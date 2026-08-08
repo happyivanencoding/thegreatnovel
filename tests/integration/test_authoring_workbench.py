@@ -95,6 +95,9 @@ def test_workbench_renders_real_profile_and_highlights_selected_node(tmp_path: P
     assert "潮汐会遮蔽灯塔坐标" in response.text
     assert "SOFT INTERPRETATION" in response.text
     assert 'data-workbench-shell' in response.text
+    assert 'class="wb-persistent-pane-controls"' in response.text
+    assert "隐藏左栏" in response.text
+    assert "隐藏右栏" in response.text
     assert "is-selected" in response.text
     assert "当前 Book 没有" not in response.text
 

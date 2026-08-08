@@ -37,6 +37,18 @@
 
   <main class="wb-shell" data-workbench-shell
         data-book-id="{{ book_id }}" data-edition-id="{{ edition_id }}">
+    <div class="wb-persistent-pane-controls" aria-label="常驻栏控制">
+      <button class="wb-pane-toggle wb-pane-toggle-left" type="button" data-toggle-pane="left"
+              aria-label="隐藏左栏" title="隐藏左栏">
+        <span class="wb-pane-toggle-icon" data-pane-toggle-icon aria-hidden="true">‹</span>
+        <span data-pane-toggle-label>隐藏左栏</span>
+      </button>
+      <button class="wb-pane-toggle wb-pane-toggle-right" type="button" data-toggle-pane="right"
+              aria-label="隐藏右栏" title="隐藏右栏">
+        <span data-pane-toggle-label>隐藏右栏</span>
+        <span class="wb-pane-toggle-icon" data-pane-toggle-icon aria-hidden="true">›</span>
+      </button>
+    </div>
     <aside class="wb-pane wb-left-pane" data-pane="left" aria-label="小说结构与知识树">
       <div class="wb-pane-header">
         <div>

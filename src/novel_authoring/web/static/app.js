@@ -319,17 +319,34 @@
     try { window.localStorage.setItem(layoutKey, JSON.stringify(value)); } catch (error) { /* local persistence is optional */ }
   }
 
+  function updatePaneButtons(root, side) {
+    var collapsed = root.classList.contains("is-" + side + "-collapsed");
+    var label = (collapsed ? "展开" : "隐藏") + (side === "left" ? "左栏" : "右栏");
+    var icon = side === "left" ? (collapsed ? "›" : "‹") : (collapsed ? "‹" : "›");
+    root.querySelectorAll('[data-toggle-pane="' + side + '"]').forEach(function (button) {
+      button.setAttribute("aria-label", label);
+      button.setAttribute("title", label);
+      var text = button.querySelector("[data-pane-toggle-label]");
+      if (text) text.textContent = label;
+      var symbol = button.querySelector("[data-pane-toggle-icon]");
+      if (symbol) symbol.textContent = icon;
+    });
+  }
+
   function initLayout(root) {
     var saved = readLayout();
     if (saved.left) root.style.setProperty("--wb-left", saved.left);
     if (saved.right) root.style.setProperty("--wb-right", saved.right);
     if (saved.leftCollapsed) root.classList.add("is-left-collapsed");
     if (saved.rightCollapsed) root.classList.add("is-right-collapsed");
+    updatePaneButtons(root, "left");
+    updatePaneButtons(root, "right");
 
     root.querySelectorAll("[data-toggle-pane]").forEach(function (button) {
       button.addEventListener("click", function () {
         var side = button.dataset.togglePane;
         root.classList.toggle("is-" + side + "-collapsed");
+        updatePaneButtons(root, side);
         saveLayout(root);
       });
     });

@@ -200,7 +200,11 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .wb-status-source, .wb-state-source, .wb-mini-source { color: #667085; }
 .wb-status-validated_draft, .wb-state-provisional, .wb-mini-provisional { color: #8a5b00; border-color: #ead7a1; background: #fffaf0; }
 .wb-status-draft { color: #2457d6; border-color: #c9d7ff; background: #f3f6ff; }
-.wb-shell { --wb-left: 20vw; --wb-right: 38vw; display: grid; grid-template-columns: var(--wb-left) 7px minmax(380px, 1fr) 7px var(--wb-right); height: calc(100vh - 56px); min-height: 540px; }
+.wb-shell { --wb-left: 20vw; --wb-right: 38vw; position: relative; display: grid; grid-template-columns: var(--wb-left) 7px minmax(380px, 1fr) 7px var(--wb-right); height: calc(100vh - 56px); min-height: 540px; }
+.wb-persistent-pane-controls { position: fixed; z-index: 30; top: 56px; right: 0; bottom: 0; left: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 .45rem; pointer-events: none; }
+.wb-pane-toggle { display: inline-flex; align-items: center; gap: .25rem; min-height: 2rem; border: 1px solid #d0d5dd; border-radius: 999px; padding: .35rem .55rem; color: #475467; background: rgba(255,255,255,.96); box-shadow: 0 3px 12px rgba(16,24,40,.12); font-size: .7rem; cursor: pointer; pointer-events: auto; }
+.wb-pane-toggle:hover { color: #2457d6; border-color: #c9d7ff; background: #f7f9ff; }
+.wb-pane-toggle-icon { font-size: 1rem; line-height: .8; }
 .wb-pane { min-width: 0; min-height: 0; overflow: hidden; background: #fff; }
 .wb-left-pane { display: flex; flex-direction: column; border-right: 1px solid #eaecf0; }
 .wb-center-pane { background: #f8f9fb; }
@@ -327,7 +331,7 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
   .wb-center-pane { order: 2; }
   .wb-right-pane { order: 3; }
   .wb-resizer { display: none; }
-  .wb-shell.is-left-collapsed .wb-left-pane, .wb-shell.is-right-collapsed .wb-right-pane { display: flex; }
+  .wb-shell.is-left-collapsed .wb-left-pane, .wb-shell.is-right-collapsed .wb-right-pane { display: none; }
   .wb-center-scroll, .wb-editor-scroll { height: auto; max-height: none; }
   .wb-editor-textarea, .wb-markdown-preview { min-height: 420px; }
   .wb-overview-grid, .wb-context-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
