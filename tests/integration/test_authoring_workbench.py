@@ -240,6 +240,8 @@ def test_author_workflow_surface_is_readable_and_embedded_in_workbench(
     assert 'data-workflow-mode="continue"' in workflow.text
     assert 'data-workflow-mode="rewrite"' in workflow.text
     assert 'data-workflow-mode="plan"' in workflow.text
+    assert workflow.text.count('data-toggle-pane="left"') == 2
+    assert workflow.text.count('data-toggle-pane="right"') == 2
 
     workbench = client.get(
         "/books/workflow-surface-book/editions/base/workbench?mode=continue"
@@ -247,6 +249,8 @@ def test_author_workflow_surface_is_readable_and_embedded_in_workbench(
     assert workbench.status_code == 200
     assert "你接下来想做什么？" in _visible_text(workbench.text)
     assert "续写设置" in _visible_text(workbench.text)
+    assert workbench.text.count('data-toggle-pane="left"') == 2
+    assert workbench.text.count('data-toggle-pane="right"') == 2
 
 
 def test_draft_is_provisional_and_explicit_save_does_not_touch_canon(tmp_path: Path) -> None:
