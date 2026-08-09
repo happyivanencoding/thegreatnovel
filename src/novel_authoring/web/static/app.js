@@ -305,11 +305,13 @@
     return meta ? meta.content : "";
   }
 
-  function readLayout() {
-    try { return JSON.parse(window.localStorage.getItem(layoutKey) || "{}"); } catch (error) { return {}; }
+  function readLayout(root) {
+    var key = root && root.dataset.layoutKey ? root.dataset.layoutKey : layoutKey;
+    try { return JSON.parse(window.localStorage.getItem(key) || "{}"); } catch (error) { return {}; }
   }
 
   function saveLayout(root) {
+    var key = root && root.dataset.layoutKey ? root.dataset.layoutKey : layoutKey;
     var value = {
       left: root.style.getPropertyValue("--wb-left"),
       right: root.style.getPropertyValue("--wb-right"),
@@ -319,7 +321,7 @@
       rightTab: root.dataset.activeRightTab || "prose",
       stateTab: root.dataset.activeStateTab || "character"
     };
-    try { window.localStorage.setItem(layoutKey, JSON.stringify(value)); } catch (error) { /* local persistence is optional */ }
+    try { window.localStorage.setItem(key, JSON.stringify(value)); } catch (error) { /* local persistence is optional */ }
   }
 
   function updatePaneButtons(root, side) {
@@ -351,7 +353,7 @@
   function addWorkbenchState(href, root) {
     try {
       var url = new URL(href, window.location.href);
-      var saved = readLayout();
+      var saved = readLayout(root);
       var mode = root.dataset.activeMode || saved.mainMode || "continue";
       var rightTab = root.dataset.activeRightTab || saved.rightTab || "prose";
       var stateTab = root.dataset.activeStateTab || saved.stateTab || "character";
@@ -365,7 +367,7 @@
   }
 
   function initLayout(root) {
-    var saved = readLayout();
+    var saved = readLayout(root);
     if (saved.left) root.style.setProperty("--wb-left", saved.left);
     if (saved.right) root.style.setProperty("--wb-right", saved.right);
     if (saved.leftCollapsed) root.classList.add("is-left-collapsed");
@@ -475,7 +477,7 @@
         applyRightTab(root, button.dataset.wbEditorTab, true);
       });
     });
-    var saved = readLayout();
+    var saved = readLayout(root);
     applyMainMode(root, stateFromUrl("mode") || saved.mainMode || root.dataset.activeMode || "continue", false);
     applyRightTab(root, stateFromUrl("right_tab") || saved.rightTab || root.dataset.activeRightTab || "prose", false);
     root.querySelectorAll("[data-wb-editor-view]").forEach(function (button) {
@@ -597,7 +599,7 @@
     buttons.forEach(function (button) {
       button.addEventListener("click", function () { activate(button.dataset.wbStateTab, true); });
     });
-    var saved = readLayout();
+    var saved = readLayout(root);
     activate(stateFromUrl("state_tab") || saved.stateTab || "character", false);
 
     root.querySelectorAll("[data-author-command-form]").forEach(function (form) {
@@ -696,6 +698,102 @@
     });
   }
 
+  function workflowPayload(form) {
+    var payload = {};
+    new FormData(form).forEach(function (value, key) {
+      if (key === "innovation_focus" || key === "author_task_ids") {
+        if (!Array.isArray(payload[key])) payload[key] = [];
+        payload[key].push(String(value));
+        return;
+      }
+      payload[key] = value;
+    });
+    if (!payload.innovation_focus || !payload.innovation_focus.length) payload.innovation_focus = ["auto"];
+    if (!String(payload.author_goal || "").trim()) payload.author_goal = null;
+    return payload;
+  }
+
+  function workflowFeedback(form, message, isError) {
+    var feedback = form.querySelector("[data-workflow-feedback]");
+    if (!feedback) return;
+    feedback.hidden = false;
+    feedback.classList.toggle("is-error", Boolean(isError));
+    feedback.textContent = message;
+  }
+
+  function initWorkflowForms(workspace) {
+    workspace.querySelectorAll("[data-workflow-form]").forEach(function (form) {
+      var auto = form.querySelector("[data-innovation-auto]");
+      if (auto) auto.addEventListener("change", function () {
+        if (!auto.checked) return;
+        form.querySelectorAll('input[name="innovation_focus"]:not([data-innovation-auto])').forEach(function (item) { item.checked = false; });
+      });
+      form.querySelectorAll('input[name="innovation_focus"]:not([data-innovation-auto])').forEach(function (item) {
+        item.addEventListener("change", function () {
+          if (!item.checked || !auto) return;
+          auto.checked = false;
+        });
+      });
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var button = form.querySelector("[data-workflow-submit-label]");
+        var original = button ? button.dataset.workflowSubmitLabel : "提交任务";
+        if (button) { button.disabled = true; button.textContent = "准备中…"; }
+        workflowFeedback(form, "正在冻结当前章节上下文，请稍候…", false);
+        fetch(form.action, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken() },
+          body: JSON.stringify(workflowPayload(form))
+        }).then(function (response) {
+          return response.json().then(function (body) { return { ok: response.ok, body: body }; });
+        }).then(function (result) {
+          if (!result.ok) {
+            var error = result.body.error && result.body.error.message ? result.body.error.message : "任务暂时无法准备";
+            workflowFeedback(form, "无法准备任务：" + error, true);
+            if (button) { button.disabled = false; button.textContent = original; }
+            return;
+          }
+          workflowFeedback(form, "✓ 任务已经准备好，正在刷新当前工作列表…", false);
+          if (button) button.textContent = "已准备";
+          window.setTimeout(function () { window.location.reload(); }, 900);
+        }).catch(function () {
+          workflowFeedback(form, "无法连接到本地工作流服务，请刷新后重试。", true);
+          if (button) { button.disabled = false; button.textContent = original; }
+        });
+      });
+    });
+  }
+
+  function initWorkflowWorkspaces() {
+    document.querySelectorAll("[data-workflow-workspace]").forEach(function (workspace) {
+      var buttons = workspace.querySelectorAll("[data-workflow-mode]");
+      var panels = workspace.querySelectorAll("[data-workflow-mode-panel]");
+      var activate = function (target) {
+        var matched = false;
+        buttons.forEach(function (button) {
+          var active = button.dataset.workflowMode === target;
+          button.setAttribute("aria-selected", active ? "true" : "false");
+          if (active) matched = true;
+        });
+        if (!matched && buttons.length) target = "continue";
+        panels.forEach(function (panel) { panel.hidden = panel.dataset.workflowModePanel !== target; });
+        workspace.dataset.activeWorkflowMode = target;
+      };
+      buttons.forEach(function (button) { button.addEventListener("click", function () { activate(button.dataset.workflowMode); }); });
+      activate(workspace.dataset.workflowInitialMode || "continue");
+      initWorkflowForms(workspace);
+      workspace.querySelectorAll("[data-workflow-task-toggle]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var row = button.closest("[data-workflow-task-row]");
+          var details = row && row.querySelector("[data-workflow-task-details]");
+          if (!details) return;
+          details.open = !details.open;
+          button.textContent = details.open ? "收起任务" : "查看任务";
+        });
+      });
+    });
+  }
+
   function loadWorkbench(link, push) {
     var currentRoot = document.querySelector("[data-workbench-shell]");
     var href = push && currentRoot ? addWorkbenchState(link.href, currentRoot) : link.href;
@@ -727,6 +825,7 @@
     initContextTabs(root);
     initEditor(root);
     initStateTabs(root);
+    initWorkflowWorkspaces();
     root.querySelectorAll("[data-workbench-navigation]").forEach(function (link) {
       link.addEventListener("click", function (event) {
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;

@@ -172,90 +172,15 @@
 
       <div class="wb-center-scroll">
         <section class="wb-mode-panel" data-wb-mode-panel="continue" {% if active_main_mode != 'continue' %}hidden{% endif %}>
-          {% if selected_node == 'chapter' and chapter_context %}
-          <article class="wb-content-card wb-chapter-context-card" data-wb-chapter-context>
-            <div class="wb-section-heading">
-              <div><p class="wb-kicker">章节上下文 · 只读历史锚点</p><h2>第{{ chapter_context.chapter_ordinal }}章</h2></div>
-              <div class="wb-heading-tags">
-                <span class="wb-state-tag wb-state-{{ chapter_context.chapter_status|lower }}">{{ chapter_context.chapter_status_label }}</span>
-                {% if chapter_context.provisional %}<span class="wb-state-tag wb-state-provisional">{{ chapter_context.provisional_label }}</span>{% else %}<span class="wb-state-tag wb-state-canon">{{ chapter_context.canonical_boundary.status_label }}</span>{% endif %}
-              </div>
-            </div>
-            <p class="wb-context-explanation">点击章节只改变查询位置。本次浏览不会回滚运行状态、创建正史事件、修改基线或切换版本。</p>
-            <div class="wb-context-tabs" role="tablist">
-              <button type="button" data-wb-context-tab="before">章前状态</button>
-              <button type="button" class="is-active" data-wb-context-tab="delta">本章变化</button>
-              <button type="button" data-wb-context-tab="after">章后状态</button>
-            </div>
-            <section class="wb-context-panel" data-wb-context-panel="before" hidden>
-              <h3>章前状态</h3>
-              <p class="wb-context-status">{{ chapter_context.before_state.availability_label }}</p>
-              <p class="wb-context-explanation">{{ chapter_context.before_state.author_summary }}</p>
-              {% if chapter_context.before_state.state_cards %}<div class="wb-state-card-grid">{% for card in chapter_context.before_state.state_cards %}<div><span>{{ card.label }}</span><strong>{{ card.summary }}</strong></div>{% endfor %}</div>{% else %}<p class="wb-empty-state">暂时没有可展示的章前状态记录。</p>{% endif %}
-            </section>
-            <section class="wb-context-panel" data-wb-context-panel="delta">
-              <h3>本章改变了什么？</h3>
-              <p class="wb-context-status">{{ chapter_context.chapter_delta.status_label }}</p>
-              <p class="wb-context-explanation">{{ chapter_context.chapter_delta.author_summary }}</p>
-              {% if chapter_context.chapter_delta.display_changes %}
-              <ul class="wb-change-list">{% for change in chapter_context.chapter_delta.display_changes[:24] %}<li><span class="wb-change-kind">{{ change.kind_label }}</span><span><b>{{ change.collection_label }}</b> · {{ change.summary }}</span></li>{% endfor %}</ul>
-              {% else %}<p class="wb-empty-state">当前没有可展示的逐章变化。</p>{% endif %}
-            </section>
-            <section class="wb-context-panel" data-wb-context-panel="after" hidden>
-              <h3>章后状态</h3>
-              <p class="wb-context-status">{{ chapter_context.after_state.availability_label }}</p>
-              <p class="wb-context-explanation">{{ chapter_context.after_state.author_summary }}</p>
-              {% if chapter_context.after_state.state_cards %}<div class="wb-state-card-grid">{% for card in chapter_context.after_state.state_cards %}<div><span>{{ card.label }}</span><strong>{{ card.summary }}</strong></div>{% endfor %}</div>{% elif chapter_context.after_state.state_changes %}<p class="wb-empty-state">当前草稿提供了 {{ chapter_context.after_state.state_changes|length }} 项临时变化，请在右侧“章末状态”查看。</p>{% else %}<p class="wb-empty-state">暂时没有可展示的章后状态记录。</p>{% endif %}
-            </section>
-            <div class="wb-context-summary-grid">
-              <div><span>原文边界</span><strong>第{{ chapter_context.source_boundary.chapter_ordinal }}章</strong></div>
-              <div><span>正史边界</span><strong>第{{ chapter_context.canonical_boundary.chapter_ordinal }}章 · {{ chapter_context.canonical_boundary.status_label }}</strong></div>
-              <div><span>审核状态</span><strong>{{ chapter_context.validation.status_label }}</strong></div>
-              <div><span>当前层</span><strong>{{ chapter_context.provisional_label }}</strong></div>
-            </div>
-            <details class="wb-technical-details"><summary>技术详情</summary><pre class="wb-json-preview">{{ chapter_context|tojson(indent=2) }}</pre></details>
-          </article>
-          {% else %}
-          <article class="wb-content-card wb-overview-card">
-            <p class="wb-kicker">作者控制台 · 续写</p>
-            <h2>从一个明确的章节位置继续推进。</h2>
-            <p class="wb-lede">左侧选择章节后，这里会显示该章正文、历史状态可用性和本章变化。当前工作台只读，不会替你批准或写入正史。</p>
-            <div class="wb-overview-grid">
-              <div><span>当前版本</span><strong>{{ edition.display_name }}</strong></div>
-              <div><span>原文章节</span><strong>{{ chapter_items|length }} 章</strong></div>
-              <div><span>草稿</span><strong>{{ draft_items|length }} 个</strong></div>
-              <div><span>本书画像</span><strong>{{ profile_items|selectattr('available')|list|length }}/{{ profile_items|length }}</strong></div>
-            </div>
-            <div class="wb-overview-note"><strong>下一步</strong><p>选择左侧正文中的章节，或进入工作流准备一次可审计的续写任务。</p><a class="button compact" href="/books/{{ book_id }}/workflow">打开工作流</a></div>
-          </article>
-          {% endif %}
-          <article class="wb-ai-card">
-            <div class="wb-section-heading"><div><p class="wb-kicker">续写准备</p><h3>需要生成下一章候选时</h3></div><span class="wb-state-tag wb-state-placeholder">尚未接入生成</span></div>
-            <p>当前页面已经接入真实章节和只读状态；候选、边界包、章节合同和校验仍通过现有工作流交给 Codex 桌面端处理。</p>
-            <div class="wb-ai-input-row"><span class="wb-context-chip">当前章节</span><span class="wb-context-chip">本书画像</span><a class="button compact" href="/books/{{ book_id }}/workflow">准备续写任务</a></div>
-          </article>
+          {% include 'workflow_workspace.html' with context %}
         </section>
 
         <section class="wb-mode-panel" data-wb-mode-panel="rewrite" {% if active_main_mode != 'rewrite' %}hidden{% endif %}>
-          <article class="wb-content-card">
-            <div class="wb-section-heading"><div><p class="wb-kicker">作者工作区 · 改写</p><h2>围绕当前章节准备派生版本</h2></div><span class="wb-state-tag wb-state-placeholder">改写编辑器未接入</span></div>
-            {% if selected_chapter %}<p class="wb-lede">当前选择：第{{ selected_chapter.ordinal }}章《{{ selected_chapter.title }}》。原文仍保持只读，改写必须落到独立版本。</p>{% else %}<p class="wb-lede">请先从左侧选择要改写的章节。</p>{% endif %}
-            <p class="wb-empty-state">这里暂时不提供假编辑按钮。准备改写任务后，系统会在独立版本中生成影响审计、改写草稿和校验结果。</p>
-            <a class="button" href="/books/{{ book_id }}/workflow">打开工作流</a>
-          </article>
+          {% set workflow_embedded = true %}{% set workflow_initial_mode = 'rewrite' %}{% include 'workflow_workspace.html' with context %}
         </section>
 
         <section class="wb-mode-panel" data-wb-mode-panel="plan" {% if active_main_mode != 'plan' %}hidden{% endif %}>
-          <article class="wb-content-card">
-            <div class="wb-section-heading"><div><p class="wb-kicker">作者工作区 · 规划</p><h2>查看当前章节的推进依据</h2></div><span class="wb-state-tag wb-state-placeholder">规划结果只读</span></div>
-            {% if chapter_context and chapter_context.narrative_context.status != 'NOT_AVAILABLE' %}
-            <p class="wb-lede">当前草稿带有可供检查的叙事上下文。它仍属于临时材料，不会自动成为固定大纲或正史。</p>
-            <div class="wb-overview-grid"><div><span>叙事镜头</span><strong>{{ chapter_context.narrative_context.lens or '未提供' }}</strong></div><div><span>推进线索</span><strong>{{ (chapter_context.narrative_context.narrative_portfolio or {})|length }} 项</strong></div><div><span>待偿还债务</span><strong>{{ (chapter_context.narrative_context.narrative_debt or {})|length }} 项</strong></div></div>
-            {% else %}
-            <p class="wb-empty-state">当前没有可展示的章节合同或叙事组合。先在工作流中准备续写任务，规划依据生成后会出现在这里。</p>
-            {% endif %}
-            <a class="button" href="/books/{{ book_id }}/workflow">准备规划任务</a>
-          </article>
+          {% set workflow_embedded = true %}{% set workflow_initial_mode = 'plan' %}{% include 'workflow_workspace.html' with context %}
         </section>
 
         <section class="wb-mode-panel" data-wb-mode-panel="analysis" {% if active_main_mode != 'analysis' %}hidden{% endif %}>

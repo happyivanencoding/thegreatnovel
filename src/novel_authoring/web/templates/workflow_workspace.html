@@ -1,0 +1,149 @@
+{% set embedded = workflow_embedded|default(false) %}
+{% set initial_mode = workflow_initial_mode|default('continue') %}
+<section class="workflow-workspace" data-workflow-workspace data-workflow-initial-mode="{{ initial_mode }}">
+  {% if not embedded %}
+  <header class="workflow-heading">
+    <div>
+      <p class="workflow-kicker">作者工作台 · 当前章节</p>
+      <h1>你接下来想做什么？</h1>
+      <p class="workflow-lede">从当前章节出发，准备一次可追溯的续写、改写或规划任务。</p>
+    </div>
+    {% if workflow.current_chapter %}<span class="workflow-chapter-badge">第{{ workflow.current_chapter.ordinal }}章</span>{% endif %}
+  </header>
+  <nav class="workflow-mode-tabs" role="tablist" aria-label="作者工作模式">
+    <button type="button" data-workflow-mode="continue" aria-selected="true">续写</button>
+    <button type="button" data-workflow-mode="rewrite" aria-selected="false">改写</button>
+    <button type="button" data-workflow-mode="plan" aria-selected="false">规划</button>
+  </nav>
+  {% endif %}
+
+  {% if not embedded or initial_mode == 'continue' %}
+  <section class="workflow-mode-panel" data-workflow-mode-panel="continue">
+    <div class="workflow-panel-heading">
+      <div><p class="workflow-kicker">续写设置</p><h2>准备下一章</h2></div>
+      <span class="workflow-soft-note">从当前章节的只读上下文开始</span>
+    </div>
+    <form class="workflow-config-form" method="post" action="/api/books/{{ workflow.book_id }}/handoffs/continuation" data-workflow-form data-workflow-kind="continue">
+      <input type="hidden" name="context_chapter_id" value="{{ workflow.current_chapter.chapter_id if workflow.current_chapter else '' }}">
+      {% if workflow.editions|length > 1 %}
+      <label class="workflow-field">版本
+        <select name="edition_id">
+          {% for edition in workflow.editions %}<option value="{{ edition.edition_id }}"{% if edition.edition_id == workflow.edition_id %} selected{% endif %}>{{ edition.display_name }}{% if edition.edition_id == workflow.edition_id %}（当前）{% endif %}</option>{% endfor %}
+        </select>
+      </label>
+      {% else %}
+      <input type="hidden" name="edition_id" value="{{ workflow.edition_id }}">
+      <div class="workflow-current-edition"><span>当前版本</span><strong>{{ workflow.edition.display_name or '原始版本' }}</strong><small>{{ workflow.edition_id }}</small></div>
+      {% endif %}
+
+      <label class="workflow-field">你希望 AI 做到哪一步？
+        <select name="requested_stage" data-workflow-stage>
+          <option value="PLAN_ONLY">只给我方案</option>
+          <option value="DRAFT_AND_VALIDATE" selected>方案 + 正文草稿，并完成校验</option>
+        </select>
+        <small>页面使用作者语言；提交时仍映射到现有的任务阶段。</small>
+      </label>
+
+      {% include 'innovation_controls.html' %}
+
+      <label class="workflow-field workflow-goal-field">这次你特别希望发生什么？
+        <textarea name="author_goal" rows="4" maxlength="2000" placeholder="例如：推进与其他幸存者的交易线，同时让血参线得到一次实质兑现。"></textarea>
+        <small>这会记录为本次工作流的作者目标，只进入规划层，不会直接改动正史。</small>
+      </label>
+
+      {% if workflow.author_tasks %}
+      <fieldset class="workflow-task-picker">
+        <legend>本次优先考虑哪些作者任务？</legend>
+        <div class="workflow-task-options">
+          {% for task in workflow.author_tasks %}
+          <label class="workflow-task-option"><input type="checkbox" name="author_task_ids" value="{{ task.task_id }}"><span><b>{{ task.title }}</b><small>{{ task.horizon_label }} · {{ task.lifecycle_status_label }}</small></span></label>
+          {% endfor %}
+        </div>
+      </fieldset>
+      {% else %}
+      <div class="workflow-inline-empty">当前还没有作者任务；你可以直接用上面的作者目标描述这次推进方向。</div>
+      {% endif %}
+
+      <div class="workflow-form-footer"><span class="workflow-safety-note">原文、正史、版本和审批边界保持不变。</span><button class="button primary workflow-submit" type="submit" data-workflow-submit-label="开始续写">开始续写</button></div>
+      <div class="workflow-feedback" data-workflow-feedback role="status" aria-live="polite" hidden></div>
+    </form>
+  </section>
+  {% endif %}
+
+  {% if not embedded or initial_mode == 'rewrite' %}
+  <section class="workflow-mode-panel" data-workflow-mode-panel="rewrite"{% if not embedded %} hidden{% endif %}>
+    <div class="workflow-panel-heading"><div><p class="workflow-kicker">改写设置</p><h2>准备一个派生版本</h2></div><span class="workflow-soft-note">原始版本保持只读</span></div>
+    <form class="workflow-config-form" method="post" action="/api/books/{{ workflow.book_id }}/handoffs/revision" data-workflow-form data-workflow-kind="rewrite">
+      <input type="hidden" name="context_chapter_id" value="{{ workflow.current_chapter.chapter_id if workflow.current_chapter else '' }}">
+      <input type="hidden" name="requested_stage" value="IMPACT_AND_PLAN">
+      {% if workflow.editions|length > 1 %}
+      <label class="workflow-field">版本
+        <select name="edition_id">{% for edition in workflow.editions %}<option value="{{ edition.edition_id }}"{% if edition.edition_id == workflow.edition_id %} selected{% endif %}>{{ edition.display_name }}{% if edition.edition_id == workflow.edition_id %}（当前）{% endif %}</option>{% endfor %}</select>
+      </label>
+      {% else %}
+      <input type="hidden" name="edition_id" value="{{ workflow.edition_id }}">
+      <div class="workflow-current-edition"><span>当前版本</span><strong>{{ workflow.edition.display_name or '原始版本' }}</strong><small>{{ workflow.edition_id }}</small></div>
+      {% endif %}
+      <div class="workflow-stage-summary"><span>第一步</span><strong>先做影响审计与改写计划</strong><small>确认范围后，才会进入独立版本的草稿工作。</small></div>
+      {% include 'innovation_controls.html' %}
+      <label class="workflow-field workflow-goal-field">这次你特别希望改变什么？
+        <textarea name="author_goal" rows="4" maxlength="2000" placeholder="例如：修正第 12 章的资源事实，同时保留人物关系的推进。"></textarea>
+        <small>目标会记录为作者意图；不会批准改写 Campaign，也不会启用版本。</small>
+      </label>
+      <div class="workflow-form-footer"><span class="workflow-safety-note">改写只写入派生版本的工作流。</span><button class="button primary workflow-submit" type="submit" data-workflow-submit-label="准备改写计划">准备改写计划</button></div>
+      <div class="workflow-feedback" data-workflow-feedback role="status" aria-live="polite" hidden></div>
+    </form>
+  </section>
+  {% endif %}
+
+  {% if not embedded or initial_mode == 'plan' %}
+  <section class="workflow-mode-panel" data-workflow-mode-panel="plan"{% if not embedded %} hidden{% endif %}>
+    <div class="workflow-panel-heading"><div><p class="workflow-kicker">规划设置</p><h2>先看下一步的几种走法</h2></div><span class="workflow-soft-note">只生成候选方案</span></div>
+    <form class="workflow-config-form" method="post" action="/api/books/{{ workflow.book_id }}/handoffs/continuation" data-workflow-form data-workflow-kind="plan">
+      <input type="hidden" name="context_chapter_id" value="{{ workflow.current_chapter.chapter_id if workflow.current_chapter else '' }}">
+      <input type="hidden" name="requested_stage" value="PLAN_ONLY">
+      {% if workflow.editions|length > 1 %}
+      <label class="workflow-field">版本
+        <select name="edition_id">{% for edition in workflow.editions %}<option value="{{ edition.edition_id }}"{% if edition.edition_id == workflow.edition_id %} selected{% endif %}>{{ edition.display_name }}{% if edition.edition_id == workflow.edition_id %}（当前）{% endif %}</option>{% endfor %}</select>
+      </label>
+      {% else %}
+      <input type="hidden" name="edition_id" value="{{ workflow.edition_id }}">
+      <div class="workflow-current-edition"><span>当前版本</span><strong>{{ workflow.edition.display_name or '原始版本' }}</strong><small>{{ workflow.edition_id }}</small></div>
+      {% endif %}
+      <div class="workflow-stage-summary"><span>生成范围</span><strong>候选方案</strong><small>你可以先比较不同方向，再决定是否进入正文。</small></div>
+      {% include 'innovation_controls.html' %}
+      <label class="workflow-field workflow-goal-field">这次你特别希望探索什么？
+        <textarea name="author_goal" rows="4" maxlength="2000" placeholder="例如：探索交易线、血参线和新的幸存者关系如何同时推进。"></textarea>
+        <small>目标只作为规划输入，不会自动成为固定大纲或正史。</small>
+      </label>
+      {% if workflow.author_tasks %}
+      <fieldset class="workflow-task-picker"><legend>本次优先考虑哪些作者任务？</legend><div class="workflow-task-options">{% for task in workflow.author_tasks %}<label class="workflow-task-option"><input type="checkbox" name="author_task_ids" value="{{ task.task_id }}"><span><b>{{ task.title }}</b><small>{{ task.horizon_label }} · {{ task.lifecycle_status_label }}</small></span></label>{% endfor %}</div></fieldset>
+      {% endif %}
+      <div class="workflow-form-footer"><span class="workflow-safety-note">规划结果仍需后续校验和你的确认。</span><button class="button primary workflow-submit" type="submit" data-workflow-submit-label="生成规划方案">生成规划方案</button></div>
+      <div class="workflow-feedback" data-workflow-feedback role="status" aria-live="polite" hidden></div>
+    </form>
+  </section>
+  {% endif %}
+
+  {% if not embedded %}
+  <section class="workflow-current-work">
+    <div class="workflow-section-heading"><div><p class="workflow-kicker">任务进度</p><h2>当前工作</h2></div><span class="workflow-soft-note">只显示作者下一步需要知道的内容</span></div>
+    {% if workflow.workflow_tasks %}
+    <div class="workflow-task-list">
+      {% for task in workflow.workflow_tasks %}
+      <article class="workflow-task-row" data-workflow-task-row>
+        <div class="workflow-task-main"><div class="workflow-task-title"><strong>{{ task.author_type_label }} · {{ task.target_chapter_label }}</strong><span class="workflow-status-chip workflow-status-{{ task.status|lower }}">{{ task.author_status_label }}</span></div><p>{{ task.author_stage_label }} · {{ task.innovation_level_label }} / {{ task.innovation_focus_label }}</p><small>创建于 {{ task.created_at_label }} · {{ task.edition_display_name }}</small></div>
+        <div class="workflow-task-actions"><button type="button" class="button" data-workflow-task-toggle>查看任务</button><button type="button" class="button" data-copy-instruction="/api/handoffs/{{ task.handoff_id }}/instruction">复制给 Codex 的指令</button>{% if task.status == 'COMPLETED' %}<a class="button" href="/api/handoffs/{{ task.handoff_id }}/result">查看结果</a>{% endif %}</div>
+        <details class="workflow-task-details" data-workflow-task-details>
+          <summary>处理进度 · {{ task.next_action_label }}</summary>
+          <ol class="workflow-timeline">{% for stage in task.timeline %}<li class="workflow-timeline-{{ stage.state }}"><span aria-hidden="true">{% if stage.state == 'done' %}✓{% elif stage.state == 'current' %}●{% elif stage.state == 'failed' %}!{% else %}○{% endif %}</span><b>{{ stage.label }}</b></li>{% endfor %}</ol>
+          <p class="workflow-next-action">下一步：{{ task.next_action_label }}。</p>
+          <details class="workflow-developer-details"><summary>技术详情</summary><dl><dt>任务标识</dt><dd>{{ task.technical.handoff_id }}</dd><dt>原始状态</dt><dd>{{ task.technical.status }}</dd><dt>生成范围</dt><dd>{{ task.technical.requested_stage }}</dd><dt>版本标识</dt><dd>{{ task.technical.edition_id }}</dd><dt>任务目录</dt><dd><code>{{ task.technical.task_directory }}</code></dd></dl></details>
+        </details>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}<div class="workflow-empty-work">还没有进行中的工作。选择一个模式，配置这次目标后，任务会出现在这里。</div>{% endif %}
+  </section>
+  {% endif %}
+</section>

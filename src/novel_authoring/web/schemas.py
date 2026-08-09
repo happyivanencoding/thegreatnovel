@@ -46,6 +46,9 @@ class HandoffRequest(BaseModel):
 
     requested_stage: str
     edition_id: str | None = None
+    context_chapter_id: str | None = None
+    author_goal: str | None = Field(default=None, max_length=2000)
+    author_task_ids: list[str] = Field(default_factory=list, max_length=20)
     require_complete_metrics: bool = False
     innovation_level: InnovationLevel | None = None
     innovation_focus: list[InnovationFocus] | None = None

@@ -21,9 +21,28 @@ class _VisibleTextParser(HTMLParser):
         self.parts: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag in {
+            "area",
+            "base",
+            "br",
+            "col",
+            "embed",
+            "hr",
+            "img",
+            "input",
+            "link",
+            "meta",
+            "param",
+            "source",
+            "track",
+            "wbr",
+        }:
+            return
         values = dict(attrs)
         classes = set((values.get("class") or "").split())
-        hidden = "hidden" in values or "wb-technical-details" in classes
+        hidden = "hidden" in values or classes.intersection(
+            {"wb-technical-details", "workflow-task-details", "workflow-developer-details"}
+        )
         self._hidden_tags.append(hidden)
         if hidden:
             self._hidden_depth += 1
@@ -164,7 +183,8 @@ def test_chapter_navigation_is_query_only_and_exposes_source_gap(tmp_path: Path)
         assert body["chapter_delta"]["status"] == "SOURCE_CHAPTER_STATE_PROJECTION_MISSING"
 
     selected = client.get(
-        f"/books/historical-workbench-book/editions/base/workbench?chapter_id={chapter_ids[1]}&node=chapter"
+        f"/books/historical-workbench-book/editions/base/workbench?chapter_id={chapter_ids[1]}"
+        "&node=chapter&mode=continuity&right_tab=state"
     )
     assert selected.status_code == 200
     assert "第2章" in selected.text
@@ -197,6 +217,36 @@ def test_modes_tabs_and_right_tabs_have_readable_state(tmp_path: Path) -> None:
     assert "不会用最新状态填充这里" in visible
     assert "SOURCE_CHAPTER_STATE_PROJECTION_MISSING" not in visible
     assert "anchor_chapter_ordinal" not in visible
+
+
+def test_author_workflow_surface_is_readable_and_embedded_in_workbench(
+    tmp_path: Path,
+) -> None:
+    database = _book(tmp_path, "workflow-surface-book")
+    app = create_app(database, book_id="workflow-surface-book")
+    client = TestClient(app)
+
+    workflow = client.get("/books/workflow-surface-book/workflow")
+    assert workflow.status_code == 200
+    visible = _visible_text(workflow.text)
+    assert "你接下来想做什么？" in visible
+    assert "续写设置" in visible
+    assert "创新程度" in visible
+    assert "创新方向" in visible
+    assert "当前还没有作者任务" in visible
+    assert "PLAN_ONLY" not in visible
+    assert "WAITING_FOR_USER" not in visible
+    assert workflow.text.count('data-workflow-form') == 3
+    assert 'data-workflow-mode="continue"' in workflow.text
+    assert 'data-workflow-mode="rewrite"' in workflow.text
+    assert 'data-workflow-mode="plan"' in workflow.text
+
+    workbench = client.get(
+        "/books/workflow-surface-book/editions/base/workbench?mode=continue"
+    )
+    assert workbench.status_code == 200
+    assert "你接下来想做什么？" in _visible_text(workbench.text)
+    assert "续写设置" in _visible_text(workbench.text)
 
 
 def test_draft_is_provisional_and_explicit_save_does_not_touch_canon(tmp_path: Path) -> None:
@@ -259,7 +309,8 @@ def test_draft_is_provisional_and_explicit_save_does_not_touch_canon(tmp_path: P
     app = create_app(database, book_id="draft-workbench-book")
     client = TestClient(app)
     page = client.get(
-        "/books/draft-workbench-book/editions/base/workbench?draft_id=draft-61&node=chapter"
+        "/books/draft-workbench-book/editions/base/workbench?draft_id=draft-61"
+        "&node=chapter&mode=continuity"
     )
     assert page.status_code == 200
     assert "草稿临时状态" in _visible_text(page.text)

@@ -353,6 +353,9 @@ def create_handoff(
     distill_request: dict[str, Any] | None = None,
     innovation_control: InnovationControl | None = None,
     innovation_source: str | None = None,
+    context_chapter_id: str | None = None,
+    author_goal: str | None = None,
+    author_task_ids: list[str] | None = None,
 ) -> dict[str, Any]:
     database.initialize()
     selected = resolve_edition_id(database, book_id, edition_id)
@@ -515,6 +518,10 @@ def create_handoff(
         artifacts = task_directory / "artifacts"
         artifacts.mkdir(parents=True, exist_ok=False)
     artifacts = task_directory / "artifacts"
+    normalized_author_goal = str(author_goal or "").strip() or None
+    selected_author_task_ids = [
+        str(task_id).strip() for task_id in (author_task_ids or []) if str(task_id).strip()
+    ]
     atlas_output_directory = artifacts / "story_atlas"
     initialization_contract_root = (
         edition_paths.initialization
@@ -580,6 +587,9 @@ def create_handoff(
             else selected_innovation.model_dump(mode="json")
         ),
         "innovation_source": innovation_source or None,
+        "context_chapter_id": context_chapter_id,
+        "author_goal": normalized_author_goal,
+        "author_task_ids": selected_author_task_ids,
         "atlas_output_directory": str(atlas_output_directory),
         "atlas_required_artifacts": [
             "atlas_manifest.json",
@@ -730,6 +740,17 @@ def create_handoff(
             "Knowledge、Capability、Resource、Author Directive、Approval 或 Edition hard gates。"
             "三个 Candidate Lens 必须全部保留。"
         )
+    author_context_instruction = ""
+    if normalized_author_goal:
+        author_context_instruction += (
+            f" 作者本次特别目标：{normalized_author_goal}。该目标只作为 Author Control Intent "
+            "与本次操作输入，不得直接写入 Canon。"
+        )
+    if selected_author_task_ids:
+        author_context_instruction += (
+            f" 作者选中的待推进任务 ID：{json_dumps(selected_author_task_ids)}；"
+            "请在候选方案中明确说明哪些任务被推进、哪些仍保持未完成。"
+        )
     prompt = (
         "$process-novel-handoff\n\n"
         "请先使用仓库内的 $process-novel-handoff Skill，领取并验证 "
@@ -737,6 +758,7 @@ def create_handoff(
         f"领取成功后，根据 task.json 调用 ${skill_name}，严格执行 "
         f"requested_stage={requested_stage}。\n\n"
         f"{atlas_instruction}\n\n"
+        f"{author_context_instruction}\n\n"
         "严格读取任务目录中的 task.json、prompt.md、metric_context.json、"
         "context_manifest.json 和 output_schema.json。\n"
         "不得修改 book；不得批准写入正史；不得批准改写 Campaign；不得启用 Edition。\n"
@@ -763,6 +785,9 @@ def create_handoff(
         "batch_plan_hash": task["batch_plan_hash"],
         "innovation_control": task["innovation_control"],
         "innovation_source": task["innovation_source"],
+        "context_chapter_id": task["context_chapter_id"],
+        "author_goal": task["author_goal"],
+        "author_task_ids": task["author_task_ids"],
         "atlas_required_artifacts": task["atlas_required_artifacts"],
         "effective_content_sha256": task["effective_content_sha256"],
         "edition_status": edition_status,

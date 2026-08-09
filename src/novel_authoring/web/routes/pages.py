@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any
 
+from novel_authoring.author_control.service import author_control_view
 from novel_authoring.edition import edition_chapters, list_editions, resolve_edition_id
 from novel_authoring.initialization.metrics import metric_bootstrap_status
 from novel_authoring.initialization.service import latest_initialization
@@ -384,10 +386,243 @@ def dashboard_context(database: Any, book_id: str) -> dict[str, Any]:
     }
 
 
-def workflow_context(database: Any, book_id: str) -> dict[str, Any]:
+_WORKFLOW_STATUS_LABELS = {
+    "READY_FOR_CODEX": "等待 AI 处理",
+    "CLAIMED": "已接收，正在准备",
+    "RUNNING": "正在分析",
+    "WAITING_FOR_USER": "等待你的操作",
+    "COMPLETED": "已生成结果",
+    "FAILED": "处理失败",
+    "STALE": "需要刷新上下文",
+    "CANCELLED": "已取消",
+    "DRAFT": "准备中",
+}
+_WORKFLOW_HANDOFF_LABELS = {"CONTINUATION": "续写", "REVISION": "改写"}
+_WORKFLOW_STAGE_LABELS = {
+    "PLAN_ONLY": "只生成方案",
+    "DRAFT_AND_VALIDATE": "方案、正文与校验",
+    "IMPACT_AND_PLAN": "影响审计与改写计划",
+}
+_WORKFLOW_LEVEL_LABELS = {
+    "minimal": "最小",
+    "low": "低",
+    "medium": "中",
+    "high": "高",
+    "bold": "大胆",
+}
+_WORKFLOW_FOCUS_LABELS = {
+    "auto": "自动",
+    "plot": "剧情",
+    "character": "人物",
+    "relationship": "关系",
+    "world": "世界",
+    "mechanism": "机制",
+    "narrative_structure": "叙事结构",
+    "style": "文风",
+}
+_WORKFLOW_TIMELINE_STAGES = (
+    ("context", "准备上下文"),
+    ("handoff", "交给 AI"),
+    ("candidates", "生成候选"),
+    ("draft", "生成正文"),
+    ("validation", "连续性校验"),
+    ("approval", "等待你的确认"),
+)
+
+
+def _workflow_date(value: Any) -> str:
+    text = str(value or "")
+    return text.replace("T", " ")[:16] if text else "—"
+
+
+def _workflow_task_file(item: dict[str, Any]) -> dict[str, Any]:
+    raw_path = item.get("task_manifest_path")
+    if not raw_path:
+        return {}
+    path = Path(str(raw_path))
+    if not path.is_file():
+        return {}
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _workflow_timeline(status: str, requested_stage: str) -> list[dict[str, str]]:
+    stage_index = {
+        "READY_FOR_CODEX": 1,
+        "CLAIMED": 1,
+        "RUNNING": 2,
+        "WAITING_FOR_USER": 5,
+        "COMPLETED": len(_WORKFLOW_TIMELINE_STAGES) + 1,
+        "FAILED": 2,
+        "STALE": 1,
+        "CANCELLED": 1,
+    }.get(status, 1)
+    if requested_stage == "PLAN_ONLY":
+        stage_index = {
+            "READY_FOR_CODEX": 1,
+            "CLAIMED": 1,
+            "RUNNING": 2,
+            "WAITING_FOR_USER": 5,
+            "COMPLETED": 4,
+            "FAILED": 2,
+            "STALE": 1,
+            "CANCELLED": 1,
+        }.get(status, stage_index)
+    result: list[dict[str, str]] = []
+    for index, (key, label) in enumerate(_WORKFLOW_TIMELINE_STAGES, start=1):
+        state = "done" if index < stage_index else "current" if index == stage_index else "upcoming"
+        if status in {"FAILED", "STALE", "CANCELLED"} and index == stage_index:
+            state = "failed"
+        result.append({"key": key, "label": label, "state": state})
+    return result
+
+
+def _workflow_task_view(
+    item: dict[str, Any],
+    editions_by_id: dict[str, dict[str, Any]],
+    current_chapter: dict[str, Any] | None,
+) -> dict[str, Any]:
+    task_file = _workflow_task_file(item)
+    status = str(item.get("status") or "DRAFT").upper()
+    handoff_type = str(item.get("handoff_type") or "").upper()
+    requested_stage = str(item.get("requested_stage") or "").upper()
+    innovation = task_file.get("innovation_control")
+    innovation = innovation if isinstance(innovation, dict) else {}
+    focus = innovation.get("focus")
+    focus_values = focus if isinstance(focus, list) else []
+    target_ordinal = task_file.get("context_chapter_ordinal")
+    if target_ordinal is None:
+        target_ordinal = task_file.get("target_chapter_ordinal")
+    if target_ordinal is None and current_chapter is not None:
+        target_ordinal = int(current_chapter["ordinal"]) + (0 if handoff_type == "REVISION" else 1)
+    selected_edition = editions_by_id.get(str(item.get("edition_id")))
+    return {
+        **item,
+        "author_type_label": _WORKFLOW_HANDOFF_LABELS.get(handoff_type, "工作任务"),
+        "author_status_label": _WORKFLOW_STATUS_LABELS.get(status, "处理中"),
+        "author_stage_label": _WORKFLOW_STAGE_LABELS.get(requested_stage, "生成任务"),
+        "edition_display_name": (
+            selected_edition.get("display_name")
+            if selected_edition
+            else str(item.get("edition_id") or "当前版本")
+        ),
+        "target_chapter_label": f"第{target_ordinal}章" if target_ordinal else "当前章节",
+        "created_at_label": _workflow_date(item.get("created_at")),
+        "innovation_level_label": _WORKFLOW_LEVEL_LABELS.get(
+            str(innovation.get("level") or ""), "默认"
+        ),
+        "innovation_focus_label": "、".join(
+            _WORKFLOW_FOCUS_LABELS.get(str(value), str(value)) for value in focus_values
+        )
+        or "自动",
+        "timeline": _workflow_timeline(status, requested_stage),
+        "next_action_label": {
+            "READY_FOR_CODEX": "复制指令给 Codex",
+            "CLAIMED": "查看准备进度",
+            "RUNNING": "查看处理进度",
+            "WAITING_FOR_USER": "处理作者请求",
+            "COMPLETED": "查看生成结果",
+            "FAILED": "查看失败原因",
+            "STALE": "重新检查上下文",
+            "CANCELLED": "查看任务记录",
+        }.get(status, "查看任务"),
+        "technical": {
+            "handoff_id": item.get("handoff_id"),
+            "requested_stage": requested_stage,
+            "edition_id": item.get("edition_id"),
+            "task_directory": item.get("task_directory"),
+            "status": status,
+        },
+    }
+
+
+def _workflow_portfolio(author_control: dict[str, Any]) -> list[dict[str, Any]]:
+    portfolio = author_control.get("portfolio")
+    portfolio = portfolio if isinstance(portfolio, dict) else {}
+    result: list[dict[str, Any]] = []
+    horizon_labels = {"SHORT": "短线", "MID": "中线", "LONG": "长线"}
+    for horizon in ("SHORT", "MID", "LONG"):
+        rows = portfolio.get(horizon) or []
+        open_count = sum(
+            1
+            for row in rows
+            if str(row.get("lifecycle_status")) not in {"DONE", "CANCELLED"}
+        )
+        active_count = sum(1 for row in rows if str(row.get("lifecycle_status")) == "ACTIVE")
+        result.append(
+            {
+                "horizon": horizon,
+                "label": horizon_labels[horizon],
+                "total": len(rows),
+                "open": open_count,
+                "active": active_count,
+                "summary": (
+                    f"{active_count} 条活跃 · {open_count} 条待推进"
+                    if open_count
+                    else "还没有作者任务"
+                ),
+            }
+        )
+    return result
+
+
+def workflow_context(
+    database: Any,
+    book_id: str,
+    *,
+    edition_id: str | None = None,
+    chapter_id: str | None = None,
+) -> dict[str, Any]:
+    database.initialize()
+    selected_edition_id = resolve_edition_id(database, book_id, edition_id)
+    with database.connect() as connection:
+        book = _book_row(connection, book_id)
+        chapters = edition_chapters(connection, book_id, selected_edition_id)
+        library_books = [
+            dict(row)
+            for row in connection.execute("SELECT * FROM books ORDER BY title, book_id")
+        ]
+    editions = [edition.model_dump(mode="json") for edition in list_editions(database, book_id)]
+    editions_by_id = {str(item["edition_id"]): item for item in editions}
+    selected_chapter = next(
+        (item for item in chapters if chapter_id and str(item["chapter_id"]) == chapter_id),
+        chapters[-1] if chapters else None,
+    )
+    current_chapter = None
+    if selected_chapter is not None:
+        status = str(selected_chapter.get("document_status") or "SOURCE").upper()
+        current_chapter = {
+            **selected_chapter,
+            "status_label": {"CANON": "原文", "SOURCE": "原文", "PROVISIONAL": "草稿"}.get(
+                status, "只读内容"
+            ),
+        }
+    author_control = author_control_view(database, book_id, selected_edition_id)
+    handoffs = list_handoffs(database, book_id, selected_edition_id)
+    workflow_tasks = [
+        _workflow_task_view(item, editions_by_id, current_chapter)
+        for item in handoffs
+        if str(item.get("handoff_type") or "").upper() in {"CONTINUATION", "REVISION"}
+    ]
+    selected_edition = editions_by_id.get(selected_edition_id, {})
     return {
         "book_id": book_id,
-        "handoffs": list_handoffs(database, book_id),
+        "book": book,
+        "library_books": library_books,
+        "chapters": chapters,
+        "current_chapter": current_chapter,
+        "edition_id": selected_edition_id,
+        "edition": selected_edition,
+        "editions": editions,
+        "handoffs": handoffs,
+        "workflow_tasks": workflow_tasks,
+        "author_control": author_control,
+        "author_tasks": author_control.get("tasks", []),
+        "author_intents": author_control.get("intents", []),
+        "portfolio": _workflow_portfolio(author_control),
         "innovation_default": load_book_innovation_control(database, book_id).model_dump(
             mode="json"
         ),

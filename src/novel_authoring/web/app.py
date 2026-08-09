@@ -68,7 +68,6 @@ from novel_authoring.web.routes.metrics import save_author_input
 from novel_authoring.web.routes.pages import (
     chapter_context,
     dashboard_context,
-    home_context,
     metric_history,
     observation_history,
     workflow_context,
@@ -403,6 +402,17 @@ def create_app(
         )
         context["csrf_token"] = app.state.csrf_token
         context["library_books"] = _library_books_for_app(app)
+        context["workflow"] = workflow_context(
+            selected_database,
+            checked_book,
+            edition_id=str(context["edition_id"]),
+            chapter_id=(
+                None
+                if context.get("selected_chapter") is None
+                else str(context["selected_chapter"]["chapter_id"])
+            ),
+        )
+        context["innovation_default"] = context["workflow"]["innovation_default"]
         return _template(templates, "workbench.html", request, context)
 
     @app.get(
@@ -431,6 +441,17 @@ def create_app(
             ) from exc
         context["csrf_token"] = app.state.csrf_token
         context["library_books"] = _library_books_for_app(app)
+        context["workflow"] = workflow_context(
+            _database_for_book(app, checked_book),
+            checked_book,
+            edition_id=str(context["edition_id"]),
+            chapter_id=(
+                None
+                if context.get("selected_chapter") is None
+                else str(context["selected_chapter"]["chapter_id"])
+            ),
+        )
+        context["innovation_default"] = context["workflow"]["innovation_default"]
         return _template(templates, "workbench.html", request, context)
 
     @app.get(
@@ -734,9 +755,15 @@ def create_app(
     async def workflow_page(request: Request, path_book_id: str) -> Any:
         checked_book = _check_id(path_book_id)
         selected_database = _database_for_book(app, checked_book)
-        context = workflow_context(selected_database, checked_book)
-        context["edition_id"] = home_context(selected_database, checked_book)["edition_id"]
+        context = workflow_context(
+            selected_database,
+            checked_book,
+            edition_id=request.query_params.get("edition_id"),
+            chapter_id=_query_id(request, "chapter_id"),
+        )
+        context["workflow"] = dict(context)
         context["csrf_token"] = app.state.csrf_token
+        context["library_books"] = _library_books_for_app(app)
         return _template(templates, "workflow.html", request, context)
 
     @app.get("/books/{path_book_id}/jobs", response_class=HTMLResponse)

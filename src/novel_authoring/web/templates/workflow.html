@@ -1,3 +1,59 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="csrf-token" content="{{ csrf_token }}"><title>Workflow Handoff</title><link rel="stylesheet" href="{{ url_for('static', path='style.css') }}"></head>
-<body><header class="topbar"><a class="brand" href="/">小说作者工作台</a><span class="muted">Workflow Handoff</span></header><main class="shell narrow"><section class="page-heading"><div><p class="eyebrow">Local File Handoff Protocol</p><h1>准备任务</h1></div></section><section class="stat-grid"><article class="panel"><h2>续写</h2><p>Web 只冻结任务并生成指令；Codex 桌面端手动领取。</p><form data-api-form method="post" action="/api/books/{{ book_id }}/handoffs/continuation"><label>requested_stage<select name="requested_stage"><option>PLAN_ONLY</option><option>DRAFT_AND_VALIDATE</option></select></label><label>Edition ID<input name="edition_id" value="{{ edition_id or '' }}"></label>{% include 'innovation_controls.html' %}<button class="button primary" type="submit">准备续写 Handoff</button></form></article><article class="panel"><h2>改写</h2><p>只进入影响审计/计划，不批准 Campaign 或启用 Edition。</p><form data-api-form method="post" action="/api/books/{{ book_id }}/handoffs/revision"><label>requested_stage<select name="requested_stage"><option>IMPACT_AND_PLAN</option></select></label><label>Edition ID<input name="edition_id" value="{{ edition_id or '' }}"></label>{% include 'innovation_controls.html' %}<button class="button primary" type="submit">准备改写 Handoff</button></form></article></section><section class="panel"><h2>已有任务</h2><p><a class="button" href="/books/{{ book_id }}/jobs">查看状态、事件与 WAITING_FOR_USER</a></p></section></main><script src="{{ url_for('static', path='app.js') }}" defer></script></body></html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{{ workflow.book.title }} · 小说工作流</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body class="workbench-body">
+  <header class="wb-topbar">
+    <a class="wb-brand" href="/books/{{ workflow.book_id }}/editions/{{ workflow.edition_id }}/workbench">Novel Authoring Workbench</a>
+    <div class="wb-breadcrumb" data-wb-breadcrumb><span>{{ workflow.book.title }}</span><span>/</span><span>小说工作流</span>{% if workflow.current_chapter %}<span>/</span><span>第{{ workflow.current_chapter.ordinal }}章</span>{% endif %}</div>
+    <div class="wb-top-actions">
+      <a class="wb-top-link" href="/library">书库 · {{ workflow.library_books|length }}</a>
+      <a class="wb-top-link" href="/books/{{ workflow.book_id }}/editions/{{ workflow.edition_id }}/workbench">返回工作台</a>
+      <a class="wb-top-link" href="/books/{{ workflow.book_id }}/jobs">任务记录</a>
+      <button class="wb-top-link" type="button" data-toggle-pane="left"><span data-pane-toggle-label>隐藏左栏</span></button>
+      <button class="wb-top-link" type="button" data-toggle-pane="right"><span data-pane-toggle-label>隐藏右栏</span></button>
+    </div>
+  </header>
+
+  <main class="wb-shell workflow-shell" data-workbench-shell data-layout-key="novel-authoring-workflow-layout" data-active-mode="continue" data-active-right-tab="context" data-active-state-tab="character">
+    <aside class="wb-pane wb-left-pane" data-pane="left" aria-label="小说章节导航">
+      <div class="wb-pane-content">
+        <div class="wb-pane-header"><div><p class="wb-kicker">创作空间</p><h1>{{ workflow.book.title }}</h1></div><button class="wb-icon-button" type="button" data-toggle-pane="left" aria-label="隐藏左栏" title="隐藏左栏"><span data-pane-toggle-icon aria-hidden="true">‹</span></button></div>
+        <div class="workflow-left-context"><span>当前章节</span><strong>{% if workflow.current_chapter %}第{{ workflow.current_chapter.ordinal }}章 · {{ workflow.current_chapter.title }}{% else %}尚未选择章节{% endif %}</strong><small>{{ workflow.edition.display_name or '原始版本' }}</small></div>
+        <nav class="wb-tree workflow-chapter-nav" aria-label="章节列表">
+          <a class="wb-tree-root wb-workbench-link" href="/books/{{ workflow.book_id }}/editions/{{ workflow.edition_id }}/workbench">⌂ <span>返回工作台</span></a>
+          <details open><summary>正文</summary><div class="wb-chapter-tree">{% for chapter in workflow.chapters %}<a class="wb-chapter-row{% if workflow.current_chapter and chapter.chapter_id == workflow.current_chapter.chapter_id %} is-selected{% endif %}" href="/books/{{ workflow.book_id }}/workflow?edition_id={{ workflow.edition_id }}&chapter_id={{ chapter.chapter_id }}"><span class="wb-chapter-number">{{ chapter.ordinal }}</span><span class="wb-chapter-title">{{ chapter.title }}</span></a>{% endfor %}</div></details>
+        </nav>
+        <div class="wb-left-footer"><span>版本</span><strong>{{ workflow.edition.display_name or '原始版本' }}</strong><span>状态</span><strong>{{ workflow.edition.status_label or '使用中' }}</strong><p class="wb-readonly-note">原文只读；本页只准备任务和作者意图。</p></div>
+      </div>
+      <div class="wb-rail" data-pane-rail="left" aria-label="左栏已收起"><button class="wb-rail-button" type="button" data-toggle-pane="left" aria-label="展开左栏" title="展开左栏"><span class="wb-pane-toggle-icon" data-pane-toggle-icon aria-hidden="true">›</span><span class="wb-visually-hidden" data-pane-toggle-label>展开左栏</span></button></div>
+    </aside>
+    <div class="wb-resizer" data-resizer="left" role="separator" aria-label="调整左栏宽度"></div>
+
+    <section class="wb-pane wb-center-pane workflow-center-pane" data-pane="center" aria-label="小说工作流配置">
+      <div class="wb-center-toolbar"><div><p class="wb-kicker">作者工作流</p><strong>准备一次清晰、可追溯的创作任务</strong></div>{% if workflow.current_chapter %}<span class="wb-anchor-chip">当前章节 · 第{{ workflow.current_chapter.ordinal }}章</span>{% endif %}</div>
+      <div class="wb-center-scroll workflow-center-scroll">{% include 'workflow_workspace.html' %}</div>
+    </section>
+
+    <div class="wb-resizer" data-resizer="right" role="separator" aria-label="调整右栏宽度"></div>
+    <aside class="wb-pane wb-right-pane workflow-right-pane" data-pane="right" aria-label="当前剧情上下文">
+      <div class="wb-pane-content">
+        <div class="wb-pane-header"><div><p class="wb-kicker">Narrative Context</p><h2>当前剧情状态</h2></div><button class="wb-icon-button" type="button" data-toggle-pane="right" aria-label="隐藏右栏" title="隐藏右栏"><span data-pane-toggle-icon aria-hidden="true">›</span></button></div>
+        <div class="workflow-right-scroll">
+          <section class="workflow-context-section"><div class="workflow-section-heading"><div><p class="workflow-kicker">当前续写位置</p><h3>{% if workflow.current_chapter %}{{ workflow.book.title }} · 第{{ workflow.current_chapter.ordinal }}章{% else %}尚未选择章节{% endif %}</h3></div></div><dl class="workflow-context-list"><dt>版本</dt><dd>{{ workflow.edition.display_name or '原始版本' }}</dd><dt>正文状态</dt><dd>{{ workflow.current_chapter.status_label if workflow.current_chapter else '只读内容' }}</dd><dt>章节数</dt><dd>{{ workflow.chapters|length }} 章</dd></dl></section>
+          <section class="workflow-context-section"><div class="workflow-section-heading"><div><p class="workflow-kicker">Narrative Portfolio</p><h3>当前剧情组合</h3></div></div><div class="workflow-portfolio-list">{% for item in workflow.portfolio %}<div class="workflow-portfolio-item"><div><span>{{ item.label }}</span><strong>{{ item.total }}</strong></div><small>{{ item.summary }}</small></div>{% endfor %}</div>{% if workflow.author_control.summary and workflow.author_control.summary.active_task_count %}<p class="workflow-attention-note">有 {{ workflow.author_control.summary.active_task_count }} 条作者任务正在推进。</p>{% else %}<p class="workflow-context-muted">还没有进行中的作者任务；可以先从作者目标开始。</p>{% endif %}</section>
+          <section class="workflow-context-section"><div class="workflow-section-heading"><div><p class="workflow-kicker">作者控制</p><h3>可推进任务</h3></div><span class="wb-state-tag wb-state-soft">规划层</span></div>{% if workflow.author_tasks %}<ul class="workflow-context-task-list">{% for task in workflow.author_tasks[:6] %}<li><strong>{{ task.title }}</strong><span>{{ task.horizon_label }} · {{ task.lifecycle_status_label }}</span></li>{% endfor %}</ul>{% else %}<p class="workflow-context-muted">暂无作者任务。作者目标会在提交后记录到规划层。</p>{% endif %}</section>
+          <section class="workflow-safety-block"><strong>边界提醒</strong><p>本页只准备 handoff、作者目标和规划输入。不会自动写入正史、批准草稿或启用改写版本。</p><details class="workflow-developer-details"><summary>技术详情</summary><dl><dt>版本标识</dt><dd>{{ workflow.edition_id }}</dd><dt>当前章节标识</dt><dd>{{ workflow.current_chapter.chapter_id if workflow.current_chapter else '—' }}</dd><dt>存储状态</dt><dd>{{ workflow.author_control.storage_status_label }}</dd></dl></details></section>
+        </div>
+      </div>
+      <div class="wb-rail" data-pane-rail="right" aria-label="右栏已收起"><button class="wb-rail-button" type="button" data-toggle-pane="right" aria-label="展开右栏" title="展开右栏"><span class="wb-pane-toggle-icon" data-pane-toggle-icon aria-hidden="true">‹</span><span class="wb-visually-hidden" data-pane-toggle-label>展开右栏</span></button></div>
+    </aside>
+  </main>
+  <script src="{{ url_for('static', path='app.js') }}" defer></script>
+</body>
+</html>
