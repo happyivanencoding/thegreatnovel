@@ -20,6 +20,15 @@ from novel_authoring.author_control.service import (
     execute_author_intent,
     execute_author_task,
 )
+from novel_authoring.author_control.source_state import (
+    SourceChapterStateDelta,
+    SourceEvidenceLocator,
+    SourceStateCategory,
+    SourceStateOperation,
+    SourceStateVerification,
+    build_source_state_projection,
+    record_source_chapter_deltas,
+)
 
 __all__ = [
     "AuthorControlHorizon",
@@ -34,4 +43,11 @@ __all__ = [
     "execute_author_command",
     "execute_author_intent",
     "execute_author_task",
+    "SourceChapterStateDelta",
+    "SourceEvidenceLocator",
+    "SourceStateCategory",
+    "SourceStateOperation",
+    "SourceStateVerification",
+    "build_source_state_projection",
+    "record_source_chapter_deltas",
 ]

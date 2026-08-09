@@ -533,7 +533,7 @@
 
   function commandContext(root) {
     return {
-      chapter_id: stateFromUrl("chapter_id") || null,
+      chapter_id: stateFromUrl("chapter_id") || root.dataset.currentChapterId || null,
       character_id: root.dataset.selectedCharacterId || stateFromUrl("character_id") || null
     };
   }
@@ -610,6 +610,48 @@
           showCommandNotice(form, result);
           if (result.result === "PLANNED") window.setTimeout(function () { window.location.reload(); }, 650);
         }).catch(function (error) { showCommandNotice(form, { result: "REJECTED", message: error.message }); });
+      });
+    });
+
+    root.querySelectorAll("[data-task-lifecycle]").forEach(function (select) {
+      select.addEventListener("change", function () {
+        var taskId = select.dataset.taskId;
+        if (!taskId) return;
+        postAuthorCommand(root, {
+          command_type: "UPDATE_TASK",
+          payload: { task_id: taskId, lifecycle_status: select.value }
+        }).then(function () { window.location.reload(); }).catch(function () {
+          window.alert("任务状态更新失败，请刷新后重试。");
+        });
+      });
+    });
+
+    root.querySelectorAll("[data-task-board-view-button]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var target = button.dataset.taskBoardViewButton;
+        root.querySelectorAll("[data-task-board-view-button]").forEach(function (item) {
+          item.classList.toggle("is-active", item === button);
+        });
+        root.querySelectorAll("[data-task-board-panel]").forEach(function (panel) {
+          panel.hidden = panel.dataset.taskBoardPanel !== target;
+        });
+      });
+    });
+
+    root.querySelectorAll("[data-item-card], .wb-item-card").forEach(function (card) {
+      card.addEventListener("click", function () {
+        var inspector = root.querySelector("[data-state-inspector]");
+        if (!inspector) return;
+        var record = {};
+        try { record = JSON.parse(card.dataset.stateRecord || "{}"); } catch (error) { record = {}; }
+        inspector.innerHTML = "";
+        var title = document.createElement("strong");
+        title.textContent = record.name || "状态记录";
+        var status = document.createElement("span");
+        status.textContent = (record.statusLabel || record.status_label || "尚未知") + " · 证据 " + ((record.source_span_ids || []).length || 0) + " 个 source span";
+        var statement = document.createElement("p");
+        statement.textContent = record.statement || "暂无说明";
+        inspector.appendChild(title); inspector.appendChild(status); inspector.appendChild(statement);
       });
     });
 

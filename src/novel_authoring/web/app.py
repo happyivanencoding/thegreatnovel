@@ -97,6 +97,7 @@ from novel_authoring.workflows.handoffs import (
 )
 
 _ID = re.compile(r"^[A-Za-z0-9._-]+$")
+_QUERY_ID = re.compile(r"^[A-Za-z0-9._:-]+$")
 
 
 def _check_id(value: str) -> str:
@@ -110,7 +111,12 @@ def _check_id(value: str) -> str:
 
 def _query_id(request: Request, name: str) -> str | None:
     value = request.query_params.get(name)
-    return _check_id(value) if value else None
+    if value and not _QUERY_ID.fullmatch(value):
+        raise HTTPException(
+            status_code=400,
+            detail={"code": "INVALID_ID", "message": "查询标识符格式无效", "details": {}},
+        )
+    return value or None
 
 
 def _error(exc: Exception) -> JSONResponse:
@@ -398,6 +404,7 @@ def create_app(
             node=request.query_params.get("node", "overview"),
             mode=request.query_params.get("mode", "continue"),
             right_tab=request.query_params.get("right_tab", "prose"),
+            state_tab=request.query_params.get("state_tab", "character"),
             character_id=_query_id(request, "character_id"),
         )
         context["csrf_token"] = app.state.csrf_token
@@ -432,6 +439,7 @@ def create_app(
                 node=request.query_params.get("node", "overview"),
                 mode=request.query_params.get("mode", "continue"),
                 right_tab=request.query_params.get("right_tab", "prose"),
+                state_tab=request.query_params.get("state_tab", "character"),
                 character_id=_query_id(request, "character_id"),
             )
         except ValueError as exc:
@@ -478,6 +486,7 @@ def create_app(
             node=request.query_params.get("node", "overview"),
             mode=request.query_params.get("mode", "continue"),
             right_tab=request.query_params.get("right_tab", "prose"),
+            state_tab=request.query_params.get("state_tab", "character"),
             character_id=_query_id(request, "character_id"),
         )
 

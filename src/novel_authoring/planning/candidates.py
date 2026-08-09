@@ -323,6 +323,15 @@ def prepare_candidate_task(
             "Python 会独立重算 InnovationRewardBreakdown，不接受 agent 自报的 reward 作为事实。",
             "先检查 Narrative Portfolio 中 PAYOFF_READY 与 overdue debt；"
             "不要为了打开新问题而免费延宕已成熟问题。",
+            "## 作者控制输入（必须显式检查）",
+            "",
+            json_dumps(
+                aggregate.get("author_policy", {}).get("author_control", {}),
+                indent=2,
+            ),
+            "",
+            "候选输出中请说明命中了哪些作者任务/意图（task_id/intent_id），"
+            "没有命中时也要说明原因；这只是规划输入，不会自动改变正史。",
             "AUTO 方向只提供推荐；若候选实际走向不同方向，必须在 Preview 中如实标注。",
             "",
             "## 三条优先线程",

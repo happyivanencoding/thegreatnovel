@@ -498,6 +498,76 @@ def _item_is_current(
     )
 
 
+def _request_source_state_hydration(
+    database: Database,
+    book_id: str,
+    edition_id: str,
+    command: AuthorStateCommand,
+) -> CommandResolution:
+    """Queue source reading work; a GET or command never mutates Canon."""
+
+    chapter_id = str(command.chapter_id or command.payload.get("chapter_id") or "").strip()
+    if not chapter_id:
+        raise ValueError("补齐章节状态需要 chapter_id")
+    database.initialize()
+    with database.connect() as connection:
+        _scope_check(connection, book_id, edition_id)
+        chapter = connection.execute(
+            "SELECT chapter_id, ordinal, title FROM chapters WHERE book_id=? AND chapter_id=?",
+            (book_id, chapter_id),
+        ).fetchone()
+        if chapter is None:
+            raise ValueError("章节不存在")
+        existing = connection.execute(
+            """
+            SELECT * FROM author_control_tasks
+            WHERE book_id=? AND edition_id=? AND task_type='SOURCE_STATE_HYDRATION'
+              AND context_chapter_id=? AND lifecycle_status NOT IN ('DONE', 'CANCELLED')
+            ORDER BY updated_at DESC, task_id DESC LIMIT 1
+            """,
+            (book_id, edition_id, chapter_id),
+        ).fetchone()
+    if existing is not None:
+        task = _task_from_row(existing)
+        return _resolution(
+            CommandResult.PLANNED,
+            "SOURCE_STATE_HYDRATION_ALREADY_QUEUED",
+            f"第{int(chapter['ordinal'])}章的故事状态补齐任务已经在队列中。",
+            allowed_actions=["PROCESS_SOURCE_STATE_HYDRATION"],
+            task=task,
+            planned_change=PlannedStateChange(
+                change_type="SOURCE_STATE_HYDRATION",
+                target_layer="AUTHOR_CONTROL",
+                subject_type="SOURCE_CHAPTER_STATE",
+                subject_id=chapter_id,
+                description=task.title,
+            ),
+        )
+    return execute_author_task(
+        database,
+        book_id,
+        edition_id,
+        title=f"补齐第{int(chapter['ordinal'])}章的故事状态",
+        task_type="SOURCE_STATE_HYDRATION",
+        description=(
+            f"读取第{int(chapter['ordinal'])}章《{chapter['title']}》并建立 Source State Delta。"
+            "只允许使用本章真实 source span；SOURCE_PARTIAL/UNKNOWN 不得作为当前状态。"
+        ),
+        horizon=AuthorControlHorizon.SHORT,
+        priority=10,
+        subject_type="SOURCE_CHAPTER_STATE",
+        subject_id=chapter_id,
+        context_chapter_id=chapter_id,
+        context_chapter_ordinal=int(chapter["ordinal"]),
+        due_chapter_ordinal=int(chapter["ordinal"]),
+        payload={
+            "chapter_id": chapter_id,
+            "chapter_ordinal": int(chapter["ordinal"]),
+            "source_state_action": "READ_SOURCE_AND_RECORD_DELTAS",
+        },
+    )
+
+
 def execute_author_command(
     database: Database,
     book_id: str,
@@ -565,6 +635,8 @@ def execute_author_command(
         if command_type == "MOVE_TASK_HORIZON":
             changes = {"horizon": payload.get("horizon")}
         return _update_task(database, book_id, edition_id, task_id, changes)
+    if command_type == "REQUEST_SOURCE_STATE_HYDRATION":
+        return _request_source_state_hydration(database, book_id, edition_id, command)
     if command_type == "CREATE_FUTURE_ITEM":
         name = str(payload.get("name") or payload.get("title") or "").strip()
         if not name:

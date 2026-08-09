@@ -7,21 +7,37 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from novel_authoring.author_control.source_state import build_source_state_projection
 from novel_authoring.canon.projection import CanonProjection, projection_from_connection
 from novel_authoring.db.database import Database
 from novel_authoring.edition import EditionWorkflowError, edition_chapters
 from novel_authoring.runtime_baseline.models import (
     BaselineCategory,
+    BaselineStatus,
     RuntimeBaseline,
     RuntimeBaselineEntry,
 )
 from novel_authoring.storage.layout import BookLayout
 
 _LAYER_LABELS = {
-    "CANON": "正史",
-    "SOURCE_BASELINE": "来源参考",
-    "SOFT_REFERENCE": "软理解参考",
+    "CANON": "正史已确认",
+    "SOURCE_VERIFIED": "✓ 原文已确认",
+    "SOURCE_PARTIAL": "原文有线索",
+    "PROVISIONAL": "当前草稿",
+    "AUTHOR_INTENT": "作者目标",
+    "SOFT_REFERENCE": "小说画像参考",
+    "UNKNOWN": "尚未知",
+    "SOURCE_BASELINE": "✓ 原文已确认",
 }
+
+_KNOWLEDGE_STATES = (
+    "KNOWN",
+    "SEEN",
+    "HEARD",
+    "SUSPECTED",
+    "MISUNDERSTOOD",
+    "UNKNOWN",
+)
 
 
 def _json_object(value: Any) -> dict[str, Any]:
@@ -186,7 +202,12 @@ def _record(
         "name": _name(value, fallback_name),
         "category": category,
         "layer": layer,
+        "layer_label": _LAYER_LABELS.get(layer, layer),
         "status": str(value.get("status") or ("CANON" if layer == "CANON" else layer)),
+        "status_label": _LAYER_LABELS.get(
+            str(value.get("status") or ("CANON" if layer == "CANON" else layer)),
+            _LAYER_LABELS.get(layer, layer),
+        ),
         "statement": str(
             value.get("statement")
             or value.get("description")
@@ -211,6 +232,126 @@ def _baseline_entries(
         owner_id = entry.attributes.get("owner_id") or entry.attributes.get("character_id")
         if entry.subject_id == character_id or owner_id == character_id:
             result.append(entry)
+    return result
+
+
+def _baseline_evidence_ordinals(
+    entry: RuntimeBaselineEntry,
+    chapter_ordinals: dict[str, int],
+    selected_ordinal: int | None,
+) -> list[int]:
+    """Return only evidence that is not from a future chapter."""
+
+    values = sorted(
+        {
+            chapter_ordinals[str(evidence.chapter_id)]
+            for evidence in entry.evidence
+            if evidence.chapter_id and str(evidence.chapter_id) in chapter_ordinals
+        }
+    )
+    if selected_ordinal is None:
+        return values
+    return [value for value in values if value <= selected_ordinal]
+
+
+def _baseline_visible(
+    entry: RuntimeBaselineEntry,
+    chapter_ordinals: dict[str, int],
+    selected_ordinal: int | None,
+) -> bool:
+    if entry.status is BaselineStatus.UNKNOWN:
+        return False
+    return bool(_baseline_evidence_ordinals(entry, chapter_ordinals, selected_ordinal))
+
+
+def _baseline_record(
+    entry: RuntimeBaselineEntry,
+    *,
+    category: str,
+    chapter_ordinals: dict[str, int],
+    selected_ordinal: int | None,
+) -> dict[str, Any]:
+    visible_evidence = [
+        evidence
+        for evidence in entry.evidence
+        if evidence.chapter_id
+        and str(evidence.chapter_id) in chapter_ordinals
+        and (
+            selected_ordinal is None
+            or chapter_ordinals[str(evidence.chapter_id)] <= selected_ordinal
+        )
+    ]
+    layer = entry.status.value
+    return {
+        "record_id": f"baseline:{entry.entry_id}",
+        "name": entry.name,
+        "category": category,
+        "layer": layer,
+        "layer_label": _LAYER_LABELS[layer],
+        "status": layer,
+        "status_label": _LAYER_LABELS[layer],
+        "statement": entry.statement,
+        "attributes": [
+            {"label": str(key), "value": str(value)}
+            for key, value in entry.attributes.items()
+        ],
+        "source": "Runtime Baseline",
+        "baseline_entry_id": entry.entry_id,
+        "subject_id": entry.subject_id,
+        "source_span_ids": [
+            span_id
+            for evidence in visible_evidence
+            for span_id in evidence.source_span_ids
+        ],
+        "evidence": [evidence.model_dump(mode="json") for evidence in visible_evidence],
+        "last_confirmed": max(
+            (chapter_ordinals[str(evidence.chapter_id)] for evidence in visible_evidence),
+            default=None,
+        ),
+        "verification_note": (
+            "当前状态只采用本书原文的 SOURCE_VERIFIED 证据。"
+            if layer == "SOURCE_VERIFIED"
+            else "原文有线索，但尚未达到可操作的 SOURCE_VERIFIED。"
+        ),
+    }
+
+
+def _baseline_entries_at_chapter(
+    baseline: RuntimeBaseline | None,
+    category: BaselineCategory,
+    *,
+    chapter_ordinals: dict[str, int],
+    selected_ordinal: int | None,
+    character_id: str | None = None,
+    include_generic: bool = False,
+) -> list[tuple[RuntimeBaselineEntry, dict[str, Any]]]:
+    if baseline is None:
+        return []
+    result: list[tuple[RuntimeBaselineEntry, dict[str, Any]]] = []
+    for entry in baseline.entries:
+        if entry.category is not category or not _baseline_visible(
+            entry, chapter_ordinals, selected_ordinal
+        ):
+            continue
+        owner_id = entry.attributes.get("owner_id") or entry.attributes.get("character_id")
+        if (
+            character_id
+            and not include_generic
+            and entry.subject_id != character_id
+            and owner_id != character_id
+        ):
+            continue
+        result.append(
+            (
+                entry,
+                _baseline_record(
+                    entry,
+                    category=category.value,
+                    chapter_ordinals=chapter_ordinals,
+                    selected_ordinal=selected_ordinal,
+                ),
+            )
+        )
     return result
 
 
@@ -287,6 +428,9 @@ def _character_options(
     projection: CanonProjection,
     baseline: RuntimeBaseline | None,
     soft: dict[str, Any],
+    *,
+    chapter_ordinals: dict[str, int],
+    selected_ordinal: int | None,
 ) -> list[dict[str, Any]]:
     options: dict[str, dict[str, Any]] = {}
 
@@ -297,6 +441,7 @@ def _character_options(
                 "name": name,
                 "layer": layer,
                 "layer_label": _LAYER_LABELS.get(layer, "参考资料"),
+                "status_label": _LAYER_LABELS.get(layer, layer),
                 "description": description,
                 "is_selectable": True,
             }
@@ -319,11 +464,13 @@ def _character_options(
             )
     if baseline is not None:
         for entry in baseline.entries:
-            if entry.category is BaselineCategory.CHARACTER:
+            if entry.category is BaselineCategory.CHARACTER and _baseline_visible(
+                entry, chapter_ordinals, selected_ordinal
+            ):
                 add(
                     str(entry.subject_id or entry.entry_id),
                     entry.name,
-                    "SOURCE_BASELINE",
+                    entry.status.value,
                     entry.statement,
                 )
     for node in soft.get("graphs", {}).get("characters", {}).get("nodes", []):
@@ -351,6 +498,9 @@ def _character_state(
     projection: CanonProjection,
     baseline: RuntimeBaseline | None,
     selected: dict[str, Any] | None,
+    *,
+    chapter_ordinals: dict[str, int],
+    selected_ordinal: int | None,
 ) -> dict[str, Any]:
     if selected is None:
         return {
@@ -376,28 +526,53 @@ def _character_state(
             for entry in (baseline.entries if baseline is not None else [])
             if entry.category is BaselineCategory.CHARACTER
             and str(entry.subject_id or entry.entry_id) == character_id
+            and _baseline_visible(entry, chapter_ordinals, selected_ordinal)
         ),
         None,
     )
     if state is None:
+        if baseline_entry is not None:
+            source = _baseline_record(
+                baseline_entry,
+                category="character",
+                chapter_ordinals=chapter_ordinals,
+                selected_ordinal=selected_ordinal,
+            )
+            return {
+                "available": True,
+                "status": source["status"],
+                "status_label": source["status_label"],
+                "layer": source["layer"],
+                "character_id": character_id,
+                "name": selected["name"],
+                "description": selected.get("description") or baseline_entry.statement,
+                "attributes": source["attributes"],
+                "source": "Runtime Baseline",
+                "evidence": source["evidence"],
+                "message": (
+                    "这是截至所选章节、由本书原文确认的角色状态；"
+                    "逐章 Canon 状态尚未建立，未确认字段保持未知。"
+                ),
+            }
         return {
             "available": False,
             "status": selected["layer"],
-            "status_label": "只有参考资料",
+            "status_label": _LAYER_LABELS.get(selected["layer"], "尚未知"),
             "character_id": character_id,
             "name": selected["name"],
             "description": selected.get("description")
             or (baseline_entry.statement if baseline_entry else ""),
             "attributes": [],
             "message": (
-                "当前角色还没有逐章正史状态；下面的资料只能作为参考，"
-                "不能当作当前背包或数值。"
+                "当前角色还没有可回指所选章节的状态证据；"
+                "软理解参考不能当作当前背包或数值。"
             ),
         }
     return {
         "available": True,
         "status": "CANON",
-        "status_label": "正史状态",
+        "status_label": _LAYER_LABELS["CANON"],
+        "layer": "CANON",
         "character_id": character_id,
         "name": selected["name"],
         "description": str(entity.get("description") or ""),
@@ -407,10 +582,34 @@ def _character_state(
     }
 
 
+def _source_records_for_character(
+    source_projection: dict[str, Any],
+    categories: set[str],
+    character_id: str,
+) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    records = source_projection.get("records", {})
+    if not isinstance(records, dict):
+        return result
+    for category in categories:
+        for record in records.get(category, []):
+            if not isinstance(record, dict):
+                continue
+            if str(record.get("subject_id") or "") not in {"", character_id}:
+                continue
+            result.append(dict(record))
+    return result
+
+
 def _projection_items(
     projection: CanonProjection,
+    baseline: RuntimeBaseline | None,
     selected: dict[str, Any] | None,
     state: dict[str, Any],
+    *,
+    chapter_ordinals: dict[str, int],
+    selected_ordinal: int | None,
+    source_projection: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     if selected is None:
         return [], []
@@ -461,6 +660,46 @@ def _projection_items(
                     category="equipment",
                 )
             )
+    if baseline is not None or source_projection.get("available"):
+        source_items = _source_records_for_character(
+            source_projection, {"ITEM", "RESOURCE"}, character_id
+        )
+        source_equipment = _source_records_for_character(
+            source_projection, {"EQUIPMENT"}, character_id
+        )
+        for record in [*source_items, *source_equipment]:
+            if record.get("status") != "SOURCE_VERIFIED":
+                continue
+            target = equipment if record.get("category") == "equipment" else inventory
+            if not any(item.get("record_id") == record.get("record_id") for item in target):
+                target.append(record)
+        for entry, record in [
+            *_baseline_entries_at_chapter(
+                baseline,
+                BaselineCategory.ITEM,
+                chapter_ordinals=chapter_ordinals,
+                selected_ordinal=selected_ordinal,
+                character_id=character_id,
+            ),
+            *_baseline_entries_at_chapter(
+                baseline,
+                BaselineCategory.RESOURCE,
+                chapter_ordinals=chapter_ordinals,
+                selected_ordinal=selected_ordinal,
+                character_id=character_id,
+            ),
+        ]:
+            if entry.status is BaselineStatus.SOURCE_VERIFIED:
+                inventory.append(record)
+        for entry, record in _baseline_entries_at_chapter(
+            baseline,
+            BaselineCategory.EQUIPMENT,
+            chapter_ordinals=chapter_ordinals,
+            selected_ordinal=selected_ordinal,
+            character_id=character_id,
+        ):
+            if entry.status is BaselineStatus.SOURCE_VERIFIED:
+                equipment.append(record)
     return inventory, equipment
 
 
@@ -468,6 +707,10 @@ def _abilities(
     projection: CanonProjection,
     baseline: RuntimeBaseline | None,
     selected: dict[str, Any] | None,
+    *,
+    chapter_ordinals: dict[str, int],
+    selected_ordinal: int | None,
+    source_projection: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     if selected is None:
         return [], []
@@ -484,31 +727,39 @@ def _abilities(
         if _owner_matches(dict(value), character_id)
     ]
     source: list[dict[str, Any]] = []
-    for entry in _baseline_entries(baseline, BaselineCategory.CAPABILITY, character_id):
-        source.append(
-            {
-                "record_id": f"baseline:{entry.entry_id}",
-                "name": entry.name,
-                "category": "capability",
-                "layer": "SOURCE_BASELINE",
-                "status": entry.status.value,
-                "status_label": "来源参考",
-                "statement": entry.statement,
-                "attributes": [
-                    {"label": key, "value": value} for key, value in entry.attributes.items()
-                ],
-            }
+    for entry, record in _baseline_entries_at_chapter(
+        baseline,
+        BaselineCategory.CAPABILITY,
+        chapter_ordinals=chapter_ordinals,
+        selected_ordinal=selected_ordinal,
+        character_id=character_id,
+    ):
+        source.append(record)
+        if entry.status is BaselineStatus.SOURCE_VERIFIED:
+            canon.append(record)
+    source.extend(
+        record
+        for record in _source_records_for_character(
+            source_projection, {"CAPABILITY"}, character_id
         )
+        if record.get("status") == "SOURCE_VERIFIED"
+    )
     return canon, source
 
 
 def _knowledge(
-    projection: CanonProjection, selected: dict[str, Any] | None
+    projection: CanonProjection,
+    baseline: RuntimeBaseline | None,
+    selected: dict[str, Any] | None,
+    *,
+    chapter_ordinals: dict[str, int],
+    selected_ordinal: int | None,
+    source_projection: dict[str, Any],
 ) -> list[dict[str, Any]]:
     if selected is None:
         return []
     character_id = str(selected["character_id"])
-    return [
+    result = [
         _record(
             str(record_id),
             dict(value),
@@ -519,10 +770,36 @@ def _knowledge(
         for record_id, value in projection.knowledge.items()
         if str(value.get("character_id") or value.get("from_entity_id") or "") == character_id
     ]
+    for record in _source_records_for_character(source_projection, {"KNOWLEDGE"}, character_id):
+        if record.get("status") == "SOURCE_VERIFIED":
+            result.append(record)
+    for entry, record in _baseline_entries_at_chapter(
+        baseline,
+        BaselineCategory.KNOWLEDGE,
+        chapter_ordinals=chapter_ordinals,
+        selected_ordinal=selected_ordinal,
+        character_id=None,
+        include_generic=True,
+    ):
+        if entry.status is not BaselineStatus.SOURCE_VERIFIED:
+            continue
+        result.append(
+            {
+                **record,
+                "knowledge_state": "UNKNOWN",
+                "knowledge_state_label": "尚未确认谁知道",
+                "who_knows": [],
+                "visibility_status": "UNKNOWN",
+            }
+        )
+    return result
 
 
 def _relationships(
-    projection: CanonProjection, selected: dict[str, Any] | None
+    projection: CanonProjection,
+    selected: dict[str, Any] | None,
+    *,
+    source_projection: dict[str, Any],
 ) -> list[dict[str, Any]]:
     if selected is None:
         return []
@@ -545,6 +822,21 @@ def _relationships(
                 category="relationship",
             )
         )
+    source_records = source_projection.get("records")
+    if not isinstance(source_records, dict):
+        return result
+    for record in source_records.get("RELATIONSHIP", []):
+        if not isinstance(record, dict) or record.get("status") != "SOURCE_VERIFIED":
+            continue
+        raw_value = record.get("raw")
+        raw: dict[str, Any] = raw_value if isinstance(raw_value, dict) else {}
+        endpoints = {
+            str(record.get("subject_id") or ""),
+            str(raw.get("from_entity_id") or ""),
+            str(raw.get("to_entity_id") or ""),
+        }
+        if character_id in endpoints:
+            result.append(dict(record))
     return result
 
 
@@ -596,8 +888,11 @@ def build_story_game_state(
             (item for item in chapters if chapter_id and str(item["chapter_id"]) == chapter_id),
             chapters[-1] if chapters else None,
         )
-        anchors = _chapter_anchors(connection, book_id, edition_id, chapters)
+        chapter_ordinals = {
+            str(item["chapter_id"]): int(item["ordinal"]) for item in chapters
+        }
         ordinal = int(selected_chapter["ordinal"]) if selected_chapter is not None else None
+        anchors = _chapter_anchors(connection, book_id, edition_id, chapters)
         after_event_seq = anchors.get(ordinal) if ordinal is not None else None
         before_event_seq = (
             max(
@@ -618,39 +913,131 @@ def build_story_game_state(
             )
             availability = "CANON_EVENT_PROJECTION"
         baseline = _read_runtime_baseline(connection, book_id, edition_id)
+        source_projection = build_source_state_projection(
+            connection,
+            book_id,
+            edition_id,
+            chapter_id=(
+                None if selected_chapter is None else str(selected_chapter["chapter_id"])
+            ),
+            chapter_ordinal=ordinal,
+        )
         workspace_root = _workspace_root(connection, book_id)
         soft = _soft_atlas(workspace_root, book_id, edition_id)
 
-    options = _character_options(projection, baseline, soft)
+    options = _character_options(
+        projection,
+        baseline,
+        soft,
+        chapter_ordinals=chapter_ordinals,
+        selected_ordinal=ordinal,
+    )
     selected = _selected_character(options, character_id)
-    selected_state = _character_state(projection, baseline, selected)
+    selected_state = _character_state(
+        projection,
+        baseline,
+        selected,
+        chapter_ordinals=chapter_ordinals,
+        selected_ordinal=ordinal,
+    )
     raw_state_value = selected_state.get("raw")
     raw_state: dict[str, Any] = raw_state_value if isinstance(raw_state_value, dict) else {}
-    inventory, equipment = _projection_items(projection, selected, raw_state)
-    canon_abilities, source_abilities = _abilities(projection, baseline, selected)
-    knowledge = _knowledge(projection, selected)
-    relationships = _relationships(projection, selected)
+    inventory, equipment = _projection_items(
+        projection,
+        baseline,
+        selected,
+        raw_state,
+        chapter_ordinals=chapter_ordinals,
+        selected_ordinal=ordinal,
+        source_projection=source_projection,
+    )
+    canon_abilities, source_abilities = _abilities(
+        projection,
+        baseline,
+        selected,
+        chapter_ordinals=chapter_ordinals,
+        selected_ordinal=ordinal,
+        source_projection=source_projection,
+    )
+    knowledge = _knowledge(
+        projection,
+        baseline,
+        selected,
+        chapter_ordinals=chapter_ordinals,
+        selected_ordinal=ordinal,
+        source_projection=source_projection,
+    )
+    relationships = _relationships(
+        projection, selected, source_projection=source_projection
+    )
     soft_relationships = _soft_relationships(soft, selected)
+    baseline_visible = [
+        entry
+        for entry in (baseline.entries if baseline is not None else [])
+        if _baseline_visible(entry, chapter_ordinals, ordinal)
+    ]
+    unknown_abilities = [
+        _baseline_record(
+            entry,
+            category="capability",
+            chapter_ordinals=chapter_ordinals,
+            selected_ordinal=ordinal,
+        )
+        for entry in (baseline.entries if baseline is not None else [])
+        if entry.category is BaselineCategory.CAPABILITY
+        and entry.status is BaselineStatus.UNKNOWN
+        and selected is not None
+        and (
+            str(entry.subject_id or "") == str(selected["character_id"])
+            or entry.attributes.get("character_id") == str(selected["character_id"])
+        )
+    ]
+    source_factions = [
+        dict(record)
+        for record in source_projection.get("records", {}).get("FACTION", [])
+        if isinstance(record, dict) and record.get("status") == "SOURCE_VERIFIED"
+    ]
     factions = [
         {
             "node_id": node.get("node_id"),
             "name": node.get("name"),
             "description": node.get("description"),
             "layer": "SOFT_REFERENCE",
+            "layer_label": _LAYER_LABELS["SOFT_REFERENCE"],
         }
         for node in soft.get("graphs", {}).get("factions", {}).get("nodes", [])
         if isinstance(node, dict)
     ]
+    factions = [*source_factions, *factions]
+    source_ready = bool(source_projection.get("available") or baseline_visible)
+    if after_event_seq is not None:
+        availability = "CANON_EVENT_PROJECTION"
+    elif source_ready:
+        availability = "SOURCE_CHAPTER_STATE_PROJECTION"
+    else:
+        availability = "SOURCE_STATE_HYDRATION_REQUIRED"
+    availability_labels = {
+        "CANON_EVENT_PROJECTION": "正史已确认",
+        "SOURCE_CHAPTER_STATE_PROJECTION": "原文状态（部分）",
+        "SOURCE_STATE_HYDRATION_REQUIRED": "正在补齐章节状态",
+    }
+    messages = {
+        "CANON_EVENT_PROJECTION": (
+            "当前内容按选定章节的正史事件投影；原文状态和作者规划仍以独立层展示。"
+        ),
+        "SOURCE_CHAPTER_STATE_PROJECTION": (
+            "当前状态来自本书原文证据和 Source State 投影；尚未建立逐章正史状态的字段保持未知，"
+            "不会把后续章节资料倒灌到本章。"
+        ),
+        "SOURCE_STATE_HYDRATION_REQUIRED": (
+            "正在补齐这一章的故事状态；当前没有可回指本章的原文状态证据，"
+            "系统不会拿最新章节状态冒充本章状态。"
+        ),
+    }
     return {
         "availability": availability,
-        "availability_label": "已建立正史时间点"
-        if availability == "CANON_EVENT_PROJECTION"
-        else "尚无正史时间点",
-        "message": (
-            "当前内容按选定章节的正史事件投影。任务和作者意图在下方独立展示。"
-            if availability == "CANON_EVENT_PROJECTION"
-            else "当前章节没有可追溯的正史事件锚点；系统不会拿最新状态冒充本章状态。"
-        ),
+        "availability_label": availability_labels[availability],
+        "message": messages[availability],
         "chapter": (
             {
                 "chapter_id": str(selected_chapter["chapter_id"]),
@@ -664,6 +1051,8 @@ def build_story_game_state(
             "before_event_seq": before_event_seq or None,
             "after_event_seq": after_event_seq,
             "historical": after_event_seq is not None,
+            "source_projection_available": source_ready,
+            "source_projection_status": source_projection.get("projection_status"),
         },
         "characters": options,
         "selected_character_id": selected["character_id"] if selected else None,
@@ -672,10 +1061,40 @@ def build_story_game_state(
         "equipment": equipment,
         "abilities": canon_abilities,
         "source_ability_references": source_abilities,
+        "unknown_abilities": unknown_abilities,
         "knowledge": knowledge,
+        "knowledge_states": list(_KNOWLEDGE_STATES),
         "relationships": relationships,
         "soft_relationships": soft_relationships,
         "factions": factions,
+        "source_state": {
+            "status": "READY" if source_ready else "MISSING",
+            "status_label": "原文状态已建立" if source_ready else "正在补齐这一章的故事状态",
+            "layer": "SOURCE_VERIFIED" if source_ready else "UNKNOWN",
+            "layer_label": (
+                _LAYER_LABELS["SOURCE_VERIFIED"]
+                if source_ready
+                else _LAYER_LABELS["UNKNOWN"]
+            ),
+            "message": messages[availability],
+            "ledger": source_projection,
+            "baseline": {
+                "available": baseline is not None,
+                "boundary_chapter": (
+                    None if baseline is None else baseline.manifest.boundary_chapter
+                ),
+                "visible_entry_count": len(baseline_visible),
+                "verified_entry_count": sum(
+                    1
+                    for entry in baseline_visible
+                    if entry.status is BaselineStatus.SOURCE_VERIFIED
+                ),
+                "partial_entry_count": sum(
+                    1 for entry in baseline_visible if entry.status is BaselineStatus.SOURCE_PARTIAL
+                ),
+            },
+            "hydration": source_projection.get("hydration", {}),
+        },
         "soft_reference": soft,
         "safety": {
             "canon_mutation_allowed": False,
@@ -690,7 +1109,10 @@ def build_story_game_state(
                 "resources": len(projection.resources),
                 "capabilities": len(projection.capabilities),
                 "knowledge": len(projection.knowledge),
-                "relationships": len(projection.relationships),
+            "relationships": len(projection.relationships),
+                "source_state_deltas": int(source_projection.get("ledger_delta_count", 0)),
+                "source_verified_deltas": int(source_projection.get("verified_delta_count", 0)),
+                "baseline_visible_entries": len(baseline_visible),
             },
         },
     }

@@ -40,6 +40,16 @@ WORKBENCH_MODES: tuple[str, ...] = (
     "state",
 )
 WORKBENCH_RIGHT_TABS: tuple[str, ...] = ("prose", "state", "next")
+WORKBENCH_STATE_TABS: tuple[str, ...] = (
+    "character",
+    "inventory",
+    "abilities",
+    "knowledge",
+    "world",
+    "factions",
+    "relationships",
+    "tasks",
+)
 
 MODE_LABELS = {
     "continue": "续写",
@@ -777,6 +787,7 @@ def build_workbench_context(
     node: str = "overview",
     mode: str = "continue",
     right_tab: str = "prose",
+    state_tab: str = "character",
     character_id: str | None = None,
 ) -> dict[str, Any]:
     """Build one Workbench read model without initializing or mutating the DB."""
@@ -826,6 +837,7 @@ def build_workbench_context(
         if selected_node not in valid_profile_nodes and selected_node not in {
             "overview",
             "chapter",
+            "state",
         }:
             selected_node = "overview"
         if (selected_chapter is not None or selected_draft is not None) and node == "chapter":
@@ -861,6 +873,9 @@ def build_workbench_context(
     if selected_anchor is None and latest_chapter is not None:
         selected_anchor = int(latest_chapter["ordinal"])
     active_mode = _normalise_choice(mode, WORKBENCH_MODES, "continue")
+    active_state_tab = _normalise_choice(
+        state_tab, WORKBENCH_STATE_TABS, "character"
+    )
     story_game_state: dict[str, Any] | None = None
     author_control: dict[str, Any] | None = None
     if active_mode == "state":
@@ -887,12 +902,16 @@ def build_workbench_context(
         "active_left_node": selected_node,
         "active_main_mode": active_mode,
         "active_right_tab": _normalise_choice(right_tab, WORKBENCH_RIGHT_TABS, "prose"),
+        "state_tab": active_state_tab,
         "selected_character_id": (
             None if story_game_state is None else story_game_state.get("selected_character_id")
         ),
         "mode_labels": MODE_LABELS,
         "right_tab_labels": RIGHT_TAB_LABELS,
         "selected_chapter": selected_chapter,
+        "selected_chapter_id": (
+            None if selected_chapter is None else str(selected_chapter["chapter_id"])
+        ),
         "selected_draft": selected_draft,
         "chapter_context": _public_chapter_context(chapter_context),
         "selected_chapter_anchor": selected_anchor,
@@ -916,5 +935,6 @@ __all__ = [
     "PROFILE_DIMENSIONS",
     "WORKBENCH_MODES",
     "WORKBENCH_RIGHT_TABS",
+    "WORKBENCH_STATE_TABS",
     "build_workbench_context",
 ]

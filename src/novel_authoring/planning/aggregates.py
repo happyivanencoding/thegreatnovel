@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sqlite3
 from typing import Any
 
@@ -123,6 +124,98 @@ def _validate_run_references(
                 )
 
 
+def _author_control_policy(
+    connection: sqlite3.Connection, book_id: str, edition_id: str
+) -> dict[str, Any]:
+    """Freeze active author tasks/intents into the planning input."""
+
+    tables = {
+        str(row[0])
+        for row in connection.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' "
+            "AND name IN ('author_control_tasks', 'author_control_intents')"
+        ).fetchall()
+    }
+    tasks: list[dict[str, Any]] = []
+    intents: list[dict[str, Any]] = []
+    if "author_control_tasks" in tables:
+        rows = connection.execute(
+            """
+            SELECT task_id, title, task_type, description, horizon,
+                   lifecycle_status, priority, subject_type, subject_id,
+                   context_chapter_id, context_chapter_ordinal, due_chapter_ordinal,
+                   payload_json
+            FROM author_control_tasks
+            WHERE book_id=? AND edition_id=? AND lifecycle_status NOT IN ('DONE', 'CANCELLED')
+            ORDER BY priority, horizon, updated_at DESC, task_id
+            """,
+            (book_id, edition_id),
+        ).fetchall()
+        for row in rows:
+            try:
+                payload = json.loads(str(row["payload_json"] or "{}"))
+            except (TypeError, ValueError):
+                payload = {}
+            tasks.append(
+                {
+                    "task_id": str(row["task_id"]),
+                    "title": str(row["title"]),
+                    "task_type": str(row["task_type"]),
+                    "description": str(row["description"] or ""),
+                    "horizon": str(row["horizon"]),
+                    "lifecycle_status": str(row["lifecycle_status"]),
+                    "priority": int(row["priority"]),
+                    "subject_type": row["subject_type"],
+                    "subject_id": row["subject_id"],
+                    "context_chapter_id": row["context_chapter_id"],
+                    "context_chapter_ordinal": row["context_chapter_ordinal"],
+                    "due_chapter_ordinal": row["due_chapter_ordinal"],
+                    "payload": payload if isinstance(payload, dict) else {},
+                }
+            )
+    if "author_control_intents" in tables:
+        rows = connection.execute(
+            """
+            SELECT intent_id, intent_type, subject_type, subject_id, title,
+                   description, horizon, priority, status, target_chapter_id, payload_json
+            FROM author_control_intents
+            WHERE book_id=? AND edition_id=? AND status NOT IN ('COMPLETED', 'CANCELLED')
+            ORDER BY priority, horizon, updated_at DESC, intent_id
+            """,
+            (book_id, edition_id),
+        ).fetchall()
+        for row in rows:
+            try:
+                payload = json.loads(str(row["payload_json"] or "{}"))
+            except (TypeError, ValueError):
+                payload = {}
+            intents.append(
+                {
+                    "intent_id": str(row["intent_id"]),
+                    "intent_type": str(row["intent_type"]),
+                    "subject_type": str(row["subject_type"]),
+                    "subject_id": row["subject_id"],
+                    "title": str(row["title"]),
+                    "description": str(row["description"] or ""),
+                    "horizon": str(row["horizon"]),
+                    "priority": int(row["priority"]),
+                    "status": str(row["status"]),
+                    "target_chapter_id": row["target_chapter_id"],
+                    "payload": payload if isinstance(payload, dict) else {},
+                }
+            )
+    return {
+        "tasks": tasks,
+        "intents": intents,
+        "target_hits": {
+            "task_count": len(tasks),
+            "intent_count": len(intents),
+            "priority_order": "priority asc, horizon, updated_at desc",
+        },
+        "rule": "候选必须读取作者任务/意图；命中只作为可追溯规划输入，不改变评分硬门。",
+    }
+
+
 def build_planning_aggregate(
     database: Database,
     book_id: str,
@@ -154,6 +247,10 @@ def build_planning_aggregate(
     horizon_hash = None if current_atlas is None else str(current_atlas["horizon_hash"] or "")
     with database.connect() as connection:
         projection = projection_from_connection(connection, book_id, edition_id)
+        policy = dict(author_policy or {})
+        policy["author_control"] = _author_control_policy(
+            connection, book_id, edition_id
+        )
         if edition_state_run_id is None:
             state = _latest_run_ids(connection, book_id, edition_id, "EDITION_STATE", limit=1)
             edition_state_run_id = state[0] if state else None
@@ -231,7 +328,7 @@ def build_planning_aggregate(
         promise_run_ids=list(promises),
         thread_run_ids=list(threads),
         metric_run_ids=all_run_ids,
-        author_policy=dict(author_policy or {}),
+        author_policy=policy,
         registry_hash=registry_hash,
         config_hash=config_hash,
         projection_hash=projection.sha256(),
