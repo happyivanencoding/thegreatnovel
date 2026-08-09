@@ -316,7 +316,8 @@
       leftCollapsed: root.classList.contains("is-left-collapsed"),
       rightCollapsed: root.classList.contains("is-right-collapsed"),
       mainMode: root.dataset.activeMode || "continue",
-      rightTab: root.dataset.activeRightTab || "prose"
+      rightTab: root.dataset.activeRightTab || "prose",
+      stateTab: root.dataset.activeStateTab || "character"
     };
     try { window.localStorage.setItem(layoutKey, JSON.stringify(value)); } catch (error) { /* local persistence is optional */ }
   }
@@ -353,8 +354,12 @@
       var saved = readLayout();
       var mode = root.dataset.activeMode || saved.mainMode || "continue";
       var rightTab = root.dataset.activeRightTab || saved.rightTab || "prose";
+      var stateTab = root.dataset.activeStateTab || saved.stateTab || "character";
+      var characterId = root.dataset.selectedCharacterId || stateFromUrl("character_id") || "";
       if (!url.searchParams.get("mode")) url.searchParams.set("mode", mode);
       if (!url.searchParams.get("right_tab")) url.searchParams.set("right_tab", rightTab);
+      if (!url.searchParams.get("state_tab")) url.searchParams.set("state_tab", stateTab);
+      if (!url.searchParams.get("character_id") && characterId) url.searchParams.set("character_id", characterId);
       return url.href;
     } catch (error) { return href; }
   }
@@ -520,6 +525,177 @@
     });
   }
 
+  function authorControlPath(root) {
+    return "/api/books/" + encodeURIComponent(root.dataset.bookId || "") + "/editions/" + encodeURIComponent(root.dataset.editionId || "") + "/author-commands";
+  }
+
+  function commandContext(root) {
+    return {
+      chapter_id: stateFromUrl("chapter_id") || null,
+      character_id: root.dataset.selectedCharacterId || stateFromUrl("character_id") || null
+    };
+  }
+
+  function showCommandNotice(form, result) {
+    var old = form.querySelector("[data-command-notice]");
+    if (old) old.remove();
+    var notice = document.createElement("p");
+    notice.dataset.commandNotice = "true";
+    notice.className = "wb-command-notice" + (result.result === "REJECTED" ? " is-rejected" : "");
+    notice.textContent = (result.result === "REJECTED" ? "已拦截：" : "已记录：") + (result.message || "命令已处理");
+    if (result.allowed_actions && result.allowed_actions.length) {
+      notice.textContent += " 可选：" + result.allowed_actions.join("、");
+    }
+    form.appendChild(notice);
+  }
+
+  function commandPayload(form, commandType) {
+    var payload = {};
+    form.querySelectorAll("input[name], select[name], textarea[name]").forEach(function (field) {
+      if (field.value !== "") payload[field.name] = field.value;
+    });
+    return { command_type: commandType, payload: payload };
+  }
+
+  function postAuthorCommand(root, command) {
+    var context = commandContext(root);
+    command.chapter_id = context.chapter_id;
+    command.character_id = context.character_id;
+    return fetch(authorControlPath(root), {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken() },
+      body: JSON.stringify(command)
+    }).then(function (response) {
+      return response.json().then(function (body) {
+        if (!response.ok) throw new Error((body.error && body.error.message) || "作者命令失败");
+        return body;
+      });
+    });
+  }
+
+  function initStateTabs(root) {
+    var buttons = root.querySelectorAll("[data-wb-state-tab]");
+    if (!buttons.length) return;
+    var activate = function (target, persist) {
+      var matched = false;
+      buttons.forEach(function (button) {
+        var active = button.dataset.wbStateTab === target;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-selected", active ? "true" : "false");
+        if (active) matched = true;
+      });
+      if (!matched) target = "character";
+      root.querySelectorAll("[data-wb-state-panel]").forEach(function (panel) {
+        panel.hidden = panel.dataset.wbStatePanel !== target;
+      });
+      root.dataset.activeStateTab = target;
+      if (persist) {
+        setWorkbenchQuery("state_tab", target);
+        saveLayout(root);
+      }
+    };
+    buttons.forEach(function (button) {
+      button.addEventListener("click", function () { activate(button.dataset.wbStateTab, true); });
+    });
+    var saved = readLayout();
+    activate(stateFromUrl("state_tab") || saved.stateTab || "character", false);
+
+    root.querySelectorAll("[data-author-command-form]").forEach(function (form) {
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var command = commandPayload(form, form.dataset.commandType || "CREATE_TASK");
+        postAuthorCommand(root, command).then(function (result) {
+          showCommandNotice(form, result);
+          if (result.result === "PLANNED") window.setTimeout(function () { window.location.reload(); }, 650);
+        }).catch(function (error) { showCommandNotice(form, { result: "REJECTED", message: error.message }); });
+      });
+    });
+
+    var draggingTask = null;
+    root.querySelectorAll("[data-author-task-id]").forEach(function (card) {
+      card.addEventListener("dragstart", function (event) {
+        draggingTask = card.dataset.authorTaskId;
+        if (event.dataTransfer) event.dataTransfer.setData("text/plain", draggingTask);
+      });
+    });
+    root.querySelectorAll("[data-author-item-id]").forEach(function (card) {
+      card.addEventListener("dragstart", function (event) {
+        if (event.dataTransfer) event.dataTransfer.setData("text/plain", card.dataset.authorItemId);
+      });
+    });
+    root.querySelectorAll("[data-task-horizon-drop]").forEach(function (target) {
+      target.addEventListener("dragover", function (event) { event.preventDefault(); target.classList.add("is-drag-over"); });
+      target.addEventListener("dragleave", function () { target.classList.remove("is-drag-over"); });
+      target.addEventListener("drop", function (event) {
+        event.preventDefault();
+        target.classList.remove("is-drag-over");
+        var taskId = draggingTask || (event.dataTransfer && event.dataTransfer.getData("text/plain"));
+        if (!taskId) return;
+        postAuthorCommand(root, { command_type: "MOVE_TASK_HORIZON", payload: { task_id: taskId, horizon: target.dataset.taskHorizonDrop } })
+          .then(function () { window.location.reload(); })
+          .catch(function () { window.alert("任务跨度调整失败，请刷新后重试。"); });
+      });
+    });
+    root.querySelectorAll("[data-drop-target]").forEach(function (target) {
+      target.addEventListener("dragover", function (event) { event.preventDefault(); target.classList.add("is-drag-over"); });
+      target.addEventListener("dragleave", function () { target.classList.remove("is-drag-over"); });
+      target.addEventListener("drop", function (event) {
+        event.preventDefault();
+        target.classList.remove("is-drag-over");
+        var itemId = event.dataTransfer && event.dataTransfer.getData("text/plain");
+        if (!itemId) return;
+        postAuthorCommand(root, { command_type: "DROP_ITEM", payload: { item_id: itemId, destination: target.dataset.dropTarget } })
+          .then(function (result) { showCommandNotice(target.parentElement || target, result); })
+          .catch(function (error) { showCommandNotice(target.parentElement || target, { result: "REJECTED", message: error.message }); });
+      });
+    });
+    initRelationshipGraph(root);
+  }
+
+  function initRelationshipGraph(root) {
+    root.querySelectorAll("[data-wb-relationship-graph]").forEach(function (container) {
+      var graph = [];
+      try { graph = JSON.parse(container.dataset.graph || "[]"); } catch (error) { graph = []; }
+      if (!graph.length) return;
+      while (container.firstChild) container.removeChild(container.firstChild);
+      var names = [];
+      var edges = graph.map(function (edge) {
+        var from = edge.from_name || (edge.raw && edge.raw.from_entity_id) || edge.name || "当前人物";
+        var to = edge.to_name || (edge.raw && edge.raw.to_entity_id) || edge.name || "关系目标";
+        if (names.indexOf(from) === -1) names.push(from);
+        if (names.indexOf(to) === -1) names.push(to);
+        return { from: from, to: to, label: edge.label || edge.statement || edge.name || "关系" };
+      });
+      var width = 720;
+      var height = Math.max(150, Math.ceil(names.length / 3) * 100);
+      var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 " + width + " " + height);
+      var positions = {};
+      names.forEach(function (name, index) {
+        positions[name] = { x: 120 + (index % 3) * 240, y: 50 + Math.floor(index / 3) * 90 };
+      });
+      edges.forEach(function (edge) {
+        var from = positions[edge.from]; var to = positions[edge.to];
+        if (!from || !to) return;
+        var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", from.x); line.setAttribute("y1", from.y); line.setAttribute("x2", to.x); line.setAttribute("y2", to.y); line.setAttribute("class", "wb-relationship-edge");
+        svg.appendChild(line);
+      });
+      names.forEach(function (name) {
+        var position = positions[name];
+        var group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        group.setAttribute("class", "wb-relationship-node");
+        var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", position.x); circle.setAttribute("cy", position.y); circle.setAttribute("r", "25");
+        var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", position.x); text.setAttribute("y", position.y + 45); text.textContent = name;
+        group.appendChild(circle); group.appendChild(text); svg.appendChild(group);
+      });
+      container.appendChild(svg);
+      var legend = document.createElement("p"); legend.className = "wb-state-note"; legend.textContent = "连线是当前关系或软参考关系；新增关系会进入作者意图。"; container.appendChild(legend);
+    });
+  }
+
   function loadWorkbench(link, push) {
     var currentRoot = document.querySelector("[data-workbench-shell]");
     var href = push && currentRoot ? addWorkbenchState(link.href, currentRoot) : link.href;
@@ -550,6 +726,7 @@
     initLayout(root);
     initContextTabs(root);
     initEditor(root);
+    initStateTabs(root);
     root.querySelectorAll("[data-workbench-navigation]").forEach(function (link) {
       link.addEventListener("click", function (event) {
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;

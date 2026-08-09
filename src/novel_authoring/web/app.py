@@ -31,6 +31,14 @@ from novel_authoring.atlas.service import (
     get_atlas_overview,
     record_atlas_action,
 )
+from novel_authoring.author_control.models import AuthorStateCommand
+from novel_authoring.author_control.projections import build_story_game_state
+from novel_authoring.author_control.service import (
+    author_control_view,
+    execute_author_command,
+    execute_author_intent,
+    execute_author_task,
+)
 from novel_authoring.db.database import Database
 from novel_authoring.drafting import save_draft_content
 from novel_authoring.edition import edition_chapters, list_editions
@@ -69,6 +77,8 @@ from novel_authoring.web.routes.workflow import prepare_continuation, prepare_re
 from novel_authoring.web.schemas import (
     AtlasActionRequest,
     AuthorInputRequest,
+    AuthorIntentRequest,
+    AuthorTaskRequest,
     DraftContentRequest,
     HandoffRequest,
     RecomputeRequest,
@@ -389,6 +399,7 @@ def create_app(
             node=request.query_params.get("node", "overview"),
             mode=request.query_params.get("mode", "continue"),
             right_tab=request.query_params.get("right_tab", "prose"),
+            character_id=_query_id(request, "character_id"),
         )
         context["csrf_token"] = app.state.csrf_token
         context["library_books"] = _library_books_for_app(app)
@@ -398,9 +409,7 @@ def create_app(
         "/books/{path_book_id}/editions/{edition_id}/workbench",
         response_class=HTMLResponse,
     )
-    async def workbench_page(
-        request: Request, path_book_id: str, edition_id: str
-    ) -> Any:
+    async def workbench_page(request: Request, path_book_id: str, edition_id: str) -> Any:
         checked_book = _check_id(path_book_id)
         checked_edition = _check_id(edition_id)
         try:
@@ -413,6 +422,7 @@ def create_app(
                 node=request.query_params.get("node", "overview"),
                 mode=request.query_params.get("mode", "continue"),
                 right_tab=request.query_params.get("right_tab", "prose"),
+                character_id=_query_id(request, "character_id"),
             )
         except ValueError as exc:
             raise HTTPException(
@@ -435,9 +445,7 @@ def create_app(
         return _template(templates, "index.html", request, context)
 
     @app.get("/api/books/{path_book_id}/editions/{edition_id}/workbench")
-    async def workbench_api(
-        request: Request, path_book_id: str, edition_id: str
-    ) -> dict[str, Any]:
+    async def workbench_api(request: Request, path_book_id: str, edition_id: str) -> dict[str, Any]:
         checked_book = _check_id(path_book_id)
         checked_edition = _check_id(edition_id)
         return build_workbench_context(
@@ -449,11 +457,10 @@ def create_app(
             node=request.query_params.get("node", "overview"),
             mode=request.query_params.get("mode", "continue"),
             right_tab=request.query_params.get("right_tab", "prose"),
+            character_id=_query_id(request, "character_id"),
         )
 
-    @app.get(
-        "/api/books/{path_book_id}/editions/{edition_id}/chapters/{chapter_id}/context"
-    )
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/chapters/{chapter_id}/context")
     async def chapter_context_projection_api(
         path_book_id: str, edition_id: str, chapter_id: str
     ) -> dict[str, Any]:
@@ -475,9 +482,99 @@ def create_app(
             )
         return cast(dict[str, Any], context)
 
-    @app.post(
-        "/api/books/{path_book_id}/editions/{edition_id}/drafts/{draft_id}/content"
-    )
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/chapters/{chapter_id}/game-state")
+    async def chapter_game_state_api(
+        request: Request, path_book_id: str, edition_id: str, chapter_id: str
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return build_story_game_state(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            chapter_id=_check_id(chapter_id),
+            character_id=_query_id(request, "character_id"),
+        )
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/author-control")
+    async def author_control_api(path_book_id: str, edition_id: str) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return author_control_view(
+            _database_for_book(app, checked_book), checked_book, checked_edition
+        )
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/author-commands")
+    async def author_command_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: AuthorStateCommand,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        resolution = execute_author_command(
+            _database_for_book(app, checked_book), checked_book, checked_edition, payload
+        )
+        return resolution.model_dump(mode="json")
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/author-intents")
+    async def author_intent_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: AuthorIntentRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        resolution = execute_author_intent(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            intent_type=payload.intent_type,
+            subject_type=payload.subject_type,
+            subject_id=payload.subject_id,
+            title=payload.title,
+            description=payload.description,
+            horizon=payload.horizon,
+            priority=payload.priority,
+            target_chapter_id=payload.target_chapter_id,
+            payload=payload.payload,
+        )
+        return resolution.model_dump(mode="json")
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/author-tasks")
+    async def author_task_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: AuthorTaskRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        resolution = execute_author_task(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            title=payload.title,
+            task_type=payload.task_type,
+            description=payload.description,
+            horizon=payload.horizon,
+            lifecycle_status=payload.lifecycle_status,
+            priority=payload.priority,
+            subject_type=payload.subject_type,
+            subject_id=payload.subject_id,
+            context_chapter_id=payload.context_chapter_id,
+            context_chapter_ordinal=payload.context_chapter_ordinal,
+            due_chapter_ordinal=payload.due_chapter_ordinal,
+            payload=payload.payload,
+        )
+        return resolution.model_dump(mode="json")
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/drafts/{draft_id}/content")
     async def save_draft_content_api(
         request: Request,
         path_book_id: str,
@@ -540,9 +637,7 @@ def create_app(
         "/books/{path_book_id}/editions/{edition_id}/initialization",
         response_class=HTMLResponse,
     )
-    async def initialization_page(
-        request: Request, path_book_id: str, edition_id: str
-    ) -> Any:
+    async def initialization_page(request: Request, path_book_id: str, edition_id: str) -> Any:
         checked_book = _check_id(path_book_id)
         checked_edition = _check_id(edition_id)
         context = {
@@ -662,8 +757,7 @@ def create_app(
         selected_database.initialize()
         with selected_database.connect() as connection:
             rows = connection.execute(
-                "SELECT * FROM drafts "
-                "WHERE book_id=? AND edition_id=? ORDER BY created_at DESC",
+                "SELECT * FROM drafts WHERE book_id=? AND edition_id=? ORDER BY created_at DESC",
                 (_check_id(path_book_id), _check_id(edition_id)),
             ).fetchall()
             drafts: list[dict[str, Any]] = []
@@ -734,8 +828,8 @@ def create_app(
                     (_check_id(path_book_id), _check_id(edition_id)),
                 ).fetchone()
                 try:
-                    draft["rhythm"] = {} if rhythm is None else json.loads(
-                        str(rhythm["snapshot_json"] or "{}")
+                    draft["rhythm"] = (
+                        {} if rhythm is None else json.loads(str(rhythm["snapshot_json"] or "{}"))
                     )
                 except ValueError:
                     draft["rhythm"] = {"raw": rhythm["snapshot_json"]}
@@ -810,9 +904,7 @@ def create_app(
         selected_database = _database_for_book(app, checked_book)
         selected_database.initialize()
         with selected_database.connect() as connection:
-            return edition_chapters(
-                connection, checked_book, _check_id(edition_id)
-            )
+            return edition_chapters(connection, checked_book, _check_id(edition_id))
 
     @app.get("/api/books/{path_book_id}/editions/{edition_id}/atlas")
     @app.get("/api/books/{path_book_id}/editions/{edition_id}/story-atlas")
@@ -845,18 +937,14 @@ def create_app(
         except Exception as exc:
             return _error(exc)
 
-    @app.get(
-        "/api/books/{path_book_id}/editions/{edition_id}/atlas/visuals/{visual_name}"
-    )
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/atlas/visuals/{visual_name}")
     async def atlas_visual_api(path_book_id: str, edition_id: str, visual_name: str) -> Response:
         if not re.fullmatch(r"[A-Za-z0-9._-]+\.svg", visual_name):
             raise HTTPException(status_code=400, detail="visual name 无效")
         checked_book = _check_id(path_book_id)
         checked_edition = _check_id(edition_id)
         selected_database = _database_for_book(app, checked_book)
-        overview = get_atlas_overview(
-            selected_database, checked_book, checked_edition
-        )
+        overview = get_atlas_overview(selected_database, checked_book, checked_edition)
         index = overview.get("index") or {}
         raw_root = str(index.get("artifact_root") or "")
         if not raw_root:
@@ -878,9 +966,7 @@ def create_app(
         checked_book = _check_id(path_book_id)
         checked_edition = _check_id(edition_id)
         selected_database = _database_for_book(app, checked_book)
-        overview = get_atlas_overview(
-            selected_database, checked_book, checked_edition
-        )
+        overview = get_atlas_overview(selected_database, checked_book, checked_edition)
         index = overview.get("index") or {}
         raw_root = str(index.get("artifact_root") or "")
         if not raw_root:
@@ -901,9 +987,7 @@ def create_app(
                     continue
         return reports
 
-    @app.get(
-        "/api/books/{path_book_id}/editions/{edition_id}/atlas/graphs/{graph_type}"
-    )
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/atlas/graphs/{graph_type}")
     async def atlas_graph_api(
         path_book_id: str,
         edition_id: str,
@@ -1037,9 +1121,7 @@ def create_app(
             _check_id(chapter_id),
         )
 
-    @app.post(
-        "/api/books/{path_book_id}/editions/{edition_id}/metrics/bootstrap/prepare"
-    )
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/metrics/bootstrap/prepare")
     async def metric_bootstrap_prepare_api(
         path_book_id: str, edition_id: str, request: Request
     ) -> Any:
@@ -1048,9 +1130,7 @@ def create_app(
             checked_book = _check_id(path_book_id)
             checked_edition = _check_id(edition_id)
             selected_database = _database_for_book(app, checked_book)
-            initialization = latest_initialization(
-                selected_database, checked_book, checked_edition
-            )
+            initialization = latest_initialization(selected_database, checked_book, checked_edition)
             if not initialization:
                 raise ValueError("尚未创建初始化包，无法准备语义指标任务")
             manifest = initialization.get("manifest") or {}
@@ -1308,9 +1388,7 @@ def create_app(
                 raise HandoffWorkflowError("需要 book_id")
             checked_book = _check_id(str(target_book))
             selected_database = (
-                _database_for_book(app, checked_book)
-                if path_book_id is not None
-                else database
+                _database_for_book(app, checked_book) if path_book_id is not None else database
             )
             return prepare_continuation(selected_database, checked_book, payload)
         except (HandoffWorkflowError, ValueError) as exc:
@@ -1328,9 +1406,7 @@ def create_app(
                 raise HandoffWorkflowError("需要 book_id")
             checked_book = _check_id(str(target_book))
             selected_database = (
-                _database_for_book(app, checked_book)
-                if path_book_id is not None
-                else database
+                _database_for_book(app, checked_book) if path_book_id is not None else database
             )
             return prepare_revision(selected_database, checked_book, payload)
         except (HandoffWorkflowError, ValueError) as exc:
@@ -1400,6 +1476,9 @@ def web_doctor() -> dict[str, Any]:
             "/books/{path_book_id}/editions/{edition_id}/workbench",
             "/api/books/{path_book_id}/editions/{edition_id}/workbench",
             "/api/books/{path_book_id}/editions/{edition_id}/chapters/{chapter_id}/context",
+            "/api/books/{path_book_id}/editions/{edition_id}/chapters/{chapter_id}/game-state",
+            "/api/books/{path_book_id}/editions/{edition_id}/author-control",
+            "/api/books/{path_book_id}/editions/{edition_id}/author-commands",
         }
         checks["routes"] = {
             "ok": required.issubset(route_paths),
@@ -1436,6 +1515,13 @@ def serve(
 ) -> None:
     if host not in ("127.0.0.1", "localhost", "::1") and not allow_remote:
         raise ValueError("默认只允许本机绑定；需要远程访问时显式传入 allow_remote")
+    # Apply structural migrations before the server starts.  This prepares the
+    # author-control tables but does not create Canon events or approve drafts.
+    database.initialize()
+    if library_root is not None:
+        layout = BookLayout(library_root)
+        for record in BookRegistry(layout).list():
+            Database(layout.for_book(record.book_id).database).initialize()
     import uvicorn
 
     uvicorn.run(

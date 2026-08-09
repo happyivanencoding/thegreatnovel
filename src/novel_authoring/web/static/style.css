@@ -325,6 +325,51 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .wb-editor-secondary { padding: .75rem 0; }
 .wb-editor-secondary h3 { margin: 0; color: #344054; font-size: .85rem; }
 .wb-editor-secondary p { color: #667085; font-size: .72rem; }
+.wb-state-tabs { display: flex; flex-wrap: wrap; gap: .2rem; margin-top: 1rem; border-bottom: 1px solid #f0f1f3; }
+.wb-state-tabs button { border: 0; border-bottom: 2px solid transparent; padding: .42rem .58rem; color: #98a2b3; background: transparent; font-size: .74rem; cursor: pointer; }
+.wb-state-tabs button:hover, .wb-state-tabs button.is-active { border-bottom-color: #6b7fbd; color: #344054; }
+.wb-state-tab-panel[hidden] { display: none; }
+.wb-character-picker { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .8rem; }
+.wb-character-chip { display: grid; gap: .15rem; min-width: 7rem; padding: .55rem .65rem; border: 1px solid #eaecf0; border-radius: 8px; color: #475467; background: #fff; text-decoration: none; }
+.wb-character-chip:hover, .wb-character-chip.is-selected { border-color: #c9d7ff; color: #2457d6; background: #f5f7ff; }
+.wb-character-chip small { color: #98a2b3; font-size: .64rem; }
+.wb-state-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: .9rem; }
+.wb-state-columns h4, .wb-task-column h4 { margin: 0 0 .45rem; color: #344054; font-size: .78rem; }
+.wb-record-list { display: grid; gap: .35rem; margin: 0; padding: 0; list-style: none; }
+.wb-record-list li { display: grid; gap: .15rem; padding: .5rem .6rem; border: 1px solid #f0f1f3; border-radius: 7px; color: #475467; background: #fcfcfd; font-size: .72rem; }
+.wb-record-list li span { color: #98a2b3; font-size: .66rem; line-height: 1.45; }
+.wb-record-list li[draggable="true"] { cursor: grab; }
+.wb-record-list li[draggable="true"]:active { cursor: grabbing; opacity: .65; }
+.wb-drop-zone { margin-top: .45rem; padding: .75rem; border: 1px dashed #c9d7ff; border-radius: 7px; color: #667085; background: #f8faff; font-size: .68rem; }
+.wb-drop-zone.is-drag-over, .wb-task-drop.is-drag-over { border-color: #6b7fbd; background: #eef2ff; }
+.wb-attribute-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .35rem .7rem; margin: .8rem 0 0; }
+.wb-attribute-list div { display: grid; gap: .1rem; padding: .45rem .55rem; border-radius: 6px; background: #fcfcfd; }
+.wb-attribute-list dt { color: #98a2b3; font-size: .64rem; }
+.wb-attribute-list dd { margin: 0; color: #475467; font-size: .72rem; }
+.wb-state-note { margin: .55rem 0 0; color: #8a5b00; font-size: .68rem; }
+.wb-reference-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .45rem; margin-top: .7rem; }
+.wb-reference-grid div { display: grid; gap: .2rem; padding: .6rem; border: 1px solid #e4e7ec; border-radius: 7px; background: #fafbff; color: #536b9e; font-size: .7rem; }
+.wb-reference-grid span { color: #98a2b3; font-size: .64rem; }
+.wb-command-form { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(120px, .45fr); gap: .55rem; margin-top: .8rem; }
+.wb-command-form label { display: grid; gap: .25rem; color: #667085; font-size: .68rem; }
+.wb-command-form label:nth-last-of-type(1), .wb-command-form button { grid-column: 1 / -1; }
+.wb-command-form input, .wb-command-form select, .wb-command-form textarea { width: 100%; border: 1px solid #eaecf0; border-radius: 6px; padding: .42rem .5rem; color: #344054; background: #fff; font: inherit; }
+.wb-command-form textarea { resize: vertical; }
+.wb-task-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .55rem; margin-top: 1rem; }
+.wb-task-column { min-width: 0; padding: .55rem; border: 1px solid #eaecf0; border-radius: 8px; background: #fcfcfd; }
+.wb-task-column h4 { display: flex; justify-content: space-between; }
+.wb-task-column h4 span { color: #98a2b3; font-weight: 400; }
+.wb-task-drop { min-height: 8rem; padding: .2rem; border: 1px dashed transparent; border-radius: 6px; }
+.wb-task-card { display: grid; gap: .25rem; margin: .28rem 0; padding: .55rem; border: 1px solid #e4e7ec; border-radius: 7px; color: #475467; background: #fff; cursor: grab; font-size: .7rem; }
+.wb-task-card:active { cursor: grabbing; opacity: .65; }
+.wb-task-card span, .wb-task-card small { color: #98a2b3; font-size: .62rem; line-height: 1.4; }
+.wb-relationship-graph { min-height: 8rem; margin: .8rem 0; padding: .6rem; border: 1px solid #f0f1f3; border-radius: 8px; background: #fcfcfd; }
+.wb-relationship-graph svg { display: block; width: 100%; min-height: 150px; }
+.wb-relationship-edge { stroke: #c9d7ff; stroke-width: 2; }
+.wb-relationship-node circle { fill: #f3f6ff; stroke: #6b7fbd; stroke-width: 2; }
+.wb-relationship-node text { fill: #344054; font-size: 12px; text-anchor: middle; }
+.wb-command-notice { grid-column: 1 / -1; margin: .4rem 0 0; padding: .55rem .7rem; border-radius: 7px; color: #176b4d; background: #f0faf5; font-size: .7rem; }
+.wb-command-notice.is-rejected { color: #8a5b00; background: #fffaf0; }
 
 @media (max-width: 1180px) {
   .wb-shell { --wb-left: 250px; --wb-right: 360px; }
@@ -344,7 +389,8 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
   .wb-shell.is-left-collapsed .wb-left-pane > .wb-rail, .wb-shell.is-right-collapsed .wb-right-pane > .wb-rail { min-height: 48px; }
   .wb-center-scroll, .wb-editor-scroll { height: auto; max-height: none; }
   .wb-editor-textarea, .wb-markdown-preview { min-height: 420px; }
-  .wb-overview-grid, .wb-context-summary-grid, .wb-state-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wb-overview-grid, .wb-context-summary-grid, .wb-state-card-grid, .wb-reference-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .wb-task-board { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
   .wb-breadcrumb { order: 3; flex-basis: 100%; }
@@ -352,4 +398,6 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
   .wb-ai-input-row { align-items: stretch; flex-wrap: wrap; }
   .wb-ai-input-row input { flex-basis: 100%; order: 3; }
   .wb-markdown-reading, .wb-editor-textarea, .wb-markdown-preview { font-size: .86rem; }
+  .wb-state-columns, .wb-command-form, .wb-attribute-list { grid-template-columns: 1fr; }
+  .wb-command-form label:nth-last-of-type(1), .wb-command-form button { grid-column: auto; }
 }

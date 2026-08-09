@@ -4,6 +4,11 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from novel_authoring.author_control.models import (
+    AuthorControlHorizon,
+    AuthorIntentStatus,
+    AuthorTaskLifecycle,
+)
 from novel_authoring.metrics.models import MetricComponentStatus, ObservationSourceKind
 from novel_authoring.planning.innovation import InnovationFocus, InnovationLevel
 
@@ -84,3 +89,35 @@ class AtlasActionRequest(BaseModel):
     expected_atlas_id: str | None = None
     expected_atlas_version: int | None = Field(default=None, ge=1)
     expected_manifest_hash: str | None = None
+
+
+class AuthorIntentRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    intent_type: str
+    subject_type: str
+    subject_id: str | None = None
+    title: str
+    description: str = ""
+    horizon: AuthorControlHorizon = AuthorControlHorizon.MID
+    priority: int = 100
+    status: AuthorIntentStatus = AuthorIntentStatus.PLANNED
+    target_chapter_id: str | None = None
+    payload: dict[str, Any] = Field(default_factory=dict)
+
+
+class AuthorTaskRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    title: str
+    task_type: str = "AUTHOR_TASK"
+    description: str = ""
+    horizon: AuthorControlHorizon = AuthorControlHorizon.MID
+    lifecycle_status: AuthorTaskLifecycle = AuthorTaskLifecycle.BACKLOG
+    priority: int = 100
+    subject_type: str | None = None
+    subject_id: str | None = None
+    context_chapter_id: str | None = None
+    context_chapter_ordinal: int | None = None
+    due_chapter_ordinal: int | None = None
+    payload: dict[str, Any] = Field(default_factory=dict)

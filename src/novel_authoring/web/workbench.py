@@ -13,6 +13,8 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from novel_authoring.author_control.projections import build_story_game_state
+from novel_authoring.author_control.service import author_control_view
 from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.edition import edition_chapters
 from novel_authoring.storage.layout import BookLayout
@@ -35,6 +37,7 @@ WORKBENCH_MODES: tuple[str, ...] = (
     "plan",
     "analysis",
     "continuity",
+    "state",
 )
 WORKBENCH_RIGHT_TABS: tuple[str, ...] = ("prose", "state", "next")
 
@@ -44,6 +47,7 @@ MODE_LABELS = {
     "plan": "规划",
     "analysis": "分析",
     "continuity": "连续性审查",
+    "state": "状态",
 }
 RIGHT_TAB_LABELS = {
     "prose": "正文",
@@ -214,9 +218,7 @@ def _book_row(connection: sqlite3.Connection, book_id: str) -> dict[str, Any]:
     return dict(row)
 
 
-def _edition_row(
-    connection: sqlite3.Connection, book_id: str, edition_id: str
-) -> dict[str, Any]:
+def _edition_row(connection: sqlite3.Connection, book_id: str, edition_id: str) -> dict[str, Any]:
     row = connection.execute(
         "SELECT * FROM editions WHERE book_id=? AND edition_id=?",
         (book_id, edition_id),
@@ -262,9 +264,9 @@ def _profile_root(book: dict[str, Any], book_id: str) -> Path:
     return root / "book_profil"
 
 
-def _profile_data(book: dict[str, Any], book_id: str, selected_node: str) -> tuple[
-    list[dict[str, Any]], dict[str, Any], dict[str, Any]
-]:
+def _profile_data(
+    book: dict[str, Any], book_id: str, selected_node: str
+) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
     root = _profile_root(book, book_id)
     manifest = _read_json(
         root.joinpath("profile_manifest.json").read_text(encoding="utf-8")
@@ -568,14 +570,10 @@ def _validation_context(
             "display_status_label", _status_label(selected_draft.get("display_status"))
         ),
         "hard_gate": (
-            "PASS"
-            if reports and all(item["passed"] for item in reports)
-            else "NOT_RUN_OR_WARNING"
+            "PASS" if reports and all(item["passed"] for item in reports) else "NOT_RUN_OR_WARNING"
         ),
         "hard_gate_label": _status_label(
-            "PASS"
-            if reports and all(item["passed"] for item in reports)
-            else "NOT_RUN_OR_WARNING"
+            "PASS" if reports and all(item["passed"] for item in reports) else "NOT_RUN_OR_WARNING"
         ),
         "reports": reports,
     }
@@ -779,6 +777,7 @@ def build_workbench_context(
     node: str = "overview",
     mode: str = "continue",
     right_tab: str = "prose",
+    character_id: str | None = None,
 ) -> dict[str, Any]:
     """Build one Workbench read model without initializing or mutating the DB."""
 
@@ -824,10 +823,10 @@ def build_workbench_context(
             selected_anchor = selected_draft.get("target_chapter_ordinal")
         selected_node = node
         valid_profile_nodes = {item[0] for item in PROFILE_DIMENSIONS}
-        if (
-            selected_node not in valid_profile_nodes
-            and selected_node not in {"overview", "chapter"}
-        ):
+        if selected_node not in valid_profile_nodes and selected_node not in {
+            "overview",
+            "chapter",
+        }:
             selected_node = "overview"
         if (selected_chapter is not None or selected_draft is not None) and node == "chapter":
             selected_node = "chapter"
@@ -855,15 +854,24 @@ def build_workbench_context(
                 ),
                 None,
             )
-    profile_items, selected_profile, profile_manifest = _profile_data(
-        book, book_id, selected_node
-    )
+    profile_items, selected_profile, profile_manifest = _profile_data(book, book_id, selected_node)
     chapter_items = _chapter_tree_items(raw_chapters)
     draft_items = _draft_tree_items(drafts)
     latest_chapter = chapter_items[-1] if chapter_items else None
     if selected_anchor is None and latest_chapter is not None:
         selected_anchor = int(latest_chapter["ordinal"])
     active_mode = _normalise_choice(mode, WORKBENCH_MODES, "continue")
+    story_game_state: dict[str, Any] | None = None
+    author_control: dict[str, Any] | None = None
+    if active_mode == "state":
+        story_game_state = build_story_game_state(
+            database,
+            book_id,
+            selected_edition_id,
+            chapter_id=(None if selected_chapter is None else str(selected_chapter["chapter_id"])),
+            character_id=character_id,
+        )
+        author_control = author_control_view(database, book_id, selected_edition_id)
     return {
         "book": book,
         "book_id": book_id,
@@ -879,6 +887,9 @@ def build_workbench_context(
         "active_left_node": selected_node,
         "active_main_mode": active_mode,
         "active_right_tab": _normalise_choice(right_tab, WORKBENCH_RIGHT_TABS, "prose"),
+        "selected_character_id": (
+            None if story_game_state is None else story_game_state.get("selected_character_id")
+        ),
         "mode_labels": MODE_LABELS,
         "right_tab_labels": RIGHT_TAB_LABELS,
         "selected_chapter": selected_chapter,
@@ -889,6 +900,8 @@ def build_workbench_context(
         "book_status": str(book.get("readiness_status") or "UNKNOWN"),
         "book_status_label": _status_label(book.get("readiness_status") or "UNKNOWN"),
         "continuation_package": _continuation_package(selected_draft),
+        "story_game_state": story_game_state,
+        "author_control": author_control,
         "data_ownership": {
             "source": "Book Library source/ and immutable chapters",
             "distill": "book_profil/ author-facing derived view",
