@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from html.parser import HTMLParser
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -10,6 +11,37 @@ from novel_authoring.db.database import Database
 from novel_authoring.ingest.service import ingest_book
 from novel_authoring.storage.library import LibraryAddOptions, add_book
 from novel_authoring.web.app import create_app, web_doctor
+
+
+class _VisibleTextParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self._hidden_depth = 0
+        self._hidden_tags: list[bool] = []
+        self.parts: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = dict(attrs)
+        classes = set((values.get("class") or "").split())
+        hidden = "hidden" in values or "wb-technical-details" in classes
+        self._hidden_tags.append(hidden)
+        if hidden:
+            self._hidden_depth += 1
+
+    def handle_endtag(self, tag: str) -> None:
+        hidden = self._hidden_tags.pop() if self._hidden_tags else False
+        if hidden:
+            self._hidden_depth -= 1
+
+    def handle_data(self, data: str) -> None:
+        if not self._hidden_depth:
+            self.parts.append(data)
+
+
+def _visible_text(html: str) -> str:
+    parser = _VisibleTextParser()
+    parser.feed(html)
+    return " ".join(parser.parts)
 
 
 def _book(tmp_path: Path, book_id: str = "workbench-book") -> Database:
@@ -87,15 +119,24 @@ def test_workbench_renders_real_profile_and_highlights_selected_node(tmp_path: P
     client = TestClient(app)
 
     response = client.get(
-        "/books/workbench-book/editions/base/workbench?node=worldbuilding"
+        "/books/workbench-book/editions/base/workbench?node=worldbuilding&mode=analysis"
     )
 
     assert response.status_code == 200
     assert "Novel Authoring Workbench" in response.text
     assert "潮汐会遮蔽灯塔坐标" in response.text
-    assert "SOFT INTERPRETATION" in response.text
+    assert "柔性理解" in _visible_text(response.text)
+    assert "SOFT INTERPRETATION" not in _visible_text(response.text)
+    assert "SELF_BOOK" not in _visible_text(response.text)
+    assert "Distill version" not in _visible_text(response.text)
     assert 'data-workbench-shell' in response.text
-    assert 'class="wb-persistent-pane-controls"' in response.text
+    assert 'data-pane-rail="left"' in response.text
+    assert 'data-pane-rail="right"' in response.text
+    assert 'data-wb-mode="continue"' in response.text
+    assert 'data-wb-mode="rewrite"' in response.text
+    assert 'data-wb-mode="plan"' in response.text
+    assert 'data-wb-mode="analysis"' in response.text
+    assert 'data-wb-mode="continuity"' in response.text
     assert "隐藏左栏" in response.text
     assert "隐藏右栏" in response.text
     assert "is-selected" in response.text
@@ -127,10 +168,35 @@ def test_chapter_navigation_is_query_only_and_exposes_source_gap(tmp_path: Path)
     )
     assert selected.status_code == 200
     assert "第2章" in selected.text
-    assert "selected_chapter_anchor · 2" in selected.text
+    assert "当前章节 · 第2章" in _visible_text(selected.text)
     assert "SOURCE_CHAPTER_STATE_PROJECTION_MISSING" in selected.text
+    assert "尚未建立历史章节状态" in _visible_text(selected.text)
+    assert "目前无法确认这一章具体改变了哪些人物、资源或剧情线" in _visible_text(selected.text)
     assert "潮声里藏着一段坐标" in selected.text
     assert _read_only_snapshot(database) == before
+
+
+def test_modes_tabs_and_right_tabs_have_readable_state(tmp_path: Path) -> None:
+    database = _book(tmp_path, "mode-workbench-book")
+    app = create_app(database, book_id="mode-workbench-book")
+    client = TestClient(app)
+    chapter_id = _chapter_ids(database)[0]
+
+    page = client.get(
+        "/books/mode-workbench-book/editions/base/workbench"
+        f"?chapter_id={chapter_id}&node=chapter&mode=continuity&right_tab=state"
+    )
+
+    assert page.status_code == 200
+    assert 'data-active-mode="continuity"' in page.text
+    assert 'data-active-right-tab="state"' in page.text
+    visible = _visible_text(page.text)
+    assert "连续性审查" in visible
+    assert "章末状态" in visible
+    assert "当前没有可读取的章节状态" not in visible
+    assert "不会用最新状态填充这里" in visible
+    assert "SOURCE_CHAPTER_STATE_PROJECTION_MISSING" not in visible
+    assert "anchor_chapter_ordinal" not in visible
 
 
 def test_draft_is_provisional_and_explicit_save_does_not_touch_canon(tmp_path: Path) -> None:
@@ -196,8 +262,9 @@ def test_draft_is_provisional_and_explicit_save_does_not_touch_canon(tmp_path: P
         "/books/draft-workbench-book/editions/base/workbench?draft_id=draft-61&node=chapter"
     )
     assert page.status_code == 200
-    assert "PROVISIONAL" in page.text
-    assert "PROVISIONAL_DRAFT_DELTA" in page.text
+    assert "草稿临时状态" in _visible_text(page.text)
+    assert "草稿临时变化" in _visible_text(page.text)
+    assert "PROVISIONAL_DRAFT_DELTA" not in _visible_text(page.text)
     assert "旧稿" in page.text
 
     before = _read_only_snapshot(database)

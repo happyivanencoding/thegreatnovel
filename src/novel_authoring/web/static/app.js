@@ -314,7 +314,9 @@
       left: root.style.getPropertyValue("--wb-left"),
       right: root.style.getPropertyValue("--wb-right"),
       leftCollapsed: root.classList.contains("is-left-collapsed"),
-      rightCollapsed: root.classList.contains("is-right-collapsed")
+      rightCollapsed: root.classList.contains("is-right-collapsed"),
+      mainMode: root.dataset.activeMode || "continue",
+      rightTab: root.dataset.activeRightTab || "prose"
     };
     try { window.localStorage.setItem(layoutKey, JSON.stringify(value)); } catch (error) { /* local persistence is optional */ }
   }
@@ -323,7 +325,7 @@
     var collapsed = root.classList.contains("is-" + side + "-collapsed");
     var label = (collapsed ? "展开" : "隐藏") + (side === "left" ? "左栏" : "右栏");
     var icon = side === "left" ? (collapsed ? "›" : "‹") : (collapsed ? "‹" : "›");
-    root.querySelectorAll('[data-toggle-pane="' + side + '"]').forEach(function (button) {
+    document.querySelectorAll('[data-toggle-pane="' + side + '"]').forEach(function (button) {
       button.setAttribute("aria-label", label);
       button.setAttribute("title", label);
       var text = button.querySelector("[data-pane-toggle-label]");
@@ -331,6 +333,30 @@
       var symbol = button.querySelector("[data-pane-toggle-icon]");
       if (symbol) symbol.textContent = icon;
     });
+  }
+
+  function stateFromUrl(key) {
+    try { return new URL(window.location.href).searchParams.get(key) || ""; } catch (error) { return ""; }
+  }
+
+  function setWorkbenchQuery(key, value) {
+    try {
+      var url = new URL(window.location.href);
+      url.searchParams.set(key, value);
+      window.history.replaceState({}, "", url.href);
+    } catch (error) { /* URL state is a convenience, not a data write. */ }
+  }
+
+  function addWorkbenchState(href, root) {
+    try {
+      var url = new URL(href, window.location.href);
+      var saved = readLayout();
+      var mode = root.dataset.activeMode || saved.mainMode || "continue";
+      var rightTab = root.dataset.activeRightTab || saved.rightTab || "prose";
+      if (!url.searchParams.get("mode")) url.searchParams.set("mode", mode);
+      if (!url.searchParams.get("right_tab")) url.searchParams.set("right_tab", rightTab);
+      return url.href;
+    } catch (error) { return href; }
   }
 
   function initLayout(root) {
@@ -342,12 +368,16 @@
     updatePaneButtons(root, "left");
     updatePaneButtons(root, "right");
 
-    root.querySelectorAll("[data-toggle-pane]").forEach(function (button) {
+    document.querySelectorAll("[data-toggle-pane]").forEach(function (button) {
+      if (button.dataset.wbPaneBound === "true") return;
+      button.dataset.wbPaneBound = "true";
       button.addEventListener("click", function () {
+        var current = document.querySelector("[data-workbench-shell]");
+        if (!current) return;
         var side = button.dataset.togglePane;
-        root.classList.toggle("is-" + side + "-collapsed");
-        updatePaneButtons(root, side);
-        saveLayout(root);
+        current.classList.toggle("is-" + side + "-collapsed");
+        updatePaneButtons(current, side);
+        saveLayout(current);
       });
     });
 
@@ -386,21 +416,63 @@
     });
   }
 
+  function applyMainMode(root, target, persist) {
+    var mode = target || "continue";
+    var buttons = root.querySelectorAll("[data-wb-mode]");
+    var panels = root.querySelectorAll("[data-wb-mode-panel]");
+    var matched = false;
+    buttons.forEach(function (button) {
+      var active = button.dataset.wbMode === mode;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-selected", active ? "true" : "false");
+      if (active) matched = true;
+    });
+    if (!matched) mode = "continue";
+    panels.forEach(function (panel) { panel.hidden = panel.dataset.wbModePanel !== mode; });
+    root.dataset.activeMode = mode;
+    if (persist) {
+      setWorkbenchQuery("mode", mode);
+      saveLayout(root);
+    }
+  }
+
+  function applyRightTab(root, target, persist) {
+    var tab = target || "prose";
+    var buttons = root.querySelectorAll("[data-wb-editor-tab]");
+    var matched = false;
+    buttons.forEach(function (button) {
+      var active = button.dataset.wbEditorTab === tab;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-selected", active ? "true" : "false");
+      if (active) matched = true;
+    });
+    if (!matched) tab = "prose";
+    root.querySelectorAll("[data-wb-editor-secondary]").forEach(function (panel) {
+      panel.hidden = panel.dataset.wbEditorSecondary !== tab;
+    });
+    var prosePanel = root.querySelector("[data-wb-editor-prose]");
+    if (prosePanel) prosePanel.hidden = tab !== "prose";
+    root.dataset.activeRightTab = tab;
+    if (persist) {
+      setWorkbenchQuery("right_tab", tab);
+      saveLayout(root);
+    }
+  }
+
   function initEditor(root) {
     root.querySelectorAll("[data-wb-mode]").forEach(function (button) {
       button.addEventListener("click", function () {
-        root.querySelectorAll("[data-wb-mode]").forEach(function (item) { item.classList.toggle("is-active", item === button); });
+        applyMainMode(root, button.dataset.wbMode, true);
       });
     });
     root.querySelectorAll("[data-wb-editor-tab]").forEach(function (button) {
       button.addEventListener("click", function () {
-        var target = button.dataset.wbEditorTab;
-        root.querySelectorAll("[data-wb-editor-tab]").forEach(function (item) { item.classList.toggle("is-active", item === button); });
-        root.querySelectorAll("[data-wb-editor-secondary]").forEach(function (panel) { panel.hidden = panel.dataset.wbEditorSecondary !== target; });
-        var prosePanel = root.querySelector("[data-wb-editor-prose]");
-        if (prosePanel) prosePanel.hidden = target !== "prose";
+        applyRightTab(root, button.dataset.wbEditorTab, true);
       });
     });
+    var saved = readLayout();
+    applyMainMode(root, stateFromUrl("mode") || saved.mainMode || root.dataset.activeMode || "continue", false);
+    applyRightTab(root, stateFromUrl("right_tab") || saved.rightTab || root.dataset.activeRightTab || "prose", false);
     root.querySelectorAll("[data-wb-editor-view]").forEach(function (button) {
       button.addEventListener("click", function () {
         var target = button.dataset.wbEditorView;
@@ -449,7 +521,9 @@
   }
 
   function loadWorkbench(link, push) {
-    fetch(link.href, { headers: { Accept: "text/html" } }).then(function (response) {
+    var currentRoot = document.querySelector("[data-workbench-shell]");
+    var href = push && currentRoot ? addWorkbenchState(link.href, currentRoot) : link.href;
+    fetch(href, { headers: { Accept: "text/html" } }).then(function (response) {
       if (!response.ok) throw new Error("Workbench 页面加载失败");
       return response.text();
     }).then(function (html) {
@@ -465,7 +539,7 @@
       var currentStatus = document.querySelector(".wb-top-actions .wb-status-chip");
       if (nextStatus && currentStatus) currentStatus.replaceWith(nextStatus);
       if (parsed.title) document.title = parsed.title;
-      if (push) window.history.pushState({}, "", link.href);
+      if (push) window.history.pushState({}, "", href);
       initWorkbench();
     }).catch(function () { window.location.href = link.href; });
   }

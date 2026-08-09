@@ -21,12 +21,94 @@ PROFILE_DIMENSIONS: tuple[tuple[str, str, str], ...] = (
     ("worldbuilding", "世界观", "worldbuilding.md"),
     ("characters", "人物", "characters.md"),
     ("plot", "剧情", "plot.md"),
-    ("style", "Style", "style.md"),
-    ("narrative", "Narrative", "narrative.md"),
-    ("dialogue", "Dialogue", "dialogue.md"),
-    ("pacing", "Pacing", "pacing.md"),
-    ("themes", "Themes", "themes.md"),
-    ("continuity", "Continuity", "continuity.md"),
+    ("style", "文风", "style.md"),
+    ("narrative", "叙事", "narrative.md"),
+    ("dialogue", "对话", "dialogue.md"),
+    ("pacing", "节奏", "pacing.md"),
+    ("themes", "主题", "themes.md"),
+    ("continuity", "连续性", "continuity.md"),
+)
+
+WORKBENCH_MODES: tuple[str, ...] = (
+    "continue",
+    "rewrite",
+    "plan",
+    "analysis",
+    "continuity",
+)
+WORKBENCH_RIGHT_TABS: tuple[str, ...] = ("prose", "state", "next")
+
+MODE_LABELS = {
+    "continue": "续写",
+    "rewrite": "改写",
+    "plan": "规划",
+    "analysis": "分析",
+    "continuity": "连续性审查",
+}
+RIGHT_TAB_LABELS = {
+    "prose": "正文",
+    "state": "章末状态",
+    "next": "下一章接续包",
+}
+STATUS_LABELS = {
+    "ACTIVE": "使用中",
+    "READY": "可用",
+    "READY_WITH_GAPS": "可用但有待补齐",
+    "NOT_STARTED": "尚未开始",
+    "STALE": "需要刷新",
+    "BLOCKED": "暂时受阻",
+    "SOURCE": "原文（只读）",
+    "CANON": "正史",
+    "DRAFT": "草稿",
+    "VALIDATED": "已校验草稿",
+    "VALIDATED_DRAFT": "已校验草稿",
+    "PROVISIONAL": "临时状态",
+    "PROVISIONAL_DRAFT_ONLY": "草稿临时状态",
+    "SOURCE_READ_ONLY": "原文只读",
+    "NOT_RUN": "尚未运行",
+    "NOT_RUN_OR_WARNING": "尚未完成或有提示",
+    "PASS": "通过",
+    "NO_CANON_EVENT_ANCHOR": "尚无正史锚点",
+    "SOURCE_ONLY": "仅有原文",
+    "EMPTY": "暂无数据",
+    "NOT_AVAILABLE": "暂不可用",
+    "PROVISIONAL_DRAFT_CONTEXT": "草稿临时上下文",
+    "CANON_EVENT_PROJECTION": "已建立正史状态截面",
+    "PROVISIONAL_DRAFT_DELTA": "草稿临时变化",
+    "CANON_EVENT_DELTA": "已记录正史变化",
+    "SOURCE_CHAPTER_STATE_PROJECTION_MISSING": "尚未建立历史章节状态",
+}
+COLLECTION_LABELS = {
+    "facts": "事实",
+    "timeline": "时间线",
+    "entities": "实体",
+    "character_states": "人物状态",
+    "knowledge": "知识边界",
+    "relationships": "关系",
+    "resources": "资源",
+    "capabilities": "能力",
+    "threads": "剧情线",
+    "promises": "伏笔承诺",
+    "payoffs": "伏笔回收",
+    "repetition": "重复风险",
+    "style_profiles": "文风画像",
+    "committed_chapters": "已确认章节",
+}
+CHANGE_KIND_LABELS = {
+    "ADDED": "新增",
+    "REMOVED": "移除",
+    "CHANGED": "更新",
+    "CHANGE": "变化",
+}
+STATE_COLLECTIONS = (
+    ("character_states", "人物状态"),
+    ("resources", "资源"),
+    ("capabilities", "能力"),
+    ("knowledge", "知识边界"),
+    ("relationships", "关系"),
+    ("threads", "剧情线"),
+    ("promises", "伏笔承诺"),
+    ("payoffs", "伏笔回收"),
 )
 
 _PROJECTION_COLLECTIONS = (
@@ -45,6 +127,84 @@ _PROJECTION_COLLECTIONS = (
     "style_profiles",
     "committed_chapters",
 )
+
+
+def _human_label(value: Any, labels: dict[str, str], fallback: str = "待确认") -> str:
+    raw = str(value or "")
+    return labels.get(raw, fallback)
+
+
+def _status_label(value: Any) -> str:
+    return _human_label(value, STATUS_LABELS)
+
+
+def _normalise_choice(value: Any, allowed: tuple[str, ...], fallback: str) -> str:
+    candidate = str(value or "")
+    return candidate if candidate in allowed else fallback
+
+
+def _value_count(value: Any) -> int:
+    if isinstance(value, (dict, list, tuple, set)):
+        return len(value)
+    return 1 if value else 0
+
+
+def _state_cards(state: Any) -> list[dict[str, Any]]:
+    if not isinstance(state, dict):
+        return []
+    cards: list[dict[str, Any]] = []
+    for collection, label in STATE_COLLECTIONS:
+        count = _value_count(state.get(collection))
+        if count:
+            cards.append({"label": label, "count": count, "summary": f"{count} 项记录"})
+    return cards
+
+
+def _change_view(change: Any) -> dict[str, Any]:
+    item = dict(change) if isinstance(change, dict) else {"value": change}
+    payload_value = item.get("payload")
+    payload: dict[str, Any] = payload_value if isinstance(payload_value, dict) else {}
+    kind = item.get("kind") or payload.get("status") or "CHANGE"
+    description = (
+        item.get("description")
+        or payload.get("description")
+        or payload.get("name")
+        or item.get("record_id")
+        or item.get("collection")
+        or "本章有一项状态变化"
+    )
+    collection = item.get("collection")
+    return {
+        **item,
+        "kind_label": _human_label(kind, CHANGE_KIND_LABELS, "变化"),
+        "summary": str(description),
+        "collection_label": COLLECTION_LABELS.get(str(collection), "章节状态")
+        if collection
+        else "章节状态",
+    }
+
+
+def _delta_author_summary(delta: dict[str, Any]) -> str:
+    status = str(delta.get("status") or "")
+    if status == "SOURCE_CHAPTER_STATE_PROJECTION_MISSING":
+        return "目前无法确认这一章具体改变了哪些人物、资源或剧情线；系统不会用最新状态冒充历史。"
+    count = int(delta.get("change_count") or len(delta.get("changes") or []))
+    if status == "PROVISIONAL_DRAFT_DELTA":
+        return f"这是草稿携带的临时变化，共 {count} 项；它还没有写入正史。"
+    if count:
+        return f"已从可追溯的章节状态中识别出 {count} 项变化。"
+    return "已找到章节状态截面，但当前没有登记可见变化。"
+
+
+def _projection_author_summary(availability: str, label: str) -> str:
+    if availability == "SOURCE_CHAPTER_STATE_PROJECTION_MISSING":
+        return (
+            f"{('章前' if label == 'BEFORE_CHAPTER' else '章后')}状态暂不可回溯："
+            "当前只有原文，还没有逐章建立历史状态记录。"
+        )
+    if availability == "PROVISIONAL_DRAFT_ONLY":
+        return "这是草稿的临时章末状态，只用于检查，不代表已经写入正史。"
+    return "已找到可追溯的正史状态截面，可以作为本章的历史锚点查看。"
 
 
 def _book_row(connection: sqlite3.Connection, book_id: str) -> dict[str, Any]:
@@ -161,6 +321,7 @@ def _draft_rows(
         item["display_status"] = (
             "VALIDATED_DRAFT" if str(item.get("status")) == "VALIDATED" else str(item.get("status"))
         )
+        item["display_status_label"] = _status_label(item["display_status"])
         item["contract_payload"] = _read_json(item.get("contract_json"))
         item["output"] = _read_json(item.get("output_json"))
         path = Path(str(item.get("file_path") or ""))
@@ -202,6 +363,9 @@ def _draft_tree_items(drafts: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "ordinal": int(ordinal),
             "title": str(draft.get("chapter_title") or f"第{ordinal}章"),
             "status": str(draft["display_status"]),
+            "status_label": str(
+                draft.get("display_status_label") or _status_label(draft["display_status"])
+            ),
             "warning_count": int(draft.get("validation_warning_count", 0)),
             "is_draft": True,
         }
@@ -220,6 +384,7 @@ def _chapter_tree_items(chapters: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "ordinal": int(chapter["ordinal"]),
                 "title": str(chapter["title"]),
                 "status": status,
+                "status_label": _status_label(status),
                 "warning_count": 0,
                 "is_draft": False,
             }
@@ -290,15 +455,20 @@ def _projection_view(
     label: str,
 ) -> dict[str, Any]:
     if event_seq is None:
+        reason = (
+            "当前章节只有不可变 Source 章节；尚未建立逐章 Source-Derived Runtime "
+            "State Projection，不能把最新状态冒充历史截面。"
+        )
         return {
             "availability": "SOURCE_CHAPTER_STATE_PROJECTION_MISSING",
             "label": label,
             "anchor_chapter_ordinal": ordinal,
             "through_event_seq": None,
-            "reason": (
-                "当前章节只有不可变 Source 章节；尚未建立逐章 Source-Derived Runtime "
-                "State Projection，不能把最新状态冒充历史截面。"
+            "availability_label": _status_label("SOURCE_CHAPTER_STATE_PROJECTION_MISSING"),
+            "author_summary": _projection_author_summary(
+                "SOURCE_CHAPTER_STATE_PROJECTION_MISSING", label
             ),
+            "reason": reason,
         }
     projection = projection_from_connection(
         connection,
@@ -313,6 +483,9 @@ def _projection_view(
         "through_event_seq": event_seq,
         "projection_hash": projection.sha256(),
         "state": projection.model_dump(mode="json"),
+        "availability_label": _status_label("CANON_EVENT_PROJECTION"),
+        "author_summary": _projection_author_summary("CANON_EVENT_PROJECTION", label),
+        "state_cards": _state_cards(projection.model_dump(mode="json")),
     }
 
 
@@ -323,6 +496,11 @@ def _projection_delta(before: dict[str, Any], after: dict[str, Any]) -> dict[str
         return {
             "status": "SOURCE_CHAPTER_STATE_PROJECTION_MISSING",
             "changes": [],
+            "display_changes": [],
+            "status_label": _status_label("SOURCE_CHAPTER_STATE_PROJECTION_MISSING"),
+            "author_summary": _delta_author_summary(
+                {"status": "SOURCE_CHAPTER_STATE_PROJECTION_MISSING"}
+            ),
             "reason": after.get("reason") or before.get("reason"),
         }
     changes: list[dict[str, Any]] = []
@@ -360,7 +538,16 @@ def _projection_delta(before: dict[str, Any], after: dict[str, Any]) -> dict[str
                         "after": new[record_id],
                     }
                 )
-    return {"status": "CANON_EVENT_DELTA", "changes": changes, "change_count": len(changes)}
+    return {
+        "status": "CANON_EVENT_DELTA",
+        "changes": changes,
+        "display_changes": [_change_view(change) for change in changes],
+        "change_count": len(changes),
+        "status_label": _status_label("CANON_EVENT_DELTA"),
+        "author_summary": _delta_author_summary(
+            {"status": "CANON_EVENT_DELTA", "change_count": len(changes)}
+        ),
+    }
 
 
 def _validation_context(
@@ -369,13 +556,23 @@ def _validation_context(
     if selected_draft is None:
         return {
             "status": "SOURCE_READ_ONLY",
+            "status_label": _status_label("SOURCE_READ_ONLY"),
             "hard_gate": "NOT_RUN",
+            "hard_gate_label": _status_label("NOT_RUN"),
             "reports": [],
         }
     reports = selected_draft.get("validation_reports", [])
     return {
         "status": selected_draft.get("display_status", selected_draft.get("status")),
+        "status_label": selected_draft.get(
+            "display_status_label", _status_label(selected_draft.get("display_status"))
+        ),
         "hard_gate": (
+            "PASS"
+            if reports and all(item["passed"] for item in reports)
+            else "NOT_RUN_OR_WARNING"
+        ),
+        "hard_gate_label": _status_label(
             "PASS"
             if reports and all(item["passed"] for item in reports)
             else "NOT_RUN_OR_WARNING"
@@ -439,7 +636,12 @@ def _chapter_context(
             delta = {
                 "status": "PROVISIONAL_DRAFT_DELTA",
                 "changes": state_changes,
+                "display_changes": [_change_view(change) for change in state_changes],
                 "change_count": len(state_changes),
+                "status_label": _status_label("PROVISIONAL_DRAFT_DELTA"),
+                "author_summary": _delta_author_summary(
+                    {"status": "PROVISIONAL_DRAFT_DELTA", "change_count": len(state_changes)}
+                ),
                 "note": "这是 Draft 自带的 provisional state_changes，不是 Canon Event。",
             }
             after = {
@@ -448,12 +650,20 @@ def _chapter_context(
                 "anchor_chapter_ordinal": ordinal,
                 "based_on": after,
                 "state_changes": state_changes,
+                "availability_label": _status_label("PROVISIONAL_DRAFT_ONLY"),
+                "author_summary": _projection_author_summary(
+                    "PROVISIONAL_DRAFT_ONLY", "PROVISIONAL_AFTER_CHAPTER"
+                ),
             }
         elif after.get("availability") != "CANON_EVENT_PROJECTION":
             after = {
                 **after,
                 "availability": "PROVISIONAL_DRAFT_ONLY",
                 "label": "PROVISIONAL_AFTER_CHAPTER",
+                "availability_label": _status_label("PROVISIONAL_DRAFT_ONLY"),
+                "author_summary": _projection_author_summary(
+                    "PROVISIONAL_DRAFT_ONLY", "PROVISIONAL_AFTER_CHAPTER"
+                ),
                 "note": "Draft 正文存在，但没有可审计的 provisional state_changes。",
             }
     source_content = "" if selected_chapter is None else str(selected_chapter.get("content") or "")
@@ -495,6 +705,7 @@ def _chapter_context(
         "chapter_id": None if selected_chapter is None else str(selected_chapter["chapter_id"]),
         "chapter_ordinal": ordinal,
         "chapter_status": status,
+        "chapter_status_label": _status_label(status),
         "selected_chapter_anchor": ordinal,
         "read_only_navigation": True,
         "before_state": before,
@@ -508,12 +719,15 @@ def _chapter_context(
             "chapter_ordinal": canon_boundary,
             "event_seq": max(anchors.values(), default=0),
             "status": "CANON" if canon_boundary else "NO_CANON_EVENT_ANCHOR",
+            "status_label": _status_label("CANON" if canon_boundary else "NO_CANON_EVENT_ANCHOR"),
         },
         "source_boundary": {
             "chapter_ordinal": source_boundary,
             "status": "SOURCE_ONLY" if source_boundary else "EMPTY",
+            "status_label": _status_label("SOURCE_ONLY" if source_boundary else "EMPTY"),
         },
         "provisional": provisional,
+        "provisional_label": "草稿临时状态" if provisional else "原文只读",
     }
 
 
@@ -521,6 +735,38 @@ def _public_chapter_context(context: dict[str, Any] | None) -> dict[str, Any] | 
     if context is None:
         return None
     return context
+
+
+def _continuation_package(selected_draft: dict[str, Any] | None) -> dict[str, Any]:
+    if selected_draft is None:
+        return {
+            "available": False,
+            "status": "NOT_AVAILABLE",
+            "status_label": "尚未生成接续包",
+            "author_summary": (
+                "当前章节没有可直接读取的下一章接续包。先在工作流中准备续写任务，"
+                "系统才会生成可审计的边界包和章节合同。"
+            ),
+        }
+    contract = selected_draft.get("contract_payload")
+    if not isinstance(contract, dict) or not contract:
+        return {
+            "available": False,
+            "status": "NOT_AVAILABLE",
+            "status_label": "接续包尚未完成",
+            "author_summary": (
+                "当前有草稿正文，但还没有可审计的章节合同；因此不能把它当作下一章接续依据。"
+            ),
+        }
+    return {
+        "available": True,
+        "status": "PROVISIONAL_DRAFT_CONTEXT",
+        "status_label": "草稿接续信息",
+        "author_summary": "当前草稿带有章节合同，可用于继续检查，但仍需完成校验和作者批准。",
+        "lens": contract.get("lens"),
+        "portfolio": contract.get("narrative_portfolio", {}),
+        "debt": contract.get("narrative_debt", {}),
+    }
 
 
 def build_workbench_context(
@@ -531,6 +777,8 @@ def build_workbench_context(
     chapter_id: str | None = None,
     draft_id: str | None = None,
     node: str = "overview",
+    mode: str = "continue",
+    right_tab: str = "prose",
 ) -> dict[str, Any]:
     """Build one Workbench read model without initializing or mutating the DB."""
 
@@ -553,6 +801,10 @@ def build_workbench_context(
             editions = [dict(edition)]
         else:
             edition = _edition_row(connection, book_id, selected_edition_id)
+        edition = {**edition, "status_label": _status_label(edition.get("status"))}
+        editions = [
+            {**item, "status_label": _status_label(item.get("status"))} for item in editions
+        ]
         raw_chapters = (
             _base_chapters_without_edition(connection, book_id)
             if not edition_rows and selected_edition_id == "base"
@@ -589,6 +841,20 @@ def build_workbench_context(
             selected_chapter,
             selected_draft,
         )
+        if chapter_context is not None:
+            chapter_ordinal = int(chapter_context["chapter_ordinal"])
+            chapter_context["next_chapter"] = next(
+                (
+                    {
+                        "chapter_id": str(item["chapter_id"]),
+                        "ordinal": int(item["ordinal"]),
+                        "title": str(item["title"]),
+                    }
+                    for item in raw_chapters
+                    if int(item["ordinal"]) == chapter_ordinal + 1
+                ),
+                None,
+            )
     profile_items, selected_profile, profile_manifest = _profile_data(
         book, book_id, selected_node
     )
@@ -597,6 +863,7 @@ def build_workbench_context(
     latest_chapter = chapter_items[-1] if chapter_items else None
     if selected_anchor is None and latest_chapter is not None:
         selected_anchor = int(latest_chapter["ordinal"])
+    active_mode = _normalise_choice(mode, WORKBENCH_MODES, "continue")
     return {
         "book": book,
         "book_id": book_id,
@@ -609,12 +876,19 @@ def build_workbench_context(
         "profile_manifest": profile_manifest,
         "selected_profile": selected_profile,
         "selected_node": selected_node,
+        "active_left_node": selected_node,
+        "active_main_mode": active_mode,
+        "active_right_tab": _normalise_choice(right_tab, WORKBENCH_RIGHT_TABS, "prose"),
+        "mode_labels": MODE_LABELS,
+        "right_tab_labels": RIGHT_TAB_LABELS,
         "selected_chapter": selected_chapter,
         "selected_draft": selected_draft,
         "chapter_context": _public_chapter_context(chapter_context),
         "selected_chapter_anchor": selected_anchor,
         "latest_chapter": latest_chapter,
         "book_status": str(book.get("readiness_status") or "UNKNOWN"),
+        "book_status_label": _status_label(book.get("readiness_status") or "UNKNOWN"),
+        "continuation_package": _continuation_package(selected_draft),
         "data_ownership": {
             "source": "Book Library source/ and immutable chapters",
             "distill": "book_profil/ author-facing derived view",
@@ -625,4 +899,9 @@ def build_workbench_context(
     }
 
 
-__all__ = ["PROFILE_DIMENSIONS", "build_workbench_context"]
+__all__ = [
+    "PROFILE_DIMENSIONS",
+    "WORKBENCH_MODES",
+    "WORKBENCH_RIGHT_TABS",
+    "build_workbench_context",
+]

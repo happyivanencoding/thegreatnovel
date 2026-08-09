@@ -387,6 +387,8 @@ def create_app(
             chapter_id=_query_id(request, "chapter_id"),
             draft_id=_query_id(request, "draft_id"),
             node=request.query_params.get("node", "overview"),
+            mode=request.query_params.get("mode", "continue"),
+            right_tab=request.query_params.get("right_tab", "prose"),
         )
         context["csrf_token"] = app.state.csrf_token
         context["library_books"] = _library_books_for_app(app)
@@ -409,6 +411,8 @@ def create_app(
                 chapter_id=_query_id(request, "chapter_id"),
                 draft_id=_query_id(request, "draft_id"),
                 node=request.query_params.get("node", "overview"),
+                mode=request.query_params.get("mode", "continue"),
+                right_tab=request.query_params.get("right_tab", "prose"),
             )
         except ValueError as exc:
             raise HTTPException(
@@ -443,6 +447,8 @@ def create_app(
             chapter_id=_query_id(request, "chapter_id"),
             draft_id=_query_id(request, "draft_id"),
             node=request.query_params.get("node", "overview"),
+            mode=request.query_params.get("mode", "continue"),
+            right_tab=request.query_params.get("right_tab", "prose"),
         )
 
     @app.get(
@@ -459,6 +465,8 @@ def create_app(
             checked_edition,
             chapter_id=_check_id(chapter_id),
             node="chapter",
+            mode="continue",
+            right_tab="prose",
         )["chapter_context"]
         if not isinstance(context, dict):
             raise HTTPException(
