@@ -144,7 +144,7 @@ def test_workbench_renders_real_profile_and_highlights_selected_node(tmp_path: P
     assert response.status_code == 200
     assert "Novel Authoring Workbench" in response.text
     assert "潮汐会遮蔽灯塔坐标" in response.text
-    assert "柔性理解" in _visible_text(response.text)
+    assert "Global Book Profile · Effective" in _visible_text(response.text)
     assert "SOFT INTERPRETATION" not in _visible_text(response.text)
     assert "SELF_BOOK" not in _visible_text(response.text)
     assert "Distill version" not in _visible_text(response.text)
@@ -189,7 +189,7 @@ def test_chapter_navigation_is_query_only_and_exposes_source_gap(tmp_path: Path)
     assert selected.status_code == 200
     assert "第2章" in selected.text
     assert "当前章节 · 第2章" in _visible_text(selected.text)
-    assert "SOURCE_CHAPTER_STATE_PROJECTION_MISSING" in selected.text
+    assert "章后状态暂不可回溯" in _visible_text(selected.text)
     assert "尚未建立历史章节状态" in _visible_text(selected.text)
     assert "目前无法确认这一章具体改变了哪些人物、资源或剧情线" in _visible_text(selected.text)
     assert "潮声里藏着一段坐标" in selected.text
@@ -214,7 +214,7 @@ def test_modes_tabs_and_right_tabs_have_readable_state(tmp_path: Path) -> None:
     assert "连续性审查" in visible
     assert "章末状态" in visible
     assert "当前没有可读取的章节状态" not in visible
-    assert "不会用最新状态填充这里" in visible
+    assert "章后状态暂不可回溯" in visible
     assert "SOURCE_CHAPTER_STATE_PROJECTION_MISSING" not in visible
     assert "anchor_chapter_ordinal" not in visible
 

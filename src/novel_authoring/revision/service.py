@@ -12,6 +12,9 @@ from typing import Any, cast
 import yaml
 from pydantic import ValidationError
 
+from novel_authoring.author_control.book_profile import (
+    queue_book_profile_refresh_proposal_in_transaction,
+)
 from novel_authoring.canon.events import EventRecord, EventStatus, EventStore
 from novel_authoring.canon.materialize import (
     materialize_change,
@@ -2190,6 +2193,13 @@ def approve_revision_campaign(
             connection.execute(
                 "UPDATE editions SET status=?, version=version+1 WHERE book_id=? AND edition_id=? AND status!='ARCHIVED'",
                 (target_status, book_id, edition_id),
+            )
+            queue_book_profile_refresh_proposal_in_transaction(
+                connection,
+                book_id,
+                edition_id,
+                source_type="REVISION_COMMIT",
+                summary=f"改写 Campaign {campaign_id} 已获作者批准，建议刷新目标 Edition 画像。",
             )
     except Exception as exc:
         for path in written:

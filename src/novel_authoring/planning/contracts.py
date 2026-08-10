@@ -89,6 +89,9 @@ def build_chapter_contract(
         "projection": boundary_json["base_projection_hash"],
         "story_atlas_anchor": boundary_json.get("story_atlas_anchor", {}),
         "batch_anchor": boundary_json.get("batch_anchor", {}),
+        "book_profile_version": task_metadata.get("effective_book_profile", {}).get(
+            "profile_version_id"
+        ),
     }
     contract_id = stable_id("contract", json_dumps(contract_seed))
     innovation_commitments = InnovationCommitments()
@@ -155,6 +158,7 @@ def build_chapter_contract(
         innovation_preview=candidate.innovation_preview,
         innovation_commitments=innovation_commitments,
         narrative_portfolio=narrative_portfolio,
+        effective_book_profile=dict(task_metadata.get("effective_book_profile", {})),
     )
     contract_json = json_dumps(contract.model_dump(mode="json"), indent=2)
     contract_hash = sha256_bytes(contract_json.encode())

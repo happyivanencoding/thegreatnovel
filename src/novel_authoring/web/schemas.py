@@ -4,6 +4,10 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from novel_authoring.author_control.book_profile import (
+    ProfileEditOperation,
+    ProfileStrength,
+)
 from novel_authoring.author_control.models import (
     AuthorControlHorizon,
     AuthorIntentStatus,
@@ -124,3 +128,28 @@ class AuthorTaskRequest(BaseModel):
     context_chapter_ordinal: int | None = None
     due_chapter_ordinal: int | None = None
     payload: dict[str, Any] = Field(default_factory=dict)
+
+
+class BookProfileEditRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    dimension: str
+    operation: ProfileEditOperation = ProfileEditOperation.ADD
+    content: str = ""
+    strength: ProfileStrength = ProfileStrength.SUGGESTION
+    reason: str = "作者编辑"
+
+
+class BookProfileProposalRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    source_type: str = "AUTHOR_REANALYSIS"
+    proposed_baseline: dict[str, Any] | None = None
+    summary: str = ""
+
+
+class BookProfileProposalResolutionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    action: str
+    edited_baseline: dict[str, Any] | None = None

@@ -20,6 +20,12 @@ from novel_authoring.author_control.models import (
     CommandResult,
     PlannedStateChange,
 )
+from novel_authoring.author_control.source_state import (
+    SourceStateCoverageStatus,
+    source_state_chapter_coverage,
+    source_state_coverage_summary,
+    upsert_source_state_coverage,
+)
 from novel_authoring.db.database import Database
 from novel_authoring.utils import utc_now
 
@@ -520,6 +526,13 @@ def _request_source_state_hydration(
         ).fetchone()
         if chapter is None:
             raise ValueError("章节不存在")
+        coverage = source_state_chapter_coverage(
+            connection,
+            book_id,
+            edition_id,
+            chapter_id,
+            chapter_ordinal=int(chapter["ordinal"]),
+        )
         existing = connection.execute(
             """
             SELECT * FROM author_control_tasks
@@ -529,6 +542,20 @@ def _request_source_state_hydration(
             """,
             (book_id, edition_id, chapter_id),
         ).fetchone()
+    if coverage.complete:
+        return _resolution(
+            CommandResult.PLANNED,
+            "SOURCE_STATE_HYDRATION_ALREADY_COMPLETE",
+            f"第{int(chapter['ordinal'])}章已经完成原文状态分析，不会重复排队。",
+            allowed_actions=["REANALYZE_SOURCE_STATE"],
+            planned_change=PlannedStateChange(
+                change_type="SOURCE_STATE_HYDRATION",
+                target_layer="SOURCE_STATE_COVERAGE",
+                subject_type="SOURCE_CHAPTER_STATE",
+                subject_id=chapter_id,
+                description="章节状态已覆盖",
+            ),
+        )
     if existing is not None:
         task = _task_from_row(existing)
         task, handoff = _ensure_source_state_hydration_handoff(
@@ -609,6 +636,17 @@ def _ensure_source_state_hydration_handoff(
             task_id=task.task_id,
         )
         handoff_id = str(created["handoff_id"])
+        with database.connect() as connection:
+            upsert_source_state_coverage(
+                connection,
+                book_id=book_id,
+                edition_id=edition_id,
+                chapter_id=chapter_id,
+                chapter_ordinal=int(task.context_chapter_ordinal or 0),
+                status=SourceStateCoverageStatus.READY_FOR_CODEX,
+                task_id=task.task_id,
+                handoff_id=handoff_id,
+            )
         payload.update(
             {
                 "handoff_id": handoff_id,
@@ -653,6 +691,87 @@ def _ensure_source_state_hydration_handoff(
     }
 
 
+def _request_source_state_batch_hydration(
+    database: Database,
+    book_id: str,
+    edition_id: str,
+    command: AuthorStateCommand,
+) -> CommandResolution:
+    payload = dict(command.payload)
+    chunk_size = max(10, min(20, int(payload.get("chunk_size", 15))))
+    start_ordinal = max(1, int(payload.get("start_ordinal", 1)))
+    end_ordinal = _optional_int(payload.get("end_ordinal"))
+    volume_title = str(payload.get("volume_title") or "").strip()
+    database.initialize()
+    with database.connect() as connection:
+        _scope_check(connection, book_id, edition_id)
+        clauses = ["book_id=?", "ordinal>=?"]
+        parameters: list[Any] = [book_id, start_ordinal]
+        if end_ordinal is not None:
+            clauses.append("ordinal<=?")
+            parameters.append(end_ordinal)
+        if volume_title:
+            clauses.append("volume_title=?")
+            parameters.append(volume_title)
+        chapters = connection.execute(
+            "SELECT chapter_id, ordinal, title FROM chapters WHERE "
+            + " AND ".join(clauses)
+            + " ORDER BY ordinal, chapter_id",
+            tuple(parameters),
+        ).fetchall()
+    if not chapters:
+        raise ValueError("批量补齐范围内没有章节")
+    batch_id = f"source-state-batch-{uuid.uuid4().hex}"
+    queued: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    for chapter in chapters:
+        resolution = _request_source_state_hydration(
+            database,
+            book_id,
+            edition_id,
+            AuthorStateCommand(
+                command_type="REQUEST_SOURCE_STATE_HYDRATION",
+                chapter_id=str(chapter["chapter_id"]),
+            ),
+        )
+        entry = {
+            "chapter_id": str(chapter["chapter_id"]),
+            "chapter_ordinal": int(chapter["ordinal"]),
+            "title": str(chapter["title"]),
+            "code": resolution.code,
+            "handoff": resolution.handoff,
+        }
+        (skipped if resolution.handoff is None else queued).append(entry)
+    chunks = [
+        queued[index : index + chunk_size]
+        for index in range(0, len(queued), chunk_size)
+    ]
+    with database.connect() as connection:
+        coverage = source_state_coverage_summary(connection, book_id, edition_id)
+    return _resolution(
+        CommandResult.PLANNED,
+        "SOURCE_STATE_BATCH_HYDRATION_READY",
+        f"已按每组 {chunk_size} 章准备 {len(queued)} 个逐章 handoff；"
+        f"{len(skipped)} 章已有覆盖或已跳过。",
+        allowed_actions=["PROCESS_SOURCE_STATE_HYDRATION_CHUNKS", "COLLECT_RESULTS"],
+        handoff={
+            "batch_id": batch_id,
+            "status": "READY_FOR_CODEX" if queued else "COMPLETE",
+            "chunk_size": chunk_size,
+            "chunks": chunks,
+            "skipped": skipped,
+            "coverage": coverage,
+        },
+        planned_change=PlannedStateChange(
+            change_type="SOURCE_STATE_BATCH_HYDRATION",
+            target_layer="SOURCE_STATE_COVERAGE",
+            subject_type="SOURCE_CHAPTER_RANGE",
+            subject_id=batch_id,
+            description=f"批量补齐 {len(chapters)} 章的原文状态",
+        ),
+    )
+
+
 def complete_source_state_hydration_task(
     database: Database, handoff_id: str, *, result: dict[str, Any]
 ) -> AuthorTask | None:
@@ -674,7 +793,34 @@ def complete_source_state_hydration_task(
         before = task.model_dump(mode="json")
         payload = dict(task.payload)
         payload["hydration_status"] = "COMPLETED"
-        payload["imported_delta_count"] = len(result.get("deltas", []))
+        result_deltas = [
+            item for item in result.get("deltas", []) if isinstance(item, dict)
+        ]
+        payload["imported_delta_count"] = len(result_deltas)
+        uncertain_count = len(result.get("uncertain_findings", []))
+        verified_count = sum(
+            1
+            for item in result_deltas
+            if item.get("verification_status") == "SOURCE_VERIFIED"
+        )
+        uncertain_count += len(result_deltas) - verified_count
+        coverage_status = (
+            SourceStateCoverageStatus.COMPLETE_WITH_CHANGES
+            if verified_count
+            else SourceStateCoverageStatus.COMPLETE_NO_CHANGE
+        )
+        upsert_source_state_coverage(
+            connection,
+            book_id=task.book_id,
+            edition_id=task.edition_id,
+            chapter_id=str(task.context_chapter_id or ""),
+            chapter_ordinal=int(task.context_chapter_ordinal or 0),
+            status=coverage_status,
+            verified_delta_count=verified_count,
+            uncertain_finding_count=uncertain_count,
+            task_id=task.task_id,
+            handoff_id=handoff_id,
+        )
         connection.execute(
             "UPDATE author_control_tasks SET lifecycle_status='DONE', payload_json=?, "
             "updated_at=?, version=version+1 WHERE task_id=?",
@@ -768,6 +914,10 @@ def execute_author_command(
         return _update_task(database, book_id, edition_id, task_id, changes)
     if command_type == "REQUEST_SOURCE_STATE_HYDRATION":
         return _request_source_state_hydration(database, book_id, edition_id, command)
+    if command_type == "REQUEST_SOURCE_STATE_BATCH_HYDRATION":
+        return _request_source_state_batch_hydration(
+            database, book_id, edition_id, command
+        )
     if command_type == "CREATE_FUTURE_ITEM":
         name = str(payload.get("name") or payload.get("title") or "").strip()
         if not name:

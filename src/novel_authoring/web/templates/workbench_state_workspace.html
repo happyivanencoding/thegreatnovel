@@ -1,0 +1,124 @@
+{% if story_game_state %}
+{% set coverage_complete = story_game_state.coverage_status in ['COMPLETE_NO_CHANGE', 'COMPLETE_WITH_CHANGES'] %}
+<article class="wb-content-card wb-state-summary">
+  <div class="wb-section-heading">
+    <div>
+      <p class="wb-kicker">Chapter World State · {{ story_game_state.view }}</p>
+      <h2>第{{ story_game_state.chapter.ordinal if story_game_state.chapter else '—' }}章 · 章后世界状态</h2>
+      <small class="wb-section-subtitle">{{ story_game_state.chapter.title if story_game_state.chapter else '尚未选择章节' }}</small>
+    </div>
+    <div class="wb-heading-tags">
+      <span class="wb-state-tag wb-state-source">{{ story_game_state.coverage_status }}</span>
+      <span class="wb-state-tag {% if story_game_state.state_changed %}wb-state-canon{% else %}wb-state-unknown{% endif %}">{% if story_game_state.state_changed %}本章有确认变化{% elif coverage_complete %}本章没有确认变化{% else %}本章尚未分析{% endif %}</span>
+      <span class="wb-state-tag wb-state-soft">投影只读</span>
+    </div>
+  </div>
+  <p class="wb-context-explanation">{{ story_game_state.message }}</p>
+  <div class="wb-overview-grid wb-coverage-summary" aria-label="全书章节状态覆盖率">
+    <div><span>已分析</span><strong>{{ story_game_state.coverage_summary.analyzed }}/{{ story_game_state.coverage_summary.total }}</strong></div>
+    <div><span>有变化</span><strong>{{ story_game_state.coverage_summary.with_changes }}</strong></div>
+    <div><span>无变化</span><strong>{{ story_game_state.coverage_summary.no_changes }}</strong></div>
+    <div><span>完成率</span><strong>{{ story_game_state.coverage_summary.percentage }}%</strong></div>
+  </div>
+  {% if story_game_state.coverage_summary.analyzed < story_game_state.coverage_summary.total %}
+  <form class="wb-batch-hydration" data-author-command-form data-command-type="REQUEST_SOURCE_STATE_BATCH_HYDRATION">
+    <input type="hidden" name="start_ordinal" value="1">
+    <input type="hidden" name="end_ordinal" value="{{ story_game_state.coverage_summary.total }}">
+    <label>每组章节数 <input type="number" name="chunk_size" min="10" max="20" value="15"></label>
+    <button class="button compact" type="submit">按全书批量准备状态任务</button>
+    <p class="wb-command-feedback" aria-live="polite"></p>
+  </form>
+  {% endif %}
+  {% if story_game_state.source_state.hydration.required %}
+  <div class="wb-state-incomplete">
+    <div><strong>{% if story_game_state.source_state.hydration.queued %}状态分析已排队{% else %}本章尚未完成原文状态分析{% endif %}</strong><span>Coverage 与 Delta 分开记录；分析完成但没有变化时会明确显示 COMPLETE_NO_CHANGE。</span></div>
+    {% if not story_game_state.source_state.hydration.queued and story_game_state.chapter %}
+    <form data-author-command-form data-command-type="REQUEST_SOURCE_STATE_HYDRATION"><input type="hidden" name="chapter_id" value="{{ story_game_state.chapter.chapter_id }}"><button class="button compact" type="submit">准备本章状态任务</button></form>
+    {% endif %}
+  </div>
+  {% endif %}
+  <div class="wb-state-tabs" role="tablist" aria-label="章节世界状态">
+    {% for tab, label in [('overview','总览'),('characters','人物'),('inventory','背包'),('equipment','装备'),('abilities','能力'),('knowledge','知识'),('locations','地点'),('factions','势力'),('relationships','关系'),('world_rules','世界规则'),('tasks','任务与剧情线')] %}
+    <button type="button" data-wb-state-tab="{{ tab }}" aria-selected="{% if state_tab == tab %}true{% else %}false{% endif %}">{{ label }}</button>
+    {% endfor %}
+  </div>
+</article>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="overview" {% if state_tab != 'overview' %}hidden{% endif %}>
+  <article class="wb-content-card">
+    <div class="wb-section-heading"><div><p class="wb-kicker">Coverage + State</p><h3>这一章分析到了什么</h3></div><span class="wb-state-tag wb-state-source">{{ story_game_state.coverage_status }}</span></div>
+    <div class="wb-overview-grid">
+      {% for key, label in [('characters','人物'),('locations','地点'),('inventory','背包'),('equipment','装备'),('abilities','能力'),('knowledge_topics','知识主题'),('relationships','关系'),('factions','势力'),('world_rules','世界规则'),('threads','剧情线'),('promises','承诺')] %}
+      <div><span>{{ label }}</span><strong>{{ story_game_state.counts[key] or 0 }}</strong></div>
+      {% endfor %}
+    </div>
+    <div class="wb-delta-panel">
+      <h4>本章 Delta</h4>
+      {% if story_game_state.chapter_delta.confirmed %}<ul class="wb-record-list">{% for item in story_game_state.chapter_delta.confirmed %}<li data-state-record='{{ item|tojson }}'><b>{{ item.operation }} · {{ item.name }}</b><span>{{ item.statement }}</span></li>{% endfor %}</ul>{% elif coverage_complete %}<p class="wb-empty-state">本章状态已分析，没有确认状态变化；这不是缺失。</p>{% else %}<p class="wb-empty-state">本章尚未完成原文状态分析；Coverage 与 Delta 会分别记录。</p>{% endif %}
+    </div>
+    <details class="wb-technical-details" data-explorer-section="atlas-soft-reference"><summary>Story Atlas 软参考（不进入当前状态）</summary>{% if story_game_state.soft_reference.available %}<div class="wb-reference-grid">{% for graph_name, graph in story_game_state.soft_reference.graphs.items() %}<div><b>{{ graph_name }}</b><span>{{ graph.nodes|length }} 节点 · {{ graph.edges|length }} 边</span></div>{% endfor %}</div>{% else %}<p class="wb-empty-state">当前没有 Story Atlas 软参考。</p>{% endif %}</details>
+  </article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="characters" {% if state_tab != 'characters' %}hidden{% endif %}>
+  <article class="wb-content-card">
+    <div class="wb-section-heading"><div><p class="wb-kicker">人物状态</p><h3>{{ story_game_state.character.name or '选择人物' }}</h3></div><span class="wb-state-tag">{{ story_game_state.character.status_label }}</span></div>
+    <div class="wb-character-picker">{% for character in story_game_state.characters %}<a class="wb-character-chip{% if character.character_id == story_game_state.selected_character_id %} is-selected{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?mode=state&node=state&state_tab=characters{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}&character_id={{ character.character_id }}" data-workbench-navigation data-inspector-record='{{ character|tojson }}'><strong>{{ character.name }}</strong><small>{{ character.layer_label }}</small></a>{% else %}<p class="wb-empty-state">当前没有可回指证据的人物。</p>{% endfor %}</div>
+    <p class="wb-context-explanation">{{ story_game_state.character.message }}</p>
+    {% if story_game_state.character.attributes %}<dl class="wb-attribute-list">{% for item in story_game_state.character.attributes %}<div><dt>{{ item.label }}</dt><dd>{{ item.value }}</dd></div>{% endfor %}</dl>{% endif %}
+  </article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="inventory" {% if state_tab != 'inventory' %}hidden{% endif %}>
+  <article class="wb-content-card">
+    <div class="wb-section-heading"><div><p class="wb-kicker">Inventory</p><h3>当前背包</h3></div><button class="button compact" type="button" data-open-item-modal>＋ 添加物品</button></div>
+    <div class="wb-inventory-grid">{% for item in story_game_state.inventory %}<button type="button" class="wb-item-card" data-inspector-record='{{ item|tojson }}' data-inspector-kind="item"><strong>{{ item.name }}</strong><span>{{ item.status_label or item.layer_label }}</span><small>{{ item.statement or '已登记物品' }}</small></button>{% else %}<p class="wb-empty-state">当前章节没有可回指证据的背包物品。</p>{% endfor %}</div>
+  </article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="equipment" {% if state_tab != 'equipment' %}hidden{% endif %}>
+  <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">Equipment</p><h3>已装备物品</h3></div></div><div class="wb-inventory-grid">{% for item in story_game_state.equipment %}<button type="button" class="wb-item-card" data-inspector-record='{{ item|tojson }}' data-inspector-kind="item"><strong>{{ item.name }}</strong><span>{{ item.slot or '装备槽未注明' }}</span><small>{{ item.statement }}</small></button>{% else %}<p class="wb-empty-state">当前没有已确认装备。</p>{% endfor %}</div></article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="abilities" {% if state_tab != 'abilities' %}hidden{% endif %}>
+  <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">Capability</p><h3>能力边界</h3></div></div><ul class="wb-record-list">{% for item in story_game_state.abilities %}<li tabindex="0" data-inspector-record='{{ item|tojson }}' data-inspector-kind="ability"><b>{{ item.name }}</b><span>{{ item.status_label or item.layer_label }} · {{ item.statement }}</span></li>{% else %}<li><b>尚无已确认能力</b><span>未知不等于未获得。</span></li>{% endfor %}</ul></article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="knowledge" {% if state_tab != 'knowledge' %}hidden{% endif %}>
+  <article class="wb-content-card">
+    <div class="wb-section-heading"><div><p class="wb-kicker">Knowledge Matrix</p><h3>人物 × 知识主题</h3></div><span class="wb-state-tag wb-state-unknown">UNKNOWN = 尚未知</span></div>
+    <p class="wb-context-explanation">知道 / 亲眼见过 / 听说 / 怀疑 / 误解 / 尚未知。没有证据时只显示“尚未知”，绝不写成“角色不知道”。</p>
+    <div class="wb-knowledge-table-wrap"><table class="wb-knowledge-table"><thead><tr><th>人物</th>{% for topic in story_game_state.knowledge_topics %}<th>{{ topic.name }}</th>{% endfor %}</tr></thead><tbody>{% for character in story_game_state.characters %}<tr><th>{{ character.name }}</th>{% for topic in story_game_state.knowledge_topics %}{% set cells = story_game_state.knowledge_matrix|selectattr('knower_id','equalto',character.character_id)|selectattr('topic_id','equalto',topic.topic_id)|list %}{% set cell = cells[0] if cells else none %}<td><button type="button" class="wb-knowledge-cell wb-knowledge-cell-{{ (cell.state if cell else 'UNKNOWN')|lower }}" data-inspector-record='{{ (cell if cell else {'knower_id': character.character_id, 'knower_name': character.name, 'topic_id': topic.topic_id, 'topic_name': topic.name, 'state': 'UNKNOWN', 'state_label': '尚未知', 'layer': 'UNKNOWN'})|tojson }}' data-inspector-kind="knowledge">{{ cell.state_label if cell else '尚未知' }}</button></td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+  </article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="locations" {% if state_tab != 'locations' %}hidden{% endif %}>
+  <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">Locations</p><h3>地点状态</h3></div></div><ul class="wb-record-list">{% for item in story_game_state.locations %}<li tabindex="0" data-inspector-record='{{ item|tojson }}' data-inspector-kind="location"><b>{{ item.name }}</b><span>{{ item.status_label or item.layer_label }} · {{ item.statement }}</span></li>{% else %}<li><b>尚无地点状态</b><span>不会从 Atlas 猜测当前地点。</span></li>{% endfor %}</ul></article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="factions" {% if state_tab != 'factions' %}hidden{% endif %}>
+  <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">Factions</p><h3>势力状态</h3></div><span class="wb-state-tag wb-state-source">事实层</span></div><ul class="wb-record-list">{% for item in story_game_state.factions %}<li tabindex="0" data-inspector-record='{{ item|tojson }}' data-inspector-kind="faction"><b>{{ item.name }}</b><span>状态 {{ item.state or 'UNKNOWN' }} · 目标 {{ item.goal }} · 态度 {{ item.attitude }}</span><small>关键人物：{{ item.key_people|join('、') if item.key_people else '尚未知' }} · 控制地点：{{ item.controlled_locations|join('、') if item.controlled_locations else '尚未知' }}</small></li>{% else %}<li><b>尚无势力事实</b><span>Story Atlas 只在总览折叠区作为软参考。</span></li>{% endfor %}</ul></article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="relationships" {% if state_tab != 'relationships' %}hidden{% endif %}>
+  <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">Relationship Graph</p><h3>人物与势力关系</h3></div></div><div class="wb-relationship-graph" data-wb-relationship-graph data-graph='{{ story_game_state.relationship_graph|tojson }}'><p class="wb-empty-state">关系图正在读取。</p></div><ul class="wb-record-list">{% for item in story_game_state.relationships %}<li tabindex="0" data-inspector-record='{{ item|tojson }}' data-inspector-kind="relationship"><b>{{ item.name }}</b><span>{{ item.statement or '关系已登记' }}</span></li>{% else %}<li><b>暂无关系边</b><span>作者目标不会伪装成当前关系。</span></li>{% endfor %}</ul></article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="world_rules" {% if state_tab != 'world_rules' %}hidden{% endif %}>
+  <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">World Rules</p><h3>当前已确认规则</h3></div></div><ul class="wb-record-list">{% for item in story_game_state.world_rules %}<li tabindex="0" data-inspector-record='{{ item|tojson }}' data-inspector-kind="world-rule"><b>{{ item.name }}</b><span>{{ item.statement }}</span></li>{% else %}<li><b>尚无规则记录</b><span>未知规则保持未知。</span></li>{% endfor %}</ul></article>
+</section>
+
+<section class="wb-state-tab-panel" data-wb-state-panel="tasks" {% if state_tab != 'tasks' %}hidden{% endif %}>
+  <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">Tasks · Threads · Promises</p><h3>事实与作者规划分层</h3></div></div><div class="wb-state-columns"><section><h4>剧情线</h4><ul class="wb-record-list">{% for item in story_game_state.threads %}<li tabindex="0" data-inspector-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.statement }}</span></li>{% else %}<li>尚无剧情线事实</li>{% endfor %}</ul></section><section><h4>承诺 / 任务</h4><ul class="wb-record-list">{% for item in story_game_state.promises + story_game_state.tasks %}<li tabindex="0" data-inspector-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.statement }}</span></li>{% else %}<li>尚无已确认任务或承诺</li>{% endfor %}</ul></section></div>{% if story_game_state.author_intents %}<div class="wb-planned-strip"><strong>作者意图（独立层）</strong>{% for item in story_game_state.author_intents %}<span>{{ item.title }}</span>{% endfor %}</div>{% endif %}</article>
+</section>
+
+<dialog class="wb-item-modal" data-item-modal>
+  <form method="dialog" class="wb-item-modal-card" data-item-modal-form>
+    <div class="wb-section-heading"><div><p class="wb-kicker">Add Item</p><h3>这件物品属于哪一层？</h3></div><button type="button" class="wb-icon-button" data-close-item-modal aria-label="关闭">×</button></div>
+    <label>名称<input name="name" required></label><label>类别<select name="category"><option value="ITEM">物品</option><option value="EQUIPMENT">装备</option><option value="RESOURCE">资源</option></select></label><label>语义<select name="intent_scope"><option value="CURRENT">当前已经存在（需要本章证据）</option><option value="FUTURE">未来获得</option><option value="CANDIDATE">候选设定</option></select></label><label>关联地点<input name="location" placeholder="可选"></label><label>说明<textarea name="description" rows="3"></textarea></label>
+    <div class="wb-modal-actions"><button type="button" class="button" data-close-item-modal>取消</button><button type="submit" class="button primary">检查并提交</button></div><p class="wb-command-feedback" data-item-modal-feedback></p>
+  </form>
+</dialog>
+{% else %}
+<article class="wb-content-card"><p class="wb-empty-state">状态面板尚未加载。</p></article>
+{% endif %}

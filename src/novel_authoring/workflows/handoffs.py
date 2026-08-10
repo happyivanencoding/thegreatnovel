@@ -11,6 +11,7 @@ from typing import Any, Literal, cast
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from novel_authoring.atlas.service import atlas_usage, latest_atlas, validate_atlas
+from novel_authoring.author_control.source_state import SourceChapterStateDelta
 from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
@@ -205,7 +206,7 @@ class SourceStateHydrationResult(BaseModel):
     edition_id: str
     chapter_id: str
     chapter_ordinal: int = Field(ge=1)
-    deltas: list[dict[str, Any]] = Field(default_factory=list)
+    deltas: list[SourceChapterStateDelta] = Field(default_factory=list)
     uncertain_findings: list[dict[str, Any]] = Field(default_factory=list)
     validation_summary: dict[str, Any] = Field(default_factory=dict)
     canon_committed: Literal[False] = False
@@ -1154,6 +1155,74 @@ def create_continuation_handoff(database: Database, book_id: str, **kwargs: Any)
     return create_handoff(database, book_id, handoff_type=HandoffType.CONTINUATION, **kwargs)
 
 
+def refresh_handoff_planning_aggregate(
+    database: Database,
+    handoff_id: str,
+) -> dict[str, str]:
+    """Refresh a READY handoff after its workflow goal enters Author Control."""
+
+    database.initialize()
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT * FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)
+        ).fetchone()
+    if row is None:
+        raise HandoffWorkflowError("handoff 不存在")
+    if str(row["status"]) != HandoffStatus.READY_FOR_CODEX.value:
+        raise HandoffWorkflowError("只有 READY_FOR_CODEX handoff 可以刷新规划锚点")
+    if str(row["handoff_type"]) not in {
+        HandoffType.CONTINUATION.value,
+        HandoffType.REVISION.value,
+        HandoffType.BATCH_CONTINUATION.value,
+    }:
+        raise HandoffWorkflowError("当前 handoff 不使用 Planning Aggregate")
+
+    book_id = str(row["book_id"])
+    edition_id = str(row["edition_id"])
+    aggregate = build_planning_aggregate(
+        database,
+        book_id,
+        edition_id=edition_id,
+        author_policy={"source": "handoff-freeze", "policy_version": "v1"},
+    )
+    task_directory = Path(str(row["task_directory"]))
+    task_path = _handoff_file(task_directory, "task.json")
+    manifest_path = _handoff_file(task_directory, "context_manifest.json")
+    task = json.loads(task_path.read_text(encoding="utf-8"))
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    task["planning_aggregate_id"] = aggregate["aggregate_id"]
+    task["planning_aggregate_hash"] = aggregate["bundle_hash"]
+    manifest["planning_aggregate_id"] = aggregate["aggregate_id"]
+    manifest["planning_aggregate_hash"] = aggregate["bundle_hash"]
+    _write_json(task_path, task)
+    file_hashes = manifest.setdefault("file_hashes", {})
+    if not isinstance(file_hashes, dict):
+        raise HandoffWorkflowError("context manifest 的 file_hashes 无效")
+    file_hashes["task.json"] = sha256_file(task_path)
+    _write_json(manifest_path, manifest)
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE workflow_handoffs SET planning_aggregate_id=?, "
+            "planning_aggregate_hash=? WHERE handoff_id=? AND status=?",
+            (
+                aggregate["aggregate_id"],
+                aggregate["bundle_hash"],
+                handoff_id,
+                HandoffStatus.READY_FOR_CODEX.value,
+            ),
+        )
+    append_event(
+        database,
+        handoff_id,
+        "PLANNING_AGGREGATE_REFRESHED",
+        {"planning_aggregate_id": aggregate["aggregate_id"]},
+    )
+    return {
+        "planning_aggregate_id": str(aggregate["aggregate_id"]),
+        "planning_aggregate_hash": str(aggregate["bundle_hash"]),
+    }
+
+
 def create_source_state_hydration_handoff(
     database: Database,
     book_id: str,
@@ -1197,9 +1266,15 @@ def create_source_state_hydration_handoff(
         entities = [
             dict(row)
             for row in connection.execute(
-                "SELECT entity_id, entity_type, name, aliases_json, status, payload_json "
-                "FROM entities WHERE book_id=? ORDER BY entity_type, name, entity_id LIMIT 500",
-                (book_id,),
+                "SELECT e.entity_id, e.entity_type, e.name, e.aliases_json, e.status, "
+                "e.payload_json, s.span_id AS source_span_id, "
+                "c.ordinal AS evidence_chapter_ordinal "
+                "FROM entities e "
+                "JOIN source_spans s ON s.span_id=e.source_span_id AND s.book_id=e.book_id "
+                "JOIN chapters c ON c.chapter_id=s.chapter_id AND c.book_id=e.book_id "
+                "WHERE e.book_id=? AND c.ordinal<=? "
+                "ORDER BY e.entity_type, e.name, e.entity_id LIMIT 500",
+                (book_id, int(chapter["ordinal"])),
             ).fetchall()
         ]
     hydration = {
@@ -1723,6 +1798,51 @@ def validate_result_file(database: Database, handoff_id: str) -> dict[str, Any]:
     return parsed.model_dump(mode="json")
 
 
+def _sync_hydration_coverage_status(
+    connection: sqlite3.Connection,
+    handoff_id: str,
+    status: HandoffStatus,
+    *,
+    error_message: str | None = None,
+) -> None:
+    task = connection.execute(
+        "SELECT * FROM author_control_tasks "
+        "WHERE task_type='SOURCE_STATE_HYDRATION' "
+        "AND json_extract(payload_json, '$.handoff_id')=? "
+        "ORDER BY updated_at DESC LIMIT 1",
+        (handoff_id,),
+    ).fetchone()
+    if task is None or task["context_chapter_id"] is None:
+        return
+    mapped = {
+        HandoffStatus.READY_FOR_CODEX: "READY_FOR_CODEX",
+        HandoffStatus.CLAIMED: "READY_FOR_CODEX",
+        HandoffStatus.RUNNING: "RUNNING",
+        HandoffStatus.WAITING_FOR_USER: "PARTIAL",
+        HandoffStatus.FAILED: "FAILED",
+        HandoffStatus.STALE: "FAILED",
+        HandoffStatus.CANCELLED: "FAILED",
+    }.get(status)
+    if mapped is None:
+        return
+    from novel_authoring.author_control.source_state import (
+        SourceStateCoverageStatus,
+        upsert_source_state_coverage,
+    )
+
+    upsert_source_state_coverage(
+        connection,
+        book_id=str(task["book_id"]),
+        edition_id=str(task["edition_id"]),
+        chapter_id=str(task["context_chapter_id"]),
+        chapter_ordinal=int(task["context_chapter_ordinal"]),
+        status=SourceStateCoverageStatus(mapped),
+        task_id=str(task["task_id"]),
+        handoff_id=handoff_id,
+        error_message=error_message,
+    )
+
+
 def update_handoff_status(
     database: Database,
     handoff_id: str,
@@ -1814,6 +1934,12 @@ def update_handoff_status(
                     handoff_id,
                 ),
             )
+            _sync_hydration_coverage_status(
+                connection,
+                handoff_id,
+                HandoffStatus.FAILED,
+                error_message=invalid_result_reason,
+            )
             task_directory = Path(str(row["task_directory"]))
             _write_json(
                 task_directory / "status.json",
@@ -1839,6 +1965,12 @@ def update_handoff_status(
                     "UPDATE workflow_handoffs SET status='STALE', stale_at=?, "
                     "stale_reason=?, drift_detected_at=?, error_message=? WHERE handoff_id=?",
                     (utc_now(), reason, utc_now(), reason, handoff_id),
+                )
+                _sync_hydration_coverage_status(
+                    connection,
+                    handoff_id,
+                    HandoffStatus.STALE,
+                    error_message=reason,
                 )
                 task_directory = Path(str(row["task_directory"]))
                 _write_json(
@@ -1871,6 +2003,12 @@ def update_handoff_status(
                     else json_dumps({"valid": True}),
                     handoff_id,
                 ),
+            )
+            _sync_hydration_coverage_status(
+                connection,
+                handoff_id,
+                status,
+                error_message=error_message,
             )
             task_directory = Path(str(row["task_directory"]))
             _write_json(

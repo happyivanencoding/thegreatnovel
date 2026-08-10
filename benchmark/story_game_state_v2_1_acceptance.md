@@ -9,6 +9,8 @@
 真实书库 session：`cable-survival-blind-50`
 数据库：`library/cable-survival-blind-50/_system/state.sqlite3`
 
+> V2.2 复核更正（2026-08-10）：本报告形成时只完成了局部 Source State hydration，因而“第 50 章才出现 M500”的判断不成立。全 50 章正式 hydration 已确认 M500 在第 6 章取得，所以第 10、30、50 章均应显示；当前完整结论以 `story_world_workbench_v2_2_acceptance.md` 为准。此处保留原表，仅作为当时局部数据状态的历史记录。
+
 ## 1. 真实 50 章验收
 
 真实章节数为 50。实际打开并检查了第 10、30、50 章的 Workbench 状态页；三个时间点不是同一个 latest baseline 的复制品：

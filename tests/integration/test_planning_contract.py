@@ -8,6 +8,12 @@ from typing import Any
 
 import pytest
 
+from novel_authoring.author_control.book_profile import (
+    PROFILE_DIMENSIONS,
+    ProfileEditOperation,
+    ProfileStrength,
+    edit_book_profile,
+)
 from novel_authoring.canon.projection import rebuild_projection
 from novel_authoring.config import Settings, load_settings
 from novel_authoring.db.database import Database
@@ -204,6 +210,17 @@ def candidate_payload(
         "required_irreversible_change": structure[8],
         "required_cost": structure[4],
         "must_not_resolve": ["无线电呼叫者的最终身份"],
+        "profile_alignment": {
+            "dimensions": [
+                {
+                    "dimension": dimension,
+                    "alignment": "符合当前 Effective Profile",
+                    "evidence": ["候选结构与本维度要求一致"],
+                }
+                for dimension, _, _ in PROFILE_DIMENSIONS
+            ],
+            "constraint_checks": [],
+        },
         "canon_constraints": ["钥匙仍是生锈钥匙", "电量已经用于无线电"],
         "knowledge_constraints": ["林岚不知道呼叫者身份"],
         "forbidden_repetitions": ["再次只靠查看面板推进"],
@@ -318,6 +335,11 @@ def test_boundary_candidate_ranking_and_contract(tmp_path: Path) -> None:
     assert contract_data["required_irreversible_change"]
     assert contract_data["required_cost"]
     assert contract_data["boundary_packet_id"] == task["boundary_packet_id"]
+    assert len(task["effective_book_profile"]["dimensions"]) == 9
+    assert (
+        contract_data["effective_book_profile"]["profile_version_id"]
+        == task["effective_book_profile"]["profile_version_id"]
+    )
 
     with sqlite3.connect(database.path) as connection:
         assert connection.execute("SELECT COUNT(*) FROM candidate_plans").fetchone()[0] == 3
@@ -357,6 +379,47 @@ def test_hard_gate_rejected_candidate_is_preserved_with_reason(tmp_path: Path) -
     assert rejected["selection_status"] == "REJECTED"
     assert rejected["score"] == 0
     assert rejected["hard_failures"] == ["主角提前知道呼叫者身份"]
+
+
+def test_profile_must_constraint_is_a_hard_gate(tmp_path: Path) -> None:
+    database, workspace, settings = setup_planning_book(tmp_path)
+    profile = edit_book_profile(
+        database,
+        "planning-book",
+        "base",
+        dimension="themes",
+        operation=ProfileEditOperation.ADD,
+        content="每次安全收益都必须伴随明确代价。",
+        strength=ProfileStrength.MUST,
+    )
+    edit_id = profile["hard_constraints"]["must"][0]["edit_id"]
+    task = prepare_candidate_task(database, "planning-book", settings)
+    candidates = [
+        candidate_payload("one", "station-defense", score=80, variant=0),
+        candidate_payload("two", "radio-caller", score=70, variant=1),
+        candidate_payload("three", "wind-rule", score=99, variant=2),
+    ]
+    for candidate in candidates:
+        candidate["profile_alignment"]["constraint_checks"] = [
+            {"edit_id": edit_id, "passed": True, "evidence": "代价已写入候选结构"}
+        ]
+    candidates[2]["profile_alignment"]["constraint_checks"][0] = {
+        "edit_id": edit_id,
+        "passed": False,
+        "evidence": "候选提供无代价收益",
+    }
+    output = write_candidates(workspace, str(task["task_id"]), candidates)
+
+    result = import_candidate_output(
+        database, "planning-book", str(task["task_id"]), settings, output
+    )
+
+    rejected = next(item for item in result["candidates"] if item["local_id"] == "three")
+    assert rejected["selection_status"] == "REJECTED"
+    assert rejected["score"] == 0
+    assert rejected["hard_failures"] == [
+        f"Profile 硬约束未通过 {edit_id}：候选提供无代价收益"
+    ]
 
 
 def test_full_synthetic_e2e_from_ingest_to_approval(tmp_path: Path) -> None:
@@ -494,8 +557,13 @@ def test_full_synthetic_e2e_from_ingest_to_approval(tmp_path: Path) -> None:
             "SELECT status FROM author_directives WHERE directive_id=?",
             (directive["directive_id"],),
         ).fetchone()[0]
+        profile_proposal = connection.execute(
+            "SELECT source_type, status FROM book_profile_refresh_proposals "
+            "WHERE book_id='planning-book' ORDER BY created_at DESC LIMIT 1"
+        ).fetchone()
 
     assert committed["status"] == "CANON_COMMITTED"
+    assert tuple(profile_proposal) == ("CANON_COMMIT", "PENDING")
     assert directive_status == "CONSUMED"
     assert next_packet["author_directives"] == []
     assert "合成端到端章节" in next_packet["recent_full_chapters"][-1]["heading"]

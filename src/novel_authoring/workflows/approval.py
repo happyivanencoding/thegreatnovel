@@ -6,6 +6,9 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from novel_authoring.author_control.book_profile import (
+    queue_book_profile_refresh_proposal_in_transaction,
+)
 from novel_authoring.canon.events import EventStatus, EventStore
 from novel_authoring.canon.materialize import MaterializationError, materialize_change
 from novel_authoring.canon.projection import (
@@ -590,6 +593,13 @@ def approve_draft(
             connection.execute(
                 "UPDATE books SET updated_at=?, version=version+1 WHERE book_id=?",
                 (now, book_id),
+            )
+            queue_book_profile_refresh_proposal_in_transaction(
+                connection,
+                book_id,
+                selected_edition,
+                source_type="CANON_COMMIT",
+                summary=f"第{ordinal}章已批准写入正史，建议重新分析全书画像。",
             )
     except ApprovalWorkflowError:
         if canon_written:

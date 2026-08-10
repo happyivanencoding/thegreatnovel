@@ -5,6 +5,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from novel_authoring.author_control.book_profile import PROFILE_DIMENSIONS
 from novel_authoring.domain.models import ContinuationMode, NarrativeFunction
 from novel_authoring.metrics.gates import HardGateInput
 from novel_authoring.planning.innovation import (
@@ -170,6 +171,37 @@ class AuthorControlTrace(BaseModel):
     unused_reasons: dict[str, str] = Field(default_factory=dict)
 
 
+class ProfileDimensionAlignment(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    dimension: str
+    alignment: str
+    evidence: list[str] = Field(default_factory=list)
+
+
+class ProfileConstraintCheck(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    edit_id: str
+    passed: bool
+    evidence: str
+
+
+class CandidateProfileAlignment(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    dimensions: list[ProfileDimensionAlignment] = Field(default_factory=list)
+    constraint_checks: list[ProfileConstraintCheck] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def dimensions_are_unique(self) -> CandidateProfileAlignment:
+        names = [item.dimension for item in self.dimensions]
+        allowed = {item[0] for item in PROFILE_DIMENSIONS}
+        if len(names) != len(set(names)) or any(name not in allowed for name in names):
+            raise ValueError("Profile alignment 维度必须唯一且属于九维画像")
+        return self
+
+
 class CandidateProposal(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -211,6 +243,9 @@ class CandidateProposal(BaseModel):
     wildcard: bool = False
     innovation_preview: CandidateInnovationPreview | None = None
     author_control_trace: AuthorControlTrace = Field(default_factory=AuthorControlTrace)
+    profile_alignment: CandidateProfileAlignment = Field(
+        default_factory=CandidateProfileAlignment
+    )
 
     @model_validator(mode="after")
     def reject_retroactive_invention(self) -> CandidateProposal:
@@ -279,3 +314,4 @@ class ChapterContract(BaseModel):
     )
     narrative_portfolio: NarrativePortfolioSnapshot | None = None
     innovation_trace: InnovationTrace | None = None
+    effective_book_profile: dict[str, Any] = Field(default_factory=dict)

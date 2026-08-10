@@ -13,23 +13,14 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
+from novel_authoring.author_control.book_profile import (
+    PROFILE_DIMENSIONS,
+    load_effective_book_profile,
+)
 from novel_authoring.author_control.projections import build_story_game_state
 from novel_authoring.author_control.service import author_control_view
 from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.edition import edition_chapters
-from novel_authoring.storage.layout import BookLayout
-
-PROFILE_DIMENSIONS: tuple[tuple[str, str, str], ...] = (
-    ("worldbuilding", "世界观", "worldbuilding.md"),
-    ("characters", "人物", "characters.md"),
-    ("plot", "剧情", "plot.md"),
-    ("style", "文风", "style.md"),
-    ("narrative", "叙事", "narrative.md"),
-    ("dialogue", "对话", "dialogue.md"),
-    ("pacing", "节奏", "pacing.md"),
-    ("themes", "主题", "themes.md"),
-    ("continuity", "连续性", "continuity.md"),
-)
 
 WORKBENCH_MODES: tuple[str, ...] = (
     "continue",
@@ -41,13 +32,16 @@ WORKBENCH_MODES: tuple[str, ...] = (
 )
 WORKBENCH_RIGHT_TABS: tuple[str, ...] = ("prose", "state", "next")
 WORKBENCH_STATE_TABS: tuple[str, ...] = (
-    "character",
+    "overview",
+    "characters",
     "inventory",
+    "equipment",
     "abilities",
     "knowledge",
-    "world",
+    "locations",
     "factions",
     "relationships",
+    "world_rules",
     "tasks",
 )
 
@@ -267,23 +261,22 @@ def _read_json(value: Any) -> dict[str, Any]:
     return parsed if isinstance(parsed, dict) else {"raw": parsed}
 
 
-def _profile_root(book: dict[str, Any], book_id: str) -> Path:
-    root = Path(str(book["workspace_root"])).expanduser().resolve()
-    if (root / "book.yaml").is_file():
-        return BookLayout(root.parent).for_book(book_id).book_profil
-    return root / "book_profil"
-
-
 def _profile_data(
-    book: dict[str, Any], book_id: str, selected_node: str
+    database: Any, book_id: str, edition_id: str, selected_node: str
 ) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, Any]]:
-    root = _profile_root(book, book_id)
-    manifest = _read_json(
-        root.joinpath("profile_manifest.json").read_text(encoding="utf-8")
-        if root.joinpath("profile_manifest.json").is_file()
-        else {}
-    )
-    items: list[dict[str, Any]] = []
+    profile = load_effective_book_profile(database, book_id, edition_id)
+    items = [
+        {
+            "id": str(item["dimension"]),
+            "label": str(item["label"]),
+            "filename": str(item["filename"]),
+            "available": bool(item["available"]),
+            "relative_path": f"book_profil/{item['filename']}",
+            "author_edit_count": int(item["author_edit_count"]),
+            "effective_source": str(item["effective_source"]),
+        }
+        for item in profile["dimensions"]
+    ]
     selected: dict[str, Any] = {
         "id": selected_node,
         "label": "作者画像",
@@ -291,22 +284,21 @@ def _profile_data(
         "content": "",
         "relative_path": "",
     }
-    for dimension, label, filename in PROFILE_DIMENSIONS:
-        path = root / filename
-        available = path.is_file()
-        item = {
-            "id": dimension,
-            "label": label,
-            "filename": filename,
-            "available": available,
-            "relative_path": f"book_profil/{filename}",
-        }
-        items.append(item)
-        if dimension == selected_node:
+    for dimension in profile["dimensions"]:
+        if dimension["dimension"] == selected_node:
             selected = {
-                **item,
-                "content": path.read_text(encoding="utf-8")[:500_000] if available else "",
+                **dimension,
+                "id": dimension["dimension"],
             }
+    manifest = {
+        "profile_version_id": profile["profile_version_id"],
+        "version_number": profile["version_number"],
+        "edition_id": edition_id,
+        "inherited_from_edition_id": profile["inherited_from_edition_id"],
+        "hard_constraints": profile["hard_constraints"],
+        "history": profile["history"],
+        "proposals": profile["proposals"],
+    }
     return items, selected, manifest
 
 
@@ -358,6 +350,46 @@ def _draft_rows(
             1 for report in item["validation_reports"] if not report["passed"]
         )
         result.append(item)
+    return result
+
+
+def _candidate_cards(
+    connection: sqlite3.Connection, book_id: str, edition_id: str
+) -> list[dict[str, Any]]:
+    latest = connection.execute(
+        "SELECT task_id FROM candidate_plans WHERE book_id=? AND edition_id=? "
+        "ORDER BY created_at DESC LIMIT 1",
+        (book_id, edition_id),
+    ).fetchone()
+    if latest is None:
+        return []
+    rows = connection.execute(
+        "SELECT * FROM candidate_plans WHERE book_id=? AND edition_id=? AND task_id=? "
+        "ORDER BY CASE WHEN rank IS NULL THEN 999 ELSE rank END, candidate_id",
+        (book_id, edition_id, str(latest["task_id"])),
+    ).fetchall()
+    result: list[dict[str, Any]] = []
+    for row in rows:
+        plan = _read_json(row["plan_json"])
+        score = _read_json(row["score_json"])
+        gate = _read_json(row["gate_report_json"])
+        result.append(
+            {
+                "candidate_id": str(row["candidate_id"]),
+                "rank": row["rank"],
+                "selection_status": str(row["selection_status"]),
+                "title": str(plan.get("title") or row["candidate_id"]),
+                "summary": str(plan.get("summary") or ""),
+                "primary_function": plan.get("primary_function"),
+                "reader_question": plan.get("reader_question"),
+                "final_selection_score": score.get("final_selection_score")
+                or score.get("score"),
+                "hard_failures": list(gate.get("hard_failures", [])),
+                "author_control_trace": plan.get("author_control_trace", {}),
+                "profile_alignment": plan.get("profile_alignment", {}),
+                "state_changes": list(plan.get("state_changes", [])),
+            }
+        )
     return result
 
 
@@ -787,7 +819,7 @@ def build_workbench_context(
     node: str = "overview",
     mode: str = "continue",
     right_tab: str = "prose",
-    state_tab: str = "character",
+    state_tab: str = "overview",
     character_id: str | None = None,
 ) -> dict[str, Any]:
     """Build one Workbench read model without initializing or mutating the DB."""
@@ -821,6 +853,7 @@ def build_workbench_context(
             else edition_chapters(connection, book_id, selected_edition_id)
         )
         drafts = _draft_rows(connection, book_id, selected_edition_id)
+        candidate_cards = _candidate_cards(connection, book_id, selected_edition_id)
         selected_chapter, selected_draft = _selected_records(
             raw_chapters,
             drafts,
@@ -866,7 +899,9 @@ def build_workbench_context(
                 ),
                 None,
             )
-    profile_items, selected_profile, profile_manifest = _profile_data(book, book_id, selected_node)
+    profile_items, selected_profile, profile_manifest = _profile_data(
+        database, book_id, selected_edition_id, selected_node
+    )
     chapter_items = _chapter_tree_items(raw_chapters)
     draft_items = _draft_tree_items(drafts)
     latest_chapter = chapter_items[-1] if chapter_items else None
@@ -874,7 +909,7 @@ def build_workbench_context(
         selected_anchor = int(latest_chapter["ordinal"])
     active_mode = _normalise_choice(mode, WORKBENCH_MODES, "continue")
     active_state_tab = _normalise_choice(
-        state_tab, WORKBENCH_STATE_TABS, "character"
+        state_tab, WORKBENCH_STATE_TABS, "overview"
     )
     story_game_state: dict[str, Any] | None = None
     author_control: dict[str, Any] | None = None
@@ -895,6 +930,7 @@ def build_workbench_context(
         "editions": editions,
         "chapter_items": chapter_items,
         "draft_items": draft_items,
+        "candidate_cards": candidate_cards,
         "profile_items": profile_items,
         "profile_manifest": profile_manifest,
         "selected_profile": selected_profile,

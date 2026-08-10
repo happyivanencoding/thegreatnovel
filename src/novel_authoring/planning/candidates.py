@@ -7,6 +7,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from novel_authoring.author_control.projections import build_story_game_state
 from novel_authoring.config import Settings
 from novel_authoring.context.router import (
     ContextPurpose,
@@ -86,6 +87,48 @@ def _validate_author_control_trace(
     missing_reasons = set(trace.author_goals_not_used) - set(trace.unused_reasons)
     if missing_reasons:
         raise PlanningError(f"未使用作者目标缺少原因：{sorted(missing_reasons)}")
+
+
+def _profile_constraint_failures(
+    candidate: CandidateProposal, frozen_profile: dict[str, Any]
+) -> list[str]:
+    if not frozen_profile:
+        return []
+    expected_dimensions = {
+        str(item.get("dimension"))
+        for item in frozen_profile.get("dimensions", [])
+        if isinstance(item, dict) and item.get("dimension")
+    }
+    actual_dimensions = {
+        item.dimension for item in candidate.profile_alignment.dimensions
+    }
+    if actual_dimensions != expected_dimensions:
+        raise PlanningError(
+            f"候选 {candidate.local_id} 必须逐维检查 Effective Profile："
+            f"missing={sorted(expected_dimensions - actual_dimensions)}, "
+            f"unknown={sorted(actual_dimensions - expected_dimensions)}"
+        )
+    hard_constraints = frozen_profile.get("hard_constraints", {})
+    expected_checks = {
+        str(item.get("edit_id"))
+        for strength in ("must", "must_not")
+        for item in hard_constraints.get(strength, [])
+        if isinstance(item, dict) and item.get("edit_id")
+    }
+    checks = {
+        item.edit_id: item for item in candidate.profile_alignment.constraint_checks
+    }
+    if set(checks) != expected_checks:
+        raise PlanningError(
+            f"候选 {candidate.local_id} 的 Profile 硬约束检查不完整："
+            f"missing={sorted(expected_checks - set(checks))}, "
+            f"unknown={sorted(set(checks) - expected_checks)}"
+        )
+    return [
+        f"Profile 硬约束未通过 {check.edit_id}：{check.evidence}"
+        for check in checks.values()
+        if not check.passed
+    ]
 
 
 def _current_ordinal(connection: Any, book_id: str, edition_id: str = "base") -> int:
@@ -373,6 +416,19 @@ def prepare_candidate_task(
             "unused_reasons。只能引用上方冻结的 ID；硬门永远优先于作者目标命中。",
             "AUTO 方向只提供推荐；若候选实际走向不同方向，必须在 Preview 中如实标注。",
             "",
+            "## Effective Global Book Profile（九维，必须逐维对齐）",
+            "",
+            json_dumps(
+                aggregate.get("author_policy", {}).get(
+                    "effective_book_profile", {}
+                ),
+                indent=2,
+            ),
+            "",
+            "每个候选必须填写 profile_alignment：九个 dimension 各一条，并逐项填写"
+            " MUST/MUST_NOT constraint_checks。任何 passed=false 都是硬门失败，"
+            "Innovation Reward 不得抵消。",
+            "",
             "## 三条优先线程",
             "",
             "```json",
@@ -422,6 +478,9 @@ def prepare_candidate_task(
         "author_control_trace_contract": aggregate.get("author_policy", {}).get(
             "trace_contract", {}
         ),
+        "effective_book_profile": aggregate.get("author_policy", {}).get(
+            "effective_book_profile", {}
+        ),
         "metric_run_ids": aggregate["metric_run_ids"],
         "bundle_hash": aggregate["bundle_hash"],
         "rhythm_snapshot_id": aggregate.get("rhythm_snapshot_id"),
@@ -449,6 +508,148 @@ def prepare_candidate_task(
         "top_threads": [item.model_dump(mode="json") for item in threads],
         "aggregate_id": aggregate["aggregate_id"],
         "bundle_hash": aggregate["bundle_hash"],
+        "effective_book_profile": metadata["effective_book_profile"],
+    }
+
+
+def prepare_handoff_candidate_task(
+    database: Database,
+    book_id: str,
+    handoff_id: str,
+) -> dict[str, object]:
+    """Prepare the three-candidate contract from a frozen local handoff."""
+
+    database.initialize()
+    with database.connect() as connection:
+        handoff = connection.execute(
+            "SELECT * FROM workflow_handoffs WHERE handoff_id=? AND book_id=?",
+            (handoff_id, book_id),
+        ).fetchone()
+    if handoff is None:
+        raise PlanningError("handoff 不存在")
+    if str(handoff["handoff_type"]) != "CONTINUATION":
+        raise PlanningError("只有 CONTINUATION handoff 可以准备候选")
+    if str(handoff["requested_stage"]) != "PLAN_ONLY":
+        raise PlanningError("handoff 不是 PLAN_ONLY")
+    if str(handoff["status"]) not in {"READY_FOR_CODEX", "CLAIMED", "RUNNING"}:
+        raise PlanningError("handoff 当前状态不能准备候选")
+
+    edition_id = str(handoff["edition_id"])
+    aggregate_id = str(handoff["planning_aggregate_id"] or "")
+    if not aggregate_id:
+        raise PlanningError("handoff 缺少 Planning Aggregate")
+    with database.connect() as connection:
+        aggregate_row = connection.execute(
+            "SELECT * FROM planning_aggregates WHERE aggregate_id=? AND book_id=? "
+            "AND edition_id=?",
+            (aggregate_id, book_id, edition_id),
+        ).fetchone()
+    if aggregate_row is None or str(aggregate_row["status"]) != "ACTIVE":
+        raise PlanningError("handoff 的 Planning Aggregate 不可用")
+    if str(aggregate_row["bundle_hash"]) != str(handoff["planning_aggregate_hash"]):
+        raise PlanningError("handoff 的 Planning Aggregate hash 不一致")
+
+    handoff_root = Path(str(handoff["task_directory"]))
+    handoff_input = handoff_root / "input" if (handoff_root / "input").is_dir() else handoff_root
+    handoff_task = json.loads((handoff_input / "task.json").read_text(encoding="utf-8"))
+    author_policy = json.loads(str(aggregate_row["author_policy_json"] or "{}"))
+    task_id = stable_id("plan", handoff_id, aggregate_id)
+    operation = ensure_operation(
+        database,
+        book_id,
+        edition_id,
+        task_id,
+        "PLAN_NEXT",
+        {"handoff_id": handoff_id, "planning_aggregate_id": aggregate_id},
+    )
+    workspace = edition_workspace(database, book_id, edition_id)
+    input_dir = operation.input if operation is not None else workspace / "agent_tasks" / task_id
+    output_dir = (
+        operation.output
+        if operation is not None
+        else workspace / "agent_outputs" / task_id
+    )
+    input_dir.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    chapter_id = str(handoff_task.get("context_chapter_id") or "") or None
+    world_state = build_story_game_state(
+        database,
+        book_id,
+        edition_id,
+        chapter_id=chapter_id,
+    )
+    schema = CandidateOutput.model_json_schema()
+    metadata = {
+        "task_id": task_id,
+        "task_type": "plan-next",
+        "book_id": book_id,
+        "edition_id": edition_id,
+        "handoff_id": handoff_id,
+        "aggregate_id": aggregate_id,
+        "aggregate_hash": str(aggregate_row["bundle_hash"]),
+        "author_goal": handoff_task.get("author_goal"),
+        "author_control": author_policy.get("author_control", {}),
+        "author_control_trace_contract": author_policy.get("trace_contract", {}),
+        "effective_book_profile": author_policy.get("effective_book_profile", {}),
+        "innovation_control": handoff_task.get("innovation_control"),
+        "innovation_source": handoff_task.get("innovation_source"),
+        "rhythm_snapshot_id": handoff_task.get("rhythm_snapshot_id"),
+        "metric_run_id": handoff_task.get("metric_run_id"),
+        "metric_bundle_hash": handoff_task.get("metric_bundle_hash"),
+        "handoff_input": str(handoff_input),
+        "source_state_context": str(input_dir / "world_state_context.json"),
+        "created_at": utc_now(),
+    }
+    input_text = "\n".join(
+        [
+            f"# PLAN_ONLY 三候选任务 `{task_id}`",
+            "",
+            f"正式 handoff：`{handoff_id}`。先读取 handoff input 下全部冻结文件。",
+            "只生成恰好三个 Candidate，不生成正文、Chapter Contract 或 Canon Event。",
+            "三个 lens 必须分别为 CONTINUITY_ACTIVE_THREAD、EARNED_OPPORTUNITY、"
+            "FORWARD_EXPANSION，且任意两案至少三个结构维度不同。",
+            "每案必须填写 author_control_trace；命中本次 WORKFLOW_GOAL intent，并说明"
+            " M500 弹药、林雨薇合作和资源代价如何进入因果链。",
+            "每案必须逐一填写九维 profile_alignment，并对全部 MUST/MUST_NOT edit_id"
+            " 给出 passed 与证据。硬约束失败不得靠创新分抵消。",
+            "所有事实必须来自 world_state_context.json 或 handoff 冻结证据；未来新增只能"
+            "作为 CANDIDATE，并填写 novelty provenance。",
+            "当前 provenance-aware 指标若为 INCOMPLETE，必须保留缺失，不得伪造分数或证据。",
+            "",
+            "## 本次作者目标",
+            "",
+            str(handoff_task.get("author_goal") or "（未提供）"),
+            "",
+            "## 冻结 Author Control",
+            "",
+            json_dumps(author_policy.get("author_control", {}), indent=2),
+            "",
+            "## Effective Global Book Profile",
+            "",
+            json_dumps(author_policy.get("effective_book_profile", {}), indent=2),
+        ]
+    )
+    (input_dir / "input.md").write_text(input_text + "\n", encoding="utf-8")
+    (input_dir / "schema.json").write_text(
+        json_dumps(schema, indent=2) + "\n", encoding="utf-8"
+    )
+    (input_dir / "task.json").write_text(
+        json_dumps(metadata, indent=2) + "\n", encoding="utf-8"
+    )
+    (input_dir / "world_state_context.json").write_text(
+        json_dumps(world_state, indent=2) + "\n", encoding="utf-8"
+    )
+    return {
+        "task_id": task_id,
+        "handoff_id": handoff_id,
+        "input": str(input_dir / "input.md"),
+        "schema": str(input_dir / "schema.json"),
+        "task": str(input_dir / "task.json"),
+        "source_state_context": str(input_dir / "world_state_context.json"),
+        "expected_output": str(output_dir / "output.json"),
+        "aggregate_id": aggregate_id,
+        "effective_book_profile": metadata["effective_book_profile"],
     }
 
 
@@ -543,6 +744,7 @@ def import_candidate_output(
     )
     aggregate_id = str(metadata.get("aggregate_id") or "")
     frozen_author_control: dict[str, Any] = {}
+    frozen_profile: dict[str, Any] = {}
     if aggregate_id:
         with database.connect() as connection:
             aggregate_row = connection.execute(
@@ -557,6 +759,7 @@ def import_candidate_output(
                 raise PlanningError("Planning Aggregate 的作者控制冻结值无效") from exc
             if isinstance(aggregate_policy, dict):
                 frozen_author_control = aggregate_policy.get("author_control", {})
+                frozen_profile = aggregate_policy.get("effective_book_profile", {})
     portfolio_path = path.parent / "portfolio_diagnostics.json"
     portfolio_path.write_text(
         json_dumps(portfolio.model_dump(mode="json"), indent=2) + "\n",
@@ -574,7 +777,16 @@ def import_candidate_output(
     evaluated: list[dict[str, Any]] = []
     for candidate in output.candidates:
         _validate_author_control_trace(candidate, frozen_author_control)
-        gate = evaluate_hard_gates(candidate.gate_input, settings.metrics)
+        profile_failures = _profile_constraint_failures(candidate, frozen_profile)
+        gate_input = candidate.gate_input.model_copy(
+            update={
+                "author_constraint_violations": [
+                    *candidate.gate_input.author_constraint_violations,
+                    *profile_failures,
+                ]
+            }
+        )
+        gate = evaluate_hard_gates(gate_input, settings.metrics)
         diversity = (
             sum(differences[candidate.local_id])
             / (len(differences[candidate.local_id]) * len(STRUCTURE_FIELDS))
@@ -737,6 +949,7 @@ def import_candidate_output(
         "candidates": [
             {
                 "candidate_id": item["candidate_id"],
+                "local_id": item["candidate"].local_id,
                 "title": item["candidate"].title,
                 "score": item["score"],
                 "base_score": item["base_score"],
@@ -757,10 +970,13 @@ def import_candidate_output(
                     item["candidate"].author_control_trace.author_task_hits
                     or item["candidate"].author_control_trace.author_intent_hits
                 ),
+                "profile_alignment": item[
+                    "candidate"
+                ].profile_alignment.model_dump(mode="json"),
             }
             for item in evaluated
         ],
-        "boundary_packet_id": metadata["boundary_packet_id"],
+        "boundary_packet_id": metadata.get("boundary_packet_id"),
         "aggregate_id": aggregate_id or None,
         "portfolio_diagnostics": portfolio.model_dump(mode="json"),
         "portfolio_diagnostics_path": str(portfolio_path),

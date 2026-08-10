@@ -9,9 +9,11 @@ from fastapi.testclient import TestClient
 from novel_authoring.author_control.source_state import (
     SourceChapterStateDelta,
     SourceStateCategory,
+    SourceStateCoverageStatus,
     SourceStateOperation,
     SourceStateVerification,
     record_source_chapter_deltas,
+    record_source_state_coverage,
 )
 from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
@@ -155,6 +157,15 @@ def _book_with_source_baseline(tmp_path: Path) -> tuple[Database, list[str], str
             ensure_ascii=False,
         ),
         encoding="utf-8",
+    )
+    record_source_state_coverage(
+        database,
+        book_id="story-game-state-v2",
+        edition_id="base",
+        chapter_id=str(chapters[1]["chapter_id"]),
+        chapter_ordinal=2,
+        status=SourceStateCoverageStatus.COMPLETE_WITH_CHANGES,
+        verified_delta_count=4,
     )
     return database, [str(row["chapter_id"]) for row in chapters], str(
         span_by_chapter[str(chapters[0]["chapter_id"])] ["span_id"]

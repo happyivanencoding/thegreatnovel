@@ -10,384 +10,71 @@
 <body class="workbench-body">
   <header class="wb-topbar">
     <a class="wb-brand" href="/">Novel Authoring Workbench</a>
-    <div class="wb-breadcrumb" data-wb-breadcrumb>
-      <span>{{ book.title }}</span><span>/</span><span>{{ edition.display_name }}</span>
-      {% if selected_chapter_anchor %}<span>/</span><span>第{{ selected_chapter_anchor }}章</span>{% endif %}
-    </div>
+    <div class="wb-breadcrumb" data-wb-breadcrumb><span>{{ book.title }}</span><span>/</span><span>{{ edition.display_name }}</span>{% if selected_chapter_anchor %}<span>/</span><span>第{{ selected_chapter_anchor }}章</span>{% endif %}</div>
     <div class="wb-top-actions">
       <a class="wb-top-link" href="/library">书库 · {{ library_books|length }}</a>
-      {% if library_books %}
-      <label class="wb-library-switcher">切换 session
-        <select aria-label="切换书库 session" onchange="if (this.value) window.location.href=this.value">
-          {% for item in library_books %}
-          <option value="/books/{{ item.book_id }}/editions/{{ item.active_edition_id }}/workbench"{% if item.book_id == book_id %} selected{% endif %}>{{ item.title }} · {{ item.book_id }}</option>
-          {% endfor %}
-        </select>
-      </label>
-      {% endif %}
-      <span class="wb-status-chip wb-status-{{ (selected_draft.display_status if selected_draft else 'SOURCE')|lower }}">
-        {{ selected_draft.display_status_label if selected_draft else '原文（只读）' }}
-      </span>
-      <a class="wb-top-link" href="/books/{{ book_id }}/workflow">工作流</a>
-      <a class="wb-top-link" href="/books/{{ book_id }}/jobs">任务交接</a>
+      {% if library_books %}<label class="wb-library-switcher">切换 session<select aria-label="切换书库 session" onchange="if(this.value) location.href=this.value">{% for item in library_books %}<option value="/books/{{ item.book_id }}/editions/{{ item.active_edition_id }}/workbench"{% if item.book_id == book_id %} selected{% endif %}>{{ item.title }} · {{ item.book_id }}</option>{% endfor %}</select></label>{% endif %}
+      <span class="wb-status-chip">{{ selected_draft.display_status_label if selected_draft else '原文（只读）' }}</span>
+      <a class="wb-top-link" href="/books/{{ book_id }}/workflow">工作流</a><a class="wb-top-link" href="/books/{{ book_id }}/jobs">任务交接</a>
     </div>
   </header>
 
-  <main class="wb-shell" data-workbench-shell
-        data-book-id="{{ book_id }}" data-edition-id="{{ edition_id }}"
-        data-active-mode="{{ active_main_mode }}" data-active-right-tab="{{ active_right_tab }}"
-        data-active-left-node="{{ active_left_node }}" data-selected-character-id="{{ selected_character_id or '' }}"
-        data-current-chapter-id="{{ selected_chapter_id or '' }}">
+  <main class="wb-shell" data-workbench-shell data-book-id="{{ book_id }}" data-edition-id="{{ edition_id }}" data-active-mode="{{ active_main_mode }}" data-active-right-tab="{{ active_right_tab }}" data-active-left-node="{{ active_left_node }}" data-active-state-tab="{{ state_tab }}" data-active-analysis-dimension="{{ selected_profile.id or '' }}" data-selected-character-id="{{ selected_character_id or '' }}" data-current-chapter-id="{{ selected_chapter_id or '' }}">
     <aside class="wb-pane wb-left-pane" data-pane="left" aria-label="小说结构与知识树">
       <div class="wb-pane-content">
-      <div class="wb-pane-header">
-        <div>
-          <p class="wb-kicker">创作空间</p>
-          <h1>{{ book.title }}</h1>
-        </div>
-        <button class="wb-icon-button" type="button" data-toggle-pane="left" aria-label="隐藏左栏" title="隐藏左栏"><span data-pane-toggle-icon aria-hidden="true">‹</span></button>
+        <div class="wb-pane-header"><div><p class="wb-kicker">创作空间</p><h1>{{ book.title }}</h1></div><button class="wb-icon-button" type="button" data-toggle-pane="left" aria-label="隐藏左栏"><span data-pane-toggle-icon>‹</span></button></div>
+        <label class="wb-select-label">版本<select data-edition-select data-book-id="{{ book_id }}" onchange="location.href='/books/{{ book_id }}/editions/'+encodeURIComponent(this.value)+'/workbench'">{% for item in editions %}<option value="{{ item.edition_id }}"{% if item.edition_id == edition_id %} selected{% endif %}>{{ item.display_name }} · {{ item.status_label }}</option>{% endfor %}</select></label>
+        <nav class="wb-tree" aria-label="Workbench Explorer">
+          <a class="wb-tree-root wb-workbench-link{% if selected_node == 'overview' %} is-selected{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=overview" data-workbench-navigation>⌂ <span>概览</span></a>
+          <details open data-explorer-section="chapters"><summary>正文 <span class="wb-count">{{ chapter_items|length }}</span></summary><label class="wb-search-label">搜索章节<input type="search" placeholder="标题或序号" data-wb-chapter-search></label><div class="wb-chapter-tree" data-wb-chapter-tree><div class="wb-volume-row"><span>▾</span> 第一卷 <span class="wb-count">{{ chapter_items|length }}</span></div>{% for item in chapter_items %}<a class="wb-chapter-row wb-workbench-link{% if selected_chapter and item.chapter_id == selected_chapter.chapter_id %} is-selected{% endif %}" data-wb-chapter-item href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?chapter_id={{ item.chapter_id }}&node=chapter" data-workbench-navigation><span class="wb-chapter-number">{{ item.ordinal }}</span><span class="wb-chapter-title">{{ item.title }}</span><span class="wb-mini-status">{{ item.status_label }}</span></a>{% endfor %}{% for item in draft_items %}<a class="wb-chapter-row wb-draft-row wb-workbench-link{% if selected_draft and item.draft_id == selected_draft.draft_id %} is-selected{% endif %}" data-wb-chapter-item href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?draft_id={{ item.draft_id }}&node=chapter" data-workbench-navigation><span class="wb-chapter-number">{{ item.ordinal }}</span><span class="wb-chapter-title">{{ item.title }}</span><span class="wb-mini-status wb-mini-provisional">{{ item.status_label }}</span></a>{% endfor %}</div></details>
+          <details open data-explorer-section="world-state"{% if active_main_mode == 'state' %} class="is-active-branch"{% endif %}><summary>◈ 世界状态</summary>{% for tab, label, icon in [('overview','总览','◈'),('characters','人物','♙'),('inventory','背包','▦'),('equipment','装备','◫'),('abilities','能力','✦'),('knowledge','知识','◎'),('locations','地点','⌖'),('factions','势力','⬡'),('relationships','关系','⌘'),('world_rules','世界规则','§'),('tasks','任务与剧情线','✓')] %}<a class="wb-tree-item wb-workbench-link{% if active_main_mode == 'state' and state_tab == tab %} is-selected{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=state&mode=state&state_tab={{ tab }}{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}" data-workbench-navigation><span class="wb-tree-icon">{{ icon }}</span>{{ label }}{% if story_game_state and story_game_state.counts.get(tab) %}<span class="wb-count">{{ story_game_state.counts.get(tab) }}</span>{% endif %}</a>{% endfor %}</details>
+          <details open data-explorer-section="analysis"{% if active_main_mode == 'analysis' %} class="is-active-branch"{% endif %}><summary>全书画像 <span class="wb-count">9</span></summary>{% for item in profile_items %}<a class="wb-tree-item wb-workbench-link{% if selected_node == item.id %} is-selected{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node={{ item.id }}&mode=analysis" data-workbench-navigation><span class="wb-tree-icon">·</span>{{ item.label }}{% if item.author_edit_count %}<span class="wb-availability">作者修改 {{ item.author_edit_count }}</span>{% elif item.available %}<span class="wb-availability">已生成</span>{% else %}<span class="wb-availability is-missing">未建立</span>{% endif %}</a>{% endfor %}</details>
+          <details data-explorer-section="continuity"><summary>连续性账本</summary><a class="wb-tree-item wb-workbench-link" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?mode=continuity&node=chapter{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}" data-workbench-navigation>章节状态审查</a></details>
+          <details data-explorer-section="revision"><summary>改写</summary><div class="wb-placeholder-tree">独立 Edition · 影响审计 · 作者批准</div></details>
+        </nav>
+        <div class="wb-left-footer"><span>状态</span><strong>{{ book_status_label }}</strong><span class="wb-readonly-note">章节点击只改变查询位置。</span></div>
       </div>
-      <label class="wb-select-label">版本
-        <select data-edition-select data-book-id="{{ book_id }}"
-                onchange="window.location.href='/books/{{ book_id }}/editions/' + encodeURIComponent(this.value) + '/workbench'">
-          {% for item in editions %}
-          <option value="{{ item.edition_id }}"{% if item.edition_id == edition_id %} selected{% endif %}>
-            {{ item.display_name }} · {{ item.status_label }}
-          </option>
-          {% endfor %}
-        </select>
-      </label>
-
-      <nav class="wb-tree" aria-label="Workbench Explorer">
-        <a class="wb-tree-root wb-workbench-link{% if selected_node == 'overview' %} is-selected{% endif %}"
-           href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=overview"
-           data-workbench-navigation>⌂ <span>概览</span></a>
-
-        <details open{% if selected_node == 'worldbuilding' %} class="is-active-branch"{% endif %}>
-          <summary>世界观</summary>
-          <a class="wb-tree-item wb-workbench-link{% if selected_node == 'worldbuilding' %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=worldbuilding&mode=analysis"
-             data-workbench-navigation><span class="wb-tree-icon">◇</span>总览
-             {% if profile_items[0].available %}<span class="wb-availability">有画像</span>{% endif %}</a>
-        </details>
-
-        <details open{% if selected_node == 'characters' %} class="is-active-branch"{% endif %}>
-          <summary>人物</summary>
-          <a class="wb-tree-item wb-workbench-link{% if selected_node == 'characters' %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=characters&mode=analysis"
-             data-workbench-navigation><span class="wb-tree-icon">♙</span>人物画像
-             {% if profile_items[1].available %}<span class="wb-availability">有画像</span>{% endif %}</a>
-        </details>
-
-        <details open{% if selected_node == 'plot' %} class="is-active-branch"{% endif %}>
-          <summary>剧情</summary>
-          <a class="wb-tree-item wb-workbench-link{% if selected_node == 'plot' %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=plot&mode=analysis"
-             data-workbench-navigation><span class="wb-tree-icon">⌁</span>情节因果与伏笔
-             {% if profile_items[2].available %}<span class="wb-availability">有画像</span>{% endif %}</a>
-        </details>
-
-        <details open class="wb-body-branch">
-          <summary>正文 <span class="wb-count">{{ chapter_items|length }}</span></summary>
-          <label class="wb-search-label">搜索章节
-            <input type="search" placeholder="标题或序号" data-wb-chapter-search>
-          </label>
-          <div class="wb-chapter-tree" data-wb-chapter-tree>
-            <div class="wb-volume-row"><span>▾</span> 第一卷 <span class="wb-count">{{ chapter_items|length }}</span></div>
-            {% for item in chapter_items %}
-            <a class="wb-chapter-row wb-workbench-link{% if selected_node == 'chapter' and selected_chapter and item.chapter_id == selected_chapter.chapter_id %} is-selected{% endif %}"
-               data-wb-chapter-item
-               href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?chapter_id={{ item.chapter_id }}&node=chapter"
-               data-workbench-navigation>
-              <span class="wb-chapter-number">{{ item.ordinal }}</span>
-              <span class="wb-chapter-title">{{ item.title }}</span>
-               <span class="wb-mini-status wb-mini-{{ item.status|lower }}">{{ item.status_label }}</span>
-            </a>
-            {% endfor %}
-            {% for item in draft_items %}
-            <a class="wb-chapter-row wb-draft-row wb-workbench-link{% if selected_draft and item.draft_id == selected_draft.draft_id %} is-selected{% endif %}"
-               data-wb-chapter-item
-               href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?draft_id={{ item.draft_id }}&node=chapter"
-               data-workbench-navigation>
-              <span class="wb-chapter-number">{{ item.ordinal }}</span>
-              <span class="wb-chapter-title">{{ item.title }}</span>
-               <span class="wb-mini-status wb-mini-provisional">{{ item.status_label }}</span>
-            </a>
-            {% endfor %}
-          </div>
-        </details>
-
-        <details>
-          <summary>连续性账本</summary>
-          <div class="wb-placeholder-tree">章节记录 · 人物状态 · 能力 · 资源 · 知识边界 · 伏笔 · 待偿还叙事线</div>
-        </details>
-
-        <details open{% if active_main_mode == 'state' or selected_node == 'state' %} class="is-active-branch"{% endif %}>
-          <summary>◈ 世界状态</summary>
-          <a class="wb-tree-item wb-workbench-link{% if active_main_mode == 'state' and (state_tab == 'character' or not state_tab) %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=state&mode=state&state_tab=character{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}"
-             data-workbench-navigation><span class="wb-tree-icon">◈</span>角色</a>
-          <a class="wb-tree-item wb-workbench-link{% if active_main_mode == 'state' and state_tab == 'inventory' %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=state&mode=state&state_tab=inventory{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}"
-             data-workbench-navigation><span class="wb-tree-icon">▦</span>背包</a>
-          <a class="wb-tree-item wb-workbench-link{% if active_main_mode == 'state' and state_tab == 'abilities' %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=state&mode=state&state_tab=abilities{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}"
-             data-workbench-navigation><span class="wb-tree-icon">✦</span>能力</a>
-          <a class="wb-tree-item wb-workbench-link{% if active_main_mode == 'state' and state_tab == 'knowledge' %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=state&mode=state&state_tab=knowledge{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}"
-             data-workbench-navigation><span class="wb-tree-icon">◎</span>知识</a>
-          <a class="wb-tree-item wb-workbench-link{% if active_main_mode == 'state' and state_tab == 'relationships' %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=state&mode=state&state_tab=relationships{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}"
-             data-workbench-navigation><span class="wb-tree-icon">⌘</span>关系</a>
-          <a class="wb-tree-item wb-workbench-link{% if active_main_mode == 'state' and state_tab == 'factions' %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=state&mode=state&state_tab=factions{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}"
-             data-workbench-navigation><span class="wb-tree-icon">⬡</span>势力</a>
-          <a class="wb-tree-item wb-workbench-link{% if active_main_mode == 'state' and state_tab == 'tasks' %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=state&mode=state&state_tab=tasks{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}"
-             data-workbench-navigation><span class="wb-tree-icon">✓</span>任务</a>
-        </details>
-
-        <details open{% if selected_node in ['style', 'narrative', 'dialogue', 'pacing', 'themes', 'continuity'] %} class="is-active-branch"{% endif %}>
-          <summary>分析 <span class="wb-count">{{ profile_items|length }}</span></summary>
-          {% for item in profile_items %}
-          <a class="wb-tree-item wb-workbench-link{% if selected_node == item.id %} is-selected{% endif %}"
-             href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node={{ item.id }}&mode=analysis"
-              data-workbench-navigation><span class="wb-tree-icon">·</span>{{ item.label }}
-              {% if item.available %}<span class="wb-availability">有内容</span>{% else %}<span class="wb-availability is-missing">未建立</span>{% endif %}</a>
-          {% endfor %}
-        </details>
-
-        <details>
-          <summary>改写</summary>
-          <div class="wb-placeholder-tree">改写工作区会复用独立版本和影响审计。</div>
-        </details>
-        <details>
-          <summary>技能与引用</summary>
-          <div class="wb-placeholder-tree">技能调用和引用素材将在后续切片接入。</div>
-        </details>
-      </nav>
-      <div class="wb-left-footer">
-        <span>状态</span><strong>{{ book_status_label }}</strong>
-        <span class="wb-readonly-note">章节点击只改变当前查询位置，不改变数据库。</span>
-      </div>
-      </div>
-      <div class="wb-rail" data-pane-rail="left" aria-label="左栏已收起">
-        <button class="wb-rail-button" type="button" data-toggle-pane="left" aria-label="展开左栏" title="展开左栏">
-          <span class="wb-pane-toggle-icon" data-pane-toggle-icon aria-hidden="true">›</span>
-          <span class="wb-visually-hidden" data-pane-toggle-label>展开左栏</span>
-        </button>
-      </div>
+      <div class="wb-rail" data-pane-rail="left"><button class="wb-rail-button" type="button" data-toggle-pane="left" aria-label="展开左栏"><span data-pane-toggle-icon>›</span></button></div>
     </aside>
-
     <div class="wb-resizer" data-resizer="left" role="separator" aria-label="调整左栏宽度"></div>
 
     <section class="wb-pane wb-center-pane" data-pane="center" aria-label="作者工作区">
-      <div class="wb-center-toolbar">
-        <div class="wb-mode-tabs" role="tablist" aria-label="作者工作模式">
-          <button type="button" data-wb-mode="continue" aria-selected="{% if active_main_mode == 'continue' %}true{% else %}false{% endif %}">续写</button>
-          <button type="button" data-wb-mode="rewrite" aria-selected="{% if active_main_mode == 'rewrite' %}true{% else %}false{% endif %}">改写</button>
-          <button type="button" data-wb-mode="plan" aria-selected="{% if active_main_mode == 'plan' %}true{% else %}false{% endif %}">规划</button>
-          <button type="button" data-wb-mode="analysis" aria-selected="{% if active_main_mode == 'analysis' %}true{% else %}false{% endif %}">分析</button>
-          <button type="button" data-wb-mode="continuity" aria-selected="{% if active_main_mode == 'continuity' %}true{% else %}false{% endif %}">连续性审查</button>
-          <button type="button" data-wb-mode="state" aria-selected="{% if active_main_mode == 'state' %}true{% else %}false{% endif %}">状态</button>
-        </div>
-        <span class="wb-anchor-chip">当前章节 · {% if selected_chapter_anchor %}第{{ selected_chapter_anchor }}章{% else %}未选择{% endif %}</span>
-      </div>
-
+      <div class="wb-center-toolbar"><div class="wb-mode-tabs" role="tablist">{% for value, label in mode_labels.items() %}<button type="button" data-wb-mode="{{ value }}" aria-selected="{% if active_main_mode == value %}true{% else %}false{% endif %}">{{ label }}</button>{% endfor %}</div><span class="wb-anchor-chip">当前章节 · {% if selected_chapter_anchor %}第{{ selected_chapter_anchor }}章{% else %}未选择{% endif %}</span></div>
       <div class="wb-center-scroll">
-        <section class="wb-mode-panel" data-wb-mode-panel="continue" {% if active_main_mode != 'continue' %}hidden{% endif %}>
-          {% include 'workflow_workspace.html' with context %}
-        </section>
-
-        <section class="wb-mode-panel" data-wb-mode-panel="rewrite" {% if active_main_mode != 'rewrite' %}hidden{% endif %}>
-          {% set workflow_embedded = true %}{% set workflow_initial_mode = 'rewrite' %}{% include 'workflow_workspace.html' with context %}
-        </section>
-
-        <section class="wb-mode-panel" data-wb-mode-panel="plan" {% if active_main_mode != 'plan' %}hidden{% endif %}>
+        <section class="wb-mode-panel" data-wb-mode-panel="continue"{% if active_main_mode != 'continue' %} hidden{% endif %}>{% include 'workflow_workspace.html' with context %}</section>
+        <section class="wb-mode-panel" data-wb-mode-panel="rewrite"{% if active_main_mode != 'rewrite' %} hidden{% endif %}>{% set workflow_embedded = true %}{% set workflow_initial_mode = 'rewrite' %}{% include 'workflow_workspace.html' with context %}</section>
+        <section class="wb-mode-panel" data-wb-mode-panel="plan"{% if active_main_mode != 'plan' %} hidden{% endif %}>
+          <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">Continuation Planning Center</p><h2>三候选与作者目标</h2></div><span class="wb-state-tag wb-state-provisional">Candidate ≠ Canon</span></div>{% if candidate_cards %}<div class="wb-candidate-grid">{% for item in candidate_cards %}<article class="wb-candidate-card{% if item.selection_status == 'SELECTED' %} is-selected{% endif %}"><header><span>#{{ item.rank or '—' }}</span><strong>{{ item.title }}</strong><small>{{ item.final_selection_score or '—' }}</small></header><p>{{ item.summary }}</p><dl><dt>读者问题</dt><dd>{{ item.reader_question }}</dd><dt>状态变化</dt><dd>{{ item.state_changes|join('；') }}</dd></dl><details><summary>作者目标推进</summary><pre class="wb-json-preview">{{ item.author_control_trace|tojson(indent=2) }}</pre></details><details><summary>九维 Profile 对齐</summary><pre class="wb-json-preview">{{ item.profile_alignment|tojson(indent=2) }}</pre></details>{% if item.hard_failures %}<p class="wb-hard-failure">硬门：{{ item.hard_failures|join('；') }}</p>{% endif %}</article>{% endfor %}</div>{% else %}<p class="wb-empty-state">尚未导入三候选。准备续写任务后，每个候选会显示作者目标命中与九维画像对齐。</p>{% endif %}</article>
           {% set workflow_embedded = true %}{% set workflow_initial_mode = 'plan' %}{% include 'workflow_workspace.html' with context %}
         </section>
-
-        <section class="wb-mode-panel" data-wb-mode-panel="analysis" {% if active_main_mode != 'analysis' %}hidden{% endif %}>
+        <section class="wb-mode-panel" data-wb-mode-panel="analysis"{% if active_main_mode != 'analysis' %} hidden{% endif %}>
           <article class="wb-content-card wb-profile-card" data-wb-profile-content>
-            <div class="wb-section-heading"><div><p class="wb-kicker">本书画像</p><h2>{{ selected_profile.label }}</h2></div>{% if selected_profile.available %}<span class="wb-state-tag wb-state-soft">柔性理解</span>{% else %}<span class="wb-state-tag wb-state-unknown">尚未建立</span>{% endif %}</div>
-            {% if selected_profile.available %}
-            <p class="wb-lede">这是一份从本书材料归纳出的作者参考画像，不等同于正史事实；使用时请回到正文和证据核对。</p>
-            <div class="wb-profile-meta"><span>来源：本书画像文件</span><span>状态：柔性理解</span></div>
-            <pre class="wb-markdown-reading">{{ selected_profile.content }}</pre>
-            <details class="wb-technical-details"><summary>技术详情</summary><dl><dt>文件</dt><dd>{{ selected_profile.relative_path }}</dd><dt>画像版本</dt><dd>{{ profile_manifest.profile_version or '未记录' }}</dd><dt>范围</dt><dd>{{ profile_manifest.scope or '本书' }}</dd></dl></details>
-            {% else %}<p class="wb-empty-state">当前没有 {{ selected_profile.label }} 的画像文件。这里保持空态，不用默认文本填充。</p>{% endif %}
+            <div class="wb-section-heading"><div><p class="wb-kicker">Global Book Profile · Effective</p><h2>{{ selected_profile.label }}</h2></div><div class="wb-heading-tags"><span class="wb-state-tag wb-state-soft">版本 {{ profile_manifest.version_number }}</span><button class="button compact" type="button" data-profile-reanalyze>重新分析</button></div></div>
+            <p class="wb-lede">Generated Baseline + Author Overlay = Effective Profile。它属于当前 Edition，不随章节切换；修改只会让旧规划失效，不会改变 Canon。</p>
+            {% if selected_profile.available %}<pre class="wb-markdown-reading">{{ selected_profile.content }}</pre>{% else %}<p class="wb-empty-state">该维度尚无生成内容，可直接添加作者定义。</p>{% endif %}
+            {% if selected_profile.id in ['worldbuilding','characters','plot','style','narrative','dialogue','pacing','themes','continuity'] %}<form class="wb-profile-edit-form" data-profile-edit-form><input type="hidden" name="dimension" value="{{ selected_profile.id }}"><label>操作<select name="operation"><option value="ADD">追加</option><option value="REPLACE">替换 Effective 内容</option><option value="REMOVE">移除该维度内容</option></select></label><label>强度<select name="strength"><option value="SUGGESTION">建议</option><option value="PREFER">优先</option><option value="MUST">必须</option><option value="MUST_NOT">禁止</option></select></label><label>作者定义<textarea name="content" rows="5" placeholder="写下该维度的作者要求"></textarea></label><label>原因<input name="reason" value="作者编辑"></label><button class="button primary" type="submit">保存为新版本</button><p class="wb-command-feedback"></p></form>{% endif %}
+            {% if selected_profile.author_edits %}<div class="wb-profile-overlay"><h3>作者 Overlay</h3>{% for edit in selected_profile.author_edits %}<article><span>{{ edit.strength_label }}</span><b>{{ edit.operation }}</b><p>{{ edit.content or '已移除' }}</p><small>{{ edit.reason }} · {{ edit.created_at }}</small></article>{% endfor %}</div>{% endif %}
+            <details class="wb-technical-details" data-explorer-section="profile-history"><summary>版本历史与可读 Diff</summary>{% for version in profile_manifest.history %}<article class="wb-profile-history"><b>v{{ version.version_number }} · {{ version.reason }}</b>{% for change in version.changes %}<span>{{ change.dimension_label }} · {{ change.operation }} · {{ change.strength_label }}</span>{% else %}<span>生成基线刷新</span>{% endfor %}</article>{% else %}<p>当前仅有生成基线。</p>{% endfor %}</details>
+            {% if profile_manifest.proposals %}<details class="wb-technical-details" open data-explorer-section="profile-proposals"><summary>Profile 更新建议</summary>{% for proposal in profile_manifest.proposals %}<article class="wb-profile-proposal"><b>{{ proposal.source_type }} · {{ proposal.status }}</b><span>{{ proposal.summary or '等待作者决定' }}</span>{% if proposal.status == 'PENDING' %}<div><button class="button compact" data-profile-proposal-action="ACCEPT" data-proposal-id="{{ proposal.proposal_id }}">接受</button><button class="button compact" data-profile-proposal-action="REJECT" data-proposal-id="{{ proposal.proposal_id }}">拒绝</button></div>{% endif %}</article>{% endfor %}</details>{% endif %}
           </article>
         </section>
-
-        <section class="wb-mode-panel" data-wb-mode-panel="continuity" {% if active_main_mode != 'continuity' %}hidden{% endif %}>
-          <article class="wb-content-card">
-            <div class="wb-section-heading"><div><p class="wb-kicker">作者工作区 · 连续性审查</p><h2>检查当前章节是否有可追溯状态</h2></div><span class="wb-state-tag wb-state-placeholder">只读诊断</span></div>
-            {% if chapter_context %}
-            <p class="wb-lede">第{{ chapter_context.chapter_ordinal }}章 · {{ chapter_context.chapter_status_label }}。以下结论只反映当前已有的章节状态记录，不会替你补写未知内容。</p>
-            <div class="wb-overview-grid"><div><span>章前状态</span><strong>{{ chapter_context.before_state.availability_label }}</strong></div><div><span>本章变化</span><strong>{{ chapter_context.chapter_delta.status_label }}</strong></div><div><span>章后状态</span><strong>{{ chapter_context.after_state.availability_label }}</strong></div><div><span>审核状态</span><strong>{{ chapter_context.validation.status_label }}</strong></div></div>
-            <p class="wb-context-explanation">{{ chapter_context.chapter_delta.author_summary }}</p>
-            {% else %}<p class="wb-empty-state">请先选择章节，再进行连续性审查。</p>{% endif %}
-          </article>
-        </section>
-
-        <section class="wb-mode-panel wb-state-workspace" data-wb-mode-panel="state" {% if active_main_mode != 'state' %}hidden{% endif %}>
-          {% if story_game_state %}
-          <article class="wb-content-card">
-            <div class="wb-section-heading">
-              <div><p class="wb-kicker">作者工作区 · Story Game State</p><h2>第{{ story_game_state.chapter.ordinal if story_game_state.chapter else '—' }}章 · 章后状态</h2><small class="wb-section-subtitle">{{ story_game_state.chapter.title if story_game_state.chapter else '尚未选择章节' }}</small></div>
-              <div class="wb-heading-tags"><span class="wb-state-tag wb-state-{{ story_game_state.availability|lower }}">{{ story_game_state.availability_label }}</span><span class="wb-state-tag wb-state-{{ story_game_state.source_state.layer|lower }}">{{ story_game_state.source_state.layer_label }}</span><span class="wb-state-tag wb-state-soft">投影只读</span></div>
-            </div>
-            <p class="wb-context-explanation">{{ story_game_state.message }} 所有拖拽、创建和移动都会先形成 Author Command；它们不会直接写入 Canon 或批准稿件。</p>
-            {% if story_game_state.source_state.hydration.required %}
-            <div class="wb-state-incomplete"><div><strong>{% if story_game_state.source_state.hydration.queued %}正在补齐这一章的故事状态{% else %}这一章的故事状态还不完整{% endif %}</strong><span>{% if story_game_state.source_state.hydration.queued %}任务已进入 Author Control；Codex 完成结构化读取并收集结果后，重新加载即可看到证据。{% else %}当前只显示已有原文证据；系统不会用后续章节状态填充空白。{% endif %}</span></div>{% if not story_game_state.source_state.hydration.queued and story_game_state.chapter %}<form data-author-command-form data-command-type="REQUEST_SOURCE_STATE_HYDRATION"><input type="hidden" name="chapter_id" value="{{ story_game_state.chapter.chapter_id }}"><button class="button compact" type="submit">准备本章状态任务</button></form>{% elif story_game_state.source_state.hydration.handoff %}<div class="wb-hydration-actions"><ol class="wb-hydration-progress">{% for step in story_game_state.source_state.hydration.progress %}<li class="{% if step.done %}is-done{% endif %}">{{ step.label }}</li>{% endfor %}</ol><div><button class="button compact" type="button" data-copy-instruction="{{ story_game_state.source_state.hydration.handoff.instruction_url }}">复制 Codex 指令</button><a class="button compact" href="/books/{{ book_id }}/jobs">打开任务</a><button class="button compact" type="button" data-hydration-collect="{{ story_game_state.source_state.hydration.handoff.collect_url }}">收集结果</button></div></div>{% else %}<span class="wb-state-tag wb-state-provisional">受控任务已创建</span>{% endif %}</div>
-            {% endif %}
-            <div class="wb-state-tabs" role="tablist" aria-label="故事状态面板">
-              <button type="button" data-wb-state-tab="character">角色</button>
-              <button type="button" data-wb-state-tab="inventory">背包</button>
-              <button type="button" data-wb-state-tab="abilities">能力</button>
-              <button type="button" data-wb-state-tab="knowledge">知识</button>
-              <button type="button" data-wb-state-tab="world">世界</button>
-              <button type="button" data-wb-state-tab="factions">势力</button>
-              <button type="button" data-wb-state-tab="relationships">关系</button>
-              <button type="button" data-wb-state-tab="tasks">任务</button>
-            </div>
-          </article>
-
-          <section class="wb-state-tab-panel" data-wb-state-panel="character">
-            <article class="wb-content-card">
-              <div class="wb-section-heading"><div><p class="wb-kicker">角色选择</p><h3>选择要检查的人物</h3></div><span class="wb-state-tag wb-state-unknown">没有证据就显示未知</span></div>
-              <div class="wb-character-picker">
-                {% for character in story_game_state.characters %}
-                <a class="wb-character-chip{% if character.character_id == story_game_state.selected_character_id %} is-selected{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?mode=state&node=chapter{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}&character_id={{ character.character_id }}" data-workbench-navigation>
-                  <strong>{{ character.name }}</strong><small>{{ character.layer_label }}</small>
-                </a>
-                {% else %}<p class="wb-empty-state">当前没有可选择的人物；系统不会凭空创建人物。</p>{% endfor %}
-              </div>
-            </article>
-            <article class="wb-content-card">
-              <div class="wb-section-heading"><div><p class="wb-kicker">角色卡</p><h3>{{ story_game_state.character.name or '未选择人物' }}</h3></div><span class="wb-state-tag">{{ story_game_state.character.status_label }}</span></div>
-              <p class="wb-context-explanation">{{ story_game_state.character.message }}</p>
-              {% if story_game_state.character.attributes %}<dl class="wb-attribute-list">{% for item in story_game_state.character.attributes %}<div><dt>{{ item.label }}</dt><dd>{{ item.value }}</dd></div>{% endfor %}</dl>{% endif %}
-              <div class="wb-state-columns">
-                <section><h4>当前背包</h4>{% if story_game_state.inventory %}<ul class="wb-record-list" data-drop-target="CURRENT_INVENTORY">{% for item in story_game_state.inventory %}<li draggable="true" data-author-item-id="{{ item.record_id }}" data-state-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.status_label or '已登记资源' }} · {{ item.statement or '已登记资源' }}</span></li>{% endfor %}</ul>{% else %}<p class="wb-empty-state">当前时间点没有可追溯的背包记录。</p><div class="wb-drop-zone" data-drop-target="CURRENT_INVENTORY">拖入物品前必须先有正史证据</div>{% endif %}</section>
-                <section><h4>已装备物品</h4>{% if story_game_state.equipment %}<ul class="wb-record-list">{% for item in story_game_state.equipment %}<li data-state-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.status_label or '已登记装备' }} · {{ item.statement or '已登记装备' }}</span></li>{% endfor %}</ul>{% else %}<p class="wb-empty-state">当前没有可回指证据的已装备物品；不会凭空创建装备槽。</p>{% endif %}</section>
-              </div>
-            </article>
-            <article class="wb-content-card">
-              <div class="wb-section-heading"><div><p class="wb-kicker">能力与知识</p><h3>只展示已获得或明确记录的内容</h3></div></div>
-              <div class="wb-state-columns">
-                <section><h4>能力</h4>{% if story_game_state.abilities %}<ul class="wb-record-list">{% for item in story_game_state.abilities %}<li data-state-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.status_label or '正史已确认' }} · {{ item.statement }}</span></li>{% endfor %}</ul>{% else %}<p class="wb-empty-state">当前没有可追溯的能力记录。</p>{% endif %}{% if story_game_state.unknown_abilities %}<p class="wb-state-note">另有 {{ story_game_state.unknown_abilities|length }} 项能力仍是“尚未知”；未知不等于未获得。</p>{% endif %}</section>
-                <section><h4>知识边界</h4>{% if story_game_state.knowledge %}<ul class="wb-record-list">{% for item in story_game_state.knowledge %}<li data-state-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.status_label or '正史已确认' }} · {{ item.statement }}</span><small>谁知道：{{ item.knowledge_state_label or '尚未确认谁知道' }}</small></li>{% endfor %}</ul>{% else %}<p class="wb-empty-state">当前没有可追溯的知识边界记录。</p>{% endif %}</section>
-              </div>
-            </article>
-            <article class="wb-content-card">
-              <div class="wb-section-heading"><div><p class="wb-kicker">作者意图</p><h3>把未来变化写进规划层</h3></div><span class="wb-state-tag wb-state-provisional">不改正史</span></div>
-              <form class="wb-command-form" data-author-command-form data-command-type="CREATE_FUTURE_ITEM">
-                <label>未来物品<input name="name" required placeholder="例如：一枚尚未取得的钥匙"></label><label>规划跨度<select name="horizon"><option value="SHORT">短期</option><option value="MID" selected>中期</option><option value="LONG">长期</option></select></label><label>说明<textarea name="description" rows="2" placeholder="取得条件、代价或用途"></textarea></label><button class="button compact" type="submit">记录未来物品意图</button>
-              </form>
-              {% if author_control and author_control.intents %}<div class="wb-planned-strip"><strong>计划获得（独立于当前背包）</strong>{% for intent in author_control.intents if intent.intent_type == 'FUTURE_ITEM' %}<span>{{ intent.title }} · {{ intent.horizon_label }}</span>{% else %}<span>尚无未来物品目标</span>{% endfor %}</div>{% endif %}
-            </article>
-          </section>
-
-          <section class="wb-state-tab-panel" data-wb-state-panel="inventory" hidden>
-            <article class="wb-content-card wb-state-master-detail">
-              <div class="wb-section-heading"><div><p class="wb-kicker">背包 · Inventory</p><h3>已确认物品</h3></div><span class="wb-state-tag wb-state-source">只接受原文或正史证据</span></div>
-              <div class="wb-inventory-grid">{% for item in story_game_state.inventory %}<button type="button" class="wb-item-card" data-state-record='{{ item|tojson }}' data-author-item-id="{{ item.record_id }}"><strong>{{ item.name }}</strong><span>{{ item.status_label or item.layer_label }}</span><small>{{ item.statement or '已登记物品' }}</small></button>{% else %}<p class="wb-empty-state">当前章节没有可回指证据的背包物品。</p>{% endfor %}</div>
-              <div class="wb-state-inspector" data-state-inspector><span>选择一个物品查看证据</span></div>
-              <div class="wb-planned-strip"><strong>计划物品</strong>{% for intent in author_control.intents if intent.intent_type == 'FUTURE_ITEM' %}<span>{{ intent.title }} · {{ intent.horizon_label }} · 作者目标</span>{% else %}<span>尚无计划物品；计划不会伪装成当前存在。</span>{% endfor %}</div>
-            </article>
-          </section>
-
-          <section class="wb-state-tab-panel" data-wb-state-panel="abilities" hidden>
-            <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">能力 · Capability</p><h3>能力边界</h3></div><span class="wb-state-tag wb-state-source">来源证据分层</span></div><ul class="wb-record-list">{% for item in story_game_state.abilities %}<li data-state-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.status_label or item.layer_label }} · {{ item.statement }}</span></li>{% else %}<li><b>尚无已确认能力</b><span>未建立证据的能力保持未知。</span></li>{% endfor %}{% for item in story_game_state.unknown_abilities %}<li class="is-uncertain"><b>{{ item.name }}</b><span>尚未知 · {{ item.statement }}</span></li>{% endfor %}</ul></article>
-          </section>
-
-          <section class="wb-state-tab-panel" data-wb-state-panel="knowledge" hidden>
-            <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">知识 · Knowledge Matrix</p><h3>知识状态与“谁知道”边界</h3></div><span class="wb-state-tag wb-state-unknown">UNKNOWN ≠ 错误</span></div><p class="wb-context-explanation">KNOWN / SEEN / HEARD / SUSPECTED / MISUNDERSTOOD / UNKNOWN 只描述信息状态；没有证据时不推断为“未发生”或“角色不知道”。点击矩阵单元格查看证据章节与 source。</p><div class="wb-knowledge-matrix">{% for cell in story_game_state.knowledge_matrix %}<button type="button" class="wb-knowledge-row wb-knowledge-cell-{{ cell.state|lower }}" data-knowledge-cell='{{ cell|tojson }}'><strong>{{ cell.knower_name }}</strong><span>{{ cell.topic_name }}</span><small>{{ cell.state }} · {{ cell.layer }}</small></button>{% else %}<p class="wb-empty-state">当前没有可回指证据的知识主题。</p>{% endfor %}</div><div class="wb-state-inspector" data-knowledge-inspector><span>选择一个“谁知道 × 什么”单元格查看证据</span></div></article>
-          </section>
-
-          <section class="wb-state-tab-panel" data-wb-state-panel="world" hidden>
-            <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">世界</p><h3>当前世界与软理解参考</h3></div><span class="wb-state-tag wb-state-soft">Atlas 参考不等于正史状态</span></div><p class="wb-context-explanation">世界规则、资源网络和人物画像来自已有 Story Atlas 时会在这里作为软参考显示；它们不会被合并进章节时间点的背包或能力。</p>{% if story_game_state.soft_reference.available %}<div class="wb-reference-grid">{% for graph_name, graph in story_game_state.soft_reference.graphs.items() %}<div><b>{{ graph_name }}</b><span>{{ graph.nodes|length }} 个节点 · {{ graph.edges|length }} 条关系</span></div>{% endfor %}</div>{% else %}<p class="wb-empty-state">当前没有可读取的 Story Atlas 软参考。</p>{% endif %}</article>
-          </section>
-
-          <section class="wb-state-tab-panel" data-wb-state-panel="factions" hidden>
-            <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">势力</p><h3>势力与组织网络</h3></div><span class="wb-state-tag wb-state-soft">软理解参考</span></div>{% if story_game_state.faction_inspector %}<ul class="wb-record-list">{% for faction in story_game_state.faction_inspector %}<li><b>{{ faction.name }}</b><span>当前：{{ faction.state or 'UNKNOWN' }} · 态度：{{ faction.attitude }} · 层：{{ faction.current_layer }}</span><small>目标：{{ faction.goal }} · 关键人物：{{ faction.key_people|join('、') if faction.key_people else 'UNKNOWN' }} · 控制地点：{{ faction.controlled_locations|join('、') if faction.controlled_locations else 'UNKNOWN' }}</small><p>{{ faction.description or faction.statement or '暂无额外说明' }}</p></li>{% endfor %}</ul>{% else %}<p class="wb-empty-state">当前没有已确认的势力记录。不会从画像猜测势力状态。</p>{% endif %}</article>
-          </section>
-
-          <section class="wb-state-tab-panel" data-wb-state-panel="relationships" hidden>
-            <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">关系图</p><h3>人物关系与未来关系目标</h3></div><span class="wb-state-tag wb-state-soft">关系目标另存为意图</span></div>{% if story_game_state.relationships %}<h4>正史 / 原文关系</h4><ul class="wb-record-list">{% for item in story_game_state.relationship_inspector %}<li data-relationship-record='{{ item|tojson }}' data-state-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.status_label or item.layer_label }} · {{ item.statement or '关系已登记' }}</span><small>信任 {{ item.dimensions.trust }} · 依赖 {{ item.dimensions.dependence }} · 冲突 {{ item.dimensions.conflict }} · 权力 {{ item.dimensions.power }} · 首次第{{ item.first_confirmed_chapter_ordinal or 'UNKNOWN' }}章 · 最近第{{ item.recent_confirmed_chapter_ordinal or 'UNKNOWN' }}章</small></li>{% endfor %}</ul><div class="wb-state-inspector" data-relationship-inspector><span>点击关系边查看当前层证据</span></div>{% elif story_game_state.soft_relationships %}<p class="wb-state-note">当前章节没有正史关系截面，下面是 Story Atlas 的软参考关系。</p>{% else %}<p class="wb-empty-state">当前没有可读取的关系边。</p>{% endif %}<div class="wb-relationship-graph" data-wb-relationship-graph data-graph='{{ (story_game_state.relationships + story_game_state.soft_relationships)|tojson }}'><div class="wb-empty-state">关系图正在读取节点。</div></div><form class="wb-command-form" data-author-command-form data-command-type="CREATE_RELATIONSHIP_INTENT"><input type="hidden" name="from_entity_id" value="{{ story_game_state.selected_character_id or '' }}"><label>目标人物<select name="to_entity_id">{% for character in story_game_state.characters %}{% if character.character_id != story_game_state.selected_character_id %}<option value="{{ character.character_id }}">{{ character.name }}</option>{% endif %}{% endfor %}</select></label><label>目标描述<textarea name="description" rows="2" placeholder="例如：建立一次不稳定的互惠关系"></textarea></label><label>规划跨度<select name="horizon"><option value="SHORT">短期</option><option value="MID" selected>中期</option><option value="LONG">长期</option></select></label><button class="button compact" type="submit">记录关系目标</button></form>{% if author_control and author_control.intents %}<div class="wb-planned-strip"><strong>作者目标</strong>{% for intent in author_control.intents if intent.intent_type == 'RELATIONSHIP_GOAL' %}<span>{{ intent.title }} · {{ intent.horizon_label }}</span>{% else %}<span>尚无未来关系目标</span>{% endfor %}</div>{% endif %}</article>
-          </section>
-
-          <section class="wb-state-tab-panel" data-wb-state-panel="tasks" hidden>
-            <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">任务板</p><h3>作者任务 · 跨度与生命周期</h3><small class="wb-section-subtitle">SHORT / MID / LONG</small></div><span class="wb-state-tag wb-state-provisional">拖动只改变规划层</span></div><p class="wb-context-explanation">拖动任务到另一个跨度会提交 `MOVE_TASK_HORIZON`；更新生命周期会提交 `UPDATE_TASK`。两者都不会推进章节、写入事件或批准 Canon。键盘/表单也可调整跨度，和拖拽共用同一条 Author Command。</p><div class="wb-task-view-toggle"><button type="button" data-task-board-view-button="horizon" class="is-active">按跨度</button><button type="button" data-task-board-view-button="lifecycle">按状态</button></div><form class="wb-command-form" data-author-command-form data-command-type="CREATE_TASK"><label>新任务<input name="title" required placeholder="例如：确认下一章的资源代价"></label><label>规划跨度<select name="horizon"><option value="SHORT">短期</option><option value="MID" selected>中期</option><option value="LONG">长期</option></select></label><label>说明<textarea name="description" rows="2"></textarea></label><button class="button compact" type="submit">加入任务板</button></form><div class="wb-task-board" data-task-board-panel="horizon">{% for horizon in ['SHORT', 'MID', 'LONG'] %}<section class="wb-task-column" data-task-horizon="{{ horizon }}"><h4>{{ {'SHORT': '短期', 'MID': '中期', 'LONG': '长期'}[horizon] }} <span>{{ author_control.portfolio[horizon]|length if author_control else 0 }}</span></h4><div class="wb-task-drop" data-task-horizon-drop="{{ horizon }}">{% if author_control %}{% for task in author_control.portfolio[horizon] %}<article class="wb-task-card" draggable="true" data-author-task-id="{{ task.task_id }}" data-task-lifecycle="{{ task.lifecycle_status }}"><b>{{ task.title }}</b><span>{{ task.lifecycle_status_label }} · {{ task.description or '暂无说明' }}</span><select aria-label="更新任务状态" data-task-lifecycle data-task-id="{{ task.task_id }}"><option value="BACKLOG"{% if task.lifecycle_status == 'BACKLOG' %} selected{% endif %}>待处理</option><option value="ACTIVE"{% if task.lifecycle_status == 'ACTIVE' %} selected{% endif %}>进行中</option><option value="BLOCKED"{% if task.lifecycle_status == 'BLOCKED' %} selected{% endif %}>受阻</option><option value="DONE"{% if task.lifecycle_status == 'DONE' %} selected{% endif %}>已完成</option><option value="CANCELLED"{% if task.lifecycle_status == 'CANCELLED' %} selected{% endif %}>已取消</option></select><label class="wb-task-horizon-control">跨度<select aria-label="更新任务跨度" data-task-horizon-select data-task-id="{{ task.task_id }}"><option value="SHORT"{% if task.horizon == 'SHORT' %} selected{% endif %}>短期</option><option value="MID"{% if task.horizon == 'MID' %} selected{% endif %}>中期</option><option value="LONG"{% if task.horizon == 'LONG' %} selected{% endif %}>长期</option></select></label><small>拖到其他列调整跨度</small></article>{% endfor %}{% endif %}</div></section>{% endfor %}</div><div class="wb-task-board" data-task-board-panel="lifecycle" hidden>{% for lifecycle in ['BACKLOG', 'ACTIVE', 'BLOCKED', 'DONE', 'CANCELLED'] %}<section class="wb-task-column" data-task-lifecycle-column="{{ lifecycle }}"><h4>{{ {'BACKLOG': '待处理', 'ACTIVE': '进行中', 'BLOCKED': '受阻', 'DONE': '已完成', 'CANCELLED': '已取消'}[lifecycle] }} <span>{{ author_control.tasks|selectattr('lifecycle_status', 'equalto', lifecycle)|list|length if author_control else 0 }}</span></h4><div class="wb-task-drop">{% if author_control %}{% for task in author_control.tasks if task.lifecycle_status == lifecycle %}<article class="wb-task-card" draggable="true" data-author-task-id="{{ task.task_id }}" data-task-lifecycle="{{ task.lifecycle_status }}"><b>{{ task.title }}</b><span>{{ task.horizon_label }} · {{ task.description or '暂无说明' }}</span><select aria-label="更新任务状态" data-task-lifecycle data-task-id="{{ task.task_id }}"><option value="BACKLOG"{% if task.lifecycle_status == 'BACKLOG' %} selected{% endif %}>待处理</option><option value="ACTIVE"{% if task.lifecycle_status == 'ACTIVE' %} selected{% endif %}>进行中</option><option value="BLOCKED"{% if task.lifecycle_status == 'BLOCKED' %} selected{% endif %}>受阻</option><option value="DONE"{% if task.lifecycle_status == 'DONE' %} selected{% endif %}>已完成</option><option value="CANCELLED"{% if task.lifecycle_status == 'CANCELLED' %} selected{% endif %}>已取消</option></select><label class="wb-task-horizon-control">跨度<select aria-label="更新任务跨度" data-task-horizon-select data-task-id="{{ task.task_id }}"><option value="SHORT"{% if task.horizon == 'SHORT' %} selected{% endif %}>短期</option><option value="MID"{% if task.horizon == 'MID' %} selected{% endif %}>中期</option><option value="LONG"{% if task.horizon == 'LONG' %} selected{% endif %}>长期</option></select></label></article>{% endfor %}{% endif %}</div></section>{% endfor %}</div>{% if author_control %}<details class="wb-technical-details"><summary>作者控制层详情</summary><pre class="wb-json-preview">{{ author_control|tojson(indent=2) }}</pre></details>{% endif %}</article>
-          </section>
-          {% else %}
-          <article class="wb-content-card"><p class="wb-empty-state">状态面板尚未加载。请重新选择“状态”模式。</p></article>
-          {% endif %}
-        </section>
+        <section class="wb-mode-panel" data-wb-mode-panel="continuity"{% if active_main_mode != 'continuity' %} hidden{% endif %}><article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">连续性审查</p><h2>章节历史状态</h2></div></div>{% if chapter_context %}<div class="wb-overview-grid"><div><span>章前</span><strong>{{ chapter_context.before_state.availability_label }}</strong></div><div><span>变化</span><strong>{{ chapter_context.chapter_delta.status_label }}</strong></div><div><span>章后</span><strong>{{ chapter_context.after_state.availability_label }}</strong></div></div><p>{{ chapter_context.chapter_delta.author_summary }}</p>{% else %}<p class="wb-empty-state">请先选择章节。</p>{% endif %}</article></section>
+        <section class="wb-mode-panel wb-state-workspace" data-wb-mode-panel="state"{% if active_main_mode != 'state' %} hidden{% endif %}>{% include 'workbench_state_workspace.html' with context %}</section>
       </div>
     </section>
-
     <div class="wb-resizer" data-resizer="right" role="separator" aria-label="调整右栏宽度"></div>
 
-    <aside class="wb-pane wb-right-pane" data-pane="right" aria-label="正文编辑器">
+    <aside class="wb-pane wb-right-pane" data-pane="right" aria-label="{% if active_main_mode == 'state' %}状态检查器{% else %}正文编辑器{% endif %}">
       <div class="wb-pane-content">
-      <div class="wb-pane-header wb-editor-header">
-        <div><p class="wb-kicker">当前正文</p><h2>{% if selected_draft %}第{{ selected_draft.target_chapter_ordinal }}章{% elif selected_chapter %}第{{ selected_chapter.ordinal }}章{% else %}正文{% endif %}</h2></div>
-        <button class="wb-icon-button" type="button" data-toggle-pane="right" aria-label="隐藏右栏" title="隐藏右栏"><span data-pane-toggle-icon aria-hidden="true">›</span></button>
-      </div>
-      <div class="wb-editor-tabs" role="tablist">
-        <button type="button" data-wb-editor-tab="prose" aria-selected="{% if active_right_tab == 'prose' %}true{% else %}false{% endif %}">正文</button>
-        <button type="button" data-wb-editor-tab="state" aria-selected="{% if active_right_tab == 'state' %}true{% else %}false{% endif %}">章末状态</button>
-        <button type="button" data-wb-editor-tab="next" aria-selected="{% if active_right_tab == 'next' %}true{% else %}false{% endif %}">下一章接续包</button>
-      </div>
-      <div class="wb-editor-scroll">
-        <div data-wb-editor-prose {% if active_right_tab != 'prose' %}hidden{% endif %}>
-        {% if selected_draft %}
-        <div class="wb-editor-banner wb-banner-provisional"><span>◌ 草稿临时状态</span><span>{{ selected_draft.display_status_label }}</span><small>保存后会回到草稿状态，并需要重新校验。</small></div>
-        <form class="wb-draft-form" method="post" action="/api/books/{{ book_id }}/editions/{{ edition_id }}/drafts/{{ selected_draft.draft_id }}/content" data-wb-draft-form>
-          <input type="hidden" name="expected_content_sha256" value="{{ selected_draft.content_sha256 }}">
-          <textarea class="wb-editor-textarea" name="content" data-wb-editor data-editor-mode="draft" spellcheck="false">{{ selected_draft.content }}</textarea>
-          <div class="wb-editor-footer"><span data-wb-word-count>0 字</span><span>当前草稿 · 可编辑</span><button class="wb-save-button" type="submit">保存草稿</button></div>
-        </form>
-        <details class="wb-technical-details"><summary>技术详情</summary><p>草稿标识：<code>{{ selected_draft.draft_id }}</code></p></details>
-        {% elif selected_chapter %}
-        <div class="wb-editor-banner wb-banner-readonly"><span>✓ 原文只读</span><small>原始章节来自书库，不允许从 Web 覆盖。</small></div>
-        <div class="wb-editor-mode-tabs"><button type="button" class="is-active" data-wb-editor-view="edit">正文</button><button type="button" data-wb-editor-view="preview">预览</button></div>
-        <div data-wb-editor-panel="edit"><textarea class="wb-editor-textarea" data-wb-editor data-editor-mode="source" readonly spellcheck="false">{{ selected_chapter.content }}</textarea></div>
-        <div data-wb-editor-panel="preview" hidden><pre class="wb-markdown-preview" data-wb-preview>{{ selected_chapter.content }}</pre></div>
-        <div class="wb-editor-footer"><span data-wb-word-count>0 字</span><span>原文内容 · 只读</span></div>
-        <details class="wb-technical-details"><summary>技术详情</summary><dl><dt>来源文件</dt><dd>{{ selected_chapter.relative_path or '—' }}</dd><dt>内容指纹</dt><dd><code>{{ selected_chapter.content_sha256 }}</code></dd></dl></details>
-        {% else %}
-        <p class="wb-empty-state">从左侧选择章节后，正文会出现在这里。</p>
-        {% endif %}
+        <div class="wb-pane-header wb-editor-header"><div><p class="wb-kicker">{% if active_main_mode == 'state' %}Inspector{% else %}当前正文{% endif %}</p><h2>{% if active_main_mode == 'state' %}证据与边界{% elif selected_draft %}第{{ selected_draft.target_chapter_ordinal }}章{% elif selected_chapter %}第{{ selected_chapter.ordinal }}章{% else %}正文{% endif %}</h2></div><button class="wb-icon-button" type="button" data-toggle-pane="right" aria-label="隐藏右栏"><span data-pane-toggle-icon>›</span></button></div>
+        <div class="wb-editor-scroll">
+          {% if active_main_mode == 'state' %}<section class="wb-global-inspector" data-wb-inspector><div class="wb-inspector-empty"><span class="wb-inspector-icon">⌁</span><h3>选择世界状态中的对象</h3><p>物品、知识单元格、地点、势力和关系边都会在这里展示来源、章节边界与 Who Knows。</p></div></section><details class="wb-technical-details wb-source-foldout" data-explorer-section="right-source"><summary>查看本章原文</summary><pre class="wb-markdown-preview">{{ selected_chapter.content if selected_chapter else '尚未选择章节' }}</pre></details>
+          {% else %}<div class="wb-editor-tabs" role="tablist">{% for value, label in right_tab_labels.items() %}<button type="button" data-wb-editor-tab="{{ value }}" aria-selected="{% if active_right_tab == value %}true{% else %}false{% endif %}">{{ label }}</button>{% endfor %}</div><div data-wb-editor-prose{% if active_right_tab != 'prose' %} hidden{% endif %}>{% if selected_draft %}<form class="wb-draft-form" method="post" action="/api/books/{{ book_id }}/editions/{{ edition_id }}/drafts/{{ selected_draft.draft_id }}/content" data-wb-draft-form><input type="hidden" name="expected_content_sha256" value="{{ selected_draft.content_sha256 }}"><textarea class="wb-editor-textarea" name="content" data-wb-editor data-editor-mode="draft">{{ selected_draft.content }}</textarea><div class="wb-editor-footer"><span data-wb-word-count>0 字</span><button class="wb-save-button" type="submit">保存草稿</button></div></form>{% elif selected_chapter %}<div class="wb-editor-banner wb-banner-readonly"><span>✓ 原文只读</span></div><textarea class="wb-editor-textarea" data-wb-editor data-editor-mode="source" readonly>{{ selected_chapter.content }}</textarea><div class="wb-editor-footer"><span data-wb-word-count>0 字</span><span>原文内容 · 只读</span></div>{% else %}<p class="wb-empty-state">从左侧选择章节。</p>{% endif %}</div><section class="wb-editor-secondary" data-wb-editor-secondary="state"{% if active_right_tab != 'state' %} hidden{% endif %}><h3>章末状态</h3>{% if chapter_context %}<p>{{ chapter_context.after_state.author_summary }}</p>{% else %}<p class="wb-empty-state">尚无章节状态。</p>{% endif %}</section><section class="wb-editor-secondary" data-wb-editor-secondary="next"{% if active_right_tab != 'next' %} hidden{% endif %}><h3>下一章接续包</h3><p>{{ continuation_package.author_summary }}</p></section>{% endif %}
         </div>
-
-        <section class="wb-editor-secondary" data-wb-editor-secondary="state" {% if active_right_tab != 'state' %}hidden{% endif %}>
-          <div class="wb-secondary-heading"><h3>章末状态</h3>{% if selected_chapter %}<a class="wb-inline-link" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?mode=state&node=state&chapter_id={{ selected_chapter.chapter_id }}&state_tab=character" data-workbench-navigation>在状态工作台中打开 ↗</a>{% endif %}</div>
-          {% if chapter_context %}
-          <div class="wb-editor-banner wb-banner-readonly"><span>{{ chapter_context.after_state.availability_label }}</span><small>这是第{{ chapter_context.chapter_ordinal }}章的历史查询结果。</small></div>
-          <p class="wb-context-explanation">{{ chapter_context.after_state.author_summary }}</p>
-          {% if chapter_context.after_state.state_cards %}<div class="wb-state-card-grid">{% for card in chapter_context.after_state.state_cards %}<div><span>{{ card.label }}</span><strong>{{ card.summary }}</strong></div>{% endfor %}</div>{% elif chapter_context.after_state.state_changes %}<ul class="wb-change-list">{% for change in chapter_context.chapter_delta.display_changes[:24] %}<li><span class="wb-change-kind">{{ change.kind_label }}</span><span><b>{{ change.collection_label }}</b> · {{ change.summary }}</span></li>{% endfor %}</ul>{% else %}<p class="wb-empty-state">目前没有可展示的章末状态记录。系统不会用最新状态填充这里。</p>{% endif %}
-          <details class="wb-technical-details"><summary>技术详情</summary><dl><dt>状态来源</dt><dd><code>{{ chapter_context.after_state.availability }}</code></dd><dt>章节位置</dt><dd><code>{{ chapter_context.after_state.anchor_chapter_ordinal }}</code></dd><dt>事件位置</dt><dd><code>{{ chapter_context.after_state.through_event_seq or '—' }}</code></dd></dl><pre class="wb-json-preview">{{ chapter_context.after_state|tojson(indent=2) }}</pre></details>
-          {% else %}<p class="wb-empty-state">当前没有可读取的章节状态。请先从左侧选择章节。</p>{% endif %}
-        </section>
-        <section class="wb-editor-secondary" data-wb-editor-secondary="next" {% if active_right_tab != 'next' %}hidden{% endif %}>
-          <h3>下一章接续包</h3>
-          <div class="wb-editor-banner {% if continuation_package.available %}wb-banner-provisional{% else %}wb-banner-readonly{% endif %}"><span>{{ continuation_package.status_label }}</span><small>接续包只在已有可审计材料时显示。</small></div>
-          <p class="wb-context-explanation">{{ continuation_package.author_summary }}</p>
-          {% if continuation_package.available %}<dl><dt>叙事镜头</dt><dd>{{ continuation_package.lens or '未提供' }}</dd><dt>推进线索</dt><dd>{{ continuation_package.portfolio|length }} 项</dd><dt>待偿还债务</dt><dd>{{ continuation_package.debt|length }} 项</dd></dl><details class="wb-technical-details"><summary>技术详情</summary><pre class="wb-json-preview">{{ selected_draft.contract_payload|tojson(indent=2) }}</pre></details>{% else %}<a class="button compact" href="/books/{{ book_id }}/workflow">准备续写任务</a>{% endif %}
-        </section>
       </div>
-      </div>
-      <div class="wb-rail" data-pane-rail="right" aria-label="右栏已收起">
-        <button class="wb-rail-button" type="button" data-toggle-pane="right" aria-label="展开右栏" title="展开右栏">
-          <span class="wb-pane-toggle-icon" data-pane-toggle-icon aria-hidden="true">‹</span>
-          <span class="wb-visually-hidden" data-pane-toggle-label>展开右栏</span>
-        </button>
-      </div>
+      <div class="wb-rail" data-pane-rail="right"><button class="wb-rail-button" type="button" data-toggle-pane="right" aria-label="展开右栏"><span data-pane-toggle-icon>‹</span></button></div>
     </aside>
   </main>
-  <script src="{{ url_for('static', path='app.js') }}" defer></script>
+  <script src="{{ url_for('static', path='workbench.js') }}?v=2.2.1" defer></script>
 </body>
 </html>

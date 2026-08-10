@@ -57,6 +57,50 @@ class SourceStateVerification(StrEnum):
     UNKNOWN = "UNKNOWN"
 
 
+class SourceStateCoverageStatus(StrEnum):
+    NOT_STARTED = "NOT_STARTED"
+    READY_FOR_CODEX = "READY_FOR_CODEX"
+    RUNNING = "RUNNING"
+    COMPLETE_NO_CHANGE = "COMPLETE_NO_CHANGE"
+    COMPLETE_WITH_CHANGES = "COMPLETE_WITH_CHANGES"
+    PARTIAL = "PARTIAL"
+    FAILED = "FAILED"
+
+
+_COMPLETE_COVERAGE_STATUSES = {
+    SourceStateCoverageStatus.COMPLETE_NO_CHANGE,
+    SourceStateCoverageStatus.COMPLETE_WITH_CHANGES,
+}
+
+_SOURCE_STATE_SNAPSHOT_VERSION = 3
+
+
+class SourceStateChapterCoverage(BaseModel):
+    """Durable proof that one source chapter was inspected at its own boundary."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    coverage_id: str
+    book_id: str
+    edition_id: str
+    chapter_id: str
+    chapter_ordinal: int = Field(ge=1)
+    status: SourceStateCoverageStatus = SourceStateCoverageStatus.NOT_STARTED
+    verified_delta_count: int = Field(default=0, ge=0)
+    uncertain_finding_count: int = Field(default=0, ge=0)
+    task_id: str | None = None
+    handoff_id: str | None = None
+    started_at: str | None = None
+    completed_at: str | None = None
+    error_message: str | None = None
+    updated_at: str
+    version: int = 1
+
+    @property
+    def complete(self) -> bool:
+        return self.status in _COMPLETE_COVERAGE_STATUSES
+
+
 _OBJECT_ID_CATEGORIES = {
     SourceStateCategory.ITEM,
     SourceStateCategory.EQUIPMENT,
@@ -344,6 +388,198 @@ def list_source_chapter_deltas(
     ]
 
 
+def _coverage_id(book_id: str, edition_id: str, chapter_id: str) -> str:
+    return f"source-coverage:{book_id}:{edition_id}:{chapter_id}"
+
+
+def source_state_chapter_coverage(
+    connection: sqlite3.Connection,
+    book_id: str,
+    edition_id: str,
+    chapter_id: str,
+    *,
+    chapter_ordinal: int | None = None,
+) -> SourceStateChapterCoverage:
+    row = connection.execute(
+        "SELECT * FROM source_state_chapter_coverage "
+        "WHERE book_id=? AND edition_id=? AND chapter_id=?",
+        (book_id, edition_id, chapter_id),
+    ).fetchone()
+    if row is None:
+        ordinal = chapter_ordinal
+        if ordinal is None:
+            chapter = connection.execute(
+                "SELECT ordinal FROM chapters WHERE book_id=? AND chapter_id=?",
+                (book_id, chapter_id),
+            ).fetchone()
+            if chapter is None:
+                raise ValueError(f"章节不存在：{chapter_id}")
+            ordinal = int(chapter["ordinal"])
+        return SourceStateChapterCoverage(
+            coverage_id=_coverage_id(book_id, edition_id, chapter_id),
+            book_id=book_id,
+            edition_id=edition_id,
+            chapter_id=chapter_id,
+            chapter_ordinal=ordinal,
+            updated_at="",
+        )
+    return SourceStateChapterCoverage(
+        coverage_id=str(row["coverage_id"]),
+        book_id=str(row["book_id"]),
+        edition_id=str(row["edition_id"]),
+        chapter_id=str(row["chapter_id"]),
+        chapter_ordinal=int(row["chapter_ordinal"]),
+        status=SourceStateCoverageStatus(str(row["status"])),
+        verified_delta_count=int(row["verified_delta_count"]),
+        uncertain_finding_count=int(row["uncertain_finding_count"]),
+        task_id=None if row["task_id"] is None else str(row["task_id"]),
+        handoff_id=None if row["handoff_id"] is None else str(row["handoff_id"]),
+        started_at=None if row["started_at"] is None else str(row["started_at"]),
+        completed_at=None if row["completed_at"] is None else str(row["completed_at"]),
+        error_message=None if row["error_message"] is None else str(row["error_message"]),
+        updated_at=str(row["updated_at"]),
+        version=int(row["version"]),
+    )
+
+
+def upsert_source_state_coverage(
+    connection: sqlite3.Connection,
+    *,
+    book_id: str,
+    edition_id: str,
+    chapter_id: str,
+    chapter_ordinal: int,
+    status: SourceStateCoverageStatus,
+    verified_delta_count: int = 0,
+    uncertain_finding_count: int = 0,
+    task_id: str | None = None,
+    handoff_id: str | None = None,
+    error_message: str | None = None,
+) -> SourceStateChapterCoverage:
+    now = utc_now()
+    started_at = now if status is SourceStateCoverageStatus.RUNNING else None
+    completed_at = now if status in _COMPLETE_COVERAGE_STATUSES else None
+    connection.execute(
+        """
+        INSERT INTO source_state_chapter_coverage(
+            coverage_id, book_id, edition_id, chapter_id, chapter_ordinal, status,
+            verified_delta_count, uncertain_finding_count, task_id, handoff_id,
+            started_at, completed_at, error_message, updated_at, version
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+        ON CONFLICT(book_id, edition_id, chapter_id) DO UPDATE SET
+            chapter_ordinal=excluded.chapter_ordinal,
+            status=excluded.status,
+            verified_delta_count=excluded.verified_delta_count,
+            uncertain_finding_count=excluded.uncertain_finding_count,
+            task_id=COALESCE(excluded.task_id, source_state_chapter_coverage.task_id),
+            handoff_id=COALESCE(excluded.handoff_id, source_state_chapter_coverage.handoff_id),
+            started_at=COALESCE(
+                source_state_chapter_coverage.started_at, excluded.started_at
+            ),
+            completed_at=excluded.completed_at,
+            error_message=excluded.error_message,
+            updated_at=excluded.updated_at,
+            version=source_state_chapter_coverage.version+1
+        """,
+        (
+            _coverage_id(book_id, edition_id, chapter_id),
+            book_id,
+            edition_id,
+            chapter_id,
+            chapter_ordinal,
+            status.value,
+            verified_delta_count,
+            uncertain_finding_count,
+            task_id,
+            handoff_id,
+            started_at,
+            completed_at,
+            error_message,
+            now,
+        ),
+    )
+    return source_state_chapter_coverage(
+        connection,
+        book_id,
+        edition_id,
+        chapter_id,
+        chapter_ordinal=chapter_ordinal,
+    )
+
+
+def record_source_state_coverage(
+    database: Database,
+    *,
+    book_id: str,
+    edition_id: str,
+    chapter_id: str,
+    chapter_ordinal: int,
+    status: SourceStateCoverageStatus,
+    verified_delta_count: int = 0,
+    uncertain_finding_count: int = 0,
+    task_id: str | None = None,
+    handoff_id: str | None = None,
+    error_message: str | None = None,
+) -> SourceStateChapterCoverage:
+    database.initialize()
+    with database.connect() as connection:
+        chapter = connection.execute(
+            "SELECT ordinal FROM chapters WHERE book_id=? AND chapter_id=?",
+            (book_id, chapter_id),
+        ).fetchone()
+        if chapter is None or int(chapter["ordinal"]) != chapter_ordinal:
+            raise ValueError("Source State coverage 的章节锚点无效")
+        return upsert_source_state_coverage(
+            connection,
+            book_id=book_id,
+            edition_id=edition_id,
+            chapter_id=chapter_id,
+            chapter_ordinal=chapter_ordinal,
+            status=status,
+            verified_delta_count=verified_delta_count,
+            uncertain_finding_count=uncertain_finding_count,
+            task_id=task_id,
+            handoff_id=handoff_id,
+            error_message=error_message,
+        )
+
+
+def source_state_coverage_summary(
+    connection: sqlite3.Connection, book_id: str, edition_id: str
+) -> dict[str, int | float]:
+    total = int(
+        connection.execute(
+            "SELECT COUNT(*) FROM chapters WHERE book_id=?", (book_id,)
+        ).fetchone()[0]
+    )
+    counts = {
+        str(row["status"]): int(row["count"])
+        for row in connection.execute(
+            "SELECT status, COUNT(*) AS count FROM source_state_chapter_coverage "
+            "WHERE book_id=? AND edition_id=? GROUP BY status",
+            (book_id, edition_id),
+        ).fetchall()
+    }
+    with_changes = counts.get(SourceStateCoverageStatus.COMPLETE_WITH_CHANGES.value, 0)
+    no_changes = counts.get(SourceStateCoverageStatus.COMPLETE_NO_CHANGE.value, 0)
+    analyzed = with_changes + no_changes
+    return {
+        "total": total,
+        "analyzed": analyzed,
+        "with_changes": with_changes,
+        "no_changes": no_changes,
+        "ready": counts.get(SourceStateCoverageStatus.READY_FOR_CODEX.value, 0),
+        "running": counts.get(SourceStateCoverageStatus.RUNNING.value, 0),
+        "partial": counts.get(SourceStateCoverageStatus.PARTIAL.value, 0),
+        "failed": counts.get(SourceStateCoverageStatus.FAILED.value, 0),
+        "not_started": counts.get(
+            SourceStateCoverageStatus.NOT_STARTED.value, 0
+        )
+        + max(0, total - sum(counts.values())),
+        "percentage": round(analyzed * 100 / total, 1) if total else 0.0,
+    }
+
+
 def _delta_record(delta: SourceChapterStateDelta) -> dict[str, Any]:
     payload = dict(delta.payload)
     owner_id = str(
@@ -352,6 +588,16 @@ def _delta_record(delta: SourceChapterStateDelta) -> dict[str, Any]:
         or payload.get("character_id")
         or delta.subject_id
     )
+    from_entity_id = payload.get("from_entity_id")
+    to_entity_id = payload.get("to_entity_id")
+    if delta.category is SourceStateCategory.RELATIONSHIP:
+        from_entity_id = from_entity_id or delta.subject_id
+        to_entity_id = (
+            to_entity_id
+            or payload.get("related_person_id")
+            or payload.get("counterparty_id")
+            or payload.get("information_provider")
+        )
     return {
         "record_id": f"source:{delta.delta_id}",
         "state_key": delta.state_key,
@@ -377,8 +623,8 @@ def _delta_record(delta: SourceChapterStateDelta) -> dict[str, Any]:
         "object_id": delta.object_id,
         "owner_id": owner_id,
         "current_holder_id": owner_id,
-        "from_entity_id": payload.get("from_entity_id"),
-        "to_entity_id": payload.get("to_entity_id"),
+        "from_entity_id": from_entity_id,
+        "to_entity_id": to_entity_id,
         "knower_id": payload.get("knower_id"),
         "topic_id": payload.get("topic_id") or delta.object_id,
         "topic_name": payload.get("topic_name") or payload.get("topic"),
@@ -417,6 +663,17 @@ def build_source_state_projection(
 ) -> dict[str, Any]:
     """Replay only verified source deltas up to the requested chapter."""
 
+    coverage = (
+        source_state_chapter_coverage(
+            connection,
+            book_id,
+            edition_id,
+            chapter_id,
+            chapter_ordinal=chapter_ordinal,
+        )
+        if chapter_id is not None and chapter_ordinal is not None
+        else None
+    )
     deltas = list_source_chapter_deltas(
         connection,
         book_id,
@@ -433,15 +690,26 @@ def build_source_state_projection(
         for delta in deltas
         if delta.verification_status is not SourceStateVerification.SOURCE_VERIFIED
     ]
+    selected = [delta for delta in deltas if delta.chapter_id == chapter_id]
+    selected_verified = [
+        delta
+        for delta in selected
+        if delta.verification_status is SourceStateVerification.SOURCE_VERIFIED
+    ]
+    selected_uncertain = [
+        delta
+        for delta in selected
+        if delta.verification_status is not SourceStateVerification.SOURCE_VERIFIED
+    ]
     records: dict[str, dict[str, dict[str, Any]]] = {}
     applied_delta_ids: set[str] = set()
     snapshot_ordinal: int | None = None
     if chapter_ordinal is not None:
         snapshot = connection.execute(
             "SELECT chapter_ordinal, projection_json FROM source_state_snapshots "
-            "WHERE book_id=? AND edition_id=? AND chapter_ordinal<=? "
+            "WHERE book_id=? AND edition_id=? AND chapter_ordinal<=? AND version=? "
             "ORDER BY chapter_ordinal DESC LIMIT 1",
-            (book_id, edition_id, chapter_ordinal),
+            (book_id, edition_id, chapter_ordinal, _SOURCE_STATE_SNAPSHOT_VERSION),
         ).fetchone()
         if snapshot is not None:
             cached = _payload(snapshot["projection_json"])
@@ -463,7 +731,9 @@ def build_source_state_projection(
             continue
         _apply_delta(records, delta)
         applied_delta_ids.add(delta.delta_id)
-    if chapter_ordinal is not None and verified:
+    if chapter_ordinal is not None and (
+        verified or (coverage is not None and coverage.complete)
+    ):
         _write_source_snapshot(
             connection,
             book_id,
@@ -473,9 +743,6 @@ def build_source_state_projection(
             records=records,
             applied_delta_ids=applied_delta_ids,
         )
-    selected_chapter_has_delta = any(
-        delta.chapter_id == chapter_id for delta in verified
-    )
     previous_chapter = max(
         (
             delta.chapter_ordinal
@@ -485,13 +752,36 @@ def build_source_state_projection(
         default=None,
     )
     queued = _hydration_task(connection, book_id, edition_id, chapter_id)
+    coverage_status = (
+        SourceStateCoverageStatus.NOT_STARTED
+        if coverage is None
+        else coverage.status
+    )
+    coverage_complete = coverage_status in _COMPLETE_COVERAGE_STATUSES
     return {
-        "available": bool(verified),
-        "projection_status": "READY" if verified else "MISSING",
+        "available": coverage_complete,
+        "projection_status": (
+            "READY"
+            if coverage_complete
+            else "PARTIAL"
+            if coverage_status is SourceStateCoverageStatus.PARTIAL
+            else "MISSING"
+        ),
+        "coverage": (
+            None if coverage is None else coverage.model_dump(mode="json")
+        ),
+        "coverage_status": coverage_status.value,
+        "state_changed": bool(selected_verified),
         "ledger_delta_count": len(deltas),
         "verified_delta_count": len(verified),
         "uncertain_delta_count": len(uncertain),
-        "selected_chapter_has_delta": selected_chapter_has_delta,
+        "chapter_verified_delta_count": len(selected_verified),
+        "chapter_uncertain_delta_count": len(selected_uncertain),
+        "chapter_delta": {
+            "changed": bool(selected_verified),
+            "confirmed": [_delta_record(delta) for delta in selected_verified],
+            "uncertain": [_delta_record(delta) for delta in selected_uncertain],
+        },
         "previous_projection_chapter_ordinal": previous_chapter,
         "snapshot_chapter_ordinal": snapshot_ordinal,
         "records": {
@@ -499,7 +789,7 @@ def build_source_state_projection(
         },
         "uncertain_records": [_delta_record(delta) for delta in uncertain],
         "hydration": {
-            "required": not selected_chapter_has_delta,
+            "required": not coverage_complete,
             "queued": queued is not None,
             "task": queued,
             "handoff": None if queued is None else queued.get("handoff"),
@@ -531,6 +821,10 @@ def _apply_delta(
             old_payload_value if isinstance(old_payload_value, dict) else {}
         )
         payload = {**old_payload, **payload}
+        if delta.category is SourceStateCategory.CHARACTER_STATE:
+            for identity_field in ("name", "character_id", "owner_id"):
+                if old_payload.get(identity_field):
+                    payload[identity_field] = old_payload[identity_field]
     if delta.operation is SourceStateOperation.TRANSFER:
         new_owner = (
             payload.get("to_subject_id")
@@ -581,7 +875,7 @@ def _write_source_snapshot(
         INSERT INTO source_state_snapshots(
             snapshot_id, book_id, edition_id, chapter_id, chapter_ordinal,
             projection_json, created_at, version
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(book_id, edition_id, chapter_ordinal) DO UPDATE SET
             chapter_id=excluded.chapter_id,
             projection_json=excluded.projection_json,
@@ -596,6 +890,7 @@ def _write_source_snapshot(
             chapter_ordinal,
             _json({"records": records, "applied_delta_ids": sorted(applied_delta_ids)}),
             utc_now(),
+            _SOURCE_STATE_SNAPSHOT_VERSION,
         ),
     )
 
@@ -690,11 +985,17 @@ def _hydration_task(
 __all__ = [
     "SourceChapterStateDelta",
     "SourceEvidenceLocator",
+    "SourceStateChapterCoverage",
     "SourceStateCategory",
+    "SourceStateCoverageStatus",
     "SourceStateOperation",
     "SourceStateVerification",
     "build_source_state_projection",
     "derive_state_key",
     "list_source_chapter_deltas",
     "record_source_chapter_deltas",
+    "record_source_state_coverage",
+    "source_state_chapter_coverage",
+    "source_state_coverage_summary",
+    "upsert_source_state_coverage",
 ]

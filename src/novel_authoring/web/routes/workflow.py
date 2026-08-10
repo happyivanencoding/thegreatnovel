@@ -5,7 +5,11 @@ from typing import Any
 from novel_authoring.author_control.service import execute_author_intent
 from novel_authoring.edition import resolve_edition_id
 from novel_authoring.planning.innovation import resolve_innovation_control
-from novel_authoring.workflows.handoffs import create_continuation_handoff, create_revision_handoff
+from novel_authoring.workflows.handoffs import (
+    create_continuation_handoff,
+    create_revision_handoff,
+    refresh_handoff_planning_aggregate,
+)
 
 
 def _record_workflow_goal(
@@ -15,6 +19,15 @@ def _record_workflow_goal(
     if not goal:
         return None
     selected_edition = resolve_edition_id(database, book_id, request.edition_id)
+    with database.connect() as connection:
+        existing = connection.execute(
+            "SELECT * FROM author_control_intents WHERE book_id=? AND edition_id=? "
+            "AND intent_type='WORKFLOW_GOAL' AND description=? "
+            "AND status IN ('PLANNED', 'ACTIVE') ORDER BY updated_at DESC LIMIT 1",
+            (book_id, selected_edition, goal),
+        ).fetchone()
+    if existing is not None:
+        return dict(existing)
     resolution = execute_author_intent(
         database,
         book_id,
@@ -57,6 +70,10 @@ def prepare_continuation(database: Any, book_id: str, request: Any) -> dict[str,
         author_task_ids=request.author_task_ids,
     )
     handoff["author_intent"] = _record_workflow_goal(database, book_id, request, handoff)
+    if handoff["author_intent"] is not None:
+        handoff.update(
+            refresh_handoff_planning_aggregate(database, str(handoff["handoff_id"]))
+        )
     return handoff
 
 
@@ -81,4 +98,8 @@ def prepare_revision(database: Any, book_id: str, request: Any) -> dict[str, Any
         author_task_ids=request.author_task_ids,
     )
     handoff["author_intent"] = _record_workflow_goal(database, book_id, request, handoff)
+    if handoff["author_intent"] is not None:
+        handoff.update(
+            refresh_handoff_planning_aggregate(database, str(handoff["handoff_id"]))
+        )
     return handoff

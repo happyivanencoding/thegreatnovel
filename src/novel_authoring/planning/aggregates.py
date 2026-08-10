@@ -7,6 +7,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
 
 from novel_authoring.atlas.service import latest_atlas
+from novel_authoring.author_control.book_profile import load_effective_book_profile
 from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
@@ -274,12 +275,20 @@ def build_planning_aggregate(
         else str(current_atlas["artifact_manifest_sha256"] or "")
     )
     horizon_hash = None if current_atlas is None else str(current_atlas["horizon_hash"] or "")
+    effective_profile = load_effective_book_profile(database, book_id, edition_id)
     with database.connect() as connection:
         projection = projection_from_connection(connection, book_id, edition_id)
         policy = dict(author_policy or {})
         policy["author_control"] = _author_control_policy(
             connection, book_id, edition_id
         )
+        policy["effective_book_profile"] = {
+            "profile_version_id": effective_profile["profile_version_id"],
+            "version_number": effective_profile["version_number"],
+            "dimensions": effective_profile["dimensions"],
+            "active_directives": effective_profile["active_directives"],
+            "hard_constraints": effective_profile["hard_constraints"],
+        }
         if edition_state_run_id is None:
             state = _latest_run_ids(connection, book_id, edition_id, "EDITION_STATE", limit=1)
             edition_state_run_id = state[0] if state else None

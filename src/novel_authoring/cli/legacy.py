@@ -82,7 +82,11 @@ from novel_authoring.planning.batch import (
     get_chunk_context,
 )
 from novel_authoring.planning.boundary import PlanningError, build_boundary_packet
-from novel_authoring.planning.candidates import import_candidate_output, prepare_candidate_task
+from novel_authoring.planning.candidates import (
+    import_candidate_output,
+    prepare_candidate_task,
+    prepare_handoff_candidate_task,
+)
 from novel_authoring.planning.contracts import build_chapter_contract
 from novel_authoring.planning.innovation import (
     parse_focus_option,
@@ -918,17 +922,29 @@ def plan_next_command(
     workspace: Workspace = Path("workspace"),
     config: ConfigPath = None,
     task_id: Annotated[Optional[str], typer.Option("--task-id")] = None,
+    handoff_id: Annotated[Optional[str], typer.Option("--handoff-id")] = None,
     output: Annotated[Optional[Path], typer.Option("--output")] = None,
     edition_id: EditionId = None,
     innovation_level: Annotated[Optional[str], typer.Option("--innovation-level")] = None,
     innovation_focus: Annotated[Optional[str], typer.Option("--innovation-focus")] = None,
     save_as_book_default: Annotated[bool, typer.Option("--save-as-book-default")] = False,
+    library_root: LibraryRoot = None,
 ) -> None:
     """准备三个候选任务，或验证、评分并导入候选 output.json。"""
     settings = load_settings(config)
-    database = Database(workspace.resolve() / safe_book_id(book_id) / "state.sqlite3")
+    database = _book_database(workspace, book_id, library_root)
     try:
-        if task_id is None:
+        if handoff_id is not None:
+            if task_id is not None or output is not None:
+                raise PlanningError("--handoff-id 不能与 --task-id/--output 同时使用")
+            if (
+                innovation_level is not None
+                or innovation_focus is not None
+                or save_as_book_default
+            ):
+                raise PlanningError("handoff 候选必须使用已冻结的 InnovationControl")
+            result = prepare_handoff_candidate_task(database, book_id, handoff_id)
+        elif task_id is None:
             if output is not None:
                 raise PlanningError("提供 --output 时必须同时提供 --task-id")
             control, source = resolve_innovation_control(

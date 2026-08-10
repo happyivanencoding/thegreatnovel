@@ -195,10 +195,10 @@ def test_story_game_state_is_historical_and_author_commands_do_not_touch_canon(
         "&character_id=su-mu"
     )
     assert page.status_code == 200
-    assert "Story Game State" in page.text
+    assert "Chapter World State" in page.text
     assert "苏牧" in page.text
-    assert "SHORT / MID / LONG" in page.text
-    assert "关系图" in page.text
+    assert "任务与剧情线" in page.text
+    assert "Relationship Graph" in page.text
 
     before = _canon_snapshot(database)
     future_item = client.post(

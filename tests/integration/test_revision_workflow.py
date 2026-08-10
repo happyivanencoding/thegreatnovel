@@ -156,6 +156,13 @@ def test_revision_workflow_approval_then_separate_activation(tmp_path: Path) -> 
             ).fetchone()[0]
             == "VALIDATED"
         )
+        assert tuple(
+            connection.execute(
+                "SELECT source_type, status FROM book_profile_refresh_proposals "
+                "WHERE book_id='revision-book' AND edition_id='edition-r1' "
+                "ORDER BY created_at DESC LIMIT 1"
+            ).fetchone()
+        ) == ("REVISION_COMMIT", "PENDING")
     with pytest.raises(RevisionWorkflowError):
         approve_revision_campaign(
             database, "revision-book", campaign_id, confirmation="批准改写版本"

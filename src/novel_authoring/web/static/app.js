@@ -5,6 +5,29 @@
   const storedTheme = window.localStorage.getItem("novel-theme");
   if (storedTheme) root.dataset.theme = storedTheme;
 
+  function centerInScrollableArea(target) {
+    let container = target.parentElement;
+    while (container && container !== document.body) {
+      const style = window.getComputedStyle(container);
+      if (/auto|scroll/.test(style.overflowY) && container.scrollHeight > container.clientHeight) {
+        const targetBox = target.getBoundingClientRect();
+        const containerBox = container.getBoundingClientRect();
+        container.scrollTo({
+          top: container.scrollTop + targetBox.top - containerBox.top
+            - (container.clientHeight - targetBox.height) / 2,
+          behavior: "smooth"
+        });
+        return;
+      }
+      container = container.parentElement;
+    }
+    const box = target.getBoundingClientRect();
+    window.scrollTo({
+      top: window.scrollY + box.top - (window.innerHeight - box.height) / 2,
+      behavior: "smooth"
+    });
+  }
+
   document.querySelectorAll("[data-theme-toggle]").forEach(function (button) {
     button.addEventListener("click", function () {
       const next = root.dataset.theme === "dark" ? "light" : "dark";
@@ -70,7 +93,7 @@
       if (!target) return;
       document.querySelectorAll("[data-segment-id]").forEach(function (item) { item.classList.remove("selected"); });
       target.classList.add("selected");
-      target.scrollIntoView({ behavior: "smooth", block: "center" });
+      centerInScrollableArea(target);
     });
   });
 
@@ -85,7 +108,7 @@
       const observationId = chip.dataset.observationId;
       if (!observationId) return;
       const row = document.querySelector('[data-observation-row="' + CSS.escape(observationId) + '"]');
-      if (row) row.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (row) centerInScrollableArea(row);
     });
   });
 

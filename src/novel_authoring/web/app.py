@@ -31,6 +31,12 @@ from novel_authoring.atlas.service import (
     get_atlas_overview,
     record_atlas_action,
 )
+from novel_authoring.author_control.book_profile import (
+    create_book_profile_refresh_proposal,
+    edit_book_profile,
+    load_effective_book_profile,
+    resolve_book_profile_refresh_proposal,
+)
 from novel_authoring.author_control.models import AuthorStateCommand
 from novel_authoring.author_control.projections import build_story_game_state
 from novel_authoring.author_control.service import (
@@ -78,6 +84,9 @@ from novel_authoring.web.schemas import (
     AuthorInputRequest,
     AuthorIntentRequest,
     AuthorTaskRequest,
+    BookProfileEditRequest,
+    BookProfileProposalRequest,
+    BookProfileProposalResolutionRequest,
     DraftContentRequest,
     HandoffRequest,
     RecomputeRequest,
@@ -407,7 +416,7 @@ def create_app(
             node=request.query_params.get("node", "overview"),
             mode=request.query_params.get("mode", "continue"),
             right_tab=request.query_params.get("right_tab", "prose"),
-            state_tab=request.query_params.get("state_tab", "character"),
+            state_tab=request.query_params.get("state_tab", "overview"),
             character_id=_query_id(request, "character_id"),
         )
         context["csrf_token"] = app.state.csrf_token
@@ -442,7 +451,7 @@ def create_app(
                 node=request.query_params.get("node", "overview"),
                 mode=request.query_params.get("mode", "continue"),
                 right_tab=request.query_params.get("right_tab", "prose"),
-                state_tab=request.query_params.get("state_tab", "character"),
+                state_tab=request.query_params.get("state_tab", "overview"),
                 character_id=_query_id(request, "character_id"),
             )
         except ValueError as exc:
@@ -489,7 +498,7 @@ def create_app(
             node=request.query_params.get("node", "overview"),
             mode=request.query_params.get("mode", "continue"),
             right_tab=request.query_params.get("right_tab", "prose"),
-            state_tab=request.query_params.get("state_tab", "character"),
+            state_tab=request.query_params.get("state_tab", "overview"),
             character_id=_query_id(request, "character_id"),
         )
 
@@ -535,6 +544,77 @@ def create_app(
         checked_edition = _check_id(edition_id)
         return author_control_view(
             _database_for_book(app, checked_book), checked_book, checked_edition
+        )
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/book-profile")
+    async def book_profile_api(path_book_id: str, edition_id: str) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return load_effective_book_profile(
+            _database_for_book(app, checked_book), checked_book, checked_edition
+        )
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/book-profile/edits")
+    async def book_profile_edit_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: BookProfileEditRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return edit_book_profile(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            dimension=payload.dimension,
+            operation=payload.operation,
+            content=payload.content,
+            strength=payload.strength,
+            reason=payload.reason,
+        )
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/book-profile/proposals")
+    async def book_profile_proposal_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: BookProfileProposalRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return create_book_profile_refresh_proposal(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            source_type=payload.source_type,
+            proposed_baseline=payload.proposed_baseline,
+            summary=payload.summary,
+        )
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/book-profile/proposals/"
+        "{proposal_id}/resolve"
+    )
+    async def book_profile_proposal_resolution_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        proposal_id: str,
+        payload: BookProfileProposalResolutionRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return resolve_book_profile_refresh_proposal(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            _check_id(proposal_id),
+            action=payload.action,
+            edited_baseline=payload.edited_baseline,
         )
 
     @app.post("/api/books/{path_book_id}/editions/{edition_id}/author-commands")

@@ -561,3 +561,72 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
   .wb-state-columns, .wb-command-form, .wb-attribute-list { grid-template-columns: 1fr; }
   .wb-command-form label:nth-last-of-type(1), .wb-command-form button { grid-column: auto; }
 }
+
+/* Story World Workbench V2.2 */
+.wb-state-summary { position: sticky; top: 0; z-index: 3; box-shadow: 0 6px 18px rgba(16, 24, 40, .04); }
+.wb-state-summary .wb-state-tabs { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: thin; }
+.wb-state-summary .wb-state-tabs button { flex: 0 0 auto; white-space: nowrap; }
+.wb-delta-panel { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid #eaecf0; }
+.wb-delta-panel h4 { margin: 0 0 .55rem; color: #344054; }
+
+.wb-knowledge-table-wrap { max-width: 100%; margin-top: 1rem; overflow: auto; border: 1px solid #e4e7ec; border-radius: 9px; background: #fff; }
+.wb-knowledge-table { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; font-size: .74rem; }
+.wb-knowledge-table th, .wb-knowledge-table td { min-width: 128px; padding: .45rem; border-right: 1px solid #f0f1f3; border-bottom: 1px solid #f0f1f3; text-align: center; background: #fff; }
+.wb-knowledge-table thead th { position: sticky; top: 0; z-index: 2; color: #344054; background: #f8f9fc; }
+.wb-knowledge-table th:first-child { position: sticky; left: 0; z-index: 3; min-width: 140px; text-align: left; background: #f8f9fc; }
+.wb-knowledge-table thead th:first-child { z-index: 4; }
+.wb-knowledge-cell { width: 100%; min-height: 34px; padding: .35rem .45rem; border: 1px solid transparent; border-radius: 6px; color: #2457d6; background: #f3f6ff; cursor: pointer; }
+.wb-knowledge-cell:hover, .wb-knowledge-cell:focus-visible { border-color: #7f9fe8; outline: 0; }
+.wb-knowledge-cell-unknown { border-style: dashed; color: #667085; background: #f9fafb; }
+.wb-knowledge-cell-misunderstood { color: #b42318; background: #fff3f2; }
+.wb-knowledge-cell-suspected { color: #8a5b00; background: #fffaf0; }
+
+.wb-global-inspector { display: grid; gap: .9rem; min-height: 280px; padding: 1rem; }
+.wb-inspector-empty { display: grid; align-content: center; min-height: 250px; color: #98a2b3; text-align: center; }
+.wb-inspector-icon { font-size: 2rem; }
+.wb-global-inspector header { display: grid; gap: .2rem; padding-bottom: .75rem; border-bottom: 1px solid #eaecf0; }
+.wb-global-inspector header span { color: #536b9e; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+.wb-global-inspector header h3 { margin: 0; color: #1d2939; }
+.wb-inspector-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; }
+.wb-inspector-grid > div { display: grid; gap: .12rem; padding: .55rem; border-radius: 7px; background: #f8f9fc; }
+.wb-inspector-grid span { color: #98a2b3; font-size: .66rem; }
+.wb-inspector-grid strong { color: #344054; font-size: .78rem; }
+.wb-who-knows { display: grid; gap: .35rem; margin: 0; padding: 0; list-style: none; }
+.wb-who-knows li { padding: .45rem .55rem; border-left: 3px solid #c9d7ff; color: #475467; background: #f8faff; }
+.wb-source-foldout { margin: 1rem; }
+.wb-source-foldout pre { max-height: 52vh; overflow: auto; white-space: pre-wrap; }
+
+.wb-item-modal { width: min(620px, calc(100vw - 2rem)); padding: 0; border: 0; border-radius: 12px; box-shadow: 0 24px 70px rgba(16, 24, 40, .24); }
+.wb-item-modal::backdrop { background: rgba(16, 24, 40, .42); backdrop-filter: blur(2px); }
+.wb-item-modal-card { display: grid; gap: .8rem; padding: 1.15rem; }
+.wb-item-modal-card label, .wb-profile-edit-form label { display: grid; gap: .3rem; color: #475467; font-size: .76rem; }
+.wb-item-modal-card input, .wb-item-modal-card select, .wb-item-modal-card textarea, .wb-profile-edit-form input, .wb-profile-edit-form select, .wb-profile-edit-form textarea { width: 100%; padding: .58rem .65rem; border: 1px solid #d0d5dd; border-radius: 7px; color: #1d2939; background: #fff; }
+.wb-modal-actions { display: flex; justify-content: flex-end; gap: .5rem; }
+.wb-semantic-actions { justify-content: flex-start; flex-wrap: wrap; }
+.wb-command-feedback { margin: 0; color: #176b4d; font-size: .76rem; }
+.wb-command-feedback.is-error, .wb-hard-failure { color: #b42318; }
+
+.wb-profile-edit-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; margin-top: 1rem; padding: 1rem; border: 1px solid #dbe5ff; border-radius: 9px; background: #f8faff; }
+.wb-profile-edit-form label:nth-of-type(3), .wb-profile-edit-form .wb-command-feedback { grid-column: 1 / -1; }
+.wb-profile-overlay { display: grid; gap: .55rem; margin-top: 1rem; }
+.wb-profile-overlay article, .wb-profile-history, .wb-profile-proposal { display: grid; gap: .25rem; padding: .7rem .8rem; border-left: 3px solid #9eb5ee; background: #fcfcfd; }
+.wb-profile-overlay article span { width: max-content; padding: .16rem .42rem; border-radius: 999px; color: #2457d6; background: #eef3ff; font-size: .66rem; }
+.wb-profile-history span, .wb-profile-proposal span { color: #667085; font-size: .74rem; }
+
+.wb-candidate-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin-top: 1rem; }
+.wb-candidate-card { min-width: 0; padding: .9rem; border: 1px solid #e4e7ec; border-radius: 10px; background: #fff; }
+.wb-candidate-card.is-selected { border-color: #7f9fe8; box-shadow: inset 0 3px 0 #6b7fbd; }
+.wb-candidate-card header { display: grid; grid-template-columns: auto 1fr auto; gap: .45rem; align-items: center; }
+.wb-candidate-card header span, .wb-candidate-card header small { color: #536b9e; }
+.wb-candidate-card p, .wb-candidate-card dl { color: #667085; font-size: .76rem; line-height: 1.5; }
+.wb-candidate-card details { margin-top: .5rem; font-size: .74rem; }
+
+.wb-relationship-edge-hit { stroke: transparent; stroke-width: 18; cursor: pointer; }
+.wb-relationship-edge-control { cursor: pointer; }
+.wb-relationship-edge-control:hover .wb-relationship-edge, .wb-relationship-edge-control:focus .wb-relationship-edge { stroke: #2457d6; stroke-width: 4; }
+.wb-relationship-edge-control:focus { outline: none; }
+.wb-node-faction circle { fill: #fff7e6; stroke: #d6a84b; }
+.wb-node-character circle { fill: #eef3ff; stroke: #6b7fbd; }
+
+@media (max-width: 1280px) { .wb-candidate-grid { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { .wb-profile-edit-form, .wb-inspector-grid { grid-template-columns: 1fr; } .wb-profile-edit-form label:nth-of-type(3) { grid-column: auto; } }
