@@ -131,6 +131,10 @@ def prepare_draft_task(
             "不解释这些治理规则。",
             "本章至少让一个重要状态发生可读的改变；未知可以保留，但若核心谜团继续悬置，"
             "必须推进或兑现另一条 SHORT/MID 线程。",
+            "严格填写 reveal_trace：planned 必须来自 Chapter Contract 的 Reveal Agenda，"
+            "realized 只记录正文真正发生的线索或揭示，且 evidence_quote 必须逐字存在于正文。"
+            "KEEP_HIDDEN 的 Truth 只能约束行为，不能被旁白、对话或解释直接说破；"
+            "HINT 必须留下读者可感知线索，但不能确认完整答案。",
             "避免连续使用‘谨慎试探—暂不下结论—保留退路—撤回’的审计型叙事，"
             "除非当前 Narrative Portfolio 明确需要这种节奏。",
             "只写 output.json，不要修改 book；系统会把合法正文导入 drafts。",
@@ -436,6 +440,18 @@ def save_draft_content(
         if not isinstance(output, dict):
             output = {}
         output["prose_markdown"] = normalized.rstrip("\n")
+        previous_trace = output.get("reveal_trace")
+        if isinstance(previous_trace, dict):
+            output["reveal_trace"] = {
+                "planned": list(previous_trace.get("planned", [])),
+                "realized": [],
+                "knowledge_transitions": [],
+            }
+            notes = output.get("notes")
+            if not isinstance(notes, list):
+                notes = []
+            notes.append("正文已手动编辑；旧 Reveal realized trace 已失效，必须重新声明。")
+            output["notes"] = notes
         connection.execute(
             """
             UPDATE drafts

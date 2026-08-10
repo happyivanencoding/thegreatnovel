@@ -1,0 +1,124 @@
+{% if truth_projection %}
+<article class="wb-content-card wb-truth-header">
+  <div class="wb-section-heading">
+    <div>
+      <p class="wb-kicker">{% if truth_lens == 'AUTHOR' %}Author Omniscient Truth{% else %}Knowledge Lens{% endif %} · Chapter {{ truth_projection.chapter_ordinal }}</p>
+      <h2>真相、认知与揭示计划</h2>
+    </div>
+    <span class="wb-state-tag wb-state-soft">{{ truth_lens }} LENS · 服务端投影</span>
+  </div>
+  {% if truth_lens == 'AUTHOR' %}<p class="wb-lede">世界事实、作者真相、角色认知、读者认知和 RevealPlan 是五个独立层。隐藏真相可以约束行为，但没有 Agenda 授权时不得写进读者可见正文。</p>{% else %}<p class="wb-lede">这是服务端生成的认知投影：未揭露答案、其他角色知识和作者 RevealPlan 不会发送到此页面。</p>{% endif %}
+  <nav class="wb-lens-tabs" aria-label="真相视角">
+    <a class="button compact{% if truth_lens == 'AUTHOR' %} primary{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?mode=truth&node=truth&truth_lens=AUTHOR{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}" data-workbench-navigation>作者全知</a>
+    <a class="button compact{% if truth_lens == 'READER' %} primary{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?mode=truth&node=truth&truth_lens=READER{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}" data-workbench-navigation>读者视角</a>
+    {% if chapter_world_state %}{% for character in chapter_world_state.characters %}<a class="button compact{% if truth_lens == 'CHARACTER' and selected_character_id == character.character_id %} primary{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?mode=truth&node=truth&truth_lens=CHARACTER&character_id={{ character.character_id }}{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}" data-workbench-navigation>{{ character.name }}</a>{% endfor %}{% endif %}
+    {% if truth_lens == 'AUTHOR' %}<a class="button compact{% if include_future_truths %} primary{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?mode=truth&node=truth&truth_lens=AUTHOR&include_future_truths={% if include_future_truths %}0{% else %}1{% endif %}{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}" data-workbench-navigation>{% if include_future_truths %}隐藏未来设定{% else %}显示未来设定{% endif %}</a>{% endif %}
+  </nav>
+  <label class="wb-search-label">搜索真相、角色、势力、地点或物品<input type="search" data-truth-search placeholder="输入标题、陈述或实体 ID"></label>
+  {% if truth_lens != 'AUTHOR' %}<p class="wb-context-explanation">此视角只把截至本章已经 HINTED / SUSPECTED / REVEALED 的主题发送到页面；UNKNOWN 真相的正文不会进入 DOM。</p>{% endif %}
+</article>
+
+{% if truth_lens == 'AUTHOR' and chapter_world_state %}
+<details class="wb-content-card wb-technical-details" data-truth-public-index>
+  <summary>公开世界状态索引 · 与隐藏真相一起搜索</summary>
+  <p class="wb-context-explanation">这里仍属于 ChapterWorldState 事实层；下方 Truth Topic 属于作者全知层。搜索角色、势力、物品、地点时会同时过滤两层。</p>
+  <ul class="wb-record-list">
+    {% for item in chapter_world_state.characters %}<li tabindex="0" data-truth-search-text="{{ item.name }} {{ item.character_id }} {{ item.description or '' }}" data-inspector-kind="character" data-inspector-record='{{ item|tojson }}'><b>人物 · {{ item.name }}</b><span>{{ item.description or item.status_label }}</span></li>{% endfor %}
+    {% for item in chapter_world_state.factions %}<li tabindex="0" data-truth-search-text="{{ item.name }} {{ item.faction_id or '' }} {{ item.statement or '' }}" data-inspector-kind="faction" data-inspector-record='{{ item|tojson }}'><b>势力 · {{ item.name }}</b><span>{{ item.statement or item.status_label }}</span></li>{% endfor %}
+    {% for item in chapter_world_state.locations %}<li tabindex="0" data-truth-search-text="{{ item.name }} {{ item.record_id or '' }} {{ item.statement or '' }}" data-inspector-kind="location" data-inspector-record='{{ item|tojson }}'><b>地点 · {{ item.name }}</b><span>{{ item.statement or item.status_label }}</span></li>{% endfor %}
+    {% for item in chapter_world_state.inventory + chapter_world_state.equipment %}<li tabindex="0" data-truth-search-text="{{ item.name }} {{ item.record_id or '' }} {{ item.statement or '' }}" data-inspector-kind="item" data-inspector-record='{{ item|tojson }}'><b>物品 · {{ item.name }}</b><span>{{ item.statement or item.status_label }}</span></li>{% endfor %}
+    {% for item in chapter_world_state.world_rules %}<li tabindex="0" data-truth-search-text="{{ item.name }} {{ item.record_id or '' }} {{ item.statement or '' }}" data-inspector-kind="world-rule" data-inspector-record='{{ item|tojson }}'><b>世界规则 · {{ item.name }}</b><span>{{ item.statement }}</span></li>{% endfor %}
+  </ul>
+</details>
+{% endif %}
+
+{% if selected_node == 'truth-board' and truth_lens == 'AUTHOR' %}
+<article class="wb-content-card">
+  <div class="wb-section-heading"><div><p class="wb-kicker">Truth Board · 按对象</p><h2>幕后设定对象视图</h2></div><span class="wb-state-tag wb-state-soft">Author only</span></div>
+  <p class="wb-context-explanation">人物、关系、势力、地点、世界规则与剧情各自成组；点击任意卡片可在右侧检查完整知识矩阵、兼容性和 RevealPlan。</p>
+  <div class="wb-truth-board">
+    {% for label, subject_types in [('人物',['CHARACTER']),('关系',['RELATIONSHIP']),('势力',['FACTION']),('地点',['LOCATION']),('世界规则',['WORLD_RULE','RULE']),('剧情',['PLOT','EVENT','THREAD','ITEM'])] %}
+    <section><h3>{{ label }}</h3>{% set group = namespace(found=false) %}{% for topic in truth_projection.topics %}{% if topic.truth.subject_type|upper in subject_types %}{% set group.found = true %}<article tabindex="0" data-truth-id="{{ topic.truth.truth_id }}" data-truth-search-text="{{ topic.truth.title }} {{ topic.truth.statement }} {{ topic.truth.subject_id or '' }}" data-inspector-kind="truth" data-inspector-record='{{ topic|tojson }}'><b>{{ topic.truth.title }}</b><span>{{ topic.truth.status }} · Reader {{ topic.reader.state }}</span><small>{{ topic.truth.statement }}</small></article>{% endif %}{% endfor %}{% if not group.found %}<p class="wb-empty-state">暂无</p>{% endif %}</section>
+    {% endfor %}
+  </div>
+</article>
+{% else %}
+<section class="wb-truth-topic-grid">
+  {% for topic in truth_projection.topics %}
+  <article class="wb-content-card wb-truth-topic" tabindex="0" data-truth-id="{{ topic.truth.truth_id }}" data-truth-search-text="{{ topic.truth.title }} {{ topic.truth.statement }} {{ topic.truth.subject_type or '' }} {{ topic.truth.subject_id or '' }}" data-inspector-kind="truth" data-inspector-record='{{ topic|tojson }}'>
+    <div class="wb-section-heading">
+      <div><p class="wb-kicker">{{ topic.truth.truth_type }}</p><h3>{{ topic.truth.title }}</h3></div>
+      <span class="wb-state-tag {% if topic.truth.status == 'ACTIVE_TRUTH' %}wb-state-canon{% else %}wb-state-provisional{% endif %}">{{ topic.truth.status }}</span>
+    </div>
+    <p class="wb-truth-statement">{{ topic.truth.statement }}</p>
+    <dl class="wb-layer-matrix">
+      <div><dt>Author Truth</dt><dd>{% if truth_lens == 'AUTHOR' %}KNOWN · {{ topic.truth.compatibility_status }}{% else %}REDACTED{% endif %}</dd></div>
+      {% if truth_lens != 'CHARACTER' %}<div><dt>Reader</dt><dd>{{ topic.reader.state }}</dd></div>{% endif %}
+      {% if topic.selected_character_knowledge %}<div><dt>{{ selected_character_id }}</dt><dd>{{ topic.selected_character_knowledge.state }}</dd></div>{% elif truth_lens == 'CHARACTER' %}<div><dt>{{ selected_character_id }}</dt><dd>UNKNOWN</dd></div>{% endif %}
+    </dl>
+    {% if truth_lens == 'AUTHOR' %}
+    <details><summary>角色认知与 RevealPlan</summary>
+      <ul class="wb-record-list">{% for item in topic.character_matrix %}<li><b>{{ item.name }}</b><span>{{ item.state }}{% if item.edge %} · as of 第{{ item.edge.as_of_chapter_ordinal }}章 · {{ item.edge.authority_status }}{% else %} · 当前没有已落地证据{% endif %}</span></li>{% else %}<li><b>没有可识别角色</b><span>UNKNOWN 不等于世界中不存在。</span></li>{% endfor %}</ul>
+      <ul class="wb-record-list">{% for plan in topic.reveal_plans %}<li><b>{{ plan.target }} · {{ plan.reveal_depth }}</b><span>第{{ plan.target_chapter_min }}{% if plan.target_chapter_max %}–{{ plan.target_chapter_max }}{% endif %}章 · {{ plan.status }} · {{ plan.horizon }}</span></li>{% else %}<li><b>尚无 RevealPlan</b><span>默认 KEEP_HIDDEN。</span></li>{% endfor %}</ul>
+    </details>
+    <details><summary>编辑 / 暂停 / 退役</summary><form class="wb-form-stack" data-author-truth-update-form data-truth-id="{{ topic.truth.truth_id }}"><label>标题<input name="title" value="{{ topic.truth.title }}" required></label><label>真实陈述<textarea name="statement" rows="3" required>{{ topic.truth.statement }}</textarea></label><label>状态<select name="status">{% for value, label in [('ACTIVE_TRUTH','Active Truth'),('PROVISIONAL_TRUTH','暂停 / Provisional'),('IDEA','Idea'),('REVEALED','Revealed'),('RETIRED','Retired')] %}<option value="{{ value }}"{% if topic.truth.status == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select></label><label>生效章<input type="number" min="1" name="effective_from_chapter" value="{{ topic.truth.effective_from_chapter }}"></label><button class="button compact" type="submit">重新检查并保存</button><p class="wb-command-feedback"></p></form></details>
+    {% endif %}
+  </article>
+  {% else %}<article class="wb-content-card"><p class="wb-empty-state">此视角在当前章节没有可见真相。UNKNOWN 内容没有被发送到页面。</p></article>{% endfor %}
+</section>
+{% endif %}
+
+{% if truth_lens == 'AUTHOR' and include_future_truths %}
+<article class="wb-content-card">
+  <div class="wb-section-heading"><div><p class="wb-kicker">Future Author Truth</p><h2>尚未到达生效章的未来设定</h2></div><span class="wb-state-tag wb-state-provisional">不属于当前 ChapterWorldState</span></div>
+  <ul class="wb-record-list">{% for item in truth_projection.future_truths %}<li><b>{{ item.title }}</b><span>第{{ item.effective_from_chapter }}章起 · {{ item.statement }}</span><small>{{ item.status }} · {{ item.compatibility_status }}</small></li>{% else %}<li><b>没有未来设定</b><span>当前没有 effective_from 晚于第{{ truth_projection.chapter_ordinal }}章的 Truth。</span></li>{% endfor %}</ul>
+</article>
+{% endif %}
+
+{% if truth_lens == 'AUTHOR' %}
+<article class="wb-content-card" data-reveal-agenda data-chapter-ordinal="{{ reveal_agenda.chapter_ordinal }}">
+  <div class="wb-section-heading"><div><p class="wb-kicker">Chapter Reveal Agenda</p><h2>第{{ reveal_agenda.chapter_ordinal }}章揭示安排</h2></div><span class="wb-state-tag {% if reveal_agenda.reveal_budget.status == 'WITHIN_GUIDELINE' %}wb-state-soft{% else %}wb-state-provisional{% endif %}">{{ reveal_agenda.reveal_budget.status }}</span></div>
+  <p class="wb-context-explanation">拖动只更新本章 Reveal Agenda，不会改变 Reader / Character Knowledge，也不会写入 Canon。</p>
+  <div class="wb-agenda-board">
+    {% for key, label in [('must_reveal','必须揭示'),('should_hint','给出线索'),('keep_hidden','继续隐藏'),('optional','可选')] %}
+    <section class="wb-agenda-column" data-agenda-bucket="{{ key|upper }}"><h3>{{ label }} <span>{{ reveal_agenda.counts[key] }}</span></h3>{% for item in reveal_agenda[key] %}<article class="wb-agenda-card" draggable="true" data-truth-id="{{ item.truth_id }}"><b>{{ item.title }}</b><span>{{ item.reveal_depth or '不揭示' }}</span><small>Reader {{ item.reader_state }} · {{ item.source }}</small></article>{% else %}<p class="wb-empty-state">暂无</p>{% endfor %}</section>
+    {% endfor %}
+  </div>
+  <p class="wb-command-feedback" aria-live="polite"></p>
+</article>
+
+<article class="wb-content-card" data-secret-board data-chapter-ordinal="{{ secret_board.chapter_ordinal }}">
+  <div class="wb-section-heading"><div><p class="wb-kicker">Secret Board</p><h2>秘密生命周期</h2></div><span class="wb-state-tag wb-state-soft">Narrative Debt 复用</span></div>
+  <div class="wb-heading-tags" aria-label="Secret Horizon 筛选"><button type="button" class="button compact primary" data-secret-horizon-filter="ALL">全部</button><button type="button" class="button compact" data-secret-horizon-filter="SHORT">SHORT</button><button type="button" class="button compact" data-secret-horizon-filter="MID">MID</button><button type="button" class="button compact" data-secret-horizon-filter="LONG">LONG</button></div>
+  <p class="wb-context-explanation">拖到“埋线索 / 部分揭露 / 继续隐藏”等列，会换算成本章 Reveal Agenda；不会直接改变 Truth、Reader Knowledge 或 Character Knowledge。</p>
+  <div class="wb-secret-board">{% for key, items in secret_board.columns.items() %}<section data-secret-lifecycle="{{ key }}"><h3>{{ key }} <span>{{ items|length }}</span></h3>{% for item in items %}<article{% if key not in ['RETIRED','AFTERMATH'] %} draggable="true"{% endif %} data-truth-id="{{ item.truth_id }}" data-secret-horizons="{{ item.horizons|join(' ') if item.horizons else 'UNSCHEDULED' }}"><b>{{ item.title }}</b><span>Reader {{ item.current_reader_state }}</span><small>{{ item.horizons|join(' / ') if item.horizons else '尚未排期' }} · Debt {{ item.narrative_debt.status }} · hints {{ item.narrative_debt.hint_count }}</small></article>{% else %}<p class="wb-empty-state">暂无</p>{% endfor %}</section>{% endfor %}</div>
+  <p class="wb-command-feedback" aria-live="polite"></p>
+</article>
+
+<div class="wb-truth-authoring-grid">
+  <article class="wb-content-card">
+    <div class="wb-section-heading"><div><p class="wb-kicker">Open Creative Question</p><h3>作者尚未决定的开放问题</h3></div><span class="wb-state-tag wb-state-soft">不是 Truth</span></div>
+    <ul class="wb-record-list">{% for item in open_questions %}<li><b>{{ item.title }}</b><span>{{ item.question }}</span><small>{{ item.horizon }} · {{ item.status }}</small></li>{% else %}<li><b>暂无开放问题</b><span>未知答案不会被强行设为幕后真相。</span></li>{% endfor %}</ul>
+    <form class="wb-form-stack" data-open-question-form><label>标题<input name="title" required></label><label>问题<textarea name="question" rows="2" required></textarea></label><label>Horizon<select name="horizon"><option>SHORT</option><option>MID</option><option selected>LONG</option></select></label><button class="button compact" type="submit">保持开放</button><p class="wb-command-feedback"></p></form>
+  </article>
+  <article class="wb-content-card">
+    <div class="wb-section-heading"><div><p class="wb-kicker">Inferred Secret Candidate</p><h3>待作者确认的隐藏设定候选</h3></div><span class="wb-state-tag wb-state-provisional">Soft possibility only</span></div>
+    <ul class="wb-record-list">{% for item in secret_candidates %}<li><b>{{ item.title }}</b><span>{{ item.statement }}</span><small>confidence {{ item.confidence }} · 不约束 Planner</small><div><button type="button" class="button compact" data-secret-candidate-action="CONFIRM_TRUTH" data-candidate-id="{{ item.candidate_id }}">确认是真相</button><button type="button" class="button compact" data-secret-candidate-action="KEEP_OPEN" data-candidate-id="{{ item.candidate_id }}">保持开放</button><button type="button" class="button compact" data-secret-candidate-action="REJECT" data-candidate-id="{{ item.candidate_id }}">拒绝</button></div></li>{% else %}<li><b>暂无候选</b><span>初始化推断不会自动升级成 Author Truth。</span></li>{% endfor %}</ul>
+  </article>
+</div>
+
+<div class="wb-truth-authoring-grid">
+  <form class="wb-content-card wb-form-stack" data-author-truth-form>
+    <div class="wb-section-heading"><div><p class="wb-kicker">Author Truth</p><h3>新增幕后真相</h3></div></div>
+    <label>类型<select name="truth_type"><option value="CHARACTER_SECRET">人物秘密</option><option value="ITEM_SECRET">隐藏物品</option><option value="FACTION_GOAL">势力真实目标</option><option value="RELATIONSHIP_SECRET">关系真相</option><option value="WORLD_RULE_SECRET">隐藏规则</option><option value="PLOT_TRUTH">剧情真相</option><option value="MOTIVE">真实动机</option><option value="CUSTOM">自定义</option></select></label>
+    <label>对象类型<input name="subject_type" value="CHARACTER" required></label><label>对象 ID<input name="subject_id"></label><label>标题<input name="title" required></label><label>真实陈述<textarea name="statement" rows="4" required></textarea></label><label>从第几章暗中成立<input type="number" name="effective_from_chapter" min="1" value="{{ selected_chapter_anchor or 1 }}" required></label>
+    <details class="wb-technical-details"><summary>历史章节兼容性证据（retroactive hidden truth）</summary><p class="wb-context-explanation">若生效章早于当前最新章，请引用已读章节或 Source Span。没有证据时系统会保持 Provisional；冲突必须进入 Revision。</p><label>结论<select name="compatibility_verdict"><option value="">暂不提交证据</option><option value="NO_CONTRADICTION">未发现冲突</option><option value="SUPPORTING">Source 支持</option><option value="CAUTION">有注意项</option><option value="CONTRADICTION">存在反证</option><option value="REVISION_REQUIRED">需要改写旧章</option></select></label><input type="hidden" name="compatibility_chapter_id" value="{{ selected_chapter.chapter_id if selected_chapter else '' }}"><input type="hidden" name="compatibility_chapter_ordinal" value="{{ selected_chapter_anchor or '' }}"><label>Source Span ID<input name="compatibility_source_span_id" placeholder="冲突证据必须填写"></label><label>原文引用<textarea name="compatibility_evidence_quote" rows="2"></textarea></label><label>判断说明<textarea name="compatibility_explanation" rows="2" placeholder="说明为什么与已发生章节兼容或冲突"></textarea></label></details>
+    <input type="hidden" name="status" value="ACTIVE_TRUTH"><input type="hidden" name="introduced_by" value="AUTHOR_MANUAL"><button class="button primary" type="submit">检查兼容性并保存</button><p class="wb-command-feedback"></p>
+  </form>
+  <form class="wb-content-card wb-form-stack" data-reveal-plan-form>
+    <div class="wb-section-heading"><div><p class="wb-kicker">RevealPlan</p><h3>安排揭示窗口</h3></div></div>
+    <label>Truth<select name="truth_id" required>{% for topic in truth_knowledge.topics %}<option value="{{ topic.truth.truth_id }}">{{ topic.truth.title }}</option>{% endfor %}</select></label><label>目标<select name="target"><option value="READER">读者</option><option value="CHARACTER">角色</option><option value="FACTION">势力</option><option value="PUBLIC_WORLD">公开世界</option></select></label><label>目标角色/势力 ID<input name="target_entity_id"></label><label>深度<select name="reveal_depth"><option value="HINT">HINT</option><option value="STRONG_HINT">STRONG_HINT</option><option value="PARTIAL_REVEAL">PARTIAL_REVEAL</option><option value="CONFIRMATION">CONFIRMATION</option><option value="FULL_REVEAL">FULL_REVEAL</option></select></label><label>起始章<input type="number" name="target_chapter_min" min="1" value="{{ selected_chapter_anchor or 1 }}" required></label><label>结束章<input type="number" name="target_chapter_max" min="1"></label><label>策略<textarea name="strategy" rows="3"></textarea></label><button class="button primary" type="submit">保存 RevealPlan</button><p class="wb-command-feedback"></p>
+  </form>
+</div>
+{% endif %}
+{% else %}<article class="wb-content-card"><p class="wb-empty-state">请选择章节后查看真相与揭示边界。</p></article>{% endif %}

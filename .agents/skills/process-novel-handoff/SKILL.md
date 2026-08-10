@@ -1,6 +1,6 @@
 ---
 name: process-novel-handoff
-description: 按 Local File Handoff Protocol 在 Windows Codex 桌面端领取并处理小说续写、改写、指标语义、章节特征或 distill 任务；当 task.json 状态为 READY_FOR_CODEX 且用户明确要求处理 handoff 时使用，不得启动 Codex 子进程、API 或 shell。
+description: 按 Local File Handoff Protocol 在 Windows Codex 桌面端领取并处理小说续写、改写、Profile 重分析、指标语义、章节特征或 distill 任务；当 task.json 状态为 READY_FOR_CODEX 且用户明确要求处理 handoff 时使用，不得启动 Codex 子进程、API 或 shell。
 ---
 
 # Process Novel Handoff
@@ -37,6 +37,12 @@ Codex 桌面客户端是唯一 LLM 执行者。先读取任务目录，再由 Py
   使用稳定 `object_id`。Python 导入门会再次校验并写入 Source State Ledger，之后才会
   将关联 Author Task 标记为 DONE；不得写 `book/`、Canon Event Store、Canon Commit、
   Edition 或 Author Intent。
+- `PROFILE_REANALYSIS`：读取冻结的 `profile_context.json`，逐项比较当前 Effective
+  Profile、Profile history、新 Canon 章节和最近 Edition 内容；结果必须恰好覆盖九维，
+  每维分别给出 `additions`、`modifications`、`removals`、`reason`、`evidence` 和
+  `confidence`。至少一个维度必须产生真实内容差异。结果只进入待作者接受、编辑后接受或
+  拒绝的 Profile Proposal；不得复制当前 baseline 冒充重分析，不得自动改变 Effective
+  Profile、提交 Canon 或启用 Edition。
 
 禁止修改 `book/`、批准正史、批准改写 Campaign、启用 Edition、删除历史草稿或绕过 Validator。不要使用 OpenAI API、`codex exec`、模型参数、API Key、shell 命令或任何 subprocess。
 

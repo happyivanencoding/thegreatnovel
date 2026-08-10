@@ -47,6 +47,26 @@ def build_chapter_contract(
         else workspace / "agent_tasks" / task_id / "task.json"
     )
     task_metadata = json.loads(task_path.read_text(encoding="utf-8"))
+    aggregate_id = str(task_metadata.get("aggregate_id") or "")
+    if aggregate_id:
+        with database.connect() as connection:
+            aggregate = connection.execute(
+                "SELECT status, bundle_hash, author_policy_json FROM planning_aggregates "
+                "WHERE aggregate_id=? AND book_id=? AND edition_id=?",
+                (aggregate_id, book_id, selected_edition),
+            ).fetchone()
+        if aggregate is None or str(aggregate["status"]) != "ACTIVE":
+            raise PlanningError("Planning Aggregate 已失效，不能生成 Chapter Contract")
+        expected_hash = str(
+            task_metadata.get("aggregate_hash") or task_metadata.get("bundle_hash") or ""
+        )
+        if expected_hash and str(aggregate["bundle_hash"]) != expected_hash:
+            raise PlanningError("Planning Aggregate hash 与候选任务冻结值不一致")
+        aggregate_policy = json.loads(str(aggregate["author_policy_json"] or "{}"))
+        if task_metadata.get("truth_reveal", {}) != aggregate_policy.get(
+            "truth_reveal", {}
+        ):
+            raise PlanningError("Truth/Reveal 冻结快照已漂移，不能生成合同")
     packet_id = str(task_metadata["boundary_packet_id"])
     boundary_dir = (
         BookLayout(root.parent).for_book(book_id).edition(selected_edition).boundaries
@@ -67,6 +87,15 @@ def build_chapter_contract(
         else None
     )
     next_chapter = int(boundary_json["current_position"]["next_chapter"])
+    truth_reveal = dict(task_metadata.get("truth_reveal", {}))
+    if not truth_reveal:
+        truth_reveal = {
+            "target_chapter_ordinal": next_chapter,
+            "active_author_truths": list(
+                boundary_json.get("active_author_truths", [])
+            ),
+            "reveal_agenda": dict(boundary_json.get("reveal_agenda", {})),
+        }
     rhythm_diagnostics = dict(boundary_json.get("rhythm_diagnostics", {}))
     rhythm_constraints: dict[str, object] = {}
     function_streak = rhythm_diagnostics.get("same_function_streak", {})
@@ -92,6 +121,12 @@ def build_chapter_contract(
         "book_profile_version": task_metadata.get("effective_book_profile", {}).get(
             "profile_version_id"
         ),
+        "active_truth_ids": [
+            item.get("truth_id")
+            for item in truth_reveal.get("active_author_truths", [])
+        ],
+        "reveal_agenda_chapter": truth_reveal.get("target_chapter_ordinal"),
+        "truth_reveal_snapshot": truth_reveal,
     }
     contract_id = stable_id("contract", json_dumps(contract_seed))
     innovation_commitments = InnovationCommitments()
@@ -159,6 +194,17 @@ def build_chapter_contract(
         innovation_commitments=innovation_commitments,
         narrative_portfolio=narrative_portfolio,
         effective_book_profile=dict(task_metadata.get("effective_book_profile", {})),
+        active_author_truths=list(truth_reveal.get("active_author_truths", [])),
+        reveal_agenda=dict(truth_reveal.get("reveal_agenda", {})),
+        truth_reveal_commitments={
+            "truth_alignment": [
+                item.model_dump(mode="json") for item in candidate.truth_alignment
+            ],
+            "reveal_impact": candidate.reveal_impact.model_dump(mode="json"),
+            "rule": (
+                "Hidden Truth 只作为行为约束；未获 Agenda 授权不得向读者或角色揭示。"
+            ),
+        },
     )
     contract_json = json_dumps(contract.model_dump(mode="json"), indent=2)
     contract_hash = sha256_bytes(contract_json.encode())

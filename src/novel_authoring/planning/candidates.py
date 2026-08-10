@@ -131,17 +131,153 @@ def _profile_constraint_failures(
     ]
 
 
-def _current_ordinal(connection: Any, book_id: str, edition_id: str = "base") -> int:
-    if edition_id != "base":
-        from novel_authoring.edition import edition_chapters
+def _truth_reveal_failures(
+    candidate: CandidateProposal, frozen: dict[str, Any]
+) -> list[str]:
+    previews = [
+        *candidate.reveal_impact.hints,
+        *candidate.reveal_impact.partial_reveals,
+        *candidate.reveal_impact.full_reveals,
+    ]
+    if not frozen:
+        if candidate.truth_alignment or previews or candidate.reveal_impact.secrets_used:
+            raise PlanningError(
+                f"候选 {candidate.local_id} 在未冻结 Truth/Agenda 时声明了揭示"
+            )
+        return []
+    active = {
+        str(item.get("truth_id")): item
+        for item in frozen.get("active_author_truths", [])
+        if isinstance(item, dict) and item.get("truth_id")
+    }
+    agenda = frozen.get("reveal_agenda", {})
 
-        chapters = edition_chapters(connection, book_id, edition_id)
-        return max((int(row["ordinal"]) for row in chapters), default=0)
-    row = connection.execute(
-        "SELECT COALESCE(MAX(ordinal), 0) FROM chapters WHERE book_id=? AND edition_id=?",
-        (book_id, edition_id),
-    ).fetchone()
-    return int(row[0])
+    def truth_ids(key: str) -> set[str]:
+        return {
+            str(item.get("truth_id"))
+            for item in agenda.get(key, [])
+            if isinstance(item, dict) and item.get("truth_id")
+        }
+
+    must_reveal = truth_ids("must_reveal")
+    should_hint = truth_ids("should_hint")
+    keep_hidden = truth_ids("keep_hidden")
+    alignments = {item.truth_id: item for item in candidate.truth_alignment}
+    if len(alignments) != len(candidate.truth_alignment):
+        raise PlanningError(f"候选 {candidate.local_id} 的 truth_alignment 存在重复 truth_id")
+    unknown = set(alignments) - set(active)
+    if unknown:
+        raise PlanningError(
+            f"候选 {candidate.local_id} 引用了未冻结的 Author Truth：{sorted(unknown)}"
+        )
+    missing = set(active) - set(alignments)
+    if missing:
+        raise PlanningError(
+            f"候选 {candidate.local_id} 未检查全部 Active Author Truth：{sorted(missing)}"
+        )
+    failures = [
+        f"未遵守 Author Truth {item.truth_id}：{item.behavioral_effect}"
+        for item in candidate.truth_alignment
+        if not item.respected
+    ]
+    bucket_by_truth = {
+        truth_id: bucket
+        for bucket, key in (
+            ("MUST_REVEAL", "must_reveal"),
+            ("SHOULD_HINT", "should_hint"),
+            ("KEEP_HIDDEN", "keep_hidden"),
+            ("OPTIONAL", "optional"),
+        )
+        for truth_id in truth_ids(key)
+    }
+    for truth_id, alignment in alignments.items():
+        expected_bucket = bucket_by_truth.get(truth_id, "KEEP_HIDDEN")
+        if alignment.agenda_bucket != expected_bucket:
+            failures.append(
+                f"Truth {truth_id} 的 agenda_bucket 应为 {expected_bucket}，"
+                f"候选却声明 {alignment.agenda_bucket}"
+            )
+    hints = {item.truth_id: item for item in candidate.reveal_impact.hints}
+    partial = {item.truth_id: item for item in candidate.reveal_impact.partial_reveals}
+    full = {item.truth_id: item for item in candidate.reveal_impact.full_reveals}
+    for preview in candidate.reveal_impact.partial_reveals:
+        if preview.depth != "PARTIAL_REVEAL":
+            failures.append(
+                f"Truth {preview.truth_id} 的 partial_reveals 必须使用 PARTIAL_REVEAL"
+            )
+    for preview in candidate.reveal_impact.full_reveals:
+        if preview.depth not in {"CONFIRMATION", "FULL_REVEAL"}:
+            failures.append(
+                f"Truth {preview.truth_id} 的 full_reveals 深度无效：{preview.depth}"
+            )
+    revealed = set(hints) | set(partial) | set(full)
+    referenced = (
+        revealed
+        | set(candidate.reveal_impact.secrets_used)
+        | set(candidate.reveal_impact.kept_hidden)
+    )
+    unknown_reveal_ids = referenced - set(active)
+    if unknown_reveal_ids:
+        raise PlanningError(
+            f"候选 {candidate.local_id} 的 reveal_impact 引用了未冻结 Truth："
+            f"{sorted(unknown_reveal_ids)}"
+        )
+    agenda_items = {
+        str(item["truth_id"]): item
+        for key in ("must_reveal", "should_hint", "keep_hidden", "optional")
+        for item in agenda.get(key, [])
+        if isinstance(item, dict) and item.get("truth_id")
+    }
+    for preview in previews:
+        planned = agenda_items.get(preview.truth_id)
+        if planned is None:
+            failures.append(f"Truth {preview.truth_id} 没有本章 Reveal Agenda 授权")
+            continue
+        plan = planned.get("plan") or {}
+        expected_target = str(plan.get("target") or "READER")
+        expected_entity = plan.get("target_entity_id")
+        if preview.target != expected_target or preview.target_entity_id != expected_entity:
+            failures.append(
+                f"Truth {preview.truth_id} 的 Reveal target 与冻结 RevealPlan 不一致"
+            )
+    for truth_id in keep_hidden:
+        if truth_id in revealed:
+            failures.append(f"KEEP_HIDDEN Truth {truth_id} 被候选写成可见揭示")
+    for truth_id in should_hint:
+        hint_preview = hints.get(truth_id)
+        if hint_preview is None or not hint_preview.clue.strip():
+            failures.append(f"SHOULD_HINT Truth {truth_id} 缺少可读线索")
+        elif hint_preview.depth not in {"HINT", "STRONG_HINT", "FALSE_LEAD"}:
+            failures.append(
+                f"SHOULD_HINT Truth {truth_id} 使用了越界深度 {hint_preview.depth}"
+            )
+        if truth_id in partial or truth_id in full:
+            failures.append(f"HINT Truth {truth_id} 越界成 PARTIAL/FULL REVEAL")
+    for truth_id in must_reveal:
+        if truth_id not in partial and truth_id not in full:
+            failures.append(f"MUST_REVEAL Truth {truth_id} 未在候选中兑现")
+        reveal_preview = partial.get(truth_id) or full.get(truth_id)
+        expected_depth = str(agenda_items.get(truth_id, {}).get("reveal_depth") or "")
+        if (
+            reveal_preview is not None
+            and expected_depth
+            and reveal_preview.depth != expected_depth
+        ):
+            failures.append(
+                f"MUST_REVEAL Truth {truth_id} 应使用 {expected_depth}，"
+                f"候选却使用 {reveal_preview.depth}"
+            )
+    undeclared = keep_hidden - set(candidate.reveal_impact.kept_hidden)
+    if undeclared:
+        failures.append(f"候选未显式确认继续隐藏：{sorted(undeclared)}")
+    return failures
+
+
+def _current_ordinal(connection: Any, book_id: str, edition_id: str = "base") -> int:
+    from novel_authoring.edition import edition_chapters
+
+    chapters = edition_chapters(connection, book_id, edition_id)
+    return max((int(row["ordinal"]) for row in chapters), default=0)
 
 
 def rank_threads(
@@ -318,11 +454,15 @@ def prepare_candidate_task(
     threads = rank_threads(database, book_id, settings, edition_id=selected_edition)
     if not threads:
         raise PlanningError("没有可规划的活跃线程；请先完成抽取与 reconcile")
+    boundary_truth_reveal = boundary.get("truth_reveal", {})
+    if not isinstance(boundary_truth_reveal, dict):
+        raise PlanningError("Boundary Packet 的 Truth/Reveal 冻结快照无效")
     aggregate = build_planning_aggregate(
         database,
         book_id,
         edition_id=selected_edition,
         author_policy={"source": "plan-next", "policy_version": "v1"},
+        truth_reveal_snapshot=boundary_truth_reveal,
     )
     with database.connect() as connection:
         metric_rows = connection.execute(
@@ -429,6 +569,17 @@ def prepare_candidate_task(
             " MUST/MUST_NOT constraint_checks。任何 passed=false 都是硬门失败，"
             "Innovation Reward 不得抵消。",
             "",
+            "## Author Truth + Chapter Reveal Agenda（行为约束不等于揭示许可）",
+            "",
+            json_dumps(
+                aggregate.get("author_policy", {}).get("truth_reveal", {}),
+                indent=2,
+            ),
+            "",
+            "每个候选必须填写 truth_alignment 与 reveal_impact。Active Author Truth 可以"
+            "改变人物行为；KEEP_HIDDEN 不得出现在旁白、对话或答案式解释中。"
+            "SHOULD_HINT 必须给出可读 clue，但不得确认身份；MUST_REVEAL 才允许按计划深度兑现。",
+            "",
             "## 三条优先线程",
             "",
             "```json",
@@ -481,6 +632,7 @@ def prepare_candidate_task(
         "effective_book_profile": aggregate.get("author_policy", {}).get(
             "effective_book_profile", {}
         ),
+        "truth_reveal": aggregate.get("author_policy", {}).get("truth_reveal", {}),
         "metric_run_ids": aggregate["metric_run_ids"],
         "bundle_hash": aggregate["bundle_hash"],
         "rhythm_snapshot_id": aggregate.get("rhythm_snapshot_id"),
@@ -509,6 +661,7 @@ def prepare_candidate_task(
         "aggregate_id": aggregate["aggregate_id"],
         "bundle_hash": aggregate["bundle_hash"],
         "effective_book_profile": metadata["effective_book_profile"],
+        "truth_reveal": metadata["truth_reveal"],
     }
 
 
@@ -592,6 +745,7 @@ def prepare_handoff_candidate_task(
         "author_control": author_policy.get("author_control", {}),
         "author_control_trace_contract": author_policy.get("trace_contract", {}),
         "effective_book_profile": author_policy.get("effective_book_profile", {}),
+        "truth_reveal": author_policy.get("truth_reveal", {}),
         "innovation_control": handoff_task.get("innovation_control"),
         "innovation_source": handoff_task.get("innovation_source"),
         "rhythm_snapshot_id": handoff_task.get("rhythm_snapshot_id"),
@@ -628,6 +782,13 @@ def prepare_handoff_candidate_task(
             "## Effective Global Book Profile",
             "",
             json_dumps(author_policy.get("effective_book_profile", {}), indent=2),
+            "",
+            "## Active Author Truth + 本章揭露计划",
+            "",
+            json_dumps(author_policy.get("truth_reveal", {}), indent=2),
+            "",
+            "Hidden Truth 是行为约束，不是揭示许可。每案填写 truth_alignment 与"
+            " reveal_impact；KEEP_HIDDEN 不得泄露，HINT 必须有可读线索且不得直接确认。",
         ]
     )
     (input_dir / "input.md").write_text(input_text + "\n", encoding="utf-8")
@@ -650,6 +811,7 @@ def prepare_handoff_candidate_task(
         "expected_output": str(output_dir / "output.json"),
         "aggregate_id": aggregate_id,
         "effective_book_profile": metadata["effective_book_profile"],
+        "truth_reveal": metadata["truth_reveal"],
     }
 
 
@@ -745,13 +907,23 @@ def import_candidate_output(
     aggregate_id = str(metadata.get("aggregate_id") or "")
     frozen_author_control: dict[str, Any] = {}
     frozen_profile: dict[str, Any] = {}
+    frozen_truth_reveal: dict[str, Any] = {}
     if aggregate_id:
         with database.connect() as connection:
             aggregate_row = connection.execute(
-                "SELECT author_policy_json FROM planning_aggregates "
+                "SELECT status, bundle_hash, author_policy_json FROM planning_aggregates "
                 "WHERE aggregate_id=? AND book_id=? AND edition_id=?",
                 (aggregate_id, book_id, selected_edition),
             ).fetchone()
+        if aggregate_row is None:
+            raise PlanningError("Planning Aggregate 不存在")
+        if str(aggregate_row["status"]) != "ACTIVE":
+            raise PlanningError("Planning Aggregate 已失效，必须重建候选任务")
+        expected_aggregate_hash = str(
+            metadata.get("aggregate_hash") or metadata.get("bundle_hash") or ""
+        )
+        if expected_aggregate_hash and str(aggregate_row["bundle_hash"]) != expected_aggregate_hash:
+            raise PlanningError("Planning Aggregate hash 与候选任务冻结值不一致")
         if aggregate_row is not None:
             try:
                 aggregate_policy = json.loads(str(aggregate_row["author_policy_json"] or "{}"))
@@ -760,6 +932,10 @@ def import_candidate_output(
             if isinstance(aggregate_policy, dict):
                 frozen_author_control = aggregate_policy.get("author_control", {})
                 frozen_profile = aggregate_policy.get("effective_book_profile", {})
+                frozen_truth_reveal = aggregate_policy.get("truth_reveal", {})
+        task_truth_reveal = metadata.get("truth_reveal", {})
+        if task_truth_reveal != frozen_truth_reveal:
+            raise PlanningError("候选任务的 Truth/Reveal 冻结快照与 Aggregate 不一致")
     portfolio_path = path.parent / "portfolio_diagnostics.json"
     portfolio_path.write_text(
         json_dumps(portfolio.model_dump(mode="json"), indent=2) + "\n",
@@ -778,11 +954,15 @@ def import_candidate_output(
     for candidate in output.candidates:
         _validate_author_control_trace(candidate, frozen_author_control)
         profile_failures = _profile_constraint_failures(candidate, frozen_profile)
+        truth_reveal_failures = _truth_reveal_failures(
+            candidate, frozen_truth_reveal
+        )
         gate_input = candidate.gate_input.model_copy(
             update={
                 "author_constraint_violations": [
                     *candidate.gate_input.author_constraint_violations,
                     *profile_failures,
+                    *truth_reveal_failures,
                 ]
             }
         )

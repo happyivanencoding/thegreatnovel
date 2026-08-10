@@ -11,6 +11,12 @@ from typing import Any, Literal, cast
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from novel_authoring.atlas.service import atlas_usage, latest_atlas, validate_atlas
+from novel_authoring.author_control.book_profile import (
+    PROFILE_DIMENSIONS,
+    ProfileReanalysisResult,
+    import_profile_reanalysis_result,
+    load_effective_book_profile,
+)
 from novel_authoring.author_control.source_state import SourceChapterStateDelta
 from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.config import load_settings
@@ -55,6 +61,7 @@ class HandoffType(StrEnum):
     NOVEL_INITIALIZATION = "NOVEL_INITIALIZATION"
     NOVEL_DISTILLATION = "NOVEL_DISTILLATION"
     SOURCE_STATE_HYDRATION = "SOURCE_STATE_HYDRATION"
+    PROFILE_REANALYSIS = "PROFILE_REANALYSIS"
 
 
 class HandoffWorkflowError(RuntimeError):
@@ -261,6 +268,7 @@ _OPERATION_INPUT_FILES = {
     "context_manifest.json",
     "output_schema.json",
     "hydration_context.json",
+    "profile_context.json",
 }
 
 
@@ -399,6 +407,7 @@ def create_handoff(
     initialization_handoff = handoff_type is HandoffType.NOVEL_INITIALIZATION
     distill_handoff = handoff_type is HandoffType.NOVEL_DISTILLATION
     hydration_handoff = handoff_type is HandoffType.SOURCE_STATE_HYDRATION
+    profile_handoff = handoff_type is HandoffType.PROFILE_REANALYSIS
     selected_innovation: InnovationControl | None = None
     requested_innovation_source = innovation_source
     innovation_source = ""
@@ -414,7 +423,7 @@ def create_handoff(
             selected_innovation, innovation_source = resolve_innovation_control(
                 database, book_id
             )
-    if initialization_handoff or distill_handoff or hydration_handoff:
+    if initialization_handoff or distill_handoff or hydration_handoff or profile_handoff:
         # Initialization and distill are upstream analysis handoffs. They must
         # not require a planning aggregate or a completed metric run.
         metric_context = {
@@ -423,11 +432,15 @@ def create_handoff(
                 if initialization_handoff
                 else "SOURCE_STATE_HYDRATION"
                 if hydration_handoff
+                else "PROFILE_REANALYSIS"
+                if profile_handoff
                 else "DISTILL"
             ),
             "scope_id": selected,
             "input_bundle_hash": "",
-            "semantic_metrics_deferred": initialization_handoff or hydration_handoff,
+            "semantic_metrics_deferred": (
+                initialization_handoff or hydration_handoff or profile_handoff
+            ),
             "registry_hash": load_registry().registry_hash,
             "config_hash": sha256_bytes(json_dumps(load_settings().metrics).encode("utf-8")),
         }
@@ -587,6 +600,53 @@ def create_handoff(
         distill_reference = latest_distill_reference(
             edition_paths, scope="SELF_BOOK"
         )
+    profile_context: dict[str, Any] | None = None
+    if profile_handoff:
+        effective_profile = load_effective_book_profile(
+            database, book_id, selected
+        )
+        with database.connect() as profile_connection:
+            chapters = edition_chapters(profile_connection, book_id, selected)
+            version_row = profile_connection.execute(
+                "SELECT created_at FROM book_profile_versions "
+                "WHERE book_id=? AND edition_id=? ORDER BY version_number DESC LIMIT 1",
+                (book_id, selected),
+            ).fetchone()
+        last_profile_at = (
+            None if version_row is None else str(version_row["created_at"])
+        )
+
+        def chapter_snapshot(item: dict[str, Any] | sqlite3.Row) -> dict[str, Any]:
+            chapter = dict(item)
+            return {
+                "chapter_id": str(chapter["chapter_id"]),
+                "ordinal": int(chapter["ordinal"]),
+                "title": str(chapter.get("title") or chapter.get("raw_heading") or ""),
+                "document_status": str(chapter.get("document_status") or "SOURCE"),
+                "created_at": str(chapter.get("created_at") or ""),
+                "content": str(chapter.get("content") or "")[:20_000],
+            }
+
+        snapshots = [chapter_snapshot(item) for item in chapters]
+        profile_context = {
+            "book_id": book_id,
+            "edition_id": selected,
+            "context_chapter_id": context_chapter_id,
+            "effective_profile": effective_profile,
+            "profile_history": effective_profile.get("history", []),
+            "last_profile_created_at": last_profile_at,
+            "new_canon_chapters": [
+                item
+                for item in snapshots
+                if item["document_status"] == "GENERATED_CANON"
+                and (last_profile_at is None or item["created_at"] > last_profile_at)
+            ],
+            "recent_edition_chapters": snapshots[-8:],
+            "output_rule": (
+                "恰好分析九维 additions/modifications/removals；每维给 reason、"
+                "evidence、confidence。结果只生成 Proposal，不自动改变 Effective Profile。"
+            ),
+        }
     task = {
         "handoff_id": handoff_id,
         "task_type": handoff_type.value,
@@ -675,6 +735,30 @@ def create_handoff(
                 "planning_aggregate_required": False,
             }
         )
+    if profile_handoff:
+        task.update(
+            {
+                "profile_reanalysis": {
+                    "context_path": "profile_context.json",
+                    "dimensions": [item[0] for item in PROFILE_DIMENSIONS],
+                    "current_profile_version_id": (
+                        None
+                        if profile_context is None
+                        else profile_context["effective_profile"][
+                            "profile_version_id"
+                        ]
+                    ),
+                    "current_profile_version_number": (
+                        0
+                        if profile_context is None
+                        else profile_context["effective_profile"]["version_number"]
+                    ),
+                    "proposal_only": True,
+                    "canon_boundary": "NO_CANON_COMMIT",
+                },
+                "planning_aggregate_required": False,
+            }
+        )
     if distill_reference is not None:
         task["distill_reference"] = distill_reference
     if distill_handoff and frozen_distill_request is not None:
@@ -755,6 +839,7 @@ def create_handoff(
         HandoffType.NOVEL_INITIALIZATION: "initialize-existing-novel",
         HandoffType.NOVEL_DISTILLATION: "distill-novels",
         HandoffType.SOURCE_STATE_HYDRATION: "process-novel-handoff",
+        HandoffType.PROFILE_REANALYSIS: "process-novel-handoff",
     }.get(handoff_type, "continue-novel")
     atlas_instruction = ""
     if handoff_type in {
@@ -793,6 +878,13 @@ def create_handoff(
             "每个 SOURCE_VERIFIED delta 必须引用本章 source span 和稳定 object_id；"
             "不要修改 book、Canon 或 Author Intent。"
         )
+    elif profile_handoff:
+        atlas_instruction = (
+            "读取 profile_context.json 的当前 Effective Profile、画像历史、新 Canon 章节与"
+            "最近 Edition 正文；按九维输出 additions/modifications/removals、reason、evidence、"
+            "confidence。不得复制当前 baseline 冒充分析；至少一维必须有真实差异。"
+            "结果只形成作者可接受/编辑/拒绝的 Proposal，不得修改 Effective Profile 或 Canon。"
+        )
     if distill_reference is not None:
         atlas_instruction += (
             " 当前 edition 还有一个已发布的 distill_reference；只能读取其抽象写作控制，"
@@ -827,7 +919,8 @@ def create_handoff(
         f"{atlas_instruction}\n\n"
         f"{author_context_instruction}\n\n"
         "严格读取任务目录中的 task.json、prompt.md、metric_context.json、"
-        "context_manifest.json、output_schema.json 和（如存在）hydration_context.json。\n"
+        "context_manifest.json、output_schema.json 和（如存在）hydration_context.json / "
+        "profile_context.json。\n"
         "不得修改 book；不得批准写入正史；不得批准改写 Campaign；不得启用 Edition。\n"
         "结束时必须严格按 output_schema.json 写回 result.json 和 status.json；"
         "需要作者决定时写 waiting_for_user.json 并进入 WAITING_FOR_USER。"
@@ -835,6 +928,8 @@ def create_handoff(
     manifest_paths = ["task.json", "prompt.md", "metric_context.json", "output_schema.json"]
     if hydration_handoff:
         manifest_paths.append("hydration_context.json")
+    if profile_handoff:
+        manifest_paths.append("profile_context.json")
     context_manifest = {
         "book_id": book_id,
         "edition_id": selected,
@@ -939,6 +1034,26 @@ def create_handoff(
             "writes_canon": False,
             "writes_book": False,
         }
+    if profile_handoff:
+        output_schema = ProfileReanalysisResult.model_json_schema()
+        output_schema["additionalProperties"] = False
+        output_schema["required"] = [
+            "handoff_id",
+            "handoff_type",
+            "status",
+            "book_id",
+            "edition_id",
+            "dimensions",
+            "summary",
+            "canon_committed",
+            "edition_activated",
+        ]
+        output_schema["x-profile-reanalysis"] = {
+            "dimensions": [item[0] for item in PROFILE_DIMENSIONS],
+            "requires_real_difference": True,
+            "writes_effective_profile": False,
+            "writes_canon": False,
+        }
     if initialization_handoff:
         output_schema["required"].extend(
             [
@@ -1022,6 +1137,7 @@ def create_handoff(
             "context_manifest.json",
             "output_schema.json",
             "hydration_context.json",
+            "profile_context.json",
         )
     }
     status_path = task_directory / "status.json"
@@ -1042,6 +1158,10 @@ def create_handoff(
         _write_json(input_files["hydration_context.json"], hydration_request or {})
     else:
         input_files.pop("hydration_context.json", None)
+    if profile_handoff:
+        _write_json(input_files["profile_context.json"], profile_context or {})
+    else:
+        input_files.pop("profile_context.json", None)
     _write_json(status_path, status_json)
     _write_json(result_path, {})
     file_hashes: dict[str, str] = {
@@ -1052,6 +1172,7 @@ def create_handoff(
             "metric_context.json",
             "output_schema.json",
             *(["hydration_context.json"] if hydration_handoff else []),
+            *(["profile_context.json"] if profile_handoff else []),
         )
     }
     context_manifest["file_hashes"] = file_hashes
@@ -1357,6 +1478,21 @@ def _drift_reasons(
     book_id = str(row["book_id"])
     edition_id = str(row["edition_id"])
     reasons: list[str] = []
+    if str(row["handoff_type"]) == HandoffType.PROFILE_REANALYSIS.value:
+        task_path = _handoff_file(Path(str(row["task_directory"])), "task.json")
+        try:
+            task_payload = json.loads(task_path.read_text(encoding="utf-8"))
+            profile_contract = dict(task_payload.get("profile_reanalysis") or {})
+            current_profile = load_effective_book_profile(database, book_id, edition_id)
+            if (
+                current_profile.get("profile_version_id")
+                != profile_contract.get("current_profile_version_id")
+                or int(current_profile.get("version_number") or 0)
+                != int(profile_contract.get("current_profile_version_number") or 0)
+            ):
+                reasons.append("effective profile version changed")
+        except (OSError, TypeError, ValueError, json.JSONDecodeError):
+            reasons.append("profile reanalysis frozen task missing or invalid")
     if _manifest_hash(database, book_id) != str(row["source_manifest_sha256"] or ""):
         reasons.append("source manifest hash changed")
     projection = projection_from_connection(connection, book_id, edition_id)
@@ -1575,7 +1711,7 @@ def validate_handoff_result(
     result: dict[str, Any],
     *,
     require_completed_status: bool = False,
-) -> WorkflowHandoffResult | SourceStateHydrationResult:
+) -> WorkflowHandoffResult | SourceStateHydrationResult | ProfileReanalysisResult:
     """Validate result.json against the frozen task and filesystem contract."""
     with database.connect() as connection:
         row = connection.execute(
@@ -1659,6 +1795,32 @@ def validate_handoff_result(
                 if str(status_payload.get("status")) != HandoffStatus.COMPLETED.value:
                     raise HandoffWorkflowError("status.json 与 hydration result 状态不一致")
             return parsed_hydration
+        if str(row["handoff_type"]) == HandoffType.PROFILE_REANALYSIS.value:
+            try:
+                parsed_profile = ProfileReanalysisResult.model_validate(result)
+            except Exception as exc:
+                raise HandoffWorkflowError(
+                    f"result.json 不符合 Profile Reanalysis 合同：{exc}"
+                ) from exc
+            if parsed_profile.handoff_id != handoff_id:
+                raise HandoffWorkflowError("Profile Reanalysis result handoff_id 不一致")
+            if parsed_profile.handoff_type != HandoffType.PROFILE_REANALYSIS.value:
+                raise HandoffWorkflowError("Profile Reanalysis result handoff_type 不一致")
+            if (
+                parsed_profile.book_id != str(row["book_id"])
+                or parsed_profile.edition_id != str(row["edition_id"])
+            ):
+                raise HandoffWorkflowError("Profile Reanalysis result 越过冻结 scope")
+            if require_completed_status:
+                status_path = task_directory / "status.json"
+                if not status_path.is_file():
+                    raise HandoffWorkflowError("status.json 缺失")
+                status_payload = json.loads(status_path.read_text(encoding="utf-8"))
+                if str(status_payload.get("status")) != HandoffStatus.COMPLETED.value:
+                    raise HandoffWorkflowError(
+                        "status.json 与 Profile Reanalysis result 状态不一致"
+                    )
+            return parsed_profile
         required_fields = {
             "handoff_id",
             "handoff_type",
@@ -1852,8 +2014,14 @@ def update_handoff_status(
     result: dict[str, Any] | None = None,
     error_message: str | None = None,
 ) -> dict[str, Any]:
-    validated_result: WorkflowHandoffResult | SourceStateHydrationResult | None = None
+    validated_result: (
+        WorkflowHandoffResult
+        | SourceStateHydrationResult
+        | ProfileReanalysisResult
+        | None
+    ) = None
     hydration_result: SourceStateHydrationResult | None = None
+    profile_result: ProfileReanalysisResult | None = None
     drift_reason: str | None = None
     invalid_result_reason: str | None = None
     if status == HandoffStatus.COMPLETED:
@@ -1864,6 +2032,8 @@ def update_handoff_status(
             result = validated_result.model_dump(mode="json")
             if isinstance(validated_result, SourceStateHydrationResult):
                 hydration_result = validated_result
+            if isinstance(validated_result, ProfileReanalysisResult):
+                profile_result = validated_result
         except HandoffWorkflowError as exc:
             invalid_result_reason = str(exc)
     if hydration_result is not None and invalid_result_reason is None:
@@ -1913,6 +2083,28 @@ def update_handoff_status(
                 )
             except (TypeError, ValueError, RuntimeError) as exc:
                 invalid_result_reason = f"SOURCE_STATE_IMPORT_FAILED: {exc}"
+    if profile_result is not None and invalid_result_reason is None:
+        with database.connect() as connection:
+            frozen = connection.execute(
+                "SELECT * FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)
+            ).fetchone()
+            if frozen is None or str(frozen["claim_token"] or "") != claim_token:
+                raise HandoffWorkflowError("claim_token 无效")
+            if str(frozen["status"]) != HandoffStatus.RUNNING.value:
+                raise HandoffWorkflowError(
+                    "只有 RUNNING Profile Reanalysis handoff 可以导入结果"
+                )
+            frozen_drift = _drift_reasons(database, connection, frozen)
+        if not frozen_drift:
+            try:
+                proposal = import_profile_reanalysis_result(
+                    database, handoff_id, profile_result
+                )
+                result = dict(result or {})
+                result["profile_proposal_id"] = proposal["proposal_id"]
+                result["effective_profile_changed"] = False
+            except (TypeError, ValueError, RuntimeError) as exc:
+                invalid_result_reason = f"PROFILE_REANALYSIS_IMPORT_FAILED: {exc}"
     with database.connect() as connection:
         row = connection.execute(
             "SELECT * FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)

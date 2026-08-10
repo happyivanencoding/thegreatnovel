@@ -8,9 +8,11 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from novel_authoring.atlas.service import latest_atlas
 from novel_authoring.author_control.book_profile import load_effective_book_profile
+from novel_authoring.author_control.reveal import build_planning_truth_context
 from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
+from novel_authoring.edition import edition_chapters
 from novel_authoring.metrics.registry import load_registry
 from novel_authoring.utils import json_dumps, sha256_bytes, stable_id, utc_now
 
@@ -257,6 +259,7 @@ def build_planning_aggregate(
     promise_run_ids: list[str] | None = None,
     thread_run_ids: list[str] | None = None,
     author_policy: dict[str, Any] | None = None,
+    truth_reveal_snapshot: dict[str, Any] | None = None,
     rhythm_snapshot_id: str | None = None,
     atlas_id: str | None = None,
 ) -> dict[str, Any]:
@@ -276,6 +279,25 @@ def build_planning_aggregate(
     )
     horizon_hash = None if current_atlas is None else str(current_atlas["horizon_hash"] or "")
     effective_profile = load_effective_book_profile(database, book_id, edition_id)
+    if truth_reveal_snapshot is None:
+        with database.connect() as chapter_connection:
+            current_chapter = max(
+                (
+                    int(chapter["ordinal"])
+                    for chapter in edition_chapters(
+                        chapter_connection, book_id, edition_id
+                    )
+                ),
+                default=0,
+            )
+        truth_context = build_planning_truth_context(
+            database,
+            book_id,
+            edition_id,
+            chapter_ordinal=current_chapter + 1,
+        )
+    else:
+        truth_context = dict(truth_reveal_snapshot)
     with database.connect() as connection:
         projection = projection_from_connection(connection, book_id, edition_id)
         policy = dict(author_policy or {})
@@ -289,6 +311,7 @@ def build_planning_aggregate(
             "active_directives": effective_profile["active_directives"],
             "hard_constraints": effective_profile["hard_constraints"],
         }
+        policy["truth_reveal"] = truth_context
         if edition_state_run_id is None:
             state = _latest_run_ids(connection, book_id, edition_id, "EDITION_STATE", limit=1)
             edition_state_run_id = state[0] if state else None

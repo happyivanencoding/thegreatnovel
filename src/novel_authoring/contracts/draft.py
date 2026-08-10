@@ -4,6 +4,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from novel_authoring.author_control.reveal import RevealTrace
 from novel_authoring.planning.innovation import (
     InnovationControl,
     InnovationDirectionAlignment,
@@ -53,6 +54,7 @@ class DraftOutput(BaseModel):
     state_changes: list[DraftStateChange] = Field(min_length=1)
     contract_evidence: dict[str, list[str]]
     knowledge_claims: list[KnowledgeClaim] = Field(default_factory=list)
+    reveal_trace: RevealTrace = Field(default_factory=RevealTrace)
     character_fit_inputs: dict[str, float]
     style_fit_inputs: dict[str, float]
     character_bottom_line_violations: list[str] = Field(default_factory=list)

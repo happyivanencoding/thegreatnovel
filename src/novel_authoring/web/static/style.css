@@ -630,3 +630,57 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 
 @media (max-width: 1280px) { .wb-candidate-grid { grid-template-columns: 1fr; } }
 @media (max-width: 700px) { .wb-profile-edit-form, .wb-inspector-grid { grid-template-columns: 1fr; } .wb-profile-edit-form label:nth-of-type(3) { grid-column: auto; } }
+
+/* Story World Workbench V2.3 */
+.wb-lens-tabs { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .9rem; }
+.wb-truth-topic-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.wb-truth-topic { min-width: 0; cursor: pointer; }
+.wb-truth-topic:focus-visible { outline: 2px solid #6b7fbd; outline-offset: 2px; }
+.wb-truth-statement { margin: .75rem 0; padding: .7rem .8rem; border-left: 3px solid #7f9fe8; color: #344054; background: #f8faff; line-height: 1.65; }
+.wb-layer-matrix { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin: 0; }
+.wb-layer-matrix > div { padding: .55rem; border: 1px solid #eaecf0; border-radius: 7px; background: #fcfcfd; }
+.wb-layer-matrix dt { color: #667085; font-size: .68rem; }
+.wb-layer-matrix dd { margin: .15rem 0 0; color: #1d2939; font-size: .78rem; font-weight: 650; }
+.wb-agenda-board { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: .65rem; margin-top: .9rem; overflow-x: auto; }
+.wb-agenda-column { min-height: 180px; padding: .65rem; border: 1px dashed #cfd7e6; border-radius: 9px; background: #f8f9fc; transition: border-color .15s ease, background .15s ease; }
+.wb-agenda-column.is-drag-over { border-color: #5271c4; background: #eef3ff; }
+.wb-agenda-column h3, .wb-secret-board h3 { display: flex; justify-content: space-between; gap: .5rem; margin: 0 0 .55rem; color: #344054; font-size: .78rem; }
+.wb-agenda-card { display: grid; gap: .22rem; margin-bottom: .45rem; padding: .58rem; border: 1px solid #e4e7ec; border-radius: 7px; background: #fff; cursor: grab; }
+.wb-agenda-card.is-dragging { opacity: .45; }
+.wb-agenda-card span, .wb-agenda-card small { color: #667085; font-size: .68rem; }
+.wb-secret-board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(170px, 1fr); gap: .6rem; margin-top: .8rem; overflow-x: auto; }
+.wb-secret-board section { min-height: 150px; padding: .6rem; border: 1px solid #eaecf0; border-radius: 8px; background: #fcfcfd; transition: border-color .15s ease, background .15s ease; }
+.wb-secret-board section.is-drag-over { border-color: #5271c4; background: #eef3ff; }
+.wb-secret-board article { display: grid; gap: .2rem; margin-bottom: .4rem; padding: .5rem; border-left: 3px solid #9eb5ee; background: #fff; cursor: grab; }
+.wb-secret-board article[hidden], [data-truth-search-text][hidden] { display: none !important; }
+.wb-secret-board article.is-dragging { opacity: .45; }
+.wb-secret-board span, .wb-secret-board small { color: #667085; font-size: .68rem; }
+.wb-truth-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .7rem; margin-top: .8rem; }
+.wb-truth-board > section, .wb-inspector-truth-card { padding: .7rem; border: 1px solid #eaecf0; border-radius: 8px; background: #fcfcfd; }
+.wb-truth-board article, .wb-inspector-truth-card { display: grid; gap: .3rem; margin-top: .5rem; }
+.wb-truth-board article { padding: .55rem; border-left: 3px solid #7f9bdd; background: #fff; cursor: pointer; }
+.wb-truth-board span, .wb-truth-board small, .wb-inspector-truth-card small { color: #667085; }
+.wb-state-inspector-summary { margin-bottom: .75rem; }
+.wb-truth-authoring-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.wb-form-stack { display: grid; gap: .65rem; }
+.wb-form-stack label { display: grid; gap: .28rem; color: #475467; font-size: .74rem; }
+.wb-form-stack input, .wb-form-stack select, .wb-form-stack textarea { width: 100%; padding: .55rem .62rem; border: 1px solid #d0d5dd; border-radius: 7px; color: #1d2939; background: #fff; }
+.wb-readable-line { display: block; margin-bottom: .24rem; }
+.wb-continuity-timeline { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); gap: .75rem; align-items: stretch; margin: 1rem 0; }
+.wb-continuity-timeline section { display: grid; gap: .35rem; padding: .85rem; border: 1px solid #e4e7ec; border-radius: 12px; background: #f8f9fc; }
+.wb-continuity-timeline section > span, .wb-continuity-timeline small { color: #667085; }
+.wb-continuity-arrow { align-self: center; color: #98a2b3; }
+.wb-right-state-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem; margin: .8rem 0; }
+.wb-right-state-grid span { display: flex; justify-content: space-between; gap: .5rem; padding: .45rem .55rem; border-radius: 8px; background: #f8f9fc; }
+.wb-candidate-card dl { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: .38rem .5rem; }
+.wb-candidate-card dt { color: #344054; font-weight: 700; }
+.wb-candidate-card dd { min-width: 0; margin: 0; }
+
+@media (max-width: 1050px) {
+  .wb-truth-topic-grid, .wb-truth-authoring-grid { grid-template-columns: 1fr; }
+  .wb-agenda-board { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+}
+@media (max-width: 620px) {
+  .wb-layer-matrix, .wb-agenda-board, .wb-continuity-timeline { grid-template-columns: 1fr; }
+  .wb-continuity-arrow { justify-self: center; transform: rotate(90deg); }
+}

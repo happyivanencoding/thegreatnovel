@@ -33,17 +33,41 @@ from novel_authoring.atlas.service import (
 )
 from novel_authoring.author_control.book_profile import (
     create_book_profile_refresh_proposal,
+    create_profile_reanalysis_handoff,
     edit_book_profile,
     load_effective_book_profile,
     resolve_book_profile_refresh_proposal,
 )
 from novel_authoring.author_control.models import AuthorStateCommand
 from novel_authoring.author_control.projections import build_story_game_state
+from novel_authoring.author_control.reveal import (
+    RevealPlanInput,
+    build_reveal_agenda,
+    build_secret_board,
+    create_reveal_plan,
+    override_reveal_agenda,
+    project_truth_lens,
+    set_character_truth_knowledge,
+    set_reader_knowledge,
+    truth_knowledge_view,
+)
 from novel_authoring.author_control.service import (
     author_control_view,
     execute_author_command,
     execute_author_intent,
     execute_author_task,
+)
+from novel_authoring.author_control.truth import (
+    AuthorTruthInput,
+    create_author_truth,
+    create_open_creative_question,
+    create_secret_candidate,
+    evaluate_truth_compatibility,
+    list_author_truths,
+    list_open_creative_questions,
+    list_secret_candidates,
+    resolve_secret_candidate,
+    update_author_truth,
 )
 from novel_authoring.db.database import Database
 from novel_authoring.drafting import save_draft_content
@@ -61,6 +85,7 @@ from novel_authoring.metrics.service import (
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.library import LibraryAddOptions, add_book
 from novel_authoring.storage.registry import BookRegistry
+from novel_authoring.utils import stable_id
 from novel_authoring.web.dependencies import create_csrf_token, verify_csrf
 from novel_authoring.web.routes.atlas import (
     GRAPH_TYPES,
@@ -84,13 +109,22 @@ from novel_authoring.web.schemas import (
     AuthorInputRequest,
     AuthorIntentRequest,
     AuthorTaskRequest,
+    AuthorTruthUpdateRequest,
     BookProfileEditRequest,
     BookProfileProposalRequest,
     BookProfileProposalResolutionRequest,
     DraftContentRequest,
     HandoffRequest,
+    HiddenItemRequest,
+    KnowledgeUpdateRequest,
+    OpenCreativeQuestionRequest,
+    ProfileReanalysisRequest,
     RecomputeRequest,
     RetractRequest,
+    RevealAgendaOverrideRequest,
+    SecretCandidateRequest,
+    SecretCandidateResolutionRequest,
+    TruthCompatibilityRequest,
     UserResponseRequest,
 )
 from novel_authoring.web.workbench import build_workbench_context
@@ -129,6 +163,15 @@ def _query_id(request: Request, name: str) -> str | None:
             detail={"code": "INVALID_ID", "message": "查询标识符格式无效", "details": {}},
         )
     return value or None
+
+
+def _query_flag(request: Request, name: str) -> bool:
+    return str(request.query_params.get(name) or "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
 
 
 def _error(exc: Exception) -> JSONResponse:
@@ -418,6 +461,9 @@ def create_app(
             right_tab=request.query_params.get("right_tab", "prose"),
             state_tab=request.query_params.get("state_tab", "overview"),
             character_id=_query_id(request, "character_id"),
+            truth_lens=request.query_params.get("truth_lens", "AUTHOR"),
+            truth_id=_query_id(request, "truth_id"),
+            include_future_truths=_query_flag(request, "include_future_truths"),
         )
         context["csrf_token"] = app.state.csrf_token
         context["library_books"] = _library_books_for_app(app)
@@ -453,6 +499,9 @@ def create_app(
                 right_tab=request.query_params.get("right_tab", "prose"),
                 state_tab=request.query_params.get("state_tab", "overview"),
                 character_id=_query_id(request, "character_id"),
+                truth_lens=request.query_params.get("truth_lens", "AUTHOR"),
+                truth_id=_query_id(request, "truth_id"),
+                include_future_truths=_query_flag(request, "include_future_truths"),
             )
         except ValueError as exc:
             raise HTTPException(
@@ -500,6 +549,9 @@ def create_app(
             right_tab=request.query_params.get("right_tab", "prose"),
             state_tab=request.query_params.get("state_tab", "overview"),
             character_id=_query_id(request, "character_id"),
+            truth_lens=request.query_params.get("truth_lens", "AUTHOR"),
+            truth_id=_query_id(request, "truth_id"),
+            include_future_truths=_query_flag(request, "include_future_truths"),
         )
 
     @app.get("/api/books/{path_book_id}/editions/{edition_id}/chapters/{chapter_id}/context")
@@ -545,6 +597,443 @@ def create_app(
         return author_control_view(
             _database_for_book(app, checked_book), checked_book, checked_edition
         )
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/author-truths")
+    async def author_truths_api(
+        path_book_id: str,
+        edition_id: str,
+        chapter_ordinal: int | None = None,
+        include_future: bool = False,
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        truths = list_author_truths(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            chapter_ordinal=chapter_ordinal,
+            include_future=include_future,
+        )
+        return {"truths": truths, "canon_changed": False}
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/author-truths")
+    async def create_author_truth_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: AuthorTruthInput,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        truth = create_author_truth(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            payload,
+        )
+        return {"truth": truth, "canon_changed": False, "knowledge_changed": False}
+
+    @app.patch(
+        "/api/books/{path_book_id}/editions/{edition_id}/author-truths/{truth_id}"
+    )
+    async def update_author_truth_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        truth_id: str,
+        payload: AuthorTruthUpdateRequest,
+    ) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        try:
+            truth = update_author_truth(
+                _database_for_book(app, checked_book),
+                checked_book,
+                checked_edition,
+                _check_id(truth_id),
+                payload.changes,
+            )
+        except ValueError as exc:
+            return _error(exc)
+        return {"truth": truth, "canon_changed": False, "knowledge_changed": False}
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/author-truths/"
+        "{truth_id}/compatibility"
+    )
+    async def truth_compatibility_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        truth_id: str,
+        payload: TruthCompatibilityRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        truth = evaluate_truth_compatibility(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            _check_id(truth_id),
+            evidence=list(payload.evidence),
+        )
+        return {"truth": truth, "canon_changed": False, "knowledge_changed": False}
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/open-questions")
+    async def open_questions_api(
+        path_book_id: str,
+        edition_id: str,
+        include_resolved: bool = False,
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return {
+            "questions": list_open_creative_questions(
+                _database_for_book(app, checked_book),
+                checked_book,
+                checked_edition,
+                include_resolved=include_resolved,
+            ),
+            "canon_changed": False,
+        }
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/open-questions")
+    async def create_open_question_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: OpenCreativeQuestionRequest,
+    ) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        try:
+            question = create_open_creative_question(
+                _database_for_book(app, checked_book),
+                checked_book,
+                checked_edition,
+                title=payload.title,
+                question=payload.question,
+                subject_type=payload.subject_type,
+                subject_id=payload.subject_id,
+                horizon=payload.horizon,
+            )
+        except ValueError as exc:
+            return _error(exc)
+        return {"question": question, "canon_changed": False}
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/secret-candidates")
+    async def secret_candidates_api(
+        path_book_id: str,
+        edition_id: str,
+        include_resolved: bool = False,
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return {
+            "candidates": list_secret_candidates(
+                _database_for_book(app, checked_book),
+                checked_book,
+                checked_edition,
+                include_resolved=include_resolved,
+            ),
+            "canon_changed": False,
+        }
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/secret-candidates")
+    async def create_secret_candidate_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: SecretCandidateRequest,
+    ) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        try:
+            candidate = create_secret_candidate(
+                _database_for_book(app, checked_book),
+                checked_book,
+                checked_edition,
+                title=payload.title,
+                statement=payload.statement,
+                truth_type=payload.truth_type,
+                subject_type=payload.subject_type,
+                subject_id=payload.subject_id,
+                evidence=payload.evidence,
+                confidence=payload.confidence,
+                source=payload.source,
+            )
+        except ValueError as exc:
+            return _error(exc)
+        return {"candidate": candidate, "canon_changed": False}
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/secret-candidates/"
+        "{candidate_id}/resolve"
+    )
+    async def resolve_secret_candidate_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        candidate_id: str,
+        payload: SecretCandidateResolutionRequest,
+    ) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        try:
+            result = resolve_secret_candidate(
+                _database_for_book(app, checked_book),
+                checked_book,
+                checked_edition,
+                _check_id(candidate_id),
+                action=payload.action,
+                effective_from_chapter=payload.effective_from_chapter,
+                compatibility_evidence=payload.compatibility_evidence,
+            )
+        except ValueError as exc:
+            return _error(exc)
+        return {**result, "canon_changed": False}
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/truth-knowledge")
+    async def truth_knowledge_api(
+        path_book_id: str,
+        edition_id: str,
+        chapter_ordinal: int,
+        truth_id: str | None = None,
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return truth_knowledge_view(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            chapter_ordinal=chapter_ordinal,
+            truth_id=None if truth_id is None else _check_id(truth_id),
+        )
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/truth-lens")
+    async def truth_lens_api(
+        path_book_id: str,
+        edition_id: str,
+        chapter_ordinal: int,
+        lens: str = "AUTHOR",
+        character_id: str | None = None,
+        include_future: bool = False,
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return project_truth_lens(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            chapter_ordinal=chapter_ordinal,
+            lens=lens,
+            character_id=character_id,
+            include_future=include_future,
+        )
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/author-truths/"
+        "{truth_id}/reader-knowledge"
+    )
+    async def reader_knowledge_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        truth_id: str,
+        payload: KnowledgeUpdateRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        result = set_reader_knowledge(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            _check_id(truth_id),
+            state=payload.state,
+            chapter_ordinal=payload.chapter_ordinal,
+            evidence=payload.evidence,
+            mode=payload.mode,
+        )
+        return {**result, "canon_changed": False}
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/author-truths/"
+        "{truth_id}/character-knowledge"
+    )
+    async def character_knowledge_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        truth_id: str,
+        payload: KnowledgeUpdateRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        if not payload.character_id:
+            raise HTTPException(status_code=422, detail="character_id 必填")
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        result = set_character_truth_knowledge(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            _check_id(truth_id),
+            payload.character_id,
+            state=payload.state,
+            chapter_ordinal=payload.chapter_ordinal,
+            evidence=payload.evidence,
+            mode=payload.mode,
+        )
+        return {**result, "canon_changed": False}
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/reveal-agenda")
+    async def reveal_agenda_api(
+        path_book_id: str, edition_id: str, chapter_ordinal: int
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return build_reveal_agenda(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            chapter_ordinal,
+        )
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/reveal-plans")
+    async def create_reveal_plan_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: RevealPlanInput,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        plan = create_reveal_plan(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            payload,
+        )
+        return {"plan": plan, "canon_changed": False, "knowledge_changed": False}
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/reveal-agenda/override")
+    async def reveal_agenda_override_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: RevealAgendaOverrideRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        result = override_reveal_agenda(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            truth_id=payload.truth_id,
+            chapter_ordinal=payload.chapter_ordinal,
+            agenda_bucket=payload.agenda_bucket,
+            reveal_depth=payload.reveal_depth,
+            reason=payload.reason,
+        )
+        return {**result, "canon_changed": False}
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/secret-board")
+    async def secret_board_api(
+        path_book_id: str,
+        edition_id: str,
+        chapter_ordinal: int,
+        horizon: str | None = None,
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return build_secret_board(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            chapter_ordinal=chapter_ordinal,
+            horizon=horizon,
+        )
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/hidden-items")
+    async def hidden_item_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: HiddenItemRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        selected_database = _database_for_book(app, checked_book)
+        item_id = stable_id(
+            "author-hidden-item",
+            checked_book,
+            checked_edition,
+            payload.name.strip(),
+            payload.location_id or "unplaced",
+            str(payload.effective_from_chapter),
+        )
+        truth = create_author_truth(
+            selected_database,
+            checked_book,
+            checked_edition,
+            {
+                "truth_type": "ITEM_SECRET",
+                "subject_type": "ITEM",
+                "subject_id": item_id,
+                "title": f"隐藏物品：{payload.name}",
+                "statement": f"{payload.name} 确实存在，但当前不等于任何角色已经持有。",
+                "description": payload.description,
+                "status": "ACTIVE_TRUTH",
+                "effective_from_chapter": payload.effective_from_chapter,
+                "metadata": {
+                    "item_id": item_id,
+                    "category": payload.category.strip().upper(),
+                    "exists": True,
+                    "location_id": payload.location_id,
+                    "intended_owner_id": payload.owner_id,
+                    "owner_id": None,
+                    "holder_id": None,
+                    "known_by": [],
+                    "reader_visibility": "UNKNOWN",
+                    "horizon": payload.horizon.strip().upper(),
+                    "priority": payload.priority,
+                    "ownership_layer": "SEPARATE_FROM_EXISTENCE",
+                },
+            },
+        )
+        plan = None
+        if payload.target_chapter_min is not None:
+            plan = create_reveal_plan(
+                selected_database,
+                checked_book,
+                checked_edition,
+                {
+                    "truth_id": truth["truth_id"],
+                    "target": "READER",
+                    "target_chapter_min": payload.target_chapter_min,
+                    "target_chapter_max": payload.target_chapter_max,
+                    "horizon": payload.horizon,
+                    "priority": payload.priority,
+                    "reveal_depth": payload.reveal_depth,
+                    "strategy": "作者通过 Hidden Item 表单创建的揭示计划",
+                },
+            )
+        return {
+            "truth": truth,
+            "plan": plan,
+            "world_state_changed": False,
+            "knowledge_changed": False,
+            "canon_changed": False,
+        }
 
     @app.get("/api/books/{path_book_id}/editions/{edition_id}/book-profile")
     async def book_profile_api(path_book_id: str, edition_id: str) -> dict[str, Any]:
@@ -593,6 +1082,26 @@ def create_app(
             proposed_baseline=payload.proposed_baseline,
             summary=payload.summary,
         )
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/book-profile/reanalysis"
+    )
+    async def book_profile_reanalysis_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: ProfileReanalysisRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        result = create_profile_reanalysis_handoff(
+            _database_for_book(app, checked_book),
+            checked_book,
+            checked_edition,
+            context_chapter_id=payload.context_chapter_id,
+        )
+        return {**result, "canon_changed": False, "effective_profile_changed": False}
 
     @app.post(
         "/api/books/{path_book_id}/editions/{edition_id}/book-profile/proposals/"

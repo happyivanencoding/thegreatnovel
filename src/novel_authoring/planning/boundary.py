@@ -6,6 +6,7 @@ from typing import Any
 
 from novel_authoring.atlas.models import AtlasGraph, InformationStatus
 from novel_authoring.atlas.service import latest_atlas
+from novel_authoring.author_control.reveal import build_planning_truth_context
 from novel_authoring.canon.projection import rebuild_projection
 from novel_authoring.db.database import Database
 from novel_authoring.edition import (
@@ -185,6 +186,8 @@ def _markdown(packet: ContinuationBoundaryPacket) -> str:
         "伏笔动作队列": packet.hook_diagnostics,
         "Story Atlas anchor": packet.story_atlas_anchor,
         "Batch anchor": packet.batch_anchor,
+        "Active Author Truths": packet.active_author_truths,
+        "Chapter Reveal Agenda": packet.reveal_agenda,
         "Innovation Control": packet.innovation_control.model_dump(mode="json"),
         "Innovation diagnostics": (
             None
@@ -434,15 +437,13 @@ def build_boundary_packet(
             """,
             (book_id, *directive_lineage),
         ).fetchall()
-        total = (
-            len(edition_chapters(connection, book_id, selected_edition))
-            if selected_edition != "base"
-            else int(
-                connection.execute(
-                    "SELECT COUNT(*) FROM chapters WHERE book_id=?", (book_id,)
-                ).fetchone()[0]
-            )
-        )
+        total = len(edition_chapters(connection, book_id, selected_edition))
+    truth_context = build_planning_truth_context(
+        database,
+        book_id,
+        selected_edition,
+        chapter_ordinal=total + 1,
+    )
     rhythm_features: list[dict[str, Any]] = []
     rhythm_diagnostics: dict[str, Any] = {}
     hook_diagnostics: dict[str, Any] = {}
@@ -538,6 +539,8 @@ def build_boundary_packet(
             "innovation_control": selected_innovation.model_dump(mode="json"),
             "innovation_diagnostics": innovation_diagnostics.model_dump(mode="json"),
             "narrative_portfolio": narrative_portfolio.model_dump(mode="json"),
+            "active_author_truths": truth_context["active_author_truths"],
+            "reveal_agenda": truth_context["reveal_agenda"],
             },
         }
     )
@@ -586,6 +589,8 @@ def build_boundary_packet(
         hook_diagnostics=hook_diagnostics,
         story_atlas_anchor=atlas_anchor,
         batch_anchor=batch_anchor,
+        active_author_truths=truth_context["active_author_truths"],
+        reveal_agenda=truth_context["reveal_agenda"],
         innovation_control=selected_innovation,
         innovation_diagnostics=innovation_diagnostics,
         narrative_portfolio=narrative_portfolio,
@@ -631,4 +636,5 @@ def build_boundary_packet(
         "markdown_path": str(markdown_path),
         "packet_sha256": packet_hash,
         "warnings": warnings,
+        "truth_reveal": truth_context,
     }

@@ -408,10 +408,256 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
             f"state_changes:{change.record_id}",
             findings,
         )
+    agenda = context.contract.reveal_agenda
+    if agenda:
+        agenda_items = {
+            str(item["truth_id"]): item
+            for key in ("must_reveal", "should_hint", "keep_hidden", "optional")
+            for item in agenda.get(key, [])
+            if isinstance(item, dict) and item.get("truth_id")
+        }
+        must_reveal = {
+            str(item.get("truth_id"))
+            for item in agenda.get("must_reveal", [])
+            if isinstance(item, dict) and item.get("truth_id")
+        }
+        should_hint = {
+            str(item.get("truth_id"))
+            for item in agenda.get("should_hint", [])
+            if isinstance(item, dict) and item.get("truth_id")
+        }
+        keep_hidden = {
+            str(item.get("truth_id"))
+            for item in agenda.get("keep_hidden", [])
+            if isinstance(item, dict) and item.get("truth_id")
+        }
+        realized: dict[str, list[Any]] = {}
+        for event in context.draft.reveal_trace.realized:
+            realized.setdefault(event.truth_id, []).append(event)
+            planned_item = agenda_items.get(event.truth_id)
+            if planned_item is None:
+                findings.append(
+                    _finding(
+                        "REVEAL_NOT_IN_AGENDA",
+                        f"Reveal {event.truth_id} 没有本章 Agenda 授权。",
+                        location="reveal_trace.realized",
+                    )
+                )
+            else:
+                plan = planned_item.get("plan") or {}
+                expected_target = str(plan.get("target") or "READER")
+                expected_entity = plan.get("target_entity_id")
+                if (
+                    event.target.value != expected_target
+                    or event.target_entity_id != expected_entity
+                ):
+                    findings.append(
+                        _finding(
+                            "REVEAL_TARGET_MISMATCH",
+                            f"Reveal {event.truth_id} 的 target 与冻结 RevealPlan 不一致。",
+                            location="reveal_trace.realized",
+                        )
+                    )
+                expected_depth = str(planned_item.get("reveal_depth") or "")
+                if (
+                    planned_item.get("agenda_bucket") == "MUST_REVEAL"
+                    and expected_depth
+                    and event.depth.value != expected_depth
+                ):
+                    findings.append(
+                        _finding(
+                            "REVEAL_DEPTH_MISMATCH",
+                            f"Reveal {event.truth_id} 应使用 {expected_depth}，"
+                            f"实际为 {event.depth.value}。",
+                            location="reveal_trace.realized",
+                        )
+                    )
+            depth_state = {
+                "HINT": "HINTED",
+                "STRONG_HINT": "SUSPECTED",
+                "PARTIAL_REVEAL": "PARTIALLY_REVEALED",
+                "FALSE_LEAD": "MISLEADING_BELIEF",
+                "CONFIRMATION": "CONFIRMED",
+                "FULL_REVEAL": "CONFIRMED",
+            }[event.depth.value]
+            if event.expected_knowledge_change.value != depth_state:
+                findings.append(
+                    _finding(
+                        "REVEAL_KNOWLEDGE_DEPTH_MISMATCH",
+                        f"Reveal {event.truth_id} 的知识变化必须与 {event.depth.value} 对应。",
+                        location="reveal_trace.realized",
+                    )
+                )
+            if event.evidence_quote not in context.draft.prose_markdown:
+                findings.append(
+                    _finding(
+                        "REVEAL_EVIDENCE_NOT_IN_PROSE",
+                        f"Reveal {event.truth_id} 的证据短句不在正文中。",
+                        evidence=[event.evidence_quote],
+                        location="reveal_trace.realized",
+                    )
+                )
+            transitions = [
+                item
+                for item in context.draft.reveal_trace.knowledge_transitions
+                if item.truth_id == event.truth_id
+                and item.target == event.target
+                and item.target_entity_id == event.target_entity_id
+            ]
+            if len(transitions) != 1 or transitions[0].after.value != depth_state:
+                findings.append(
+                    _finding(
+                        "KNOWLEDGE_TRANSITION_MISSING_OR_INVALID",
+                        f"Reveal {event.truth_id} 必须有且只有一条匹配的 KnowledgeTransition。",
+                        location="reveal_trace.knowledge_transitions",
+                    )
+                )
+            if event.target.value == "CHARACTER":
+                state_changes = [
+                    change
+                    for change in context.draft.state_changes
+                    if change.kind == "knowledge"
+                    and str(
+                        change.payload.get("truth_id")
+                        or change.payload.get("fact_id")
+                        or ""
+                    )
+                    == event.truth_id
+                    and str(change.payload.get("character_id") or "")
+                    == str(event.target_entity_id or "")
+                ]
+                if not state_changes:
+                    findings.append(
+                        _finding(
+                            "CHARACTER_REVEAL_STATE_CHANGE_MISSING",
+                            f"角色 Reveal {event.truth_id} 缺少 knowledge StateChange。",
+                            location="state_changes",
+                        )
+                    )
+        planned = {
+            item.truth_id: item for item in context.draft.reveal_trace.planned
+        }
+        if len(planned) != len(context.draft.reveal_trace.planned):
+            findings.append(
+                _finding(
+                    "REVEAL_PLANNED_DUPLICATE",
+                    "RevealTrace.planned 存在重复 truth_id。",
+                    location="reveal_trace.planned",
+                )
+            )
+        required_planned = must_reveal | should_hint | keep_hidden
+        if set(planned) != required_planned:
+            findings.append(
+                _finding(
+                    "REVEAL_PLANNED_NOT_FROZEN_AGENDA",
+                    "RevealTrace.planned 必须精确声明本章 MUST/SHOULD/KEEP Agenda。",
+                    evidence=[
+                        f"missing={sorted(required_planned - set(planned))}",
+                        f"unknown={sorted(set(planned) - required_planned)}",
+                    ],
+                    location="reveal_trace.planned",
+                )
+            )
+        for truth_id, item in planned.items():
+            expected_bucket = str(
+                agenda_items.get(truth_id, {}).get("agenda_bucket") or ""
+            )
+            if item.agenda_bucket.value != expected_bucket:
+                findings.append(
+                    _finding(
+                        "REVEAL_PLANNED_BUCKET_MISMATCH",
+                        f"Truth {truth_id} 的 planned bucket 与合同 Agenda 不一致。",
+                        location="reveal_trace.planned",
+                    )
+                )
+        for truth_id in sorted(must_reveal):
+            events = realized.get(truth_id, [])
+            if not events or not any(
+                event.depth.value
+                in {"PARTIAL_REVEAL", "CONFIRMATION", "FULL_REVEAL"}
+                for event in events
+            ):
+                findings.append(
+                    _finding(
+                        "MUST_REVEAL_MISSING",
+                        f"本章必须揭示的 Truth {truth_id} 未实际发生。",
+                        location="reveal_trace",
+                    )
+                )
+        for truth_id in sorted(keep_hidden):
+            if realized.get(truth_id):
+                findings.append(
+                    _finding(
+                        "KEEP_HIDDEN_BREACHED",
+                        f"Truth {truth_id} 本章必须继续隐藏，却出现在 realized reveal 中。",
+                        severity=Severity.FATAL,
+                        location="reveal_trace",
+                    )
+                )
+        for truth_id in sorted(should_hint):
+            events = realized.get(truth_id, [])
+            if not any(
+                event.depth.value in {"HINT", "STRONG_HINT", "FALSE_LEAD"}
+                and event.evidence_quote.strip()
+                for event in events
+            ):
+                findings.append(
+                    _finding(
+                        "PLANNED_HINT_MISSING",
+                        f"Truth {truth_id} 缺少本章计划的可读线索。",
+                        location="reveal_trace",
+                    )
+                )
+            if any(
+                event.depth.value
+                in {"PARTIAL_REVEAL", "CONFIRMATION", "FULL_REVEAL"}
+                for event in events
+            ):
+                findings.append(
+                    _finding(
+                        "HINT_ESCALATED_TO_REVEAL",
+                        f"Truth {truth_id} 只允许 HINT，却被直接部分或完整揭示。",
+                        location="reveal_trace",
+                    )
+                )
+        active_ids = {
+            str(item.get("truth_id"))
+            for item in context.contract.active_author_truths
+            if isinstance(item, dict) and item.get("truth_id")
+        }
+        unknown = set(realized) - active_ids
+        if unknown:
+            findings.append(
+                _finding(
+                    "REVEAL_TRUTH_NOT_FROZEN",
+                    f"Reveal Trace 引用了合同未冻结的 Truth：{sorted(unknown)}",
+                    location="reveal_trace",
+                )
+            )
+    elif (
+        context.draft.reveal_trace.planned
+        or context.draft.reveal_trace.realized
+        or context.draft.reveal_trace.knowledge_transitions
+    ):
+        findings.append(
+            _finding(
+                "REVEAL_TRACE_WITHOUT_AGENDA",
+                "合同没有 Reveal Agenda，草稿不得自行声明 RevealTrace。",
+                location="reveal_trace",
+            )
+        )
     return _report(
         "Contract Validator",
         findings,
-        {"requirements_checked": len(required)},
+        {
+            "requirements_checked": len(required),
+            "reveal_requirements_checked": sum(
+                len(agenda.get(key, []))
+                for key in ("must_reveal", "should_hint", "keep_hidden")
+            )
+            if agenda
+            else 0,
+        },
     )
 
 

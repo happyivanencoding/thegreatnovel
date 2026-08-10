@@ -7,7 +7,9 @@ import sqlite3
 import uuid
 from enum import StrEnum
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from novel_authoring.db.database import Database
 from novel_authoring.storage.layout import BookLayout
@@ -50,6 +52,51 @@ STRENGTH_LABELS = {
     ProfileStrength.MUST.value: "必须",
     ProfileStrength.MUST_NOT.value: "禁止",
 }
+
+
+class ProfileTextModification(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    before: str = Field(min_length=1)
+    after: str = Field(min_length=1)
+
+
+class ProfileDimensionUpdate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    dimension: str
+    additions: list[str] = Field(default_factory=list)
+    modifications: list[ProfileTextModification] = Field(default_factory=list)
+    removals: list[str] = Field(default_factory=list)
+    reason: str = Field(min_length=1)
+    evidence: list[str] = Field(min_length=1)
+    confidence: float = Field(ge=0, le=1)
+
+
+class ProfileReanalysisResult(BaseModel):
+    """Strict Local File Handoff output; it never changes Effective Profile."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    handoff_id: str
+    handoff_type: Literal["PROFILE_REANALYSIS"] = "PROFILE_REANALYSIS"
+    status: Literal["COMPLETED"] = "COMPLETED"
+    book_id: str
+    edition_id: str
+    dimensions: list[ProfileDimensionUpdate]
+    summary: str = Field(min_length=1)
+    canon_committed: Literal[False] = False
+    edition_activated: Literal[False] = False
+
+    @model_validator(mode="after")
+    def dimensions_are_complete(self) -> ProfileReanalysisResult:
+        expected = {item[0] for item in PROFILE_DIMENSIONS}
+        actual = [item.dimension for item in self.dimensions]
+        if set(actual) != expected or len(actual) != len(expected):
+            raise ValueError("Profile Reanalysis 必须恰好覆盖九个唯一维度")
+        if self.canon_committed or self.edition_activated:
+            raise ValueError("Profile Reanalysis 不得提交 Canon 或启用 Edition")
+        return self
 
 
 def _loads(value: Any, fallback: Any) -> Any:
@@ -224,14 +271,15 @@ def queue_book_profile_refresh_proposal_in_transaction(
     """Queue an author-reviewed refresh suggestion inside an existing commit."""
 
     proposal_id = f"profile-proposal-{uuid.uuid4().hex}"
-    baseline = proposed_baseline or _baseline_for_connection(
-        connection, book_id, edition_id
+    analysis_status = (
+        "PROPOSAL_READY" if proposed_baseline is not None else "REANALYSIS_REQUIRED"
     )
+    baseline = proposed_baseline or {}
     connection.execute(
         "INSERT INTO book_profile_refresh_proposals("
         "proposal_id, book_id, edition_id, source_type, status, "
-        "proposed_baseline_json, summary, created_at, version"
-        ") VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, 1)",
+        "proposed_baseline_json, summary, created_at, version, analysis_status"
+        ") VALUES (?, ?, ?, ?, 'PENDING', ?, ?, ?, 1, ?)",
         (
             proposal_id,
             book_id,
@@ -240,6 +288,7 @@ def queue_book_profile_refresh_proposal_in_transaction(
             _dumps(baseline),
             summary.strip(),
             utc_now(),
+            analysis_status,
         ),
     )
     return proposal_id
@@ -315,6 +364,12 @@ def load_effective_book_profile(
             {
                 **dict(proposal),
                 "proposed_baseline": _loads(proposal["proposed_baseline_json"], {}),
+                "analysis": _loads(proposal["analysis_json"], {}),
+                "display_status": (
+                    str(proposal["analysis_status"])
+                    if str(proposal["status"]) == "PENDING"
+                    else str(proposal["status"])
+                ),
             }
             for proposal in connection.execute(
                 "SELECT * FROM book_profile_refresh_proposals "
@@ -451,6 +506,174 @@ def create_book_profile_refresh_proposal(
     return {"proposal_id": proposal_id, "status": "PENDING"}
 
 
+def create_profile_reanalysis_handoff(
+    database: Database,
+    book_id: str,
+    edition_id: str,
+    *,
+    context_chapter_id: str | None = None,
+) -> dict[str, Any]:
+    """Create a real Local File Handoff instead of cloning the current baseline."""
+
+    from novel_authoring.workflows.handoffs import HandoffType, create_handoff
+
+    handoff = create_handoff(
+        database,
+        book_id,
+        handoff_type=HandoffType.PROFILE_REANALYSIS,
+        requested_stage="PROFILE_REANALYSIS",
+        edition_id=edition_id,
+        context_chapter_id=context_chapter_id,
+    )
+    with database.connect() as connection:
+        request_id = queue_book_profile_refresh_proposal_in_transaction(
+            connection,
+            book_id,
+            edition_id,
+            source_type="AUTHOR_REANALYSIS",
+            proposed_baseline=None,
+            summary="九维 Profile Reanalysis Handoff 已准备，等待 Codex 分析结果。",
+        )
+        connection.execute(
+            "UPDATE book_profile_refresh_proposals SET handoff_id=?, "
+            "analysis_status='HANDOFF_READY', version=version+1 WHERE proposal_id=?",
+            (handoff["handoff_id"], request_id),
+        )
+    return {
+        **handoff,
+        "status_record": handoff["status"],
+        "status": "READY_FOR_CODEX",
+        "profile_request_id": request_id,
+        "analysis_status": "HANDOFF_READY",
+        "effective_profile_changed": False,
+    }
+
+
+def import_profile_reanalysis_result(
+    database: Database,
+    handoff_id: str,
+    payload: ProfileReanalysisResult | dict[str, Any],
+) -> dict[str, Any]:
+    """Validate a semantic reanalysis and expose it as an author-reviewed proposal."""
+
+    result = (
+        payload
+        if isinstance(payload, ProfileReanalysisResult)
+        else ProfileReanalysisResult.model_validate(payload)
+    )
+    if result.handoff_id != handoff_id:
+        raise ValueError("Profile Reanalysis result handoff_id 不一致")
+    current = load_effective_book_profile(
+        database, result.book_id, result.edition_id
+    )
+    baseline = {
+        key: dict(value)
+        for key, value in current["baseline"].items()
+        if isinstance(value, dict)
+    }
+    for dimension, label, filename in PROFILE_DIMENSIONS:
+        baseline.setdefault(
+            dimension,
+            {
+                "dimension": dimension,
+                "label": label,
+                "filename": filename,
+                "content": "",
+                "available": False,
+                "source": "PROFILE_REANALYSIS",
+            },
+        )
+    semantic_change_count = 0
+    for update in result.dimensions:
+        entry = baseline[update.dimension]
+        original_content = str(entry.get("content") or "")
+        content = original_content
+        for removal in update.removals:
+            if removal not in content:
+                raise ValueError(
+                    f"Profile Reanalysis removal 不在当前 {update.dimension} 内容中"
+                )
+            content = content.replace(removal, "")
+        for modification in update.modifications:
+            if modification.before not in content:
+                raise ValueError(
+                    f"Profile Reanalysis modification.before 不在当前 {update.dimension} 内容中"
+                )
+            content = content.replace(
+                modification.before, modification.after, 1
+            )
+        additions = [item.strip() for item in update.additions if item.strip()]
+        if additions:
+            suffix = "\n\n".join(additions)
+            content = f"{content.rstrip()}\n\n{suffix}" if content.strip() else suffix
+        normalized_content = content.strip()
+        if normalized_content != original_content.strip():
+            semantic_change_count += 1
+            entry.update(
+                {
+                    "content": normalized_content,
+                    "available": bool(normalized_content),
+                    "source": "PROFILE_REANALYSIS",
+                }
+            )
+    if semantic_change_count == 0:
+        raise ValueError("Profile Reanalysis 结果与当前 baseline 完全相同")
+    analysis = result.model_dump(mode="json")
+    with database.connect() as connection:
+        handoff = connection.execute(
+            "SELECT book_id, edition_id FROM workflow_handoffs WHERE handoff_id=? "
+            "AND handoff_type='PROFILE_REANALYSIS'",
+            (handoff_id,),
+        ).fetchone()
+        if handoff is None:
+            raise ValueError("Profile Reanalysis handoff 不存在")
+        if (
+            str(handoff["book_id"]) != result.book_id
+            or str(handoff["edition_id"]) != result.edition_id
+        ):
+            raise ValueError("Profile Reanalysis result 越过冻结 book/edition")
+        proposal = connection.execute(
+            "SELECT proposal_id FROM book_profile_refresh_proposals "
+            "WHERE handoff_id=? ORDER BY created_at DESC LIMIT 1",
+            (handoff_id,),
+        ).fetchone()
+        if proposal is None:
+            proposal_id = queue_book_profile_refresh_proposal_in_transaction(
+                connection,
+                result.book_id,
+                result.edition_id,
+                source_type="AUTHOR_REANALYSIS",
+                proposed_baseline=baseline,
+                summary=result.summary,
+            )
+            connection.execute(
+                "UPDATE book_profile_refresh_proposals SET handoff_id=?, "
+                "analysis_json=? WHERE proposal_id=?",
+                (handoff_id, _dumps(analysis), proposal_id),
+            )
+        else:
+            proposal_id = str(proposal["proposal_id"])
+            connection.execute(
+                "UPDATE book_profile_refresh_proposals SET status='PENDING', "
+                "analysis_status='PROPOSAL_READY', proposed_baseline_json=?, "
+                "analysis_json=?, summary=?, version=version+1 WHERE proposal_id=?",
+                (
+                    _dumps(baseline),
+                    _dumps(analysis),
+                    result.summary,
+                    proposal_id,
+                ),
+            )
+    return {
+        "proposal_id": proposal_id,
+        "handoff_id": handoff_id,
+        "status": "PENDING",
+        "analysis_status": "PROPOSAL_READY",
+        "effective_profile_changed": False,
+        "dimensions": [item.model_dump(mode="json") for item in result.dimensions],
+    }
+
+
 def resolve_book_profile_refresh_proposal(
     database: Database,
     book_id: str,
@@ -475,6 +698,8 @@ def resolve_book_profile_refresh_proposal(
             raise ValueError("Profile proposal 不存在")
         if str(proposal["status"]) != "PENDING":
             raise ValueError("Profile proposal 已处理")
+        if str(proposal["analysis_status"]) != "PROPOSAL_READY":
+            raise ValueError("Profile reanalysis 尚未完成，不能接受或拒绝 Proposal")
         now = utc_now()
         if selected_action == "REJECT":
             connection.execute(
@@ -526,11 +751,16 @@ def resolve_book_profile_refresh_proposal(
 __all__ = [
     "PROFILE_DIMENSIONS",
     "ProfileEditOperation",
+    "ProfileDimensionUpdate",
+    "ProfileReanalysisResult",
     "ProfileStrength",
+    "ProfileTextModification",
     "STRENGTH_LABELS",
     "create_book_profile_refresh_proposal",
+    "create_profile_reanalysis_handoff",
     "edit_book_profile",
     "load_effective_book_profile",
+    "import_profile_reanalysis_result",
     "queue_book_profile_refresh_proposal_in_transaction",
     "resolve_book_profile_refresh_proposal",
 ]

@@ -9,6 +9,9 @@ from pydantic import ValidationError
 from novel_authoring.author_control.book_profile import (
     queue_book_profile_refresh_proposal_in_transaction,
 )
+from novel_authoring.author_control.reveal import (
+    apply_canon_reveal_trace_in_transaction,
+)
 from novel_authoring.canon.events import EventStatus, EventStore
 from novel_authoring.canon.materialize import MaterializationError, materialize_change
 from novel_authoring.canon.projection import (
@@ -400,6 +403,27 @@ def approve_draft(
                     ordinal=ordinal,
                     edition_id=selected_edition,
                 )
+            approved_character_knowledge = {
+                (
+                    str(change.payload.get("truth_id") or change.payload.get("fact_id")),
+                    str(change.payload.get("character_id")),
+                )
+                for change in draft.state_changes
+                if change.kind == "knowledge"
+                and (change.payload.get("truth_id") or change.payload.get("fact_id"))
+                and change.payload.get("character_id")
+            }
+            reveal_event_ids = apply_canon_reveal_trace_in_transaction(
+                connection,
+                book_id=book_id,
+                edition_id=selected_edition,
+                chapter_id=chapter_id,
+                chapter_ordinal=ordinal,
+                draft_id=draft_id,
+                commit_id=commit_id,
+                reveal_trace=draft.reveal_trace,
+                approved_character_knowledge=approved_character_knowledge,
+            )
             if draft.structure_tags and not any(
                 change.kind == "repetition" for change in draft.state_changes
             ):
@@ -505,6 +529,7 @@ def approve_draft(
                     "title": draft.chapter_title,
                     "content_sha256": content_hash,
                     "aftershock_obligation_ids": aftershock_ids,
+                    "reveal_event_ids": reveal_event_ids,
                 },
                 source_kind="AUTHOR_APPROVED_DRAFT",
                 source_id=draft_id,
@@ -634,6 +659,7 @@ def approve_draft(
         "content_sha256": content_hash,
         "event_start_seq": approval_event.event_seq,
         "event_end_seq": last_event_seq,
+        "reveal_event_ids": reveal_event_ids,
         "snapshot_path": str(snapshot_path),
         "source_verify": source_report,
         "rhythm_diagnostics": rhythm_result,

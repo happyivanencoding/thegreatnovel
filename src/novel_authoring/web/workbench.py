@@ -18,7 +18,18 @@ from novel_authoring.author_control.book_profile import (
     load_effective_book_profile,
 )
 from novel_authoring.author_control.projections import build_story_game_state
+from novel_authoring.author_control.reveal import (
+    TruthLens,
+    build_reveal_agenda,
+    build_secret_board,
+    project_truth_lens,
+    truth_knowledge_view,
+)
 from novel_authoring.author_control.service import author_control_view
+from novel_authoring.author_control.truth import (
+    list_open_creative_questions,
+    list_secret_candidates,
+)
 from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.edition import edition_chapters
 
@@ -29,6 +40,7 @@ WORKBENCH_MODES: tuple[str, ...] = (
     "analysis",
     "continuity",
     "state",
+    "truth",
 )
 WORKBENCH_RIGHT_TABS: tuple[str, ...] = ("prose", "state", "next")
 WORKBENCH_STATE_TABS: tuple[str, ...] = (
@@ -52,6 +64,7 @@ MODE_LABELS = {
     "analysis": "分析",
     "continuity": "连续性审查",
     "state": "状态",
+    "truth": "真相与揭示",
 }
 RIGHT_TAB_LABELS = {
     "prose": "正文",
@@ -373,6 +386,58 @@ def _candidate_cards(
         plan = _read_json(row["plan_json"])
         score = _read_json(row["score_json"])
         gate = _read_json(row["gate_report_json"])
+        truth_alignment = list(plan.get("truth_alignment", []))
+        reveal_impact = dict(plan.get("reveal_impact", {}))
+        truth_effects = [
+            {
+                "truth_id": str(item.get("truth_id") or ""),
+                "title": str(item.get("title") or item.get("truth_id") or "未命名真相"),
+                "behavioral_effect": str(item.get("behavioral_effect") or "未说明行为约束"),
+                "agenda_bucket": str(item.get("agenda_bucket") or "KEEP_HIDDEN"),
+                "respected": bool(item.get("respected", False)),
+            }
+            for item in truth_alignment
+            if isinstance(item, dict)
+        ]
+        truth_labels = {
+            str(item["truth_id"]): str(item["title"])
+            for item in truth_effects
+            if item["truth_id"]
+        }
+
+        secrets_used = [
+            {
+                "truth_id": str(value),
+                "title": truth_labels.get(str(value), str(value)),
+            }
+            for value in reveal_impact.get("secrets_used", [])
+        ]
+        kept_hidden = [
+            {
+                "truth_id": str(value),
+                "title": truth_labels.get(str(value), str(value)),
+            }
+            for value in reveal_impact.get("kept_hidden", [])
+        ]
+
+        reveal_previews: list[dict[str, Any]] = []
+        for impact_key, impact_label in (
+            ("hints", "线索"),
+            ("partial_reveals", "部分揭示"),
+            ("full_reveals", "完整揭示"),
+        ):
+            for item in reveal_impact.get(impact_key, []):
+                if not isinstance(item, dict):
+                    continue
+                reveal_previews.append(
+                    {
+                        "kind": impact_label,
+                        "truth_id": str(item.get("truth_id") or ""),
+                        "depth": str(item.get("depth") or ""),
+                        "clue": str(item.get("clue") or "未写明可读线索"),
+                        "target": str(item.get("target") or "READER"),
+                    }
+                )
         result.append(
             {
                 "candidate_id": str(row["candidate_id"]),
@@ -384,10 +449,21 @@ def _candidate_cards(
                 "reader_question": plan.get("reader_question"),
                 "final_selection_score": score.get("final_selection_score")
                 or score.get("score"),
+                "gate_passed": bool(gate.get("passed", False)),
                 "hard_failures": list(gate.get("hard_failures", [])),
                 "author_control_trace": plan.get("author_control_trace", {}),
                 "profile_alignment": plan.get("profile_alignment", {}),
                 "state_changes": list(plan.get("state_changes", [])),
+                "truth_effects": truth_effects,
+                "reveal_previews": reveal_previews,
+                "secrets_used": secrets_used,
+                "kept_hidden": kept_hidden,
+                "reader_knowledge_delta": list(
+                    reveal_impact.get("reader_knowledge_delta", [])
+                ),
+                "character_knowledge_delta": list(
+                    reveal_impact.get("character_knowledge_delta", [])
+                ),
             }
         )
     return result
@@ -821,6 +897,9 @@ def build_workbench_context(
     right_tab: str = "prose",
     state_tab: str = "overview",
     character_id: str | None = None,
+    truth_lens: str = "AUTHOR",
+    truth_id: str | None = None,
+    include_future_truths: bool = False,
 ) -> dict[str, Any]:
     """Build one Workbench read model without initializing or mutating the DB."""
 
@@ -871,6 +950,10 @@ def build_workbench_context(
             "overview",
             "chapter",
             "state",
+            "truth",
+            "truth-board",
+            "secret-board",
+            "reveal-agenda",
         }:
             selected_node = "overview"
         if (selected_chapter is not None or selected_draft is not None) and node == "chapter":
@@ -912,16 +995,168 @@ def build_workbench_context(
         state_tab, WORKBENCH_STATE_TABS, "overview"
     )
     story_game_state: dict[str, Any] | None = None
+    previous_story_game_state: dict[str, Any] | None = None
     author_control: dict[str, Any] | None = None
-    if active_mode == "state":
+    truth_projection: dict[str, Any] | None = None
+    truth_knowledge: dict[str, Any] | None = None
+    reveal_agenda: dict[str, Any] | None = None
+    secret_board: dict[str, Any] | None = None
+    open_questions: list[dict[str, Any]] = []
+    secret_candidates: list[dict[str, Any]] = []
+    selected_lens = TruthLens(str(truth_lens).upper())
+    state_chapter_id = (
+        None if selected_chapter is None else str(selected_chapter["chapter_id"])
+    )
+    if selected_chapter is not None:
         story_game_state = build_story_game_state(
             database,
             book_id,
             selected_edition_id,
-            chapter_id=(None if selected_chapter is None else str(selected_chapter["chapter_id"])),
+            chapter_id=state_chapter_id,
             character_id=character_id,
         )
+        selected_ordinal = int(selected_chapter["ordinal"])
+        previous_chapter = next(
+            (
+                item
+                for item in raw_chapters
+                if int(item["ordinal"]) == selected_ordinal - 1
+            ),
+            None,
+        )
+        if previous_chapter is not None:
+            previous_story_game_state = build_story_game_state(
+                database,
+                book_id,
+                selected_edition_id,
+                chapter_id=str(previous_chapter["chapter_id"]),
+                character_id=character_id,
+            )
+    if active_mode == "state":
+        if story_game_state is None:
+            story_game_state = build_story_game_state(
+                database,
+                book_id,
+                selected_edition_id,
+                chapter_id=None,
+                character_id=character_id,
+            )
+        state_ordinal = int(
+            (story_game_state.get("chapter") or {}).get("ordinal") or selected_anchor or 0
+        )
+        state_truth_topics = truth_knowledge_view(
+            database,
+            book_id,
+            selected_edition_id,
+            chapter_ordinal=state_ordinal,
+        )["topics"]
+        for collection, subject_type in (
+            ("characters", "CHARACTER"),
+            ("factions", "FACTION"),
+        ):
+            enriched: list[dict[str, Any]] = []
+            for record in story_game_state.get(collection, []):
+                entity_id = str(
+                    record.get("character_id")
+                    or record.get("faction_id")
+                    or record.get("record_id")
+                    or record.get("id")
+                    or ""
+                )
+                topics = [
+                    topic
+                    for topic in state_truth_topics
+                    if str(topic["truth"].get("subject_type") or "").upper()
+                    == subject_type
+                    and str(topic["truth"].get("subject_id") or "") == entity_id
+                ]
+                enriched.append({**record, "author_truth_topics": topics})
+            story_game_state[collection] = enriched
+        selected_character_record = next(
+            (
+                item
+                for item in story_game_state.get("characters", [])
+                if item.get("character_id") == story_game_state.get("selected_character_id")
+            ),
+            None,
+        )
+        if selected_character_record is not None:
+            story_game_state["character"] = {
+                **story_game_state.get("character", {}),
+                "author_truth_topics": selected_character_record.get(
+                    "author_truth_topics", []
+                ),
+            }
         author_control = author_control_view(database, book_id, selected_edition_id)
+    truth_chapter_ordinal = int(selected_anchor or 0)
+    if active_mode == "truth" or selected_node in {
+        "truth",
+        "truth-board",
+        "secret-board",
+        "reveal-agenda",
+    }:
+        truth_projection = project_truth_lens(
+            database,
+            book_id,
+            selected_edition_id,
+            chapter_ordinal=truth_chapter_ordinal,
+            lens=selected_lens,
+            character_id=character_id,
+            include_future=(
+                selected_lens is TruthLens.AUTHOR and include_future_truths
+            ),
+        )
+        chapter_characters = (
+            [] if story_game_state is None else story_game_state.get("characters", [])
+        )
+        for topic in truth_projection["topics"]:
+            known_by_character = {
+                str(item["character_id"]): item for item in topic.get("characters", [])
+            }
+            topic["character_matrix"] = [
+                {
+                    "character_id": str(character["character_id"]),
+                    "name": str(character.get("name") or character["character_id"]),
+                    "state": known_by_character.get(
+                        str(character["character_id"]),
+                        {"state": "UNKNOWN"},
+                    )["state"],
+                    "edge": known_by_character.get(str(character["character_id"])),
+                }
+                for character in chapter_characters
+                if character.get("character_id")
+            ]
+        if truth_id is not None:
+            truth_projection["topics"] = [
+                topic
+                for topic in truth_projection["topics"]
+                if topic["truth"]["truth_id"] == truth_id
+            ]
+        if selected_lens is TruthLens.AUTHOR:
+            truth_knowledge = truth_knowledge_view(
+                database,
+                book_id,
+                selected_edition_id,
+                chapter_ordinal=truth_chapter_ordinal,
+                truth_id=truth_id,
+            )
+            reveal_agenda = build_reveal_agenda(
+                database, book_id, selected_edition_id, truth_chapter_ordinal
+            )
+            secret_board = build_secret_board(
+                database,
+                book_id,
+                selected_edition_id,
+                chapter_ordinal=truth_chapter_ordinal,
+            )
+            open_questions = list_open_creative_questions(
+                database, book_id, selected_edition_id
+            )
+            secret_candidates = list_secret_candidates(
+                database, book_id, selected_edition_id
+            )
+    if selected_lens is not TruthLens.AUTHOR:
+        candidate_cards = []
     return {
         "book": book,
         "book_id": book_id,
@@ -940,7 +1175,9 @@ def build_workbench_context(
         "active_right_tab": _normalise_choice(right_tab, WORKBENCH_RIGHT_TABS, "prose"),
         "state_tab": active_state_tab,
         "selected_character_id": (
-            None if story_game_state is None else story_game_state.get("selected_character_id")
+            character_id
+            if story_game_state is None
+            else story_game_state.get("selected_character_id")
         ),
         "mode_labels": MODE_LABELS,
         "right_tab_labels": RIGHT_TAB_LABELS,
@@ -956,7 +1193,18 @@ def build_workbench_context(
         "book_status_label": _status_label(book.get("readiness_status") or "UNKNOWN"),
         "continuation_package": _continuation_package(selected_draft),
         "story_game_state": story_game_state,
+        "chapter_world_state": story_game_state,
+        "previous_chapter_world_state": previous_story_game_state,
         "author_control": author_control,
+        "truth_lens": selected_lens.value,
+        "truth_id": truth_id,
+        "include_future_truths": include_future_truths,
+        "truth_projection": truth_projection,
+        "truth_knowledge": truth_knowledge,
+        "reveal_agenda": reveal_agenda,
+        "secret_board": secret_board,
+        "open_questions": open_questions,
+        "secret_candidates": secret_candidates,
         "data_ownership": {
             "source": "Book Library source/ and immutable chapters",
             "distill": "book_profil/ author-facing derived view",

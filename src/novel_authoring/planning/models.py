@@ -66,6 +66,8 @@ class ContinuationBoundaryPacket(BaseModel):
     hook_diagnostics: dict[str, Any] = Field(default_factory=dict)
     story_atlas_anchor: dict[str, Any] = Field(default_factory=dict)
     batch_anchor: dict[str, Any] = Field(default_factory=dict)
+    active_author_truths: list[dict[str, Any]] = Field(default_factory=list)
+    reveal_agenda: dict[str, Any] = Field(default_factory=dict)
     innovation_control: InnovationControl = Field(default_factory=InnovationControl)
     innovation_diagnostics: InnovationDiagnostics | None = None
     narrative_portfolio: NarrativePortfolioSnapshot | None = None
@@ -202,6 +204,43 @@ class CandidateProfileAlignment(BaseModel):
         return self
 
 
+class CandidateTruthAlignment(BaseModel):
+    """How a proposal uses a frozen truth without inventing reveal permission."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    truth_id: str
+    title: str = ""
+    behavioral_effect: str = Field(min_length=1)
+    respected: bool = True
+    agenda_bucket: str = "KEEP_HIDDEN"
+    evidence: list[str] = Field(default_factory=list)
+
+
+class CandidateRevealEventPreview(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    truth_id: str
+    depth: str
+    clue: str = ""
+    target: str = "READER"
+    target_entity_id: str | None = None
+    reader_knowledge_delta: str = "UNCHANGED"
+    character_knowledge_delta: dict[str, str] = Field(default_factory=dict)
+
+
+class CandidateRevealImpact(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    secrets_used: list[str] = Field(default_factory=list)
+    hints: list[CandidateRevealEventPreview] = Field(default_factory=list)
+    partial_reveals: list[CandidateRevealEventPreview] = Field(default_factory=list)
+    full_reveals: list[CandidateRevealEventPreview] = Field(default_factory=list)
+    kept_hidden: list[str] = Field(default_factory=list)
+    reader_knowledge_delta: list[str] = Field(default_factory=list)
+    character_knowledge_delta: list[str] = Field(default_factory=list)
+
+
 class CandidateProposal(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -246,6 +285,8 @@ class CandidateProposal(BaseModel):
     profile_alignment: CandidateProfileAlignment = Field(
         default_factory=CandidateProfileAlignment
     )
+    truth_alignment: list[CandidateTruthAlignment] = Field(default_factory=list)
+    reveal_impact: CandidateRevealImpact = Field(default_factory=CandidateRevealImpact)
 
     @model_validator(mode="after")
     def reject_retroactive_invention(self) -> CandidateProposal:
@@ -315,3 +356,6 @@ class ChapterContract(BaseModel):
     narrative_portfolio: NarrativePortfolioSnapshot | None = None
     innovation_trace: InnovationTrace | None = None
     effective_book_profile: dict[str, Any] = Field(default_factory=dict)
+    active_author_truths: list[dict[str, Any]] = Field(default_factory=list)
+    reveal_agenda: dict[str, Any] = Field(default_factory=dict)
+    truth_reveal_commitments: dict[str, Any] = Field(default_factory=dict)

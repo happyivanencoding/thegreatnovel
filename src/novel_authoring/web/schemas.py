@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from novel_authoring.author_control.book_profile import (
     ProfileEditOperation,
@@ -13,6 +13,8 @@ from novel_authoring.author_control.models import (
     AuthorIntentStatus,
     AuthorTaskLifecycle,
 )
+from novel_authoring.author_control.reveal import AgendaBucket, KnowledgeState, RevealDepth
+from novel_authoring.author_control.truth import TruthCompatibilityEvidenceInput
 from novel_authoring.metrics.models import MetricComponentStatus, ObservationSourceKind
 from novel_authoring.planning.innovation import InnovationFocus, InnovationLevel
 
@@ -153,3 +155,103 @@ class BookProfileProposalResolutionRequest(BaseModel):
 
     action: str
     edited_baseline: dict[str, Any] | None = None
+
+
+class ProfileReanalysisRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    context_chapter_id: str | None = None
+
+
+class TruthCompatibilityRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    evidence: list[TruthCompatibilityEvidenceInput] = Field(default_factory=list)
+
+
+class AuthorTruthUpdateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    changes: dict[str, Any]
+
+
+class OpenCreativeQuestionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    title: str = Field(min_length=1)
+    question: str = Field(min_length=1)
+    subject_type: str | None = None
+    subject_id: str | None = None
+    horizon: Literal["SHORT", "MID", "LONG"] = "LONG"
+
+
+class SecretCandidateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    title: str = Field(min_length=1)
+    statement: str = Field(min_length=1)
+    truth_type: str = "CUSTOM"
+    subject_type: str | None = None
+    subject_id: str | None = None
+    evidence: list[dict[str, Any]] = Field(default_factory=list)
+    confidence: float = Field(default=0.5, ge=0, le=1)
+    source: str = "INITIALIZATION_INFERRED"
+
+
+class SecretCandidateResolutionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    action: str
+    effective_from_chapter: int | None = Field(default=None, ge=1)
+    compatibility_evidence: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class KnowledgeUpdateRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    state: KnowledgeState
+    chapter_ordinal: int | None = Field(default=None, ge=0)
+    evidence: list[dict[str, Any]] = Field(default_factory=list)
+    mode: str = "AUTHOR_PLANNING"
+    character_id: str | None = None
+
+
+class RevealAgendaOverrideRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    truth_id: str
+    chapter_ordinal: int = Field(ge=1)
+    agenda_bucket: AgendaBucket
+    reveal_depth: RevealDepth | None = None
+    reason: str = "作者手动调整本章揭示安排"
+
+
+class HiddenItemRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1)
+    category: Literal["ITEM", "EQUIPMENT", "RESOURCE"] = "ITEM"
+    description: str = ""
+    effective_from_chapter: int = Field(ge=1)
+    location_id: str | None = None
+    owner_id: str | None = None
+    horizon: Literal["SHORT", "MID", "LONG"] = "MID"
+    priority: int = Field(default=100, ge=0)
+    reveal_depth: RevealDepth = RevealDepth.HINT
+    target_chapter_min: int | None = Field(default=None, ge=1)
+    target_chapter_max: int | None = Field(default=None, ge=1)
+
+    @model_validator(mode="after")
+    def valid_reveal_window(self) -> HiddenItemRequest:
+        if (
+            self.target_chapter_min is None
+            and self.target_chapter_max is not None
+        ):
+            raise ValueError("填写揭示窗口结束章时必须同时填写起始章")
+        if (
+            self.target_chapter_min is not None
+            and self.target_chapter_max is not None
+            and self.target_chapter_max < self.target_chapter_min
+        ):
+            raise ValueError("揭示窗口结束章不得早于起始章")
+        return self
