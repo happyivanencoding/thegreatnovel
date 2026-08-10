@@ -904,6 +904,8 @@
   function loadWorkbench(link, push) {
     var currentRoot = document.querySelector("[data-workbench-shell]");
     var href = push && currentRoot ? addWorkbenchState(link.href, currentRoot) : link.href;
+    var scrollX = window.scrollX;
+    var scrollY = window.scrollY;
     fetch(href, { headers: { Accept: "text/html" } }).then(function (response) {
       if (!response.ok) throw new Error("Workbench 页面加载失败");
       return response.text();
@@ -922,6 +924,7 @@
       if (parsed.title) document.title = parsed.title;
       if (push) window.history.pushState({}, "", href);
       initWorkbench();
+      window.scrollTo(scrollX, scrollY);
     }).catch(function () { window.location.href = link.href; });
   }
 
