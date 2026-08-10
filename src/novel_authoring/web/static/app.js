@@ -906,6 +906,9 @@
     var href = push && currentRoot ? addWorkbenchState(link.href, currentRoot) : link.href;
     var scrollX = window.scrollX;
     var scrollY = window.scrollY;
+    var currentTree = currentRoot ? currentRoot.querySelector(".wb-tree") : null;
+    var treeScrollLeft = currentTree ? currentTree.scrollLeft : 0;
+    var treeScrollTop = currentTree ? currentTree.scrollTop : 0;
     fetch(href, { headers: { Accept: "text/html" } }).then(function (response) {
       if (!response.ok) throw new Error("Workbench 页面加载失败");
       return response.text();
@@ -924,7 +927,14 @@
       if (parsed.title) document.title = parsed.title;
       if (push) window.history.pushState({}, "", href);
       initWorkbench();
-      window.scrollTo(scrollX, scrollY);
+      window.requestAnimationFrame(function () {
+        window.scrollTo(scrollX, scrollY);
+        var nextTree = next.querySelector(".wb-tree");
+        if (nextTree) {
+          nextTree.scrollLeft = treeScrollLeft;
+          nextTree.scrollTop = treeScrollTop;
+        }
+      });
     }).catch(function () { window.location.href = link.href; });
   }
 
