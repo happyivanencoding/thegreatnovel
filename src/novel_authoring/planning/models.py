@@ -141,6 +141,35 @@ class NoveltyDeclaration(BaseModel):
         return self
 
 
+class AuthorTaskTraceHit(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: str
+    title: str
+    effect: str
+    strength: str
+
+
+class AuthorIntentTraceHit(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    intent_id: str
+    title: str
+    effect: str
+    strength: str
+
+
+class AuthorControlTrace(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    author_task_hits: list[AuthorTaskTraceHit] = Field(default_factory=list)
+    author_intent_hits: list[AuthorIntentTraceHit] = Field(default_factory=list)
+    author_tasks_advanced: list[str] = Field(default_factory=list)
+    author_intents_advanced: list[str] = Field(default_factory=list)
+    author_goals_not_used: list[str] = Field(default_factory=list)
+    unused_reasons: dict[str, str] = Field(default_factory=dict)
+
+
 class CandidateProposal(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -181,6 +210,7 @@ class CandidateProposal(BaseModel):
     novelty_provenance: list[NoveltyDeclaration] = Field(default_factory=list)
     wildcard: bool = False
     innovation_preview: CandidateInnovationPreview | None = None
+    author_control_trace: AuthorControlTrace = Field(default_factory=AuthorControlTrace)
 
     @model_validator(mode="after")
     def reject_retroactive_invention(self) -> CandidateProposal:

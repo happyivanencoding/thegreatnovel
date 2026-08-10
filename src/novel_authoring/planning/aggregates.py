@@ -210,7 +210,36 @@ def _author_control_policy(
         "target_hits": {
             "task_count": len(tasks),
             "intent_count": len(intents),
+            "task_ids": [item["task_id"] for item in tasks],
+            "intent_ids": [item["intent_id"] for item in intents],
+            "targets": [
+                {
+                    "id": item["task_id"],
+                    "kind": "AUTHOR_TASK",
+                    "title": item["title"],
+                }
+                for item in tasks
+            ]
+            + [
+                {
+                    "id": item["intent_id"],
+                    "kind": "AUTHOR_INTENT",
+                    "title": item["title"],
+                }
+                for item in intents
+            ],
             "priority_order": "priority asc, horizon, updated_at desc",
+        },
+        "trace_contract": {
+            "required": [
+                "author_task_hits",
+                "author_intent_hits",
+                "author_tasks_advanced",
+                "author_intents_advanced",
+                "author_goals_not_used",
+                "unused_reasons",
+            ],
+            "hard_gates_win": True,
         },
         "rule": "候选必须读取作者任务/意图；命中只作为可追溯规划输入，不改变评分硬门。",
     }

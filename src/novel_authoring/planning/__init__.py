@@ -12,6 +12,9 @@ from typing import Any
 
 _EXPORTS: dict[str, tuple[str, str]] = {
     "build_boundary_packet": ("novel_authoring.planning.boundary", "build_boundary_packet"),
+    "AuthorControlTrace": ("novel_authoring.planning.models", "AuthorControlTrace"),
+    "AuthorIntentTraceHit": ("novel_authoring.planning.models", "AuthorIntentTraceHit"),
+    "AuthorTaskTraceHit": ("novel_authoring.planning.models", "AuthorTaskTraceHit"),
     "BatchChunkPlan": ("novel_authoring.planning.batch", "BatchChunkPlan"),
     "BatchChapterValidation": ("novel_authoring.planning.batch", "BatchChapterValidation"),
     "BatchError": ("novel_authoring.planning.batch", "BatchError"),

@@ -113,6 +113,7 @@ class CommandResolution(BaseModel):
     planned_change: PlannedStateChange | None = None
     intent: AuthorIntent | None = None
     task: AuthorTask | None = None
+    handoff: dict[str, Any] | None = None
     history_id: str | None = None
     canon_changed: bool = False
 

@@ -19,7 +19,7 @@
       <td>{{ item.handoff_type }}<br>{{ item.requested_stage }}</td>
       <td><span class="status status-{{ item.status|lower }}">{{ item.status }}</span>{% if item.stale_reason %}<br><small>STALE: {{ item.stale_reason }}</small>{% endif %}</td>
       <td>{% if item.waiting_for_user %}<span class="badge">需要作者输入</span><br>{{ item.waiting_for_user.question or item.waiting_for_user.requested_action or '请查看 waiting 文件' }}{% else %}—{% endif %}</td>
-      <td><a href="/api/handoffs/{{ item.handoff_id }}">JSON</a> · <a href="/api/handoffs/{{ item.handoff_id }}/instruction">指令</a><br><button type="button" class="button compact" data-copy-instruction="/api/handoffs/{{ item.handoff_id }}/instruction">复制指令</button></td>
+      <td><a href="/api/handoffs/{{ item.handoff_id }}">JSON</a> · <a href="/api/books/{{ book_id }}/editions/{{ item.edition_id }}/handoffs/{{ item.handoff_id }}/instruction">指令</a><br><button type="button" class="button compact" data-copy-instruction="/api/books/{{ book_id }}/editions/{{ item.edition_id }}/handoffs/{{ item.handoff_id }}/instruction">复制指令</button>{% if item.handoff_type == 'SOURCE_STATE_HYDRATION' %}<button type="button" class="button compact" data-hydration-collect="/api/books/{{ book_id }}/editions/{{ item.edition_id }}/source-state-hydration/{{ item.handoff_id }}/collect">收集结果</button>{% endif %}</td>
     </tr>
     {% else %}<tr><td colspan="5">暂无任务。</td></tr>{% endfor %}
     </tbody>

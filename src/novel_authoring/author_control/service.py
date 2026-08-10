@@ -126,6 +126,7 @@ def _resolution(
     planned_change: PlannedStateChange | None = None,
     intent: AuthorIntent | None = None,
     task: AuthorTask | None = None,
+    handoff: dict[str, Any] | None = None,
     history_id: str | None = None,
 ) -> CommandResolution:
     return CommandResolution(
@@ -136,6 +137,7 @@ def _resolution(
         planned_change=planned_change,
         intent=intent,
         task=task,
+        handoff=handoff,
         history_id=history_id,
         canon_changed=False,
     )
@@ -529,12 +531,16 @@ def _request_source_state_hydration(
         ).fetchone()
     if existing is not None:
         task = _task_from_row(existing)
+        task, handoff = _ensure_source_state_hydration_handoff(
+            database, book_id, edition_id, task, chapter_id
+        )
         return _resolution(
             CommandResult.PLANNED,
             "SOURCE_STATE_HYDRATION_ALREADY_QUEUED",
             f"第{int(chapter['ordinal'])}章的故事状态补齐任务已经在队列中。",
             allowed_actions=["PROCESS_SOURCE_STATE_HYDRATION"],
             task=task,
+            handoff=handoff,
             planned_change=PlannedStateChange(
                 change_type="SOURCE_STATE_HYDRATION",
                 target_layer="AUTHOR_CONTROL",
@@ -543,7 +549,7 @@ def _request_source_state_hydration(
                 description=task.title,
             ),
         )
-    return execute_author_task(
+    resolution = execute_author_task(
         database,
         book_id,
         edition_id,
@@ -566,6 +572,131 @@ def _request_source_state_hydration(
             "source_state_action": "READ_SOURCE_AND_RECORD_DELTAS",
         },
     )
+    if resolution.task is None:
+        raise RuntimeError("Source State hydration task 创建失败")
+    task, handoff = _ensure_source_state_hydration_handoff(
+        database, book_id, edition_id, resolution.task, chapter_id
+    )
+    return _resolution(
+        CommandResult.PLANNED,
+        "SOURCE_STATE_HYDRATION_HANDOFF_READY",
+        "章节状态任务已准备为 Codex handoff；完成结构化导入后会自动回写任务状态。",
+        allowed_actions=["OPEN_HANDOFF", "COPY_CODEX_INSTRUCTION", "COLLECT_RESULT"],
+        task=task,
+        handoff=handoff,
+        history_id=resolution.history_id,
+        planned_change=resolution.planned_change,
+    )
+
+
+def _ensure_source_state_hydration_handoff(
+    database: Database,
+    book_id: str,
+    edition_id: str,
+    task: AuthorTask,
+    chapter_id: str,
+) -> tuple[AuthorTask, dict[str, Any]]:
+    payload = dict(task.payload)
+    handoff_id = str(payload.get("handoff_id") or "").strip()
+    if not handoff_id:
+        from novel_authoring.workflows.handoffs import create_source_state_hydration_handoff
+
+        created = create_source_state_hydration_handoff(
+            database,
+            book_id,
+            edition_id=edition_id,
+            chapter_id=chapter_id,
+            task_id=task.task_id,
+        )
+        handoff_id = str(created["handoff_id"])
+        payload.update(
+            {
+                "handoff_id": handoff_id,
+                "hydration_status": "READY_FOR_CODEX",
+                "task_directory": created.get("task_directory"),
+            }
+        )
+        updated = _update_task(
+            database, book_id, edition_id, task.task_id, {"payload": payload}
+        )
+        task = updated.task or task
+    else:
+        with database.connect() as connection:
+            row = connection.execute(
+                "SELECT status, task_directory FROM workflow_handoffs WHERE handoff_id=? "
+                "AND book_id=? AND edition_id=?",
+                (handoff_id, book_id, edition_id),
+            ).fetchone()
+        if row is not None:
+            payload.setdefault("task_directory", str(row["task_directory"]))
+            payload.setdefault("hydration_status", str(row["status"]))
+    status = str(payload.get("hydration_status") or "READY_FOR_CODEX")
+    directory = str(payload.get("task_directory") or "")
+    return task, {
+        "handoff_id": handoff_id,
+        "status": status,
+        "task_id": task.task_id,
+        "chapter_id": chapter_id,
+        "task_directory": directory,
+        "instruction_url": (
+            f"/api/books/{book_id}/editions/{edition_id}/handoffs/"
+            f"{handoff_id}/instruction"
+        ),
+        "result_url": (
+            f"/api/books/{book_id}/editions/{edition_id}/handoffs/"
+            f"{handoff_id}/result"
+        ),
+        "collect_url": (
+            f"/api/books/{book_id}/editions/{edition_id}/source-state-hydration/"
+            f"{handoff_id}/collect"
+        ),
+    }
+
+
+def complete_source_state_hydration_task(
+    database: Database, handoff_id: str, *, result: dict[str, Any]
+) -> AuthorTask | None:
+    """Close the linked planning task after the source ledger import succeeds."""
+
+    database.initialize()
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT * FROM author_control_tasks WHERE task_type='SOURCE_STATE_HYDRATION'"
+            " AND json_extract(payload_json, '$.handoff_id')=? "
+            "ORDER BY updated_at DESC LIMIT 1",
+            (handoff_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        task = _task_from_row(row)
+        if task.lifecycle_status is AuthorTaskLifecycle.DONE:
+            return task
+        before = task.model_dump(mode="json")
+        payload = dict(task.payload)
+        payload["hydration_status"] = "COMPLETED"
+        payload["imported_delta_count"] = len(result.get("deltas", []))
+        connection.execute(
+            "UPDATE author_control_tasks SET lifecycle_status='DONE', payload_json=?, "
+            "updated_at=?, version=version+1 WHERE task_id=?",
+            (_json(payload), utc_now(), task.task_id),
+        )
+        updated_row = connection.execute(
+            "SELECT * FROM author_control_tasks WHERE task_id=?", (task.task_id,)
+        ).fetchone()
+        if updated_row is None:
+            raise RuntimeError("Source State hydration task 完成后无法读取")
+        updated = _task_from_row(updated_row)
+        _history(
+            connection,
+            book_id=task.book_id,
+            edition_id=task.edition_id,
+            object_type="TASK",
+            object_id=task.task_id,
+            action_type="SOURCE_STATE_HYDRATION_COMPLETED",
+            before=before,
+            after=updated.model_dump(mode="json"),
+        )
+        return updated
 
 
 def execute_author_command(
@@ -756,6 +887,7 @@ def author_control_view(database: Database, book_id: str, edition_id: str) -> di
 
 __all__ = [
     "author_control_view",
+    "complete_source_state_hydration_task",
     "execute_author_command",
     "execute_author_intent",
     "execute_author_task",

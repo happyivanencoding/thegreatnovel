@@ -27,6 +27,7 @@ from novel_authoring.author_control.source_state import (
     SourceStateOperation,
     SourceStateVerification,
     build_source_state_projection,
+    derive_state_key,
     record_source_chapter_deltas,
 )
 
@@ -49,5 +50,6 @@ __all__ = [
     "SourceStateOperation",
     "SourceStateVerification",
     "build_source_state_projection",
+    "derive_state_key",
     "record_source_chapter_deltas",
 ]

@@ -30,6 +30,13 @@ Codex 桌面客户端是唯一 LLM 执行者。先读取任务目录，再由 Py
   `DISTILLED`，由 `novel distill import` 显式发布为 `REFERENCE_ONLY`，不得写入 Canon。
 - `BATCH_CONTINUATION`：调用 `$continue-novel-batch`，必须绑定 batch/chunk，逐章保留
   Boundary、Contract、十项 Validator 和 provisional hash；`BATCH_VALIDATED` 不是批准。
+- `SOURCE_STATE_HYDRATION`：读取 `hydration_context.json` 中的当前章节全文、当前章节
+  source spans、上一时间点的 Source State projection，以及仅供召回的实体和 Baseline/
+  Atlas hints。只输出结构化 `deltas` 与 `uncertain_findings`，不得用 prose-only 摘要
+  代替；`SOURCE_VERIFIED` 必须引用当前章节 span，物品/装备/资源/能力/知识/关系必须
+  使用稳定 `object_id`。Python 导入门会再次校验并写入 Source State Ledger，之后才会
+  将关联 Author Task 标记为 DONE；不得写 `book/`、Canon Event Store、Canon Commit、
+  Edition 或 Author Intent。
 
 禁止修改 `book/`、批准正史、批准改写 Campaign、启用 Edition、删除历史草稿或绕过 Validator。不要使用 OpenAI API、`codex exec`、模型参数、API Key、shell 命令或任何 subprocess。
 

@@ -53,6 +53,7 @@ class HandoffType(StrEnum):
     BATCH_CONTINUATION = "BATCH_CONTINUATION"
     NOVEL_INITIALIZATION = "NOVEL_INITIALIZATION"
     NOVEL_DISTILLATION = "NOVEL_DISTILLATION"
+    SOURCE_STATE_HYDRATION = "SOURCE_STATE_HYDRATION"
 
 
 class HandoffWorkflowError(RuntimeError):
@@ -160,6 +161,8 @@ class WorkflowHandoffResult(BaseModel):
                 raise ValueError("NOVEL_DISTILLATION 完成结果必须包含 distill_source_ids")
             if not self.distill_skill_root:
                 raise ValueError("NOVEL_DISTILLATION 完成结果必须包含 distill_skill_root")
+        if atlas_type == HandoffType.SOURCE_STATE_HYDRATION.value:
+            raise ValueError("SOURCE_STATE_HYDRATION 使用专用结果合同")
         compatible = {
             "PLAN_ONLY": {"PLAN_ONLY", "PLANNED", "CANDIDATES"},
             "DRAFT_AND_VALIDATE": {"DRAFT_AND_VALIDATE", "VALIDATED_DRAFT", "VALIDATED"},
@@ -188,6 +191,25 @@ class WorkflowHandoffResult(BaseModel):
         if requested in compatible and completed not in compatible[requested]:
             raise ValueError(f"requested_stage={requested} 与 completed_stage={completed} 不兼容")
         return self
+
+
+class SourceStateHydrationResult(BaseModel):
+    """Structured chapter reading result; it can never commit Canon."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    handoff_id: str | None = None
+    handoff_type: str = HandoffType.SOURCE_STATE_HYDRATION.value
+    status: str = "COMPLETED"
+    book_id: str
+    edition_id: str
+    chapter_id: str
+    chapter_ordinal: int = Field(ge=1)
+    deltas: list[dict[str, Any]] = Field(default_factory=list)
+    uncertain_findings: list[dict[str, Any]] = Field(default_factory=list)
+    validation_summary: dict[str, Any] = Field(default_factory=dict)
+    canon_committed: Literal[False] = False
+    edition_activated: Literal[False] = False
 
 
 class WaitingForUser(BaseModel):
@@ -237,6 +259,7 @@ _OPERATION_INPUT_FILES = {
     "metric_context.json",
     "context_manifest.json",
     "output_schema.json",
+    "hydration_context.json",
 }
 
 
@@ -356,6 +379,7 @@ def create_handoff(
     context_chapter_id: str | None = None,
     author_goal: str | None = None,
     author_task_ids: list[str] | None = None,
+    hydration_request: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     database.initialize()
     selected = resolve_edition_id(database, book_id, edition_id)
@@ -373,6 +397,7 @@ def create_handoff(
     edition_status = None if edition_row is None else str(edition_row["status"])
     initialization_handoff = handoff_type is HandoffType.NOVEL_INITIALIZATION
     distill_handoff = handoff_type is HandoffType.NOVEL_DISTILLATION
+    hydration_handoff = handoff_type is HandoffType.SOURCE_STATE_HYDRATION
     selected_innovation: InnovationControl | None = None
     requested_innovation_source = innovation_source
     innovation_source = ""
@@ -388,14 +413,20 @@ def create_handoff(
             selected_innovation, innovation_source = resolve_innovation_control(
                 database, book_id
             )
-    if initialization_handoff or distill_handoff:
+    if initialization_handoff or distill_handoff or hydration_handoff:
         # Initialization and distill are upstream analysis handoffs. They must
         # not require a planning aggregate or a completed metric run.
         metric_context = {
-            "scope_type": "INITIALIZATION" if initialization_handoff else "DISTILL",
+            "scope_type": (
+                "INITIALIZATION"
+                if initialization_handoff
+                else "SOURCE_STATE_HYDRATION"
+                if hydration_handoff
+                else "DISTILL"
+            ),
             "scope_id": selected,
             "input_bundle_hash": "",
-            "semantic_metrics_deferred": initialization_handoff,
+            "semantic_metrics_deferred": initialization_handoff or hydration_handoff,
             "registry_hash": load_registry().registry_hash,
             "config_hash": sha256_bytes(json_dumps(load_settings().metrics).encode("utf-8")),
         }
@@ -616,6 +647,33 @@ def create_handoff(
         "expected_outputs": ["events.jsonl", "result.json", "status.json"],
         "task_schema_version": "handoff-v1",
     }
+    if hydration_handoff:
+        if not isinstance(hydration_request, dict):
+            raise HandoffWorkflowError("SOURCE_STATE_HYDRATION handoff 缺少 hydration_request")
+        task.update(
+            {
+                "hydration": hydration_request,
+                "hydration_contract": {
+                    "required_input": [
+                        "task.json",
+                        "hydration_context.json",
+                        "output_schema.json",
+                    ],
+                    "required_output_fields": [
+                        "book_id",
+                        "edition_id",
+                        "chapter_id",
+                        "chapter_ordinal",
+                        "deltas",
+                        "uncertain_findings",
+                    ],
+                    "delta_semantics": "SOURCE_STATE_ONLY",
+                    "canon_boundary": "NO_CANON_COMMIT",
+                    "executor": "Windows Codex desktop",
+                },
+                "planning_aggregate_required": False,
+            }
+        )
     if distill_reference is not None:
         task["distill_reference"] = distill_reference
     if distill_handoff and frozen_distill_request is not None:
@@ -695,6 +753,7 @@ def create_handoff(
         HandoffType.BATCH_CONTINUATION: "continue-novel-batch",
         HandoffType.NOVEL_INITIALIZATION: "initialize-existing-novel",
         HandoffType.NOVEL_DISTILLATION: "distill-novels",
+        HandoffType.SOURCE_STATE_HYDRATION: "process-novel-handoff",
     }.get(handoff_type, "continue-novel")
     atlas_instruction = ""
     if handoff_type in {
@@ -725,6 +784,13 @@ def create_handoff(
             "只把抽象、可迁移的写作机制写入 artifacts/distill_skill/。"
             "不得复制来源正文、不得把来源人物/设定/事件写入 Canon；完成后停在 DISTILLED，"
             "由 Python 的 novel distill import 显式发布为 REFERENCE_ONLY。"
+        )
+    elif hydration_handoff:
+        atlas_instruction = (
+            "读取 hydration_context.json 中的本章完整 Source Text 和 source spans；"
+            "只输出结构化 SourceChapterStateDelta[] 与 uncertain_findings，不输出 prose-only 结果。"
+            "每个 SOURCE_VERIFIED delta 必须引用本章 source span 和稳定 object_id；"
+            "不要修改 book、Canon 或 Author Intent。"
         )
     if distill_reference is not None:
         atlas_instruction += (
@@ -760,11 +826,14 @@ def create_handoff(
         f"{atlas_instruction}\n\n"
         f"{author_context_instruction}\n\n"
         "严格读取任务目录中的 task.json、prompt.md、metric_context.json、"
-        "context_manifest.json 和 output_schema.json。\n"
+        "context_manifest.json、output_schema.json 和（如存在）hydration_context.json。\n"
         "不得修改 book；不得批准写入正史；不得批准改写 Campaign；不得启用 Edition。\n"
         "结束时必须严格按 output_schema.json 写回 result.json 和 status.json；"
         "需要作者决定时写 waiting_for_user.json 并进入 WAITING_FOR_USER。"
     )
+    manifest_paths = ["task.json", "prompt.md", "metric_context.json", "output_schema.json"]
+    if hydration_handoff:
+        manifest_paths.append("hydration_context.json")
     context_manifest = {
         "book_id": book_id,
         "edition_id": selected,
@@ -792,7 +861,7 @@ def create_handoff(
         "effective_content_sha256": task["effective_content_sha256"],
         "edition_status": edition_status,
         "frozen_at": task["created_at"],
-        "paths": ["task.json", "prompt.md", "metric_context.json", "output_schema.json"],
+        "paths": manifest_paths,
     }
     output_schema = WorkflowHandoffResult.model_json_schema()
     output_schema["additionalProperties"] = False
@@ -853,6 +922,22 @@ def create_handoff(
             ]
         },
     }
+    if hydration_handoff:
+        output_schema = SourceStateHydrationResult.model_json_schema()
+        output_schema["additionalProperties"] = False
+        output_schema["required"] = [
+            "book_id",
+            "edition_id",
+            "chapter_id",
+            "chapter_ordinal",
+            "deltas",
+            "uncertain_findings",
+        ]
+        output_schema["x-source-state-hydration"] = {
+            "requires_current_chapter_spans": True,
+            "writes_canon": False,
+            "writes_book": False,
+        }
     if initialization_handoff:
         output_schema["required"].extend(
             [
@@ -935,6 +1020,7 @@ def create_handoff(
             "metric_context.json",
             "context_manifest.json",
             "output_schema.json",
+            "hydration_context.json",
         )
     }
     status_path = task_directory / "status.json"
@@ -951,11 +1037,21 @@ def create_handoff(
             input_files[name].write_text(value, encoding="utf-8")
         else:
             _write_json(input_files[name], value)
+    if hydration_handoff:
+        _write_json(input_files["hydration_context.json"], hydration_request or {})
+    else:
+        input_files.pop("hydration_context.json", None)
     _write_json(status_path, status_json)
     _write_json(result_path, {})
     file_hashes: dict[str, str] = {
         name: sha256_file(input_files[name])
-        for name in ("task.json", "prompt.md", "metric_context.json", "output_schema.json")
+        for name in (
+            "task.json",
+            "prompt.md",
+            "metric_context.json",
+            "output_schema.json",
+            *(["hydration_context.json"] if hydration_handoff else []),
+        )
     }
     context_manifest["file_hashes"] = file_hashes
     if distill_handoff:
@@ -1056,6 +1152,81 @@ def create_handoff(
 
 def create_continuation_handoff(database: Database, book_id: str, **kwargs: Any) -> dict[str, Any]:
     return create_handoff(database, book_id, handoff_type=HandoffType.CONTINUATION, **kwargs)
+
+
+def create_source_state_hydration_handoff(
+    database: Database,
+    book_id: str,
+    *,
+    edition_id: str,
+    chapter_id: str,
+    task_id: str,
+) -> dict[str, Any]:
+    """Freeze a real chapter-reading handoff for the Codex desktop client."""
+
+    database.initialize()
+    with database.connect() as connection:
+        chapter = connection.execute(
+            "SELECT chapter_id, ordinal, title, content, content_sha256 FROM chapters "
+            "WHERE book_id=? AND chapter_id=?",
+            (book_id, chapter_id),
+        ).fetchone()
+        if chapter is None:
+            raise HandoffWorkflowError("hydration 章节不存在")
+        spans = [
+            dict(row)
+            for row in connection.execute(
+                "SELECT span_id, chapter_id, kind, start_line, end_line, start_char, "
+                "end_char, excerpt FROM source_spans WHERE book_id=? AND chapter_id=? "
+                "ORDER BY start_line, span_id",
+                (book_id, chapter_id),
+            ).fetchall()
+        ]
+        if not spans:
+            raise HandoffWorkflowError("hydration 章节没有可用 source span")
+        prior_ordinal = int(chapter["ordinal"]) - 1
+        from novel_authoring.author_control.source_state import build_source_state_projection
+
+        prior_projection = build_source_state_projection(
+            connection,
+            book_id,
+            edition_id,
+            chapter_id=None,
+            chapter_ordinal=prior_ordinal if prior_ordinal > 0 else 0,
+        )
+        entities = [
+            dict(row)
+            for row in connection.execute(
+                "SELECT entity_id, entity_type, name, aliases_json, status, payload_json "
+                "FROM entities WHERE book_id=? ORDER BY entity_type, name, entity_id LIMIT 500",
+                (book_id,),
+            ).fetchall()
+        ]
+    hydration = {
+        "book_id": book_id,
+        "edition_id": edition_id,
+        "chapter_id": str(chapter["chapter_id"]),
+        "chapter_ordinal": int(chapter["ordinal"]),
+        "chapter_title": str(chapter["title"]),
+        "source_text": str(chapter["content"]),
+        "source_content_sha256": str(chapter["content_sha256"]),
+        "source_spans": spans,
+        "prior_source_state_projection": prior_projection,
+        "relevant_entities": entities,
+        "runtime_baseline_recall_hints": [],
+        "story_atlas_recall_hints": [],
+        "author_task_id": task_id,
+    }
+    return create_handoff(
+        database,
+        book_id,
+        handoff_type=HandoffType.SOURCE_STATE_HYDRATION,
+        requested_stage="SOURCE_STATE_HYDRATION",
+        edition_id=edition_id,
+        context_chapter_id=chapter_id,
+        author_task_ids=[task_id],
+        hydration_request=hydration,
+    )
 
 
 def create_revision_handoff(database: Database, book_id: str, **kwargs: Any) -> dict[str, Any]:
@@ -1329,7 +1500,7 @@ def validate_handoff_result(
     result: dict[str, Any],
     *,
     require_completed_status: bool = False,
-) -> WorkflowHandoffResult:
+) -> WorkflowHandoffResult | SourceStateHydrationResult:
     """Validate result.json against the frozen task and filesystem contract."""
     with database.connect() as connection:
         row = connection.execute(
@@ -1342,6 +1513,77 @@ def validate_handoff_result(
         if not task_path.is_file():
             raise HandoffWorkflowError("task.json 缺失")
         task = json.loads(task_path.read_text(encoding="utf-8"))
+        if str(row["handoff_type"]) == HandoffType.SOURCE_STATE_HYDRATION.value:
+            try:
+                parsed_hydration = SourceStateHydrationResult.model_validate(result)
+            except Exception as exc:
+                raise HandoffWorkflowError(
+                    f"result.json 不符合 Source State hydration 合同：{exc}"
+                ) from exc
+            hydration = task.get("hydration")
+            if not isinstance(hydration, dict):
+                raise HandoffWorkflowError("hydration handoff 缺少冻结输入")
+            expected = {
+                "book_id": str(row["book_id"]),
+                "edition_id": str(row["edition_id"]),
+                "chapter_id": str(hydration.get("chapter_id") or ""),
+                "chapter_ordinal": int(hydration.get("chapter_ordinal") or 0),
+            }
+            for field, value in expected.items():
+                if getattr(parsed_hydration, field) != value:
+                    raise HandoffWorkflowError(f"hydration result {field} 与冻结输入不一致")
+            if parsed_hydration.handoff_id not in {None, handoff_id}:
+                raise HandoffWorkflowError("hydration result handoff_id 不一致")
+            if parsed_hydration.handoff_type != HandoffType.SOURCE_STATE_HYDRATION.value:
+                raise HandoffWorkflowError("hydration result handoff_type 不一致")
+            from novel_authoring.author_control.source_state import (
+                SourceChapterStateDelta,
+                SourceStateVerification,
+            )
+
+            chapter = connection.execute(
+                "SELECT chapter_id, ordinal FROM chapters WHERE book_id=? AND chapter_id=?",
+                (expected["book_id"], expected["chapter_id"]),
+            ).fetchone()
+            if chapter is None or int(chapter["ordinal"]) != expected["chapter_ordinal"]:
+                raise HandoffWorkflowError("hydration result 章节不存在或序号不一致")
+            for raw_delta in parsed_hydration.deltas:
+                try:
+                    delta = SourceChapterStateDelta.model_validate(raw_delta)
+                except Exception as exc:
+                    raise HandoffWorkflowError(f"hydration delta 无效：{exc}") from exc
+                if (
+                    delta.book_id != expected["book_id"]
+                    or delta.edition_id != expected["edition_id"]
+                    or delta.chapter_id != expected["chapter_id"]
+                    or delta.chapter_ordinal != expected["chapter_ordinal"]
+                ):
+                    raise HandoffWorkflowError("hydration delta 越过冻结章节边界")
+                if delta.verification_status is SourceStateVerification.SOURCE_VERIFIED:
+                    if not delta.source_span_ids:
+                        raise HandoffWorkflowError("SOURCE_VERIFIED delta 必须带本章 source span")
+                    placeholders = ",".join("?" for _ in delta.source_span_ids)
+                    span_rows = connection.execute(
+                        "SELECT span_id, chapter_id FROM source_spans "
+                        f"WHERE book_id=? AND span_id IN ({placeholders})",
+                        (expected["book_id"], *delta.source_span_ids),
+                    ).fetchall()
+                    found = {
+                        str(item["span_id"]): str(item["chapter_id"] or "")
+                        for item in span_rows
+                    }
+                    if set(delta.source_span_ids) - set(found):
+                        raise HandoffWorkflowError("hydration delta 引用了不存在的 source span")
+                    if any(value != expected["chapter_id"] for value in found.values()):
+                        raise HandoffWorkflowError("hydration delta evidence 必须属于当前章节")
+            if require_completed_status:
+                status_path = task_directory / "status.json"
+                if not status_path.is_file():
+                    raise HandoffWorkflowError("status.json 缺失")
+                status_payload = json.loads(status_path.read_text(encoding="utf-8"))
+                if str(status_payload.get("status")) != HandoffStatus.COMPLETED.value:
+                    raise HandoffWorkflowError("status.json 与 hydration result 状态不一致")
+            return parsed_hydration
         required_fields = {
             "handoff_id",
             "handoff_type",
@@ -1414,14 +1656,14 @@ def validate_handoff_result(
             raise HandoffWorkflowError(f"result.json 不符合 WorkflowHandoffResult：{exc}") from exc
         if parsed.handoff_id != handoff_id:
             raise HandoffWorkflowError("result handoff_id 不一致")
-        for field, expected in (
+        for field, expected_value in (
             ("handoff_type", str(row["handoff_type"])),
             ("book_id", str(row["book_id"])),
             ("edition_id", str(row["edition_id"])),
             ("base_event_seq", int(row["base_event_seq"])),
             ("base_projection_hash", str(row["base_projection_hash"])),
         ):
-            if getattr(parsed, field) != expected:
+            if getattr(parsed, field) != expected_value:
                 raise HandoffWorkflowError(f"result {field} 与冻结 handoff 不一致")
         if row["metric_bundle_hash"] and parsed.metric_bundle_hash != str(
             row["metric_bundle_hash"]
@@ -1490,7 +1732,8 @@ def update_handoff_status(
     result: dict[str, Any] | None = None,
     error_message: str | None = None,
 ) -> dict[str, Any]:
-    validated_result: WorkflowHandoffResult | None = None
+    validated_result: WorkflowHandoffResult | SourceStateHydrationResult | None = None
+    hydration_result: SourceStateHydrationResult | None = None
     drift_reason: str | None = None
     invalid_result_reason: str | None = None
     if status == HandoffStatus.COMPLETED:
@@ -1499,8 +1742,57 @@ def update_handoff_status(
         try:
             validated_result = validate_handoff_result(database, handoff_id, result)
             result = validated_result.model_dump(mode="json")
+            if isinstance(validated_result, SourceStateHydrationResult):
+                hydration_result = validated_result
         except HandoffWorkflowError as exc:
             invalid_result_reason = str(exc)
+    if hydration_result is not None and invalid_result_reason is None:
+        from novel_authoring.author_control.source_state import (
+            SourceChapterStateDelta,
+            record_source_chapter_deltas,
+        )
+
+        with database.connect() as connection:
+            frozen = connection.execute(
+                "SELECT * FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)
+            ).fetchone()
+            if frozen is None or str(frozen["claim_token"] or "") != claim_token:
+                raise HandoffWorkflowError("claim_token 无效")
+            if str(frozen["status"]) != HandoffStatus.RUNNING.value:
+                raise HandoffWorkflowError("只有 RUNNING hydration handoff 可以导入结果")
+            frozen_drift = _drift_reasons(database, connection, frozen)
+        if frozen_drift:
+            # The main transition below records STALE_RESULT and leaves the
+            # ledger untouched.
+            pass
+        else:
+            try:
+                deltas = [
+                    SourceChapterStateDelta.model_validate(item)
+                    for item in hydration_result.deltas
+                ]
+                stored = record_source_chapter_deltas(
+                    database,
+                    hydration_result.book_id,
+                    hydration_result.edition_id,
+                    deltas,
+                )
+                result = dict(result or {})
+                result["validation_summary"] = {
+                    "valid": True,
+                    "imported_delta_count": len(stored),
+                    "uncertain_finding_count": len(hydration_result.uncertain_findings),
+                    "source_state_only": True,
+                }
+                from novel_authoring.author_control.service import (
+                    complete_source_state_hydration_task,
+                )
+
+                complete_source_state_hydration_task(
+                    database, handoff_id, result=result
+                )
+            except (TypeError, ValueError, RuntimeError) as exc:
+                invalid_result_reason = f"SOURCE_STATE_IMPORT_FAILED: {exc}"
     with database.connect() as connection:
         row = connection.execute(
             "SELECT * FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)

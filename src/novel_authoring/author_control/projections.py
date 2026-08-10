@@ -39,6 +39,25 @@ _KNOWLEDGE_STATES = (
     "UNKNOWN",
 )
 
+_BASELINE_MUTABLE_KEYS = {
+    "owner_id",
+    "holder_id",
+    "character_id",
+    "quantity",
+    "equipped",
+    "slot",
+    "equipment_slot",
+    "location",
+    "location_id",
+    "status",
+    "current",
+    "availability",
+    "injury",
+    "relationship",
+    "target",
+    "faction_state",
+}
+
 
 def _json_object(value: Any) -> dict[str, Any]:
     if isinstance(value, dict):
@@ -282,6 +301,13 @@ def _baseline_record(
         )
     ]
     layer = entry.status.value
+    # Runtime Baseline is a boundary snapshot.  Its mutable fields are not a
+    # historical ledger and must not masquerade as chapter-N current state.
+    safe_attributes = [
+        {"label": str(key), "value": str(value)}
+        for key, value in entry.attributes.items()
+        if str(key) not in _BASELINE_MUTABLE_KEYS
+    ]
     return {
         "record_id": f"baseline:{entry.entry_id}",
         "name": entry.name,
@@ -291,10 +317,16 @@ def _baseline_record(
         "status": layer,
         "status_label": _LAYER_LABELS[layer],
         "statement": entry.statement,
-        "attributes": [
-            {"label": str(key), "value": str(value)}
-            for key, value in entry.attributes.items()
-        ],
+        "description": entry.statement,
+        "owner_id": entry.attributes.get("owner_id") or entry.attributes.get("character_id"),
+        "current_holder_id": entry.attributes.get("owner_id")
+        or entry.attributes.get("character_id"),
+        "quantity": entry.attributes.get("quantity"),
+        "equipped": entry.attributes.get("equipped", False),
+        "slot": entry.attributes.get("slot") or entry.attributes.get("equipment_slot"),
+        "use": entry.attributes.get("use") or entry.attributes.get("usage"),
+        "constraints": entry.attributes.get("constraints"),
+        "attributes": safe_attributes,
         "source": "Runtime Baseline",
         "baseline_entry_id": entry.entry_id,
         "subject_id": entry.subject_id,
@@ -308,6 +340,15 @@ def _baseline_record(
             (chapter_ordinals[str(evidence.chapter_id)] for evidence in visible_evidence),
             default=None,
         ),
+        "first_acquired_chapter_ordinal": min(
+            (chapter_ordinals[str(evidence.chapter_id)] for evidence in visible_evidence),
+            default=None,
+        ),
+        "recent_confirmed_chapter_ordinal": max(
+            (chapter_ordinals[str(evidence.chapter_id)] for evidence in visible_evidence),
+            default=None,
+        ),
+        "mutable_attributes_suppressed": True,
         "verification_note": (
             "当前状态只采用本书原文的 SOURCE_VERIFIED 证据。"
             if layer == "SOURCE_VERIFIED"
@@ -431,6 +472,7 @@ def _character_options(
     *,
     chapter_ordinals: dict[str, int],
     selected_ordinal: int | None,
+    source_projection: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     options: dict[str, dict[str, Any]] = {}
 
@@ -473,6 +515,44 @@ def _character_options(
                     entry.status.value,
                     entry.statement,
                 )
+    if isinstance(source_projection, dict):
+        source_records = source_projection.get("records", {})
+        if isinstance(source_records, dict):
+            for category in (
+                "CHARACTER_STATE",
+                "ITEM",
+                "EQUIPMENT",
+                "RESOURCE",
+                "CAPABILITY",
+                "KNOWLEDGE",
+                "RELATIONSHIP",
+            ):
+                for record in source_records.get(category, []):
+                    if not isinstance(record, dict):
+                        continue
+                    raw_value = record.get("raw")
+                    raw: dict[str, Any] = raw_value if isinstance(raw_value, dict) else {}
+                    candidates = (
+                        [record.get("subject_id")]
+                        if category in {"CHARACTER_STATE", "KNOWLEDGE"}
+                        else [
+                            record.get("owner_id"),
+                            raw.get("owner_id"),
+                            record.get("subject_id"),
+                        ]
+                    )
+                    if category == "RELATIONSHIP":
+                        candidates.extend(
+                            [raw.get("from_entity_id"), raw.get("to_entity_id")]
+                        )
+                    for candidate in candidates:
+                        character = str(candidate or "")
+                        if character:
+                            add(
+                                character,
+                                str(raw.get("character_name") or character),
+                                "SOURCE_VERIFIED",
+                            )
     for node in soft.get("graphs", {}).get("characters", {}).get("nodes", []):
         if isinstance(node, dict):
             add(
@@ -595,7 +675,18 @@ def _source_records_for_character(
         for record in records.get(category, []):
             if not isinstance(record, dict):
                 continue
-            if str(record.get("subject_id") or "") not in {"", character_id}:
+            raw_value = record.get("raw")
+            raw: dict[str, Any] = raw_value if isinstance(raw_value, dict) else {}
+            owner_id = str(
+                record.get("owner_id")
+                or raw.get("owner_id")
+                or raw.get("character_id")
+                or ""
+            )
+            if (
+                str(record.get("subject_id") or "") not in {"", character_id}
+                and owner_id != character_id
+            ):
                 continue
             result.append(dict(record))
     return result
@@ -670,36 +761,45 @@ def _projection_items(
         for record in [*source_items, *source_equipment]:
             if record.get("status") != "SOURCE_VERIFIED":
                 continue
-            target = equipment if record.get("category") == "equipment" else inventory
+            target = (
+                equipment
+                if record.get("category") == "equipment" or record.get("equipped")
+                else inventory
+            )
             if not any(item.get("record_id") == record.get("record_id") for item in target):
                 target.append(record)
-        for entry, record in [
-            *_baseline_entries_at_chapter(
+        baseline_boundary_reached = baseline is not None and (
+            selected_ordinal is None
+            or selected_ordinal >= baseline.manifest.boundary_chapter
+        )
+        if baseline_boundary_reached:
+            for entry, record in [
+                *_baseline_entries_at_chapter(
+                    baseline,
+                    BaselineCategory.ITEM,
+                    chapter_ordinals=chapter_ordinals,
+                    selected_ordinal=selected_ordinal,
+                    character_id=character_id,
+                ),
+                *_baseline_entries_at_chapter(
+                    baseline,
+                    BaselineCategory.RESOURCE,
+                    chapter_ordinals=chapter_ordinals,
+                    selected_ordinal=selected_ordinal,
+                    character_id=character_id,
+                ),
+            ]:
+                if entry.status is BaselineStatus.SOURCE_VERIFIED:
+                    inventory.append(record)
+            for entry, record in _baseline_entries_at_chapter(
                 baseline,
-                BaselineCategory.ITEM,
+                BaselineCategory.EQUIPMENT,
                 chapter_ordinals=chapter_ordinals,
                 selected_ordinal=selected_ordinal,
                 character_id=character_id,
-            ),
-            *_baseline_entries_at_chapter(
-                baseline,
-                BaselineCategory.RESOURCE,
-                chapter_ordinals=chapter_ordinals,
-                selected_ordinal=selected_ordinal,
-                character_id=character_id,
-            ),
-        ]:
-            if entry.status is BaselineStatus.SOURCE_VERIFIED:
-                inventory.append(record)
-        for entry, record in _baseline_entries_at_chapter(
-            baseline,
-            BaselineCategory.EQUIPMENT,
-            chapter_ordinals=chapter_ordinals,
-            selected_ordinal=selected_ordinal,
-            character_id=character_id,
-        ):
-            if entry.status is BaselineStatus.SOURCE_VERIFIED:
-                equipment.append(record)
+            ):
+                if entry.status is BaselineStatus.SOURCE_VERIFIED:
+                    equipment.append(record)
     return inventory, equipment
 
 
@@ -727,16 +827,21 @@ def _abilities(
         if _owner_matches(dict(value), character_id)
     ]
     source: list[dict[str, Any]] = []
-    for entry, record in _baseline_entries_at_chapter(
-        baseline,
-        BaselineCategory.CAPABILITY,
-        chapter_ordinals=chapter_ordinals,
-        selected_ordinal=selected_ordinal,
-        character_id=character_id,
-    ):
-        source.append(record)
-        if entry.status is BaselineStatus.SOURCE_VERIFIED:
-            canon.append(record)
+    baseline_boundary_reached = baseline is not None and (
+        selected_ordinal is None
+        or selected_ordinal >= baseline.manifest.boundary_chapter
+    )
+    if baseline_boundary_reached:
+        for entry, record in _baseline_entries_at_chapter(
+            baseline,
+            BaselineCategory.CAPABILITY,
+            chapter_ordinals=chapter_ordinals,
+            selected_ordinal=selected_ordinal,
+            character_id=character_id,
+        ):
+            source.append(record)
+            if entry.status is BaselineStatus.SOURCE_VERIFIED:
+                canon.append(record)
     source.extend(
         record
         for record in _source_records_for_character(
@@ -773,26 +878,136 @@ def _knowledge(
     for record in _source_records_for_character(source_projection, {"KNOWLEDGE"}, character_id):
         if record.get("status") == "SOURCE_VERIFIED":
             result.append(record)
-    for entry, record in _baseline_entries_at_chapter(
-        baseline,
-        BaselineCategory.KNOWLEDGE,
-        chapter_ordinals=chapter_ordinals,
-        selected_ordinal=selected_ordinal,
-        character_id=None,
-        include_generic=True,
-    ):
-        if entry.status is not BaselineStatus.SOURCE_VERIFIED:
-            continue
-        result.append(
-            {
-                **record,
-                "knowledge_state": "UNKNOWN",
-                "knowledge_state_label": "尚未确认谁知道",
-                "who_knows": [],
-                "visibility_status": "UNKNOWN",
-            }
-        )
+    baseline_boundary_reached = baseline is not None and (
+        selected_ordinal is None
+        or selected_ordinal >= baseline.manifest.boundary_chapter
+    )
+    if baseline_boundary_reached:
+        for entry, record in _baseline_entries_at_chapter(
+            baseline,
+            BaselineCategory.KNOWLEDGE,
+            chapter_ordinals=chapter_ordinals,
+            selected_ordinal=selected_ordinal,
+            character_id=None,
+            include_generic=True,
+        ):
+            if entry.status is not BaselineStatus.SOURCE_VERIFIED:
+                continue
+            result.append(
+                {
+                    **record,
+                    "knowledge_state": "UNKNOWN",
+                    "knowledge_state_label": "尚未确认谁知道",
+                    "who_knows": [],
+                    "visibility_status": "UNKNOWN",
+                }
+            )
     return result
+
+
+def _knowledge_matrix(
+    projection: CanonProjection,
+    source_projection: dict[str, Any],
+    characters: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Build an auditable knower × topic matrix without filling UNKNOWN by inference."""
+
+    topics: dict[str, dict[str, Any]] = {}
+    edges: dict[tuple[str, str], dict[str, Any]] = {}
+
+    def add_edge(raw: dict[str, Any], *, layer: str, record_id: str) -> None:
+        knower_id = str(
+            raw.get("knower_id")
+            or raw.get("character_id")
+            or raw.get("from_entity_id")
+            or raw.get("subject_id")
+            or ""
+        )
+        topic_id = str(
+            raw.get("topic_id")
+            or raw.get("object_id")
+            or raw.get("knowledge_id")
+            or record_id
+        )
+        if not knower_id or not topic_id:
+            return
+        topic_name = str(
+            raw.get("topic_name") or raw.get("name") or raw.get("topic") or topic_id
+        )
+        topics.setdefault(
+            topic_id,
+            {"topic_id": topic_id, "name": topic_name, "layer": layer},
+        )
+        state = str(
+            raw.get("knowledge_state")
+            or raw.get("visibility_state")
+            or raw.get("state")
+            or "KNOWN"
+        ).upper()
+        if state not in _KNOWLEDGE_STATES:
+            state = "UNKNOWN"
+        edges[(knower_id, topic_id)] = {
+            "knower_id": knower_id,
+            "topic_id": topic_id,
+            "topic_name": topic_name,
+            "state": state,
+            "state_label": state,
+            "layer": layer,
+            "record_id": record_id,
+            "evidence_chapter_ordinal": raw.get("chapter_ordinal"),
+            "source_span_ids": list(raw.get("source_span_ids") or []),
+            "source": raw.get("source") or layer,
+        }
+
+    for record_id, value in projection.knowledge.items():
+        add_edge(dict(value), layer="CANON", record_id=str(record_id))
+    source_records = source_projection.get("records", {})
+    if isinstance(source_records, dict):
+        for record in source_records.get("KNOWLEDGE", []):
+            if not isinstance(record, dict) or record.get("status") != "SOURCE_VERIFIED":
+                continue
+            raw_value = record.get("raw")
+            raw = raw_value if isinstance(raw_value, dict) else {}
+            add_edge(
+                {**raw, **record},
+                layer="SOURCE_VERIFIED",
+                record_id=str(
+                    record.get("record_id")
+                    or record.get("state_key")
+                    or "source-knowledge"
+                ),
+            )
+    names = {
+        str(item.get("character_id")): str(item.get("name") or item.get("character_id"))
+        for item in characters
+        if item.get("character_id")
+    }
+    matrix: list[dict[str, Any]] = []
+    for character_id, character_name in names.items():
+        for topic_id, topic in topics.items():
+            cell = edges.get((character_id, topic_id))
+            matrix.append(
+                {
+                    "knower_id": character_id,
+                    "knower_name": character_name,
+                    "topic_id": topic_id,
+                    "topic_name": topic["name"],
+                    "state": "UNKNOWN" if cell is None else cell["state"],
+                    "state_label": "UNKNOWN" if cell is None else cell["state_label"],
+                    "layer": "UNKNOWN" if cell is None else cell["layer"],
+                    "evidence_chapter_ordinal": None if cell is None else cell[
+                        "evidence_chapter_ordinal"
+                    ],
+                    "source_span_ids": [] if cell is None else cell["source_span_ids"],
+                    "record_id": None if cell is None else cell["record_id"],
+                }
+            )
+    return {
+        "topics": list(topics.values()),
+        "edges": list(edges.values()),
+        "matrix": matrix,
+        "states": list(_KNOWLEDGE_STATES),
+    }
 
 
 def _relationships(
@@ -872,6 +1087,65 @@ def _soft_relationships(
     return result
 
 
+def _relationship_details(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    details: list[dict[str, Any]] = []
+    for record in records:
+        raw_value = record.get("raw")
+        raw = raw_value if isinstance(raw_value, dict) else {}
+        details.append(
+            {
+                **record,
+                "from_entity_id": record.get("from_entity_id") or raw.get("from_entity_id"),
+                "to_entity_id": record.get("to_entity_id") or raw.get("to_entity_id"),
+                "first_confirmed_chapter_ordinal": record.get(
+                    "first_confirmed_chapter_ordinal", record.get("chapter_ordinal")
+                ),
+                "recent_confirmed_chapter_ordinal": record.get(
+                    "recent_confirmed_chapter_ordinal", record.get("chapter_ordinal")
+                ),
+                "dimensions": {
+                    name: str(raw.get(name) or record.get(name) or "UNKNOWN").upper()
+                    for name in (
+                        "trust",
+                        "dependence",
+                        "conflict",
+                        "intimacy",
+                        "power",
+                        "fear",
+                        "obligation",
+                    )
+                },
+                "current_layer": record.get("layer") or "UNKNOWN",
+                "author_intent_separate": True,
+            }
+        )
+    return details
+
+
+def _faction_details(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for record in records:
+        raw_value = record.get("raw")
+        raw = raw_value if isinstance(raw_value, dict) else {}
+        result.append(
+            {
+                **record,
+                "state": raw.get("state") or raw.get("status") or record.get("status"),
+                "goal": raw.get("goal") or raw.get("objective") or "UNKNOWN",
+                "key_people": raw.get("key_people") or raw.get("members") or [],
+                "controlled_locations": raw.get("controlled_locations") or [],
+                "resources": raw.get("resources") or [],
+                "attitude": raw.get("attitude") or "UNKNOWN",
+                "action": raw.get("action") or "UNKNOWN",
+                "known": raw.get("known") or [],
+                "unknown": raw.get("unknown") or [],
+                "current_layer": record.get("layer") or "UNKNOWN",
+                "author_plan_separate": True,
+            }
+        )
+    return result
+
+
 def build_story_game_state(
     database: Database,
     book_id: str,
@@ -931,6 +1205,7 @@ def build_story_game_state(
         soft,
         chapter_ordinals=chapter_ordinals,
         selected_ordinal=ordinal,
+        source_projection=source_projection,
     )
     selected = _selected_character(options, character_id)
     selected_state = _character_state(
@@ -967,9 +1242,23 @@ def build_story_game_state(
         selected_ordinal=ordinal,
         source_projection=source_projection,
     )
+    knowledge_matrix = _knowledge_matrix(projection, source_projection, options)
+    for item in knowledge:
+        topic_id = str(
+            item.get("object_id")
+            or item.get("topic_id")
+            or item.get("state_key")
+            or item.get("name")
+        )
+        item["who_knows"] = [
+            dict(edge)
+            for edge in knowledge_matrix["edges"]
+            if str(edge.get("topic_id")) == topic_id
+        ]
     relationships = _relationships(
         projection, selected, source_projection=source_projection
     )
+    relationship_inspector = _relationship_details(relationships)
     soft_relationships = _soft_relationships(soft, selected)
     baseline_visible = [
         entry
@@ -986,6 +1275,8 @@ def build_story_game_state(
         for entry in (baseline.entries if baseline is not None else [])
         if entry.category is BaselineCategory.CAPABILITY
         and entry.status is BaselineStatus.UNKNOWN
+        and baseline is not None
+        and (ordinal is None or ordinal >= baseline.manifest.boundary_chapter)
         and selected is not None
         and (
             str(entry.subject_id or "") == str(selected["character_id"])
@@ -1009,6 +1300,7 @@ def build_story_game_state(
         if isinstance(node, dict)
     ]
     factions = [*source_factions, *factions]
+    faction_inspector = _faction_details(factions)
     source_ready = bool(source_projection.get("available") or baseline_visible)
     if after_event_seq is not None:
         availability = "CANON_EVENT_PROJECTION"
@@ -1064,9 +1356,14 @@ def build_story_game_state(
         "unknown_abilities": unknown_abilities,
         "knowledge": knowledge,
         "knowledge_states": list(_KNOWLEDGE_STATES),
+        "knowledge_topics": knowledge_matrix["topics"],
+        "knowledge_visibility_edges": knowledge_matrix["edges"],
+        "knowledge_matrix": knowledge_matrix["matrix"],
         "relationships": relationships,
+        "relationship_inspector": relationship_inspector,
         "soft_relationships": soft_relationships,
         "factions": factions,
+        "faction_inspector": faction_inspector,
         "source_state": {
             "status": "READY" if source_ready else "MISSING",
             "status_label": "原文状态已建立" if source_ready else "正在补齐这一章的故事状态",

@@ -52,6 +52,42 @@ STRUCTURE_FIELDS = (
 )
 
 
+def _validate_author_control_trace(
+    candidate: CandidateProposal, author_control: dict[str, Any]
+) -> None:
+    """Ensure a candidate can only claim against the frozen planning inputs."""
+
+    tasks = {
+        str(item.get("task_id")): item
+        for item in author_control.get("tasks", [])
+        if isinstance(item, dict) and item.get("task_id")
+    }
+    intents = {
+        str(item.get("intent_id")): item
+        for item in author_control.get("intents", [])
+        if isinstance(item, dict) and item.get("intent_id")
+    }
+    trace = candidate.author_control_trace
+    task_hit_ids = {item.task_id for item in trace.author_task_hits}
+    intent_hit_ids = {item.intent_id for item in trace.author_intent_hits}
+    unknown_tasks = (task_hit_ids | set(trace.author_tasks_advanced)) - set(tasks)
+    unknown_intents = (intent_hit_ids | set(trace.author_intents_advanced)) - set(intents)
+    unknown_goals = set(trace.author_goals_not_used) - (set(tasks) | set(intents))
+    if unknown_tasks or unknown_intents or unknown_goals:
+        raise PlanningError(
+            "AuthorControlTrace 引用了未冻结的任务/意图："
+            f"tasks={sorted(unknown_tasks)}, intents={sorted(unknown_intents)}, "
+            f"goals={sorted(unknown_goals)}"
+        )
+    if not set(trace.author_tasks_advanced).issubset(task_hit_ids):
+        raise PlanningError("author_tasks_advanced 必须是 author_task_hits 的子集")
+    if not set(trace.author_intents_advanced).issubset(intent_hit_ids):
+        raise PlanningError("author_intents_advanced 必须是 author_intent_hits 的子集")
+    missing_reasons = set(trace.author_goals_not_used) - set(trace.unused_reasons)
+    if missing_reasons:
+        raise PlanningError(f"未使用作者目标缺少原因：{sorted(missing_reasons)}")
+
+
 def _current_ordinal(connection: Any, book_id: str, edition_id: str = "base") -> int:
     if edition_id != "base":
         from novel_authoring.edition import edition_chapters
@@ -332,6 +368,9 @@ def prepare_candidate_task(
             "",
             "候选输出中请说明命中了哪些作者任务/意图（task_id/intent_id），"
             "没有命中时也要说明原因；这只是规划输入，不会自动改变正史。",
+            "每个候选必须填写 author_control_trace：author_task_hits、author_intent_hits、"
+            "author_tasks_advanced、author_intents_advanced、author_goals_not_used 和"
+            "unused_reasons。只能引用上方冻结的 ID；硬门永远优先于作者目标命中。",
             "AUTO 方向只提供推荐；若候选实际走向不同方向，必须在 Preview 中如实标注。",
             "",
             "## 三条优先线程",
@@ -379,6 +418,10 @@ def prepare_candidate_task(
         "boundary_packet_id": boundary["packet_id"],
         "boundary_path": boundary["json_path"],
         "aggregate_id": aggregate["aggregate_id"],
+        "author_control": aggregate.get("author_policy", {}).get("author_control", {}),
+        "author_control_trace_contract": aggregate.get("author_policy", {}).get(
+            "trace_contract", {}
+        ),
         "metric_run_ids": aggregate["metric_run_ids"],
         "bundle_hash": aggregate["bundle_hash"],
         "rhythm_snapshot_id": aggregate.get("rhythm_snapshot_id"),
@@ -498,6 +541,22 @@ def import_candidate_output(
         if boundary_path and Path(str(boundary_path)).is_file()
         else {}
     )
+    aggregate_id = str(metadata.get("aggregate_id") or "")
+    frozen_author_control: dict[str, Any] = {}
+    if aggregate_id:
+        with database.connect() as connection:
+            aggregate_row = connection.execute(
+                "SELECT author_policy_json FROM planning_aggregates "
+                "WHERE aggregate_id=? AND book_id=? AND edition_id=?",
+                (aggregate_id, book_id, selected_edition),
+            ).fetchone()
+        if aggregate_row is not None:
+            try:
+                aggregate_policy = json.loads(str(aggregate_row["author_policy_json"] or "{}"))
+            except (TypeError, ValueError) as exc:
+                raise PlanningError("Planning Aggregate 的作者控制冻结值无效") from exc
+            if isinstance(aggregate_policy, dict):
+                frozen_author_control = aggregate_policy.get("author_control", {})
     portfolio_path = path.parent / "portfolio_diagnostics.json"
     portfolio_path.write_text(
         json_dumps(portfolio.model_dump(mode="json"), indent=2) + "\n",
@@ -514,6 +573,7 @@ def import_candidate_output(
             )
     evaluated: list[dict[str, Any]] = []
     for candidate in output.candidates:
+        _validate_author_control_trace(candidate, frozen_author_control)
         gate = evaluate_hard_gates(candidate.gate_input, settings.metrics)
         diversity = (
             sum(differences[candidate.local_id])
@@ -575,7 +635,6 @@ def import_candidate_output(
         if best_score - float(item["final_selection_score"]) < tie_delta
     ]
     ranking = {str(item["candidate_id"]): index for index, item in enumerate(passed, 1)}
-    aggregate_id = str(metadata.get("aggregate_id") or "")
     with database.connect() as connection:
         aggregate = None
         if aggregate_id:
@@ -637,6 +696,7 @@ def import_candidate_output(
                 "reason": reason,
                 "portfolio_diagnostics": portfolio.model_dump(mode="json"),
                 "narrative_portfolio_snapshot": narrative_portfolio.model_dump(mode="json"),
+                "author_control_trace": candidate.author_control_trace.model_dump(mode="json"),
             }
             connection.execute(
                 """
@@ -690,6 +750,13 @@ def import_candidate_output(
                 else "NOT_SELECTED",
                 "hard_failures": item["gate"].hard_failures,
                 "structural_difference_counts": differences[item["candidate"].local_id],
+                "author_control_trace": item["candidate"].author_control_trace.model_dump(
+                    mode="json"
+                ),
+                "author_control_hit": bool(
+                    item["candidate"].author_control_trace.author_task_hits
+                    or item["candidate"].author_control_trace.author_intent_hits
+                ),
             }
             for item in evaluated
         ],

@@ -648,10 +648,65 @@
         var title = document.createElement("strong");
         title.textContent = record.name || "状态记录";
         var status = document.createElement("span");
-        status.textContent = (record.statusLabel || record.status_label || "尚未知") + " · 证据 " + ((record.source_span_ids || []).length || 0) + " 个 source span";
+        status.textContent = (record.statusLabel || record.status_label || "尚未知")
+          + " · 持有者 " + (record.current_holder_id || record.owner_id || "UNKNOWN")
+          + " · 数量 " + (record.quantity == null ? "UNKNOWN" : record.quantity)
+          + (record.equipped ? " · 已装备" : "")
+          + (record.slot ? " · 槽位 " + record.slot : "");
         var statement = document.createElement("p");
-        statement.textContent = record.statement || "暂无说明";
+        statement.textContent = (record.description || record.statement || "暂无说明")
+          + " · 首次确认第" + (record.first_acquired_chapter_ordinal || "UNKNOWN")
+          + "章 · 最近确认第" + (record.recent_confirmed_chapter_ordinal || record.chapter_ordinal || "UNKNOWN") + "章";
         inspector.appendChild(title); inspector.appendChild(status); inspector.appendChild(statement);
+        [
+          ["用途", record.use],
+          ["约束", record.constraints],
+          ["证据", (record.source_span_ids || []).join("、") || "暂无 source span"],
+          ["关联能力/人物/关系", [record.related_ability_id, record.related_person_id, record.related_relationship_id].filter(Boolean).join("、") || "暂无"],
+        ].forEach(function (item) {
+          if (!item[1]) return;
+          var line = document.createElement("small");
+          line.textContent = item[0] + "：" + item[1];
+          inspector.appendChild(line);
+        });
+      });
+    });
+
+    root.querySelectorAll("[data-knowledge-cell]").forEach(function (cell) {
+      cell.addEventListener("click", function () {
+        var inspector = root.querySelector("[data-knowledge-inspector]");
+        if (!inspector) return;
+        var record = {};
+        try { record = JSON.parse(cell.dataset.knowledgeCell || "{}"); } catch (error) { record = {}; }
+        inspector.innerHTML = "";
+        var title = document.createElement("strong");
+        title.textContent = (record.knower_name || record.knower_id || "UNKNOWN") + " × " + (record.topic_name || record.topic_id || "主题");
+        var status = document.createElement("span");
+        status.textContent = (record.state || "UNKNOWN") + " · " + (record.layer || "UNKNOWN")
+          + " · 证据章节 " + (record.evidence_chapter_ordinal || "UNKNOWN");
+        var evidence = document.createElement("p");
+        evidence.textContent = "source spans：" + ((record.source_span_ids || []).join("、") || "无；UNKNOWN 不是推断出的否定");
+        inspector.appendChild(title); inspector.appendChild(status); inspector.appendChild(evidence);
+      });
+    });
+
+    root.querySelectorAll("[data-relationship-record]").forEach(function (card) {
+      card.addEventListener("click", function () {
+        var inspector = root.querySelector("[data-relationship-inspector]");
+        if (!inspector) return;
+        var record = {};
+        try { record = JSON.parse(card.dataset.relationshipRecord || "{}"); } catch (error) { record = {}; }
+        inspector.innerHTML = "";
+        var title = document.createElement("strong");
+        title.textContent = record.name || ((record.from_entity_id || "A") + " ↔ " + (record.to_entity_id || "B"));
+        var summary = document.createElement("span");
+        summary.textContent = "当前层 " + (record.current_layer || record.layer || "UNKNOWN")
+          + " · 首次第" + (record.first_confirmed_chapter_ordinal || "UNKNOWN")
+          + "章 · 最近第" + (record.recent_confirmed_chapter_ordinal || "UNKNOWN") + "章";
+        var dimensions = document.createElement("p");
+        var values = record.dimensions || {};
+        dimensions.textContent = Object.keys(values).map(function (key) { return key + "=" + values[key]; }).join(" · ") || "暂无叙事维度证据";
+        inspector.appendChild(title); inspector.appendChild(summary); inspector.appendChild(dimensions);
       });
     });
 
@@ -676,6 +731,16 @@
         var taskId = draggingTask || (event.dataTransfer && event.dataTransfer.getData("text/plain"));
         if (!taskId) return;
         postAuthorCommand(root, { command_type: "MOVE_TASK_HORIZON", payload: { task_id: taskId, horizon: target.dataset.taskHorizonDrop } })
+          .then(function () { window.location.reload(); })
+          .catch(function () { window.alert("任务跨度调整失败，请刷新后重试。"); });
+      });
+    });
+    root.querySelectorAll("[data-task-horizon-select]").forEach(function (select) {
+      select.addEventListener("change", function () {
+        postAuthorCommand(root, {
+          command_type: "MOVE_TASK_HORIZON",
+          payload: { task_id: select.dataset.taskId, horizon: select.value }
+        })
           .then(function () { window.location.reload(); })
           .catch(function () { window.alert("任务跨度调整失败，请刷新后重试。"); });
       });
@@ -881,6 +946,27 @@
     var link = document.createElement("a");
     link.href = window.location.href;
     loadWorkbench(link, false);
+  });
+
+  document.querySelectorAll("[data-hydration-collect]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      button.disabled = true;
+      fetch(button.dataset.hydrationCollect, {
+        method: "POST",
+        headers: { "X-CSRF-Token": csrfToken() }
+      })
+        .then(function (response) {
+          return response.json().then(function (body) {
+            if (!response.ok) throw new Error((body.error && body.error.message) || "收集失败");
+            return body;
+          });
+        })
+        .then(function () { window.location.reload(); })
+        .catch(function (error) {
+          button.disabled = false;
+          button.textContent = error.message || "收集失败";
+        });
+    });
   });
   initWorkbench();
 }());

@@ -86,6 +86,8 @@ from novel_authoring.web.schemas import (
 )
 from novel_authoring.web.workbench import build_workbench_context
 from novel_authoring.workflows.handoffs import (
+    HandoffStatus,
+    HandoffType,
     HandoffWorkflowError,
     cancel_handoff,
     copy_instruction,
@@ -93,6 +95,7 @@ from novel_authoring.workflows.handoffs import (
     get_handoff,
     mark_stale,
     record_user_response,
+    update_handoff_status,
     validate_result_file,
 )
 
@@ -548,6 +551,57 @@ def create_app(
             _database_for_book(app, checked_book), checked_book, checked_edition, payload
         )
         return resolution.model_dump(mode="json")
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/source-state-hydration/{handoff_id}/collect"
+    )
+    async def collect_source_state_hydration_api(
+        request: Request, path_book_id: str, edition_id: str, handoff_id: str
+    ) -> Any:
+        """Collect a Codex-written result file; Web never executes the model."""
+
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        checked_handoff = _check_id(handoff_id)
+        selected_database = _database_for_book(app, checked_book)
+        try:
+            item = get_handoff(selected_database, checked_handoff)
+            if (
+                str(item.get("book_id")) != checked_book
+                or str(item.get("edition_id")) != checked_edition
+                or str(item.get("handoff_type")) != HandoffType.SOURCE_STATE_HYDRATION.value
+            ):
+                raise HandoffWorkflowError("hydration handoff scope 不匹配")
+            status = str(item.get("status"))
+            if status == HandoffStatus.COMPLETED.value:
+                return {"handoff_id": checked_handoff, "status": status, "already_completed": True}
+            result_path = Path(str(item.get("result_path") or ""))
+            if not result_path.is_file():
+                raise HandoffWorkflowError("尚未找到 Codex 写入的 result.json")
+            raw_result = json.loads(result_path.read_text(encoding="utf-8"))
+            if not isinstance(raw_result, dict) or not raw_result:
+                raise HandoffWorkflowError("result.json 为空或不是 object")
+            claim_token = str(item.get("claim_token") or "")
+            if not claim_token:
+                raise HandoffWorkflowError("handoff 尚未由 Codex 桌面端领取")
+            if status == HandoffStatus.CLAIMED.value:
+                update_handoff_status(
+                    selected_database,
+                    checked_handoff,
+                    HandoffStatus.RUNNING,
+                    claim_token=claim_token,
+                )
+            completed = update_handoff_status(
+                selected_database,
+                checked_handoff,
+                HandoffStatus.COMPLETED,
+                claim_token=claim_token,
+                result=raw_result,
+            )
+            return completed
+        except (HandoffWorkflowError, OSError, ValueError, json.JSONDecodeError) as exc:
+            return _error(exc)
 
     @app.post("/api/books/{path_book_id}/editions/{edition_id}/author-intents")
     async def author_intent_api(
@@ -1404,6 +1458,49 @@ def create_app(
     async def handoff_instruction_api(handoff_id: str) -> dict[str, str]:
         checked = _check_id(handoff_id)
         return {"handoff_id": checked, "instruction": copy_instruction(database, checked)}
+
+    @app.get(
+        "/api/books/{path_book_id}/editions/{edition_id}/handoffs/{handoff_id}/instruction"
+    )
+    async def book_handoff_instruction_api(
+        path_book_id: str, edition_id: str, handoff_id: str
+    ) -> dict[str, str]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        checked_handoff = _check_id(handoff_id)
+        selected_database = _database_for_book(app, checked_book)
+        item = get_handoff(selected_database, checked_handoff)
+        if (
+            str(item.get("book_id")) != checked_book
+            or str(item.get("edition_id")) != checked_edition
+        ):
+            raise HTTPException(status_code=404, detail="handoff 不属于当前 book/edition")
+        return {
+            "handoff_id": checked_handoff,
+            "instruction": copy_instruction(selected_database, checked_handoff),
+        }
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/handoffs/{handoff_id}/result")
+    async def book_handoff_result_api(
+        path_book_id: str, edition_id: str, handoff_id: str
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        checked_handoff = _check_id(handoff_id)
+        selected_database = _database_for_book(app, checked_book)
+        item = get_handoff(selected_database, checked_handoff)
+        if (
+            str(item.get("book_id")) != checked_book
+            or str(item.get("edition_id")) != checked_edition
+        ):
+            raise HTTPException(status_code=404, detail="handoff 不属于当前 book/edition")
+        if item.get("status") == HandoffStatus.COMPLETED.value:
+            item["validated_result"] = validate_result_file(selected_database, checked_handoff)
+        return {
+            key: item[key]
+            for key in ("handoff_id", "status", "result", "validated_result")
+            if key in item
+        }
 
     @app.get("/api/books/{path_book_id}/handoffs")
     async def handoffs_api(
