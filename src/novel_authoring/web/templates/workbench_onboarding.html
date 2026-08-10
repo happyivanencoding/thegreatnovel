@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{{ catalog_entry.title }} · 准备 Novel Studio</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=3.1.0">
+</head>
+<body class="workbench-body">
+  <header class="wb-topbar">
+    <a class="wb-brand" href="/library">Novel Studio</a>
+    <div class="wb-breadcrumb"><span>{{ catalog_entry.title }}</span><span>/</span><span>准备工作台</span></div>
+    <div class="wb-top-actions"><a class="wb-top-link" href="/library">书库 · {{ catalog.entries|length }}</a><span class="wb-status-chip" data-onboarding-status-label>{{ catalog_entry.state_label }}</span><button class="wb-activity-trigger" type="button" data-onboarding-activity-trigger aria-expanded="false" aria-controls="onboarding-activity-center">● 任务 <span data-onboarding-activity-count>{% if catalog_entry.handoff_status in ['READY_FOR_CODEX','CLAIMED','RUNNING','WAITING_FOR_USER'] %}1{% else %}0{% endif %}</span></button></div>
+  </header>
+
+  <main class="wb-shell wb-onboarding-shell" data-workbench-shell data-library-catalog data-catalog-revision="{{ catalog.revision }}" data-current-catalog-id="{{ current_catalog_id }}" data-book-id="{{ catalog_entry.book_id or '' }}" data-edition-id="{{ catalog_entry.active_edition }}">
+    <aside class="wb-pane wb-left-pane" data-pane="left" aria-label="书籍与初始化">
+      <div class="wb-pane-content">
+        <div class="wb-pane-header wb-book-pane-header">{% include 'workbench_book_selector.html' with context %}<button class="wb-icon-button" type="button" data-toggle-pane="left" aria-label="隐藏左栏"><span data-pane-toggle-icon>‹</span></button></div>
+        <nav class="wb-onboarding-nav" aria-label="准备步骤">
+          <a class="is-selected" href="#onboarding-main"><span>○</span> 准备工作台</a>
+          <a href="/library"><span>⌂</span> 返回书库</a>
+        </nav>
+        <div class="wb-left-footer"><span>当前状态</span><strong data-onboarding-left-status>{{ catalog_entry.state_label }}</strong><span class="wb-readonly-note">发现目录只读；确认前不会建立数据库或任务。</span></div>
+      </div>
+      <div class="wb-rail" data-pane-rail="left"><button class="wb-rail-button" type="button" data-toggle-pane="left" aria-label="展开左栏"><span data-pane-toggle-icon>›</span></button></div>
+    </aside>
+    <div class="wb-resizer" data-resizer="left" role="separator" aria-label="调整左栏宽度"></div>
+
+    <section class="wb-pane wb-center-pane wb-onboarding-center" data-pane="center" aria-label="初始化引导">
+      <div class="wb-center-scroll" id="onboarding-main">
+        <article class="wb-content-card wb-onboarding-hero" data-onboarding-card data-state="{{ catalog_entry.state }}">
+          <div class="wb-onboarding-mark" data-onboarding-mark>{% if catalog_entry.studio_ready %}✓{% elif catalog_entry.state in ['INITIALIZING','INITIALIZATION_REVIEW'] %}●{% else %}○{% endif %}</div>
+          <p class="wb-kicker">准备 Novel Studio</p>
+          <h1>《{{ catalog_entry.title }}》</h1>
+          <h2 data-onboarding-headline>{% if catalog_entry.state in ['DISCOVERED','INITIALIZATION_REQUIRED'] %}还需要初始化才能开始创作{% elif catalog_entry.state == 'INITIALIZATION_READY_FOR_CODEX' %}初始化任务已经准备好{% elif catalog_entry.state == 'INITIALIZING' %}正在初始化这本书{% elif catalog_entry.state == 'INITIALIZATION_REVIEW' %}初始化正在等待确认{% elif catalog_entry.state in ['FAILED','NEEDS_REPAIR'] %}初始化尚未完整{% else %}正文已读取，等待初始化{% endif %}</h2>
+          <p class="wb-lede" data-onboarding-summary>{{ catalog_entry.author_summary }}</p>
+
+          <ol class="wb-initialization-steps" data-onboarding-steps>
+            <li class="{% if catalog_entry.book_id %}is-complete{% else %}is-active{% endif %}"><span>{% if catalog_entry.book_id %}✓{% else %}●{% endif %}</span><div><strong>读取小说</strong><small>{% if catalog_entry.book_id %}已安全复制到系统书库{% else %}等待你的确认{% endif %}</small></div></li>
+            <li class="{% if catalog_entry.book_id %}is-complete{% endif %}"><span>{% if catalog_entry.book_id %}✓{% else %}○{% endif %}</span><div><strong>建立章节</strong><small>{% if catalog_entry.book_id %}正文与章节索引已建立{% else %}确认后使用现有解析器{% endif %}</small></div></li>
+            <li class="{% if catalog_entry.state == 'INITIALIZATION_READY_FOR_CODEX' %}is-active{% elif catalog_entry.state in ['INITIALIZING','INITIALIZATION_REVIEW','NEEDS_REPAIR','FAILED'] %}is-complete{% endif %}"><span>{% if catalog_entry.state == 'INITIALIZATION_READY_FOR_CODEX' %}●{% elif catalog_entry.state in ['INITIALIZING','INITIALIZATION_REVIEW','NEEDS_REPAIR','FAILED'] %}✓{% else %}○{% endif %}</span><div><strong>AI 初始化</strong><small>{% if catalog_entry.state == 'INITIALIZATION_READY_FOR_CODEX' %}等待 Codex 桌面端领取{% elif catalog_entry.state == 'INITIALIZING' %}正在建立故事理解{% else %}建立人物、世界与叙事状态{% endif %}</small></div></li>
+            <li class="{% if catalog_entry.state in ['INITIALIZING','INITIALIZATION_REVIEW'] %}is-active{% endif %}"><span>{% if catalog_entry.state in ['INITIALIZING','INITIALIZATION_REVIEW'] %}●{% else %}○{% endif %}</span><div><strong>验证初始化结果</strong><small>按现有 Initialization Contract 验收</small></div></li>
+            <li><span>○</span><div><strong>准备工作台</strong><small>仅完整就绪后开放创作功能</small></div></li>
+          </ol>
+
+          <div class="wb-onboarding-actions" data-onboarding-actions>
+            {% if catalog_entry.state == 'DISCOVERED' %}<button class="button primary" type="button" data-initialize-candidate data-candidate-id="{{ catalog_entry.candidate_id }}">准备初始化</button>
+            {% elif catalog_entry.primary_action == 'PREPARE_INITIALIZATION' %}<button class="button primary" type="button" data-prepare-initialization data-book-id="{{ catalog_entry.book_id }}" data-edition-id="{{ catalog_entry.active_edition }}">{% if catalog_entry.state in ['FAILED','NEEDS_REPAIR'] %}重新准备初始化{% else %}准备初始化{% endif %}</button>{% endif %}
+            {% if catalog_entry.handoff_id %}<button class="button primary" type="button" data-copy-handoff data-instruction-url="/api/books/{{ catalog_entry.book_id }}/editions/{{ catalog_entry.active_edition }}/handoffs/{{ catalog_entry.handoff_id }}/instruction">复制给 Codex 的指令</button><button class="button" type="button" data-refresh-library>查看处理进度</button>{% endif %}
+            <a class="button" href="/library">返回书库</a>
+          </div>
+          <p class="wb-command-feedback" data-onboarding-feedback aria-live="polite"></p>
+        </article>
+
+        {% if catalog_entry.missing_requirements %}<article class="wb-content-card wb-onboarding-missing" data-onboarding-missing><h2>还缺这些关键结果</h2><ul>{% for item in catalog_entry.missing_requirements %}<li>{{ item }}</li>{% endfor %}</ul></article>{% endif %}
+        <details class="wb-content-card wb-technical-details"><summary>技术详情</summary><dl class="wb-technical-list"><dt>书籍记录</dt><dd>{{ catalog_entry.book_id or '尚未建立' }}</dd><dt>初始化记录</dt><dd>{{ catalog_entry.initialization_id or '尚未建立' }}</dd><dt>初始化状态</dt><dd>{{ catalog_entry.initialization_status or '尚未开始' }}</dd><dt>任务状态</dt><dd>{{ catalog_entry.handoff_status or '尚未创建' }}</dd><dt>来源</dt><dd>{{ catalog_entry.source_path }}</dd></dl></details>
+      </div>
+    </section>
+    <div class="wb-resizer" data-resizer="right" role="separator" aria-label="调整右栏宽度"></div>
+
+    <aside class="wb-pane wb-right-pane wb-onboarding-help" data-pane="right" aria-label="初始化说明">
+      <div class="wb-pane-content">
+        <div class="wb-pane-header"><div><p class="wb-kicker">下一步</p><h2>如何完成初始化</h2></div><button class="wb-icon-button" type="button" data-toggle-pane="right" aria-label="隐藏右栏"><span data-pane-toggle-icon>›</span></button></div>
+        <div class="wb-editor-scroll"><section class="wb-onboarding-help-copy"><span class="wb-help-number">1</span><h3>准备任务</h3><p>系统只在你确认后读取正文、建立章节，并创建本地交接任务。</p><span class="wb-help-number">2</span><h3>交给 Codex</h3><p>复制真实指令，在 Codex 桌面端处理。Web 不会自行调用模型或命令行。</p><span class="wb-help-number">3</span><h3>返回这里</h3><p>页面每 10 秒检查一次。完整验收后会出现“进入小说工作台”按钮。</p></section></div>
+      </div>
+      <div class="wb-rail" data-pane-rail="right"><button class="wb-rail-button" type="button" data-toggle-pane="right" aria-label="展开右栏"><span data-pane-toggle-icon>‹</span></button></div>
+    </aside>
+    {% include 'workbench_onboarding_activity_center.html' with context %}
+  </main>
+  <script src="{{ url_for('static', path='library_catalog.js') }}?v=3.1.0" defer></script>
+</body>
+</html>

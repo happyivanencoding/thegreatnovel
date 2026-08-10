@@ -605,9 +605,11 @@ def test_library_mode_auto_discovers_canonical_sessions_and_opens_each_workbench
     assert "标题 session-a" in page.text
     assert "标题 session-b" in page.text
     assert ".raw-input" not in page.text
-    assert page.text.count("打开 Workbench") == 2
+    assert page.text.count("准备初始化") == 2
 
     workbench = client.get("/books/session-b/editions/base/workbench")
     assert workbench.status_code == 200
     assert "标题 session-b" in workbench.text
     assert "标题 session-a" in workbench.text
+    assert "还需要初始化" in workbench.text
+    assert 'data-wb-chapter-tree' not in workbench.text

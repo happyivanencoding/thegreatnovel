@@ -4,70 +4,44 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token }}">
-  <title>书库目录 · Novel Authoring System</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
-  <style>
-    .library-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-    .library-card { display: flex; flex-direction: column; gap: .55rem; }
-    .library-card .actions { margin-top: auto; }
-    .library-import { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: end; }
-    .library-import button { width: fit-content; }
-    .path-line { overflow-wrap: anywhere; }
-  </style>
+  <title>书库 · Novel Studio</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=3.1.0">
 </head>
-<body>
-  <header class="topbar">
-    <a class="brand" href="/library">小说书库</a>
-    <span class="muted">Book Library · source 只读 · Canon 不自动批准</span>
-    <button class="theme-toggle" type="button" data-theme-toggle>主题</button>
+<body class="library-body">
+  <header class="library-topbar">
+    <a class="wb-brand" href="/library">Novel Studio</a>
+    <nav><a class="is-active" href="/library">书库</a></nav>
   </header>
-  <main class="shell">
-    <section class="page-heading">
-      <div><p class="eyebrow">Book Library</p><h1>书库目录</h1><p class="muted">{{ library_root or '尚未配置 library-root' }}</p></div>
-      <a class="button" href="/">作者工作台</a>
-    </section>
-    <section class="panel">
-      <div class="panel-heading"><h2>导入新书</h2><span class="badge">自动发现 {{ library|length }} 个 session</span></div>
-      <form class="library-import" data-library-import>
-        <label>book_id<input name="book_id" required pattern="[A-Za-z0-9._-]+" placeholder="cable-survival-demo"></label>
-        <label>标题<input name="title" placeholder="可选，默认使用 book_id"></label>
-        <label>来源文件或目录<input name="source_path" required placeholder="C:\\dev\\小说续写系统\\book\\正文.md"></label>
-        <button class="button" type="submit">导入到 canonical library</button>
-      </form>
-      <p class="muted" data-library-import-result>Web 与 <code>novel library add</code> 共用同一导入服务：复制来源、建立 SQLite/章节/FTS，并将书籍置为 NEEDS_INITIALIZATION。目录扫描只认含 <code>book.yaml</code> 的 canonical session；<code>*.input</code> 输入素材不会混入书库。</p>
-    </section>
-    <section class="library-grid" aria-label="书籍列表">
-      {% for book in library %}
-      <article class="panel library-card">
-        <div class="panel-heading"><div><p class="eyebrow">{{ book.active_edition_id }}</p><h2>{{ book.title }}</h2></div><span class="badge">{{ book.readiness_status or 'UNKNOWN' }}</span></div>
-        <p><code>{{ book.book_id }}</code></p>
-        <p class="muted path-line">source · {{ book.source_root }}</p>
-        <p class="muted">来源文件 {{ book.source_files|length }} 个 · latest export {% if book.latest_export_available %}可用{% else %}未生成{% endif %}</p>
-        {% if book.legacy_locations %}<p class="muted">保留旧位置 {{ book.legacy_locations|length }} 个</p>{% endif %}
-        <div class="actions"><a class="button primary" href="/books/{{ book.book_id }}/editions/{{ book.active_edition_id }}/workbench">打开 Workbench</a><a class="button" href="/library/{{ book.book_id }}/paths">查看路径</a>{% if book.latest_export_available %}<a class="button" href="/library/{{ book.book_id }}/export/latest/">打开 latest</a>{% endif %}<a class="button" href="/books/{{ book.book_id }}/editions/{{ book.active_edition_id }}/atlas">Story Atlas</a></div>
-      </article>
-      {% else %}
-      <section class="panel"><h2>书库为空</h2><p class="muted">使用上面的导入表单建立第一本书。</p></section>
-      {% endfor %}
-    </section>
+  <main class="library-shell" data-library-catalog data-catalog-revision="{{ catalog.revision }}">
+    <header class="library-hero">
+      <div><p class="wb-kicker">你的创作项目</p><h1>书库</h1><p>把小说放进书籍目录，这里会自动发现；只有在你确认后才会读取和初始化。</p></div>
+      <div class="library-hero-actions"><button class="button" type="button" data-refresh-library>刷新书籍</button><button class="button" type="button" data-copy-path="{{ catalog.discovery_root }}">复制书籍目录</button></div>
+    </header>
+
+    <section class="library-location" aria-label="书籍目录"><span>书籍目录</span><code>{{ catalog.discovery_root or '尚未配置' }}</code><small>支持 {{ catalog.supported_formats|join('、') if catalog.supported_formats else '当前解析器格式' }} · 扫描只读</small></section>
+    <p class="library-feedback" data-library-feedback aria-live="polite"></p>
+
+    {% for group_key, title, description in [('ready','可以继续创作','初始化已完整验收'),('running','正在准备','初始化任务正在处理或等待确认'),('pending','还需要准备','新发现或尚未完整初始化')] %}
+      {% set group = catalog.groups[group_key] %}
+      {% if group %}<section class="library-section" data-library-group="{{ group_key }}">
+        <header><div><h2>{{ title }}</h2><p>{{ description }}</p></div><span>{{ group|length }} 本</span></header>
+        <div class="library-grid">
+          {% for item in group %}<article class="library-book-card library-state-{{ item.state|lower }}" data-catalog-card data-catalog-id="{{ item.catalog_id }}">
+            <a class="library-card-main" href="{{ item.href }}">
+              <div class="library-book-cover"><span>{{ item.title[:1] }}</span></div>
+              <div class="library-book-copy"><div class="library-card-status"><span class="wb-book-state-dot wb-book-state-{{ item.state|lower }}"></span>{{ item.state_label }}</div><h3>{{ item.title }}</h3><p>{{ item.author_summary }}</p><div class="library-card-meta">{% if item.book_id %}<span>{{ item.chapter_count }} 章</span><span>{{ item.edition_count }} 个版本</span>{% else %}<span>{% if item.source_kind == 'FOLDER' %}章节目录{% else %}单个正文文件{% endif %}</span>{% endif %}{% if item.modified_at %}<span>最近更新</span>{% endif %}</div></div>
+            </a>
+            <footer>
+              <a class="button {% if item.studio_ready or item.state == 'DISCOVERED' %}primary{% endif %}" href="{{ item.href }}">{{ item.primary_action_label }}</a>
+              <details class="library-card-details"><summary>详情</summary><dl><dt>来源</dt><dd>{{ item.source_path }}</dd>{% if item.missing_requirements %}<dt>还缺</dt><dd>{{ item.missing_requirements|join('；') }}</dd>{% endif %}<dt>技术状态</dt><dd>{{ item.initialization_status or item.state }}</dd></dl></details>
+            </footer>
+          </article>{% endfor %}
+        </div>
+      </section>{% endif %}
+    {% endfor %}
+
+    {% if not catalog.entries %}<section class="library-empty"><div>＋</div><h2>放入你的第一本小说</h2><p>把 .md 或 .txt 文件复制到上面的书籍目录，最迟约 10 秒后会出现在这里。</p><button class="button primary" type="button" data-copy-path="{{ catalog.discovery_root }}">复制书籍目录</button></section>{% endif %}
   </main>
-  <script src="{{ url_for('static', path='app.js') }}" defer></script>
-  <script>
-    document.querySelector('[data-library-import]')?.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const form = event.currentTarget;
-      const result = document.querySelector('[data-library-import-result]');
-      const payload = Object.fromEntries(new FormData(form).entries());
-      const response = await fetch('/api/library/import', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content},
-        body: JSON.stringify(payload),
-      });
-      const body = await response.json();
-      if (!response.ok) { result.textContent = body?.error?.message || '导入失败'; return; }
-      result.textContent = `已导入 ${body.book_id}，正在刷新书库…`;
-      window.location.reload();
-    });
-  </script>
+  <script src="{{ url_for('static', path='library_catalog.js') }}?v=3.1.0" defer></script>
 </body>
 </html>

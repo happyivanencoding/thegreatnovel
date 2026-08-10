@@ -160,6 +160,7 @@
       present.replaceWith(next);
       replaceChrome(parsed);
       initWorkbench(next);
+      if (window.NovelLibraryCatalogInit) window.NovelLibraryCatalogInit();
       restoreNavigationState(next, desired);
       var state = { workbenchState: captureNavigationState(next) };
       if (options && options.push === false) history.replaceState(state, "", resolved); else history.pushState(state, "", resolved);

@@ -75,6 +75,14 @@ from novel_authoring.drafting import save_draft_content
 from novel_authoring.edition import edition_chapters, list_editions
 from novel_authoring.initialization import InitializationError, latest_initialization
 from novel_authoring.initialization.metrics import prepare_metric_bootstrap
+from novel_authoring.library_catalog import (
+    LibraryCatalogEntry,
+    LibraryCatalogView,
+    build_library_catalog,
+    find_candidate,
+    studio_readiness,
+    suggest_book_id,
+)
 from novel_authoring.metrics.registry import load_registry
 from novel_authoring.metrics.segments import list_segments
 from novel_authoring.metrics.service import (
@@ -228,34 +236,26 @@ def _database_for_book(app: Any, book_id: str) -> Database:
     raise HTTPException(status_code=404, detail="书籍不在当前 Web 运行库")
 
 
-def _library_payload(layout: BookLayout, registry: BookRegistry) -> list[dict[str, Any]]:
-    records = registry.list()
-    payload: list[dict[str, Any]] = []
-    for record in records:
-        latest = layout.for_book(record.book_id).edition(record.active_edition_id).latest_export
-        payload.append(
-            {
-                "book_id": record.book_id,
-                "title": record.title,
-                "root": str(record.root),
-                "source_root": str(record.source_root),
-                "source_files": list(record.source_files),
-                "active_edition_id": record.active_edition_id,
-                "readiness_status": record.readiness_status,
-                "legacy_locations": list(record.legacy_locations),
-                "latest_export": str(latest),
-                "latest_export_available": (latest / "index.html").is_file(),
-            }
-        )
-    return payload
-
-
-def _library_books_for_app(app: Any) -> list[dict[str, Any]]:
+def _library_catalog_for_app(app: Any) -> LibraryCatalogView | None:
     root = app.state.library_root
-    if root is None:
-        return []
-    layout = BookLayout(root)
-    return _library_payload(layout, BookRegistry(layout))
+    discovery_root = app.state.discovery_root
+    if root is None or discovery_root is None:
+        return None
+    return build_library_catalog(BookLayout(root), discovery_root)
+
+
+def _catalog_entry(
+    catalog: LibraryCatalogView, *, book_id: str | None = None, candidate_id: str | None = None
+) -> LibraryCatalogEntry | None:
+    return next(
+        (
+            item
+            for item in catalog.entries
+            if (book_id is not None and item.book_id == book_id)
+            or (candidate_id is not None and item.candidate_id == candidate_id)
+        ),
+        None,
+    )
 
 
 def _library_paths_payload(
@@ -308,6 +308,7 @@ def create_app(
     *,
     book_id: str | None = None,
     library_root: Path | None = None,
+    discovery_root: Path | None = None,
 ) -> Any:
     if FastAPI is None or Jinja2Templates is None:
         raise RuntimeError("Web 功能需要安装可选依赖：pip install '.[web]'")
@@ -315,10 +316,40 @@ def create_app(
     app.state.database = database
     app.state.book_id = book_id
     app.state.library_root = _library_root_for_database(database, library_root)
+    app.state.discovery_root = (
+        Path(discovery_root).expanduser().resolve()
+        if discovery_root is not None
+        else (
+            None
+            if app.state.library_root is None
+            else Path(app.state.library_root).parent / "book"
+        )
+    )
     app.state.csrf_token = create_csrf_token()
     template_dir = Path(__file__).parent / "templates"
     templates = Jinja2Templates(directory=str(template_dir))
     templates.env.autoescape = True
+
+    def render_onboarding(
+        request: Request,
+        catalog: LibraryCatalogView,
+        entry: LibraryCatalogEntry,
+    ) -> Any:
+        return _template(
+            templates,
+            "workbench_onboarding.html",
+            request,
+            {
+                "book": {"title": entry.title},
+                "book_id": entry.book_id or "",
+                "edition_id": entry.active_edition,
+                "catalog": catalog.to_dict(),
+                "library_catalog": catalog.to_dict(),
+                "catalog_entry": entry.to_dict(),
+                "current_catalog_id": entry.catalog_id,
+                "csrf_token": app.state.csrf_token,
+            },
+        )
 
     @app.exception_handler(HTTPException)
     async def handle_http_error(_request: Request, exc: HTTPException) -> JSONResponse:
@@ -343,15 +374,76 @@ def create_app(
     async def health() -> dict[str, str]:
         return {"status": "ok", "executor": "Windows Codex desktop client via local file handoff"}
 
+    def catalog_payload() -> dict[str, Any]:
+        catalog = _library_catalog_for_app(app)
+        if catalog is None:
+            return {
+                "library_root": None,
+                "discovery_root": None,
+                "supported_formats": [],
+                "entries": [],
+                "groups": {"ready": [], "running": [], "pending": []},
+                "counts": {"ready": 0, "running": 0, "pending": 0},
+                "revision": "",
+                "books": [],
+            }
+        payload = catalog.to_dict()
+        payload["books"] = [item for item in payload["entries"] if item["book_id"]]
+        return payload
+
     @app.get("/api/library")
+    @app.get("/api/library/catalog")
     async def library_api() -> dict[str, Any]:
-        root = app.state.library_root
-        if root is None:
-            return {"library_root": None, "books": []}
-        layout = BookLayout(root)
+        return catalog_payload()
+
+    @app.post("/api/library/discovery/refresh")
+    async def library_discovery_refresh_api(request: Request) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        return catalog_payload()
+
+    @app.post("/api/library/candidates/{candidate_id}/initialize")
+    async def candidate_initialize_api(request: Request, candidate_id: str) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_candidate = _check_id(candidate_id)
+        catalog = _library_catalog_for_app(app)
+        if catalog is None:
+            raise HTTPException(status_code=404, detail="书库未配置")
+        candidate = find_candidate(catalog, checked_candidate)
+        if candidate is None:
+            raise HTTPException(status_code=404, detail="待初始化书籍不存在或已被处理")
+        layout = BookLayout(app.state.library_root)
+        book_id_value = suggest_book_id(candidate, layout)
+        try:
+            added = add_book(
+                LibraryAddOptions(
+                    book_id=book_id_value,
+                    title=candidate.title,
+                    source=Path(candidate.source_path),
+                    source_origin=Path(candidate.source_path),
+                    library_root=layout.library_root,
+                    confirm_order=True,
+                    initialize_mode="prepare",
+                )
+            )
+            handoff = create_initialization_handoff(
+                Database(added.database),
+                added.book_id,
+                edition_id="base",
+                requested_stage="NOVEL_INITIALIZATION",
+            )
+        except (OSError, ValueError, RuntimeError) as exc:
+            return _error(exc)
+        handoff_id = str(handoff["handoff_id"])
         return {
-            "library_root": str(layout.library_root),
-            "books": _library_payload(layout, BookRegistry(layout)),
+            "book_id": added.book_id,
+            "title": added.title,
+            "handoff_id": handoff_id,
+            "status_label": "等待处理",
+            "instruction_url": (
+                f"/api/books/{added.book_id}/editions/base/handoffs/"
+                f"{handoff_id}/instruction"
+            ),
+            "workbench_url": f"/books/{added.book_id}/editions/base/workbench",
         }
 
     @app.get("/api/library/{path_book_id}/paths")
@@ -397,26 +489,29 @@ def create_app(
 
     @app.get("/library", response_class=HTMLResponse)
     async def library_page(request: Request) -> Any:
-        root = app.state.library_root
-        if root is None:
-            return _template(
-                templates,
-                "library.html",
-                request,
-                {"library": [], "library_root": "", "csrf_token": app.state.csrf_token},
-            )
-        layout = BookLayout(root)
-        registry = BookRegistry(layout)
+        catalog = _library_catalog_for_app(app)
+        payload = catalog_payload() if catalog is None else catalog.to_dict()
         return _template(
             templates,
             "library.html",
             request,
             {
-                "library": _library_payload(layout, registry),
-                "library_root": str(layout.library_root),
+                "catalog": payload,
+                "library": payload["entries"],
+                "library_root": payload.get("library_root") or "",
                 "csrf_token": app.state.csrf_token,
             },
         )
+
+    @app.get("/library/candidates/{candidate_id}", response_class=HTMLResponse)
+    async def candidate_onboarding_page(request: Request, candidate_id: str) -> Any:
+        catalog = _library_catalog_for_app(app)
+        if catalog is None:
+            raise HTTPException(status_code=404, detail="书库未配置")
+        candidate = find_candidate(catalog, _check_id(candidate_id))
+        if candidate is None:
+            raise HTTPException(status_code=404, detail="待初始化书籍不存在或已被处理")
+        return render_onboarding(request, catalog, candidate)
 
     @app.get("/library/{path_book_id}/paths", response_class=HTMLResponse)
     async def library_paths_page(request: Request, path_book_id: str) -> Any:
@@ -461,6 +556,15 @@ def create_app(
         if app.state.book_id is None:
             return RedirectResponse(url="/library", status_code=307)
         checked_book = _check_id(str(app.state.book_id))
+        catalog = _library_catalog_for_app(app)
+        current_entry = (
+            None if catalog is None else _catalog_entry(catalog, book_id=checked_book)
+        )
+        if catalog is not None:
+            if current_entry is None:
+                raise HTTPException(status_code=404, detail="书籍不在当前书库")
+            if not current_entry.studio_ready:
+                return render_onboarding(request, catalog, current_entry)
         selected_database = _database_for_book(app, checked_book)
         context = build_workbench_context(
             selected_database,
@@ -480,7 +584,14 @@ def create_app(
         context["active_action"] = _query_action(request)
         context["planning_view"] = request.query_params.get("planning_view", "tasks")
         context["csrf_token"] = app.state.csrf_token
-        context["library_books"] = _library_books_for_app(app)
+        context["library_catalog"] = None if catalog is None else catalog.to_dict()
+        context["library_books"] = (
+            [] if catalog is None else [item.to_dict() for item in catalog.entries]
+        )
+        context["current_catalog_id"] = f"book:{checked_book}"
+        context["catalog_entry"] = None if current_entry is None else current_entry.to_dict()
+        if current_entry is not None and current_entry.studio_ready:
+            context["book_status_label"] = "可创作"
         context["workflow"] = workflow_context(
             selected_database,
             checked_book,
@@ -502,6 +613,15 @@ def create_app(
     async def workbench_page(request: Request, path_book_id: str, edition_id: str) -> Any:
         checked_book = _check_id(path_book_id)
         checked_edition = _check_id(edition_id)
+        catalog = _library_catalog_for_app(app)
+        current_entry = (
+            None if catalog is None else _catalog_entry(catalog, book_id=checked_book)
+        )
+        if catalog is not None:
+            if current_entry is None:
+                raise HTTPException(status_code=404, detail="书籍不在当前书库")
+            if not current_entry.studio_ready:
+                return render_onboarding(request, catalog, current_entry)
         try:
             context = build_workbench_context(
                 _database_for_book(app, checked_book),
@@ -526,7 +646,14 @@ def create_app(
         context["active_action"] = _query_action(request)
         context["planning_view"] = request.query_params.get("planning_view", "tasks")
         context["csrf_token"] = app.state.csrf_token
-        context["library_books"] = _library_books_for_app(app)
+        context["library_catalog"] = None if catalog is None else catalog.to_dict()
+        context["library_books"] = (
+            [] if catalog is None else [item.to_dict() for item in catalog.entries]
+        )
+        context["current_catalog_id"] = f"book:{checked_book}"
+        context["catalog_entry"] = None if current_entry is None else current_entry.to_dict()
+        if current_entry is not None and current_entry.studio_ready:
+            context["book_status_label"] = "可创作"
         context["workflow"] = workflow_context(
             _database_for_book(app, checked_book),
             checked_book,
@@ -556,6 +683,20 @@ def create_app(
     async def workbench_api(request: Request, path_book_id: str, edition_id: str) -> dict[str, Any]:
         checked_book = _check_id(path_book_id)
         checked_edition = _check_id(edition_id)
+        catalog = _library_catalog_for_app(app)
+        if catalog is not None:
+            entry = _catalog_entry(catalog, book_id=checked_book)
+            if entry is None:
+                raise HTTPException(status_code=404, detail="书籍不在当前书库")
+            if not entry.studio_ready:
+                raise HTTPException(
+                    status_code=409,
+                    detail={
+                        "code": "STUDIO_NOT_READY",
+                        "message": entry.author_summary,
+                        "details": {"missing_requirements": list(entry.missing_requirements)},
+                    },
+                )
         return build_workbench_context(
             _database_for_book(app, checked_book),
             checked_book,
@@ -1623,6 +1764,19 @@ def create_app(
             _database_for_book(app, checked_book), checked_book, _check_id(edition_id)
         )
 
+    @app.get("/api/books/{path_book_id}/studio-readiness")
+    async def studio_readiness_api(path_book_id: str) -> dict[str, Any]:
+        root = app.state.library_root
+        if root is None:
+            raise HTTPException(status_code=404, detail="书库未配置")
+        layout = BookLayout(root)
+        checked_book = _check_id(path_book_id)
+        try:
+            record = BookRegistry(layout).record(checked_book)
+        except (OSError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail="书籍不存在") from exc
+        return studio_readiness(layout, record).to_dict()
+
     @app.post("/api/books/{path_book_id}/editions/{edition_id}/initialization")
     async def initialization_handoff_api(
         request: Request, path_book_id: str, edition_id: str
@@ -2218,8 +2372,12 @@ def web_doctor() -> dict[str, Any]:
             "/",
             "/library",
             "/api/library",
+            "/api/library/catalog",
+            "/api/library/discovery/refresh",
+            "/api/library/candidates/{candidate_id}/initialize",
             "/books/{path_book_id}/editions/{edition_id}/workbench",
             "/api/books/{path_book_id}/editions/{edition_id}/workbench",
+            "/api/books/{path_book_id}/studio-readiness",
             "/api/books/{path_book_id}/editions/{edition_id}/chapters/{chapter_id}/context",
             "/api/books/{path_book_id}/editions/{edition_id}/chapters/{chapter_id}/game-state",
             "/api/books/{path_book_id}/editions/{edition_id}/author-control",
@@ -2257,6 +2415,7 @@ def serve(
     allow_remote: bool = False,
     book_id: str | None = None,
     library_root: Path | None = None,
+    discovery_root: Path | None = None,
 ) -> None:
     if host not in ("127.0.0.1", "localhost", "::1") and not allow_remote:
         raise ValueError("默认只允许本机绑定；需要远程访问时显式传入 allow_remote")
@@ -2270,7 +2429,12 @@ def serve(
     import uvicorn
 
     uvicorn.run(
-        create_app(database, book_id=book_id, library_root=library_root),
+        create_app(
+            database,
+            book_id=book_id,
+            library_root=library_root,
+            discovery_root=discovery_root,
+        ),
         host=host,
         port=port,
     )

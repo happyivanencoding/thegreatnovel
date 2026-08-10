@@ -5,24 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>{{ book.title }} · 小说工作台</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=3.0.8">
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=3.1.0">
 </head>
 <body class="workbench-body">
   <header class="wb-topbar">
-    <a class="wb-brand" href="/">小说工作台</a>
-    <div class="wb-breadcrumb" data-wb-breadcrumb><span>{{ book.title }}</span><span>/</span><span>{{ edition.display_name }}</span>{% if selected_chapter_anchor %}<span>/</span><span>第{{ selected_chapter_anchor }}章</span>{% endif %}</div>
+    <a class="wb-brand" href="/library">Novel Studio</a>
+    <div class="wb-breadcrumb" data-wb-breadcrumb><span>{{ book.title }}</span>{% if edition.display_name != book.title %}<span>/</span><span>{{ edition.display_name }}</span>{% endif %}{% if selected_chapter_anchor %}<span>/</span><span>第{{ selected_chapter_anchor }}章</span>{% endif %}</div>
     <div class="wb-top-actions">
-      <a class="wb-top-link" href="/library">书库 · {{ library_books|length }}</a>
-      {% if library_books %}<label class="wb-library-switcher">切换 session<select aria-label="切换书库 session" onchange="if(this.value) location.href=this.value">{% for item in library_books %}<option value="/books/{{ item.book_id }}/editions/{{ item.active_edition_id }}/workbench"{% if item.book_id == book_id %} selected{% endif %}>{{ item.title }} · {{ item.book_id }}</option>{% endfor %}</select></label>{% endif %}
+      <a class="wb-top-link" href="/library">书库 · {{ library_catalog.entries|length if library_catalog else library_books|length }}</a>
       <span class="wb-status-chip">{{ selected_draft.display_status_label if selected_draft else '原文（只读）' }}</span>
       <button class="wb-activity-trigger" type="button" data-activity-trigger aria-expanded="false" aria-controls="activity-center">● 任务 {{ workflow.activity_center.badge_count }}</button>
     </div>
   </header>
 
-  <main class="wb-shell" data-workbench-shell data-book-id="{{ book_id }}" data-edition-id="{{ edition_id }}" data-active-mode="{{ active_main_mode }}" data-active-action="{{ active_action or '' }}" data-active-right-tab="{{ active_right_tab }}" data-active-left-node="{{ active_left_node }}" data-active-state-tab="{{ state_tab }}" data-active-analysis-dimension="{{ selected_profile.id or '' }}" data-selected-character-id="{{ selected_character_id or '' }}" data-current-chapter-id="{{ selected_chapter_id or '' }}" data-selected-chapter-anchor="{{ selected_chapter_anchor or 0 }}" data-truth-lens="{{ truth_lens }}">
+  <main class="wb-shell" data-workbench-shell{% if library_catalog %} data-library-catalog data-catalog-revision="{{ library_catalog.revision }}" data-current-catalog-id="{{ current_catalog_id }}"{% endif %} data-book-id="{{ book_id }}" data-edition-id="{{ edition_id }}" data-active-mode="{{ active_main_mode }}" data-active-action="{{ active_action or '' }}" data-active-right-tab="{{ active_right_tab }}" data-active-left-node="{{ active_left_node }}" data-active-state-tab="{{ state_tab }}" data-active-analysis-dimension="{{ selected_profile.id or '' }}" data-selected-character-id="{{ selected_character_id or '' }}" data-current-chapter-id="{{ selected_chapter_id or '' }}" data-selected-chapter-anchor="{{ selected_chapter_anchor or 0 }}" data-truth-lens="{{ truth_lens }}">
     <aside class="wb-pane wb-left-pane" data-pane="left" aria-label="小说结构与知识树">
       <div class="wb-pane-content">
-        <div class="wb-pane-header"><div><p class="wb-kicker">创作空间</p><h1>{{ book.title }}</h1></div><button class="wb-icon-button" type="button" data-toggle-pane="left" aria-label="隐藏左栏"><span data-pane-toggle-icon>‹</span></button></div>
+        <div class="wb-pane-header wb-book-pane-header">{% include 'workbench_book_selector.html' with context %}<button class="wb-icon-button" type="button" data-toggle-pane="left" aria-label="隐藏左栏"><span data-pane-toggle-icon>‹</span></button></div>
         <label class="wb-select-label">版本<select data-edition-select data-book-id="{{ book_id }}" onchange="location.href='/books/{{ book_id }}/editions/'+encodeURIComponent(this.value)+'/workbench'">{% for item in editions %}<option value="{{ item.edition_id }}"{% if item.edition_id == edition_id %} selected{% endif %}>{{ item.display_name }} · {{ item.status_label }}</option>{% endfor %}</select></label>
         <nav class="wb-tree" aria-label="Workbench Explorer">
           <a class="wb-tree-root wb-workbench-link{% if selected_node == 'overview' and active_main_mode == 'home' %} is-selected{% endif %}" href="/books/{{ book_id }}/editions/{{ edition_id }}/workbench?node=overview&mode=home{% if selected_chapter %}&chapter_id={{ selected_chapter.chapter_id }}{% endif %}" data-workbench-navigation>⌂ <span>作品概览</span></a>
@@ -133,6 +132,7 @@
     </aside>
     {% include 'workbench_activity_center.html' with context %}
   </main>
-  <script src="{{ url_for('static', path='workbench.js') }}?v=3.0.8" defer></script>
+  <script src="{{ url_for('static', path='library_catalog.js') }}?v=3.1.0" defer></script>
+  <script src="{{ url_for('static', path='workbench.js') }}?v=3.1.0" defer></script>
 </body>
 </html>

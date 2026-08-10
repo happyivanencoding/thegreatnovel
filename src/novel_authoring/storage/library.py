@@ -30,6 +30,7 @@ class LibraryAddOptions:
     library_root: Path | None = None
     confirm_order: bool = False
     initialize_mode: str = "deferred"
+    source_origin: Path | None = None
 
 
 @dataclass(slots=True)
@@ -131,6 +132,7 @@ def add_book(options: LibraryAddOptions) -> LibraryAddResult:
             source_before,
             initialize_mode,
             layout=layout,
+            source_origin=options.source_origin or source,
         )
         fts_rows = _validate_book_tree(
             stage_paths,
@@ -235,6 +237,7 @@ def _finalize_registry(
     initialize_mode: str,
     *,
     layout: BookLayout,
+    source_origin: Path,
 ) -> None:
     registry = BookRegistry(layout)
     values: dict[str, Any] = {
@@ -246,6 +249,10 @@ def _finalize_registry(
         "active_edition_id": "base",
         "database_path": "_system/state.sqlite3",
         "source_storage_mode": "COPY_READ_ONLY",
+        "source_origin": {
+            "path": str(source_origin.expanduser().resolve()),
+            "kind": "FILE" if source_origin.is_file() else "FOLDER",
+        },
         "source_files": sorted(source_hashes),
         "created_at": utc_now(),
         "updated_at": utc_now(),

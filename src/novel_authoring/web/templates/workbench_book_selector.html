@@ -1,0 +1,30 @@
+{% if library_catalog and library_catalog.entries %}
+<div class="wb-book-project">
+  <span class="wb-select-caption">书籍</span>
+  <details class="wb-book-selector" data-book-selector>
+    <summary>
+      <span class="wb-book-state-dot wb-book-state-{{ catalog_entry.state|lower if catalog_entry else 'ready' }}" data-current-book-state-dot aria-hidden="true"></span>
+      <span class="wb-book-current-title">{{ catalog_entry.title if catalog_entry else book.title }}</span>
+      <small data-current-book-state-label>{{ catalog_entry.state_label if catalog_entry else '可创作' }}</small>
+      <span aria-hidden="true">⌄</span>
+    </summary>
+    <div class="wb-book-selector-popover">
+      <label class="wb-book-search"><span>搜索书籍</span><input type="search" placeholder="输入书名" data-book-search autocomplete="off"></label>
+      {% for group_key, group_label in [('ready','可创作'),('running','进行中'),('pending','待准备')] %}
+        {% set group = library_catalog.groups[group_key] %}
+        {% if group %}<section class="wb-book-group" data-book-group>
+          <h3>{{ group_label }} <span>{{ group|length }}</span></h3>
+          {% for item in group %}<a href="{{ item.href }}" class="wb-book-option{% if item.catalog_id == current_catalog_id %} is-current{% endif %}" data-book-option data-book-switch data-catalog-id="{{ item.catalog_id }}" data-book-id="{{ item.book_id or '' }}">
+            <span class="wb-book-state-dot wb-book-state-{{ item.state|lower }}" aria-hidden="true"></span>
+            <span><strong>{{ item.title }}</strong><small{% if item.catalog_id == current_catalog_id %} data-current-book-option-state-label{% endif %}>{{ item.state_label }}</small></span>
+            {% if item.catalog_id == current_catalog_id %}<span aria-label="当前书籍">✓</span>{% endif %}
+          </a>{% endfor %}
+        </section>{% endif %}
+      {% endfor %}
+      <a class="wb-book-library-link" href="/library">管理全部书籍</a>
+    </div>
+  </details>
+</div>
+{% else %}
+<div class="wb-book-project"><span class="wb-select-caption">书籍</span><strong class="wb-book-standalone">{{ book.title }}</strong></div>
+{% endif %}

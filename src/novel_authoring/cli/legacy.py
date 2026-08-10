@@ -2781,6 +2781,7 @@ def web_serve_command(
     host: str = typer.Option("127.0.0.1", "--host"), port: int = typer.Option(8765, "--port"),
     allow_remote: bool = typer.Option(False, "--allow-remote"),
     library_root: LibraryRoot = None,
+    discovery_root: Annotated[Optional[Path], typer.Option("--discovery-root")] = None,
 ) -> None:
     try:
         from novel_authoring.web.app import serve
@@ -2801,6 +2802,7 @@ def web_serve_command(
             allow_remote=allow_remote,
             book_id=book_id,
             library_root=selected_library_root,
+            discovery_root=discovery_root,
         )
     except (ValueError, RuntimeError, OSError) as exc:
         typer.echo(str(exc), err=True); raise typer.Exit(code=3) from exc

@@ -24,6 +24,8 @@ class BookRecord:
     active_edition_id: str
     layout_version: str
     readiness_status: str | None = None
+    source_origin: Path | None = None
+    source_origin_kind: str | None = None
     legacy_locations: tuple[dict[str, Any] | str, ...] = ()
 
     @classmethod
@@ -38,6 +40,9 @@ class BookRecord:
         files = files_value if isinstance(files_value, list) else []
         legacy_value = mapping.get("legacy_locations")
         legacy = legacy_value if isinstance(legacy_value, list) else []
+        origin_value = mapping.get("source_origin")
+        origin = origin_value if isinstance(origin_value, dict) else {}
+        origin_path = origin.get("path")
         return cls(
             book_id=str(mapping.get("book_id") or paths.book_id),
             title=str(mapping.get("title") or paths.book_id),
@@ -49,6 +54,10 @@ class BookRecord:
             readiness_status=(
                 str(mapping["readiness_status"]) if mapping.get("readiness_status") else None
             ),
+            source_origin=(
+                Path(str(origin_path)).expanduser().resolve() if origin_path else None
+            ),
+            source_origin_kind=(str(origin.get("kind")) if origin.get("kind") else None),
             legacy_locations=tuple(
                 item for item in legacy if isinstance(item, (str, dict))
             ),
