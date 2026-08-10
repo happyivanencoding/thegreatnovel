@@ -446,7 +446,7 @@ def test_v22_workbench_renders_matrix_inspector_modal_and_stable_explorer(
         "&character_id=character:hero"
     )
     assert zero_delta_page.status_code == 200
-    assert "COMPLETE_NO_CHANGE" in zero_delta_page.text
+    assert "已分析 · 无确认变化" in zero_delta_page.text
     assert "本章状态已分析，没有确认状态变化" in zero_delta_page.text
     assert "准备本章状态任务" not in zero_delta_page.text
 
@@ -454,7 +454,7 @@ def test_v22_workbench_renders_matrix_inspector_modal_and_stable_explorer(
         "/books/story-world-v22/editions/base/workbench?mode=analysis&node=worldbuilding"
     )
     assert profile.status_code == 200
-    assert "Global Book Profile · Effective" in profile.text
+    assert "全书画像 · 当前有效版本" in profile.text
     assert profile.text.count("data-profile-edit-form") == 1
     workbench_js_path = (
         Path(__file__).parents[2]

@@ -34,6 +34,7 @@ from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.edition import edition_chapters
 
 WORKBENCH_MODES: tuple[str, ...] = (
+    "home",
     "continue",
     "rewrite",
     "plan",
@@ -58,6 +59,7 @@ WORKBENCH_STATE_TABS: tuple[str, ...] = (
 )
 
 MODE_LABELS = {
+    "home": "工作台",
     "continue": "续写",
     "rewrite": "改写",
     "plan": "规划",
@@ -98,6 +100,15 @@ STATUS_LABELS = {
     "PROVISIONAL_DRAFT_DELTA": "草稿临时变化",
     "CANON_EVENT_DELTA": "已记录正史变化",
     "SOURCE_CHAPTER_STATE_PROJECTION_MISSING": "尚未建立历史章节状态",
+}
+SOURCE_COVERAGE_LABELS = {
+    "NOT_STARTED": "尚未分析",
+    "READY_FOR_CODEX": "等待 AI 处理",
+    "RUNNING": "正在分析",
+    "PARTIAL": "部分完成",
+    "COMPLETE_NO_CHANGE": "已分析 · 无确认变化",
+    "COMPLETE_WITH_CHANGES": "已分析 · 有确认变化",
+    "FAILED": "分析失败",
 }
 COLLECTION_LABELS = {
     "facts": "事实",
@@ -367,21 +378,64 @@ def _draft_rows(
 
 
 def _candidate_cards(
-    connection: sqlite3.Connection, book_id: str, edition_id: str
+    connection: sqlite3.Connection,
+    book_id: str,
+    edition_id: str,
+    *,
+    context_chapter_id: str | None,
+    context_chapter_ordinal: int | None,
 ) -> list[dict[str, Any]]:
-    latest = connection.execute(
-        "SELECT task_id FROM candidate_plans WHERE book_id=? AND edition_id=? "
-        "ORDER BY created_at DESC LIMIT 1",
-        (book_id, edition_id),
-    ).fetchone()
-    if latest is None:
+    task_id: str | None = None
+    if context_chapter_id:
+        handoffs = connection.execute(
+            "SELECT task_manifest_path, result_json FROM workflow_handoffs "
+            "WHERE book_id=? AND edition_id=? AND handoff_type='CONTINUATION' "
+            "AND result_json IS NOT NULL ORDER BY created_at DESC",
+            (book_id, edition_id),
+        ).fetchall()
+        for handoff in handoffs:
+            path = Path(str(handoff["task_manifest_path"] or ""))
+            if not path.is_file():
+                continue
+            try:
+                task = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            if str(task.get("context_chapter_id") or "") != context_chapter_id:
+                continue
+            result_payload = _read_json(handoff["result_json"])
+            task_ids = result_payload.get("task_ids") or []
+            if task_ids:
+                task_id = str(task_ids[0])
+                break
+    else:
+        latest = connection.execute(
+            "SELECT task_id FROM candidate_plans WHERE book_id=? AND edition_id=? "
+            "ORDER BY created_at DESC LIMIT 1",
+            (book_id, edition_id),
+        ).fetchone()
+        if latest is not None:
+            task_id = str(latest["task_id"])
+    if task_id is None:
         return []
     rows = connection.execute(
         "SELECT * FROM candidate_plans WHERE book_id=? AND edition_id=? AND task_id=? "
         "ORDER BY CASE WHEN rank IS NULL THEN 999 ELSE rank END, candidate_id",
-        (book_id, edition_id, str(latest["task_id"])),
+        (book_id, edition_id, task_id),
     ).fetchall()
     result: list[dict[str, Any]] = []
+    agenda_labels = {
+        "KEEP_HIDDEN": "继续隐藏",
+        "SHOULD_HINT": "本章宜给线索",
+        "MUST_REVEAL": "本章必须揭示",
+    }
+    depth_labels = {
+        "HINT": "线索",
+        "STRONG_HINT": "强线索",
+        "PARTIAL_REVEAL": "部分揭示",
+        "FULL_REVEAL": "完整揭示",
+    }
+    dimension_labels = {key: label for key, label, _ in PROFILE_DIMENSIONS}
     for row in rows:
         plan = _read_json(row["plan_json"])
         score = _read_json(row["score_json"])
@@ -393,7 +447,9 @@ def _candidate_cards(
                 "truth_id": str(item.get("truth_id") or ""),
                 "title": str(item.get("title") or item.get("truth_id") or "未命名真相"),
                 "behavioral_effect": str(item.get("behavioral_effect") or "未说明行为约束"),
-                "agenda_bucket": str(item.get("agenda_bucket") or "KEEP_HIDDEN"),
+                "agenda_bucket": agenda_labels.get(
+                    str(item.get("agenda_bucket") or "KEEP_HIDDEN"), "继续隐藏"
+                ),
                 "respected": bool(item.get("respected", False)),
             }
             for item in truth_alignment
@@ -433,7 +489,9 @@ def _candidate_cards(
                     {
                         "kind": impact_label,
                         "truth_id": str(item.get("truth_id") or ""),
-                        "depth": str(item.get("depth") or ""),
+                        "depth": depth_labels.get(
+                            str(item.get("depth") or ""), "未注明深度"
+                        ),
                         "clue": str(item.get("clue") or "未写明可读线索"),
                         "target": str(item.get("target") or "READER"),
                     }
@@ -441,6 +499,12 @@ def _candidate_cards(
         result.append(
             {
                 "candidate_id": str(row["candidate_id"]),
+                "context_chapter_id": context_chapter_id,
+                "target_chapter_ordinal": (
+                    context_chapter_ordinal + 1
+                    if context_chapter_ordinal is not None
+                    else None
+                ),
                 "rank": row["rank"],
                 "selection_status": str(row["selection_status"]),
                 "title": str(plan.get("title") or row["candidate_id"]),
@@ -452,7 +516,22 @@ def _candidate_cards(
                 "gate_passed": bool(gate.get("passed", False)),
                 "hard_failures": list(gate.get("hard_failures", [])),
                 "author_control_trace": plan.get("author_control_trace", {}),
-                "profile_alignment": plan.get("profile_alignment", {}),
+                "profile_alignment": {
+                    **dict(plan.get("profile_alignment", {})),
+                    "dimensions": [
+                        {
+                            **item,
+                            "dimension": dimension_labels.get(
+                                str(item.get("dimension") or ""),
+                                str(item.get("dimension") or "未注明维度"),
+                            ),
+                        }
+                        for item in dict(plan.get("profile_alignment", {})).get(
+                            "dimensions", []
+                        )
+                        if isinstance(item, dict)
+                    ],
+                },
                 "state_changes": list(plan.get("state_changes", [])),
                 "truth_effects": truth_effects,
                 "reveal_previews": reveal_previews,
@@ -893,7 +972,7 @@ def build_workbench_context(
     chapter_id: str | None = None,
     draft_id: str | None = None,
     node: str = "overview",
-    mode: str = "continue",
+    mode: str = "home",
     right_tab: str = "prose",
     state_tab: str = "overview",
     character_id: str | None = None,
@@ -932,7 +1011,6 @@ def build_workbench_context(
             else edition_chapters(connection, book_id, selected_edition_id)
         )
         drafts = _draft_rows(connection, book_id, selected_edition_id)
-        candidate_cards = _candidate_cards(connection, book_id, selected_edition_id)
         selected_chapter, selected_draft = _selected_records(
             raw_chapters,
             drafts,
@@ -944,11 +1022,23 @@ def build_workbench_context(
             selected_anchor = int(selected_chapter["ordinal"])
         elif selected_draft is not None:
             selected_anchor = selected_draft.get("target_chapter_ordinal")
+        candidate_cards = _candidate_cards(
+            connection,
+            book_id,
+            selected_edition_id,
+            context_chapter_id=(
+                None if selected_chapter is None else str(selected_chapter["chapter_id"])
+            ),
+            context_chapter_ordinal=(
+                None if selected_chapter is None else int(selected_chapter["ordinal"])
+            ),
+        )
         selected_node = node
         valid_profile_nodes = {item[0] for item in PROFILE_DIMENSIONS}
         if selected_node not in valid_profile_nodes and selected_node not in {
             "overview",
             "chapter",
+            "planning",
             "state",
             "truth",
             "truth-board",
@@ -990,7 +1080,7 @@ def build_workbench_context(
     latest_chapter = chapter_items[-1] if chapter_items else None
     if selected_anchor is None and latest_chapter is not None:
         selected_anchor = int(latest_chapter["ordinal"])
-    active_mode = _normalise_choice(mode, WORKBENCH_MODES, "continue")
+    active_mode = _normalise_choice(mode, WORKBENCH_MODES, "home")
     active_state_tab = _normalise_choice(
         state_tab, WORKBENCH_STATE_TABS, "overview"
     )
@@ -1015,6 +1105,9 @@ def build_workbench_context(
             chapter_id=state_chapter_id,
             character_id=character_id,
         )
+        story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
+            str(story_game_state.get("coverage_status") or "NOT_STARTED"), "状态未知"
+        )
         selected_ordinal = int(selected_chapter["ordinal"])
         previous_chapter = next(
             (
@@ -1032,6 +1125,15 @@ def build_workbench_context(
                 chapter_id=str(previous_chapter["chapter_id"]),
                 character_id=character_id,
             )
+            previous_story_game_state["coverage_status_label"] = (
+                SOURCE_COVERAGE_LABELS.get(
+                    str(
+                        previous_story_game_state.get("coverage_status")
+                        or "NOT_STARTED"
+                    ),
+                    "状态未知",
+                )
+            )
     if active_mode == "state":
         if story_game_state is None:
             story_game_state = build_story_game_state(
@@ -1040,6 +1142,10 @@ def build_workbench_context(
                 selected_edition_id,
                 chapter_id=None,
                 character_id=character_id,
+            )
+            story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
+                str(story_game_state.get("coverage_status") or "NOT_STARTED"),
+                "状态未知",
             )
         state_ordinal = int(
             (story_game_state.get("chapter") or {}).get("ordinal") or selected_anchor or 0

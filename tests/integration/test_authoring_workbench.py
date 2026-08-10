@@ -11,6 +11,7 @@ from novel_authoring.db.database import Database
 from novel_authoring.ingest.service import ingest_book
 from novel_authoring.storage.library import LibraryAddOptions, add_book
 from novel_authoring.web.app import create_app, web_doctor
+from novel_authoring.web.routes.pages import workflow_context
 
 
 class _VisibleTextParser(HTMLParser):
@@ -132,6 +133,52 @@ def _read_only_snapshot(database: Database) -> dict[str, object]:
     }
 
 
+def _insert_handoff(
+    database: Database,
+    root: Path,
+    *,
+    handoff_id: str,
+    handoff_type: str,
+    requested_stage: str,
+    status: str,
+    chapter_id: str,
+    created_at: str,
+) -> None:
+    task_directory = root / handoff_id
+    task_directory.mkdir(parents=True)
+    task_manifest = task_directory / "task.json"
+    task_manifest.write_text(
+        json.dumps({"context_chapter_id": chapter_id}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+    with database.connect() as connection:
+        connection.execute(
+            """
+            INSERT INTO workflow_handoffs(
+                handoff_id, book_id, edition_id, handoff_type, requested_stage,
+                status, task_directory, prompt_path, task_manifest_path,
+                output_schema_path, result_path, event_log_path, base_event_seq,
+                base_projection_hash, source_manifest_sha256, registry_hash,
+                config_hash, created_at
+            ) VALUES (?, 'shell-test-book', 'base', ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                      0, 'projection', 'source', 'registry', 'config', ?)
+            """,
+            (
+                handoff_id,
+                handoff_type,
+                requested_stage,
+                status,
+                str(task_directory),
+                str(task_directory / "prompt.md"),
+                str(task_manifest),
+                str(task_directory / "schema.json"),
+                str(task_directory / "result.json"),
+                str(task_directory / "events.jsonl"),
+                created_at,
+            ),
+        )
+
+
 def test_workbench_renders_real_profile_and_highlights_selected_node(tmp_path: Path) -> None:
     database = _book(tmp_path)
     app = create_app(database, book_id="workbench-book")
@@ -142,20 +189,22 @@ def test_workbench_renders_real_profile_and_highlights_selected_node(tmp_path: P
     )
 
     assert response.status_code == 200
-    assert "Novel Authoring Workbench" in response.text
+    assert "小说工作台" in response.text
     assert "潮汐会遮蔽灯塔坐标" in response.text
-    assert "Global Book Profile · Effective" in _visible_text(response.text)
+    assert "全书画像 · 当前有效版本" in _visible_text(response.text)
     assert "SOFT INTERPRETATION" not in _visible_text(response.text)
     assert "SELF_BOOK" not in _visible_text(response.text)
     assert "Distill version" not in _visible_text(response.text)
     assert 'data-workbench-shell' in response.text
     assert 'data-pane-rail="left"' in response.text
     assert 'data-pane-rail="right"' in response.text
-    assert 'data-wb-mode="continue"' in response.text
-    assert 'data-wb-mode="rewrite"' in response.text
-    assert 'data-wb-mode="plan"' in response.text
-    assert 'data-wb-mode="analysis"' in response.text
-    assert 'data-wb-mode="continuity"' in response.text
+    assert "action=continue" in response.text
+    assert "action=rewrite" in response.text
+    assert "action=plan" in response.text
+    assert "续写下一章" in response.text
+    assert "改写本章" in response.text
+    assert "规划后续" in response.text
+    assert "data-activity-trigger" in response.text
     assert "隐藏左栏" in response.text
     assert "隐藏右栏" in response.text
     assert "is-selected" in response.text
@@ -189,9 +238,9 @@ def test_chapter_navigation_is_query_only_and_exposes_source_gap(tmp_path: Path)
     assert selected.status_code == 200
     assert "第2章" in selected.text
     assert "当前章节 · 第2章" in _visible_text(selected.text)
-    assert "章后状态暂不可回溯" in _visible_text(selected.text)
-    assert "尚未建立历史章节状态" in _visible_text(selected.text)
-    assert "目前无法确认这一章具体改变了哪些人物、资源或剧情线" in _visible_text(selected.text)
+    assert "正在补齐这一章的故事状态" in _visible_text(selected.text)
+    assert "当前没有可回指本章的原文状态证据" in _visible_text(selected.text)
+    assert "SOURCE_CHAPTER_STATE_PROJECTION_MISSING" not in _visible_text(selected.text)
     assert "潮声里藏着一段坐标" in selected.text
     assert _read_only_snapshot(database) == before
 
@@ -214,7 +263,7 @@ def test_modes_tabs_and_right_tabs_have_readable_state(tmp_path: Path) -> None:
     assert "连续性审查" in visible
     assert "章末状态" in visible
     assert "当前没有可读取的章节状态" not in visible
-    assert "章后状态暂不可回溯" in visible
+    assert "正在补齐这一章的故事状态" in visible
     assert "SOURCE_CHAPTER_STATE_PROJECTION_MISSING" not in visible
     assert "anchor_chapter_ordinal" not in visible
 
@@ -226,31 +275,196 @@ def test_author_workflow_surface_is_readable_and_embedded_in_workbench(
     app = create_app(database, book_id="workflow-surface-book")
     client = TestClient(app)
 
-    workflow = client.get("/books/workflow-surface-book/workflow")
+    legacy = client.get("/books/workflow-surface-book/workflow", follow_redirects=False)
+    assert legacy.status_code == 302
+    assert legacy.headers["location"].startswith(
+        "/books/workflow-surface-book/editions/base/workbench?action=continue"
+    )
+
+    workflow = client.get(legacy.headers["location"])
     assert workflow.status_code == 200
     visible = _visible_text(workflow.text)
-    assert "你接下来想做什么？" in visible
+    assert "续写 · 第4章" in visible
     assert "续写设置" in visible
     assert "创新程度" in visible
     assert "创新方向" in visible
     assert "当前还没有作者任务" in visible
     assert "PLAN_ONLY" not in visible
     assert "WAITING_FOR_USER" not in visible
-    assert workflow.text.count('data-workflow-form') == 3
-    assert 'data-workflow-mode="continue"' in workflow.text
-    assert 'data-workflow-mode="rewrite"' in workflow.text
-    assert 'data-workflow-mode="plan"' in workflow.text
+    assert workflow.text.count("data-workflow-form") == 1
+    assert 'data-active-action="continue"' in workflow.text
+    assert "workflow-shell" not in workflow.text
     assert workflow.text.count('data-toggle-pane="left"') == 2
     assert workflow.text.count('data-toggle-pane="right"') == 2
 
     workbench = client.get(
-        "/books/workflow-surface-book/editions/base/workbench?mode=continue"
+        "/books/workflow-surface-book/editions/base/workbench?action=continue"
     )
     assert workbench.status_code == 200
-    assert "你接下来想做什么？" in _visible_text(workbench.text)
+    assert "续写 · 第4章" in _visible_text(workbench.text)
     assert "续写设置" in _visible_text(workbench.text)
     assert workbench.text.count('data-toggle-pane="left"') == 2
     assert workbench.text.count('data-toggle-pane="right"') == 2
+
+
+def test_product_shell_has_one_primary_nav_and_three_chapter_actions(tmp_path: Path) -> None:
+    database = _book(tmp_path, "shell-test-book")
+    app = create_app(database, book_id="shell-test-book")
+    page = TestClient(app).get("/books/shell-test-book/editions/base/workbench")
+
+    assert page.status_code == 200
+    assert 'data-active-mode="home"' in page.text
+    assert page.text.count("data-workbench-shell") == 1
+    assert "续写下一章" in page.text
+    assert "改写本章" in page.text
+    assert "规划后续" in page.text
+    assert "剧情规划" in page.text
+    assert 'href="/books/shell-test-book/workflow"' not in page.text
+    assert 'href="/books/shell-test-book/jobs"' not in page.text
+    assert "data-activity-trigger" in page.text
+
+
+def test_each_chapter_action_opens_its_center_and_keeps_chapter_anchor(
+    tmp_path: Path,
+) -> None:
+    database = _book(tmp_path, "shell-test-book")
+    app = create_app(database, book_id="shell-test-book")
+    client = TestClient(app)
+    chapter_id = _chapter_ids(database)[1]
+
+    expected = {
+        "continue": ("续写 · 第3章", "/handoffs/continuation"),
+        "rewrite": ("改写 · 第2章", "/handoffs/revision"),
+        "plan": ("规划 · 第3章以后", "/handoffs/continuation"),
+    }
+    for action, (title, endpoint) in expected.items():
+        page = client.get(
+            "/books/shell-test-book/editions/base/workbench"
+            f"?action={action}&chapter_id={chapter_id}"
+        )
+        assert page.status_code == 200
+        assert f'data-active-action="{action}"' in page.text
+        assert title in _visible_text(page.text)
+        assert endpoint in page.text
+        assert page.text.count("data-workflow-form") == 1
+        assert f"chapter_id={chapter_id}" in page.text
+
+
+def test_activity_center_groups_system_work_and_keeps_author_tasks_separate(
+    tmp_path: Path,
+) -> None:
+    database = _book(tmp_path, "shell-test-book")
+    chapter_id = _chapter_ids(database)[-1]
+    _insert_handoff(
+        database,
+        tmp_path / "activities",
+        handoff_id="handoff-shell-plan",
+        handoff_type="CONTINUATION",
+        requested_stage="PLAN_ONLY",
+        status="READY_FOR_CODEX",
+        chapter_id=chapter_id,
+        created_at="2026-08-10T10:00:00+00:00",
+    )
+    _insert_handoff(
+        database,
+        tmp_path / "activities",
+        handoff_id="handoff-shell-profile",
+        handoff_type="PROFILE_REANALYSIS",
+        requested_stage="PROFILE_REANALYSIS",
+        status="COMPLETED",
+        chapter_id=chapter_id,
+        created_at="2026-08-10T09:00:00+00:00",
+    )
+    with database.connect() as connection:
+        connection.executemany(
+            """
+            INSERT INTO author_control_tasks(
+                task_id, book_id, edition_id, title, task_type, description,
+                horizon, lifecycle_status, priority, payload_json, created_at, updated_at
+            ) VALUES (?, 'shell-test-book', 'base', ?, ?, '', 'MID', 'ACTIVE',
+                      100, '{}', 'now', 'now')
+            """,
+            [
+                ("task-story", "获得长枪", "AUTHOR_TASK"),
+                ("task-hydration", "补齐第3章的故事状态", "SOURCE_STATE_HYDRATION"),
+            ],
+        )
+
+    context = workflow_context(database, "shell-test-book", edition_id="base")
+    assert [task["title"] for task in context["author_tasks"]] == ["获得长枪"]
+    assert context["activity_center"]["badge_count"] == 1
+    groups = {
+        group["key"]: [item["title"] for item in group["items"]]
+        for group in context["activity_center"]["groups"]
+    }
+    assert groups["running"] == ["第4章规划候选"]
+    assert groups["completed"] == ["全书画像重新分析"]
+
+    app = create_app(database, book_id="shell-test-book")
+    page = TestClient(app).get(
+        f"/books/shell-test-book/editions/base/workbench?chapter_id={chapter_id}"
+    )
+    assert "等待 AI 处理" in page.text
+    assert "第4章规划候选" in page.text
+    assert "任务中心" in page.text
+    assert "task_directory" in page.text
+    assert "READY_FOR_CODEX" not in _visible_text(page.text)
+
+    planning = TestClient(app).get(
+        "/books/shell-test-book/editions/base/workbench"
+        f"?mode=plan&node=planning&planning_view=tasks&chapter_id={chapter_id}"
+    )
+    planning_visible = _visible_text(planning.text)
+    assert "获得长枪" in planning_visible
+    assert "补齐第3章的故事状态" not in planning_visible
+    assert "不等于系统任务" in planning_visible
+
+
+def test_chapter_anchor_is_shared_by_profile_planning_state_and_continuity(
+    tmp_path: Path,
+) -> None:
+    database = _book(tmp_path, "shell-test-book")
+    chapter_id = _chapter_ids(database)[0]
+    app = create_app(database, book_id="shell-test-book")
+    page = TestClient(app).get(
+        "/books/shell-test-book/editions/base/workbench"
+        f"?mode=analysis&node=worldbuilding&chapter_id={chapter_id}"
+    )
+
+    assert page.status_code == 200
+    assert f'data-current-chapter-id="{chapter_id}"' in page.text
+    assert f"mode=analysis&chapter_id={chapter_id}" in page.text
+    assert f"mode=state&state_tab=overview&chapter_id={chapter_id}" in page.text
+    assert f"mode=continuity&node=chapter&chapter_id={chapter_id}" in page.text
+    planning_link = (
+        f"action=plan&node=planning&planning_view=candidates&chapter_id={chapter_id}"
+    )
+    assert planning_link in page.text
+
+
+def test_navigation_and_item_scripts_preserve_history_scroll_and_current_state() -> None:
+    root = Path(__file__).parents[2]
+    script = (root / "src" / "novel_authoring" / "web" / "static" / "workbench.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert "options && options.fromPop" in script
+    assert "bindScrollPersistence" in script
+    assert "leftTreeScrollTop" in script
+    assert "centerScrollTop" in script
+    assert "rightScrollTop" in script
+    assert "leftCollapsed" in script and "rightCollapsed" in script
+    assert "history.pushState" in script
+    assert "DROP_ITEM" not in script
+    assert "没有当前证据" in script
+    assert "已存在：" in script
+    assert "item.record_id" in script
+    assert "item.name" in script
+    assert "item.label" in script
+    assert (
+        'form.querySelector("[data-item-submit]").addEventListener("click", submitItem)'
+        in script
+    )
 
 
 def test_draft_is_provisional_and_explicit_save_does_not_touch_canon(tmp_path: Path) -> None:

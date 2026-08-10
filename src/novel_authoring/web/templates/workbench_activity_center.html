@@ -1,0 +1,25 @@
+<aside class="wb-activity-center" id="activity-center" data-activity-center aria-label="任务中心" hidden>
+  <header>
+    <div><p class="wb-kicker">Activity Center</p><h2>任务中心</h2><span>系统运行记录与作者剧情任务分开显示。</span></div>
+    <button class="wb-icon-button" type="button" data-activity-close aria-label="关闭任务中心">×</button>
+  </header>
+  <div class="wb-activity-groups">
+    {% for group in workflow.activity_center.groups %}
+    <section class="wb-activity-group" data-activity-group="{{ group['key'] }}">
+      <div class="wb-activity-group-title"><h3>{{ group['label'] }}</h3><span>{{ group['items']|length }}</span></div>
+      {% for activity in group['items'] %}
+      <article class="wb-activity-card{% if workflow.activity_center.selected_activity and workflow.activity_center.selected_activity.activity_id == activity.activity_id %} is-selected{% endif %}" data-activity-id="{{ activity.activity_id }}">
+        <div class="wb-activity-card-heading"><span class="wb-activity-type">{{ activity.type_label }}</span><span class="workflow-status-chip workflow-status-{{ activity.status|lower }}">{{ activity.status_label }}</span></div>
+        <h4>{{ activity.title }}</h4>
+        <p>{{ activity.summary }}</p>
+        {% if activity.progress is not none %}<div class="wb-activity-progress" role="progressbar" aria-valuenow="{{ activity.progress }}" aria-valuemin="0" aria-valuemax="100"><span style="width: {{ activity.progress }}%"></span></div>{% endif %}
+        <small>{{ activity.progress_label }} · {{ activity.created_at_label }}</small>
+        <div class="wb-activity-actions"><a class="button compact" href="{{ activity.open_target }}" data-workbench-navigation>{{ activity.next_action_label }}</a></div>
+        <details class="workflow-developer-details"><summary>技术详情</summary><dl>{% for key, value in activity.technical.items() %}<dt>{{ key }}</dt><dd>{% if value is iterable and value is not string %}<code>{{ value|tojson }}</code>{% else %}<code>{{ value }}</code>{% endif %}</dd>{% endfor %}</dl></details>
+      </article>
+      {% else %}<p class="wb-activity-empty">暂无{{ group['label'] }}任务。</p>{% endfor %}
+    </section>
+    {% endfor %}
+  </div>
+</aside>
+<button class="wb-activity-scrim" type="button" data-activity-close aria-label="关闭任务中心" hidden></button>

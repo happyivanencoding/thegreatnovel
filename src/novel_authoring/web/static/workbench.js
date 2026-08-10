@@ -6,7 +6,7 @@
   function root() { return document.querySelector(rootSelector); }
   function csrfToken() { var meta = document.querySelector('meta[name="csrf-token"]'); return meta ? meta.content : ""; }
   function json(value, fallback) { try { return JSON.parse(value); } catch (error) { return fallback; } }
-  function scopedKey(current) { return "novel-workbench-v2.3:" + current.dataset.bookId + ":" + current.dataset.editionId; }
+  function scopedKey(current) { return "novel-workbench-v2.4:" + current.dataset.bookId + ":" + current.dataset.editionId; }
   function number(value) { return Number.isFinite(Number(value)) ? Number(value) : 0; }
 
   function captureNavigationState(current) {
@@ -24,12 +24,14 @@
       rightScrollTop: right ? right.scrollTop : 0,
       rightScrollLeft: right ? right.scrollLeft : 0,
       openExplorerSections: Array.from(current.querySelectorAll("details[data-explorer-section][open]")).map(function (item) { return item.dataset.explorerSection; }),
-      activeMainMode: current.dataset.activeMode || "continue",
+      activeMainMode: current.dataset.activeMode || "home",
+      activeAction: current.dataset.activeAction || "",
       activeRightTab: current.dataset.activeRightTab || "prose",
       activeStateTab: current.dataset.activeStateTab || "overview",
       activeAnalysisDimension: current.dataset.activeAnalysisDimension || "",
       selectedChapter: current.dataset.currentChapterId || "",
       selectedCharacter: current.dataset.selectedCharacterId || "",
+      activityCenterOpen: !current.querySelector("[data-activity-center]").hidden,
       leftCollapsed: current.classList.contains("is-left-collapsed"),
       rightCollapsed: current.classList.contains("is-right-collapsed"),
       paneWidths: {
@@ -62,6 +64,7 @@
     current.classList.toggle("is-left-collapsed", Boolean(state.leftCollapsed));
     current.classList.toggle("is-right-collapsed", Boolean(state.rightCollapsed));
     updatePaneButtons(current);
+    setActivityOpen(current, Boolean(state.activityCenterOpen), false);
   }
 
   function restoreScroll(current, state) {
@@ -122,7 +125,8 @@
   function targetUrl(href, current) {
     var url = new URL(href, location.href);
     if (!url.searchParams.has("chapter_id") && !url.searchParams.has("draft_id") && current.dataset.currentChapterId) url.searchParams.set("chapter_id", current.dataset.currentChapterId);
-    if (!url.searchParams.has("mode")) url.searchParams.set("mode", current.dataset.activeMode || "continue");
+    if (!url.searchParams.has("action") && current.dataset.activeAction && !url.searchParams.has("mode") && url.searchParams.get("node") === "chapter") url.searchParams.set("action", current.dataset.activeAction);
+    if (!url.searchParams.has("mode") && !url.searchParams.has("action")) url.searchParams.set("mode", current.dataset.activeMode || "home");
     if (!url.searchParams.has("right_tab")) url.searchParams.set("right_tab", current.dataset.activeRightTab || "prose");
     if (!url.searchParams.has("state_tab") && (current.dataset.activeMode === "state" || url.searchParams.get("mode") === "state")) url.searchParams.set("state_tab", current.dataset.activeStateTab || "overview");
     if (!url.searchParams.has("character_id") && current.dataset.selectedCharacterId) url.searchParams.set("character_id", current.dataset.selectedCharacterId);
@@ -131,7 +135,7 @@
   }
 
   function replaceChrome(parsed) {
-    [["[data-wb-breadcrumb]", "[data-wb-breadcrumb]"], [".wb-status-chip", ".wb-status-chip"]].forEach(function (pair) { var next = parsed.querySelector(pair[0]); var present = document.querySelector(pair[1]); if (next && present) present.replaceWith(next); });
+    [["[data-wb-breadcrumb]", "[data-wb-breadcrumb]"], [".wb-status-chip", ".wb-status-chip"], ["[data-activity-trigger]", "[data-activity-trigger]"]].forEach(function (pair) { var next = parsed.querySelector(pair[0]); var present = document.querySelector(pair[1]); if (next && present) present.replaceWith(next); });
     if (parsed.title) document.title = parsed.title;
   }
 
@@ -141,7 +145,7 @@
     var current = root();
     if (!current) { location.href = href; return; }
     var desired = options && options.restoreState ? options.restoreState : captureNavigationState(current);
-    var resolved = targetUrl(href, current);
+    var resolved = options && options.fromPop ? new URL(href, location.href).href : targetUrl(href, current);
     if (!options || !options.fromPop) {
       history.replaceState({ workbenchState: captureNavigationState(current) }, "", location.href);
     }
@@ -168,7 +172,15 @@
     current.querySelectorAll("[data-workbench-navigation]").forEach(function (link) { link.addEventListener("click", function (event) { if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); loadWorkbench(link.href, { push: true }); }); });
     current.querySelectorAll("[data-wb-mode]").forEach(function (button) { button.addEventListener("click", function () { navigateQuery(current, { mode: button.dataset.wbMode, node: button.dataset.wbMode === "state" ? "state" : button.dataset.wbMode === "truth" ? "truth" : null }); }); });
     current.querySelectorAll("[data-wb-state-tab]").forEach(function (button) { button.addEventListener("click", function () { navigateQuery(current, { mode: "state", node: "state", state_tab: button.dataset.wbStateTab }); }); });
-    current.querySelectorAll("[data-wb-editor-tab]").forEach(function (button) { button.addEventListener("click", function () { var tab = button.dataset.wbEditorTab; current.querySelectorAll("[data-wb-editor-tab]").forEach(function (item) { var active = item === button; item.setAttribute("aria-selected", active ? "true" : "false"); item.classList.toggle("is-active", active); }); var prose = current.querySelector("[data-wb-editor-prose]"); if (prose) prose.hidden = tab !== "prose"; current.querySelectorAll("[data-wb-editor-secondary]").forEach(function (panel) { panel.hidden = panel.dataset.wbEditorSecondary !== tab; }); current.dataset.activeRightTab = tab; var url = new URL(location.href); url.searchParams.set("right_tab", tab); history.replaceState({ workbenchState: captureNavigationState(current) }, "", url.href); }); });
+    current.querySelectorAll("[data-wb-editor-tab]").forEach(function (button) { button.addEventListener("click", function () { var previous = captureNavigationState(current); history.replaceState({ workbenchState: previous }, "", location.href); var tab = button.dataset.wbEditorTab; current.querySelectorAll("[data-wb-editor-tab]").forEach(function (item) { var active = item === button; item.setAttribute("aria-selected", active ? "true" : "false"); item.classList.toggle("is-active", active); }); var prose = current.querySelector("[data-wb-editor-prose]"); if (prose) prose.hidden = tab !== "prose"; current.querySelectorAll("[data-wb-editor-secondary]").forEach(function (panel) { panel.hidden = panel.dataset.wbEditorSecondary !== tab; }); current.dataset.activeRightTab = tab; var url = new URL(location.href); url.searchParams.set("right_tab", tab); history.pushState({ workbenchState: captureNavigationState(current) }, "", url.href); }); });
+  }
+
+  function bindScrollPersistence(current) {
+    var timer = 0;
+    [current.querySelector(".wb-left-pane .wb-pane-content"), current.querySelector(".wb-tree"), current.querySelector(".wb-center-scroll"), current.querySelector(".wb-editor-scroll")].forEach(function (node) {
+      if (!node) return;
+      node.addEventListener("scroll", function () { clearTimeout(timer); timer = setTimeout(function () { var state = captureNavigationState(current); saveFallback(current, state); history.replaceState({ workbenchState: state }, "", location.href); }, 90); }, { passive: true });
+    });
   }
 
   function authorPath(current) { return "/api/books/" + encodeURIComponent(current.dataset.bookId) + "/editions/" + encodeURIComponent(current.dataset.editionId) + "/author-commands"; }
@@ -192,7 +204,7 @@
     var header = document.createElement("header"); var kicker = document.createElement("span"); var title = document.createElement("h3"); kicker.textContent = kind || record.category || "状态记录"; title.textContent = (truth && truth.title) || record.name || record.topic_name || record.label || ((record.from_entity_id || "") + " ↔ " + (record.to_entity_id || "")) || "未命名记录"; header.appendChild(kicker); header.appendChild(title); panel.appendChild(header);
     var grid = document.createElement("div"); grid.className = "wb-inspector-grid";
     var truthWindow = truth ? ("第" + truth.effective_from_chapter + (truth.effective_until_chapter ? "–" + truth.effective_until_chapter : "+") + "章") : null;
-    [["信息层", truth ? "AUTHOR_TRUTH" : (record.layer || record.current_layer)], ["状态", truth ? truth.status : (record.state_label || record.status_label || record.state || record.status)], ["生效范围", truthWindow], ["兼容性", truth && truth.compatibility_status], ["Reader", record.reader && record.reader.state], ["当前目标", record.current_goal || record.goal || (record.attributes && (record.attributes.current_goal || record.attributes.goal))], ["公开目标", record.public_goal], ["态度", record.attitude], ["关键人物", inspectorValue(record.key_people)], ["控制地点", inspectorValue(record.controlled_locations)], ["资源", inspectorValue(record.resources)], ["当前行动", record.action], ["关系", inspectorValue(record.relationships)], ["首次获得", record.first_acquired_chapter_ordinal], ["首次确认", record.first_confirmed_chapter_ordinal], ["最近确认", record.recent_confirmed_chapter_ordinal || record.evidence_chapter_ordinal || record.chapter_ordinal], ["持有者", record.current_holder_id || record.owner_id], ["数量", record.quantity], ["槽位", record.slot]].forEach(function (item) { if (item[1] != null && item[1] !== "") grid.appendChild(inspectorLine(item[0], item[1])); }); panel.appendChild(grid);
+    [["信息层", truth ? "作者真相" : (record.layer_label || record.layer || record.current_layer)], ["状态", truth ? truth.status : (record.state_label || record.status_label || record.state || record.status)], ["生效范围", truthWindow], ["兼容性", truth && truth.compatibility_status], ["读者认知", record.reader && record.reader.state], ["当前目标", record.current_goal || record.goal || (record.attributes && (record.attributes.current_goal || record.attributes.goal))], ["公开目标", record.public_goal], ["态度", record.attitude], ["关键人物", inspectorValue(record.key_people)], ["控制地点", inspectorValue(record.controlled_locations)], ["资源", inspectorValue(record.resources)], ["当前行动", record.action], ["已确认", inspectorValue(record.known)], ["仍未知", inspectorValue(record.unknown)], ["关系", inspectorValue(record.relationships)], ["首次获得", record.first_acquired_chapter_ordinal], ["首次确认", record.first_confirmed_chapter_ordinal], ["最近确认", record.recent_confirmed_chapter_ordinal || record.evidence_chapter_ordinal || record.chapter_ordinal], ["持有者", record.current_holder_id || record.owner_id], ["数量", record.quantity], ["槽位", record.slot]].forEach(function (item) { if (item[1] != null && item[1] !== "") grid.appendChild(inspectorLine(item[0], item[1])); }); panel.appendChild(grid);
     var description = document.createElement("p"); description.textContent = (truth && truth.statement) || record.description || record.statement || record.evidence || "当前没有额外说明。"; panel.appendChild(description);
     if (truth && truth.compatibility_summary) { var compatibilitySummary = document.createElement("p"); compatibilitySummary.textContent = truth.compatibility_summary; compatibilitySummary.className = "wb-context-explanation"; panel.appendChild(compatibilitySummary); }
     var spans = record.source_span_ids || []; var evidence = document.createElement("small"); evidence.textContent = "证据：" + (spans.length ? spans.join("、") : "尚无 source span"); panel.appendChild(evidence);
@@ -214,27 +226,64 @@
       container.innerHTML = ""; var width = 760; var height = Math.max(190, Math.ceil(nodes.length / 4) * 140); var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("viewBox", "0 0 " + width + " " + height); var positions = {};
       nodes.forEach(function (node, index) { positions[node.node_id] = { x: 100 + (index % 4) * 185, y: 70 + Math.floor(index / 4) * 130 }; });
       edges.forEach(function (edge) { var from = positions[edge.from_id]; var to = positions[edge.to_id]; if (!from || !to) return; var group = document.createElementNS("http://www.w3.org/2000/svg", "g"); group.setAttribute("class", "wb-relationship-edge-control"); group.setAttribute("role", "button"); group.setAttribute("tabindex", "0"); group.setAttribute("aria-label", edge.label || "关系边"); group.dataset.edgeId = edge.edge_id; ["wb-relationship-edge-hit", "wb-relationship-edge"].forEach(function (className) { var line = document.createElementNS("http://www.w3.org/2000/svg", "line"); line.setAttribute("x1", from.x); line.setAttribute("y1", from.y); line.setAttribute("x2", to.x); line.setAttribute("y2", to.y); line.setAttribute("class", className); group.appendChild(line); }); var activate = function () { showInspector(current, edge.inspector || edge, "relationship"); }; group.addEventListener("click", activate); group.addEventListener("keydown", function (event) { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(); } }); svg.appendChild(group); });
-      nodes.forEach(function (node) { var position = positions[node.node_id]; var group = document.createElementNS("http://www.w3.org/2000/svg", "g"); group.setAttribute("class", "wb-relationship-node wb-node-" + String(node.node_type || "unknown").toLowerCase()); var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", position.x); circle.setAttribute("cy", position.y); circle.setAttribute("r", "26"); var label = document.createElementNS("http://www.w3.org/2000/svg", "text"); label.setAttribute("x", position.x); label.setAttribute("y", position.y + 44); label.setAttribute("text-anchor", "middle"); label.textContent = node.name; group.appendChild(circle); group.appendChild(label); svg.appendChild(group); }); container.appendChild(svg);
+      nodes.forEach(function (node) { var position = positions[node.node_id]; var group = document.createElementNS("http://www.w3.org/2000/svg", "g"); group.setAttribute("class", "wb-relationship-node wb-node-" + String(node.node_type || "unknown").toLowerCase()); group.setAttribute("role", "button"); group.setAttribute("tabindex", "0"); group.setAttribute("aria-label", "查看" + (node.name || "关系对象")); var activate = function () { showInspector(current, node.inspector || node, node.node_type === "FACTION" ? "势力" : "人物"); }; group.addEventListener("click", activate); group.addEventListener("keydown", function (event) { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(); } }); var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle"); circle.setAttribute("cx", position.x); circle.setAttribute("cy", position.y); circle.setAttribute("r", "26"); var label = document.createElementNS("http://www.w3.org/2000/svg", "text"); label.setAttribute("x", position.x); label.setAttribute("y", position.y + 44); label.setAttribute("text-anchor", "middle"); label.textContent = node.name; group.appendChild(circle); group.appendChild(label); svg.appendChild(group); }); container.appendChild(svg);
     });
   }
 
+  function setActivityOpen(current, open, persist) {
+    var panel = current && current.querySelector("[data-activity-center]");
+    var scrim = current && current.querySelector("[data-activity-close].wb-activity-scrim");
+    var trigger = document.querySelector("[data-activity-trigger]");
+    if (!panel) return;
+    panel.hidden = !open;
+    if (scrim) scrim.hidden = !open;
+    if (trigger) trigger.setAttribute("aria-expanded", open ? "true" : "false");
+    current.classList.toggle("is-activity-open", open);
+    if (persist !== false) saveFallback(current, captureNavigationState(current));
+  }
+
+  function bindActivityCenter(current) {
+    var trigger = document.querySelector("[data-activity-trigger]");
+    if (trigger) trigger.addEventListener("click", function () { var panel = current.querySelector("[data-activity-center]"); setActivityOpen(current, Boolean(panel && panel.hidden)); });
+    current.querySelectorAll("[data-activity-close]").forEach(function (button) { button.addEventListener("click", function () { setActivityOpen(current, false); }); });
+  }
+
+  function closeDialog(dialog) { var form = dialog.querySelector("[data-item-modal-form]"); if (!form) return; form.reset(); form.querySelectorAll(".wb-semantic-actions").forEach(function (node) { node.remove(); }); var message = form.querySelector("[data-item-modal-feedback]"); if (message) { message.textContent = ""; message.classList.remove("is-error"); } }
+
   function bindItemModal(current) {
     var dialog = current.querySelector("[data-item-modal]"); if (!dialog) return;
-    current.querySelectorAll("[data-open-item-modal]").forEach(function (button) { button.addEventListener("click", function () { dialog.showModal(); }); }); current.querySelectorAll("[data-close-item-modal]").forEach(function (button) { button.addEventListener("click", function () { dialog.close(); }); });
-    var form = dialog.querySelector("[data-item-modal-form]"); form.addEventListener("submit", function (event) { event.preventDefault(); var values = formPayload(form); var scope = values.intent_scope;
+    current.querySelectorAll("[data-close-item-modal]").forEach(function (button) { button.addEventListener("click", function () { closeDialog(dialog); }); });
+    var form = dialog.querySelector("[data-item-modal-form]"); var submitItem = function (event) { event.preventDefault(); var values = formPayload(form); var scope = values.intent_scope; form.querySelectorAll(".wb-semantic-actions").forEach(function (node) { node.remove(); });
       if (scope === "HIDDEN") {
         var hiddenPath = "/api/books/" + encodeURIComponent(current.dataset.bookId) + "/editions/" + encodeURIComponent(current.dataset.editionId) + "/hidden-items";
-        postJson(hiddenPath, { name: values.name, category: values.category || "ITEM", description: values.description || "", effective_from_chapter: number(current.dataset.selectedChapterAnchor) || 1, location_id: values.location || null, owner_id: values.character_id || null, horizon: values.horizon || "MID", priority: values.priority !== undefined && values.priority !== "" ? number(values.priority) : 100, target_chapter_min: values.target_chapter_min ? number(values.target_chapter_min) : null, target_chapter_max: values.target_chapter_max ? number(values.target_chapter_max) : null, reveal_depth: values.reveal_depth || "HINT" }).then(function () { feedback(form, "已创建独立 Author Truth；存在、地点、持有与可见性保持分层。", false); setTimeout(function () { dialog.close(); loadWorkbench(location.href, { push: false }); }, 500); }).catch(function (error) { feedback(form, error.message, true); }); return;
+        postJson(hiddenPath, { name: values.name, category: values.category || "ITEM", description: values.description || "", effective_from_chapter: number(current.dataset.selectedChapterAnchor) || 1, location_id: values.location || null, owner_id: values.character_id || null, horizon: values.horizon || "MID", priority: values.priority !== undefined && values.priority !== "" ? number(values.priority) : 100, target_chapter_min: values.target_chapter_min ? number(values.target_chapter_min) : null, target_chapter_max: values.target_chapter_max ? number(values.target_chapter_max) : null, reveal_depth: values.reveal_depth || "HINT" }).then(function () { feedback(form, "已创建独立 Author Truth；存在、地点、持有与可见性保持分层。", false); setTimeout(function () { closeDialog(dialog); loadWorkbench(location.href, { push: false }); }, 500); }).catch(function (error) { feedback(form, error.message, true); }); return;
       }
-      var command = scope === "CURRENT" ? { command_type: "DROP_ITEM", payload: { item_id: values.name, destination: "CURRENT_INVENTORY" } } : scope === "FUTURE" ? { command_type: "CREATE_FUTURE_ITEM", payload: values } : { command_type: "CREATE_TASK", payload: { title: "候选物品：" + values.name, task_type: "CANDIDATE_ITEM", description: values.description || "", subject_type: "ITEM", subject_id: values.name } };
-      postAuthorCommand(current, command).then(function (result) { feedback(form, result.message, result.result === "REJECTED"); if (scope === "CURRENT" && result.result === "REJECTED") { var actions = document.createElement("div"); actions.className = "wb-modal-actions wb-semantic-actions"; [["转为未来获得", "FUTURE"], ["创建改写请求", "REVISION"], ["取消", "CANCEL"]].forEach(function (entry) { var button = document.createElement("button"); button.type = "button"; button.className = "button compact"; button.textContent = entry[0]; button.addEventListener("click", function () { if (entry[1] === "FUTURE") { form.querySelector('[name="intent_scope"]').value = "FUTURE"; form.requestSubmit(); } else if (entry[1] === "REVISION") { postAuthorCommand(current, { command_type: "CREATE_REVISION_REQUEST", payload: { title: "为当前章节加入物品：" + values.name, item_id: values.name, description: values.description || "" } }).then(function (reply) { feedback(form, reply.message, false); }); } else dialog.close(); }); actions.appendChild(button); }); form.appendChild(actions); } else if (result.result === "PLANNED") setTimeout(function () { dialog.close(); loadWorkbench(location.href, { push: false }); }, 400); }).catch(function (error) { feedback(form, error.message, true); });
-    });
+      if (scope === "CURRENT") {
+        var inventoryNode = current.querySelector("[data-current-inventory]");
+        var inventory = inventoryNode ? json(inventoryNode.textContent || "[]", []) : [];
+        var wanted = String(values.name || "").trim().toLocaleLowerCase();
+        var existing = inventory.find(function (item) { return [item.record_id, item.name, item.label].some(function (value) { return String(value || "").trim().toLocaleLowerCase() === wanted; }); });
+        var actions = document.createElement("div"); actions.className = "wb-modal-actions wb-semantic-actions";
+        if (existing) {
+          feedback(form, "已存在：" + (existing.name || values.name), false);
+          var openButton = document.createElement("button"); openButton.type = "button"; openButton.className = "button primary compact"; openButton.textContent = "打开"; openButton.addEventListener("click", function () { closeDialog(dialog); showInspector(current, existing, "物品"); }); actions.appendChild(openButton);
+        } else {
+          feedback(form, "没有当前证据。当前状态不会被直接改写。", true);
+          [["未来获得", "FUTURE"], ["创建改写", "REVISION"], ["取消", "CANCEL"]].forEach(function (entry) { var button = document.createElement("button"); button.type = "button"; button.className = "button compact"; button.textContent = entry[0]; button.addEventListener("click", function () { if (entry[1] === "FUTURE") { postAuthorCommand(current, { command_type: "CREATE_FUTURE_ITEM", payload: values }).then(function (reply) { feedback(form, reply.message, false); setTimeout(function () { closeDialog(dialog); loadWorkbench(location.href, { push: false }); }, 400); }).catch(function (error) { feedback(form, error.message, true); }); } else if (entry[1] === "REVISION") { postAuthorCommand(current, { command_type: "CREATE_REVISION_REQUEST", payload: { title: "为当前章节加入物品：" + values.name, item_id: values.name, description: values.description || "" } }).then(function (reply) { feedback(form, reply.message, false); }); } else closeDialog(dialog); }); actions.appendChild(button); });
+        }
+        form.appendChild(actions); return;
+      }
+      var command = scope === "FUTURE" ? { command_type: "CREATE_FUTURE_ITEM", payload: values } : { command_type: "CREATE_TASK", payload: { title: "候选物品：" + values.name, task_type: "CANDIDATE_ITEM", description: values.description || "", subject_type: "ITEM", subject_id: values.name } };
+      postAuthorCommand(current, command).then(function (result) { feedback(form, result.message, result.result === "REJECTED"); if (result.result === "PLANNED") setTimeout(function () { closeDialog(dialog); loadWorkbench(location.href, { push: false }); }, 400); }).catch(function (error) { feedback(form, error.message, true); });
+    };
+    form.addEventListener("submit", submitItem);
+    form.querySelector("[data-item-submit]").addEventListener("click", submitItem);
   }
 
   function profileBase(current) { return "/api/books/" + encodeURIComponent(current.dataset.bookId) + "/editions/" + encodeURIComponent(current.dataset.editionId) + "/book-profile"; }
   function bindProfile(current) {
     current.querySelectorAll("[data-profile-edit-form]").forEach(function (form) { form.addEventListener("submit", function (event) { event.preventDefault(); postJson(profileBase(current) + "/edits", formPayload(form)).then(function () { feedback(form, "已保存新 Profile 版本。", false); setTimeout(function () { loadWorkbench(location.href, { push: false }); }, 300); }).catch(function (error) { feedback(form, error.message, true); }); }); });
-    current.querySelectorAll("[data-profile-reanalyze]").forEach(function (button) { button.addEventListener("click", function () { button.disabled = true; button.textContent = "正在准备 Handoff…"; postJson(profileBase(current) + "/reanalysis", { context_chapter_id: current.dataset.currentChapterId || null }).then(function (result) { button.textContent = "Handoff 已准备"; button.title = result.handoff_id; setTimeout(function () { loadWorkbench(location.href, { push: false }); }, 500); }).catch(function (error) { button.disabled = false; button.textContent = error.message; }); }); });
+    current.querySelectorAll("[data-profile-reanalyze]").forEach(function (button) { button.addEventListener("click", function () { button.disabled = true; button.textContent = "正在准备任务…"; postJson(profileBase(current) + "/reanalysis", { context_chapter_id: current.dataset.currentChapterId || null }).then(function (result) { button.textContent = "任务已准备"; button.title = result.handoff_id; var url = new URL(location.href); url.searchParams.set("activity_id", result.handoff_id); setTimeout(function () { loadWorkbench(url.href, { push: false, restoreState: Object.assign(captureNavigationState(current), { activityCenterOpen: true }) }); }, 350); }).catch(function (error) { button.disabled = false; button.textContent = error.message; }); }); });
     current.querySelectorAll("[data-profile-proposal-action]").forEach(function (button) { button.addEventListener("click", function () { postJson(profileBase(current) + "/proposals/" + encodeURIComponent(button.dataset.proposalId) + "/resolve", { action: button.dataset.profileProposalAction }).then(function () { loadWorkbench(location.href, { push: false }); }).catch(function (error) { button.textContent = error.message; }); }); });
   }
 
@@ -284,12 +333,12 @@
 
   function bindWorkflow(current) {
     current.querySelectorAll("[data-workflow-workspace]").forEach(function (workspace) { var buttons = workspace.querySelectorAll("[data-workflow-mode]"); var panels = workspace.querySelectorAll("[data-workflow-mode-panel]"); function activate(target) { buttons.forEach(function (button) { button.setAttribute("aria-selected", button.dataset.workflowMode === target ? "true" : "false"); }); panels.forEach(function (panel) { panel.hidden = panel.dataset.workflowModePanel !== target; }); } buttons.forEach(function (button) { button.addEventListener("click", function () { activate(button.dataset.workflowMode); }); }); activate(workspace.dataset.workflowInitialMode || "continue"); });
-    current.querySelectorAll("[data-workflow-form]").forEach(function (form) { form.addEventListener("submit", function (event) { event.preventDefault(); var payload = {}; new FormData(form).forEach(function (value, key) { if (key === "innovation_focus" || key === "author_task_ids") { payload[key] = payload[key] || []; payload[key].push(String(value)); } else payload[key] = value; }); postJson(form.action, payload).then(function () { loadWorkbench(location.href, { push: false }); }).catch(function (error) { var node = form.querySelector("[data-workflow-feedback]"); if (node) { node.hidden = false; node.textContent = error.message; } }); }); });
+    current.querySelectorAll("[data-workflow-form]").forEach(function (form) { form.addEventListener("submit", function (event) { event.preventDefault(); var payload = {}; new FormData(form).forEach(function (value, key) { if (key === "innovation_focus" || key === "author_task_ids") { payload[key] = payload[key] || []; payload[key].push(String(value)); } else payload[key] = value; }); postJson(form.action, payload).then(function (result) { var url = new URL(location.href); var kind = form.dataset.workflowKind || "continue"; url.searchParams.set("action", kind); url.searchParams.delete("mode"); if (result.handoff_id) url.searchParams.set("activity_id", result.handoff_id); loadWorkbench(url.href, { push: false, restoreState: Object.assign(captureNavigationState(current), { activityCenterOpen: true }) }); }).catch(function (error) { var node = form.querySelector("[data-workflow-feedback]"); if (node) { node.hidden = false; node.textContent = error.message; } }); }); });
   }
 
   function bindSearch(current) { var search = current.querySelector("[data-wb-chapter-search]"); if (!search) return; search.addEventListener("input", function () { var query = search.value.trim().toLowerCase(); current.querySelectorAll("[data-wb-chapter-item]").forEach(function (item) { item.hidden = Boolean(query && item.textContent.toLowerCase().indexOf(query) === -1); }); }); }
 
-  function initWorkbench(current) { bindLayout(current); bindNavigation(current); bindCommands(current); bindInspector(current); bindRelationshipGraph(current); bindItemModal(current); bindProfile(current); bindTruth(current); bindSecretBoard(current); bindDraft(current); bindWorkflow(current); bindSearch(current); current.querySelectorAll("details[data-explorer-section]").forEach(function (item) { item.addEventListener("toggle", function () { saveFallback(current, captureNavigationState(current)); }); }); }
+  function initWorkbench(current) { bindLayout(current); bindNavigation(current); bindScrollPersistence(current); bindActivityCenter(current); bindCommands(current); bindInspector(current); bindRelationshipGraph(current); bindItemModal(current); bindProfile(current); bindTruth(current); bindSecretBoard(current); bindDraft(current); bindWorkflow(current); bindSearch(current); current.querySelectorAll("details[data-explorer-section]").forEach(function (item) { item.addEventListener("toggle", function () { saveFallback(current, captureNavigationState(current)); }); }); }
 
   window.addEventListener("popstate", function (event) { loadWorkbench(location.href, { push: false, fromPop: true, restoreState: event.state && event.state.workbenchState ? event.state.workbenchState : readFallback(root()) }); });
   var initial = root(); if (initial) { var state = history.state && history.state.workbenchState ? history.state.workbenchState : readFallback(initial); restoreDetails(initial, state); restoreLayout(initial, state); initWorkbench(initial); restoreNavigationState(initial, state); history.replaceState({ workbenchState: captureNavigationState(initial) }, "", location.href); }

@@ -1,6 +1,17 @@
 {% set embedded = workflow_embedded|default(false) %}
 {% set initial_mode = workflow_initial_mode|default('continue') %}
 <section class="workflow-workspace" data-workflow-workspace data-workflow-initial-mode="{{ initial_mode }}">
+  {% if embedded %}
+  {% set selected_activity = workflow.activity_center.selected_activity %}
+  {% set action_progress = selected_activity.progress if selected_activity and selected_activity.progress is not none else 0 %}
+  {% set action_status = selected_activity.status_label if selected_activity else '尚未开始' %}
+  {% if initial_mode == 'continue' %}{% set action_title = '续写 · 第' ~ ((workflow.current_chapter.ordinal + 1) if workflow.current_chapter else '—') ~ '章' %}{% set action_steps = ['确认本章', '生成候选', '写作与校验', '作者确认'] %}
+  {% elif initial_mode == 'rewrite' %}{% set action_title = '改写 · 第' ~ (workflow.current_chapter.ordinal if workflow.current_chapter else '—') ~ '章' %}{% set action_steps = ['确认本章', '影响审计', '派生版本草稿', '作者确认'] %}
+  {% else %}{% set action_title = '规划 · 第' ~ ((workflow.current_chapter.ordinal + 1) if workflow.current_chapter else '—') ~ '章以后' %}{% set action_steps = ['确认本章', '生成候选', '比较方向', '选择下一步'] %}{% endif %}
+  {% set step_thresholds = [1, 35, 70, 100] %}
+  <header class="workflow-action-heading"><div><p class="workflow-kicker">章节动作</p><h1>{{ action_title }}</h1><p>以第{{ workflow.current_chapter.ordinal if workflow.current_chapter else '—' }}章为共同上下文；切换视图不会丢失这个锚点。</p></div><span class="workflow-status-chip">{{ action_status }}</span></header>
+  <ol class="workflow-author-stepper" aria-label="作者任务进度">{% for label in action_steps %}<li class="{% if action_progress >= step_thresholds[loop.index0] %}is-done{% elif loop.first %}is-current{% endif %}"><span>{% if action_progress >= step_thresholds[loop.index0] %}✓{% else %}{{ loop.index }}{% endif %}</span><b>{{ label }}</b></li>{% endfor %}</ol>
+  {% endif %}
   {% if not embedded %}
   <header class="workflow-heading">
     <div>
@@ -36,12 +47,12 @@
       <div class="workflow-current-edition"><span>当前版本</span><strong>{{ workflow.edition.display_name or '原始版本' }}</strong><small>{{ workflow.edition_id }}</small></div>
       {% endif %}
 
-      <label class="workflow-field">你希望 AI 做到哪一步？
+      <label class="workflow-field">这次希望交付到哪一步？
         <select name="requested_stage" data-workflow-stage>
           <option value="PLAN_ONLY">只给我方案</option>
           <option value="DRAFT_AND_VALIDATE" selected>方案 + 正文草稿，并完成校验</option>
         </select>
-        <small>页面使用作者语言；提交时仍映射到现有的任务阶段。</small>
+        <small>你可以只比较方向，也可以继续到正文草稿与连续性检查。</small>
       </label>
 
       {% include 'innovation_controls.html' %}

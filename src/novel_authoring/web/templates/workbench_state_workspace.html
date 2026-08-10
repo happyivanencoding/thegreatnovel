@@ -8,7 +8,7 @@
       <small class="wb-section-subtitle">{{ story_game_state.chapter.title if story_game_state.chapter else '尚未选择章节' }}</small>
     </div>
     <div class="wb-heading-tags">
-      <span class="wb-state-tag wb-state-source">{{ story_game_state.coverage_status }}</span>
+      <span class="wb-state-tag wb-state-source">{{ story_game_state.coverage_status_label }}</span>
       <span class="wb-state-tag {% if story_game_state.state_changed %}wb-state-canon{% else %}wb-state-unknown{% endif %}">{% if story_game_state.state_changed %}本章有确认变化{% elif coverage_complete %}本章没有确认变化{% else %}本章尚未分析{% endif %}</span>
       <span class="wb-state-tag wb-state-soft">投影只读</span>
     </div>
@@ -46,7 +46,7 @@
 
 <section class="wb-state-tab-panel" data-wb-state-panel="overview" {% if state_tab != 'overview' %}hidden{% endif %}>
   <article class="wb-content-card">
-    <div class="wb-section-heading"><div><p class="wb-kicker">Coverage + State</p><h3>这一章分析到了什么</h3></div><span class="wb-state-tag wb-state-source">{{ story_game_state.coverage_status }}</span></div>
+    <div class="wb-section-heading"><div><p class="wb-kicker">Coverage + State</p><h3>这一章分析到了什么</h3></div><span class="wb-state-tag wb-state-source">{{ story_game_state.coverage_status_label }}</span></div>
     <div class="wb-overview-grid">
       {% for key, label in [('characters','人物'),('locations','地点'),('inventory','背包'),('equipment','装备'),('abilities','能力'),('knowledge_topics','知识主题'),('relationships','关系'),('factions','势力'),('world_rules','世界规则'),('threads','剧情线'),('promises','承诺')] %}
       <div><span>{{ label }}</span><strong>{{ story_game_state.counts[key] or 0 }}</strong></div>
@@ -71,7 +71,14 @@
 
 <section class="wb-state-tab-panel" data-wb-state-panel="inventory" {% if state_tab != 'inventory' %}hidden{% endif %}>
   <article class="wb-content-card">
-    <div class="wb-section-heading"><div><p class="wb-kicker">Inventory</p><h3>当前背包</h3></div><button class="button compact" type="button" data-open-item-modal>＋ 添加物品</button></div>
+    <div class="wb-section-heading"><div><p class="wb-kicker">Inventory</p><h3>当前背包</h3></div></div>
+    <section class="wb-item-modal" data-item-modal>
+      <form class="wb-item-modal-card" data-item-modal-form>
+        <div class="wb-section-heading"><div><p class="wb-kicker">Add Item</p><h3>＋ 添加物品 · 这件物品属于哪一层？</h3></div></div>
+        <label>名称<input name="name" required></label><label>类别<select name="category"><option value="ITEM">物品</option><option value="EQUIPMENT">装备</option><option value="RESOURCE">资源</option></select></label><label>语义<select name="intent_scope"><option value="CURRENT">当前已经持有（需要本章证据）</option><option value="HIDDEN">确实存在，但尚未归属/公开</option><option value="FUTURE">未来获得</option><option value="CANDIDATE">候选设定</option></select></label><label>关联角色<input name="character_id" placeholder="只表示预期关系，不自动写入持有"></label><label>关联地点<input name="location" placeholder="可选"></label><label>Horizon<select name="horizon"><option>SHORT</option><option selected>MID</option><option>LONG</option></select></label><label>优先级<input type="number" name="priority" min="0" value="100"></label><label>计划首次给线索的章节<input type="number" name="target_chapter_min" min="1"></label><label>计划窗口结束章节<input type="number" name="target_chapter_max" min="1"></label><label>揭示深度<select name="reveal_depth"><option>HINT</option><option>STRONG_HINT</option><option>PARTIAL_REVEAL</option><option>FULL_REVEAL</option></select></label><label class="wb-item-description">说明<textarea name="description" rows="3"></textarea></label>
+        <div class="wb-modal-actions"><button type="button" class="button" data-close-item-modal>取消</button><button type="submit" class="button primary" data-item-submit>检查并提交</button></div><p class="wb-command-feedback" data-item-modal-feedback></p>
+      </form>
+    </section>
     <div class="wb-inventory-grid">{% for item in story_game_state.inventory %}<button type="button" class="wb-item-card" data-inspector-record='{{ item|tojson }}' data-inspector-kind="item"><strong>{{ item.name }}</strong><span>{{ item.status_label or item.layer_label }}</span><small>{{ item.statement or '已登记物品' }}</small></button>{% else %}<p class="wb-empty-state">当前章节没有可回指证据的背包物品。</p>{% endfor %}</div>
   </article>
 </section>
@@ -97,7 +104,7 @@
 </section>
 
 <section class="wb-state-tab-panel" data-wb-state-panel="factions" {% if state_tab != 'factions' %}hidden{% endif %}>
-  <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">Factions</p><h3>势力状态</h3></div><span class="wb-state-tag wb-state-source">事实层</span></div><ul class="wb-record-list">{% for item in story_game_state.factions %}<li tabindex="0" data-inspector-record='{{ item|tojson }}' data-inspector-kind="faction"><b>{{ item.name }}</b><span>状态 {{ item.state or 'UNKNOWN' }} · 真实目标 {{ item.goal }} · 态度 {{ item.attitude }}</span><small>关键人物：{{ item.key_people|join('、') if item.key_people else '尚未知' }} · 控制地点：{{ item.controlled_locations|join('、') if item.controlled_locations else '尚未知' }}</small><small>资源：{{ item.resources|join('、') if item.resources else '尚未知' }} · 当前行动：{{ item.action or 'UNKNOWN' }}</small></li>{% else %}<li><b>尚无势力事实</b><span>Story Atlas 只在总览折叠区作为软参考。</span></li>{% endfor %}</ul></article>
+  <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">势力</p><h3>势力状态</h3></div><span class="wb-state-tag wb-state-source">事实层</span></div><ul class="wb-record-list">{% for item in story_game_state.factions %}<li tabindex="0" data-inspector-record='{{ item|tojson }}' data-inspector-kind="faction"><b>{{ item.name }}</b><span>状态 {{ item.state_label or item.status_label or '尚未知' }} · 真实目标 {{ item.goal or '尚未知' }} · 态度 {{ item.attitude or '尚未知' }}</span><small>关键人物：{{ item.key_people|join('、') if item.key_people else '尚未知' }} · 控制地点：{{ item.controlled_locations|join('、') if item.controlled_locations else '尚未知' }}</small><small>资源：{{ item.resources|join('、') if item.resources else '尚未知' }} · 当前行动：{{ item.action or '尚未知' }}</small></li>{% else %}<li><b>尚无势力事实</b><span>Story Atlas 只在总览折叠区作为软参考。</span></li>{% endfor %}</ul></article>
 </section>
 
 <section class="wb-state-tab-panel" data-wb-state-panel="relationships" {% if state_tab != 'relationships' %}hidden{% endif %}>
@@ -112,13 +119,7 @@
   <article class="wb-content-card"><div class="wb-section-heading"><div><p class="wb-kicker">Tasks · Threads · Promises</p><h3>事实与作者规划分层</h3></div></div><div class="wb-state-columns"><section><h4>剧情线</h4><ul class="wb-record-list">{% for item in story_game_state.threads %}<li tabindex="0" data-inspector-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.statement }}</span></li>{% else %}<li>尚无剧情线事实</li>{% endfor %}</ul></section><section><h4>承诺 / 任务</h4><ul class="wb-record-list">{% for item in story_game_state.promises + story_game_state.tasks %}<li tabindex="0" data-inspector-record='{{ item|tojson }}'><b>{{ item.name }}</b><span>{{ item.statement }}</span></li>{% else %}<li>尚无已确认任务或承诺</li>{% endfor %}</ul></section></div>{% if story_game_state.author_intents %}<div class="wb-planned-strip"><strong>作者意图（独立层）</strong>{% for item in story_game_state.author_intents %}<span>{{ item.title }}</span>{% endfor %}</div>{% endif %}</article>
 </section>
 
-<dialog class="wb-item-modal" data-item-modal>
-  <form method="dialog" class="wb-item-modal-card" data-item-modal-form>
-    <div class="wb-section-heading"><div><p class="wb-kicker">Add Item</p><h3>这件物品属于哪一层？</h3></div><button type="button" class="wb-icon-button" data-close-item-modal aria-label="关闭">×</button></div>
-    <label>名称<input name="name" required></label><label>类别<select name="category"><option value="ITEM">物品</option><option value="EQUIPMENT">装备</option><option value="RESOURCE">资源</option></select></label><label>语义<select name="intent_scope"><option value="CURRENT">当前已经持有（需要本章证据）</option><option value="HIDDEN">确实存在，但尚未归属/公开</option><option value="FUTURE">未来获得</option><option value="CANDIDATE">候选设定</option></select></label><label>关联角色<input name="character_id" placeholder="只表示预期关系，不自动写入持有"></label><label>关联地点<input name="location" placeholder="可选"></label><label>Horizon<select name="horizon"><option>SHORT</option><option selected>MID</option><option>LONG</option></select></label><label>优先级<input type="number" name="priority" min="0" value="100"></label><label>计划首次给线索的章节<input type="number" name="target_chapter_min" min="1"></label><label>计划窗口结束章节<input type="number" name="target_chapter_max" min="1"></label><label>揭示深度<select name="reveal_depth"><option>HINT</option><option>STRONG_HINT</option><option>PARTIAL_REVEAL</option><option>FULL_REVEAL</option></select></label><label>说明<textarea name="description" rows="3"></textarea></label>
-    <div class="wb-modal-actions"><button type="button" class="button" data-close-item-modal>取消</button><button type="submit" class="button primary">检查并提交</button></div><p class="wb-command-feedback" data-item-modal-feedback></p>
-  </form>
-</dialog>
+<script type="application/json" data-current-inventory>{{ (story_game_state.inventory + story_game_state.equipment)|tojson }}</script>
 {% else %}
 <article class="wb-content-card"><p class="wb-empty-state">状态面板尚未加载。</p></article>
 {% endif %}

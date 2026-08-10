@@ -990,8 +990,8 @@ def test_workbench_uses_one_chapter_anchor_redacts_lenses_and_hidden_item_is_not
     assert f"mode=continuity&node=chapter&chapter_id={chapter_10_id}" in navigation_page.text
     assert "author_control_trace" not in navigation_page.text
     assert "profile_alignment JSON" not in navigation_page.text
-    assert "目标 / 隐藏真相 / Reveal / Profile" in navigation_page.text
-    assert "Hard Gate" in navigation_page.text
+    assert "目标 / 隐藏真相 / 揭示安排 / 全书画像对齐" in navigation_page.text
+    assert "硬约束" in navigation_page.text
     assert "章末状态 · ChapterWorldStateView" in navigation_page.text
 
     continuity_page = client.get(

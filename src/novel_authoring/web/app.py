@@ -4,6 +4,7 @@ import json
 import re
 from pathlib import Path
 from typing import Any, cast
+from urllib.parse import urlencode
 
 try:  # Optional dependency: CLI/core remains usable without the web extra.
     from fastapi import FastAPI, HTTPException, Request
@@ -144,6 +145,7 @@ from novel_authoring.workflows.handoffs import (
 
 _ID = re.compile(r"^[A-Za-z0-9._-]+$")
 _QUERY_ID = re.compile(r"^[A-Za-z0-9._:-]+$")
+_ACTION_MODES = {"continue": "continue", "rewrite": "rewrite", "plan": "plan"}
 
 
 def _check_id(value: str) -> str:
@@ -172,6 +174,16 @@ def _query_flag(request: Request, name: str) -> bool:
         "yes",
         "on",
     }
+
+
+def _query_action(request: Request) -> str | None:
+    action = str(request.query_params.get("action") or "").strip().lower()
+    return action if action in _ACTION_MODES else None
+
+
+def _workbench_mode(request: Request) -> str:
+    action = _query_action(request)
+    return _ACTION_MODES[action] if action else request.query_params.get("mode", "home")
 
 
 def _error(exc: Exception) -> JSONResponse:
@@ -457,7 +469,7 @@ def create_app(
             chapter_id=_query_id(request, "chapter_id"),
             draft_id=_query_id(request, "draft_id"),
             node=request.query_params.get("node", "overview"),
-            mode=request.query_params.get("mode", "continue"),
+            mode=_workbench_mode(request),
             right_tab=request.query_params.get("right_tab", "prose"),
             state_tab=request.query_params.get("state_tab", "overview"),
             character_id=_query_id(request, "character_id"),
@@ -465,6 +477,8 @@ def create_app(
             truth_id=_query_id(request, "truth_id"),
             include_future_truths=_query_flag(request, "include_future_truths"),
         )
+        context["active_action"] = _query_action(request)
+        context["planning_view"] = request.query_params.get("planning_view", "tasks")
         context["csrf_token"] = app.state.csrf_token
         context["library_books"] = _library_books_for_app(app)
         context["workflow"] = workflow_context(
@@ -476,6 +490,7 @@ def create_app(
                 if context.get("selected_chapter") is None
                 else str(context["selected_chapter"]["chapter_id"])
             ),
+            activity_id=_query_id(request, "activity_id"),
         )
         context["innovation_default"] = context["workflow"]["innovation_default"]
         return _template(templates, "workbench.html", request, context)
@@ -495,7 +510,7 @@ def create_app(
                 chapter_id=_query_id(request, "chapter_id"),
                 draft_id=_query_id(request, "draft_id"),
                 node=request.query_params.get("node", "overview"),
-                mode=request.query_params.get("mode", "continue"),
+                mode=_workbench_mode(request),
                 right_tab=request.query_params.get("right_tab", "prose"),
                 state_tab=request.query_params.get("state_tab", "overview"),
                 character_id=_query_id(request, "character_id"),
@@ -508,6 +523,8 @@ def create_app(
                 status_code=404,
                 detail={"code": "NOT_FOUND", "message": str(exc), "details": {}},
             ) from exc
+        context["active_action"] = _query_action(request)
+        context["planning_view"] = request.query_params.get("planning_view", "tasks")
         context["csrf_token"] = app.state.csrf_token
         context["library_books"] = _library_books_for_app(app)
         context["workflow"] = workflow_context(
@@ -519,6 +536,7 @@ def create_app(
                 if context.get("selected_chapter") is None
                 else str(context["selected_chapter"]["chapter_id"])
             ),
+            activity_id=_query_id(request, "activity_id"),
         )
         context["innovation_default"] = context["workflow"]["innovation_default"]
         return _template(templates, "workbench.html", request, context)
@@ -1403,7 +1421,7 @@ def create_app(
             },
         )
 
-    @app.get("/books/{path_book_id}/workflow", response_class=HTMLResponse)
+    @app.get("/books/{path_book_id}/workflow", include_in_schema=False)
     async def workflow_page(request: Request, path_book_id: str) -> Any:
         checked_book = _check_id(path_book_id)
         selected_database = _database_for_book(app, checked_book)
@@ -1413,10 +1431,15 @@ def create_app(
             edition_id=request.query_params.get("edition_id"),
             chapter_id=_query_id(request, "chapter_id"),
         )
-        context["workflow"] = dict(context)
-        context["csrf_token"] = app.state.csrf_token
-        context["library_books"] = _library_books_for_app(app)
-        return _template(templates, "workflow.html", request, context)
+        action = _query_action(request) or "continue"
+        query = {"action": action}
+        if context.get("current_chapter"):
+            query["chapter_id"] = str(context["current_chapter"]["chapter_id"])
+        target = (
+            f"/books/{checked_book}/editions/{context['edition_id']}/workbench?"
+            f"{urlencode(query)}"
+        )
+        return RedirectResponse(url=target, status_code=302)
 
     @app.get("/books/{path_book_id}/jobs", response_class=HTMLResponse)
     async def jobs_page(request: Request, path_book_id: str) -> Any:

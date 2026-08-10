@@ -3,8 +3,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
 
 from novel_authoring.author_control.service import author_control_view
+from novel_authoring.author_control.source_state import source_state_coverage_summary
 from novel_authoring.edition import edition_chapters, list_editions, resolve_edition_id
 from novel_authoring.initialization.metrics import metric_bootstrap_status
 from novel_authoring.initialization.service import latest_initialization
@@ -398,6 +400,21 @@ _WORKFLOW_STATUS_LABELS = {
     "DRAFT": "准备中",
 }
 _WORKFLOW_HANDOFF_LABELS = {"CONTINUATION": "续写", "REVISION": "改写"}
+_ACTIVITY_TYPE_LABELS = {
+    "CONTINUATION": "续写",
+    "REVISION": "改写",
+    "METRIC_SEMANTIC_ANALYSIS": "语义指标分析",
+    "CHAPTER_FEATURE_ANALYSIS": "章节特征分析",
+    "STORY_ATLAS_BOOTSTRAP": "故事地图初始化",
+    "STORY_ATLAS_REFRESH": "故事地图刷新",
+    "WORLD_MODEL_REVIEW": "世界模型复核",
+    "STORY_ATLAS_RENDER": "故事地图渲染",
+    "BATCH_CONTINUATION": "批量续写",
+    "NOVEL_INITIALIZATION": "小说初始化",
+    "NOVEL_DISTILLATION": "写作知识提炼",
+    "SOURCE_STATE_HYDRATION": "世界状态补齐",
+    "PROFILE_REANALYSIS": "全书画像重新分析",
+}
 _WORKFLOW_STAGE_LABELS = {
     "PLAN_ONLY": "只生成方案",
     "DRAFT_AND_VALIDATE": "方案、正文与校验",
@@ -539,6 +556,307 @@ def _workflow_task_view(
     }
 
 
+def _activity_status_group(status: str) -> str:
+    if status in {"WAITING_FOR_USER", "FAILED", "STALE"}:
+        return "attention"
+    if status in {"COMPLETED", "CANCELLED"}:
+        return "completed"
+    return "running"
+
+
+def _activity_progress(handoff_type: str, status: str) -> int | None:
+    if handoff_type not in {"CONTINUATION", "REVISION", "BATCH_CONTINUATION"}:
+        return 100 if status in {"COMPLETED", "CANCELLED"} else None
+    return {
+        "DRAFT": 0,
+        "READY_FOR_CODEX": 20,
+        "CLAIMED": 30,
+        "RUNNING": 55,
+        "WAITING_FOR_USER": 85,
+        "COMPLETED": 100,
+        "FAILED": 55,
+        "STALE": 20,
+        "CANCELLED": 100,
+    }.get(status)
+
+
+def _activity_target(
+    item: dict[str, Any],
+    task_file: dict[str, Any],
+    chapters_by_id: dict[str, dict[str, Any]],
+    current_chapter: dict[str, Any] | None,
+) -> tuple[str | None, int | None]:
+    handoff_type = str(item.get("handoff_type") or "").upper()
+    hydration = task_file.get("hydration")
+    hydration = hydration if isinstance(hydration, dict) else {}
+    chapter_id = str(
+        task_file.get("context_chapter_id")
+        or hydration.get("chapter_id")
+        or item.get("context_chapter_id")
+        or ""
+    ) or None
+    chapter = chapters_by_id.get(chapter_id or "")
+    context_ordinal = None if chapter is None else int(chapter["ordinal"])
+    if context_ordinal is None and hydration.get("chapter_ordinal") is not None:
+        context_ordinal = int(hydration["chapter_ordinal"])
+    if context_ordinal is None and current_chapter is not None:
+        context_ordinal = int(current_chapter["ordinal"])
+        chapter_id = str(current_chapter["chapter_id"])
+    target_ordinal = context_ordinal
+    if handoff_type in {"CONTINUATION", "BATCH_CONTINUATION"} and context_ordinal:
+        target_ordinal = context_ordinal + 1
+    return chapter_id, target_ordinal
+
+
+def _workbench_target(
+    book_id: str,
+    edition_id: str,
+    *,
+    chapter_id: str | None,
+    action: str | None = None,
+    mode: str | None = None,
+    node: str | None = None,
+    activity_id: str | None = None,
+    state_tab: str | None = None,
+) -> str:
+    query: dict[str, str] = {}
+    if chapter_id:
+        query["chapter_id"] = chapter_id
+    if action:
+        query["action"] = action
+    if mode:
+        query["mode"] = mode
+    if node:
+        query["node"] = node
+    if activity_id:
+        query["activity_id"] = activity_id
+    if state_tab:
+        query["state_tab"] = state_tab
+    suffix = f"?{urlencode(query)}" if query else ""
+    return f"/books/{book_id}/editions/{edition_id}/workbench{suffix}"
+
+
+def _activity_view(
+    item: dict[str, Any],
+    *,
+    book_id: str,
+    edition_id: str,
+    chapters_by_id: dict[str, dict[str, Any]],
+    current_chapter: dict[str, Any] | None,
+) -> dict[str, Any]:
+    task_file = _workflow_task_file(item)
+    handoff_type = str(item.get("handoff_type") or "").upper()
+    requested_stage = str(item.get("requested_stage") or "").upper()
+    status = str(item.get("status") or "DRAFT").upper()
+    chapter_id, target_ordinal = _activity_target(
+        item, task_file, chapters_by_id, current_chapter
+    )
+    action: str | None = None
+    mode: str | None = "home"
+    node = "overview"
+    if handoff_type == "CONTINUATION":
+        action = "plan" if requested_stage == "PLAN_ONLY" else "continue"
+        mode = None
+        node = "planning" if action == "plan" else "chapter"
+    elif handoff_type == "REVISION":
+        action = "rewrite"
+        mode = None
+        node = "chapter"
+    elif handoff_type == "PROFILE_REANALYSIS":
+        mode = "analysis"
+        node = "worldbuilding"
+    elif handoff_type == "SOURCE_STATE_HYDRATION":
+        mode = "state"
+        node = "state"
+    type_label = _ACTIVITY_TYPE_LABELS.get(handoff_type, "系统任务")
+    if handoff_type == "CONTINUATION":
+        title = (
+            f"第{target_ordinal}章规划候选"
+            if requested_stage == "PLAN_ONLY" and target_ordinal
+            else f"第{target_ordinal}章续写" if target_ordinal else "下一章续写"
+        )
+    elif handoff_type == "REVISION":
+        title = f"第{target_ordinal}章改写" if target_ordinal else "本章改写"
+    elif handoff_type == "PROFILE_REANALYSIS":
+        title = "全书画像重新分析"
+    elif handoff_type == "SOURCE_STATE_HYDRATION":
+        title = f"第{target_ordinal}章世界状态补齐" if target_ordinal else "世界状态补齐"
+    else:
+        title = type_label
+    summary = {
+        "CONTINUATION": "从所选章节继续，生成可比较的方向或草稿。",
+        "REVISION": "先完成影响审计，再进入派生版本改写。",
+        "PROFILE_REANALYSIS": "重新分析九维全书画像；当前画像保持可用。",
+        "SOURCE_STATE_HYDRATION": "从原文证据补齐这一章的历史世界状态。",
+    }.get(handoff_type, "后台能力正在为小说工作台准备结果。")
+    handoff_id = str(item.get("handoff_id") or "")
+    progress = _activity_progress(handoff_type, status)
+    open_target = _workbench_target(
+        book_id,
+        edition_id,
+        chapter_id=chapter_id,
+        action=action,
+        mode=mode,
+        node=node,
+        activity_id=handoff_id,
+        state_tab="overview" if node == "state" else None,
+    )
+    return {
+        "activity_id": handoff_id,
+        "activity_kind": "SYSTEM_ACTIVITY",
+        "handoff_type": handoff_type,
+        "type_label": type_label,
+        "title": title,
+        "summary": summary,
+        "status": status,
+        "status_label": _WORKFLOW_STATUS_LABELS.get(status, "处理中"),
+        "status_group": _activity_status_group(status),
+        "progress": progress,
+        "progress_label": f"{progress}%" if progress is not None else "按阶段显示",
+        "created_at_label": _workflow_date(item.get("created_at")),
+        "open_target": open_target,
+        "next_action_label": {
+            "READY_FOR_CODEX": "等待 AI 处理",
+            "CLAIMED": "查看准备进度",
+            "RUNNING": "查看处理进度",
+            "WAITING_FOR_USER": "继续处理",
+            "COMPLETED": "查看结果",
+            "FAILED": "查看问题",
+            "STALE": "刷新后重试",
+            "CANCELLED": "查看记录",
+        }.get(status, "查看任务"),
+        "technical": {
+            "handoff_id": handoff_id,
+            "handoff_type": handoff_type,
+            "requested_stage": requested_stage,
+            "status": status,
+            "edition_id": item.get("edition_id"),
+            "task_directory": item.get("task_directory"),
+        },
+    }
+
+
+def _hydration_activity(
+    activities: list[dict[str, Any]],
+    *,
+    book_id: str,
+    edition_id: str,
+    current_chapter: dict[str, Any] | None,
+    coverage: dict[str, int | float],
+) -> dict[str, Any] | None:
+    hydration = [
+        item for item in activities if item["handoff_type"] == "SOURCE_STATE_HYDRATION"
+    ]
+    if not hydration:
+        return None
+    latest = hydration[0]
+    total = int(coverage["total"])
+    analyzed = int(coverage["analyzed"])
+    if analyzed >= total and total:
+        status = "COMPLETED"
+    elif int(coverage["failed"]):
+        status = "FAILED"
+    elif int(coverage["running"]):
+        status = "RUNNING"
+    elif int(coverage["ready"]):
+        status = "READY_FOR_CODEX"
+    else:
+        status = str(latest["status"])
+    progress = round(analyzed * 100 / total) if total else 0
+    chapter_id = (
+        None if current_chapter is None else str(current_chapter["chapter_id"])
+    )
+    return {
+        **latest,
+        "activity_id": f"source-state-hydration:{edition_id}",
+        "title": f"世界状态补齐 · {analyzed}/{total}章",
+        "summary": "从原文证据建立各章的历史世界状态；无变化也会明确记为已分析。",
+        "status": status,
+        "status_label": _WORKFLOW_STATUS_LABELS.get(status, "处理中"),
+        "status_group": _activity_status_group(status),
+        "progress": progress,
+        "progress_label": f"{analyzed}/{total}章 · {progress}%",
+        "open_target": _workbench_target(
+            book_id,
+            edition_id,
+            chapter_id=chapter_id,
+            mode="state",
+            node="state",
+            activity_id=f"source-state-hydration:{edition_id}",
+            state_tab="overview",
+        ),
+        "technical": {
+            "handoff_count": len(hydration),
+            "handoff_ids": [item["technical"]["handoff_id"] for item in hydration],
+            "raw_statuses": sorted({str(item["status"]) for item in hydration}),
+            "task_directories": [item["technical"]["task_directory"] for item in hydration],
+        },
+    }
+
+
+def activity_center_view(
+    database: Any,
+    *,
+    book_id: str,
+    edition_id: str,
+    handoffs: list[dict[str, Any]],
+    chapters: list[dict[str, Any]],
+    current_chapter: dict[str, Any] | None,
+    selected_activity_id: str | None,
+) -> dict[str, Any]:
+    chapters_by_id = {str(item["chapter_id"]): item for item in chapters}
+    activities = [
+        _activity_view(
+            item,
+            book_id=book_id,
+            edition_id=edition_id,
+            chapters_by_id=chapters_by_id,
+            current_chapter=current_chapter,
+        )
+        for item in handoffs
+    ]
+    with database.connect() as connection:
+        coverage = source_state_coverage_summary(connection, book_id, edition_id)
+    hydration = _hydration_activity(
+        activities,
+        book_id=book_id,
+        edition_id=edition_id,
+        current_chapter=current_chapter,
+        coverage=coverage,
+    )
+    activities = [
+        item for item in activities if item["handoff_type"] != "SOURCE_STATE_HYDRATION"
+    ]
+    if hydration is not None:
+        activities.append(hydration)
+    activities.sort(key=lambda item: str(item["created_at_label"]), reverse=True)
+    group_labels = {
+        "attention": "需要你",
+        "running": "进行中",
+        "completed": "已完成",
+    }
+    groups = [
+        {
+            "key": key,
+            "label": group_labels[key],
+            "items": [item for item in activities if item["status_group"] == key],
+        }
+        for key in ("attention", "running", "completed")
+    ]
+    active = [item for item in activities if item["status_group"] != "completed"]
+    selected = next(
+        (item for item in activities if item["activity_id"] == selected_activity_id),
+        None,
+    )
+    return {
+        "activities": activities,
+        "groups": groups,
+        "badge_count": len(active),
+        "selected_activity": selected,
+        "coverage": coverage,
+    }
+
+
 def _workflow_portfolio(author_control: dict[str, Any]) -> list[dict[str, Any]]:
     portfolio = author_control.get("portfolio")
     portfolio = portfolio if isinstance(portfolio, dict) else {}
@@ -575,6 +893,7 @@ def workflow_context(
     *,
     edition_id: str | None = None,
     chapter_id: str | None = None,
+    activity_id: str | None = None,
 ) -> dict[str, Any]:
     database.initialize()
     selected_edition_id = resolve_edition_id(database, book_id, edition_id)
@@ -607,6 +926,26 @@ def workflow_context(
         for item in handoffs
         if str(item.get("handoff_type") or "").upper() in {"CONTINUATION", "REVISION"}
     ]
+    narrative_tasks = [
+        task
+        for task in author_control.get("tasks", [])
+        if str(task.get("task_type") or "").upper() == "AUTHOR_TASK"
+    ]
+    narrative_portfolio = {
+        horizon: [
+            task for task in narrative_tasks if str(task.get("horizon") or "") == horizon
+        ]
+        for horizon in ("SHORT", "MID", "LONG")
+    }
+    activity_center = activity_center_view(
+        database,
+        book_id=book_id,
+        edition_id=selected_edition_id,
+        handoffs=handoffs,
+        chapters=chapters,
+        current_chapter=current_chapter,
+        selected_activity_id=activity_id,
+    )
     selected_edition = editions_by_id.get(selected_edition_id, {})
     return {
         "book_id": book_id,
@@ -619,10 +958,11 @@ def workflow_context(
         "editions": editions,
         "handoffs": handoffs,
         "workflow_tasks": workflow_tasks,
+        "activity_center": activity_center,
         "author_control": author_control,
-        "author_tasks": author_control.get("tasks", []),
+        "author_tasks": narrative_tasks,
         "author_intents": author_control.get("intents", []),
-        "portfolio": _workflow_portfolio(author_control),
+        "portfolio": _workflow_portfolio({"portfolio": narrative_portfolio}),
         "innovation_default": load_book_innovation_control(database, book_id).model_dump(
             mode="json"
         ),
