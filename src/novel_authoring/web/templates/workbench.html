@@ -45,6 +45,10 @@
     <div class="wb-resizer" data-resizer="left" role="separator" aria-label="调整左栏宽度"></div>
 
     <section class="wb-pane wb-center-pane" data-pane="center" aria-label="作者工作区">
+      {% if catalog_entry and catalog_entry.handoff_id and not catalog_entry.studio_ready %}<section class="wb-progressive-handoff">
+        <div><strong>{{ catalog_entry.state_label }}</strong><span>{{ catalog_entry.author_summary }}</span></div>
+        <div class="original-actions">{% if catalog_entry.instruction_available %}<button class="button primary" type="button" data-copy-handoff data-instruction-url="/api/books/{{ catalog_entry.book_id }}/editions/{{ catalog_entry.active_edition }}/handoffs/{{ catalog_entry.handoff_id }}/instruction">复制给 Codex 的指令</button>{% else %}<span class="wb-onboarding-warning">交接指令不可用</span><button class="button primary" type="button" data-prepare-initialization data-book-id="{{ catalog_entry.book_id }}" data-edition-id="{{ catalog_entry.active_edition }}">重新准备初始化</button><details class="wb-technical-details"><summary>技术详情</summary><p>{{ catalog_entry.instruction_error }}</p></details>{% endif %}</div>
+      </section>{% endif %}
       <div class="wb-center-toolbar wb-chapter-context-bar">
         <div class="wb-chapter-context-copy"><p>当前章节上下文</p><strong>{% if selected_chapter %}第{{ selected_chapter.ordinal }}章 · {{ selected_chapter.title }}{% elif selected_draft %}第{{ selected_draft.target_chapter_ordinal }}章 · {{ selected_draft.title }}{% else %}尚未选择章节{% endif %}</strong><small>{% if selected_chapter_anchor %}当前章节 · 第{{ selected_chapter_anchor }}章 · {% endif %}{{ workflow.current_chapter.status_label if workflow.current_chapter else '请选择正文锚点' }} · 所有视图与动作共用此锚点</small></div>
         <nav class="wb-chapter-actions" aria-label="章节动作">

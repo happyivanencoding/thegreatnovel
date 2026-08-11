@@ -96,11 +96,17 @@ def test_library_web_lists_paths_and_imports_without_overwriting(tmp_path: Path)
         )
     )
     database = Database(BookLayout(library).for_book("canonical-book").database)
-    app = create_app(database, book_id="canonical-book", library_root=library)
+    app = create_app(
+        database,
+        book_id="canonical-book",
+        library_root=library,
+        developer_mode=True,
+    )
     client = TestClient(app)
 
     assert client.get("/library").status_code == 200
-    assert "canonical-book" in client.get("/api/library").text
+    assert "canonical-book" not in client.get("/api/library").text
+    assert "canonical-book" in client.get("/api/library?scope=TECHNICAL").text
     assert client.get("/library/canonical-book/paths").status_code == 200
     assert client.get("/library/canonical-book/export/latest/").status_code == 404
 

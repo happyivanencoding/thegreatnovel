@@ -15,7 +15,7 @@
   <main class="library-shell" data-library-catalog data-catalog-revision="{{ catalog.revision }}">
     <header class="library-hero">
       <div><p class="wb-kicker">{% if technical_library %}开发者内容{% else %}你的创作项目{% endif %}</p><h1>{% if technical_library %}技术书库{% else %}书库{% endif %}</h1><p>{% if technical_library %}Benchmark、Test、Demo 和尚未分类的历史项目；它们不会进入作者书库或书籍选择器。{% else %}把小说放进书籍目录，这里会自动发现；只有在你确认后才会读取和初始化。{% endif %}</p></div>
-      <div class="library-hero-actions"><button class="button" type="button" data-refresh-library>刷新书籍</button><button class="button" type="button" data-copy-path="{{ catalog.discovery_root }}">复制书籍目录</button></div>
+      <div class="library-hero-actions">{% if not technical_library %}<button class="button" type="button" data-copy-path="{{ catalog.discovery_root }}">导入现有小说</button><a class="button primary" href="/library/original/new">新建原创小说</a>{% endif %}<button class="button" type="button" data-refresh-library>刷新书籍</button></div>
     </header>
 
     <section class="library-location" aria-label="书籍目录"><span>书籍目录</span><code>{{ catalog.discovery_root or '尚未配置' }}</code><small>支持 {{ catalog.supported_formats|join('、') if catalog.supported_formats else '当前解析器格式' }} · 扫描只读</small></section>

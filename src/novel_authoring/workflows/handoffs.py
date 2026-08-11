@@ -25,6 +25,8 @@ from novel_authoring.edition import edition_chapters, resolve_edition_id
 from novel_authoring.ingest.service import verify_sources
 from novel_authoring.metrics.registry import load_registry
 from novel_authoring.metrics.service import MetricsAssembler
+from novel_authoring.original.models import OriginalBootstrapProposal
+from novel_authoring.original.state import is_original_book
 from novel_authoring.planning.aggregates import build_planning_aggregate
 from novel_authoring.planning.batch import get_batch_plan, get_batch_projection
 from novel_authoring.planning.innovation import (
@@ -62,6 +64,7 @@ class HandoffType(StrEnum):
     NOVEL_DISTILLATION = "NOVEL_DISTILLATION"
     SOURCE_STATE_HYDRATION = "SOURCE_STATE_HYDRATION"
     PROFILE_REANALYSIS = "PROFILE_REANALYSIS"
+    ORIGINAL_BOOK_BOOTSTRAP = "ORIGINAL_BOOK_BOOTSTRAP"
 
 
 class HandoffWorkflowError(RuntimeError):
@@ -181,6 +184,11 @@ class WorkflowHandoffResult(BaseModel):
                 raise ValueError("NOVEL_DISTILLATION 完成结果必须包含 distill_source_ids")
             if not self.distill_skill_root:
                 raise ValueError("NOVEL_DISTILLATION 完成结果必须包含 distill_skill_root")
+        if atlas_type == HandoffType.ORIGINAL_BOOK_BOOTSTRAP.value:
+            if len(self.candidate_ids) != 3:
+                raise ValueError("ORIGINAL_BOOK_BOOTSTRAP 必须返回三个 Foundation candidate_ids")
+            if not self.artifact_paths:
+                raise ValueError("ORIGINAL_BOOK_BOOTSTRAP 必须返回 proposal artifact_paths")
         if atlas_type == HandoffType.SOURCE_STATE_HYDRATION.value:
             raise ValueError("SOURCE_STATE_HYDRATION 使用专用结果合同")
         compatible = {
@@ -206,6 +214,11 @@ class WorkflowHandoffResult(BaseModel):
                 "DISTILLED",
                 "VALIDATED_DISTILL",
                 "VALIDATED",
+            },
+            "ORIGINAL_BOOK_BOOTSTRAP": {
+                "ORIGINAL_BOOK_BOOTSTRAP",
+                "FOUNDATION_PROPOSED",
+                "VALIDATED_PROPOSAL",
             },
         }
         if requested in compatible and completed not in compatible[requested]:
@@ -281,6 +294,8 @@ _OPERATION_INPUT_FILES = {
     "output_schema.json",
     "hydration_context.json",
     "profile_context.json",
+    "original_request.json",
+    "proposal_schema.json",
 }
 
 
@@ -438,15 +453,23 @@ def create_handoff(
     author_goal: str | None = None,
     author_task_ids: list[str] | None = None,
     hydration_request: dict[str, Any] | None = None,
+    original_bootstrap_request: dict[str, Any] | None = None,
+    prepared_draft_task: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     database.initialize()
     selected = resolve_edition_id(database, book_id, edition_id)
     workspace_root = _book_workspace(database, book_id)
-    verification = verify_sources(book_id, workspace_root.parent)
+    original_book = is_original_book(database, book_id)
+    verification = (
+        {"ok": True, "mode": "ORIGINAL_CANON"}
+        if original_book
+        else verify_sources(book_id, workspace_root.parent)
+    )
     if not bool(verification.get("ok")):
         raise HandoffWorkflowError("source verify 失败，不能创建 handoff")
     with database.connect() as connection:
         projection = projection_from_connection(connection, book_id, selected)
+        chapter_count = len(edition_chapters(connection, book_id, selected))
         edition_row = connection.execute(
             "SELECT status FROM editions WHERE book_id=? AND edition_id=?",
             (book_id, selected),
@@ -457,6 +480,8 @@ def create_handoff(
     distill_handoff = handoff_type is HandoffType.NOVEL_DISTILLATION
     hydration_handoff = handoff_type is HandoffType.SOURCE_STATE_HYDRATION
     profile_handoff = handoff_type is HandoffType.PROFILE_REANALYSIS
+    original_bootstrap_handoff = handoff_type is HandoffType.ORIGINAL_BOOK_BOOTSTRAP
+    original_genesis = original_book and chapter_count == 0
     selected_innovation: InnovationControl | None = None
     requested_innovation_source = innovation_source
     innovation_source = ""
@@ -472,12 +497,23 @@ def create_handoff(
             selected_innovation, innovation_source = resolve_innovation_control(
                 database, book_id
             )
-    if initialization_handoff or distill_handoff or hydration_handoff or profile_handoff:
+    if (
+        initialization_handoff
+        or distill_handoff
+        or hydration_handoff
+        or profile_handoff
+        or original_bootstrap_handoff
+        or original_genesis
+    ):
         # Initialization and distill are upstream analysis handoffs. They must
         # not require a planning aggregate or a completed metric run.
         metric_context = {
             "scope_type": (
-                "INITIALIZATION"
+                "ORIGINAL_BOOTSTRAP"
+                if original_bootstrap_handoff
+                else "GENESIS"
+                if original_genesis
+                else "INITIALIZATION"
                 if initialization_handoff
                 else "SOURCE_STATE_HYDRATION"
                 if hydration_handoff
@@ -488,7 +524,11 @@ def create_handoff(
             "scope_id": selected,
             "input_bundle_hash": "",
             "semantic_metrics_deferred": (
-                initialization_handoff or hydration_handoff or profile_handoff
+                initialization_handoff
+                or hydration_handoff
+                or profile_handoff
+                or original_bootstrap_handoff
+                or original_genesis
             ),
             "registry_hash": load_registry().registry_hash,
             "config_hash": sha256_bytes(json_dumps(load_settings().metrics).encode("utf-8")),
@@ -527,7 +567,7 @@ def create_handoff(
         HandoffType.CONTINUATION,
         HandoffType.REVISION,
         HandoffType.BATCH_CONTINUATION,
-    }
+    } and not original_genesis
     if rhythm_snapshot_id is None and rhythm_required:
         raise HandoffWorkflowError("当前 edition 没有 Rhythm Snapshot，不能冻结 handoff")
     current_atlas = latest_atlas(database, book_id, selected)
@@ -622,6 +662,15 @@ def create_handoff(
         if canonical_layout
         else workspace_root / "editions" / selected / "initialization"
     )
+    frozen_original_request: dict[str, Any] | None = None
+    if original_bootstrap_handoff:
+        if not original_book:
+            raise HandoffWorkflowError("ORIGINAL_BOOK_BOOTSTRAP 只适用于 ORIGINAL 项目")
+        if not isinstance(original_bootstrap_request, dict):
+            raise HandoffWorkflowError(
+                "ORIGINAL_BOOK_BOOTSTRAP handoff 缺少 original_bootstrap_request"
+            )
+        frozen_original_request = dict(original_bootstrap_request)
     frozen_distill_request: dict[str, Any] | None = None
     if distill_handoff:
         if not isinstance(distill_request, dict):
@@ -757,6 +806,24 @@ def create_handoff(
         "expected_outputs": ["events.jsonl", "result.json", "status.json"],
         "task_schema_version": "handoff-v1",
     }
+    if prepared_draft_task is not None:
+        task["prepared_draft_task"] = dict(prepared_draft_task)
+    if original_bootstrap_handoff and frozen_original_request is not None:
+        task.update(
+            {
+                "original_bootstrap": {
+                    "request_path": "original_request.json",
+                    "proposal_schema_path": "proposal_schema.json",
+                    "proposal_artifact": "artifacts/story_foundation/proposal.json",
+                    "foundation_candidate_count": 3,
+                    "first_chapter_candidate_count": 3,
+                    "information_status": "PROPOSAL",
+                    "confirmation_required": "确认基础框架",
+                    "canon_boundary": "NO_CHAPTER_NO_CANON",
+                },
+                "planning_aggregate_required": False,
+            }
+        )
     if hydration_handoff:
         if not isinstance(hydration_request, dict):
             raise HandoffWorkflowError("SOURCE_STATE_HYDRATION handoff 缺少 hydration_request")
@@ -889,6 +956,7 @@ def create_handoff(
         HandoffType.NOVEL_DISTILLATION: "distill-novels",
         HandoffType.SOURCE_STATE_HYDRATION: "process-novel-handoff",
         HandoffType.PROFILE_REANALYSIS: "process-novel-handoff",
+        HandoffType.ORIGINAL_BOOK_BOOTSTRAP: "bootstrap-original-novel",
     }.get(handoff_type, "continue-novel")
     atlas_instruction = ""
     if handoff_type in {
@@ -934,6 +1002,20 @@ def create_handoff(
             "confidence。不得复制当前 baseline 冒充分析；至少一维必须有真实差异。"
             "结果只形成作者可接受/编辑/拒绝的 Proposal，不得修改 Effective Profile 或 Canon。"
         )
+    elif original_bootstrap_handoff:
+        atlas_instruction = (
+            "读取 original_request.json，从 premise 建立纯 Proposal：恰好三个标题、三个不同的 "
+            "Story Foundation、三条未来路线和三个首章候选；给出推荐与理由、世界规则、"
+            "人物/势力、SHORT/MID/LONG Rolling Planning、开放问题、风险与避免陈词滥调。"
+            "所有内容保持 information_status=PROPOSAL，只写 "
+            "artifacts/story_foundation/proposal.json；不得创建章节、Canon、Edition 或固定结局。"
+        )
+    elif original_genesis and prepared_draft_task is not None:
+        atlas_instruction = (
+            "这是无既有章节的 Genesis 首章任务。直接读取 task.json 的 prepared_draft_task，"
+            "使用已经由作者选择的 Candidate 与 Chapter Contract 生成正文、导入 Draft 并运行"
+            "十项 Validator；停在 VALIDATED，不得重新生成或替换三个首章候选。"
+        )
     if distill_reference is not None:
         atlas_instruction += (
             " 当前 edition 还有一个已发布的 distill_reference；只能读取其抽象写作控制，"
@@ -969,7 +1051,7 @@ def create_handoff(
         f"{author_context_instruction}\n\n"
         "严格读取任务目录中的 task.json、prompt.md、metric_context.json、"
         "context_manifest.json、output_schema.json 和（如存在）hydration_context.json / "
-        "profile_context.json。\n"
+        "profile_context.json / original_request.json / proposal_schema.json。\n"
         "不得修改 book；不得批准写入正史；不得批准改写 Campaign；不得启用 Edition。\n"
         "结束时必须严格按 output_schema.json 写回 result.json 和 status.json；"
         "需要作者决定时写 waiting_for_user.json 并进入 WAITING_FOR_USER。"
@@ -979,6 +1061,8 @@ def create_handoff(
         manifest_paths.append("hydration_context.json")
     if profile_handoff:
         manifest_paths.append("profile_context.json")
+    if original_bootstrap_handoff:
+        manifest_paths.extend(["original_request.json", "proposal_schema.json"])
     context_manifest = {
         "book_id": book_id,
         "edition_id": selected,
@@ -1065,6 +1149,9 @@ def create_handoff(
                 "distill_dimensions",
                 "distill_skill_root",
             ]
+        },
+        "ORIGINAL_BOOK_BOOTSTRAP": {
+            "required_non_empty": ["candidate_ids", "artifact_paths"]
         },
     }
     if hydration_handoff:
@@ -1187,6 +1274,8 @@ def create_handoff(
             "output_schema.json",
             "hydration_context.json",
             "profile_context.json",
+            "original_request.json",
+            "proposal_schema.json",
         )
     }
     status_path = task_directory / "status.json"
@@ -1211,6 +1300,15 @@ def create_handoff(
         _write_json(input_files["profile_context.json"], profile_context or {})
     else:
         input_files.pop("profile_context.json", None)
+    if original_bootstrap_handoff:
+        _write_json(input_files["original_request.json"], frozen_original_request or {})
+        _write_json(
+            input_files["proposal_schema.json"],
+            OriginalBootstrapProposal.model_json_schema(),
+        )
+    else:
+        input_files.pop("original_request.json", None)
+        input_files.pop("proposal_schema.json", None)
     _write_json(status_path, status_json)
     _write_json(result_path, {})
     file_hashes: dict[str, str] = {
@@ -1222,6 +1320,11 @@ def create_handoff(
             "output_schema.json",
             *(["hydration_context.json"] if hydration_handoff else []),
             *(["profile_context.json"] if profile_handoff else []),
+            *(
+                ["original_request.json", "proposal_schema.json"]
+                if original_bootstrap_handoff
+                else []
+            ),
         )
     }
     context_manifest["file_hashes"] = file_hashes
@@ -1521,6 +1624,18 @@ def create_initialization_handoff(
     )
 
 
+def create_original_bootstrap_handoff(
+    database: Database, book_id: str, **kwargs: Any
+) -> dict[str, Any]:
+    return create_handoff(
+        database,
+        book_id,
+        handoff_type=HandoffType.ORIGINAL_BOOK_BOOTSTRAP,
+        requested_stage="ORIGINAL_BOOK_BOOTSTRAP",
+        **kwargs,
+    )
+
+
 def _drift_reasons(
     database: Database, connection: sqlite3.Connection, row: sqlite3.Row
 ) -> list[str]:
@@ -1700,7 +1815,15 @@ def claim_handoff(database: Database, handoff_id: str, claimed_by: str) -> dict[
             except (OSError, ValueError, TypeError) as exc:
                 file_drift_reason = f"context_manifest.json 无效：{exc}"
         verification = (
-            verify_sources(row["book_id"], _book_workspace(database, str(row["book_id"])).parent)
+            {
+                "ok": True,
+                "mode": "ORIGINAL_CANON",
+            }
+            if file_drift_reason is None
+            and is_original_book(database, str(row["book_id"]))
+            else verify_sources(
+                row["book_id"], _book_workspace(database, str(row["book_id"])).parent
+            )
             if file_drift_reason is None
             else {"ok": False}
         )

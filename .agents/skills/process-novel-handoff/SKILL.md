@@ -9,7 +9,7 @@ Codex 桌面客户端是唯一 LLM 执行者。先读取任务目录，再由 Py
 
 ## 领取与冻结校验
 
-1. 用 `handoff_id` 定位 `workspace/<book_id>/editions/<edition_id>/handoffs/<handoff_id>/`。
+1. 用 `handoff_id` 从数据库定位 `library/<book_id>/editions/<edition_id>/operations/<handoff_id>/`。
 2. 读取 `task.json`、`prompt.md`、`metric_context.json`、`context_manifest.json`、`output_schema.json` 和 `status.json`。校验 `task_schema_version`、source/projection/metric/registry/config/edition hash、Atlas/Horizon anchor、Batch plan hash 以及 allowed paths；任何漂移都标记 STALE 并停止。
 3. 只在数据库状态 `READY_FOR_CODEX` 时用 SQLite 事务原子 claim，保存 `claimed_by` 与 `claim_token`，写入 `events.jsonl`；不能让两个 Codex 线程领取同一个任务。
 4. 状态按 `CLAIMED → RUNNING` 推进；需要作者选择时写 `waiting_for_user.json`、事件和 `WAITING_FOR_USER`，不要猜测。心跳只表示最近活动，Web 不得推断“仍在思考”。
@@ -28,6 +28,10 @@ Codex 桌面客户端是唯一 LLM 执行者。先读取任务目录，再由 Py
 - `NOVEL_DISTILLATION`：调用 `$distill-novels`，读取冻结的
   `artifacts/distill_input/`，只把抽象写作机制写入 `artifacts/distill_skill/`；完成后停在
   `DISTILLED`，由 `novel distill import` 显式发布为 `REFERENCE_ONLY`，不得写入 Canon。
+- `ORIGINAL_BOOK_BOOTSTRAP`：调用 `$bootstrap-original-novel`，读取冻结的
+  `original_request.json` 和 `proposal_schema.json`；只写
+  `artifacts/story_foundation/proposal.json`，恰好保留三个 Story Foundation 和三个首章
+  候选。此阶段全部是 `PROPOSAL`，不得创建章节、Canon、Edition 或伪造 Source/Arc。
 - `BATCH_CONTINUATION`：调用 `$continue-novel-batch`，必须绑定 batch/chunk，逐章保留
   Boundary、Contract、十项 Validator 和 provisional hash；`BATCH_VALIDATED` 不是批准。
 - `SOURCE_STATE_HYDRATION`：读取 `hydration_context.json` 中的当前章节全文、当前章节

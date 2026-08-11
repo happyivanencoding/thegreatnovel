@@ -39,6 +39,7 @@ class BookRecord:
     layout_version: str
     book_kind: BookKind = BookKind.UNCLASSIFIED
     creation_mode: CreationMode = CreationMode.IMPORTED
+    original_state: str | None = None
     readiness_status: str | None = None
     source_origin: Path | None = None
     source_origin_kind: str | None = None
@@ -76,6 +77,9 @@ class BookRecord:
             layout_version=str(mapping.get("layout_version") or LAYOUT_VERSION),
             book_kind=book_kind,
             creation_mode=creation_mode,
+            original_state=(
+                str(mapping["original_state"]) if mapping.get("original_state") else None
+            ),
             readiness_status=(
                 str(mapping["readiness_status"]) if mapping.get("readiness_status") else None
             ),
@@ -121,6 +125,8 @@ class BookRegistry:
         normalized.setdefault("source_storage_mode", "COPY_READ_ONLY")
         normalized.setdefault("book_kind", BookKind.UNCLASSIFIED.value)
         normalized.setdefault("creation_mode", CreationMode.IMPORTED.value)
+        if normalized.get("creation_mode") == CreationMode.ORIGINAL.value:
+            normalized.setdefault("original_state", "ORIGINAL_SEED")
         normalized.setdefault("source_files", [])
         normalized.setdefault("created_at", utc_now())
         normalized.setdefault("latest_chapter", None)
@@ -201,17 +207,25 @@ class BookRegistry:
         source = metadata.get("source") or {}
         files = source.get("files", []) if isinstance(source, dict) else []
         readiness = metadata.get("readiness_status") or "UNKNOWN"
+        original = metadata.get("creation_mode") == CreationMode.ORIGINAL.value
         lines = [
             f"# {title}",
             "",
             "此目录由 Novel Authoring System 的 Book Library 管理。",
-            "原始来源位于 `source/`，机器运行数据位于 `_system/`；请勿手工覆盖数据库或 Canon。",
+            (
+                "此原创项目从 premise 与 Story Foundation 开始，不要求来源正文；"
+                "机器运行数据位于 `_system/`，请勿手工覆盖数据库或 Canon。"
+                if original
+                else "原始来源位于 `source/`，机器运行数据位于 `_system/`；"
+                "请勿手工覆盖数据库或 Canon。"
+            ),
             "",
             f"- book_id: `{paths.book_id}`",
             f"- layout: `{metadata.get('layout_version', LAYOUT_VERSION)}`",
             f"- active edition: `{metadata.get('active_edition_id', 'base')}`",
             f"- book kind: `{metadata.get('book_kind', BookKind.UNCLASSIFIED.value)}`",
             f"- creation mode: `{metadata.get('creation_mode', CreationMode.IMPORTED.value)}`",
+            f"- original state: `{metadata.get('original_state') or 'not applicable'}`",
             f"- database: `{metadata.get('database_path', '_system/state.sqlite3')}`",
             f"- readiness: `{readiness}`",
             f"- source files: {len(files)}",

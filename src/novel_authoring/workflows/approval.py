@@ -27,6 +27,7 @@ from novel_authoring.domain.models import (
 )
 from novel_authoring.edition import edition_workspace, resolve_edition_id
 from novel_authoring.ingest.service import verify_sources
+from novel_authoring.original.state import is_original_book
 from novel_authoring.planning.models import ChapterContract
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import book_root
@@ -226,7 +227,11 @@ def approve_draft(
         if canonical
         else (workspace.parent if selected_edition == "base" else workspace.parents[2])
     )
-    source_report = verify_sources(book_id, source_root)
+    source_report = (
+        {"ok": True, "mode": "ORIGINAL_CANON"}
+        if is_original_book(database, book_id)
+        else verify_sources(book_id, source_root)
+    )
     if not bool(source_report["ok"]):
         raise ApprovalWorkflowError("不可变源文件校验失败，拒绝写入正史")
     draft_path = Path(str(row["file_path"]))

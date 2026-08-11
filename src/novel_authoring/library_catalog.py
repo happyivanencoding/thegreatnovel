@@ -15,7 +15,12 @@ from typing import Any
 
 from novel_authoring.config import load_settings
 from novel_authoring.storage.layout import BookLayout
-from novel_authoring.storage.registry import BookKind, BookRecord, BookRegistry
+from novel_authoring.storage.registry import (
+    BookKind,
+    BookRecord,
+    BookRegistry,
+    CreationMode,
+)
 from novel_authoring.workflows.handoffs import resolve_instruction_path
 
 _IGNORED_NAMES = {"library", "benchmark", "audit", "_system"}
@@ -247,9 +252,12 @@ class LibraryCatalogEntry:
     missing_requirements: tuple[str, ...] = ()
     author_summary: str = ""
     technical: dict[str, Any] = field(default_factory=dict)
+    route: str | None = None
 
     @property
     def href(self) -> str:
+        if self.route:
+            return self.route
         if self.book_id:
             return f"/books/{self.book_id}/editions/{self.active_edition}/workbench"
         return f"/library/candidates/{self.candidate_id}"
@@ -337,7 +345,12 @@ def _latest_initialization(paths: Any, edition_id: str) -> dict[str, Any] | None
     return {"root": selected, "manifest": manifest, "status": status}
 
 
-def _read_book_runtime(database_path: Path, book_id: str, edition_id: str) -> dict[str, Any]:
+def _read_book_runtime(
+    database_path: Path,
+    book_id: str,
+    edition_id: str,
+    handoff_type: str = "NOVEL_INITIALIZATION",
+) -> dict[str, Any]:
     value: dict[str, Any] = {
         "chapter_count": 0,
         "edition_count": 0,
@@ -362,9 +375,9 @@ def _read_book_runtime(database_path: Path, book_id: str, edition_id: str) -> di
                     "SELECT handoff_id, status, created_at, completed_at, error_message, "
                     "prompt_path, task_directory "
                     "FROM workflow_handoffs WHERE book_id=? AND edition_id=? "
-                    "AND handoff_type='NOVEL_INITIALIZATION' "
+                    "AND handoff_type=? "
                     "ORDER BY created_at DESC LIMIT 1",
-                    (book_id, edition_id),
+                    (book_id, edition_id, handoff_type),
                 ).fetchone()
             except sqlite3.OperationalError:
                 handoff = None
@@ -376,8 +389,60 @@ def _read_book_runtime(database_path: Path, book_id: str, edition_id: str) -> di
 
 def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessView:
     paths = layout.for_book(record.book_id)
-    runtime = _read_book_runtime(paths.database, record.book_id, record.active_edition_id)
+    runtime = _read_book_runtime(
+        paths.database,
+        record.book_id,
+        record.active_edition_id,
+        "ORIGINAL_BOOK_BOOTSTRAP"
+        if record.creation_mode is CreationMode.ORIGINAL
+        else "NOVEL_INITIALIZATION",
+    )
     handoff = runtime.get("handoff") or {}
+    if record.creation_mode is CreationMode.ORIGINAL:
+        original_state = record.original_state or "ORIGINAL_SEED"
+        handoff_status = str(handoff.get("status") or "") or None
+        accepted = original_state in {
+            "FOUNDATION_ACCEPTED",
+            "FIRST_CHAPTER_DRAFTING",
+            "FIRST_CHAPTER_VALIDATED",
+            "WRITING",
+        }
+        if accepted:
+            status = "READY"
+            summary = (
+                "原创基础框架已确认，可以继续首章工作流。"
+                if int(runtime.get("chapter_count") or 0) == 0
+                else "原创小说已进入标准逐章创作工作流。"
+            )
+            original_missing: tuple[str, ...] = ()
+        elif original_state == "BOOTSTRAP_READY":
+            status = "FOUNDATION_REVIEW"
+            summary = "基础框架 Proposal 已生成，等待作者编辑并明确确认。"
+            original_missing = ("尚未确认 Story Foundation",)
+        elif handoff_status in {"CLAIMED", "RUNNING"}:
+            status = "INITIALIZING"
+            summary = "Codex 正在生成原创基础框架 Proposal。"
+            original_missing = ("基础框架 Proposal 尚未完成",)
+        elif handoff_status == "READY_FOR_CODEX":
+            status = "INITIALIZATION_READY_FOR_CODEX"
+            summary = "原创基础框架任务已准备好，等待 Codex 桌面端领取。"
+            original_missing = ("基础框架 Proposal 尚未完成",)
+        else:
+            status = "ORIGINAL_SEED"
+            summary = "Premise 已保存，下一步生成三个可选择的 Story Foundation。"
+            original_missing = ("尚未生成 Story Foundation Proposal",)
+        return StudioReadinessView(
+            book_id=record.book_id,
+            status=status,
+            ready=accepted,
+            missing_requirements=original_missing,
+            initialization_id=None,
+            initialization_status=original_state,
+            author_summary=summary,
+            handoff_id=str(handoff.get("handoff_id") or "") or None,
+            handoff_status=handoff_status,
+            updated_at=str(handoff.get("created_at") or "") or None,
+        )
     initialization = _latest_initialization(paths, record.active_edition_id)
     missing: list[str] = []
     if int(runtime.get("chapter_count") or 0) < 1:
@@ -512,6 +577,52 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
 def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
     readiness = studio_readiness(layout, record)
     paths = layout.for_book(record.book_id)
+    if record.creation_mode is CreationMode.ORIGINAL:
+        runtime = _read_book_runtime(
+            paths.database,
+            record.book_id,
+            record.active_edition_id,
+            "ORIGINAL_BOOK_BOOTSTRAP",
+        )
+        chapter_count = int(runtime.get("chapter_count") or 0)
+        accepted = readiness.ready
+        capabilities = {
+            "browse_structure": accepted,
+            "view_partial_profile": accepted,
+            "plan_next": accepted,
+            "continue_from_current_boundary": accepted,
+            "rewrite_selected_chapter": chapter_count > 0,
+            "inspect_global_world_state": accepted,
+        }
+        statuses = {
+            name: "AVAILABLE" if value else "FOUNDATION_CONFIRMATION_REQUIRED"
+            for name, value in capabilities.items()
+        }
+        level = (
+            StudioAccessLevel.FULL
+            if chapter_count > 0
+            else StudioAccessLevel.ACTION_READY
+            if accepted
+            else StudioAccessLevel.ONBOARDING
+        )
+        return StudioAccessView(
+            book_id=record.book_id,
+            access_level=level,
+            initialization_depth=None,
+            initialization_id=None,
+            capabilities=capabilities,
+            capability_status=statuses,
+            uncovered_semantic_chapter_count=0,
+            author_label=(
+                "原创写作中"
+                if chapter_count > 0
+                else "基础框架已确认"
+                if accepted
+                else "建立原创基础框架"
+            ),
+            current_stage=record.original_state or "ORIGINAL_SEED",
+            blockers=readiness.missing_requirements,
+        )
     initialization = _latest_initialization(paths, record.active_edition_id)
     capability_names = (
         "browse_structure",
@@ -636,6 +747,8 @@ _STATE_LABELS = {
     "INITIALIZATION_REVIEW": "等待确认",
     "FAILED": "初始化失败",
     "NEEDS_REPAIR": "需要修复",
+    "ORIGINAL_SEED": "待生成基础框架",
+    "FOUNDATION_REVIEW": "等待确认基础框架",
 }
 
 
@@ -655,13 +768,29 @@ def _instruction_availability(handoff: dict[str, Any]) -> tuple[bool, str | None
 
 def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogEntry:
     paths = layout.for_book(record.book_id)
-    runtime = _read_book_runtime(paths.database, record.book_id, record.active_edition_id)
+    runtime = _read_book_runtime(
+        paths.database,
+        record.book_id,
+        record.active_edition_id,
+        "ORIGINAL_BOOK_BOOTSTRAP"
+        if record.creation_mode is CreationMode.ORIGINAL
+        else "NOVEL_INITIALIZATION",
+    )
     readiness = studio_readiness(layout, record)
     access = studio_access(layout, record)
     instruction_available, instruction_error = _instruction_availability(
         runtime.get("handoff") or {}
     )
-    if access.accessible:
+    if record.creation_mode is CreationMode.ORIGINAL:
+        action = "OPEN_ORIGINAL_STUDIO"
+        action_label = (
+            "继续写作"
+            if int(runtime["chapter_count"]) > 0
+            else "写第一章"
+            if access.accessible
+            else "完善基础框架"
+        )
+    elif access.accessible:
         action, action_label = "OPEN_STUDIO", "进入小说工作台"
     elif readiness.handoff_status in _ACTIVE_HANDOFF_STATUSES:
         action, action_label = "VIEW_INITIALIZATION", "查看初始化进度"
@@ -671,8 +800,16 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
         catalog_id=f"book:{record.book_id}",
         book_id=record.book_id,
         title=record.title,
-        source_path=str(record.source_origin or record.source_root),
-        source_kind=record.source_origin_kind or "LIBRARY_COPY",
+        source_path=(
+            "原创项目（无导入正文）"
+            if record.creation_mode is CreationMode.ORIGINAL
+            else str(record.source_origin or record.source_root)
+        ),
+        source_kind=(
+            "ORIGINAL"
+            if record.creation_mode is CreationMode.ORIGINAL
+            else record.source_origin_kind or "LIBRARY_COPY"
+        ),
         state=readiness.status,
         state_label=access.author_label if access.accessible else _STATE_LABELS[readiness.status],
         studio_ready=readiness.ready,
@@ -702,6 +839,12 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
             "instruction_available": instruction_available,
             "instruction_error": instruction_error,
         },
+        route=(
+            f"/books/{record.book_id}/original"
+            if record.creation_mode is CreationMode.ORIGINAL
+            and int(runtime["chapter_count"]) == 0
+            else None
+        ),
     )
 
 

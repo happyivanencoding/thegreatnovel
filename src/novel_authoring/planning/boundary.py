@@ -16,6 +16,7 @@ from novel_authoring.edition import (
     resolve_edition_id,
 )
 from novel_authoring.ingest.service import verify_sources
+from novel_authoring.original.state import is_original_book
 from novel_authoring.planning.diagnostics import build_narrative_portfolio_snapshot
 from novel_authoring.planning.innovation import (
     InnovationControl,
@@ -231,7 +232,11 @@ def build_boundary_packet(
 ) -> dict[str, object]:
     database.initialize()
     workspace_root = _workspace(database, book_id)
-    verification = verify_sources(book_id, workspace_root.parent)
+    verification = (
+        {"ok": True, "mode": "ORIGINAL_CANON"}
+        if is_original_book(database, book_id)
+        else verify_sources(book_id, workspace_root.parent)
+    )
     if not verification["ok"]:
         raise PlanningError("源文件 SHA-256 校验失败，禁止建立续写边界")
     selected_edition = resolve_edition_id(database, book_id, edition_id)

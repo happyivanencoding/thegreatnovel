@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>新建原创小说 · Novel Studio</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v={{ asset_version }}">
+</head>
+<body class="library-body original-body">
+  <header class="library-topbar"><a class="wb-brand" href="/library">Novel Studio</a><nav><a href="/library">返回书库</a></nav></header>
+  <main class="original-shell">
+    <header class="original-hero"><p class="wb-kicker">Original Novel</p><h1>从一个 premise 开始</h1><p>这里只保存创作意图并建立本地 handoff。系统不会生成假“第 0 章”，也不会把 Proposal 写进 Canon。</p></header>
+    <form class="original-form panel" data-original-create>
+      <label class="original-field original-field-wide"><span>Premise <strong>必填</strong></span><textarea name="premise" rows="6" required placeholder="一句话、一个困境，或一个你真正想追下去的故事问题。"></textarea></label>
+      <div class="original-form-grid">
+        <label class="original-field"><span>类型</span><input name="genre" placeholder="例如：近未来悬疑"></label>
+        <label class="original-field"><span>基调 / 文风</span><input name="tone_style" placeholder="例如：冷峻、克制、贴近人物"></label>
+        <label class="original-field"><span>视角</span><input name="pov" placeholder="例如：第三人称限知"></label>
+        <label class="original-field"><span>预期篇幅</span><input name="expected_length" placeholder="例如：长篇；不锁定章数"></label>
+      </div>
+      <label class="original-field original-field-wide"><span>必须包含（每行一项）</span><textarea name="must_include" rows="3"></textarea></label>
+      <label class="original-field original-field-wide"><span>禁止出现（每行一项）</span><textarea name="forbidden" rows="3"></textarea></label>
+      <label class="original-field original-field-wide"><span>抽象参考特征（每行一项，不复制人物或情节）</span><textarea name="reference_traits" rows="3"></textarea></label>
+      <footer class="original-actions"><a class="button" href="/library">取消</a><button class="button primary" type="submit">创建并准备基础框架</button></footer>
+    </form>
+    <p class="library-feedback" data-original-feedback aria-live="polite"></p>
+  </main>
+  <script src="{{ url_for('static', path='original.js') }}?v={{ asset_version }}" defer></script>
+</body>
+</html>

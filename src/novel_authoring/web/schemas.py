@@ -89,6 +89,25 @@ class UserResponseRequest(BaseModel):
     response: dict[str, Any]
 
 
+class OriginalProposalImportRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    handoff_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+
+
+class OriginalCandidateSelectionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    candidate_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+
+
+class OriginalDraftActionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    draft_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    confirmation: str = ""
+
+
 class AtlasActionRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

@@ -103,6 +103,20 @@ from novel_authoring.metrics.service import (
     MetricValidationError,
     ObservationResolver,
 )
+from novel_authoring.original.models import (
+    OriginalBookRequest,
+    OriginalFoundationConfirmation,
+)
+from novel_authoring.original.service import (
+    approve_original_first_chapter,
+    confirm_original_foundation,
+    create_original_book,
+    import_original_bootstrap_proposal,
+    original_overview,
+    prepare_original_bootstrap,
+    select_first_chapter_candidate,
+    validate_original_draft,
+)
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.library import LibraryAddOptions, add_book
 from novel_authoring.storage.registry import BookKind, BookRegistry
@@ -139,6 +153,9 @@ from novel_authoring.web.schemas import (
     HiddenItemRequest,
     KnowledgeUpdateRequest,
     OpenCreativeQuestionRequest,
+    OriginalCandidateSelectionRequest,
+    OriginalDraftActionRequest,
+    OriginalProposalImportRequest,
     ProfileReanalysisRequest,
     RecomputeRequest,
     RetractRequest,
@@ -635,6 +652,143 @@ def create_app(
             },
         )
 
+    @app.get("/library/original/new", response_class=HTMLResponse)
+    async def original_new_page(request: Request) -> Any:
+        if app.state.library_root is None:
+            raise HTTPException(status_code=404, detail="library 未配置")
+        return _template(
+            templates,
+            "original_new.html",
+            request,
+            {"csrf_token": app.state.csrf_token},
+        )
+
+    @app.post("/api/library/original")
+    async def original_create_api(
+        request: Request, payload: OriginalBookRequest
+    ) -> Any:
+        verify_csrf(request, None)
+        if app.state.library_root is None:
+            raise HTTPException(status_code=400, detail="library 未配置")
+        try:
+            created = create_original_book(
+                BookLayout(app.state.library_root), payload
+            )
+            selected_database = Database(Path(str(created["database"])))
+            handoff = prepare_original_bootstrap(
+                selected_database, str(created["book_id"])
+            )
+            return {
+                **created,
+                "handoff": handoff,
+                "original_url": f"/books/{created['book_id']}/original",
+            }
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.get("/books/{path_book_id}/original", response_class=HTMLResponse)
+    async def original_studio_page(request: Request, path_book_id: str) -> Any:
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            overview = original_overview(_database_for_book(app, checked), checked)
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+        return _template(
+            templates,
+            "original_studio.html",
+            request,
+            {"original": overview, "csrf_token": app.state.csrf_token},
+        )
+
+    @app.post("/api/books/{path_book_id}/original/bootstrap")
+    async def original_bootstrap_api(request: Request, path_book_id: str) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return prepare_original_bootstrap(
+                _database_for_book(app, checked), checked
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/proposal/import")
+    async def original_proposal_import_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalProposalImportRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return import_original_bootstrap_proposal(
+                _database_for_book(app, checked), checked, payload.handoff_id
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/foundation/confirm")
+    async def original_foundation_confirm_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalFoundationConfirmation,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return confirm_original_foundation(
+                _database_for_book(app, checked), checked, payload
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/first-chapter/select")
+    async def original_first_chapter_select_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalCandidateSelectionRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return select_first_chapter_candidate(
+                _database_for_book(app, checked), checked, payload.candidate_id
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/first-chapter/validate")
+    async def original_first_chapter_validate_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalDraftActionRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return validate_original_draft(
+                _database_for_book(app, checked), checked, payload.draft_id
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/first-chapter/approve")
+    async def original_first_chapter_approve_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalDraftActionRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return approve_original_first_chapter(
+                _database_for_book(app, checked),
+                checked,
+                payload.draft_id,
+                payload.confirmation,
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
     @app.get("/library/technical", response_class=HTMLResponse)
     async def technical_library_page(request: Request) -> Any:
         if not app.state.developer_mode:
@@ -719,6 +873,13 @@ def create_app(
         if catalog is not None:
             if current_entry is None:
                 raise HTTPException(status_code=404, detail="书籍不在当前书库")
+            if (
+                current_entry.creation_mode == "ORIGINAL"
+                and current_entry.chapter_count == 0
+            ):
+                return RedirectResponse(
+                    url=f"/books/{checked_book}/original", status_code=302
+                )
             if not current_entry.studio_accessible:
                 return render_onboarding(request, catalog, current_entry)
         selected_database = _database_for_book(app, checked_book)
@@ -777,6 +938,13 @@ def create_app(
         if catalog is not None:
             if current_entry is None:
                 raise HTTPException(status_code=404, detail="书籍不在当前书库")
+            if (
+                current_entry.creation_mode == "ORIGINAL"
+                and current_entry.chapter_count == 0
+            ):
+                return RedirectResponse(
+                    url=f"/books/{checked_book}/original", status_code=302
+                )
             if not current_entry.studio_accessible:
                 return render_onboarding(request, catalog, current_entry)
         try:

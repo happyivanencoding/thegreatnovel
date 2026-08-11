@@ -50,6 +50,13 @@ Book Library 只收敛存储位置，不改变 V2 宪法、指标公式、Atlas 
 作者批准门。Portable Snapshot 的 JSON 是 canonical view；SVG 只能通过显式 atlas export
 生成。`exports/latest` 可直接打开，不依赖服务端或 `file:// fetch`。
 
+`creation_mode=ORIGINAL` 的作者项目不要求来源正文。它仍使用同一 Book/base Edition、
+Author Truth、Book Profile、Planning、Candidate、Chapter Contract、Draft、Validator、Approval
+和 Canon 存储，只把初始化入口替换为 `ORIGINAL_SEED → Story Foundation Proposal → 作者确认
+→ Genesis State`。Proposal 确认前不建立章节；确认后也只建立作者控制层和三个首章候选。首章
+必须经过十项校验和“批准写入正史”才成为第 1 章。详细合同见
+`docs/ORIGINAL_NOVEL_GENESIS.md`。
+
 ## Distillation Knowledge Layer
 
 Distill Skill ≠ Canon ≠ Runtime State。`SELF_BOOK` 是当前 selected Edition 的软理解层，
