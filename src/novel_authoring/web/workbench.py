@@ -33,6 +33,42 @@ from novel_authoring.author_control.truth import (
 from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.edition import edition_chapters
 
+_EDITION_PURPOSE_LABELS = {
+    "SOURCE_BASE": "来源底稿",
+    "AUTHOR_REVISION": "当前路线修订",
+    "ALTERNATE_ROUTE": "故事备选路线",
+}
+
+
+def _author_edition_groups(editions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    specs = (
+        ("CURRENT", "当前正式版本"),
+        ("CANDIDATE", "正在修订"),
+        ("ALTERNATE", "备选路线"),
+        ("ARCHIVED", "已归档"),
+    )
+    groups: list[dict[str, Any]] = []
+    for role, label in specs:
+        items = []
+        for item in editions:
+            if str(item.get("official_role")) != role:
+                continue
+            ordinal = item.get("fork_chapter_ordinal")
+            items.append(
+                {
+                    **item,
+                    "purpose_label": _EDITION_PURPOSE_LABELS.get(
+                        str(item.get("edition_purpose")), "待确认用途"
+                    ),
+                    "source_label": ("来源版本" if ordinal is None else f"从第 {ordinal} 章分开"),
+                    "updated_label": item.get("activated_at") or item.get("created_at"),
+                }
+            )
+        if items:
+            groups.append({"role": role, "label": label, "items": items})
+    return groups
+
+
 WORKBENCH_MODES: tuple[str, ...] = (
     "home",
     "continue",
@@ -263,17 +299,13 @@ def _author_record_name(record: dict[str, Any], fallback: str = "状态记录") 
     }.get(category, fallback)
 
 
-def _record_presentation(
-    record: dict[str, Any], *, fallback: str = "状态记录"
-) -> dict[str, Any]:
+def _record_presentation(record: dict[str, Any], *, fallback: str = "状态记录") -> dict[str, Any]:
     result = dict(record)
     layer = str(result.get("current_layer") or result.get("layer") or "UNKNOWN")
     category = str(result.get("category") or "").lower()
     result["author_name"] = _author_record_name(result, fallback)
     result["author_category_label"] = str(
-        result.get("category_label")
-        or STATE_CATEGORY_LABELS.get(category)
-        or fallback
+        result.get("category_label") or STATE_CATEGORY_LABELS.get(category) or fallback
     )
     result["source_label"] = STATE_SOURCE_LABELS.get(layer, "○ 边界待确认")
     result["recent_chapter_ordinal"] = (
@@ -321,25 +353,18 @@ def _record_value(record: dict[str, Any], keys: tuple[str, ...]) -> Any:
     return None
 
 
-def _character_focus(
-    state: dict[str, Any], recent_changes: list[dict[str, Any]]
-) -> dict[str, Any]:
+def _character_focus(state: dict[str, Any], recent_changes: list[dict[str, Any]]) -> dict[str, Any]:
     author_attributes = [
         item
         for item in state.get("attributes", [])
         if isinstance(item, dict) and item.get("author_visible")
     ]
     return {
-        "location": _record_value(
-            state, ("current_location", "location", "location_id")
-        )
+        "location": _record_value(state, ("current_location", "location", "location_id"))
         or "本章尚未明确",
-        "goal": _record_value(state, ("current_goal", "goal", "objective"))
-        or "本章尚未明确",
-        "body": _record_value(state, ("health", "body", "injury", "condition"))
-        or "未见明确异常",
-        "mood": _record_value(state, ("mood", "emotion", "mental_state"))
-        or "本章尚未明确",
+        "goal": _record_value(state, ("current_goal", "goal", "objective")) or "本章尚未明确",
+        "body": _record_value(state, ("health", "body", "injury", "condition")) or "未见明确异常",
+        "mood": _record_value(state, ("mood", "emotion", "mental_state")) or "本章尚未明确",
         "risk": _record_value(state, ("risk", "danger", "threat"))
         or ("本章状态有变化" if recent_changes else "本章无新增风险证据"),
         "stats": author_attributes[:8],
@@ -419,8 +444,7 @@ def _state_presentation(
         characters.append(item)
     state["characters"] = characters
     character_names = {
-        str(item.get("character_id")): str(item.get("author_name"))
-        for item in characters
+        str(item.get("character_id")): str(item.get("author_name")) for item in characters
     }
 
     workspaces: list[dict[str, Any]] = []
@@ -430,12 +454,9 @@ def _state_presentation(
             str(item.get("character_id")), _author_record_name(item, "未命名人物")
         )
         item["recent_changes"] = [
-            _record_presentation(change)
-            for change in item.get("recent_changes", [])
+            _record_presentation(change) for change in item.get("recent_changes", [])
         ]
-        item["focus"] = _character_focus(
-            item.get("state", {}), item["recent_changes"]
-        )
+        item["focus"] = _character_focus(item.get("state", {}), item["recent_changes"])
         for key in ("inventory", "equipment", "abilities", "relationships"):
             item[key] = [
                 _record_presentation(record)
@@ -445,11 +466,7 @@ def _state_presentation(
         workspaces.append(item)
     state["character_workspaces"] = workspaces
     state["selected_character_workspace"] = next(
-        (
-            item
-            for item in workspaces
-            if str(item.get("character_id")) == selected_id
-        ),
+        (item for item in workspaces if str(item.get("character_id")) == selected_id),
         None,
     )
 
@@ -496,8 +513,7 @@ def _state_presentation(
             (
                 topic
                 for topic in item.get("author_truth_topics", [])
-                if str((topic.get("truth") or {}).get("truth_type") or "").upper()
-                == "FACTION_GOAL"
+                if str((topic.get("truth") or {}).get("truth_type") or "").upper() == "FACTION_GOAL"
             ),
             None,
         )
@@ -506,9 +522,7 @@ def _state_presentation(
         item["from_name"] = character_names.get(
             str(item.get("from_entity_id") or ""), "未命名关系方"
         )
-        item["to_name"] = character_names.get(
-            str(item.get("to_entity_id") or ""), "未命名关系方"
-        )
+        item["to_name"] = character_names.get(str(item.get("to_entity_id") or ""), "未命名关系方")
         item["relationship_label"] = _relationship_author_label(item)
 
     faction_records: dict[str, dict[str, Any]] = {}
@@ -979,9 +993,7 @@ def _candidate_cards(
             if isinstance(item, dict)
         ]
         truth_labels = {
-            str(item["truth_id"]): str(item["title"])
-            for item in truth_effects
-            if item["truth_id"]
+            str(item["truth_id"]): str(item["title"]) for item in truth_effects if item["truth_id"]
         }
 
         secrets_used = [
@@ -1012,9 +1024,7 @@ def _candidate_cards(
                     {
                         "kind": impact_label,
                         "truth_id": str(item.get("truth_id") or ""),
-                        "depth": depth_labels.get(
-                            str(item.get("depth") or ""), "未注明深度"
-                        ),
+                        "depth": depth_labels.get(str(item.get("depth") or ""), "未注明深度"),
                         "clue": str(item.get("clue") or "未写明可读线索"),
                         "target": str(item.get("target") or "READER"),
                     }
@@ -1024,9 +1034,7 @@ def _candidate_cards(
                 "candidate_id": str(row["candidate_id"]),
                 "context_chapter_id": context_chapter_id,
                 "target_chapter_ordinal": (
-                    context_chapter_ordinal + 1
-                    if context_chapter_ordinal is not None
-                    else None
+                    context_chapter_ordinal + 1 if context_chapter_ordinal is not None else None
                 ),
                 "rank": row["rank"],
                 "selection_status": str(row["selection_status"]),
@@ -1036,9 +1044,26 @@ def _candidate_cards(
                 "reader_question": plan.get("reader_question"),
                 "final_selection_score": score.get("final_selection_score")
                 or score.get("score"),
+                "score_available": (
+                    str(score.get("score_status") or "COMPUTED") != "NOT_COMPUTED"
+                    and isinstance(
+                        score.get("final_selection_score") or score.get("score"),
+                        (int, float),
+                    )
+                ),
+                "gate_available": str(gate.get("gate_status") or "COMPUTED")
+                != "NOT_RUN",
                 "gate_passed": bool(gate.get("passed", False)),
                 "hard_failures": list(gate.get("hard_failures", [])),
                 "author_control_trace": plan.get("author_control_trace", {}),
+                "protagonist_choice": str(
+                    plan.get("protagonist_strategy") or plan.get("solution_method") or ""
+                ),
+                "cost": str(plan.get("required_cost") or plan.get("opportunity_cost") or ""),
+                "irreversible_change": str(plan.get("required_irreversible_change") or ""),
+                "future_space": str(plan.get("ending_state") or ""),
+                "main_risk": str(plan.get("risk_form") or ""),
+                "plot_advances": list(plan.get("commit_updates", [])),
                 "profile_alignment": {
                     **dict(plan.get("profile_alignment", {})),
                     "dimensions": [
@@ -1049,9 +1074,7 @@ def _candidate_cards(
                                 str(item.get("dimension") or "未注明维度"),
                             ),
                         }
-                        for item in dict(plan.get("profile_alignment", {})).get(
-                            "dimensions", []
-                        )
+                        for item in dict(plan.get("profile_alignment", {})).get("dimensions", [])
                         if isinstance(item, dict)
                     ],
                 },
@@ -1060,9 +1083,7 @@ def _candidate_cards(
                 "reveal_previews": reveal_previews,
                 "secrets_used": secrets_used,
                 "kept_hidden": kept_hidden,
-                "reader_knowledge_delta": list(
-                    reveal_impact.get("reader_knowledge_delta", [])
-                ),
+                "reader_knowledge_delta": list(reveal_impact.get("reader_knowledge_delta", [])),
                 "character_knowledge_delta": list(
                     reveal_impact.get("character_knowledge_delta", [])
                 ),
@@ -1510,7 +1531,9 @@ def build_workbench_context(
         book = _book_row(connection, book_id)
         selected_edition_id = edition_id or str(book.get("active_edition_id") or "base")
         edition_rows = connection.execute(
-            "SELECT edition_id, display_name, status, parent_edition_id "
+            "SELECT edition_id, display_name, status, parent_edition_id, "
+            "edition_purpose, official_role, fork_chapter_ordinal, created_at, "
+            "activated_at, purpose_review_required "
             "FROM editions WHERE book_id=? ORDER BY created_at, edition_id",
             (book_id,),
         ).fetchall()
@@ -1521,6 +1544,12 @@ def build_workbench_context(
                 "display_name": str(book.get("title") or book_id),
                 "status": "ACTIVE",
                 "parent_edition_id": None,
+                "edition_purpose": "SOURCE_BASE",
+                "official_role": "CURRENT",
+                "fork_chapter_ordinal": None,
+                "created_at": str(book.get("created_at") or ""),
+                "activated_at": None,
+                "purpose_review_required": False,
             }
             editions = [dict(edition)]
         else:
@@ -1605,12 +1634,8 @@ def build_workbench_context(
     if selected_anchor is None and latest_chapter is not None:
         selected_anchor = int(latest_chapter["ordinal"])
     active_mode = _normalise_choice(mode, WORKBENCH_MODES, "home")
-    active_state_tab = _normalise_choice(
-        state_tab, WORKBENCH_STATE_TABS, "overview"
-    )
-    active_state_scope = _normalise_choice(
-        state_scope, WORKBENCH_STATE_SCOPES, "character"
-    )
+    active_state_tab = _normalise_choice(state_tab, WORKBENCH_STATE_TABS, "overview")
+    active_state_scope = _normalise_choice(state_scope, WORKBENCH_STATE_SCOPES, "character")
     story_game_state: dict[str, Any] | None = None
     previous_story_game_state: dict[str, Any] | None = None
     author_control: dict[str, Any] | None = None
@@ -1621,9 +1646,7 @@ def build_workbench_context(
     open_questions: list[dict[str, Any]] = []
     secret_candidates: list[dict[str, Any]] = []
     selected_lens = TruthLens(str(truth_lens).upper())
-    state_chapter_id = (
-        None if selected_chapter is None else str(selected_chapter["chapter_id"])
-    )
+    state_chapter_id = None if selected_chapter is None else str(selected_chapter["chapter_id"])
     if selected_chapter is not None:
         story_game_state = build_story_game_state(
             database,
@@ -1631,20 +1654,14 @@ def build_workbench_context(
             selected_edition_id,
             chapter_id=state_chapter_id,
             character_id=character_id,
-            include_global_scope=(
-                active_mode == "state" and active_state_scope == "global"
-            ),
+            include_global_scope=(active_mode == "state" and active_state_scope == "global"),
         )
         story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
             str(story_game_state.get("coverage_status") or "NOT_STARTED"), "状态未知"
         )
         selected_ordinal = int(selected_chapter["ordinal"])
         previous_chapter = next(
-            (
-                item
-                for item in raw_chapters
-                if int(item["ordinal"]) == selected_ordinal - 1
-            ),
+            (item for item in raw_chapters if int(item["ordinal"]) == selected_ordinal - 1),
             None,
         )
         if previous_chapter is not None:
@@ -1654,18 +1671,11 @@ def build_workbench_context(
                 selected_edition_id,
                 chapter_id=str(previous_chapter["chapter_id"]),
                 character_id=character_id,
-                include_global_scope=(
-                    active_mode == "state" and active_state_scope == "global"
-                ),
+                include_global_scope=(active_mode == "state" and active_state_scope == "global"),
             )
-            previous_story_game_state["coverage_status_label"] = (
-                SOURCE_COVERAGE_LABELS.get(
-                    str(
-                        previous_story_game_state.get("coverage_status")
-                        or "NOT_STARTED"
-                    ),
-                    "状态未知",
-                )
+            previous_story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
+                str(previous_story_game_state.get("coverage_status") or "NOT_STARTED"),
+                "状态未知",
             )
     if active_mode == "state":
         if story_game_state is None:
@@ -1697,16 +1707,12 @@ def build_workbench_context(
                 selected_edition_id,
                 chapter_ordinal=state_ordinal,
                 lens=selected_lens,
-                character_id=(
-                    state_character_id if selected_lens is TruthLens.CHARACTER else None
-                ),
+                character_id=(state_character_id if selected_lens is TruthLens.CHARACTER else None),
                 include_future=False,
             )
         state_truth_topics_value: Any = state_lens_projection.get("topics", [])
         state_truth_topics: list[dict[str, Any]] = [
-            dict(topic)
-            for topic in state_truth_topics_value
-            if isinstance(topic, dict)
+            dict(topic) for topic in state_truth_topics_value if isinstance(topic, dict)
         ]
         for collection, subject_type, identifier_keys in (
             ("characters", "CHARACTER", ("character_id", "record_id", "id")),
@@ -1750,8 +1756,7 @@ def build_workbench_context(
                     topic
                     for topic in state_truth_topics
                     if isinstance(topic.get("truth"), dict)
-                    and str(topic["truth"].get("subject_type") or "").upper()
-                    == subject_type
+                    and str(topic["truth"].get("subject_type") or "").upper() == subject_type
                     and str(topic["truth"].get("subject_id") or "") == entity_id
                 ]
                 enriched.append(
@@ -1782,9 +1787,7 @@ def build_workbench_context(
         if selected_character_record is not None:
             story_game_state["character"] = {
                 **story_game_state.get("character", {}),
-                "author_truth_topics": selected_character_record.get(
-                    "author_truth_topics", []
-                ),
+                "author_truth_topics": selected_character_record.get("author_truth_topics", []),
             }
         story_game_state = _state_presentation(
             story_game_state,
@@ -1792,9 +1795,7 @@ def build_workbench_context(
             scope=active_state_scope,
             lens_projection=state_lens_projection,
         )
-        current_state_ordinal = int(
-            (story_game_state.get("chapter") or {}).get("ordinal") or 0
-        )
+        current_state_ordinal = int((story_game_state.get("chapter") or {}).get("ordinal") or 0)
         story_game_state["chapter_navigation"] = {
             direction: next(
                 (
@@ -1833,9 +1834,7 @@ def build_workbench_context(
                     else story_game_state.get("selected_character_id")
                 )
             ),
-            include_future=(
-                selected_lens is TruthLens.AUTHOR and include_future_truths
-            ),
+            include_future=(selected_lens is TruthLens.AUTHOR and include_future_truths),
         )
         chapter_characters = (
             [] if story_game_state is None else story_game_state.get("characters", [])
@@ -1880,12 +1879,8 @@ def build_workbench_context(
                 selected_edition_id,
                 chapter_ordinal=truth_chapter_ordinal,
             )
-            open_questions = list_open_creative_questions(
-                database, book_id, selected_edition_id
-            )
-            secret_candidates = list_secret_candidates(
-                database, book_id, selected_edition_id
-            )
+            open_questions = list_open_creative_questions(database, book_id, selected_edition_id)
+            secret_candidates = list_secret_candidates(database, book_id, selected_edition_id)
     if selected_lens is not TruthLens.AUTHOR:
         candidate_cards = []
     return {
@@ -1894,6 +1889,7 @@ def build_workbench_context(
         "edition_id": selected_edition_id,
         "edition": edition,
         "editions": editions,
+        "edition_groups": _author_edition_groups(editions),
         "chapter_items": chapter_items,
         "draft_items": draft_items,
         "candidate_cards": candidate_cards,

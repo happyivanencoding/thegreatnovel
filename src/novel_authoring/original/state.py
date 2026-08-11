@@ -10,9 +10,7 @@ from novel_authoring.storage.registry import BookRegistry, CreationMode
 
 
 def original_record(database: Any, book_id: str) -> Any | None:
-    root_value = database.scalar(
-        "SELECT workspace_root FROM books WHERE book_id=?", (book_id,)
-    )
+    root_value = database.scalar("SELECT workspace_root FROM books WHERE book_id=?", (book_id,))
     if root_value is None:
         return None
     root = Path(str(root_value)).expanduser().resolve()

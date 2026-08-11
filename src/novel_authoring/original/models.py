@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -12,11 +12,60 @@ from novel_authoring.domain.models import NarrativeFunction
 
 class OriginalState(StrEnum):
     ORIGINAL_SEED = "ORIGINAL_SEED"
-    BOOTSTRAP_READY = "BOOTSTRAP_READY"
-    FOUNDATION_ACCEPTED = "FOUNDATION_ACCEPTED"
+    FOUNDATION_GENERATING = "FOUNDATION_GENERATING"
+    FOUNDATION_REVIEW = "FOUNDATION_REVIEW"
+    FOUNDATION_READY = "FOUNDATION_READY"
     FIRST_CHAPTER_DRAFTING = "FIRST_CHAPTER_DRAFTING"
     FIRST_CHAPTER_VALIDATED = "FIRST_CHAPTER_VALIDATED"
-    WRITING = "WRITING"
+    WRITING_READY = "WRITING_READY"
+
+
+class SettingStrength(StrEnum):
+    CORE = "CORE"
+    PREFERENCE = "PREFERENCE"
+    OPEN = "OPEN"
+
+
+class FoundationSetting(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    setting_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    category: str = Field(min_length=1)
+    statement: str = Field(min_length=1)
+    strength: SettingStrength
+
+
+class BookProfileDimensionDraft(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    summary: str = Field(min_length=1)
+    core_commitments: list[str] = Field(default_factory=list)
+    preferences: list[str] = Field(default_factory=list)
+    open_questions: list[str] = Field(default_factory=list)
+    risks: list[str] = Field(default_factory=list)
+
+
+class BookProfileDraft(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    worldbuilding: BookProfileDimensionDraft
+    characters: BookProfileDimensionDraft
+    plot: BookProfileDimensionDraft
+    style: BookProfileDimensionDraft
+    narrative: BookProfileDimensionDraft
+    dialogue: BookProfileDimensionDraft
+    pacing: BookProfileDimensionDraft
+    themes: BookProfileDimensionDraft
+    continuity: BookProfileDimensionDraft
+
+
+class HiddenTruthCandidate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    candidate_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    title: str = Field(min_length=1)
+    statement: str = Field(min_length=1)
+    confidence: float = Field(default=0.5, ge=0, le=1)
 
 
 class OriginalBookRequest(BaseModel):
@@ -57,6 +106,8 @@ class StoryRoute(BaseModel):
     central_pressure: str = Field(min_length=1)
     opportunity: str = Field(min_length=1)
     risk: str = Field(min_length=1)
+    commitments: list[str] = Field(min_length=1)
+    open_alternatives: list[str] = Field(default_factory=list)
 
 
 class FirstChapterCandidate(BaseModel):
@@ -90,19 +141,18 @@ class OriginalBootstrapProposal(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal["original-bootstrap-v1"] = "original-bootstrap-v1"
+    schema_version: Literal["original-bootstrap-v2"] = "original-bootstrap-v2"
     information_status: Literal["PROPOSAL"] = "PROPOSAL"
     title_candidates: list[str] = Field(min_length=3, max_length=3)
     expanded_premise: str = Field(min_length=1)
-    foundation_candidates: list[StoryFoundationCandidate] = Field(
-        min_length=3, max_length=3
-    )
+    foundation_candidates: list[StoryFoundationCandidate] = Field(min_length=3, max_length=3)
     protagonist: str = Field(min_length=1)
     protagonist_goal: str = Field(min_length=1)
     protagonist_conflict: str = Field(min_length=1)
     protagonist_cost: str = Field(min_length=1)
     protagonist_growth: str = Field(min_length=1)
     world_rules: list[str] = Field(min_length=1)
+    foundation_settings: list[FoundationSetting] = Field(min_length=1)
     characters: list[str] = Field(min_length=1)
     factions: list[str] = Field(default_factory=list)
     routes: list[StoryRoute] = Field(min_length=3, max_length=3)
@@ -110,10 +160,10 @@ class OriginalBootstrapProposal(BaseModel):
     recommendation_reason: str = Field(min_length=1)
     first_phase_objective: str = Field(min_length=1)
     rolling_planning: RollingPlanning
-    first_chapter_candidates: list[FirstChapterCandidate] = Field(
-        min_length=3, max_length=3
-    )
+    book_profile_draft: BookProfileDraft
+    first_chapter_candidates: list[FirstChapterCandidate] = Field(min_length=3, max_length=3)
     open_questions: list[str] = Field(default_factory=list)
+    hidden_truth_candidates: list[HiddenTruthCandidate] = Field(default_factory=list)
     risks: list[str] = Field(default_factory=list)
     avoid_cliches: list[str] = Field(default_factory=list)
 
@@ -136,7 +186,7 @@ class OriginalBootstrapProposal(BaseModel):
 class OriginalFoundationConfirmation(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    confirmation: str
+    confirmed: bool = True
     selected_title: str = Field(min_length=1)
     title_override: str = ""
     selected_foundation_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
@@ -153,13 +203,39 @@ class OriginalFoundationConfirmation(BaseModel):
     rolling_short_override: list[str] = Field(default_factory=list)
     rolling_mid_override: list[str] = Field(default_factory=list)
     rolling_long_override: list[str] = Field(default_factory=list)
+    setting_strength_overrides: dict[str, SettingStrength] = Field(default_factory=dict)
+    open_question_actions: dict[str, Literal["KEEP_OPEN", "TENTATIVE", "SECRET", "DELETE"]] = Field(
+        default_factory=dict
+    )
+    hidden_truth_actions: dict[
+        str, Literal["CONFIRM_TRUTH", "KEEP_CANDIDATE", "KEEP_OPEN", "REJECT"]
+    ] = Field(default_factory=dict)
 
 
-FOUNDATION_CONFIRMATION = "确认基础框架"
+class GenesisApplyPlan(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    proposal_version_id: str
+    selected_title: str
+    selected_foundation: dict[str, Any]
+    selected_route: dict[str, Any]
+    author_truths: list[dict[str, Any]]
+    persistent_directives: list[dict[str, Any]]
+    profile_dimensions: dict[str, dict[str, Any]]
+    open_questions: list[dict[str, Any]]
+    secret_candidates: list[dict[str, Any]]
+    narrative_spine: dict[str, Any]
+    rolling_planning: dict[str, list[str]]
+    main_thread: dict[str, Any]
+    first_chapter_candidates: list[dict[str, Any]]
 
 
 __all__ = [
-    "FOUNDATION_CONFIRMATION",
+    "BookProfileDimensionDraft",
+    "BookProfileDraft",
+    "FoundationSetting",
+    "GenesisApplyPlan",
+    "HiddenTruthCandidate",
     "FirstChapterCandidate",
     "OriginalBookRequest",
     "OriginalBootstrapProposal",
@@ -168,4 +244,5 @@ __all__ = [
     "RollingPlanning",
     "StoryFoundationCandidate",
     "StoryRoute",
+    "SettingStrength",
 ]

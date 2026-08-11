@@ -37,12 +37,26 @@
           <h2 data-onboarding-headline>{% if catalog_entry.state in ['DISCOVERED','INITIALIZATION_REQUIRED'] %}还需要初始化才能开始创作{% elif catalog_entry.state == 'INITIALIZATION_READY_FOR_CODEX' %}初始化任务已经准备好{% elif catalog_entry.state == 'INITIALIZING' %}正在初始化这本书{% elif catalog_entry.state == 'INITIALIZATION_REVIEW' %}初始化正在等待确认{% elif catalog_entry.state in ['FAILED','NEEDS_REPAIR'] %}初始化尚未完整{% else %}正文已读取，等待初始化{% endif %}</h2>
           <p class="wb-lede" data-onboarding-summary>{{ catalog_entry.author_summary }}</p>
 
-          <fieldset class="wb-depth-selector" data-initialization-depth-selector>
-            <legend>选择准备深度</legend>
-            <label><input type="radio" name="initialization-depth" value="QUICK"><span><strong>快速了解</strong><small>全书结构索引 + 开篇、最新边界和 Arc 锚点；未分析内容保持未知。</small></span></label>
-            <label class="is-recommended"><input type="radio" name="initialization-depth" value="BALANCED" checked><span><strong>均衡准备 <em>推荐</em></strong><small>补充当前 Arc、活跃依赖和高变化章节，适合继续创作。</small></span></label>
-            <label><input type="radio" name="initialization-depth" value="FULL"><span><strong>完整初始化</strong><small>全章语义、全局综合和严格 READY；适合全书重构与全局审计。</small></span></label>
+          <fieldset class="wb-depth-selector" data-author-goal-selector>
+            <legend>你接下来想做什么？</legend>
+            <label class="is-recommended"><input type="radio" name="author-goal" value="CONTINUE" checked><span><strong>尽快续写最新章节 <em>推荐</em></strong><small>先处理当前写作边界，同时建立全书连续性索引。</small></span></label>
+            <label><input type="radio" name="author-goal" value="UNDERSTAND"><span><strong>先了解这本书</strong><small>快速建立全书结构、开篇基础和近期状态。</small></span></label>
+            <label><input type="radio" name="author-goal" value="REWRITE"><span><strong>改写某个章节范围</strong><small>建立连续性索引，并在进入工作台后补齐指定范围。</small></span></label>
+            <label><input type="radio" name="author-goal" value="AUDIT"><span><strong>做完整全书审查</strong><small>全章文学深分析、全局综合、指标与完整历史状态。</small></span></label>
           </fieldset>
+          <section class="wb-onboarding-plan" data-initialization-plan>
+            <strong data-plan-title>为你推荐：均衡准备</strong>
+            <ul data-plan-items><li>{{ catalog_entry.chapter_count }} / {{ catalog_entry.chapter_count }} 章结构索引</li><li>{{ catalog_entry.chapter_count }} / {{ catalog_entry.chapter_count }} 章连续性轻分析</li><li>最近章节与当前活跃人物、物品、规则和伏笔优先深读</li><li>每个故事阶段选择代表章节做文学分析</li></ul>
+            <span data-plan-effort>预计任务量：较长；完成第一批分析后提供时间范围。</span>
+          </section>
+          <details class="wb-technical-details wb-onboarding-advanced"><summary>高级设置</summary>
+            <fieldset class="wb-depth-selector" data-initialization-depth-selector>
+              <legend>初始化深度</legend>
+              <label><input type="radio" name="initialization-depth" value="QUICK"><span><strong>快速</strong><small>结构完整，当前边界优先。</small></span></label>
+              <label><input type="radio" name="initialization-depth" value="BALANCED" checked><span><strong>均衡</strong><small>全书连续性索引 + 代表章节文学分析。</small></span></label>
+              <label><input type="radio" name="initialization-depth" value="FULL"><span><strong>完整</strong><small>全章文学深分析与全局综合。</small></span></label>
+            </fieldset>
+          </details>
 
           <ol class="wb-initialization-steps" data-onboarding-steps>
             <li class="{% if catalog_entry.book_id %}is-complete{% else %}is-active{% endif %}"><span>{% if catalog_entry.book_id %}✓{% else %}●{% endif %}</span><div><strong>读取小说</strong><small>{% if catalog_entry.book_id %}已安全复制到系统书库{% else %}等待你的确认{% endif %}</small></div></li>
@@ -70,7 +84,7 @@
     <aside class="wb-pane wb-right-pane wb-onboarding-help" data-pane="right" aria-label="初始化说明">
       <div class="wb-pane-content">
         <div class="wb-pane-header"><div><p class="wb-kicker">下一步</p><h2>如何完成初始化</h2></div><button class="wb-icon-button" type="button" data-toggle-pane="right" aria-label="隐藏右栏"><span data-pane-toggle-icon>›</span></button></div>
-        <div class="wb-editor-scroll"><section class="wb-onboarding-help-copy"><span class="wb-help-number">1</span><h3>选择深度</h3><p>三种深度都会覆盖全书结构；差别只在语义深读范围，默认推荐均衡准备。</p><span class="wb-help-number">2</span><h3>交给 Codex</h3><p>复制真实指令，在 Codex 桌面端处理。Web 不会自行调用模型或命令行。</p><span class="wb-help-number">3</span><h3>渐进开放</h3><p>页面每 10 秒检查一次。结构索引完成后先进入受限工作台；缺上下文时会创建定向补齐任务。</p></section></div>
+        <div class="wb-editor-scroll"><section class="wb-onboarding-help-copy"><span class="wb-help-number">1</span><h3>告诉系统目标</h3><p>普通作者只需说明下一步想做什么，系统会推荐实际准备方案。</p><span class="wb-help-number">2</span><h3>交给 Codex</h3><p>复制一次真实指令，在 Codex 桌面端处理。Web 不会自行调用模型或命令行。</p><span class="wb-help-number">3</span><h3>先开放能用的能力</h3><p>页面局部检查进度；达到当前写作边界后先允许续写，其余历史分析可以继续在后台完成。</p></section></div>
       </div>
       <div class="wb-rail" data-pane-rail="right"><button class="wb-rail-button" type="button" data-toggle-pane="right" aria-label="展开右栏"><span data-pane-toggle-icon>‹</span></button></div>
     </aside>

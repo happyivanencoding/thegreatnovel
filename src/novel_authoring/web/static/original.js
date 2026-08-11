@@ -1,14 +1,18 @@
 (() => {
+  "use strict";
+
   const csrf = document.querySelector('meta[name="csrf-token"]')?.content || "";
   const feedback = document.querySelector("[data-original-feedback]");
   const bookId = document.body.dataset.originalBookId || "";
-
   const lines = (value) => String(value || "").split(/\r?\n/).map((item) => item.trim()).filter(Boolean);
+
   const show = (message, failed = false) => {
     if (!feedback) return;
     feedback.textContent = message;
     feedback.classList.toggle("is-error", failed);
   };
+
+  const responseError = (value) => value?.error?.message || value?.detail?.message || value?.detail || "操作失败";
   const post = async (url, payload) => {
     const response = await fetch(url, {
       method: "POST",
@@ -16,16 +20,14 @@
       body: JSON.stringify(payload),
     });
     const value = await response.json();
-    if (!response.ok || value.error) {
-      throw new Error(value.error?.message || value.error?.detail || "操作失败");
-    }
+    if (!response.ok || value.error) throw new Error(responseError(value));
     return value;
   };
 
   document.querySelector("[data-original-create]")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    show("正在创建原创项目并准备本地 handoff…");
+    show("正在创建原创项目并准备 AI 任务…");
     try {
       const value = await post("/api/library/original", {
         premise: String(form.get("premise") || "").trim(),
@@ -41,58 +43,125 @@
     } catch (error) { show(error.message, true); }
   });
 
-  document.querySelector("[data-original-confirm]")?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    show("正在确认基础框架；这一步不会创建章节或 Canon…");
-    try {
-      await post(`/api/books/${bookId}/original/foundation/confirm`, {
-        confirmation: String(form.get("confirmation") || ""),
-        selected_title: String(form.get("selected_title") || ""),
-        title_override: String(form.get("title_override") || "").trim(),
-        selected_foundation_id: String(form.get("selected_foundation_id") || ""),
-        selected_route_id: String(form.get("selected_route_id") || ""),
-        protagonist_override: String(form.get("protagonist_override") || "").trim(),
-        protagonist_goal_override: String(form.get("protagonist_goal_override") || "").trim(),
-        main_conflict_override: String(form.get("main_conflict_override") || "").trim(),
-        protagonist_cost_override: String(form.get("protagonist_cost_override") || "").trim(),
-        protagonist_growth_override: String(form.get("protagonist_growth_override") || "").trim(),
-        characters_override: lines(form.get("characters_override")),
-        factions_override: lines(form.get("factions_override")),
-        world_rules: lines(form.get("world_rules")),
-        first_phase_objective: String(form.get("first_phase_objective") || "").trim(),
-        rolling_short_override: lines(form.get("rolling_short_override")),
-        rolling_mid_override: lines(form.get("rolling_mid_override")),
-        rolling_long_override: lines(form.get("rolling_long_override")),
-      });
-      window.location.reload();
-    } catch (error) { show(error.message, true); }
-  });
+  const wizard = document.querySelector("[data-original-confirm]");
+  if (wizard) {
+    let step = 1;
+    const renderStep = () => {
+      wizard.querySelectorAll("[data-wizard-step]").forEach((panel) => { panel.hidden = Number(panel.dataset.wizardStep) !== step; });
+      wizard.querySelectorAll("[data-wizard-indicator]").forEach((item) => { item.classList.toggle("is-active", Number(item.dataset.wizardIndicator) === step); item.classList.toggle("is-done", Number(item.dataset.wizardIndicator) < step); });
+      wizard.querySelector("[data-wizard-back]").hidden = step === 1;
+      wizard.querySelector("[data-wizard-next]").hidden = step === 4;
+      wizard.querySelector("[data-wizard-submit]").hidden = step !== 4;
+      if (step === 4) {
+        const form = new FormData(wizard);
+        const choice = wizard.querySelector('[name="selected_foundation_id"]:checked')?.closest("label");
+        wizard.querySelector("[data-preview-foundation]").textContent = choice?.querySelector("span")?.textContent || "";
+        wizard.querySelector("[data-preview-protagonist]").textContent = `${form.get("protagonist_override")}：${form.get("protagonist_goal_override")}`;
+        wizard.querySelector("[data-preview-world]").textContent = lines(form.get("world_rules")).slice(0, 3).join("；");
+        wizard.querySelector("[data-preview-phase]").textContent = String(form.get("first_phase_objective") || "");
+      }
+    };
+    wizard.querySelector("[data-wizard-next]").addEventListener("click", () => { step = Math.min(4, step + 1); renderStep(); wizard.scrollIntoView({behavior: "smooth", block: "start"}); });
+    wizard.querySelector("[data-wizard-back]").addEventListener("click", () => { step = Math.max(1, step - 1); renderStep(); wizard.scrollIntoView({behavior: "smooth", block: "start"}); });
+    renderStep();
+
+    wizard.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = new FormData(wizard);
+      const selectedFoundation = String(form.get("selected_foundation_id") || "");
+      const title = String(form.get("title_override") || form.get("selected_title") || "").trim();
+      if (!window.confirm(`确认《${title}》的故事基础并开始准备第一章？\n\n这会写入作者幕后设定、全书画像和剧情方向，但不会创建或批准正式正文。`)) return;
+      const settingStrengths = {};
+      const openQuestionActions = {};
+      const hiddenTruthActions = {};
+      for (const [key, value] of form.entries()) {
+        if (key.startsWith("setting_strength__")) settingStrengths[key.slice(18)] = String(value);
+        if (key.startsWith("open_question_action__")) {
+          const index = key.slice(22);
+          openQuestionActions[`question-${wizard.dataset.proposalVersionId}-${selectedFoundation}-${index}`] = String(value);
+        }
+        if (key.startsWith("hidden_truth_action__")) hiddenTruthActions[key.slice(21)] = String(value);
+      }
+      show("正在以单一事务确认故事基础…");
+      try {
+        await post(`/api/books/${bookId}/original/foundation/confirm`, {
+          confirmed: true,
+          selected_title: String(form.get("selected_title") || ""),
+          title_override: String(form.get("title_override") || "").trim(),
+          selected_foundation_id: selectedFoundation,
+          selected_route_id: String(form.get("selected_route_id") || ""),
+          protagonist_override: String(form.get("protagonist_override") || "").trim(),
+          protagonist_goal_override: String(form.get("protagonist_goal_override") || "").trim(),
+          main_conflict_override: String(form.get("main_conflict_override") || "").trim(),
+          protagonist_cost_override: String(form.get("protagonist_cost_override") || "").trim(),
+          protagonist_growth_override: String(form.get("protagonist_growth_override") || "").trim(),
+          characters_override: lines(form.get("characters_override")),
+          factions_override: lines(form.get("factions_override")),
+          world_rules: lines(form.get("world_rules")),
+          first_phase_objective: String(form.get("first_phase_objective") || "").trim(),
+          rolling_short_override: lines(form.get("rolling_short_override")),
+          rolling_mid_override: lines(form.get("rolling_mid_override")),
+          rolling_long_override: lines(form.get("rolling_long_override")),
+          setting_strength_overrides: settingStrengths,
+          open_question_actions: openQuestionActions,
+          hidden_truth_actions: hiddenTruthActions,
+        });
+        window.location.replace(window.location.href);
+      } catch (error) { show(error.message, true); }
+    });
+  }
+
+  const renderComparison = (value) => {
+    const target = document.querySelector("[data-original-compare]");
+    if (!target) return;
+    const column = (label, proposal) => `<article><h3>${label}</h3><p><strong>${proposal.expanded_premise}</strong></p>${proposal.foundation_candidates.map((item) => `<div><b>${item.title}</b><span>${item.core_reading_promise}</span><small>${item.main_conflict}</small></div>`).join("")}</article>`;
+    target.innerHTML = column("当前方案", value.current) + column("新方案", value.target);
+    target.hidden = false;
+    target.scrollIntoView({behavior: "smooth", block: "center"});
+  };
 
   document.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-original-action]");
     if (!button) return;
-    button.disabled = true;
     const action = button.dataset.originalAction;
+    button.disabled = true;
     try {
       if (action === "bootstrap") {
-        show("正在准备新的 Proposal handoff…");
-        await post(`/api/books/${bookId}/original/bootstrap`, {});
+        show("正在准备新的故事方案；当前方案会保留…");
+        const value = await post(`/api/books/${bookId}/original/bootstrap`, {});
+        show(value.deduplicated ? "新方案已经在生成，已恢复原 AI 任务。" : "新方案任务已准备好，只需复制一次指令给 Codex。")
+        setTimeout(() => window.location.replace(window.location.href), 500);
       } else if (action === "import") {
-        show("正在校验并导入 Proposal…");
+        show("正在读取完成的故事方案…");
         await post(`/api/books/${bookId}/original/proposal/import`, {handoff_id: button.dataset.handoffId});
+        window.location.replace(window.location.href);
+      } else if (action === "compare-proposal") {
+        const response = await fetch(`/api/books/${bookId}/original/proposals/${button.dataset.proposalVersionId}/compare`);
+        const value = await response.json();
+        if (!response.ok || value.error) throw new Error(responseError(value));
+        renderComparison(value);
+        button.disabled = false;
+      } else if (action === "replace-proposal") {
+        if (!window.confirm("用新方案替换当前待确认方案？已经确认的作者设定和正式正文不会改变。")) { button.disabled = false; return; }
+        await post(`/api/books/${bookId}/original/proposals/${button.dataset.proposalVersionId}/resolve`, {action: "REPLACE_CURRENT"});
+        window.location.replace(window.location.href);
+      } else if (action === "keep-proposal") {
+        await post(`/api/books/${bookId}/original/proposals/${button.dataset.proposalVersionId}/resolve`, {action: "KEEP_CURRENT"});
+        window.location.replace(window.location.href);
       } else if (action === "select") {
-        show("正在建立首章 Chapter Contract 与本地 Draft handoff…");
+        show("正在冻结第一章要求并准备 AI 任务…");
         await post(`/api/books/${bookId}/original/first-chapter/select`, {candidate_id: button.dataset.candidateId});
+        window.location.replace(window.location.href);
       } else if (action === "validate") {
         show("正在运行十项校验…");
         await post(`/api/books/${bookId}/original/first-chapter/validate`, {draft_id: button.dataset.draftId, confirmation: ""});
+        window.location.replace(window.location.href);
       } else if (action === "approve") {
-        const confirmation = document.querySelector("[data-approval-confirmation]")?.value || "";
-        show("正在执行作者显式批准…");
-        await post(`/api/books/${bookId}/original/first-chapter/approve`, {draft_id: button.dataset.draftId, confirmation});
+        if (!window.confirm("批准后，第一章草稿将写入正式正文，并成为后续创作的权威边界。是否继续？")) { button.disabled = false; return; }
+        show("正在写入正式正文…");
+        await post(`/api/books/${bookId}/original/first-chapter/approve`, {draft_id: button.dataset.draftId, confirmation: "批准写入正史"});
+        window.location.replace(window.location.href);
       }
-      window.location.reload();
     } catch (error) {
       show(error.message, true);
       button.disabled = false;

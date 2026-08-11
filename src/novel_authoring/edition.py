@@ -22,6 +22,19 @@ class EditionStatus(StrEnum):
     ARCHIVED = "ARCHIVED"
 
 
+class EditionPurpose(StrEnum):
+    SOURCE_BASE = "SOURCE_BASE"
+    AUTHOR_REVISION = "AUTHOR_REVISION"
+    ALTERNATE_ROUTE = "ALTERNATE_ROUTE"
+
+
+class OfficialRole(StrEnum):
+    CURRENT = "CURRENT"
+    CANDIDATE = "CANDIDATE"
+    ALTERNATE = "ALTERNATE"
+    ARCHIVED = "ARCHIVED"
+
+
 class Edition(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -30,6 +43,11 @@ class Edition(BaseModel):
     parent_edition_id: str | None = None
     display_name: str
     status: EditionStatus
+    edition_purpose: EditionPurpose
+    official_role: OfficialRole
+    fork_chapter_ordinal: int | None = None
+    created_by_action: str
+    purpose_review_required: bool = False
     base_event_seq: int
     base_projection_hash: str
     parent_base_event_seq: int = 0
@@ -43,6 +61,46 @@ class Edition(BaseModel):
 
 class EditionWorkflowError(RuntimeError):
     pass
+
+
+_PURPOSE_LABELS = {
+    EditionPurpose.SOURCE_BASE: "来源底稿",
+    EditionPurpose.AUTHOR_REVISION: "当前路线修订",
+    EditionPurpose.ALTERNATE_ROUTE: "故事备选路线",
+}
+
+
+def author_edition_groups(editions: list[Edition]) -> list[dict[str, Any]]:
+    """Return mutually exclusive, author-language Edition selector groups."""
+
+    group_specs = (
+        (OfficialRole.CURRENT, "current", "当前正式版本"),
+        (OfficialRole.CANDIDATE, "revision", "正在修订"),
+        (OfficialRole.ALTERNATE, "alternate", "备选路线"),
+        (OfficialRole.ARCHIVED, "archived", "已归档"),
+    )
+    grouped: list[dict[str, Any]] = []
+    for role, key, label in group_specs:
+        items = []
+        for edition in editions:
+            if edition.official_role is not role:
+                continue
+            source = (
+                "来源版本"
+                if edition.fork_chapter_ordinal is None
+                else f"从第 {edition.fork_chapter_ordinal} 章分开"
+            )
+            items.append(
+                {
+                    **edition.model_dump(mode="json"),
+                    "purpose_label": _PURPOSE_LABELS[edition.edition_purpose],
+                    "source_label": source,
+                    "updated_label": edition.activated_at or edition.created_at,
+                }
+            )
+        if items:
+            grouped.append({"key": key, "label": label, "items": items})
+    return grouped
 
 
 def _source_manifest_hash(connection: sqlite3.Connection, book_id: str) -> str:
@@ -81,6 +139,13 @@ def _row_to_edition(row: sqlite3.Row) -> Edition:
         ),
         display_name=str(row["display_name"]),
         status=EditionStatus(str(row["status"])),
+        edition_purpose=EditionPurpose(str(row["edition_purpose"])),
+        official_role=OfficialRole(str(row["official_role"])),
+        fork_chapter_ordinal=(
+            None if row["fork_chapter_ordinal"] is None else int(row["fork_chapter_ordinal"])
+        ),
+        created_by_action=str(row["created_by_action"]),
+        purpose_review_required=bool(row["purpose_review_required"]),
         base_event_seq=int(row["base_event_seq"]),
         base_projection_hash=str(row["base_projection_hash"]),
         parent_base_event_seq=int(row["parent_base_event_seq"] or row["base_event_seq"]),
@@ -113,10 +178,13 @@ def backfill_base_editions(connection: sqlite3.Connection) -> None:
                 """
                 INSERT INTO editions(
                     edition_id, book_id, parent_edition_id, display_name, status,
+                    edition_purpose, official_role, created_by_action,
+                    purpose_review_required,
                     base_event_seq, base_projection_hash, source_manifest_sha256,
                     parent_base_event_seq, parent_base_projection_hash,
                     created_at, activated_at, version
-                ) VALUES (?, ?, NULL, ?, 'ACTIVE', ?, ?, ?, ?, ?, ?, ?, 1)
+                ) VALUES (?, ?, NULL, ?, 'ACTIVE', 'SOURCE_BASE', 'CURRENT',
+                    'BOOK_CREATED', 0, ?, ?, ?, ?, ?, ?, ?, 1)
                 """,
                 (
                     BASE_EDITION_ID,
@@ -216,11 +284,18 @@ def create_edition(
     display_name: str,
     *,
     parent_edition_id: str | None = None,
+    edition_purpose: EditionPurpose = EditionPurpose.AUTHOR_REVISION,
+    fork_chapter_ordinal: int | None = None,
+    created_by_action: str = "REWRITE_CHAPTER",
 ) -> Edition:
     ensure_base_edition(database, book_id)
     parent_id = parent_edition_id or resolve_edition_id(database, book_id)
     if not edition_id or edition_id == BASE_EDITION_ID:
         raise EditionWorkflowError("derived edition_id 必须是非空且不能为 base")
+    if edition_purpose is EditionPurpose.SOURCE_BASE:
+        raise EditionWorkflowError("派生版本不能标记为 SOURCE_BASE")
+    if edition_purpose is EditionPurpose.ALTERNATE_ROUTE and fork_chapter_ordinal is None:
+        raise EditionWorkflowError("另开故事路线必须记录分叉章节")
     parent = get_edition(database, book_id, parent_id)
     if parent.status is EditionStatus.ARCHIVED:
         raise EditionWorkflowError("不能从 ARCHIVED edition 创建派生版本")
@@ -236,20 +311,31 @@ def create_edition(
 
         projection = projection_from_connection(connection, book_id, edition_id=parent_id)
         now = utc_now()
+        official_role = (
+            OfficialRole.ALTERNATE
+            if edition_purpose is EditionPurpose.ALTERNATE_ROUTE
+            else OfficialRole.CANDIDATE
+        )
         connection.execute(
             """
             INSERT INTO editions(
                 edition_id, book_id, parent_edition_id, display_name, status,
+                edition_purpose, official_role, fork_chapter_ordinal,
+                created_by_action, purpose_review_required,
                 base_event_seq, base_projection_hash, source_manifest_sha256,
                 parent_base_event_seq, parent_base_projection_hash,
                 created_at, version
-            ) VALUES (?, ?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, ?, 1)
+            ) VALUES (?, ?, ?, ?, 'DRAFT', ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, 1)
             """,
             (
                 edition_id,
                 book_id,
                 parent_id,
                 display_name,
+                edition_purpose.value,
+                official_role.value,
+                fork_chapter_ordinal,
+                created_by_action,
                 projection.through_event_seq,
                 projection.sha256(),
                 _source_manifest_hash(connection, book_id),
@@ -295,9 +381,7 @@ def activate_edition(
                     connection,
                     book_id,
                     edition_id=str(parent_id),
-                    through_event_seq=int(
-                        row["parent_base_event_seq"] or row["base_event_seq"]
-                    ),
+                    through_event_seq=int(row["parent_base_event_seq"] or row["base_event_seq"]),
                 )
                 if frozen_parent.sha256() != str(
                     row["parent_base_projection_hash"] or row["base_projection_hash"]
@@ -309,14 +393,16 @@ def activate_edition(
         now = utc_now()
         connection.execute(
             """
-            UPDATE editions SET status='ARCHIVED', archived_at=?, version=version+1
+            UPDATE editions SET status='ARCHIVED', official_role='ARCHIVED',
+                archived_at=?, version=version+1
             WHERE book_id=? AND status='ACTIVE' AND edition_id<>?
             """,
             (now, book_id, edition_id),
         )
         connection.execute(
             """
-            UPDATE editions SET status=?, activated_at=?, archived_at=NULL,
+            UPDATE editions SET status=?, official_role='CURRENT',
+                activated_at=?, archived_at=NULL,
                 version=version+1 WHERE book_id=? AND edition_id=?
             """,
             (target_status, now, book_id, edition_id),
@@ -347,7 +433,8 @@ def archive_edition(database: Database, book_id: str, edition_id: str) -> Editio
             raise EditionWorkflowError(f"edition 不存在：{edition_id}")
         connection.execute(
             """
-            UPDATE editions SET status='ARCHIVED', archived_at=?, version=version+1
+            UPDATE editions SET status='ARCHIVED', official_role='ARCHIVED',
+                archived_at=?, version=version+1
             WHERE edition_id=?
             """,
             (now, edition_id),
@@ -371,6 +458,7 @@ def archive_edition(database: Database, book_id: str, edition_id: str) -> Editio
             connection.execute(
                 """
                 UPDATE editions SET status='ACTIVE',
+                    official_role='CURRENT',
                     activated_at=COALESCE(activated_at, ?), archived_at=NULL
                 WHERE book_id=? AND edition_id='base'
                 """,
@@ -404,9 +492,7 @@ def edition_lineage_ids(connection: sqlite3.Connection, edition_id: str) -> list
     return list(reversed(lineage))
 
 
-def _edition_event_limits(
-    connection: sqlite3.Connection, edition_id: str
-) -> dict[str, int | None]:
+def _edition_event_limits(connection: sqlite3.Connection, edition_id: str) -> dict[str, int | None]:
     """Return the event horizon at which each lineage edition was frozen."""
     lineage = edition_lineage_ids(connection, edition_id)
     limits: dict[str, int | None] = {item: None for item in lineage}

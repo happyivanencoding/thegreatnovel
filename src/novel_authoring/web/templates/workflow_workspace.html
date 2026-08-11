@@ -83,25 +83,30 @@
 
   {% if not embedded or initial_mode == 'rewrite' %}
   <section class="workflow-mode-panel" data-workflow-mode-panel="rewrite"{% if not embedded %} hidden{% endif %}>
-    <div class="workflow-panel-heading"><div><p class="workflow-kicker">改写设置</p><h2>准备一个派生版本</h2></div><span class="workflow-soft-note">原始版本保持只读</span></div>
+    <div class="workflow-panel-heading"><div><p class="workflow-kicker">改写本章</p><h2>这次要修订，还是另开一条路线？</h2></div><span class="workflow-soft-note">当前正式版本保持不变</span></div>
     <form class="workflow-config-form" method="post" action="/api/books/{{ workflow.book_id }}/handoffs/revision" data-workflow-form data-workflow-kind="rewrite">
       <input type="hidden" name="context_chapter_id" value="{{ workflow.current_chapter.chapter_id if workflow.current_chapter else '' }}">
       <input type="hidden" name="requested_stage" value="IMPACT_AND_PLAN">
+      <fieldset class="workflow-route-choice"><legend>选择改写用途</legend>
+        <label><input type="radio" name="revision_mode" value="AUTHOR_REVISION" checked><span><b>A. 修订当前故事路线</b><small>修正文句、节奏、场景或局部事实，不改变整体故事方向。</small></span></label>
+        <label><input type="radio" name="revision_mode" value="ALTERNATE_ROUTE"><span><b>B. 保留当前版本，另开故事路线</b><small>改变人物选择、关系走向、势力立场或后续主线；系统会记录本章为分叉点。</small></span></label>
+      </fieldset>
       {% if workflow.editions|length > 1 %}
-      <label class="workflow-field">版本
-        <select name="edition_id">{% for edition in workflow.editions %}<option value="{{ edition.edition_id }}"{% if edition.edition_id == workflow.edition_id %} selected{% endif %}>{{ edition.display_name }}{% if edition.edition_id == workflow.edition_id %}（当前）{% endif %}</option>{% endfor %}</select>
+      <label class="workflow-field">从哪个版本开始
+        <select name="edition_id">{% for group in workflow.edition_groups %}<optgroup label="{{ group.label }}">{% for edition in group['items'] %}<option value="{{ edition.edition_id }}"{% if edition.edition_id == workflow.edition_id %} selected{% endif %}>{{ edition.display_name }} · {{ edition.purpose_label }}</option>{% endfor %}</optgroup>{% endfor %}</select>
       </label>
       {% else %}
       <input type="hidden" name="edition_id" value="{{ workflow.edition_id }}">
       <div class="workflow-current-edition"><span>当前版本</span><strong>{{ workflow.edition.display_name or '原始版本' }}</strong><small>{{ workflow.edition_id }}</small></div>
       {% endif %}
+      <label class="workflow-field">新版本名称（可选）<input name="edition_display_name" maxlength="120" placeholder="留空则按章节和用途自动命名"></label>
       <div class="workflow-stage-summary"><span>第一步</span><strong>先做影响审计与改写计划</strong><small>确认范围后，才会进入独立版本的草稿工作。</small></div>
       {% include 'innovation_controls.html' %}
       <label class="workflow-field workflow-goal-field">这次你特别希望改变什么？
         <textarea name="author_goal" rows="4" maxlength="2000" placeholder="例如：修正第 12 章的资源事实，同时保留人物关系的推进。"></textarea>
         <small>目标会记录为作者意图；不会批准改写 Campaign，也不会启用版本。</small>
       </label>
-      <div class="workflow-form-footer"><span class="workflow-safety-note">改写只写入派生版本的工作流。</span><button class="button primary workflow-submit" type="submit" data-workflow-submit-label="准备改写计划">准备改写计划</button></div>
+      <div class="workflow-form-footer"><span class="workflow-safety-note">批准改写只会把新版本标为可选；设为当前正式版本仍需单独确认。</span><button class="button primary workflow-submit" type="submit" data-workflow-submit-label="准备改写计划">准备改写计划</button></div>
       <div class="workflow-feedback" data-workflow-feedback role="status" aria-live="polite" hidden></div>
     </form>
   </section>

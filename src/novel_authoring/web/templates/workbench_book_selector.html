@@ -10,7 +10,7 @@
     </summary>
     <div class="wb-book-selector-popover">
       <label class="wb-book-search"><span>搜索书籍</span><input type="search" placeholder="输入书名" data-book-search autocomplete="off"></label>
-      {% for group_key, group_label in [('ready','可创作'),('running','进行中'),('pending','待准备')] %}
+      {% for group_key, group_label in [('needs_action','需要你的处理'),('preparing','正在准备'),('creative','可以继续创作'),('awaiting_import','待导入')] %}
         {% set group = library_catalog.groups[group_key] %}
         {% if group %}<section class="wb-book-group" data-book-group>
           <h3>{{ group_label }} <span>{{ group|length }}</span></h3>

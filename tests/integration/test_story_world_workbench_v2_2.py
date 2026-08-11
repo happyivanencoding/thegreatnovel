@@ -622,7 +622,7 @@ def test_world_state_scope_and_navigation_keep_character_subview_and_lens(
     )
     assert page.status_code == 200
     assert "主角的背包状态" in page.text
-    assert "主角背包" in page.text
+    assert "物品与装备" in page.text
     assert (
         f"state_tab=inventory&state_scope=character&truth_lens=READER&chapter_id="
         f"{chapters[0]['chapter_id']}&character_id=character:hero"

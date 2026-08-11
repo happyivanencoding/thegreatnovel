@@ -6,6 +6,16 @@
 
 生命周期状态为 `DRAFT → VALIDATED → ACTIVE → ARCHIVED`。同一本书最多一个 `ACTIVE`，`books.active_edition_id` 是默认续写入口。
 
+生命周期不再承担版本用途。`edition_purpose` 独立区分：
+
+- `SOURCE_BASE`：来源底稿；
+- `AUTHOR_REVISION`：修订当前故事路线；
+- `ALTERNATE_ROUTE`：从指定章节另开故事路线，必须记录 `fork_chapter_ordinal`。
+
+`official_role` 独立表达作者关系：`CURRENT / CANDIDATE / ALTERNATE / ARCHIVED`。
+实验、Benchmark、A/B 和盲测仍属于 Operation，不是 Edition。旧派生 Edition 无法可靠判断用途时，
+迁移为 `AUTHOR_REVISION` 并标记 `purpose_review_required=true`，不会根据名称猜测平行路线。
+
 ## 投影隔离
 
 EventStore 仍是唯一 append-only 哈希链。base 事件沿用 V1 头部格式；版本化事件携带 `edition_id`。派生 Canon Projection 重放父版本在冻结序列的投影，再叠加该 edition 的批准改写事件和后续章节事件。facts、人物状态、关系、知识边、线程、承诺、指标、boundary、contract、draft、validation、commit、snapshot 和 projection metadata 均带 edition scope；不可变 source documents、spans 和原始 chapters 可以共享。
@@ -31,3 +41,9 @@ revision_campaigns
 ## 续写入口
 
 V1 命令不传 `--edition-id` 时解析当前 ACTIVE，若无派生 ACTIVE 则使用 base。传入派生版本时，Boundary、plan、contract、draft、validation、approve、snapshot、rebuild 和 export 均从该 edition 的 variants、投影状态和最近章节读取，因此不会把 base 中已被替换的旧关系带回续写。
+
+## 作者操作
+
+“改写本章”必须先选择“修订当前路线”或“另开故事路线”，然后才创建对应用途的派生 Edition。
+Revision Campaign 批准后，Edition 只进入 `VALIDATED`，并保持 `CANDIDATE` 或 `ALTERNATE`；
+只有作者再次确认“设为当前正式版本”，系统才切换 `CURRENT`。批准改写和版本激活始终是两次操作。

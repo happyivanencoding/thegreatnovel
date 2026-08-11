@@ -79,12 +79,7 @@ def _ignored(path: Path) -> bool:
 
 def _ignored_relative_part(name: str) -> bool:
     folded = name.casefold()
-    return (
-        not name
-        or name.startswith(".")
-        or name.startswith(".~")
-        or folded in _IGNORED_NAMES
-    )
+    return not name or name.startswith(".") or name.startswith(".~") or folded in _IGNORED_NAMES
 
 
 @dataclass(frozen=True, slots=True)
@@ -119,9 +114,7 @@ class BookDiscoveryService:
             return []
         candidates: list[DiscoveredBookCandidate] = []
         try:
-            children = sorted(
-                self.discovery_root.iterdir(), key=lambda item: item.name.casefold()
-            )
+            children = sorted(self.discovery_root.iterdir(), key=lambda item: item.name.casefold())
         except OSError:
             return []
         for child in children:
@@ -137,8 +130,7 @@ class BookDiscoveryService:
                     and not path.is_symlink()
                     and path.suffix.casefold() in self.extensions
                     and not any(
-                        _ignored_relative_part(part)
-                        for part in path.relative_to(child).parts[:-1]
+                        _ignored_relative_part(part) for part in path.relative_to(child).parts[:-1]
                     )
                     and not _ignored(path)
                 ]
@@ -207,6 +199,7 @@ class StudioAccessView:
     progress: dict[str, Any] = field(default_factory=dict)
     blockers: tuple[str, ...] = ()
     gaps: tuple[str, ...] = ()
+    authoring_capabilities: dict[str, bool] = field(default_factory=dict)
 
     @property
     def accessible(self) -> bool:
@@ -277,26 +270,40 @@ class LibraryCatalogView:
     entries: tuple[LibraryCatalogEntry, ...]
     revision: str
     scope: CatalogScope = CatalogScope.AUTHOR
+    unclassified_count: int = 0
 
     def to_dict(self) -> dict[str, Any]:
-        grouped = {
-            "ready": [item.to_dict() for item in self.entries if item.studio_accessible],
-            "running": [
-                item.to_dict()
-                for item in self.entries
-                if item.state in {"INITIALIZING", "INITIALIZATION_REVIEW"}
-            ],
-            "pending": [
-                item.to_dict()
-                for item in self.entries
-                if not item.studio_accessible
-                and item.state not in {"INITIALIZING", "INITIALIZATION_REVIEW"}
-            ],
+        grouped: dict[str, list[dict[str, Any]]] = {
+            "needs_action": [],
+            "preparing": [],
+            "creative": [],
+            "awaiting_import": [],
         }
+        for item in self.entries:
+            value = item.to_dict()
+            if item.state == "DISCOVERED":
+                grouped["awaiting_import"].append(value)
+            elif (
+                item.state
+                in {
+                    "INITIALIZATION_REVIEW",
+                    "FOUNDATION_REVIEW",
+                    "FAILED",
+                    "NEEDS_REPAIR",
+                    "INITIALIZATION_READY_FOR_CODEX",
+                }
+                or item.handoff_status in {"READY_FOR_CODEX", "WAITING_FOR_USER"}
+                or (item.handoff_id and not item.instruction_available and not item.studio_ready)
+            ):
+                grouped["needs_action"].append(value)
+            elif item.state in {"INITIALIZING", "FOUNDATION_GENERATING"}:
+                grouped["preparing"].append(value)
+            elif item.studio_accessible:
+                grouped["creative"].append(value)
+            else:
+                grouped["needs_action"].append(value)
         kind_groups = {
-            kind.value: [
-                item.to_dict() for item in self.entries if item.book_kind == kind.value
-            ]
+            kind.value: [item.to_dict() for item in self.entries if item.book_kind == kind.value]
             for kind in (
                 BookKind.BENCHMARK,
                 BookKind.TEST,
@@ -315,6 +322,7 @@ class LibraryCatalogView:
             "kind_counts": {name: len(items) for name, items in kind_groups.items()},
             "scope": self.scope.value,
             "revision": self.revision,
+            "unclassified_count": self.unclassified_count,
         }
 
 
@@ -355,6 +363,7 @@ def _read_book_runtime(
         "chapter_count": 0,
         "edition_count": 0,
         "handoff": None,
+        "original_state": None,
     }
     if not database_path.is_file():
         return value
@@ -382,6 +391,14 @@ def _read_book_runtime(
             except sqlite3.OperationalError:
                 handoff = None
             value["handoff"] = None if handoff is None else dict(handoff)
+            try:
+                original = connection.execute(
+                    "SELECT state FROM original_states WHERE book_id=? AND edition_id=?",
+                    (book_id, edition_id),
+                ).fetchone()
+            except sqlite3.OperationalError:
+                original = None
+            value["original_state"] = None if original is None else str(original["state"])
     except (OSError, sqlite3.Error):
         return value
     return value
@@ -399,38 +416,44 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
     )
     handoff = runtime.get("handoff") or {}
     if record.creation_mode is CreationMode.ORIGINAL:
-        original_state = record.original_state or "ORIGINAL_SEED"
+        stored_state = str(runtime.get("original_state") or "")
+        legacy_state = record.original_state or "ORIGINAL_SEED"
+        original_state = stored_state or {
+            "BOOTSTRAP_READY": "FOUNDATION_REVIEW",
+            "FOUNDATION_ACCEPTED": "FOUNDATION_READY",
+            "WRITING": "WRITING_READY",
+        }.get(legacy_state, legacy_state)
         handoff_status = str(handoff.get("status") or "") or None
         accepted = original_state in {
-            "FOUNDATION_ACCEPTED",
+            "FOUNDATION_READY",
             "FIRST_CHAPTER_DRAFTING",
             "FIRST_CHAPTER_VALIDATED",
-            "WRITING",
+            "WRITING_READY",
         }
         if accepted:
-            status = "READY"
+            status = original_state
             summary = (
-                "原创基础框架已确认，可以继续首章工作流。"
+                "故事基础已确认，可以选择并准备第一章。"
                 if int(runtime.get("chapter_count") or 0) == 0
-                else "原创小说已进入标准逐章创作工作流。"
+                else "第一章已成为正式正文，可以继续创作。"
             )
             original_missing: tuple[str, ...] = ()
-        elif original_state == "BOOTSTRAP_READY":
+        elif original_state in {"FOUNDATION_REVIEW", "BOOTSTRAP_READY"}:
             status = "FOUNDATION_REVIEW"
-            summary = "基础框架 Proposal 已生成，等待作者编辑并明确确认。"
-            original_missing = ("尚未确认 Story Foundation",)
-        elif handoff_status in {"CLAIMED", "RUNNING"}:
-            status = "INITIALIZING"
-            summary = "Codex 正在生成原创基础框架 Proposal。"
-            original_missing = ("基础框架 Proposal 尚未完成",)
+            summary = "故事基础方案已生成，等待你选择和调整。"
+            original_missing = ("尚未确认故事基础方案",)
+        elif original_state == "FOUNDATION_GENERATING" or handoff_status in {"CLAIMED", "RUNNING"}:
+            status = "FOUNDATION_GENERATING"
+            summary = "AI 正在生成三个故事基础方案。"
+            original_missing = ("故事基础方案尚未完成",)
         elif handoff_status == "READY_FOR_CODEX":
-            status = "INITIALIZATION_READY_FOR_CODEX"
-            summary = "原创基础框架任务已准备好，等待 Codex 桌面端领取。"
-            original_missing = ("基础框架 Proposal 尚未完成",)
+            status = "FOUNDATION_GENERATING"
+            summary = "故事方案任务已准备好，等待复制给 Codex。"
+            original_missing = ("故事基础方案尚未完成",)
         else:
             status = "ORIGINAL_SEED"
-            summary = "Premise 已保存，下一步生成三个可选择的 Story Foundation。"
-            original_missing = ("尚未生成 Story Foundation Proposal",)
+            summary = "一句话创意已保存，下一步生成三个故事基础方案。"
+            original_missing = ("尚未生成故事基础方案",)
         return StudioReadinessView(
             book_id=record.book_id,
             status=status,
@@ -465,17 +488,14 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
         else:
             readiness = {}
             readiness_status = str(readiness_payload or "")
-        initialization_id = str(
-            manifest.get("initialization_id")
-            or status_payload.get("initialization_id")
-            or ""
-        ) or None
-        initialization_status = str(
-            readiness_status
-            or status_payload.get("state")
-            or manifest.get("state")
-            or ""
-        ) or None
+        initialization_id = (
+            str(manifest.get("initialization_id") or status_payload.get("initialization_id") or "")
+            or None
+        )
+        initialization_status = (
+            str(readiness_status or status_payload.get("state") or manifest.get("state") or "")
+            or None
+        )
         updated_at = str(status_payload.get("updated_at") or "") or None
         if str(manifest.get("state") or "") != "READY":
             missing.append("初始化清单尚未达到完整就绪")
@@ -494,9 +514,7 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
             "初始化验收报告": root / "reports" / "readiness_report.md",
         }
         missing.extend(
-            label + "缺失"
-            for label, path in required_files.items()
-            if not path.is_file()
+            label + "缺失" for label, path in required_files.items() if not path.is_file()
         )
         arc_manifest = _read_json(root / "arc_manifest.json") or {}
         arcs = arc_manifest.get("arcs")
@@ -513,9 +531,7 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
                     missing.append(f"Arc {arc_id} 的任务标识无效")
                     continue
                 output = (
-                    paths.edition(record.active_edition_id)
-                    .operation(operation_id)
-                    .output
+                    paths.edition(record.active_edition_id).operation(operation_id).output
                     / "output.json"
                 )
                 if not output.is_file():
@@ -585,26 +601,31 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
             "ORIGINAL_BOOK_BOOTSTRAP",
         )
         chapter_count = int(runtime.get("chapter_count") or 0)
+        original_state = str(readiness.initialization_status or "ORIGINAL_SEED")
         accepted = readiness.ready
+        writing_ready = original_state == "WRITING_READY" and chapter_count > 0
         capabilities = {
             "browse_structure": accepted,
             "view_partial_profile": accepted,
             "plan_next": accepted,
-            "continue_from_current_boundary": accepted,
+            "continue_from_current_boundary": writing_ready,
             "rewrite_selected_chapter": chapter_count > 0,
             "inspect_global_world_state": accepted,
+        }
+        authoring_capabilities = {
+            "BROWSE_READY": accepted,
+            "PROFILE_READY": accepted,
+            "PLAN_READY": accepted,
+            "CONTINUE_READY": writing_ready,
+            "REWRITE_READY": chapter_count > 0,
+            "WORLD_HISTORY_READY": False,
+            "FULL_READY": False,
         }
         statuses = {
             name: "AVAILABLE" if value else "FOUNDATION_CONFIRMATION_REQUIRED"
             for name, value in capabilities.items()
         }
-        level = (
-            StudioAccessLevel.FULL
-            if chapter_count > 0
-            else StudioAccessLevel.ACTION_READY
-            if accepted
-            else StudioAccessLevel.ONBOARDING
-        )
+        level = StudioAccessLevel.ACTION_READY if accepted else StudioAccessLevel.ONBOARDING
         return StudioAccessView(
             book_id=record.book_id,
             access_level=level,
@@ -620,8 +641,9 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
                 if accepted
                 else "建立原创基础框架"
             ),
-            current_stage=record.original_state or "ORIGINAL_SEED",
+            current_stage=original_state,
             blockers=readiness.missing_requirements,
+            authoring_capabilities=authoring_capabilities,
         )
     initialization = _latest_initialization(paths, record.active_edition_id)
     capability_names = (
@@ -646,6 +668,15 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
             capability_status=statuses,
             uncovered_semantic_chapter_count=0,
             author_label="完整就绪",
+            authoring_capabilities={
+                "BROWSE_READY": True,
+                "PROFILE_READY": True,
+                "PLAN_READY": True,
+                "CONTINUE_READY": True,
+                "REWRITE_READY": True,
+                "WORLD_HISTORY_READY": True,
+                "FULL_READY": True,
+            },
         )
     if initialization is None:
         return StudioAccessView(
@@ -658,6 +689,15 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
             uncovered_semantic_chapter_count=0,
             author_label="尚未初始化",
             blockers=readiness.missing_requirements,
+            authoring_capabilities={
+                "BROWSE_READY": False,
+                "PROFILE_READY": False,
+                "PLAN_READY": False,
+                "CONTINUE_READY": False,
+                "REWRITE_READY": False,
+                "WORLD_HISTORY_READY": False,
+                "FULL_READY": False,
+            },
         )
     root = Path(initialization["root"])
     manifest = dict(initialization.get("manifest") or {})
@@ -678,10 +718,10 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
     statuses["view_partial_profile"] = (
         "AVAILABLE" if partial_profile else "EVIDENCE_HYDRATION_REQUIRED"
     )
-    boundary_ready = (
-        bool(semantic.get("protagonist_confirmed"))
-        and bool(semantic.get("current_thread_confirmed"))
-        and bool(semantic.get("core_graphs_complete"))
+    boundary_payload = semantic.get("continuation_boundary")
+    boundary_ready = bool(
+        isinstance(boundary_payload, dict)
+        and boundary_payload.get("ready_for_continuation") is True
     )
     capabilities["plan_next"] = structural_ready
     capabilities["continue_from_current_boundary"] = boundary_ready
@@ -729,12 +769,19 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
         semantic_coverage=semantic_coverage,
         completed_arc_count=int(progress.get("completed_arc_count") or 0),
         remaining_arc_count=int(progress.get("remaining_arc_count") or 0),
-        current_stage=str(
-            status_payload.get("state") or manifest.get("state") or "SOURCE_MAPPED"
-        ),
+        current_stage=str(status_payload.get("state") or manifest.get("state") or "SOURCE_MAPPED"),
         progress=progress,
         blockers=tuple(str(item) for item in semantic.get("blocking_reasons") or []),
         gaps=tuple(str(item) for item in semantic.get("gaps") or []),
+        authoring_capabilities={
+            "BROWSE_READY": structural_ready,
+            "PROFILE_READY": partial_profile,
+            "PLAN_READY": structural_ready,
+            "CONTINUE_READY": boundary_ready,
+            "REWRITE_READY": capabilities["rewrite_selected_chapter"],
+            "WORLD_HISTORY_READY": False,
+            "FULL_READY": False,
+        },
     )
 
 
@@ -748,7 +795,12 @@ _STATE_LABELS = {
     "FAILED": "初始化失败",
     "NEEDS_REPAIR": "需要修复",
     "ORIGINAL_SEED": "待生成基础框架",
+    "FOUNDATION_GENERATING": "正在生成故事方案",
     "FOUNDATION_REVIEW": "等待确认基础框架",
+    "FOUNDATION_READY": "可以开始写第一章",
+    "FIRST_CHAPTER_DRAFTING": "正在写第一章",
+    "FIRST_CHAPTER_VALIDATED": "第一章等待批准",
+    "WRITING_READY": "可以继续写作",
 }
 
 
@@ -841,8 +893,7 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
         },
         route=(
             f"/books/{record.book_id}/original"
-            if record.creation_mode is CreationMode.ORIGINAL
-            and int(runtime["chapter_count"]) == 0
+            if record.creation_mode is CreationMode.ORIGINAL and int(runtime["chapter_count"]) == 0
             else None
         ),
     )
@@ -925,6 +976,9 @@ def build_library_catalog(
         entries=tuple(entries),
         revision="|".join(revision_parts),
         scope=scope,
+        unclassified_count=sum(
+            1 for record in records if record.book_kind is BookKind.UNCLASSIFIED
+        ),
     )
 
 

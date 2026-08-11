@@ -162,6 +162,7 @@
       var next = parsed.querySelector(rootSelector);
       var present = root();
       if (!next || !present) { fullNavigate(resolved, desired); return; }
+      if (present._pendingActionTimer) clearInterval(present._pendingActionTimer);
       restoreDetails(next, desired);
       restoreLayout(next, desired);
       present.replaceWith(next);
@@ -309,6 +310,7 @@
     var trigger = document.querySelector("[data-activity-trigger]");
     if (trigger) trigger.addEventListener("click", function () { var panel = current.querySelector("[data-activity-center]"); setActivityOpen(current, Boolean(panel && panel.hidden)); });
     current.querySelectorAll("[data-activity-close]").forEach(function (button) { button.addEventListener("click", function () { setActivityOpen(current, false); }); });
+    current.querySelectorAll("[data-open-activity-center]").forEach(function (button) { button.addEventListener("click", function () { setActivityOpen(current, true); }); });
   }
 
   function closeDialog(dialog) { var form = dialog.querySelector("[data-item-modal-form]"); if (!form) return; form.reset(); form.querySelectorAll(".wb-semantic-actions").forEach(function (node) { node.remove(); }); var message = form.querySelector("[data-item-modal-feedback]"); if (message) { message.textContent = ""; message.classList.remove("is-error"); } }
@@ -395,13 +397,56 @@
   function bindDraft(current) { current.querySelectorAll("[data-wb-editor]").forEach(function (editor) { var counter = current.querySelector("[data-wb-word-count]"); var update = function () { if (counter) counter.textContent = Array.from(editor.value || "").length + " 字"; }; editor.addEventListener("input", update); update(); }); current.querySelectorAll("[data-wb-draft-form]").forEach(function (form) { form.addEventListener("submit", function (event) { event.preventDefault(); var editor = form.querySelector('[name="content"]'); var expected = form.querySelector('[name="expected_content_sha256"]'); postJson(form.action, { content: editor.value, expected_content_sha256: expected ? expected.value : null }).then(function () { loadWorkbench(location.href, { push: false }); }).catch(function (error) { feedback(form, error.message, true); }); }); }); }
 
   function bindWorkflow(current) {
+    current.querySelectorAll("[data-activate-edition]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var name = button.dataset.editionName || "这个版本";
+        if (!window.confirm("将“" + name + "”设为当前正式版本。原正式版本会保留并归档，正式正文不会被删除。是否继续？")) return;
+        button.disabled = true;
+        postJson("/api/books/" + encodeURIComponent(current.dataset.bookId) + "/editions/" + encodeURIComponent(current.dataset.editionId) + "/activate", { confirmed: true }).then(function (result) {
+          location.assign(result.redirect_url);
+        }).catch(function (error) { button.disabled = false; button.textContent = error.message; });
+      });
+    });
     current.querySelectorAll("[data-workflow-workspace]").forEach(function (workspace) { var buttons = workspace.querySelectorAll("[data-workflow-mode]"); var panels = workspace.querySelectorAll("[data-workflow-mode-panel]"); function activate(target) { buttons.forEach(function (button) { button.setAttribute("aria-selected", button.dataset.workflowMode === target ? "true" : "false"); }); panels.forEach(function (panel) { panel.hidden = panel.dataset.workflowModePanel !== target; }); } buttons.forEach(function (button) { button.addEventListener("click", function () { activate(button.dataset.workflowMode); }); }); activate(workspace.dataset.workflowInitialMode || "continue"); });
     current.querySelectorAll("[data-workflow-form]").forEach(function (form) { form.addEventListener("submit", function (event) { event.preventDefault(); var payload = {}; new FormData(form).forEach(function (value, key) { if (key === "innovation_focus" || key === "author_task_ids") { payload[key] = payload[key] || []; payload[key].push(String(value)); } else payload[key] = value; }); postJson(form.action, payload).then(function (result) { var url = new URL(location.href); var kind = form.dataset.workflowKind || "continue"; url.searchParams.set("action", kind); url.searchParams.delete("mode"); if (result.handoff_id) url.searchParams.set("activity_id", result.handoff_id); loadWorkbench(url.href, { push: false, restoreState: Object.assign(captureNavigationState(current), { activityCenterOpen: true }) }); }).catch(function (error) { var node = form.querySelector("[data-workflow-feedback]"); if (node) { node.hidden = false; node.textContent = error.message; } }); }); });
   }
 
+  function bindPendingActions(current) {
+    if (!current.querySelector("[data-pending-action-id]")) return;
+    var url = "/api/books/" + encodeURIComponent(current.dataset.bookId) + "/pending-actions?edition_id=" + encodeURIComponent(current.dataset.editionId);
+    current._pendingActionTimer = setInterval(function () {
+      fetch(url, { headers: { Accept: "application/json" } }).then(function (response) {
+        if (!response.ok) throw new Error("pending-actions");
+        return response.json();
+      }).then(function (items) {
+        items.forEach(function (item) {
+          var card = current.querySelector('[data-pending-action-id="' + item.pending_action_id + '"]');
+          if (!card) return;
+          var status = card.querySelector(".workflow-status-chip");
+          if (status) status.textContent = item.author_status;
+          card.querySelectorAll(".wb-activity-timeline li").forEach(function (node, index) {
+            var step = item.timeline[index];
+            if (!step) return;
+            node.className = "is-" + step.state;
+          });
+          if (item.resumed_handoff_id && !card.querySelector(".wb-activity-actions")) {
+            var actions = document.createElement("div");
+            actions.className = "wb-activity-actions";
+            var link = document.createElement("a");
+            link.className = "button compact primary";
+            link.href = "/api/handoffs/" + encodeURIComponent(item.resumed_handoff_id) + "/instruction";
+            link.textContent = "复制给 Codex 的指令";
+            actions.appendChild(link);
+            card.insertBefore(actions, card.querySelector("details"));
+          }
+        });
+      }).catch(function () { /* 下一轮继续，不打断作者输入。 */ });
+    }, 5000);
+  }
+
   function bindSearch(current) { var search = current.querySelector("[data-wb-chapter-search]"); if (!search) return; search.addEventListener("input", function () { var query = search.value.trim().toLowerCase(); current.querySelectorAll("[data-wb-chapter-item]").forEach(function (item) { item.hidden = Boolean(query && item.textContent.toLowerCase().indexOf(query) === -1); }); }); }
 
-  function initWorkbench(current) { bindLayout(current); bindNavigation(current); bindScrollPersistence(current); bindActivityCenter(current); bindCommands(current); bindInspector(current); bindRelationshipGraph(current); bindStateWorkspace(current); bindItemModal(current); bindProfile(current); bindTruth(current); bindSecretBoard(current); bindDraft(current); bindWorkflow(current); bindSearch(current); current.querySelectorAll("details[data-explorer-section]").forEach(function (item) { item.addEventListener("toggle", function () { saveFallback(current, captureNavigationState(current)); }); }); }
+  function initWorkbench(current) { bindLayout(current); bindNavigation(current); bindScrollPersistence(current); bindActivityCenter(current); bindCommands(current); bindInspector(current); bindRelationshipGraph(current); bindStateWorkspace(current); bindItemModal(current); bindProfile(current); bindTruth(current); bindSecretBoard(current); bindDraft(current); bindWorkflow(current); bindPendingActions(current); bindSearch(current); current.querySelectorAll("details[data-explorer-section]").forEach(function (item) { item.addEventListener("toggle", function () { saveFallback(current, captureNavigationState(current)); }); }); }
 
   window.addEventListener("popstate", function (event) { loadWorkbench(location.href, { push: false, fromPop: true, restoreState: event.state && event.state.workbenchState ? event.state.workbenchState : readFallback(root()) }); });
   var initial = root(); if (initial) { var state = history.state && history.state.workbenchState ? history.state.workbenchState : readFallback(initial); restoreDetails(initial, state); restoreLayout(initial, state); initWorkbench(initial); restoreNavigationState(initial, state); history.replaceState({ workbenchState: captureNavigationState(initial) }, "", location.href); }

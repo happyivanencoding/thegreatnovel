@@ -52,7 +52,8 @@ def _complete_semantic_tasks(result: dict[str, object]) -> None:
     arc_manifest = json.loads((root / "arc_manifest.json").read_text(encoding="utf-8"))
     for arc in arc_manifest["arcs"]:
         chapter_ids = list(arc["semantic_chapter_ids"])
-        if not chapter_ids:
+        continuity_ids = list(arc["continuity_chapter_ids"])
+        if not chapter_ids and not continuity_ids:
             continue
         output = ArcExtractionOutput(
             initialization_id=str(result["initialization_id"]),
@@ -60,6 +61,10 @@ def _complete_semantic_tasks(result: dict[str, object]) -> None:
             chapter_semantic_features=[
                 {"chapter_id": chapter_id, "analysis_status": "COMPLETE"}
                 for chapter_id in chapter_ids
+            ],
+            chapter_continuity_deltas=[
+                {"chapter_id": chapter_id, "status": "COMPLETE_NO_CHANGE"}
+                for chapter_id in continuity_ids
             ],
         )
         output_path = root / "arc_outputs" / str(arc["arc_id"]) / "output.json"
@@ -96,8 +101,13 @@ def test_all_depths_keep_full_structure_but_different_semantic_scope(
         )
         deep_counts[depth] = len(manifest["deep_chapter_ids"])
         selected = set(manifest["deep_chapter_ids"])
+        continuity = set(manifest["analysis_plan"]["continuity_index_chapter_ids"])
         for chapter in coverage["chapters"]:
-            expected = "PENDING" if chapter["chapter_id"] in selected else "UNKNOWN"
+            expected = (
+                "PENDING"
+                if chapter["chapter_id"] in selected | continuity
+                else "UNKNOWN"
+            )
             assert chapter["analysis_status"] == expected
     assert deep_counts[InitializationDepth.QUICK] < deep_counts[InitializationDepth.FULL]
     assert deep_counts[InitializationDepth.BALANCED] < deep_counts[InitializationDepth.FULL]

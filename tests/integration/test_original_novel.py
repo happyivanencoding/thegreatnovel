@@ -16,10 +16,12 @@ from novel_authoring.original.models import OriginalBootstrapProposal
 from novel_authoring.original.service import (
     OriginalWorkflowError,
     approve_original_first_chapter,
+    compare_original_proposals,
     confirm_original_foundation,
     create_original_book,
     import_original_bootstrap_proposal,
     prepare_original_bootstrap,
+    resolve_original_proposal_version,
     select_first_chapter_candidate,
     validate_original_draft,
 )
@@ -41,7 +43,7 @@ BOOK_ID = "original-test"
 
 def proposal_payload() -> dict[str, Any]:
     return {
-        "schema_version": "original-bootstrap-v1",
+        "schema_version": "original-bootstrap-v2",
         "information_status": "PROPOSAL",
         "title_candidates": ["无情之城", "昨日情绪档案", "被删除的悲伤"],
         "expanded_premise": "城市每天删除一种情感，失忆档案员决定找回它们。",
@@ -70,6 +72,26 @@ def proposal_payload() -> dict[str, Any]:
             "午夜删除一种情感",
             "被删除的情感会留下可追踪的物理空洞",
         ],
+        "foundation_settings": [
+            {
+                "setting_id": "setting-world-rule",
+                "category": "WORLD_RULE",
+                "statement": "午夜删除一种情感",
+                "strength": "CORE",
+            },
+            {
+                "setting_id": "setting-style",
+                "category": "STYLE",
+                "statement": "整体采用冷峻克制的文风",
+                "strength": "PREFERENCE",
+            },
+            {
+                "setting_id": "setting-controller",
+                "category": "WORLD_DESIGN",
+                "statement": "删除机制是否由组织控制",
+                "strength": "OPEN",
+            },
+        ],
         "characters": ["林默", "许栀"],
         "factions": ["城市记忆局"],
         "routes": [
@@ -80,6 +102,8 @@ def proposal_payload() -> dict[str, Any]:
                 "central_pressure": f"秩序与私人记忆的冲突 {index}",
                 "opportunity": f"打开新的城市层级 {index}",
                 "risk": f"路线风险 {index}",
+                "commitments": [f"主角必须主动追查路线 {index}"],
+                "open_alternatives": [f"保留路线 {index} 的幕后来源"],
             }
             for index in range(1, 4)
         ],
@@ -90,6 +114,26 @@ def proposal_payload() -> dict[str, Any]:
             "short": ["找到第一处情绪空洞"],
             "mid": ["进入城市记忆局的边缘系统"],
             "long": ["保留城市共识来源的多种可能解释"],
+        },
+        "book_profile_draft": {
+            dimension: {
+                "summary": f"{dimension} 的原创基础设计",
+                "core_commitments": ["保持人物选择与代价绑定"],
+                "preferences": ["优先服务核心阅读承诺"],
+                "open_questions": ["保留可演化空间"],
+                "risks": ["避免设定压过人物"],
+            }
+            for dimension in (
+                "worldbuilding",
+                "characters",
+                "plot",
+                "style",
+                "narrative",
+                "dialogue",
+                "pacing",
+                "themes",
+                "continuity",
+            )
         },
         "first_chapter_candidates": [
             {
@@ -110,6 +154,14 @@ def proposal_payload() -> dict[str, Any]:
             for index in range(1, 4)
         ],
         "open_questions": ["谁设计了删除机制"],
+        "hidden_truth_candidates": [
+            {
+                "candidate_id": "hidden-source",
+                "title": "删除源头",
+                "statement": "删除机制可能源于城市居民的共同选择",
+                "confidence": 0.55,
+            }
+        ],
         "risks": ["设定解谜压过人物能动性"],
         "avoid_cliches": ["万能幕后组织"],
     }
@@ -136,20 +188,13 @@ def complete_bootstrap_handoff(database: Database) -> str:
     handoff = get_handoff(database, handoff_id)
     proposal = OriginalBootstrapProposal.model_validate(proposal_payload())
     artifact = (
-        Path(str(handoff["task_directory"]))
-        / "artifacts"
-        / "story_foundation"
-        / "proposal.json"
+        Path(str(handoff["task_directory"])) / "artifacts" / "story_foundation" / "proposal.json"
     )
     artifact.parent.mkdir(parents=True, exist_ok=True)
-    artifact.write_text(
-        json_dumps(proposal.model_dump(mode="json"), indent=2), encoding="utf-8"
-    )
+    artifact.write_text(json_dumps(proposal.model_dump(mode="json"), indent=2), encoding="utf-8")
     claim = claim_handoff(database, handoff_id, "test-worker")
     token = str(claim["claim_token"])
-    update_handoff_status(
-        database, handoff_id, HandoffStatus.RUNNING, claim_token=token
-    )
+    update_handoff_status(database, handoff_id, HandoffStatus.RUNNING, claim_token=token)
     frozen = get_handoff(database, handoff_id)
     result = {
         "handoff_id": handoff_id,
@@ -199,7 +244,7 @@ def accept_foundation(database: Database) -> dict[str, Any]:
         database,
         BOOK_ID,
         {
-            "confirmation": "确认基础框架",
+            "confirmed": True,
             "selected_title": "无情之城",
             "selected_foundation_id": "foundation-1",
             "selected_route_id": "route-2",
@@ -227,7 +272,7 @@ def test_original_book_requires_no_source_and_has_one_author_card(tmp_path: Path
     assert studio_access(layout, record).access_level.value == "ONBOARDING"
 
 
-def test_foundation_stays_proposal_until_exact_author_confirmation(tmp_path: Path) -> None:
+def test_foundation_stays_proposal_until_author_confirms_impact(tmp_path: Path) -> None:
     layout, database = create_original(tmp_path)
     handoff_id = complete_bootstrap_handoff(database)
     imported = import_original_bootstrap_proposal(database, BOOK_ID, handoff_id)
@@ -239,12 +284,12 @@ def test_foundation_stays_proposal_until_exact_author_confirmation(tmp_path: Pat
                 "(SELECT COUNT(*) FROM chapters), (SELECT COUNT(*) FROM canon_commits)"
             ).fetchone()
         )
-    with pytest.raises(OriginalWorkflowError, match="确认语"):
+    with pytest.raises(OriginalWorkflowError, match="确认"):
         confirm_original_foundation(
             database,
             BOOK_ID,
             {
-                "confirmation": "同意",
+                "confirmed": False,
                 "selected_title": "无情之城",
                 "selected_foundation_id": "foundation-1",
                 "selected_route_id": "route-2",
@@ -256,7 +301,7 @@ def test_foundation_stays_proposal_until_exact_author_confirmation(tmp_path: Pat
         database,
         BOOK_ID,
         {
-            "confirmation": "确认基础框架",
+            "confirmed": True,
             "selected_title": "无情之城",
             "title_override": "情绪失物招领处",
             "selected_foundation_id": "foundation-1",
@@ -285,12 +330,29 @@ def test_foundation_stays_proposal_until_exact_author_confirmation(tmp_path: Pat
     accepted = Path(str(result["accepted_path"])).read_text(encoding="utf-8")
     assert "情绪失物招领处" in accepted
     assert "先找回被删除的悲伤" in accepted
-    with pytest.raises(OriginalWorkflowError, match="不能重复确认"):
+    retry = confirm_original_foundation(
+        database,
+        BOOK_ID,
+        {
+            "confirmed": True,
+            "selected_title": "无情之城",
+            "title_override": "情绪失物招领处",
+            "selected_foundation_id": "foundation-1",
+            "selected_route_id": "route-2",
+            "protagonist_goal_override": "先找回被删除的悲伤",
+            "world_rules": proposal_payload()["world_rules"],
+            "first_phase_objective": proposal_payload()["first_phase_objective"],
+            "rolling_short_override": ["定位第一位情绪保留者"],
+        },
+    )
+    assert retry["idempotent"] is True
+    assert retry["apply_id"] == result["apply_id"]
+    with pytest.raises(OriginalWorkflowError, match="不能再次覆盖"):
         confirm_original_foundation(
             database,
             BOOK_ID,
             {
-                "confirmation": "确认基础框架",
+                "confirmed": True,
                 "selected_title": "无情之城",
                 "selected_foundation_id": "foundation-1",
                 "selected_route_id": "route-2",
@@ -299,7 +361,87 @@ def test_foundation_stays_proposal_until_exact_author_confirmation(tmp_path: Pat
             },
         )
     assert len(result["genesis"]["candidates"]) == 3
+    assert {
+        candidate["score_status"] for candidate in result["genesis"]["candidates"]
+    } == {"NOT_COMPUTED"}
     assert studio_access(layout, BookRegistry(layout).record(BOOK_ID)).accessible
+
+
+def test_foundation_transaction_rolls_back_all_partial_writes(tmp_path: Path) -> None:
+    _, database = create_original(tmp_path)
+    handoff_id = complete_bootstrap_handoff(database)
+    imported = import_original_bootstrap_proposal(database, BOOK_ID, handoff_id)
+    proposal_version_id = str(imported["proposal_version_id"])
+    collision_id = f"directive-{proposal_version_id}-foundation-1-must-1"
+    with database.connect() as connection:
+        connection.execute(
+            "INSERT INTO author_directives("
+            "directive_id, book_id, edition_id, directive_type, content, mode, status, "
+            "priority, source, created_at, version"
+            ") VALUES (?, ?, 'base', 'requirement', '预置冲突', 'persistent', 'ACTIVE', "
+            "100, 'TEST', 'now', 1)",
+            (collision_id, BOOK_ID),
+        )
+
+    with pytest.raises(OriginalWorkflowError):
+        confirm_original_foundation(
+            database,
+            BOOK_ID,
+            {
+                "confirmed": True,
+                "selected_title": "无情之城",
+                "selected_foundation_id": "foundation-1",
+                "selected_route_id": "route-2",
+                "world_rules": proposal_payload()["world_rules"],
+                "first_phase_objective": proposal_payload()["first_phase_objective"],
+            },
+        )
+    with database.connect() as connection:
+        assert connection.execute("SELECT COUNT(*) FROM author_truths").fetchone()[0] == 0
+        assert (
+            connection.execute("SELECT COUNT(*) FROM original_genesis_applies").fetchone()[0] == 0
+        )
+        state = connection.execute(
+            "SELECT state, accepted_apply_id FROM original_states WHERE book_id=?",
+            (BOOK_ID,),
+        ).fetchone()
+    assert tuple(state) == ("FOUNDATION_REVIEW", None)
+
+
+def test_regenerated_proposal_is_versioned_and_does_not_replace_accepted_foundation(
+    tmp_path: Path,
+) -> None:
+    _, database = create_original(tmp_path)
+    accepted = accept_foundation(database)
+    first_apply_id = str(accepted["apply_id"])
+    first = prepare_original_bootstrap(database, BOOK_ID)
+    duplicate = prepare_original_bootstrap(database, BOOK_ID)
+    assert duplicate["deduplicated"] is True
+    assert duplicate["handoff_id"] == first["handoff_id"]
+
+    regenerated_handoff = complete_bootstrap_handoff(database)
+    assert regenerated_handoff == first["handoff_id"]
+    imported = import_original_bootstrap_proposal(database, BOOK_ID, regenerated_handoff)
+    assert imported["proposal_status"] == "READY"
+    comparison = compare_original_proposals(database, BOOK_ID, str(imported["proposal_version_id"]))
+    assert comparison["current_version_id"] != comparison["target_version_id"]
+
+    replaced = resolve_original_proposal_version(
+        database,
+        BOOK_ID,
+        str(imported["proposal_version_id"]),
+        action="REPLACE_CURRENT",
+    )
+    assert replaced["current_changed"] is True
+    assert replaced["accepted_foundation_changed"] is False
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT state, accepted_apply_id FROM original_states WHERE book_id=?",
+            (BOOK_ID,),
+        ).fetchone()
+        canon_count = connection.execute("SELECT COUNT(*) FROM canon_commits").fetchone()[0]
+    assert tuple(state) == ("FOUNDATION_READY", first_apply_id)
+    assert canon_count == 0
 
 
 def test_first_chapter_uses_contract_validation_and_explicit_approval(tmp_path: Path) -> None:
@@ -356,9 +498,7 @@ def test_first_chapter_uses_contract_validation_and_explicit_approval(tmp_path: 
                 "required_irreversible_change": [contract.required_irreversible_change],
                 "required_cost": [contract.required_cost],
                 "ending_state": [contract.ending_state],
-                f"commit:thread_status:{contract.primary_thread}": [
-                    "线程状态完成更新"
-                ],
+                f"commit:thread_status:{contract.primary_thread}": ["线程状态完成更新"],
                 "commit:character_state:protagonist": ["人物状态完成更新"],
             },
             "knowledge_claims": [],
@@ -375,12 +515,8 @@ def test_first_chapter_uses_contract_validation_and_explicit_approval(tmp_path: 
                 "realized": [],
                 "knowledge_transitions": [],
             },
-            "character_fit_inputs": dict.fromkeys(
-                settings.metrics["character_fit"]["weights"], 90
-            ),
-            "style_fit_inputs": dict.fromkeys(
-                settings.metrics["style_fit"]["weights"], 90
-            ),
+            "character_fit_inputs": dict.fromkeys(settings.metrics["character_fit"]["weights"], 90),
+            "style_fit_inputs": dict.fromkeys(settings.metrics["style_fit"]["weights"], 90),
             "promises_advanced": [contract.primary_thread],
             "structure_tags": ["original-genesis-active-choice"],
             "notes": ["固定本地测试输出，不调用远程模型"],
@@ -390,17 +526,13 @@ def test_first_chapter_uses_contract_validation_and_explicit_approval(tmp_path: 
     output_path.write_text(
         json_dumps(draft_output.model_dump(mode="json"), indent=2), encoding="utf-8"
     )
-    imported = import_draft_output(
-        database, BOOK_ID, str(selected["draft_task"]["task_id"])
-    )
+    imported = import_draft_output(database, BOOK_ID, str(selected["draft_task"]["task_id"]))
     draft_id = str(imported["draft_id"])
     validation = validate_original_draft(database, BOOK_ID, draft_id)
     assert validation["passed"] is True, validation
     with pytest.raises(RuntimeError, match="必须逐字"):
         approve_original_first_chapter(database, BOOK_ID, draft_id, "同意")
-    approved = approve_original_first_chapter(
-        database, BOOK_ID, draft_id, "批准写入正史"
-    )
+    approved = approve_original_first_chapter(database, BOOK_ID, draft_id, "批准写入正史")
     next_handoff = create_continuation_handoff(
         database,
         BOOK_ID,
@@ -443,9 +575,9 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
         original = client.get(created.json()["original_url"])
 
     assert library.status_code == 200
-    assert "导入现有小说" in library.text
+    assert "导入小说" in library.text
     assert "新建原创小说" in library.text
-    assert "Premise" in form.text
+    assert "一句话创意" in form.text
     assert created.status_code == 200
     assert created.json()["source_required"] is False
-    assert "ORIGINAL_BOOK_BOOTSTRAP" in original.text
+    assert "AI 任务" in original.text

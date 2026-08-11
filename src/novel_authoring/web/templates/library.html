@@ -15,16 +15,17 @@
   <main class="library-shell" data-library-catalog data-catalog-revision="{{ catalog.revision }}">
     <header class="library-hero">
       <div><p class="wb-kicker">{% if technical_library %}开发者内容{% else %}你的创作项目{% endif %}</p><h1>{% if technical_library %}技术书库{% else %}书库{% endif %}</h1><p>{% if technical_library %}Benchmark、Test、Demo 和尚未分类的历史项目；它们不会进入作者书库或书籍选择器。{% else %}把小说放进书籍目录，这里会自动发现；只有在你确认后才会读取和初始化。{% endif %}</p></div>
-      <div class="library-hero-actions">{% if not technical_library %}<button class="button" type="button" data-copy-path="{{ catalog.discovery_root }}">导入现有小说</button><a class="button primary" href="/library/original/new">新建原创小说</a>{% endif %}<button class="button" type="button" data-refresh-library>刷新书籍</button></div>
+      <div class="library-hero-actions">{% if not technical_library %}<button class="button" type="button" data-open-import>导入小说</button><button class="button" type="button" data-copy-path="{{ catalog.discovery_root }}">复制导入目录</button><a class="button primary" href="/library/original/new">新建原创小说</a>{% endif %}<button class="button" type="button" data-refresh-library>刷新书籍</button></div>
     </header>
 
     <section class="library-location" aria-label="书籍目录"><span>书籍目录</span><code>{{ catalog.discovery_root or '尚未配置' }}</code><small>支持 {{ catalog.supported_formats|join('、') if catalog.supported_formats else '当前解析器格式' }} · 扫描只读</small></section>
     <p class="library-feedback" data-library-feedback aria-live="polite"></p>
 
+    <div data-library-groups>
     {% if technical_library %}
       {% set group_specs = [('BENCHMARK','Benchmark','性能、质量与盲测运行'),('TEST','Test','自动化或验收测试项目'),('DEMO','Demo','产品演示项目'),('UNCLASSIFIED','尚未分类','历史项目，等待显式分类')] %}
     {% else %}
-      {% set group_specs = [('ready','可以继续创作','初始化已完整验收'),('running','正在准备','初始化任务正在处理或等待确认'),('pending','还需要准备','新发现或尚未完整初始化')] %}
+      {% set group_specs = [('needs_action','需要你的处理','等待确认、处理指令或修复失败任务'),('preparing','正在准备','系统正在建立这本书的创作上下文'),('creative','可以继续创作','当前操作已经可用；后台分析会显示为次级进度'),('awaiting_import','待导入','新发现正文，确认后才会读取')] %}
     {% endif %}
     {% for group_key, title, description in group_specs %}
       {% set group = catalog.kind_groups[group_key] if technical_library else catalog.groups[group_key] %}
@@ -44,6 +45,21 @@
         </div>
       </section>{% endif %}
     {% endfor %}
+
+    {% if not technical_library and catalog.unclassified_count %}<footer class="library-unclassified-notice"><span>有 {{ catalog.unclassified_count }} 个历史项目尚未分类</span><a class="button compact" href="/library/unclassified">前往整理</a></footer>{% endif %}
+    </div>
+
+    {% if not technical_library %}<dialog class="library-import-dialog" data-import-dialog>
+      <form method="dialog" class="library-import-form" data-import-form>
+        <header><div><p class="wb-kicker">本地导入</p><h2>导入小说正文</h2></div><button type="button" class="wb-icon-button" data-close-import aria-label="关闭">×</button></header>
+        <p>可选择一个 TXT / Markdown 文件，或一次选择多个章节文件。文件会安全复制到监听目录，原文件不会修改。</p>
+        <label class="library-drop-zone">选择正文文件<input type="file" name="files" accept=".txt,.md,.markdown" multiple required></label>
+        <label>同名文件冲突<select name="conflict_policy"><option value="KEEP_BOTH">保留两份</option><option value="RENAME">更改文件名</option><option value="CANCEL">取消本次导入</option></select></label>
+        <label>更改后的文件名（仅“更改文件名”且单文件时）<input name="renamed_filename" placeholder="例如：我的小说-修订版.txt"></label>
+        <div class="workflow-form-footer"><button type="button" class="button" data-close-import>取消</button><button type="submit" class="button primary">导入到书库</button></div>
+        <p class="library-feedback" data-import-feedback aria-live="polite"></p>
+      </form>
+    </dialog>{% endif %}
 
     {% if not catalog.entries %}<section class="library-empty"><div>＋</div><h2>{% if technical_library %}没有技术项目{% else %}放入你的第一本小说{% endif %}</h2><p>{% if technical_library %}只有显式分类的 Benchmark、Test、Demo 或历史未分类项目会显示在这里。{% else %}把 .md 或 .txt 文件复制到上面的书籍目录，最迟约 10 秒后会出现在这里。{% endif %}</p>{% if not technical_library %}<button class="button primary" type="button" data-copy-path="{{ catalog.discovery_root }}">复制书籍目录</button>{% endif %}</section>{% endif %}
   </main>

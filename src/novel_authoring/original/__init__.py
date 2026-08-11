@@ -1,5 +1,4 @@
 from novel_authoring.original.models import (
-    FOUNDATION_CONFIRMATION,
     FirstChapterCandidate,
     OriginalBookRequest,
     OriginalBootstrapProposal,
@@ -11,7 +10,6 @@ from novel_authoring.original.models import (
 )
 
 __all__ = [
-    "FOUNDATION_CONFIRMATION",
     "FirstChapterCandidate",
     "OriginalBookRequest",
     "OriginalBootstrapProposal",

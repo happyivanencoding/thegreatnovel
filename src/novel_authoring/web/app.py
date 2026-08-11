@@ -5,11 +5,11 @@ import re
 import sqlite3
 import subprocess
 from pathlib import Path
-from typing import Any, cast
+from typing import Annotated, Any, cast
 from urllib.parse import urlencode
 
 try:  # Optional dependency: CLI/core remains usable without the web extra.
-    from fastapi import FastAPI, HTTPException, Request
+    from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
     from fastapi.responses import (
         FileResponse,
         HTMLResponse,
@@ -23,6 +23,8 @@ except ImportError:  # pragma: no cover - exercised only without web extras
     FastAPI = None  # type: ignore[misc, assignment]
     HTTPException = Exception  # type: ignore[misc, assignment]
     Request = Any  # type: ignore[misc, assignment]
+    File = Form = lambda *args, **kwargs: None
+    UploadFile = Any  # type: ignore[misc, assignment]
     FileResponse = HTMLResponse = JSONResponse = RedirectResponse = Response = Any  # type: ignore[misc, assignment]
     StaticFiles = None  # type: ignore[misc, assignment]
     Jinja2Templates = None  # type: ignore[misc, assignment]
@@ -75,13 +77,19 @@ from novel_authoring.author_control.truth import (
 )
 from novel_authoring.db.database import Database
 from novel_authoring.drafting import save_draft_content
-from novel_authoring.edition import edition_chapters, list_editions
+from novel_authoring.edition import (
+    ACTIVATE_PHRASE,
+    activate_edition,
+    edition_chapters,
+    list_editions,
+)
 from novel_authoring.initialization import (
     InitializationDepth,
     InitializationError,
     create_initialization,
     latest_initialization,
     prepare_action_deepening,
+    refresh_initialization,
     upgrade_initialization,
 )
 from novel_authoring.initialization.metrics import prepare_metric_bootstrap
@@ -109,18 +117,28 @@ from novel_authoring.original.models import (
 )
 from novel_authoring.original.service import (
     approve_original_first_chapter,
+    compare_original_proposals,
     confirm_original_foundation,
     create_original_book,
     import_original_bootstrap_proposal,
     original_overview,
     prepare_original_bootstrap,
+    resolve_original_proposal_version,
     select_first_chapter_candidate,
     validate_original_draft,
 )
+from novel_authoring.pending_actions import (
+    attach_deepening_operation,
+    author_activity_view,
+    ensure_pending_author_action,
+    list_pending_author_actions,
+    set_pending_author_action_status,
+)
+from novel_authoring.readiness import evaluate_revision_range
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.library import LibraryAddOptions, add_book
 from novel_authoring.storage.registry import BookKind, BookRegistry
-from novel_authoring.utils import stable_id
+from novel_authoring.utils import stable_id, utc_now
 from novel_authoring.web.dependencies import create_csrf_token, verify_csrf
 from novel_authoring.web.routes.atlas import (
     GRAPH_TYPES,
@@ -149,6 +167,7 @@ from novel_authoring.web.schemas import (
     BookProfileProposalRequest,
     BookProfileProposalResolutionRequest,
     DraftContentRequest,
+    EditionActivationRequest,
     HandoffRequest,
     HiddenItemRequest,
     KnowledgeUpdateRequest,
@@ -156,6 +175,7 @@ from novel_authoring.web.schemas import (
     OriginalCandidateSelectionRequest,
     OriginalDraftActionRequest,
     OriginalProposalImportRequest,
+    OriginalProposalVersionResolutionRequest,
     ProfileReanalysisRequest,
     RecomputeRequest,
     RetractRequest,
@@ -186,7 +206,7 @@ _ACTION_MODES = {"continue": "continue", "rewrite": "rewrite", "plan": "plan"}
 
 # Single source of truth for the cache-busting ``?v=`` suffix used by every
 # template; also reported by /health so stale static assets are diagnosable.
-STATIC_ASSET_VERSION = "3.3.0"
+STATIC_ASSET_VERSION = "3.4.0"
 
 
 # Sentinel distinguishing "never probed" from a probed result of ``None``.
@@ -421,6 +441,211 @@ def _library_paths_payload(
     }
 
 
+def _target_action_ordinal(
+    database: Database,
+    book_id: str,
+    edition_id: str,
+    action_type: str,
+    chapter_id: str | None,
+) -> int | None:
+    with database.connect() as connection:
+        chapters = edition_chapters(connection, book_id, edition_id)
+    if action_type == "CONTINUE":
+        return max((int(item["ordinal"]) for item in chapters), default=0) + 1
+    return next(
+        (int(item["ordinal"]) for item in chapters if str(item["chapter_id"]) == str(chapter_id)),
+        None,
+    )
+
+
+def _resume_pending_actions(database: Database, book_id: str) -> list[dict[str, Any]]:
+    """Advance completed deepening tasks and recreate the author's original action."""
+
+    for item in list_pending_author_actions(database, book_id):
+        deepening_id = str(item.get("deepening_operation_id") or "")
+        if not deepening_id:
+            continue
+        try:
+            deepening_handoff = get_handoff(database, deepening_id)
+        except HandoffWorkflowError:
+            continue
+        if str(deepening_handoff.get("status")) != HandoffStatus.COMPLETED.value:
+            continue
+        try:
+            refresh_initialization(
+                database,
+                book_id,
+                edition_id=str(item["edition_id"]),
+            )
+            deepening = prepare_action_deepening(
+                database,
+                book_id,
+                edition_id=str(item["edition_id"]),
+                action=str(item["action_type"]),
+                target_chapter_id=item.get("chapter_id"),
+            )
+            if deepening["status"] != "ACTION_CONTEXT_READY":
+                next_handoff = create_initialization_handoff(
+                    database,
+                    book_id,
+                    edition_id=str(item["edition_id"]),
+                    requested_stage="NOVEL_INITIALIZATION",
+                )
+                attach_deepening_operation(
+                    database,
+                    str(item["pending_action_id"]),
+                    str(next_handoff["handoff_id"]),
+                    deepening,
+                )
+                continue
+            set_pending_author_action_status(
+                database,
+                str(item["pending_action_id"]),
+                "CONTEXT_READY",
+            )
+            set_pending_author_action_status(
+                database,
+                str(item["pending_action_id"]),
+                "RESUMING",
+            )
+            request_payload = HandoffRequest.model_validate(item["request"])
+            if str(item["action_type"]) == "CONTINUE":
+                resumed = prepare_continuation(database, book_id, request_payload)
+            else:
+                resumed = prepare_revision(database, book_id, request_payload)
+            set_pending_author_action_status(
+                database,
+                str(item["pending_action_id"]),
+                "COMPLETED",
+                resumed_handoff_id=str(resumed["handoff_id"]),
+            )
+        except (InitializationError, HandoffWorkflowError, ValueError):
+            set_pending_author_action_status(
+                database,
+                str(item["pending_action_id"]),
+                "FAILED",
+            )
+            continue
+    return [
+        author_activity_view(item)
+        for item in list_pending_author_actions(
+            database,
+            book_id,
+            include_finished=True,
+        )
+    ]
+
+
+def _queue_pending_author_action(
+    database: Database,
+    book_id: str,
+    payload: HandoffRequest,
+    *,
+    action_type: str,
+) -> dict[str, Any]:
+    edition_id = str(payload.edition_id or "base")
+    target_ordinal = _target_action_ordinal(
+        database,
+        book_id,
+        edition_id,
+        action_type,
+        payload.context_chapter_id,
+    )
+    pending, reused = ensure_pending_author_action(
+        database,
+        action_type=action_type,
+        book_id=book_id,
+        edition_id=edition_id,
+        chapter_id=payload.context_chapter_id,
+        target_chapter_ordinal=target_ordinal,
+        author_goal=str(payload.author_goal or ""),
+        innovation={
+            "level": None if payload.innovation_level is None else payload.innovation_level.value,
+            "focus": [item.value for item in (payload.innovation_focus or [])],
+            "save_as_book_default": payload.save_as_book_default,
+        },
+        selected_author_tasks=list(payload.author_task_ids),
+        requested_stage=payload.requested_stage,
+        request_payload=payload.model_dump(mode="json"),
+        required_context={},
+    )
+    if reused:
+        activities = _resume_pending_actions(database, book_id)
+        current = next(
+            (
+                item
+                for item in activities
+                if item["pending_action_id"] == pending["pending_action_id"]
+            ),
+            author_activity_view(pending),
+        )
+        return {
+            "workflow_status": "PENDING_ACTION_REUSED",
+            "resume_action": action_type,
+            "pending_action": current,
+            "deduplicated": True,
+        }
+    try:
+        deepening = prepare_action_deepening(
+            database,
+            book_id,
+            edition_id=edition_id,
+            action=action_type,
+            target_chapter_id=payload.context_chapter_id,
+        )
+        if deepening["status"] == "ACTION_CONTEXT_READY":
+            set_pending_author_action_status(
+                database,
+                str(pending["pending_action_id"]),
+                "RESUMING",
+            )
+            resumed = (
+                prepare_continuation(database, book_id, payload)
+                if action_type == "CONTINUE"
+                else prepare_revision(database, book_id, payload)
+            )
+            completed = set_pending_author_action_status(
+                database,
+                str(pending["pending_action_id"]),
+                "COMPLETED",
+                resumed_handoff_id=str(resumed["handoff_id"]),
+            )
+            return {
+                "workflow_status": "ACTION_RESUMED",
+                "resume_action": action_type,
+                "pending_action": author_activity_view(completed),
+                "handoff": resumed,
+                "deduplicated": False,
+            }
+        handoff = create_initialization_handoff(
+            database,
+            book_id,
+            edition_id=edition_id,
+            requested_stage="NOVEL_INITIALIZATION",
+        )
+        attached = attach_deepening_operation(
+            database,
+            str(pending["pending_action_id"]),
+            str(handoff["handoff_id"]),
+            deepening,
+        )
+        return {
+            "workflow_status": "CONTEXT_HYDRATION_REQUIRED",
+            "resume_action": action_type,
+            "pending_action": author_activity_view(attached),
+            "deepening": deepening,
+            "handoff": handoff,
+            "deduplicated": False,
+        }
+    except Exception:
+        set_pending_author_action_status(
+            database,
+            str(pending["pending_action_id"]),
+            "FAILED",
+        )
+        raise
+
+
 def create_app(
     database: Database,
     *,
@@ -439,9 +664,7 @@ def create_app(
         Path(discovery_root).expanduser().resolve()
         if discovery_root is not None
         else (
-            None
-            if app.state.library_root is None
-            else Path(app.state.library_root).parent / "book"
+            None if app.state.library_root is None else Path(app.state.library_root).parent / "book"
         )
     )
     app.state.developer_mode = developer_mode
@@ -554,6 +777,9 @@ def create_app(
             depth = InitializationDepth(
                 str(payload.get("depth") or InitializationDepth.BALANCED).upper()
             )
+            author_goal = str(payload.get("author_goal") or "CONTINUE").upper()
+            if author_goal not in {"CONTINUE", "UNDERSTAND", "REWRITE", "AUDIT"}:
+                raise ValueError("创作目标无效")
             added = add_book(
                 LibraryAddOptions(
                     book_id=book_id_value,
@@ -571,6 +797,7 @@ def create_app(
                 added.book_id,
                 edition_id="base",
                 depth=depth,
+                requested_action=f"GOAL_{author_goal}",
             )
             handoff = create_initialization_handoff(
                 selected_database,
@@ -587,8 +814,7 @@ def create_app(
             "handoff_id": handoff_id,
             "status_label": "等待处理",
             "instruction_url": (
-                f"/api/books/{added.book_id}/editions/base/handoffs/"
-                f"{handoff_id}/instruction"
+                f"/api/books/{added.book_id}/editions/base/handoffs/{handoff_id}/instruction"
             ),
             "workbench_url": f"/books/{added.book_id}/editions/base/workbench",
         }
@@ -663,21 +889,54 @@ def create_app(
             {"csrf_token": app.state.csrf_token},
         )
 
+    @app.get("/library/unclassified", response_class=HTMLResponse)
+    async def unclassified_library_page(request: Request) -> Any:
+        root = app.state.library_root
+        if root is None:
+            raise HTTPException(status_code=404, detail="library 未配置")
+        registry = BookRegistry(BookLayout(root))
+        projects = [
+            record for record in registry.list() if record.book_kind is BookKind.UNCLASSIFIED
+        ]
+        return _template(
+            templates,
+            "library_unclassified.html",
+            request,
+            {
+                "projects": projects,
+                "csrf_token": app.state.csrf_token,
+            },
+        )
+
+    @app.post("/api/library/{path_book_id}/classify")
+    async def classify_library_book(request: Request, path_book_id: str) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        root = app.state.library_root
+        if root is None:
+            raise HTTPException(status_code=404, detail="library 未配置")
+        payload = await request.json()
+        try:
+            book_kind = BookKind(str(payload.get("book_kind") or ""))
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="项目分类无效") from exc
+        checked_book = _check_id(path_book_id)
+        registry = BookRegistry(BookLayout(root))
+        values = registry.read(checked_book)
+        values["book_kind"] = book_kind.value
+        values["updated_at"] = utc_now()
+        registry.write(BookLayout(root).for_book(checked_book), values)
+        registry.write_readme(BookLayout(root).for_book(checked_book), values)
+        return {"book_id": checked_book, "book_kind": book_kind.value}
+
     @app.post("/api/library/original")
-    async def original_create_api(
-        request: Request, payload: OriginalBookRequest
-    ) -> Any:
+    async def original_create_api(request: Request, payload: OriginalBookRequest) -> Any:
         verify_csrf(request, None)
         if app.state.library_root is None:
             raise HTTPException(status_code=400, detail="library 未配置")
         try:
-            created = create_original_book(
-                BookLayout(app.state.library_root), payload
-            )
+            created = create_original_book(BookLayout(app.state.library_root), payload)
             selected_database = Database(Path(str(created["database"])))
-            handoff = prepare_original_bootstrap(
-                selected_database, str(created["book_id"])
-            )
+            handoff = prepare_original_bootstrap(selected_database, str(created["book_id"]))
             return {
                 **created,
                 "handoff": handoff,
@@ -685,6 +944,65 @@ def create_app(
             }
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)
+
+    @app.post("/api/library/upload")
+    async def library_upload_api(
+        request: Request,
+        files: Annotated[list[UploadFile], File()],
+        conflict_policy: Annotated[str, Form()] = "KEEP_BOTH",
+        renamed_filename: Annotated[str, Form()] = "",
+    ) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        discovery_root = app.state.discovery_root
+        if discovery_root is None:
+            raise HTTPException(status_code=400, detail="导入目录未配置")
+        policy = conflict_policy.upper()
+        if policy not in {"KEEP_BOTH", "RENAME", "CANCEL"}:
+            raise HTTPException(status_code=400, detail="同名文件处理方式无效")
+        if not files:
+            raise HTTPException(status_code=400, detail="请选择正文文件")
+        allowed = {".txt", ".md", ".markdown"}
+        names = [Path(str(item.filename or "")).name for item in files]
+        if any(not name or Path(name).suffix.casefold() not in allowed for name in names):
+            raise HTTPException(status_code=400, detail="只支持 TXT、MD 或 Markdown 正文")
+        target_root = Path(discovery_root).expanduser().resolve()
+        target_root.mkdir(parents=True, exist_ok=True)
+        if len(files) > 1:
+            folder_name = re.sub(r"[^A-Za-z0-9._\-\u4e00-\u9fff]+", "-", Path(names[0]).stem)
+            destination = target_root / f"{folder_name or '章节合集'}-章节"
+            folder_suffix = 2
+            while destination.exists():
+                destination = target_root / f"{folder_name or '章节合集'}-章节-{folder_suffix}"
+                folder_suffix += 1
+            destination.mkdir()
+        else:
+            destination = target_root
+        if policy == "RENAME":
+            if len(files) != 1:
+                raise HTTPException(status_code=400, detail="更改文件名只适用于单文件导入")
+            renamed = Path(renamed_filename).name
+            if not renamed or Path(renamed).suffix.casefold() not in allowed:
+                raise HTTPException(status_code=400, detail="请输入带 TXT/Markdown 后缀的新文件名")
+            names = [renamed]
+        targets = [destination / name for name in names]
+        if policy == "CANCEL" and any(path.exists() for path in targets):
+            raise HTTPException(status_code=409, detail="存在同名文件，本次导入已取消")
+        written: list[str] = []
+        for upload, target in zip(files, targets, strict=True):
+            if target.exists():
+                stem, file_suffix = target.stem, target.suffix
+                index = 2
+                while target.exists():
+                    target = target.with_name(f"{stem} ({index}){file_suffix}")
+                    index += 1
+            target.write_bytes(await upload.read())
+            written.append(str(target))
+        return {
+            "status": "IMPORTED_TO_DISCOVERY",
+            "file_count": len(written),
+            "paths": written,
+            "message": f"已导入 {len(written)} 个正文文件，书库会立即识别。",
+        }
 
     @app.get("/books/{path_book_id}/original", response_class=HTMLResponse)
     async def original_studio_page(request: Request, path_book_id: str) -> Any:
@@ -705,9 +1023,7 @@ def create_app(
         verify_csrf(request, None)
         checked = _require_book_scope(app, path_book_id)
         try:
-            return prepare_original_bootstrap(
-                _database_for_book(app, checked), checked
-            )
+            return prepare_original_bootstrap(_database_for_book(app, checked), checked)
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)
 
@@ -726,6 +1042,40 @@ def create_app(
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)
 
+    @app.get("/api/books/{path_book_id}/original/proposals/{proposal_version_id}/compare")
+    async def original_proposal_compare_api(
+        path_book_id: str,
+        proposal_version_id: str,
+    ) -> Any:
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return compare_original_proposals(
+                _database_for_book(app, checked),
+                checked,
+                _check_id(proposal_version_id),
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/proposals/{proposal_version_id}/resolve")
+    async def original_proposal_resolution_api(
+        request: Request,
+        path_book_id: str,
+        proposal_version_id: str,
+        payload: OriginalProposalVersionResolutionRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return resolve_original_proposal_version(
+                _database_for_book(app, checked),
+                checked,
+                _check_id(proposal_version_id),
+                action=payload.action,
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
     @app.post("/api/books/{path_book_id}/original/foundation/confirm")
     async def original_foundation_confirm_api(
         request: Request,
@@ -735,9 +1085,7 @@ def create_app(
         verify_csrf(request, None)
         checked = _require_book_scope(app, path_book_id)
         try:
-            return confirm_original_foundation(
-                _database_for_book(app, checked), checked, payload
-            )
+            return confirm_original_foundation(_database_for_book(app, checked), checked, payload)
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)
 
@@ -852,9 +1200,7 @@ def create_app(
             raise HTTPException(status_code=404, detail="library 未配置")
         layout = BookLayout(root)
         latest = (
-            layout.for_book(_require_book_scope(app, path_book_id))
-            .edition("base")
-            .latest_export
+            layout.for_book(_require_book_scope(app, path_book_id)).edition("base").latest_export
         )
         path = (latest / asset_path).resolve()
         if latest.resolve() not in path.parents or not path.is_file():
@@ -873,13 +1219,8 @@ def create_app(
         if catalog is not None:
             if current_entry is None:
                 raise HTTPException(status_code=404, detail="书籍不在当前书库")
-            if (
-                current_entry.creation_mode == "ORIGINAL"
-                and current_entry.chapter_count == 0
-            ):
-                return RedirectResponse(
-                    url=f"/books/{checked_book}/original", status_code=302
-                )
+            if current_entry.creation_mode == "ORIGINAL" and current_entry.chapter_count == 0:
+                return RedirectResponse(url=f"/books/{checked_book}/original", status_code=302)
             if not current_entry.studio_accessible:
                 return render_onboarding(request, catalog, current_entry)
         selected_database = _database_for_book(app, checked_book)
@@ -921,6 +1262,16 @@ def create_app(
             ),
             activity_id=_query_id(request, "activity_id"),
         )
+        context["pending_activities"] = _resume_pending_actions(
+            _database_for_book(app, checked_book), checked_book
+        )
+        context["activity_badge_count"] = int(
+            context["workflow"]["activity_center"]["badge_count"]
+        ) + sum(
+            1
+            for item in context["pending_activities"]
+            if item["status"] in {"WAITING_FOR_CONTEXT", "CONTEXT_READY", "RESUMING"}
+        )
         context["innovation_default"] = context["workflow"]["innovation_default"]
         return _template(templates, "workbench.html", request, context)
 
@@ -938,13 +1289,8 @@ def create_app(
         if catalog is not None:
             if current_entry is None:
                 raise HTTPException(status_code=404, detail="书籍不在当前书库")
-            if (
-                current_entry.creation_mode == "ORIGINAL"
-                and current_entry.chapter_count == 0
-            ):
-                return RedirectResponse(
-                    url=f"/books/{checked_book}/original", status_code=302
-                )
+            if current_entry.creation_mode == "ORIGINAL" and current_entry.chapter_count == 0:
+                return RedirectResponse(url=f"/books/{checked_book}/original", status_code=302)
             if not current_entry.studio_accessible:
                 return render_onboarding(request, catalog, current_entry)
         try:
@@ -1120,9 +1466,7 @@ def create_app(
         )
         return {"truth": truth, "canon_changed": False, "knowledge_changed": False}
 
-    @app.patch(
-        "/api/books/{path_book_id}/editions/{edition_id}/author-truths/{truth_id}"
-    )
+    @app.patch("/api/books/{path_book_id}/editions/{edition_id}/author-truths/{truth_id}")
     async def update_author_truth_api(
         request: Request,
         path_book_id: str,
@@ -1146,8 +1490,7 @@ def create_app(
         return {"truth": truth, "canon_changed": False, "knowledge_changed": False}
 
     @app.post(
-        "/api/books/{path_book_id}/editions/{edition_id}/author-truths/"
-        "{truth_id}/compatibility"
+        "/api/books/{path_book_id}/editions/{edition_id}/author-truths/{truth_id}/compatibility"
     )
     async def truth_compatibility_api(
         request: Request,
@@ -1258,8 +1601,7 @@ def create_app(
         return {"candidate": candidate, "canon_changed": False}
 
     @app.post(
-        "/api/books/{path_book_id}/editions/{edition_id}/secret-candidates/"
-        "{candidate_id}/resolve"
+        "/api/books/{path_book_id}/editions/{edition_id}/secret-candidates/{candidate_id}/resolve"
     )
     async def resolve_secret_candidate_api(
         request: Request,
@@ -1324,8 +1666,7 @@ def create_app(
         )
 
     @app.post(
-        "/api/books/{path_book_id}/editions/{edition_id}/author-truths/"
-        "{truth_id}/reader-knowledge"
+        "/api/books/{path_book_id}/editions/{edition_id}/author-truths/{truth_id}/reader-knowledge"
     )
     async def reader_knowledge_api(
         request: Request,
@@ -1569,9 +1910,7 @@ def create_app(
             summary=payload.summary,
         )
 
-    @app.post(
-        "/api/books/{path_book_id}/editions/{edition_id}/book-profile/reanalysis"
-    )
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/book-profile/reanalysis")
     async def book_profile_reanalysis_api(
         request: Request,
         path_book_id: str,
@@ -1904,8 +2243,7 @@ def create_app(
         if context.get("current_chapter"):
             query["chapter_id"] = str(context["current_chapter"]["chapter_id"])
         target = (
-            f"/books/{checked_book}/editions/{context['edition_id']}/workbench?"
-            f"{urlencode(query)}"
+            f"/books/{checked_book}/editions/{context['edition_id']}/workbench?{urlencode(query)}"
         )
         return RedirectResponse(url=target, status_code=302)
 
@@ -2131,16 +2469,18 @@ def create_app(
             depth = InitializationDepth(
                 str(payload.get("depth") or InitializationDepth.BALANCED).upper()
             )
+            author_goal = str(payload.get("author_goal") or "CONTINUE").upper()
+            if author_goal not in {"CONTINUE", "UNDERSTAND", "REWRITE", "AUDIT"}:
+                raise ValueError("创作目标无效")
             selected_database = _database_for_book(app, checked_book)
-            current = latest_initialization(
-                selected_database, checked_book, _check_id(edition_id)
-            )
+            current = latest_initialization(selected_database, checked_book, _check_id(edition_id))
             if current is None:
                 create_initialization(
                     selected_database,
                     checked_book,
                     edition_id=_check_id(edition_id),
                     depth=depth,
+                    requested_action=f"GOAL_{author_goal}",
                 )
             else:
                 upgrade_initialization(
@@ -2148,6 +2488,7 @@ def create_app(
                     checked_book,
                     edition_id=_check_id(edition_id),
                     depth=depth,
+                    requested_action=f"GOAL_{author_goal}",
                 )
             return create_initialization_handoff(
                 selected_database,
@@ -2158,9 +2499,7 @@ def create_app(
         except Exception as exc:
             return _error(exc)
 
-    @app.post(
-        "/api/books/{path_book_id}/editions/{edition_id}/initialization/deepen"
-    )
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/initialization/deepen")
     async def initialization_deepen_api(
         request: Request, path_book_id: str, edition_id: str
     ) -> Any:
@@ -2177,9 +2516,7 @@ def create_app(
                 edition_id=_check_id(edition_id),
                 action=str(payload.get("action") or ""),
                 target_chapter_id=(
-                    str(payload["target_chapter_id"])
-                    if payload.get("target_chapter_id")
-                    else None
+                    str(payload["target_chapter_id"]) if payload.get("target_chapter_id") else None
                 ),
             )
             if result["status"] != "ACTION_CONTEXT_READY":
@@ -2635,9 +2972,7 @@ def create_app(
             return _error(exc)
         return {"handoff_id": checked, "instruction": instruction}
 
-    @app.get(
-        "/api/books/{path_book_id}/editions/{edition_id}/handoffs/{handoff_id}/instruction"
-    )
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/handoffs/{handoff_id}/instruction")
     async def book_handoff_instruction_api(
         path_book_id: str, edition_id: str, handoff_id: str
     ) -> Any:
@@ -2701,6 +3036,47 @@ def create_app(
         checked_book = _check_id(path_book_id)
         return list_handoffs(_database_for_book(app, checked_book), checked_book, edition_id)
 
+    @app.get("/api/books/{path_book_id}/pending-actions")
+    async def pending_author_actions_api(
+        path_book_id: str,
+        edition_id: str | None = None,
+    ) -> list[dict[str, Any]]:
+        checked_book = _check_id(path_book_id)
+        activities = _resume_pending_actions(_database_for_book(app, checked_book), checked_book)
+        return [
+            item
+            for item in activities
+            if edition_id is None or item["edition_id"] == _check_id(edition_id)
+        ]
+
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/activate")
+    async def activate_edition_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: EditionActivationRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        if not payload.confirmed:
+            return _error(ValueError("请确认切换正式版本的影响"))
+        checked_book = _require_book_scope(app, path_book_id)
+        try:
+            activated = activate_edition(
+                _database_for_book(app, checked_book),
+                checked_book,
+                _check_id(edition_id),
+                confirmation=ACTIVATE_PHRASE,
+            )
+            return {
+                "edition": activated.model_dump(mode="json"),
+                "redirect_url": (
+                    f"/books/{checked_book}/editions/{activated.edition_id}/workbench"
+                ),
+                "canon_changed": False,
+            }
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
     @app.post("/api/handoffs/continue")
     @app.post("/api/books/{path_book_id}/handoffs/continuation")
     async def continuation_api(
@@ -2718,27 +3094,13 @@ def create_app(
             if app.state.library_root is not None:
                 record = BookRegistry(BookLayout(app.state.library_root)).record(checked_book)
                 access = studio_access(BookLayout(app.state.library_root), record)
-                if access.accessible and not access.capabilities[
-                    "continue_from_current_boundary"
-                ]:
-                    deepening = prepare_action_deepening(
+                if access.accessible and not access.capabilities["continue_from_current_boundary"]:
+                    return _queue_pending_author_action(
                         selected_database,
                         checked_book,
-                        edition_id=payload.edition_id,
-                        action="CONTINUE",
+                        payload,
+                        action_type="CONTINUE",
                     )
-                    if deepening["status"] != "ACTION_CONTEXT_READY":
-                        deepening["handoff"] = create_initialization_handoff(
-                            selected_database,
-                            checked_book,
-                            edition_id=payload.edition_id,
-                            requested_stage="NOVEL_INITIALIZATION",
-                        )
-                        return {
-                            "workflow_status": "CONTEXT_HYDRATION_REQUIRED",
-                            "resume_action": "CONTINUE",
-                            "deepening": deepening,
-                        }
             return prepare_continuation(selected_database, checked_book, payload)
         except (HandoffWorkflowError, ValueError) as exc:
             return _error(exc)
@@ -2757,29 +3119,29 @@ def create_app(
             selected_database = (
                 _database_for_book(app, checked_book) if path_book_id is not None else database
             )
+            revision_readiness = None
+            if payload.context_chapter_id:
+                with selected_database.connect() as connection:
+                    revision_readiness = evaluate_revision_range(
+                        connection,
+                        book_id=checked_book,
+                        edition_id=str(payload.edition_id or "base"),
+                        target_chapter_ids=[payload.context_chapter_id],
+                    )
             if app.state.library_root is not None:
                 record = BookRegistry(BookLayout(app.state.library_root)).record(checked_book)
                 access = studio_access(BookLayout(app.state.library_root), record)
-                if access.accessible and not access.capabilities["rewrite_selected_chapter"]:
-                    deepening = prepare_action_deepening(
+                if access.accessible and (
+                    not access.capabilities["rewrite_selected_chapter"]
+                    or revision_readiness is None
+                    or not revision_readiness.ready
+                ):
+                    return _queue_pending_author_action(
                         selected_database,
                         checked_book,
-                        edition_id=payload.edition_id,
-                        action="REWRITE",
-                        target_chapter_id=payload.context_chapter_id,
+                        payload,
+                        action_type="REWRITE",
                     )
-                    if deepening["status"] != "ACTION_CONTEXT_READY":
-                        deepening["handoff"] = create_initialization_handoff(
-                            selected_database,
-                            checked_book,
-                            edition_id=payload.edition_id,
-                            requested_stage="NOVEL_INITIALIZATION",
-                        )
-                        return {
-                            "workflow_status": "CONTEXT_HYDRATION_REQUIRED",
-                            "resume_action": "REWRITE",
-                            "deepening": deepening,
-                        }
             return prepare_revision(selected_database, checked_book, payload)
         except (HandoffWorkflowError, ValueError) as exc:
             return _error(exc)

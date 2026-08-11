@@ -27,18 +27,25 @@ Extraction 或 Story Atlas 初始化。
 - 恰好三个结构上不同的 Story Foundation；每个都含阅读承诺、主角、目标、主冲突、世界
   机制、成长循环、长期可能性、风险以及与 premise 的关系。
 - 给出主角目标、冲突、代价与成长，明确世界规则、人物和势力。
-- 恰好三条未来路线，给出推荐路线和理由；三条路线是同一本书的可能方向，不创建 Book 或
-  Edition。
+- 每项基础设定必须标记 `CORE`、`PREFERENCE` 或 `OPEN`；不得把开放问题伪装成已确认事实。
+- 直接提供 `worldbuilding / characters / plot / style / narrative / dialogue / pacing /
+  themes / continuity` 九维 `book_profile_draft`。每维都必须包含摘要、核心承诺、偏好、开放问题
+  与风险，不能用同一段通用模板机械填充九维。
+- 恰好三条未来路线，给出推荐路线和理由；每条路线还要给出 commitments 与
+  open_alternatives。三条路线是同一本书的可能方向，不创建 Book 或 Edition。
 - 给出第一阶段目标和 SHORT/MID/LONG Rolling Planning。LONG 只描述方向与可能性，不得写
   固定结局或逐章 FAR 大纲。
 - 恰好三个结构上不同的第一章候选；每个都含开场情境、hook、本章目标、关键选择、冲突、
   主角行动、代价、不可逆改变、章末转折和差异说明。
 - 明确开放问题、风险和需要避免的陈词滥调；未知保持开放，不猜成事实。
+- 可以提出 `hidden_truth_candidates`，但它们只能是幕后候选，不能成为 Author Truth。
+- 首章候选只描述主动选择、代价、不可逆改变、后续空间和风险；本任务不运行评分引擎，
+  不得填写占位分数。
 
 ## 硬边界
 
 不得修改 `book/`，不得建立 Source Manifest、假章节、Chapter 0、Canon Event、Canon Commit、
-Edition、Author Truth、Book Profile 或 Planning Aggregate。不得替作者执行“确认基础框架”。
+Edition、Author Truth、Book Profile 或 Planning Aggregate。不得替作者执行“确认并开始写作”。
 
 ## 完成
 
@@ -50,6 +57,6 @@ Edition、Author Truth、Book Profile 或 Planning Aggregate。不得替作者�
 - `candidate_ids` 与三个 Foundation 的 `candidate_id` 顺序完全一致
 - `artifact_paths` 包含 `artifacts/story_foundation/proposal.json`
 - `canon_committed=false`、`edition_activated=false`
-- `next_action` 明确为作者审阅、编辑并显式确认基础框架
+- `next_action` 明确为作者审阅、编辑并在影响摘要后确认开始写作
 
 最后按 Local File Handoff 协议写状态和事件并进入 `COMPLETED`。

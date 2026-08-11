@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>整理历史项目 · Novel Studio</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v={{ asset_version }}">
+</head>
+<body class="library-body">
+  <header class="library-topbar"><a class="wb-brand" href="/library">Novel Studio</a><nav><a href="/library">返回书库</a></nav></header>
+  <main class="library-shell" data-unclassified-page>
+    <header class="library-hero"><div><p class="wb-kicker">历史项目整理</p><h1>这些项目要放在哪里？</h1><p>分类只改变它在书库中的位置，不修改正文、版本或正式内容。</p></div></header>
+    <section class="library-section"><div class="library-grid">
+      {% for item in projects %}<article class="library-book-card" data-unclassified-book="{{ item.book_id }}"><div class="library-card-main"><div class="library-book-cover"><span>{{ item.title[:1] }}</span></div><div class="library-book-copy"><h3>{{ item.title }}</h3><p>{{ item.book_id }}</p></div></div><footer><label>归类为<select data-book-kind><option value="AUTHOR">作者创作项目</option><option value="TEST">测试项目</option><option value="DEMO">演示项目</option><option value="BENCHMARK">基准项目</option></select></label><button class="button primary" type="button" data-save-classification>保存分类</button></footer></article>{% else %}<p>没有待分类项目。</p>{% endfor %}
+    </div></section>
+  </main>
+  <script src="{{ url_for('static', path='library_catalog.js') }}?v={{ asset_version }}" defer></script>
+</body>
+</html>

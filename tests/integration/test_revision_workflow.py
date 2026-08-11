@@ -7,7 +7,13 @@ import pytest
 
 from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
-from novel_authoring.edition import activate_edition, create_edition
+from novel_authoring.edition import (
+    EditionPurpose,
+    OfficialRole,
+    activate_edition,
+    create_edition,
+    get_edition,
+)
 from novel_authoring.ingest.service import ingest_book
 from novel_authoring.revision import (
     RevisionSpec,
@@ -127,6 +133,29 @@ def test_revision_spec_rejects_unknown_fields() -> None:
     value["unknown"] = True
     with pytest.raises(ValueError):
         RevisionSpec.model_validate(value)
+
+
+def test_edition_purpose_is_separate_from_lifecycle(tmp_path: Path) -> None:
+    database, _ = _setup(tmp_path)
+    base = get_edition(database, "revision-book", "base")
+    revision = get_edition(database, "revision-book", "edition-r1")
+    alternate = create_edition(
+        database,
+        "revision-book",
+        "alternate-r1",
+        "第二章备选路线",
+        edition_purpose=EditionPurpose.ALTERNATE_ROUTE,
+        fork_chapter_ordinal=2,
+        created_by_action="ALTERNATE_ROUTE",
+    )
+
+    assert base.edition_purpose is EditionPurpose.SOURCE_BASE
+    assert base.official_role is OfficialRole.CURRENT
+    assert revision.edition_purpose is EditionPurpose.AUTHOR_REVISION
+    assert revision.official_role is OfficialRole.CANDIDATE
+    assert alternate.edition_purpose is EditionPurpose.ALTERNATE_ROUTE
+    assert alternate.official_role is OfficialRole.ALTERNATE
+    assert alternate.fork_chapter_ordinal == 2
 
 
 def test_revision_workflow_approval_then_separate_activation(tmp_path: Path) -> None:

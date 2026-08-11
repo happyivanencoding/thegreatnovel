@@ -214,6 +214,21 @@ library/<book_id>/
 
 改写流水线为：`RevisionSpec → Impact Packet（规则扫描 + Codex 语义审计）→ Revision Plan/Units → REVISION_DRAFT → 十项改写校验 + 既有十项审计 → 作者批准 → chapter_variants/revision commit/snapshot`。批准事务失败会回滚数据库和本次创建的文件；`批准改写版本` 只提交目标版本，`启用改写版本` 才切换 books.active_edition_id，二者不合并。
 
+## 渐进初始化与作者动作恢复
+
+已有小说初始化按 `SOURCE_STRUCTURE → CONTINUITY_INDEX → LITERARY_PROFILE →
+CURRENT_BOUNDARY_DEEP` 四层组织。SOURCE_STRUCTURE 始终覆盖全书；BALANCED 为每章生成独立、
+有证据边界的 `ChapterContinuityDelta`，文学深分析只覆盖代表章节；FULL 才要求全章文学深分析
+和完整全局综合。调度先处理当前续写边界，再处理依赖、开篇、代表章节和其余历史。
+
+章节层 `ChapterAnalysisRecord` 按 Edition、章节、分析层和来源版本复用，所以 Arc 重划不会迫使
+系统重做已经完成的章节分析。定向补齐按人物、物品/能力、线程、变化信号、最近出现和因果
+距离排序，每次只创建一个有预算的批次。
+
+续写或改写触发补齐时，`Pending Author Action` 保存原表单和目标。任务中心只显示一个作者
+Activity；补齐完成后服务自动恢复原请求并创建 Continuation/Revision AI 任务。页面通过局部
+轮询更新任务和能力，不整页刷新，也不清空作者正在填写的表单。
+
 ## V1 有意不做
 
 云数据库、向量数据库、LangChain、递归多代理、运行时 API Key、自动发布、无批准 retcon，以及对真实读者留存的伪精确预测仍不在范围内。Phase E 仅增加绑定本机的 FastAPI Author Workbench；Phase F 通过本地文件交接让 Windows Codex 桌面端手动执行，Web 不启动模型进程。

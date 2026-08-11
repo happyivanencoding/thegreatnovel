@@ -7,7 +7,12 @@ from urllib.parse import urlencode
 
 from novel_authoring.author_control.service import author_control_view
 from novel_authoring.author_control.source_state import source_state_coverage_summary
-from novel_authoring.edition import edition_chapters, list_editions, resolve_edition_id
+from novel_authoring.edition import (
+    author_edition_groups,
+    edition_chapters,
+    list_editions,
+    resolve_edition_id,
+)
 from novel_authoring.initialization.metrics import metric_bootstrap_status
 from novel_authoring.initialization.service import latest_initialization
 from novel_authoring.metrics.registry import load_registry
@@ -44,10 +49,10 @@ def home_context(database: Any, book_id: str) -> dict[str, Any]:
         book = _book_row(connection, book_id)
         chapters = edition_chapters(connection, book_id, edition_id)
         books = [
-            dict(row)
-            for row in connection.execute("SELECT * FROM books ORDER BY title, book_id")
+            dict(row) for row in connection.execute("SELECT * FROM books ORDER BY title, book_id")
         ]
-    editions = [edition.model_dump(mode="json") for edition in list_editions(database, book_id)]
+    edition_models = list_editions(database, book_id)
+    editions = [edition.model_dump(mode="json") for edition in edition_models]
     return {
         "book": book,
         "books": books,
@@ -213,12 +218,8 @@ def chapter_context(
         "metric_metadata": metric_metadata,
         "metric_bootstrap": metric_metadata["bootstrap"],
         "missing_count": missing_count,
-        "previous_chapter": None
-        if chapter_index == 0
-        else chapters[chapter_index - 1],
-        "next_chapter": None
-        if chapter_index == len(chapters) - 1
-        else chapters[chapter_index + 1],
+        "previous_chapter": None if chapter_index == 0 else chapters[chapter_index - 1],
+        "next_chapter": None if chapter_index == len(chapters) - 1 else chapters[chapter_index + 1],
         "source_info": {
             "relative_path": chapter.get("relative_path", ""),
             "source_span_id": chapter.get("source_span_id"),
@@ -247,9 +248,7 @@ def metric_history(
             item["disputed_components"] = json.loads(
                 str(item.get("disputed_components_json") or "[]")
             )
-            item["stale_components"] = json.loads(
-                str(item.get("stale_components_json") or "[]")
-            )
+            item["stale_components"] = json.loads(str(item.get("stale_components_json") or "[]"))
             result.append(item)
         return result
 
@@ -361,8 +360,7 @@ def dashboard_context(database: Any, book_id: str) -> dict[str, Any]:
             dict(row)
             for row in overdue_promises
             if row["target_max_age"] is not None
-            and latest_ordinal - int(row["last_advanced_ordinal"] or 0)
-            > int(row["target_max_age"])
+            and latest_ordinal - int(row["last_advanced_ordinal"] or 0) > int(row["target_max_age"])
         ]
     rhythm: dict[str, Any] = {}
     if rhythm_row is not None:
@@ -602,12 +600,15 @@ def _activity_target(
     handoff_type = str(item.get("handoff_type") or "").upper()
     hydration = task_file.get("hydration")
     hydration = hydration if isinstance(hydration, dict) else {}
-    chapter_id = str(
-        task_file.get("context_chapter_id")
-        or hydration.get("chapter_id")
-        or item.get("context_chapter_id")
-        or ""
-    ) or None
+    chapter_id = (
+        str(
+            task_file.get("context_chapter_id")
+            or hydration.get("chapter_id")
+            or item.get("context_chapter_id")
+            or ""
+        )
+        or None
+    )
     chapter = chapters_by_id.get(chapter_id or "")
     context_ordinal = None if chapter is None else int(chapter["ordinal"])
     if context_ordinal is None and hydration.get("chapter_ordinal") is not None:
@@ -661,9 +662,7 @@ def _activity_view(
     handoff_type = str(item.get("handoff_type") or "").upper()
     requested_stage = str(item.get("requested_stage") or "").upper()
     status = str(item.get("status") or "DRAFT").upper()
-    chapter_id, target_ordinal = _activity_target(
-        item, task_file, chapters_by_id, current_chapter
-    )
+    chapter_id, target_ordinal = _activity_target(item, task_file, chapters_by_id, current_chapter)
     action: str | None = None
     mode: str | None = "home"
     node = "overview"
@@ -686,7 +685,9 @@ def _activity_view(
         title = (
             f"第{target_ordinal}章规划候选"
             if requested_stage == "PLAN_ONLY" and target_ordinal
-            else f"第{target_ordinal}章续写" if target_ordinal else "下一章续写"
+            else f"第{target_ordinal}章续写"
+            if target_ordinal
+            else "下一章续写"
         )
     elif handoff_type == "REVISION":
         title = f"第{target_ordinal}章改写" if target_ordinal else "本章改写"
@@ -762,9 +763,7 @@ def _hydration_activity(
     current_chapter: dict[str, Any] | None,
     coverage: dict[str, int | float],
 ) -> dict[str, Any] | None:
-    hydration = [
-        item for item in activities if item["handoff_type"] == "SOURCE_STATE_HYDRATION"
-    ]
+    hydration = [item for item in activities if item["handoff_type"] == "SOURCE_STATE_HYDRATION"]
     if not hydration:
         return None
     latest = hydration[0]
@@ -781,9 +780,7 @@ def _hydration_activity(
     else:
         status = str(latest["status"])
     progress = round(analyzed * 100 / total) if total else 0
-    chapter_id = (
-        None if current_chapter is None else str(current_chapter["chapter_id"])
-    )
+    chapter_id = None if current_chapter is None else str(current_chapter["chapter_id"])
     return {
         **latest,
         "activity_id": f"source-state-hydration:{edition_id}",
@@ -842,9 +839,7 @@ def activity_center_view(
         current_chapter=current_chapter,
         coverage=coverage,
     )
-    activities = [
-        item for item in activities if item["handoff_type"] != "SOURCE_STATE_HYDRATION"
-    ]
+    activities = [item for item in activities if item["handoff_type"] != "SOURCE_STATE_HYDRATION"]
     if hydration is not None:
         activities.append(hydration)
     activities.sort(key=lambda item: str(item["created_at_label"]), reverse=True)
@@ -883,9 +878,7 @@ def _workflow_portfolio(author_control: dict[str, Any]) -> list[dict[str, Any]]:
     for horizon in ("SHORT", "MID", "LONG"):
         rows = portfolio.get(horizon) or []
         open_count = sum(
-            1
-            for row in rows
-            if str(row.get("lifecycle_status")) not in {"DONE", "CANCELLED"}
+            1 for row in rows if str(row.get("lifecycle_status")) not in {"DONE", "CANCELLED"}
         )
         active_count = sum(1 for row in rows if str(row.get("lifecycle_status")) == "ACTIVE")
         result.append(
@@ -919,10 +912,10 @@ def workflow_context(
         book = _book_row(connection, book_id)
         chapters = edition_chapters(connection, book_id, selected_edition_id)
         library_books = [
-            dict(row)
-            for row in connection.execute("SELECT * FROM books ORDER BY title, book_id")
+            dict(row) for row in connection.execute("SELECT * FROM books ORDER BY title, book_id")
         ]
-    editions = [edition.model_dump(mode="json") for edition in list_editions(database, book_id)]
+    edition_models = list_editions(database, book_id)
+    editions = [edition.model_dump(mode="json") for edition in edition_models]
     editions_by_id = {str(item["edition_id"]): item for item in editions}
     selected_chapter = next(
         (item for item in chapters if chapter_id and str(item["chapter_id"]) == chapter_id),
@@ -950,9 +943,7 @@ def workflow_context(
         if str(task.get("task_type") or "").upper() == "AUTHOR_TASK"
     ]
     narrative_portfolio = {
-        horizon: [
-            task for task in narrative_tasks if str(task.get("horizon") or "") == horizon
-        ]
+        horizon: [task for task in narrative_tasks if str(task.get("horizon") or "") == horizon]
         for horizon in ("SHORT", "MID", "LONG")
     }
     activity_center = activity_center_view(
@@ -974,6 +965,7 @@ def workflow_context(
         "edition_id": selected_edition_id,
         "edition": selected_edition,
         "editions": editions,
+        "edition_groups": author_edition_groups(edition_models),
         "handoffs": handoffs,
         "workflow_tasks": workflow_tasks,
         "activity_center": activity_center,

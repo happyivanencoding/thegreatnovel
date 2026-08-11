@@ -79,7 +79,7 @@ def test_empty_semantic_features_are_not_counted_as_chapter_coverage(tmp_path: P
     )
 
     assert refreshed["readiness"]["source_mapping_coverage"] == 1.0
-    assert refreshed["readiness"]["arc_output_coverage"] == 1.0
+    assert refreshed["readiness"]["arc_output_coverage"] == 0.0
     assert refreshed["readiness"]["chapter_semantic_feature_coverage"] == 0.0
     assert refreshed["readiness"]["metric_bootstrap_status"] == "NOT_READY"
     assert refreshed["readiness"]["status"] == "BLOCKED"

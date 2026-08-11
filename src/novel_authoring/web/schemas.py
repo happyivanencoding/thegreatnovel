@@ -59,6 +59,14 @@ class HandoffRequest(BaseModel):
     innovation_level: InnovationLevel | None = None
     innovation_focus: list[InnovationFocus] | None = None
     save_as_book_default: bool = False
+    revision_mode: Literal["AUTHOR_REVISION", "ALTERNATE_ROUTE"] | None = None
+    edition_display_name: str | None = Field(default=None, max_length=120)
+
+
+class EditionActivationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    confirmed: bool
 
 
 class RetractRequest(BaseModel):
@@ -93,6 +101,12 @@ class OriginalProposalImportRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     handoff_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+
+
+class OriginalProposalVersionResolutionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    action: Literal["REPLACE_CURRENT", "KEEP_CURRENT", "REJECT"]
 
 
 class OriginalCandidateSelectionRequest(BaseModel):
@@ -262,10 +276,7 @@ class HiddenItemRequest(BaseModel):
 
     @model_validator(mode="after")
     def valid_reveal_window(self) -> HiddenItemRequest:
-        if (
-            self.target_chapter_min is None
-            and self.target_chapter_max is not None
-        ):
+        if self.target_chapter_min is None and self.target_chapter_max is not None:
             raise ValueError("填写揭示窗口结束章时必须同时填写起始章")
         if (
             self.target_chapter_min is not None

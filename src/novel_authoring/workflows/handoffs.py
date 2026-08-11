@@ -4,6 +4,7 @@ import json
 import secrets
 import shutil
 import sqlite3
+from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, Literal, cast
@@ -163,11 +164,15 @@ class WorkflowHandoffResult(BaseModel):
             if not self.artifact_paths:
                 raise ValueError("IMPACT_AND_PLAN 完成结果必须包含 artifact_paths")
         atlas_type = self.handoff_type.upper()
-        if atlas_type in {
-            HandoffType.STORY_ATLAS_BOOTSTRAP.value,
-            HandoffType.STORY_ATLAS_REFRESH.value,
-            HandoffType.STORY_ATLAS_RENDER.value,
-        } and not self.artifact_paths:
+        if (
+            atlas_type
+            in {
+                HandoffType.STORY_ATLAS_BOOTSTRAP.value,
+                HandoffType.STORY_ATLAS_REFRESH.value,
+                HandoffType.STORY_ATLAS_RENDER.value,
+            }
+            and not self.artifact_paths
+        ):
             raise ValueError(f"{atlas_type} 完成结果必须包含 Atlas artifact_paths")
         if atlas_type == HandoffType.BATCH_CONTINUATION.value and not self.batch_id:
             raise ValueError("BATCH_CONTINUATION 完成结果必须包含 batch_id")
@@ -347,9 +352,7 @@ def resolve_instruction_path(task_directory: Path, prompt_path: str | None) -> P
     return None
 
 
-def _author_directives_hash(
-    connection: sqlite3.Connection, book_id: str, edition_id: str
-) -> str:
+def _author_directives_hash(connection: sqlite3.Connection, book_id: str, edition_id: str) -> str:
     rows = connection.execute(
         "SELECT directive_id, directive_type, content, mode, status, priority "
         "FROM author_directives WHERE book_id=? AND edition_id=? "
@@ -494,9 +497,7 @@ def create_handoff(
             selected_innovation = innovation_control
             innovation_source = requested_innovation_source or "operation_override"
         else:
-            selected_innovation, innovation_source = resolve_innovation_control(
-                database, book_id
-            )
+            selected_innovation, innovation_source = resolve_innovation_control(database, book_id)
     if (
         initialization_handoff
         or distill_handoff
@@ -563,19 +564,22 @@ def create_handoff(
             (book_id, selected),
         ).fetchone()
     rhythm_snapshot_id = None if rhythm_row is None else str(rhythm_row["snapshot_id"])
-    rhythm_required = handoff_type in {
-        HandoffType.CONTINUATION,
-        HandoffType.REVISION,
-        HandoffType.BATCH_CONTINUATION,
-    } and not original_genesis
+    rhythm_required = (
+        handoff_type
+        in {
+            HandoffType.CONTINUATION,
+            HandoffType.REVISION,
+            HandoffType.BATCH_CONTINUATION,
+        }
+        and not original_genesis
+    )
     if rhythm_snapshot_id is None and rhythm_required:
         raise HandoffWorkflowError("当前 edition 没有 Rhythm Snapshot，不能冻结 handoff")
     current_atlas = latest_atlas(database, book_id, selected)
     if atlas_id is not None:
         with database.connect() as connection:
             current_atlas = connection.execute(
-                "SELECT * FROM story_atlases WHERE atlas_id=? AND book_id=? "
-                "AND edition_id=?",
+                "SELECT * FROM story_atlases WHERE atlas_id=? AND book_id=? AND edition_id=?",
                 (atlas_id, book_id, selected),
             ).fetchone()
         current_atlas = None if current_atlas is None else dict(current_atlas)
@@ -594,19 +598,13 @@ def create_handoff(
         ):
             raise HandoffWorkflowError("Batch handoff 的 Atlas 必须与 Batch 冻结锚点一致")
         batch_plan_path = (
-            BookLayout(workspace_root.parent)
-            .for_book(book_id)
-            .edition(selected)
-            .batches
-            / batch_id
-            / "batch_plan.json"
-        ) if (workspace_root / "book.yaml").is_file() else (
-            workspace_root
-            / "editions"
-            / selected
-            / "batches"
-            / batch_id
-            / "batch_plan.json"
+            (
+                BookLayout(workspace_root.parent).for_book(book_id).edition(selected).batches
+                / batch_id
+                / "batch_plan.json"
+            )
+            if (workspace_root / "book.yaml").is_file()
+            else (workspace_root / "editions" / selected / "batches" / batch_id / "batch_plan.json")
         )
         if not batch_plan_path.is_file():
             raise HandoffWorkflowError("Batch plan 文件不存在")
@@ -620,9 +618,7 @@ def create_handoff(
         batch_plan_hash = None
     atlas_version = None if current_atlas is None else int(current_atlas["atlas_version"])
     atlas_manifest_hash = (
-        None
-        if current_atlas is None
-        else str(current_atlas["artifact_manifest_sha256"] or "")
+        None if current_atlas is None else str(current_atlas["artifact_manifest_sha256"] or "")
     )
     horizon_hash = None if current_atlas is None else str(current_atlas["horizon_hash"] or "")
     readiness_status = None if current_atlas is None else str(current_atlas["readiness_status"])
@@ -695,14 +691,10 @@ def create_handoff(
     if canonical_layout and not distill_handoff:
         from novel_authoring.distill.service import latest_distill_reference
 
-        distill_reference = latest_distill_reference(
-            edition_paths, scope="SELF_BOOK"
-        )
+        distill_reference = latest_distill_reference(edition_paths, scope="SELF_BOOK")
     profile_context: dict[str, Any] | None = None
     if profile_handoff:
-        effective_profile = load_effective_book_profile(
-            database, book_id, selected
-        )
+        effective_profile = load_effective_book_profile(database, book_id, selected)
         with database.connect() as profile_connection:
             chapters = edition_chapters(profile_connection, book_id, selected)
             version_row = profile_connection.execute(
@@ -710,9 +702,7 @@ def create_handoff(
                 "WHERE book_id=? AND edition_id=? ORDER BY version_number DESC LIMIT 1",
                 (book_id, selected),
             ).fetchone()
-        last_profile_at = (
-            None if version_row is None else str(version_row["created_at"])
-        )
+        last_profile_at = None if version_row is None else str(version_row["created_at"])
 
         def chapter_snapshot(item: dict[str, Any] | sqlite3.Row) -> dict[str, Any]:
             chapter = dict(item)
@@ -772,9 +762,7 @@ def create_handoff(
         "batch_id": batch_id,
         "batch_plan_hash": batch_plan_hash,
         "innovation_control": (
-            None
-            if selected_innovation is None
-            else selected_innovation.model_dump(mode="json")
+            None if selected_innovation is None else selected_innovation.model_dump(mode="json")
         ),
         "innovation_source": innovation_source or None,
         "context_chapter_id": context_chapter_id,
@@ -860,9 +848,7 @@ def create_handoff(
                     "current_profile_version_id": (
                         None
                         if profile_context is None
-                        else profile_context["effective_profile"][
-                            "profile_version_id"
-                        ]
+                        else profile_context["effective_profile"]["profile_version_id"]
                     ),
                     "current_profile_version_number": (
                         0
@@ -1005,8 +991,10 @@ def create_handoff(
     elif original_bootstrap_handoff:
         atlas_instruction = (
             "读取 original_request.json，从 premise 建立纯 Proposal：恰好三个标题、三个不同的 "
-            "Story Foundation、三条未来路线和三个首章候选；给出推荐与理由、世界规则、"
-            "人物/势力、SHORT/MID/LONG Rolling Planning、开放问题、风险与避免陈词滥调。"
+            "Story Foundation、三条未来路线和三个首章候选；逐项标记 CORE/PREFERENCE/OPEN，"
+            "直接提供九维 book_profile_draft，并为路线提供 commitments/open_alternatives；"
+            "给出推荐与理由、世界规则、人物/势力、近期/中期/长期方向、开放问题、幕后真相"
+            "候选、风险与避免陈词滥调。不得填写没有经过评分引擎计算的占位分数。"
             "所有内容保持 information_status=PROPOSAL，只写 "
             "artifacts/story_foundation/proposal.json；不得创建章节、Canon、Edition 或固定结局。"
         )
@@ -1124,9 +1112,7 @@ def create_handoff(
     output_schema["x-stage-rules"] = {
         "PLAN_ONLY": {"required_non_empty": ["candidate_ids"]},
         "DRAFT_AND_VALIDATE": {"required_non_empty": ["draft_id"]},
-        "IMPACT_AND_PLAN": {
-            "required_non_empty": ["campaign_id", "artifact_paths"]
-        },
+        "IMPACT_AND_PLAN": {"required_non_empty": ["campaign_id", "artifact_paths"]},
         "ATLAS_BOOTSTRAP": {"required_non_empty": ["artifact_paths"]},
         "ATLAS_REFRESH": {"required_non_empty": ["artifact_paths"]},
         "WORLD_MODEL_REVIEW": {"required_non_empty": ["review_queue_ids"]},
@@ -1150,9 +1136,7 @@ def create_handoff(
                 "distill_skill_root",
             ]
         },
-        "ORIGINAL_BOOK_BOOTSTRAP": {
-            "required_non_empty": ["candidate_ids", "artifact_paths"]
-        },
+        "ORIGINAL_BOOK_BOOTSTRAP": {"required_non_empty": ["candidate_ids", "artifact_paths"]},
     }
     if hydration_handoff:
         output_schema = SourceStateHydrationResult.model_json_schema()
@@ -1648,11 +1632,10 @@ def _drift_reasons(
             task_payload = json.loads(task_path.read_text(encoding="utf-8"))
             profile_contract = dict(task_payload.get("profile_reanalysis") or {})
             current_profile = load_effective_book_profile(database, book_id, edition_id)
-            if (
-                current_profile.get("profile_version_id")
-                != profile_contract.get("current_profile_version_id")
-                or int(current_profile.get("version_number") or 0)
-                != int(profile_contract.get("current_profile_version_number") or 0)
+            if current_profile.get("profile_version_id") != profile_contract.get(
+                "current_profile_version_id"
+            ) or int(current_profile.get("version_number") or 0) != int(
+                profile_contract.get("current_profile_version_number") or 0
             ):
                 reasons.append("effective profile version changed")
         except (OSError, TypeError, ValueError, json.JSONDecodeError):
@@ -1732,9 +1715,7 @@ def _drift_reasons(
                 row["atlas_manifest_hash"]
             ):
                 reasons.append("Atlas manifest hash changed")
-            if row["horizon_hash"] and str(atlas["horizon_hash"] or "") != str(
-                row["horizon_hash"]
-            ):
+            if row["horizon_hash"] and str(atlas["horizon_hash"] or "") != str(row["horizon_hash"]):
                 reasons.append("Rolling Horizon hash changed")
             try:
                 validation = validate_atlas(
@@ -1765,15 +1746,11 @@ def _drift_reasons(
                     / str(row["batch_id"])
                     / "batch_plan.json"
                 )
-                if not plan_path.is_file() or sha256_file(plan_path) != str(
-                    row["batch_plan_hash"]
-                ):
+                if not plan_path.is_file() or sha256_file(plan_path) != str(row["batch_plan_hash"]):
                     reasons.append("Batch plan hash changed")
             if row["atlas_id"] and str(batch["atlas_id"] or "") != str(row["atlas_id"]):
                 reasons.append("Batch Atlas anchor changed")
-            if row["horizon_hash"] and str(batch["horizon_hash"] or "") != str(
-                row["horizon_hash"]
-            ):
+            if row["horizon_hash"] and str(batch["horizon_hash"] or "") != str(row["horizon_hash"]):
                 reasons.append("Batch Horizon anchor changed")
     return list(dict.fromkeys(reasons))
 
@@ -1819,8 +1796,7 @@ def claim_handoff(database: Database, handoff_id: str, claimed_by: str) -> dict[
                 "ok": True,
                 "mode": "ORIGINAL_CANON",
             }
-            if file_drift_reason is None
-            and is_original_book(database, str(row["book_id"]))
+            if file_drift_reason is None and is_original_book(database, str(row["book_id"]))
             else verify_sources(
                 row["book_id"], _book_workspace(database, str(row["book_id"])).parent
             )
@@ -1952,8 +1928,7 @@ def validate_handoff_result(
                         (expected["book_id"], *delta.source_span_ids),
                     ).fetchall()
                     found = {
-                        str(item["span_id"]): str(item["chapter_id"] or "")
-                        for item in span_rows
+                        str(item["span_id"]): str(item["chapter_id"] or "") for item in span_rows
                     }
                     if set(delta.source_span_ids) - set(found):
                         raise HandoffWorkflowError("hydration delta 引用了不存在的 source span")
@@ -1978,9 +1953,8 @@ def validate_handoff_result(
                 raise HandoffWorkflowError("Profile Reanalysis result handoff_id 不一致")
             if parsed_profile.handoff_type != HandoffType.PROFILE_REANALYSIS.value:
                 raise HandoffWorkflowError("Profile Reanalysis result handoff_type 不一致")
-            if (
-                parsed_profile.book_id != str(row["book_id"])
-                or parsed_profile.edition_id != str(row["edition_id"])
+            if parsed_profile.book_id != str(row["book_id"]) or parsed_profile.edition_id != str(
+                row["edition_id"]
             ):
                 raise HandoffWorkflowError("Profile Reanalysis result 越过冻结 scope")
             if require_completed_status:
@@ -2056,9 +2030,7 @@ def validate_handoff_result(
             )
             missing_fields = sorted(required_fields - set(result))
         if missing_fields:
-            raise HandoffWorkflowError(
-                f"result.json 缺少必填字段：{', '.join(missing_fields)}"
-            )
+            raise HandoffWorkflowError(f"result.json 缺少必填字段：{', '.join(missing_fields)}")
         try:
             parsed = WorkflowHandoffResult.model_validate(result)
         except Exception as exc:
@@ -2126,9 +2098,7 @@ def validate_result_file(database: Database, handoff_id: str) -> dict[str, Any]:
     if not result_path.is_file():
         raise HandoffWorkflowError("result.json 缺失")
     result = json.loads(result_path.read_text(encoding="utf-8"))
-    parsed = validate_handoff_result(
-        database, handoff_id, result, require_completed_status=True
-    )
+    parsed = validate_handoff_result(database, handoff_id, result, require_completed_status=True)
     return parsed.model_dump(mode="json")
 
 
@@ -2187,10 +2157,7 @@ def update_handoff_status(
     error_message: str | None = None,
 ) -> dict[str, Any]:
     validated_result: (
-        WorkflowHandoffResult
-        | SourceStateHydrationResult
-        | ProfileReanalysisResult
-        | None
+        WorkflowHandoffResult | SourceStateHydrationResult | ProfileReanalysisResult | None
     ) = None
     hydration_result: SourceStateHydrationResult | None = None
     profile_result: ProfileReanalysisResult | None = None
@@ -2230,8 +2197,7 @@ def update_handoff_status(
         else:
             try:
                 deltas = [
-                    SourceChapterStateDelta.model_validate(item)
-                    for item in hydration_result.deltas
+                    SourceChapterStateDelta.model_validate(item) for item in hydration_result.deltas
                 ]
                 stored = record_source_chapter_deltas(
                     database,
@@ -2250,9 +2216,7 @@ def update_handoff_status(
                     complete_source_state_hydration_task,
                 )
 
-                complete_source_state_hydration_task(
-                    database, handoff_id, result=result
-                )
+                complete_source_state_hydration_task(database, handoff_id, result=result)
             except (TypeError, ValueError, RuntimeError) as exc:
                 invalid_result_reason = f"SOURCE_STATE_IMPORT_FAILED: {exc}"
     if profile_result is not None and invalid_result_reason is None:
@@ -2263,15 +2227,11 @@ def update_handoff_status(
             if frozen is None or str(frozen["claim_token"] or "") != claim_token:
                 raise HandoffWorkflowError("claim_token 无效")
             if str(frozen["status"]) != HandoffStatus.RUNNING.value:
-                raise HandoffWorkflowError(
-                    "只有 RUNNING Profile Reanalysis handoff 可以导入结果"
-                )
+                raise HandoffWorkflowError("只有 RUNNING Profile Reanalysis handoff 可以导入结果")
             frozen_drift = _drift_reasons(database, connection, frozen)
         if not frozen_drift:
             try:
-                proposal = import_profile_reanalysis_result(
-                    database, handoff_id, profile_result
-                )
+                proposal = import_profile_reanalysis_result(database, handoff_id, profile_result)
                 result = dict(result or {})
                 result["profile_proposal_id"] = proposal["proposal_id"]
                 result["effective_profile_changed"] = False
@@ -2350,21 +2310,48 @@ def update_handoff_status(
         if invalid_result_reason is None and drift_reason is None:
             now = utc_now()
             completed = now if status == HandoffStatus.COMPLETED else None
+            current_status = str(row["status"])
+            started_value = now if status is HandoffStatus.RUNNING else None
+            active_seconds = float(row["active_processing_seconds"] or 0.0)
+            if (
+                current_status == HandoffStatus.RUNNING.value
+                and status is not HandoffStatus.RUNNING
+            ):
+                raw_started = row["task_running_started_at"] or row["started_at"]
+                if raw_started:
+                    started_at = datetime.fromisoformat(str(raw_started))
+                    stopped_at = datetime.fromisoformat(now)
+                    active_seconds += max(0.0, (stopped_at - started_at).total_seconds())
+            processed_chapters = 0
+            processed_characters = 0
+            if isinstance(result, dict):
+                processed_chapters = int(
+                    result.get("processed_chapter_count") or result.get("chapter_count") or 0
+                )
+                processed_characters = int(result.get("processed_char_count") or 0)
             connection.execute(
                 "UPDATE workflow_handoffs SET status=?, started_at=COALESCE(started_at, ?), "
                 "completed_at=COALESCE(?, completed_at), "
+                "task_running_started_at=CASE WHEN ? IS NOT NULL THEN ? "
+                "ELSE task_running_started_at END, "
+                "task_completed_at=COALESCE(?, task_completed_at), "
+                "active_processing_seconds=?, "
+                "processed_chapter_count=MAX(processed_chapter_count, ?), "
+                "processed_char_count=MAX(processed_char_count, ?), "
                 "error_message=?, result_json=?, result_validation_json=? WHERE handoff_id=?",
                 (
                     status.value,
-                    now
-                    if status in (HandoffStatus.RUNNING, HandoffStatus.WAITING_FOR_USER)
-                    else None,
+                    started_value,
                     completed,
+                    started_value,
+                    started_value,
+                    completed,
+                    active_seconds,
+                    processed_chapters,
+                    processed_characters,
                     error_message,
                     None if result is None else json_dumps(result),
-                    None
-                    if status != HandoffStatus.COMPLETED
-                    else json_dumps({"valid": True}),
+                    None if status != HandoffStatus.COMPLETED else json_dumps({"valid": True}),
                     handoff_id,
                 ),
             )

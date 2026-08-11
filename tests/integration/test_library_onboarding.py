@@ -37,19 +37,11 @@ def _mark_initialization_ready(database: Database, book_id: str) -> Path:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     manifest["state"] = "READY"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
-    (root / "entity_resolution" / "entity_resolution_map.json").write_text(
-        "{}", encoding="utf-8"
-    )
-    (root / "synthesis" / "current_world_model.md").write_text(
-        "# 当前世界模型\n", encoding="utf-8"
-    )
+    (root / "entity_resolution" / "entity_resolution_map.json").write_text("{}", encoding="utf-8")
+    (root / "synthesis" / "current_world_model.md").write_text("# 当前世界模型\n", encoding="utf-8")
     (root / "synthesis" / "graphs.json").write_text("{}", encoding="utf-8")
-    (root / "metrics" / "metric_bootstrap_manifest.json").write_text(
-        "{}", encoding="utf-8"
-    )
-    (root / "reports" / "readiness_report.md").write_text(
-        "# READY\n", encoding="utf-8"
-    )
+    (root / "metrics" / "metric_bootstrap_manifest.json").write_text("{}", encoding="utf-8")
+    (root / "reports" / "readiness_report.md").write_text("# READY\n", encoding="utf-8")
     arc_manifest = json.loads((root / "arc_manifest.json").read_text(encoding="utf-8"))
     for arc in arc_manifest["arcs"]:
         output = (
@@ -117,6 +109,35 @@ def test_discovery_is_read_only_and_uses_supported_top_level_sources(tmp_path: P
     assert [item.display_title for item in candidates].count("A") == 1
 
 
+def test_local_upload_never_overwrites_same_named_source(tmp_path: Path) -> None:
+    client, _library, discovery = _client(tmp_path)
+    headers = {"X-CSRF-Token": client.app.state.csrf_token}
+    first = client.post(
+        "/api/library/upload",
+        headers=headers,
+        data={"conflict_policy": "KEEP_BOTH", "renamed_filename": ""},
+        files={"files": ("小说.md", "第一份正文", "text/markdown")},
+    )
+    cancelled = client.post(
+        "/api/library/upload",
+        headers=headers,
+        data={"conflict_policy": "CANCEL", "renamed_filename": ""},
+        files={"files": ("小说.md", "第二份正文", "text/markdown")},
+    )
+    kept = client.post(
+        "/api/library/upload",
+        headers=headers,
+        data={"conflict_policy": "KEEP_BOTH", "renamed_filename": ""},
+        files={"files": ("小说.md", "第二份正文", "text/markdown")},
+    )
+
+    assert first.status_code == 200
+    assert cancelled.status_code == 409
+    assert kept.status_code == 200
+    assert (discovery / "小说.md").read_text(encoding="utf-8") == "第一份正文"
+    assert (discovery / "小说 (2).md").read_text(encoding="utf-8") == "第二份正文"
+
+
 def test_candidate_ingest_creates_existing_initialization_handoff_and_deduplicates(
     tmp_path: Path,
 ) -> None:
@@ -128,11 +149,17 @@ def test_candidate_ingest_creates_existing_initialization_handoff_and_deduplicat
     initial = client.get("/api/library/catalog").json()
     candidate = next(item for item in initial["entries"] if item["candidate_id"])
     assert not library.exists()
-    assert initial["counts"] == {"ready": 0, "running": 0, "pending": 1}
+    assert initial["counts"] == {
+        "needs_action": 0,
+        "preparing": 0,
+        "creative": 0,
+        "awaiting_import": 1,
+    }
     assert client.get(candidate["href"]).status_code == 200
-    assert client.post(
-        f"/api/library/candidates/{candidate['candidate_id']}/initialize"
-    ).status_code == 403
+    assert (
+        client.post(f"/api/library/candidates/{candidate['candidate_id']}/initialize").status_code
+        == 403
+    )
 
     response = client.post(
         f"/api/library/candidates/{candidate['candidate_id']}/initialize",
@@ -172,9 +199,7 @@ def test_candidate_ingest_creates_existing_initialization_handoff_and_deduplicat
     assert access["capabilities"]["browse_structure"] is True
     assert access["capabilities"]["plan_next"] is True
     assert access["capabilities"]["continue_from_current_boundary"] is False
-    limited_api = client.get(
-        f"/api/books/{result['book_id']}/editions/base/workbench"
-    )
+    limited_api = client.get(f"/api/books/{result['book_id']}/editions/base/workbench")
     assert limited_api.status_code == 200
 
 
@@ -194,9 +219,7 @@ def test_completed_handoff_without_core_artifacts_remains_blocked(tmp_path: Path
             (created["handoff_id"],),
         )
 
-    readiness = client.get(
-        f"/api/books/{created['book_id']}/studio-readiness"
-    ).json()
+    readiness = client.get(f"/api/books/{created['book_id']}/studio-readiness").json()
     assert readiness["ready"] is False
     assert readiness["status"] == "NEEDS_REPAIR"
     assert "核心关系图谱缺失" in readiness["missing_requirements"]
@@ -214,20 +237,18 @@ def test_valid_ready_contract_opens_full_studio_and_catalog_selector(tmp_path: P
     paths = BookLayout(library).for_book(created["book_id"])
     _mark_initialization_ready(Database(paths.database), created["book_id"])
 
-    readiness = client.get(
-        f"/api/books/{created['book_id']}/studio-readiness"
-    ).json()
+    readiness = client.get(f"/api/books/{created['book_id']}/studio-readiness").json()
     assert readiness["ready"] is True
     assert readiness["status"] == "READY"
     catalog = client.get("/api/library/catalog").json()
-    assert catalog["groups"]["ready"][0]["book_id"] == created["book_id"]
+    assert catalog["groups"]["needs_action"][0]["book_id"] == created["book_id"]
     page = client.get(created["workbench_url"])
     assert page.status_code == 200
-    assert 'data-wb-chapter-tree' in page.text
+    assert "data-wb-chapter-tree" in page.text
     assert "世界状态" in page.text
     assert "剧情规划" in page.text
     assert "全书画像" in page.text
-    assert 'data-book-selector' in page.text
+    assert "data-book-selector" in page.text
     assert "切换 session" not in page.text
 
 
@@ -240,17 +261,18 @@ def test_library_and_selector_share_catalog_and_poll_without_mutation(tmp_path: 
 
     assert "候选甲" in library_page
     assert "候选甲" in candidate_page
-    assert "快速了解" in candidate_page
-    assert "均衡准备" in candidate_page
-    assert "完整初始化" in candidate_page
+    assert "先了解这本书" in candidate_page
+    assert "尽快续写最新章节" in candidate_page
+    assert "做完整全书审查" in candidate_page
     assert catalog["entries"][0]["state_label"] == "待初始化"
-    assert "每 10 秒" in candidate_page
+    assert "页面局部检查进度" in candidate_page
     assert "data-current-book-state-label" in candidate_page
     assert "data-onboarding-activity-count>0</span>" in candidate_page
     script = client.get("/static/library_catalog.js").text
     assert "setInterval" in script
     assert "10000" in script
     assert "data-current-book-option-state-label" in script
-    assert "wb-book-state-ready" in script
+    assert "showReady" in script
+    assert "location.reload" not in script
     assert "data-onboarding-activity-count" in script
     assert not library.exists()
