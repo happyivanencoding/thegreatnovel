@@ -1,5 +1,7 @@
 # World State UX Refinement 验收报告
 
+> **2026-08-11 复审修订提示**：本报告自身 UX 验收项与两个当日缺陷无直接因果关系（验收样本未触发缺陷路径），但全站页面渲染路径曾被 readiness 崩溃 live blocker 波及，原隐含“通过”结论已按复审结果加注限定；详见文末“2026-08-11 复审修订”章节。**2026-08-11 证据回填后，波及限定已按证据范围解除（见文末“证据回填”与“最终结论”）。**
+
 ## Before UX problems
 
 改造前截图保存在 `benchmark/artifacts/world_state_ux_refinement/before/`。实际页面存在以下作者体验问题：
@@ -119,7 +121,7 @@
 ## Tests
 
 - `uv sync --python "C:\Users\jingx\anaconda3\python.exe" --extra dev --no-editable --reinstall-package novel-authoring-system`：通过。
-- `uv run --no-sync pytest -q`：196 passed。
+- `uv run --no-sync pytest -q`：196 passed。（本报告初次验收时的数字；2026-08-11 缺陷修复后全量回归为 **210 passed**，见复审章节）
 - 世界状态与 Truth/Reveal 聚焦测试：15 passed。
 - `uv run --no-sync ruff check src tests`：通过。
 - `uv run --no-sync mypy src`：148 个源文件无错误。
@@ -143,3 +145,68 @@
 - 分支：`小说续写_codex`。
 - 交付范围：世界状态投影、Workbench 模板/样式/交互、相关集成测试、本报告与本目录 14 张截图。
 - 提交与远端同步结果以最终交付消息和仓库历史为准。
+
+## 2026-08-11 复审修订
+
+### 复查结论：与当日两个缺陷的关系
+
+同日复审确认了两个真实缺陷（均有真实 HTTP 响应与 traceback 证据）：
+
+1. 缺陷 1（交接指令路径）：legacy migrate 导入书的 `NOVEL_INITIALIZATION` handoff `prompt_path` 缺 `input/` 段，`copy_instruction` 抛 `FileNotFoundError` → HTTP 400 `WORKFLOW_ERROR`（真实复现：`cable-survival-demo`）。**本报告验收不涉及初始化交接指令链路，无直接波及。**
+2. 缺陷 2（readiness 崩溃）：`library_catalog.py` 对字符串 readiness（`"BLOCKED"`）做 `dict()` 崩溃，导致所有 HTML 页面与 catalog API 400（真实复现：`book-6k-0lnr4da` 初始化写入后全页面 400）。
+
+**对本报告的波及评估**：
+
+- 初次验收当时，样本书 `cable-survival-blind-50` 为就绪书，书库中不存在字符串 readiness 书，缺陷 2 未被触发；14 张截图与 Browser acceptance 各项观察在当时真实成立，**逐项结果维持**。
+- 但世界状态页面与其他页面共享同一 Catalog/页面渲染路径：只要书库中存在一本初始化中（字符串 readiness）书，本报告验收的全部页面同样会 400。因此本报告隐含的“通过”结论需加注限定，不能视为无条件终验收。
+- 两缺陷均已在本会话修复并合入工作树，全量回归通过；真实浏览器端到端复验仍在补齐中。
+
+### 修订后结论
+
+~~**UX 验收项维持；整体结论加注限定：“修复已落地，自动测试证据充分；存在初始化中书的书库中的端到端渲染复验：进行中（待补）。”**~~（**已于 2026-08-11 证据回填后再次更新，见文末“最终结论”**）
+
+### 证据四分类（截至 2026-08-11，2026-08-11 证据回填后更新）
+
+**a) 自动测试证据（已有）**
+
+- 本报告初次验收时：`uv run --no-sync pytest -q` 196 passed；世界状态与 Truth/Reveal 聚焦测试 15 passed；ruff/mypy/compileall/node --check/web doctor 均通过。
+- 缺陷修复后：新增回归 `uv run --no-sync pytest -q tests/integration/test_handoff_instruction_reliability.py` **14 passed**（含字符串 readiness 不崩溃且页面 200）；全量回归 **210 passed**；各质量门禁均通过。
+- 局限：进程内/TestClient 级验证，不覆盖真实浏览器行为。
+
+**b) 真实浏览器证据（初次验收已有；2026-08-11 缺陷波及面的共享渲染路径复验已回填，PASS）**
+
+- 已有：`artifacts/world_state_ux_refinement/` 下 before/after 截图共 14 张（见 Screenshot index）与真实书第 50 章浏览器操作记录；截图使用只读直连 SQLite 的可视化 harness，不改变目录状态，已在报告中如实标注。
+- 2026-08-11 回填（PASS，截图目录 `artifacts/acceptance-browser/20260811-init-handoff/`，step1–step6 共 7 张，与 Library Onboarding 报告 L-3 同一证据源）：在真实书库（含初始化中书与字符串 readiness 存量书）中，Library 页、任务中心与指令复制链路端到端正常渲染、无 400（GET instruction 200、content-length=1083，剪贴板 723 字符与服务端 `body.instruction` 逐字相同，含 `$process-novel-handoff`/`$initialize-existing-novel`；静态资源全部 `?v=3.3.0`）。
+- 如实限定：上述回填截图覆盖的是与本报告共享的 Catalog/页面渲染路径（Library 页、任务中心）；本报告世界状态功能页自身在存在初始化中书时的直接截图未在本轮单独采集，其渲染正确性由共享路径端到端证据与自动测试（字符串 readiness 下页面 200 回归用例）联合支撑。
+
+**c) 真实语义执行证据（本报告不依赖；同日初始化链路证据已回填，执行主体限定如实标注）**
+
+- 本报告验收基于既有 Source State 只读投影，自身不涉及 Codex 执行。
+- 2026-08-11 同日初始化链路回填（与 Library Onboarding 报告 L-2 同一证据源）：`handoff_c3582f9ea417a15da6c7d45b` 被真实领取处理，按 skill 完整执行 Atlas-first 初始化流水线至严格 READY（status=COMPLETED、readiness=READY、canon_committed=false、edition_activated=false；catalog API 最终 book-qombhi5tza state=READY、studio_ready=true）。执行主体为开发代理在 Codex 桌面端合同下按 skill 执行，非作者手工操作的 Codex 桌面端会话，**不得称为“作者侧 Codex 桌面端执行”**。
+
+**d) 合同 fixture 证据（间接，明确局限）**
+
+- 本报告仅使用一次性临时数据库样本（截图 02、09）验证势力正样本，不属于初始化合同 fixture；同日 Library Onboarding 报告的 READY 验收所用合同 fixture 不传导为本报告证据。
+- 局限：fixture/临时样本只验证展示与契约，不得称为真实 Codex 初始化。
+
+**声明：不得把 fixture 称为真实 Codex 初始化。本次回填的真实语义执行虽非 fixture，但执行主体为开发代理（Codex 桌面端合同下按 skill 执行），不等同于作者侧 Codex 桌面端执行，二者如实区分。**
+
+### Blocker 清单与解除状态（2026-08-11 证据回填后更新）
+
+| ID | Blocker | 解除状态 | 证据出处 |
+|---|---|---|---|
+| W-1 | 存在初始化中（字符串 readiness）书时世界状态页面渲染的端到端复验 | **已按波及范围解除（2026-08-11）** | 证据 b)：`artifacts/acceptance-browser/20260811-init-handoff/` step1–step6，真实书库（含初始化中书与字符串 readiness 存量书）中共享 Catalog/页面渲染路径（Library 页、任务中心、指令复制链路）端到端 200、无崩溃；叠加自动测试中字符串 readiness 下页面 200 的回归用例。如实限定：世界状态功能页自身的直接截图未在本轮单独采集 |
+
+关联报告证据同步：L-2/S-3 对应的真实语义执行证据已于 2026-08-11 补齐（执行主体为开发代理，非作者手工 Codex 桌面端会话，如实标注）。
+
+### 证据回填（2026-08-11）
+
+本节在保留上方复审修订全部历史记录的前提下，回填新证据（详见“证据四分类”b/c 两节与上方解除状态表）：
+
+1. **真实浏览器端到端证据（PASS）**：截图目录 `artifacts/acceptance-browser/20260811-init-handoff/`（step1 至 step6 共 7 张），覆盖 W-1 波及面：真实书库（含初始化中书与字符串 readiness 存量书）中共享渲染路径端到端正常。
+2. **真实语义执行证据（非 fixture）**：`handoff_c3582f9ea417a15da6c7d45b` 完整执行 Atlas-first 初始化流水线至严格 READY（与 L-2/S-3 同一证据源）；本报告自身不依赖该项，仅同步记录。执行主体为开发代理在 Codex 桌面端合同下按 skill 执行，不得称为“作者侧 Codex 桌面端执行”。
+3. **存量修复佐证**：`cable-survival-demo` 失效 `prompt_path` 行经 `copy_instruction` 回退读取成功并自动回写 DB（instruction_available=true）。
+
+### 最终结论（2026-08-11 证据回填后，按波及评估）
+
+**UX 验收项维持通过；缺陷 2 波及的共享 Catalog/页面渲染路径限定已解除**：真实书库（含初始化中书与字符串 readiness 存量书）端到端复验（PASS，`artifacts/acceptance-browser/20260811-init-handoff/`）确认 Library 页、任务中心与指令复制链路正常渲染，叠加字符串 readiness 页面 200 的自动回归用例，W-1 按波及范围解除。如实保留两点限定：（1）本报告世界状态功能页自身在存在初始化中书时的直接截图未在本轮单独采集；（2）本报告不声称“作者侧 Codex 桌面端执行”已完成（同日真实语义执行的执行主体为开发代理，非作者手工 Codex 桌面端会话），合同 fixture 仍不构成真实 Codex 初始化证据。

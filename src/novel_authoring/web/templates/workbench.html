@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>{{ book.title }} · 小说工作台</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=3.2.4">
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v={{ asset_version }}">
 </head>
 <body class="workbench-body">
   <header class="wb-topbar">
@@ -138,7 +138,7 @@
     </aside>
     {% include 'workbench_activity_center.html' with context %}
   </main>
-  <script src="{{ url_for('static', path='library_catalog.js') }}?v=3.2.4" defer></script>
-  <script src="{{ url_for('static', path='workbench.js') }}?v=3.2.4" defer></script>
+  <script src="{{ url_for('static', path='library_catalog.js') }}?v={{ asset_version }}" defer></script>
+  <script src="{{ url_for('static', path='workbench.js') }}?v={{ asset_version }}" defer></script>
 </body>
 </html>

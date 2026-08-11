@@ -12,8 +12,9 @@
         <h4>《{{ catalog_entry.title }}》初始化</h4>
         <p data-onboarding-activity-summary>{{ catalog_entry.author_summary }}</p>
         <small>由 Local File Handoff 交给 Codex 桌面端处理</small>
-        <div class="wb-activity-actions">{% if catalog_entry.handoff_id %}<button class="button compact" type="button" data-copy-handoff data-instruction-url="/api/books/{{ catalog_entry.book_id }}/editions/{{ catalog_entry.active_edition }}/handoffs/{{ catalog_entry.handoff_id }}/instruction">复制处理指令</button>{% endif %}<button class="button compact" type="button" data-refresh-library>查看进度</button></div>
-        <details class="workflow-developer-details"><summary>技术详情</summary><dl><dt>任务</dt><dd><code>{{ catalog_entry.handoff_id }}</code></dd><dt>状态</dt><dd><code>{{ catalog_entry.handoff_status }}</code></dd></dl></details>
+        {% if not catalog_entry.instruction_available %}<p class="wb-onboarding-warning">交接指令不可用：{{ catalog_entry.instruction_error or '交接指令文件缺失' }}</p>{% endif %}
+        <div class="wb-activity-actions">{% if catalog_entry.instruction_available %}<button class="button compact" type="button" data-copy-handoff data-instruction-url="/api/books/{{ catalog_entry.book_id }}/editions/{{ catalog_entry.active_edition }}/handoffs/{{ catalog_entry.handoff_id }}/instruction">复制处理指令</button>{% else %}<button class="button compact" type="button" data-prepare-initialization data-book-id="{{ catalog_entry.book_id }}" data-edition-id="{{ catalog_entry.active_edition }}">重新准备初始化</button>{% endif %}<button class="button compact" type="button" data-refresh-library>查看进度</button></div>
+        <details class="workflow-developer-details"><summary>技术详情</summary><dl><dt>任务</dt><dd><code>{{ catalog_entry.handoff_id }}</code></dd><dt>状态</dt><dd><code>{{ catalog_entry.handoff_status }}</code></dd><dt>交接指令</dt><dd><code>{% if catalog_entry.instruction_available %}可用{% else %}{{ catalog_entry.instruction_error or '不可用' }}{% endif %}</code></dd></dl></details>
       </article>
     </section>
     {% else %}

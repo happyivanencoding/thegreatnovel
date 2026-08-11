@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>{{ catalog_entry.title }} · 准备 Novel Studio</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=3.1.0">
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v={{ asset_version }}">
 </head>
 <body class="workbench-body">
   <header class="wb-topbar">
@@ -48,14 +48,14 @@
           <div class="wb-onboarding-actions" data-onboarding-actions>
             {% if catalog_entry.state == 'DISCOVERED' %}<button class="button primary" type="button" data-initialize-candidate data-candidate-id="{{ catalog_entry.candidate_id }}">准备初始化</button>
             {% elif catalog_entry.primary_action == 'PREPARE_INITIALIZATION' %}<button class="button primary" type="button" data-prepare-initialization data-book-id="{{ catalog_entry.book_id }}" data-edition-id="{{ catalog_entry.active_edition }}">{% if catalog_entry.state in ['FAILED','NEEDS_REPAIR'] %}重新准备初始化{% else %}准备初始化{% endif %}</button>{% endif %}
-            {% if catalog_entry.handoff_id %}<button class="button primary" type="button" data-copy-handoff data-instruction-url="/api/books/{{ catalog_entry.book_id }}/editions/{{ catalog_entry.active_edition }}/handoffs/{{ catalog_entry.handoff_id }}/instruction">复制给 Codex 的指令</button><button class="button" type="button" data-refresh-library>查看处理进度</button>{% endif %}
+            {% if catalog_entry.handoff_id %}{% if catalog_entry.instruction_available %}<button class="button primary" type="button" data-copy-handoff data-instruction-url="/api/books/{{ catalog_entry.book_id }}/editions/{{ catalog_entry.active_edition }}/handoffs/{{ catalog_entry.handoff_id }}/instruction">复制给 Codex 的指令</button>{% else %}<span class="wb-onboarding-warning">交接指令不可用</span><button class="button primary" type="button" data-prepare-initialization data-book-id="{{ catalog_entry.book_id }}" data-edition-id="{{ catalog_entry.active_edition }}">重新准备初始化</button>{% endif %}<button class="button" type="button" data-refresh-library>查看处理进度</button>{% endif %}
             <a class="button" href="/library">返回书库</a>
           </div>
           <p class="wb-command-feedback" data-onboarding-feedback aria-live="polite"></p>
         </article>
 
         {% if catalog_entry.missing_requirements %}<article class="wb-content-card wb-onboarding-missing" data-onboarding-missing><h2>还缺这些关键结果</h2><ul>{% for item in catalog_entry.missing_requirements %}<li>{{ item }}</li>{% endfor %}</ul></article>{% endif %}
-        <details class="wb-content-card wb-technical-details"><summary>技术详情</summary><dl class="wb-technical-list"><dt>书籍记录</dt><dd>{{ catalog_entry.book_id or '尚未建立' }}</dd><dt>初始化记录</dt><dd>{{ catalog_entry.initialization_id or '尚未建立' }}</dd><dt>初始化状态</dt><dd>{{ catalog_entry.initialization_status or '尚未开始' }}</dd><dt>任务状态</dt><dd>{{ catalog_entry.handoff_status or '尚未创建' }}</dd><dt>来源</dt><dd>{{ catalog_entry.source_path }}</dd></dl></details>
+        <details class="wb-content-card wb-technical-details"><summary>技术详情</summary><dl class="wb-technical-list"><dt>书籍记录</dt><dd>{{ catalog_entry.book_id or '尚未建立' }}</dd><dt>初始化记录</dt><dd>{{ catalog_entry.initialization_id or '尚未建立' }}</dd><dt>初始化状态</dt><dd>{{ catalog_entry.initialization_status or '尚未开始' }}</dd><dt>任务状态</dt><dd>{{ catalog_entry.handoff_status or '尚未创建' }}</dd><dt>交接指令</dt><dd>{% if catalog_entry.instruction_available %}可用{% elif catalog_entry.handoff_id %}{{ catalog_entry.instruction_error or '不可用' }}{% else %}交接任务尚未创建{% endif %}</dd><dt>来源</dt><dd>{{ catalog_entry.source_path }}</dd></dl></details>
       </div>
     </section>
     <div class="wb-resizer" data-resizer="right" role="separator" aria-label="调整右栏宽度"></div>
@@ -69,6 +69,6 @@
     </aside>
     {% include 'workbench_onboarding_activity_center.html' with context %}
   </main>
-  <script src="{{ url_for('static', path='library_catalog.js') }}?v=3.1.0" defer></script>
+  <script src="{{ url_for('static', path='library_catalog.js') }}?v={{ asset_version }}" defer></script>
 </body>
 </html>

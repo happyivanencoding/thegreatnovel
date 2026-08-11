@@ -15,6 +15,19 @@ from novel_authoring.metrics.segments import list_segments, rebuild_segments
 from novel_authoring.metrics.service import MetricsAssembler, ObservationResolver
 from novel_authoring.planning.innovation import load_book_innovation_control
 from novel_authoring.web.routes.jobs import list_handoffs
+from novel_authoring.workflows.handoffs import resolve_instruction_path
+
+
+def _instruction_availability(item: dict[str, Any]) -> tuple[bool, str | None]:
+    """Mirror the copy_instruction fallback order for activity-center views."""
+
+    task_directory = str(item.get("task_directory") or "")
+    if not task_directory:
+        return False, "交接任务目录缺失"
+    resolved = resolve_instruction_path(Path(task_directory), item.get("prompt_path"))
+    if resolved is None:
+        return False, "交接任务存在，但交接指令文件缺失。请重新准备初始化任务。"
+    return True, None
 
 
 def _book_row(connection: Any, book_id: str) -> dict[str, Any]:
@@ -691,6 +704,7 @@ def _activity_view(
     }.get(handoff_type, "后台能力正在为小说工作台准备结果。")
     handoff_id = str(item.get("handoff_id") or "")
     progress = _activity_progress(handoff_type, status)
+    instruction_available, instruction_error = _instruction_availability(item)
     open_target = _workbench_target(
         book_id,
         edition_id,
@@ -713,6 +727,8 @@ def _activity_view(
         "status_group": _activity_status_group(status),
         "progress": progress,
         "progress_label": f"{progress}%" if progress is not None else "按阶段显示",
+        "instruction_available": instruction_available,
+        "instruction_error": instruction_error,
         "created_at_label": _workflow_date(item.get("created_at")),
         "open_target": open_target,
         "next_action_label": {
@@ -732,6 +748,8 @@ def _activity_view(
             "status": status,
             "edition_id": item.get("edition_id"),
             "task_directory": item.get("task_directory"),
+            "instruction_available": instruction_available,
+            "instruction_error": instruction_error,
         },
     }
 

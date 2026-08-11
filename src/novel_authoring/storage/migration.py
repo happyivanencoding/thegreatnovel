@@ -527,9 +527,105 @@ def _rewrite_database_paths(database: Path, mappings: list[tuple[Path, Path]]) -
                         (replacement, value),
                     )
                     changed += cursor.rowcount
+        changed += _align_workflow_handoff_paths(connection, mappings)
         connection.commit()
     finally:
         connection.close()
+    return changed
+
+
+# File relocation rules of ``_import_handoff``: these handoff files move into
+# the canonical ``input/`` / ``output/`` segments of an operation directory.
+_HANDOFF_IMPORTED_INPUT_FILES = {
+    "prompt.md",
+    "task.json",
+    "output_schema.json",
+    "context_manifest.json",
+    "metric_context.json",
+}
+
+
+def _align_workflow_handoff_paths(
+    connection: sqlite3.Connection, mappings: list[tuple[Path, Path]]
+) -> int:
+    """Align workflow_handoffs path columns with the imported operation layout.
+
+    ``_import_handoff`` relocates handoff files into ``input/`` and
+    ``output/``, while a plain prefix rewrite leaves the DB columns pointing
+    at the old flat layout (e.g. ``<operation>/prompt.md``).  Any path column
+    that still references a known handoff file directly below the task
+    directory is rewritten to the canonical segment location.
+
+    Only rows whose ``task_directory`` lies below an operations target
+    produced by this migration's ``_path_mapping`` (i.e. genuinely relocated
+    by ``_import_handoff``) are rewritten; rows with any other provenance
+    keep their original values, so repeated runs stay idempotent.
+    """
+
+    tables = {
+        str(row[0])
+        for row in connection.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+        )
+    }
+    if "workflow_handoffs" not in tables:
+        return 0
+    columns = [
+        str(row[1])
+        for row in connection.execute('PRAGMA table_info("workflow_handoffs")')
+    ]
+    if "task_directory" not in columns:
+        return 0
+    path_columns = [
+        column
+        for column in columns
+        if column != "task_directory"
+        and any(token in column.casefold() for token in _PATH_COLUMN_TOKENS)
+    ]
+    if not path_columns:
+        return 0
+    # Only the ``editions/<edition>/handoffs -> editions/<edition>/operations``
+    # mapping entries relocate handoff files into input/output segments.
+    operation_prefixes = [
+        os.path.normcase(os.path.normpath(str(new)))
+        for old, new in mappings
+        if old.name == "handoffs" and new.name == "operations"
+    ]
+    select_columns = ["handoff_id", "task_directory", *path_columns]
+    projection = ", ".join(f'"{_quote(column)}"' for column in select_columns)
+    changed = 0
+    for row in connection.execute(f"SELECT {projection} FROM workflow_handoffs"):
+        task_directory = row[1]
+        if not isinstance(task_directory, str) or not task_directory:
+            continue
+        raw_task_directory = os.path.normcase(os.path.normpath(task_directory))
+        if not any(
+            raw_task_directory.startswith(prefix + os.sep)
+            for prefix in operation_prefixes
+        ):
+            # Provenance unknown or outside this migration's operations
+            # targets: keep the original values untouched.
+            continue
+        base = Path(task_directory)
+        for index, column in enumerate(path_columns, start=2):
+            value = row[index]
+            if not isinstance(value, str) or not value:
+                continue
+            parsed = Path(value)
+            if parsed.parent != base:
+                continue
+            if parsed.name in _HANDOFF_IMPORTED_INPUT_FILES:
+                target = base / "input" / parsed.name
+            elif parsed.name == "result.json":
+                target = base / "output" / parsed.name
+            else:
+                continue
+            cursor = connection.execute(
+                f'UPDATE "workflow_handoffs" SET "{_quote(column)}"=? '
+                f'WHERE "handoff_id"=? AND "{_quote(column)}"=?',
+                (str(target), row[0], value),
+            )
+            changed += cursor.rowcount
     return changed
 
 

@@ -798,6 +798,7 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .wb-initialization-steps li.is-active strong { color: #2457d6; }
 .wb-onboarding-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; }
 .wb-onboarding-actions .button { min-width: 138px; }
+.wb-onboarding-warning { margin: 0; color: #9a6700; background: color-mix(in srgb, var(--warning), transparent 85%); border: 1px solid color-mix(in srgb, var(--warning), transparent 45%); border-radius: 7px; padding: .35rem .6rem; font-size: .78rem; align-self: center; }
 .wb-onboarding-missing { max-width: 760px; margin: 1rem auto 0; border-left: 3px solid #d05a4e; }
 .wb-onboarding-missing h2 { margin-top: 0; font-size: .9rem; }
 .wb-onboarding-missing li { margin: .3rem 0; color: #667085; font-size: .76rem; }

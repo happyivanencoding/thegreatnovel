@@ -121,6 +121,17 @@
     });
   }
 
+  function instructionErrorMessage(response) {
+    return response.json().then(function (body) {
+      var detail = body && body.error && body.error.message ? String(body.error.message) : "";
+      return detail
+        ? detail + "（HTTP " + response.status + "）"
+        : "无法读取交接指令（HTTP " + response.status + "）";
+    }).catch(function () {
+      return "无法读取交接指令（HTTP " + response.status + "）";
+    });
+  }
+
   function bindInitializationActions() {
     document.querySelectorAll("[data-initialize-candidate]").forEach(function (button) {
       button.addEventListener("click", function () {
@@ -145,7 +156,14 @@
     document.querySelectorAll("[data-copy-handoff]").forEach(function (button) {
       button.addEventListener("click", function () {
         fetch(button.dataset.instructionUrl, { headers: { Accept: "application/json" } })
-          .then(function (response) { if (!response.ok) throw new Error("无法读取交接指令"); return response.json(); })
+          .then(function (response) {
+            if (!response.ok) {
+              return instructionErrorMessage(response).then(function (message) {
+                throw new Error(message);
+              });
+            }
+            return response.json();
+          })
           .then(function (body) { return copyText(body.instruction || ""); })
           .then(function () { feedback("给 Codex 的真实初始化指令已复制。", false); })
           .catch(function (error) { feedback(error.message, true); });

@@ -15,6 +15,7 @@ from typing import Any
 from novel_authoring.config import load_settings
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.registry import BookRecord, BookRegistry
+from novel_authoring.workflows.handoffs import resolve_instruction_path
 
 _IGNORED_NAMES = {"library", "benchmark", "audit", "_system"}
 _ACTIVE_HANDOFF_STATUSES = {"READY_FOR_CODEX", "CLAIMED", "RUNNING", "WAITING_FOR_USER"}
@@ -181,6 +182,8 @@ class LibraryCatalogEntry:
     initialization_id: str | None = None
     handoff_id: str | None = None
     handoff_status: str | None = None
+    instruction_available: bool = False
+    instruction_error: str | None = None
     missing_requirements: tuple[str, ...] = ()
     author_summary: str = ""
     technical: dict[str, Any] = field(default_factory=dict)
@@ -281,7 +284,8 @@ def _read_book_runtime(database_path: Path, book_id: str, edition_id: str) -> di
             value["edition_count"] = 0 if row is None else int(row["count"])
             try:
                 handoff = connection.execute(
-                    "SELECT handoff_id, status, created_at, completed_at, error_message "
+                    "SELECT handoff_id, status, created_at, completed_at, error_message, "
+                    "prompt_path, task_directory "
                     "FROM workflow_handoffs WHERE book_id=? AND edition_id=? "
                     "AND handoff_type='NOVEL_INITIALIZATION' "
                     "ORDER BY created_at DESC LIMIT 1",
@@ -312,14 +316,22 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
         root = Path(initialization["root"])
         manifest = dict(initialization.get("manifest") or {})
         status_payload = dict(initialization.get("status") or {})
-        readiness = dict(status_payload.get("readiness") or {})
+        # ``readiness`` is defined as ``string | null | object`` by the output
+        # schema; a string such as "BLOCKED" is a status marker, never a dict.
+        readiness_payload = status_payload.get("readiness")
+        if isinstance(readiness_payload, dict):
+            readiness = readiness_payload
+            readiness_status = str(readiness.get("status") or "")
+        else:
+            readiness = {}
+            readiness_status = str(readiness_payload or "")
         initialization_id = str(
             manifest.get("initialization_id")
             or status_payload.get("initialization_id")
             or ""
         ) or None
         initialization_status = str(
-            readiness.get("status")
+            readiness_status
             or status_payload.get("state")
             or manifest.get("state")
             or ""
@@ -329,7 +341,7 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
             missing.append("初始化清单尚未达到完整就绪")
         if str(status_payload.get("state") or "") != "READY":
             missing.append("初始化状态尚未达到完整就绪")
-        if str(readiness.get("status") or "") != "READY":
+        if readiness_status != "READY":
             missing.append("初始化验收尚未达到完整就绪")
         required_files = {
             "Source Coverage": root / "source_coverage.json",
@@ -434,10 +446,27 @@ _STATE_LABELS = {
 }
 
 
+def _instruction_availability(handoff: dict[str, Any]) -> tuple[bool, str | None]:
+    """Check the instruction file with the same fallback order as copy_instruction."""
+
+    if not handoff:
+        return False, "交接任务尚未创建"
+    task_directory = str(handoff.get("task_directory") or "")
+    if not task_directory:
+        return False, "交接任务目录缺失"
+    resolved = resolve_instruction_path(Path(task_directory), handoff.get("prompt_path"))
+    if resolved is None:
+        return False, "交接任务存在，但交接指令文件缺失。请重新准备初始化任务。"
+    return True, None
+
+
 def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogEntry:
     paths = layout.for_book(record.book_id)
     runtime = _read_book_runtime(paths.database, record.book_id, record.active_edition_id)
     readiness = studio_readiness(layout, record)
+    instruction_available, instruction_error = _instruction_availability(
+        runtime.get("handoff") or {}
+    )
     if readiness.ready:
         action, action_label = "OPEN_STUDIO", "进入小说工作台"
     elif readiness.handoff_status in _ACTIVE_HANDOFF_STATUSES:
@@ -463,12 +492,16 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
         initialization_id=readiness.initialization_id,
         handoff_id=readiness.handoff_id,
         handoff_status=readiness.handoff_status,
+        instruction_available=instruction_available,
+        instruction_error=instruction_error,
         missing_requirements=readiness.missing_requirements,
         author_summary=readiness.author_summary,
         technical={
             "book_id": record.book_id,
             "initialization_status": readiness.initialization_status,
             "handoff_status": readiness.handoff_status,
+            "instruction_available": instruction_available,
+            "instruction_error": instruction_error,
         },
     )
 

@@ -67,6 +67,18 @@ class HandoffType(StrEnum):
 class HandoffWorkflowError(RuntimeError):
     status_code = 409
 
+    def __init__(
+        self,
+        message: str,
+        *,
+        error_code: str | None = None,
+        status_code: int | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.error_code = error_code
+        if status_code is not None:
+            self.status_code = status_code
+
 
 class WorkflowHandoffResult(BaseModel):
     """Strict result contract shared by Codex desktop, Web and CLI."""
@@ -281,6 +293,43 @@ def _handoff_file(task_directory: Path, name: str) -> Path:
         if name == "result.json":
             return task_directory / "output" / name
     return task_directory / name
+
+
+def resolve_instruction_path(task_directory: Path, prompt_path: str | None) -> Path | None:
+    """Resolve the handoff instruction file across legacy and canonical layouts.
+
+    Order: the persisted ``prompt_path`` first, then ``input/prompt.md`` in the
+    canonical operation layout, then a flat ``prompt.md`` next to the task
+    directory.  Returns ``None`` when no candidate exists.
+
+    A relative ``prompt_path`` is anchored to ``task_directory`` instead of
+    the process CWD.  When ``task_directory`` is empty, only an absolute
+    persisted ``prompt_path`` is trusted and every directory-based fallback is
+    skipped.
+    """
+
+    has_directory = str(task_directory) not in {"", "."}
+    candidates: list[Path] = []
+    if prompt_path:
+        candidate = Path(str(prompt_path)).expanduser()
+        if candidate.is_absolute():
+            candidates.append(candidate)
+        elif has_directory:
+            candidates.append(task_directory.expanduser() / candidate)
+        # Relative without an anchor: never fall back to the process CWD.
+    if has_directory:
+        candidates.append(_handoff_file(task_directory, "prompt.md"))
+        candidates.append(task_directory / "input" / "prompt.md")
+        candidates.append(task_directory / "prompt.md")
+    seen: set[Path] = set()
+    for candidate in candidates:
+        expanded = candidate.expanduser()
+        if expanded in seen:
+            continue
+        seen.add(expanded)
+        if expanded.is_file():
+            return expanded
+    return None
 
 
 def _author_directives_hash(
@@ -2414,4 +2463,22 @@ def get_handoff(database: Database, handoff_id: str) -> dict[str, Any]:
 
 def copy_instruction(database: Database, handoff_id: str) -> str:
     row = get_handoff(database, handoff_id)
-    return Path(str(row["prompt_path"])).read_text(encoding="utf-8")
+    task_directory = Path(str(row.get("task_directory") or ""))
+    resolved = resolve_instruction_path(task_directory, row.get("prompt_path"))
+    if resolved is None:
+        raise HandoffWorkflowError(
+            "交接任务存在，但交接指令文件缺失。请重新准备初始化任务。",
+            error_code="HANDOFF_INSTRUCTION_MISSING",
+            status_code=404,
+        )
+    if not resolved.is_absolute():
+        # Never persist a relative path back into the database.
+        resolved = resolved.resolve()
+    resolved_str = str(resolved)
+    if resolved_str != str(row.get("prompt_path") or ""):
+        with database.connect() as connection:
+            connection.execute(
+                "UPDATE workflow_handoffs SET prompt_path=? WHERE handoff_id=?",
+                (resolved_str, handoff_id),
+            )
+    return resolved.read_text(encoding="utf-8")

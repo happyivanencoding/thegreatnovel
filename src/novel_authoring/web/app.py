@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import re
+import sqlite3
+import subprocess
 from pathlib import Path
 from typing import Any, cast
 from urllib.parse import urlencode
@@ -25,6 +27,7 @@ except ImportError:  # pragma: no cover - exercised only without web extras
     StaticFiles = None  # type: ignore[misc, assignment]
     Jinja2Templates = None  # type: ignore[misc, assignment]
 
+from novel_authoring import __version__
 from novel_authoring.atlas.models import AtlasAction
 from novel_authoring.atlas.service import (
     AtlasError,
@@ -155,6 +158,43 @@ _ID = re.compile(r"^[A-Za-z0-9._-]+$")
 _QUERY_ID = re.compile(r"^[A-Za-z0-9._:-]+$")
 _ACTION_MODES = {"continue": "continue", "rewrite": "rewrite", "plan": "plan"}
 
+# Single source of truth for the cache-busting ``?v=`` suffix used by every
+# template; also reported by /health so stale static assets are diagnosable.
+STATIC_ASSET_VERSION = "3.3.0"
+
+
+# Sentinel distinguishing "never probed" from a probed result of ``None``.
+_COMMIT_NOT_PROBED = object()
+_commit_cache: object = _COMMIT_NOT_PROBED
+
+
+def _current_commit() -> str | None:
+    """Best-effort git commit hash; never raises, returns None when unknown.
+
+    The probe runs at most once per process and the result is cached, so
+    ``/health`` never spawns ``git`` per request and a hanging ``git`` cannot
+    block the event loop more than once.
+    """
+
+    global _commit_cache
+    if _commit_cache is not _COMMIT_NOT_PROBED:
+        return cast("str | None", _commit_cache)
+    value: str | None
+    try:
+        completed = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            cwd=str(Path(__file__).resolve().parents[2]),
+        )
+    except (OSError, subprocess.SubprocessError):
+        value = None
+    else:
+        value = completed.stdout.strip() or None if completed.returncode == 0 else None
+    _commit_cache = value
+    return value
+
 
 def _check_id(value: str) -> str:
     if not _ID.fullmatch(value):
@@ -195,6 +235,13 @@ def _workbench_mode(request: Request) -> str:
 
 
 def _error(exc: Exception) -> JSONResponse:
+    error_code = getattr(exc, "error_code", None)
+    if error_code:
+        status = getattr(exc, "status_code", 400)
+        return JSONResponse(
+            status_code=status if isinstance(status, int) and status < 500 else 400,
+            content={"error": {"code": error_code, "message": str(exc), "details": {}}},
+        )
     code = "CONFLICT" if getattr(exc, "status_code", 500) == 409 else "WORKFLOW_ERROR"
     status = 409 if code == "CONFLICT" else 400
     return JSONResponse(
@@ -203,8 +250,21 @@ def _error(exc: Exception) -> JSONResponse:
     )
 
 
+def _handoff_not_found_response() -> JSONResponse:
+    return JSONResponse(
+        status_code=404,
+        content={
+            "error": {
+                "code": "HANDOFF_NOT_FOUND",
+                "message": "handoff 不存在",
+                "details": {},
+            }
+        },
+    )
+
+
 def _template(templates: Any, name: str, request: Request, context: dict[str, Any]) -> Any:
-    context = {"request": request, **context}
+    context = {"request": request, "asset_version": STATIC_ASSET_VERSION, **context}
     return templates.TemplateResponse(request=request, name=name, context=context)
 
 
@@ -230,7 +290,10 @@ def _database_for_book(app: Any, book_id: str) -> Database:
         paths = BookLayout(root).for_book(checked)
         if paths.database.is_file():
             return Database(paths.database)
-        raise HTTPException(status_code=404, detail="书籍运行库不存在")
+        raise HTTPException(
+            status_code=404,
+            detail={"code": "BOOK_RUNTIME_NOT_FOUND", "message": "书籍运行库不存在"},
+        )
     if app.state.book_id is None or str(app.state.book_id) == checked:
         return cast(Database, app.state.database)
     raise HTTPException(status_code=404, detail="书籍不在当前 Web 运行库")
@@ -371,8 +434,14 @@ def create_app(
         )
 
     @app.get("/health")
-    async def health() -> dict[str, str]:
-        return {"status": "ok", "executor": "Windows Codex desktop client via local file handoff"}
+    async def health() -> dict[str, Any]:
+        return {
+            "status": "ok",
+            "executor": "Windows Codex desktop client via local file handoff",
+            "version": __version__,
+            "commit": _current_commit(),
+            "static_asset_version": STATIC_ASSET_VERSION,
+        }
 
     def catalog_payload() -> dict[str, Any]:
         catalog = _library_catalog_for_app(app)
@@ -2224,29 +2293,55 @@ def create_app(
         }
 
     @app.get("/api/handoffs/{handoff_id}/instruction")
-    async def handoff_instruction_api(handoff_id: str) -> dict[str, str]:
+    async def handoff_instruction_api(handoff_id: str) -> Any:
         checked = _check_id(handoff_id)
-        return {"handoff_id": checked, "instruction": copy_instruction(database, checked)}
+        try:
+            get_handoff(database, checked)
+        except (HandoffWorkflowError, sqlite3.OperationalError):
+            # A missing workflow_handoffs table also means the handoff does not
+            # exist; align with the book-scoped route's error mapping.
+            return _handoff_not_found_response()
+        try:
+            instruction = copy_instruction(database, checked)
+        except HandoffWorkflowError as exc:
+            return _error(exc)
+        return {"handoff_id": checked, "instruction": instruction}
 
     @app.get(
         "/api/books/{path_book_id}/editions/{edition_id}/handoffs/{handoff_id}/instruction"
     )
     async def book_handoff_instruction_api(
         path_book_id: str, edition_id: str, handoff_id: str
-    ) -> dict[str, str]:
+    ) -> Any:
         checked_book = _check_id(path_book_id)
         checked_edition = _check_id(edition_id)
         checked_handoff = _check_id(handoff_id)
         selected_database = _database_for_book(app, checked_book)
-        item = get_handoff(selected_database, checked_handoff)
+        try:
+            item = get_handoff(selected_database, checked_handoff)
+        except HandoffWorkflowError:
+            return _handoff_not_found_response()
         if (
             str(item.get("book_id")) != checked_book
             or str(item.get("edition_id")) != checked_edition
         ):
-            raise HTTPException(status_code=404, detail="handoff 不属于当前 book/edition")
+            return JSONResponse(
+                status_code=404,
+                content={
+                    "error": {
+                        "code": "HANDOFF_SCOPE_MISMATCH",
+                        "message": "handoff 不属于当前 book/edition",
+                        "details": {},
+                    }
+                },
+            )
+        try:
+            instruction = copy_instruction(selected_database, checked_handoff)
+        except HandoffWorkflowError as exc:
+            return _error(exc)
         return {
             "handoff_id": checked_handoff,
-            "instruction": copy_instruction(selected_database, checked_handoff),
+            "instruction": instruction,
         }
 
     @app.get("/api/books/{path_book_id}/editions/{edition_id}/handoffs/{handoff_id}/result")
@@ -2362,6 +2457,12 @@ def web_doctor() -> dict[str, Any]:
             "ok": True,
             "mode": "native-javascript-css",
             "detail": "不需要 Node 或额外 frontend build。",
+        },
+        "version": {
+            "ok": True,
+            "package": __version__,
+            "commit": _current_commit(),
+            "static_asset_version": STATIC_ASSET_VERSION,
         },
     }
     try:
