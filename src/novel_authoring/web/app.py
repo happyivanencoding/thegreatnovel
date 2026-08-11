@@ -76,7 +76,14 @@ from novel_authoring.author_control.truth import (
 from novel_authoring.db.database import Database
 from novel_authoring.drafting import save_draft_content
 from novel_authoring.edition import edition_chapters, list_editions
-from novel_authoring.initialization import InitializationError, latest_initialization
+from novel_authoring.initialization import (
+    InitializationDepth,
+    InitializationError,
+    create_initialization,
+    latest_initialization,
+    prepare_action_deepening,
+    upgrade_initialization,
+)
 from novel_authoring.initialization.metrics import prepare_metric_bootstrap
 from novel_authoring.library_catalog import (
     CatalogScope,
@@ -84,6 +91,7 @@ from novel_authoring.library_catalog import (
     LibraryCatalogView,
     build_library_catalog,
     find_candidate,
+    studio_access,
     studio_readiness,
     suggest_book_id,
 )
@@ -522,6 +530,13 @@ def create_app(
         layout = BookLayout(app.state.library_root)
         book_id_value = suggest_book_id(candidate, layout)
         try:
+            raw = await request.body()
+            payload = json.loads(raw) if raw else {}
+            if not isinstance(payload, dict):
+                raise ValueError("初始化请求必须是 object")
+            depth = InitializationDepth(
+                str(payload.get("depth") or InitializationDepth.BALANCED).upper()
+            )
             added = add_book(
                 LibraryAddOptions(
                     book_id=book_id_value,
@@ -533,8 +548,15 @@ def create_app(
                     initialize_mode="prepare",
                 )
             )
+            selected_database = Database(added.database)
+            create_initialization(
+                selected_database,
+                added.book_id,
+                edition_id="base",
+                depth=depth,
+            )
             handoff = create_initialization_handoff(
-                Database(added.database),
+                selected_database,
                 added.book_id,
                 edition_id="base",
                 requested_stage="NOVEL_INITIALIZATION",
@@ -697,7 +719,7 @@ def create_app(
         if catalog is not None:
             if current_entry is None:
                 raise HTTPException(status_code=404, detail="书籍不在当前书库")
-            if not current_entry.studio_ready:
+            if not current_entry.studio_accessible:
                 return render_onboarding(request, catalog, current_entry)
         selected_database = _database_for_book(app, checked_book)
         context = build_workbench_context(
@@ -725,8 +747,8 @@ def create_app(
         )
         context["current_catalog_id"] = f"book:{checked_book}"
         context["catalog_entry"] = None if current_entry is None else current_entry.to_dict()
-        if current_entry is not None and current_entry.studio_ready:
-            context["book_status_label"] = "可创作"
+        if current_entry is not None and current_entry.studio_accessible:
+            context["book_status_label"] = current_entry.readiness_label
         context["workflow"] = workflow_context(
             selected_database,
             checked_book,
@@ -755,7 +777,7 @@ def create_app(
         if catalog is not None:
             if current_entry is None:
                 raise HTTPException(status_code=404, detail="书籍不在当前书库")
-            if not current_entry.studio_ready:
+            if not current_entry.studio_accessible:
                 return render_onboarding(request, catalog, current_entry)
         try:
             context = build_workbench_context(
@@ -788,8 +810,8 @@ def create_app(
         )
         context["current_catalog_id"] = f"book:{checked_book}"
         context["catalog_entry"] = None if current_entry is None else current_entry.to_dict()
-        if current_entry is not None and current_entry.studio_ready:
-            context["book_status_label"] = "可创作"
+        if current_entry is not None and current_entry.studio_accessible:
+            context["book_status_label"] = current_entry.readiness_label
         context["workflow"] = workflow_context(
             _database_for_book(app, checked_book),
             checked_book,
@@ -824,7 +846,7 @@ def create_app(
             entry = _catalog_entry_for_app(app, catalog, checked_book)
             if entry is None:
                 raise HTTPException(status_code=404, detail="书籍不在当前书库")
-            if not entry.studio_ready:
+            if not entry.studio_accessible:
                 raise HTTPException(
                     status_code=409,
                     detail={
@@ -1907,12 +1929,25 @@ def create_app(
         if root is None:
             raise HTTPException(status_code=404, detail="书库未配置")
         layout = BookLayout(root)
-        checked_book = _check_id(path_book_id)
+        checked_book = _require_book_scope(app, path_book_id)
         try:
             record = BookRegistry(layout).record(checked_book)
         except (OSError, ValueError) as exc:
             raise HTTPException(status_code=404, detail="书籍不存在") from exc
         return studio_readiness(layout, record).to_dict()
+
+    @app.get("/api/books/{path_book_id}/studio-access")
+    async def studio_access_api(path_book_id: str) -> dict[str, Any]:
+        root = app.state.library_root
+        if root is None:
+            raise HTTPException(status_code=404, detail="书库未配置")
+        layout = BookLayout(root)
+        checked_book = _require_book_scope(app, path_book_id)
+        try:
+            record = BookRegistry(layout).record(checked_book)
+        except (OSError, ValueError) as exc:
+            raise HTTPException(status_code=404, detail="书籍不存在") from exc
+        return studio_access(layout, record).to_dict()
 
     @app.post("/api/books/{path_book_id}/editions/{edition_id}/initialization")
     async def initialization_handoff_api(
@@ -1921,12 +1956,72 @@ def create_app(
         verify_csrf(request, request.headers.get("X-CSRF-Token"))
         try:
             checked_book = _check_id(path_book_id)
+            raw = await request.body()
+            payload = json.loads(raw) if raw else {}
+            if not isinstance(payload, dict):
+                raise ValueError("初始化请求必须是 object")
+            depth = InitializationDepth(
+                str(payload.get("depth") or InitializationDepth.BALANCED).upper()
+            )
+            selected_database = _database_for_book(app, checked_book)
+            current = latest_initialization(
+                selected_database, checked_book, _check_id(edition_id)
+            )
+            if current is None:
+                create_initialization(
+                    selected_database,
+                    checked_book,
+                    edition_id=_check_id(edition_id),
+                    depth=depth,
+                )
+            else:
+                upgrade_initialization(
+                    selected_database,
+                    checked_book,
+                    edition_id=_check_id(edition_id),
+                    depth=depth,
+                )
             return create_initialization_handoff(
-                _database_for_book(app, checked_book),
+                selected_database,
                 checked_book,
                 edition_id=_check_id(edition_id),
                 requested_stage="NOVEL_INITIALIZATION",
             )
+        except Exception as exc:
+            return _error(exc)
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/initialization/deepen"
+    )
+    async def initialization_deepen_api(
+        request: Request, path_book_id: str, edition_id: str
+    ) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        try:
+            payload = await request.json()
+            if not isinstance(payload, dict):
+                raise ValueError("补齐请求必须是 object")
+            checked_book = _require_book_scope(app, path_book_id)
+            selected_database = _database_for_book(app, checked_book)
+            result = prepare_action_deepening(
+                selected_database,
+                checked_book,
+                edition_id=_check_id(edition_id),
+                action=str(payload.get("action") or ""),
+                target_chapter_id=(
+                    str(payload["target_chapter_id"])
+                    if payload.get("target_chapter_id")
+                    else None
+                ),
+            )
+            if result["status"] != "ACTION_CONTEXT_READY":
+                result["handoff"] = create_initialization_handoff(
+                    selected_database,
+                    checked_book,
+                    edition_id=_check_id(edition_id),
+                    requested_stage="NOVEL_INITIALIZATION",
+                )
+            return result
         except Exception as exc:
             return _error(exc)
 
@@ -2452,6 +2547,30 @@ def create_app(
             selected_database = (
                 _database_for_book(app, checked_book) if path_book_id is not None else database
             )
+            if app.state.library_root is not None:
+                record = BookRegistry(BookLayout(app.state.library_root)).record(checked_book)
+                access = studio_access(BookLayout(app.state.library_root), record)
+                if access.accessible and not access.capabilities[
+                    "continue_from_current_boundary"
+                ]:
+                    deepening = prepare_action_deepening(
+                        selected_database,
+                        checked_book,
+                        edition_id=payload.edition_id,
+                        action="CONTINUE",
+                    )
+                    if deepening["status"] != "ACTION_CONTEXT_READY":
+                        deepening["handoff"] = create_initialization_handoff(
+                            selected_database,
+                            checked_book,
+                            edition_id=payload.edition_id,
+                            requested_stage="NOVEL_INITIALIZATION",
+                        )
+                        return {
+                            "workflow_status": "CONTEXT_HYDRATION_REQUIRED",
+                            "resume_action": "CONTINUE",
+                            "deepening": deepening,
+                        }
             return prepare_continuation(selected_database, checked_book, payload)
         except (HandoffWorkflowError, ValueError) as exc:
             return _error(exc)
@@ -2470,6 +2589,29 @@ def create_app(
             selected_database = (
                 _database_for_book(app, checked_book) if path_book_id is not None else database
             )
+            if app.state.library_root is not None:
+                record = BookRegistry(BookLayout(app.state.library_root)).record(checked_book)
+                access = studio_access(BookLayout(app.state.library_root), record)
+                if access.accessible and not access.capabilities["rewrite_selected_chapter"]:
+                    deepening = prepare_action_deepening(
+                        selected_database,
+                        checked_book,
+                        edition_id=payload.edition_id,
+                        action="REWRITE",
+                        target_chapter_id=payload.context_chapter_id,
+                    )
+                    if deepening["status"] != "ACTION_CONTEXT_READY":
+                        deepening["handoff"] = create_initialization_handoff(
+                            selected_database,
+                            checked_book,
+                            edition_id=payload.edition_id,
+                            requested_stage="NOVEL_INITIALIZATION",
+                        )
+                        return {
+                            "workflow_status": "CONTEXT_HYDRATION_REQUIRED",
+                            "resume_action": "REWRITE",
+                            "deepening": deepening,
+                        }
             return prepare_revision(selected_database, checked_book, payload)
         except (HandoffWorkflowError, ValueError) as exc:
             return _error(exc)

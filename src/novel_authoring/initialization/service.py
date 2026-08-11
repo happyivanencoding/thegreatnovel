@@ -5,6 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections import defaultdict
+from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -38,6 +40,12 @@ class InitializationState(StrEnum):
     STALE = "STALE"
 
 
+class InitializationDepth(StrEnum):
+    QUICK = "QUICK"
+    BALANCED = "BALANCED"
+    FULL = "FULL"
+
+
 class InitializationBase(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -66,6 +74,13 @@ class ArcRecord(InitializationBase):
     inferred_volume: str | None = None
     boundary_reason: str
     status: str = "PENDING"
+    semantic_chapter_ids: list[str] = Field(default_factory=list)
+    operation_id: str | None = None
+    operation_input_path: str | None = None
+    reused_from_arc_id: str | None = None
+    reused_semantic_chapter_ids: list[str] = Field(default_factory=list)
+    scheduled_semantic_chapter_ids: list[str] = Field(default_factory=list)
+    reused_output_path: str | None = None
 
 
 class ArcManifest(InitializationBase):
@@ -154,18 +169,27 @@ class ArcExtractionOutput(InitializationBase):
         )
         for collection in collections:
             for item in getattr(self, collection):
-                status = str(item.get("information_status", "CANON")).upper()
+                if "information_status" not in item:
+                    raise ValueError(f"{collection} 的记录必须显式标记 information_status")
+                status = str(item["information_status"]).upper()
                 spans = item.get("source_span_ids") or item.get("source_evidence") or []
                 if status == "CANON" and not spans:
                     raise ValueError(f"{collection} 的 CANON 记录必须有 source_span_ids")
                 if status == "INFERENCE":
                     missing = [
                         key
-                        for key in ("reasoning_summary", "confidence", "counter_evidence")
+                        for key in (
+                            "reasoning_summary",
+                            "confidence",
+                            "counter_evidence",
+                            "unknown_boundary",
+                        )
                         if key not in item
                     ]
                     if missing:
                         raise ValueError(f"{collection} 的 INFERENCE 记录缺少 {missing}")
+                    if not spans:
+                        raise ValueError(f"{collection} 的 INFERENCE 记录必须有 source_span_ids")
         return self
 
 
@@ -190,6 +214,7 @@ class InitializationReadiness(InitializationBase):
     recent_detailed_metric_coverage: float = Field(default=0.0, ge=0, le=1)
     current_chapter_metric_coverage: float = Field(default=0.0, ge=0, le=1)
     metric_bootstrap_status: str = "NOT_READY"
+    metric_authority: str = "PROVISIONAL"
     metric_bootstrap: dict[str, Any] = Field(default_factory=dict)
     canon_evidence_coverage: float = Field(ge=0, le=1)
     entity_resolution_coverage: float = Field(ge=0, le=1)
@@ -218,9 +243,27 @@ class InitializationManifest(InitializationBase):
     arc_count: int = Field(ge=0)
     current_core_requirements: list[str]
     future_can_remain_incomplete: bool = True
+    initialization_depth: InitializationDepth = InitializationDepth.FULL
+    analysis_plan: dict[str, Any] = Field(default_factory=dict)
+    deep_chapter_ids: list[str] = Field(default_factory=list)
+    lightweight_chapter_ids: list[str] = Field(default_factory=list)
+    uncovered_semantic_chapter_ids: list[str] = Field(default_factory=list)
+    current_boundary_window: list[str] = Field(default_factory=list)
+    capabilities: dict[str, bool] = Field(default_factory=dict)
+    upgrade_from_initialization_id: str | None = None
+    reused_arc_ids: list[str] = Field(default_factory=list)
+    scheduled_arc_ids: list[str] = Field(default_factory=list)
+    requested_action: str | None = None
+    structural_index_path: str = "structural_index.json"
 
 
-_HEADING_WORDS = re.compile(r"(?:地图|区域|基地|城市|避难所|阶段|副本|领地|世界|联盟|大区|车队)")
+_VOLUME_HEADING = re.compile(r"第\s*([0-9零一二三四五六七八九十百千]+)\s*卷")
+_RECALL_TERM = re.compile(
+    r"[\u4e00-\u9fffA-Za-z0-9]{2,12}(?:能力|规则|组织|联盟|城市|基地|物品|资源|关系|线索)"
+)
+_CHANGE_MARKERS = re.compile(r"获得|失去|升级|突破|死亡|背叛|揭示|发现|决定|改变|转折")
+_RISK_MARKERS = re.compile(r"危险|死亡|失败|代价|受伤|追杀|危机|倒计时|期限")
+_PAYOFF_MARKERS = re.compile(r"兑现|成功|胜利|奖励|完成|解决|真相")
 
 
 def _write_json(path: Path, value: Any) -> None:
@@ -268,7 +311,8 @@ def _infer_volume(row: dict[str, Any]) -> str | None:
     if value:
         return str(value)
     heading = str(row.get("raw_heading") or row.get("title") or "")
-    return heading if _HEADING_WORDS.search(heading) else None
+    matched = _VOLUME_HEADING.search(heading)
+    return matched.group(0) if matched else None
 
 
 def _chapter_rows(database: Database, book_id: str, edition_id: str) -> list[dict[str, Any]]:
@@ -463,6 +507,205 @@ def arc_output_path(
     return edition.operation(_arc_operation_id(initialization_id, arc_id)).output / "output.json"
 
 
+def _chapter_structure_record(row: dict[str, Any], arc_id: str) -> dict[str, Any]:
+    content = str(row.get("content") or "")
+    terms = sorted(set(_RECALL_TERM.findall(content)))[:30]
+    change_count = len(_CHANGE_MARKERS.findall(content))
+    risk_count = len(_RISK_MARKERS.findall(content))
+    payoff_count = len(_PAYOFF_MARKERS.findall(content))
+    recall_hints = [
+        {
+            "term": term,
+            "category": next(
+                (
+                    label
+                    for suffix, label in (
+                        ("能力", "ABILITY_CANDIDATE"),
+                        ("规则", "RULE_CANDIDATE"),
+                        ("组织", "FACTION_CANDIDATE"),
+                        ("联盟", "FACTION_CANDIDATE"),
+                        ("城市", "LOCATION_CANDIDATE"),
+                        ("基地", "LOCATION_CANDIDATE"),
+                        ("物品", "ITEM_CANDIDATE"),
+                        ("资源", "RESOURCE_CANDIDATE"),
+                        ("关系", "RELATIONSHIP_CANDIDATE"),
+                        ("线索", "THREAD_CANDIDATE"),
+                    )
+                    if term.endswith(suffix)
+                ),
+                "ENTITY_CANDIDATE",
+            ),
+            "status": "RECALL_HINT",
+            "information_status": None,
+            "first_occurrence": False,
+            "source_span_ids": (
+                [str(row["source_span_id"])] if row.get("source_span_id") else []
+            ),
+        }
+        for term in terms
+    ]
+    return {
+        "chapter_id": str(row["chapter_id"]),
+        "ordinal": int(row["ordinal"]),
+        "heading": str(row.get("raw_heading") or row.get("title") or ""),
+        "arc_id": arc_id,
+        "char_count": len(content),
+        "source_span_ids": (
+            [str(row["source_span_id"])] if row.get("source_span_id") else []
+        ),
+        "change_marker_count": change_count,
+        "risk_marker_count": risk_count,
+        "payoff_marker_count": payoff_count,
+        "selection_score": (
+            change_count * 3 + risk_count * 2 + payoff_count * 2 + len(terms)
+        ),
+        "recall_hints": recall_hints,
+        "candidate_mentions": recall_hints,
+        "semantic_status": "UNKNOWN",
+        "unknown_boundary": "尚未执行该章节的 Codex 语义分析",
+    }
+
+
+def _select_deep_chapters(
+    depth: InitializationDepth,
+    chapters: list[dict[str, Any]],
+    arcs: list[ArcRecord],
+    structural_records: list[dict[str, Any]],
+) -> tuple[set[str], dict[str, list[str]]]:
+    all_ids = [str(item["chapter_id"]) for item in chapters]
+    reasons: dict[str, set[str]] = defaultdict(set)
+
+    def include(rows: list[dict[str, Any]], reason: str) -> None:
+        for row in rows:
+            reasons[str(row["chapter_id"])].add(reason)
+
+    if depth is InitializationDepth.FULL:
+        include(chapters, "FULL_ALL_CHAPTERS")
+    else:
+        opening = 3 if depth is InitializationDepth.QUICK else 5
+        latest = 5 if depth is InitializationDepth.QUICK else 12
+        include(chapters[:opening], "OPENING_FOUNDATION")
+        include(chapters[-latest:], "CURRENT_BOUNDARY_WINDOW")
+        by_id = {str(item["chapter_id"]): item for item in chapters}
+        for arc in arcs:
+            include(
+                [by_id[arc.chapter_ids[0]], by_id[arc.chapter_ids[-1]]],
+                "ARC_BOUNDARY",
+            )
+        ranked = sorted(
+            structural_records,
+            key=lambda item: (-int(item["selection_score"]), int(item["ordinal"])),
+        )
+        fraction = 0.10 if depth is InitializationDepth.QUICK else 0.20
+        high_change_count = max(1, round(len(chapters) * fraction))
+        include(
+            [by_id[str(item["chapter_id"])] for item in ranked[:high_change_count]],
+            "HIGH_CHANGE_SIGNAL",
+        )
+        if depth is InitializationDepth.BALANCED:
+            current_arc = arcs[-1]
+            include([by_id[item] for item in current_arc.chapter_ids], "CURRENT_ARC")
+            active_terms = {
+                str(hint["term"])
+                for item in structural_records[-5:]
+                for hint in item["recall_hints"]
+            }
+            # Two bounded passes provide deterministic dependency tracing without
+            # pretending recall hints are semantic facts.
+            for _ in range(2):
+                matched = [
+                    item
+                    for item in structural_records
+                    if any(str(hint["term"]) in active_terms for hint in item["recall_hints"])
+                ]
+                include(
+                    [by_id[str(item["chapter_id"])] for item in matched],
+                    "ACTIVE_DEPENDENCY_RECALL",
+                )
+                expanded = {
+                    str(hint["term"])
+                    for item in matched
+                    for hint in item["recall_hints"]
+                }
+                if expanded <= active_terms:
+                    break
+                active_terms.update(expanded)
+    selected = set(reasons)
+    if depth is InitializationDepth.FULL:
+        selected = set(all_ids)
+    return selected, {key: sorted(value) for key, value in reasons.items()}
+
+
+_DEPTH_ORDER = {
+    InitializationDepth.QUICK: 1,
+    InitializationDepth.BALANCED: 2,
+    InitializationDepth.FULL: 3,
+}
+
+
+def _reusable_arc_outputs(
+    database: Database,
+    book_id: str,
+    edition_id: str,
+    prior_initialization_id: str | None,
+    source_manifest_sha256: str,
+    effective_content_sha256: str,
+    arcs: list[ArcRecord],
+) -> dict[str, tuple[str, dict[str, Any], set[str]]]:
+    if not prior_initialization_id:
+        return {}
+    prior = latest_initialization(
+        database,
+        book_id,
+        edition_id,
+        initialization_id=prior_initialization_id,
+    )
+    if prior is None:
+        return {}
+    prior_manifest = InitializationManifest.model_validate(prior["manifest"])
+    if (
+        prior_manifest.source_manifest_sha256 != source_manifest_sha256
+        or prior_manifest.effective_content_sha256 != effective_content_sha256
+    ):
+        raise InitializationError("初始化升级不能复用已漂移的 Source 或 Edition")
+    prior_root = Path(str(prior["root"]))
+    prior_arcs = ArcManifest.model_validate(
+        _read_json(prior_root / "arc_manifest.json")
+    )
+    by_chapters = {tuple(item.chapter_ids): item for item in prior_arcs.arcs}
+    reusable: dict[str, tuple[str, dict[str, Any], set[str]]] = {}
+    for arc in arcs:
+        previous = by_chapters.get(tuple(arc.chapter_ids))
+        if previous is None:
+            continue
+        output_path = arc_output_path(
+            prior_root,
+            prior_arcs.initialization_id,
+            book_id,
+            edition_id,
+            previous.arc_id,
+        )
+        if not output_path.is_file():
+            continue
+        try:
+            output = ArcExtractionOutput.model_validate(_read_json(output_path))
+        except (OSError, json.JSONDecodeError, ValueError):
+            continue
+        analyzed = {
+            str(item.get("chapter_id"))
+            for item in output.chapter_semantic_features
+            if item.get("chapter_id")
+            and str(item.get("analysis_status", "PENDING")).upper()
+            not in {"PENDING", "UNKNOWN", "NOT_ANALYZED"}
+        }
+        reused_ids = set(arc.semantic_chapter_ids) & analyzed
+        if not reused_ids:
+            continue
+        payload = output.model_dump(mode="json")
+        reusable[arc.arc_id] = (previous.arc_id, payload, reused_ids)
+    return reusable
+
+
 def create_initialization(
     database: Database,
     book_id: str,
@@ -470,6 +713,10 @@ def create_initialization(
     edition_id: str | None = None,
     char_limit: int = 80_000,
     max_chapters_per_arc: int = 20,
+    depth: InitializationDepth = InitializationDepth.FULL,
+    upgrade_from_initialization_id: str | None = None,
+    additional_deep_chapter_ids: set[str] | None = None,
+    requested_action: str | None = None,
 ) -> dict[str, Any]:
     """Create a frozen, source-complete initialization task package.
 
@@ -478,6 +725,7 @@ def create_initialization(
     """
     if char_limit < 1 or max_chapters_per_arc < 1 or max_chapters_per_arc > 20:
         raise InitializationError("Arc 限制无效：章节数必须 1—20，字符上限必须为正数")
+    depth = InitializationDepth(depth)
     database.initialize()
     selected = resolve_edition_id(database, book_id, edition_id)
     chapters = _chapter_rows(database, book_id, selected)
@@ -516,6 +764,55 @@ def create_initialization(
         for arc in arcs
         for chapter_id in arc.chapter_ids
     }
+    structural_records = [
+        _chapter_structure_record(row, arc_by_chapter[str(row["chapter_id"])].arc_id)
+        for row in chapters
+    ]
+    first_seen_terms: set[str] = set()
+    for record in structural_records:
+        for hint in record["recall_hints"]:
+            term = str(hint["term"])
+            hint["first_occurrence"] = term not in first_seen_terms
+            first_seen_terms.add(term)
+    deep_chapter_ids, selection_reasons = _select_deep_chapters(
+        depth, chapters, arcs, structural_records
+    )
+    known_chapter_ids = {str(row["chapter_id"]) for row in chapters}
+    requested_ids = set(additional_deep_chapter_ids or set())
+    unknown_requested = requested_ids - known_chapter_ids
+    if unknown_requested:
+        raise InitializationError(
+            "补齐范围包含未知章节：" + ", ".join(sorted(unknown_requested))
+        )
+    for chapter_id in requested_ids:
+        selection_reasons.setdefault(chapter_id, []).append(
+            requested_action or "AUTHOR_SELECTED_DEEPENING"
+        )
+    deep_chapter_ids.update(requested_ids)
+    arcs = [
+        arc.model_copy(
+            update={
+                "semantic_chapter_ids": [
+                    chapter_id
+                    for chapter_id in arc.chapter_ids
+                    if chapter_id in deep_chapter_ids
+                ]
+            }
+        )
+        for arc in arcs
+    ]
+    arc_by_chapter = {
+        chapter_id: arc for arc in arcs for chapter_id in arc.chapter_ids
+    }
+    reusable_outputs = _reusable_arc_outputs(
+        database,
+        book_id,
+        selected,
+        upgrade_from_initialization_id,
+        source_hash,
+        effective_hash,
+        arcs,
+    )
     coverage_items: list[ChapterCoverage] = []
     for row in chapters:
         arc = arc_by_chapter[str(row["chapter_id"])]
@@ -532,6 +829,11 @@ def create_initialization(
                 char_count=len(str(row.get("content") or "")),
                 inferred_volume=_infer_volume(row),
                 assigned_arc_id=arc.arc_id,
+                analysis_status=(
+                    "PENDING"
+                    if str(row["chapter_id"]) in deep_chapter_ids
+                    else "UNKNOWN"
+                ),
             )
         )
     coverage = SourceCoverage(
@@ -577,8 +879,49 @@ def create_initialization(
             "active main thread",
             "continuation boundary",
         ],
+        initialization_depth=depth,
+        analysis_plan={
+            "strategy": depth.value,
+            "selection_reasons": selection_reasons,
+            "semantic_outputs_are_provisional_until_validated": True,
+            "unselected_chapters_remain_unknown": True,
+        },
+        deep_chapter_ids=[
+            str(row["chapter_id"])
+            for row in chapters
+            if str(row["chapter_id"]) in deep_chapter_ids
+        ],
+        lightweight_chapter_ids=[str(row["chapter_id"]) for row in chapters],
+        uncovered_semantic_chapter_ids=[
+            str(row["chapter_id"])
+            for row in chapters
+            if str(row["chapter_id"]) not in deep_chapter_ids
+        ],
+        current_boundary_window=[str(row["chapter_id"]) for row in chapters[-10:]],
+        capabilities={
+            "browse_structure": True,
+            "view_partial_profile": False,
+            "plan_next": False,
+            "continue_from_current_boundary": False,
+            "rewrite_selected_chapter": False,
+            "inspect_global_world_state": False,
+        },
+        upgrade_from_initialization_id=upgrade_from_initialization_id,
+        requested_action=requested_action,
     )
     _write_json(root / "source_coverage.json", coverage.model_dump(mode="json"))
+    _write_json(
+        root / "structural_index.json",
+        {
+            "schema_version": "structural-index-v1",
+            "book_id": book_id,
+            "edition_id": selected,
+            "initialization_id": initialization_id,
+            "source_coverage": 1.0,
+            "semantic_authority": "RECALL_HINT_ONLY",
+            "chapters": structural_records,
+        },
+    )
     arc_manifest = ArcManifest(
         initialization_id=initialization_id,
         book_id=book_id,
@@ -587,38 +930,65 @@ def create_initialization(
         max_chapters_per_arc=max_chapters_per_arc,
         char_limit=char_limit,
     )
-    _write_json(root / "arc_manifest.json", arc_manifest.model_dump(mode="json"))
     schema_path = root / "arc_schema.json"
     _write_json(schema_path, _arc_schema())
-    manifest.contract_hashes = {
-        "arc_schema.json": sha256_file(schema_path),
-        "source_coverage.json": sha256_file(root / "source_coverage.json"),
-        "arc_manifest.json": sha256_file(root / "arc_manifest.json"),
-    }
-    _write_json(root / "initialization_manifest.json", manifest.model_dump(mode="json"))
-    _write_json(
-        root / "status.json",
-        {
-            "initialization_id": initialization_id,
-            "state": InitializationState.SOURCE_MAPPED.value,
-            "readiness": "BLOCKED",
-            "source_coverage": coverage.chapter_coverage,
-            "chapter_coverage": 0.0,
-            "updated_at": utc_now(),
-            "completed_arc_ids": [],
-            "failed_arc_ids": [],
-            "warnings": ["语义 Arc 输出尚未由 Codex 桌面端完成"],
-        },
-    )
     (root / "events.jsonl").write_text("", encoding="utf-8")
+    prepared_arcs: list[ArcRecord] = []
+    reused_arc_ids: list[str] = []
+    scheduled_arc_ids: list[str] = []
     for arc in arcs:
+        if not arc.semantic_chapter_ids:
+            prepared_arcs.append(arc)
+            continue
+        reusable = reusable_outputs.get(arc.arc_id)
+        task_chapter_ids = list(arc.semantic_chapter_ids)
+        reused_output_path: Path | None = None
+        previous_arc_id: str | None = None
+        reused_ids: set[str] = set()
+        if reusable is not None:
+            previous_arc_id, payload, reused_ids = reusable
+            payload["initialization_id"] = initialization_id
+            payload["arc_id"] = arc.arc_id
+            task_chapter_ids = [
+                chapter_id
+                for chapter_id in arc.semantic_chapter_ids
+                if chapter_id not in reused_ids
+            ]
+            if not task_chapter_ids:
+                output_path = arc_output_path(
+                    root,
+                    initialization_id,
+                    book_id,
+                    selected,
+                    arc.arc_id,
+                )
+                _write_json(output_path, payload)
+                prepared_arcs.append(
+                    arc.model_copy(
+                        update={
+                            "status": "REUSED",
+                            "reused_from_arc_id": previous_arc_id,
+                            "reused_semantic_chapter_ids": sorted(reused_ids),
+                        }
+                    )
+                )
+                reused_arc_ids.append(arc.arc_id)
+                continue
+            reused_output_path = root / "reused_arc_outputs" / f"{arc.arc_id}.json"
+            _write_json(reused_output_path, payload)
+        operation_id = _arc_operation_id(initialization_id, arc.arc_id)
         operation = ensure_operation(
             database,
             book_id,
             selected,
-            _arc_operation_id(initialization_id, arc.arc_id),
+            operation_id,
             "INITIALIZATION_ARC",
-            {"initialization_id": initialization_id, "arc_id": arc.arc_id},
+            {
+                "initialization_id": initialization_id,
+                "arc_id": arc.arc_id,
+                "initialization_depth": depth.value,
+                "chapter_ids": task_chapter_ids,
+            },
         )
         arc_task = (
             operation.input
@@ -627,7 +997,9 @@ def create_initialization(
         )
         (arc_task / "chapters").mkdir(parents=True)
         arc_chapters = [
-            row for row in chapters if str(row["chapter_id"]) in set(arc.chapter_ids)
+            row
+            for row in chapters
+            if str(row["chapter_id"]) in set(task_chapter_ids)
         ]
         chapter_lines: list[str] = []
         for row in arc_chapters:
@@ -642,8 +1014,16 @@ def create_initialization(
             {
                 "initialization_id": initialization_id,
                 "arc_id": arc.arc_id,
-                "chapter_ids": arc.chapter_ids,
-                "source_span_ids": arc.source_span_ids,
+                "chapter_ids": task_chapter_ids,
+                "arc_all_chapter_ids": arc.chapter_ids,
+                "arc_required_semantic_chapter_ids": arc.semantic_chapter_ids,
+                "reused_semantic_chapter_ids": sorted(reused_ids),
+                "source_span_ids": [
+                    str(row["source_span_id"])
+                    for row in arc_chapters
+                    if row.get("source_span_id")
+                ],
+                "initialization_depth": depth.value,
                 "content_hashes": [
                     str(row.get("content_sha256") or "") for row in arc_chapters
                 ],
@@ -669,6 +1049,59 @@ def create_initialization(
             "本 Arc 章节：\n" + "\n".join(chapter_lines) + "\n"
         )
         (arc_task / "input.md").write_text(input_text, encoding="utf-8")
+        prepared_arcs.append(
+            arc.model_copy(
+                update={
+                    "operation_id": operation_id,
+                    "operation_input_path": str(arc_task),
+                    "reused_from_arc_id": previous_arc_id,
+                    "reused_semantic_chapter_ids": sorted(reused_ids),
+                    "scheduled_semantic_chapter_ids": task_chapter_ids,
+                    "reused_output_path": (
+                        str(reused_output_path) if reused_output_path else None
+                    ),
+                }
+            )
+        )
+        scheduled_arc_ids.append(arc.arc_id)
+    arc_manifest = arc_manifest.model_copy(update={"arcs": prepared_arcs})
+    _write_json(root / "arc_manifest.json", arc_manifest.model_dump(mode="json"))
+    manifest.reused_arc_ids = reused_arc_ids
+    manifest.scheduled_arc_ids = scheduled_arc_ids
+    manifest.contract_hashes = {
+        "arc_schema.json": sha256_file(schema_path),
+        "source_coverage.json": sha256_file(root / "source_coverage.json"),
+        "arc_manifest.json": sha256_file(root / "arc_manifest.json"),
+    }
+    _write_json(root / "initialization_manifest.json", manifest.model_dump(mode="json"))
+    _write_json(
+        root / "status.json",
+        {
+            "initialization_id": initialization_id,
+            "state": InitializationState.SOURCE_MAPPED.value,
+            "readiness": "BLOCKED",
+            "source_coverage": coverage.chapter_coverage,
+            "chapter_coverage": 0.0,
+            "updated_at": utc_now(),
+            "completed_arc_ids": reused_arc_ids,
+            "pending_arc_ids": scheduled_arc_ids,
+            "failed_arc_ids": [],
+            "warnings": ["语义 Arc 输出尚未由 Codex 桌面端完成"],
+            "initialization_depth": depth.value,
+            "structural_index_status": "COMPLETE",
+            "semantic_status": "PENDING",
+            "progress": {
+                "reused_arc_count": len(reused_arc_ids),
+                "reused_chapter_count": sum(
+                    len(arc.reused_semantic_chapter_ids) for arc in prepared_arcs
+                ),
+                "scheduled_arc_count": len(scheduled_arc_ids),
+                "remaining_arc_count": len(scheduled_arc_ids),
+                "observed_seconds_per_arc": None,
+                "estimated_remaining_seconds": None,
+            },
+        },
+    )
     _event(root, "SOURCE_MAPPED", {"chapter_count": len(chapters), "arc_count": len(arcs)})
     return {
         "initialization_id": initialization_id,
@@ -682,6 +1115,14 @@ def create_initialization(
         "source_coverage": 1.0,
         "arc_ids": [arc.arc_id for arc in arcs],
         "source_manifest_sha256": source_hash,
+        "initialization_depth": depth.value,
+        "deep_chapter_count": len(deep_chapter_ids),
+        "lightweight_chapter_count": len(chapters),
+        "uncovered_semantic_chapter_count": len(chapters) - len(deep_chapter_ids),
+        "upgrade_from_initialization_id": upgrade_from_initialization_id,
+        "reused_arc_count": len(reused_arc_ids),
+        "scheduled_arc_count": len(scheduled_arc_ids),
+        "requested_action": requested_action,
     }
 
 
@@ -714,7 +1155,47 @@ def latest_initialization(
     return {"root": str(selected), "manifest": manifest, "status": status}
 
 
-def _arc_outputs(root: Path, arc_manifest: ArcManifest) -> tuple[list[ArcExtractionOutput], list[str], list[str]]:
+def _validate_arc_output_evidence(
+    database: Database,
+    book_id: str,
+    arc: ArcRecord,
+    output: ArcExtractionOutput,
+) -> None:
+    with database.connect() as connection:
+        rows = connection.execute(
+            "SELECT span_id FROM source_spans WHERE book_id=? AND chapter_id IN ({})".format(
+                ",".join("?" for _ in arc.chapter_ids)
+            ),
+            (book_id, *arc.chapter_ids),
+        ).fetchall()
+    valid = {str(row["span_id"]) for row in rows}
+    for field_name in type(output).model_fields:
+        value = getattr(output, field_name)
+        if not isinstance(value, list):
+            continue
+        for item in value:
+            if not isinstance(item, dict):
+                continue
+            status = str(item.get("information_status") or "").upper()
+            if status not in {"CANON", "INFERENCE"}:
+                continue
+            spans = {
+                str(span_id)
+                for span_id in (item.get("source_span_ids") or [])
+            }
+            invalid = spans - valid
+            if invalid:
+                raise ValueError(
+                    f"Arc {arc.arc_id} 引用了不属于该 Book/Arc 的 source span: "
+                    + ", ".join(sorted(invalid))
+                )
+
+
+def _arc_outputs(
+    database: Database,
+    root: Path,
+    arc_manifest: ArcManifest,
+) -> tuple[list[ArcExtractionOutput], list[str], list[str]]:
     completed: list[ArcExtractionOutput] = []
     failed: list[str] = []
     pending: list[str] = []
@@ -733,6 +1214,33 @@ def _arc_outputs(root: Path, arc_manifest: ArcManifest) -> tuple[list[ArcExtract
             value = ArcExtractionOutput.model_validate(_read_json(path))
             if value.initialization_id != arc_manifest.initialization_id or value.arc_id != arc.arc_id:
                 raise ValueError("initialization_id/arc_id 不匹配")
+            if arc.reused_output_path:
+                reused_path = Path(arc.reused_output_path)
+                reused = ArcExtractionOutput.model_validate(_read_json(reused_path))
+                updates: dict[str, Any] = {}
+                for field_name in type(value).model_fields:
+                    current_items = getattr(value, field_name)
+                    reused_items = getattr(reused, field_name)
+                    if not isinstance(current_items, list) or not isinstance(
+                        reused_items, list
+                    ):
+                        continue
+                    combined: list[Any] = []
+                    seen: set[str] = set()
+                    for item in [*reused_items, *current_items]:
+                        key = json.dumps(item, ensure_ascii=False, sort_keys=True)
+                        if key in seen:
+                            continue
+                        seen.add(key)
+                        combined.append(item)
+                    updates[field_name] = combined
+                value = value.model_copy(update=updates)
+            _validate_arc_output_evidence(
+                database,
+                arc_manifest.book_id,
+                arc,
+                value,
+            )
         except (OSError, json.JSONDecodeError, ValueError) as exc:
             failed.append(arc.arc_id)
             _write_json(
@@ -742,6 +1250,156 @@ def _arc_outputs(root: Path, arc_manifest: ArcManifest) -> tuple[list[ArcExtract
             continue
         completed.append(value)
     return completed, pending, failed
+
+
+def _analyzed_chapter_ids(outputs: list[ArcExtractionOutput]) -> set[str]:
+    return {
+        str(item["chapter_id"])
+        for output in outputs
+        for item in output.chapter_semantic_features
+        if item.get("chapter_id")
+        and str(item.get("analysis_status", "PENDING")).upper()
+        not in {"PENDING", "UNKNOWN", "NOT_ANALYZED"}
+    }
+
+
+def upgrade_initialization(
+    database: Database,
+    book_id: str,
+    *,
+    edition_id: str | None = None,
+    depth: InitializationDepth,
+) -> dict[str, Any]:
+    selected = resolve_edition_id(database, book_id, edition_id)
+    current = latest_initialization(database, book_id, selected)
+    if current is None:
+        return create_initialization(database, book_id, edition_id=selected, depth=depth)
+    manifest = InitializationManifest.model_validate(current["manifest"])
+    target = InitializationDepth(depth)
+    if _DEPTH_ORDER[target] <= _DEPTH_ORDER[manifest.initialization_depth]:
+        return {
+            **current,
+            "upgrade_status": "NO_CHANGE",
+            "initialization_depth": manifest.initialization_depth.value,
+        }
+    root = Path(str(current["root"]))
+    arc_manifest = ArcManifest.model_validate(_read_json(root / "arc_manifest.json"))
+    _, pending, failed = _arc_outputs(database, root, arc_manifest)
+    if pending or failed:
+        return {
+            **current,
+            "upgrade_status": "RESUME_REQUIRED",
+            "pending_arc_ids": pending,
+            "failed_arc_ids": failed,
+            "initialization_depth": manifest.initialization_depth.value,
+        }
+    return {
+        **create_initialization(
+            database,
+            book_id,
+            edition_id=selected,
+            depth=target,
+            upgrade_from_initialization_id=manifest.initialization_id,
+        ),
+        "upgrade_status": "UPGRADE_CREATED",
+    }
+
+
+def prepare_action_deepening(
+    database: Database,
+    book_id: str,
+    *,
+    edition_id: str | None = None,
+    action: str,
+    target_chapter_id: str | None = None,
+) -> dict[str, Any]:
+    selected = resolve_edition_id(database, book_id, edition_id)
+    current = latest_initialization(database, book_id, selected)
+    if current is None:
+        raise InitializationError("尚未建立结构索引，不能准备按操作补齐")
+    root = Path(str(current["root"]))
+    manifest = InitializationManifest.model_validate(current["manifest"])
+    arc_manifest = ArcManifest.model_validate(_read_json(root / "arc_manifest.json"))
+    structural = _read_json(root / manifest.structural_index_path)
+    chapters = list(structural.get("chapters") or [])
+    by_id = {str(item["chapter_id"]): item for item in chapters}
+    normalized_action = action.strip().upper()
+    required: set[str] = set()
+    if normalized_action == "CONTINUE":
+        required.update(manifest.current_boundary_window)
+        if arc_manifest.arcs:
+            required.update(arc_manifest.arcs[-1].chapter_ids)
+        boundary_terms = {
+            str(hint["term"])
+            for item in chapters[-5:]
+            for hint in item.get("recall_hints") or []
+        }
+    elif normalized_action == "REWRITE":
+        if target_chapter_id is None or target_chapter_id not in by_id:
+            raise InitializationError("改写补齐需要有效 target_chapter_id")
+        target = by_id[target_chapter_id]
+        ordinal = int(target["ordinal"])
+        required.update(
+            str(item["chapter_id"])
+            for item in chapters
+            if abs(int(item["ordinal"]) - ordinal) <= 1
+        )
+        target_arc = next(
+            arc for arc in arc_manifest.arcs if target_chapter_id in arc.chapter_ids
+        )
+        required.update(target_arc.chapter_ids)
+        boundary_terms = {
+            str(hint["term"]) for hint in target.get("recall_hints") or []
+        }
+    else:
+        raise InitializationError("action 必须是 CONTINUE 或 REWRITE")
+    if boundary_terms:
+        required.update(
+            str(item["chapter_id"])
+            for item in chapters
+            if any(
+                str(hint["term"]) in boundary_terms
+                for hint in item.get("recall_hints") or []
+            )
+        )
+    outputs, pending, failed = _arc_outputs(database, root, arc_manifest)
+    analyzed = _analyzed_chapter_ids(outputs)
+    missing = required - analyzed
+    if not missing:
+        return {
+            "status": "ACTION_CONTEXT_READY",
+            "action": normalized_action,
+            "initialization_id": manifest.initialization_id,
+            "required_chapter_ids": sorted(required),
+            "missing_chapter_ids": [],
+        }
+    planned = set(manifest.deep_chapter_ids)
+    if missing <= planned and (pending or failed):
+        return {
+            "status": "RESUME_EXISTING_INITIALIZATION",
+            "action": normalized_action,
+            "initialization_id": manifest.initialization_id,
+            "required_chapter_ids": sorted(required),
+            "missing_chapter_ids": sorted(missing),
+            "pending_arc_ids": pending,
+            "failed_arc_ids": failed,
+        }
+    created = create_initialization(
+        database,
+        book_id,
+        edition_id=selected,
+        depth=manifest.initialization_depth,
+        upgrade_from_initialization_id=manifest.initialization_id,
+        additional_deep_chapter_ids=required,
+        requested_action=normalized_action,
+    )
+    return {
+        **created,
+        "status": "ACTION_DEEPENING_CREATED",
+        "action": normalized_action,
+        "required_chapter_ids": sorted(required),
+        "missing_chapter_ids": sorted(missing),
+    }
 
 
 def _write_reports(root: Path, coverage: SourceCoverage, arc_manifest: ArcManifest, outputs: list[ArcExtractionOutput], readiness: InitializationReadiness) -> None:
@@ -841,19 +1499,11 @@ def refresh_initialization(
         return {"root": str(root), "status": stale_status, "readiness": stale_status}
     coverage = SourceCoverage.model_validate(_read_json(root / "source_coverage.json"))
     arc_manifest = ArcManifest.model_validate(_read_json(root / "arc_manifest.json"))
-    outputs, pending, failed = _arc_outputs(root, arc_manifest)
-    analyzed_chapter_ids: set[str] = set()
+    outputs, pending, failed = _arc_outputs(database, root, arc_manifest)
+    analyzed_chapter_ids = _analyzed_chapter_ids(outputs)
     evidence_total = 0
     evidence_valid = 0
     for output in outputs:
-        feature_rows = output.chapter_semantic_features
-        analyzed_chapter_ids.update(
-            str(item["chapter_id"])
-            for item in feature_rows
-            if item.get("chapter_id")
-            and str(item.get("analysis_status", "PENDING")).upper()
-            not in {"PENDING", "UNKNOWN", "NOT_ANALYZED"}
-        )
         for field_name in type(output).model_fields:
             value = getattr(output, field_name)
             if not isinstance(value, list):
@@ -953,6 +1603,13 @@ def refresh_initialization(
     if metric_audit.get("status") != "COMPLETE":
         errors = metric_audit.get("errors") or ["严格 Semantic Metric Bootstrap 尚未完成"]
         blockers.append(f"Semantic Metric Bootstrap 未完成：{errors[0]}")
+    partial_depth = (
+        initialization_manifest.initialization_depth is not InitializationDepth.FULL
+    )
+    if partial_depth:
+        blockers.append(
+            f"{initialization_manifest.initialization_depth.value} 只提供渐进式访问；完整 READY 需要 FULL"
+        )
     if (root / "synthesis" / "unresolved_assumptions.yaml").is_file():
         gaps.append("Future Possibility Space 仍保留未决假设")
     status = "BLOCKED" if blockers else ("READY_WITH_GAPS" if gaps or chapter_coverage < 1.0 else "READY")
@@ -967,6 +1624,7 @@ def refresh_initialization(
         recent_detailed_metric_coverage=recent_detailed_metric_coverage,
         current_chapter_metric_coverage=current_chapter_metric_coverage,
         metric_bootstrap_status=str(metric_audit.get("status", "NOT_READY")),
+        metric_authority=("FULL" if not partial_depth else "PROVISIONAL"),
         metric_bootstrap=metric_audit,
         canon_evidence_coverage=canon_evidence,
         entity_resolution_coverage=entity_cov,
@@ -996,6 +1654,23 @@ def refresh_initialization(
         state = InitializationState.METRIC_BOOTSTRAP_RUNNING
     else:
         state = InitializationState.ATLAS_VALIDATION_RUNNING
+    created_at = datetime.fromisoformat(initialization_manifest.created_at)
+    elapsed_seconds = max(
+        0.0,
+        (datetime.now(created_at.tzinfo) - created_at).total_seconds(),
+    )
+    newly_completed_count = max(
+        0,
+        len(outputs) - len(initialization_manifest.reused_arc_ids),
+    )
+    observed_seconds_per_arc = (
+        elapsed_seconds / newly_completed_count if newly_completed_count else None
+    )
+    estimated_remaining_seconds = (
+        observed_seconds_per_arc * len(pending)
+        if observed_seconds_per_arc is not None
+        else None
+    )
     status_payload = {
         "initialization_id": arc_manifest.initialization_id,
         "state": state.value,
@@ -1018,6 +1693,20 @@ def refresh_initialization(
             else sum(len(item.characters) for item in outputs)
         ),
         "warnings": readiness.gaps,
+        "initialization_depth": initialization_manifest.initialization_depth.value,
+        "uncovered_semantic_chapter_ids": [
+            chapter_id
+            for chapter_id in initialization_manifest.deep_chapter_ids
+            if chapter_id not in analyzed_chapter_ids
+        ]
+        + list(initialization_manifest.uncovered_semantic_chapter_ids),
+        "progress": {
+            "reused_arc_count": len(initialization_manifest.reused_arc_ids),
+            "completed_arc_count": len(outputs),
+            "remaining_arc_count": len(pending),
+            "observed_seconds_per_arc": observed_seconds_per_arc,
+            "estimated_remaining_seconds": estimated_remaining_seconds,
+        },
     }
     _write_json(root / "status.json", status_payload)
     _write_json(

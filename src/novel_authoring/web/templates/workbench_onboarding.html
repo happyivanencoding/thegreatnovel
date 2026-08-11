@@ -37,12 +37,19 @@
           <h2 data-onboarding-headline>{% if catalog_entry.state in ['DISCOVERED','INITIALIZATION_REQUIRED'] %}还需要初始化才能开始创作{% elif catalog_entry.state == 'INITIALIZATION_READY_FOR_CODEX' %}初始化任务已经准备好{% elif catalog_entry.state == 'INITIALIZING' %}正在初始化这本书{% elif catalog_entry.state == 'INITIALIZATION_REVIEW' %}初始化正在等待确认{% elif catalog_entry.state in ['FAILED','NEEDS_REPAIR'] %}初始化尚未完整{% else %}正文已读取，等待初始化{% endif %}</h2>
           <p class="wb-lede" data-onboarding-summary>{{ catalog_entry.author_summary }}</p>
 
+          <fieldset class="wb-depth-selector" data-initialization-depth-selector>
+            <legend>选择准备深度</legend>
+            <label><input type="radio" name="initialization-depth" value="QUICK"><span><strong>快速了解</strong><small>全书结构索引 + 开篇、最新边界和 Arc 锚点；未分析内容保持未知。</small></span></label>
+            <label class="is-recommended"><input type="radio" name="initialization-depth" value="BALANCED" checked><span><strong>均衡准备 <em>推荐</em></strong><small>补充当前 Arc、活跃依赖和高变化章节，适合继续创作。</small></span></label>
+            <label><input type="radio" name="initialization-depth" value="FULL"><span><strong>完整初始化</strong><small>全章语义、全局综合和严格 READY；适合全书重构与全局审计。</small></span></label>
+          </fieldset>
+
           <ol class="wb-initialization-steps" data-onboarding-steps>
             <li class="{% if catalog_entry.book_id %}is-complete{% else %}is-active{% endif %}"><span>{% if catalog_entry.book_id %}✓{% else %}●{% endif %}</span><div><strong>读取小说</strong><small>{% if catalog_entry.book_id %}已安全复制到系统书库{% else %}等待你的确认{% endif %}</small></div></li>
             <li class="{% if catalog_entry.book_id %}is-complete{% endif %}"><span>{% if catalog_entry.book_id %}✓{% else %}○{% endif %}</span><div><strong>建立章节</strong><small>{% if catalog_entry.book_id %}正文与章节索引已建立{% else %}确认后使用现有解析器{% endif %}</small></div></li>
             <li class="{% if catalog_entry.state == 'INITIALIZATION_READY_FOR_CODEX' %}is-active{% elif catalog_entry.state in ['INITIALIZING','INITIALIZATION_REVIEW','NEEDS_REPAIR','FAILED'] %}is-complete{% endif %}"><span>{% if catalog_entry.state == 'INITIALIZATION_READY_FOR_CODEX' %}●{% elif catalog_entry.state in ['INITIALIZING','INITIALIZATION_REVIEW','NEEDS_REPAIR','FAILED'] %}✓{% else %}○{% endif %}</span><div><strong>AI 初始化</strong><small>{% if catalog_entry.state == 'INITIALIZATION_READY_FOR_CODEX' %}等待 Codex 桌面端领取{% elif catalog_entry.state == 'INITIALIZING' %}正在建立故事理解{% else %}建立人物、世界与叙事状态{% endif %}</small></div></li>
             <li class="{% if catalog_entry.state in ['INITIALIZING','INITIALIZATION_REVIEW'] %}is-active{% endif %}"><span>{% if catalog_entry.state in ['INITIALIZING','INITIALIZATION_REVIEW'] %}●{% else %}○{% endif %}</span><div><strong>验证初始化结果</strong><small>按现有 Initialization Contract 验收</small></div></li>
-            <li><span>○</span><div><strong>准备工作台</strong><small>仅完整就绪后开放创作功能</small></div></li>
+            <li><span>○</span><div><strong>准备工作台</strong><small>结构完成后开放受限工作台；完整 READY 仍只属于 FULL</small></div></li>
           </ol>
 
           <div class="wb-onboarding-actions" data-onboarding-actions>
@@ -55,7 +62,7 @@
         </article>
 
         {% if catalog_entry.missing_requirements %}<article class="wb-content-card wb-onboarding-missing" data-onboarding-missing><h2>还缺这些关键结果</h2><ul>{% for item in catalog_entry.missing_requirements %}<li>{{ item }}</li>{% endfor %}</ul></article>{% endif %}
-        <details class="wb-content-card wb-technical-details"><summary>技术详情</summary><dl class="wb-technical-list"><dt>书籍记录</dt><dd>{{ catalog_entry.book_id or '尚未建立' }}</dd><dt>初始化记录</dt><dd>{{ catalog_entry.initialization_id or '尚未建立' }}</dd><dt>初始化状态</dt><dd>{{ catalog_entry.initialization_status or '尚未开始' }}</dd><dt>任务状态</dt><dd>{{ catalog_entry.handoff_status or '尚未创建' }}</dd><dt>交接指令</dt><dd>{% if catalog_entry.instruction_available %}可用{% elif catalog_entry.handoff_id %}{{ catalog_entry.instruction_error or '不可用' }}{% else %}交接任务尚未创建{% endif %}</dd><dt>来源</dt><dd>{{ catalog_entry.source_path }}</dd></dl></details>
+        <details class="wb-content-card wb-technical-details"><summary>技术详情</summary><dl class="wb-technical-list"><dt>书籍记录</dt><dd>{{ catalog_entry.book_id or '尚未建立' }}</dd><dt>访问级别</dt><dd>{{ catalog_entry.studio_access_level or 'ONBOARDING' }}</dd><dt>初始化记录</dt><dd>{{ catalog_entry.initialization_id or '尚未建立' }}</dd><dt>初始化状态</dt><dd>{{ catalog_entry.initialization_status or '尚未开始' }}</dd><dt>任务状态</dt><dd>{{ catalog_entry.handoff_status or '尚未创建' }}</dd><dt>交接指令</dt><dd>{% if catalog_entry.instruction_available %}可用{% elif catalog_entry.handoff_id %}{{ catalog_entry.instruction_error or '不可用' }}{% else %}交接任务尚未创建{% endif %}</dd><dt>来源</dt><dd>{{ catalog_entry.source_path }}</dd></dl></details>
       </div>
     </section>
     <div class="wb-resizer" data-resizer="right" role="separator" aria-label="调整右栏宽度"></div>
@@ -63,7 +70,7 @@
     <aside class="wb-pane wb-right-pane wb-onboarding-help" data-pane="right" aria-label="初始化说明">
       <div class="wb-pane-content">
         <div class="wb-pane-header"><div><p class="wb-kicker">下一步</p><h2>如何完成初始化</h2></div><button class="wb-icon-button" type="button" data-toggle-pane="right" aria-label="隐藏右栏"><span data-pane-toggle-icon>›</span></button></div>
-        <div class="wb-editor-scroll"><section class="wb-onboarding-help-copy"><span class="wb-help-number">1</span><h3>准备任务</h3><p>系统只在你确认后读取正文、建立章节，并创建本地交接任务。</p><span class="wb-help-number">2</span><h3>交给 Codex</h3><p>复制真实指令，在 Codex 桌面端处理。Web 不会自行调用模型或命令行。</p><span class="wb-help-number">3</span><h3>返回这里</h3><p>页面每 10 秒检查一次。完整验收后会出现“进入小说工作台”按钮。</p></section></div>
+        <div class="wb-editor-scroll"><section class="wb-onboarding-help-copy"><span class="wb-help-number">1</span><h3>选择深度</h3><p>三种深度都会覆盖全书结构；差别只在语义深读范围，默认推荐均衡准备。</p><span class="wb-help-number">2</span><h3>交给 Codex</h3><p>复制真实指令，在 Codex 桌面端处理。Web 不会自行调用模型或命令行。</p><span class="wb-help-number">3</span><h3>渐进开放</h3><p>页面每 10 秒检查一次。结构索引完成后先进入受限工作台；缺上下文时会创建定向补齐任务。</p></section></div>
       </div>
       <div class="wb-rail" data-pane-rail="right"><button class="wb-rail-button" type="button" data-toggle-pane="right" aria-label="展开右栏"><span data-pane-toggle-icon>‹</span></button></div>
     </aside>

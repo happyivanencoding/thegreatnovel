@@ -108,11 +108,11 @@
     });
   }
 
-  function postJson(url) {
+  function postJson(url, payload) {
     return fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-CSRF-Token": csrfToken() },
-      body: "{}"
+      body: JSON.stringify(payload || {})
     }).then(function (response) {
       return response.json().then(function (body) {
         if (!response.ok) throw new Error((body.error && body.error.message) || "请求失败");
@@ -133,11 +133,15 @@
   }
 
   function bindInitializationActions() {
+    function selectedDepth() {
+      var selected = document.querySelector('input[name="initialization-depth"]:checked');
+      return selected ? selected.value : "BALANCED";
+    }
     document.querySelectorAll("[data-initialize-candidate]").forEach(function (button) {
       button.addEventListener("click", function () {
         button.disabled = true;
         feedback("正在读取正文并建立章节…", false);
-        postJson("/api/library/candidates/" + encodeURIComponent(button.dataset.candidateId) + "/initialize")
+        postJson("/api/library/candidates/" + encodeURIComponent(button.dataset.candidateId) + "/initialize", { depth: selectedDepth() })
           .then(function (body) {
             feedback("正文与章节已建立，初始化任务已准备好。", false);
             location.href = body.workbench_url;
@@ -150,7 +154,7 @@
         button.disabled = true;
         feedback("正在准备初始化任务…", false);
         var url = "/api/books/" + encodeURIComponent(button.dataset.bookId) + "/editions/" + encodeURIComponent(button.dataset.editionId) + "/initialization";
-        postJson(url).then(function () { location.reload(); }).catch(function (error) { button.disabled = false; feedback(error.message, true); });
+        postJson(url, { depth: selectedDepth() }).then(function () { location.reload(); }).catch(function (error) { button.disabled = false; feedback(error.message, true); });
       });
     });
     document.querySelectorAll("[data-copy-handoff]").forEach(function (button) {

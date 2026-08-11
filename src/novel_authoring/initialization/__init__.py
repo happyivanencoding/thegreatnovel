@@ -10,23 +10,29 @@ from novel_authoring.initialization.metrics import (
     rebuild_initialization_metric_runs,
 )
 from novel_authoring.initialization.service import (
+    InitializationDepth,
     InitializationError,
     InitializationState,
     calculate_source_coverage,
     create_initialization,
     initialization_root,
     latest_initialization,
+    prepare_action_deepening,
     refresh_initialization,
+    upgrade_initialization,
 )
 
 __all__ = [
     "InitializationError",
+    "InitializationDepth",
     "InitializationState",
     "calculate_source_coverage",
     "create_initialization",
     "initialization_root",
     "latest_initialization",
+    "prepare_action_deepening",
     "refresh_initialization",
+    "upgrade_initialization",
     "ChapterMetricBootstrapRecord",
     "InitializationMetricBootstrapManifest",
     "MetricBootstrapImportReport",

@@ -784,6 +784,15 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .wb-onboarding-hero h1 { margin: .25rem 0; color: #101828; font-size: clamp(1.45rem, 3vw, 2.1rem); }
 .wb-onboarding-hero h2 { margin: .35rem 0 .65rem; color: #344054; font-size: 1rem; font-weight: 620; }
 .wb-onboarding-hero .wb-lede { max-width: 570px; margin: 0 auto; }
+.wb-depth-selector { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin: 1.5rem auto .5rem; padding: 0; border: 0; text-align: left; }
+.wb-depth-selector legend { grid-column: 1 / -1; margin-bottom: .25rem; color: #344054; font-size: .78rem; font-weight: 700; }
+.wb-depth-selector label { position: relative; display: block; min-width: 0; border: 1px solid #dfe3ea; border-radius: 10px; background: #fff; cursor: pointer; }
+.wb-depth-selector label:has(input:checked) { border-color: #6d8fe8; box-shadow: 0 0 0 3px #eef3ff; }
+.wb-depth-selector input { position: absolute; top: .75rem; left: .75rem; }
+.wb-depth-selector label > span { display: grid; gap: .35rem; padding: .75rem .7rem .75rem 2rem; }
+.wb-depth-selector strong { color: #344054; font-size: .75rem; }
+.wb-depth-selector small { color: #667085; font-size: .66rem; line-height: 1.45; }
+.wb-depth-selector em { padding: .1rem .28rem; border-radius: 4px; color: #2457d6; background: #eef3ff; font-size: .58rem; font-style: normal; }
 .wb-initialization-steps { display: grid; gap: 0; max-width: 520px; margin: 2rem auto; padding: 0; text-align: left; list-style: none; }
 .wb-initialization-steps li { position: relative; display: grid; grid-template-columns: 30px 1fr; gap: .65rem; min-height: 58px; color: #98a2b3; }
 .wb-initialization-steps li:not(:last-child)::after { position: absolute; top: 25px; bottom: 0; left: 12px; width: 2px; background: #e4e7ec; content: ""; }
@@ -810,6 +819,7 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .wb-onboarding-help-copy h3 { margin: .2rem 0; color: #344054; font-size: .85rem; }
 .wb-onboarding-help-copy p { margin: 0 0 1.35rem; color: #667085; font-size: .74rem; line-height: 1.6; }
 .wb-help-number { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; color: #2457d6; background: #eef3ff; font-size: .7rem; font-weight: 700; }
+@media (max-width: 760px) { .wb-depth-selector { grid-template-columns: 1fr; } }
 
 .library-body { min-height: 100vh; margin: 0; color: #1d2939; background: #f7f8fa; font-family: Inter, "Segoe UI", "Microsoft YaHei", sans-serif; }
 .library-topbar { display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 clamp(1rem, 4vw, 3rem); border-bottom: 1px solid #e4e7ec; background: rgba(255, 255, 255, .96); }

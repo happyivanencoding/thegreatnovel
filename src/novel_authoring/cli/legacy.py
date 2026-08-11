@@ -56,10 +56,12 @@ from novel_authoring.initialization.metrics import (
     rebuild_initialization_metric_runs,
 )
 from novel_authoring.initialization.service import (
+    InitializationDepth,
     InitializationError,
     create_initialization,
     latest_initialization,
     refresh_initialization,
+    upgrade_initialization,
 )
 from novel_authoring.metrics.engine import diagnose_bundle, load_metric_bundle, persist_results
 from novel_authoring.metrics.models import MetricSemanticObservationsOutput
@@ -2228,6 +2230,11 @@ def initialize_create_command(
     library_root: LibraryRoot = None,
     char_limit: int = typer.Option(80_000, "--char-limit"),
     max_chapters_per_arc: int = typer.Option(20, "--max-chapters-per-arc"),
+    depth: InitializationDepth = typer.Option(
+        InitializationDepth.BALANCED,
+        "--depth",
+        help="QUICK / BALANCED / FULL；完整 READY 仍只允许 FULL",
+    ),
 ) -> None:
     try:
         _emit(
@@ -2237,6 +2244,30 @@ def initialize_create_command(
                 edition_id=edition_id,
                 char_limit=char_limit,
                 max_chapters_per_arc=max_chapters_per_arc,
+                depth=depth,
+            )
+        )
+    except (InitializationError, ValueError, OSError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=3) from exc
+
+
+@initialize_app.command("upgrade")
+def initialize_upgrade_command(
+    book_id: BookId = typer.Option(...),
+    depth: InitializationDepth = typer.Option(..., "--depth"),
+    workspace: Workspace = Path("workspace"),
+    edition_id: EditionId = None,
+    library_root: LibraryRoot = None,
+) -> None:
+    """渐进升级并复用已完成 Arc；未完成任务先原地继续。"""
+    try:
+        _emit(
+            upgrade_initialization(
+                _book_database(workspace, book_id, library_root),
+                book_id,
+                edition_id=edition_id,
+                depth=depth,
             )
         )
     except (InitializationError, ValueError, OSError) as exc:

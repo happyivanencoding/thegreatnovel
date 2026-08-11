@@ -5,7 +5,15 @@ description: 按 Atlas-first 初始化合同，为已有长篇建立可审计的
 
 # Initialize Existing Novel
 
-这是已有长篇首次进入本系统时的唯一初始化流程。`ingest` 只建立不可变源、章节和 source spans；它不代表理解已经完成。初始化必须使用 `workspace/<book_id>/editions/<edition_id>/initialization/<initialization_id>/`，并冻结 source manifest、effective edition、content hashes、输出 schema 和作者指令 hash。
+这是已有长篇首次进入本系统时的唯一初始化流程。`ingest` 只建立不可变源、章节和 source spans；它不代表理解已经完成。新任务必须使用 `library/<book_id>/editions/<edition_id>/initialization/<initialization_id>/`，路径统一由 `BookLayout` 解析；旧 `workspace/` 只允许 legacy 读取。初始化冻结 source manifest、effective edition、content hashes、输出 schema 和作者指令 hash。
+
+## 初始化深度
+
+- `QUICK`：全书结构索引，深读开篇、最新边界、每个 Arc 首尾及少量高变化章节。
+- `BALANCED`：在 QUICK 之上深读当前 Arc、活跃依赖和结构索引定位到的历史依赖；默认推荐。
+- `FULL`：所有有效章节与 Arc 的严格全量语义、综合、指标和图谱；只有 FULL 可以达到现有 `READY`。
+
+三种深度都必须完整建立全书结构索引。结构候选、Recall Hint 和未分析章节没有事实权威，必须保持 `information_status=null` / `UNKNOWN`。QUICK/BALANCED 只能提供 Limited Studio；不能把局部语义覆盖写成完整 READY。升级时先检查当前任务：未完成则原地恢复，完成后复用可验证的 Arc 输出并只创建缺失任务。
 
 ## 阶段
 
@@ -17,18 +25,18 @@ Python 负责完整章节覆盖、唯一 Arc 归属、边界、hash、schema、�
 
 ## Arc 合同
 
-读取 `arc_tasks/<arc_id>/input.md`、`source_manifest.json`、`chapters/`、`output_schema.json` 和 `status.json`。每个有效章节必须恰好属于一个 Arc；默认 Arc 不超过 20 章和配置字符上限。只能把输出写到对应 `arc_outputs/<arc_id>/output.json`，不能覆盖 `book/`。
+从 `arc_manifest.json` 的 `operation_input_path` 读取 `input.md`、`source_manifest.json`、`chapters/`、`output_schema.json` 和 `status.json`。每个有效章节必须恰好属于一个 Arc；默认 Arc 不超过 20 章和配置字符上限。输出写到对应 Operation Workspace 的 `output/output.json`；legacy 初始化才使用初始化目录下的 `arc_outputs/<arc_id>/output.json`。不能覆盖 `book/`。
 
 `CANON` 记录必须包含真实 `source_span_ids`。`INFERENCE` 必须包含 `reasoning_summary`、`confidence`、`counter_evidence` 和 `unknown_boundary`。不确定的别名、冲突和世界规则保持未知或 unresolved，不得用相似字符串自动合并。
 
 ## 就绪门槛
 
-- `READY`：章节 100% 覆盖、Arc 100% 完成、CANON 证据达标、主角与当前边界确认、当前核心图谱齐全且无阻断冲突。
+- `READY`：必须是 FULL，且章节 100% 覆盖、Arc 100% 完成、CANON 证据达标、主角与当前边界确认、当前核心图谱齐全且无阻断冲突。
 - `READY_WITH_GAPS`：至少 95% 章节覆盖、当前核心图谱齐全；只剩次要实体、远期路线或非核心语义缺口。
 - `BLOCKED`：主角状态、当前核心规则/能力边界、主线程、续写边界、Edition/Source hash 或关键 Arc 缺失/冲突。
 
-未来可能性可以不完整，但不得被伪装成当前 Canon。完成初始化后才允许进入 `STORY_ATLAS_BOOTSTRAP`、语义指标汇总和 Planning Aggregate；不得产生 Canon Commit、批准草稿或启用 Edition。
+未来可能性可以不完整，但不得被伪装成当前 Canon。QUICK/BALANCED 可以进入独立的 Limited Studio，并按续写或改写动作创建定向补齐任务；这不等于完整就绪。不得产生 Canon Commit、批准草稿或启用 Edition。
 
 ## 输出
 
-至少保留 `initialization_manifest.json`、`source_coverage.json`、`arc_manifest.json`、`status.json`、`events.jsonl`、`arc_tasks/`、`arc_outputs/`、`entity_resolution/`、`synthesis/`、`metrics/`、`visuals/` 和 `reports/`。初始化 handoff 结果必须包含 initialization_id、Arc 完成/失败列表、覆盖率、实体/关系/图谱计数、生成视觉资产、readiness、warnings、review_queue，并固定 `canon_committed=false`、`edition_activated=false`。
+至少保留 `initialization_manifest.json`、`source_coverage.json`、`structural_index.json`、`arc_manifest.json`、`status.json`、`events.jsonl`、Operation Workspace、`entity_resolution/`、`synthesis/`、`metrics/`、`visuals/` 和 `reports/`。初始化 handoff 结果必须包含 initialization_id、深度、已复用/已完成/剩余 Arc、语义覆盖率、实体/关系/图谱计数、生成视觉资产、readiness、warnings、review_queue，并固定 `canon_committed=false`、`edition_activated=false`。时间估计只能根据本次真实完成速度动态计算；尚无完成样本时保持 null。

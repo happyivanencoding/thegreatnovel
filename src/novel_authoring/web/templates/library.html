@@ -37,7 +37,7 @@
               <div class="library-book-copy"><div class="library-card-status"><span class="wb-book-state-dot wb-book-state-{{ item.state|lower }}"></span>{% if technical_library %}{{ item.book_kind|title }}{% else %}{{ item.state_label }}{% endif %}</div><h3>{{ item.title }}</h3><p>{{ item.author_summary }}</p><div class="library-card-meta">{% if item.book_id %}<span>{{ item.chapter_count }} 章</span><span>{{ item.edition_count }} 个版本</span>{% else %}<span>{% if item.source_kind == 'FOLDER' %}章节目录{% else %}单个正文文件{% endif %}</span>{% endif %}{% if item.modified_at %}<span>最近更新</span>{% endif %}</div></div>
             </a>
             <footer>
-              <a class="button {% if item.studio_ready or item.state == 'DISCOVERED' %}primary{% endif %}" href="{{ item.href }}">{{ item.primary_action_label }}</a>
+              <a class="button {% if item.studio_accessible or item.state == 'DISCOVERED' %}primary{% endif %}" href="{{ item.href }}">{{ item.primary_action_label }}</a>
               <details class="library-card-details"><summary>详情</summary><dl><dt>来源</dt><dd>{{ item.source_path }}</dd>{% if item.missing_requirements %}<dt>还缺</dt><dd>{{ item.missing_requirements|join('；') }}</dd>{% endif %}<dt>技术状态</dt><dd>{{ item.initialization_status or item.state }}</dd></dl></details>
             </footer>
           </article>{% endfor %}

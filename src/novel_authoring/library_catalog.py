@@ -27,6 +27,13 @@ class CatalogScope(StrEnum):
     TECHNICAL = "TECHNICAL"
 
 
+class StudioAccessLevel(StrEnum):
+    ONBOARDING = "ONBOARDING"
+    LIMITED = "LIMITED"
+    ACTION_READY = "ACTION_READY"
+    FULL = "FULL"
+
+
 def _normalized_path(path: Path) -> str:
     return str(path.expanduser().resolve()).replace("/", "\\").casefold()
 
@@ -179,12 +186,44 @@ class StudioReadinessView:
 
 
 @dataclass(frozen=True, slots=True)
+class StudioAccessView:
+    book_id: str
+    access_level: StudioAccessLevel
+    initialization_depth: str | None
+    initialization_id: str | None
+    capabilities: dict[str, bool]
+    capability_status: dict[str, str]
+    uncovered_semantic_chapter_count: int
+    author_label: str
+    semantic_coverage: float = 0.0
+    completed_arc_count: int = 0
+    remaining_arc_count: int = 0
+    current_stage: str = "NOT_STARTED"
+    progress: dict[str, Any] = field(default_factory=dict)
+    blockers: tuple[str, ...] = ()
+    gaps: tuple[str, ...] = ()
+
+    @property
+    def accessible(self) -> bool:
+        return self.access_level is not StudioAccessLevel.ONBOARDING
+
+    def to_dict(self) -> dict[str, Any]:
+        value = asdict(self)
+        value["access_level"] = self.access_level.value
+        value["accessible"] = self.accessible
+        value["blockers"] = list(self.blockers)
+        value["gaps"] = list(self.gaps)
+        return value
+
+
+@dataclass(frozen=True, slots=True)
 class LibraryCatalogEntry:
     catalog_id: str
     title: str
     state: str
     state_label: str
     studio_ready: bool
+    studio_accessible: bool
     primary_action: str
     primary_action_label: str
     source_path: str
@@ -197,6 +236,8 @@ class LibraryCatalogEntry:
     active_edition: str = "base"
     book_kind: str | None = None
     creation_mode: str | None = None
+    studio_access_level: str = StudioAccessLevel.ONBOARDING.value
+    readiness_label: str = "尚未就绪"
     initialization_status: str | None = None
     initialization_id: str | None = None
     handoff_id: str | None = None
@@ -231,7 +272,7 @@ class LibraryCatalogView:
 
     def to_dict(self) -> dict[str, Any]:
         grouped = {
-            "ready": [item.to_dict() for item in self.entries if item.studio_ready],
+            "ready": [item.to_dict() for item in self.entries if item.studio_accessible],
             "running": [
                 item.to_dict()
                 for item in self.entries
@@ -240,7 +281,7 @@ class LibraryCatalogView:
             "pending": [
                 item.to_dict()
                 for item in self.entries
-                if not item.studio_ready
+                if not item.studio_accessible
                 and item.state not in {"INITIALIZING", "INITIALIZATION_REVIEW"}
             ],
         }
@@ -468,6 +509,124 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
     )
 
 
+def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
+    readiness = studio_readiness(layout, record)
+    paths = layout.for_book(record.book_id)
+    initialization = _latest_initialization(paths, record.active_edition_id)
+    capability_names = (
+        "browse_structure",
+        "view_partial_profile",
+        "plan_next",
+        "continue_from_current_boundary",
+        "rewrite_selected_chapter",
+        "inspect_global_world_state",
+    )
+    capabilities = {name: False for name in capability_names}
+    statuses = {name: "NOT_READY" for name in capability_names}
+    if readiness.ready:
+        capabilities = {name: True for name in capability_names}
+        statuses = {name: "AVAILABLE" for name in capability_names}
+        return StudioAccessView(
+            book_id=record.book_id,
+            access_level=StudioAccessLevel.FULL,
+            initialization_depth="FULL",
+            initialization_id=readiness.initialization_id,
+            capabilities=capabilities,
+            capability_status=statuses,
+            uncovered_semantic_chapter_count=0,
+            author_label="完整就绪",
+        )
+    if initialization is None:
+        return StudioAccessView(
+            book_id=record.book_id,
+            access_level=StudioAccessLevel.ONBOARDING,
+            initialization_depth=None,
+            initialization_id=None,
+            capabilities=capabilities,
+            capability_status=statuses,
+            uncovered_semantic_chapter_count=0,
+            author_label="尚未初始化",
+            blockers=readiness.missing_requirements,
+        )
+    root = Path(initialization["root"])
+    manifest = dict(initialization.get("manifest") or {})
+    status_payload = dict(initialization.get("status") or {})
+    depth = str(manifest.get("initialization_depth") or "FULL")
+    structural_ready = (root / "structural_index.json").is_file()
+    capabilities["browse_structure"] = structural_ready
+    statuses["browse_structure"] = "AVAILABLE" if structural_ready else "NOT_READY"
+    readiness_payload = status_payload.get("readiness")
+    semantic = readiness_payload if isinstance(readiness_payload, dict) else {}
+    semantic_coverage = float(
+        semantic.get("chapter_semantic_feature_coverage")
+        or status_payload.get("chapter_semantic_feature_coverage")
+        or 0.0
+    )
+    partial_profile = semantic_coverage > 0.0
+    capabilities["view_partial_profile"] = partial_profile
+    statuses["view_partial_profile"] = (
+        "AVAILABLE" if partial_profile else "EVIDENCE_HYDRATION_REQUIRED"
+    )
+    boundary_ready = (
+        bool(semantic.get("protagonist_confirmed"))
+        and bool(semantic.get("current_thread_confirmed"))
+        and bool(semantic.get("core_graphs_complete"))
+    )
+    capabilities["plan_next"] = structural_ready
+    capabilities["continue_from_current_boundary"] = boundary_ready
+    statuses["plan_next"] = (
+        "AVAILABLE"
+        if boundary_ready
+        else "PROVISIONAL_STRUCTURAL_ONLY"
+        if structural_ready
+        else "EVIDENCE_HYDRATION_REQUIRED"
+    )
+    statuses["continue_from_current_boundary"] = (
+        "AVAILABLE" if boundary_ready else "EVIDENCE_HYDRATION_REQUIRED"
+    )
+    statuses["rewrite_selected_chapter"] = "TARGET_ANALYSIS_REQUIRED"
+    statuses["inspect_global_world_state"] = "FULL_INITIALIZATION_REQUIRED"
+    uncovered = len(
+        status_payload.get("uncovered_semantic_chapter_ids")
+        or manifest.get("uncovered_semantic_chapter_ids")
+        or []
+    )
+    progress = dict(status_payload.get("progress") or {})
+    level = (
+        StudioAccessLevel.ACTION_READY
+        if boundary_ready
+        else StudioAccessLevel.LIMITED
+        if structural_ready
+        else StudioAccessLevel.ONBOARDING
+    )
+    label = (
+        "标准就绪"
+        if level is StudioAccessLevel.ACTION_READY
+        else ("均衡准备" if depth == "BALANCED" else "快速了解")
+        if level is StudioAccessLevel.LIMITED
+        else "尚未就绪"
+    )
+    return StudioAccessView(
+        book_id=record.book_id,
+        access_level=level,
+        initialization_depth=depth,
+        initialization_id=str(manifest.get("initialization_id") or "") or None,
+        capabilities=capabilities,
+        capability_status=statuses,
+        uncovered_semantic_chapter_count=uncovered,
+        author_label=label,
+        semantic_coverage=semantic_coverage,
+        completed_arc_count=int(progress.get("completed_arc_count") or 0),
+        remaining_arc_count=int(progress.get("remaining_arc_count") or 0),
+        current_stage=str(
+            status_payload.get("state") or manifest.get("state") or "SOURCE_MAPPED"
+        ),
+        progress=progress,
+        blockers=tuple(str(item) for item in semantic.get("blocking_reasons") or []),
+        gaps=tuple(str(item) for item in semantic.get("gaps") or []),
+    )
+
+
 _STATE_LABELS = {
     "READY": "可创作",
     "DISCOVERED": "待初始化",
@@ -498,10 +657,11 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
     paths = layout.for_book(record.book_id)
     runtime = _read_book_runtime(paths.database, record.book_id, record.active_edition_id)
     readiness = studio_readiness(layout, record)
+    access = studio_access(layout, record)
     instruction_available, instruction_error = _instruction_availability(
         runtime.get("handoff") or {}
     )
-    if readiness.ready:
+    if access.accessible:
         action, action_label = "OPEN_STUDIO", "进入小说工作台"
     elif readiness.handoff_status in _ACTIVE_HANDOFF_STATUSES:
         action, action_label = "VIEW_INITIALIZATION", "查看初始化进度"
@@ -514,8 +674,9 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
         source_path=str(record.source_origin or record.source_root),
         source_kind=record.source_origin_kind or "LIBRARY_COPY",
         state=readiness.status,
-        state_label=_STATE_LABELS[readiness.status],
+        state_label=access.author_label if access.accessible else _STATE_LABELS[readiness.status],
         studio_ready=readiness.ready,
+        studio_accessible=access.accessible,
         primary_action=action,
         primary_action_label=action_label,
         modified_at=readiness.updated_at,
@@ -524,6 +685,8 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
         active_edition=record.active_edition_id,
         book_kind=record.book_kind.value,
         creation_mode=record.creation_mode.value,
+        studio_access_level=access.access_level.value,
+        readiness_label=access.author_label,
         initialization_status=readiness.initialization_status,
         initialization_id=readiness.initialization_id,
         handoff_id=readiness.handoff_id,
@@ -585,6 +748,7 @@ def build_library_catalog(
                 state="DISCOVERED",
                 state_label=_STATE_LABELS["DISCOVERED"],
                 studio_ready=False,
+                studio_accessible=False,
                 primary_action="INGEST_AND_PREPARE",
                 primary_action_label="开始初始化",
                 modified_at=candidate.modified_at,
@@ -599,7 +763,7 @@ def build_library_catalog(
     entries.sort(
         key=lambda item: (
             0
-            if item.studio_ready
+            if item.studio_accessible
             else 1
             if item.state in {"INITIALIZING", "INITIALIZATION_REVIEW"}
             else 2,
@@ -642,8 +806,11 @@ __all__ = [
     "LibraryCatalogEntry",
     "LibraryCatalogView",
     "StudioReadinessView",
+    "StudioAccessLevel",
+    "StudioAccessView",
     "build_library_catalog",
     "find_candidate",
     "studio_readiness",
+    "studio_access",
     "suggest_book_id",
 ]

@@ -137,7 +137,7 @@ def test_candidate_ingest_creates_existing_initialization_handoff_and_deduplicat
     response = client.post(
         f"/api/library/candidates/{candidate['candidate_id']}/initialize",
         headers={"X-CSRF-Token": client.app.state.csrf_token},
-        json={},
+        json={"depth": "QUICK"},
     )
     assert response.status_code == 200
     result = response.json()
@@ -145,6 +145,10 @@ def test_candidate_ingest_creates_existing_initialization_handoff_and_deduplicat
     record = BookRegistry(BookLayout(library)).record(result["book_id"])
     assert record.source_origin == source.resolve()
     database = Database(BookLayout(library).for_book(result["book_id"]).database)
+    initialization = client.get(
+        f"/api/books/{result['book_id']}/editions/base/initialization"
+    ).json()
+    assert initialization["manifest"]["initialization_depth"] == "QUICK"
     with database.connect() as connection:
         handoff = connection.execute(
             "SELECT handoff_type, status FROM workflow_handoffs WHERE handoff_id=?",
@@ -162,15 +166,16 @@ def test_candidate_ingest_creates_existing_initialization_handoff_and_deduplicat
     assert all(item["candidate_id"] is None for item in updated["entries"])
     onboarding = client.get(result["workbench_url"])
     assert onboarding.status_code == 200
-    assert "初始化任务已经准备好" in onboarding.text
-    assert "复制给 Codex 的指令" in onboarding.text
-    assert "data-onboarding-activity-card" in onboarding.text
-    assert "《新测试小说》初始化" in onboarding.text
-    assert "data-onboarding-activity-count>1</span>" in onboarding.text
-    blocked_api = client.get(
+    assert "data-wb-chapter-tree" in onboarding.text
+    access = client.get(f"/api/books/{result['book_id']}/studio-access").json()
+    assert access["access_level"] == "LIMITED"
+    assert access["capabilities"]["browse_structure"] is True
+    assert access["capabilities"]["plan_next"] is True
+    assert access["capabilities"]["continue_from_current_boundary"] is False
+    limited_api = client.get(
         f"/api/books/{result['book_id']}/editions/base/workbench"
     )
-    assert blocked_api.status_code == 409
+    assert limited_api.status_code == 200
 
 
 def test_completed_handoff_without_core_artifacts_remains_blocked(tmp_path: Path) -> None:
@@ -194,7 +199,7 @@ def test_completed_handoff_without_core_artifacts_remains_blocked(tmp_path: Path
     ).json()
     assert readiness["ready"] is False
     assert readiness["status"] == "NEEDS_REPAIR"
-    assert "尚未建立小说初始化结果" in readiness["missing_requirements"]
+    assert "核心关系图谱缺失" in readiness["missing_requirements"]
 
 
 def test_valid_ready_contract_opens_full_studio_and_catalog_selector(tmp_path: Path) -> None:
@@ -235,6 +240,9 @@ def test_library_and_selector_share_catalog_and_poll_without_mutation(tmp_path: 
 
     assert "候选甲" in library_page
     assert "候选甲" in candidate_page
+    assert "快速了解" in candidate_page
+    assert "均衡准备" in candidate_page
+    assert "完整初始化" in candidate_page
     assert catalog["entries"][0]["state_label"] == "待初始化"
     assert "每 10 秒" in candidate_page
     assert "data-current-book-state-label" in candidate_page
