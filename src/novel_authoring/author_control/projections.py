@@ -79,6 +79,40 @@ _BASELINE_MUTABLE_KEYS = {
     "affiliation",
 }
 
+_AUTHOR_ATTRIBUTE_LABELS = {
+    "current_location": "当前地点",
+    "location": "当前地点",
+    "location_id": "当前地点",
+    "current_goal": "当前目标",
+    "goal": "当前目标",
+    "objective": "当前目标",
+    "health": "身体状态",
+    "body": "身体状态",
+    "injury": "伤势",
+    "condition": "身体状态",
+    "mood": "情绪",
+    "emotion": "情绪",
+    "mental_state": "心理状态",
+    "risk": "风险",
+    "danger": "风险",
+    "threat": "威胁",
+    "level": "等级",
+    "experience": "经验",
+    "experience_after": "当前经验",
+    "experience_display": "经验进度",
+    "remaining_to_next_level": "距离升级",
+    "strength": "力量",
+    "agility": "敏捷",
+    "constitution": "体质",
+    "spirit": "精神",
+    "hunger": "饥饿",
+    "armor": "护甲",
+    "quantity": "数量",
+    "use": "用途",
+    "usage": "用途",
+    "status": "状态",
+}
+
 
 class ChapterWorldStateView(BaseModel):
     """One read-only AFTER_CHAPTER world-state view from existing authorities."""
@@ -247,7 +281,7 @@ def _owner_matches(value: dict[str, Any], character_id: str) -> bool:
     )
 
 
-def _public_attributes(value: dict[str, Any]) -> list[dict[str, str]]:
+def _public_attributes(value: dict[str, Any]) -> list[dict[str, Any]]:
     excluded = {
         "_event_id",
         "_event_seq",
@@ -262,11 +296,19 @@ def _public_attributes(value: dict[str, Any]) -> list[dict[str, str]]:
         "relationship_id",
         "edge_id",
     }
-    result: list[dict[str, str]] = []
+    result: list[dict[str, Any]] = []
     for key, raw in value.items():
         if str(key) in excluded or raw is None or isinstance(raw, (dict, list)):
             continue
-        result.append({"label": str(key), "value": str(raw)})
+        raw_key = str(key)
+        result.append(
+            {
+                "key": raw_key,
+                "label": _AUTHOR_ATTRIBUTE_LABELS.get(raw_key, raw_key),
+                "value": str(raw),
+                "author_visible": raw_key in _AUTHOR_ATTRIBUTE_LABELS,
+            }
+        )
     return result[:24]
 
 
@@ -659,6 +701,15 @@ def _selected_character(
         exact = next((item for item in options if item["character_id"] == character_id), None)
         if exact is not None:
             return exact
+        return {
+            "character_id": character_id,
+            "name": "该人物（本章暂无证据）",
+            "layer": "UNKNOWN",
+            "layer_label": _LAYER_LABELS["UNKNOWN"],
+            "status_label": _LAYER_LABELS["UNKNOWN"],
+            "description": "所选人物在这一章边界还没有可回指的状态证据。",
+            "is_selectable": False,
+        }
     return options[0] if options else None
 
 
@@ -1298,17 +1349,53 @@ def _faction_details(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
         result.append(
             {
                 **record,
-                "state": facts.get("state") or facts.get("status"),
+                "state": payload.get("state") or raw.get("state") or "UNKNOWN",
+                "public_goal": facts.get("public_goal")
+                or facts.get("public_objective")
+                or "UNKNOWN",
                 "goal": facts.get("goal") or facts.get("objective") or "UNKNOWN",
                 "key_people": facts.get("key_people") or facts.get("members") or [],
                 "controlled_locations": facts.get("controlled_locations") or [],
                 "resources": facts.get("resources") or [],
+                "relationships": facts.get("relationships") or [],
                 "attitude": facts.get("attitude") or "UNKNOWN",
                 "action": facts.get("action") or "UNKNOWN",
                 "known": facts.get("known") or [],
                 "unknown": facts.get("unknown") or [],
                 "current_layer": record.get("layer") or "UNKNOWN",
                 "author_plan_separate": True,
+            }
+        )
+    return result
+
+
+def _location_details(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for record in records:
+        raw_value = record.get("raw")
+        raw: dict[str, Any] = raw_value if isinstance(raw_value, dict) else {}
+        payload_value = raw.get("payload")
+        payload: dict[str, Any] = payload_value if isinstance(payload_value, dict) else {}
+        facts = {**raw, **payload, **record}
+        result.append(
+            {
+                **record,
+                "public_status": payload.get("public_status")
+                or payload.get("state")
+                or raw.get("public_status")
+                or raw.get("state")
+                or "UNKNOWN",
+                "recent_events": facts.get("recent_events") or facts.get("events") or [],
+                "present_characters": facts.get("present_characters")
+                or facts.get("characters")
+                or [],
+                "resources": facts.get("resources") or [],
+                "constraints": facts.get("constraints") or facts.get("rules") or [],
+                "related_factions": facts.get("related_factions")
+                or facts.get("factions")
+                or [],
+                "known": facts.get("known") or [],
+                "unknown": facts.get("unknown") or [],
             }
         )
     return result
@@ -1426,6 +1513,83 @@ def _attach_who_knows(
         ]
 
 
+def _record_identities(record: dict[str, Any]) -> set[str]:
+    return {
+        str(value)
+        for value in (
+            record.get("state_key"),
+            record.get("object_id"),
+            record.get("record_id"),
+            record.get("name"),
+        )
+        if value
+    }
+
+
+def _attach_history(
+    records: list[dict[str, Any]],
+    history: list[dict[str, Any]],
+    *,
+    selected_ordinal: int | None,
+) -> None:
+    for record in records:
+        identities = _record_identities(record)
+        entries = [
+            dict(entry)
+            for entry in history
+            if identities & _record_identities(entry)
+        ]
+        entries.sort(
+            key=lambda item: (
+                int(item.get("chapter_ordinal") or 0),
+                str(item.get("record_id") or ""),
+            )
+        )
+        record["history"] = entries
+        record["changed_this_chapter"] = any(
+            selected_ordinal is not None
+            and int(item.get("chapter_ordinal") or 0) == selected_ordinal
+            for item in entries
+        )
+
+
+def _extend_unique(
+    target: list[dict[str, Any]], records: list[dict[str, Any]]
+) -> None:
+    seen = {
+        (
+            str(item.get("record_id") or item.get("state_key") or item.get("name") or ""),
+            str(item.get("owner_id") or item.get("current_holder_id") or ""),
+        )
+        for item in target
+    }
+    for record in records:
+        key = (
+            str(record.get("record_id") or record.get("state_key") or record.get("name") or ""),
+            str(record.get("owner_id") or record.get("current_holder_id") or ""),
+        )
+        if key in seen:
+            continue
+        target.append(record)
+        seen.add(key)
+
+
+def _character_recent_changes(
+    character_id: str, chapter_delta: dict[str, Any]
+) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    for item in chapter_delta.get("confirmed", []):
+        if character_id in {
+            str(item.get("subject_id") or ""),
+            str(item.get("owner_id") or ""),
+            str(item.get("current_holder_id") or ""),
+            str(item.get("from_entity_id") or ""),
+            str(item.get("to_entity_id") or ""),
+        }:
+            result.append(dict(item))
+    return result
+
+
 def _relationship_graph(
     characters: list[dict[str, Any]],
     factions: list[dict[str, Any]],
@@ -1473,6 +1637,7 @@ def build_story_game_state(
     *,
     chapter_id: str | None = None,
     character_id: str | None = None,
+    include_global_scope: bool = False,
 ) -> dict[str, Any]:
     """Build a historical, chapter-aware game-like state without persisting it."""
 
@@ -1515,6 +1680,7 @@ def build_story_game_state(
                 None if selected_chapter is None else str(selected_chapter["chapter_id"])
             ),
             chapter_ordinal=ordinal,
+            materialize_snapshot=False,
         )
         coverage_summary = source_state_coverage_summary(
             connection, book_id, edition_id
@@ -1580,6 +1746,7 @@ def build_story_game_state(
         options,
         extra_topics=[*inventory, *equipment],
     )
+    verified_history = list(source_projection.get("verified_history", []))
     _attach_who_knows(inventory, knowledge_matrix["matrix"])
     _attach_who_knows(equipment, knowledge_matrix["matrix"])
     for item in knowledge:
@@ -1648,6 +1815,7 @@ def build_story_game_state(
         if _is_location(dict(value))
     ]
     locations.extend(_source_category_records(source_projection, "LOCATION"))
+    locations = _location_details(locations)
     resources = [
         *_canon_records(projection.resources, category="resource"),
         *_source_category_records(source_projection, "RESOURCE"),
@@ -1689,6 +1857,136 @@ def build_story_game_state(
         for record in source_tasks_and_promises
         if source_kind(record) not in {"TASK", "THREAD"}
     )
+
+    for collection in (
+        inventory,
+        equipment,
+        canon_abilities,
+        knowledge,
+        relationship_inspector,
+        faction_inspector,
+        locations,
+        resources,
+        world_rules,
+        tasks,
+        threads,
+        promises,
+    ):
+        _attach_history(collection, verified_history, selected_ordinal=ordinal)
+
+    character_workspaces: list[dict[str, Any]] = []
+    all_inventory: list[dict[str, Any]] = []
+    all_equipment: list[dict[str, Any]] = []
+    all_abilities: list[dict[str, Any]] = []
+    all_relationships: list[dict[str, Any]] = []
+    workspace_options = (
+        list(options)
+        if include_global_scope
+        else ([] if selected is None else [selected])
+    )
+    if selected is not None and not any(
+        item["character_id"] == selected["character_id"] for item in workspace_options
+    ):
+        workspace_options.append(selected)
+    character_names = {
+        str(item["character_id"]): str(item.get("name") or "未命名人物")
+        for item in options
+    }
+    for option in workspace_options:
+        option_id = str(option["character_id"])
+        if selected is not None and option_id == str(selected["character_id"]):
+            option_state = selected_state
+            option_inventory = inventory
+            option_equipment = equipment
+            option_abilities = canon_abilities
+            option_relationships = relationship_inspector
+        else:
+            option_state = _character_state(
+                projection,
+                baseline,
+                option,
+                chapter_ordinals=chapter_ordinals,
+                selected_ordinal=ordinal,
+                source_projection=source_projection,
+            )
+            option_raw_value = option_state.get("raw")
+            option_raw = (
+                option_raw_value if isinstance(option_raw_value, dict) else {}
+            )
+            option_inventory, option_equipment = _projection_items(
+                projection,
+                baseline,
+                option,
+                option_raw,
+                chapter_ordinals=chapter_ordinals,
+                selected_ordinal=ordinal,
+                source_projection=source_projection,
+            )
+            option_abilities, _option_source_abilities = _abilities(
+                projection,
+                baseline,
+                option,
+                chapter_ordinals=chapter_ordinals,
+                selected_ordinal=ordinal,
+                source_projection=source_projection,
+            )
+            option_relationships = _relationship_details(
+                _relationships(
+                    projection,
+                    option,
+                    source_projection=source_projection,
+                )
+            )
+            _attach_who_knows(option_inventory, knowledge_matrix["matrix"])
+            _attach_who_knows(option_equipment, knowledge_matrix["matrix"])
+            for collection in (
+                option_inventory,
+                option_equipment,
+                option_abilities,
+                option_relationships,
+            ):
+                _attach_history(collection, verified_history, selected_ordinal=ordinal)
+        for record in [*option_inventory, *option_equipment, *option_abilities]:
+            record["owner_name"] = character_names.get(option_id, option.get("name"))
+        _extend_unique(all_inventory, option_inventory)
+        _extend_unique(all_equipment, option_equipment)
+        _extend_unique(all_abilities, option_abilities)
+        _extend_unique(all_relationships, option_relationships)
+        character_workspaces.append(
+            {
+                **option,
+                "state": option_state,
+                "inventory": option_inventory,
+                "equipment": option_equipment,
+                "abilities": option_abilities,
+                "relationships": option_relationships,
+                "recent_changes": _character_recent_changes(
+                    option_id, source_projection.get("chapter_delta", {})
+                ),
+                "counts": {
+                    "inventory": len(option_inventory),
+                    "equipment": len(option_equipment),
+                    "abilities": len(option_abilities),
+                    "relationships": len(option_relationships),
+                },
+            }
+        )
+    scope_counts = {
+        "global": {
+            "characters": len(options),
+            "inventory": len(all_inventory),
+            "equipment": len(all_equipment),
+            "abilities": len(all_abilities),
+            "relationships": len(all_relationships),
+        },
+        "selected_character": {
+            "characters": 1 if selected is not None else 0,
+            "inventory": len(inventory),
+            "equipment": len(equipment),
+            "abilities": len(canon_abilities),
+            "relationships": len(relationship_inspector),
+        },
+    }
     relationship_graph = _relationship_graph(options, factions, relationship_inspector)
     source_ready = bool(source_projection.get("available"))
     if after_event_seq is not None:
@@ -1780,11 +2078,15 @@ def build_story_game_state(
             "source_projection_status": source_projection.get("projection_status"),
         },
         "characters": options,
+        "character_workspaces": character_workspaces,
         "selected_character_id": selected["character_id"] if selected else None,
         "character": selected_state,
         "inventory": inventory,
+        "all_inventory": all_inventory,
         "equipment": equipment,
+        "all_equipment": all_equipment,
         "abilities": canon_abilities,
+        "all_abilities": all_abilities,
         "source_ability_references": source_abilities,
         "unknown_abilities": unknown_abilities,
         "knowledge": knowledge,
@@ -1796,11 +2098,13 @@ def build_story_game_state(
         "knowledge_visibility_edges": knowledge_matrix["edges"],
         "knowledge_matrix": knowledge_matrix["matrix"],
         "relationships": relationship_inspector,
+        "all_relationships": all_relationships,
         "relationship_inspector": relationship_inspector,
         "relationship_graph": relationship_graph,
         "soft_relationships": soft_relationships,
         "factions": faction_inspector,
         "faction_inspector": faction_inspector,
+        "scope_counts": scope_counts,
         "source_state": {
             "status": "READY" if source_ready else "MISSING",
             "status_label": "原文状态已建立" if source_ready else "正在补齐这一章的故事状态",

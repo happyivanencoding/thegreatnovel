@@ -67,6 +67,37 @@ class SourceStateCoverageStatus(StrEnum):
     FAILED = "FAILED"
 
 
+_CATEGORY_LABELS = {
+    SourceStateCategory.CHARACTER_STATE: "人物",
+    SourceStateCategory.LOCATION: "地点",
+    SourceStateCategory.ITEM: "物品",
+    SourceStateCategory.EQUIPMENT: "装备",
+    SourceStateCategory.RESOURCE: "资源",
+    SourceStateCategory.CAPABILITY: "能力",
+    SourceStateCategory.KNOWLEDGE: "认知",
+    SourceStateCategory.RELATIONSHIP: "关系",
+    SourceStateCategory.FACTION: "势力",
+    SourceStateCategory.WORLD_RULE: "世界规则",
+    SourceStateCategory.TASK_OR_PROMISE: "剧情进展",
+}
+
+_OPERATION_LABELS = {
+    SourceStateOperation.ADD: "新增",
+    SourceStateOperation.REMOVE: "移除",
+    SourceStateOperation.UPDATE: "状态更新",
+    SourceStateOperation.TRANSFER: "转交",
+    SourceStateOperation.ACQUIRE: "获得",
+    SourceStateOperation.LOSE: "失去",
+    SourceStateOperation.EQUIP: "装备",
+    SourceStateOperation.UNEQUIP: "卸下",
+    SourceStateOperation.LEARN: "掌握",
+    SourceStateOperation.REVEAL: "公开",
+    SourceStateOperation.HIDE: "转为隐藏",
+    SourceStateOperation.RELATIONSHIP_CHANGE: "关系变化",
+    SourceStateOperation.LOCATION_CHANGE: "位置变化",
+}
+
+
 _COMPLETE_COVERAGE_STATUSES = {
     SourceStateCoverageStatus.COMPLETE_NO_CHANGE,
     SourceStateCoverageStatus.COMPLETE_WITH_CHANGES,
@@ -603,6 +634,7 @@ def _delta_record(delta: SourceChapterStateDelta) -> dict[str, Any]:
         "state_key": delta.state_key,
         "name": str(payload.get("name") or delta.object_id or delta.subject_id),
         "category": delta.category.value.lower(),
+        "category_label": _CATEGORY_LABELS[delta.category],
         "layer": delta.verification_status.value,
         "status": delta.verification_status.value,
         "status_label": {
@@ -635,6 +667,7 @@ def _delta_record(delta: SourceChapterStateDelta) -> dict[str, Any]:
         "visible": payload.get("visible", True),
         "visibility_status": "VISIBLE" if payload.get("visible", True) else "HIDDEN",
         "operation": delta.operation.value,
+        "operation_label": _OPERATION_LABELS[delta.operation],
         "chapter_id": delta.chapter_id,
         "chapter_ordinal": delta.chapter_ordinal,
         "evidence_chapter_ordinal": delta.chapter_ordinal,
@@ -660,6 +693,7 @@ def build_source_state_projection(
     *,
     chapter_id: str | None,
     chapter_ordinal: int | None,
+    materialize_snapshot: bool = True,
 ) -> dict[str, Any]:
     """Replay only verified source deltas up to the requested chapter."""
 
@@ -731,7 +765,7 @@ def build_source_state_projection(
             continue
         _apply_delta(records, delta)
         applied_delta_ids.add(delta.delta_id)
-    if chapter_ordinal is not None and (
+    if materialize_snapshot and chapter_ordinal is not None and (
         verified or (coverage is not None and coverage.complete)
     ):
         _write_source_snapshot(
@@ -782,6 +816,7 @@ def build_source_state_projection(
             "confirmed": [_delta_record(delta) for delta in selected_verified],
             "uncertain": [_delta_record(delta) for delta in selected_uncertain],
         },
+        "verified_history": [_delta_record(delta) for delta in verified],
         "previous_projection_chapter_ordinal": previous_chapter,
         "snapshot_chapter_ordinal": snapshot_ordinal,
         "records": {

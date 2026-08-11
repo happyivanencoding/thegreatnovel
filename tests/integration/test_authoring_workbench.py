@@ -434,7 +434,11 @@ def test_chapter_anchor_is_shared_by_profile_planning_state_and_continuity(
     assert page.status_code == 200
     assert f'data-current-chapter-id="{chapter_id}"' in page.text
     assert f"mode=analysis&chapter_id={chapter_id}" in page.text
-    assert f"mode=state&state_tab=overview&chapter_id={chapter_id}" in page.text
+    state_link = (
+        "mode=state&state_tab=overview&state_scope=character&truth_lens=AUTHOR"
+        f"&chapter_id={chapter_id}"
+    )
+    assert state_link in page.text
     assert f"mode=continuity&node=chapter&chapter_id={chapter_id}" in page.text
     planning_link = (
         f"action=plan&node=planning&planning_view=candidates&chapter_id={chapter_id}"

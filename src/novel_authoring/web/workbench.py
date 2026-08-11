@@ -57,6 +57,53 @@ WORKBENCH_STATE_TABS: tuple[str, ...] = (
     "world_rules",
     "tasks",
 )
+WORKBENCH_STATE_SCOPES: tuple[str, ...] = ("character", "global")
+
+STATE_TAB_ITEMS = (
+    ("overview", "本章变化", "◈", "chapter_delta"),
+    ("characters", "人物", "♙", "characters"),
+    ("inventory", "背包", "▦", "inventory"),
+    ("equipment", "装备", "◫", "equipment"),
+    ("abilities", "能力", "✦", "abilities"),
+    ("knowledge", "认知边界", "◎", "knowledge_topics"),
+    ("locations", "地点", "⌖", "locations"),
+    ("factions", "势力", "⬡", "factions"),
+    ("relationships", "关系", "⌘", "relationships"),
+    ("world_rules", "世界规则", "§", "world_rules"),
+    ("tasks", "剧情进展", "✓", "plot_status"),
+)
+
+STATE_LENS_LABELS = {
+    "AUTHOR": "作者镜头",
+    "READER": "读者镜头",
+    "CHARACTER": "人物镜头",
+}
+
+STATE_SOURCE_LABELS = {
+    "CANON": "◆ 正史确认",
+    "SOURCE_VERIFIED": "✓ 原文确认",
+    "SOURCE_BASELINE": "✓ 原文确认",
+    "AUTHOR_INTENT": "✎ 作者规划",
+    "PROVISIONAL": "△ 草稿推演",
+    "SOFT_REFERENCE": "◇ 软参考",
+    "UNKNOWN": "○ 尚无证据",
+}
+
+STATE_CATEGORY_LABELS = {
+    "character_state": "人物",
+    "item": "物品",
+    "equipment": "装备",
+    "resource": "资源",
+    "capability": "能力",
+    "knowledge": "认知",
+    "location": "地点",
+    "faction": "势力",
+    "relationship": "关系",
+    "world_rule": "世界规则",
+    "task_or_promise": "剧情进展",
+    "thread": "剧情线",
+    "promise": "承诺",
+}
 
 MODE_LABELS = {
     "home": "工作台",
@@ -173,6 +220,482 @@ def _status_label(value: Any) -> str:
 def _normalise_choice(value: Any, allowed: tuple[str, ...], fallback: str) -> str:
     candidate = str(value or "")
     return candidate if candidate in allowed else fallback
+
+
+def _contains_cjk(value: Any) -> bool:
+    return any("\u3400" <= character <= "\u9fff" for character in str(value or ""))
+
+
+def _short_statement(value: Any, limit: int = 30) -> str:
+    text = " ".join(str(value or "").split())
+    if not text:
+        return ""
+    for separator in ("。", "；", "，"):
+        head = text.split(separator, 1)[0].strip()
+        if 4 <= len(head) <= limit:
+            return head
+    return text if len(text) <= limit else f"{text[:limit]}…"
+
+
+def _author_record_name(record: dict[str, Any], fallback: str = "状态记录") -> str:
+    name = str(record.get("name") or record.get("topic_name") or "").strip()
+    if name and _contains_cjk(name) and ":" not in name:
+        return name
+    statement = _short_statement(
+        record.get("statement") or record.get("description") or record.get("evidence_excerpt")
+    )
+    if statement and _contains_cjk(statement):
+        return statement
+    category = str(record.get("category") or "").lower()
+    return {
+        "character_state": "未命名人物",
+        "character": "未命名人物",
+        "item": "未命名物品",
+        "equipment": "未命名装备",
+        "resource": "未命名资源",
+        "capability": "未命名能力",
+        "knowledge": "未命名认知主题",
+        "location": "未命名地点",
+        "faction": "未命名势力",
+        "relationship": "未命名关系",
+        "world_rule": "未命名世界规则",
+        "task_or_promise": "未命名剧情进展",
+    }.get(category, fallback)
+
+
+def _record_presentation(
+    record: dict[str, Any], *, fallback: str = "状态记录"
+) -> dict[str, Any]:
+    result = dict(record)
+    layer = str(result.get("current_layer") or result.get("layer") or "UNKNOWN")
+    category = str(result.get("category") or "").lower()
+    result["author_name"] = _author_record_name(result, fallback)
+    result["author_category_label"] = str(
+        result.get("category_label")
+        or STATE_CATEGORY_LABELS.get(category)
+        or fallback
+    )
+    result["source_label"] = STATE_SOURCE_LABELS.get(layer, "○ 边界待确认")
+    result["recent_chapter_ordinal"] = (
+        result.get("recent_confirmed_chapter_ordinal")
+        or result.get("evidence_chapter_ordinal")
+        or result.get("chapter_ordinal")
+    )
+    result["card_summary"] = _short_statement(
+        result.get("description") or result.get("statement"), 42
+    )
+    history: list[dict[str, Any]] = []
+    for entry in result.get("history", []):
+        presented = dict(entry)
+        presented["author_name"] = _author_record_name(presented, result["author_name"])
+        presented["source_label"] = STATE_SOURCE_LABELS.get(
+            str(presented.get("layer") or "UNKNOWN"), "○ 边界待确认"
+        )
+        history.append(presented)
+    result["history"] = history
+    return result
+
+
+def _record_value(record: dict[str, Any], keys: tuple[str, ...]) -> Any:
+    for key in keys:
+        value = record.get(key)
+        if value not in (None, "", "UNKNOWN"):
+            return value
+    raw_value = record.get("raw")
+    raw = raw_value if isinstance(raw_value, dict) else {}
+    payload_value = raw.get("payload")
+    payload = payload_value if isinstance(payload_value, dict) else {}
+    for key in keys:
+        value = payload.get(key)
+        if value not in (None, "", "UNKNOWN"):
+            return value
+    attributes = record.get("attributes")
+    if isinstance(attributes, list):
+        for item in attributes:
+            if not isinstance(item, dict):
+                continue
+            if str(item.get("key") or item.get("label") or "") in keys:
+                value = item.get("value")
+                if value not in (None, "", "UNKNOWN"):
+                    return value
+    return None
+
+
+def _character_focus(
+    state: dict[str, Any], recent_changes: list[dict[str, Any]]
+) -> dict[str, Any]:
+    author_attributes = [
+        item
+        for item in state.get("attributes", [])
+        if isinstance(item, dict) and item.get("author_visible")
+    ]
+    return {
+        "location": _record_value(
+            state, ("current_location", "location", "location_id")
+        )
+        or "本章尚未明确",
+        "goal": _record_value(state, ("current_goal", "goal", "objective"))
+        or "本章尚未明确",
+        "body": _record_value(state, ("health", "body", "injury", "condition"))
+        or "未见明确异常",
+        "mood": _record_value(state, ("mood", "emotion", "mental_state"))
+        or "本章尚未明确",
+        "risk": _record_value(state, ("risk", "danger", "threat"))
+        or ("本章状态有变化" if recent_changes else "本章无新增风险证据"),
+        "stats": author_attributes[:8],
+    }
+
+
+def _relationship_author_label(record: dict[str, Any]) -> str:
+    value = str(
+        _record_value(
+            record,
+            ("relationship_state", "relation_type", "relationship_type", "label", "type"),
+        )
+        or ""
+    )
+    labels = {
+        "CONDITIONAL_COOPERATION": "有条件合作",
+        "COOPERATIVE_ACQUAINTANCES": "合作熟人",
+        "RECIPROCAL_INFORMATION_TRADE": "互惠信息交易",
+        "COOPERATION": "合作",
+        "ALLY": "盟友",
+        "ALLIANCE": "同盟",
+        "HOSTILE": "敌对",
+        "ENEMY": "敌对",
+        "DEPENDENCE": "依赖",
+        "TRADE": "交易",
+        "RIVALRY": "竞争",
+        "INTIMATE": "亲密",
+        "CONCLUDED": "关系已收束",
+    }
+    if value.upper() in labels:
+        return labels[value.upper()]
+    if value and _contains_cjk(value):
+        return value
+    statement = _short_statement(record.get("statement") or record.get("description"), 16)
+    return statement or "关系"
+
+
+def _is_lens_visible(record: dict[str, Any], lens: str) -> bool:
+    return lens == "AUTHOR" or record.get("visible") is not False
+
+
+def _active_plot_record(record: dict[str, Any]) -> bool:
+    raw_value = record.get("raw")
+    raw: dict[str, Any] = raw_value if isinstance(raw_value, dict) else {}
+    payload_value = raw.get("payload")
+    payload: dict[str, Any] = payload_value if isinstance(payload_value, dict) else {}
+    state = str(
+        next(
+            (
+                payload[key]
+                for key in ("task_state", "lifecycle_status", "state", "status")
+                if payload.get(key) not in (None, "", "UNKNOWN")
+            ),
+            _record_value(record, ("task_state", "lifecycle_status", "state", "status"))
+            or "ACTIVE",
+        )
+    ).upper()
+    return state not in {"COMPLETED", "DONE", "CLOSED", "CANCELLED", "RESOLVED"}
+
+
+def _state_presentation(
+    state: dict[str, Any],
+    previous: dict[str, Any] | None,
+    *,
+    scope: str,
+    lens_projection: dict[str, Any],
+) -> dict[str, Any]:
+    selected_id = str(state.get("selected_character_id") or "")
+    characters = []
+    for character in state.get("characters", []):
+        item = dict(character)
+        item["category"] = "character"
+        item["author_name"] = _author_record_name(item, "未命名人物")
+        item["source_label"] = STATE_SOURCE_LABELS.get(
+            str(item.get("layer") or "UNKNOWN"), "○ 边界待确认"
+        )
+        characters.append(item)
+    state["characters"] = characters
+    character_names = {
+        str(item.get("character_id")): str(item.get("author_name"))
+        for item in characters
+    }
+
+    workspaces: list[dict[str, Any]] = []
+    for workspace in state.get("character_workspaces", []):
+        item = dict(workspace)
+        item["author_name"] = character_names.get(
+            str(item.get("character_id")), _author_record_name(item, "未命名人物")
+        )
+        item["recent_changes"] = [
+            _record_presentation(change)
+            for change in item.get("recent_changes", [])
+        ]
+        item["focus"] = _character_focus(
+            item.get("state", {}), item["recent_changes"]
+        )
+        for key in ("inventory", "equipment", "abilities", "relationships"):
+            item[key] = [
+                _record_presentation(record)
+                for record in item.get(key, [])
+                if _is_lens_visible(record, str(lens_projection["lens"]))
+            ]
+        workspaces.append(item)
+    state["character_workspaces"] = workspaces
+    state["selected_character_workspace"] = next(
+        (
+            item
+            for item in workspaces
+            if str(item.get("character_id")) == selected_id
+        ),
+        None,
+    )
+
+    scoped_keys = {
+        "inventory": "all_inventory",
+        "equipment": "all_equipment",
+        "abilities": "all_abilities",
+        "relationships": "all_relationships",
+    }
+    for key, global_key in scoped_keys.items():
+        source = state.get(global_key, []) if scope == "global" else state.get(key, [])
+        state[f"visible_{key}"] = [
+            _record_presentation(record)
+            for record in source
+            if _is_lens_visible(record, str(lens_projection["lens"]))
+        ]
+    for key in ("locations", "factions", "world_rules", "tasks", "threads", "promises"):
+        state[key] = [
+            _record_presentation(record)
+            for record in state.get(key, [])
+            if _is_lens_visible(record, str(lens_projection["lens"]))
+        ]
+
+    chapter_ordinal = int((state.get("chapter") or {}).get("ordinal") or 0)
+    for item in state["locations"]:
+        recent = int(item.get("recent_chapter_ordinal") or 0)
+        item["recency_filter"] = (
+            "current"
+            if item.get("changed_this_chapter")
+            else "recent"
+            if recent and chapter_ordinal - recent <= 5
+            else "known"
+        )
+    for item in state["factions"]:
+        item["state_label"] = {
+            "ACTIVE": "正在活动",
+            "INACTIVE": "暂未活动",
+            "DISSOLVED": "已经解散",
+            "HOSTILE": "公开敌对",
+            "FRIENDLY": "公开友好",
+            "NEUTRAL": "公开中立",
+        }.get(str(item.get("state") or "UNKNOWN").upper(), "公开状态尚未确认")
+        item["goal_truth"] = next(
+            (
+                topic
+                for topic in item.get("author_truth_topics", [])
+                if str((topic.get("truth") or {}).get("truth_type") or "").upper()
+                == "FACTION_GOAL"
+            ),
+            None,
+        )
+
+    for item in state["visible_relationships"]:
+        item["from_name"] = character_names.get(
+            str(item.get("from_entity_id") or ""), "未命名关系方"
+        )
+        item["to_name"] = character_names.get(
+            str(item.get("to_entity_id") or ""), "未命名关系方"
+        )
+        item["relationship_label"] = _relationship_author_label(item)
+
+    faction_records: dict[str, dict[str, Any]] = {}
+    for faction in state["factions"]:
+        for identifier_key in ("faction_id", "object_id", "record_id", "id"):
+            identifier = faction.get(identifier_key)
+            if identifier:
+                faction_records[str(identifier)] = faction
+    character_records = {
+        str(character.get("character_id")): character
+        for character in characters
+        if character.get("character_id")
+    }
+    graph = dict(state.get("relationship_graph") or {})
+    relationship_records = {
+        str(item.get("record_id") or ""): item
+        for item in state["visible_relationships"]
+        if item.get("record_id")
+    }
+    graph_nodes = []
+    for node in graph.get("nodes", []):
+        presented_node = dict(node)
+        node_id = str(presented_node.get("node_id") or "")
+        inspector = (
+            faction_records.get(node_id)
+            if presented_node.get("node_type") == "FACTION"
+            else character_records.get(node_id)
+        )
+        if inspector is not None:
+            presented_node["name"] = inspector["author_name"]
+            presented_node["inspector"] = inspector
+        graph_nodes.append(presented_node)
+    graph["nodes"] = graph_nodes
+    graph["edges"] = [
+        {
+            **edge,
+            "label": relationship_records.get(str(edge.get("edge_id") or ""), {}).get(
+                "relationship_label", edge.get("label") or "关系"
+            ),
+            "inspector": relationship_records.get(
+                str(edge.get("edge_id") or ""), edge.get("inspector") or edge
+            ),
+        }
+        for edge in graph.get("edges", [])
+    ]
+    state["relationship_graph"] = graph
+
+    grouped: dict[str, dict[str, Any]] = {}
+    for record in state.get("chapter_delta", {}).get("confirmed", []):
+        presented = _record_presentation(record)
+        key = str(presented.get("category") or "other")
+        group = grouped.setdefault(
+            key,
+            {
+                "key": key,
+                "label": presented["author_category_label"],
+                "items": [],
+            },
+        )
+        group["items"].append(presented)
+    state["delta_groups"] = list(grouped.values())
+
+    scoped_count_key = "global" if scope == "global" else "selected_character"
+    state["state_scope"] = scope
+    state["scope_label"] = "全局" if scope == "global" else "选中人物"
+    state["visible_scope_counts"] = {
+        **state.get("scope_counts", {}).get(scoped_count_key, {}),
+        "inventory": len(state["visible_inventory"]),
+        "equipment": len(state["visible_equipment"]),
+        "abilities": len(state["visible_abilities"]),
+        "relationships": len(state["visible_relationships"]),
+    }
+
+    previous_counts: dict[str, int] = {}
+    if previous is not None:
+        previous_key = "global" if scope == "global" else "selected_character"
+        previous_counts = dict(
+            previous.get("scope_counts", {}).get(previous_key, previous.get("counts", {}))
+        )
+    comparison = []
+    for key, label in (
+        ("characters", "人物"),
+        ("inventory", "背包"),
+        ("equipment", "装备"),
+        ("abilities", "能力"),
+        ("relationships", "关系"),
+    ):
+        current_value = int(state["visible_scope_counts"].get(key, 0) or 0)
+        previous_value = int(previous_counts.get(key, 0) or 0)
+        comparison.append(
+            {
+                "key": key,
+                "label": label,
+                "current": current_value,
+                "previous": previous_value,
+                "difference": current_value - previous_value,
+            }
+        )
+    state["comparison"] = comparison
+    state["previous_chapter"] = None if previous is None else previous.get("chapter")
+
+    matrix = state.get("knowledge_matrix", [])
+    edges = state.get("knowledge_visibility_edges", [])
+    state["knowledge_by_character"] = []
+    for character in characters:
+        character_id = str(character.get("character_id") or "")
+        cells = [
+            _record_presentation({**cell, "category": "knowledge"})
+            for cell in edges
+            if str(cell.get("knower_id") or "") == character_id
+        ]
+        state["knowledge_by_character"].append(
+            {
+                **character,
+                "topics": cells,
+                "evidence_count": sum(bool(item.get("source_span_ids")) for item in cells),
+                "known_count": sum(item.get("state") != "UNKNOWN" for item in cells),
+            }
+        )
+    state["knowledge_by_topic"] = []
+    for topic in state.get("knowledge_topics", []):
+        topic_id = str(topic.get("topic_id") or "")
+        topic_edges = [item for item in edges if str(item.get("topic_id") or "") == topic_id]
+        presented_topic = _record_presentation(
+            {**topic, "category": "knowledge"}, fallback="认知主题"
+        )
+        state["knowledge_by_topic"].append(
+            {
+                **presented_topic,
+                "known_by": [
+                    {
+                        **item,
+                        "knower_name": character_names.get(
+                            str(item.get("knower_id") or ""), "未命名人物"
+                        ),
+                    }
+                    for item in topic_edges
+                    if item.get("state") != "UNKNOWN"
+                ],
+                "evidence_count": sum(bool(item.get("source_span_ids")) for item in topic_edges),
+            }
+        )
+    state["knowledge_matrix_payload"] = matrix
+
+    lens_topics = []
+    for topic in lens_projection.get("topics", []):
+        item = dict(topic)
+        truth = dict(item.get("truth") or {})
+        truth["author_name"] = _author_record_name(
+            {**truth, "category": "world_rule"}, "未命名真相"
+        )
+        truth["status_label"] = {
+            "ACTIVE": "当前成立",
+            "ACTIVE_TRUTH": "当前成立",
+            "CONFLICTING": "与已发生正文冲突",
+            "RETIRED": "已结束",
+            "REVEALED": "已经揭示",
+            "PROVISIONAL_TRUTH": "作者暂定",
+            "IDEA": "作者构想",
+            "DRAFT": "作者草案",
+        }.get(str(truth.get("status") or "").upper(), "作者已记录")
+        reader = item.get("reader")
+        if isinstance(reader, dict):
+            item["reader"] = {
+                **reader,
+                "state_label": {
+                    "UNKNOWN": "读者尚未知",
+                    "HINTED": "读者已有暗示",
+                    "PARTIAL": "读者部分知情",
+                    "KNOWN": "读者已经知道",
+                }.get(str(reader.get("state") or "UNKNOWN").upper(), "读者边界待确认"),
+            }
+        item["truth"] = truth
+        lens_topics.append(item)
+    state["lens"] = {
+        "value": lens_projection["lens"],
+        "label": STATE_LENS_LABELS[str(lens_projection["lens"])],
+        "character_name": character_names.get(selected_id, "所选人物"),
+        "topics": lens_topics,
+        "projection_only": True,
+    }
+    state["current_plot_status"] = [
+        record
+        for record in [*state["threads"], *state["promises"], *state["tasks"]]
+        if _active_plot_record(record)
+    ]
+    return state
 
 
 def _value_count(value: Any) -> int:
@@ -975,6 +1498,7 @@ def build_workbench_context(
     mode: str = "home",
     right_tab: str = "prose",
     state_tab: str = "overview",
+    state_scope: str = "character",
     character_id: str | None = None,
     truth_lens: str = "AUTHOR",
     truth_id: str | None = None,
@@ -1084,6 +1608,9 @@ def build_workbench_context(
     active_state_tab = _normalise_choice(
         state_tab, WORKBENCH_STATE_TABS, "overview"
     )
+    active_state_scope = _normalise_choice(
+        state_scope, WORKBENCH_STATE_SCOPES, "character"
+    )
     story_game_state: dict[str, Any] | None = None
     previous_story_game_state: dict[str, Any] | None = None
     author_control: dict[str, Any] | None = None
@@ -1104,6 +1631,9 @@ def build_workbench_context(
             selected_edition_id,
             chapter_id=state_chapter_id,
             character_id=character_id,
+            include_global_scope=(
+                active_mode == "state" and active_state_scope == "global"
+            ),
         )
         story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
             str(story_game_state.get("coverage_status") or "NOT_STARTED"), "状态未知"
@@ -1124,6 +1654,9 @@ def build_workbench_context(
                 selected_edition_id,
                 chapter_id=str(previous_chapter["chapter_id"]),
                 character_id=character_id,
+                include_global_scope=(
+                    active_mode == "state" and active_state_scope == "global"
+                ),
             )
             previous_story_game_state["coverage_status_label"] = (
                 SOURCE_COVERAGE_LABELS.get(
@@ -1142,6 +1675,7 @@ def build_workbench_context(
                 selected_edition_id,
                 chapter_id=None,
                 character_id=character_id,
+                include_global_scope=active_state_scope == "global",
             )
             story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
                 str(story_game_state.get("coverage_status") or "NOT_STARTED"),
@@ -1150,33 +1684,92 @@ def build_workbench_context(
         state_ordinal = int(
             (story_game_state.get("chapter") or {}).get("ordinal") or selected_anchor or 0
         )
-        state_truth_topics = truth_knowledge_view(
-            database,
-            book_id,
-            selected_edition_id,
-            chapter_ordinal=state_ordinal,
-        )["topics"]
-        for collection, subject_type in (
-            ("characters", "CHARACTER"),
-            ("factions", "FACTION"),
+        state_character_id = str(story_game_state.get("selected_character_id") or "")
+        if selected_lens is TruthLens.CHARACTER and not state_character_id:
+            state_lens_projection = {
+                "lens": selected_lens.value,
+                "topics": [],
+            }
+        else:
+            state_lens_projection = project_truth_lens(
+                database,
+                book_id,
+                selected_edition_id,
+                chapter_ordinal=state_ordinal,
+                lens=selected_lens,
+                character_id=(
+                    state_character_id if selected_lens is TruthLens.CHARACTER else None
+                ),
+                include_future=False,
+            )
+        state_truth_topics_value: Any = state_lens_projection.get("topics", [])
+        state_truth_topics: list[dict[str, Any]] = [
+            dict(topic)
+            for topic in state_truth_topics_value
+            if isinstance(topic, dict)
+        ]
+        for collection, subject_type, identifier_keys in (
+            ("characters", "CHARACTER", ("character_id", "record_id", "id")),
+            ("factions", "FACTION", ("faction_id", "object_id", "record_id", "id")),
+            ("locations", "LOCATION", ("location_id", "object_id", "record_id", "id")),
+            ("inventory", "ITEM", ("object_id", "item_id", "record_id", "id")),
+            ("all_inventory", "ITEM", ("object_id", "item_id", "record_id", "id")),
+            ("equipment", "ITEM", ("object_id", "item_id", "record_id", "id")),
+            ("all_equipment", "ITEM", ("object_id", "item_id", "record_id", "id")),
+            ("abilities", "ABILITY", ("object_id", "ability_id", "record_id", "id")),
+            (
+                "all_abilities",
+                "ABILITY",
+                ("object_id", "ability_id", "record_id", "id"),
+            ),
+            (
+                "relationships",
+                "RELATIONSHIP",
+                ("object_id", "relationship_id", "record_id", "id"),
+            ),
+            (
+                "all_relationships",
+                "RELATIONSHIP",
+                ("object_id", "relationship_id", "record_id", "id"),
+            ),
+            ("world_rules", "WORLD_RULE", ("object_id", "rule_id", "record_id", "id")),
         ):
             enriched: list[dict[str, Any]] = []
             for record in story_game_state.get(collection, []):
                 entity_id = str(
-                    record.get("character_id")
-                    or record.get("faction_id")
-                    or record.get("record_id")
-                    or record.get("id")
-                    or ""
+                    next(
+                        (
+                            record[key]
+                            for key in identifier_keys
+                            if record.get(key) not in (None, "")
+                        ),
+                        "",
+                    )
                 )
-                topics = [
+                matching_topics = [
                     topic
                     for topic in state_truth_topics
-                    if str(topic["truth"].get("subject_type") or "").upper()
+                    if isinstance(topic.get("truth"), dict)
+                    and str(topic["truth"].get("subject_type") or "").upper()
                     == subject_type
                     and str(topic["truth"].get("subject_id") or "") == entity_id
                 ]
-                enriched.append({**record, "author_truth_topics": topics})
+                enriched.append(
+                    {
+                        **record,
+                        "author_truth_topics": matching_topics,
+                        "reveal_plans": [
+                            plan
+                            for topic in matching_topics
+                            for plan in topic.get("reveal_plans", [])
+                        ],
+                        "reader": (
+                            matching_topics[0].get("reader")
+                            if len(matching_topics) == 1
+                            else record.get("reader")
+                        ),
+                    }
+                )
             story_game_state[collection] = enriched
         selected_character_record = next(
             (
@@ -1193,6 +1786,31 @@ def build_workbench_context(
                     "author_truth_topics", []
                 ),
             }
+        story_game_state = _state_presentation(
+            story_game_state,
+            previous_story_game_state,
+            scope=active_state_scope,
+            lens_projection=state_lens_projection,
+        )
+        current_state_ordinal = int(
+            (story_game_state.get("chapter") or {}).get("ordinal") or 0
+        )
+        story_game_state["chapter_navigation"] = {
+            direction: next(
+                (
+                    {
+                        "chapter_id": str(item["chapter_id"]),
+                        "ordinal": int(item["ordinal"]),
+                        "title": str(item["title"]),
+                    }
+                    for item in raw_chapters
+                    if int(item["ordinal"])
+                    == current_state_ordinal + (-1 if direction == "previous" else 1)
+                ),
+                None,
+            )
+            for direction in ("previous", "next")
+        }
         author_control = author_control_view(database, book_id, selected_edition_id)
     truth_chapter_ordinal = int(selected_anchor or 0)
     if active_mode == "truth" or selected_node in {
@@ -1207,7 +1825,14 @@ def build_workbench_context(
             selected_edition_id,
             chapter_ordinal=truth_chapter_ordinal,
             lens=selected_lens,
-            character_id=character_id,
+            character_id=(
+                character_id
+                or (
+                    None
+                    if story_game_state is None
+                    else story_game_state.get("selected_character_id")
+                )
+            ),
             include_future=(
                 selected_lens is TruthLens.AUTHOR and include_future_truths
             ),
@@ -1280,6 +1905,8 @@ def build_workbench_context(
         "active_main_mode": active_mode,
         "active_right_tab": _normalise_choice(right_tab, WORKBENCH_RIGHT_TABS, "prose"),
         "state_tab": active_state_tab,
+        "state_scope": active_state_scope,
+        "state_tab_items": STATE_TAB_ITEMS,
         "selected_character_id": (
             character_id
             if story_game_state is None

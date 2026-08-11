@@ -985,14 +985,16 @@ def test_workbench_uses_one_chapter_anchor_redacts_lenses_and_hidden_item_is_not
     )
     assert navigation_page.status_code == 200
     assert f'data-current-chapter-id="{chapter_10_id}"' in navigation_page.text
-    assert f"state_tab=inventory&chapter_id={chapter_10_id}" in navigation_page.text
+    assert "state_tab=inventory&state_scope=character&truth_lens=AUTHOR" in navigation_page.text
+    assert f"chapter_id={chapter_10_id}" in navigation_page.text
     assert f"mode=analysis&chapter_id={chapter_10_id}" in navigation_page.text
     assert f"mode=continuity&node=chapter&chapter_id={chapter_10_id}" in navigation_page.text
     assert "author_control_trace" not in navigation_page.text
     assert "profile_alignment JSON" not in navigation_page.text
-    assert "目标 / 隐藏真相 / 揭示安排 / 全书画像对齐" in navigation_page.text
-    assert "硬约束" in navigation_page.text
-    assert "章末状态 · ChapterWorldStateView" in navigation_page.text
+    assert "第10章结束时" in navigation_page.text
+    assert "苏牧" in navigation_page.text
+    assert "的背包状态" in navigation_page.text
+    assert "选择一个世界状态对象" in navigation_page.text
 
     continuity_page = client.get(
         f"/books/{BOOK_ID}/editions/base/workbench?mode=continuity&node=chapter"
@@ -1060,3 +1062,90 @@ def test_workbench_uses_one_chapter_anchor_redacts_lenses_and_hidden_item_is_not
             ).fetchone()[0]
         )
     assert truth_count_after == truth_count_before
+
+
+def test_world_state_lenses_are_chapter_aware_and_read_only(tmp_path: Path) -> None:
+    database, chapters, spans = _v23_book(tmp_path, chapter_count=30)
+    truth = _manual_hidden_truth(database, chapters, spans)
+    truth_id = str(truth["truth_id"])
+    evidence = [{"source_span_id": spans[30]["span_id"], "quote": spans[30]["excerpt"]}]
+    set_reader_knowledge(
+        database,
+        BOOK_ID,
+        "base",
+        truth_id,
+        state="HINTED",
+        chapter_ordinal=30,
+        evidence=evidence,
+        mode="SOURCE_EVIDENCE",
+    )
+    set_character_truth_knowledge(
+        database,
+        BOOK_ID,
+        "base",
+        truth_id,
+        "character:lin-yuwei",
+        state="SUSPECTED",
+        chapter_ordinal=30,
+        evidence=evidence,
+        mode="SOURCE_EVIDENCE",
+    )
+    chapter_id = str(chapters[29]["chapter_id"])
+    with database.connect() as connection:
+        before = "\n".join(connection.iterdump())
+
+    projections: dict[str, dict[str, object]] = {}
+    for lens in ("AUTHOR", "READER", "CHARACTER"):
+        projections[lens] = build_workbench_context(
+            database,
+            BOOK_ID,
+            "base",
+            chapter_id=chapter_id,
+            character_id="character:lin-yuwei",
+            mode="state",
+            node="state",
+            state_tab="overview",
+            state_scope="character",
+            truth_lens=lens,
+        )["story_game_state"]
+    with database.connect() as connection:
+        after = "\n".join(connection.iterdump())
+
+    assert before == after
+    assert projections["AUTHOR"]["lens"]["value"] == "AUTHOR"
+    assert projections["READER"]["lens"]["value"] == "READER"
+    assert projections["CHARACTER"]["lens"]["value"] == "CHARACTER"
+    author_topic = next(
+        item
+        for item in projections["AUTHOR"]["lens"]["topics"]
+        if item["truth"]["truth_id"] == truth_id
+    )
+    reader_topic = next(
+        item
+        for item in projections["READER"]["lens"]["topics"]
+        if item["truth"]["truth_id"] == truth_id
+    )
+    character_topic = next(
+        item
+        for item in projections["CHARACTER"]["lens"]["topics"]
+        if item["truth"]["truth_id"] == truth_id
+    )
+    assert author_topic["truth"]["statement"] == truth["statement"]
+    assert reader_topic["truth"].get("statement") != truth["statement"]
+    assert character_topic["truth"].get("statement") != truth["statement"]
+    assert reader_topic["reader"]["state_label"] == "读者已有暗示"
+
+    app = create_app(database, book_id=BOOK_ID)
+    client = TestClient(app)
+    pages = {
+        lens: client.get(
+            f"/books/{BOOK_ID}/editions/base/workbench?mode=state&node=state"
+            f"&state_tab=overview&state_scope=character&truth_lens={lens}"
+            f"&chapter_id={chapter_id}&character_id=character:lin-yuwei"
+        )
+        for lens in ("AUTHOR", "READER", "CHARACTER")
+    }
+    assert all(page.status_code == 200 for page in pages.values())
+    assert str(truth["statement"]) in pages["AUTHOR"].text
+    assert str(truth["statement"]) not in pages["READER"].text
+    assert str(truth["statement"]) not in pages["CHARACTER"].text

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
+from html.parser import HTMLParser
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -16,6 +17,7 @@ from novel_authoring.author_control.book_profile import (
     resolve_book_profile_refresh_proposal,
 )
 from novel_authoring.author_control.projections import build_story_game_state
+from novel_authoring.author_control.service import execute_author_intent
 from novel_authoring.author_control.source_state import (
     SourceChapterStateDelta,
     SourceStateCategory,
@@ -31,7 +33,44 @@ from novel_authoring.edition import create_edition
 from novel_authoring.ingest.service import ingest_book
 from novel_authoring.planning.candidates import prepare_handoff_candidate_task
 from novel_authoring.web.app import create_app
+from novel_authoring.web.workbench import build_workbench_context
 from novel_authoring.workflows.handoffs import claim_handoff
+
+
+class _VisibleAuthorText(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.hidden_depth = 0
+        self.parts: list[str] = []
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        del attrs
+        if tag in {"details", "script", "style"}:
+            self.hidden_depth += 1
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in {"details", "script", "style"} and self.hidden_depth:
+            self.hidden_depth -= 1
+
+    def handle_data(self, data: str) -> None:
+        if not self.hidden_depth and data.strip():
+            self.parts.append(data.strip())
+
+
+def _visible_author_text(markup: str) -> str:
+    parser = _VisibleAuthorText()
+    parser.feed(markup)
+    return " ".join(parser.parts)
+
+
+def _state_author_text(markup: str) -> str:
+    start = markup.index('<section class="wb-mode-panel wb-state-workspace"')
+    end = markup.index(
+        '<section class="wb-mode-panel wb-truth-workspace"', start
+    )
+    return _visible_author_text(markup[start:end])
 
 
 def _v22_book(
@@ -433,11 +472,15 @@ def test_v22_workbench_renders_matrix_inspector_modal_and_stable_explorer(
     )
     assert page.status_code == 200
     assert 'data-explorer-section="world-state"' in page.text
-    assert 'class="wb-knowledge-table"' in page.text
-    assert "人物 × 知识主题" in page.text
+    assert 'data-knowledge-panel="character"' in page.text
+    assert 'data-knowledge-panel="topic"' in page.text
+    assert 'data-knowledge-panel="matrix"' in page.text
+    assert "data-build-knowledge-matrix" in page.text
+    assert 'class="wb-knowledge-table"' not in page.text
+    assert "谁知道什么？" in page.text
     assert "data-wb-inspector" in page.text
-    assert "Who Knows" in page.text
-    assert "这件物品属于哪一层？" in page.text
+    assert "谁知道" in page.text
+    assert "Add Item" not in page.text
     assert "按全书批量准备状态任务" not in page.text
 
     zero_delta_page = TestClient(app).get(
@@ -446,8 +489,9 @@ def test_v22_workbench_renders_matrix_inspector_modal_and_stable_explorer(
         "&character_id=character:hero"
     )
     assert zero_delta_page.status_code == 200
-    assert "已分析 · 无确认变化" in zero_delta_page.text
-    assert "本章状态已分析，没有确认状态变化" in zero_delta_page.text
+    assert "本章没有确认变化" in zero_delta_page.text
+    assert "状态已分析" in zero_delta_page.text
+    assert "章末世界状态继承上一章" in zero_delta_page.text
     assert "准备本章状态任务" not in zero_delta_page.text
 
     profile = TestClient(app).get(
@@ -465,6 +509,313 @@ def test_v22_workbench_renders_matrix_inspector_modal_and_stable_explorer(
         / "workbench.js"
     )
     workbench_js = workbench_js_path.read_text(encoding="utf-8")
+    workbench_css = workbench_js_path.with_name("style.css").read_text(encoding="utf-8")
     legacy_js = workbench_js_path.with_name("app.js").read_text(encoding="utf-8")
     assert "scrollIntoView" not in workbench_js
     assert "scrollIntoView" not in legacy_js
+    assert 'nextLocation.searchParams.get("state_tab")' in workbench_js
+    assert "desired.centerScrollTop = 0" in workbench_js
+    assert "[hidden] { display: none !important; }" in workbench_css
+    assert "overflow-anchor: none" in workbench_css
+
+
+def test_world_state_author_view_is_delta_first_and_raw_metadata_is_collapsed(
+    tmp_path: Path,
+) -> None:
+    database, chapters = _v22_book(tmp_path, chapter_count=3)
+    app = create_app(database, book_id="story-world-v22")
+    client = TestClient(app)
+    page = client.get(
+        "/books/story-world-v22/editions/base/workbench"
+        f"?mode=state&node=state&state_tab=overview&chapter_id={chapters[1]['chapter_id']}"
+        "&character_id=character:hero&truth_lens=AUTHOR&state_scope=character"
+    )
+    assert page.status_code == 200
+    visible = _state_author_text(page.text)
+    assert visible.index("这一章改变了什么？") < visible.index("人物落点")
+    assert "本章变化" in visible
+    assert "当前关键状态" in visible
+    assert "当前世界" in visible
+    assert "COMPLETE_WITH_CHANGES" not in visible
+    assert "SOURCE_VERIFIED" not in visible
+    assert "AFTER_CHAPTER" not in visible
+    assert "Coverage + State" not in visible
+    assert "chunk_size" not in visible
+    assert "Projection" not in visible
+    assert "COMPLETE_WITH_CHANGES" in page.text
+    assert "AFTER_CHAPTER" in page.text
+    assert "Story Atlas 软参考（不属于当前世界事实）" in page.text
+    assert "Story Atlas" not in visible
+
+
+def test_world_state_scope_and_navigation_keep_character_subview_and_lens(
+    tmp_path: Path,
+) -> None:
+    database, chapters = _v22_book(tmp_path, chapter_count=3)
+    with database.connect() as connection:
+        span_rows = connection.execute(
+            "SELECT chapter_id, MIN(span_id) AS span_id FROM source_spans "
+            "WHERE book_id='story-world-v22' GROUP BY chapter_id"
+        ).fetchall()
+    spans = {str(row["chapter_id"]): str(row["span_id"]) for row in span_rows}
+    ally = SourceChapterStateDelta(
+        delta_id="v22-character-ally",
+        book_id="story-world-v22",
+        edition_id="base",
+        chapter_id=str(chapters[0]["chapter_id"]),
+        chapter_ordinal=1,
+        category=SourceStateCategory.CHARACTER_STATE,
+        operation=SourceStateOperation.ADD,
+        subject_id="character:ally",
+        statement="盟友在第一章登场。",
+        source_span_ids=[spans[str(chapters[0]["chapter_id"])]],
+        confidence=1.0,
+        verification_status=SourceStateVerification.SOURCE_VERIFIED,
+        payload={"name": "盟友"},
+    )
+    ally_item = SourceChapterStateDelta(
+        delta_id="v22-item-ally-map",
+        book_id="story-world-v22",
+        edition_id="base",
+        chapter_id=str(chapters[1]["chapter_id"]),
+        chapter_ordinal=2,
+        category=SourceStateCategory.ITEM,
+        operation=SourceStateOperation.ACQUIRE,
+        subject_id="character:ally",
+        object_id="item:ally-map",
+        statement="盟友在第二章取得路线图。",
+        source_span_ids=[spans[str(chapters[1]["chapter_id"])]],
+        confidence=1.0,
+        verification_status=SourceStateVerification.SOURCE_VERIFIED,
+        payload={"name": "路线图", "owner_id": "character:ally", "quantity": 1},
+    )
+    record_source_chapter_deltas(
+        database, "story-world-v22", "base", [ally, ally_item]
+    )
+
+    common = {
+        "chapter_id": str(chapters[1]["chapter_id"]),
+        "character_id": "character:hero",
+        "mode": "state",
+        "node": "state",
+        "state_tab": "inventory",
+        "truth_lens": "READER",
+    }
+    character = build_workbench_context(
+        database, "story-world-v22", "base", state_scope="character", **common
+    )["story_game_state"]
+    global_state = build_workbench_context(
+        database, "story-world-v22", "base", state_scope="global", **common
+    )["story_game_state"]
+    assert character["scope_label"] == "选中人物"
+    assert global_state["scope_label"] == "全局"
+    assert character["visible_scope_counts"]["characters"] == 1
+    assert global_state["visible_scope_counts"]["characters"] == 2
+    assert character["visible_scope_counts"]["inventory"] == 1
+    assert global_state["visible_scope_counts"]["inventory"] == 2
+
+    app = create_app(database, book_id="story-world-v22")
+    page = TestClient(app).get(
+        "/books/story-world-v22/editions/base/workbench"
+        f"?mode=state&node=state&state_tab=inventory&chapter_id={chapters[1]['chapter_id']}"
+        "&character_id=character:hero&truth_lens=READER&state_scope=character"
+    )
+    assert page.status_code == 200
+    assert "主角的背包状态" in page.text
+    assert "主角背包" in page.text
+    assert (
+        f"state_tab=inventory&state_scope=character&truth_lens=READER&chapter_id="
+        f"{chapters[0]['chapter_id']}&character_id=character:hero"
+    ) in page.text
+    assert (
+        f"state_tab=inventory&state_scope=character&truth_lens=READER&chapter_id="
+        f"{chapters[2]['chapter_id']}&character_id=character:hero"
+    ) in page.text
+
+    missing = build_workbench_context(
+        database,
+        "story-world-v22",
+        "base",
+        chapter_id=str(chapters[0]["chapter_id"]),
+        character_id="character:not-yet-present",
+        mode="state",
+        node="state",
+        state_tab="characters",
+        state_scope="character",
+        truth_lens="AUTHOR",
+    )["story_game_state"]
+    assert missing["selected_character_id"] == "character:not-yet-present"
+    assert missing["selected_character_workspace"]["state"]["available"] is False
+    assert "本章暂无证据" in missing["selected_character_workspace"]["author_name"]
+
+
+def test_item_faction_and_author_plan_keep_authority_boundaries(
+    tmp_path: Path,
+) -> None:
+    database, chapters = _v22_book(tmp_path, chapter_count=3)
+    with database.connect() as connection:
+        span_id = str(
+            connection.execute(
+                "SELECT MIN(span_id) AS span_id FROM source_spans "
+                "WHERE book_id='story-world-v22' AND chapter_id=?",
+                (str(chapters[1]["chapter_id"]),),
+            ).fetchone()["span_id"]
+        )
+    faction = SourceChapterStateDelta(
+        delta_id="v22-faction-north-traders",
+        book_id="story-world-v22",
+        edition_id="base",
+        chapter_id=str(chapters[1]["chapter_id"]),
+        chapter_ordinal=2,
+        category=SourceStateCategory.FACTION,
+        operation=SourceStateOperation.ADD,
+        subject_id="faction:north-traders",
+        object_id="faction:north-traders",
+        statement="北境商会公开收购通行证，并在边界城组织互助交易。",
+        source_span_ids=[span_id],
+        confidence=1.0,
+        verification_status=SourceStateVerification.SOURCE_VERIFIED,
+        payload={
+            "name": "北境商会",
+            "state": "ACTIVE",
+            "public_goal": "互助交易",
+            "goal": "垄断运输线",
+            "key_people": ["主角"],
+            "controlled_locations": ["边界城"],
+            "resources": ["车队", "药品"],
+            "relationships": ["与守卫队合作"],
+            "attitude": "谨慎合作",
+            "action": "收购通行证",
+            "known": ["公开收购"],
+            "unknown": ["幕后资助者"],
+        },
+    )
+    location = SourceChapterStateDelta(
+        delta_id="v22-location-border-city",
+        book_id="story-world-v22",
+        edition_id="base",
+        chapter_id=str(chapters[1]["chapter_id"]),
+        chapter_ordinal=2,
+        category=SourceStateCategory.LOCATION,
+        operation=SourceStateOperation.ADD,
+        subject_id="location:border-city",
+        object_id="location:border-city",
+        statement="边界城开放南门集市，主角与商会代表都在场。",
+        source_span_ids=[span_id],
+        confidence=1.0,
+        verification_status=SourceStateVerification.SOURCE_VERIFIED,
+        payload={
+            "name": "边界城",
+            "public_status": "南门集市开放",
+            "present_characters": ["主角", "商会代表"],
+            "resources": ["通行证"],
+            "constraints": ["日落前关闭"],
+            "related_factions": ["北境商会"],
+            "recent_events": ["互助交易启动"],
+            "known": ["南门开放"],
+            "unknown": ["幕后资助者"],
+        },
+    )
+    record_source_chapter_deltas(
+        database, "story-world-v22", "base", [faction, location]
+    )
+    execute_author_intent(
+        database,
+        "story-world-v22",
+        "base",
+        intent_type="PLOT_DIRECTION",
+        subject_type="FACTION",
+        title="未来让北境商会封锁南门",
+        target_chapter_id=str(chapters[1]["chapter_id"]),
+    )
+    state = build_workbench_context(
+        database,
+        "story-world-v22",
+        "base",
+        chapter_id=str(chapters[1]["chapter_id"]),
+        character_id="character:hero",
+        mode="state",
+        node="state",
+        state_tab="factions",
+        state_scope="global",
+        truth_lens="AUTHOR",
+    )["story_game_state"]
+    item = next(
+        record
+        for record in state["visible_inventory"]
+        if record["author_name"] == "边界钥匙"
+    )
+    assert item["history"]
+    assert item["who_knows"]
+    assert item["source_span_ids"]
+    faction_view = state["factions"][0]
+    for key in (
+        "state",
+        "goal",
+        "public_goal",
+        "key_people",
+        "controlled_locations",
+        "resources",
+        "relationships",
+        "attitude",
+        "action",
+        "known",
+        "unknown",
+    ):
+        assert faction_view[key]
+    location_view = state["locations"][0]
+    for key in (
+        "public_status",
+        "present_characters",
+        "resources",
+        "constraints",
+        "related_factions",
+        "recent_events",
+        "known",
+        "unknown",
+    ):
+        assert location_view[key]
+    assert "未来让北境商会封锁南门" not in json.dumps(
+        state["current_plot_status"], ensure_ascii=False
+    )
+    assert "未来让北境商会封锁南门" in json.dumps(
+        state["author_intents"], ensure_ascii=False
+    )
+
+    app = create_app(database, book_id="story-world-v22")
+    page = TestClient(app).get(
+        "/books/story-world-v22/editions/base/workbench"
+        f"?mode=state&node=state&state_tab=factions&chapter_id={chapters[1]['chapter_id']}"
+        "&character_id=character:hero&truth_lens=AUTHOR&state_scope=global"
+    )
+    assert page.status_code == 200
+    visible = _state_author_text(page.text)
+    for text in (
+        "北境商会",
+        "正在活动",
+        "互助交易",
+        "垄断运输线",
+        "谨慎合作",
+        "收购通行证",
+        "关系 1",
+    ):
+        assert text in visible
+
+    location_page = TestClient(app).get(
+        "/books/story-world-v22/editions/base/workbench"
+        f"?mode=state&node=state&state_tab=locations&chapter_id={chapters[1]['chapter_id']}"
+        "&character_id=character:hero&truth_lens=AUTHOR&state_scope=global"
+    )
+    assert location_page.status_code == 200
+    location_visible = _state_author_text(location_page.text)
+    assert "SOURCE_VERIFIED" not in location_visible
+    for text in (
+        "边界城",
+        "南门集市开放",
+        "主角、商会代表",
+        "通行证",
+        "日落前关闭",
+        "互助交易启动",
+        "关联势力 1",
+    ):
+        assert text in location_visible
