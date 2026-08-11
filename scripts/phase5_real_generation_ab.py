@@ -64,6 +64,7 @@ from novel_authoring.rhythm.service import diagnose_rhythm, rebuild_features
 from novel_authoring.runtime_baseline import build_runtime_baseline
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.library import LibraryAddOptions, add_book
+from novel_authoring.storage.registry import BookKind
 from novel_authoring.utils import json_dumps, stable_id, utc_now
 from novel_authoring.validation.service import validate_draft
 from novel_authoring.workflows.handoffs import (
@@ -658,7 +659,7 @@ def _setup_variant(
 ) -> dict[str, Any]:
     label = f"{run_label}-{variant.lower()}-{boundary:03d}"
     book_id = f"phase5-real-{label}"
-    library_root = ROOT / "library"
+    library_root = ROOT / "benchmark" / "phase5_real_library"
     source_root = library_root / f".{label}-input"
     source_root.mkdir(parents=True, exist_ok=True)
     visible_path = source_root / f"visible_{boundary:03d}.md"
@@ -670,6 +671,7 @@ def _setup_variant(
             source=visible_path,
             library_root=library_root,
             confirm_order=True,
+            book_kind=BookKind.BENCHMARK,
         )
     )
     database = Database(added.database)

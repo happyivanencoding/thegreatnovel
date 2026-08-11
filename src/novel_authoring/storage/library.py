@@ -18,7 +18,7 @@ from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.manifest import verify_mirror, write_compatibility_mirror
 from novel_authoring.storage.migration import _rewrite_database_paths
 from novel_authoring.storage.models import BookPaths, LayoutError
-from novel_authoring.storage.registry import BookRegistry
+from novel_authoring.storage.registry import BookKind, BookRegistry, CreationMode
 from novel_authoring.utils import json_dumps, safe_book_id, sha256_file, utc_now
 
 
@@ -31,6 +31,8 @@ class LibraryAddOptions:
     confirm_order: bool = False
     initialize_mode: str = "deferred"
     source_origin: Path | None = None
+    book_kind: BookKind = BookKind.AUTHOR
+    creation_mode: CreationMode = CreationMode.IMPORTED
 
 
 @dataclass(slots=True)
@@ -133,6 +135,8 @@ def add_book(options: LibraryAddOptions) -> LibraryAddResult:
             initialize_mode,
             layout=layout,
             source_origin=options.source_origin or source,
+            book_kind=options.book_kind,
+            creation_mode=options.creation_mode,
         )
         fts_rows = _validate_book_tree(
             stage_paths,
@@ -238,6 +242,8 @@ def _finalize_registry(
     *,
     layout: BookLayout,
     source_origin: Path,
+    book_kind: BookKind,
+    creation_mode: CreationMode,
 ) -> None:
     registry = BookRegistry(layout)
     values: dict[str, Any] = {
@@ -249,6 +255,8 @@ def _finalize_registry(
         "active_edition_id": "base",
         "database_path": "_system/state.sqlite3",
         "source_storage_mode": "COPY_READ_ONLY",
+        "book_kind": book_kind.value,
+        "creation_mode": creation_mode.value,
         "source_origin": {
             "path": str(source_origin.expanduser().resolve()),
             "kind": "FILE" if source_origin.is_file() else "FOLDER",

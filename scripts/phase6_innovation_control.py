@@ -72,6 +72,7 @@ from novel_authoring.planning.rewards import (
 )
 from novel_authoring.storage.library import LibraryAddOptions, add_book
 from novel_authoring.storage.operations import ensure_operation
+from novel_authoring.storage.registry import BookKind
 from novel_authoring.utils import json_dumps, sha256_file, stable_id, utc_now
 from novel_authoring.validation.service import validate_draft
 from novel_authoring.workflows.handoffs import HandoffStatus, get_handoff
@@ -165,7 +166,7 @@ def _paths(
         "queue": controller / "runs" / run_label / "WORK_QUEUE.md",
         "queue_pointer": controller / "WORK_QUEUE.md",
         "hidden_root": (hidden_root or root / "benchmark" / HIDDEN_DIR_NAME / run_label).resolve(),
-        "library_root": (library_root or root / "library").resolve(),
+        "library_root": (library_root or root / "benchmark" / "phase6_live_library").resolve(),
     }
 
 
@@ -447,6 +448,7 @@ def _make_book(
             source=visible_path,
             library_root=paths["library_root"],
             confirm_order=True,
+            book_kind=BookKind.BENCHMARK,
         )
     )
     database = Database(added.database)

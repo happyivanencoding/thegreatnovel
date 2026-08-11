@@ -10,26 +10,31 @@
 <body class="library-body">
   <header class="library-topbar">
     <a class="wb-brand" href="/library">Novel Studio</a>
-    <nav><a class="is-active" href="/library">书库</a></nav>
+    <nav><a class="{% if not technical_library %}is-active{% endif %}" href="/library">创作项目</a>{% if developer_mode %}<a class="{% if technical_library %}is-active{% endif %}" href="/library/technical">技术书库</a>{% endif %}</nav>
   </header>
   <main class="library-shell" data-library-catalog data-catalog-revision="{{ catalog.revision }}">
     <header class="library-hero">
-      <div><p class="wb-kicker">你的创作项目</p><h1>书库</h1><p>把小说放进书籍目录，这里会自动发现；只有在你确认后才会读取和初始化。</p></div>
+      <div><p class="wb-kicker">{% if technical_library %}开发者内容{% else %}你的创作项目{% endif %}</p><h1>{% if technical_library %}技术书库{% else %}书库{% endif %}</h1><p>{% if technical_library %}Benchmark、Test、Demo 和尚未分类的历史项目；它们不会进入作者书库或书籍选择器。{% else %}把小说放进书籍目录，这里会自动发现；只有在你确认后才会读取和初始化。{% endif %}</p></div>
       <div class="library-hero-actions"><button class="button" type="button" data-refresh-library>刷新书籍</button><button class="button" type="button" data-copy-path="{{ catalog.discovery_root }}">复制书籍目录</button></div>
     </header>
 
     <section class="library-location" aria-label="书籍目录"><span>书籍目录</span><code>{{ catalog.discovery_root or '尚未配置' }}</code><small>支持 {{ catalog.supported_formats|join('、') if catalog.supported_formats else '当前解析器格式' }} · 扫描只读</small></section>
     <p class="library-feedback" data-library-feedback aria-live="polite"></p>
 
-    {% for group_key, title, description in [('ready','可以继续创作','初始化已完整验收'),('running','正在准备','初始化任务正在处理或等待确认'),('pending','还需要准备','新发现或尚未完整初始化')] %}
-      {% set group = catalog.groups[group_key] %}
+    {% if technical_library %}
+      {% set group_specs = [('BENCHMARK','Benchmark','性能、质量与盲测运行'),('TEST','Test','自动化或验收测试项目'),('DEMO','Demo','产品演示项目'),('UNCLASSIFIED','尚未分类','历史项目，等待显式分类')] %}
+    {% else %}
+      {% set group_specs = [('ready','可以继续创作','初始化已完整验收'),('running','正在准备','初始化任务正在处理或等待确认'),('pending','还需要准备','新发现或尚未完整初始化')] %}
+    {% endif %}
+    {% for group_key, title, description in group_specs %}
+      {% set group = catalog.kind_groups[group_key] if technical_library else catalog.groups[group_key] %}
       {% if group %}<section class="library-section" data-library-group="{{ group_key }}">
         <header><div><h2>{{ title }}</h2><p>{{ description }}</p></div><span>{{ group|length }} 本</span></header>
         <div class="library-grid">
-          {% for item in group %}<article class="library-book-card library-state-{{ item.state|lower }}" data-catalog-card data-catalog-id="{{ item.catalog_id }}">
+          {% for item in group %}<article class="library-book-card library-state-{{ item.state|lower }}{% if technical_library %} library-technical-card{% endif %}" data-catalog-card data-catalog-id="{{ item.catalog_id }}">
             <a class="library-card-main" href="{{ item.href }}">
               <div class="library-book-cover"><span>{{ item.title[:1] }}</span></div>
-              <div class="library-book-copy"><div class="library-card-status"><span class="wb-book-state-dot wb-book-state-{{ item.state|lower }}"></span>{{ item.state_label }}</div><h3>{{ item.title }}</h3><p>{{ item.author_summary }}</p><div class="library-card-meta">{% if item.book_id %}<span>{{ item.chapter_count }} 章</span><span>{{ item.edition_count }} 个版本</span>{% else %}<span>{% if item.source_kind == 'FOLDER' %}章节目录{% else %}单个正文文件{% endif %}</span>{% endif %}{% if item.modified_at %}<span>最近更新</span>{% endif %}</div></div>
+              <div class="library-book-copy"><div class="library-card-status"><span class="wb-book-state-dot wb-book-state-{{ item.state|lower }}"></span>{% if technical_library %}{{ item.book_kind|title }}{% else %}{{ item.state_label }}{% endif %}</div><h3>{{ item.title }}</h3><p>{{ item.author_summary }}</p><div class="library-card-meta">{% if item.book_id %}<span>{{ item.chapter_count }} 章</span><span>{{ item.edition_count }} 个版本</span>{% else %}<span>{% if item.source_kind == 'FOLDER' %}章节目录{% else %}单个正文文件{% endif %}</span>{% endif %}{% if item.modified_at %}<span>最近更新</span>{% endif %}</div></div>
             </a>
             <footer>
               <a class="button {% if item.studio_ready or item.state == 'DISCOVERED' %}primary{% endif %}" href="{{ item.href }}">{{ item.primary_action_label }}</a>
@@ -40,7 +45,7 @@
       </section>{% endif %}
     {% endfor %}
 
-    {% if not catalog.entries %}<section class="library-empty"><div>＋</div><h2>放入你的第一本小说</h2><p>把 .md 或 .txt 文件复制到上面的书籍目录，最迟约 10 秒后会出现在这里。</p><button class="button primary" type="button" data-copy-path="{{ catalog.discovery_root }}">复制书籍目录</button></section>{% endif %}
+    {% if not catalog.entries %}<section class="library-empty"><div>＋</div><h2>{% if technical_library %}没有技术项目{% else %}放入你的第一本小说{% endif %}</h2><p>{% if technical_library %}只有显式分类的 Benchmark、Test、Demo 或历史未分类项目会显示在这里。{% else %}把 .md 或 .txt 文件复制到上面的书籍目录，最迟约 10 秒后会出现在这里。{% endif %}</p>{% if not technical_library %}<button class="button primary" type="button" data-copy-path="{{ catalog.discovery_root }}">复制书籍目录</button>{% endif %}</section>{% endif %}
   </main>
   <script src="{{ url_for('static', path='library_catalog.js') }}?v={{ asset_version }}" defer></script>
 </body>

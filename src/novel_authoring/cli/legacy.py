@@ -116,6 +116,13 @@ from novel_authoring.rhythm.service import (
     show_features,
     show_latest_rhythm,
 )
+from novel_authoring.library_governance import (
+    APPLY_CONFIRMATION,
+    apply_classification_mapping,
+    build_classification_plan,
+    set_book_classification,
+    write_classification_plan,
+)
 from novel_authoring.storage.cleanup import (
     CleanupCandidate,
     CleanupCategory,
@@ -129,7 +136,7 @@ from novel_authoring.storage.migration import (
     cleanup_legacy,
     migrate_legacy,
 )
-from novel_authoring.storage.registry import BookRegistry
+from novel_authoring.storage.registry import BookKind, BookRegistry, CreationMode
 from novel_authoring.storage.retention import (
     RetentionConfig,
     apply_retention,
@@ -202,6 +209,7 @@ segments_app = typer.Typer(help="effective edition 段落与证据")
 workflow_app = typer.Typer(help="Local File Handoff Protocol")
 web_app = typer.Typer(help="本地 Author Workbench（不启动 Codex 进程）")
 library_app = typer.Typer(help="Canonical Book Library 与 legacy 迁移")
+library_classification_app = typer.Typer(help="非破坏性书籍分类 preview 与显式 apply")
 app.add_typer(source_app, name="source")
 app.add_typer(extract_app, name="extract")
 app.add_typer(boundary_app, name="boundary")
@@ -228,6 +236,7 @@ app.add_typer(workflow_app, name="workflow")
 app.add_typer(workflow_app, name="handoff")
 app.add_typer(web_app, name="web")
 app.add_typer(library_app, name="library")
+library_app.add_typer(library_classification_app, name="classify")
 
 # Keep the required book ID as a plain type.  Commands provide an explicit
 # ``typer.Option`` default so the project remains compatible with Typer 0.9;
@@ -282,11 +291,86 @@ def library_list_command(library_root: LibraryRoot = None) -> None:
                 "root": str(record.root),
                 "source_files": list(record.source_files),
                 "active_edition_id": record.active_edition_id,
+                "book_kind": record.book_kind.value,
+                "creation_mode": record.creation_mode.value,
                 "readiness_status": record.readiness_status,
                 "legacy_locations": list(record.legacy_locations),
             }
             for record in registry.list()
         ]
+    )
+
+
+@library_classification_app.command("preview")
+def library_classification_preview_command(
+    library_root: LibraryRoot = None,
+    output_dir: Path = typer.Option(Path("benchmark"), "--output-dir"),
+) -> None:
+    """生成分类建议；不会修改任何 book.yaml。"""
+
+    layout, _registry = _book_library(library_root)
+    plan = build_classification_plan(layout, project_root=Path.cwd())
+    json_path, markdown_path = write_classification_plan(
+        plan,
+        json_path=output_dir / "library_project_classification_plan.json",
+        markdown_path=output_dir / "library_project_classification_plan.md",
+    )
+    _emit({"dry_run": True, "json": str(json_path), "markdown": str(markdown_path), **plan})
+
+
+@library_classification_app.command("apply")
+def library_classification_apply_command(
+    mapping: Path = typer.Option(..., "--mapping", exists=True, dir_okay=False),
+    confirm: str = typer.Option(..., "--confirm", help=f"精确输入 {APPLY_CONFIRMATION}"),
+    library_root: LibraryRoot = None,
+) -> None:
+    """只按作者提供的显式 mapping 写入分类。"""
+
+    layout, _registry = _book_library(library_root)
+    try:
+        records = apply_classification_mapping(layout, mapping, confirm=confirm)
+    except (OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+    _emit(
+        {
+            "applied": len(records),
+            "books": [
+                {"book_id": item.book_id, "book_kind": item.book_kind.value}
+                for item in records
+            ],
+        }
+    )
+
+
+@library_classification_app.command("set")
+def library_classification_set_command(
+    book_id: str = typer.Option(..., "--book-id"),
+    book_kind: str = typer.Option(..., "--book-kind"),
+    creation_mode: Optional[str] = typer.Option(None, "--creation-mode"),
+    library_root: LibraryRoot = None,
+) -> None:
+    """显式修改单本书的分类；不会移动、删除或合并目录。"""
+
+    layout, _registry = _book_library(library_root)
+    try:
+        record = set_book_classification(
+            layout,
+            book_id,
+            book_kind=BookKind(book_kind.upper()),
+            creation_mode=(
+                None if creation_mode is None else CreationMode(creation_mode.upper())
+            ),
+        )
+    except (OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+    _emit(
+        {
+            "book_id": record.book_id,
+            "book_kind": record.book_kind.value,
+            "creation_mode": record.creation_mode.value,
+        }
     )
 
 
@@ -2782,6 +2866,7 @@ def web_serve_command(
     allow_remote: bool = typer.Option(False, "--allow-remote"),
     library_root: LibraryRoot = None,
     discovery_root: Annotated[Optional[Path], typer.Option("--discovery-root")] = None,
+    developer_mode: bool = typer.Option(False, "--developer-mode"),
 ) -> None:
     try:
         from novel_authoring.web.app import serve
@@ -2803,6 +2888,7 @@ def web_serve_command(
             book_id=book_id,
             library_root=selected_library_root,
             discovery_root=discovery_root,
+            developer_mode=developer_mode,
         )
     except (ValueError, RuntimeError, OSError) as exc:
         typer.echo(str(exc), err=True); raise typer.Exit(code=3) from exc

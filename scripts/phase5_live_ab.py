@@ -65,6 +65,7 @@ from novel_authoring.runtime_baseline.models import (
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.library import LibraryAddOptions, add_book
 from novel_authoring.storage.operations import ensure_operation
+from novel_authoring.storage.registry import BookKind
 from novel_authoring.utils import json_dumps, sha256_file, stable_id, utc_now
 from novel_authoring.validation.service import validate_draft
 from novel_authoring.workflows.handoffs import (
@@ -162,7 +163,7 @@ def _paths(
     controller = (controller_root or root / "benchmark" / RUN_DIR_NAME).resolve()
     run_root = controller / "runs" / run_label
     hidden = (hidden_root or root / "benchmark" / HIDDEN_DIR_NAME / run_label).resolve()
-    library = (library_root or root / "library").resolve()
+    library = (library_root or root / "benchmark" / "phase5_live_library").resolve()
     return {
         "controller_root": controller,
         "run_root": run_root,
@@ -703,6 +704,7 @@ def _make_book_state(
             source=visible_path,
             library_root=library_root,
             confirm_order=True,
+            book_kind=BookKind.BENCHMARK,
         )
     )
     database = Database(added.database)

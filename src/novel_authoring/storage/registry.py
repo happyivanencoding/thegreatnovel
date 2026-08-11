@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from builtins import list as builtin_list
 from dataclasses import dataclass
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +13,19 @@ import yaml
 from novel_authoring.storage.layout import LAYOUT_VERSION, BookLayout
 from novel_authoring.storage.models import BookPaths
 from novel_authoring.utils import sha256_file, utc_now
+
+
+class BookKind(StrEnum):
+    AUTHOR = "AUTHOR"
+    DEMO = "DEMO"
+    TEST = "TEST"
+    BENCHMARK = "BENCHMARK"
+    UNCLASSIFIED = "UNCLASSIFIED"
+
+
+class CreationMode(StrEnum):
+    IMPORTED = "IMPORTED"
+    ORIGINAL = "ORIGINAL"
 
 
 @dataclass(frozen=True, slots=True)
@@ -23,6 +37,8 @@ class BookRecord:
     source_files: tuple[str, ...]
     active_edition_id: str
     layout_version: str
+    book_kind: BookKind = BookKind.UNCLASSIFIED
+    creation_mode: CreationMode = CreationMode.IMPORTED
     readiness_status: str | None = None
     source_origin: Path | None = None
     source_origin_kind: str | None = None
@@ -43,6 +59,13 @@ class BookRecord:
         origin_value = mapping.get("source_origin")
         origin = origin_value if isinstance(origin_value, dict) else {}
         origin_path = origin.get("path")
+        try:
+            book_kind = BookKind(str(mapping.get("book_kind") or BookKind.UNCLASSIFIED))
+            creation_mode = CreationMode(
+                str(mapping.get("creation_mode") or CreationMode.IMPORTED)
+            )
+        except ValueError as exc:
+            raise ValueError(f"book.yaml 项目分类无效: {paths.book_yaml}") from exc
         return cls(
             book_id=str(mapping.get("book_id") or paths.book_id),
             title=str(mapping.get("title") or paths.book_id),
@@ -51,6 +74,8 @@ class BookRecord:
             source_files=tuple(str(item) for item in files if isinstance(item, str)),
             active_edition_id=str(edition),
             layout_version=str(mapping.get("layout_version") or LAYOUT_VERSION),
+            book_kind=book_kind,
+            creation_mode=creation_mode,
             readiness_status=(
                 str(mapping["readiness_status"]) if mapping.get("readiness_status") else None
             ),
@@ -94,6 +119,8 @@ class BookRegistry:
         normalized.setdefault("slug", paths.book_id)
         normalized.setdefault("database_path", "_system/state.sqlite3")
         normalized.setdefault("source_storage_mode", "COPY_READ_ONLY")
+        normalized.setdefault("book_kind", BookKind.UNCLASSIFIED.value)
+        normalized.setdefault("creation_mode", CreationMode.IMPORTED.value)
         normalized.setdefault("source_files", [])
         normalized.setdefault("created_at", utc_now())
         normalized.setdefault("latest_chapter", None)
@@ -117,6 +144,8 @@ class BookRegistry:
         active_edition_id: str = "base",
         readiness_status: str | None = None,
         legacy_locations: builtin_list[str] | None = None,
+        book_kind: BookKind | str | None = None,
+        creation_mode: CreationMode | str | None = None,
     ) -> BookRecord:
         paths = self.layout.ensure_book(book_id)
         values: dict[str, Any] = self.read(paths.book_id) if paths.book_yaml.exists() else {}
@@ -131,6 +160,12 @@ class BookRegistry:
                 "active_edition_id": active_edition_id,
                 "database_path": "_system/state.sqlite3",
                 "source_storage_mode": "COPY_READ_ONLY",
+                "book_kind": str(
+                    book_kind or values.get("book_kind") or BookKind.UNCLASSIFIED
+                ),
+                "creation_mode": str(
+                    creation_mode or values.get("creation_mode") or CreationMode.IMPORTED
+                ),
                 "created_at": created_at,
                 "latest_export": values.get(
                     "latest_export", "editions/base/exports/latest"
@@ -175,6 +210,8 @@ class BookRegistry:
             f"- book_id: `{paths.book_id}`",
             f"- layout: `{metadata.get('layout_version', LAYOUT_VERSION)}`",
             f"- active edition: `{metadata.get('active_edition_id', 'base')}`",
+            f"- book kind: `{metadata.get('book_kind', BookKind.UNCLASSIFIED.value)}`",
+            f"- creation mode: `{metadata.get('creation_mode', CreationMode.IMPORTED.value)}`",
             f"- database: `{metadata.get('database_path', '_system/state.sqlite3')}`",
             f"- readiness: `{readiness}`",
             f"- source files: {len(files)}",
@@ -204,4 +241,4 @@ class BookRegistry:
         return paths.readme
 
 
-__all__ = ["BookRecord", "BookRegistry"]
+__all__ = ["BookKind", "BookRecord", "BookRegistry", "CreationMode"]

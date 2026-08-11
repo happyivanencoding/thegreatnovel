@@ -79,6 +79,7 @@ from novel_authoring.edition import edition_chapters, list_editions
 from novel_authoring.initialization import InitializationError, latest_initialization
 from novel_authoring.initialization.metrics import prepare_metric_bootstrap
 from novel_authoring.library_catalog import (
+    CatalogScope,
     LibraryCatalogEntry,
     LibraryCatalogView,
     build_library_catalog,
@@ -96,7 +97,7 @@ from novel_authoring.metrics.service import (
 )
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.library import LibraryAddOptions, add_book
-from novel_authoring.storage.registry import BookRegistry
+from novel_authoring.storage.registry import BookKind, BookRegistry
 from novel_authoring.utils import stable_id
 from novel_authoring.web.dependencies import create_csrf_token, verify_csrf
 from novel_authoring.web.routes.atlas import (
@@ -281,10 +282,27 @@ def _library_root_for_database(database: Database, explicit: Path | None) -> Pat
     return book_root.parent if (book_root / "book.yaml").is_file() else None
 
 
+def _require_book_scope(app: Any, book_id: str) -> str:
+    checked = _check_id(book_id)
+    root = app.state.library_root
+    if root is None:
+        return checked
+    try:
+        record = BookRegistry(BookLayout(root)).record(checked)
+    except FileNotFoundError:
+        return checked
+    if record.book_kind is not BookKind.AUTHOR and not app.state.developer_mode:
+        raise HTTPException(
+            status_code=404,
+            detail={"code": "BOOK_NOT_IN_AUTHOR_SCOPE", "message": "作品不在作者书库"},
+        )
+    return checked
+
+
 def _database_for_book(app: Any, book_id: str) -> Database:
     """Resolve a canonical book database instead of reusing the boot DB."""
 
-    checked = _check_id(book_id)
+    checked = _require_book_scope(app, book_id)
     root = app.state.library_root
     if root is not None:
         paths = BookLayout(root).for_book(checked)
@@ -299,12 +317,24 @@ def _database_for_book(app: Any, book_id: str) -> Database:
     raise HTTPException(status_code=404, detail="书籍不在当前 Web 运行库")
 
 
-def _library_catalog_for_app(app: Any) -> LibraryCatalogView | None:
+def _library_catalog_for_app(
+    app: Any, scope: CatalogScope = CatalogScope.AUTHOR
+) -> LibraryCatalogView | None:
     root = app.state.library_root
     discovery_root = app.state.discovery_root
     if root is None or discovery_root is None:
         return None
-    return build_library_catalog(BookLayout(root), discovery_root)
+    return build_library_catalog(BookLayout(root), discovery_root, scope=scope)
+
+
+def _catalog_entry_for_app(
+    app: Any, catalog: LibraryCatalogView, book_id: str
+) -> LibraryCatalogEntry | None:
+    entry = _catalog_entry(catalog, book_id=book_id)
+    if entry is not None or not app.state.developer_mode:
+        return entry
+    technical = _library_catalog_for_app(app, CatalogScope.TECHNICAL)
+    return None if technical is None else _catalog_entry(technical, book_id=book_id)
 
 
 def _catalog_entry(
@@ -372,6 +402,7 @@ def create_app(
     book_id: str | None = None,
     library_root: Path | None = None,
     discovery_root: Path | None = None,
+    developer_mode: bool = False,
 ) -> Any:
     if FastAPI is None or Jinja2Templates is None:
         raise RuntimeError("Web 功能需要安装可选依赖：pip install '.[web]'")
@@ -388,6 +419,7 @@ def create_app(
             else Path(app.state.library_root).parent / "book"
         )
     )
+    app.state.developer_mode = developer_mode
     app.state.csrf_token = create_csrf_token()
     template_dir = Path(__file__).parent / "templates"
     templates = Jinja2Templates(directory=str(template_dir))
@@ -443,8 +475,8 @@ def create_app(
             "static_asset_version": STATIC_ASSET_VERSION,
         }
 
-    def catalog_payload() -> dict[str, Any]:
-        catalog = _library_catalog_for_app(app)
+    def catalog_payload(scope: CatalogScope = CatalogScope.AUTHOR) -> dict[str, Any]:
+        catalog = _library_catalog_for_app(app, scope)
         if catalog is None:
             return {
                 "library_root": None,
@@ -462,8 +494,15 @@ def create_app(
 
     @app.get("/api/library")
     @app.get("/api/library/catalog")
-    async def library_api() -> dict[str, Any]:
-        return catalog_payload()
+    async def library_api(request: Request) -> dict[str, Any]:
+        requested_scope = str(request.query_params.get("scope") or "AUTHOR").upper()
+        try:
+            scope = CatalogScope(requested_scope)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="书库 scope 无效") from exc
+        if scope is CatalogScope.TECHNICAL and not app.state.developer_mode:
+            raise HTTPException(status_code=404, detail="技术书库未启用")
+        return catalog_payload(scope)
 
     @app.post("/api/library/discovery/refresh")
     async def library_discovery_refresh_api(request: Request) -> dict[str, Any]:
@@ -520,7 +559,7 @@ def create_app(
         root = app.state.library_root
         if root is None:
             raise HTTPException(status_code=404, detail="library 未配置")
-        return _library_paths_payload(BookLayout(root), _check_id(path_book_id))
+        return _library_paths_payload(BookLayout(root), _require_book_scope(app, path_book_id))
 
     @app.post("/api/library/import")
     async def library_import_api(request: Request) -> Any:
@@ -569,6 +608,28 @@ def create_app(
                 "library": payload["entries"],
                 "library_root": payload.get("library_root") or "",
                 "csrf_token": app.state.csrf_token,
+                "developer_mode": app.state.developer_mode,
+                "technical_library": False,
+            },
+        )
+
+    @app.get("/library/technical", response_class=HTMLResponse)
+    async def technical_library_page(request: Request) -> Any:
+        if not app.state.developer_mode:
+            raise HTTPException(status_code=404, detail="技术书库未启用")
+        catalog = _library_catalog_for_app(app, CatalogScope.TECHNICAL)
+        payload = catalog_payload(CatalogScope.TECHNICAL) if catalog is None else catalog.to_dict()
+        return _template(
+            templates,
+            "library.html",
+            request,
+            {
+                "catalog": payload,
+                "library": payload["entries"],
+                "library_root": payload.get("library_root") or "",
+                "csrf_token": app.state.csrf_token,
+                "developer_mode": True,
+                "technical_library": True,
             },
         )
 
@@ -588,7 +649,7 @@ def create_app(
         if root is None:
             raise HTTPException(status_code=404, detail="library 未配置")
         layout = BookLayout(root)
-        checked = _check_id(path_book_id)
+        checked = _require_book_scope(app, path_book_id)
         return _template(
             templates,
             "library_paths.html",
@@ -601,7 +662,7 @@ def create_app(
 
     @app.get("/library/{path_book_id}/export/latest")
     async def latest_export_redirect(path_book_id: str) -> Any:
-        _check_id(path_book_id)
+        _require_book_scope(app, path_book_id)
         return RedirectResponse(url=f"/library/{path_book_id}/export/latest/")
 
     @app.get("/library/{path_book_id}/export/latest/", include_in_schema=False)
@@ -614,7 +675,11 @@ def create_app(
         if root is None:
             raise HTTPException(status_code=404, detail="library 未配置")
         layout = BookLayout(root)
-        latest = layout.for_book(_check_id(path_book_id)).edition("base").latest_export
+        latest = (
+            layout.for_book(_require_book_scope(app, path_book_id))
+            .edition("base")
+            .latest_export
+        )
         path = (latest / asset_path).resolve()
         if latest.resolve() not in path.parents or not path.is_file():
             raise HTTPException(status_code=404, detail="latest export 不存在")
@@ -627,7 +692,7 @@ def create_app(
         checked_book = _check_id(str(app.state.book_id))
         catalog = _library_catalog_for_app(app)
         current_entry = (
-            None if catalog is None else _catalog_entry(catalog, book_id=checked_book)
+            None if catalog is None else _catalog_entry_for_app(app, catalog, checked_book)
         )
         if catalog is not None:
             if current_entry is None:
@@ -685,7 +750,7 @@ def create_app(
         checked_edition = _check_id(edition_id)
         catalog = _library_catalog_for_app(app)
         current_entry = (
-            None if catalog is None else _catalog_entry(catalog, book_id=checked_book)
+            None if catalog is None else _catalog_entry_for_app(app, catalog, checked_book)
         )
         if catalog is not None:
             if current_entry is None:
@@ -756,7 +821,7 @@ def create_app(
         checked_edition = _check_id(edition_id)
         catalog = _library_catalog_for_app(app)
         if catalog is not None:
-            entry = _catalog_entry(catalog, book_id=checked_book)
+            entry = _catalog_entry_for_app(app, catalog, checked_book)
             if entry is None:
                 raise HTTPException(status_code=404, detail="书籍不在当前书库")
             if not entry.studio_ready:
@@ -2520,6 +2585,7 @@ def serve(
     book_id: str | None = None,
     library_root: Path | None = None,
     discovery_root: Path | None = None,
+    developer_mode: bool = False,
 ) -> None:
     if host not in ("127.0.0.1", "localhost", "::1") and not allow_remote:
         raise ValueError("默认只允许本机绑定；需要远程访问时显式传入 allow_remote")
@@ -2538,6 +2604,7 @@ def serve(
             book_id=book_id,
             library_root=library_root,
             discovery_root=discovery_root,
+            developer_mode=developer_mode,
         ),
         host=host,
         port=port,

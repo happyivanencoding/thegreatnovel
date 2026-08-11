@@ -9,16 +9,22 @@ from base64 import urlsafe_b64encode
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
 from novel_authoring.config import load_settings
 from novel_authoring.storage.layout import BookLayout
-from novel_authoring.storage.registry import BookRecord, BookRegistry
+from novel_authoring.storage.registry import BookKind, BookRecord, BookRegistry
 from novel_authoring.workflows.handoffs import resolve_instruction_path
 
 _IGNORED_NAMES = {"library", "benchmark", "audit", "_system"}
 _ACTIVE_HANDOFF_STATUSES = {"READY_FOR_CODEX", "CLAIMED", "RUNNING", "WAITING_FOR_USER"}
+
+
+class CatalogScope(StrEnum):
+    AUTHOR = "AUTHOR"
+    TECHNICAL = "TECHNICAL"
 
 
 def _normalized_path(path: Path) -> str:
@@ -32,6 +38,17 @@ def _iso_mtime(timestamp: float) -> str:
 def _candidate_id(relative_path: str) -> str:
     encoded = urlsafe_b64encode(relative_path.casefold().encode("utf-8")).decode("ascii")
     return "candidate-" + encoded.rstrip("=")
+
+
+def _legacy_source_key(record: BookRecord) -> tuple[str, int] | None:
+    if len(record.source_files) != 1:
+        return None
+    source = record.source_root / record.source_files[0]
+    try:
+        size = source.stat().st_size
+    except OSError:
+        return None
+    return Path(record.source_files[0]).name.casefold(), size
 
 
 def _ignored(path: Path) -> bool:
@@ -178,6 +195,8 @@ class LibraryCatalogEntry:
     chapter_count: int = 0
     edition_count: int = 0
     active_edition: str = "base"
+    book_kind: str | None = None
+    creation_mode: str | None = None
     initialization_status: str | None = None
     initialization_id: str | None = None
     handoff_id: str | None = None
@@ -208,6 +227,7 @@ class LibraryCatalogView:
     supported_formats: tuple[str, ...]
     entries: tuple[LibraryCatalogEntry, ...]
     revision: str
+    scope: CatalogScope = CatalogScope.AUTHOR
 
     def to_dict(self) -> dict[str, Any]:
         grouped = {
@@ -224,6 +244,17 @@ class LibraryCatalogView:
                 and item.state not in {"INITIALIZING", "INITIALIZATION_REVIEW"}
             ],
         }
+        kind_groups = {
+            kind.value: [
+                item.to_dict() for item in self.entries if item.book_kind == kind.value
+            ]
+            for kind in (
+                BookKind.BENCHMARK,
+                BookKind.TEST,
+                BookKind.DEMO,
+                BookKind.UNCLASSIFIED,
+            )
+        }
         return {
             "library_root": self.library_root,
             "discovery_root": self.discovery_root,
@@ -231,6 +262,9 @@ class LibraryCatalogView:
             "entries": [item.to_dict() for item in self.entries],
             "groups": grouped,
             "counts": {name: len(items) for name, items in grouped.items()},
+            "kind_groups": kind_groups,
+            "kind_counts": {name: len(items) for name, items in kind_groups.items()},
+            "scope": self.scope.value,
             "revision": self.revision,
         }
 
@@ -488,6 +522,8 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
         chapter_count=int(runtime["chapter_count"]),
         edition_count=int(runtime["edition_count"]),
         active_edition=record.active_edition_id,
+        book_kind=record.book_kind.value,
+        creation_mode=record.creation_mode.value,
         initialization_status=readiness.initialization_status,
         initialization_id=readiness.initialization_id,
         handoff_id=readiness.handoff_id,
@@ -507,7 +543,10 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
 
 
 def build_library_catalog(
-    layout: BookLayout, discovery_root: Path
+    layout: BookLayout,
+    discovery_root: Path,
+    *,
+    scope: CatalogScope = CatalogScope.AUTHOR,
 ) -> LibraryCatalogView:
     discovery = BookDiscoveryService(discovery_root)
     records = BookRegistry(layout).list()
@@ -516,9 +555,24 @@ def build_library_catalog(
         for record in records
         if record.source_origin is not None
     }
-    entries = [_registered_entry(layout, record) for record in records]
-    for candidate in discovery.scan():
+    legacy_keys: dict[tuple[str, int], list[str]] = {}
+    for record in records:
+        key = _legacy_source_key(record)
+        if key is not None:
+            legacy_keys.setdefault(key, []).append(record.book_id)
+    visible_records = [
+        record
+        for record in records
+        if (scope is CatalogScope.AUTHOR and record.book_kind is BookKind.AUTHOR)
+        or (scope is CatalogScope.TECHNICAL and record.book_kind is not BookKind.AUTHOR)
+    ]
+    entries = [_registered_entry(layout, record) for record in visible_records]
+    for candidate in discovery.scan() if scope is CatalogScope.AUTHOR else []:
         linked_book_id = linked_origins.get(_normalized_path(Path(candidate.source_path)))
+        if linked_book_id is None:
+            key = (candidate.source_filename.casefold(), candidate.file_size)
+            legacy_matches = legacy_keys.get(key, [])
+            linked_book_id = legacy_matches[0] if len(legacy_matches) == 1 else None
         if linked_book_id:
             continue
         entries.append(
@@ -563,6 +617,7 @@ def build_library_catalog(
         supported_formats=discovery.extensions,
         entries=tuple(entries),
         revision="|".join(revision_parts),
+        scope=scope,
     )
 
 
@@ -582,6 +637,7 @@ def suggest_book_id(candidate: LibraryCatalogEntry, layout: BookLayout) -> str:
 
 __all__ = [
     "BookDiscoveryService",
+    "CatalogScope",
     "DiscoveredBookCandidate",
     "LibraryCatalogEntry",
     "LibraryCatalogView",

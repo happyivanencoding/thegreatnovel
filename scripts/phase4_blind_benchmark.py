@@ -51,6 +51,7 @@ from novel_authoring.planning.models import (
     NoveltyProvenance,
 )
 from novel_authoring.storage.library import LibraryAddOptions, add_book
+from novel_authoring.storage.registry import BookKind
 from novel_authoring.utils import json_dumps
 from novel_authoring.validation.service import ValidationContext
 from novel_authoring.validation.validators import VALIDATORS
@@ -460,8 +461,9 @@ def _token_overlap(left: str, right: str) -> float:
 
 def _run_boundary(sections: list[str], boundary: int) -> dict[str, Any]:
     book_id = f"phase4-blind-phase4c-{boundary:03d}"
-    root = ROOT / "library" / book_id
-    source_root = ROOT / "library" / f".phase4-input-phase4c-{boundary}"
+    library_root = ROOT / "benchmark" / "phase4_run_library"
+    root = library_root / book_id
+    source_root = library_root / f".phase4-input-phase4c-{boundary}"
     source_root.mkdir(parents=True, exist_ok=True)
     visible_path = source_root / f"visible_001_{boundary:03d}.md"
     visible_path.write_text("\n\n".join(sections[:boundary]) + "\n", encoding="utf-8")
@@ -470,8 +472,9 @@ def _run_boundary(sections: list[str], boundary: int) -> dict[str, Any]:
             book_id=book_id,
             title=f"Phase 4 blind boundary {boundary}",
             source=visible_path,
-            library_root=ROOT / "library",
+            library_root=library_root,
             confirm_order=True,
+            book_kind=BookKind.BENCHMARK,
         )
     )
     database = Database(added.database)
