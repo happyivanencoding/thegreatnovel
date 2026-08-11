@@ -13,6 +13,24 @@
   };
 
   const responseError = (value) => value?.error?.message || value?.detail?.message || value?.detail || "操作失败";
+  const copyText = async (value) => {
+    if (!value) throw new Error("AI 任务中没有可复制的指令");
+    const area = document.createElement("textarea");
+    area.value = value;
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    area.style.top = "0";
+    area.setAttribute("readonly", "");
+    document.body.appendChild(area);
+    area.focus();
+    area.select();
+    area.setSelectionRange(0, area.value.length);
+    const copied = document.execCommand("copy");
+    area.remove();
+    if (copied) return;
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(value);
+    throw new Error("浏览器未允许复制，请重试");
+  };
   const post = async (url, payload) => {
     const response = await fetch(url, {
       method: "POST",
@@ -23,6 +41,26 @@
     if (!response.ok || value.error) throw new Error(responseError(value));
     return value;
   };
+
+  document.querySelectorAll("[data-copy-instruction]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const label = button.textContent;
+      button.disabled = true;
+      try {
+        const response = await fetch(button.dataset.copyInstruction, {headers: {Accept: "application/json"}});
+        const value = await response.json();
+        if (!response.ok || value.error) throw new Error(responseError(value));
+        await copyText(value.instruction || "");
+        button.textContent = "已复制";
+        show("给 Codex 的指令已复制。请回到 Codex 桌面端粘贴处理。", false);
+      } catch (error) {
+        button.textContent = "复制失败";
+        show(error.message, true);
+      } finally {
+        window.setTimeout(() => { button.textContent = label; button.disabled = false; }, 1500);
+      }
+    });
+  });
 
   document.querySelector("[data-original-create]")?.addEventListener("submit", async (event) => {
     event.preventDefault();

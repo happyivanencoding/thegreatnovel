@@ -206,7 +206,7 @@ _ACTION_MODES = {"continue": "continue", "rewrite": "rewrite", "plan": "plan"}
 
 # Single source of truth for the cache-busting ``?v=`` suffix used by every
 # template; also reported by /health so stale static assets are diagnosable.
-STATIC_ASSET_VERSION = "3.4.0"
+STATIC_ASSET_VERSION = "3.4.2"
 
 
 # Sentinel distinguishing "never probed" from a probed result of ``None``.

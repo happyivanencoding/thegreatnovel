@@ -573,6 +573,13 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
             json={"premise": "一座城市每天删除一种情感"},
         )
         original = client.get(created.json()["original_url"])
+        created_payload = created.json()
+        handoff_id = str(created_payload["handoff"]["handoff_id"])
+        book_id = str(created_payload["book_id"])
+        instruction_url = (
+            f"/api/books/{book_id}/editions/base/handoffs/{handoff_id}/instruction"
+        )
+        instruction = client.get(instruction_url)
 
     assert library.status_code == 200
     assert "导入小说" in library.text
@@ -581,3 +588,7 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
     assert created.status_code == 200
     assert created.json()["source_required"] is False
     assert "AI 任务" in original.text
+    assert instruction.status_code == 200
+    assert instruction.json()["instruction"]
+    assert f'data-copy-instruction="{instruction_url}"' in original.text
+    assert f'href="/api/handoffs/{handoff_id}/instruction"' not in original.text

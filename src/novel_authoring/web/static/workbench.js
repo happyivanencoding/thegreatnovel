@@ -9,6 +9,46 @@
   function scopedKey(current) { return "novel-workbench-v2.4:" + current.dataset.bookId + ":" + current.dataset.editionId; }
   function number(value) { return Number.isFinite(Number(value)) ? Number(value) : 0; }
 
+  function copyText(value) {
+    if (!value) return Promise.reject(new Error("AI 任务中没有可复制的指令"));
+    var area = document.createElement("textarea");
+    area.value = value;
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    area.style.top = "0";
+    area.setAttribute("readonly", "");
+    document.body.appendChild(area);
+    area.focus();
+    area.select();
+    area.setSelectionRange(0, area.value.length);
+    var copied = document.execCommand("copy");
+    area.remove();
+    if (copied) return Promise.resolve();
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(value);
+    return Promise.reject(new Error("浏览器未允许复制，请重试"));
+  }
+
+  function bindInstructionCopy(button) {
+    if (!button || button.dataset.copyInstructionBound === "true") return;
+    button.dataset.copyInstructionBound = "true";
+    button.addEventListener("click", function () {
+      var label = button.textContent;
+      button.disabled = true;
+      fetch(button.dataset.copyInstruction, { headers: { Accept: "application/json" } }).then(function (response) {
+        return response.json().then(function (value) {
+          if (!response.ok || value.error) throw new Error((value.error && value.error.message) || "指令不可用");
+          return value;
+        });
+      }).then(function (value) { return copyText(value.instruction || ""); }).then(function () {
+        button.textContent = "已复制";
+      }).catch(function (error) {
+        button.textContent = error.message;
+      }).finally(function () {
+        window.setTimeout(function () { button.textContent = label; button.disabled = false; }, 1500);
+      });
+    });
+  }
+
   function captureNavigationState(current) {
     if (!current) return null;
     var leftContent = current.querySelector(".wb-left-pane .wb-pane-content");
@@ -432,11 +472,13 @@
           if (item.resumed_handoff_id && !card.querySelector(".wb-activity-actions")) {
             var actions = document.createElement("div");
             actions.className = "wb-activity-actions";
-            var link = document.createElement("a");
-            link.className = "button compact primary";
-            link.href = "/api/handoffs/" + encodeURIComponent(item.resumed_handoff_id) + "/instruction";
-            link.textContent = "复制给 Codex 的指令";
-            actions.appendChild(link);
+            var button = document.createElement("button");
+            button.type = "button";
+            button.className = "button compact primary";
+            button.dataset.copyInstruction = "/api/books/" + encodeURIComponent(current.dataset.bookId) + "/editions/" + encodeURIComponent(current.dataset.editionId) + "/handoffs/" + encodeURIComponent(item.resumed_handoff_id) + "/instruction";
+            button.textContent = "复制给 Codex 的指令";
+            bindInstructionCopy(button);
+            actions.appendChild(button);
             card.insertBefore(actions, card.querySelector("details"));
           }
         });
@@ -446,7 +488,7 @@
 
   function bindSearch(current) { var search = current.querySelector("[data-wb-chapter-search]"); if (!search) return; search.addEventListener("input", function () { var query = search.value.trim().toLowerCase(); current.querySelectorAll("[data-wb-chapter-item]").forEach(function (item) { item.hidden = Boolean(query && item.textContent.toLowerCase().indexOf(query) === -1); }); }); }
 
-  function initWorkbench(current) { bindLayout(current); bindNavigation(current); bindScrollPersistence(current); bindActivityCenter(current); bindCommands(current); bindInspector(current); bindRelationshipGraph(current); bindStateWorkspace(current); bindItemModal(current); bindProfile(current); bindTruth(current); bindSecretBoard(current); bindDraft(current); bindWorkflow(current); bindPendingActions(current); bindSearch(current); current.querySelectorAll("details[data-explorer-section]").forEach(function (item) { item.addEventListener("toggle", function () { saveFallback(current, captureNavigationState(current)); }); }); }
+  function initWorkbench(current) { bindLayout(current); bindNavigation(current); bindScrollPersistence(current); bindActivityCenter(current); bindCommands(current); bindInspector(current); bindRelationshipGraph(current); bindStateWorkspace(current); bindItemModal(current); bindProfile(current); bindTruth(current); bindSecretBoard(current); bindDraft(current); bindWorkflow(current); bindPendingActions(current); bindSearch(current); current.querySelectorAll("[data-copy-instruction]").forEach(bindInstructionCopy); current.querySelectorAll("details[data-explorer-section]").forEach(function (item) { item.addEventListener("toggle", function () { saveFallback(current, captureNavigationState(current)); }); }); }
 
   window.addEventListener("popstate", function (event) { loadWorkbench(location.href, { push: false, fromPop: true, restoreState: event.state && event.state.workbenchState ? event.state.workbenchState : readFallback(root()) }); });
   var initial = root(); if (initial) { var state = history.state && history.state.workbenchState ? history.state.workbenchState : readFallback(initial); restoreDetails(initial, state); restoreLayout(initial, state); initWorkbench(initial); restoreNavigationState(initial, state); history.replaceState({ workbenchState: captureNavigationState(initial) }, "", location.href); }

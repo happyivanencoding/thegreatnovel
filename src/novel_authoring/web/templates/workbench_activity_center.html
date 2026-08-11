@@ -13,7 +13,7 @@
         <ol class="wb-activity-timeline">
           {% for step in activity.timeline %}<li class="is-{{ step.state }}">{{ step.label }}</li>{% endfor %}
         </ol>
-        {% if activity.resumed_handoff_id %}<div class="wb-activity-actions"><a class="button compact primary" href="/api/handoffs/{{ activity.resumed_handoff_id }}/instruction">复制给 Codex 的指令</a></div>{% endif %}
+        {% if activity.resumed_handoff_id %}<div class="wb-activity-actions"><button class="button compact primary" type="button" data-copy-instruction="/api/books/{{ book_id }}/editions/{{ edition_id }}/handoffs/{{ activity.resumed_handoff_id }}/instruction">复制给 Codex 的指令</button></div>{% endif %}
         <details class="workflow-developer-details"><summary>技术详情</summary><dl><dt>作者操作</dt><dd><code>{{ activity.pending_action_id }}</code></dd><dt>补齐任务</dt><dd><code>{{ activity.deepening_operation_id or '-' }}</code></dd><dt>AI 任务</dt><dd><code>{{ activity.resumed_handoff_id or '-' }}</code></dd></dl></details>
       </article>
       {% endfor %}

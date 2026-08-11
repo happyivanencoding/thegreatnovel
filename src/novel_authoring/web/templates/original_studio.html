@@ -25,7 +25,7 @@
       <h2>新的故事基础方案正在准备</h2>
       <p>当前方案会保留。新方案完成后，你可以查看、比较，再决定是否替换。</p>
       <div class="original-actions">
-        {% if original.generating_proposal.handoff_id %}<a class="button primary" href="/api/handoffs/{{ original.generating_proposal.handoff_id }}/instruction">查看 AI 任务</a>{% endif %}
+        {% if original.generating_proposal.handoff_id %}<button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_proposal.handoff_id }}/instruction">复制给 Codex 的指令</button>{% endif %}
         <button class="button" type="button" data-original-action="bootstrap">检查生成状态</button>
       </div>
       <details class="wb-technical-details"><summary>技术详情</summary><code>{{ original.generating_proposal.proposal_version_id }}</code></details>
@@ -57,7 +57,7 @@
       <p>AI 只会生成待确认方案，不会创建正式章节，也不会替你批准设定。</p>
       {% if original.handoffs %}{% set handoff = original.handoffs[0] %}
       <div class="original-actions">
-        <a class="button" href="/api/handoffs/{{ handoff.handoff_id }}/instruction">复制给 Codex 的指令</a>
+        <button class="button" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ handoff.handoff_id }}/instruction">复制给 Codex 的指令</button>
         {% if handoff.status == 'COMPLETED' %}<button class="button primary" type="button" data-original-action="import" data-handoff-id="{{ handoff.handoff_id }}">读取完成的方案</button>{% endif %}
         {% if not original.generating_proposal %}<button class="button" type="button" data-original-action="bootstrap">生成故事方案</button>{% endif %}
       </div>
@@ -168,7 +168,7 @@
 
     {% if not original.drafts and original.original_state == 'FIRST_CHAPTER_DRAFTING' %}
     {% set handoff = original.handoffs[0] %}
-    <section class="panel original-status-card"><p class="wb-kicker">第一章 AI 任务</p><h2>首章要求已冻结，等待生成与校验</h2><p>AI 必须停在“已校验”，不会自动写入正式正文。</p><div class="original-actions"><a class="button primary" href="/api/handoffs/{{ handoff.handoff_id }}/instruction">复制给 Codex 的指令</a></div><details class="wb-technical-details"><summary>技术详情</summary><code>{{ handoff.handoff_id }}</code></details></section>
+    <section class="panel original-status-card"><p class="wb-kicker">第一章 AI 任务</p><h2>首章要求已冻结，等待生成与校验</h2><p>AI 必须停在“已校验”，不会自动写入正式正文。</p><div class="original-actions"><button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ handoff.handoff_id }}/instruction">复制给 Codex 的指令</button></div><details class="wb-technical-details"><summary>技术详情</summary><code>{{ handoff.handoff_id }}</code></details></section>
     {% elif not original.drafts %}
     <section class="original-choice-section"><h2>选择第一章</h2><p>这里不显示占位评分。请按人物行动、代价、不可逆变化与后续空间选择。</p><div class="original-choice-grid">{% for item in original.candidates %}<article class="original-choice original-choice-tall"><h3>{{ item.title }}</h3><p><strong>这一章会发生什么：</strong>{{ item.summary }}</p><small>主角主动选择：{{ item.protagonist_action }}</small><small>代价：{{ item.required_cost }}</small><small>不可逆变化：{{ item.irreversible_change }}</small><small>打开的后续空间：{{ item.future_space }}</small><small>主要风险：{{ item.main_risk }}</small><button class="button primary" type="button" data-original-action="select" data-candidate-id="{{ item.candidate_id }}">选择这个第一章</button><details class="wb-technical-details"><summary>技术详情</summary><code>{{ item.candidate_id }}</code></details></article>{% endfor %}</div></section>
     {% else %}
