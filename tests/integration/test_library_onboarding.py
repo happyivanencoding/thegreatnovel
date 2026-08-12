@@ -6,7 +6,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from novel_authoring.db.database import Database
-from novel_authoring.initialization import create_initialization
+from novel_authoring.initialization import create_initialization, latest_initialization
 from novel_authoring.library_catalog import BookDiscoveryService
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.registry import BookRegistry
@@ -323,6 +323,47 @@ def test_ready_with_gaps_without_structural_index_stays_blocked(tmp_path: Path) 
     access = client.get(f"/api/books/{created['book_id']}/studio-access").json()
     assert access["access_level"] == "ONBOARDING"
     assert access["accessible"] is False
+
+
+def test_continue_ready_is_the_author_status_while_full_analysis_is_blocked(
+    tmp_path: Path,
+) -> None:
+    client, library, discovery = _client(tmp_path)
+    _write_novel(discovery / "渐进续写.md")
+    candidate = client.get("/api/library/catalog").json()["entries"][0]
+    created = client.post(
+        f"/api/library/candidates/{candidate['candidate_id']}/initialize",
+        headers={"X-CSRF-Token": client.app.state.csrf_token},
+        json={"depth": "BALANCED"},
+    ).json()
+    paths = BookLayout(library).for_book(created["book_id"])
+    current = latest_initialization(Database(paths.database), created["book_id"], "base")
+    assert current is not None
+    root = Path(str(current["root"]))
+    status_path = root / "status.json"
+    status = json.loads(status_path.read_text(encoding="utf-8"))
+    status["state"] = "METRIC_BOOTSTRAP_RUNNING"
+    status["readiness"] = {
+        "status": "BLOCKED",
+        "chapter_semantic_feature_coverage": 0.4,
+        "blocking_reasons": ["完整 READY 需要 FULL"],
+        "gaps": ["非阻塞历史章节仍保持 UNKNOWN / NOT_ANALYZED"],
+        "continuation_boundary": {"ready_for_continuation": True},
+    }
+    status_path.write_text(json.dumps(status, ensure_ascii=False), encoding="utf-8")
+
+    access = client.get(f"/api/books/{created['book_id']}/studio-access").json()
+    assert access["authoring_capabilities"]["CONTINUE_READY"] is True
+    assert access["authoring_capabilities"]["FULL_READY"] is False
+    assert access["author_label"] == "可以续写 · 历史仍在补齐"
+    catalog = client.get("/api/library/catalog").json()
+    entry = next(item for item in catalog["entries"] if item["book_id"] == created["book_id"])
+    assert entry["state"] == "CONTINUE_READY"
+    assert entry["state_label"] == "可以续写 · 历史仍在补齐"
+    assert entry["author_summary"] == "当前续写边界已经就绪；未覆盖的历史语义仍在渐进补齐。"
+    assert entry in catalog["groups"]["creative"]
+    assert entry not in catalog["groups"]["needs_action"]
+    assert paths.root.is_dir()
 
 
 def test_library_and_selector_share_catalog_and_poll_without_mutation(tmp_path: Path) -> None:

@@ -2,8 +2,6 @@ name: quality-gates
 
 on:
   push:
-    branches:
-      - progression-webnovel-kernel-v1
   pull_request:
 
 jobs:

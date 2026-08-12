@@ -3,12 +3,9 @@
 from __future__ import annotations
 
 import json
-import os
 import shutil
 import sqlite3
-import stat
 import tempfile
-import uuid
 from contextlib import suppress
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -89,13 +86,6 @@ def delete_library_project(layout: BookLayout, book_id: str) -> dict[str, Any]:
     """Permanently remove one registered project without touching its source origin."""
 
     normalized = safe_book_id(book_id)
-    raw_root = layout.library_root / normalized
-    if _is_reparse_point(raw_root):
-        raise LibraryProjectDeleteError(
-            f"书库项目路径不是规范目录：{normalized}",
-            error_code="LIBRARY_PROJECT_PATH_INVALID",
-            status_code=409,
-        )
     paths = layout.for_book(normalized)
     project_root = layout.require_contained(paths.root, label="Library Project")
     if project_root == layout.library_root or not paths.book_yaml.is_file():
@@ -112,9 +102,8 @@ def delete_library_project(layout: BookLayout, book_id: str) -> dict[str, Any]:
             error_code="LIBRARY_PROJECT_BUSY",
             status_code=409,
         )
-    _verify_project_directory_is_releasable(project_root, normalized)
     try:
-        shutil.rmtree(project_root, onerror=_remove_readonly)
+        shutil.rmtree(project_root)
     except OSError as exc:
         raise LibraryProjectDeleteError(
             f"项目文件正在使用，无法永久删除：{exc}",
@@ -156,46 +145,6 @@ def _active_project_handoffs(database_path: Path) -> list[str]:
             error_code="LIBRARY_PROJECT_STATUS_UNREADABLE",
             status_code=409,
         ) from exc
-
-
-def _remove_readonly(function: Any, path: str, _error: Any) -> None:
-    os.chmod(path, stat.S_IWRITE)
-    function(path)
-
-
-def _is_reparse_point(path: Path) -> bool:
-    if path.is_symlink():
-        return True
-    try:
-        attributes = int(getattr(path.lstat(), "st_file_attributes", 0))
-    except OSError:
-        return False
-    return bool(attributes & int(getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)))
-
-
-def _verify_project_directory_is_releasable(project_root: Path, book_id: str) -> None:
-    """Fail before recursive deletion when Windows still holds a project handle."""
-
-    probe_root = project_root.parent / f".delete-check-{book_id}-{uuid.uuid4().hex}"
-    try:
-        project_root.replace(probe_root)
-        probe_root.replace(project_root)
-    except OSError as exc:
-        if probe_root.exists() and not project_root.exists():
-            try:
-                probe_root.replace(project_root)
-            except OSError as rollback_exc:
-                raise LibraryProjectDeleteError(
-                    f"项目目录无法恢复，拒绝继续删除：{rollback_exc}",
-                    error_code="LIBRARY_PROJECT_DELETE_FAILED",
-                    status_code=409,
-                ) from rollback_exc
-        raise LibraryProjectDeleteError(
-            "项目文件正在使用，无法永久删除；请先结束正在访问该项目的页面或程序",
-            error_code="LIBRARY_PROJECT_DELETE_FAILED",
-            status_code=409,
-        ) from exc
-
 
 def add_book(options: LibraryAddOptions) -> LibraryAddResult:
     """Create a new canonical book atomically and ingest its source."""

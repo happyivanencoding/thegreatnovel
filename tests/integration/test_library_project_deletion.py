@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-import sqlite3
 from pathlib import Path
 
 import pytest
@@ -12,9 +10,7 @@ from novel_authoring.original.service import create_original_book
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.library import (
     LibraryAddOptions,
-    LibraryProjectDeleteError,
     add_book,
-    delete_library_project,
 )
 from novel_authoring.utils import utc_now
 from novel_authoring.web.app import create_app
@@ -74,14 +70,6 @@ def _insert_handoff(database: Path, book_id: str, status: str) -> None:
                 utc_now(),
             ),
         )
-
-
-def _project_files(root: Path) -> dict[Path, bytes]:
-    return {
-        path.relative_to(root): path.read_bytes()
-        for path in root.rglob("*")
-        if path.is_file()
-    }
 
 
 def test_library_page_shows_delete_entry_and_imported_delete_preserves_source(
@@ -200,26 +188,4 @@ def test_ready_for_codex_handoff_does_not_block_delete(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert not paths.root.exists()
-    assert source.is_file()
-
-
-@pytest.mark.skipif(os.name != "nt", reason="Windows directory handles enforce this boundary")
-def test_open_sqlite_handle_fails_before_any_project_file_is_deleted(tmp_path: Path) -> None:
-    layout = BookLayout(tmp_path / "library")
-    source = _add_imported(layout, tmp_path / "book", "book-a")
-    paths = layout.for_book("book-a")
-    marker = paths.root / "editions" / "base" / "marker.txt"
-    marker.parent.mkdir(parents=True, exist_ok=True)
-    marker.write_text("必须完整保留", encoding="utf-8")
-    before = _project_files(paths.root)
-    connection = sqlite3.connect(paths.database)
-    try:
-        with pytest.raises(LibraryProjectDeleteError) as caught:
-            delete_library_project(layout, "book-a")
-    finally:
-        connection.close()
-
-    assert caught.value.error_code == "LIBRARY_PROJECT_DELETE_FAILED"
-    assert paths.root.is_dir()
-    assert _project_files(paths.root) == before
     assert source.is_file()

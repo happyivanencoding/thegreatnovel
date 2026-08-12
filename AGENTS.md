@@ -1,81 +1,292 @@
-# Canonical Development Branch
+## 1. 规范优先级
 
-本仓库唯一永久开发分支是 `progression-webnovel-kernel-v1`。所有生产代码、测试、文档和本地 Web 交付均直接在该分支完成；不得创建新分支、Pull Request 或额外 worktree。允许创建保护性 tag，但不得把功能分散到其他长期分支。每次交付前必须确认当前分支、工作树和远端 `origin/progression-webnovel-kernel-v1` 一致，并只推送该分支。
+按以下顺序执行：
 
-主 Agent 负责拆解、调度、整合、验收和最终提交；子代理只能执行自包含的只读审计，或在明确隔离的 Operation Workspace/artifact 目录内工作，不得修改生产代码、`book/`、Canon、远端分支或启动 Codex 子进程/API。不得创建额外 worktree；生产代码由主 Agent 在当前分支串行修改。
+1. 当前用户 / 当前任务明确要求
+2. `Novel_Authoring_System_Constitution_V2.md`
+3. 本 `AGENTS.md`
+4. 当前任务相关 `.agents/skills/*/SKILL.md`
+5. 当前有效代码与文档
 
-## Existing Novel Initialization Is Atlas-First
+历史 benchmark / audit 只作为证据，不覆盖当前实现。
 
-对已有长篇的正式初始化不是一次普通 ingest，也不是直接进入续写。初始化必须按下列可审计流水线执行：
+---
 
-`Source Coverage -> Arc Segmentation -> Arc Extraction -> Entity Resolution -> Cross-Arc Synthesis -> Contradiction Audit -> Narrative DNA -> Current Story Atlas -> Future Possibility Space -> Semantic Metric Bootstrap -> Optional Visual Asset Export`
+## 2. Git / Agent 工作方式
 
-`ingest` 只负责建立不可变源、章节和 source spans；它不等于初始化完成。正式续写的最低状态是 `WORLD_MODEL_READY_WITH_GAPS`，50/100 章 Batch 的最低状态是 `WORLD_MODEL_READY`。未来路线允许存在空白；但当前主角状态、当前核心规则、当前能力边界、当前主要线程和续写边界缺失时必须阻断。
+不要永久绑定某一个开发分支。
 
-初始化状态使用 `NOT_STARTED`、`SOURCE_MAPPED`、`ARC_EXTRACTION_RUNNING`、`ENTITY_RESOLUTION_RUNNING`、`SYNTHESIS_RUNNING`、`ATLAS_VALIDATION_RUNNING`、`METRIC_BOOTSTRAP_RUNNING`、`VISUAL_RENDERING_RUNNING`、`READY_WITH_GAPS`、`READY`、`BLOCKED`、`STALE`。Web 只创建本地 handoff；`$process-novel-handoff` 之后必须进入 `$initialize-existing-novel`。所有 CANON 节点和关系必须能回指真实 source span；INFERENCE/CANDIDATE/PROSE_ONLY 不得静默升级为 CANON。
+- 当前任务指定分支时，只在该分支工作。
+- 未指定时，继续当前 checkout 分支。
+- 不擅自创建 branch、PR、merge 或 rebase；不得创建额外 worktree。
+- Push 前确认当前分支、工作树和目标远端正确。
+- 子代理默认只做独立只读审计或隔离 artifact 工作。
+- 生产代码最终由主 Agent 负责整合和验收。
+- 不为了并行而修改并发配置或制造多个开发分支。
 
-架构原则：**Facts are deterministic. Meaning is probabilistic.** Python 负责完整源覆盖、边界、哈希、唯一归属、Schema、证据、状态、阈值、冲突检测、稳定 ID 和离线图渲染；Codex 桌面端负责分段语义理解、跨 Arc 综合、Narrative DNA、世界模型、未知与反证解释。初始化不得依赖 Planning Aggregate 才能建立 Atlas。
+---
 
-# 子代理调度与项目边界
+## 3. 项目硬边界
 
-主 Agent 负责拆解任务、选择执行方式、派发子任务、整合结果并按验收标准复核；worker 负责执行父任务明确授权的独立子任务。以下原则适用于 `luna_worker` 及其他自定义 subagents。
+- `book/` 原文永久只读。
+- 新运行数据写入 `library/<book_id>/`，路径通过 `BookLayout`。
+- `workspace/` 仅用于 legacy 读取和迁移，不作为新运行目录。
+- `INFERENCE / CANDIDATE / PROSE_ONLY / SOFT_REFERENCE` 不得静默升级为 Canon。
+- Draft 默认停在 `VALIDATED`。
+- 未经作者当前明确批准，不得执行 Canon Commit。
+- Story Atlas 是版本化软理解层，不是 Canon、Truth 或固定未来大纲。
+- Revision 必须使用派生 Edition，不覆盖 base 或 `book/`。
 
-## 子代理调度
+---
 
-1. 对体量较大且相互独立的子任务，优先派发给多个 `luna_worker` 并行处理。
-2. 对几分钟内能够完成的轻量任务，直接留在主线程。
-3. 每个 worker 的任务描述必须上下文完整，明确文件范围、任务边界、预期输出和验收标准；任务必须自包含，不得依赖主线程的对话历史。
-4. 子代理不得修改生产代码；子代理只允许执行只读审计，或写入隔离的 Operation Workspace/artifact 目录；所有生产代码修改由主 Agent 在 `progression-webnovel-kernel-v1` 当前工作树串行完成。
-5. worker 完成后，主线程必须按照验收标准检查结果；未达标时重新派发修正任务，直到满足标准或明确报告阻塞。
-6. 如果多个 worker 无法并行，先检查当前生效的 `config.toml` 中 `[agents]` 的 `max_concurrent_threads_per_session`；若设置为 `1`，按串行处理，不因本规则擅自修改配置。
+## 4. Existing Novel Initialization
 
-## 项目硬边界
+初始化原则：
 
-1. 最高产品规范是 `Novel_Authoring_System_Constitution_V2.md`；根 `CONSTITUTION.md` 不属于本系统。
-2. `book/` 原文永久只读。所有新书、索引、任务、草稿、续章、报告与导出必须写入 `library/<book_id>/`，并通过 `BookLayout` 解析路径。旧 `workspace/<book_id>/` 只允许 legacy 读取、`migrate-legacy` 输入和 `cleanup-legacy` 前的保留历史；不得作为新运行产物写入目标。
-3. Codex 不得脱离 Continuation Boundary Packet 和 Chapter Contract 自由续写；详细流程见 `.agents/skills/continue-novel/SKILL.md`。
-4. 草稿默认停在 `VALIDATED`。未经作者当前明确说“批准写入正史”，不得运行 `novel approve` 或产生 Canon Commit。
-5. 不得把 `INFERENCE`、`CANDIDATE`、`PROSE_ONLY` 静默升级为 `CANON`；所有正史变化必须可回指原文或作者批准事件。
+> **Evidence-first, Progressive, capability-specific readiness**
 
-6. Story Atlas 是版本化软理解层，不是 Truth、Canon、固定大纲或数据库正史。Atlas
-   节点/关系必须区分 `information_status`、`constraint_level`、`horizon`、
-   `confidence` 和真实 `source_span`；新版本使用新 ID/版本并保留父版本，旧 artifact
-   不得覆盖。
-7. Future Possibility Space 必须保留 Active/Alternative/Wildcard/Open Design，
-   Rolling Horizon 的 FAR 不得写逐章大纲或固定结局；FAR 覆盖至少为
-   `max(current_written_chapters*2, batch_target_chapters*2)`。
-8. Batch Continuation 默认 chunk=5、checkpoint=10。每章必须沿用 Boundary、Chapter
-   Contract 和十项校验；Batch Provisional Projection、Atlas accepted 或
-   `BATCH_VALIDATED` 都不得写入 Canon 或替代作者批准。
+`ingest` 只负责：
 
-版本化改写另遵循 `.agents/skills/revise-novel/SKILL.md`：改写只能写派生 edition，必须经过影响审计、计划、`REVISION_DRAFT`、校验和逐字批准；`批准改写版本` 与 `启用改写版本` 分离，base/真实 `book/` 不得被覆盖。
+- immutable source
+- chapters
+- source spans
 
-长跨度节奏诊断遵循 `.agents/skills/analyze-novel-rhythm/SKILL.md`：先建立 edition-aware
-`chapter_features`，再运行 `novel rhythm diagnose` 与 `novel hooks diagnose`，最后才进入候选与合同。
-章节功能、标题/首尾相似和高压连续分别补充既有 Repetition Fatigue/Pressure Curve，伏笔
- Age/Dormancy/Readiness 补充 Narrative Debt 与 Thread Priority；不改变 Candidate Score 权重，
- 不把 WARNING 当作批准依据，也不允许伪造语义证据。
+不等于初始化完成。
 
-指标观测和本地审核台遵循 `.agents/skills/review-novel-metrics/SKILL.md`：指标只诊断，
-正文/状态提供证据，缺失必须保持 null 并可追溯。Windows Codex 桌面端交接遵循
-`.agents/skills/process-novel-handoff/SKILL.md`：Web 只生成和读取 handoff 文件，绝不调用
-Codex subprocess、`codex exec`、OpenAI API 或任意 shell；作者必须手动在 Codex 桌面端领取任务。
+初始化不要求每次先做完整全文深分析。
 
-## 构建与验收
+应优先保证当前任务需要的能力，例如：
 
-Windows 中文路径使用普通 wheel，避免 editable `.pth` 的本地代码页问题：
+- Continuation Boundary
+- 当前人物状态
+- 当前资源 / 能力
+- 当前知识边界
+- 当前主要线程
+- 当前世界规则
+- 当前成长 / Narrative Drive 状态
+
+证据不足时：
+
+- 保持 `UNKNOWN`
+- 或执行有界 Hydration
+
+不要用抽样结果冒充全书事实。
+
+具体初始化状态和 readiness 以当前代码为准，不在 AGENTS.md 固定枚举。
+
+Readiness 按创作动作判断，不用一个全局状态替代所有能力：
+
+- `CONTINUE_READY` 只要求当前安全续写所需的证据与边界完整。
+- `CONTINUE_READY` 不要求 `FULL_READY`；历史语义仍可渐进补齐。
+- Full Readiness 继续保持严格定义，不因某个动作已可用而放宽。
+
+---
+
+## 5. Deterministic / Semantic 边界
+
+核心原则：
+
+> **Facts are deterministic. Meaning is probabilistic.**
+
+Python 负责：
+
+- Source / Canon / State
+- Boundary
+- Schema
+- Evidence
+- Knowledge / Resource / Capability constraints
+- Hard Gates
+- deterministic metrics
+- Approval
+- Projection / Snapshot
+
+LLM / Codex 负责：
+
+- 文学理解
+- Narrative interpretation
+- Candidate creativity
+- Draft prose
+- semantic proposal
+- uncertainty explanation
+
+不要让 LLM 成为 Canon authority。
+
+也不要让 Python 用大量机械规则替代文学判断。
+
+---
+
+## 6. Progression / Narrative Kernel
+
+Narrative Drive / Progression Kernel 是语义与规划层。
+
+它不得创建第二套：
+
+- Canon
+- World State
+- Candidate Score
+- Hard Gate
+- Narrative Debt
+- Payoff
+- Approval
+
+应把 Kernel Evidence 编译进现有：
+
+- Hard Gates
+- Progress
+- Narrative Debt
+- Resource Pressure
+- Payoff
+- Candidate Score
+- Innovation Reward
+- Scheduler
+
+原则：
+
+> **Kernel 负责告诉旧系统“该算什么”，旧系统继续负责“怎么算”。**
+
+---
+
+## 7. 验证与性能原则
+
+本项目需要验证，但禁止重复验证和过度防御。
+
+同一事实只在正确的权威边界验证一次；下游复用已冻结、已验证的结果。
+
+任何检查前先回答：
+
+1. 它检测什么具体失败？
+2. 出现失败后系统会做什么不同动作？
+
+答不上来就不要加。
+
+保留真正改变行为的检查，例如：
+
+- Schema validation
+- Canon / Timeline / Knowledge
+- Resource / Capability
+- Author hard constraints
+- Draft evidence
+- Boundary freshness
+- Author Approval
+- Source immutable verification
+
+避免：
+
+- 同一事实反复验证
+- 普通页面反复完整 Event Replay
+- 已 VALIDATED Draft 在 Approval 时再次完整 Validation
+- 已冻结 Planning Context 再次生成
+- 无消费者的 hash / checksum
+- 为不存在的情况增加 wrapper / compatibility layer / feature flag
+
+性能是产品要求。
+
+优先：
+
+- materialized state
+- snapshot
+- incremental delta
+- request 内复用
+- lazy loading
+- 避免 N+1 查询
+
+---
+
+## 8. Continuation / Batch / Revision
+
+正式续写遵循：
+
+`.agents/skills/continue-novel/SKILL.md`
+
+必须经过：
+
+`Boundary -> Candidate -> Chapter Contract -> Draft -> Validation -> Author Approval`
+
+Batch 的具体 chunk / checkpoint 以当前 Skill 和任务配置为准，不在这里永久固定数字。
+
+Batch provisional state 不得变成 Canon。
+
+改写遵循：
+
+`.agents/skills/revise-novel/SKILL.md`
+
+---
+
+## 9. Metrics / Rhythm
+
+节奏和指标用于诊断，不是自动批准依据。
+
+遵循：
+
+- `.agents/skills/analyze-novel-rhythm/SKILL.md`
+- `.agents/skills/review-novel-metrics/SKILL.md`
+
+缺失证据保持：
+
+`UNKNOWN / null / incomplete`
+
+不要为了填满指标而伪造值。
+
+WARNING 默认不是 Hard Failure。
+
+---
+
+## 10. Local File Handoff
+
+遵循：
+
+`.agents/skills/process-novel-handoff/SKILL.md`
+
+Web 只负责：
+
+- 创建 handoff
+- 展示 handoff
+- 读取结果
+- 导入结果
+
+Web 不得自行调用：
+
+- Codex subprocess
+- `codex exec`
+- OpenAI API
+- 自动 shell 执行 Codex
+
+---
+
+## 11. 测试与交付
+
+开发中先运行相关测试。
+
+完整改动完成后，再运行一次全量验证：
 
 ```powershell
-uv sync --python "C:\Users\jingx\anaconda3\python.exe" --extra dev --no-editable --reinstall-package novel-authoring-system
 uv run --no-sync pytest -q
 uv run --no-sync ruff check src tests
 uv run --no-sync mypy src
-uv run --no-sync novel --help
-uv run --no-sync novel features --help
-uv run --no-sync novel rhythm --help
-uv run --no-sync novel hooks --help
-uv run --no-sync novel metrics --help
-uv run --no-sync novel segments --help
-uv run --no-sync novel workflow --help
-uv run --no-sync novel web doctor
+uv run --no-sync python -m compileall -q src tests
 ```
+
+只有修改对应 CLI / Web 时才运行相关：
+
+uv run --no-sync novel --help
+uv run --no-sync novel web doctor
+node --check <changed-js>
+
+不要为了展示验收完整而反复运行与本次修改无关的检查。
+
+Windows 中文路径需要重新安装时：
+
+uv sync --python "C:\Users\jingx\anaconda3\python.exe" --extra dev --no-editable --reinstall-package novel-authoring-system
+
+不需要每次小改动都重新安装。
+
+## 12. 最终判断原则
+对的就说对，不要为了审计硬找问题。
+不为理论上的 corner case 增加工程复杂度。
+不新增没有真实消费者的 Hash、Cache、Migration、Wrapper。
+已经验证完成的东西，不要无理由重新验证。
+能用现有系统解决，就不要创建第二套系统。
+
+最终目标：
+
+用尽可能少而清晰的机制，可靠地维护长篇小说的事实、状态、作者意图和连续性。

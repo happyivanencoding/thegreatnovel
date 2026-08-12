@@ -283,6 +283,8 @@ class LibraryCatalogView:
             value = item.to_dict()
             if item.state == "DISCOVERED":
                 grouped["awaiting_import"].append(value)
+            elif item.state == "CONTINUE_READY":
+                grouped["creative"].append(value)
             elif (
                 item.state
                 in {
@@ -781,8 +783,8 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
     label = (
         "可用但有待补齐"
         if readiness.status == "READY_WITH_GAPS"
-        else "标准就绪"
-        if level is StudioAccessLevel.ACTION_READY
+        else "可以续写 · 历史仍在补齐"
+        if boundary_ready
         else ("均衡准备" if depth == "BALANCED" else "快速了解")
         if level is StudioAccessLevel.LIMITED
         else "尚未就绪"
@@ -825,6 +827,7 @@ _STATE_LABELS = {
     "FAILED": "初始化失败",
     "NEEDS_REPAIR": "需要修复",
     "READY_WITH_GAPS": "可用但有待补齐",
+    "CONTINUE_READY": "可以续写 · 历史仍在补齐",
     "ORIGINAL_SEED": "待生成基础框架",
     "FOUNDATION_GENERATING": "正在生成故事方案",
     "FOUNDATION_REVIEW": "等待确认基础框架",
@@ -861,6 +864,18 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
     )
     readiness = studio_readiness(layout, record)
     access = studio_access(layout, record)
+    continue_ready = bool(access.authoring_capabilities.get("CONTINUE_READY"))
+    full_ready = bool(access.authoring_capabilities.get("FULL_READY"))
+    capability_state = (
+        "CONTINUE_READY"
+        if record.creation_mode is not CreationMode.ORIGINAL and continue_ready and not full_ready
+        else readiness.status
+    )
+    author_summary = (
+        "当前续写边界已经就绪；未覆盖的历史语义仍在渐进补齐。"
+        if capability_state == "CONTINUE_READY"
+        else readiness.author_summary
+    )
     instruction_available, instruction_error = _instruction_availability(
         runtime.get("handoff") or {}
     )
@@ -893,7 +908,7 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
             if record.creation_mode is CreationMode.ORIGINAL
             else record.source_origin_kind or "LIBRARY_COPY"
         ),
-        state=readiness.status,
+        state=capability_state,
         state_label=access.author_label if access.accessible else _STATE_LABELS[readiness.status],
         studio_ready=readiness.ready,
         studio_accessible=access.accessible,
@@ -914,7 +929,7 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
         instruction_available=instruction_available,
         instruction_error=instruction_error,
         missing_requirements=readiness.missing_requirements,
-        author_summary=readiness.author_summary,
+        author_summary=author_summary,
         technical={
             "book_id": record.book_id,
             "initialization_status": readiness.initialization_status,

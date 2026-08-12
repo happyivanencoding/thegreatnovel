@@ -299,8 +299,7 @@ def test_agents_rejects_worktree_creation_instruction() -> None:
     text = (root / "AGENTS.md").read_text(encoding="utf-8")
     assert "不得创建额外 worktree" in text
     assert "使用独立 worktree" not in text
-    assert (
-        "所有生产代码修改由主 Agent 在 `progression-webnovel-kernel-v1` "
-        "当前工作树串行完成"
-        in text
-    )
+    assert "不要永久绑定某一个开发分支" in text
+    assert "当前任务指定分支时，只在该分支工作。" in text
+    assert "生产代码最终由主 Agent 负责整合和验收。" in text
+    assert "progression-webnovel-kernel-v1" not in text
