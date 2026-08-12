@@ -1127,7 +1127,11 @@ def import_candidate_output(
             candidate, frozen_truth_reveal
         )
         kernel_compilation = (
-            KernelEvidenceCompiler().compile(frozen_kernel_context, candidate)
+            KernelEvidenceCompiler().compile(
+                frozen_kernel_context,
+                candidate,
+                settings.metrics,
+            )
             if frozen_kernel_context is not None
             and frozen_kernel_context.contract_references
             else None
@@ -1195,7 +1199,29 @@ def import_candidate_output(
         inputs = candidate.score_inputs.model_dump()
         inputs["structural_diversity"] = diversity
         score_evidence = dict(candidate.score_evidence)
-        if candidate.progress_preview is not None:
+        if kernel_compilation is not None:
+            override_bundle = kernel_compilation.soft_metric_compilation.get(
+                "candidate_score_overrides", {}
+            )
+            overrides = override_bundle.get("values", {})
+            sources = override_bundle.get("components", {})
+            if isinstance(overrides, dict):
+                inputs.update(
+                    {
+                        str(name): float(value)
+                        for name, value in overrides.items()
+                        if name in inputs
+                    }
+                )
+            if isinstance(sources, dict):
+                for name, source in sources.items():
+                    if name not in inputs or not isinstance(source, dict):
+                        continue
+                    evidence_values = source.get("evidence", [])
+                    score_evidence[str(name)] = [
+                        str(item) for item in evidence_values
+                    ] or [str(source.get("source") or "KERNEL_VERIFIED_EVIDENCE")]
+        elif candidate.progress_preview is not None:
             progress_result = progress_metric(
                 candidate.progress_preview.values,
                 settings.metrics["progress"],
@@ -1220,8 +1246,71 @@ def import_candidate_output(
             if gate.passed
             else 0
         )
+        verified_candidate = candidate
+        if kernel_compilation is not None:
+            verified_payload = kernel_compilation.verified
+            verified_reader_ids = {
+                str(item.get("promise_id"))
+                for item in kernel_compilation.verified_reader_promise_alignment
+                if item.get("verification_status") == "VERIFIED"
+            }
+            verified_impact = kernel_compilation.verified_progression_impact
+            verified_candidate = candidate.model_copy(
+                update={
+                    "reader_promise_alignment": [
+                        item
+                        for item in candidate.reader_promise_alignment
+                        if item.promise_id in verified_reader_ids
+                    ],
+                    "genre_alignment": (
+                        ["VERIFIED_STRUCTURAL_CAUSALITY"]
+                        if verified_payload.get("genre_drift", {}).get("status")
+                        == "CLEAR"
+                        else []
+                    ),
+                    "narrative_drive_alignment": candidate.narrative_drive_alignment.model_validate(
+                        kernel_compilation.verified_drive_alignment
+                    ),
+                    "progression_impact": candidate.progression_impact.model_copy(
+                        update={
+                            "axis_advanced": verified_impact.get("axis_advanced", []),
+                            "progression_delta_type": verified_impact.get(
+                                "progression_delta_type", []
+                            ),
+                            "stage_change": (
+                                candidate.progression_impact.stage_change
+                                if verified_impact.get("stage_change")
+                                else None
+                            ),
+                            "resource_change": [
+                                str(item.get("claim"))
+                                for item in verified_impact.get("resource_changes", [])
+                            ],
+                            "ability_unlock": [
+                                str(item.get("claim"))
+                                for item in verified_impact.get("ability_unlocks", [])
+                            ],
+                            "growth_cost": verified_impact.get("growth_costs", []),
+                        }
+                    ),
+                    "payoff_channel_impact": kernel_compilation.soft_metric_compilation.get(
+                        "payoff", {}
+                    ).get("evidence", []),
+                    "world_expansion_impact": kernel_compilation.verified_world_expansion_impact,
+                    "resource_opportunity_impact": [
+                        str(item.get("claim"))
+                        for item in kernel_compilation.verified_resource_impact
+                        if str(item.get("status", "")).startswith("VERIFIED")
+                    ],
+                    "anticipation_impact": kernel_compilation.verified_anticipation_impact,
+                    "genre_drift_diagnostic": verified_payload.get("genre_drift", {}),
+                    "genre_evolution_diagnostic": verified_payload.get(
+                        "genre_evolution", {}
+                    ),
+                }
+            )
         reward = calculate_candidate_innovation_reward(
-            candidate,
+            verified_candidate,
             expected_innovation,
             base_candidate_score=base_score,
             portfolio=narrative_portfolio,

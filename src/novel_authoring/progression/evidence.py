@@ -8,14 +8,23 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from novel_authoring.metrics.formulas import payoff_score, progress, resource_pressure
 from novel_authoring.planning.models import (
     CandidateProposal,
     NarrativeDriveAlignment,
     ReaderPromiseService,
 )
 from novel_authoring.progression.context import KernelPlanningContext
+from novel_authoring.progression.diagnostics import (
+    GenreStructureEvidence,
+    diagnose_genre_change,
+)
+from novel_authoring.serial_kernel.diagnostics import (
+    NarrativeDriveStructureEvidence,
+    diagnose_narrative_drive_drift,
+)
 from novel_authoring.serial_kernel.engines import NARRATIVE_ENGINE_REGISTRY
-from novel_authoring.serial_kernel.models import NarrativeEngineType
+from novel_authoring.serial_kernel.models import NarrativeDrive, NarrativeEngineType
 
 
 class EvidenceCompleteness(StrEnum):
@@ -129,6 +138,7 @@ class KernelEvidenceCompiler:
         self,
         context: KernelPlanningContext,
         candidate: CandidateProposal,
+        metrics_config: Mapping[str, Any] | None = None,
     ) -> KernelEvidenceCompilation:
         context_payload = context.model_dump(mode="json")
         adapter = NARRATIVE_ENGINE_REGISTRY.get(NarrativeEngineType.PROGRESSION)
@@ -285,6 +295,73 @@ class KernelEvidenceCompiler:
             ),
         ).model_dump(mode="json")
 
+        core_contradicted = any(
+            item["contract_strength"] == "CORE" and item["service"] == "CONTRADICTED"
+            for item in verified_reader
+        )
+        genre_evidence = GenreStructureEvidence(
+            progression_gate_affects_causality=bool(
+                progression_effect.get("stage_change")
+                or progression_effect.get("progression_delta_type")
+            ),
+            extraordinary_resource_affects_choice=bool(
+                progression_effect.get("resource_changes")
+            ),
+            ability_changes_solution=bool(progression_effect.get("ability_unlocks")),
+            power_opens_space=bool(progression_effect.get("world_expansion")),
+            mystery_changes_understanding=bool(candidate.reveal_impact.hints)
+            or bool(candidate.reveal_impact.partial_reveals)
+            or bool(candidate.reveal_impact.full_reveals),
+            core_promise_preserved=not core_contradicted,
+            secondary_replaces_primary=bool(
+                primary_drive
+                and declared_drive.drives_advanced
+                and primary_drive not in declared_drive.drives_advanced
+                and any(
+                    drive in secondary_drives for drive in declared_drive.drives_advanced
+                )
+            ),
+            contradicts_core_promise=core_contradicted,
+            evidence=[
+                *engine_validation.evidence,
+                *[
+                    proof
+                    for item in verified_reader
+                    for proof in item.get("evidence", [])
+                ],
+            ],
+        )
+        genre_diagnostics = diagnose_genre_change(genre_evidence)
+        if genre_diagnostics.drift.hard_failure:
+            author_failures.extend(genre_diagnostics.drift.reasons)
+        try:
+            drive_enum = NarrativeDrive(primary_drive)
+        except ValueError:
+            drive_diagnostic: dict[str, Any] = {
+                "status": "UNKNOWN",
+                "warning": False,
+                "hard_failure": False,
+                "reasons": ["没有可验证的 Effective Primary Drive"],
+                "evidence": [],
+            }
+        else:
+            verified_drive_changed = primary_drive in verified_advanced
+            drive_result = diagnose_narrative_drive_drift(
+                NarrativeDriveStructureEvidence(
+                    primary_drive=drive_enum,
+                    primary_drive_affects_causality=verified_drive_changed,
+                    primary_drive_state_changed=verified_drive_changed,
+                    secondary_drive_replaces_primary=genre_evidence.secondary_replaces_primary,
+                    unrelated_to_all_confirmed_drives=not bool(verified_advanced),
+                    contradicts_primary_drive=primary_drive
+                    in declared_drive.drive_conflicts,
+                    evidence=verified_drive["evidence"],
+                )
+            )
+            drive_diagnostic = drive_result.model_dump(mode="json")
+            if drive_result.hard_failure:
+                author_failures.extend(drive_result.reasons)
+
         resource_tokens = _tokens(context.chapter_state.resource_state)
         opportunity = context.chapter_state.opportunity_surface or {}
         opportunity_tokens = _tokens(opportunity.get("items", []))
@@ -345,6 +422,277 @@ class KernelEvidenceCompiler:
 
         gate_values.setdefault("author_constraint_violations", []).extend(author_failures)
         gate = KernelHardGateCompilation.model_validate(gate_values)
+
+        progression_values = {
+            "permanent_growth": (
+                100.0
+                if progression_effect.get("stage_change")
+                or progression_effect.get("ability_unlocks")
+                else 60.0
+                if progression_effect.get("axis_advanced")
+                or progression_effect.get("progression_delta_type")
+                else 0.0
+            ),
+            "world_state_change": (
+                100.0
+                if progression_effect.get("world_expansion")
+                else 60.0
+                if progression_effect.get("resource_changes")
+                else 0.0
+            ),
+            "relationship_change": (
+                100.0
+                if candidate.primary_function.value == "relationship_shift"
+                and bool(candidate.state_changes)
+                else 0.0
+            ),
+            "knowledge_change": (
+                100.0
+                if candidate.reveal_impact.partial_reveals
+                or candidate.reveal_impact.full_reveals
+                else 60.0
+                if candidate.reveal_impact.hints
+                or candidate.primary_function.value == "discovery"
+                else 0.0
+            ),
+            "goal_advance": (
+                100.0
+                if candidate.promises_to_pay
+                else 70.0
+                if candidate.promises_to_advance
+                or bool(candidate.required_irreversible_change.strip())
+                else 0.0
+            ),
+            "strategy_expansion": (
+                100.0
+                if progression_effect.get("ability_unlocks")
+                else 75.0
+                if progression_effect.get("resource_changes")
+                or progression_effect.get("world_expansion")
+                else 50.0
+                if candidate.protagonist_strategy.strip() and candidate.state_changes
+                else 0.0
+            ),
+        }
+        progress_evidence = {
+            component: (
+                list(engine_validation.evidence)
+                if value > 0
+                else [f"no_verified_{component}_change"]
+            )
+            for component, value in progression_values.items()
+        }
+        metric_values: dict[str, Any] = {
+            "progress": {
+                "formula": "existing:progress",
+                "components": progression_values,
+                "evidence": progress_evidence,
+                "completeness": "COMPLETE",
+                "source": "KERNEL_VERIFIED_EVIDENCE",
+                "score": None,
+            }
+        }
+        score_overrides: dict[str, float] = {}
+        score_sources: dict[str, dict[str, Any]] = {}
+        if metrics_config is not None:
+            progress_result = progress(
+                progression_values,
+                metrics_config["progress"],
+            )
+            metric_values["progress"]["score"] = progress_result.score
+            score_overrides["progress_gain"] = progress_result.score
+            score_sources["progress_gain"] = metric_values["progress"]
+
+            progression_state = context.chapter_state.progression_state or {}
+            missing_resources = progression_state.get("missing_resources", [])
+            bottlenecks = progression_state.get("primary_axis_state", {}).get(
+                "current_bottlenecks", []
+            )
+            resource_values = {
+                "current_shortfall": 100.0 if missing_resources else 0.0,
+                "cost_income_imbalance": (
+                    100.0
+                    if any(
+                        word in item["claim"].casefold()
+                        for item in verified_resources
+                        for word in ("消耗", "付出", "consume", "spend")
+                    )
+                    else 0.0
+                ),
+                "recently_blocked_actions": 100.0 if bottlenecks else 0.0,
+                "near_future_demand": 100.0 if missing_resources else 0.0,
+                "reader_salience": (
+                    100.0
+                    if "RESOURCE_OPPORTUNITY"
+                    in set(context.effective_contracts.reader_experience.get(
+                        "experience_priorities", {}
+                    ) if context.effective_contracts.reader_experience else {})
+                    else 50.0
+                    if missing_resources
+                    else 0.0
+                ),
+            }
+            resource_score = resource_pressure(
+                resource_values,
+                metrics_config["resource_pressure"],
+            )
+            metric_values["resource_pressure"] = {
+                "formula": "existing:resource_pressure",
+                "components": resource_values,
+                "evidence": [
+                    *[f"missing_resource:{item}" for item in missing_resources],
+                    *[f"bottleneck:{item}" for item in bottlenecks],
+                ],
+                "completeness": "COMPLETE",
+                "source": "KERNEL_VERIFIED_EVIDENCE",
+                "score": resource_score,
+            }
+
+            debt_by_id = {
+                str(item.get("debt_id")): item
+                for item in context.planning_state.narrative_debts
+                if item.get("debt_id")
+            }
+            served_debts = set(candidate.scheduler_alignment.debts_served)
+            served_scores = [
+                float(debt_by_id[debt_id].get("debt_score") or 0)
+                for debt_id in served_debts
+                if debt_id in debt_by_id
+            ]
+            debt_utility = min(100.0, max(served_scores, default=0.0))
+            score_overrides["debt_utility"] = debt_utility
+            score_sources["debt_utility"] = {
+                "formula": "existing:narrative_debt",
+                "score": debt_utility,
+                "evidence": sorted(served_debts.intersection(debt_by_id)),
+                "completeness": "COMPLETE",
+                "source": "FROZEN_NARRATIVE_DEBT",
+            }
+
+            thread_ids = {
+                str(item.get("thread_id") or item.get("id"))
+                for item in context.planning_state.active_threads
+                if item.get("thread_id") or item.get("id")
+            }
+            thread_fit = 100.0 if candidate.primary_thread_id in thread_ids else 0.0
+            score_overrides["thread_need_fit"] = thread_fit
+            score_sources["thread_need_fit"] = {
+                "score": thread_fit,
+                "evidence": [candidate.primary_thread_id],
+                "completeness": "COMPLETE",
+                "source": "FROZEN_ACTIVE_THREADS",
+            }
+
+            payoff_profile = context.effective_contracts.payoff_channel or {}
+            enabled_channels = {
+                str(channel)
+                for channel, strength in payoff_profile.get("channels", {}).items()
+                if str(strength) != "DISABLED"
+            }
+            verified_channels = [
+                channel
+                for channel in candidate.payoff_channel_impact
+                if channel in enabled_channels
+            ]
+            unknown_channels = set(candidate.payoff_channel_impact) - set(
+                verified_channels
+            )
+            if unknown_channels:
+                warnings.append(
+                    "Payoff Channel 未在 Effective Profile 启用："
+                    + ", ".join(sorted(unknown_channels))
+                )
+            payoff_value = 0.0
+            if verified_channels:
+                anticipation_items = (
+                    context.planning_state.anticipation_surface or {}
+                ).get("items", [])
+                maturity = max(
+                    [
+                        float(item.get("maturity") or 0) * 100
+                        for item in anticipation_items
+                        if isinstance(item, Mapping)
+                    ],
+                    default=0.0,
+                )
+                payoff_result = payoff_score(
+                    maturity=maturity,
+                    impact=max(progression_values.values()),
+                    causality=100.0 if candidate.causal_sources else 0.0,
+                    after_value=progression_values["strategy_expansion"],
+                    repetition_fatigue_score=candidate.score_inputs.repetition_fatigue,
+                    structural_fit=100.0 if candidate.promises_to_pay else 60.0,
+                    future_damage=min(
+                        100.0,
+                        20.0
+                        * len(
+                            candidate.innovation_preview.expected_new_debts
+                            if candidate.innovation_preview is not None
+                            else []
+                        ),
+                    ),
+                    config=metrics_config["payoff"],
+                )
+                payoff_value = payoff_result.score
+                metric_values["payoff"] = {
+                    "formula": "existing:payoff_score",
+                    "components": payoff_result.inputs,
+                    "evidence": verified_channels,
+                    "completeness": "PARTIAL",
+                    "source": "KERNEL_VERIFIED_PLUS_EXISTING_REPETITION_INPUT",
+                    "score": payoff_value,
+                }
+            score_overrides["payoff_or_setup_utility"] = payoff_value
+            score_sources["payoff_or_setup_utility"] = metric_values.get(
+                "payoff",
+                {
+                    "score": 0.0,
+                    "evidence": ["no_verified_payoff_channel"],
+                    "completeness": "COMPLETE",
+                    "source": "KERNEL_VERIFIED_EVIDENCE",
+                },
+            )
+            score_overrides["agency_gain"] = (
+                100.0
+                if progression_changed and candidate.protagonist_strategy.strip()
+                else 50.0
+                if candidate.state_changes and candidate.protagonist_strategy.strip()
+                else 0.0
+            )
+            score_overrides["risk_fit"] = (
+                100.0
+                if not gate.hard_failures
+                and bool(
+                    candidate.required_cost.strip()
+                    or progression_effect.get("growth_costs")
+                )
+                else 0.0
+            )
+            score_overrides["future_damage"] = (
+                100.0
+                if gate.hard_failures
+                else min(
+                    100.0,
+                    20.0
+                    * len(
+                        candidate.innovation_preview.expected_new_debts
+                        if candidate.innovation_preview is not None
+                        else []
+                    ),
+                )
+            )
+            for name in ("agency_gain", "risk_fit", "future_damage"):
+                score_sources[name] = {
+                    "score": score_overrides[name],
+                    "evidence": list(engine_validation.evidence),
+                    "completeness": "COMPLETE",
+                    "source": "KERNEL_VERIFIED_EVIDENCE",
+                }
+            metric_values["candidate_score_overrides"] = {
+                "values": score_overrides,
+                "components": score_sources,
+                "source": "KERNEL_EVIDENCE_COMPILER",
+            }
         if gate.hard_failures:
             completeness = EvidenceCompleteness.CONFLICT
         elif warnings:
@@ -362,6 +710,9 @@ class KernelEvidenceCompiler:
             "resource_impact": verified_resources,
             "world_expansion_impact": verified_world,
             "scheduler_alignment": candidate.scheduler_alignment.model_dump(mode="json"),
+            "genre_drift": genre_diagnostics.drift.model_dump(mode="json"),
+            "genre_evolution": genre_diagnostics.evolution.model_dump(mode="json"),
+            "drive_drift": drive_diagnostic,
         }
         return KernelEvidenceCompilation(
             candidate_local_id=candidate.local_id,
@@ -373,7 +724,9 @@ class KernelEvidenceCompiler:
             verified_progression_impact=progression_effect,
             verified_world_expansion_impact=verified_world,
             verified_resource_impact=verified_resources,
+            verified_progress_components=metric_values["progress"],
             hard_gate_compilation=gate,
+            soft_metric_compilation=metric_values,
             completeness=completeness,
             warnings=list(dict.fromkeys(warnings)),
         )

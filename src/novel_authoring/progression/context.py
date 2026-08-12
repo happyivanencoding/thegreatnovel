@@ -12,8 +12,10 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
 from novel_authoring.edition import edition_chapters
+from novel_authoring.metrics.formulas import narrative_debt as narrative_debt_metric
 from novel_authoring.planning.diagnostics import build_narrative_portfolio_snapshot
 from novel_authoring.planning.innovation import NarrativeDebt
 from novel_authoring.progression.anticipation import AnticipationSurfaceView
@@ -181,7 +183,51 @@ def _portfolio_debts(
         current_chapter=chapter_ordinal,
         snapshot_id=f"kernel-portfolio-{book_id}-{edition_id}-{chapter_ordinal}",
     )
-    return snapshot.narrative_debts
+    settings = load_settings()
+    values: list[NarrativeDebt] = []
+    source_by_id = _promise_mapping(promises)
+    for debt in snapshot.narrative_debts:
+        if debt.debt_score is not None:
+            values.append(debt)
+            continue
+        source = source_by_id.get(debt.debt_id, {})
+        try:
+            metric = narrative_debt_metric(
+                importance=float(str(source.get("importance", 0.5))),
+                reader_visibility=float(str(source.get("reader_visibility", 0.5))),
+                promise_progress=float(str(source.get("progress", 0))),
+                age_chapters=max(0, chapter_ordinal - debt.opened_chapter),
+                target_max_age=max(
+                    1,
+                    int(
+                        str(
+                            source.get("target_max_age")
+                            or source.get("target_max_age_chapters")
+                            or 8
+                        )
+                    ),
+                ),
+                reminder_count=max(
+                    0, int(str(source.get("reminder_count") or 0))
+                ),
+                config=settings.metrics["narrative_debt"],
+            )
+        except (TypeError, ValueError):
+            values.append(debt)
+            continue
+        values.append(
+            debt.model_copy(
+                update={
+                    "debt_score": metric.score,
+                    "metric_components": metric.inputs,
+                    "evidence": [
+                        *debt.evidence,
+                        f"existing_formula:{metric.metric}",
+                    ],
+                }
+            )
+        )
+    return values
 
 
 def _engine_recommendations(
