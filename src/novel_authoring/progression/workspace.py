@@ -20,6 +20,7 @@ from novel_authoring.progression.resources import project_opportunity_surface
 from novel_authoring.progression.service import (
     ProgressionContractType,
     effective_contract_records,
+    list_contract_records,
 )
 
 
@@ -69,6 +70,15 @@ def build_progression_workspace_from_world_state(
         book_id=book_id,
         edition_id=edition_id,
     )
+    proposals = [
+        record
+        for record in list_contract_records(
+            database,
+            book_id=book_id,
+            edition_id=edition_id,
+        )
+        if record.status.value in {"INFERRED_PROPOSAL", "NEEDS_REVIEW"}
+    ]
     progression_record = records.get(ProgressionContractType.PROGRESSION)
     world_record = records.get(ProgressionContractType.WORLD_EXPANSION)
     payoff_record = records.get(ProgressionContractType.PAYOFF_CHANNEL)
@@ -142,6 +152,7 @@ def build_progression_workspace_from_world_state(
             }
             for contract_type, record in records.items()
         },
+        "contract_proposals": [item.model_dump(mode="json") for item in proposals],
         "projection_only": True,
         "canon_mutation_allowed": False,
     }

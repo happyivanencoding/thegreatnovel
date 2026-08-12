@@ -371,6 +371,70 @@ def test_progression_workspace_reuses_historical_world_state_without_future_leak
     assert "观察边界" in page.text
 
 
+def test_existing_novel_contract_suggestions_require_item_by_item_confirmation(
+    tmp_path: Path,
+) -> None:
+    database, chapters = _v22_book(tmp_path, chapter_count=3)
+    app = create_app(database, book_id="story-world-v22")
+    client = TestClient(app)
+    headers = {"X-CSRF-Token": app.state.csrf_token}
+    chapter_id = str(chapters[1]["chapter_id"])
+    before = client.get(
+        f"/api/books/story-world-v22/editions/base/chapters/{chapter_id}/progression"
+    ).json()
+    with database.connect() as connection:
+        authority_before = tuple(
+            connection.execute(
+                "SELECT (SELECT COUNT(*) FROM events), (SELECT COUNT(*) FROM canon_commits), "
+                "(SELECT COUNT(*) FROM author_truths)"
+            ).fetchone()
+        )
+
+    inferred = client.post(
+        "/api/books/story-world-v22/editions/base/progression-contracts/infer",
+        headers=headers,
+    )
+    assert inferred.status_code == 200
+    assert len(inferred.json()["created"]) == 5
+    assert {item["status"] for item in inferred.json()["created"]} == {
+        "INFERRED_PROPOSAL"
+    }
+    assert inferred.json()["canon_changed"] is False
+    assert before["available"] is False
+    assert client.post(
+        "/api/books/story-world-v22/editions/base/progression-contracts/infer",
+        headers=headers,
+    ).json()["deduplicated"] is True
+
+    contracts = client.get(
+        "/api/books/story-world-v22/editions/base/progression-contracts"
+    ).json()["records"]
+    progression = next(
+        item for item in contracts if item["contract_type"] == "PROGRESSION"
+    )
+    confirmed = client.post(
+        "/api/books/story-world-v22/editions/base/progression-contracts/"
+        f"{progression['contract_record_id']}/confirm",
+        headers=headers,
+        json={"effective_from_boundary": 2, "author_notes": "仅确认成长轴"},
+    )
+    assert confirmed.status_code == 200
+    assert confirmed.json()["record"]["status"] == "EFFECTIVE"
+    after = client.get(
+        f"/api/books/story-world-v22/editions/base/chapters/{chapter_id}/progression"
+    ).json()
+    assert after["available"] is True
+    assert len(after["contract_proposals"]) == 4
+    with database.connect() as connection:
+        authority_after = tuple(
+            connection.execute(
+                "SELECT (SELECT COUNT(*) FROM events), (SELECT COUNT(*) FROM canon_commits), "
+                "(SELECT COUNT(*) FROM author_truths)"
+            ).fetchone()
+        )
+    assert authority_after == authority_before
+
+
 def test_completed_zero_delta_chapter_is_not_requeued_and_batch_is_chunked(
     tmp_path: Path,
 ) -> None:

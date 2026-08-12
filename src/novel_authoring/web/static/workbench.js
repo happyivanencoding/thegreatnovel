@@ -392,6 +392,22 @@
     current.querySelectorAll("[data-profile-proposal-action]").forEach(function (button) { button.addEventListener("click", function () { postJson(profileBase(current) + "/proposals/" + encodeURIComponent(button.dataset.proposalId) + "/resolve", { action: button.dataset.profileProposalAction }).then(function () { loadWorkbench(location.href, { push: false }); }).catch(function (error) { button.textContent = error.message; }); }); });
   }
 
+  function bindProgressionContracts(current) {
+    var base = "/api/books/" + encodeURIComponent(current.dataset.bookId) + "/editions/" + encodeURIComponent(current.dataset.editionId) + "/progression-contracts";
+    current.querySelectorAll("[data-infer-progression-contracts]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        button.disabled = true;
+        postJson(base + "/infer", {}).then(function () { loadWorkbench(location.href, { push: false }); }).catch(function (error) { button.disabled = false; button.textContent = error.message; });
+      });
+    });
+    current.querySelectorAll("[data-confirm-progression-contract]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        button.disabled = true;
+        postJson(base + "/" + encodeURIComponent(button.dataset.confirmProgressionContract) + "/confirm", { effective_from_boundary: number(current.dataset.selectedChapterAnchor) || 0, author_notes: "作者在成长工作台逐项确认" }).then(function () { loadWorkbench(location.href, { push: false }); }).catch(function (error) { button.disabled = false; button.textContent = error.message; });
+      });
+    });
+  }
+
   function truthBase(current) { return "/api/books/" + encodeURIComponent(current.dataset.bookId) + "/editions/" + encodeURIComponent(current.dataset.editionId); }
   function bindTruth(current) {
     current.querySelectorAll("[data-author-truth-form]").forEach(function (form) { form.addEventListener("submit", function (event) { event.preventDefault(); var payload = formPayload(form); var verdict = payload.compatibility_verdict; var evidence = verdict ? { verdict: verdict, chapter_id: payload.compatibility_chapter_id || null, chapter_ordinal: payload.compatibility_chapter_ordinal ? number(payload.compatibility_chapter_ordinal) : null, source_span_id: payload.compatibility_source_span_id || null, evidence_quote: payload.compatibility_evidence_quote || "", explanation: payload.compatibility_explanation || "" } : null; ["compatibility_verdict", "compatibility_chapter_id", "compatibility_chapter_ordinal", "compatibility_source_span_id", "compatibility_evidence_quote", "compatibility_explanation"].forEach(function (key) { delete payload[key]; }); payload.compatibility_evidence = evidence ? [evidence] : []; postJson(truthBase(current) + "/author-truths", payload).then(function (result) { feedback(form, "已保存：" + result.truth.status + " · " + result.truth.compatibility_status, false); setTimeout(function () { loadWorkbench(location.href, { push: false }); }, 500); }).catch(function (error) { feedback(form, error.message, true); }); }); });
@@ -488,7 +504,7 @@
 
   function bindSearch(current) { var search = current.querySelector("[data-wb-chapter-search]"); if (!search) return; search.addEventListener("input", function () { var query = search.value.trim().toLowerCase(); current.querySelectorAll("[data-wb-chapter-item]").forEach(function (item) { item.hidden = Boolean(query && item.textContent.toLowerCase().indexOf(query) === -1); }); }); }
 
-  function initWorkbench(current) { bindLayout(current); bindNavigation(current); bindScrollPersistence(current); bindActivityCenter(current); bindCommands(current); bindInspector(current); bindRelationshipGraph(current); bindStateWorkspace(current); bindItemModal(current); bindProfile(current); bindTruth(current); bindSecretBoard(current); bindDraft(current); bindWorkflow(current); bindPendingActions(current); bindSearch(current); current.querySelectorAll("[data-copy-instruction]").forEach(bindInstructionCopy); current.querySelectorAll("details[data-explorer-section]").forEach(function (item) { item.addEventListener("toggle", function () { saveFallback(current, captureNavigationState(current)); }); }); }
+  function initWorkbench(current) { bindLayout(current); bindNavigation(current); bindScrollPersistence(current); bindActivityCenter(current); bindCommands(current); bindInspector(current); bindRelationshipGraph(current); bindStateWorkspace(current); bindItemModal(current); bindProfile(current); bindProgressionContracts(current); bindTruth(current); bindSecretBoard(current); bindDraft(current); bindWorkflow(current); bindPendingActions(current); bindSearch(current); current.querySelectorAll("[data-copy-instruction]").forEach(bindInstructionCopy); current.querySelectorAll("details[data-explorer-section]").forEach(function (item) { item.addEventListener("toggle", function () { saveFallback(current, captureNavigationState(current)); }); }); }
 
   window.addEventListener("popstate", function (event) { loadWorkbench(location.href, { push: false, fromPop: true, restoreState: event.state && event.state.workbenchState ? event.state.workbenchState : readFallback(root()) }); });
   var initial = root(); if (initial) { var state = history.state && history.state.workbenchState ? history.state.workbenchState : readFallback(initial); restoreDetails(initial, state); restoreLayout(initial, state); initWorkbench(initial); restoreNavigationState(initial, state); history.replaceState({ workbenchState: captureNavigationState(initial) }, "", location.href); }

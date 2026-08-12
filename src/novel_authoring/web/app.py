@@ -136,6 +136,12 @@ from novel_authoring.pending_actions import (
     list_pending_author_actions,
     set_pending_author_action_status,
 )
+from novel_authoring.progression.inference import infer_existing_contract_proposals
+from novel_authoring.progression.service import (
+    confirm_contract,
+    get_contract_record,
+    list_contract_records,
+)
 from novel_authoring.progression.workspace import build_progression_workspace
 from novel_authoring.readiness import evaluate_revision_range
 from novel_authoring.storage.layout import BookLayout
@@ -181,6 +187,7 @@ from novel_authoring.web.schemas import (
     OriginalProposalVersionResolutionRequest,
     OriginalReaderExperienceConfirmationRequest,
     ProfileReanalysisRequest,
+    ProgressionContractConfirmationRequest,
     RecomputeRequest,
     RetractRequest,
     RevealAgendaOverrideRequest,
@@ -1471,6 +1478,68 @@ def create_app(
             )
         except ValueError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    @app.get("/api/books/{path_book_id}/editions/{edition_id}/progression-contracts")
+    async def progression_contracts_api(
+        path_book_id: str, edition_id: str
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        records = list_contract_records(
+            _database_for_book(app, checked_book),
+            book_id=checked_book,
+            edition_id=checked_edition,
+        )
+        return {
+            "records": [record.model_dump(mode="json") for record in records],
+            "canon_changed": False,
+        }
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/progression-contracts/infer"
+    )
+    async def infer_progression_contracts_api(
+        request: Request, path_book_id: str, edition_id: str
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return infer_existing_contract_proposals(
+            _database_for_book(app, checked_book),
+            book_id=checked_book,
+            edition_id=checked_edition,
+        )
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/progression-contracts/"
+        "{contract_record_id}/confirm"
+    )
+    async def confirm_progression_contract_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        contract_record_id: str,
+        payload: ProgressionContractConfirmationRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        selected_database = _database_for_book(app, checked_book)
+        checked_record_id = _check_id(contract_record_id)
+        current = get_contract_record(selected_database, checked_record_id)
+        if (
+            current is None
+            or current.book_id != checked_book
+            or current.edition_id != checked_edition
+        ):
+            raise HTTPException(status_code=404, detail="Contract Proposal 不属于当前作品版本")
+        record = confirm_contract(
+            selected_database,
+            checked_record_id,
+            effective_from_boundary=payload.effective_from_boundary,
+            author_notes=payload.author_notes,
+        )
+        return {"record": record.model_dump(mode="json"), "canon_changed": False}
 
     @app.get("/api/books/{path_book_id}/editions/{edition_id}/author-control")
     async def author_control_api(path_book_id: str, edition_id: str) -> dict[str, Any]:

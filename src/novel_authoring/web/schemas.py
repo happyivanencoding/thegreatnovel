@@ -292,3 +292,10 @@ class HiddenItemRequest(BaseModel):
         ):
             raise ValueError("揭示窗口结束章不得早于起始章")
         return self
+
+
+class ProgressionContractConfirmationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    effective_from_boundary: int = Field(ge=0)
+    author_notes: str = "作者在成长工作台确认"
