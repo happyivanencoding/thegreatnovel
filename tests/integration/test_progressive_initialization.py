@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
+import novel_authoring.initialization.service as initialization_service
 from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
 from novel_authoring.ingest.service import ingest_book
@@ -111,8 +112,21 @@ def test_all_depths_keep_full_structure_but_different_semantic_scope(
             assert chapter["analysis_status"] == expected
     assert deep_counts[InitializationDepth.QUICK] < deep_counts[InitializationDepth.FULL]
     assert deep_counts[InitializationDepth.BALANCED] < deep_counts[InitializationDepth.FULL]
-    assert deep_counts[InitializationDepth.QUICK] <= deep_counts[InitializationDepth.BALANCED]
     assert deep_counts[InitializationDepth.FULL] == 30
+    quick_manifest = _payload(results[InitializationDepth.QUICK], "initialization_manifest.json")
+    balanced_manifest = _payload(
+        results[InitializationDepth.BALANCED], "initialization_manifest.json"
+    )
+    full_manifest = _payload(results[InitializationDepth.FULL], "initialization_manifest.json")
+    quick_continuity = set(quick_manifest["analysis_plan"]["continuity_index_chapter_ids"])
+    balanced_continuity = set(
+        balanced_manifest["analysis_plan"]["continuity_index_chapter_ids"]
+    )
+    full_continuity = set(full_manifest["analysis_plan"]["continuity_index_chapter_ids"])
+    assert len(quick_continuity) < 30
+    assert len(balanced_continuity) < 30
+    assert len(full_continuity) == 30
+    assert set(balanced_manifest["current_boundary_window"]) <= balanced_continuity
 
 
 def test_partial_depth_tasks_only_include_selected_chapters(tmp_path: Path) -> None:
@@ -126,15 +140,17 @@ def test_partial_depth_tasks_only_include_selected_chapters(tmp_path: Path) -> N
     for arc in arc_manifest["arcs"]:
         semantic_ids = set(arc["semantic_chapter_ids"])
         assert semantic_ids <= selected
-        if not semantic_ids:
+        continuity_ids = set(arc["continuity_chapter_ids"])
+        if not semantic_ids and not continuity_ids:
             continue
         operation = Path(str(arc["operation_input_path"]))
         task_manifest = json.loads(
             (operation / "source_manifest.json").read_text(encoding="utf-8")
         )
-        assert set(task_manifest["chapter_ids"]) == semantic_ids
+        assert set(task_manifest["chapter_ids"]) == semantic_ids | continuity_ids
         packaged.update(task_manifest["chapter_ids"])
-    assert packaged == selected
+    continuity = set(manifest["analysis_plan"]["continuity_index_chapter_ids"])
+    assert packaged == selected | continuity
 
 
 def test_arc_semantic_records_require_explicit_information_status() -> None:
@@ -183,15 +199,149 @@ def test_upgrade_resumes_pending_then_reuses_completed_semantic_chapters(
     assert upgraded["upgrade_status"] == "UPGRADE_CREATED"
     assert upgraded["upgrade_from_initialization_id"] == quick["initialization_id"]
     arc_manifest = _payload(upgraded, "arc_manifest.json")
+    quick_manifest = _payload(quick, "initialization_manifest.json")
+    upgraded_manifest = _payload(upgraded, "initialization_manifest.json")
     reused_count = sum(
         len(arc["reused_semantic_chapter_ids"])
         for arc in arc_manifest["arcs"]
     )
-    assert reused_count == quick["deep_chapter_count"]
+    assert reused_count == len(
+        set(quick_manifest["deep_chapter_ids"])
+        & set(upgraded_manifest["deep_chapter_ids"])
+    )
     for arc in arc_manifest["arcs"]:
         scheduled = set(arc["scheduled_semantic_chapter_ids"])
         reused = set(arc["reused_semantic_chapter_ids"])
         assert not scheduled & reused
+
+
+def _ready_boundary(*args: object, **kwargs: object) -> object:
+    del args
+    return initialization_service.ContinuationBoundaryReadiness.model_validate(
+        {
+            "book_id": kwargs["book_id"],
+            "edition_id": kwargs["edition_id"],
+            "target_chapter_ordinal": kwargs["target_chapter_ordinal"],
+            "current_protagonist": {
+                "entity_id": "character:hero",
+                "confirmed": True,
+                "current_state_available": True,
+            },
+            "active_main_threads": [
+                {
+                    "thread_id": "thread:current",
+                    "confirmed": True,
+                    "status": "ACTIVE",
+                }
+            ],
+            "current_world_boundaries": {"confirmed_rules": [{"id": "rule:current"}]},
+            "current_character_state": {
+                "inventory_ready": True,
+                "abilities_ready": True,
+                "relationships_ready": True,
+                "knowledge_ready": True,
+            },
+            "current_narrative_state": {"reveal_agenda_ready": True},
+            "ready_for_continuation": True,
+        }
+    )
+
+
+def test_balanced_prioritizes_boundary_current_arc_and_dependencies(tmp_path: Path) -> None:
+    database, book_id = _book(tmp_path)
+    result = create_initialization(database, book_id, depth=InitializationDepth.BALANCED)
+    manifest = _payload(result, "initialization_manifest.json")
+    arcs = _payload(result, "arc_manifest.json")["arcs"]
+    continuity = set(manifest["analysis_plan"]["continuity_index_chapter_ids"])
+    reasons = manifest["analysis_plan"]["selection_reasons"]
+
+    assert len(continuity) < manifest["chapter_count"]
+    assert set(manifest["current_boundary_window"]) <= continuity
+    assert set(arcs[-1]["chapter_ids"]) <= continuity
+    dependency_ids = {
+        chapter_id
+        for chapter_id, chapter_reasons in reasons.items()
+        if "ACTIVE_DEPENDENCY_RECALL" in chapter_reasons
+    }
+    assert dependency_ids
+    assert dependency_ids <= continuity
+    priorities = []
+    for arc in arcs:
+        if not arc["operation_input_path"]:
+            continue
+        source_manifest = json.loads(
+            (Path(arc["operation_input_path"]) / "source_manifest.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        priorities.append((source_manifest["execution_priority"], set(arc["chapter_ids"])))
+    boundary_ids = set(manifest["current_boundary_window"])
+    assert min(
+        priority for priority, chapters in priorities if chapters & boundary_ids
+    ) == 1
+
+
+def test_continuation_capability_is_independent_but_requires_boundary_continuity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(initialization_service, "evaluate_continuation_boundary", _ready_boundary)
+    database, book_id = _book(tmp_path)
+    created = create_initialization(database, book_id, depth=InitializationDepth.BALANCED)
+
+    blocked = refresh_initialization(database, book_id)
+    assert blocked["readiness"]["continuation_boundary"]["ready_for_continuation"] is False
+    assert any(
+        "Continuation Boundary" in gap
+        for gap in blocked["readiness"]["continuation_boundary"]["blocking_gaps"]
+    )
+
+    _complete_semantic_tasks(created)
+    ready = refresh_initialization(database, book_id)
+    assert ready["readiness"]["chapter_semantic_feature_coverage"] < 1.0
+    assert ready["readiness"]["continuity_index_coverage"] < 1.0
+    assert ready["readiness"]["continuation_boundary"]["ready_for_continuation"] is True
+    assert ready["status"]["capabilities"]["continue_from_current_boundary"] is True
+    persisted = _payload(created, "initialization_manifest.json")
+    assert persisted["capabilities"]["continue_from_current_boundary"] is True
+
+
+def test_completed_analysis_is_reused_only_for_the_same_source_revision(tmp_path: Path) -> None:
+    database, book_id = _book(tmp_path)
+    created = create_initialization(database, book_id, depth=InitializationDepth.QUICK)
+    _complete_semantic_tasks(created)
+    refresh_initialization(database, book_id)
+    manifest = _payload(created, "initialization_manifest.json")
+    chapter_id = str(manifest["deep_chapter_ids"][0])
+
+    completed = initialization_service._completed_chapter_layers(database, book_id, "base")
+    assert chapter_id in completed["LITERARY"]
+    assert chapter_id in completed["CONTINUITY"]
+
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE chapters SET version=version+1 WHERE chapter_id=?",
+            (chapter_id,),
+        )
+    stale = initialization_service._completed_chapter_layers(database, book_id, "base")
+    assert chapter_id not in stale["LITERARY"]
+    assert chapter_id not in stale["CONTINUITY"]
+
+    manifest_path = Path(str(created["root"])) / "initialization_manifest.json"
+    stale_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    stale_manifest["capabilities"]["continue_from_current_boundary"] = True
+    manifest_path.write_text(
+        json.dumps(stale_manifest, ensure_ascii=False), encoding="utf-8"
+    )
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE chapters SET content_sha256='changed' WHERE chapter_id=?",
+            (chapter_id,),
+        )
+    refreshed = refresh_initialization(database, book_id)
+    assert refreshed["status"]["state"] == "STALE"
+    assert refreshed["status"]["capabilities"]["continue_from_current_boundary"] is False
+    persisted = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert persisted["capabilities"]["continue_from_current_boundary"] is False
 
 
 def test_rewrite_deepening_targets_unknown_chapter_and_dependencies(

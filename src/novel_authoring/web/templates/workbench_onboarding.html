@@ -39,21 +39,21 @@
 
           <fieldset class="wb-depth-selector" data-author-goal-selector>
             <legend>你接下来想做什么？</legend>
-            <label class="is-recommended"><input type="radio" name="author-goal" value="CONTINUE" checked><span><strong>尽快续写最新章节 <em>推荐</em></strong><small>先处理当前写作边界，同时建立全书连续性索引。</small></span></label>
+            <label class="is-recommended"><input type="radio" name="author-goal" value="CONTINUE" checked><span><strong>尽快续写最新章节 <em>推荐</em></strong><small>先处理当前写作边界、当前故事阶段和活跃依赖。</small></span></label>
             <label><input type="radio" name="author-goal" value="UNDERSTAND"><span><strong>先了解这本书</strong><small>快速建立全书结构、开篇基础和近期状态。</small></span></label>
             <label><input type="radio" name="author-goal" value="REWRITE"><span><strong>改写某个章节范围</strong><small>建立连续性索引，并在进入工作台后补齐指定范围。</small></span></label>
             <label><input type="radio" name="author-goal" value="AUDIT"><span><strong>做完整全书审查</strong><small>全章文学深分析、全局综合、指标与完整历史状态。</small></span></label>
           </fieldset>
           <section class="wb-onboarding-plan" data-initialization-plan>
             <strong data-plan-title>为你推荐：均衡准备</strong>
-            <ul data-plan-items><li>{{ catalog_entry.chapter_count }} / {{ catalog_entry.chapter_count }} 章结构索引</li><li>{{ catalog_entry.chapter_count }} / {{ catalog_entry.chapter_count }} 章连续性轻分析</li><li>最近章节与当前活跃人物、物品、规则和伏笔优先深读</li><li>每个故事阶段选择代表章节做文学分析</li></ul>
+            <ul data-plan-items><li>{{ catalog_entry.chapter_count }} / {{ catalog_entry.chapter_count }} 章结构索引</li><li>当前边界、当前故事阶段和活跃依赖优先的连续性分析</li><li>最近章节与当前活跃人物、物品、规则和伏笔优先深读</li><li>每个故事阶段选择代表章节做文学分析</li></ul>
             <span data-plan-effort>预计任务量：较长；完成第一批分析后提供时间范围。</span>
           </section>
           <details class="wb-technical-details wb-onboarding-advanced"><summary>高级设置</summary>
             <fieldset class="wb-depth-selector" data-initialization-depth-selector>
               <legend>初始化深度</legend>
               <label><input type="radio" name="initialization-depth" value="QUICK"><span><strong>快速</strong><small>结构完整，当前边界优先。</small></span></label>
-              <label><input type="radio" name="initialization-depth" value="BALANCED" checked><span><strong>均衡</strong><small>全书连续性索引 + 代表章节文学分析。</small></span></label>
+              <label><input type="radio" name="initialization-depth" value="BALANCED" checked><span><strong>均衡</strong><small>当前边界与活跃依赖优先 + 代表章节文学分析。</small></span></label>
               <label><input type="radio" name="initialization-depth" value="FULL"><span><strong>完整</strong><small>全章文学深分析与全局综合。</small></span></label>
             </fieldset>
           </details>

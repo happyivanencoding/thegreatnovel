@@ -217,9 +217,10 @@ library/<book_id>/
 ## 渐进初始化与作者动作恢复
 
 已有小说初始化按 `SOURCE_STRUCTURE → CONTINUITY_INDEX → LITERARY_PROFILE →
-CURRENT_BOUNDARY_DEEP` 四层组织。SOURCE_STRUCTURE 始终覆盖全书；BALANCED 为每章生成独立、
-有证据边界的 `ChapterContinuityDelta`，文学深分析只覆盖代表章节；FULL 才要求全章文学深分析
-和完整全局综合。调度先处理当前续写边界，再处理依赖、开篇、代表章节和其余历史。
+CURRENT_BOUNDARY_DEEP` 四层组织。SOURCE_STRUCTURE 始终覆盖全书；BALANCED 为当前边界、当前
+Arc 与活跃依赖章节生成有证据边界的 `ChapterContinuityDelta`，文学深分析只覆盖代表章节；
+FULL 才要求全章连续性、全章文学深分析和完整全局综合。调度先处理当前续写边界，再处理依赖、
+开篇、代表章节和其余历史。
 
 章节层 `ChapterAnalysisRecord` 按 Edition、章节、分析层和来源版本复用，所以 Arc 重划不会迫使
 系统重做已经完成的章节分析。定向补齐按人物、物品/能力、线程、变化信号、最近出现和因果

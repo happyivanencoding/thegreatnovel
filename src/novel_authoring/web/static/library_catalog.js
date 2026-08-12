@@ -188,9 +188,9 @@
     var plan = document.querySelector("[data-initialization-plan]");
     if (!selector || !plan) return;
     var configurations = {
-      CONTINUE: { depth: "BALANCED", title: "为你推荐：均衡准备", items: ["全书结构索引", "全书连续性轻分析", "最近章节与当前活跃人物、物品、规则和伏笔优先深读", "每个故事阶段选择代表章节做文学分析"], effort: "预计任务量：较长；完成第一批分析后提供时间范围。" },
+      CONTINUE: { depth: "BALANCED", title: "为你推荐：均衡准备", items: ["全书结构索引", "当前边界、当前故事阶段与活跃依赖优先的连续性分析", "最近章节与当前活跃人物、物品、规则和伏笔优先深读", "每个故事阶段选择代表章节做文学分析"], effort: "预计任务量：较长；完成第一批分析后提供时间范围。" },
       UNDERSTAND: { depth: "QUICK", title: "为你推荐：快速了解", items: ["全书结构索引", "开篇基础与最近章节深读", "少量文学代表章节", "需要正式续写时再按相关性补齐历史"], effort: "预计任务量：较短。" },
-      REWRITE: { depth: "BALANCED", title: "为你推荐：均衡准备 + 指定范围补齐", items: ["全书结构索引", "全书连续性轻分析", "进入工作台后选择改写章节", "只补齐目标章节、相邻章节与被后文引用的事实"], effort: "预计任务量：取决于改写范围。" },
+      REWRITE: { depth: "BALANCED", title: "为你推荐：均衡准备 + 指定范围补齐", items: ["全书结构索引", "当前边界与活跃依赖优先的连续性分析", "进入工作台后选择改写章节", "只补齐目标章节、相邻章节与被后文引用的事实"], effort: "预计任务量：取决于改写范围。" },
       AUDIT: { depth: "FULL", title: "为你推荐：完整全书审查", items: ["全书结构与连续性索引", "每一章文学深分析", "全局综合、指标与图谱", "完整历史状态与严格验收"], effort: "预计任务量：很长；完成第一批分析后提供时间范围。" }
     };
     function render() {

@@ -349,9 +349,12 @@ def calculate_source_coverage(
             (book_id,),
         ).fetchall()
     span_rows = [dict(row) for row in spans]
+    spans_by_chapter: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in span_rows:
+        spans_by_chapter[str(row.get("chapter_id") or "")].append(row)
     for item in chapters:
         chapter_id = str(item["chapter_id"])
-        related = [row for row in span_rows if str(row.get("chapter_id")) == chapter_id]
+        related = spans_by_chapter.get(chapter_id, [])
         if not related:
             missing_spans.append(chapter_id)
         if len(related) > 1:
@@ -646,6 +649,38 @@ def _select_deep_chapters(
     return selected, {key: sorted(value) for key, value in reasons.items()}
 
 
+def _select_literary_chapters(
+    depth: InitializationDepth,
+    chapters: list[dict[str, Any]],
+    arcs: list[ArcRecord],
+    structural_records: list[dict[str, Any]],
+) -> set[str]:
+    if depth is InitializationDepth.FULL:
+        return {str(item["chapter_id"]) for item in chapters}
+    by_id = {str(item["chapter_id"]): item for item in structural_records}
+    selected = {
+        str(item["chapter_id"])
+        for item in [
+            *chapters[: (2 if depth is InitializationDepth.QUICK else 3)],
+            *chapters[-(3 if depth is InitializationDepth.QUICK else 5) :],
+        ]
+    }
+    for arc in arcs:
+        representative = max(
+            arc.chapter_ids,
+            key=lambda chapter_id: int(by_id[chapter_id]["selection_score"]),
+        )
+        selected.add(representative)
+    if depth is InitializationDepth.BALANCED and arcs:
+        current_arc = arcs[-1]
+        ranked_current = sorted(
+            current_arc.chapter_ids,
+            key=lambda chapter_id: -int(by_id[chapter_id]["selection_score"]),
+        )
+        selected.update(ranked_current[:2])
+    return selected
+
+
 _DEPTH_ORDER = {
     InitializationDepth.QUICK: 1,
     InitializationDepth.BALANCED: 2,
@@ -824,6 +859,11 @@ def create_initialization(
     deep_chapter_ids, selection_reasons = _select_deep_chapters(
         depth, chapters, arcs, structural_records
     )
+    literary_chapter_ids = _select_literary_chapters(
+        depth, chapters, arcs, structural_records
+    )
+    if depth is InitializationDepth.QUICK:
+        literary_chapter_ids = set(deep_chapter_ids)
     known_chapter_ids = {str(row["chapter_id"]) for row in chapters}
     requested_ids = set(additional_deep_chapter_ids or set())
     unknown_requested = requested_ids - known_chapter_ids
@@ -834,15 +874,18 @@ def create_initialization(
             requested_action or "AUTHOR_SELECTED_DEEPENING"
         )
     deep_chapter_ids.update(requested_ids)
+    literary_chapter_ids.update(requested_ids)
     arcs = [
         arc.model_copy(
             update={
                 "semantic_chapter_ids": [
-                    chapter_id for chapter_id in arc.chapter_ids if chapter_id in deep_chapter_ids
+                    chapter_id
+                    for chapter_id in arc.chapter_ids
+                    if chapter_id in literary_chapter_ids
                 ],
                 "continuity_chapter_ids": (
                     list(arc.chapter_ids)
-                    if depth in {InitializationDepth.BALANCED, InitializationDepth.FULL}
+                    if depth is InitializationDepth.FULL
                     else [
                         chapter_id
                         for chapter_id in arc.chapter_ids
@@ -949,15 +992,20 @@ def create_initialization(
             "unselected_chapters_remain_unknown": True,
         },
         deep_chapter_ids=[
-            str(row["chapter_id"]) for row in chapters if str(row["chapter_id"]) in deep_chapter_ids
+            str(row["chapter_id"])
+            for row in chapters
+            if str(row["chapter_id"]) in literary_chapter_ids
         ],
         lightweight_chapter_ids=[str(row["chapter_id"]) for row in chapters],
         uncovered_semantic_chapter_ids=[
             str(row["chapter_id"])
             for row in chapters
-            if str(row["chapter_id"]) not in deep_chapter_ids
+            if str(row["chapter_id"]) not in literary_chapter_ids
         ],
-        current_boundary_window=[str(row["chapter_id"]) for row in chapters[-10:]],
+        current_boundary_window=[
+            str(row["chapter_id"])
+            for row in chapters[-(5 if depth is InitializationDepth.QUICK else 10) :]
+        ],
         capabilities={
             "browse_structure": True,
             "view_partial_profile": False,
@@ -1002,13 +1050,22 @@ def create_initialization(
         chapter_ids = set(arc.chapter_ids)
         if chapter_ids & current_boundary_ids:
             return (0, -arc.ordinal)
-        if chapter_ids & requested_ids:
+        arc_reasons = {
+            reason
+            for chapter_id in chapter_ids
+            for reason in selection_reasons.get(chapter_id, [])
+        }
+        if "CURRENT_ARC" in arc_reasons:
             return (1, -arc.ordinal)
-        if arc.ordinal == 1:
-            return (2, arc.ordinal)
-        if arc.semantic_chapter_ids:
+        if "ACTIVE_DEPENDENCY_RECALL" in arc_reasons:
+            return (2, -arc.ordinal)
+        if chapter_ids & requested_ids:
             return (3, -arc.ordinal)
-        return (4, -arc.ordinal)
+        if arc.ordinal == 1:
+            return (4, arc.ordinal)
+        if arc.semantic_chapter_ids:
+            return (5, -arc.ordinal)
+        return (6, -arc.ordinal)
 
     execution_arcs = sorted(arcs, key=execution_priority)
     for execution_index, arc in enumerate(execution_arcs, start=1):
@@ -1211,9 +1268,9 @@ def create_initialization(
         "arc_ids": [arc.arc_id for arc in arcs],
         "source_manifest_sha256": source_hash,
         "initialization_depth": depth.value,
-        "deep_chapter_count": len(deep_chapter_ids),
+        "deep_chapter_count": len(literary_chapter_ids),
         "lightweight_chapter_count": len(chapters),
-        "uncovered_semantic_chapter_count": len(chapters) - len(deep_chapter_ids),
+        "uncovered_semantic_chapter_count": len(chapters) - len(literary_chapter_ids),
         "upgrade_from_initialization_id": upgrade_from_initialization_id,
         "reused_arc_count": len(reused_arc_ids),
         "scheduled_arc_count": len(scheduled_arc_ids),
@@ -1805,6 +1862,9 @@ def refresh_initialization(
         initialization_manifest.source_manifest_sha256 != current_source_hash
         or initialization_manifest.effective_content_sha256 != current_effective_hash
     ):
+        stale_capabilities = {
+            key: False for key in initialization_manifest.capabilities
+        }
         stale_status = {
             "initialization_id": initialization_manifest.initialization_id,
             "state": InitializationState.STALE.value,
@@ -1815,12 +1875,16 @@ def refresh_initialization(
             "blocking_reasons": ["Source 或 effective Edition hash 已漂移，必须重新初始化"],
             "completed_arc_ids": [],
             "failed_arc_ids": [],
+            "capabilities": stale_capabilities,
         }
         _write_json(root / "status.json", stale_status)
         _write_json(
             root / "initialization_manifest.json",
             initialization_manifest.model_copy(
-                update={"state": InitializationState.STALE}
+                update={
+                    "state": InitializationState.STALE,
+                    "capabilities": stale_capabilities,
+                }
             ).model_dump(mode="json"),
         )
         _event(root, InitializationState.STALE.value, stale_status)
@@ -1895,6 +1959,24 @@ def refresh_initialization(
             target_chapter_ordinal=target_ordinal,
             graphs=graphs,
         )
+    missing_boundary_continuity = sorted(
+        set(initialization_manifest.current_boundary_window) - continuity_chapter_ids
+    )
+    boundary_gaps = list(continuation_boundary.blocking_gaps)
+    if coverage.chapter_coverage < 1.0:
+        boundary_gaps.append("Source Mapping 尚未完整覆盖当前 Edition")
+    if missing_boundary_continuity:
+        boundary_gaps.append(
+            f"当前 Continuation Boundary 仍有 {len(missing_boundary_continuity)} 章未完成 Continuity"
+        )
+    if failed:
+        boundary_gaps.append("初始化语义输出存在校验失败，当前边界不可放行")
+    continuation_boundary = continuation_boundary.model_copy(
+        update={
+            "blocking_gaps": list(dict.fromkeys(boundary_gaps)),
+            "ready_for_continuation": not boundary_gaps,
+        }
+    )
     protagonist_confirmed = (
         continuation_boundary.current_protagonist.confirmed
         and continuation_boundary.current_protagonist.current_state_available
@@ -1948,14 +2030,12 @@ def refresh_initialization(
     if arc_coverage < 1.0:
         blockers.append("仍有 Arc 未完成语义提取")
     if (
-        initialization_manifest.initialization_depth
-        in {
-            InitializationDepth.BALANCED,
-            InitializationDepth.FULL,
-        }
+        initialization_manifest.initialization_depth is InitializationDepth.FULL
         and continuity_index_coverage < 1.0
     ):
         blockers.append("全书逐章连续性索引尚未完成")
+    elif continuity_index_coverage < 1.0:
+        gaps.append("非阻塞历史章节仍保持 UNKNOWN / NOT_ANALYZED")
     if not core_graphs:
         blockers.append("当前核心 World Model/图谱尚未生成")
     if not protagonist_confirmed:
@@ -2029,6 +2109,18 @@ def refresh_initialization(
         state = InitializationState.METRIC_BOOTSTRAP_RUNNING
     else:
         state = InitializationState.ATLAS_VALIDATION_RUNNING
+    capabilities = {
+        **initialization_manifest.capabilities,
+        "browse_structure": True,
+        "view_partial_profile": chapter_coverage > 0.0,
+        "plan_next": True,
+        "continue_from_current_boundary": continuation_boundary.ready_for_continuation,
+        "rewrite_selected_chapter": False,
+        "inspect_global_world_state": (
+            initialization_manifest.initialization_depth is InitializationDepth.FULL
+            and status in {"READY", "READY_WITH_GAPS"}
+        ),
+    }
     with database.connect() as connection:
         samples = connection.execute(
             "SELECT active_processing_seconds, processed_chapter_count "
@@ -2046,7 +2138,10 @@ def refresh_initialization(
         sum(seconds_per_chapter) / len(seconds_per_chapter) if seconds_per_chapter else None
     )
     remaining_chapters = sum(
-        len(arc.scheduled_continuity_chapter_ids or arc.scheduled_semantic_chapter_ids)
+        len(
+            set(arc.scheduled_continuity_chapter_ids)
+            | set(arc.scheduled_semantic_chapter_ids)
+        )
         for arc in arc_manifest.arcs
         if arc.arc_id in pending
     )
@@ -2078,6 +2173,7 @@ def refresh_initialization(
         ),
         "warnings": readiness.gaps,
         "initialization_depth": initialization_manifest.initialization_depth.value,
+        "capabilities": capabilities,
         "uncovered_semantic_chapter_ids": [
             chapter_id
             for chapter_id in initialization_manifest.deep_chapter_ids
@@ -2100,7 +2196,9 @@ def refresh_initialization(
     _write_json(root / "status.json", status_payload)
     _write_json(
         root / "initialization_manifest.json",
-        initialization_manifest.model_copy(update={"state": state}).model_dump(mode="json"),
+        initialization_manifest.model_copy(
+            update={"state": state, "capabilities": capabilities}
+        ).model_dump(mode="json"),
     )
     _write_reports(root, coverage, arc_manifest, outputs, readiness)
     _event(root, state.value, {"readiness": readiness.model_dump(mode="json")})
