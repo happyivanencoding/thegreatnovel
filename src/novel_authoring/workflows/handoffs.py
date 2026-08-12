@@ -301,6 +301,7 @@ _OPERATION_INPUT_FILES = {
     "profile_context.json",
     "original_request.json",
     "proposal_schema.json",
+    "kernel_context.json",
 }
 
 
@@ -750,6 +751,11 @@ def create_handoff(
         "metric_bundle_hash": metric_context.get("input_bundle_hash"),
         "planning_aggregate_id": planning_aggregate["aggregate_id"],
         "planning_aggregate_hash": planning_aggregate["bundle_hash"],
+        "kernel_context_path": (
+            "kernel_context.json"
+            if planning_aggregate.get("kernel_context") is not None
+            else None
+        ),
         "effective_content_sha256": metric_context.get("effective_content_sha256"),
         "rhythm_snapshot_id": rhythm_snapshot_id,
         "registry_hash": metric_context.get("registry_hash", ""),
@@ -1040,12 +1046,15 @@ def create_handoff(
         f"{author_context_instruction}\n\n"
         "严格读取任务目录中的 task.json、prompt.md、metric_context.json、"
         "context_manifest.json、output_schema.json 和（如存在）hydration_context.json / "
-        "profile_context.json / original_request.json / proposal_schema.json。\n"
+        "profile_context.json / original_request.json / proposal_schema.json / "
+        "kernel_context.json。\n"
         "不得修改 book；不得批准写入正史；不得批准改写 Campaign；不得启用 Edition。\n"
         "结束时必须严格按 output_schema.json 写回 result.json 和 status.json；"
         "需要作者决定时写 waiting_for_user.json 并进入 WAITING_FOR_USER。"
     )
     manifest_paths = ["task.json", "prompt.md", "metric_context.json", "output_schema.json"]
+    if planning_aggregate.get("kernel_context") is not None:
+        manifest_paths.append("kernel_context.json")
     if hydration_handoff:
         manifest_paths.append("hydration_context.json")
     if profile_handoff:
@@ -1060,6 +1069,7 @@ def create_handoff(
         "metric_bundle_hash": task["metric_bundle_hash"],
         "planning_aggregate_id": task["planning_aggregate_id"],
         "planning_aggregate_hash": task["planning_aggregate_hash"],
+        "kernel_context_path": task["kernel_context_path"],
         "registry_hash": task["registry_hash"],
         "config_hash": task["config_hash"],
         "author_directives_hash": task["author_directives_hash"],
@@ -1261,6 +1271,7 @@ def create_handoff(
             "profile_context.json",
             "original_request.json",
             "proposal_schema.json",
+            "kernel_context.json",
         )
     }
     status_path = task_directory / "status.json"
@@ -1294,6 +1305,13 @@ def create_handoff(
     else:
         input_files.pop("original_request.json", None)
         input_files.pop("proposal_schema.json", None)
+    if planning_aggregate.get("kernel_context") is not None:
+        _write_json(
+            input_files["kernel_context.json"],
+            planning_aggregate["kernel_context"],
+        )
+    else:
+        input_files.pop("kernel_context.json", None)
     _write_json(status_path, status_json)
     _write_json(result_path, {})
     file_hashes: dict[str, str] = {
@@ -1308,6 +1326,11 @@ def create_handoff(
             *(
                 ["original_request.json", "proposal_schema.json"]
                 if original_bootstrap_handoff
+                else []
+            ),
+            *(
+                ["kernel_context.json"]
+                if planning_aggregate.get("kernel_context") is not None
                 else []
             ),
         )
@@ -1455,13 +1478,22 @@ def refresh_handoff_planning_aggregate(
     )
     task["planning_aggregate_id"] = aggregate["aggregate_id"]
     task["planning_aggregate_hash"] = aggregate["bundle_hash"]
+    task["kernel_context_path"] = (
+        "kernel_context.json" if aggregate.get("kernel_context") is not None else None
+    )
     manifest["planning_aggregate_id"] = aggregate["aggregate_id"]
     manifest["planning_aggregate_hash"] = aggregate["bundle_hash"]
+    manifest["kernel_context_path"] = task["kernel_context_path"]
+    kernel_context_path = _handoff_file(task_directory, "kernel_context.json")
+    if aggregate.get("kernel_context") is not None:
+        _write_json(kernel_context_path, aggregate["kernel_context"])
     _write_json(task_path, task)
     file_hashes = manifest.setdefault("file_hashes", {})
     if not isinstance(file_hashes, dict):
         raise HandoffWorkflowError("context manifest 的 file_hashes 无效")
     file_hashes["task.json"] = sha256_file(task_path)
+    if aggregate.get("kernel_context") is not None:
+        file_hashes["kernel_context.json"] = sha256_file(kernel_context_path)
     _write_json(manifest_path, manifest)
     with database.connect() as connection:
         connection.execute(

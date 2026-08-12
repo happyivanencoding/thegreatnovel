@@ -43,6 +43,7 @@ from novel_authoring.planning.innovation import (
 )
 from novel_authoring.planning.models import CandidateOutput, CandidateProposal, ThreadPriority
 from novel_authoring.planning.rewards import calculate_candidate_innovation_reward
+from novel_authoring.progression.context import KernelPlanningContext
 from novel_authoring.runtime_baseline import load_earned_surface
 from novel_authoring.storage.operations import ensure_operation, find_operation
 from novel_authoring.utils import json_dumps, sha256_bytes, stable_id, utc_now
@@ -58,6 +59,67 @@ STRUCTURE_FIELDS = (
     "scene_topology",
     "ending_state",
 )
+
+
+def _kernel_author_summary(context: KernelPlanningContext) -> dict[str, Any]:
+    contracts = context.effective_contracts.model_dump(mode="json")
+    reader = contracts.get("reader_experience") or {}
+    genre = contracts.get("genre") or {}
+    drive = contracts.get("narrative_drive") or {}
+    progression = context.chapter_state.progression_state or {}
+    primary_axis = progression.get("primary_axis_state", {})
+    opportunity = context.chapter_state.opportunity_surface or {}
+    anticipation = context.planning_state.anticipation_surface or {}
+    core_genre_promises = [
+        item
+        for item in genre.get("genre_promises", [])
+        if isinstance(item, dict) and item.get("strength") == "CORE"
+    ]
+    return {
+        "why_this_book_is_worth_following": reader.get("must_deliver", []),
+        "reader_experience_core_promises": [
+            *reader.get("must_deliver", []),
+            *core_genre_promises,
+        ],
+        "narrative_drives": {
+            "primary_drive": drive.get("primary_drive"),
+            "secondary_drives": drive.get("secondary_drives", []),
+            "drive_priorities": drive.get("drive_priorities", {}),
+        },
+        "current_progression": {
+            "axis": primary_axis.get("axis_id"),
+            "stage": primary_axis.get("current_stage"),
+            "next_stage_visibility": primary_axis.get("next_stage_visibility"),
+            "bottlenecks": primary_axis.get("current_bottlenecks", []),
+            "missing_resources": progression.get("missing_resources", []),
+            "pending_ability_showcases": progression.get(
+                "pending_ability_showcases", []
+            ),
+            "growth_costs": progression.get("growth_costs_active", []),
+            "readiness": progression.get("next_breakthrough_readiness", "UNKNOWN"),
+        },
+        "world_expansion": context.chapter_state.world_expansion_state,
+        "resources_and_opportunities": {
+            "owned_or_current": context.chapter_state.resource_state,
+            "opportunities": opportunity.get("items", []),
+        },
+        "reader_anticipation": anticipation.get("items", []),
+        "narrative_debts": context.planning_state.narrative_debts,
+        "scheduler_recommendation": (
+            None
+            if context.planning_state.scheduler_recommendation is None
+            else context.planning_state.scheduler_recommendation.model_dump(mode="json")
+        ),
+        "author_control": {
+            "tasks": context.author_state.author_tasks,
+            "intents": context.author_state.author_intents,
+            "profile": context.author_state.effective_book_profile,
+            "truths": context.author_state.author_truths,
+            "reveal_agenda": context.planning_state.reveal_agenda,
+        },
+        "coverage": context.coverage.model_dump(mode="json"),
+        "warnings": context.warnings,
+    }
 
 
 def _validate_author_control_trace(
@@ -480,6 +542,11 @@ def prepare_candidate_task(
         )
         or None,
     )
+    kernel_context = (
+        None
+        if aggregate.get("kernel_context") is None
+        else KernelPlanningContext.model_validate(aggregate["kernel_context"])
+    )
     with database.connect() as connection:
         metric_rows = connection.execute(
             """
@@ -596,6 +663,18 @@ def prepare_candidate_task(
             "改变人物行为；KEEP_HIDDEN 不得出现在旁白、对话或答案式解释中。"
             "SHOULD_HINT 必须给出可读 clue，但不得确认身份；MUST_REVEAL 才允许按计划深度兑现。",
             "",
+            "## Frozen Kernel Planning Context（机器冻结输入）",
+            "",
+            (
+                "当前为 Legacy 规划：没有可冻结的 Kernel Context，沿用原有流程。"
+                if kernel_context is None
+                else json_dumps(_kernel_author_summary(kernel_context), indent=2)
+            ),
+            "",
+            "每案必须填写 scheduler_alignment。Scheduler 是建议；若选择其他 Primary Intent，"
+            "必须给出 deviation_reason。Reader/Drive/Progression/Resource/World 声明将由 Python"
+            "依据 kernel_context.json 重新核验，不能靠自报获得评分。",
+            "",
             "## 三条优先线程",
             "",
             "```json",
@@ -663,10 +742,27 @@ def prepare_candidate_task(
         "innovation_source": selected_source,
         "innovation_recommendation": boundary_payload.get("innovation_diagnostics", {}),
         "narrative_portfolio_snapshot": narrative_portfolio.model_dump(mode="json"),
+        "kernel_context": str(task_dir / "kernel_context.json"),
+        "scheduler_recommendation": (
+            None
+            if kernel_context is None
+            or kernel_context.planning_state.scheduler_recommendation is None
+            else kernel_context.planning_state.scheduler_recommendation.model_dump(mode="json")
+        ),
     }
     (task_dir / "input.md").write_text(input_text, encoding="utf-8")
     (task_dir / "schema.json").write_text(schema_json + "\n", encoding="utf-8")
     (task_dir / "task.json").write_text(json_dumps(metadata, indent=2) + "\n", encoding="utf-8")
+    (task_dir / "kernel_context.json").write_text(
+        json_dumps(
+            None
+            if kernel_context is None
+            else kernel_context.model_dump(mode="json"),
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     return {
         "task_id": task_id,
         "boundary_packet_id": boundary["packet_id"],
@@ -678,6 +774,7 @@ def prepare_candidate_task(
         "bundle_hash": aggregate["bundle_hash"],
         "effective_book_profile": metadata["effective_book_profile"],
         "truth_reveal": metadata["truth_reveal"],
+        "kernel_context": metadata["kernel_context"],
     }
 
 
@@ -717,6 +814,11 @@ def prepare_handoff_candidate_task(
         raise PlanningError("handoff 的 Planning Aggregate 不可用")
     if str(aggregate_row["bundle_hash"]) != str(handoff["planning_aggregate_hash"]):
         raise PlanningError("handoff 的 Planning Aggregate hash 不一致")
+    raw_kernel_context = str(aggregate_row["kernel_context_json"] or "null")
+    try:
+        kernel_context = KernelPlanningContext.model_validate_json(raw_kernel_context)
+    except ValidationError as exc:
+        raise PlanningError(f"Planning Aggregate 的 Kernel Context 无效：{exc}") from exc
 
     handoff_root = Path(str(handoff["task_directory"]))
     handoff_input = handoff_root / "input" if (handoff_root / "input").is_dir() else handoff_root
@@ -741,7 +843,11 @@ def prepare_handoff_candidate_task(
     input_dir.mkdir(parents=True, exist_ok=True)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    chapter_id = str(handoff_task.get("context_chapter_id") or "") or None
+    frozen_chapter_id = kernel_context.context_chapter_id
+    handoff_chapter_id = str(handoff_task.get("context_chapter_id") or "") or None
+    if handoff_chapter_id is not None and handoff_chapter_id != frozen_chapter_id:
+        raise PlanningError("handoff 章节与 Frozen Kernel Context 不一致")
+    chapter_id = frozen_chapter_id
     world_state = build_story_game_state(
         database,
         book_id,
@@ -769,6 +875,15 @@ def prepare_handoff_candidate_task(
         "metric_bundle_hash": handoff_task.get("metric_bundle_hash"),
         "handoff_input": str(handoff_input),
         "source_state_context": str(input_dir / "world_state_context.json"),
+        "kernel_context": str(input_dir / "kernel_context.json"),
+        "effective_contract_references": [
+            item.model_dump(mode="json") for item in kernel_context.contract_references
+        ],
+        "scheduler_recommendation": (
+            None
+            if kernel_context.planning_state.scheduler_recommendation is None
+            else kernel_context.planning_state.scheduler_recommendation.model_dump(mode="json")
+        ),
         "created_at": utc_now(),
     }
     input_text = "\n".join(
@@ -805,6 +920,15 @@ def prepare_handoff_candidate_task(
             "",
             "Hidden Truth 是行为约束，不是揭示许可。每案填写 truth_alignment 与"
             " reveal_impact；KEEP_HIDDEN 不得泄露，HINT 必须有可读线索且不得直接确认。",
+            "",
+            "## Frozen Kernel Planning Context",
+            "",
+            json_dumps(_kernel_author_summary(kernel_context), indent=2),
+            "",
+            "每案必须填写 scheduler_alignment：说明是否采纳推荐 Primary Intent、服务哪些"
+            " Debt / Anticipation，以及偏离理由。Lens 与 Chapter Intent 是两个独立维度。",
+            "Reader/Drive/Progression/Resource/World/Drift 字段只是 declared claims；"
+            "Python 将依据 kernel_context.json 重新核验。",
         ]
     )
     (input_dir / "input.md").write_text(input_text + "\n", encoding="utf-8")
@@ -817,6 +941,10 @@ def prepare_handoff_candidate_task(
     (input_dir / "world_state_context.json").write_text(
         json_dumps(world_state, indent=2) + "\n", encoding="utf-8"
     )
+    (input_dir / "kernel_context.json").write_text(
+        json_dumps(kernel_context.model_dump(mode="json"), indent=2) + "\n",
+        encoding="utf-8",
+    )
     return {
         "task_id": task_id,
         "handoff_id": handoff_id,
@@ -824,6 +952,7 @@ def prepare_handoff_candidate_task(
         "schema": str(input_dir / "schema.json"),
         "task": str(input_dir / "task.json"),
         "source_state_context": str(input_dir / "world_state_context.json"),
+        "kernel_context": str(input_dir / "kernel_context.json"),
         "expected_output": str(output_dir / "output.json"),
         "aggregate_id": aggregate_id,
         "effective_book_profile": metadata["effective_book_profile"],

@@ -657,6 +657,32 @@ def test_global_book_profile_versions_are_edition_aware_and_author_controlled(
 
 def test_workflow_goal_is_frozen_before_handoff_candidate_task(tmp_path: Path) -> None:
     database, chapters = _v22_book(tmp_path, chapter_count=3)
+    bundle = compile_kernel_contract_proposals(
+        interpret_reader_experience(
+            "主角持续变强、突破阶段，并以能力、资源和世界扩张推进故事。",
+            genre_hint="成长冒险",
+            contract_prefix="story-world-v22-handoff",
+        )
+    )
+    for contract_type, payload in (
+        (ProgressionContractType.READER_EXPERIENCE, bundle.reader_experience),
+        (ProgressionContractType.MARKET_CATEGORY, bundle.market_category),
+        (ProgressionContractType.NARRATIVE_DRIVE, bundle.narrative_drive),
+        (ProgressionContractType.GENRE, bundle.genre),
+        (ProgressionContractType.PROGRESSION, bundle.progression),
+        (ProgressionContractType.WORLD_EXPANSION, bundle.world_expansion),
+        (ProgressionContractType.PAYOFF_CHANNEL, bundle.payoff_channels),
+    ):
+        assert payload is not None
+        proposal = create_contract_proposal(
+            database,
+            book_id="story-world-v22",
+            edition_id="base",
+            contract_type=contract_type,
+            payload=payload,
+            source="TEST_AUTHOR_PROPOSAL",
+        )
+        confirm_contract(database, proposal.contract_record_id, effective_from_boundary=1)
     with database.connect() as connection:
         connection.execute(
             """
@@ -684,7 +710,8 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(tmp_path: Path) -
     intent_id = handoff["author_intent"]["intent_id"]
     with database.connect() as connection:
         row = connection.execute(
-            "SELECT planning_aggregate_id FROM workflow_handoffs WHERE handoff_id=?",
+            "SELECT planning_aggregate_id, task_directory FROM workflow_handoffs "
+            "WHERE handoff_id=?",
             (handoff["handoff_id"],),
         ).fetchone()
         assert row is not None
@@ -693,6 +720,13 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(tmp_path: Path) -
             (row["planning_aggregate_id"],),
         ).fetchone()
     assert aggregate is not None
+    handoff_root = Path(str(row["task_directory"]))
+    handoff_kernel_path = (
+        handoff_root / "input" / "kernel_context.json"
+        if (handoff_root / "input").is_dir()
+        else handoff_root / "kernel_context.json"
+    )
+    assert handoff_kernel_path.is_file()
     policy = json.loads(str(aggregate["author_policy_json"]))
     assert intent_id in {
         item["intent_id"] for item in policy["author_control"]["intents"]
@@ -709,6 +743,19 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(tmp_path: Path) -
     }
     assert len(task["effective_book_profile"]["dimensions"]) == 9
     assert Path(str(prepared["source_state_context"])).is_file()
+    kernel_path = Path(str(prepared["kernel_context"]))
+    assert kernel_path.is_file()
+    kernel = json.loads(kernel_path.read_text(encoding="utf-8"))
+    assert len(kernel["contract_references"]) == 7
+    assert kernel["chapter_state"]["progression_state"] is not None
+    assert "resource_state" in kernel["chapter_state"]
+    assert "opportunity_surface" in kernel["chapter_state"]
+    assert "narrative_debts" in kernel["planning_state"]
+    assert "anticipation_surface" in kernel["planning_state"]
+    assert kernel["planning_state"]["scheduler_recommendation"]["primary_intent"]
+    assert task["scheduler_recommendation"] == kernel["planning_state"][
+        "scheduler_recommendation"
+    ]
 
 
 def test_v22_workbench_renders_matrix_inspector_modal_and_stable_explorer(

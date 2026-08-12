@@ -1,11 +1,14 @@
 from pathlib import Path
 
+import pytest
+
 from novel_authoring.db.database import Database
 from novel_authoring.planning.innovation import (
     NarrativeDebt,
     NarrativeDebtType,
     NarrativeHorizon,
 )
+from novel_authoring.planning.models import SchedulerAlignment
 from novel_authoring.progression.anticipation import AnticipationSurfaceView
 from novel_authoring.progression.scheduler import (
     ChapterIntent,
@@ -75,3 +78,19 @@ def test_scheduler_override_persists(tmp_path: Path) -> None:
     assert loaded == saved
     assert loaded is not None
     assert loaded.primary_intent is ChapterIntent.RECOVERY
+
+
+def test_candidate_may_override_scheduler_with_reason() -> None:
+    with pytest.raises(ValueError, match="必须说明原因"):
+        SchedulerAlignment(
+            recommended_primary_intent="BREAKTHROUGH",
+            candidate_primary_intent="RECOVERY",
+        )
+
+    alignment = SchedulerAlignment(
+        recommended_primary_intent="BREAKTHROUGH",
+        candidate_primary_intent="RECOVERY",
+        alignment="AUTHOR_OVERRIDE",
+        deviation_reason="作者要求先处理上一章伤势。",
+    )
+    assert alignment.deviation_reason

@@ -128,6 +128,31 @@ class NarrativeDriveAlignment(BaseModel):
     evidence: list[str] = Field(default_factory=list)
 
 
+class SchedulerAlignment(BaseModel):
+    """Candidate response to the frozen scheduler recommendation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    recommended_primary_intent: str | None = None
+    candidate_primary_intent: str | None = None
+    alignment: str = "UNKNOWN"
+    deviation_reason: str = ""
+    debts_served: list[str] = Field(default_factory=list)
+    anticipations_served: list[str] = Field(default_factory=list)
+    risks: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def require_override_reason(self) -> SchedulerAlignment:
+        if (
+            self.recommended_primary_intent
+            and self.candidate_primary_intent
+            and self.recommended_primary_intent != self.candidate_primary_intent
+            and not self.deviation_reason.strip()
+        ):
+            raise ValueError("Candidate 偏离 Scheduler Recommendation 时必须说明原因")
+        return self
+
+
 class ProgressComponent(StrEnum):
     PERMANENT_GROWTH = "permanent_growth"
     WORLD_STATE_CHANGE = "world_state_change"
@@ -382,6 +407,7 @@ class CandidateProposal(BaseModel):
     world_expansion_impact: list[str] = Field(default_factory=list)
     resource_opportunity_impact: list[str] = Field(default_factory=list)
     chapter_intent: str | None = None
+    scheduler_alignment: SchedulerAlignment = Field(default_factory=SchedulerAlignment)
     progression_debt_impact: list[str] = Field(default_factory=list)
     anticipation_impact: list[str] = Field(default_factory=list)
     genre_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
