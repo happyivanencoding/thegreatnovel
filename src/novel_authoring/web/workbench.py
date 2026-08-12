@@ -979,6 +979,48 @@ def _candidate_cards(
         plan = _read_json(row["plan_json"])
         score = _read_json(row["score_json"])
         gate = _read_json(row["gate_report_json"])
+        kernel_compilation = score.get("kernel_evidence_compilation")
+        kernel_trace: dict[str, Any] = {
+            "available": False,
+            "completeness": "LEGACY_NO_EFFECTIVE_CONTRACT",
+            "declared": {},
+            "verified": {},
+            "differences": [],
+            "warnings": [],
+            "evidence": [],
+        }
+        if isinstance(kernel_compilation, dict):
+            declared = kernel_compilation.get("declared", {})
+            verified = kernel_compilation.get("verified", {})
+            verified = dict(verified) if isinstance(verified, dict) else {}
+            verified_drive = verified.get("narrative_drive_alignment", {})
+            if isinstance(verified_drive, dict) and verified_drive.get("primary_drive"):
+                verified_drive = dict(verified_drive)
+                verified_drive["primary_drive"] = narrative_drive_label(
+                    str(verified_drive["primary_drive"])
+                )
+                verified["narrative_drive_alignment"] = verified_drive
+            evidence: list[str] = []
+            for item in kernel_compilation.get("verified_reader_promise_alignment", []):
+                if isinstance(item, dict):
+                    evidence.extend(str(value) for value in item.get("evidence", []))
+            for item in kernel_compilation.get("verified_resource_impact", []):
+                if isinstance(item, dict):
+                    evidence.extend(str(value) for value in item.get("evidence", []))
+            progress = kernel_compilation.get("verified_progress_components", {})
+            if isinstance(progress, dict):
+                evidence.extend(str(value) for value in progress.get("evidence", []))
+            kernel_trace = {
+                "available": True,
+                "completeness": str(kernel_compilation.get("completeness") or "UNKNOWN"),
+                "declared": dict(declared) if isinstance(declared, dict) else {},
+                "verified": verified,
+                "differences": [
+                    str(item) for item in kernel_compilation.get("differences", [])
+                ],
+                "warnings": [str(item) for item in kernel_compilation.get("warnings", [])],
+                "evidence": list(dict.fromkeys(evidence))[:12],
+            }
         truth_alignment = list(plan.get("truth_alignment", []))
         reveal_impact = dict(plan.get("reveal_impact", {}))
         truth_effects = [
@@ -1062,6 +1104,7 @@ def _candidate_cards(
                 != "NOT_RUN",
                 "gate_passed": bool(gate.get("passed", False)),
                 "hard_failures": list(gate.get("hard_failures", [])),
+                "kernel_trace": kernel_trace,
                 "author_control_trace": plan.get("author_control_trace", {}),
                 "protagonist_choice": str(
                     plan.get("protagonist_strategy") or plan.get("solution_method") or ""

@@ -370,6 +370,8 @@ def test_progression_workspace_reuses_historical_world_state_without_future_leak
     assert "Progression Workspace" in page.text
     assert "UNKNOWN" in page.text
     assert "观察边界" in page.text
+    assert "当前状态证据" in page.text
+    assert "Python 章节投影" in page.text
 
 
 def test_planning_aggregate_freezes_chapter_aware_kernel_context(

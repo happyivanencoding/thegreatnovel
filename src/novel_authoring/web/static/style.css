@@ -743,6 +743,16 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .wb-candidate-card dl { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: .38rem .5rem; }
 .wb-candidate-card dt { color: #344054; font-weight: 700; }
 .wb-candidate-card dd { min-width: 0; margin: 0; }
+.wb-kernel-verification { margin: .7rem 0; padding: .65rem; border: 1px solid #d8e3d6; border-radius: 8px; background: #fbfdf9; }
+.wb-kernel-verification-head { display: flex; align-items: center; gap: .35rem; flex-wrap: wrap; margin-bottom: .5rem; }
+.wb-kernel-trace-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.wb-kernel-trace-grid article { padding: .48rem; border-radius: 6px; background: #fff; }
+.wb-kernel-trace-grid span, .wb-kernel-evidence > span, .wb-kernel-conflicts > span { display: block; color: #344054; font-size: .7rem; font-weight: 700; }
+.wb-kernel-trace-grid p { margin: .2rem 0 0; }
+.wb-kernel-evidence, .wb-kernel-conflicts { margin-top: .45rem; }
+.wb-kernel-evidence small, .wb-kernel-conflicts small { display: block; margin-top: .18rem; color: #667085; }
+.wb-kernel-conflicts small { color: #b42318; }
+.wb-kernel-legacy { padding: .45rem; border-radius: 6px; background: #f8f9fb; }
 
 @media (max-width: 1050px) {
   .wb-truth-topic-grid, .wb-truth-authoring-grid { grid-template-columns: 1fr; }

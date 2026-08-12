@@ -48,6 +48,7 @@ from novel_authoring.progression.service import (
 )
 from novel_authoring.utils import json_dumps, sha256_file, utc_now
 from novel_authoring.validation.service import validate_draft
+from novel_authoring.web.workbench import _candidate_cards
 from novel_authoring.workflows.approval import approve_draft
 from novel_authoring.workflows.directives import add_directive
 from novel_authoring.workflows.exporting import export_book
@@ -622,6 +623,19 @@ def test_effective_kernel_candidate_claims_are_verified_before_contract(
     assert contract["declared_kernel_trace"]
     assert contract["verified_kernel_trace"]["evidence_compilation"]
     assert contract["declared_kernel_trace"] != contract["verified_kernel_trace"]
+    with database.connect() as connection:
+        cards = _candidate_cards(
+            connection,
+            "planning-book",
+            "base",
+            context_chapter_id=None,
+            context_chapter_ordinal=3,
+        )
+    selected_card = next(item for item in cards if item["candidate_id"] == selected_id)
+    assert selected_card["kernel_trace"]["available"] is True
+    assert selected_card["kernel_trace"]["completeness"] in {"COMPLETE", "PARTIAL"}
+    assert selected_card["kernel_trace"]["declared"]
+    assert selected_card["kernel_trace"]["verified"]
 
 
 def test_candidate_output_rejects_renamed_same_structure(tmp_path: Path) -> None:

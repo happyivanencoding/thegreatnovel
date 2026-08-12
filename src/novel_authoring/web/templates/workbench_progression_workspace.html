@@ -20,6 +20,7 @@
       <section><span>成长主体</span><strong>{{ state.subject_type }}</strong><small>{{ state.subject_id }}</small></section>
       <section><span>成长拓扑</span><strong>{{ state.topology_state|join(' + ') }}</strong><small>由 Effective Contract 冻结</small></section>
     </div>
+    <section class="pwk-section wb-kernel-verification"><div class="wb-kernel-verification-head"><strong>当前状态证据</strong><span class="wb-state-tag wb-state-source">Python 章节投影</span><span class="wb-state-tag wb-state-soft">只读</span></div>{% if state.primary_axis_state.evidence %}{% for evidence in state.primary_axis_state.evidence %}<span class="wb-readable-line">已验证：{{ evidence }}</span>{% endfor %}{% else %}<span class="wb-readable-line">UNKNOWN：当前阶段没有 Source State 或已批准章节证据，不显示伪精度。</span>{% endif %}<small>合同仅提供结构；资源、能力、阶段与世界层级均以第 {{ growth.chapter.ordinal }} 章边界为准。</small></section>
 
     <section class="pwk-section"><h3>成长轴与阶段轨道</h3><div class="pwk-axis-grid">
       <article><span>主轴</span><strong>{{ contract.primary_axis.name }}</strong><p>{{ contract.primary_axis.progress_measure }}</p>{% for stage in contract.primary_axis.stage_definitions %}<div class="pwk-track-row"><b>{{ stage.name }}</b><small>{{ stage.entry_requirements|join('；') or '开放条件未说明' }}</small></div>{% else %}<p class="wb-empty-state">该成长轴不使用固定等级表。</p>{% endfor %}</article>
