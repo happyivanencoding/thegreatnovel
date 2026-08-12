@@ -14,6 +14,16 @@ from novel_authoring.author_control.book_profile import (
     ProfileStrength,
     edit_book_profile,
 )
+from novel_authoring.author_control.projections import build_story_game_state
+from novel_authoring.author_control.source_state import (
+    SourceChapterStateDelta,
+    SourceStateCategory,
+    SourceStateCoverageStatus,
+    SourceStateOperation,
+    SourceStateVerification,
+    record_source_chapter_deltas,
+    record_source_state_coverage,
+)
 from novel_authoring.canon.projection import rebuild_projection
 from novel_authoring.config import Settings, load_settings
 from novel_authoring.db.database import Database
@@ -27,6 +37,15 @@ from novel_authoring.planning.candidates import (
 )
 from novel_authoring.planning.contracts import build_chapter_contract
 from novel_authoring.planning.models import ChapterContract
+from novel_authoring.progression.interpretation import (
+    compile_kernel_contract_proposals,
+    interpret_reader_experience,
+)
+from novel_authoring.progression.service import (
+    ProgressionContractType,
+    confirm_contract,
+    create_contract_proposal,
+)
 from novel_authoring.utils import json_dumps, sha256_file, utc_now
 from novel_authoring.validation.service import validate_draft
 from novel_authoring.workflows.approval import approve_draft
@@ -278,6 +297,151 @@ def write_candidates(
     return path
 
 
+def enable_progression_kernel(database: Database, *, boundary: int) -> None:
+    bundle = compile_kernel_contract_proposals(
+        interpret_reader_experience(
+            "主角持续变强、突破阶段，并以能力、资源和世界扩张推进故事。",
+            genre_hint="成长冒险",
+            contract_prefix="planning-kernel",
+        )
+    )
+    progression_payload = {
+        "progression_contract_id": "planning-body-progression",
+        "progression_subject": "CHARACTER",
+        "primary_axis": {
+            "axis_id": "body-axis",
+            "name": "身体重塑",
+            "axis_type": "BODY_EVOLUTION",
+            "current_stage_schema": "定性身体阶段",
+            "stage_order": ["tempered", "renewed"],
+            "stage_definitions": [
+                {
+                    "stage_id": "tempered",
+                    "name": "初次锻体",
+                    "next_stage_candidates": ["renewed"],
+                },
+                {"stage_id": "renewed", "name": "生命重构"},
+            ],
+            "progress_measure": "正文证明的身体性质变化",
+        },
+        "topology": ["LINEAR"],
+        "allowed_delta_types": ["ADVANCE"],
+        "stage_model": "非数字生命阶段",
+        "breakthrough_model": {
+            "gates": [
+                {
+                    "gate_id": "body-gate",
+                    "gate_type": "RESOURCE_GATE",
+                    "requirement": "消耗已持有的边界钥匙",
+                    "evidence_requirements": ["正文事件与资源变化"],
+                    "required_resources": ["边界钥匙"],
+                }
+            ]
+        },
+        "ability_unlock_model": [],
+        "resource_economy": ["边界钥匙"],
+        "growth_costs": ["身体损伤"],
+        "verification_modes": ["事件验证"],
+        "next_ceiling_model": "更高生命层级",
+        "upper_ceiling_visibility": "PARTIAL",
+        "progression_promises": ["成长改变行动可能性"],
+        "status": "NEEDS_REVIEW",
+    }
+    for contract_type, payload in (
+        (ProgressionContractType.READER_EXPERIENCE, bundle.reader_experience),
+        (ProgressionContractType.MARKET_CATEGORY, bundle.market_category),
+        (ProgressionContractType.NARRATIVE_DRIVE, bundle.narrative_drive),
+        (ProgressionContractType.GENRE, bundle.genre),
+        (ProgressionContractType.PROGRESSION, progression_payload),
+        (ProgressionContractType.WORLD_EXPANSION, bundle.world_expansion),
+        (ProgressionContractType.PAYOFF_CHANNEL, bundle.payoff_channels),
+    ):
+        assert payload is not None
+        proposal = create_contract_proposal(
+            database,
+            book_id="planning-book",
+            edition_id="base",
+            contract_type=contract_type,
+            payload=payload,
+            source="TEST_AUTHOR_PROPOSAL",
+        )
+        confirm_contract(
+            database,
+            proposal.contract_record_id,
+            effective_from_boundary=boundary,
+        )
+
+
+def seed_progression_source_state(database: Database) -> None:
+    with database.connect() as connection:
+        chapter = connection.execute(
+            "SELECT chapter_id, ordinal FROM chapters WHERE book_id='planning-book' "
+            "ORDER BY ordinal DESC LIMIT 1"
+        ).fetchone()
+        assert chapter is not None
+        span = connection.execute(
+            "SELECT span_id FROM source_spans WHERE book_id='planning-book' "
+            "AND chapter_id=? ORDER BY start_line LIMIT 1",
+            (chapter["chapter_id"],),
+        ).fetchone()
+        assert span is not None
+    common = {
+        "book_id": "planning-book",
+        "edition_id": "base",
+        "chapter_id": str(chapter["chapter_id"]),
+        "chapter_ordinal": int(chapter["ordinal"]),
+        "source_span_ids": [str(span["span_id"])],
+        "confidence": 1.0,
+        "verification_status": SourceStateVerification.SOURCE_VERIFIED,
+    }
+    record_source_chapter_deltas(
+        database,
+        "planning-book",
+        "base",
+        [
+            SourceChapterStateDelta(
+                delta_id="planning-character-progression",
+                category=SourceStateCategory.CHARACTER_STATE,
+                operation=SourceStateOperation.ADD,
+                subject_id="character:hero",
+                statement="主角已处于初次锻体阶段，并已满足尝试下一阶段的条件。",
+                payload={
+                    "name": "主角",
+                    "progression": {
+                        "axis_id": "body-axis",
+                        "stage_id": "tempered",
+                        "readiness": "READY_TO_ATTEMPT",
+                    },
+                },
+                **common,
+            ),
+            SourceChapterStateDelta(
+                delta_id="planning-resource-boundary-key",
+                category=SourceStateCategory.RESOURCE,
+                operation=SourceStateOperation.ACQUIRE,
+                subject_id="character:hero",
+                object_id="resource:boundary-key",
+                statement="主角持有一枚边界钥匙。",
+                payload={
+                    "name": "边界钥匙",
+                    "owner_id": "character:hero",
+                    "quantity": 1,
+                },
+                **common,
+            ),
+        ],
+    )
+    record_source_state_coverage(
+        database,
+        book_id="planning-book",
+        edition_id="base",
+        chapter_id=str(chapter["chapter_id"]),
+        chapter_ordinal=int(chapter["ordinal"]),
+        status=SourceStateCoverageStatus.COMPLETE_WITH_CHANGES,
+        verified_delta_count=2,
+    )
+
+
 def test_boundary_candidate_ranking_and_contract(tmp_path: Path) -> None:
     database, workspace, settings = setup_planning_book(tmp_path)
     boundary = build_boundary_packet(database, "planning-book", recent_full_chapters=2)
@@ -406,6 +570,58 @@ def test_boundary_candidate_ranking_and_contract(tmp_path: Path) -> None:
     with sqlite3.connect(database.path) as connection:
         assert connection.execute("SELECT COUNT(*) FROM candidate_plans").fetchone()[0] == 3
         assert connection.execute("SELECT COUNT(*) FROM chapter_contracts").fetchone()[0] == 1
+
+
+def test_effective_kernel_candidate_claims_are_verified_before_contract(
+    tmp_path: Path,
+) -> None:
+    database, workspace, settings = setup_planning_book(tmp_path)
+    enable_progression_kernel(database, boundary=4)
+    task = prepare_candidate_task(database, "planning-book", settings)
+    task_id = str(task["task_id"])
+    candidates = [
+        candidate_payload("kernel-a", "station-defense", score=99, variant=0),
+        candidate_payload("kernel-b", "radio-caller", score=75, variant=1),
+        candidate_payload("kernel-c", "wind-rule", score=65, variant=2),
+    ]
+    candidates[0]["narrative_drive_alignment"] = {
+        "primary_drive": "INVENTED_DRIVE",
+        "drives_advanced": ["INVENTED_DRIVE"],
+        "evidence": ["模型自报的驱动力"],
+    }
+    output = write_candidates(workspace, task_id, candidates)
+
+    result = import_candidate_output(
+        database, "planning-book", task_id, settings, output
+    )
+    rejected = next(item for item in result["candidates"] if item["local_id"] == "kernel-a")
+    assert rejected["selection_status"] == "REJECTED"
+    assert any("Narrative Drive 不属于" in item for item in rejected["hard_failures"])
+
+    selected_id = str(result["selected_candidate_id"])
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT plan_json, score_json, gate_report_json FROM candidate_plans "
+            "WHERE candidate_id=?",
+            (selected_id,),
+        ).fetchone()
+    assert row is not None
+    declared = json.loads(str(row["plan_json"]))
+    score = json.loads(str(row["score_json"]))
+    gate = json.loads(str(row["gate_report_json"]))
+    compilation = score["kernel_evidence_compilation"]
+    assert compilation["verified"]["drive_drift"]["status"] == "SOFT_MISS"
+    assert score["inputs"]["progress_gain"] != declared["score_inputs"]["progress_gain"]
+    assert gate["kernel_evidence"]["candidate_local_id"] in {"kernel-b", "kernel-c"}
+
+    contract_result = build_chapter_contract(database, "planning-book", selected_id)
+    contract = json.loads(
+        Path(str(contract_result["path"])).read_text(encoding="utf-8")
+    )
+    assert contract["kernel_verification_status"] in {"COMPLETE", "PARTIAL"}
+    assert contract["declared_kernel_trace"]
+    assert contract["verified_kernel_trace"]["evidence_compilation"]
+    assert contract["declared_kernel_trace"] != contract["verified_kernel_trace"]
 
 
 def test_candidate_output_rejects_renamed_same_structure(tmp_path: Path) -> None:
@@ -633,3 +849,240 @@ def test_full_synthetic_e2e_from_ingest_to_approval(tmp_path: Path) -> None:
     assert contract.primary_thread in projection.threads
     assert Path(str(exported["manifest"])).is_file()
     assert sha256_file(source_path) == source_hash
+
+
+def test_verified_kernel_trace_closes_through_approval_and_next_state(
+    tmp_path: Path,
+) -> None:
+    database, workspace, settings = setup_planning_book(tmp_path)
+    enable_progression_kernel(database, boundary=4)
+    seed_progression_source_state(database)
+
+    task = prepare_candidate_task(database, "planning-book", settings)
+    old_aggregate_id = str(task["aggregate_id"])
+    initial_kernel = json.loads(
+        Path(str(task["kernel_context"])).read_text(encoding="utf-8")
+    )
+    assert initial_kernel["chapter_state"]["progression_state"][
+        "primary_axis_state"
+    ]["current_stage"] == "tempered"
+    assert "边界钥匙" in initial_kernel["chapter_state"]["progression_state"][
+        "available_resources"
+    ]
+    candidates = [
+        candidate_payload("kernel-e2e-a", "station-defense", score=90, variant=0),
+        candidate_payload("kernel-e2e-b", "radio-caller", score=75, variant=1),
+        candidate_payload("kernel-e2e-c", "wind-rule", score=65, variant=2),
+    ]
+    candidates[0].update(
+        {
+            "reader_promise_alignment": [
+                {
+                    "promise_id": "continuous-growth",
+                    "priority": "CORE",
+                    "service": "SERVED",
+                    "evidence": ["身体阶段从 tempered 进入 renewed"],
+                }
+            ],
+            "narrative_drive_alignment": {
+                "primary_drive": "POWER_PROGRESSION",
+                "primary_drive_effect": "身体阶段改变可执行行动",
+                "drives_advanced": ["POWER_PROGRESSION"],
+                "evidence": ["tempered -> renewed"],
+            },
+            "progression_impact": {
+                "axis_advanced": ["body-axis"],
+                "progression_delta_type": ["ADVANCE"],
+                "stage_change": "tempered -> renewed",
+                "resource_change": ["消耗边界钥匙"],
+                "growth_cost": ["身体损伤"],
+            },
+            "resource_opportunity_impact": ["消耗边界钥匙"],
+            "chapter_intent": "BREAKTHROUGH",
+            "scheduler_alignment": {
+                "candidate_primary_intent": "BREAKTHROUGH",
+                "alignment": "ACCEPTED",
+            },
+        }
+    )
+    candidate_path = write_candidates(
+        workspace, str(task["task_id"]), candidates
+    )
+    planned = import_candidate_output(
+        database,
+        "planning-book",
+        str(task["task_id"]),
+        settings,
+        candidate_path,
+    )
+    selected = next(
+        item for item in planned["candidates"] if item["selection_status"] == "SELECTED"
+    )
+    assert selected["local_id"] == "kernel-e2e-a"
+    contract_result = build_chapter_contract(
+        database, "planning-book", str(planned["selected_candidate_id"])
+    )
+    contract = ChapterContract.model_validate_json(
+        Path(str(contract_result["path"])).read_text(encoding="utf-8")
+    )
+    assert contract.declared_kernel_trace
+    assert contract.verified_kernel_trace["progression_impact"]["stage_change"] == {
+        "from": "tempered",
+        "to": "renewed",
+    }
+
+    draft_task = prepare_draft_task(database, "planning-book", contract.contract_id)
+    prose = "\n".join(
+        [
+            contract.required_irreversible_change,
+            contract.required_cost,
+            contract.ending_state,
+            "线程状态完成更新，防守承诺向前推进。",
+            "边界钥匙在重塑中彻底碎裂。",
+            "他的旧躯壳崩解，身体阶段进入 renewed。",
+            "人物状态完成更新，新的身体改变了行动边界。",
+            "资源库存完成更新，钥匙余量归零。",
+        ]
+    )
+    draft_output = {
+        "task_id": draft_task["task_id"],
+        "contract_id": contract.contract_id,
+        "chapter_title": "身体重塑",
+        "prose_markdown": prose,
+        "state_changes": [
+            {
+                "kind": "thread",
+                "record_id": contract.primary_thread,
+                "payload": {
+                    "goal": "守住气象站",
+                    "stakes": "失守将失去安全据点",
+                    "phase": "advanced",
+                    "importance": 0.9,
+                    "reader_visibility": 0.9,
+                    "progress": 0.85,
+                },
+                "evidence_quotes": ["线程状态完成更新"],
+            },
+            {
+                "kind": "resource",
+                "record_id": "resource_boundary_key",
+                "payload": {
+                    "owner_id": "character:hero",
+                    "name": "边界钥匙",
+                    "before_quantity": 1,
+                    "delta": -1,
+                    "after_quantity": 0,
+                    "unit": "枚",
+                    "causal_source": "身体重塑消耗",
+                },
+                "evidence_quotes": ["边界钥匙在重塑中彻底碎裂"],
+            },
+            {
+                "kind": "character_state",
+                "record_id": "state_hero_renewed",
+                "payload": {
+                    "character_id": "character:hero",
+                    "goals": ["验证重塑后的行动边界"],
+                    "plans": ["先稳定新身体"],
+                    "progression": {
+                        "axis_id": "body-axis",
+                        "stage_id": "renewed",
+                        "readiness": "ACCUMULATING",
+                    },
+                },
+                "evidence_quotes": ["身体阶段进入 renewed"],
+            },
+        ],
+        "contract_evidence": {
+            "required_irreversible_change": [contract.required_irreversible_change],
+            "required_cost": [contract.required_cost],
+            "ending_state": [contract.ending_state],
+            "commit:thread_status": ["线程状态完成更新"],
+            "commit:resource_stock": ["资源库存完成更新"],
+            "commit:character_state": ["人物状态完成更新"],
+        },
+        "knowledge_claims": [],
+        "character_fit_inputs": dict.fromkeys(
+            settings.metrics["character_fit"]["weights"], 90
+        ),
+        "style_fit_inputs": dict.fromkeys(
+            settings.metrics["style_fit"]["weights"], 90
+        ),
+        "promises_advanced": [contract.primary_thread],
+        "promises_paid": [],
+        "new_major_hooks": 0,
+        "structure_tags": ["kernel-stage-transition"],
+        "realized_kernel_trace": {
+            "expected_contract_id": contract.contract_id,
+            "primary_intent": "BREAKTHROUGH",
+            "reader_promises_served": ["continuous-growth"],
+            "narrative_drives_advanced": ["POWER_PROGRESSION"],
+            "progression_impact": {
+                "axis_advanced": ["body-axis"],
+                "progression_delta_type": ["ADVANCE"],
+                "stage_change": "tempered -> renewed",
+                "resource_change": ["消耗边界钥匙"],
+                "growth_cost": ["身体损伤"],
+            },
+            "resource_changes": ["消耗边界钥匙"],
+            "evidence": [
+                {
+                    "claim": "body-axis tempered -> renewed",
+                    "state_change_record_ids": [
+                        "resource_boundary_key",
+                        "state_hero_renewed",
+                    ],
+                    "evidence_quotes": [
+                        "边界钥匙在重塑中彻底碎裂",
+                        "身体阶段进入 renewed",
+                    ],
+                }
+            ],
+        },
+        "notes": ["原创合成生产闭环证据"],
+    }
+    output_path = Path(str(draft_task["expected_output"]))
+    output_path.write_text(json_dumps(draft_output, indent=2), encoding="utf-8")
+    imported = import_draft_output(
+        database, "planning-book", str(draft_task["task_id"])
+    )
+    draft_id = str(imported["draft_id"])
+    validation = validate_draft(database, "planning-book", draft_id, settings)
+    assert validation.passed
+    comparison = next(
+        report for report in validation.reports if report.validator == "Contract Validator"
+    ).measurements["kernel_trace_comparison"]
+    assert comparison["unexpected"] == {}
+    assert comparison["underdelivered"] == {}
+
+    approve_draft(database, "planning-book", draft_id, confirmation="批准写入正史")
+    with database.connect() as connection:
+        committed_chapter = connection.execute(
+            "SELECT chapter_id FROM canon_commits WHERE draft_id=?", (draft_id,)
+        ).fetchone()
+        old_aggregate = connection.execute(
+            "SELECT status FROM planning_aggregates WHERE aggregate_id=?",
+            (old_aggregate_id,),
+        ).fetchone()
+    assert committed_chapter is not None
+    assert old_aggregate["status"] == "STALE"
+    after = build_story_game_state(
+        database,
+        "planning-book",
+        "base",
+        chapter_id=str(committed_chapter["chapter_id"]),
+    )
+    assert after["progression_state"]["primary_axis_state"]["current_stage"] == (
+        "renewed"
+    )
+    assert after["progression_state"]["recent_breakthrough"]["stage_id"] == (
+        "renewed"
+    )
+    next_task = prepare_candidate_task(database, "planning-book", settings)
+    assert next_task["aggregate_id"] != old_aggregate_id
+    next_kernel = json.loads(
+        Path(str(next_task["kernel_context"])).read_text(encoding="utf-8")
+    )
+    assert next_kernel["chapter_state"]["progression_state"]["primary_axis_state"][
+        "current_stage"
+    ] == "renewed"

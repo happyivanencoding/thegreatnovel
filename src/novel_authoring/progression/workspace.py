@@ -13,6 +13,7 @@ from novel_authoring.progression.models import (
     WorldExpansionContract,
 )
 from novel_authoring.progression.projections import (
+    AxisObservation,
     project_progression_state,
     project_world_expansion_state,
 )
@@ -59,6 +60,131 @@ def _thread_inputs(world_state: Mapping[str, Any]) -> list[dict[str, Any]]:
     return values
 
 
+def _nested_mappings(value: object) -> list[Mapping[str, Any]]:
+    values: list[Mapping[str, Any]] = []
+    pending = [value]
+    while pending:
+        current = pending.pop()
+        if isinstance(current, Mapping):
+            values.append(current)
+            pending.extend(current.values())
+        elif isinstance(current, list):
+            pending.extend(current)
+    return values
+
+
+def _approved_kernel_observations(
+    database: Database,
+    *,
+    book_id: str,
+    edition_id: str,
+    through_chapter_ordinal: int,
+) -> tuple[dict[str, AxisObservation], str | None]:
+    """Derive observations only from approved Canon-linked draft state changes."""
+
+    with database.connect() as connection:
+        rows = connection.execute(
+            """
+            SELECT d.output_json, ch.ordinal
+            FROM canon_commits cc
+            JOIN drafts d ON d.draft_id=cc.draft_id AND d.edition_id=cc.edition_id
+            JOIN chapters ch ON ch.chapter_id=cc.chapter_id AND ch.edition_id=cc.edition_id
+            WHERE cc.book_id=? AND cc.edition_id=? AND ch.ordinal<=?
+            ORDER BY ch.ordinal, cc.committed_at
+            """,
+            (book_id, edition_id, through_chapter_ordinal),
+        ).fetchall()
+    raw_axes: dict[str, dict[str, Any]] = {}
+    current_world_stage: str | None = None
+    import json
+
+    for row in rows:
+        try:
+            output = json.loads(str(row["output_json"] or "{}"))
+        except (TypeError, ValueError):
+            continue
+        for change in output.get("state_changes", []):
+            if not isinstance(change, Mapping):
+                continue
+            payload = change.get("payload", {})
+            if not isinstance(payload, Mapping):
+                continue
+            progression = payload.get("progression")
+            if isinstance(progression, Mapping) and progression.get("axis_id"):
+                axis_id = str(progression["axis_id"])
+                value = raw_axes.setdefault(axis_id, {"evidence": []})
+                if progression.get("stage_id"):
+                    value["current_stage"] = str(progression["stage_id"])
+                    value["recent_breakthrough"] = {
+                        "chapter_ordinal": int(row["ordinal"]),
+                        "stage_id": str(progression["stage_id"]),
+                        "state_change_record_id": change.get("record_id"),
+                    }
+                if progression.get("substage"):
+                    value["current_substage"] = str(progression["substage"])
+                if progression.get("readiness"):
+                    value["readiness"] = str(progression["readiness"])
+                value["available_branches"] = list(
+                    progression.get("available_branches", value.get("available_branches", []))
+                )
+                value["locked_branches"] = list(
+                    progression.get("locked_branches", value.get("locked_branches", []))
+                )
+                value["evidence"].extend(
+                    str(item) for item in change.get("evidence_quotes", [])
+                )
+            world_expansion = payload.get("world_expansion")
+            if isinstance(world_expansion, Mapping) and world_expansion.get("stage_id"):
+                current_world_stage = str(world_expansion["stage_id"])
+        trace = output.get("realized_kernel_trace")
+        if not isinstance(trace, Mapping):
+            continue
+        impact = trace.get("progression_impact", {})
+        if isinstance(impact, Mapping):
+            for axis_id in impact.get("axis_advanced", []):
+                value = raw_axes.setdefault(str(axis_id), {"evidence": []})
+                value["pending_showcases"] = list(impact.get("ability_showcase", []))
+                value["progression_debts"] = list(trace.get("debts_advanced", []))
+    return (
+        {
+            axis_id: AxisObservation.model_validate(value)
+            for axis_id, value in raw_axes.items()
+        },
+        current_world_stage,
+    )
+
+
+def _source_axis_observations(
+    world_state: Mapping[str, Any],
+) -> tuple[dict[str, AxisObservation], str | None]:
+    axes: dict[str, AxisObservation] = {}
+    world_stage: str | None = None
+    roots: list[object] = [world_state.get("character", {})]
+    for collection in ("characters", "facts"):
+        values = world_state.get(collection, [])
+        if isinstance(values, list):
+            roots.extend(values)
+    for item in roots:
+        for value in _nested_mappings(item):
+            progression = value.get("progression")
+            if isinstance(progression, Mapping) and progression.get("axis_id"):
+                axis_id = str(progression["axis_id"])
+                axes[axis_id] = AxisObservation.model_validate(
+                    {
+                        "current_stage": progression.get("stage_id"),
+                        "current_substage": progression.get("substage"),
+                        "available_branches": progression.get("available_branches", []),
+                        "locked_branches": progression.get("locked_branches", []),
+                        "readiness": progression.get("readiness", "UNKNOWN"),
+                        "evidence": value.get("source_evidence", []),
+                    }
+                )
+            expansion = value.get("world_expansion")
+            if isinstance(expansion, Mapping) and expansion.get("stage_id"):
+                world_stage = str(expansion["stage_id"])
+    return axes, world_stage
+
+
 def build_progression_workspace_from_world_state(
     database: Database,
     *,
@@ -96,6 +222,14 @@ def build_progression_workspace_from_world_state(
     payoff_record = records.get(ProgressionContractType.PAYOFF_CHANNEL)
 
     progression = None
+    source_observations, source_world_stage = _source_axis_observations(world_state)
+    approved_observations, approved_world_stage = _approved_kernel_observations(
+        database,
+        book_id=book_id,
+        edition_id=edition_id,
+        through_chapter_ordinal=chapter_ordinal,
+    )
+    axis_observations = {**source_observations, **approved_observations}
     if progression_record is not None:
         contract = ProgressionContract.model_validate(
             progression_record.payload
@@ -105,6 +239,7 @@ def build_progression_workspace_from_world_state(
             world_state,
             contract,
             subject_id=subject_id,
+            axis_observations=axis_observations,
         )
 
     world_expansion = None
@@ -114,6 +249,7 @@ def build_progression_workspace_from_world_state(
             WorldExpansionContract.model_validate(world_record.payload).model_copy(
                 update={"effective_from_boundary": None}
             ),
+            current_stage_id=approved_world_stage or source_world_stage,
         )
 
     opportunity_surface = project_opportunity_surface(world_state, ())

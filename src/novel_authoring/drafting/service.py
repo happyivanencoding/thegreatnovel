@@ -135,6 +135,10 @@ def prepare_draft_task(
             "realized 只记录正文真正发生的线索或揭示，且 evidence_quote 必须逐字存在于正文。"
             "KEEP_HIDDEN 的 Truth 只能约束行为，不能被旁白、对话或解释直接说破；"
             "HINT 必须留下读者可感知线索，但不能确认完整答案。",
+            "若 Chapter Contract 的 kernel_verification_status 不是 "
+            "LEGACY_NO_EFFECTIVE_CONTRACT，必须填写 RealizedKernelTrace。它只声明正文实际"
+            "兑现的部分；每条证据必须逐字出现在正文，并绑定将由 Author Approval 提交的"
+            " state_change record_id。不得把 Expected Kernel Trace 原样抄成 Realized。",
             "避免连续使用‘谨慎试探—暂不下结论—保留退路—撤回’的审计型叙事，"
             "除非当前 Narrative Portfolio 明确需要这种节奏。",
             "只写 output.json，不要修改 book；系统会把合法正文导入 drafts。",

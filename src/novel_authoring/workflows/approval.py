@@ -386,6 +386,11 @@ def approve_draft(
                     "contract_id": contract.contract_id,
                     "approval": confirmation,
                     "approved_at": now,
+                    "realized_kernel_trace": (
+                        None
+                        if draft.realized_kernel_trace is None
+                        else draft.realized_kernel_trace.model_dump(mode="json")
+                    ),
                 },
                 source_kind="AUTHOR_CONFIRMATION",
                 source_id=draft_id,
@@ -623,6 +628,30 @@ def approve_draft(
             connection.execute(
                 "UPDATE books SET updated_at=?, version=version+1 WHERE book_id=?",
                 (now, book_id),
+            )
+            invalidation_reason = (
+                f"Canon chapter {ordinal} committed; next chapter must rebuild planning context"
+            )
+            connection.execute(
+                "UPDATE planning_aggregates SET status='STALE', stale_reason=?, "
+                "invalidated_at=?, version=version+1 "
+                "WHERE book_id=? AND edition_id=? AND status='ACTIVE'",
+                (invalidation_reason, now, book_id, selected_edition),
+            )
+            connection.execute(
+                "UPDATE candidate_plans SET status='STALE', stale_reason=?, version=version+1 "
+                "WHERE book_id=? AND edition_id=? AND status<>'STALE'",
+                (invalidation_reason, book_id, selected_edition),
+            )
+            connection.execute(
+                "UPDATE chapter_contracts SET status='STALE', stale_reason=?, version=version+1 "
+                "WHERE book_id=? AND edition_id=? AND contract_id<>? AND status='READY'",
+                (invalidation_reason, book_id, selected_edition, contract.contract_id),
+            )
+            connection.execute(
+                "UPDATE chapter_contracts SET status='FULFILLED', stale_reason=NULL, "
+                "version=version+1 WHERE contract_id=? AND edition_id=?",
+                (contract.contract_id, selected_edition),
             )
             queue_book_profile_refresh_proposal_in_transaction(
                 connection,

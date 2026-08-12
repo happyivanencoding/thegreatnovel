@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
@@ -381,6 +382,293 @@ def _quotes_in_prose(
             )
 
 
+def _kernel_claims(value: object, *, key: str | None = None) -> set[str]:
+    if not isinstance(value, list):
+        return set()
+    claims: set[str] = set()
+    for item in value:
+        if isinstance(item, dict) and key:
+            claim = str(item.get(key) or "").strip()
+        else:
+            claim = str(item).strip()
+        if claim:
+            claims.add(claim)
+    return claims
+
+
+def _stage_target(value: object) -> str:
+    if isinstance(value, dict):
+        return str(value.get("to") or "").strip()
+    parts = [
+        item.strip()
+        for item in re.split(r"(?:->|→|=>|至|到)", str(value or ""))
+        if item.strip()
+    ]
+    return parts[-1] if parts else ""
+
+
+def _validate_realized_kernel_trace(
+    context: ValidationContext,
+) -> tuple[list[ValidationFinding], dict[str, Any]]:
+    findings: list[ValidationFinding] = []
+    status = context.contract.kernel_verification_status
+    trace = context.draft.realized_kernel_trace
+    if status == "LEGACY_NO_EFFECTIVE_CONTRACT":
+        if trace is not None:
+            findings.append(
+                _finding(
+                    "KERNEL_TRACE_WITHOUT_EFFECTIVE_CONTRACT",
+                    "Legacy 合同没有 Verified Kernel Trace；草稿声明只作为未核验备注。",
+                    severity=Severity.WARNING,
+                    location="realized_kernel_trace",
+                )
+            )
+        return findings, {"status": status, "expected": {}, "realized": {}}
+    if trace is None:
+        findings.append(
+            _finding(
+                "REALIZED_KERNEL_TRACE_MISSING",
+                "本章合同含 Verified Kernel Trace，草稿必须声明 RealizedKernelTrace。",
+                location="realized_kernel_trace",
+            )
+        )
+        return findings, {"status": status, "expected": context.contract.verified_kernel_trace}
+    if trace.expected_contract_id != context.contract.contract_id:
+        findings.append(
+            _finding(
+                "REALIZED_KERNEL_CONTRACT_MISMATCH",
+                "RealizedKernelTrace 引用的 Chapter Contract 不匹配。",
+                location="realized_kernel_trace.expected_contract_id",
+            )
+        )
+
+    state_changes = {item.record_id: item for item in context.draft.state_changes}
+    for item in trace.evidence:
+        unknown = set(item.state_change_record_ids) - set(state_changes)
+        if unknown:
+            findings.append(
+                _finding(
+                    "KERNEL_EVIDENCE_STATE_CHANGE_UNKNOWN",
+                    f"Kernel Evidence 引用了不存在的 StateChange：{sorted(unknown)}",
+                    location="realized_kernel_trace.evidence",
+                )
+            )
+        _quotes_in_prose(
+            context.draft.prose_markdown,
+            item.evidence_quotes,
+            f"realized_kernel_trace:{item.claim}",
+            findings,
+        )
+
+    impact = trace.progression_impact
+    realized_has_claims = any(
+        (
+            trace.reader_promises_served,
+            trace.narrative_drives_advanced,
+            impact.axis_advanced,
+            impact.progression_delta_type,
+            impact.stage_change,
+            impact.resource_change,
+            impact.ability_unlock,
+            impact.growth_cost,
+            trace.resource_changes,
+            trace.world_expansion_changes,
+            trace.payoff_channels_realized,
+            trace.debts_advanced,
+            trace.debts_paid,
+        )
+    )
+    if realized_has_claims and not trace.evidence:
+        findings.append(
+            _finding(
+                "REALIZED_KERNEL_EVIDENCE_MISSING",
+                "Realized Kernel 声明必须绑定正文证据与 StateChange。",
+                location="realized_kernel_trace.evidence",
+            )
+        )
+
+    expected = context.contract.verified_kernel_trace
+    expected_reader = {
+        str(item.get("promise_id"))
+        for item in expected.get("reader_promise_alignment", [])
+        if isinstance(item, dict)
+        and item.get("verification_status") == "VERIFIED"
+        and item.get("promise_id")
+    }
+    expected_drive = expected.get("narrative_drive_alignment", {})
+    expected_drives = _kernel_claims(
+        expected_drive.get("drives_advanced", [])
+        if isinstance(expected_drive, dict)
+        else []
+    )
+    expected_progression = expected.get("progression_impact", {})
+    if not isinstance(expected_progression, dict):
+        expected_progression = {}
+    expected_axes = _kernel_claims(expected_progression.get("axis_advanced", []))
+    expected_deltas = _kernel_claims(
+        expected_progression.get("progression_delta_type", [])
+    )
+    expected_resources = _kernel_claims(
+        expected_progression.get("resource_changes", []), key="claim"
+    ) | _kernel_claims(expected.get("resource_impact", []), key="claim")
+    expected_abilities = _kernel_claims(
+        expected_progression.get("ability_unlocks", []), key="claim"
+    )
+    expected_world = _kernel_claims(expected.get("world_expansion_impact", []))
+    expected_payoffs = _kernel_claims(expected.get("payoff_channels", []))
+    expected_scheduler = expected.get("scheduler_alignment", {})
+    if not isinstance(expected_scheduler, dict):
+        expected_scheduler = {}
+    expected_debts = _kernel_claims(expected_scheduler.get("debts_served", []))
+    expected_intent = str(
+        expected_scheduler.get("candidate_primary_intent")
+        or context.contract.chapter_intent
+        or ""
+    )
+    expected_stage = _stage_target(expected_progression.get("stage_change"))
+
+    checks = (
+        ("reader promise", set(trace.reader_promises_served), expected_reader),
+        ("narrative drive", set(trace.narrative_drives_advanced), expected_drives),
+        ("growth axis", set(impact.axis_advanced), expected_axes),
+        ("progression delta", set(impact.progression_delta_type), expected_deltas),
+        (
+            "resource",
+            set(impact.resource_change) | set(trace.resource_changes),
+            expected_resources,
+        ),
+        ("ability", set(impact.ability_unlock), expected_abilities),
+        ("world expansion", set(trace.world_expansion_changes), expected_world),
+        ("payoff channel", set(trace.payoff_channels_realized), expected_payoffs),
+        (
+            "narrative debt",
+            set(trace.debts_advanced) | set(trace.debts_paid),
+            expected_debts,
+        ),
+    )
+    underdelivered: dict[str, list[str]] = {}
+    unexpected: dict[str, list[str]] = {}
+    for label, realized_values, expected_values in checks:
+        extras = realized_values - expected_values
+        missing = expected_values - realized_values
+        if extras:
+            unexpected[label] = sorted(extras)
+            findings.append(
+                _finding(
+                    "REALIZED_KERNEL_EXCEEDS_VERIFIED_CONTRACT",
+                    f"Realized {label} 超出 Verified Kernel Trace：{sorted(extras)}",
+                    location="realized_kernel_trace",
+                )
+            )
+        if missing:
+            underdelivered[label] = sorted(missing)
+            findings.append(
+                _finding(
+                    "REALIZED_KERNEL_UNDERDELIVERY",
+                    f"Expected {label} 未在正文中兑现：{sorted(missing)}",
+                    severity=Severity.WARNING,
+                    location="realized_kernel_trace",
+                )
+            )
+
+    realized_stage = _stage_target(impact.stage_change)
+    if trace.primary_intent and trace.primary_intent != expected_intent:
+        findings.append(
+            _finding(
+                "REALIZED_PRIMARY_INTENT_MISMATCH",
+                "实际 Primary Intent "
+                f"{trace.primary_intent} 与合同 {expected_intent or 'NONE'} 不一致。",
+                location="realized_kernel_trace.primary_intent",
+            )
+        )
+    elif expected_intent and not trace.primary_intent:
+        underdelivered["primary intent"] = [expected_intent]
+        findings.append(
+            _finding(
+                "REALIZED_KERNEL_UNDERDELIVERY",
+                f"Expected Primary Intent 未明确兑现：{expected_intent}",
+                severity=Severity.WARNING,
+                location="realized_kernel_trace.primary_intent",
+            )
+        )
+    if realized_stage and realized_stage != expected_stage:
+        unexpected["stage transition"] = [realized_stage]
+        findings.append(
+            _finding(
+                "REALIZED_STAGE_TRANSITION_MISMATCH",
+                f"实际阶段目标 {realized_stage} 与核验合同 {expected_stage or 'NONE'} 不一致。",
+                location="realized_kernel_trace.progression_impact.stage_change",
+            )
+        )
+    elif expected_stage and not realized_stage:
+        underdelivered["stage transition"] = [expected_stage]
+        findings.append(
+            _finding(
+                "REALIZED_KERNEL_UNDERDELIVERY",
+                f"Expected stage transition 未兑现：{expected_stage}",
+                severity=Severity.WARNING,
+                location="realized_kernel_trace.progression_impact.stage_change",
+            )
+        )
+
+    if realized_stage:
+        stage_changes = [
+            item
+            for item in context.draft.state_changes
+            if item.kind in {"character_state", "fact"}
+            and isinstance(item.payload.get("progression"), dict)
+            and str(item.payload["progression"].get("stage_id") or "")
+            == realized_stage
+        ]
+        if not stage_changes:
+            findings.append(
+                _finding(
+                    "REALIZED_STAGE_STATE_CHANGE_MISSING",
+                    "阶段变化必须落到 character_state 或 fact 的 progression payload。",
+                    location="state_changes",
+                )
+            )
+    if impact.ability_unlock and not any(
+        item.kind == "capability" for item in context.draft.state_changes
+    ):
+        findings.append(
+            _finding(
+                "REALIZED_ABILITY_STATE_CHANGE_MISSING",
+                "能力解锁必须有 capability StateChange。",
+                location="state_changes",
+            )
+        )
+    if (impact.resource_change or trace.resource_changes) and not any(
+        item.kind == "resource" for item in context.draft.state_changes
+    ):
+        findings.append(
+            _finding(
+                "REALIZED_RESOURCE_STATE_CHANGE_MISSING",
+                "资源变化必须有 resource StateChange。",
+                location="state_changes",
+            )
+        )
+    if trace.world_expansion_changes and not any(
+        item.kind == "fact" and isinstance(item.payload.get("world_expansion"), dict)
+        for item in context.draft.state_changes
+    ):
+        findings.append(
+            _finding(
+                "REALIZED_WORLD_EXPANSION_STATE_CHANGE_MISSING",
+                "世界层级变化必须有 fact StateChange 的 world_expansion payload。",
+                location="state_changes",
+            )
+        )
+
+    return findings, {
+        "status": status,
+        "expected": expected,
+        "realized": trace.model_dump(mode="json"),
+        "underdelivered": underdelivered,
+        "unexpected": unexpected,
+    }
+
+
 def validate_contract(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
     required = {
@@ -408,6 +696,8 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
             f"state_changes:{change.record_id}",
             findings,
         )
+    kernel_findings, kernel_comparison = _validate_realized_kernel_trace(context)
+    findings.extend(kernel_findings)
     agenda = context.contract.reveal_agenda
     if agenda:
         agenda_items = {
@@ -651,6 +941,7 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
         findings,
         {
             "requirements_checked": len(required),
+            "kernel_trace_comparison": kernel_comparison,
             "reveal_requirements_checked": sum(
                 len(agenda.get(key, []))
                 for key in ("must_reveal", "should_hint", "keep_hidden")
