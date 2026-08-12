@@ -14,6 +14,14 @@ from novel_authoring.progression.anticipation import (
 )
 from novel_authoring.progression.contracts import progression_contract_from_derived
 from novel_authoring.progression.derived import compile_derived_adapter
+from novel_authoring.progression.diagnostics import (
+    GenreChangeDiagnostics,
+    GenreChangeStatus,
+    GenreDriftDiagnostic,
+    GenreEvolutionDiagnostic,
+    GenreStructureEvidence,
+    diagnose_genre_change,
+)
 from novel_authoring.progression.models import (
     AbilityUnlockMode,
     AbilityUnlockRule,
@@ -112,9 +120,14 @@ __all__ = [
     "ExplanationStyle",
     "GenreAdapter",
     "GenreAdapterKind",
+    "GenreChangeDiagnostics",
+    "GenreChangeStatus",
     "GenreContract",
+    "GenreDriftDiagnostic",
+    "GenreEvolutionDiagnostic",
     "GenrePromise",
     "GenrePromiseStrength",
+    "GenreStructureEvidence",
     "GrowthAxis",
     "GrowthAxisType",
     "PayoffChannel",
@@ -152,6 +165,7 @@ __all__ = [
     "compile_genre_adapters",
     "compile_derived_adapter",
     "effective_genre_contract",
+    "diagnose_genre_change",
     "evaluate_resource_gate",
     "load_scheduler_override",
     "progression_contract_from_derived",
