@@ -88,6 +88,35 @@ class ExplanationStyle(StrEnum):
     HARD_EXPLANATION = "HARD_EXPLANATION"
 
 
+class AuthoringPreset(StrEnum):
+    CHINESE_MALE_COMMERCIAL_PROGRESSION = "CHINESE_MALE_COMMERCIAL_PROGRESSION"
+    SURVIVAL_PROGRESSION = "SURVIVAL_PROGRESSION"
+    MYSTERY_PROGRESSION = "MYSTERY_PROGRESSION"
+    TEAM_PROGRESSION = "TEAM_PROGRESSION"
+    CIVILIZATION_PROGRESSION = "CIVILIZATION_PROGRESSION"
+    CUSTOM_AUTHOR_PROFILE = "CUSTOM_AUTHOR_PROFILE"
+
+
+class StoryProfile(BaseModel):
+    """Author-facing defaults used to propose, never enforce, a contract."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    profile_id: AuthoringPreset
+    label: str = Field(min_length=1)
+    experience_defaults: dict[ReaderExperience, ExperiencePriority]
+    growth_centrality: ExperiencePriority
+    world_expansion_centrality: ExperiencePriority
+    mystery_centrality: ExperiencePriority
+    team_centrality: ExperiencePriority
+    relationship_centrality: ExperiencePriority
+    theme_centrality: ExperiencePriority
+    mysticism_level: ExperiencePriority = ExperiencePriority.MEDIUM
+    explanation_style: ExplanationStyle = ExplanationStyle.BALANCED
+    must_deliver_defaults: list[str] = Field(min_length=1)
+    drift_guard_defaults: list[str] = Field(default_factory=list)
+
+
 class ReaderExperienceContract(BaseModel):
     """The reader-facing promise confirmed before story-foundation generation."""
 

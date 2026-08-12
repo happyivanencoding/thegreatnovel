@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 
 from novel_authoring.progression.models import (
+    AuthoringPreset,
     ContractStatus,
     ExperiencePriority,
     ExplanationStyle,
@@ -10,6 +11,10 @@ from novel_authoring.progression.models import (
     ReaderExperience,
     ReaderExperienceContract,
     SettingSkin,
+)
+from novel_authoring.progression.presets import (
+    BUILTIN_STORY_PROFILES,
+    compile_story_profile,
 )
 
 
@@ -76,3 +81,42 @@ def test_primary_family_cannot_be_duplicated_as_secondary() -> None:
                 PrimaryFamily.COSMIC_PROGRESSION,
             ]
         )
+
+
+def test_story_profile_compiles_into_contract_proposal() -> None:
+    profile = BUILTIN_STORY_PROFILES[
+        AuthoringPreset.CHINESE_MALE_COMMERCIAL_PROGRESSION
+    ]
+
+    proposal = compile_story_profile(
+        profile,
+        contract_id="reader-from-profile",
+        primary_family=PrimaryFamily.PROGRESSION_FANTASY,
+        setting_skin=SettingSkin.NEAR_FUTURE,
+        priority_overrides={ReaderExperience.SOCIAL_THEME: ExperiencePriority.OFF},
+    )
+
+    assert proposal.status is ContractStatus.NEEDS_REVIEW
+    assert proposal.experience_priorities[ReaderExperience.PROGRESSION] is (
+        ExperiencePriority.VERY_HIGH
+    )
+    assert proposal.experience_priorities[ReaderExperience.SOCIAL_THEME] is (
+        ExperiencePriority.OFF
+    )
+    assert "profile" not in type(proposal).model_fields
+
+
+def test_profile_name_is_not_part_of_compiled_runtime_shape() -> None:
+    profile = BUILTIN_STORY_PROFILES[
+        AuthoringPreset.CHINESE_MALE_COMMERCIAL_PROGRESSION
+    ]
+    proposal = compile_story_profile(
+        profile,
+        contract_id="reader-runtime-shape",
+        primary_family=PrimaryFamily.TEAM_PROGRESSION,
+        setting_skin=SettingSkin.OTHERWORLD,
+    )
+
+    payload = proposal.model_dump(mode="json")
+    assert "profile_id" not in payload
+    assert "CHINESE_MALE_COMMERCIAL_PROGRESSION" not in str(payload)
