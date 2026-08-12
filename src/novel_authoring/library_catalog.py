@@ -473,6 +473,10 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
     initialization_id: str | None = None
     initialization_status: str | None = None
     updated_at: str | None = None
+    manifest_state = ""
+    status_state = ""
+    readiness_status = ""
+    complete_markers = False
     if initialization is None:
         missing.append("尚未建立小说初始化结果")
     else:
@@ -497,14 +501,26 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
             or None
         )
         updated_at = str(status_payload.get("updated_at") or "") or None
-        if str(manifest.get("state") or "") != "READY":
+        manifest_state = str(manifest.get("state") or "")
+        status_state = str(status_payload.get("state") or "")
+        complete_markers = (
+            manifest_state == "READY"
+            and status_state == "READY"
+            and readiness_status == "READY"
+        )
+        acceptable_markers = {"READY", "READY_WITH_GAPS"}
+        if manifest_state not in acceptable_markers:
             missing.append("初始化清单尚未达到完整就绪")
-        if str(status_payload.get("state") or "") != "READY":
+        if status_state not in acceptable_markers:
             missing.append("初始化状态尚未达到完整就绪")
-        if readiness_status != "READY":
+        if readiness_status not in acceptable_markers:
             missing.append("初始化验收尚未达到完整就绪")
+        structural_index = root / str(
+            manifest.get("structural_index_path") or "structural_index.json"
+        )
         required_files = {
             "Source Coverage": root / "source_coverage.json",
+            "全书结构索引": structural_index,
             "Arc Manifest": root / "arc_manifest.json",
             "事件记录": root / "events.jsonl",
             "实体解析": root / "entity_resolution" / "entity_resolution_map.json",
@@ -553,11 +569,19 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
             missing.append("当前主线程尚未确认")
         missing.extend(str(item) for item in readiness.get("blocking_reasons") or [])
     missing = list(dict.fromkeys(item for item in missing if item))
-    ready = not missing
+    ready = complete_markers and not missing
     handoff_status = str(handoff.get("status") or "") or None
     if ready:
         status = "READY"
         summary = "初始化已完整验收，可以进入小说工作台。"
+    elif (
+        initialization is not None
+        and not missing
+        and {manifest_state, status_state, readiness_status} <= {"READY", "READY_WITH_GAPS"}
+        and "READY_WITH_GAPS" in {manifest_state, status_state, readiness_status}
+    ):
+        status = "READY_WITH_GAPS"
+        summary = "初始化已完成当前边界，可以进入受限工作台；远期内容仍有待补齐。"
     elif handoff_status in {"CLAIMED", "RUNNING"}:
         status = "INITIALIZING"
         summary = "Codex 正在处理初始化任务，页面会自动更新进度。"
@@ -703,7 +727,8 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
     manifest = dict(initialization.get("manifest") or {})
     status_payload = dict(initialization.get("status") or {})
     depth = str(manifest.get("initialization_depth") or "FULL")
-    structural_ready = (root / "structural_index.json").is_file()
+    structural_path = root / str(manifest.get("structural_index_path") or "structural_index.json")
+    structural_ready = structural_path.is_file()
     capabilities["browse_structure"] = structural_ready
     statuses["browse_structure"] = "AVAILABLE" if structural_ready else "NOT_READY"
     readiness_payload = status_payload.get("readiness")
@@ -751,7 +776,9 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
         else StudioAccessLevel.ONBOARDING
     )
     label = (
-        "标准就绪"
+        "可用但有待补齐"
+        if readiness.status == "READY_WITH_GAPS"
+        else "标准就绪"
         if level is StudioAccessLevel.ACTION_READY
         else ("均衡准备" if depth == "BALANCED" else "快速了解")
         if level is StudioAccessLevel.LIMITED
@@ -794,6 +821,7 @@ _STATE_LABELS = {
     "INITIALIZATION_REVIEW": "等待确认",
     "FAILED": "初始化失败",
     "NEEDS_REPAIR": "需要修复",
+    "READY_WITH_GAPS": "可用但有待补齐",
     "ORIGINAL_SEED": "待生成基础框架",
     "FOUNDATION_GENERATING": "正在生成故事方案",
     "FOUNDATION_REVIEW": "等待确认基础框架",

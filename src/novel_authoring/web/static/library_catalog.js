@@ -290,9 +290,10 @@
       if (manual) feedback("书籍列表已刷新。", false);
       if (payload.revision === root.dataset.catalogRevision) return;
       var entry = currentEntry(payload, root);
-      if (entry && entry.studio_ready && document.querySelector("[data-onboarding-card]")) {
+      if (entry && entry.studio_accessible && document.querySelector("[data-onboarding-card]")) {
         root.dataset.catalogRevision = payload.revision;
-        showReady(entry);
+        if (entry.studio_ready) showReady(entry);
+        else window.location.assign(entry.href);
         return;
       }
       root.dataset.catalogRevision = payload.revision;

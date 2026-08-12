@@ -252,6 +252,79 @@ def test_valid_ready_contract_opens_full_studio_and_catalog_selector(tmp_path: P
     assert "切换 session" not in page.text
 
 
+def test_ready_with_gaps_opens_limited_studio_without_claiming_full_readiness(
+    tmp_path: Path,
+) -> None:
+    client, library, discovery = _client(tmp_path)
+    _write_novel(discovery / "有待补齐.md")
+    candidate = client.get("/api/library/catalog").json()["entries"][0]
+    created = client.post(
+        f"/api/library/candidates/{candidate['candidate_id']}/initialize",
+        headers={"X-CSRF-Token": client.app.state.csrf_token},
+        json={},
+    ).json()
+    paths = BookLayout(library).for_book(created["book_id"])
+    root = _mark_initialization_ready(Database(paths.database), created["book_id"])
+
+    manifest_path = root / "initialization_manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["state"] = "READY_WITH_GAPS"
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
+    status_path = root / "status.json"
+    status = json.loads(status_path.read_text(encoding="utf-8"))
+    status["state"] = "READY_WITH_GAPS"
+    status["readiness"]["status"] = "READY_WITH_GAPS"
+    status["readiness"]["gaps"] = ["远期路线仍有待定项"]
+    status_path.write_text(json.dumps(status, ensure_ascii=False), encoding="utf-8")
+
+    readiness = client.get(f"/api/books/{created['book_id']}/studio-readiness").json()
+    assert readiness["status"] == "READY_WITH_GAPS"
+    assert readiness["ready"] is False
+    assert readiness["missing_requirements"] == []
+
+    access = client.get(f"/api/books/{created['book_id']}/studio-access").json()
+    assert access["access_level"] == "LIMITED"
+    assert access["accessible"] is True
+    assert access["author_label"] == "可用但有待补齐"
+    catalog = client.get("/api/library/catalog").json()
+    entry = next(item for item in catalog["entries"] if item["book_id"] == created["book_id"])
+    assert entry["state"] == "READY_WITH_GAPS"
+    assert entry["studio_ready"] is False
+    assert entry["studio_accessible"] is True
+    assert entry["primary_action"] == "OPEN_STUDIO"
+    page = client.get(created["workbench_url"])
+    assert page.status_code == 200
+    assert "初始化尚未完整" not in page.text
+    assert "data-wb-chapter-tree" in page.text
+
+
+def test_ready_with_gaps_without_structural_index_stays_blocked(tmp_path: Path) -> None:
+    client, library, discovery = _client(tmp_path)
+    _write_novel(discovery / "缺结构索引.md")
+    candidate = client.get("/api/library/catalog").json()["entries"][0]
+    created = client.post(
+        f"/api/library/candidates/{candidate['candidate_id']}/initialize",
+        headers={"X-CSRF-Token": client.app.state.csrf_token},
+        json={},
+    ).json()
+    paths = BookLayout(library).for_book(created["book_id"])
+    database = Database(paths.database)
+    root = _mark_initialization_ready(database, created["book_id"])
+    (root / "structural_index.json").unlink()
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE workflow_handoffs SET status='COMPLETED' WHERE handoff_id=?",
+            (created["handoff_id"],),
+        )
+
+    readiness = client.get(f"/api/books/{created['book_id']}/studio-readiness").json()
+    assert readiness["status"] == "NEEDS_REPAIR"
+    assert "全书结构索引缺失" in readiness["missing_requirements"]
+    access = client.get(f"/api/books/{created['book_id']}/studio-access").json()
+    assert access["access_level"] == "ONBOARDING"
+    assert access["accessible"] is False
+
+
 def test_library_and_selector_share_catalog_and_poll_without_mutation(tmp_path: Path) -> None:
     client, library, discovery = _client(tmp_path)
     _write_novel(discovery / "候选甲.md")
@@ -273,6 +346,7 @@ def test_library_and_selector_share_catalog_and_poll_without_mutation(tmp_path: 
     assert "10000" in script
     assert "data-current-book-option-state-label" in script
     assert "showReady" in script
+    assert "studio_accessible" in script
     assert "location.reload" not in script
     assert "data-onboarding-activity-count" in script
     assert not library.exists()
