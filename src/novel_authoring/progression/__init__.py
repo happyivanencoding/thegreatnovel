@@ -78,6 +78,14 @@ from novel_authoring.progression.resources import (
     evaluate_resource_gate,
     project_opportunity_surface,
 )
+from novel_authoring.progression.scheduler import (
+    ChapterIntent,
+    ChapterIntentRecommendation,
+    SchedulerOverride,
+    load_scheduler_override,
+    recommend_chapter_intent,
+    save_scheduler_override,
+)
 
 __all__ = [
     "AbilityUnlockMode",
@@ -91,6 +99,8 @@ __all__ = [
     "AuthoringPreset",
     "BUILTIN_STORY_PROFILES",
     "BUILTIN_GENRE_ADAPTERS",
+    "ChapterIntent",
+    "ChapterIntentRecommendation",
     "BreakthroughGate",
     "BreakthroughGateType",
     "BreakthroughModel",
@@ -128,6 +138,7 @@ __all__ = [
     "ResourceGateAssessment",
     "QualitativeReadiness",
     "RuntimeGenreCapabilities",
+    "SchedulerOverride",
     "SerialForm",
     "SettingSkin",
     "StoryProfile",
@@ -142,8 +153,11 @@ __all__ = [
     "compile_derived_adapter",
     "effective_genre_contract",
     "evaluate_resource_gate",
+    "load_scheduler_override",
     "progression_contract_from_derived",
     "project_progression_state",
     "project_opportunity_surface",
     "project_world_expansion_state",
+    "recommend_chapter_intent",
+    "save_scheduler_override",
 ]
