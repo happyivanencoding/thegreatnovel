@@ -10,7 +10,7 @@ novel library list
 
 ```powershell
 novel library import `
-  --book-id cable-survival-demo `
+  --book-id example-book `
   --source C:\dev\小说续写系统\book\全民纜車求生，我一級一個三選一_正文全集.md
 ```
 
@@ -21,7 +21,7 @@ novel library import `
 检查路径：
 
 ```powershell
-novel library paths --book-id cable-survival-demo
+novel library paths --book-id example-book
 ```
 
 Portable Snapshot 由 `novel atlas export-snapshot` 写入

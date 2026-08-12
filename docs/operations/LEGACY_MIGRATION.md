@@ -4,9 +4,9 @@
 
 ```powershell
 novel library migrate-legacy `
-  --book-id cable-survival-demo `
+  --book-id example-book `
   --source-root C:\path\to\legacy\_source `
-  --workspace-root C:\path\to\legacy\cable-survival-demo `
+  --workspace-root C:\path\to\legacy\example-book `
   --library-root C:\dev\小说续写系统\library `
   --dry-run
 ```

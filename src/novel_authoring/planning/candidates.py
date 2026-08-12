@@ -895,11 +895,13 @@ def prepare_handoff_candidate_task(
             "三个 lens 必须分别为 CONTINUITY_ACTIVE_THREAD、EARNED_OPPORTUNITY、"
             "FORWARD_EXPANSION，且任意两案至少三个结构维度不同。",
             "每案必须填写 author_control_trace；命中本次 WORKFLOW_GOAL intent，并说明"
-            " M500 弹药、林雨薇合作和资源代价如何进入因果链。",
+            "冻结资源、关系、知识边界与真实代价如何进入因果链。",
             "每案必须逐一填写九维 profile_alignment，并对全部 MUST/MUST_NOT edit_id"
             " 给出 passed 与证据。硬约束失败不得靠创新分抵消。",
             "所有事实必须来自 world_state_context.json 或 handoff 冻结证据；未来新增只能"
             "作为 CANDIDATE，并填写 novelty provenance。",
+            "不得引用任何未出现在 Author Goal、World State、Resource、Relationship、"
+            "Knowledge Boundary、Active Threads 或 Kernel Context 中的人物、物品、能力或专名。",
             "当前 provenance-aware 指标若为 INCOMPLETE，必须保留缺失，不得伪造分数或证据。",
             "",
             "## 本次作者目标",
