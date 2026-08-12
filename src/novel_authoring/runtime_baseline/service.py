@@ -8,7 +8,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from novel_authoring.canon.projection import CanonProjection, rebuild_projection
+from novel_authoring.canon.projection import CanonProjection, load_projection, rebuild_projection
 from novel_authoring.db.database import Database
 from novel_authoring.distill.models import DistillScope, EvidenceMappingStatus
 from novel_authoring.edition import edition_chapters, resolve_edition_id
@@ -722,11 +722,8 @@ def load_effective_runtime_state(
     baseline = latest_runtime_baseline(database, book_id, edition_id=edition_id)
     if baseline is None:
         return None
-    projection = rebuild_projection(
-        database,
-        book_id,
-        edition_id=baseline.manifest.edition_id,
-        persist=False,
+    projection = load_projection(
+        database, book_id, edition_id=baseline.manifest.edition_id
     )
     return build_effective_runtime_state(baseline, projection)
 

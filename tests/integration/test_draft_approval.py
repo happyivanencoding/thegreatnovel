@@ -6,6 +6,7 @@ from typing import Any
 
 import pytest
 
+import novel_authoring.validation.service as validation_service
 from novel_authoring.canon.events import EventStatus, EventStore
 from novel_authoring.canon.projection import rebuild_projection
 from novel_authoring.config import load_settings
@@ -319,6 +320,52 @@ def test_ten_validators_approval_snapshot_and_rebuild(tmp_path: Path) -> None:
     assert rebuilt.facts["fact_resource_free"]["predicate"] == "resource_pressure"
     assert rebuilt.committed_chapters[str(result["chapter_id"])]["ordinal"] == 3
     assert sha256_file(source_path) == source_hash
+
+
+def test_validation_is_reused_and_approval_does_not_run_validators(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database, _, contract = _setup_contract(tmp_path)
+    draft_id = _import_output(database, contract)
+    validator_calls: list[str] = []
+    projection_calls = 0
+    original_projection = validation_service.load_projection
+    wrapped_validators = []
+    for validator in validation_service.VALIDATORS:
+        def counted(context: object, validator: Callable[..., Any] = validator) -> Any:
+            validator_calls.append(str(getattr(validator, "__name__", "validator")))
+            return validator(context)
+
+        wrapped_validators.append(counted)
+
+    def counted_projection(*args: object, **kwargs: object) -> object:
+        nonlocal projection_calls
+        projection_calls += 1
+        return original_projection(*args, **kwargs)
+
+    monkeypatch.setattr(validation_service, "VALIDATORS", tuple(wrapped_validators))
+    monkeypatch.setattr(validation_service, "load_projection", counted_projection)
+
+    first = validate_draft(database, BOOK_ID, draft_id)
+    second = validate_draft(database, BOOK_ID, draft_id)
+    assert second.run_id == first.run_id
+    assert len(validator_calls) == len(VALIDATOR_NAMES)
+    assert projection_calls == 2
+    approve_draft(database, BOOK_ID, draft_id, confirmation="批准写入正史")
+    assert len(validator_calls) == len(VALIDATOR_NAMES)
+
+
+def test_approval_rejects_a_stale_contract_without_revalidation(tmp_path: Path) -> None:
+    database, _, contract = _setup_contract(tmp_path)
+    draft_id = _import_output(database, contract)
+    assert validate_draft(database, BOOK_ID, draft_id).passed
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE chapter_contracts SET status='STALE' WHERE contract_id=?",
+            (contract.contract_id,),
+        )
+    with pytest.raises(ApprovalWorkflowError, match="需要重新校验"):
+        approve_draft(database, BOOK_ID, draft_id, confirmation="批准写入正史")
 
 
 def test_canon_conflict_timeline_conflict_and_knowledge_leak_fail(

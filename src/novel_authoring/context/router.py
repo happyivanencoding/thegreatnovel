@@ -10,7 +10,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from novel_authoring.canon.projection import rebuild_projection
+from novel_authoring.canon.projection import load_projection
 from novel_authoring.db.database import Database
 from novel_authoring.distill.models import (
     CharacterVoiceProfile,
@@ -38,7 +38,6 @@ from novel_authoring.storage.operations import book_root
 class ContextPurpose(StrEnum):
     CANDIDATE_PLANNING = "candidate_planning"
     DRAFT = "draft"
-    VALIDATION = "validation"
 
 
 class RuntimeContextRequest(BaseModel):
@@ -123,12 +122,10 @@ def _default_request(purpose: ContextPurpose) -> RuntimeContextRequest:
     dimensions = {
         ContextPurpose.CANDIDATE_PLANNING: ["plot", "pacing", "themes", "continuity"],
         ContextPurpose.DRAFT: ["characters", "style", "narrative", "dialogue"],
-        ContextPurpose.VALIDATION: ["continuity", "style", "narrative", "dialogue"],
     }[purpose]
     uses = {
         ContextPurpose.CANDIDATE_PLANNING: ["candidate_planning"],
         ContextPurpose.DRAFT: ["draft_controls"],
-        ContextPurpose.VALIDATION: ["soft_validation"],
     }[purpose]
     return RuntimeContextRequest(purpose=purpose, dimensions=dimensions, runtime_uses=uses)
 
@@ -258,13 +255,7 @@ def _purpose_artifacts(
             voices if request.subject_ids or "dialogue" in request.dimensions else [],
             themes if "themes" in request.dimensions else [],
         )
-    return (
-        arcs if "plot" in request.dimensions or "narrative" in request.dimensions else [],
-        continuity,
-        controls,
-        voices if "dialogue" in request.dimensions or request.subject_ids else [],
-        themes if "themes" in request.dimensions else [],
-    )
+    raise ValueError(f"不支持的 Runtime Context purpose：{purpose}")
 
 
 def route_runtime_context(
@@ -289,10 +280,16 @@ def route_runtime_context(
     selected_request = request or _default_request(selected_purpose)
     if selected_request.purpose is not selected_purpose:
         raise ValueError("RuntimeContextRequest purpose 与 router purpose 不一致")
-    projection = rebuild_projection(
-        database, book_id, edition_id=selected_edition, persist=False
+    projection = (
+        None
+        if boundary is not None
+        else load_projection(database, book_id, edition_id=selected_edition)
     )
-    hard_boundary = dict(boundary or projection.model_dump(mode="json"))
+    hard_boundary = dict(
+        boundary
+        if boundary is not None
+        else projection.model_dump(mode="json") if projection is not None else {}
+    )
     runtime_state_enabled = selected_request.include_runtime_state
     earned = (
         load_earned_surface(database, book_id, edition_id=selected_edition)
@@ -354,41 +351,94 @@ def route_runtime_context(
     if not package_root.is_dir():
         bundle.warnings.append("Distill Package machine root 不存在")
         return bundle
-    observations_path = package_root / "observations.jsonl"
-    if observations_path.is_file():
+    manifest_path = Path(str(reference.get("machine_manifest") or "")).expanduser()
+    if not manifest_path.is_file():
+        bundle.warnings.append("Distill Package manifest 不存在")
+        return bundle
+    manifest = _read_json(manifest_path)
+    if not isinstance(manifest, dict) or not isinstance(manifest.get("artifacts"), dict):
+        raise ValueError(f"Context Router manifest 无效：{manifest_path}")
+    artifact_values = {
+        str(key): str(value) for key, value in manifest["artifacts"].items()
+    }
+    skill_root = Path(str(reference.get("skill_root") or package_root.parent)).expanduser()
+
+    def artifact_path(name: str) -> Path | None:
+        relative = artifact_values.get(f"machine/{name}")
+        if relative is None:
+            return None
+        path = skill_root / relative
+        if not path.is_file():
+            raise ValueError(f"Context Router manifest artifact 不存在：{path}")
+        return path
+
+    scope_is_self = str(reference.get("scope") or "") == "SELF_BOOK"
+    observations_path = artifact_path("observations.jsonl")
+    if observations_path is not None:
         for line in observations_path.read_text(encoding="utf-8").splitlines():
             if line.strip():
                 observation = DistilledObservation.model_validate(json.loads(line))
                 if _matches(observation, selected_request):
                     bundle.observations.append(observation)
+    arcs_path = (
+        artifact_path("literary_arcs.json")
+        if scope_is_self and selected_purpose is ContextPurpose.CANDIDATE_PLANNING
+        else None
+    )
     arcs = [
         item
-        for item in _read_json_array(package_root / "literary_arcs.json", LiteraryArc)
+        for item in ([] if arcs_path is None else _read_json_array(arcs_path, LiteraryArc))
         if _artifact_matches(item, selected_request)
     ]
+    continuity_path = (
+        artifact_path("continuity_candidates.jsonl")
+        if scope_is_self
+        and selected_purpose in {ContextPurpose.CANDIDATE_PLANNING, ContextPurpose.DRAFT}
+        else None
+    )
     continuity = [
         item
-        for item in _read_jsonl(
-            package_root / "continuity_candidates.jsonl", ContinuityCandidate
+        for item in (
+            []
+            if continuity_path is None
+            else _read_jsonl(continuity_path, ContinuityCandidate)
         )
         if item.verification_status.value != "RESOLVED"
         and _artifact_matches(item, selected_request)
     ]
+    controls_path = artifact_path("craft_controls.json")
     controls = [
         item
-        for item in _read_json_array(package_root / "craft_controls.json", CraftControl)
-        if _artifact_matches(item, selected_request)
-    ]
-    voices = [
-        item
-        for item in _read_json_array(
-            package_root / "character_voice_profiles.json", CharacterVoiceProfile
+        for item in (
+            [] if controls_path is None else _read_json_array(controls_path, CraftControl)
         )
         if _artifact_matches(item, selected_request)
     ]
+    needs_voices = scope_is_self and (
+        selected_purpose is ContextPurpose.CANDIDATE_PLANNING
+        or selected_request.subject_ids
+        or "dialogue" in selected_request.dimensions
+    )
+    voices_path = artifact_path("character_voice_profiles.json") if needs_voices else None
+    voices = [
+        item
+        for item in (
+            []
+            if voices_path is None
+            else _read_json_array(voices_path, CharacterVoiceProfile)
+        )
+        if _artifact_matches(item, selected_request)
+    ]
+    themes_path = (
+        artifact_path("theme_questions.json")
+        if scope_is_self and "themes" in selected_request.dimensions
+        else None
+    )
     themes = [
         item
-        for item in _read_json_array(package_root / "theme_questions.json", ThemeQuestion)
+        for item in (
+            [] if themes_path is None else _read_json_array(themes_path, ThemeQuestion)
+        )
         if _artifact_matches(item, selected_request)
     ]
     (

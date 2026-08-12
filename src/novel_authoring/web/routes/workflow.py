@@ -11,10 +11,11 @@ from novel_authoring.edition import (
     resolve_edition_id,
 )
 from novel_authoring.planning.innovation import resolve_innovation_control
+from novel_authoring.utils import stable_id, utc_now
 from novel_authoring.workflows.handoffs import (
+    HandoffType,
     create_continuation_handoff,
     create_revision_handoff,
-    refresh_handoff_planning_aggregate,
 )
 
 
@@ -63,9 +64,22 @@ def prepare_continuation(database: Any, book_id: str, request: Any) -> dict[str,
         focus=request.innovation_focus,
         save_as_book_default=request.save_as_book_default,
     )
+    selected_edition = resolve_edition_id(database, book_id, request.edition_id)
+    handoff_id = stable_id(
+        "handoff",
+        book_id,
+        selected_edition,
+        HandoffType.CONTINUATION.value,
+        request.requested_stage,
+        utc_now(),
+    )
+    author_intent = _record_workflow_goal(
+        database, book_id, request, {"handoff_id": handoff_id}
+    )
     handoff = create_continuation_handoff(
         database,
         book_id,
+        handoff_id=handoff_id,
         edition_id=request.edition_id,
         requested_stage=request.requested_stage,
         require_complete_metrics=request.require_complete_metrics,
@@ -75,9 +89,7 @@ def prepare_continuation(database: Any, book_id: str, request: Any) -> dict[str,
         author_goal=request.author_goal,
         author_task_ids=request.author_task_ids,
     )
-    handoff["author_intent"] = _record_workflow_goal(database, book_id, request, handoff)
-    if handoff["author_intent"] is not None:
-        handoff.update(refresh_handoff_planning_aggregate(database, str(handoff["handoff_id"])))
+    handoff["author_intent"] = author_intent
     return handoff
 
 
@@ -124,9 +136,21 @@ def prepare_revision(database: Any, book_id: str, request: Any) -> dict[str, Any
         focus=request.innovation_focus,
         save_as_book_default=request.save_as_book_default,
     )
+    handoff_id = stable_id(
+        "handoff",
+        book_id,
+        created_edition.edition_id,
+        HandoffType.REVISION.value,
+        request.requested_stage,
+        utc_now(),
+    )
+    author_intent = _record_workflow_goal(
+        database, book_id, request, {"handoff_id": handoff_id}
+    )
     handoff = create_revision_handoff(
         database,
         book_id,
+        handoff_id=handoff_id,
         edition_id=created_edition.edition_id,
         requested_stage=request.requested_stage,
         require_complete_metrics=request.require_complete_metrics,
@@ -136,8 +160,6 @@ def prepare_revision(database: Any, book_id: str, request: Any) -> dict[str, Any
         author_goal=request.author_goal,
         author_task_ids=request.author_task_ids,
     )
-    handoff["author_intent"] = _record_workflow_goal(database, book_id, request, handoff)
-    if handoff["author_intent"] is not None:
-        handoff.update(refresh_handoff_planning_aggregate(database, str(handoff["handoff_id"])))
+    handoff["author_intent"] = author_intent
     handoff["created_edition"] = created_edition.model_dump(mode="json")
     return handoff

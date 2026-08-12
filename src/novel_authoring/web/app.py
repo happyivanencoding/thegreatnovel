@@ -2468,8 +2468,13 @@ def create_app(
                     draft["output"] = {"raw": draft.get("output_json", "")}
                 reports = connection.execute(
                     "SELECT validator, severity, passed, report_json, run_id "
-                    "FROM validation_reports WHERE draft_id=? ORDER BY validator, created_at",
-                    (str(row["draft_id"]),),
+                    "FROM validation_reports WHERE draft_id=? AND edition_id=? "
+                    "AND run_id=? ORDER BY validator, created_at",
+                    (
+                        str(row["draft_id"]),
+                        str(row["edition_id"]),
+                        draft.get("validation_run_id"),
+                    ),
                 ).fetchall()
                 draft["validation_reports"] = []
                 for report in reports:

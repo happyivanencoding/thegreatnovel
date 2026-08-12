@@ -26,7 +26,6 @@ from novel_authoring.progression.scheduler import (
 )
 from novel_authoring.progression.service import (
     ProgressionContractType,
-    effective_contract_records,
     list_contract_records,
 )
 from novel_authoring.progression.workspace import build_progression_workspace_from_world_state
@@ -284,6 +283,7 @@ def build_kernel_planning_context(
     context_chapter_id: str | None = None,
     target_chapter_id: str | None = None,
     target_chapter_ordinal: int | None = None,
+    world_state: Mapping[str, Any] | None = None,
 ) -> KernelPlanningContext | None:
     """Freeze the state through one real chapter for planning the next chapter."""
 
@@ -294,11 +294,15 @@ def build_kernel_planning_context(
     if not chapters:
         return None
     selected_chapter_id = context_chapter_id or str(chapters[-1]["chapter_id"])
-    world_state = build_story_game_state(
-        database,
-        book_id,
-        edition_id,
-        chapter_id=selected_chapter_id,
+    world_state = (
+        dict(world_state)
+        if world_state is not None
+        else build_story_game_state(
+            database,
+            book_id,
+            edition_id,
+            chapter_id=selected_chapter_id,
+        )
     )
     chapter = world_state.get("chapter")
     if (
@@ -311,14 +315,15 @@ def build_kernel_planning_context(
     if planning_ordinal < context_ordinal:
         raise ValueError("Kernel Planning Context 的目标章不能早于状态上下文章")
 
-    all_effective = effective_contract_records(
+    all_records = list_contract_records(
         database,
         book_id=book_id,
         edition_id=edition_id,
     )
     active_records = {
-        contract_type: record
-        for contract_type, record in all_effective.items()
+        record.contract_type: record
+        for record in all_records
+        if record.status.value == "EFFECTIVE"
         if int(record.effective_from_boundary or 0) <= planning_ordinal
     }
     effective_values: dict[str, dict[str, Any] | None] = {
@@ -338,11 +343,7 @@ def build_kernel_planning_context(
         )
     proposals = [
         record.model_dump(mode="json")
-        for record in list_contract_records(
-            database,
-            book_id=book_id,
-            edition_id=edition_id,
-        )
+        for record in all_records
         if record.status.value in {"INFERRED_PROPOSAL", "NEEDS_REVIEW"}
     ]
     workspace = build_progression_workspace_from_world_state(

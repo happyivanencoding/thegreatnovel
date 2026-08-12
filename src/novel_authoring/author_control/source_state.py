@@ -403,12 +403,16 @@ def list_source_chapter_deltas(
     book_id: str,
     edition_id: str,
     *,
+    after_chapter_ordinal: int | None = None,
     through_chapter_ordinal: int | None = None,
 ) -> list[SourceChapterStateDelta]:
     sql = (
         "SELECT * FROM source_state_deltas WHERE book_id=? AND edition_id=?"
     )
     parameters: list[Any] = [book_id, edition_id]
+    if after_chapter_ordinal is not None:
+        sql += " AND chapter_ordinal>?"
+        parameters.append(after_chapter_ordinal)
     if through_chapter_ordinal is not None:
         sql += " AND chapter_ordinal<=?"
         parameters.append(through_chapter_ordinal)
@@ -694,6 +698,7 @@ def build_source_state_projection(
     chapter_id: str | None,
     chapter_ordinal: int | None,
     materialize_snapshot: bool = True,
+    include_verified_history: bool = False,
 ) -> dict[str, Any]:
     """Replay only verified source deltas up to the requested chapter."""
 
@@ -708,35 +713,7 @@ def build_source_state_projection(
         if chapter_id is not None and chapter_ordinal is not None
         else None
     )
-    deltas = list_source_chapter_deltas(
-        connection,
-        book_id,
-        edition_id,
-        through_chapter_ordinal=chapter_ordinal,
-    )
-    verified = [
-        delta
-        for delta in deltas
-        if delta.verification_status is SourceStateVerification.SOURCE_VERIFIED
-    ]
-    uncertain = [
-        delta
-        for delta in deltas
-        if delta.verification_status is not SourceStateVerification.SOURCE_VERIFIED
-    ]
-    selected = [delta for delta in deltas if delta.chapter_id == chapter_id]
-    selected_verified = [
-        delta
-        for delta in selected
-        if delta.verification_status is SourceStateVerification.SOURCE_VERIFIED
-    ]
-    selected_uncertain = [
-        delta
-        for delta in selected
-        if delta.verification_status is not SourceStateVerification.SOURCE_VERIFIED
-    ]
     records: dict[str, dict[str, dict[str, Any]]] = {}
-    applied_delta_ids: set[str] = set()
     snapshot_ordinal: int | None = None
     if chapter_ordinal is not None:
         snapshot = connection.execute(
@@ -758,13 +735,47 @@ def build_source_state_projection(
                     for category, values in raw_records.items()
                     if isinstance(values, dict)
                 }
-            applied_delta_ids = {str(item) for item in cached.get("applied_delta_ids", [])}
             snapshot_ordinal = int(snapshot["chapter_ordinal"])
+
+    deltas = list_source_chapter_deltas(
+        connection,
+        book_id,
+        edition_id,
+        after_chapter_ordinal=snapshot_ordinal,
+        through_chapter_ordinal=chapter_ordinal,
+    )
+    verified = [
+        delta
+        for delta in deltas
+        if delta.verification_status is SourceStateVerification.SOURCE_VERIFIED
+    ]
+    selected = (
+        []
+        if chapter_id is None
+        else [
+            source_delta_from_row(row)
+            for row in connection.execute(
+                """
+                SELECT * FROM source_state_deltas
+                WHERE book_id=? AND edition_id=? AND chapter_id=?
+                ORDER BY chapter_ordinal, created_at, delta_id
+                """,
+                (book_id, edition_id, chapter_id),
+            ).fetchall()
+        ]
+    )
+    selected_verified = [
+        delta
+        for delta in selected
+        if delta.verification_status is SourceStateVerification.SOURCE_VERIFIED
+    ]
+    selected_uncertain = [
+        delta
+        for delta in selected
+        if delta.verification_status is not SourceStateVerification.SOURCE_VERIFIED
+    ]
     for delta in verified:
-        if delta.delta_id in applied_delta_ids:
-            continue
         _apply_delta(records, delta)
-        applied_delta_ids.add(delta.delta_id)
     if materialize_snapshot and chapter_ordinal is not None and (
         verified or (coverage is not None and coverage.complete)
     ):
@@ -775,15 +786,52 @@ def build_source_state_projection(
             chapter_id=chapter_id,
             chapter_ordinal=chapter_ordinal,
             records=records,
-            applied_delta_ids=applied_delta_ids,
         )
-    previous_chapter = max(
-        (
-            delta.chapter_ordinal
-            for delta in verified
-            if chapter_ordinal is None or delta.chapter_ordinal < chapter_ordinal
-        ),
-        default=None,
+    count_where = "WHERE book_id=? AND edition_id=?"
+    count_parameters: list[Any] = [book_id, edition_id]
+    if chapter_ordinal is not None:
+        count_where += " AND chapter_ordinal<=?"
+        count_parameters.append(chapter_ordinal)
+    counts = connection.execute(
+        f"""
+        SELECT COUNT(*) AS total,
+               SUM(CASE WHEN verification_status='SOURCE_VERIFIED' THEN 1 ELSE 0 END)
+                   AS verified,
+               SUM(CASE WHEN verification_status<>'SOURCE_VERIFIED' THEN 1 ELSE 0 END)
+                   AS uncertain
+        FROM source_state_deltas {count_where}
+        """,
+        tuple(count_parameters),
+    ).fetchone()
+    previous_parameters: list[Any] = [book_id, edition_id]
+    previous_sql = (
+        "SELECT MAX(chapter_ordinal) AS chapter_ordinal FROM source_state_deltas "
+        "WHERE book_id=? AND edition_id=? AND verification_status='SOURCE_VERIFIED'"
+    )
+    if chapter_ordinal is not None:
+        previous_sql += " AND chapter_ordinal<?"
+        previous_parameters.append(chapter_ordinal)
+    previous_row = connection.execute(
+        previous_sql, tuple(previous_parameters)
+    ).fetchone()
+    previous_chapter = (
+        None
+        if previous_row is None or previous_row["chapter_ordinal"] is None
+        else int(previous_row["chapter_ordinal"])
+    )
+    verified_history = (
+        [
+            _delta_record(delta)
+            for delta in list_source_chapter_deltas(
+                connection,
+                book_id,
+                edition_id,
+                through_chapter_ordinal=chapter_ordinal,
+            )
+            if delta.verification_status is SourceStateVerification.SOURCE_VERIFIED
+        ]
+        if include_verified_history
+        else []
     )
     queued = _hydration_task(connection, book_id, edition_id, chapter_id)
     coverage_status = (
@@ -806,9 +854,9 @@ def build_source_state_projection(
         ),
         "coverage_status": coverage_status.value,
         "state_changed": bool(selected_verified),
-        "ledger_delta_count": len(deltas),
-        "verified_delta_count": len(verified),
-        "uncertain_delta_count": len(uncertain),
+        "ledger_delta_count": int(counts["total"] or 0),
+        "verified_delta_count": int(counts["verified"] or 0),
+        "uncertain_delta_count": int(counts["uncertain"] or 0),
         "chapter_verified_delta_count": len(selected_verified),
         "chapter_uncertain_delta_count": len(selected_uncertain),
         "chapter_delta": {
@@ -816,13 +864,13 @@ def build_source_state_projection(
             "confirmed": [_delta_record(delta) for delta in selected_verified],
             "uncertain": [_delta_record(delta) for delta in selected_uncertain],
         },
-        "verified_history": [_delta_record(delta) for delta in verified],
+        "verified_history": verified_history,
         "previous_projection_chapter_ordinal": previous_chapter,
         "snapshot_chapter_ordinal": snapshot_ordinal,
         "records": {
             category: list(values.values()) for category, values in records.items()
         },
-        "uncertain_records": [_delta_record(delta) for delta in uncertain],
+        "uncertain_records": [_delta_record(delta) for delta in selected_uncertain],
         "hydration": {
             "required": not coverage_complete,
             "queued": queued is not None,
@@ -903,7 +951,6 @@ def _write_source_snapshot(
     chapter_id: str | None,
     chapter_ordinal: int,
     records: dict[str, dict[str, dict[str, Any]]],
-    applied_delta_ids: set[str],
 ) -> None:
     connection.execute(
         """
@@ -923,7 +970,7 @@ def _write_source_snapshot(
             edition_id,
             chapter_id,
             chapter_ordinal,
-            _json({"records": records, "applied_delta_ids": sorted(applied_delta_ids)}),
+            _json({"records": records}),
             utc_now(),
             _SOURCE_STATE_SNAPSHOT_VERSION,
         ),

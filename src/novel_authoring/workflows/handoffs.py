@@ -18,8 +18,9 @@ from novel_authoring.author_control.book_profile import (
     import_profile_reanalysis_result,
     load_effective_book_profile,
 )
+from novel_authoring.author_control.projections import build_story_game_state
 from novel_authoring.author_control.source_state import SourceChapterStateDelta
-from novel_authoring.canon.projection import projection_from_connection
+from novel_authoring.canon.projection import load_projection_from_connection
 from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
 from novel_authoring.edition import edition_chapters, resolve_edition_id
@@ -30,6 +31,7 @@ from novel_authoring.original.models import OriginalBootstrapProposal
 from novel_authoring.original.state import is_original_book
 from novel_authoring.planning.aggregates import build_planning_aggregate
 from novel_authoring.planning.batch import get_batch_plan, get_batch_projection
+from novel_authoring.planning.boundary import build_boundary_packet
 from novel_authoring.planning.innovation import (
     InnovationControl,
     resolve_innovation_control,
@@ -473,6 +475,7 @@ def create_handoff(
     original_bootstrap_request: dict[str, Any] | None = None,
     prepared_draft_task: dict[str, Any] | None = None,
     kernel_discovery_request: dict[str, Any] | None = None,
+    handoff_id: str | None = None,
 ) -> dict[str, Any]:
     database.initialize()
     selected = resolve_edition_id(database, book_id, edition_id)
@@ -486,7 +489,7 @@ def create_handoff(
     if not bool(verification.get("ok")):
         raise HandoffWorkflowError("source verify 失败，不能创建 handoff")
     with database.connect() as connection:
-        projection = projection_from_connection(connection, book_id, selected)
+        projection = load_projection_from_connection(connection, book_id, selected)
         chapter_count = len(edition_chapters(connection, book_id, selected))
         edition_row = connection.execute(
             "SELECT status FROM editions WHERE book_id=? AND edition_id=?",
@@ -555,16 +558,12 @@ def create_handoff(
             "config_hash": sha256_bytes(json_dumps(load_settings().metrics).encode("utf-8")),
         }
         latest = None
-        planning_aggregate = {"aggregate_id": None, "bundle_hash": None}
+        planning_aggregate: dict[str, Any] = {
+            "aggregate_id": None,
+            "bundle_hash": None,
+        }
     else:
         metric_context, latest = _current_metric_anchor(database, book_id, selected)
-        planning_aggregate = build_planning_aggregate(
-            database,
-            book_id,
-            edition_id=selected,
-            author_policy={"source": "handoff-freeze", "policy_version": "v1"},
-            context_chapter_id=context_chapter_id,
-        )
     if metric_run_id is None and latest is not None:
         metric_run_id = str(latest["run"]["run_id"])
     if metric_run_id is None:
@@ -580,11 +579,17 @@ def create_handoff(
     manifest_hash = _manifest_hash(database, book_id)
     with database.connect() as connection:
         rhythm_row = connection.execute(
-            "SELECT snapshot_id FROM rhythm_diagnostic_snapshots WHERE book_id=? AND edition_id=? "
+            "SELECT snapshot_id, snapshot_json FROM rhythm_diagnostic_snapshots "
+            "WHERE book_id=? AND edition_id=? "
             "ORDER BY as_of_chapter DESC, created_at DESC LIMIT 1",
             (book_id, selected),
         ).fetchone()
     rhythm_snapshot_id = None if rhythm_row is None else str(rhythm_row["snapshot_id"])
+    rhythm_snapshot = (
+        None
+        if rhythm_row is None
+        else json.loads(str(rhythm_row["snapshot_json"]))
+    )
     rhythm_required = (
         handoff_type
         in {
@@ -596,6 +601,52 @@ def create_handoff(
     )
     if rhythm_snapshot_id is None and rhythm_required:
         raise HandoffWorkflowError("当前 edition 没有 Rhythm Snapshot，不能冻结 handoff")
+    frozen_world_state: dict[str, Any] | None = None
+    frozen_boundary: dict[str, object] | None = None
+    frozen_context_chapter_id = context_chapter_id
+    if handoff_type is HandoffType.CONTINUATION and not original_genesis:
+        with database.connect() as connection:
+            continuation_chapters = edition_chapters(connection, book_id, selected)
+        if not continuation_chapters:
+            raise HandoffWorkflowError("没有可用章节，不能冻结续写上下文")
+        frozen_context_chapter_id = context_chapter_id or str(
+            continuation_chapters[-1]["chapter_id"]
+        )
+        frozen_world_state = build_story_game_state(
+            database,
+            book_id,
+            selected,
+            chapter_id=frozen_context_chapter_id,
+            include_knowledge_view=False,
+        )
+        frozen_boundary = build_boundary_packet(
+            database,
+            book_id,
+            edition_id=selected,
+            innovation_control=selected_innovation,
+            source_verification=verification,
+            projection=projection,
+            rhythm_snapshot=rhythm_snapshot,
+        )
+    if not (
+        initialization_handoff
+        or distill_handoff
+        or hydration_handoff
+        or profile_handoff
+        or original_bootstrap_handoff
+        or kernel_discovery_handoff
+        or original_genesis
+    ):
+        planning_aggregate = build_planning_aggregate(
+            database,
+            book_id,
+            edition_id=selected,
+            author_policy={"source": "handoff-freeze", "policy_version": "v1"},
+            context_chapter_id=frozen_context_chapter_id,
+            rhythm_snapshot_id=rhythm_snapshot_id,
+            projection=projection,
+            world_state=frozen_world_state,
+        )
     current_atlas = latest_atlas(database, book_id, selected)
     if atlas_id is not None:
         with database.connect() as connection:
@@ -643,7 +694,7 @@ def create_handoff(
     )
     horizon_hash = None if current_atlas is None else str(current_atlas["horizon_hash"] or "")
     readiness_status = None if current_atlas is None else str(current_atlas["readiness_status"])
-    handoff_id = stable_id(
+    handoff_id = handoff_id or stable_id(
         "handoff", book_id, selected, handoff_type.value, requested_stage, utc_now()
     )
     canonical_layout = (workspace_root / "book.yaml").is_file()
@@ -784,6 +835,21 @@ def create_handoff(
             if planning_aggregate.get("kernel_context") is not None
             else None
         ),
+        "world_state_context_path": (
+            "world_state_context.json" if frozen_world_state is not None else None
+        ),
+        "boundary_packet_id": (
+            None if frozen_boundary is None else frozen_boundary["packet_id"]
+        ),
+        "boundary_packet_sha256": (
+            None if frozen_boundary is None else frozen_boundary["packet_sha256"]
+        ),
+        "boundary_packet_json_path": (
+            None if frozen_boundary is None else frozen_boundary["json_path"]
+        ),
+        "boundary_packet_markdown_path": (
+            None if frozen_boundary is None else frozen_boundary["markdown_path"]
+        ),
         "effective_content_sha256": metric_context.get("effective_content_sha256"),
         "rhythm_snapshot_id": rhythm_snapshot_id,
         "registry_hash": metric_context.get("registry_hash", ""),
@@ -800,7 +866,7 @@ def create_handoff(
             None if selected_innovation is None else selected_innovation.model_dump(mode="json")
         ),
         "innovation_source": innovation_source or None,
-        "context_chapter_id": context_chapter_id,
+        "context_chapter_id": frozen_context_chapter_id,
         "author_goal": normalized_author_goal,
         "author_task_ids": selected_author_task_ids,
         "atlas_output_directory": str(atlas_output_directory),
@@ -1116,6 +1182,8 @@ def create_handoff(
     manifest_paths = ["task.json", "prompt.md", "metric_context.json", "output_schema.json"]
     if planning_aggregate.get("kernel_context") is not None:
         manifest_paths.append("kernel_context.json")
+    if frozen_world_state is not None:
+        manifest_paths.append("world_state_context.json")
     if hydration_handoff:
         manifest_paths.append("hydration_context.json")
     if profile_handoff:
@@ -1135,6 +1203,11 @@ def create_handoff(
         "planning_aggregate_id": task["planning_aggregate_id"],
         "planning_aggregate_hash": task["planning_aggregate_hash"],
         "kernel_context_path": task["kernel_context_path"],
+        "world_state_context_path": task["world_state_context_path"],
+        "boundary_packet_id": task["boundary_packet_id"],
+        "boundary_packet_sha256": task["boundary_packet_sha256"],
+        "boundary_packet_json_path": task["boundary_packet_json_path"],
+        "boundary_packet_markdown_path": task["boundary_packet_markdown_path"],
         "registry_hash": task["registry_hash"],
         "config_hash": task["config_hash"],
         "author_directives_hash": task["author_directives_hash"],
@@ -1338,6 +1411,7 @@ def create_handoff(
             "original_request.json",
             "proposal_schema.json",
             "kernel_context.json",
+            "world_state_context.json",
             "kernel_discovery_context.json",
             "kernel_contract_proposal_schema.json",
         )
@@ -1380,6 +1454,10 @@ def create_handoff(
         )
     else:
         input_files.pop("kernel_context.json", None)
+    if frozen_world_state is not None:
+        _write_json(input_files["world_state_context.json"], frozen_world_state)
+    else:
+        input_files.pop("world_state_context.json", None)
     if kernel_discovery_handoff and frozen_kernel_discovery is not None:
         from novel_authoring.progression.discovery import KernelContractDiscoveryArtifact
 
@@ -1413,6 +1491,11 @@ def create_handoff(
             *(
                 ["kernel_context.json"]
                 if planning_aggregate.get("kernel_context") is not None
+                else []
+            ),
+            *(
+                ["world_state_context.json"]
+                if frozen_world_state is not None
                 else []
             ),
             *(
@@ -1521,88 +1604,6 @@ def create_handoff(
 
 def create_continuation_handoff(database: Database, book_id: str, **kwargs: Any) -> dict[str, Any]:
     return create_handoff(database, book_id, handoff_type=HandoffType.CONTINUATION, **kwargs)
-
-
-def refresh_handoff_planning_aggregate(
-    database: Database,
-    handoff_id: str,
-) -> dict[str, str]:
-    """Refresh a READY handoff after its workflow goal enters Author Control."""
-
-    database.initialize()
-    with database.connect() as connection:
-        row = connection.execute(
-            "SELECT * FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)
-        ).fetchone()
-    if row is None:
-        raise HandoffWorkflowError("handoff 不存在")
-    if str(row["status"]) != HandoffStatus.READY_FOR_CODEX.value:
-        raise HandoffWorkflowError("只有 READY_FOR_CODEX handoff 可以刷新规划锚点")
-    if str(row["handoff_type"]) not in {
-        HandoffType.CONTINUATION.value,
-        HandoffType.REVISION.value,
-        HandoffType.BATCH_CONTINUATION.value,
-    }:
-        raise HandoffWorkflowError("当前 handoff 不使用 Planning Aggregate")
-
-    book_id = str(row["book_id"])
-    edition_id = str(row["edition_id"])
-    task_directory = Path(str(row["task_directory"]))
-    task_path = _handoff_file(task_directory, "task.json")
-    manifest_path = _handoff_file(task_directory, "context_manifest.json")
-    task = json.loads(task_path.read_text(encoding="utf-8"))
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    aggregate = build_planning_aggregate(
-        database,
-        book_id,
-        edition_id=edition_id,
-        author_policy={"source": "handoff-freeze", "policy_version": "v1"},
-        context_chapter_id=(
-            str(task.get("context_chapter_id"))
-            if task.get("context_chapter_id")
-            else None
-        ),
-    )
-    task["planning_aggregate_id"] = aggregate["aggregate_id"]
-    task["planning_aggregate_hash"] = aggregate["bundle_hash"]
-    task["kernel_context_path"] = (
-        "kernel_context.json" if aggregate.get("kernel_context") is not None else None
-    )
-    manifest["planning_aggregate_id"] = aggregate["aggregate_id"]
-    manifest["planning_aggregate_hash"] = aggregate["bundle_hash"]
-    manifest["kernel_context_path"] = task["kernel_context_path"]
-    kernel_context_path = _handoff_file(task_directory, "kernel_context.json")
-    if aggregate.get("kernel_context") is not None:
-        _write_json(kernel_context_path, aggregate["kernel_context"])
-    _write_json(task_path, task)
-    file_hashes = manifest.setdefault("file_hashes", {})
-    if not isinstance(file_hashes, dict):
-        raise HandoffWorkflowError("context manifest 的 file_hashes 无效")
-    file_hashes["task.json"] = sha256_file(task_path)
-    if aggregate.get("kernel_context") is not None:
-        file_hashes["kernel_context.json"] = sha256_file(kernel_context_path)
-    _write_json(manifest_path, manifest)
-    with database.connect() as connection:
-        connection.execute(
-            "UPDATE workflow_handoffs SET planning_aggregate_id=?, "
-            "planning_aggregate_hash=? WHERE handoff_id=? AND status=?",
-            (
-                aggregate["aggregate_id"],
-                aggregate["bundle_hash"],
-                handoff_id,
-                HandoffStatus.READY_FOR_CODEX.value,
-            ),
-        )
-    append_event(
-        database,
-        handoff_id,
-        "PLANNING_AGGREGATE_REFRESHED",
-        {"planning_aggregate_id": aggregate["aggregate_id"]},
-    )
-    return {
-        "planning_aggregate_id": str(aggregate["aggregate_id"]),
-        "planning_aggregate_hash": str(aggregate["bundle_hash"]),
-    }
 
 
 def create_source_state_hydration_handoff(
@@ -1767,7 +1768,7 @@ def _drift_reasons(
             reasons.append("profile reanalysis frozen task missing or invalid")
     if _manifest_hash(database, book_id) != str(row["source_manifest_sha256"] or ""):
         reasons.append("source manifest hash changed")
-    projection = projection_from_connection(connection, book_id, edition_id)
+    projection = load_projection_from_connection(connection, book_id, edition_id)
     if projection.sha256() != str(row["base_projection_hash"] or ""):
         reasons.append("projection hash changed")
     edition = connection.execute(
@@ -1916,23 +1917,9 @@ def claim_handoff(database: Database, handoff_id: str, claimed_by: str) -> dict[
                         break
             except (OSError, ValueError, TypeError) as exc:
                 file_drift_reason = f"context_manifest.json 无效：{exc}"
-        verification = (
-            {
-                "ok": True,
-                "mode": "ORIGINAL_CANON",
-            }
-            if file_drift_reason is None and is_original_book(database, str(row["book_id"]))
-            else verify_sources(
-                row["book_id"], _book_workspace(database, str(row["book_id"])).parent
-            )
-            if file_drift_reason is None
-            else {"ok": False}
-        )
         drift_reasons = _drift_reasons(database, connection, row)
         if file_drift_reason is not None:
             drift_reasons.append(file_drift_reason)
-        if not bool(verification.get("ok")):
-            drift_reasons.append("source verify failed")
         if drift_reasons:
             reason = "; ".join(dict.fromkeys(drift_reasons))
             connection.execute(

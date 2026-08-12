@@ -199,10 +199,60 @@ def projection_from_connection(
     return projection
 
 
+def load_projection_from_connection(
+    connection: sqlite3.Connection,
+    book_id: str,
+    edition_id: str = "base",
+    through_event_seq: int | None = None,
+) -> CanonProjection:
+    """Load an ordinary read projection without auditing the full event chain."""
+
+    if through_event_seq is not None:
+        snapshot = connection.execute(
+            """
+            SELECT state_json FROM snapshots
+            WHERE book_id=? AND edition_id=? AND through_event_seq=?
+            ORDER BY created_at DESC LIMIT 1
+            """,
+            (book_id, edition_id, through_event_seq),
+        ).fetchone()
+        if snapshot is not None:
+            return CanonProjection.model_validate_json(str(snapshot["state_json"]))
+        rows = connection.execute(
+            "SELECT * FROM events WHERE book_id=? AND event_seq<=? ORDER BY event_seq",
+            (book_id, through_event_seq),
+        ).fetchall()
+        events = [row_to_event(row) for row in rows]
+        selected = _selected_events(
+            connection, events, book_id, edition_id, through_event_seq
+        )
+        projection = CanonProjection(book_id=book_id, edition_id=edition_id)
+        for event in selected:
+            apply_event(projection, event)
+        return projection
+
+    table = (
+        "projection_metadata" if edition_id == "base" else "edition_projection_metadata"
+    )
+    row = connection.execute(
+        f"SELECT state_json FROM {table} WHERE book_id=? AND edition_id=?",
+        (book_id, edition_id),
+    ).fetchone()
+    if row is not None:
+        return CanonProjection.model_validate_json(str(row["state_json"]))
+
+    projection = projection_from_connection(
+        connection, book_id, edition_id=edition_id
+    )
+    persist_projection_in_transaction(connection, projection)
+    return projection
+
+
 def persist_projection_in_transaction(
     connection: sqlite3.Connection, projection: CanonProjection
-) -> None:
+) -> tuple[str, str]:
     state_json = projection.canonical_json()
+    state_hash = sha256_bytes(state_json.encode())
     if projection.edition_id == "base":
         connection.execute(
             """
@@ -218,12 +268,12 @@ def persist_projection_in_transaction(
                 projection.book_id,
                 projection.edition_id,
                 projection.through_event_seq,
-                projection.sha256(),
+                state_hash,
                 utc_now(),
                 state_json,
             ),
         )
-        return
+        return state_json, state_hash
     connection.execute(
         """
         INSERT INTO edition_projection_metadata(
@@ -239,11 +289,12 @@ def persist_projection_in_transaction(
             projection.book_id,
             projection.edition_id,
             projection.through_event_seq,
-            projection.sha256(),
+            state_hash,
             utc_now(),
             state_json,
         ),
     )
+    return state_json, state_hash
 
 
 def load_projection(
@@ -255,25 +306,9 @@ def load_projection(
     ensure_base_edition(database, book_id)
     selected_edition = resolve_edition_id(database, book_id, edition_id)
     with database.connect() as connection:
-        if selected_edition == "base":
-            row = connection.execute(
-                "SELECT state_json FROM projection_metadata WHERE book_id=?",
-                (book_id,),
-            ).fetchone()
-        else:
-            row = connection.execute(
-                """
-                SELECT state_json FROM edition_projection_metadata
-                WHERE book_id=? AND edition_id=?
-                """,
-                (book_id, selected_edition),
-            ).fetchone()
-    if row is None:
-        return rebuild_projection(database, book_id, edition_id=selected_edition, persist=True)
-    projection = CanonProjection.model_validate_json(str(row["state_json"]))
-    if projection.edition_id != selected_edition:
-        projection.edition_id = selected_edition
-    return projection
+        return load_projection_from_connection(
+            connection, book_id, edition_id=selected_edition
+        )
 
 
 def validate_information_transition(

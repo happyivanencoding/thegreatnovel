@@ -13,7 +13,7 @@ from novel_authoring.author_control.source_state import (
     build_source_state_projection,
     source_state_coverage_summary,
 )
-from novel_authoring.canon.projection import CanonProjection, projection_from_connection
+from novel_authoring.canon.projection import CanonProjection, load_projection_from_connection
 from novel_authoring.db.database import Database
 from novel_authoring.edition import EditionWorkflowError, edition_chapters
 from novel_authoring.runtime_baseline.models import (
@@ -524,16 +524,25 @@ def _chapter_anchors(
     edition_id: str,
     chapters: list[dict[str, Any]],
 ) -> dict[int, int]:
-    anchors: dict[int, int] = {}
-    for chapter in chapters:
-        row = connection.execute(
-            "SELECT MAX(event_end_seq) AS event_end_seq FROM canon_commits "
-            "WHERE book_id=? AND edition_id=? AND chapter_id=?",
-            (book_id, edition_id, str(chapter["chapter_id"])),
-        ).fetchone()
-        if row is not None and row["event_end_seq"] is not None:
-            anchors[int(chapter["ordinal"])] = int(row["event_end_seq"])
-    return anchors
+    rows = connection.execute(
+        """
+        SELECT chapter_id, MAX(event_end_seq) AS event_end_seq
+        FROM canon_commits
+        WHERE book_id=? AND edition_id=?
+        GROUP BY chapter_id
+        """,
+        (book_id, edition_id),
+    ).fetchall()
+    event_seq_by_chapter = {
+        str(row["chapter_id"]): int(row["event_end_seq"])
+        for row in rows
+        if row["event_end_seq"] is not None
+    }
+    return {
+        int(chapter["ordinal"]): event_seq_by_chapter[str(chapter["chapter_id"])]
+        for chapter in chapters
+        if str(chapter["chapter_id"]) in event_seq_by_chapter
+    }
 
 
 def _soft_atlas(workspace_root: Path | None, book_id: str, edition_id: str) -> dict[str, Any]:
@@ -726,6 +735,7 @@ def _character_state(
     chapter_ordinals: dict[str, int],
     selected_ordinal: int | None,
     source_projection: dict[str, Any],
+    records_by_owner: dict[tuple[str, str], list[dict[str, Any]]],
 ) -> dict[str, Any]:
     if selected is None:
         return {
@@ -748,10 +758,8 @@ def _character_state(
     source_character = next(
         (
             dict(record)
-            for record in source_projection.get("records", {}).get("CHARACTER_STATE", [])
-            if isinstance(record, dict)
-            and record.get("status") == "SOURCE_VERIFIED"
-            and str(record.get("subject_id") or "") == character_id
+            for record in records_by_owner.get(("CHARACTER_STATE", character_id), [])
+            if record.get("status") == "SOURCE_VERIFIED"
         ),
         None,
     )
@@ -839,34 +847,50 @@ def _character_state(
     }
 
 
-def _source_records_for_character(
+def _source_records_by_owner(
     source_projection: dict[str, Any],
-    categories: set[str],
-    character_id: str,
-) -> list[dict[str, Any]]:
-    result: list[dict[str, Any]] = []
+) -> dict[tuple[str, str], list[dict[str, Any]]]:
+    result: dict[tuple[str, str], list[dict[str, Any]]] = {}
     records = source_projection.get("records", {})
     if not isinstance(records, dict):
         return result
-    for category in categories:
-        for record in records.get(category, []):
+    for category, values in records.items():
+        if not isinstance(values, list):
+            continue
+        for record in values:
             if not isinstance(record, dict):
                 continue
             raw_value = record.get("raw")
-            raw: dict[str, Any] = raw_value if isinstance(raw_value, dict) else {}
-            owner_id = str(
-                record.get("owner_id")
-                or raw.get("owner_id")
-                or raw.get("character_id")
-                or ""
-            )
-            if (
-                str(record.get("subject_id") or "") not in {"", character_id}
-                and owner_id != character_id
-            ):
-                continue
-            result.append(dict(record))
+            raw = raw_value if isinstance(raw_value, dict) else {}
+            identities = {
+                str(value)
+                for value in (
+                    record.get("subject_id"),
+                    record.get("owner_id"),
+                    raw.get("owner_id"),
+                    raw.get("character_id"),
+                )
+                if value
+            }
+            for identity in identities or {""}:
+                result.setdefault((str(category), identity), []).append(record)
     return result
+
+
+def _source_records_for_character(
+    categories: set[str],
+    character_id: str,
+    records_by_owner: dict[tuple[str, str], list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    result: dict[str, dict[str, Any]] = {}
+    for category in categories:
+        for record in [
+            *records_by_owner.get((category, ""), []),
+            *records_by_owner.get((category, character_id), []),
+        ]:
+            key = str(record.get("record_id") or record.get("state_key") or id(record))
+            result[key] = dict(record)
+    return list(result.values())
 
 
 def _projection_items(
@@ -878,6 +902,7 @@ def _projection_items(
     chapter_ordinals: dict[str, int],
     selected_ordinal: int | None,
     source_projection: dict[str, Any],
+    records_by_owner: dict[tuple[str, str], list[dict[str, Any]]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     if selected is None:
         return [], []
@@ -930,10 +955,10 @@ def _projection_items(
             )
     if baseline is not None or source_projection.get("available"):
         source_items = _source_records_for_character(
-            source_projection, {"ITEM", "RESOURCE"}, character_id
+            {"ITEM", "RESOURCE"}, character_id, records_by_owner
         )
         source_equipment = _source_records_for_character(
-            source_projection, {"EQUIPMENT"}, character_id
+            {"EQUIPMENT"}, character_id, records_by_owner
         )
         for record in [*source_items, *source_equipment]:
             if record.get("status") != "SOURCE_VERIFIED":
@@ -988,6 +1013,7 @@ def _abilities(
     chapter_ordinals: dict[str, int],
     selected_ordinal: int | None,
     source_projection: dict[str, Any],
+    records_by_owner: dict[tuple[str, str], list[dict[str, Any]]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     if selected is None:
         return [], []
@@ -1007,7 +1033,7 @@ def _abilities(
     verified_source = [
         record
         for record in _source_records_for_character(
-            source_projection, {"CAPABILITY"}, character_id
+            {"CAPABILITY"}, character_id, records_by_owner
         )
         if record.get("status") == "SOURCE_VERIFIED"
     ]
@@ -1051,6 +1077,7 @@ def _knowledge(
     chapter_ordinals: dict[str, int],
     selected_ordinal: int | None,
     source_projection: dict[str, Any],
+    records_by_owner: dict[tuple[str, str], list[dict[str, Any]]],
 ) -> list[dict[str, Any]]:
     if selected is None:
         return []
@@ -1066,7 +1093,9 @@ def _knowledge(
         for record_id, value in projection.knowledge.items()
         if str(value.get("character_id") or value.get("from_entity_id") or "") == character_id
     ]
-    for record in _source_records_for_character(source_projection, {"KNOWLEDGE"}, character_id):
+    for record in _source_records_for_character(
+        {"KNOWLEDGE"}, character_id, records_by_owner
+    ):
         if record.get("status") == "SOURCE_VERIFIED":
             result.append(record)
     baseline_boundary_reached = baseline is not None and (
@@ -1193,30 +1222,10 @@ def _knowledge_matrix(
         for item in characters
         if item.get("character_id")
     }
-    matrix: list[dict[str, Any]] = []
-    for character_id, character_name in names.items():
-        for topic_id, topic in topics.items():
-            cell = edges.get((character_id, topic_id))
-            matrix.append(
-                {
-                    "knower_id": character_id,
-                    "knower_name": character_name,
-                    "topic_id": topic_id,
-                    "topic_name": topic["name"],
-                    "state": "UNKNOWN" if cell is None else cell["state"],
-                    "state_label": (
-                        _KNOWLEDGE_STATE_LABELS["UNKNOWN"]
-                        if cell is None
-                        else cell["state_label"]
-                    ),
-                    "layer": "UNKNOWN" if cell is None else cell["layer"],
-                    "evidence_chapter_ordinal": None if cell is None else cell[
-                        "evidence_chapter_ordinal"
-                    ],
-                    "source_span_ids": [] if cell is None else cell["source_span_ids"],
-                    "record_id": None if cell is None else cell["record_id"],
-                }
-            )
+    matrix = [
+        {**edge, "knower_name": names.get(str(edge["knower_id"]), str(edge["knower_id"]))}
+        for edge in edges.values()
+    ]
     return {
         "topics": list(topics.values()),
         "edges": list(edges.values()),
@@ -1228,49 +1237,52 @@ def _knowledge_matrix(
     }
 
 
-def _relationships(
+def _relationships_by_endpoint(
     projection: CanonProjection,
-    selected: dict[str, Any] | None,
-    *,
     source_projection: dict[str, Any],
+) -> dict[str, list[dict[str, Any]]]:
+    result: dict[str, list[dict[str, Any]]] = {}
+    for record_id, value in projection.relationships.items():
+        payload = dict(value)
+        record = _record(
+            str(record_id),
+            payload,
+            layer="CANON",
+            fallback_name=str(record_id),
+            category="relationship",
+        )
+        endpoints = {
+            str(payload.get("from_entity_id") or ""),
+            str(payload.get("to_entity_id") or ""),
+            str(payload.get("character_id") or ""),
+        }
+        for endpoint in endpoints - {""}:
+            result.setdefault(endpoint, []).append(record)
+    source_records = source_projection.get("records")
+    if isinstance(source_records, dict):
+        for record in source_records.get("RELATIONSHIP", []):
+            if not isinstance(record, dict) or record.get("status") != "SOURCE_VERIFIED":
+                continue
+            raw_value = record.get("raw")
+            raw = raw_value if isinstance(raw_value, dict) else {}
+            endpoints = {
+                str(record.get("subject_id") or ""),
+                str(raw.get("from_entity_id") or ""),
+                str(raw.get("to_entity_id") or ""),
+            }
+            for endpoint in endpoints - {""}:
+                result.setdefault(endpoint, []).append(record)
+    return result
+
+
+def _relationships(
+    selected: dict[str, Any] | None,
+    relationships_by_endpoint: dict[str, list[dict[str, Any]]],
 ) -> list[dict[str, Any]]:
     if selected is None:
         return []
     character_id = str(selected["character_id"])
-    result: list[dict[str, Any]] = []
-    for record_id, value in projection.relationships.items():
-        payload = dict(value)
-        if character_id not in {
-            str(payload.get("from_entity_id") or ""),
-            str(payload.get("to_entity_id") or ""),
-            str(payload.get("character_id") or ""),
-        }:
-            continue
-        result.append(
-            _record(
-                str(record_id),
-                payload,
-                layer="CANON",
-                fallback_name=str(record_id),
-                category="relationship",
-            )
-        )
-    source_records = source_projection.get("records")
-    if not isinstance(source_records, dict):
-        return result
-    for record in source_records.get("RELATIONSHIP", []):
-        if not isinstance(record, dict) or record.get("status") != "SOURCE_VERIFIED":
-            continue
-        raw_value = record.get("raw")
-        raw: dict[str, Any] = raw_value if isinstance(raw_value, dict) else {}
-        endpoints = {
-            str(record.get("subject_id") or ""),
-            str(raw.get("from_entity_id") or ""),
-            str(raw.get("to_entity_id") or ""),
-        }
-        if character_id in endpoints:
-            result.append(dict(record))
-    return result
+    return [dict(record) for record in relationships_by_endpoint.get(character_id, [])]
 
 
 def _soft_relationships(
@@ -1496,8 +1508,20 @@ def _provisional_overlay_at_chapter(
     return result
 
 
+def _knowledge_edges_by_topic(
+    matrix: list[dict[str, Any]],
+) -> dict[str, list[dict[str, Any]]]:
+    result: dict[str, list[dict[str, Any]]] = {}
+    for cell in matrix:
+        for identity in (cell.get("topic_id"), cell.get("topic_name")):
+            if identity:
+                result.setdefault(str(identity), []).append(cell)
+    return result
+
+
 def _attach_who_knows(
-    records: list[dict[str, Any]], matrix: list[dict[str, Any]]
+    records: list[dict[str, Any]],
+    edges_by_topic: dict[str, list[dict[str, Any]]],
 ) -> None:
     for record in records:
         identities = {
@@ -1510,12 +1534,12 @@ def _attach_who_knows(
             )
             if value
         }
-        record["who_knows"] = [
-            dict(cell)
-            for cell in matrix
-            if str(cell.get("topic_id") or "") in identities
-            or str(cell.get("topic_name") or "") in identities
-        ]
+        matches: dict[tuple[str, str], dict[str, Any]] = {}
+        for identity in identities:
+            for cell in edges_by_topic.get(identity, []):
+                key = (str(cell.get("knower_id") or ""), str(cell.get("topic_id") or ""))
+                matches[key] = cell
+        record["who_knows"] = [dict(cell) for cell in matches.values()]
 
 
 def _record_identities(record: dict[str, Any]) -> set[str]:
@@ -1531,19 +1555,29 @@ def _record_identities(record: dict[str, Any]) -> set[str]:
     }
 
 
+def _history_by_identity(
+    history: list[dict[str, Any]],
+) -> dict[str, list[dict[str, Any]]]:
+    result: dict[str, list[dict[str, Any]]] = {}
+    for entry in history:
+        for identity in _record_identities(entry):
+            result.setdefault(identity, []).append(entry)
+    return result
+
+
 def _attach_history(
     records: list[dict[str, Any]],
-    history: list[dict[str, Any]],
+    history_by_identity: dict[str, list[dict[str, Any]]],
     *,
     selected_ordinal: int | None,
 ) -> None:
     for record in records:
         identities = _record_identities(record)
-        entries = [
-            dict(entry)
-            for entry in history
-            if identities & _record_identities(entry)
-        ]
+        matched: dict[str, dict[str, Any]] = {}
+        for identity in identities:
+            for entry in history_by_identity.get(identity, []):
+                matched[str(entry.get("record_id") or id(entry))] = entry
+        entries = [dict(entry) for entry in matched.values()]
         entries.sort(
             key=lambda item: (
                 int(item.get("chapter_ordinal") or 0),
@@ -1643,6 +1677,8 @@ def build_story_game_state(
     chapter_id: str | None = None,
     character_id: str | None = None,
     include_global_scope: bool = False,
+    include_knowledge_view: bool = True,
+    include_history: bool = False,
 ) -> dict[str, Any]:
     """Build a historical, chapter-aware game-like state without persisting it."""
 
@@ -1669,7 +1705,7 @@ def build_story_game_state(
         projection = CanonProjection(book_id=book_id, edition_id=edition_id)
         availability = "NO_CANON_EVENT_ANCHOR"
         if after_event_seq is not None:
-            projection = projection_from_connection(
+            projection = load_projection_from_connection(
                 connection,
                 book_id,
                 edition_id=edition_id,
@@ -1686,6 +1722,7 @@ def build_story_game_state(
             ),
             chapter_ordinal=ordinal,
             materialize_snapshot=False,
+            include_verified_history=include_history,
         )
         coverage_summary = source_state_coverage_summary(
             connection, book_id, edition_id
@@ -1702,6 +1739,10 @@ def build_story_game_state(
             connection, book_id, edition_id, ordinal
         )
 
+    records_by_owner = _source_records_by_owner(source_projection)
+    relationships_by_endpoint = _relationships_by_endpoint(
+        projection, source_projection
+    )
     options = _character_options(
         projection,
         baseline,
@@ -1717,6 +1758,7 @@ def build_story_game_state(
         chapter_ordinals=chapter_ordinals,
         selected_ordinal=ordinal,
         source_projection=source_projection,
+        records_by_owner=records_by_owner,
     )
     raw_state_value = selected_state.get("raw")
     raw_state: dict[str, Any] = raw_state_value if isinstance(raw_state_value, dict) else {}
@@ -1728,6 +1770,7 @@ def build_story_game_state(
         chapter_ordinals=chapter_ordinals,
         selected_ordinal=ordinal,
         source_projection=source_projection,
+        records_by_owner=records_by_owner,
     )
     canon_abilities, source_abilities = _abilities(
         projection,
@@ -1736,24 +1779,36 @@ def build_story_game_state(
         chapter_ordinals=chapter_ordinals,
         selected_ordinal=ordinal,
         source_projection=source_projection,
+        records_by_owner=records_by_owner,
     )
-    knowledge = _knowledge(
-        projection,
-        baseline,
-        selected,
-        chapter_ordinals=chapter_ordinals,
-        selected_ordinal=ordinal,
-        source_projection=source_projection,
+    knowledge = (
+        _knowledge(
+            projection,
+            baseline,
+            selected,
+            chapter_ordinals=chapter_ordinals,
+            selected_ordinal=ordinal,
+            source_projection=source_projection,
+            records_by_owner=records_by_owner,
+        )
+        if include_knowledge_view
+        else []
     )
-    knowledge_matrix = _knowledge_matrix(
-        projection,
-        source_projection,
-        options,
-        extra_topics=[*inventory, *equipment],
+    knowledge_matrix = (
+        _knowledge_matrix(
+            projection,
+            source_projection,
+            options,
+            extra_topics=[*inventory, *equipment],
+        )
+        if include_knowledge_view
+        else {"topics": [], "edges": [], "matrix": [], "states": []}
     )
     verified_history = list(source_projection.get("verified_history", []))
-    _attach_who_knows(inventory, knowledge_matrix["matrix"])
-    _attach_who_knows(equipment, knowledge_matrix["matrix"])
+    knowledge_edges_by_topic = _knowledge_edges_by_topic(knowledge_matrix["matrix"])
+    history_by_identity = _history_by_identity(verified_history)
+    _attach_who_knows(inventory, knowledge_edges_by_topic)
+    _attach_who_knows(equipment, knowledge_edges_by_topic)
     for item in knowledge:
         topic_id = str(
             item.get("object_id")
@@ -1766,9 +1821,7 @@ def build_story_game_state(
             for edge in knowledge_matrix["edges"]
             if str(edge.get("topic_id")) == topic_id
         ]
-    relationships = _relationships(
-        projection, selected, source_projection=source_projection
-    )
+    relationships = _relationships(selected, relationships_by_endpoint)
     relationship_inspector = _relationship_details(relationships)
     soft_relationships = _soft_relationships(soft, selected)
     baseline_visible = [
@@ -1863,21 +1916,22 @@ def build_story_game_state(
         if source_kind(record) not in {"TASK", "THREAD"}
     )
 
-    for collection in (
-        inventory,
-        equipment,
-        canon_abilities,
-        knowledge,
-        relationship_inspector,
-        faction_inspector,
-        locations,
-        resources,
-        world_rules,
-        tasks,
-        threads,
-        promises,
-    ):
-        _attach_history(collection, verified_history, selected_ordinal=ordinal)
+    if include_history:
+        for collection in (
+            inventory,
+            equipment,
+            canon_abilities,
+            knowledge,
+            relationship_inspector,
+            faction_inspector,
+            locations,
+            resources,
+            world_rules,
+            tasks,
+            threads,
+            promises,
+        ):
+            _attach_history(collection, history_by_identity, selected_ordinal=ordinal)
 
     character_workspaces: list[dict[str, Any]] = []
     all_inventory: list[dict[str, Any]] = []
@@ -1913,6 +1967,7 @@ def build_story_game_state(
                 chapter_ordinals=chapter_ordinals,
                 selected_ordinal=ordinal,
                 source_projection=source_projection,
+                records_by_owner=records_by_owner,
             )
             option_raw_value = option_state.get("raw")
             option_raw = (
@@ -1926,6 +1981,7 @@ def build_story_game_state(
                 chapter_ordinals=chapter_ordinals,
                 selected_ordinal=ordinal,
                 source_projection=source_projection,
+                records_by_owner=records_by_owner,
             )
             option_abilities, _option_source_abilities = _abilities(
                 projection,
@@ -1934,23 +1990,23 @@ def build_story_game_state(
                 chapter_ordinals=chapter_ordinals,
                 selected_ordinal=ordinal,
                 source_projection=source_projection,
+                records_by_owner=records_by_owner,
             )
             option_relationships = _relationship_details(
-                _relationships(
-                    projection,
-                    option,
-                    source_projection=source_projection,
-                )
+                _relationships(option, relationships_by_endpoint)
             )
-            _attach_who_knows(option_inventory, knowledge_matrix["matrix"])
-            _attach_who_knows(option_equipment, knowledge_matrix["matrix"])
-            for collection in (
-                option_inventory,
-                option_equipment,
-                option_abilities,
-                option_relationships,
-            ):
-                _attach_history(collection, verified_history, selected_ordinal=ordinal)
+            _attach_who_knows(option_inventory, knowledge_edges_by_topic)
+            _attach_who_knows(option_equipment, knowledge_edges_by_topic)
+            if include_history:
+                for collection in (
+                    option_inventory,
+                    option_equipment,
+                    option_abilities,
+                    option_relationships,
+                ):
+                    _attach_history(
+                        collection, history_by_identity, selected_ordinal=ordinal
+                    )
         for record in [*option_inventory, *option_equipment, *option_abilities]:
             record["owner_name"] = character_names.get(option_id, option.get("name"))
         _extend_unique(all_inventory, option_inventory)
@@ -2164,14 +2220,7 @@ def build_story_game_state(
             },
         },
     }
-    from novel_authoring.progression.workspace import attach_progression_workspace
-
-    return attach_progression_workspace(
-        database,
-        book_id=book_id,
-        edition_id=edition_id,
-        world_state=state_payload,
-    )
+    return state_payload
 
 
 __all__ = ["ChapterWorldStateView", "build_story_game_state"]

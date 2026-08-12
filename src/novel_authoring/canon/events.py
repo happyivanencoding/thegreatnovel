@@ -208,7 +208,7 @@ class EventStore:
         actual_sequence = int(cursor.lastrowid)
         if actual_sequence != next_sequence:
             raise RuntimeError(f"事件序列不连续：预期 {next_sequence}，实际 {actual_sequence}")
-        return EventRecord(
+        event = EventRecord(
             event_seq=actual_sequence,
             event_id=event_id,
             book_id=book_id,
@@ -228,6 +228,35 @@ class EventStore:
             edition_id=edition_id,
             version=2,
         )
+        projection_table = (
+            "projection_metadata"
+            if edition_id == "base"
+            else "edition_projection_metadata"
+        )
+        if status is EventStatus.COMMITTED and information_state is InformationStatus.CANON:
+            connection.execute(
+                f"DELETE FROM {projection_table} WHERE book_id=? AND edition_id=?",
+                (book_id, edition_id),
+            )
+        else:
+            projection_row = connection.execute(
+                f"SELECT state_json FROM {projection_table} "
+                "WHERE book_id=? AND edition_id=?",
+                (book_id, edition_id),
+            ).fetchone()
+            if projection_row is not None:
+                from novel_authoring.canon.projection import (
+                    CanonProjection,
+                    apply_event,
+                    persist_projection_in_transaction,
+                )
+
+                projection = CanonProjection.model_validate_json(
+                    str(projection_row["state_json"])
+                )
+                apply_event(projection, event)
+                persist_projection_in_transaction(connection, projection)
+        return event
 
 
 def row_to_event(row: sqlite3.Row) -> EventRecord:

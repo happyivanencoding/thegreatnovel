@@ -7,7 +7,10 @@ from typing import Any
 from novel_authoring.atlas.models import AtlasGraph, InformationStatus
 from novel_authoring.atlas.service import latest_atlas
 from novel_authoring.author_control.reveal import build_planning_truth_context
-from novel_authoring.canon.projection import rebuild_projection
+from novel_authoring.canon.projection import (
+    CanonProjection,
+    load_projection,
+)
 from novel_authoring.db.database import Database
 from novel_authoring.edition import (
     edition_chapters,
@@ -229,10 +232,13 @@ def build_boundary_packet(
     edition_id: str | None = None,
     batch_id: str | None = None,
     innovation_control: InnovationControl | None = None,
+    source_verification: dict[str, Any] | None = None,
+    projection: CanonProjection | None = None,
+    rhythm_snapshot: dict[str, Any] | None = None,
 ) -> dict[str, object]:
     database.initialize()
     workspace_root = _workspace(database, book_id)
-    verification = (
+    verification = source_verification or (
         {"ok": True, "mode": "ORIGINAL_CANON"}
         if is_original_book(database, book_id)
         else verify_sources(book_id, workspace_root.parent)
@@ -246,7 +252,9 @@ def build_boundary_packet(
             database, book_id
         )
     workspace = edition_workspace(database, book_id, selected_edition)
-    projection = rebuild_projection(database, book_id, edition_id=selected_edition)
+    projection = projection or load_projection(
+        database, book_id, edition_id=selected_edition
+    )
     conflicts = _fact_conflicts(projection)
     if conflicts:
         raise PlanningError("存在未解决的 CANON 冲突，禁止建立续写边界")
@@ -455,10 +463,15 @@ def build_boundary_packet(
     try:
         from novel_authoring.rhythm.service import diagnose_hooks, diagnose_rhythm
 
-        rhythm_diagnostics = diagnose_rhythm(
-            database, book_id, edition_id=selected_edition
-        )
-        hook_diagnostics = diagnose_hooks(database, book_id, edition_id=selected_edition)
+        if rhythm_snapshot is None:
+            rhythm_diagnostics = diagnose_rhythm(
+                database, book_id, edition_id=selected_edition
+            )
+            hook_diagnostics = diagnose_hooks(database, book_id, edition_id=selected_edition)
+        else:
+            rhythm_diagnostics = dict(rhythm_snapshot)
+            hooks = rhythm_snapshot.get("hooks")
+            hook_diagnostics = dict(hooks) if isinstance(hooks, dict) else {}
         with database.connect() as rhythm_connection:
             rows = rhythm_connection.execute(
                 """

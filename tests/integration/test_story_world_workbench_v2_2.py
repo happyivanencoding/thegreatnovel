@@ -5,8 +5,11 @@ from copy import deepcopy
 from html.parser import HTMLParser
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
+import novel_authoring.planning.candidates as candidate_module
+import novel_authoring.workflows.handoffs as handoff_module
 from novel_authoring.author_control.book_profile import (
     PROFILE_DIMENSIONS,
     ProfileEditOperation,
@@ -42,6 +45,7 @@ from novel_authoring.progression.service import (
     confirm_contract,
     create_contract_proposal,
 )
+from novel_authoring.progression.workspace import attach_progression_workspace
 from novel_authoring.web.app import create_app
 from novel_authoring.web.workbench import build_workbench_context
 from novel_authoring.workflows.handoffs import claim_handoff
@@ -329,12 +333,24 @@ def test_progression_workspace_reuses_historical_world_state_without_future_leak
         chapter_id=str(chapters[0]["chapter_id"]),
         character_id="character:hero",
     )
+    chapter_one = attach_progression_workspace(
+        database,
+        book_id="story-world-v22",
+        edition_id="base",
+        world_state=chapter_one,
+    )
     chapter_two = build_story_game_state(
         database,
         "story-world-v22",
         "base",
         chapter_id=str(chapters[1]["chapter_id"]),
         character_id="character:hero",
+    )
+    chapter_two = attach_progression_workspace(
+        database,
+        book_id="story-world-v22",
+        edition_id="base",
+        world_state=chapter_two,
     )
     with database.connect() as connection:
         canon_after = tuple(
@@ -659,7 +675,9 @@ def test_global_book_profile_versions_are_edition_aware_and_author_controlled(
     assert accepted["history"][0]["reason"].startswith("接受 Profile proposal")
 
 
-def test_workflow_goal_is_frozen_before_handoff_candidate_task(tmp_path: Path) -> None:
+def test_workflow_goal_is_frozen_before_handoff_candidate_task(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     database, chapters = _v22_book(tmp_path, chapter_count=3)
     bundle = compile_kernel_contract_proposals(
         interpret_reader_experience(
@@ -697,6 +715,26 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(tmp_path: Path) -
                       'projection', 'config', '{}', '{}', 'now')
             """
         )
+    calls = {"verify_sources": 0, "boundary": 0, "story_state": 0}
+    original_verify = handoff_module.verify_sources
+    original_boundary = handoff_module.build_boundary_packet
+    original_story_state = handoff_module.build_story_game_state
+
+    def counted_verify(*args: object, **kwargs: object) -> dict[str, object]:
+        calls["verify_sources"] += 1
+        return original_verify(*args, **kwargs)
+
+    def counted_boundary(*args: object, **kwargs: object) -> dict[str, object]:
+        calls["boundary"] += 1
+        return original_boundary(*args, **kwargs)
+
+    def counted_story_state(*args: object, **kwargs: object) -> dict[str, object]:
+        calls["story_state"] += 1
+        return original_story_state(*args, **kwargs)
+
+    monkeypatch.setattr(handoff_module, "verify_sources", counted_verify)
+    monkeypatch.setattr(handoff_module, "build_boundary_packet", counted_boundary)
+    monkeypatch.setattr(handoff_module, "build_story_game_state", counted_story_state)
     app = create_app(database, book_id="story-world-v22")
     client = TestClient(app)
     response = client.post(
@@ -731,15 +769,21 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(tmp_path: Path) -
         else handoff_root / "kernel_context.json"
     )
     assert handoff_kernel_path.is_file()
+    assert calls == {"verify_sources": 1, "boundary": 1, "story_state": 1}
     policy = json.loads(str(aggregate["author_policy_json"]))
     assert intent_id in {
         item["intent_id"] for item in policy["author_control"]["intents"]
     }
 
+    def no_prepare_boundary(*args: object, **kwargs: object) -> object:
+        raise AssertionError("Candidate prepare 不得重建 Boundary")
+
+    monkeypatch.setattr(candidate_module, "build_boundary_packet", no_prepare_boundary)
     claim_handoff(database, handoff["handoff_id"], "v22-test")
     prepared = prepare_handoff_candidate_task(
         database, "story-world-v22", handoff["handoff_id"]
     )
+    assert calls == {"verify_sources": 1, "boundary": 1, "story_state": 1}
     task = json.loads(Path(str(prepared["task"])).read_text(encoding="utf-8"))
     assert task["author_goal"] == "推进钥匙线，并让资源代价可见。"
     assert intent_id in {
@@ -1051,7 +1095,28 @@ def test_item_faction_and_author_plan_keep_authority_boundaries(
         if record["author_name"] == "边界钥匙"
     )
     assert item["history"]
-    assert item["who_knows"]
+    assert item["who_knows"] == []
+    knowledge_state = build_workbench_context(
+        database,
+        "story-world-v22",
+        "base",
+        chapter_id=str(chapters[1]["chapter_id"]),
+        character_id="character:hero",
+        mode="state",
+        node="state",
+        state_tab="knowledge",
+        state_scope="global",
+        truth_lens="AUTHOR",
+    )["story_game_state"]
+    knowledge_item = next(
+        record
+        for record in knowledge_state["visible_inventory"]
+        if record["author_name"] == "边界钥匙"
+    )
+    assert knowledge_item["who_knows"] == []
+    assert all(
+        cell["state"] != "UNKNOWN" for cell in knowledge_state["knowledge_matrix"]
+    )
     assert item["source_span_ids"]
     faction_view = state["factions"][0]
     for key in (

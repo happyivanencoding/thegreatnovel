@@ -30,8 +30,9 @@ from novel_authoring.author_control.truth import (
     list_open_creative_questions,
     list_secret_candidates,
 )
-from novel_authoring.canon.projection import projection_from_connection
+from novel_authoring.canon.projection import load_projection_from_connection
 from novel_authoring.edition import edition_chapters
+from novel_authoring.progression.workspace import attach_progression_workspace
 from novel_authoring.serial_kernel import narrative_drive_label
 
 _EDITION_PURPOSE_LABELS = {
@@ -880,6 +881,21 @@ def _draft_rows(
         """,
         (book_id, edition_id),
     ).fetchall()
+    report_rows = connection.execute(
+        """
+        SELECT vr.draft_id, vr.validator, vr.severity, vr.passed,
+               vr.report_json, vr.run_id
+        FROM validation_reports vr
+        JOIN drafts d ON d.draft_id=vr.draft_id
+                     AND d.validation_run_id=vr.run_id
+        WHERE d.book_id=? AND d.edition_id=?
+        ORDER BY vr.draft_id, vr.validator
+        """,
+        (book_id, edition_id),
+    ).fetchall()
+    reports_by_draft: dict[str, list[sqlite3.Row]] = {}
+    for report in report_rows:
+        reports_by_draft.setdefault(str(report["draft_id"]), []).append(report)
     result: list[dict[str, Any]] = []
     for row in rows:
         item = dict(row)
@@ -896,18 +912,13 @@ def _draft_rows(
             item["content"] = path.read_text(encoding="utf-8")[:500_000] if path.is_file() else ""
         except OSError:
             item["content"] = ""
-        report_rows = connection.execute(
-            "SELECT validator, severity, passed, report_json, run_id "
-            "FROM validation_reports WHERE draft_id=? ORDER BY validator, run_id",
-            (str(item["draft_id"]),),
-        ).fetchall()
         item["validation_reports"] = [
             {
                 **dict(report),
                 "passed": bool(report["passed"]),
                 "report": _read_json(report["report_json"]),
             }
-            for report in report_rows
+            for report in reports_by_draft.get(str(item["draft_id"]), [])
         ]
         item["validation_warning_count"] = sum(
             1 for report in item["validation_reports"] if not report["passed"]
@@ -1241,18 +1252,26 @@ def _commit_anchors(
     edition_id: str,
     chapters: list[dict[str, Any]],
 ) -> dict[int, int]:
-    anchors: dict[int, int] = {}
-    for chapter in chapters:
-        if str(chapter.get("document_status")) != "GENERATED_CANON":
-            continue
-        row = connection.execute(
-            "SELECT MAX(event_end_seq) AS event_end_seq FROM canon_commits "
-            "WHERE book_id=? AND edition_id=? AND chapter_id=?",
-            (book_id, edition_id, str(chapter["chapter_id"])),
-        ).fetchone()
-        if row is not None and row["event_end_seq"] is not None:
-            anchors[int(chapter["ordinal"])] = int(row["event_end_seq"])
-    return anchors
+    rows = connection.execute(
+        """
+        SELECT chapter_id, MAX(event_end_seq) AS event_end_seq
+        FROM canon_commits
+        WHERE book_id=? AND edition_id=?
+        GROUP BY chapter_id
+        """,
+        (book_id, edition_id),
+    ).fetchall()
+    event_seq_by_chapter = {
+        str(row["chapter_id"]): int(row["event_end_seq"])
+        for row in rows
+        if row["event_end_seq"] is not None
+    }
+    return {
+        int(chapter["ordinal"]): event_seq_by_chapter[str(chapter["chapter_id"])]
+        for chapter in chapters
+        if str(chapter.get("document_status")) == "GENERATED_CANON"
+        and str(chapter["chapter_id"]) in event_seq_by_chapter
+    }
 
 
 def _projection_view(
@@ -1280,22 +1299,23 @@ def _projection_view(
             ),
             "reason": reason,
         }
-    projection = projection_from_connection(
+    projection = load_projection_from_connection(
         connection,
         book_id,
         edition_id=edition_id,
         through_event_seq=event_seq,
     )
+    state = projection.model_dump(mode="json")
     return {
         "availability": "CANON_EVENT_PROJECTION",
         "label": label,
         "anchor_chapter_ordinal": ordinal,
         "through_event_seq": event_seq,
         "projection_hash": projection.sha256(),
-        "state": projection.model_dump(mode="json"),
+        "state": state,
         "availability_label": _status_label("CANON_EVENT_PROJECTION"),
         "author_summary": _projection_author_summary("CANON_EVENT_PROJECTION", label),
-        "state_cards": _state_cards(projection.model_dump(mode="json")),
+        "state_cards": _state_cards(state),
     }
 
 
@@ -1594,6 +1614,10 @@ def build_workbench_context(
 ) -> dict[str, Any]:
     """Build one Workbench read model without initializing or mutating the DB."""
 
+    active_mode = _normalise_choice(mode, WORKBENCH_MODES, "home")
+    active_right_tab = _normalise_choice(right_tab, WORKBENCH_RIGHT_TABS, "prose")
+    active_state_tab = _normalise_choice(state_tab, WORKBENCH_STATE_TABS, "overview")
+    active_state_scope = _normalise_choice(state_scope, WORKBENCH_STATE_SCOPES, "character")
     with database.connect() as connection:
         book = _book_row(connection, book_id)
         selected_edition_id = edition_id or str(book.get("active_edition_id") or "base")
@@ -1671,13 +1695,17 @@ def build_workbench_context(
             selected_node = "chapter"
         if selected_node == "chapter" and selected_chapter is None and selected_draft is None:
             selected_node = "overview"
-        chapter_context = _chapter_context(
-            connection,
-            book_id,
-            selected_edition_id,
-            raw_chapters,
-            selected_chapter,
-            selected_draft,
+        chapter_context = (
+            _chapter_context(
+                connection,
+                book_id,
+                selected_edition_id,
+                raw_chapters,
+                selected_chapter,
+                selected_draft,
+            )
+            if active_mode == "continuity" or selected_node == "chapter"
+            else None
         )
         if chapter_context is not None:
             chapter_ordinal = int(chapter_context["chapter_ordinal"])
@@ -1701,9 +1729,6 @@ def build_workbench_context(
     latest_chapter = chapter_items[-1] if chapter_items else None
     if selected_anchor is None and latest_chapter is not None:
         selected_anchor = int(latest_chapter["ordinal"])
-    active_mode = _normalise_choice(mode, WORKBENCH_MODES, "home")
-    active_state_tab = _normalise_choice(state_tab, WORKBENCH_STATE_TABS, "overview")
-    active_state_scope = _normalise_choice(state_scope, WORKBENCH_STATE_SCOPES, "character")
     story_game_state: dict[str, Any] | None = None
     previous_story_game_state: dict[str, Any] | None = None
     author_control: dict[str, Any] | None = None
@@ -1715,7 +1740,17 @@ def build_workbench_context(
     secret_candidates: list[dict[str, Any]] = []
     selected_lens = TruthLens(str(truth_lens).upper())
     state_chapter_id = None if selected_chapter is None else str(selected_chapter["chapter_id"])
-    if selected_chapter is not None:
+    needs_story_state = (
+        active_mode in {"state", "growth", "continuity", "truth"}
+        or active_right_tab == "state"
+    )
+    needs_previous_state = active_mode in {"continuity", "truth"} or (
+        active_mode == "state" and active_state_tab == "overview"
+    )
+    include_knowledge_view = active_mode == "truth" or (
+        active_mode == "state" and active_state_tab == "knowledge"
+    )
+    if selected_chapter is not None and needs_story_state:
         story_game_state = build_story_game_state(
             database,
             book_id,
@@ -1723,7 +1758,16 @@ def build_workbench_context(
             chapter_id=state_chapter_id,
             character_id=character_id,
             include_global_scope=(active_mode == "state" and active_state_scope == "global"),
+            include_knowledge_view=include_knowledge_view,
+            include_history=active_mode == "state",
         )
+        if active_mode == "growth":
+            story_game_state = attach_progression_workspace(
+                database,
+                book_id=book_id,
+                edition_id=selected_edition_id,
+                world_state=story_game_state,
+            )
         story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
             str(story_game_state.get("coverage_status") or "NOT_STARTED"), "状态未知"
         )
@@ -1732,7 +1776,7 @@ def build_workbench_context(
             (item for item in raw_chapters if int(item["ordinal"]) == selected_ordinal - 1),
             None,
         )
-        if previous_chapter is not None:
+        if previous_chapter is not None and needs_previous_state:
             previous_story_game_state = build_story_game_state(
                 database,
                 book_id,
@@ -1740,6 +1784,8 @@ def build_workbench_context(
                 chapter_id=str(previous_chapter["chapter_id"]),
                 character_id=character_id,
                 include_global_scope=(active_mode == "state" and active_state_scope == "global"),
+                include_knowledge_view=include_knowledge_view,
+                include_history=False,
             )
             previous_story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
                 str(previous_story_game_state.get("coverage_status") or "NOT_STARTED"),
@@ -1754,6 +1800,8 @@ def build_workbench_context(
                 chapter_id=None,
                 character_id=character_id,
                 include_global_scope=active_state_scope == "global",
+                include_knowledge_view=include_knowledge_view,
+                include_history=True,
             )
             story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
                 str(story_game_state.get("coverage_status") or "NOT_STARTED"),
@@ -1967,7 +2015,7 @@ def build_workbench_context(
         "selected_node": selected_node,
         "active_left_node": selected_node,
         "active_main_mode": active_mode,
-        "active_right_tab": _normalise_choice(right_tab, WORKBENCH_RIGHT_TABS, "prose"),
+        "active_right_tab": active_right_tab,
         "state_tab": active_state_tab,
         "state_scope": active_state_scope,
         "state_tab_items": STATE_TAB_ITEMS,

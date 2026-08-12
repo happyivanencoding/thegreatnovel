@@ -46,6 +46,7 @@ from novel_authoring.progression.service import (
     confirm_contract,
     create_contract_proposal,
 )
+from novel_authoring.progression.workspace import attach_progression_workspace
 from novel_authoring.utils import json_dumps, sha256_file, utc_now
 from novel_authoring.validation.service import validate_draft
 from novel_authoring.web.workbench import _candidate_cards
@@ -1069,6 +1070,12 @@ def test_verified_kernel_trace_closes_through_approval_and_next_state(
     assert comparison["unexpected"] == {}
     assert comparison["underdelivered"] == {}
     before_approval = build_story_game_state(database, "planning-book", "base")
+    before_approval = attach_progression_workspace(
+        database,
+        book_id="planning-book",
+        edition_id="base",
+        world_state=before_approval,
+    )
     assert before_approval["progression_state"]["primary_axis_state"][
         "current_stage"
     ] == "tempered"
@@ -1089,6 +1096,12 @@ def test_verified_kernel_trace_closes_through_approval_and_next_state(
         "planning-book",
         "base",
         chapter_id=str(committed_chapter["chapter_id"]),
+    )
+    after = attach_progression_workspace(
+        database,
+        book_id="planning-book",
+        edition_id="base",
+        world_state=after,
     )
     assert after["progression_state"]["primary_axis_state"]["current_stage"] == (
         "renewed"

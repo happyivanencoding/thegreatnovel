@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from novel_authoring.atlas.service import latest_atlas
 from novel_authoring.author_control.book_profile import load_effective_book_profile
 from novel_authoring.author_control.reveal import build_planning_truth_context
-from novel_authoring.canon.projection import projection_from_connection
+from novel_authoring.canon.projection import CanonProjection, load_projection_from_connection
 from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
 from novel_authoring.edition import edition_chapters
@@ -275,6 +275,8 @@ def build_planning_aggregate(
     context_chapter_id: str | None = None,
     target_chapter_id: str | None = None,
     target_chapter_ordinal: int | None = None,
+    projection: CanonProjection | None = None,
+    world_state: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Persist a stable, reference-only planning aggregate."""
     database.initialize()
@@ -312,7 +314,8 @@ def build_planning_aggregate(
     else:
         truth_context = dict(truth_reveal_snapshot)
     with database.connect() as connection:
-        projection = projection_from_connection(connection, book_id, edition_id)
+        if projection is None:
+            projection = load_projection_from_connection(connection, book_id, edition_id)
         policy = dict(author_policy or {})
         policy["author_control"] = _author_control_policy(
             connection, book_id, edition_id
@@ -390,6 +393,7 @@ def build_planning_aggregate(
         context_chapter_id=context_chapter_id,
         target_chapter_id=target_chapter_id,
         target_chapter_ordinal=target_chapter_ordinal,
+        world_state=world_state,
     )
     all_run_ids: list[str] = []
     for run_id in (

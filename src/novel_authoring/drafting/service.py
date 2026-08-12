@@ -370,9 +370,22 @@ def show_draft(
         reports = connection.execute(
             """
             SELECT validator, severity, passed, report_json
-            FROM validation_reports WHERE book_id=? AND draft_id=? ORDER BY validator
+            FROM validation_reports
+            WHERE book_id=? AND edition_id=? AND draft_id=?
+              AND run_id=(
+                  SELECT validation_run_id FROM drafts
+                  WHERE book_id=? AND edition_id=? AND draft_id=?
+              )
+            ORDER BY validator
             """,
-            (book_id, draft_id),
+            (
+                book_id,
+                selected_edition,
+                draft_id,
+                book_id,
+                selected_edition,
+                draft_id,
+            ),
         ).fetchall()
     if row is None:
         raise DraftWorkflowError(f"草稿不存在：{draft_id}")

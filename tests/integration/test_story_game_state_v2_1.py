@@ -227,6 +227,8 @@ def test_source_state_replay_preserves_objects_and_operation_semantics(tmp_path:
             chapter_id=chapter_ids[0],
             chapter_ordinal=1,
         )
+        statements: list[str] = []
+        connection.set_trace_callback(statements.append)
         second = build_source_state_projection(
             connection,
             "story-game-state-v2-1",
@@ -234,6 +236,7 @@ def test_source_state_replay_preserves_objects_and_operation_semantics(tmp_path:
             chapter_id=chapter_ids[1],
             chapter_ordinal=2,
         )
+        connection.set_trace_callback(None)
         third = build_source_state_projection(
             connection,
             "story-game-state-v2-1",
@@ -250,6 +253,10 @@ def test_source_state_replay_preserves_objects_and_operation_semantics(tmp_path:
         )
 
     assert len(first["records"]["ITEM"]) == 3
+    assert any(
+        "chapter_ordinal>1" in statement and "chapter_ordinal<=2" in statement
+        for statement in statements
+    )
     assert len(first["records"]["CAPABILITY"]) == 3
     assert {item["state_key"] for item in first["records"]["ITEM"]} == {
         "item:item-a",

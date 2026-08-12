@@ -32,7 +32,7 @@ from novel_authoring.planning.models import ChapterContract
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import book_root
 from novel_authoring.utils import json_dumps, sha256_bytes, sha256_file, stable_id, utc_now
-from novel_authoring.validation.service import ValidationWorkflowError, validate_draft
+from novel_authoring.validation.service import current_validation_bundle
 
 APPROVAL_PHRASE = "批准写入正史"
 
@@ -63,7 +63,9 @@ def _load_approval_rows(
     with database.connect() as connection:
         row = connection.execute(
             """
-            SELECT d.*, c.contract_json, c.target_chapter_ordinal
+            SELECT d.*, c.contract_json, c.target_chapter_ordinal,
+                   c.status AS contract_status, c.contract_sha256,
+                   c.version AS contract_version
             FROM drafts d JOIN chapter_contracts c ON c.contract_id=d.contract_id
             WHERE d.book_id=? AND d.draft_id=? AND d.edition_id=?
             """,
@@ -209,16 +211,30 @@ def approve_draft(
         raise ApprovalWorkflowError(f"拒绝提交：必须逐字提供确认语“{APPROVAL_PHRASE}”")
     database.initialize()
     selected_edition = resolve_edition_id(database, book_id, edition_id)
-    try:
-        validation = validate_draft(database, book_id, draft_id, edition_id=selected_edition)
-    except ValidationWorkflowError as exc:
-        raise ApprovalWorkflowError(str(exc)) from exc
-    if not validation.passed:
-        failed = [report.validator for report in validation.reports if not report.passed]
-        raise ApprovalWorkflowError(f"十项校验未全部通过：{failed}")
     row, draft, contract = _load_approval_rows(database, book_id, draft_id, selected_edition)
     if row["status"] != DraftStatus.VALIDATED.value:
-        raise ApprovalWorkflowError(f"草稿尚未处于 VALIDATED：{row['status']}")
+        if row["validation_run_id"] is not None:
+            with database.connect() as connection:
+                failed_rows = connection.execute(
+                    "SELECT validator FROM validation_reports "
+                    "WHERE book_id=? AND edition_id=? AND draft_id=? AND run_id=? "
+                    "AND passed=0 ORDER BY validator",
+                    (book_id, selected_edition, draft_id, row["validation_run_id"]),
+                ).fetchall()
+            if failed_rows:
+                failed = [str(item["validator"]) for item in failed_rows]
+                raise ApprovalWorkflowError(
+                    f"十项校验未全部通过，需要重新校验：{failed}"
+                )
+        raise ApprovalWorkflowError(
+            f"草稿尚未处于 VALIDATED，需要重新校验：{row['status']}"
+        )
+    if row["validation_run_id"] is None:
+        raise ApprovalWorkflowError("草稿没有当前校验结果，需要重新校验")
+    if str(row["contract_status"]) != "READY":
+        raise ApprovalWorkflowError("章节合同已失效，需要重新校验")
+    if int(row["target_chapter_ordinal"]) != int(contract.chapter):
+        raise ApprovalWorkflowError("章节合同目标已变化，需要重新校验")
     workspace = edition_workspace(database, book_id, selected_edition)
     root = book_root(database, book_id)
     canonical = (root / "book.yaml").is_file()
@@ -235,8 +251,12 @@ def approve_draft(
     if not bool(source_report["ok"]):
         raise ApprovalWorkflowError("不可变源文件校验失败，拒绝写入正史")
     draft_path = Path(str(row["file_path"]))
+    if not draft_path.is_file():
+        raise ApprovalWorkflowError("草稿文件不存在，需要重新校验")
     if sha256_file(draft_path) != str(row["content_sha256"]):
-        raise ApprovalWorkflowError("草稿文件哈希已变化，拒绝写入正史")
+        raise ApprovalWorkflowError("草稿文件哈希已变化，需要重新校验")
+    if draft_path.read_text(encoding="utf-8") != draft.prose_markdown.strip() + "\n":
+        raise ApprovalWorkflowError("草稿文件与已校验正文不一致，需要重新校验")
 
     now = utc_now()
     commit_id = stable_id(
@@ -275,7 +295,25 @@ def approve_draft(
             if duplicate is not None:
                 raise ApprovalWorkflowError(f"草稿已经提交：{duplicate['commit_id']}")
             current = projection_from_connection(connection, book_id, edition_id=selected_edition)
-            if current.through_event_seq != int(row["base_event_seq"]) or current.sha256() != str(
+            current_hash = current.sha256()
+            validation = current_validation_bundle(
+                connection,
+                book_id=book_id,
+                edition_id=selected_edition,
+                draft_id=draft_id,
+                contract_id=contract.contract_id,
+                draft_version=int(row["version"]),
+                content_sha256=str(row["content_sha256"]),
+                contract_sha256=str(row["contract_sha256"]),
+                base_event_seq=int(row["base_event_seq"]),
+                base_projection_hash=str(row["base_projection_hash"]),
+                validation_run_id=str(row["validation_run_id"]),
+                projection=current,
+                projection_sha256=current_hash,
+            )
+            if validation is None:
+                raise ApprovalWorkflowError("草稿校验结果缺失或已失效，需要重新校验")
+            if current.through_event_seq != int(row["base_event_seq"]) or current_hash != str(
                 row["base_projection_hash"]
             ):
                 raise ApprovalWorkflowError(
@@ -571,9 +609,9 @@ def approve_draft(
             projection = projection_from_connection(
                 connection, book_id, edition_id=selected_edition
             )
-            persist_projection_in_transaction(connection, projection)
-            state_json = projection.canonical_json()
-            state_hash = projection.sha256()
+            state_json, state_hash = persist_projection_in_transaction(
+                connection, projection
+            )
             snapshot_id = stable_id(
                 "snapshot",
                 book_id,

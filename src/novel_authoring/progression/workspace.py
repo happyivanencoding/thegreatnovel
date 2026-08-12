@@ -23,7 +23,6 @@ from novel_authoring.progression.resources import (
 )
 from novel_authoring.progression.service import (
     ProgressionContractType,
-    effective_contract_records,
     list_contract_records,
 )
 from novel_authoring.serial_kernel.classification import (
@@ -202,22 +201,23 @@ def build_progression_workspace_from_world_state(
     effective_ordinal = planning_target_ordinal or chapter_ordinal
     if effective_ordinal < chapter_ordinal:
         raise ValueError("成长投影的生效边界不能早于状态章节")
+    all_contract_records = list_contract_records(
+        database,
+        book_id=book_id,
+        edition_id=edition_id,
+    )
     records = {
         contract_type: record
-        for contract_type, record in effective_contract_records(
-            database,
-            book_id=book_id,
-            edition_id=edition_id,
-        ).items()
+        for contract_type, record in (
+            (record.contract_type, record)
+            for record in all_contract_records
+            if record.status.value == "EFFECTIVE"
+        )
         if int(record.effective_from_boundary or 0) <= effective_ordinal
     }
     proposals = [
         record
-        for record in list_contract_records(
-            database,
-            book_id=book_id,
-            edition_id=edition_id,
-        )
+        for record in all_contract_records
         if record.status.value in {"INFERRED_PROPOSAL", "NEEDS_REVIEW"}
     ]
     progression_record = records.get(ProgressionContractType.PROGRESSION)
@@ -398,10 +398,12 @@ def build_progression_workspace(
     chapter = world_state.get("chapter") or {}
     if str(chapter.get("chapter_id") or "") != chapter_id:
         raise ValueError("章节不存在，不能回退到最新章生成成长投影")
-    workspace = world_state.get("progression_workspace")
-    if not isinstance(workspace, dict):
-        raise RuntimeError("成长工作台投影未建立")
-    return workspace
+    return build_progression_workspace_from_world_state(
+        database,
+        book_id=book_id,
+        edition_id=edition_id,
+        world_state=world_state,
+    )
 
 
 __all__ = [

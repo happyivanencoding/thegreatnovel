@@ -4,8 +4,11 @@ import json
 from html.parser import HTMLParser
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
+import novel_authoring.canon.projection as projection_module
+import novel_authoring.web.workbench as workbench_module
 from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
 from novel_authoring.ingest.service import ingest_book
@@ -266,6 +269,49 @@ def test_modes_tabs_and_right_tabs_have_readable_state(tmp_path: Path) -> None:
     assert "正在补齐这一章的故事状态" in visible
     assert "SOURCE_CHAPTER_STATE_PROJECTION_MISSING" not in visible
     assert "anchor_chapter_ordinal" not in visible
+
+
+def test_workbench_builds_only_the_state_requested_by_the_page(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database = _book(tmp_path, "workbench-query-budget")
+    chapter_id = _chapter_ids(database)[1]
+    calls = 0
+    original = workbench_module.build_story_game_state
+
+    def counted(*args: object, **kwargs: object) -> dict[str, object]:
+        nonlocal calls
+        calls += 1
+        return original(*args, **kwargs)
+
+    def no_full_replay(*args: object, **kwargs: object) -> object:
+        raise AssertionError("Workbench 普通读取不得完整审计 Event Chain")
+
+    monkeypatch.setattr(workbench_module, "build_story_game_state", counted)
+    monkeypatch.setattr(projection_module, "projection_from_connection", no_full_replay)
+
+    workbench_module.build_workbench_context(
+        database, "workbench-query-budget", "base", chapter_id=chapter_id, mode="home"
+    )
+    assert calls == 0
+    workbench_module.build_workbench_context(
+        database,
+        "workbench-query-budget",
+        "base",
+        chapter_id=chapter_id,
+        mode="state",
+        state_tab="overview",
+    )
+    assert calls == 2
+    workbench_module.build_workbench_context(
+        database,
+        "workbench-query-budget",
+        "base",
+        chapter_id=chapter_id,
+        mode="state",
+        state_tab="knowledge",
+    )
+    assert calls == 3
 
 
 def test_author_workflow_surface_is_readable_and_embedded_in_workbench(

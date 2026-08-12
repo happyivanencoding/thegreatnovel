@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import json
+import shutil
 from itertools import combinations
 from pathlib import Path
 from typing import Any
 
 from pydantic import ValidationError
 
-from novel_authoring.author_control.projections import build_story_game_state
 from novel_authoring.config import Settings
 from novel_authoring.context.router import (
     ContextPurpose,
@@ -823,7 +823,13 @@ def prepare_handoff_candidate_task(
 
     handoff_root = Path(str(handoff["task_directory"]))
     handoff_input = handoff_root / "input" if (handoff_root / "input").is_dir() else handoff_root
-    handoff_task = json.loads((handoff_input / "task.json").read_text(encoding="utf-8"))
+    handoff_task_path = handoff_input / "task.json"
+    if not handoff_task_path.is_file():
+        raise PlanningError("handoff 缺少冻结 task.json")
+    try:
+        handoff_task = json.loads(handoff_task_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise PlanningError("handoff 的冻结 task.json 无法解析") from exc
     author_policy = json.loads(str(aggregate_row["author_policy_json"] or "{}"))
     task_id = stable_id("plan", handoff_id, aggregate_id)
     operation = ensure_operation(
@@ -849,24 +855,53 @@ def prepare_handoff_candidate_task(
     if handoff_chapter_id is not None and handoff_chapter_id != frozen_chapter_id:
         raise PlanningError("handoff 章节与 Frozen Kernel Context 不一致")
     chapter_id = frozen_chapter_id
-    world_state = build_story_game_state(
-        database,
-        book_id,
-        edition_id,
-        chapter_id=chapter_id,
+    world_state_path = handoff_input / str(
+        handoff_task.get("world_state_context_path") or ""
     )
-    innovation_control = InnovationControl.model_validate(
-        handoff_task.get("innovation_control", {})
+    kernel_context_path = handoff_input / str(
+        handoff_task.get("kernel_context_path") or ""
     )
-    boundary = build_boundary_packet(
-        database,
-        book_id,
-        edition_id=edition_id,
-        innovation_control=innovation_control,
+    boundary_packet_id = str(handoff_task.get("boundary_packet_id") or "")
+    boundary_json_path = Path(str(handoff_task.get("boundary_packet_json_path") or ""))
+    boundary_markdown_path = Path(
+        str(handoff_task.get("boundary_packet_markdown_path") or "")
     )
-    boundary_payload = json.loads(
-        Path(str(boundary["json_path"])).read_text(encoding="utf-8")
-    )
+    if not world_state_path.is_file() or not kernel_context_path.is_file():
+        raise PlanningError("handoff 缺少冻结 World State 或 Kernel Context")
+    if (
+        not boundary_packet_id
+        or not boundary_json_path.is_file()
+        or not boundary_markdown_path.is_file()
+    ):
+        raise PlanningError("handoff 缺少冻结 Continuation Boundary artifact")
+    try:
+        world_state = json.loads(world_state_path.read_text(encoding="utf-8"))
+        frozen_kernel_payload = json.loads(kernel_context_path.read_text(encoding="utf-8"))
+        boundary_payload = json.loads(boundary_json_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise PlanningError("handoff 冻结 artifact 无法解析") from exc
+    if not isinstance(world_state, dict) or not isinstance(boundary_payload, dict):
+        raise PlanningError("handoff 冻结 World State 或 Boundary 结构无效")
+    if frozen_kernel_payload != kernel_context.model_dump(mode="json"):
+        raise PlanningError("handoff Kernel Context 与 Planning Aggregate 不一致")
+    world_chapter = world_state.get("chapter")
+    if (
+        not isinstance(world_chapter, dict)
+        or str(world_chapter.get("chapter_id") or "") != chapter_id
+    ):
+        raise PlanningError("handoff World State 与 Frozen Kernel Context 章节不一致")
+    with database.connect() as connection:
+        boundary_row = connection.execute(
+            "SELECT packet_sha256, status FROM boundary_packets "
+            "WHERE packet_id=? AND book_id=? AND edition_id=?",
+            (boundary_packet_id, book_id, edition_id),
+        ).fetchone()
+    if boundary_row is None or str(boundary_row["status"]) != "READY":
+        raise PlanningError("handoff 的冻结 Continuation Boundary 不可用")
+    if str(boundary_row["packet_sha256"]) != str(
+        handoff_task.get("boundary_packet_sha256") or ""
+    ):
+        raise PlanningError("handoff 的冻结 Continuation Boundary 不一致")
     boundary_position = boundary_payload.get("current_position", {})
     if int(boundary_position.get("last_canon_chapter") or 0) != (
         kernel_context.context_chapter_ordinal
@@ -881,8 +916,8 @@ def prepare_handoff_candidate_task(
         "handoff_id": handoff_id,
         "aggregate_id": aggregate_id,
         "aggregate_hash": str(aggregate_row["bundle_hash"]),
-        "boundary_packet_id": boundary["packet_id"],
-        "boundary_path": boundary["json_path"],
+        "boundary_packet_id": boundary_packet_id,
+        "boundary_path": str(boundary_json_path),
         "author_goal": handoff_task.get("author_goal"),
         "author_control": author_policy.get("author_control", {}),
         "author_control_trace_contract": author_policy.get("trace_contract", {}),
@@ -963,13 +998,8 @@ def prepare_handoff_candidate_task(
     (input_dir / "task.json").write_text(
         json_dumps(metadata, indent=2) + "\n", encoding="utf-8"
     )
-    (input_dir / "world_state_context.json").write_text(
-        json_dumps(world_state, indent=2) + "\n", encoding="utf-8"
-    )
-    (input_dir / "kernel_context.json").write_text(
-        json_dumps(kernel_context.model_dump(mode="json"), indent=2) + "\n",
-        encoding="utf-8",
-    )
+    shutil.copyfile(world_state_path, input_dir / "world_state_context.json")
+    shutil.copyfile(kernel_context_path, input_dir / "kernel_context.json")
     return {
         "task_id": task_id,
         "handoff_id": handoff_id,
@@ -980,7 +1010,7 @@ def prepare_handoff_candidate_task(
         "kernel_context": str(input_dir / "kernel_context.json"),
         "expected_output": str(output_dir / "output.json"),
         "aggregate_id": aggregate_id,
-        "boundary_packet_id": boundary["packet_id"],
+        "boundary_packet_id": boundary_packet_id,
         "effective_book_profile": metadata["effective_book_profile"],
         "truth_reveal": metadata["truth_reveal"],
     }
