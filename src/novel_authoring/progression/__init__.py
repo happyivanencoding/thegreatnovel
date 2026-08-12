@@ -92,6 +92,7 @@ from novel_authoring.progression.scheduler import (
     SchedulerOverride,
     load_scheduler_override,
     recommend_chapter_intent,
+    recommend_universal_chapter_intent,
     save_scheduler_override,
 )
 
@@ -173,5 +174,6 @@ __all__ = [
     "project_opportunity_surface",
     "project_world_expansion_state",
     "recommend_chapter_intent",
+    "recommend_universal_chapter_intent",
     "save_scheduler_override",
 ]

@@ -14,6 +14,8 @@ from novel_authoring.db.database import Database
 from novel_authoring.planning.innovation import NarrativeDebt, NarrativeDebtType
 from novel_authoring.progression.anticipation import AnticipationSurfaceView
 from novel_authoring.progression.models import PayoffChannel
+from novel_authoring.serial_kernel.engines import EngineIntentRecommendation
+from novel_authoring.serial_kernel.models import NarrativeDriveContract
 from novel_authoring.utils import json_dumps, utc_now
 
 
@@ -31,6 +33,13 @@ class ChapterIntent(StrEnum):
     STATUS_RISE = "STATUS_RISE"
     TEAM_GROWTH = "TEAM_GROWTH"
     RELATIONSHIP_ADVANCE = "RELATIONSHIP_ADVANCE"
+    CAREER_MASTERY = "CAREER_MASTERY"
+    COMPETITIVE_SKILL = "COMPETITIVE_SKILL"
+    COMPETITIVE_RANK = "COMPETITIVE_RANK"
+    SURVIVAL_ADVANCE = "SURVIVAL_ADVANCE"
+    BASE_BUILDING = "BASE_BUILDING"
+    STATE_BUILDING = "STATE_BUILDING"
+    POLITICAL_STRATEGY = "POLITICAL_STRATEGY"
     RECOVERY = "RECOVERY"
     AFTERMATH = "AFTERMATH"
     TRANSITION = "TRANSITION"
@@ -50,6 +59,9 @@ class ChapterIntentRecommendation(BaseModel):
     risks: list[str] = Field(default_factory=list)
     alternatives: list[ChapterIntent] = Field(default_factory=list)
     author_override_applied: bool = False
+    source_drive: str | None = None
+    reader_promises_served: list[str] = Field(default_factory=list)
+    engine_recommendations: list[dict[str, Any]] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_distinct_intents(self) -> ChapterIntentRecommendation:
@@ -121,8 +133,23 @@ def recommend_chapter_intent(
     immediate_aftermath: bool = False,
     recovery_needed: bool = False,
     override: SchedulerOverride | None = None,
+    drive_contract: NarrativeDriveContract | None = None,
+    engine_recommendations: Sequence[EngineIntentRecommendation] = (),
 ) -> ChapterIntentRecommendation:
     """Recommend a function without creating a plot event or a mandatory schedule."""
+
+    if drive_contract is not None and engine_recommendations:
+        return recommend_universal_chapter_intent(
+            drive_contract=drive_contract,
+            engine_recommendations=engine_recommendations,
+            debts=debts,
+            anticipation=anticipation,
+            author_tasks=author_tasks,
+            active_thread_ids=active_thread_ids,
+            immediate_aftermath=immediate_aftermath,
+            recovery_needed=recovery_needed,
+            override=override,
+        )
 
     if override is not None:
         return ChapterIntentRecommendation(
@@ -192,6 +219,99 @@ def recommend_chapter_intent(
             intent
             for intent in (ChapterIntent.CONTINUITY_ADVANCE, ChapterIntent.TRANSITION)
             if intent is not primary
+        ],
+    )
+
+
+def recommend_universal_chapter_intent(
+    *,
+    drive_contract: NarrativeDriveContract,
+    engine_recommendations: Sequence[EngineIntentRecommendation],
+    debts: Sequence[NarrativeDebt],
+    anticipation: AnticipationSurfaceView,
+    author_tasks: Sequence[Mapping[str, Any]] = (),
+    active_thread_ids: Sequence[str] = (),
+    immediate_aftermath: bool = False,
+    recovery_needed: bool = False,
+    override: SchedulerOverride | None = None,
+) -> ChapterIntentRecommendation:
+    """Aggregate enabled engines; Market Category is deliberately not an input."""
+
+    author_intent = _intent_from_task(author_tasks)
+    if override is not None or author_intent is not None or immediate_aftermath or recovery_needed:
+        return recommend_chapter_intent(
+            debts=debts,
+            anticipation=anticipation,
+            author_tasks=author_tasks,
+            active_thread_ids=active_thread_ids,
+            immediate_aftermath=immediate_aftermath,
+            recovery_needed=recovery_needed,
+            override=override,
+        )
+    active_drives = set(drive_contract.drive_mix)
+    ranked: list[tuple[float, EngineIntentRecommendation, ChapterIntent]] = []
+    for recommendation in engine_recommendations:
+        if recommendation.drive not in active_drives:
+            continue
+        try:
+            intent = ChapterIntent(recommendation.intent)
+        except ValueError:
+            intent = ChapterIntent.CUSTOM
+        drive_priority = drive_contract.drive_priorities[recommendation.drive]
+        weighted_priority = recommendation.priority * (0.5 + drive_priority / 200)
+        ranked.append((weighted_priority, recommendation, intent))
+    ranked.sort(key=lambda item: item[0], reverse=True)
+    if not ranked:
+        return recommend_chapter_intent(
+            debts=debts,
+            anticipation=anticipation,
+            author_tasks=author_tasks,
+            active_thread_ids=active_thread_ids,
+        )
+    _, primary_recommendation, primary_intent = ranked[0]
+    secondary: list[ChapterIntent] = []
+    for _, _, intent in ranked[1:]:
+        if intent is primary_intent or intent in secondary:
+            continue
+        secondary.append(intent)
+        if len(secondary) == 2:
+            break
+    supporting_debts = list(
+        dict.fromkeys(
+            [
+                *primary_recommendation.debt_ids,
+                *[
+                    debt.debt_id
+                    for debt in debts
+                    if (debt.debt_score or 0) >= 40
+                ],
+            ]
+        )
+    )
+    return ChapterIntentRecommendation(
+        primary_intent=primary_intent,
+        secondary_intents=secondary,
+        why_now=primary_recommendation.why_now,
+        supporting_debt_ids=supporting_debts,
+        supporting_anticipation_ids=[
+            item.anticipation_id for item in anticipation.items[:3]
+        ],
+        supporting_thread_ids=list(active_thread_ids),
+        risks=list(
+            dict.fromkeys(
+                risk for _, recommendation, _ in ranked[:3] for risk in recommendation.risks
+            )
+        ),
+        alternatives=[
+            intent
+            for intent in (ChapterIntent.CONTINUITY_ADVANCE, ChapterIntent.TRANSITION)
+            if intent is not primary_intent
+        ],
+        source_drive=primary_recommendation.drive.value,
+        reader_promises_served=primary_recommendation.reader_promises,
+        engine_recommendations=[
+            recommendation.model_dump(mode="json")
+            for _, recommendation, _ in ranked
         ],
     )
 
@@ -286,5 +406,6 @@ __all__ = [
     "SchedulerOverride",
     "load_scheduler_override",
     "recommend_chapter_intent",
+    "recommend_universal_chapter_intent",
     "save_scheduler_override",
 ]
