@@ -371,6 +371,25 @@ class SemanticPolicyLeakDiagnostic(BaseModel):
     penalty: float = Field(default=0, ge=0)
 
 
+class GenrePromiseRewardBreakdown(BaseModel):
+    """Small auditable add-on inside the existing post-gate reward path."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    reader_promise_alignment: float = Field(default=0, ge=0)
+    progression_gain: float = Field(default=0, ge=0)
+    progression_payoff: float = Field(default=0, ge=0)
+    power_showcase_utility: float = Field(default=0, ge=0)
+    resource_opportunity_utility: float = Field(default=0, ge=0)
+    world_expansion_utility: float = Field(default=0, ge=0)
+    anticipation_utility: float = Field(default=0, ge=0)
+    genre_native_synergy: float = Field(default=0, ge=0)
+    genre_evolution_value: float = Field(default=0, ge=0)
+    genre_drift_penalty: float = Field(default=0, ge=0)
+    stagnation_penalty: float = Field(default=0, ge=0)
+    total_reward: float = 0
+
+
 class InnovationRewardBreakdown(BaseModel):
     """Auditable reward components applied only after Hard Gates pass."""
 
@@ -391,6 +410,9 @@ class InnovationRewardBreakdown(BaseModel):
     payoff_reward: float = Field(default=0, ge=0)
     answer_and_expand_reward: float = Field(default=0, ge=0)
     focus_alignment_reward: float = Field(default=0, ge=0)
+    genre_promise_reward: GenrePromiseRewardBreakdown = Field(
+        default_factory=GenrePromiseRewardBreakdown
+    )
     new_narrative_debt_cost: float = Field(default=0, ge=0)
     overdue_debt_penalty: float = Field(default=0, ge=0)
     integration_cost_penalty: float = Field(default=0, ge=0)

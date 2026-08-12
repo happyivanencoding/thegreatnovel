@@ -205,6 +205,18 @@ def build_chapter_contract(
                 "Hidden Truth 只作为行为约束；未获 Agenda 授权不得向读者或角色揭示。"
             ),
         },
+        reader_promise_alignment=candidate.reader_promise_alignment,
+        genre_alignment=candidate.genre_alignment,
+        progress_preview=candidate.progress_preview,
+        progression_impact=candidate.progression_impact,
+        payoff_channel_impact=candidate.payoff_channel_impact,
+        world_expansion_impact=candidate.world_expansion_impact,
+        resource_opportunity_impact=candidate.resource_opportunity_impact,
+        chapter_intent=candidate.chapter_intent,
+        progression_debt_impact=candidate.progression_debt_impact,
+        anticipation_impact=candidate.anticipation_impact,
+        genre_drift_diagnostic=candidate.genre_drift_diagnostic,
+        genre_evolution_diagnostic=candidate.genre_evolution_diagnostic,
     )
     contract_json = json_dumps(contract.model_dump(mode="json"), indent=2)
     contract_hash = sha256_bytes(contract_json.encode())

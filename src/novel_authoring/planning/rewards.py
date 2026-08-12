@@ -17,6 +17,7 @@ from novel_authoring.planning.innovation import (
     CrossHorizonSynergy,
     EarnedRecombination,
     ExpectedNarrativeDebt,
+    GenrePromiseRewardBreakdown,
     InnovationControl,
     InnovationElement,
     InnovationFocus,
@@ -36,7 +37,7 @@ from novel_authoring.planning.innovation import (
     QuestionBalance,
     SemanticPolicyLeakDiagnostic,
 )
-from novel_authoring.planning.models import CandidateProposal
+from novel_authoring.planning.models import CandidateProposal, ReaderPromiseService
 
 LEVEL_MULTIPLIERS: dict[InnovationLevel, float] = {
     InnovationLevel.MINIMAL: 0.35,
@@ -92,6 +93,102 @@ def question_balance(delta: NarrativeDelta | None) -> QuestionBalance:
         newly_opened=opened,
         over_deferred=over_deferred,
         penalty=4 if over_deferred else 0,
+    )
+
+
+def calculate_genre_promise_reward(
+    candidate: CandidateProposal,
+) -> GenrePromiseRewardBreakdown:
+    """Moderate promise alignment without creating a second score engine."""
+
+    if not candidate.reader_promise_alignment and not any(
+        (
+            candidate.genre_alignment,
+            candidate.progression_impact.axis_advanced,
+            candidate.progression_impact.progression_delta_type,
+            candidate.payoff_channel_impact,
+            candidate.world_expansion_impact,
+            candidate.resource_opportunity_impact,
+            candidate.progression_debt_impact,
+            candidate.anticipation_impact,
+            candidate.genre_drift_diagnostic,
+            candidate.genre_evolution_diagnostic,
+        )
+    ):
+        return GenrePromiseRewardBreakdown()
+    core = [
+        item
+        for item in candidate.reader_promise_alignment
+        if item.priority.upper() == "CORE"
+    ]
+    served = sum(
+        1.0
+        if item.service is ReaderPromiseService.SERVED
+        else 0.5
+        if item.service is ReaderPromiseService.PARTIALLY_SERVED
+        else 0.0
+        for item in core
+    )
+    contradicted = sum(
+        1 for item in core if item.service is ReaderPromiseService.CONTRADICTED
+    )
+    impact = candidate.progression_impact
+    progression_signals = sum(
+        bool(value)
+        for value in (
+            impact.axis_advanced,
+            impact.progression_delta_type,
+            impact.stage_change,
+            impact.branch_change,
+            impact.bottleneck_change,
+            impact.resource_change,
+            impact.ability_unlock,
+            impact.ability_showcase,
+            impact.new_ceiling_visibility,
+            impact.future_progression_space,
+        )
+    )
+    alignment_reward = min(3.0, served)
+    progression_gain = min(2.0, 0.4 * progression_signals)
+    progression_payoff = 1.0 if impact.stage_change or impact.ability_unlock else 0.0
+    showcase = 0.75 if impact.ability_showcase else 0.0
+    resource = 0.75 if candidate.resource_opportunity_impact else 0.0
+    world = 0.75 if candidate.world_expansion_impact else 0.0
+    anticipation = 0.75 if candidate.anticipation_impact else 0.0
+    synergy = 0.5 if candidate.genre_alignment else 0.0
+    evolution_status = str(candidate.genre_evolution_diagnostic.get("status", ""))
+    evolution = 1.0 if evolution_status in {"GENRE_EVOLUTION", "GENRE_EXPANSION"} else 0.0
+    drift_penalty = min(
+        6.0,
+        float(candidate.genre_drift_diagnostic.get("penalty", 0))
+        + 4.0 * contradicted,
+    )
+    stagnation_penalty = 0.5 if core and served == 0 and progression_signals == 0 else 0.0
+    positive = min(
+        8.0,
+        alignment_reward
+        + progression_gain
+        + progression_payoff
+        + showcase
+        + resource
+        + world
+        + anticipation
+        + synergy
+        + evolution,
+    )
+    return GenrePromiseRewardBreakdown(
+        reader_promise_alignment=alignment_reward,
+        progression_gain=progression_gain,
+        progression_payoff=progression_payoff,
+        power_showcase_utility=showcase,
+        resource_opportunity_utility=resource,
+        world_expansion_utility=world,
+        anticipation_utility=anticipation,
+        genre_native_synergy=synergy,
+        genre_evolution_value=evolution,
+        genre_drift_penalty=drift_penalty,
+        stagnation_penalty=stagnation_penalty,
+        total_reward=positive - drift_penalty - stagnation_penalty,
     )
 
 
@@ -294,6 +391,7 @@ def calculate_innovation_reward(
     candidate_metadata: Mapping[str, object] | None = None,
     eligible: bool = True,
     ineligibility_reasons: Sequence[str] = (),
+    genre_promise_reward: GenrePromiseRewardBreakdown | None = None,
 ) -> InnovationRewardBreakdown:
     """Calculate expected or realized reward for one already-gated plan."""
 
@@ -302,6 +400,7 @@ def calculate_innovation_reward(
         primary_directions=[InnovationFocus.AUTO],
         main_innovations=["未提供结构化创新元素"],
     )
+    promise_reward = genre_promise_reward or GenrePromiseRewardBreakdown()
     elements = list(preview.expected_innovation_elements)
     meaningful = _meaningful_elements(elements)
     meaningful_ids = {element.element_id for element in meaningful}
@@ -426,6 +525,7 @@ def calculate_innovation_reward(
         + payoff_reward
         + answer_and_expand_reward
         + focus_alignment_reward
+        + max(0.0, promise_reward.total_reward)
     )
     multiplier = LEVEL_MULTIPLIERS[control.level]
     reward_cap = LEVEL_REWARD_CAPS[control.level]
@@ -439,6 +539,7 @@ def calculate_innovation_reward(
         + orphan_penalty
         + pattern.penalty
         + over_deferral_penalty
+        + max(0.0, -promise_reward.total_reward)
     )
     final = base_candidate_score + capped - penalties if eligible else 0.0
     return InnovationRewardBreakdown(
@@ -457,6 +558,7 @@ def calculate_innovation_reward(
         payoff_reward=payoff_reward,
         answer_and_expand_reward=answer_and_expand_reward,
         focus_alignment_reward=focus_alignment_reward,
+        genre_promise_reward=promise_reward,
         new_narrative_debt_cost=new_narrative_debt_cost,
         overdue_debt_penalty=overdue_debt_penalty,
         integration_cost_penalty=integration_cost_penalty,
@@ -486,6 +588,7 @@ def calculate_candidate_innovation_reward(
     eligible: bool = True,
     ineligibility_reasons: Sequence[str] = (),
 ) -> InnovationRewardBreakdown:
+    promise_reward = calculate_genre_promise_reward(candidate)
     return calculate_innovation_reward(
         candidate.innovation_preview,
         control,
@@ -495,6 +598,7 @@ def calculate_candidate_innovation_reward(
         candidate_metadata=candidate.model_dump(mode="json"),
         eligible=eligible,
         ineligibility_reasons=ineligibility_reasons,
+        genre_promise_reward=promise_reward,
     )
 
 
@@ -559,6 +663,7 @@ __all__ = [
     "MAGNITUDE_REWARDS",
     "PAYOFF_REWARDS",
     "calculate_candidate_innovation_reward",
+    "calculate_genre_promise_reward",
     "calculate_innovation_reward",
     "calculate_realized_innovation_reward",
     "detect_pattern_repetition",

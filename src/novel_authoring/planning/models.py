@@ -96,6 +96,74 @@ class CandidateLens(StrEnum):
     FORWARD_EXPANSION = "FORWARD_EXPANSION"
 
 
+class ReaderPromiseService(StrEnum):
+    SERVED = "SERVED"
+    PARTIALLY_SERVED = "PARTIALLY_SERVED"
+    NOT_RELEVANT = "NOT_RELEVANT"
+    CONTRADICTED = "CONTRADICTED"
+
+
+class ReaderPromiseAlignment(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    promise_id: str
+    priority: str
+    service: ReaderPromiseService
+    evidence: list[str] = Field(default_factory=list)
+
+
+class ProgressComponent(StrEnum):
+    PERMANENT_GROWTH = "permanent_growth"
+    WORLD_STATE_CHANGE = "world_state_change"
+    RELATIONSHIP_CHANGE = "relationship_change"
+    KNOWLEDGE_CHANGE = "knowledge_change"
+    GOAL_ADVANCE = "goal_advance"
+    STRATEGY_EXPANSION = "strategy_expansion"
+
+
+class ProgressComponentEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    component: ProgressComponent
+    value: float = Field(ge=0, le=100)
+    evidence: list[str] = Field(min_length=1)
+
+
+class ProgressPreview(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    components: list[ProgressComponentEvidence] = Field(min_length=6, max_length=6)
+    metric_run_id: str | None = None
+
+    @model_validator(mode="after")
+    def validate_components(self) -> ProgressPreview:
+        expected = set(ProgressComponent)
+        actual = {item.component for item in self.components}
+        if actual != expected:
+            raise ValueError("Progress Preview 必须提供六个唯一分量")
+        return self
+
+    @property
+    def values(self) -> dict[str, float]:
+        return {item.component.value: item.value for item in self.components}
+
+
+class ProgressionImpact(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    axis_advanced: list[str] = Field(default_factory=list)
+    progression_delta_type: list[str] = Field(default_factory=list)
+    stage_change: str | None = None
+    branch_change: str | None = None
+    bottleneck_change: str | None = None
+    resource_change: list[str] = Field(default_factory=list)
+    ability_unlock: list[str] = Field(default_factory=list)
+    ability_showcase: list[str] = Field(default_factory=list)
+    growth_cost: list[str] = Field(default_factory=list)
+    new_ceiling_visibility: list[str] = Field(default_factory=list)
+    future_progression_space: list[str] = Field(default_factory=list)
+
+
 class NoveltyProvenance(StrEnum):
     EXISTING_RUNTIME = "EXISTING_RUNTIME"
     SOURCE_EARNED = "SOURCE_EARNED"
@@ -287,6 +355,18 @@ class CandidateProposal(BaseModel):
     )
     truth_alignment: list[CandidateTruthAlignment] = Field(default_factory=list)
     reveal_impact: CandidateRevealImpact = Field(default_factory=CandidateRevealImpact)
+    reader_promise_alignment: list[ReaderPromiseAlignment] = Field(default_factory=list)
+    genre_alignment: list[str] = Field(default_factory=list)
+    progress_preview: ProgressPreview | None = None
+    progression_impact: ProgressionImpact = Field(default_factory=ProgressionImpact)
+    payoff_channel_impact: list[str] = Field(default_factory=list)
+    world_expansion_impact: list[str] = Field(default_factory=list)
+    resource_opportunity_impact: list[str] = Field(default_factory=list)
+    chapter_intent: str | None = None
+    progression_debt_impact: list[str] = Field(default_factory=list)
+    anticipation_impact: list[str] = Field(default_factory=list)
+    genre_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
+    genre_evolution_diagnostic: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def reject_retroactive_invention(self) -> CandidateProposal:
@@ -359,3 +439,15 @@ class ChapterContract(BaseModel):
     active_author_truths: list[dict[str, Any]] = Field(default_factory=list)
     reveal_agenda: dict[str, Any] = Field(default_factory=dict)
     truth_reveal_commitments: dict[str, Any] = Field(default_factory=dict)
+    reader_promise_alignment: list[ReaderPromiseAlignment] = Field(default_factory=list)
+    genre_alignment: list[str] = Field(default_factory=list)
+    progress_preview: ProgressPreview | None = None
+    progression_impact: ProgressionImpact = Field(default_factory=ProgressionImpact)
+    payoff_channel_impact: list[str] = Field(default_factory=list)
+    world_expansion_impact: list[str] = Field(default_factory=list)
+    resource_opportunity_impact: list[str] = Field(default_factory=list)
+    chapter_intent: str | None = None
+    progression_debt_impact: list[str] = Field(default_factory=list)
+    anticipation_impact: list[str] = Field(default_factory=list)
+    genre_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
+    genre_evolution_diagnostic: dict[str, Any] = Field(default_factory=dict)

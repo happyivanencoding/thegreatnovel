@@ -289,6 +289,60 @@ def test_boundary_candidate_ranking_and_contract(tmp_path: Path) -> None:
         candidate_payload("candidate-b", thread_ids[1], score=85, variant=1),
         candidate_payload("candidate-c", thread_ids[2], score=65, variant=2),
     ]
+    candidates[0].update(
+        {
+            "reader_promise_alignment": [
+                {
+                    "promise_id": "promise-growth",
+                    "priority": "CORE",
+                    "service": "SERVED",
+                    "evidence": ["维修资源转化改变了下一步行动可能性"],
+                }
+            ],
+            "genre_alignment": ["生存成长中的资源转化"],
+            "progress_preview": {
+                "components": [
+                    {
+                        "component": component,
+                        "value": 90,
+                        "evidence": [f"{component} 的章节状态变化"],
+                    }
+                    for component in (
+                        "permanent_growth",
+                        "world_state_change",
+                        "relationship_change",
+                        "knowledge_change",
+                        "goal_advance",
+                        "strategy_expansion",
+                    )
+                ]
+            },
+            "progression_impact": {
+                "axis_advanced": ["生存能力"],
+                "progression_delta_type": ["CONVERT"],
+                "resource_change": ["维修材料转化为防御能力"],
+                "future_progression_space": ["稳定气象站后探索外部区域"],
+            },
+            "resource_opportunity_impact": ["回收已铺垫维修材料"],
+            "chapter_intent": "RESOURCE_CONVERSION",
+            "anticipation_impact": ["兑现材料用途"],
+        }
+    )
+    for key in (
+        "reader_promise_alignment",
+        "genre_alignment",
+        "progression_impact",
+        "resource_opportunity_impact",
+        "chapter_intent",
+        "anticipation_impact",
+    ):
+        candidates[1][key] = deepcopy(candidates[0][key])
+    candidates[1]["progress_preview"] = {
+        "components": [
+            {**component, "value": 85}
+            for component in candidates[0]["progress_preview"]["components"]
+        ]
+    }
     output_path = write_candidates(workspace, task_id, candidates)
 
     planned = import_candidate_output(
@@ -328,12 +382,20 @@ def test_boundary_candidate_ranking_and_contract(tmp_path: Path) -> None:
     assert len(planned["same_choice_band"]) == 2
     assert sum(item["selection_status"] == "SELECTED" for item in planned["candidates"]) == 1
     assert all(min(item["structural_difference_counts"]) >= 3 for item in planned["candidates"])
+    selected = next(
+        item for item in planned["candidates"] if item["selection_status"] == "SELECTED"
+    )
+    assert selected["innovation_reward_breakdown"]["genre_promise_reward"][
+        "total_reward"
+    ] > 0
 
     contract_data = json.loads(Path(str(contract["path"])).read_text(encoding="utf-8"))
     assert contract_data["chapter"] == 4
     assert len(contract_data["secondary_functions"]) <= 2
     assert contract_data["required_irreversible_change"]
     assert contract_data["required_cost"]
+    assert contract_data["chapter_intent"] == "RESOURCE_CONVERSION"
+    assert contract_data["progression_impact"]["resource_change"]
     assert contract_data["boundary_packet_id"] == task["boundary_packet_id"]
     assert len(task["effective_book_profile"]["dimensions"]) == 9
     assert (

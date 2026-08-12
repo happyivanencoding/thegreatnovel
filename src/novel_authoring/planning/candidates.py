@@ -16,7 +16,14 @@ from novel_authoring.context.router import (
 )
 from novel_authoring.db.database import Database
 from novel_authoring.edition import edition_workspace, resolve_edition_id
-from novel_authoring.metrics.formulas import candidate_score, narrative_debt, thread_need
+from novel_authoring.metrics.formulas import (
+    candidate_score,
+    narrative_debt,
+    thread_need,
+)
+from novel_authoring.metrics.formulas import (
+    progress as progress_metric,
+)
 from novel_authoring.metrics.gates import evaluate_hard_gates
 from novel_authoring.planning.aggregates import build_planning_aggregate
 from novel_authoring.planning.boundary import (
@@ -974,13 +981,24 @@ def import_candidate_output(
         )
         inputs = candidate.score_inputs.model_dump()
         inputs["structural_diversity"] = diversity
+        score_evidence = dict(candidate.score_evidence)
+        if candidate.progress_preview is not None:
+            progress_result = progress_metric(
+                candidate.progress_preview.values,
+                settings.metrics["progress"],
+            )
+            inputs["progress_gain"] = progress_result.score
+            score_evidence["progress_gain"] = [
+                evidence
+                for component in candidate.progress_preview.components
+                for evidence in component.evidence
+            ]
         required_evidence = set(inputs) - {"structural_diversity"}
         missing_evidence = sorted(
-            key for key in required_evidence if not candidate.score_evidence.get(key)
+            key for key in required_evidence if not score_evidence.get(key)
         )
         if missing_evidence:
             raise PlanningError(f"候选 {candidate.local_id} 缺少评分证据：{missing_evidence}")
-        score_evidence = dict(candidate.score_evidence)
         score_evidence["structural_diversity"] = [
             f"与另外两案的结构差异维度数：{differences[candidate.local_id]}"
         ]
