@@ -1115,6 +1115,13 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .original-contract-card { display: grid; gap: 8px; padding: 16px; border: 1px solid #dbe5ff; border-radius: 12px; background: #f8faff; }
 .original-contract-card > span { color: #2457d6; font-size: .72rem; font-weight: 700; }
 .original-contract-card small { color: #667085; line-height: 1.5; }
+.pwk-workspace { display: grid; gap: 18px; }
+.pwk-summary-grid, .pwk-axis-grid, .pwk-column-grid, .pwk-world-track { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.pwk-summary-grid > section, .pwk-axis-grid > article, .pwk-column-grid > article, .pwk-world-track > article { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: var(--panel); }
+.pwk-summary-grid span, .pwk-axis-grid span, .pwk-column-grid span, .pwk-world-track span { display: block; color: var(--muted); font-size: 12px; }
+.pwk-summary-grid strong, .pwk-axis-grid strong, .pwk-column-grid b, .pwk-world-track strong { display: block; margin: 5px 0; }
+.pwk-section { border-top: 1px solid var(--line); padding-top: 14px; }
+.pwk-track-row { border-left: 2px solid var(--accent); margin-top: 8px; padding-left: 10px; }
 .original-version-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 18px; padding: 14px 0; border-top: 1px solid #eaecf0; }
 .original-version-row > div:first-child { display: grid; gap: 4px; }
 .original-version-row small { color: #98a2b3; }

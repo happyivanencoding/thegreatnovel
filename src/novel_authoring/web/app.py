@@ -136,6 +136,7 @@ from novel_authoring.pending_actions import (
     list_pending_author_actions,
     set_pending_author_action_status,
 )
+from novel_authoring.progression.workspace import build_progression_workspace
 from novel_authoring.readiness import evaluate_revision_range
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.library import LibraryAddOptions, add_book
@@ -1452,6 +1453,24 @@ def create_app(
             chapter_id=_check_id(chapter_id),
             character_id=_query_id(request, "character_id"),
         )
+
+    @app.get(
+        "/api/books/{path_book_id}/editions/{edition_id}/chapters/{chapter_id}/progression"
+    )
+    async def chapter_progression_api(
+        path_book_id: str, edition_id: str, chapter_id: str
+    ) -> dict[str, Any]:
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        try:
+            return build_progression_workspace(
+                _database_for_book(app, checked_book),
+                book_id=checked_book,
+                edition_id=checked_edition,
+                chapter_id=_check_id(chapter_id),
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
 
     @app.get("/api/books/{path_book_id}/editions/{edition_id}/author-control")
     async def author_control_api(path_book_id: str, edition_id: str) -> dict[str, Any]:

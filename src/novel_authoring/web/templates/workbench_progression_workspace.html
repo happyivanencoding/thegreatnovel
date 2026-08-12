@@ -1,0 +1,48 @@
+{% set growth = progression_workspace %}
+<article class="wb-content-card pwk-workspace">
+  <div class="wb-section-heading">
+    <div><p class="wb-kicker">Progression Workspace · 章节只读投影</p><h2>第{{ growth.chapter.ordinal if growth else '—' }}章成长状态</h2></div>
+    <div class="wb-heading-tags"><span class="wb-state-tag wb-state-soft">不会修改 Canon</span>{% if growth and growth.available %}<span class="wb-state-tag wb-state-source">合同已生效</span>{% endif %}</div>
+  </div>
+  {% if not growth or not growth.available %}
+    <div class="wb-empty-state"><h3>这本书尚未建立成长体系</h3><p>{{ growth.message if growth else '请先选择一个真实章节。' }}</p><small>世界状态、人物、物品与连续性功能不受影响；系统不会用默认等级或百分比冒充证据。</small></div>
+  {% else %}
+    {% set state = growth.progression_state %}
+    {% set contract = growth.progression_contract %}
+    <p class="wb-lede">{{ growth.message }}</p>
+    <div class="pwk-summary-grid">
+      <section><span>当前阶段</span><strong>{{ state.primary_axis_state.current_stage or 'UNKNOWN' }}</strong><small>{{ state.primary_axis_state.current_substage or '尚无章节证据' }}</small></section>
+      <section><span>突破准备度</span><strong>{{ state.next_breakthrough_readiness }}</strong><small>缺证据时不显示伪百分比</small></section>
+      <section><span>成长主体</span><strong>{{ state.subject_type }}</strong><small>{{ state.subject_id }}</small></section>
+      <section><span>成长拓扑</span><strong>{{ state.topology_state|join(' + ') }}</strong><small>由 Effective Contract 冻结</small></section>
+    </div>
+
+    <section class="pwk-section"><h3>成长轴与阶段轨道</h3><div class="pwk-axis-grid">
+      <article><span>主轴</span><strong>{{ contract.primary_axis.name }}</strong><p>{{ contract.primary_axis.progress_measure }}</p>{% for stage in contract.primary_axis.stage_definitions %}<div class="pwk-track-row"><b>{{ stage.name }}</b><small>{{ stage.entry_requirements|join('；') or '开放条件未说明' }}</small></div>{% else %}<p class="wb-empty-state">该成长轴不使用固定等级表。</p>{% endfor %}</article>
+      {% for axis in contract.secondary_axes %}<article><span>副轴</span><strong>{{ axis.name }}</strong><p>{{ axis.progress_measure }}</p><small>{{ axis.bottlenecks|join('；') or '暂无已知瓶颈' }}</small></article>{% endfor %}
+    </div></section>
+
+    <section class="pwk-section"><h3>资源经济与突破门槛</h3><div class="pwk-column-grid">
+      <article><span>当前可见资源</span>{% for value in state.available_resources %}<b>{{ value }}</b>{% else %}<p>本章边界尚无可验证资源。</p>{% endfor %}</article>
+      <article><span>仍缺资源</span>{% for value in state.missing_resources %}<b>{{ value }}</b>{% else %}<p>没有已证实的资源缺口。</p>{% endfor %}</article>
+      <article><span>成长代价</span>{% for value in state.growth_costs_active %}<b>{{ value }}</b>{% else %}<p>合同未声明成长代价。</p>{% endfor %}</article>
+    </div></section>
+
+    <section class="pwk-section"><h3>能力树与展示债</h3><div class="pwk-column-grid">
+      <article><span>已解锁能力</span>{% for value in state.unlocked_abilities %}<b>{{ value }}</b>{% else %}<p>本章边界没有可验证能力。</p>{% endfor %}</article>
+      <article><span>待展示能力</span>{% for value in state.pending_ability_showcases %}<b>{{ value }}</b>{% else %}<p>没有已登记的展示债。</p>{% endfor %}</article>
+      <article><span>下一层天花板</span>{% for value in state.known_higher_ceiling %}<b>{{ value }}</b>{% endfor %}{% for value in state.unknown_ceiling_hints %}<b>线索：{{ value }}</b>{% endfor %}{% if not state.known_higher_ceiling and not state.unknown_ceiling_hints %}<p>UNKNOWN</p>{% endif %}</article>
+    </div></section>
+
+    <section class="pwk-section"><h3>世界扩张</h3>{% if growth.world_expansion %}<div class="pwk-world-track"><article><span>当前舞台</span><strong>{{ growth.world_expansion.current_stage.name }}</strong><p>{{ growth.world_expansion.current_stage.world_scope }}</p></article>{% for stage in growth.world_expansion.next_stage_candidates %}<span class="wb-continuity-arrow">→</span><article><span>候选舞台</span><strong>{{ stage.name }}</strong><p>{{ stage.reader_question }}</p></article>{% endfor %}</div>{% else %}<p class="wb-empty-state">本章尚未进入有效的世界扩张阶梯。</p>{% endif %}</section>
+
+    <section class="pwk-section"><h3>机会面与回报准备度</h3><div class="pwk-column-grid">
+      <article><span>已铺垫机会</span>{% for item in growth.opportunity_surface['items'] %}<b>{{ item.subject }}</b><small>{{ item.status }} · {{ item.information_status }}</small>{% else %}<p>没有带本章证据的机会项。</p>{% endfor %}</article>
+      <article><span>回报通道</span>{% for item in growth.payoff_readiness %}<b>{{ item.channel }}</b><small>{{ item.promise_strength }} · {{ item.readiness }}</small>{% else %}<p>没有有效回报通道合同。</p>{% endfor %}</article>
+      <article><span>读者期待</span>{% for item in growth.anticipation['items'] %}<b>{{ item.subject }}</b><small>{{ item.source }} · 紧迫度 {{ item.urgency }}</small>{% else %}<p>当前没有可追溯的期待项。</p>{% endfor %}</article>
+    </div></section>
+
+    <section class="pwk-section"><h3>本章成长变化</h3>{% for item in state.recent_growth_events %}<article class="wb-readable-line"><b>{{ item.statement or item.category or '状态变化' }}</b><small>{{ item.verification_status or item.layer or '章节投影' }}</small></article>{% else %}<p class="wb-empty-state">这一章没有确认的成长变化；这不等于成长停滞，只表示没有足够证据。</p>{% endfor %}</section>
+    <details class="wb-technical-details"><summary>合同版本与投影边界</summary><pre>{{ {'chapter': growth.chapter, 'contracts': growth.contract_records, 'projection_only': growth.projection_only, 'canon_mutation_allowed': growth.canon_mutation_allowed}|tojson(indent=2) }}</pre></details>
+  {% endif %}
+</article>

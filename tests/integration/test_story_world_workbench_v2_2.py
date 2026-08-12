@@ -32,6 +32,15 @@ from novel_authoring.db.database import Database
 from novel_authoring.edition import create_edition
 from novel_authoring.ingest.service import ingest_book
 from novel_authoring.planning.candidates import prepare_handoff_candidate_task
+from novel_authoring.progression.interpretation import (
+    compile_kernel_contract_proposals,
+    interpret_reader_experience,
+)
+from novel_authoring.progression.service import (
+    ProgressionContractType,
+    confirm_contract,
+    create_contract_proposal,
+)
 from novel_authoring.web.app import create_app
 from novel_authoring.web.workbench import build_workbench_context
 from novel_authoring.workflows.handoffs import claim_handoff
@@ -278,6 +287,88 @@ def test_chapter_world_state_separates_coverage_delta_and_future_facts(
         "not_started": 20,
         "percentage": 13.0,
     }
+
+
+def test_progression_workspace_reuses_historical_world_state_without_future_leak(
+    tmp_path: Path,
+) -> None:
+    database, chapters = _v22_book(tmp_path, chapter_count=3)
+    bundle = compile_kernel_contract_proposals(
+        interpret_reader_experience(
+            "主角以可验证能力突破边界，并逐步打开更大的世界。",
+            genre_hint="成长冒险",
+            contract_prefix="story-world-v22",
+        )
+    )
+    for contract_type, payload in (
+        (ProgressionContractType.PROGRESSION, bundle.progression),
+        (ProgressionContractType.WORLD_EXPANSION, bundle.world_expansion),
+        (ProgressionContractType.PAYOFF_CHANNEL, bundle.payoff_channels),
+    ):
+        proposal = create_contract_proposal(
+            database,
+            book_id="story-world-v22",
+            edition_id="base",
+            contract_type=contract_type,
+            payload=payload,
+            source="TEST_AUTHOR_PROPOSAL",
+        )
+        confirm_contract(database, proposal.contract_record_id, effective_from_boundary=1)
+
+    with database.connect() as connection:
+        canon_before = tuple(
+            connection.execute(
+                "SELECT (SELECT COUNT(*) FROM events), (SELECT COUNT(*) FROM canon_commits)"
+            ).fetchone()
+        )
+    chapter_one = build_story_game_state(
+        database,
+        "story-world-v22",
+        "base",
+        chapter_id=str(chapters[0]["chapter_id"]),
+        character_id="character:hero",
+    )
+    chapter_two = build_story_game_state(
+        database,
+        "story-world-v22",
+        "base",
+        chapter_id=str(chapters[1]["chapter_id"]),
+        character_id="character:hero",
+    )
+    with database.connect() as connection:
+        canon_after = tuple(
+            connection.execute(
+                "SELECT (SELECT COUNT(*) FROM events), (SELECT COUNT(*) FROM canon_commits)"
+            ).fetchone()
+        )
+
+    assert chapter_one["progression_workspace"]["available"] is True
+    assert chapter_one["progression_state"]["primary_axis_state"]["current_stage"] is None
+    assert chapter_one["progression_state"]["next_breakthrough_readiness"] == "UNKNOWN"
+    assert "边界钥匙" not in json.dumps(chapter_one["progression_workspace"], ensure_ascii=False)
+    assert "边界钥匙" in chapter_two["progression_state"]["available_resources"]
+    assert chapter_one["safety"]["canon_mutation_allowed"] is False
+    assert canon_after == canon_before
+
+    app = create_app(database, book_id="story-world-v22")
+    client = TestClient(app)
+    chapter_id = str(chapters[0]["chapter_id"])
+    progression = client.get(
+        f"/api/books/story-world-v22/editions/base/chapters/{chapter_id}/progression"
+    )
+    assert progression.status_code == 200
+    assert progression.json()["chapter"]["chapter_id"] == chapter_id
+    assert client.get(
+        "/api/books/story-world-v22/editions/base/chapters/missing/progression"
+    ).status_code == 404
+    page = client.get(
+        "/books/story-world-v22/editions/base/workbench",
+        params={"mode": "growth", "node": "growth", "chapter_id": chapter_id},
+    )
+    assert page.status_code == 200
+    assert "Progression Workspace" in page.text
+    assert "UNKNOWN" in page.text
+    assert "观察边界" in page.text
 
 
 def test_completed_zero_delta_chapter_is_not_requeued_and_batch_is_chunked(

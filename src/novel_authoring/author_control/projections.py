@@ -146,6 +146,11 @@ class ChapterWorldStateView(BaseModel):
     chapter_delta: dict[str, Any] = Field(default_factory=dict)
     author_intents: list[dict[str, Any]] = Field(default_factory=list)
     provisional_draft_overlay: list[dict[str, Any]] = Field(default_factory=list)
+    progression_state: dict[str, Any] | None = None
+    world_expansion: dict[str, Any] | None = None
+    opportunity_surface: dict[str, Any] | None = None
+    payoff_readiness: list[dict[str, Any]] = Field(default_factory=list)
+    anticipation: dict[str, Any] | None = None
 
 
 def _json_object(value: Any) -> dict[str, Any]:
@@ -2064,7 +2069,7 @@ def build_story_game_state(
         author_intents=author_intents,
         provisional_draft_overlay=provisional_overlay,
     )
-    return {
+    state_payload = {
         **world_state.model_dump(mode="json"),
         "availability": availability,
         "availability_label": availability_labels[availability],
@@ -2159,6 +2164,14 @@ def build_story_game_state(
             },
         },
     }
+    from novel_authoring.progression.workspace import attach_progression_workspace
+
+    return attach_progression_workspace(
+        database,
+        book_id=book_id,
+        edition_id=edition_id,
+        world_state=state_payload,
+    )
 
 
 __all__ = ["ChapterWorldStateView", "build_story_game_state"]

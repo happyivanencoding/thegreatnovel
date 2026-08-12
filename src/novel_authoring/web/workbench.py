@@ -77,6 +77,7 @@ WORKBENCH_MODES: tuple[str, ...] = (
     "analysis",
     "continuity",
     "state",
+    "growth",
     "truth",
 )
 WORKBENCH_RIGHT_TABS: tuple[str, ...] = ("prose", "state", "next")
@@ -1087,6 +1088,22 @@ def _candidate_cards(
                 "character_knowledge_delta": list(
                     reveal_impact.get("character_knowledge_delta", [])
                 ),
+                "reader_promise_alignment": list(
+                    plan.get("reader_promise_alignment", [])
+                ),
+                "progression_impact": dict(plan.get("progression_impact", {})),
+                "payoff_channel_impact": list(plan.get("payoff_channel_impact", [])),
+                "world_expansion_impact": list(plan.get("world_expansion_impact", [])),
+                "resource_opportunity_impact": list(
+                    plan.get("resource_opportunity_impact", [])
+                ),
+                "anticipation_impact": list(plan.get("anticipation_impact", [])),
+                "genre_drift_diagnostic": dict(
+                    plan.get("genre_drift_diagnostic", {})
+                ),
+                "genre_evolution_diagnostic": dict(
+                    plan.get("genre_evolution_diagnostic", {})
+                ),
             }
         )
     return result
@@ -1593,6 +1610,7 @@ def build_workbench_context(
             "chapter",
             "planning",
             "state",
+            "growth",
             "truth",
             "truth-board",
             "secret-board",
@@ -1923,6 +1941,11 @@ def build_workbench_context(
         "continuation_package": _continuation_package(selected_draft),
         "story_game_state": story_game_state,
         "chapter_world_state": story_game_state,
+        "progression_workspace": (
+            None
+            if story_game_state is None
+            else story_game_state.get("progression_workspace")
+        ),
         "previous_chapter_world_state": previous_story_game_state,
         "author_control": author_control,
         "truth_lens": selected_lens.value,
