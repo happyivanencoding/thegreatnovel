@@ -13,6 +13,8 @@ from novel_authoring.serial_kernel import (
     NarrativeEngineType,
     adjust_narrative_drive_interpretation,
     interpret_narrative_drives,
+    market_category_label,
+    narrative_drive_label,
 )
 
 
@@ -142,3 +144,8 @@ def test_author_can_raise_secondary_drive_without_replacing_primary() -> None:
         adjusted.drive_contract.secondary_drives
     )
     assert adjusted.drive_contract.author_overrides == ["RELATIONSHIP_STRONGER"]
+
+
+def test_author_ui_has_readable_labels_for_every_drive_and_market_category() -> None:
+    assert all(narrative_drive_label(value) != value.value for value in NarrativeDrive)
+    assert all(market_category_label(value) != value.value for value in MarketCategory)

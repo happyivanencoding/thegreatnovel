@@ -22,7 +22,10 @@ from novel_authoring.progression.service import (
     effective_contract_records,
     list_contract_records,
 )
-from novel_authoring.serial_kernel.classification import narrative_drive_label
+from novel_authoring.serial_kernel.classification import (
+    market_category_label,
+    narrative_drive_label,
+)
 
 
 def _chapter(world_state: Mapping[str, Any]) -> tuple[str, int]:
@@ -133,6 +136,17 @@ def build_progression_workspace_from_world_state(
             payload["secondary_drive_displays"] = [
                 narrative_drive_label(str(drive))
                 for drive in payload.get("secondary_drives", [])
+            ]
+            value["payload"] = payload
+        elif item.contract_type is ProgressionContractType.MARKET_CATEGORY:
+            payload = dict(value["payload"])
+            payload["display_labels"] = [
+                market_category_label(str(category))
+                for category in [
+                    payload.get("primary_market_category"),
+                    *payload.get("secondary_market_categories", []),
+                ]
+                if category
             ]
             value["payload"] = payload
         proposal_values.append(value)

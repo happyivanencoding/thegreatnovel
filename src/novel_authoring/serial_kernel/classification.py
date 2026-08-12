@@ -19,10 +19,15 @@ from novel_authoring.serial_kernel.models import (
 _DRIVE_LABELS: dict[NarrativeDrive, str] = {
     NarrativeDrive.POWER_PROGRESSION: "力量与阶段成长",
     NarrativeDrive.KNOWLEDGE_PROGRESSION: "知识与认知成长",
+    NarrativeDrive.ABILITY_PROGRESSION: "能力解锁与组合成长",
     NarrativeDrive.BODY_EVOLUTION: "身体蜕变",
+    NarrativeDrive.SEQUENCE_PROGRESSION: "序列与路径晋升",
+    NarrativeDrive.STATUS_PROGRESSION: "身份层级成长",
     NarrativeDrive.MYSTERY_INVESTIGATION: "谜团调查",
     NarrativeDrive.MYSTERY_REVELATION: "秘密揭露",
     NarrativeDrive.CAREER_MASTERY: "职业能力与事业建设",
+    NarrativeDrive.CRAFT_PROFESSION: "技艺与职业精进",
+    NarrativeDrive.STATUS_WEALTH: "财富与社会地位",
     NarrativeDrive.STATUS_RISE: "身份与认可提升",
     NarrativeDrive.TERRITORY_FACTION: "势力与领地推进",
     NarrativeDrive.POLITICAL_STRATEGY: "政治与战略博弈",
@@ -30,12 +35,28 @@ _DRIVE_LABELS: dict[NarrativeDrive, str] = {
     NarrativeDrive.COMPETITIVE_SKILL: "竞技技能成长",
     NarrativeDrive.COMPETITIVE_RANK: "排名与赛事晋级",
     NarrativeDrive.SURVIVAL_RESOURCE: "生存与资源",
+    NarrativeDrive.BASE_BUILDING: "基地与生存体系建设",
     NarrativeDrive.TEAM_GROWTH: "团队成长",
     NarrativeDrive.RELATIONSHIP_EMOTIONAL: "关系与人生阶段",
     NarrativeDrive.WORLD_EXPLORATION: "世界探索",
     NarrativeDrive.RESOURCE_OPPORTUNITY: "资源与机缘",
     NarrativeDrive.IDENTITY_PRESSURE: "身份保存压力",
+    NarrativeDrive.COMEDY_EXPECTATION: "喜剧期待与回调",
     NarrativeDrive.CUSTOM: "作者自定义长期驱动力",
+}
+
+_MARKET_LABELS: dict[MarketCategory, str] = {
+    MarketCategory.XUANHUAN: "玄幻",
+    MarketCategory.XIANXIA: "仙侠",
+    MarketCategory.URBAN: "都市",
+    MarketCategory.SCIENCE_FICTION: "科幻",
+    MarketCategory.FANTASY: "奇幻",
+    MarketCategory.HISTORY: "历史",
+    MarketCategory.WUXIA: "武侠",
+    MarketCategory.GAME: "游戏 / 电竞",
+    MarketCategory.HIGH_MARTIAL: "高武",
+    MarketCategory.SUPERNATURAL: "灵异",
+    MarketCategory.CUSTOM: "作者自定义",
 }
 
 
@@ -45,6 +66,14 @@ def narrative_drive_label(value: NarrativeDrive | str) -> str:
     except ValueError:
         return str(value)
     return _DRIVE_LABELS.get(drive, drive.value)
+
+
+def market_category_label(value: MarketCategory | str) -> str:
+    try:
+        category = value if isinstance(value, MarketCategory) else MarketCategory(value)
+    except ValueError:
+        return str(value)
+    return _MARKET_LABELS.get(category, category.value)
 
 
 def _contains(text: str, values: Iterable[str]) -> bool:
@@ -254,7 +283,10 @@ def interpret_narrative_drives(
             metadata_id=f"{contract_prefix}-market-category",
             primary_market_category=primary_category,
             secondary_market_categories=secondary_categories,
-            display_labels=[primary_category.value, *[item.value for item in secondary_categories]],
+            display_labels=[
+                market_category_label(primary_category),
+                *[market_category_label(item) for item in secondary_categories],
+            ],
         ),
         drive_contract=NarrativeDriveContract(
             drive_contract_id=f"{contract_prefix}-narrative-drive",
@@ -349,5 +381,6 @@ def adjust_narrative_drive_interpretation(
 __all__ = [
     "adjust_narrative_drive_interpretation",
     "interpret_narrative_drives",
+    "market_category_label",
     "narrative_drive_label",
 ]

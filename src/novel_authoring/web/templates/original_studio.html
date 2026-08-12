@@ -172,9 +172,9 @@
         <div class="original-contract-grid">
           {% for contract in original.pending_kernel_contracts %}
           <article class="original-contract-card">
-            <span>{{ contract.contract_type }}</span>
+            <span>{% if contract.contract_type == 'MARKET_CATEGORY' %}市场分类{% elif contract.contract_type == 'NARRATIVE_DRIVE' %}叙事驱动力{% elif contract.contract_type == 'PROGRESSION' %}成长合同{% elif contract.contract_type == 'WORLD_EXPANSION' %}世界扩张{% elif contract.contract_type == 'PAYOFF_CHANNEL' %}回报通道{% elif contract.contract_type == 'GENRE' %}题材契约{% else %}{{ contract.contract_type }}{% endif %}</span>
             {% if contract.contract_type == 'MARKET_CATEGORY' %}
-            <strong>市场分类元数据</strong><small>{{ contract.payload.display_labels|join(' / ') }}</small><small>不会进入章节调度。</small>
+            <strong>市场分类元数据</strong><small>{{ original.reader_experience_display.market_categories|join(' / ') }}</small><small>不会进入章节调度。</small>
             {% elif contract.contract_type == 'NARRATIVE_DRIVE' %}
             <strong>主要：{{ original.reader_experience_display.primary_drive }}</strong><small>辅助：{{ original.reader_experience_display.secondary_drives|join(' / ') or '无' }}</small><small>章节调度读取 Drive Mix，不读取市场分类。</small>
             {% elif contract.contract_type == 'PROGRESSION' %}

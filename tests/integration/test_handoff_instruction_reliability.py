@@ -456,6 +456,6 @@ def test_health_reports_versions(tmp_path: Path) -> None:
 
     assert health["status"] == "ok"
     assert health["static_asset_version"] == STATIC_ASSET_VERSION
-    assert health["static_asset_version"] == "3.4.2"
+    assert health["static_asset_version"] == "3.4.3"
     assert "version" in health
     assert "commit" in health

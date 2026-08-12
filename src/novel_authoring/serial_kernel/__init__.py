@@ -3,6 +3,7 @@
 from novel_authoring.serial_kernel.classification import (
     adjust_narrative_drive_interpretation,
     interpret_narrative_drives,
+    market_category_label,
     narrative_drive_label,
 )
 from novel_authoring.serial_kernel.diagnostics import (
@@ -56,6 +57,7 @@ __all__ = [
     "ProgressionNarrativeEngineAdapter",
     "adjust_narrative_drive_interpretation",
     "interpret_narrative_drives",
+    "market_category_label",
     "narrative_drive_label",
     "diagnose_narrative_drive_drift",
 ]

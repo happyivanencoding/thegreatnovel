@@ -51,6 +51,8 @@ from novel_authoring.progression.service import (
 )
 from novel_authoring.serial_kernel.classification import (
     adjust_narrative_drive_interpretation,
+    market_category_label,
+    narrative_drive_label,
 )
 from novel_authoring.serial_kernel.models import PROGRESSION_DRIVES, NarrativeDriveContract
 from novel_authoring.storage.layout import BookLayout
@@ -1227,12 +1229,26 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                 reader_payload.get("must_not_drift_into", [])
             ),
             "derived_adapter": reader_interpretation.get("derived_adapter_spec"),
-            "market_categories": list(market_display.get("display_labels", [])),
+            "market_categories": [
+                market_category_label(str(value))
+                for value in [
+                    market_display.get("primary_market_category"),
+                    *market_display.get("secondary_market_categories", []),
+                ]
+                if value
+            ],
             "primary_drive": str(
-                narrative_display.get("display_primary_drive") or "待作者确认"
+                reader_interpretation.get("growth_object")
+                if narrative_display.get("progression_engine_enabled")
+                else narrative_display.get("display_primary_drive")
+                or "待作者确认"
             ),
             "secondary_drives": list(
-                narrative_display.get("display_secondary_drives", [])
+                [
+                    narrative_drive_label(str(value))
+                    for value in drive_contract_display.get("secondary_drives", [])
+                ]
+                or narrative_display.get("display_secondary_drives", [])
             ),
             "progression_engine_enabled": bool(
                 narrative_display.get("progression_engine_enabled", False)

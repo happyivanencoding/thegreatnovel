@@ -32,6 +32,7 @@ from novel_authoring.author_control.truth import (
 )
 from novel_authoring.canon.projection import projection_from_connection
 from novel_authoring.edition import edition_chapters
+from novel_authoring.serial_kernel import narrative_drive_label
 
 _EDITION_PURPOSE_LABELS = {
     "SOURCE_BASE": "来源底稿",
@@ -1030,6 +1031,11 @@ def _candidate_cards(
                         "target": str(item.get("target") or "READER"),
                     }
                 )
+        narrative_drive_alignment = dict(plan.get("narrative_drive_alignment", {}))
+        if narrative_drive_alignment.get("primary_drive"):
+            narrative_drive_alignment["primary_drive"] = narrative_drive_label(
+                str(narrative_drive_alignment["primary_drive"])
+            )
         result.append(
             {
                 "candidate_id": str(row["candidate_id"]),
@@ -1091,9 +1097,7 @@ def _candidate_cards(
                 "reader_promise_alignment": list(
                     plan.get("reader_promise_alignment", [])
                 ),
-                "narrative_drive_alignment": dict(
-                    plan.get("narrative_drive_alignment", {})
-                ),
+                "narrative_drive_alignment": narrative_drive_alignment,
                 "progression_impact": dict(plan.get("progression_impact", {})),
                 "payoff_channel_impact": list(plan.get("payoff_channel_impact", [])),
                 "world_expansion_impact": list(plan.get("world_expansion_impact", [])),
