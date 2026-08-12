@@ -146,6 +146,24 @@ def progression_contract_from_genre(
         else []
     )
     selected_topology = topology or [ProgressionTopology.ACCUMULATIVE]
+    secondary_axes = (
+        [
+            GrowthAxis(
+                axis_id="team-combination-axis",
+                name="成员之间的组合与协同",
+                axis_type=GrowthAxisType.TEAM,
+                current_stage_schema="由成员能力组合实际解决的问题定义",
+                progress_measure="团队是否获得单个成员不能完成的新解决方法",
+                unlock_effects=["形成新的能力组合与协作入口"],
+                bottlenecks=["成员能力与选择尚未形成有效组合"],
+                evidence_requirements=["多人共同完成的事件后果"],
+                visibility=UpperCeilingVisibility.PARTIAL,
+            )
+        ]
+        if ProgressionTopology.MULTI_AXIS in selected_topology
+        and capabilities.has_team_progression
+        else []
+    )
     return ProgressionContract(
         progression_contract_id=progression_contract_id,
         progression_subject=progression_subject,
@@ -162,6 +180,7 @@ def progression_contract_from_genre(
             ],
             visibility=UpperCeilingVisibility.PARTIAL,
         ),
+        secondary_axes=secondary_axes,
         topology=selected_topology,
         allowed_delta_types=[
             ProgressionDeltaType.ADVANCE,
