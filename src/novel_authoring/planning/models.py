@@ -112,6 +112,22 @@ class ReaderPromiseAlignment(BaseModel):
     evidence: list[str] = Field(default_factory=list)
 
 
+class NarrativeDriveAlignment(BaseModel):
+    """Generic drive trace alongside, never instead of, specialized impacts."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    primary_drive: str | None = None
+    primary_drive_effect: str = ""
+    secondary_drive_effects: dict[str, str] = Field(default_factory=dict)
+    drives_advanced: list[str] = Field(default_factory=list)
+    drives_paid_off: list[str] = Field(default_factory=list)
+    drives_deferred: list[str] = Field(default_factory=list)
+    drive_conflicts: list[str] = Field(default_factory=list)
+    drive_balance: str = "UNKNOWN"
+    evidence: list[str] = Field(default_factory=list)
+
+
 class ProgressComponent(StrEnum):
     PERMANENT_GROWTH = "permanent_growth"
     WORLD_STATE_CHANGE = "world_state_change"
@@ -357,6 +373,9 @@ class CandidateProposal(BaseModel):
     reveal_impact: CandidateRevealImpact = Field(default_factory=CandidateRevealImpact)
     reader_promise_alignment: list[ReaderPromiseAlignment] = Field(default_factory=list)
     genre_alignment: list[str] = Field(default_factory=list)
+    narrative_drive_alignment: NarrativeDriveAlignment = Field(
+        default_factory=NarrativeDriveAlignment
+    )
     progress_preview: ProgressPreview | None = None
     progression_impact: ProgressionImpact = Field(default_factory=ProgressionImpact)
     payoff_channel_impact: list[str] = Field(default_factory=list)
@@ -441,6 +460,9 @@ class ChapterContract(BaseModel):
     truth_reveal_commitments: dict[str, Any] = Field(default_factory=dict)
     reader_promise_alignment: list[ReaderPromiseAlignment] = Field(default_factory=list)
     genre_alignment: list[str] = Field(default_factory=list)
+    narrative_drive_alignment: NarrativeDriveAlignment = Field(
+        default_factory=NarrativeDriveAlignment
+    )
     progress_preview: ProgressPreview | None = None
     progression_impact: ProgressionImpact = Field(default_factory=ProgressionImpact)
     payoff_channel_impact: list[str] = Field(default_factory=list)

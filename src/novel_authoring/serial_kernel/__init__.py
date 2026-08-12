@@ -1,6 +1,12 @@
 """Chinese Serialized Webnovel Kernel public surface."""
 
 from novel_authoring.serial_kernel.classification import interpret_narrative_drives
+from novel_authoring.serial_kernel.diagnostics import (
+    NarrativeDriveDriftDiagnostic,
+    NarrativeDriveDriftStatus,
+    NarrativeDriveStructureEvidence,
+    diagnose_narrative_drive_drift,
+)
 from novel_authoring.serial_kernel.engines import (
     NARRATIVE_ENGINE_REGISTRY,
     EngineCandidateEvaluation,
@@ -34,12 +40,16 @@ __all__ = [
     "MarketCategoryMetadata",
     "NarrativeDrive",
     "NarrativeDriveContract",
+    "NarrativeDriveDriftDiagnostic",
+    "NarrativeDriveDriftStatus",
     "NarrativeDriveInterpretation",
     "NARRATIVE_ENGINE_REGISTRY",
     "NarrativeEngineAdapter",
     "NarrativeEngineRegistry",
     "NarrativeEngineType",
+    "NarrativeDriveStructureEvidence",
     "PROGRESSION_DRIVES",
     "ProgressionNarrativeEngineAdapter",
     "interpret_narrative_drives",
+    "diagnose_narrative_drive_drift",
 ]

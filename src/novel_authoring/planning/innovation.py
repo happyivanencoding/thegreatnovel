@@ -223,6 +223,8 @@ class ExpectedNarrativeDebt(BaseModel):
     expected_payoff_window: str
     magnitude: InnovationMagnitude = InnovationMagnitude.LOCAL
     debt_type: NarrativeDebtType = NarrativeDebtType.PLOT
+    drive_type: str | None = None
+    engine_type: str | None = None
     allowed_resolution_modes: list[DebtResolutionMode] = Field(default_factory=list)
 
 
@@ -241,6 +243,8 @@ class NarrativeDebt(BaseModel):
     status: NarrativeDebtStatus = NarrativeDebtStatus.OPEN
     last_advanced: int = Field(default=0, ge=0)
     debt_type: NarrativeDebtType = NarrativeDebtType.PLOT
+    drive_type: str | None = None
+    engine_type: str | None = None
     metric_run_id: str | None = None
     debt_score: float | None = Field(default=None, ge=0, le=150)
     metric_components: dict[str, float | str | bool] = Field(default_factory=dict)
@@ -258,6 +262,8 @@ class NarrativePayoff(BaseModel):
     horizon: NarrativeHorizon
     extent: PayoffExtent = PayoffExtent.FULL
     debt_id: str | None = None
+    associated_drive: str | None = None
+    engine_type: str | None = None
     evidence_or_forward_introduction: str = ""
 
 

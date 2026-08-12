@@ -1091,6 +1091,9 @@ def _candidate_cards(
                 "reader_promise_alignment": list(
                     plan.get("reader_promise_alignment", [])
                 ),
+                "narrative_drive_alignment": dict(
+                    plan.get("narrative_drive_alignment", {})
+                ),
                 "progression_impact": dict(plan.get("progression_impact", {})),
                 "payoff_channel_impact": list(plan.get("payoff_channel_impact", [])),
                 "world_expansion_impact": list(plan.get("world_expansion_impact", [])),

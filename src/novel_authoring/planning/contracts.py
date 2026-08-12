@@ -207,6 +207,7 @@ def build_chapter_contract(
         },
         reader_promise_alignment=candidate.reader_promise_alignment,
         genre_alignment=candidate.genre_alignment,
+        narrative_drive_alignment=candidate.narrative_drive_alignment,
         progress_preview=candidate.progress_preview,
         progression_impact=candidate.progression_impact,
         payoff_channel_impact=candidate.payoff_channel_impact,
