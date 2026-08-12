@@ -93,6 +93,30 @@ class NarrativeDebtStatus(StrEnum):
     OVERDUE = "OVERDUE"
 
 
+class NarrativeDebtType(StrEnum):
+    PLOT = "PLOT"
+    MYSTERY = "MYSTERY"
+    RELATIONSHIP = "RELATIONSHIP"
+    PROGRESSION = "PROGRESSION"
+    POWER_SHOWCASE = "POWER_SHOWCASE"
+    RESOURCE = "RESOURCE"
+    WORLD_EXPANSION = "WORLD_EXPANSION"
+    STATUS = "STATUS"
+    TEAM = "TEAM"
+    ANTICIPATION = "ANTICIPATION"
+
+
+class DebtResolutionMode(StrEnum):
+    COMBAT = "COMBAT"
+    ESCAPE = "ESCAPE"
+    RESCUE = "RESCUE"
+    EXPLORATION = "EXPLORATION"
+    CRAFT = "CRAFT"
+    NEGOTIATION = "NEGOTIATION"
+    RULE_BREAK = "RULE_BREAK"
+    STRATEGY = "STRATEGY"
+
+
 class PayoffExtent(StrEnum):
     PARTIAL = "PARTIAL"
     FULL = "FULL"
@@ -198,6 +222,8 @@ class ExpectedNarrativeDebt(BaseModel):
     source_event: str
     expected_payoff_window: str
     magnitude: InnovationMagnitude = InnovationMagnitude.LOCAL
+    debt_type: NarrativeDebtType = NarrativeDebtType.PLOT
+    allowed_resolution_modes: list[DebtResolutionMode] = Field(default_factory=list)
 
 
 class NarrativeDebt(BaseModel):
@@ -214,6 +240,12 @@ class NarrativeDebt(BaseModel):
     maturity: str = "developing"
     status: NarrativeDebtStatus = NarrativeDebtStatus.OPEN
     last_advanced: int = Field(default=0, ge=0)
+    debt_type: NarrativeDebtType = NarrativeDebtType.PLOT
+    metric_run_id: str | None = None
+    debt_score: float | None = Field(default=None, ge=0, le=150)
+    metric_components: dict[str, float | str | bool] = Field(default_factory=dict)
+    evidence: list[str] = Field(default_factory=list)
+    allowed_resolution_modes: list[DebtResolutionMode] = Field(default_factory=list)
 
 
 class NarrativePayoff(BaseModel):

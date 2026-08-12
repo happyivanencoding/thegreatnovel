@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+from typing import cast
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from novel_authoring.planning.innovation import (
+    DebtResolutionMode,
     NarrativeDebt,
     NarrativeDebtStatus,
+    NarrativeDebtType,
     NarrativeHorizon,
     NarrativePortfolioSnapshot,
     NarrativeThreadLifecycle,
@@ -226,6 +229,27 @@ def build_narrative_portfolio_snapshot(
         opened = _int_value(item, "opened_chapter", "introduced_ordinal", "introduced_chapter")
         last_advanced = _int_value(item, "last_advanced", "last_advanced_chapter")
         progress = item.get("progress", 0)
+        raw_metric_components = item.get("metric_components")
+        metric_components = (
+            dict(cast(Mapping[str, float | str | bool], raw_metric_components))
+            if isinstance(raw_metric_components, Mapping)
+            else {}
+        )
+        raw_evidence = item.get("evidence")
+        evidence = (
+            [str(value) for value in cast(list[object], raw_evidence)]
+            if isinstance(raw_evidence, list)
+            else []
+        )
+        raw_resolution_modes = item.get("allowed_resolution_modes")
+        resolution_modes = (
+            [
+                DebtResolutionMode(str(value))
+                for value in cast(list[object], raw_resolution_modes)
+            ]
+            if isinstance(raw_resolution_modes, list)
+            else []
+        )
         try:
             progress_float = float(str(progress))
         except (TypeError, ValueError):
@@ -303,6 +327,18 @@ def build_narrative_portfolio_snapshot(
                 ),
                 status=status,
                 last_advanced=last_advanced,
+                debt_type=NarrativeDebtType(str(item.get("debt_type", "PLOT"))),
+                metric_run_id=(
+                    str(item["metric_run_id"]) if item.get("metric_run_id") else None
+                ),
+                debt_score=(
+                    float(str(item["debt_score"]))
+                    if item.get("debt_score") is not None
+                    else None
+                ),
+                metric_components=metric_components,
+                evidence=evidence,
+                allowed_resolution_modes=resolution_modes,
             )
         )
 
