@@ -97,6 +97,127 @@ class AuthoringPreset(StrEnum):
     CUSTOM_AUTHOR_PROFILE = "CUSTOM_AUTHOR_PROFILE"
 
 
+class GenrePromiseStrength(StrEnum):
+    CORE = "CORE"
+    IMPORTANT = "IMPORTANT"
+    OPTIONAL = "OPTIONAL"
+    DISABLED = "DISABLED"
+
+
+class GenreAdapterKind(StrEnum):
+    CULTIVATION_ESCALATION = "CULTIVATION_ESCALATION"
+    ABILITY_UNLOCK_TEAM = "ABILITY_UNLOCK_TEAM"
+    MYTHIC_BODY_ANCIENT_WORLD = "MYTHIC_BODY_ANCIENT_WORLD"
+    COSMIC_PROGRESSION = "COSMIC_PROGRESSION"
+    EVOLUTION_APOCALYPSE = "EVOLUTION_APOCALYPSE"
+    OCCULT_SEQUENCE_MYSTERY = "OCCULT_SEQUENCE_MYSTERY"
+    SURVIVAL_RESOURCE_PROGRESSION = "SURVIVAL_RESOURCE_PROGRESSION"
+    CUSTOM = "CUSTOM"
+
+
+class PayoffChannel(StrEnum):
+    POWER_BREAKTHROUGH = "POWER_BREAKTHROUGH"
+    NEW_ABILITY = "NEW_ABILITY"
+    NEW_TECHNIQUE = "NEW_TECHNIQUE"
+    NEW_ARTIFACT = "NEW_ARTIFACT"
+    RESOURCE_GAIN = "RESOURCE_GAIN"
+    COMBAT_DOMINANCE = "COMBAT_DOMINANCE"
+    UNDERDOG_VICTORY = "UNDERDOG_VICTORY"
+    STATUS_RISE = "STATUS_RISE"
+    RANKING_RISE = "RANKING_RISE"
+    RECOGNITION = "RECOGNITION"
+    REVENGE = "REVENGE"
+    MYSTERY_REVEAL = "MYSTERY_REVEAL"
+    WORLD_EXPANSION = "WORLD_EXPANSION"
+    FACTION_ADVANCE = "FACTION_ADVANCE"
+    TEAM_GROWTH = "TEAM_GROWTH"
+    RELATIONSHIP_ADVANCE = "RELATIONSHIP_ADVANCE"
+    WEALTH_GAIN = "WEALTH_GAIN"
+    SURVIVAL_ESCAPE = "SURVIVAL_ESCAPE"
+    KNOWLEDGE_GAIN = "KNOWLEDGE_GAIN"
+    MASTERY = "MASTERY"
+    DISCOVERY = "DISCOVERY"
+    TRANSFORMATION = "TRANSFORMATION"
+    STRATEGIC_ADVANTAGE = "STRATEGIC_ADVANTAGE"
+    CUSTOM = "CUSTOM"
+
+
+class RuntimeGenreCapabilities(BaseModel):
+    """Adapter-neutral structural capabilities consumed by runtime services."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    has_progression_axis: bool = False
+    has_stage_transition: bool = False
+    has_resource_gate: bool = False
+    has_knowledge_gate: bool = False
+    has_ability_unlock: bool = False
+    has_verification_requirement: bool = False
+    has_status_progression: bool = False
+    has_world_expansion: bool = False
+    has_mystery_binding: bool = False
+    has_team_progression: bool = False
+
+
+class GenrePromise(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    promise_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    statement: str = Field(min_length=1)
+    strength: GenrePromiseStrength
+
+
+class GenreAdapter(BaseModel):
+    """A proposal generator.  Its identity must not enter effective runtime."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    adapter_id: GenreAdapterKind
+    label: str = Field(min_length=1)
+    capabilities: RuntimeGenreCapabilities
+    expected_payoff_channels: list[PayoffChannel] = Field(default_factory=list)
+    genre_native_scene_types: list[str] = Field(default_factory=list)
+    genre_native_resource_types: list[str] = Field(default_factory=list)
+    genre_native_conflicts: list[str] = Field(default_factory=list)
+    drift_risks: list[str] = Field(default_factory=list)
+
+
+class GenreContract(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    genre_contract_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    primary_genre: PrimaryFamily
+    subgenres: list[PrimaryFamily] = Field(default_factory=list)
+    reader_experience_contract_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    genre_promises: list[GenrePromise] = Field(min_length=1)
+    genre_native_engines: list[str] = Field(default_factory=list)
+    expected_payoff_channels: list[PayoffChannel] = Field(default_factory=list)
+    expected_progression_shape: list[str] = Field(default_factory=list)
+    world_expansion_expectation: str = ""
+    genre_native_scene_types: list[str] = Field(default_factory=list)
+    genre_native_resource_types: list[str] = Field(default_factory=list)
+    genre_native_conflicts: list[str] = Field(default_factory=list)
+    genre_drift_risks: list[str] = Field(default_factory=list)
+    forbidden_drift_patterns: list[str] = Field(default_factory=list)
+    author_overrides: list[str] = Field(default_factory=list)
+    capabilities: RuntimeGenreCapabilities
+    status: ContractStatus = ContractStatus.NEEDS_REVIEW
+
+
+class EffectiveGenreContract(BaseModel):
+    """Adapter-free contract shape consumed by runtime services."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    genre_contract_id: str
+    reader_experience_contract_id: str
+    promises: list[GenrePromise]
+    payoff_channels: list[PayoffChannel]
+    capabilities: RuntimeGenreCapabilities
+    world_expansion_expectation: str = ""
+    forbidden_drift_patterns: list[str] = Field(default_factory=list)
+
+
 class StoryProfile(BaseModel):
     """Author-facing defaults used to propose, never enforce, a contract."""
 

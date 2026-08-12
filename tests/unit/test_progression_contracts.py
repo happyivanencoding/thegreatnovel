@@ -2,14 +2,22 @@ from __future__ import annotations
 
 import pytest
 
+from novel_authoring.progression.adapters import (
+    BUILTIN_GENRE_ADAPTERS,
+    compile_genre_adapters,
+    effective_genre_contract,
+)
 from novel_authoring.progression.models import (
     AuthoringPreset,
     ContractStatus,
+    EffectiveGenreContract,
     ExperiencePriority,
     ExplanationStyle,
+    GenreAdapterKind,
     PrimaryFamily,
     ReaderExperience,
     ReaderExperienceContract,
+    RuntimeGenreCapabilities,
     SettingSkin,
 )
 from novel_authoring.progression.presets import (
@@ -120,3 +128,50 @@ def test_profile_name_is_not_part_of_compiled_runtime_shape() -> None:
     payload = proposal.model_dump(mode="json")
     assert "profile_id" not in payload
     assert "CHINESE_MALE_COMMERCIAL_PROGRESSION" not in str(payload)
+
+
+def test_genre_adapters_can_compose_without_runtime_identity() -> None:
+    contract = compile_genre_adapters(
+        reader_contract(),
+        genre_contract_id="genre-composed",
+        primary_adapter=BUILTIN_GENRE_ADAPTERS[
+            GenreAdapterKind.ABILITY_UNLOCK_TEAM
+        ],
+        secondary_adapters=[
+            BUILTIN_GENRE_ADAPTERS[GenreAdapterKind.COSMIC_PROGRESSION]
+        ],
+    )
+
+    assert contract.capabilities.has_team_progression is True
+    assert contract.capabilities.has_world_expansion is True
+    assert contract.capabilities.has_knowledge_gate is True
+    assert "adapter" not in type(contract).model_fields
+
+
+def test_adapter_compiles_into_effective_contract() -> None:
+    proposal = compile_genre_adapters(
+        reader_contract(),
+        genre_contract_id="genre-occult",
+        primary_adapter=BUILTIN_GENRE_ADAPTERS[
+            GenreAdapterKind.OCCULT_SEQUENCE_MYSTERY
+        ],
+    )
+    effective = effective_genre_contract(
+        proposal.model_copy(update={"status": ContractStatus.EFFECTIVE})
+    )
+
+    assert effective.capabilities.has_mystery_binding is True
+    assert effective.capabilities.has_knowledge_gate is True
+    assert "adapter_id" not in effective.model_dump(mode="json")
+
+
+def test_runtime_contract_does_not_require_adapter_identity() -> None:
+    effective = EffectiveGenreContract(
+        genre_contract_id="genre-custom-runtime",
+        reader_experience_contract_id="reader-near-future-body",
+        promises=[],
+        payoff_channels=[],
+        capabilities=RuntimeGenreCapabilities(has_progression_axis=True),
+    )
+
+    assert effective.capabilities.has_progression_axis is True
