@@ -104,6 +104,7 @@ def _kernel_author_summary(context: KernelPlanningContext) -> dict[str, Any]:
             "owned_or_current": context.chapter_state.resource_state,
             "opportunities": opportunity.get("items", []),
         },
+        "knowledge_boundary": context.chapter_state.knowledge_state,
         "reader_anticipation": anticipation.get("items", []),
         "narrative_debts": context.planning_state.narrative_debts,
         "scheduler_recommendation": (

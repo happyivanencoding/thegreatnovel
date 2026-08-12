@@ -617,7 +617,8 @@ def create_handoff(
             book_id,
             selected,
             chapter_id=frozen_context_chapter_id,
-            include_knowledge_view=False,
+            include_knowledge_state=True,
+            include_knowledge_matrix=False,
         )
         frozen_boundary = build_boundary_packet(
             database,

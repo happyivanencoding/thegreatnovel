@@ -276,12 +276,11 @@ def test_workbench_builds_only_the_state_requested_by_the_page(
 ) -> None:
     database = _book(tmp_path, "workbench-query-budget")
     chapter_id = _chapter_ids(database)[1]
-    calls = 0
+    calls: list[dict[str, object]] = []
     original = workbench_module.build_story_game_state
 
     def counted(*args: object, **kwargs: object) -> dict[str, object]:
-        nonlocal calls
-        calls += 1
+        calls.append(dict(kwargs))
         return original(*args, **kwargs)
 
     def no_full_replay(*args: object, **kwargs: object) -> object:
@@ -293,7 +292,16 @@ def test_workbench_builds_only_the_state_requested_by_the_page(
     workbench_module.build_workbench_context(
         database, "workbench-query-budget", "base", chapter_id=chapter_id, mode="home"
     )
-    assert calls == 0
+    assert calls == []
+    workbench_module.build_workbench_context(
+        database,
+        "workbench-query-budget",
+        "base",
+        chapter_id=chapter_id,
+        mode="analysis",
+        right_tab="prose",
+    )
+    assert calls == []
     workbench_module.build_workbench_context(
         database,
         "workbench-query-budget",
@@ -302,7 +310,10 @@ def test_workbench_builds_only_the_state_requested_by_the_page(
         mode="state",
         state_tab="overview",
     )
-    assert calls == 2
+    assert len(calls) == 2
+    assert all(call["include_knowledge_state"] is False for call in calls)
+    assert all(call["include_knowledge_matrix"] is False for call in calls)
+    assert all(call["include_history"] is False for call in calls)
     workbench_module.build_workbench_context(
         database,
         "workbench-query-budget",
@@ -311,7 +322,21 @@ def test_workbench_builds_only_the_state_requested_by_the_page(
         mode="state",
         state_tab="knowledge",
     )
-    assert calls == 3
+    assert len(calls) == 3
+    assert calls[-1]["include_knowledge_state"] is False
+    assert calls[-1]["include_knowledge_matrix"] is True
+    assert calls[-1]["include_history"] is False
+    workbench_module.build_workbench_context(
+        database,
+        "workbench-query-budget",
+        "base",
+        chapter_id=chapter_id,
+        mode="growth",
+    )
+    assert len(calls) == 4
+    assert calls[-1]["include_knowledge_state"] is False
+    assert calls[-1]["include_knowledge_matrix"] is False
+    assert calls[-1]["include_history"] is False
 
 
 def test_author_workflow_surface_is_readable_and_embedded_in_workbench(

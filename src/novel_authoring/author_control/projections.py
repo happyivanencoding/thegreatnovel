@@ -1592,6 +1592,20 @@ def _attach_history(
         )
 
 
+def _attach_current_chapter_changes(
+    records: list[dict[str, Any]], chapter_delta: dict[str, Any]
+) -> None:
+    changed_identities = {
+        identity
+        for entry in chapter_delta.get("confirmed", [])
+        for identity in _record_identities(entry)
+    }
+    for record in records:
+        record["changed_this_chapter"] = bool(
+            changed_identities.intersection(_record_identities(record))
+        )
+
+
 def _extend_unique(
     target: list[dict[str, Any]], records: list[dict[str, Any]]
 ) -> None:
@@ -1677,7 +1691,8 @@ def build_story_game_state(
     chapter_id: str | None = None,
     character_id: str | None = None,
     include_global_scope: bool = False,
-    include_knowledge_view: bool = True,
+    include_knowledge_state: bool = True,
+    include_knowledge_matrix: bool = False,
     include_history: bool = False,
 ) -> dict[str, Any]:
     """Build a historical, chapter-aware game-like state without persisting it."""
@@ -1791,7 +1806,7 @@ def build_story_game_state(
             source_projection=source_projection,
             records_by_owner=records_by_owner,
         )
-        if include_knowledge_view
+        if include_knowledge_state
         else []
     )
     knowledge_matrix = (
@@ -1801,26 +1816,27 @@ def build_story_game_state(
             options,
             extra_topics=[*inventory, *equipment],
         )
-        if include_knowledge_view
+        if include_knowledge_matrix
         else {"topics": [], "edges": [], "matrix": [], "states": []}
     )
     verified_history = list(source_projection.get("verified_history", []))
-    knowledge_edges_by_topic = _knowledge_edges_by_topic(knowledge_matrix["matrix"])
     history_by_identity = _history_by_identity(verified_history)
-    _attach_who_knows(inventory, knowledge_edges_by_topic)
-    _attach_who_knows(equipment, knowledge_edges_by_topic)
-    for item in knowledge:
-        topic_id = str(
-            item.get("object_id")
-            or item.get("topic_id")
-            or item.get("state_key")
-            or item.get("name")
-        )
-        item["who_knows"] = [
-            dict(edge)
-            for edge in knowledge_matrix["edges"]
-            if str(edge.get("topic_id")) == topic_id
-        ]
+    if include_knowledge_matrix:
+        knowledge_edges_by_topic = _knowledge_edges_by_topic(knowledge_matrix["matrix"])
+        _attach_who_knows(inventory, knowledge_edges_by_topic)
+        _attach_who_knows(equipment, knowledge_edges_by_topic)
+        for item in knowledge:
+            topic_id = str(
+                item.get("object_id")
+                or item.get("topic_id")
+                or item.get("state_key")
+                or item.get("name")
+            )
+            item["who_knows"] = [
+                dict(edge)
+                for edge in knowledge_matrix["edges"]
+                if str(edge.get("topic_id")) == topic_id
+            ]
     relationships = _relationships(selected, relationships_by_endpoint)
     relationship_inspector = _relationship_details(relationships)
     soft_relationships = _soft_relationships(soft, selected)
@@ -1916,22 +1932,27 @@ def build_story_game_state(
         if source_kind(record) not in {"TASK", "THREAD"}
     )
 
+    state_collections = (
+        inventory,
+        equipment,
+        canon_abilities,
+        knowledge,
+        relationship_inspector,
+        faction_inspector,
+        locations,
+        resources,
+        world_rules,
+        tasks,
+        threads,
+        promises,
+    )
     if include_history:
-        for collection in (
-            inventory,
-            equipment,
-            canon_abilities,
-            knowledge,
-            relationship_inspector,
-            faction_inspector,
-            locations,
-            resources,
-            world_rules,
-            tasks,
-            threads,
-            promises,
-        ):
+        for collection in state_collections:
             _attach_history(collection, history_by_identity, selected_ordinal=ordinal)
+    else:
+        chapter_delta = source_projection.get("chapter_delta", {})
+        for collection in state_collections:
+            _attach_current_chapter_changes(collection, chapter_delta)
 
     character_workspaces: list[dict[str, Any]] = []
     all_inventory: list[dict[str, Any]] = []
@@ -1995,8 +2016,9 @@ def build_story_game_state(
             option_relationships = _relationship_details(
                 _relationships(option, relationships_by_endpoint)
             )
-            _attach_who_knows(option_inventory, knowledge_edges_by_topic)
-            _attach_who_knows(option_equipment, knowledge_edges_by_topic)
+            if include_knowledge_matrix:
+                _attach_who_knows(option_inventory, knowledge_edges_by_topic)
+                _attach_who_knows(option_equipment, knowledge_edges_by_topic)
             if include_history:
                 for collection in (
                     option_inventory,
@@ -2007,6 +2029,15 @@ def build_story_game_state(
                     _attach_history(
                         collection, history_by_identity, selected_ordinal=ordinal
                     )
+            else:
+                chapter_delta = source_projection.get("chapter_delta", {})
+                for collection in (
+                    option_inventory,
+                    option_equipment,
+                    option_abilities,
+                    option_relationships,
+                ):
+                    _attach_current_chapter_changes(collection, chapter_delta)
         for record in [*option_inventory, *option_equipment, *option_abilities]:
             record["owner_name"] = character_names.get(option_id, option.get("name"))
         _extend_unique(all_inventory, option_inventory)

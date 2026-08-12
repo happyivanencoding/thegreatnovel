@@ -1466,6 +1466,7 @@ def create_app(
             checked_edition,
             chapter_id=_check_id(chapter_id),
             character_id=_query_id(request, "character_id"),
+            include_history=_query_flag(request, "include_history"),
         )
 
     @app.get(

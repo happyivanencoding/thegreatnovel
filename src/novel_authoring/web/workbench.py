@@ -319,15 +319,16 @@ def _record_presentation(record: dict[str, Any], *, fallback: str = "状态记�
     result["card_summary"] = _short_statement(
         result.get("description") or result.get("statement"), 42
     )
-    history: list[dict[str, Any]] = []
-    for entry in result.get("history", []):
-        presented = dict(entry)
-        presented["author_name"] = _author_record_name(presented, result["author_name"])
-        presented["source_label"] = STATE_SOURCE_LABELS.get(
-            str(presented.get("layer") or "UNKNOWN"), "○ 边界待确认"
-        )
-        history.append(presented)
-    result["history"] = history
+    if "history" in result:
+        history: list[dict[str, Any]] = []
+        for entry in result.get("history", []):
+            presented = dict(entry)
+            presented["author_name"] = _author_record_name(presented, result["author_name"])
+            presented["source_label"] = STATE_SOURCE_LABELS.get(
+                str(presented.get("layer") or "UNKNOWN"), "○ 边界待确认"
+            )
+            history.append(presented)
+        result["history"] = history
     return result
 
 
@@ -1747,9 +1748,7 @@ def build_workbench_context(
     needs_previous_state = active_mode in {"continuity", "truth"} or (
         active_mode == "state" and active_state_tab == "overview"
     )
-    include_knowledge_view = active_mode == "truth" or (
-        active_mode == "state" and active_state_tab == "knowledge"
-    )
+    include_knowledge_matrix = active_mode == "state" and active_state_tab == "knowledge"
     if selected_chapter is not None and needs_story_state:
         story_game_state = build_story_game_state(
             database,
@@ -1758,8 +1757,9 @@ def build_workbench_context(
             chapter_id=state_chapter_id,
             character_id=character_id,
             include_global_scope=(active_mode == "state" and active_state_scope == "global"),
-            include_knowledge_view=include_knowledge_view,
-            include_history=active_mode == "state",
+            include_knowledge_state=False,
+            include_knowledge_matrix=include_knowledge_matrix,
+            include_history=False,
         )
         if active_mode == "growth":
             story_game_state = attach_progression_workspace(
@@ -1784,7 +1784,8 @@ def build_workbench_context(
                 chapter_id=str(previous_chapter["chapter_id"]),
                 character_id=character_id,
                 include_global_scope=(active_mode == "state" and active_state_scope == "global"),
-                include_knowledge_view=include_knowledge_view,
+                include_knowledge_state=False,
+                include_knowledge_matrix=include_knowledge_matrix,
                 include_history=False,
             )
             previous_story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
@@ -1800,8 +1801,9 @@ def build_workbench_context(
                 chapter_id=None,
                 character_id=character_id,
                 include_global_scope=active_state_scope == "global",
-                include_knowledge_view=include_knowledge_view,
-                include_history=True,
+                include_knowledge_state=False,
+                include_knowledge_matrix=include_knowledge_matrix,
+                include_history=False,
             )
             story_game_state["coverage_status_label"] = SOURCE_COVERAGE_LABELS.get(
                 str(story_game_state.get("coverage_status") or "NOT_STARTED"),

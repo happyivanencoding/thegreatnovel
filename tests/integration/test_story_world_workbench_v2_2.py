@@ -679,6 +679,46 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     database, chapters = _v22_book(tmp_path, chapter_count=3)
+    with database.connect() as connection:
+        span_id = str(
+            connection.execute(
+                "SELECT MIN(span_id) AS span_id FROM source_spans WHERE chapter_id=?",
+                (str(chapters[1]["chapter_id"]),),
+            ).fetchone()["span_id"]
+        )
+    record_source_chapter_deltas(
+        database,
+        "story-world-v22",
+        "base",
+        [
+            SourceChapterStateDelta(
+                delta_id="v22-knowledge-boundary",
+                book_id="story-world-v22",
+                edition_id="base",
+                chapter_id=str(chapters[1]["chapter_id"]),
+                chapter_ordinal=2,
+                category=SourceStateCategory.KNOWLEDGE,
+                operation=SourceStateOperation.LEARN,
+                subject_id="character:hero",
+                object_id="knowledge:boundary-key-rule",
+                statement="主角确认边界钥匙只能开启一次。",
+                source_span_ids=[span_id],
+                confidence=1.0,
+                verification_status=SourceStateVerification.SOURCE_VERIFIED,
+                payload={"name": "边界钥匙规则", "owner_id": "character:hero"},
+            )
+        ],
+    )
+    before_knowledge = build_story_game_state(
+        database,
+        "story-world-v22",
+        "base",
+        chapter_id=str(chapters[0]["chapter_id"]),
+    )
+    assert all(
+        record.get("object_id") != "knowledge:boundary-key-rule"
+        for record in before_knowledge["knowledge"]
+    )
     bundle = compile_kernel_contract_proposals(
         interpret_reader_experience(
             "主角持续变强、突破阶段，并以能力、资源和世界扩张推进故事。",
@@ -716,6 +756,7 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(
             """
         )
     calls = {"verify_sources": 0, "boundary": 0, "story_state": 0}
+    story_state_kwargs: list[dict[str, object]] = []
     original_verify = handoff_module.verify_sources
     original_boundary = handoff_module.build_boundary_packet
     original_story_state = handoff_module.build_story_game_state
@@ -730,6 +771,7 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(
 
     def counted_story_state(*args: object, **kwargs: object) -> dict[str, object]:
         calls["story_state"] += 1
+        story_state_kwargs.append(dict(kwargs))
         return original_story_state(*args, **kwargs)
 
     monkeypatch.setattr(handoff_module, "verify_sources", counted_verify)
@@ -770,6 +812,24 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(
     )
     assert handoff_kernel_path.is_file()
     assert calls == {"verify_sources": 1, "boundary": 1, "story_state": 1}
+    assert story_state_kwargs == [
+        {
+            "chapter_id": str(chapters[-1]["chapter_id"]),
+            "include_knowledge_state": True,
+            "include_knowledge_matrix": False,
+        }
+    ]
+    frozen_world_state_path = (
+        handoff_root / "input" / "world_state_context.json"
+        if (handoff_root / "input").is_dir()
+        else handoff_root / "world_state_context.json"
+    )
+    frozen_world_state = json.loads(frozen_world_state_path.read_text(encoding="utf-8"))
+    assert any(
+        record.get("object_id") == "knowledge:boundary-key-rule"
+        for record in frozen_world_state["knowledge"]
+    )
+    assert frozen_world_state["knowledge_matrix"] == []
     policy = json.loads(str(aggregate["author_policy_json"]))
     assert intent_id in {
         item["intent_id"] for item in policy["author_control"]["intents"]
@@ -801,6 +861,7 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(
     assert kernel["chapter_state"]["progression_state"] is not None
     assert "resource_state" in kernel["chapter_state"]
     assert "opportunity_surface" in kernel["chapter_state"]
+    assert kernel["chapter_state"]["knowledge_state"] == frozen_world_state["knowledge"]
     assert "narrative_debts" in kernel["planning_state"]
     assert "anticipation_surface" in kernel["planning_state"]
     assert kernel["planning_state"]["scheduler_recommendation"]["primary_intent"]
@@ -1094,8 +1155,9 @@ def test_item_faction_and_author_plan_keep_authority_boundaries(
         for record in state["visible_inventory"]
         if record["author_name"] == "边界钥匙"
     )
-    assert item["history"]
-    assert item["who_knows"] == []
+    assert "history" not in item
+    assert item["changed_this_chapter"] is True
+    assert "who_knows" not in item
     knowledge_state = build_workbench_context(
         database,
         "story-world-v22",
@@ -1153,7 +1215,24 @@ def test_item_faction_and_author_plan_keep_authority_boundaries(
     )
 
     app = create_app(database, book_id="story-world-v22")
-    page = TestClient(app).get(
+    client = TestClient(app)
+    default_state = client.get(
+        "/api/books/story-world-v22/editions/base/chapters/"
+        f"{chapters[1]['chapter_id']}/game-state"
+    ).json()
+    default_item = next(
+        record for record in default_state["inventory"] if record.get("name") == "边界钥匙"
+    )
+    assert "history" not in default_item
+    history_state = client.get(
+        "/api/books/story-world-v22/editions/base/chapters/"
+        f"{chapters[1]['chapter_id']}/game-state?include_history=1"
+    ).json()
+    history_item = next(
+        record for record in history_state["inventory"] if record.get("name") == "边界钥匙"
+    )
+    assert history_item["history"]
+    page = client.get(
         "/books/story-world-v22/editions/base/workbench"
         f"?mode=state&node=state&state_tab=factions&chapter_id={chapters[1]['chapter_id']}"
         "&character_id=character:hero&truth_lens=AUTHOR&state_scope=global"
