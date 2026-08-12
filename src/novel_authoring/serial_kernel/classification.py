@@ -39,6 +39,14 @@ _DRIVE_LABELS: dict[NarrativeDrive, str] = {
 }
 
 
+def narrative_drive_label(value: NarrativeDrive | str) -> str:
+    try:
+        drive = value if isinstance(value, NarrativeDrive) else NarrativeDrive(value)
+    except ValueError:
+        return str(value)
+    return _DRIVE_LABELS.get(drive, drive.value)
+
+
 def _contains(text: str, values: Iterable[str]) -> bool:
     return any(value in text for value in values)
 
@@ -140,6 +148,7 @@ def _drive_mix(text: str) -> tuple[NarrativeDrive, list[NarrativeDrive], list[st
             "超凡能力",
             "重塑他的身体",
             "进化",
+            "突破",
         ),
     ):
         evidence.append("主动变强、资源与验证直接改变行动可能性")
@@ -273,4 +282,72 @@ def interpret_narrative_drives(
     )
 
 
-__all__ = ["interpret_narrative_drives"]
+def adjust_narrative_drive_interpretation(
+    value: NarrativeDriveInterpretation,
+    adjustment: str,
+) -> NarrativeDriveInterpretation:
+    """Apply a small author-facing emphasis without guessing a new story model."""
+
+    target = {
+        "MYSTERY_STRONGER": NarrativeDrive.MYSTERY_REVELATION,
+        "TEAM_STRONGER": NarrativeDrive.TEAM_GROWTH,
+        "RELATIONSHIP_STRONGER": NarrativeDrive.RELATIONSHIP_EMOTIONAL,
+        "CAREER_STRONGER": NarrativeDrive.CAREER_MASTERY,
+    }.get(adjustment)
+    if target is None:
+        return value
+    contract = value.drive_contract
+    secondary = list(contract.secondary_drives)
+    if target is not contract.primary_drive and target not in secondary:
+        secondary.append(target)
+    secondary = secondary[:4]
+    priorities = dict(contract.drive_priorities)
+    priorities[target] = max(90, priorities.get(target, 0))
+    promises = dict(contract.drive_promises)
+    promises.setdefault(
+        target,
+        [f"持续通过{_DRIVE_LABELS.get(target, target.value)}产生可见后果"],
+    )
+    payoff_channels = list(contract.drive_payoff_channels)
+    if not any(item.associated_drive is target for item in payoff_channels):
+        payoff_channels.append(
+            DrivePayoffChannel(
+                channel=_payoff_for_drive(target),
+                associated_drive=target,
+            )
+        )
+    debts = dict(contract.drive_debt_types)
+    debts.setdefault(target, [target.value])
+    updated_contract = contract.model_copy(
+        update={
+            "secondary_drives": secondary,
+            "drive_priorities": priorities,
+            "drive_promises": promises,
+            "drive_payoff_channels": payoff_channels,
+            "drive_debt_types": debts,
+            "author_overrides": [*contract.author_overrides, adjustment],
+        }
+    )
+    mix = updated_contract.drive_mix
+    enabled_engines = list(dict.fromkeys(_engine_for_drive(drive) for drive in mix))
+    return value.model_copy(
+        update={
+            "summary": (
+                f"主要依靠{value.display_primary_drive}推进；"
+                f"作者提高了{_DRIVE_LABELS.get(target, target.value)}的优先级"
+            ),
+            "drive_contract": updated_contract,
+            "enabled_engines": enabled_engines,
+            "display_secondary_drives": [
+                _DRIVE_LABELS.get(item, item.value) for item in secondary
+            ],
+            "evidence": [*value.evidence, f"AUTHOR_ADJUSTMENT:{adjustment}"],
+        }
+    )
+
+
+__all__ = [
+    "adjust_narrative_drive_interpretation",
+    "interpret_narrative_drives",
+    "narrative_drive_label",
+]

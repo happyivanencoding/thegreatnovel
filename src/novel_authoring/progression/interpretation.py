@@ -56,6 +56,8 @@ class ReaderExperienceAdjustment(StrEnum):
     PAYOFF_STRONGER = "PAYOFF_STRONGER"
     MYSTERY_STRONGER = "MYSTERY_STRONGER"
     TEAM_STRONGER = "TEAM_STRONGER"
+    RELATIONSHIP_STRONGER = "RELATIONSHIP_STRONGER"
+    CAREER_STRONGER = "CAREER_STRONGER"
 
 
 class ReaderExperienceInterpretation(BaseModel):
@@ -409,6 +411,10 @@ def adjust_reader_experience(
         priorities[ReaderExperience.REVEAL] = ExperiencePriority.HIGH
     elif adjustment is ReaderExperienceAdjustment.TEAM_STRONGER:
         priorities[ReaderExperience.TEAM_GROWTH] = ExperiencePriority.VERY_HIGH
+    elif adjustment is ReaderExperienceAdjustment.RELATIONSHIP_STRONGER:
+        priorities[ReaderExperience.RELATIONSHIP] = ExperiencePriority.VERY_HIGH
+    elif adjustment is ReaderExperienceAdjustment.CAREER_STRONGER:
+        priorities[ReaderExperience.STATUS_RISE] = ExperiencePriority.VERY_HIGH
     return contract.model_copy(
         update={
             "experience_priorities": priorities,

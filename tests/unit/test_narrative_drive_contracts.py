@@ -11,6 +11,7 @@ from novel_authoring.serial_kernel import (
     NarrativeDrive,
     NarrativeDriveContract,
     NarrativeEngineType,
+    adjust_narrative_drive_interpretation,
     interpret_narrative_drives,
 )
 
@@ -124,3 +125,20 @@ def test_near_future_body_progression_specialization_is_preserved() -> None:
     assert bundle.progression is not None
     assert bundle.genre.capabilities.has_progression_axis is True
     assert bundle.genre.capabilities.has_verification_requirement is True
+
+
+def test_author_can_raise_secondary_drive_without_replacing_primary() -> None:
+    original = interpret_narrative_drives(
+        "一名县城外科医生接手一家即将关闭的急救中心。"
+    )
+
+    adjusted = adjust_narrative_drive_interpretation(
+        original,
+        "RELATIONSHIP_STRONGER",
+    )
+
+    assert adjusted.drive_contract.primary_drive is NarrativeDrive.CAREER_MASTERY
+    assert NarrativeDrive.RELATIONSHIP_EMOTIONAL in (
+        adjusted.drive_contract.secondary_drives
+    )
+    assert adjusted.drive_contract.author_overrides == ["RELATIONSHIP_STRONGER"]

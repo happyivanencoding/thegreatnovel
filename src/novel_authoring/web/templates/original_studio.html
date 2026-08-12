@@ -22,17 +22,20 @@
     {% if original.reader_experience_contract and original.reader_experience_contract.status != 'EFFECTIVE' %}
     <section class="panel original-foundation original-reader-step" data-reader-experience-step>
       <header class="original-wizard-header">
-        <div><p class="wb-kicker">Step 0 · 阅读体验</p><h2>这首先是一部什么小说？</h2></div>
+        <div><p class="wb-kicker">Step 0 · 阅读体验与主要驱动力</p><h2>读者为什么追，故事靠什么长期推进？</h2></div>
         <span class="badge">等待作者确认</span>
       </header>
       {% set reader = original.reader_experience_display %}
       <div class="original-reader-summary">
         <p>{{ reader.summary }}</p>
         <div class="original-final-preview">
-          <article><span>主类型</span><strong>{{ reader.primary_family }}</strong></article>
+          <article><span>市场分类</span><strong>{{ reader.market_categories|join(' / ') or '待作者确认' }}</strong></article>
+          <article><span>主要驱动力</span><strong>{{ reader.primary_drive }}</strong></article>
+          <article><span>辅助驱动力</span><strong>{{ reader.secondary_drives|join(' / ') or '待作者补充' }}</strong></article>
+          <article><span>成长是否为核心</span><strong>{{ '是 · 使用 Progression Engine' if reader.progression_engine_enabled else '否 · 不强制力量体系' }}</strong></article>
+          <article><span>阅读类型</span><strong>{{ reader.primary_family }}</strong></article>
           <article><span>世界外壳</span><strong>{{ reader.setting_skin }}</strong></article>
           <article><span>超凡解释</span><strong>{{ reader.explanation_style }}</strong></article>
-          <article><span>建议规模</span><strong>长篇连载</strong></article>
         </div>
       </div>
       <h3>主要阅读体验</h3>
@@ -52,12 +55,14 @@
       <details><summary>核心承诺与防漂移边界</summary><h4>必须持续提供</h4><ul>{% for item in reader.must_deliver %}<li>{{ item }}</li>{% endfor %}</ul><h4>不得漂移为</h4><ul>{% for item in reader.must_not_drift_into %}<li>{{ item }}</li>{% endfor %}</ul></details>
       <div class="original-actions original-reader-actions">
         <button class="button primary" type="button" data-original-action="confirm-reader" data-reader-adjustment="CONFIRM">符合我的想法</button>
-        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="CULTIVATION_STRONGER">修炼成长更强</button>
+        {% if reader.progression_engine_enabled %}<button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="CULTIVATION_STRONGER">成长更强</button>{% endif %}
         <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="PAYOFF_STRONGER">战斗和爽点更强</button>
         <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="MYSTERY_STRONGER">谜团更强</button>
         <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="TEAM_STRONGER">团队更强</button>
+        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="RELATIONSHIP_STRONGER">关系更强</button>
+        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="CAREER_STRONGER">职业更强</button>
       </div>
-      <p class="muted">确认后才会生成 Genre / Progression / World / Payoff Proposal，并准备三个共享同一 Reader Promise 的 Story Foundation。</p>
+      <p class="muted">确认后会生成 Reader / Genre / Narrative Drive Proposal；只有启用成长 Drive 时才生成完整 Progression Contract。所有方案仍需作者确认。</p>
     </section>
     {% else %}
 
@@ -168,7 +173,11 @@
           {% for contract in original.pending_kernel_contracts %}
           <article class="original-contract-card">
             <span>{{ contract.contract_type }}</span>
-            {% if contract.contract_type == 'PROGRESSION' %}
+            {% if contract.contract_type == 'MARKET_CATEGORY' %}
+            <strong>市场分类元数据</strong><small>{{ contract.payload.display_labels|join(' / ') }}</small><small>不会进入章节调度。</small>
+            {% elif contract.contract_type == 'NARRATIVE_DRIVE' %}
+            <strong>主要：{{ original.reader_experience_display.primary_drive }}</strong><small>辅助：{{ original.reader_experience_display.secondary_drives|join(' / ') or '无' }}</small><small>章节调度读取 Drive Mix，不读取市场分类。</small>
+            {% elif contract.contract_type == 'PROGRESSION' %}
             <strong>{{ contract.payload.primary_axis.name }}</strong>
             <small>成长主体：{{ contract.payload.progression_subject }}</small>
             <small>成长拓扑：{{ contract.payload.topology|join(' / ') }}</small>

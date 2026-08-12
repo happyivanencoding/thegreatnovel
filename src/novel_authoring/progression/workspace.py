@@ -22,6 +22,7 @@ from novel_authoring.progression.service import (
     effective_contract_records,
     list_contract_records,
 )
+from novel_authoring.serial_kernel.classification import narrative_drive_label
 
 
 def _chapter(world_state: Mapping[str, Any]) -> tuple[str, int]:
@@ -121,6 +122,20 @@ def build_progression_workspace_from_world_state(
         world_expansion=world_expansion,
     )
     available = progression is not None
+    proposal_values: list[dict[str, Any]] = []
+    for item in proposals:
+        value = item.model_dump(mode="json")
+        if item.contract_type is ProgressionContractType.NARRATIVE_DRIVE:
+            payload = dict(value["payload"])
+            payload["primary_drive_display"] = narrative_drive_label(
+                str(payload.get("primary_drive") or "")
+            )
+            payload["secondary_drive_displays"] = [
+                narrative_drive_label(str(drive))
+                for drive in payload.get("secondary_drives", [])
+            ]
+            value["payload"] = payload
+        proposal_values.append(value)
     return {
         "available": available,
         "message": (
@@ -152,7 +167,7 @@ def build_progression_workspace_from_world_state(
             }
             for contract_type, record in records.items()
         },
-        "contract_proposals": [item.model_dump(mode="json") for item in proposals],
+        "contract_proposals": proposal_values,
         "projection_only": True,
         "canon_mutation_allowed": False,
     }

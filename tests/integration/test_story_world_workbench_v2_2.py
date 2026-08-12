@@ -395,7 +395,10 @@ def test_existing_novel_contract_suggestions_require_item_by_item_confirmation(
         headers=headers,
     )
     assert inferred.status_code == 200
-    assert len(inferred.json()["created"]) == 5
+    assert len(inferred.json()["created"]) == 7
+    assert "NARRATIVE_DRIVE" in {
+        item["contract_type"] for item in inferred.json()["created"]
+    }
     assert {item["status"] for item in inferred.json()["created"]} == {
         "INFERRED_PROPOSAL"
     }
@@ -424,7 +427,7 @@ def test_existing_novel_contract_suggestions_require_item_by_item_confirmation(
         f"/api/books/story-world-v22/editions/base/chapters/{chapter_id}/progression"
     ).json()
     assert after["available"] is True
-    assert len(after["contract_proposals"]) == 4
+    assert len(after["contract_proposals"]) == 6
     with database.connect() as connection:
         authority_after = tuple(
             connection.execute(

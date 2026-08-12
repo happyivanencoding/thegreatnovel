@@ -707,7 +707,8 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
     assert "一句话创意" in form.text
     assert created.status_code == 200
     assert created.json()["source_required"] is False
-    assert "这首先是一部什么小说" in reader_step.text
+    assert "阅读体验与主要驱动力" in reader_step.text
+    assert "长期推进" in reader_step.text
     assert "AI 任务" in original.text
     assert instruction.status_code == 200
     assert instruction.json()["instruction"]

@@ -49,6 +49,9 @@ from novel_authoring.progression.service import (
     list_contract_records,
     reject_contract,
 )
+from novel_authoring.serial_kernel.classification import (
+    adjust_narrative_drive_interpretation,
+)
 from novel_authoring.serial_kernel.models import PROGRESSION_DRIVES, NarrativeDriveContract
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import ensure_operation
@@ -263,7 +266,26 @@ def confirm_original_reader_experience(
         payload = _read_json(interpretation_path)
     if payload is None:
         raise OriginalWorkflowError("Reader Experience Proposal 不存在")
-    interpretation = ReaderExperienceInterpretation.model_validate(payload)
+    if "narrative_drive" not in payload:
+        request_payload = _read_json(_original_dir(database, book_id) / "request.json")
+        if request_payload is None:
+            raise OriginalWorkflowError("原创的一句话创意不存在")
+        request = OriginalBookRequest.model_validate(request_payload)
+        interpretation = interpret_reader_experience(
+            request.premise,
+            genre_hint=request.genre,
+            contract_prefix=book_id,
+        )
+    else:
+        interpretation = ReaderExperienceInterpretation.model_validate(payload)
+    interpretation = interpretation.model_copy(
+        update={
+            "narrative_drive": adjust_narrative_drive_interpretation(
+                interpretation.narrative_drive,
+                selected_adjustment.value,
+            )
+        }
+    )
     records = list_contract_records(database, book_id=book_id, edition_id="base")
     effective = next(
         (
@@ -289,6 +311,21 @@ def confirm_original_reader_experience(
         adjusted = adjust_reader_experience(
             ReaderExperienceContract.model_validate(current.payload),
             selected_adjustment,
+        )
+        drive_contract = interpretation.narrative_drive.drive_contract
+        adjusted = adjusted.model_copy(
+            update={
+                "primary_narrative_drive": drive_contract.primary_drive.value,
+                "secondary_narrative_drives": [
+                    item.value for item in drive_contract.secondary_drives
+                ],
+                "drive_priority_order": [
+                    item.value for item in drive_contract.drive_mix
+                ],
+                "expected_drive_interactions": [
+                    f"{interpretation.narrative_drive.display_primary_drive}为主要驱动力"
+                ],
+            }
         )
         if adjusted != ReaderExperienceContract.model_validate(current.payload):
             replacement = create_contract_proposal(
@@ -1116,6 +1153,13 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
         if reader_interpretation is not None
         else {}
     )
+    narrative_display = (
+        dict(reader_interpretation.get("narrative_drive", {}))
+        if reader_interpretation is not None
+        else {}
+    )
+    drive_contract_display = dict(narrative_display.get("drive_contract", {}))
+    market_display = dict(narrative_display.get("market_category", {}))
     priority_labels = {
         "PROGRESSION": "成长突破",
         "POWER_VERIFICATION": "能力兑现",
@@ -1183,6 +1227,19 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                 reader_payload.get("must_not_drift_into", [])
             ),
             "derived_adapter": reader_interpretation.get("derived_adapter_spec"),
+            "market_categories": list(market_display.get("display_labels", [])),
+            "primary_drive": str(
+                narrative_display.get("display_primary_drive") or "待作者确认"
+            ),
+            "secondary_drives": list(
+                narrative_display.get("display_secondary_drives", [])
+            ),
+            "progression_engine_enabled": bool(
+                narrative_display.get("progression_engine_enabled", False)
+            ),
+            "drive_priorities": dict(
+                drive_contract_display.get("drive_priorities", {})
+            ),
         }
         if reader_interpretation is not None
         else None

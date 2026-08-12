@@ -17,8 +17,9 @@ Extraction 或 Story Atlas 初始化。
 3. `premise` 是唯一必填作者输入。类型、文风、视角、篇幅、must include、forbidden 与抽象
    reference traits 都是约束；reference traits 不得被复制为来源小说的人物、设定或情节。
 4. 若 `original_request.json` 含 `progression_kernel`，完整读取其中已确认的
-   Reader Experience 与待确认 Genre / Progression / World / Payoff Proposal；这些是三个
-   Foundation 共享的冻结边界，不得按 Adapter 名称套用题材套路。
+   Reader Experience、Market Category、Narrative Drive 与待确认 Genre / World / Payoff
+   Proposal；这些是三个 Foundation 共享的冻结边界，不得按 Adapter 名称套用题材套路。
+   只有已启用 Progression Drive 时，输入中才要求完整 Progression Contract。
 
 ## Proposal 合同
 
@@ -27,7 +28,8 @@ Extraction 或 Story Atlas 初始化。
 
 - `information_status` 必须为 `PROPOSAL`。
 - `kernel_contracts` 必须原样复制 `original_request.json.progression_kernel`；三个 Foundation
-  共享同一核心 Reader Promise 与 Progression Promise。
+  共享同一核心 Reader Promise 与 Narrative Drive Contract。若存在 Progression Contract，
+  还必须共享同一 Progression Promise；若不存在，不得自行补造境界、突破或力量体系。
 - 恰好三个不同书名。
 - 恰好三个结构上不同的 Story Foundation；每个都含阅读承诺、主角、目标、主冲突、世界
   机制、成长循环、长期可能性、风险以及与 premise 的关系。
