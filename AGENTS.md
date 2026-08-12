@@ -1,6 +1,6 @@
 # Canonical Development Branch
 
-本仓库唯一永久开发分支是 `小说续写_codex`。所有生产代码、测试、文档和本地 Web 交付均直接在该分支完成；不得创建新分支、Pull Request 或额外 worktree。允许创建保护性 tag，但不得把功能分散到其他长期分支。每次交付前必须确认当前分支、工作树和远端 `origin/小说续写_codex` 一致，并只推送该分支。
+本仓库唯一永久开发分支是 `progression-webnovel-kernel-v1`。所有生产代码、测试、文档和本地 Web 交付均直接在该分支完成；不得创建新分支、Pull Request 或额外 worktree。允许创建保护性 tag，但不得把功能分散到其他长期分支。每次交付前必须确认当前分支、工作树和远端 `origin/progression-webnovel-kernel-v1` 一致，并只推送该分支。
 
 主 Agent 负责拆解、调度、整合、验收和最终提交；子代理只能执行自包含的只读审计，或在明确隔离的 Operation Workspace/artifact 目录内工作，不得修改生产代码、`book/`、Canon、远端分支或启动 Codex 子进程/API。不得创建额外 worktree；生产代码由主 Agent 在当前分支串行修改。
 
@@ -25,7 +25,7 @@
 1. 对体量较大且相互独立的子任务，优先派发给多个 `luna_worker` 并行处理。
 2. 对几分钟内能够完成的轻量任务，直接留在主线程。
 3. 每个 worker 的任务描述必须上下文完整，明确文件范围、任务边界、预期输出和验收标准；任务必须自包含，不得依赖主线程的对话历史。
-4. 子代理不得修改生产代码；子代理只允许执行只读审计，或写入隔离的 Operation Workspace/artifact 目录；所有生产代码修改由主 Agent 在 `小说续写_codex` 当前工作树串行完成。
+4. 子代理不得修改生产代码；子代理只允许执行只读审计，或写入隔离的 Operation Workspace/artifact 目录；所有生产代码修改由主 Agent 在 `progression-webnovel-kernel-v1` 当前工作树串行完成。
 5. worker 完成后，主线程必须按照验收标准检查结果；未达标时重新派发修正任务，直到满足标准或明确报告阻塞。
 6. 如果多个 worker 无法并行，先检查当前生效的 `config.toml` 中 `[agents]` 的 `max_concurrent_threads_per_session`；若设置为 `1`，按串行处理，不因本规则擅自修改配置。
 
