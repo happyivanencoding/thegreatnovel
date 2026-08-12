@@ -203,6 +203,14 @@ class ProfileReanalysisRequest(BaseModel):
     context_chapter_id: str | None = None
 
 
+class KernelContractDiscoveryRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    context_chapter_id: str | None = Field(
+        default=None, pattern=r"^[A-Za-z0-9._:-]+$"
+    )
+
+
 class TruthCompatibilityRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

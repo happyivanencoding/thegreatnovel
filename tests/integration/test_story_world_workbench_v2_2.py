@@ -464,7 +464,7 @@ def test_planning_aggregate_freezes_chapter_aware_kernel_context(
     assert stored == context
 
 
-def test_existing_novel_contract_suggestions_require_item_by_item_confirmation(
+def test_existing_novel_lexical_fallback_requires_item_by_item_confirmation(
     tmp_path: Path,
 ) -> None:
     database, chapters = _v22_book(tmp_path, chapter_count=3)
@@ -484,7 +484,7 @@ def test_existing_novel_contract_suggestions_require_item_by_item_confirmation(
         )
 
     inferred = client.post(
-        "/api/books/story-world-v22/editions/base/progression-contracts/infer",
+        "/api/books/story-world-v22/editions/base/progression-contracts/lexical-fallback",
         headers=headers,
     )
     assert inferred.status_code == 200
@@ -496,9 +496,11 @@ def test_existing_novel_contract_suggestions_require_item_by_item_confirmation(
         "INFERRED_PROPOSAL"
     }
     assert inferred.json()["canon_changed"] is False
+    assert inferred.json()["discovery_mode"] == "LEXICAL_FALLBACK"
+    assert inferred.json()["confidence_boundary"] == "RECALL_HINT_ONLY"
     assert before["available"] is False
     assert client.post(
-        "/api/books/story-world-v22/editions/base/progression-contracts/infer",
+        "/api/books/story-world-v22/editions/base/progression-contracts/lexical-fallback",
         headers=headers,
     ).json()["deduplicated"] is True
 

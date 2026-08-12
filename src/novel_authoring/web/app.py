@@ -136,7 +136,13 @@ from novel_authoring.pending_actions import (
     list_pending_author_actions,
     set_pending_author_action_status,
 )
-from novel_authoring.progression.inference import infer_existing_contract_proposals
+from novel_authoring.progression.discovery import (
+    import_kernel_contract_discovery,
+    prepare_kernel_contract_discovery,
+)
+from novel_authoring.progression.inference import (
+    infer_existing_contract_proposals_lexical_fallback,
+)
 from novel_authoring.progression.service import (
     confirm_contract,
     get_contract_record,
@@ -179,6 +185,7 @@ from novel_authoring.web.schemas import (
     EditionActivationRequest,
     HandoffRequest,
     HiddenItemRequest,
+    KernelContractDiscoveryRequest,
     KnowledgeUpdateRequest,
     OpenCreativeQuestionRequest,
     OriginalCandidateSelectionRequest,
@@ -1496,15 +1503,66 @@ def create_app(
         }
 
     @app.post(
-        "/api/books/{path_book_id}/editions/{edition_id}/progression-contracts/infer"
+        "/api/books/{path_book_id}/editions/{edition_id}/progression-contracts/discovery"
     )
-    async def infer_progression_contracts_api(
+    async def prepare_kernel_contract_discovery_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        payload: KernelContractDiscoveryRequest,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        return prepare_kernel_contract_discovery(
+            _database_for_book(app, checked_book),
+            book_id=checked_book,
+            edition_id=checked_edition,
+            context_chapter_id=payload.context_chapter_id,
+        )
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/progression-contracts/"
+        "discovery/{handoff_id}/collect"
+    )
+    async def collect_kernel_contract_discovery_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        handoff_id: str,
+    ) -> dict[str, Any]:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        checked_handoff = _check_id(handoff_id)
+        selected_database = _database_for_book(app, checked_book)
+        item = get_handoff(selected_database, checked_handoff)
+        if (
+            str(item.get("book_id")) != checked_book
+            or str(item.get("edition_id")) != checked_edition
+            or str(item.get("handoff_type"))
+            != HandoffType.KERNEL_CONTRACT_DISCOVERY.value
+        ):
+            raise HTTPException(status_code=404, detail="Kernel discovery handoff scope 不匹配")
+        try:
+            return import_kernel_contract_discovery(
+                selected_database,
+                handoff_id=checked_handoff,
+            )
+        except HandoffWorkflowError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/progression-contracts/"
+        "lexical-fallback"
+    )
+    async def lexical_fallback_progression_contracts_api(
         request: Request, path_book_id: str, edition_id: str
     ) -> dict[str, Any]:
         verify_csrf(request, request.headers.get("X-CSRF-Token"))
         checked_book = _check_id(path_book_id)
         checked_edition = _check_id(edition_id)
-        return infer_existing_contract_proposals(
+        return infer_existing_contract_proposals_lexical_fallback(
             _database_for_book(app, checked_book),
             book_id=checked_book,
             edition_id=checked_edition,

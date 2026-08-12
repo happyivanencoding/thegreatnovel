@@ -397,7 +397,14 @@
     current.querySelectorAll("[data-infer-progression-contracts]").forEach(function (button) {
       button.addEventListener("click", function () {
         button.disabled = true;
-        postJson(base + "/infer", {}).then(function () { loadWorkbench(location.href, { push: false }); }).catch(function (error) { button.disabled = false; button.textContent = error.message; });
+        button.textContent = "正在冻结语义发现任务…";
+        postJson(base + "/discovery", { context_chapter_id: current.dataset.currentChapterId || null }).then(function (result) {
+          button.textContent = "任务已准备";
+          button.title = result.handoff_id;
+          var url = new URL(location.href);
+          url.searchParams.set("activity_id", result.handoff_id);
+          setTimeout(function () { loadWorkbench(url.href, { push: false, restoreState: Object.assign(captureNavigationState(current), { activityCenterOpen: true }) }); }, 350);
+        }).catch(function (error) { button.disabled = false; button.textContent = error.message; });
       });
     });
     current.querySelectorAll("[data-confirm-progression-contract]").forEach(function (button) {

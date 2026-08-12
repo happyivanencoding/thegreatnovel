@@ -66,6 +66,7 @@ class HandoffType(StrEnum):
     SOURCE_STATE_HYDRATION = "SOURCE_STATE_HYDRATION"
     PROFILE_REANALYSIS = "PROFILE_REANALYSIS"
     ORIGINAL_BOOK_BOOTSTRAP = "ORIGINAL_BOOK_BOOTSTRAP"
+    KERNEL_CONTRACT_DISCOVERY = "KERNEL_CONTRACT_DISCOVERY"
 
 
 class HandoffWorkflowError(RuntimeError):
@@ -194,6 +195,11 @@ class WorkflowHandoffResult(BaseModel):
                 raise ValueError("ORIGINAL_BOOK_BOOTSTRAP 必须返回三个 Foundation candidate_ids")
             if not self.artifact_paths:
                 raise ValueError("ORIGINAL_BOOK_BOOTSTRAP 必须返回 proposal artifact_paths")
+        if (
+            atlas_type == HandoffType.KERNEL_CONTRACT_DISCOVERY.value
+            and not self.artifact_paths
+        ):
+            raise ValueError("KERNEL_CONTRACT_DISCOVERY 必须返回 proposal artifact_paths")
         if atlas_type == HandoffType.SOURCE_STATE_HYDRATION.value:
             raise ValueError("SOURCE_STATE_HYDRATION 使用专用结果合同")
         compatible = {
@@ -223,6 +229,11 @@ class WorkflowHandoffResult(BaseModel):
             "ORIGINAL_BOOK_BOOTSTRAP": {
                 "ORIGINAL_BOOK_BOOTSTRAP",
                 "FOUNDATION_PROPOSED",
+                "VALIDATED_PROPOSAL",
+            },
+            "KERNEL_CONTRACT_DISCOVERY": {
+                "KERNEL_CONTRACT_DISCOVERY",
+                "CONTRACT_PROPOSAL_READY",
                 "VALIDATED_PROPOSAL",
             },
         }
@@ -302,6 +313,8 @@ _OPERATION_INPUT_FILES = {
     "original_request.json",
     "proposal_schema.json",
     "kernel_context.json",
+    "kernel_discovery_context.json",
+    "kernel_contract_proposal_schema.json",
 }
 
 
@@ -459,6 +472,7 @@ def create_handoff(
     hydration_request: dict[str, Any] | None = None,
     original_bootstrap_request: dict[str, Any] | None = None,
     prepared_draft_task: dict[str, Any] | None = None,
+    kernel_discovery_request: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     database.initialize()
     selected = resolve_edition_id(database, book_id, edition_id)
@@ -485,6 +499,7 @@ def create_handoff(
     hydration_handoff = handoff_type is HandoffType.SOURCE_STATE_HYDRATION
     profile_handoff = handoff_type is HandoffType.PROFILE_REANALYSIS
     original_bootstrap_handoff = handoff_type is HandoffType.ORIGINAL_BOOK_BOOTSTRAP
+    kernel_discovery_handoff = handoff_type is HandoffType.KERNEL_CONTRACT_DISCOVERY
     original_genesis = original_book and chapter_count == 0
     selected_innovation: InnovationControl | None = None
     requested_innovation_source = innovation_source
@@ -505,6 +520,7 @@ def create_handoff(
         or hydration_handoff
         or profile_handoff
         or original_bootstrap_handoff
+        or kernel_discovery_handoff
         or original_genesis
     ):
         # Initialization and distill are upstream analysis handoffs. They must
@@ -513,6 +529,8 @@ def create_handoff(
             "scope_type": (
                 "ORIGINAL_BOOTSTRAP"
                 if original_bootstrap_handoff
+                else "KERNEL_CONTRACT_DISCOVERY"
+                if kernel_discovery_handoff
                 else "GENESIS"
                 if original_genesis
                 else "INITIALIZATION"
@@ -530,6 +548,7 @@ def create_handoff(
                 or hydration_handoff
                 or profile_handoff
                 or original_bootstrap_handoff
+                or kernel_discovery_handoff
                 or original_genesis
             ),
             "registry_hash": load_registry().registry_hash,
@@ -669,6 +688,15 @@ def create_handoff(
                 "ORIGINAL_BOOK_BOOTSTRAP handoff 缺少 original_bootstrap_request"
             )
         frozen_original_request = dict(original_bootstrap_request)
+    frozen_kernel_discovery: dict[str, Any] | None = None
+    if kernel_discovery_handoff:
+        if original_book and chapter_count == 0:
+            raise HandoffWorkflowError("KERNEL_CONTRACT_DISCOVERY 只适用于有真实章节的作品")
+        if not isinstance(kernel_discovery_request, dict):
+            raise HandoffWorkflowError(
+                "KERNEL_CONTRACT_DISCOVERY handoff 缺少冻结的语义发现上下文"
+            )
+        frozen_kernel_discovery = dict(kernel_discovery_request)
     frozen_distill_request: dict[str, Any] | None = None
     if distill_handoff:
         if not isinstance(distill_request, dict):
@@ -819,6 +847,25 @@ def create_handoff(
                 "planning_aggregate_required": False,
             }
         )
+    if kernel_discovery_handoff and frozen_kernel_discovery is not None:
+        task.update(
+            {
+                "kernel_contract_discovery": {
+                    "context_path": "kernel_discovery_context.json",
+                    "proposal_schema_path": "kernel_contract_proposal_schema.json",
+                    "proposal_artifact": "artifacts/kernel_contract_discovery/proposal.json",
+                    "context_chapter": frozen_kernel_discovery["context_chapter"],
+                    "bounded_chapter_ids": frozen_kernel_discovery["bounded_inputs"][
+                        "chapter_ids"
+                    ],
+                    "discovery_mode": "SEMANTIC_CONTROLLED",
+                    "proposal_only": True,
+                    "author_confirmation_required": True,
+                    "canon_boundary": "NO_CANON_COMMIT",
+                },
+                "planning_aggregate_required": False,
+            }
+        )
     if hydration_handoff:
         if not isinstance(hydration_request, dict):
             raise HandoffWorkflowError("SOURCE_STATE_HYDRATION handoff 缺少 hydration_request")
@@ -950,6 +997,7 @@ def create_handoff(
         HandoffType.SOURCE_STATE_HYDRATION: "process-novel-handoff",
         HandoffType.PROFILE_REANALYSIS: "process-novel-handoff",
         HandoffType.ORIGINAL_BOOK_BOOTSTRAP: "bootstrap-original-novel",
+        HandoffType.KERNEL_CONTRACT_DISCOVERY: "process-novel-handoff",
     }.get(handoff_type, "continue-novel")
     atlas_instruction = ""
     if handoff_type in {
@@ -1005,6 +1053,18 @@ def create_handoff(
             "所有内容保持 information_status=PROPOSAL，只写 "
             "artifacts/story_foundation/proposal.json；不得创建章节、Canon、Edition 或固定结局。"
         )
+    elif kernel_discovery_handoff:
+        atlas_instruction = (
+            "这是受控语义 Kernel Contract Discovery。读取 "
+            "kernel_discovery_context.json 和 kernel_contract_proposal_schema.json，"
+            "综合冻结的近期章节、Chapter Continuity Index、Source State、"
+            "Current Boundary、Global Book Profile、Author Truth、Reveal Agenda、"
+            "Story Atlas 与 Distillation Package，产出唯一 "
+            "artifacts/kernel_contract_discovery/proposal.json。未知项必须保持 unknown；"
+            "不得以市场分类直接决定 Narrative Drive；非成长 Drive 不得强制"
+            "生成 Progression Contract。所有合同只能是 INFERRED_PROPOSAL，不得确认"
+            "合同或修改 Canon。"
+        )
     elif original_genesis and prepared_draft_task is not None:
         atlas_instruction = (
             "这是无既有章节的 Genesis 首章任务。直接读取 task.json 的 prepared_draft_task，"
@@ -1047,7 +1107,8 @@ def create_handoff(
         "严格读取任务目录中的 task.json、prompt.md、metric_context.json、"
         "context_manifest.json、output_schema.json 和（如存在）hydration_context.json / "
         "profile_context.json / original_request.json / proposal_schema.json / "
-        "kernel_context.json。\n"
+        "kernel_context.json / kernel_discovery_context.json / "
+        "kernel_contract_proposal_schema.json。\n"
         "不得修改 book；不得批准写入正史；不得批准改写 Campaign；不得启用 Edition。\n"
         "结束时必须严格按 output_schema.json 写回 result.json 和 status.json；"
         "需要作者决定时写 waiting_for_user.json 并进入 WAITING_FOR_USER。"
@@ -1061,6 +1122,10 @@ def create_handoff(
         manifest_paths.append("profile_context.json")
     if original_bootstrap_handoff:
         manifest_paths.extend(["original_request.json", "proposal_schema.json"])
+    if kernel_discovery_handoff:
+        manifest_paths.extend(
+            ["kernel_discovery_context.json", "kernel_contract_proposal_schema.json"]
+        )
     context_manifest = {
         "book_id": book_id,
         "edition_id": selected,
@@ -1148,6 +1213,7 @@ def create_handoff(
             ]
         },
         "ORIGINAL_BOOK_BOOTSTRAP": {"required_non_empty": ["candidate_ids", "artifact_paths"]},
+        "KERNEL_CONTRACT_DISCOVERY": {"required_non_empty": ["artifact_paths"]},
     }
     if hydration_handoff:
         output_schema = SourceStateHydrationResult.model_json_schema()
@@ -1272,6 +1338,8 @@ def create_handoff(
             "original_request.json",
             "proposal_schema.json",
             "kernel_context.json",
+            "kernel_discovery_context.json",
+            "kernel_contract_proposal_schema.json",
         )
     }
     status_path = task_directory / "status.json"
@@ -1312,6 +1380,20 @@ def create_handoff(
         )
     else:
         input_files.pop("kernel_context.json", None)
+    if kernel_discovery_handoff and frozen_kernel_discovery is not None:
+        from novel_authoring.progression.discovery import KernelContractDiscoveryArtifact
+
+        _write_json(
+            input_files["kernel_discovery_context.json"],
+            frozen_kernel_discovery,
+        )
+        _write_json(
+            input_files["kernel_contract_proposal_schema.json"],
+            KernelContractDiscoveryArtifact.model_json_schema(),
+        )
+    else:
+        input_files.pop("kernel_discovery_context.json", None)
+        input_files.pop("kernel_contract_proposal_schema.json", None)
     _write_json(status_path, status_json)
     _write_json(result_path, {})
     file_hashes: dict[str, str] = {
@@ -1331,6 +1413,11 @@ def create_handoff(
             *(
                 ["kernel_context.json"]
                 if planning_aggregate.get("kernel_context") is not None
+                else []
+            ),
+            *(
+                ["kernel_discovery_context.json", "kernel_contract_proposal_schema.json"]
+                if kernel_discovery_handoff
                 else []
             ),
         )

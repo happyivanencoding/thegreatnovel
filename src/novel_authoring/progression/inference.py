@@ -60,13 +60,13 @@ def _names(world_state: Mapping[str, Any], collections: tuple[str, ...]) -> list
     return list(dict.fromkeys(names))
 
 
-def infer_existing_contract_proposals(
+def infer_existing_contract_proposals_lexical_fallback(
     database: Database,
     *,
     book_id: str,
     edition_id: str,
 ) -> dict[str, Any]:
-    """Create author-reviewable proposals; never infer current stage or Canon facts."""
+    """Low-confidence lexical fallback; never infer current stage or Canon facts."""
 
     with database.connect() as connection:
         chapters = edition_chapters(connection, book_id, edition_id)
@@ -170,7 +170,7 @@ def infer_existing_contract_proposals(
             metadata_id=f"{book_id}-inferred-market-category",
             primary_market_category=MarketCategory.CUSTOM,
             display_labels=["待作者确认市场分类"],
-            source="EXISTING_NOVEL_DISCOVERY",
+            source="LEXICAL_FALLBACK",
         ),
         drive_contract=drive_contract,
         enabled_engines=enabled_engines,
@@ -282,13 +282,15 @@ def infer_existing_contract_proposals(
                 edition_id=edition_id,
                 contract_type=contract_type,
                 payload=payload,
-                source="EXISTING_NOVEL_CHAPTER_STATE_INFERENCE",
+                source="LEXICAL_FALLBACK",
                 status=ContractStatus.INFERRED_PROPOSAL,
                 author_notes=evidence_summary,
             )
         )
     return {
         "chapter": {"chapter_id": chapter_id, "ordinal": int(latest["ordinal"])},
+        "discovery_mode": "LEXICAL_FALLBACK",
+        "confidence_boundary": "RECALL_HINT_ONLY",
         "evidence_summary": evidence_summary,
         "created": [item.model_dump(mode="json") for item in created],
         "deduplicated": not created,
@@ -296,4 +298,4 @@ def infer_existing_contract_proposals(
     }
 
 
-__all__ = ["infer_existing_contract_proposals"]
+__all__ = ["infer_existing_contract_proposals_lexical_fallback"]
