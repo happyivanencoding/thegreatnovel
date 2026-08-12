@@ -882,6 +882,23 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .library-card-details dl { display: grid; grid-template-columns: 60px minmax(0, 1fr); gap: .35rem; margin: 0; }
 .library-card-details dt { color: #98a2b3; }
 .library-card-details dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.library-card-tools { display: flex; align-items: center; gap: .7rem; }
+.library-card-menu { position: relative; }
+.library-card-menu > summary { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 6px; color: #667085; cursor: pointer; list-style: none; }
+.library-card-menu > summary::-webkit-details-marker { display: none; }
+.library-card-menu > summary:hover { color: #344054; background: #f2f4f7; }
+.library-card-menu[open] > div { position: absolute; z-index: 11; right: 0; bottom: 2rem; width: 126px; padding: .3rem; border: 1px solid #e4e7ec; border-radius: 8px; background: #fff; box-shadow: 0 12px 28px rgba(16,24,40,.16); }
+.library-card-menu button { width: 100%; padding: .48rem .55rem; border: 0; border-radius: 6px; color: #b42318; background: transparent; font: inherit; font-size: .7rem; text-align: left; cursor: pointer; }
+.library-card-menu button:hover { background: #fff1f0; }
+.library-delete-dialog { width: min(540px, calc(100vw - 2rem)); padding: 0; border: 0; border-radius: 14px; color: #344054; box-shadow: 0 24px 60px rgba(16,24,40,.24); }
+.library-delete-dialog::backdrop { background: rgba(16,24,40,.52); }
+.library-delete-form { display: grid; gap: 1rem; padding: 1.2rem; }
+.library-delete-form > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.library-delete-form h2 { margin: .15rem 0 0; color: #101828; font-size: 1.15rem; }
+.library-delete-form > p { margin: 0; font-size: .76rem; line-height: 1.65; }
+.library-delete-warning { padding: .7rem .8rem; border: 1px solid #fed7d2; border-radius: 8px; color: #912018; background: #fff5f4; }
+.library-delete-confirm { border-color: #b42318; color: #fff; background: #b42318; }
+.library-delete-confirm:hover { border-color: #912018; background: #912018; }
 .library-empty { display: grid; justify-items: center; max-width: 680px; margin: 4rem auto; padding: 3rem; border: 1px dashed #cdd5e3; border-radius: 16px; color: #667085; background: #fff; text-align: center; }
 .library-empty > div { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 15px; color: #2457d6; background: #eef3ff; font-size: 1.5rem; }
 .library-empty h2 { margin: 1rem 0 .25rem; color: #344054; }

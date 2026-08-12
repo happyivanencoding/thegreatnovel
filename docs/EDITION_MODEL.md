@@ -2,7 +2,7 @@
 
 ## 版本锚点
 
-`editions` 为每本书保存一个不可删除的 `base` 和任意多个派生版本。派生版本创建时固定 `parent_edition_id`、父投影在当时的 `base_event_seq`、`base_projection_hash` 和不可变 source manifest SHA-256。父版本后来变化不会静默改变派生版本；显式 rebase 不在本版本范围内。
+`editions` 为每本书保存一个不可单独删除的 `base` 和任意多个派生版本。派生版本创建时固定 `parent_edition_id`、父投影在当时的 `base_event_seq`、`base_projection_hash` 和不可变 source manifest SHA-256。父版本后来变化不会静默改变派生版本；显式 rebase 不在本版本范围内。作者明确永久删除整个 Library Project 时，项目内所有 Edition 会随 `library/<book_id>/` 一并删除；这不影响 IMPORTED 项目的外部来源文件。
 
 生命周期状态为 `DRAFT → VALIDATED → ACTIVE → ARCHIVED`。同一本书最多一个 `ACTIVE`，`books.active_edition_id` 是默认续写入口。
 

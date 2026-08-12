@@ -151,7 +151,12 @@ from novel_authoring.progression.service import (
 from novel_authoring.progression.workspace import build_progression_workspace
 from novel_authoring.readiness import evaluate_revision_range
 from novel_authoring.storage.layout import BookLayout
-from novel_authoring.storage.library import LibraryAddOptions, add_book
+from novel_authoring.storage.library import (
+    LibraryAddOptions,
+    LibraryProjectDeleteError,
+    add_book,
+    delete_library_project,
+)
 from novel_authoring.storage.registry import BookKind, BookRegistry
 from novel_authoring.utils import stable_id, utc_now
 from novel_authoring.web.dependencies import create_csrf_token, verify_csrf
@@ -224,7 +229,7 @@ _ACTION_MODES = {"continue": "continue", "rewrite": "rewrite", "plan": "plan"}
 
 # Single source of truth for the cache-busting ``?v=`` suffix used by every
 # template; also reported by /health so stale static assets are diagnosable.
-STATIC_ASSET_VERSION = "3.5.0"
+STATIC_ASSET_VERSION = "3.5.1"
 
 
 # Sentinel distinguishing "never probed" from a probed result of ``None``.
@@ -770,10 +775,28 @@ def create_app(
             raise HTTPException(status_code=404, detail="技术书库未启用")
         return catalog_payload(scope)
 
+    @app.delete("/api/library/books/{path_book_id}")
+    async def delete_library_book_api(request: Request, path_book_id: str) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        root = app.state.library_root
+        if root is None:
+            raise HTTPException(status_code=404, detail="library 未配置")
+        try:
+            return delete_library_project(BookLayout(root), _require_book_scope(app, path_book_id))
+        except LibraryProjectDeleteError as exc:
+            return _error(exc)
+
     @app.post("/api/library/discovery/refresh")
     async def library_discovery_refresh_api(request: Request) -> dict[str, Any]:
         verify_csrf(request, request.headers.get("X-CSRF-Token"))
-        return catalog_payload()
+        requested_scope = str(request.query_params.get("scope") or "AUTHOR").upper()
+        try:
+            scope = CatalogScope(requested_scope)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="书库 scope 无效") from exc
+        if scope is CatalogScope.TECHNICAL and not app.state.developer_mode:
+            raise HTTPException(status_code=404, detail="技术书库未启用")
+        return catalog_payload(scope)
 
     @app.post("/api/library/candidates/{candidate_id}/initialize")
     async def candidate_initialize_api(request: Request, candidate_id: str) -> Any:
@@ -3397,6 +3420,7 @@ def web_doctor() -> dict[str, Any]:
             "/library",
             "/api/library",
             "/api/library/catalog",
+            "/api/library/books/{path_book_id}",
             "/api/library/discovery/refresh",
             "/api/library/candidates/{candidate_id}/initialize",
             "/books/{path_book_id}/editions/{edition_id}/workbench",

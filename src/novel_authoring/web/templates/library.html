@@ -32,14 +32,14 @@
       {% if group %}<section class="library-section" data-library-group="{{ group_key }}">
         <header><div><h2>{{ title }}</h2><p>{{ description }}</p></div><span>{{ group|length }} 本</span></header>
         <div class="library-grid">
-          {% for item in group %}<article class="library-book-card library-state-{{ item.state|lower }}{% if technical_library %} library-technical-card{% endif %}" data-catalog-card data-catalog-id="{{ item.catalog_id }}">
+          {% for item in group %}<article class="library-book-card library-state-{{ item.state|lower }}{% if technical_library %} library-technical-card{% endif %}" data-catalog-card data-catalog-id="{{ item.catalog_id }}"{% if item.book_id %} data-book-id="{{ item.book_id }}"{% endif %}>
             <a class="library-card-main" href="{{ item.href }}">
               <div class="library-book-cover"><span>{{ item.title[:1] }}</span></div>
               <div class="library-book-copy"><div class="library-card-status"><span class="wb-book-state-dot wb-book-state-{{ item.state|lower }}"></span>{% if technical_library %}{{ item.book_kind|title }}{% else %}{{ item.state_label }}{% endif %}</div><h3>{{ item.title }}</h3><p>{{ item.author_summary }}</p><div class="library-card-meta">{% if item.book_id %}<span>{{ item.chapter_count }} 章</span><span>{{ item.edition_count }} 个版本</span>{% else %}<span>{% if item.source_kind == 'FOLDER' %}章节目录{% else %}单个正文文件{% endif %}</span>{% endif %}{% if item.modified_at %}<span>最近更新</span>{% endif %}</div></div>
             </a>
             <footer>
               <a class="button {% if item.studio_accessible or item.state == 'DISCOVERED' %}primary{% endif %}" href="{{ item.href }}">{{ item.primary_action_label }}</a>
-              <details class="library-card-details"><summary>详情</summary><dl><dt>来源</dt><dd>{{ item.source_path }}</dd>{% if item.missing_requirements %}<dt>还缺</dt><dd>{{ item.missing_requirements|join('；') }}</dd>{% endif %}<dt>技术状态</dt><dd>{{ item.initialization_status or item.state }}</dd></dl></details>
+              <div class="library-card-tools"><details class="library-card-details"><summary>详情</summary><dl><dt>来源</dt><dd>{{ item.source_path }}</dd>{% if item.missing_requirements %}<dt>还缺</dt><dd>{{ item.missing_requirements|join('；') }}</dd>{% endif %}<dt>技术状态</dt><dd>{{ item.initialization_status or item.state }}</dd></dl></details>{% if item.book_id %}<details class="library-card-menu"><summary aria-label="更多项目操作">⋯</summary><div><button type="button" data-delete-book data-book-id="{{ item.book_id }}" data-book-title="{{ item.title }}" data-creation-mode="{{ item.creation_mode or 'IMPORTED' }}">删除项目</button></div></details>{% endif %}</div>
             </footer>
           </article>{% endfor %}
         </div>
@@ -60,6 +60,16 @@
         <p class="library-feedback" data-import-feedback aria-live="polite"></p>
       </form>
     </dialog>{% endif %}
+
+    <dialog class="library-delete-dialog" data-delete-dialog>
+      <form method="dialog" class="library-delete-form">
+        <header><div><p class="wb-kicker">永久删除</p><h2>确定删除《<span data-delete-book-title></span>》？</h2></div><button type="button" class="wb-icon-button" data-close-delete aria-label="关闭">×</button></header>
+        <p>将永久删除该项目在 Novel Studio 中的初始化结果、SQLite 状态、草稿、候选、章节合同、Handoff、Edition、项目生成的 Canon、Analysis、Distill、Story Atlas 与 Operation artifacts。</p>
+        <p class="library-delete-warning" data-delete-warning></p>
+        <div class="workflow-form-footer"><button type="button" class="button" data-close-delete>取消</button><button type="button" class="button library-delete-confirm" data-confirm-delete>永久删除</button></div>
+        <p class="library-feedback" data-delete-feedback aria-live="polite"></p>
+      </form>
+    </dialog>
 
     {% if not catalog.entries %}<section class="library-empty"><div>＋</div><h2>{% if technical_library %}没有技术项目{% else %}放入你的第一本小说{% endif %}</h2><p>{% if technical_library %}只有显式分类的 Benchmark、Test、Demo 或历史未分类项目会显示在这里。{% else %}把 .md 或 .txt 文件复制到上面的书籍目录，最迟约 10 秒后会出现在这里。{% endif %}</p>{% if not technical_library %}<button class="button primary" type="button" data-copy-path="{{ catalog.discovery_root }}">复制书籍目录</button>{% endif %}</section>{% endif %}
   </main>

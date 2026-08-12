@@ -237,6 +237,58 @@
     });
   }
 
+  function bindProjectDeletion() {
+    var dialog = document.querySelector("[data-delete-dialog]");
+    var catalog = document.querySelector("[data-library-catalog]");
+    if (!dialog || !catalog) return;
+    var title = dialog.querySelector("[data-delete-book-title]");
+    var warning = dialog.querySelector("[data-delete-warning]");
+    var status = dialog.querySelector("[data-delete-feedback]");
+    var confirm = dialog.querySelector("[data-confirm-delete]");
+    catalog.addEventListener("click", function (event) {
+      var button = event.target.closest("[data-delete-book]");
+      if (!button) return;
+      dialog.dataset.bookId = button.dataset.bookId || "";
+      if (title) title.textContent = button.dataset.bookTitle || button.dataset.bookId || "未命名项目";
+      if (warning) warning.textContent = button.dataset.creationMode === "ORIGINAL"
+        ? "这是原创建项目，删除后该项目中的原创正文、草稿和运行数据也会永久删除。"
+        : "原始 book/ 或 Library 外部来源文件不会被删除。";
+      if (status) { status.textContent = ""; status.classList.remove("is-error"); }
+      if (confirm) confirm.disabled = false;
+      dialog.showModal();
+    });
+    dialog.querySelectorAll("[data-close-delete]").forEach(function (button) {
+      button.addEventListener("click", function () { dialog.close(); });
+    });
+    if (!confirm) return;
+    confirm.addEventListener("click", function () {
+      var bookId = dialog.dataset.bookId;
+      if (!bookId) return;
+      confirm.disabled = true;
+      if (status) status.textContent = "正在永久删除项目…";
+      fetch("/api/library/books/" + encodeURIComponent(bookId), {
+        method: "DELETE",
+        headers: { "X-CSRF-Token": csrfToken() }
+      }).then(function (response) {
+        return response.json().then(function (body) {
+          if (!response.ok) throw new Error(
+            (body.error && body.error.message)
+            || (body.detail && body.detail.message)
+            || body.detail
+            || "删除项目失败"
+          );
+          return body;
+        });
+      }).then(function () {
+        dialog.close();
+        return refreshCatalog(true);
+      }).catch(function (error) {
+        confirm.disabled = false;
+        if (status) { status.textContent = error.message; status.classList.add("is-error"); }
+      });
+    });
+  }
+
   function bindClassification() {
     document.querySelectorAll("[data-save-classification]").forEach(function (button) {
       button.addEventListener("click", function () {
@@ -285,7 +337,8 @@
   function refreshCatalog(manual) {
     var root = document.querySelector("[data-library-catalog]");
     if (!root) return Promise.resolve();
-    var request = manual ? postJson("/api/library/discovery/refresh") : fetch("/api/library/catalog", { headers: { Accept: "application/json" } }).then(function (response) { if (!response.ok) throw new Error("刷新书籍失败"); return response.json(); });
+    var scopeQuery = location.pathname === "/library/technical" ? "?scope=TECHNICAL" : "";
+    var request = manual ? postJson("/api/library/discovery/refresh" + scopeQuery) : fetch("/api/library/catalog" + scopeQuery, { headers: { Accept: "application/json" } }).then(function (response) { if (!response.ok) throw new Error("刷新书籍失败"); return response.json(); });
     return request.then(function (payload) {
       if (manual) feedback("书籍列表已刷新。", false);
       if (payload.revision === root.dataset.catalogRevision) return;
@@ -309,9 +362,17 @@
       }
       if (location.pathname === "/library" || location.pathname === "/library/technical") {
         fetch(location.href, { headers: { Accept: "text/html" } }).then(function (response) { return response.text(); }).then(function (html) {
-          var next = new DOMParser().parseFromString(html, "text/html").querySelector("[data-library-groups]");
+          var parsed = new DOMParser().parseFromString(html, "text/html");
+          var next = parsed.querySelector("[data-library-groups]");
           var current = document.querySelector("[data-library-groups]");
-          if (next && current) current.replaceWith(next);
+          var nextEmpty = parsed.querySelector(".library-empty");
+          var currentEmpty = document.querySelector(".library-empty");
+          if (next && current) {
+            current.replaceWith(next);
+            if (nextEmpty && !currentEmpty) next.insertAdjacentElement("afterend", nextEmpty);
+            else if (!nextEmpty && currentEmpty) currentEmpty.remove();
+            else if (nextEmpty && currentEmpty) currentEmpty.replaceWith(nextEmpty);
+          }
         });
       }
     }).catch(function (error) { if (manual) feedback(error.message, true); });
@@ -336,6 +397,7 @@
   bindAuthorGoalSelector();
   bindInitializationActions();
   bindImportDialog();
+  bindProjectDeletion();
   bindClassification();
   bindRefresh();
   window.NovelLibraryCatalogInit = bindBookSelectors;

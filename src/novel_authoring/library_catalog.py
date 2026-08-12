@@ -369,7 +369,8 @@ def _read_book_runtime(
         return value
     try:
         uri = f"{database_path.resolve().as_uri()}?mode=ro"
-        with sqlite3.connect(uri, uri=True) as connection:
+        connection = sqlite3.connect(uri, uri=True)
+        try:
             connection.row_factory = sqlite3.Row
             row = connection.execute(
                 "SELECT COUNT(*) AS count FROM chapters WHERE book_id=?", (book_id,)
@@ -399,6 +400,8 @@ def _read_book_runtime(
             except sqlite3.OperationalError:
                 original = None
             value["original_state"] = None if original is None else str(original["state"])
+        finally:
+            connection.close()
     except (OSError, sqlite3.Error):
         return value
     return value

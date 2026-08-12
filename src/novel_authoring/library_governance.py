@@ -47,13 +47,16 @@ def _runtime_counts(record: BookRecord) -> tuple[int, int]:
         return 0, 0
     try:
         uri = f"{database.resolve().as_uri()}?mode=ro"
-        with sqlite3.connect(uri, uri=True) as connection:
+        connection = sqlite3.connect(uri, uri=True)
+        try:
             chapters = connection.execute(
                 "SELECT COUNT(*) FROM chapters WHERE book_id=?", (record.book_id,)
             ).fetchone()
             editions = connection.execute(
                 "SELECT COUNT(*) FROM editions WHERE book_id=?", (record.book_id,)
             ).fetchone()
+        finally:
+            connection.close()
     except sqlite3.Error:
         return 0, 0
     return int(chapters[0]) if chapters else 0, int(editions[0]) if editions else 0
