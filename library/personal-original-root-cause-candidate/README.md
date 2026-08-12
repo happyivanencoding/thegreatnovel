@@ -6,6 +6,9 @@
 - book_id: `personal-original-root-cause-candidate`
 - layout: `library-v1`
 - active edition: `base`
+- book kind: `AUTHOR`
+- creation mode: `IMPORTED`
+- original state: `not applicable`
 - database: `_system/state.sqlite3`
 - readiness: `NEEDS_INITIALIZATION`
 - source files: 1
