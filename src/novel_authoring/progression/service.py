@@ -248,6 +248,11 @@ def confirm_contract(
     confirmed = get_contract_record(database, contract_record_id)
     if confirmed is None:
         raise RuntimeError("Contract 确认失败")
+    # The contract remains planning-only, but any frozen plan that predates
+    # this author decision must not keep accepting candidate output.
+    from novel_authoring.planning.aggregates import invalidate_planning_aggregates
+
+    invalidate_planning_aggregates(database, record.book_id, record.edition_id)
     return confirmed
 
 

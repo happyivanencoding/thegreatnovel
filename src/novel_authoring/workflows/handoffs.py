@@ -543,6 +543,7 @@ def create_handoff(
             book_id,
             edition_id=selected,
             author_policy={"source": "handoff-freeze", "policy_version": "v1"},
+            context_chapter_id=context_chapter_id,
         )
     if metric_run_id is None and latest is not None:
         metric_run_id = str(latest["run"]["run_id"])
@@ -1436,17 +1437,22 @@ def refresh_handoff_planning_aggregate(
 
     book_id = str(row["book_id"])
     edition_id = str(row["edition_id"])
-    aggregate = build_planning_aggregate(
-        database,
-        book_id,
-        edition_id=edition_id,
-        author_policy={"source": "handoff-freeze", "policy_version": "v1"},
-    )
     task_directory = Path(str(row["task_directory"]))
     task_path = _handoff_file(task_directory, "task.json")
     manifest_path = _handoff_file(task_directory, "context_manifest.json")
     task = json.loads(task_path.read_text(encoding="utf-8"))
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    aggregate = build_planning_aggregate(
+        database,
+        book_id,
+        edition_id=edition_id,
+        author_policy={"source": "handoff-freeze", "policy_version": "v1"},
+        context_chapter_id=(
+            str(task.get("context_chapter_id"))
+            if task.get("context_chapter_id")
+            else None
+        ),
+    )
     task["planning_aggregate_id"] = aggregate["aggregate_id"]
     task["planning_aggregate_hash"] = aggregate["bundle_hash"]
     manifest["planning_aggregate_id"] = aggregate["aggregate_id"]

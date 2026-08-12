@@ -470,6 +470,15 @@ def prepare_candidate_task(
         edition_id=selected_edition,
         author_policy={"source": "plan-next", "policy_version": "v1"},
         truth_reveal_snapshot=boundary_truth_reveal,
+        context_chapter_id=(
+            str(boundary_payload.get("recent_full_chapters", [])[-1]["chapter_id"])
+            if boundary_payload.get("recent_full_chapters")
+            else None
+        ),
+        target_chapter_ordinal=int(
+            boundary_payload.get("current_position", {}).get("next_chapter", 0)
+        )
+        or None,
     )
     with database.connect() as connection:
         metric_rows = connection.execute(

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from novel_authoring.db.database import Database
+from novel_authoring.planning.aggregates import build_planning_aggregate
 from novel_authoring.progression.models import (
     ContractStatus,
     ExperiencePriority,
@@ -82,3 +83,30 @@ def test_contract_proposal_requires_explicit_confirmation(tmp_path: Path) -> Non
     assert confirmed.payload["status"] == "EFFECTIVE"
     assert database.scalar("SELECT COUNT(*) FROM events") == before["events"]
     assert database.scalar("SELECT COUNT(*) FROM canon_commits") == before["canon_commits"]
+
+
+def test_contract_confirmation_invalidates_frozen_planning_aggregate(
+    tmp_path: Path,
+) -> None:
+    database = database_with_book(tmp_path / "contract-stale.sqlite3")
+    aggregate = build_planning_aggregate(database, "contract-book", edition_id="base")
+    assert aggregate["kernel_context"] is None
+    proposal = create_contract_proposal(
+        database,
+        book_id="contract-book",
+        edition_id="base",
+        contract_type=ProgressionContractType.READER_EXPERIENCE,
+        payload=reader_contract(),
+        source="TEST_AUTHOR_PROPOSAL",
+    )
+
+    confirm_contract(database, proposal.contract_record_id, effective_from_boundary=1)
+
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT status, stale_reason FROM planning_aggregates WHERE aggregate_id=?",
+            (aggregate["aggregate_id"],),
+        ).fetchone()
+    assert row is not None
+    assert row["status"] == "STALE"
+    assert "re-plan required" in row["stale_reason"]

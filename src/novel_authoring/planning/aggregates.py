@@ -14,6 +14,10 @@ from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
 from novel_authoring.edition import edition_chapters
 from novel_authoring.metrics.registry import load_registry
+from novel_authoring.progression.context import (
+    KernelPlanningContext,
+    build_kernel_planning_context,
+)
 from novel_authoring.utils import json_dumps, sha256_bytes, stable_id, utc_now
 
 
@@ -40,6 +44,7 @@ class PlanningMetricBundle(BaseModel):
     atlas_version: int | None = None
     atlas_manifest_hash: str | None = None
     horizon_hash: str | None = None
+    kernel_context: KernelPlanningContext | None = None
 
     @property
     def bundle_hash(self) -> str:
@@ -62,6 +67,11 @@ class PlanningMetricBundle(BaseModel):
             "atlas_version": self.atlas_version,
             "atlas_manifest_hash": self.atlas_manifest_hash,
             "horizon_hash": self.horizon_hash,
+            "kernel_context": (
+                None
+                if self.kernel_context is None
+                else self.kernel_context.model_dump(mode="json")
+            ),
         }
         return sha256_bytes(json_dumps(payload).encode("utf-8"))
 
@@ -262,6 +272,9 @@ def build_planning_aggregate(
     truth_reveal_snapshot: dict[str, Any] | None = None,
     rhythm_snapshot_id: str | None = None,
     atlas_id: str | None = None,
+    context_chapter_id: str | None = None,
+    target_chapter_id: str | None = None,
+    target_chapter_ordinal: int | None = None,
 ) -> dict[str, Any]:
     """Persist a stable, reference-only planning aggregate."""
     database.initialize()
@@ -369,6 +382,15 @@ def build_planning_aggregate(
             if snapshot is not None:
                 snapshot_hash = sha256_bytes(str(snapshot["snapshot_json"]).encode("utf-8"))
 
+    kernel_context = build_kernel_planning_context(
+        database,
+        book_id=book_id,
+        edition_id=edition_id,
+        author_policy=policy,
+        context_chapter_id=context_chapter_id,
+        target_chapter_id=target_chapter_id,
+        target_chapter_ordinal=target_chapter_ordinal,
+    )
     all_run_ids: list[str] = []
     for run_id in (
         [edition_state_run_id] if edition_state_run_id else [],
@@ -399,6 +421,7 @@ def build_planning_aggregate(
         atlas_version=atlas_version,
         atlas_manifest_hash=atlas_manifest_hash,
         horizon_hash=horizon_hash,
+        kernel_context=kernel_context,
     )
     aggregate_id = stable_id("planning-aggregate", book_id, edition_id, bundle.bundle_hash)
     created_at = utc_now()
@@ -416,8 +439,9 @@ def build_planning_aggregate(
                 thread_run_ids_json, metric_run_ids_json, author_policy_json,
                 registry_hash, config_hash, projection_hash, rhythm_snapshot_id,
                 rhythm_snapshot_hash, atlas_id, atlas_version, atlas_manifest_hash,
-                horizon_hash, bundle_hash, status, stale_reason, created_at, version
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+                horizon_hash, kernel_context_json, bundle_hash, status, stale_reason,
+                created_at, version
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
             ON CONFLICT(aggregate_id) DO UPDATE SET status='ACTIVE', invalidated_at=NULL
             """,
             (
@@ -440,6 +464,11 @@ def build_planning_aggregate(
                 aggregate.atlas_version,
                 aggregate.atlas_manifest_hash,
                 aggregate.horizon_hash,
+                json_dumps(
+                    None
+                    if aggregate.kernel_context is None
+                    else aggregate.kernel_context.model_dump(mode="json")
+                ),
                 aggregate.bundle_hash,
                 aggregate.status,
                 aggregate.stale_reason,

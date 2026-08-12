@@ -65,15 +65,23 @@ def build_progression_workspace_from_world_state(
     book_id: str,
     edition_id: str,
     world_state: Mapping[str, Any],
+    planning_target_ordinal: int | None = None,
 ) -> dict[str, Any]:
     """Attach only contract + chapter-state projections; never persist observations."""
 
     chapter_id, chapter_ordinal = _chapter(world_state)
-    records = effective_contract_records(
-        database,
-        book_id=book_id,
-        edition_id=edition_id,
-    )
+    effective_ordinal = planning_target_ordinal or chapter_ordinal
+    if effective_ordinal < chapter_ordinal:
+        raise ValueError("成长投影的生效边界不能早于状态章节")
+    records = {
+        contract_type: record
+        for contract_type, record in effective_contract_records(
+            database,
+            book_id=book_id,
+            edition_id=edition_id,
+        ).items()
+        if int(record.effective_from_boundary or 0) <= effective_ordinal
+    }
     proposals = [
         record
         for record in list_contract_records(
@@ -89,7 +97,9 @@ def build_progression_workspace_from_world_state(
 
     progression = None
     if progression_record is not None:
-        contract = ProgressionContract.model_validate(progression_record.payload)
+        contract = ProgressionContract.model_validate(
+            progression_record.payload
+        ).model_copy(update={"effective_from_boundary": None})
         subject_id = str(world_state.get("selected_character_id") or book_id)
         progression = project_progression_state(
             world_state,
@@ -101,7 +111,9 @@ def build_progression_workspace_from_world_state(
     if world_record is not None:
         world_expansion = project_world_expansion_state(
             world_state,
-            WorldExpansionContract.model_validate(world_record.payload),
+            WorldExpansionContract.model_validate(world_record.payload).model_copy(
+                update={"effective_from_boundary": None}
+            ),
         )
 
     opportunity_surface = project_opportunity_surface(world_state, ())
@@ -158,6 +170,7 @@ def build_progression_workspace_from_world_state(
             else "这本书尚未建立成长体系。现有世界状态仍可正常使用。"
         ),
         "chapter": {"chapter_id": chapter_id, "ordinal": chapter_ordinal},
+        "effective_at_boundary": effective_ordinal,
         "progression_state": (
             None if progression is None else progression.model_dump(mode="json")
         ),

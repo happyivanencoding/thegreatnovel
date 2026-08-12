@@ -31,6 +31,7 @@ from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
 from novel_authoring.edition import create_edition
 from novel_authoring.ingest.service import ingest_book
+from novel_authoring.planning.aggregates import build_planning_aggregate
 from novel_authoring.planning.candidates import prepare_handoff_candidate_task
 from novel_authoring.progression.interpretation import (
     compile_kernel_contract_proposals,
@@ -369,6 +370,98 @@ def test_progression_workspace_reuses_historical_world_state_without_future_leak
     assert "Progression Workspace" in page.text
     assert "UNKNOWN" in page.text
     assert "观察边界" in page.text
+
+
+def test_planning_aggregate_freezes_chapter_aware_kernel_context(
+    tmp_path: Path,
+) -> None:
+    database, chapters = _v22_book(tmp_path, chapter_count=3)
+    bundle = compile_kernel_contract_proposals(
+        interpret_reader_experience(
+            "主角以可验证能力突破边界，并逐步打开更大的世界。",
+            genre_hint="成长冒险",
+            contract_prefix="story-world-v22-freeze",
+        )
+    )
+    payloads = {
+        ProgressionContractType.READER_EXPERIENCE: bundle.reader_experience,
+        ProgressionContractType.MARKET_CATEGORY: bundle.market_category,
+        ProgressionContractType.NARRATIVE_DRIVE: bundle.narrative_drive,
+        ProgressionContractType.GENRE: bundle.genre,
+        ProgressionContractType.PROGRESSION: bundle.progression,
+        ProgressionContractType.WORLD_EXPANSION: bundle.world_expansion,
+        ProgressionContractType.PAYOFF_CHANNEL: bundle.payoff_channels,
+    }
+    for contract_type, payload in payloads.items():
+        assert payload is not None
+        proposal = create_contract_proposal(
+            database,
+            book_id="story-world-v22",
+            edition_id="base",
+            contract_type=contract_type,
+            payload=payload,
+            source="TEST_AUTHOR_PROPOSAL",
+        )
+        confirm_contract(database, proposal.contract_record_id, effective_from_boundary=3)
+
+    before_boundary = build_planning_aggregate(
+        database,
+        "story-world-v22",
+        edition_id="base",
+        context_chapter_id=str(chapters[0]["chapter_id"]),
+        target_chapter_ordinal=2,
+    )
+    before_context = before_boundary["kernel_context"]
+    assert before_context is not None
+    assert before_context["contract_references"] == []
+    assert before_context["chapter_state"]["progression_state"] is None
+
+    review_only = bundle.reader_experience.model_copy(
+        update={"contract_id": "story-world-v22-review-only"}
+    )
+    create_contract_proposal(
+        database,
+        book_id="story-world-v22",
+        edition_id="base",
+        contract_type=ProgressionContractType.READER_EXPERIENCE,
+        payload=review_only,
+        source="TEST_REVIEW_ONLY",
+    )
+    aggregate = build_planning_aggregate(
+        database,
+        "story-world-v22",
+        edition_id="base",
+        context_chapter_id=str(chapters[1]["chapter_id"]),
+        target_chapter_ordinal=3,
+    )
+    context = aggregate["kernel_context"]
+    assert context is not None
+    assert context["context_chapter_ordinal"] == 2
+    assert context["target_chapter_ordinal"] == 3
+    assert {item["contract_type"] for item in context["contract_references"]} == {
+        item.value for item in ProgressionContractType
+    }
+    assert context["effective_contracts"]["reader_experience"]["status"] == "EFFECTIVE"
+    assert context["effective_contracts"]["progression"]["status"] == "EFFECTIVE"
+    assert context["chapter_state"]["progression_state"] is not None
+    assert context["planning_state"]["scheduler_recommendation"]["primary_intent"]
+    assert context["proposal_context"]["excluded_from_scoring"] is True
+    assert any(
+        item["contract_record_id"]
+        for item in context["proposal_context"]["records"]
+        if item["source"] == "TEST_REVIEW_ONLY"
+    )
+    with database.connect() as connection:
+        stored = json.loads(
+            str(
+                connection.execute(
+                    "SELECT kernel_context_json FROM planning_aggregates "
+                    "WHERE aggregate_id=?",
+                    (aggregate["aggregate_id"],),
+                ).fetchone()[0]
+            )
+        )
+    assert stored == context
 
 
 def test_existing_novel_contract_suggestions_require_item_by_item_confirmation(
