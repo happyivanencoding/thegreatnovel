@@ -94,6 +94,12 @@ _PAYOFF_INTENTS: dict[PayoffChannel, ChapterIntent] = {
     PayoffChannel.FACTION_ADVANCE: ChapterIntent.FACTION_CONFLICT,
     PayoffChannel.TEAM_GROWTH: ChapterIntent.TEAM_GROWTH,
     PayoffChannel.RELATIONSHIP_ADVANCE: ChapterIntent.RELATIONSHIP_ADVANCE,
+    PayoffChannel.KNOWLEDGE_GAIN: ChapterIntent.MYSTERY_ADVANCE,
+    PayoffChannel.DISCOVERY: ChapterIntent.EXPLORATION,
+    PayoffChannel.TRANSFORMATION: ChapterIntent.PROGRESSION_SETUP,
+    PayoffChannel.MASTERY: ChapterIntent.POWER_VERIFICATION,
+    PayoffChannel.STRATEGIC_ADVANTAGE: ChapterIntent.CONTINUITY_ADVANCE,
+    PayoffChannel.CUSTOM: ChapterIntent.CUSTOM,
 }
 
 
