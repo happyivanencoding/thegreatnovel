@@ -1,382 +1,503 @@
-Novel Studio
+# Novel Studio
 
-Author-first, local, auditable long-form webnovel authoring system.
+> **Author-first, local, auditable long-form webnovel authoring system.**
+>
+> 一个面向**中文长篇连载网文**的本地创作、续写、改写与世界管理系统。
 
-一个面向中文长篇连载网文的本地创作、续写、改写与世界管理系统。
+---
 
-为什么要做这个项目？
+# 为什么要做这个项目？
 
-现有的大模型可以写小说。
+现有的大模型已经能够写出不错的小说片段。
 
-但是：
+但是，当目标变成一部几十万、上百万字的长篇网文时，它们通常会遇到：
 
-它们会遗忘设定；
-会偷偷修改人物；
-会吃掉伏笔；
-会创造不存在的能力；
-很难连续写几百章；
-很难保持一本小说十万、百万字后的连续性。
+- 遗忘既有设定；
+- 偷偷修改人物状态；
+- 吃掉伏笔与承诺；
+- 创造没有来源的能力、物品或知识；
+- 世界观逐渐崩坏；
+- 几百章以后无法保持连续性；
+- 很难长期维持成长节奏与读者期待。
 
-Novel Studio 不是一个聊天机器人。
+**Novel Studio 不是一个聊天机器人。**
 
-它更像：
+它更接近于：
 
-一套给小说作者使用的 IDE（集成创作环境）。
+> **一套专门为长篇网文作者设计的 IDE（Integrated Development Environment）。**
 
-它把：
+系统将小说中的：
 
-世界状态
-人物
-势力
-能力
-背包
-知识边界
-作者隐藏设定
-长线剧情
-爽点
-节奏
-世界扩张
+- 世界状态
+- 人物
+- 势力
+- 能力
+- 背包
+- 资源
+- 知识边界
+- 作者隐藏设定
+- 长线剧情
+- 世界扩张
+- 爽点
+- 节奏
 
-全部变成可以管理、可以验证、可以审计的数据。
+全部变成：
 
-目标
+> **可管理、可验证、可审计、可持续维护的数据。**
 
-Novel Studio 希望最终做到：
+---
 
-让 AI 能够参与创作一本几百万字的长篇网文，而不是只能写几章 Demo。
+# 项目目标
+
+Novel Studio 希望解决的不是：
+
+> "让 AI 写几章小说。"
+
+而是：
+
+> **让 AI 能够长期参与一部数百万字中文长篇网文的创作，同时保持世界观、成长体系、人物关系和剧情连续性。**
 
 支持：
 
-导入已有小说继续写
-改写已有小说
-从一句话开始原创
-长期维护世界观
-长期维护人物成长
-自动管理伏笔
-自动管理秘密
-自动管理爽点
-自动管理节奏
-自动管理世界状态
-设计原则
-1. Author First
+- 导入已有小说继续创作
+- 改写已有小说
+- 从一句话开始原创
+- 长期维护世界状态
+- 长期维护人物成长
+- 自动管理伏笔
+- 自动管理秘密
+- 自动管理节奏
+- 自动管理爽点
+- 自动管理世界扩张
+
+---
+
+# 产品定位
+
+Novel Studio 面向的是：
+
+**中文长篇连载网文。**
+
+尤其适合：
+
+- 东方玄幻
+- 仙侠
+- 高武
+- 科幻玄幻
+- 神秘学成长
+- 末世成长
+- 求生
+- 长篇成长流
+
+未来也支持：
+
+- 都市
+- 历史
+- 游戏
+- 电竞
+- 商业
+- 文娱
+- 职业成长等长篇类型。
+
+---
+
+# 核心理念
+
+## Author First
 
 作者永远拥有最终决定权。
 
 AI：
 
-可以建议；
-可以规划；
-可以写草稿；
+可以：
+
+- 理解
+- 建议
+- 规划
+- 写草稿
+- 找 Bug
+- 检查连续性
 
 不能：
 
-偷偷修改世界观；
-偷偷修改人物；
-偷偷批准正史。
-2. Canon is Sacred
+- 偷偷修改世界观
+- 偷偷修改人物
+- 偷偷修改正史
+- 偷偷批准章节
 
-已经发生的正文：
+---
 
-永远不能被 AI 默默修改。
+## Canon is Sacred
 
-所有变化必须：
+正式正文永远需要：
 
+```text
+Candidate
+    ↓
+Chapter Contract
+    ↓
 Draft
-
-↓
-
+    ↓
 Validation
-
-↓
-
+    ↓
 Author Approval
-
-↓
-
+    ↓
 Canon
+```
 
-3. Python is the Authority
+AI 永远不能直接写入 Canon。
+
+---
+
+## Python is the Authority
 
 LLM：
 
-负责理解、规划、创意。
+负责：
+
+- 创意
+- 理解
+- 写作
+- 分析
 
 Python：
 
 负责：
 
-状态
-数据
-校验
-工作流
-审计
-Commit
-4. Everything is Auditable
+- 状态
+- 数据
+- 校验
+- 工作流
+- 审计
+- Commit
 
-任何一句正文都必须回答：
+核心原则：
 
-为什么会写这句话？
+> **LLM at the edges; deterministic engine at the center.**
 
-它依据哪些事实？
+---
 
-违反了哪些规则？
+## Everything is Auditable
 
-修改了哪些状态？
+系统必须回答：
 
-以后还能回滚。
+为什么会生成这一章？
 
-支持两种创作模式
-导入已有小说
+依据哪些事实？
 
-例如：
+推进哪些剧情？
 
-《斗破苍穹》
+修改哪些状态？
 
-《斗罗大陆》
+违反哪些规则？
 
-《吞噬星空》
+以后还能不能回滚？
 
-《诡秘之主》
+---
 
-系统会：
+# 两种创作模式
 
-建立 Book Library
-初始化
-建立 Story Atlas
-建立 World State
-建立 Character State
-建立九维画像
-建立 Author Truth
-建立续写边界
-
-然后继续第 N+1 章。
-
-从一句话开始
+## 导入已有小说
 
 例如：
 
-一个普通人在移动巨兽背上建立文明。
-
-或者：
-
-近未来体修成神。
+- 《斗破苍穹》
+- 《斗罗大陆》
+- 《吞噬星空》
+- 《诡秘之主》
 
 系统会：
 
 建立：
 
-Reader Experience
-Story Foundation
-世界观
-主角
-势力
-长线剧情
-第一章候选
+- Book Library
+- Story Atlas
+- Chapter World State
+- Character State
+- Distillation Package
+- Author Truth
+- Continuation Boundary
+- 九维全书画像
 
-然后进入正式创作。
+然后继续：
 
-Novel Studio
+第 N+1 章。
+
+---
+
+## 从一句话开始原创
+
+例如：
+
+> 近未来体修成神。
+
+或者：
+
+> 一群人在移动巨兽背上建立文明。
+
+系统会：
+
+建立：
+
+- Reader Experience
+- Story Foundation
+- Genre Contract
+- Progression Contract
+- 世界规则
+- 主角
+- 势力
+- 长线规划
+- 第一章候选
+
+然后正式开始创作。
+
+---
+
+# Novel Studio
 
 Novel Studio 是整个系统的工作台。
 
 包括：
 
-正文
-世界状态
-人物
-背包
-能力
-势力
-地点
-作者全知
-长线规划
-九维画像
-连续性
-Activity Center
+- 正文
+- 世界状态
+- 人物
+- 背包
+- 能力
+- 地点
+- 势力
+- 作者全知
+- 长线规划
+- 九维画像
+- 连续性
+- Activity Center
 
-所有工作都在这里完成。
+作者几乎所有工作都在这里完成。
 
-Book Library
+---
+
+# Book Library
 
 Book Library 管理所有小说。
 
 支持：
 
-导入已有小说
-原创新书
-多 Edition
-版本管理
-初始化
-分类
-Developer Mode
+- 导入已有小说
+- 新建原创小说
+- Book
+- Edition
+- 初始化
+- 分类
+- Developer Mode
 
-测试、Benchmark 与正式作品默认隔离。
+正式作品、测试、Demo 与 Benchmark 默认隔离。
 
-世界状态
+---
 
-每一章都有：
+# 世界状态
 
-Chapter World State。
+系统为每一章维护：
 
-系统知道：
+**Chapter World State**
 
-这一章结束以后：
+记录：
 
-人物状态
-背包
-能力
-地点
-势力
-世界规则
-知识
-作者隐藏设定
+- 人物
+- 背包
+- 能力
+- 装备
+- 地点
+- 势力
+- 世界规则
+- 知识
+- 作者隐藏设定
 
-发生了什么。
+并能够查看：
 
-Author Truth
+> **第 N 章结束以后，世界真正是什么样。**
 
-作者知道，
+---
 
-角色不知道，
+# Author Truth
+
+作者知道：
+
+角色不知道。
 
 读者不知道。
 
-例如：
+包括：
 
-幕后真相
+- 真相
+- 幕后计划
+- 最终目标
+- 世界秘密
 
-最终 Boss
+这些不会直接进入正文。
 
-未来路线
+---
 
-真正目的
+# Progressive Initialization
 
-全部单独维护。
+已有小说支持：
 
-不会直接写进正文。
+## QUICK
 
-Progressive Initialization
-
-已有长篇支持三种初始化。
-
-QUICK
-
-最快进入工作台。
+快速进入工作台。
 
 适合：
 
 快速了解作品。
 
-BALANCED（推荐）
+---
 
-重点分析：
+## BALANCED（推荐）
 
-当前剧情
-当前人物
-当前 Arc
-活跃伏笔
+建立：
+
+- 全书事实索引
+- 当前边界
+- 活跃人物
+- 当前剧情
 
 适合：
 
 正式续写。
 
-FULL
+---
 
-全书深度分析。
+## FULL
+
+完整深度分析。
 
 适合：
 
-大规模改写
-全书审计
-长期项目
-Distill Integration
+- 大规模改写
+- 全书审计
+- 长期项目
 
-系统集成：
+---
 
-distill-novels。
+# Distillation
 
-它负责：
+Novel Studio 集成：
 
-把一本小说提炼成：
+**distill-novels**
 
-世界
-人物
-剧情
-文风
-对话
-节奏
-主题
-连续性
+生成：
 
-等九维知识。
+- 世界
+- 人物
+- 剧情
+- 文风
+- 对话
+- 节奏
+- 主题
+- 连续性
+
+形成九维文学理解层。
 
 这些属于：
 
-软理解层。
+> **Soft Reference**
 
-不会直接变成 Canon。
+不会直接成为 Canon。
 
-续写流程
-读取 Source
-↓
+---
 
-建立 Boundary
+# Novel Studio Architecture
 
-↓
-
-三个 Candidate
-
-↓
-
-Chapter Contract
-
-↓
-
+```text
+Reader Experience
+        ↓
+Genre Contract
+        ↓
+Narrative Drive
+        ↓
+Specialized Narrative Engines
+        ↓
+Story Planning
+        ↓
+Candidate
+        ↓
 Draft
-
-↓
-
-十项 Validation
-
-↓
-
-Author Approval
-
-↓
-
-Canon Commit
-改写流程
-选择章节
-
-↓
-
-Revision Campaign
-
-↓
-
-派生 Edition
-
-↓
-
-Draft
-
-↓
-
+        ↓
 Validation
-
-↓
-
+        ↓
 Author Approval
+        ↓
+Canon
+        ↓
+World State
+```
 
-↓
+---
 
-是否设为正式版本
-项目结构
+# 核心能力
+
+- 多版本 Edition
+- 正式续写
+- 正式改写
+- 世界状态
+- 作者全知
+- Reveal Plan
+- Story Atlas
+- Distillation
+- Progressive Initialization
+- Activity Center
+- Local Codex Workflow
+- Browser Workbench
+
+---
+
+# 当前重点方向
+
+Novel Studio 正在建设：
+
+## Chinese Serialized Webnovel Kernel
+
+它不是：
+
+一个"修仙生成器"。
+
+而是：
+
+一个专门服务：
+
+**中文长篇连载网文**
+
+的创作内核。
+
+目前重点完成：
+
+- Progression Engine（成长）
+- Reader Experience
+- Genre Contract
+- World Expansion
+- Resource Economy
+- Payoff Engine
+- Narrative Debt
+- Serial Scheduler
+
+未来扩展：
+
+- Mystery Engine
+- Career Engine
+- Strategy Engine
+- Survival Engine
+- Competition Engine
+- Relationship Engine
+
+---
+
+# 项目目录
+
+```text
 book/
     原始正文（永久只读）
 
 library/
-    Book Library
+    小说运行库
 
 src/
     Python Engine
@@ -392,111 +513,22 @@ benchmark/
 
 tests/
     自动测试
-信息层级
+```
 
-系统严格区分：
+---
 
-Source
+# Roadmap
 
-↓
+未来重点：
 
-Canon
-
-↓
-
-Author Truth
-
-↓
-
-Reader Knowledge
-
-↓
-
-Character Knowledge
-
-↓
-
-Inference
-
-↓
-
-Candidate
-
-↓
-
-Draft
-
-任何推断：
-
-都不能自动升级为 Canon。
-
-本项目最大的特点
-
-Novel Studio 并不是：
-
-"让 AI 写小说。"
-
-它真正想解决的是：
-
-如何让 AI 连续写几百万字，而仍然保持世界观一致。
-
-因此：
-
-本项目更关注：
-
-世界状态
-长期成长
-世界扩张
-长线剧情
-爽点管理
-资源系统
-能力系统
-作者控制
-
-而不是：
-
-单章 Prompt Engineering。
-
-当前定位
-
-当前默认配置最适合：
-
-东方玄幻
-仙侠
-科幻玄幻
-高武
-成长型爽文
-求生
-长篇连载
-
-其他类型：
-
-例如：
-
-都市
-历史
-电竞
-商业
-文娱
-
-也可以使用当前系统，
-
-后续将进一步扩展对应的叙事内核。
-
-Roadmap
-
-下一阶段重点：
-
-Reader Experience Contract
-Narrative Drive Kernel
-Progression Kernel
-Mystery Kernel
-Career Kernel
-Strategy Kernel
-World Expansion
-Automatic Narrative Scheduler
-Progressive World Simulation
+- Reader Experience
+- Narrative Drive
+- Progression Engine
+- Mystery Engine
+- World Expansion
+- Story Scheduler
+- Automatic Long-form Planning
 
 最终目标：
 
-建立一个真正能够长期辅助作者创作中文长篇网文的专业创作系统，而不是一个只会生成几章小说的 AI。
+> **建立一个真正能够长期辅助作者创作中文长篇连载网文的专业创作系统，而不是一个只会生成几章小说的 AI。**
