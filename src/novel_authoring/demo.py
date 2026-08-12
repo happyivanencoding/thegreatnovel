@@ -438,7 +438,7 @@ def _create_completed_demo_handoff(database: Database, book_id: str) -> str:
         "metric_bundle_hash": task.get("metric_bundle_hash"),
         "completed_at": utc_now(),
     }
-    result_path = Path(str(started["artifact_target"]))
+    result_path = Path(str(started["result_target"]))
     result_path.write_text(json_dumps(result), encoding="utf-8")
     complete_handoff(database, handoff_id, token, result_path)
     return handoff_id

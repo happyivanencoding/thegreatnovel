@@ -132,6 +132,15 @@ def build_genesis_apply_plan(
         "mid": confirmation.rolling_mid_override or proposal.rolling_planning.mid,
         "long": confirmation.rolling_long_override or proposal.rolling_planning.long,
     }
+    first_phase = proposal.first_phase.model_dump(mode="json")
+    first_phase.update(
+        {
+            key: value.strip()
+            for key, value in confirmation.first_phase_overrides.items()
+            if value.strip()
+        }
+    )
+    first_phase["first_concrete_goal"] = confirmation.first_phase_objective.strip()
     prefix = f"{proposal_version_id}-{foundation.candidate_id}"
     settings = []
     known_statements = set()
@@ -338,6 +347,13 @@ def build_genesis_apply_plan(
         selected_title=selected_title,
         selected_foundation=foundation.model_dump(mode="json"),
         selected_route=route.model_dump(mode="json"),
+        core_innovation_intent=proposal.core_innovation_intent.model_dump(mode="json"),
+        growth_grammar={
+            "progression": proposal.progression_grammar,
+            "expansion": proposal.expansion_grammar,
+            "payoff": proposal.payoff_grammar,
+        },
+        first_phase=first_phase,
         author_truths=author_truths,
         persistent_directives=directives,
         profile_dimensions=profile_payload,

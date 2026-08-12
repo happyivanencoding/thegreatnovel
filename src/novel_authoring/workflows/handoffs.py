@@ -135,11 +135,17 @@ HANDOFF_DEPENDENCIES: dict[HandoffType, frozenset[str]] = {
     HandoffType.WORLD_MODEL_REVIEW: frozenset({"edition", "atlas"}),
     HandoffType.STORY_ATLAS_RENDER: frozenset({"edition", "atlas"}),
     HandoffType.BATCH_CONTINUATION: frozenset({"batch"}),
-    HandoffType.NOVEL_INITIALIZATION: frozenset({"source", "edition"}),
+    HandoffType.NOVEL_INITIALIZATION: frozenset(
+        {"source", "projection", "effective_content", "edition"}
+    ),
     HandoffType.NOVEL_DISTILLATION: frozenset({"edition"}),
     HandoffType.SOURCE_STATE_HYDRATION: frozenset({"source", "edition"}),
-    HandoffType.PROFILE_REANALYSIS: frozenset({"edition", "profile"}),
-    HandoffType.ORIGINAL_BOOK_BOOTSTRAP: frozenset({"projection", "edition"}),
+    HandoffType.PROFILE_REANALYSIS: frozenset(
+        {"projection", "effective_content", "edition", "profile"}
+    ),
+    HandoffType.ORIGINAL_BOOK_BOOTSTRAP: frozenset(
+        {"projection", "edition", "original_intent"}
+    ),
     HandoffType.KERNEL_CONTRACT_DISCOVERY: frozenset({"source", "edition"}),
 }
 
@@ -504,6 +510,67 @@ def _manifest_hash(database: Database, book_id: str) -> str:
     return manifest_hash(path) if path.is_file() else ""
 
 
+def _effective_content_anchor(
+    connection: sqlite3.Connection, book_id: str, edition_id: str
+) -> str:
+    chapters = edition_chapters(connection, book_id, edition_id)
+    return str(chapters[-1].get("content_sha256") or "") if chapters else ""
+
+
+def _original_intent_anchor(
+    database: Database, book_id: str, requested_stage: str
+) -> str:
+    """Freeze only the author inputs consumed by an ORIGINAL Genesis task."""
+
+    from novel_authoring.progression.service import list_contract_records
+
+    root = _book_workspace(database, book_id)
+    request_path = (
+        BookLayout(root.parent).for_book(book_id).edition("base").analysis
+        / "original"
+        / "request.json"
+    )
+    try:
+        request_payload = json.loads(request_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise HandoffWorkflowError("ORIGINAL premise 请求无法读取") from exc
+    contracts = [
+        item.model_dump(mode="json")
+        for item in list_contract_records(database, book_id=book_id, edition_id="base")
+    ]
+    selected_intent: dict[str, Any] | None = None
+    if requested_stage.upper() == "STORY_FOUNDATION_PROPOSAL":
+        with database.connect() as connection:
+            state = connection.execute(
+                "SELECT current_innovation_proposal_version_id, "
+                "selected_primary_innovation_id, optional_mix_notes "
+                "FROM original_states WHERE book_id=? AND edition_id='base'",
+                (book_id,),
+            ).fetchone()
+        selected_intent = (
+            None
+            if state is None
+            else {
+                "proposal_version_id": str(
+                    state["current_innovation_proposal_version_id"] or ""
+                ),
+                "selected_primary_innovation_id": str(
+                    state["selected_primary_innovation_id"] or ""
+                ),
+                "optional_mix_notes": str(state["optional_mix_notes"] or ""),
+            }
+        )
+    return sha256_bytes(
+        json_dumps(
+            {
+                "request": request_payload,
+                "progression_contracts": contracts,
+                "selected_core_innovation": selected_intent,
+            }
+        ).encode("utf-8")
+    )
+
+
 _OPERATION_INPUT_FILES = {
     "task.json",
     "prompt.md",
@@ -715,6 +782,12 @@ def create_handoff(
         and requested_stage.upper() in _DISTILL_REFERENCE_STAGES
     ):
         dependencies = dependencies | frozenset({"distill_reference"})
+    effective_content_anchor = ""
+    if "effective_content" in dependencies:
+        with database.connect() as connection:
+            effective_content_anchor = _effective_content_anchor(
+                connection, book_id, selected
+            )
     if original_bootstrap_handoff and requested_stage.upper() not in {
         "CORE_INNOVATION_PROPOSAL",
         "STORY_FOUNDATION_PROPOSAL",
@@ -1084,7 +1157,20 @@ def create_handoff(
             ),
         }
     executor_skill = HANDOFF_EXECUTOR_SKILLS[handoff_type]
-    business_input_files = list(HANDOFF_BUSINESS_INPUT_FILES[handoff_type])
+    materialized_inputs = {
+        "boundary_packet.json": frozen_boundary is not None,
+        "rhythm_context.json": rhythm_snapshot is not None,
+        "atlas_context.json": current_atlas is not None,
+        "kernel_context.json": planning_aggregate.get("kernel_context") is not None,
+        "world_state_context.json": frozen_world_state is not None,
+        "batch_plan.json": batch_plan is not None,
+        "batch_context.json": batch_context is not None,
+    }
+    business_input_files = [
+        name
+        for name in HANDOFF_BUSINESS_INPUT_FILES[handoff_type]
+        if materialized_inputs.get(name, True)
+    ]
     atlas_output_required = handoff_type in {
         HandoffType.STORY_ATLAS_BOOTSTRAP,
         HandoffType.STORY_ATLAS_REFRESH,
@@ -1131,7 +1217,7 @@ def create_handoff(
         "effective_content_sha256": (
             metric_context.get("effective_content_sha256")
             if metric_required
-            else None
+            else effective_content_anchor or None
         ),
         "rhythm_snapshot_id": rhythm_snapshot_id if "rhythm" in dependencies else None,
         "registry_hash": (
@@ -1189,6 +1275,10 @@ def create_handoff(
         "expected_outputs": ["events.jsonl", "result.json", "status.json"],
         "task_schema_version": "handoff-v1",
     }
+    if "original_intent" in dependencies:
+        task["original_intent_hash"] = _original_intent_anchor(
+            database, book_id, requested_stage
+        )
     if prepared_draft_task is not None:
         task["prepared_draft_task"] = dict(prepared_draft_task)
     if original_bootstrap_handoff and frozen_original_request is not None:
@@ -1443,6 +1533,7 @@ def create_handoff(
         "business_input_files": task["business_input_files"],
         "atlas_required_artifacts": task["atlas_required_artifacts"],
         "effective_content_sha256": task["effective_content_sha256"],
+        "original_intent_hash": task.get("original_intent_hash"),
         "edition_status": edition_status,
         "frozen_at": task["created_at"],
         "paths": manifest_paths,
@@ -2015,6 +2106,18 @@ def _drift_reasons(
         projection = load_projection_from_connection(connection, book_id, edition_id)
         if projection.sha256() != str(row["base_projection_hash"] or ""):
             reasons.append("projection hash changed")
+    if "original_intent" in dependencies:
+        task_path = _handoff_file(Path(str(row["task_directory"])), "task.json")
+        try:
+            task_payload = json.loads(task_path.read_text(encoding="utf-8"))
+            frozen_anchor = str(task_payload.get("original_intent_hash") or "")
+            current_anchor = _original_intent_anchor(
+                database, book_id, str(row["requested_stage"])
+            )
+            if not frozen_anchor or frozen_anchor != current_anchor:
+                reasons.append("original author intent changed")
+        except (OSError, TypeError, ValueError, json.JSONDecodeError):
+            reasons.append("original author intent anchor unavailable")
     if "edition" in dependencies:
         edition = connection.execute(
             "SELECT status FROM editions WHERE book_id=? AND edition_id=?",
@@ -2022,9 +2125,11 @@ def _drift_reasons(
         ).fetchone()
         if edition is None or str(edition["status"]) != str(row["edition_status"] or ""):
             reasons.append("edition status changed")
-    if "metrics" in dependencies and row["effective_content_sha256"]:
-        chapters = edition_chapters(connection, book_id, edition_id)
-        current_content = str(chapters[-1].get("content_sha256") or "") if chapters else ""
+    if (
+        {"metrics", "effective_content"} & dependencies
+        and row["effective_content_sha256"]
+    ):
+        current_content = _effective_content_anchor(connection, book_id, edition_id)
         if current_content != str(row["effective_content_sha256"]):
             reasons.append("effective chapter hash changed")
     if "metrics" in dependencies and row["metric_run_id"]:
@@ -2220,13 +2325,15 @@ def _execution_contract(database: Database, handoff_id: str) -> dict[str, Any]:
         raise HandoffWorkflowError(
             f"task executor_skill={executor_skill} 与 Python 路由 {expected_executor} 不一致"
         )
-    expected_inputs = list(HANDOFF_BUSINESS_INPUT_FILES[handoff_type])
-    normalized_inputs = [str(item) for item in business_input_files]
-    if normalized_inputs != expected_inputs:
-        raise HandoffWorkflowError(
-            f"task business_input_files 与 {handoff_type.value} 的冻结声明不一致"
-        )
+    allowed_inputs = set(HANDOFF_BUSINESS_INPUT_FILES[handoff_type])
+    normalized_inputs = [str(item).replace("\\", "/") for item in business_input_files]
+    if len(normalized_inputs) != len(set(normalized_inputs)):
+        raise HandoffWorkflowError("task business_input_files 不得重复")
     for relative_path in normalized_inputs:
+        if relative_path not in allowed_inputs:
+            raise HandoffWorkflowError(
+                f"task business input 不属于 {handoff_type.value} 的允许声明：{relative_path}"
+            )
         candidate = (_handoff_file(task_directory, relative_path)).resolve()
         if task_directory.resolve() not in candidate.parents or not candidate.is_file():
             raise HandoffWorkflowError(f"business input 不存在或越界：{relative_path}")
@@ -2238,11 +2345,33 @@ def _execution_contract(database: Database, handoff_id: str) -> dict[str, Any]:
     }
 
 
+def _refresh_batch_freshness(database: Database, handoff_id: str) -> None:
+    """Delegate Batch input freshness to the existing Batch projection authority."""
+
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT handoff_type, batch_id FROM workflow_handoffs WHERE handoff_id=?",
+            (handoff_id,),
+        ).fetchone()
+    if row is None:
+        raise HandoffWorkflowError("handoff 不存在")
+    if str(row["handoff_type"]) != HandoffType.BATCH_CONTINUATION.value:
+        return
+    batch_id = str(row["batch_id"] or "")
+    if not batch_id:
+        raise HandoffWorkflowError("Batch handoff 缺少 batch_id")
+    try:
+        get_batch_projection(database, batch_id)
+    except (OSError, RuntimeError, TypeError, ValueError) as exc:
+        raise HandoffWorkflowError(f"Batch freshness 无法确认：{exc}") from exc
+
+
 def start_handoff(
     database: Database, handoff_id: str, claimed_by: str = "codex-desktop"
 ) -> dict[str, Any]:
     """Atomically claim a ready handoff, then advance it to RUNNING."""
 
+    _refresh_batch_freshness(database, handoff_id)
     contract = _execution_contract(database, handoff_id)
     claimed = claim_handoff(database, handoff_id, claimed_by)
     update_handoff_status(
@@ -2258,7 +2387,7 @@ def start_handoff(
         "executor_skill": contract["executor_skill"],
         "task_directory": contract["task_directory"],
         "business_input_files": contract["business_input_files"],
-        "artifact_target": contract["result_path"],
+        "result_target": contract["result_path"],
     }
 
 
@@ -2279,13 +2408,14 @@ def complete_handoff(
     if row is None:
         raise HandoffWorkflowError("handoff 不存在")
     if result_file.resolve() != Path(str(row["result_path"])).resolve():
-        raise HandoffWorkflowError("result_path 必须等于 workflow start 返回的 artifact_target")
+        raise HandoffWorkflowError("result_path 必须等于 workflow start 返回的 result_target")
     try:
         loaded = json.loads(result_file.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise HandoffWorkflowError(f"result.json 无法读取：{exc}") from exc
     if not isinstance(loaded, dict):
         raise HandoffWorkflowError("result.json 必须是 object")
+    _refresh_batch_freshness(database, handoff_id)
     update_handoff_status(
         database,
         handoff_id,
@@ -2477,6 +2607,15 @@ def validate_handoff_result(
                 row["batch_plan_hash"] or ""
             ):
                 raise HandoffWorkflowError("result batch_plan_hash 与冻结 Batch 不一致")
+            if parsed.completed_stage.upper() == "BATCH_VALIDATED":
+                batch = connection.execute(
+                    "SELECT status FROM batch_working_projections WHERE batch_id=?",
+                    (str(row["batch_id"] or ""),),
+                ).fetchone()
+                if batch is None or str(batch["status"]) != "BATCH_VALIDATED":
+                    raise HandoffWorkflowError(
+                        "result 声称 BATCH_VALIDATED，但 BatchProjection 尚未验证完成"
+                    )
         if str(row["handoff_type"]) == HandoffType.NOVEL_DISTILLATION.value:
             distill_request = task.get("distill")
             if not isinstance(distill_request, dict):

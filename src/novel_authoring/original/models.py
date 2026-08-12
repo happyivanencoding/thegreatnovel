@@ -13,6 +13,8 @@ from novel_authoring.domain.models import NarrativeFunction
 class OriginalState(StrEnum):
     ORIGINAL_SEED = "ORIGINAL_SEED"
     READER_EXPERIENCE_REVIEW = "READER_EXPERIENCE_REVIEW"
+    CORE_INNOVATION_GENERATING = "CORE_INNOVATION_GENERATING"
+    CORE_INNOVATION_REVIEW = "CORE_INNOVATION_REVIEW"
     FOUNDATION_GENERATING = "FOUNDATION_GENERATING"
     FOUNDATION_REVIEW = "FOUNDATION_REVIEW"
     FOUNDATION_READY = "FOUNDATION_READY"
@@ -82,6 +84,67 @@ class OriginalBookRequest(BaseModel):
     reference_traits: list[str] = Field(default_factory=list)
 
 
+class CoreInnovationCandidate(BaseModel):
+    """An open semantic mechanism proposal, not a classified innovation type."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    innovation_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    title: str = Field(min_length=1)
+    one_sentence_hook: str = Field(min_length=1)
+    core_mechanism: str = Field(min_length=1)
+    protagonist_special_rule: str = Field(min_length=1)
+    choice_generation: str = Field(min_length=1)
+    progression_generation: str = Field(min_length=1)
+    payoff_generation: str = Field(min_length=1)
+    limitation: str = Field(min_length=1)
+    expansion_grammar: str = Field(min_length=1)
+    long_form_capacity: str = Field(min_length=1)
+    novelty_source: str = Field(min_length=1)
+    repetition_risk: str = Field(min_length=1)
+    fit_with_reader_promise: str = Field(min_length=1)
+
+
+class CoreInnovationProposal(BaseModel):
+    """Exactly three open-ended mechanisms sharing the frozen reader kernel."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["core-innovation-v1"] = "core-innovation-v1"
+    information_status: Literal["PROPOSAL"] = "PROPOSAL"
+    innovation_candidates: list[CoreInnovationCandidate] = Field(min_length=3, max_length=3)
+    kernel_contracts: dict[str, Any]
+
+    @model_validator(mode="after")
+    def candidates_are_distinct(self) -> CoreInnovationProposal:
+        innovation_ids = [item.innovation_id for item in self.innovation_candidates]
+        if len(set(innovation_ids)) != 3:
+            raise ValueError("Core Innovation 必须恰好包含三个不同候选")
+        return self
+
+
+class AuthorInnovationIntent(BaseModel):
+    """The author's selected mechanism boundary carried into later Genesis stages."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    selected_primary_innovation_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    optional_mix_notes: str = ""
+
+
+class FirstPhaseProposal(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    opening_pressure: str = Field(min_length=1)
+    first_concrete_goal: str = Field(min_length=1)
+    first_resource_bottleneck: str = Field(min_length=1)
+    first_progression_opportunity: str = Field(min_length=1)
+    first_payoff: str = Field(min_length=1)
+    first_meaningful_escalation: str = Field(min_length=1)
+    stage_climax: str = Field(min_length=1)
+    after_climax_change: str = Field(min_length=1)
+
+
 class StoryFoundationCandidate(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -96,6 +159,10 @@ class StoryFoundationCandidate(BaseModel):
     long_term_possibility: str = Field(min_length=1)
     risk: str = Field(min_length=1)
     premise_relationship: str = Field(min_length=1)
+    author_facing_pitch: str = Field(min_length=1)
+    opening_situation: str = Field(min_length=1)
+    typical_choice: str = Field(min_length=1)
+    innovation_fit: str = Field(min_length=1)
 
 
 class StoryRoute(BaseModel):
@@ -142,8 +209,9 @@ class OriginalBootstrapProposal(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal["original-bootstrap-v2"] = "original-bootstrap-v2"
+    schema_version: Literal["original-bootstrap-v3"] = "original-bootstrap-v3"
     information_status: Literal["PROPOSAL"] = "PROPOSAL"
+    core_innovation_intent: AuthorInnovationIntent
     title_candidates: list[str] = Field(min_length=3, max_length=3)
     expanded_premise: str = Field(min_length=1)
     foundation_candidates: list[StoryFoundationCandidate] = Field(min_length=3, max_length=3)
@@ -159,6 +227,10 @@ class OriginalBootstrapProposal(BaseModel):
     routes: list[StoryRoute] = Field(min_length=3, max_length=3)
     recommended_route_id: str = Field(min_length=1)
     recommendation_reason: str = Field(min_length=1)
+    progression_grammar: list[str] = Field(min_length=1)
+    expansion_grammar: list[str] = Field(min_length=1)
+    payoff_grammar: list[str] = Field(min_length=1)
+    first_phase: FirstPhaseProposal
     first_phase_objective: str = Field(min_length=1)
     rolling_planning: RollingPlanning
     book_profile_draft: BookProfileDraft
@@ -198,6 +270,7 @@ class OriginalFoundationConfirmation(BaseModel):
     main_conflict_override: str = ""
     protagonist_cost_override: str = ""
     protagonist_growth_override: str = ""
+    first_phase_overrides: dict[str, str] = Field(default_factory=dict)
     characters_override: list[str] = Field(default_factory=list)
     factions_override: list[str] = Field(default_factory=list)
     world_rules: list[str] = Field(min_length=1)
@@ -222,6 +295,9 @@ class GenesisApplyPlan(BaseModel):
     selected_title: str
     selected_foundation: dict[str, Any]
     selected_route: dict[str, Any]
+    core_innovation_intent: dict[str, Any]
+    growth_grammar: dict[str, list[str]]
+    first_phase: dict[str, str]
     author_truths: list[dict[str, Any]]
     persistent_directives: list[dict[str, Any]]
     profile_dimensions: dict[str, dict[str, Any]]
@@ -234,8 +310,12 @@ class GenesisApplyPlan(BaseModel):
 
 
 __all__ = [
+    "AuthorInnovationIntent",
     "BookProfileDimensionDraft",
     "BookProfileDraft",
+    "CoreInnovationCandidate",
+    "CoreInnovationProposal",
+    "FirstPhaseProposal",
     "FoundationSetting",
     "GenesisApplyPlan",
     "HiddenTruthCandidate",

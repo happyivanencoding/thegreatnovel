@@ -4,7 +4,13 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from novel_authoring.progression.models import ContractStatus, PayoffChannel
+from novel_authoring.progression.models import (
+    ContractStatus,
+    ExperiencePriority,
+    PayoffChannel,
+    ReaderExperience,
+    ReaderExperienceContract,
+)
 from novel_authoring.serial_kernel.models import (
     PROGRESSION_DRIVES,
     DrivePayoffChannel,
@@ -59,6 +65,36 @@ _MARKET_LABELS: dict[MarketCategory, str] = {
     MarketCategory.CUSTOM: "作者自定义",
 }
 
+_READER_EXPERIENCE_DRIVES: dict[ReaderExperience, NarrativeDrive] = {
+    ReaderExperience.PROGRESSION: NarrativeDrive.POWER_PROGRESSION,
+    ReaderExperience.BREAKTHROUGH: NarrativeDrive.POWER_PROGRESSION,
+    ReaderExperience.POWER_VERIFICATION: NarrativeDrive.ABILITY_PROGRESSION,
+    ReaderExperience.COMBAT: NarrativeDrive.POWER_PROGRESSION,
+    ReaderExperience.EXPLORATION: NarrativeDrive.WORLD_EXPLORATION,
+    ReaderExperience.RESOURCE_OPPORTUNITY: NarrativeDrive.RESOURCE_OPPORTUNITY,
+    ReaderExperience.ARTIFACT_OR_ABILITY: NarrativeDrive.ABILITY_PROGRESSION,
+    ReaderExperience.WORLD_EXPANSION: NarrativeDrive.WORLD_EXPLORATION,
+    ReaderExperience.FACTION_CONFLICT: NarrativeDrive.TERRITORY_FACTION,
+    ReaderExperience.MYSTERY: NarrativeDrive.MYSTERY_INVESTIGATION,
+    ReaderExperience.REVEAL: NarrativeDrive.MYSTERY_REVELATION,
+    ReaderExperience.TEAM_GROWTH: NarrativeDrive.TEAM_GROWTH,
+    ReaderExperience.RELATIONSHIP: NarrativeDrive.RELATIONSHIP_EMOTIONAL,
+    ReaderExperience.ROMANCE: NarrativeDrive.RELATIONSHIP_EMOTIONAL,
+    ReaderExperience.STATUS_RISE: NarrativeDrive.STATUS_RISE,
+    ReaderExperience.REVENGE: NarrativeDrive.IDENTITY_PRESSURE,
+    ReaderExperience.SURVIVAL: NarrativeDrive.SURVIVAL_RESOURCE,
+    ReaderExperience.KNOWLEDGE: NarrativeDrive.KNOWLEDGE_PROGRESSION,
+    ReaderExperience.WEALTH: NarrativeDrive.STATUS_WEALTH,
+}
+
+_READER_PRIORITY_SCORES = {
+    ExperiencePriority.OFF: 0,
+    ExperiencePriority.LOW: 25,
+    ExperiencePriority.MEDIUM: 50,
+    ExperiencePriority.HIGH: 75,
+    ExperiencePriority.VERY_HIGH: 100,
+}
+
 
 def narrative_drive_label(value: NarrativeDrive | str) -> str:
     try:
@@ -74,6 +110,93 @@ def market_category_label(value: MarketCategory | str) -> str:
     except ValueError:
         return str(value)
     return _MARKET_LABELS.get(category, category.value)
+
+
+def align_narrative_drive_to_reader_experience(
+    value: NarrativeDriveInterpretation,
+    reader_contract: ReaderExperienceContract,
+) -> NarrativeDriveInterpretation:
+    """Make confirmed strong reader priorities visible in the existing Drive proposal."""
+
+    drive_scores: dict[NarrativeDrive, int] = {}
+    drive_order: dict[NarrativeDrive, int] = {}
+    for index, (experience, priority) in enumerate(
+        reader_contract.experience_priorities.items()
+    ):
+        if priority not in {ExperiencePriority.HIGH, ExperiencePriority.VERY_HIGH}:
+            continue
+        drive = _READER_EXPERIENCE_DRIVES.get(experience)
+        if drive is None:
+            continue
+        score = _READER_PRIORITY_SCORES[priority]
+        drive_scores[drive] = max(score, drive_scores.get(drive, 0))
+        drive_order.setdefault(drive, index)
+    if not drive_scores:
+        return value
+
+    ranked = sorted(
+        drive_scores,
+        key=lambda drive: (-drive_scores[drive], drive_order[drive]),
+    )
+    current_primary = value.drive_contract.primary_drive
+    current_score = drive_scores.get(current_primary, -1)
+    primary = current_primary if current_score >= drive_scores[ranked[0]] else ranked[0]
+    secondary = [drive for drive in ranked if drive is not primary][:4]
+    contract = value.drive_contract
+    priorities = dict(contract.drive_priorities)
+    promises = dict(contract.drive_promises)
+    payoff_channels = list(contract.drive_payoff_channels)
+    debt_types = dict(contract.drive_debt_types)
+    for drive in [primary, *secondary]:
+        priorities[drive] = max(priorities.get(drive, 0), drive_scores.get(drive, 50))
+        promises.setdefault(
+            drive,
+            [f"持续通过{_DRIVE_LABELS.get(drive, drive.value)}产生可见后果"],
+        )
+        debt_types.setdefault(drive, [drive.value])
+        if not any(item.associated_drive is drive for item in payoff_channels):
+            payoff_channels.append(
+                DrivePayoffChannel(
+                    channel=_payoff_for_drive(drive),
+                    associated_drive=drive,
+                )
+            )
+    updated_contract = contract.model_copy(
+        update={
+            "primary_drive": primary,
+            "secondary_drives": secondary,
+            "drive_priorities": priorities,
+            "drive_promises": promises,
+            "drive_payoff_channels": payoff_channels,
+            "drive_debt_types": debt_types,
+            "author_overrides": (
+                contract.author_overrides
+                if "READER_EXPERIENCE_STRENGTHS" in contract.author_overrides
+                else [*contract.author_overrides, "READER_EXPERIENCE_STRENGTHS"]
+            ),
+        }
+    )
+    mix = updated_contract.drive_mix
+    evidence = (
+        value.evidence
+        if "AUTHOR_READER_EXPERIENCE_STRENGTHS" in value.evidence
+        else [*value.evidence, "AUTHOR_READER_EXPERIENCE_STRENGTHS"]
+    )
+    return value.model_copy(
+        update={
+            "summary": (
+                f"主要依靠{_DRIVE_LABELS.get(primary, primary.value)}推进；"
+                f"已读取作者确认的阅读体验优先级"
+            ),
+            "drive_contract": updated_contract,
+            "enabled_engines": list(dict.fromkeys(_engine_for_drive(drive) for drive in mix)),
+            "display_primary_drive": _DRIVE_LABELS.get(primary, primary.value),
+            "display_secondary_drives": [
+                _DRIVE_LABELS.get(drive, drive.value) for drive in secondary
+            ],
+            "evidence": evidence,
+        }
+    )
 
 
 def _contains(text: str, values: Iterable[str]) -> bool:
@@ -379,6 +502,7 @@ def adjust_narrative_drive_interpretation(
 
 
 __all__ = [
+    "align_narrative_drive_to_reader_experience",
     "adjust_narrative_drive_interpretation",
     "interpret_narrative_drives",
     "market_category_label",

@@ -27,7 +27,7 @@ Python 已在 start 中完成 READY_FOR_CODEX 检查、原子 claim、冻结文�
 
 ## Deterministic complete
 
-业务 Skill 将结果写入 start 返回的 `artifact_target`（result JSON 路径），然后运行：
+业务 Skill 将结果写入 start 返回的 `result_target`（result JSON 路径），然后运行：
 
 ```powershell
 novel workflow complete --book-id <book-id> --handoff-id <handoff-id> --claim-token <claim-token> --result-path <result.json>

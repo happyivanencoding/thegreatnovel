@@ -108,16 +108,73 @@
   });
 
   const wizard = document.querySelector("[data-original-confirm]");
+  const readerControls = (() => {
+    const root = document.querySelector("[data-reader-experience-controls]");
+    if (!root) return null;
+    const presets = {
+      PAYOFF_STRONGER: {POWER_VERIFICATION: "CORE", COMBAT: "CORE", BREAKTHROUGH: "STRONG"},
+      MYSTERY_STRONGER: {MYSTERY: "CORE", REVEAL: "CORE", WORLD_EXPANSION: "STRONG"},
+      TEAM_STRONGER: {TEAM_GROWTH: "CORE", RELATIONSHIP: "STRONG", FACTION_CONFLICT: "STRONG"},
+      RELATIONSHIP_STRONGER: {RELATIONSHIP: "CORE", ROMANCE: "CORE", TEAM_GROWTH: "STRONG"},
+      CAREER_STRONGER: {STATUS_RISE: "CORE", PROGRESSION: "STRONG", RESOURCE_OPPORTUNITY: "STRONG"},
+    };
+    const select = (row, value) => {
+      const option = row.querySelector(`[data-reader-strength="${value}"]`);
+      if (!option) return;
+      row.querySelectorAll("[data-reader-strength]").forEach((item) => {
+        const selected = item === option;
+        item.classList.toggle("is-selected", selected);
+        item.setAttribute("aria-pressed", selected ? "true" : "false");
+      });
+      const label = row.querySelector("[data-reader-strength-label]");
+      if (label) label.textContent = option.textContent;
+    };
+    root.querySelectorAll("[data-reader-experience-item]").forEach((row) => {
+      row.querySelectorAll("[data-reader-strength]").forEach((option) => {
+        option.addEventListener("click", () => select(row, option.dataset.readerStrength));
+      });
+    });
+    return {
+      applyPreset(name) {
+        Object.entries(presets[name] || {}).forEach(([key, value]) => {
+          const row = root.querySelector(`[data-reader-experience-key="${key}"]`);
+          if (row) select(row, value);
+        });
+      },
+      collect() {
+        return Object.fromEntries(
+          [...root.querySelectorAll("[data-reader-experience-item]")].map((row) => [
+            row.dataset.readerExperienceKey,
+            row.querySelector("[data-reader-strength].is-selected")?.dataset.readerStrength || "NORMAL",
+          ]),
+        );
+      },
+    };
+  })();
   pollGeneration();
+  document.querySelector("[data-core-innovation-select]")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const selected = String(form.get("selected_primary_innovation_id") || "").trim();
+    if (!selected) { show("请选择一个 Primary Innovation。", true); return; }
+    show("正在冻结 Core Innovation Intent，并准备 Story Foundation Proposal…");
+    try {
+      await post(`/api/books/${bookId}/original/core-innovation/select`, {
+        selected_primary_innovation_id: selected,
+        optional_mix_notes: String(form.get("optional_mix_notes") || "").trim(),
+      });
+      window.location.replace(window.location.href);
+    } catch (error) { show(error.message, true); }
+  });
   if (wizard) {
-    let step = 1;
+    let step = 2;
     const renderStep = () => {
       wizard.querySelectorAll("[data-wizard-step]").forEach((panel) => { panel.hidden = Number(panel.dataset.wizardStep) !== step; });
       wizard.querySelectorAll("[data-wizard-indicator]").forEach((item) => { item.classList.toggle("is-active", Number(item.dataset.wizardIndicator) === step); item.classList.toggle("is-done", Number(item.dataset.wizardIndicator) < step); });
-      wizard.querySelector("[data-wizard-back]").hidden = step === 1;
-      wizard.querySelector("[data-wizard-next]").hidden = step === 4;
-      wizard.querySelector("[data-wizard-submit]").hidden = step !== 4;
-      if (step === 4) {
+      wizard.querySelector("[data-wizard-back]").hidden = step === 2;
+      wizard.querySelector("[data-wizard-next]").hidden = step === 5;
+      wizard.querySelector("[data-wizard-submit]").hidden = step !== 5;
+      if (step === 5) {
         const form = new FormData(wizard);
         const choice = wizard.querySelector('[name="selected_foundation_id"]:checked')?.closest("label");
         wizard.querySelector("[data-preview-foundation]").textContent = choice?.querySelector("span")?.textContent || "";
@@ -126,8 +183,8 @@
         wizard.querySelector("[data-preview-phase]").textContent = String(form.get("first_phase_objective") || "");
       }
     };
-    wizard.querySelector("[data-wizard-next]").addEventListener("click", () => { step = Math.min(4, step + 1); renderStep(); wizard.scrollIntoView({behavior: "smooth", block: "start"}); });
-    wizard.querySelector("[data-wizard-back]").addEventListener("click", () => { step = Math.max(1, step - 1); renderStep(); wizard.scrollIntoView({behavior: "smooth", block: "start"}); });
+      wizard.querySelector("[data-wizard-next]").addEventListener("click", () => { step = Math.min(5, step + 1); renderStep(); wizard.scrollIntoView({behavior: "smooth", block: "start"}); });
+      wizard.querySelector("[data-wizard-back]").addEventListener("click", () => { step = Math.max(2, step - 1); renderStep(); wizard.scrollIntoView({behavior: "smooth", block: "start"}); });
     renderStep();
 
     wizard.addEventListener("submit", async (event) => {
@@ -139,6 +196,7 @@
       const settingStrengths = {};
       const openQuestionActions = {};
       const hiddenTruthActions = {};
+      const firstPhaseOverrides = {};
       for (const [key, value] of form.entries()) {
         if (key.startsWith("setting_strength__")) settingStrengths[key.slice(18)] = String(value);
         if (key.startsWith("open_question_action__")) {
@@ -146,6 +204,7 @@
           openQuestionActions[`question-${wizard.dataset.proposalVersionId}-${selectedFoundation}-${index}`] = String(value);
         }
         if (key.startsWith("hidden_truth_action__")) hiddenTruthActions[key.slice(21)] = String(value);
+        if (key.startsWith("first_phase__")) firstPhaseOverrides[key.slice(13)] = String(value).trim();
       }
       show("正在以单一事务确认故事基础…");
       try {
@@ -160,6 +219,7 @@
           main_conflict_override: String(form.get("main_conflict_override") || "").trim(),
           protagonist_cost_override: String(form.get("protagonist_cost_override") || "").trim(),
           protagonist_growth_override: String(form.get("protagonist_growth_override") || "").trim(),
+          first_phase_overrides: firstPhaseOverrides,
           characters_override: lines(form.get("characters_override")),
           factions_override: lines(form.get("factions_override")),
           world_rules: lines(form.get("world_rules")),
@@ -195,8 +255,17 @@
       if (action === "confirm-reader") {
         show("正在确认阅读体验并准备共享 Contract 的三个故事方向…");
         await post(`/api/books/${bookId}/original/reader-experience/confirm`, {
-          adjustment: button.dataset.readerAdjustment || "CONFIRM",
+          adjustment: "CONFIRM",
+          priority_overrides: readerControls?.collect() || {},
         });
+        window.location.replace(window.location.href);
+      } else if (action === "reader-preset") {
+        readerControls?.applyPreset(button.dataset.readerPreset || "");
+        show("快捷组合已应用；你仍可以逐项调整后再确认。", false);
+        button.disabled = false;
+      } else if (action === "prepare-core") {
+        show("正在检查 Core Innovation Proposal…");
+        await post(`/api/books/${bookId}/original/core-innovation/prepare`, {});
         window.location.replace(window.location.href);
       } else if (action === "bootstrap") {
         show("正在准备新的故事方案；当前方案会保留…");

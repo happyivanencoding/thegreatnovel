@@ -48,9 +48,11 @@ from novel_authoring.web.app import create_app
 from novel_authoring.web.routes.atlas import public_atlas_overview
 from novel_authoring.workflows.handoffs import (
     HandoffType,
+    HandoffWorkflowError,
     complete_handoff,
     create_batch_continuation_handoff,
     create_story_atlas_handoff,
+    get_handoff,
     start_handoff,
 )
 
@@ -636,7 +638,7 @@ def test_batch_synthetic_handoff_reads_frozen_plan_and_context_once(
     assert task["batch_checkpoint_interval"] == batch_plan["checkpoint_interval"]
     assert (input_root / "batch_context.json").is_file()
     started = start_handoff(database, str(handoff["handoff_id"]))
-    result_path = Path(str(started["artifact_target"]))
+    result_path = Path(str(started["result_target"]))
     result_path.write_text(
         json.dumps(
             {
@@ -657,13 +659,87 @@ def test_batch_synthetic_handoff_reads_frozen_plan_and_context_once(
         ),
         encoding="utf-8",
     )
-    completed = complete_handoff(
+    with pytest.raises(HandoffWorkflowError, match="BatchProjection 尚未验证完成"):
+        complete_handoff(
+            database,
+            str(handoff["handoff_id"]),
+            str(started["claim_token"]),
+            result_path,
+        )
+    assert get_handoff(database, str(handoff["handoff_id"]))["status"] == "FAILED"
+
+
+@pytest.mark.parametrize("boundary", ["start", "complete"])
+def test_batch_handoff_delegates_freshness_to_batch_projection(
+    tmp_path: Path, boundary: str
+) -> None:
+    database, book_id, current, span_id, content_hash = _setup_book(tmp_path)
+    root = _write_atlas(database, book_id, current, span_id, content_hash)
+    register_atlas(database, book_id, "base", root=root)
+    created = create_batch(
         database,
-        str(handoff["handoff_id"]),
-        str(started["claim_token"]),
-        result_path,
+        book_id,
+        target_chapter_count=10,
+        edition_id="base",
     )
-    assert completed["status"] == "COMPLETED"
+    handoff = create_batch_continuation_handoff(
+        database,
+        book_id,
+        batch_id=str(created["batch_id"]),
+        requested_stage="BATCH_CONTINUATION",
+        edition_id="base",
+    )
+    handoff_id = str(handoff["handoff_id"])
+    started = start_handoff(database, handoff_id) if boundary == "complete" else None
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE batch_working_projections SET chunk_size=chunk_size+1 WHERE batch_id=?",
+            (str(created["batch_id"]),),
+        )
+
+    if boundary == "start":
+        with pytest.raises(HandoffWorkflowError, match="漂移"):
+            start_handoff(database, handoff_id)
+    else:
+        assert started is not None
+        task_directory = Path(str(handoff["task_directory"]))
+        input_root = (
+            task_directory / "input"
+            if (task_directory / "input").is_dir()
+            else task_directory
+        )
+        task = json.loads((input_root / "task.json").read_text(encoding="utf-8"))
+        result_path = Path(str(started["result_target"]))
+        result_path.write_text(
+            json.dumps(
+                {
+                    "handoff_id": handoff_id,
+                    "handoff_type": "BATCH_CONTINUATION",
+                    "requested_stage": "BATCH_CONTINUATION",
+                    "completed_stage": "BATCH_CONTINUATION",
+                    "book_id": book_id,
+                    "edition_id": "base",
+                    "status": "COMPLETED",
+                    "batch_id": str(created["batch_id"]),
+                    "chunk_ids": ["chunk-1"],
+                    "canon_committed": False,
+                    "edition_activated": False,
+                    "base_event_seq": task["base_event_seq"],
+                    "base_projection_hash": task["base_projection_hash"],
+                }
+            ),
+            encoding="utf-8",
+        )
+        with pytest.raises(HandoffWorkflowError, match="漂移"):
+            complete_handoff(
+                database,
+                handoff_id,
+                str(started["claim_token"]),
+                result_path,
+            )
+
+    assert get_batch_projection(database, str(created["batch_id"])).status.value == "STALE"
+    assert get_handoff(database, handoff_id)["status"] == "STALE"
 
 
 def test_atlas_web_scope_and_atlas_handoff_anchor(tmp_path: Path) -> None:

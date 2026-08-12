@@ -12,4 +12,4 @@ description: 在冻结章节窗口内提出 Kernel Contract Proposal；只生成
 
 不得重新领取 handoff、调用 protocol Skill、重算 hash、读取无关 Atlas/Metric 或把提案
 写入 Canon。输出必须保留 UNKNOWN、证据定位和作者确认边界；完成后写 result JSON 到
-`artifact_target`，由 `novel workflow complete` 统一完成通用协议校验。
+`result_target`，由 `novel workflow complete` 统一完成通用协议校验。

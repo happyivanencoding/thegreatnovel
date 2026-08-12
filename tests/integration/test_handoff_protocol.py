@@ -19,6 +19,7 @@ from novel_authoring.workflows.handoffs import (
     claim_handoff,
     complete_handoff,
     create_continuation_handoff,
+    create_handoff,
     get_handoff,
     load_completed_handoff_result,
     start_handoff,
@@ -174,7 +175,7 @@ def test_workflow_start_is_one_claim_and_running_transition(tmp_path: Path) -> N
 
     assert started["status"] == HandoffStatus.RUNNING.value
     assert started["executor_skill"] == "continue-novel"
-    assert started["artifact_target"]
+    assert started["result_target"]
     assert set(started) == {
         "handoff_id",
         "status",
@@ -182,7 +183,7 @@ def test_workflow_start_is_one_claim_and_running_transition(tmp_path: Path) -> N
         "executor_skill",
         "task_directory",
         "business_input_files",
-        "artifact_target",
+        "result_target",
     }
     frozen = get_handoff(database, str(handoff["handoff_id"]))
     assert frozen["status"] == HandoffStatus.RUNNING.value
@@ -201,10 +202,39 @@ def test_workflow_start_marks_frozen_input_drift_stale(tmp_path: Path) -> None:
     assert get_handoff(database, str(handoff["handoff_id"]))["status"] == HandoffStatus.STALE.value
 
 
+def test_profile_reanalysis_stales_when_effective_edition_content_changes(
+    tmp_path: Path,
+) -> None:
+    database, _ = _continuation_handoff(tmp_path)
+    handoff = create_handoff(
+        database,
+        "fast-path-book",
+        handoff_type=HandoffType.PROFILE_REANALYSIS,
+        requested_stage="PROFILE_REANALYSIS",
+    )
+    task_directory = Path(str(handoff["task_directory"]))
+    task = json.loads((task_directory / "task.json").read_text(encoding="utf-8"))
+    assert task["business_input_files"] == ["profile_context.json"]
+    assert all(
+        (task_directory / name).is_file() for name in task["business_input_files"]
+    )
+
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE chapters SET content_sha256='changed-after-freeze' "
+            "WHERE book_id=? AND ordinal=(SELECT MAX(ordinal) FROM chapters WHERE book_id=?)",
+            ("fast-path-book", "fast-path-book"),
+        )
+
+    with pytest.raises(HandoffWorkflowError, match="effective chapter hash changed"):
+        start_handoff(database, str(handoff["handoff_id"]))
+    assert get_handoff(database, str(handoff["handoff_id"]))["status"] == "STALE"
+
+
 def test_workflow_complete_rejects_invalid_and_detects_runtime_drift(tmp_path: Path) -> None:
     database, handoff = _continuation_handoff(tmp_path)
     started = start_handoff(database, str(handoff["handoff_id"]))
-    result_path = Path(str(started["artifact_target"]))
+    result_path = Path(str(started["result_target"]))
     result_path.write_text(json.dumps({"invalid": True}), encoding="utf-8")
     with pytest.raises(HandoffWorkflowError):
         complete_handoff(
@@ -217,7 +247,7 @@ def test_workflow_complete_rejects_invalid_and_detects_runtime_drift(tmp_path: P
 
     database, handoff = _continuation_handoff(tmp_path / "runtime-drift")
     started = start_handoff(database, str(handoff["handoff_id"]))
-    result_path = Path(str(started["artifact_target"]))
+    result_path = Path(str(started["result_target"]))
     result_path.write_text(
         json.dumps(_plan_result(database, str(handoff["handoff_id"]))), encoding="utf-8"
     )
@@ -239,7 +269,7 @@ def test_workflow_complete_rejects_invalid_and_detects_runtime_drift(tmp_path: P
 def test_workflow_complete_valid_result_is_authority(tmp_path: Path) -> None:
     database, handoff = _continuation_handoff(tmp_path)
     started = start_handoff(database, str(handoff["handoff_id"]))
-    result_path = Path(str(started["artifact_target"]))
+    result_path = Path(str(started["result_target"]))
     result_path.write_text(
         json.dumps(_plan_result(database, str(handoff["handoff_id"]))), encoding="utf-8"
     )
@@ -257,7 +287,7 @@ def test_workflow_complete_valid_result_is_authority(tmp_path: Path) -> None:
 def test_completed_result_loader_uses_persisted_validated_envelope(tmp_path: Path) -> None:
     database, handoff = _continuation_handoff(tmp_path)
     started = start_handoff(database, str(handoff["handoff_id"]))
-    result_path = Path(str(started["artifact_target"]))
+    result_path = Path(str(started["result_target"]))
     result_path.write_text(
         json.dumps(_plan_result(database, str(handoff["handoff_id"]))), encoding="utf-8"
     )

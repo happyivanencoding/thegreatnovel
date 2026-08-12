@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -58,6 +59,77 @@ class ReaderExperienceAdjustment(StrEnum):
     TEAM_STRONGER = "TEAM_STRONGER"
     RELATIONSHIP_STRONGER = "RELATIONSHIP_STRONGER"
     CAREER_STRONGER = "CAREER_STRONGER"
+
+
+class ReaderExperienceStrength(StrEnum):
+    """Five author-facing levels mapped onto the existing priority contract."""
+
+    WEAK = "WEAK"
+    SECONDARY = "SECONDARY"
+    NORMAL = "NORMAL"
+    STRONG = "STRONG"
+    CORE = "CORE"
+
+
+_STRENGTH_TO_PRIORITY = {
+    ReaderExperienceStrength.WEAK: ExperiencePriority.OFF,
+    ReaderExperienceStrength.SECONDARY: ExperiencePriority.LOW,
+    ReaderExperienceStrength.NORMAL: ExperiencePriority.MEDIUM,
+    ReaderExperienceStrength.STRONG: ExperiencePriority.HIGH,
+    ReaderExperienceStrength.CORE: ExperiencePriority.VERY_HIGH,
+}
+
+
+def apply_reader_experience_overrides(
+    contract: ReaderExperienceContract,
+    overrides: Mapping[
+        str, ReaderExperienceStrength | ExperiencePriority | str
+    ],
+) -> ReaderExperienceContract:
+    """Apply explicit author levels without replacing unrelated inference."""
+
+    priorities = dict(contract.experience_priorities)
+    for raw_key, raw_value in overrides.items():
+        try:
+            key = raw_key if isinstance(raw_key, ReaderExperience) else ReaderExperience(raw_key)
+        except ValueError as exc:
+            raise ValueError(f"未知的阅读体验维度：{raw_key}") from exc
+        if isinstance(raw_value, ExperiencePriority):
+            priority = raw_value
+        else:
+            try:
+                strength = (
+                    raw_value
+                    if isinstance(raw_value, ReaderExperienceStrength)
+                    else ReaderExperienceStrength(raw_value)
+                )
+            except ValueError as exc:
+                raise ValueError(f"未知的阅读体验强度：{raw_value}") from exc
+            priority = _STRENGTH_TO_PRIORITY[strength]
+        priorities[key] = priority
+    return contract.model_copy(
+        update={
+            "experience_priorities": priorities,
+            "growth_centrality": priorities.get(
+                ReaderExperience.PROGRESSION, contract.growth_centrality
+            ),
+            "world_expansion_centrality": priorities.get(
+                ReaderExperience.WORLD_EXPANSION, contract.world_expansion_centrality
+            ),
+            "mystery_centrality": priorities.get(
+                ReaderExperience.MYSTERY, contract.mystery_centrality
+            ),
+            "team_centrality": priorities.get(
+                ReaderExperience.TEAM_GROWTH, contract.team_centrality
+            ),
+            "relationship_centrality": priorities.get(
+                ReaderExperience.RELATIONSHIP, contract.relationship_centrality
+            ),
+            "theme_centrality": priorities.get(
+                ReaderExperience.SOCIAL_THEME, contract.theme_centrality
+            ),
+        }
+    )
 
 
 class ReaderExperienceInterpretation(BaseModel):
@@ -295,7 +367,9 @@ def interpret_reader_experience(
         summary = f"原创成长语法：{growth_object}"
 
     if not drive_interpretation.progression_engine_enabled:
-        priorities = {item: ExperiencePriority.LOW for item in ReaderExperience}
+        # No specialized evidence is still a valid proposal state; keep every
+        # unproven dimension at NORMAL instead of presenting it as WEAK.
+        priorities = {item: ExperiencePriority.MEDIUM for item in ReaderExperience}
         drive_to_experience = {
             NarrativeDrive.CAREER_MASTERY: ReaderExperience.STATUS_RISE,
             NarrativeDrive.STATE_BUILDING: ReaderExperience.FACTION_CONFLICT,
@@ -562,6 +636,8 @@ __all__ = [
     "KernelContractProposalBundle",
     "ReaderExperienceAdjustment",
     "ReaderExperienceInterpretation",
+    "ReaderExperienceStrength",
+    "apply_reader_experience_overrides",
     "adjust_reader_experience",
     "compile_kernel_contract_proposals",
     "interpret_reader_experience",

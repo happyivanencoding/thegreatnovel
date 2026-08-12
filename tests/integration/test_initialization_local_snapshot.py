@@ -110,7 +110,7 @@ def test_initialization_synthetic_handoff_uses_scheduled_manifests_only(
         for name in task["business_input_files"]
     )
     started = start_handoff(database, str(handoff["handoff_id"]))
-    result_path = Path(str(started["artifact_target"]))
+    result_path = Path(str(started["result_target"]))
     result_path.write_text(
         json.dumps(
             {

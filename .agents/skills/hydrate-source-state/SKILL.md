@@ -14,5 +14,5 @@ protocol Skill、不计算 hash、不判断 task type，也不读取无关 Atlas
 `SOURCE_VERIFIED` 必须带冻结章节内的 source span；不确定内容保留
 `uncertain_findings`。不得修改 `book/`、Canon、Author Intent 或 SQLite。
 
-完成后将 result 写到 `workflow start` 返回的 `artifact_target`，由
+完成后将 result 写到 `workflow start` 返回的 `result_target`，由
 `novel workflow complete` 统一完成 Python schema、artifact、漂移、状态和事件边界。

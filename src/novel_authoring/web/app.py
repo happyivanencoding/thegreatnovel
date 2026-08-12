@@ -122,11 +122,14 @@ from novel_authoring.original.service import (
     confirm_original_reader_experience,
     create_original_book,
     import_original_bootstrap_proposal,
+    import_original_core_innovation_proposal,
     original_overview,
     prepare_original_bootstrap,
+    prepare_original_core_innovation,
     prepare_original_reader_experience,
     resolve_original_proposal_version,
     select_first_chapter_candidate,
+    select_original_core_innovation,
     validate_original_draft,
 )
 from novel_authoring.pending_actions import (
@@ -194,6 +197,7 @@ from novel_authoring.web.schemas import (
     KnowledgeUpdateRequest,
     OpenCreativeQuestionRequest,
     OriginalCandidateSelectionRequest,
+    OriginalCoreInnovationSelectionRequest,
     OriginalDraftActionRequest,
     OriginalProposalImportRequest,
     OriginalProposalVersionResolutionRequest,
@@ -1092,6 +1096,7 @@ def create_app(
                 _database_for_book(app, checked),
                 checked,
                 payload.adjustment,
+                payload.priority_overrides,
             )
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)
@@ -1107,6 +1112,48 @@ def create_app(
         try:
             return import_original_bootstrap_proposal(
                 _database_for_book(app, checked), checked, payload.handoff_id
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/core-innovation/import")
+    async def original_core_innovation_import_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalProposalImportRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return import_original_core_innovation_proposal(
+                _database_for_book(app, checked), checked, payload.handoff_id
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/core-innovation/prepare")
+    async def original_core_innovation_prepare_api(
+        request: Request,
+        path_book_id: str,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return prepare_original_core_innovation(_database_for_book(app, checked), checked)
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/core-innovation/select")
+    async def original_core_innovation_select_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalCoreInnovationSelectionRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return select_original_core_innovation(
+                _database_for_book(app, checked), checked, payload.model_dump(mode="json")
             )
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)

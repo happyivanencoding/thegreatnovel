@@ -1133,9 +1133,13 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .original-final-preview strong { color: #1d2939; line-height: 1.55; }
 .original-reader-summary, .original-derived-card { display: grid; gap: 14px; }
 .original-priority-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-.original-priority-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid #e4e7ec; border-radius: 10px; background: #fff; }
+.original-priority-row { display: grid; gap: 10px; padding: 12px 14px; border: 1px solid #e4e7ec; border-radius: 10px; background: #fff; }
+.original-priority-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .original-priority-row span { color: #475467; }
 .original-priority-row strong { color: #244fae; font-size: .82rem; }
+.reader-strength-options { display: flex; flex-wrap: wrap; gap: 5px; }
+.reader-strength-options .button { padding: 5px 8px; color: #667085; background: #fff; }
+.reader-strength-options .button.is-selected { color: #244fae; border-color: #8aa9ed; background: #eef4ff; }
 .original-derived-card { padding: 18px; border: 1px solid #c9d7ff; border-radius: 12px; background: #f8faff; }
 .original-derived-card h3, .original-derived-card p { margin: 0; }
 .original-contract-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }

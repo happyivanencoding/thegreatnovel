@@ -22,6 +22,7 @@ from .migration_13 import SQL as MIGRATION_13_SQL
 from .migration_14 import SQL as MIGRATION_14_SQL
 from .migration_15 import SQL as MIGRATION_15_SQL
 from .migration_16 import SQL as MIGRATION_16_SQL
+from .migration_17 import SQL as MIGRATION_17_SQL
 
 
 @dataclass(frozen=True, slots=True)
@@ -49,6 +50,7 @@ def migration_definitions() -> tuple[MigrationDefinition, ...]:
             (14, MIGRATION_14_SQL),
             (15, MIGRATION_15_SQL),
             (16, MIGRATION_16_SQL),
+            (17, MIGRATION_17_SQL),
         )
     )
     expected = tuple(range(2, SCHEMA_VERSION + 1))

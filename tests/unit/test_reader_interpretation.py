@@ -1,6 +1,7 @@
 from novel_authoring.progression.interpretation import (
     ReaderExperienceAdjustment,
     adjust_reader_experience,
+    apply_reader_experience_overrides,
     compile_kernel_contract_proposals,
     interpret_reader_experience,
 )
@@ -9,6 +10,9 @@ from novel_authoring.progression.models import (
     GenreAdapterKind,
     ProgressionSubject,
     ReaderExperience,
+)
+from novel_authoring.serial_kernel.classification import (
+    align_narrative_drive_to_reader_experience,
 )
 
 
@@ -31,6 +35,35 @@ def test_near_future_body_seed_is_growth_first() -> None:
     bundle = compile_kernel_contract_proposals(value)
     assert bundle.progression.primary_axis.name.startswith("体修")
     assert bundle.genre.status.value == "NEEDS_REVIEW"
+
+
+def test_reader_experience_without_specialized_evidence_uses_normal_defaults() -> None:
+    value = interpret_reader_experience("一个人寻找失踪姐姐的故事。")
+
+    assert value.narrative_drive.drive_contract.primary_drive.value == "CUSTOM"
+    assert set(value.reader_contract.experience_priorities.values()) == {
+        ExperiencePriority.MEDIUM
+    }
+
+
+def test_reader_strength_override_reaches_existing_narrative_drive_proposal() -> None:
+    value = interpret_reader_experience("一个人寻找失踪姐姐的故事。")
+    adjusted = apply_reader_experience_overrides(
+        value.reader_contract,
+        {
+            "RESOURCE_OPPORTUNITY": ExperiencePriority.VERY_HIGH,
+            "MYSTERY": ExperiencePriority.HIGH,
+        },
+    )
+    aligned = align_narrative_drive_to_reader_experience(value.narrative_drive, adjusted)
+
+    assert adjusted.experience_priorities[ReaderExperience.RESOURCE_OPPORTUNITY] is (
+        ExperiencePriority.VERY_HIGH
+    )
+    assert aligned.drive_contract.primary_drive.value == "RESOURCE_OPPORTUNITY"
+    assert "MYSTERY_INVESTIGATION" in {
+        item.value for item in aligned.drive_contract.secondary_drives
+    }
 
 
 def test_reader_adjustment_is_author_review_before_contracts() -> None:

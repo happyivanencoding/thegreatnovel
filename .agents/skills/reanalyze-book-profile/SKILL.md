@@ -12,5 +12,5 @@ reason、evidence 和 confidence。
 
 结果只能是 Proposal；不得重新领取 handoff、调用 protocol Skill、重算冻结 hash、读取
 无关 Atlas/Metric 或自行判断 task type，也不得直接写 Effective Profile、Canon 或正文。
-完成后写 result JSON 到 `artifact_target`，由 `novel workflow complete` 统一执行通用
+完成后写 result JSON 到 `result_target`，由 `novel workflow complete` 统一执行通用
 结果、artifact、漂移、状态和事件校验。

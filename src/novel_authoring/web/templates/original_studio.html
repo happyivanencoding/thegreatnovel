@@ -7,7 +7,7 @@
   <title>{{ original.title }} · Novel Studio</title>
   <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v={{ asset_version }}">
 </head>
-<body class="library-body original-body" data-original-book-id="{{ original.book_id }}"{% if original.generating_proposal %} data-original-generating="true"{% endif %}>
+<body class="library-body original-body" data-original-book-id="{{ original.book_id }}"{% if original.generating_proposal or original.generating_innovation_proposal %} data-original-generating="true"{% endif %}>
   <header class="library-topbar">
     <a class="wb-brand" href="/library">Novel Studio</a>
     <nav><a href="/library">书库</a>{% if original.chapter_count %}<a href="/books/{{ original.book_id }}/editions/base/workbench">小说工作台</a>{% endif %}</nav>
@@ -39,9 +39,15 @@
         </div>
       </div>
       <h3>主要阅读体验</h3>
-      <div class="original-priority-grid">
+      <p class="muted">这是 AI 提案的默认组合。点击每项强度即可单独调整；快捷按钮只会批量修改当前组合，之后仍可逐项覆盖。</p>
+      <div class="original-priority-grid" data-reader-experience-controls>
         {% for item in reader.priorities %}
-        <article class="original-priority-row"><span>{{ item.label }}</span><strong>{{ item.value_label }}</strong></article>
+        <article class="original-priority-row" data-reader-experience-item data-reader-experience-key="{{ item.key }}">
+          <div class="original-priority-heading"><span>{{ item.label }}</span><strong data-reader-strength-label>{{ item.value_label }}</strong></div>
+          <div class="reader-strength-options" role="group" aria-label="{{ item.label }}强度">
+            {% for option in item.options %}<button class="button compact{% if option.value == item.strength %} is-selected{% endif %}" type="button" data-reader-strength="{{ option.value }}" aria-pressed="{{ 'true' if option.value == item.strength else 'false' }}">{{ option.label }}</button>{% endfor %}
+          </div>
+        </article>
         {% endfor %}
       </div>
       {% if reader.derived_adapter %}
@@ -54,23 +60,78 @@
       {% endif %}
       <details><summary>核心承诺与防漂移边界</summary><h4>必须持续提供</h4><ul>{% for item in reader.must_deliver %}<li>{{ item }}</li>{% endfor %}</ul><h4>不得漂移为</h4><ul>{% for item in reader.must_not_drift_into %}<li>{{ item }}</li>{% endfor %}</ul></details>
       <div class="original-actions original-reader-actions">
-        <button class="button primary" type="button" data-original-action="confirm-reader" data-reader-adjustment="CONFIRM">符合我的想法</button>
-        {% if reader.progression_engine_enabled %}<button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="CULTIVATION_STRONGER">成长更强</button>{% endif %}
-        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="PAYOFF_STRONGER">战斗和爽点更强</button>
-        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="MYSTERY_STRONGER">谜团更强</button>
-        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="TEAM_STRONGER">团队更强</button>
-        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="RELATIONSHIP_STRONGER">关系更强</button>
-        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="CAREER_STRONGER">职业更强</button>
+        <button class="button primary" type="button" data-original-action="confirm-reader">符合我的想法</button>
+        <button class="button" type="button" data-original-action="reader-preset" data-reader-preset="PAYOFF_STRONGER">战斗和爽点更强</button>
+        <button class="button" type="button" data-original-action="reader-preset" data-reader-preset="MYSTERY_STRONGER">谜团更强</button>
+        <button class="button" type="button" data-original-action="reader-preset" data-reader-preset="TEAM_STRONGER">团队更强</button>
+        <button class="button" type="button" data-original-action="reader-preset" data-reader-preset="RELATIONSHIP_STRONGER">关系更强</button>
+        <button class="button" type="button" data-original-action="reader-preset" data-reader-preset="CAREER_STRONGER">职业更强</button>
       </div>
       <p class="muted">确认后会生成 Reader / Genre / Narrative Drive Proposal；只有启用成长 Drive 时才生成完整 Progression Contract。所有方案仍需作者确认。</p>
     </section>
     {% else %}
 
+    {% if original.reader_experience_display and original.reader_experience_contract and original.reader_experience_contract.status == 'EFFECTIVE' %}
+    <section class="panel original-reader-confirmed" data-reader-experience-confirmed>
+      <header class="original-wizard-header"><div><p class="wb-kicker">已确认 · 阅读体验</p><h2>当前作者确认的阅读体验组合</h2></div><span class="badge">作者意图</span></header>
+      <div class="original-priority-grid">
+        {% for item in original.reader_experience_display.priorities %}<article class="original-priority-row"><div class="original-priority-heading"><span>{{ item.label }}</span><strong>{{ item.value_label }}</strong></div></article>{% endfor %}
+      </div>
+      <p class="muted">这些强度会进入下一步 Narrative Drive Proposal；后续推理不得静默覆盖作者确认值。</p>
+    </section>
+    {% endif %}
+
+    {% if original.generating_innovation_proposal %}
+    <section class="panel original-status-card">
+      <p class="wb-kicker">Step 1 · 核心创意 AI 任务</p>
+      <h2>正在生成三个高杠杆核心创意</h2>
+      <p>三者共享已确认的阅读体验与主要驱动力，只比较机制如何产生选择、成长、兑现和新的问题空间。</p>
+      <div class="original-actions">
+        {% if original.generating_innovation_proposal.handoff_id %}<button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_innovation_proposal.handoff_id }}/instruction">复制给 Codex 的指令</button>{% endif %}
+        <button class="button" type="button" data-original-action="prepare-core">检查生成状态</button>
+      </div>
+      <details class="wb-technical-details"><summary>技术详情</summary><code>{{ original.generating_innovation_proposal.innovation_proposal_version_id }}</code></details>
+    </section>
+    {% elif original.innovation_proposal and not original.innovation_selection %}
+    <form class="panel original-foundation original-innovation-step" data-core-innovation-select>
+      <header class="original-wizard-header">
+        <div><p class="wb-kicker">Step 1 · 核心创意</p><h2>先选择会持续产生内容的机制</h2></div><span class="badge">等待作者选择</span>
+      </header>
+      <p class="muted">这三个方案共享已确认的 Reader Promise 与 Narrative Drive；差异来自机制本身，不来自强行更换题材或故事引擎。你可以选一个作为主机制，并在最后补充想吸收的特征。</p>
+      <div class="original-choice-grid">
+        {% for item in original.innovation_proposal.innovation_candidates %}
+        <label class="original-choice original-choice-tall">
+          <input type="radio" name="selected_primary_innovation_id" value="{{ item.innovation_id }}" {% if loop.first %}checked{% endif %}>
+          <strong>{{ item.title }}</strong>
+          <span>{{ item.one_sentence_hook }}</span>
+          <small>核心机制：{{ item.core_mechanism }}</small>
+          <small>它如何产生选择：{{ item.choice_generation }}</small>
+          <small>它如何推动成长：{{ item.progression_generation }}</small>
+          <small>它如何兑现爽点：{{ item.payoff_generation }}</small>
+          <small>限制与代价：{{ item.limitation }}</small>
+          <details><summary>查看长期能力与风险</summary><small>扩张语法：{{ item.expansion_grammar }}</small><small>长篇容量：{{ item.long_form_capacity }}</small><small>新颖性来源：{{ item.novelty_source }}</small><small>重复风险：{{ item.repetition_risk }}</small></details>
+        </label>
+        {% endfor %}
+      </div>
+      <label class="original-field original-field-wide"><span>想融合哪些特点（可选）</span><textarea name="optional_mix_notes" rows="3" placeholder="只写你想吸收的特征，系统不会自动融合全部方案。"></textarea></label>
+      <footer class="original-wizard-actions"><button class="button primary" type="submit">选择这个核心创意并生成故事基础</button></footer>
+    </form>
+    {% elif original.innovation_selection %}
+    <section class="panel original-reader-confirmed" data-core-innovation-confirmed>
+      <header class="original-wizard-header"><div><p class="wb-kicker">已冻结 · 核心创意</p><h2>Foundation 将在这个机制边界下生成</h2></div><span class="badge">作者意图</span></header>
+      {% for item in original.innovation_proposal.innovation_candidates if item.innovation_id == original.innovation_selection.selected_primary_innovation_id %}
+      <div class="original-final-preview"><article><span>{{ item.title }}</span><strong>{{ item.one_sentence_hook }}</strong></article><article><span>核心机制</span><strong>{{ item.core_mechanism }}</strong></article><article><span>选择 / 成长 / 兑现</span><strong>{{ item.choice_generation }} · {{ item.progression_generation }} · {{ item.payoff_generation }}</strong></article></div>
+      {% endfor %}
+      {% if original.innovation_selection.optional_mix_notes %}<p class="muted">作者希望吸收的特征：{{ original.innovation_selection.optional_mix_notes }}</p>{% endif %}
+      <p class="muted">后续 Foundation、成长与长线、第一阶段和候选生成都必须读取这份冻结 Intent；如果发现风险，只能提出 Alternative，不能静默替换。</p>
+    </section>
+    {% endif %}
+
     {% if original.generating_proposal %}
     <section class="panel original-status-card">
-      <p class="wb-kicker">正在生成的新方案</p>
-      <h2>新的故事基础方案正在准备</h2>
-      <p>当前方案会保留。新方案完成后，你可以查看、比较，再决定是否替换。</p>
+      <p class="wb-kicker">Step 2 · 故事基础</p>
+      <h2>正在核心创意下生成三个故事基础</h2>
+      <p>三个方案会更换故事承载方式，但不会重新发明或替换已冻结的核心创意。</p>
       <div class="original-actions">
         {% if original.generating_proposal.handoff_id %}<button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_proposal.handoff_id }}/instruction">复制给 Codex 的指令</button>{% endif %}
         <button class="button" type="button" data-original-action="bootstrap">检查生成状态</button>
@@ -97,36 +158,32 @@
     </section>
     {% endif %}
 
-    {% if not original.proposal %}
+    {% if not original.proposal and original.innovation_selection and not original.generating_proposal %}
     <section class="panel original-status-card">
-      <p class="wb-kicker">故事基础方案</p>
-      <h2>{% if original.generating_proposal %}等待 AI 完成三个故事方向{% else %}准备三个故事方向{% endif %}</h2>
+      <p class="wb-kicker">Step 2 · 故事基础</p>
+      <h2>准备核心创意下的三个故事基础</h2>
       <p>AI 只会生成待确认方案，不会创建正式章节，也不会替你批准设定。</p>
-      {% if original.handoffs %}{% set handoff = original.handoffs[0] %}
       <div class="original-actions">
-        <button class="button" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ handoff.handoff_id }}/instruction">复制给 Codex 的指令</button>
-        {% if handoff.status == 'COMPLETED' %}<button class="button primary" type="button" data-original-action="import" data-handoff-id="{{ handoff.handoff_id }}">读取完成的方案</button>{% endif %}
-        {% if not original.generating_proposal %}<button class="button" type="button" data-original-action="bootstrap">生成故事方案</button>{% endif %}
+        <button class="button primary" type="button" data-original-action="bootstrap">生成故事基础</button>
       </div>
-      <details class="wb-technical-details"><summary>技术详情</summary><p>AI 任务状态：{{ handoff.status }} · {{ handoff.requested_stage }}</p><code>{{ handoff.handoff_id }}</code></details>
-      {% endif %}
     </section>
-    {% elif not original.accepted %}
+    {% elif not original.accepted and original.proposal %}
     <form class="panel original-foundation original-wizard" data-original-confirm data-proposal-version-id="{{ original.current_proposal_version.proposal_version_id if original.current_proposal_version else '' }}">
       <header class="original-wizard-header">
-        <div><p class="wb-kicker">当前故事基础方案</p><h2>阅读体验已确认，再用四步确认创作起点</h2></div>
+        <div><p class="wb-kicker">Step 2 · 故事基础</p><h2>在已冻结的核心创意下确认故事承载方式</h2></div>
         <ol class="original-wizard-progress" aria-label="确认步骤">
           <li class="is-done">0 阅读体验</li>
-          <li class="is-active" data-wizard-indicator="1">1 故事方向</li>
-          <li data-wizard-indicator="2">2 主角与世界</li>
+          <li class="is-done">1 核心创意</li>
+          <li class="is-active" data-wizard-indicator="2">2 故事基础</li>
           <li data-wizard-indicator="3">3 成长与长线</li>
-          <li data-wizard-indicator="4">4 最终预览</li>
+          <li data-wizard-indicator="4">4 第一阶段</li>
+          <li data-wizard-indicator="5">5 最终预览</li>
         </ol>
       </header>
 
-      <section data-wizard-step="1">
-        <h3>选择故事方向</h3>
-        <p>先看核心阅读承诺、主角目标、核心冲突与主要风险。</p>
+      <section data-wizard-step="2">
+        <h3>选择故事基础</h3>
+        <p>三个候选共享同一核心创意；这里比较谁最能把它变成有画面的主角、世界与开局。</p>
         <div class="original-choice-grid">
           {% for item in original.proposal.foundation_candidates %}
           <label class="original-choice original-choice-tall">
@@ -137,6 +194,10 @@
             <small>核心冲突：{{ item.main_conflict }}</small>
             <small>成长循环：{{ item.growth_loop }}</small>
             <small>主要风险：{{ item.risk }}</small>
+            <small>第一章画面：{{ item.opening_situation }}</small>
+            <small>典型选择：{{ item.typical_choice }}</small>
+            <small>为何适合核心创意：{{ item.innovation_fit }}</small>
+            <details><summary>作者向故事 pitch</summary><small>{{ item.author_facing_pitch }}</small></details>
           </label>
           {% endfor %}
         </div>
@@ -146,7 +207,7 @@
       </section>
 
       <section data-wizard-step="2" hidden>
-        <h3>确认主角与世界</h3>
+        <h3>补充主角与世界</h3>
         <div class="original-form-grid">
           <label class="original-field"><span>主角</span><input name="protagonist_override" value="{{ original.proposal.protagonist }}"></label>
           <label class="original-field"><span>主角目标</span><input name="protagonist_goal_override" value="{{ original.proposal.protagonist_goal }}"></label>
@@ -201,17 +262,33 @@
           {% endfor %}
         </div>
         <p class="muted">推荐理由：{{ original.proposal.recommendation_reason }}</p>
-        <label class="original-field original-field-wide"><span>第一阶段要完成什么</span><textarea name="first_phase_objective" rows="3">{{ original.proposal.first_phase_objective }}</textarea></label>
-        <div class="original-form-grid">
-          <label class="original-field"><span>近期方向</span><textarea name="rolling_short_override" rows="4">{{ original.proposal.rolling_planning.short|join('\n') }}</textarea></label>
-          <label class="original-field"><span>中期方向</span><textarea name="rolling_mid_override" rows="4">{{ original.proposal.rolling_planning.mid|join('\n') }}</textarea></label>
-          <label class="original-field original-field-wide"><span>长期可能性（不锁定结局）</span><textarea name="rolling_long_override" rows="4">{{ original.proposal.rolling_planning.long|join('\n') }}</textarea></label>
-        </div>
+        <div class="original-final-preview"><article><span>Progression Grammar</span><strong>{{ original.proposal.progression_grammar|join('；') }}</strong></article><article><span>Expansion Grammar</span><strong>{{ original.proposal.expansion_grammar|join('；') }}</strong></article><article><span>Payoff Grammar</span><strong>{{ original.proposal.payoff_grammar|join('；') }}</strong></article></div>
         {% if original.proposal.open_questions %}<h3>仍然开放的问题</h3>{% for question in original.proposal.open_questions %}<label class="original-setting-row"><span>{{ question }}</span><select name="open_question_action__{{ loop.index }}"><option value="KEEP_OPEN">保留开放</option><option value="TENTATIVE">转为暂定答案</option><option value="SECRET">转为幕后候选</option><option value="DELETE">删除</option></select></label>{% endfor %}{% endif %}
         {% if original.proposal.hidden_truth_candidates %}<h3>幕后候选</h3>{% for candidate in original.proposal.hidden_truth_candidates %}<label class="original-setting-row"><span><strong>{{ candidate.title }}</strong><small>{{ candidate.statement }}</small></span><select name="hidden_truth_action__{{ candidate.candidate_id }}"><option value="KEEP_CANDIDATE">保持候选</option><option value="CONFIRM_TRUTH">确认是真相</option><option value="KEEP_OPEN">保持开放</option><option value="REJECT">拒绝</option></select></label>{% endfor %}{% endif %}
       </section>
 
       <section data-wizard-step="4" hidden>
+        <h3>落到第一阶段</h3>
+        <p class="muted">这里定义第一卷或第一阶段的可写运行方式；不会预写整本书的固定章节大纲。</p>
+        <div class="original-form-grid">
+          {% set phase = original.proposal.first_phase %}
+          <label class="original-field"><span>开场压力</span><textarea name="first_phase__opening_pressure" rows="3">{{ phase.opening_pressure }}</textarea></label>
+          <label class="original-field"><span>第一个具体目标</span><textarea name="first_phase_objective" rows="3">{{ phase.first_concrete_goal }}</textarea></label>
+          <label class="original-field"><span>第一个资源瓶颈</span><textarea name="first_phase__first_resource_bottleneck" rows="3">{{ phase.first_resource_bottleneck }}</textarea></label>
+          <label class="original-field"><span>第一次成长机会</span><textarea name="first_phase__first_progression_opportunity" rows="3">{{ phase.first_progression_opportunity }}</textarea></label>
+          <label class="original-field"><span>第一次兑现</span><textarea name="first_phase__first_payoff" rows="3">{{ phase.first_payoff }}</textarea></label>
+          <label class="original-field"><span>第一次有意义的升级</span><textarea name="first_phase__first_meaningful_escalation" rows="3">{{ phase.first_meaningful_escalation }}</textarea></label>
+          <label class="original-field"><span>阶段高潮</span><textarea name="first_phase__stage_climax" rows="3">{{ phase.stage_climax }}</textarea></label>
+          <label class="original-field"><span>高潮后改变什么</span><textarea name="first_phase__after_climax_change" rows="3">{{ phase.after_climax_change }}</textarea></label>
+        </div>
+        <div class="original-form-grid">
+          <label class="original-field"><span>近期方向</span><textarea name="rolling_short_override" rows="4">{{ original.proposal.rolling_planning.short|join('\n') }}</textarea></label>
+          <label class="original-field"><span>中期方向</span><textarea name="rolling_mid_override" rows="4">{{ original.proposal.rolling_planning.mid|join('\n') }}</textarea></label>
+          <label class="original-field original-field-wide"><span>长期可能性（不锁定结局）</span><textarea name="rolling_long_override" rows="4">{{ original.proposal.rolling_planning.long|join('\n') }}</textarea></label>
+        </div>
+      </section>
+
+      <section data-wizard-step="5" hidden>
         <h3>最终预览</h3>
         <div class="original-final-preview" data-original-preview>
           <article><span>这本书讲什么</span><strong data-preview-foundation></strong></article>
@@ -221,7 +298,7 @@
           <article><span>目前仍开放什么</span><strong>{{ original.proposal.open_questions|join('；') or '暂无' }}</strong></article>
           <article><span>幕后候选</span><strong>{{ original.proposal.hidden_truth_candidates|map(attribute='title')|join('；') or '暂无' }}</strong></article>
         </div>
-        <p class="muted">确认后会建立作者幕后设定、全书画像、剧情方向和三个第一章候选；不会创建或批准正式正文。</p>
+        <p class="muted">确认后会建立作者幕后设定、全书画像、长期语法和三个第一章候选；不会创建或批准正式正文。</p>
       </section>
 
       <footer class="original-wizard-actions">
@@ -229,7 +306,7 @@
         <div class="original-actions">
           <button class="button" type="button" data-original-action="bootstrap">重新生成故事方案</button>
           <button class="button primary" type="button" data-wizard-next>下一步</button>
-          <button class="button primary" type="submit" data-wizard-submit hidden>确认并开始写第一章</button>
+          <button class="button primary" type="submit" data-wizard-submit hidden>确认故事基础并进入第一章候选</button>
         </div>
       </footer>
       <details class="wb-technical-details"><summary>技术详情</summary><p>待确认方案版本：{{ original.current_proposal_version.proposal_version_id if original.current_proposal_version else '-' }}</p><pre>{{ {'risks': original.proposal.risks, 'avoid_cliches': original.proposal.avoid_cliches}|tojson(indent=2) }}</pre></details>

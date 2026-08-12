@@ -443,22 +443,30 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
                 else "第一章已成为正式正文，可以继续创作。"
             )
             original_missing: tuple[str, ...] = ()
+        elif original_state == "CORE_INNOVATION_REVIEW":
+            status = "CORE_INNOVATION_REVIEW"
+            summary = "三个核心创意已生成，等待你选择主机制或补充融合意图。"
+            original_missing = ("尚未选择 Core Innovation",)
+        elif original_state == "CORE_INNOVATION_GENERATING":
+            status = "CORE_INNOVATION_GENERATING"
+            summary = "AI 正在生成三个高杠杆核心创意方案。"
+            original_missing = ("核心创意方案尚未完成",)
         elif original_state in {"FOUNDATION_REVIEW", "BOOTSTRAP_READY"}:
             status = "FOUNDATION_REVIEW"
             summary = "故事基础方案已生成，等待你选择和调整。"
             original_missing = ("尚未确认故事基础方案",)
         elif original_state == "FOUNDATION_GENERATING" or handoff_status in {"CLAIMED", "RUNNING"}:
             status = "FOUNDATION_GENERATING"
-            summary = "AI 正在生成三个故事基础方案。"
+            summary = "AI 正在已选 Core Innovation 下生成三个故事基础方案。"
             original_missing = ("故事基础方案尚未完成",)
         elif handoff_status == "READY_FOR_CODEX":
             status = "FOUNDATION_GENERATING"
-            summary = "故事方案任务已准备好，等待复制给 Codex。"
+            summary = "故事基础任务已准备好，等待复制给 Codex。"
             original_missing = ("故事基础方案尚未完成",)
         else:
             status = "ORIGINAL_SEED"
-            summary = "一句话创意已保存，下一步生成三个故事基础方案。"
-            original_missing = ("尚未生成故事基础方案",)
+            summary = "一句话创意已保存，下一步先生成三个核心创意方案。"
+            original_missing = ("尚未生成 Core Innovation Proposal",)
         return StudioReadinessView(
             book_id=record.book_id,
             status=status,
