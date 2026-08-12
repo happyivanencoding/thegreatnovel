@@ -127,6 +127,7 @@ def _declared_trace(candidate: CandidateProposal) -> dict[str, Any]:
         "anticipation_impact": candidate.anticipation_impact,
         "genre_drift": candidate.genre_drift_diagnostic,
         "genre_evolution": candidate.genre_evolution_diagnostic,
+        "drive_drift": candidate.narrative_drive_drift_diagnostic,
         "scheduler_alignment": candidate.scheduler_alignment.model_dump(mode="json"),
     }
 
@@ -709,6 +710,7 @@ class KernelEvidenceCompiler:
             "progression_impact": progression_effect,
             "resource_impact": verified_resources,
             "world_expansion_impact": verified_world,
+            "payoff_channels": verified_channels if metrics_config is not None else [],
             "scheduler_alignment": candidate.scheduler_alignment.model_dump(mode="json"),
             "genre_drift": genre_diagnostics.drift.model_dump(mode="json"),
             "genre_evolution": genre_diagnostics.evolution.model_dump(mode="json"),

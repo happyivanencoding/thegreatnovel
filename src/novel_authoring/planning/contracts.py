@@ -77,6 +77,24 @@ def build_chapter_contract(
         (boundary_dir / f"{packet_id}.json").read_text(encoding="utf-8")
     )
     candidate = CandidateProposal.model_validate_json(str(row["plan_json"]))
+    score_payload = json.loads(str(row["score_json"] or "{}"))
+    kernel_compilation = score_payload.get("kernel_evidence_compilation")
+    declared_kernel_trace: dict[str, object] = {}
+    verified_kernel_trace: dict[str, object] = {}
+    kernel_verification_status = "LEGACY_NO_EFFECTIVE_CONTRACT"
+    if isinstance(kernel_compilation, dict):
+        declared_raw = kernel_compilation.get("declared", {})
+        verified_raw = kernel_compilation.get("verified", {})
+        declared_kernel_trace = (
+            dict(declared_raw) if isinstance(declared_raw, dict) else {}
+        )
+        verified_kernel_trace = (
+            dict(verified_raw) if isinstance(verified_raw, dict) else {}
+        )
+        verified_kernel_trace["evidence_compilation"] = kernel_compilation
+        kernel_verification_status = str(
+            kernel_compilation.get("completeness") or "UNKNOWN"
+        )
     innovation_control = InnovationControl.model_validate(
         task_metadata.get("innovation_control", {})
     )
@@ -214,10 +232,15 @@ def build_chapter_contract(
         world_expansion_impact=candidate.world_expansion_impact,
         resource_opportunity_impact=candidate.resource_opportunity_impact,
         chapter_intent=candidate.chapter_intent,
+        scheduler_alignment=candidate.scheduler_alignment,
         progression_debt_impact=candidate.progression_debt_impact,
         anticipation_impact=candidate.anticipation_impact,
         genre_drift_diagnostic=candidate.genre_drift_diagnostic,
         genre_evolution_diagnostic=candidate.genre_evolution_diagnostic,
+        narrative_drive_drift_diagnostic=candidate.narrative_drive_drift_diagnostic,
+        declared_kernel_trace=declared_kernel_trace,
+        verified_kernel_trace=verified_kernel_trace,
+        kernel_verification_status=kernel_verification_status,
     )
     contract_json = json_dumps(contract.model_dump(mode="json"), indent=2)
     contract_hash = sha256_bytes(contract_json.encode())

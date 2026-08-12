@@ -1307,6 +1307,9 @@ def import_candidate_output(
                     "genre_evolution_diagnostic": verified_payload.get(
                         "genre_evolution", {}
                     ),
+                    "narrative_drive_drift_diagnostic": verified_payload.get(
+                        "drive_drift", {}
+                    ),
                 }
             )
         reward = calculate_candidate_innovation_reward(

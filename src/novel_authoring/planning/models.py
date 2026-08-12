@@ -412,6 +412,7 @@ class CandidateProposal(BaseModel):
     anticipation_impact: list[str] = Field(default_factory=list)
     genre_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
     genre_evolution_diagnostic: dict[str, Any] = Field(default_factory=dict)
+    narrative_drive_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def reject_retroactive_invention(self) -> CandidateProposal:
@@ -495,7 +496,12 @@ class ChapterContract(BaseModel):
     world_expansion_impact: list[str] = Field(default_factory=list)
     resource_opportunity_impact: list[str] = Field(default_factory=list)
     chapter_intent: str | None = None
+    scheduler_alignment: SchedulerAlignment = Field(default_factory=SchedulerAlignment)
     progression_debt_impact: list[str] = Field(default_factory=list)
     anticipation_impact: list[str] = Field(default_factory=list)
     genre_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
     genre_evolution_diagnostic: dict[str, Any] = Field(default_factory=dict)
+    narrative_drive_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
+    declared_kernel_trace: dict[str, Any] = Field(default_factory=dict)
+    verified_kernel_trace: dict[str, Any] = Field(default_factory=dict)
+    kernel_verification_status: str = "LEGACY_NO_EFFECTIVE_CONTRACT"
