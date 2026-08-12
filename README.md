@@ -1,230 +1,577 @@
-# TheGreatNovel MVP Rewrite
+下面是我建议作为**项目门面**的 README，它不是开发日志，也不是设计宪法，而是第一次进入仓库的人（包括未来的你）能够在 5 分钟内理解：
 
-A **deterministic, event-sourced, replayable game simulation core** designed to be tested by scripted and LLM agents.
+> **这是什么？为什么存在？怎么开始？和其他 AI 小说工具有什么区别？**
 
-## Current Status
+---
 
-**Phase 7 — frozen at `phase-7-frozen`**
+# Novel Studio
 
-**Phase 7.5 — frozen at `phase-7.5-frozen`**
+> **Author-first, local, auditable long-form webnovel authoring system.**
+>
+> 一个面向**中文长篇连载网文**的本地创作、续写、改写与世界管理系统。
 
-**Phase 8 — frozen at `phase-8-frozen`**
+---
 
-**Phase 9A — frozen at `phase-9a-frozen`**
+# 为什么要做这个项目？
 
-**Phase 9B1 — frozen at `phase-9b1-frozen`**
+现有的大模型可以写小说。
 
-**Phase 9B2A — frozen at `phase-9b2a-frozen`**
+但是：
 
-Frozen implementation SHA: `60ebf493ba90114c4f03048558e316ac07118ee2`
+* 它们会遗忘设定；
+* 会偷偷修改人物；
+* 会吃掉伏笔；
+* 会创造不存在的能力；
+* 很难连续写几百章；
+* 很难保持一本小说十万、百万字后的连续性。
 
-**Phase 9B2B — frozen at `phase-9b2b-frozen`**
+**Novel Studio 不是一个聊天机器人。**
 
-Frozen implementation SHA: `218a246add4481088872487e80ac83ad1099171b`
+它更像：
 
-**Phase 9C — Phase 9C1 frozen at `phase-9c1-frozen`; Phase 9C2 frozen at `phase-9c2-frozen`**
+> **一套给小说作者使用的 IDE（集成创作环境）。**
 
-Accepted Phase 9C1 implementation SHA: `04640bb2bf8e9ab27980c9be61e8f89edf44bd28`。
-Phase 9C1 freeze commit / `phase-9c1-frozen` target: `9bb739fdb1bd08d4c0c036e7c3d3c0ee5d083f01`。
-`phase-9c1-frozen` is immutable and must never be moved, deleted, or recreated。
-Initial Phase 9C2 implementation: `ad4772e6a712bfb445860b4e8daf8498a3cec363`。
-Phase 9C2 conditional-replacement correction: `b5fa586fb7e0838a95e14fb445508f4b5d8a32e6`。
-Phase 9C2 Windows/recovery correction: `5685fb645d30d85bf4942e91973409d878d97bac`。
-Phase 9C2 cleanup identity correction: `0dc03156155a8914d586e6efb621c5817e0a05c7`；
-Phase 9C2 recovery test correction: `d1f64153e59c3f62cd4784f0641b2cadda38f325`；
-Phase 9C2 Windows delete-HANDLE exact-observable correction: `a445cf4b925f550d22c661504049be025ffa73c2`；
-Phase 9C2 Windows DELETE-HANDLE share-compatibility correction: `f9a8a10adb7579fe4e06e462fbbeee47cdf69aea`；
-parallel pytest tooling commit: `1dfa3fe33bf5bea35e831cf56af9678fd2e88dd4`。
-Accepted frozen Phase 9C2 implementation SHA: `f9a8a10adb7579fe4e06e462fbbeee47cdf69aea`。
-`phase-9c2-frozen` is immutable and must never be moved, deleted, or recreated；
-任何未来修复都必须经过显式 reopen 或 superseding-phase 流程。
-Phase 9C2 frozen at `phase-9c2-frozen`。
-Playable Client Milestone PC1 — frozen at `pc1-frozen`
+它把：
 
-Accepted PC1 implementation SHA: `96ffe3eefa9ea6558e3f9105f0a5a47838e3a1ce`。
-`pc1-frozen` is immutable and must never be moved, deleted, or recreated。
-Phase 9C2 remains frozen；Phase 9D deferred / not started；Phase 10 has not started。
+* 世界状态
+* 人物
+* 势力
+* 能力
+* 背包
+* 知识边界
+* 作者隐藏设定
+* 长线剧情
+* 爽点
+* 节奏
+* 世界扩张
 
-Playable Client Milestone PC1 是 Phase 9C2 之上的薄本地产品整合层，现已冻结在
-`pc1-frozen`。它只通过 Campaign 与 Story 的公开 service
-API 组合一个可恢复的本地人类玩家 / 外部 narrator loop：Engine 先持久化一个
-action，Story 再准备并提交 narration，只有 committed turn 才能向玩家显示 prose，
-最终由 Story 导出 novel.md。PC1 不修改任何 frozen package、测试或配置，不开始
-Phase 9D 或 Phase 10。
+全部变成可以管理、可以验证、可以审计的数据。
 
-Phase 9C 的合同范围是 Persistent External Narration, Resume and Novel Export：
-使用与 Campaign 分离的 immutable Story sidecar 保存 deterministic Narration Request、
-pending/resume 状态和 committed turn artifacts，再从这些 artifact 确定性导出
-novel.md。Phase 9C1 不包含 Narration provider、Narrator adapter、翻译数据库或
-Phase 9C 以外的功能。Phase 9C2 冻结范围包括 per-turn locale switching、
-deterministic snapshot/final novel export、terminal completion metadata、novel
-status classification 和 export CLI；不引入 provider、Story SQLite 或通用框架。
-合同同时固定历史 snapshot 的自有导出边界、冻结
-Session 的单 Event 基线和稳定 Campaign snapshot 捕获协议。当前实现覆盖
-Campaign-bound Story persistence、deterministic Narration Request、pending/resume、
-structured claims、committed turn artifacts、status、verify、local CLI、locale
-switching 和 deterministic novel export；Phase 9C1 与 Phase 9C2 均已冻结。
+---
 
-Phase 9C1 publication source-identity correction commit：`739a656fc8e7b50a12484049bb0f4598aa0cb1b2`；
-final idempotent source-identity fix：`f5aeba6dd0e02a028dde8c077dd5c68dfbd98159`；
-loaded Story directory identity fix：`04640bb2bf8e9ab27980c9be61e8f89edf44bd28`。
-本次修复将 Story root、requests/ 和 turns/ 的 publication parent 锚定到已验证的
-POSIX directory fd 或 Windows directory HANDLE；临时 artifact 的 retained
-descriptor/HANDLE、当前 source-name identity 和发布 target identity 必须一致，
-pending request 也通过已锚定的 requests/ binding 重新验证；Phase 9C1 已冻结在
-`phase-9c1-frozen`。final fix 使 already-committed 重交也经过
-Story root/turns identity、Campaign historical prefix 和 committed turn source
-identity 的完整校验，并在 post-move target identity 不匹配时保留竞争者 target。
-本次 directory fix 还要求 recommit 的 root/turns binding 与已加载 StoryView 的目录 identity 相等。
-PC1 initial implementation candidate commit：`0510c4dc8d83f1e80f725bde693232662deba1f2`；
-PC1 complete product-proof test correction：`7e8f16c7bf3908abb5424cab9457986f6e162674`；
-PC1 comprehensive recovery/boundary correction：`0510c4dc8d83f1e80f725bde693232662deba1f2`；
-PC1 final process/file boundary hardening：`3456178fb42eb6ae8c3debe33653924315e349d0`；
-PC1 final acceptance correction：`96ffe3eefa9ea6558e3f9105f0a5a47838e3a1ce`。
-以上 accepted implementation 已冻结为 `pc1-frozen`；冻结范围为
-`src/tgn/play/**` 与 `tests/play/**`。冻结生产实现和测试不得原地编辑；未来缺陷
-必须经过显式 PC1 reopen，或由新的 superseding milestone/phase 以新的 implementation
-SHA 和新的 freeze tag 处理。PC1 freeze tag 不得移动、删除或重建。
-PC1 使用 `src/tgn/play/**` 提供 `new`、`resume`、`narrate`、`status`、`verify` 和
-`export`，只组合冻结 Campaign/Story 的公开 service API；不创建 Client 数据库、provider
-adapter 或 Phase 9D/10 功能。PC1 本轮回归结果为 `tests/play 101 passed`、affected 集
-`518 passed, 2 skipped`、全仓 `1740 passed, 2 skipped`；`src/tgn/play 97.11%`、
-`src/tgn/story 96.95%`、`src/tgn/campaign 97.55%`、`src/tgn/projection 100%`、
-full `src/tgn 97.05%`；warning-as-error 为 `0 warnings`。POSIX 使用
-`start_new_session=True` 与 process-group cleanup，Windows 使用 operation-owned Job
-Object 的 `KILL_ON_JOB_CLOSE`；response file 在 `O_NONBLOCK`、祖先 component、handle/path
-identity 和最终 observable 复核下读取，CLI JSON 对 terminal controls 使用合法 JSON
-escape。真实 WSL/POSIX `tests/play` 为 `101 passed`。唯一 skips 是 Windows 上既有的两个
-POSIX FIFO 测试。
+# 目标
 
-PC1 freeze verification record：`tests/play` `101 passed`；affected
-`tests/play tests/campaign tests/story` `518 passed, 2 skipped`；full suite
-`1740 passed, 2 skipped`；full serial `1740 passed, 2 skipped`；real WSL/POSIX
-`tests/play` `101 passed`。Coverage 为 `src/tgn/play 97.11%`、
-`src/tgn/story 96.95%`、`src/tgn/campaign 97.55%`、`src/tgn/projection 100.00%`、
-full `src/tgn 97.05%`；warnings `0`。唯一 skips 为
-`tests/campaign/test_no_follow.py::test_campaign_fifo_is_rejected_on_posix` 与
-`tests/campaign/test_no_follow.py::test_copy_fifo_source_is_rejected_on_posix`，原因是
-最终 Windows full-suite 主机无法创建 POSIX FIFO；PC1 自身没有新增 skip。
+Novel Studio 希望最终做到：
 
-PC1 冻结不改变架构边界：PC1 是 thin outer client，Campaign/Engine 仍是 authority，
-Story 仍是 derived/non-authoritative artifact；external narrator 是 trusted local
-adapter；process containment 只是 operational cleanup，不是 security sandbox。不存在
-Client database 或 provider framework。
+> **让 AI 能够参与创作一本几百万字的长篇网文，而不是只能写几章 Demo。**
 
-下一里程碑方向为 Phase 10：让一个由 growth 产生的 Capability 成为真实可执行的
-非 basic action。Phase 9D 仍 deferred，且不是 Phase 10 前置条件。Phase 10 不得引入
-EffectSystem、AbilityGraph、SkillTree mega-framework、generic rule DSL 或
-world-specific branching。
-现有 pending Narration Request 的自身 locale 是恢复时的权威值；只有新建 request
-使用一次性 locale override，下一次新 request 回到 Story initial locale。Campaign
-manifest 与 Session 的 campaign/session ID、actor ID、max_decisions 在 Story 初始化前
-通过公开 model 做同 Campaign 绑定校验；外部 NarrationResponse 的字段、hash、locale、
-claims 或 prose 错误统一返回 `PLAY_NARRATOR_FAILED`，并保留 exact pending request。
-Windows 手工命令明确标为 `PowerShell command`，使用单引号参数；它不是安全沙箱。
-外部 narrator executable 是用户选择的 trusted local adapter；PC1 不隔离文件系统、网络、
-凭据或 hostile native code。POSIX process group 与 Windows Job Object 只提供 bounded
-operational cleanup，不是 security isolation boundary；Windows `Popen →
-AssignProcessToJobObject` 之前的恶意逃逸不在保证范围内。reader 线程必须在成功返回前
-结束。
-Phase 9C2 conditional-replacement correction：`b5fa586fb7e0838a95e14fb445508f4b5d8a32e6`。`novel.md` 的已有目标现在
-必须以完整 expected observable 进行条件替换；POSIX 使用 anchored exchange 保留
-displaced target，Windows 使用 `ReplaceFileW` 及 writer-owned backup；parent、target
-和 writer artifact 在原子操作后再次校验，竞争者不会被覆盖或删除。CLI 的
-`ReplaceFileW` 失败会保留精确的 `1175`、`1176` 和 `1177` outcome，并在 bound
-Story parent 内重新检查 target、replacement、backup 与 retained writer HANDLE。
-可证明的 `1177` partial layout 会先以 no-replace 恢复 expected target；未知对象
-只会触发 bounded failure，不会被删除。POSIX displaced expected target 也只在
-完整 observable 相等时清理，recoverable failure 不留下 `.tmp` 或 `.backup`。
-`--accepted-decisions` 只接受 canonical non-negative integer。Phase 9C2 冻结前最终验证：
-Story `244 passed`、Story coverage `96.95%`；Campaign `173 passed, 2 skipped`、
-Campaign coverage `97.55%`；Worldgen `150 passed`；Projection `112 passed`、Projection
-coverage `100%`；Session `74 passed`；LLM Player `63 passed`；Phase 8 autoplay
-`1 passed`；全仓 `1639 passed, 2 skipped`、全仓 coverage `97.04%`；warning-as-error
-全仓回归为 `0 warnings`。冻结门禁耗时为：focused parallel `118 passed` / `6.73s`；
-Story parallel `244 passed` / `10.09s`；full parallel coverage `1639 passed, 2 skipped` /
-`14.55s`；critical serial `118 passed` / `9.81s`；full serial `1639 passed, 2 skipped` /
-`63.05s`。使用 pytest-xdist `3.8.0`，12/12 worker、WorkStealing，
-max-worker-restart=0，未发生 worker crash/restart。
-两个 skipped 是 Windows 上
-`tests/campaign/test_no_follow.py::test_campaign_fifo_is_rejected_on_posix` 和
-`tests/campaign/test_no_follow.py::test_copy_fifo_source_is_rejected_on_posix`，原因是
-当前平台无法创建 POSIX FIFO；不是 Phase 9C1 测试失败。
+支持：
 
-This branch contains the first WorldPack's local Phase 7 permanent build-choice
-slice and the frozen Phase 7.5 named actor, relationship, and knowledge slice.
-slice. Phase 9A is frozen at `phase-9a-frozen` and covers only the minimal
-external-client session protocol using a supplied canonical initial GameState.
-Phase 9B1 is the frozen bounded World Draft compilation slice at
-`phase-9b1-frozen`: it validates strict
-JSON, binds one reviewed mechanics profile to a deterministic Compiled WorldPack,
-materializes an initial GameState, runs a scripted bootstrap smoke test, and
-publishes a verified compiled bundle. It does not create formal Campaigns,
-SQLite sessions, or narration. The Phase 7 build effects remain the explicit
-`window_runner`, `field_rest`, and `quick_rest` candidates only; none of these
-phases introduces a general framework. Phase 9B2A is the frozen Player-Visible
-Projection Map at `phase-9b2a-frozen`: it adds a supplemental display-label
-draft, a detached deterministic presentation sidecar, a separate presentation
-hash, and a verified four-file projection bundle without changing the canonical
-Engine request or creating a Campaign, Session, SQLite database, or Narration
-layer. Phase 9B2B is frozen at `phase-9b2b-frozen` and covers Atomic Campaign
-Bootstrap and Projected Session Integration. A Campaign uses copied and locked
-WorldPack, Projection, and Phase 9A Session artifacts. Phase 9B2B does not
-include Narration, novel export, an LLM provider, translation, or any Phase 9C
-functionality. Its frozen implementation SHA is
-`218a246add4481088872487e80ac83ad1099171b`. Frozen implementation must not be
-modified directly; any fix requires an explicit reopen or superseding-phase
-process. Phase 9C1 is frozen at `phase-9c1-frozen`; Phase 9C2 is frozen at
-`phase-9c2-frozen` and is immutable.
+* 导入已有小说继续写
+* 改写已有小说
+* 从一句话开始原创
+* 长期维护世界观
+* 长期维护人物成长
+* 自动管理伏笔
+* 自动管理秘密
+* 自动管理爽点
+* 自动管理节奏
+* 自动管理世界状态
 
-## Legacy Implementation
+---
 
-The previous implementation is preserved for reference:
-- Branch: `legacy/2026-07-31`
-- Tag: `legacy-engine-2026-07-31`
+# 设计原则
 
-**Do not modify these references.** They are read-only documentation of the legacy engine.
+## 1. Author First
 
-## Architecture Principles
+作者永远拥有最终决定权。
 
-1. **State First**: All game facts live in deterministic state
-2. **Events as Truth**: Every change is recorded as an immutable event
-3. **Replayability**: Any state can be reconstructed from events
-4. **Agent Testing**: Designed for automated testing by scripted/LLM agents
-5. **Minimal Core**: No abstractions for unimplemented features
+AI：
 
-## Development Phases
+* 可以建议；
+* 可以规划；
+* 可以写草稿；
 
-Phases 1–6 establish the deterministic core, action validation, replay and
-the first gameplay slices. Phase 7 is frozen at `phase-7-frozen`; Phase 7.5 is
-frozen at `phase-7.5-frozen`; Phase 8 is frozen at `phase-8-frozen`; Phase 9A is
-frozen at `phase-9a-frozen`; Phase 9B1 is frozen at `phase-9b1-frozen`; Phase
-9B2A is frozen at `phase-9b2a-frozen`; Phase 9B2B is frozen at
-`phase-9b2b-frozen` with implementation SHA
-`218a246add4481088872487e80ac83ad1099171b`. Phase 9C1 is frozen at
-`phase-9c1-frozen`; Phase 9C2 is frozen at `phase-9c2-frozen` and is immutable.
+不能：
 
-## Getting Started
+* 偷偷修改世界观；
+* 偷偷修改人物；
+* 偷偷批准正史。
 
-```bash
-# Install dependencies
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -e .
+---
 
-# Run tests
-python -m pytest
+## 2. Canon is Sacred
 
-# Run a test world
-python -m tgn.demo  # (TBD in Phase 1)
+已经发生的正文：
+
+永远不能被 AI 默默修改。
+
+所有变化必须：
+
+Draft
+
+↓
+
+Validation
+
+↓
+
+Author Approval
+
+↓
+
+Canon
+
+---
+
+## 3. Python is the Authority
+
+LLM：
+
+负责理解、规划、创意。
+
+Python：
+
+负责：
+
+* 状态
+* 数据
+* 校验
+* 工作流
+* 审计
+* Commit
+
+---
+
+## 4. Everything is Auditable
+
+任何一句正文都必须回答：
+
+为什么会写这句话？
+
+它依据哪些事实？
+
+违反了哪些规则？
+
+修改了哪些状态？
+
+以后还能回滚。
+
+---
+
+# 支持两种创作模式
+
+## 导入已有小说
+
+例如：
+
+《斗破苍穹》
+
+《斗罗大陆》
+
+《吞噬星空》
+
+《诡秘之主》
+
+系统会：
+
+* 建立 Book Library
+* 初始化
+* 建立 Story Atlas
+* 建立 World State
+* 建立 Character State
+* 建立九维画像
+* 建立 Author Truth
+* 建立续写边界
+
+然后继续第 N+1 章。
+
+---
+
+## 从一句话开始
+
+例如：
+
+> 一个普通人在移动巨兽背上建立文明。
+
+或者：
+
+> 近未来体修成神。
+
+系统会：
+
+建立：
+
+* Reader Experience
+* Story Foundation
+* 世界观
+* 主角
+* 势力
+* 长线剧情
+* 第一章候选
+
+然后进入正式创作。
+
+---
+
+# Novel Studio
+
+Novel Studio 是整个系统的工作台。
+
+包括：
+
+* 正文
+* 世界状态
+* 人物
+* 背包
+* 能力
+* 势力
+* 地点
+* 作者全知
+* 长线规划
+* 九维画像
+* 连续性
+* Activity Center
+
+所有工作都在这里完成。
+
+---
+
+# Book Library
+
+Book Library 管理所有小说。
+
+支持：
+
+* 导入已有小说
+* 原创新书
+* 多 Edition
+* 版本管理
+* 初始化
+* 分类
+* Developer Mode
+
+测试、Benchmark 与正式作品默认隔离。
+
+---
+
+# 世界状态
+
+每一章都有：
+
+Chapter World State。
+
+系统知道：
+
+这一章结束以后：
+
+* 人物状态
+* 背包
+* 能力
+* 地点
+* 势力
+* 世界规则
+* 知识
+* 作者隐藏设定
+
+发生了什么。
+
+---
+
+# Author Truth
+
+作者知道，
+
+角色不知道，
+
+读者不知道。
+
+例如：
+
+幕后真相
+
+最终 Boss
+
+未来路线
+
+真正目的
+
+全部单独维护。
+
+不会直接写进正文。
+
+---
+
+# Progressive Initialization
+
+已有长篇支持三种初始化。
+
+## QUICK
+
+最快进入工作台。
+
+适合：
+
+快速了解作品。
+
+---
+
+## BALANCED（推荐）
+
+重点分析：
+
+* 当前剧情
+* 当前人物
+* 当前 Arc
+* 活跃伏笔
+
+适合：
+
+正式续写。
+
+---
+
+## FULL
+
+全书深度分析。
+
+适合：
+
+* 大规模改写
+* 全书审计
+* 长期项目
+
+---
+
+# Distill Integration
+
+系统集成：
+
+distill-novels。
+
+它负责：
+
+把一本小说提炼成：
+
+* 世界
+* 人物
+* 剧情
+* 文风
+* 对话
+* 节奏
+* 主题
+* 连续性
+
+等九维知识。
+
+这些属于：
+
+**软理解层。**
+
+不会直接变成 Canon。
+
+---
+
+# 续写流程
+
+```
+读取 Source
+↓
+
+建立 Boundary
+
+↓
+
+三个 Candidate
+
+↓
+
+Chapter Contract
+
+↓
+
+Draft
+
+↓
+
+十项 Validation
+
+↓
+
+Author Approval
+
+↓
+
+Canon Commit
 ```
 
-## Documentation
+---
 
-- [DESIGN_VALUES.md](docs/DESIGN_VALUES.md) - Core design philosophy
-- [MVP_REWRITE_SPEC.md](docs/MVP_REWRITE_SPEC.md) - Detailed architecture specification
-- [DEFERRED.md](docs/DEFERRED.md) - Features explicitly out of scope
+# 改写流程
 
-## License
+```
+选择章节
 
-See LICENSE file (if applicable).
+↓
+
+Revision Campaign
+
+↓
+
+派生 Edition
+
+↓
+
+Draft
+
+↓
+
+Validation
+
+↓
+
+Author Approval
+
+↓
+
+是否设为正式版本
+```
+
+---
+
+# 项目结构
+
+```
+book/
+    原始正文（永久只读）
+
+library/
+    Book Library
+
+src/
+    Python Engine
+
+.agents/
+    Codex Skills
+
+docs/
+    文档
+
+benchmark/
+    Benchmark
+
+tests/
+    自动测试
+```
+
+---
+
+# 信息层级
+
+系统严格区分：
+
+```
+Source
+
+↓
+
+Canon
+
+↓
+
+Author Truth
+
+↓
+
+Reader Knowledge
+
+↓
+
+Character Knowledge
+
+↓
+
+Inference
+
+↓
+
+Candidate
+
+↓
+
+Draft
+```
+
+任何推断：
+
+都不能自动升级为 Canon。
+
+---
+
+# 本项目最大的特点
+
+Novel Studio 并不是：
+
+> "让 AI 写小说。"
+
+它真正想解决的是：
+
+> **如何让 AI 连续写几百万字，而仍然保持世界观一致。**
+
+因此：
+
+本项目更关注：
+
+* 世界状态
+* 长期成长
+* 世界扩张
+* 长线剧情
+* 爽点管理
+* 资源系统
+* 能力系统
+* 作者控制
+
+而不是：
+
+单章 Prompt Engineering。
+
+---
+
+# 当前定位
+
+当前默认配置最适合：
+
+* 东方玄幻
+* 仙侠
+* 科幻玄幻
+* 高武
+* 成长型爽文
+* 求生
+* 长篇连载
+
+其他类型：
+
+例如：
+
+* 都市
+* 历史
+* 电竞
+* 商业
+* 文娱
+
+也可以使用当前系统，
+
+后续将进一步扩展对应的叙事内核。
+
+---
+
+# Roadmap
+
+下一阶段重点：
+
+* Reader Experience Contract
+* Narrative Drive Kernel
+* Progression Kernel
+* Mystery Kernel
+* Career Kernel
+* Strategy Kernel
+* World Expansion
+* Automatic Narrative Scheduler
+* Progressive World Simulation
+
+最终目标：
+
+> **建立一个真正能够长期辅助作者创作中文长篇网文的专业创作系统，而不是一个只会生成几章小说的 AI。**
+
+```
+```
