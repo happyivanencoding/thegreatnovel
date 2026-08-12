@@ -1,4 +1,4 @@
-"""Deterministic review helpers for the Phase 5 real generation benchmark.
+"""Deterministic review helpers for real generation A/B benchmarks.
 
 These functions intentionally report observable structure only.  They do not
 claim to measure literary quality, semantic novelty, or truth alignment.

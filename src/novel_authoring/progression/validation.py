@@ -161,6 +161,7 @@ class ProgressionConsistencyValidator:
             "stage_change": None,
             "resource_changes": [],
             "ability_unlocks": [],
+            "ability_showcases": [],
             "growth_costs": [],
             "world_expansion": [],
         }
@@ -275,6 +276,8 @@ class ProgressionConsistencyValidator:
         unlock_rules = _mapping_list(contract.get("ability_unlock_model"))
         ability_claims = _strings(impact.get("ability_unlock"))
         knowledge_items = _mapping_list(chapter_state.get("knowledge_state"))
+        knowledge_tokens = _tokens(knowledge_items)
+        causal_sources = _strings(candidate.get("causal_sources"))
         for claim in ability_claims:
             if _matches(claim, known_abilities):
                 message = f"能力已存在，不能倒写为本章新解锁：{claim}"
@@ -302,17 +305,32 @@ class ProgressionConsistencyValidator:
                 continue
             rule = matching_rules[0]
             mode = str(rule.get("mode") or "")
+            condition = str(rule.get("condition") or "").strip()
             if bool(rule.get("provenance_required", True)) and not (
-                _strings(candidate.get("causal_sources")) or forward
+                forward
+                or any(
+                    _matches(
+                        source,
+                        owned_tokens
+                        | knowledge_tokens
+                        | known_abilities
+                        | ({current_stage_value.casefold()} if current_stage_value else set()),
+                    )
+                    for source in causal_sources
+                )
             ):
                 message = f"能力解锁缺少 provenance：{claim}"
                 hard.append(message)
                 missing_causal.append(message)
-            elif mode == "KNOWLEDGE" and not knowledge_items and not forward:
+            elif mode == "KNOWLEDGE" and not (
+                forward or (knowledge_tokens and _matches(condition, knowledge_tokens))
+            ):
                 message = f"知识边界不足以支持能力解锁：{claim}"
                 hard.append(message)
                 knowledge.append(message)
-            elif mode == "RESOURCE" and not (owned_tokens or forward):
+            elif mode == "RESOURCE" and not (
+                forward or (owned_tokens and _matches(condition, owned_tokens))
+            ):
                 message = f"能力解锁所需资源未满足：{claim}"
                 hard.append(message)
                 capability.append(message)
@@ -325,6 +343,23 @@ class ProgressionConsistencyValidator:
                     {"claim": claim, "unlock_id": rule.get("unlock_id"), "mode": mode}
                 )
                 evidence.append(f"ability_unlock_rule:{rule.get('unlock_id')}")
+
+        verified_unlock_tokens = _tokens(verified["ability_unlocks"])
+        for claim in _strings(impact.get("ability_showcase")):
+            if _matches(claim, known_abilities):
+                verified["ability_showcases"].append(
+                    {"claim": claim, "source": "CURRENT_CAPABILITY"}
+                )
+                evidence.append(f"current_ability_showcase:{claim}")
+            elif _matches(claim, verified_unlock_tokens):
+                verified["ability_showcases"].append(
+                    {"claim": claim, "source": "VERIFIED_SAME_CHAPTER_UNLOCK"}
+                )
+                evidence.append(f"new_ability_showcase:{claim}")
+            else:
+                message = f"能力展示超出当前章节 Capability Boundary：{claim}"
+                hard.append(message)
+                capability.append(message)
 
         costs = _strings(impact.get("growth_cost"))
         if (valid_stage_change or ability_claims or introductions) and not (
@@ -341,6 +376,10 @@ class ProgressionConsistencyValidator:
         next_stages = _mapping_list(world_state.get("next_stage_candidates"))
         next_tokens = _tokens(next_stages)
         current_world = _mapping(world_state.get("current_stage"))
+        world_bridge_tokens = _tokens([current_world]) | {
+            item.casefold()
+            for item in _strings(world_state.get("transition_conditions"))
+        }
         for claim in world_claims:
             claims_transition = any(
                 word in claim.casefold()
@@ -357,7 +396,9 @@ class ProgressionConsistencyValidator:
                 message = f"世界层级跳跃不属于 next candidates：{claim}"
                 hard.append(message)
                 timeline.append(message)
-            elif not _strings(candidate.get("causal_sources")):
+            elif not any(
+                _matches(source, world_bridge_tokens) for source in causal_sources
+            ):
                 message = f"世界扩张缺少当前状态到下一层的因果桥梁：{claim}"
                 hard.append(message)
                 missing_causal.append(message)

@@ -222,3 +222,50 @@ def test_unknown_reader_promise_and_drive_cannot_pass_as_verified() -> None:
     assert "Reader Promise ID 不属于" in failures
     assert "Narrative Drive 不属于" in failures
     assert compilation.verified_reader_promise_alignment == []
+
+
+def test_self_reported_core_service_without_structural_effect_stays_unverified() -> None:
+    candidate = _candidate().model_copy(
+        update={
+            "progression_impact": ProgressionImpact(),
+            "resource_opportunity_impact": [],
+            "world_expansion_impact": [],
+            "state_changes": [],
+            "required_irreversible_change": "",
+        }
+    )
+    compilation = KernelEvidenceCompiler().compile(
+        _context(), candidate, load_settings().metrics
+    )
+
+    promise = compilation.verified_reader_promise_alignment[0]
+    assert promise["verification_status"] == "UNVERIFIED"
+    assert compilation.verified_drive_alignment["drives_advanced"] == []
+    assert compilation.verified["drive_drift"]["status"] == "SOFT_MISS"
+
+
+def test_self_reported_clear_drift_cannot_hide_secondary_replacement() -> None:
+    candidate = _candidate().model_copy(
+        update={
+            "progression_impact": ProgressionImpact(),
+            "resource_opportunity_impact": [],
+            "world_expansion_impact": [],
+            "state_changes": [],
+            "required_irreversible_change": "",
+            "narrative_drive_alignment": NarrativeDriveAlignment(
+                primary_drive="POWER_PROGRESSION",
+                drives_advanced=["WORLD_EXPLORATION"],
+                drive_balance="PRIMARY_SERVICED",
+                evidence=["候选自报无漂移"],
+            ),
+            "narrative_drive_drift_diagnostic": {"status": "CLEAR"},
+        }
+    )
+
+    compilation = KernelEvidenceCompiler().compile(
+        _context(), candidate, load_settings().metrics
+    )
+
+    assert compilation.declared["drive_drift"] == {"status": "CLEAR"}
+    assert compilation.verified["drive_drift"]["status"] == "SECONDARY_REPLACEMENT"
+    assert compilation.verified_drive_alignment["drives_advanced"] == []

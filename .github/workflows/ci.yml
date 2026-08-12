@@ -1,0 +1,33 @@
+name: quality-gates
+
+on:
+  push:
+    branches:
+      - progression-webnovel-kernel-v1
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+          enable-cache: true
+      - name: Install
+        run: uv sync --extra dev --no-editable
+      - name: Test
+        run: uv run --no-sync pytest -q
+      - name: Lint
+        run: uv run --no-sync ruff check src tests
+      - name: Type check
+        run: uv run --no-sync mypy src
+      - name: Compile Python
+        run: uv run --no-sync python -m compileall -q src tests
+      - name: Check JavaScript syntax
+        run: |
+          for script in src/novel_authoring/web/static/*.js; do
+            node --check "$script"
+          done

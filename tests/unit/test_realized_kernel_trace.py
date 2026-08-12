@@ -83,3 +83,22 @@ def test_realized_trace_cannot_claim_unverified_drive() -> None:
     assert "REALIZED_KERNEL_EXCEEDS_VERIFIED_CONTRACT" in {
         finding.code for finding in report.findings
     }
+
+
+def test_missing_expected_kernel_delivery_is_warning_not_hard_failure() -> None:
+    report = _validate(
+        _draft(
+            RealizedKernelTrace(
+                expected_contract_id="contract-kernel",
+                primary_intent="BREAKTHROUGH",
+            )
+        )
+    )
+
+    underdelivery = [
+        finding
+        for finding in report.findings
+        if finding.code == "REALIZED_KERNEL_UNDERDELIVERY"
+    ]
+    assert underdelivery
+    assert all(finding.severity.value == "WARNING" for finding in underdelivery)

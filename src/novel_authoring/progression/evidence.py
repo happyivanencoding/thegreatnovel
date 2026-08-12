@@ -24,7 +24,11 @@ from novel_authoring.serial_kernel.diagnostics import (
     diagnose_narrative_drive_drift,
 )
 from novel_authoring.serial_kernel.engines import NARRATIVE_ENGINE_REGISTRY
-from novel_authoring.serial_kernel.models import NarrativeDrive, NarrativeEngineType
+from novel_authoring.serial_kernel.models import (
+    PROGRESSION_DRIVES,
+    NarrativeDrive,
+    NarrativeEngineType,
+)
 
 
 class EvidenceCompleteness(StrEnum):
@@ -154,6 +158,28 @@ class KernelEvidenceCompiler:
         warnings = list(engine_validation.warnings)
         differences: list[str] = []
 
+        drive_contract = context.effective_contracts.narrative_drive or {}
+        primary_drive = str(drive_contract.get("primary_drive") or "")
+        secondary_drives = {
+            str(item) for item in drive_contract.get("secondary_drives", [])
+        }
+        active_drives = ({primary_drive} if primary_drive else set()) | secondary_drives
+        progression_effect = engine_validation.verified_progression_impact
+        progression_changed = any(
+            progression_effect.get(name)
+            for name in (
+                "axis_advanced",
+                "progression_delta_type",
+                "stage_change",
+                "resource_changes",
+                "ability_unlocks",
+                "world_expansion",
+            )
+        )
+        primary_is_progression = primary_drive in {
+            drive.value for drive in PROGRESSION_DRIVES
+        }
+
         genre = context.effective_contracts.genre or {}
         promise_by_id = {
             str(item.get("promise_id")): item
@@ -172,9 +198,12 @@ class KernelEvidenceCompiler:
             if claim.service in {
                 ReaderPromiseService.SERVED,
                 ReaderPromiseService.PARTIALLY_SERVED,
-            } and not claim.evidence:
+            } and not (claim.evidence and primary_is_progression and progression_changed):
                 status = "UNVERIFIED"
-                message = f"Reader Promise 服务声明缺少证据：{claim.promise_id}"
+                message = (
+                    "Reader Promise 服务声明没有可验证的结构影响："
+                    f"{claim.promise_id}"
+                )
                 warnings.append(message)
                 differences.append(message)
             if (
@@ -206,12 +235,6 @@ class KernelEvidenceCompiler:
         if core_ids and not core_ids.intersection(served_ids):
             warnings.append("本候选未直接服务 CORE Reader Promise；单章缺席只记 Soft Miss。")
 
-        drive_contract = context.effective_contracts.narrative_drive or {}
-        primary_drive = str(drive_contract.get("primary_drive") or "")
-        secondary_drives = {
-            str(item) for item in drive_contract.get("secondary_drives", [])
-        }
-        active_drives = ({primary_drive} if primary_drive else set()) | secondary_drives
         declared_drive = candidate.narrative_drive_alignment
         referenced_drives = {
             item
@@ -229,27 +252,39 @@ class KernelEvidenceCompiler:
             message = f"Narrative Drive 不属于 Effective Drive Mix：{drive}"
             author_failures.append(message)
             differences.append(message)
-        progression_effect = engine_validation.verified_progression_impact
-        progression_changed = any(
-            progression_effect.get(name)
-            for name in (
-                "axis_advanced",
-                "progression_delta_type",
-                "stage_change",
-                "resource_changes",
-                "ability_unlocks",
-                "world_expansion",
-            )
+        reveal_changed = bool(candidate.reveal_impact.hints) or bool(
+            candidate.reveal_impact.partial_reveals
+        ) or bool(candidate.reveal_impact.full_reveals)
+        relationship_changed = (
+            candidate.primary_function.value == "relationship_shift"
+            and bool(candidate.state_changes)
         )
+
+        def drive_has_verified_effect(drive: str) -> bool:
+            try:
+                drive_value = NarrativeDrive(drive)
+            except ValueError:
+                return False
+            if drive_value in PROGRESSION_DRIVES:
+                return progression_changed
+            if drive_value is NarrativeDrive.WORLD_EXPLORATION:
+                return bool(progression_effect.get("world_expansion"))
+            if drive_value in {
+                NarrativeDrive.MYSTERY_INVESTIGATION,
+                NarrativeDrive.MYSTERY_REVELATION,
+            }:
+                return reveal_changed
+            if drive_value in {
+                NarrativeDrive.RELATIONSHIP_EMOTIONAL,
+                NarrativeDrive.TEAM_GROWTH,
+            }:
+                return relationship_changed
+            return False
+
         verified_advanced = [
             drive
             for drive in declared_drive.drives_advanced
-            if drive in active_drives
-            and (
-                drive != primary_drive
-                or bool(declared_drive.evidence)
-                or progression_changed
-            )
+            if drive in active_drives and drive_has_verified_effect(drive)
         ]
         if declared_drive.primary_drive and declared_drive.primary_drive != primary_drive:
             message = (
