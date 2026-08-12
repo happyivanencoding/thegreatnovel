@@ -1,0 +1,1279 @@
+{
+  "candidates": [
+    {
+      "anticipation_impact": [
+        "兑现木刺是否有效的近期问题，同时保留Lv2威胁期待"
+      ],
+      "author_control_trace": {
+        "author_goals_not_used": [],
+        "author_intent_hits": [],
+        "author_intents_advanced": [],
+        "author_task_hits": [],
+        "author_tasks_advanced": [],
+        "unused_reasons": {}
+      },
+      "canon_constraints": [
+        "三级缆车升级完成前不得使用三级能力",
+        "静音符、药品交易和高阶怪物细节仍未确认",
+        "仅使用第50章及以前冻结状态"
+      ],
+      "causal_sources": [
+        "普通木刺",
+        "小型箭匣",
+        "第50章窗外怪异响动和身影",
+        "tier-2-upgrading-tier-3"
+      ],
+      "chapter_intent": "PROGRESSION_SETUP",
+      "commit_updates": [
+        "普通木刺21→20（仅在草稿实际发生并获批后）",
+        "木刺试射结果"
+      ],
+      "emotional_outcome": "苏牧从疲惫中恢复警觉，但不因一次结果高估武器。",
+      "ending_state": "普通木刺库存从21降至20；只记录一次试射结果，不解锁新能力。",
+      "event_source": "第50章已装填21/100的普通木刺；窗外已有怪异响动和身影；伤害未验证。",
+      "forbidden_repetitions": [
+        "不得用纯清单替代现场选择",
+        "不得重复幸运掉落解决资源问题"
+      ],
+      "gate_input": {
+        "author_constraint_violations": [],
+        "canon_conflicts": [],
+        "capability_violations": [],
+        "character_bottom_line_violation": false,
+        "character_fit_inputs": {
+          "capability_alignment": 91.0,
+          "emotional_continuity": 90.0,
+          "knowledge_alignment": 94.0,
+          "motivation_alignment": 92.0,
+          "relationship_alignment": 82.0
+        },
+        "knowledge_violations": [],
+        "missing_causal_sources": [],
+        "payoff_cooldown_violations": [],
+        "style_boundary_violations": [],
+        "style_fit_inputs": {
+          "dialogue_voice": 87.0,
+          "diction_register": 91.0,
+          "emotional_distance": 91.0,
+          "exposition_density": 90.0,
+          "pov_and_tense": 92.0,
+          "sentence_rhythm": 88.0
+        },
+        "timeline_conflicts": []
+      },
+      "genre_alignment": [
+        "生存成长必须通过资源、行动、代价和验证推进"
+      ],
+      "genre_drift_diagnostic": {
+        "declared_status": "CLEAR"
+      },
+      "genre_evolution_diagnostic": {
+        "declared_status": "UNCHANGED"
+      },
+      "innovation_preview": null,
+      "knowledge_constraints": [
+        "只知道周振国自述遭遇Lv2蓝色品质舔食者",
+        "普通木刺能装入箭匣，但伤害尚未验证",
+        "夜间威胁规则保持开放问题"
+      ],
+      "lens": "CONTINUITY_ACTIVE_THREAD",
+      "local_id": "pwk-b-controlled-arrow-test",
+      "must_not_resolve": [
+        "不得确认三级缆车升级完成",
+        "不得获得未成交的静音符或药品",
+        "不得解释Lv2怪物的完整规则"
+      ],
+      "narrative_drive_alignment": {
+        "drive_balance": "PRIMARY_SERVICED",
+        "drive_conflicts": [],
+        "drives_advanced": [
+          "POWER_PROGRESSION"
+        ],
+        "drives_deferred": [
+          "WORLD_EXPLORATION"
+        ],
+        "drives_paid_off": [],
+        "evidence": [
+          "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+        ],
+        "primary_drive": "POWER_PROGRESSION",
+        "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+        "secondary_drive_effects": {
+          "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+          "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+          "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+        }
+      },
+      "narrative_drive_drift_diagnostic": {
+        "declared_status": "CLEAR"
+      },
+      "novelty_provenance": [
+        {
+          "causal_source": "第50章普通木刺与小型箭匣",
+          "conflicts_checked": [
+            "库存21/100",
+            "伤害未验证",
+            "三级升级未完成"
+          ],
+          "introduction_event": "",
+          "new_state_if_committed": "",
+          "novelty_boundary": "FORWARD_CANON_COMPATIBLE",
+          "provenance": "SOURCE_EARNED",
+          "retroactive_claim": false
+        },
+        {
+          "causal_source": "第50章已出现怪异响动和身影",
+          "conflicts_checked": [
+            "不命名新怪物",
+            "不确认夜间规则",
+            "不产生新能力"
+          ],
+          "introduction_event": "窗外一个未命名影子短暂进入已确认的百米射程",
+          "new_state_if_committed": "苏牧获得一次木刺试射结果，库存减少一支",
+          "novelty_boundary": "FORWARD_CANON_COMPATIBLE",
+          "provenance": "FORWARD_NOVELTY",
+          "retroactive_claim": false
+        }
+      ],
+      "opportunity_cost": "消耗一支已确认木刺，并放弃继续休息的窗口。",
+      "payoff_channel_impact": [
+        "KNOWLEDGE_GAIN"
+      ],
+      "pressure_before": 55.0,
+      "pressure_target_after": 62.0,
+      "primary_function": "progress",
+      "primary_thread_id": "source:source-delta-pwk-live-b-ch50-threat-opportunity",
+      "profile_alignment": {
+        "constraint_checks": [],
+        "dimensions": [
+          {
+            "alignment": "ALIGNED",
+            "dimension": "worldbuilding",
+            "evidence": [
+              "二十一分之一遵守已冻结的worldbuilding画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "characters",
+            "evidence": [
+              "二十一分之一遵守已冻结的characters画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "plot",
+            "evidence": [
+              "二十一分之一遵守已冻结的plot画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "style",
+            "evidence": [
+              "二十一分之一遵守已冻结的style画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "narrative",
+            "evidence": [
+              "二十一分之一遵守已冻结的narrative画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "dialogue",
+            "evidence": [
+              "二十一分之一遵守已冻结的dialogue画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "pacing",
+            "evidence": [
+              "二十一分之一遵守已冻结的pacing画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "themes",
+            "evidence": [
+              "二十一分之一遵守已冻结的themes画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "continuity",
+            "evidence": [
+              "二十一分之一遵守已冻结的continuity画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          }
+        ]
+      },
+      "progress_preview": {
+        "components": [
+          {
+            "component": "permanent_growth",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 90.0
+          },
+          {
+            "component": "world_state_change",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 80.0
+          },
+          {
+            "component": "relationship_change",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 0.0
+          },
+          {
+            "component": "knowledge_change",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 65.0
+          },
+          {
+            "component": "goal_advance",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 75.0
+          },
+          {
+            "component": "strategy_expansion",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 88.0
+          }
+        ],
+        "metric_run_id": null
+      },
+      "progression_debt_impact": [
+        "推进木刺伤害未验证债务，但不宣告完全解决"
+      ],
+      "progression_impact": {
+        "ability_showcase": [],
+        "ability_unlock": [],
+        "axis_advanced": [
+          "survival-cable-growth"
+        ],
+        "bottleneck_change": null,
+        "branch_change": null,
+        "future_progression_space": [
+          "若结果有效，后续才能讨论稳定火力；若无效，必须调整箭材或策略"
+        ],
+        "growth_cost": [
+          "一支普通木刺",
+          "暴露位置风险"
+        ],
+        "new_ceiling_visibility": [],
+        "progression_delta_type": [
+          "ADVANCE"
+        ],
+        "resource_change": [
+          "普通木刺消耗1支并记录试射结果"
+        ],
+        "stage_change": null
+      },
+      "promises_to_advance": [
+        "手工弹药能否成为可靠火力"
+      ],
+      "promises_to_pay": [],
+      "protagonist_strategy": "用最小库存损失换取可复用的战斗证据，拒绝在升级未完成时扩大风险。",
+      "reader_promise_alignment": [
+        {
+          "evidence": [
+            "资源变化只使用已确认普通木刺，机会不写成库存。"
+          ],
+          "priority": "CORE",
+          "promise_id": "promise.resource-earned",
+          "service": "SERVED"
+        },
+        {
+          "evidence": [
+            "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+          ],
+          "priority": "CORE",
+          "promise_id": "promise.survival-verification",
+          "service": "PARTIALLY_SERVED"
+        },
+        {
+          "evidence": [
+            "只保留高阶路线问题，不提前跨区。"
+          ],
+          "priority": "IMPORTANT",
+          "promise_id": "promise.world-opening",
+          "service": "PARTIALLY_SERVED"
+        }
+      ],
+      "reader_question": "这批低成本木刺究竟能不能变成可靠火力？",
+      "required_cost": "消耗一支普通木刺，并承担短暂暴露位置的风险。",
+      "required_irreversible_change": "普通木刺库存真实减少一支，并留下可供后续比较的试射结果。",
+      "resource_opportunity_impact": [
+        "普通木刺消耗1支并记录试射结果"
+      ],
+      "reveal_impact": {
+        "character_knowledge_delta": [],
+        "full_reveals": [],
+        "hints": [],
+        "kept_hidden": [],
+        "partial_reveals": [],
+        "reader_knowledge_delta": [],
+        "secrets_used": []
+      },
+      "risk_form": "一支木刺可能无效，射击也可能暴露缆车位置。",
+      "scene_topology": "静默观察→单发试射→近距离结果核验→立刻停火。",
+      "scheduler_alignment": {
+        "alignment": "ALIGNED",
+        "anticipations_served": [
+          "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+        ],
+        "candidate_primary_intent": "PROGRESSION_SETUP",
+        "debts_served": [],
+        "deviation_reason": "",
+        "recommended_primary_intent": "PROGRESSION_SETUP",
+        "risks": [
+          "恢复与准备不能写成无事件清单"
+        ]
+      },
+      "score_evidence": {
+        "agency_gain": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "debt_utility": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "future_damage": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "payoff_or_setup_utility": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "pressure_curve_fit": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "progress_gain": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "repetition_fatigue": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "risk_fit": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "structural_diversity": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "style_fit": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "thread_need_fit": [
+          "二十一分之一：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ]
+      },
+      "score_inputs": {
+        "agency_gain": 92.0,
+        "debt_utility": 70.0,
+        "future_damage": 14.0,
+        "payoff_or_setup_utility": 80.0,
+        "pressure_curve_fit": 86.0,
+        "progress_gain": 98.0,
+        "repetition_fatigue": 18.0,
+        "risk_fit": 88.0,
+        "structural_diversity": 73.0,
+        "style_fit": 91.0,
+        "thread_need_fit": 91.0
+      },
+      "secondary_functions": [
+        "pressure_build",
+        "discovery"
+      ],
+      "social_feedback": "不新增对外关系变化；测试结果只由苏牧掌握。",
+      "solution_method": "等目标进入既有百米射程，仅试射一支并观察箭匣、命中与目标反应。",
+      "state_changes": [
+        "消耗一支普通木刺",
+        "形成一条木刺试射证据",
+        "高阶怪物与三级缆车状态均未被越界解释"
+      ],
+      "style_constraints": {
+        "dialogue_voice": "交易、试探和价格都要有摩擦",
+        "diction_register": "直接克制，系统信息只服务选择",
+        "emotional_distance": "情绪通过动作与取舍呈现",
+        "exposition_density": "中等；先现场后解释",
+        "pov_and_tense": "第三人称限知",
+        "sentence_rhythm": "短句动作链与少量判断交替"
+      },
+      "summary": "苏牧不追查怪物本体，而是利用窗外已有动静做一次可撤销的木刺试射：只放一支、记录命中与箭匣反应，失败便立即停火。章末库存下降，手工弹药是否形成稳定火力仍保持开放。",
+      "title": "二十一分之一",
+      "truth_alignment": [],
+      "wildcard": false,
+      "world_expansion_impact": [
+        "高阶威胁路线只保留为调查线索，当前雾区不变"
+      ]
+    },
+    {
+      "anticipation_impact": [
+        "把药品机会与Lv2威胁合并为一个可追踪的下一步"
+      ],
+      "author_control_trace": {
+        "author_goals_not_used": [],
+        "author_intent_hits": [],
+        "author_intents_advanced": [],
+        "author_task_hits": [],
+        "author_tasks_advanced": [],
+        "unused_reasons": {}
+      },
+      "canon_constraints": [
+        "三级缆车升级完成前不得使用三级能力",
+        "静音符、药品交易和高阶怪物细节仍未确认",
+        "仅使用第50章及以前冻结状态"
+      ],
+      "causal_sources": [
+        "药品请求与高阶怪物威胁",
+        "普通物品可脱离图纸手工制作",
+        "第50章交易习惯与不赊账原则"
+      ],
+      "chapter_intent": "PROGRESSION_SETUP",
+      "commit_updates": [
+        "待处理交易条件",
+        "周振国证据要求",
+        "资源所有权保持不变"
+      ],
+      "emotional_outcome": "苏牧保持警惕，但从单纯拒绝转向可控制的合作。",
+      "ending_state": "药品请求变成有证据门槛的待处理交易；资源所有权不变。",
+      "event_source": "第50章周振国提出药品请求，声称遭遇Lv2蓝色品质舔食者并以未来静音符交换。",
+      "forbidden_repetitions": [
+        "不得用纯清单替代现场选择",
+        "不得重复幸运掉落解决资源问题"
+      ],
+      "gate_input": {
+        "author_constraint_violations": [],
+        "canon_conflicts": [],
+        "capability_violations": [],
+        "character_bottom_line_violation": false,
+        "character_fit_inputs": {
+          "capability_alignment": 91.0,
+          "emotional_continuity": 90.0,
+          "knowledge_alignment": 94.0,
+          "motivation_alignment": 92.0,
+          "relationship_alignment": 82.0
+        },
+        "knowledge_violations": [],
+        "missing_causal_sources": [],
+        "payoff_cooldown_violations": [],
+        "style_boundary_violations": [],
+        "style_fit_inputs": {
+          "dialogue_voice": 87.0,
+          "diction_register": 91.0,
+          "emotional_distance": 91.0,
+          "exposition_density": 90.0,
+          "pov_and_tense": 92.0,
+          "sentence_rhythm": 88.0
+        },
+        "timeline_conflicts": []
+      },
+      "genre_alignment": [
+        "生存成长必须通过资源、行动、代价和验证推进"
+      ],
+      "genre_drift_diagnostic": {
+        "declared_status": "CLEAR"
+      },
+      "genre_evolution_diagnostic": {
+        "declared_status": "UNCHANGED"
+      },
+      "innovation_preview": null,
+      "knowledge_constraints": [
+        "只知道周振国自述遭遇Lv2蓝色品质舔食者",
+        "普通木刺能装入箭匣，但伤害尚未验证",
+        "夜间威胁规则保持开放问题"
+      ],
+      "lens": "EARNED_OPPORTUNITY",
+      "local_id": "pwk-b-conditional-medical-deal",
+      "must_not_resolve": [
+        "不得确认三级缆车升级完成",
+        "不得获得未成交的静音符或药品",
+        "不得解释Lv2怪物的完整规则"
+      ],
+      "narrative_drive_alignment": {
+        "drive_balance": "PRIMARY_SERVICED",
+        "drive_conflicts": [],
+        "drives_advanced": [
+          "POWER_PROGRESSION"
+        ],
+        "drives_deferred": [
+          "WORLD_EXPLORATION"
+        ],
+        "drives_paid_off": [],
+        "evidence": [
+          "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+        ],
+        "primary_drive": "POWER_PROGRESSION",
+        "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+        "secondary_drive_effects": {
+          "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+          "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+          "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+        }
+      },
+      "narrative_drive_drift_diagnostic": {
+        "declared_status": "CLEAR"
+      },
+      "novelty_provenance": [
+        {
+          "causal_source": "第50章药品请求与高阶怪物威胁",
+          "conflicts_checked": [
+            "静音符没有现货",
+            "药品尚未转移",
+            "怪物情报来自周振国自述"
+          ],
+          "introduction_event": "",
+          "new_state_if_committed": "",
+          "novelty_boundary": "FORWARD_CANON_COMPATIBLE",
+          "provenance": "SOURCE_EARNED",
+          "retroactive_claim": false
+        },
+        {
+          "causal_source": "第50章明确的赊账请求与苏牧不赊账原则",
+          "conflicts_checked": [
+            "不提前成交",
+            "不虚构药品数量",
+            "不确认怪物规则"
+          ],
+          "introduction_event": "苏牧提出分步交易的证据与现货条件",
+          "new_state_if_committed": "该机会转为有门槛的待处理交易，资源所有权仍不变",
+          "novelty_boundary": "FORWARD_CANON_COMPATIBLE",
+          "provenance": "FORWARD_NOVELTY",
+          "retroactive_claim": false
+        }
+      ],
+      "opportunity_cost": "花费谈判时间，并向对方暴露自己可能有少量药品的信息。",
+      "payoff_channel_impact": [
+        "RESOURCE_GAIN"
+      ],
+      "pressure_before": 55.0,
+      "pressure_target_after": 59.0,
+      "primary_function": "choice",
+      "primary_thread_id": "source:source-delta-pwk-live-b-ch50-threat-opportunity",
+      "profile_alignment": {
+        "constraint_checks": [],
+        "dimensions": [
+          {
+            "alignment": "ALIGNED",
+            "dimension": "worldbuilding",
+            "evidence": [
+              "先给伤口，不给药遵守已冻结的worldbuilding画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "characters",
+            "evidence": [
+              "先给伤口，不给药遵守已冻结的characters画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "plot",
+            "evidence": [
+              "先给伤口，不给药遵守已冻结的plot画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "style",
+            "evidence": [
+              "先给伤口，不给药遵守已冻结的style画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "narrative",
+            "evidence": [
+              "先给伤口，不给药遵守已冻结的narrative画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "dialogue",
+            "evidence": [
+              "先给伤口，不给药遵守已冻结的dialogue画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "pacing",
+            "evidence": [
+              "先给伤口，不给药遵守已冻结的pacing画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "themes",
+            "evidence": [
+              "先给伤口，不给药遵守已冻结的themes画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "continuity",
+            "evidence": [
+              "先给伤口，不给药遵守已冻结的continuity画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          }
+        ]
+      },
+      "progress_preview": {
+        "components": [
+          {
+            "component": "permanent_growth",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 75.0
+          },
+          {
+            "component": "world_state_change",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 70.0
+          },
+          {
+            "component": "relationship_change",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 55.0
+          },
+          {
+            "component": "knowledge_change",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 70.0
+          },
+          {
+            "component": "goal_advance",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 85.0
+          },
+          {
+            "component": "strategy_expansion",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 95.0
+          }
+        ],
+        "metric_run_id": null
+      },
+      "progression_debt_impact": [
+        "新增一项可审计交易承诺，不制造第二套债务"
+      ],
+      "progression_impact": {
+        "ability_showcase": [],
+        "ability_unlock": [],
+        "axis_advanced": [
+          "survival-cable-growth"
+        ],
+        "bottleneck_change": null,
+        "branch_change": null,
+        "future_progression_space": [
+          "若对方提供证据和现货，未来才可能形成药品—符箓资源链"
+        ],
+        "growth_cost": [
+          "谈判时间",
+          "暴露少量药品可能性"
+        ],
+        "new_ceiling_visibility": [],
+        "progression_delta_type": [
+          "ADVANCE"
+        ],
+        "resource_change": [
+          "药品请求与高阶怪物威胁仅建立交换条件"
+        ],
+        "stage_change": null
+      },
+      "promises_to_advance": [
+        "药品请求与高阶怪物威胁",
+        "稀缺条件下如何建立可验证合作"
+      ],
+      "promises_to_pay": [],
+      "protagonist_strategy": "把不可验证的求助改写为分步交易，既不白给资源，也保留获取情报和符箓的可能。",
+      "reader_promise_alignment": [
+        {
+          "evidence": [
+            "资源变化只使用已确认普通木刺，机会不写成库存。"
+          ],
+          "priority": "CORE",
+          "promise_id": "promise.resource-earned",
+          "service": "SERVED"
+        },
+        {
+          "evidence": [
+            "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+          ],
+          "priority": "CORE",
+          "promise_id": "promise.survival-verification",
+          "service": "PARTIALLY_SERVED"
+        },
+        {
+          "evidence": [
+            "只保留高阶路线问题，不提前跨区。"
+          ],
+          "priority": "IMPORTANT",
+          "promise_id": "promise.world-opening",
+          "service": "PARTIALLY_SERVED"
+        }
+      ],
+      "reader_question": "苏牧能否把一桩高风险求助改造成可验证的资源合作？",
+      "required_cost": "暴露少量药品可能性，并承担错失交易或延误救助的代价。",
+      "required_irreversible_change": "苏牧把口头求助改成明确的证据与现货门槛，对方必须选择是否接受。",
+      "resource_opportunity_impact": [
+        "药品请求与高阶怪物威胁仅建立交换条件"
+      ],
+      "reveal_impact": {
+        "character_knowledge_delta": [],
+        "full_reveals": [],
+        "hints": [],
+        "kept_hidden": [],
+        "partial_reveals": [],
+        "reader_knowledge_delta": [],
+        "secrets_used": []
+      },
+      "risk_form": "周振国可能隐瞒伤情、伪造证据或因条件过严转向别人。",
+      "scene_topology": "消息追问→证据门槛→小额交换条件→等待对方下一步。",
+      "scheduler_alignment": {
+        "alignment": "ALIGNED",
+        "anticipations_served": [
+          "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+        ],
+        "candidate_primary_intent": "PROGRESSION_SETUP",
+        "debts_served": [],
+        "deviation_reason": "",
+        "recommended_primary_intent": "PROGRESSION_SETUP",
+        "risks": [
+          "恢复与准备不能写成无事件清单"
+        ]
+      },
+      "score_evidence": {
+        "agency_gain": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "debt_utility": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "future_damage": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "payoff_or_setup_utility": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "pressure_curve_fit": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "progress_gain": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "repetition_fatigue": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "risk_fit": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "structural_diversity": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "style_fit": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "thread_need_fit": [
+          "先给伤口，不给药：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ]
+      },
+      "score_inputs": {
+        "agency_gain": 95.0,
+        "debt_utility": 74.0,
+        "future_damage": 12.0,
+        "payoff_or_setup_utility": 84.0,
+        "pressure_curve_fit": 78.0,
+        "progress_gain": 96.0,
+        "repetition_fatigue": 16.0,
+        "risk_fit": 90.0,
+        "structural_diversity": 70.0,
+        "style_fit": 92.0,
+        "thread_need_fit": 96.0
+      },
+      "secondary_functions": [
+        "progress",
+        "relationship_shift"
+      ],
+      "social_feedback": "周振国必须用可核验证据和现货回应；双方关系停在条件合作。",
+      "solution_method": "拆成证据、现货、交付三道门：先看伤势和接触信息，再谈一小份药，最后只接受现货。",
+      "state_changes": [
+        "明确三段交易条件",
+        "周振国必须补充可核验证据",
+        "静音符和药品均未成交"
+      ],
+      "style_constraints": {
+        "dialogue_voice": "交易、试探和价格都要有摩擦",
+        "diction_register": "直接克制，系统信息只服务选择",
+        "emotional_distance": "情绪通过动作与取舍呈现",
+        "exposition_density": "中等；先现场后解释",
+        "pov_and_tense": "第三人称限知",
+        "sentence_rhythm": "短句动作链与少量判断交替"
+      },
+      "summary": "苏牧不接受赊账，也不立即回绝。他要求周振国先提供伤势与怪物接触的可核验证据，再用一小份药品换第一张现货静音符；本章只建立交换条件，任何药品、符箓都不提前转移。",
+      "title": "先给伤口，不给药",
+      "truth_alignment": [],
+      "wildcard": false,
+      "world_expansion_impact": [
+        "Lv2威胁仍是当前雾区的待验证外部压力"
+      ]
+    },
+    {
+      "anticipation_impact": [
+        "为higher-threat-route建立可复核入口，同时保留药品交易线"
+      ],
+      "author_control_trace": {
+        "author_goals_not_used": [],
+        "author_intent_hits": [],
+        "author_intents_advanced": [],
+        "author_task_hits": [],
+        "author_tasks_advanced": [],
+        "unused_reasons": {}
+      },
+      "canon_constraints": [
+        "三级缆车升级完成前不得使用三级能力",
+        "静音符、药品交易和高阶怪物细节仍未确认",
+        "仅使用第50章及以前冻结状态"
+      ],
+      "causal_sources": [
+        "fog-cable-current-zone",
+        "第50章窗外怪异响动和身影",
+        "小型箭匣",
+        "三级缆车完成或取得跨区路线证据"
+      ],
+      "chapter_intent": "PROGRESSION_SETUP",
+      "commit_updates": [
+        "未验证方位线索",
+        "后续路线核验问题"
+      ],
+      "emotional_outcome": "苏牧压住追击冲动，把不安转为一个可复核问题。",
+      "ending_state": "当前雾区不变；新增一个有三次现场观察支撑、仍待验证的方位线索。",
+      "event_source": "第50章窗外已有怪异响动和身影；当前世界层级仍是浓雾缆车生存区。",
+      "forbidden_repetitions": [
+        "不得用纯清单替代现场选择",
+        "不得重复幸运掉落解决资源问题"
+      ],
+      "gate_input": {
+        "author_constraint_violations": [],
+        "canon_conflicts": [],
+        "capability_violations": [],
+        "character_bottom_line_violation": false,
+        "character_fit_inputs": {
+          "capability_alignment": 91.0,
+          "emotional_continuity": 90.0,
+          "knowledge_alignment": 94.0,
+          "motivation_alignment": 92.0,
+          "relationship_alignment": 82.0
+        },
+        "knowledge_violations": [],
+        "missing_causal_sources": [],
+        "payoff_cooldown_violations": [],
+        "style_boundary_violations": [],
+        "style_fit_inputs": {
+          "dialogue_voice": 87.0,
+          "diction_register": 91.0,
+          "emotional_distance": 91.0,
+          "exposition_density": 90.0,
+          "pov_and_tense": 92.0,
+          "sentence_rhythm": 88.0
+        },
+        "timeline_conflicts": []
+      },
+      "genre_alignment": [
+        "生存成长必须通过资源、行动、代价和验证推进"
+      ],
+      "genre_drift_diagnostic": {
+        "declared_status": "CLEAR"
+      },
+      "genre_evolution_diagnostic": {
+        "declared_status": "UNCHANGED"
+      },
+      "innovation_preview": null,
+      "knowledge_constraints": [
+        "只知道周振国自述遭遇Lv2蓝色品质舔食者",
+        "普通木刺能装入箭匣，但伤害尚未验证",
+        "夜间威胁规则保持开放问题"
+      ],
+      "lens": "FORWARD_EXPANSION",
+      "local_id": "pwk-b-fog-bearing-mark",
+      "must_not_resolve": [
+        "不得确认三级缆车升级完成",
+        "不得获得未成交的静音符或药品",
+        "不得解释Lv2怪物的完整规则"
+      ],
+      "narrative_drive_alignment": {
+        "drive_balance": "PRIMARY_SERVICED",
+        "drive_conflicts": [],
+        "drives_advanced": [
+          "POWER_PROGRESSION"
+        ],
+        "drives_deferred": [
+          "WORLD_EXPLORATION"
+        ],
+        "drives_paid_off": [],
+        "evidence": [
+          "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+        ],
+        "primary_drive": "POWER_PROGRESSION",
+        "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+        "secondary_drive_effects": {
+          "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+          "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+          "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+        }
+      },
+      "narrative_drive_drift_diagnostic": {
+        "declared_status": "CLEAR"
+      },
+      "novelty_provenance": [
+        {
+          "causal_source": "当前浓雾缆车生存区与第50章窗外动静",
+          "conflicts_checked": [
+            "当前世界层级未变化",
+            "不读取第51章真实后续"
+          ],
+          "introduction_event": "",
+          "new_state_if_committed": "",
+          "novelty_boundary": "FORWARD_CANON_COMPATIBLE",
+          "provenance": "EXISTING_RUNTIME",
+          "retroactive_claim": false
+        },
+        {
+          "causal_source": "第50章已建立的怪异响动与浓雾环境",
+          "conflicts_checked": [
+            "不命名新地点",
+            "不进入higher-threat-route",
+            "不获得新资源或能力"
+          ],
+          "introduction_event": "同一方向的金属摩擦声在观察期内重复三次",
+          "new_state_if_committed": "苏牧记录一个未验证方位，作为以后调查入口",
+          "novelty_boundary": "FORWARD_CANON_COMPATIBLE",
+          "provenance": "FORWARD_NOVELTY",
+          "retroactive_claim": false
+        }
+      ],
+      "opportunity_cost": "牺牲休息时间，且本章不直接取得资源或战斗收益。",
+      "payoff_channel_impact": [
+        "KNOWLEDGE_GAIN"
+      ],
+      "pressure_before": 55.0,
+      "pressure_target_after": 64.0,
+      "primary_function": "discovery",
+      "primary_thread_id": "source:source-delta-pwk-live-b-ch50-threat-opportunity",
+      "profile_alignment": {
+        "constraint_checks": [],
+        "dimensions": [
+          {
+            "alignment": "ALIGNED",
+            "dimension": "worldbuilding",
+            "evidence": [
+              "雾里的同一声遵守已冻结的worldbuilding画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "characters",
+            "evidence": [
+              "雾里的同一声遵守已冻结的characters画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "plot",
+            "evidence": [
+              "雾里的同一声遵守已冻结的plot画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "style",
+            "evidence": [
+              "雾里的同一声遵守已冻结的style画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "narrative",
+            "evidence": [
+              "雾里的同一声遵守已冻结的narrative画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "dialogue",
+            "evidence": [
+              "雾里的同一声遵守已冻结的dialogue画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "pacing",
+            "evidence": [
+              "雾里的同一声遵守已冻结的pacing画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "themes",
+            "evidence": [
+              "雾里的同一声遵守已冻结的themes画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          },
+          {
+            "alignment": "ALIGNED",
+            "dimension": "continuity",
+            "evidence": [
+              "雾里的同一声遵守已冻结的continuity画像；具体因果由第50章 Source State 与当前选择支撑。"
+            ]
+          }
+        ]
+      },
+      "progress_preview": {
+        "components": [
+          {
+            "component": "permanent_growth",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 65.0
+          },
+          {
+            "component": "world_state_change",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 65.0
+          },
+          {
+            "component": "relationship_change",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 0.0
+          },
+          {
+            "component": "knowledge_change",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 90.0
+          },
+          {
+            "component": "goal_advance",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 72.0
+          },
+          {
+            "component": "strategy_expansion",
+            "evidence": [
+              "模型预测；等待 Python 用冻结状态重算。"
+            ],
+            "value": 92.0
+          }
+        ],
+        "metric_run_id": null
+      },
+      "progression_debt_impact": [
+        "推进世界扩张问题，不关闭当前威胁债务"
+      ],
+      "progression_impact": {
+        "ability_showcase": [],
+        "ability_unlock": [],
+        "axis_advanced": [
+          "survival-cable-growth"
+        ],
+        "bottleneck_change": null,
+        "branch_change": null,
+        "future_progression_space": [
+          "未验证方位可在以后满足跨区路线证据门槛，但本章不转移世界层级"
+        ],
+        "growth_cost": [
+          "休息时间",
+          "暴露风险"
+        ],
+        "new_ceiling_visibility": [],
+        "progression_delta_type": [
+          "ADVANCE"
+        ],
+        "resource_change": [
+          "小型箭匣保持21/100，不声明新增弹药"
+        ],
+        "stage_change": null
+      },
+      "promises_to_advance": [
+        "当前雾区之外存在什么",
+        "Lv2威胁是否与路线有关"
+      ],
+      "promises_to_pay": [],
+      "protagonist_strategy": "用静态观察扩大信息，不用未完成升级或未验证木刺冒险追击。",
+      "reader_promise_alignment": [
+        {
+          "evidence": [
+            "资源变化只使用已确认普通木刺，机会不写成库存。"
+          ],
+          "priority": "CORE",
+          "promise_id": "promise.resource-earned",
+          "service": "SERVED"
+        },
+        {
+          "evidence": [
+            "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+          ],
+          "priority": "CORE",
+          "promise_id": "promise.survival-verification",
+          "service": "PARTIALLY_SERVED"
+        },
+        {
+          "evidence": [
+            "只保留高阶路线问题，不提前跨区。"
+          ],
+          "priority": "IMPORTANT",
+          "promise_id": "promise.world-opening",
+          "service": "PARTIALLY_SERVED"
+        }
+      ],
+      "reader_question": "浓雾中的固定方位，是危险源还是通往下一片区域的路线线索？",
+      "required_cost": "牺牲休息时间并承担被外部存在察觉的风险。",
+      "required_irreversible_change": "苏牧记录一个具体方位，并把它纳入后续路线核验；该信息一旦形成会改变下一步观察选择。",
+      "resource_opportunity_impact": [
+        "小型箭匣保持21/100，不声明新增弹药"
+      ],
+      "reveal_impact": {
+        "character_knowledge_delta": [],
+        "full_reveals": [],
+        "hints": [],
+        "kept_hidden": [],
+        "partial_reveals": [],
+        "reader_knowledge_delta": [],
+        "secrets_used": []
+      },
+      "risk_form": "持续观察可能让外部存在察觉缆车，也可能把普通环境噪声误判为路线。",
+      "scene_topology": "黑暗静听→三次间隔比对→箭匣反馈校对→私下标记方位。",
+      "scheduler_alignment": {
+        "alignment": "ALIGNED",
+        "anticipations_served": [
+          "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+        ],
+        "candidate_primary_intent": "PROGRESSION_SETUP",
+        "debts_served": [],
+        "deviation_reason": "",
+        "recommended_primary_intent": "PROGRESSION_SETUP",
+        "risks": [
+          "恢复与准备不能写成无事件清单"
+        ]
+      },
+      "score_evidence": {
+        "agency_gain": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "debt_utility": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "future_damage": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "payoff_or_setup_utility": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "pressure_curve_fit": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "progress_gain": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "repetition_fatigue": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "risk_fit": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "structural_diversity": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "style_fit": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ],
+        "thread_need_fit": [
+          "雾里的同一声：该项为模型声明，须由 importer 的冻结 Kernel Evidence 重新计算或保留现有指标来源。"
+        ]
+      },
+      "score_inputs": {
+        "agency_gain": 90.0,
+        "debt_utility": 66.0,
+        "future_damage": 19.0,
+        "payoff_or_setup_utility": 76.0,
+        "pressure_curve_fit": 90.0,
+        "progress_gain": 94.0,
+        "repetition_fatigue": 15.0,
+        "risk_fit": 86.0,
+        "structural_diversity": 79.0,
+        "style_fit": 90.0,
+        "thread_need_fit": 88.0
+      },
+      "secondary_functions": [
+        "world_expansion",
+        "pressure_build"
+      ],
+      "social_feedback": "暂不向外公开方位，避免交易频道抢先涌向未知区域。",
+      "solution_method": "不进入雾区，只比较三次声响间隔、方向和箭匣瞄准反馈，标记一个待验证方位。",
+      "state_changes": [
+        "形成一个未验证方位记录",
+        "三级升级与现有资源均未改变",
+        "更高威胁路线获得本地调查入口"
+      ],
+      "style_constraints": {
+        "dialogue_voice": "交易、试探和价格都要有摩擦",
+        "diction_register": "直接克制，系统信息只服务选择",
+        "emotional_distance": "情绪通过动作与取舍呈现",
+        "exposition_density": "中等；先现场后解释",
+        "pov_and_tense": "第三人称限知",
+        "sentence_rhythm": "短句动作链与少量判断交替"
+      },
+      "summary": "苏牧在休息与升级等待中，发现窗外金属摩擦声按固定间隔从同一方向重复。他不下车、不追击，只借箭匣瞄准回馈与缆车位置记录一个未验证方位，让“更高威胁路线”第一次获得可复核的本地线索。",
+      "title": "雾里的同一声",
+      "truth_alignment": [],
+      "wildcard": false,
+      "world_expansion_impact": [
+        "higher-threat-route线索获得一个可复核方位，但仍停留当前雾区"
+      ]
+    }
+  ],
+  "innovation_control": {
+    "focus": [
+      "auto"
+    ],
+    "level": "medium"
+  },
+  "notes": [
+    "本结果由当前 Codex 会话按正式 PLAN_ONLY handoff 的冻结文件生成；所有 kernel 字段均为声明，须由 Python importer 复核。",
+    "未读取第51章真实后续；未创建正文、Chapter Contract、Event 或 Canon Commit。"
+  ],
+  "task_id": "plan_ffe0e06d113a1f02f1156d17"
+}

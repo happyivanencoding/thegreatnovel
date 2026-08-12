@@ -1,0 +1,1318 @@
+{
+  "active_author_truths": [],
+  "anticipation_impact": [
+    "为higher-threat-route建立可复核入口，同时保留药品交易线"
+  ],
+  "boundary_packet_id": "boundary_0f25cf85ceb7c5870b105c23",
+  "candidate_id": "candidate_627c9669f9e1241d0790b0ca",
+  "canon_constraints": [
+    "三级缆车升级完成前不得使用三级能力",
+    "静音符、药品交易和高阶怪物细节仍未确认",
+    "仅使用第50章及以前冻结状态"
+  ],
+  "chapter": 51,
+  "chapter_intent": "PROGRESSION_SETUP",
+  "commit_updates": [
+    "未验证方位线索",
+    "后续路线核验问题"
+  ],
+  "continuation_boundary": {
+    "base_event_seq": 0,
+    "base_projection_hash": "3c1f9cef1411d7fd88c8704faae7b18604794892599e9fcc88b30cc7d3c5694b",
+    "batch_anchor": {},
+    "last_canon_chapter": 50,
+    "story_atlas_anchor": {}
+  },
+  "contract_id": "contract_40141b35706e489cfe9c8041",
+  "declared_kernel_trace": {
+    "anticipation_impact": [
+      "为higher-threat-route建立可复核入口，同时保留药品交易线"
+    ],
+    "drive_drift": {
+      "declared_status": "CLEAR"
+    },
+    "genre_drift": {
+      "declared_status": "CLEAR"
+    },
+    "genre_evolution": {
+      "declared_status": "UNCHANGED"
+    },
+    "narrative_drive_alignment": {
+      "drive_balance": "PRIMARY_SERVICED",
+      "drive_conflicts": [],
+      "drives_advanced": [
+        "POWER_PROGRESSION"
+      ],
+      "drives_deferred": [
+        "WORLD_EXPLORATION"
+      ],
+      "drives_paid_off": [],
+      "evidence": [
+        "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+      ],
+      "primary_drive": "POWER_PROGRESSION",
+      "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+      "secondary_drive_effects": {
+        "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+        "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+        "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+      }
+    },
+    "payoff_channel_impact": [
+      "KNOWLEDGE_GAIN"
+    ],
+    "progression_impact": {
+      "ability_showcase": [],
+      "ability_unlock": [],
+      "axis_advanced": [
+        "survival-cable-growth"
+      ],
+      "bottleneck_change": null,
+      "branch_change": null,
+      "future_progression_space": [
+        "未验证方位可在以后满足跨区路线证据门槛，但本章不转移世界层级"
+      ],
+      "growth_cost": [
+        "休息时间",
+        "暴露风险"
+      ],
+      "new_ceiling_visibility": [],
+      "progression_delta_type": [
+        "ADVANCE"
+      ],
+      "resource_change": [
+        "小型箭匣保持21/100，不声明新增弹药"
+      ],
+      "stage_change": null
+    },
+    "reader_promise_alignment": [
+      {
+        "evidence": [
+          "资源变化只使用已确认普通木刺，机会不写成库存。"
+        ],
+        "priority": "CORE",
+        "promise_id": "promise.resource-earned",
+        "service": "SERVED"
+      },
+      {
+        "evidence": [
+          "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+        ],
+        "priority": "CORE",
+        "promise_id": "promise.survival-verification",
+        "service": "PARTIALLY_SERVED"
+      },
+      {
+        "evidence": [
+          "只保留高阶路线问题，不提前跨区。"
+        ],
+        "priority": "IMPORTANT",
+        "promise_id": "promise.world-opening",
+        "service": "PARTIALLY_SERVED"
+      }
+    ],
+    "resource_impact": [
+      "小型箭匣保持21/100，不声明新增弹药"
+    ],
+    "scheduler_alignment": {
+      "alignment": "ALIGNED",
+      "anticipations_served": [
+        "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+      ],
+      "candidate_primary_intent": "PROGRESSION_SETUP",
+      "debts_served": [],
+      "deviation_reason": "",
+      "recommended_primary_intent": "PROGRESSION_SETUP",
+      "risks": [
+        "恢复与准备不能写成无事件清单"
+      ]
+    },
+    "world_expansion_impact": [
+      "higher-threat-route线索获得一个可复核方位，但仍停留当前雾区"
+    ]
+  },
+  "effective_book_profile": {
+    "active_directives": [],
+    "dimensions": [
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Worldbuilding\n\n## Rule-bound survival space\n- Observation: The suspended cable-car network is simultaneously a protected personal shelter, a moving resource route, and a daily risk-selection interface; safety depends on preserving the vehicle while choosing when to descend.\n- Confidence: 0.95\n- Chapter range: 1-1\n- Subject IDs: cable-car-survival-system\n- Evidence: `book-01-8ca152d8 · segment-0001 · lines 1-40`\n\n",
+        "dimension": "worldbuilding",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "worldbuilding.md",
+        "label": "世界观",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Characters\n\n## Relational suspicion under cooperation\n- Observation: Su Mu treats cooperation as an exchange of tested value rather than immediate trust; Lin Yuwei's bargaining and his deliberate withholding create a relationship that advances through transactions, teasing, and verified risk.\n- Voice: Su Mu favors short strategic statements, dry internal judgments, and action before explanation; Lin Yuwei answers with direct challenge and defensive humor.\n- Controls: Keep trust changes tied to a concrete exchange, rescue, injury, or revealed cost; do not convert pragmatic cooperation into unearned intimacy.\n- Confidence: 0.91\n- Chapter range: 28-41\n- Subject IDs: su-mu, lin-yuwei\n- Evidence: `book-01-8ca152d8 · segment-0028 · lines 5946-6000`\n\n",
+        "dimension": "characters",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "characters.md",
+        "label": "人物",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Plot\n\n## Literary Arc: from isolated survival to negotiated interdependence\n- Observation: The survival loop expands from solo scouting and loot selection into a chain of cooperation, trade, shared danger, and new uncertainty; each gain opens a larger tactical or social problem.\n- Interpretation: Escalation works when a concrete resource or threat forces a choice, the choice produces a visible cost, and the consequence changes the next route or relationship.\n- State before: Su Mu has a protected vehicle and strong tactical advantage but limited social information.\n- State after: He has usable cooperation with selected survivors while the world contains threats and rules that cannot be solved by strength alone.\n- Literary Arc IDs: literary-arc-survival-to-network\n- Confidence: 0.92\n- Chapter range: 1-50\n- Subject IDs: su-mu, lin-yuwei, zhou-zhenguo\n- Evidence: `book-01-8ca152d8 · segment-0039 · lines 7940-8020`\n\n",
+        "dimension": "plot",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "plot.md",
+        "label": "剧情",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Style\n\n## Information-first action prose\n- Observation: Scenes alternate compact system-readable facts, immediate sensory danger, and a protagonist's fast tactical inference.\n- Interpretation: Numeric or rule-like information is most effective when it changes an immediate decision rather than replacing the scene.\n- Control: Present a concrete sensory obstacle before explaining the useful rule; make each displayed attribute pay for itself through action.\n- Risks: Dense status exposition can flatten fear; repeated lucky outcomes can reduce perceived cost.\n- Confidence: 0.9\n- Chapter range: 1-50\n- Evidence: `book-01-8ca152d8 · segment-0040 · lines 8162-8240`\n\n",
+        "dimension": "style",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "style.md",
+        "label": "文风",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Narrative\n\n## Escalation through rule disclosure\n- Interpretation: The narrative repeatedly reveals a rule through a local survival problem, lets Su Mu test it, then widens its consequence into a new area, threat class, or social choice.\n- Observation: A new interface, item, or enemy is introduced as a practical obstacle before its larger implication becomes clear.\n- Control: Let the next revelation answer one immediate question while creating a more dangerous question.\n- Confidence: 0.91\n- Chapter range: 1-50\n- Evidence: `book-01-8ca152d8 · segment-0031 · lines 6530-6600`\n\n",
+        "dimension": "narrative",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "narrative.md",
+        "label": "叙事",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Dialogue\n\n## Transactional dialogue with friction\n- Observation: Conversations carry logistics, price, suspicion, and personality at the same time; speakers rarely state trust directly.\n- Voice: Su Mu's replies are economical and evasive when protecting an advantage; Lin Yuwei uses accusation, bargaining, and humor to test him.\n- Control: Give each exchange a concrete item, promise, injury, or threat to negotiate, then let the subtext change the relationship.\n- Confidence: 0.9\n- Chapter range: 28-50\n- Subject IDs: su-mu, lin-yuwei\n- Evidence: `book-01-8ca152d8 · segment-0041 · lines 8318-8390`\n\n",
+        "dimension": "dialogue",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "dialogue.md",
+        "label": "对话",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Pacing\n\n## Search, reveal, consequence\n- Control: Alternate short preparation or search beats with a sharp reveal and an irreversible consequence; use inventory or system detail as pressure, not as a pause from story.\n- Observation: The source compresses travel and setup but expands the moment an enemy, rule, or transaction changes the available choices.\n- Confidence: 0.89\n- Chapter range: 1-50\n- Evidence: `book-01-8ca152d8 · segment-0042 · lines 8500-8580`\n\n",
+        "dimension": "pacing",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "pacing.md",
+        "label": "节奏",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Themes\n\n## Scarcity and negotiated trust\n- Question: Can cooperation remain human when every exchange is also a survival calculation?\n- Competing Answers: Trust grows through paid risk and reliable action; scarcity turns every relationship into leverage.\n- Observation: Food, ammunition, information, shelter, and rescue repeatedly make moral or emotional choices material.\n- Confidence: 0.86\n- Chapter range: 28-50\n- Evidence: `book-01-8ca152d8 · segment-0044 · lines 8854-8940`\n\n",
+        "dimension": "themes",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "themes.md",
+        "label": "主题 / 价值观",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Continuity\n\n## Open: the limits of the night threat\n- Observation: The visible story establishes multiple categories of danger, including nocturnal phenomena and enemies whose timing or classification is uncertain; the distinction remains a live continuity question.\n- Open: whether the night threat follows a fixed category boundary or can manifest outside the expected time remains unverified.\n- Control: Treat the boundary as an open question; do not retroactively assign a new rule without a present-scene manifestation and cost.\n- Confidence: 0.88\n- Chapter range: 49-50\n- Evidence: `book-01-8ca152d8 · segment-0050 · lines 9892-9970`\n\n",
+        "dimension": "continuity",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "continuity.md",
+        "label": "连续性",
+        "source": "INITIALIZATION_GENERATED"
+      }
+    ],
+    "hard_constraints": {
+      "must": [],
+      "must_not": []
+    },
+    "profile_version_id": "generated:phase5-live-b-050:base",
+    "version_number": 0
+  },
+  "ending_state": "当前雾区不变；新增一个有三次现场观察支撑、仍待验证的方位线索。",
+  "forbidden_repetitions": [
+    "不得用纯清单替代现场选择",
+    "不得重复幸运掉落解决资源问题"
+  ],
+  "genre_alignment": [
+    "生存成长必须通过资源、行动、代价和验证推进"
+  ],
+  "genre_drift_diagnostic": {
+    "declared_status": "CLEAR"
+  },
+  "genre_evolution_diagnostic": {
+    "declared_status": "UNCHANGED"
+  },
+  "innovation_commitments": {
+    "expected_cross_horizon_synergies": [],
+    "expected_element_synergies": [],
+    "expected_future_options_opened": [],
+    "expected_horizon_roles": {},
+    "expected_innovation_elements": [],
+    "expected_new_debts": [],
+    "expected_payoffs": [],
+    "hard_gate_exception": false,
+    "minimum_meaningful_delta": null,
+    "soft_contract": true
+  },
+  "innovation_control": {
+    "focus": [
+      "auto"
+    ],
+    "level": "medium"
+  },
+  "innovation_preview": null,
+  "innovation_trace": null,
+  "kernel_verification_status": "PARTIAL",
+  "knowledge_constraints": [
+    "只知道周振国自述遭遇Lv2蓝色品质舔食者",
+    "普通木刺能装入箭匣，但伤害尚未验证",
+    "夜间威胁规则保持开放问题"
+  ],
+  "lens": "FORWARD_EXPANSION",
+  "mode": "faithful_continuation",
+  "must_not_resolve": [
+    "不得确认三级缆车升级完成",
+    "不得获得未成交的静音符或药品",
+    "不得解释Lv2怪物的完整规则"
+  ],
+  "narrative_debt": {
+    "advance": [
+      "当前雾区之外存在什么",
+      "Lv2威胁是否与路线有关"
+    ],
+    "fully_pay": [],
+    "new_major_hooks_allowed": 1
+  },
+  "narrative_drive_alignment": {
+    "drive_balance": "PRIMARY_SERVICED",
+    "drive_conflicts": [],
+    "drives_advanced": [
+      "POWER_PROGRESSION"
+    ],
+    "drives_deferred": [
+      "WORLD_EXPLORATION"
+    ],
+    "drives_paid_off": [],
+    "evidence": [
+      "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+    ],
+    "primary_drive": "POWER_PROGRESSION",
+    "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+    "secondary_drive_effects": {
+      "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+      "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+      "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+    }
+  },
+  "narrative_drive_drift_diagnostic": {
+    "declared_status": "CLEAR"
+  },
+  "narrative_portfolio": {
+    "consecutive_deferrals": 0,
+    "current_chapter": 50,
+    "long_threads": [],
+    "mid_threads": [
+      {
+        "debt_ids": [],
+        "horizon": "MID",
+        "last_advanced": 49,
+        "lifecycle": "DEVELOPING",
+        "maturity": 0.5,
+        "maturity_note": "",
+        "name": "从可见正文确定下一步问题",
+        "opened_chapter": 49,
+        "thread_id": "live-thread-50-1"
+      },
+      {
+        "debt_ids": [],
+        "horizon": "MID",
+        "last_advanced": 48,
+        "lifecycle": "DEVELOPING",
+        "maturity": 0.5,
+        "maturity_note": "",
+        "name": "保持可见事实与未知边界分离",
+        "opened_chapter": 48,
+        "thread_id": "live-thread-50-2"
+      },
+      {
+        "debt_ids": [],
+        "horizon": "MID",
+        "last_advanced": 47,
+        "lifecycle": "DEVELOPING",
+        "maturity": 0.5,
+        "maturity_note": "",
+        "name": "让作者选择保留可验证的前进空间",
+        "opened_chapter": 47,
+        "thread_id": "live-thread-50-3"
+      }
+    ],
+    "narrative_debts": [],
+    "overdue_debt_ids": [],
+    "payoff_ready_thread_ids": [],
+    "short_threads": [],
+    "snapshot_id": "portfolio_28625261cda453b52e5a37bf",
+    "warnings": []
+  },
+  "novelty_provenance": [
+    {
+      "causal_source": "当前浓雾缆车生存区与第50章窗外动静",
+      "conflicts_checked": [
+        "当前世界层级未变化",
+        "不读取第51章真实后续"
+      ],
+      "introduction_event": "",
+      "new_state_if_committed": "",
+      "novelty_boundary": "FORWARD_CANON_COMPATIBLE",
+      "provenance": "EXISTING_RUNTIME",
+      "retroactive_claim": false
+    },
+    {
+      "causal_source": "第50章已建立的怪异响动与浓雾环境",
+      "conflicts_checked": [
+        "不命名新地点",
+        "不进入higher-threat-route",
+        "不获得新资源或能力"
+      ],
+      "introduction_event": "同一方向的金属摩擦声在观察期内重复三次",
+      "new_state_if_committed": "苏牧记录一个未验证方位，作为以后调查入口",
+      "novelty_boundary": "FORWARD_CANON_COMPATIBLE",
+      "provenance": "FORWARD_NOVELTY",
+      "retroactive_claim": false
+    }
+  ],
+  "payoff_channel_impact": [
+    "KNOWLEDGE_GAIN"
+  ],
+  "payoff_plan": {
+    "causal_sources": [
+      "fog-cable-current-zone",
+      "第50章窗外怪异响动和身影",
+      "小型箭匣",
+      "三级缆车完成或取得跨区路线证据"
+    ],
+    "must_change_behavior": [
+      "未验证方位线索",
+      "后续路线核验问题"
+    ],
+    "state_changes": [
+      "形成一个未验证方位记录",
+      "三级升级与现有资源均未改变",
+      "更高威胁路线获得本地调查入口"
+    ]
+  },
+  "pressure": {
+    "before": 55.0,
+    "target_after": 64.0
+  },
+  "primary_function": "discovery",
+  "primary_thread": "source:source-delta-pwk-live-b-ch50-threat-opportunity",
+  "progress": {
+    "minimum_score": 25.0,
+    "required_irreversible_change": "苏牧记录一个具体方位，并把它纳入后续路线核验；该信息一旦形成会改变下一步观察选择。"
+  },
+  "progress_preview": {
+    "components": [
+      {
+        "component": "permanent_growth",
+        "evidence": [
+          "模型预测；等待 Python 用冻结状态重算。"
+        ],
+        "value": 65.0
+      },
+      {
+        "component": "world_state_change",
+        "evidence": [
+          "模型预测；等待 Python 用冻结状态重算。"
+        ],
+        "value": 65.0
+      },
+      {
+        "component": "relationship_change",
+        "evidence": [
+          "模型预测；等待 Python 用冻结状态重算。"
+        ],
+        "value": 0.0
+      },
+      {
+        "component": "knowledge_change",
+        "evidence": [
+          "模型预测；等待 Python 用冻结状态重算。"
+        ],
+        "value": 90.0
+      },
+      {
+        "component": "goal_advance",
+        "evidence": [
+          "模型预测；等待 Python 用冻结状态重算。"
+        ],
+        "value": 72.0
+      },
+      {
+        "component": "strategy_expansion",
+        "evidence": [
+          "模型预测；等待 Python 用冻结状态重算。"
+        ],
+        "value": 92.0
+      }
+    ],
+    "metric_run_id": null
+  },
+  "progression_debt_impact": [
+    "推进世界扩张问题，不关闭当前威胁债务"
+  ],
+  "progression_impact": {
+    "ability_showcase": [],
+    "ability_unlock": [],
+    "axis_advanced": [
+      "survival-cable-growth"
+    ],
+    "bottleneck_change": null,
+    "branch_change": null,
+    "future_progression_space": [
+      "未验证方位可在以后满足跨区路线证据门槛，但本章不转移世界层级"
+    ],
+    "growth_cost": [
+      "休息时间",
+      "暴露风险"
+    ],
+    "new_ceiling_visibility": [],
+    "progression_delta_type": [
+      "ADVANCE"
+    ],
+    "resource_change": [
+      "小型箭匣保持21/100，不声明新增弹药"
+    ],
+    "stage_change": null
+  },
+  "reader_promise_alignment": [
+    {
+      "evidence": [
+        "资源变化只使用已确认普通木刺，机会不写成库存。"
+      ],
+      "priority": "CORE",
+      "promise_id": "promise.resource-earned",
+      "service": "SERVED"
+    },
+    {
+      "evidence": [
+        "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+      ],
+      "priority": "CORE",
+      "promise_id": "promise.survival-verification",
+      "service": "PARTIALLY_SERVED"
+    },
+    {
+      "evidence": [
+        "只保留高阶路线问题，不提前跨区。"
+      ],
+      "priority": "IMPORTANT",
+      "promise_id": "promise.world-opening",
+      "service": "PARTIALLY_SERVED"
+    }
+  ],
+  "reader_question": "浓雾中的固定方位，是危险源还是通往下一片区域的路线线索？",
+  "required_cost": "牺牲休息时间并承担被外部存在察觉的风险。",
+  "required_irreversible_change": "苏牧记录一个具体方位，并把它纳入后续路线核验；该信息一旦形成会改变下一步观察选择。",
+  "resource_opportunity_impact": [
+    "小型箭匣保持21/100，不声明新增弹药"
+  ],
+  "reveal_agenda": {
+    "book_id": "phase5-live-b-050",
+    "chapter_ordinal": 51,
+    "counts": {
+      "keep_hidden": 0,
+      "must_reveal": 0,
+      "optional": 0,
+      "should_hint": 0
+    },
+    "debt_integration": {
+      "engine": "Narrative Debt / Promise",
+      "secret_obligations": [],
+      "separate_reveal_debt_engine": false
+    },
+    "edition_id": "base",
+    "keep_hidden": [],
+    "must_reveal": [],
+    "optional": [],
+    "reveal_budget": {
+      "hard_gate": false,
+      "hint_guideline": "1–3",
+      "partial_or_full_guideline": "0–1",
+      "planned_hints": 0,
+      "planned_partial_or_full": 0,
+      "status": "WITHIN_GUIDELINE"
+    },
+    "rule": "Hidden Truth 是行为约束，不等于揭示许可；拖动 Agenda 不改变任何 Knowledge。",
+    "should_hint": []
+  },
+  "rhythm_constraints": {
+    "advance_due_promises": [],
+    "avoid_repeated_ending_mode": "unknown",
+    "resolve_due_promises": []
+  },
+  "scheduler_alignment": {
+    "alignment": "ALIGNED",
+    "anticipations_served": [
+      "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+    ],
+    "candidate_primary_intent": "PROGRESSION_SETUP",
+    "debts_served": [],
+    "deviation_reason": "",
+    "recommended_primary_intent": "PROGRESSION_SETUP",
+    "risks": [
+      "恢复与准备不能写成无事件清单"
+    ]
+  },
+  "secondary_functions": [
+    "world_expansion",
+    "pressure_build"
+  ],
+  "style_constraints": {
+    "dialogue_voice": "交易、试探和价格都要有摩擦",
+    "diction_register": "直接克制，系统信息只服务选择",
+    "emotional_distance": "情绪通过动作与取舍呈现",
+    "exposition_density": "中等；先现场后解释",
+    "pov_and_tense": "第三人称限知",
+    "sentence_rhythm": "短句动作链与少量判断交替"
+  },
+  "truth_reveal_commitments": {
+    "reveal_impact": {
+      "character_knowledge_delta": [],
+      "full_reveals": [],
+      "hints": [],
+      "kept_hidden": [],
+      "partial_reveals": [],
+      "reader_knowledge_delta": [],
+      "secrets_used": []
+    },
+    "rule": "Hidden Truth 只作为行为约束；未获 Agenda 授权不得向读者或角色揭示。",
+    "truth_alignment": []
+  },
+  "verified_kernel_trace": {
+    "drive_drift": {
+      "evidence": [
+        "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+      ],
+      "hard_failure": false,
+      "reasons": [],
+      "status": "CLEAR",
+      "warning": false
+    },
+    "evidence_compilation": {
+      "candidate_local_id": "pwk-b-fog-bearing-mark",
+      "completeness": "PARTIAL",
+      "declared": {
+        "anticipation_impact": [
+          "为higher-threat-route建立可复核入口，同时保留药品交易线"
+        ],
+        "drive_drift": {
+          "declared_status": "CLEAR"
+        },
+        "genre_drift": {
+          "declared_status": "CLEAR"
+        },
+        "genre_evolution": {
+          "declared_status": "UNCHANGED"
+        },
+        "narrative_drive_alignment": {
+          "drive_balance": "PRIMARY_SERVICED",
+          "drive_conflicts": [],
+          "drives_advanced": [
+            "POWER_PROGRESSION"
+          ],
+          "drives_deferred": [
+            "WORLD_EXPLORATION"
+          ],
+          "drives_paid_off": [],
+          "evidence": [
+            "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+          ],
+          "primary_drive": "POWER_PROGRESSION",
+          "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+          "secondary_drive_effects": {
+            "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+            "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+            "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+          }
+        },
+        "payoff_channel_impact": [
+          "KNOWLEDGE_GAIN"
+        ],
+        "progression_impact": {
+          "ability_showcase": [],
+          "ability_unlock": [],
+          "axis_advanced": [
+            "survival-cable-growth"
+          ],
+          "bottleneck_change": null,
+          "branch_change": null,
+          "future_progression_space": [
+            "未验证方位可在以后满足跨区路线证据门槛，但本章不转移世界层级"
+          ],
+          "growth_cost": [
+            "休息时间",
+            "暴露风险"
+          ],
+          "new_ceiling_visibility": [],
+          "progression_delta_type": [
+            "ADVANCE"
+          ],
+          "resource_change": [
+            "小型箭匣保持21/100，不声明新增弹药"
+          ],
+          "stage_change": null
+        },
+        "reader_promise_alignment": [
+          {
+            "evidence": [
+              "资源变化只使用已确认普通木刺，机会不写成库存。"
+            ],
+            "priority": "CORE",
+            "promise_id": "promise.resource-earned",
+            "service": "SERVED"
+          },
+          {
+            "evidence": [
+              "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+            ],
+            "priority": "CORE",
+            "promise_id": "promise.survival-verification",
+            "service": "PARTIALLY_SERVED"
+          },
+          {
+            "evidence": [
+              "只保留高阶路线问题，不提前跨区。"
+            ],
+            "priority": "IMPORTANT",
+            "promise_id": "promise.world-opening",
+            "service": "PARTIALLY_SERVED"
+          }
+        ],
+        "resource_impact": [
+          "小型箭匣保持21/100，不声明新增弹药"
+        ],
+        "scheduler_alignment": {
+          "alignment": "ALIGNED",
+          "anticipations_served": [
+            "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+          ],
+          "candidate_primary_intent": "PROGRESSION_SETUP",
+          "debts_served": [],
+          "deviation_reason": "",
+          "recommended_primary_intent": "PROGRESSION_SETUP",
+          "risks": [
+            "恢复与准备不能写成无事件清单"
+          ]
+        },
+        "world_expansion_impact": [
+          "higher-threat-route线索获得一个可复核方位，但仍停留当前雾区"
+        ]
+      },
+      "differences": [],
+      "hard_gate_compilation": {
+        "author_constraint_violations": [],
+        "canon_conflicts": [],
+        "capability_violations": [],
+        "knowledge_violations": [],
+        "missing_causal_sources": [],
+        "payoff_cooldown_violations": [],
+        "timeline_conflicts": []
+      },
+      "soft_metric_compilation": {
+        "candidate_score_overrides": {
+          "components": {
+            "agency_gain": {
+              "completeness": "COMPLETE",
+              "evidence": [
+                "allowed_delta_type:ADVANCE",
+                "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+              ],
+              "score": 100.0,
+              "source": "KERNEL_VERIFIED_EVIDENCE"
+            },
+            "debt_utility": {
+              "completeness": "COMPLETE",
+              "evidence": [],
+              "formula": "existing:narrative_debt",
+              "score": 0.0,
+              "source": "FROZEN_NARRATIVE_DEBT"
+            },
+            "future_damage": {
+              "completeness": "COMPLETE",
+              "evidence": [
+                "allowed_delta_type:ADVANCE",
+                "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+              ],
+              "score": 0.0,
+              "source": "KERNEL_VERIFIED_EVIDENCE"
+            },
+            "payoff_or_setup_utility": {
+              "completeness": "PARTIAL",
+              "components": {
+                "after_value": 75.0,
+                "causality": 100.0,
+                "future_damage": 0.0,
+                "impact": 75.0,
+                "maturity": 0.0,
+                "novelty": 85.0,
+                "repetition_fatigue": 15.0,
+                "structural_fit": 60.0
+              },
+              "evidence": [
+                "KNOWLEDGE_GAIN"
+              ],
+              "formula": "existing:payoff_score",
+              "score": 59.7,
+              "source": "KERNEL_VERIFIED_PLUS_EXISTING_REPETITION_INPUT"
+            },
+            "progress_gain": {
+              "completeness": "COMPLETE",
+              "components": {
+                "goal_advance": 70.0,
+                "knowledge_change": 60.0,
+                "permanent_growth": 60.0,
+                "relationship_change": 0.0,
+                "strategy_expansion": 75.0,
+                "world_state_change": 60.0
+              },
+              "evidence": {
+                "goal_advance": [
+                  "allowed_delta_type:ADVANCE",
+                  "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                ],
+                "knowledge_change": [
+                  "allowed_delta_type:ADVANCE",
+                  "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                ],
+                "permanent_growth": [
+                  "allowed_delta_type:ADVANCE",
+                  "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                ],
+                "relationship_change": [
+                  "no_verified_relationship_change_change"
+                ],
+                "strategy_expansion": [
+                  "allowed_delta_type:ADVANCE",
+                  "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                ],
+                "world_state_change": [
+                  "allowed_delta_type:ADVANCE",
+                  "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                ]
+              },
+              "formula": "existing:progress",
+              "score": 54.75,
+              "source": "KERNEL_VERIFIED_EVIDENCE"
+            },
+            "risk_fit": {
+              "completeness": "COMPLETE",
+              "evidence": [
+                "allowed_delta_type:ADVANCE",
+                "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+              ],
+              "score": 100.0,
+              "source": "KERNEL_VERIFIED_EVIDENCE"
+            },
+            "thread_need_fit": {
+              "completeness": "COMPLETE",
+              "evidence": [
+                "source:source-delta-pwk-live-b-ch50-threat-opportunity"
+              ],
+              "score": 100.0,
+              "source": "FROZEN_ACTIVE_THREADS"
+            }
+          },
+          "source": "KERNEL_EVIDENCE_COMPILER",
+          "values": {
+            "agency_gain": 100.0,
+            "debt_utility": 0.0,
+            "future_damage": 0.0,
+            "payoff_or_setup_utility": 59.7,
+            "progress_gain": 54.75,
+            "risk_fit": 100.0,
+            "thread_need_fit": 100.0
+          }
+        },
+        "payoff": {
+          "completeness": "PARTIAL",
+          "components": {
+            "after_value": 75.0,
+            "causality": 100.0,
+            "future_damage": 0.0,
+            "impact": 75.0,
+            "maturity": 0.0,
+            "novelty": 85.0,
+            "repetition_fatigue": 15.0,
+            "structural_fit": 60.0
+          },
+          "evidence": [
+            "KNOWLEDGE_GAIN"
+          ],
+          "formula": "existing:payoff_score",
+          "score": 59.7,
+          "source": "KERNEL_VERIFIED_PLUS_EXISTING_REPETITION_INPUT"
+        },
+        "progress": {
+          "completeness": "COMPLETE",
+          "components": {
+            "goal_advance": 70.0,
+            "knowledge_change": 60.0,
+            "permanent_growth": 60.0,
+            "relationship_change": 0.0,
+            "strategy_expansion": 75.0,
+            "world_state_change": 60.0
+          },
+          "evidence": {
+            "goal_advance": [
+              "allowed_delta_type:ADVANCE",
+              "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+            ],
+            "knowledge_change": [
+              "allowed_delta_type:ADVANCE",
+              "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+            ],
+            "permanent_growth": [
+              "allowed_delta_type:ADVANCE",
+              "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+            ],
+            "relationship_change": [
+              "no_verified_relationship_change_change"
+            ],
+            "strategy_expansion": [
+              "allowed_delta_type:ADVANCE",
+              "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+            ],
+            "world_state_change": [
+              "allowed_delta_type:ADVANCE",
+              "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+            ]
+          },
+          "formula": "existing:progress",
+          "score": 54.75,
+          "source": "KERNEL_VERIFIED_EVIDENCE"
+        },
+        "resource_pressure": {
+          "completeness": "COMPLETE",
+          "components": {
+            "cost_income_imbalance": 0.0,
+            "current_shortfall": 0.0,
+            "near_future_demand": 0.0,
+            "reader_salience": 100.0,
+            "recently_blocked_actions": 100.0
+          },
+          "evidence": [
+            "bottleneck:升级完成时点",
+            "bottleneck:弹药伤害未验证",
+            "bottleneck:药品与高阶怪物信息不足"
+          ],
+          "formula": "existing:resource_pressure",
+          "score": 35.0,
+          "source": "KERNEL_VERIFIED_EVIDENCE"
+        }
+      },
+      "verified": {
+        "drive_drift": {
+          "evidence": [
+            "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+          ],
+          "hard_failure": false,
+          "reasons": [],
+          "status": "CLEAR",
+          "warning": false
+        },
+        "genre_drift": {
+          "evidence": [
+            "allowed_delta_type:ADVANCE",
+            "owned_resource:小型箭匣保持21/100，不声明新增弹药",
+            "资源变化只使用已确认普通木刺，机会不写成库存。",
+            "候选以Lv2威胁压力组织准备，但不虚构怪物细节。",
+            "只保留高阶路线问题，不提前跨区。"
+          ],
+          "hard_failure": false,
+          "penalty": 0.0,
+          "reasons": [],
+          "status": "CLEAR",
+          "warning": false
+        },
+        "genre_evolution": {
+          "core_promise_preserved": true,
+          "evidence": [
+            "allowed_delta_type:ADVANCE",
+            "owned_resource:小型箭匣保持21/100，不声明新增弹药",
+            "资源变化只使用已确认普通木刺，机会不写成库存。",
+            "候选以Lv2威胁压力组织准备，但不虚构怪物细节。",
+            "只保留高阶路线问题，不提前跨区。"
+          ],
+          "explanation": "未检测到需要单独标记的 Genre Evolution",
+          "status": "CLEAR"
+        },
+        "narrative_drive_alignment": {
+          "drive_balance": "PRIMARY_SERVICED",
+          "drive_conflicts": [],
+          "drives_advanced": [
+            "POWER_PROGRESSION"
+          ],
+          "drives_deferred": [
+            "WORLD_EXPLORATION"
+          ],
+          "drives_paid_off": [],
+          "evidence": [
+            "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+          ],
+          "primary_drive": "POWER_PROGRESSION",
+          "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+          "secondary_drive_effects": {
+            "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+            "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+            "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+          }
+        },
+        "payoff_channels": [
+          "KNOWLEDGE_GAIN"
+        ],
+        "progression_impact": {
+          "ability_showcases": [],
+          "ability_unlocks": [],
+          "axis_advanced": [
+            "survival-cable-growth"
+          ],
+          "growth_costs": [
+            "休息时间",
+            "暴露风险"
+          ],
+          "progression_delta_type": [
+            "ADVANCE"
+          ],
+          "resource_changes": [
+            {
+              "claim": "小型箭匣保持21/100，不声明新增弹药",
+              "source": "CURRENT_OWNED_RESOURCE"
+            }
+          ],
+          "stage_change": null,
+          "world_expansion": []
+        },
+        "reader_promise_alignment": [
+          {
+            "contract_strength": "CORE",
+            "evidence": [
+              "资源变化只使用已确认普通木刺，机会不写成库存。"
+            ],
+            "priority": "CORE",
+            "promise_id": "promise.resource-earned",
+            "service": "SERVED",
+            "verification_status": "VERIFIED"
+          },
+          {
+            "contract_strength": "CORE",
+            "evidence": [
+              "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+            ],
+            "priority": "CORE",
+            "promise_id": "promise.survival-verification",
+            "service": "PARTIALLY_SERVED",
+            "verification_status": "VERIFIED"
+          },
+          {
+            "contract_strength": "IMPORTANT",
+            "evidence": [
+              "只保留高阶路线问题，不提前跨区。"
+            ],
+            "priority": "IMPORTANT",
+            "promise_id": "promise.world-opening",
+            "service": "PARTIALLY_SERVED",
+            "verification_status": "VERIFIED"
+          }
+        ],
+        "resource_impact": [
+          {
+            "claim": "小型箭匣保持21/100，不声明新增弹药",
+            "source": "CURRENT_RESOURCE",
+            "status": "VERIFIED"
+          }
+        ],
+        "scheduler_alignment": {
+          "alignment": "ALIGNED",
+          "anticipations_served": [
+            "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+          ],
+          "candidate_primary_intent": "PROGRESSION_SETUP",
+          "debts_served": [],
+          "deviation_reason": "",
+          "recommended_primary_intent": "PROGRESSION_SETUP",
+          "risks": [
+            "恢复与准备不能写成无事件清单"
+          ]
+        },
+        "world_expansion_impact": []
+      },
+      "verified_anticipation_impact": [],
+      "verified_drive_alignment": {
+        "drive_balance": "PRIMARY_SERVICED",
+        "drive_conflicts": [],
+        "drives_advanced": [
+          "POWER_PROGRESSION"
+        ],
+        "drives_deferred": [
+          "WORLD_EXPLORATION"
+        ],
+        "drives_paid_off": [],
+        "evidence": [
+          "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+        ],
+        "primary_drive": "POWER_PROGRESSION",
+        "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+        "secondary_drive_effects": {
+          "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+          "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+          "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+        }
+      },
+      "verified_progress_components": {
+        "completeness": "COMPLETE",
+        "components": {
+          "goal_advance": 70.0,
+          "knowledge_change": 60.0,
+          "permanent_growth": 60.0,
+          "relationship_change": 0.0,
+          "strategy_expansion": 75.0,
+          "world_state_change": 60.0
+        },
+        "evidence": {
+          "goal_advance": [
+            "allowed_delta_type:ADVANCE",
+            "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+          ],
+          "knowledge_change": [
+            "allowed_delta_type:ADVANCE",
+            "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+          ],
+          "permanent_growth": [
+            "allowed_delta_type:ADVANCE",
+            "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+          ],
+          "relationship_change": [
+            "no_verified_relationship_change_change"
+          ],
+          "strategy_expansion": [
+            "allowed_delta_type:ADVANCE",
+            "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+          ],
+          "world_state_change": [
+            "allowed_delta_type:ADVANCE",
+            "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+          ]
+        },
+        "formula": "existing:progress",
+        "score": 54.75,
+        "source": "KERNEL_VERIFIED_EVIDENCE"
+      },
+      "verified_progression_impact": {
+        "ability_showcases": [],
+        "ability_unlocks": [],
+        "axis_advanced": [
+          "survival-cable-growth"
+        ],
+        "growth_costs": [
+          "休息时间",
+          "暴露风险"
+        ],
+        "progression_delta_type": [
+          "ADVANCE"
+        ],
+        "resource_changes": [
+          {
+            "claim": "小型箭匣保持21/100，不声明新增弹药",
+            "source": "CURRENT_OWNED_RESOURCE"
+          }
+        ],
+        "stage_change": null,
+        "world_expansion": []
+      },
+      "verified_reader_promise_alignment": [
+        {
+          "contract_strength": "CORE",
+          "evidence": [
+            "资源变化只使用已确认普通木刺，机会不写成库存。"
+          ],
+          "priority": "CORE",
+          "promise_id": "promise.resource-earned",
+          "service": "SERVED",
+          "verification_status": "VERIFIED"
+        },
+        {
+          "contract_strength": "CORE",
+          "evidence": [
+            "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+          ],
+          "priority": "CORE",
+          "promise_id": "promise.survival-verification",
+          "service": "PARTIALLY_SERVED",
+          "verification_status": "VERIFIED"
+        },
+        {
+          "contract_strength": "IMPORTANT",
+          "evidence": [
+            "只保留高阶路线问题，不提前跨区。"
+          ],
+          "priority": "IMPORTANT",
+          "promise_id": "promise.world-opening",
+          "service": "PARTIALLY_SERVED",
+          "verification_status": "VERIFIED"
+        }
+      ],
+      "verified_resource_impact": [
+        {
+          "claim": "小型箭匣保持21/100，不声明新增弹药",
+          "source": "CURRENT_RESOURCE",
+          "status": "VERIFIED"
+        }
+      ],
+      "verified_world_expansion_impact": [],
+      "warnings": [
+        "世界扩张声明仅视为铺垫：higher-threat-route线索获得一个可复核方位，但仍停留当前雾区"
+      ]
+    },
+    "genre_drift": {
+      "evidence": [
+        "allowed_delta_type:ADVANCE",
+        "owned_resource:小型箭匣保持21/100，不声明新增弹药",
+        "资源变化只使用已确认普通木刺，机会不写成库存。",
+        "候选以Lv2威胁压力组织准备，但不虚构怪物细节。",
+        "只保留高阶路线问题，不提前跨区。"
+      ],
+      "hard_failure": false,
+      "penalty": 0.0,
+      "reasons": [],
+      "status": "CLEAR",
+      "warning": false
+    },
+    "genre_evolution": {
+      "core_promise_preserved": true,
+      "evidence": [
+        "allowed_delta_type:ADVANCE",
+        "owned_resource:小型箭匣保持21/100，不声明新增弹药",
+        "资源变化只使用已确认普通木刺，机会不写成库存。",
+        "候选以Lv2威胁压力组织准备，但不虚构怪物细节。",
+        "只保留高阶路线问题，不提前跨区。"
+      ],
+      "explanation": "未检测到需要单独标记的 Genre Evolution",
+      "status": "CLEAR"
+    },
+    "narrative_drive_alignment": {
+      "drive_balance": "PRIMARY_SERVICED",
+      "drive_conflicts": [],
+      "drives_advanced": [
+        "POWER_PROGRESSION"
+      ],
+      "drives_deferred": [
+        "WORLD_EXPLORATION"
+      ],
+      "drives_paid_off": [],
+      "evidence": [
+        "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+      ],
+      "primary_drive": "POWER_PROGRESSION",
+      "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+      "secondary_drive_effects": {
+        "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+        "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+        "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+      }
+    },
+    "payoff_channels": [
+      "KNOWLEDGE_GAIN"
+    ],
+    "progression_impact": {
+      "ability_showcases": [],
+      "ability_unlocks": [],
+      "axis_advanced": [
+        "survival-cable-growth"
+      ],
+      "growth_costs": [
+        "休息时间",
+        "暴露风险"
+      ],
+      "progression_delta_type": [
+        "ADVANCE"
+      ],
+      "resource_changes": [
+        {
+          "claim": "小型箭匣保持21/100，不声明新增弹药",
+          "source": "CURRENT_OWNED_RESOURCE"
+        }
+      ],
+      "stage_change": null,
+      "world_expansion": []
+    },
+    "reader_promise_alignment": [
+      {
+        "contract_strength": "CORE",
+        "evidence": [
+          "资源变化只使用已确认普通木刺，机会不写成库存。"
+        ],
+        "priority": "CORE",
+        "promise_id": "promise.resource-earned",
+        "service": "SERVED",
+        "verification_status": "VERIFIED"
+      },
+      {
+        "contract_strength": "CORE",
+        "evidence": [
+          "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+        ],
+        "priority": "CORE",
+        "promise_id": "promise.survival-verification",
+        "service": "PARTIALLY_SERVED",
+        "verification_status": "VERIFIED"
+      },
+      {
+        "contract_strength": "IMPORTANT",
+        "evidence": [
+          "只保留高阶路线问题，不提前跨区。"
+        ],
+        "priority": "IMPORTANT",
+        "promise_id": "promise.world-opening",
+        "service": "PARTIALLY_SERVED",
+        "verification_status": "VERIFIED"
+      }
+    ],
+    "resource_impact": [
+      {
+        "claim": "小型箭匣保持21/100，不声明新增弹药",
+        "source": "CURRENT_RESOURCE",
+        "status": "VERIFIED"
+      }
+    ],
+    "scheduler_alignment": {
+      "alignment": "ALIGNED",
+      "anticipations_served": [
+        "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+      ],
+      "candidate_primary_intent": "PROGRESSION_SETUP",
+      "debts_served": [],
+      "deviation_reason": "",
+      "recommended_primary_intent": "PROGRESSION_SETUP",
+      "risks": [
+        "恢复与准备不能写成无事件清单"
+      ]
+    },
+    "world_expansion_impact": []
+  },
+  "world_expansion_impact": [
+    "higher-threat-route线索获得一个可复核方位，但仍停留当前雾区"
+  ]
+}

@@ -1,0 +1,350 @@
+{
+  "aggregate_hash": "433f3c428a9d4fbab23ee67b031b553ae5bfbb835a6517ae5d95ab51290c01a5",
+  "aggregate_id": "planning-aggregate_667057dec2c81abe70d4c518",
+  "author_control": {
+    "intents": [],
+    "rule": "候选必须读取作者任务/意图；命中只作为可追溯规划输入，不改变评分硬门。",
+    "target_hits": {
+      "intent_count": 0,
+      "intent_ids": [],
+      "priority_order": "priority asc, horizon, updated_at desc",
+      "targets": [],
+      "task_count": 0,
+      "task_ids": []
+    },
+    "tasks": [],
+    "trace_contract": {
+      "hard_gates_win": true,
+      "required": [
+        "author_task_hits",
+        "author_intent_hits",
+        "author_tasks_advanced",
+        "author_intents_advanced",
+        "author_goals_not_used",
+        "unused_reasons"
+      ]
+    }
+  },
+  "author_control_trace_contract": {},
+  "author_goal": "在不泄漏第51章真实后续的前提下，延续第50章手工木刺资源线，并处理Lv2蓝色怪物带来的药品与战斗压力；不得凭空获得资源或能力。",
+  "book_id": "phase5-live-b-050",
+  "boundary_packet_id": "boundary_0f25cf85ceb7c5870b105c23",
+  "boundary_path": "C:\\dev\\小说续写系统\\library\\phase5-live-b-050\\editions\\base\\writing\\boundaries\\boundary_0f25cf85ceb7c5870b105c23.json",
+  "created_at": "2026-08-12T09:17:18.694514+00:00",
+  "edition_id": "base",
+  "effective_book_profile": {
+    "active_directives": [],
+    "dimensions": [
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Worldbuilding\n\n## Rule-bound survival space\n- Observation: The suspended cable-car network is simultaneously a protected personal shelter, a moving resource route, and a daily risk-selection interface; safety depends on preserving the vehicle while choosing when to descend.\n- Confidence: 0.95\n- Chapter range: 1-1\n- Subject IDs: cable-car-survival-system\n- Evidence: `book-01-8ca152d8 · segment-0001 · lines 1-40`\n\n",
+        "dimension": "worldbuilding",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "worldbuilding.md",
+        "label": "世界观",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Characters\n\n## Relational suspicion under cooperation\n- Observation: Su Mu treats cooperation as an exchange of tested value rather than immediate trust; Lin Yuwei's bargaining and his deliberate withholding create a relationship that advances through transactions, teasing, and verified risk.\n- Voice: Su Mu favors short strategic statements, dry internal judgments, and action before explanation; Lin Yuwei answers with direct challenge and defensive humor.\n- Controls: Keep trust changes tied to a concrete exchange, rescue, injury, or revealed cost; do not convert pragmatic cooperation into unearned intimacy.\n- Confidence: 0.91\n- Chapter range: 28-41\n- Subject IDs: su-mu, lin-yuwei\n- Evidence: `book-01-8ca152d8 · segment-0028 · lines 5946-6000`\n\n",
+        "dimension": "characters",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "characters.md",
+        "label": "人物",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Plot\n\n## Literary Arc: from isolated survival to negotiated interdependence\n- Observation: The survival loop expands from solo scouting and loot selection into a chain of cooperation, trade, shared danger, and new uncertainty; each gain opens a larger tactical or social problem.\n- Interpretation: Escalation works when a concrete resource or threat forces a choice, the choice produces a visible cost, and the consequence changes the next route or relationship.\n- State before: Su Mu has a protected vehicle and strong tactical advantage but limited social information.\n- State after: He has usable cooperation with selected survivors while the world contains threats and rules that cannot be solved by strength alone.\n- Literary Arc IDs: literary-arc-survival-to-network\n- Confidence: 0.92\n- Chapter range: 1-50\n- Subject IDs: su-mu, lin-yuwei, zhou-zhenguo\n- Evidence: `book-01-8ca152d8 · segment-0039 · lines 7940-8020`\n\n",
+        "dimension": "plot",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "plot.md",
+        "label": "剧情",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Style\n\n## Information-first action prose\n- Observation: Scenes alternate compact system-readable facts, immediate sensory danger, and a protagonist's fast tactical inference.\n- Interpretation: Numeric or rule-like information is most effective when it changes an immediate decision rather than replacing the scene.\n- Control: Present a concrete sensory obstacle before explaining the useful rule; make each displayed attribute pay for itself through action.\n- Risks: Dense status exposition can flatten fear; repeated lucky outcomes can reduce perceived cost.\n- Confidence: 0.9\n- Chapter range: 1-50\n- Evidence: `book-01-8ca152d8 · segment-0040 · lines 8162-8240`\n\n",
+        "dimension": "style",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "style.md",
+        "label": "文风",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Narrative\n\n## Escalation through rule disclosure\n- Interpretation: The narrative repeatedly reveals a rule through a local survival problem, lets Su Mu test it, then widens its consequence into a new area, threat class, or social choice.\n- Observation: A new interface, item, or enemy is introduced as a practical obstacle before its larger implication becomes clear.\n- Control: Let the next revelation answer one immediate question while creating a more dangerous question.\n- Confidence: 0.91\n- Chapter range: 1-50\n- Evidence: `book-01-8ca152d8 · segment-0031 · lines 6530-6600`\n\n",
+        "dimension": "narrative",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "narrative.md",
+        "label": "叙事",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Dialogue\n\n## Transactional dialogue with friction\n- Observation: Conversations carry logistics, price, suspicion, and personality at the same time; speakers rarely state trust directly.\n- Voice: Su Mu's replies are economical and evasive when protecting an advantage; Lin Yuwei uses accusation, bargaining, and humor to test him.\n- Control: Give each exchange a concrete item, promise, injury, or threat to negotiate, then let the subtext change the relationship.\n- Confidence: 0.9\n- Chapter range: 28-50\n- Subject IDs: su-mu, lin-yuwei\n- Evidence: `book-01-8ca152d8 · segment-0041 · lines 8318-8390`\n\n",
+        "dimension": "dialogue",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "dialogue.md",
+        "label": "对话",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Pacing\n\n## Search, reveal, consequence\n- Control: Alternate short preparation or search beats with a sharp reveal and an irreversible consequence; use inventory or system detail as pressure, not as a pause from story.\n- Observation: The source compresses travel and setup but expands the moment an enemy, rule, or transaction changes the available choices.\n- Confidence: 0.89\n- Chapter range: 1-50\n- Evidence: `book-01-8ca152d8 · segment-0042 · lines 8500-8580`\n\n",
+        "dimension": "pacing",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "pacing.md",
+        "label": "节奏",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Themes\n\n## Scarcity and negotiated trust\n- Question: Can cooperation remain human when every exchange is also a survival calculation?\n- Competing Answers: Trust grows through paid risk and reliable action; scarcity turns every relationship into leverage.\n- Observation: Food, ammunition, information, shelter, and rescue repeatedly make moral or emotional choices material.\n- Confidence: 0.86\n- Chapter range: 28-50\n- Evidence: `book-01-8ca152d8 · segment-0044 · lines 8854-8940`\n\n",
+        "dimension": "themes",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "themes.md",
+        "label": "主题 / 价值观",
+        "source": "INITIALIZATION_GENERATED"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "# Continuity\n\n## Open: the limits of the night threat\n- Observation: The visible story establishes multiple categories of danger, including nocturnal phenomena and enemies whose timing or classification is uncertain; the distinction remains a live continuity question.\n- Open: whether the night threat follows a fixed category boundary or can manifest outside the expected time remains unverified.\n- Control: Treat the boundary as an open question; do not retroactively assign a new rule without a present-scene manifestation and cost.\n- Confidence: 0.88\n- Chapter range: 49-50\n- Evidence: `book-01-8ca152d8 · segment-0050 · lines 9892-9970`\n\n",
+        "dimension": "continuity",
+        "effective_source": "INITIALIZATION_GENERATED",
+        "filename": "continuity.md",
+        "label": "连续性",
+        "source": "INITIALIZATION_GENERATED"
+      }
+    ],
+    "hard_constraints": {
+      "must": [],
+      "must_not": []
+    },
+    "profile_version_id": "generated:phase5-live-b-050:base",
+    "version_number": 0
+  },
+  "effective_contract_references": [
+    {
+      "contract_record_id": "progression-contract-f473692c5f734dca816b386e2a69ce40",
+      "contract_type": "GENRE",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-64b9d3395ecb4857b799c2cfd306d99c",
+      "contract_type": "MARKET_CATEGORY",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-6fdab99b082e429fac207ecc1804c887",
+      "contract_type": "NARRATIVE_DRIVE",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-860fe3379b1a4aebb9bb585d657cdeb8",
+      "contract_type": "PAYOFF_CHANNEL",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-ad36acb4a4a941b9b694894ca369c97a",
+      "contract_type": "PROGRESSION",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-88093906b05b4bdd966e0bb456ff1518",
+      "contract_type": "READER_EXPERIENCE",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-f40ab026b5ef4af199ade315b25f4fdf",
+      "contract_type": "WORLD_EXPANSION",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    }
+  ],
+  "handoff_id": "handoff_7d20458a61b76806c794921f",
+  "handoff_input": "C:\\dev\\小说续写系统\\library\\phase5-live-b-050\\editions\\base\\operations\\handoff_7d20458a61b76806c794921f\\input",
+  "innovation_control": {
+    "focus": [
+      "auto"
+    ],
+    "level": "medium"
+  },
+  "innovation_source": "PWK_V1_1_LIVE_AB_SAME_CONDITION",
+  "kernel_context": "C:\\dev\\小说续写系统\\library\\phase5-live-b-050\\editions\\base\\operations\\plan_ffe0e06d113a1f02f1156d17\\input\\kernel_context.json",
+  "metric_bundle_hash": "de5426dabb85bbed07bb8c189e39495477079e07dbb6fb7f7b9532f54f71cecd",
+  "metric_run_id": null,
+  "narrative_portfolio_snapshot": {
+    "consecutive_deferrals": 0,
+    "current_chapter": 50,
+    "long_threads": [],
+    "mid_threads": [
+      {
+        "debt_ids": [],
+        "horizon": "MID",
+        "last_advanced": 49,
+        "lifecycle": "DEVELOPING",
+        "maturity": 0.5,
+        "maturity_note": "",
+        "name": "从可见正文确定下一步问题",
+        "opened_chapter": 49,
+        "thread_id": "live-thread-50-1"
+      },
+      {
+        "debt_ids": [],
+        "horizon": "MID",
+        "last_advanced": 48,
+        "lifecycle": "DEVELOPING",
+        "maturity": 0.5,
+        "maturity_note": "",
+        "name": "保持可见事实与未知边界分离",
+        "opened_chapter": 48,
+        "thread_id": "live-thread-50-2"
+      },
+      {
+        "debt_ids": [],
+        "horizon": "MID",
+        "last_advanced": 47,
+        "lifecycle": "DEVELOPING",
+        "maturity": 0.5,
+        "maturity_note": "",
+        "name": "让作者选择保留可验证的前进空间",
+        "opened_chapter": 47,
+        "thread_id": "live-thread-50-3"
+      }
+    ],
+    "narrative_debts": [],
+    "overdue_debt_ids": [],
+    "payoff_ready_thread_ids": [],
+    "short_threads": [],
+    "snapshot_id": "portfolio_28625261cda453b52e5a37bf",
+    "warnings": []
+  },
+  "rhythm_snapshot_id": "rhythm-snapshot_15f7b76dcb6f09f6546dccb7",
+  "scheduler_recommendation": {
+    "alternatives": [
+      "CONTINUITY_ADVANCE",
+      "TRANSITION"
+    ],
+    "author_override_applied": false,
+    "engine_recommendations": [
+      {
+        "debt_ids": [],
+        "drive": "POWER_PROGRESSION",
+        "engine_type": "PROGRESSION",
+        "evidence": [
+          "第49章原文：二级缆车向三级升级，预计八小时完成。"
+        ],
+        "intent": "PROGRESSION_SETUP",
+        "priority": 58.0,
+        "reader_promises": [
+          "成长必须由可见资源、行动和代价支撑",
+          "新能力必须经过来源与实战验证",
+          "世界扩大必须跨越已确认边界"
+        ],
+        "risks": [],
+        "why_now": [
+          "保持成长因果与下一层期待可见"
+        ]
+      }
+    ],
+    "primary_intent": "PROGRESSION_SETUP",
+    "reader_promises_served": [
+      "成长必须由可见资源、行动和代价支撑",
+      "新能力必须经过来源与实战验证",
+      "世界扩大必须跨越已确认边界"
+    ],
+    "risks": [],
+    "secondary_intents": [],
+    "source_drive": "POWER_PROGRESSION",
+    "supporting_anticipation_ids": [
+      "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request",
+      "anticipation-thread-1",
+      "anticipation-world-higher-threat-route"
+    ],
+    "supporting_debt_ids": [],
+    "supporting_thread_ids": [
+      "source:source-delta-pwk-live-b-ch50-threat-opportunity"
+    ],
+    "why_now": [
+      "保持成长因果与下一层期待可见"
+    ]
+  },
+  "source_state_context": "C:\\dev\\小说续写系统\\library\\phase5-live-b-050\\editions\\base\\operations\\plan_ffe0e06d113a1f02f1156d17\\input\\world_state_context.json",
+  "task_id": "plan_ffe0e06d113a1f02f1156d17",
+  "task_type": "plan-next",
+  "truth_reveal": {
+    "active_author_truths": [],
+    "behavioral_rule": "Active Author Truth 可约束人物选择、资源部署与势力行动；只有 Reveal Agenda 授权的深度可以进入读者可见正文。KEEP_HIDDEN 不得直接说明答案。",
+    "candidate_contract": {
+      "hint_must_not_confirm_identity": true,
+      "hint_requires_readable_clue": true,
+      "keep_hidden_is_hard_boundary": true,
+      "required_fields": [
+        "truth_alignment",
+        "reveal_impact"
+      ]
+    },
+    "reveal_agenda": {
+      "book_id": "phase5-live-b-050",
+      "chapter_ordinal": 51,
+      "counts": {
+        "keep_hidden": 0,
+        "must_reveal": 0,
+        "optional": 0,
+        "should_hint": 0
+      },
+      "debt_integration": {
+        "engine": "Narrative Debt / Promise",
+        "secret_obligations": [],
+        "separate_reveal_debt_engine": false
+      },
+      "edition_id": "base",
+      "keep_hidden": [],
+      "must_reveal": [],
+      "optional": [],
+      "reveal_budget": {
+        "hard_gate": false,
+        "hint_guideline": "1–3",
+        "partial_or_full_guideline": "0–1",
+        "planned_hints": 0,
+        "planned_partial_or_full": 0,
+        "status": "WITHIN_GUIDELINE"
+      },
+      "rule": "Hidden Truth 是行为约束，不等于揭示许可；拖动 Agenda 不改变任何 Knowledge。",
+      "should_hint": []
+    },
+    "target_chapter_ordinal": 51
+  }
+}

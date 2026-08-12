@@ -1,0 +1,2552 @@
+{
+  "author_state": {
+    "author_intents": [],
+    "author_tasks": [],
+    "author_truths": [],
+    "effective_book_profile": {
+      "active_directives": [],
+      "dimensions": [
+        {
+          "author_edit_count": 0,
+          "author_edits": [],
+          "available": true,
+          "content": "# Worldbuilding\n\n## Rule-bound survival space\n- Observation: The suspended cable-car network is simultaneously a protected personal shelter, a moving resource route, and a daily risk-selection interface; safety depends on preserving the vehicle while choosing when to descend.\n- Confidence: 0.95\n- Chapter range: 1-1\n- Subject IDs: cable-car-survival-system\n- Evidence: `book-01-8ca152d8 · segment-0001 · lines 1-40`\n\n",
+          "dimension": "worldbuilding",
+          "effective_source": "INITIALIZATION_GENERATED",
+          "filename": "worldbuilding.md",
+          "label": "世界观",
+          "source": "INITIALIZATION_GENERATED"
+        },
+        {
+          "author_edit_count": 0,
+          "author_edits": [],
+          "available": true,
+          "content": "# Characters\n\n## Relational suspicion under cooperation\n- Observation: Su Mu treats cooperation as an exchange of tested value rather than immediate trust; Lin Yuwei's bargaining and his deliberate withholding create a relationship that advances through transactions, teasing, and verified risk.\n- Voice: Su Mu favors short strategic statements, dry internal judgments, and action before explanation; Lin Yuwei answers with direct challenge and defensive humor.\n- Controls: Keep trust changes tied to a concrete exchange, rescue, injury, or revealed cost; do not convert pragmatic cooperation into unearned intimacy.\n- Confidence: 0.91\n- Chapter range: 28-41\n- Subject IDs: su-mu, lin-yuwei\n- Evidence: `book-01-8ca152d8 · segment-0028 · lines 5946-6000`\n\n",
+          "dimension": "characters",
+          "effective_source": "INITIALIZATION_GENERATED",
+          "filename": "characters.md",
+          "label": "人物",
+          "source": "INITIALIZATION_GENERATED"
+        },
+        {
+          "author_edit_count": 0,
+          "author_edits": [],
+          "available": true,
+          "content": "# Plot\n\n## Literary Arc: from isolated survival to negotiated interdependence\n- Observation: The survival loop expands from solo scouting and loot selection into a chain of cooperation, trade, shared danger, and new uncertainty; each gain opens a larger tactical or social problem.\n- Interpretation: Escalation works when a concrete resource or threat forces a choice, the choice produces a visible cost, and the consequence changes the next route or relationship.\n- State before: Su Mu has a protected vehicle and strong tactical advantage but limited social information.\n- State after: He has usable cooperation with selected survivors while the world contains threats and rules that cannot be solved by strength alone.\n- Literary Arc IDs: literary-arc-survival-to-network\n- Confidence: 0.92\n- Chapter range: 1-50\n- Subject IDs: su-mu, lin-yuwei, zhou-zhenguo\n- Evidence: `book-01-8ca152d8 · segment-0039 · lines 7940-8020`\n\n",
+          "dimension": "plot",
+          "effective_source": "INITIALIZATION_GENERATED",
+          "filename": "plot.md",
+          "label": "剧情",
+          "source": "INITIALIZATION_GENERATED"
+        },
+        {
+          "author_edit_count": 0,
+          "author_edits": [],
+          "available": true,
+          "content": "# Style\n\n## Information-first action prose\n- Observation: Scenes alternate compact system-readable facts, immediate sensory danger, and a protagonist's fast tactical inference.\n- Interpretation: Numeric or rule-like information is most effective when it changes an immediate decision rather than replacing the scene.\n- Control: Present a concrete sensory obstacle before explaining the useful rule; make each displayed attribute pay for itself through action.\n- Risks: Dense status exposition can flatten fear; repeated lucky outcomes can reduce perceived cost.\n- Confidence: 0.9\n- Chapter range: 1-50\n- Evidence: `book-01-8ca152d8 · segment-0040 · lines 8162-8240`\n\n",
+          "dimension": "style",
+          "effective_source": "INITIALIZATION_GENERATED",
+          "filename": "style.md",
+          "label": "文风",
+          "source": "INITIALIZATION_GENERATED"
+        },
+        {
+          "author_edit_count": 0,
+          "author_edits": [],
+          "available": true,
+          "content": "# Narrative\n\n## Escalation through rule disclosure\n- Interpretation: The narrative repeatedly reveals a rule through a local survival problem, lets Su Mu test it, then widens its consequence into a new area, threat class, or social choice.\n- Observation: A new interface, item, or enemy is introduced as a practical obstacle before its larger implication becomes clear.\n- Control: Let the next revelation answer one immediate question while creating a more dangerous question.\n- Confidence: 0.91\n- Chapter range: 1-50\n- Evidence: `book-01-8ca152d8 · segment-0031 · lines 6530-6600`\n\n",
+          "dimension": "narrative",
+          "effective_source": "INITIALIZATION_GENERATED",
+          "filename": "narrative.md",
+          "label": "叙事",
+          "source": "INITIALIZATION_GENERATED"
+        },
+        {
+          "author_edit_count": 0,
+          "author_edits": [],
+          "available": true,
+          "content": "# Dialogue\n\n## Transactional dialogue with friction\n- Observation: Conversations carry logistics, price, suspicion, and personality at the same time; speakers rarely state trust directly.\n- Voice: Su Mu's replies are economical and evasive when protecting an advantage; Lin Yuwei uses accusation, bargaining, and humor to test him.\n- Control: Give each exchange a concrete item, promise, injury, or threat to negotiate, then let the subtext change the relationship.\n- Confidence: 0.9\n- Chapter range: 28-50\n- Subject IDs: su-mu, lin-yuwei\n- Evidence: `book-01-8ca152d8 · segment-0041 · lines 8318-8390`\n\n",
+          "dimension": "dialogue",
+          "effective_source": "INITIALIZATION_GENERATED",
+          "filename": "dialogue.md",
+          "label": "对话",
+          "source": "INITIALIZATION_GENERATED"
+        },
+        {
+          "author_edit_count": 0,
+          "author_edits": [],
+          "available": true,
+          "content": "# Pacing\n\n## Search, reveal, consequence\n- Control: Alternate short preparation or search beats with a sharp reveal and an irreversible consequence; use inventory or system detail as pressure, not as a pause from story.\n- Observation: The source compresses travel and setup but expands the moment an enemy, rule, or transaction changes the available choices.\n- Confidence: 0.89\n- Chapter range: 1-50\n- Evidence: `book-01-8ca152d8 · segment-0042 · lines 8500-8580`\n\n",
+          "dimension": "pacing",
+          "effective_source": "INITIALIZATION_GENERATED",
+          "filename": "pacing.md",
+          "label": "节奏",
+          "source": "INITIALIZATION_GENERATED"
+        },
+        {
+          "author_edit_count": 0,
+          "author_edits": [],
+          "available": true,
+          "content": "# Themes\n\n## Scarcity and negotiated trust\n- Question: Can cooperation remain human when every exchange is also a survival calculation?\n- Competing Answers: Trust grows through paid risk and reliable action; scarcity turns every relationship into leverage.\n- Observation: Food, ammunition, information, shelter, and rescue repeatedly make moral or emotional choices material.\n- Confidence: 0.86\n- Chapter range: 28-50\n- Evidence: `book-01-8ca152d8 · segment-0044 · lines 8854-8940`\n\n",
+          "dimension": "themes",
+          "effective_source": "INITIALIZATION_GENERATED",
+          "filename": "themes.md",
+          "label": "主题 / 价值观",
+          "source": "INITIALIZATION_GENERATED"
+        },
+        {
+          "author_edit_count": 0,
+          "author_edits": [],
+          "available": true,
+          "content": "# Continuity\n\n## Open: the limits of the night threat\n- Observation: The visible story establishes multiple categories of danger, including nocturnal phenomena and enemies whose timing or classification is uncertain; the distinction remains a live continuity question.\n- Open: whether the night threat follows a fixed category boundary or can manifest outside the expected time remains unverified.\n- Control: Treat the boundary as an open question; do not retroactively assign a new rule without a present-scene manifestation and cost.\n- Confidence: 0.88\n- Chapter range: 49-50\n- Evidence: `book-01-8ca152d8 · segment-0050 · lines 9892-9970`\n\n",
+          "dimension": "continuity",
+          "effective_source": "INITIALIZATION_GENERATED",
+          "filename": "continuity.md",
+          "label": "连续性",
+          "source": "INITIALIZATION_GENERATED"
+        }
+      ],
+      "hard_constraints": {
+        "must": [],
+        "must_not": []
+      },
+      "profile_version_id": "generated:phase5-live-b-050:base",
+      "version_number": 0
+    }
+  },
+  "book_id": "phase5-live-b-050",
+  "chapter_state": {
+    "capability_state": [],
+    "knowledge_state": [
+      {
+        "attributes": [
+          {
+            "label": "knower_id",
+            "value": "character:su-mu"
+          },
+          {
+            "label": "knowledge_state",
+            "value": "KNOWN"
+          },
+          {
+            "label": "name",
+            "value": "手工制造常识"
+          },
+          {
+            "label": "topic_id",
+            "value": "handmade-physical-items"
+          },
+          {
+            "label": "topic_name",
+            "value": "普通物品可脱离图纸手工制作"
+          }
+        ],
+        "category": "knowledge",
+        "category_label": "认知",
+        "changed_this_chapter": false,
+        "chapter_id": "chapter_16c5cb40869998f5814d32e5",
+        "chapter_ordinal": 49,
+        "confidence": 1.0,
+        "constraints": null,
+        "current_holder_id": "character:su-mu",
+        "description": "苏牧确认普通日用品不必依赖图纸，也能按原理手工制作。",
+        "equipped": false,
+        "evidence_chapter_ordinal": 49,
+        "evidence_excerpt": "很多日常用品，只要知道原理，手工也能做出来。",
+        "evidence_locator": [
+          {
+            "note": "很多日常用品，只要知道原理，手工也能做出来。",
+            "source_span_id": "span_3ffe3e0f5ef35c8559585b25"
+          }
+        ],
+        "first_acquired_chapter_ordinal": null,
+        "first_confirmed_chapter_ordinal": 49,
+        "from_entity_id": null,
+        "history": [
+          {
+            "attributes": [
+              {
+                "label": "knower_id",
+                "value": "character:su-mu"
+              },
+              {
+                "label": "knowledge_state",
+                "value": "KNOWN"
+              },
+              {
+                "label": "name",
+                "value": "手工制造常识"
+              },
+              {
+                "label": "topic_id",
+                "value": "handmade-physical-items"
+              },
+              {
+                "label": "topic_name",
+                "value": "普通物品可脱离图纸手工制作"
+              }
+            ],
+            "category": "knowledge",
+            "category_label": "认知",
+            "chapter_id": "chapter_16c5cb40869998f5814d32e5",
+            "chapter_ordinal": 49,
+            "confidence": 1.0,
+            "constraints": null,
+            "current_holder_id": "character:su-mu",
+            "description": "苏牧确认普通日用品不必依赖图纸，也能按原理手工制作。",
+            "equipped": false,
+            "evidence_chapter_ordinal": 49,
+            "evidence_excerpt": "很多日常用品，只要知道原理，手工也能做出来。",
+            "evidence_locator": [
+              {
+                "note": "很多日常用品，只要知道原理，手工也能做出来。",
+                "source_span_id": "span_3ffe3e0f5ef35c8559585b25"
+              }
+            ],
+            "from_entity_id": null,
+            "knower_id": "character:su-mu",
+            "knowledge_state": "KNOWN",
+            "layer": "SOURCE_VERIFIED",
+            "name": "手工制造常识",
+            "object_id": "handmade-physical-items",
+            "operation": "LEARN",
+            "operation_label": "掌握",
+            "owner_id": "character:su-mu",
+            "quantity": null,
+            "raw": {
+              "book_id": "phase5-live-b-050",
+              "category": "KNOWLEDGE",
+              "chapter_id": "chapter_16c5cb40869998f5814d32e5",
+              "chapter_ordinal": 49,
+              "confidence": 1.0,
+              "created_at": "2026-08-12T09:01:53.729533+00:00",
+              "delta_id": "source-delta-pwk-live-b-ch49-knowledge",
+              "edition_id": "base",
+              "evidence_locator": [
+                {
+                  "note": "很多日常用品，只要知道原理，手工也能做出来。",
+                  "source_span_id": "span_3ffe3e0f5ef35c8559585b25"
+                }
+              ],
+              "object_id": "handmade-physical-items",
+              "operation": "LEARN",
+              "payload": {
+                "knower_id": "character:su-mu",
+                "knowledge_state": "KNOWN",
+                "name": "手工制造常识",
+                "topic_id": "handmade-physical-items",
+                "topic_name": "普通物品可脱离图纸手工制作"
+              },
+              "source_span_ids": [
+                "span_3ffe3e0f5ef35c8559585b25"
+              ],
+              "state_key": "knowledge:character:su-mu:handmade-physical-items",
+              "statement": "苏牧确认普通日用品不必依赖图纸，也能按原理手工制作。",
+              "subject_id": "character:su-mu",
+              "verification_status": "SOURCE_VERIFIED",
+              "version": 1
+            },
+            "record_id": "source:source-delta-pwk-live-b-ch49-knowledge",
+            "related_ability_id": null,
+            "related_person_id": null,
+            "related_plot_thread_id": null,
+            "related_relationship_id": null,
+            "related_task_id": null,
+            "slot": null,
+            "source_span_ids": [
+              "span_3ffe3e0f5ef35c8559585b25"
+            ],
+            "state_key": "knowledge:character:su-mu:handmade-physical-items",
+            "statement": "苏牧确认普通日用品不必依赖图纸，也能按原理手工制作。",
+            "status": "SOURCE_VERIFIED",
+            "status_label": "✓ 原文已确认",
+            "subject_id": "character:su-mu",
+            "to_entity_id": null,
+            "topic_id": "handmade-physical-items",
+            "topic_name": "普通物品可脱离图纸手工制作",
+            "use": null,
+            "visibility_status": "VISIBLE",
+            "visible": true
+          }
+        ],
+        "knower_id": "character:su-mu",
+        "knowledge_state": "KNOWN",
+        "layer": "SOURCE_VERIFIED",
+        "name": "手工制造常识",
+        "object_id": "handmade-physical-items",
+        "operation": "LEARN",
+        "operation_label": "掌握",
+        "owner_id": "character:su-mu",
+        "quantity": null,
+        "raw": {
+          "book_id": "phase5-live-b-050",
+          "category": "KNOWLEDGE",
+          "chapter_id": "chapter_16c5cb40869998f5814d32e5",
+          "chapter_ordinal": 49,
+          "confidence": 1.0,
+          "created_at": "2026-08-12T09:01:53.729533+00:00",
+          "delta_id": "source-delta-pwk-live-b-ch49-knowledge",
+          "edition_id": "base",
+          "evidence_locator": [
+            {
+              "note": "很多日常用品，只要知道原理，手工也能做出来。",
+              "source_span_id": "span_3ffe3e0f5ef35c8559585b25"
+            }
+          ],
+          "object_id": "handmade-physical-items",
+          "operation": "LEARN",
+          "payload": {
+            "knower_id": "character:su-mu",
+            "knowledge_state": "KNOWN",
+            "name": "手工制造常识",
+            "topic_id": "handmade-physical-items",
+            "topic_name": "普通物品可脱离图纸手工制作"
+          },
+          "source_span_ids": [
+            "span_3ffe3e0f5ef35c8559585b25"
+          ],
+          "state_key": "knowledge:character:su-mu:handmade-physical-items",
+          "statement": "苏牧确认普通日用品不必依赖图纸，也能按原理手工制作。",
+          "subject_id": "character:su-mu",
+          "verification_status": "SOURCE_VERIFIED",
+          "version": 1
+        },
+        "recent_confirmed_chapter_ordinal": 49,
+        "record_id": "source:source-delta-pwk-live-b-ch49-knowledge",
+        "related_ability_id": null,
+        "related_person_id": null,
+        "related_plot_thread_id": null,
+        "related_relationship_id": null,
+        "related_task_id": null,
+        "slot": null,
+        "source_span_ids": [
+          "span_3ffe3e0f5ef35c8559585b25"
+        ],
+        "state_key": "knowledge:character:su-mu:handmade-physical-items",
+        "statement": "苏牧确认普通日用品不必依赖图纸，也能按原理手工制作。",
+        "status": "SOURCE_VERIFIED",
+        "status_label": "✓ 原文已确认",
+        "subject_id": "character:su-mu",
+        "to_entity_id": null,
+        "topic_id": "handmade-physical-items",
+        "topic_name": "普通物品可脱离图纸手工制作",
+        "use": null,
+        "visibility_status": "VISIBLE",
+        "visible": true,
+        "who_knows": [
+          {
+            "evidence_chapter_ordinal": 49,
+            "knower_id": "character:su-mu",
+            "layer": "SOURCE_VERIFIED",
+            "record_id": "source:source-delta-pwk-live-b-ch49-knowledge",
+            "source": "SOURCE_VERIFIED",
+            "source_span_ids": [
+              "span_3ffe3e0f5ef35c8559585b25"
+            ],
+            "state": "KNOWN",
+            "state_label": "知道",
+            "topic_id": "handmade-physical-items",
+            "topic_name": "普通物品可脱离图纸手工制作"
+          }
+        ]
+      },
+      {
+        "attributes": [
+          {
+            "label": "constraints",
+            "value": "visible source only"
+          },
+          {
+            "label": "costs",
+            "value": "must verify before use"
+          },
+          {
+            "label": "last_confirmed",
+            "value": "50"
+          }
+        ],
+        "baseline_entry_id": "visible-knowledge-50-50",
+        "category": "knowledge",
+        "changed_this_chapter": false,
+        "constraints": "visible source only",
+        "current_holder_id": null,
+        "description": "A source-derived actionable knowledge observation anchored to visible chapter 50; live Codex must verify its narrative use from the frozen source.",
+        "equipped": false,
+        "evidence": [
+          {
+            "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+            "direct_text_confirmed": true,
+            "end_line": 9895,
+            "mapping_status": "EXACT",
+            "note": null,
+            "segment_id": "segment-0050",
+            "source_id": "book-01-8ca152d8",
+            "source_span_ids": [
+              "span_0c5991a6f029f263033fdc00"
+            ],
+            "start_line": 9893
+          }
+        ],
+        "first_acquired_chapter_ordinal": 50,
+        "history": [],
+        "knowledge_state": "UNKNOWN",
+        "knowledge_state_label": "尚未确认谁知道",
+        "last_confirmed": 50,
+        "layer": "SOURCE_VERIFIED",
+        "layer_label": "✓ 原文已确认",
+        "mutable_attributes_suppressed": true,
+        "name": "source-confirmed actionable knowledge at chapter 50",
+        "owner_id": null,
+        "quantity": null,
+        "recent_confirmed_chapter_ordinal": 50,
+        "record_id": "baseline:visible-knowledge-50-50",
+        "slot": null,
+        "source": "Runtime Baseline",
+        "source_span_ids": [
+          "span_0c5991a6f029f263033fdc00"
+        ],
+        "statement": "A source-derived actionable knowledge observation anchored to visible chapter 50; live Codex must verify its narrative use from the frozen source.",
+        "status": "SOURCE_VERIFIED",
+        "status_label": "✓ 原文已确认",
+        "subject_id": null,
+        "use": null,
+        "verification_note": "当前状态只采用本书原文的 SOURCE_VERIFIED 证据。",
+        "visibility_status": "UNKNOWN",
+        "who_knows": []
+      }
+    ],
+    "opportunity_surface": {
+      "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+      "chapter_ordinal": 50,
+      "items": [
+        {
+          "evidence": [
+            {
+              "chapter_ordinal": 50,
+              "information_status": "SOURCE_VERIFIED",
+              "source_span_id": "span_0c5991a6f029f263033fdc00",
+              "statement": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。"
+            }
+          ],
+          "information_status": "SOFT_REFERENCE",
+          "opportunity_id": "opportunity-lv2-blue-threat-medical-request",
+          "progression_use": "通过真实交易或调查取得药品、符箓或高阶怪物情报，以推进生存准备和战力验证",
+          "related_entities": [
+            "character:zhou-zhenguo"
+          ],
+          "risk": [
+            "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证"
+          ],
+          "source": "SOURCE_VERIFIED",
+          "status": "TRACKABLE",
+          "subject": "药品请求与高阶怪物威胁"
+        }
+      ],
+      "projection_only": true
+    },
+    "progression_state": {
+      "available_resources": [
+        "普通木刺",
+        "小型箭匣"
+      ],
+      "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+      "chapter_ordinal": 50,
+      "growth_costs_active": [
+        "升级时间与材料",
+        "食物支出",
+        "资源交换机会成本",
+        "高阶怪物风险"
+      ],
+      "known_higher_ceiling": [],
+      "missing_resources": [],
+      "next_breakthrough_readiness": "ACCUMULATING",
+      "pending_ability_showcases": [],
+      "primary_axis_state": {
+        "available_branches": [
+          "resource-preparation",
+          "combat-preparation"
+        ],
+        "axis_id": "survival-cable-growth",
+        "current_bottlenecks": [
+          "升级完成时点",
+          "弹药伤害未验证",
+          "药品与高阶怪物信息不足"
+        ],
+        "current_stage": "tier-2-upgrading-tier-3",
+        "current_substage": null,
+        "evidence": [
+          "第49章原文：二级缆车向三级升级，预计八小时完成。"
+        ],
+        "locked_branches": [],
+        "next_known_stage": [
+          "tier-3-cable"
+        ],
+        "next_stage_visibility": "PARTIAL",
+        "readiness": "ACCUMULATING"
+      },
+      "progression_debts": [],
+      "recent_breakthrough": null,
+      "recent_growth_events": [
+        {
+          "attributes": [
+            {
+              "label": "constraints",
+              "value": "伤害未经实战验证；不可当作更高品质箭矢"
+            },
+            {
+              "label": "name",
+              "value": "普通木刺"
+            },
+            {
+              "label": "owner_id",
+              "value": "character:su-mu"
+            },
+            {
+              "label": "quantity",
+              "value": "21"
+            },
+            {
+              "label": "use",
+              "value": "小型箭匣弹药"
+            }
+          ],
+          "category": "item",
+          "category_label": "物品",
+          "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+          "chapter_ordinal": 50,
+          "confidence": 1.0,
+          "constraints": "伤害未经实战验证；不可当作更高品质箭矢",
+          "current_holder_id": "character:su-mu",
+          "description": "苏牧获得并装填二十一支可供箭匣使用的普通木刺。",
+          "equipped": false,
+          "evidence_chapter_ordinal": 50,
+          "evidence_excerpt": "【箭匣装填：21/100】",
+          "evidence_locator": [
+            {
+              "note": "【箭匣装填：21/100】",
+              "source_span_id": "span_0c5991a6f029f263033fdc00"
+            }
+          ],
+          "from_entity_id": null,
+          "knower_id": null,
+          "knowledge_state": null,
+          "layer": "SOURCE_VERIFIED",
+          "name": "普通木刺",
+          "object_id": "ordinary-wooden-spikes",
+          "operation": "ACQUIRE",
+          "operation_label": "获得",
+          "owner_id": "character:su-mu",
+          "quantity": 21,
+          "raw": {
+            "book_id": "phase5-live-b-050",
+            "category": "ITEM",
+            "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+            "chapter_ordinal": 50,
+            "confidence": 1.0,
+            "created_at": "2026-08-12T09:01:53.729533+00:00",
+            "delta_id": "source-delta-pwk-live-b-ch50-arrows",
+            "edition_id": "base",
+            "evidence_locator": [
+              {
+                "note": "【箭匣装填：21/100】",
+                "source_span_id": "span_0c5991a6f029f263033fdc00"
+              }
+            ],
+            "object_id": "ordinary-wooden-spikes",
+            "operation": "ACQUIRE",
+            "payload": {
+              "constraints": "伤害未经实战验证；不可当作更高品质箭矢",
+              "name": "普通木刺",
+              "owner_id": "character:su-mu",
+              "quantity": 21,
+              "use": "小型箭匣弹药"
+            },
+            "source_span_ids": [
+              "span_0c5991a6f029f263033fdc00"
+            ],
+            "state_key": "item:ordinary-wooden-spikes",
+            "statement": "苏牧获得并装填二十一支可供箭匣使用的普通木刺。",
+            "subject_id": "character:su-mu",
+            "verification_status": "SOURCE_VERIFIED",
+            "version": 1
+          },
+          "record_id": "source:source-delta-pwk-live-b-ch50-arrows",
+          "related_ability_id": null,
+          "related_person_id": null,
+          "related_plot_thread_id": null,
+          "related_relationship_id": null,
+          "related_task_id": null,
+          "slot": null,
+          "source_span_ids": [
+            "span_0c5991a6f029f263033fdc00"
+          ],
+          "state_key": "item:ordinary-wooden-spikes",
+          "statement": "苏牧获得并装填二十一支可供箭匣使用的普通木刺。",
+          "status": "SOURCE_VERIFIED",
+          "status_label": "✓ 原文已确认",
+          "subject_id": "character:su-mu",
+          "to_entity_id": null,
+          "topic_id": "ordinary-wooden-spikes",
+          "topic_name": null,
+          "use": "小型箭匣弹药",
+          "visibility_status": "VISIBLE",
+          "visible": true
+        },
+        {
+          "attributes": [
+            {
+              "label": "capacity",
+              "value": "100"
+            },
+            {
+              "label": "constraints",
+              "value": "木刺伤害尚未验证"
+            },
+            {
+              "label": "equipped",
+              "value": "True"
+            },
+            {
+              "label": "name",
+              "value": "小型箭匣"
+            },
+            {
+              "label": "owner_id",
+              "value": "character:su-mu"
+            },
+            {
+              "label": "quantity",
+              "value": "21"
+            },
+            {
+              "label": "slot",
+              "value": "纜车防御"
+            },
+            {
+              "label": "use",
+              "value": "百米内自动瞄准与射击"
+            }
+          ],
+          "category": "equipment",
+          "category_label": "装备",
+          "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+          "chapter_ordinal": 50,
+          "confidence": 1.0,
+          "constraints": "木刺伤害尚未验证",
+          "current_holder_id": "character:su-mu",
+          "description": "小型箭匣已装填二十一支普通木刺，容量一百。",
+          "equipped": true,
+          "evidence_chapter_ordinal": 50,
+          "evidence_excerpt": "【箭匣装填：21/100】",
+          "evidence_locator": [
+            {
+              "note": "【箭匣装填：21/100】",
+              "source_span_id": "span_0c5991a6f029f263033fdc00"
+            }
+          ],
+          "from_entity_id": null,
+          "knower_id": null,
+          "knowledge_state": null,
+          "layer": "SOURCE_VERIFIED",
+          "name": "小型箭匣",
+          "object_id": "small-arrow-quiver",
+          "operation": "UPDATE",
+          "operation_label": "状态更新",
+          "owner_id": "character:su-mu",
+          "quantity": 21,
+          "raw": {
+            "book_id": "phase5-live-b-050",
+            "category": "EQUIPMENT",
+            "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+            "chapter_ordinal": 50,
+            "confidence": 1.0,
+            "created_at": "2026-08-12T09:01:53.729533+00:00",
+            "delta_id": "source-delta-pwk-live-b-ch50-quiver",
+            "edition_id": "base",
+            "evidence_locator": [
+              {
+                "note": "【箭匣装填：21/100】",
+                "source_span_id": "span_0c5991a6f029f263033fdc00"
+              }
+            ],
+            "object_id": "small-arrow-quiver",
+            "operation": "UPDATE",
+            "payload": {
+              "capacity": 100,
+              "constraints": "木刺伤害尚未验证",
+              "equipped": true,
+              "name": "小型箭匣",
+              "owner_id": "character:su-mu",
+              "quantity": 21,
+              "slot": "纜车防御",
+              "use": "百米内自动瞄准与射击"
+            },
+            "source_span_ids": [
+              "span_0c5991a6f029f263033fdc00"
+            ],
+            "state_key": "equipment:small-arrow-quiver",
+            "statement": "小型箭匣已装填二十一支普通木刺，容量一百。",
+            "subject_id": "character:su-mu",
+            "verification_status": "SOURCE_VERIFIED",
+            "version": 1
+          },
+          "record_id": "source:source-delta-pwk-live-b-ch50-quiver",
+          "related_ability_id": null,
+          "related_person_id": null,
+          "related_plot_thread_id": null,
+          "related_relationship_id": null,
+          "related_task_id": null,
+          "slot": "纜车防御",
+          "source_span_ids": [
+            "span_0c5991a6f029f263033fdc00"
+          ],
+          "state_key": "equipment:small-arrow-quiver",
+          "statement": "小型箭匣已装填二十一支普通木刺，容量一百。",
+          "status": "SOURCE_VERIFIED",
+          "status_label": "✓ 原文已确认",
+          "subject_id": "character:su-mu",
+          "to_entity_id": null,
+          "topic_id": "small-arrow-quiver",
+          "topic_name": null,
+          "use": "百米内自动瞄准与射击",
+          "visibility_status": "VISIBLE",
+          "visible": true
+        },
+        {
+          "attributes": [
+            {
+              "label": "constraints",
+              "value": "尚未确认交易，也未获得静音符"
+            },
+            {
+              "label": "kind",
+              "value": "THREAD"
+            },
+            {
+              "label": "related_person_id",
+              "value": "character:zhou-zhenguo"
+            },
+            {
+              "label": "state",
+              "value": "OPEN"
+            },
+            {
+              "label": "title",
+              "value": "药品请求与高阶怪物威胁"
+            }
+          ],
+          "category": "task_or_promise",
+          "category_label": "剧情进展",
+          "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+          "chapter_ordinal": 50,
+          "confidence": 1.0,
+          "constraints": "尚未确认交易，也未获得静音符",
+          "current_holder_id": "character:su-mu",
+          "description": "周振国请求药品，并透露遭遇 Lv2 蓝色品质舔食者。",
+          "equipped": false,
+          "evidence_chapter_ordinal": 50,
+          "evidence_excerpt": "“我们遇到高阶怪物了。Lv2蓝色品质，舔食者。”",
+          "evidence_locator": [
+            {
+              "note": "“我们遇到高阶怪物了。Lv2蓝色品质，舔食者。”",
+              "source_span_id": "span_0c5991a6f029f263033fdc00"
+            }
+          ],
+          "from_entity_id": null,
+          "knower_id": null,
+          "knowledge_state": null,
+          "layer": "SOURCE_VERIFIED",
+          "name": "lv2-blue-threat-medical-request",
+          "object_id": "lv2-blue-threat-medical-request",
+          "operation": "ADD",
+          "operation_label": "新增",
+          "owner_id": "character:su-mu",
+          "quantity": null,
+          "raw": {
+            "book_id": "phase5-live-b-050",
+            "category": "TASK_OR_PROMISE",
+            "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+            "chapter_ordinal": 50,
+            "confidence": 1.0,
+            "created_at": "2026-08-12T09:01:53.729533+00:00",
+            "delta_id": "source-delta-pwk-live-b-ch50-threat",
+            "edition_id": "base",
+            "evidence_locator": [
+              {
+                "note": "“我们遇到高阶怪物了。Lv2蓝色品质，舔食者。”",
+                "source_span_id": "span_0c5991a6f029f263033fdc00"
+              }
+            ],
+            "object_id": "lv2-blue-threat-medical-request",
+            "operation": "ADD",
+            "payload": {
+              "constraints": "尚未确认交易，也未获得静音符",
+              "kind": "THREAD",
+              "related_person_id": "character:zhou-zhenguo",
+              "state": "OPEN",
+              "title": "药品请求与高阶怪物威胁"
+            },
+            "source_span_ids": [
+              "span_0c5991a6f029f263033fdc00"
+            ],
+            "state_key": "promise:lv2-blue-threat-medical-request",
+            "statement": "周振国请求药品，并透露遭遇 Lv2 蓝色品质舔食者。",
+            "subject_id": "character:su-mu",
+            "verification_status": "SOURCE_VERIFIED",
+            "version": 1
+          },
+          "record_id": "source:source-delta-pwk-live-b-ch50-threat",
+          "related_ability_id": null,
+          "related_person_id": "character:zhou-zhenguo",
+          "related_plot_thread_id": null,
+          "related_relationship_id": null,
+          "related_task_id": null,
+          "slot": null,
+          "source_span_ids": [
+            "span_0c5991a6f029f263033fdc00"
+          ],
+          "state_key": "promise:lv2-blue-threat-medical-request",
+          "statement": "周振国请求药品，并透露遭遇 Lv2 蓝色品质舔食者。",
+          "status": "SOURCE_VERIFIED",
+          "status_label": "✓ 原文已确认",
+          "subject_id": "character:su-mu",
+          "to_entity_id": null,
+          "topic_id": "lv2-blue-threat-medical-request",
+          "topic_name": null,
+          "use": null,
+          "visibility_status": "VISIBLE",
+          "visible": true
+        },
+        {
+          "attributes": [
+            {
+              "label": "constraints",
+              "value": "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证"
+            },
+            {
+              "label": "kind",
+              "value": "THREAD"
+            },
+            {
+              "label": "progression_use",
+              "value": "通过真实交易或调查取得药品、符箓或高阶怪物情报，以推进生存准备和战力验证"
+            },
+            {
+              "label": "related_person_id",
+              "value": "character:zhou-zhenguo"
+            },
+            {
+              "label": "state",
+              "value": "OPEN"
+            },
+            {
+              "label": "title",
+              "value": "药品请求与高阶怪物威胁"
+            }
+          ],
+          "category": "task_or_promise",
+          "category_label": "剧情进展",
+          "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+          "chapter_ordinal": 50,
+          "confidence": 1.0,
+          "constraints": "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证",
+          "current_holder_id": "character:su-mu",
+          "description": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+          "equipped": false,
+          "evidence_chapter_ordinal": 50,
+          "evidence_excerpt": "周振国提出用未来的静音符换药，并说明遭遇 Lv2 蓝色品质舔食者。",
+          "evidence_locator": [
+            {
+              "note": "周振国提出用未来的静音符换药，并说明遭遇 Lv2 蓝色品质舔食者。",
+              "source_span_id": "span_0c5991a6f029f263033fdc00"
+            }
+          ],
+          "from_entity_id": null,
+          "knower_id": null,
+          "knowledge_state": null,
+          "layer": "SOURCE_VERIFIED",
+          "name": "lv2-blue-threat-medical-request",
+          "object_id": "lv2-blue-threat-medical-request",
+          "operation": "UPDATE",
+          "operation_label": "状态更新",
+          "owner_id": "character:su-mu",
+          "quantity": null,
+          "raw": {
+            "book_id": "phase5-live-b-050",
+            "category": "TASK_OR_PROMISE",
+            "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+            "chapter_ordinal": 50,
+            "confidence": 1.0,
+            "created_at": "2026-08-12T09:05:44.368426+00:00",
+            "delta_id": "source-delta-pwk-live-b-ch50-threat-opportunity",
+            "edition_id": "base",
+            "evidence_locator": [
+              {
+                "note": "周振国提出用未来的静音符换药，并说明遭遇 Lv2 蓝色品质舔食者。",
+                "source_span_id": "span_0c5991a6f029f263033fdc00"
+              }
+            ],
+            "object_id": "lv2-blue-threat-medical-request",
+            "operation": "UPDATE",
+            "payload": {
+              "constraints": "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证",
+              "kind": "THREAD",
+              "progression_use": "通过真实交易或调查取得药品、符箓或高阶怪物情报，以推进生存准备和战力验证",
+              "related_person_id": "character:zhou-zhenguo",
+              "state": "OPEN",
+              "title": "药品请求与高阶怪物威胁"
+            },
+            "source_span_ids": [
+              "span_0c5991a6f029f263033fdc00"
+            ],
+            "state_key": "promise:lv2-blue-threat-medical-request",
+            "statement": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+            "subject_id": "character:su-mu",
+            "verification_status": "SOURCE_VERIFIED",
+            "version": 1
+          },
+          "record_id": "source:source-delta-pwk-live-b-ch50-threat-opportunity",
+          "related_ability_id": null,
+          "related_person_id": "character:zhou-zhenguo",
+          "related_plot_thread_id": null,
+          "related_relationship_id": null,
+          "related_task_id": null,
+          "slot": null,
+          "source_span_ids": [
+            "span_0c5991a6f029f263033fdc00"
+          ],
+          "state_key": "promise:lv2-blue-threat-medical-request",
+          "statement": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+          "status": "SOURCE_VERIFIED",
+          "status_label": "✓ 原文已确认",
+          "subject_id": "character:su-mu",
+          "to_entity_id": null,
+          "topic_id": "lv2-blue-threat-medical-request",
+          "topic_name": null,
+          "use": null,
+          "visibility_status": "VISIBLE",
+          "visible": true
+        }
+      ],
+      "required_resources": [],
+      "secondary_axis_states": [],
+      "source_layer": "CHAPTER_WORLD_STATE_PROJECTION",
+      "subject_id": "character:su-mu",
+      "subject_type": "CHARACTER",
+      "topology_state": [
+        "LINEAR",
+        "ACCUMULATIVE"
+      ],
+      "unknown_ceiling_hints": [
+        "三级缆车及更高风险雾区，但具体能力保持未知"
+      ],
+      "unlocked_abilities": []
+    },
+    "resource_state": [
+      {
+        "attributes": [
+          {
+            "label": "constraints",
+            "value": "伤害未经实战验证；不可当作更高品质箭矢"
+          },
+          {
+            "label": "name",
+            "value": "普通木刺"
+          },
+          {
+            "label": "owner_id",
+            "value": "character:su-mu"
+          },
+          {
+            "label": "quantity",
+            "value": "21"
+          },
+          {
+            "label": "use",
+            "value": "小型箭匣弹药"
+          }
+        ],
+        "category": "item",
+        "category_label": "物品",
+        "changed_this_chapter": true,
+        "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+        "chapter_ordinal": 50,
+        "confidence": 1.0,
+        "constraints": "伤害未经实战验证；不可当作更高品质箭矢",
+        "current_holder_id": "character:su-mu",
+        "description": "苏牧获得并装填二十一支可供箭匣使用的普通木刺。",
+        "equipped": false,
+        "evidence_chapter_ordinal": 50,
+        "evidence_excerpt": "【箭匣装填：21/100】",
+        "evidence_locator": [
+          {
+            "note": "【箭匣装填：21/100】",
+            "source_span_id": "span_0c5991a6f029f263033fdc00"
+          }
+        ],
+        "first_acquired_chapter_ordinal": 50,
+        "first_confirmed_chapter_ordinal": 50,
+        "from_entity_id": null,
+        "history": [
+          {
+            "attributes": [
+              {
+                "label": "constraints",
+                "value": "伤害未经实战验证；不可当作更高品质箭矢"
+              },
+              {
+                "label": "name",
+                "value": "普通木刺"
+              },
+              {
+                "label": "owner_id",
+                "value": "character:su-mu"
+              },
+              {
+                "label": "quantity",
+                "value": "21"
+              },
+              {
+                "label": "use",
+                "value": "小型箭匣弹药"
+              }
+            ],
+            "category": "item",
+            "category_label": "物品",
+            "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+            "chapter_ordinal": 50,
+            "confidence": 1.0,
+            "constraints": "伤害未经实战验证；不可当作更高品质箭矢",
+            "current_holder_id": "character:su-mu",
+            "description": "苏牧获得并装填二十一支可供箭匣使用的普通木刺。",
+            "equipped": false,
+            "evidence_chapter_ordinal": 50,
+            "evidence_excerpt": "【箭匣装填：21/100】",
+            "evidence_locator": [
+              {
+                "note": "【箭匣装填：21/100】",
+                "source_span_id": "span_0c5991a6f029f263033fdc00"
+              }
+            ],
+            "from_entity_id": null,
+            "knower_id": null,
+            "knowledge_state": null,
+            "layer": "SOURCE_VERIFIED",
+            "name": "普通木刺",
+            "object_id": "ordinary-wooden-spikes",
+            "operation": "ACQUIRE",
+            "operation_label": "获得",
+            "owner_id": "character:su-mu",
+            "quantity": 21,
+            "raw": {
+              "book_id": "phase5-live-b-050",
+              "category": "ITEM",
+              "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+              "chapter_ordinal": 50,
+              "confidence": 1.0,
+              "created_at": "2026-08-12T09:01:53.729533+00:00",
+              "delta_id": "source-delta-pwk-live-b-ch50-arrows",
+              "edition_id": "base",
+              "evidence_locator": [
+                {
+                  "note": "【箭匣装填：21/100】",
+                  "source_span_id": "span_0c5991a6f029f263033fdc00"
+                }
+              ],
+              "object_id": "ordinary-wooden-spikes",
+              "operation": "ACQUIRE",
+              "payload": {
+                "constraints": "伤害未经实战验证；不可当作更高品质箭矢",
+                "name": "普通木刺",
+                "owner_id": "character:su-mu",
+                "quantity": 21,
+                "use": "小型箭匣弹药"
+              },
+              "source_span_ids": [
+                "span_0c5991a6f029f263033fdc00"
+              ],
+              "state_key": "item:ordinary-wooden-spikes",
+              "statement": "苏牧获得并装填二十一支可供箭匣使用的普通木刺。",
+              "subject_id": "character:su-mu",
+              "verification_status": "SOURCE_VERIFIED",
+              "version": 1
+            },
+            "record_id": "source:source-delta-pwk-live-b-ch50-arrows",
+            "related_ability_id": null,
+            "related_person_id": null,
+            "related_plot_thread_id": null,
+            "related_relationship_id": null,
+            "related_task_id": null,
+            "slot": null,
+            "source_span_ids": [
+              "span_0c5991a6f029f263033fdc00"
+            ],
+            "state_key": "item:ordinary-wooden-spikes",
+            "statement": "苏牧获得并装填二十一支可供箭匣使用的普通木刺。",
+            "status": "SOURCE_VERIFIED",
+            "status_label": "✓ 原文已确认",
+            "subject_id": "character:su-mu",
+            "to_entity_id": null,
+            "topic_id": "ordinary-wooden-spikes",
+            "topic_name": null,
+            "use": "小型箭匣弹药",
+            "visibility_status": "VISIBLE",
+            "visible": true
+          }
+        ],
+        "knower_id": null,
+        "knowledge_state": null,
+        "layer": "SOURCE_VERIFIED",
+        "name": "普通木刺",
+        "object_id": "ordinary-wooden-spikes",
+        "operation": "ACQUIRE",
+        "operation_label": "获得",
+        "owner_id": "character:su-mu",
+        "owner_name": "苏牧",
+        "quantity": 21,
+        "raw": {
+          "book_id": "phase5-live-b-050",
+          "category": "ITEM",
+          "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+          "chapter_ordinal": 50,
+          "confidence": 1.0,
+          "created_at": "2026-08-12T09:01:53.729533+00:00",
+          "delta_id": "source-delta-pwk-live-b-ch50-arrows",
+          "edition_id": "base",
+          "evidence_locator": [
+            {
+              "note": "【箭匣装填：21/100】",
+              "source_span_id": "span_0c5991a6f029f263033fdc00"
+            }
+          ],
+          "object_id": "ordinary-wooden-spikes",
+          "operation": "ACQUIRE",
+          "payload": {
+            "constraints": "伤害未经实战验证；不可当作更高品质箭矢",
+            "name": "普通木刺",
+            "owner_id": "character:su-mu",
+            "quantity": 21,
+            "use": "小型箭匣弹药"
+          },
+          "source_span_ids": [
+            "span_0c5991a6f029f263033fdc00"
+          ],
+          "state_key": "item:ordinary-wooden-spikes",
+          "statement": "苏牧获得并装填二十一支可供箭匣使用的普通木刺。",
+          "subject_id": "character:su-mu",
+          "verification_status": "SOURCE_VERIFIED",
+          "version": 1
+        },
+        "recent_confirmed_chapter_ordinal": 50,
+        "record_id": "source:source-delta-pwk-live-b-ch50-arrows",
+        "related_ability_id": null,
+        "related_person_id": null,
+        "related_plot_thread_id": null,
+        "related_relationship_id": null,
+        "related_task_id": null,
+        "slot": null,
+        "source_span_ids": [
+          "span_0c5991a6f029f263033fdc00"
+        ],
+        "state_key": "item:ordinary-wooden-spikes",
+        "statement": "苏牧获得并装填二十一支可供箭匣使用的普通木刺。",
+        "status": "SOURCE_VERIFIED",
+        "status_label": "✓ 原文已确认",
+        "subject_id": "character:su-mu",
+        "to_entity_id": null,
+        "topic_id": "ordinary-wooden-spikes",
+        "topic_name": null,
+        "use": "小型箭匣弹药",
+        "visibility_status": "VISIBLE",
+        "visible": true,
+        "who_knows": [
+          {
+            "evidence_chapter_ordinal": null,
+            "knower_id": "character:su-mu",
+            "knower_name": "苏牧",
+            "layer": "UNKNOWN",
+            "record_id": null,
+            "source_span_ids": [],
+            "state": "UNKNOWN",
+            "state_label": "尚未知",
+            "topic_id": "ordinary-wooden-spikes",
+            "topic_name": "普通木刺"
+          }
+        ]
+      },
+      {
+        "attributes": [
+          {
+            "label": "capacity",
+            "value": "100"
+          },
+          {
+            "label": "constraints",
+            "value": "木刺伤害尚未验证"
+          },
+          {
+            "label": "equipped",
+            "value": "True"
+          },
+          {
+            "label": "name",
+            "value": "小型箭匣"
+          },
+          {
+            "label": "owner_id",
+            "value": "character:su-mu"
+          },
+          {
+            "label": "quantity",
+            "value": "21"
+          },
+          {
+            "label": "slot",
+            "value": "纜车防御"
+          },
+          {
+            "label": "use",
+            "value": "百米内自动瞄准与射击"
+          }
+        ],
+        "category": "equipment",
+        "category_label": "装备",
+        "changed_this_chapter": true,
+        "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+        "chapter_ordinal": 50,
+        "confidence": 1.0,
+        "constraints": "木刺伤害尚未验证",
+        "current_holder_id": "character:su-mu",
+        "description": "小型箭匣已装填二十一支普通木刺，容量一百。",
+        "equipped": true,
+        "evidence_chapter_ordinal": 50,
+        "evidence_excerpt": "【箭匣装填：21/100】",
+        "evidence_locator": [
+          {
+            "note": "【箭匣装填：21/100】",
+            "source_span_id": "span_0c5991a6f029f263033fdc00"
+          }
+        ],
+        "first_acquired_chapter_ordinal": null,
+        "first_confirmed_chapter_ordinal": 50,
+        "from_entity_id": null,
+        "history": [
+          {
+            "attributes": [
+              {
+                "label": "capacity",
+                "value": "100"
+              },
+              {
+                "label": "constraints",
+                "value": "木刺伤害尚未验证"
+              },
+              {
+                "label": "equipped",
+                "value": "True"
+              },
+              {
+                "label": "name",
+                "value": "小型箭匣"
+              },
+              {
+                "label": "owner_id",
+                "value": "character:su-mu"
+              },
+              {
+                "label": "quantity",
+                "value": "21"
+              },
+              {
+                "label": "slot",
+                "value": "纜车防御"
+              },
+              {
+                "label": "use",
+                "value": "百米内自动瞄准与射击"
+              }
+            ],
+            "category": "equipment",
+            "category_label": "装备",
+            "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+            "chapter_ordinal": 50,
+            "confidence": 1.0,
+            "constraints": "木刺伤害尚未验证",
+            "current_holder_id": "character:su-mu",
+            "description": "小型箭匣已装填二十一支普通木刺，容量一百。",
+            "equipped": true,
+            "evidence_chapter_ordinal": 50,
+            "evidence_excerpt": "【箭匣装填：21/100】",
+            "evidence_locator": [
+              {
+                "note": "【箭匣装填：21/100】",
+                "source_span_id": "span_0c5991a6f029f263033fdc00"
+              }
+            ],
+            "from_entity_id": null,
+            "knower_id": null,
+            "knowledge_state": null,
+            "layer": "SOURCE_VERIFIED",
+            "name": "小型箭匣",
+            "object_id": "small-arrow-quiver",
+            "operation": "UPDATE",
+            "operation_label": "状态更新",
+            "owner_id": "character:su-mu",
+            "quantity": 21,
+            "raw": {
+              "book_id": "phase5-live-b-050",
+              "category": "EQUIPMENT",
+              "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+              "chapter_ordinal": 50,
+              "confidence": 1.0,
+              "created_at": "2026-08-12T09:01:53.729533+00:00",
+              "delta_id": "source-delta-pwk-live-b-ch50-quiver",
+              "edition_id": "base",
+              "evidence_locator": [
+                {
+                  "note": "【箭匣装填：21/100】",
+                  "source_span_id": "span_0c5991a6f029f263033fdc00"
+                }
+              ],
+              "object_id": "small-arrow-quiver",
+              "operation": "UPDATE",
+              "payload": {
+                "capacity": 100,
+                "constraints": "木刺伤害尚未验证",
+                "equipped": true,
+                "name": "小型箭匣",
+                "owner_id": "character:su-mu",
+                "quantity": 21,
+                "slot": "纜车防御",
+                "use": "百米内自动瞄准与射击"
+              },
+              "source_span_ids": [
+                "span_0c5991a6f029f263033fdc00"
+              ],
+              "state_key": "equipment:small-arrow-quiver",
+              "statement": "小型箭匣已装填二十一支普通木刺，容量一百。",
+              "subject_id": "character:su-mu",
+              "verification_status": "SOURCE_VERIFIED",
+              "version": 1
+            },
+            "record_id": "source:source-delta-pwk-live-b-ch50-quiver",
+            "related_ability_id": null,
+            "related_person_id": null,
+            "related_plot_thread_id": null,
+            "related_relationship_id": null,
+            "related_task_id": null,
+            "slot": "纜车防御",
+            "source_span_ids": [
+              "span_0c5991a6f029f263033fdc00"
+            ],
+            "state_key": "equipment:small-arrow-quiver",
+            "statement": "小型箭匣已装填二十一支普通木刺，容量一百。",
+            "status": "SOURCE_VERIFIED",
+            "status_label": "✓ 原文已确认",
+            "subject_id": "character:su-mu",
+            "to_entity_id": null,
+            "topic_id": "small-arrow-quiver",
+            "topic_name": null,
+            "use": "百米内自动瞄准与射击",
+            "visibility_status": "VISIBLE",
+            "visible": true
+          }
+        ],
+        "knower_id": null,
+        "knowledge_state": null,
+        "layer": "SOURCE_VERIFIED",
+        "name": "小型箭匣",
+        "object_id": "small-arrow-quiver",
+        "operation": "UPDATE",
+        "operation_label": "状态更新",
+        "owner_id": "character:su-mu",
+        "owner_name": "苏牧",
+        "quantity": 21,
+        "raw": {
+          "book_id": "phase5-live-b-050",
+          "category": "EQUIPMENT",
+          "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+          "chapter_ordinal": 50,
+          "confidence": 1.0,
+          "created_at": "2026-08-12T09:01:53.729533+00:00",
+          "delta_id": "source-delta-pwk-live-b-ch50-quiver",
+          "edition_id": "base",
+          "evidence_locator": [
+            {
+              "note": "【箭匣装填：21/100】",
+              "source_span_id": "span_0c5991a6f029f263033fdc00"
+            }
+          ],
+          "object_id": "small-arrow-quiver",
+          "operation": "UPDATE",
+          "payload": {
+            "capacity": 100,
+            "constraints": "木刺伤害尚未验证",
+            "equipped": true,
+            "name": "小型箭匣",
+            "owner_id": "character:su-mu",
+            "quantity": 21,
+            "slot": "纜车防御",
+            "use": "百米内自动瞄准与射击"
+          },
+          "source_span_ids": [
+            "span_0c5991a6f029f263033fdc00"
+          ],
+          "state_key": "equipment:small-arrow-quiver",
+          "statement": "小型箭匣已装填二十一支普通木刺，容量一百。",
+          "subject_id": "character:su-mu",
+          "verification_status": "SOURCE_VERIFIED",
+          "version": 1
+        },
+        "recent_confirmed_chapter_ordinal": 50,
+        "record_id": "source:source-delta-pwk-live-b-ch50-quiver",
+        "related_ability_id": null,
+        "related_person_id": null,
+        "related_plot_thread_id": null,
+        "related_relationship_id": null,
+        "related_task_id": null,
+        "slot": "纜车防御",
+        "source_span_ids": [
+          "span_0c5991a6f029f263033fdc00"
+        ],
+        "state_key": "equipment:small-arrow-quiver",
+        "statement": "小型箭匣已装填二十一支普通木刺，容量一百。",
+        "status": "SOURCE_VERIFIED",
+        "status_label": "✓ 原文已确认",
+        "subject_id": "character:su-mu",
+        "to_entity_id": null,
+        "topic_id": "small-arrow-quiver",
+        "topic_name": null,
+        "use": "百米内自动瞄准与射击",
+        "visibility_status": "VISIBLE",
+        "visible": true,
+        "who_knows": [
+          {
+            "evidence_chapter_ordinal": null,
+            "knower_id": "character:su-mu",
+            "knower_name": "苏牧",
+            "layer": "UNKNOWN",
+            "record_id": null,
+            "source_span_ids": [],
+            "state": "UNKNOWN",
+            "state_label": "尚未知",
+            "topic_id": "small-arrow-quiver",
+            "topic_name": "小型箭匣"
+          }
+        ]
+      }
+    ],
+    "world_expansion_state": {
+      "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+      "chapter_ordinal": 50,
+      "current_stage": {
+        "expansion_types": [
+          "GEOGRAPHIC",
+          "POWER"
+        ],
+        "faction_ceiling": "",
+        "knowledge_ceiling": "",
+        "known_map": [
+          "当前缆车内部",
+          "百米箭匣射程",
+          "交易频道"
+        ],
+        "mystery_ceiling": "浓雾与夜间怪物规律仍待验证",
+        "name": "当前浓雾缆车生存区",
+        "order": 1,
+        "power_ceiling": "Lv2蓝色品质怪物已被他人报告，细节未知",
+        "reader_question": "苏牧能否把临时资源链转化为应对更高阶威胁的可靠能力？",
+        "resource_ceiling": "木材、食物、普通木刺及已确认库存",
+        "stage_id": "fog-cable-current-zone",
+        "status": "AVAILABLE",
+        "transition_conditions": [
+          "三级缆车完成或取得跨区路线证据"
+        ],
+        "world_scope": "缆车周边可见与交易频道可触达范围"
+      },
+      "next_stage_candidates": [
+        {
+          "expansion_types": [
+            "GEOGRAPHIC",
+            "POWER",
+            "MYSTERY"
+          ],
+          "faction_ceiling": "",
+          "knowledge_ceiling": "",
+          "known_map": [],
+          "mystery_ceiling": "Lv2威胁来源与路线结构",
+          "name": "更高威胁路线",
+          "order": 2,
+          "power_ceiling": "UNKNOWN",
+          "reader_question": "更高威胁是否同时带来突破当前资源上限的机会？",
+          "resource_ceiling": "UNKNOWN",
+          "stage_id": "higher-threat-route",
+          "status": "AVAILABLE",
+          "transition_conditions": [
+            "必须有可回指的新路线或跨区事件"
+          ],
+          "world_scope": "当前雾区之外的路线与高阶怪物活动范围"
+        }
+      ],
+      "source_layer": "CONTRACT_PLUS_CHAPTER_WORLD_STATE",
+      "stagnation_diagnostic": null,
+      "transition_conditions": [
+        "必须有可回指的新路线或跨区事件"
+      ]
+    },
+    "world_state_reference": {
+      "availability": "SOURCE_CHAPTER_STATE_PROJECTION",
+      "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+      "chapter_ordinal": 50,
+      "coverage_status": "COMPLETE_WITH_CHANGES",
+      "projection_only": true,
+      "source_layer": "SOURCE_VERIFIED"
+    }
+  },
+  "context_chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+  "context_chapter_ordinal": 50,
+  "contract_references": [
+    {
+      "contract_record_id": "progression-contract-f473692c5f734dca816b386e2a69ce40",
+      "contract_type": "GENRE",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-64b9d3395ecb4857b799c2cfd306d99c",
+      "contract_type": "MARKET_CATEGORY",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-6fdab99b082e429fac207ecc1804c887",
+      "contract_type": "NARRATIVE_DRIVE",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-860fe3379b1a4aebb9bb585d657cdeb8",
+      "contract_type": "PAYOFF_CHANNEL",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-ad36acb4a4a941b9b694894ca369c97a",
+      "contract_type": "PROGRESSION",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-88093906b05b4bdd966e0bb456ff1518",
+      "contract_type": "READER_EXPERIENCE",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    },
+    {
+      "contract_record_id": "progression-contract-f40ab026b5ef4af199ade315b25f4fdf",
+      "contract_type": "WORLD_EXPANSION",
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE",
+      "version_number": 1
+    }
+  ],
+  "coverage": {
+    "blocking_gaps": [],
+    "known": [
+      "contract:GENRE",
+      "contract:MARKET_CATEGORY",
+      "contract:NARRATIVE_DRIVE",
+      "contract:PAYOFF_CHANNEL",
+      "contract:PROGRESSION",
+      "contract:READER_EXPERIENCE",
+      "contract:WORLD_EXPANSION",
+      "progression_state"
+    ],
+    "partial": [],
+    "unknown": []
+  },
+  "edition_id": "base",
+  "effective_contracts": {
+    "genre": {
+      "author_overrides": [
+        "第51章可以选择克制恢复，但须保留明确压力与下一步期待"
+      ],
+      "capabilities": {
+        "has_ability_unlock": true,
+        "has_knowledge_gate": true,
+        "has_mystery_binding": false,
+        "has_progression_axis": true,
+        "has_resource_gate": true,
+        "has_stage_transition": true,
+        "has_status_progression": false,
+        "has_team_progression": false,
+        "has_verification_requirement": true,
+        "has_world_expansion": true
+      },
+      "expected_payoff_channels": [
+        "NEW_ARTIFACT",
+        "RESOURCE_GAIN",
+        "SURVIVAL_ESCAPE",
+        "WORLD_EXPANSION"
+      ],
+      "expected_progression_shape": [
+        "装备与载具升级",
+        "资源转化",
+        "战斗验证"
+      ],
+      "forbidden_drift_patterns": [
+        "无来源获得高阶能力",
+        "未满足门槛跨级",
+        "以设定说明代替状态变化"
+      ],
+      "genre_contract_id": "genre.phase5-live-b-050.v1",
+      "genre_drift_risks": [
+        "无代价升级",
+        "恢复章机械塞战斗",
+        "把线索直接当库存"
+      ],
+      "genre_native_conflicts": [
+        "资源稀缺",
+        "高阶怪物",
+        "交易信用",
+        "成长验证"
+      ],
+      "genre_native_engines": [
+        "PROGRESSION"
+      ],
+      "genre_native_resource_types": [
+        "材料",
+        "弹药",
+        "食物",
+        "药品",
+        "工具"
+      ],
+      "genre_native_scene_types": [
+        "资源交易",
+        "载具升级",
+        "威胁应对",
+        "恢复与准备"
+      ],
+      "genre_promises": [
+        {
+          "promise_id": "promise.resource-earned",
+          "statement": "资源、装备与缆车成长都要可追溯地赚到并付出代价",
+          "strength": "CORE"
+        },
+        {
+          "promise_id": "promise.survival-verification",
+          "statement": "成长必须在生存威胁中得到验证",
+          "strength": "CORE"
+        },
+        {
+          "promise_id": "promise.world-opening",
+          "statement": "缆车升级逐步打开更危险也更广阔的世界",
+          "strength": "IMPORTANT"
+        }
+      ],
+      "primary_genre": "SURVIVAL_PROGRESSION",
+      "reader_experience_contract_id": "reader.phase5-live-b-050.v1",
+      "status": "EFFECTIVE",
+      "subgenres": [],
+      "world_expansion_expectation": "由当前雾区的生存与路线证据逐步进入更高风险区域"
+    },
+    "market_category": {
+      "display_labels": [
+        "游戏生存",
+        "科幻灾变"
+      ],
+      "metadata_id": "market.phase5-live-b-050.v1",
+      "primary_market_category": "GAME",
+      "secondary_market_categories": [
+        "SCIENCE_FICTION"
+      ],
+      "source": "AUTHOR_CONFIRMED_LIVE_AB_PROTOCOL"
+    },
+    "narrative_drive": {
+      "author_overrides": [
+        "第51章允许恢复和准备，不要求立即突破；但必须推动至少一个主或次驱动力。"
+      ],
+      "drive_contract_id": "drive.phase5-live-b-050.v1",
+      "drive_debt_types": {
+        "POWER_PROGRESSION": [
+          "PROGRESSION",
+          "POWER_SHOWCASE"
+        ],
+        "RESOURCE_OPPORTUNITY": [
+          "RESOURCE"
+        ],
+        "SURVIVAL_RESOURCE": [
+          "SURVIVAL_RESOURCE"
+        ],
+        "WORLD_EXPLORATION": [
+          "WORLD_EXPANSION"
+        ]
+      },
+      "drive_fatigue_risks": {
+        "POWER_PROGRESSION": [
+          "连续升级但不验证"
+        ],
+        "RESOURCE_OPPORTUNITY": [
+          "资源只堆数量不产生选择"
+        ],
+        "SURVIVAL_RESOURCE": [
+          "持续受压没有阶段回报"
+        ],
+        "WORLD_EXPLORATION": [
+          "长期停留在同一雾区"
+        ]
+      },
+      "drive_payoff_channels": [
+        {
+          "associated_drive": "POWER_PROGRESSION",
+          "channel": "NEW_ARTIFACT"
+        },
+        {
+          "associated_drive": "SURVIVAL_RESOURCE",
+          "channel": "SURVIVAL_ESCAPE"
+        },
+        {
+          "associated_drive": "RESOURCE_OPPORTUNITY",
+          "channel": "RESOURCE_GAIN"
+        },
+        {
+          "associated_drive": "WORLD_EXPLORATION",
+          "channel": "WORLD_EXPANSION"
+        }
+      ],
+      "drive_priorities": {
+        "POWER_PROGRESSION": 100,
+        "RESOURCE_OPPORTUNITY": 80,
+        "SURVIVAL_RESOURCE": 90,
+        "WORLD_EXPLORATION": 65
+      },
+      "drive_promises": {
+        "POWER_PROGRESSION": [
+          "缆车、装备与能力通过可见行动持续成长"
+        ],
+        "RESOURCE_OPPORTUNITY": [
+          "机会必须转化后才成为资源"
+        ],
+        "SURVIVAL_RESOURCE": [
+          "威胁迫使资源取舍与战术准备"
+        ],
+        "WORLD_EXPLORATION": [
+          "跨越浓雾边界逐步打开更大生存空间"
+        ]
+      },
+      "drive_states": [
+        {
+          "drive": "POWER_PROGRESSION",
+          "evidence": [
+            "第49章：二级缆车正向三级升级"
+          ],
+          "state": "ACTIVE"
+        },
+        {
+          "drive": "SURVIVAL_RESOURCE",
+          "evidence": [
+            "第50章：Lv2蓝色品质怪物与药品需求"
+          ],
+          "state": "PRESSURED"
+        },
+        {
+          "drive": "RESOURCE_OPPORTUNITY",
+          "evidence": [
+            "第50章：手工木刺进入箭匣，但品质未验证"
+          ],
+          "state": "ACTIVE"
+        },
+        {
+          "drive": "WORLD_EXPLORATION",
+          "evidence": [
+            "第49-50章：浓雾缆车生存区"
+          ],
+          "state": "CURRENT_ZONE"
+        }
+      ],
+      "primary_drive": "POWER_PROGRESSION",
+      "secondary_drives": [
+        "SURVIVAL_RESOURCE",
+        "RESOURCE_OPPORTUNITY",
+        "WORLD_EXPLORATION"
+      ],
+      "status": "EFFECTIVE"
+    },
+    "payoff_channel": {
+      "channels": {
+        "COMBAT_DOMINANCE": "IMPORTANT",
+        "KNOWLEDGE_GAIN": "IMPORTANT",
+        "NEW_ARTIFACT": "CORE",
+        "RESOURCE_GAIN": "CORE",
+        "SURVIVAL_ESCAPE": "IMPORTANT",
+        "WORLD_EXPANSION": "IMPORTANT"
+      },
+      "effective_from_boundary": 51,
+      "status": "EFFECTIVE"
+    },
+    "progression": {
+      "ability_unlock_model": [
+        {
+          "condition": "普通木刺已装填且经过实际射击验证",
+          "effect": "确认小型箭匣可使用手工弹药形成稳定火力",
+          "mode": "COMBINATION",
+          "provenance_required": true,
+          "unlock_id": "unlock.handmade-ammunition"
+        }
+      ],
+      "allowed_delta_types": [
+        "ADVANCE",
+        "UNLOCK",
+        "REBUILD"
+      ],
+      "artifact_or_equipment_model": [
+        "小型箭匣容量100，当前装填21；木刺伤害未验证",
+        "缆车升级完成前不得使用三级能力"
+      ],
+      "author_constraints": [
+        "第51章不得宣告三级升级完成，除非叙事时间和证据满足",
+        "不得把周振国的静音符当成已拥有资源",
+        "不得凭空获得药品或高阶武器"
+      ],
+      "breakthrough_model": {
+        "all_gates_required": true,
+        "gates": [
+          {
+            "evidence_requirements": [
+              "完成时点",
+              "状态变化证据"
+            ],
+            "gate_id": "gate.tier3-completion",
+            "gate_type": "ACCUMULATION",
+            "irreversible": false,
+            "required_resources": [],
+            "requirement": "升级计时完成且原文或批准事件确认三级状态"
+          }
+        ]
+      },
+      "effective_from_boundary": 51,
+      "growth_costs": [
+        "升级时间与材料",
+        "食物支出",
+        "资源交换机会成本",
+        "高阶怪物风险"
+      ],
+      "next_ceiling_model": "三级缆车及更高风险雾区，但具体能力保持未知",
+      "primary_axis": {
+        "axis_id": "survival-cable-growth",
+        "axis_type": "EQUIPMENT",
+        "bottlenecks": [
+          "升级完成时点",
+          "弹药伤害未验证",
+          "药品与高阶怪物信息不足"
+        ],
+        "costs": [
+          "材料",
+          "时间",
+          "食物与交易信用",
+          "暴露于高阶威胁"
+        ],
+        "current_stage_schema": "载具等级及升级状态",
+        "evidence_requirements": [
+          "source span 或作者批准事件",
+          "资源所有权与数量",
+          "能力获得或验证过程"
+        ],
+        "name": "缆车与生存战力成长",
+        "progress_measure": "等级、已验证装备、可持续资源与威胁应对能力",
+        "stage_definitions": [
+          {
+            "entry_requirements": [],
+            "name": "一级缆车",
+            "next_stage_candidates": [
+              "tier-2-upgrading-tier-3"
+            ],
+            "order": 1,
+            "reader_visible": true,
+            "stage_id": "tier-1-cable",
+            "status": "AVAILABLE",
+            "typical_capabilities": [
+              "基础移动与容纳"
+            ],
+            "typical_costs": [],
+            "validation_expectations": []
+          },
+          {
+            "entry_requirements": [
+              "二级缆车已建成"
+            ],
+            "name": "二级缆车向三级升级中",
+            "next_stage_candidates": [
+              "tier-3-cable"
+            ],
+            "order": 2,
+            "reader_visible": true,
+            "stage_id": "tier-2-upgrading-tier-3",
+            "status": "AVAILABLE",
+            "typical_capabilities": [
+              "基础环境防护",
+              "安装小型箭匣"
+            ],
+            "typical_costs": [
+              "升级等待时间",
+              "材料消耗"
+            ],
+            "validation_expectations": [
+              "完成前不得写成三级能力已生效"
+            ]
+          },
+          {
+            "entry_requirements": [
+              "八小时升级计时完成"
+            ],
+            "name": "三级缆车",
+            "next_stage_candidates": [],
+            "order": 3,
+            "reader_visible": true,
+            "stage_id": "tier-3-cable",
+            "status": "AVAILABLE",
+            "typical_capabilities": [
+              "更高载具上限，具体能力须以后续原文或批准事件为准"
+            ],
+            "typical_costs": [
+              "升级材料已消耗"
+            ],
+            "validation_expectations": [
+              "必须有完成时点与能力来源证据"
+            ]
+          }
+        ],
+        "stage_order": [
+          "tier-1-cable",
+          "tier-2-upgrading-tier-3",
+          "tier-3-cable"
+        ],
+        "unlock_effects": [
+          "载具容量与环境控制",
+          "装备槽位与战术能力"
+        ],
+        "visibility": "PARTIAL"
+      },
+      "progression_contract_id": "progression.phase5-live-b-050.v1",
+      "progression_promises": [
+        "缆车与生存装备持续成长",
+        "资源与能力都必须赚取并验证",
+        "成长会打开更高风险世界"
+      ],
+      "progression_subject": "CHARACTER",
+      "resource_economy": [
+        "木材和人工转化为木刺",
+        "食物作为交易媒介",
+        "药品与静音符构成待确认交易机会"
+      ],
+      "secondary_axes": [],
+      "stage_model": "载具等级为显式阶段；资源与装备能力只在获得并验证后进入状态",
+      "status": "EFFECTIVE",
+      "status_rise_model": "",
+      "topology": [
+        "LINEAR",
+        "ACCUMULATIVE"
+      ],
+      "upper_ceiling_visibility": "HINTED",
+      "verification_modes": [
+        "source span",
+        "批准后的 state change",
+        "实战结果与明确代价"
+      ]
+    },
+    "reader_experience": {
+      "author_notes": "PWK V1.1 real live A/B B-side experimental contract; author-equivalent benchmark condition.",
+      "contract_id": "reader.phase5-live-b-050.v1",
+      "drive_priority_order": [
+        "POWER_PROGRESSION",
+        "SURVIVAL_RESOURCE",
+        "RESOURCE_OPPORTUNITY",
+        "WORLD_EXPLORATION"
+      ],
+      "expected_drive_interactions": [
+        "资源准备服务于缆车与战斗成长",
+        "生存威胁验证成长而非凭空发奖"
+      ],
+      "experience_priorities": {
+        "MYSTERY": "MEDIUM",
+        "POWER_VERIFICATION": "HIGH",
+        "PROGRESSION": "VERY_HIGH",
+        "RESOURCE_OPPORTUNITY": "VERY_HIGH",
+        "SURVIVAL": "VERY_HIGH",
+        "WORLD_EXPANSION": "HIGH"
+      },
+      "explanation_style": "BALANCED",
+      "growth_centrality": "VERY_HIGH",
+      "must_deliver": [
+        "成长必须由可见资源、行动和代价支撑",
+        "新能力必须经过来源与实战验证",
+        "世界扩大必须跨越已确认边界"
+      ],
+      "must_not_drift_into": [
+        "用无证据的系统奖励代替因果",
+        "在恢复章节强行突破",
+        "把未获得的机会写成库存"
+      ],
+      "mystery_centrality": "MEDIUM",
+      "mysticism_level": "MEDIUM",
+      "primary_family": "SURVIVAL_PROGRESSION",
+      "primary_narrative_drive": "POWER_PROGRESSION",
+      "relationship_centrality": "LOW",
+      "secondary_families": [],
+      "secondary_narrative_drives": [
+        "SURVIVAL_RESOURCE",
+        "RESOURCE_OPPORTUNITY",
+        "WORLD_EXPLORATION"
+      ],
+      "serial_form": "LONG_SERIAL",
+      "setting_skin": "APOCALYPSE",
+      "status": "EFFECTIVE",
+      "team_centrality": "LOW",
+      "theme_centrality": "LOW",
+      "tone": [
+        "生存压力",
+        "资源经营",
+        "克制推进"
+      ],
+      "world_expansion_centrality": "HIGH"
+    },
+    "world_expansion": {
+      "current_stage_id": "fog-cable-current-zone",
+      "effective_from_boundary": 51,
+      "expansion_promises": [
+        "缆车成长会逐步扩大可行动世界",
+        "每次扩张同时提高资源机会与生存风险"
+      ],
+      "ladder_id": "world.phase5-live-b-050.v1",
+      "stages": [
+        {
+          "expansion_types": [
+            "GEOGRAPHIC",
+            "POWER"
+          ],
+          "faction_ceiling": "",
+          "knowledge_ceiling": "",
+          "known_map": [
+            "当前缆车内部",
+            "百米箭匣射程",
+            "交易频道"
+          ],
+          "mystery_ceiling": "浓雾与夜间怪物规律仍待验证",
+          "name": "当前浓雾缆车生存区",
+          "order": 1,
+          "power_ceiling": "Lv2蓝色品质怪物已被他人报告，细节未知",
+          "reader_question": "苏牧能否把临时资源链转化为应对更高阶威胁的可靠能力？",
+          "resource_ceiling": "木材、食物、普通木刺及已确认库存",
+          "stage_id": "fog-cable-current-zone",
+          "status": "AVAILABLE",
+          "transition_conditions": [
+            "三级缆车完成或取得跨区路线证据"
+          ],
+          "world_scope": "缆车周边可见与交易频道可触达范围"
+        },
+        {
+          "expansion_types": [
+            "GEOGRAPHIC",
+            "POWER",
+            "MYSTERY"
+          ],
+          "faction_ceiling": "",
+          "knowledge_ceiling": "",
+          "known_map": [],
+          "mystery_ceiling": "Lv2威胁来源与路线结构",
+          "name": "更高威胁路线",
+          "order": 2,
+          "power_ceiling": "UNKNOWN",
+          "reader_question": "更高威胁是否同时带来突破当前资源上限的机会？",
+          "resource_ceiling": "UNKNOWN",
+          "stage_id": "higher-threat-route",
+          "status": "AVAILABLE",
+          "transition_conditions": [
+            "必须有可回指的新路线或跨区事件"
+          ],
+          "world_scope": "当前雾区之外的路线与高阶怪物活动范围"
+        }
+      ],
+      "stagnation_policy": "连续多章无世界边界变化时，可以先推进资源/威胁线，但必须保留明确扩张问题",
+      "status": "EFFECTIVE",
+      "transition_rules": [
+        "只能由 source verified 或批准后的 world_expansion state change 改变当前阶段",
+        "候选机会不能直接成为已探索区域"
+      ]
+    }
+  },
+  "planning_state": {
+    "active_threads": [
+      {
+        "attributes": [
+          {
+            "label": "constraints",
+            "value": "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证"
+          },
+          {
+            "label": "kind",
+            "value": "THREAD"
+          },
+          {
+            "label": "related_person_id",
+            "value": "character:zhou-zhenguo"
+          },
+          {
+            "label": "state",
+            "value": "OPEN"
+          },
+          {
+            "label": "title",
+            "value": "药品请求与高阶怪物威胁"
+          },
+          {
+            "label": "progression_use",
+            "value": "通过真实交易或调查取得药品、符箓或高阶怪物情报，以推进生存准备和战力验证"
+          }
+        ],
+        "category": "task_or_promise",
+        "category_label": "剧情进展",
+        "changed_this_chapter": true,
+        "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+        "chapter_ordinal": 50,
+        "confidence": 1.0,
+        "constraints": "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证",
+        "current_holder_id": "character:su-mu",
+        "description": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+        "equipped": false,
+        "evidence_chapter_ordinal": 50,
+        "evidence_excerpt": "周振国提出用未来的静音符换药，并说明遭遇 Lv2 蓝色品质舔食者。",
+        "evidence_locator": [
+          {
+            "note": "周振国提出用未来的静音符换药，并说明遭遇 Lv2 蓝色品质舔食者。",
+            "source_span_id": "span_0c5991a6f029f263033fdc00"
+          }
+        ],
+        "first_acquired_chapter_ordinal": 50,
+        "first_confirmed_chapter_ordinal": 50,
+        "from_entity_id": null,
+        "history": [
+          {
+            "attributes": [
+              {
+                "label": "constraints",
+                "value": "尚未确认交易，也未获得静音符"
+              },
+              {
+                "label": "kind",
+                "value": "THREAD"
+              },
+              {
+                "label": "related_person_id",
+                "value": "character:zhou-zhenguo"
+              },
+              {
+                "label": "state",
+                "value": "OPEN"
+              },
+              {
+                "label": "title",
+                "value": "药品请求与高阶怪物威胁"
+              }
+            ],
+            "category": "task_or_promise",
+            "category_label": "剧情进展",
+            "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+            "chapter_ordinal": 50,
+            "confidence": 1.0,
+            "constraints": "尚未确认交易，也未获得静音符",
+            "current_holder_id": "character:su-mu",
+            "description": "周振国请求药品，并透露遭遇 Lv2 蓝色品质舔食者。",
+            "equipped": false,
+            "evidence_chapter_ordinal": 50,
+            "evidence_excerpt": "“我们遇到高阶怪物了。Lv2蓝色品质，舔食者。”",
+            "evidence_locator": [
+              {
+                "note": "“我们遇到高阶怪物了。Lv2蓝色品质，舔食者。”",
+                "source_span_id": "span_0c5991a6f029f263033fdc00"
+              }
+            ],
+            "from_entity_id": null,
+            "knower_id": null,
+            "knowledge_state": null,
+            "layer": "SOURCE_VERIFIED",
+            "name": "lv2-blue-threat-medical-request",
+            "object_id": "lv2-blue-threat-medical-request",
+            "operation": "ADD",
+            "operation_label": "新增",
+            "owner_id": "character:su-mu",
+            "quantity": null,
+            "raw": {
+              "book_id": "phase5-live-b-050",
+              "category": "TASK_OR_PROMISE",
+              "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+              "chapter_ordinal": 50,
+              "confidence": 1.0,
+              "created_at": "2026-08-12T09:01:53.729533+00:00",
+              "delta_id": "source-delta-pwk-live-b-ch50-threat",
+              "edition_id": "base",
+              "evidence_locator": [
+                {
+                  "note": "“我们遇到高阶怪物了。Lv2蓝色品质，舔食者。”",
+                  "source_span_id": "span_0c5991a6f029f263033fdc00"
+                }
+              ],
+              "object_id": "lv2-blue-threat-medical-request",
+              "operation": "ADD",
+              "payload": {
+                "constraints": "尚未确认交易，也未获得静音符",
+                "kind": "THREAD",
+                "related_person_id": "character:zhou-zhenguo",
+                "state": "OPEN",
+                "title": "药品请求与高阶怪物威胁"
+              },
+              "source_span_ids": [
+                "span_0c5991a6f029f263033fdc00"
+              ],
+              "state_key": "promise:lv2-blue-threat-medical-request",
+              "statement": "周振国请求药品，并透露遭遇 Lv2 蓝色品质舔食者。",
+              "subject_id": "character:su-mu",
+              "verification_status": "SOURCE_VERIFIED",
+              "version": 1
+            },
+            "record_id": "source:source-delta-pwk-live-b-ch50-threat",
+            "related_ability_id": null,
+            "related_person_id": "character:zhou-zhenguo",
+            "related_plot_thread_id": null,
+            "related_relationship_id": null,
+            "related_task_id": null,
+            "slot": null,
+            "source_span_ids": [
+              "span_0c5991a6f029f263033fdc00"
+            ],
+            "state_key": "promise:lv2-blue-threat-medical-request",
+            "statement": "周振国请求药品，并透露遭遇 Lv2 蓝色品质舔食者。",
+            "status": "SOURCE_VERIFIED",
+            "status_label": "✓ 原文已确认",
+            "subject_id": "character:su-mu",
+            "to_entity_id": null,
+            "topic_id": "lv2-blue-threat-medical-request",
+            "topic_name": null,
+            "use": null,
+            "visibility_status": "VISIBLE",
+            "visible": true
+          },
+          {
+            "attributes": [
+              {
+                "label": "constraints",
+                "value": "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证"
+              },
+              {
+                "label": "kind",
+                "value": "THREAD"
+              },
+              {
+                "label": "progression_use",
+                "value": "通过真实交易或调查取得药品、符箓或高阶怪物情报，以推进生存准备和战力验证"
+              },
+              {
+                "label": "related_person_id",
+                "value": "character:zhou-zhenguo"
+              },
+              {
+                "label": "state",
+                "value": "OPEN"
+              },
+              {
+                "label": "title",
+                "value": "药品请求与高阶怪物威胁"
+              }
+            ],
+            "category": "task_or_promise",
+            "category_label": "剧情进展",
+            "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+            "chapter_ordinal": 50,
+            "confidence": 1.0,
+            "constraints": "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证",
+            "current_holder_id": "character:su-mu",
+            "description": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+            "equipped": false,
+            "evidence_chapter_ordinal": 50,
+            "evidence_excerpt": "周振国提出用未来的静音符换药，并说明遭遇 Lv2 蓝色品质舔食者。",
+            "evidence_locator": [
+              {
+                "note": "周振国提出用未来的静音符换药，并说明遭遇 Lv2 蓝色品质舔食者。",
+                "source_span_id": "span_0c5991a6f029f263033fdc00"
+              }
+            ],
+            "from_entity_id": null,
+            "knower_id": null,
+            "knowledge_state": null,
+            "layer": "SOURCE_VERIFIED",
+            "name": "lv2-blue-threat-medical-request",
+            "object_id": "lv2-blue-threat-medical-request",
+            "operation": "UPDATE",
+            "operation_label": "状态更新",
+            "owner_id": "character:su-mu",
+            "quantity": null,
+            "raw": {
+              "book_id": "phase5-live-b-050",
+              "category": "TASK_OR_PROMISE",
+              "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+              "chapter_ordinal": 50,
+              "confidence": 1.0,
+              "created_at": "2026-08-12T09:05:44.368426+00:00",
+              "delta_id": "source-delta-pwk-live-b-ch50-threat-opportunity",
+              "edition_id": "base",
+              "evidence_locator": [
+                {
+                  "note": "周振国提出用未来的静音符换药，并说明遭遇 Lv2 蓝色品质舔食者。",
+                  "source_span_id": "span_0c5991a6f029f263033fdc00"
+                }
+              ],
+              "object_id": "lv2-blue-threat-medical-request",
+              "operation": "UPDATE",
+              "payload": {
+                "constraints": "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证",
+                "kind": "THREAD",
+                "progression_use": "通过真实交易或调查取得药品、符箓或高阶怪物情报，以推进生存准备和战力验证",
+                "related_person_id": "character:zhou-zhenguo",
+                "state": "OPEN",
+                "title": "药品请求与高阶怪物威胁"
+              },
+              "source_span_ids": [
+                "span_0c5991a6f029f263033fdc00"
+              ],
+              "state_key": "promise:lv2-blue-threat-medical-request",
+              "statement": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+              "subject_id": "character:su-mu",
+              "verification_status": "SOURCE_VERIFIED",
+              "version": 1
+            },
+            "record_id": "source:source-delta-pwk-live-b-ch50-threat-opportunity",
+            "related_ability_id": null,
+            "related_person_id": "character:zhou-zhenguo",
+            "related_plot_thread_id": null,
+            "related_relationship_id": null,
+            "related_task_id": null,
+            "slot": null,
+            "source_span_ids": [
+              "span_0c5991a6f029f263033fdc00"
+            ],
+            "state_key": "promise:lv2-blue-threat-medical-request",
+            "statement": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+            "status": "SOURCE_VERIFIED",
+            "status_label": "✓ 原文已确认",
+            "subject_id": "character:su-mu",
+            "to_entity_id": null,
+            "topic_id": "lv2-blue-threat-medical-request",
+            "topic_name": null,
+            "use": null,
+            "visibility_status": "VISIBLE",
+            "visible": true
+          }
+        ],
+        "knower_id": null,
+        "knowledge_state": null,
+        "layer": "SOURCE_VERIFIED",
+        "name": "lv2-blue-threat-medical-request",
+        "object_id": "lv2-blue-threat-medical-request",
+        "operation": "UPDATE",
+        "operation_label": "状态更新",
+        "owner_id": "character:su-mu",
+        "quantity": null,
+        "raw": {
+          "book_id": "phase5-live-b-050",
+          "category": "TASK_OR_PROMISE",
+          "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+          "chapter_ordinal": 50,
+          "confidence": 1.0,
+          "created_at": "2026-08-12T09:05:44.368426+00:00",
+          "delta_id": "source-delta-pwk-live-b-ch50-threat-opportunity",
+          "edition_id": "base",
+          "evidence_locator": [
+            {
+              "note": "周振国提出用未来的静音符换药，并说明遭遇 Lv2 蓝色品质舔食者。",
+              "source_span_id": "span_0c5991a6f029f263033fdc00"
+            }
+          ],
+          "object_id": "lv2-blue-threat-medical-request",
+          "operation": "UPDATE",
+          "payload": {
+            "constraints": "尚未确认交易，也未获得静音符；高阶怪物情报尚待验证",
+            "kind": "THREAD",
+            "progression_use": "通过真实交易或调查取得药品、符箓或高阶怪物情报，以推进生存准备和战力验证",
+            "related_person_id": "character:zhou-zhenguo",
+            "state": "OPEN",
+            "title": "药品请求与高阶怪物威胁"
+          },
+          "source_span_ids": [
+            "span_0c5991a6f029f263033fdc00"
+          ],
+          "state_key": "promise:lv2-blue-threat-medical-request",
+          "statement": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+          "subject_id": "character:su-mu",
+          "verification_status": "SOURCE_VERIFIED",
+          "version": 1
+        },
+        "recent_confirmed_chapter_ordinal": 50,
+        "record_id": "source:source-delta-pwk-live-b-ch50-threat-opportunity",
+        "related_ability_id": null,
+        "related_person_id": "character:zhou-zhenguo",
+        "related_plot_thread_id": null,
+        "related_relationship_id": null,
+        "related_task_id": null,
+        "slot": null,
+        "source_span_ids": [
+          "span_0c5991a6f029f263033fdc00"
+        ],
+        "state_key": "promise:lv2-blue-threat-medical-request",
+        "statement": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+        "status": "SOURCE_VERIFIED",
+        "status_label": "✓ 原文已确认",
+        "subject_id": "character:su-mu",
+        "to_entity_id": null,
+        "topic_id": "lv2-blue-threat-medical-request",
+        "topic_name": null,
+        "use": null,
+        "visibility_status": "VISIBLE",
+        "visible": true
+      }
+    ],
+    "anticipation_surface": {
+      "canon_mutation_allowed": false,
+      "chapter_id": "chapter_02dc0ea3f9b0e95fdb6e12a1",
+      "chapter_ordinal": 50,
+      "items": [
+        {
+          "anticipation_id": "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request",
+          "evidence": [
+            "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。"
+          ],
+          "expected_horizon": "SHORT",
+          "expected_payoff_channel": "RESOURCE_GAIN",
+          "last_served": null,
+          "maturity": null,
+          "risk_if_delayed": "已铺垫机会长期未回收",
+          "source": "OPPORTUNITY",
+          "source_reference_id": "opportunity-lv2-blue-threat-medical-request",
+          "status": "BUILDING",
+          "subject": "药品请求与高阶怪物威胁",
+          "urgency": 3
+        },
+        {
+          "anticipation_id": "anticipation-thread-1",
+          "evidence": [],
+          "expected_horizon": "MID",
+          "expected_payoff_channel": "CUSTOM",
+          "last_served": null,
+          "maturity": null,
+          "risk_if_delayed": "读者期待继续积累",
+          "source": "ACTIVE_THREAD",
+          "source_reference_id": "thread-1",
+          "status": "BUILDING",
+          "subject": "药品请求和 Lv2 蓝色品质怪物信息构成待验证机会，尚未成交。",
+          "urgency": 3
+        },
+        {
+          "anticipation_id": "anticipation-world-higher-threat-route",
+          "evidence": [
+            "必须有可回指的新路线或跨区事件"
+          ],
+          "expected_horizon": "LONG",
+          "expected_payoff_channel": "WORLD_EXPANSION",
+          "last_served": null,
+          "maturity": null,
+          "risk_if_delayed": "世界长期没有打开新的可能性",
+          "source": "WORLD_EXPANSION",
+          "source_reference_id": "higher-threat-route",
+          "status": "BUILDING",
+          "subject": "更高威胁是否同时带来突破当前资源上限的机会？",
+          "urgency": 3
+        }
+      ],
+      "projection_only": true
+    },
+    "narrative_debts": [],
+    "promises": [],
+    "reveal_agenda": [
+      {
+        "keep_hidden": 0,
+        "must_reveal": 0,
+        "optional": 0,
+        "should_hint": 0
+      },
+      {
+        "hard_gate": false,
+        "hint_guideline": "1–3",
+        "partial_or_full_guideline": "0–1",
+        "planned_hints": 0,
+        "planned_partial_or_full": 0,
+        "status": "WITHIN_GUIDELINE"
+      },
+      {
+        "engine": "Narrative Debt / Promise",
+        "secret_obligations": [],
+        "separate_reveal_debt_engine": false
+      }
+    ],
+    "scheduler_recommendation": {
+      "alternatives": [
+        "CONTINUITY_ADVANCE",
+        "TRANSITION"
+      ],
+      "author_override_applied": false,
+      "engine_recommendations": [
+        {
+          "debt_ids": [],
+          "drive": "POWER_PROGRESSION",
+          "engine_type": "PROGRESSION",
+          "evidence": [
+            "第49章原文：二级缆车向三级升级，预计八小时完成。"
+          ],
+          "intent": "PROGRESSION_SETUP",
+          "priority": 58.0,
+          "reader_promises": [
+            "成长必须由可见资源、行动和代价支撑",
+            "新能力必须经过来源与实战验证",
+            "世界扩大必须跨越已确认边界"
+          ],
+          "risks": [],
+          "why_now": [
+            "保持成长因果与下一层期待可见"
+          ]
+        }
+      ],
+      "primary_intent": "PROGRESSION_SETUP",
+      "reader_promises_served": [
+        "成长必须由可见资源、行动和代价支撑",
+        "新能力必须经过来源与实战验证",
+        "世界扩大必须跨越已确认边界"
+      ],
+      "risks": [],
+      "secondary_intents": [],
+      "source_drive": "POWER_PROGRESSION",
+      "supporting_anticipation_ids": [
+        "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request",
+        "anticipation-thread-1",
+        "anticipation-world-higher-threat-route"
+      ],
+      "supporting_debt_ids": [],
+      "supporting_thread_ids": [
+        "source:source-delta-pwk-live-b-ch50-threat-opportunity"
+      ],
+      "why_now": [
+        "保持成长因果与下一层期待可见"
+      ]
+    }
+  },
+  "proposal_context": {
+    "excluded_from_scoring": true,
+    "records": []
+  },
+  "target_chapter_id": null,
+  "target_chapter_ordinal": 51,
+  "warnings": []
+}

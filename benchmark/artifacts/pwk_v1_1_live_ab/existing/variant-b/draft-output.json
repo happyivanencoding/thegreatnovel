@@ -1,0 +1,139 @@
+{
+  "task_id": "draft-task_3d317535e9079fb7fdd57879",
+  "contract_id": "contract_40141b35706e489cfe9c8041",
+  "chapter_title": "雾里的同一声",
+  "prose_markdown": "## 第51章 雾里的同一声\n\n周振国最后那句话停在屏幕上。\n\nLv2，蓝色品质。\n\n苏牧没有立刻追问。他把对话框缩到一旁，抬头看向窗外。浓雾贴着玻璃缓慢流动，远处忽然传来一声很轻的金属摩擦。\n\n吱——\n\n像有什么东西拖过锈蚀的钢索。声音只持续两秒，随即被雾吞没。\n\n苏牧的手按在箭匣旁。\n\n【小型箭匣：21/100】\n\n二十一支普通木刺，一支都没多。他没有开火。看不见目标时，射出去的每一支都只是浪费；更不能因为周振国刚提到高阶怪物，就把两件未知硬凑成一个答案。\n\n他关掉车厢里最亮的灯，只留操作台下一线昏黄。又把半枚螺母系在窗闩上，先看清缆车摇摆的方向。刚才的声音来自北偏西，与车体晃动并不一致。\n\n他在窗框内侧刻下第一道指向记号，方位一旦记住，下一次停车时他就不会再把那片雾当成普通背景。\n\n“你见过它？”苏牧问。\n\n“只见到一截舌头。”周振国回道，“隔着两节车厢把人拖走。我们没看清全貌。”\n\n“有声音吗？”\n\n“什么声音？”\n\n苏牧没有把刚才的动静告诉他。周振国需要药，他需要静音符，双方都有东西没摆上桌。未经验证的恐惧换不来信任，只会让价格变得更贵。\n\n“药可以谈。”苏牧说，“先发伤员情况和你手里现有符的效果。没有现货，就拿能核验的东西做抵押。”\n\n消息没有立即回来。苏牧调暗屏幕，开始计时。\n\n十一分钟后，第二声响起。\n\n吱——咔。\n\n仍是那道记号指向的雾里，末尾多了一下硬物碰撞。苏牧立刻趴低，从车窗边撤开。半分钟过去，玻璃外没有影子，箭匣也没有触发。\n\n能避开射界的东西，可能比冲上来的怪物更麻烦；也可能那里根本没有活物，只是一段废弃设施在风里摆动。两种判断之间，差的是一条命。\n\n苏牧取出一块木片，画下当前钢索和声音方位。第一道记号旁写下时间，第二道旁写下缆车倾角。\n\n周振国终于发来一张模糊的伤口照片，随后是一段符纸试用影像。画面里，符纸撕开后，落地的金属杯没有发出声音。\n\n“这只能证明你有过一张。”苏牧说。\n\n“所以我才说现货得等。”\n\n“药也得等我确认数量。”\n\n“你不信我？”\n\n“我信能验的东西。”\n\n周振国没有再催。\n\n苏牧本该休息。缆车升级尚未结束，体力也没有恢复，可两道重合的方向线一直留在他脑子里。他重新坐起，把螺母摆角、风向和车体晃动分别记在木片背面。要证明声音来自固定位置，至少还需要一次观察。\n\n二十七分钟后，第三声出现。\n\n吱——咔。\n\n仍是北偏西。\n\n苏牧没有探头。他等余音完全消失，才补下第三个时间点。三次声音来自同一方位，每一次出现时，缆车都处在一段向上的索道。\n\n那东西可能没有移动。\n\n移动的是他。\n\n若声音来自某个固定设施，那里可能是下一处落脚点，也可能盘踞着高阶怪物；若声音其实在跟着缆车，危险就已经靠得太近。两种可能都不能靠猜。\n\n他给木片上的方位画了一个圈，又在旁边写下：下次停车前复核；不接近；不消耗箭。\n\n这一轮观察吃掉了他原本用来休息的四十分钟，也让车厢里的微光在雾中暴露得更久。\n\n苏牧关掉最后一线灯光。箭匣依旧只有二十一支普通木刺，窗外仍是当前雾区，他没有获得新武器，也没有找到通往下一片区域的路。\n\n但那道声音不再只是背景。\n\n同一个方向，三次声音，间隔都在缩短；它仍不是答案，却已经成了一条必须核验的路线线索。",
+  "state_changes": [
+    {
+      "kind": "knowledge",
+      "record_id": "fog-bearing-observation",
+      "payload": {
+        "fact": "北偏西方向出现三次来源未明的金属摩擦声",
+        "status": "UNVERIFIED",
+        "chapter_ordinal": 51
+      },
+      "evidence_quotes": [
+        "同一个方向，三次声音，间隔都在缩短；它仍不是答案，却已经成了一条必须核验的路线线索。"
+      ]
+    },
+    {
+      "kind": "thread",
+      "record_id": "fog-bearing-route-check",
+      "payload": {
+        "question": "北偏西的固定方位是危险源、设施，还是下一片区域的路线线索",
+        "status": "OPEN",
+        "next_action": "下次停车前复核，不主动接近"
+      },
+      "evidence_quotes": [
+        "他给木片上的方位画了一个圈，又在旁边写下：下次停车前复核；不接近；不消耗箭。"
+      ]
+    }
+  ],
+  "contract_evidence": {
+    "required_irreversible_change": [
+      "他在窗框内侧刻下第一道指向记号，方位一旦记住，下一次停车时他就不会再把那片雾当成普通背景。"
+    ],
+    "required_cost": [
+      "这一轮观察吃掉了他原本用来休息的四十分钟，也让车厢里的微光在雾中暴露得更久。"
+    ],
+    "ending_state": [
+      "同一个方向，三次声音，间隔都在缩短；它仍不是答案，却已经成了一条必须核验的路线线索。"
+    ],
+    "commit:未验证方位线索": [
+      "同一个方向，三次声音，间隔都在缩短；它仍不是答案，却已经成了一条必须核验的路线线索。"
+    ],
+    "commit:后续路线核验问题": [
+      "他给木片上的方位画了一个圈，又在旁边写下：下次停车前复核；不接近；不消耗箭。"
+    ]
+  },
+  "knowledge_claims": [],
+  "reveal_trace": {
+    "planned": [],
+    "realized": [],
+    "knowledge_transitions": []
+  },
+  "character_fit_inputs": {
+    "motivation_alignment": 94.0,
+    "knowledge_alignment": 96.0,
+    "capability_alignment": 96.0,
+    "relationship_alignment": 90.0,
+    "emotional_continuity": 93.0
+  },
+  "style_fit_inputs": {
+    "pov_and_tense": 95.0,
+    "diction_register": 92.0,
+    "sentence_rhythm": 92.0,
+    "dialogue_voice": 91.0,
+    "exposition_density": 90.0,
+    "emotional_distance": 93.0
+  },
+  "character_bottom_line_violations": [],
+  "style_boundary_violations": [],
+  "promises_advanced": [
+    "当前雾区之外存在什么",
+    "Lv2威胁是否与路线有关"
+  ],
+  "promises_paid": [],
+  "new_major_hooks": 0,
+  "structure_tags": [
+    "sensory-observation",
+    "three-beat-verification",
+    "open-route-question"
+  ],
+  "realized_kernel_trace": {
+    "expected_contract_id": "contract_40141b35706e489cfe9c8041",
+    "primary_intent": "PROGRESSION_SETUP",
+    "reader_promises_served": [
+      "promise.resource-earned",
+      "promise.survival-verification",
+      "promise.world-opening"
+    ],
+    "narrative_drives_advanced": [
+      "POWER_PROGRESSION"
+    ],
+    "progression_impact": {
+      "axis_advanced": [
+        "survival-cable-growth"
+      ],
+      "progression_delta_type": [
+        "ADVANCE"
+      ],
+      "stage_change": null,
+      "branch_change": null,
+      "bottleneck_change": null,
+      "resource_change": [],
+      "ability_unlock": [],
+      "ability_showcase": [],
+      "growth_cost": [
+        "休息时间",
+        "暴露风险"
+      ],
+      "new_ceiling_visibility": [],
+      "future_progression_space": [
+        "方位线索进入后续路线核验，但本章不改变世界层级"
+      ]
+    },
+    "resource_changes": [],
+    "world_expansion_changes": [],
+    "payoff_channels_realized": [
+      "KNOWLEDGE_GAIN"
+    ],
+    "debts_advanced": [],
+    "debts_paid": [],
+    "evidence": [
+      {
+        "claim": "可复核的方位观察推进 survival-cable-growth，并形成 KNOWLEDGE_GAIN",
+        "state_change_record_ids": [
+          "fog-bearing-observation",
+          "fog-bearing-route-check"
+        ],
+        "evidence_quotes": [
+          "同一个方向，三次声音，间隔都在缩短；它仍不是答案，却已经成了一条必须核验的路线线索。"
+        ]
+      }
+    ]
+  },
+  "notes": [
+    "Live B revision 2：补齐 Narrative Debt 兑现声明；仍不把软机会写成已拥有资源。"
+  ]
+}

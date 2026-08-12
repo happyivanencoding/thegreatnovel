@@ -1,0 +1,874 @@
+{
+  "book_id": "phase5-live-b-050",
+  "content_sha256": "5cb02df02f2bb6cd184c41cb6f6fe66b4235c93940fe115b38379594ecd095bd",
+  "contract_id": "contract_40141b35706e489cfe9c8041",
+  "created_at": "2026-08-12T09:26:25.088468+00:00",
+  "draft_id": "draft_8a313c3153f4b1558fe3a938",
+  "passed": true,
+  "projection_sha256": "3c1f9cef1411d7fd88c8704faae7b18604794892599e9fcc88b30cc7d3c5694b",
+  "reports": [
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Canon Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "latest_order_key": null
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Timeline Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Knowledge Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "character_fit": 93.85000000000001
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Character Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Economy / Power Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "REALIZED_KERNEL_UNDERDELIVERY",
+          "evidence": [],
+          "location": "realized_kernel_trace",
+          "message": "Expected resource 未在正文中兑现：['小型箭匣保持21/100，不声明新增弹药']",
+          "severity": "WARNING",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {
+        "kernel_trace_comparison": {
+          "expected": {
+            "drive_drift": {
+              "evidence": [
+                "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+              ],
+              "hard_failure": false,
+              "reasons": [],
+              "status": "CLEAR",
+              "warning": false
+            },
+            "evidence_compilation": {
+              "candidate_local_id": "pwk-b-fog-bearing-mark",
+              "completeness": "PARTIAL",
+              "declared": {
+                "anticipation_impact": [
+                  "为higher-threat-route建立可复核入口，同时保留药品交易线"
+                ],
+                "drive_drift": {
+                  "declared_status": "CLEAR"
+                },
+                "genre_drift": {
+                  "declared_status": "CLEAR"
+                },
+                "genre_evolution": {
+                  "declared_status": "UNCHANGED"
+                },
+                "narrative_drive_alignment": {
+                  "drive_balance": "PRIMARY_SERVICED",
+                  "drive_conflicts": [],
+                  "drives_advanced": [
+                    "POWER_PROGRESSION"
+                  ],
+                  "drives_deferred": [
+                    "WORLD_EXPLORATION"
+                  ],
+                  "drives_paid_off": [],
+                  "evidence": [
+                    "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+                  ],
+                  "primary_drive": "POWER_PROGRESSION",
+                  "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+                  "secondary_drive_effects": {
+                    "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+                    "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+                    "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+                  }
+                },
+                "payoff_channel_impact": [
+                  "KNOWLEDGE_GAIN"
+                ],
+                "progression_impact": {
+                  "ability_showcase": [],
+                  "ability_unlock": [],
+                  "axis_advanced": [
+                    "survival-cable-growth"
+                  ],
+                  "bottleneck_change": null,
+                  "branch_change": null,
+                  "future_progression_space": [
+                    "未验证方位可在以后满足跨区路线证据门槛，但本章不转移世界层级"
+                  ],
+                  "growth_cost": [
+                    "休息时间",
+                    "暴露风险"
+                  ],
+                  "new_ceiling_visibility": [],
+                  "progression_delta_type": [
+                    "ADVANCE"
+                  ],
+                  "resource_change": [
+                    "小型箭匣保持21/100，不声明新增弹药"
+                  ],
+                  "stage_change": null
+                },
+                "reader_promise_alignment": [
+                  {
+                    "evidence": [
+                      "资源变化只使用已确认普通木刺，机会不写成库存。"
+                    ],
+                    "priority": "CORE",
+                    "promise_id": "promise.resource-earned",
+                    "service": "SERVED"
+                  },
+                  {
+                    "evidence": [
+                      "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+                    ],
+                    "priority": "CORE",
+                    "promise_id": "promise.survival-verification",
+                    "service": "PARTIALLY_SERVED"
+                  },
+                  {
+                    "evidence": [
+                      "只保留高阶路线问题，不提前跨区。"
+                    ],
+                    "priority": "IMPORTANT",
+                    "promise_id": "promise.world-opening",
+                    "service": "PARTIALLY_SERVED"
+                  }
+                ],
+                "resource_impact": [
+                  "小型箭匣保持21/100，不声明新增弹药"
+                ],
+                "scheduler_alignment": {
+                  "alignment": "ALIGNED",
+                  "anticipations_served": [
+                    "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+                  ],
+                  "candidate_primary_intent": "PROGRESSION_SETUP",
+                  "debts_served": [],
+                  "deviation_reason": "",
+                  "recommended_primary_intent": "PROGRESSION_SETUP",
+                  "risks": [
+                    "恢复与准备不能写成无事件清单"
+                  ]
+                },
+                "world_expansion_impact": [
+                  "higher-threat-route线索获得一个可复核方位，但仍停留当前雾区"
+                ]
+              },
+              "differences": [],
+              "hard_gate_compilation": {
+                "author_constraint_violations": [],
+                "canon_conflicts": [],
+                "capability_violations": [],
+                "knowledge_violations": [],
+                "missing_causal_sources": [],
+                "payoff_cooldown_violations": [],
+                "timeline_conflicts": []
+              },
+              "soft_metric_compilation": {
+                "candidate_score_overrides": {
+                  "components": {
+                    "agency_gain": {
+                      "completeness": "COMPLETE",
+                      "evidence": [
+                        "allowed_delta_type:ADVANCE",
+                        "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                      ],
+                      "score": 100.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "debt_utility": {
+                      "completeness": "COMPLETE",
+                      "evidence": [],
+                      "formula": "existing:narrative_debt",
+                      "score": 0.0,
+                      "source": "FROZEN_NARRATIVE_DEBT"
+                    },
+                    "future_damage": {
+                      "completeness": "COMPLETE",
+                      "evidence": [
+                        "allowed_delta_type:ADVANCE",
+                        "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                      ],
+                      "score": 0.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "payoff_or_setup_utility": {
+                      "completeness": "PARTIAL",
+                      "components": {
+                        "after_value": 75.0,
+                        "causality": 100.0,
+                        "future_damage": 0.0,
+                        "impact": 75.0,
+                        "maturity": 0.0,
+                        "novelty": 85.0,
+                        "repetition_fatigue": 15.0,
+                        "structural_fit": 60.0
+                      },
+                      "evidence": [
+                        "KNOWLEDGE_GAIN"
+                      ],
+                      "formula": "existing:payoff_score",
+                      "score": 59.7,
+                      "source": "KERNEL_VERIFIED_PLUS_EXISTING_REPETITION_INPUT"
+                    },
+                    "progress_gain": {
+                      "completeness": "COMPLETE",
+                      "components": {
+                        "goal_advance": 70.0,
+                        "knowledge_change": 60.0,
+                        "permanent_growth": 60.0,
+                        "relationship_change": 0.0,
+                        "strategy_expansion": 75.0,
+                        "world_state_change": 60.0
+                      },
+                      "evidence": {
+                        "goal_advance": [
+                          "allowed_delta_type:ADVANCE",
+                          "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                        ],
+                        "knowledge_change": [
+                          "allowed_delta_type:ADVANCE",
+                          "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                        ],
+                        "permanent_growth": [
+                          "allowed_delta_type:ADVANCE",
+                          "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                        ],
+                        "relationship_change": [
+                          "no_verified_relationship_change_change"
+                        ],
+                        "strategy_expansion": [
+                          "allowed_delta_type:ADVANCE",
+                          "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                        ],
+                        "world_state_change": [
+                          "allowed_delta_type:ADVANCE",
+                          "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                        ]
+                      },
+                      "formula": "existing:progress",
+                      "score": 54.75,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "risk_fit": {
+                      "completeness": "COMPLETE",
+                      "evidence": [
+                        "allowed_delta_type:ADVANCE",
+                        "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                      ],
+                      "score": 100.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "thread_need_fit": {
+                      "completeness": "COMPLETE",
+                      "evidence": [
+                        "source:source-delta-pwk-live-b-ch50-threat-opportunity"
+                      ],
+                      "score": 100.0,
+                      "source": "FROZEN_ACTIVE_THREADS"
+                    }
+                  },
+                  "source": "KERNEL_EVIDENCE_COMPILER",
+                  "values": {
+                    "agency_gain": 100.0,
+                    "debt_utility": 0.0,
+                    "future_damage": 0.0,
+                    "payoff_or_setup_utility": 59.7,
+                    "progress_gain": 54.75,
+                    "risk_fit": 100.0,
+                    "thread_need_fit": 100.0
+                  }
+                },
+                "payoff": {
+                  "completeness": "PARTIAL",
+                  "components": {
+                    "after_value": 75.0,
+                    "causality": 100.0,
+                    "future_damage": 0.0,
+                    "impact": 75.0,
+                    "maturity": 0.0,
+                    "novelty": 85.0,
+                    "repetition_fatigue": 15.0,
+                    "structural_fit": 60.0
+                  },
+                  "evidence": [
+                    "KNOWLEDGE_GAIN"
+                  ],
+                  "formula": "existing:payoff_score",
+                  "score": 59.7,
+                  "source": "KERNEL_VERIFIED_PLUS_EXISTING_REPETITION_INPUT"
+                },
+                "progress": {
+                  "completeness": "COMPLETE",
+                  "components": {
+                    "goal_advance": 70.0,
+                    "knowledge_change": 60.0,
+                    "permanent_growth": 60.0,
+                    "relationship_change": 0.0,
+                    "strategy_expansion": 75.0,
+                    "world_state_change": 60.0
+                  },
+                  "evidence": {
+                    "goal_advance": [
+                      "allowed_delta_type:ADVANCE",
+                      "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                    ],
+                    "knowledge_change": [
+                      "allowed_delta_type:ADVANCE",
+                      "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                    ],
+                    "permanent_growth": [
+                      "allowed_delta_type:ADVANCE",
+                      "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                    ],
+                    "relationship_change": [
+                      "no_verified_relationship_change_change"
+                    ],
+                    "strategy_expansion": [
+                      "allowed_delta_type:ADVANCE",
+                      "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                    ],
+                    "world_state_change": [
+                      "allowed_delta_type:ADVANCE",
+                      "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                    ]
+                  },
+                  "formula": "existing:progress",
+                  "score": 54.75,
+                  "source": "KERNEL_VERIFIED_EVIDENCE"
+                },
+                "resource_pressure": {
+                  "completeness": "COMPLETE",
+                  "components": {
+                    "cost_income_imbalance": 0.0,
+                    "current_shortfall": 0.0,
+                    "near_future_demand": 0.0,
+                    "reader_salience": 100.0,
+                    "recently_blocked_actions": 100.0
+                  },
+                  "evidence": [
+                    "bottleneck:升级完成时点",
+                    "bottleneck:弹药伤害未验证",
+                    "bottleneck:药品与高阶怪物信息不足"
+                  ],
+                  "formula": "existing:resource_pressure",
+                  "score": 35.0,
+                  "source": "KERNEL_VERIFIED_EVIDENCE"
+                }
+              },
+              "verified": {
+                "drive_drift": {
+                  "evidence": [
+                    "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+                  ],
+                  "hard_failure": false,
+                  "reasons": [],
+                  "status": "CLEAR",
+                  "warning": false
+                },
+                "genre_drift": {
+                  "evidence": [
+                    "allowed_delta_type:ADVANCE",
+                    "owned_resource:小型箭匣保持21/100，不声明新增弹药",
+                    "资源变化只使用已确认普通木刺，机会不写成库存。",
+                    "候选以Lv2威胁压力组织准备，但不虚构怪物细节。",
+                    "只保留高阶路线问题，不提前跨区。"
+                  ],
+                  "hard_failure": false,
+                  "penalty": 0.0,
+                  "reasons": [],
+                  "status": "CLEAR",
+                  "warning": false
+                },
+                "genre_evolution": {
+                  "core_promise_preserved": true,
+                  "evidence": [
+                    "allowed_delta_type:ADVANCE",
+                    "owned_resource:小型箭匣保持21/100，不声明新增弹药",
+                    "资源变化只使用已确认普通木刺，机会不写成库存。",
+                    "候选以Lv2威胁压力组织准备，但不虚构怪物细节。",
+                    "只保留高阶路线问题，不提前跨区。"
+                  ],
+                  "explanation": "未检测到需要单独标记的 Genre Evolution",
+                  "status": "CLEAR"
+                },
+                "narrative_drive_alignment": {
+                  "drive_balance": "PRIMARY_SERVICED",
+                  "drive_conflicts": [],
+                  "drives_advanced": [
+                    "POWER_PROGRESSION"
+                  ],
+                  "drives_deferred": [
+                    "WORLD_EXPLORATION"
+                  ],
+                  "drives_paid_off": [],
+                  "evidence": [
+                    "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+                  ],
+                  "primary_drive": "POWER_PROGRESSION",
+                  "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+                  "secondary_drive_effects": {
+                    "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+                    "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+                    "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+                  }
+                },
+                "payoff_channels": [
+                  "KNOWLEDGE_GAIN"
+                ],
+                "progression_impact": {
+                  "ability_showcases": [],
+                  "ability_unlocks": [],
+                  "axis_advanced": [
+                    "survival-cable-growth"
+                  ],
+                  "growth_costs": [
+                    "休息时间",
+                    "暴露风险"
+                  ],
+                  "progression_delta_type": [
+                    "ADVANCE"
+                  ],
+                  "resource_changes": [
+                    {
+                      "claim": "小型箭匣保持21/100，不声明新增弹药",
+                      "source": "CURRENT_OWNED_RESOURCE"
+                    }
+                  ],
+                  "stage_change": null,
+                  "world_expansion": []
+                },
+                "reader_promise_alignment": [
+                  {
+                    "contract_strength": "CORE",
+                    "evidence": [
+                      "资源变化只使用已确认普通木刺，机会不写成库存。"
+                    ],
+                    "priority": "CORE",
+                    "promise_id": "promise.resource-earned",
+                    "service": "SERVED",
+                    "verification_status": "VERIFIED"
+                  },
+                  {
+                    "contract_strength": "CORE",
+                    "evidence": [
+                      "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+                    ],
+                    "priority": "CORE",
+                    "promise_id": "promise.survival-verification",
+                    "service": "PARTIALLY_SERVED",
+                    "verification_status": "VERIFIED"
+                  },
+                  {
+                    "contract_strength": "IMPORTANT",
+                    "evidence": [
+                      "只保留高阶路线问题，不提前跨区。"
+                    ],
+                    "priority": "IMPORTANT",
+                    "promise_id": "promise.world-opening",
+                    "service": "PARTIALLY_SERVED",
+                    "verification_status": "VERIFIED"
+                  }
+                ],
+                "resource_impact": [
+                  {
+                    "claim": "小型箭匣保持21/100，不声明新增弹药",
+                    "source": "CURRENT_RESOURCE",
+                    "status": "VERIFIED"
+                  }
+                ],
+                "scheduler_alignment": {
+                  "alignment": "ALIGNED",
+                  "anticipations_served": [
+                    "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+                  ],
+                  "candidate_primary_intent": "PROGRESSION_SETUP",
+                  "debts_served": [],
+                  "deviation_reason": "",
+                  "recommended_primary_intent": "PROGRESSION_SETUP",
+                  "risks": [
+                    "恢复与准备不能写成无事件清单"
+                  ]
+                },
+                "world_expansion_impact": []
+              },
+              "verified_anticipation_impact": [],
+              "verified_drive_alignment": {
+                "drive_balance": "PRIMARY_SERVICED",
+                "drive_conflicts": [],
+                "drives_advanced": [
+                  "POWER_PROGRESSION"
+                ],
+                "drives_deferred": [
+                  "WORLD_EXPLORATION"
+                ],
+                "drives_paid_off": [],
+                "evidence": [
+                  "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+                ],
+                "primary_drive": "POWER_PROGRESSION",
+                "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+                "secondary_drive_effects": {
+                  "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+                  "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+                  "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+                }
+              },
+              "verified_progress_components": {
+                "completeness": "COMPLETE",
+                "components": {
+                  "goal_advance": 70.0,
+                  "knowledge_change": 60.0,
+                  "permanent_growth": 60.0,
+                  "relationship_change": 0.0,
+                  "strategy_expansion": 75.0,
+                  "world_state_change": 60.0
+                },
+                "evidence": {
+                  "goal_advance": [
+                    "allowed_delta_type:ADVANCE",
+                    "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                  ],
+                  "knowledge_change": [
+                    "allowed_delta_type:ADVANCE",
+                    "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                  ],
+                  "permanent_growth": [
+                    "allowed_delta_type:ADVANCE",
+                    "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                  ],
+                  "relationship_change": [
+                    "no_verified_relationship_change_change"
+                  ],
+                  "strategy_expansion": [
+                    "allowed_delta_type:ADVANCE",
+                    "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                  ],
+                  "world_state_change": [
+                    "allowed_delta_type:ADVANCE",
+                    "owned_resource:小型箭匣保持21/100，不声明新增弹药"
+                  ]
+                },
+                "formula": "existing:progress",
+                "score": 54.75,
+                "source": "KERNEL_VERIFIED_EVIDENCE"
+              },
+              "verified_progression_impact": {
+                "ability_showcases": [],
+                "ability_unlocks": [],
+                "axis_advanced": [
+                  "survival-cable-growth"
+                ],
+                "growth_costs": [
+                  "休息时间",
+                  "暴露风险"
+                ],
+                "progression_delta_type": [
+                  "ADVANCE"
+                ],
+                "resource_changes": [
+                  {
+                    "claim": "小型箭匣保持21/100，不声明新增弹药",
+                    "source": "CURRENT_OWNED_RESOURCE"
+                  }
+                ],
+                "stage_change": null,
+                "world_expansion": []
+              },
+              "verified_reader_promise_alignment": [
+                {
+                  "contract_strength": "CORE",
+                  "evidence": [
+                    "资源变化只使用已确认普通木刺，机会不写成库存。"
+                  ],
+                  "priority": "CORE",
+                  "promise_id": "promise.resource-earned",
+                  "service": "SERVED",
+                  "verification_status": "VERIFIED"
+                },
+                {
+                  "contract_strength": "CORE",
+                  "evidence": [
+                    "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+                  ],
+                  "priority": "CORE",
+                  "promise_id": "promise.survival-verification",
+                  "service": "PARTIALLY_SERVED",
+                  "verification_status": "VERIFIED"
+                },
+                {
+                  "contract_strength": "IMPORTANT",
+                  "evidence": [
+                    "只保留高阶路线问题，不提前跨区。"
+                  ],
+                  "priority": "IMPORTANT",
+                  "promise_id": "promise.world-opening",
+                  "service": "PARTIALLY_SERVED",
+                  "verification_status": "VERIFIED"
+                }
+              ],
+              "verified_resource_impact": [
+                {
+                  "claim": "小型箭匣保持21/100，不声明新增弹药",
+                  "source": "CURRENT_RESOURCE",
+                  "status": "VERIFIED"
+                }
+              ],
+              "verified_world_expansion_impact": [],
+              "warnings": [
+                "世界扩张声明仅视为铺垫：higher-threat-route线索获得一个可复核方位，但仍停留当前雾区"
+              ]
+            },
+            "genre_drift": {
+              "evidence": [
+                "allowed_delta_type:ADVANCE",
+                "owned_resource:小型箭匣保持21/100，不声明新增弹药",
+                "资源变化只使用已确认普通木刺，机会不写成库存。",
+                "候选以Lv2威胁压力组织准备，但不虚构怪物细节。",
+                "只保留高阶路线问题，不提前跨区。"
+              ],
+              "hard_failure": false,
+              "penalty": 0.0,
+              "reasons": [],
+              "status": "CLEAR",
+              "warning": false
+            },
+            "genre_evolution": {
+              "core_promise_preserved": true,
+              "evidence": [
+                "allowed_delta_type:ADVANCE",
+                "owned_resource:小型箭匣保持21/100，不声明新增弹药",
+                "资源变化只使用已确认普通木刺，机会不写成库存。",
+                "候选以Lv2威胁压力组织准备，但不虚构怪物细节。",
+                "只保留高阶路线问题，不提前跨区。"
+              ],
+              "explanation": "未检测到需要单独标记的 Genre Evolution",
+              "status": "CLEAR"
+            },
+            "narrative_drive_alignment": {
+              "drive_balance": "PRIMARY_SERVICED",
+              "drive_conflicts": [],
+              "drives_advanced": [
+                "POWER_PROGRESSION"
+              ],
+              "drives_deferred": [
+                "WORLD_EXPLORATION"
+              ],
+              "drives_paid_off": [],
+              "evidence": [
+                "第49章缆车升级中；第50章箭匣21/100与药品请求形成可执行压力。"
+              ],
+              "primary_drive": "POWER_PROGRESSION",
+              "primary_drive_effect": "把现有装备或资源线转化为下一步可验证的生存战力",
+              "secondary_drive_effects": {
+                "RESOURCE_OPPORTUNITY": "保持机会与所有权边界",
+                "SURVIVAL_RESOURCE": "用现有威胁迫使资源选择",
+                "WORLD_EXPLORATION": "只铺垫高阶路线，不越过当前世界层级"
+              }
+            },
+            "payoff_channels": [
+              "KNOWLEDGE_GAIN"
+            ],
+            "progression_impact": {
+              "ability_showcases": [],
+              "ability_unlocks": [],
+              "axis_advanced": [
+                "survival-cable-growth"
+              ],
+              "growth_costs": [
+                "休息时间",
+                "暴露风险"
+              ],
+              "progression_delta_type": [
+                "ADVANCE"
+              ],
+              "resource_changes": [
+                {
+                  "claim": "小型箭匣保持21/100，不声明新增弹药",
+                  "source": "CURRENT_OWNED_RESOURCE"
+                }
+              ],
+              "stage_change": null,
+              "world_expansion": []
+            },
+            "reader_promise_alignment": [
+              {
+                "contract_strength": "CORE",
+                "evidence": [
+                  "资源变化只使用已确认普通木刺，机会不写成库存。"
+                ],
+                "priority": "CORE",
+                "promise_id": "promise.resource-earned",
+                "service": "SERVED",
+                "verification_status": "VERIFIED"
+              },
+              {
+                "contract_strength": "CORE",
+                "evidence": [
+                  "候选以Lv2威胁压力组织准备，但不虚构怪物细节。"
+                ],
+                "priority": "CORE",
+                "promise_id": "promise.survival-verification",
+                "service": "PARTIALLY_SERVED",
+                "verification_status": "VERIFIED"
+              },
+              {
+                "contract_strength": "IMPORTANT",
+                "evidence": [
+                  "只保留高阶路线问题，不提前跨区。"
+                ],
+                "priority": "IMPORTANT",
+                "promise_id": "promise.world-opening",
+                "service": "PARTIALLY_SERVED",
+                "verification_status": "VERIFIED"
+              }
+            ],
+            "resource_impact": [
+              {
+                "claim": "小型箭匣保持21/100，不声明新增弹药",
+                "source": "CURRENT_RESOURCE",
+                "status": "VERIFIED"
+              }
+            ],
+            "scheduler_alignment": {
+              "alignment": "ALIGNED",
+              "anticipations_served": [
+                "anticipation-opportunity-opportunity-lv2-blue-threat-medical-request"
+              ],
+              "candidate_primary_intent": "PROGRESSION_SETUP",
+              "debts_served": [],
+              "deviation_reason": "",
+              "recommended_primary_intent": "PROGRESSION_SETUP",
+              "risks": [
+                "恢复与准备不能写成无事件清单"
+              ]
+            },
+            "world_expansion_impact": []
+          },
+          "realized": {
+            "debts_advanced": [],
+            "debts_paid": [],
+            "evidence": [
+              {
+                "claim": "可复核的方位观察推进 survival-cable-growth，并形成 KNOWLEDGE_GAIN",
+                "evidence_quotes": [
+                  "同一个方向，三次声音，间隔都在缩短；它仍不是答案，却已经成了一条必须核验的路线线索。"
+                ],
+                "state_change_record_ids": [
+                  "fog-bearing-observation",
+                  "fog-bearing-route-check"
+                ]
+              }
+            ],
+            "expected_contract_id": "contract_40141b35706e489cfe9c8041",
+            "narrative_drives_advanced": [
+              "POWER_PROGRESSION"
+            ],
+            "payoff_channels_realized": [
+              "KNOWLEDGE_GAIN"
+            ],
+            "primary_intent": "PROGRESSION_SETUP",
+            "progression_impact": {
+              "ability_showcase": [],
+              "ability_unlock": [],
+              "axis_advanced": [
+                "survival-cable-growth"
+              ],
+              "bottleneck_change": null,
+              "branch_change": null,
+              "future_progression_space": [
+                "方位线索进入后续路线核验，但本章不改变世界层级"
+              ],
+              "growth_cost": [
+                "休息时间",
+                "暴露风险"
+              ],
+              "new_ceiling_visibility": [],
+              "progression_delta_type": [
+                "ADVANCE"
+              ],
+              "resource_change": [],
+              "stage_change": null
+            },
+            "reader_promises_served": [
+              "promise.resource-earned",
+              "promise.survival-verification",
+              "promise.world-opening"
+            ],
+            "resource_changes": [],
+            "world_expansion_changes": []
+          },
+          "status": "PARTIAL",
+          "underdelivered": {
+            "resource": [
+              "小型箭匣保持21/100，不声明新增弹药"
+            ]
+          },
+          "unexpected": {}
+        },
+        "requirements_checked": 5,
+        "reveal_requirements_checked": 0
+      },
+      "passed": true,
+      "severity": "WARNING",
+      "validator": "Contract Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Debt Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Payoff Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Repetition Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "style_fit": 92.30000000000001
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Style Validator"
+    }
+  ],
+  "run_id": "validation_a4a2fb3e2a2973d9e0f366c4",
+  "through_event_seq": 0
+}

@@ -1,0 +1,23 @@
+INFO:     127.0.0.1:29734 - "GET /books/phase5-live-b-050/editions/base/workbench?mode=state&node=progression&chapter_id=chapter_02dc0ea3f9b0e95fdb6e12a1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45127 - "GET /static/library_catalog.js?v=3.5.0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:29734 - "GET /static/style.css?v=3.5.0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20713 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:20196 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:1680 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63472 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63472 - "GET /books/phase5-live-b-050/editions/base/workbench?mode=state&node=progression&chapter_id=chapter_02dc0ea3f9b0e95fdb6e12a1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63472 - "GET /static/style.css?v=3.5.0 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:1971 - "GET /static/library_catalog.js?v=3.5.0 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:60053 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:31503 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53856 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34369 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48519 - "GET /api/books/phase5-live-b-050/editions/base/chapters/chapter_02dc0ea3f9b0e95fdb6e12a1/progression HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48519 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32468 - "GET /api/library/catalog HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47381 - "GET /books/pwk-v11-original-b-live/original HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47381 - "GET /static/style.css?v=3.5.0 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:47381 - "GET /static/original.js?v=3.5.0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32976 - "GET /books/cable-survival-test/editions/base/workbench?mode=plan&node=planning&planning_view=candidates&chapter_id=chapter_ed41da55b14683dfd18bace7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32976 - "GET /static/style.css?v=3.5.0 HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:58028 - "GET /static/library_catalog.js?v=3.5.0 HTTP/1.1" 304 Not Modified
