@@ -1,7 +1,7 @@
 # Progression Webnovel Kernel V1 架构审计
 
-> 状态：PWK-01 / 实施前审计  
-> 基线：`progression-webnovel-kernel-v1`  
+> 状态：PWK-01 / 实施前审计
+> 基线：`progression-webnovel-kernel-v1`
 > 最高规范：`Novel_Authoring_System_Constitution_V2.md`
 
 ## 1. 结论
