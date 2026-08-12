@@ -781,10 +781,10 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
         else StudioAccessLevel.ONBOARDING
     )
     label = (
-        "可用但有待补齐"
-        if readiness.status == "READY_WITH_GAPS"
-        else "可以续写 · 历史仍在补齐"
+        "可以续写 · 历史仍在补齐"
         if boundary_ready
+        else "可用但有待补齐"
+        if readiness.status == "READY_WITH_GAPS"
         else ("均衡准备" if depth == "BALANCED" else "快速了解")
         if level is StudioAccessLevel.LIMITED
         else "尚未就绪"

@@ -199,6 +199,13 @@ def test_candidate_ingest_creates_existing_initialization_handoff_and_deduplicat
     assert access["capabilities"]["browse_structure"] is True
     assert access["capabilities"]["plan_next"] is True
     assert access["capabilities"]["continue_from_current_boundary"] is False
+    assert access["author_label"] != "可以续写 · 历史仍在补齐"
+    catalog_entry = next(
+        item
+        for item in client.get("/api/library/catalog").json()["entries"]
+        if item["book_id"] == result["book_id"]
+    )
+    assert catalog_entry["state"] != "CONTINUE_READY"
     limited_api = client.get(f"/api/books/{result['book_id']}/editions/base/workbench")
     assert limited_api.status_code == 200
 
@@ -240,7 +247,13 @@ def test_valid_ready_contract_opens_full_studio_and_catalog_selector(tmp_path: P
     readiness = client.get(f"/api/books/{created['book_id']}/studio-readiness").json()
     assert readiness["ready"] is True
     assert readiness["status"] == "READY"
+    access = client.get(f"/api/books/{created['book_id']}/studio-access").json()
+    assert access["access_level"] == "FULL"
+    assert access["author_label"] == "完整就绪"
+    assert access["authoring_capabilities"]["FULL_READY"] is True
     catalog = client.get("/api/library/catalog").json()
+    entry = next(item for item in catalog["entries"] if item["book_id"] == created["book_id"])
+    assert entry["state_label"] == "完整就绪"
     assert catalog["groups"]["needs_action"][0]["book_id"] == created["book_id"]
     page = client.get(created["workbench_url"])
     assert page.status_code == 200
@@ -275,6 +288,7 @@ def test_ready_with_gaps_opens_limited_studio_without_claiming_full_readiness(
     status["state"] = "READY_WITH_GAPS"
     status["readiness"]["status"] = "READY_WITH_GAPS"
     status["readiness"]["gaps"] = ["远期路线仍有待定项"]
+    status["readiness"]["continuation_boundary"] = {"ready_for_continuation": True}
     status_path.write_text(json.dumps(status, ensure_ascii=False), encoding="utf-8")
 
     readiness = client.get(f"/api/books/{created['book_id']}/studio-readiness").json()
@@ -283,12 +297,17 @@ def test_ready_with_gaps_opens_limited_studio_without_claiming_full_readiness(
     assert readiness["missing_requirements"] == []
 
     access = client.get(f"/api/books/{created['book_id']}/studio-access").json()
-    assert access["access_level"] == "LIMITED"
+    assert access["access_level"] == "ACTION_READY"
     assert access["accessible"] is True
-    assert access["author_label"] == "可用但有待补齐"
+    assert access["authoring_capabilities"]["CONTINUE_READY"] is True
+    assert access["authoring_capabilities"]["FULL_READY"] is False
+    assert access["author_label"] == "可以续写 · 历史仍在补齐"
     catalog = client.get("/api/library/catalog").json()
     entry = next(item for item in catalog["entries"] if item["book_id"] == created["book_id"])
-    assert entry["state"] == "READY_WITH_GAPS"
+    assert entry["state"] == "CONTINUE_READY"
+    assert entry["state_label"] == "可以续写 · 历史仍在补齐"
+    assert entry in catalog["groups"]["creative"]
+    assert entry not in catalog["groups"]["needs_action"]
     assert entry["studio_ready"] is False
     assert entry["studio_accessible"] is True
     assert entry["primary_action"] == "OPEN_STUDIO"

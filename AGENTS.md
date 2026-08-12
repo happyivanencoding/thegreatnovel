@@ -1,14 +1,13 @@
 ## 1. 规范优先级
 
-按以下顺序执行：
+`Novel_Authoring_System_Constitution_V2.md` 是最高产品规范和长期不变量。
 
-1. 当前用户 / 当前任务明确要求
-2. `Novel_Authoring_System_Constitution_V2.md`
-3. 本 `AGENTS.md`
-4. 当前任务相关 `.agents/skills/*/SKILL.md`
-5. 当前有效代码与文档
+当前用户 / 当前任务可以指定 branch、文件、实现范围、测试范围和当前交付目标；
+但不得被解释为静默取消 Constitution 的产品硬边界。若用户明确要求修改
+Constitution 本身，则按该任务处理。
 
-历史 benchmark / audit 只作为证据，不覆盖当前实现。
+本 `AGENTS.md` 提供默认工程纪律；相关 skill、当前代码和历史 benchmark / audit
+分别只在其适用范围内提供执行细节或证据。
 
 ---
 
