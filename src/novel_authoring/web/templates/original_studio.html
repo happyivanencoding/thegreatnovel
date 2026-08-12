@@ -19,6 +19,48 @@
     </header>
     <p class="library-feedback" data-original-feedback aria-live="polite"></p>
 
+    {% if original.reader_experience_contract and original.reader_experience_contract.status != 'EFFECTIVE' %}
+    <section class="panel original-foundation original-reader-step" data-reader-experience-step>
+      <header class="original-wizard-header">
+        <div><p class="wb-kicker">Step 0 · 阅读体验</p><h2>这首先是一部什么小说？</h2></div>
+        <span class="badge">等待作者确认</span>
+      </header>
+      {% set reader = original.reader_experience_display %}
+      <div class="original-reader-summary">
+        <p>{{ reader.summary }}</p>
+        <div class="original-final-preview">
+          <article><span>主类型</span><strong>{{ reader.primary_family }}</strong></article>
+          <article><span>世界外壳</span><strong>{{ reader.setting_skin }}</strong></article>
+          <article><span>超凡解释</span><strong>{{ reader.explanation_style }}</strong></article>
+          <article><span>建议规模</span><strong>长篇连载</strong></article>
+        </div>
+      </div>
+      <h3>主要阅读体验</h3>
+      <div class="original-priority-grid">
+        {% for item in reader.priorities %}
+        <article class="original-priority-row"><span>{{ item.label }}</span><strong>{{ item.value_label }}</strong></article>
+        {% endfor %}
+      </div>
+      {% if reader.derived_adapter %}
+      <section class="original-derived-card">
+        <p class="wb-kicker">Derived Custom Adapter</p>
+        <h3>{{ reader.derived_adapter.growth_object }}</h3>
+        <p>成长主体：{{ reader.derived_adapter.progression_subject }} · 拓扑：{{ reader.derived_adapter.progression_topology|join(' / ') }}</p>
+        <p>这不是“未知错误”，也不会强行归入传统修仙、序列或等级模板。</p>
+      </section>
+      {% endif %}
+      <details><summary>核心承诺与防漂移边界</summary><h4>必须持续提供</h4><ul>{% for item in reader.must_deliver %}<li>{{ item }}</li>{% endfor %}</ul><h4>不得漂移为</h4><ul>{% for item in reader.must_not_drift_into %}<li>{{ item }}</li>{% endfor %}</ul></details>
+      <div class="original-actions original-reader-actions">
+        <button class="button primary" type="button" data-original-action="confirm-reader" data-reader-adjustment="CONFIRM">符合我的想法</button>
+        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="CULTIVATION_STRONGER">修炼成长更强</button>
+        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="PAYOFF_STRONGER">战斗和爽点更强</button>
+        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="MYSTERY_STRONGER">谜团更强</button>
+        <button class="button" type="button" data-original-action="confirm-reader" data-reader-adjustment="TEAM_STRONGER">团队更强</button>
+      </div>
+      <p class="muted">确认后才会生成 Genre / Progression / World / Payoff Proposal，并准备三个共享同一 Reader Promise 的 Story Foundation。</p>
+    </section>
+    {% else %}
+
     {% if original.generating_proposal %}
     <section class="panel original-status-card">
       <p class="wb-kicker">正在生成的新方案</p>
@@ -67,11 +109,12 @@
     {% elif not original.accepted %}
     <form class="panel original-foundation original-wizard" data-original-confirm data-proposal-version-id="{{ original.current_proposal_version.proposal_version_id if original.current_proposal_version else '' }}">
       <header class="original-wizard-header">
-        <div><p class="wb-kicker">当前故事基础方案</p><h2>用四步确认这本书的创作起点</h2></div>
+        <div><p class="wb-kicker">当前故事基础方案</p><h2>阅读体验已确认，再用四步确认创作起点</h2></div>
         <ol class="original-wizard-progress" aria-label="确认步骤">
+          <li class="is-done">0 阅读体验</li>
           <li class="is-active" data-wizard-indicator="1">1 故事方向</li>
           <li data-wizard-indicator="2">2 主角与世界</li>
-          <li data-wizard-indicator="3">3 近期与长期</li>
+          <li data-wizard-indicator="3">3 成长与长线</li>
           <li data-wizard-indicator="4">4 最终预览</li>
         </ol>
       </header>
@@ -118,7 +161,31 @@
       </section>
 
       <section data-wizard-step="3" hidden>
-        <h3>确认近期与长期方向</h3>
+        <h3>确认成长与长线</h3>
+        <input type="hidden" name="confirm_kernel_contracts" value="true">
+        {% if original.pending_kernel_contracts %}
+        <div class="original-contract-grid">
+          {% for contract in original.pending_kernel_contracts %}
+          <article class="original-contract-card">
+            <span>{{ contract.contract_type }}</span>
+            {% if contract.contract_type == 'PROGRESSION' %}
+            <strong>{{ contract.payload.primary_axis.name }}</strong>
+            <small>成长主体：{{ contract.payload.progression_subject }}</small>
+            <small>成长拓扑：{{ contract.payload.topology|join(' / ') }}</small>
+            <small>成长门槛：{% for gate in contract.payload.breakthrough_model.gates %}{{ gate.requirement }}{% if not loop.last %}；{% endif %}{% endfor %}</small>
+            <small>成长代价：{{ contract.payload.growth_costs|join('；') or '按具体 Foundation 确认' }}</small>
+            {% elif contract.contract_type == 'WORLD_EXPANSION' %}
+            <strong>世界扩张阶梯</strong><small>{% for stage in contract.payload.stages %}{{ stage.name }}{% if not loop.last %} → {% endif %}{% endfor %}</small>
+            {% elif contract.contract_type == 'PAYOFF_CHANNEL' %}
+            <strong>主要爽点渠道</strong><small>{{ contract.payload.channels.keys()|join(' / ') }}</small>
+            {% else %}
+            <strong>Genre Promise</strong><small>{% for promise in contract.payload.genre_promises %}{{ promise.statement }}{% if not loop.last %}；{% endif %}{% endfor %}</small>
+            {% endif %}
+          </article>
+          {% endfor %}
+        </div>
+        <p class="muted">最终确认时这些 Proposal 从第一章边界起生效；不会改写历史章节，也不会写入 Canon。</p>
+        {% endif %}
         <div class="original-choice-grid">
           {% for item in original.proposal.routes %}
           <label class="original-choice original-choice-tall"><input type="radio" name="selected_route_id" value="{{ item.route_id }}" {% if item.route_id == original.proposal.recommended_route_id %}checked{% endif %}><strong>{{ item.title }}</strong><span>{{ item.direction }}</span><small>核心压力：{{ item.central_pressure }}</small><small>机会：{{ item.opportunity }}</small><small>风险：{{ item.risk }}</small><small>仍保留：{{ item.open_alternatives|join('；') }}</small></label>
@@ -179,6 +246,7 @@
     {% endif %}
 
     {% if original.historical_proposal_versions %}<details class="panel wb-technical-details"><summary>历史故事方案</summary>{% for version in original.historical_proposal_versions %}<p>方案 {{ version.version_number }} · {{ version.status }} · {{ version.updated_at }}</p>{% endfor %}</details>{% endif %}
+    {% endif %}
   </main>
   <script src="{{ url_for('static', path='original.js') }}?v={{ asset_version }}" defer></script>
 </body>

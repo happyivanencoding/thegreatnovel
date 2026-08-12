@@ -574,6 +574,8 @@ class PayoffChannelProfile(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     channels: dict[PayoffChannel, GenrePromiseStrength]
+    effective_from_boundary: int | None = Field(default=None, ge=0)
+    status: ContractStatus = ContractStatus.NEEDS_REVIEW
 
 
 class RuntimeGenreCapabilities(BaseModel):

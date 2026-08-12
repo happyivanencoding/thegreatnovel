@@ -32,6 +32,23 @@ from novel_authoring.original.state import original_record
 from novel_authoring.planning.boundary import build_boundary_packet
 from novel_authoring.planning.contracts import build_chapter_contract
 from novel_authoring.planning.innovation import resolve_innovation_control
+from novel_authoring.progression.interpretation import (
+    ReaderExperienceAdjustment,
+    ReaderExperienceInterpretation,
+    adjust_reader_experience,
+    compile_kernel_contract_proposals,
+    interpret_reader_experience,
+)
+from novel_authoring.progression.models import ContractStatus, ReaderExperienceContract
+from novel_authoring.progression.service import (
+    ContractRecord,
+    ProgressionContractType,
+    confirm_contract,
+    create_contract_proposal,
+    effective_contract_records,
+    list_contract_records,
+    reject_contract,
+)
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import ensure_operation
 from novel_authoring.storage.registry import (
@@ -142,6 +159,162 @@ def _current_proposal_row(database: Database, book_id: str) -> dict[str, Any] | 
     return None if row is None else dict(row)
 
 
+def prepare_original_reader_experience(database: Database, book_id: str) -> dict[str, Any]:
+    records = list_contract_records(database, book_id=book_id, edition_id="base")
+    existing = next(
+        (
+            record
+            for record in records
+            if record.contract_type is ProgressionContractType.READER_EXPERIENCE
+            and record.status
+            in {ContractStatus.NEEDS_REVIEW, ContractStatus.EFFECTIVE}
+        ),
+        None,
+    )
+    interpretation_path = _original_dir(database, book_id) / "reader_experience.json"
+    existing_interpretation = _read_json(interpretation_path)
+    if existing is not None and existing_interpretation is not None:
+        return {
+            "contract": existing.model_dump(mode="json"),
+            "interpretation": existing_interpretation,
+            "deduplicated": True,
+            "canon_changed": False,
+        }
+    request_payload = _read_json(_original_dir(database, book_id) / "request.json")
+    if request_payload is None:
+        raise OriginalWorkflowError("原创的一句话创意不存在")
+    request = OriginalBookRequest.model_validate(request_payload)
+    interpretation = interpret_reader_experience(
+        request.premise,
+        genre_hint=request.genre,
+        contract_prefix=book_id,
+    )
+    proposal = create_contract_proposal(
+        database,
+        book_id=book_id,
+        edition_id="base",
+        contract_type=ProgressionContractType.READER_EXPERIENCE,
+        payload=interpretation.reader_contract,
+        source="ORIGINAL_READER_EXPERIENCE_INTERPRETATION",
+    )
+    _write_json(interpretation_path, interpretation.model_dump(mode="json"))
+    _set_original_state(database, book_id, OriginalState.READER_EXPERIENCE_REVIEW)
+    return {
+        "contract": proposal.model_dump(mode="json"),
+        "interpretation": interpretation.model_dump(mode="json"),
+        "deduplicated": False,
+        "canon_changed": False,
+    }
+
+
+def _create_kernel_contract_proposals(
+    database: Database,
+    book_id: str,
+    interpretation: ReaderExperienceInterpretation,
+) -> list[ContractRecord]:
+    existing = list_contract_records(database, book_id=book_id, edition_id="base")
+    existing_types = {
+        record.contract_type
+        for record in existing
+        if record.status in {ContractStatus.NEEDS_REVIEW, ContractStatus.EFFECTIVE}
+    }
+    bundle = compile_kernel_contract_proposals(interpretation)
+    created: list[ContractRecord] = []
+    for contract_type, payload in (
+        (ProgressionContractType.GENRE, bundle.genre),
+        (ProgressionContractType.PROGRESSION, bundle.progression),
+        (ProgressionContractType.WORLD_EXPANSION, bundle.world_expansion),
+        (ProgressionContractType.PAYOFF_CHANNEL, bundle.payoff_channels),
+    ):
+        if contract_type in existing_types:
+            continue
+        created.append(
+            create_contract_proposal(
+                database,
+                book_id=book_id,
+                edition_id="base",
+                contract_type=contract_type,
+                payload=payload,
+                source="CONFIRMED_READER_EXPERIENCE",
+            )
+        )
+    return created
+
+
+def confirm_original_reader_experience(
+    database: Database,
+    book_id: str,
+    adjustment: ReaderExperienceAdjustment | str = ReaderExperienceAdjustment.CONFIRM,
+) -> dict[str, Any]:
+    selected_adjustment = (
+        adjustment
+        if isinstance(adjustment, ReaderExperienceAdjustment)
+        else ReaderExperienceAdjustment(adjustment)
+    )
+    interpretation_path = _original_dir(database, book_id) / "reader_experience.json"
+    payload = _read_json(interpretation_path)
+    if payload is None:
+        prepare_original_reader_experience(database, book_id)
+        payload = _read_json(interpretation_path)
+    if payload is None:
+        raise OriginalWorkflowError("Reader Experience Proposal 不存在")
+    interpretation = ReaderExperienceInterpretation.model_validate(payload)
+    records = list_contract_records(database, book_id=book_id, edition_id="base")
+    effective = next(
+        (
+            record
+            for record in records
+            if record.contract_type is ProgressionContractType.READER_EXPERIENCE
+            and record.status is ContractStatus.EFFECTIVE
+        ),
+        None,
+    )
+    if effective is None:
+        current = next(
+            (
+                record
+                for record in records
+                if record.contract_type is ProgressionContractType.READER_EXPERIENCE
+                and record.status is ContractStatus.NEEDS_REVIEW
+            ),
+            None,
+        )
+        if current is None:
+            raise OriginalWorkflowError("没有待确认的 Reader Experience Proposal")
+        adjusted = adjust_reader_experience(
+            ReaderExperienceContract.model_validate(current.payload),
+            selected_adjustment,
+        )
+        if adjusted != ReaderExperienceContract.model_validate(current.payload):
+            replacement = create_contract_proposal(
+                database,
+                book_id=book_id,
+                edition_id="base",
+                contract_type=ProgressionContractType.READER_EXPERIENCE,
+                payload=adjusted,
+                source="AUTHOR_ADJUSTED_READER_EXPERIENCE",
+            )
+            reject_contract(database, current.contract_record_id)
+            current = replacement
+        effective = confirm_contract(
+            database,
+            current.contract_record_id,
+            effective_from_boundary=1,
+            author_notes=f"作者选择：{selected_adjustment.value}",
+        )
+    confirmed_reader = ReaderExperienceContract.model_validate(effective.payload)
+    interpretation = interpretation.model_copy(update={"reader_contract": confirmed_reader})
+    _write_json(interpretation_path, interpretation.model_dump(mode="json"))
+    proposals = _create_kernel_contract_proposals(database, book_id, interpretation)
+    handoff = prepare_original_bootstrap(database, book_id)
+    return {
+        "reader_experience": effective.model_dump(mode="json"),
+        "created_contract_proposals": [item.model_dump(mode="json") for item in proposals],
+        "handoff": handoff,
+        "canon_changed": False,
+    }
+
+
 def create_original_book(
     layout: BookLayout,
     request: OriginalBookRequest | dict[str, Any],
@@ -206,6 +379,7 @@ def create_original_book(
         paths.edition("base").analysis / "original" / "request.json",
         data.model_dump(mode="json"),
     )
+    reader_experience = prepare_original_reader_experience(database, selected_id)
     return {
         "book_id": selected_id,
         "title": working_title,
@@ -213,9 +387,10 @@ def create_original_book(
         "request_path": str(request_path),
         "book_kind": BookKind.AUTHOR.value,
         "creation_mode": CreationMode.ORIGINAL.value,
-        "original_state": OriginalState.ORIGINAL_SEED.value,
+        "original_state": OriginalState.READER_EXPERIENCE_REVIEW.value,
         "chapter_count": 0,
         "source_required": False,
+        "reader_experience": reader_experience,
     }
 
 
@@ -224,6 +399,29 @@ def prepare_original_bootstrap(database: Database, book_id: str) -> dict[str, An
     request = _read_json(request_path)
     if request is None:
         raise OriginalWorkflowError("原创 premise 请求不存在")
+    effective = effective_contract_records(database, book_id=book_id, edition_id="base")
+    reader = effective.get(ProgressionContractType.READER_EXPERIENCE)
+    if reader is None:
+        raise OriginalWorkflowError("必须先确认 Reader Experience，才能生成 Story Foundation")
+    contract_records = list_contract_records(database, book_id=book_id, edition_id="base")
+    latest_by_type: dict[str, dict[str, Any]] = {}
+    for record in contract_records:
+        latest_by_type.setdefault(
+            record.contract_type.value,
+            record.model_dump(mode="json"),
+        )
+    request = {
+        **request,
+        "progression_kernel": {
+            "reader_experience": reader.model_dump(mode="json"),
+            "contract_proposals": latest_by_type,
+            "foundation_rules": [
+                "三个 Foundation 必须共享同一 Reader Experience 与 Genre Promise",
+                "三个 Foundation 必须在成长来源、资源经济、世界入口、冲突与人物动力上不同",
+                "不得让 setting skin 或社会议题取代核心成长因果",
+            ],
+        },
+    }
     completed = _reconcile_completed_original_bootstrap(database, book_id)
     if completed is not None:
         # A completed Codex handoff is already the user's requested result. Do
@@ -361,6 +559,12 @@ def import_original_bootstrap_proposal(
     proposal = OriginalBootstrapProposal.model_validate_json(
         proposal_path.read_text(encoding="utf-8")
     )
+    handoff_request = _read_json(task_directory / "input" / "original_request.json") or {}
+    expected_kernel = handoff_request.get("progression_kernel")
+    if expected_kernel and proposal.kernel_contracts != expected_kernel:
+        raise OriginalWorkflowError(
+            "Foundation Proposal 必须原样携带已冻结的 Progression Kernel Contracts"
+        )
     foundation_ids = [item.candidate_id for item in proposal.foundation_candidates]
     if list(result.get("candidate_ids", [])) != foundation_ids:
         raise OriginalWorkflowError("handoff candidate_ids 与 Foundation Proposal 不一致")
@@ -615,6 +819,24 @@ def confirm_original_foundation(
         applied = apply_genesis_plan(database, book_id, plan)
     except (GenesisApplyError, sqlite3.IntegrityError) as exc:
         raise OriginalWorkflowError(str(exc)) from exc
+    confirmed_contracts: list[dict[str, Any]] = []
+    if data.confirm_kernel_contracts:
+        seen: set[ProgressionContractType] = set()
+        for record in list_contract_records(database, book_id=book_id, edition_id="base"):
+            if (
+                record.contract_type is ProgressionContractType.READER_EXPERIENCE
+                or record.contract_type in seen
+            ):
+                continue
+            seen.add(record.contract_type)
+            if record.status is ContractStatus.NEEDS_REVIEW:
+                confirmed = confirm_contract(
+                    database,
+                    record.contract_record_id,
+                    effective_from_boundary=1,
+                    author_notes="作者在 Foundation 最终预览中一并确认",
+                )
+                confirmed_contracts.append(confirmed.model_dump(mode="json"))
     accepted_path = _original_dir(database, book_id) / "story_foundation" / "accepted.json"
     export_warning: str | None = None
     try:
@@ -643,6 +865,7 @@ def confirm_original_foundation(
         },
         "chapter_created": False,
         "canon_changed": False,
+        "confirmed_kernel_contracts": confirmed_contracts,
     }
 
 
@@ -652,6 +875,20 @@ def select_first_chapter_candidate(
     accepted = accepted_foundation(database, book_id)
     if accepted is None:
         raise OriginalWorkflowError("必须先确认故事基础方案")
+    records = list_contract_records(database, book_id=book_id, edition_id="base")
+    if records:
+        effective_types = {
+            record.contract_type
+            for record in records
+            if record.status is ContractStatus.EFFECTIVE
+        }
+        required = {
+            ProgressionContractType.READER_EXPERIENCE,
+            ProgressionContractType.GENRE,
+            ProgressionContractType.PROGRESSION,
+        }
+        if not required.issubset(effective_types):
+            raise OriginalWorkflowError("必须先确认 Reader、Genre 与 Progression Contract")
     task_id = str(accepted.get("genesis_task_id") or "")
     boundary = build_boundary_packet(database, book_id, edition_id="base")
     boundary_payload = json.loads(Path(str(boundary["json_path"])).read_text(encoding="utf-8"))
@@ -785,6 +1022,10 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
     _reconcile_completed_original_bootstrap(database, book_id)
     proposal = load_original_proposal(database, book_id)
     accepted = accepted_foundation(database, book_id)
+    kernel_records = list_contract_records(database, book_id=book_id, edition_id="base")
+    reader_interpretation = _read_json(
+        _original_dir(database, book_id) / "reader_experience.json"
+    )
     with database.connect() as connection:
         state_row = connection.execute(
             "SELECT state FROM original_states WHERE book_id=? AND edition_id='base'",
@@ -852,12 +1093,89 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
         if state_row is not None
         else record.original_state or OriginalState.ORIGINAL_SEED.value
     )
+    reader_payload = (
+        dict(reader_interpretation.get("reader_contract", {}))
+        if reader_interpretation is not None
+        else {}
+    )
+    priority_labels = {
+        "PROGRESSION": "成长突破",
+        "POWER_VERIFICATION": "能力兑现",
+        "COMBAT": "战斗兑现",
+        "EXPLORATION": "机缘探索",
+        "RESOURCE_OPPORTUNITY": "资源机会",
+        "WORLD_EXPANSION": "世界扩张",
+        "FACTION_CONFLICT": "势力竞争",
+        "MYSTERY": "世界谜团",
+        "TEAM_GROWTH": "团队成长",
+        "RELATIONSHIP": "人物关系",
+        "KNOWLEDGE": "知识成长",
+        "SOCIAL_THEME": "社会议题",
+    }
+    reader_display = (
+        {
+            "summary": str(reader_interpretation.get("summary") or ""),
+            "primary_family": {
+                "PROGRESSION_FANTASY": "成长型玄幻",
+                "MYSTERY_PROGRESSION": "神秘学成长",
+                "SURVIVAL_PROGRESSION": "生存成长",
+                "TEAM_PROGRESSION": "团队成长",
+                "COSMIC_PROGRESSION": "宇宙成长",
+                "EVOLUTION_PROGRESSION": "进化成长",
+                "CIVILIZATION_PROGRESSION": "文明成长",
+                "CUSTOM": "自定义成长",
+            }.get(str(reader_payload.get("primary_family") or ""), "自定义成长"),
+            "setting_skin": {
+                "ANCIENT_FANTASY": "古典幻想",
+                "OTHERWORLD": "异世界",
+                "MODERN_CITY": "现代城市",
+                "NEAR_FUTURE": "近未来",
+                "APOCALYPSE": "末世",
+                "COSMIC": "宇宙",
+                "STEAMPUNK": "蒸汽幻想",
+                "CUSTOM": "作者自定义",
+            }.get(str(reader_payload.get("setting_skin") or ""), "作者自定义"),
+            "explanation_style": {
+                "MYSTICAL": "玄秘",
+                "MIXED_MYSTICAL": "混合偏玄秘",
+                "BALANCED": "平衡",
+                "MIXED_HARD": "混合偏硬",
+                "HARD_EXPLANATION": "硬解释",
+            }.get(str(reader_payload.get("explanation_style") or ""), "平衡"),
+            "priorities": [
+                {
+                    "key": key,
+                    "label": priority_labels[key],
+                    "value": str(value),
+                    "value_label": {
+                        "VERY_HIGH": "核心",
+                        "HIGH": "重要",
+                        "MEDIUM": "辅助",
+                        "LOW": "弱化",
+                        "OFF": "不需要",
+                    }.get(str(value), str(value)),
+                }
+                for key, value in dict(
+                    reader_payload.get("experience_priorities", {})
+                ).items()
+                if key in priority_labels
+            ],
+            "must_deliver": list(reader_payload.get("must_deliver", [])),
+            "must_not_drift_into": list(
+                reader_payload.get("must_not_drift_into", [])
+            ),
+            "derived_adapter": reader_interpretation.get("derived_adapter_spec"),
+        }
+        if reader_interpretation is not None
+        else None
+    )
     return {
         "book_id": book_id,
         "title": record.title,
         "original_state": state_value,
         "original_state_label": {
             "ORIGINAL_SEED": "一句话创意已保存",
+            "READER_EXPERIENCE_REVIEW": "等待确认阅读体验",
             "FOUNDATION_GENERATING": "正在生成故事方案",
             "FOUNDATION_REVIEW": "等待你确认故事方案",
             "FOUNDATION_READY": "故事基础已确认",
@@ -885,6 +1203,30 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
         "chapter_count": chapter_count,
         "handoffs": handoffs,
         "approval_confirmation": "批准写入正史",
+        "reader_experience": reader_interpretation,
+        "reader_experience_display": reader_display,
+        "kernel_contracts": [item.model_dump(mode="json") for item in kernel_records],
+        "reader_experience_contract": next(
+            (
+                item.model_dump(mode="json")
+                for item in kernel_records
+                if item.contract_type is ProgressionContractType.READER_EXPERIENCE
+                and item.status
+                in {ContractStatus.EFFECTIVE, ContractStatus.NEEDS_REVIEW}
+            ),
+            None,
+        ),
+        "pending_kernel_contracts": [
+            item.model_dump(mode="json")
+            for item in kernel_records
+            if item.contract_type is not ProgressionContractType.READER_EXPERIENCE
+            and item.status is ContractStatus.NEEDS_REVIEW
+        ],
+        "effective_kernel_contracts": [
+            item.model_dump(mode="json")
+            for item in kernel_records
+            if item.status is ContractStatus.EFFECTIVE
+        ],
     }
 
 
@@ -892,12 +1234,14 @@ __all__ = [
     "OriginalWorkflowError",
     "approve_original_first_chapter",
     "confirm_original_foundation",
+    "confirm_original_reader_experience",
     "compare_original_proposals",
     "create_original_book",
     "import_original_bootstrap_proposal",
     "load_original_proposal",
     "original_overview",
     "prepare_original_bootstrap",
+    "prepare_original_reader_experience",
     "resolve_original_proposal_version",
     "select_first_chapter_candidate",
     "validate_original_draft",

@@ -91,7 +91,7 @@
   document.querySelector("[data-original-create]")?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    show("正在创建原创项目并准备 AI 任务…");
+    show("正在创建原创项目并理解核心阅读体验…");
     try {
       const value = await post("/api/library/original", {
         premise: String(form.get("premise") || "").trim(),
@@ -170,6 +170,7 @@
           setting_strength_overrides: settingStrengths,
           open_question_actions: openQuestionActions,
           hidden_truth_actions: hiddenTruthActions,
+          confirm_kernel_contracts: String(form.get("confirm_kernel_contracts") || "") === "true",
         });
         window.location.replace(window.location.href);
       } catch (error) { show(error.message, true); }
@@ -191,7 +192,13 @@
     const action = button.dataset.originalAction;
     button.disabled = true;
     try {
-      if (action === "bootstrap") {
+      if (action === "confirm-reader") {
+        show("正在确认阅读体验并准备共享 Contract 的三个故事方向…");
+        await post(`/api/books/${bookId}/original/reader-experience/confirm`, {
+          adjustment: button.dataset.readerAdjustment || "CONFIRM",
+        });
+        window.location.replace(window.location.href);
+      } else if (action === "bootstrap") {
         show("正在准备新的故事方案；当前方案会保留…");
         const value = await post(`/api/books/${bookId}/original/bootstrap`, {});
         const message = value.proposal_imported

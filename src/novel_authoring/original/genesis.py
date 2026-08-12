@@ -118,8 +118,10 @@ def build_genesis_apply_plan(
     if foundation is None or route is None:
         raise GenesisApplyError("选择的故事基础或路线不属于当前方案")
     selected_title = confirmation.title_override.strip() or confirmation.selected_title
-    protagonist = confirmation.protagonist_override.strip() or proposal.protagonist
-    protagonist_goal = confirmation.protagonist_goal_override.strip() or proposal.protagonist_goal
+    protagonist = confirmation.protagonist_override.strip() or foundation.protagonist
+    protagonist_goal = (
+        confirmation.protagonist_goal_override.strip() or foundation.protagonist_goal
+    )
     main_conflict = confirmation.main_conflict_override.strip() or foundation.main_conflict
     protagonist_cost = confirmation.protagonist_cost_override.strip() or proposal.protagonist_cost
     protagonist_growth = (
@@ -152,6 +154,26 @@ def build_genesis_apply_plan(
                     "strength": SettingStrength.CORE.value,
                 }
             )
+    characters = confirmation.characters_override or proposal.characters
+    factions = confirmation.factions_override or proposal.factions
+    settings.extend(
+        {
+            "setting_id": f"author-character-{index}",
+            "category": "CHARACTER",
+            "statement": character,
+            "strength": SettingStrength.CORE.value,
+        }
+        for index, character in enumerate(characters, start=1)
+    )
+    settings.extend(
+        {
+            "setting_id": f"author-faction-{index}",
+            "category": "FACTION",
+            "statement": faction,
+            "strength": SettingStrength.CORE.value,
+        }
+        for index, faction in enumerate(factions, start=1)
+    )
     truth_specs: list[tuple[TruthType, str, str]] = [
         (TruthType.CHARACTER_IDENTITY, "主角", protagonist),
         (TruthType.CHARACTER_GOAL, "主角目标", protagonist_goal),

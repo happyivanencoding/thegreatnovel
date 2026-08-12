@@ -12,6 +12,7 @@ from novel_authoring.domain.models import NarrativeFunction
 
 class OriginalState(StrEnum):
     ORIGINAL_SEED = "ORIGINAL_SEED"
+    READER_EXPERIENCE_REVIEW = "READER_EXPERIENCE_REVIEW"
     FOUNDATION_GENERATING = "FOUNDATION_GENERATING"
     FOUNDATION_REVIEW = "FOUNDATION_REVIEW"
     FOUNDATION_READY = "FOUNDATION_READY"
@@ -166,6 +167,7 @@ class OriginalBootstrapProposal(BaseModel):
     hidden_truth_candidates: list[HiddenTruthCandidate] = Field(default_factory=list)
     risks: list[str] = Field(default_factory=list)
     avoid_cliches: list[str] = Field(default_factory=list)
+    kernel_contracts: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def choices_are_distinct_and_recommendation_exists(self) -> OriginalBootstrapProposal:
@@ -210,6 +212,7 @@ class OriginalFoundationConfirmation(BaseModel):
     hidden_truth_actions: dict[
         str, Literal["CONFIRM_TRUTH", "KEEP_CANDIDATE", "KEEP_OPEN", "REJECT"]
     ] = Field(default_factory=dict)
+    confirm_kernel_contracts: bool = True
 
 
 class GenesisApplyPlan(BaseModel):

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,7 @@ from novel_authoring.original.service import (
     approve_original_first_chapter,
     compare_original_proposals,
     confirm_original_foundation,
+    confirm_original_reader_experience,
     create_original_book,
     import_original_bootstrap_proposal,
     original_overview,
@@ -185,9 +187,21 @@ def create_original(tmp_path: Path) -> tuple[BookLayout, Database]:
 
 
 def complete_bootstrap_handoff(database: Database) -> str:
-    handoff_id = str(prepare_original_bootstrap(database, BOOK_ID)["handoff_id"])
+    reader_result = confirm_original_reader_experience(database, BOOK_ID)
+    handoff_id = str(reader_result["handoff"]["handoff_id"])
     handoff = get_handoff(database, handoff_id)
-    proposal = OriginalBootstrapProposal.model_validate(proposal_payload())
+    original_request = json.loads(
+        (
+            Path(str(handoff["task_directory"]))
+            / "input"
+            / "original_request.json"
+        ).read_text(
+            encoding="utf-8"
+        )
+    )
+    proposal_data = proposal_payload()
+    proposal_data["kernel_contracts"] = original_request["progression_kernel"]
+    proposal = OriginalBootstrapProposal.model_validate(proposal_data)
     artifact = (
         Path(str(handoff["task_directory"])) / "artifacts" / "story_foundation" / "proposal.json"
     )
@@ -263,11 +277,16 @@ def test_original_book_requires_no_source_and_has_one_author_card(tmp_path: Path
             "SELECT (SELECT COUNT(*) FROM source_documents), "
             "(SELECT COUNT(*) FROM chapters), (SELECT COUNT(*) FROM editions)"
         ).fetchone()
+        handoff_count = connection.execute(
+            "SELECT COUNT(*) FROM workflow_handoffs"
+        ).fetchone()[0]
     catalog = build_library_catalog(layout, tmp_path / "book")
 
     assert record.book_kind is BookKind.AUTHOR
     assert record.creation_mode is CreationMode.ORIGINAL
     assert tuple(counts) == (0, 0, 1)
+    assert handoff_count == 0
+    assert record.original_state == "READER_EXPERIENCE_REVIEW"
     assert len(catalog.entries) == 1
     assert catalog.entries[0].href == f"/books/{BOOK_ID}/original"
     assert studio_access(layout, record).access_level.value == "ONBOARDING"
@@ -311,6 +330,8 @@ def test_foundation_stays_proposal_until_author_confirms_impact(tmp_path: Path) 
             "world_rules": proposal_payload()["world_rules"],
             "first_phase_objective": proposal_payload()["first_phase_objective"],
             "rolling_short_override": ["定位第一位情绪保留者"],
+            "characters_override": ["林默：主动追索被删情感的人"],
+            "factions_override": ["情绪保留者联盟"],
         },
     )
     with database.connect() as connection:
@@ -323,11 +344,19 @@ def test_foundation_stays_proposal_until_author_confirms_impact(tmp_path: Path) 
         intents = connection.execute(
             "SELECT horizon FROM author_control_intents ORDER BY horizon"
         ).fetchall()
+        foundation_truths = [
+            str(row[0])
+            for row in connection.execute(
+                "SELECT statement FROM author_truths ORDER BY truth_id"
+            ).fetchall()
+        ]
 
     assert before == (0, 0, 0)
     assert after[0] >= 6
     assert after[1:] == (0, 0)
     assert {row["horizon"] for row in intents} == {"SHORT", "MID", "LONG"}
+    assert "林默：主动追索被删情感的人" in foundation_truths
+    assert "情绪保留者联盟" in foundation_truths
     accepted = Path(str(result["accepted_path"])).read_text(encoding="utf-8")
     assert "情绪失物招领处" in accepted
     assert "先找回被删除的悲伤" in accepted
@@ -344,6 +373,8 @@ def test_foundation_stays_proposal_until_author_confirms_impact(tmp_path: Path) 
             "world_rules": proposal_payload()["world_rules"],
             "first_phase_objective": proposal_payload()["first_phase_objective"],
             "rolling_short_override": ["定位第一位情绪保留者"],
+            "characters_override": ["林默：主动追索被删情感的人"],
+            "factions_override": ["情绪保留者联盟"],
         },
     )
     assert retry["idempotent"] is True
@@ -655,10 +686,16 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
             headers={"X-CSRF-Token": token},
             json={"premise": "一座城市每天删除一种情感"},
         )
-        original = client.get(created.json()["original_url"])
         created_payload = created.json()
-        handoff_id = str(created_payload["handoff"]["handoff_id"])
         book_id = str(created_payload["book_id"])
+        reader_step = client.get(created.json()["original_url"])
+        confirmed = client.post(
+            f"/api/books/{book_id}/original/reader-experience/confirm",
+            headers={"X-CSRF-Token": token},
+            json={"adjustment": "CONFIRM"},
+        )
+        original = client.get(created.json()["original_url"])
+        handoff_id = str(confirmed.json()["handoff"]["handoff_id"])
         instruction_url = (
             f"/api/books/{book_id}/editions/base/handoffs/{handoff_id}/instruction"
         )
@@ -670,6 +707,7 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
     assert "一句话创意" in form.text
     assert created.status_code == 200
     assert created.json()["source_required"] is False
+    assert "这首先是一部什么小说" in reader_step.text
     assert "AI 任务" in original.text
     assert instruction.status_code == 200
     assert instruction.json()["instruction"]

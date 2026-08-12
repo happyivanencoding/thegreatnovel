@@ -17,6 +17,7 @@ from novel_authoring.author_control.reveal import AgendaBucket, KnowledgeState, 
 from novel_authoring.author_control.truth import TruthCompatibilityEvidenceInput
 from novel_authoring.metrics.models import MetricComponentStatus, ObservationSourceKind
 from novel_authoring.planning.innovation import InnovationFocus, InnovationLevel
+from novel_authoring.progression.interpretation import ReaderExperienceAdjustment
 
 
 class AuthorInputRequest(BaseModel):
@@ -101,6 +102,12 @@ class OriginalProposalImportRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     handoff_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+
+
+class OriginalReaderExperienceConfirmationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    adjustment: ReaderExperienceAdjustment = ReaderExperienceAdjustment.CONFIRM
 
 
 class OriginalProposalVersionResolutionRequest(BaseModel):

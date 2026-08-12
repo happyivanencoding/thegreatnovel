@@ -10,10 +10,13 @@ from novel_authoring.progression.models import (
     BreakthroughModel,
     ContractStatus,
     DerivedAdapterSpec,
+    GenreContract,
     GrowthAxis,
     GrowthAxisType,
     ProgressionContract,
     ProgressionDeltaType,
+    ProgressionSubject,
+    ProgressionTopology,
     UpperCeilingVisibility,
 )
 
@@ -86,4 +89,107 @@ def progression_contract_from_derived(
     )
 
 
-__all__ = ["progression_contract_from_derived"]
+def progression_contract_from_genre(
+    contract: GenreContract,
+    *,
+    progression_contract_id: str,
+    progression_subject: ProgressionSubject,
+    growth_object: str,
+    axis_type: GrowthAxisType = GrowthAxisType.CUSTOM,
+    topology: list[ProgressionTopology] | None = None,
+) -> ProgressionContract:
+    """Compile structural capabilities without branching on Adapter identity."""
+
+    capabilities = contract.capabilities
+    gates: list[BreakthroughGate] = []
+    if capabilities.has_resource_gate:
+        gates.append(
+            BreakthroughGate(
+                gate_id="resource-gate",
+                gate_type=BreakthroughGateType.RESOURCE_GATE,
+                requirement="取得并实际满足作者确认的成长资源条件",
+                evidence_requirements=["章节资源状态与来源证据"],
+            )
+        )
+    if capabilities.has_knowledge_gate:
+        gates.append(
+            BreakthroughGate(
+                gate_id="knowledge-gate",
+                gate_type=BreakthroughGateType.KNOWLEDGE_GATE,
+                requirement="真正理解并能运用所需知识",
+                evidence_requirements=["知识获得与行为改变证据"],
+            )
+        )
+    if not gates:
+        gates.append(
+            BreakthroughGate(
+                gate_id="structural-gate",
+                gate_type=BreakthroughGateType.CUSTOM,
+                requirement="满足作者确认的下一次可能性变化条件",
+                evidence_requirements=["可回指的状态变化证据"],
+            )
+        )
+    unlocks = (
+        [
+            AbilityUnlockRule(
+                unlock_id="contract-unlock",
+                mode=(
+                    AbilityUnlockMode.KNOWLEDGE
+                    if capabilities.has_knowledge_gate
+                    else AbilityUnlockMode.CUSTOM
+                ),
+                condition="满足合同门槛并建立可回指来源",
+                effect="新增解决问题的方法或进入空间",
+            )
+        ]
+        if capabilities.has_ability_unlock
+        else []
+    )
+    selected_topology = topology or [ProgressionTopology.ACCUMULATIVE]
+    return ProgressionContract(
+        progression_contract_id=progression_contract_id,
+        progression_subject=progression_subject,
+        primary_axis=GrowthAxis(
+            axis_id="primary-growth-axis",
+            name=growth_object,
+            axis_type=axis_type,
+            current_stage_schema="作者确认的定性成长阶段",
+            progress_measure="成长是否扩大行动、进入、理解或影响的可能性",
+            unlock_effects=["改变可采取的解决方法"],
+            bottlenecks=[gate.requirement for gate in gates],
+            evidence_requirements=[
+                evidence for gate in gates for evidence in gate.evidence_requirements
+            ],
+            visibility=UpperCeilingVisibility.PARTIAL,
+        ),
+        topology=selected_topology,
+        allowed_delta_types=[
+            ProgressionDeltaType.ADVANCE,
+            ProgressionDeltaType.UNLOCK,
+            ProgressionDeltaType.CONVERT,
+            ProgressionDeltaType.TRANSFORM,
+        ],
+        stage_model="可命名或不命名的定性阶段，不要求数字等级",
+        breakthrough_model=BreakthroughModel(gates=gates),
+        ability_unlock_model=unlocks,
+        resource_economy=contract.genre_native_resource_types,
+        growth_costs=contract.genre_native_conflicts,
+        verification_modes=(
+            contract.genre_native_scene_types
+            if capabilities.has_verification_requirement
+            else ["通过事件后果确认成长成立"]
+        ),
+        next_ceiling_model=contract.world_expansion_expectation
+        or "由已获得信息逐步显露更高可能性",
+        upper_ceiling_visibility=UpperCeilingVisibility.PARTIAL,
+        progression_promises=[
+            promise.statement
+            for promise in contract.genre_promises
+            if promise.strength.value != "DISABLED"
+        ],
+        author_constraints=contract.forbidden_drift_patterns,
+        status=ContractStatus.NEEDS_REVIEW,
+    )
+
+
+__all__ = ["progression_contract_from_derived", "progression_contract_from_genre"]

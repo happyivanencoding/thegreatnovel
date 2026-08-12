@@ -119,10 +119,12 @@ from novel_authoring.original.service import (
     approve_original_first_chapter,
     compare_original_proposals,
     confirm_original_foundation,
+    confirm_original_reader_experience,
     create_original_book,
     import_original_bootstrap_proposal,
     original_overview,
     prepare_original_bootstrap,
+    prepare_original_reader_experience,
     resolve_original_proposal_version,
     select_first_chapter_candidate,
     validate_original_draft,
@@ -176,6 +178,7 @@ from novel_authoring.web.schemas import (
     OriginalDraftActionRequest,
     OriginalProposalImportRequest,
     OriginalProposalVersionResolutionRequest,
+    OriginalReaderExperienceConfirmationRequest,
     ProfileReanalysisRequest,
     RecomputeRequest,
     RetractRequest,
@@ -935,11 +938,8 @@ def create_app(
             raise HTTPException(status_code=400, detail="library 未配置")
         try:
             created = create_original_book(BookLayout(app.state.library_root), payload)
-            selected_database = Database(Path(str(created["database"])))
-            handoff = prepare_original_bootstrap(selected_database, str(created["book_id"]))
             return {
                 **created,
-                "handoff": handoff,
                 "original_url": f"/books/{created['book_id']}/original",
             }
         except (OSError, RuntimeError, ValueError) as exc:
@@ -1024,6 +1024,37 @@ def create_app(
         checked = _require_book_scope(app, path_book_id)
         try:
             return prepare_original_bootstrap(_database_for_book(app, checked), checked)
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/reader-experience/prepare")
+    async def original_reader_experience_prepare_api(
+        request: Request,
+        path_book_id: str,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return prepare_original_reader_experience(
+                _database_for_book(app, checked), checked
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/reader-experience/confirm")
+    async def original_reader_experience_confirm_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalReaderExperienceConfirmationRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return confirm_original_reader_experience(
+                _database_for_book(app, checked),
+                checked,
+                payload.adjustment,
+            )
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)
 
