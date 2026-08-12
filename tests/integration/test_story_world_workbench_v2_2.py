@@ -747,6 +747,9 @@ def test_workflow_goal_is_frozen_before_handoff_candidate_task(tmp_path: Path) -
     }
     assert len(task["effective_book_profile"]["dimensions"]) == 9
     assert Path(str(prepared["source_state_context"])).is_file()
+    assert prepared["boundary_packet_id"] == task["boundary_packet_id"]
+    assert Path(task["boundary_path"]).is_file()
+    assert task["narrative_portfolio_snapshot"] is not None
     kernel_path = Path(str(prepared["kernel_context"]))
     assert kernel_path.is_file()
     kernel = json.loads(kernel_path.read_text(encoding="utf-8"))

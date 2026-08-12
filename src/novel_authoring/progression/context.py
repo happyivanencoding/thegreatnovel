@@ -167,6 +167,17 @@ def _promise_mapping(value: object) -> dict[str, dict[str, object]]:
     return result
 
 
+def _planning_item_id(item: Mapping[str, Any]) -> str:
+    return str(
+        item.get("thread_id")
+        or item.get("promise_id")
+        or item.get("id")
+        or item.get("record_id")
+        or item.get("state_key")
+        or ""
+    )
+
+
 def _portfolio_debts(
     *,
     book_id: str,
@@ -379,9 +390,9 @@ def build_kernel_planning_context(
         anticipation=anticipation,
         author_tasks=author_tasks,
         active_thread_ids=[
-            str(item.get("thread_id") or item.get("id"))
+            _planning_item_id(item)
             for item in active_threads
-            if item.get("thread_id") or item.get("id")
+            if _planning_item_id(item)
         ],
         override=load_scheduler_override(
             database,

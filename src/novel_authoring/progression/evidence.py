@@ -606,9 +606,17 @@ class KernelEvidenceCompiler:
             }
 
             thread_ids = {
-                str(item.get("thread_id") or item.get("id"))
+                str(
+                    item.get("thread_id")
+                    or item.get("id")
+                    or item.get("record_id")
+                    or item.get("state_key")
+                )
                 for item in context.planning_state.active_threads
-                if item.get("thread_id") or item.get("id")
+                if item.get("thread_id")
+                or item.get("id")
+                or item.get("record_id")
+                or item.get("state_key")
             }
             thread_fit = 100.0 if candidate.primary_thread_id in thread_ids else 0.0
             score_overrides["thread_need_fit"] = thread_fit

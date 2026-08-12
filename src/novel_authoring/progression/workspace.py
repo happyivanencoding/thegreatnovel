@@ -17,7 +17,10 @@ from novel_authoring.progression.projections import (
     project_progression_state,
     project_world_expansion_state,
 )
-from novel_authoring.progression.resources import project_opportunity_surface
+from novel_authoring.progression.resources import (
+    opportunity_items_from_world_state,
+    project_opportunity_surface,
+)
 from novel_authoring.progression.service import (
     ProgressionContractType,
     effective_contract_records,
@@ -252,7 +255,10 @@ def build_progression_workspace_from_world_state(
             current_stage_id=approved_world_stage or source_world_stage,
         )
 
-    opportunity_surface = project_opportunity_surface(world_state, ())
+    opportunity_surface = project_opportunity_surface(
+        world_state,
+        opportunity_items_from_world_state(world_state),
+    )
     payoff_readiness: list[dict[str, Any]] = []
     if payoff_record is not None:
         payoff = PayoffChannelProfile.model_validate(payoff_record.payload)

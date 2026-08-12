@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping, Sequence
 from typing import Any
 
@@ -9,6 +10,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from novel_authoring.progression.models import (
     BreakthroughGate,
+    OpportunityInformationStatus,
+    OpportunityStatus,
     OpportunitySurface,
     OpportunitySurfaceItem,
     ProgressionEvidence,
@@ -122,8 +125,91 @@ def project_opportunity_surface(
     )
 
 
+def opportunity_items_from_world_state(
+    world_state: Mapping[str, Any],
+) -> list[OpportunitySurfaceItem]:
+    """Compile explicitly annotated current threads into non-owned opportunities."""
+
+    _, chapter_ordinal = _chapter(world_state)
+    items: list[OpportunitySurfaceItem] = []
+    for collection in ("tasks", "threads", "promises"):
+        values = world_state.get(collection, [])
+        if not isinstance(values, list):
+            continue
+        for index, value in enumerate(values, start=1):
+            if not isinstance(value, Mapping):
+                continue
+            raw = value.get("raw")
+            raw = raw if isinstance(raw, Mapping) else {}
+            payload = raw.get("payload")
+            payload = payload if isinstance(payload, Mapping) else {}
+            progression_use = payload.get("progression_use") or value.get(
+                "progression_use"
+            )
+            if not progression_use:
+                continue
+            evidence_ordinal = int(
+                value.get("evidence_chapter_ordinal")
+                or value.get("chapter_ordinal")
+                or chapter_ordinal
+            )
+            span_ids = [
+                str(item)
+                for item in value.get("source_span_ids", [])
+                if str(item)
+            ]
+            evidence = [
+                ProgressionEvidence(
+                    statement=str(value.get("statement") or progression_use),
+                    source_span_id=span_id,
+                    chapter_ordinal=evidence_ordinal,
+                    information_status="SOURCE_VERIFIED",
+                )
+                for span_id in span_ids
+            ]
+            raw_id = str(
+                value.get("object_id")
+                or value.get("record_id")
+                or value.get("state_key")
+                or f"{collection}-{index}"
+            )
+            opportunity_id = re.sub(r"[^A-Za-z0-9._-]+", "-", raw_id).strip("-")
+            items.append(
+                OpportunitySurfaceItem(
+                    opportunity_id=f"opportunity-{opportunity_id}",
+                    subject=str(
+                        payload.get("title")
+                        or value.get("title")
+                        or value.get("statement")
+                        or raw_id
+                    ),
+                    progression_use=str(progression_use),
+                    source=str(value.get("layer") or value.get("source") or collection),
+                    related_entities=[
+                        str(item)
+                        for item in (
+                            payload.get("related_person_id"),
+                            payload.get("related_task_id"),
+                            payload.get("related_plot_thread_id"),
+                        )
+                        if item
+                    ],
+                    risk=[
+                        str(payload.get("constraints") or value.get("constraints"))
+                    ]
+                    if payload.get("constraints") or value.get("constraints")
+                    else [],
+                    information_status=OpportunityInformationStatus.SOFT_REFERENCE,
+                    status=OpportunityStatus.TRACKABLE,
+                    evidence=evidence,
+                )
+            )
+    return items
+
+
 __all__ = [
     "ResourceGateAssessment",
     "evaluate_resource_gate",
+    "opportunity_items_from_world_state",
     "project_opportunity_surface",
 ]

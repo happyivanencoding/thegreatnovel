@@ -855,6 +855,23 @@ def prepare_handoff_candidate_task(
         edition_id,
         chapter_id=chapter_id,
     )
+    innovation_control = InnovationControl.model_validate(
+        handoff_task.get("innovation_control", {})
+    )
+    boundary = build_boundary_packet(
+        database,
+        book_id,
+        edition_id=edition_id,
+        innovation_control=innovation_control,
+    )
+    boundary_payload = json.loads(
+        Path(str(boundary["json_path"])).read_text(encoding="utf-8")
+    )
+    boundary_position = boundary_payload.get("current_position", {})
+    if int(boundary_position.get("last_canon_chapter") or 0) != (
+        kernel_context.context_chapter_ordinal
+    ):
+        raise PlanningError("Continuation Boundary 与 Frozen Kernel Context 章节不一致")
     schema = CandidateOutput.model_json_schema()
     metadata = {
         "task_id": task_id,
@@ -864,6 +881,8 @@ def prepare_handoff_candidate_task(
         "handoff_id": handoff_id,
         "aggregate_id": aggregate_id,
         "aggregate_hash": str(aggregate_row["bundle_hash"]),
+        "boundary_packet_id": boundary["packet_id"],
+        "boundary_path": boundary["json_path"],
         "author_goal": handoff_task.get("author_goal"),
         "author_control": author_policy.get("author_control", {}),
         "author_control_trace_contract": author_policy.get("trace_contract", {}),
@@ -884,6 +903,9 @@ def prepare_handoff_candidate_task(
             None
             if kernel_context.planning_state.scheduler_recommendation is None
             else kernel_context.planning_state.scheduler_recommendation.model_dump(mode="json")
+        ),
+        "narrative_portfolio_snapshot": boundary_payload.get(
+            "narrative_portfolio"
         ),
         "created_at": utc_now(),
     }
@@ -958,6 +980,7 @@ def prepare_handoff_candidate_task(
         "kernel_context": str(input_dir / "kernel_context.json"),
         "expected_output": str(output_dir / "output.json"),
         "aggregate_id": aggregate_id,
+        "boundary_packet_id": boundary["packet_id"],
         "effective_book_profile": metadata["effective_book_profile"],
         "truth_reveal": metadata["truth_reveal"],
     }

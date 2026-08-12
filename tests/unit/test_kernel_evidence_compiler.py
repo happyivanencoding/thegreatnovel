@@ -195,6 +195,31 @@ def test_verified_kernel_evidence_feeds_existing_metrics_and_score_inputs() -> N
     )
 
 
+def test_source_thread_record_id_feeds_existing_thread_need_score() -> None:
+    context = _context().model_copy(
+        update={
+            "planning_state": _context().planning_state.model_copy(
+                update={
+                    "active_threads": [
+                        {"record_id": "source:thread-growth", "layer": "SOURCE_VERIFIED"}
+                    ]
+                }
+            )
+        }
+    )
+    candidate = _candidate().model_copy(update={"primary_thread_id": "source:thread-growth"})
+
+    compilation = KernelEvidenceCompiler().compile(
+        context, candidate, load_settings().metrics
+    )
+
+    overrides = compilation.soft_metric_compilation["candidate_score_overrides"]
+    assert overrides["values"]["thread_need_fit"] == 100
+    assert overrides["components"]["thread_need_fit"]["source"] == (
+        "FROZEN_ACTIVE_THREADS"
+    )
+
+
 def test_unknown_reader_promise_and_drive_cannot_pass_as_verified() -> None:
     candidate = _candidate().model_copy(
         update={

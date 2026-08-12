@@ -31,6 +31,7 @@ from novel_authoring.progression.projections import (
 )
 from novel_authoring.progression.resources import (
     evaluate_resource_gate,
+    opportunity_items_from_world_state,
     project_opportunity_surface,
 )
 
@@ -210,6 +211,36 @@ def test_opportunity_surface_does_not_leak_future_evidence() -> None:
     )
 
     assert surface.items == []
+
+
+def test_world_state_compiles_only_explicitly_annotated_opportunities() -> None:
+    state = world_state(12)
+    state["threads"] = [
+        {
+            "record_id": "source:thread-medical-trade",
+            "statement": "有人提出药品交易，但尚未成交。",
+            "layer": "SOURCE_VERIFIED",
+            "chapter_ordinal": 12,
+            "source_span_ids": ["span-12"],
+            "raw": {
+                "payload": {
+                    "title": "药品交易线索",
+                    "progression_use": "取得药品后可缓解生存资源压力",
+                    "constraints": "尚未成交，不能视为已拥有药品",
+                }
+            },
+        },
+        {"record_id": "thread-unannotated", "statement": "普通连续性线程"},
+    ]
+
+    items = opportunity_items_from_world_state(state)
+    surface = project_opportunity_surface(state, items)
+
+    assert len(surface.items) == 1
+    assert surface.items[0].subject == "药品交易线索"
+    assert surface.items[0].information_status is OpportunityInformationStatus.SOFT_REFERENCE
+    assert surface.items[0].evidence[0].source_span_id == "span-12"
+    assert not hasattr(surface.items[0], "owned")
 
 
 def test_resource_gate_requires_state_and_evidence() -> None:
