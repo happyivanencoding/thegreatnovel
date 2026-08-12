@@ -5,9 +5,15 @@ from novel_authoring.progression.adapters import (
     compile_genre_adapters,
     effective_genre_contract,
 )
+from novel_authoring.progression.contracts import progression_contract_from_derived
 from novel_authoring.progression.derived import compile_derived_adapter
 from novel_authoring.progression.models import (
+    AbilityUnlockMode,
+    AbilityUnlockRule,
     AuthoringPreset,
+    BreakthroughGate,
+    BreakthroughGateType,
+    BreakthroughModel,
     ContractStatus,
     DerivedAdapterSpec,
     EffectiveGenreContract,
@@ -18,9 +24,13 @@ from novel_authoring.progression.models import (
     GenreContract,
     GenrePromise,
     GenrePromiseStrength,
+    GrowthAxis,
+    GrowthAxisType,
     PayoffChannel,
     PrimaryFamily,
+    ProgressionContract,
     ProgressionDeltaType,
+    ProgressionStageDefinition,
     ProgressionSubject,
     ProgressionTopology,
     ReaderExperience,
@@ -28,7 +38,9 @@ from novel_authoring.progression.models import (
     RuntimeGenreCapabilities,
     SerialForm,
     SettingSkin,
+    StageStatus,
     StoryProfile,
+    UpperCeilingVisibility,
 )
 from novel_authoring.progression.presets import (
     BUILTIN_STORY_PROFILES,
@@ -36,9 +48,14 @@ from novel_authoring.progression.presets import (
 )
 
 __all__ = [
+    "AbilityUnlockMode",
+    "AbilityUnlockRule",
     "AuthoringPreset",
     "BUILTIN_STORY_PROFILES",
     "BUILTIN_GENRE_ADAPTERS",
+    "BreakthroughGate",
+    "BreakthroughGateType",
+    "BreakthroughModel",
     "ContractStatus",
     "DerivedAdapterSpec",
     "EffectiveGenreContract",
@@ -49,8 +66,12 @@ __all__ = [
     "GenreContract",
     "GenrePromise",
     "GenrePromiseStrength",
+    "GrowthAxis",
+    "GrowthAxisType",
     "PayoffChannel",
     "ProgressionDeltaType",
+    "ProgressionContract",
+    "ProgressionStageDefinition",
     "ProgressionSubject",
     "ProgressionTopology",
     "PrimaryFamily",
@@ -60,8 +81,11 @@ __all__ = [
     "SerialForm",
     "SettingSkin",
     "StoryProfile",
+    "StageStatus",
+    "UpperCeilingVisibility",
     "compile_story_profile",
     "compile_genre_adapters",
     "compile_derived_adapter",
     "effective_genre_contract",
+    "progression_contract_from_derived",
 ]

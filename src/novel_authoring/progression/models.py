@@ -184,6 +184,187 @@ class ProgressionDeltaType(StrEnum):
     CUSTOM = "CUSTOM"
 
 
+class GrowthAxisType(StrEnum):
+    POWER_STAGE = "POWER_STAGE"
+    BODY_EVOLUTION = "BODY_EVOLUTION"
+    ABILITY_UNLOCK = "ABILITY_UNLOCK"
+    KNOWLEDGE = "KNOWLEDGE"
+    CRAFT = "CRAFT"
+    EQUIPMENT = "EQUIPMENT"
+    BLOODLINE = "BLOODLINE"
+    SEQUENCE = "SEQUENCE"
+    STATUS = "STATUS"
+    TEAM = "TEAM"
+    FACTION_AUTHORITY = "FACTION_AUTHORITY"
+    CIVILIZATION = "CIVILIZATION"
+    TERRITORY = "TERRITORY"
+    IDENTITY = "IDENTITY"
+    CUSTOM = "CUSTOM"
+
+
+class BreakthroughGateType(StrEnum):
+    ACCUMULATION = "ACCUMULATION"
+    RESOURCE_GATE = "RESOURCE_GATE"
+    RITUAL_GATE = "RITUAL_GATE"
+    INSIGHT_GATE = "INSIGHT_GATE"
+    COMBAT_GATE = "COMBAT_GATE"
+    BODY_TRANSFORMATION = "BODY_TRANSFORMATION"
+    KNOWLEDGE_GATE = "KNOWLEDGE_GATE"
+    RELATIONSHIP_GATE = "RELATIONSHIP_GATE"
+    STATUS_GATE = "STATUS_GATE"
+    SACRIFICE_GATE = "SACRIFICE_GATE"
+    CHOICE_GATE = "CHOICE_GATE"
+    MIXED = "MIXED"
+    CUSTOM = "CUSTOM"
+
+
+class AbilityUnlockMode(StrEnum):
+    STAGE = "STAGE"
+    RESOURCE = "RESOURCE"
+    COMBAT_INSIGHT = "COMBAT_INSIGHT"
+    KNOWLEDGE = "KNOWLEDGE"
+    ARTIFACT_OR_EQUIPMENT = "ARTIFACT_OR_EQUIPMENT"
+    COMBINATION = "COMBINATION"
+    RELATIONSHIP = "RELATIONSHIP"
+    STATUS_ACCESS = "STATUS_ACCESS"
+    IRREVERSIBLE_CHOICE = "IRREVERSIBLE_CHOICE"
+    CUSTOM = "CUSTOM"
+
+
+class UpperCeilingVisibility(StrEnum):
+    VISIBLE = "VISIBLE"
+    PARTIAL = "PARTIAL"
+    HINTED = "HINTED"
+    UNKNOWN = "UNKNOWN"
+
+
+class StageStatus(StrEnum):
+    AVAILABLE = "AVAILABLE"
+    LOCKED = "LOCKED"
+    UNKNOWN = "UNKNOWN"
+    RETIRED = "RETIRED"
+
+
+class ProgressionStageDefinition(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    stage_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    name: str = Field(min_length=1)
+    order: int | None = Field(default=None, ge=0)
+    reader_visible: bool = True
+    entry_requirements: list[str] = Field(default_factory=list)
+    typical_capabilities: list[str] = Field(default_factory=list)
+    typical_costs: list[str] = Field(default_factory=list)
+    validation_expectations: list[str] = Field(default_factory=list)
+    next_stage_candidates: list[str] = Field(default_factory=list)
+    status: StageStatus = StageStatus.AVAILABLE
+
+
+class GrowthAxis(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    axis_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    name: str = Field(min_length=1)
+    axis_type: GrowthAxisType
+    current_stage_schema: str = Field(min_length=1)
+    stage_order: list[str] = Field(default_factory=list)
+    stage_definitions: list[ProgressionStageDefinition] = Field(default_factory=list)
+    progress_measure: str = Field(min_length=1)
+    unlock_effects: list[str] = Field(default_factory=list)
+    costs: list[str] = Field(default_factory=list)
+    bottlenecks: list[str] = Field(default_factory=list)
+    evidence_requirements: list[str] = Field(default_factory=list)
+    visibility: UpperCeilingVisibility = UpperCeilingVisibility.PARTIAL
+
+    @model_validator(mode="after")
+    def validate_stage_graph(self) -> GrowthAxis:
+        stage_ids = [stage.stage_id for stage in self.stage_definitions]
+        if len(stage_ids) != len(set(stage_ids)):
+            raise ValueError("Growth Axis 的 stage_id 不得重复")
+        if self.stage_order and (
+            len(self.stage_order) != len(set(self.stage_order))
+            or set(self.stage_order) != set(stage_ids)
+        ):
+            raise ValueError("stage_order 必须恰好覆盖唯一的 stage definitions")
+        missing = sorted(
+            {
+                target
+                for stage in self.stage_definitions
+                for target in stage.next_stage_candidates
+                if target not in set(stage_ids)
+            }
+        )
+        if missing:
+            raise ValueError(f"next_stage_candidates 引用了未知阶段：{missing}")
+        return self
+
+
+class BreakthroughGate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    gate_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    gate_type: BreakthroughGateType
+    requirement: str = Field(min_length=1)
+    evidence_requirements: list[str] = Field(min_length=1)
+    required_resources: list[str] = Field(default_factory=list)
+    irreversible: bool = False
+
+
+class BreakthroughModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    gates: list[BreakthroughGate] = Field(min_length=1)
+    all_gates_required: bool = True
+
+
+class AbilityUnlockRule(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    unlock_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    mode: AbilityUnlockMode
+    condition: str = Field(min_length=1)
+    effect: str = Field(min_length=1)
+    provenance_required: bool = True
+
+
+class ProgressionContract(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    progression_contract_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    progression_subject: ProgressionSubject
+    primary_axis: GrowthAxis
+    secondary_axes: list[GrowthAxis] = Field(default_factory=list)
+    topology: list[ProgressionTopology] = Field(min_length=1, max_length=3)
+    allowed_delta_types: list[ProgressionDeltaType] = Field(min_length=1)
+    stage_model: str = Field(min_length=1)
+    breakthrough_model: BreakthroughModel
+    ability_unlock_model: list[AbilityUnlockRule] = Field(default_factory=list)
+    resource_economy: list[str] = Field(default_factory=list)
+    artifact_or_equipment_model: list[str] = Field(default_factory=list)
+    growth_costs: list[str] = Field(default_factory=list)
+    verification_modes: list[str] = Field(min_length=1)
+    status_rise_model: str = ""
+    next_ceiling_model: str = Field(min_length=1)
+    upper_ceiling_visibility: UpperCeilingVisibility
+    progression_promises: list[str] = Field(min_length=1)
+    author_constraints: list[str] = Field(default_factory=list)
+    effective_from_boundary: int | None = Field(default=None, ge=0)
+    status: ContractStatus = ContractStatus.NEEDS_REVIEW
+
+    @model_validator(mode="after")
+    def axes_and_topology_are_consistent(self) -> ProgressionContract:
+        axes = [self.primary_axis, *self.secondary_axes]
+        axis_ids = [axis.axis_id for axis in axes]
+        if len(axis_ids) != len(set(axis_ids)):
+            raise ValueError("Progression Contract 的 axis_id 不得重复")
+        if (
+            ProgressionTopology.MULTI_AXIS in self.topology
+            and not self.secondary_axes
+        ):
+            raise ValueError("MULTI_AXIS topology 至少需要一个 secondary axis")
+        return self
+
+
 class RuntimeGenreCapabilities(BaseModel):
     """Adapter-neutral structural capabilities consumed by runtime services."""
 
