@@ -5,9 +5,11 @@ from novel_authoring.progression.adapters import (
     compile_genre_adapters,
     effective_genre_contract,
 )
+from novel_authoring.progression.derived import compile_derived_adapter
 from novel_authoring.progression.models import (
     AuthoringPreset,
     ContractStatus,
+    DerivedAdapterSpec,
     EffectiveGenreContract,
     ExperiencePriority,
     ExplanationStyle,
@@ -18,6 +20,9 @@ from novel_authoring.progression.models import (
     GenrePromiseStrength,
     PayoffChannel,
     PrimaryFamily,
+    ProgressionDeltaType,
+    ProgressionSubject,
+    ProgressionTopology,
     ReaderExperience,
     ReaderExperienceContract,
     RuntimeGenreCapabilities,
@@ -35,6 +40,7 @@ __all__ = [
     "BUILTIN_STORY_PROFILES",
     "BUILTIN_GENRE_ADAPTERS",
     "ContractStatus",
+    "DerivedAdapterSpec",
     "EffectiveGenreContract",
     "ExperiencePriority",
     "ExplanationStyle",
@@ -44,6 +50,9 @@ __all__ = [
     "GenrePromise",
     "GenrePromiseStrength",
     "PayoffChannel",
+    "ProgressionDeltaType",
+    "ProgressionSubject",
+    "ProgressionTopology",
     "PrimaryFamily",
     "ReaderExperience",
     "ReaderExperienceContract",
@@ -53,5 +62,6 @@ __all__ = [
     "StoryProfile",
     "compile_story_profile",
     "compile_genre_adapters",
+    "compile_derived_adapter",
     "effective_genre_contract",
 ]

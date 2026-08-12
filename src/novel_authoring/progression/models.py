@@ -142,6 +142,48 @@ class PayoffChannel(StrEnum):
     CUSTOM = "CUSTOM"
 
 
+class ProgressionSubject(StrEnum):
+    CHARACTER = "CHARACTER"
+    MULTIPLE_CHARACTERS = "MULTIPLE_CHARACTERS"
+    TEAM = "TEAM"
+    FACTION = "FACTION"
+    SETTLEMENT = "SETTLEMENT"
+    ORGANIZATION = "ORGANIZATION"
+    CIVILIZATION = "CIVILIZATION"
+    COLLECTIVE = "COLLECTIVE"
+    WORLD = "WORLD"
+    HYBRID = "HYBRID"
+    CUSTOM = "CUSTOM"
+
+
+class ProgressionTopology(StrEnum):
+    LINEAR = "LINEAR"
+    MULTI_AXIS = "MULTI_AXIS"
+    BRANCHING = "BRANCHING"
+    NETWORK = "NETWORK"
+    TRANSFORMATIVE = "TRANSFORMATIVE"
+    CYCLICAL = "CYCLICAL"
+    ACCUMULATIVE = "ACCUMULATIVE"
+    TRADEOFF = "TRADEOFF"
+    CUSTOM = "CUSTOM"
+
+
+class ProgressionDeltaType(StrEnum):
+    ADVANCE = "ADVANCE"
+    UNLOCK = "UNLOCK"
+    BRANCH = "BRANCH"
+    CONVERT = "CONVERT"
+    SACRIFICE = "SACRIFICE"
+    REGRESS = "REGRESS"
+    REBUILD = "REBUILD"
+    MERGE = "MERGE"
+    SPLIT = "SPLIT"
+    LOCK_OUT = "LOCK_OUT"
+    TRANSFORM = "TRANSFORM"
+    TRANSFER = "TRANSFER"
+    CUSTOM = "CUSTOM"
+
+
 class RuntimeGenreCapabilities(BaseModel):
     """Adapter-neutral structural capabilities consumed by runtime services."""
 
@@ -180,6 +222,30 @@ class GenreAdapter(BaseModel):
     genre_native_resource_types: list[str] = Field(default_factory=list)
     genre_native_conflicts: list[str] = Field(default_factory=list)
     drift_risks: list[str] = Field(default_factory=list)
+
+
+class DerivedAdapterSpec(BaseModel):
+    """Author-reviewable structural interpretation for an unknown grammar."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    spec_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    progression_subject: ProgressionSubject
+    growth_object: str = Field(min_length=1)
+    progression_topology: list[ProgressionTopology] = Field(min_length=1, max_length=3)
+    delta_types: list[ProgressionDeltaType] = Field(min_length=1)
+    growth_resources: list[str] = Field(default_factory=list)
+    growth_gates: list[str] = Field(default_factory=list)
+    growth_costs: list[str] = Field(default_factory=list)
+    verification_modes: list[str] = Field(min_length=1)
+    unlock_logic: str = Field(min_length=1)
+    world_expansion_relation: str = Field(min_length=1)
+    reader_visible_progress: list[str] = Field(min_length=1)
+    long_term_ceiling_logic: str = Field(min_length=1)
+    payoff_logic: list[str] = Field(min_length=1)
+    capabilities: RuntimeGenreCapabilities
+    payoff_channels: list[PayoffChannel] = Field(min_length=1)
+    status: ContractStatus = ContractStatus.NEEDS_REVIEW
 
 
 class GenreContract(BaseModel):
