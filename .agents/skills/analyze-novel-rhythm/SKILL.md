@@ -5,14 +5,24 @@ description: 运行本项目 edition-aware 的章节特征、长跨度节奏、�
 
 # Edition-aware 小说节奏诊断
 
-只在 `C:\dev\小说续写系统` 根目录工作，并先读取 `AGENTS.md` 与
-`Novel_Authoring_System_Constitution_V2.md`。`book/` 永久只读；任务、语义输出、快照和报告写入对应 `workspace/<book_id>/` 或派生 edition 工作区。
+只在 `C:\dev\小说续写系统` 根目录工作。`book/` 永久只读；任务、语义输出、快照和报告写入
+`library/<book_id>/` 或派生 edition 工作区。
+
+## Handoff Fast Path
+
+如果 `workflow start` 已返回 `status=RUNNING` 且 `executor_skill=analyze-novel-rhythm`，
+只读取 `task.json` 指定的业务输入，复用冻结的 edition/source/rhythm context。不要手工
+核对 projection、registry、config 或 source hash，不无条件运行 source verify、features
+rebuild 或 segments rebuild；当前有效 artifact 已存在时直接使用，只有任务明确缺少或已失效
+的 artifact 才补建。`workflow complete` 负责 envelope 与运行时漂移。
+
+Direct Diagnostic Mode 才按下面顺序准备缺失的确定性证据。
 
 ## 固定顺序
 
 1. 用 `novel status --book-id <id> --edition-id <edition>` 和
    `novel source verify --book-id <id>` 核对状态、源 SHA-256 和 edition。
-2. 先重建或读取有效特征：
+2. 读取有效特征；仅在缺失或 stale 时重建：
    `novel features rebuild --book-id <id> --edition-id <edition>`；需要 Codex 判断时使用
    `novel features prepare`，只按任务 `input.md` 与 `schema.json` 生成 `output.json`，再运行
    `novel features import`。
@@ -20,7 +30,7 @@ description: 运行本项目 edition-aware 的章节特征、长跨度节奏、�
    续写候选必须在这些证据之后生成。
 4. 用 `novel rhythm show`、`novel hooks show` 或 `novel features show` 汇报可审计快照，保留
    `edition_id`、content hash、analyzer version、config hash 和证据短句。
-5. 如需段落级证据，先运行 `novel segments rebuild`；语义指标任务使用
+5. 如需段落级证据且当前 artifact 缺失或 stale，运行 `novel segments rebuild`；语义指标任务使用
    `$review-novel-metrics` 与 `MetricSemanticObservationsOutput`，不能让 Codex 重算标题、字数、
    Content SHA-256 或已确认状态。
 

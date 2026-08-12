@@ -364,7 +364,7 @@ def test_approval_rejects_a_stale_contract_without_revalidation(tmp_path: Path) 
             "UPDATE chapter_contracts SET status='STALE' WHERE contract_id=?",
             (contract.contract_id,),
         )
-    with pytest.raises(ApprovalWorkflowError, match="需要重新校验"):
+    with pytest.raises(ApprovalWorkflowError, match="当前校验 bundle 不再适用"):
         approve_draft(database, BOOK_ID, draft_id, confirmation="批准写入正史")
 
 
@@ -424,7 +424,7 @@ def test_canon_conflict_timeline_conflict_and_knowledge_leak_fail(
     assert "Canon Validator" in failed
     assert "Timeline Validator" in failed
     assert "Knowledge Validator" in failed
-    with pytest.raises(ApprovalWorkflowError, match="十项校验未全部通过"):
+    with pytest.raises(ApprovalWorkflowError, match="当前十项校验 bundle 未全部通过"):
         approve_draft(database, BOOK_ID, draft_id, confirmation="批准写入正史")
     assert not rebuild_projection(database, BOOK_ID).committed_chapters
 

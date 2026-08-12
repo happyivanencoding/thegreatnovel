@@ -70,7 +70,7 @@ from novel_authoring.workflows.handoffs import (
     create_continuation_handoff,
     create_original_bootstrap_handoff,
     get_handoff,
-    validate_result_file,
+    load_completed_handoff_result,
 )
 
 
@@ -580,9 +580,10 @@ def import_original_bootstrap_proposal(
     if (
         str(handoff["book_id"]) != book_id
         or str(handoff["handoff_type"]) != HandoffType.ORIGINAL_BOOK_BOOTSTRAP.value
+        or str(handoff["requested_stage"]).upper() != "STORY_FOUNDATION_PROPOSAL"
     ):
         raise OriginalWorkflowError("handoff 不属于当前原创项目的基础框架任务")
-    result = validate_result_file(database, handoff_id)
+    result = load_completed_handoff_result(database, handoff_id)
     task_directory = Path(str(handoff["task_directory"])).resolve()
     artifact_root = (task_directory / "artifacts").resolve()
     proposal_path: Path | None = None

@@ -185,8 +185,7 @@ def test_distill_handoff_freezes_and_publishes_reference_skill(tmp_path: Path) -
     init_task = json.loads(
         (_task_path(Path(str(initialization["task_directory"])))).read_text(encoding="utf-8")
     )
-    assert init_task["distill_reference"]["usage"] == "REFERENCE_ONLY"
-    assert init_task["distill_reference"]["scope"] == "SELF_BOOK"
+    assert "distill_reference" not in init_task
 
 
 def test_distill_import_rejects_missing_selected_dimension(tmp_path: Path) -> None:

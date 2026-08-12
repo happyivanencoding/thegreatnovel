@@ -12,7 +12,12 @@ from novel_authoring.initialization.service import (
     calculate_source_coverage,
     create_initialization,
 )
-from novel_authoring.workflows.handoffs import create_initialization_handoff
+from novel_authoring.workflows.handoffs import (
+    HandoffStatus,
+    complete_handoff,
+    create_initialization_handoff,
+    start_handoff,
+)
 
 
 def _book(tmp_path: Path, count: int = 24) -> tuple[Database, str]:
@@ -73,6 +78,66 @@ def test_initialization_maps_every_chapter_and_does_not_build_planning_aggregate
     )
     assert handoff["status"]["status"] == "READY_FOR_CODEX"
     assert int(database.scalar("SELECT COUNT(*) FROM planning_aggregates") or 0) == 0
+
+
+def test_initialization_synthetic_handoff_uses_scheduled_manifests_only(
+    tmp_path: Path,
+) -> None:
+    database, book_id = _book(tmp_path)
+    prepared = create_initialization(database, book_id, edition_id="base")
+    handoff = create_initialization_handoff(
+        database,
+        book_id,
+        edition_id="base",
+        requested_stage="NOVEL_INITIALIZATION",
+    )
+    task_directory = Path(str(handoff["task_directory"]))
+    input_root = (
+        task_directory / "input"
+        if (task_directory / "input").is_dir()
+        else task_directory
+    )
+    task = json.loads(
+        (input_root / "task.json").read_text(encoding="utf-8")
+    )
+    assert task["executor_skill"] == "initialize-existing-novel"
+    assert task["business_input_files"] == [
+        "initialization_manifest.json",
+        "arc_manifest.json",
+    ]
+    assert all(
+        (input_root / name).is_file()
+        for name in task["business_input_files"]
+    )
+    started = start_handoff(database, str(handoff["handoff_id"]))
+    result_path = Path(str(started["artifact_target"]))
+    result_path.write_text(
+        json.dumps(
+            {
+                "handoff_id": str(handoff["handoff_id"]),
+                "handoff_type": "NOVEL_INITIALIZATION",
+                "requested_stage": "NOVEL_INITIALIZATION",
+                "completed_stage": "INITIALIZATION_READY",
+                "book_id": book_id,
+                "edition_id": "base",
+                "status": "COMPLETED",
+                "initialization_id": prepared["initialization_id"],
+                "readiness": "FULL_READY",
+                "canon_committed": False,
+                "edition_activated": False,
+                "base_event_seq": task["base_event_seq"],
+                "base_projection_hash": task["base_projection_hash"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    completed = complete_handoff(
+        database,
+        str(handoff["handoff_id"]),
+        str(started["claim_token"]),
+        result_path,
+    )
+    assert completed["status"] == HandoffStatus.COMPLETED.value
 
 
 def test_visuals_and_offline_snapshot_are_self_contained(tmp_path: Path) -> None:

@@ -9,15 +9,15 @@ Batch 是受 Atlas 和 Canon 锚点约束的调度与临时状态层。每章仍
 
 ## 硬边界
 
-1. 先读取 `AGENTS.md`、V2 宪法、当前 edition、source manifest、Canon projection、Atlas manifest、WorldModelReadiness、Rolling Horizon、作者指令和任务 `context_manifest.json`。
-2. Source/projection/edition/Atlas/horizon/metric/config/directive 任一 hash 漂移，立即将 Batch 标记 `STALE` 并停止；不得继续写正文。
+1. Handoff Mode 先确认 `workflow start` 已返回 `status=RUNNING`、`executor_skill=continue-novel-batch`，然后只读取 `task.json` 列出的业务输入，尤其是冻结的 `batch_plan.json`、当前 chunk context 和 Batch Provisional Projection。
+2. `workflow start` 已负责 task input integrity；Batch layer 只检查自己的 batch state、batch plan、provisional projection、Atlas/horizon batch contract。不要再次检查 source、registry、config、directives、metrics 等 Handoff 依赖。
 3. `book/`、正式 Canon events、真实 projection、`next_chapter` 指令和已批准 edition 不得被 Batch 直接修改。
-4. 默认 `chunk_size=5`、`checkpoint_interval=10`。每次只处理当前 chunk；前一章/前一 chunk 的 provisional state 必须成为下一章输入。
+4. `chunk_size` 和 `checkpoint_interval` 必须从冻结 `batch_plan.json` 读取；不得在 Skill 或 prompt 写死默认数值。每次只处理当前 chunk；前一章/前一 chunk 的 provisional state 必须成为下一章输入。
 5. 任何章节都必须通过 Boundary → 三候选 → Chapter Contract → 正文 → 十项 Validator。chunk 全部完成不等于验证通过。
 
 ## 创建 Batch
 
-由 Python 生成不含正文的分块计划：
+由 Python 生成不含正文的分块计划；运行时以冻结 BatchPlan 为唯一数值权威：
 
 ```powershell
 novel source verify --book-id <book_id>
@@ -27,6 +27,10 @@ novel batch create --book-id <book_id> --edition-id <edition_id> --target-chapte
 
 Batch manifest/plan 必须记录目标范围、base event/projection/source/effective-content hash、Atlas id/version/hash、horizon hash、metrics/config/directives hash，以及每个 chunk 的连续章节范围。不得产生一个覆盖 50/100 章正文的 prompt。
 
+Batch Handoff 不重新做 Handoff 层的 source/projection/registry/config/directive/metric/Atlas
+漂移检查；START 与 COMPLETE 是两个边界，Batch 只在自己的 chunk/state transition 中判断
+Batch identity、plan、provisional projection 和 frozen Atlas/horizon contract。
+
 ## 逐章滚动
 
 每章读取：正式 Canon、当前 Batch Provisional Projection、Story Atlas、NEAR Horizon、相关 Metric 和作者要求；然后运行 `$continue-novel` 的完整单章合同。正文、draft、validator、候选和 contract 都写入 Batch task artifact，结果只更新 provisional state 与 `atlas_candidate_changes`。
@@ -35,7 +39,7 @@ Batch manifest/plan 必须记录目标范围、base event/projection/source/effe
 
 ## Checkpoint
 
-每 5 章检查节奏、Promise、重复、资源/能力、新人物/势力作用并调整 NEAR；每 10 章执行 Checkpoint：Snapshot/Rebuild 只读验证、节奏与 Review Queue 报告、Atlas Refresh handoff、Horizon Shift。Atlas 新版本必须是 immutable child，失效路线可退休，Active Spine 可切换但不改 Canon。
+按冻结 `batch_plan.json` 的 `checkpoint_interval` 执行 Checkpoint：Snapshot/Rebuild 只读验证、节奏与 Review Queue 报告、Atlas Refresh handoff、Horizon Shift；其余 chunk 内检查按当前 BatchPlan 的计划执行。Atlas 新版本必须是 immutable child，失效路线可退休，Active Spine 可切换但不改 Canon。
 
 FAR Horizon 必须至少覆盖：
 

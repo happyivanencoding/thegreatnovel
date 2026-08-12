@@ -9,13 +9,20 @@ Story Atlas 是 LLM 对当前小说的版本化、带证据的最佳理解，不
 
 ## 硬边界
 
-1. 先读取根 `AGENTS.md`、`Novel_Authoring_System_Constitution_V2.md` 和 handoff 目录中的 `task.json`、`prompt.md`、`context_manifest.json`、`output_schema.json`、`status.json`。
+1. Handoff Mode 先确认 `workflow start` 已返回 `status=RUNNING` 且
+   `executor_skill=bootstrap-story-atlas`，只读取 `task.json` 指定的业务输入。Python 已
+   负责 protocol integrity；不要再次读取整份全局规范、context manifest 或 status 文件。
 2. `book/` 永久只读；所有 Atlas 文件只能写入当前 handoff 的 `artifacts/story_atlas/`，不得直接改写 Canon、真实 projection、edition 或旧 Atlas。
 3. `CANON`、`AUTHOR_INTENT`、`APPROVED_OUTLINE`、`INFERENCE`、`CANDIDATE`、`PROSE_ONLY` 是信息状态，不得混用。每个节点和关系都必须有 `information_status`、`constraint_level`、`horizon`、`confidence`、`evidence` 和稳定 ID。
 4. `CANON + HARD` 必须有可回溯到真实 `source_span_id` 的证据。`INFERENCE`/`CANDIDATE`/`SPECULATIVE` 只能作为软理解或候选，不能指控正文违反正史。
 5. Atlas accepted、World Model Review 完成、`BATCH_VALIDATED` 都不等于“批准写入正史”；只有作者当前明确说“批准写入正史”才可进入批准流程。
 
 ## 工作流
+
+如果初始化目录已经提供 verified `Source Coverage`、Arc outputs、Entity Resolution 或
+Synthesis，优先消费这些 artifact；不要重新从全文执行相同 Arc Extraction。Standalone Atlas
+bootstrap 只有在这些 artifact 缺失时才补做缺失阶段。Atlas Render 是独立显式操作，普通
+bootstrap 不生成七张视觉资产。
 
 ### 1. Source Coverage
 

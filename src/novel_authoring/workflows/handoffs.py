@@ -27,7 +27,7 @@ from novel_authoring.edition import edition_chapters, resolve_edition_id
 from novel_authoring.ingest.service import verify_sources
 from novel_authoring.metrics.registry import load_registry
 from novel_authoring.metrics.service import MetricsAssembler
-from novel_authoring.original.models import OriginalBootstrapProposal
+from novel_authoring.original.models import CoreInnovationProposal, OriginalBootstrapProposal
 from novel_authoring.original.state import is_original_book
 from novel_authoring.planning.aggregates import build_planning_aggregate
 from novel_authoring.planning.batch import get_batch_plan, get_batch_projection
@@ -71,6 +71,129 @@ class HandoffType(StrEnum):
     KERNEL_CONTRACT_DISCOVERY = "KERNEL_CONTRACT_DISCOVERY"
 
 
+# The workflow layer is the only routing authority.  Business skills consume
+# this frozen value from task.json; they must not infer a skill from prose or
+# maintain a second handoff-type table.
+HANDOFF_EXECUTOR_SKILLS: dict[HandoffType, str] = {
+    HandoffType.CONTINUATION: "continue-novel",
+    HandoffType.REVISION: "revise-novel",
+    HandoffType.METRIC_SEMANTIC_ANALYSIS: "review-novel-metrics",
+    HandoffType.CHAPTER_FEATURE_ANALYSIS: "analyze-novel-rhythm",
+    HandoffType.STORY_ATLAS_BOOTSTRAP: "bootstrap-story-atlas",
+    HandoffType.STORY_ATLAS_REFRESH: "refresh-story-atlas",
+    HandoffType.WORLD_MODEL_REVIEW: "review-story-atlas",
+    HandoffType.STORY_ATLAS_RENDER: "render-story-atlas-assets",
+    HandoffType.BATCH_CONTINUATION: "continue-novel-batch",
+    HandoffType.NOVEL_INITIALIZATION: "initialize-existing-novel",
+    HandoffType.NOVEL_DISTILLATION: "distill-novels",
+    HandoffType.SOURCE_STATE_HYDRATION: "hydrate-source-state",
+    HandoffType.PROFILE_REANALYSIS: "reanalyze-book-profile",
+    HandoffType.ORIGINAL_BOOK_BOOTSTRAP: "bootstrap-original-novel",
+    HandoffType.KERNEL_CONTRACT_DISCOVERY: "discover-kernel-contracts",
+}
+
+
+# A small closed declaration is the dependency authority.  An omitted key is
+# intentionally not frozen or checked at claim/complete time.
+HANDOFF_DEPENDENCIES: dict[HandoffType, frozenset[str]] = {
+    HandoffType.CONTINUATION: frozenset(
+        {
+            "source",
+            "projection",
+            "edition",
+            "metrics",
+            "rhythm",
+            "planning",
+            "directives",
+            "atlas",
+        }
+    ),
+    HandoffType.REVISION: frozenset(
+        {
+            "source",
+            "projection",
+            "edition",
+            "metrics",
+            "rhythm",
+            "planning",
+            "directives",
+            "atlas",
+        }
+    ),
+    HandoffType.METRIC_SEMANTIC_ANALYSIS: frozenset(
+        {"source", "projection", "edition", "metrics"}
+    ),
+    HandoffType.CHAPTER_FEATURE_ANALYSIS: frozenset(
+        {"source", "projection", "edition", "rhythm"}
+    ),
+    HandoffType.STORY_ATLAS_BOOTSTRAP: frozenset(
+        {"source", "projection", "edition", "atlas"}
+    ),
+    HandoffType.STORY_ATLAS_REFRESH: frozenset(
+        {"source", "projection", "edition", "atlas"}
+    ),
+    HandoffType.WORLD_MODEL_REVIEW: frozenset({"edition", "atlas"}),
+    HandoffType.STORY_ATLAS_RENDER: frozenset({"edition", "atlas"}),
+    HandoffType.BATCH_CONTINUATION: frozenset({"batch"}),
+    HandoffType.NOVEL_INITIALIZATION: frozenset({"source", "edition"}),
+    HandoffType.NOVEL_DISTILLATION: frozenset({"edition"}),
+    HandoffType.SOURCE_STATE_HYDRATION: frozenset({"source", "edition"}),
+    HandoffType.PROFILE_REANALYSIS: frozenset({"edition", "profile"}),
+    HandoffType.ORIGINAL_BOOK_BOOTSTRAP: frozenset({"projection", "edition"}),
+    HandoffType.KERNEL_CONTRACT_DISCOVERY: frozenset({"source", "edition"}),
+}
+
+
+_DISTILL_REFERENCE_STAGES = frozenset(
+    {"PLAN_ONLY", "DRAFT_AND_VALIDATE", "IMPACT_AND_PLAN", "DRAFT_SELECTED_UNITS"}
+)
+
+
+HANDOFF_BUSINESS_INPUT_FILES: dict[HandoffType, tuple[str, ...]] = {
+    HandoffType.CONTINUATION: (
+        "metric_context.json",
+        "kernel_context.json",
+        "world_state_context.json",
+        "boundary_packet.json",
+        "rhythm_context.json",
+    ),
+    HandoffType.REVISION: (
+        "metric_context.json",
+        "kernel_context.json",
+        "rhythm_context.json",
+        "atlas_context.json",
+    ),
+    HandoffType.METRIC_SEMANTIC_ANALYSIS: ("metric_context.json",),
+    HandoffType.CHAPTER_FEATURE_ANALYSIS: ("rhythm_context.json",),
+    HandoffType.STORY_ATLAS_BOOTSTRAP: ("atlas_context.json",),
+    HandoffType.STORY_ATLAS_REFRESH: ("atlas_context.json",),
+    HandoffType.WORLD_MODEL_REVIEW: ("atlas_context.json",),
+    HandoffType.STORY_ATLAS_RENDER: ("atlas_context.json",),
+    HandoffType.BATCH_CONTINUATION: (
+        "batch_plan.json",
+        "batch_context.json",
+    ),
+    HandoffType.NOVEL_INITIALIZATION: (
+        "initialization_manifest.json",
+        "arc_manifest.json",
+    ),
+    HandoffType.NOVEL_DISTILLATION: (
+        "artifacts/distill_input/manifest.json",
+        "artifacts/distill_input/chapter_index.json",
+    ),
+    HandoffType.SOURCE_STATE_HYDRATION: ("hydration_context.json",),
+    HandoffType.PROFILE_REANALYSIS: ("profile_context.json",),
+    HandoffType.ORIGINAL_BOOK_BOOTSTRAP: (
+        "original_request.json",
+        "proposal_schema.json",
+    ),
+    HandoffType.KERNEL_CONTRACT_DISCOVERY: (
+        "kernel_discovery_context.json",
+        "kernel_contract_proposal_schema.json",
+    ),
+}
+
+
 class HandoffWorkflowError(RuntimeError):
     status_code = 409
 
@@ -101,6 +224,7 @@ class WorkflowHandoffResult(BaseModel):
     status: str
     task_ids: list[str] = Field(default_factory=list)
     candidate_ids: list[str] = Field(default_factory=list)
+    innovation_ids: list[str] = Field(default_factory=list)
     selected_candidate_id: str | None = None
     contract_id: str | None = None
     draft_id: str | None = None
@@ -193,8 +317,19 @@ class WorkflowHandoffResult(BaseModel):
             if not self.distill_skill_root:
                 raise ValueError("NOVEL_DISTILLATION 完成结果必须包含 distill_skill_root")
         if atlas_type == HandoffType.ORIGINAL_BOOK_BOOTSTRAP.value:
-            if len(self.candidate_ids) != 3:
-                raise ValueError("ORIGINAL_BOOK_BOOTSTRAP 必须返回三个 Foundation candidate_ids")
+            if requested == "CORE_INNOVATION_PROPOSAL":
+                if len(self.innovation_ids) != 3:
+                    raise ValueError("CORE_INNOVATION_PROPOSAL 必须返回三个 innovation_ids")
+            elif requested == "STORY_FOUNDATION_PROPOSAL":
+                if len(self.candidate_ids) != 3:
+                    raise ValueError(
+                        "Story Foundation Proposal 必须返回三个 Foundation candidate_ids"
+                    )
+            else:
+                raise ValueError(
+                    "ORIGINAL_BOOK_BOOTSTRAP 只支持 CORE_INNOVATION_PROPOSAL 或 "
+                    "STORY_FOUNDATION_PROPOSAL"
+                )
             if not self.artifact_paths:
                 raise ValueError("ORIGINAL_BOOK_BOOTSTRAP 必须返回 proposal artifact_paths")
         if (
@@ -228,8 +363,13 @@ class WorkflowHandoffResult(BaseModel):
                 "VALIDATED_DISTILL",
                 "VALIDATED",
             },
-            "ORIGINAL_BOOK_BOOTSTRAP": {
-                "ORIGINAL_BOOK_BOOTSTRAP",
+            "CORE_INNOVATION_PROPOSAL": {
+                "CORE_INNOVATION_PROPOSAL",
+                "CORE_INNOVATION_PROPOSED",
+                "VALIDATED_PROPOSAL",
+            },
+            "STORY_FOUNDATION_PROPOSAL": {
+                "STORY_FOUNDATION_PROPOSAL",
                 "FOUNDATION_PROPOSED",
                 "VALIDATED_PROPOSAL",
             },
@@ -242,6 +382,66 @@ class WorkflowHandoffResult(BaseModel):
         if requested in compatible and completed not in compatible[requested]:
             raise ValueError(f"requested_stage={requested} 与 completed_stage={completed} 不兼容")
         return self
+
+
+_WORKFLOW_RESULT_COMMON_REQUIRED = {
+    "handoff_id",
+    "handoff_type",
+    "requested_stage",
+    "completed_stage",
+    "book_id",
+    "edition_id",
+    "status",
+    "canon_committed",
+    "edition_activated",
+    "base_event_seq",
+    "base_projection_hash",
+}
+
+
+def _workflow_result_required_fields(
+    handoff_type: HandoffType, requested_stage: str
+) -> set[str]:
+    """Return only envelope invariants plus the requested stage contract."""
+
+    required = set(_WORKFLOW_RESULT_COMMON_REQUIRED)
+    stage = requested_stage.upper()
+    stage_fields = {
+        "PLAN_ONLY": {"candidate_ids"},
+        "DRAFT_AND_VALIDATE": {"draft_id"},
+        "IMPACT_AND_PLAN": {"campaign_id", "artifact_paths"},
+        "ATLAS_BOOTSTRAP": {"artifact_paths"},
+        "ATLAS_REFRESH": {"artifact_paths"},
+        "WORLD_MODEL_REVIEW": {"review_queue_ids"},
+        "BATCH_CONTINUATION": {"batch_id", "chunk_ids"},
+        "NOVEL_INITIALIZATION": {"initialization_id", "readiness"},
+        "DISTILL": {
+            "distill_id",
+            "distill_source_ids",
+            "distill_dimensions",
+            "distill_mode",
+            "distill_depth",
+            "distill_skill_root",
+        },
+        "NOVEL_DISTILLATION": {
+            "distill_id",
+            "distill_source_ids",
+            "distill_dimensions",
+            "distill_mode",
+            "distill_depth",
+            "distill_skill_root",
+        },
+        "CORE_INNOVATION_PROPOSAL": {"innovation_ids", "artifact_paths"},
+        "STORY_FOUNDATION_PROPOSAL": {"candidate_ids", "artifact_paths"},
+        "KERNEL_CONTRACT_DISCOVERY": {"artifact_paths"},
+    }
+    required.update(stage_fields.get(stage, set()))
+    if handoff_type is HandoffType.ORIGINAL_BOOK_BOOTSTRAP and stage not in {
+        "CORE_INNOVATION_PROPOSAL",
+        "STORY_FOUNDATION_PROPOSAL",
+    }:
+        raise HandoffWorkflowError(f"不支持的 ORIGINAL_BOOK_BOOTSTRAP stage：{stage}")
+    return required
 
 
 class SourceStateHydrationResult(BaseModel):
@@ -317,6 +517,13 @@ _OPERATION_INPUT_FILES = {
     "kernel_context.json",
     "kernel_discovery_context.json",
     "kernel_contract_proposal_schema.json",
+    "batch_plan.json",
+    "batch_context.json",
+    "boundary_packet.json",
+    "rhythm_context.json",
+    "atlas_context.json",
+    "initialization_manifest.json",
+    "arc_manifest.json",
 }
 
 
@@ -502,8 +709,26 @@ def create_handoff(
     hydration_handoff = handoff_type is HandoffType.SOURCE_STATE_HYDRATION
     profile_handoff = handoff_type is HandoffType.PROFILE_REANALYSIS
     original_bootstrap_handoff = handoff_type is HandoffType.ORIGINAL_BOOK_BOOTSTRAP
+    dependencies = HANDOFF_DEPENDENCIES[handoff_type]
+    if (
+        handoff_type in {HandoffType.CONTINUATION, HandoffType.REVISION}
+        and requested_stage.upper() in _DISTILL_REFERENCE_STAGES
+    ):
+        dependencies = dependencies | frozenset({"distill_reference"})
+    if original_bootstrap_handoff and requested_stage.upper() not in {
+        "CORE_INNOVATION_PROPOSAL",
+        "STORY_FOUNDATION_PROPOSAL",
+    }:
+        raise HandoffWorkflowError(
+            "ORIGINAL_BOOK_BOOTSTRAP 只支持 CORE_INNOVATION_PROPOSAL 或 "
+            "STORY_FOUNDATION_PROPOSAL"
+        )
+    original_core_innovation_handoff = (
+        original_bootstrap_handoff and requested_stage.upper() == "CORE_INNOVATION_PROPOSAL"
+    )
     kernel_discovery_handoff = handoff_type is HandoffType.KERNEL_CONTRACT_DISCOVERY
     original_genesis = original_book and chapter_count == 0
+    metric_required = "metrics" in dependencies and not original_genesis
     selected_innovation: InnovationControl | None = None
     requested_innovation_source = innovation_source
     innovation_source = ""
@@ -517,17 +742,10 @@ def create_handoff(
             innovation_source = requested_innovation_source or "operation_override"
         else:
             selected_innovation, innovation_source = resolve_innovation_control(database, book_id)
-    if (
-        initialization_handoff
-        or distill_handoff
-        or hydration_handoff
-        or profile_handoff
-        or original_bootstrap_handoff
-        or kernel_discovery_handoff
-        or original_genesis
-    ):
-        # Initialization and distill are upstream analysis handoffs. They must
-        # not require a planning aggregate or a completed metric run.
+    if not metric_required:
+        # Upstream analysis and ORIGINAL genesis handoffs do not yet have a
+        # chapter-scoped metric anchor.  Keep a compact placeholder in the
+        # protocol envelope, while business inputs remain task-specific.
         metric_context = {
             "scope_type": (
                 "ORIGINAL_BOOTSTRAP"
@@ -542,6 +760,8 @@ def create_handoff(
                 if hydration_handoff
                 else "PROFILE_REANALYSIS"
                 if profile_handoff
+                else "BATCH"
+                if handoff_type is HandoffType.BATCH_CONTINUATION
                 else "DISTILL"
             ),
             "scope_id": selected,
@@ -554,17 +774,15 @@ def create_handoff(
                 or kernel_discovery_handoff
                 or original_genesis
             ),
-            "registry_hash": load_registry().registry_hash,
-            "config_hash": sha256_bytes(json_dumps(load_settings().metrics).encode("utf-8")),
+            "registry_hash": "",
+            "config_hash": "",
         }
         latest = None
-        planning_aggregate: dict[str, Any] = {
-            "aggregate_id": None,
-            "bundle_hash": None,
-        }
     else:
         metric_context, latest = _current_metric_anchor(database, book_id, selected)
-    if metric_run_id is None and latest is not None:
+    if not metric_required:
+        metric_run_id = None
+    if metric_run_id is None and latest is not None and metric_required:
         metric_run_id = str(latest["run"]["run_id"])
     if metric_run_id is None:
         if require_complete_metrics:
@@ -576,29 +794,25 @@ def create_handoff(
             item["missing_components_json"] != "[]" for item in latest["results"]
         ):
             raise HandoffWorkflowError("当前 Metric Run 仍有缺失 component")
-    manifest_hash = _manifest_hash(database, book_id)
-    with database.connect() as connection:
-        rhythm_row = connection.execute(
-            "SELECT snapshot_id, snapshot_json FROM rhythm_diagnostic_snapshots "
-            "WHERE book_id=? AND edition_id=? "
-            "ORDER BY as_of_chapter DESC, created_at DESC LIMIT 1",
-            (book_id, selected),
-        ).fetchone()
+    source_manifest_sha256 = (
+        _manifest_hash(database, book_id) if "source" in dependencies else ""
+    )
+    rhythm_row = None
+    if "rhythm" in dependencies:
+        with database.connect() as connection:
+            rhythm_row = connection.execute(
+                "SELECT snapshot_id, snapshot_json FROM rhythm_diagnostic_snapshots "
+                "WHERE book_id=? AND edition_id=? "
+                "ORDER BY as_of_chapter DESC, created_at DESC LIMIT 1",
+                (book_id, selected),
+            ).fetchone()
     rhythm_snapshot_id = None if rhythm_row is None else str(rhythm_row["snapshot_id"])
     rhythm_snapshot = (
         None
         if rhythm_row is None
         else json.loads(str(rhythm_row["snapshot_json"]))
     )
-    rhythm_required = (
-        handoff_type
-        in {
-            HandoffType.CONTINUATION,
-            HandoffType.REVISION,
-            HandoffType.BATCH_CONTINUATION,
-        }
-        and not original_genesis
-    )
+    rhythm_required = "rhythm" in dependencies and not original_genesis
     if rhythm_snapshot_id is None and rhythm_required:
         raise HandoffWorkflowError("当前 edition 没有 Rhythm Snapshot，不能冻结 handoff")
     frozen_world_state: dict[str, Any] | None = None
@@ -629,15 +843,11 @@ def create_handoff(
             projection=projection,
             rhythm_snapshot=rhythm_snapshot,
         )
-    if not (
-        initialization_handoff
-        or distill_handoff
-        or hydration_handoff
-        or profile_handoff
-        or original_bootstrap_handoff
-        or kernel_discovery_handoff
-        or original_genesis
-    ):
+    planning_aggregate: dict[str, Any] = {
+        "aggregate_id": None,
+        "bundle_hash": None,
+    }
+    if "planning" in dependencies:
         planning_aggregate = build_planning_aggregate(
             database,
             book_id,
@@ -648,14 +858,22 @@ def create_handoff(
             projection=projection,
             world_state=frozen_world_state,
         )
-    current_atlas = latest_atlas(database, book_id, selected)
+    current_atlas: dict[str, Any] | None = None
+    if "atlas" in dependencies or handoff_type is HandoffType.BATCH_CONTINUATION:
+        current_atlas = latest_atlas(database, book_id, selected)
     if atlas_id is not None:
+        if "atlas" not in dependencies:
+            raise HandoffWorkflowError(
+                f"{handoff_type.value} 不消费 Atlas，不能绑定 atlas_id"
+            )
         with database.connect() as connection:
             current_atlas = connection.execute(
                 "SELECT * FROM story_atlases WHERE atlas_id=? AND book_id=? AND edition_id=?",
                 (atlas_id, book_id, selected),
             ).fetchone()
         current_atlas = None if current_atlas is None else dict(current_atlas)
+    batch_plan_path: Path | None = None
+    batch_context: dict[str, Any] | None = None
     if handoff_type is HandoffType.BATCH_CONTINUATION:
         if not batch_id:
             raise HandoffWorkflowError("BATCH_CONTINUATION handoff 必须绑定 batch_id")
@@ -682,6 +900,16 @@ def create_handoff(
         if not batch_plan_path.is_file():
             raise HandoffWorkflowError("Batch plan 文件不存在")
         batch_plan_hash = sha256_file(batch_plan_path)
+        with database.connect() as connection:
+            chunk_rows = connection.execute(
+                "SELECT * FROM batch_chunk_states WHERE batch_id=? ORDER BY chunk_order",
+                (batch_id,),
+            ).fetchall()
+        batch_context = {
+            "batch_id": batch_id,
+            "batch_projection": batch_projection.model_dump(mode="json"),
+            "chunk_states": [dict(row) for row in chunk_rows],
+        }
         if innovation_control is None:
             selected_innovation = batch_plan.innovation_control
             innovation_source = "batch_frozen"
@@ -731,6 +959,44 @@ def create_handoff(
         if canonical_layout
         else workspace_root / "editions" / selected / "initialization"
     )
+    initialization_manifest_payload: dict[str, Any] | None = None
+    initialization_arc_payload: dict[str, Any] | None = None
+    if initialization_handoff:
+        initialization_candidates = (
+            [
+                path
+                for path in initialization_contract_root.iterdir()
+                if path.is_dir() and (path / "initialization_manifest.json").is_file()
+            ]
+            if initialization_contract_root.is_dir()
+            else []
+        )
+        if initialization_candidates:
+            initialization_contract_root = max(
+                initialization_candidates, key=lambda path: path.stat().st_mtime_ns
+            )
+        initialization_manifest_path = initialization_contract_root / "initialization_manifest.json"
+        initialization_arc_path = initialization_contract_root / "arc_manifest.json"
+        if initialization_manifest_path.is_file() and initialization_arc_path.is_file():
+            try:
+                raw_manifest = json.loads(
+                    initialization_manifest_path.read_text(encoding="utf-8")
+                )
+                raw_arc_manifest = json.loads(
+                    initialization_arc_path.read_text(encoding="utf-8")
+                )
+            except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+                raise HandoffWorkflowError("NOVEL_INITIALIZATION manifest 无法读取") from exc
+            if not isinstance(raw_manifest, dict) or not isinstance(raw_arc_manifest, dict):
+                raise HandoffWorkflowError("NOVEL_INITIALIZATION manifest 必须是 object")
+            initialization_manifest_payload = raw_manifest
+            initialization_arc_payload = raw_arc_manifest
+        else:
+            # A source-mapped book may create the initialization handoff before
+            # its first initialization artifact exists.  Keep the task contract
+            # thin; the initialization Skill will create those artifacts.
+            initialization_manifest_payload = {}
+            initialization_arc_payload = {"arcs": []}
     frozen_original_request: dict[str, Any] | None = None
     if original_bootstrap_handoff:
         if not original_book:
@@ -770,7 +1036,7 @@ def create_handoff(
             shutil.copytree(base_root, frozen_base)
             frozen_distill_request["base_skill_root"] = str(frozen_base)
     distill_reference: dict[str, Any] | None = None
-    if canonical_layout and not distill_handoff:
+    if canonical_layout and "distill_reference" in dependencies:
         from novel_authoring.distill.service import latest_distill_reference
 
         distill_reference = latest_distill_reference(edition_paths, scope="SELF_BOOK")
@@ -817,18 +1083,29 @@ def create_handoff(
                 "evidence、confidence。结果只生成 Proposal，不自动改变 Effective Profile。"
             ),
         }
+    executor_skill = HANDOFF_EXECUTOR_SKILLS[handoff_type]
+    business_input_files = list(HANDOFF_BUSINESS_INPUT_FILES[handoff_type])
+    atlas_output_required = handoff_type in {
+        HandoffType.STORY_ATLAS_BOOTSTRAP,
+        HandoffType.STORY_ATLAS_REFRESH,
+        HandoffType.STORY_ATLAS_RENDER,
+    }
     task = {
         "handoff_id": handoff_id,
         "task_type": handoff_type.value,
+        "executor_skill": executor_skill,
+        "business_input_files": business_input_files,
         "requested_stage": requested_stage,
         "book_id": book_id,
         "edition_id": selected,
         "created_at": utc_now(),
         "base_event_seq": projection.through_event_seq,
         "base_projection_hash": projection.sha256(),
-        "source_manifest_sha256": manifest_hash,
-        "metric_run_id": metric_run_id,
-        "metric_bundle_hash": metric_context.get("input_bundle_hash"),
+        "source_manifest_sha256": source_manifest_sha256,
+        "metric_run_id": metric_run_id if metric_required else None,
+        "metric_bundle_hash": (
+            metric_context.get("input_bundle_hash") if metric_required else None
+        ),
         "planning_aggregate_id": planning_aggregate["aggregate_id"],
         "planning_aggregate_hash": planning_aggregate["bundle_hash"],
         "kernel_context_path": (
@@ -851,18 +1128,34 @@ def create_handoff(
         "boundary_packet_markdown_path": (
             None if frozen_boundary is None else frozen_boundary["markdown_path"]
         ),
-        "effective_content_sha256": metric_context.get("effective_content_sha256"),
-        "rhythm_snapshot_id": rhythm_snapshot_id,
-        "registry_hash": metric_context.get("registry_hash", ""),
-        "config_hash": metric_context.get("config_hash", ""),
-        "author_directives_hash": directives_hash,
-        "current_atlas_id": None if current_atlas is None else current_atlas["atlas_id"],
-        "current_atlas_version": atlas_version,
-        "current_atlas_manifest_hash": atlas_manifest_hash,
-        "current_horizon_hash": horizon_hash,
-        "readiness_status": readiness_status,
-        "batch_id": batch_id,
-        "batch_plan_hash": batch_plan_hash,
+        "effective_content_sha256": (
+            metric_context.get("effective_content_sha256")
+            if metric_required
+            else None
+        ),
+        "rhythm_snapshot_id": rhythm_snapshot_id if "rhythm" in dependencies else None,
+        "registry_hash": (
+            metric_context.get("registry_hash", "") if metric_required else ""
+        ),
+        "config_hash": (
+            metric_context.get("config_hash", "") if metric_required else ""
+        ),
+        "author_directives_hash": directives_hash if "directives" in dependencies else "",
+        "current_atlas_id": (
+            None
+            if "atlas" not in dependencies or current_atlas is None
+            else current_atlas["atlas_id"]
+        ),
+        "current_atlas_version": atlas_version if "atlas" in dependencies else None,
+        "current_atlas_manifest_hash": atlas_manifest_hash if "atlas" in dependencies else None,
+        "current_horizon_hash": horizon_hash if "atlas" in dependencies else None,
+        "readiness_status": readiness_status if "atlas" in dependencies else None,
+        "batch_id": batch_id if "batch" in dependencies else None,
+        "batch_plan_hash": batch_plan_hash if "batch" in dependencies else None,
+        "batch_plan_path": (
+            None if batch_plan_path is None else str(batch_plan_path)
+        ),
+        "batch_context_path": "batch_context.json" if batch_context is not None else None,
         "innovation_control": (
             None if selected_innovation is None else selected_innovation.model_dump(mode="json")
         ),
@@ -881,7 +1174,7 @@ def create_handoff(
             "graphs/*.json",
             "future/*.yaml",
             "reports/*.md",
-        ],
+        ] if atlas_output_required else [],
         "allowed_paths": [str(artifacts.resolve()), str(task_directory.resolve())],
         "forbidden_actions": [
             "不得修改book",
@@ -899,16 +1192,24 @@ def create_handoff(
     if prepared_draft_task is not None:
         task["prepared_draft_task"] = dict(prepared_draft_task)
     if original_bootstrap_handoff and frozen_original_request is not None:
+        original_artifact = (
+            "artifacts/core_innovation/proposal.json"
+            if original_core_innovation_handoff
+            else "artifacts/story_foundation/proposal.json"
+        )
         task.update(
             {
                 "original_bootstrap": {
                     "request_path": "original_request.json",
                     "proposal_schema_path": "proposal_schema.json",
-                    "proposal_artifact": "artifacts/story_foundation/proposal.json",
-                    "foundation_candidate_count": 3,
-                    "first_chapter_candidate_count": 3,
+                    "stage": requested_stage,
+                    "proposal_artifact": original_artifact,
                     "information_status": "PROPOSAL",
-                    "confirmation_required": "确认基础框架",
+                    "confirmation_required": (
+                        "选择核心创意"
+                        if original_core_innovation_handoff
+                        else "确认故事基础"
+                    ),
                     "canon_boundary": "NO_CHAPTER_NO_CANON",
                 },
                 "planning_aggregate_required": False,
@@ -1011,36 +1312,44 @@ def create_handoff(
             }
         )
     if initialization_handoff:
+        assert initialization_manifest_payload is not None
+        assert initialization_arc_payload is not None
+        scheduled_arc_ids = list(initialization_manifest_payload.get("scheduled_arc_ids") or [])
+        scheduled_chapter_ids = sorted(
+            {
+                str(chapter_id)
+                for arc in initialization_arc_payload.get("arcs") or []
+                if str(arc.get("arc_id")) in {str(item) for item in scheduled_arc_ids}
+                for chapter_id in [
+                    *(arc.get("scheduled_semantic_chapter_ids") or []),
+                    *(arc.get("scheduled_continuity_chapter_ids") or []),
+                ]
+            }
+        )
+        initialization_depth = str(
+            initialization_manifest_payload.get("initialization_depth") or "FULL"
+        ).upper()
+        requested_action = str(initialization_manifest_payload.get("requested_action") or "")
+        continuation_intent = "CONTINUE" in requested_action.upper()
         task.update(
             {
                 "initialization_contract": {
                     "root": str(initialization_contract_root),
-                    "required_files": [
-                        "initialization_manifest.json",
-                        "source_coverage.json",
-                        "arc_manifest.json",
-                        "status.json",
-                        "events.jsonl",
-                        "operations/<initialization_id>-arc-*/input/",
-                        "operations/<initialization_id>-arc-*/output/",
-                        "entity_resolution/",
-                        "synthesis/",
-                        "metrics/",
-                        "reports/",
-                    ],
-                    "pipeline": [
-                        "Source Coverage",
-                        "Arc Segmentation",
-                        "Arc Extraction",
-                        "Entity Resolution",
-                        "Cross-Arc Synthesis",
-                        "Contradiction Audit",
-                        "Narrative DNA",
-                        "Current Story Atlas",
-                        "Future Possibility Space",
-                        "Semantic Metric Bootstrap",
-                        "Optional Visual Asset Export (explicit atlas export-visuals)",
-                    ],
+                    "initialization_manifest": "initialization_manifest.json",
+                    "arc_manifest": "arc_manifest.json",
+                    "scheduled_arc_ids": scheduled_arc_ids,
+                    "scheduled_chapter_ids": scheduled_chapter_ids,
+                    "reused_arc_ids": list(
+                        initialization_manifest_payload.get("reused_arc_ids") or []
+                    ),
+                    "initialization_depth": initialization_depth,
+                    "requested_action": requested_action or None,
+                    "readiness_target": (
+                        "CONTINUE_READY"
+                        if continuation_intent and initialization_depth != "FULL"
+                        else "FULL_READY"
+                    ),
+                    "visual_rendering": "EXPLICIT_ONLY",
                 },
                 "planning_aggregate_required": False,
             }
@@ -1049,109 +1358,8 @@ def create_handoff(
         task["batch_target_chapter_count"] = batch_plan.target_chapter_count
         task["batch_current_chapter_ordinal"] = batch_projection.current_chapter_ordinal
         task["batch_status"] = batch_projection.status.value
-    skill_name = {
-        HandoffType.CONTINUATION: "continue-novel",
-        HandoffType.REVISION: "revise-novel",
-        HandoffType.METRIC_SEMANTIC_ANALYSIS: "review-novel-metrics",
-        HandoffType.CHAPTER_FEATURE_ANALYSIS: "analyze-novel-rhythm",
-        HandoffType.STORY_ATLAS_BOOTSTRAP: "bootstrap-story-atlas",
-        HandoffType.STORY_ATLAS_REFRESH: "refresh-story-atlas",
-        HandoffType.WORLD_MODEL_REVIEW: "review-story-atlas",
-        HandoffType.STORY_ATLAS_RENDER: "render-story-atlas-assets",
-        HandoffType.BATCH_CONTINUATION: "continue-novel-batch",
-        HandoffType.NOVEL_INITIALIZATION: "initialize-existing-novel",
-        HandoffType.NOVEL_DISTILLATION: "distill-novels",
-        HandoffType.SOURCE_STATE_HYDRATION: "process-novel-handoff",
-        HandoffType.PROFILE_REANALYSIS: "process-novel-handoff",
-        HandoffType.ORIGINAL_BOOK_BOOTSTRAP: "bootstrap-original-novel",
-        HandoffType.KERNEL_CONTRACT_DISCOVERY: "process-novel-handoff",
-    }.get(handoff_type, "continue-novel")
-    atlas_instruction = ""
-    if handoff_type in {
-        HandoffType.STORY_ATLAS_BOOTSTRAP,
-        HandoffType.STORY_ATLAS_REFRESH,
-        HandoffType.WORLD_MODEL_REVIEW,
-        HandoffType.STORY_ATLAS_RENDER,
-    }:
-        atlas_instruction = (
-            "Atlas 输出必须先写入 task artifacts/story_atlas，再由 Python 校验并登记；"
-            "不得直接修改 Canon。"
-        )
-    elif handoff_type is HandoffType.BATCH_CONTINUATION:
-        atlas_instruction = (
-            "Batch 必须按 chunk_size=5 滚动执行、每章更新 Batch Provisional Projection；"
-            "每10章进入 checkpoint，最终停在 BATCH_VALIDATED，不得自动批准正史。"
-        )
-    elif handoff_type is HandoffType.NOVEL_INITIALIZATION:
-        atlas_instruction = (
-            "初始化必须先完成 Source Coverage 和 Arc task 文件合同，再由 Codex 桌面端执行 "
-            "Arc Extraction、Entity Resolution、Cross-Arc Synthesis、Contradiction Audit、"
-            "Narrative DNA、Atlas、语义指标和 SVG 渲染；"
-            "不得依赖 Planning Aggregate，不得写入 Canon。"
-        )
-    elif handoff_type is HandoffType.NOVEL_DISTILLATION:
-        atlas_instruction = (
-            "先读取 task.json 的 distill 与 distill_contract；调用 $distill-novels，"
-            "只把抽象、可迁移的写作机制写入 artifacts/distill_skill/。"
-            "不得复制来源正文、不得把来源人物/设定/事件写入 Canon；完成后停在 DISTILLED，"
-            "由 Python 的 novel distill import 显式发布为 REFERENCE_ONLY。"
-        )
-    elif hydration_handoff:
-        atlas_instruction = (
-            "读取 hydration_context.json 中的本章完整 Source Text 和 source spans；"
-            "只输出结构化 SourceChapterStateDelta[] 与 uncertain_findings，不输出 prose-only 结果。"
-            "每个 SOURCE_VERIFIED delta 必须引用本章 source span 和稳定 object_id；"
-            "不要修改 book、Canon 或 Author Intent。"
-        )
-    elif profile_handoff:
-        atlas_instruction = (
-            "读取 profile_context.json 的当前 Effective Profile、画像历史、新 Canon 章节与"
-            "最近 Edition 正文；按九维输出 additions/modifications/removals、reason、evidence、"
-            "confidence。不得复制当前 baseline 冒充分析；至少一维必须有真实差异。"
-            "结果只形成作者可接受/编辑/拒绝的 Proposal，不得修改 Effective Profile 或 Canon。"
-        )
-    elif original_bootstrap_handoff:
-        atlas_instruction = (
-            "读取 original_request.json，从 premise 建立纯 Proposal：恰好三个标题、三个不同的 "
-            "Story Foundation、三条未来路线和三个首章候选；逐项标记 CORE/PREFERENCE/OPEN，"
-            "直接提供九维 book_profile_draft，并为路线提供 commitments/open_alternatives；"
-            "给出推荐与理由、世界规则、人物/势力、近期/中期/长期方向、开放问题、幕后真相"
-            "候选、风险与避免陈词滥调。不得填写没有经过评分引擎计算的占位分数。"
-            "所有内容保持 information_status=PROPOSAL，只写 "
-            "artifacts/story_foundation/proposal.json；不得创建章节、Canon、Edition 或固定结局。"
-        )
-    elif kernel_discovery_handoff:
-        atlas_instruction = (
-            "这是受控语义 Kernel Contract Discovery。读取 "
-            "kernel_discovery_context.json 和 kernel_contract_proposal_schema.json，"
-            "综合冻结的近期章节、Chapter Continuity Index、Source State、"
-            "Current Boundary、Global Book Profile、Author Truth、Reveal Agenda、"
-            "Story Atlas 与 Distillation Package，产出唯一 "
-            "artifacts/kernel_contract_discovery/proposal.json。未知项必须保持 unknown；"
-            "不得以市场分类直接决定 Narrative Drive；非成长 Drive 不得强制"
-            "生成 Progression Contract。所有合同只能是 INFERRED_PROPOSAL，不得确认"
-            "合同或修改 Canon。"
-        )
-    elif original_genesis and prepared_draft_task is not None:
-        atlas_instruction = (
-            "这是无既有章节的 Genesis 首章任务。直接读取 task.json 的 prepared_draft_task，"
-            "使用已经由作者选择的 Candidate 与 Chapter Contract 生成正文、导入 Draft 并运行"
-            "十项 Validator；停在 VALIDATED，不得重新生成或替换三个首章候选。"
-        )
-    if distill_reference is not None:
-        atlas_instruction += (
-            " 当前 edition 还有一个已发布的 distill_reference；只能读取其抽象写作控制，"
-            "不得把来源事实当作 Canon。"
-        )
-    if selected_innovation is not None:
-        atlas_instruction += (
-            f" 本次 InnovationControl={json_dumps(selected_innovation.model_dump(mode='json'))}；"
-            f"creative-distance guidance={selected_innovation.creative_distance_guidance}；"
-            f"lens tendency={selected_innovation.lens_tendency_guidance}；"
-            "只控制 creative distance 与 future branch surface，绝不放松 Canon、Timeline、"
-            "Knowledge、Capability、Resource、Author Directive、Approval 或 Edition hard gates。"
-            "三个 Candidate Lens 必须全部保留。"
-        )
+        task["batch_chunk_size"] = batch_plan.chunk_size
+        task["batch_checkpoint_interval"] = batch_plan.checkpoint_interval
     author_context_instruction = ""
     if normalized_author_goal:
         author_context_instruction += (
@@ -1165,19 +1373,16 @@ def create_handoff(
         )
     prompt = (
         "$process-novel-handoff\n\n"
-        "请先使用仓库内的 $process-novel-handoff Skill，领取并验证 "
-        f"handoff_id={handoff_id}。\n\n"
-        f"领取成功后，根据 task.json 调用 ${skill_name}，严格执行 "
-        f"requested_stage={requested_stage}。\n\n"
-        f"{atlas_instruction}\n\n"
+        f"处理 handoff_id={handoff_id}。\n\n"
+        "运行 deterministic workflow start；成功后信任其 RUNNING contract。\n"
+        f"Python 已冻结 executor_skill={executor_skill}；调用 ${executor_skill} Skill，"
+        "严格执行该 Skill 的 "
+        f"requested_stage={requested_stage}。\n"
+        "业务输入只读取 task.json 指定的 "
+        f"business_input_files={json_dumps(business_input_files)}。\n\n"
         f"{author_context_instruction}\n\n"
-        "严格读取任务目录中的 task.json、prompt.md、metric_context.json、"
-        "context_manifest.json、output_schema.json 和（如存在）hydration_context.json / "
-        "profile_context.json / original_request.json / proposal_schema.json / "
-        "kernel_context.json / kernel_discovery_context.json / "
-        "kernel_contract_proposal_schema.json。\n"
         "不得修改 book；不得批准写入正史；不得批准改写 Campaign；不得启用 Edition。\n"
-        "结束时必须严格按 output_schema.json 写回 result.json 和 status.json；"
+        "完成后将 result.json 写到任务输出目标，并运行 deterministic workflow complete；"
         "需要作者决定时写 waiting_for_user.json 并进入 WAITING_FOR_USER。"
     )
     manifest_paths = ["task.json", "prompt.md", "metric_context.json", "output_schema.json"]
@@ -1195,11 +1400,20 @@ def create_handoff(
         manifest_paths.extend(
             ["kernel_discovery_context.json", "kernel_contract_proposal_schema.json"]
         )
+    if batch_plan is not None:
+        manifest_paths.append("batch_plan.json")
+    if batch_context is not None:
+        manifest_paths.append("batch_context.json")
+    if initialization_handoff:
+        manifest_paths.extend(["initialization_manifest.json", "arc_manifest.json"])
+    for business_file in ("boundary_packet.json", "rhythm_context.json", "atlas_context.json"):
+        if business_file in business_input_files:
+            manifest_paths.append(business_file)
     context_manifest = {
         "book_id": book_id,
         "edition_id": selected,
         "base_projection_hash": projection.sha256(),
-        "source_manifest_sha256": manifest_hash,
+        "source_manifest_sha256": source_manifest_sha256,
         "metric_bundle_hash": task["metric_bundle_hash"],
         "planning_aggregate_id": task["planning_aggregate_id"],
         "planning_aggregate_hash": task["planning_aggregate_hash"],
@@ -1219,11 +1433,14 @@ def create_handoff(
         "readiness_status": task["readiness_status"],
         "batch_id": task["batch_id"],
         "batch_plan_hash": task["batch_plan_hash"],
+        "batch_context_path": task["batch_context_path"],
         "innovation_control": task["innovation_control"],
         "innovation_source": task["innovation_source"],
         "context_chapter_id": task["context_chapter_id"],
         "author_goal": task["author_goal"],
         "author_task_ids": task["author_task_ids"],
+        "executor_skill": task["executor_skill"],
+        "business_input_files": task["business_input_files"],
         "atlas_required_artifacts": task["atlas_required_artifacts"],
         "effective_content_sha256": task["effective_content_sha256"],
         "edition_status": edition_status,
@@ -1232,33 +1449,9 @@ def create_handoff(
     }
     output_schema = WorkflowHandoffResult.model_json_schema()
     output_schema["additionalProperties"] = False
-    output_schema["required"] = [
-        "handoff_id",
-        "handoff_type",
-        "requested_stage",
-        "completed_stage",
-        "book_id",
-        "edition_id",
-        "status",
-        "task_ids",
-        "candidate_ids",
-        "selected_candidate_id",
-        "contract_id",
-        "draft_id",
-        "campaign_id",
-        "revision_unit_ids",
-        "artifact_paths",
-        "validation_summary",
-        "warnings",
-        "next_action",
-        "canon_committed",
-        "edition_activated",
-        "base_event_seq",
-        "base_projection_hash",
-        "metric_run_ids",
-        "metric_bundle_hash",
-        "completed_at",
-    ]
+    output_schema["required"] = sorted(
+        _workflow_result_required_fields(handoff_type, requested_stage)
+    )
     output_schema["x-stage-rules"] = {
         "PLAN_ONLY": {"required_non_empty": ["candidate_ids"]},
         "DRAFT_AND_VALIDATE": {"required_non_empty": ["draft_id"]},
@@ -1286,7 +1479,12 @@ def create_handoff(
                 "distill_skill_root",
             ]
         },
-        "ORIGINAL_BOOK_BOOTSTRAP": {"required_non_empty": ["candidate_ids", "artifact_paths"]},
+        "CORE_INNOVATION_PROPOSAL": {
+            "required_non_empty": ["innovation_ids", "artifact_paths"]
+        },
+        "STORY_FOUNDATION_PROPOSAL": {
+            "required_non_empty": ["candidate_ids", "artifact_paths"]
+        },
         "KERNEL_CONTRACT_DISCOVERY": {"required_non_empty": ["artifact_paths"]},
     }
     if hydration_handoff:
@@ -1326,26 +1524,6 @@ def create_handoff(
             "writes_canon": False,
         }
     if initialization_handoff:
-        output_schema["required"].extend(
-            [
-                "initialization_id",
-                "completed_arc_ids",
-                "failed_arc_ids",
-                "chapter_coverage",
-                "arc_coverage",
-                "entity_count",
-                "relationship_count",
-                "faction_count",
-                "ability_count",
-                "resource_count",
-                "region_count",
-                "thread_count",
-                "metric_observation_count",
-                "generated_visuals",
-                "readiness",
-                "review_queue",
-            ]
-        )
         output_schema["x-initialization-result-fields"] = [
             "initialization_id",
             "completed_arc_ids",
@@ -1370,16 +1548,6 @@ def create_handoff(
             "edition_activated",
         ]
     if distill_handoff:
-        output_schema["required"].extend(
-            [
-                "distill_id",
-                "distill_source_ids",
-                "distill_dimensions",
-                "distill_mode",
-                "distill_depth",
-                "distill_skill_root",
-            ]
-        )
         output_schema["x-distill-result-fields"] = [
             "distill_id",
             "distill_source_ids",
@@ -1415,6 +1583,13 @@ def create_handoff(
             "world_state_context.json",
             "kernel_discovery_context.json",
             "kernel_contract_proposal_schema.json",
+            "batch_plan.json",
+            "batch_context.json",
+            "boundary_packet.json",
+            "rhythm_context.json",
+            "atlas_context.json",
+            "initialization_manifest.json",
+            "arc_manifest.json",
         )
     }
     status_path = task_directory / "status.json"
@@ -1431,6 +1606,18 @@ def create_handoff(
             input_files[name].write_text(value, encoding="utf-8")
         else:
             _write_json(input_files[name], value)
+    if "boundary_packet.json" in business_input_files:
+        _write_json(input_files["boundary_packet.json"], frozen_boundary or {})
+    else:
+        input_files.pop("boundary_packet.json", None)
+    if "rhythm_context.json" in business_input_files:
+        _write_json(input_files["rhythm_context.json"], rhythm_snapshot or {})
+    else:
+        input_files.pop("rhythm_context.json", None)
+    if "atlas_context.json" in business_input_files:
+        _write_json(input_files["atlas_context.json"], current_atlas or {})
+    else:
+        input_files.pop("atlas_context.json", None)
     if hydration_handoff:
         _write_json(input_files["hydration_context.json"], hydration_request or {})
     else:
@@ -1443,7 +1630,11 @@ def create_handoff(
         _write_json(input_files["original_request.json"], frozen_original_request or {})
         _write_json(
             input_files["proposal_schema.json"],
-            OriginalBootstrapProposal.model_json_schema(),
+            (
+                CoreInnovationProposal.model_json_schema()
+                if original_core_innovation_handoff
+                else OriginalBootstrapProposal.model_json_schema()
+            ),
         )
     else:
         input_files.pop("original_request.json", None)
@@ -1459,6 +1650,26 @@ def create_handoff(
         _write_json(input_files["world_state_context.json"], frozen_world_state)
     else:
         input_files.pop("world_state_context.json", None)
+    if batch_plan is not None:
+        _write_json(input_files["batch_plan.json"], batch_plan.model_dump(mode="json"))
+    else:
+        input_files.pop("batch_plan.json", None)
+    if batch_context is not None:
+        _write_json(input_files["batch_context.json"], batch_context)
+    else:
+        input_files.pop("batch_context.json", None)
+    if initialization_handoff:
+        _write_json(
+            input_files["initialization_manifest.json"],
+            initialization_manifest_payload or {},
+        )
+        _write_json(
+            input_files["arc_manifest.json"],
+            initialization_arc_payload or {"arcs": []},
+        )
+    else:
+        input_files.pop("initialization_manifest.json", None)
+        input_files.pop("arc_manifest.json", None)
     if kernel_discovery_handoff and frozen_kernel_discovery is not None:
         from novel_authoring.progression.discovery import KernelContractDiscoveryArtifact
 
@@ -1482,6 +1693,20 @@ def create_handoff(
             "prompt.md",
             "metric_context.json",
             "output_schema.json",
+            *(
+                [
+                    name
+                    for name in (
+                        "boundary_packet.json",
+                        "rhythm_context.json",
+                        "atlas_context.json",
+                        "batch_context.json",
+                        "initialization_manifest.json",
+                        "arc_manifest.json",
+                    )
+                    if name in business_input_files
+                ]
+            ),
             *(["hydration_context.json"] if hydration_handoff else []),
             *(["profile_context.json"] if profile_handoff else []),
             *(
@@ -1499,6 +1724,13 @@ def create_handoff(
                 if frozen_world_state is not None
                 else []
             ),
+            *(
+                ["initialization_manifest.json", "arc_manifest.json"]
+                if initialization_handoff
+                else []
+            ),
+            *(["batch_plan.json"] if batch_plan is not None else []),
+            *(["batch_context.json"] if batch_context is not None else []),
             *(
                 ["kernel_discovery_context.json", "kernel_contract_proposal_schema.json"]
                 if kernel_discovery_handoff
@@ -1563,7 +1795,7 @@ def create_handoff(
                 str(event_log_path),
                 projection.through_event_seq,
                 projection.sha256(),
-                manifest_hash,
+                source_manifest_sha256,
                 metric_run_id,
                 task["metric_bundle_hash"],
                 task["rhythm_snapshot_id"],
@@ -1736,13 +1968,17 @@ def create_initialization_handoff(
 
 
 def create_original_bootstrap_handoff(
-    database: Database, book_id: str, **kwargs: Any
+    database: Database,
+    book_id: str,
+    *,
+    requested_stage: str = "STORY_FOUNDATION_PROPOSAL",
+    **kwargs: Any,
 ) -> dict[str, Any]:
     return create_handoff(
         database,
         book_id,
         handoff_type=HandoffType.ORIGINAL_BOOK_BOOTSTRAP,
-        requested_stage="ORIGINAL_BOOK_BOOTSTRAP",
+        requested_stage=requested_stage,
         **kwargs,
     )
 
@@ -1752,8 +1988,10 @@ def _drift_reasons(
 ) -> list[str]:
     book_id = str(row["book_id"])
     edition_id = str(row["edition_id"])
+    handoff_type = HandoffType(str(row["handoff_type"]))
+    dependencies = HANDOFF_DEPENDENCIES[handoff_type]
     reasons: list[str] = []
-    if str(row["handoff_type"]) == HandoffType.PROFILE_REANALYSIS.value:
+    if handoff_type is HandoffType.PROFILE_REANALYSIS:
         task_path = _handoff_file(Path(str(row["task_directory"])), "task.json")
         try:
             task_payload = json.loads(task_path.read_text(encoding="utf-8"))
@@ -1767,23 +2005,29 @@ def _drift_reasons(
                 reasons.append("effective profile version changed")
         except (OSError, TypeError, ValueError, json.JSONDecodeError):
             reasons.append("profile reanalysis frozen task missing or invalid")
-    if _manifest_hash(database, book_id) != str(row["source_manifest_sha256"] or ""):
+    if (
+        "source" in dependencies
+        and row["source_manifest_sha256"]
+        and _manifest_hash(database, book_id) != str(row["source_manifest_sha256"])
+    ):
         reasons.append("source manifest hash changed")
-    projection = load_projection_from_connection(connection, book_id, edition_id)
-    if projection.sha256() != str(row["base_projection_hash"] or ""):
-        reasons.append("projection hash changed")
-    edition = connection.execute(
-        "SELECT status FROM editions WHERE book_id=? AND edition_id=?",
-        (book_id, edition_id),
-    ).fetchone()
-    if edition is None or str(edition["status"]) != str(row["edition_status"] or ""):
-        reasons.append("edition status changed")
-    chapters = edition_chapters(connection, book_id, edition_id)
-    if row["effective_content_sha256"]:
+    if "projection" in dependencies:
+        projection = load_projection_from_connection(connection, book_id, edition_id)
+        if projection.sha256() != str(row["base_projection_hash"] or ""):
+            reasons.append("projection hash changed")
+    if "edition" in dependencies:
+        edition = connection.execute(
+            "SELECT status FROM editions WHERE book_id=? AND edition_id=?",
+            (book_id, edition_id),
+        ).fetchone()
+        if edition is None or str(edition["status"]) != str(row["edition_status"] or ""):
+            reasons.append("edition status changed")
+    if "metrics" in dependencies and row["effective_content_sha256"]:
+        chapters = edition_chapters(connection, book_id, edition_id)
         current_content = str(chapters[-1].get("content_sha256") or "") if chapters else ""
         if current_content != str(row["effective_content_sha256"]):
             reasons.append("effective chapter hash changed")
-    if row["metric_run_id"]:
+    if "metrics" in dependencies and row["metric_run_id"]:
         metric_run = connection.execute(
             "SELECT input_bundle_hash, registry_hash, config_hash, invalidated_at "
             "FROM metric_runs WHERE run_id=?",
@@ -1798,7 +2042,7 @@ def _drift_reasons(
                 reasons.append("registry hash changed")
             if str(metric_run["config_hash"] or "") != str(row["config_hash"] or ""):
                 reasons.append("config hash changed")
-    if row["planning_aggregate_id"]:
+    if "planning" in dependencies and row["planning_aggregate_id"]:
         aggregate = connection.execute(
             "SELECT status, bundle_hash FROM planning_aggregates "
             "WHERE aggregate_id=? AND book_id=? AND edition_id=?",
@@ -1808,17 +2052,18 @@ def _drift_reasons(
             reasons.append("planning aggregate missing or stale")
         elif str(aggregate["bundle_hash"] or "") != str(row["planning_aggregate_hash"] or ""):
             reasons.append("planning aggregate hash changed")
-    if row["author_directives_hash"]:
+    if "directives" in dependencies and row["author_directives_hash"]:
         current_directives_hash = _author_directives_hash(connection, book_id, edition_id)
         if current_directives_hash != str(row["author_directives_hash"]):
             reasons.append("author directives hash changed")
-    current_registry = load_registry().registry_hash
-    current_metrics_hash = sha256_bytes(json_dumps(load_settings().metrics).encode("utf-8"))
-    if current_registry != str(row["registry_hash"] or ""):
-        reasons.append("current registry hash changed")
-    if current_metrics_hash != str(row["config_hash"] or ""):
-        reasons.append("current config hash changed")
-    if row["rhythm_snapshot_id"]:
+    if "metrics" in dependencies and (row["registry_hash"] or row["config_hash"]):
+        current_registry = load_registry().registry_hash
+        current_metrics_hash = sha256_bytes(json_dumps(load_settings().metrics).encode("utf-8"))
+        if row["registry_hash"] and current_registry != str(row["registry_hash"] or ""):
+            reasons.append("current registry hash changed")
+        if row["config_hash"] and current_metrics_hash != str(row["config_hash"] or ""):
+            reasons.append("current config hash changed")
+    if "rhythm" in dependencies and row["rhythm_snapshot_id"]:
         rhythm = connection.execute(
             "SELECT 1 FROM rhythm_diagnostic_snapshots WHERE snapshot_id=? "
             "AND book_id=? AND edition_id=?",
@@ -1826,7 +2071,7 @@ def _drift_reasons(
         ).fetchone()
         if rhythm is None:
             reasons.append("rhythm snapshot missing")
-    if row["atlas_id"]:
+    if "atlas" in dependencies and row["atlas_id"]:
         atlas = connection.execute(
             "SELECT * FROM story_atlases WHERE atlas_id=? AND book_id=? AND edition_id=?",
             (str(row["atlas_id"]), book_id, edition_id),
@@ -1855,7 +2100,7 @@ def _drift_reasons(
                     reasons.append("Atlas validation failed")
             except (OSError, RuntimeError, ValueError):
                 reasons.append("Atlas validation unavailable")
-    if row["batch_id"]:
+    if "batch" in dependencies and row["batch_id"]:
         batch = connection.execute(
             "SELECT * FROM batch_working_projections WHERE batch_id=? AND book_id=? "
             "AND edition_id=?",
@@ -1863,22 +2108,8 @@ def _drift_reasons(
         ).fetchone()
         if batch is None:
             reasons.append("Batch missing")
-        else:
-            if row["batch_plan_hash"]:
-                plan_path = (
-                    _book_workspace(database, book_id)
-                    / "editions"
-                    / edition_id
-                    / "batches"
-                    / str(row["batch_id"])
-                    / "batch_plan.json"
-                )
-                if not plan_path.is_file() or sha256_file(plan_path) != str(row["batch_plan_hash"]):
-                    reasons.append("Batch plan hash changed")
-            if row["atlas_id"] and str(batch["atlas_id"] or "") != str(row["atlas_id"]):
-                reasons.append("Batch Atlas anchor changed")
-            if row["horizon_hash"] and str(batch["horizon_hash"] or "") != str(row["horizon_hash"]):
-                reasons.append("Batch Horizon anchor changed")
+        elif str(batch["status"] or "") in {"STALE", "CANCELLED"}:
+            reasons.append("Batch status is not executable")
     return list(dict.fromkeys(reasons))
 
 
@@ -1953,6 +2184,120 @@ def claim_handoff(database: Database, handoff_id: str, claimed_by: str) -> dict[
     assert token is not None
     append_event(database, handoff_id, "CLAIMED", {"claimed_by": claimed_by}, claim_token=token)
     return {"handoff_id": handoff_id, "claim_token": token, "status": HandoffStatus.CLAIMED.value}
+
+
+def _execution_contract(database: Database, handoff_id: str) -> dict[str, Any]:
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT task_directory, result_path, handoff_type FROM workflow_handoffs "
+            "WHERE handoff_id=?",
+            (handoff_id,),
+        ).fetchone()
+    if row is None:
+        raise HandoffWorkflowError("handoff 不存在")
+    task_directory = Path(str(row["task_directory"]))
+    task_path = _handoff_file(task_directory, "task.json")
+    if not task_path.is_file():
+        raise HandoffWorkflowError("task.json 缺失")
+    try:
+        task = json.loads(task_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise HandoffWorkflowError(f"task.json 无法读取：{exc}") from exc
+    if not isinstance(task, dict):
+        raise HandoffWorkflowError("task.json 必须是 object")
+    try:
+        handoff_type = HandoffType(str(row["handoff_type"]))
+    except ValueError as exc:
+        raise HandoffWorkflowError(f"未知 handoff_type：{row['handoff_type']}") from exc
+    executor_skill = str(task.get("executor_skill") or "").strip()
+    business_input_files = task.get("business_input_files")
+    if not executor_skill or not isinstance(business_input_files, list):
+        raise HandoffWorkflowError(
+            "handoff task 缺少冻结的 executor_skill/business_input_files contract"
+        )
+    expected_executor = HANDOFF_EXECUTOR_SKILLS[handoff_type]
+    if executor_skill != expected_executor:
+        raise HandoffWorkflowError(
+            f"task executor_skill={executor_skill} 与 Python 路由 {expected_executor} 不一致"
+        )
+    expected_inputs = list(HANDOFF_BUSINESS_INPUT_FILES[handoff_type])
+    normalized_inputs = [str(item) for item in business_input_files]
+    if normalized_inputs != expected_inputs:
+        raise HandoffWorkflowError(
+            f"task business_input_files 与 {handoff_type.value} 的冻结声明不一致"
+        )
+    for relative_path in normalized_inputs:
+        candidate = (_handoff_file(task_directory, relative_path)).resolve()
+        if task_directory.resolve() not in candidate.parents or not candidate.is_file():
+            raise HandoffWorkflowError(f"business input 不存在或越界：{relative_path}")
+    return {
+        "task_directory": str(task_directory),
+        "result_path": str(row["result_path"]),
+        "executor_skill": executor_skill,
+        "business_input_files": normalized_inputs,
+    }
+
+
+def start_handoff(
+    database: Database, handoff_id: str, claimed_by: str = "codex-desktop"
+) -> dict[str, Any]:
+    """Atomically claim a ready handoff, then advance it to RUNNING."""
+
+    contract = _execution_contract(database, handoff_id)
+    claimed = claim_handoff(database, handoff_id, claimed_by)
+    update_handoff_status(
+        database,
+        handoff_id,
+        HandoffStatus.RUNNING,
+        claim_token=str(claimed["claim_token"]),
+    )
+    return {
+        "handoff_id": handoff_id,
+        "status": HandoffStatus.RUNNING.value,
+        "claim_token": claimed["claim_token"],
+        "executor_skill": contract["executor_skill"],
+        "task_directory": contract["task_directory"],
+        "business_input_files": contract["business_input_files"],
+        "artifact_target": contract["result_path"],
+    }
+
+
+def complete_handoff(
+    database: Database,
+    handoff_id: str,
+    claim_token: str,
+    result_path: Path | str,
+) -> dict[str, Any]:
+    """Validate and persist one result, including runtime drift checks."""
+
+    result_file = Path(result_path)
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT result_path FROM workflow_handoffs WHERE handoff_id=?",
+            (handoff_id,),
+        ).fetchone()
+    if row is None:
+        raise HandoffWorkflowError("handoff 不存在")
+    if result_file.resolve() != Path(str(row["result_path"])).resolve():
+        raise HandoffWorkflowError("result_path 必须等于 workflow start 返回的 artifact_target")
+    try:
+        loaded = json.loads(result_file.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise HandoffWorkflowError(f"result.json 无法读取：{exc}") from exc
+    if not isinstance(loaded, dict):
+        raise HandoffWorkflowError("result.json 必须是 object")
+    update_handoff_status(
+        database,
+        handoff_id,
+        HandoffStatus.COMPLETED,
+        claim_token=claim_token,
+        result=loaded,
+    )
+    return {
+        "handoff_id": handoff_id,
+        "status": HandoffStatus.COMPLETED.value,
+        "result_path": str(result_file),
+    }
 
 
 def _allowed_artifact_path(task_directory: Path, task: dict[str, Any], raw_path: str) -> Path:
@@ -2080,68 +2425,10 @@ def validate_handoff_result(
                         "status.json 与 Profile Reanalysis result 状态不一致"
                     )
             return parsed_profile
-        required_fields = {
-            "handoff_id",
-            "handoff_type",
-            "requested_stage",
-            "completed_stage",
-            "book_id",
-            "edition_id",
-            "status",
-            "task_ids",
-            "candidate_ids",
-            "selected_candidate_id",
-            "contract_id",
-            "draft_id",
-            "campaign_id",
-            "revision_unit_ids",
-            "artifact_paths",
-            "validation_summary",
-            "warnings",
-            "next_action",
-            "canon_committed",
-            "edition_activated",
-            "base_event_seq",
-            "base_projection_hash",
-            "metric_run_ids",
-            "metric_bundle_hash",
-            "completed_at",
-        }
+        required_fields = _workflow_result_required_fields(
+            HandoffType(str(row["handoff_type"])), str(row["requested_stage"])
+        )
         missing_fields = sorted(required_fields - set(result))
-        if str(row["handoff_type"]) == HandoffType.NOVEL_INITIALIZATION.value:
-            required_fields.update(
-                {
-                    "initialization_id",
-                    "completed_arc_ids",
-                    "failed_arc_ids",
-                    "chapter_coverage",
-                    "arc_coverage",
-                    "entity_count",
-                    "relationship_count",
-                    "faction_count",
-                    "ability_count",
-                    "resource_count",
-                    "region_count",
-                    "thread_count",
-                    "metric_observation_count",
-                    "generated_visuals",
-                    "readiness",
-                    "review_queue",
-                }
-            )
-            missing_fields = sorted(required_fields - set(result))
-        if str(row["handoff_type"]) == HandoffType.NOVEL_DISTILLATION.value:
-            required_fields.update(
-                {
-                    "distill_id",
-                    "distill_source_ids",
-                    "distill_dimensions",
-                    "distill_mode",
-                    "distill_depth",
-                    "distill_skill_root",
-                }
-            )
-            missing_fields = sorted(required_fields - set(result))
         if missing_fields:
             raise HandoffWorkflowError(f"result.json 缺少必填字段：{', '.join(missing_fields)}")
         try:
@@ -2159,10 +2446,15 @@ def validate_handoff_result(
         ):
             if getattr(parsed, field) != expected_value:
                 raise HandoffWorkflowError(f"result {field} 与冻结 handoff 不一致")
-        if row["metric_bundle_hash"] and parsed.metric_bundle_hash != str(
-            row["metric_bundle_hash"]
-        ):
-            raise HandoffWorkflowError("result metric_bundle_hash 与冻结 handoff 不一致")
+        if row["metric_bundle_hash"]:
+            if parsed.metric_bundle_hash is not None and parsed.metric_bundle_hash != str(
+                row["metric_bundle_hash"]
+            ):
+                raise HandoffWorkflowError("result metric_bundle_hash 与冻结 handoff 不一致")
+            if parsed.metric_bundle_hash is None:
+                parsed = parsed.model_copy(
+                    update={"metric_bundle_hash": str(row["metric_bundle_hash"])}
+                )
         if require_completed_status:
             status_path = task_directory / "status.json"
             if not status_path.is_file():
@@ -2178,6 +2470,13 @@ def validate_handoff_result(
                 raise HandoffWorkflowError(f"required artifact 不存在：{raw_path}")
         if parsed.requested_stage.upper() != str(row["requested_stage"]).upper():
             raise HandoffWorkflowError("result requested_stage 不一致")
+        if str(row["handoff_type"]) == HandoffType.BATCH_CONTINUATION.value:
+            if parsed.batch_id != str(row["batch_id"] or ""):
+                raise HandoffWorkflowError("result batch_id 与冻结 Batch 不一致")
+            if parsed.batch_plan_hash is not None and parsed.batch_plan_hash != str(
+                row["batch_plan_hash"] or ""
+            ):
+                raise HandoffWorkflowError("result batch_plan_hash 与冻结 Batch 不一致")
         if str(row["handoff_type"]) == HandoffType.NOVEL_DISTILLATION.value:
             distill_request = task.get("distill")
             if not isinstance(distill_request, dict):
@@ -2200,13 +2499,50 @@ def validate_handoff_result(
         return parsed
 
 
-def validate_result_file(database: Database, handoff_id: str) -> dict[str, Any]:
+def load_completed_handoff_result(database: Database, handoff_id: str) -> dict[str, Any]:
+    """Load the result already validated by workflow complete.
+
+    Importers must consume this persisted envelope and validate only their own
+    business artifact.  A completed handoff without the validated database
+    payload is not importable.
+    """
+
     with database.connect() as connection:
         row = connection.execute(
-            "SELECT result_path FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)
+            "SELECT status, result_json, result_validation_json "
+            "FROM workflow_handoffs WHERE handoff_id=?",
+            (handoff_id,),
         ).fetchone()
     if row is None:
         raise HandoffWorkflowError("handoff 不存在")
+    if str(row["status"]) != HandoffStatus.COMPLETED.value:
+        raise HandoffWorkflowError("只有 COMPLETED handoff 才能导入业务 artifact")
+    if not row["result_json"] or not row["result_validation_json"]:
+        raise HandoffWorkflowError(
+            "COMPLETED handoff 缺少 workflow complete 的 validated result_json"
+        )
+    try:
+        validation = json.loads(str(row["result_validation_json"]))
+        result = json.loads(str(row["result_json"]))
+    except (TypeError, ValueError, json.JSONDecodeError) as exc:
+        raise HandoffWorkflowError("COMPLETED handoff 的 persisted result 无法读取") from exc
+    if not isinstance(validation, dict) or validation.get("valid") is not True:
+        raise HandoffWorkflowError("COMPLETED handoff 的 result 尚未通过 workflow complete")
+    if not isinstance(result, dict):
+        raise HandoffWorkflowError("COMPLETED handoff 的 result_json 必须是 object")
+    return result
+
+
+def validate_result_file(database: Database, handoff_id: str) -> dict[str, Any]:
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT status, result_path FROM workflow_handoffs WHERE handoff_id=?",
+            (handoff_id,),
+        ).fetchone()
+    if row is None:
+        raise HandoffWorkflowError("handoff 不存在")
+    if str(row["status"]) == HandoffStatus.COMPLETED.value:
+        return load_completed_handoff_result(database, handoff_id)
     result_path = Path(str(row["result_path"]))
     if not result_path.is_file():
         raise HandoffWorkflowError("result.json 缺失")

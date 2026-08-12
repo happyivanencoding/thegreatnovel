@@ -305,6 +305,45 @@ def test_continuation_capability_is_independent_but_requires_boundary_continuity
     assert persisted["capabilities"]["continue_from_current_boundary"] is True
 
 
+def test_balanced_continue_handoff_can_stop_at_continue_ready(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(initialization_service, "evaluate_continuation_boundary", _ready_boundary)
+    database, book_id = _book(tmp_path)
+    balanced = create_initialization(
+        database,
+        book_id,
+        depth=InitializationDepth.BALANCED,
+        requested_action="GOAL_CONTINUE",
+    )
+    _complete_semantic_tasks(balanced)
+
+    refreshed = refresh_initialization(database, book_id)
+
+    assert refreshed["readiness"]["status"] == "CONTINUE_READY"
+    assert refreshed["status"]["state"] == "READY_WITH_GAPS"
+    assert refreshed["status"]["capabilities"]["continue_from_current_boundary"] is True
+
+
+def test_full_continue_initialization_remains_strict(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(initialization_service, "evaluate_continuation_boundary", _ready_boundary)
+    database, book_id = _book(tmp_path)
+    full = create_initialization(
+        database,
+        book_id,
+        depth=InitializationDepth.FULL,
+        requested_action="GOAL_CONTINUE",
+    )
+    _complete_semantic_tasks(full)
+
+    refreshed = refresh_initialization(database, book_id)
+
+    assert refreshed["readiness"]["status"] != "CONTINUE_READY"
+    assert refreshed["readiness"]["status"] in {"BLOCKED", "READY_WITH_GAPS", "READY"}
+
+
 def test_completed_analysis_is_reused_only_for_the_same_source_revision(tmp_path: Path) -> None:
     database, book_id = _book(tmp_path)
     created = create_initialization(database, book_id, depth=InitializationDepth.QUICK)

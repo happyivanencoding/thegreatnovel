@@ -383,10 +383,10 @@ def import_kernel_contract_discovery(
     from novel_authoring.workflows.handoffs import (
         HandoffType,
         HandoffWorkflowError,
-        validate_result_file,
+        load_completed_handoff_result,
     )
 
-    result = validate_result_file(database, handoff_id)
+    result = load_completed_handoff_result(database, handoff_id)
     with database.connect() as connection:
         row = connection.execute(
             "SELECT * FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)

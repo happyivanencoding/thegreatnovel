@@ -8,16 +8,15 @@ description: 严格依据 Novel_Authoring_System_Constitution_V2.md，在本项�
 ## 硬边界
 
 1. 项目根必须包含 `Novel_Authoring_System_Constitution_V2.md`、`AGENTS.md`、`pyproject.toml` 和 `book/`。规范只认 V2 文件；根 `CONSTITUTION.md` 与本系统无关。
-2. `book/` 永久只读。任何 task、output、草稿、正史续章、报告和导出只能进入 `workspace/<book_id>/`。
-3. Python 不调用远程模型。Web 只创建 `workflow_handoffs` 本地文件交接；用户在 Windows Codex 桌面端手动使用 `$process-novel-handoff`，不使用 Codex CLI、`codex exec`、API Key 或 Responses API。
+2. `book/` 永久只读。任何 task、output、草稿、报告和导出只能进入 `library/<book_id>/` 及其由 `BookLayout` 解析的派生目录。
+3. Python 不调用远程模型。Web 只创建 `workflow_handoffs` 本地文件交接；用户在 Windows Codex 桌面端运行 `novel workflow start` 后执行本 Skill，不使用 Codex CLI、`codex exec`、API Key 或 Responses API。
 4. 未通过十项校验不得批准；未在当前请求中明确说“批准写入正史”不得运行 `novel approve`。
 5. 不直接编辑 SQLite，不把 INFERENCE、CANDIDATE 或 PROSE_ONLY 静默升级为 CANON。
 6. 一个合同最多保留初稿加两轮修订；每轮产生新 draft，不覆盖旧草稿。
 7. 长跨度节奏是证据层，不是新的文学总分：功能/标题/首尾补充 Repetition Fatigue，
    高压连续补充 Pressure Curve，Age/Dormancy/Readiness 补充 Narrative Debt 与 Thread Priority。
-8. 若当前 edition 有 Story Atlas，先读取其 manifest、Readiness、Current World Model、NEAR
-   Horizon 和 open questions；Atlas 的 `INFERENCE`/`CANDIDATE`/`FAR` 只能作为软约束，
-   不得把它们写成 CANON。Atlas hash/projection/source 漂移时重新建立 handoff。
+8. 若当前 edition 的冻结业务输入包含 Story Atlas，Atlas 的 `INFERENCE`/`CANDIDATE`/`FAR`
+   只能作为软约束，不得把它们写成 CANON。
 9. Batch 续写必须改用 `$continue-novel-batch`；不可把多章要求合并成一个正文 prompt，
    每章仍必须有 Boundary、Chapter Contract 和十项校验，Batch Provisional Projection
    不得进入批准事务。
@@ -31,18 +30,35 @@ $BookId = "<book-id>"
 
 ## 工作流
 
-### 1. 定位与只读检查
+### 1. Handoff Mode
 
-先完整读取根 `AGENTS.md`，再阅读 V2 宪法第 1—6、7—18、20—24 节中与本轮有关的约束。运行：
+当任务目录存在 `task.json` 且 `workflow start` 已成功返回
+`status=RUNNING`、`executor_skill=continue-novel` 时，直接进入本次
+`requested_stage`。只读取 `task.json` 列出的 `business_input_files`，复用其中冻结的
+Boundary、Runtime、Rhythm、Metrics 和 Planning Context。
+
+Handoff Mode 不再无条件运行 `status`、`source verify`、`boundary build`、
+`features rebuild`、`rhythm diagnose`、`hooks diagnose`、`segments rebuild`、
+`metrics rebuild` 或 generic `diagnose`。这些确定性输入已经由 Python 在 start 前冻结；
+只执行当前 stage 真正需要的候选、合同、草稿或验证业务。只有业务合同明确指出某个输入
+缺失，才在该业务边界补建缺失 artifact；已存在且有效的 artifact 必须复用。
+
+若 `task.json` 声明 `distill_reference`，并且本次 stage 是 planning、writing 或
+revision，才读取其 `skill_root/SKILL.md` 与所需证据索引；其他 stage 不加载它。
+
+### 2. Direct Maintenance / Diagnostic Mode
+
+没有冻结 handoff、由作者直接请求维护或诊断时，才按需执行：
 
 ```powershell
 & $Novel status --book-id $BookId
 & $Novel source verify --book-id $BookId
 ```
 
-若 `source verify` 失败、`unresolved_hard_conflicts` 大于 0、事件链损坏或状态库不存在，停止续写并给出具体修复点。待审核推断不得当作正史事实使用。
+随后只创建当前缺失的 Boundary、features、rhythm、hooks、segments 或 metrics。
+不要为了得到同一事实重复重建；`UNKNOWN`/缺失证据保持原状并报告具体修复点。
 
-### 2. 先持久化用户要求
+### 3. 先持久化用户要求
 
 用户若规定下一章人物、事件、禁忌、节奏或结局，先逐条写入 `author_directives`：
 
@@ -53,9 +69,9 @@ $BookId = "<book-id>"
 
 不要只把要求临时塞进提示词。长期偏好使用 `--scope persistent`。
 
-### 3. 建立边界和诊断
+### 3.1 建立边界和诊断
 
-正文步骤之前必须先建立边界：
+Direct Maintenance / Diagnostic Mode 的正文步骤之前按需建立边界：
 
 ```powershell
 & $Novel boundary build --book-id $BookId
@@ -68,7 +84,7 @@ $BookId = "<book-id>"
 & $Novel metrics rebuild --book-id $BookId --edition-id <edition-id>
 ```
 
-根据边界包、当前投影和已保存指标证据，准备 `workspace/<book_id>/metric_inputs.json`，再运行：
+根据边界包、当前投影和已保存指标证据，准备 `library/<book_id>/metric_inputs.json`，再运行：
 
 ```powershell
 & $Novel diagnose --book-id $BookId
@@ -116,9 +132,9 @@ Boundary Packet 中的 `rhythm_features`、`rhythm_diagnostics` 与 `hook_diagno
 
 ### 6. Codex 草稿文件合同
 
-如果任务由 Workbench 准备，先读取 handoff 目录中的 `task.json`、`prompt.md`、
-`metric_context.json`、`context_manifest.json` 和 `output_schema.json`，再由
-`process-novel-handoff` 原子领取；Web 不启动模型进程。
+如果任务由 Workbench 准备，前置的 `novel workflow start` 必须已经成功返回
+`status=RUNNING`。读取 `task.json` 中冻结的 `executor_skill` 与
+`business_input_files`，只消费其中列出的业务输入；Web 不启动模型进程。
 
 ```powershell
 & $Novel draft prepare --book-id $BookId --contract-id <contract-id>
@@ -159,7 +175,7 @@ Boundary Packet 中的 `rhythm_features`、`rhythm_diagnostics` 与 `hook_diagno
 所有新生成的 draft 正文都必须保留为可审计 Git 工件。完成导入和十项校验后：
 
 1. 确认 draft 文件位于 `library/<book_id>/editions/<edition_id>/writing/drafts/`；改写 draft
-   位于对应 `writing/revisions/`；历史 benchmark 兼容路径也必须保留；
+   位于对应 `writing/revisions/`；
 2. 由于 `library/` 默认被忽略，使用精确 draft 路径执行 `git add -f`，只 stage 本次 draft 正文
    及明确需要的审计文档；不 stage `book/`、`audit/`、Canon、数据库、operations、hidden truth
    或其它运行时缓存；
@@ -175,7 +191,7 @@ Draft 上传不等于批准，不改变 Canon、Edition active state 或 Approva
 & $Novel approve --book-id $BookId --draft-id <draft-id> --confirm "批准写入正史"
 ```
 
-阅读命令先显示的 approval preview。命令会重新运行十项校验、复核源文件哈希和 Boundary 投影，随后以事务写入 AUTHOR_APPROVED、状态变化、CANON_CHAPTER_COMMITTED、规范化查询表、Canon Projection 和 Snapshot。重大兑现还必须产生四类 Aftershock Obligations。
+阅读命令先显示的 approval preview。命令复用已持久化的当前 validation bundle，并复核源文件哈希和 Boundary 投影；若 bundle 已失效则拒绝批准，不在 Approval 边界重新运行整套 Validator。通过后以事务写入 AUTHOR_APPROVED、状态变化、CANON_CHAPTER_COMMITTED、规范化查询表、Canon Projection 和 Snapshot。重大兑现还必须产生四类 Aftershock Obligations。
 
 提交后运行：
 

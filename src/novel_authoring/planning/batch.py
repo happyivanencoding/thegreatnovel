@@ -283,12 +283,24 @@ def _batch_drift_reasons(
     except (OSError, ValueError, sqlite3.DatabaseError) as exc:
         reasons.append(f"current edition anchor unavailable: {exc}")
 
+    plan_path = _batch_root(database, book_id, edition_id, str(row["batch_id"])) / "batch_plan.json"
+    try:
+        plan = BatchPlan.model_validate(json.loads(plan_path.read_text(encoding="utf-8")))
+        if plan.batch_id != str(row["batch_id"]):
+            reasons.append("Batch plan identity")
+        if plan.book_id != book_id or plan.edition_id != edition_id:
+            reasons.append("Batch plan scope")
+        if plan.chunk_size != int(row["chunk_size"]):
+            reasons.append("Batch chunk_size changed")
+        if plan.checkpoint_interval != int(row["checkpoint_interval"]):
+            reasons.append("Batch checkpoint_interval changed")
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        reasons.append(f"Batch plan unavailable: {exc}")
     workspace = _workspace(database, book_id)
     source_manifest = authority_path(workspace)
     current_source_hash = manifest_hash(source_manifest) if source_manifest.is_file() else ""
     if str(row["source_manifest_sha256"] or "") != current_source_hash:
         reasons.append("source manifest hash")
-
     try:
         if str(row["registry_hash"] or "") != load_registry().registry_hash:
             reasons.append("metric registry hash")

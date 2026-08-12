@@ -13,8 +13,10 @@ Python 只负责准备来源、章节边界、manifest、任务冻结和结果�
 
 ## 输入
 
-先完整读取 handoff 目录中的 `task.json`、`prompt.md`、`output_schema.json`、
-`context_manifest.json` 和 `artifacts/distill_input/manifest.json`。任务中的
+Handoff Mode 先确认 `workflow start` 已返回 `status=RUNNING` 且
+`executor_skill=distill-novels`。只读取 `task.json` 列出的 business inputs，以及
+`artifacts/distill_input/manifest.json`。不要重新读取全局规范、context manifest、status
+或 output schema；Python complete 已完成通用 envelope 校验。任务中的
 `distill.mode`、`distill.scope`、`distill.dimensions`、`distill.depth` 和 `distill.source_ids` 是冻结参数，
 不得自行改写。来源正文只从 `artifacts/distill_input/normalized/` 按 bounded segment 读取；
 不得修改 `book/`、Canonical source 或 SQLite。

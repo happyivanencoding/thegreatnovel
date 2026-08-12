@@ -214,12 +214,12 @@ from novel_authoring.workflows.handoffs import (
     HandoffType,
     HandoffWorkflowError,
     cancel_handoff,
+    complete_handoff,
     copy_instruction,
     create_initialization_handoff,
     get_handoff,
     mark_stale,
     record_user_response,
-    update_handoff_status,
     validate_result_file,
 )
 
@@ -2194,25 +2194,18 @@ def create_app(
             result_path = Path(str(item.get("result_path") or ""))
             if not result_path.is_file():
                 raise HandoffWorkflowError("尚未找到 Codex 写入的 result.json")
-            raw_result = json.loads(result_path.read_text(encoding="utf-8"))
-            if not isinstance(raw_result, dict) or not raw_result:
-                raise HandoffWorkflowError("result.json 为空或不是 object")
             claim_token = str(item.get("claim_token") or "")
             if not claim_token:
                 raise HandoffWorkflowError("handoff 尚未由 Codex 桌面端领取")
-            if status == HandoffStatus.CLAIMED.value:
-                update_handoff_status(
-                    selected_database,
-                    checked_handoff,
-                    HandoffStatus.RUNNING,
-                    claim_token=claim_token,
+            if status != HandoffStatus.RUNNING.value:
+                raise HandoffWorkflowError(
+                    "hydration handoff 必须先通过 novel workflow start 进入 RUNNING"
                 )
-            completed = update_handoff_status(
+            completed = complete_handoff(
                 selected_database,
                 checked_handoff,
-                HandoffStatus.COMPLETED,
-                claim_token=claim_token,
-                result=raw_result,
+                claim_token,
+                result_path,
             )
             return completed
         except (HandoffWorkflowError, OSError, ValueError, json.JSONDecodeError) as exc:

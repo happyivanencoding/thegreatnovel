@@ -19,11 +19,10 @@ from novel_authoring.metrics.service import (
 from novel_authoring.planning.aggregates import build_planning_aggregate
 from novel_authoring.utils import json_dumps, sha256_bytes, stable_id, utc_now
 from novel_authoring.workflows.handoffs import (
-    HandoffStatus,
     HandoffType,
-    claim_handoff,
+    complete_handoff,
     create_continuation_handoff,
-    update_handoff_status,
+    start_handoff,
 )
 
 DEMO_BOOK_ID = "demo-author-workbench"
@@ -407,9 +406,8 @@ def _create_completed_demo_handoff(database: Database, book_id: str) -> str:
         require_complete_metrics=False,
     )
     handoff_id = str(handoff["handoff_id"])
-    claimed = claim_handoff(database, handoff_id, "demo-fake-codex")
-    token = str(claimed["claim_token"])
-    update_handoff_status(database, handoff_id, HandoffStatus.RUNNING, claim_token=token)
+    started = start_handoff(database, handoff_id, "demo-fake-codex")
+    token = str(started["claim_token"])
     task = json.loads(
         (Path(str(handoff["task_directory"])) / "task.json").read_text(encoding="utf-8")
     )
@@ -440,13 +438,9 @@ def _create_completed_demo_handoff(database: Database, book_id: str) -> str:
         "metric_bundle_hash": task.get("metric_bundle_hash"),
         "completed_at": utc_now(),
     }
-    update_handoff_status(
-        database,
-        handoff_id,
-        HandoffStatus.COMPLETED,
-        claim_token=token,
-        result=result,
-    )
+    result_path = Path(str(started["artifact_target"]))
+    result_path.write_text(json_dumps(result), encoding="utf-8")
+    complete_handoff(database, handoff_id, token, result_path)
     return handoff_id
 
 

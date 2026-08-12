@@ -1,55 +1,41 @@
 ---
 name: process-novel-handoff
-description: 按 Local File Handoff Protocol 在 Windows Codex 桌面端领取并处理小说续写、改写、Profile 重分析、指标语义、章节特征或 distill 任务；当 task.json 状态为 READY_FOR_CODEX 且用户明确要求处理 handoff 时使用，不得启动 Codex 子进程、API 或 shell。
+description: 在 Windows Codex 桌面端按 Python 冻结的 Local File Handoff contract 执行业务 Skill；不启动 Codex 子进程、API 或 shell。
 ---
 
 # Process Novel Handoff
 
-Codex 桌面客户端是唯一 LLM 执行者。先读取任务目录，再由 Python CLI 和现有业务 Skill 生成文件产物；Web 不运行模型。
+Codex 桌面端是唯一 LLM 执行者。Python workflow layer 决定路由、冻结输入、状态和完成验证；本 Skill 不维护任务类型路由表，也不重新推导已经冻结的协议事实。
 
-## 领取与冻结校验
+## Deterministic start
 
-1. 用 `handoff_id` 从数据库定位 `library/<book_id>/editions/<edition_id>/operations/<handoff_id>/`。
-2. 读取 `task.json`、`prompt.md`、`metric_context.json`、`context_manifest.json`、`output_schema.json` 和 `status.json`。校验 `task_schema_version`、source/projection/metric/registry/config/edition hash、Atlas/Horizon anchor、Batch plan hash 以及 allowed paths；任何漂移都标记 STALE 并停止。
-3. 只在数据库状态 `READY_FOR_CODEX` 时用 SQLite 事务原子 claim，保存 `claimed_by` 与 `claim_token`，写入 `events.jsonl`；不能让两个 Codex 线程领取同一个任务。
-4. 状态按 `CLAIMED → RUNNING` 推进；需要作者选择时写 `waiting_for_user.json`、事件和 `WAITING_FOR_USER`，不要猜测。心跳只表示最近活动，Web 不得推断“仍在思考”。
+对一个已知 `handoff_id`，先运行：
 
-## 具体业务
+```powershell
+novel workflow start --book-id <book-id> --handoff-id <handoff-id>
+```
 
-- `CONTINUATION`：调用 `$continue-novel`，按 `requested_stage` 走 Boundary、Contract、候选和 Validator。
-- `REVISION`：调用 `$revise-novel`，按 RevisionSpec、Impact Packet、Plan/Unit 和 Validator 执行。
-- 语义/特征任务：只写结构化 observation/feature 文件，不改章节正文。
-- `STORY_ATLAS_BOOTSTRAP` / `STORY_ATLAS_REFRESH` / `WORLD_MODEL_REVIEW`：调用
-  `$bootstrap-story-atlas`，只写 `artifacts/story_atlas/`，由 Python 校验后登记 immutable
-  版本；不把软理解写入 Canon。
-- `NOVEL_INITIALIZATION`：调用 `$initialize-existing-novel`，先读取初始化目录和 Arc task，
-  按 Atlas-first pipeline 处理 `arc_outputs/`、`entity_resolution/`、`synthesis/`、
-  `metrics/` 和 `visuals/`；不得预先创建 Planning Aggregate。
-- `NOVEL_DISTILLATION`：调用 `$distill-novels`，读取冻结的
-  `artifacts/distill_input/`，只把抽象写作机制写入 `artifacts/distill_skill/`；完成后停在
-  `DISTILLED`，由 `novel distill import` 显式发布为 `REFERENCE_ONLY`，不得写入 Canon。
-- `ORIGINAL_BOOK_BOOTSTRAP`：调用 `$bootstrap-original-novel`，读取冻结的
-  `original_request.json` 和 `proposal_schema.json`；只写
-  `artifacts/story_foundation/proposal.json`，恰好保留三个 Story Foundation 和三个首章
-  候选。此阶段全部是 `PROPOSAL`，不得创建章节、Canon、Edition 或伪造 Source/Arc。
-- `BATCH_CONTINUATION`：调用 `$continue-novel-batch`，必须绑定 batch/chunk，逐章保留
-  Boundary、Contract、十项 Validator 和 provisional hash；`BATCH_VALIDATED` 不是批准。
-- `SOURCE_STATE_HYDRATION`：读取 `hydration_context.json` 中的当前章节全文、当前章节
-  source spans、上一时间点的 Source State projection，以及仅供召回的实体和 Baseline/
-  Atlas hints。只输出结构化 `deltas` 与 `uncertain_findings`，不得用 prose-only 摘要
-  代替；`SOURCE_VERIFIED` 必须引用当前章节 span，物品/装备/资源/能力/知识/关系必须
-  使用稳定 `object_id`。Python 导入门会再次校验并写入 Source State Ledger，之后才会
-  将关联 Author Task 标记为 DONE；不得写 `book/`、Canon Event Store、Canon Commit、
-  Edition 或 Author Intent。
-- `PROFILE_REANALYSIS`：读取冻结的 `profile_context.json`，逐项比较当前 Effective
-  Profile、Profile history、新 Canon 章节和最近 Edition 内容；结果必须恰好覆盖九维，
-  每维分别给出 `additions`、`modifications`、`removals`、`reason`、`evidence` 和
-  `confidence`。至少一个维度必须产生真实内容差异。结果只进入待作者接受、编辑后接受或
-  拒绝的 Profile Proposal；不得复制当前 baseline 冒充重分析，不得自动改变 Effective
-  Profile、提交 Canon 或启用 Edition。
+只有命令成功返回 `status=RUNNING` 时才继续。返回中的 `executor_skill` 是唯一业务 Skill 路由，`business_input_files` 是本次业务允许读取的输入。失败返回 `STALE`、`BUSY` 或 `INVALID` 时停止，不自行修复或重算协议。
 
-禁止修改 `book/`、批准正史、批准改写 Campaign、启用 Edition、删除历史草稿或绕过 Validator。不要使用 OpenAI API、`codex exec`、模型参数、API Key、shell 命令或任何 subprocess。
+Python 已在 start 中完成 READY_FOR_CODEX 检查、原子 claim、冻结文件完整性和漂移检查，并保留 `CLAIMED`、`RUNNING` 两个事件。不要再次逐文件计算 hash、比较 projection/registry/config/edition、检查 Canon 数量或推断 allowed paths。
 
-## 结束合同
+## Business execution
 
-成功时先验证 `result.json` 符合 `output_schema.json`，并明确 `canon_committed=false`、`edition_activated=false`；再写 result、事件和 `COMPLETED`（可用 `novel workflow update --status COMPLETED --result-path <result.json>`）。续写最多停在 `VALIDATED_DRAFT`，改写最多停在 `VALIDATED_CAMPAIGN` 或请求阶段。失败写 `error.json` 和 `FAILED`，保留历史文件，不覆盖旧 handoff。
+读取 `task.json`，只读取其中列出的 `business_input_files`，然后执行冻结的 `executor_skill`。业务 Skill 负责语义工作和业务 artifact；本 Skill 不执行任何业务语义，也不自行选择另一个 Skill。
+
+不得修改 `book/`、批准正史、批准改写 Campaign、启用 Edition、删除历史草稿或绕过 Validator。业务结果必须停在对应 Skill 合同允许的 Proposal、Validated Draft、Validated Campaign、Source State 或 Reference-only 边界。
+
+## Deterministic complete
+
+业务 Skill 将结果写入 start 返回的 `artifact_target`（result JSON 路径），然后运行：
+
+```powershell
+novel workflow complete --book-id <book-id> --handoff-id <handoff-id> --claim-token <claim-token> --result-path <result.json>
+```
+
+complete 一次完成 result schema、artifact、运行期间漂移、结果持久化、状态和 `COMPLETED` event。成功结果就是完成权威，不需要再运行 post-verifier；失败则按 Python 返回的真实 blocker 停止。START 的 Frozen Task Integrity 与 COMPLETE 的 Runtime Boundary Drift 是两个不同边界，均由 Python 执行，不能由 LLM 复算。
+
+## Protocol boundary
+
+结果只能写入冻结任务目录；业务边界、Canon、Edition、作者批准和 artifact 语义由冻结的
+executor Skill 与 Python complete 合同负责，本 Skill 不重复解释或判断。

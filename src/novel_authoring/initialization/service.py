@@ -939,6 +939,28 @@ def create_initialization(
         chapters=coverage_items,
         diagnostics=source_diagnostic,
     )
+    continuation_pipeline = [
+        "Source Structure",
+        "Current Boundary Window",
+        "Current Arc",
+        "Active Dependencies",
+        "Current protagonist/resource/ability/knowledge/thread",
+        "Required Synthesis",
+        "CONTINUE_READY",
+    ]
+    full_pipeline = [
+        "Source Coverage",
+        "Arc Segmentation",
+        "Arc Extraction",
+        "Entity Resolution",
+        "Cross-Arc Synthesis",
+        "Contradiction Audit",
+        "Narrative DNA",
+        "Current Story Atlas",
+        "Future Possibility Space",
+        "Semantic Metric Bootstrap",
+    ]
+    is_continue_intent = "CONTINUE" in str(requested_action or "").upper()
     manifest = InitializationManifest(
         initialization_id=initialization_id,
         book_id=book_id,
@@ -946,19 +968,7 @@ def create_initialization(
         source_manifest_sha256=source_hash,
         effective_content_sha256=effective_hash,
         created_at=utc_now(),
-        pipeline=[
-            "Source Coverage",
-            "Arc Segmentation",
-            "Arc Extraction",
-            "Entity Resolution",
-            "Cross-Arc Synthesis",
-            "Contradiction Audit",
-            "Narrative DNA",
-            "Current Story Atlas",
-            "Future Possibility Space",
-            "Semantic Metric Bootstrap",
-            "Visual Asset Rendering",
-        ],
+        pipeline=(continuation_pipeline if depth is not InitializationDepth.FULL and is_continue_intent else full_pipeline),
         state=InitializationState.SOURCE_MAPPED,
         source_coverage_path="source_coverage.json",
         arc_manifest_path="arc_manifest.json",
@@ -2055,17 +2065,31 @@ def refresh_initialization(
         errors = metric_audit.get("errors") or ["严格 Semantic Metric Bootstrap 尚未完成"]
         blockers.append(f"Semantic Metric Bootstrap 未完成：{errors[0]}")
     partial_depth = initialization_manifest.initialization_depth is not InitializationDepth.FULL
-    if partial_depth:
+    if (root / "synthesis" / "unresolved_assumptions.yaml").is_file():
+        gaps.append("Future Possibility Space 仍保留未决假设")
+    continuation_intent = "CONTINUE" in str(
+        initialization_manifest.requested_action or ""
+    ).upper()
+    continuation_ready = (
+        continuation_intent
+        and partial_depth
+        and continuation_boundary.ready_for_continuation
+    )
+    if partial_depth and not continuation_ready:
         blockers.append(
             f"{initialization_manifest.initialization_depth.value} 只提供渐进式访问；完整 READY 需要 FULL"
         )
-    if (root / "synthesis" / "unresolved_assumptions.yaml").is_file():
-        gaps.append("Future Possibility Space 仍保留未决假设")
-    status = (
-        "BLOCKED"
-        if blockers
-        else ("READY_WITH_GAPS" if gaps or chapter_coverage < 1.0 else "READY")
-    )
+    if continuation_ready:
+        gaps.extend(blockers)
+        blockers = []
+        gaps.append("非当前续写所需的历史理解保持 UNKNOWN / NOT_ANALYZED")
+        status = "CONTINUE_READY"
+    else:
+        status = (
+            "BLOCKED"
+            if blockers
+            else ("READY_WITH_GAPS" if gaps or chapter_coverage < 1.0 else "READY")
+        )
     readiness = InitializationReadiness(
         status=status,
         chapter_coverage=chapter_coverage,
@@ -2093,7 +2117,7 @@ def refresh_initialization(
     metrics_ready = metric_audit.get("status") == "COMPLETE"
     if status == "READY":
         state = InitializationState.READY
-    elif status == "READY_WITH_GAPS":
+    elif status in {"READY_WITH_GAPS", "CONTINUE_READY"}:
         state = InitializationState.READY_WITH_GAPS
     elif failed:
         state = InitializationState.BLOCKED

@@ -165,20 +165,18 @@ from novel_authoring.workflows.extraction import (
     reconcile_record,
 )
 from novel_authoring.workflows.handoffs import (
-    HandoffStatus,
     HandoffType,
     HandoffWorkflowError,
     cancel_handoff,
-    claim_handoff,
     create_batch_continuation_handoff,
     create_continuation_handoff,
     create_initialization_handoff,
     create_revision_handoff,
     create_story_atlas_handoff,
+    complete_handoff,
     get_handoff,
     mark_stale,
-    update_handoff_status,
-    validate_result_file,
+    start_handoff,
 )
 
 # Typer 0.9 (the project's test runtime) requires explicit Option defaults for
@@ -235,7 +233,6 @@ app.add_typer(batch_app, name="batch")
 app.add_typer(demo_app, name="demo")
 app.add_typer(segments_app, name="segments")
 app.add_typer(workflow_app, name="workflow")
-app.add_typer(workflow_app, name="handoff")
 app.add_typer(web_app, name="web")
 app.add_typer(library_app, name="library")
 library_app.add_typer(library_classification_app, name="classify")
@@ -2765,15 +2762,26 @@ def workflow_list_command(
     workflow_handoffs_command(book_id, workspace, edition_id, library_root)
 
 
-@workflow_app.command("claim")
-def workflow_claim_command(
+@workflow_app.command("start")
+def workflow_start_command(
     handoff_id: str = typer.Option(..., "--handoff-id"),
-    claimed_by: str = typer.Option(..., "--claimed-by"),
+    claimed_by: str = typer.Option("codex-desktop", "--claimed-by"),
     workspace: Workspace = Path("workspace"),
     book_id: BookId = typer.Option(...),
     library_root: LibraryRoot = None,
 ) -> None:
-    _emit(claim_handoff(_book_database(workspace, book_id, library_root), handoff_id, claimed_by))
+    """Claim a ready handoff and advance it to RUNNING in one call."""
+    try:
+        _emit(
+            start_handoff(
+                _book_database(workspace, book_id, library_root),
+                handoff_id,
+                claimed_by,
+            )
+        )
+    except (HandoffWorkflowError, ValueError, OSError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=3) from exc
 
 
 @workflow_app.command("cancel")
@@ -2806,65 +2814,28 @@ def workflow_mark_stale_command(
     workflow_stale_command(handoff_id, workspace, book_id, library_root)
 
 
-@workflow_app.command("validate-result")
-def workflow_validate_result_command(
+@workflow_app.command("complete")
+def workflow_complete_command(
     handoff_id: str = typer.Option(..., "--handoff-id"),
+    claim_token: str = typer.Option(..., "--claim-token"),
+    result_path: Path = typer.Option(..., "--result-path"),
     workspace: Workspace = Path("workspace"),
     book_id: BookId = typer.Option(...),
     library_root: LibraryRoot = None,
 ) -> None:
+    """Validate and complete a RUNNING handoff in one call."""
     try:
         _emit(
-            validate_result_file(
+            complete_handoff(
                 _book_database(workspace, book_id, library_root),
                 handoff_id,
+                claim_token,
+                result_path,
             )
         )
     except (HandoffWorkflowError, ValueError, OSError) as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=3) from exc
-
-
-@workflow_app.command("update")
-def workflow_update_command(
-    handoff_id: str = typer.Option(..., "--handoff-id"),
-    status: HandoffStatus = typer.Option(..., "--status"),
-    claim_token: str = typer.Option(..., "--claim-token"),
-    workspace: Workspace = Path("workspace"),
-    book_id: BookId = typer.Option(...),
-    library_root: LibraryRoot = None,
-    result_path: Annotated[Optional[Path], typer.Option("--result-path")] = None,
-) -> None:
-    result: dict[str, object] | None = None
-    if status is HandoffStatus.COMPLETED:
-        database = _book_database(workspace, book_id, library_root)
-        if result_path is None:
-            with database.connect() as connection:
-                row = connection.execute(
-                    "SELECT result_path FROM workflow_handoffs WHERE handoff_id=?",
-                    (handoff_id,),
-                ).fetchone()
-            if row is None:
-                raise typer.BadParameter("handoff 不存在")
-            result_path = Path(str(row["result_path"]))
-        try:
-            loaded = json.loads(result_path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-            typer.echo(f"result.json 无法读取：{exc}", err=True)
-            raise typer.Exit(code=3) from exc
-        if not isinstance(loaded, dict):
-            typer.echo("result.json 必须是 object", err=True)
-            raise typer.Exit(code=3)
-        result = loaded
-    _emit(
-        update_handoff_status(
-            _book_database(workspace, book_id, library_root),
-            handoff_id,
-            status,
-            claim_token=claim_token,
-            result=result,
-        )
-    )
 
 
 @web_app.command("doctor")

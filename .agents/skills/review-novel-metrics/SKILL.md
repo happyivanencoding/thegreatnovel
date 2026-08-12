@@ -7,6 +7,16 @@ description: 审核本项目 provenance-aware 指标运行、缺失 component、
 
 使用 Python 指标服务和本地 SQLite 审核一个冻结的 Metric Run。指标只诊断，正文和状态才是证据，作者负责判断。
 
+## Handoff Fast Path
+
+当 `workflow start` 已返回 `status=RUNNING` 且 `executor_skill=review-novel-metrics` 时，
+只读取 `task.json` 指定的 `metric_context.json` 和本次业务需要的证据。START 已冻结
+projection、source、registry、config 和 metric input integrity；本 Skill 不再次手工计算或
+比较这些 hash，也不无条件重建 source/features。已有有效 Metric Run 直接复用，只有业务输入
+明确缺失或 stale 时才调用对应 deterministic service。完成由 `workflow complete` 统一校验。
+
+Direct review 仍可按需准备缺失的 Metric Run，但不得把缺失语义观察伪造成确定性 component。
+
 ## 工作流
 
 1. 读取 `metric_runs`、`metric_run_results`、`metric_observations` 和 `metric_evidence_links`；确认 `book_id`、`edition_id`、projection hash、effective content hash、registry hash 和 config hash 一致。

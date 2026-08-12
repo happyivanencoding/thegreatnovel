@@ -483,7 +483,7 @@ def import_distill_result(database: Database, book_id: str, handoff_id: str) -> 
         HandoffType,
         HandoffWorkflowError,
         append_event,
-        validate_result_file,
+        load_completed_handoff_result,
     )
 
     database.initialize()
@@ -497,7 +497,7 @@ def import_distill_result(database: Database, book_id: str, handoff_id: str) -> 
     if str(row["handoff_type"]) != HandoffType.NOVEL_DISTILLATION.value:
         raise DistillError("指定 handoff 不是 NOVEL_DISTILLATION")
     try:
-        result = validate_result_file(database, handoff_id)
+        result = load_completed_handoff_result(database, handoff_id)
     except HandoffWorkflowError as exc:
         raise DistillError(str(exc)) from exc
     task_directory = Path(str(row["task_directory"])).resolve()

@@ -174,9 +174,9 @@ def distill_validate_command(
     try:
         edition = _book_edition(database, book_id, edition_id)
         if handoff_id:
-            from novel_authoring.workflows.handoffs import validate_result_file
+            from novel_authoring.workflows.handoffs import load_completed_handoff_result
 
-            result = validate_result_file(database, handoff_id)
+            result = load_completed_handoff_result(database, handoff_id)
             with database.connect() as connection:
                 row = connection.execute(
                     "SELECT task_directory FROM workflow_handoffs WHERE handoff_id=?",

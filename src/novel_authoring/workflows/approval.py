@@ -224,17 +224,17 @@ def approve_draft(
             if failed_rows:
                 failed = [str(item["validator"]) for item in failed_rows]
                 raise ApprovalWorkflowError(
-                    f"十项校验未全部通过，需要重新校验：{failed}"
+                    f"当前十项校验 bundle 未全部通过，不能批准：{failed}"
                 )
         raise ApprovalWorkflowError(
-            f"草稿尚未处于 VALIDATED，需要重新校验：{row['status']}"
+            f"草稿尚未处于 VALIDATED，不能使用当前校验 bundle：{row['status']}"
         )
     if row["validation_run_id"] is None:
-        raise ApprovalWorkflowError("草稿没有当前校验结果，需要重新校验")
+        raise ApprovalWorkflowError("草稿没有当前校验 bundle，不能批准")
     if str(row["contract_status"]) != "READY":
-        raise ApprovalWorkflowError("章节合同已失效，需要重新校验")
+        raise ApprovalWorkflowError("章节合同已失效，当前校验 bundle 不再适用")
     if int(row["target_chapter_ordinal"]) != int(contract.chapter):
-        raise ApprovalWorkflowError("章节合同目标已变化，需要重新校验")
+        raise ApprovalWorkflowError("章节合同目标已变化，当前校验 bundle 不再适用")
     workspace = edition_workspace(database, book_id, selected_edition)
     root = book_root(database, book_id)
     canonical = (root / "book.yaml").is_file()
@@ -252,11 +252,11 @@ def approve_draft(
         raise ApprovalWorkflowError("不可变源文件校验失败，拒绝写入正史")
     draft_path = Path(str(row["file_path"]))
     if not draft_path.is_file():
-        raise ApprovalWorkflowError("草稿文件不存在，需要重新校验")
+        raise ApprovalWorkflowError("草稿文件不存在，当前校验 bundle 不再适用")
     if sha256_file(draft_path) != str(row["content_sha256"]):
-        raise ApprovalWorkflowError("草稿文件哈希已变化，需要重新校验")
+        raise ApprovalWorkflowError("草稿文件哈希已变化，当前校验 bundle 不再适用")
     if draft_path.read_text(encoding="utf-8") != draft.prose_markdown.strip() + "\n":
-        raise ApprovalWorkflowError("草稿文件与已校验正文不一致，需要重新校验")
+        raise ApprovalWorkflowError("草稿文件与已校验正文不一致，当前校验 bundle 不再适用")
 
     now = utc_now()
     commit_id = stable_id(
@@ -312,7 +312,7 @@ def approve_draft(
                 projection_sha256=current_hash,
             )
             if validation is None:
-                raise ApprovalWorkflowError("草稿校验结果缺失或已失效，需要重新校验")
+                raise ApprovalWorkflowError("草稿当前校验 bundle 缺失或已失效，不能批准")
             if current.through_event_seq != int(row["base_event_seq"]) or current_hash != str(
                 row["base_projection_hash"]
             ):
