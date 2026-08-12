@@ -44,6 +44,7 @@ from novel_authoring.planning.innovation import (
 from novel_authoring.planning.models import CandidateOutput, CandidateProposal, ThreadPriority
 from novel_authoring.planning.rewards import calculate_candidate_innovation_reward
 from novel_authoring.progression.context import KernelPlanningContext
+from novel_authoring.progression.evidence import KernelEvidenceCompiler
 from novel_authoring.runtime_baseline import load_earned_surface
 from novel_authoring.storage.operations import ensure_operation, find_operation
 from novel_authoring.utils import json_dumps, sha256_bytes, stable_id, utc_now
@@ -1055,10 +1056,12 @@ def import_candidate_output(
     frozen_author_control: dict[str, Any] = {}
     frozen_profile: dict[str, Any] = {}
     frozen_truth_reveal: dict[str, Any] = {}
+    frozen_kernel_context: KernelPlanningContext | None = None
     if aggregate_id:
         with database.connect() as connection:
             aggregate_row = connection.execute(
-                "SELECT status, bundle_hash, author_policy_json FROM planning_aggregates "
+                "SELECT status, bundle_hash, author_policy_json, kernel_context_json "
+                "FROM planning_aggregates "
                 "WHERE aggregate_id=? AND book_id=? AND edition_id=?",
                 (aggregate_id, book_id, selected_edition),
             ).fetchone()
@@ -1080,6 +1083,25 @@ def import_candidate_output(
                 frozen_author_control = aggregate_policy.get("author_control", {})
                 frozen_profile = aggregate_policy.get("effective_book_profile", {})
                 frozen_truth_reveal = aggregate_policy.get("truth_reveal", {})
+            raw_kernel_context = str(aggregate_row["kernel_context_json"] or "null")
+            if raw_kernel_context != "null":
+                try:
+                    frozen_kernel_context = KernelPlanningContext.model_validate_json(
+                        raw_kernel_context
+                    )
+                except ValidationError as exc:
+                    raise PlanningError(
+                        f"Planning Aggregate 的 Kernel Context 无效：{exc}"
+                    ) from exc
+                kernel_path = metadata.get("kernel_context")
+                if kernel_path and Path(str(kernel_path)).is_file():
+                    task_kernel = KernelPlanningContext.model_validate_json(
+                        Path(str(kernel_path)).read_text(encoding="utf-8")
+                    )
+                    if task_kernel != frozen_kernel_context:
+                        raise PlanningError(
+                            "候选任务的 Kernel Context 与 Planning Aggregate 不一致"
+                        )
         task_truth_reveal = metadata.get("truth_reveal", {})
         if task_truth_reveal != frozen_truth_reveal:
             raise PlanningError("候选任务的 Truth/Reveal 冻结快照与 Aggregate 不一致")
@@ -1104,16 +1126,67 @@ def import_candidate_output(
         truth_reveal_failures = _truth_reveal_failures(
             candidate, frozen_truth_reveal
         )
+        kernel_compilation = (
+            KernelEvidenceCompiler().compile(frozen_kernel_context, candidate)
+            if frozen_kernel_context is not None
+            and frozen_kernel_context.contract_references
+            else None
+        )
+        kernel_gate = (
+            None
+            if kernel_compilation is None
+            else kernel_compilation.hard_gate_compilation
+        )
         gate_input = candidate.gate_input.model_copy(
             update={
+                "canon_conflicts": [
+                    *candidate.gate_input.canon_conflicts,
+                    *([] if kernel_gate is None else kernel_gate.canon_conflicts),
+                ],
+                "timeline_conflicts": [
+                    *candidate.gate_input.timeline_conflicts,
+                    *([] if kernel_gate is None else kernel_gate.timeline_conflicts),
+                ],
+                "knowledge_violations": [
+                    *candidate.gate_input.knowledge_violations,
+                    *([] if kernel_gate is None else kernel_gate.knowledge_violations),
+                ],
+                "missing_causal_sources": [
+                    *candidate.gate_input.missing_causal_sources,
+                    *([] if kernel_gate is None else kernel_gate.missing_causal_sources),
+                ],
+                "payoff_cooldown_violations": [
+                    *candidate.gate_input.payoff_cooldown_violations,
+                    *(
+                        []
+                        if kernel_gate is None
+                        else kernel_gate.payoff_cooldown_violations
+                    ),
+                ],
+                "capability_violations": [
+                    *candidate.gate_input.capability_violations,
+                    *([] if kernel_gate is None else kernel_gate.capability_violations),
+                ],
                 "author_constraint_violations": [
                     *candidate.gate_input.author_constraint_violations,
                     *profile_failures,
                     *truth_reveal_failures,
+                    *(
+                        []
+                        if kernel_gate is None
+                        else kernel_gate.author_constraint_violations
+                    ),
                 ]
             }
         )
         gate = evaluate_hard_gates(gate_input, settings.metrics)
+        if kernel_compilation is not None:
+            gate = gate.model_copy(
+                update={
+                    "kernel_warnings": kernel_compilation.warnings,
+                    "kernel_evidence": kernel_compilation.model_dump(mode="json"),
+                }
+            )
         diversity = (
             sum(differences[candidate.local_id])
             / (len(differences[candidate.local_id]) * len(STRUCTURE_FIELDS))
@@ -1168,6 +1241,7 @@ def import_candidate_output(
                 "inputs": inputs,
                 "score_evidence": score_evidence,
                 "diversity": diversity,
+                "kernel_compilation": kernel_compilation,
             }
         )
     passed = sorted(
@@ -1247,6 +1321,11 @@ def import_candidate_output(
                 "portfolio_diagnostics": portfolio.model_dump(mode="json"),
                 "narrative_portfolio_snapshot": narrative_portfolio.model_dump(mode="json"),
                 "author_control_trace": candidate.author_control_trace.model_dump(mode="json"),
+                "kernel_evidence_compilation": (
+                    None
+                    if item["kernel_compilation"] is None
+                    else item["kernel_compilation"].model_dump(mode="json")
+                ),
             }
             connection.execute(
                 """

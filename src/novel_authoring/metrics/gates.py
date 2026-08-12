@@ -30,6 +30,8 @@ class GateReport(BaseModel):
     style_fit: float
     requires_character_bridge: bool
     style_review_required: bool
+    kernel_warnings: list[str] = Field(default_factory=list)
+    kernel_evidence: dict[str, object] = Field(default_factory=dict)
 
 
 def evaluate_hard_gates(

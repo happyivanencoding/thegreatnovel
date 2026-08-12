@@ -8,6 +8,7 @@ from typing import Any, Protocol, runtime_checkable
 from pydantic import BaseModel, ConfigDict, Field
 
 from novel_authoring.progression.models import PayoffChannel
+from novel_authoring.progression.validation import ProgressionConsistencyValidator
 from novel_authoring.serial_kernel.models import (
     EngineImplementationDepth,
     NarrativeDrive,
@@ -45,6 +46,9 @@ class EngineValidationResult(BaseModel):
     valid: bool
     errors: list[str] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
+    verified_progression_impact: dict[str, Any] = Field(default_factory=dict)
+    evidence: list[str] = Field(default_factory=list)
+    hard_gate_compilation: dict[str, list[str]] = Field(default_factory=dict)
 
 
 @runtime_checkable
@@ -72,7 +76,9 @@ class NarrativeEngineAdapter(Protocol):
     ) -> Sequence[Mapping[str, Any]]: ...
 
     def validate_candidate(
-        self, candidate: Mapping[str, Any]
+        self,
+        candidate: Mapping[str, Any],
+        context: Mapping[str, Any] | None = None,
     ) -> EngineValidationResult: ...
 
     def render_author_summary(self, context: Mapping[str, Any]) -> str: ...
@@ -195,12 +201,36 @@ class ProgressionNarrativeEngineAdapter:
         return [item for item in values if isinstance(item, Mapping)]
 
     def validate_candidate(
-        self, candidate: Mapping[str, Any]
+        self,
+        candidate: Mapping[str, Any],
+        context: Mapping[str, Any] | None = None,
     ) -> EngineValidationResult:
-        evaluation = self.evaluate_candidate(candidate)
+        if context is None:
+            evaluation = self.evaluate_candidate(candidate)
+            return EngineValidationResult(
+                valid=not bool(evaluation.drives_advanced),
+                errors=(
+                    ["缺少 Frozen Kernel Context，不能验证成长声明"]
+                    if evaluation.drives_advanced
+                    else []
+                ),
+                warnings=evaluation.warnings,
+                evidence=evaluation.evidence,
+            )
+        result = ProgressionConsistencyValidator().validate(context, candidate)
         return EngineValidationResult(
-            valid=True,
-            warnings=evaluation.warnings,
+            valid=result.valid,
+            errors=result.hard_errors,
+            warnings=result.warnings,
+            verified_progression_impact=result.verified_progression_impact,
+            evidence=result.evidence,
+            hard_gate_compilation={
+                "canon_conflicts": result.canon_conflicts,
+                "timeline_conflicts": result.timeline_conflicts,
+                "knowledge_violations": result.knowledge_violations,
+                "missing_causal_sources": result.missing_causal_sources,
+                "capability_violations": result.capability_violations,
+            },
         )
 
     def render_author_summary(self, context: Mapping[str, Any]) -> str:
