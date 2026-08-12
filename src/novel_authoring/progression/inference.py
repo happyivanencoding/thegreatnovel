@@ -34,6 +34,15 @@ from novel_authoring.progression.service import (
     create_contract_proposal,
     list_contract_records,
 )
+from novel_authoring.serial_kernel.models import (
+    DrivePayoffChannel,
+    MarketCategory,
+    MarketCategoryMetadata,
+    NarrativeDrive,
+    NarrativeDriveContract,
+    NarrativeDriveInterpretation,
+    NarrativeEngineType,
+)
 
 
 def _names(world_state: Mapping[str, Any], collections: tuple[str, ...]) -> list[str]:
@@ -98,6 +107,80 @@ def infer_existing_contract_proposals(
         f"第{int(latest['ordinal'])}章边界：能力 {len(abilities)}、资源 {len(resources)}、"
         f"关系/势力 {len(relationships)}、世界入口 {len(world_entries)}、未决线程 {len(threads)}"
     )
+    if abilities or resources:
+        primary_drive = NarrativeDrive.POWER_PROGRESSION
+        secondary_drives = [
+            NarrativeDrive.RESOURCE_OPPORTUNITY,
+            NarrativeDrive.WORLD_EXPLORATION,
+        ]
+        enabled_engines = [NarrativeEngineType.PROGRESSION]
+        display_primary_drive = "可验证的能力与资源成长"
+    elif threads:
+        primary_drive = NarrativeDrive.MYSTERY_INVESTIGATION
+        secondary_drives = [NarrativeDrive.MYSTERY_REVELATION]
+        enabled_engines = [NarrativeEngineType.MYSTERY_REVEAL]
+        display_primary_drive = "未决问题的调查与揭露"
+    elif relationships:
+        primary_drive = NarrativeDrive.TEAM_GROWTH
+        secondary_drives = [NarrativeDrive.RELATIONSHIP_EMOTIONAL]
+        enabled_engines = [NarrativeEngineType.TEAM_FACTION_GROWTH]
+        display_primary_drive = "团队与关系状态变化"
+    else:
+        primary_drive = NarrativeDrive.CUSTOM
+        secondary_drives = []
+        enabled_engines = [NarrativeEngineType.CUSTOM]
+        display_primary_drive = "待作者确认的长期推进机制"
+    drive_mix = [primary_drive, *secondary_drives]
+    drive_contract = NarrativeDriveContract(
+        drive_contract_id=f"{book_id}-inferred-narrative-drive",
+        primary_drive=primary_drive,
+        secondary_drives=secondary_drives,
+        drive_priorities={
+            drive: max(50, 100 - index * 20)
+            for index, drive in enumerate(drive_mix)
+        },
+        drive_promises={
+            drive: ["该驱动力需要作者结合全书证据确认"] for drive in drive_mix
+        },
+        drive_payoff_channels=[
+            DrivePayoffChannel(
+                channel=(
+                    PayoffChannel.POWER_BREAKTHROUGH
+                    if drive is NarrativeDrive.POWER_PROGRESSION
+                    else PayoffChannel.RESOURCE_GAIN
+                    if drive is NarrativeDrive.RESOURCE_OPPORTUNITY
+                    else PayoffChannel.WORLD_EXPANSION
+                    if drive is NarrativeDrive.WORLD_EXPLORATION
+                    else PayoffChannel.MYSTERY_REVEAL
+                    if drive is NarrativeDrive.MYSTERY_REVELATION
+                    else PayoffChannel.TEAM_GROWTH
+                    if drive is NarrativeDrive.TEAM_GROWTH
+                    else PayoffChannel.CUSTOM
+                ),
+                associated_drive=drive,
+            )
+            for drive in drive_mix
+        ],
+        drive_debt_types={drive: [drive.value] for drive in drive_mix},
+        status=ContractStatus.INFERRED_PROPOSAL,
+    )
+    drive_interpretation = NarrativeDriveInterpretation(
+        summary=f"现有章节边界显示：{display_primary_drive}",
+        market_category=MarketCategoryMetadata(
+            metadata_id=f"{book_id}-inferred-market-category",
+            primary_market_category=MarketCategory.CUSTOM,
+            display_labels=["待作者确认市场分类"],
+            source="EXISTING_NOVEL_DISCOVERY",
+        ),
+        drive_contract=drive_contract,
+        enabled_engines=enabled_engines,
+        progression_engine_enabled=(
+            NarrativeEngineType.PROGRESSION in enabled_engines
+        ),
+        display_primary_drive=display_primary_drive,
+        display_secondary_drives=[drive.value for drive in secondary_drives],
+        evidence=[evidence_summary],
+    )
     reader = ReaderExperienceContract(
         contract_id=f"{book_id}-inferred-reader-experience",
         primary_family=PrimaryFamily.CUSTOM,
@@ -113,6 +196,10 @@ def infer_existing_contract_proposals(
         tone=["沿用现有作品", "先证据后确认"],
         must_deliver=["由作者确认什么变化才算这本书的真实成长"],
         must_not_drift_into=["不得把已有作品强制套入预设题材等级表"],
+        primary_narrative_drive=primary_drive.value,
+        secondary_narrative_drives=[drive.value for drive in secondary_drives],
+        drive_priority_order=[drive.value for drive in drive_mix],
+        expected_drive_interactions=["所有 Drive 都是待作者确认的结构建议"],
         author_notes=evidence_summary,
         status=ContractStatus.INFERRED_PROPOSAL,
     )
@@ -157,7 +244,10 @@ def infer_existing_contract_proposals(
             progression_subject=derived.progression_subject,
             axis_type=GrowthAxisType.CUSTOM,
             topology=derived.progression_topology,
-            derived_adapter_spec=derived,
+            derived_adapter_spec=(
+                derived if drive_interpretation.progression_engine_enabled else None
+            ),
+            narrative_drive=drive_interpretation,
             interpretation_notes=[evidence_summary],
         )
     )
@@ -174,11 +264,15 @@ def infer_existing_contract_proposals(
     created = []
     for contract_type, payload in (
         (ProgressionContractType.READER_EXPERIENCE, bundle.reader_experience),
+        (ProgressionContractType.MARKET_CATEGORY, bundle.market_category),
+        (ProgressionContractType.NARRATIVE_DRIVE, bundle.narrative_drive),
         (ProgressionContractType.GENRE, bundle.genre),
         (ProgressionContractType.PROGRESSION, bundle.progression),
         (ProgressionContractType.WORLD_EXPANSION, bundle.world_expansion),
         (ProgressionContractType.PAYOFF_CHANNEL, bundle.payoff_channels),
     ):
+        if payload is None:
+            continue
         if contract_type in existing_types:
             continue
         created.append(

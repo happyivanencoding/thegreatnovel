@@ -23,6 +23,7 @@ from novel_authoring.progression.models import (
     ExplanationStyle,
     GenreAdapterKind,
     GenreContract,
+    GenrePromise,
     GenrePromiseStrength,
     GrowthAxisType,
     PayoffChannel,
@@ -39,6 +40,13 @@ from novel_authoring.progression.models import (
     StageStatus,
     WorldExpansionContract,
     WorldExpansionType,
+)
+from novel_authoring.serial_kernel.classification import interpret_narrative_drives
+from novel_authoring.serial_kernel.models import (
+    MarketCategoryMetadata,
+    NarrativeDrive,
+    NarrativeDriveContract,
+    NarrativeDriveInterpretation,
 )
 
 
@@ -62,6 +70,7 @@ class ReaderExperienceInterpretation(BaseModel):
     axis_type: GrowthAxisType
     topology: list[ProgressionTopology]
     derived_adapter_spec: DerivedAdapterSpec | None = None
+    narrative_drive: NarrativeDriveInterpretation
     interpretation_notes: list[str] = Field(default_factory=list)
 
 
@@ -69,8 +78,10 @@ class KernelContractProposalBundle(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     reader_experience: ReaderExperienceContract
+    market_category: MarketCategoryMetadata
+    narrative_drive: NarrativeDriveContract
     genre: GenreContract
-    progression: ProgressionContract
+    progression: ProgressionContract | None = None
     world_expansion: WorldExpansionContract
     payoff_channels: PayoffChannelProfile
     derived_adapter_spec: DerivedAdapterSpec | None = None
@@ -205,6 +216,11 @@ def interpret_reader_experience(
     """Create an author-reviewable interpretation; never an Effective Contract."""
 
     text = f"{premise} {genre_hint}".casefold()
+    drive_interpretation = interpret_narrative_drives(
+        premise,
+        market_hint=genre_hint,
+        contract_prefix=contract_prefix,
+    )
     priorities = _base_priorities()
     primary_family = PrimaryFamily.PROGRESSION_FANTASY
     secondary: list[PrimaryFamily] = []
@@ -262,7 +278,7 @@ def interpret_reader_experience(
         axis_type = GrowthAxisType.POWER_STAGE
         topology = [ProgressionTopology.LINEAR, ProgressionTopology.ACCUMULATIVE]
         summary = "阶段成长玄幻：资源转化、突破门槛与能力验证持续推进"
-    else:
+    elif drive_interpretation.progression_engine_enabled:
         derived = _custom_spec(premise, contract_prefix)
         subject = derived.progression_subject
         growth_object = derived.growth_object
@@ -276,6 +292,34 @@ def interpret_reader_experience(
             priorities[ReaderExperience.COMBAT] = ExperiencePriority.OFF
         summary = f"原创成长语法：{growth_object}"
 
+    if not drive_interpretation.progression_engine_enabled:
+        priorities = {item: ExperiencePriority.LOW for item in ReaderExperience}
+        drive_to_experience = {
+            NarrativeDrive.CAREER_MASTERY: ReaderExperience.STATUS_RISE,
+            NarrativeDrive.STATE_BUILDING: ReaderExperience.FACTION_CONFLICT,
+            NarrativeDrive.POLITICAL_STRATEGY: ReaderExperience.FACTION_CONFLICT,
+            NarrativeDrive.COMPETITIVE_SKILL: ReaderExperience.TEAM_GROWTH,
+            NarrativeDrive.COMPETITIVE_RANK: ReaderExperience.STATUS_RISE,
+            NarrativeDrive.MYSTERY_INVESTIGATION: ReaderExperience.MYSTERY,
+            NarrativeDrive.MYSTERY_REVELATION: ReaderExperience.REVEAL,
+            NarrativeDrive.SURVIVAL_RESOURCE: ReaderExperience.SURVIVAL,
+            NarrativeDrive.TEAM_GROWTH: ReaderExperience.TEAM_GROWTH,
+            NarrativeDrive.RELATIONSHIP_EMOTIONAL: ReaderExperience.RELATIONSHIP,
+        }
+        for index, drive in enumerate(drive_interpretation.drive_contract.drive_mix):
+            experience = drive_to_experience.get(drive)
+            if experience is not None:
+                priorities[experience] = (
+                    ExperiencePriority.VERY_HIGH if index == 0 else ExperiencePriority.HIGH
+                )
+        primary_family = PrimaryFamily.CUSTOM
+        adapter = GenreAdapterKind.CUSTOM
+        growth_object = "不强制建立力量成长体系"
+        subject = ProgressionSubject.CUSTOM
+        axis_type = GrowthAxisType.CUSTOM
+        topology = [ProgressionTopology.CUSTOM]
+        summary = drive_interpretation.summary
+
     reader = ReaderExperienceContract(
         contract_id=f"{contract_prefix}-reader-experience",
         primary_family=primary_family,
@@ -284,21 +328,48 @@ def interpret_reader_experience(
         experience_priorities=priorities,
         mysticism_level=ExperiencePriority.HIGH,
         explanation_style=explanation,
-        growth_centrality=ExperiencePriority.VERY_HIGH,
-        world_expansion_centrality=ExperiencePriority.HIGH,
+        growth_centrality=(
+            ExperiencePriority.VERY_HIGH
+            if drive_interpretation.progression_engine_enabled
+            else ExperiencePriority.LOW
+        ),
+        world_expansion_centrality=priorities.get(
+            ReaderExperience.WORLD_EXPANSION, ExperiencePriority.MEDIUM
+        ),
         mystery_centrality=priorities[ReaderExperience.MYSTERY],
         team_centrality=priorities[ReaderExperience.TEAM_GROWTH],
         relationship_centrality=priorities[ReaderExperience.RELATIONSHIP],
         theme_centrality=priorities[ReaderExperience.SOCIAL_THEME],
-        tone=["长篇连载", "成长驱动", "保留未知"],
-        must_deliver=[
-            "成长持续扩大主体能够做什么、进入哪里或理解什么",
-            "关键成长拥有事件验证与后果",
-            "始终保留可感知的下一层期待",
+        tone=["长篇连载", "保留未知"],
+        must_deliver=(
+            [
+                "成长持续扩大主体能够做什么、进入哪里或理解什么",
+                "关键成长拥有事件验证与后果",
+                "始终保留可感知的下一层期待",
+            ]
+            if drive_interpretation.progression_engine_enabled
+            else [
+                f"持续通过{drive_interpretation.display_primary_drive}产生下一章期待",
+                "主要驱动力必须改变事件与后续可能性",
+            ]
+        ),
+        must_not_drift_into=(
+            [
+                "不得让世界外壳或社会议题取代核心成长因果",
+                "不得把原创成长语法强制替换为宗门、秘境、学院或擂台套路",
+            ]
+            if drive_interpretation.progression_engine_enabled
+            else ["不得把非成长主驱动强制解释为力量境界、突破或战斗验证"]
+        ),
+        primary_narrative_drive=drive_interpretation.drive_contract.primary_drive.value,
+        secondary_narrative_drives=[
+            item.value for item in drive_interpretation.drive_contract.secondary_drives
         ],
-        must_not_drift_into=[
-            "不得让世界外壳或社会议题取代核心成长因果",
-            "不得把原创成长语法强制替换为宗门、秘境、学院或擂台套路",
+        drive_priority_order=[
+            item.value for item in drive_interpretation.drive_contract.drive_mix
+        ],
+        expected_drive_interactions=[
+            f"{drive_interpretation.display_primary_drive}为主，辅助驱动力不得长期取代它"
         ],
         author_notes=premise,
         status=ContractStatus.NEEDS_REVIEW,
@@ -313,6 +384,7 @@ def interpret_reader_experience(
         axis_type=axis_type,
         topology=topology,
         derived_adapter_spec=derived,
+        narrative_drive=drive_interpretation,
         interpretation_notes=[
             "这是 Proposal，不会写入 Author Truth 或 Canon",
             "作者确认后才会生成 Genre 与 Progression Contract Proposal",
@@ -359,33 +431,60 @@ def compile_kernel_contract_proposals(
         if interpretation.derived_adapter_spec is not None
         else BUILTIN_GENRE_ADAPTERS[interpretation.primary_adapter]
     )
-    genre = compile_genre_adapters(
-        reader,
-        genre_contract_id=reader.contract_id.replace("reader-experience", "genre"),
-        primary_adapter=primary_adapter,
-        secondary_adapters=[
-            BUILTIN_GENRE_ADAPTERS[item] for item in interpretation.secondary_adapters
-        ],
-    )
-    progression = (
-        progression_contract_from_derived(
-            interpretation.derived_adapter_spec,
-            progression_contract_id=reader.contract_id.replace(
-                "reader-experience", "progression"
-            ),
+    if interpretation.narrative_drive.progression_engine_enabled:
+        genre = compile_genre_adapters(
+            reader,
+            genre_contract_id=reader.contract_id.replace("reader-experience", "genre"),
+            primary_adapter=primary_adapter,
+            secondary_adapters=[
+                BUILTIN_GENRE_ADAPTERS[item] for item in interpretation.secondary_adapters
+            ],
         )
-        if interpretation.derived_adapter_spec is not None
-        else progression_contract_from_genre(
-            genre,
-            progression_contract_id=reader.contract_id.replace(
-                "reader-experience", "progression"
-            ),
-            progression_subject=interpretation.progression_subject,
-            growth_object=interpretation.growth_object,
-            axis_type=interpretation.axis_type,
-            topology=interpretation.topology,
+    else:
+        genre = GenreContract(
+            genre_contract_id=reader.contract_id.replace("reader-experience", "genre"),
+            primary_genre=reader.primary_family,
+            subgenres=reader.secondary_families,
+            reader_experience_contract_id=reader.contract_id,
+            genre_promises=[
+                GenrePromise(
+                    promise_id="primary-narrative-drive",
+                    statement=reader.must_deliver[0],
+                    strength=GenrePromiseStrength.CORE,
+                )
+            ],
+            genre_native_engines=[
+                item.value for item in interpretation.narrative_drive.enabled_engines
+            ],
+            expected_payoff_channels=[
+                item.channel
+                for item in interpretation.narrative_drive.drive_contract.drive_payoff_channels
+            ],
+            forbidden_drift_patterns=reader.must_not_drift_into,
+            capabilities=RuntimeGenreCapabilities(),
+            status=ContractStatus.NEEDS_REVIEW,
         )
-    )
+    progression: ProgressionContract | None = None
+    if interpretation.narrative_drive.progression_engine_enabled:
+        progression = (
+            progression_contract_from_derived(
+                interpretation.derived_adapter_spec,
+                progression_contract_id=reader.contract_id.replace(
+                    "reader-experience", "progression"
+                ),
+            )
+            if interpretation.derived_adapter_spec is not None
+            else progression_contract_from_genre(
+                genre,
+                progression_contract_id=reader.contract_id.replace(
+                    "reader-experience", "progression"
+                ),
+                progression_subject=interpretation.progression_subject,
+                growth_object=interpretation.growth_object,
+                axis_type=interpretation.axis_type,
+                topology=interpretation.topology,
+            )
+        )
     if genre.capabilities.has_mystery_binding:
         expansion_types = [WorldExpansionType.MYSTERY, WorldExpansionType.KNOWLEDGE]
     elif reader.setting_skin is SettingSkin.COSMIC:
@@ -443,6 +542,8 @@ def compile_kernel_contract_proposals(
     )
     return KernelContractProposalBundle(
         reader_experience=reader,
+        market_category=interpretation.narrative_drive.market_category,
+        narrative_drive=interpretation.narrative_drive.drive_contract,
         genre=genre,
         progression=progression,
         world_expansion=world,

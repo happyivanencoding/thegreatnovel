@@ -720,6 +720,10 @@ class ReaderExperienceContract(BaseModel):
     tone: list[str] = Field(default_factory=list)
     must_deliver: list[str] = Field(min_length=1)
     must_not_drift_into: list[str] = Field(default_factory=list)
+    primary_narrative_drive: str | None = None
+    secondary_narrative_drives: list[str] = Field(default_factory=list, max_length=4)
+    drive_priority_order: list[str] = Field(default_factory=list, max_length=5)
+    expected_drive_interactions: list[str] = Field(default_factory=list)
     author_notes: str = ""
     status: ContractStatus = ContractStatus.NEEDS_REVIEW
 
@@ -733,4 +737,11 @@ class ReaderExperienceContract(BaseModel):
             raise ValueError("必须至少定义一个阅读体验优先级")
         if all(value is ExperiencePriority.OFF for value in self.experience_priorities.values()):
             raise ValueError("阅读体验优先级不能全部关闭")
+        drive_mix = [
+            value
+            for value in [self.primary_narrative_drive, *self.secondary_narrative_drives]
+            if value is not None
+        ]
+        if len(drive_mix) != len(set(drive_mix)):
+            raise ValueError("Reader Experience 的 Narrative Drive 不得重复")
         return self

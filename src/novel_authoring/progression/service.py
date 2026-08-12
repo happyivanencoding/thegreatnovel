@@ -18,11 +18,17 @@ from novel_authoring.progression.models import (
     ReaderExperienceContract,
     WorldExpansionContract,
 )
+from novel_authoring.serial_kernel.models import (
+    MarketCategoryMetadata,
+    NarrativeDriveContract,
+)
 from novel_authoring.utils import json_dumps, utc_now
 
 
 class ProgressionContractType(StrEnum):
     READER_EXPERIENCE = "READER_EXPERIENCE"
+    MARKET_CATEGORY = "MARKET_CATEGORY"
+    NARRATIVE_DRIVE = "NARRATIVE_DRIVE"
     GENRE = "GENRE"
     PROGRESSION = "PROGRESSION"
     WORLD_EXPANSION = "WORLD_EXPANSION"
@@ -35,10 +41,14 @@ ContractModel = (
     | ProgressionContract
     | WorldExpansionContract
     | PayoffChannelProfile
+    | MarketCategoryMetadata
+    | NarrativeDriveContract
 )
 
 _CONTRACT_MODELS: dict[ProgressionContractType, type[BaseModel]] = {
     ProgressionContractType.READER_EXPERIENCE: ReaderExperienceContract,
+    ProgressionContractType.MARKET_CATEGORY: MarketCategoryMetadata,
+    ProgressionContractType.NARRATIVE_DRIVE: NarrativeDriveContract,
     ProgressionContractType.GENRE: GenreContract,
     ProgressionContractType.PROGRESSION: ProgressionContract,
     ProgressionContractType.WORLD_EXPANSION: WorldExpansionContract,

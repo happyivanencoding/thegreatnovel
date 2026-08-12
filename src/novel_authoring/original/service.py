@@ -49,6 +49,7 @@ from novel_authoring.progression.service import (
     list_contract_records,
     reject_contract,
 )
+from novel_authoring.serial_kernel.models import PROGRESSION_DRIVES, NarrativeDriveContract
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import ensure_operation
 from novel_authoring.storage.registry import (
@@ -221,11 +222,15 @@ def _create_kernel_contract_proposals(
     bundle = compile_kernel_contract_proposals(interpretation)
     created: list[ContractRecord] = []
     for contract_type, payload in (
+        (ProgressionContractType.MARKET_CATEGORY, bundle.market_category),
+        (ProgressionContractType.NARRATIVE_DRIVE, bundle.narrative_drive),
         (ProgressionContractType.GENRE, bundle.genre),
         (ProgressionContractType.PROGRESSION, bundle.progression),
         (ProgressionContractType.WORLD_EXPANSION, bundle.world_expansion),
         (ProgressionContractType.PAYOFF_CHANNEL, bundle.payoff_channels),
     ):
+        if payload is None:
+            continue
         if contract_type in existing_types:
             continue
         created.append(
@@ -885,10 +890,23 @@ def select_first_chapter_candidate(
         required = {
             ProgressionContractType.READER_EXPERIENCE,
             ProgressionContractType.GENRE,
-            ProgressionContractType.PROGRESSION,
+            ProgressionContractType.NARRATIVE_DRIVE,
         }
+        drive_record = next(
+            (
+                record
+                for record in records
+                if record.contract_type is ProgressionContractType.NARRATIVE_DRIVE
+                and record.status is ContractStatus.EFFECTIVE
+            ),
+            None,
+        )
+        if drive_record is not None:
+            drive_contract = NarrativeDriveContract.model_validate(drive_record.payload)
+            if any(drive in PROGRESSION_DRIVES for drive in drive_contract.drive_mix):
+                required.add(ProgressionContractType.PROGRESSION)
         if not required.issubset(effective_types):
-            raise OriginalWorkflowError("必须先确认 Reader、Genre 与 Progression Contract")
+            raise OriginalWorkflowError("必须先确认 Reader、Genre 与 Narrative Drive Contract")
     task_id = str(accepted.get("genesis_task_id") or "")
     boundary = build_boundary_packet(database, book_id, edition_id="base")
     boundary_payload = json.loads(Path(str(boundary["json_path"])).read_text(encoding="utf-8"))
