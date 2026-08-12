@@ -365,6 +365,217 @@ class ProgressionContract(BaseModel):
         return self
 
 
+class QualitativeReadiness(StrEnum):
+    NOT_STARTED = "NOT_STARTED"
+    ACCUMULATING = "ACCUMULATING"
+    NEAR_GATE = "NEAR_GATE"
+    GATE_SATISFIED = "GATE_SATISFIED"
+    MISSING_RESOURCE = "MISSING_RESOURCE"
+    NEEDS_INSIGHT = "NEEDS_INSIGHT"
+    NEEDS_CHOICE = "NEEDS_CHOICE"
+    NEEDS_SACRIFICE = "NEEDS_SACRIFICE"
+    READY_TO_ATTEMPT = "READY_TO_ATTEMPT"
+    UNKNOWN = "UNKNOWN"
+
+
+class AxisProgressionState(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    axis_id: str
+    current_stage: str | None = None
+    current_substage: str | None = None
+    available_branches: list[str] = Field(default_factory=list)
+    locked_branches: list[str] = Field(default_factory=list)
+    next_known_stage: list[str] = Field(default_factory=list)
+    next_stage_visibility: UpperCeilingVisibility = UpperCeilingVisibility.UNKNOWN
+    current_bottlenecks: list[str] = Field(default_factory=list)
+    readiness: QualitativeReadiness = QualitativeReadiness.UNKNOWN
+    evidence: list[str] = Field(default_factory=list)
+
+
+class ProgressionStateView(BaseModel):
+    """Chapter-pinned projection from existing world-state authorities."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    subject_id: str
+    subject_type: ProgressionSubject
+    chapter_id: str
+    chapter_ordinal: int = Field(ge=0)
+    primary_axis_state: AxisProgressionState
+    secondary_axis_states: list[AxisProgressionState] = Field(default_factory=list)
+    topology_state: list[ProgressionTopology]
+    required_resources: list[str] = Field(default_factory=list)
+    available_resources: list[str] = Field(default_factory=list)
+    missing_resources: list[str] = Field(default_factory=list)
+    recent_growth_events: list[dict[str, object]] = Field(default_factory=list)
+    unlocked_abilities: list[str] = Field(default_factory=list)
+    pending_ability_showcases: list[str] = Field(default_factory=list)
+    recent_breakthrough: dict[str, object] | None = None
+    next_breakthrough_readiness: QualitativeReadiness = QualitativeReadiness.UNKNOWN
+    growth_costs_active: list[str] = Field(default_factory=list)
+    known_higher_ceiling: list[str] = Field(default_factory=list)
+    unknown_ceiling_hints: list[str] = Field(default_factory=list)
+    progression_debts: list[str] = Field(default_factory=list)
+    source_layer: str = "CHAPTER_WORLD_STATE_PROJECTION"
+
+
+class WorldExpansionType(StrEnum):
+    GEOGRAPHIC = "GEOGRAPHIC"
+    SOCIAL = "SOCIAL"
+    POWER = "POWER"
+    CIVILIZATIONAL = "CIVILIZATIONAL"
+    COSMIC = "COSMIC"
+    HISTORICAL = "HISTORICAL"
+    MYSTERY = "MYSTERY"
+    KNOWLEDGE = "KNOWLEDGE"
+    IDENTITY = "IDENTITY"
+    ONTOLOGICAL = "ONTOLOGICAL"
+
+
+class ExpansionStage(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    stage_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    name: str = Field(min_length=1)
+    order: int = Field(ge=0)
+    expansion_types: list[WorldExpansionType] = Field(min_length=1)
+    world_scope: str = Field(min_length=1)
+    known_map: list[str] = Field(default_factory=list)
+    power_ceiling: str = ""
+    faction_ceiling: str = ""
+    resource_ceiling: str = ""
+    mystery_ceiling: str = ""
+    knowledge_ceiling: str = ""
+    reader_question: str = Field(min_length=1)
+    transition_conditions: list[str] = Field(default_factory=list)
+    status: StageStatus = StageStatus.AVAILABLE
+
+
+class WorldExpansionContract(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    ladder_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    stages: list[ExpansionStage] = Field(min_length=1)
+    current_stage_id: str
+    transition_rules: list[str] = Field(default_factory=list)
+    expansion_promises: list[str] = Field(min_length=1)
+    stagnation_policy: str = Field(min_length=1)
+    effective_from_boundary: int | None = Field(default=None, ge=0)
+    status: ContractStatus = ContractStatus.NEEDS_REVIEW
+
+    @model_validator(mode="after")
+    def validate_ladder(self) -> WorldExpansionContract:
+        stage_ids = [stage.stage_id for stage in self.stages]
+        if len(stage_ids) != len(set(stage_ids)):
+            raise ValueError("World Expansion stage_id 不得重复")
+        if self.current_stage_id not in set(stage_ids):
+            raise ValueError("current_stage_id 必须引用 ladder 中的阶段")
+        return self
+
+
+class WorldExpansionStateView(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    chapter_id: str
+    chapter_ordinal: int = Field(ge=0)
+    current_stage: ExpansionStage
+    next_stage_candidates: list[ExpansionStage] = Field(default_factory=list)
+    transition_conditions: list[str] = Field(default_factory=list)
+    stagnation_diagnostic: str | None = None
+    source_layer: str = "CONTRACT_PLUS_CHAPTER_WORLD_STATE"
+
+
+class ProgressionResourceType(StrEnum):
+    ENERGY = "ENERGY"
+    MATERIAL = "MATERIAL"
+    TECHNIQUE = "TECHNIQUE"
+    FORMULA = "FORMULA"
+    KNOWLEDGE = "KNOWLEDGE"
+    ARTIFACT = "ARTIFACT"
+    EQUIPMENT = "EQUIPMENT"
+    BLOODLINE = "BLOODLINE"
+    RITUAL_CONDITION = "RITUAL_CONDITION"
+    MENTORSHIP = "MENTORSHIP"
+    STATUS_ACCESS = "STATUS_ACCESS"
+    RELATIONSHIP_ACCESS = "RELATIONSHIP_ACCESS"
+    CHOICE = "CHOICE"
+    TIME = "TIME"
+    POSSIBILITY = "POSSIBILITY"
+    CUSTOM = "CUSTOM"
+
+
+class ProgressionEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    statement: str = Field(min_length=1)
+    source_span_id: str | None = None
+    chapter_ordinal: int | None = Field(default=None, ge=0)
+    information_status: str = "INFERENCE"
+
+
+class ProgressionResourceProfile(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    resource_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    name: str = Field(min_length=1)
+    resource_type: ProgressionResourceType
+    scarcity: str = Field(min_length=1)
+    sources: list[str] = Field(default_factory=list)
+    sinks: list[str] = Field(default_factory=list)
+    acquisition_methods: list[str] = Field(default_factory=list)
+    conversion_rules: list[str] = Field(default_factory=list)
+    progression_uses: list[str] = Field(default_factory=list)
+    current_owner_or_location: str | None = None
+    known_opportunities: list[str] = Field(default_factory=list)
+    risk: list[str] = Field(default_factory=list)
+    evidence: list[ProgressionEvidence] = Field(default_factory=list)
+
+
+class OpportunityInformationStatus(StrEnum):
+    SOFT_REFERENCE = "SOFT_REFERENCE"
+    CANDIDATE = "CANDIDATE"
+    AUTHOR_INTENT = "AUTHOR_INTENT"
+
+
+class OpportunityStatus(StrEnum):
+    TRACKABLE = "TRACKABLE"
+    PREPARED = "PREPARED"
+    UNKNOWN = "UNKNOWN"
+    RESOLVED = "RESOLVED"
+
+
+class OpportunitySurfaceItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    opportunity_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    subject: str = Field(min_length=1)
+    progression_use: str = Field(min_length=1)
+    source: str = Field(min_length=1)
+    related_entities: list[str] = Field(default_factory=list)
+    risk: list[str] = Field(default_factory=list)
+    information_status: OpportunityInformationStatus
+    status: OpportunityStatus
+    evidence: list[ProgressionEvidence] = Field(default_factory=list)
+
+
+class OpportunitySurface(BaseModel):
+    """Planning input; its items are never projected as owned resources."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    chapter_id: str
+    chapter_ordinal: int = Field(ge=0)
+    items: list[OpportunitySurfaceItem] = Field(default_factory=list)
+    projection_only: bool = True
+
+
+class PayoffChannelProfile(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    channels: dict[PayoffChannel, GenrePromiseStrength]
+
+
 class RuntimeGenreCapabilities(BaseModel):
     """Adapter-neutral structural capabilities consumed by runtime services."""
 
