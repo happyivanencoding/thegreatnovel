@@ -66,6 +66,11 @@ from novel_authoring.progression.projections import (
     project_progression_state,
     project_world_expansion_state,
 )
+from novel_authoring.progression.resources import (
+    ResourceGateAssessment,
+    evaluate_resource_gate,
+    project_opportunity_surface,
+)
 
 __all__ = [
     "AbilityUnlockMode",
@@ -109,6 +114,7 @@ __all__ = [
     "PrimaryFamily",
     "ReaderExperience",
     "ReaderExperienceContract",
+    "ResourceGateAssessment",
     "QualitativeReadiness",
     "RuntimeGenreCapabilities",
     "SerialForm",
@@ -123,7 +129,9 @@ __all__ = [
     "compile_genre_adapters",
     "compile_derived_adapter",
     "effective_genre_contract",
+    "evaluate_resource_gate",
     "progression_contract_from_derived",
     "project_progression_state",
+    "project_opportunity_surface",
     "project_world_expansion_state",
 ]

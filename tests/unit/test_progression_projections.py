@@ -16,6 +16,7 @@ from novel_authoring.progression.models import (
     OpportunitySurfaceItem,
     ProgressionContract,
     ProgressionDeltaType,
+    ProgressionEvidence,
     ProgressionStageDefinition,
     ProgressionSubject,
     ProgressionTopology,
@@ -27,6 +28,10 @@ from novel_authoring.progression.projections import (
     AxisObservation,
     project_progression_state,
     project_world_expansion_state,
+)
+from novel_authoring.progression.resources import (
+    evaluate_resource_gate,
+    project_opportunity_surface,
 )
 
 
@@ -181,6 +186,55 @@ def test_opportunity_surface_never_claims_ownership() -> None:
 
     assert surface.projection_only is True
     assert not hasattr(surface.items[0], "owned")
+
+
+def test_opportunity_surface_does_not_leak_future_evidence() -> None:
+    surface = project_opportunity_surface(
+        world_state(12),
+        [
+            OpportunitySurfaceItem(
+                opportunity_id="future-ember",
+                subject="未来才发现的星火",
+                progression_use="突破",
+                source="后续章节",
+                information_status=OpportunityInformationStatus.SOFT_REFERENCE,
+                status=OpportunityStatus.TRACKABLE,
+                evidence=[
+                    {
+                        "statement": "第20章才确认星火地点",
+                        "chapter_ordinal": 20,
+                    }
+                ],
+            )
+        ],
+    )
+
+    assert surface.items == []
+
+
+def test_resource_gate_requires_state_and_evidence() -> None:
+    gate = BreakthroughGate(
+        gate_id="ember-gate",
+        gate_type=BreakthroughGateType.RESOURCE_GATE,
+        requirement="持有并消耗星火",
+        required_resources=["星火"],
+        evidence_requirements=["Source State 资源证据"],
+    )
+    without_proof = evaluate_resource_gate(gate, world_state(12))
+    with_proof = evaluate_resource_gate(
+        gate,
+        world_state(12),
+        evidence=[
+            ProgressionEvidence(
+                statement="章末仍持有星火",
+                chapter_ordinal=12,
+            )
+        ],
+    )
+
+    assert without_proof.satisfied is False
+    assert without_proof.errors == ["资源缺少章节证据：星火"]
+    assert with_proof.satisfied is True
 
 
 def test_world_expansion_supports_non_geographic_ladder() -> None:
