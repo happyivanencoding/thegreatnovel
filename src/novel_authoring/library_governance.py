@@ -75,14 +75,11 @@ def _evidence_hits(records: list[BookRecord], roots: tuple[Path, ...]) -> dict[s
             if (
                 not path.is_file()
                 or path.suffix.casefold() not in _TEXT_SUFFIXES
-                or {
-                    "artifacts",
-                    "phase5_live_library",
-                    "phase6_live_library",
-                    "phase5_live_hidden",
-                    "phase6_live_hidden",
-                }
-                & {part.casefold() for part in path.parts}
+                or "artifacts" in {part.casefold() for part in path.parts}
+                or any(
+                    part.casefold().endswith(("_live_library", "_live_hidden"))
+                    for part in path.parts
+                )
             ):
                 continue
             try:
@@ -120,12 +117,15 @@ def _suggest(
         or (
             _is_within(item, project_root / "benchmark")
             and (
-                item.name.startswith(("phase4", "phase5", "phase6"))
+                re.match(r"^phase\d", item.name, flags=re.IGNORECASE)
                 or any(
-                    part.casefold().startswith(("phase4", "phase5", "phase6"))
+                    re.match(r"^phase\d", part, flags=re.IGNORECASE)
                     for part in item.parts
                 )
-                or "live_phase5" in {part.casefold() for part in item.parts}
+                or any(
+                    re.match(r"^live_phase\d+$", part, flags=re.IGNORECASE)
+                    for part in item.parts
+                )
             )
         )
     ]
@@ -154,7 +154,7 @@ def _suggest(
             "Benchmark/Phase 脚本或验收报告明确引用该 book_id",
             [str(item) for item in phase_evidence],
         )
-    if re.match(r"^phase[456]-", record.book_id, flags=re.IGNORECASE):
+    if re.match(r"^phase\d+-", record.book_id, flags=re.IGNORECASE):
         return (
             BookKind.BENCHMARK,
             "MEDIUM",

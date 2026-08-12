@@ -13,8 +13,11 @@ FORBIDDEN_FIXTURE_NAMES = (
 def test_generic_production_prompts_contain_no_fixture_entities() -> None:
     root = Path(__file__).parents[2]
     files = [
-        *sorted((root / "src" / "novel_authoring" / "planning").glob("*.py")),
-        *sorted((root / "src" / "novel_authoring" / "workflows").glob("*.py")),
+        *sorted(
+            path
+            for path in (root / "src" / "novel_authoring").rglob("*")
+            if path.suffix.casefold() in {".py", ".html", ".js", ".md", ".json", ".yaml"}
+        ),
         *sorted((root / ".agents" / "skills").glob("*/SKILL.md")),
         *sorted((root / "docs" / "user").rglob("*.md")),
         *sorted((root / "docs" / "operations").rglob("*.md")),

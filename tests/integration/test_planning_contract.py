@@ -855,7 +855,7 @@ def test_verified_kernel_trace_closes_through_approval_and_next_state(
     tmp_path: Path,
 ) -> None:
     database, workspace, settings = setup_planning_book(tmp_path)
-    enable_progression_kernel(database, boundary=4)
+    enable_progression_kernel(database, boundary=3)
     seed_progression_source_state(database)
 
     task = prepare_candidate_task(database, "planning-book", settings)
@@ -1054,6 +1054,10 @@ def test_verified_kernel_trace_closes_through_approval_and_next_state(
     ).measurements["kernel_trace_comparison"]
     assert comparison["unexpected"] == {}
     assert comparison["underdelivered"] == {}
+    before_approval = build_story_game_state(database, "planning-book", "base")
+    assert before_approval["progression_state"]["primary_axis_state"][
+        "current_stage"
+    ] == "tempered"
 
     approve_draft(database, "planning-book", draft_id, confirmation="批准写入正史")
     with database.connect() as connection:
