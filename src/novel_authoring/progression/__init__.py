@@ -5,6 +5,13 @@ from novel_authoring.progression.adapters import (
     compile_genre_adapters,
     effective_genre_contract,
 )
+from novel_authoring.progression.anticipation import (
+    AnticipationItem,
+    AnticipationSource,
+    AnticipationStatus,
+    AnticipationSurfaceView,
+    build_anticipation_surface,
+)
 from novel_authoring.progression.contracts import progression_contract_from_derived
 from novel_authoring.progression.derived import compile_derived_adapter
 from novel_authoring.progression.models import (
@@ -75,6 +82,10 @@ from novel_authoring.progression.resources import (
 __all__ = [
     "AbilityUnlockMode",
     "AbilityUnlockRule",
+    "AnticipationItem",
+    "AnticipationSource",
+    "AnticipationStatus",
+    "AnticipationSurfaceView",
     "AxisObservation",
     "AxisProgressionState",
     "AuthoringPreset",
@@ -126,6 +137,7 @@ __all__ = [
     "WorldExpansionStateView",
     "WorldExpansionType",
     "compile_story_profile",
+    "build_anticipation_surface",
     "compile_genre_adapters",
     "compile_derived_adapter",
     "effective_genre_contract",
