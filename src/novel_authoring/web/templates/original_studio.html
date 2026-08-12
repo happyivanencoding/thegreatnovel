@@ -7,7 +7,7 @@
   <title>{{ original.title }} · Novel Studio</title>
   <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v={{ asset_version }}">
 </head>
-<body class="library-body original-body" data-original-book-id="{{ original.book_id }}">
+<body class="library-body original-body" data-original-book-id="{{ original.book_id }}"{% if original.generating_proposal %} data-original-generating="true"{% endif %}>
   <header class="library-topbar">
     <a class="wb-brand" href="/library">Novel Studio</a>
     <nav><a href="/library">书库</a>{% if original.chapter_count %}<a href="/books/{{ original.book_id }}/editions/base/workbench">小说工作台</a>{% endif %}</nav>

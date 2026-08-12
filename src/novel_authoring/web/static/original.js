@@ -13,6 +13,32 @@
   };
 
   const responseError = (value) => value?.error?.message || value?.detail?.message || value?.detail || "操作失败";
+  const pollGeneration = () => {
+    if (!document.body.dataset.originalGenerating) return;
+    let checking = false;
+    const check = async () => {
+      if (checking) return;
+      checking = true;
+      try {
+        const response = await fetch(window.location.href, {
+          headers: {Accept: "text/html", "X-Requested-With": "original-status-poll"},
+          cache: "no-store",
+        });
+        if (!response.ok) return;
+        const html = await response.text();
+        if (!html.includes("data-original-generating=\"true\"")) {
+          window.location.reload();
+        }
+      } catch (_) {
+        // A transient network failure should not turn a status poll into an
+        // error banner; the next poll will retry.
+      } finally {
+        checking = false;
+      }
+    };
+    const timer = window.setInterval(check, 4000);
+    window.addEventListener("beforeunload", () => window.clearInterval(timer), {once: true});
+  };
   const copyText = async (value) => {
     if (!value) throw new Error("AI 任务中没有可复制的指令");
     const area = document.createElement("textarea");
@@ -82,6 +108,7 @@
   });
 
   const wizard = document.querySelector("[data-original-confirm]");
+  pollGeneration();
   if (wizard) {
     let step = 1;
     const renderStep = () => {
@@ -167,7 +194,12 @@
       if (action === "bootstrap") {
         show("正在准备新的故事方案；当前方案会保留…");
         const value = await post(`/api/books/${bookId}/original/bootstrap`, {});
-        show(value.deduplicated ? "新方案已经在生成，已恢复原 AI 任务。" : "新方案任务已准备好，只需复制一次指令给 Codex。")
+        const message = value.proposal_imported
+          ? "方案已完成并读取，正在刷新页面…"
+          : value.deduplicated
+            ? "新方案已经在生成，已恢复原 AI 任务。"
+            : "新方案任务已准备好，只需复制一次指令给 Codex。";
+        show(message);
         setTimeout(() => window.location.replace(window.location.href), 500);
       } else if (action === "import") {
         show("正在读取完成的故事方案…");

@@ -224,6 +224,11 @@ def prepare_original_bootstrap(database: Database, book_id: str) -> dict[str, An
     request = _read_json(request_path)
     if request is None:
         raise OriginalWorkflowError("原创 premise 请求不存在")
+    completed = _reconcile_completed_original_bootstrap(database, book_id)
+    if completed is not None:
+        # A completed Codex handoff is already the user's requested result. Do
+        # not classify it as a stale generator and create a replacement task.
+        return {**completed, "deduplicated": True, "proposal_imported": True}
     with database.connect() as connection:
         generating = connection.execute(
             "SELECT proposal_version_id, handoff_id FROM original_proposal_versions "
@@ -238,7 +243,12 @@ def prepare_original_bootstrap(database: Database, book_id: str) -> dict[str, An
     has_accepted_foundation = bool(state_row and state_row["accepted_apply_id"])
     if generating is not None and generating["handoff_id"]:
         handoff = get_handoff(database, str(generating["handoff_id"]))
-        if str(handoff.get("status")) in {"READY_FOR_CODEX", "CLAIMED", "RUNNING"}:
+        if str(handoff.get("status")) in {
+            "READY_FOR_CODEX",
+            "CLAIMED",
+            "RUNNING",
+            "WAITING_FOR_USER",
+        }:
             return {
                 **handoff,
                 "proposal_version_id": str(generating["proposal_version_id"]),
@@ -293,6 +303,34 @@ def prepare_original_bootstrap(database: Database, book_id: str) -> dict[str, An
     return {**handoff, "proposal_version_id": proposal_version_id, "deduplicated": False}
 
 
+def _reconcile_completed_original_bootstrap(
+    database: Database, book_id: str
+) -> dict[str, Any] | None:
+    """Import a completed bootstrap handoff exactly once when it is observed.
+
+    The Codex desktop client writes the handoff result files and status, while
+    the Web app owns the proposal-version projection.  Reconciliation at the
+    Web read/create boundaries closes that gap without creating a second
+    handoff.  The importer itself is idempotent, so a page refresh and a
+    concurrent status check are safe.
+    """
+
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT handoff_id FROM original_proposal_versions "
+            "WHERE book_id=? AND edition_id='base' AND status='GENERATING' "
+            "AND handoff_id IS NOT NULL ORDER BY version_number DESC LIMIT 1",
+            (book_id,),
+        ).fetchone()
+    if row is None:
+        return None
+    handoff_id = str(row["handoff_id"])
+    handoff = get_handoff(database, handoff_id)
+    if str(handoff.get("status")) != "COMPLETED":
+        return None
+    return import_original_bootstrap_proposal(database, book_id, handoff_id)
+
+
 def import_original_bootstrap_proposal(
     database: Database, book_id: str, handoff_id: str
 ) -> dict[str, Any]:
@@ -329,6 +367,10 @@ def import_original_bootstrap_proposal(
     now = utc_now()
     proposal_payload = proposal.model_dump(mode="json")
     with database.connect() as connection:
+        # Serialize imports for the same proposal version.  Without this
+        # lock, two browser requests could both observe GENERATING and the
+        # second one would downgrade a CURRENT version to READY.
+        connection.execute("BEGIN IMMEDIATE")
         version_row = connection.execute(
             "SELECT * FROM original_proposal_versions WHERE book_id=? "
             "AND edition_id='base' AND handoff_id=?",
@@ -336,6 +378,47 @@ def import_original_bootstrap_proposal(
         ).fetchone()
         if version_row is None:
             raise OriginalWorkflowError("找不到本次 AI 任务对应的方案版本")
+        stored_status = str(version_row["status"])
+        stored_payload = str(version_row["proposal_json"] or "")
+        if stored_status == "CURRENT" and stored_payload in {"", "{}"}:
+            raise OriginalWorkflowError("当前故事方案版本缺少内容，不能重复导入")
+        if stored_status in {"CURRENT", "READY"} and stored_payload not in {"", "{}"}:
+            try:
+                stored_proposal = OriginalBootstrapProposal.model_validate_json(stored_payload)
+            except ValueError as exc:
+                if stored_status == "CURRENT":
+                    raise OriginalWorkflowError("当前故事方案版本已损坏，不能重复导入") from exc
+            else:
+                state_row = connection.execute(
+                    "SELECT state, accepted_apply_id FROM original_states "
+                    "WHERE book_id=? AND edition_id='base'",
+                    (book_id,),
+                ).fetchone()
+                resulting_state = (
+                    str(state_row["state"])
+                    if state_row is not None and state_row["accepted_apply_id"]
+                    else OriginalState.FOUNDATION_REVIEW.value
+                )
+                version_id = str(version_row["proposal_version_id"])
+                canonical_path = (
+                    _original_dir(database, book_id) / "story_foundation" / "proposal.json"
+                    if stored_status == "CURRENT"
+                    else _original_dir(database, book_id)
+                    / "story_foundation"
+                    / "versions"
+                    / f"{version_id}.json"
+                )
+                return {
+                    "book_id": book_id,
+                    "handoff_id": handoff_id,
+                    "proposal_version_id": version_id,
+                    "proposal_status": stored_status,
+                    "original_state": resulting_state,
+                    "proposal_path": str(canonical_path),
+                    "proposal": stored_proposal.model_dump(mode="json"),
+                    "canon_changed": False,
+                    "chapter_created": False,
+                }
         current = connection.execute(
             "SELECT proposal_version_id FROM original_proposal_versions "
             "WHERE book_id=? AND edition_id='base' AND status='CURRENT' LIMIT 1",
@@ -699,6 +782,7 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
     record = original_record(database, book_id)
     if record is None:
         raise OriginalWorkflowError("当前项目不是 ORIGINAL 小说")
+    _reconcile_completed_original_bootstrap(database, book_id)
     proposal = load_original_proposal(database, book_id)
     accepted = accepted_foundation(database, book_id)
     with database.connect() as connection:

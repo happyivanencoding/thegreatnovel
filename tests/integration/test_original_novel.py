@@ -20,6 +20,7 @@ from novel_authoring.original.service import (
     confirm_original_foundation,
     create_original_book,
     import_original_bootstrap_proposal,
+    original_overview,
     prepare_original_bootstrap,
     resolve_original_proposal_version,
     select_first_chapter_candidate,
@@ -365,6 +366,88 @@ def test_foundation_stays_proposal_until_author_confirms_impact(tmp_path: Path) 
         candidate["score_status"] for candidate in result["genesis"]["candidates"]
     } == {"NOT_COMPUTED"}
     assert studio_access(layout, BookRegistry(layout).record(BOOK_ID)).accessible
+
+
+def test_completed_bootstrap_reconciles_on_status_check_without_new_handoff(
+    tmp_path: Path,
+) -> None:
+    layout, database = create_original(tmp_path)
+    handoff_id = complete_bootstrap_handoff(database)
+    with database.connect() as connection:
+        before_handoffs = connection.execute(
+            "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? AND handoff_type=?",
+            (BOOK_ID, "ORIGINAL_BOOK_BOOTSTRAP"),
+        ).fetchone()[0]
+        before_version = connection.execute(
+            "SELECT status FROM original_proposal_versions WHERE book_id=? AND handoff_id=?",
+            (BOOK_ID, handoff_id),
+        ).fetchone()[0]
+    assert before_handoffs == 1
+    assert before_version == "GENERATING"
+
+    checked = prepare_original_bootstrap(database, BOOK_ID)
+    assert checked["deduplicated"] is True
+    assert checked["proposal_imported"] is True
+    assert checked["handoff_id"] == handoff_id
+    assert checked["proposal_status"] == "CURRENT"
+
+    # A second import is a no-op and cannot downgrade CURRENT to READY.
+    repeated = import_original_bootstrap_proposal(database, BOOK_ID, handoff_id)
+    assert repeated["proposal_status"] == "CURRENT"
+    overview = original_overview(database, BOOK_ID)
+    assert overview["original_state"] == "FOUNDATION_REVIEW"
+    assert overview["proposal"] is not None
+    assert overview["generating_proposal"] is None
+
+    app = create_app(
+        database,
+        library_root=layout.library_root,
+        discovery_root=tmp_path / "book",
+    )
+    with TestClient(app) as client:
+        page = client.get(f"/books/{BOOK_ID}/original")
+    assert page.status_code == 200
+    assert "等待你确认故事方案" in page.text
+    assert "正在生成故事方案" not in page.text
+    with database.connect() as connection:
+        after_handoffs = connection.execute(
+            "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? AND handoff_type=?",
+            (BOOK_ID, "ORIGINAL_BOOK_BOOTSTRAP"),
+        ).fetchone()[0]
+        after_version = connection.execute(
+            "SELECT status FROM original_proposal_versions WHERE book_id=? AND handoff_id=?",
+            (BOOK_ID, handoff_id),
+        ).fetchone()[0]
+    assert after_handoffs == before_handoffs
+    assert after_version == "CURRENT"
+
+
+def test_web_read_reconciles_completed_bootstrap_without_manual_import(tmp_path: Path) -> None:
+    layout, database = create_original(tmp_path)
+    handoff_id = complete_bootstrap_handoff(database)
+    app = create_app(
+        database,
+        library_root=layout.library_root,
+        discovery_root=tmp_path / "book",
+    )
+
+    with TestClient(app) as client:
+        page = client.get(f"/books/{BOOK_ID}/original")
+
+    assert page.status_code == 200
+    assert "等待你确认故事方案" in page.text
+    assert "正在生成故事方案" not in page.text
+    with database.connect() as connection:
+        handoff_count = connection.execute(
+            "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? AND handoff_type=?",
+            (BOOK_ID, "ORIGINAL_BOOK_BOOTSTRAP"),
+        ).fetchone()[0]
+        version_status = connection.execute(
+            "SELECT status FROM original_proposal_versions WHERE book_id=? AND handoff_id=?",
+            (BOOK_ID, handoff_id),
+        ).fetchone()[0]
+    assert handoff_count == 1
+    assert version_status == "CURRENT"
 
 
 def test_foundation_transaction_rolls_back_all_partial_writes(tmp_path: Path) -> None:
