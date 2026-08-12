@@ -1,8 +1,14 @@
 # Progression Webnovel Kernel V1 架构审计
 
-> 状态：PWK-01 / 实施前审计
+> 状态：PWK-01 审计完成；PWK-02—PWK-19 V1 已实施
 > 基线：`progression-webnovel-kernel-v1`
 > 最高规范：`Novel_Authoring_System_Constitution_V2.md`
+
+> 顶层定位：Progression Webnovel Kernel 是 Chinese Serialized Webnovel Kernel
+> 下的首个、最成熟的 Specialized Narrative Engine。它不是所有中文网文的唯一
+> 故事模型；Market Category 也不是 Serial Scheduler 的权威输入。顶层通用边界、
+> Narrative Drive Mix 与后续 Engine 路线见
+> `docs/CHINESE_SERIALIZED_WEBNOVEL_KERNEL.md`。
 
 ## 1. 结论
 
@@ -258,6 +264,16 @@ Soft：单章不服务核心 Promise；连续多章成长无变化；能力长�
 8. Original Wizard Step 0、成长与长线确认、三 Foundation 共享 Contract。
 9. Workbench“成长”页面、Candidate Card、历史状态与 Imported Proposal。
 10. 四个内置 Seed、三个 OOD Seed、近未来体修 A/B、浏览器截图和全量工程验证。
+
+## 8. V1 实施结果
+
+实际模块位于 `src/novel_authoring/progression/`：模型、Preset、Adapter、Derived Spec、合同编译与版本服务、章节投影、资源机会、Debt bridge、Anticipation、Scheduler、Drift/Evolution、Original Interpretation、Existing Novel Inference 与 Workbench read model 已各自保持单一职责。
+
+Original Wizard 已加入 Step 0 Reader Experience 确认；Bootstrap skill 要求 Foundation Proposal 原样携带冻结 `progression_kernel`，服务端在导入时再次校验。Genesis 同时修复了选中 Foundation 的主角/目标 precedence，以及 `characters_override` / `factions_override` 丢失。
+
+`ChapterWorldStateView` 已挂载 Progression / World Expansion / Opportunity / Payoff Readiness / Anticipation 只读投影。Workbench 左栏增加“成长”，Candidate Card 显示 Reader Promise、成长、资源、世界、期待和题材状态。导入小说可以生成 `INFERRED_PROPOSAL` 并逐项确认；无合同的旧项目不被阻断。
+
+验收索引见 `benchmark/progression_kernel_v1_acceptance.md`。
 
 每个切片独立提交并推送到 `origin/progression-webnovel-kernel-v1`。生产代码不得修改 `book/` 原文、自动接受 Contract、自动写 Author Truth，或建立新的 Canon / Debt / Payoff / Candidate / World State authority。
 
