@@ -95,8 +95,8 @@ def _record(row: Any) -> ContractRecord:
     )
 
 
-def create_contract_proposal(
-    database: Database,
+def _create_contract_proposal_in_connection(
+    connection: sqlite3.Connection,
     *,
     book_id: str,
     edition_id: str,
@@ -108,7 +108,6 @@ def create_contract_proposal(
 ) -> ContractRecord:
     if status is ContractStatus.EFFECTIVE:
         raise ValueError("Contract Proposal 不能绕过作者确认直接生效")
-    database.initialize()
     model_type = _CONTRACT_MODELS[contract_type]
     validated = payload if isinstance(payload, model_type) else model_type.model_validate(payload)
     values = validated.model_dump(mode="json")
@@ -116,43 +115,70 @@ def create_contract_proposal(
         values["status"] = status.value
     now = utc_now()
     record_id = f"progression-contract-{uuid.uuid4().hex}"
-    with database.connect() as connection:
-        version_number = int(
-            connection.execute(
-                """
-                SELECT COALESCE(MAX(version_number), 0) + 1
-                FROM progression_contract_versions
-                WHERE book_id=? AND edition_id=? AND contract_type=?
-                """,
-                (book_id, edition_id, contract_type.value),
-            ).fetchone()[0]
-        )
+    version_number = int(
         connection.execute(
             """
-            INSERT INTO progression_contract_versions(
-                contract_record_id, book_id, edition_id, contract_type,
-                version_number, status, payload_json, effective_from_boundary,
-                source, author_notes, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)
+            SELECT COALESCE(MAX(version_number), 0) + 1
+            FROM progression_contract_versions
+            WHERE book_id=? AND edition_id=? AND contract_type=?
             """,
-            (
-                record_id,
-                book_id,
-                edition_id,
-                contract_type.value,
-                version_number,
-                status.value,
-                json_dumps(values),
-                source,
-                author_notes,
-                now,
-                now,
-            ),
-        )
-    record = get_contract_record(database, record_id)
-    if record is None:
+            (book_id, edition_id, contract_type.value),
+        ).fetchone()[0]
+    )
+    connection.execute(
+        """
+        INSERT INTO progression_contract_versions(
+            contract_record_id, book_id, edition_id, contract_type,
+            version_number, status, payload_json, effective_from_boundary,
+            source, author_notes, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)
+        """,
+        (
+            record_id,
+            book_id,
+            edition_id,
+            contract_type.value,
+            version_number,
+            status.value,
+            json_dumps(values),
+            source,
+            author_notes,
+            now,
+            now,
+        ),
+    )
+    row = connection.execute(
+        "SELECT * FROM progression_contract_versions WHERE contract_record_id=?",
+        (record_id,),
+    ).fetchone()
+    if row is None:
         raise RuntimeError("Contract Proposal 持久化失败")
-    return record
+    return _record(row)
+
+
+def create_contract_proposal(
+    database: Database,
+    *,
+    book_id: str,
+    edition_id: str,
+    contract_type: ProgressionContractType,
+    payload: ContractModel | dict[str, Any],
+    source: str,
+    status: ContractStatus = ContractStatus.NEEDS_REVIEW,
+    author_notes: str = "",
+) -> ContractRecord:
+    database.initialize()
+    with database.connect() as connection:
+        return _create_contract_proposal_in_connection(
+            connection,
+            book_id=book_id,
+            edition_id=edition_id,
+            contract_type=contract_type,
+            payload=payload,
+            source=source,
+            status=status,
+            author_notes=author_notes,
+        )
 
 
 def get_contract_record(database: Database, contract_record_id: str) -> ContractRecord | None:
@@ -285,28 +311,42 @@ def confirm_contract(
     return confirmed
 
 
-def reject_contract(database: Database, contract_record_id: str) -> ContractRecord:
-    record = get_contract_record(database, contract_record_id)
-    if record is None:
+def _reject_contract_in_connection(
+    connection: sqlite3.Connection, contract_record_id: str
+) -> ContractRecord:
+    row = connection.execute(
+        "SELECT * FROM progression_contract_versions WHERE contract_record_id=?",
+        (contract_record_id,),
+    ).fetchone()
+    if row is None:
         raise ValueError("Contract Proposal 不存在")
+    record = _record(row)
     if record.status is ContractStatus.EFFECTIVE:
         raise ValueError("Effective Contract 需要新版本替代，不能直接拒绝")
     payload = dict(record.payload)
     if "status" in payload:
         payload["status"] = ContractStatus.REJECTED.value
-    with database.connect() as connection:
-        connection.execute(
-            """
-            UPDATE progression_contract_versions
-            SET status='REJECTED', payload_json=?, updated_at=?, version=version+1
-            WHERE contract_record_id=?
-            """,
-            (json_dumps(payload), utc_now(), contract_record_id),
-        )
-    rejected = get_contract_record(database, contract_record_id)
-    if rejected is None:
+    connection.execute(
+        """
+        UPDATE progression_contract_versions
+        SET status='REJECTED', payload_json=?, updated_at=?, version=version+1
+        WHERE contract_record_id=?
+        """,
+        (json_dumps(payload), utc_now(), contract_record_id),
+    )
+    rejected_row = connection.execute(
+        "SELECT * FROM progression_contract_versions WHERE contract_record_id=?",
+        (contract_record_id,),
+    ).fetchone()
+    if rejected_row is None:
         raise RuntimeError("Contract 拒绝失败")
-    return rejected
+    return _record(rejected_row)
+
+
+def reject_contract(database: Database, contract_record_id: str) -> ContractRecord:
+    database.initialize()
+    with database.connect() as connection:
+        return _reject_contract_in_connection(connection, contract_record_id)
 
 
 def effective_contract_records(

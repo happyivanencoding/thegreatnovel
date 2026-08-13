@@ -54,7 +54,8 @@ from novel_authoring.progression.service import (
     ContractRecord,
     ProgressionContractType,
     _confirm_contract_in_connection,
-    confirm_contract,
+    _create_contract_proposal_in_connection,
+    _reject_contract_in_connection,
     create_contract_proposal,
     effective_contract_records,
     list_contract_records,
@@ -548,12 +549,26 @@ def confirm_original_reader_experience(
         ).fetchone()
     if state is None:
         raise OriginalWorkflowError("Original state 不存在")
+    effective = next(
+        (
+            record
+            for record in records
+            if record.contract_type is ProgressionContractType.READER_EXPERIENCE
+            and record.status is ContractStatus.EFFECTIVE
+        ),
+        None,
+    )
+    drive_status = (
+        ContractStatus.EFFECTIVE
+        if effective is not None
+        else ContractStatus.NEEDS_REVIEW
+    )
     drive_record = next(
         (
             record
             for record in records
             if record.contract_type is ProgressionContractType.NARRATIVE_DRIVE
-            and record.status in {ContractStatus.NEEDS_REVIEW, ContractStatus.EFFECTIVE}
+            and record.status is drive_status
         ),
         None,
     )
@@ -584,15 +599,6 @@ def confirm_original_reader_experience(
         if progression_engine_enabled is None
         else progression_engine_enabled
     )
-    effective = next(
-        (
-            record
-            for record in records
-            if record.contract_type is ProgressionContractType.READER_EXPERIENCE
-            and record.status is ContractStatus.EFFECTIVE
-        ),
-        None,
-    )
     if effective is not None:
         effective_reader = ReaderExperienceContract.model_validate(effective.payload)
         requested_reader = adjust_reader_experience(
@@ -606,7 +612,7 @@ def confirm_original_reader_experience(
         same_author_intent = (
             requested_reader.experience_priorities
             == effective_reader.experience_priorities
-            and selected_primary is current_drive.primary_drive
+            and selected_primary == current_drive.primary_drive
             and selected_secondary == current_drive.secondary_drives
             and selected_progression == current_drive.progression_engine_enabled
         )
@@ -614,29 +620,11 @@ def confirm_original_reader_experience(
             raise OriginalWorkflowError(
                 "Reader Kernel 已确认；如需修改，请从新的创世/改写流程重新开始"
             )
-        with database.connect() as connection:
-            innovation = connection.execute(
-                "SELECT innovation_proposal_version_id, handoff_id "
-                "FROM original_innovation_versions WHERE book_id=? AND edition_id='base' "
-                "AND status IN ('GENERATING', 'CURRENT') "
-                "ORDER BY version_number DESC LIMIT 1",
-                (book_id,),
-            ).fetchone()
-        if innovation is None or not innovation["handoff_id"]:
-            raise OriginalWorkflowError(
-                "Reader Kernel 已确认，但当前 Core Innovation workflow 不存在"
-            )
-        handoff = get_handoff(database, str(innovation["handoff_id"]))
+        handoff = prepare_original_core_innovation(database, book_id)
         return {
             "reader_experience": effective.model_dump(mode="json"),
             "narrative_drive": drive_record.model_dump(mode="json"),
-            "handoff": {
-                **handoff,
-                "innovation_proposal_version_id": str(
-                    innovation["innovation_proposal_version_id"]
-                ),
-                "deduplicated": True,
-            },
+            "handoff": handoff,
             "idempotent": True,
             "canon_changed": False,
         }
@@ -697,45 +685,76 @@ def confirm_original_reader_experience(
             ],
         }
     )
-    if adjusted != ReaderExperienceContract.model_validate(current.payload):
-        replacement = create_contract_proposal(
-            database,
-            book_id=book_id,
-            edition_id="base",
-            contract_type=ProgressionContractType.READER_EXPERIENCE,
-            payload=adjusted,
-            source="AUTHOR_ADJUSTED_READER_EXPERIENCE",
+    current_reader = ReaderExperienceContract.model_validate(current.payload)
+    reader_to_confirm = current
+    drive_to_confirm = drive_record
+    with database.connect() as connection:
+        connection.execute("BEGIN IMMEDIATE")
+        for record, label in (
+            (current, "Reader Experience"),
+            (drive_record, "Narrative Drive"),
+        ):
+            row = connection.execute(
+                "SELECT status, payload_json FROM progression_contract_versions "
+                "WHERE contract_record_id=?",
+                (record.contract_record_id,),
+            ).fetchone()
+            if (
+                row is None
+                or str(row["status"]) != ContractStatus.NEEDS_REVIEW.value
+                or json.loads(str(row["payload_json"])) != record.payload
+            ):
+                raise OriginalWorkflowError(
+                    f"当前 {label} Proposal 已变化，请刷新后重试"
+                )
+        if adjusted != current_reader:
+            reader_to_confirm = _create_contract_proposal_in_connection(
+                connection,
+                book_id=book_id,
+                edition_id="base",
+                contract_type=ProgressionContractType.READER_EXPERIENCE,
+                payload=adjusted,
+                source="AUTHOR_ADJUSTED_READER_EXPERIENCE",
+            )
+            _reject_contract_in_connection(connection, current.contract_record_id)
+        if confirmed_drive != current_drive:
+            drive_to_confirm = _create_contract_proposal_in_connection(
+                connection,
+                book_id=book_id,
+                edition_id="base",
+                contract_type=ProgressionContractType.NARRATIVE_DRIVE,
+                payload=confirmed_drive,
+                source="AUTHOR_CONFIRMED_NARRATIVE_DRIVE",
+            )
+            _reject_contract_in_connection(connection, drive_record.contract_record_id)
+        confirmed_reader = _confirm_contract_in_connection(
+            connection,
+            reader_to_confirm.contract_record_id,
+            effective_from_boundary=1,
+            author_notes=f"作者选择：{selected_adjustment.value}",
         )
-        reject_contract(database, current.contract_record_id)
-        current = replacement
-    effective = confirm_contract(
-        database,
-        current.contract_record_id,
-        effective_from_boundary=1,
-        author_notes=f"作者选择：{selected_adjustment.value}",
-    )
-    if confirmed_drive != current_drive:
-        replacement_drive = create_contract_proposal(
-            database,
-            book_id=book_id,
-            edition_id="base",
-            contract_type=ProgressionContractType.NARRATIVE_DRIVE,
-            payload=confirmed_drive,
-            source="AUTHOR_CONFIRMED_NARRATIVE_DRIVE",
+        confirmed_drive_record = _confirm_contract_in_connection(
+            connection,
+            drive_to_confirm.contract_record_id,
+            effective_from_boundary=1,
+            author_notes="作者在 Step 0 一并确认 Narrative Drive",
         )
-        reject_contract(database, drive_record.contract_record_id)
-        drive_record = replacement_drive
+    from novel_authoring.planning.aggregates import invalidate_planning_aggregates
+
+    invalidate_planning_aggregates(database, book_id, "base")
     proposal = proposal.model_copy(
         update={
-            "reader_experience": ReaderExperienceContract.model_validate(effective.payload),
+            "reader_experience": ReaderExperienceContract.model_validate(
+                confirmed_reader.payload
+            ),
             "narrative_drive": confirmed_drive,
         }
     )
     _write_json(proposal_path, proposal.model_dump(mode="json"))
     handoff = prepare_original_core_innovation(database, book_id)
     return {
-        "reader_experience": effective.model_dump(mode="json"),
-        "narrative_drive": drive_record.model_dump(mode="json"),
+        "reader_experience": confirmed_reader.model_dump(mode="json"),
+        "narrative_drive": confirmed_drive_record.model_dump(mode="json"),
         "handoff": handoff,
         "canon_changed": False,
     }

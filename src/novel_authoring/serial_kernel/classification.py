@@ -126,10 +126,20 @@ def ensure_drive_support_metadata(
             [f"持续通过{_DRIVE_LABELS.get(drive, drive.value)}产生可见后果"],
         )
         debt_types.setdefault(drive, [drive.value])
-        if not any(item.associated_drive is drive for item in payoff_channels):
+        authoritative_channel = _payoff_for_drive(drive)
+        active_channels = [
+            index
+            for index, item in enumerate(payoff_channels)
+            if item.associated_drive == drive
+        ]
+        for channel_index in active_channels:
+            payoff_channels[channel_index] = payoff_channels[channel_index].model_copy(
+                update={"channel": authoritative_channel}
+            )
+        if not active_channels:
             payoff_channels.append(
                 DrivePayoffChannel(
-                    channel=_payoff_for_drive(drive),
+                    channel=authoritative_channel,
                     associated_drive=drive,
                 )
             )
