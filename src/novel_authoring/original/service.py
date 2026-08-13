@@ -540,12 +540,14 @@ def confirm_original_reader_experience(
         else ReaderExperienceAdjustment(adjustment)
     )
     priority_overrides = priority_overrides or {}
-    proposal_path = _original_dir(database, book_id) / "reader_experience.json"
-    payload = _read_json(proposal_path)
-    if payload is None:
-        raise OriginalWorkflowError("Reader Experience Proposal 不存在")
-    proposal = OriginalReaderKernelProposal.model_validate(payload)
     records = list_contract_records(database, book_id=book_id, edition_id="base")
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT state FROM original_states WHERE book_id=? AND edition_id='base'",
+            (book_id,),
+        ).fetchone()
+    if state is None:
+        raise OriginalWorkflowError("Original state 不存在")
     drive_record = next(
         (
             record
@@ -582,6 +584,67 @@ def confirm_original_reader_experience(
         if progression_engine_enabled is None
         else progression_engine_enabled
     )
+    effective = next(
+        (
+            record
+            for record in records
+            if record.contract_type is ProgressionContractType.READER_EXPERIENCE
+            and record.status is ContractStatus.EFFECTIVE
+        ),
+        None,
+    )
+    if effective is not None:
+        effective_reader = ReaderExperienceContract.model_validate(effective.payload)
+        requested_reader = adjust_reader_experience(
+            effective_reader,
+            selected_adjustment,
+        )
+        requested_reader = apply_reader_experience_overrides(
+            requested_reader,
+            priority_overrides,
+        )
+        same_author_intent = (
+            requested_reader.experience_priorities
+            == effective_reader.experience_priorities
+            and selected_primary is current_drive.primary_drive
+            and selected_secondary == current_drive.secondary_drives
+            and selected_progression == current_drive.progression_engine_enabled
+        )
+        if not same_author_intent:
+            raise OriginalWorkflowError(
+                "Reader Kernel 已确认；如需修改，请从新的创世/改写流程重新开始"
+            )
+        with database.connect() as connection:
+            innovation = connection.execute(
+                "SELECT innovation_proposal_version_id, handoff_id "
+                "FROM original_innovation_versions WHERE book_id=? AND edition_id='base' "
+                "AND status IN ('GENERATING', 'CURRENT') "
+                "ORDER BY version_number DESC LIMIT 1",
+                (book_id,),
+            ).fetchone()
+        if innovation is None or not innovation["handoff_id"]:
+            raise OriginalWorkflowError(
+                "Reader Kernel 已确认，但当前 Core Innovation workflow 不存在"
+            )
+        handoff = get_handoff(database, str(innovation["handoff_id"]))
+        return {
+            "reader_experience": effective.model_dump(mode="json"),
+            "narrative_drive": drive_record.model_dump(mode="json"),
+            "handoff": {
+                **handoff,
+                "innovation_proposal_version_id": str(
+                    innovation["innovation_proposal_version_id"]
+                ),
+                "deduplicated": True,
+            },
+            "idempotent": True,
+            "canon_changed": False,
+        }
+    proposal_path = _original_dir(database, book_id) / "reader_experience.json"
+    payload = _read_json(proposal_path)
+    if payload is None:
+        raise OriginalWorkflowError("Reader Experience Proposal 不存在")
+    proposal = OriginalReaderKernelProposal.model_validate(payload)
     priorities = dict(current_drive.drive_priorities)
     promises = dict(current_drive.drive_promises)
     debts = dict(current_drive.drive_debt_types)
@@ -606,98 +669,51 @@ def confirm_original_reader_experience(
             }
         )
     )
-    effective = next(
+    current = next(
         (
             record
             for record in records
             if record.contract_type is ProgressionContractType.READER_EXPERIENCE
-            and record.status is ContractStatus.EFFECTIVE
+            and record.status is ContractStatus.NEEDS_REVIEW
         ),
         None,
     )
-    if effective is None:
-        current = next(
-            (
-                record
-                for record in records
-                if record.contract_type is ProgressionContractType.READER_EXPERIENCE
-                and record.status is ContractStatus.NEEDS_REVIEW
-            ),
-            None,
-        )
-        if current is None:
-            raise OriginalWorkflowError("没有待确认的 Reader Experience Proposal")
-        adjusted = adjust_reader_experience(
-            ReaderExperienceContract.model_validate(current.payload),
-            selected_adjustment,
-        )
-        adjusted = apply_reader_experience_overrides(adjusted, priority_overrides)
-        adjusted = adjusted.model_copy(
-            update={
-                "primary_narrative_drive": confirmed_drive.primary_drive.value,
-                "secondary_narrative_drives": [
-                    item.value for item in confirmed_drive.secondary_drives
-                ],
-                "drive_priority_order": [
-                    item.value for item in confirmed_drive.drive_mix
-                ],
-                "expected_drive_interactions": [
-                    f"{narrative_drive_label(confirmed_drive.primary_drive)}为主要驱动力"
-                ],
-            }
-        )
-        if adjusted != ReaderExperienceContract.model_validate(current.payload):
-            replacement = create_contract_proposal(
-                database,
-                book_id=book_id,
-                edition_id="base",
-                contract_type=ProgressionContractType.READER_EXPERIENCE,
-                payload=adjusted,
-                source="AUTHOR_ADJUSTED_READER_EXPERIENCE",
-            )
-            reject_contract(database, current.contract_record_id)
-            current = replacement
-        effective = confirm_contract(
+    if current is None:
+        raise OriginalWorkflowError("没有待确认的 Reader Experience Proposal")
+    adjusted = adjust_reader_experience(
+        ReaderExperienceContract.model_validate(current.payload),
+        selected_adjustment,
+    )
+    adjusted = apply_reader_experience_overrides(adjusted, priority_overrides)
+    adjusted = adjusted.model_copy(
+        update={
+            "primary_narrative_drive": confirmed_drive.primary_drive.value,
+            "secondary_narrative_drives": [
+                item.value for item in confirmed_drive.secondary_drives
+            ],
+            "drive_priority_order": [item.value for item in confirmed_drive.drive_mix],
+            "expected_drive_interactions": [
+                f"{narrative_drive_label(confirmed_drive.primary_drive)}为主要驱动力"
+            ],
+        }
+    )
+    if adjusted != ReaderExperienceContract.model_validate(current.payload):
+        replacement = create_contract_proposal(
             database,
-            current.contract_record_id,
-            effective_from_boundary=1,
-            author_notes=f"作者选择：{selected_adjustment.value}",
+            book_id=book_id,
+            edition_id="base",
+            contract_type=ProgressionContractType.READER_EXPERIENCE,
+            payload=adjusted,
+            source="AUTHOR_ADJUSTED_READER_EXPERIENCE",
         )
-    elif priority_overrides:
-        adjusted = apply_reader_experience_overrides(
-            ReaderExperienceContract.model_validate(effective.payload),
-            priority_overrides,
-        )
-        adjusted = adjusted.model_copy(
-            update={
-                "primary_narrative_drive": confirmed_drive.primary_drive.value,
-                "secondary_narrative_drives": [
-                    item.value for item in confirmed_drive.secondary_drives
-                ],
-                "drive_priority_order": [
-                    item.value for item in confirmed_drive.drive_mix
-                ],
-                "expected_drive_interactions": [
-                    f"{narrative_drive_label(confirmed_drive.primary_drive)}为主要驱动力"
-                ],
-            }
-        )
-        if adjusted != ReaderExperienceContract.model_validate(effective.payload):
-            replacement = create_contract_proposal(
-                database,
-                book_id=book_id,
-                edition_id="base",
-                contract_type=ProgressionContractType.READER_EXPERIENCE,
-                payload=adjusted,
-                source="AUTHOR_ADJUSTED_READER_EXPERIENCE",
-            )
-            reject_contract(database, effective.contract_record_id)
-            effective = confirm_contract(
-                database,
-                replacement.contract_record_id,
-                effective_from_boundary=1,
-                author_notes="作者手动调整阅读体验强度",
-            )
+        reject_contract(database, current.contract_record_id)
+        current = replacement
+    effective = confirm_contract(
+        database,
+        current.contract_record_id,
+        effective_from_boundary=1,
+        author_notes=f"作者选择：{selected_adjustment.value}",
+    )
     if confirmed_drive != current_drive:
         replacement_drive = create_contract_proposal(
             database,
