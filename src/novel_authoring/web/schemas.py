@@ -16,7 +16,10 @@ from novel_authoring.author_control.models import (
 from novel_authoring.author_control.reveal import AgendaBucket, KnowledgeState, RevealDepth
 from novel_authoring.author_control.truth import TruthCompatibilityEvidenceInput
 from novel_authoring.metrics.models import MetricComponentStatus, ObservationSourceKind
-from novel_authoring.original.models import OriginalCreativeSemantics
+from novel_authoring.original.models import (
+    OriginalCreativeSemantics,
+    OriginalReaderKernelAuthorOverrides,
+)
 from novel_authoring.planning.innovation import InnovationFocus, InnovationLevel
 from novel_authoring.progression.interpretation import (
     ReaderExperienceAdjustment,
@@ -118,6 +121,14 @@ class OriginalReaderExperienceConfirmationRequest(BaseModel):
     secondary_drives: list[NarrativeDrive] = Field(default_factory=list, max_length=4)
     progression_engine_enabled: bool
     creative_semantics: OriginalCreativeSemantics
+    author_overrides: OriginalReaderKernelAuthorOverrides | None = None
+
+
+class OriginalReaderKernelRegenerationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    author_overrides: OriginalReaderKernelAuthorOverrides
+    author_instruction: str = Field(default="", max_length=4000)
 
 
 class OriginalCoreInnovationSelectionRequest(BaseModel):

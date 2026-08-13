@@ -6,6 +6,7 @@ import json
 import sqlite3
 import uuid
 from collections.abc import Mapping, Sequence
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
@@ -30,6 +31,8 @@ from novel_authoring.original.models import (
     OriginalBookRequest,
     OriginalCreativeSemantics,
     OriginalFoundationConfirmation,
+    OriginalReaderKernelAuthorOverrides,
+    OriginalReaderKernelGenerationRequest,
     OriginalReaderKernelProposal,
     OriginalState,
     StoryFoundationProposal,
@@ -49,7 +52,11 @@ from novel_authoring.progression.interpretation import (
 from novel_authoring.progression.models import (
     ContractStatus,
     ExperiencePriority,
+    ExplanationStyle,
+    PrimaryFamily,
     ReaderExperienceContract,
+    SerialForm,
+    SettingSkin,
 )
 from novel_authoring.progression.service import (
     ContractRecord,
@@ -67,7 +74,11 @@ from novel_authoring.serial_kernel.classification import (
     market_category_label,
     narrative_drive_label,
 )
-from novel_authoring.serial_kernel.models import NarrativeDrive, NarrativeDriveContract
+from novel_authoring.serial_kernel.models import (
+    MarketCategory,
+    NarrativeDrive,
+    NarrativeDriveContract,
+)
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import ensure_operation
 from novel_authoring.storage.registry import (
@@ -91,6 +102,13 @@ from novel_authoring.workflows.handoffs import (
 
 class OriginalWorkflowError(RuntimeError):
     pass
+
+
+def _enum_options(enum_type: type[StrEnum]) -> list[dict[str, str]]:
+    return [
+        {"value": item.value, "label": item.value.replace("_", " ").title()}
+        for item in enum_type
+    ]
 
 
 def _original_root(database: Database, book_id: str) -> Path:
@@ -121,6 +139,61 @@ def _read_json(path: Path) -> dict[str, Any] | None:
     return payload if isinstance(payload, dict) else None
 
 
+def _reader_kernel_author_overrides(
+    database: Database, book_id: str
+) -> tuple[OriginalReaderKernelAuthorOverrides, str]:
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT reader_kernel_author_overrides_json, "
+            "reader_kernel_author_instruction FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (book_id,),
+        ).fetchone()
+    if row is None:
+        raise OriginalWorkflowError("Original state 不存在")
+    raw = row["reader_kernel_author_overrides_json"]
+    overrides = (
+        OriginalReaderKernelAuthorOverrides()
+        if not raw
+        else OriginalReaderKernelAuthorOverrides.model_validate_json(str(raw))
+    )
+    return overrides, str(row["reader_kernel_author_instruction"] or "")
+
+
+def _assert_reader_kernel_overrides_applied(
+    proposal: OriginalReaderKernelProposal,
+    overrides: OriginalReaderKernelAuthorOverrides,
+) -> None:
+    sections = (
+        ("reader_experience", proposal.reader_experience, overrides.reader_experience),
+        ("market_category", proposal.market_category, overrides.market_category),
+        ("narrative_drive", proposal.narrative_drive, overrides.narrative_drive),
+        ("creative_semantics", proposal.creative_semantics, overrides.creative_semantics),
+    )
+    for section_name, actual, expected in sections:
+        for field_name in type(expected).model_fields:
+            expected_value = getattr(expected, field_name)
+            if expected_value is None:
+                continue
+            if section_name == "reader_experience" and field_name == "experience_priorities":
+                if not expected_value:
+                    continue
+                if not isinstance(actual, ReaderExperienceContract):
+                    raise OriginalWorkflowError("Reader Experience Override 目标无效")
+                for experience, priority in expected_value.items():
+                    if actual.experience_priorities.get(experience) != priority:
+                        raise OriginalWorkflowError(
+                            "重新生成的 Reader Kernel 未遵守 Author Override："
+                            f"reader_experience.experience_priorities.{experience.value}"
+                        )
+                continue
+            if getattr(actual, field_name) != expected_value:
+                raise OriginalWorkflowError(
+                    "重新生成的 Reader Kernel 未遵守 Author Override："
+                    f"{section_name}.{field_name}"
+                )
+
+
 def _confirmed_reader_kernel_projection(
     database: Database,
     book_id: str,
@@ -129,8 +202,9 @@ def _confirmed_reader_kernel_projection(
     """Overlay confirmed SQLite intent onto optional semantic-read metadata."""
     effective = effective_contract_records(database, book_id=book_id, edition_id="base")
     reader = effective.get(ProgressionContractType.READER_EXPERIENCE)
+    market = effective.get(ProgressionContractType.MARKET_CATEGORY)
     drive = effective.get(ProgressionContractType.NARRATIVE_DRIVE)
-    if reader is None or drive is None:
+    if reader is None or market is None or drive is None:
         return proposal
     with database.connect() as connection:
         state = connection.execute(
@@ -146,6 +220,7 @@ def _confirmed_reader_kernel_projection(
     return {
         **(proposal or {}),
         "reader_experience": reader.payload,
+        "market_category": market.payload,
         "narrative_drive": drive.payload,
         "creative_semantics": creative_semantics.model_dump(mode="json"),
     }
@@ -281,8 +356,10 @@ def _confirmed_progression_kernel(
 ) -> dict[str, Any]:
     effective = effective_contract_records(database, book_id=book_id, edition_id="base")
     reader = effective.get(ProgressionContractType.READER_EXPERIENCE)
-    if reader is None:
-        raise OriginalWorkflowError("必须先确认 Reader Experience")
+    market = effective.get(ProgressionContractType.MARKET_CATEGORY)
+    drive = effective.get(ProgressionContractType.NARRATIVE_DRIVE)
+    if reader is None or market is None or drive is None:
+        raise OriginalWorkflowError("必须先确认完整 Reader Kernel")
     with database.connect() as connection:
         state = connection.execute(
             "SELECT confirmed_creative_semantics_json FROM original_states "
@@ -294,10 +371,10 @@ def _confirmed_progression_kernel(
     creative_semantics = OriginalCreativeSemantics.model_validate_json(
         str(state["confirmed_creative_semantics_json"])
     )
-    contract_records = list_contract_records(database, book_id=book_id, edition_id="base")
-    latest_by_type: dict[str, dict[str, Any]] = {}
-    for record in contract_records:
-        latest_by_type.setdefault(record.contract_type.value, record.model_dump(mode="json"))
+    latest_by_type = {
+        contract_type.value: record.model_dump(mode="json")
+        for contract_type, record in effective.items()
+    }
     kernel: dict[str, Any] = {
         "reader_experience": reader.model_dump(mode="json"),
         "creative_semantics": creative_semantics.model_dump(mode="json"),
@@ -453,15 +530,150 @@ def prepare_original_reader_experience(database: Database, book_id: str) -> dict
     if request_payload is None:
         raise OriginalWorkflowError("原创的一句话创意不存在")
     request = OriginalBookRequest.model_validate(request_payload)
+    generation_request = OriginalReaderKernelGenerationRequest(
+        **request.model_dump(mode="json")
+    )
     handoff = create_original_reader_interpretation_handoff(
         database,
         book_id,
-        original_reader_request=request.model_dump(mode="json"),
+        original_reader_request=generation_request.model_dump(mode="json", exclude_none=True),
     )
     _set_original_state(database, book_id, OriginalState.READER_EXPERIENCE_GENERATING)
     return {
         **handoff,
         "deduplicated": False,
+        "canon_changed": False,
+    }
+
+
+def regenerate_original_reader_kernel(
+    database: Database,
+    book_id: str,
+    *,
+    author_overrides: OriginalReaderKernelAuthorOverrides | Mapping[str, Any],
+    author_instruction: str = "",
+) -> dict[str, Any]:
+    overrides = OriginalReaderKernelAuthorOverrides.model_validate(author_overrides)
+    proposal_path = _original_dir(database, book_id) / "reader_experience.json"
+    proposal_payload = _read_json(proposal_path)
+    if proposal_payload is None:
+        raise OriginalWorkflowError("Reader Kernel Proposal 不存在")
+    proposal = OriginalReaderKernelProposal.model_validate(proposal_payload)
+    request_payload = _read_json(_original_dir(database, book_id) / "request.json")
+    if request_payload is None:
+        raise OriginalWorkflowError("原创的一句话创意不存在")
+    seed = OriginalBookRequest.model_validate(request_payload)
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT state, confirmed_creative_semantics_json, "
+            "reader_kernel_overrides_need_regeneration FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (book_id,),
+        ).fetchone()
+        active = connection.execute(
+            "SELECT handoff_id FROM workflow_handoffs WHERE book_id=? AND edition_id='base' "
+            "AND handoff_type=? AND status IN ('READY_FOR_CODEX', 'CLAIMED', 'RUNNING', "
+            "'WAITING_FOR_USER') ORDER BY created_at DESC LIMIT 1",
+            (book_id, HandoffType.ORIGINAL_READER_INTERPRETATION.value),
+        ).fetchone()
+    if state is None or str(state["state"]) not in {
+        OriginalState.READER_EXPERIENCE_REVIEW.value,
+        OriginalState.READER_EXPERIENCE_GENERATING.value,
+    }:
+        raise OriginalWorkflowError("只有待审阅的 Reader Kernel Proposal 可以重新生成")
+    if state["confirmed_creative_semantics_json"]:
+        raise OriginalWorkflowError("Reader Kernel 已确认，不能重新生成 Proposal")
+    if active is not None:
+        raise OriginalWorkflowError("Reader Kernel Proposal 正在重新生成")
+    generation_request = OriginalReaderKernelGenerationRequest(
+        **seed.model_dump(mode="json"),
+        generation_mode="REGENERATION",
+        current_ai_proposal=proposal,
+        author_overrides=overrides,
+        author_instruction=author_instruction.strip(),
+    )
+    handoff = create_original_reader_interpretation_handoff(
+        database,
+        book_id,
+        original_reader_request=generation_request.model_dump(mode="json", exclude_none=True),
+    )
+    now = utc_now()
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE original_states SET state=?, reader_kernel_author_overrides_json=?, "
+            "reader_kernel_author_instruction=?, reader_kernel_overrides_need_regeneration=1, "
+            "updated_at=?, version=version+1 "
+            "WHERE book_id=? AND edition_id='base'",
+            (
+                OriginalState.READER_EXPERIENCE_GENERATING.value,
+                json_dumps(
+                    overrides.model_dump(
+                        mode="json", exclude_unset=True, exclude_none=True
+                    )
+                ),
+                author_instruction.strip(),
+                now,
+                book_id,
+            ),
+        )
+    _update_registry(
+        database, book_id, state=OriginalState.READER_EXPERIENCE_GENERATING
+    )
+    return {
+        **handoff,
+        "author_overrides": overrides.model_dump(
+            mode="json", exclude_unset=True, exclude_none=True
+        ),
+        "author_instruction": author_instruction.strip(),
+        "deduplicated": False,
+        "canon_changed": False,
+    }
+
+
+def save_original_reader_kernel_overrides(
+    database: Database,
+    book_id: str,
+    *,
+    author_overrides: OriginalReaderKernelAuthorOverrides | Mapping[str, Any],
+    author_instruction: str = "",
+) -> dict[str, Any]:
+    overrides = OriginalReaderKernelAuthorOverrides.model_validate(author_overrides)
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT state, confirmed_creative_semantics_json, "
+            "reader_kernel_overrides_need_regeneration FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (book_id,),
+        ).fetchone()
+        if state is None:
+            raise OriginalWorkflowError("Original state 不存在")
+        if (
+            str(state["state"]) != OriginalState.READER_EXPERIENCE_REVIEW.value
+            or state["confirmed_creative_semantics_json"]
+        ):
+            raise OriginalWorkflowError("只有待审阅的 Reader Kernel 可以保存 Author Overrides")
+        connection.execute(
+            "UPDATE original_states SET reader_kernel_author_overrides_json=?, "
+            "reader_kernel_author_instruction=?, reader_kernel_overrides_need_regeneration=1, "
+            "updated_at=?, version=version+1 "
+            "WHERE book_id=? AND edition_id='base'",
+            (
+                json_dumps(
+                    overrides.model_dump(
+                        mode="json", exclude_unset=True, exclude_none=True
+                    )
+                ),
+                author_instruction.strip(),
+                utc_now(),
+                book_id,
+            ),
+        )
+    return {
+        "author_overrides": overrides.model_dump(
+            mode="json", exclude_unset=True, exclude_none=True
+        ),
+        "author_instruction": author_instruction.strip(),
+        "saved": True,
         "canon_changed": False,
     }
 
@@ -479,16 +691,69 @@ def _reconcile_completed_original_reader_kernel(
         return None
     with database.connect() as connection:
         row = connection.execute(
-            "SELECT handoff_id FROM workflow_handoffs WHERE book_id=? AND edition_id='base' "
-            "AND handoff_type=? AND status='COMPLETED' ORDER BY created_at DESC LIMIT 1",
+            "SELECT handoff_id, status FROM workflow_handoffs "
+            "WHERE book_id=? AND edition_id='base' AND handoff_type=? "
+            "ORDER BY created_at DESC, rowid DESC LIMIT 1",
             (book_id, HandoffType.ORIGINAL_READER_INTERPRETATION.value),
         ).fetchone()
     if row is None:
         return None
-    proposal_path = _original_dir(database, book_id) / "reader_experience.json"
-    if proposal_path.is_file():
+    handoff = get_handoff(database, str(row["handoff_id"]))
+    generation_payload = _read_json(
+        Path(str(handoff["task_directory"])) / "input" / "original_request.json"
+    ) or {}
+    generation_mode = str(generation_payload.get("generation_mode") or "INITIAL")
+    handoff_status = str(row["status"])
+    if handoff_status == "FAILED" and generation_mode == "REGENERATION":
+        _set_original_state(database, book_id, OriginalState.READER_EXPERIENCE_REVIEW)
         return None
-    return import_original_reader_kernel_proposal(database, book_id, str(row["handoff_id"]))
+    if handoff_status != "COMPLETED":
+        return None
+    proposal_path = _original_dir(database, book_id) / "reader_experience.json"
+    if proposal_path.is_file() and generation_mode != "REGENERATION":
+        return None
+    try:
+        return import_original_reader_kernel_proposal(
+            database, book_id, str(row["handoff_id"])
+        )
+    except (OriginalWorkflowError, ValueError) as exc:
+        if generation_mode != "REGENERATION":
+            raise
+        now = utc_now()
+        reason = f"READER_KERNEL_IMPORT_FAILED: {exc}"
+        with database.connect() as connection:
+            connection.execute(
+                "UPDATE workflow_handoffs SET status='FAILED', error_message=?, "
+                "result_validation_json=? "
+                "WHERE handoff_id=? AND status='COMPLETED'",
+                (
+                    reason,
+                    json_dumps({"valid": False, "error": reason}),
+                    str(row["handoff_id"]),
+                ),
+            )
+            connection.execute(
+                "UPDATE original_states SET state=?, updated_at=?, version=version+1 "
+                "WHERE book_id=? AND edition_id='base'",
+                (
+                    OriginalState.READER_EXPERIENCE_REVIEW.value,
+                    now,
+                    book_id,
+                ),
+            )
+        task_directory = Path(str(handoff["task_directory"]))
+        _write_json(
+            task_directory / "status.json",
+            {
+                "handoff_id": str(row["handoff_id"]),
+                "status": "FAILED",
+                "updated_at": now,
+                "reason": reason,
+            },
+        )
+        _write_json(task_directory / "error.json", {"error": reason, "created_at": now})
+        _update_registry(database, book_id, state=OriginalState.READER_EXPERIENCE_REVIEW)
+        return None
 
 
 def import_original_reader_kernel_proposal(
@@ -517,6 +782,17 @@ def import_original_reader_kernel_proposal(
         expected.read_text(encoding="utf-8")
     )
     task = _read_json(task_directory / "input" / "task.json") or {}
+    generation_payload = _read_json(
+        task_directory / "input" / "original_request.json"
+    ) or {}
+    generation_request = OriginalReaderKernelGenerationRequest.model_validate(
+        generation_payload
+    )
+    regenerating = generation_request.generation_mode == "REGENERATION"
+    if regenerating:
+        _assert_reader_kernel_overrides_applied(
+            proposal, generation_request.author_overrides
+        )
     frozen_ids = dict(
         (task.get("original_reader_interpretation") or {}).get("contract_ids") or {}
     )
@@ -548,26 +824,86 @@ def import_original_reader_kernel_proposal(
                 "deduplicated": True,
                 "canon_changed": False,
             }
-        raise OriginalWorkflowError("当前原创项目已存在 Reader Kernel Proposal")
+        active_by_type = {
+            record.contract_type: record
+            for record in existing
+            if record.status is ContractStatus.NEEDS_REVIEW
+        }
+        proposal_by_type = {
+            ProgressionContractType.READER_EXPERIENCE: proposal.reader_experience,
+            ProgressionContractType.MARKET_CATEGORY: proposal.market_category,
+            ProgressionContractType.NARRATIVE_DRIVE: proposal.narrative_drive,
+        }
+        if regenerating and all(
+            contract_type in active_by_type
+            and active_by_type[contract_type].payload
+            == payload.model_dump(mode="json")
+            for contract_type, payload in proposal_by_type.items()
+        ):
+            stored = proposal.model_dump(mode="json")
+            _write_json(_original_dir(database, book_id) / "reader_experience.json", stored)
+            with database.connect() as connection:
+                connection.execute(
+                    "UPDATE original_states SET state=?, "
+                    "reader_kernel_overrides_need_regeneration=0, updated_at=?, "
+                    "version=version+1 WHERE book_id=? AND edition_id='base'",
+                    (OriginalState.READER_EXPERIENCE_REVIEW.value, utc_now(), book_id),
+                )
+            _update_registry(database, book_id, state=OriginalState.READER_EXPERIENCE_REVIEW)
+            return {
+                "book_id": book_id,
+                "handoff_id": handoff_id,
+                "proposal": stored,
+                "deduplicated": True,
+                "canon_changed": False,
+            }
+        if not regenerating or any(
+            record.status is ContractStatus.EFFECTIVE
+            for record in existing
+            if record.contract_type in required_types
+        ):
+            raise OriginalWorkflowError("当前原创项目已存在 Reader Kernel Proposal")
     created: list[ContractRecord] = []
-    for contract_type, payload in (
-        (ProgressionContractType.READER_EXPERIENCE, proposal.reader_experience),
-        (ProgressionContractType.MARKET_CATEGORY, proposal.market_category),
-        (ProgressionContractType.NARRATIVE_DRIVE, proposal.narrative_drive),
-    ):
-        created.append(
-            create_contract_proposal(
-                database,
-                book_id=book_id,
-                edition_id="base",
-                contract_type=contract_type,
-                payload=payload,
-                source="ORIGINAL_READER_SEMANTIC_FIRST_READ",
+    with database.connect() as connection:
+        connection.execute("BEGIN IMMEDIATE")
+        if regenerating:
+            for record in existing:
+                if (
+                    record.contract_type in required_types
+                    and record.status is ContractStatus.NEEDS_REVIEW
+                ):
+                    _reject_contract_in_connection(
+                        connection, record.contract_record_id
+                    )
+        for contract_type, payload in (
+            (ProgressionContractType.READER_EXPERIENCE, proposal.reader_experience),
+            (ProgressionContractType.MARKET_CATEGORY, proposal.market_category),
+            (ProgressionContractType.NARRATIVE_DRIVE, proposal.narrative_drive),
+        ):
+            created.append(
+                _create_contract_proposal_in_connection(
+                    connection,
+                    book_id=book_id,
+                    edition_id="base",
+                    contract_type=contract_type,
+                    payload=payload,
+                    source=(
+                        "ORIGINAL_READER_AUTHOR_REGENERATION"
+                        if regenerating
+                        else "ORIGINAL_READER_SEMANTIC_FIRST_READ"
+                    ),
+                )
             )
-        )
     stored = proposal.model_dump(mode="json")
     _write_json(_original_dir(database, book_id) / "reader_experience.json", stored)
-    _set_original_state(database, book_id, OriginalState.READER_EXPERIENCE_REVIEW)
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE original_states SET state=?, "
+            "reader_kernel_overrides_need_regeneration=0, updated_at=?, version=version+1 "
+            "WHERE book_id=? AND edition_id='base'",
+            (OriginalState.READER_EXPERIENCE_REVIEW.value, utc_now(), book_id),
+        )
+    _update_registry(database, book_id, state=OriginalState.READER_EXPERIENCE_REVIEW)
     return {
         "book_id": book_id,
         "handoff_id": handoff_id,
@@ -591,6 +927,8 @@ def confirm_original_reader_experience(
     secondary_drives: Sequence[NarrativeDrive | str] | None = None,
     progression_engine_enabled: bool | None = None,
     creative_semantics: OriginalCreativeSemantics | Mapping[str, Any] | None = None,
+    *,
+    author_overrides: OriginalReaderKernelAuthorOverrides | Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     selected_adjustment = (
         adjustment
@@ -601,7 +939,8 @@ def confirm_original_reader_experience(
     records = list_contract_records(database, book_id=book_id, edition_id="base")
     with database.connect() as connection:
         state = connection.execute(
-            "SELECT state, confirmed_creative_semantics_json FROM original_states "
+            "SELECT state, confirmed_creative_semantics_json, "
+            "reader_kernel_overrides_need_regeneration FROM original_states "
             "WHERE book_id=? AND edition_id='base'",
             (book_id,),
         ).fetchone()
@@ -632,6 +971,17 @@ def confirm_original_reader_experience(
     )
     if drive_record is None:
         raise OriginalWorkflowError("Narrative Drive Proposal 不存在")
+    market_record = next(
+        (
+            record
+            for record in records
+            if record.contract_type is ProgressionContractType.MARKET_CATEGORY
+            and record.status is drive_status
+        ),
+        None,
+    )
+    if market_record is None:
+        raise OriginalWorkflowError("Market Category Proposal 不存在")
     current_drive = NarrativeDriveContract.model_validate(drive_record.payload)
     proposal_path = _original_dir(database, book_id) / "reader_experience.json"
     payload = _read_json(proposal_path)
@@ -705,6 +1055,7 @@ def confirm_original_reader_experience(
         handoff = prepare_original_core_innovation(database, book_id)
         return {
             "reader_experience": effective.model_dump(mode="json"),
+            "market_category": market_record.model_dump(mode="json"),
             "narrative_drive": drive_record.model_dump(mode="json"),
             "creative_semantics": confirmed_creative_semantics.model_dump(mode="json"),
             "handoff": handoff,
@@ -713,7 +1064,16 @@ def confirm_original_reader_experience(
         }
     if payload is None:
         raise OriginalWorkflowError("Reader Experience Proposal 不存在")
+    if bool(state["reader_kernel_overrides_need_regeneration"]):
+        raise OriginalWorkflowError("Author Overrides 已修改，请先重新生成 Reader Kernel Proposal")
     proposal = OriginalReaderKernelProposal.model_validate(payload)
+    requested_overrides = (
+        OriginalReaderKernelAuthorOverrides.model_validate(author_overrides)
+        if author_overrides is not None
+        else _reader_kernel_author_overrides(database, book_id)[0]
+    )
+    if requested_overrides.model_dump(exclude_none=True, exclude_defaults=True):
+        _assert_reader_kernel_overrides_applied(proposal, requested_overrides)
     if requested_creative_semantics is None:
         raise OriginalWorkflowError("Creative Semantics Proposal 不存在")
     priorities = dict(current_drive.drive_priorities)
@@ -770,11 +1130,13 @@ def confirm_original_reader_experience(
     )
     current_reader = ReaderExperienceContract.model_validate(current.payload)
     reader_to_confirm = current
+    market_to_confirm = market_record
     drive_to_confirm = drive_record
     with database.connect() as connection:
         connection.execute("BEGIN IMMEDIATE")
         for record, label in (
             (current, "Reader Experience"),
+            (market_record, "Market Category"),
             (drive_record, "Narrative Drive"),
         ):
             row = connection.execute(
@@ -816,6 +1178,12 @@ def confirm_original_reader_experience(
             effective_from_boundary=1,
             author_notes=f"作者选择：{selected_adjustment.value}",
         )
+        confirmed_market_record = _confirm_contract_in_connection(
+            connection,
+            market_to_confirm.contract_record_id,
+            effective_from_boundary=1,
+            author_notes="作者在 Step 0 一并确认 Market Category",
+        )
         confirmed_drive_record = _confirm_contract_in_connection(
             connection,
             drive_to_confirm.contract_record_id,
@@ -839,6 +1207,9 @@ def confirm_original_reader_experience(
             "reader_experience": ReaderExperienceContract.model_validate(
                 confirmed_reader.payload
             ),
+            "market_category": type(proposal.market_category).model_validate(
+                confirmed_market_record.payload
+            ),
             "narrative_drive": confirmed_drive,
             "creative_semantics": requested_creative_semantics,
         }
@@ -851,6 +1222,7 @@ def confirm_original_reader_experience(
     handoff = prepare_original_core_innovation(database, book_id)
     result = {
         "reader_experience": confirmed_reader.model_dump(mode="json"),
+        "market_category": confirmed_market_record.model_dump(mode="json"),
         "narrative_drive": confirmed_drive_record.model_dump(mode="json"),
         "creative_semantics": requested_creative_semantics.model_dump(mode="json"),
         "handoff": handoff,
@@ -2133,14 +2505,11 @@ def _current_genesis_contract_rows(
         ),
         ProgressionContractType.MARKET_CATEGORY: select_one(
             ProgressionContractType.MARKET_CATEGORY,
-            sources={"ORIGINAL_READER_SEMANTIC_FIRST_READ"},
+            required_status=ContractStatus.EFFECTIVE,
         ),
         ProgressionContractType.NARRATIVE_DRIVE: select_one(
             ProgressionContractType.NARRATIVE_DRIVE,
-            sources={
-                "ORIGINAL_READER_SEMANTIC_FIRST_READ",
-                "AUTHOR_CONFIRMED_NARRATIVE_DRIVE",
-            },
+            required_status=ContractStatus.EFFECTIVE,
         ),
     }
     drive = NarrativeDriveContract.model_validate_json(
@@ -2577,7 +2946,8 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
             "SELECT state, current_innovation_proposal_version_id, "
             "selected_primary_innovation_id, optional_mix_notes, "
             "selected_foundation_proposal_version_id, selected_foundation_id, "
-            "current_development_proposal_version_id "
+            "current_development_proposal_version_id, "
+            "reader_kernel_overrides_need_regeneration "
             "FROM original_states WHERE book_id=? AND edition_id='base'",
             (book_id,),
         ).fetchone()
@@ -2710,11 +3080,36 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
         "HIGH": ReaderExperienceStrength.STRONG.value,
         "VERY_HIGH": ReaderExperienceStrength.CORE.value,
     }
-    priority_from_contract = dict(reader_payload.get("experience_priorities", {}))
     priority_options = [
         {"value": value.value, "label": priority_value_labels[value.value]}
         for value in ReaderExperienceStrength
     ]
+    author_overrides, author_instruction = _reader_kernel_author_overrides(
+        database, book_id
+    )
+    author_overrides_payload = author_overrides.model_dump(
+        mode="json", exclude_unset=True, exclude_none=True
+    )
+    reader_override_payload = dict(author_overrides_payload.get("reader_experience", {}))
+    market_override_payload = dict(author_overrides_payload.get("market_category", {}))
+    drive_override_payload = dict(author_overrides_payload.get("narrative_drive", {}))
+    creative_override_payload = dict(author_overrides_payload.get("creative_semantics", {}))
+
+    def current_value(section: dict[str, Any], field: str, recommended: Any) -> Any:
+        return section.get(field, recommended)
+
+    recommended_priorities = dict(reader_payload.get("experience_priorities", {}))
+    priority_from_contract = {
+        **recommended_priorities,
+        **dict(reader_override_payload.get("experience_priorities", {})),
+    }
+    experience_priority_labels = {
+        "OFF": "关闭",
+        "LOW": "弱化",
+        "MEDIUM": "标准",
+        "HIGH": "强化",
+        "VERY_HIGH": "核心",
+    }
     reader_display = (
         {
             "summary": str(reader_proposal.get("summary") or ""),
@@ -2733,6 +3128,24 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                 "CIVILIZATION_PROGRESSION": "文明成长",
                 "CUSTOM": "自定义成长",
             }.get(str(reader_payload.get("primary_family") or ""), "自定义成长"),
+            "recommended_primary_family_value": str(
+                reader_payload.get("primary_family") or "CUSTOM"
+            ),
+            "primary_family_value": str(
+                current_value(
+                    reader_override_payload,
+                    "primary_family",
+                    reader_payload.get("primary_family") or "CUSTOM",
+                )
+            ),
+            "secondary_family_values": list(
+                current_value(
+                    reader_override_payload,
+                    "secondary_families",
+                    reader_payload.get("secondary_families", []),
+                )
+            ),
+            "primary_family_options": _enum_options(PrimaryFamily),
             "setting_skin": {
                 "ANCIENT_FANTASY": "古典幻想",
                 "OTHERWORLD": "异世界",
@@ -2743,6 +3156,32 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                 "STEAMPUNK": "蒸汽幻想",
                 "CUSTOM": "作者自定义",
             }.get(str(reader_payload.get("setting_skin") or ""), "作者自定义"),
+            "recommended_setting_skin_value": str(
+                reader_payload.get("setting_skin") or "CUSTOM"
+            ),
+            "setting_skin_value": str(
+                current_value(
+                    reader_override_payload,
+                    "setting_skin",
+                    reader_payload.get("setting_skin") or "CUSTOM",
+                )
+            ),
+            "setting_skin_options": _enum_options(SettingSkin),
+            "serial_form_value": str(
+                current_value(
+                    reader_override_payload,
+                    "serial_form",
+                    reader_payload.get("serial_form") or "LONG_SERIAL",
+                )
+            ),
+            "serial_form_options": _enum_options(SerialForm),
+            "mysticism_level_value": str(
+                current_value(
+                    reader_override_payload,
+                    "mysticism_level",
+                    reader_payload.get("mysticism_level") or "MEDIUM",
+                )
+            ),
             "explanation_style": {
                 "MYSTICAL": "玄秘",
                 "MIXED_MYSTICAL": "混合偏玄秘",
@@ -2750,6 +3189,26 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                 "MIXED_HARD": "混合偏硬",
                 "HARD_EXPLANATION": "硬解释",
             }.get(str(reader_payload.get("explanation_style") or ""), "平衡"),
+            "recommended_explanation_style_value": str(
+                reader_payload.get("explanation_style") or "BALANCED"
+            ),
+            "explanation_style_value": str(
+                current_value(
+                    reader_override_payload,
+                    "explanation_style",
+                    reader_payload.get("explanation_style") or "BALANCED",
+                )
+            ),
+            "explanation_style_options": _enum_options(ExplanationStyle),
+            "experience_priority_options": [
+                {"value": item.value, "label": experience_priority_labels[item.value]}
+                for item in ExperiencePriority
+            ],
+            "tone": list(
+                current_value(
+                    reader_override_payload, "tone", reader_payload.get("tone", [])
+                )
+            ),
             "priorities": [
                 {
                     "key": str(item["key"]),
@@ -2773,14 +3232,28 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                         ),
                         "标准",
                     ),
+                    "recommended_value_label": experience_priority_labels.get(
+                        str(recommended_priorities.get(str(item["key"]), "MEDIUM")),
+                        "标准",
+                    ),
                     "options": priority_options,
                 }
                 for item in READER_EXPERIENCE_UI
             ],
             "presets": list(READER_EXPERIENCE_PRESETS),
-            "must_deliver": list(reader_payload.get("must_deliver", [])),
+            "must_deliver": list(
+                current_value(
+                    reader_override_payload,
+                    "must_deliver",
+                    reader_payload.get("must_deliver", []),
+                )
+            ),
             "must_not_drift_into": list(
-                reader_payload.get("must_not_drift_into", [])
+                current_value(
+                    reader_override_payload,
+                    "must_not_drift_into",
+                    reader_payload.get("must_not_drift_into", []),
+                )
             ),
             "market_categories": [
                 market_category_label(str(value))
@@ -2790,13 +3263,59 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                 ]
                 if value
             ],
+            "primary_market_category_value": str(
+                current_value(
+                    market_override_payload,
+                    "primary_market_category",
+                    market_display.get("primary_market_category") or "CUSTOM",
+                )
+            ),
+            "secondary_market_category_values": list(
+                current_value(
+                    market_override_payload,
+                    "secondary_market_categories",
+                    market_display.get("secondary_market_categories", []),
+                )
+            ),
+            "current_market_categories": [
+                market_category_label(str(value))
+                for value in [
+                    current_value(
+                        market_override_payload,
+                        "primary_market_category",
+                        market_display.get("primary_market_category") or "CUSTOM",
+                    ),
+                    *current_value(
+                        market_override_payload,
+                        "secondary_market_categories",
+                        market_display.get("secondary_market_categories", []),
+                    ),
+                ]
+            ],
+            "market_category_options": [
+                {"value": item.value, "label": market_category_label(item)}
+                for item in MarketCategory
+            ],
             "primary_drive": str(
                 narrative_drive_label(
                     str(drive_contract_display.get("primary_drive") or "CUSTOM")
                 )
             ),
             "primary_drive_value": str(
-                drive_contract_display.get("primary_drive") or "CUSTOM"
+                current_value(
+                    drive_override_payload,
+                    "primary_drive",
+                    drive_contract_display.get("primary_drive") or "CUSTOM",
+                )
+            ),
+            "current_primary_drive": narrative_drive_label(
+                str(
+                    current_value(
+                        drive_override_payload,
+                        "primary_drive",
+                        drive_contract_display.get("primary_drive") or "CUSTOM",
+                    )
+                )
             ),
             "secondary_drives": list(
                 [
@@ -2804,8 +3323,19 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                     for value in drive_contract_display.get("secondary_drives", [])
                 ]
             ),
+            "secondary_drive_values": list(
+                current_value(
+                    drive_override_payload,
+                    "secondary_drives",
+                    drive_contract_display.get("secondary_drives", []),
+                )
+            ),
             "progression_engine_enabled": bool(
-                drive_contract_display.get("progression_engine_enabled", False)
+                current_value(
+                    drive_override_payload,
+                    "progression_engine_enabled",
+                    drive_contract_display.get("progression_engine_enabled", False),
+                )
             ),
             "drive_priorities": dict(
                 drive_contract_display.get("drive_priorities", {})
@@ -2814,6 +3344,18 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                 {"value": drive.value, "label": narrative_drive_label(drive)}
                 for drive in NarrativeDrive
             ],
+            "author_overrides": author_overrides_payload,
+            "author_instruction": author_instruction,
+            "current_creative_semantics": {
+                key: current_value(creative_override_payload, key, value)
+                for key, value in dict(
+                    reader_proposal.get("creative_semantics", {})
+                ).items()
+            },
+            "overrides_need_regeneration": bool(
+                state_row is not None
+                and state_row["reader_kernel_overrides_need_regeneration"]
+            ),
         }
         if reader_proposal is not None
         else None
@@ -2907,6 +3449,8 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
         "approval_confirmation": "批准写入正史",
         "reader_experience": reader_proposal,
         "reader_experience_display": reader_display,
+        "reader_kernel_author_overrides": author_overrides_payload,
+        "reader_kernel_author_instruction": author_instruction,
         "kernel_contracts": [item.model_dump(mode="json") for item in kernel_records],
         "reader_experience_contract": next(
             (
@@ -2950,6 +3494,8 @@ __all__ = [
     "prepare_original_bootstrap",
     "prepare_original_foundation_development",
     "prepare_original_reader_experience",
+    "regenerate_original_reader_kernel",
+    "save_original_reader_kernel_overrides",
     "resolve_original_proposal_version",
     "select_original_core_innovation",
     "select_first_chapter_candidate",

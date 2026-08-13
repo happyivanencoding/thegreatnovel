@@ -108,8 +108,13 @@
   });
 
   const wizard = document.querySelector("[data-original-confirm]");
+  const readerRoot = document.querySelector("[data-reader-experience-controls]");
+  const storedReaderOverrides = readerRoot
+    ? JSON.parse(readerRoot.dataset.readerAuthorOverrides || "{}")
+    : {};
+  let readerOverrides = null;
   const readerControls = (() => {
-    const root = document.querySelector("[data-reader-experience-controls]");
+    const root = readerRoot;
     if (!root) return null;
     const select = (row, value) => {
       const option = row.querySelector(`[data-reader-strength="${value}"]`);
@@ -121,12 +126,25 @@
       });
       const label = row.querySelector("[data-reader-strength-label]");
       if (label) label.textContent = option.textContent;
+      readerOverrides?.markPriority(row.dataset.readerExperienceKey, value);
     };
     root.querySelectorAll("[data-reader-experience-item]").forEach((row) => {
       row.querySelectorAll("[data-reader-strength]").forEach((option) => {
         option.addEventListener("click", () => select(row, option.dataset.readerStrength));
       });
     });
+    const priorityToStrength = {
+      OFF: "WEAK",
+      LOW: "SECONDARY",
+      MEDIUM: "NORMAL",
+      HIGH: "STRONG",
+      VERY_HIGH: "CORE",
+    };
+    Object.entries(storedReaderOverrides.reader_experience?.experience_priorities || {})
+      .forEach(([key, priority]) => {
+        const row = root.querySelector(`[data-reader-experience-key="${key}"]`);
+        if (row && priorityToStrength[priority]) select(row, priorityToStrength[priority]);
+      });
     return {
       applyPreset(values) {
         Object.entries(values || {}).forEach(([key, value]) => {
@@ -141,6 +159,95 @@
             row.querySelector("[data-reader-strength].is-selected")?.dataset.readerStrength || "NORMAL",
           ]),
         );
+      },
+    };
+  })();
+  readerOverrides = (() => {
+    const root = readerRoot;
+    if (!root) return null;
+    const overrides = storedReaderOverrides;
+    const strengthToPriority = {
+      WEAK: "OFF",
+      SECONDARY: "LOW",
+      NORMAL: "MEDIUM",
+      STRONG: "HIGH",
+      CORE: "VERY_HIGH",
+    };
+    const confirmButton = root.querySelector('[data-original-action="confirm-reader"]');
+    const dirtyMessage = root.querySelector("[data-reader-dirty-message]");
+    let saveTimer = null;
+    const save = async () => {
+      try {
+        await post(`/api/books/${bookId}/original/reader-kernel/overrides`, {
+          author_overrides: overrides,
+          author_instruction: String(root.querySelector("[data-reader-author-instruction]")?.value || "").trim(),
+        });
+      } catch (error) { show(error.message, true); }
+    };
+    const scheduleSave = () => {
+      window.clearTimeout(saveTimer);
+      saveTimer = window.setTimeout(save, 300);
+    };
+    const markDirty = () => {
+      if (confirmButton) confirmButton.disabled = true;
+      if (dirtyMessage) dirtyMessage.hidden = false;
+      scheduleSave();
+    };
+    const setValue = (section, field, value) => {
+      overrides[section] ||= {};
+      overrides[section][field] = value;
+      markDirty();
+    };
+    const controlValue = (control) => {
+      if (control.hasAttribute("data-reader-override-list")) {
+        const section = control.dataset.readerOverrideSection;
+        const field = control.dataset.readerOverrideField;
+        return [...root.querySelectorAll(`[data-reader-override-section="${section}"][data-reader-override-field="${field}"]:checked`)]
+          .map((item) => item.value);
+      }
+      if (control.type === "checkbox") return Boolean(control.checked);
+      if (control.hasAttribute("data-reader-override-lines")) return lines(control.value);
+      return String(control.value || "").trim();
+    };
+    Object.entries(overrides).forEach(([section, fields]) => {
+      Object.entries(fields || {}).forEach(([field, value]) => {
+        if (section === "reader_experience" && field === "experience_priorities") return;
+        const controls = [...root.querySelectorAll(`[data-reader-override-section="${section}"][data-reader-override-field="${field}"]`)];
+        controls.forEach((control) => {
+          if (control.hasAttribute("data-reader-override-list")) {
+            control.checked = Array.isArray(value) && value.includes(control.value);
+          } else if (control.type === "checkbox") {
+            control.checked = Boolean(value);
+          } else if (control.hasAttribute("data-reader-override-lines")) {
+            control.value = Array.isArray(value) ? value.join("\n") : "";
+          } else {
+            control.value = value ?? "";
+          }
+        });
+      });
+    });
+    root.querySelectorAll("[data-reader-override-section]").forEach((control) => {
+      const eventName = control.tagName === "TEXTAREA" ? "input" : "change";
+      control.addEventListener(eventName, () => {
+        setValue(
+          control.dataset.readerOverrideSection,
+          control.dataset.readerOverrideField,
+          controlValue(control),
+        );
+      });
+    });
+    root.querySelector("[data-reader-author-instruction]")?.addEventListener("input", markDirty);
+    if (root.dataset.readerOverridesNeedRegeneration === "true") {
+      if (confirmButton) confirmButton.disabled = true;
+      if (dirtyMessage) dirtyMessage.hidden = false;
+    }
+    return {
+      collect: () => overrides,
+      markPriority(key, strength) {
+        overrides.reader_experience ||= {};
+        overrides.reader_experience.experience_priorities ||= {};
+        overrides.reader_experience.experience_priorities[key] = strengthToPriority[strength];
+        markDirty();
       },
     };
   })();
@@ -278,6 +385,14 @@
           secondary_drives: secondaryDrives,
           progression_engine_enabled: Boolean(document.querySelector("[data-progression-engine]")?.checked),
           creative_semantics: creativeSemantics,
+          author_overrides: readerOverrides?.collect() || {},
+        });
+        window.location.replace(window.location.href);
+      } else if (action === "regenerate-reader") {
+        show("正在保存 Author Overrides 并准备新的完整 Reader Kernel Proposal…");
+        await post(`/api/books/${bookId}/original/reader-kernel/regenerate`, {
+          author_overrides: readerOverrides?.collect() || {},
+          author_instruction: String(document.querySelector("[data-reader-author-instruction]")?.value || "").trim(),
         });
         window.location.replace(window.location.href);
       } else if (action === "reader-preset") {

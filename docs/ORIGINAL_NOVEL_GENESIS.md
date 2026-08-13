@@ -17,12 +17,18 @@ FIRST_CHAPTER_DRAFTING → FIRST_CHAPTER_VALIDATED → WRITING_READY`
   genre 关键词推断 Reader Experience、Narrative Drive、Progression Engine 或 Creative
   Semantics。
 - `READER_EXPERIENCE_REVIEW`：Reader、Market、Narrative Drive 均是 `NEEDS_REVIEW`
-  Proposal；作者可分别调整 20 个阅读体验、Primary/Secondary Drive 和独立的 Progression
-  Engine 开关。`Creative Semantics` 用纯文本记录核心幻想、Seed 已有生成机制、开放设计空间、
+  Proposal；作者可分别调整 20 个阅读体验、Reader classification、Market Category、世界外壳、
+  连载形态、解释方式、Primary/Secondary Drive 和独立的 Progression Engine 开关。
+  `Creative Semantics` 用纯文本记录核心幻想、Seed 已有生成机制、开放设计空间、
   兑现质感、新奇度焦点、现实锚点、复杂度边界、可重复阅读循环和防漂移边界。阅读体验强度
-  不会静默改写 Primary Drive。作者可在同一 Step 0 页面编辑全部 Creative Semantics；确认时
-  Reader Experience、Narrative Drive 与 Creative Semantics 在同一 SQLite 事务中成为 Author
-  Intent。`reader_experience.json` 只保留 Semantic First Read 元数据与可恢复投影，不再是确认
+  不会静默改写 Primary Drive。作者可在同一 Step 0 页面编辑全部 Creative Semantics，并把
+  发生变化的结构化字段作为 story-scoped Author Overrides 保存。页面会自动保存尚未重新
+  生成的 sparse Override 草稿与作者补充指令，刷新或重新进入不会丢失。重新生成只创建新的
+  `ORIGINAL_READER_INTERPRETATION` Proposal：冻结原 Seed、上一版 Proposal、稀疏 Overrides
+  和可选作者指令，完整重写解释文本，仍停在 Review；未 override 的字段继续由 AI 判断。
+  只有单独的 Confirm 动作才进入核心玩法阶段。确认时
+  Reader Experience、Market Category、Narrative Drive 与 Creative Semantics 在同一 SQLite
+  事务中成为 Author Intent。`reader_experience.json` 只保留 Semantic First Read 元数据与可恢复投影，不再是确认
   后语义的权威来源。
 - `CORE_INNOVATION_GENERATING` / `CORE_INNOVATION_REVIEW`：在作者确认的 Reader Kernel
   与 Creative Semantics 边界内生成并选择一个核心玩法。Seed 已有强生成机制时只解决仍开放

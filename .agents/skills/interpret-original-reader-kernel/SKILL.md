@@ -20,6 +20,18 @@ Prerequisite：`novel workflow start` 已成功返回 `status=RUNNING`，且 `ex
 - must_include 与 forbidden
 - reference_traits（只取抽象特征，不模仿命名作品）
 
+`original_request.json.generation_mode` 决定本次任务：
+
+- `INITIAL`：首次 Semantic First Read，只依据 Seed 推断完整 Proposal。
+- `REGENERATION`：同一项目的作者修正后重新提案。除原 Seed 外，还必须读取
+  `current_ai_proposal`、`author_overrides` 与 `author_instruction`。
+
+重新生成时，语义优先级依次为：显式 `author_overrides`、其中已经冻结的作者控制项、
+Seed 的明确约束、AI 对其余字段的重新推断。`current_ai_proposal` 只是帮助理解作者改了
+什么的上下文，不是高于 Seed 或 Author Overrides 的权威。只对 override 中实际出现的
+字段保持原值；未出现的字段必须允许根据 Seed 与新上下文重新判断。`author_instruction`
+只约束本轮重新生成，不得写回或改写 premise/Seed。
+
 使用 `task.json.original_reader_interpretation.contract_ids` 的三个 ID，不自行发明基础设施 ID；
 输出结构与 enum 值以同一节点的 `proposal_schema` 为准，不额外打开源码或业务文件。
 
@@ -66,6 +78,10 @@ Creative Semantics 只识别体验、既有机制、开放空间、创新焦点�
 
 三个结构的 `status` 必须为 `NEEDS_REVIEW`。Reader priorities 必须恰好覆盖全部现有 ReaderExperience。不得写 `EFFECTIVE`，不得写 Canon。
 
+`REGENERATION` 仍须输出完整、自洽的 `OriginalReaderKernelProposal`，包括 summary、
+semantic evidence、uncertainties 与 author attention points；不得只改结构化标签而保留
+与旧值冲突的解释。Author Overrides 是当前创作决策，不是供模型讨论或反驳的建议。
+
 ## 禁止越级
 
 不得生成或决定：
@@ -76,6 +92,9 @@ Creative Semantics 只识别体验、既有机制、开放空间、创新焦点�
 - premise/genre 关键词路由、固定 creative taxonomy 或 named novel imitation
 
 本任务只提出“读者期待、长期推进方式、是否需要成长引擎、作者已定义什么、哪里仍可创新以及如何防止漂移”。
+
+无论 `INITIAL` 还是 `REGENERATION`，都不得创建 Core Innovation、Story Foundation、
+剧情、章节或正文，也不得确认 Proposal 或推进到 Reader Kernel Review 之后的阶段。
 
 ## 完成
 

@@ -11,15 +11,21 @@ from novel_authoring.domain.models import NarrativeFunction
 from novel_authoring.progression.models import (
     ContractStatus,
     ExperiencePriority,
+    ExplanationStyle,
     GenreContract,
     PayoffChannelProfile,
+    PrimaryFamily,
     ProgressionContract,
     ReaderExperience,
     ReaderExperienceContract,
+    SerialForm,
+    SettingSkin,
     WorldExpansionContract,
 )
 from novel_authoring.serial_kernel.models import (
+    MarketCategory,
     MarketCategoryMetadata,
+    NarrativeDrive,
     NarrativeDriveContract,
 )
 
@@ -117,6 +123,103 @@ class OriginalCreativeSemantics(BaseModel):
     anti_drift: list[str] = Field(min_length=1)
 
 
+class OriginalCreativeSemanticsOverrides(BaseModel):
+    """Sparse author-owned decisions; absent fields remain AI-controlled."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    signature_fantasy: str | None = Field(default=None, min_length=1)
+    existing_signature_mechanism: str | None = None
+    open_design_space: list[str] | None = Field(default=None, min_length=1)
+    payoff_texture: list[str] | None = Field(default=None, min_length=1)
+    novelty_focus: list[str] | None = Field(default=None, min_length=1)
+    realism_anchors: list[str] | None = Field(default=None, min_length=1)
+    complexity_boundaries: list[str] | None = Field(default=None, min_length=1)
+    repeatable_reader_loop: list[str] | None = Field(default=None, min_length=1)
+    anti_drift: list[str] | None = Field(default=None, min_length=1)
+
+
+class OriginalReaderExperienceOverrides(BaseModel):
+    """Sparse author choices for decision fields in ReaderExperienceContract."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    primary_family: PrimaryFamily | None = None
+    secondary_families: list[PrimaryFamily] | None = Field(default=None, max_length=3)
+    setting_skin: SettingSkin | None = None
+    serial_form: SerialForm | None = None
+    experience_priorities: dict[ReaderExperience, ExperiencePriority] = Field(
+        default_factory=dict
+    )
+    mysticism_level: ExperiencePriority | None = None
+    explanation_style: ExplanationStyle | None = None
+    tone: list[str] | None = None
+    must_deliver: list[str] | None = Field(default=None, min_length=1)
+    must_not_drift_into: list[str] | None = None
+
+    @model_validator(mode="after")
+    def families_are_distinct(self) -> OriginalReaderExperienceOverrides:
+        if self.primary_family in (self.secondary_families or []):
+            raise ValueError("primary_family 不得重复出现在 secondary_families")
+        if len(self.secondary_families or []) != len(set(self.secondary_families or [])):
+            raise ValueError("secondary_families 不得重复")
+        return self
+
+
+class OriginalMarketCategoryOverrides(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    primary_market_category: MarketCategory | None = None
+    secondary_market_categories: list[MarketCategory] | None = Field(
+        default=None, max_length=4
+    )
+
+    @model_validator(mode="after")
+    def categories_are_distinct(self) -> OriginalMarketCategoryOverrides:
+        if self.primary_market_category in (self.secondary_market_categories or []):
+            raise ValueError("primary market category 不得在 secondary 中重复")
+        if len(self.secondary_market_categories or []) != len(
+            set(self.secondary_market_categories or [])
+        ):
+            raise ValueError("secondary market categories 不得重复")
+        return self
+
+
+class OriginalNarrativeDriveOverrides(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    primary_drive: NarrativeDrive | None = None
+    secondary_drives: list[NarrativeDrive] | None = Field(default=None, max_length=4)
+    progression_engine_enabled: bool | None = None
+
+    @model_validator(mode="after")
+    def drives_are_distinct(self) -> OriginalNarrativeDriveOverrides:
+        if self.primary_drive in (self.secondary_drives or []):
+            raise ValueError("primary drive 不得在 secondary drives 中重复")
+        if len(self.secondary_drives or []) != len(set(self.secondary_drives or [])):
+            raise ValueError("secondary drives 不得重复")
+        return self
+
+
+class OriginalReaderKernelAuthorOverrides(BaseModel):
+    """Story-scoped provenance input, never a second Reader Kernel contract."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    reader_experience: OriginalReaderExperienceOverrides = Field(
+        default_factory=OriginalReaderExperienceOverrides
+    )
+    market_category: OriginalMarketCategoryOverrides = Field(
+        default_factory=OriginalMarketCategoryOverrides
+    )
+    narrative_drive: OriginalNarrativeDriveOverrides = Field(
+        default_factory=OriginalNarrativeDriveOverrides
+    )
+    creative_semantics: OriginalCreativeSemanticsOverrides = Field(
+        default_factory=OriginalCreativeSemanticsOverrides
+    )
+
+
 class OriginalReaderKernelProposal(BaseModel):
     """Semantic first read for author review; never an Effective contract."""
 
@@ -148,6 +251,25 @@ class OriginalReaderKernelProposal(BaseModel):
         ):
             if contract.status is not ContractStatus.NEEDS_REVIEW:
                 raise ValueError("Reader Kernel Proposal Contract 必须为 NEEDS_REVIEW")
+        return self
+
+
+class OriginalReaderKernelGenerationRequest(OriginalBookRequest):
+    """Frozen Seed plus optional regeneration context for the same proposal."""
+
+    generation_mode: Literal["INITIAL", "REGENERATION"] = "INITIAL"
+    current_ai_proposal: OriginalReaderKernelProposal | None = None
+    author_overrides: OriginalReaderKernelAuthorOverrides = Field(
+        default_factory=OriginalReaderKernelAuthorOverrides
+    )
+    author_instruction: str = Field(default="", max_length=4000)
+
+    @model_validator(mode="after")
+    def regeneration_has_previous_proposal(self) -> OriginalReaderKernelGenerationRequest:
+        if self.generation_mode == "REGENERATION" and self.current_ai_proposal is None:
+            raise ValueError("REGENERATION 必须携带 current_ai_proposal")
+        if self.generation_mode == "INITIAL" and self.current_ai_proposal is not None:
+            raise ValueError("INITIAL 不得携带 current_ai_proposal")
         return self
 
 

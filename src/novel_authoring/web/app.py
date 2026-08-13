@@ -130,7 +130,9 @@ from novel_authoring.original.service import (
     prepare_original_core_innovation,
     prepare_original_foundation_development,
     prepare_original_reader_experience,
+    regenerate_original_reader_kernel,
     resolve_original_proposal_version,
+    save_original_reader_kernel_overrides,
     select_first_chapter_candidate,
     select_original_core_innovation,
     select_original_foundation,
@@ -207,6 +209,7 @@ from novel_authoring.web.schemas import (
     OriginalProposalImportRequest,
     OriginalProposalVersionResolutionRequest,
     OriginalReaderExperienceConfirmationRequest,
+    OriginalReaderKernelRegenerationRequest,
     ProfileReanalysisRequest,
     ProgressionContractConfirmationRequest,
     RecomputeRequest,
@@ -1106,6 +1109,43 @@ def create_app(
                 payload.secondary_drives,
                 payload.progression_engine_enabled,
                 payload.creative_semantics,
+                author_overrides=payload.author_overrides,
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/reader-kernel/regenerate")
+    async def original_reader_kernel_regenerate_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalReaderKernelRegenerationRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return regenerate_original_reader_kernel(
+                _database_for_book(app, checked),
+                checked,
+                author_overrides=payload.author_overrides,
+                author_instruction=payload.author_instruction,
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/reader-kernel/overrides")
+    async def original_reader_kernel_overrides_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalReaderKernelRegenerationRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return save_original_reader_kernel_overrides(
+                _database_for_book(app, checked),
+                checked,
+                author_overrides=payload.author_overrides,
+                author_instruction=payload.author_instruction,
             )
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)

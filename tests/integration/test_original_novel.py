@@ -36,7 +36,9 @@ from novel_authoring.original.service import (
     original_overview,
     prepare_original_bootstrap,
     prepare_original_reader_experience,
+    regenerate_original_reader_kernel,
     resolve_original_proposal_version,
+    save_original_reader_kernel_overrides,
     select_first_chapter_candidate,
     select_original_core_innovation,
     select_original_foundation,
@@ -50,13 +52,17 @@ from novel_authoring.progression.interpretation import (
 )
 from novel_authoring.progression.models import (
     ContractStatus,
+    ExperiencePriority,
+    ExplanationStyle,
+    PrimaryFamily,
     ReaderExperience,
+    SettingSkin,
 )
 from novel_authoring.progression.service import (
     ProgressionContractType,
     list_contract_records,
 )
-from novel_authoring.serial_kernel.models import NarrativeDrive
+from novel_authoring.serial_kernel.models import MarketCategory, NarrativeDrive
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.registry import BookKind, BookRegistry, CreationMode
 from novel_authoring.utils import json_dumps
@@ -425,6 +431,145 @@ def complete_reader_kernel_handoff(
     )
     if import_result:
         import_original_reader_kernel_proposal(database, book_id, handoff_id)
+    return handoff_id
+
+
+def complete_regenerated_reader_kernel_handoff(
+    database: Database,
+    *,
+    signature_fantasy: str,
+    summary: str,
+    setting_skin: str = "OTHERWORLD",
+    primary_drive: NarrativeDrive | None = None,
+    secondary_drives: list[NarrativeDrive] | None = None,
+    progression_engine_enabled: bool | None = None,
+    mystery_priority: str | None = None,
+    primary_market_category: MarketCategory | None = None,
+    secondary_market_categories: list[MarketCategory] | None = None,
+    primary_family: PrimaryFamily | None = None,
+    secondary_families: list[PrimaryFamily] | None = None,
+    explanation_style: ExplanationStyle | None = None,
+    payoff_texture: list[str] | None = None,
+) -> str:
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT handoff_id FROM workflow_handoffs WHERE handoff_type=? "
+            "AND status!='COMPLETED' ORDER BY created_at DESC LIMIT 1",
+            ("ORIGINAL_READER_INTERPRETATION",),
+        ).fetchone()
+    assert row is not None
+    handoff_id = str(row["handoff_id"])
+    handoff = get_handoff(database, handoff_id)
+    task_directory = Path(str(handoff["task_directory"]))
+    task = json.loads(
+        (task_directory / "input" / "task.json").read_text(encoding="utf-8")
+    )
+    request = json.loads(
+        (task_directory / "input" / "original_request.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    ids = task["original_reader_interpretation"]["contract_ids"]
+    current = OriginalReaderKernelProposal.model_validate(request["current_ai_proposal"])
+    reader_updates: dict[str, Any] = {
+        "contract_id": ids["reader_experience_contract_id"],
+        "setting_skin": SettingSkin(setting_skin),
+    }
+    if mystery_priority is not None:
+        priorities = dict(current.reader_experience.experience_priorities)
+        selected_priority = ExperiencePriority(mystery_priority)
+        priorities[ReaderExperience.MYSTERY] = selected_priority
+        reader_updates["experience_priorities"] = priorities
+        reader_updates["mystery_centrality"] = selected_priority
+    if primary_family is not None:
+        reader_updates["primary_family"] = primary_family
+    if secondary_families is not None:
+        reader_updates["secondary_families"] = secondary_families
+    if explanation_style is not None:
+        reader_updates["explanation_style"] = explanation_style
+    drive_updates: dict[str, Any] = {
+        "drive_contract_id": ids["narrative_drive_contract_id"]
+    }
+    if primary_drive is not None:
+        drive_updates["primary_drive"] = primary_drive
+    if secondary_drives is not None:
+        drive_updates["secondary_drives"] = secondary_drives
+    if progression_engine_enabled is not None:
+        drive_updates["progression_engine_enabled"] = progression_engine_enabled
+    selected_mix = [
+        drive_updates.get("primary_drive", current.narrative_drive.primary_drive),
+        *drive_updates.get("secondary_drives", current.narrative_drive.secondary_drives),
+    ]
+    drive_updates["drive_priorities"] = {
+        **current.narrative_drive.drive_priorities,
+        **{drive: max(55, 100 - index * 15) for index, drive in enumerate(selected_mix)},
+    }
+    drive_updates["drive_promises"] = {
+        **current.narrative_drive.drive_promises,
+        **{drive: [f"由 {drive.value} 持续推动故事"] for drive in selected_mix},
+    }
+    proposal = current.model_copy(
+        update={
+            "summary": summary,
+            "reader_experience": current.reader_experience.model_copy(update=reader_updates),
+            "market_category": current.market_category.model_copy(
+                update={
+                    "metadata_id": ids["market_category_metadata_id"],
+                    **(
+                        {"primary_market_category": primary_market_category}
+                        if primary_market_category is not None
+                        else {}
+                    ),
+                    **(
+                        {"secondary_market_categories": secondary_market_categories}
+                        if secondary_market_categories is not None
+                        else {}
+                    ),
+                }
+            ),
+            "narrative_drive": current.narrative_drive.model_copy(update=drive_updates),
+            "creative_semantics": current.creative_semantics.model_copy(
+                update={
+                    "signature_fantasy": signature_fantasy,
+                    **(
+                        {"payoff_texture": payoff_texture}
+                        if payoff_texture is not None
+                        else {}
+                    ),
+                }
+            ),
+        }
+    )
+    artifact = task_directory / "artifacts" / "reader_kernel" / "proposal.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text(
+        json_dumps(proposal.model_dump(mode="json"), indent=2), encoding="utf-8"
+    )
+    claim = claim_handoff(database, handoff_id, "test-worker")
+    token = str(claim["claim_token"])
+    update_handoff_status(database, handoff_id, HandoffStatus.RUNNING, claim_token=token)
+    frozen = get_handoff(database, handoff_id)
+    update_handoff_status(
+        database,
+        handoff_id,
+        HandoffStatus.COMPLETED,
+        claim_token=token,
+        result={
+            "handoff_id": handoff_id,
+            "handoff_type": "ORIGINAL_READER_INTERPRETATION",
+            "requested_stage": "READER_KERNEL_PROPOSAL",
+            "completed_stage": "READER_KERNEL_PROPOSED",
+            "book_id": BOOK_ID,
+            "edition_id": "base",
+            "status": "COMPLETED",
+            "artifact_paths": ["artifacts/reader_kernel/proposal.json"],
+            "canon_committed": False,
+            "edition_activated": False,
+            "base_event_seq": int(frozen["base_event_seq"]),
+            "base_projection_hash": str(frozen["base_projection_hash"]),
+        },
+    )
+    import_original_reader_kernel_proposal(database, BOOK_ID, handoff_id)
     return handoff_id
 
 
@@ -817,6 +962,390 @@ def test_unseen_premise_is_frozen_for_semantic_read_without_python_fallback(
         "OriginalReaderKernelProposal"
     )
     assert contract_count == 0
+
+
+def test_reader_kernel_author_overrides_regenerate_full_proposal_without_advancing(
+    tmp_path: Path,
+) -> None:
+    layout, database = create_original(tmp_path)
+    original_seed = json.loads(
+        (
+            original_service._original_dir(database, BOOK_ID) / "request.json"
+        ).read_text(encoding="utf-8")
+    )
+    overrides = {
+        "reader_experience": {
+            "setting_skin": "OTHERWORLD",
+            "primary_family": "SURVIVAL_PROGRESSION",
+            "secondary_families": ["TEAM_PROGRESSION"],
+            "explanation_style": "HARD_EXPLANATION",
+            "experience_priorities": {"MYSTERY": "VERY_HIGH"},
+        },
+        "market_category": {
+            "primary_market_category": "FANTASY",
+            "secondary_market_categories": ["SUPERNATURAL"],
+        },
+        "narrative_drive": {
+            "primary_drive": "MYSTERY_INVESTIGATION",
+            "secondary_drives": ["RESOURCE_OPPORTUNITY"],
+            "progression_engine_enabled": False,
+        },
+        "creative_semantics": {"signature_fantasy": "作者指定的核心幻想 B"},
+    }
+    regenerated = regenerate_original_reader_kernel(
+        database,
+        BOOK_ID,
+        author_overrides=overrides,
+        author_instruction="某项成长只作为辅助，不应逐渐成为主线。",
+    )
+    task_directory = Path(str(regenerated["task_directory"]))
+    request = json.loads(
+        (task_directory / "input" / "original_request.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    task = json.loads(
+        (task_directory / "input" / "task.json").read_text(encoding="utf-8")
+    )
+
+    assert request["generation_mode"] == "REGENERATION"
+    assert request["premise"] == original_seed["premise"]
+    assert request["author_overrides"]["creative_semantics"][
+        "signature_fantasy"
+    ] == "作者指定的核心幻想 B"
+    assert request["author_instruction"] == "某项成长只作为辅助，不应逐渐成为主线。"
+    assert request["current_ai_proposal"]["summary"]
+    assert task["business_input_files"] == ["original_request.json"]
+    assert task["original_reader_interpretation"]["request_path"] == (
+        "original_request.json"
+    )
+    assert original_overview(database, BOOK_ID)["original_state"] == (
+        "READER_EXPERIENCE_GENERATING"
+    )
+    assert database.scalar(
+        "SELECT reader_kernel_overrides_need_regeneration FROM original_states "
+        "WHERE book_id=? AND edition_id='base'",
+        (BOOK_ID,),
+    ) == 1
+    assert database.scalar(
+        "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? AND handoff_type=?",
+        (BOOK_ID, "ORIGINAL_BOOK_BOOTSTRAP"),
+    ) == 0
+
+    complete_regenerated_reader_kernel_handoff(
+        database,
+        signature_fantasy="作者指定的核心幻想 B",
+        summary="这是 AI 根据作者调整重新生成的完整解释。",
+        setting_skin="OTHERWORLD",
+        primary_drive=NarrativeDrive.MYSTERY_INVESTIGATION,
+        secondary_drives=[NarrativeDrive.RESOURCE_OPPORTUNITY],
+        progression_engine_enabled=False,
+        mystery_priority="VERY_HIGH",
+        primary_market_category=MarketCategory.FANTASY,
+        secondary_market_categories=[MarketCategory.SUPERNATURAL],
+        primary_family=PrimaryFamily.SURVIVAL_PROGRESSION,
+        secondary_families=[PrimaryFamily.TEAM_PROGRESSION],
+        explanation_style=ExplanationStyle.HARD_EXPLANATION,
+        payoff_texture=["AI 可以重写未被作者覆盖的兑现质感"],
+    )
+    overview = original_overview(database, BOOK_ID)
+    assert overview["original_state"] == "READER_EXPERIENCE_REVIEW"
+    assert overview["reader_experience_display"]["overrides_need_regeneration"] is False
+    assert overview["reader_experience"]["summary"] == (
+        "这是 AI 根据作者调整重新生成的完整解释。"
+    )
+    assert overview["reader_experience"]["creative_semantics"][
+        "signature_fantasy"
+    ] == "作者指定的核心幻想 B"
+    assert overview["reader_experience"]["reader_experience"][
+        "setting_skin"
+    ] == "OTHERWORLD"
+    assert overview["reader_experience"]["reader_experience"][
+        "primary_family"
+    ] == "SURVIVAL_PROGRESSION"
+    assert overview["reader_experience"]["reader_experience"][
+        "explanation_style"
+    ] == "HARD_EXPLANATION"
+    assert overview["reader_experience"]["market_category"][
+        "primary_market_category"
+    ] == "FANTASY"
+    assert overview["reader_experience"]["market_category"][
+        "secondary_market_categories"
+    ] == ["SUPERNATURAL"]
+    assert overview["reader_experience"]["creative_semantics"]["payoff_texture"] == [
+        "AI 可以重写未被作者覆盖的兑现质感"
+    ]
+    assert database.scalar("SELECT COUNT(*) FROM chapters") == 0
+    assert database.scalar("SELECT COUNT(*) FROM canon_commits") == 0
+    records = list_contract_records(database, book_id=BOOK_ID, edition_id="base")
+    assert not any(record.status is ContractStatus.EFFECTIVE for record in records)
+
+    app = create_app(
+        Database(tmp_path / "fallback.sqlite3"),
+        library_root=layout.library_root,
+        discovery_root=tmp_path / "book",
+    )
+    with TestClient(app) as client:
+        review_page = client.get(f"/books/{BOOK_ID}/original")
+    assert review_page.status_code == 200
+    assert 'data-reader-overrides-need-regeneration="false"' in review_page.text
+    assert 'value="SURVIVAL_PROGRESSION" selected' in review_page.text
+    assert 'value="HARD_EXPLANATION" selected' in review_page.text
+
+    confirmed = confirm_original_reader_experience(database, BOOK_ID)
+    next_handoff = get_handoff(database, str(confirmed["handoff"]["handoff_id"]))
+    assert next_handoff["requested_stage"] == "CORE_INNOVATION_PROPOSAL"
+    assert original_overview(database, BOOK_ID)["original_state"] == (
+        "CORE_INNOVATION_GENERATING"
+    )
+    assert confirmed["reader_experience"]["payload"]["setting_skin"] == "OTHERWORLD"
+    assert confirmed["market_category"]["status"] == "EFFECTIVE"
+    effective = {
+        record.contract_type: record
+        for record in list_contract_records(database, book_id=BOOK_ID, edition_id="base")
+        if record.status is ContractStatus.EFFECTIVE
+    }
+    assert set(effective) >= {
+        ProgressionContractType.READER_EXPERIENCE,
+        ProgressionContractType.MARKET_CATEGORY,
+        ProgressionContractType.NARRATIVE_DRIVE,
+    }
+
+
+def test_reader_kernel_regeneration_rejects_ai_output_that_overwrites_author_choice(
+    tmp_path: Path,
+) -> None:
+    _, database = create_original(tmp_path)
+    regenerated = regenerate_original_reader_kernel(
+        database,
+        BOOK_ID,
+        author_overrides={
+            "creative_semantics": {"signature_fantasy": "作者指定的核心幻想 B"}
+        },
+    )
+    handoff_id = str(regenerated["handoff_id"])
+    handoff = get_handoff(database, handoff_id)
+    task_directory = Path(str(handoff["task_directory"]))
+    request = json.loads(
+        (task_directory / "input" / "original_request.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    proposal = OriginalReaderKernelProposal.model_validate(
+        request["current_ai_proposal"]
+    )
+    artifact = task_directory / "artifacts" / "reader_kernel" / "proposal.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text(
+        json_dumps(proposal.model_dump(mode="json"), indent=2), encoding="utf-8"
+    )
+    claim = claim_handoff(database, handoff_id, "test-worker")
+    token = str(claim["claim_token"])
+    update_handoff_status(database, handoff_id, HandoffStatus.RUNNING, claim_token=token)
+    frozen = get_handoff(database, handoff_id)
+    update_handoff_status(
+        database,
+        handoff_id,
+        HandoffStatus.COMPLETED,
+        claim_token=token,
+        result={
+            "handoff_id": handoff_id,
+            "handoff_type": "ORIGINAL_READER_INTERPRETATION",
+            "requested_stage": "READER_KERNEL_PROPOSAL",
+            "completed_stage": "READER_KERNEL_PROPOSED",
+            "book_id": BOOK_ID,
+            "edition_id": "base",
+            "status": "COMPLETED",
+            "artifact_paths": ["artifacts/reader_kernel/proposal.json"],
+            "canon_committed": False,
+            "edition_activated": False,
+            "base_event_seq": int(frozen["base_event_seq"]),
+            "base_projection_hash": str(frozen["base_projection_hash"]),
+        },
+    )
+
+    with pytest.raises(OriginalWorkflowError, match="未遵守 Author Override"):
+        import_original_reader_kernel_proposal(database, BOOK_ID, handoff_id)
+
+    overview = original_overview(database, BOOK_ID)
+    assert overview["original_state"] == "READER_EXPERIENCE_REVIEW"
+    assert overview["reader_experience"]["creative_semantics"][
+        "signature_fantasy"
+    ] != "作者指定的核心幻想 B"
+    assert get_handoff(database, handoff_id)["status"] == "FAILED"
+    retried = regenerate_original_reader_kernel(
+        database,
+        BOOK_ID,
+        author_overrides={
+            "creative_semantics": {"signature_fantasy": "作者指定的核心幻想 B"}
+        },
+    )
+    assert retried["handoff_id"] != handoff_id
+
+
+def test_reader_kernel_regeneration_schema_failure_returns_to_review(
+    tmp_path: Path,
+) -> None:
+    _, database = create_original(tmp_path)
+    regenerated = regenerate_original_reader_kernel(
+        database,
+        BOOK_ID,
+        author_overrides={"reader_experience": {"setting_skin": "MODERN_CITY"}},
+    )
+    handoff_id = str(regenerated["handoff_id"])
+    handoff = get_handoff(database, handoff_id)
+    task_directory = Path(str(handoff["task_directory"]))
+    artifact = task_directory / "artifacts" / "reader_kernel" / "proposal.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text("{not-json", encoding="utf-8")
+    claim = claim_handoff(database, handoff_id, "test-worker")
+    token = str(claim["claim_token"])
+    update_handoff_status(database, handoff_id, HandoffStatus.RUNNING, claim_token=token)
+    frozen = get_handoff(database, handoff_id)
+    update_handoff_status(
+        database,
+        handoff_id,
+        HandoffStatus.COMPLETED,
+        claim_token=token,
+        result={
+            "handoff_id": handoff_id,
+            "handoff_type": "ORIGINAL_READER_INTERPRETATION",
+            "requested_stage": "READER_KERNEL_PROPOSAL",
+            "completed_stage": "READER_KERNEL_PROPOSED",
+            "book_id": BOOK_ID,
+            "edition_id": "base",
+            "status": "COMPLETED",
+            "artifact_paths": ["artifacts/reader_kernel/proposal.json"],
+            "canon_committed": False,
+            "edition_activated": False,
+            "base_event_seq": int(frozen["base_event_seq"]),
+            "base_projection_hash": str(frozen["base_projection_hash"]),
+        },
+    )
+
+    overview = original_overview(database, BOOK_ID)
+    assert overview["original_state"] == "READER_EXPERIENCE_REVIEW"
+    assert get_handoff(database, handoff_id)["status"] == "FAILED"
+    assert json.loads((task_directory / "status.json").read_text(encoding="utf-8"))[
+        "status"
+    ] == "FAILED"
+    assert (task_directory / "error.json").is_file()
+    retry = regenerate_original_reader_kernel(
+        database,
+        BOOK_ID,
+        author_overrides={"reader_experience": {"setting_skin": "MODERN_CITY"}},
+    )
+    assert retry["handoff_id"] != handoff_id
+
+
+def test_reader_kernel_author_overrides_are_isolated_per_new_project(
+    tmp_path: Path,
+) -> None:
+    first_layout = BookLayout(tmp_path / "first-library")
+    first = create_original_book(
+        first_layout, {"premise": "第一个完全独立的故事 Seed。"}, book_id=BOOK_ID
+    )
+    first_database = Database(Path(str(first["database"])))
+    complete_reader_kernel_handoff(first_database)
+    regenerate_original_reader_kernel(
+        first_database,
+        BOOK_ID,
+        author_overrides={
+            "creative_semantics": {"signature_fantasy": "只属于第一个项目的选择"}
+        },
+        author_instruction="只属于第一个项目的作者指令",
+    )
+
+    second_id = "second-original-test"
+    second_layout = BookLayout(tmp_path / "second-library")
+    second = create_original_book(
+        second_layout, {"premise": "第二个完全不同的新故事 Seed。"}, book_id=second_id
+    )
+    second_database = Database(Path(str(second["database"])))
+    with second_database.connect() as connection:
+        state = connection.execute(
+            "SELECT reader_kernel_author_overrides_json, "
+            "reader_kernel_author_instruction FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (second_id,),
+        ).fetchone()
+    assert state is not None
+    assert state["reader_kernel_author_overrides_json"] is None
+    assert state["reader_kernel_author_instruction"] == ""
+    second_handoff = get_handoff(
+        second_database, str(second["reader_handoff"]["handoff_id"])
+    )
+    second_request = json.loads(
+        (
+            Path(str(second_handoff["task_directory"]))
+            / "input"
+            / "original_request.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert second_request["premise"] == "第二个完全不同的新故事 Seed。"
+    assert second_request["author_overrides"] == {
+        "reader_experience": {"experience_priorities": {}},
+        "market_category": {},
+        "narrative_drive": {},
+        "creative_semantics": {},
+    }
+    assert second_request["author_instruction"] == ""
+
+
+def test_reader_kernel_author_override_draft_survives_page_reentry(
+    tmp_path: Path,
+) -> None:
+    layout, database = create_original(tmp_path)
+    saved = save_original_reader_kernel_overrides(
+        database,
+        BOOK_ID,
+        author_overrides={
+            "reader_experience": {
+                "primary_family": "TEAM_PROGRESSION",
+                "setting_skin": "MODERN_CITY",
+                "explanation_style": "MIXED_HARD",
+            },
+            "market_category": {
+                "primary_market_category": "URBAN",
+                "secondary_market_categories": [],
+            },
+            "creative_semantics": {"signature_fantasy": "尚未重新生成的作者草稿"}
+        },
+        author_instruction="刷新后仍应保留的补充指令",
+    )
+    assert saved["saved"] is True
+    overview = original_overview(database, BOOK_ID)
+    assert overview["reader_kernel_author_overrides"]["creative_semantics"][
+        "signature_fantasy"
+    ] == "尚未重新生成的作者草稿"
+    assert overview["reader_kernel_author_instruction"] == (
+        "刷新后仍应保留的补充指令"
+    )
+    assert overview["reader_experience_display"]["primary_family_value"] == (
+        "TEAM_PROGRESSION"
+    )
+    assert overview["reader_experience_display"]["setting_skin_value"] == "MODERN_CITY"
+    assert overview["reader_experience_display"]["explanation_style_value"] == "MIXED_HARD"
+    assert overview["reader_experience_display"]["primary_market_category_value"] == "URBAN"
+    assert overview["reader_experience_display"]["secondary_market_category_values"] == []
+    assert overview["reader_experience_display"]["overrides_need_regeneration"] is True
+    with pytest.raises(OriginalWorkflowError, match="请先重新生成"):
+        confirm_original_reader_experience(database, BOOK_ID)
+    app = create_app(
+        Database(tmp_path / "fallback.sqlite3"),
+        library_root=layout.library_root,
+        discovery_root=tmp_path / "book",
+    )
+    with TestClient(app) as client:
+        page = client.get(f"/books/{BOOK_ID}/original")
+    assert page.status_code == 200
+    assert "data-reader-author-overrides" in page.text
+    assert 'data-reader-overrides-need-regeneration="true"' in page.text
+    assert 'value="TEAM_PROGRESSION" selected' in page.text
+    assert 'value="MODERN_CITY" selected' in page.text
+    assert 'value="MIXED_HARD" selected' in page.text
+    assert 'value="URBAN" selected' in page.text
+    assert json.dumps("尚未重新生成的作者草稿", ensure_ascii=True)[1:-1] in page.text
 
 
 def test_reader_priority_edits_do_not_reinfer_primary_drive(tmp_path: Path) -> None:
@@ -1891,6 +2420,19 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
         assert before.text.count("标准") >= 20
         assert before.text.count("data-reader-experience-key=") == 20
         assert 'data-reader-strength="CORE"' in before.text
+        assert "data-reader-kernel-review" in before.text
+        assert 'data-original-action="regenerate-reader"' in before.text
+        assert "data-reader-author-instruction" in before.text
+        assert 'data-reader-override-field="primary_family"' in before.text
+        assert 'data-reader-override-field="secondary_families"' in before.text
+        assert 'data-reader-override-field="primary_market_category"' in before.text
+        assert 'data-reader-override-field="secondary_market_categories"' in before.text
+        assert 'data-reader-override-field="setting_skin"' in before.text
+        assert 'data-reader-override-field="explanation_style"' in before.text
+        assert "data-reader-recommended=" in before.text
+        assert "data-reader-current=" in before.text
+        for option in (*MarketCategory, *PrimaryFamily, *SettingSkin, *ExplanationStyle):
+            assert f'value="{option.value}"' in before.text
         assert "调整创作语义" in before.text
         assert before.text.count("data-creative-semantics-key=") == 9
         for label in ("战斗和爽点更强", "谜团更强", "团队更强", "关系更强", "职业更强"):
@@ -1946,6 +2488,14 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
         assert 'data-reader-experience-confirmed' in after.text
         assert "资源机会" in after.text
         assert "已确认 · 阅读体验" in after.text
+        assert "市场分类" in after.text
+        assert "阅读类型" in after.text
+        assert "世界外壳" in after.text
+        assert "超凡解释" in after.text
+        assert "data-reader-override-field=" not in after.text
+        assert "data-reader-author-instruction" not in after.text
+        assert 'data-original-action="regenerate-reader"' not in after.text
+        assert 'data-original-action="confirm-reader"' not in after.text
         assert "后续推理不得静默覆盖作者确认值" in after.text
         assert "已确认的创作语义" in after.text
         assert "作者改写后的核心幻想" in after.text
@@ -2004,9 +2554,13 @@ def test_confirmed_creative_semantics_are_sqlite_authority_when_projection_drift
     )
     stale = json.loads(proposal_path.read_text(encoding="utf-8"))
     stale["creative_semantics"]["signature_fantasy"] = "AI 旧版本 A"
+    stale["market_category"]["primary_market_category"] = "CUSTOM"
     proposal_path.write_text(json_dumps(stale, indent=2), encoding="utf-8")
     overview = original_overview(database, BOOK_ID)
     assert overview["reader_experience"]["creative_semantics"] == author_semantics
+    assert overview["reader_experience"]["market_category"] == confirmed[
+        "market_category"
+    ]["payload"]
     request = json.loads(
         (
             Path(str(confirmed["handoff"]["task_directory"]))
@@ -2015,6 +2569,9 @@ def test_confirmed_creative_semantics_are_sqlite_authority_when_projection_drift
         ).read_text(encoding="utf-8")
     )
     assert request["progression_kernel"]["creative_semantics"] == author_semantics
+    assert request["progression_kernel"]["contract_proposals"]["MARKET_CATEGORY"][
+        "status"
+    ] == "EFFECTIVE"
 
     proposal_path.unlink()
     assert original_overview(database, BOOK_ID)["reader_experience"][
@@ -2111,6 +2668,7 @@ def test_projection_write_failure_does_not_rollback_reader_author_decision(
         if record.status is ContractStatus.EFFECTIVE
     }
     assert ProgressionContractType.READER_EXPERIENCE in effective
+    assert ProgressionContractType.MARKET_CATEGORY in effective
     assert ProgressionContractType.NARRATIVE_DRIVE in effective
     with database.connect() as connection:
         stored = connection.execute(
