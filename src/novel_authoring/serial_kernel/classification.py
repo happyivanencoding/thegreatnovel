@@ -66,26 +66,24 @@ _MARKET_LABELS: dict[MarketCategory, str] = {
 }
 
 _READER_EXPERIENCE_DRIVES: dict[ReaderExperience, NarrativeDrive] = {
-    ReaderExperience.PROGRESSION: NarrativeDrive.POWER_PROGRESSION,
-    ReaderExperience.BREAKTHROUGH: NarrativeDrive.POWER_PROGRESSION,
-    ReaderExperience.POWER_VERIFICATION: NarrativeDrive.ABILITY_PROGRESSION,
-    ReaderExperience.COMBAT: NarrativeDrive.POWER_PROGRESSION,
-    ReaderExperience.EXPLORATION: NarrativeDrive.WORLD_EXPLORATION,
     ReaderExperience.RESOURCE_OPPORTUNITY: NarrativeDrive.RESOURCE_OPPORTUNITY,
-    ReaderExperience.ARTIFACT_OR_ABILITY: NarrativeDrive.ABILITY_PROGRESSION,
-    ReaderExperience.WORLD_EXPANSION: NarrativeDrive.WORLD_EXPLORATION,
-    ReaderExperience.FACTION_CONFLICT: NarrativeDrive.TERRITORY_FACTION,
     ReaderExperience.MYSTERY: NarrativeDrive.MYSTERY_INVESTIGATION,
     ReaderExperience.REVEAL: NarrativeDrive.MYSTERY_REVELATION,
     ReaderExperience.TEAM_GROWTH: NarrativeDrive.TEAM_GROWTH,
     ReaderExperience.RELATIONSHIP: NarrativeDrive.RELATIONSHIP_EMOTIONAL,
-    ReaderExperience.ROMANCE: NarrativeDrive.RELATIONSHIP_EMOTIONAL,
     ReaderExperience.STATUS_RISE: NarrativeDrive.STATUS_RISE,
-    ReaderExperience.REVENGE: NarrativeDrive.IDENTITY_PRESSURE,
     ReaderExperience.SURVIVAL: NarrativeDrive.SURVIVAL_RESOURCE,
     ReaderExperience.KNOWLEDGE: NarrativeDrive.KNOWLEDGE_PROGRESSION,
     ReaderExperience.WEALTH: NarrativeDrive.STATUS_WEALTH,
 }
+
+_PROGRESSION_ENGINE_EXPERIENCES = {
+    ReaderExperience.PROGRESSION,
+    ReaderExperience.BREAKTHROUGH,
+    ReaderExperience.ARTIFACT_OR_ABILITY,
+}
+
+_PROGRESSION_ENGINE_METADATA = ("成长", "升级", "progression")
 
 _READER_PRIORITY_SCORES = {
     ExperiencePriority.OFF: 0,
@@ -119,10 +117,7 @@ def align_narrative_drive_to_reader_experience(
     """Make confirmed strong reader priorities visible in the existing Drive proposal."""
 
     drive_scores: dict[NarrativeDrive, int] = {}
-    drive_order: dict[NarrativeDrive, int] = {}
-    for index, (experience, priority) in enumerate(
-        reader_contract.experience_priorities.items()
-    ):
+    for experience, priority in reader_contract.experience_priorities.items():
         if priority not in {ExperiencePriority.HIGH, ExperiencePriority.VERY_HIGH}:
             continue
         drive = _READER_EXPERIENCE_DRIVES.get(experience)
@@ -130,17 +125,19 @@ def align_narrative_drive_to_reader_experience(
             continue
         score = _READER_PRIORITY_SCORES[priority]
         drive_scores[drive] = max(score, drive_scores.get(drive, 0))
-        drive_order.setdefault(drive, index)
-    if not drive_scores:
-        return value
-
-    ranked = sorted(
-        drive_scores,
-        key=lambda drive: (-drive_scores[drive], drive_order[drive]),
+    progression_enabled = value.progression_engine_enabled or any(
+        reader_contract.experience_priorities.get(experience)
+        in {ExperiencePriority.HIGH, ExperiencePriority.VERY_HIGH}
+        for experience in _PROGRESSION_ENGINE_EXPERIENCES
     )
+    ranked = sorted(drive_scores, key=lambda drive: (-drive_scores[drive], drive.value))
     current_primary = value.drive_contract.primary_drive
-    current_score = drive_scores.get(current_primary, -1)
-    primary = current_primary if current_score >= drive_scores[ranked[0]] else ranked[0]
+    primary = current_primary
+    if current_primary is NarrativeDrive.CUSTOM and ranked:
+        highest = drive_scores[ranked[0]]
+        strongest = [drive for drive in ranked if drive_scores[drive] == highest]
+        if len(strongest) == 1:
+            primary = strongest[0]
     secondary = [drive for drive in ranked if drive is not primary][:4]
     contract = value.drive_contract
     priorities = dict(contract.drive_priorities)
@@ -148,6 +145,8 @@ def align_narrative_drive_to_reader_experience(
     payoff_channels = list(contract.drive_payoff_channels)
     debt_types = dict(contract.drive_debt_types)
     for drive in [primary, *secondary]:
+        if drive is NarrativeDrive.CUSTOM:
+            continue
         priorities[drive] = max(priorities.get(drive, 0), drive_scores.get(drive, 50))
         promises.setdefault(
             drive,
@@ -169,6 +168,10 @@ def align_narrative_drive_to_reader_experience(
             "drive_promises": promises,
             "drive_payoff_channels": payoff_channels,
             "drive_debt_types": debt_types,
+            "progression_engine_enabled": (
+                progression_enabled
+                or any(drive in PROGRESSION_DRIVES for drive in [primary, *secondary])
+            ),
             "author_overrides": (
                 contract.author_overrides
                 if "READER_EXPERIENCE_STRENGTHS" in contract.author_overrides
@@ -176,7 +179,11 @@ def align_narrative_drive_to_reader_experience(
             ),
         }
     )
+    progression_enabled = updated_contract.progression_engine_enabled
     mix = updated_contract.drive_mix
+    enabled_engines = list(dict.fromkeys(_engine_for_drive(drive) for drive in mix))
+    if progression_enabled and NarrativeEngineType.PROGRESSION not in enabled_engines:
+        enabled_engines.append(NarrativeEngineType.PROGRESSION)
     evidence = (
         value.evidence
         if "AUTHOR_READER_EXPERIENCE_STRENGTHS" in value.evidence
@@ -189,7 +196,8 @@ def align_narrative_drive_to_reader_experience(
                 f"已读取作者确认的阅读体验优先级"
             ),
             "drive_contract": updated_contract,
-            "enabled_engines": list(dict.fromkeys(_engine_for_drive(drive) for drive in mix)),
+            "enabled_engines": enabled_engines,
+            "progression_engine_enabled": progression_enabled,
             "display_primary_drive": _DRIVE_LABELS.get(primary, primary.value),
             "display_secondary_drives": [
                 _DRIVE_LABELS.get(drive, drive.value) for drive in secondary
@@ -203,131 +211,100 @@ def _contains(text: str, values: Iterable[str]) -> bool:
     return any(value in text for value in values)
 
 
-def _market_categories(text: str) -> tuple[MarketCategory, list[MarketCategory]]:
-    if _contains(text, ("修仙", "仙侠", "气修")):
+def _market_categories(metadata: str) -> tuple[MarketCategory, list[MarketCategory]]:
+    if _contains(metadata, ("修仙", "仙侠", "xianxia")):
         secondary = (
             [MarketCategory.SCIENCE_FICTION]
-            if _contains(text, ("近未来", "科技", "赛博"))
+            if _contains(metadata, ("科幻", "science fiction", "sci-fi"))
             else []
         )
         return MarketCategory.XIANXIA, secondary
-    if _contains(text, ("玄幻", "超凡", "矿脉", "异能")):
+    if _contains(metadata, ("玄幻", "xuanhuan")):
         return MarketCategory.XUANHUAN, []
-    if _contains(text, ("历史", "地方官", "边城", "朝堂")):
+    if _contains(metadata, ("历史", "historical")):
         return MarketCategory.HISTORY, []
-    if _contains(text, ("电竞", "战队", "联赛", "选手")):
+    if _contains(metadata, ("电竞", "游戏", "esports", "game")):
         return MarketCategory.GAME, [MarketCategory.URBAN]
-    if _contains(text, ("灵异", "旧公寓", "鬼", "不存在的房间")):
+    if _contains(metadata, ("灵异", "supernatural", "horror")):
         return MarketCategory.SUPERNATURAL, []
-    if _contains(text, ("医生", "医院", "职业", "商业", "文娱")):
+    if _contains(metadata, ("都市", "urban", "职场", "career")):
         return MarketCategory.URBAN, []
-    if _contains(text, ("科幻", "未来", "星际", "宇宙")):
+    if _contains(metadata, ("科幻", "science fiction", "sci-fi")):
         return MarketCategory.SCIENCE_FICTION, []
+    if _contains(metadata, ("奇幻", "fantasy")):
+        return MarketCategory.FANTASY, []
+    if _contains(metadata, ("武侠", "wuxia")):
+        return MarketCategory.WUXIA, []
     return MarketCategory.CUSTOM, []
 
 
-def _drive_mix(text: str) -> tuple[NarrativeDrive, list[NarrativeDrive], list[str]]:
-    evidence: list[str] = []
-    if _contains(text, ("医生", "医院", "急救", "外科", "职业体系")):
-        evidence.append("职业、医疗或组织能力是显式长期目标")
+def _drive_mix(metadata: str) -> tuple[NarrativeDrive, list[NarrativeDrive], list[str]]:
+    """Derive conservative hints only from explicit author metadata."""
+
+    evidence = ["只使用作者显式题材元数据生成弱驱动力建议"]
+    if _contains(metadata, ("修仙", "cultivation")):
         return (
-            NarrativeDrive.CAREER_MASTERY,
-            [NarrativeDrive.TEAM_GROWTH, NarrativeDrive.STATUS_RISE],
+            NarrativeDrive.POWER_PROGRESSION,
+            [NarrativeDrive.RESOURCE_OPPORTUNITY],
             evidence,
         )
-    if _contains(text, ("地方官", "恢复人口", "粮食", "治理", "国家建设")):
-        evidence.append("治理指标与组织建设是显式长期目标")
+    if _contains(metadata, ("肉身进化", "body progression")):
+        return NarrativeDrive.BODY_EVOLUTION, [], evidence
+    if _contains(metadata, ("宇宙成长", "cosmic progression")):
         return (
-            NarrativeDrive.STATE_BUILDING,
-            [NarrativeDrive.POLITICAL_STRATEGY, NarrativeDrive.TERRITORY_FACTION],
+            NarrativeDrive.POWER_PROGRESSION,
+            [NarrativeDrive.WORLD_EXPLORATION],
             evidence,
         )
-    if _contains(text, ("电竞", "战队", "联赛", "选手", "竞技排名")):
-        evidence.append("技能、赛事排名与团队磨合共同构成长线")
+    if _contains(metadata, ("神秘学晋升", "occult progression")):
         return (
-            NarrativeDrive.COMPETITIVE_SKILL,
-            [
-                NarrativeDrive.COMPETITIVE_RANK,
-                NarrativeDrive.TEAM_GROWTH,
-                NarrativeDrive.CAREER_MASTERY,
-            ],
+            NarrativeDrive.SEQUENCE_PROGRESSION,
+            [NarrativeDrive.MYSTERY_REVELATION],
             evidence,
         )
-    if _contains(text, ("不存在的房间", "失去关于", "灵异", "旧公寓")):
-        evidence.append("异常规律的调查与揭露是下一章期待来源")
+    if _contains(metadata, ("生存", "资源管理", "survival", "resource management")):
+        return (
+            NarrativeDrive.SURVIVAL_RESOURCE,
+            [NarrativeDrive.RESOURCE_OPPORTUNITY],
+            evidence,
+        )
+    if _contains(metadata, ("悬疑", "谜团", "mystery", "suspense")):
         return (
             NarrativeDrive.MYSTERY_INVESTIGATION,
-            [NarrativeDrive.SURVIVAL_RESOURCE, NarrativeDrive.MYSTERY_REVELATION],
+            [NarrativeDrive.MYSTERY_REVELATION],
             evidence,
         )
-    if _contains(text, ("禁忌晋升", "禁忌", "晋升路线")) and _contains(
-        text, ("职业", "身份", "秘密")
-    ):
-        evidence.append("晋升与秘密、身份代价绑定")
-        return (
-            NarrativeDrive.KNOWLEDGE_PROGRESSION,
-            [NarrativeDrive.MYSTERY_REVELATION, NarrativeDrive.IDENTITY_PRESSURE],
-            evidence,
-        )
-    if _contains(text, ("灭亡的语言", "理解一种", "现实层")):
-        evidence.append("知识理解持续解锁此前不可进入的现实层")
-        return (
-            NarrativeDrive.KNOWLEDGE_PROGRESSION,
-            [NarrativeDrive.MYSTERY_REVELATION, NarrativeDrive.WORLD_EXPLORATION],
-            evidence,
-        )
-    if _contains(text, ("城市本身是成长主体", "城市获得", "新的自然法则")):
-        evidence.append("集体解决问题会让城市主体获得可验证的新能力")
-        return (
-            NarrativeDrive.POWER_PROGRESSION,
-            [NarrativeDrive.TEAM_GROWTH, NarrativeDrive.WORLD_EXPLORATION],
-            evidence,
-        )
-    if _contains(text, ("恒星", "宇宙能量", "吸收残留能量")):
-        evidence.append("能量积累与宇宙尺度共同扩大主体可能性")
-        return (
-            NarrativeDrive.POWER_PROGRESSION,
-            [NarrativeDrive.WORLD_EXPLORATION, NarrativeDrive.KNOWLEDGE_PROGRESSION],
-            evidence,
-        )
-    if _contains(
-        text,
-        (
-            "体修",
-            "修仙",
-            "修为",
-            "炼化",
-            "超凡能力",
-            "重塑他的身体",
-            "进化",
-            "突破",
-        ),
-    ):
-        evidence.append("主动变强、资源与验证直接改变行动可能性")
-        secondary = [
-            NarrativeDrive.WORLD_EXPLORATION,
-            NarrativeDrive.RESOURCE_OPPORTUNITY,
-        ]
-        if _contains(text, ("势力", "宗门", "城市")):
-            secondary.append(NarrativeDrive.TERRITORY_FACTION)
-        if _contains(text, ("秘密", "古老")):
-            secondary.append(NarrativeDrive.MYSTERY_REVELATION)
-        return NarrativeDrive.POWER_PROGRESSION, secondary[:4], evidence
-    if _contains(text, ("队伍", "团队", "能力槽")):
-        evidence.append("团队组合能力是显式推进机制")
+    if _contains(metadata, ("团队", "群像", "team", "ensemble")):
         return (
             NarrativeDrive.TEAM_GROWTH,
-            [NarrativeDrive.ABILITY_PROGRESSION, NarrativeDrive.WORLD_EXPLORATION],
+            [NarrativeDrive.RELATIONSHIP_EMOTIONAL],
             evidence,
         )
-    if _contains(text, ("不可撤销的选择", "失去一种未来", "可能性")):
-        evidence.append("不可逆选择持续改变主体能力与可达世界")
+    if _contains(metadata, ("关系", "恋爱", "romance", "relationship")):
         return (
-            NarrativeDrive.POWER_PROGRESSION,
-            [NarrativeDrive.WORLD_EXPLORATION, NarrativeDrive.IDENTITY_PRESSURE],
+            NarrativeDrive.RELATIONSHIP_EMOTIONAL,
+            [],
             evidence,
         )
-    evidence.append("当前文字不足以可靠推断成熟专用驱动力")
+    if _contains(metadata, ("职场", "职业", "career", "profession")):
+        return (
+            NarrativeDrive.CAREER_MASTERY,
+            [NarrativeDrive.STATUS_RISE],
+            evidence,
+        )
+    if _contains(metadata, ("竞技", "电竞", "competition", "esports")):
+        return (
+            NarrativeDrive.COMPETITIVE_SKILL,
+            [NarrativeDrive.COMPETITIVE_RANK, NarrativeDrive.TEAM_GROWTH],
+            evidence,
+        )
+    if _contains(metadata, ("治理", "建设", "strategy", "state building")):
+        return (
+            NarrativeDrive.STATE_BUILDING,
+            [NarrativeDrive.POLITICAL_STRATEGY],
+            evidence,
+        )
+    evidence = ["显式题材元数据不足以可靠确定主要驱动力"]
     return NarrativeDrive.CUSTOM, [], evidence
 
 
@@ -383,9 +360,10 @@ def interpret_narrative_drives(
 ) -> NarrativeDriveInterpretation:
     """Produce a reviewable proposal without changing runtime or Canon."""
 
-    text = f"{premise} {market_hint}".casefold()
-    primary_category, secondary_categories = _market_categories(text)
-    primary, secondary, evidence = _drive_mix(text)
+    del premise
+    metadata = market_hint.casefold()
+    primary_category, secondary_categories = _market_categories(metadata)
+    primary, secondary, evidence = _drive_mix(metadata)
     mix = [primary, *secondary]
     priorities = {drive: max(45, 100 - index * 15) for index, drive in enumerate(mix)}
     promises = {
@@ -393,7 +371,11 @@ def interpret_narrative_drives(
         for drive in mix
     }
     enabled_engines = list(dict.fromkeys(_engine_for_drive(drive) for drive in mix))
-    progression_enabled = any(drive in PROGRESSION_DRIVES for drive in mix)
+    progression_enabled = any(drive in PROGRESSION_DRIVES for drive in mix) or _contains(
+        metadata, _PROGRESSION_ENGINE_METADATA
+    )
+    if progression_enabled and NarrativeEngineType.PROGRESSION not in enabled_engines:
+        enabled_engines.append(NarrativeEngineType.PROGRESSION)
     secondary_summary = "、".join(
         _DRIVE_LABELS.get(item, item.value) for item in secondary
     ) or "待作者补充"
@@ -425,6 +407,7 @@ def interpret_narrative_drives(
             drive_fatigue_risks={
                 primary: ["连续多章只推进次要 Drive 会稀释主要承诺"]
             },
+            progression_engine_enabled=progression_enabled,
             status=ContractStatus.NEEDS_REVIEW,
         ),
         enabled_engines=enabled_engines,
@@ -480,11 +463,17 @@ def adjust_narrative_drive_interpretation(
             "drive_promises": promises,
             "drive_payoff_channels": payoff_channels,
             "drive_debt_types": debts,
+            "progression_engine_enabled": value.progression_engine_enabled,
             "author_overrides": [*contract.author_overrides, adjustment],
         }
     )
     mix = updated_contract.drive_mix
     enabled_engines = list(dict.fromkeys(_engine_for_drive(drive) for drive in mix))
+    if (
+        updated_contract.progression_engine_enabled
+        and NarrativeEngineType.PROGRESSION not in enabled_engines
+    ):
+        enabled_engines.append(NarrativeEngineType.PROGRESSION)
     return value.model_copy(
         update={
             "summary": (

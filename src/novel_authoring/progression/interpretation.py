@@ -27,11 +27,9 @@ from novel_authoring.progression.models import (
     GenrePromise,
     GenrePromiseStrength,
     GrowthAxisType,
-    PayoffChannel,
     PayoffChannelProfile,
     PrimaryFamily,
     ProgressionContract,
-    ProgressionDeltaType,
     ProgressionSubject,
     ProgressionTopology,
     ReaderExperience,
@@ -53,7 +51,6 @@ from novel_authoring.serial_kernel.models import (
 
 class ReaderExperienceAdjustment(StrEnum):
     CONFIRM = "CONFIRM"
-    CULTIVATION_STRONGER = "CULTIVATION_STRONGER"
     PAYOFF_STRONGER = "PAYOFF_STRONGER"
     MYSTERY_STRONGER = "MYSTERY_STRONGER"
     TEAM_STRONGER = "TEAM_STRONGER"
@@ -78,6 +75,63 @@ _STRENGTH_TO_PRIORITY = {
     ReaderExperienceStrength.STRONG: ExperiencePriority.HIGH,
     ReaderExperienceStrength.CORE: ExperiencePriority.VERY_HIGH,
 }
+
+
+READER_EXPERIENCE_UI: tuple[dict[str, str], ...] = (
+    {"key": "PROGRESSION", "label": "持续成长", "group": "PRIMARY"},
+    {"key": "BREAKTHROUGH", "label": "突破兑现", "group": "PRIMARY"},
+    {"key": "POWER_VERIFICATION", "label": "能力验证", "group": "PRIMARY"},
+    {"key": "COMBAT", "label": "战斗兑现", "group": "PRIMARY"},
+    {"key": "EXPLORATION", "label": "探索机缘", "group": "PRIMARY"},
+    {"key": "RESOURCE_OPPORTUNITY", "label": "资源机会", "group": "PRIMARY"},
+    {"key": "ARTIFACT_OR_ABILITY", "label": "新物品 / 新能力", "group": "PRIMARY"},
+    {"key": "WORLD_EXPANSION", "label": "世界扩张", "group": "PRIMARY"},
+    {"key": "FACTION_CONFLICT", "label": "势力竞争", "group": "PRIMARY"},
+    {"key": "MYSTERY", "label": "世界谜团", "group": "PRIMARY"},
+    {"key": "REVEAL", "label": "揭秘兑现", "group": "MORE"},
+    {"key": "TEAM_GROWTH", "label": "团队成长", "group": "MORE"},
+    {"key": "RELATIONSHIP", "label": "人物关系", "group": "MORE"},
+    {"key": "ROMANCE", "label": "恋爱关系", "group": "MORE"},
+    {"key": "STATUS_RISE", "label": "身份提升", "group": "MORE"},
+    {"key": "REVENGE", "label": "复仇兑现", "group": "MORE"},
+    {"key": "SURVIVAL", "label": "生存压力", "group": "MORE"},
+    {"key": "KNOWLEDGE", "label": "知识成长", "group": "MORE"},
+    {"key": "WEALTH", "label": "财富增长", "group": "MORE"},
+    {"key": "SOCIAL_THEME", "label": "社会议题", "group": "MORE"},
+)
+
+
+READER_EXPERIENCE_PRESETS: tuple[dict[str, object], ...] = (
+    {
+        "key": "PAYOFF_STRONGER",
+        "label": "战斗和爽点更强",
+        "values": {"POWER_VERIFICATION": "CORE", "COMBAT": "CORE", "BREAKTHROUGH": "STRONG"},
+    },
+    {
+        "key": "MYSTERY_STRONGER",
+        "label": "谜团更强",
+        "values": {"MYSTERY": "CORE", "REVEAL": "CORE", "WORLD_EXPANSION": "STRONG"},
+    },
+    {
+        "key": "TEAM_STRONGER",
+        "label": "团队更强",
+        "values": {"TEAM_GROWTH": "CORE", "RELATIONSHIP": "STRONG", "FACTION_CONFLICT": "STRONG"},
+    },
+    {
+        "key": "RELATIONSHIP_STRONGER",
+        "label": "关系更强",
+        "values": {"RELATIONSHIP": "CORE", "ROMANCE": "CORE", "TEAM_GROWTH": "STRONG"},
+    },
+    {
+        "key": "CAREER_STRONGER",
+        "label": "职业更强",
+        "values": {
+            "STATUS_RISE": "CORE",
+            "PROGRESSION": "STRONG",
+            "RESOURCE_OPPORTUNITY": "STRONG",
+        },
+    },
+)
 
 
 def apply_reader_experience_overrides(
@@ -162,123 +216,7 @@ class KernelContractProposalBundle(BaseModel):
 
 
 def _base_priorities() -> dict[ReaderExperience, ExperiencePriority]:
-    return {
-        ReaderExperience.PROGRESSION: ExperiencePriority.VERY_HIGH,
-        ReaderExperience.BREAKTHROUGH: ExperiencePriority.HIGH,
-        ReaderExperience.POWER_VERIFICATION: ExperiencePriority.HIGH,
-        ReaderExperience.EXPLORATION: ExperiencePriority.HIGH,
-        ReaderExperience.RESOURCE_OPPORTUNITY: ExperiencePriority.HIGH,
-        ReaderExperience.ARTIFACT_OR_ABILITY: ExperiencePriority.HIGH,
-        ReaderExperience.WORLD_EXPANSION: ExperiencePriority.HIGH,
-        ReaderExperience.FACTION_CONFLICT: ExperiencePriority.MEDIUM,
-        ReaderExperience.MYSTERY: ExperiencePriority.MEDIUM,
-        ReaderExperience.REVEAL: ExperiencePriority.MEDIUM,
-        ReaderExperience.TEAM_GROWTH: ExperiencePriority.LOW,
-        ReaderExperience.RELATIONSHIP: ExperiencePriority.MEDIUM,
-        ReaderExperience.COMBAT: ExperiencePriority.MEDIUM,
-        ReaderExperience.SOCIAL_THEME: ExperiencePriority.LOW,
-    }
-
-
-def _custom_spec(premise: str, contract_prefix: str) -> DerivedAdapterSpec:
-    if "城市" in premise and ("成长主体" in premise or "自然法则" in premise):
-        return DerivedAdapterSpec(
-            spec_id=f"{contract_prefix}-derived-city",
-            progression_subject=ProgressionSubject.SETTLEMENT,
-            growth_object="城市共同解决问题后获得的自然法则",
-            progression_topology=[
-                ProgressionTopology.NETWORK,
-                ProgressionTopology.ACCUMULATIVE,
-            ],
-            delta_types=[ProgressionDeltaType.UNLOCK, ProgressionDeltaType.MERGE],
-            growth_resources=["居民共同理解", "被解决的新型问题"],
-            growth_gates=["居民共同解决此前无法解决的问题"],
-            growth_costs=["共同选择会改变城市未来规则"],
-            verification_modes=["城市地图、居民权限或自然规则发生可见变化"],
-            unlock_logic="共同解决问题后生成一条新的城市自然法则",
-            world_expansion_relation="城市能力与文明影响范围同步扩大",
-            reader_visible_progress=["新自然法则", "居民权限", "城市影响范围"],
-            long_term_ceiling_logic="城市逐步成为能够改写更大区域规则的集体主体",
-            payoff_logic=["城市能力兑现", "文明规则变化", "共同选择后果"],
-            capabilities=RuntimeGenreCapabilities(
-                has_progression_axis=True,
-                has_ability_unlock=True,
-                has_verification_requirement=True,
-                has_world_expansion=True,
-                has_team_progression=True,
-            ),
-            payoff_channels=[PayoffChannel.TEAM_GROWTH, PayoffChannel.WORLD_EXPANSION],
-        )
-    if "语言" in premise and ("现实层" in premise or "文明" in premise):
-        return DerivedAdapterSpec(
-            spec_id=f"{contract_prefix}-derived-language",
-            progression_subject=ProgressionSubject.CHARACTER,
-            growth_object="理解灭亡语言后可进入的文明现实层",
-            progression_topology=[
-                ProgressionTopology.NETWORK,
-                ProgressionTopology.TRANSFORMATIVE,
-            ],
-            delta_types=[ProgressionDeltaType.UNLOCK, ProgressionDeltaType.TRANSFORM],
-            growth_resources=["语言材料", "文明语境", "真正理解"],
-            growth_gates=["真正理解而非仅翻译一种灭亡语言"],
-            growth_costs=["新理解改变主角对现实的认知边界"],
-            verification_modes=["进入该文明曾理解过的现实层并解决问题"],
-            unlock_logic="理解一门语言即获得对应现实层的进入权限",
-            world_expansion_relation="知识成长直接打开新的本体与历史空间",
-            reader_visible_progress=["可理解文本", "可进入现实层", "文明知识权限"],
-            long_term_ceiling_logic="多种文明理解相互连接，显露现实的更高结构",
-            payoff_logic=["知识兑现", "谜团揭示", "世界扩张"],
-            capabilities=RuntimeGenreCapabilities(
-                has_progression_axis=True,
-                has_knowledge_gate=True,
-                has_ability_unlock=True,
-                has_verification_requirement=True,
-                has_world_expansion=True,
-                has_mystery_binding=True,
-            ),
-            payoff_channels=[
-                PayoffChannel.KNOWLEDGE_GAIN,
-                PayoffChannel.MYSTERY_REVEAL,
-                PayoffChannel.WORLD_EXPANSION,
-            ],
-        )
-    return DerivedAdapterSpec(
-        spec_id=f"{contract_prefix}-derived-possibility",
-        progression_subject=ProgressionSubject.CHARACTER,
-        growth_object="被不可逆选择关闭的未来与现实可能性权柄",
-        progression_topology=[
-            ProgressionTopology.BRANCHING,
-            ProgressionTopology.TRADEOFF,
-        ],
-        delta_types=[
-            ProgressionDeltaType.BRANCH,
-            ProgressionDeltaType.SACRIFICE,
-            ProgressionDeltaType.LOCK_OUT,
-        ],
-        growth_resources=["被放弃的未来", "不可逆选择"],
-        growth_gates=["做出真正不可撤销的选择"],
-        growth_costs=["永久失去一条人生路线"],
-        verification_modes=["现实开始服从新获得的可能性权柄"],
-        unlock_logic="失去一种未来后，获得使用该未来残余可能性的权限",
-        world_expansion_relation="每次选择都改变可进入的现实分支",
-        reader_visible_progress=["可使用的失去未来", "已锁死路线", "现实服从范围"],
-        long_term_ceiling_logic="力量增长与人生可能性持续减少形成终极张力",
-        payoff_logic=["不可逆选择后果", "权柄验证", "新现实分支"],
-        capabilities=RuntimeGenreCapabilities(
-            has_progression_axis=True,
-            has_stage_transition=True,
-            has_resource_gate=True,
-            has_ability_unlock=True,
-            has_verification_requirement=True,
-            has_world_expansion=True,
-            has_mystery_binding=True,
-        ),
-        payoff_channels=[
-            PayoffChannel.STRATEGIC_ADVANTAGE,
-            PayoffChannel.TRANSFORMATION,
-            PayoffChannel.WORLD_EXPANSION,
-        ],
-    )
+    return {item: ExperiencePriority.MEDIUM for item in ReaderExperience}
 
 
 def interpret_reader_experience(
@@ -289,27 +227,27 @@ def interpret_reader_experience(
 ) -> ReaderExperienceInterpretation:
     """Create an author-reviewable interpretation; never an Effective Contract."""
 
-    text = f"{premise} {genre_hint}".casefold()
+    metadata = genre_hint.casefold()
     drive_interpretation = interpret_narrative_drives(
         premise,
         market_hint=genre_hint,
         contract_prefix=contract_prefix,
     )
     priorities = _base_priorities()
-    primary_family = PrimaryFamily.PROGRESSION_FANTASY
+    primary_family = PrimaryFamily.CUSTOM
     secondary: list[PrimaryFamily] = []
     setting = SettingSkin.CUSTOM
     explanation = ExplanationStyle.MIXED_MYSTICAL
     adapter = GenreAdapterKind.CUSTOM
     secondary_adapters: list[GenreAdapterKind] = []
-    growth_object = "持续扩大可能性的原创成长"
-    subject = ProgressionSubject.CHARACTER
+    growth_object = "待 Core Innovation 与 Story Foundation 确认后定义"
+    subject = ProgressionSubject.CUSTOM
     axis_type = GrowthAxisType.CUSTOM
-    topology = [ProgressionTopology.ACCUMULATIVE]
+    topology = [ProgressionTopology.CUSTOM]
     derived: DerivedAdapterSpec | None = None
-    summary = "自定义成长型长篇：先确认成长语法，再生成故事方向"
+    summary = "开放语义原创：详细成长语法将在创意与故事基础确认后生成"
 
-    if "能力槽" in text or ("队伍" in text and "能力" in text):
+    if "团队成长" in metadata or "team progression" in metadata:
         primary_family = PrimaryFamily.TEAM_PROGRESSION
         adapter = GenreAdapterKind.ABILITY_UNLOCK_TEAM
         growth_object = "成员能力槽与团队组合可能性"
@@ -318,55 +256,51 @@ def interpret_reader_experience(
         topology = [ProgressionTopology.MULTI_AXIS, ProgressionTopology.NETWORK]
         priorities[ReaderExperience.TEAM_GROWTH] = ExperiencePriority.VERY_HIGH
         summary = "团队能力成长：成员解锁与组合共同扩大解决空间"
-    elif "恒星" in text or "宇宙" in text:
+    elif "宇宙成长" in metadata or "cosmic progression" in metadata:
         primary_family = PrimaryFamily.COSMIC_PROGRESSION
         setting = SettingSkin.COSMIC
         adapter = GenreAdapterKind.COSMIC_PROGRESSION
         growth_object = "宇宙能量、生命层级与感知范围"
+        subject = ProgressionSubject.CHARACTER
         axis_type = GrowthAxisType.BODY_EVOLUTION
         topology = [ProgressionTopology.TRANSFORMATIVE, ProgressionTopology.ACCUMULATIVE]
         summary = "宇宙生命成长：天体资源、认知与世界尺度同步扩大"
-    elif "禁忌" in text and ("职业" in text or "晋升" in text):
+    elif "神秘学晋升" in metadata or "occult progression" in metadata:
         primary_family = PrimaryFamily.MYSTERY_PROGRESSION
         adapter = GenreAdapterKind.OCCULT_SEQUENCE_MYSTERY
         growth_object = "禁忌知识、身份保存与职业权限"
+        subject = ProgressionSubject.CHARACTER
         axis_type = GrowthAxisType.SEQUENCE
         topology = [ProgressionTopology.BRANCHING, ProgressionTopology.TRADEOFF]
         priorities[ReaderExperience.MYSTERY] = ExperiencePriority.VERY_HIGH
         priorities[ReaderExperience.REVEAL] = ExperiencePriority.HIGH
         summary = "神秘学晋升：知识门槛、身份代价与揭露权限相互绑定"
-    elif ("近未来" in text or "科技" in text) and ("体修" in text or "肉身" in text):
+    elif "肉身进化" in metadata or "body progression" in metadata:
         setting = SettingSkin.NEAR_FUTURE
         secondary = [PrimaryFamily.MYSTERY_PROGRESSION]
         adapter = GenreAdapterKind.MYTHIC_BODY_ANCIENT_WORLD
         secondary_adapters = [GenreAdapterKind.CULTIVATION_ESCALATION]
         growth_object = "体修、肉身蜕变与生命层级提升"
+        subject = ProgressionSubject.CHARACTER
         axis_type = GrowthAxisType.BODY_EVOLUTION
         topology = [ProgressionTopology.TRANSFORMATIVE, ProgressionTopology.ACCUMULATIVE]
         priorities[ReaderExperience.COMBAT] = ExperiencePriority.VERY_HIGH
         summary = "成长型科幻玄幻：近未来是外壳，体修蜕变与战斗验证是发动机"
-    elif "修为" in text or "炼化" in text or "修仙" in text:
+    elif "修仙" in metadata or "cultivation" in metadata:
         setting = SettingSkin.ANCIENT_FANTASY
         adapter = GenreAdapterKind.CULTIVATION_ESCALATION
         growth_object = "积累、资源转化与阶段突破"
+        subject = ProgressionSubject.CHARACTER
         axis_type = GrowthAxisType.POWER_STAGE
         topology = [ProgressionTopology.LINEAR, ProgressionTopology.ACCUMULATIVE]
         summary = "阶段成长玄幻：资源转化、突破门槛与能力验证持续推进"
     elif drive_interpretation.progression_engine_enabled:
-        derived = _custom_spec(premise, contract_prefix)
-        subject = derived.progression_subject
-        growth_object = derived.growth_object
-        topology = derived.progression_topology
-        if subject is ProgressionSubject.SETTLEMENT:
-            primary_family = PrimaryFamily.CIVILIZATION_PROGRESSION
-            priorities[ReaderExperience.TEAM_GROWTH] = ExperiencePriority.VERY_HIGH
-        elif derived.capabilities.has_knowledge_gate:
-            primary_family = PrimaryFamily.MYSTERY_PROGRESSION
-            priorities[ReaderExperience.KNOWLEDGE] = ExperiencePriority.VERY_HIGH
-            priorities[ReaderExperience.COMBAT] = ExperiencePriority.OFF
-        summary = f"原创成长语法：{growth_object}"
+        summary = "原创成长引擎已启用；具体语法等待 Core Innovation 与 Story Foundation"
 
-    if not drive_interpretation.progression_engine_enabled:
+    if (
+        not drive_interpretation.progression_engine_enabled
+        and adapter is GenreAdapterKind.CUSTOM
+    ):
         # No specialized evidence is still a valid proposal state; keep every
         # unproven dimension at NORMAL instead of presenting it as WEAK.
         priorities = {item: ExperiencePriority.MEDIUM for item in ReaderExperience}
@@ -463,7 +397,7 @@ def interpret_reader_experience(
         narrative_drive=drive_interpretation,
         interpretation_notes=[
             "这是 Proposal，不会写入 Author Truth 或 Canon",
-            "作者确认后才会生成 Genre 与 Progression Contract Proposal",
+            "详细成长、世界与兑现语法等待 Core Innovation 和 Foundation 确认",
         ],
     )
 
@@ -472,33 +406,21 @@ def adjust_reader_experience(
     contract: ReaderExperienceContract,
     adjustment: ReaderExperienceAdjustment,
 ) -> ReaderExperienceContract:
-    priorities = dict(contract.experience_priorities)
-    if adjustment is ReaderExperienceAdjustment.CULTIVATION_STRONGER:
-        priorities[ReaderExperience.PROGRESSION] = ExperiencePriority.VERY_HIGH
-        priorities[ReaderExperience.BREAKTHROUGH] = ExperiencePriority.VERY_HIGH
-        priorities[ReaderExperience.RESOURCE_OPPORTUNITY] = ExperiencePriority.VERY_HIGH
-    elif adjustment is ReaderExperienceAdjustment.PAYOFF_STRONGER:
-        priorities[ReaderExperience.POWER_VERIFICATION] = ExperiencePriority.VERY_HIGH
-        priorities[ReaderExperience.COMBAT] = ExperiencePriority.VERY_HIGH
-    elif adjustment is ReaderExperienceAdjustment.MYSTERY_STRONGER:
-        priorities[ReaderExperience.MYSTERY] = ExperiencePriority.VERY_HIGH
-        priorities[ReaderExperience.REVEAL] = ExperiencePriority.HIGH
-    elif adjustment is ReaderExperienceAdjustment.TEAM_STRONGER:
-        priorities[ReaderExperience.TEAM_GROWTH] = ExperiencePriority.VERY_HIGH
-    elif adjustment is ReaderExperienceAdjustment.RELATIONSHIP_STRONGER:
-        priorities[ReaderExperience.RELATIONSHIP] = ExperiencePriority.VERY_HIGH
-    elif adjustment is ReaderExperienceAdjustment.CAREER_STRONGER:
-        priorities[ReaderExperience.STATUS_RISE] = ExperiencePriority.VERY_HIGH
-    return contract.model_copy(
-        update={
-            "experience_priorities": priorities,
-            "mystery_centrality": priorities.get(
-                ReaderExperience.MYSTERY, contract.mystery_centrality
-            ),
-            "team_centrality": priorities.get(
-                ReaderExperience.TEAM_GROWTH, contract.team_centrality
-            ),
-        }
+    preset = next(
+        (
+            item
+            for item in READER_EXPERIENCE_PRESETS
+            if item["key"] == adjustment.value
+        ),
+        None,
+    )
+    if preset is None:
+        return contract
+    values = preset["values"]
+    if not isinstance(values, dict):
+        return contract
+    return apply_reader_experience_overrides(
+        contract, {str(key): str(value) for key, value in values.items()}
     )
 
 
@@ -637,6 +559,8 @@ __all__ = [
     "ReaderExperienceAdjustment",
     "ReaderExperienceInterpretation",
     "ReaderExperienceStrength",
+    "READER_EXPERIENCE_PRESETS",
+    "READER_EXPERIENCE_UI",
     "apply_reader_experience_overrides",
     "adjust_reader_experience",
     "compile_kernel_contract_proposals",

@@ -19,74 +19,89 @@ from novel_authoring.serial_kernel import (
 
 
 @pytest.mark.parametrize(
-    ("premise", "primary", "secondary", "progression_enabled"),
+    ("metadata", "primary", "secondary", "progression_enabled"),
     [
         (
-            "一名失去超凡能力的矿工发现，废弃矿脉中残留的声音能够重塑他的身体。",
+            "生存 / 资源管理",
+            NarrativeDrive.SURVIVAL_RESOURCE,
+            {NarrativeDrive.RESOURCE_OPPORTUNITY},
+            False,
+        ),
+        (
+            "修仙",
             NarrativeDrive.POWER_PROGRESSION,
-            {NarrativeDrive.RESOURCE_OPPORTUNITY, NarrativeDrive.WORLD_EXPLORATION},
+            {NarrativeDrive.RESOURCE_OPPORTUNITY},
             True,
         ),
         (
-            "一名县城外科医生接手一家即将关闭的急救中心，并试图建立完整的区域创伤救治体系。",
+            "职业 / 都市",
             NarrativeDrive.CAREER_MASTERY,
-            {NarrativeDrive.TEAM_GROWTH, NarrativeDrive.STATUS_RISE},
+            {NarrativeDrive.STATUS_RISE},
             False,
         ),
         (
-            "一名年轻地方官接管战乱后的边城，要在三年内恢复人口、粮食与防御。",
+            "治理 / 建设 / 历史",
             NarrativeDrive.STATE_BUILDING,
-            {NarrativeDrive.POLITICAL_STRATEGY, NarrativeDrive.TERRITORY_FACTION},
+            {NarrativeDrive.POLITICAL_STRATEGY},
             False,
         ),
         (
-            "五名被不同战队放弃的选手组成新队，目标是在两年内进入最高级联赛。",
+            "竞技 / 电竞",
             NarrativeDrive.COMPETITIVE_SKILL,
             {
                 NarrativeDrive.COMPETITIVE_RANK,
                 NarrativeDrive.TEAM_GROWTH,
-                NarrativeDrive.CAREER_MASTERY,
             },
             False,
         ),
         (
-            "每到午夜，一栋旧公寓都会多出一个不存在的房间，进入过的人会失去关于某个人的记忆。",
+            "悬疑",
             NarrativeDrive.MYSTERY_INVESTIGATION,
-            {NarrativeDrive.SURVIVAL_RESOURCE, NarrativeDrive.MYSTERY_REVELATION},
+            {NarrativeDrive.MYSTERY_REVELATION},
             False,
-        ),
-        (
-            "城市中的每种职业都存在一条禁忌晋升路线，越接近顶层越难保留自己的身份。",
-            NarrativeDrive.KNOWLEDGE_PROGRESSION,
-            {NarrativeDrive.MYSTERY_REVELATION, NarrativeDrive.IDENTITY_PRESSURE},
-            True,
         ),
     ],
 )
 def test_synthetic_seeds_classify_drive_mix_without_forcing_progression(
-    premise: str,
+    metadata: str,
     primary: NarrativeDrive,
     secondary: set[NarrativeDrive],
     progression_enabled: bool,
 ) -> None:
-    result = interpret_narrative_drives(premise, contract_prefix="seed")
+    result = interpret_narrative_drives(
+        "一个生产代码从未见过的开放 premise。",
+        market_hint=metadata,
+        contract_prefix="seed",
+    )
 
     assert result.drive_contract.primary_drive is primary
     assert set(result.drive_contract.secondary_drives) == secondary
     assert result.progression_engine_enabled is progression_enabled
+    assert result.drive_contract.progression_engine_enabled is progression_enabled
 
 
 def test_market_category_is_metadata_not_drive_authority() -> None:
     historical = interpret_narrative_drives(
-        "一名年轻地方官接管战乱后的边城，要在三年内恢复人口、粮食与防御。"
+        "一个开放 premise。", market_hint="历史 / 治理 / 建设"
     )
 
     assert historical.market_category.primary_market_category is MarketCategory.HISTORY
     assert historical.drive_contract.primary_drive is NarrativeDrive.STATE_BUILDING
     assert historical.enabled_engines == [
         NarrativeEngineType.STRATEGY_STATE_BUILDING,
-        NarrativeEngineType.TEAM_FACTION_GROWTH,
     ]
+
+
+def test_explicit_growth_metadata_enables_engine_without_inventing_power_drive() -> None:
+    result = interpret_narrative_drives(
+        "一个生产代码从未见过的开放 premise。",
+        market_hint="成长冒险",
+    )
+
+    assert result.progression_engine_enabled is True
+    assert result.drive_contract.progression_engine_enabled is True
+    assert result.drive_contract.primary_drive is NarrativeDrive.CUSTOM
+    assert NarrativeEngineType.PROGRESSION in result.enabled_engines
 
 
 def test_drive_contract_rejects_duplicate_and_missing_priorities() -> None:
@@ -102,7 +117,8 @@ def test_drive_contract_rejects_duplicate_and_missing_priorities() -> None:
 
 def test_non_progression_reader_contract_does_not_compile_power_system() -> None:
     interpretation = interpret_reader_experience(
-        "一名县城外科医生接手一家即将关闭的急救中心，并试图建立完整的区域创伤救治体系。",
+        "一个开放 premise。",
+        genre_hint="职业 / 都市",
         contract_prefix="doctor",
     )
     bundle = compile_kernel_contract_proposals(interpretation)
@@ -115,15 +131,20 @@ def test_non_progression_reader_contract_does_not_compile_power_system() -> None
 
 def test_near_future_body_progression_specialization_is_preserved() -> None:
     interpretation = interpret_reader_experience(
-        "近未来的气修修仙小说，体修成神的故事。",
+        "一个开放 premise。",
+        genre_hint="近未来 / 肉身进化",
         contract_prefix="body",
     )
     bundle = compile_kernel_contract_proposals(interpretation)
 
-    assert interpretation.narrative_drive.drive_contract.primary_drive is (
-        NarrativeDrive.POWER_PROGRESSION
+    assert (
+        interpretation.narrative_drive.drive_contract.primary_drive
+        is NarrativeDrive.BODY_EVOLUTION
     )
     assert interpretation.narrative_drive.progression_engine_enabled is True
+    assert (
+        interpretation.narrative_drive.drive_contract.progression_engine_enabled is True
+    )
     assert bundle.progression is not None
     assert bundle.genre.capabilities.has_progression_axis is True
     assert bundle.genre.capabilities.has_verification_requirement is True
@@ -131,7 +152,7 @@ def test_near_future_body_progression_specialization_is_preserved() -> None:
 
 def test_author_can_raise_secondary_drive_without_replacing_primary() -> None:
     original = interpret_narrative_drives(
-        "一名县城外科医生接手一家即将关闭的急救中心。"
+        "一个开放 premise。", market_hint="职业 / 都市"
     )
 
     adjusted = adjust_narrative_drive_interpretation(

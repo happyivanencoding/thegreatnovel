@@ -128,6 +128,7 @@ class NarrativeDriveContract(BaseModel):
     drive_payoff_channels: list[DrivePayoffChannel] = Field(default_factory=list)
     drive_debt_types: dict[NarrativeDrive, list[str]] = Field(default_factory=dict)
     drive_fatigue_risks: dict[NarrativeDrive, list[str]] = Field(default_factory=dict)
+    progression_engine_enabled: bool = False
     author_overrides: list[str] = Field(default_factory=list)
     status: ContractStatus = ContractStatus.NEEDS_REVIEW
 
