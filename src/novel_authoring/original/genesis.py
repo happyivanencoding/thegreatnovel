@@ -11,9 +11,9 @@ from novel_authoring.author_control.book_profile import PROFILE_DIMENSIONS
 from novel_authoring.author_control.truth import TruthType
 from novel_authoring.db.database import Database
 from novel_authoring.original.models import (
+    FoundationDevelopmentProposal,
     GenesisApplyPlan,
     OriginalBookRequest,
-    OriginalBootstrapProposal,
     OriginalFoundationConfirmation,
     SettingStrength,
 )
@@ -95,7 +95,7 @@ def _candidate_plan(
 def build_genesis_apply_plan(
     *,
     proposal_version_id: str,
-    proposal: OriginalBootstrapProposal,
+    proposal: FoundationDevelopmentProposal,
     confirmation: OriginalFoundationConfirmation,
     request: OriginalBookRequest,
 ) -> GenesisApplyPlan:
@@ -103,19 +103,12 @@ def build_genesis_apply_plan(
         raise GenesisApplyError("请在影响摘要中确认后再开始写作")
     if confirmation.selected_title not in proposal.title_candidates:
         raise GenesisApplyError("选择的书名不属于当前方案")
-    foundation = next(
-        (
-            item
-            for item in proposal.foundation_candidates
-            if item.candidate_id == confirmation.selected_foundation_id
-        ),
-        None,
-    )
+    foundation = proposal.selected_foundation
     route = next(
         (item for item in proposal.routes if item.route_id == confirmation.selected_route_id),
         None,
     )
-    if foundation is None or route is None:
+    if foundation.candidate_id != confirmation.selected_foundation_id or route is None:
         raise GenesisApplyError("选择的故事基础或路线不属于当前方案")
     selected_title = confirmation.title_override.strip() or confirmation.selected_title
     protagonist = confirmation.protagonist_override.strip() or foundation.protagonist

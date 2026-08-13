@@ -16,7 +16,8 @@ from novel_authoring.library_catalog import build_library_catalog, studio_access
 from novel_authoring.original.models import (
     CoreInnovationCandidate,
     CoreInnovationProposal,
-    OriginalBootstrapProposal,
+    FoundationDevelopmentProposal,
+    StoryFoundationProposal,
 )
 from novel_authoring.original.service import (
     OriginalWorkflowError,
@@ -27,11 +28,13 @@ from novel_authoring.original.service import (
     create_original_book,
     import_original_bootstrap_proposal,
     import_original_core_innovation_proposal,
+    import_original_foundation_development,
     original_overview,
     prepare_original_bootstrap,
     resolve_original_proposal_version,
     select_first_chapter_candidate,
     select_original_core_innovation,
+    select_original_foundation,
     validate_original_draft,
 )
 from novel_authoring.planning.models import ChapterContract
@@ -82,7 +85,7 @@ def innovation_payload() -> dict[str, Any]:
 
 def proposal_payload() -> dict[str, Any]:
     return {
-        "schema_version": "original-bootstrap-v3",
+        "schema_version": "foundation-development-v1",
         "information_status": "PROPOSAL",
         "core_innovation_intent": {
             "selected_primary_innovation_id": "innovation-1",
@@ -90,26 +93,27 @@ def proposal_payload() -> dict[str, Any]:
         },
         "title_candidates": ["无情之城", "昨日情绪档案", "被删除的悲伤"],
         "expanded_premise": "城市每天删除一种情感，失忆档案员决定找回它们。",
-        "foundation_candidates": [
-            {
-                "candidate_id": f"foundation-{index}",
-                "title": f"基础框架 {index}",
-                "core_reading_promise": f"让每次找回情感都迫使主角承担选择 {index}",
+        "selected_foundation_id": "foundation-1",
+        "selected_foundation": {
+                "candidate_id": "foundation-1",
+                "title": "基础框架 1",
+                "core_reading_promise": "让每次找回情感都迫使主角承担选择 1",
                 "protagonist": "林默",
+                "protagonist_competence": "能够识别情绪空洞",
+                "protagonist_weakness": "私人记忆会被机制侵蚀",
                 "protagonist_goal": "找回被删除的情感",
-                "main_conflict": f"城市记忆局以秩序之名阻止调查 {index}",
-                "world_mechanism": "午夜删除一种情感，并留下可追踪的物理空洞",
-                "growth_loop": "调查空洞、主动选择、承担记忆代价",
-                "long_term_possibility": "逐步逼近城市共识的多种可能来源",
-                "risk": "世界机制压过人物选择",
+                "main_conflict": "城市记忆局以秩序之名阻止调查 1",
+                "world_carrier": "情绪被删除后留下可追踪的物理空洞",
+                "first_stage_objective": "阻止下一次删除",
+                "risk_structure": "每次调查都会损失私人记忆",
+                "social_configuration": "档案员、保留者与记忆局形成三方压力",
+                "resource_structure": "调查时间、可信证人与可用记忆均有限",
                 "premise_relationship": "直接展开 premise，不预设幕后答案",
-                "author_facing_pitch": "主角在具体压力中用已选机制做出代价明确的选择。",
-                "opening_situation": "清晨档案室出现异常空洞，主角必须立即决定是否介入。",
-                "typical_choice": "在保护现有生活与测试核心机制之间做出不可逆选择。",
-                "innovation_fit": "这个承载方式让核心机制直接改变人物行动。",
-            }
-            for index in range(1, 4)
-        ],
+                "author_facing_pitch": "主角在压力中承担代价明确的选择。",
+                "opening_situation": "档案室出现异常空洞，主角决定是否介入。",
+                "typical_choice": "在安全与测试核心机制之间不可逆选择。",
+                "innovation_fit": "让核心机制直接改变人物行动。",
+            },
         "protagonist": "林默",
         "protagonist_goal": "找回被删除的情感",
         "protagonist_conflict": "每次找回都会失去一段私人记忆",
@@ -160,6 +164,7 @@ def proposal_payload() -> dict[str, Any]:
         "expansion_grammar": ["从当前环境向更大的问题空间自然扩展，不预设固定层数"],
         "payoff_grammar": ["先兑现当前机制，再暴露更高瓶颈与组合可能"],
         "first_phase": {
+            "selected_foundation_id": "foundation-1",
             "opening_pressure": "异常空洞在公开场合出现，主角必须承担立即后果。",
             "first_concrete_goal": "阻止下一次删除并找到第一位保留者",
             "first_resource_bottleneck": "调查时间与可用记忆不足",
@@ -224,6 +229,32 @@ def proposal_payload() -> dict[str, Any]:
         ],
         "risks": ["设定解谜压过人物能动性"],
         "avoid_cliches": ["万能幕后组织"],
+    }
+
+
+def foundation_payload() -> dict[str, Any]:
+    development = proposal_payload()
+    candidates = []
+    for index in range(1, 4):
+        item = dict(development["selected_foundation"])
+        if index > 1:
+            item.update(
+                {
+                    "candidate_id": f"foundation-{index}",
+                    "title": f"基础框架 {index}",
+                    "core_reading_promise": f"让选择承担不同压力 {index}",
+                    "main_conflict": f"冲突表现 {index}",
+                    "first_stage_objective": f"第一阶段目标 {index}",
+                    "opening_situation": f"开局压力 {index}",
+                }
+            )
+        candidates.append(item)
+    return {
+        "schema_version": "story-foundation-v1",
+        "information_status": "PROPOSAL",
+        "core_innovation_intent": development["core_innovation_intent"],
+        "foundation_candidates": candidates,
+        "kernel_contracts": {},
     }
 
 
@@ -323,9 +354,16 @@ def complete_foundation_handoff(database: Database) -> str:
             / "original_request.json"
         ).read_text(encoding="utf-8")
     )
-    proposal_data = proposal_payload()
+    proposal_data = foundation_payload()
     proposal_data["kernel_contracts"] = original_request["progression_kernel"]
-    proposal = OriginalBootstrapProposal.model_validate(proposal_data)
+    selected_core = original_request["progression_kernel"]["core_innovation"]
+    proposal_data["core_innovation_intent"] = {
+        "selected_primary_innovation_id": selected_core[
+            "selected_primary_innovation_id"
+        ],
+        "optional_mix_notes": selected_core.get("optional_mix_notes", ""),
+    }
+    proposal = StoryFoundationProposal.model_validate(proposal_data)
     artifact = (
         Path(str(frozen_handoff["task_directory"]))
         / "artifacts"
@@ -348,7 +386,7 @@ def complete_foundation_handoff(database: Database) -> str:
         "status": "COMPLETED",
         "task_ids": [],
         "candidate_ids": [
-            item["candidate_id"] for item in proposal_payload()["foundation_candidates"]
+            item["candidate_id"] for item in foundation_payload()["foundation_candidates"]
         ],
         "innovation_ids": [],
         "selected_candidate_id": None,
@@ -400,9 +438,64 @@ def complete_bootstrap_handoff(database: Database) -> str:
     return complete_foundation_handoff(database)
 
 
+def complete_development_handoff(database: Database) -> str:
+    selected = select_original_foundation(database, BOOK_ID, "foundation-1")
+    development_handoff_id = str(selected["handoff"]["handoff_id"])
+    frozen_handoff = get_handoff(database, development_handoff_id)
+    original_request = json.loads(
+        (
+            Path(str(frozen_handoff["task_directory"]))
+            / "input"
+            / "original_request.json"
+        ).read_text(encoding="utf-8")
+    )
+    development_data = proposal_payload()
+    development_data["kernel_contracts"] = original_request["progression_kernel"]
+    development = FoundationDevelopmentProposal.model_validate(development_data)
+    artifact = (
+        Path(str(frozen_handoff["task_directory"]))
+        / "artifacts"
+        / "foundation_development"
+        / "proposal.json"
+    )
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text(
+        json_dumps(development.model_dump(mode="json"), indent=2), encoding="utf-8"
+    )
+    claim = claim_handoff(database, development_handoff_id, "test-worker")
+    token = str(claim["claim_token"])
+    update_handoff_status(
+        database, development_handoff_id, HandoffStatus.RUNNING, claim_token=token
+    )
+    frozen = get_handoff(database, development_handoff_id)
+    update_handoff_status(
+        database,
+        development_handoff_id,
+        HandoffStatus.COMPLETED,
+        claim_token=token,
+        result={
+            "handoff_id": development_handoff_id,
+            "handoff_type": "ORIGINAL_BOOK_BOOTSTRAP",
+            "requested_stage": "FOUNDATION_DEVELOPMENT_PROPOSAL",
+            "completed_stage": "FOUNDATION_DEVELOPED",
+            "book_id": BOOK_ID,
+            "edition_id": "base",
+            "status": "COMPLETED",
+            "artifact_paths": ["artifacts/foundation_development/proposal.json"],
+            "canon_committed": False,
+            "edition_activated": False,
+            "base_event_seq": int(frozen["base_event_seq"]),
+            "base_projection_hash": str(frozen["base_projection_hash"]),
+        },
+    )
+    import_original_foundation_development(database, BOOK_ID, development_handoff_id)
+    return development_handoff_id
+
+
 def accept_foundation(database: Database) -> dict[str, Any]:
     handoff_id = complete_bootstrap_handoff(database)
     import_original_bootstrap_proposal(database, BOOK_ID, handoff_id)
+    complete_development_handoff(database)
     proposal = proposal_payload()
     return confirm_original_foundation(
         database,
@@ -487,15 +580,16 @@ def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path:
     assert selected["innovation_intent"]["selected_primary_innovation_id"] == candidates[0][
         "innovation_id"
     ]
-    with pytest.raises(OriginalWorkflowError, match="已冻结"):
-        select_original_core_innovation(
-            database,
-            BOOK_ID,
-            {
-                "selected_primary_innovation_id": candidates[1]["innovation_id"],
-                "optional_mix_notes": "尝试替换已选机制",
-            },
-        )
+    old_handoff_id = str(selected["handoff"]["handoff_id"])
+    selected = select_original_core_innovation(
+        database,
+        BOOK_ID,
+        {
+            "selected_primary_innovation_id": candidates[1]["innovation_id"],
+            "optional_mix_notes": "作者明确改选",
+        },
+    )
+    assert get_handoff(database, old_handoff_id)["status"] == "STALE"
     foundation_handoff = get_handoff(database, str(selected["handoff"]["handoff_id"]))
     assert foundation_handoff["requested_stage"] == "STORY_FOUNDATION_PROPOSAL"
     foundation_request = json.loads(
@@ -511,7 +605,7 @@ def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path:
         foundation_request["progression_kernel"]["core_innovation"][
             "selected_primary_innovation_id"
         ]
-        == candidates[0]["innovation_id"]
+        == candidates[1]["innovation_id"]
     )
     with database.connect() as connection:
         state = connection.execute(
@@ -519,8 +613,8 @@ def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path:
             "FROM original_states WHERE book_id=? AND edition_id='base'",
             (BOOK_ID,),
         ).fetchone()
-    assert state["selected_primary_innovation_id"] == candidates[0]["innovation_id"]
-    assert state["optional_mix_notes"] == "吸收机制 2 的一个选择特征"
+    assert state["selected_primary_innovation_id"] == candidates[1]["innovation_id"]
+    assert state["optional_mix_notes"] == "作者明确改选"
     assert state["state"] == "FOUNDATION_GENERATING"
 
     foundation_handoff_id = complete_foundation_handoff(database)
@@ -563,6 +657,38 @@ def test_original_foundation_stales_when_selected_author_intent_changes(
     with pytest.raises(HandoffWorkflowError, match="original author intent changed"):
         start_handoff(database, foundation_handoff_id)
     assert get_handoff(database, foundation_handoff_id)["status"] == "STALE"
+
+
+def test_foundation_can_be_explicitly_reselected_before_final_confirmation(
+    tmp_path: Path,
+) -> None:
+    _, database = create_original(tmp_path)
+    handoff_id = complete_bootstrap_handoff(database)
+    import_original_bootstrap_proposal(database, BOOK_ID, handoff_id)
+
+    first = select_original_foundation(database, BOOK_ID, "foundation-1")
+    first_handoff_id = str(first["handoff"]["handoff_id"])
+    second = select_original_foundation(database, BOOK_ID, "foundation-2")
+
+    assert get_handoff(database, first_handoff_id)["status"] == "STALE"
+    assert second["selected_foundation_id"] == "foundation-2"
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT selected_primary_innovation_id, selected_foundation_id, "
+            "accepted_apply_id FROM original_states WHERE book_id=?",
+            (BOOK_ID,),
+        ).fetchone()
+        archived = connection.execute(
+            "SELECT COUNT(*) FROM original_development_versions "
+            "WHERE book_id=? AND status='ARCHIVED'",
+            (BOOK_ID,),
+        ).fetchone()[0]
+        canon_count = connection.execute("SELECT COUNT(*) FROM canon_commits").fetchone()[0]
+    assert state["selected_primary_innovation_id"] == "innovation-1"
+    assert state["selected_foundation_id"] == "foundation-2"
+    assert state["accepted_apply_id"] is None
+    assert archived == 1
+    assert canon_count == 0
 
 
 def test_original_bootstrap_fast_path_freezes_one_skill_and_thin_inputs(tmp_path: Path) -> None:
@@ -718,7 +844,18 @@ def test_foundation_stays_proposal_until_author_confirms_impact(tmp_path: Path) 
                 "(SELECT COUNT(*) FROM chapters), (SELECT COUNT(*) FROM canon_commits)"
             ).fetchone()
         )
-    with pytest.raises(OriginalWorkflowError, match="确认"):
+        development_count = connection.execute(
+            "SELECT COUNT(*) FROM original_development_versions"
+        ).fetchone()[0]
+    assert set(StoryFoundationProposal.model_fields) == {
+        "schema_version",
+        "information_status",
+        "core_innovation_intent",
+        "foundation_candidates",
+        "kernel_contracts",
+    }
+    assert development_count == 0
+    with pytest.raises(OriginalWorkflowError, match="Development"):
         confirm_original_foundation(
             database,
             BOOK_ID,
@@ -731,6 +868,7 @@ def test_foundation_stays_proposal_until_author_confirms_impact(tmp_path: Path) 
                 "first_phase_objective": proposal_payload()["first_phase_objective"],
             },
         )
+    complete_development_handoff(database)
     result = confirm_original_foundation(
         database,
         BOOK_ID,
@@ -957,6 +1095,17 @@ def test_regenerated_proposal_is_versioned_and_does_not_replace_accepted_foundat
     _, database = create_original(tmp_path)
     accepted = accept_foundation(database)
     first_apply_id = str(accepted["apply_id"])
+    with pytest.raises(OriginalWorkflowError, match="最终确认"):
+        select_original_foundation(database, BOOK_ID, "foundation-2")
+    with pytest.raises(OriginalWorkflowError, match="最终确认"):
+        select_original_core_innovation(
+            database,
+            BOOK_ID,
+            {
+                "selected_primary_innovation_id": "innovation-2",
+                "optional_mix_notes": "最终确认后不允许普通改选",
+            },
+        )
     first = prepare_original_bootstrap(database, BOOK_ID)
     duplicate = prepare_original_bootstrap(database, BOOK_ID)
     assert duplicate["deduplicated"] is True
@@ -1157,16 +1306,14 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
     with TestClient(app) as client:
         before = client.get(f"/books/{BOOK_ID}/original")
         assert before.status_code == 200
-        assert before.text.count("标准") >= 12
+        assert before.text.count("标准") >= 20
+        assert before.text.count("data-reader-experience-key=") == 20
         assert 'data-reader-strength="CORE"' in before.text
-        for preset in (
-            "PAYOFF_STRONGER",
-            "MYSTERY_STRONGER",
-            "TEAM_STRONGER",
-            "RELATIONSHIP_STRONGER",
-            "CAREER_STRONGER",
-        ):
-            assert f'data-reader-preset="{preset}"' in before.text
+        for label in ("战斗和爽点更强", "谜团更强", "团队更强", "关系更强", "职业更强"):
+            assert label in before.text
+        assert "const presets" not in (
+            Path("src/novel_authoring/web/static/original.js").read_text(encoding="utf-8")
+        )
 
         confirmed = client.post(
             f"/api/books/{BOOK_ID}/original/reader-experience/confirm",

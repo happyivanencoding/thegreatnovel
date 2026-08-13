@@ -121,6 +121,12 @@ class OriginalCoreInnovationSelectionRequest(BaseModel):
     optional_mix_notes: str = ""
 
 
+class OriginalFoundationSelectionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    selected_foundation_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+
+
 class OriginalProposalVersionResolutionRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

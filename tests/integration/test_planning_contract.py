@@ -303,7 +303,7 @@ def enable_progression_kernel(database: Database, *, boundary: int) -> None:
     bundle = compile_kernel_contract_proposals(
         interpret_reader_experience(
             "主角持续变强、突破阶段，并以能力、资源和世界扩张推进故事。",
-            genre_hint="成长冒险",
+            genre_hint="肉身进化",
             contract_prefix="planning-kernel",
         )
     )
@@ -900,9 +900,9 @@ def test_verified_kernel_trace_closes_through_approval_and_next_state(
                 }
             ],
             "narrative_drive_alignment": {
-                "primary_drive": "POWER_PROGRESSION",
+                    "primary_drive": "BODY_EVOLUTION",
                 "primary_drive_effect": "身体阶段改变可执行行动",
-                "drives_advanced": ["POWER_PROGRESSION"],
+                    "drives_advanced": ["BODY_EVOLUTION"],
                 "evidence": ["tempered -> renewed"],
             },
             "progression_impact": {
@@ -1031,7 +1031,7 @@ def test_verified_kernel_trace_closes_through_approval_and_next_state(
             "expected_contract_id": contract.contract_id,
             "primary_intent": "BREAKTHROUGH",
             "reader_promises_served": ["continuous-growth"],
-            "narrative_drives_advanced": ["POWER_PROGRESSION"],
+            "narrative_drives_advanced": ["BODY_EVOLUTION"],
             "progression_impact": {
                 "axis_advanced": ["body-axis"],
                 "progression_delta_type": ["ADVANCE"],

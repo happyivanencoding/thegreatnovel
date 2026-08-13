@@ -17,6 +17,8 @@ class OriginalState(StrEnum):
     CORE_INNOVATION_REVIEW = "CORE_INNOVATION_REVIEW"
     FOUNDATION_GENERATING = "FOUNDATION_GENERATING"
     FOUNDATION_REVIEW = "FOUNDATION_REVIEW"
+    DEVELOPMENT_GENERATING = "DEVELOPMENT_GENERATING"
+    DEVELOPMENT_REVIEW = "DEVELOPMENT_REVIEW"
     FOUNDATION_READY = "FOUNDATION_READY"
     FIRST_CHAPTER_DRAFTING = "FIRST_CHAPTER_DRAFTING"
     FIRST_CHAPTER_VALIDATED = "FIRST_CHAPTER_VALIDATED"
@@ -135,6 +137,7 @@ class AuthorInnovationIntent(BaseModel):
 class FirstPhaseProposal(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    selected_foundation_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
     opening_pressure: str = Field(min_length=1)
     first_concrete_goal: str = Field(min_length=1)
     first_resource_bottleneck: str = Field(min_length=1)
@@ -152,12 +155,15 @@ class StoryFoundationCandidate(BaseModel):
     title: str = Field(min_length=1)
     core_reading_promise: str = Field(min_length=1)
     protagonist: str = Field(min_length=1)
+    protagonist_competence: str = Field(min_length=1)
+    protagonist_weakness: str = Field(min_length=1)
     protagonist_goal: str = Field(min_length=1)
     main_conflict: str = Field(min_length=1)
-    world_mechanism: str = Field(min_length=1)
-    growth_loop: str = Field(min_length=1)
-    long_term_possibility: str = Field(min_length=1)
-    risk: str = Field(min_length=1)
+    world_carrier: str = Field(min_length=1)
+    first_stage_objective: str = Field(min_length=1)
+    risk_structure: str = Field(min_length=1)
+    social_configuration: str = Field(min_length=1)
+    resource_structure: str = Field(min_length=1)
     premise_relationship: str = Field(min_length=1)
     author_facing_pitch: str = Field(min_length=1)
     opening_situation: str = Field(min_length=1)
@@ -204,17 +210,37 @@ class RollingPlanning(BaseModel):
     long: list[str] = Field(min_length=1)
 
 
-class OriginalBootstrapProposal(BaseModel):
-    """A proposal-only semantic package produced by the desktop handoff."""
+class StoryFoundationProposal(BaseModel):
+    """Exactly three story carriers for one selected Core Innovation."""
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal["original-bootstrap-v3"] = "original-bootstrap-v3"
+    schema_version: Literal["story-foundation-v1"] = "story-foundation-v1"
     information_status: Literal["PROPOSAL"] = "PROPOSAL"
     core_innovation_intent: AuthorInnovationIntent
+    foundation_candidates: list[StoryFoundationCandidate] = Field(min_length=3, max_length=3)
+    kernel_contracts: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def candidates_are_distinct(self) -> StoryFoundationProposal:
+        ids = [item.candidate_id for item in self.foundation_candidates]
+        if len(set(ids)) != 3:
+            raise ValueError("Story Foundation 必须恰好包含三个不同候选")
+        return self
+
+
+class FoundationDevelopmentProposal(BaseModel):
+    """Long-form development for the author-selected Story Foundation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["foundation-development-v1"] = "foundation-development-v1"
+    information_status: Literal["PROPOSAL"] = "PROPOSAL"
+    core_innovation_intent: AuthorInnovationIntent
+    selected_foundation_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    selected_foundation: StoryFoundationCandidate
     title_candidates: list[str] = Field(min_length=3, max_length=3)
     expanded_premise: str = Field(min_length=1)
-    foundation_candidates: list[StoryFoundationCandidate] = Field(min_length=3, max_length=3)
     protagonist: str = Field(min_length=1)
     protagonist_goal: str = Field(min_length=1)
     protagonist_conflict: str = Field(min_length=1)
@@ -242,10 +268,11 @@ class OriginalBootstrapProposal(BaseModel):
     kernel_contracts: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def choices_are_distinct_and_recommendation_exists(self) -> OriginalBootstrapProposal:
+    def choices_are_distinct_and_recommendation_exists(
+        self,
+    ) -> FoundationDevelopmentProposal:
         collections = {
             "标题": self.title_candidates,
-            "基础框架": [item.candidate_id for item in self.foundation_candidates],
             "路线": [item.route_id for item in self.routes],
             "首章": [item.candidate_id for item in self.first_chapter_candidates],
         }
@@ -254,6 +281,10 @@ class OriginalBootstrapProposal(BaseModel):
                 raise ValueError(f"{label}必须恰好包含三个不同候选")
         if self.recommended_route_id not in {item.route_id for item in self.routes}:
             raise ValueError("recommended_route_id 必须指向三条路线之一")
+        if self.selected_foundation.candidate_id != self.selected_foundation_id:
+            raise ValueError("Development Proposal 的 Foundation 快照与选择不一致")
+        if self.first_phase.selected_foundation_id != self.selected_foundation_id:
+            raise ValueError("First Phase 必须绑定作者选择的 Story Foundation")
         return self
 
 
@@ -316,16 +347,17 @@ __all__ = [
     "CoreInnovationCandidate",
     "CoreInnovationProposal",
     "FirstPhaseProposal",
+    "FoundationDevelopmentProposal",
     "FoundationSetting",
     "GenesisApplyPlan",
     "HiddenTruthCandidate",
     "FirstChapterCandidate",
     "OriginalBookRequest",
-    "OriginalBootstrapProposal",
     "OriginalFoundationConfirmation",
     "OriginalState",
     "RollingPlanning",
     "StoryFoundationCandidate",
+    "StoryFoundationProposal",
     "StoryRoute",
     "SettingStrength",
 ]

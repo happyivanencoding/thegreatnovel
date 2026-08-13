@@ -27,7 +27,11 @@ from novel_authoring.edition import edition_chapters, resolve_edition_id
 from novel_authoring.ingest.service import verify_sources
 from novel_authoring.metrics.registry import load_registry
 from novel_authoring.metrics.service import MetricsAssembler
-from novel_authoring.original.models import CoreInnovationProposal, OriginalBootstrapProposal
+from novel_authoring.original.models import (
+    CoreInnovationProposal,
+    FoundationDevelopmentProposal,
+    StoryFoundationProposal,
+)
 from novel_authoring.original.state import is_original_book
 from novel_authoring.planning.aggregates import build_planning_aggregate
 from novel_authoring.planning.batch import get_batch_plan, get_batch_projection
@@ -331,10 +335,9 @@ class WorkflowHandoffResult(BaseModel):
                     raise ValueError(
                         "Story Foundation Proposal 必须返回三个 Foundation candidate_ids"
                     )
-            else:
+            elif requested != "FOUNDATION_DEVELOPMENT_PROPOSAL":
                 raise ValueError(
-                    "ORIGINAL_BOOK_BOOTSTRAP 只支持 CORE_INNOVATION_PROPOSAL 或 "
-                    "STORY_FOUNDATION_PROPOSAL"
+                    "ORIGINAL_BOOK_BOOTSTRAP stage 无效"
                 )
             if not self.artifact_paths:
                 raise ValueError("ORIGINAL_BOOK_BOOTSTRAP 必须返回 proposal artifact_paths")
@@ -377,6 +380,11 @@ class WorkflowHandoffResult(BaseModel):
             "STORY_FOUNDATION_PROPOSAL": {
                 "STORY_FOUNDATION_PROPOSAL",
                 "FOUNDATION_PROPOSED",
+                "VALIDATED_PROPOSAL",
+            },
+            "FOUNDATION_DEVELOPMENT_PROPOSAL": {
+                "FOUNDATION_DEVELOPMENT_PROPOSAL",
+                "FOUNDATION_DEVELOPED",
                 "VALIDATED_PROPOSAL",
             },
             "KERNEL_CONTRACT_DISCOVERY": {
@@ -439,12 +447,14 @@ def _workflow_result_required_fields(
         },
         "CORE_INNOVATION_PROPOSAL": {"innovation_ids", "artifact_paths"},
         "STORY_FOUNDATION_PROPOSAL": {"candidate_ids", "artifact_paths"},
+        "FOUNDATION_DEVELOPMENT_PROPOSAL": {"artifact_paths"},
         "KERNEL_CONTRACT_DISCOVERY": {"artifact_paths"},
     }
     required.update(stage_fields.get(stage, set()))
     if handoff_type is HandoffType.ORIGINAL_BOOK_BOOTSTRAP and stage not in {
         "CORE_INNOVATION_PROPOSAL",
         "STORY_FOUNDATION_PROPOSAL",
+        "FOUNDATION_DEVELOPMENT_PROPOSAL",
     }:
         raise HandoffWorkflowError(f"不支持的 ORIGINAL_BOOK_BOOTSTRAP stage：{stage}")
     return required
@@ -537,13 +547,20 @@ def _original_intent_anchor(
     contracts = [
         item.model_dump(mode="json")
         for item in list_contract_records(database, book_id=book_id, edition_id="base")
+        if item.contract_type.value
+        in {"READER_EXPERIENCE", "NARRATIVE_DRIVE", "MARKET_CATEGORY"}
+        and item.status.value in {"EFFECTIVE", "NEEDS_REVIEW"}
     ]
     selected_intent: dict[str, Any] | None = None
-    if requested_stage.upper() == "STORY_FOUNDATION_PROPOSAL":
+    if requested_stage.upper() in {
+        "STORY_FOUNDATION_PROPOSAL",
+        "FOUNDATION_DEVELOPMENT_PROPOSAL",
+    }:
         with database.connect() as connection:
             state = connection.execute(
                 "SELECT current_innovation_proposal_version_id, "
-                "selected_primary_innovation_id, optional_mix_notes "
+                "selected_primary_innovation_id, optional_mix_notes, "
+                "selected_foundation_proposal_version_id, selected_foundation_id "
                 "FROM original_states WHERE book_id=? AND edition_id='base'",
                 (book_id,),
             ).fetchone()
@@ -560,6 +577,20 @@ def _original_intent_anchor(
                 "optional_mix_notes": str(state["optional_mix_notes"] or ""),
             }
         )
+        if (
+            selected_intent is not None
+            and requested_stage.upper() == "FOUNDATION_DEVELOPMENT_PROPOSAL"
+        ):
+            selected_intent.update(
+                {
+                    "selected_foundation_proposal_version_id": str(
+                        state["selected_foundation_proposal_version_id"] or ""
+                    ),
+                    "selected_foundation_id": str(
+                        state["selected_foundation_id"] or ""
+                    ),
+                }
+            )
     return sha256_bytes(
         json_dumps(
             {
@@ -791,10 +822,10 @@ def create_handoff(
     if original_bootstrap_handoff and requested_stage.upper() not in {
         "CORE_INNOVATION_PROPOSAL",
         "STORY_FOUNDATION_PROPOSAL",
+        "FOUNDATION_DEVELOPMENT_PROPOSAL",
     }:
         raise HandoffWorkflowError(
-            "ORIGINAL_BOOK_BOOTSTRAP 只支持 CORE_INNOVATION_PROPOSAL 或 "
-            "STORY_FOUNDATION_PROPOSAL"
+            "ORIGINAL_BOOK_BOOTSTRAP stage 无效"
         )
     original_core_innovation_handoff = (
         original_bootstrap_handoff and requested_stage.upper() == "CORE_INNOVATION_PROPOSAL"
@@ -1285,6 +1316,8 @@ def create_handoff(
         original_artifact = (
             "artifacts/core_innovation/proposal.json"
             if original_core_innovation_handoff
+            else "artifacts/foundation_development/proposal.json"
+            if requested_stage.upper() == "FOUNDATION_DEVELOPMENT_PROPOSAL"
             else "artifacts/story_foundation/proposal.json"
         )
         task.update(
@@ -1298,7 +1331,9 @@ def create_handoff(
                     "confirmation_required": (
                         "选择核心创意"
                         if original_core_innovation_handoff
-                        else "确认故事基础"
+                        else "最终确认 Genesis"
+                        if requested_stage.upper() == "FOUNDATION_DEVELOPMENT_PROPOSAL"
+                        else "选择故事基础"
                     ),
                     "canon_boundary": "NO_CHAPTER_NO_CANON",
                 },
@@ -1576,6 +1611,9 @@ def create_handoff(
         "STORY_FOUNDATION_PROPOSAL": {
             "required_non_empty": ["candidate_ids", "artifact_paths"]
         },
+        "FOUNDATION_DEVELOPMENT_PROPOSAL": {
+            "required_non_empty": ["artifact_paths"]
+        },
         "KERNEL_CONTRACT_DISCOVERY": {"required_non_empty": ["artifact_paths"]},
     }
     if hydration_handoff:
@@ -1724,7 +1762,9 @@ def create_handoff(
             (
                 CoreInnovationProposal.model_json_schema()
                 if original_core_innovation_handoff
-                else OriginalBootstrapProposal.model_json_schema()
+                else FoundationDevelopmentProposal.model_json_schema()
+                if requested_stage.upper() == "FOUNDATION_DEVELOPMENT_PROPOSAL"
+                else StoryFoundationProposal.model_json_schema()
             ),
         )
     else:

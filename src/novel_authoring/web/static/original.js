@@ -111,13 +111,6 @@
   const readerControls = (() => {
     const root = document.querySelector("[data-reader-experience-controls]");
     if (!root) return null;
-    const presets = {
-      PAYOFF_STRONGER: {POWER_VERIFICATION: "CORE", COMBAT: "CORE", BREAKTHROUGH: "STRONG"},
-      MYSTERY_STRONGER: {MYSTERY: "CORE", REVEAL: "CORE", WORLD_EXPANSION: "STRONG"},
-      TEAM_STRONGER: {TEAM_GROWTH: "CORE", RELATIONSHIP: "STRONG", FACTION_CONFLICT: "STRONG"},
-      RELATIONSHIP_STRONGER: {RELATIONSHIP: "CORE", ROMANCE: "CORE", TEAM_GROWTH: "STRONG"},
-      CAREER_STRONGER: {STATUS_RISE: "CORE", PROGRESSION: "STRONG", RESOURCE_OPPORTUNITY: "STRONG"},
-    };
     const select = (row, value) => {
       const option = row.querySelector(`[data-reader-strength="${value}"]`);
       if (!option) return;
@@ -135,8 +128,8 @@
       });
     });
     return {
-      applyPreset(name) {
-        Object.entries(presets[name] || {}).forEach(([key, value]) => {
+      applyPreset(values) {
+        Object.entries(values || {}).forEach(([key, value]) => {
           const row = root.querySelector(`[data-reader-experience-key="${key}"]`);
           if (row) select(row, value);
         });
@@ -162,6 +155,19 @@
       await post(`/api/books/${bookId}/original/core-innovation/select`, {
         selected_primary_innovation_id: selected,
         optional_mix_notes: String(form.get("optional_mix_notes") || "").trim(),
+      });
+      window.location.replace(window.location.href);
+    } catch (error) { show(error.message, true); }
+  });
+  document.querySelector("[data-foundation-select]")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const selected = String(form.get("selected_foundation_id") || "").trim();
+    if (!selected) { show("请选择一个 Story Foundation。", true); return; }
+    show("正在冻结本次 Foundation 选择并准备 Development Proposal…");
+    try {
+      await post(`/api/books/${bookId}/original/foundation/select`, {
+        selected_foundation_id: selected,
       });
       window.location.replace(window.location.href);
     } catch (error) { show(error.message, true); }
@@ -240,7 +246,7 @@
   const renderComparison = (value) => {
     const target = document.querySelector("[data-original-compare]");
     if (!target) return;
-    const column = (label, proposal) => `<article><h3>${label}</h3><p><strong>${proposal.expanded_premise}</strong></p>${proposal.foundation_candidates.map((item) => `<div><b>${item.title}</b><span>${item.core_reading_promise}</span><small>${item.main_conflict}</small></div>`).join("")}</article>`;
+    const column = (label, proposal) => `<article><h3>${label}</h3>${proposal.foundation_candidates.map((item) => `<div><b>${item.title}</b><span>${item.core_reading_promise}</span><small>${item.main_conflict}</small></div>`).join("")}</article>`;
     target.innerHTML = column("当前方案", value.current) + column("新方案", value.target);
     target.hidden = false;
     target.scrollIntoView({behavior: "smooth", block: "center"});
@@ -260,7 +266,7 @@
         });
         window.location.replace(window.location.href);
       } else if (action === "reader-preset") {
-        readerControls?.applyPreset(button.dataset.readerPreset || "");
+        readerControls?.applyPreset(JSON.parse(button.dataset.readerPresetValues || "{}"));
         show("快捷组合已应用；你仍可以逐项调整后再确认。", false);
         button.disabled = false;
       } else if (action === "prepare-core") {

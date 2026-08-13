@@ -26,22 +26,24 @@ from novel_authoring.original.genesis import (
 from novel_authoring.original.models import (
     AuthorInnovationIntent,
     CoreInnovationProposal,
+    FoundationDevelopmentProposal,
     OriginalBookRequest,
-    OriginalBootstrapProposal,
     OriginalFoundationConfirmation,
     OriginalState,
+    StoryFoundationProposal,
 )
 from novel_authoring.original.state import original_record
 from novel_authoring.planning.boundary import build_boundary_packet
 from novel_authoring.planning.contracts import build_chapter_contract
 from novel_authoring.planning.innovation import resolve_innovation_control
 from novel_authoring.progression.interpretation import (
+    READER_EXPERIENCE_PRESETS,
+    READER_EXPERIENCE_UI,
     ReaderExperienceAdjustment,
     ReaderExperienceInterpretation,
     ReaderExperienceStrength,
     adjust_reader_experience,
     apply_reader_experience_overrides,
-    compile_kernel_contract_proposals,
     interpret_reader_experience,
 )
 from novel_authoring.progression.models import (
@@ -64,7 +66,6 @@ from novel_authoring.serial_kernel.classification import (
     market_category_label,
     narrative_drive_label,
 )
-from novel_authoring.serial_kernel.models import PROGRESSION_DRIVES, NarrativeDriveContract
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import ensure_operation
 from novel_authoring.storage.registry import (
@@ -81,6 +82,7 @@ from novel_authoring.workflows.handoffs import (
     create_original_bootstrap_handoff,
     get_handoff,
     load_completed_handoff_result,
+    mark_stale,
 )
 
 
@@ -183,6 +185,48 @@ def _current_innovation_row(database: Database, book_id: str) -> dict[str, Any] 
             (book_id,),
         ).fetchone()
     return None if row is None else dict(row)
+
+
+def _current_development_row(database: Database, book_id: str) -> dict[str, Any] | None:
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT * FROM original_development_versions WHERE book_id=? "
+            "AND edition_id='base' AND status='CURRENT' "
+            "ORDER BY version_number DESC LIMIT 1",
+            (book_id,),
+        ).fetchone()
+    return None if row is None else dict(row)
+
+
+def _selected_foundation(database: Database, book_id: str) -> dict[str, Any] | None:
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT selected_foundation_proposal_version_id, selected_foundation_id "
+            "FROM original_states WHERE book_id=? AND edition_id='base'",
+            (book_id,),
+        ).fetchone()
+        if state is None or not state["selected_foundation_id"]:
+            return None
+        row = connection.execute(
+            "SELECT proposal_json FROM original_proposal_versions "
+            "WHERE proposal_version_id=? AND book_id=?",
+            (state["selected_foundation_proposal_version_id"], book_id),
+        ).fetchone()
+    if row is None:
+        raise OriginalWorkflowError("作者选择的 Story Foundation Proposal 不存在")
+    proposal = StoryFoundationProposal.model_validate_json(str(row["proposal_json"]))
+    selected_id = str(state["selected_foundation_id"])
+    selected = next(
+        (item for item in proposal.foundation_candidates if item.candidate_id == selected_id),
+        None,
+    )
+    if selected is None:
+        raise OriginalWorkflowError("作者选择的 Story Foundation 不属于冻结 Proposal")
+    return {
+        "proposal_version_id": str(state["selected_foundation_proposal_version_id"]),
+        "selected_foundation_id": selected_id,
+        "selected_candidate": selected.model_dump(mode="json"),
+    }
 
 
 def _confirmed_progression_kernel(
@@ -371,15 +415,16 @@ def _create_kernel_contract_proposals(
         for record in existing
         if record.status in {ContractStatus.NEEDS_REVIEW, ContractStatus.EFFECTIVE}
     }
-    bundle = compile_kernel_contract_proposals(interpretation)
     created: list[ContractRecord] = []
     for contract_type, payload in (
-        (ProgressionContractType.MARKET_CATEGORY, bundle.market_category),
-        (ProgressionContractType.NARRATIVE_DRIVE, bundle.narrative_drive),
-        (ProgressionContractType.GENRE, bundle.genre),
-        (ProgressionContractType.PROGRESSION, bundle.progression),
-        (ProgressionContractType.WORLD_EXPANSION, bundle.world_expansion),
-        (ProgressionContractType.PAYOFF_CHANNEL, bundle.payoff_channels),
+        (
+            ProgressionContractType.MARKET_CATEGORY,
+            interpretation.narrative_drive.market_category,
+        ),
+        (
+            ProgressionContractType.NARRATIVE_DRIVE,
+            interpretation.narrative_drive.drive_contract,
+        ),
     ):
         if payload is None:
             continue
@@ -955,29 +1000,71 @@ def select_original_core_innovation(
         ).fetchone()
     existing_id = None if state is None else state["selected_primary_innovation_id"]
     existing_mix = "" if state is None else str(state["optional_mix_notes"] or "")
-    if existing_id:
-        if state is not None and state["accepted_apply_id"]:
-            raise OriginalWorkflowError("故事基础已经确认，Core Innovation Intent 已冻结")
-        if (
+    if existing_id and state is not None and state["accepted_apply_id"]:
+        raise OriginalWorkflowError("Genesis 已最终确认，不能从普通流程改选核心创意")
+    changed = bool(
+        existing_id
+        and (
             str(existing_id) != data.selected_primary_innovation_id
             or existing_mix != data.optional_mix_notes
-        ):
-            raise OriginalWorkflowError("Core Innovation Intent 已冻结，不能静默替换")
+        )
+    )
+    stale_handoff_ids: list[str] = []
+    if changed:
+        with database.connect() as connection:
+            stale_handoff_ids = [
+                str(item["handoff_id"])
+                for item in connection.execute(
+                    "SELECT handoff_id FROM workflow_handoffs WHERE book_id=? "
+                    "AND requested_stage IN ('STORY_FOUNDATION_PROPOSAL', "
+                    "'FOUNDATION_DEVELOPMENT_PROPOSAL') "
+                    "AND status IN ('READY_FOR_CODEX', 'CLAIMED', 'RUNNING', "
+                    "'WAITING_FOR_USER')",
+                    (book_id,),
+                ).fetchall()
+            ]
     now = utc_now()
     with database.connect() as connection:
+        if changed:
+            connection.execute(
+                "UPDATE original_proposal_versions SET status='ARCHIVED', archived_at=?, "
+                "updated_at=?, version=version+1 WHERE book_id=? AND edition_id='base' "
+                "AND status IN ('CURRENT', 'READY', 'GENERATING')",
+                (now, now, book_id),
+            )
+            connection.execute(
+                "UPDATE original_development_versions SET status='ARCHIVED', "
+                "archived_at=?, updated_at=?, version=version+1 WHERE book_id=? "
+                "AND edition_id='base' AND status IN ('CURRENT', 'READY', 'GENERATING')",
+                (now, now, book_id),
+            )
         connection.execute(
             "UPDATE original_states SET current_innovation_proposal_version_id=?, "
-            "selected_primary_innovation_id=?, optional_mix_notes=?, state=?, updated_at=?, "
+            "selected_primary_innovation_id=?, optional_mix_notes=?, "
+            "current_proposal_version_id=CASE WHEN ? THEN NULL "
+            "ELSE current_proposal_version_id END, "
+            "selected_foundation_proposal_version_id=CASE WHEN ? THEN NULL "
+            "ELSE selected_foundation_proposal_version_id END, "
+            "selected_foundation_id=CASE WHEN ? THEN NULL ELSE selected_foundation_id END, "
+            "current_development_proposal_version_id=CASE WHEN ? THEN NULL "
+            "ELSE current_development_proposal_version_id END, "
+            "state=?, updated_at=?, "
             "version=version+1 WHERE book_id=? AND edition_id='base'",
             (
                 str(row["innovation_proposal_version_id"]),
                 data.selected_primary_innovation_id,
                 data.optional_mix_notes,
+                changed,
+                changed,
+                changed,
+                changed,
                 OriginalState.FOUNDATION_GENERATING.value,
                 now,
                 book_id,
             ),
         )
+    for handoff_id in stale_handoff_ids:
+        mark_stale(database, handoff_id, "author explicitly reselected Core Innovation")
     _update_registry(database, book_id, state=OriginalState.FOUNDATION_GENERATING)
     handoff = prepare_original_bootstrap(database, book_id)
     return {
@@ -1083,7 +1170,7 @@ def import_original_bootstrap_proposal(
             break
     if proposal_path is None:
         raise OriginalWorkflowError("handoff 未返回 story_foundation/proposal.json")
-    proposal = OriginalBootstrapProposal.model_validate_json(
+    proposal = StoryFoundationProposal.model_validate_json(
         proposal_path.read_text(encoding="utf-8")
     )
     handoff_request = _read_json(task_directory / "input" / "original_request.json") or {}
@@ -1125,7 +1212,7 @@ def import_original_bootstrap_proposal(
             raise OriginalWorkflowError("当前故事方案版本缺少内容，不能重复导入")
         if stored_status in {"CURRENT", "READY"} and stored_payload not in {"", "{}"}:
             try:
-                stored_proposal = OriginalBootstrapProposal.model_validate_json(stored_payload)
+                stored_proposal = StoryFoundationProposal.model_validate_json(stored_payload)
             except ValueError as exc:
                 if stored_status == "CURRENT":
                     raise OriginalWorkflowError("当前故事方案版本已损坏，不能重复导入") from exc
@@ -1225,11 +1312,11 @@ def import_original_bootstrap_proposal(
     }
 
 
-def load_original_proposal(database: Database, book_id: str) -> OriginalBootstrapProposal | None:
+def load_original_proposal(database: Database, book_id: str) -> StoryFoundationProposal | None:
     row = _current_proposal_row(database, book_id)
     if row is None:
         return None
-    return OriginalBootstrapProposal.model_validate_json(str(row["proposal_json"]))
+    return StoryFoundationProposal.model_validate_json(str(row["proposal_json"]))
 
 
 def compare_original_proposals(
@@ -1251,10 +1338,10 @@ def compare_original_proposals(
     return {
         "current_version_id": str(current["proposal_version_id"]),
         "target_version_id": str(target["proposal_version_id"]),
-        "current": OriginalBootstrapProposal.model_validate_json(
+        "current": StoryFoundationProposal.model_validate_json(
             str(current["proposal_json"])
         ).model_dump(mode="json"),
-        "target": OriginalBootstrapProposal.model_validate_json(
+        "target": StoryFoundationProposal.model_validate_json(
             str(target["proposal_json"])
         ).model_dump(mode="json"),
     }
@@ -1312,7 +1399,7 @@ def resolve_original_proposal_version(
             )
             accepted_apply_id = None
     if normalized == "REPLACE_CURRENT":
-        proposal = OriginalBootstrapProposal.model_validate_json(str(target["proposal_json"]))
+        proposal = StoryFoundationProposal.model_validate_json(str(target["proposal_json"]))
         _write_json(
             _original_dir(database, book_id) / "story_foundation" / "proposal.json",
             proposal.model_dump(mode="json"),
@@ -1328,6 +1415,261 @@ def resolve_original_proposal_version(
     }
 
 
+def select_original_foundation(
+    database: Database,
+    book_id: str,
+    selected_foundation_id: str,
+) -> dict[str, Any]:
+    proposal_row = _current_proposal_row(database, book_id)
+    if proposal_row is None:
+        raise OriginalWorkflowError("尚无可选择的 Story Foundation Proposal")
+    proposal = StoryFoundationProposal.model_validate_json(
+        str(proposal_row["proposal_json"])
+    )
+    selected = next(
+        (
+            item
+            for item in proposal.foundation_candidates
+            if item.candidate_id == selected_foundation_id
+        ),
+        None,
+    )
+    if selected is None:
+        raise OriginalWorkflowError("选择的 Story Foundation 不属于当前 Proposal")
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT accepted_apply_id FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (book_id,),
+        ).fetchone()
+    if state is not None and state["accepted_apply_id"]:
+        raise OriginalWorkflowError("Genesis 已最终确认，不能从普通流程改选故事基础")
+    with database.connect() as connection:
+        stale_handoff_ids = [
+            str(item["handoff_id"])
+            for item in connection.execute(
+                "SELECT handoff_id FROM workflow_handoffs WHERE book_id=? "
+                "AND requested_stage='FOUNDATION_DEVELOPMENT_PROPOSAL' "
+                "AND status IN ('READY_FOR_CODEX', 'CLAIMED', 'RUNNING', "
+                "'WAITING_FOR_USER')",
+                (book_id,),
+            ).fetchall()
+        ]
+    now = utc_now()
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE original_development_versions SET status='ARCHIVED', archived_at=?, "
+            "updated_at=?, version=version+1 WHERE book_id=? AND edition_id='base' "
+            "AND status IN ('CURRENT', 'READY', 'GENERATING')",
+            (now, now, book_id),
+        )
+        connection.execute(
+            "UPDATE original_states SET selected_foundation_proposal_version_id=?, "
+            "selected_foundation_id=?, current_development_proposal_version_id=NULL, "
+            "state=?, updated_at=?, version=version+1 "
+            "WHERE book_id=? AND edition_id='base'",
+            (
+                str(proposal_row["proposal_version_id"]),
+                selected_foundation_id,
+                OriginalState.DEVELOPMENT_GENERATING.value,
+                now,
+                book_id,
+            ),
+        )
+    for handoff_id in stale_handoff_ids:
+        mark_stale(database, handoff_id, "author explicitly reselected Story Foundation")
+    _update_registry(database, book_id, state=OriginalState.DEVELOPMENT_GENERATING)
+    handoff = prepare_original_foundation_development(database, book_id)
+    return {
+        "book_id": book_id,
+        "selected_foundation_id": selected_foundation_id,
+        "selected_foundation": selected.model_dump(mode="json"),
+        "handoff": handoff,
+        "canon_changed": False,
+    }
+
+
+def prepare_original_foundation_development(
+    database: Database, book_id: str
+) -> dict[str, Any]:
+    request_payload = _read_json(_original_dir(database, book_id) / "request.json")
+    selected_core = _selected_innovation_intent(database, book_id)
+    selected_foundation = _selected_foundation(database, book_id)
+    if request_payload is None or selected_core is None or selected_foundation is None:
+        raise OriginalWorkflowError("必须先确认 Reader Experience、Core 与 Story Foundation")
+    completed = _reconcile_completed_foundation_development(database, book_id)
+    if completed is not None:
+        return {**completed, "deduplicated": True, "proposal_imported": True}
+    with database.connect() as connection:
+        generating = connection.execute(
+            "SELECT development_proposal_version_id, handoff_id "
+            "FROM original_development_versions WHERE book_id=? AND edition_id='base' "
+            "AND status='GENERATING' ORDER BY version_number DESC LIMIT 1",
+            (book_id,),
+        ).fetchone()
+    if generating is not None and generating["handoff_id"]:
+        handoff = get_handoff(database, str(generating["handoff_id"]))
+        if str(handoff["status"]) in {
+            "READY_FOR_CODEX",
+            "CLAIMED",
+            "RUNNING",
+            "WAITING_FOR_USER",
+        }:
+            return {
+                **handoff,
+                "development_proposal_version_id": str(
+                    generating["development_proposal_version_id"]
+                ),
+                "deduplicated": True,
+            }
+    kernel = _confirmed_progression_kernel(
+        database, book_id, core_innovation=selected_core
+    )
+    request = {
+        **request_payload,
+        "requested_stage": "FOUNDATION_DEVELOPMENT_PROPOSAL",
+        "progression_kernel": kernel,
+        "selected_story_foundation": selected_foundation,
+    }
+    handoff = create_original_bootstrap_handoff(
+        database,
+        book_id,
+        requested_stage="FOUNDATION_DEVELOPMENT_PROPOSAL",
+        edition_id="base",
+        original_bootstrap_request=request,
+    )
+    now = utc_now()
+    with database.connect() as connection:
+        version_number = int(
+            connection.execute(
+                "SELECT COALESCE(MAX(version_number), 0) + 1 "
+                "FROM original_development_versions WHERE book_id=? AND edition_id='base'",
+                (book_id,),
+            ).fetchone()[0]
+        )
+        version_id = f"development-{uuid.uuid4().hex}"
+        connection.execute(
+            "INSERT INTO original_development_versions("
+            "development_proposal_version_id, book_id, edition_id, version_number, "
+            "status, handoff_id, proposal_json, created_at, updated_at, version) "
+            "VALUES (?, ?, 'base', ?, 'GENERATING', ?, '{}', ?, ?, 1)",
+            (version_id, book_id, version_number, str(handoff["handoff_id"]), now, now),
+        )
+    return {
+        **handoff,
+        "development_proposal_version_id": version_id,
+        "deduplicated": False,
+    }
+
+
+def _reconcile_completed_foundation_development(
+    database: Database, book_id: str
+) -> dict[str, Any] | None:
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT handoff_id FROM original_development_versions "
+            "WHERE book_id=? AND edition_id='base' AND status='GENERATING' "
+            "AND handoff_id IS NOT NULL ORDER BY version_number DESC LIMIT 1",
+            (book_id,),
+        ).fetchone()
+    if row is None:
+        return None
+    handoff = get_handoff(database, str(row["handoff_id"]))
+    if str(handoff["status"]) != "COMPLETED":
+        return None
+    return import_original_foundation_development(
+        database, book_id, str(row["handoff_id"])
+    )
+
+
+def import_original_foundation_development(
+    database: Database, book_id: str, handoff_id: str
+) -> dict[str, Any]:
+    handoff = get_handoff(database, handoff_id)
+    if (
+        str(handoff["book_id"]) != book_id
+        or str(handoff["handoff_type"]) != HandoffType.ORIGINAL_BOOK_BOOTSTRAP.value
+        or str(handoff["requested_stage"]).upper()
+        != "FOUNDATION_DEVELOPMENT_PROPOSAL"
+    ):
+        raise OriginalWorkflowError("handoff 不属于当前 Foundation Development 任务")
+    result = load_completed_handoff_result(database, handoff_id)
+    task_directory = Path(str(handoff["task_directory"])).resolve()
+    expected = (
+        task_directory / "artifacts" / "foundation_development" / "proposal.json"
+    ).resolve()
+    paths = []
+    for raw_path in result.get("artifact_paths", []):
+        path = Path(str(raw_path))
+        paths.append(
+            (task_directory / path).resolve()
+            if not path.is_absolute()
+            else path.resolve()
+        )
+    if expected not in paths or not expected.is_file():
+        raise OriginalWorkflowError("handoff 未返回 foundation_development/proposal.json")
+    proposal = FoundationDevelopmentProposal.model_validate_json(
+        expected.read_text(encoding="utf-8")
+    )
+    selected_core = _selected_innovation_intent(database, book_id)
+    selected_foundation = _selected_foundation(database, book_id)
+    if selected_core is None or selected_foundation is None:
+        raise OriginalWorkflowError("Foundation Development 的作者选择已不存在")
+    expected_core = {
+        "selected_primary_innovation_id": selected_core["selected_primary_innovation_id"],
+        "optional_mix_notes": selected_core.get("optional_mix_notes", ""),
+    }
+    if proposal.core_innovation_intent.model_dump(mode="json") != expected_core:
+        raise OriginalWorkflowError("Development Proposal 不得替换 Core Innovation")
+    if proposal.selected_foundation_id != selected_foundation["selected_foundation_id"]:
+        raise OriginalWorkflowError("Development Proposal 未绑定作者选择的 Foundation")
+    if proposal.selected_foundation.model_dump(mode="json") != selected_foundation[
+        "selected_candidate"
+    ]:
+        raise OriginalWorkflowError("Development Proposal 不得替换已选 Foundation 内容")
+    handoff_request = _read_json(task_directory / "input" / "original_request.json") or {}
+    expected_kernel = handoff_request.get("progression_kernel")
+    if expected_kernel and proposal.kernel_contracts != expected_kernel:
+        raise OriginalWorkflowError("Development Proposal 不得替换已确认的 Reader/Drive")
+    now = utc_now()
+    payload = proposal.model_dump(mode="json")
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT development_proposal_version_id FROM original_development_versions "
+            "WHERE book_id=? AND handoff_id=?",
+            (book_id, handoff_id),
+        ).fetchone()
+        if row is None:
+            raise OriginalWorkflowError("找不到 Development Proposal 版本")
+        version_id = str(row["development_proposal_version_id"])
+        connection.execute(
+            "UPDATE original_development_versions SET status='CURRENT', proposal_json=?, "
+            "ready_at=?, updated_at=?, version=version+1 "
+            "WHERE development_proposal_version_id=?",
+            (json_dumps(payload), now, now, version_id),
+        )
+        connection.execute(
+            "UPDATE original_states SET current_development_proposal_version_id=?, "
+            "state=?, updated_at=?, version=version+1 "
+            "WHERE book_id=? AND edition_id='base'",
+            (version_id, OriginalState.DEVELOPMENT_REVIEW.value, now, book_id),
+        )
+    path = _write_json(
+        _original_dir(database, book_id) / "foundation_development" / "proposal.json",
+        payload,
+    )
+    _update_registry(database, book_id, state=OriginalState.DEVELOPMENT_REVIEW)
+    return {
+        "book_id": book_id,
+        "handoff_id": handoff_id,
+        "development_proposal_version_id": version_id,
+        "proposal": payload,
+        "proposal_path": str(path),
+        "canon_changed": False,
+        "chapter_created": False,
+    }
+
+
 def confirm_original_foundation(
     database: Database,
     book_id: str,
@@ -1338,10 +1680,12 @@ def confirm_original_foundation(
         if isinstance(confirmation, OriginalFoundationConfirmation)
         else OriginalFoundationConfirmation.model_validate(confirmation)
     )
-    proposal_row = _current_proposal_row(database, book_id)
+    proposal_row = _current_development_row(database, book_id)
     if proposal_row is None:
-        raise OriginalWorkflowError("尚无可确认的当前故事基础方案")
-    proposal = OriginalBootstrapProposal.model_validate_json(str(proposal_row["proposal_json"]))
+        raise OriginalWorkflowError("Foundation Development Proposal 尚未完成")
+    proposal = FoundationDevelopmentProposal.model_validate_json(
+        str(proposal_row["proposal_json"])
+    )
     selected_innovation = _selected_innovation_intent(database, book_id)
     if selected_innovation is None:
         raise OriginalWorkflowError("必须先确认 Core Innovation，才能确认故事基础")
@@ -1352,13 +1696,21 @@ def confirm_original_foundation(
         "optional_mix_notes": selected_innovation.get("optional_mix_notes", ""),
     }:
         raise OriginalWorkflowError("当前故事基础方案没有沿用作者确认的 Core Innovation")
+    selected_foundation = _selected_foundation(database, book_id)
+    if (
+        selected_foundation is None
+        or proposal.selected_foundation_id
+        != selected_foundation["selected_foundation_id"]
+        or data.selected_foundation_id != proposal.selected_foundation_id
+    ):
+        raise OriginalWorkflowError("最终确认必须使用当前作者选择的 Story Foundation")
     request_payload = _read_json(_original_dir(database, book_id) / "request.json")
     if request_payload is None:
         raise OriginalWorkflowError("原创的一句话创意不存在")
     request = OriginalBookRequest.model_validate(request_payload)
     try:
         plan = build_genesis_apply_plan(
-            proposal_version_id=str(proposal_row["proposal_version_id"]),
+            proposal_version_id=str(selected_foundation["proposal_version_id"]),
             proposal=proposal,
             confirmation=data,
             request=request,
@@ -1431,24 +1783,10 @@ def select_first_chapter_candidate(
         }
         required = {
             ProgressionContractType.READER_EXPERIENCE,
-            ProgressionContractType.GENRE,
             ProgressionContractType.NARRATIVE_DRIVE,
         }
-        drive_record = next(
-            (
-                record
-                for record in records
-                if record.contract_type is ProgressionContractType.NARRATIVE_DRIVE
-                and record.status is ContractStatus.EFFECTIVE
-            ),
-            None,
-        )
-        if drive_record is not None:
-            drive_contract = NarrativeDriveContract.model_validate(drive_record.payload)
-            if any(drive in PROGRESSION_DRIVES for drive in drive_contract.drive_mix):
-                required.add(ProgressionContractType.PROGRESSION)
         if not required.issubset(effective_types):
-            raise OriginalWorkflowError("必须先确认 Reader、Genre 与 Narrative Drive Contract")
+            raise OriginalWorkflowError("必须先确认 Reader 与 Narrative Drive Contract")
     task_id = str(accepted.get("genesis_task_id") or "")
     boundary = build_boundary_packet(database, book_id, edition_id="base")
     boundary_payload = json.loads(Path(str(boundary["json_path"])).read_text(encoding="utf-8"))
@@ -1581,8 +1919,17 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
         raise OriginalWorkflowError("当前项目不是 ORIGINAL 小说")
     _reconcile_completed_core_innovation(database, book_id)
     _reconcile_completed_original_bootstrap(database, book_id)
+    _reconcile_completed_foundation_development(database, book_id)
     innovation_proposal = load_original_innovation_proposal(database, book_id)
     proposal = load_original_proposal(database, book_id)
+    development_row = _current_development_row(database, book_id)
+    development_proposal = (
+        None
+        if development_row is None
+        else FoundationDevelopmentProposal.model_validate_json(
+            str(development_row["proposal_json"])
+        )
+    )
     accepted = accepted_foundation(database, book_id)
     kernel_records = list_contract_records(database, book_id=book_id, edition_id="base")
     reader_interpretation = _read_json(
@@ -1591,7 +1938,9 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
     with database.connect() as connection:
         state_row = connection.execute(
             "SELECT state, current_innovation_proposal_version_id, "
-            "selected_primary_innovation_id, optional_mix_notes "
+            "selected_primary_innovation_id, optional_mix_notes, "
+            "selected_foundation_proposal_version_id, selected_foundation_id, "
+            "current_development_proposal_version_id "
             "FROM original_states WHERE book_id=? AND edition_id='base'",
             (book_id,),
         ).fetchone()
@@ -1609,6 +1958,15 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
             for row in connection.execute(
                 "SELECT innovation_proposal_version_id, version_number, status, handoff_id, "
                 "created_at, updated_at, ready_at FROM original_innovation_versions "
+                "WHERE book_id=? AND edition_id='base' ORDER BY version_number DESC",
+                (book_id,),
+            ).fetchall()
+        ]
+        development_proposal_versions = [
+            dict(row)
+            for row in connection.execute(
+                "SELECT development_proposal_version_id, version_number, status, handoff_id, "
+                "created_at, updated_at, ready_at FROM original_development_versions "
                 "WHERE book_id=? AND edition_id='base' ORDER BY version_number DESC",
                 (book_id,),
             ).fetchall()
@@ -1677,6 +2035,14 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                 state_row["current_innovation_proposal_version_id"] or ""
             ),
         }
+    foundation_selection = None
+    if state_row is not None and state_row["selected_foundation_id"]:
+        foundation_selection = {
+            "proposal_version_id": str(
+                state_row["selected_foundation_proposal_version_id"] or ""
+            ),
+            "selected_foundation_id": str(state_row["selected_foundation_id"]),
+        }
     reader_payload = (
         dict(reader_interpretation.get("reader_contract", {}))
         if reader_interpretation is not None
@@ -1689,20 +2055,6 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
     )
     drive_contract_display = dict(narrative_display.get("drive_contract", {}))
     market_display = dict(narrative_display.get("market_category", {}))
-    priority_labels = {
-        "PROGRESSION": "成长突破",
-        "POWER_VERIFICATION": "能力兑现",
-        "COMBAT": "战斗兑现",
-        "EXPLORATION": "机缘探索",
-        "RESOURCE_OPPORTUNITY": "资源机会",
-        "WORLD_EXPANSION": "世界扩张",
-        "FACTION_CONFLICT": "势力竞争",
-        "MYSTERY": "世界谜团",
-        "TEAM_GROWTH": "团队成长",
-        "RELATIONSHIP": "人物关系",
-        "KNOWLEDGE": "知识成长",
-        "SOCIAL_THEME": "社会议题",
-    }
     priority_value_labels = {
         "WEAK": "弱化",
         "SECONDARY": "次要",
@@ -1754,18 +2106,32 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
             }.get(str(reader_payload.get("explanation_style") or ""), "平衡"),
             "priorities": [
                 {
-                    "key": key,
-                    "label": priority_labels[key],
-                    "value": str(value),
-                    "strength": priority_to_strength.get(str(value), "NORMAL"),
+                    "key": str(item["key"]),
+                    "label": str(item["label"]),
+                    "group": str(item["group"]),
+                    "value": str(
+                        priority_from_contract.get(str(item["key"]), "MEDIUM")
+                    ),
+                    "strength": priority_to_strength.get(
+                        str(priority_from_contract.get(str(item["key"]), "MEDIUM")),
+                        "NORMAL",
+                    ),
                     "value_label": priority_value_labels.get(
-                        priority_to_strength.get(str(value), "NORMAL"), "标准"
+                        priority_to_strength.get(
+                            str(
+                                priority_from_contract.get(
+                                    str(item["key"]), "MEDIUM"
+                                )
+                            ),
+                            "NORMAL",
+                        ),
+                        "标准",
                     ),
                     "options": priority_options,
                 }
-                for key, value in priority_from_contract.items()
-                if key in priority_labels
+                for item in READER_EXPERIENCE_UI
             ],
+            "presets": list(READER_EXPERIENCE_PRESETS),
             "must_deliver": list(reader_payload.get("must_deliver", [])),
             "must_not_drift_into": list(
                 reader_payload.get("must_not_drift_into", [])
@@ -1780,10 +2146,7 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                 if value
             ],
             "primary_drive": str(
-                reader_interpretation.get("growth_object")
-                if narrative_display.get("progression_engine_enabled")
-                else narrative_display.get("display_primary_drive")
-                or "待作者确认"
+                narrative_display.get("display_primary_drive") or "待作者确认"
             ),
             "secondary_drives": list(
                 [
@@ -1813,12 +2176,33 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
             "CORE_INNOVATION_REVIEW": "等待选择核心创意",
             "FOUNDATION_GENERATING": "正在生成故事方案",
             "FOUNDATION_REVIEW": "等待你确认故事方案",
+            "DEVELOPMENT_GENERATING": "正在展开选定的故事基础",
+            "DEVELOPMENT_REVIEW": "等待最终预览与确认",
             "FOUNDATION_READY": "故事基础已确认",
             "FIRST_CHAPTER_DRAFTING": "正在准备第一章",
             "FIRST_CHAPTER_VALIDATED": "第一章已校验",
             "WRITING_READY": "可以继续创作",
         }.get(state_value, "原创项目"),
         "proposal": None if proposal is None else proposal.model_dump(mode="json"),
+        "development_proposal": (
+            None
+            if development_proposal is None
+            else development_proposal.model_dump(mode="json")
+        ),
+        "development_proposal_versions": development_proposal_versions,
+        "current_development_proposal_version_id": (
+            None
+            if development_row is None
+            else str(development_row["development_proposal_version_id"])
+        ),
+        "generating_development_proposal": next(
+            (
+                item
+                for item in development_proposal_versions
+                if item["status"] == "GENERATING"
+            ),
+            None,
+        ),
         "innovation_proposal": (
             None if innovation_proposal is None else innovation_proposal.model_dump(mode="json")
         ),
@@ -1836,6 +2220,7 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
             None,
         ),
         "innovation_selection": innovation_selection,
+        "foundation_selection": foundation_selection,
         "proposal_versions": proposal_versions,
         "current_proposal_version": next(
             (item for item in proposal_versions if item["status"] == "CURRENT"), None

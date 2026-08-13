@@ -123,13 +123,16 @@ from novel_authoring.original.service import (
     create_original_book,
     import_original_bootstrap_proposal,
     import_original_core_innovation_proposal,
+    import_original_foundation_development,
     original_overview,
     prepare_original_bootstrap,
     prepare_original_core_innovation,
+    prepare_original_foundation_development,
     prepare_original_reader_experience,
     resolve_original_proposal_version,
     select_first_chapter_candidate,
     select_original_core_innovation,
+    select_original_foundation,
     validate_original_draft,
 )
 from novel_authoring.pending_actions import (
@@ -199,6 +202,7 @@ from novel_authoring.web.schemas import (
     OriginalCandidateSelectionRequest,
     OriginalCoreInnovationSelectionRequest,
     OriginalDraftActionRequest,
+    OriginalFoundationSelectionRequest,
     OriginalProposalImportRequest,
     OriginalProposalVersionResolutionRequest,
     OriginalReaderExperienceConfirmationRequest,
@@ -1202,6 +1206,51 @@ def create_app(
         checked = _require_book_scope(app, path_book_id)
         try:
             return confirm_original_foundation(_database_for_book(app, checked), checked, payload)
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/foundation/select")
+    async def original_foundation_select_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalFoundationSelectionRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return select_original_foundation(
+                _database_for_book(app, checked),
+                checked,
+                payload.selected_foundation_id,
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/foundation-development/prepare")
+    async def original_foundation_development_prepare_api(
+        request: Request, path_book_id: str
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return prepare_original_foundation_development(
+                _database_for_book(app, checked), checked
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/foundation-development/import")
+    async def original_foundation_development_import_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalProposalImportRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return import_original_foundation_development(
+                _database_for_book(app, checked), checked, payload.handoff_id
+            )
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)
 

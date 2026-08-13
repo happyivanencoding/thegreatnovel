@@ -61,6 +61,7 @@ def _proposal_bundle() -> dict[str, object]:
     bundle = compile_kernel_contract_proposals(
         interpret_reader_experience(
             "一名失去超凡能力的矿工发现，废弃矿脉中残留的声音能够重塑他的身体。",
+            genre_hint="肉身进化",
             contract_prefix="semantic-discovery",
         )
     ).model_dump(mode="json")
