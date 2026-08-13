@@ -9,9 +9,13 @@ Web 创建 `library/<book_id>/editions/<edition_id>/operations/<handoff_id>/`，
 作者在 Codex 桌面端复制 Web 给出的固定指令，必须先使用 `$process-novel-handoff` 原子领取任务，再调用 `$continue-novel`、`$revise-novel`、`$bootstrap-story-atlas` 或 `$continue-novel-batch`，并写回状态/结果。Atlas handoff 的软 artifact 只能写入 `artifacts/story_atlas/`；Batch handoff 必须绑定 `batch_id`，沿用 Boundary/Contract/十项校验，结果停在 `BATCH_VALIDATED` 而不写 Canon。Web 只读取 SQLite、状态文件、事件日志和结果文件；SSE（如启用）只传输已有状态，不能控制 Codex，也不能假装知道模型是否仍在思考。没有 heartbeat 时只显示“Codex 客户端可能已停止或等待用户操作”。
 
 原创小说使用 `ORIGINAL_BOOK_BOOTSTRAP`：额外冻结 `original_request.json` 和
-`proposal_schema.json`，调用 `$bootstrap-original-novel`，只允许写
-`artifacts/story_foundation/proposal.json`。结果必须恰好包含三个 Story Foundation
-candidate id，且保持 `PROPOSAL`；导入结果和作者显式“确认基础框架”是两个独立动作。
+`proposal_schema.json`，调用 `$bootstrap-original-novel`。它依次支持三个 Proposal-only
+stage：`CORE_INNOVATION_PROPOSAL` 写三个开放语义机制，作者选择后
+`STORY_FOUNDATION_PROPOSAL` 只写三个故事承载方案，作者再选择后
+`FOUNDATION_DEVELOPMENT_PROPOSAL` 才写选定承载方案的长期成长、第一阶段、画像、路线与
+三个首章候选。三个阶段分别写入 `artifacts/core_innovation/`、
+`artifacts/story_foundation/` 与 `artifacts/foundation_development/`，都保持
+`PROPOSAL`；导入、作者选择与最终 Genesis 确认是独立动作。
 
 `result.json` 必须符合严格 `WorkflowHandoffResult`；COMPLETED 还要通过 artifact、edition/hash anchor 和 `status.json` 一致性检查。需要作者决定时，Codex 写 `waiting_for_user.json` 并进入 `WAITING_FOR_USER`；Web 只新增 `handoff_user_response.json`，不修改冻结的 `task.json`。
 
