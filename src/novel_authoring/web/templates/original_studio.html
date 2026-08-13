@@ -53,7 +53,20 @@
           <article><span>Seed 已有生成机制</span><strong>{{ creative.existing_signature_mechanism or '尚未确定' }}</strong></article>
           <article><span>可重复阅读循环</span><strong>{{ creative.repeatable_reader_loop|join(' → ') }}</strong></article>
         </div>
-        <details><summary>查看开放空间与防漂移边界</summary><h4>仍可创新</h4><ul>{% for item in creative.open_design_space %}<li>{{ item }}</li>{% endfor %}</ul><h4>兑现质感</h4><ul>{% for item in creative.payoff_texture %}<li>{{ item }}</li>{% endfor %}</ul><h4>新奇度焦点</h4><ul>{% for item in creative.novelty_focus %}<li>{{ item }}</li>{% endfor %}</ul><h4>保持直观或可信</h4><ul>{% for item in creative.realism_anchors %}<li>{{ item }}</li>{% endfor %}</ul><h4>复杂度边界</h4><ul>{% for item in creative.complexity_boundaries %}<li>{{ item }}</li>{% endfor %}</ul><h4>不得漂移为</h4><ul>{% for item in creative.anti_drift %}<li>{{ item }}</li>{% endfor %}</ul></details>
+        <details data-creative-semantics-controls>
+          <summary>调整创作语义</summary>
+          <div class="original-form-grid">
+            <label class="original-field original-field-wide"><span>核心幻想</span><textarea data-creative-semantics-key="signature_fantasy">{{ creative.signature_fantasy }}</textarea></label>
+            <label class="original-field original-field-wide"><span>Seed 已有生成机制（允许留空）</span><textarea data-creative-semantics-key="existing_signature_mechanism">{{ creative.existing_signature_mechanism }}</textarea></label>
+            <label class="original-field original-field-wide"><span>开放设计空间（每行一项）</span><textarea data-creative-semantics-key="open_design_space" data-creative-semantics-list>{{ creative.open_design_space|join('\n') }}</textarea></label>
+            <label class="original-field original-field-wide"><span>兑现质感（每行一项）</span><textarea data-creative-semantics-key="payoff_texture" data-creative-semantics-list>{{ creative.payoff_texture|join('\n') }}</textarea></label>
+            <label class="original-field original-field-wide"><span>新奇度焦点（每行一项）</span><textarea data-creative-semantics-key="novelty_focus" data-creative-semantics-list>{{ creative.novelty_focus|join('\n') }}</textarea></label>
+            <label class="original-field original-field-wide"><span>直观与可信锚点（每行一项）</span><textarea data-creative-semantics-key="realism_anchors" data-creative-semantics-list>{{ creative.realism_anchors|join('\n') }}</textarea></label>
+            <label class="original-field original-field-wide"><span>复杂度边界（每行一项）</span><textarea data-creative-semantics-key="complexity_boundaries" data-creative-semantics-list>{{ creative.complexity_boundaries|join('\n') }}</textarea></label>
+            <label class="original-field original-field-wide"><span>可重复阅读循环（每行一项）</span><textarea data-creative-semantics-key="repeatable_reader_loop" data-creative-semantics-list>{{ creative.repeatable_reader_loop|join('\n') }}</textarea></label>
+            <label class="original-field original-field-wide"><span>不得漂移为（每行一项）</span><textarea data-creative-semantics-key="anti_drift" data-creative-semantics-list>{{ creative.anti_drift|join('\n') }}</textarea></label>
+          </div>
+        </details>
       </section>
       <section class="original-derived-card"><h3>语义依据与不确定性</h3><ul>{% for item in reader.semantic_evidence %}<li>{{ item }}</li>{% endfor %}</ul>{% if reader.uncertainties %}<h4>仍不确定</h4><ul>{% for item in reader.uncertainties %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}{% if reader.author_attention_points %}<h4>请作者留意</h4><ul>{% for item in reader.author_attention_points %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}</section>
       <div class="original-form-grid" data-narrative-drive-controls>
@@ -103,7 +116,9 @@
         {% for item in original.reader_experience_display.priorities %}<article class="original-priority-row"><div class="original-priority-heading"><span>{{ item.label }}</span><strong>{{ item.value_label }}</strong></div></article>{% endfor %}
       </div>
       {% set creative = original.reader_experience.creative_semantics %}
+      <h3>已确认的创作语义</h3>
       <div class="original-final-preview"><article><span>核心幻想</span><strong>{{ creative.signature_fantasy }}</strong></article><article><span>Seed 已有生成机制</span><strong>{{ creative.existing_signature_mechanism or '尚未确定' }}</strong></article><article><span>可重复阅读循环</span><strong>{{ creative.repeatable_reader_loop|join(' → ') }}</strong></article></div>
+      <details><summary>查看完整创作语义</summary><h4>开放设计空间</h4><ul>{% for item in creative.open_design_space %}<li>{{ item }}</li>{% endfor %}</ul><h4>兑现质感</h4><ul>{% for item in creative.payoff_texture %}<li>{{ item }}</li>{% endfor %}</ul><h4>新奇度焦点</h4><ul>{% for item in creative.novelty_focus %}<li>{{ item }}</li>{% endfor %}</ul><h4>直观与可信锚点</h4><ul>{% for item in creative.realism_anchors %}<li>{{ item }}</li>{% endfor %}</ul><h4>复杂度边界</h4><ul>{% for item in creative.complexity_boundaries %}<li>{{ item }}</li>{% endfor %}</ul><h4>不得漂移为</h4><ul>{% for item in creative.anti_drift %}<li>{{ item }}</li>{% endfor %}</ul></details>
       <p class="muted">这些阅读体验强度、Narrative Drive 与 Creative Semantics 将共同作为后续核心玩法的创作边界；后续推理不得静默覆盖作者确认值。</p>
     </section>
     {% endif %}

@@ -16,6 +16,7 @@ from novel_authoring.author_control.models import (
 from novel_authoring.author_control.reveal import AgendaBucket, KnowledgeState, RevealDepth
 from novel_authoring.author_control.truth import TruthCompatibilityEvidenceInput
 from novel_authoring.metrics.models import MetricComponentStatus, ObservationSourceKind
+from novel_authoring.original.models import OriginalCreativeSemantics
 from novel_authoring.planning.innovation import InnovationFocus, InnovationLevel
 from novel_authoring.progression.interpretation import (
     ReaderExperienceAdjustment,
@@ -116,6 +117,7 @@ class OriginalReaderExperienceConfirmationRequest(BaseModel):
     primary_drive: NarrativeDrive
     secondary_drives: list[NarrativeDrive] = Field(default_factory=list, max_length=4)
     progression_engine_enabled: bool
+    creative_semantics: OriginalCreativeSemantics
 
 
 class OriginalCoreInnovationSelectionRequest(BaseModel):

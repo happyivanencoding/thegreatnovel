@@ -265,12 +265,19 @@
           .map((item) => item.value)
           .filter((value) => value !== primaryDrive);
         if (secondaryDrives.length > 4) throw new Error("Secondary Narrative Drive 最多选择四个。");
+        const creativeSemantics = {};
+        document.querySelectorAll("[data-creative-semantics-key]").forEach((control) => {
+          creativeSemantics[control.dataset.creativeSemanticsKey] = control.hasAttribute("data-creative-semantics-list")
+            ? lines(control.value)
+            : String(control.value || "").trim();
+        });
         await post(`/api/books/${bookId}/original/reader-experience/confirm`, {
           adjustment: "CONFIRM",
           priority_overrides: readerControls?.collect() || {},
           primary_drive: primaryDrive,
           secondary_drives: secondaryDrives,
           progression_engine_enabled: Boolean(document.querySelector("[data-progression-engine]")?.checked),
+          creative_semantics: creativeSemantics,
         });
         window.location.replace(window.location.href);
       } else if (action === "reader-preset") {

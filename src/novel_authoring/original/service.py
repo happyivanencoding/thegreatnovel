@@ -121,6 +121,36 @@ def _read_json(path: Path) -> dict[str, Any] | None:
     return payload if isinstance(payload, dict) else None
 
 
+def _confirmed_reader_kernel_projection(
+    database: Database,
+    book_id: str,
+    proposal: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Overlay confirmed SQLite intent onto optional semantic-read metadata."""
+    effective = effective_contract_records(database, book_id=book_id, edition_id="base")
+    reader = effective.get(ProgressionContractType.READER_EXPERIENCE)
+    drive = effective.get(ProgressionContractType.NARRATIVE_DRIVE)
+    if reader is None or drive is None:
+        return proposal
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT confirmed_creative_semantics_json FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (book_id,),
+        ).fetchone()
+    if state is None or not state["confirmed_creative_semantics_json"]:
+        return proposal
+    creative_semantics = OriginalCreativeSemantics.model_validate_json(
+        str(state["confirmed_creative_semantics_json"])
+    )
+    return {
+        **(proposal or {}),
+        "reader_experience": reader.payload,
+        "narrative_drive": drive.payload,
+        "creative_semantics": creative_semantics.model_dump(mode="json"),
+    }
+
+
 def _update_registry(
     database: Database,
     book_id: str,
@@ -253,13 +283,16 @@ def _confirmed_progression_kernel(
     reader = effective.get(ProgressionContractType.READER_EXPERIENCE)
     if reader is None:
         raise OriginalWorkflowError("必须先确认 Reader Experience")
-    reader_proposal_payload = _read_json(
-        _original_dir(database, book_id) / "reader_experience.json"
-    )
-    if reader_proposal_payload is None:
-        raise OriginalWorkflowError("已确认的 Reader Kernel Proposal 不存在")
-    creative_semantics = OriginalCreativeSemantics.model_validate(
-        reader_proposal_payload.get("creative_semantics")
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT confirmed_creative_semantics_json FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (book_id,),
+        ).fetchone()
+    if state is None or not state["confirmed_creative_semantics_json"]:
+        raise OriginalWorkflowError("必须先确认 Creative Semantics")
+    creative_semantics = OriginalCreativeSemantics.model_validate_json(
+        str(state["confirmed_creative_semantics_json"])
     )
     contract_records = list_contract_records(database, book_id=book_id, edition_id="base")
     latest_by_type: dict[str, dict[str, Any]] = {}
@@ -397,10 +430,13 @@ def prepare_original_reader_experience(database: Database, book_id: str) -> dict
     )
     proposal_path = _original_dir(database, book_id) / "reader_experience.json"
     existing_proposal = _read_json(proposal_path)
-    if existing is not None and existing_proposal is not None:
+    available_projection = _confirmed_reader_kernel_projection(
+        database, book_id, existing_proposal
+    )
+    if existing is not None and available_projection is not None:
         return {
             "contract": existing.model_dump(mode="json"),
-            "proposal": existing_proposal,
+            "proposal": available_projection,
             "deduplicated": True,
             "canon_changed": False,
         }
@@ -433,6 +469,14 @@ def prepare_original_reader_experience(database: Database, book_id: str) -> dict
 def _reconcile_completed_original_reader_kernel(
     database: Database, book_id: str
 ) -> dict[str, Any] | None:
+    with database.connect() as connection:
+        confirmed = connection.execute(
+            "SELECT confirmed_creative_semantics_json FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (book_id,),
+        ).fetchone()
+    if confirmed is not None and confirmed["confirmed_creative_semantics_json"]:
+        return None
     with database.connect() as connection:
         row = connection.execute(
             "SELECT handoff_id FROM workflow_handoffs WHERE book_id=? AND edition_id='base' "
@@ -546,6 +590,7 @@ def confirm_original_reader_experience(
     primary_drive: NarrativeDrive | str | None = None,
     secondary_drives: Sequence[NarrativeDrive | str] | None = None,
     progression_engine_enabled: bool | None = None,
+    creative_semantics: OriginalCreativeSemantics | Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     selected_adjustment = (
         adjustment
@@ -556,7 +601,8 @@ def confirm_original_reader_experience(
     records = list_contract_records(database, book_id=book_id, edition_id="base")
     with database.connect() as connection:
         state = connection.execute(
-            "SELECT state FROM original_states WHERE book_id=? AND edition_id='base'",
+            "SELECT state, confirmed_creative_semantics_json FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
             (book_id,),
         ).fetchone()
     if state is None:
@@ -587,6 +633,21 @@ def confirm_original_reader_experience(
     if drive_record is None:
         raise OriginalWorkflowError("Narrative Drive Proposal 不存在")
     current_drive = NarrativeDriveContract.model_validate(drive_record.payload)
+    proposal_path = _original_dir(database, book_id) / "reader_experience.json"
+    payload = _read_json(proposal_path)
+    requested_creative_semantics = None
+    if creative_semantics is not None:
+        requested_creative_semantics = OriginalCreativeSemantics.model_validate(
+            creative_semantics
+        )
+    elif (
+        effective is None
+        and payload is not None
+        and payload.get("creative_semantics") is not None
+    ):
+        requested_creative_semantics = OriginalCreativeSemantics.model_validate(
+            payload["creative_semantics"]
+        )
     selected_primary = (
         current_drive.primary_drive
         if primary_drive is None
@@ -612,6 +673,14 @@ def confirm_original_reader_experience(
         else progression_engine_enabled
     )
     if effective is not None:
+        stored_creative_json = state["confirmed_creative_semantics_json"]
+        if not stored_creative_json:
+            raise OriginalWorkflowError("已确认的 Creative Semantics 不存在")
+        confirmed_creative_semantics = OriginalCreativeSemantics.model_validate_json(
+            str(stored_creative_json)
+        )
+        if requested_creative_semantics is None:
+            requested_creative_semantics = confirmed_creative_semantics
         effective_reader = ReaderExperienceContract.model_validate(effective.payload)
         requested_reader = adjust_reader_experience(
             effective_reader,
@@ -627,6 +696,7 @@ def confirm_original_reader_experience(
             and selected_primary == current_drive.primary_drive
             and selected_secondary == current_drive.secondary_drives
             and selected_progression == current_drive.progression_engine_enabled
+            and requested_creative_semantics == confirmed_creative_semantics
         )
         if not same_author_intent:
             raise OriginalWorkflowError(
@@ -636,15 +706,16 @@ def confirm_original_reader_experience(
         return {
             "reader_experience": effective.model_dump(mode="json"),
             "narrative_drive": drive_record.model_dump(mode="json"),
+            "creative_semantics": confirmed_creative_semantics.model_dump(mode="json"),
             "handoff": handoff,
             "idempotent": True,
             "canon_changed": False,
         }
-    proposal_path = _original_dir(database, book_id) / "reader_experience.json"
-    payload = _read_json(proposal_path)
     if payload is None:
         raise OriginalWorkflowError("Reader Experience Proposal 不存在")
     proposal = OriginalReaderKernelProposal.model_validate(payload)
+    if requested_creative_semantics is None:
+        raise OriginalWorkflowError("Creative Semantics Proposal 不存在")
     priorities = dict(current_drive.drive_priorities)
     promises = dict(current_drive.drive_promises)
     debts = dict(current_drive.drive_debt_types)
@@ -751,6 +822,15 @@ def confirm_original_reader_experience(
             effective_from_boundary=1,
             author_notes="作者在 Step 0 一并确认 Narrative Drive",
         )
+        connection.execute(
+            "UPDATE original_states SET confirmed_creative_semantics_json=?, "
+            "updated_at=?, version=version+1 WHERE book_id=? AND edition_id='base'",
+            (
+                json_dumps(requested_creative_semantics.model_dump(mode="json")),
+                utc_now(),
+                book_id,
+            ),
+        )
     from novel_authoring.planning.aggregates import invalidate_planning_aggregates
 
     invalidate_planning_aggregates(database, book_id, "base")
@@ -760,16 +840,25 @@ def confirm_original_reader_experience(
                 confirmed_reader.payload
             ),
             "narrative_drive": confirmed_drive,
+            "creative_semantics": requested_creative_semantics,
         }
     )
-    _write_json(proposal_path, proposal.model_dump(mode="json"))
+    projection_warning = None
+    try:
+        _write_json(proposal_path, proposal.model_dump(mode="json"))
+    except OSError as exc:
+        projection_warning = f"Reader Kernel projection 写入失败：{exc}"
     handoff = prepare_original_core_innovation(database, book_id)
-    return {
+    result = {
         "reader_experience": confirmed_reader.model_dump(mode="json"),
         "narrative_drive": confirmed_drive_record.model_dump(mode="json"),
+        "creative_semantics": requested_creative_semantics.model_dump(mode="json"),
         "handoff": handoff,
         "canon_changed": False,
     }
+    if projection_warning is not None:
+        result["warning"] = projection_warning
+    return result
 
 
 def create_original_book(
@@ -2479,6 +2568,9 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
     kernel_records = list_contract_records(database, book_id=book_id, edition_id="base")
     reader_proposal = _read_json(
         _original_dir(database, book_id) / "reader_experience.json"
+    )
+    reader_proposal = _confirmed_reader_kernel_projection(
+        database, book_id, reader_proposal
     )
     with database.connect() as connection:
         state_row = connection.execute(

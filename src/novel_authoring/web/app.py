@@ -1105,6 +1105,7 @@ def create_app(
                 payload.primary_drive,
                 payload.secondary_drives,
                 payload.progression_engine_enabled,
+                payload.creative_semantics,
             )
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)

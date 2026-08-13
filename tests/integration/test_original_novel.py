@@ -13,6 +13,7 @@ from novel_authoring.contracts.draft import DraftOutput
 from novel_authoring.db.database import Database
 from novel_authoring.drafting.service import import_draft_output
 from novel_authoring.library_catalog import build_library_catalog, studio_access
+from novel_authoring.original import service as original_service
 from novel_authoring.original.models import (
     CoreInnovationCandidate,
     CoreInnovationProposal,
@@ -34,6 +35,7 @@ from novel_authoring.original.service import (
     import_original_reader_kernel_proposal,
     original_overview,
     prepare_original_bootstrap,
+    prepare_original_reader_experience,
     resolve_original_proposal_version,
     select_first_chapter_candidate,
     select_original_core_innovation,
@@ -1803,6 +1805,7 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
                 "primary_drive": "SURVIVAL_RESOURCE",
                 "secondary_drives": ["RESOURCE_OPPORTUNITY"],
                 "progression_engine_enabled": True,
+                "creative_semantics": creative_semantics_payload(),
             },
         )
         original = client.get(created.json()["original_url"])
@@ -1888,12 +1891,28 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
         assert before.text.count("标准") >= 20
         assert before.text.count("data-reader-experience-key=") == 20
         assert 'data-reader-strength="CORE"' in before.text
+        assert "调整创作语义" in before.text
+        assert before.text.count("data-creative-semantics-key=") == 9
         for label in ("战斗和爽点更强", "谜团更强", "团队更强", "关系更强", "职业更强"):
             assert label in before.text
         assert "const presets" not in (
             Path("src/novel_authoring/web/static/original.js").read_text(encoding="utf-8")
         )
 
+        author_semantics = creative_semantics_payload()
+        author_semantics.update(
+            {
+                "signature_fantasy": "作者改写后的核心幻想",
+                "existing_signature_mechanism": "作者确认的既有机制",
+                "open_design_space": ["作者开放空间"],
+                "payoff_texture": ["作者兑现质感"],
+                "novelty_focus": ["作者新奇度焦点"],
+                "realism_anchors": ["作者可信锚点"],
+                "complexity_boundaries": ["世界可以高度复杂，但不得创造竞争性第二主机制"],
+                "repeatable_reader_loop": ["压力", "主动选择", "快速兑现", "更大局势"],
+                "anti_drift": ["不得退回 AI 原始语义"],
+            }
+        )
         confirmed = client.post(
             f"/api/books/{BOOK_ID}/original/reader-experience/confirm",
             headers={"X-CSRF-Token": client.app.state.csrf_token},
@@ -1908,6 +1927,7 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
                 "primary_drive": "RESOURCE_OPPORTUNITY",
                 "secondary_drives": ["MYSTERY_INVESTIGATION"],
                 "progression_engine_enabled": True,
+                "creative_semantics": author_semantics,
             },
         )
         assert confirmed.status_code == 200, confirmed.text
@@ -1927,6 +1947,10 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
         assert "资源机会" in after.text
         assert "已确认 · 阅读体验" in after.text
         assert "后续推理不得静默覆盖作者确认值" in after.text
+        assert "已确认的创作语义" in after.text
+        assert "作者改写后的核心幻想" in after.text
+        assert "世界可以高度复杂" in after.text
+        assert "data-creative-semantics-controls" not in after.text
 
     # The same effective contract is still the persisted source for the next read.
     overview = original_overview(database, BOOK_ID)
@@ -1935,3 +1959,164 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
     assert displayed["RESOURCE_OPPORTUNITY"] == "核心"
     assert displayed["PROGRESSION"] == "次要"
     assert displayed["POWER_VERIFICATION"] == "强化"
+    assert overview["reader_experience"]["creative_semantics"] == author_semantics
+    with database.connect() as connection:
+        persisted = connection.execute(
+            "SELECT confirmed_creative_semantics_json FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (BOOK_ID,),
+        ).fetchone()
+    assert persisted is not None
+    assert json.loads(str(persisted["confirmed_creative_semantics_json"])) == author_semantics
+
+
+def test_confirmed_creative_semantics_are_sqlite_authority_when_projection_drifts(
+    tmp_path: Path,
+) -> None:
+    layout, database = create_original(tmp_path)
+    author_semantics = creative_semantics_payload()
+    author_semantics["signature_fantasy"] = "作者版本 B"
+    author_semantics["anti_drift"] = ["作者防漂移边界"]
+    confirmed = confirm_original_reader_experience(
+        database,
+        BOOK_ID,
+        creative_semantics=author_semantics,
+    )
+    handoff_count = database.scalar(
+        "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? AND handoff_type=?",
+        (BOOK_ID, "ORIGINAL_BOOK_BOOTSTRAP"),
+    )
+    retry = confirm_original_reader_experience(
+        database,
+        BOOK_ID,
+        creative_semantics=author_semantics,
+    )
+    assert retry["idempotent"] is True
+    assert database.scalar(
+        "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? AND handoff_type=?",
+        (BOOK_ID, "ORIGINAL_BOOK_BOOTSTRAP"),
+    ) == handoff_count
+
+    proposal_path = (
+        layout.for_book(BOOK_ID).edition("base").analysis
+        / "original"
+        / "reader_experience.json"
+    )
+    stale = json.loads(proposal_path.read_text(encoding="utf-8"))
+    stale["creative_semantics"]["signature_fantasy"] = "AI 旧版本 A"
+    proposal_path.write_text(json_dumps(stale, indent=2), encoding="utf-8")
+    overview = original_overview(database, BOOK_ID)
+    assert overview["reader_experience"]["creative_semantics"] == author_semantics
+    request = json.loads(
+        (
+            Path(str(confirmed["handoff"]["task_directory"]))
+            / "input"
+            / "original_request.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert request["progression_kernel"]["creative_semantics"] == author_semantics
+
+    proposal_path.unlink()
+    assert original_overview(database, BOOK_ID)["reader_experience"][
+        "creative_semantics"
+    ] == author_semantics
+    reader_handoffs_before = database.scalar(
+        "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? AND handoff_type=?",
+        (BOOK_ID, "ORIGINAL_READER_INTERPRETATION"),
+    )
+    prepared_reader = prepare_original_reader_experience(database, BOOK_ID)
+    assert prepared_reader["deduplicated"] is True
+    assert database.scalar(
+        "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? AND handoff_type=?",
+        (BOOK_ID, "ORIGINAL_READER_INTERPRETATION"),
+    ) == reader_handoffs_before
+    retry_without_projection = confirm_original_reader_experience(database, BOOK_ID)
+    assert retry_without_projection["idempotent"] is True
+    proposal_path.write_text('{"broken": true}', encoding="utf-8")
+    retry_with_broken_projection = confirm_original_reader_experience(database, BOOK_ID)
+    assert retry_with_broken_projection["idempotent"] is True
+
+    changed = dict(author_semantics)
+    changed["anti_drift"] = ["不同的 stale 请求"]
+    with pytest.raises(OriginalWorkflowError, match="已确认"):
+        confirm_original_reader_experience(
+            database,
+            BOOK_ID,
+            creative_semantics=changed,
+        )
+    with database.connect() as connection:
+        stored = connection.execute(
+            "SELECT confirmed_creative_semantics_json FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (BOOK_ID,),
+        ).fetchone()
+    assert stored is not None
+    assert json.loads(str(stored["confirmed_creative_semantics_json"])) == author_semantics
+
+
+def test_reader_author_decision_rolls_back_together_on_database_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, database = create_original(tmp_path)
+    original_confirm = original_service._confirm_contract_in_connection
+    calls = 0
+
+    def fail_second_confirmation(*args: Any, **kwargs: Any) -> Any:
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            raise sqlite3.OperationalError("simulated drive confirmation failure")
+        return original_confirm(*args, **kwargs)
+
+    monkeypatch.setattr(
+        original_service, "_confirm_contract_in_connection", fail_second_confirmation
+    )
+    with pytest.raises(sqlite3.OperationalError, match="simulated"):
+        confirm_original_reader_experience(
+            database,
+            BOOK_ID,
+            creative_semantics=creative_semantics_payload(),
+        )
+    records = list_contract_records(database, book_id=BOOK_ID, edition_id="base")
+    assert not any(record.status is ContractStatus.EFFECTIVE for record in records)
+    with database.connect() as connection:
+        stored = connection.execute(
+            "SELECT confirmed_creative_semantics_json FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (BOOK_ID,),
+        ).fetchone()
+    assert stored is not None
+    assert stored["confirmed_creative_semantics_json"] is None
+
+
+def test_projection_write_failure_does_not_rollback_reader_author_decision(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, database = create_original(tmp_path)
+
+    def fail_projection_write(path: Path, payload: Any) -> Path:
+        raise OSError("simulated projection failure")
+
+    monkeypatch.setattr(original_service, "_write_json", fail_projection_write)
+    semantics = creative_semantics_payload()
+    confirmed = confirm_original_reader_experience(
+        database,
+        BOOK_ID,
+        creative_semantics=semantics,
+    )
+    assert "projection 写入失败" in confirmed["warning"]
+    effective = {
+        record.contract_type
+        for record in list_contract_records(database, book_id=BOOK_ID, edition_id="base")
+        if record.status is ContractStatus.EFFECTIVE
+    }
+    assert ProgressionContractType.READER_EXPERIENCE in effective
+    assert ProgressionContractType.NARRATIVE_DRIVE in effective
+    with database.connect() as connection:
+        stored = connection.execute(
+            "SELECT confirmed_creative_semantics_json FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (BOOK_ID,),
+        ).fetchone()
+    assert stored is not None
+    assert json.loads(str(stored["confirmed_creative_semantics_json"])) == semantics

@@ -92,8 +92,13 @@ def test_schema_migration_is_idempotent(tmp_path: Path) -> None:
             row[1] for row in connection.execute("PRAGMA table_info(events)").fetchall()
         }
 
-        assert versions == list(range(1, 19))
+        original_state_columns = {
+            row[1]
+            for row in connection.execute("PRAGMA table_info(original_states)").fetchall()
+        }
+        assert versions == list(range(1, 20))
     assert {"information_state", "payload_sha256", "event_hash"} <= event_columns
+    assert "confirmed_creative_semantics_json" in original_state_columns
 
 
 def test_old_v6_workspace_upgrades_to_migration_7_without_history_loss(tmp_path: Path) -> None:
@@ -133,7 +138,7 @@ def test_old_v6_workspace_upgrades_to_migration_7_without_history_loss(tmp_path:
             "SELECT value_json, retracted_at, freshness_status FROM metric_observations "
             "WHERE observation_id='old-observation'"
         ).fetchone()
-    assert versions == list(range(1, 19))
+        assert versions == list(range(1, 20))
     assert observation is not None
     assert observation["value_json"] == "70"
     assert observation["retracted_at"] is None
