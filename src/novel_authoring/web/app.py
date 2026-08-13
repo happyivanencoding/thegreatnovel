@@ -3281,7 +3281,9 @@ def create_app(
             # exist; align with the book-scoped route's error mapping.
             return _handoff_not_found_response()
         try:
-            instruction = copy_instruction(database, checked)
+            instruction = copy_instruction(
+                database, checked, library_root=app.state.library_root
+            )
         except HandoffWorkflowError as exc:
             return _error(exc)
         return {"handoff_id": checked, "instruction": instruction}
@@ -3313,7 +3315,11 @@ def create_app(
                 },
             )
         try:
-            instruction = copy_instruction(selected_database, checked_handoff)
+            instruction = copy_instruction(
+                selected_database,
+                checked_handoff,
+                library_root=app.state.library_root,
+            )
         except HandoffWorkflowError as exc:
             return _error(exc)
         return {

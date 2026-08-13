@@ -81,6 +81,28 @@ def _instruction_url(created: dict[str, Any]) -> str:
     return created["instruction_url"]
 
 
+def _assert_execution_instruction(
+    instruction: str,
+    prompt: str,
+    library: Path,
+    created: dict[str, Any],
+    result_path: Path,
+) -> None:
+    assert instruction.startswith(prompt.rstrip())
+    root = str(library.resolve())
+    start = (
+        f'uv run --no-sync novel workflow start --library-root "{root}" '
+        f'--book-id "{created["book_id"]}" --handoff-id "{created["handoff_id"]}"'
+    )
+    complete = (
+        f'uv run --no-sync novel workflow complete --library-root "{root}" '
+        f'--book-id "{created["book_id"]}" --handoff-id "{created["handoff_id"]}" '
+        f'--claim-token "<claim-token-from-start>" --result-path "{result_path.resolve()}"'
+    )
+    assert start in instruction
+    assert complete in instruction
+
+
 def _flatten_to_legacy_layout(task_directory: Path) -> Path:
     """Convert a canonical operation layout into the legacy flat layout."""
 
@@ -107,7 +129,13 @@ def test_fresh_canonical_operation_prompt_served(tmp_path: Path) -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["handoff_id"] == created["handoff_id"]
-    assert payload["instruction"] == canonical_prompt.read_text(encoding="utf-8")
+    _assert_execution_instruction(
+        payload["instruction"],
+        canonical_prompt.read_text(encoding="utf-8"),
+        library,
+        created,
+        Path(str(row["result_path"])),
+    )
     assert "$initialize-existing-novel" in payload["instruction"]
 
 
@@ -123,7 +151,13 @@ def test_legacy_flat_prompt_layout_fallback(tmp_path: Path) -> None:
     response = client.get(_instruction_url(created))
 
     assert response.status_code == 200
-    assert response.json()["instruction"] == flat_prompt.read_text(encoding="utf-8")
+    _assert_execution_instruction(
+        response.json()["instruction"],
+        flat_prompt.read_text(encoding="utf-8"),
+        library,
+        created,
+        Path(str(row["result_path"])),
+    )
 
 
 # 验收清单 3：stale absolute prompt_path，回退成功且 DB prompt_path 被回写修复。
@@ -140,7 +174,13 @@ def test_stale_absolute_prompt_path_is_repaired_in_database(tmp_path: Path) -> N
     response = client.get(_instruction_url(created))
 
     assert response.status_code == 200
-    assert response.json()["instruction"] == canonical_prompt.read_text(encoding="utf-8")
+    _assert_execution_instruction(
+        response.json()["instruction"],
+        canonical_prompt.read_text(encoding="utf-8"),
+        library,
+        created,
+        Path(str(row["result_path"])),
+    )
     repaired = _handoff_row(database, created["handoff_id"])
     assert Path(str(repaired["prompt_path"])) == canonical_prompt
 
@@ -159,7 +199,13 @@ def test_fallback_to_input_prompt_when_prompt_path_missing(tmp_path: Path) -> No
     response = client.get(_instruction_url(created))
 
     assert response.status_code == 200
-    assert response.json()["instruction"] == canonical_prompt.read_text(encoding="utf-8")
+    _assert_execution_instruction(
+        response.json()["instruction"],
+        canonical_prompt.read_text(encoding="utf-8"),
+        library,
+        created,
+        Path(str(row["result_path"])),
+    )
     repaired = _handoff_row(database, created["handoff_id"])
     assert Path(str(repaired["prompt_path"])) == canonical_prompt
 
@@ -182,7 +228,7 @@ def test_missing_prompt_returns_handoff_instruction_missing(tmp_path: Path) -> N
     assert error["message"] == MISSING_INSTRUCTION_MESSAGE
     assert error["details"] == {}
     with pytest.raises(HandoffWorkflowError) as excinfo:
-        copy_instruction(database, created["handoff_id"])
+        copy_instruction(database, created["handoff_id"], library_root=library)
     assert excinfo.value.error_code == "HANDOFF_INSTRUCTION_MISSING"
     assert excinfo.value.status_code == 404
     assert str(excinfo.value) == MISSING_INSTRUCTION_MESSAGE

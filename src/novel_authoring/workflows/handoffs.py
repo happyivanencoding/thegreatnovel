@@ -415,27 +415,15 @@ class WorkflowHandoffResult(BaseModel):
         return self
 
 
-_WORKFLOW_RESULT_COMMON_REQUIRED = {
-    "handoff_id",
-    "handoff_type",
-    "requested_stage",
-    "completed_stage",
-    "book_id",
-    "edition_id",
-    "status",
-    "canon_committed",
-    "edition_activated",
-    "base_event_seq",
-    "base_projection_hash",
-}
+_WORKFLOW_RESULT_BUSINESS_REQUIRED = {"completed_stage"}
 
 
 def _workflow_result_required_fields(
     handoff_type: HandoffType, requested_stage: str
 ) -> set[str]:
-    """Return only envelope invariants plus the requested stage contract."""
+    """Return only the business fields the executor must submit."""
 
-    required = set(_WORKFLOW_RESULT_COMMON_REQUIRED)
+    required = set(_WORKFLOW_RESULT_BUSINESS_REQUIRED)
     stage = requested_stage.upper()
     stage_fields = {
         "PLAN_ONLY": {"candidate_ids"},
@@ -483,6 +471,31 @@ def _workflow_result_required_fields(
             f"不支持的 ORIGINAL_READER_INTERPRETATION stage：{stage}"
         )
     return required
+
+
+def _normalize_handoff_result_envelope(
+    row: sqlite3.Row, business_result: dict[str, Any]
+) -> dict[str, Any]:
+    """Inject protocol facts owned by the frozen workflow handoff."""
+
+    normalized = dict(business_result)
+    authoritative = {
+        "handoff_id": str(row["handoff_id"]),
+        "handoff_type": str(row["handoff_type"]),
+        "book_id": str(row["book_id"]),
+        "edition_id": str(row["edition_id"]),
+        "requested_stage": str(row["requested_stage"]),
+        "status": HandoffStatus.COMPLETED.value,
+        "base_event_seq": int(row["base_event_seq"]),
+        "base_projection_hash": str(row["base_projection_hash"]),
+        "canon_committed": False,
+        "edition_activated": False,
+    }
+    for field, expected in authoritative.items():
+        if field in normalized and normalized[field] != expected:
+            raise HandoffWorkflowError(f"result {field} 与冻结 handoff 不一致")
+        normalized[field] = expected
+    return normalized
 
 
 class SourceStateHydrationResult(BaseModel):
@@ -2534,11 +2547,15 @@ def complete_handoff(
     result_file = Path(result_path)
     with database.connect() as connection:
         row = connection.execute(
-            "SELECT result_path FROM workflow_handoffs WHERE handoff_id=?",
+            "SELECT status, claim_token, result_path FROM workflow_handoffs WHERE handoff_id=?",
             (handoff_id,),
         ).fetchone()
     if row is None:
         raise HandoffWorkflowError("handoff 不存在")
+    if str(row["status"]) != HandoffStatus.RUNNING.value:
+        raise HandoffWorkflowError("只有 RUNNING handoff 可以提交结果")
+    if str(row["claim_token"] or "") != claim_token:
+        raise HandoffWorkflowError("claim_token 无效")
     if result_file.resolve() != Path(str(row["result_path"])).resolve():
         raise HandoffWorkflowError("result_path 必须等于 workflow start 返回的 result_target")
     try:
@@ -2693,21 +2710,11 @@ def validate_handoff_result(
         missing_fields = sorted(required_fields - set(result))
         if missing_fields:
             raise HandoffWorkflowError(f"result.json 缺少必填字段：{', '.join(missing_fields)}")
+        normalized_result = _normalize_handoff_result_envelope(row, result)
         try:
-            parsed = WorkflowHandoffResult.model_validate(result)
+            parsed = WorkflowHandoffResult.model_validate(normalized_result)
         except Exception as exc:
             raise HandoffWorkflowError(f"result.json 不符合 WorkflowHandoffResult：{exc}") from exc
-        if parsed.handoff_id != handoff_id:
-            raise HandoffWorkflowError("result handoff_id 不一致")
-        for field, expected_value in (
-            ("handoff_type", str(row["handoff_type"])),
-            ("book_id", str(row["book_id"])),
-            ("edition_id", str(row["edition_id"])),
-            ("base_event_seq", int(row["base_event_seq"])),
-            ("base_projection_hash", str(row["base_projection_hash"])),
-        ):
-            if getattr(parsed, field) != expected_value:
-                raise HandoffWorkflowError(f"result {field} 与冻结 handoff 不一致")
         if row["metric_bundle_hash"]:
             if parsed.metric_bundle_hash is not None and parsed.metric_bundle_hash != str(
                 row["metric_bundle_hash"]
@@ -2730,8 +2737,6 @@ def validate_handoff_result(
             artifact = _allowed_artifact_path(task_directory, task, raw_path)
             if not artifact.is_file():
                 raise HandoffWorkflowError(f"required artifact 不存在：{raw_path}")
-        if parsed.requested_stage.upper() != str(row["requested_stage"]).upper():
-            raise HandoffWorkflowError("result requested_stage 不一致")
         if str(row["handoff_type"]) == HandoffType.BATCH_CONTINUATION.value:
             if parsed.batch_id != str(row["batch_id"] or ""):
                 raise HandoffWorkflowError("result batch_id 与冻结 Batch 不一致")
@@ -2882,7 +2887,8 @@ def update_handoff_status(
     hydration_result: SourceStateHydrationResult | None = None
     profile_result: ProfileReanalysisResult | None = None
     drift_reason: str | None = None
-    invalid_result_reason: str | None = None
+    result_validation_error: str | None = None
+    business_failure_reason: str | None = None
     if status == HandoffStatus.COMPLETED:
         if result is None:
             raise HandoffWorkflowError("COMPLETED 必须同时提供 result.json 内容")
@@ -2894,8 +2900,8 @@ def update_handoff_status(
             if isinstance(validated_result, ProfileReanalysisResult):
                 profile_result = validated_result
         except HandoffWorkflowError as exc:
-            invalid_result_reason = str(exc)
-    if hydration_result is not None and invalid_result_reason is None:
+            result_validation_error = str(exc)
+    if hydration_result is not None and result_validation_error is None:
         from novel_authoring.author_control.source_state import (
             SourceChapterStateDelta,
             record_source_chapter_deltas,
@@ -2938,8 +2944,8 @@ def update_handoff_status(
 
                 complete_source_state_hydration_task(database, handoff_id, result=result)
             except (TypeError, ValueError, RuntimeError) as exc:
-                invalid_result_reason = f"SOURCE_STATE_IMPORT_FAILED: {exc}"
-    if profile_result is not None and invalid_result_reason is None:
+                business_failure_reason = f"SOURCE_STATE_IMPORT_FAILED: {exc}"
+    if profile_result is not None and result_validation_error is None:
         with database.connect() as connection:
             frozen = connection.execute(
                 "SELECT * FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)
@@ -2956,7 +2962,7 @@ def update_handoff_status(
                 result["profile_proposal_id"] = proposal["proposal_id"]
                 result["effective_profile_changed"] = False
             except (TypeError, ValueError, RuntimeError) as exc:
-                invalid_result_reason = f"PROFILE_REANALYSIS_IMPORT_FAILED: {exc}"
+                business_failure_reason = f"PROFILE_REANALYSIS_IMPORT_FAILED: {exc}"
     with database.connect() as connection:
         row = connection.execute(
             "SELECT * FROM workflow_handoffs WHERE handoff_id=?", (handoff_id,)
@@ -2964,17 +2970,46 @@ def update_handoff_status(
         if row is None or str(row["claim_token"] or "") != claim_token:
             raise HandoffWorkflowError("claim_token 无效")
         current = HandoffStatus(str(row["status"]))
-        if invalid_result_reason is not None:
+        if result_validation_error is not None:
+            if current is not HandoffStatus.RUNNING:
+                raise HandoffWorkflowError(result_validation_error)
+            now = utc_now()
+            connection.execute(
+                "UPDATE workflow_handoffs SET error_message=?, "
+                "result_validation_json=? WHERE handoff_id=?",
+                (
+                    result_validation_error,
+                    json_dumps({"valid": False, "error": result_validation_error}),
+                    handoff_id,
+                ),
+            )
+            _sync_hydration_coverage_status(
+                connection,
+                handoff_id,
+                HandoffStatus.RUNNING,
+                error_message=result_validation_error,
+            )
+            task_directory = Path(str(row["task_directory"]))
+            _write_json(
+                task_directory / "status.json",
+                {
+                    "handoff_id": handoff_id,
+                    "status": HandoffStatus.RUNNING.value,
+                    "updated_at": now,
+                    "result_validation_error": result_validation_error,
+                },
+            )
+        elif business_failure_reason is not None:
             if HandoffStatus.FAILED not in _ALLOWED_TRANSITIONS.get(current, set()):
-                raise HandoffWorkflowError(invalid_result_reason)
+                raise HandoffWorkflowError(business_failure_reason)
             now = utc_now()
             connection.execute(
                 "UPDATE workflow_handoffs SET status=?, error_message=?, "
                 "result_validation_json=? WHERE handoff_id=?",
                 (
                     HandoffStatus.FAILED.value,
-                    invalid_result_reason,
-                    json_dumps({"valid": False, "error": invalid_result_reason}),
+                    business_failure_reason,
+                    json_dumps({"valid": False, "error": business_failure_reason}),
                     handoff_id,
                 ),
             )
@@ -2982,7 +3017,7 @@ def update_handoff_status(
                 connection,
                 handoff_id,
                 HandoffStatus.FAILED,
-                error_message=invalid_result_reason,
+                error_message=business_failure_reason,
             )
             task_directory = Path(str(row["task_directory"]))
             _write_json(
@@ -2991,14 +3026,13 @@ def update_handoff_status(
                     "handoff_id": handoff_id,
                     "status": HandoffStatus.FAILED.value,
                     "updated_at": now,
-                    "reason": invalid_result_reason,
+                    "reason": business_failure_reason,
                 },
             )
             _write_json(
                 task_directory / "error.json",
-                {"error": invalid_result_reason, "created_at": now},
+                {"error": business_failure_reason, "created_at": now},
             )
-            invalid_result_reason = f"INVALID_RESULT: {invalid_result_reason}"
         elif status not in _ALLOWED_TRANSITIONS.get(current, set()):
             raise HandoffWorkflowError(f"非法 handoff 状态转换：{current.value} -> {status.value}")
         if status == HandoffStatus.COMPLETED and current == HandoffStatus.RUNNING:
@@ -3027,7 +3061,11 @@ def update_handoff_status(
                     },
                 )
                 drift_reason = reason
-        if invalid_result_reason is None and drift_reason is None:
+        if (
+            result_validation_error is None
+            and business_failure_reason is None
+            and drift_reason is None
+        ):
             now = utc_now()
             completed = now if status == HandoffStatus.COMPLETED else None
             current_status = str(row["status"])
@@ -3100,15 +3138,17 @@ def update_handoff_status(
                     task_directory / "error.json",
                     {"error": error_message, "created_at": now},
                 )
-    if invalid_result_reason is not None:
+    if result_validation_error is not None:
+        raise HandoffWorkflowError(f"RESULT_INVALID: {result_validation_error}")
+    if business_failure_reason is not None:
         append_event(
             database,
             handoff_id,
             HandoffStatus.FAILED.value,
-            {"error": invalid_result_reason},
+            {"error": business_failure_reason},
             claim_token=claim_token,
         )
-        raise HandoffWorkflowError(invalid_result_reason)
+        raise HandoffWorkflowError(business_failure_reason)
     if drift_reason is not None:
         append_event(
             database,
@@ -3291,7 +3331,9 @@ def get_handoff(database: Database, handoff_id: str) -> dict[str, Any]:
         return result
 
 
-def copy_instruction(database: Database, handoff_id: str) -> str:
+def copy_instruction(
+    database: Database, handoff_id: str, *, library_root: Path | None
+) -> str:
     row = get_handoff(database, handoff_id)
     task_directory = Path(str(row.get("task_directory") or ""))
     resolved = resolve_instruction_path(task_directory, row.get("prompt_path"))
@@ -3311,4 +3353,31 @@ def copy_instruction(database: Database, handoff_id: str) -> str:
                 "UPDATE workflow_handoffs SET prompt_path=? WHERE handoff_id=?",
                 (resolved_str, handoff_id),
             )
-    return resolved.read_text(encoding="utf-8")
+    if library_root is None:
+        raise HandoffWorkflowError(
+            "Web 未配置 library_root，无法生成可靠的 handoff 执行指令",
+            error_code="HANDOFF_LIBRARY_ROOT_MISSING",
+            status_code=409,
+        )
+    root = Path(library_root).expanduser().resolve()
+    book_id = str(row["book_id"])
+    result_path = Path(str(row["result_path"])).resolve()
+    start_command = (
+        "uv run --no-sync novel workflow start "
+        f'--library-root "{root}" --book-id "{book_id}" --handoff-id "{handoff_id}"'
+    )
+    complete_command = (
+        "uv run --no-sync novel workflow complete "
+        f'--library-root "{root}" --book-id "{book_id}" --handoff-id "{handoff_id}" '
+        f'--claim-token "<claim-token-from-start>" --result-path "{result_path}"'
+    )
+    prompt = resolved.read_text(encoding="utf-8").rstrip()
+    return (
+        f"{prompt}\n\n"
+        "以下是本次 Web 配置生成的 PowerShell 命令；必须原样使用其中的绝对 "
+        "library root，不得从当前目录或文件搜索推断。\n\n"
+        "```powershell\n"
+        f"{start_command}\n"
+        f"{complete_command}\n"
+        "```\n"
+    )

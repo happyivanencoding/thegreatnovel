@@ -466,6 +466,9 @@ def test_hydration_rejects_evidence_from_another_chapter(tmp_path: Path) -> None
         headers={"X-CSRF-Token": app.state.csrf_token},
     )
     assert rejected.status_code == 409
-    assert get_handoff(database, handoff_id)["status"] == HandoffStatus.FAILED.value
+    frozen = get_handoff(database, handoff_id)
+    assert frozen["status"] == HandoffStatus.RUNNING.value
+    assert frozen["claim_token"] == claim["claim_token"]
+    assert "FAILED" not in [event["event_type"] for event in frozen["events"]]
     with database.connect() as connection:
         assert connection.execute("SELECT COUNT(*) FROM source_state_deltas").fetchone()[0] == 0

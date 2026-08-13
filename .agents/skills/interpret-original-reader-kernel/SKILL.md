@@ -63,4 +63,6 @@ Prerequisite：`novel workflow start` 已成功返回 `status=RUNNING`，且 `ex
 
 ## 完成
 
-写 `result.json`：`requested_stage=READER_KERNEL_PROPOSAL`、`completed_stage=READER_KERNEL_PROPOSED`，`artifact_paths` 包含 `artifacts/reader_kernel/proposal.json`，并保持 `canon_committed=false`、`edition_activated=false`。随后运行 `novel workflow complete`。
+写业务 `result.json`：`completed_stage=READER_KERNEL_PROPOSED`，`artifact_paths` 包含 `artifacts/reader_kernel/proposal.json`；`validation_summary`、`warnings`、`next_action` 可按实际业务结果提供。随后使用复制指令给出的绝对 `library_root` 和 workflow start 返回的同一个 `claim_token` 运行 `novel workflow complete`。
+
+不要手写 `handoff_id`、`handoff_type`、`book_id`、`edition_id`、`requested_stage`、`status`、`base_event_seq`、`base_projection_hash`、`canon_committed` 或 `edition_activated`；这些 deterministic envelope 字段由 Python complete 注入并验证。

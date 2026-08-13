@@ -642,19 +642,9 @@ def test_batch_synthetic_handoff_reads_frozen_plan_and_context_once(
     result_path.write_text(
         json.dumps(
             {
-                "handoff_id": str(handoff["handoff_id"]),
-                "handoff_type": "BATCH_CONTINUATION",
-                "requested_stage": "BATCH_CONTINUATION",
                 "completed_stage": "BATCH_VALIDATED",
-                "book_id": book_id,
-                "edition_id": "base",
-                "status": "COMPLETED",
                 "batch_id": str(created["batch_id"]),
                 "chunk_ids": ["chunk-1"],
-                "canon_committed": False,
-                "edition_activated": False,
-                "base_event_seq": task["base_event_seq"],
-                "base_projection_hash": task["base_projection_hash"],
             }
         ),
         encoding="utf-8",
@@ -666,7 +656,9 @@ def test_batch_synthetic_handoff_reads_frozen_plan_and_context_once(
             str(started["claim_token"]),
             result_path,
         )
-    assert get_handoff(database, str(handoff["handoff_id"]))["status"] == "FAILED"
+    frozen = get_handoff(database, str(handoff["handoff_id"]))
+    assert frozen["status"] == "RUNNING"
+    assert "FAILED" not in [event["event_type"] for event in frozen["events"]]
 
 
 @pytest.mark.parametrize("boundary", ["start", "complete"])

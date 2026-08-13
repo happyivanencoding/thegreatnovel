@@ -245,7 +245,11 @@ BookId = str
 Workspace = Annotated[Path, typer.Option("--workspace", help="workspace 根目录")]
 ConfigPath = Annotated[Optional[Path], typer.Option("--config", help="可选 YAML 覆盖配置")]
 LibraryRoot = Annotated[
-    Optional[Path], typer.Option("--library-root", help="书库根目录；默认项目根目录/library")
+    Optional[Path],
+    typer.Option(
+        "--library-root",
+        help="书库根目录；跨进程执行应显式传入绝对路径（默认当前目录/library）",
+    ),
 ]
 EditionId = Annotated[
     Optional[str], typer.Option("--edition-id", help="edition ID；默认当前 ACTIVE，否则 base")

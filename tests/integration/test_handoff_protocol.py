@@ -116,21 +116,10 @@ def _continuation_handoff(tmp_path: Path) -> tuple[Database, dict[str, object]]:
     )
 
 
-def _plan_result(database: Database, handoff_id: str) -> dict[str, object]:
-    frozen = get_handoff(database, handoff_id)
+def _plan_result() -> dict[str, object]:
     return {
-        "handoff_id": handoff_id,
-        "handoff_type": "CONTINUATION",
-        "requested_stage": "PLAN_ONLY",
         "completed_stage": "PLANNED",
-        "book_id": str(frozen["book_id"]),
-        "edition_id": str(frozen["edition_id"]),
-        "status": "COMPLETED",
         "candidate_ids": ["candidate-fast-1", "candidate-fast-2", "candidate-fast-3"],
-        "canon_committed": False,
-        "edition_activated": False,
-        "base_event_seq": int(frozen["base_event_seq"]),
-        "base_projection_hash": str(frozen["base_projection_hash"]),
     }
 
 
@@ -167,6 +156,8 @@ def test_every_handoff_type_has_one_executor_and_protocol_has_no_business_router
     ).read_text(encoding="utf-8")
     assert "HandoffType" not in process_skill
     assert "executor_skill=process-novel-handoff" not in process_skill
+    assert "--library-root" in process_skill
+    assert "不得通过当前工作目录" in process_skill
 
 
 def test_workflow_start_is_one_claim_and_running_transition(tmp_path: Path) -> None:
@@ -188,6 +179,10 @@ def test_workflow_start_is_one_claim_and_running_transition(tmp_path: Path) -> N
     frozen = get_handoff(database, str(handoff["handoff_id"]))
     assert frozen["status"] == HandoffStatus.RUNNING.value
     assert [event["event_type"] for event in frozen["events"]][-2:] == ["CLAIMED", "RUNNING"]
+    output_schema = json.loads(
+        Path(str(frozen["output_schema_path"])).read_text(encoding="utf-8")
+    )
+    assert set(output_schema["required"]) == {"completed_stage", "candidate_ids"}
     with pytest.raises(HandoffWorkflowError):
         start_handoff(database, str(handoff["handoff_id"]), "fast-path-b")
 
@@ -231,26 +226,71 @@ def test_profile_reanalysis_stales_when_effective_edition_content_changes(
     assert get_handoff(database, str(handoff["handoff_id"]))["status"] == "STALE"
 
 
-def test_workflow_complete_rejects_invalid_and_detects_runtime_drift(tmp_path: Path) -> None:
+def test_workflow_complete_invalid_business_result_is_retryable(tmp_path: Path) -> None:
     database, handoff = _continuation_handoff(tmp_path)
     started = start_handoff(database, str(handoff["handoff_id"]))
     result_path = Path(str(started["result_target"]))
-    result_path.write_text(json.dumps({"invalid": True}), encoding="utf-8")
-    with pytest.raises(HandoffWorkflowError):
+    invalid_result = {
+        "candidate_ids": ["candidate-fast-1", "candidate-fast-2", "candidate-fast-3"]
+    }
+    result_path.write_text(json.dumps(invalid_result), encoding="utf-8")
+
+    with pytest.raises(HandoffWorkflowError, match="completed_stage"):
         complete_handoff(
             database, str(handoff["handoff_id"]), str(started["claim_token"]), result_path
         )
-    assert (
-        get_handoff(database, str(handoff["handoff_id"]))["status"]
-        == HandoffStatus.FAILED.value
-    )
 
+    frozen = get_handoff(database, str(handoff["handoff_id"]))
+    assert frozen["status"] == HandoffStatus.RUNNING.value
+    assert frozen["claim_token"] == started["claim_token"]
+    assert "FAILED" not in [event["event_type"] for event in frozen["events"]]
+    assert json.loads(result_path.read_text(encoding="utf-8")) == invalid_result
+    status = json.loads(
+        (Path(str(handoff["task_directory"])) / "status.json").read_text(encoding="utf-8")
+    )
+    assert status["status"] == HandoffStatus.RUNNING.value
+    assert "completed_stage" in status["result_validation_error"]
+
+    result_path.write_text(json.dumps(_plan_result()), encoding="utf-8")
+    completed = complete_handoff(
+        database, str(handoff["handoff_id"]), str(started["claim_token"]), result_path
+    )
+    assert completed["status"] == HandoffStatus.COMPLETED.value
+
+
+@pytest.mark.parametrize(
+    ("field", "wrong_value"),
+    [("book_id", "wrong-book"), ("base_projection_hash", "wrong-projection")],
+)
+def test_workflow_complete_deterministic_conflict_is_retryable(
+    tmp_path: Path, field: str, wrong_value: str
+) -> None:
+    database, handoff = _continuation_handoff(tmp_path)
+    started = start_handoff(database, str(handoff["handoff_id"]))
+    result_path = Path(str(started["result_target"]))
+    result = _plan_result()
+    result[field] = wrong_value
+    result_path.write_text(json.dumps(result), encoding="utf-8")
+
+    with pytest.raises(HandoffWorkflowError, match=field):
+        complete_handoff(
+            database, str(handoff["handoff_id"]), str(started["claim_token"]), result_path
+        )
+    assert get_handoff(database, str(handoff["handoff_id"]))["status"] == "RUNNING"
+
+    result.pop(field)
+    result_path.write_text(json.dumps(result), encoding="utf-8")
+    completed = complete_handoff(
+        database, str(handoff["handoff_id"]), str(started["claim_token"]), result_path
+    )
+    assert completed["status"] == HandoffStatus.COMPLETED.value
+
+
+def test_workflow_complete_runtime_drift_still_becomes_stale(tmp_path: Path) -> None:
     database, handoff = _continuation_handoff(tmp_path / "runtime-drift")
     started = start_handoff(database, str(handoff["handoff_id"]))
     result_path = Path(str(started["result_target"]))
-    result_path.write_text(
-        json.dumps(_plan_result(database, str(handoff["handoff_id"]))), encoding="utf-8"
-    )
+    result_path.write_text(json.dumps(_plan_result()), encoding="utf-8")
     with database.connect() as connection:
         connection.execute(
             "UPDATE editions SET status='ARCHIVED' WHERE book_id=? AND edition_id='base'",
@@ -270,9 +310,7 @@ def test_workflow_complete_valid_result_is_authority(tmp_path: Path) -> None:
     database, handoff = _continuation_handoff(tmp_path)
     started = start_handoff(database, str(handoff["handoff_id"]))
     result_path = Path(str(started["result_target"]))
-    result_path.write_text(
-        json.dumps(_plan_result(database, str(handoff["handoff_id"]))), encoding="utf-8"
-    )
+    result_path.write_text(json.dumps(_plan_result()), encoding="utf-8")
 
     completed = complete_handoff(
         database, str(handoff["handoff_id"]), str(started["claim_token"]), result_path
@@ -282,15 +320,25 @@ def test_workflow_complete_valid_result_is_authority(tmp_path: Path) -> None:
         get_handoff(database, str(handoff["handoff_id"]))["status"]
         == HandoffStatus.COMPLETED.value
     )
+    frozen = get_handoff(database, str(handoff["handoff_id"]))
+    persisted = load_completed_handoff_result(database, str(handoff["handoff_id"]))
+    assert persisted["handoff_id"] == handoff["handoff_id"]
+    assert persisted["handoff_type"] == HandoffType.CONTINUATION.value
+    assert persisted["book_id"] == frozen["book_id"]
+    assert persisted["edition_id"] == frozen["edition_id"]
+    assert persisted["requested_stage"] == frozen["requested_stage"]
+    assert persisted["status"] == HandoffStatus.COMPLETED.value
+    assert persisted["base_event_seq"] == frozen["base_event_seq"]
+    assert persisted["base_projection_hash"] == frozen["base_projection_hash"]
+    assert persisted["canon_committed"] is False
+    assert persisted["edition_activated"] is False
 
 
 def test_completed_result_loader_uses_persisted_validated_envelope(tmp_path: Path) -> None:
     database, handoff = _continuation_handoff(tmp_path)
     started = start_handoff(database, str(handoff["handoff_id"]))
     result_path = Path(str(started["result_target"]))
-    result_path.write_text(
-        json.dumps(_plan_result(database, str(handoff["handoff_id"]))), encoding="utf-8"
-    )
+    result_path.write_text(json.dumps(_plan_result()), encoding="utf-8")
     complete_handoff(
         database, str(handoff["handoff_id"]), str(started["claim_token"]), result_path
     )

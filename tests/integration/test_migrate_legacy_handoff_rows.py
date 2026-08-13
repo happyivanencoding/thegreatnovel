@@ -130,7 +130,9 @@ def test_migrate_legacy_real_handoff_rows(tmp_path: Path) -> None:
     assert Path(real_row["result_path"]) == operation / "output" / "result.json"
     assert Path(real_row["result_path"]).is_file()
     expected_prompt = (operation / "input" / "prompt.md").read_text(encoding="utf-8")
-    assert copy_instruction(migrated, real_id) == expected_prompt
+    instruction = copy_instruction(migrated, real_id, library_root=library)
+    assert instruction.startswith(expected_prompt.rstrip())
+    assert f'--library-root "{library.resolve()}"' in instruction
 
     # W3：非重定位行只经过前缀改写，保持平铺文件名，不被误改成 input//output/。
     stray_row = _handoff_row(migrated, stray_id)

@@ -43,24 +43,11 @@ def _task_path(task_directory: Path) -> Path:
     return task_directory / "input" / "task.json"
 
 
-def _result(task: dict[str, object], handoff_id: str) -> dict[str, object]:
+def _result(task: dict[str, object]) -> dict[str, object]:
     distill = task["distill"]
     assert isinstance(distill, dict)
     return {
-        "handoff_id": handoff_id,
-        "handoff_type": "NOVEL_DISTILLATION",
-        "requested_stage": "DISTILL",
         "completed_stage": "DISTILLED",
-        "book_id": task["book_id"],
-        "edition_id": task["edition_id"],
-        "status": "DISTILLED",
-        "task_ids": [],
-        "candidate_ids": [],
-        "selected_candidate_id": None,
-        "contract_id": None,
-        "draft_id": None,
-        "campaign_id": None,
-        "revision_unit_ids": [],
         "artifact_paths": [
             "artifacts/distill_skill/SKILL.md",
             "artifacts/distill_skill/distillation-report.md",
@@ -68,13 +55,6 @@ def _result(task: dict[str, object], handoff_id: str) -> dict[str, object]:
         "validation_summary": {"provenance": "PASS", "leakage": "PASS"},
         "warnings": [],
         "next_action": "novel distill import",
-        "canon_committed": False,
-        "edition_activated": False,
-        "base_event_seq": task["base_event_seq"],
-        "base_projection_hash": task["base_projection_hash"],
-        "metric_run_ids": [],
-        "metric_bundle_hash": None,
-        "completed_at": "2026-01-01T00:00:00+00:00",
         "distill_id": distill["distill_id"],
         "distill_source_ids": distill["source_ids"],
         "distill_dimensions": distill["dimensions"],
@@ -138,7 +118,7 @@ def _publish_distill(
         handoff_id,
         HandoffStatus.COMPLETED,
         claim_token=str(claim["claim_token"]),
-        result=_result(task, handoff_id),
+        result=_result(task),
     )
     return import_distill_result(database, book_id, handoff_id)
 
