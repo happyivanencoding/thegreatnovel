@@ -17,6 +17,7 @@ from novel_authoring.original.models import (
     CoreInnovationCandidate,
     CoreInnovationProposal,
     FoundationDevelopmentProposal,
+    OriginalReaderKernelProposal,
     StoryFoundationProposal,
 )
 from novel_authoring.original.service import (
@@ -29,6 +30,7 @@ from novel_authoring.original.service import (
     import_original_bootstrap_proposal,
     import_original_core_innovation_proposal,
     import_original_foundation_development,
+    import_original_reader_kernel_proposal,
     original_overview,
     prepare_original_bootstrap,
     resolve_original_proposal_version,
@@ -38,6 +40,20 @@ from novel_authoring.original.service import (
     validate_original_draft,
 )
 from novel_authoring.planning.models import ChapterContract
+from novel_authoring.progression.context import build_kernel_planning_context
+from novel_authoring.progression.interpretation import (
+    compile_kernel_contract_proposals,
+    interpret_reader_experience,
+)
+from novel_authoring.progression.models import (
+    ContractStatus,
+    ReaderExperience,
+)
+from novel_authoring.progression.service import (
+    ProgressionContractType,
+    list_contract_records,
+)
+from novel_authoring.serial_kernel.models import NarrativeDrive
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.registry import BookKind, BookRegistry, CreationMode
 from novel_authoring.utils import json_dumps
@@ -83,7 +99,22 @@ def innovation_payload() -> dict[str, Any]:
     }
 
 
-def proposal_payload() -> dict[str, Any]:
+def proposal_payload(*, progression_enabled: bool = True) -> dict[str, Any]:
+    bundle = compile_kernel_contract_proposals(
+        interpret_reader_experience(
+            "仅用于结构化合同测试的开放 premise。",
+            genre_hint="肉身进化",
+            contract_prefix=BOOK_ID,
+        )
+    )
+    assert bundle.progression is not None
+    progression = (
+        bundle.progression.model_copy(
+            update={"progression_contract_id": f"{BOOK_ID}-progression"}
+        ).model_dump(mode="json")
+        if progression_enabled
+        else None
+    )
     return {
         "schema_version": "foundation-development-v1",
         "information_status": "PROPOSAL",
@@ -229,6 +260,19 @@ def proposal_payload() -> dict[str, Any]:
         ],
         "risks": ["设定解谜压过人物能动性"],
         "avoid_cliches": ["万能幕后组织"],
+        "kernel_contract_proposals": {
+            "genre": bundle.genre.model_copy(
+                update={
+                    "genre_contract_id": f"{BOOK_ID}-genre",
+                    "reader_experience_contract_id": f"{BOOK_ID}-reader-experience",
+                }
+            ).model_dump(mode="json"),
+            "progression": progression,
+            "world_expansion": bundle.world_expansion.model_copy(
+                update={"ladder_id": f"{BOOK_ID}-world-expansion"}
+            ).model_dump(mode="json"),
+            "payoff_channel": bundle.payoff_channels.model_dump(mode="json"),
+        },
     }
 
 
@@ -258,7 +302,97 @@ def foundation_payload() -> dict[str, Any]:
     }
 
 
-def create_original(tmp_path: Path) -> tuple[BookLayout, Database]:
+def complete_reader_kernel_handoff(
+    database: Database,
+    book_id: str = BOOK_ID,
+    *,
+    progression_enabled: bool = True,
+    import_result: bool = True,
+) -> str:
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT handoff_id FROM workflow_handoffs WHERE handoff_type=? "
+            "ORDER BY created_at DESC LIMIT 1",
+            ("ORIGINAL_READER_INTERPRETATION",),
+        ).fetchone()
+    assert row is not None
+    handoff_id = str(row["handoff_id"])
+    handoff = get_handoff(database, handoff_id)
+    task_directory = Path(str(handoff["task_directory"]))
+    task = json.loads((task_directory / "input" / "task.json").read_text(encoding="utf-8"))
+    ids = task["original_reader_interpretation"]["contract_ids"]
+    interpreted = interpret_reader_experience(
+        "仅用于测试的开放 premise。", genre_hint="生存升级 / 资源管理"
+    )
+    reader = interpreted.reader_contract.model_copy(
+        update={
+            "contract_id": ids["reader_experience_contract_id"],
+            "primary_narrative_drive": "SURVIVAL_RESOURCE",
+            "secondary_narrative_drives": ["RESOURCE_OPPORTUNITY"],
+            "drive_priority_order": ["SURVIVAL_RESOURCE", "RESOURCE_OPPORTUNITY"],
+        }
+    )
+    market = interpreted.narrative_drive.market_category.model_copy(
+        update={"metadata_id": ids["market_category_metadata_id"]}
+    )
+    drive = interpreted.narrative_drive.drive_contract.model_copy(
+        update={
+            "drive_contract_id": ids["narrative_drive_contract_id"],
+            "primary_drive": NarrativeDrive.SURVIVAL_RESOURCE,
+            "secondary_drives": [NarrativeDrive.RESOURCE_OPPORTUNITY],
+            "progression_engine_enabled": progression_enabled,
+        }
+    )
+    proposal = OriginalReaderKernelProposal(
+        summary="封闭环境中的资源选择持续制造生存压力与成长机会。",
+        reader_experience=reader,
+        market_category=market,
+        narrative_drive=drive,
+        semantic_evidence=[
+            "生存压力来自不可逆选择",
+            "资源机会来自每日受限行动",
+            "成长引擎扩大后续行动可能性",
+        ],
+        uncertainties=["长期幕后来源仍待 Core Innovation 设计"],
+        author_attention_points=["确认生存是否为主要驱动力"],
+    )
+    artifact = task_directory / "artifacts" / "reader_kernel" / "proposal.json"
+    artifact.parent.mkdir(parents=True, exist_ok=True)
+    artifact.write_text(
+        json_dumps(proposal.model_dump(mode="json"), indent=2), encoding="utf-8"
+    )
+    claim = claim_handoff(database, handoff_id, "test-worker")
+    token = str(claim["claim_token"])
+    update_handoff_status(database, handoff_id, HandoffStatus.RUNNING, claim_token=token)
+    frozen = get_handoff(database, handoff_id)
+    update_handoff_status(
+        database,
+        handoff_id,
+        HandoffStatus.COMPLETED,
+        claim_token=token,
+        result={
+            "handoff_id": handoff_id,
+            "handoff_type": "ORIGINAL_READER_INTERPRETATION",
+            "requested_stage": "READER_KERNEL_PROPOSAL",
+            "completed_stage": "READER_KERNEL_PROPOSED",
+            "book_id": book_id,
+            "edition_id": "base",
+            "status": "COMPLETED",
+            "artifact_paths": ["artifacts/reader_kernel/proposal.json"],
+            "canon_committed": False,
+            "edition_activated": False,
+            "base_event_seq": int(frozen["base_event_seq"]),
+            "base_projection_hash": str(frozen["base_projection_hash"]),
+        },
+    )
+    if import_result:
+        import_original_reader_kernel_proposal(database, book_id, handoff_id)
+    return handoff_id
+
+
+def create_original(
+    tmp_path: Path, *, semantic_ready: bool = True
+) -> tuple[BookLayout, Database]:
     layout = BookLayout(tmp_path / "library")
     created = create_original_book(
         layout,
@@ -271,7 +405,10 @@ def create_original(tmp_path: Path) -> tuple[BookLayout, Database]:
         },
         book_id=BOOK_ID,
     )
-    return layout, Database(Path(str(created["database"])))
+    database = Database(Path(str(created["database"])))
+    if semantic_ready:
+        complete_reader_kernel_handoff(database)
+    return layout, database
 
 
 def complete_core_innovation_handoff(database: Database) -> str:
@@ -438,7 +575,9 @@ def complete_bootstrap_handoff(database: Database) -> str:
     return complete_foundation_handoff(database)
 
 
-def complete_development_handoff(database: Database) -> str:
+def complete_development_handoff(
+    database: Database, *, progression_enabled: bool = True
+) -> str:
     selected = select_original_foundation(database, BOOK_ID, "foundation-1")
     development_handoff_id = str(selected["handoff"]["handoff_id"])
     frozen_handoff = get_handoff(database, development_handoff_id)
@@ -449,7 +588,7 @@ def complete_development_handoff(database: Database) -> str:
             / "original_request.json"
         ).read_text(encoding="utf-8")
     )
-    development_data = proposal_payload()
+    development_data = proposal_payload(progression_enabled=progression_enabled)
     development_data["kernel_contracts"] = original_request["progression_kernel"]
     development = FoundationDevelopmentProposal.model_validate(development_data)
     artifact = (
@@ -492,11 +631,13 @@ def complete_development_handoff(database: Database) -> str:
     return development_handoff_id
 
 
-def accept_foundation(database: Database) -> dict[str, Any]:
+def accept_foundation(
+    database: Database, *, progression_enabled: bool = True
+) -> dict[str, Any]:
     handoff_id = complete_bootstrap_handoff(database)
     import_original_bootstrap_proposal(database, BOOK_ID, handoff_id)
-    complete_development_handoff(database)
-    proposal = proposal_payload()
+    complete_development_handoff(database, progression_enabled=progression_enabled)
+    proposal = proposal_payload(progression_enabled=progression_enabled)
     return confirm_original_foundation(
         database,
         BOOK_ID,
@@ -512,7 +653,7 @@ def accept_foundation(database: Database) -> dict[str, Any]:
 
 
 def test_original_book_requires_no_source_and_has_one_author_card(tmp_path: Path) -> None:
-    layout, database = create_original(tmp_path)
+    layout, database = create_original(tmp_path, semantic_ready=False)
     record = BookRegistry(layout).record(BOOK_ID)
     with database.connect() as connection:
         counts = connection.execute(
@@ -527,11 +668,123 @@ def test_original_book_requires_no_source_and_has_one_author_card(tmp_path: Path
     assert record.book_kind is BookKind.AUTHOR
     assert record.creation_mode is CreationMode.ORIGINAL
     assert tuple(counts) == (0, 0, 1)
-    assert handoff_count == 0
-    assert record.original_state == "READER_EXPERIENCE_REVIEW"
+    assert handoff_count == 1
+    assert record.original_state == "READER_EXPERIENCE_GENERATING"
+    handoff = get_handoff(
+        database,
+        str(
+            next(
+                item
+                for item in original_overview(database, BOOK_ID)["handoffs"]
+                if item["handoff_type"] == "ORIGINAL_READER_INTERPRETATION"
+            )["handoff_id"]
+        ),
+    )
+    task = json.loads(
+        (Path(str(handoff["task_directory"])) / "input" / "task.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert task["executor_skill"] == "interpret-original-reader-kernel"
+    assert task["business_input_files"] == ["original_request.json"]
     assert len(catalog.entries) == 1
     assert catalog.entries[0].href == f"/books/{BOOK_ID}/original"
+    assert catalog.entries[0].state == "READER_EXPERIENCE_GENERATING"
+    assert catalog.entries[0].handoff_id == handoff["handoff_id"]
     assert studio_access(layout, record).access_level.value == "ONBOARDING"
+
+
+def test_completed_reader_semantic_handoff_imports_review_only_contracts(
+    tmp_path: Path,
+) -> None:
+    _, database = create_original(tmp_path, semantic_ready=False)
+    complete_reader_kernel_handoff(database, import_result=False)
+
+    overview = original_overview(database, BOOK_ID)
+    records = list_contract_records(database, book_id=BOOK_ID, edition_id="base")
+    reader_contracts = {
+        record.contract_type: record
+        for record in records
+        if record.contract_type
+        in {
+            ProgressionContractType.READER_EXPERIENCE,
+            ProgressionContractType.MARKET_CATEGORY,
+            ProgressionContractType.NARRATIVE_DRIVE,
+        }
+    }
+    with database.connect() as connection:
+        chapter_count, canon_count = tuple(
+            connection.execute(
+                "SELECT (SELECT COUNT(*) FROM chapters), "
+                "(SELECT COUNT(*) FROM canon_commits)"
+            ).fetchone()
+        )
+
+    assert overview["original_state"] == "READER_EXPERIENCE_REVIEW"
+    assert set(overview["reader_experience"]["reader_experience"]["experience_priorities"]) == {
+        item.value for item in ReaderExperience
+    }
+    assert set(reader_contracts) == {
+        ProgressionContractType.READER_EXPERIENCE,
+        ProgressionContractType.MARKET_CATEGORY,
+        ProgressionContractType.NARRATIVE_DRIVE,
+    }
+    assert {record.status for record in reader_contracts.values()} == {
+        ContractStatus.NEEDS_REVIEW
+    }
+    assert (chapter_count, canon_count) == (0, 0)
+
+
+def test_unseen_premise_is_frozen_for_semantic_read_without_python_fallback(
+    tmp_path: Path,
+) -> None:
+    premise = "主角每说出一个从未有人说过的真句子，世界就失去一种旧的可能性。"
+    layout = BookLayout(tmp_path / "library")
+    created = create_original_book(layout, {"premise": premise}, book_id=BOOK_ID)
+    database = Database(Path(str(created["database"])))
+    handoff = get_handoff(database, str(created["reader_handoff"]["handoff_id"]))
+    task_directory = Path(str(handoff["task_directory"]))
+    task = json.loads(
+        (task_directory / "input" / "task.json").read_text(encoding="utf-8")
+    )
+    request = json.loads(
+        (task_directory / "input" / "original_request.json").read_text(encoding="utf-8")
+    )
+    with database.connect() as connection:
+        contract_count = connection.execute(
+            "SELECT COUNT(*) FROM progression_contract_versions"
+        ).fetchone()[0]
+
+    assert request["premise"] == premise
+    assert request["genre"] == ""
+    assert task["executor_skill"] == "interpret-original-reader-kernel"
+    assert task["business_input_files"] == ["original_request.json"]
+    assert task["original_reader_interpretation"]["proposal_schema"]["title"] == (
+        "OriginalReaderKernelProposal"
+    )
+    assert contract_count == 0
+
+
+def test_reader_priority_edits_do_not_reinfer_primary_drive(tmp_path: Path) -> None:
+    _, database = create_original(tmp_path)
+
+    confirmed = confirm_original_reader_experience(
+        database,
+        BOOK_ID,
+        priority_overrides={
+            "PROGRESSION": "CORE",
+            "BREAKTHROUGH": "CORE",
+            "ARTIFACT_OR_ABILITY": "CORE",
+        },
+    )
+
+    assert confirmed["reader_experience"]["payload"]["primary_narrative_drive"] == (
+        "SURVIVAL_RESOURCE"
+    )
+    assert confirmed["narrative_drive"]["payload"]["primary_drive"] == (
+        "SURVIVAL_RESOURCE"
+    )
+    assert confirmed["narrative_drive"]["payload"]["progression_engine_enabled"] is True
 
 
 def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path: Path) -> None:
@@ -662,7 +915,7 @@ def test_original_foundation_stales_when_selected_author_intent_changes(
 def test_foundation_can_be_explicitly_reselected_before_final_confirmation(
     tmp_path: Path,
 ) -> None:
-    _, database = create_original(tmp_path)
+    layout, database = create_original(tmp_path)
     handoff_id = complete_bootstrap_handoff(database)
     import_original_bootstrap_proposal(database, BOOK_ID, handoff_id)
 
@@ -688,6 +941,101 @@ def test_foundation_can_be_explicitly_reselected_before_final_confirmation(
     assert state["selected_foundation_id"] == "foundation-2"
     assert state["accepted_apply_id"] is None
     assert archived == 1
+    assert canon_count == 0
+    app = create_app(
+        database,
+        library_root=layout.library_root,
+        discovery_root=tmp_path / "book",
+    )
+    with TestClient(app) as client:
+        page = client.get(f"/books/{BOOK_ID}/original")
+    assert "重新选择核心创意" in page.text
+    assert "换一个故事基础" in page.text
+    assert "不会删除历史，也不会修改 Canon" in Path(
+        "src/novel_authoring/web/static/original.js"
+    ).read_text(encoding="utf-8")
+
+
+def test_same_core_and_foundation_selection_reuse_existing_downstream(
+    tmp_path: Path,
+) -> None:
+    _, database = create_original(tmp_path)
+    handoff_id = complete_bootstrap_handoff(database)
+    import_original_bootstrap_proposal(database, BOOK_ID, handoff_id)
+    first = select_original_foundation(database, BOOK_ID, "foundation-1")
+    development_handoff_id = str(first["handoff"]["handoff_id"])
+
+    repeated_foundation = select_original_foundation(database, BOOK_ID, "foundation-1")
+    repeated_core = select_original_core_innovation(
+        database,
+        BOOK_ID,
+        {
+            "selected_primary_innovation_id": "innovation-1",
+            "optional_mix_notes": "吸收机制 2 的一个选择特征",
+        },
+    )
+    with database.connect() as connection:
+        foundation_tasks = connection.execute(
+            "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? "
+            "AND requested_stage='STORY_FOUNDATION_PROPOSAL'",
+            (BOOK_ID,),
+        ).fetchone()[0]
+        development_tasks = connection.execute(
+            "SELECT COUNT(*) FROM workflow_handoffs WHERE book_id=? "
+            "AND requested_stage='FOUNDATION_DEVELOPMENT_PROPOSAL'",
+            (BOOK_ID,),
+        ).fetchone()[0]
+
+    assert repeated_foundation["idempotent"] is True
+    assert repeated_foundation["handoff"]["handoff_id"] == development_handoff_id
+    assert repeated_core["idempotent"] is True
+    assert "foundation_proposal" in repeated_core
+    assert foundation_tasks == 1
+    assert development_tasks == 1
+    assert get_handoff(database, development_handoff_id)["status"] == "READY_FOR_CODEX"
+
+
+def test_replacing_foundation_proposal_invalidates_only_downstream_selection(
+    tmp_path: Path,
+) -> None:
+    _, database = create_original(tmp_path)
+    current_handoff_id = complete_bootstrap_handoff(database)
+    current = import_original_bootstrap_proposal(database, BOOK_ID, current_handoff_id)
+    selected = select_original_foundation(database, BOOK_ID, "foundation-1")
+    development_handoff_id = str(selected["handoff"]["handoff_id"])
+
+    unchanged = resolve_original_proposal_version(
+        database,
+        BOOK_ID,
+        str(current["proposal_version_id"]),
+        action="REPLACE_CURRENT",
+    )
+    assert unchanged["current_changed"] is False
+    assert get_handoff(database, development_handoff_id)["status"] == "READY_FOR_CODEX"
+
+    replacement_handoff_id = complete_foundation_handoff(database)
+    replacement = import_original_bootstrap_proposal(
+        database, BOOK_ID, replacement_handoff_id
+    )
+    changed = resolve_original_proposal_version(
+        database,
+        BOOK_ID,
+        str(replacement["proposal_version_id"]),
+        action="REPLACE_CURRENT",
+    )
+    with database.connect() as connection:
+        state = connection.execute(
+            "SELECT state, selected_primary_innovation_id, "
+            "selected_foundation_proposal_version_id, selected_foundation_id, "
+            "current_development_proposal_version_id FROM original_states "
+            "WHERE book_id=? AND edition_id='base'",
+            (BOOK_ID,),
+        ).fetchone()
+        canon_count = connection.execute("SELECT COUNT(*) FROM canon_commits").fetchone()[0]
+
+    assert changed["downstream_invalidated"] is True
+    assert tuple(state) == ("FOUNDATION_REVIEW", "innovation-1", None, None, None)
+    assert get_handoff(database, development_handoff_id)["status"] == "STALE"
     assert canon_count == 0
 
 
@@ -868,7 +1216,28 @@ def test_foundation_stays_proposal_until_author_confirms_impact(tmp_path: Path) 
                 "first_phase_objective": proposal_payload()["first_phase_objective"],
             },
         )
-    complete_development_handoff(database)
+    development_handoff_id = complete_development_handoff(database)
+    proposed_kernel = [
+        record
+        for record in list_contract_records(database, book_id=BOOK_ID, edition_id="base")
+        if record.source == f"ORIGINAL_FOUNDATION_DEVELOPMENT:{development_handoff_id}"
+    ]
+    assert {record.contract_type for record in proposed_kernel} == {
+        ProgressionContractType.GENRE,
+        ProgressionContractType.PROGRESSION,
+        ProgressionContractType.WORLD_EXPANSION,
+        ProgressionContractType.PAYOFF_CHANNEL,
+    }
+    assert {record.status for record in proposed_kernel} == {ContractStatus.NEEDS_REVIEW}
+    app = create_app(
+        database,
+        library_root=layout.library_root,
+        discovery_root=tmp_path / "book",
+    )
+    with TestClient(app) as client:
+        development_page = client.get(f"/books/{BOOK_ID}/original")
+    assert 'data-selected-foundation-title="基础框架 1"' in development_page.text
+    assert "第一次实质性局势升级" in development_page.text
     result = confirm_original_foundation(
         database,
         BOOK_ID,
@@ -924,6 +1293,13 @@ def test_foundation_stays_proposal_until_author_confirms_impact(tmp_path: Path) 
     )
     assert "情绪失物招领处" in accepted
     assert "先找回被删除的悲伤" in accepted
+    effective_kernel = {
+        record.contract_type: record
+        for record in list_contract_records(database, book_id=BOOK_ID, edition_id="base")
+        if record.status is ContractStatus.EFFECTIVE
+    }
+    assert set(effective_kernel) == set(ProgressionContractType)
+    assert {record.effective_from_boundary for record in effective_kernel.values()} == {1}
     retry = confirm_original_foundation(
         database,
         BOOK_ID,
@@ -1017,6 +1393,25 @@ def test_completed_bootstrap_reconciles_on_status_check_without_new_handoff(
         ).fetchone()[0]
     assert after_handoffs == before_handoffs
     assert after_version == "CURRENT"
+
+
+def test_progression_disabled_does_not_create_progression_contract(tmp_path: Path) -> None:
+    _, database = create_original(tmp_path, semantic_ready=False)
+    complete_reader_kernel_handoff(database, progression_enabled=False)
+
+    result = accept_foundation(database, progression_enabled=False)
+    records = list_contract_records(database, book_id=BOOK_ID, edition_id="base")
+
+    assert result["original_state"] == "FOUNDATION_READY"
+    assert all(
+        record.contract_type is not ProgressionContractType.PROGRESSION
+        for record in records
+    )
+    assert {
+        record.contract_type
+        for record in records
+        if record.status is ContractStatus.EFFECTIVE
+    } == set(ProgressionContractType) - {ProgressionContractType.PROGRESSION}
 
 
 def test_web_read_reconciles_completed_bootstrap_without_manual_import(tmp_path: Path) -> None:
@@ -1118,14 +1513,13 @@ def test_regenerated_proposal_is_versioned_and_does_not_replace_accepted_foundat
     comparison = compare_original_proposals(database, BOOK_ID, str(imported["proposal_version_id"]))
     assert comparison["current_version_id"] != comparison["target_version_id"]
 
-    replaced = resolve_original_proposal_version(
-        database,
-        BOOK_ID,
-        str(imported["proposal_version_id"]),
-        action="REPLACE_CURRENT",
-    )
-    assert replaced["current_changed"] is True
-    assert replaced["accepted_foundation_changed"] is False
+    with pytest.raises(OriginalWorkflowError, match="最终确认"):
+        resolve_original_proposal_version(
+            database,
+            BOOK_ID,
+            str(imported["proposal_version_id"]),
+            action="REPLACE_CURRENT",
+        )
     with database.connect() as connection:
         state = connection.execute(
             "SELECT state, accepted_apply_id FROM original_states WHERE book_id=?",
@@ -1225,6 +1619,23 @@ def test_first_chapter_uses_contract_validation_and_explicit_approval(tmp_path: 
     with pytest.raises(RuntimeError, match="必须逐字"):
         approve_original_first_chapter(database, BOOK_ID, draft_id, "同意")
     approved = approve_original_first_chapter(database, BOOK_ID, draft_id, "批准写入正史")
+    kernel_context = build_kernel_planning_context(
+        database,
+        book_id=BOOK_ID,
+        edition_id="base",
+        author_policy={},
+    )
+    assert kernel_context is not None
+    effective = kernel_context.effective_contracts
+    assert effective.reader_experience is not None
+    assert effective.market_category is not None
+    assert effective.narrative_drive is not None
+    assert effective.genre is not None
+    assert effective.progression is not None
+    assert effective.world_expansion is not None
+    assert effective.payoff_channel is not None
+    assert effective.narrative_drive["primary_drive"] == "SURVIVAL_RESOURCE"
+    assert effective.narrative_drive["progression_engine_enabled"] is True
     next_handoff = create_continuation_handoff(
         database,
         BOOK_ID,
@@ -1267,10 +1678,17 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
         created_payload = created.json()
         book_id = str(created_payload["book_id"])
         reader_step = client.get(created.json()["original_url"])
+        book_database = Database(BookLayout(library_root).for_book(book_id).database)
+        complete_reader_kernel_handoff(book_database, book_id)
         confirmed = client.post(
             f"/api/books/{book_id}/original/reader-experience/confirm",
             headers={"X-CSRF-Token": token},
-            json={"adjustment": "CONFIRM"},
+            json={
+                "adjustment": "CONFIRM",
+                "primary_drive": "SURVIVAL_RESOURCE",
+                "secondary_drives": ["RESOURCE_OPPORTUNITY"],
+                "progression_engine_enabled": True,
+            },
         )
         original = client.get(created.json()["original_url"])
         handoff_id = str(confirmed.json()["handoff"]["handoff_id"])
@@ -1285,7 +1703,8 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
     assert "一句话创意" in form.text
     assert created.status_code == 200
     assert created.json()["source_required"] is False
-    assert "阅读体验与主要驱动力" in reader_step.text
+    assert "Semantic First Read" in reader_step.text
+    assert "故事靠什么长期推进" in reader_step.text
     assert "长期推进" in reader_step.text
     assert "AI 任务" in original.text
     assert instruction.status_code == 200
@@ -1326,6 +1745,9 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
                     "POWER_VERIFICATION": "STRONG",
                     "MYSTERY": "STRONG",
                 },
+                "primary_drive": "RESOURCE_OPPORTUNITY",
+                "secondary_drives": ["MYSTERY_INVESTIGATION"],
+                "progression_engine_enabled": True,
             },
         )
         assert confirmed.status_code == 200, confirmed.text
@@ -1335,11 +1757,7 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
         assert priorities["PROGRESSION"] == "LOW"
         assert priorities["POWER_VERIFICATION"] == "HIGH"
         assert reader["primary_narrative_drive"] == "RESOURCE_OPPORTUNITY"
-        drive = next(
-            item["payload"]
-            for item in confirmed.json()["created_contract_proposals"]
-            if item["contract_type"] == "NARRATIVE_DRIVE"
-        )
+        drive = confirmed.json()["narrative_drive"]["payload"]
         assert drive["primary_drive"] == "RESOURCE_OPPORTUNITY"
         assert "MYSTERY_INVESTIGATION" in drive["secondary_drives"]
 

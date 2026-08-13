@@ -1,8 +1,10 @@
 from novel_authoring.original.models import (
     FirstChapterCandidate,
     FoundationDevelopmentProposal,
+    FoundationKernelContractProposals,
     OriginalBookRequest,
     OriginalFoundationConfirmation,
+    OriginalReaderKernelProposal,
     OriginalState,
     RollingPlanning,
     StoryFoundationCandidate,
@@ -13,8 +15,10 @@ from novel_authoring.original.models import (
 __all__ = [
     "FirstChapterCandidate",
     "FoundationDevelopmentProposal",
+    "FoundationKernelContractProposals",
     "OriginalBookRequest",
     "OriginalFoundationConfirmation",
+    "OriginalReaderKernelProposal",
     "OriginalState",
     "RollingPlanning",
     "StoryFoundationCandidate",

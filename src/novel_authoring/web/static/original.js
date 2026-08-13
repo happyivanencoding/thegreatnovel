@@ -150,6 +150,7 @@
     const form = new FormData(event.currentTarget);
     const selected = String(form.get("selected_primary_innovation_id") || "").trim();
     if (!selected) { show("请选择一个 Primary Innovation。", true); return; }
+    if (event.currentTarget.dataset.reselection && !window.confirm("修改核心创意会使基于旧核心创意生成的故事基础和 Development 失效，但不会删除历史，也不会修改 Canon。")) return;
     show("正在冻结 Core Innovation Intent，并准备 Story Foundation Proposal…");
     try {
       await post(`/api/books/${bookId}/original/core-innovation/select`, {
@@ -164,6 +165,7 @@
     const form = new FormData(event.currentTarget);
     const selected = String(form.get("selected_foundation_id") || "").trim();
     if (!selected) { show("请选择一个 Story Foundation。", true); return; }
+    if (event.currentTarget.dataset.reselection && !window.confirm("更换故事基础会使依赖旧选择的 Development 失效，但会保留 Reader Kernel、Core Innovation、Foundation Proposal 历史且不会修改 Canon。")) return;
     show("正在冻结本次 Foundation 选择并准备 Development Proposal…");
     try {
       await post(`/api/books/${bookId}/original/foundation/select`, {
@@ -182,8 +184,7 @@
       wizard.querySelector("[data-wizard-submit]").hidden = step !== 5;
       if (step === 5) {
         const form = new FormData(wizard);
-        const choice = wizard.querySelector('[name="selected_foundation_id"]:checked')?.closest("label");
-        wizard.querySelector("[data-preview-foundation]").textContent = choice?.querySelector("span")?.textContent || "";
+        wizard.querySelector("[data-preview-foundation]").textContent = `${wizard.dataset.selectedFoundationTitle || ""}：${wizard.dataset.selectedFoundationPitch || ""}`;
         wizard.querySelector("[data-preview-protagonist]").textContent = `${form.get("protagonist_override")}：${form.get("protagonist_goal_override")}`;
         wizard.querySelector("[data-preview-world]").textContent = lines(form.get("world_rules")).slice(0, 3).join("；");
         wizard.querySelector("[data-preview-phase]").textContent = String(form.get("first_phase_objective") || "");
@@ -260,9 +261,17 @@
     try {
       if (action === "confirm-reader") {
         show("正在确认阅读体验并准备共享 Contract 的三个故事方向…");
+        const primaryDrive = document.querySelector("[data-primary-drive]")?.value || "CUSTOM";
+        const secondaryDrives = [...document.querySelectorAll("[data-secondary-drive]:checked")]
+          .map((item) => item.value)
+          .filter((value) => value !== primaryDrive);
+        if (secondaryDrives.length > 4) throw new Error("Secondary Narrative Drive 最多选择四个。");
         await post(`/api/books/${bookId}/original/reader-experience/confirm`, {
           adjustment: "CONFIRM",
           priority_overrides: readerControls?.collect() || {},
+          primary_drive: primaryDrive,
+          secondary_drives: secondaryDrives,
+          progression_engine_enabled: Boolean(document.querySelector("[data-progression-engine]")?.checked),
         });
         window.location.replace(window.location.href);
       } else if (action === "reader-preset") {
@@ -272,6 +281,10 @@
       } else if (action === "prepare-core") {
         show("正在检查 Core Innovation Proposal…");
         await post(`/api/books/${bookId}/original/core-innovation/prepare`, {});
+        window.location.replace(window.location.href);
+      } else if (action === "prepare-reader") {
+        show("正在检查 Semantic First Read Proposal…");
+        await post(`/api/books/${bookId}/original/reader-experience/prepare`, {});
         window.location.replace(window.location.href);
       } else if (action === "bootstrap") {
         show("正在准备新的故事方案；当前方案会保留…");

@@ -124,6 +124,7 @@ from novel_authoring.original.service import (
     import_original_bootstrap_proposal,
     import_original_core_innovation_proposal,
     import_original_foundation_development,
+    import_original_reader_kernel_proposal,
     original_overview,
     prepare_original_bootstrap,
     prepare_original_core_innovation,
@@ -1101,6 +1102,24 @@ def create_app(
                 checked,
                 payload.adjustment,
                 payload.priority_overrides,
+                payload.primary_drive,
+                payload.secondary_drives,
+                payload.progression_engine_enabled,
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post("/api/books/{path_book_id}/original/reader-kernel/import")
+    async def original_reader_kernel_import_api(
+        request: Request,
+        path_book_id: str,
+        payload: OriginalProposalImportRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        checked = _require_book_scope(app, path_book_id)
+        try:
+            return import_original_reader_kernel_proposal(
+                _database_for_book(app, checked), checked, payload.handoff_id
             )
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)

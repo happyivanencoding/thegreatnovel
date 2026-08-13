@@ -8,10 +8,24 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from novel_authoring.domain.models import NarrativeFunction
+from novel_authoring.progression.models import (
+    ContractStatus,
+    GenreContract,
+    PayoffChannelProfile,
+    ProgressionContract,
+    ReaderExperience,
+    ReaderExperienceContract,
+    WorldExpansionContract,
+)
+from novel_authoring.serial_kernel.models import (
+    MarketCategoryMetadata,
+    NarrativeDriveContract,
+)
 
 
 class OriginalState(StrEnum):
     ORIGINAL_SEED = "ORIGINAL_SEED"
+    READER_EXPERIENCE_GENERATING = "READER_EXPERIENCE_GENERATING"
     READER_EXPERIENCE_REVIEW = "READER_EXPERIENCE_REVIEW"
     CORE_INNOVATION_GENERATING = "CORE_INNOVATION_GENERATING"
     CORE_INNOVATION_REVIEW = "CORE_INNOVATION_REVIEW"
@@ -84,6 +98,35 @@ class OriginalBookRequest(BaseModel):
     must_include: list[str] = Field(default_factory=list)
     forbidden: list[str] = Field(default_factory=list)
     reference_traits: list[str] = Field(default_factory=list)
+
+
+class OriginalReaderKernelProposal(BaseModel):
+    """Semantic first read for author review; never an Effective contract."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal["original-reader-kernel-v1"] = "original-reader-kernel-v1"
+    information_status: Literal["PROPOSAL"] = "PROPOSAL"
+    summary: str = Field(min_length=1)
+    reader_experience: ReaderExperienceContract
+    market_category: MarketCategoryMetadata
+    narrative_drive: NarrativeDriveContract
+    semantic_evidence: list[str] = Field(min_length=1)
+    uncertainties: list[str] = Field(default_factory=list)
+    author_attention_points: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_proposal_boundary(self) -> OriginalReaderKernelProposal:
+        if set(self.reader_experience.experience_priorities) != set(ReaderExperience):
+            raise ValueError("Reader Kernel Proposal 必须覆盖全部 Reader Experience")
+        for contract in (
+            self.reader_experience,
+            self.market_category,
+            self.narrative_drive,
+        ):
+            if contract.status is not ContractStatus.NEEDS_REVIEW:
+                raise ValueError("Reader Kernel Proposal Contract 必须为 NEEDS_REVIEW")
+        return self
 
 
 class CoreInnovationCandidate(BaseModel):
@@ -229,6 +272,29 @@ class StoryFoundationProposal(BaseModel):
         return self
 
 
+class FoundationKernelContractProposals(BaseModel):
+    """Existing runtime contract shapes proposed by Foundation Development."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    genre: GenreContract
+    progression: ProgressionContract | None = None
+    world_expansion: WorldExpansionContract
+    payoff_channel: PayoffChannelProfile
+
+    @model_validator(mode="after")
+    def proposals_require_review(self) -> FoundationKernelContractProposals:
+        for contract in (
+            self.genre,
+            self.progression,
+            self.world_expansion,
+            self.payoff_channel,
+        ):
+            if contract is not None and contract.status is not ContractStatus.NEEDS_REVIEW:
+                raise ValueError("Development Kernel Contract 必须为 NEEDS_REVIEW")
+        return self
+
+
 class FoundationDevelopmentProposal(BaseModel):
     """Long-form development for the author-selected Story Foundation."""
 
@@ -266,6 +332,7 @@ class FoundationDevelopmentProposal(BaseModel):
     risks: list[str] = Field(default_factory=list)
     avoid_cliches: list[str] = Field(default_factory=list)
     kernel_contracts: dict[str, Any] = Field(default_factory=dict)
+    kernel_contract_proposals: FoundationKernelContractProposals
 
     @model_validator(mode="after")
     def choices_are_distinct_and_recommendation_exists(
@@ -348,12 +415,14 @@ __all__ = [
     "CoreInnovationProposal",
     "FirstPhaseProposal",
     "FoundationDevelopmentProposal",
+    "FoundationKernelContractProposals",
     "FoundationSetting",
     "GenesisApplyPlan",
     "HiddenTruthCandidate",
     "FirstChapterCandidate",
     "OriginalBookRequest",
     "OriginalFoundationConfirmation",
+    "OriginalReaderKernelProposal",
     "OriginalState",
     "RollingPlanning",
     "StoryFoundationCandidate",

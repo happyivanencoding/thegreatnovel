@@ -359,7 +359,7 @@ def _read_book_runtime(
     database_path: Path,
     book_id: str,
     edition_id: str,
-    handoff_type: str = "NOVEL_INITIALIZATION",
+    handoff_type: str | tuple[str, ...] = "NOVEL_INITIALIZATION",
 ) -> dict[str, Any]:
     value: dict[str, Any] = {
         "chapter_count": 0,
@@ -383,13 +383,17 @@ def _read_book_runtime(
             ).fetchone()
             value["edition_count"] = 0 if row is None else int(row["count"])
             try:
+                handoff_types = (
+                    (handoff_type,) if isinstance(handoff_type, str) else handoff_type
+                )
+                placeholders = ", ".join("?" for _ in handoff_types)
                 handoff = connection.execute(
                     "SELECT handoff_id, status, created_at, completed_at, error_message, "
                     "prompt_path, task_directory "
                     "FROM workflow_handoffs WHERE book_id=? AND edition_id=? "
-                    "AND handoff_type=? "
+                    f"AND handoff_type IN ({placeholders}) "
                     "ORDER BY created_at DESC LIMIT 1",
-                    (book_id, edition_id, handoff_type),
+                    (book_id, edition_id, *handoff_types),
                 ).fetchone()
             except sqlite3.OperationalError:
                 handoff = None
@@ -415,7 +419,7 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
         paths.database,
         record.book_id,
         record.active_edition_id,
-        "ORIGINAL_BOOK_BOOTSTRAP"
+        ("ORIGINAL_READER_INTERPRETATION", "ORIGINAL_BOOK_BOOTSTRAP")
         if record.creation_mode is CreationMode.ORIGINAL
         else "NOVEL_INITIALIZATION",
     )
@@ -443,6 +447,16 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
                 else "第一章已成为正式正文，可以继续创作。"
             )
             original_missing: tuple[str, ...] = ()
+        elif original_state == "READER_EXPERIENCE_REVIEW":
+            status = "READER_EXPERIENCE_REVIEW"
+            summary = "AI 阅读体验与叙事驱动力提案已完成，等待你确认。"
+            original_missing = ("尚未确认 Reader Kernel Proposal",)
+        elif original_state == "READER_EXPERIENCE_GENERATING":
+            status = "READER_EXPERIENCE_GENERATING"
+            summary = (
+                "AI 正在理解这本书主要给读者什么体验，以及故事靠什么长期推进。"
+            )
+            original_missing = ("Reader Kernel Proposal 尚未完成",)
         elif original_state == "CORE_INNOVATION_REVIEW":
             status = "CORE_INNOVATION_REVIEW"
             summary = "三个核心创意已生成，等待你选择主机制或补充融合意图。"
@@ -635,7 +649,7 @@ def studio_access(layout: BookLayout, record: BookRecord) -> StudioAccessView:
             paths.database,
             record.book_id,
             record.active_edition_id,
-            "ORIGINAL_BOOK_BOOTSTRAP",
+            ("ORIGINAL_READER_INTERPRETATION", "ORIGINAL_BOOK_BOOTSTRAP"),
         )
         chapter_count = int(runtime.get("chapter_count") or 0)
         original_state = str(readiness.initialization_status or "ORIGINAL_SEED")
@@ -837,8 +851,14 @@ _STATE_LABELS = {
     "READY_WITH_GAPS": "可用但有待补齐",
     "CONTINUE_READY": "可以续写 · 历史仍在补齐",
     "ORIGINAL_SEED": "待生成基础框架",
+    "READER_EXPERIENCE_GENERATING": "正在理解阅读体验",
+    "READER_EXPERIENCE_REVIEW": "等待确认阅读体验",
+    "CORE_INNOVATION_GENERATING": "正在生成核心创意",
+    "CORE_INNOVATION_REVIEW": "等待选择核心创意",
     "FOUNDATION_GENERATING": "正在生成故事方案",
     "FOUNDATION_REVIEW": "等待确认基础框架",
+    "DEVELOPMENT_GENERATING": "正在展开故事基础",
+    "DEVELOPMENT_REVIEW": "等待确认故事发展方案",
     "FOUNDATION_READY": "可以开始写第一章",
     "FIRST_CHAPTER_DRAFTING": "正在写第一章",
     "FIRST_CHAPTER_VALIDATED": "第一章等待批准",
@@ -866,7 +886,7 @@ def _registered_entry(layout: BookLayout, record: BookRecord) -> LibraryCatalogE
         paths.database,
         record.book_id,
         record.active_edition_id,
-        "ORIGINAL_BOOK_BOOTSTRAP"
+        ("ORIGINAL_READER_INTERPRETATION", "ORIGINAL_BOOK_BOOTSTRAP")
         if record.creation_mode is CreationMode.ORIGINAL
         else "NOVEL_INITIALIZATION",
     )

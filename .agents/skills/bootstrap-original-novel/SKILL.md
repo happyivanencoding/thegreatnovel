@@ -23,7 +23,7 @@ Prerequisite：`novel workflow start` 已成功返回 `status=RUNNING`，且 `ex
 
 `original_request.json.progression_kernel` 中的 Reader Experience、Primary Narrative Drive、Secondary Drive mix 与作者 hard constraints 是冻结边界。必须原样带回 `kernel_contracts`，不得用题材或关键词替换它们。
 
-在 Foundation 与 Development 阶段，`progression_kernel.core_innovation` 是唯一允许使用的 Core Innovation Intent。Development 阶段还必须原样使用 `selected_story_foundation`。它们是作者意图，不是 Canon；不得自行改写、替换或合并。
+在 Foundation 与 Development 阶段，`progression_kernel.core_innovation` 是唯一允许使用的 Core Innovation Intent。Development 阶段还必须原样使用 `selected_story_foundation`，并使用 Python 冻结的 `kernel_contract_ids`。它们是作者意图，不是 Canon；不得自行改写、替换或合并。
 
 ## CORE_INNOVATION_PROPOSAL 合同
 
@@ -56,7 +56,8 @@ Prerequisite：`novel workflow start` 已成功返回 `status=RUNNING`，且 `ex
 - `information_status` 必须为 `PROPOSAL`；`kernel_contracts`、`core_innovation_intent` 与 `selected_foundation_id` 必须与冻结输入一致。
 - 只发展 `selected_story_foundation.selected_candidate`，不得换主角承载、Foundation、Primary Narrative Drive 或 Core Innovation。
 - 生成 protagonist refinement、world rules / social configuration、Progression Grammar、Expansion Grammar、Payoff Grammar、Growth & Long-Term、First Phase、Rolling Planning、Book Profile Draft、开放路线和恰好三个首章候选。
-- `first_phase.selected_foundation_id` 必须等于冻结选择，并回答 opening pressure、具体目标、资源瓶颈、成长机会、第一次兑现、第一次有意义升级、阶段高潮和高潮后变化。
+- 同时生成 `kernel_contract_proposals`，严格复用现有 `GenreContract`、`ProgressionContract`、`WorldExpansionContract`、`PayoffChannelProfile`；全部为 `NEEDS_REVIEW`，ID 必须匹配 `kernel_contract_ids`。若冻结的 `progression_engine_enabled=false`，`progression` 必须为 `null`。
+- `first_phase.selected_foundation_id` 必须等于冻结选择，并回答 opening pressure、具体目标、资源瓶颈、成长机会、第一次兑现、第一次实质性局势升级、阶段高潮和高潮后变化。
 - 长期语法回答“为什么可以持续成长、扩大问题空间、分阶段兑现”，不得固定第 N 章、卷数、地图频率、层数或结局。
 - 首章候选只描述主动选择、代价、不可逆改变、后续空间和风险；不生成正文，不运行评分引擎。
 

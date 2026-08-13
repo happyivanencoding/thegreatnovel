@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interpret Original Reader Kernel"
+  short_description: "语义理解原创 premise 并提出 Reader Kernel Proposal"
+  default_prompt: "Use $interpret-original-reader-kernel to semantically interpret the frozen original request into an author-reviewable Reader Kernel proposal."

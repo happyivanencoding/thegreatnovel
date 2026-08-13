@@ -85,6 +85,7 @@ class MarketCategoryMetadata(BaseModel):
     )
     display_labels: list[str] = Field(default_factory=list)
     source: str = "AUTHOR_PREMISE_INTERPRETATION"
+    status: ContractStatus = ContractStatus.NEEDS_REVIEW
 
     @model_validator(mode="after")
     def validate_categories(self) -> MarketCategoryMetadata:

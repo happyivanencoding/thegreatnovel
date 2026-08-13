@@ -30,6 +30,7 @@ from novel_authoring.metrics.service import MetricsAssembler
 from novel_authoring.original.models import (
     CoreInnovationProposal,
     FoundationDevelopmentProposal,
+    OriginalReaderKernelProposal,
     StoryFoundationProposal,
 )
 from novel_authoring.original.state import is_original_book
@@ -71,6 +72,7 @@ class HandoffType(StrEnum):
     NOVEL_DISTILLATION = "NOVEL_DISTILLATION"
     SOURCE_STATE_HYDRATION = "SOURCE_STATE_HYDRATION"
     PROFILE_REANALYSIS = "PROFILE_REANALYSIS"
+    ORIGINAL_READER_INTERPRETATION = "ORIGINAL_READER_INTERPRETATION"
     ORIGINAL_BOOK_BOOTSTRAP = "ORIGINAL_BOOK_BOOTSTRAP"
     KERNEL_CONTRACT_DISCOVERY = "KERNEL_CONTRACT_DISCOVERY"
 
@@ -92,6 +94,7 @@ HANDOFF_EXECUTOR_SKILLS: dict[HandoffType, str] = {
     HandoffType.NOVEL_DISTILLATION: "distill-novels",
     HandoffType.SOURCE_STATE_HYDRATION: "hydrate-source-state",
     HandoffType.PROFILE_REANALYSIS: "reanalyze-book-profile",
+    HandoffType.ORIGINAL_READER_INTERPRETATION: "interpret-original-reader-kernel",
     HandoffType.ORIGINAL_BOOK_BOOTSTRAP: "bootstrap-original-novel",
     HandoffType.KERNEL_CONTRACT_DISCOVERY: "discover-kernel-contracts",
 }
@@ -147,6 +150,9 @@ HANDOFF_DEPENDENCIES: dict[HandoffType, frozenset[str]] = {
     HandoffType.PROFILE_REANALYSIS: frozenset(
         {"projection", "effective_content", "edition", "profile"}
     ),
+    HandoffType.ORIGINAL_READER_INTERPRETATION: frozenset(
+        {"projection", "edition", "original_intent"}
+    ),
     HandoffType.ORIGINAL_BOOK_BOOTSTRAP: frozenset(
         {"projection", "edition", "original_intent"}
     ),
@@ -193,6 +199,7 @@ HANDOFF_BUSINESS_INPUT_FILES: dict[HandoffType, tuple[str, ...]] = {
     ),
     HandoffType.SOURCE_STATE_HYDRATION: ("hydration_context.json",),
     HandoffType.PROFILE_REANALYSIS: ("profile_context.json",),
+    HandoffType.ORIGINAL_READER_INTERPRETATION: ("original_request.json",),
     HandoffType.ORIGINAL_BOOK_BOOTSTRAP: (
         "original_request.json",
         "proposal_schema.json",
@@ -342,6 +349,11 @@ class WorkflowHandoffResult(BaseModel):
             if not self.artifact_paths:
                 raise ValueError("ORIGINAL_BOOK_BOOTSTRAP 必须返回 proposal artifact_paths")
         if (
+            atlas_type == HandoffType.ORIGINAL_READER_INTERPRETATION.value
+            and not self.artifact_paths
+        ):
+            raise ValueError("ORIGINAL_READER_INTERPRETATION 必须返回 proposal artifact_paths")
+        if (
             atlas_type == HandoffType.KERNEL_CONTRACT_DISCOVERY.value
             and not self.artifact_paths
         ):
@@ -385,6 +397,11 @@ class WorkflowHandoffResult(BaseModel):
             "FOUNDATION_DEVELOPMENT_PROPOSAL": {
                 "FOUNDATION_DEVELOPMENT_PROPOSAL",
                 "FOUNDATION_DEVELOPED",
+                "VALIDATED_PROPOSAL",
+            },
+            "READER_KERNEL_PROPOSAL": {
+                "READER_KERNEL_PROPOSAL",
+                "READER_KERNEL_PROPOSED",
                 "VALIDATED_PROPOSAL",
             },
             "KERNEL_CONTRACT_DISCOVERY": {
@@ -448,6 +465,7 @@ def _workflow_result_required_fields(
         "CORE_INNOVATION_PROPOSAL": {"innovation_ids", "artifact_paths"},
         "STORY_FOUNDATION_PROPOSAL": {"candidate_ids", "artifact_paths"},
         "FOUNDATION_DEVELOPMENT_PROPOSAL": {"artifact_paths"},
+        "READER_KERNEL_PROPOSAL": {"artifact_paths"},
         "KERNEL_CONTRACT_DISCOVERY": {"artifact_paths"},
     }
     required.update(stage_fields.get(stage, set()))
@@ -457,6 +475,13 @@ def _workflow_result_required_fields(
         "FOUNDATION_DEVELOPMENT_PROPOSAL",
     }:
         raise HandoffWorkflowError(f"不支持的 ORIGINAL_BOOK_BOOTSTRAP stage：{stage}")
+    if (
+        handoff_type is HandoffType.ORIGINAL_READER_INTERPRETATION
+        and stage != "READER_KERNEL_PROPOSAL"
+    ):
+        raise HandoffWorkflowError(
+            f"不支持的 ORIGINAL_READER_INTERPRETATION stage：{stage}"
+        )
     return required
 
 
@@ -544,13 +569,17 @@ def _original_intent_anchor(
         request_payload = json.loads(request_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise HandoffWorkflowError("ORIGINAL premise 请求无法读取") from exc
-    contracts = [
-        item.model_dump(mode="json")
-        for item in list_contract_records(database, book_id=book_id, edition_id="base")
-        if item.contract_type.value
-        in {"READER_EXPERIENCE", "NARRATIVE_DRIVE", "MARKET_CATEGORY"}
-        and item.status.value in {"EFFECTIVE", "NEEDS_REVIEW"}
-    ]
+    contracts = (
+        []
+        if requested_stage.upper() == "READER_KERNEL_PROPOSAL"
+        else [
+            item.model_dump(mode="json")
+            for item in list_contract_records(database, book_id=book_id, edition_id="base")
+            if item.contract_type.value
+            in {"READER_EXPERIENCE", "NARRATIVE_DRIVE", "MARKET_CATEGORY"}
+            and item.status.value in {"EFFECTIVE", "NEEDS_REVIEW"}
+        ]
+    )
     selected_intent: dict[str, Any] | None = None
     if requested_stage.upper() in {
         "STORY_FOUNDATION_PROPOSAL",
@@ -777,6 +806,7 @@ def create_handoff(
     author_goal: str | None = None,
     author_task_ids: list[str] | None = None,
     hydration_request: dict[str, Any] | None = None,
+    original_reader_request: dict[str, Any] | None = None,
     original_bootstrap_request: dict[str, Any] | None = None,
     prepared_draft_task: dict[str, Any] | None = None,
     kernel_discovery_request: dict[str, Any] | None = None,
@@ -806,6 +836,9 @@ def create_handoff(
     distill_handoff = handoff_type is HandoffType.NOVEL_DISTILLATION
     hydration_handoff = handoff_type is HandoffType.SOURCE_STATE_HYDRATION
     profile_handoff = handoff_type is HandoffType.PROFILE_REANALYSIS
+    original_reader_handoff = (
+        handoff_type is HandoffType.ORIGINAL_READER_INTERPRETATION
+    )
     original_bootstrap_handoff = handoff_type is HandoffType.ORIGINAL_BOOK_BOOTSTRAP
     dependencies = HANDOFF_DEPENDENCIES[handoff_type]
     if (
@@ -852,7 +885,9 @@ def create_handoff(
         # protocol envelope, while business inputs remain task-specific.
         metric_context = {
             "scope_type": (
-                "ORIGINAL_BOOTSTRAP"
+                "ORIGINAL_READER_INTERPRETATION"
+                if original_reader_handoff
+                else "ORIGINAL_BOOTSTRAP"
                 if original_bootstrap_handoff
                 else "KERNEL_CONTRACT_DISCOVERY"
                 if kernel_discovery_handoff
@@ -874,6 +909,7 @@ def create_handoff(
                 initialization_handoff
                 or hydration_handoff
                 or profile_handoff
+                or original_reader_handoff
                 or original_bootstrap_handoff
                 or kernel_discovery_handoff
                 or original_genesis
@@ -1102,6 +1138,20 @@ def create_handoff(
             initialization_manifest_payload = {}
             initialization_arc_payload = {"arcs": []}
     frozen_original_request: dict[str, Any] | None = None
+    if original_reader_handoff:
+        if not original_book:
+            raise HandoffWorkflowError(
+                "ORIGINAL_READER_INTERPRETATION 只适用于 ORIGINAL 项目"
+            )
+        if requested_stage.upper() != "READER_KERNEL_PROPOSAL":
+            raise HandoffWorkflowError(
+                "ORIGINAL_READER_INTERPRETATION stage 无效"
+            )
+        if not isinstance(original_reader_request, dict):
+            raise HandoffWorkflowError(
+                "ORIGINAL_READER_INTERPRETATION 缺少 original_reader_request"
+            )
+        frozen_original_request = dict(original_reader_request)
     if original_bootstrap_handoff:
         if not original_book:
             raise HandoffWorkflowError("ORIGINAL_BOOK_BOOTSTRAP 只适用于 ORIGINAL 项目")
@@ -1340,6 +1390,25 @@ def create_handoff(
                 "planning_aggregate_required": False,
             }
         )
+    if original_reader_handoff and frozen_original_request is not None:
+        task.update(
+            {
+                "original_reader_interpretation": {
+                    "request_path": "original_request.json",
+                    "proposal_artifact": "artifacts/reader_kernel/proposal.json",
+                    "proposal_schema": OriginalReaderKernelProposal.model_json_schema(),
+                    "contract_ids": {
+                        "reader_experience_contract_id": f"{book_id}-reader-experience",
+                        "market_category_metadata_id": f"{book_id}-market-category",
+                        "narrative_drive_contract_id": f"{book_id}-narrative-drive",
+                    },
+                    "information_status": "PROPOSAL",
+                    "author_confirmation_required": True,
+                    "canon_boundary": "NO_CHAPTER_NO_CANON",
+                },
+                "planning_aggregate_required": False,
+            }
+        )
     if kernel_discovery_handoff and frozen_kernel_discovery is not None:
         task.update(
             {
@@ -1521,6 +1590,8 @@ def create_handoff(
         manifest_paths.append("profile_context.json")
     if original_bootstrap_handoff:
         manifest_paths.extend(["original_request.json", "proposal_schema.json"])
+    elif original_reader_handoff:
+        manifest_paths.append("original_request.json")
     if kernel_discovery_handoff:
         manifest_paths.extend(
             ["kernel_discovery_context.json", "kernel_contract_proposal_schema.json"]
@@ -1614,6 +1685,7 @@ def create_handoff(
         "FOUNDATION_DEVELOPMENT_PROPOSAL": {
             "required_non_empty": ["artifact_paths"]
         },
+        "READER_KERNEL_PROPOSAL": {"required_non_empty": ["artifact_paths"]},
         "KERNEL_CONTRACT_DISCOVERY": {"required_non_empty": ["artifact_paths"]},
     }
     if hydration_handoff:
@@ -1767,6 +1839,9 @@ def create_handoff(
                 else StoryFoundationProposal.model_json_schema()
             ),
         )
+    elif original_reader_handoff:
+        _write_json(input_files["original_request.json"], frozen_original_request or {})
+        input_files.pop("proposal_schema.json", None)
     else:
         input_files.pop("original_request.json", None)
         input_files.pop("proposal_schema.json", None)
@@ -1845,6 +1920,7 @@ def create_handoff(
                 if original_bootstrap_handoff
                 else []
             ),
+            *(["original_request.json"] if original_reader_handoff else []),
             *(
                 ["kernel_context.json"]
                 if planning_aggregate.get("kernel_context") is not None
@@ -2111,6 +2187,22 @@ def create_original_bootstrap_handoff(
         handoff_type=HandoffType.ORIGINAL_BOOK_BOOTSTRAP,
         requested_stage=requested_stage,
         **kwargs,
+    )
+
+
+def create_original_reader_interpretation_handoff(
+    database: Database,
+    book_id: str,
+    *,
+    original_reader_request: dict[str, Any],
+) -> dict[str, Any]:
+    return create_handoff(
+        database,
+        book_id,
+        handoff_type=HandoffType.ORIGINAL_READER_INTERPRETATION,
+        requested_stage="READER_KERNEL_PROPOSAL",
+        edition_id="base",
+        original_reader_request=original_reader_request,
     )
 
 

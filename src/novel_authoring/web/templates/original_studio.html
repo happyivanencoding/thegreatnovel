@@ -7,7 +7,7 @@
   <title>{{ original.title }} · Novel Studio</title>
   <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v={{ asset_version }}">
 </head>
-<body class="library-body original-body" data-original-book-id="{{ original.book_id }}"{% if original.generating_proposal or original.generating_innovation_proposal or original.generating_development_proposal %} data-original-generating="true"{% endif %}>
+<body class="library-body original-body" data-original-book-id="{{ original.book_id }}"{% if original.generating_reader_handoff or original.generating_proposal or original.generating_innovation_proposal or original.generating_development_proposal %} data-original-generating="true"{% endif %}>
   <header class="library-topbar">
     <a class="wb-brand" href="/library">Novel Studio</a>
     <nav><a href="/library">书库</a>{% if original.chapter_count %}<a href="/books/{{ original.book_id }}/editions/base/workbench">小说工作台</a>{% endif %}</nav>
@@ -19,15 +19,22 @@
     </header>
     <p class="library-feedback" data-original-feedback aria-live="polite"></p>
 
-    {% if original.reader_experience_contract and original.reader_experience_contract.status != 'EFFECTIVE' %}
+    {% if original.generating_reader_handoff %}
+    <section class="panel original-status-card" data-reader-kernel-generating>
+      <p class="wb-kicker">Step 0 · Semantic First Read</p>
+      <h2>AI 正在理解这本书主要给读者什么体验，以及故事靠什么长期推进</h2>
+      <p>本任务会真正阅读 premise 与作者元数据，只提出 Reader Experience、Narrative Drive、市场语义和 Progression Engine Proposal；不会生成 Core Innovation、Foundation 或首章。</p>
+      <div class="original-actions"><button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_reader_handoff.handoff_id }}/instruction">复制给 Codex 的指令</button><button class="button" type="button" data-original-action="prepare-reader">检查生成状态</button></div>
+    </section>
+    {% elif original.reader_experience_contract and original.reader_experience_contract.status != 'EFFECTIVE' %}
     <section class="panel original-foundation original-reader-step" data-reader-experience-step data-reader-experience-controls>
       <header class="original-wizard-header">
-        <div><p class="wb-kicker">Step 0 · 阅读体验与主要驱动力</p><h2>读者为什么追，故事靠什么长期推进？</h2></div>
+        <div><p class="wb-kicker">Step 0 · 阅读体验与主要驱动力</p><h2>AI 对当前创意的阅读体验与叙事驱动力理解</h2></div>
         <span class="badge">等待作者确认</span>
       </header>
       {% set reader = original.reader_experience_display %}
       <div class="original-reader-summary">
-        <p>{{ reader.summary }}</p>
+        <p>{{ reader.summary }}</p><p class="muted">这是待作者确认的创作 Proposal。</p>
         <div class="original-final-preview">
           <article><span>市场分类</span><strong>{{ reader.market_categories|join(' / ') or '待作者确认' }}</strong></article>
           <article><span>主要驱动力</span><strong>{{ reader.primary_drive }}</strong></article>
@@ -37,6 +44,12 @@
           <article><span>世界外壳</span><strong>{{ reader.setting_skin }}</strong></article>
           <article><span>超凡解释</span><strong>{{ reader.explanation_style }}</strong></article>
         </div>
+      </div>
+      <section class="original-derived-card"><h3>语义依据与不确定性</h3><ul>{% for item in reader.semantic_evidence %}<li>{{ item }}</li>{% endfor %}</ul>{% if reader.uncertainties %}<h4>仍不确定</h4><ul>{% for item in reader.uncertainties %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}{% if reader.author_attention_points %}<h4>请作者留意</h4><ul>{% for item in reader.author_attention_points %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}</section>
+      <div class="original-form-grid" data-narrative-drive-controls>
+        <label class="original-field"><span>Primary Narrative Drive</span><select data-primary-drive>{% for option in reader.drive_options %}<option value="{{ option.value }}" {% if option.value == reader.primary_drive_value %}selected{% endif %}>{{ option.label }}</option>{% endfor %}</select></label>
+        <fieldset class="original-field original-field-wide"><legend>Secondary Narrative Drives</legend><div class="reader-strength-options">{% for option in reader.drive_options %}<label><input type="checkbox" data-secondary-drive value="{{ option.value }}" {% if option.label in reader.secondary_drives %}checked{% endif %}>{{ option.label }}</label>{% endfor %}</div></fieldset>
+        <label class="original-field original-field-wide"><input type="checkbox" data-progression-engine {% if reader.progression_engine_enabled %}checked{% endif %}> 启用 Progression Engine（独立于 Primary Drive）</label>
       </div>
       <h3>主要阅读体验</h3>
       <p class="muted">这是 AI 提案的默认组合。点击每项强度即可单独调整；快捷按钮只会批量修改当前组合，之后仍可逐项覆盖。</p>
@@ -64,14 +77,6 @@
           {% endif %}{% endfor %}
         </div>
       </details>
-      {% if reader.derived_adapter %}
-      <section class="original-derived-card">
-        <p class="wb-kicker">Derived Custom Adapter</p>
-        <h3>{{ reader.derived_adapter.growth_object }}</h3>
-        <p>成长主体：{{ reader.derived_adapter.progression_subject }} · 拓扑：{{ reader.derived_adapter.progression_topology|join(' / ') }}</p>
-        <p>这不是“未知错误”，也不会强行归入传统修仙、序列或等级模板。</p>
-      </section>
-      {% endif %}
       <details><summary>核心承诺与防漂移边界</summary><h4>必须持续提供</h4><ul>{% for item in reader.must_deliver %}<li>{{ item }}</li>{% endfor %}</ul><h4>不得漂移为</h4><ul>{% for item in reader.must_not_drift_into %}<li>{{ item }}</li>{% endfor %}</ul></details>
       <div class="original-actions original-reader-actions">
         <button class="button primary" type="button" data-original-action="confirm-reader">符合我的想法</button>
@@ -134,7 +139,12 @@
       {% endfor %}
       {% if original.innovation_selection.optional_mix_notes %}<p class="muted">作者希望吸收的特征：{{ original.innovation_selection.optional_mix_notes }}</p>{% endif %}
       <p class="muted">后续 Foundation、成长与长线、第一阶段和候选生成都必须读取这份冻结 Intent；如果发现风险，只能提出 Alternative，不能静默替换。</p>
+      {% if not original.accepted %}<details><summary>重新选择核心创意</summary><form data-core-innovation-select data-reselection="core"><div class="original-choice-grid">{% for item in original.innovation_proposal.innovation_candidates %}<label class="original-choice"><input type="radio" name="selected_primary_innovation_id" value="{{ item.innovation_id }}" {% if item.innovation_id == original.innovation_selection.selected_primary_innovation_id %}checked{% endif %}><strong>{{ item.title }}</strong><span>{{ item.one_sentence_hook }}</span></label>{% endfor %}</div><label class="original-field original-field-wide"><span>融合说明</span><textarea name="optional_mix_notes" rows="3">{{ original.innovation_selection.optional_mix_notes }}</textarea></label><button class="button" type="submit">确认重新选择核心创意</button></form></details>{% endif %}
     </section>
+    {% endif %}
+
+    {% if not original.accepted and original.foundation_selection and original.proposal %}
+    <section class="panel original-reader-confirmed"><details><summary>换一个故事基础</summary><form data-foundation-select data-reselection="foundation"><p class="muted">只会废弃依赖旧选择的 Development；Reader Kernel、Core Innovation 与三个 Foundation 历史都会保留。</p><div class="original-choice-grid">{% for item in original.proposal.foundation_candidates %}<label class="original-choice"><input type="radio" name="selected_foundation_id" value="{{ item.candidate_id }}" {% if item.candidate_id == original.foundation_selection.selected_foundation_id %}checked{% endif %}><strong>{{ item.title }}</strong><span>{{ item.author_facing_pitch }}</span></label>{% endfor %}</div><button class="button" type="submit">确认更换故事基础</button></form></details></section>
     {% endif %}
 
     {% if original.generating_proposal %}
@@ -200,7 +210,7 @@
     <section class="panel original-status-card"><p class="wb-kicker">Step 3 · Foundation Development</p><h2>正在针对已选故事基础生成成长长线与第一阶段</h2><p>此任务不会替换 Reader Experience、Narrative Drive 或 Core Innovation。</p>{% if original.generating_development_proposal.handoff_id %}<button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_development_proposal.handoff_id }}/instruction">复制给 Codex 的指令</button>{% endif %}</section>
     {% elif not original.accepted and original.development_proposal %}
     {% set proposal = original.development_proposal %}
-    <form class="panel original-foundation original-wizard" data-original-confirm data-proposal-version-id="{{ original.current_development_proposal_version_id or '' }}">
+    <form class="panel original-foundation original-wizard" data-original-confirm data-proposal-version-id="{{ original.current_development_proposal_version_id or '' }}" data-selected-foundation-title="{{ proposal.selected_foundation.title }}" data-selected-foundation-pitch="{{ proposal.selected_foundation.author_facing_pitch }}">
       <header class="original-wizard-header">
         <div><p class="wb-kicker">Step 2 · 故事基础</p><h2>在已冻结的核心创意下确认故事承载方式</h2></div>
         <ol class="original-wizard-progress" aria-label="确认步骤">
@@ -293,7 +303,7 @@
           <label class="original-field"><span>第一个资源瓶颈</span><textarea name="first_phase__first_resource_bottleneck" rows="3">{{ phase.first_resource_bottleneck }}</textarea></label>
           <label class="original-field"><span>第一次成长机会</span><textarea name="first_phase__first_progression_opportunity" rows="3">{{ phase.first_progression_opportunity }}</textarea></label>
           <label class="original-field"><span>第一次兑现</span><textarea name="first_phase__first_payoff" rows="3">{{ phase.first_payoff }}</textarea></label>
-          <label class="original-field"><span>第一次有意义的升级</span><textarea name="first_phase__first_meaningful_escalation" rows="3">{{ phase.first_meaningful_escalation }}</textarea></label>
+          <label class="original-field"><span>第一次实质性局势升级</span><textarea name="first_phase__first_meaningful_escalation" rows="3">{{ phase.first_meaningful_escalation }}</textarea></label>
           <label class="original-field"><span>阶段高潮</span><textarea name="first_phase__stage_climax" rows="3">{{ phase.stage_climax }}</textarea></label>
           <label class="original-field"><span>高潮后改变什么</span><textarea name="first_phase__after_climax_change" rows="3">{{ phase.after_climax_change }}</textarea></label>
         </div>

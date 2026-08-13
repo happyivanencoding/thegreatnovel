@@ -21,6 +21,7 @@ from novel_authoring.progression.interpretation import (
     ReaderExperienceAdjustment,
     ReaderExperienceStrength,
 )
+from novel_authoring.serial_kernel.models import NarrativeDrive
 
 
 class AuthorInputRequest(BaseModel):
@@ -112,6 +113,9 @@ class OriginalReaderExperienceConfirmationRequest(BaseModel):
 
     adjustment: ReaderExperienceAdjustment = ReaderExperienceAdjustment.CONFIRM
     priority_overrides: dict[str, ReaderExperienceStrength] = Field(default_factory=dict)
+    primary_drive: NarrativeDrive
+    secondary_drives: list[NarrativeDrive] = Field(default_factory=list, max_length=4)
+    progression_engine_enabled: bool
 
 
 class OriginalCoreInnovationSelectionRequest(BaseModel):
