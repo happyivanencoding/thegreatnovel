@@ -459,19 +459,19 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
             original_missing = ("Reader Kernel Proposal 尚未完成",)
         elif original_state == "CORE_INNOVATION_REVIEW":
             status = "CORE_INNOVATION_REVIEW"
-            summary = "三个核心创意已生成，等待你选择主机制或补充融合意图。"
-            original_missing = ("尚未选择 Core Innovation",)
+            summary = "三个核心玩法已生成，等待你选择主方案或补充融合意图。"
+            original_missing = ("尚未选择核心玩法",)
         elif original_state == "CORE_INNOVATION_GENERATING":
             status = "CORE_INNOVATION_GENERATING"
-            summary = "AI 正在生成三个高杠杆核心创意方案。"
-            original_missing = ("核心创意方案尚未完成",)
+            summary = "AI 正在生成三个核心玩法方案。"
+            original_missing = ("核心玩法方案尚未完成",)
         elif original_state in {"FOUNDATION_REVIEW", "BOOTSTRAP_READY"}:
             status = "FOUNDATION_REVIEW"
             summary = "故事基础方案已生成，等待你选择和调整。"
             original_missing = ("尚未确认故事基础方案",)
         elif original_state == "FOUNDATION_GENERATING" or handoff_status in {"CLAIMED", "RUNNING"}:
             status = "FOUNDATION_GENERATING"
-            summary = "AI 正在已选 Core Innovation 下生成三个故事基础方案。"
+            summary = "AI 正在已选核心玩法下生成三个故事基础方案。"
             original_missing = ("故事基础方案尚未完成",)
         elif handoff_status == "READY_FOR_CODEX":
             status = "FOUNDATION_GENERATING"
@@ -479,8 +479,8 @@ def studio_readiness(layout: BookLayout, record: BookRecord) -> StudioReadinessV
             original_missing = ("故事基础方案尚未完成",)
         else:
             status = "ORIGINAL_SEED"
-            summary = "一句话创意已保存，下一步先生成三个核心创意方案。"
-            original_missing = ("尚未生成 Core Innovation Proposal",)
+            summary = "一句话创意已保存，下一步先生成三个核心玩法方案。"
+            original_missing = ("尚未生成核心玩法方案",)
         return StudioReadinessView(
             book_id=record.book_id,
             status=status,
@@ -853,8 +853,8 @@ _STATE_LABELS = {
     "ORIGINAL_SEED": "待生成基础框架",
     "READER_EXPERIENCE_GENERATING": "正在理解阅读体验",
     "READER_EXPERIENCE_REVIEW": "等待确认阅读体验",
-    "CORE_INNOVATION_GENERATING": "正在生成核心创意",
-    "CORE_INNOVATION_REVIEW": "等待选择核心创意",
+    "CORE_INNOVATION_GENERATING": "正在生成核心玩法",
+    "CORE_INNOVATION_REVIEW": "等待选择核心玩法",
     "FOUNDATION_GENERATING": "正在生成故事方案",
     "FOUNDATION_REVIEW": "等待确认基础框架",
     "DEVELOPMENT_GENERATING": "正在展开故事基础",

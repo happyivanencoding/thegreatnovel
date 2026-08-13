@@ -23,7 +23,7 @@
     <section class="panel original-status-card" data-reader-kernel-generating>
       <p class="wb-kicker">Step 0 · Semantic First Read</p>
       <h2>AI 正在理解这本书主要给读者什么体验，以及故事靠什么长期推进</h2>
-      <p>本任务会真正阅读 premise 与作者元数据，只提出 Reader Experience、Narrative Drive、市场语义和 Progression Engine Proposal；不会生成 Core Innovation、Foundation 或首章。</p>
+      <p>本任务会真正阅读 premise 与作者元数据，只提出 Reader Experience、Narrative Drive、Creative Semantics、市场语义和 Progression Engine Proposal；不会生成核心玩法、Foundation 或首章。</p>
       <div class="original-actions"><button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_reader_handoff.handoff_id }}/instruction">复制给 Codex 的指令</button><button class="button" type="button" data-original-action="prepare-reader">检查生成状态</button></div>
     </section>
     {% elif original.reader_experience_contract and original.reader_experience_contract.status != 'EFFECTIVE' %}
@@ -45,6 +45,16 @@
           <article><span>超凡解释</span><strong>{{ reader.explanation_style }}</strong></article>
         </div>
       </div>
+      {% set creative = original.reader_experience.creative_semantics %}
+      <section class="original-derived-card">
+        <h3>创作语义边界</h3>
+        <div class="original-final-preview">
+          <article><span>读者购买的核心幻想</span><strong>{{ creative.signature_fantasy }}</strong></article>
+          <article><span>Seed 已有生成机制</span><strong>{{ creative.existing_signature_mechanism or '尚未确定' }}</strong></article>
+          <article><span>可重复阅读循环</span><strong>{{ creative.repeatable_reader_loop|join(' → ') }}</strong></article>
+        </div>
+        <details><summary>查看开放空间与防漂移边界</summary><h4>仍可创新</h4><ul>{% for item in creative.open_design_space %}<li>{{ item }}</li>{% endfor %}</ul><h4>兑现质感</h4><ul>{% for item in creative.payoff_texture %}<li>{{ item }}</li>{% endfor %}</ul><h4>新奇度焦点</h4><ul>{% for item in creative.novelty_focus %}<li>{{ item }}</li>{% endfor %}</ul><h4>保持直观或可信</h4><ul>{% for item in creative.realism_anchors %}<li>{{ item }}</li>{% endfor %}</ul><h4>复杂度边界</h4><ul>{% for item in creative.complexity_boundaries %}<li>{{ item }}</li>{% endfor %}</ul><h4>不得漂移为</h4><ul>{% for item in creative.anti_drift %}<li>{{ item }}</li>{% endfor %}</ul></details>
+      </section>
       <section class="original-derived-card"><h3>语义依据与不确定性</h3><ul>{% for item in reader.semantic_evidence %}<li>{{ item }}</li>{% endfor %}</ul>{% if reader.uncertainties %}<h4>仍不确定</h4><ul>{% for item in reader.uncertainties %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}{% if reader.author_attention_points %}<h4>请作者留意</h4><ul>{% for item in reader.author_attention_points %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}</section>
       <div class="original-form-grid" data-narrative-drive-controls>
         <label class="original-field"><span>Primary Narrative Drive</span><select data-primary-drive>{% for option in reader.drive_options %}<option value="{{ option.value }}" {% if option.value == reader.primary_drive_value %}selected{% endif %}>{{ option.label }}</option>{% endfor %}</select></label>
@@ -82,7 +92,7 @@
         <button class="button primary" type="button" data-original-action="confirm-reader">符合我的想法</button>
         {% for preset in reader.presets %}<button class="button" type="button" data-original-action="reader-preset" data-reader-preset-values='{{ preset["values"]|tojson }}'>{{ preset.label }}</button>{% endfor %}
       </div>
-      <p class="muted">确认后只保存 Reader Experience、市场分类与 Narrative Drive Proposal。详细成长、世界与兑现语法会等 Core Innovation 和 Story Foundation 都选定后再生成。</p>
+      <p class="muted">确认后保存 Reader Experience、市场分类、Narrative Drive 与 Creative Semantics Proposal。详细成长、世界与兑现语法会等核心玩法和 Story Foundation 都选定后再生成。</p>
     </section>
     {% else %}
 
@@ -92,15 +102,17 @@
       <div class="original-priority-grid">
         {% for item in original.reader_experience_display.priorities %}<article class="original-priority-row"><div class="original-priority-heading"><span>{{ item.label }}</span><strong>{{ item.value_label }}</strong></div></article>{% endfor %}
       </div>
-      <p class="muted">这些阅读体验强度与已确认的 Narrative Drive 将共同作为后续 Core Innovation 的创作边界；后续推理不得静默覆盖作者确认值。</p>
+      {% set creative = original.reader_experience.creative_semantics %}
+      <div class="original-final-preview"><article><span>核心幻想</span><strong>{{ creative.signature_fantasy }}</strong></article><article><span>Seed 已有生成机制</span><strong>{{ creative.existing_signature_mechanism or '尚未确定' }}</strong></article><article><span>可重复阅读循环</span><strong>{{ creative.repeatable_reader_loop|join(' → ') }}</strong></article></div>
+      <p class="muted">这些阅读体验强度、Narrative Drive 与 Creative Semantics 将共同作为后续核心玩法的创作边界；后续推理不得静默覆盖作者确认值。</p>
     </section>
     {% endif %}
 
     {% if original.generating_innovation_proposal %}
     <section class="panel original-status-card">
-      <p class="wb-kicker">Step 1 · 核心创意 AI 任务</p>
-      <h2>正在生成三个高杠杆核心创意</h2>
-      <p>三者共享已确认的阅读体验与主要驱动力，只比较机制如何产生选择、成长、兑现和新的问题空间。</p>
+      <p class="wb-kicker">Step 1 · 核心玩法 AI 任务</p>
+      <h2>正在生成三个核心玩法方案</h2>
+      <p>这本书会靠什么持续产生选择、成长和爽点？三个方案共享已确认的阅读体验、主要驱动力与创作语义，只在真正尚未决定的空间里创新。</p>
       <div class="original-actions">
         {% if original.generating_innovation_proposal.handoff_id %}<button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_innovation_proposal.handoff_id }}/instruction">复制给 Codex 的指令</button>{% endif %}
         <button class="button" type="button" data-original-action="prepare-core">检查生成状态</button>
@@ -110,48 +122,46 @@
     {% elif original.innovation_proposal and not original.innovation_selection %}
     <form class="panel original-foundation original-innovation-step" data-core-innovation-select>
       <header class="original-wizard-header">
-        <div><p class="wb-kicker">Step 1 · 核心创意</p><h2>先选择会持续产生内容的机制</h2></div><span class="badge">等待作者选择</span>
+        <div><p class="wb-kicker">Step 1 · 核心玩法</p><h2>这本书会靠什么持续产生选择、成长和爽点？</h2></div><span class="badge">等待作者选择</span>
       </header>
-      <p class="muted">这三个方案共享已确认的 Reader Promise 与 Narrative Drive；差异来自机制本身，不来自强行更换题材或故事引擎。你可以选一个作为主机制，并在最后补充想吸收的特征。</p>
+      <p class="muted">如果 Seed 已经有强生成机制，三个方案都会保留它，只比较尚未解决的设计选择；如果 Seed 没有机制，三个方案仍会提出真正不同的生成方式。</p>
       <div class="original-choice-grid">
         {% for item in original.innovation_proposal.innovation_candidates %}
         <label class="original-choice original-choice-tall">
           <input type="radio" name="selected_primary_innovation_id" value="{{ item.innovation_id }}" {% if loop.first %}checked{% endif %}>
           <strong>{{ item.title }}</strong>
-          <span>{{ item.one_sentence_hook }}</span>
-          <small>核心机制：{{ item.core_mechanism }}</small>
-          <small>它如何产生选择：{{ item.choice_generation }}</small>
-          <small>它如何推动成长：{{ item.progression_generation }}</small>
-          <small>它如何兑现爽点：{{ item.payoff_generation }}</small>
+          <span>{{ item.plain_language_pitch }}</span>
+          <small><strong>具体示例（NON_CANON，仅供理解）</strong>：{{ item.concrete_example }}</small>
+          <small>为什么会期待下一次：{{ item.reader_anticipation }}</small>
           <small>限制与代价：{{ item.limitation }}</small>
-          <details><summary>查看长期能力与风险</summary><small>扩张语法：{{ item.expansion_grammar }}</small><small>长篇容量：{{ item.long_form_capacity }}</small><small>新颖性来源：{{ item.novelty_source }}</small><small>重复风险：{{ item.repetition_risk }}</small></details>
+          <details><summary>查看设计细节</summary><small>解决的开放问题：{{ item.unresolved_design_choices|join(' / ') }}</small><small>核心机制：{{ item.core_mechanism }}</small><small>主角特殊规则：{{ item.protagonist_special_rule }}</small><small>选择生成：{{ item.choice_generation }}</small><small>成长生成：{{ item.progression_generation }}</small><small>兑现生成：{{ item.payoff_generation }}</small><small>扩张语法：{{ item.expansion_grammar }}</small><small>长篇容量：{{ item.long_form_capacity }}</small><small>新颖性来源：{{ item.novelty_source }}</small><small>重复风险：{{ item.repetition_risk }}</small><small>与阅读承诺的契合：{{ item.fit_with_reader_promise }}</small></details>
         </label>
         {% endfor %}
       </div>
       <label class="original-field original-field-wide"><span>想融合哪些特点（可选）</span><textarea name="optional_mix_notes" rows="3" placeholder="只写你想吸收的特征，系统不会自动融合全部方案。"></textarea></label>
-      <footer class="original-wizard-actions"><button class="button primary" type="submit">选择这个核心创意并生成故事基础</button></footer>
+      <footer class="original-wizard-actions"><button class="button primary" type="submit">选择这个核心玩法并生成故事基础</button></footer>
     </form>
     {% elif original.innovation_selection %}
     <section class="panel original-reader-confirmed" data-core-innovation-confirmed>
-      <header class="original-wizard-header"><div><p class="wb-kicker">已冻结 · 核心创意</p><h2>Foundation 将在这个机制边界下生成</h2></div><span class="badge">作者意图</span></header>
+      <header class="original-wizard-header"><div><p class="wb-kicker">已冻结 · 核心玩法</p><h2>Foundation 将在这个机制边界下生成</h2></div><span class="badge">作者意图</span></header>
       {% for item in original.innovation_proposal.innovation_candidates if item.innovation_id == original.innovation_selection.selected_primary_innovation_id %}
-      <div class="original-final-preview"><article><span>{{ item.title }}</span><strong>{{ item.one_sentence_hook }}</strong></article><article><span>核心机制</span><strong>{{ item.core_mechanism }}</strong></article><article><span>选择 / 成长 / 兑现</span><strong>{{ item.choice_generation }} · {{ item.progression_generation }} · {{ item.payoff_generation }}</strong></article></div>
+      <div class="original-final-preview"><article><span>{{ item.title }}</span><strong>{{ item.plain_language_pitch }}</strong></article><article><span>为什么会期待下一次</span><strong>{{ item.reader_anticipation }}</strong></article><article><span>限制与代价</span><strong>{{ item.limitation }}</strong></article></div>
       {% endfor %}
       {% if original.innovation_selection.optional_mix_notes %}<p class="muted">作者希望吸收的特征：{{ original.innovation_selection.optional_mix_notes }}</p>{% endif %}
       <p class="muted">后续 Foundation、成长与长线、第一阶段和候选生成都必须读取这份冻结 Intent；如果发现风险，只能提出 Alternative，不能静默替换。</p>
-      {% if not original.accepted %}<details><summary>重新选择核心创意</summary><form data-core-innovation-select data-reselection="core"><div class="original-choice-grid">{% for item in original.innovation_proposal.innovation_candidates %}<label class="original-choice"><input type="radio" name="selected_primary_innovation_id" value="{{ item.innovation_id }}" {% if item.innovation_id == original.innovation_selection.selected_primary_innovation_id %}checked{% endif %}><strong>{{ item.title }}</strong><span>{{ item.one_sentence_hook }}</span></label>{% endfor %}</div><label class="original-field original-field-wide"><span>融合说明</span><textarea name="optional_mix_notes" rows="3">{{ original.innovation_selection.optional_mix_notes }}</textarea></label><button class="button" type="submit">确认重新选择核心创意</button></form></details>{% endif %}
+      {% if not original.accepted %}<details><summary>重新选择核心玩法</summary><form data-core-innovation-select data-reselection="core"><div class="original-choice-grid">{% for item in original.innovation_proposal.innovation_candidates %}<label class="original-choice"><input type="radio" name="selected_primary_innovation_id" value="{{ item.innovation_id }}" {% if item.innovation_id == original.innovation_selection.selected_primary_innovation_id %}checked{% endif %}><strong>{{ item.title }}</strong><span>{{ item.plain_language_pitch }}</span></label>{% endfor %}</div><label class="original-field original-field-wide"><span>融合说明</span><textarea name="optional_mix_notes" rows="3">{{ original.innovation_selection.optional_mix_notes }}</textarea></label><button class="button" type="submit">确认重新选择核心玩法</button></form></details>{% endif %}
     </section>
     {% endif %}
 
     {% if not original.accepted and original.foundation_selection and original.proposal %}
-    <section class="panel original-reader-confirmed"><details><summary>换一个故事基础</summary><form data-foundation-select data-reselection="foundation"><p class="muted">只会废弃依赖旧选择的 Development；Reader Kernel、Core Innovation 与三个 Foundation 历史都会保留。</p><div class="original-choice-grid">{% for item in original.proposal.foundation_candidates %}<label class="original-choice"><input type="radio" name="selected_foundation_id" value="{{ item.candidate_id }}" {% if item.candidate_id == original.foundation_selection.selected_foundation_id %}checked{% endif %}><strong>{{ item.title }}</strong><span>{{ item.author_facing_pitch }}</span></label>{% endfor %}</div><button class="button" type="submit">确认更换故事基础</button></form></details></section>
+    <section class="panel original-reader-confirmed"><details><summary>换一个故事基础</summary><form data-foundation-select data-reselection="foundation"><p class="muted">只会废弃依赖旧选择的 Development；Reader Kernel、核心玩法与三个 Foundation 历史都会保留。</p><div class="original-choice-grid">{% for item in original.proposal.foundation_candidates %}<label class="original-choice"><input type="radio" name="selected_foundation_id" value="{{ item.candidate_id }}" {% if item.candidate_id == original.foundation_selection.selected_foundation_id %}checked{% endif %}><strong>{{ item.title }}</strong><span>{{ item.author_facing_pitch }}</span></label>{% endfor %}</div><button class="button" type="submit">确认更换故事基础</button></form></details></section>
     {% endif %}
 
     {% if original.generating_proposal %}
     <section class="panel original-status-card">
       <p class="wb-kicker">Step 2 · 故事基础</p>
-      <h2>正在核心创意下生成三个故事基础</h2>
-      <p>三个方案会更换故事承载方式，但不会重新发明或替换已冻结的核心创意。</p>
+      <h2>正在核心玩法下生成三个故事基础</h2>
+      <p>三个方案会用不同的活动、压力、资源与关系承载同一玩法，不会为显得不同而再发明竞争性核心。</p>
       <div class="original-actions">
         {% if original.generating_proposal.handoff_id %}<button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_proposal.handoff_id }}/instruction">复制给 Codex 的指令</button>{% endif %}
         <button class="button" type="button" data-original-action="bootstrap">检查生成状态</button>
@@ -181,7 +191,7 @@
     {% if not original.proposal and original.innovation_selection and not original.generating_proposal %}
     <section class="panel original-status-card">
       <p class="wb-kicker">Step 2 · 故事基础</p>
-      <h2>准备核心创意下的三个故事基础</h2>
+      <h2>准备核心玩法下的三个故事基础</h2>
       <p>AI 只会生成待确认方案，不会创建正式章节，也不会替你批准设定。</p>
       <div class="original-actions">
         <button class="button primary" type="button" data-original-action="bootstrap">生成故事基础</button>
@@ -190,32 +200,31 @@
     {% elif not original.accepted and original.proposal and not original.foundation_selection %}
     <form class="panel original-foundation" data-foundation-select>
       <header class="original-wizard-header"><div><p class="wb-kicker">Step 2 · 故事基础</p><h2>明确选择一个故事承载方案</h2></div><span class="badge">作者决定</span></header>
-      <p>三个候选共享 Reader Experience、Narrative Drive 与 Core Innovation；选择后才会展开长期成长与第一阶段。</p>
+      <p>三个候选共享 Reader Experience、Narrative Drive、Creative Semantics 与核心玩法；选择后才会展开长期成长与第一阶段。</p>
       <div class="original-choice-grid">
         {% for item in original.proposal.foundation_candidates %}
         <label class="original-choice original-choice-tall">
           <input type="radio" name="selected_foundation_id" value="{{ item.candidate_id }}" {% if loop.first %}checked{% endif %}>
-          <strong>{{ item.title }}</strong><span>{{ item.core_reading_promise }}</span>
-          <small>主角：{{ item.protagonist }}</small><small>能力 / 弱点：{{ item.protagonist_competence }} / {{ item.protagonist_weakness }}</small>
-          <small>开局：{{ item.opening_situation }}</small><small>世界承载：{{ item.world_carrier }}</small>
-          <small>第一阶段目标：{{ item.first_stage_objective }}</small><small>风险：{{ item.risk_structure }}</small>
-          <small>社会 / 资源：{{ item.social_configuration }} / {{ item.resource_structure }}</small>
-          <details><summary>作者向故事 pitch</summary><small>{{ item.author_facing_pitch }}</small></details>
+          <strong>{{ item.title }}</strong><span>{{ item.author_facing_pitch }}</span>
+          <small>开局：{{ item.opening_situation }}</small>
+          <small>平时会面对的选择：{{ item.typical_choice }}</small>
+          <small>第一阶段目标：{{ item.first_stage_objective }}</small>
+          <details><summary>查看故事结构</summary><small>阅读承诺：{{ item.core_reading_promise }}</small><small>主角：{{ item.protagonist }}</small><small>能力 / 弱点：{{ item.protagonist_competence }} / {{ item.protagonist_weakness }}</small><small>目标 / 冲突：{{ item.protagonist_goal }} / {{ item.main_conflict }}</small><small>世界承载：{{ item.world_carrier }}</small><small>风险：{{ item.risk_structure }}</small><small>社会 / 资源：{{ item.social_configuration }} / {{ item.resource_structure }}</small><small>与 Seed 的关系：{{ item.premise_relationship }}</small><small>如何让核心玩法更好玩：{{ item.innovation_fit }}</small></details>
         </label>
         {% endfor %}
       </div>
       <footer class="original-wizard-actions"><button class="button primary" type="submit">选择并展开此故事基础</button></footer>
     </form>
     {% elif not original.accepted and original.generating_development_proposal %}
-    <section class="panel original-status-card"><p class="wb-kicker">Step 3 · Foundation Development</p><h2>正在针对已选故事基础生成成长长线与第一阶段</h2><p>此任务不会替换 Reader Experience、Narrative Drive 或 Core Innovation。</p>{% if original.generating_development_proposal.handoff_id %}<button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_development_proposal.handoff_id }}/instruction">复制给 Codex 的指令</button>{% endif %}</section>
+    <section class="panel original-status-card"><p class="wb-kicker">Step 3 · Foundation Development</p><h2>正在针对已选故事基础生成成长长线与第一阶段</h2><p>此任务不会替换 Reader Experience、Narrative Drive、Creative Semantics 或核心玩法。</p>{% if original.generating_development_proposal.handoff_id %}<button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_development_proposal.handoff_id }}/instruction">复制给 Codex 的指令</button>{% endif %}</section>
     {% elif not original.accepted and original.development_proposal %}
     {% set proposal = original.development_proposal %}
     <form class="panel original-foundation original-wizard" data-original-confirm data-proposal-version-id="{{ original.current_development_proposal_version_id or '' }}" data-selected-foundation-title="{{ proposal.selected_foundation.title }}" data-selected-foundation-pitch="{{ proposal.selected_foundation.author_facing_pitch }}">
       <header class="original-wizard-header">
-        <div><p class="wb-kicker">Step 2 · 故事基础</p><h2>在已冻结的核心创意下确认故事承载方式</h2></div>
+        <div><p class="wb-kicker">Step 2 · 故事基础</p><h2>在已冻结的核心玩法下确认故事承载方式</h2></div>
         <ol class="original-wizard-progress" aria-label="确认步骤">
           <li class="is-done">0 阅读体验</li>
-          <li class="is-done">1 核心创意</li>
+          <li class="is-done">1 核心玩法</li>
           <li class="is-done">2 故事基础</li>
           <li data-wizard-indicator="3">3 成长与长线</li>
           <li data-wizard-indicator="4">4 第一阶段</li>

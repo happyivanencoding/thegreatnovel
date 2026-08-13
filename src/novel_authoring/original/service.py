@@ -28,6 +28,7 @@ from novel_authoring.original.models import (
     CoreInnovationProposal,
     FoundationDevelopmentProposal,
     OriginalBookRequest,
+    OriginalCreativeSemantics,
     OriginalFoundationConfirmation,
     OriginalReaderKernelProposal,
     OriginalState,
@@ -252,17 +253,28 @@ def _confirmed_progression_kernel(
     reader = effective.get(ProgressionContractType.READER_EXPERIENCE)
     if reader is None:
         raise OriginalWorkflowError("必须先确认 Reader Experience")
+    reader_proposal_payload = _read_json(
+        _original_dir(database, book_id) / "reader_experience.json"
+    )
+    if reader_proposal_payload is None:
+        raise OriginalWorkflowError("已确认的 Reader Kernel Proposal 不存在")
+    creative_semantics = OriginalCreativeSemantics.model_validate(
+        reader_proposal_payload.get("creative_semantics")
+    )
     contract_records = list_contract_records(database, book_id=book_id, edition_id="base")
     latest_by_type: dict[str, dict[str, Any]] = {}
     for record in contract_records:
         latest_by_type.setdefault(record.contract_type.value, record.model_dump(mode="json"))
     kernel: dict[str, Any] = {
         "reader_experience": reader.model_dump(mode="json"),
+        "creative_semantics": creative_semantics.model_dump(mode="json"),
         "contract_proposals": latest_by_type,
         "foundation_rules": [
-            "故事基础候选必须共享已确认的 Reader Experience 与 Primary Narrative Drive",
-            "故事基础候选必须在同一核心创意下提供不同的故事承载方式",
-            "不得把市场分类、setting skin 或社会议题替换成新的核心机制",
+            "故事基础候选必须共享已确认的 Reader Experience、Primary Narrative Drive "
+            "与 Creative Semantics",
+            "故事基础候选必须用不同故事活动、压力、资源、关系与扩张方式承载同一核心玩法",
+            "不得为追求候选差异新增未经 Seed、Creative Semantics 或 Core Intent "
+            "需要的竞争性第二核心机制",
         ],
     }
     if core_innovation is not None:
@@ -2722,8 +2734,8 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
             "ORIGINAL_SEED": "一句话创意已保存",
             "READER_EXPERIENCE_GENERATING": "AI 正在理解阅读体验与叙事驱动力",
             "READER_EXPERIENCE_REVIEW": "等待确认阅读体验",
-            "CORE_INNOVATION_GENERATING": "正在生成核心创意方案",
-            "CORE_INNOVATION_REVIEW": "等待选择核心创意",
+            "CORE_INNOVATION_GENERATING": "正在生成核心玩法方案",
+            "CORE_INNOVATION_REVIEW": "等待选择核心玩法",
             "FOUNDATION_GENERATING": "正在生成故事方案",
             "FOUNDATION_REVIEW": "等待你确认故事方案",
             "DEVELOPMENT_GENERATING": "正在展开选定的故事基础",

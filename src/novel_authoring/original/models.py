@@ -101,17 +101,34 @@ class OriginalBookRequest(BaseModel):
     reference_traits: list[str] = Field(default_factory=list)
 
 
+class OriginalCreativeSemantics(BaseModel):
+    """Open author-intent semantics from the ORIGINAL first read."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    signature_fantasy: str = Field(min_length=1)
+    existing_signature_mechanism: str = ""
+    open_design_space: list[str] = Field(min_length=1)
+    payoff_texture: list[str] = Field(min_length=1)
+    novelty_focus: list[str] = Field(min_length=1)
+    realism_anchors: list[str] = Field(min_length=1)
+    complexity_boundaries: list[str] = Field(min_length=1)
+    repeatable_reader_loop: list[str] = Field(min_length=1)
+    anti_drift: list[str] = Field(min_length=1)
+
+
 class OriginalReaderKernelProposal(BaseModel):
     """Semantic first read for author review; never an Effective contract."""
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal["original-reader-kernel-v1"] = "original-reader-kernel-v1"
+    schema_version: Literal["original-reader-kernel-v2"] = "original-reader-kernel-v2"
     information_status: Literal["PROPOSAL"] = "PROPOSAL"
     summary: str = Field(min_length=1)
     reader_experience: ReaderExperienceContract
     market_category: MarketCategoryMetadata
     narrative_drive: NarrativeDriveContract
+    creative_semantics: OriginalCreativeSemantics
     semantic_evidence: list[str] = Field(min_length=1)
     uncertainties: list[str] = Field(default_factory=list)
     author_attention_points: list[str] = Field(default_factory=list)
@@ -141,7 +158,10 @@ class CoreInnovationCandidate(BaseModel):
 
     innovation_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
     title: str = Field(min_length=1)
-    one_sentence_hook: str = Field(min_length=1)
+    plain_language_pitch: str = Field(min_length=1)
+    concrete_example: str = Field(min_length=1)
+    reader_anticipation: str = Field(min_length=1)
+    unresolved_design_choices: list[str] = Field(min_length=1)
     core_mechanism: str = Field(min_length=1)
     protagonist_special_rule: str = Field(min_length=1)
     choice_generation: str = Field(min_length=1)
@@ -160,7 +180,7 @@ class CoreInnovationProposal(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal["core-innovation-v1"] = "core-innovation-v1"
+    schema_version: Literal["core-innovation-v2"] = "core-innovation-v2"
     information_status: Literal["PROPOSAL"] = "PROPOSAL"
     innovation_candidates: list[CoreInnovationCandidate] = Field(min_length=3, max_length=3)
     kernel_contracts: dict[str, Any]
@@ -423,6 +443,7 @@ __all__ = [
     "HiddenTruthCandidate",
     "FirstChapterCandidate",
     "OriginalBookRequest",
+    "OriginalCreativeSemantics",
     "OriginalFoundationConfirmation",
     "OriginalReaderKernelProposal",
     "OriginalState",

@@ -1106,6 +1106,7 @@ th, td { padding: .6rem; border-bottom: 1px solid var(--line); text-align: left;
 .original-choice strong, .original-choice h3 { margin: 0; color: #101828; font-size: 1.02rem; }
 .original-choice span { line-height: 1.55; }
 .original-choice small { color: #667085; line-height: 1.5; }
+.original-choice details small { display: block; margin-top: 6px; }
 .original-choice .button { align-self: end; margin-top: auto; }
 .original-confirm-line { display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 14px; color: #344054; font-weight: 650; }
 .original-draft-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(260px, auto); align-items: center; gap: 18px; padding: 18px 0; border-top: 1px solid #eaecf0; }

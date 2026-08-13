@@ -17,6 +17,7 @@ from novel_authoring.original.models import (
     CoreInnovationCandidate,
     CoreInnovationProposal,
     FoundationDevelopmentProposal,
+    OriginalCreativeSemantics,
     OriginalReaderKernelProposal,
     StoryFoundationProposal,
 )
@@ -72,16 +73,41 @@ from novel_authoring.workflows.handoffs import (
 BOOK_ID = "original-test"
 
 
+def creative_semantics_payload(
+    *, existing_signature_mechanism: str = "每日一次、不可撤销的受限行动机会"
+) -> dict[str, Any]:
+    return {
+        "signature_fantasy": "普通人在压力中把有限机会变成不断扩大的主动权",
+        "existing_signature_mechanism": existing_signature_mechanism,
+        "open_design_space": ["如何让每次选择保持新鲜", "既有成果如何组合并持续回收"],
+        "payoff_texture": ["具体选择带来的反差", "旧成果在新压力中的回收"],
+        "novelty_focus": ["有限机会产生的不同用途与组合"],
+        "realism_anchors": ["人物的资源判断与行动后果保持直观"],
+        "complexity_boundaries": ["不增加与既有机制竞争的第二套异常系统"],
+        "repeatable_reader_loop": ["压力出现", "选择有限机会", "立即兑现", "打开新局势"],
+        "anti_drift": ["把故事改写成调查另一套独立世界规则"],
+    }
+
+
 def innovation_payload() -> dict[str, Any]:
     return {
-        "schema_version": "core-innovation-v1",
+        "schema_version": "core-innovation-v2",
         "information_status": "PROPOSAL",
         "innovation_candidates": [
             {
                 "innovation_id": f"innovation-{index}",
                 "title": f"核心机制 {index}",
-                "one_sentence_hook": f"同一承诺通过机制 {index} 持续产生新选择。",
-                "core_mechanism": f"机制杠杆 {index}",
+                "plain_language_pitch": f"保留每日受限机会，并用方案 {index} 让选择持续变化。",
+                "concrete_example": (
+                    f"主角在一次压力中选择用途 {index}；"
+                    "这不是故事基础、Canon 或必然事件。"
+                ),
+                "reader_anticipation": f"读者会期待下一次有限机会如何与旧成果组合 {index}。",
+                "unresolved_design_choices": [
+                    f"有限机会怎样产生不同选择 {index}",
+                    f"已有成果怎样在后续压力中回收 {index}",
+                ],
+                "core_mechanism": f"保留每日一次、不可撤销的受限行动机会；变化来自方案 {index}",
                 "protagonist_special_rule": f"主角的特殊规则 {index}",
                 "choice_generation": f"选择空间来源 {index}",
                 "progression_generation": f"成长空间来源 {index}",
@@ -143,7 +169,7 @@ def proposal_payload(*, progression_enabled: bool = True) -> dict[str, Any]:
                 "author_facing_pitch": "主角在压力中承担代价明确的选择。",
                 "opening_situation": "档案室出现异常空洞，主角决定是否介入。",
                 "typical_choice": "在安全与测试核心机制之间不可逆选择。",
-                "innovation_fit": "让核心机制直接改变人物行动。",
+                "innovation_fit": "让核心机制直接改变人物行动，不新增第二核心。",
             },
         "protagonist": "林默",
         "protagonist_goal": "找回被删除的情感",
@@ -191,9 +217,9 @@ def proposal_payload(*, progression_enabled: bool = True) -> dict[str, Any]:
         ],
         "recommended_route_id": "route-2",
         "recommendation_reason": "人物代价与世界机制结合最紧密",
-        "progression_grammar": ["通过新的可验证选择获得新的行动能力"],
-        "expansion_grammar": ["从当前环境向更大的问题空间自然扩展，不预设固定层数"],
-        "payoff_grammar": ["先兑现当前机制，再暴露更高瓶颈与组合可能"],
+        "progression_grammar": ["压力出现后选择有限机会，并由结果获得新的行动能力"],
+        "expansion_grammar": ["兑现当前结果后打开新局势，不预设固定层数"],
+        "payoff_grammar": ["立即兑现当前结果，再暴露更高瓶颈与组合可能"],
         "first_phase": {
             "selected_foundation_id": "foundation-1",
             "opening_pressure": "异常空洞在公开场合出现，主角必须承担立即后果。",
@@ -288,8 +314,15 @@ def foundation_payload() -> dict[str, Any]:
                     "title": f"基础框架 {index}",
                     "core_reading_promise": f"让选择承担不同压力 {index}",
                     "main_conflict": f"冲突表现 {index}",
+                    "world_carrier": f"世界承载 {index}",
                     "first_stage_objective": f"第一阶段目标 {index}",
+                    "risk_structure": f"压力结构 {index}",
+                    "social_configuration": f"关系进入方式 {index}",
+                    "resource_structure": f"资源循环 {index}",
+                    "author_facing_pitch": f"主角会反复进行具体故事活动 {index}。",
                     "opening_situation": f"开局压力 {index}",
+                    "typical_choice": f"在压力 {index} 下使用既有机制作出取舍。",
+                    "innovation_fit": f"用承载方式 {index} 兑现核心玩法，不新增第二核心。",
                 }
             )
         candidates.append(item)
@@ -348,6 +381,9 @@ def complete_reader_kernel_handoff(
         reader_experience=reader,
         market_category=market,
         narrative_drive=drive,
+        creative_semantics=OriginalCreativeSemantics.model_validate(
+            creative_semantics_payload()
+        ),
         semantic_evidence=[
             "生存压力来自不可逆选择",
             "资源机会来自每日受限行动",
@@ -590,6 +626,22 @@ def complete_development_handoff(
     )
     development_data = proposal_payload(progression_enabled=progression_enabled)
     development_data["kernel_contracts"] = original_request["progression_kernel"]
+    development_data["core_innovation_intent"] = {
+        "selected_primary_innovation_id": original_request["progression_kernel"][
+            "core_innovation"
+        ]["selected_primary_innovation_id"],
+        "optional_mix_notes": original_request["progression_kernel"]["core_innovation"].get(
+            "optional_mix_notes", ""
+        ),
+    }
+    selected_foundation = original_request["selected_story_foundation"]
+    development_data["selected_foundation_id"] = selected_foundation[
+        "selected_foundation_id"
+    ]
+    development_data["selected_foundation"] = selected_foundation["selected_candidate"]
+    development_data["first_phase"]["selected_foundation_id"] = selected_foundation[
+        "selected_foundation_id"
+    ]
     development = FoundationDevelopmentProposal.model_validate(development_data)
     artifact = (
         Path(str(frozen_handoff["task_directory"]))
@@ -791,7 +843,10 @@ def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path:
     assert set(CoreInnovationCandidate.model_fields) == {
         "innovation_id",
         "title",
-        "one_sentence_hook",
+        "plain_language_pitch",
+        "concrete_example",
+        "reader_anticipation",
+        "unresolved_design_choices",
         "core_mechanism",
         "protagonist_special_rule",
         "choice_generation",
@@ -819,7 +874,9 @@ def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path:
     candidates = overview["innovation_proposal"]["innovation_candidates"]
     assert len(candidates) == 3
     assert len({item["innovation_id"] for item in candidates}) == 3
-    assert all(item["core_mechanism"] for item in candidates)
+    signature_mechanism = creative_semantics_payload()["existing_signature_mechanism"]
+    assert all(signature_mechanism in item["core_mechanism"] for item in candidates)
+    assert len({tuple(item["unresolved_design_choices"]) for item in candidates}) == 3
 
     selected = select_original_core_innovation(
         database,
@@ -850,10 +907,15 @@ def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path:
         .read_text(encoding="utf-8")
     )
     assert foundation_request["progression_kernel"]["foundation_rules"] == [
-        "故事基础候选必须共享已确认的 Reader Experience 与 Primary Narrative Drive",
-        "故事基础候选必须在同一核心创意下提供不同的故事承载方式",
-        "不得把市场分类、setting skin 或社会议题替换成新的核心机制",
+        "故事基础候选必须共享已确认的 Reader Experience、Primary Narrative Drive "
+        "与 Creative Semantics",
+        "故事基础候选必须用不同故事活动、压力、资源、关系与扩张方式承载同一核心玩法",
+        "不得为追求候选差异新增未经 Seed、Creative Semantics 或 Core Intent "
+        "需要的竞争性第二核心机制",
     ]
+    assert foundation_request["progression_kernel"]["creative_semantics"] == (
+        creative_semantics_payload()
+    )
     assert (
         foundation_request["progression_kernel"]["core_innovation"][
             "selected_primary_innovation_id"
@@ -877,6 +939,59 @@ def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path:
     assert foundation_imported["proposal"]["core_innovation_intent"] == selected[
         "innovation_intent"
     ]
+    foundation_candidates = foundation_imported["proposal"]["foundation_candidates"]
+    assert len(
+        {
+            (
+                item["typical_choice"],
+                item["risk_structure"],
+                item["resource_structure"],
+                item["social_configuration"],
+                item["world_carrier"],
+            )
+            for item in foundation_candidates
+        }
+    ) == 3
+    assert all("不新增第二核心" in item["innovation_fit"] for item in foundation_candidates)
+
+    development = select_original_foundation(
+        database,
+        BOOK_ID,
+        foundation_candidates[0]["candidate_id"],
+    )
+    development_handoff = get_handoff(database, str(development["handoff"]["handoff_id"]))
+    development_request = json.loads(
+        (
+            Path(str(development_handoff["task_directory"]))
+            / "input"
+            / "original_request.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert development_request["progression_kernel"]["creative_semantics"] == (
+        creative_semantics_payload()
+    )
+    assert development_request["selected_story_foundation"]["selected_candidate"] == (
+        foundation_candidates[0]
+    )
+
+    complete_development_handoff(database)
+    developed = original_overview(database, BOOK_ID)["development_proposal"]
+    assert developed["kernel_contracts"]["creative_semantics"] == (
+        creative_semantics_payload()
+    )
+    grammar_text = json.dumps(
+        {
+            "progression": developed["progression_grammar"],
+            "expansion": developed["expansion_grammar"],
+            "payoff": developed["payoff_grammar"],
+            "first_phase": developed["first_phase"],
+        },
+        ensure_ascii=False,
+    )
+    assert all(
+        step in grammar_text
+        for step in creative_semantics_payload()["repeatable_reader_loop"]
+    )
     with database.connect() as connection:
         counts = connection.execute(
             "SELECT (SELECT COUNT(*) FROM chapters), "
@@ -949,7 +1064,7 @@ def test_foundation_can_be_explicitly_reselected_before_final_confirmation(
     )
     with TestClient(app) as client:
         page = client.get(f"/books/{BOOK_ID}/original")
-    assert "重新选择核心创意" in page.text
+    assert "重新选择核心玩法" in page.text
     assert "换一个故事基础" in page.text
     assert "不会删除历史，也不会修改 Canon" in Path(
         "src/novel_authoring/web/static/original.js"
@@ -1711,6 +1826,51 @@ def test_original_web_entry_and_premise_form(tmp_path: Path) -> None:
     assert instruction.json()["instruction"]
     assert f'data-copy-instruction="{instruction_url}"' in original.text
     assert f'href="/api/handoffs/{handoff_id}/instruction"' not in original.text
+
+
+def test_original_studio_renders_human_first_core_and_foundation_cards(
+    tmp_path: Path,
+) -> None:
+    layout, database = create_original(tmp_path)
+    core_handoff_id = complete_core_innovation_handoff(database)
+    import_original_core_innovation_proposal(database, BOOK_ID, core_handoff_id)
+    app = create_app(
+        database,
+        library_root=layout.library_root,
+        discovery_root=tmp_path / "book",
+    )
+
+    with TestClient(app) as client:
+        core_page = client.get(f"/books/{BOOK_ID}/original")
+
+    assert core_page.status_code == 200
+    assert "核心玩法" in core_page.text
+    assert "保留每日受限机会" in core_page.text
+    assert "具体示例（NON_CANON，仅供理解）" in core_page.text
+    assert "为什么会期待下一次" in core_page.text
+    assert "查看设计细节" in core_page.text
+
+    selected = select_original_core_innovation(
+        database,
+        BOOK_ID,
+        {
+            "selected_primary_innovation_id": "innovation-1",
+            "optional_mix_notes": "",
+        },
+    )
+    assert selected["handoff"]["status"]["status"] == "READY_FOR_CODEX"
+    foundation_handoff_id = complete_foundation_handoff(database)
+    import_original_bootstrap_proposal(database, BOOK_ID, foundation_handoff_id)
+
+    with TestClient(app) as client:
+        foundation_page = client.get(f"/books/{BOOK_ID}/original")
+
+    assert foundation_page.status_code == 200
+    assert "主角在压力中承担代价明确的选择" in foundation_page.text
+    assert "档案室出现异常空洞" in foundation_page.text
+    assert "在安全与测试核心机制之间不可逆选择" in foundation_page.text
+    assert "阻止下一次删除" in foundation_page.text
+    assert "查看故事结构" in foundation_page.text
 
 
 def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_proposal(

@@ -149,9 +149,9 @@
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const selected = String(form.get("selected_primary_innovation_id") || "").trim();
-    if (!selected) { show("请选择一个 Primary Innovation。", true); return; }
-    if (event.currentTarget.dataset.reselection && !window.confirm("修改核心创意会使基于旧核心创意生成的故事基础和 Development 失效，但不会删除历史，也不会修改 Canon。")) return;
-    show("正在冻结 Core Innovation Intent，并准备 Story Foundation Proposal…");
+    if (!selected) { show("请选择一个核心玩法。", true); return; }
+    if (event.currentTarget.dataset.reselection && !window.confirm("修改核心玩法会使基于旧核心玩法生成的故事基础和 Development 失效，但不会删除历史，也不会修改 Canon。")) return;
+    show("正在冻结核心玩法，并准备 Story Foundation Proposal…");
     try {
       await post(`/api/books/${bookId}/original/core-innovation/select`, {
         selected_primary_innovation_id: selected,
@@ -164,9 +164,9 @@
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const selected = String(form.get("selected_foundation_id") || "").trim();
-    if (!selected) { show("请选择一个 Story Foundation。", true); return; }
-    if (event.currentTarget.dataset.reselection && !window.confirm("更换故事基础会使依赖旧选择的 Development 失效，但会保留 Reader Kernel、Core Innovation、Foundation Proposal 历史且不会修改 Canon。")) return;
-    show("正在冻结本次 Foundation 选择并准备 Development Proposal…");
+    if (!selected) { show("请选择一个故事基础。", true); return; }
+    if (event.currentTarget.dataset.reselection && !window.confirm("更换故事基础会使依赖旧选择的 Development 失效，但会保留 Reader Kernel、核心玩法、Foundation Proposal 历史且不会修改 Canon。")) return;
+    show("正在冻结本次故事基础选择并准备 Development Proposal…");
     try {
       await post(`/api/books/${bookId}/original/foundation/select`, {
         selected_foundation_id: selected,
@@ -278,7 +278,7 @@
         show("快捷组合已应用；你仍可以逐项调整后再确认。", false);
         button.disabled = false;
       } else if (action === "prepare-core") {
-        show("正在检查 Core Innovation Proposal…");
+        show("正在检查核心玩法 Proposal…");
         await post(`/api/books/${bookId}/original/core-innovation/prepare`, {});
         window.location.replace(window.location.href);
       } else if (action === "prepare-reader") {
