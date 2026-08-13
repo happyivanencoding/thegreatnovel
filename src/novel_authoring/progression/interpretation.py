@@ -295,6 +295,7 @@ def interpret_reader_experience(
         topology = [ProgressionTopology.LINEAR, ProgressionTopology.ACCUMULATIVE]
         summary = "阶段成长玄幻：资源转化、突破门槛与能力验证持续推进"
     elif drive_interpretation.progression_engine_enabled:
+        priorities[ReaderExperience.PROGRESSION] = ExperiencePriority.VERY_HIGH
         summary = "原创成长引擎已启用；具体语法等待 Core Innovation 与 Story Foundation"
 
     if (

@@ -110,6 +110,39 @@ def market_category_label(value: MarketCategory | str) -> str:
     return _MARKET_LABELS.get(category, category.value)
 
 
+def ensure_drive_support_metadata(
+    contract: NarrativeDriveContract,
+) -> NarrativeDriveContract:
+    """Fill deterministic metadata without changing the author-selected drive mix."""
+
+    priorities = dict(contract.drive_priorities)
+    promises = dict(contract.drive_promises)
+    debt_types = dict(contract.drive_debt_types)
+    payoff_channels = list(contract.drive_payoff_channels)
+    for index, drive in enumerate(contract.drive_mix):
+        priorities.setdefault(drive, max(45, 100 - index * 15))
+        promises.setdefault(
+            drive,
+            [f"持续通过{_DRIVE_LABELS.get(drive, drive.value)}产生可见后果"],
+        )
+        debt_types.setdefault(drive, [drive.value])
+        if not any(item.associated_drive is drive for item in payoff_channels):
+            payoff_channels.append(
+                DrivePayoffChannel(
+                    channel=_payoff_for_drive(drive),
+                    associated_drive=drive,
+                )
+            )
+    return contract.model_copy(
+        update={
+            "drive_priorities": priorities,
+            "drive_promises": promises,
+            "drive_debt_types": debt_types,
+            "drive_payoff_channels": payoff_channels,
+        }
+    )
+
+
 def align_narrative_drive_to_reader_experience(
     value: NarrativeDriveInterpretation,
     reader_contract: ReaderExperienceContract,
@@ -493,6 +526,7 @@ def adjust_narrative_drive_interpretation(
 __all__ = [
     "align_narrative_drive_to_reader_experience",
     "adjust_narrative_drive_interpretation",
+    "ensure_drive_support_metadata",
     "interpret_narrative_drives",
     "market_category_label",
     "narrative_drive_label",

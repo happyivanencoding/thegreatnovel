@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import uuid
 from enum import StrEnum
 from typing import Any
@@ -183,16 +184,20 @@ def list_contract_records(
     return [_record(row) for row in rows]
 
 
-def confirm_contract(
-    database: Database,
+def _confirm_contract_in_connection(
+    connection: sqlite3.Connection,
     contract_record_id: str,
     *,
     effective_from_boundary: int,
     author_notes: str = "",
 ) -> ContractRecord:
-    record = get_contract_record(database, contract_record_id)
-    if record is None:
+    row = connection.execute(
+        "SELECT * FROM progression_contract_versions WHERE contract_record_id=?",
+        (contract_record_id,),
+    ).fetchone()
+    if row is None:
         raise ValueError("Contract Proposal 不存在")
+    record = _record(row)
     if record.status in {ContractStatus.REJECTED, ContractStatus.SUPERSEDED}:
         raise ValueError("已拒绝或被替代的 Contract Proposal 不能确认")
     model_type = _CONTRACT_MODELS[record.contract_type]
@@ -203,56 +208,80 @@ def confirm_contract(
         payload["effective_from_boundary"] = effective_from_boundary
     validated = model_type.model_validate(payload)
     now = utc_now()
-    with database.connect() as connection:
-        previous = connection.execute(
-            """
-            SELECT contract_record_id, payload_json
-            FROM progression_contract_versions
-            WHERE book_id=? AND edition_id=? AND contract_type=?
-              AND status='EFFECTIVE' AND contract_record_id<>?
-            """,
-            (
-                record.book_id,
-                record.edition_id,
-                record.contract_type.value,
-                contract_record_id,
-            ),
-        ).fetchall()
-        for row in previous:
-            old_payload = json.loads(str(row["payload_json"]))
-            if "status" in old_payload:
-                old_payload["status"] = ContractStatus.SUPERSEDED.value
-            connection.execute(
-                """
-                UPDATE progression_contract_versions
-                SET status='SUPERSEDED', payload_json=?, updated_at=?, version=version+1
-                WHERE contract_record_id=?
-                """,
-                (json_dumps(old_payload), now, str(row["contract_record_id"])),
-            )
+    previous = connection.execute(
+        """
+        SELECT contract_record_id, payload_json
+        FROM progression_contract_versions
+        WHERE book_id=? AND edition_id=? AND contract_type=?
+          AND status='EFFECTIVE' AND contract_record_id<>?
+        """,
+        (
+            record.book_id,
+            record.edition_id,
+            record.contract_type.value,
+            contract_record_id,
+        ),
+    ).fetchall()
+    for previous_row in previous:
+        old_payload = json.loads(str(previous_row["payload_json"]))
+        if "status" in old_payload:
+            old_payload["status"] = ContractStatus.SUPERSEDED.value
         connection.execute(
             """
             UPDATE progression_contract_versions
-            SET status='EFFECTIVE', payload_json=?, effective_from_boundary=?,
-                author_notes=?, updated_at=?, version=version+1
+            SET status='SUPERSEDED', payload_json=?, updated_at=?, version=version+1
             WHERE contract_record_id=?
             """,
             (
-                json_dumps(validated.model_dump(mode="json")),
-                effective_from_boundary,
-                author_notes,
+                json_dumps(old_payload),
                 now,
-                contract_record_id,
+                str(previous_row["contract_record_id"]),
             ),
         )
-    confirmed = get_contract_record(database, contract_record_id)
-    if confirmed is None:
+    connection.execute(
+        """
+        UPDATE progression_contract_versions
+        SET status='EFFECTIVE', payload_json=?, effective_from_boundary=?,
+            author_notes=?, updated_at=?, version=version+1
+        WHERE contract_record_id=?
+        """,
+        (
+            json_dumps(validated.model_dump(mode="json")),
+            effective_from_boundary,
+            author_notes,
+            now,
+            contract_record_id,
+        ),
+    )
+    confirmed_row = connection.execute(
+        "SELECT * FROM progression_contract_versions WHERE contract_record_id=?",
+        (contract_record_id,),
+    ).fetchone()
+    if confirmed_row is None:
         raise RuntimeError("Contract 确认失败")
+    return _record(confirmed_row)
+
+
+def confirm_contract(
+    database: Database,
+    contract_record_id: str,
+    *,
+    effective_from_boundary: int,
+    author_notes: str = "",
+) -> ContractRecord:
+    database.initialize()
+    with database.connect() as connection:
+        confirmed = _confirm_contract_in_connection(
+            connection,
+            contract_record_id,
+            effective_from_boundary=effective_from_boundary,
+            author_notes=author_notes,
+        )
     # The contract remains planning-only, but any frozen plan that predates
     # this author decision must not keep accepting candidate output.
     from novel_authoring.planning.aggregates import invalidate_planning_aggregates
 
-    invalidate_planning_aggregates(database, record.book_id, record.edition_id)
+    invalidate_planning_aggregates(database, confirmed.book_id, confirmed.edition_id)
     return confirmed
 
 

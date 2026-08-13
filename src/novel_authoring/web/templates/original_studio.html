@@ -92,7 +92,7 @@
       <div class="original-priority-grid">
         {% for item in original.reader_experience_display.priorities %}<article class="original-priority-row"><div class="original-priority-heading"><span>{{ item.label }}</span><strong>{{ item.value_label }}</strong></div></article>{% endfor %}
       </div>
-      <p class="muted">这些强度会进入下一步 Narrative Drive Proposal；后续推理不得静默覆盖作者确认值。</p>
+      <p class="muted">这些阅读体验强度与已确认的 Narrative Drive 将共同作为后续 Core Innovation 的创作边界；后续推理不得静默覆盖作者确认值。</p>
     </section>
     {% endif %}
 
@@ -254,7 +254,6 @@
 
       <section data-wizard-step="3" hidden>
         <h3>确认成长与长线</h3>
-        <input type="hidden" name="confirm_kernel_contracts" value="true">
         {% if original.pending_kernel_contracts %}
         <div class="original-contract-grid">
           {% for contract in original.pending_kernel_contracts %}

@@ -53,6 +53,7 @@ from novel_authoring.progression.models import (
 from novel_authoring.progression.service import (
     ContractRecord,
     ProgressionContractType,
+    _confirm_contract_in_connection,
     confirm_contract,
     create_contract_proposal,
     effective_contract_records,
@@ -60,6 +61,7 @@ from novel_authoring.progression.service import (
     reject_contract,
 )
 from novel_authoring.serial_kernel.classification import (
+    ensure_drive_support_metadata,
     market_category_label,
     narrative_drive_label,
 )
@@ -587,18 +589,22 @@ def confirm_original_reader_experience(
         priorities[drive] = max(priorities.get(drive, 0), 100 - index * 15)
         promises.setdefault(drive, [f"持续通过{narrative_drive_label(drive)}推动故事状态变化"])
         debts.setdefault(drive, [drive.value])
-    confirmed_drive = current_drive.model_copy(
-        update={
-            "primary_drive": selected_primary,
-            "secondary_drives": selected_secondary,
-            "drive_priorities": priorities,
-            "drive_promises": promises,
-            "drive_debt_types": debts,
-            "progression_engine_enabled": selected_progression,
-            "author_overrides": list(
-                dict.fromkeys([*current_drive.author_overrides, "AUTHOR_CONFIRMED_DRIVE"])
-            ),
-        }
+    confirmed_drive = ensure_drive_support_metadata(
+        current_drive.model_copy(
+            update={
+                "primary_drive": selected_primary,
+                "secondary_drives": selected_secondary,
+                "drive_priorities": priorities,
+                "drive_promises": promises,
+                "drive_debt_types": debts,
+                "progression_engine_enabled": selected_progression,
+                "author_overrides": list(
+                    dict.fromkeys(
+                        [*current_drive.author_overrides, "AUTHOR_CONFIRMED_DRIVE"]
+                    )
+                ),
+            }
+        )
     )
     effective = next(
         (
@@ -1950,6 +1956,173 @@ def import_original_foundation_development(
     }
 
 
+def _current_genesis_contract_rows(
+    connection: sqlite3.Connection,
+    *,
+    book_id: str,
+    development_handoff_id: str,
+) -> dict[ProgressionContractType, sqlite3.Row]:
+    rows: list[sqlite3.Row] = list(
+        connection.execute(
+            "SELECT * FROM progression_contract_versions WHERE book_id=? "
+            "AND edition_id='base' AND status IN ('NEEDS_REVIEW', 'EFFECTIVE') "
+            "ORDER BY version_number DESC",
+            (book_id,),
+        ).fetchall()
+    )
+
+    def select_one(
+        contract_type: ProgressionContractType,
+        *,
+        sources: set[str] | None = None,
+        required_status: ContractStatus | None = None,
+    ) -> sqlite3.Row:
+        matches = [
+            row
+            for row in rows
+            if str(row["contract_type"]) == contract_type.value
+            and (sources is None or str(row["source"]) in sources)
+            and (required_status is None or str(row["status"]) == required_status.value)
+        ]
+        if len(matches) != 1:
+            raise OriginalWorkflowError(
+                f"当前 Genesis 缺少唯一的 {contract_type.value} Contract"
+            )
+        return matches[0]
+
+    selected = {
+        ProgressionContractType.READER_EXPERIENCE: select_one(
+            ProgressionContractType.READER_EXPERIENCE,
+            required_status=ContractStatus.EFFECTIVE,
+        ),
+        ProgressionContractType.MARKET_CATEGORY: select_one(
+            ProgressionContractType.MARKET_CATEGORY,
+            sources={"ORIGINAL_READER_SEMANTIC_FIRST_READ"},
+        ),
+        ProgressionContractType.NARRATIVE_DRIVE: select_one(
+            ProgressionContractType.NARRATIVE_DRIVE,
+            sources={
+                "ORIGINAL_READER_SEMANTIC_FIRST_READ",
+                "AUTHOR_CONFIRMED_NARRATIVE_DRIVE",
+            },
+        ),
+    }
+    drive = NarrativeDriveContract.model_validate_json(
+        str(selected[ProgressionContractType.NARRATIVE_DRIVE]["payload_json"])
+    )
+    development_source = f"ORIGINAL_FOUNDATION_DEVELOPMENT:{development_handoff_id}"
+    expected_development = {
+        ProgressionContractType.GENRE,
+        ProgressionContractType.WORLD_EXPANSION,
+        ProgressionContractType.PAYOFF_CHANNEL,
+    }
+    if drive.progression_engine_enabled:
+        expected_development.add(ProgressionContractType.PROGRESSION)
+    for contract_type in expected_development:
+        selected[contract_type] = select_one(
+            contract_type,
+            sources={development_source},
+        )
+    return selected
+
+
+def _validate_current_genesis_selection(
+    connection: sqlite3.Connection,
+    *,
+    book_id: str,
+    development_proposal_version_id: str,
+    development_handoff_id: str,
+    development_proposal: FoundationDevelopmentProposal,
+    selected_innovation: dict[str, Any],
+    selected_foundation: dict[str, Any],
+) -> None:
+    state = connection.execute(
+        "SELECT current_innovation_proposal_version_id, selected_primary_innovation_id, "
+        "optional_mix_notes, current_proposal_version_id, "
+        "selected_foundation_proposal_version_id, selected_foundation_id, "
+        "current_development_proposal_version_id FROM original_states "
+        "WHERE book_id=? AND edition_id='base'",
+        (book_id,),
+    ).fetchone()
+    if state is None or (
+        str(state["current_innovation_proposal_version_id"] or "")
+        != selected_innovation["proposal_version_id"]
+        or str(state["selected_primary_innovation_id"] or "")
+        != selected_innovation["selected_primary_innovation_id"]
+        or str(state["optional_mix_notes"] or "")
+        != selected_innovation.get("optional_mix_notes", "")
+        or str(state["current_proposal_version_id"] or "")
+        != selected_foundation["proposal_version_id"]
+        or str(state["selected_foundation_proposal_version_id"] or "")
+        != selected_foundation["proposal_version_id"]
+        or str(state["selected_foundation_id"] or "")
+        != selected_foundation["selected_foundation_id"]
+        or str(state["current_development_proposal_version_id"] or "")
+        != development_proposal_version_id
+    ):
+        raise OriginalWorkflowError("Final Genesis Confirm 的作者选择已变化")
+    innovation = connection.execute(
+        "SELECT status, proposal_json FROM original_innovation_versions "
+        "WHERE innovation_proposal_version_id=? AND book_id=? AND edition_id='base'",
+        (selected_innovation["proposal_version_id"], book_id),
+    ).fetchone()
+    if innovation is None or str(innovation["status"]) != "CURRENT":
+        raise OriginalWorkflowError("Final Genesis Confirm 的 Core Innovation 已变化")
+    innovation_proposal = CoreInnovationProposal.model_validate_json(
+        str(innovation["proposal_json"])
+    )
+    innovation_candidate = next(
+        (
+            candidate
+            for candidate in innovation_proposal.innovation_candidates
+            if candidate.innovation_id
+            == selected_innovation["selected_primary_innovation_id"]
+        ),
+        None,
+    )
+    if innovation_candidate is None or innovation_candidate.model_dump(mode="json") != (
+        selected_innovation["selected_candidate"]
+    ):
+        raise OriginalWorkflowError("Final Genesis Confirm 的 Core Innovation 已变化")
+    foundation = connection.execute(
+        "SELECT status, proposal_json FROM original_proposal_versions "
+        "WHERE proposal_version_id=? AND book_id=? AND edition_id='base'",
+        (selected_foundation["proposal_version_id"], book_id),
+    ).fetchone()
+    if foundation is None or str(foundation["status"]) != "CURRENT":
+        raise OriginalWorkflowError("Final Genesis Confirm 的 Story Foundation 已变化")
+    foundation_proposal = StoryFoundationProposal.model_validate_json(
+        str(foundation["proposal_json"])
+    )
+    foundation_candidate = next(
+        (
+            candidate
+            for candidate in foundation_proposal.foundation_candidates
+            if candidate.candidate_id == selected_foundation["selected_foundation_id"]
+        ),
+        None,
+    )
+    if foundation_candidate is None or foundation_candidate.model_dump(mode="json") != (
+        selected_foundation["selected_candidate"]
+    ):
+        raise OriginalWorkflowError("Final Genesis Confirm 的 Story Foundation 已变化")
+    development = connection.execute(
+        "SELECT status, handoff_id, proposal_json FROM original_development_versions "
+        "WHERE development_proposal_version_id=? AND book_id=? AND edition_id='base'",
+        (development_proposal_version_id, book_id),
+    ).fetchone()
+    if (
+        development is None
+        or str(development["status"]) != "CURRENT"
+        or str(development["handoff_id"] or "") != development_handoff_id
+        or FoundationDevelopmentProposal.model_validate_json(
+            str(development["proposal_json"])
+        )
+        != development_proposal
+    ):
+        raise OriginalWorkflowError("Final Genesis Confirm 的 Development Proposal 已变化")
+
+
 def confirm_original_foundation(
     database: Database,
     book_id: str,
@@ -1995,27 +2168,71 @@ def confirm_original_foundation(
             confirmation=data,
             request=request,
         )
-        applied = apply_genesis_plan(database, book_id, plan)
-    except (GenesisApplyError, sqlite3.IntegrityError) as exc:
-        raise OriginalWorkflowError(str(exc)) from exc
-    confirmed_contracts: list[dict[str, Any]] = []
-    if data.confirm_kernel_contracts:
-        seen: set[ProgressionContractType] = set()
-        for record in list_contract_records(database, book_id=book_id, edition_id="base"):
-            if (
-                record.contract_type is ProgressionContractType.READER_EXPERIENCE
-                or record.contract_type in seen
+        development_version_id = str(
+            proposal_row["development_proposal_version_id"]
+        )
+        development_handoff_id = str(proposal_row["handoff_id"] or "")
+        if not development_handoff_id:
+            raise OriginalWorkflowError("当前 Development Proposal 缺少来源 handoff")
+        selected_contract_ids: set[str] = set()
+        with database.connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            _validate_current_genesis_selection(
+                connection,
+                book_id=book_id,
+                development_proposal_version_id=development_version_id,
+                development_handoff_id=development_handoff_id,
+                development_proposal=proposal,
+                selected_innovation=selected_innovation,
+                selected_foundation=selected_foundation,
+            )
+            contract_rows = _current_genesis_contract_rows(
+                connection,
+                book_id=book_id,
+                development_handoff_id=development_handoff_id,
+            )
+            selected_contract_ids = {
+                str(row["contract_record_id"]) for row in contract_rows.values()
+            }
+            applied = apply_genesis_plan(
+                database,
+                book_id,
+                plan,
+                connection=connection,
+            )
+            if applied["idempotent"] and any(
+                str(row["status"]) != ContractStatus.EFFECTIVE.value
+                for row in contract_rows.values()
             ):
-                continue
-            seen.add(record.contract_type)
-            if record.status is ContractStatus.NEEDS_REVIEW:
-                confirmed = confirm_contract(
-                    database,
-                    record.contract_record_id,
-                    effective_from_boundary=1,
-                    author_notes="作者在 Foundation 最终预览中一并确认",
+                raise OriginalWorkflowError(
+                    "已确认的 Genesis 缺少对应 EFFECTIVE Runtime Kernel Contract"
                 )
-                confirmed_contracts.append(confirmed.model_dump(mode="json"))
+            for row in contract_rows.values():
+                if str(row["status"]) == ContractStatus.NEEDS_REVIEW.value:
+                    _confirm_contract_in_connection(
+                        connection,
+                        str(row["contract_record_id"]),
+                        effective_from_boundary=1,
+                        author_notes="作者在 Foundation 最终预览中一并确认",
+                    )
+            if not applied["idempotent"]:
+                connection.execute(
+                    "UPDATE planning_aggregates SET status='STALE', stale_reason=?, "
+                    "invalidated_at=? WHERE book_id=? AND edition_id='base' "
+                    "AND status='ACTIVE'",
+                    (
+                        "author confirmed Original Genesis runtime kernel",
+                        utc_now(),
+                        book_id,
+                    ),
+                )
+    except (GenesisApplyError, OriginalWorkflowError, sqlite3.IntegrityError, ValueError) as exc:
+        raise OriginalWorkflowError(str(exc)) from exc
+    confirmed_contracts = [
+        record.model_dump(mode="json")
+        for record in list_contract_records(database, book_id=book_id, edition_id="base")
+        if record.contract_record_id in selected_contract_ids
+    ]
     accepted_path = _original_dir(database, book_id) / "story_foundation" / "accepted.json"
     export_warning: str | None = None
     try:

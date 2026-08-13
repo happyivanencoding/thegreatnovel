@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 
@@ -391,13 +392,19 @@ def apply_genesis_plan(
     database: Database,
     book_id: str,
     plan: GenesisApplyPlan,
+    *,
+    connection: sqlite3.Connection | None = None,
 ) -> dict[str, Any]:
     payload = plan.model_dump(mode="json")
     selected_foundation_id = str(plan.selected_foundation["candidate_id"])
     apply_id = f"genesis-apply-{plan.proposal_version_id}-{selected_foundation_id}"
     now = utc_now()
-    with database.connect() as connection:
-        connection.execute("BEGIN IMMEDIATE")
+    owns_transaction = connection is None
+    transaction = database.connect() if connection is None else nullcontext(connection)
+    with transaction as transaction_connection:
+        connection = transaction_connection
+        if owns_transaction:
+            connection.execute("BEGIN IMMEDIATE")
         proposal = connection.execute(
             "SELECT status FROM original_proposal_versions WHERE proposal_version_id=? "
             "AND book_id=? AND edition_id='base'",

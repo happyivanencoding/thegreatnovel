@@ -10,6 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from novel_authoring.domain.models import NarrativeFunction
 from novel_authoring.progression.models import (
     ContractStatus,
+    ExperiencePriority,
     GenreContract,
     PayoffChannelProfile,
     ProgressionContract,
@@ -119,6 +120,10 @@ class OriginalReaderKernelProposal(BaseModel):
     def validate_proposal_boundary(self) -> OriginalReaderKernelProposal:
         if set(self.reader_experience.experience_priorities) != set(ReaderExperience):
             raise ValueError("Reader Kernel Proposal 必须覆盖全部 Reader Experience")
+        if set(self.reader_experience.experience_priorities.values()) == {
+            ExperiencePriority.MEDIUM
+        }:
+            raise ValueError("Reader Kernel Proposal 不得以全部 NORMAL 回避语义判断")
         for contract in (
             self.reader_experience,
             self.market_category,
@@ -383,9 +388,6 @@ class OriginalFoundationConfirmation(BaseModel):
     hidden_truth_actions: dict[
         str, Literal["CONFIRM_TRUTH", "KEEP_CANDIDATE", "KEEP_OPEN", "REJECT"]
     ] = Field(default_factory=dict)
-    confirm_kernel_contracts: bool = True
-
-
 class GenesisApplyPlan(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

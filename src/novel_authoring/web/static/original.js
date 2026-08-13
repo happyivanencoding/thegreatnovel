@@ -237,7 +237,6 @@
           setting_strength_overrides: settingStrengths,
           open_question_actions: openQuestionActions,
           hidden_truth_actions: hiddenTruthActions,
-          confirm_kernel_contracts: String(form.get("confirm_kernel_contracts") || "") === "true",
         });
         window.location.replace(window.location.href);
       } catch (error) { show(error.message, true); }
