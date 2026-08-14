@@ -35,7 +35,7 @@ Prerequisite：`novel workflow start` 已成功返回 `status=RUNNING`，且 `ex
 - 三个候选必须共享 Core Reader Promise、Primary Narrative Drive、Creative Semantics、作者 premise hard constraints、must_include 与 forbidden。
 - Core 的职责是解决 `creative_semantics.open_design_space` 中最高杠杆的未决问题，不是固定要求再发明一个核心机制。
 - 当 `existing_signature_mechanism` 已明确描述足以持续生成故事的机制时，三个候选都必须保留该机制，不得替换、稀释、重新定义或用第二套系统夺取主机制位置；候选差异必须来自未决设计选择，例如选择如何产生、成长如何持续、兑现如何变化、已有能力如何组合、重复如何避免或问题空间如何扩大。
-- 如果冻结的 `signature_fantasy` 是主角独占且普通人无法复制的特殊规则，三个候选必须保留它的正向异常性、主角与普通人的能力不对称、可见的能力验证和质变行动空间。`protagonist_special_rule` 不能只有“每天一次、不能全知、不能自动战斗”等负面限制，还必须说明主角因此能做到什么普通人做不到的事情；`limitation` 只能描述代价与摩擦，不能把能力中和成普通效率提升。
+- 如果冻结的 `signature_fantasy` 是主角独占且普通人无法复制的特殊规则，三个候选必须保留它的正向异常性、主角与普通人的能力不对称、可见的能力验证和质变行动空间。`protagonist_special_rule` 不能只有“每天一次、不能全知、不能自动战斗”等负面限制，还必须说明主角因此能做到什么普通人做不到的事情；`limitation` 只描述已确认的核心机制约束或语义上确实需要的摩擦，不得自动升级为主角必须付出的叙事代价。
 - 当 `existing_signature_mechanism` 为空或语义上不足以独立产生长期内容时，三个候选仍可真正提出不同的高杠杆生成机制。这个判断由 LLM 阅读完整 Seed 与 Creative Semantics 后作出，不得由 Python 分类、关键词或题材路由完成。
 - 三个候选必须在 unresolved design choices 上有实质差异；不能只是换人物、地点、反派、开场事故或表面设定，也不能为了制造差异强造第二套系统。
 - 每个候选必须具体回答 schema 中的 `core_mechanism`、`protagonist_special_rule`、`choice_generation`、`progression_generation`、`payoff_generation`、`limitation`、`expansion_grammar`、`long_form_capacity`、`novelty_source`、`repetition_risk` 与 `fit_with_reader_promise`。
@@ -83,12 +83,26 @@ Prerequisite：`novel workflow start` 已成功返回 `status=RUNNING`，且 `ex
 - 只发展 `selected_story_foundation.selected_candidate`，不得换主角承载、Foundation、Primary Narrative Drive 或 Core Innovation。
 - 生成 protagonist refinement、world rules / social configuration、Progression Grammar、Expansion Grammar、Payoff Grammar、Growth & Long-Term、First Phase、Rolling Planning、Book Profile Draft、开放路线和恰好三个首章候选。
 - 同时生成 `kernel_contract_proposals`，严格复用现有 `GenreContract`、`ProgressionContract`、`WorldExpansionContract`、`PayoffChannelProfile`；全部为 `NEEDS_REVIEW`，ID 必须匹配 `kernel_contract_ids`。若冻结的 `progression_engine_enabled=false`，`progression` 必须为 `null`。
-- `first_phase.selected_foundation_id` 必须等于冻结选择，并回答 opening pressure、具体目标、资源瓶颈、成长机会、第一次兑现、第一次实质性局势升级、阶段高潮和高潮后变化。
+- FANTASY AMPLITUDE MUST NOT SILENTLY DECREASE DOWNSTREAM：Development 可以把已确认的异常能力变得更具体、更可执行、更有世界后果，但不得在作者没有明确要求时把它降级成现实范围内的效率优化。必须完整读取冻结的 `progression_kernel.creative_semantics`（尤其是 `signature_fantasy`、`existing_signature_mechanism`、`payoff_texture`、`novelty_focus`、`realism_anchors`、`complexity_boundaries`、`repeatable_reader_loop`、`anti_drift`）、selected Core candidate 的机制与兑现字段，以及 selected Story Foundation；不得只读取 Foundation 的资源、设施、社会结构或地点。
+- FUNCTIONAL CONTINUITY != PHYSICAL REALISM CEILING：原功能连续性约束的是语义方向，不是普通工程上限。只要不违反作者显式限制，储存、保存、净化、移动、通讯、防护等普通功能都可以沿原功能发展到真正超现实的尺度。这里的例子只用于 NON_CANON 语义理解，不是 preset、enum 或当前故事硬编码。
+- 区分 `AMPLIFYING THE CONFIRMED CORE` 与 `ADDING A COMPETING SECOND CORE`。把已确认的每日物品升级继续放大到超自然物品、超现实设施、异常建筑、城市级资产或改变局部生存规则的设施，属于放大第一核心；只有在其外另加独立签到、修炼境界、血脉、抽卡、系统任务或第二种超能力来源时，才是竞争性第二核心。不得因为害怕第二核心而削弱第一核心的异常性。
+- Progression Grammar 的第一问题是“下一阶段主角能做到什么以前真正做不到的事情”，即 `POSSIBILITY EXPANSION`，而不只是稳定性、精度、耐受、产能、维护或组织规模提升。允许定性能力升级、多个超常资产组合、大型设施获得超现实能力和更大尺度的不可复制效果，但不得凭空创建固定等级树、数值 tier 或预设路线。
+- 当确认的 Reader Experience / Creative Semantics 把 artifact / ability、breakthrough、power verification 或 qualitative transformation 放在高优先级时，`ProgressionContract` 必须真正消费这些语义：`ability_unlock_model` 可以描述既有能力达到条件后打开的新行动可能性；`artifact_or_equipment_model` 必须说明资产如何产生能力级变化和普通人的能力差距，而不是只列名词；`next_ceiling_model` 必须表达更高的能力上限，不得只写更大的组织或供应规模；`verification_modes` 与 `progression_promises` 必须让读者看见能力兑现如何成立。字段仍按语义填写，不要求所有作品永远非空。
+- World Expansion 不默认等于行政、工业或供应网络扩大。根据冻结 Kernel 选择 geographic、mystery、knowledge、anomalous environment、power、social、civilizational、ontological 等真实承载维度；异常区域、特殊灾害、怪异生态、遗迹或高阶世界规则可以承担 pressure、opportunity、mystery、resource、exploration 或 payoff environment，但不得变成主角的第二成长系统。
+- Payoff Grammar 必须回答什么可见结果证明主角拥有普通人无法达到的能力尺度，而不只是解决一个瓶颈。应对 `PayoffChannel` 与已确认 Reader Experience 做 semantic consistency self-check：如果能力、突破、神器/资产、转化或质变是高优先级体验，而主要 payoff channels 却全部落成知识、资源、识别、逃生、团队或组织扩张，必须解释这种选择；解释不了就重写 Kernel Contract Proposal。对于语义确实支持的作品，`NEW_ABILITY`、`NEW_ARTIFACT`、`POWER_BREAKTHROUGH` 或 `TRANSFORMATION` 可以成为主要 payoff，不是 genre preset。
+- 三个 StoryRoute 不得在没有语义理由时只是三种现实运营路线。若冻结 Kernel 明确要求高探索、高异常、高能力成长或高世界扩张，路线应在能力突破、异常探索、资源机会、势力冲突、世界谜团、身份变化或关系兑现等真实叙事机会中形成差异；若 selected Foundation 确实限制了范围，必须由 Foundation 语义解释，而不是 Skill 预设路线类型。
+- First Phase 也必须继承异常尺度：`first_progression_opportunity`、`first_payoff`、`first_meaningful_escalation` 与 `stage_climax` 至少让读者看见一次普通人无法复制的行动可能和未来能力上限，不能自动收敛为工作流首次运转或资源链首次稳定。第一阶段不必满级，但必须建立 `ABILITY CEILING ANTICIPATION`。
+- 完成 Development 后，内部执行 `FANTASY AMPLITUDE CHECK` 与 `PROFESSIONAL ENGINEER REPLACEMENT TEST`：检查 selected Core 的异常承诺是否仍能扩大、next ceiling 是否仍是能力 ceiling、Payoff Grammar 是否有可见质变、World Expansion 是否提供更大舞台；如果删除特殊能力并换成优秀工程师、物流专家或管理者后 Progression/Payoff/Expansion 仍大体成立，说明发生 Fantasy Amplitude Collapse，必须重写。不要把这些审计推理输出给作者。
+- `first_phase.selected_foundation_id` 必须等于冻结选择，并回答 opening pressure、具体目标、成长机会、第一次兑现、第一次实质性局势升级、阶段高潮和高潮后变化；`first_resource_bottleneck` 只有当前故事语义确实需要时才填写，可以为空。
 - Progression Grammar、Expansion Grammar、Payoff Grammar 与 First Phase 必须把已确认的 `repeatable_reader_loop` 转化为可持续语法和具体活动，但不得变成固定章节模板。
 - 长期语法回答“为什么可以持续成长、扩大问题空间、分阶段兑现”，并依据 `expected_length`、Reader Promise、Signature Mechanism、Progression Engine、Creative Semantics 与选定 Foundation 调整容量；不得使用固定章数阈值、长篇 preset、固定 arc、卷数、地图频率、层数、结局或完整全书大纲。
 - 较短且闭环的作品可以控制扩张和长期承诺，形成有限但完整的阶段兑现；超长成长型作品可以支持多阶段能力、人物、团队、组织、地域、世界、资源、身份、谜团与阶段高潮。两者使用同一开放架构，由语义需求决定，不进入 genre-specific branch。
 - 超长篇持续冻结全部 Creative Semantics，以及 Reader Promise、Primary Narrative Drive、Signature Mechanism、Progression / Payoff / Expansion Grammar、关键世界 invariant 与作者 hard constraints；人物、地图、组织、具体阶段目标、冲突、支线和 arc 由 Rolling Planning 逐步展开。
-- 首章候选只描述主动选择、代价、不可逆改变、后续空间和风险；不生成正文，不运行评分引擎。
+- 首章候选必须优先描述强开场处境、主角行动、具体兑现或有意义的结果、不可逆改变和后续空间；`cost`、牺牲或风险只有在 Seed、已确认 Creative Semantics、选定 Core/ Foundation 或当前具体剧情确实需要时才填写，不得为了填 schema 或制造“深度”自动添加。`CONFLICT`、`PRESSURE` 与 `IRREVERSIBLE CHANGE` 不等于 `NARRATIVE COST`；不生成正文，不运行评分引擎。
+- Core Mechanism Constraint 与 Narrative Cost 必须分开理解。每天一次、对象必须实际拥有/控制、非生命和原功能连续性等已确认能力规则继续保留，但损失资源、暴露能力、关系受损、资源债务、受伤和机会成本都不是每次动作的 mandatory requirement。
+- PAYOFF MAY BE PURE UPSIDE：主角可以选择正确、获得巨大资源或新能力、扩大权限、提升地位、增加财富、提高安全性、解锁区域或获得新资产，而同一场景不必同时丢失另一项资源、失去盟友、暴露秘密、负债或伤亡。新的问题与更高 ceiling 可以在兑现充分发生之后自然出现。
+- `CONSTRAINT CREATES NEXT DESIRE, IT DOES NOT CANCEL CURRENT PAYOFF`：压力产生选择后，应先让兑现产生真实后果，再打开新的目标、未知、对手或更高瓶颈；不得在同一兑现中用燃料、维护、暴露、抢夺或牺牲把优势抵消到几乎无效。
+- `ProgressionContract.growth_costs` 是语义可选字段。若已确认语义没有成长付价，不要为了字段存在而填写，允许 `growth_costs=[]`；Core constraints 不得重复解释成额外惩罚。Breakthrough gate 也可以只是达到能力条件、完成验证、获得对象、探索新区域、作出关键选择、完成组合或掌握知识，不自动要求牺牲或资源损失。Payoff Grammar 描述读者获得满足的结果，不把“兑现必须带成本”设为 mandatory component。
 
 ## 共同硬边界
 

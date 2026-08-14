@@ -181,7 +181,6 @@ def build_genesis_apply_plan(
         (TruthType.CHARACTER_IDENTITY, "主角", protagonist),
         (TruthType.CHARACTER_GOAL, "主角目标", protagonist_goal),
         (TruthType.PLOT_TRUTH, "主冲突", main_conflict),
-        (TruthType.CUSTOM, "主角代价", protagonist_cost),
         (TruthType.CUSTOM, "主角成长空间", protagonist_growth),
         (
             TruthType.FUTURE_EVENT_PRECONDITION,
@@ -189,6 +188,8 @@ def build_genesis_apply_plan(
             confirmation.first_phase_objective,
         ),
     ]
+    if protagonist_cost.strip():
+        truth_specs.insert(3, (TruthType.CUSTOM, "主角代价", protagonist_cost))
     truth_specs.extend(
         (TruthType.CUSTOM, str(item["category"]), str(item["statement"]))
         for item in settings

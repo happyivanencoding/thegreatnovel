@@ -330,7 +330,7 @@ class FirstPhaseProposal(BaseModel):
     selected_foundation_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
     opening_pressure: str = Field(min_length=1)
     first_concrete_goal: str = Field(min_length=1)
-    first_resource_bottleneck: str = Field(min_length=1)
+    first_resource_bottleneck: str = ""
     first_progression_opportunity: str = Field(min_length=1)
     first_payoff: str = Field(min_length=1)
     first_meaningful_escalation: str = Field(min_length=1)
@@ -385,7 +385,7 @@ class FirstChapterCandidate(BaseModel):
     central_choice: str = Field(min_length=1)
     conflict: str = Field(min_length=1)
     protagonist_action: str = Field(min_length=1)
-    cost: str = Field(min_length=1)
+    cost: str = ""
     irreversible_change: str = Field(min_length=1)
     ending_turn: str = Field(min_length=1)
     distinctiveness: str = Field(min_length=1)
@@ -457,7 +457,7 @@ class FoundationDevelopmentProposal(BaseModel):
     protagonist: str = Field(min_length=1)
     protagonist_goal: str = Field(min_length=1)
     protagonist_conflict: str = Field(min_length=1)
-    protagonist_cost: str = Field(min_length=1)
+    protagonist_cost: str = ""
     protagonist_growth: str = Field(min_length=1)
     world_rules: list[str] = Field(min_length=1)
     foundation_settings: list[FoundationSetting] = Field(min_length=1)
