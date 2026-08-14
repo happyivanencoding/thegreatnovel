@@ -176,7 +176,12 @@
     const confirmButton = root.querySelector('[data-original-action="confirm-reader"]');
     const dirtyMessage = root.querySelector("[data-reader-dirty-message]");
     let saveTimer = null;
+    const clearPendingSave = () => {
+      window.clearTimeout(saveTimer);
+      saveTimer = null;
+    };
     const save = async () => {
+      saveTimer = null;
       try {
         await post(`/api/books/${bookId}/original/reader-kernel/overrides`, {
           author_overrides: overrides,
@@ -185,7 +190,7 @@
       } catch (error) { show(error.message, true); }
     };
     const scheduleSave = () => {
-      window.clearTimeout(saveTimer);
+      clearPendingSave();
       saveTimer = window.setTimeout(save, 300);
     };
     const markDirty = () => {
@@ -197,6 +202,7 @@
       overrides[section] ||= {};
       overrides[section][field] = value;
       markDirty();
+      refreshLockUi();
     };
     const controlValue = (control) => {
       if (control.hasAttribute("data-reader-override-list")) {
@@ -209,6 +215,97 @@
       if (control.hasAttribute("data-reader-override-lines")) return lines(control.value);
       return String(control.value || "").trim();
     };
+    const hasOverride = (section, field, key = "") => {
+      const fields = overrides[section] || {};
+      if (key) return Object.hasOwn(fields[field] || {}, key);
+      return Object.hasOwn(fields, field);
+    };
+    const cleanupSection = (section) => {
+      if (overrides[section] && !Object.keys(overrides[section]).length) {
+        delete overrides[section];
+      }
+    };
+    const deleteOverride = (section, field, key = "") => {
+      if (key) {
+        delete overrides[section]?.[field]?.[key];
+        if (overrides[section]?.[field] && !Object.keys(overrides[section][field]).length) {
+          delete overrides[section][field];
+        }
+      } else {
+        delete overrides[section]?.[field];
+      }
+      cleanupSection(section);
+    };
+    const creativeFields = () => [...new Set(
+      [...root.querySelectorAll('[data-reader-override-section="creative_semantics"]')]
+        .map((control) => control.dataset.readerOverrideField),
+    )];
+    const refreshLockUi = () => {
+      root.querySelectorAll("button[data-reader-lock-section]").forEach((button) => {
+        const section = button.dataset.readerLockSection;
+        const field = button.dataset.readerLockField || "";
+        const key = button.dataset.readerLockKey || "";
+        const locked = button.hasAttribute("data-reader-lock-all")
+          ? creativeFields().every((item) => hasOverride(section, item))
+          : hasOverride(section, field, key);
+        button.textContent = locked
+          ? "交还 AI 判断"
+          : (button.hasAttribute("data-reader-lock-all") ? "固定当前创作语义" : "固定当前值");
+      });
+      root.querySelectorAll("[data-reader-lock-status]").forEach((status) => {
+        const section = status.dataset.readerLockSection;
+        const field = status.dataset.readerLockField || "";
+        const key = status.dataset.readerLockKey || "";
+        const locked = status.hasAttribute("data-reader-lock-all")
+          ? creativeFields().every((item) => hasOverride(section, item))
+          : hasOverride(section, field, key);
+        status.textContent = locked ? "作者已固定" : "";
+      });
+    };
+    root.querySelectorAll("button[data-reader-lock-section]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const section = button.dataset.readerLockSection;
+        if (button.hasAttribute("data-reader-lock-all")) {
+          const fields = creativeFields();
+          const locked = fields.every((field) => hasOverride(section, field));
+          fields.forEach((field) => {
+            if (locked) {
+              deleteOverride(section, field);
+              return;
+            }
+            const control = root.querySelector(
+              `[data-reader-override-section="${section}"][data-reader-override-field="${field}"]`,
+            );
+            if (control) {
+              overrides[section] ||= {};
+              overrides[section][field] = controlValue(control);
+            }
+          });
+        } else {
+          const field = button.dataset.readerLockField;
+          const key = button.dataset.readerLockKey || "";
+          if (hasOverride(section, field, key)) {
+            deleteOverride(section, field, key);
+          } else if (key) {
+            const row = root.querySelector(`[data-reader-experience-key="${key}"]`);
+            const strength = row?.querySelector("[data-reader-strength].is-selected")?.dataset.readerStrength || "NORMAL";
+            overrides[section] ||= {};
+            overrides[section][field] ||= {};
+            overrides[section][field][key] = strengthToPriority[strength];
+          } else {
+            const control = root.querySelector(
+              `[data-reader-override-section="${section}"][data-reader-override-field="${field}"]`,
+            );
+            if (control) {
+              overrides[section] ||= {};
+              overrides[section][field] = controlValue(control);
+            }
+          }
+        }
+        markDirty();
+        refreshLockUi();
+      });
+    });
     Object.entries(overrides).forEach(([section, fields]) => {
       Object.entries(fields || {}).forEach(([field, value]) => {
         if (section === "reader_experience" && field === "experience_priorities") return;
@@ -241,13 +338,16 @@
       if (confirmButton) confirmButton.disabled = true;
       if (dirtyMessage) dirtyMessage.hidden = false;
     }
+    refreshLockUi();
     return {
       collect: () => overrides,
+      clearPendingSave,
       markPriority(key, strength) {
         overrides.reader_experience ||= {};
         overrides.reader_experience.experience_priorities ||= {};
         overrides.reader_experience.experience_priorities[key] = strengthToPriority[strength];
         markDirty();
+        refreshLockUi();
       },
     };
   })();
@@ -366,6 +466,7 @@
     button.disabled = true;
     try {
       if (action === "confirm-reader") {
+        readerOverrides?.clearPendingSave();
         show("正在确认阅读体验并准备共享 Contract 的三个故事方向…");
         const primaryDrive = document.querySelector("[data-primary-drive]")?.value || "CUSTOM";
         const secondaryDrives = [...document.querySelectorAll("[data-secondary-drive]:checked")]
@@ -389,6 +490,7 @@
         });
         window.location.replace(window.location.href);
       } else if (action === "regenerate-reader") {
+        readerOverrides?.clearPendingSave();
         show("正在保存 Author Overrides 并准备新的完整 Reader Kernel Proposal…");
         await post(`/api/books/${bookId}/original/reader-kernel/regenerate`, {
           author_overrides: readerOverrides?.collect() || {},

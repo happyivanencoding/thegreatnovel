@@ -54,6 +54,7 @@ from novel_authoring.progression.models import (
     ExperiencePriority,
     ExplanationStyle,
     PrimaryFamily,
+    ReaderExperience,
     ReaderExperienceContract,
     SerialForm,
     SettingSkin,
@@ -192,6 +193,33 @@ def _assert_reader_kernel_overrides_applied(
                     "重新生成的 Reader Kernel 未遵守 Author Override："
                     f"{section_name}.{field_name}"
                 )
+
+
+def _normalize_reader_kernel_projections(
+    proposal: OriginalReaderKernelProposal,
+) -> OriginalReaderKernelProposal:
+    """Keep Reader mirrors derived from their single structured authorities."""
+    reader = proposal.reader_experience
+    priorities = reader.experience_priorities
+    drive = proposal.narrative_drive
+    normalized_reader = reader.model_copy(
+        update={
+            "growth_centrality": priorities[ReaderExperience.PROGRESSION],
+            "world_expansion_centrality": priorities[
+                ReaderExperience.WORLD_EXPANSION
+            ],
+            "mystery_centrality": priorities[ReaderExperience.MYSTERY],
+            "team_centrality": priorities[ReaderExperience.TEAM_GROWTH],
+            "relationship_centrality": priorities[ReaderExperience.RELATIONSHIP],
+            "theme_centrality": priorities[ReaderExperience.SOCIAL_THEME],
+            "primary_narrative_drive": drive.primary_drive.value,
+            "secondary_narrative_drives": [
+                item.value for item in drive.secondary_drives
+            ],
+            "drive_priority_order": [item.value for item in drive.drive_mix],
+        }
+    )
+    return proposal.model_copy(update={"reader_experience": normalized_reader})
 
 
 def _confirmed_reader_kernel_projection(
@@ -781,6 +809,7 @@ def import_original_reader_kernel_proposal(
     proposal = OriginalReaderKernelProposal.model_validate_json(
         expected.read_text(encoding="utf-8")
     )
+    proposal = _normalize_reader_kernel_projections(proposal)
     task = _read_json(task_directory / "input" / "task.json") or {}
     generation_payload = _read_json(
         task_directory / "input" / "original_request.json"
@@ -3145,6 +3174,9 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                     reader_payload.get("secondary_families", []),
                 )
             ),
+            "recommended_secondary_family_values": list(
+                reader_payload.get("secondary_families", [])
+            ),
             "primary_family_options": _enum_options(PrimaryFamily),
             "setting_skin": {
                 "ANCIENT_FANTASY": "古典幻想",
@@ -3174,6 +3206,9 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                     reader_payload.get("serial_form") or "LONG_SERIAL",
                 )
             ),
+            "recommended_serial_form_value": str(
+                reader_payload.get("serial_form") or "LONG_SERIAL"
+            ),
             "serial_form_options": _enum_options(SerialForm),
             "mysticism_level_value": str(
                 current_value(
@@ -3181,6 +3216,9 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                     "mysticism_level",
                     reader_payload.get("mysticism_level") or "MEDIUM",
                 )
+            ),
+            "recommended_mysticism_level_value": str(
+                reader_payload.get("mysticism_level") or "MEDIUM"
             ),
             "explanation_style": {
                 "MYSTICAL": "玄秘",
@@ -3209,6 +3247,7 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                     reader_override_payload, "tone", reader_payload.get("tone", [])
                 )
             ),
+            "recommended_tone": list(reader_payload.get("tone", [])),
             "priorities": [
                 {
                     "key": str(item["key"]),
@@ -3248,12 +3287,16 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                     reader_payload.get("must_deliver", []),
                 )
             ),
+            "recommended_must_deliver": list(reader_payload.get("must_deliver", [])),
             "must_not_drift_into": list(
                 current_value(
                     reader_override_payload,
                     "must_not_drift_into",
                     reader_payload.get("must_not_drift_into", []),
                 )
+            ),
+            "recommended_must_not_drift_into": list(
+                reader_payload.get("must_not_drift_into", [])
             ),
             "market_categories": [
                 market_category_label(str(value))
@@ -3270,12 +3313,18 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                     market_display.get("primary_market_category") or "CUSTOM",
                 )
             ),
+            "recommended_primary_market_category_value": str(
+                market_display.get("primary_market_category") or "CUSTOM"
+            ),
             "secondary_market_category_values": list(
                 current_value(
                     market_override_payload,
                     "secondary_market_categories",
                     market_display.get("secondary_market_categories", []),
                 )
+            ),
+            "recommended_secondary_market_category_values": list(
+                market_display.get("secondary_market_categories", [])
             ),
             "current_market_categories": [
                 market_category_label(str(value))
@@ -3308,6 +3357,9 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                     drive_contract_display.get("primary_drive") or "CUSTOM",
                 )
             ),
+            "recommended_primary_drive_value": str(
+                drive_contract_display.get("primary_drive") or "CUSTOM"
+            ),
             "current_primary_drive": narrative_drive_label(
                 str(
                     current_value(
@@ -3330,12 +3382,26 @@ def original_overview(database: Database, book_id: str) -> dict[str, Any]:
                     drive_contract_display.get("secondary_drives", []),
                 )
             ),
+            "recommended_secondary_drive_values": list(
+                drive_contract_display.get("secondary_drives", [])
+            ),
+            "current_secondary_drives": [
+                narrative_drive_label(str(value))
+                for value in current_value(
+                    drive_override_payload,
+                    "secondary_drives",
+                    drive_contract_display.get("secondary_drives", []),
+                )
+            ],
             "progression_engine_enabled": bool(
                 current_value(
                     drive_override_payload,
                     "progression_engine_enabled",
                     drive_contract_display.get("progression_engine_enabled", False),
                 )
+            ),
+            "recommended_progression_engine_enabled": bool(
+                drive_contract_display.get("progression_engine_enabled", False)
             ),
             "drive_priorities": dict(
                 drive_contract_display.get("drive_priorities", {})

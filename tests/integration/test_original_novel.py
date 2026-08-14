@@ -1066,6 +1066,26 @@ def test_reader_kernel_author_overrides_regenerate_full_proposal_without_advanci
     assert overview["reader_experience"]["reader_experience"][
         "explanation_style"
     ] == "HARD_EXPLANATION"
+    regenerated_reader = overview["reader_experience"]["reader_experience"]
+    assert regenerated_reader["primary_narrative_drive"] == "MYSTERY_INVESTIGATION"
+    assert regenerated_reader["secondary_narrative_drives"] == [
+        "RESOURCE_OPPORTUNITY"
+    ]
+    assert regenerated_reader["drive_priority_order"] == [
+        "MYSTERY_INVESTIGATION",
+        "RESOURCE_OPPORTUNITY",
+    ]
+    for centrality_field, experience in (
+        ("growth_centrality", "PROGRESSION"),
+        ("world_expansion_centrality", "WORLD_EXPANSION"),
+        ("mystery_centrality", "MYSTERY"),
+        ("team_centrality", "TEAM_GROWTH"),
+        ("relationship_centrality", "RELATIONSHIP"),
+        ("theme_centrality", "SOCIAL_THEME"),
+    ):
+        assert regenerated_reader[centrality_field] == regenerated_reader[
+            "experience_priorities"
+        ][experience]
     assert overview["reader_experience"]["market_category"][
         "primary_market_category"
     ] == "FANTASY"
@@ -1116,12 +1136,16 @@ def test_reader_kernel_regeneration_rejects_ai_output_that_overwrites_author_cho
     tmp_path: Path,
 ) -> None:
     _, database = create_original(tmp_path)
+    initial_setting = original_overview(database, BOOK_ID)["reader_experience"][
+        "reader_experience"
+    ]["setting_skin"]
+    changed_setting = next(
+        item.value for item in SettingSkin if item.value != initial_setting
+    )
     regenerated = regenerate_original_reader_kernel(
         database,
         BOOK_ID,
-        author_overrides={
-            "creative_semantics": {"signature_fantasy": "作者指定的核心幻想 B"}
-        },
+        author_overrides={"reader_experience": {"setting_skin": initial_setting}},
     )
     handoff_id = str(regenerated["handoff_id"])
     handoff = get_handoff(database, handoff_id)
@@ -1131,8 +1155,15 @@ def test_reader_kernel_regeneration_rejects_ai_output_that_overwrites_author_cho
             encoding="utf-8"
         )
     )
-    proposal = OriginalReaderKernelProposal.model_validate(
+    current_proposal = OriginalReaderKernelProposal.model_validate(
         request["current_ai_proposal"]
+    )
+    proposal = current_proposal.model_copy(
+        update={
+            "reader_experience": current_proposal.reader_experience.model_copy(
+                update={"setting_skin": SettingSkin(changed_setting)}
+            )
+        }
     )
     artifact = task_directory / "artifacts" / "reader_kernel" / "proposal.json"
     artifact.parent.mkdir(parents=True, exist_ok=True)
@@ -1164,23 +1195,79 @@ def test_reader_kernel_regeneration_rejects_ai_output_that_overwrites_author_cho
         },
     )
 
-    with pytest.raises(OriginalWorkflowError, match="未遵守 Author Override"):
+    with pytest.raises(
+        OriginalWorkflowError,
+        match="reader_experience.setting_skin",
+    ):
         import_original_reader_kernel_proposal(database, BOOK_ID, handoff_id)
 
     overview = original_overview(database, BOOK_ID)
     assert overview["original_state"] == "READER_EXPERIENCE_REVIEW"
-    assert overview["reader_experience"]["creative_semantics"][
-        "signature_fantasy"
-    ] != "作者指定的核心幻想 B"
+    assert overview["reader_experience"]["reader_experience"]["setting_skin"] == (
+        initial_setting
+    )
     assert get_handoff(database, handoff_id)["status"] == "FAILED"
     retried = regenerate_original_reader_kernel(
         database,
         BOOK_ID,
-        author_overrides={
-            "creative_semantics": {"signature_fantasy": "作者指定的核心幻想 B"}
-        },
+        author_overrides={"reader_experience": {"setting_skin": initial_setting}},
     )
     assert retried["handoff_id"] != handoff_id
+
+
+def test_reader_kernel_lock_equal_value_can_be_removed_before_regeneration(
+    tmp_path: Path,
+) -> None:
+    _, database = create_original(tmp_path)
+    initial_setting = original_overview(database, BOOK_ID)["reader_experience"][
+        "reader_experience"
+    ]["setting_skin"]
+    changed_setting = next(
+        item.value for item in SettingSkin if item.value != initial_setting
+    )
+
+    save_original_reader_kernel_overrides(
+        database,
+        BOOK_ID,
+        author_overrides={"reader_experience": {"setting_skin": initial_setting}},
+    )
+    stored = json.loads(
+        str(
+            database.scalar(
+                "SELECT reader_kernel_author_overrides_json FROM original_states "
+                "WHERE book_id=? AND edition_id='base'",
+                (BOOK_ID,),
+            )
+        )
+    )
+    assert stored == {"reader_experience": {"setting_skin": initial_setting}}
+
+    save_original_reader_kernel_overrides(
+        database,
+        BOOK_ID,
+        author_overrides={},
+    )
+    stored = json.loads(
+        str(
+            database.scalar(
+                "SELECT reader_kernel_author_overrides_json FROM original_states "
+                "WHERE book_id=? AND edition_id='base'",
+                (BOOK_ID,),
+            )
+        )
+    )
+    assert "setting_skin" not in stored.get("reader_experience", {})
+
+    regenerate_original_reader_kernel(database, BOOK_ID, author_overrides={})
+    complete_regenerated_reader_kernel_handoff(
+        database,
+        signature_fantasy="AI 在取消固定后重新判断的核心幻想",
+        summary="取消固定后，未覆盖字段重新由 AI 判断。",
+        setting_skin=changed_setting,
+    )
+    assert original_overview(database, BOOK_ID)["reader_experience"][
+        "reader_experience"
+    ]["setting_skin"] == changed_setting
 
 
 def test_reader_kernel_regeneration_schema_failure_returns_to_review(
@@ -1296,6 +1383,18 @@ def test_reader_kernel_author_override_draft_survives_page_reentry(
     tmp_path: Path,
 ) -> None:
     layout, database = create_original(tmp_path)
+    recommended = original_overview(database, BOOK_ID)["reader_experience_display"]
+    serial_form = (
+        "CUSTOM"
+        if recommended["recommended_serial_form_value"] != "CUSTOM"
+        else "SEASONAL_SERIAL"
+    )
+    mysticism_level = (
+        "OFF"
+        if recommended["recommended_mysticism_level_value"] != "OFF"
+        else "HIGH"
+    )
+    progression_enabled = not recommended["recommended_progression_engine_enabled"]
     saved = save_original_reader_kernel_overrides(
         database,
         BOOK_ID,
@@ -1303,11 +1402,17 @@ def test_reader_kernel_author_override_draft_survives_page_reentry(
             "reader_experience": {
                 "primary_family": "TEAM_PROGRESSION",
                 "setting_skin": "MODERN_CITY",
+                "serial_form": serial_form,
+                "mysticism_level": mysticism_level,
                 "explanation_style": "MIXED_HARD",
+                "tone": ["作者当前语气"],
             },
             "market_category": {
                 "primary_market_category": "URBAN",
                 "secondary_market_categories": [],
+            },
+            "narrative_drive": {
+                "progression_engine_enabled": progression_enabled,
             },
             "creative_semantics": {"signature_fantasy": "尚未重新生成的作者草稿"}
         },
@@ -1325,6 +1430,26 @@ def test_reader_kernel_author_override_draft_survives_page_reentry(
         "TEAM_PROGRESSION"
     )
     assert overview["reader_experience_display"]["setting_skin_value"] == "MODERN_CITY"
+    assert overview["reader_experience_display"]["serial_form_value"] == serial_form
+    assert overview["reader_experience_display"]["mysticism_level_value"] == (
+        mysticism_level
+    )
+    assert overview["reader_experience_display"]["tone"] == ["作者当前语气"]
+    assert overview["reader_experience_display"]["progression_engine_enabled"] is (
+        progression_enabled
+    )
+    assert overview["reader_experience_display"]["recommended_serial_form_value"] == (
+        recommended["recommended_serial_form_value"]
+    )
+    assert overview["reader_experience_display"][
+        "recommended_mysticism_level_value"
+    ] == recommended["recommended_mysticism_level_value"]
+    assert overview["reader_experience_display"]["recommended_tone"] == recommended[
+        "recommended_tone"
+    ]
+    assert overview["reader_experience_display"][
+        "recommended_progression_engine_enabled"
+    ] is recommended["recommended_progression_engine_enabled"]
     assert overview["reader_experience_display"]["explanation_style_value"] == "MIXED_HARD"
     assert overview["reader_experience_display"]["primary_market_category_value"] == "URBAN"
     assert overview["reader_experience_display"]["secondary_market_category_values"] == []
@@ -1345,6 +1470,17 @@ def test_reader_kernel_author_override_draft_survives_page_reentry(
     assert 'value="MODERN_CITY" selected' in page.text
     assert 'value="MIXED_HARD" selected' in page.text
     assert 'value="URBAN" selected' in page.text
+    assert (
+        f"AI 推荐：{recommended['recommended_serial_form_value']} · "
+        f"当前选择：{serial_form}"
+    ) in page.text
+    assert (
+        f"AI 推荐：{recommended['recommended_mysticism_level_value']} · "
+        f"当前选择：{mysticism_level}"
+    ) in page.text
+    assert "当前选择：作者当前语气" in page.text
+    assert "data-reader-lock-field=\"setting_skin\"" in page.text
+    assert "作者已固定" in page.text
     assert json.dumps("尚未重新生成的作者草稿", ensure_ascii=True)[1:-1] in page.text
 
 
@@ -2405,6 +2541,30 @@ def test_original_studio_renders_human_first_core_and_foundation_cards(
     assert "查看故事结构" in foundation_page.text
 
 
+def test_reader_kernel_actions_cancel_pending_override_autosave() -> None:
+    script = (
+        Path(__file__).parents[2]
+        / "src"
+        / "novel_authoring"
+        / "web"
+        / "static"
+        / "original.js"
+    ).read_text(encoding="utf-8")
+    confirm_branch = script.split('if (action === "confirm-reader")', 1)[1].split(
+        '} else if (action === "regenerate-reader")', 1
+    )[0]
+    regenerate_branch = script.split(
+        '} else if (action === "regenerate-reader")', 1
+    )[1].split('} else if (action === "reader-preset")', 1)[0]
+
+    assert confirm_branch.index("clearPendingSave()") < confirm_branch.index(
+        "/reader-experience/confirm"
+    )
+    assert regenerate_branch.index("clearPendingSave()") < regenerate_branch.index(
+        "/reader-kernel/regenerate"
+    )
+
+
 def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_proposal(
     tmp_path: Path,
 ) -> None:
@@ -2429,6 +2589,27 @@ def test_reader_experience_strengths_are_editable_persisted_and_used_by_drive_pr
         assert 'data-reader-override-field="secondary_market_categories"' in before.text
         assert 'data-reader-override-field="setting_skin"' in before.text
         assert 'data-reader-override-field="explanation_style"' in before.text
+        for field in (
+            "primary_family",
+            "secondary_families",
+            "setting_skin",
+            "serial_form",
+            "mysticism_level",
+            "explanation_style",
+            "tone",
+            "must_deliver",
+            "must_not_drift_into",
+            "primary_market_category",
+            "secondary_market_categories",
+            "primary_drive",
+            "secondary_drives",
+            "progression_engine_enabled",
+            "experience_priorities",
+        ):
+            assert f'data-reader-lock-field="{field}"' in before.text
+        assert "data-reader-lock-all" in before.text
+        assert "固定当前值" in before.text
+        assert "固定当前创作语义" in before.text
         assert "data-reader-recommended=" in before.text
         assert "data-reader-current=" in before.text
         for option in (*MarketCategory, *PrimaryFamily, *SettingSkin, *ExplanationStyle):
