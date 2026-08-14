@@ -196,6 +196,21 @@ def test_novel_handoff_runner_is_one_handoff_protocol_boundary() -> None:
     )
 
 
+def test_reader_kernel_skill_uses_frozen_proposal_schema_authority() -> None:
+    skill_path = (
+        Path(__file__).parents[2]
+        / ".agents"
+        / "skills"
+        / "interpret-original-reader-kernel"
+        / "SKILL.md"
+    )
+    skill = skill_path.read_text(encoding="utf-8")
+
+    assert "task.json.original_reader_interpretation.proposal_schema" in skill
+    assert "不得自行选择、升级、降级或兼容 schema version" in skill
+    assert "original-reader-kernel-v2" not in skill
+
+
 def test_workflow_start_is_one_claim_and_running_transition(tmp_path: Path) -> None:
     database, handoff = _continuation_handoff(tmp_path)
     started = start_handoff(database, str(handoff["handoff_id"]), "fast-path-a")

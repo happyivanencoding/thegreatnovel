@@ -958,10 +958,74 @@ def test_unseen_premise_is_frozen_for_semantic_read_without_python_fallback(
     assert request["genre"] == ""
     assert task["executor_skill"] == "interpret-original-reader-kernel"
     assert task["business_input_files"] == ["original_request.json"]
-    assert task["original_reader_interpretation"]["proposal_schema"]["title"] == (
-        "OriginalReaderKernelProposal"
-    )
+    frozen_schema = task["original_reader_interpretation"]["proposal_schema"]
+    current_schema = OriginalReaderKernelProposal.model_json_schema()
+    assert frozen_schema == current_schema
+    assert "creative_semantics" in frozen_schema["required"]
     assert contract_count == 0
+
+
+def test_reader_kernel_start_stales_frozen_runtime_schema_mismatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    current_schema = OriginalReaderKernelProposal.model_json_schema()
+    older_schema = json.loads(json.dumps(current_schema))
+    older_schema["properties"].pop("creative_semantics")
+    older_schema["required"].remove("creative_semantics")
+    layout = BookLayout(tmp_path / "library")
+    with monkeypatch.context() as patch:
+        patch.setattr(
+            OriginalReaderKernelProposal,
+            "model_json_schema",
+            classmethod(lambda _cls: older_schema),
+        )
+        created = create_original_book(
+            layout,
+            {"premise": "每次选择都会永久关闭另一条未来道路。"},
+            book_id=BOOK_ID,
+        )
+
+    database = Database(Path(str(created["database"])))
+    handoff_id = str(created["reader_handoff"]["handoff_id"])
+    frozen = get_handoff(database, handoff_id)
+    task_path = Path(str(frozen["task_manifest_path"]))
+    task_before = task_path.read_bytes()
+
+    with pytest.raises(HandoffWorkflowError, match="current runtime contract"):
+        start_handoff(database, handoff_id)
+
+    stale = get_handoff(database, handoff_id)
+    assert stale["status"] == HandoffStatus.STALE.value
+    assert stale["claim_token"] is None
+    assert [event["event_type"] for event in stale["events"]] == [
+        HandoffStatus.READY_FOR_CODEX.value,
+        HandoffStatus.STALE.value,
+    ]
+    assert task_path.read_bytes() == task_before
+
+
+def test_reader_kernel_current_runtime_schema_starts_normally(tmp_path: Path) -> None:
+    layout = BookLayout(tmp_path / "library")
+    created = create_original_book(
+        layout,
+        {"premise": "每次选择都会永久关闭另一条未来道路。"},
+        book_id=BOOK_ID,
+    )
+    database = Database(Path(str(created["database"])))
+    handoff_id = str(created["reader_handoff"]["handoff_id"])
+
+    started = start_handoff(database, handoff_id)
+
+    assert started["status"] == HandoffStatus.RUNNING.value
+    assert started["executor_skill"] == "interpret-original-reader-kernel"
+    assert started["business_input_files"] == ["original_request.json"]
+    assert started["claim_token"]
+    assert started["result_target"]
+    running = get_handoff(database, handoff_id)
+    assert [event["event_type"] for event in running["events"]][-2:] == [
+        HandoffStatus.CLAIMED.value,
+        HandoffStatus.RUNNING.value,
+    ]
 
 
 def test_reader_kernel_author_overrides_regenerate_full_proposal_without_advancing(

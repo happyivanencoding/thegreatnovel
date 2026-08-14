@@ -2363,6 +2363,31 @@ def _drift_reasons(
     return list(dict.fromkeys(reasons))
 
 
+def _business_contract_drift_reasons(
+    task_directory: Path, handoff_type: HandoffType
+) -> list[str]:
+    if handoff_type is not HandoffType.ORIGINAL_READER_INTERPRETATION:
+        return []
+    try:
+        task = json.loads(
+            _handoff_file(task_directory, "task.json").read_text(encoding="utf-8")
+        )
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return ["frozen Reader Kernel proposal schema is unavailable"]
+    reader_contract = task.get("original_reader_interpretation")
+    frozen_schema = (
+        reader_contract.get("proposal_schema")
+        if isinstance(reader_contract, dict)
+        else None
+    )
+    if frozen_schema != OriginalReaderKernelProposal.model_json_schema():
+        return [
+            "frozen Reader Kernel proposal schema is incompatible with current "
+            "runtime contract; recreate the handoff"
+        ]
+    return []
+
+
 def claim_handoff(database: Database, handoff_id: str, claimed_by: str) -> dict[str, Any]:
     database.initialize()
     stale_reason: str | None = None
@@ -2402,6 +2427,12 @@ def claim_handoff(database: Database, handoff_id: str, claimed_by: str) -> dict[
         drift_reasons = _drift_reasons(database, connection, row)
         if file_drift_reason is not None:
             drift_reasons.append(file_drift_reason)
+        else:
+            drift_reasons.extend(
+                _business_contract_drift_reasons(
+                    task_directory, HandoffType(str(row["handoff_type"]))
+                )
+            )
         if drift_reasons:
             reason = "; ".join(dict.fromkeys(drift_reasons))
             connection.execute(

@@ -33,7 +33,11 @@ Seed 的明确约束、AI 对其余字段的重新推断。`current_ai_proposal`
 只约束本轮重新生成，不得写回或改写 premise/Seed。
 
 使用 `task.json.original_reader_interpretation.contract_ids` 的三个 ID，不自行发明基础设施 ID；
-输出结构与 enum 值以同一节点的 `proposal_schema` 为准，不额外打开源码或业务文件。
+输出 `schema_version`、字段结构与 enum 值必须严格遵循
+`task.json.original_reader_interpretation.proposal_schema`；不得自行选择、升级、降级或兼容 schema version，
+也不得额外打开源码或业务文件。如果 frozen proposal schema 与本 Skill
+要求的 Creative Semantics 出现矛盾，立即停止并报告 blocker，不得把缺失字段塞进
+`summary`、删改字段或猜测兼容方案。
 
 ## 语义任务
 
@@ -65,7 +69,7 @@ Creative Semantics 只识别体验、既有机制、开放空间、创新焦点�
 
 写 `artifacts/reader_kernel/proposal.json`，字段为：
 
-- `schema_version=original-reader-kernel-v2`
+- `schema_version`：严格使用 frozen `proposal_schema` 要求的值
 - `information_status=PROPOSAL`
 - `summary`
 - `reader_experience`：复用 `ReaderExperienceContract`
