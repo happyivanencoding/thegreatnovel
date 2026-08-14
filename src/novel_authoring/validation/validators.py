@@ -671,10 +671,11 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
     required = {
         "required_irreversible_change",
-        "required_cost",
         "ending_state",
         *(f"commit:{item}" for item in context.contract.commit_updates),
     }
+    if context.contract.required_cost.strip():
+        required.add("required_cost")
     for key in sorted(required):
         quotes = context.draft.contract_evidence.get(key)
         if quotes is None:

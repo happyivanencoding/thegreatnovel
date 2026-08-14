@@ -117,7 +117,11 @@ def build_genesis_apply_plan(
         confirmation.protagonist_goal_override.strip() or foundation.protagonist_goal
     )
     main_conflict = confirmation.main_conflict_override.strip() or foundation.main_conflict
-    protagonist_cost = confirmation.protagonist_cost_override.strip() or proposal.protagonist_cost
+    protagonist_cost = (
+        proposal.protagonist_cost
+        if confirmation.protagonist_cost_override is None
+        else confirmation.protagonist_cost_override.strip()
+    )
     protagonist_growth = (
         confirmation.protagonist_growth_override.strip() or proposal.protagonist_growth
     )
@@ -127,13 +131,10 @@ def build_genesis_apply_plan(
         "long": confirmation.rolling_long_override or proposal.rolling_planning.long,
     }
     first_phase = proposal.first_phase.model_dump(mode="json")
-    first_phase.update(
-        {
-            key: value.strip()
-            for key, value in confirmation.first_phase_overrides.items()
-            if value.strip()
-        }
-    )
+    for key, value in confirmation.first_phase_overrides.items():
+        stripped = value.strip()
+        if key == "first_resource_bottleneck" or stripped:
+            first_phase[key] = stripped
     first_phase["first_concrete_goal"] = confirmation.first_phase_objective.strip()
     prefix = f"{proposal_version_id}-{foundation.candidate_id}"
     settings = []

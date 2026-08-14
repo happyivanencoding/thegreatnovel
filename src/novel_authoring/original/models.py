@@ -513,7 +513,7 @@ class OriginalFoundationConfirmation(BaseModel):
     protagonist_override: str = ""
     protagonist_goal_override: str = ""
     main_conflict_override: str = ""
-    protagonist_cost_override: str = ""
+    protagonist_cost_override: str | None = None
     protagonist_growth_override: str = ""
     first_phase_overrides: dict[str, str] = Field(default_factory=dict)
     characters_override: list[str] = Field(default_factory=list)

@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Any, cast
+
+from novel_authoring.config import load_settings
+from novel_authoring.contracts.draft import DraftOutput
 from novel_authoring.domain.models import ContinuationMode, NarrativeFunction
 from novel_authoring.original.genesis import build_genesis_apply_plan
 from novel_authoring.original.models import (
@@ -10,6 +15,7 @@ from novel_authoring.original.models import (
     FirstPhaseProposal,
     FoundationDevelopmentProposal,
     FoundationSetting,
+    GenesisApplyPlan,
     OriginalBookRequest,
     OriginalFoundationConfirmation,
     RollingPlanning,
@@ -18,6 +24,7 @@ from novel_authoring.original.models import (
     StoryRoute,
 )
 from novel_authoring.planning.models import CandidateProposal, ChapterContract
+from novel_authoring.validation.validators import ValidationContext, validate_contract
 
 
 def _profile() -> BookProfileDraft:
@@ -56,7 +63,9 @@ def _chapter_candidate(index: int) -> FirstChapterCandidate:
     )
 
 
-def _development_proposal() -> FoundationDevelopmentProposal:
+def _development_proposal(
+    *, protagonist_cost: str = "", first_resource_bottleneck: str = ""
+) -> FoundationDevelopmentProposal:
     foundation = StoryFoundationCandidate(
         candidate_id="foundation-one",
         title="异常能力承载",
@@ -81,7 +90,7 @@ def _development_proposal() -> FoundationDevelopmentProposal:
         selected_foundation_id=foundation.candidate_id,
         opening_pressure="能力验证窗口正在关闭",
         first_concrete_goal="完成第一次验证",
-        first_resource_bottleneck="",
+        first_resource_bottleneck=first_resource_bottleneck,
         first_progression_opportunity="打开此前不可能的行动",
         first_payoff="得到普通人无法复制的结果",
         first_meaningful_escalation="更高能力边界被迫显形",
@@ -101,7 +110,7 @@ def _development_proposal() -> FoundationDevelopmentProposal:
         protagonist="主角",
         protagonist_goal="证明能力可以改变处境",
         protagonist_conflict="外部压力阻止能力验证",
-        protagonist_cost="",
+        protagonist_cost=protagonist_cost,
         protagonist_growth="从验证者扩大为改变环境的行动者",
         world_rules=["能力必须沿原功能连续发展"],
         foundation_settings=[
@@ -154,9 +163,18 @@ def test_original_narrative_cost_fields_are_optional() -> None:
     assert not FirstPhaseProposal.model_fields["first_resource_bottleneck"].is_required()
     assert not FirstChapterCandidate.model_fields["cost"].is_required()
     assert not FoundationDevelopmentProposal.model_fields["protagonist_cost"].is_required()
+    assert (
+        not OriginalFoundationConfirmation.model_fields[
+            "protagonist_cost_override"
+        ].is_required()
+    )
     assert FirstPhaseProposal.model_fields["first_resource_bottleneck"].default == ""
     assert FirstChapterCandidate.model_fields["cost"].default == ""
     assert FoundationDevelopmentProposal.model_fields["protagonist_cost"].default == ""
+    assert (
+        OriginalFoundationConfirmation.model_fields["protagonist_cost_override"].default
+        is None
+    )
 
 
 def test_empty_costs_flow_through_genesis_and_contract_shapes() -> None:
@@ -212,3 +230,165 @@ def test_empty_costs_flow_through_genesis_and_contract_shapes() -> None:
         commit_updates=["thread_status:thread-one"],
     )
     assert contract.required_cost == ""
+
+
+def _confirmation(
+    *,
+    protagonist_cost_override: str | None = None,
+    first_phase_overrides: dict[str, str] | None = None,
+) -> OriginalFoundationConfirmation:
+    return OriginalFoundationConfirmation(
+        confirmed=True,
+        selected_title="书名一",
+        selected_foundation_id="foundation-one",
+        selected_route_id="route-1",
+        protagonist_cost_override=protagonist_cost_override,
+        first_phase_overrides=first_phase_overrides or {},
+        world_rules=["能力必须沿原功能连续发展"],
+        first_phase_objective="完成第一次验证",
+    )
+
+
+def _genesis_plan(
+    proposal: FoundationDevelopmentProposal,
+    confirmation: OriginalFoundationConfirmation,
+) -> GenesisApplyPlan:
+    return build_genesis_apply_plan(
+        proposal_version_id="proposal-one",
+        proposal=proposal,
+        confirmation=confirmation,
+        request=OriginalBookRequest(premise="特殊能力让普通对象产生超常结果。"),
+    )
+
+
+def test_author_can_clear_protagonist_cost_and_first_resource_bottleneck() -> None:
+    proposal = _development_proposal(
+        protagonist_cost="AI 生成的代价",
+        first_resource_bottleneck="AI 生成的资源瓶颈",
+    )
+
+    inherited = _genesis_plan(proposal, _confirmation())
+    assert {
+        item["statement"]
+        for item in inherited.author_truths
+        if item["title"] == "主角代价"
+    } == {"AI 生成的代价"}
+    assert inherited.first_phase["first_resource_bottleneck"] == "AI 生成的资源瓶颈"
+
+    cleared = _genesis_plan(
+        proposal,
+        _confirmation(
+            protagonist_cost_override="",
+            first_phase_overrides={"first_resource_bottleneck": ""},
+        ),
+    )
+    assert all(item["title"] != "主角代价" for item in cleared.author_truths)
+    assert cleared.first_phase["first_resource_bottleneck"] == ""
+
+    overridden = _genesis_plan(
+        proposal,
+        _confirmation(protagonist_cost_override="作者确认的代价"),
+    )
+    assert {
+        item["statement"]
+        for item in overridden.author_truths
+        if item["title"] == "主角代价"
+    } == {"作者确认的代价"}
+
+
+def test_empty_mandatory_first_phase_override_keeps_proposal_value() -> None:
+    proposal = _development_proposal()
+    proposal.first_phase.first_payoff = "AI 生成的兑现"
+
+    plan = _genesis_plan(
+        proposal,
+        _confirmation(
+            first_phase_overrides={
+                "first_resource_bottleneck": "",
+                "first_payoff": "",
+            }
+        ),
+    )
+
+    assert plan.first_phase["first_resource_bottleneck"] == ""
+    assert plan.first_phase["first_payoff"] == "AI 生成的兑现"
+
+
+def _validation_context(
+    *, required_cost: str, include_cost_evidence: bool
+) -> ValidationContext:
+    evidence = {
+        "required_irreversible_change": ["不可逆改变"],
+        "ending_state": ["结尾状态"],
+        "commit:thread:main": ["线程证据"],
+    }
+    prose = "不可逆改变。结尾状态。线程证据。"
+    if include_cost_evidence:
+        evidence["required_cost"] = ["真实成本"]
+        prose += "真实成本。"
+    return ValidationContext(
+        draft=DraftOutput.model_construct(
+            task_id="task-cost",
+            contract_id="contract-cost",
+            chapter_title="成本校验",
+            prose_markdown=prose,
+            state_changes=[],
+            contract_evidence=evidence,
+            character_fit_inputs={},
+            style_fit_inputs={},
+            realized_kernel_trace=None,
+        ),
+        contract=ChapterContract.model_construct(
+            contract_id="contract-cost",
+            required_irreversible_change="不可逆改变",
+            required_cost=required_cost,
+            ending_state="结尾状态",
+            commit_updates=["thread:main"],
+            kernel_verification_status="LEGACY_NO_EFFECTIVE_CONTRACT",
+        ),
+        projection=cast(Any, None),
+        settings=load_settings(),
+    )
+
+
+def test_empty_contract_cost_does_not_require_cost_evidence() -> None:
+    report = validate_contract(
+        _validation_context(required_cost="", include_cost_evidence=False)
+    )
+
+    assert report.passed
+    assert all(
+        finding.location != "contract_evidence:required_cost"
+        for finding in report.findings
+    )
+
+
+def test_nonempty_contract_cost_still_requires_cost_evidence() -> None:
+    report = validate_contract(
+        _validation_context(required_cost="真实成本", include_cost_evidence=False)
+    )
+
+    assert not report.passed
+    assert any(
+        finding.code == "CONTRACT_REQUIREMENT_MISSING"
+        and "required_cost" in finding.message
+        for finding in report.findings
+    )
+
+
+def test_original_studio_preserves_explicit_empty_override_keys() -> None:
+    javascript = (
+        Path(__file__).resolve().parents[2]
+        / "src"
+        / "novel_authoring"
+        / "web"
+        / "static"
+        / "original.js"
+    ).read_text(encoding="utf-8")
+
+    assert (
+        'protagonist_cost_override: String(form.get("protagonist_cost_override") || "").trim(),'
+        in javascript
+    )
+    assert "firstPhaseOverrides[key.slice(13)] = String(value).trim();" in javascript
+    assert "first_phase_overrides: firstPhaseOverrides," in javascript
