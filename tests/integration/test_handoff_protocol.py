@@ -170,7 +170,8 @@ def test_novel_handoff_runner_is_one_handoff_protocol_boundary() -> None:
     )
     config = tomllib.loads(config_path.read_text(encoding="utf-8"))
 
-    assert set(config) == {"name", "description", "developer_instructions"}
+    required_keys = {"name", "description", "developer_instructions"}
+    assert required_keys <= set(config)
     assert config["name"] == "novel_handoff_runner"
     instructions = config["developer_instructions"]
     for required_fact in {

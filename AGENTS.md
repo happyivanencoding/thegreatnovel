@@ -236,9 +236,10 @@ WARNING 默认不是 Hard Failure。
 
 `.agents/skills/process-novel-handoff/SKILL.md`
 
-重复的单 handoff 执行可委派给
-`.codex/agents/novel-handoff-runner.toml`。调用方必须显式提供绝对
-`library_root`、`book_id` 和 `handoff_id`；一次 Agent invocation 只处理一个 handoff。
+当任务是一个已明确给出绝对 `library_root`、`book_id` 和 `handoff_id` 的标准单
+handoff 时，默认委派给 `.codex/agents/novel-handoff-runner.toml`。只有子代理不可用、
+父任务明确要求在当前会话执行或存在真实不可委派约束时，才由主会话直接执行；一次
+Agent invocation 只处理一个 handoff。
 
 Web 只负责：
 

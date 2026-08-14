@@ -2110,6 +2110,16 @@ def _book_database(
     return Database(workspace.resolve() / safe_book_id(book_id) / "state.sqlite3")
 
 
+def _require_absolute_handoff_library_root(
+    library_root: Path | None, *, command: str
+) -> Path:
+    if library_root is None or not library_root.is_absolute():
+        raise ValueError(
+            f"INVALID: workflow {command} requires an explicit absolute --library-root"
+        )
+    return library_root
+
+
 @atlas_app.command("show")
 def atlas_show_command(
     book_id: BookId = typer.Option(...),
@@ -2776,9 +2786,10 @@ def workflow_start_command(
 ) -> None:
     """Claim a ready handoff and advance it to RUNNING in one call."""
     try:
+        root = _require_absolute_handoff_library_root(library_root, command="start")
         _emit(
             start_handoff(
-                _book_database(workspace, book_id, library_root),
+                _book_database(workspace, book_id, root),
                 handoff_id,
                 claimed_by,
             )
@@ -2829,9 +2840,10 @@ def workflow_complete_command(
 ) -> None:
     """Validate and complete a RUNNING handoff in one call."""
     try:
+        root = _require_absolute_handoff_library_root(library_root, command="complete")
         _emit(
             complete_handoff(
-                _book_database(workspace, book_id, library_root),
+                _book_database(workspace, book_id, root),
                 handoff_id,
                 claim_token,
                 result_path,

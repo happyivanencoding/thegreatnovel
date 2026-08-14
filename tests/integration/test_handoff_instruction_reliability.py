@@ -10,6 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 from typer.testing import CliRunner
 
+import novel_authoring.cli.legacy as cli_legacy
 from novel_authoring.cli import app as cli_app
 from novel_authoring.db.database import Database
 from novel_authoring.initialization import create_initialization
@@ -18,9 +19,12 @@ from novel_authoring.web import app as web_app_module
 from novel_authoring.web.app import STATIC_ASSET_VERSION, create_app
 from novel_authoring.web.routes.pages import _activity_view
 from novel_authoring.workflows.handoffs import (
+    HandoffStatus,
     HandoffWorkflowError,
     copy_instruction,
+    get_handoff,
     resolve_instruction_path,
+    start_handoff,
 )
 
 MISSING_INSTRUCTION_MESSAGE = "交接任务存在，但交接指令文件缺失。请重新准备初始化任务。"
@@ -175,6 +179,109 @@ def test_workflow_start_uses_explicit_library_root_from_unrelated_cwd(
     assert payload["status"] == "RUNNING"
     assert payload["executor_skill"] == task["executor_skill"]
     assert Path(payload["task_directory"]).resolve() == task_directory.resolve()
+
+
+@pytest.mark.parametrize(
+    "library_args",
+    [
+        pytest.param([], id="missing"),
+        pytest.param(["--library-root", "library"], id="relative"),
+    ],
+)
+def test_workflow_start_rejects_non_absolute_library_root_before_database_access(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    library_args: list[str],
+) -> None:
+    client, library, discovery = _client(tmp_path)
+    created = _create_initialized_book(client, discovery)
+    database = _database_for(library, created["book_id"])
+    before = get_handoff(database, created["handoff_id"])
+    unrelated_cwd = tmp_path / "unrelated-cwd"
+    (unrelated_cwd / "library").mkdir(parents=True)
+    monkeypatch.chdir(unrelated_cwd)
+
+    def unexpected_database_access(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("invalid library root reached _book_database")
+
+    monkeypatch.setattr(cli_legacy, "_book_database", unexpected_database_access)
+    result = CliRunner().invoke(
+        cli_app,
+        [
+            "workflow",
+            "start",
+            *library_args,
+            "--book-id",
+            created["book_id"],
+            "--handoff-id",
+            created["handoff_id"],
+        ],
+    )
+
+    assert result.exit_code == 3, result.output
+    assert (
+        "INVALID: workflow start requires an explicit absolute --library-root"
+        in result.output
+    )
+    after = get_handoff(database, created["handoff_id"])
+    assert after["status"] == before["status"] == HandoffStatus.READY_FOR_CODEX.value
+    assert [event["event_type"] for event in after["events"]] == [
+        event["event_type"] for event in before["events"]
+    ]
+
+
+@pytest.mark.parametrize(
+    "library_args",
+    [
+        pytest.param([], id="missing"),
+        pytest.param(["--library-root", "library"], id="relative"),
+    ],
+)
+def test_workflow_complete_rejects_non_absolute_library_root_before_database_access(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    library_args: list[str],
+) -> None:
+    client, library, discovery = _client(tmp_path)
+    created = _create_initialized_book(client, discovery)
+    database = _database_for(library, created["book_id"])
+    started = start_handoff(database, created["handoff_id"], "root-guard-test")
+    before = get_handoff(database, created["handoff_id"])
+    unrelated_cwd = tmp_path / "unrelated-cwd"
+    (unrelated_cwd / "library").mkdir(parents=True)
+    monkeypatch.chdir(unrelated_cwd)
+
+    def unexpected_database_access(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("invalid library root reached _book_database")
+
+    monkeypatch.setattr(cli_legacy, "_book_database", unexpected_database_access)
+    result = CliRunner().invoke(
+        cli_app,
+        [
+            "workflow",
+            "complete",
+            *library_args,
+            "--book-id",
+            created["book_id"],
+            "--handoff-id",
+            created["handoff_id"],
+            "--claim-token",
+            str(started["claim_token"]),
+            "--result-path",
+            str(started["result_target"]),
+        ],
+    )
+
+    assert result.exit_code == 3, result.output
+    assert (
+        "INVALID: workflow complete requires an explicit absolute --library-root"
+        in result.output
+    )
+    after = get_handoff(database, created["handoff_id"])
+    assert after["status"] == before["status"] == HandoffStatus.RUNNING.value
+    assert [event["event_type"] for event in after["events"]] == [
+        event["event_type"] for event in before["events"]
+    ]
 
 
 # 验收清单 2：legacy root prompt（flat 布局 task_directory/prompt.md）。
