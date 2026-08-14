@@ -1637,13 +1637,18 @@ def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path:
         (Path(str(foundation_handoff["task_directory"])) / "input" / "original_request.json")
         .read_text(encoding="utf-8")
     )
-    assert foundation_request["progression_kernel"]["foundation_rules"] == [
-        "故事基础候选必须共享已确认的 Reader Experience、Primary Narrative Drive "
-        "与 Creative Semantics",
-        "故事基础候选必须用不同故事活动、压力、资源、关系与扩张方式承载同一核心玩法",
-        "不得为追求候选差异新增未经 Seed、Creative Semantics 或 Core Intent "
-        "需要的竞争性第二核心机制",
-    ]
+    foundation_rules = foundation_request["progression_kernel"]["foundation_rules"]
+    assert len(foundation_rules) == 3
+    assert any(
+        "Reader Experience" in rule and "Creative Semantics" in rule
+        for rule in foundation_rules
+    )
+    assert any(
+        "同一个 Core Innovation" in rule and "Core selection" in rule
+        for rule in foundation_rules
+    )
+    assert any("竞争性第二核心机制" in rule for rule in foundation_rules)
+    assert not any("活动、压力、资源、关系、空间与扩张" in rule for rule in foundation_rules)
     assert foundation_request["progression_kernel"]["creative_semantics"] == (
         creative_semantics_payload()
     )
@@ -1653,6 +1658,13 @@ def test_core_innovation_precedes_foundation_and_freezes_author_intent(tmp_path:
         ]
         == candidates[1]["innovation_id"]
     )
+    assert (
+        foundation_request["progression_kernel"]["core_innovation"]["selected_candidate"]
+        == candidates[1]
+    )
+    assert "innovation_candidates" not in foundation_request["progression_kernel"][
+        "core_innovation"
+    ]
     with database.connect() as connection:
         state = connection.execute(
             "SELECT selected_primary_innovation_id, optional_mix_notes, state "

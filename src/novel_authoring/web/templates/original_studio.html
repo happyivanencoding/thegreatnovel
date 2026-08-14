@@ -74,6 +74,7 @@
       {% set current_creative = reader.current_creative_semantics %}
       <section class="original-derived-card">
         <h3>创作语义边界</h3>
+        <p class="muted">现实锚点只约束这里明确列出的部分，不会自动限制核心幻想或特殊能力的超现实程度；资源与社会后果可以真实，主角的独占能力仍应保持可见。</p>
         <div class="original-final-preview">
           <article><span>读者购买的核心幻想</span><strong>{{ creative.signature_fantasy }}</strong></article>
           <article><span>Seed 已有生成机制</span><strong>{{ creative.existing_signature_mechanism or '尚未确定' }}</strong></article>
@@ -186,6 +187,7 @@
           <small><strong>具体示例（NON_CANON，仅供理解）</strong>：{{ item.concrete_example }}</small>
           <small>为什么会期待下一次：{{ item.reader_anticipation }}</small>
           <small>限制与代价：{{ item.limitation }}</small>
+          <small><strong>主角为什么特殊：</strong>{{ item.protagonist_special_rule }}</small>
           <details><summary>查看设计细节</summary><small>解决的开放问题：{{ item.unresolved_design_choices|join(' / ') }}</small><small>核心机制：{{ item.core_mechanism }}</small><small>主角特殊规则：{{ item.protagonist_special_rule }}</small><small>选择生成：{{ item.choice_generation }}</small><small>成长生成：{{ item.progression_generation }}</small><small>兑现生成：{{ item.payoff_generation }}</small><small>扩张语法：{{ item.expansion_grammar }}</small><small>长篇容量：{{ item.long_form_capacity }}</small><small>新颖性来源：{{ item.novelty_source }}</small><small>重复风险：{{ item.repetition_risk }}</small><small>与阅读承诺的契合：{{ item.fit_with_reader_promise }}</small></details>
         </label>
         {% endfor %}
@@ -197,7 +199,7 @@
     <section class="panel original-reader-confirmed" data-core-innovation-confirmed>
       <header class="original-wizard-header"><div><p class="wb-kicker">已冻结 · 核心玩法</p><h2>Foundation 将在这个机制边界下生成</h2></div><span class="badge">作者意图</span></header>
       {% for item in original.innovation_proposal.innovation_candidates if item.innovation_id == original.innovation_selection.selected_primary_innovation_id %}
-      <div class="original-final-preview"><article><span>{{ item.title }}</span><strong>{{ item.plain_language_pitch }}</strong></article><article><span>为什么会期待下一次</span><strong>{{ item.reader_anticipation }}</strong></article><article><span>限制与代价</span><strong>{{ item.limitation }}</strong></article></div>
+      <div class="original-final-preview"><article><span>{{ item.title }}</span><strong>{{ item.plain_language_pitch }}</strong></article><article><span>主角为什么特殊</span><strong>{{ item.protagonist_special_rule }}</strong></article><article><span>主要怎么兑现</span><strong>{{ item.payoff_generation }}</strong></article><article><span>为什么会期待下一次</span><strong>{{ item.reader_anticipation }}</strong></article><article><span>限制与代价</span><strong>{{ item.limitation }}</strong></article></div>
       {% endfor %}
       {% if original.innovation_selection.optional_mix_notes %}<p class="muted">作者希望吸收的特征：{{ original.innovation_selection.optional_mix_notes }}</p>{% endif %}
       <p class="muted">后续 Foundation、成长与长线、第一阶段和候选生成都必须读取这份冻结 Intent；如果发现风险，只能提出 Alternative，不能静默替换。</p>
@@ -213,7 +215,7 @@
     <section class="panel original-status-card">
       <p class="wb-kicker">Step 2 · 故事基础</p>
       <h2>正在核心玩法下生成三个故事基础</h2>
-      <p>三个方案会用不同的活动、压力、资源与关系承载同一玩法，不会为显得不同而再发明竞争性核心。</p>
+      <p>三个方案会保持同一已确认核心的语义身份，同时形成不同的故事体验，并寻找能够持续兑现作者确认的阅读承诺的故事环境；不会为显得不同而再发明竞争性核心。</p>
       <div class="original-actions">
         {% if original.generating_proposal.handoff_id %}<button class="button primary" type="button" data-copy-instruction="/api/books/{{ original.book_id }}/editions/base/handoffs/{{ original.generating_proposal.handoff_id }}/instruction">复制给 Codex 的指令</button>{% endif %}
         <button class="button" type="button" data-original-action="bootstrap">检查生成状态</button>
@@ -261,7 +263,7 @@
           <small>开局：{{ item.opening_situation }}</small>
           <small>平时会面对的选择：{{ item.typical_choice }}</small>
           <small>第一阶段目标：{{ item.first_stage_objective }}</small>
-          <details><summary>查看故事结构</summary><small>阅读承诺：{{ item.core_reading_promise }}</small><small>主角：{{ item.protagonist }}</small><small>能力 / 弱点：{{ item.protagonist_competence }} / {{ item.protagonist_weakness }}</small><small>目标 / 冲突：{{ item.protagonist_goal }} / {{ item.main_conflict }}</small><small>世界承载：{{ item.world_carrier }}</small><small>风险：{{ item.risk_structure }}</small><small>社会 / 资源：{{ item.social_configuration }} / {{ item.resource_structure }}</small><small>与 Seed 的关系：{{ item.premise_relationship }}</small><small>如何让核心玩法更好玩：{{ item.innovation_fit }}</small></details>
+          <details><summary>查看故事结构</summary><small>阅读承诺：{{ item.core_reading_promise }}</small><small>主角：{{ item.protagonist }}</small><small>能力 / 弱点：{{ item.protagonist_competence }} / {{ item.protagonist_weakness }}</small><small>目标 / 冲突：{{ item.protagonist_goal }} / {{ item.main_conflict }}</small><small>世界承载：{{ item.world_carrier }}</small><small>风险：{{ item.risk_structure }}</small><small>社会 / 资源：{{ item.social_configuration }} / {{ item.resource_structure }}</small><small>与 Seed 的关系：{{ item.premise_relationship }}</small><small><strong>特殊机制如何成为主要兑现：</strong>{{ item.innovation_fit }}</small></details>
         </label>
         {% endfor %}
       </div>

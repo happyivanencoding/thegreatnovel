@@ -408,9 +408,11 @@ def _confirmed_progression_kernel(
         "creative_semantics": creative_semantics.model_dump(mode="json"),
         "contract_proposals": latest_by_type,
         "foundation_rules": [
-            "故事基础候选必须共享已确认的 Reader Experience、Primary Narrative Drive "
+            "Foundation 必须保留已确认的 Reader Experience、Primary Narrative Drive "
             "与 Creative Semantics",
-            "故事基础候选必须用不同故事活动、压力、资源、关系与扩张方式承载同一核心玩法",
+            "三个 Foundation 候选必须共享并实质依赖作者选择的同一个 Core Innovation；"
+            "selected Core 内部仍开放的问题可以被具体化，但不得重新打开已由 Core selection "
+            "关闭的同等级机制分叉",
             "不得为追求候选差异新增未经 Seed、Creative Semantics 或 Core Intent "
             "需要的竞争性第二核心机制",
         ],
