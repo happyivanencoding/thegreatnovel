@@ -1861,10 +1861,11 @@ def test_original_bootstrap_fast_path_freezes_one_skill_and_thin_inputs(tmp_path
     assert prompt.count("process-novel-handoff") == 1
     assert "workflow start" in prompt
     assert "workflow complete" in prompt
+    assert f'${task["executor_skill"]}' in prompt
 
     started = start_handoff(database, handoff_id)
     assert started["status"] == HandoffStatus.RUNNING.value
-    assert started["executor_skill"] == "bootstrap-original-novel"
+    assert started["executor_skill"] == task["executor_skill"]
     assert started["business_input_files"] == task["business_input_files"]
 
     proposal = CoreInnovationProposal.model_validate(innovation_payload())

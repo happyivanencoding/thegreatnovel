@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -160,12 +161,51 @@ def test_every_handoff_type_has_one_executor_and_protocol_has_no_business_router
     assert "不得通过当前工作目录" in process_skill
 
 
+def test_novel_handoff_runner_is_one_handoff_protocol_boundary() -> None:
+    config_path = (
+        Path(__file__).parents[2]
+        / ".codex"
+        / "agents"
+        / "novel-handoff-runner.toml"
+    )
+    config = tomllib.loads(config_path.read_text(encoding="utf-8"))
+
+    assert set(config) == {"name", "description", "developer_instructions"}
+    assert config["name"] == "novel_handoff_runner"
+    instructions = config["developer_instructions"]
+    for required_fact in {
+        "$process-novel-handoff",
+        "library_root",
+        "book_id",
+        "handoff_id",
+        "executor_skill",
+        "business_input_files",
+        "result_target",
+        "claim_token",
+        "workflow complete",
+        "一次 Agent invocation 只处理一个 handoff",
+    }:
+        assert required_fact in instructions
+    assert "不得从 cwd" in instructions
+    assert "不得通过 workflow list/jobs" in instructions
+    assert "不领取下一个 handoff" in instructions
+    assert "HandoffType" not in instructions
+    assert not any(
+        executor in instructions for executor in HANDOFF_EXECUTOR_SKILLS.values()
+    )
+
+
 def test_workflow_start_is_one_claim_and_running_transition(tmp_path: Path) -> None:
     database, handoff = _continuation_handoff(tmp_path)
     started = start_handoff(database, str(handoff["handoff_id"]), "fast-path-a")
 
+    task_directory = Path(str(handoff["task_directory"]))
+    task = json.loads((task_directory / "task.json").read_text(encoding="utf-8"))
+    prompt = (task_directory / "prompt.md").read_text(encoding="utf-8")
+
     assert started["status"] == HandoffStatus.RUNNING.value
-    assert started["executor_skill"] == "continue-novel"
+    assert started["executor_skill"] == task["executor_skill"] == "continue-novel"
+    assert f'${started["executor_skill"]}' in prompt
     assert started["result_target"]
     assert set(started) == {
         "handoff_id",
@@ -235,10 +275,12 @@ def test_workflow_complete_invalid_business_result_is_retryable(tmp_path: Path) 
     }
     result_path.write_text(json.dumps(invalid_result), encoding="utf-8")
 
-    with pytest.raises(HandoffWorkflowError, match="completed_stage"):
+    with pytest.raises(HandoffWorkflowError) as excinfo:
         complete_handoff(
             database, str(handoff["handoff_id"]), str(started["claim_token"]), result_path
         )
+    assert str(excinfo.value).startswith("RESULT_INVALID:")
+    assert "completed_stage" in str(excinfo.value)
 
     frozen = get_handoff(database, str(handoff["handoff_id"]))
     assert frozen["status"] == HandoffStatus.RUNNING.value

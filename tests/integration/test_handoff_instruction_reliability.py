@@ -8,7 +8,9 @@ from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
+from typer.testing import CliRunner
 
+from novel_authoring.cli import app as cli_app
 from novel_authoring.db.database import Database
 from novel_authoring.initialization import create_initialization
 from novel_authoring.storage.layout import BookLayout
@@ -137,6 +139,42 @@ def test_fresh_canonical_operation_prompt_served(tmp_path: Path) -> None:
         Path(str(row["result_path"])),
     )
     assert "$initialize-existing-novel" in payload["instruction"]
+
+
+def test_workflow_start_uses_explicit_library_root_from_unrelated_cwd(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client, library, discovery = _client(tmp_path)
+    created = _create_initialized_book(client, discovery)
+    database = _database_for(library, created["book_id"])
+    row = _handoff_row(database, created["handoff_id"])
+    task_directory = Path(str(row["task_directory"]))
+    task = json.loads(
+        (task_directory / "input" / "task.json").read_text(encoding="utf-8")
+    )
+    unrelated_cwd = tmp_path / "unrelated-cwd"
+    unrelated_cwd.mkdir()
+    monkeypatch.chdir(unrelated_cwd)
+
+    started = CliRunner().invoke(
+        cli_app,
+        [
+            "workflow",
+            "start",
+            "--library-root",
+            str(library.resolve()),
+            "--book-id",
+            created["book_id"],
+            "--handoff-id",
+            created["handoff_id"],
+        ],
+    )
+
+    assert started.exit_code == 0, started.output
+    payload = json.loads(started.output)
+    assert payload["status"] == "RUNNING"
+    assert payload["executor_skill"] == task["executor_skill"]
+    assert Path(payload["task_directory"]).resolve() == task_directory.resolve()
 
 
 # 验收清单 2：legacy root prompt（flat 布局 task_directory/prompt.md）。
