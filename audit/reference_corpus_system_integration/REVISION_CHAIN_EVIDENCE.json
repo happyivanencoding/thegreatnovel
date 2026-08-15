@@ -1,48 +1,110 @@
 {
-  "evidence_kind": "DISPOSABLE_REFERENCE_CORPUS_CLOSURE_RUN",
-  "source_test": "tests/integration/test_reference_corpus_closure.py::test_revision_strategy_chain_uses_selected_cards_and_draft_task",
-  "production_corpus": false,
-  "campaign_id": "campaign_8643663d8613d24b4344b6f9",
-  "planning_task_id": "revision-plan-task_010e4967e9d687650e55cdf3",
-  "impact_ids": [
-    "impact_542d5a64b2947cb3656a2164",
-    "impact_2daf7cc9405c7d2b91e508ad"
-  ],
-  "reference_snapshot_id": "reference-context_45662941db81297e24515ba9",
-  "reference_snapshot_hash": "474676af16ecdb801591b09bf1d615c1f22bf699404fe8ee515c04f62b2aff4e",
-  "selected_card_ids": [
-    "contrast-closure",
-    "mechanism-closure"
-  ],
-  "revision_unit_id": "revision-unit_bcb08a2066d24bf397a833c3",
-  "revision_strategy": {
-    "strategy_summary": "如何让同一类资源修订产生不同读者反馈；让资源限制迫使角色交换或取舍，并把结果写成行动反馈。",
-    "structural_moves": [
-      "只迁移结构动作与读者效果，不迁移来源事实或人物事件。",
-      "以当前场景动作承载变化，保留可验证的结果反馈。",
-      "变化必须可被读者观察",
-      "牺牲部分解释篇幅换取现场感",
-      "以当前场景动作承载变化，保留可验证的结果反馈。",
-      "变化必须可被读者观察",
-      "牺牲部分解释篇幅换取现场感",
-      "以当前场景动作承载变化，保留可验证的结果反馈。"
-    ],
-    "reference_card_ids_used": [
-      "contrast-closure",
-      "mechanism-closure"
-    ],
+  "evidence_kind": "DISPOSABLE_REFERENCE_CORPUS_FINAL_CLOSURE",
+  "closure_status": "PASS_DISPOSABLE_PRODUCTION_NOT_CONFIGURED",
+  "source_test": "tests/integration/test_reference_corpus_final_closure.py",
+  "disposable_status": {
+    "is_disposable": true,
+    "root": "pytest tmp_path",
+    "machine_package": "valid V1 package with A/B/C/prose-control cards",
+    "status": "TESTED"
+  },
+  "production_status": {
+    "production_corpus": false,
+    "status": "NOT_CONFIGURED",
+    "runtime_diagnostic": {
+      "status": "DISABLED",
+      "configured_root": null,
+      "query_ready": false,
+      "machine_bundle_hash": null,
+      "bundle_seal_valid": false,
+      "card_count": 0,
+      "warnings": ["soft-fail：Reference Corpus 未启用或未配置"],
+      "knowledge_gaps": ["当前没有可用的 Reference Corpus machine package/path"]
+    }
+  },
+  "revision_chain": {
+    "selected_card_ids": ["A", "B", "C"],
+    "snapshot": {
+      "status": "ENABLED",
+      "all_ids_from_frozen_snapshot": true,
+      "contrast_solution_ids": [
+        "B.solution_1",
+        "B.solution_2",
+        "B.solution_3"
+      ]
+    },
+    "bounded_selector_contract": {
+      "unit_1": {
+        "used_card_ids": ["A", "B"],
+        "contrast_solution_used": "B.solution_2",
+        "not_used": ["C", "B.solution_1", "B.solution_3"]
+      },
+      "unit_2": {
+        "used_card_ids": ["C"],
+        "allowed_fallback": []
+      },
+      "unit_results_must_differ": true,
+      "usage": "REFERENCE_ONLY"
+    },
+    "strategy_to_revision_draft_task": {
+      "selector_output_contract": "RevisionStrategySelectionOutput",
+      "selector_importer": "import_revision_strategy_selection",
+      "function": "prepare_revision_draft_task",
+      "required": true,
+      "planning_snapshot_provenance_required": true,
+      "status": "PASS"
+    },
+    "observed_imported_build": {
+      "unit_1_reference_card_ids_used": ["A", "B"],
+      "unit_1_selected_contrast_solution": "B.solution_2",
+      "unit_2_reference_card_ids_used": ["C"],
+      "not_used_by_unit_1": ["C", "B.solution_1", "B.solution_3"],
+      "draft_tasks_consumed_strategy": true
+    }
+  },
+  "prose": {
+    "snapshot_status": "ENABLED",
+    "snapshot_selected_card_ids": ["prose-control"],
+    "snapshot_cards_are_frozen": true,
+    "scene_functions": ["ACTION", "PAYOFF"],
+    "scene_function_source": "revision_kind_fallback",
+    "planning_family_is_excluded": true,
     "usage": "REFERENCE_ONLY"
   },
-  "revision_draft_task_id": "revision-draft-task_7e926de609ca60b9000ba4eb",
-  "prose_snapshot_id": "reference-context_90648b466e91223b0969a9c6",
-  "prose_selected_card_ids": [
-    "prose-control-closure"
+  "machine_bundle_seal": {
+    "valid": "ENABLED",
+    "missing_machine_bundle_hash": "UNAVAILABLE/RECOMPILE_REQUIRED",
+    "cards_or_dependencies_mutation": "CORRUPT/MACHINE_BUNDLE_HASH_MISMATCH",
+    "generated_at_only_mutation": "ENABLED with stable machine_bundle_hash",
+    "test_status": "PASS"
+  },
+  "original_supported_handoff": {
+    "workflow": "create_original_book -> reader handoff completion -> prepare_original_core_innovation",
+    "status": "PASS_DISPOSABLE",
+    "selected_card_ids": ["A", "B", "C"],
+    "full_snapshot_provenance": ["snapshot_id", "snapshot_hash", "machine_bundle_hash", "compact_cards"],
+    "creative_guidance_present": true,
+    "contract_ids_present": true,
+    "identity_present": ["book_id", "edition_id", "requested_stage"],
+    "forbidden_projection_fields_absent": true,
+    "canon_boundary": "NO_CHAPTER_NO_CANON"
+  },
+  "regressions": {
+    "continuation_state_derived_tags": "PASS",
+    "impact_reference_query_count": 0,
+    "planning_prose_family_isolation": "PASS",
+    "snapshot_integrity_tamper_detection": "PASS",
+    "snapshot_soft_fail_missing_path": "PASS"
+  },
+  "test_results": {
+    "final_closure": "6 passed",
+    "failed_assertion": null,
+    "ruff": "PASS",
+    "original_and_continuation_subset": "2 passed"
+  },
+  "unresolved": [
+    "Production Corpus is not configured in this runtime; disposable evidence must not be promoted to production evidence.",
+    "REAL_BROWSER is blocked in the current environment and is not represented as a browser pass."
   ],
-  "scene_functions": [
-    "ACTION",
-    "PAYOFF"
-  ],
-  "scene_function_source": "revision_kind_fallback",
-  "machine_bundle_hash": "8955acdd21d7ffe706bf7e0c58c61b85ea9d133bbab28cfc02ddfe063bb8da58",
-  "acceptance_statement": "Impact 没有调用 Reference；PLANNING selected cards 进入 RevisionStrategy.reference_card_ids_used，并随 strategy 写入 Revision Draft task；PROSE 只选 prose-control。"
+  "acceptance_statement": "The final disposable contract records selected [A,B,C], bounded per-unit use [A,B] with B.solution_2 and [C], not_used [C,B.solution_1,B.solution_3] for Unit1, selector import, strategy-to-draft provenance, prose snapshot/cards and scene function source. Seal and regression checks pass; production path remains NOT_CONFIGURED."
 }

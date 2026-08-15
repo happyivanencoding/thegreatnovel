@@ -14,8 +14,10 @@ from novel_authoring.reference_corpus.query import (
     reference_corpus_runtime_diagnostic,
 )
 from novel_authoring.reference_corpus.semantic import (
+    compute_machine_bundle_hash,
     retrieve_metadata_candidates,
     source_diversity_guard,
+    validate_machine_package,
 )
 from novel_authoring.reference_corpus.semantic_models import (
     ProseControlCard,
@@ -99,20 +101,28 @@ def _prose_control(card_id: str = "prose-control-test") -> dict[str, object]:
 def _write_package(root: Path, records: list[dict[str, object]]) -> None:
     machine = root / "machine"
     machine.mkdir(parents=True)
-    (machine / "corpus-package.json").write_text(
-        json.dumps(
-            {
-                "schema_version": "reference-corpus-machine-package-v1",
-                "status": "REFERENCE_ONLY",
-                "query_ready": True,
-                "raw_text_included": False,
-            },
-            ensure_ascii=False,
-        ),
-        encoding="utf-8",
-    )
+    package = {
+        "schema_version": "reference-corpus-machine-package-v1",
+        "status": "REFERENCE_ONLY",
+        "query_ready": True,
+        "raw_text_included": False,
+    }
     (machine / "cards.jsonl").write_text(
         "".join(json.dumps(record, ensure_ascii=False) + "\n" for record in records),
+        encoding="utf-8",
+    )
+    (machine / "dependencies.jsonl").write_text("", encoding="utf-8")
+    package["machine_bundle_hash"] = compute_machine_bundle_hash(root, package=package)
+    (machine / "corpus-package.json").write_text(
+        json.dumps(package, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+
+def _rewrite_package(root: Path, package: dict[str, object]) -> None:
+    package["machine_bundle_hash"] = compute_machine_bundle_hash(root, package=package)
+    (root / "machine" / "corpus-package.json").write_text(
+        json.dumps(package, ensure_ascii=False),
         encoding="utf-8",
     )
 
@@ -188,7 +198,7 @@ def test_query_soft_fails_when_machine_package_is_not_retrieval_ready(
     package_path = root / "machine" / "corpus-package.json"
     package = json.loads(package_path.read_text(encoding="utf-8"))
     package[field] = value
-    package_path.write_text(json.dumps(package), encoding="utf-8")
+    _rewrite_package(root, package)
 
     response = query_reference_corpus(
         {"purpose": "PLANNING", "creative_problem": "pure-upside", "max_cards": 3},
@@ -224,9 +234,49 @@ def test_machine_bundle_hash_changes_when_cards_change_without_package_hash_chan
     cards_path.write_text(json.dumps(card) + "\n", encoding="utf-8")
     after = query_reference_corpus(request, corpus_root=root)
 
-    assert after.status == "ENABLED"
+    assert after.status == "CORRUPT"
+    assert not after.cards
+    assert any("MACHINE_BUNDLE_HASH_MISMATCH" in warning for warning in after.warnings)
     assert after.machine_bundle_hash != before.machine_bundle_hash
     assert after.package_hash == generated_at_only.package_hash
+
+
+def test_query_soft_fails_when_machine_bundle_seal_is_missing(tmp_path: Path) -> None:
+    root = tmp_path / "missing-seal"
+    _write_package(root, [_mechanism()])
+    package_path = root / "machine" / "corpus-package.json"
+    package = json.loads(package_path.read_text(encoding="utf-8"))
+    package.pop("machine_bundle_hash")
+    package_path.write_text(json.dumps(package), encoding="utf-8")
+
+    response = query_reference_corpus(
+        {"purpose": "PLANNING", "creative_problem": "pure-upside", "max_cards": 3},
+        corpus_root=root,
+    )
+
+    assert response.status == "UNAVAILABLE"
+    assert not response.cards
+    assert any("RECOMPILE_REQUIRED" in warning for warning in response.warnings)
+    assert validate_machine_package(root)["bundle_seal_valid"] is False
+
+
+def test_query_detects_dependency_bundle_mutation(tmp_path: Path) -> None:
+    root = tmp_path / "dependency-mismatch"
+    _write_package(root, [_mechanism()])
+    (root / "machine" / "dependencies.jsonl").write_text(
+        '{"upstream_card_id":"changed"}\n',
+        encoding="utf-8",
+    )
+
+    response = query_reference_corpus(
+        {"purpose": "PLANNING", "creative_problem": "pure-upside", "max_cards": 3},
+        corpus_root=root,
+    )
+
+    assert response.status == "CORRUPT"
+    assert not response.cards
+    assert any("MACHINE_BUNDLE_HASH_MISMATCH" in warning for warning in response.warnings)
+    assert validate_machine_package(root)["bundle_seal_valid"] is False
 
 
 def test_runtime_diagnostic_reports_configured_package_identity(tmp_path: Path) -> None:
@@ -239,6 +289,7 @@ def test_runtime_diagnostic_reports_configured_package_identity(tmp_path: Path) 
     assert result["configured_root"] == str(root)
     assert result["query_ready"] is True
     assert result["machine_bundle_hash"]
+    assert result["bundle_seal_valid"] is True
     assert result["card_count"] == 2
 
 
@@ -249,13 +300,14 @@ def test_runtime_diagnostic_reports_not_ready_without_cards(tmp_path: Path) -> N
     package = json.loads(package_path.read_text(encoding="utf-8"))
     package["query_ready"] = False
     package["readiness_reasons"] = ["semantic validation 未通过"]
-    package_path.write_text(json.dumps(package), encoding="utf-8")
+    _rewrite_package(root, package)
 
     result = reference_corpus_runtime_diagnostic(corpus_root=root)
 
     assert result["status"] == "UNAVAILABLE"
     assert result["query_ready"] is False
     assert result["machine_bundle_hash"]
+    assert result["bundle_seal_valid"] is True
     assert result["card_count"] == 1
     assert result["knowledge_gaps"] == ["semantic validation 未通过"]
 
@@ -301,6 +353,7 @@ def test_query_status_corrupt_when_package_json_or_schema_is_invalid(
 
     assert response.status == "CORRUPT"
     assert not response.cards
+    assert validate_machine_package(root)["bundle_seal_valid"] is False
 
 
 def test_query_status_corrupt_when_cards_jsonl_is_invalid(tmp_path: Path) -> None:
@@ -313,6 +366,7 @@ def test_query_status_corrupt_when_cards_jsonl_is_invalid(tmp_path: Path) -> Non
     assert response.status == "CORRUPT"
     assert response.package_schema_version == "reference-corpus-machine-package-v1"
     assert response.package_hash
+    assert validate_machine_package(root)["bundle_seal_valid"] is False
 
 
 def test_query_separates_human_problem_from_machine_tags_and_keeps_legacy_tag(

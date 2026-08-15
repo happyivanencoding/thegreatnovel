@@ -6,6 +6,7 @@ import json
 import sqlite3
 import uuid
 from collections.abc import Mapping, Sequence
+from contextlib import suppress
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -70,12 +71,16 @@ from novel_authoring.progression.service import (
     list_contract_records,
     reject_contract,
 )
+from novel_authoring.reference_corpus import context as reference_context
 from novel_authoring.reference_corpus.context import (
+    ReferenceContextSnapshot,
     freeze_reference_context,
     load_reference_context_snapshot,
 )
 from novel_authoring.reference_corpus.query import (
+    ReferenceCorpusQueryEcho,
     ReferenceCorpusQueryRequest,
+    ReferenceCorpusQueryResponse,
     query_reference_corpus,
 )
 from novel_authoring.serial_kernel.classification import (
@@ -95,7 +100,7 @@ from novel_authoring.storage.registry import (
     BookRegistry,
     CreationMode,
 )
-from novel_authoring.utils import json_dumps, safe_book_id, utc_now
+from novel_authoring.utils import json_dumps, safe_book_id, sha256_file, utc_now
 from novel_authoring.validation.service import validate_draft
 from novel_authoring.workflows.approval import approval_preview, approve_draft
 from novel_authoring.workflows.handoffs import (
@@ -456,53 +461,9 @@ def _reference_field_values(payload: object, *keys: str) -> list[str]:
     return list(dict.fromkeys(values))
 
 
-_REFERENCE_PROMPT_FORBIDDEN_FIELDS = frozenset(
-    {
-        "source_refs",
-        "source_book_ids",
-        "raw",
-        "full_dna",
-        "book_dna",
-        "prose_dna",
-        "source_prose",
-        "source_content",
-        "full_text",
-        "raw_text",
-    }
-)
-
-
-def _is_forbidden_reference_prompt_field(key: object) -> bool:
-    normalized = str(key).casefold().replace("-", "_").replace(" ", "_")
-    return normalized in _REFERENCE_PROMPT_FORBIDDEN_FIELDS
-
-
-def _compact_reference_prompt_value(value: object) -> object:
-    if isinstance(value, Mapping):
-        return {
-            str(key): _compact_reference_prompt_value(nested)
-            for key, nested in value.items()
-            if not _is_forbidden_reference_prompt_field(key)
-        }
-    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
-        return [_compact_reference_prompt_value(item) for item in value]
-    return value
-
-
-def _compact_reference_prompt_cards(value: object) -> list[dict[str, Any]]:
-    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
-        return []
-    cards: list[dict[str, Any]] = []
-    for card in value:
-        compact = _compact_reference_prompt_value(card)
-        if isinstance(compact, dict):
-            cards.append(compact)
-    return cards
-
-
-def _original_reference_planning_context(
+def _original_reference_planning_snapshot(
     request: Mapping[str, Any], *, stage: str, book_id: str
-) -> dict[str, Any]:
+) -> ReferenceContextSnapshot:
     kernel = request.get("progression_kernel")
     kernel = kernel if isinstance(kernel, Mapping) else {}
     reader = _contract_payload(kernel.get("reader_experience"))
@@ -548,15 +509,142 @@ def _original_reference_planning_context(
         ),
         max_cards=6,
     )
-    response = query_reference_corpus(query)
-    snapshot = freeze_reference_context(
-        query,
-        response,
-        book_id=book_id,
-        edition_id="base",
-        operation_id=f"original:{book_id}:{stage}",
+    operation_id = f"original:{book_id}:{stage}"
+    try:
+        response = query_reference_corpus(query)
+        return freeze_reference_context(
+            query,
+            response,
+            book_id=book_id,
+            edition_id="base",
+            operation_id=operation_id,
+        )
+    except (OSError, UnicodeError, TypeError, ValueError) as exc:
+        unavailable = ReferenceCorpusQueryResponse(
+            schema_version="reference-corpus-query-v1",
+            purpose=query.purpose,
+            query=ReferenceCorpusQueryEcho.model_validate(
+                query.model_dump(mode="json", exclude={"purpose"})
+            ),
+            status="UNAVAILABLE",
+            knowledge_gaps=["Reference Corpus query/freeze 未能完成"],
+            warnings=[
+                "soft-fail：Reference Corpus query/freeze 失败："
+                f"{type(exc).__name__}"
+            ],
+        )
+        return freeze_reference_context(
+            query,
+            unavailable,
+            book_id=book_id,
+            edition_id="base",
+            operation_id=operation_id,
+        )
+
+
+def _original_reference_planning_context(
+    request: Mapping[str, Any], *, stage: str, book_id: str
+) -> dict[str, Any]:
+    """Return the full snapshot shape for audit-only callers."""
+
+    return _original_reference_planning_snapshot(
+        request, stage=stage, book_id=book_id
+    ).model_dump(mode="json")
+
+
+def _persist_original_reference_operation(
+    handoff: Mapping[str, Any],
+    snapshot: ReferenceContextSnapshot,
+    prompt_projection: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Persist one immutable full snapshot beside, not inside, business input."""
+
+    task_directory = Path(str(handoff["task_directory"])).resolve()
+    snapshot_path = task_directory / "reference_context_snapshot.json"
+    try:
+        if snapshot_path.is_file():
+            existing = load_reference_context_snapshot(snapshot_path)
+            if existing.snapshot_hash != snapshot.snapshot_hash:
+                return {
+                    "reference_context_snapshot": None,
+                    "reference_planning_context": dict(prompt_projection),
+                    "reference_context_status": "CONFLICT",
+                    "reference_context_warning": (
+                        "soft-fail：Original handoff 已存在不同的 Reference Context Snapshot"
+                    ),
+                }
+        else:
+            _write_json(snapshot_path, snapshot.model_dump(mode="json"))
+            load_reference_context_snapshot(snapshot_path)
+    except (OSError, UnicodeError, TypeError, ValueError) as exc:
+        return {
+            "reference_context_snapshot": None,
+            "reference_planning_context": dict(prompt_projection),
+            "reference_context_status": "UNAVAILABLE",
+            "reference_context_warning": (
+                "soft-fail：Reference Context Snapshot 未能持久化："
+                f"{type(exc).__name__}: {exc}"
+            ),
+        }
+
+    input_directory = (
+        task_directory / "input" if (task_directory / "input").is_dir() else task_directory
     )
-    return snapshot.model_dump(mode="json")
+    task_path = input_directory / "task.json"
+    task = _read_json(task_path)
+    if task is not None:
+        task["reference_context_snapshot"] = str(snapshot_path)
+        task["reference_planning_context"] = dict(prompt_projection)
+        with suppress(OSError, UnicodeError, TypeError):
+            _write_json(task_path, task)
+
+    prompt_path = input_directory / "prompt.md"
+    try:
+        prompt_text = prompt_path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        prompt_text = ""
+    prompt_marker = "## Reference Corpus Prompt Projection（REFERENCE_ONLY）"
+    if prompt_marker not in prompt_text:
+        prompt_text = (
+            f"{prompt_text.rstrip()}\n\n"
+            f"{prompt_marker}\n\n"
+            "以下内容只提供可迁移的抽象创作指导；Reference Corpus 保持 REFERENCE_ONLY，"
+            "不得替代作者意图、Story Foundation、Canon 或事实状态。\n\n"
+            "```json\n"
+            f"{json_dumps(dict(prompt_projection), indent=2)}\n"
+            "```\n"
+        )
+        with suppress(OSError, UnicodeError, TypeError):
+            prompt_path.write_text(prompt_text, encoding="utf-8")
+
+    context_manifest_path = input_directory / "context_manifest.json"
+    context_manifest = _read_json(context_manifest_path)
+    if context_manifest is not None:
+        paths = context_manifest.setdefault("paths", [])
+        if "reference_context_snapshot.json" not in paths:
+            paths.append("reference_context_snapshot.json")
+        try:
+            file_hashes = context_manifest.setdefault("file_hashes", {})
+            file_hashes["reference_context_snapshot.json"] = sha256_file(snapshot_path)
+            if task_path.is_file():
+                file_hashes["task.json"] = sha256_file(task_path)
+            if prompt_path.is_file():
+                file_hashes["prompt.md"] = sha256_file(prompt_path)
+            context_manifest["reference_context_snapshot"] = str(snapshot_path)
+            _write_json(context_manifest_path, context_manifest)
+        except (OSError, UnicodeError):
+            pass
+
+    operation_manifest_path = task_directory / "manifest.json"
+    operation_manifest = _read_json(operation_manifest_path)
+    if operation_manifest is not None:
+        operation_manifest["reference_context_snapshot"] = str(snapshot_path)
+        with suppress(OSError, UnicodeError, TypeError):
+            _write_json(operation_manifest_path, operation_manifest)
+    return {
+        "reference_context_snapshot": str(snapshot_path),
+        "reference_planning_context": dict(prompt_projection),
+    }
 
 
 def _latest_original_reference_planning_context(
@@ -570,12 +658,11 @@ def _latest_original_reference_planning_context(
     try:
         handoff = get_handoff(database, str(development["handoff_id"]))
         task_directory = Path(str(handoff["task_directory"]))
-        request = _read_json(task_directory / "input" / "original_request.json")
     except (KeyError, OSError, TypeError, ValueError):
         return {}
     snapshot_paths = (
-        task_directory / "input" / "reference_context_snapshot.json",
         task_directory / "reference_context_snapshot.json",
+        task_directory / "input" / "reference_context_snapshot.json",
     )
     for snapshot_path in snapshot_paths:
         if not snapshot_path.is_file():
@@ -605,8 +692,23 @@ def _latest_original_reference_planning_context(
                 "usage": "REFERENCE_ONLY",
             }
         return snapshot.model_dump(mode="json")
-    context = request.get("reference_planning_context") if isinstance(request, dict) else None
-    return dict(context) if isinstance(context, dict) else {}
+    return {
+        "purpose": "PLANNING",
+        "status": "UNAVAILABLE",
+        "snapshot_id": None,
+        "snapshot_hash": None,
+        "machine_bundle_hash": None,
+        "selected_card_count": 0,
+        "selected_card_ids": [],
+        "selected_card_types": [],
+        "selected_card_knowledge_levels": [],
+        "compact_cards": [],
+        "knowledge_gaps": ["Original handoff 缺少独立的 Reference Context Snapshot"],
+        "warnings": [
+            "soft-fail：未找到可通过 Core loader 读取的 Reference Context Snapshot"
+        ],
+        "usage": "REFERENCE_ONLY",
+    }
 
 
 def prepare_original_core_innovation(database: Database, book_id: str) -> dict[str, Any]:
@@ -618,8 +720,11 @@ def prepare_original_core_innovation(database: Database, book_id: str) -> dict[s
         "requested_stage": "CORE_INNOVATION_PROPOSAL",
         "progression_kernel": _confirmed_progression_kernel(database, book_id),
     }
-    request["reference_planning_context"] = _original_reference_planning_context(
+    reference_snapshot = _original_reference_planning_snapshot(
         request, stage="CORE_INNOVATION_PROPOSAL", book_id=book_id
+    )
+    request["reference_planning_context"] = reference_context.project_reference_context_for_prompt(
+        reference_snapshot
     )
     completed = _reconcile_completed_core_innovation(database, book_id)
     if completed is not None:
@@ -672,6 +777,9 @@ def prepare_original_core_innovation(database: Database, book_id: str) -> dict[s
         book_id,
         requested_stage="CORE_INNOVATION_PROPOSAL",
         original_bootstrap_request=request,
+    )
+    _persist_original_reference_operation(
+        handoff, reference_snapshot, request["reference_planning_context"]
     )
     now = utc_now()
     with database.connect() as connection:
@@ -1551,8 +1659,11 @@ def prepare_original_bootstrap(database: Database, book_id: str) -> dict[str, An
         "requested_stage": "STORY_FOUNDATION_PROPOSAL",
         "progression_kernel": progression_kernel,
     }
-    request["reference_planning_context"] = _original_reference_planning_context(
+    reference_snapshot = _original_reference_planning_snapshot(
         request, stage="STORY_FOUNDATION_PROPOSAL", book_id=book_id
+    )
+    request["reference_planning_context"] = reference_context.project_reference_context_for_prompt(
+        reference_snapshot
     )
     completed = _reconcile_completed_original_bootstrap(database, book_id)
     if completed is not None:
@@ -1597,6 +1708,9 @@ def prepare_original_bootstrap(database: Database, book_id: str) -> dict[str, An
         requested_stage="STORY_FOUNDATION_PROPOSAL",
         edition_id="base",
         original_bootstrap_request=request,
+    )
+    _persist_original_reference_operation(
+        handoff, reference_snapshot, request["reference_planning_context"]
     )
     now = utc_now()
     with database.connect() as connection:
@@ -2496,8 +2610,11 @@ def prepare_original_foundation_development(
         "selected_story_foundation": selected_foundation,
         "kernel_contract_ids": kernel_contract_ids,
     }
-    request["reference_planning_context"] = _original_reference_planning_context(
+    reference_snapshot = _original_reference_planning_snapshot(
         request, stage="FOUNDATION_DEVELOPMENT_PROPOSAL", book_id=book_id
+    )
+    request["reference_planning_context"] = reference_context.project_reference_context_for_prompt(
+        reference_snapshot
     )
     handoff = create_original_bootstrap_handoff(
         database,
@@ -2505,6 +2622,9 @@ def prepare_original_foundation_development(
         requested_stage="FOUNDATION_DEVELOPMENT_PROPOSAL",
         edition_id="base",
         original_bootstrap_request=request,
+    )
+    _persist_original_reference_operation(
+        handoff, reference_snapshot, request["reference_planning_context"]
     )
     now = utc_now()
     with database.connect() as connection:
@@ -3050,8 +3170,8 @@ def select_first_chapter_candidate(
         )
         if key in reference_planning_context
     }
-    reference_prompt["compact_cards"] = _compact_reference_prompt_cards(
-        reference_planning_context.get("compact_cards", [])
+    reference_prompt = reference_context.project_reference_context_for_prompt(
+        reference_planning_context
     )
     if reference_planning_context:
         reference_prompt["usage"] = "REFERENCE_ONLY"

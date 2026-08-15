@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from novel_authoring.contracts.draft import DraftStateChange
 from novel_authoring.planning.innovation import (
@@ -194,6 +194,15 @@ class RevisionUnit(BaseModel):
     status: Literal["PLANNED", "DRAFTED", "VALIDATED", "COMMITTED", "REJECTED"] = "PLANNED"
 
 
+class RevisionContrastSolutionSelection(BaseModel):
+    """A bounded, provenance-only selection from one frozen contrast card."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    card_id: str = Field(min_length=1)
+    solution_id: str = Field(min_length=1)
+
+
 class RevisionStrategy(BaseModel):
     """只描述 HOW 的、带 planning snapshot provenance 的改写策略。"""
 
@@ -211,8 +220,45 @@ class RevisionStrategy(BaseModel):
     preserve_strategy: list[str] = Field(min_length=1)
     failure_modes_to_avoid: list[str] = Field(default_factory=list)
     reference_card_ids_used: list[str] = Field(default_factory=list)
+    selected_contrast_solutions: list[RevisionContrastSolutionSelection] = Field(
+        default_factory=list
+    )
     actual_scene_functions: list[str] = Field(default_factory=list)
     usage: Literal["REFERENCE_ONLY"] = "REFERENCE_ONLY"
+
+    @model_validator(mode="after")
+    def deduplicate_exact_values(self) -> RevisionStrategy:
+        """Keep selector output deterministic without semantic similarity scoring."""
+
+        self.structural_moves = list(dict.fromkeys(self.structural_moves))
+        self.reader_effect_targets = list(dict.fromkeys(self.reader_effect_targets))
+        self.failure_modes_to_avoid = list(dict.fromkeys(self.failure_modes_to_avoid))
+        self.reference_card_ids_used = list(dict.fromkeys(self.reference_card_ids_used))
+        self.actual_scene_functions = list(dict.fromkeys(self.actual_scene_functions))
+        seen_solutions: set[tuple[str, str]] = set()
+        unique_solutions: list[RevisionContrastSolutionSelection] = []
+        for selection in self.selected_contrast_solutions:
+            key = (selection.card_id, selection.solution_id)
+            if key in seen_solutions:
+                continue
+            seen_solutions.add(key)
+            unique_solutions.append(selection)
+        self.selected_contrast_solutions = unique_solutions
+        return self
+
+
+class RevisionStrategySelectionOutput(BaseModel):
+    """现有 revision-plan handoff 的逐 unit semantic selector 输出。"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    task_type: Literal["REVISION_STRATEGY_SELECTION"] = "REVISION_STRATEGY_SELECTION"
+    task_id: str = Field(min_length=1)
+    campaign_id: str = Field(min_length=1)
+    edition_id: str = Field(min_length=1)
+    planning_snapshot_id: str | None = None
+    planning_snapshot_hash: str | None = None
+    strategies: dict[str, RevisionStrategy]
 
 
 class RevisionDraftOutput(BaseModel):

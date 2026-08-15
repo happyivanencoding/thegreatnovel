@@ -38,7 +38,7 @@ from novel_authoring.reference_corpus.semantic_models import (
     SpanKind,
 )
 from novel_authoring.reference_corpus.service import normalize_title
-from novel_authoring.utils import json_dumps, sha256_bytes
+from novel_authoring.utils import json_dumps, sha256_bytes, sha256_file
 
 SEMANTIC_CARD_DIRS = (
     "books",
@@ -437,34 +437,21 @@ def _machine_state(
     root: Path,
 ) -> tuple[bool, list[SemanticCard], list[str]]:
     """Read the optional compiled package once for validation/readiness checks."""
-
-    package_path = root / "machine" / "corpus-package.json"
-    cards_path = root / "machine" / "cards.jsonl"
-    if not package_path.is_file() or not cards_path.is_file():
-        return False, [], []
-    errors: list[str] = []
-    try:
-        package = json.loads(package_path.read_text(encoding="utf-8"))
-        if not isinstance(package, dict):
-            raise ValueError("package 根节点不是 object")
-        if package.get("schema_version") != MACHINE_PACKAGE_VERSION:
-            raise ValueError("package schema_version 不正确")
-        lines = [line for line in cards_path.read_text(encoding="utf-8").splitlines() if line]
-        cards = [
-            SEMANTIC_CARD_ADAPTER.validate_python(json.loads(line))
-            for line in lines
-        ]
-    except (
-        OSError,
-        UnicodeError,
-        json.JSONDecodeError,
-        ValidationError,
-        TypeError,
-        ValueError,
-    ) as exc:
-        errors.append(f"machine package 无法按统一 contract 解析：{exc}")
-        return False, [], errors
-    return True, cards, errors
+    validation = validate_machine_package(root)
+    if validation["status"] == "CORRUPT":
+        return (
+            False,
+            [],
+            [
+                "machine package validation：" + str(item)
+                for item in validation.get("warnings", [])
+            ],
+        )
+    return (
+        bool(validation.get("machine_parseable", False)),
+        list(validation.get("cards", [])),
+        [],
+    )
 
 
 def _is_cross_book_card(card: SemanticCard) -> bool:
@@ -700,6 +687,140 @@ def compute_machine_bundle_hash(
     return sha256_bytes(json_dumps(material).encode("utf-8"))
 
 
+def validate_machine_package(corpus_root: Path | str) -> dict[str, Any]:
+    """Validate one V1 machine package, including its retrieval-identity seal."""
+
+    root = _resolved(Path(corpus_root))
+    package_path = root / "machine" / "corpus-package.json"
+    cards_path = root / "machine" / "cards.jsonl"
+    result: dict[str, Any] = {
+        "status": "UNAVAILABLE",
+        "package_schema_version": None,
+        "package_hash": None,
+        "machine_bundle_hash": None,
+        "bundle_seal_valid": False,
+        "query_ready": False,
+        "card_count": 0,
+        "cards": [],
+        "machine_parseable": False,
+        "warnings": [],
+        "knowledge_gaps": [],
+    }
+    if not root.is_dir():
+        result["warnings"] = ["soft-fail：Reference Corpus package/path 不存在"]
+        result["knowledge_gaps"] = ["当前配置的 Reference Corpus path 不存在"]
+        return result
+    if not package_path.is_file() or not cards_path.is_file():
+        result["warnings"] = ["soft-fail：machine package/path 不完整"]
+        result["knowledge_gaps"] = ["需要先 compile Reference Corpus machine package"]
+        return result
+
+    try:
+        result["package_hash"] = sha256_file(package_path)
+        package = json.loads(package_path.read_text(encoding="utf-8"))
+        if not isinstance(package, dict):
+            raise ValueError("package 根节点不是 object")
+        result["package_schema_version"] = (
+            str(package.get("schema_version", "")) or None
+        )
+        if package.get("schema_version") != MACHINE_PACKAGE_VERSION:
+            raise ValueError("package schema_version 不正确")
+        if package.get("status") != "REFERENCE_ONLY":
+            raise ValueError("package status 必须是 REFERENCE_ONLY")
+        if type(package.get("query_ready")) is not bool:
+            raise ValueError("package query_ready 必须是 bool")
+        if type(package.get("raw_text_included")) is not bool:
+            raise ValueError("package raw_text_included 必须是 bool")
+    except (
+        OSError,
+        UnicodeError,
+        json.JSONDecodeError,
+        TypeError,
+        ValueError,
+    ) as exc:
+        result["warnings"] = [f"corrupt package：{exc}"]
+        result["knowledge_gaps"] = ["machine package 不能作为可靠的查询输入"]
+        return result | {"status": "CORRUPT"}
+
+    result["query_ready"] = bool(package["query_ready"])
+    stored_hash = package.get("machine_bundle_hash")
+    if not isinstance(stored_hash, str) or not stored_hash.strip():
+        reason = (
+            "RECOMPILE_REQUIRED：package machine_bundle_hash 缺失，"
+            "必须重新 compile machine package"
+        )
+        result["warnings"] = [f"soft-fail：{reason}"]
+        result["knowledge_gaps"] = [reason]
+        return result
+
+    try:
+        recomputed_hash = compute_machine_bundle_hash(root, package=package)
+    except (
+        OSError,
+        UnicodeError,
+        json.JSONDecodeError,
+        TypeError,
+        ValueError,
+    ) as exc:
+        result["warnings"] = [f"corrupt package：{exc}"]
+        result["knowledge_gaps"] = ["machine package 不能作为可靠的查询输入"]
+        return result | {"status": "CORRUPT"}
+    result["machine_bundle_hash"] = recomputed_hash
+    if stored_hash != recomputed_hash:
+        reason = (
+            "MACHINE_BUNDLE_HASH_MISMATCH：stored package machine_bundle_hash "
+            f"{stored_hash} != recomputed {recomputed_hash}"
+        )
+        result["warnings"] = [f"corrupt package：{reason}"]
+        result["knowledge_gaps"] = [reason]
+        return result | {"status": "CORRUPT"}
+
+    try:
+        lines = [
+            line
+            for line in cards_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        cards = [
+            SEMANTIC_CARD_ADAPTER.validate_python(json.loads(line))
+            for line in lines
+        ]
+    except (
+        OSError,
+        UnicodeError,
+        json.JSONDecodeError,
+        ValidationError,
+        TypeError,
+        ValueError,
+    ) as exc:
+        result["warnings"] = [f"corrupt package：{exc}"]
+        result["knowledge_gaps"] = [
+            "machine package cards 无法解析为当前 V1 contract"
+        ]
+        return result | {"status": "CORRUPT"}
+
+    result["cards"] = cards
+    result["card_count"] = len(cards)
+    result["machine_parseable"] = True
+    result["bundle_seal_valid"] = True
+    readiness_reasons: list[str] = []
+    if package["query_ready"] is False:
+        package_reasons = package.get("readiness_reasons", [])
+        if isinstance(package_reasons, list) and package_reasons:
+            readiness_reasons.extend(str(reason) for reason in package_reasons)
+        else:
+            readiness_reasons.append("package query_ready=false")
+    if package["raw_text_included"] is True:
+        readiness_reasons.append("package raw_text_included=true")
+    if readiness_reasons:
+        result["warnings"] = [
+            f"soft-fail：{reason}" for reason in readiness_reasons
+        ]
+        result["knowledge_gaps"] = readiness_reasons
+        return result | {"status": "UNAVAILABLE"}
+    return result | {"status": "ENABLED"}
+
+
 def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
     """Compile validated Markdown projections into the machine package."""
 
@@ -805,6 +926,12 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
     package["machine_bundle_hash"] = compute_machine_bundle_hash(root, package=package)
     package_path = machine_root / "corpus-package.json"
     package_path.write_text(json_dumps(package, indent=2) + "\n", encoding="utf-8", newline="\n")
+    machine_validation = validate_machine_package(root)
+    if machine_validation["status"] == "CORRUPT":
+        raise SemanticCorpusError(
+            "compile 生成的 machine package 未通过统一 seal validation："
+            + "；".join(str(item) for item in machine_validation["warnings"])
+        )
     return {
         "valid": True,
         "corpus_root": str(root),
@@ -813,7 +940,7 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         "unique_evidence_rows": len(evidence_by_id),
         "evidence_reference_count": stats["evidence_reference_count"],
         "dependency_count": len(dependency_rows),
-        "machine_bundle_hash": package["machine_bundle_hash"],
+        "machine_bundle_hash": machine_validation["machine_bundle_hash"],
         "query_ready": readiness["query_ready"],
         "readiness_status": readiness["readiness_status"],
         "paths": package["paths"],
@@ -1330,5 +1457,6 @@ __all__ = [
     "semantic_stats",
     "source_diversity_guard",
     "stats_semantic_corpus",
+    "validate_machine_package",
     "validate_semantic_corpus",
 ]

@@ -44,10 +44,26 @@ Impact Audit/WHAT MUST CHANGE -> PLANNING query -> HOW -> typed RevisionStrategy
 `RevisionStrategy` 必须带 `unit_id`、结构动作、读者效果、保留方式、失败模式和
 `reference_card_ids_used`；后者只能是 frozen planning snapshot 的
 `selected_card_ids` 子集，并保持 `REFERENCE_ONLY`。Plan task 与 draft task 必须保留
-campaign、edition、planning task、snapshot id/hash 和 strategy provenance。
+campaign、edition、planning task、snapshot id/hash 和 strategy provenance。Contrast 只能用
+显式的 `selected_contrast_solutions: [{card_id, solution_id}]` 引用同一 frozen card 下真实
+存在的 solution。Campaign 只做一次 `PLANNING` query；所有 RevisionUnit 共用同一个 frozen
+planning snapshot，但由现有 `revision-plan` handoff 提供每个 unit 的 bounded options，
+selector 可以逐 unit 返回 typed `RevisionStrategy` 并回写同一 handoff 的 `strategies` map。
+没有可调用 selector 时，Python 只提供
+reference ids 为空的可用 fallback，不得用拼接、截断或相似度评分伪装文学选择。
+
+Selector 只能读取 unit-specific `scope`、`must_change`、`must_preserve`、`forbidden`、
+`expected_after_state` 与 frozen planning options；不能修改这些约束、Canon 或任何书内事实。
+Python 负责冻结 bounded options、校验 schema、`REFERENCE_ONLY`、card/solution provenance、
+strategy identity 和 exact structural dedupe；不创建第二套 planner。`structural_moves`、
+`reader_effect_targets`、`failure_modes_to_avoid` 只做精确去重，不做文学相似度评分。
 
 `prepare_revision_draft_task` 再通过同一 gateway 以 `purpose="PROSE"` 冻结
 `reference_prose_context`，并写入 `reference_context_snapshot.json` 与 `input.md`。
+Revision Plan/Strategy task 和 Revision Draft task 的 executor-facing
+`reference_planning_context`、`reference_prose_context` 必须调用 Reference Corpus Core 的
+共享 `project_reference_context_for_prompt()`；完整 snapshot 只保留在 audit/provenance
+artifact，prompt projection 不得含 `source_refs`、`source_book_ids` 或来源正文。
 Revision Draft 必须读取并遵循 `.agents/skills/novel-prose-realization/SKILL.md`，
 与普通 Draft 共用 Novel Prose Realization、Naturalness Audit 和有界 Targeted Repair
 协议；不得创建第二套 revision humanizer 或正文生成逻辑。Prose Controls 只能改变句法、
@@ -61,9 +77,10 @@ snapshot/package identity、card count、selected card ids、warnings 和 knowle
 `ReferenceContextSnapshot.model_validate_json`；若某 checkout 尚未提供该接口，应先按
 现有 `context.py` 公开接口确认并报告跨 scope 依赖，而不是在 Revision 侧复制 loader。
 
-PROSE `scene_functions` 的优先级为：真实 target chapter features/rhythm、策略中的
-actual scene functions、RevisionSpec explicit policy、revision kind fallback；必须记录
-`scene_function_source`，且 `style_rewrite` 不得默认成 `ACTION`。GBrain/Reference gateway
+PLANNING cards 的 `applicable_scene_functions` 不参与 RevisionStrategy。PROSE
+`scene_functions` 的优先级为：真实 target chapter features/rhythm、selector 明确填写且
+通过合法词汇校验的 strategy functions、RevisionSpec explicit policy、revision kind fallback；
+必须记录 `scene_function_source`，且 `style_rewrite` 不得默认成 `ACTION`。GBrain/Reference gateway
 失败只允许 soft-fail 为无卡的 `REFERENCE_ONLY` context/strategy，不能改变 RevisionUnit、
 must-change、must-preserve、forbidden changes 或任何书内事实。
 
@@ -75,6 +92,7 @@ novel revision create --book-id <book> --edition-id <edition> --spec revision_sp
 novel revision impact --book-id <book> --campaign-id <campaign>
 novel revision impact-complete --book-id <book> --campaign-id <campaign> --decisions decisions.json
 novel revision plan --book-id <book> --campaign-id <campaign>
+novel revision strategy-import --book-id <book> --campaign-id <campaign> --output selector-output.json
 novel revision draft-task --book-id <book> --campaign-id <campaign> --unit-id <unit>
 novel revision import --book-id <book> --output output.json
 novel revision validate --book-id <book> --campaign-id <campaign>

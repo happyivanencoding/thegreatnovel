@@ -1993,6 +1993,192 @@ def test_original_bootstrap_fast_path_freezes_one_skill_and_thin_inputs(tmp_path
     assert get_handoff(database, handoff_id)["status"] == HandoffStatus.COMPLETED.value
 
 
+def test_original_bootstrap_separates_full_reference_snapshot_from_executor_inputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from novel_authoring.reference_corpus import context as reference_context
+
+    projection_calls: list[Any] = []
+
+    def shared_prompt_projection(snapshot: Any) -> dict[str, Any]:
+        projection_calls.append(snapshot)
+        return {
+            "purpose": snapshot.purpose,
+            "status": snapshot.status,
+            "snapshot_id": snapshot.snapshot_id,
+            "snapshot_hash": snapshot.snapshot_hash,
+            "machine_bundle_hash": snapshot.machine_bundle_hash,
+            "selected_card_count": snapshot.selected_card_count,
+            "selected_card_ids": list(snapshot.selected_card_ids),
+            "compact_cards": [
+                {
+                    "card_id": "mechanism-provenance",
+                    "card_type": "mechanism-card",
+                    "status": "REFERENCE_ONLY",
+                    "creative_problem": "资源缺口如何转成可观察动作",
+                    "mechanism": "让限制迫使角色取舍，并保留结果反馈。",
+                }
+            ],
+            "knowledge_gaps": list(snapshot.knowledge_gaps),
+            "warnings": list(snapshot.warnings),
+            "usage": "REFERENCE_ONLY",
+        }
+
+    monkeypatch.setattr(
+        reference_context,
+        "project_reference_context_for_prompt",
+        shared_prompt_projection,
+        raising=False,
+    )
+
+    card = {
+        "card_id": "mechanism-provenance",
+        "card_type": "mechanism-card",
+        "knowledge_level": "CROSS_BOOK_CONTRAST",
+        "status": "REFERENCE_ONLY",
+        "source_book_ids": ["source-book-a"],
+        "category_ids": ["玄幻"],
+        "creative_problem_tags": ["resource-pressure"],
+        "reader_experiences": ["BREAKTHROUGH"],
+        "narrative_drives": ["POWER_PROGRESSION"],
+        "payoff_channels": ["POWER_BREAKTHROUGH"],
+        "evidence_scope": "SINGLE_BOOK",
+        "maturity": "SUPPORTED",
+        "source_refs": [
+            {
+                "source_book_id": "source-book-a",
+                "source_id": "source-a",
+                "distill_id": "distill-a",
+                "segment_id": "segment-0001",
+                "line_start": 11,
+                "line_end": 14,
+            }
+        ],
+        "metadata_match_fields": [],
+        "creative_problem": "资源缺口如何转成可观察动作",
+        "applicability_conditions": ["资源缺口必须改变当前选择"],
+        "mechanism": "让限制迫使角色取舍，并保留结果反馈。",
+        "reader_payoff": ["读者直接感到选择压力"],
+        "action_space_effect": ["把缺口转成行动约束"],
+        "variants": ["先交换再反转"],
+        "when_not_to_use": ["不要把参考方案写成本书事实"],
+        "contrast_cases": ["不要用旁白宣布结果"],
+        "failure_risks": ["动作变成解释清单"],
+        "failure_basis": ["缺少场景后果"],
+    }
+
+    def fake_query(request: Any) -> ReferenceCorpusQueryResponse:
+        return ReferenceCorpusQueryResponse(
+            schema_version="reference-corpus-query-v1",
+            purpose=request.purpose,
+            query=request.model_dump(mode="json", exclude={"purpose"}),
+            status="ENABLED",
+            package_schema_version="reference-corpus-machine-package-v1",
+            package_hash="package-hash",
+            machine_bundle_hash="machine-bundle-hash",
+            cards=[card],
+        )
+
+    monkeypatch.setattr(original_service, "query_reference_corpus", fake_query)
+    _, database = create_original(tmp_path)
+
+    confirmed = confirm_original_reader_experience(database, BOOK_ID)
+    handoff = get_handoff(database, str(confirmed["handoff"]["handoff_id"]))
+    task_directory = Path(str(handoff["task_directory"]))
+    input_directory = task_directory / "input"
+    snapshot_path = task_directory / "reference_context_snapshot.json"
+    snapshot_payload = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    snapshot = original_service.load_reference_context_snapshot(snapshot_path)
+    request = json.loads(
+        (input_directory / "original_request.json").read_text(encoding="utf-8")
+    )
+    task = json.loads((input_directory / "task.json").read_text(encoding="utf-8"))
+    prompt = (input_directory / "prompt.md").read_text(encoding="utf-8")
+
+    assert len(projection_calls) == 1
+    assert projection_calls[0].snapshot_id == snapshot.snapshot_id
+    assert snapshot.status == "ENABLED"
+    assert snapshot.usage == "REFERENCE_ONLY"
+    assert snapshot.machine_bundle_hash == "machine-bundle-hash"
+    assert snapshot.selected_card_ids == ["mechanism-provenance"]
+    assert snapshot_payload["compact_cards"][0]["source_book_ids"] == ["source-book-a"]
+    assert snapshot_payload["compact_cards"][0]["source_refs"][0]["source_id"] == "source-a"
+    assert snapshot_payload["compact_cards"][0]["source_refs"][0]["line_start"] == 11
+    assert "observation_summary" not in json.dumps(snapshot_payload, ensure_ascii=False)
+    assert "reference_context_snapshot.json" not in {
+        item.name for item in input_directory.iterdir()
+    }
+
+    reference_prompt = request["reference_planning_context"]
+    assert reference_prompt == task["reference_planning_context"]
+    assert reference_prompt["selected_card_ids"] == ["mechanism-provenance"]
+    assert reference_prompt["snapshot_id"] == snapshot.snapshot_id
+    assert reference_prompt["snapshot_hash"] == snapshot.snapshot_hash
+    assert reference_prompt["machine_bundle_hash"] == "machine-bundle-hash"
+    assert reference_prompt["status"] == "ENABLED"
+    assert reference_prompt["usage"] == "REFERENCE_ONLY"
+    assert "让限制迫使角色取舍" in prompt
+    assert task["reference_context_snapshot"] == str(snapshot_path)
+
+
+    forbidden_keys = {
+        "source_refs",
+        "source_book_ids",
+        "source_book_id",
+        "source_id",
+        "distill_id",
+        "segment_id",
+        "line_start",
+        "line_end",
+        "source_title",
+        "raw",
+        "observation_summary",
+        "full_dna",
+        "book_dna",
+        "prose_dna",
+    }
+
+    def assert_no_forbidden(value: object) -> None:
+        if isinstance(value, dict):
+            assert forbidden_keys.isdisjoint(value)
+            for nested in value.values():
+                assert_no_forbidden(nested)
+        elif isinstance(value, list):
+            for nested in value:
+                assert_no_forbidden(nested)
+
+    assert_no_forbidden(request)
+    assert_no_forbidden(task)
+    assert_no_forbidden(json.loads(json.dumps(prompt, ensure_ascii=False)))
+    assert reference_prompt["compact_cards"][0]["status"] == "REFERENCE_ONLY"
+
+
+def test_original_reference_failure_soft_fails_without_blocking_bootstrap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def fail_query(_request: Any) -> ReferenceCorpusQueryResponse:
+        raise OSError("simulated reference package read failure")
+
+    monkeypatch.setattr(original_service, "query_reference_corpus", fail_query)
+    _, database = create_original(tmp_path)
+
+    confirmed = confirm_original_reader_experience(database, BOOK_ID)
+    handoff = get_handoff(database, str(confirmed["handoff"]["handoff_id"]))
+    task_directory = Path(str(handoff["task_directory"]))
+    request = json.loads(
+        (task_directory / "input" / "original_request.json").read_text(encoding="utf-8")
+    )
+    snapshot = original_service.load_reference_context_snapshot(
+        task_directory / "reference_context_snapshot.json"
+    )
+
+    assert handoff["status"] == HandoffStatus.READY_FOR_CODEX.value
+    assert snapshot.status == "UNAVAILABLE"
+    assert snapshot.selected_card_ids == []
+    assert request["reference_planning_context"]["status"] == "UNAVAILABLE"
+    assert request["reference_planning_context"]["usage"] == "REFERENCE_ONLY"
+
+
 def test_core_innovation_import_rejects_frozen_kernel_drift(tmp_path: Path) -> None:
     _, database = create_original(tmp_path)
     handoff_id = complete_core_innovation_handoff(database)

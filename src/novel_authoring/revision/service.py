@@ -46,6 +46,7 @@ from novel_authoring.reference_corpus.context import (
     ReferenceContextIntegrityError,
     freeze_reference_context,
     load_reference_context_snapshot,
+    project_reference_context_for_prompt,
 )
 from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryRequest,
@@ -59,6 +60,7 @@ from novel_authoring.revision.models import (
     RevisionDraftOutput,
     RevisionSpec,
     RevisionStrategy,
+    RevisionStrategySelectionOutput,
     RevisionUnit,
 )
 from novel_authoring.rhythm.service import show_features
@@ -110,6 +112,13 @@ def _campaign_root(database: Database, book_id: str, edition_id: str, campaign_i
         root = book_root / "editions" / edition_id / "revision_campaigns" / campaign_id
     root.mkdir(parents=True, exist_ok=True)
     return root
+
+
+def _revision_draft_task_path(root: Path, unit_id: str) -> Path:
+    """Keep legacy task filenames short enough for supported Windows paths."""
+
+    short_id = str(unit_id).rsplit("_", 1)[-1]
+    return root / "agent_tasks" / f"draft-{short_id}.json"
 
 
 def _revision_operation(
@@ -186,6 +195,25 @@ _SCENE_FUNCTION_ALIASES: dict[str, list[str]] = {
     "relationship_shift": ["DIALOGUE", "RELATIONSHIP_SHIFT"],
     "world_expansion": ["EXPOSITION", "EXPLORATION"],
 }
+_VALID_STRATEGY_SCENE_FUNCTIONS = frozenset(
+    {
+        "OPENING",
+        "ORDINARY",
+        "DIALOGUE",
+        "ACTION",
+        "PAYOFF",
+        "AFTERMATH",
+        "EXPOSITION",
+        "EMOTION",
+        "LATE",
+        "ENDING",
+        "DISCOVERY",
+        "EXPLORATION",
+        "RELATIONSHIP_SHIFT",
+        "UNKNOWN",
+        "NOT_APPLICABLE",
+    }
+)
 _RHYTHM_ENDING_SCENE_FUNCTIONS: dict[str, list[str]] = {
     "new_threat": ["ACTION"],
     "reward_reveal": ["PAYOFF"],
@@ -262,7 +290,13 @@ def _select_revision_scene_functions(
         )
     strategy_functions = [] if strategy is None else strategy.actual_scene_functions
     if strategy_functions:
-        return list(dict.fromkeys(item.upper() for item in strategy_functions)), "strategy"
+        normalized = list(dict.fromkeys(item.upper() for item in strategy_functions))
+        invalid = [item for item in normalized if item not in _VALID_STRATEGY_SCENE_FUNCTIONS]
+        if invalid:
+            raise RevisionWorkflowError(
+                "RevisionStrategy 包含非法 scene function：" + ", ".join(invalid)
+            )
+        return normalized, "strategy"
     configured = _reference_policy_values(spec, "scene_functions")
     if configured:
         return list(dict.fromkeys(item.upper() for item in configured)), "explicit_policy"
@@ -312,6 +346,66 @@ def _reference_context_metadata(
         "warnings": warnings,
         "usage": snapshot.get("usage", "REFERENCE_ONLY"),
     }
+
+
+_PROMPT_REFERENCE_FORBIDDEN_FIELDS = frozenset({"source_refs", "source_book_ids"})
+
+
+def _prompt_projection_contains_forbidden_fields(value: object) -> str | None:
+    if isinstance(value, Mapping):
+        for key, nested in value.items():
+            if str(key).casefold() in _PROMPT_REFERENCE_FORBIDDEN_FIELDS:
+                return str(key)
+            found = _prompt_projection_contains_forbidden_fields(nested)
+            if found:
+                return found
+    elif isinstance(value, list):
+        for nested in value:
+            found = _prompt_projection_contains_forbidden_fields(nested)
+            if found:
+                return found
+    return None
+
+
+def _project_reference_context_for_prompt(
+    snapshot: Mapping[str, Any], *, snapshot_path: Path | None = None
+) -> dict[str, Any]:
+    """Use the shared Core projection for every executor-facing reference context."""
+
+    try:
+        projected = project_reference_context_for_prompt(snapshot)
+    except (OSError, TypeError, ValueError, RuntimeError) as exc:
+        raise RevisionWorkflowError("Reference Context prompt projection 无效") from exc
+    if not isinstance(projected, Mapping):
+        raise RevisionWorkflowError("Reference Context prompt projection 必须是 object")
+    payload = dict(projected)
+    for key in (
+        "purpose",
+        "status",
+        "snapshot_id",
+        "snapshot_hash",
+        "snapshot_path",
+        "package_schema_version",
+        "package_hash",
+        "machine_bundle_hash",
+        "selected_card_count",
+        "selected_card_ids",
+        "selected_card_types",
+        "selected_card_knowledge_levels",
+        "knowledge_gaps",
+        "warnings",
+        "usage",
+    ):
+        if key not in payload and key in snapshot:
+            payload[key] = snapshot[key]
+    if snapshot_path is not None:
+        payload["snapshot_path"] = str(snapshot_path)
+    forbidden = _prompt_projection_contains_forbidden_fields(payload)
+    if forbidden:
+        raise RevisionWorkflowError(
+            f"Reference Context prompt projection 不得包含 {forbidden}"
+        )
+    return payload
 
 
 def _load_frozen_reference_context(
@@ -1298,15 +1392,264 @@ def _planning_cards(snapshot: Mapping[str, Any]) -> list[dict[str, Any]]:
     ]
 
 
-def _card_values(card: Mapping[str, Any], *keys: str) -> list[str]:
-    values: list[str] = []
-    for key in keys:
-        value = card.get(key)
-        if isinstance(value, list):
-            values.extend(str(item) for item in value)
-        elif isinstance(value, str) and value.strip():
-            values.append(value)
-    return list(dict.fromkeys(values))
+def _planning_card_index(snapshot: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
+    return {
+        str(card["card_id"]): card
+        for card in _planning_cards(snapshot)
+        if str(card.get("card_id", "")).strip()
+    }
+
+
+def _strategy_snapshot_value(
+    planning_context: Mapping[str, Any], planning_snapshot: Mapping[str, Any], key: str
+) -> str | None:
+    snapshot_value = planning_snapshot.get(key)
+    context_value = planning_context.get(key)
+    if (
+        snapshot_value is not None
+        and context_value is not None
+        and str(snapshot_value) != str(context_value)
+    ):
+        raise RevisionWorkflowError(f"planning {key} 与 frozen snapshot 不一致")
+    value = snapshot_value if snapshot_value is not None else context_value
+    return None if value is None else str(value)
+
+
+def _validate_revision_strategy(
+    unit: RevisionUnit,
+    strategy: RevisionStrategy,
+    *,
+    campaign_id: str,
+    edition_id: str,
+    planning_task_id: str,
+    planning_context: Mapping[str, Any],
+    planning_snapshot: Mapping[str, Any],
+) -> RevisionStrategy:
+    """Validate only typed provenance, bounded references and hard authority."""
+
+    if (
+        strategy.unit_id != unit.unit_id
+        or strategy.campaign_id != campaign_id
+        or strategy.edition_id != edition_id
+        or unit.campaign_id != campaign_id
+        or unit.edition_id != edition_id
+    ):
+        raise RevisionWorkflowError("RevisionStrategy 与当前 RevisionUnit/campaign/edition 不一致")
+    if strategy.planning_task_id != planning_task_id:
+        raise RevisionWorkflowError("RevisionStrategy 与 planning task 不一致")
+    snapshot_id = _strategy_snapshot_value(planning_context, planning_snapshot, "snapshot_id")
+    snapshot_hash = _strategy_snapshot_value(
+        planning_context, planning_snapshot, "snapshot_hash"
+    )
+    if strategy.planning_snapshot_id != snapshot_id:
+        raise RevisionWorkflowError("RevisionStrategy 与 planning snapshot_id 不一致")
+    if strategy.planning_snapshot_hash != snapshot_hash:
+        raise RevisionWorkflowError("RevisionStrategy 与 planning snapshot_hash 不一致")
+    if planning_snapshot.get("purpose") not in (None, "PLANNING"):
+        raise RevisionWorkflowError("RevisionStrategy 只能使用 PLANNING frozen snapshot")
+
+    snapshot_selected_ids = {
+        str(item) for item in planning_snapshot.get("selected_card_ids", [])
+    }
+    context_selected_ids = {str(item) for item in planning_context.get("selected_card_ids", [])}
+    card_index = _planning_card_index(planning_snapshot)
+    strategy_card_ids = set(strategy.reference_card_ids_used)
+    if not strategy_card_ids <= snapshot_selected_ids:
+        raise RevisionWorkflowError("RevisionStrategy 引用了 planning snapshot 之外的 card_id")
+    if not strategy_card_ids <= context_selected_ids:
+        raise RevisionWorkflowError("RevisionStrategy 引用了 planning context 之外的 card_id")
+    if not strategy_card_ids <= set(card_index):
+        raise RevisionWorkflowError("RevisionStrategy 引用了 snapshot 中没有可用投影的 card_id")
+    for card_id in strategy_card_ids:
+        card = card_index[card_id]
+        if card.get("status") != "REFERENCE_ONLY":
+            raise RevisionWorkflowError("RevisionStrategy 只能引用 REFERENCE_ONLY card")
+
+    for selection in strategy.selected_contrast_solutions:
+        selected_card = card_index.get(selection.card_id)
+        if selected_card is None or selected_card.get("card_type") != "contrast-card":
+            raise RevisionWorkflowError("selected_contrast_solutions 的 card_id 不是 frozen contrast card")
+        if selection.card_id not in strategy_card_ids:
+            raise RevisionWorkflowError(
+                "selected_contrast_solutions 的 card_id 必须同时出现在 reference_card_ids_used"
+            )
+        solutions = selected_card.get("solutions", [])
+        if not any(
+            isinstance(solution, Mapping)
+            and str(solution.get("solution_id")) == selection.solution_id
+            for solution in solutions
+        ):
+            raise RevisionWorkflowError(
+                "selected_contrast_solutions 的 solution_id 不属于 frozen contrast card"
+            )
+
+    invalid_scene_functions = [
+        str(item).upper()
+        for item in strategy.actual_scene_functions
+        if str(item).upper() not in _VALID_STRATEGY_SCENE_FUNCTIONS
+    ]
+    if invalid_scene_functions:
+        raise RevisionWorkflowError(
+            "RevisionStrategy 包含非法 scene function："
+            + ", ".join(dict.fromkeys(invalid_scene_functions))
+        )
+    return strategy
+
+
+def _fallback_revision_strategy(
+    unit: RevisionUnit,
+    *,
+    campaign_id: str,
+    edition_id: str,
+    planning_task_id: str,
+    planning_context: Mapping[str, Any],
+    planning_snapshot: Mapping[str, Any],
+) -> RevisionStrategy:
+    return RevisionStrategy(
+        unit_id=unit.unit_id,
+        campaign_id=campaign_id,
+        edition_id=edition_id,
+        planning_task_id=planning_task_id,
+        planning_snapshot_id=_strategy_snapshot_value(
+            planning_context, planning_snapshot, "snapshot_id"
+        ),
+        planning_snapshot_hash=_strategy_snapshot_value(
+            planning_context, planning_snapshot, "snapshot_hash"
+        ),
+        strategy_summary=(
+            "当前没有可调用的 semantic selector；使用不引用 Reference Corpus 的最小改写策略，"
+            "并把全部文学选择留给 Revision Draft executor。"
+        ),
+        structural_moves=[
+            "按 RevisionUnit 的 required changes 在目标场景中呈现可观察的行动、互动或反馈。",
+            "保持已冻结的事件顺序与人物选择，只实现明确授权的改写变化。",
+        ],
+        reader_effect_targets=["让读者直接感知 required changes 的因果、信息或情绪结果。"],
+        preserve_strategy=[
+            "锁定 RevisionUnit 的 scope、required changes、must preserve、forbidden changes 与 expected_after_state。",
+            "把 Canon、资源、知识边界和人物事实交给 RevisionUnit 与既有 Validator 约束。",
+        ],
+        failure_modes_to_avoid=[
+            "把未选择的 Reference Guidance 当作当前书事实。",
+            "用说明性总结替代人物行动与场景后果。",
+        ],
+        reference_card_ids_used=[],
+        selected_contrast_solutions=[],
+        actual_scene_functions=[],
+    )
+
+
+def _bounded_planning_options(
+    planning_prompt_context: Mapping[str, Any], planning_snapshot: Mapping[str, Any]
+) -> list[dict[str, Any]]:
+    """Expose only prompt-projected, frozen planning cards to the selector."""
+
+    selected_ids = {str(item) for item in planning_snapshot.get("selected_card_ids", [])}
+    available_ids = set(_planning_card_index(planning_snapshot))
+    raw_cards = planning_prompt_context.get("compact_cards", [])
+    if not isinstance(raw_cards, list):
+        return []
+    options: list[dict[str, Any]] = []
+    for raw_card in raw_cards:
+        if not isinstance(raw_card, Mapping):
+            continue
+        card_id = str(raw_card.get("card_id", ""))
+        if (
+            not card_id
+            or card_id not in selected_ids
+            or card_id not in available_ids
+            or str(raw_card.get("card_type")) not in _PLANNING_CARD_TYPES
+        ):
+            continue
+        options.append(
+            {
+                str(key): value
+                for key, value in raw_card.items()
+                if str(key) != "applicable_scene_functions"
+            }
+        )
+    return options
+
+
+def _revision_strategy_selector_input(
+    unit: RevisionUnit,
+    *,
+    planning_task_id: str,
+    planning_context: Mapping[str, Any],
+    planning_snapshot: Mapping[str, Any],
+    planning_prompt_context: Mapping[str, Any],
+    target_context: Mapping[str, Any],
+    effective_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    target_chapter_context = [
+        chapter
+        for chapter in target_context.get("target_chapters", [])
+        if isinstance(chapter, Mapping)
+        and str(chapter.get("chapter_id")) == unit.base_chapter_id
+    ]
+    target_feature_context = [
+        feature
+        for feature in target_context.get("target_features", [])
+        if isinstance(feature, Mapping)
+        and str(feature.get("chapter_id")) == unit.base_chapter_id
+    ]
+    return {
+        "unit_id": unit.unit_id,
+        "campaign_id": unit.campaign_id,
+        "edition_id": unit.edition_id,
+        "planning_task_id": planning_task_id,
+        "planning_snapshot_id": _strategy_snapshot_value(
+            planning_context, planning_snapshot, "snapshot_id"
+        ),
+        "planning_snapshot_hash": _strategy_snapshot_value(
+            planning_context, planning_snapshot, "snapshot_hash"
+        ),
+        "unit_authority": {
+            "scope": {
+                "base_chapter_id": unit.base_chapter_id,
+                "base_chapter_ordinal": unit.base_chapter_ordinal,
+            },
+            "must_change": list(unit.direct_change_requirements),
+            "must_preserve": list(unit.must_preserve),
+            "forbidden": list(unit.forbidden_changes),
+            "expected_after_state": dict(unit.expected_after_state),
+            "canon_inputs": {
+                "facts_to_add": list(unit.facts_to_add),
+                "facts_to_supersede": list(unit.facts_to_supersede),
+            },
+        },
+        "target_chapter_context": {
+            "chapters": target_chapter_context,
+            "features": target_feature_context,
+            "scene_functions": list(target_context.get("target_scene_functions", [])),
+            "rhythm_scene_functions": list(
+                target_context.get("rhythm_scene_functions", [])
+            ),
+            "rhythm": dict(target_context.get("rhythm", {}))
+            if isinstance(target_context.get("rhythm"), Mapping)
+            else {},
+            "narrative_debt": dict(target_context.get("narrative_debt", {}))
+            if isinstance(target_context.get("narrative_debt"), Mapping)
+            else {},
+            "payoff": dict(target_context.get("payoff", {}))
+            if isinstance(target_context.get("payoff"), Mapping)
+            else {},
+        },
+        "effective_reader_context": {
+            "reader_experiences": list(effective_context.get("reader_experiences", [])),
+            "narrative_drives": list(effective_context.get("narrative_drives", [])),
+            "payoff_channels": list(effective_context.get("payoff_channels", [])),
+        },
+        "bounded_options": _bounded_planning_options(
+            planning_prompt_context, planning_snapshot
+        ),
+        "allowed_scene_functions": sorted(_VALID_STRATEGY_SCENE_FUNCTIONS),
+        "output_contract": "RevisionStrategy",
+        "selection_rule": (
+            "选择零个或多个 frozen planning card；每个 contrast solution 必须以 card_id + "
+            "solution_id 明确引用。不得改变 unit_authority。"
+        ),
+    }
 
 
 def _build_revision_strategy(
@@ -1317,89 +1660,31 @@ def _build_revision_strategy(
     planning_task_id: str,
     planning_context: Mapping[str, Any],
     planning_snapshot: Mapping[str, Any],
+    selector_output: Mapping[str, Any] | None = None,
 ) -> RevisionStrategy:
-    cards = _planning_cards(planning_snapshot)
-    card_ids = [str(card["card_id"]) for card in cards]
-    structural_moves: list[str] = []
-    reader_effect_targets: list[str] = []
-    failure_modes: list[str] = []
-    actual_scene_functions: list[str] = []
-    summaries: list[str] = []
-    for card in cards:
-        card_type = str(card.get("card_type"))
-        if card_type == "mechanism-card":
-            structural_moves.extend(_card_values(card, "mechanism", "action_space_effect", "variants"))
-            reader_effect_targets.extend(_card_values(card, "reader_payoff"))
-            failure_modes.extend(_card_values(card, "failure_risks", "when_not_to_use"))
-            summaries.extend(_card_values(card, "mechanism"))
-        elif card_type == "contrast-card":
-            structural_moves.extend(_card_values(card, "transfer_boundary"))
-            for solution in card.get("solutions", []):
-                if isinstance(solution, Mapping):
-                    structural_moves.extend(
-                        _card_values(solution, "description", "conditions", "tradeoffs")
-                    )
-                    reader_effect_targets.extend(
-                        _card_values(solution, "reader_experience_differences")
-                    )
-                    failure_modes.extend(_card_values(solution, "failure_risks"))
-            summaries.extend(_card_values(card, "shared_creative_problem"))
-        elif card_type == "corpus-synthesis":
-            structural_moves.extend(
-                _card_values(card, "distinctive_mechanisms", "major_divergences", "transfer_boundary")
-            )
-            reader_effect_targets.extend(_card_values(card, "payoff_differences"))
-            failure_modes.extend(_card_values(card, "failure_fatigue_risks"))
-            summaries.extend(_card_values(card, "shared_creative_problem"))
-        actual_scene_functions.extend(_card_values(card, "applicable_scene_functions"))
-    structural_moves = structural_moves[:8]
-    reader_effect_targets = reader_effect_targets[:8]
-    failure_modes = failure_modes[:8]
-    actual_scene_functions = list(dict.fromkeys(item.upper() for item in actual_scene_functions))
-    if not structural_moves:
-        structural_moves = [
-            "把已冻结的改写要求转译成可观察的行动、互动或反馈，避免用总结句替代场景变化。"
-        ]
-    if not reader_effect_targets:
-        reader_effect_targets = ["让读者直接感知改写带来的因果、信息或情绪差异。"]
-    if not failure_modes:
-        failure_modes = [
-            "把 Reference Guidance 当作当前书事实。",
-            "用说明性总结代替人物行动与场景后果。",
-        ]
-    summary = (
-        "；".join(summaries[:3])
-        if summaries
-        else "以可观察的结构动作承载改写，让表达层服务于已冻结的 RevisionUnit。"
-    )
-    strategy = RevisionStrategy(
-        unit_id=unit.unit_id,
+    if selector_output is None:
+        strategy = _fallback_revision_strategy(
+            unit,
+            campaign_id=campaign_id,
+            edition_id=edition_id,
+            planning_task_id=planning_task_id,
+            planning_context=planning_context,
+            planning_snapshot=planning_snapshot,
+        )
+    else:
+        try:
+            strategy = RevisionStrategy.model_validate(dict(selector_output))
+        except ValidationError as exc:
+            raise RevisionWorkflowError("RevisionStrategy selector 输出合同无效") from exc
+    return _validate_revision_strategy(
+        unit,
+        strategy,
         campaign_id=campaign_id,
         edition_id=edition_id,
         planning_task_id=planning_task_id,
-        planning_snapshot_id=(
-            None if planning_context.get("snapshot_id") is None else str(planning_context["snapshot_id"])
-        ),
-        planning_snapshot_hash=(
-            None
-            if planning_context.get("snapshot_hash") is None
-            else str(planning_context["snapshot_hash"])
-        ),
-        strategy_summary=summary,
-        structural_moves=structural_moves,
-        reader_effect_targets=reader_effect_targets,
-        preserve_strategy=[
-            "先锁定 RevisionUnit 的 required changes、must preserve、forbidden changes 与 expected_after_state，再选择场景表达。",
-            "把事件顺序、人物选择、资源和知识边界交给 RevisionUnit、共享 Prose Realization 与 Validator 约束。",
-        ],
-        failure_modes_to_avoid=failure_modes,
-        reference_card_ids_used=card_ids,
-        actual_scene_functions=actual_scene_functions,
+        planning_context=planning_context,
+        planning_snapshot=planning_snapshot,
     )
-    selected_ids = {str(item) for item in planning_context.get("selected_card_ids", [])}
-    if not set(strategy.reference_card_ids_used) <= selected_ids:
-        raise RevisionWorkflowError("RevisionStrategy 引用了 planning snapshot 之外的 card_id")
-    return strategy
 
 
 def build_revision_impact(database: Database, book_id: str, campaign_id: str) -> dict[str, object]:
@@ -2134,7 +2419,11 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
     reference_planning_context = _reference_context_metadata(
         planning_snapshot, reference_snapshot_path
     )
+    planning_prompt_context = _project_reference_context_for_prompt(
+        planning_snapshot, snapshot_path=reference_snapshot_path
+    )
     strategies: dict[str, dict[str, Any]] = {}
+    strategy_selection_inputs: dict[str, dict[str, Any]] = {}
     for unit in units:
         strategy = _build_revision_strategy(
             unit,
@@ -2145,6 +2434,15 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
             planning_snapshot=planning_snapshot,
         )
         strategies[unit.unit_id] = strategy.model_dump(mode="json")
+        strategy_selection_inputs[unit.unit_id] = _revision_strategy_selector_input(
+            unit,
+            planning_task_id=planning_task_id,
+            planning_context=reference_planning_context,
+            planning_snapshot=planning_snapshot,
+            planning_prompt_context=planning_prompt_context,
+            target_context=target_context,
+            effective_context=effective_context,
+        )
     planning_provenance = {
         "task_id": planning_task_id,
         "campaign_id": campaign_id,
@@ -2167,6 +2465,38 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
             "scene_functions": planning_scene_functions,
         },
     }
+    strategy_selection = {
+        "contract": "bounded-revision-strategy-selector-v1",
+        "output_type": "RevisionStrategySelectionOutput",
+        "output_schema": RevisionStrategySelectionOutput.model_json_schema(),
+        "input_field": "strategy_selection.units",
+        "output_field": "strategies",
+        "fallback": "precomputed strategies[unit_id] (REFERENCE_ONLY, no-card fallback)",
+        "units": strategy_selection_inputs,
+    }
+    plan_path = root / "revision_plan.json"
+    task_path = (
+        plan_operation.input / "task.json"
+        if plan_operation is not None
+        else root / "agent_tasks" / "revision-plan.json"
+    )
+    strategy_schema_path = (
+        plan_operation.input / "strategy-selection.schema.json"
+        if plan_operation is not None
+        else root / "schemas" / "strategy-selection.schema.json"
+    )
+    strategy_output_path = (
+        plan_operation.output / "strategy-selection.json"
+        if plan_operation is not None
+        else root / "agent_tasks" / "strategy-selection.json"
+    )
+    _write_json(strategy_schema_path, RevisionStrategySelectionOutput.model_json_schema())
+    strategy_selection.update(
+        {
+            "output_schema_path": str(strategy_schema_path),
+            "expected_output": str(strategy_output_path),
+        }
+    )
     plan = {
         "campaign_id": campaign_id,
         "book_id": book_id,
@@ -2177,18 +2507,14 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
         "dependency_order": [unit.unit_id for unit in units],
         "innovation_control": spec.innovation_control.model_dump(mode="json"),
         "reference_planning_context": reference_planning_context,
+        "reference_planning_prompt_context": planning_prompt_context,
         "planning_provenance": planning_provenance,
         "planning_inputs": planning_inputs,
+        "strategy_selection": strategy_selection,
         "strategies": strategies,
         "created_at": utc_now(),
     }
-    plan_path = root / "revision_plan.json"
     _write_json(plan_path, plan)
-    task_path = (
-        plan_operation.input / "task.json"
-        if plan_operation is not None
-        else root / "agent_tasks" / "revision-plan.json"
-    )
     _write_json(
         task_path,
         {
@@ -2197,12 +2523,15 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
             "campaign_id": campaign_id,
             "edition_id": edition_id,
             "input": str(plan_path),
-            "schema": "RevisionUnit[] + RevisionStrategy",
+            "schema": "RevisionUnit[] + RevisionStrategySelectionOutput",
+            "output_schema": str(strategy_schema_path),
+            "expected_output": str(strategy_output_path),
             "innovation_control": spec.innovation_control.model_dump(mode="json"),
-            "reference_planning_context": reference_planning_context,
+            "reference_planning_context": planning_prompt_context,
             "reference_context_snapshot": str(reference_snapshot_path),
             "planning_provenance": planning_provenance,
             "planning_inputs": planning_inputs,
+            "strategy_selection": strategy_selection,
             "strategies": strategies,
         },
     )
@@ -2213,9 +2542,147 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
         "unit_count": len(units),
         "units": plan["units"],
         "reference_planning_context": reference_planning_context,
+        "reference_planning_prompt_context": planning_prompt_context,
         "planning_provenance": planning_provenance,
         "planning_inputs": planning_inputs,
+        "strategy_selection": strategy_selection,
         "strategies": strategies,
+    }
+
+
+def import_revision_strategy_selection(
+    database: Database, book_id: str, campaign_id: str, output_path: Path | str
+) -> dict[str, object]:
+    """导入现有 revision-plan handoff 的 bounded semantic selector 结果。
+
+    The selector sees only the per-unit authority packet and frozen planning
+    options written by :func:`build_revision_plan`.  This importer is the
+    deterministic boundary: it does not choose literary guidance itself; it
+    validates the selector's typed choices and makes the verified strategies
+    available to ``prepare_revision_draft_task``.
+    """
+
+    database.initialize()
+    row = _campaign_row(database, book_id, campaign_id)
+    edition_id = str(row["edition_id"])
+    root = _campaign_root(database, book_id, edition_id, campaign_id)
+    plan_path = root / "revision_plan.json"
+    fallback_snapshot_path = root / "reference_planning_context_snapshot.json"
+    if not plan_path.is_file():
+        raise RevisionWorkflowError("Revision Plan 不存在；不能导入脱离 plan 的 Strategy")
+
+    output = Path(output_path)
+    if not output.is_file():
+        raise RevisionWorkflowError(f"Revision Strategy selector 输出不存在：{output}")
+    try:
+        output_payload = json.loads(output.read_text(encoding="utf-8"))
+        selector_result = RevisionStrategySelectionOutput.model_validate(output_payload)
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValidationError) as exc:
+        raise RevisionWorkflowError(
+            "REVISION_STRATEGY_SELECTION 输出合同无效；必须是逐 unit typed Strategy"
+        ) from exc
+
+    plan_payload, planning_context, planning_snapshot = _load_revision_plan_artifact(
+        plan_path,
+        fallback_snapshot_path,
+        expected_book_id=book_id,
+        expected_edition_id=edition_id,
+    )
+    planning_provenance = plan_payload.get("planning_provenance")
+    if not isinstance(planning_provenance, Mapping):
+        raise RevisionWorkflowError("Revision Plan 缺少 planning provenance")
+    planning_task_id = str(planning_provenance.get("task_id") or "")
+    if not planning_task_id:
+        raise RevisionWorkflowError("Revision Plan 缺少 planning task_id")
+    expected_snapshot_id = _strategy_snapshot_value(
+        planning_context, planning_snapshot, "snapshot_id"
+    )
+    expected_snapshot_hash = _strategy_snapshot_value(
+        planning_context, planning_snapshot, "snapshot_hash"
+    )
+    if (
+        selector_result.task_id != planning_task_id
+        or selector_result.campaign_id != campaign_id
+        or selector_result.edition_id != edition_id
+        or selector_result.planning_snapshot_id != expected_snapshot_id
+        or selector_result.planning_snapshot_hash != expected_snapshot_hash
+    ):
+        raise RevisionWorkflowError(
+            "RevisionStrategy selector 输出与当前 campaign/edition/task/snapshot 不一致"
+        )
+
+    raw_units = plan_payload.get("units")
+    if not isinstance(raw_units, list) or not raw_units:
+        raise RevisionWorkflowError("Revision Plan 没有可供 selector 逐 unit 选择的 RevisionUnit")
+    try:
+        units = [RevisionUnit.model_validate(item) for item in raw_units]
+    except (TypeError, ValidationError) as exc:
+        raise RevisionWorkflowError("Revision Plan units 合同无效") from exc
+    unit_by_id = {unit.unit_id: unit for unit in units}
+    if set(selector_result.strategies) != set(unit_by_id):
+        raise RevisionWorkflowError(
+            "RevisionStrategy selector 必须逐 unit 覆盖且不能引用未知 unit"
+        )
+
+    validated_strategies: dict[str, dict[str, Any]] = {}
+    for unit in units:
+        selected = selector_result.strategies[unit.unit_id]
+        validated = _build_revision_strategy(
+            unit,
+            campaign_id=campaign_id,
+            edition_id=edition_id,
+            planning_task_id=planning_task_id,
+            planning_context=planning_context,
+            planning_snapshot=planning_snapshot,
+            selector_output=selected.model_dump(mode="json"),
+        )
+        validated_strategies[unit.unit_id] = validated.model_dump(mode="json")
+
+    operation = _revision_operation(database, book_id, edition_id, campaign_id, "plan")
+    task_path = (
+        operation.input / "task.json"
+        if operation is not None
+        else root / "agent_tasks" / "revision-plan.json"
+    )
+    if not task_path.is_file():
+        raise RevisionWorkflowError("Revision Plan task 文件不存在；不能导入 selector 输出")
+    try:
+        task_payload = json.loads(task_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise RevisionWorkflowError("Revision Plan task 文件不可读") from exc
+    if not isinstance(task_payload, dict):
+        raise RevisionWorkflowError("Revision Plan task 顶层必须是 object")
+    if (
+        str(task_payload.get("task_id")) != planning_task_id
+        or str(task_payload.get("campaign_id")) != campaign_id
+        or str(task_payload.get("edition_id")) != edition_id
+    ):
+        raise RevisionWorkflowError("Revision Plan task 与当前 selector 输出锚点不一致")
+
+    selection_record = {
+        "status": "IMPORTED",
+        "task_type": selector_result.task_type,
+        "task_id": selector_result.task_id,
+        "output_path": str(output.resolve()),
+        "unit_count": len(validated_strategies),
+        "reference_only": True,
+    }
+    plan_payload["strategies"] = validated_strategies
+    plan_payload["strategy_selection_result"] = selection_record
+    task_payload["strategies"] = validated_strategies
+    task_payload["strategy_selection_result"] = selection_record
+    _write_json(plan_path, plan_payload)
+    _write_json(task_path, task_payload)
+    return {
+        "campaign_id": campaign_id,
+        "edition_id": edition_id,
+        "task_id": planning_task_id,
+        "plan_path": str(plan_path),
+        "task_path": str(task_path),
+        "output_path": str(output.resolve()),
+        "unit_count": len(validated_strategies),
+        "strategies": validated_strategies,
+        "status": "IMPORTED",
     }
 
 
@@ -2269,7 +2736,7 @@ def prepare_revision_draft_task(
     task_path = (
         operation.input / "task.json"
         if operation is not None
-        else root / "agent_tasks" / f"{unit_id}.json"
+        else _revision_draft_task_path(root, unit_id)
     )
     schema_path = (
         operation.input / "revision-draft-output.schema.json"
@@ -2287,31 +2754,37 @@ def prepare_revision_draft_task(
         expected_book_id=book_id,
         expected_edition_id=unit.edition_id,
     )
+    planning_prompt_context = _project_reference_context_for_prompt(
+        planning_snapshot,
+        snapshot_path=Path(
+            str(
+                reference_planning_context.get("snapshot_path")
+                or root / "reference_planning_context_snapshot.json"
+            )
+        ),
+    )
     raw_strategy = plan_payload.get("strategies", {}).get(unit_id)
     if not isinstance(raw_strategy, Mapping):
         raise RevisionWorkflowError(f"Revision Plan 缺少 unit 的 RevisionStrategy：{unit_id}")
+    planning_provenance = plan_payload.get("planning_provenance", {})
+    if not isinstance(planning_provenance, dict):
+        raise RevisionWorkflowError("Revision Plan 缺少有效 planning provenance")
+    planning_task_id = str(planning_provenance.get("task_id") or "")
+    if not planning_task_id:
+        raise RevisionWorkflowError("Revision Plan 缺少 planning task_id")
     try:
         strategy = RevisionStrategy.model_validate(raw_strategy)
     except ValidationError as exc:
         raise RevisionWorkflowError(f"RevisionStrategy 合同无效：{unit_id}") from exc
-    if (
-        strategy.unit_id != unit.unit_id
-        or strategy.campaign_id != campaign_id
-        or strategy.edition_id != unit.edition_id
-    ):
-        raise RevisionWorkflowError("RevisionStrategy 与当前 unit/campaign/edition 不一致")
-    selected_card_ids = {str(item) for item in reference_planning_context.get("selected_card_ids", [])}
-    if not set(strategy.reference_card_ids_used) <= selected_card_ids:
-        raise RevisionWorkflowError("RevisionStrategy 的 card ids 不属于 frozen planning snapshot")
-    planning_provenance = plan_payload.get("planning_provenance", {})
-    if not isinstance(planning_provenance, dict):
-        raise RevisionWorkflowError("Revision Plan 缺少有效 planning provenance")
-    if strategy.planning_task_id != str(planning_provenance.get("task_id")):
-        raise RevisionWorkflowError("RevisionStrategy 与 planning task 不一致")
-    if strategy.planning_snapshot_id != planning_snapshot.get("snapshot_id"):
-        raise RevisionWorkflowError("RevisionStrategy 与 planning snapshot_id 不一致")
-    if strategy.planning_snapshot_hash != planning_snapshot.get("snapshot_hash"):
-        raise RevisionWorkflowError("RevisionStrategy 与 planning snapshot_hash 不一致")
+    strategy = _validate_revision_strategy(
+        unit,
+        strategy,
+        campaign_id=campaign_id,
+        edition_id=unit.edition_id,
+        planning_task_id=planning_task_id,
+        planning_context=reference_planning_context,
+        planning_snapshot=planning_snapshot,
+    )
     target_context = _target_revision_context(database, book_id, unit.edition_id, [unit])
     scene_functions, scene_function_source = _select_revision_scene_functions(
         spec,
@@ -2339,8 +2812,16 @@ def prepare_revision_draft_task(
             expected_book_id=book_id,
             expected_edition_id=unit.edition_id,
         )
-        reference_prose_context = _reference_context_metadata(prose_snapshot, snapshot_path)
-        reference_prose_context["controls"] = _reference_prose_controls(prose_snapshot)
+    else:
+        prose_snapshot = dict(reference_prose_context)
+    reference_prose_prompt_context = _project_reference_context_for_prompt(
+        prose_snapshot, snapshot_path=snapshot_path
+    )
+    reference_prose_context = dict(reference_prose_prompt_context)
+    reference_prose_context["snapshot_path"] = str(snapshot_path)
+    reference_prose_context["controls"] = _reference_prose_controls(
+        reference_prose_prompt_context
+    )
     strategy_payload = strategy.model_dump(mode="json")
     strategy_hash = sha256_bytes(json_dumps(strategy_payload).encode("utf-8"))
     input_path = task_path.with_name("input.md")
@@ -2363,10 +2844,10 @@ def prepare_revision_draft_task(
         "innovation_control": innovation_control.model_dump(mode="json"),
         "revision_strategy": strategy_payload,
         "strategy": strategy_payload,
-        "reference_planning_context": reference_planning_context,
+        "reference_planning_context": planning_prompt_context,
         "planning_provenance": planning_provenance,
-        "planning_snapshot_id": reference_planning_context.get("snapshot_id"),
-        "planning_snapshot_hash": reference_planning_context.get("snapshot_hash"),
+        "planning_snapshot_id": planning_prompt_context.get("snapshot_id"),
+        "planning_snapshot_hash": planning_prompt_context.get("snapshot_hash"),
         "reference_prose_context": reference_prose_context,
         "scene_functions": scene_functions,
         "scene_function_source": scene_function_source,
@@ -2387,13 +2868,14 @@ def prepare_revision_draft_task(
             ],
         },
     }
+    task_path.parent.mkdir(parents=True, exist_ok=True)
     input_path.parent.mkdir(parents=True, exist_ok=True)
     input_path.write_text(
         _revision_draft_input_text(
             task_id,
             unit,
             strategy,
-            reference_planning_context,
+            planning_prompt_context,
             planning_provenance,
             reference_prose_context,
             scene_functions,
@@ -2407,7 +2889,7 @@ def prepare_revision_draft_task(
         "task_path": str(task_path),
         "schema_path": str(schema_path),
         "input_markdown": str(input_path),
-        "reference_planning_context": reference_planning_context,
+        "reference_planning_context": planning_prompt_context,
         "reference_prose_context": reference_prose_context,
         "planning_provenance": planning_provenance,
         "revision_strategy": strategy_payload,
@@ -2440,7 +2922,7 @@ def import_revision_draft(
     task_path = (
         operation.input / "task.json"
         if operation is not None
-        else root / "agent_tasks" / f"{output.unit_id}.json"
+        else _revision_draft_task_path(root, output.unit_id)
     )
     if not task_path.is_file():
         raise RevisionWorkflowError("Revision Draft task 文件不存在；不能导入脱离任务的输出")

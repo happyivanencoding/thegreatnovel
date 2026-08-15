@@ -7,7 +7,6 @@ caller that asked for a planning or prose suggestion.
 
 from __future__ import annotations
 
-import json
 import os
 import re
 from collections.abc import Mapping
@@ -19,10 +18,9 @@ from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
 from novel_authoring.progression.models import PayoffChannel, ReaderExperience
 from novel_authoring.reference_corpus.models import CardKnowledgeLevel
 from novel_authoring.reference_corpus.semantic import (
-    MACHINE_PACKAGE_VERSION,
     SemanticCorpusError,
-    compute_machine_bundle_hash,
     retrieve_metadata_candidates,
+    validate_machine_package,
 )
 from novel_authoring.reference_corpus.semantic_models import (
     EvidenceScope,
@@ -30,7 +28,6 @@ from novel_authoring.reference_corpus.semantic_models import (
     SemanticStatus,
 )
 from novel_authoring.serial_kernel.models import NarrativeDrive
-from novel_authoring.utils import sha256_file
 
 QueryPurpose = Literal["PLANNING", "PROSE"]
 QueryUsage = Literal["REFERENCE_ONLY"]
@@ -391,6 +388,7 @@ def reference_corpus_runtime_diagnostic(
         "configured_root": None if root is None else str(root),
         "query_ready": False,
         "machine_bundle_hash": None,
+        "bundle_seal_valid": False,
         "card_count": 0,
         "warnings": [],
         "knowledge_gaps": [],
@@ -399,78 +397,18 @@ def reference_corpus_runtime_diagnostic(
         result["warnings"] = ["soft-fail：Reference Corpus 未启用或未配置"]
         result["knowledge_gaps"] = ["当前没有可用的 Reference Corpus machine package/path"]
         return result
-    if not root.is_dir():
-        result["status"] = "UNAVAILABLE"
-        result["warnings"] = ["soft-fail：Reference Corpus package/path 不存在"]
-        result["knowledge_gaps"] = ["当前配置的 Reference Corpus path 不存在"]
-        return result
-
-    package_path = root / "machine" / "corpus-package.json"
-    cards_path = root / "machine" / "cards.jsonl"
-    if not package_path.is_file() or not cards_path.is_file():
-        result["status"] = "UNAVAILABLE"
-        result["warnings"] = ["soft-fail：machine package/path 不完整"]
-        result["knowledge_gaps"] = ["需要先 compile Reference Corpus machine package"]
-        return result
-
-    try:
-        package = json.loads(package_path.read_text(encoding="utf-8"))
-        if not isinstance(package, dict):
-            raise ValueError("package 根节点不是 object")
-        if package.get("schema_version") != MACHINE_PACKAGE_VERSION:
-            raise ValueError("package schema_version 不正确")
-        if package.get("status") != "REFERENCE_ONLY":
-            raise ValueError("package status 必须是 REFERENCE_ONLY")
-        if type(package.get("query_ready")) is not bool:
-            raise ValueError("package query_ready 必须是 bool")
-        if type(package.get("raw_text_included")) is not bool:
-            raise ValueError("package raw_text_included 必须是 bool")
-        card_count = 0
-        for line in cards_path.read_text(encoding="utf-8").splitlines():
-            if line.strip():
-                json.loads(line)
-                card_count += 1
-        result["card_count"] = card_count
-        result["machine_bundle_hash"] = compute_machine_bundle_hash(
-            root, package=package
-        )
-    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
-        result["status"] = "CORRUPT"
-        result["warnings"] = [f"corrupt package：{exc}"]
-        result["knowledge_gaps"] = ["machine package 不能作为可靠的查询输入"]
-        return result
-
-    result["query_ready"] = bool(package["query_ready"])
-    readiness_reasons: list[str] = []
-    if package["query_ready"] is False:
-        readiness_reasons.extend(
-            str(reason) for reason in package.get("readiness_reasons", [])
-        )
-        if not readiness_reasons:
-            readiness_reasons.append("package query_ready=false")
-    if package["raw_text_included"] is True:
-        readiness_reasons.append("package raw_text_included=true")
-    if readiness_reasons:
-        result["status"] = "UNAVAILABLE"
-        result["warnings"] = [
-            f"soft-fail：{reason}" for reason in readiness_reasons
-        ]
-        result["knowledge_gaps"] = readiness_reasons
-    else:
-        try:
-            # Reuse the same semantic parser as the real gateway so this
-            # diagnostic does not report ENABLED for an unreadable card row.
-            retrieve_metadata_candidates(
-                root,
-                card_families=(*_PLANNING_FAMILIES, *_PROSE_FAMILIES),
-                max_cards=8,
-            )
-        except (OSError, UnicodeError, SemanticCorpusError, TypeError, ValueError) as exc:
-            result["status"] = "CORRUPT"
-            result["warnings"] = [f"corrupt package：{exc}"]
-            result["knowledge_gaps"] = ["machine package cards 无法解析为当前 V1 contract"]
-        else:
-            result["status"] = "ENABLED"
+    validation = validate_machine_package(root)
+    result.update(
+        {
+            "status": validation["status"],
+            "query_ready": bool(validation.get("query_ready", False)),
+            "machine_bundle_hash": validation.get("machine_bundle_hash"),
+            "bundle_seal_valid": bool(validation.get("bundle_seal_valid", False)),
+            "card_count": int(validation.get("card_count", 0)),
+            "warnings": list(validation.get("warnings", [])),
+            "knowledge_gaps": list(validation.get("knowledge_gaps", [])),
+        }
+    )
     return result
 
 
@@ -498,91 +436,21 @@ def query_reference_corpus(
             warnings=["soft-fail：Reference Corpus 未启用或未配置"],
             status="DISABLED",
         )
-    if not root.is_dir():
+    validation = validate_machine_package(root)
+    if validation["status"] != "ENABLED":
         return _response(
             query,
-            knowledge_gaps=["当前配置的 Reference Corpus path 不存在"],
-            warnings=["soft-fail：Reference Corpus package/path 不存在"],
-            status="UNAVAILABLE",
-        )
-    package_path = root / "machine" / "corpus-package.json"
-    cards_path = root / "machine" / "cards.jsonl"
-    if not package_path.is_file() or not cards_path.is_file():
-        return _response(
-            query,
-            knowledge_gaps=["需要先 compile Reference Corpus machine package"],
-            warnings=["soft-fail：machine package/path 不完整"],
-            status="UNAVAILABLE",
-        )
-    package_schema_version: str | None = None
-    package_hash: str | None = None
-    machine_bundle_hash: str | None = None
-    try:
-        package = json.loads(package_path.read_text(encoding="utf-8"))
-        if not isinstance(package, dict):
-            raise ValueError("package 根节点不是 object")
-        package_schema_version = str(package.get("schema_version", "")) or None
-        package_hash = sha256_file(package_path)
-        if package.get("schema_version") != MACHINE_PACKAGE_VERSION:
-            raise ValueError("package schema_version 不正确")
-        if package.get("status") != "REFERENCE_ONLY":
-            raise ValueError("package status 必须是 REFERENCE_ONLY")
-        if type(package.get("query_ready")) is not bool:
-            raise ValueError("package query_ready 必须是 bool")
-        if type(package.get("raw_text_included")) is not bool:
-            raise ValueError("package raw_text_included 必须是 bool")
-    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
-        return _response(
-            query,
-            knowledge_gaps=["machine package 不能作为可靠的查询输入"],
-            warnings=[f"corrupt package：{exc}"],
-            status="CORRUPT",
-            package_schema_version=package_schema_version,
-            package_hash=package_hash,
-            machine_bundle_hash=machine_bundle_hash,
+            knowledge_gaps=list(validation.get("knowledge_gaps", [])),
+            warnings=list(validation.get("warnings", [])),
+            status=validation["status"],
+            package_schema_version=validation.get("package_schema_version"),
+            package_hash=validation.get("package_hash"),
+            machine_bundle_hash=validation.get("machine_bundle_hash"),
         )
 
-    try:
-        machine_bundle_hash = compute_machine_bundle_hash(root, package=package)
-    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
-        return _response(
-            query,
-            knowledge_gaps=["machine package 不能作为可靠的查询输入"],
-            warnings=[f"corrupt package：{exc}"],
-            status="CORRUPT",
-            package_schema_version=package_schema_version,
-            package_hash=package_hash,
-        )
-
-    readiness_reasons: list[str] = []
-    if package["query_ready"] is False:
-        readiness_status = package.get("readiness_status", "UNKNOWN")
-        package_reasons = package.get("readiness_reasons", [])
-        if isinstance(package_reasons, list) and package_reasons:
-            details = "；".join(str(reason) for reason in package_reasons)
-        else:
-            details = "未提供 readiness_reasons"
-        readiness_reasons.append(
-            "machine package query_ready=false"
-            f"（readiness_status={readiness_status}；readiness_reasons={details}）"
-        )
-    if package["raw_text_included"] is True:
-        readiness_reasons.append(
-            "machine package raw_text_included=true，拒绝把来源正文带入 retrieval"
-        )
-    if readiness_reasons:
-        return _response(
-            query,
-            knowledge_gaps=[
-                f"Reference Corpus 当前不可查询：{reason}"
-                for reason in readiness_reasons
-            ],
-            warnings=[f"soft-fail：{reason}" for reason in readiness_reasons],
-            status="UNAVAILABLE",
-            package_schema_version=package_schema_version,
-            package_hash=package_hash,
-            machine_bundle_hash=machine_bundle_hash,
-        )
+    package_schema_version = validation.get("package_schema_version")
+    package_hash = validation.get("package_hash")
+    machine_bundle_hash = validation.get("machine_bundle_hash")
 
     families = _PLANNING_FAMILIES if query.purpose == "PLANNING" else _PROSE_FAMILIES
     legacy_tags = []

@@ -104,6 +104,7 @@ from novel_authoring.revision import (
     create_revision_campaign,
     discard_revision_draft,
     import_revision_draft,
+    import_revision_strategy_selection,
     prepare_revision_draft_task,
     revision_preview,
     validate_revision_campaign,
@@ -1428,6 +1429,24 @@ def revision_plan_command(
     database = _book_database(workspace, book_id, library_root)
     try:
         _emit(build_revision_plan(database, book_id, campaign_id))
+    except (RevisionWorkflowError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=3) from exc
+
+
+@revision_app.command("strategy-import")
+def revision_strategy_import_command(
+    book_id: BookId = typer.Option(...),
+    campaign_id: str = typer.Option(..., "--campaign-id"),
+    output: Path = typer.Option(..., "--output"),
+    workspace: Workspace = Path("workspace"),
+    library_root: LibraryRoot = None,
+) -> None:
+    """导入 revision-plan handoff 的逐 unit bounded RevisionStrategy。"""
+
+    database = _book_database(workspace, book_id, library_root)
+    try:
+        _emit(import_revision_strategy_selection(database, book_id, campaign_id, output))
     except (RevisionWorkflowError, OSError, ValueError) as exc:
         typer.echo(str(exc), err=True)
         raise typer.Exit(code=3) from exc

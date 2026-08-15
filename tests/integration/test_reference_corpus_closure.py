@@ -36,6 +36,7 @@ from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryResponse,
     query_reference_corpus,
 )
+from novel_authoring.reference_corpus.semantic import compute_machine_bundle_hash
 from novel_authoring.revision import (
     build_revision_impact,
     build_revision_plan,
@@ -191,6 +192,11 @@ def _write_machine_package(
         encoding="utf-8",
     )
     (machine / "dependencies.jsonl").write_text("", encoding="utf-8")
+    package["machine_bundle_hash"] = compute_machine_bundle_hash(root, package=package)
+    (machine / "corpus-package.json").write_text(
+        json.dumps(package, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     return root
 
 
@@ -605,11 +611,14 @@ def test_revision_strategy_chain_uses_selected_cards_and_draft_task(
 
     unit = plan["units"][0]
     strategy = plan["strategies"][str(unit["unit_id"])]
-    assert set(strategy["reference_card_ids_used"]) == set(planning_context["selected_card_ids"])
+    # No semantic selector result has been imported in this deterministic
+    # stage, so Python must use the explicit no-card fallback rather than
+    # pretending that retrieval selected every available card.
+    assert strategy["reference_card_ids_used"] == []
     assert strategy["planning_snapshot_id"] == planning_context["snapshot_id"]
     assert strategy["planning_snapshot_hash"] == planning_context["snapshot_hash"]
     assert strategy["usage"] == "REFERENCE_ONLY"
-    assert "资源限制迫使角色交换或取舍" in strategy["strategy_summary"]
+    assert "semantic selector" in strategy["strategy_summary"]
     assert strategy["structural_moves"]
 
     task = prepare_revision_draft_task(

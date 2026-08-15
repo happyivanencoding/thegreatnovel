@@ -43,8 +43,10 @@ from novel_authoring.revision import (
     prepare_revision_draft_task,
     validate_revision_campaign,
 )
+from novel_authoring.revision.models import RevisionUnit
 from novel_authoring.revision.service import (
     RevisionWorkflowError,
+    _build_revision_strategy,
     _select_revision_scene_functions,
 )
 from novel_authoring.workflows.edition_export import export_edition
@@ -673,18 +675,21 @@ def test_revision_strategy_uses_frozen_cards_effective_metadata_and_real_scene_s
     planning_provenance = cast(dict[str, Any], plan["planning_provenance"])
     unit = cast(list[dict[str, Any]], plan["units"])[0]
     strategy = cast(dict[str, Any], plan["strategies"])[str(unit["unit_id"])]
-    assert strategy["reference_card_ids_used"] == [
-        "mechanism-card-test",
-        "contrast-card-test",
-    ]
+    assert strategy["reference_card_ids_used"] == []
+    assert strategy["selected_contrast_solutions"] == []
     assert strategy["usage"] == "REFERENCE_ONLY"
     assert strategy["planning_task_id"] == planning_provenance["task_id"]
     assert strategy["planning_snapshot_id"] == planning_provenance["planning_snapshot_id"]
     assert strategy["planning_snapshot_hash"] == planning_provenance["planning_snapshot_hash"]
-    assert "让资源限制迫使角色交换或取舍" in strategy["structural_moves"]
-    assert any(
-        "只迁移结构动作与读者效果" in value
-        for value in strategy["structural_moves"]
+    assert all("资源限制迫使角色交换或取舍" not in value for value in strategy["structural_moves"])
+    selector_input = cast(dict[str, Any], plan["strategy_selection"])["units"][
+        str(unit["unit_id"])
+    ]
+    assert {
+        option["card_id"] for option in selector_input["bounded_options"]
+    } == {"mechanism-card-test", "contrast-card-test"}
+    assert "applicable_scene_functions" not in json.dumps(
+        selector_input["bounded_options"], ensure_ascii=False
     )
 
     task = prepare_revision_draft_task(
@@ -695,14 +700,160 @@ def test_revision_strategy_uses_frozen_cards_effective_metadata_and_real_scene_s
     assert calls[1].scene_functions == ["DIALOGUE", "RELATIONSHIP_SHIFT"]
     assert task["scene_function_source"] == "target_chapter_features"
     task_payload = json.loads(Path(str(task["task_path"])).read_text(encoding="utf-8"))
-    assert task_payload["revision_strategy"]["reference_card_ids_used"] == [
-        "mechanism-card-test",
-        "contrast-card-test",
-    ]
+    assert task_payload["revision_strategy"]["reference_card_ids_used"] == []
     assert task_payload["planning_provenance"] == planning_provenance
+    assert "source_refs" not in json.dumps(
+        task_payload["reference_planning_context"], ensure_ascii=False
+    )
+    assert "source_book_ids" not in json.dumps(
+        task_payload["reference_planning_context"], ensure_ascii=False
+    )
+    assert "source_refs" not in json.dumps(
+        task_payload["reference_prose_context"], ensure_ascii=False
+    )
+    assert "source_book_ids" not in json.dumps(
+        task_payload["reference_prose_context"], ensure_ascii=False
+    )
     input_text = Path(str(task["input_markdown"])).read_text(encoding="utf-8")
     assert "Revision Strategy（REFERENCE_ONLY；只描述 HOW）" in input_text
-    assert "让资源限制迫使角色交换或取舍" in input_text
-    assert "只迁移结构动作与读者效果" in input_text
+    assert "当前没有可调用的 semantic selector" in input_text
+    assert "source_refs" not in input_text
+    assert "source_book_ids" not in input_text
     assert len(feature_calls) == 2
     assert len(loader_calls) >= 3
+
+
+def test_revision_strategy_selection_is_per_unit_and_bounded() -> None:
+    campaign_id = "campaign-selector"
+    edition_id = "edition-selector"
+    planning_task_id = "planning-task-selector"
+    snapshot = {
+        "purpose": "PLANNING",
+        "snapshot_id": "snapshot-selector",
+        "snapshot_hash": "hash-selector",
+        "selected_card_ids": ["A", "B", "C"],
+        "compact_cards": [
+            _planning_mechanism_card().model_copy(update={"card_id": "A"}).model_dump(
+                mode="json"
+            ),
+            _planning_contrast_card().model_copy(update={"card_id": "B"}).model_dump(
+                mode="json"
+            ),
+            _planning_mechanism_card().model_copy(update={"card_id": "C"}).model_dump(
+                mode="json"
+            ),
+        ],
+    }
+    context = {
+        "selected_card_ids": ["A", "B", "C"],
+        "snapshot_id": "snapshot-selector",
+        "snapshot_hash": "hash-selector",
+    }
+
+    def make_unit(unit_id: str) -> RevisionUnit:
+        return RevisionUnit(
+            unit_id=unit_id,
+            campaign_id=campaign_id,
+            book_id="book-selector",
+            edition_id=edition_id,
+            unit_order=1,
+            base_chapter_ordinal=1,
+            base_chapter_id=f"chapter-{unit_id}",
+            base_source_span_id=f"span-{unit_id}",
+            base_content_sha256=f"content-{unit_id}",
+            original_heading="测试章节",
+            original_content="测试正文",
+            direct_change_requirements=["必须改变"],
+            must_preserve=["必须保留"],
+            forbidden_changes=["禁止改变"],
+            expected_after_state={"intent": "测试"},
+        )
+
+    def selector_payload(
+        unit_id: str,
+        *,
+        card_ids: list[str],
+        selected_solutions: list[dict[str, str]],
+    ) -> dict[str, Any]:
+        return {
+            "unit_id": unit_id,
+            "campaign_id": campaign_id,
+            "edition_id": edition_id,
+            "planning_task_id": planning_task_id,
+            "planning_snapshot_id": "snapshot-selector",
+            "planning_snapshot_hash": "hash-selector",
+            "strategy_summary": "selector 选择的有界策略",
+            "structural_moves": ["A move", "A move", "B move"],
+            "reader_effect_targets": ["effect", "effect"],
+            "preserve_strategy": ["保留 unit authority"],
+            "failure_modes_to_avoid": ["failure", "failure"],
+            "reference_card_ids_used": card_ids,
+            "selected_contrast_solutions": selected_solutions,
+            "actual_scene_functions": [],
+        }
+
+    unit_one = make_unit("unit-one")
+    unit_two = make_unit("unit-two")
+    unit_three = make_unit("unit-three")
+    strategy_one = _build_revision_strategy(
+        unit_one,
+        campaign_id=campaign_id,
+        edition_id=edition_id,
+        planning_task_id=planning_task_id,
+        planning_context=context,
+        planning_snapshot=snapshot,
+        selector_output=selector_payload(
+            unit_one.unit_id,
+            card_ids=["A", "B"],
+            selected_solutions=[{"card_id": "B", "solution_id": "solution-b"}],
+        ),
+    )
+    strategy_two = _build_revision_strategy(
+        unit_two,
+        campaign_id=campaign_id,
+        edition_id=edition_id,
+        planning_task_id=planning_task_id,
+        planning_context=context,
+        planning_snapshot=snapshot,
+        selector_output=selector_payload(
+            unit_two.unit_id,
+            card_ids=["C"],
+            selected_solutions=[],
+        ),
+    )
+    fallback = _build_revision_strategy(
+        unit_three,
+        campaign_id=campaign_id,
+        edition_id=edition_id,
+        planning_task_id=planning_task_id,
+        planning_context=context,
+        planning_snapshot=snapshot,
+    )
+
+    assert strategy_one.reference_card_ids_used == ["A", "B"]
+    assert [item.model_dump(mode="json") for item in strategy_one.selected_contrast_solutions] == [
+        {"card_id": "B", "solution_id": "solution-b"}
+    ]
+    assert strategy_one.structural_moves == ["A move", "B move"]
+    assert strategy_one.reader_effect_targets == ["effect"]
+    assert strategy_one.failure_modes_to_avoid == ["failure"]
+    assert strategy_two.reference_card_ids_used == ["C"]
+    assert fallback.reference_card_ids_used == []
+    assert fallback.selected_contrast_solutions == []
+    assert {"B1", "B3"}.isdisjoint(strategy_one.reference_card_ids_used)
+
+    invalid_solution = selector_payload(
+        unit_one.unit_id,
+        card_ids=["B"],
+        selected_solutions=[{"card_id": "B", "solution_id": "solution-not-frozen"}],
+    )
+    with pytest.raises(RevisionWorkflowError, match="solution_id"):
+        _build_revision_strategy(
+            unit_one,
+            campaign_id=campaign_id,
+            edition_id=edition_id,
+            planning_task_id=planning_task_id,
+            planning_context=context,
+            planning_snapshot=snapshot,
+            selector_output=invalid_solution,
+        )

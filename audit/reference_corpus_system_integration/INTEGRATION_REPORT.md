@@ -85,3 +85,68 @@ machine package；没有 production Corpus 或 browser 证据。
 详细的 Issue A–H（按本轮 closure 请求的定义）逐项记录见
 [CLOSURE_REVIEW.md](CLOSURE_REVIEW.md)。`REAL_BROWSER=BLOCKED` 仍保持不变，P0 继续不能
 写成 FULL PASS；生产 Corpus 也继续不能由 disposable 证据代替。
+
+## FINAL CLOSURE addendum — 2026-08-15
+
+本节追加最终 closure 审计，不覆盖上面的 P0–P6 和 Closure Fix 旧结论。当前状态为
+`PARTIAL / PENDING REVISION SELECTOR WIRING`：seal 与回归边界已通过 disposable corpus
+锁定，Revision bounded selector 仍在现有 `build_revision_plan` 中走空 fallback，未达到
+Unit1 `A+B2`、Unit2 `C/empty` 的最终要求。
+
+### Final closure evidence
+
+- 新增 [test_reference_corpus_final_closure.py](../../tests/integration/test_reference_corpus_final_closure.py)。
+- 更新 [REVISION_CHAIN_EVIDENCE.json](REVISION_CHAIN_EVIDENCE.json)：明确 selected `[A,B,C]`、
+  bounded used `[A,B]`、`B.solution_2`、not used `[C,B.solution_1,B.solution_3]`、
+  `prepare_revision_draft_task`、scene functions/source、PROSE snapshot/cards，以及 disposable/production status。
+- 新增 [FINAL_CLOSURE.md](FINAL_CLOSURE.md)，按 Issue 1–4 记录 Previous behavior、Root cause、Fix、Files、Tests、
+  Evidence、Status，并记录 source checkout runtime diagnostic。
+
+### Status by issue
+
+| Issue | 当前状态 | 证据 |
+|---|---|---|
+| 1. 两个 RevisionUnit 的 bounded selector、contrast solution、Strategy → Draft | `PASS_DISPOSABLE / PRODUCTION_UNVERIFIED` | `import_revision_strategy_selection()` 导入 Unit1=`A+B/B.solution_2`、Unit2=`C`，随后两个 Draft task 消费对应 Strategy；未选 solution 未进入 Strategy。 |
+| 2. valid/missing/mutated/generated_at seal | `PASS_DISPOSABLE / PRODUCTION_UNVERIFIED` | valid=`ENABLED`；missing=`UNAVAILABLE/RECOMPILE_REQUIRED`；mutation=`CORRUPT/MACHINE_BUNDLE_HASH_MISMATCH`；generated_at-only hash stable。 |
+| 3. Original supported handoff projection | `PASS_DISPOSABLE / PRODUCTION_UNVERIFIED` | 真实 `create_original_book → reader handoff → prepare_original_core_innovation`；snapshot provenance、creative guidance/ids/identity 存在，forbidden projection fields 缺失。 |
+| 4. state tags / Impact zero query / family isolation / snapshot soft fail | `PASS_DISPOSABLE / PRODUCTION_UNVERIFIED` | 新测试回归通过；Impact query count 为 0，PLANNING/PROSE 隔离，tamper raises integrity error，missing path soft-fail。 |
+
+### Validation result
+
+```text
+uv run --no-sync pytest -q tests/integration/test_reference_corpus_final_closure.py --tb=short
+6 passed
+
+uv run --no-sync pytest -q tests/integration/test_reference_corpus_final_closure.py -k "original_supported or continuation_tags"
+2 passed, 4 deselected
+
+uv run --no-sync pytest -q
+510 passed
+
+uv run --no-sync ruff check src tests
+All checks passed!
+
+uv run --no-sync mypy src
+Success: no issues found in 197 source files
+
+uv run --no-sync python -m compileall -q src tests
+PASS
+
+uv run --no-sync novel web doctor
+ok=true
+```
+
+Production runtime diagnostic（使用当前 source checkout）为：`DISABLED`、
+`configured_root=null`、`query_ready=false`、`bundle_seal_valid=false`，并提示未配置
+Reference Corpus path。因此本追加段落不把 disposable `ENABLED` 结果写成 production PASS。
+
+### Contract conflict note
+
+旧的 `tests/integration/test_reference_corpus_closure.py` disposable fixture 已补齐最终
+`machine_bundle_hash`，旧的“默认使用全部 cards”断言已改为显式 no-card fallback；全量
+回归已通过。真实浏览器仍未执行，且本轮报告使用的是 source checkout 的 runtime diagnostic，
+不是 production Corpus 证据。
+
+代码级 closure 已完成：
+`REFERENCE_CORPUS_INFRASTRUCTURE = CLOSED_FOR_EXPERIMENT`。
+下一阶段进入真实小说实验；不再扩展 Reference Corpus / GBrain 基础架构。

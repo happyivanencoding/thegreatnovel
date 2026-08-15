@@ -7,6 +7,7 @@ from novel_authoring.revision.models import (
     RevisionDraftOutput,
     RevisionSpec,
     RevisionStrategy,
+    RevisionStrategySelectionOutput,
     RevisionUnit,
 )
 from novel_authoring.revision.service import (
@@ -19,6 +20,7 @@ from novel_authoring.revision.service import (
     create_revision_campaign,
     discard_revision_draft,
     import_revision_draft,
+    import_revision_strategy_selection,
     list_revision_campaigns,
     prepare_revision_draft_task,
     revision_preview,
@@ -32,6 +34,7 @@ __all__ = [
     "RevisionDraftOutput",
     "RevisionSpec",
     "RevisionStrategy",
+    "RevisionStrategySelectionOutput",
     "RevisionUnit",
     "RevisionWorkflowError",
     "REVISION_APPROVAL_PHRASE",
@@ -42,6 +45,7 @@ __all__ = [
     "create_revision_campaign",
     "discard_revision_draft",
     "import_revision_draft",
+    "import_revision_strategy_selection",
     "list_revision_campaigns",
     "prepare_revision_draft_task",
     "revision_preview",

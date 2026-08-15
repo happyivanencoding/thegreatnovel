@@ -7,6 +7,8 @@ changes cannot rewrite an in-flight task.
 
 from __future__ import annotations
 
+import re
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any, Literal
 
@@ -106,6 +108,106 @@ class ReferenceContextSnapshot(BaseModel):
             # rejects Book DNA/Prose DNA and any unbounded raw card shape.
             COMPACT_CARD_ADAPTER.validate_python(card)
         return cards
+
+
+_PROMPT_SNAPSHOT_FIELDS = (
+    "purpose",
+    "status",
+    "snapshot_id",
+    "snapshot_hash",
+    "machine_bundle_hash",
+    "selected_card_count",
+    "selected_card_ids",
+    "selected_card_types",
+    "selected_card_knowledge_levels",
+    "compact_cards",
+    "knowledge_gaps",
+    "warnings",
+    "usage",
+)
+_PROMPT_FORBIDDEN_FIELDS = frozenset(
+    {
+        "source",
+        "source_ref",
+        "source_refs",
+        "source_book_id",
+        "source_book_ids",
+        "source_id",
+        "source_title",
+        "distill_id",
+        "segment_id",
+        "line_start",
+        "line_end",
+        "raw",
+        "raw_text",
+        "raw_text_included",
+        "full_text",
+        "source_quote",
+        "source_prose",
+        "source_content",
+        "observation_summary",
+        "evidence",
+        "evidence_ref",
+        "evidence_refs",
+        "evidence_id",
+        "locator",
+        "locators",
+        "provenance",
+        "book_dna",
+        "prose_dna",
+        "full_dna",
+    }
+)
+
+
+def _prompt_field_name(key: object) -> str:
+    normalized = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", str(key))
+    normalized = re.sub(r"[\s-]+", "_", normalized)
+    return normalized.casefold()
+
+
+def _is_forbidden_prompt_field(key: object) -> bool:
+    normalized = _prompt_field_name(key)
+    return normalized in _PROMPT_FORBIDDEN_FIELDS or normalized.startswith(
+        ("source_", "provenance_")
+    )
+
+
+def _project_prompt_value(value: object) -> object:
+    if isinstance(value, Mapping):
+        return {
+            str(key): _project_prompt_value(nested)
+            for key, nested in value.items()
+            if not _is_forbidden_prompt_field(key)
+        }
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return [_project_prompt_value(item) for item in value]
+    return value
+
+
+def project_reference_context_for_prompt(
+    snapshot_or_dict: ReferenceContextSnapshot | Mapping[str, Any],
+) -> dict[str, Any]:
+    """Project a full Reference Context Snapshot into prompt-safe context."""
+
+    if isinstance(snapshot_or_dict, ReferenceContextSnapshot):
+        payload: Mapping[str, Any] = snapshot_or_dict.model_dump(mode="json")
+    elif isinstance(snapshot_or_dict, Mapping):
+        payload = snapshot_or_dict
+    else:
+        raise TypeError("snapshot_or_dict 必须是 ReferenceContextSnapshot 或 mapping")
+
+    projected: dict[str, Any] = {
+        key: _project_prompt_value(payload[key])
+        for key in _PROMPT_SNAPSHOT_FIELDS
+        if key in payload
+    }
+    cards = projected.get("compact_cards")
+    if isinstance(cards, list):
+        projected["compact_cards"] = [
+            card for card in cards if isinstance(card, dict)
+        ]
+    return projected
 
 
 def _hash_payload(snapshot: ReferenceContextSnapshot) -> str:
@@ -226,4 +328,5 @@ __all__ = [
     "ReferenceContextSnapshot",
     "freeze_reference_context",
     "load_reference_context_snapshot",
+    "project_reference_context_for_prompt",
 ]
