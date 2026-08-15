@@ -160,3 +160,22 @@ Reference Corpus path。因此本追加段落不把 disposable `ENABLED` 结果�
 代码级 Reference Corpus closure 已完成：
 `REFERENCE_CORPUS_INFRASTRUCTURE = CLOSED_FOR_EXPERIMENT`。
 下一阶段进入真实小说实验；不再扩展 Reference Corpus / GBrain 基础架构。
+
+## Final Experiment Readiness Patch — 2026-08-15
+
+旧的 clean-checkout CI failure 记录保留为历史证据；在提交 `6d230cd` 中已纳入五个根因
+修复：Revision selector mandatory gate 与 per-unit scene context、resource materialization
+owner validation、RealizedKernelTrace 的当前 contract 读取，以及 Original semantic
+exceptional-advantage/scope-realism contract。
+
+本地全量为 `513 passed`，ruff、mypy、compileall、web doctor 均通过。提交推送后，GitHub
+Actions `quality-gates` run `31901981461` 在 clean checkout 的 Test、Lint、Type check、
+Compile Python、Check JavaScript syntax 全部通过。因此本轮不再标记
+`FAIL_OUT_OF_SCOPE_BASELINE`；该字符串仅存在于上方旧审计回放中，不代表当前 HEAD。
+
+当前 production diagnostic 仍为 `NOT_CONFIGURED / DISABLED`，真实 Browser 仍为
+`BLOCKED`；这些边界没有被 disposable corpus 或 TestClient 冒充通过。
+
+`REFERENCE_CORPUS_INFRASTRUCTURE = CLOSED_FOR_EXPERIMENT`
+
+`NOVEL_STUDIO_EXPERIMENT_READINESS = READY_FOR_10_CHAPTER_RUN`

@@ -246,3 +246,86 @@ Browser 为 `BLOCKED`；两者均未被 disposable/TestClient 结果冒充通过
 `REFERENCE_CORPUS_INFRASTRUCTURE = CLOSED_FOR_EXPERIMENT`
 
 下一阶段应进入真实小说实验，不再继续扩展 Reference Corpus / GBrain 基础架构。
+
+## Final Experiment Readiness Patch — 2026-08-15
+
+本节是对上文旧 CI 结果的追加收口。旧记录中的 `CI_BASELINE_FAILURE_OUT_OF_SCOPE` 对应
+提交前的 dirty checkout；本轮已把五个真实根因修复纳入独立提交，并在该提交的 clean
+checkout 上重新验证。
+
+### Selector mandatory gate
+
+**Previous behavior**：Revision Plan 会预生成合法的 no-card fallback；当 PLANNING 已为
+`ENABLED` 且 frozen planning cards 有 bounded options 时，draft preparation 仍可能直接消费
+该 fallback，绕过 semantic selector / strategy-import。
+
+**Fix**：`prepare_revision_draft_task()` 重新从已验证的 frozen snapshot 投影 bounded options。
+当 `ENABLED + selected_card_count > 0 + options > 0` 时，必须读取
+`plan.strategy_selection_result`，确认 `status=IMPORTED`、planning task id、task type 与
+unit coverage；否则在任何 draft task 文件写入前报
+`REVISION_STRATEGY_SELECTION_PENDING`，并给出 campaign、planning task、selector output
+和 `novel revision strategy-import` 下一步。`DISABLED/UNAVAILABLE/CORRUPT/ZERO_RESULTS`
+或无 cards/options 仍使用空引用的 `REFERENCE_ONLY` fallback。
+
+**Files**：`src/novel_authoring/revision/service.py`、`.agents/skills/revise-novel/SKILL.md`、
+`tests/integration/test_revision_workflow.py`、`tests/integration/test_reference_corpus_closure.py`。
+
+**Tests / evidence**：enabled disposable corpus 中未 import 时 draft 被拒绝且没有
+`draft-*.json`；import 后 Draft 成功。现有 bounded fixture 同时证明 Unit1=`A+B/B.solution_2`、
+Unit2=`C`，未选的 `C/B.solution_1/B.solution_3` 不进入 Unit1 Strategy。
+
+**Status**：`PASS`。
+
+### Per-unit selector context
+
+**Previous behavior**：selector input 虽按 chapter 过滤 features，但 scene/rhythm function
+仍可能使用 campaign aggregate。
+
+**Fix**：按 Unit 优先使用该目标章 `realized_primary_function`、再使用
+`planned_primary_function`；未知时只使用同一 chapter ordinal 的 rhythm evidence，不复制其他
+Unit 或 campaign aggregate。真实 chapter features 的 Draft PROSE 优先级保持不变。
+
+**Tests / evidence**：Unit A 的 `relationship_shift` 得到
+`DIALOGUE/RELATIONSHIP_SHIFT`，Unit B 无 feature 时只得到其 chapter-local `PAYOFF` rhythm，
+campaign-level `ACTION/EXPOSITION` 未进入任一 Unit。
+
+**Status**：`PASS`。
+
+### Clean CI recovery
+
+本轮修复并提交了以下五个 clean-checkout 失败根因：
+
+1. resource materialization 缺少 `owner_id`：`materialize.py` 与 Canon Validator 共享必填字段
+   校验，缺失时返回 blocking `MATERIALIZATION_REQUIRED_FIELD_MISSING`，不自动补 owner。
+2. 三个 `RealizedKernelTrace` 用例：Validator 按当前 `ChapterContract` 合同安全读取缺失的
+   `required_cost`，不再因测试的 partial model construction 崩溃；trace 仍保持 blocking，
+   underdelivery 仍为 warning。
+3. Original semantic Skill：明确 exceptional advantage、signature fantasy、局部
+   `realism_anchors`、scope realism 与 core fantasy salience 的同时保留，并以段落合同测试
+   防止机械 exact-string 通过。
+
+涉及文件：`src/novel_authoring/canon/materialize.py`、
+`src/novel_authoring/validation/validators.py`、
+`.agents/skills/interpret-original-reader-kernel/SKILL.md` 及对应测试。
+
+本地证据：targeted CI 回归 `7 passed`；Revision/Reference closure `27 passed`；全量
+`pytest`=`513 passed`；ruff、mypy、compileall、web doctor 均通过。
+
+Clean committed tree 证据：提交 `6d230cd` 推送到
+`reference-corpus-semantic-v1` 后，GitHub Actions `quality-gates` run `31901981461`
+通过，Test、Lint、Type check、Compile Python、Check JavaScript syntax 全部通过（verify
+耗时 4m3s）。这替代并解释了上文旧的 baseline failure 记录。
+
+### Final runtime boundary
+
+当前 source checkout diagnostic：`PRODUCTION_CORPUS=NOT_CONFIGURED`，
+`status=DISABLED`、`query_ready=false`、`card_count=0`、`machine_bundle_hash=null`、
+`bundle_seal_valid=false`。真实 Browser 仍为 `BLOCKED`，未用 TestClient 冒充浏览器。
+
+本轮代码与 clean CI 收口完成：
+
+`REFERENCE_CORPUS_INFRASTRUCTURE = CLOSED_FOR_EXPERIMENT`
+
+`NOVEL_STUDIO_EXPERIMENT_READINESS = READY_FOR_10_CHAPTER_RUN`
+
+下一阶段进入新 Seed 的 10 章连续生成实验；不再继续扩展 Reference Corpus / GBrain 基础设施。
