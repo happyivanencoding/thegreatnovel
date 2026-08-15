@@ -31,11 +31,12 @@
 
 ## Delivery validation
 
-- Final commit：`41c1ef7`（`fix: close reference corpus final integration`）。
+- Final code commit：`41c1ef7`（`fix: close reference corpus final integration`）；最终审计提交：
+  `d47a433`（`docs: record reference corpus closure delivery status`）。
 - 已推送：`origin/reference-corpus-semantic-v1` 与 HEAD 同步。
 - 本地工作树验证：`510 passed`、Ruff、mypy、compileall、web doctor 均通过；该结果使用了
   工作树中原有但未纳入本轮提交的其他修改。
-- Clean checkout CI：run `31897807936` 失败于 5 个非本轮 Reference Corpus 测试。失败分别对应
+- Clean checkout CI：runs `31897807936` 与 `31898062703` 均失败于 5 个非本轮 Reference Corpus 测试。失败分别对应
   提交外的 `canon/materialize.py`、`validation/validators.py` 与
   `.agents/skills/interpret-original-reader-kernel/SKILL.md` 修改；本轮没有把这些无关修改
   并入提交，也没有覆盖它们。Reference Corpus targeted tests 在 clean commit 上已由本地
