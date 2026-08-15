@@ -21,6 +21,7 @@ from novel_authoring.reference_corpus.models import CardKnowledgeLevel
 from novel_authoring.reference_corpus.semantic import (
     MACHINE_PACKAGE_VERSION,
     SemanticCorpusError,
+    compute_machine_bundle_hash,
     retrieve_metadata_candidates,
 )
 from novel_authoring.reference_corpus.semantic_models import (
@@ -180,6 +181,7 @@ class ReferenceCorpusQueryResponse(BaseModel):
     status: QueryStatus = "ENABLED"
     package_schema_version: str | None = None
     package_hash: str | None = None
+    machine_bundle_hash: str | None = None
     cards: list[CompactCard] = Field(default_factory=list, max_length=8)
     knowledge_gaps: list[str] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
@@ -260,6 +262,8 @@ def _common_projection(record: dict[str, Any]) -> dict[str, Any]:
 
 
 def _compact_projection(record: dict[str, Any]) -> CompactCard:
+    if record.get("status") != SemanticStatus.REFERENCE_ONLY.value:
+        raise ValueError("query projection 只能包含 REFERENCE_ONLY cards")
     card_type = record.get("card_type")
     common = _common_projection(record)
     if card_type == "mechanism-card":
@@ -345,6 +349,7 @@ def _response(
     status: QueryStatus = "ENABLED",
     package_schema_version: str | None = None,
     package_hash: str | None = None,
+    machine_bundle_hash: str | None = None,
 ) -> ReferenceCorpusQueryResponse:
     return ReferenceCorpusQueryResponse(
         schema_version="reference-corpus-query-v1",
@@ -353,6 +358,7 @@ def _response(
         status=status,
         package_schema_version=package_schema_version,
         package_hash=package_hash,
+        machine_bundle_hash=machine_bundle_hash,
         cards=cards or [],
         knowledge_gaps=knowledge_gaps or [],
         warnings=warnings or [],
@@ -372,6 +378,100 @@ def _root_from_config(corpus_root: Path | str | None) -> Path | None:
         return configured.expanduser()
     env_root = os.environ.get("NOVEL_REFERENCE_CORPUS_ROOT")
     return Path(env_root).expanduser() if env_root else None
+
+
+def reference_corpus_runtime_diagnostic(
+    *, corpus_root: Path | str | None = None
+) -> dict[str, Any]:
+    """Return the small runtime status needed to diagnose the configured package."""
+
+    root = _root_from_config(corpus_root)
+    result: dict[str, Any] = {
+        "status": "DISABLED",
+        "configured_root": None if root is None else str(root),
+        "query_ready": False,
+        "machine_bundle_hash": None,
+        "card_count": 0,
+        "warnings": [],
+        "knowledge_gaps": [],
+    }
+    if root is None:
+        result["warnings"] = ["soft-fail：Reference Corpus 未启用或未配置"]
+        result["knowledge_gaps"] = ["当前没有可用的 Reference Corpus machine package/path"]
+        return result
+    if not root.is_dir():
+        result["status"] = "UNAVAILABLE"
+        result["warnings"] = ["soft-fail：Reference Corpus package/path 不存在"]
+        result["knowledge_gaps"] = ["当前配置的 Reference Corpus path 不存在"]
+        return result
+
+    package_path = root / "machine" / "corpus-package.json"
+    cards_path = root / "machine" / "cards.jsonl"
+    if not package_path.is_file() or not cards_path.is_file():
+        result["status"] = "UNAVAILABLE"
+        result["warnings"] = ["soft-fail：machine package/path 不完整"]
+        result["knowledge_gaps"] = ["需要先 compile Reference Corpus machine package"]
+        return result
+
+    try:
+        package = json.loads(package_path.read_text(encoding="utf-8"))
+        if not isinstance(package, dict):
+            raise ValueError("package 根节点不是 object")
+        if package.get("schema_version") != MACHINE_PACKAGE_VERSION:
+            raise ValueError("package schema_version 不正确")
+        if package.get("status") != "REFERENCE_ONLY":
+            raise ValueError("package status 必须是 REFERENCE_ONLY")
+        if type(package.get("query_ready")) is not bool:
+            raise ValueError("package query_ready 必须是 bool")
+        if type(package.get("raw_text_included")) is not bool:
+            raise ValueError("package raw_text_included 必须是 bool")
+        card_count = 0
+        for line in cards_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                json.loads(line)
+                card_count += 1
+        result["card_count"] = card_count
+        result["machine_bundle_hash"] = compute_machine_bundle_hash(
+            root, package=package
+        )
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        result["status"] = "CORRUPT"
+        result["warnings"] = [f"corrupt package：{exc}"]
+        result["knowledge_gaps"] = ["machine package 不能作为可靠的查询输入"]
+        return result
+
+    result["query_ready"] = bool(package["query_ready"])
+    readiness_reasons: list[str] = []
+    if package["query_ready"] is False:
+        readiness_reasons.extend(
+            str(reason) for reason in package.get("readiness_reasons", [])
+        )
+        if not readiness_reasons:
+            readiness_reasons.append("package query_ready=false")
+    if package["raw_text_included"] is True:
+        readiness_reasons.append("package raw_text_included=true")
+    if readiness_reasons:
+        result["status"] = "UNAVAILABLE"
+        result["warnings"] = [
+            f"soft-fail：{reason}" for reason in readiness_reasons
+        ]
+        result["knowledge_gaps"] = readiness_reasons
+    else:
+        try:
+            # Reuse the same semantic parser as the real gateway so this
+            # diagnostic does not report ENABLED for an unreadable card row.
+            retrieve_metadata_candidates(
+                root,
+                card_families=(*_PLANNING_FAMILIES, *_PROSE_FAMILIES),
+                max_cards=8,
+            )
+        except (OSError, UnicodeError, SemanticCorpusError, TypeError, ValueError) as exc:
+            result["status"] = "CORRUPT"
+            result["warnings"] = [f"corrupt package：{exc}"]
+            result["knowledge_gaps"] = ["machine package cards 无法解析为当前 V1 contract"]
+        else:
+            result["status"] = "ENABLED"
+    return result
 
 
 def query_reference_corpus(
@@ -416,20 +516,72 @@ def query_reference_corpus(
         )
     package_schema_version: str | None = None
     package_hash: str | None = None
+    machine_bundle_hash: str | None = None
     try:
         package = json.loads(package_path.read_text(encoding="utf-8"))
         if not isinstance(package, dict):
             raise ValueError("package 根节点不是 object")
+        package_schema_version = str(package.get("schema_version", "")) or None
+        package_hash = sha256_file(package_path)
         if package.get("schema_version") != MACHINE_PACKAGE_VERSION:
             raise ValueError("package schema_version 不正确")
-        package_schema_version = str(package["schema_version"])
-        package_hash = sha256_file(package_path)
+        if package.get("status") != "REFERENCE_ONLY":
+            raise ValueError("package status 必须是 REFERENCE_ONLY")
+        if type(package.get("query_ready")) is not bool:
+            raise ValueError("package query_ready 必须是 bool")
+        if type(package.get("raw_text_included")) is not bool:
+            raise ValueError("package raw_text_included 必须是 bool")
     except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
         return _response(
             query,
             knowledge_gaps=["machine package 不能作为可靠的查询输入"],
             warnings=[f"corrupt package：{exc}"],
             status="CORRUPT",
+            package_schema_version=package_schema_version,
+            package_hash=package_hash,
+            machine_bundle_hash=machine_bundle_hash,
+        )
+
+    try:
+        machine_bundle_hash = compute_machine_bundle_hash(root, package=package)
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        return _response(
+            query,
+            knowledge_gaps=["machine package 不能作为可靠的查询输入"],
+            warnings=[f"corrupt package：{exc}"],
+            status="CORRUPT",
+            package_schema_version=package_schema_version,
+            package_hash=package_hash,
+        )
+
+    readiness_reasons: list[str] = []
+    if package["query_ready"] is False:
+        readiness_status = package.get("readiness_status", "UNKNOWN")
+        package_reasons = package.get("readiness_reasons", [])
+        if isinstance(package_reasons, list) and package_reasons:
+            details = "；".join(str(reason) for reason in package_reasons)
+        else:
+            details = "未提供 readiness_reasons"
+        readiness_reasons.append(
+            "machine package query_ready=false"
+            f"（readiness_status={readiness_status}；readiness_reasons={details}）"
+        )
+    if package["raw_text_included"] is True:
+        readiness_reasons.append(
+            "machine package raw_text_included=true，拒绝把来源正文带入 retrieval"
+        )
+    if readiness_reasons:
+        return _response(
+            query,
+            knowledge_gaps=[
+                f"Reference Corpus 当前不可查询：{reason}"
+                for reason in readiness_reasons
+            ],
+            warnings=[f"soft-fail：{reason}" for reason in readiness_reasons],
+            status="UNAVAILABLE",
+            package_schema_version=package_schema_version,
+            package_hash=package_hash,
+            machine_bundle_hash=machine_bundle_hash,
         )
 
     families = _PLANNING_FAMILIES if query.purpose == "PLANNING" else _PROSE_FAMILIES
@@ -469,6 +621,7 @@ def query_reference_corpus(
             status="CORRUPT",
             package_schema_version=package_schema_version,
             package_hash=package_hash,
+            machine_bundle_hash=machine_bundle_hash,
         )
     if not cards:
         return _response(
@@ -478,6 +631,7 @@ def query_reference_corpus(
             status="ZERO_RESULTS",
             package_schema_version=package_schema_version,
             package_hash=package_hash,
+            machine_bundle_hash=machine_bundle_hash,
         )
     return _response(
         query,
@@ -485,6 +639,7 @@ def query_reference_corpus(
         status="ENABLED",
         package_schema_version=package_schema_version,
         package_hash=package_hash,
+        machine_bundle_hash=machine_bundle_hash,
     )
 
 
@@ -504,6 +659,7 @@ __all__ = [
     "ReferenceCorpusQueryRequest",
     "ReferenceCorpusQueryResponse",
     "SourceRefProjection",
+    "reference_corpus_runtime_diagnostic",
     "query_corpus",
     "query_reference_corpus",
 ]

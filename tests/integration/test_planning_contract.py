@@ -8,6 +8,7 @@ from typing import Any
 
 import pytest
 
+import novel_authoring.planning.candidates as candidates_service
 from novel_authoring.author_control.book_profile import (
     PROFILE_DIMENSIONS,
     ProfileEditOperation,
@@ -580,6 +581,60 @@ def test_boundary_candidate_ranking_and_contract(tmp_path: Path) -> None:
     with sqlite3.connect(database.path) as connection:
         assert connection.execute("SELECT COUNT(*) FROM candidate_plans").fetchone()[0] == 3
         assert connection.execute("SELECT COUNT(*) FROM chapter_contracts").fetchone()[0] == 1
+
+
+def test_continuation_reference_query_uses_frozen_state_adapter(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database, _workspace, settings = setup_planning_book(tmp_path)
+    enable_progression_kernel(database, boundary=4)
+    seed_progression_source_state(database)
+
+    captured: dict[str, Any] = {}
+    real_query = candidates_service.query_reference_corpus
+
+    def capture_query(request: Any) -> Any:
+        captured["request"] = request
+        return real_query(request)
+
+    monkeypatch.setattr(candidates_service, "query_reference_corpus", capture_query)
+    prepare_candidate_task(database, "planning-book", settings)
+
+    request = captured["request"]
+    allowed_tags = {
+        "opening",
+        "first-payoff",
+        "breakthrough",
+        "power-verification",
+        "resource-release",
+        "pure-upside",
+        "post-payoff-anticipation",
+        "world-expansion",
+        "map-transition",
+        "exploration",
+        "mystery-reveal",
+        "status-rise",
+        "ability-rule",
+        "artifact-ability",
+        "relationship",
+        "long-form",
+        "fatigue",
+        "ending-settlement",
+    }
+    assert request.reader_experiences
+    assert request.narrative_drives
+    assert request.payoff_channels
+    assert request.creative_problem_tags
+    assert set(request.creative_problem_tags) <= allowed_tags
+    assert "reference_query" not in request.creative_problem
+    assert "current_pressure" not in request.creative_problem
+    assert "active_threads=" in request.creative_problem
+    assert "pressure=" in request.creative_problem
+    assert "payoff_ready=" in request.creative_problem
+    assert "overdue_debt=" in request.creative_problem
+    assert "progression_bottleneck=" in request.creative_problem
+    assert "resource_pressure=" in request.creative_problem
+    assert "unknown=" in request.creative_problem
 
 
 def test_effective_kernel_candidate_claims_are_verified_before_contract(

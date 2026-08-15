@@ -11,6 +11,7 @@ from novel_authoring.reference_corpus.semantic import (
     SemanticCorpusError,
     _record_invalid_ids,
     compile_semantic_corpus,
+    compute_machine_bundle_hash,
     retrieve_metadata_candidates,
     source_diversity_guard,
     validate_semantic_corpus,
@@ -193,9 +194,47 @@ def test_compile_machine_package_and_dependency_stale_status(tmp_path: Path) -> 
     package = json.loads((root / "machine/corpus-package.json").read_text(encoding="utf-8"))
     assert package["canon_committed"] is False
     assert package["edition_activated"] is False
+    assert package["status"] == "REFERENCE_ONLY"
+    assert package["raw_text_included"] is False
+    assert package["machine_bundle_hash"]
+    assert result["machine_bundle_hash"] == package["machine_bundle_hash"]
     assert (root / "machine/cards.jsonl").is_file()
     manifest_path = next((root / "machine/manifests").glob("*.json"))
     assert manifest_path.read_text(encoding="utf-8")
+
+
+def test_machine_bundle_hash_ignores_generated_at_and_covers_cards_and_dependencies(
+    tmp_path: Path,
+) -> None:
+    root = _make_compile_fixture(tmp_path)
+    compile_semantic_corpus(root)
+    package = json.loads((root / "machine/corpus-package.json").read_text(encoding="utf-8"))
+    original = compute_machine_bundle_hash(root, package=package)
+
+    package["generated_at"] = "not-semantic"
+    assert compute_machine_bundle_hash(root, package=package) == original
+
+    cards_path = root / "machine/cards.jsonl"
+    card = json.loads(cards_path.read_text(encoding="utf-8").splitlines()[0])
+    card["summary"] = "cards semantic change"
+    cards_path.write_text(json.dumps(card) + "\n", encoding="utf-8")
+    with_changed_cards = compute_machine_bundle_hash(root, package=package)
+    assert with_changed_cards != original
+
+    dependencies_path = root / "machine/dependencies.jsonl"
+    dependencies_path.write_text(
+        json.dumps(
+            {
+                "upstream_card_id": "book-card-01",
+                "downstream_card_id": "book-card-02",
+                "relation": "supports",
+                "status": "ACTIVE",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    assert compute_machine_bundle_hash(root, package=package) != with_changed_cards
 
 
 def test_compile_rebuilds_an_old_machine_snapshot(tmp_path: Path) -> None:

@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 import re
 from collections import Counter
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -38,7 +38,7 @@ from novel_authoring.reference_corpus.semantic_models import (
     SpanKind,
 )
 from novel_authoring.reference_corpus.service import normalize_title
-from novel_authoring.utils import json_dumps
+from novel_authoring.utils import json_dumps, sha256_bytes
 
 SEMANTIC_CARD_DIRS = (
     "books",
@@ -54,6 +54,7 @@ SEMANTIC_CARD_DIRS = (
 )
 MACHINE_PACKAGE_VERSION = "reference-corpus-machine-package-v1"
 SOURCE_FREEZE_VERSION = "reference-corpus-source-freeze-v1"
+_NON_SEMANTIC_PACKAGE_FIELDS = {"generated_at", "machine_bundle_hash", "package_hash"}
 _FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*(?:\n|\Z)", re.DOTALL)
 _LEGACY_CREATIVE_PROBLEM_TAG_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*\Z")
 _SEGMENT_RE = re.compile(r"^segment-(\d+)$")
@@ -647,6 +648,58 @@ def _jsonl_write(path: Path, values: Iterable[dict[str, Any]]) -> None:
     )
 
 
+def _canonical_jsonl(path: Path) -> str:
+    """Return the semantic JSONL content without insignificant whitespace."""
+
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+        values = [json.loads(line) for line in lines if line.strip()]
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise SemanticCorpusError(f"machine package JSONL 无法规范化：{path}") from exc
+    return "\n".join(json_dumps(value) for value in values)
+
+
+def compute_machine_bundle_hash(
+    corpus_root: Path,
+    *,
+    package: Mapping[str, Any] | None = None,
+) -> str:
+    """Hash the retrieval identity, independent of package generation time."""
+
+    root = _resolved(corpus_root)
+    package_value: Mapping[str, Any]
+    if package is None:
+        package_path = root / "machine" / "corpus-package.json"
+        try:
+            loaded = json.loads(package_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+            raise SemanticCorpusError(f"machine package 无法读取：{package_path}") from exc
+        if not isinstance(loaded, dict):
+            raise SemanticCorpusError("machine package 根节点不是 object")
+        package_value = loaded
+    else:
+        package_value = package
+
+    machine_root = root / "machine"
+    cards_path = machine_root / "cards.jsonl"
+    if not cards_path.is_file():
+        raise SemanticCorpusError(f"machine cards 不存在：{cards_path}")
+    dependencies_path = machine_root / "dependencies.jsonl"
+    semantic_package = {
+        str(key): value
+        for key, value in package_value.items()
+        if str(key) not in _NON_SEMANTIC_PACKAGE_FIELDS
+    }
+    material = {
+        "package": semantic_package,
+        "cards": _canonical_jsonl(cards_path),
+        "dependencies": (
+            _canonical_jsonl(dependencies_path) if dependencies_path.is_file() else ""
+        ),
+    }
+    return sha256_bytes(json_dumps(material).encode("utf-8"))
+
+
 def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
     """Compile validated Markdown projections into the machine package."""
 
@@ -731,6 +784,7 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         "source_freeze": freeze_result,
         "query_ready": readiness["query_ready"],
         "readiness_status": readiness["readiness_status"],
+        "readiness_reasons": readiness["readiness_reasons"],
         "prose_controls_compiled": readiness["prose_controls_compiled"],
         "paths": {
             "cards": "machine/cards.jsonl",
@@ -748,6 +802,7 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         },
         "stats": stats,
     }
+    package["machine_bundle_hash"] = compute_machine_bundle_hash(root, package=package)
     package_path = machine_root / "corpus-package.json"
     package_path.write_text(json_dumps(package, indent=2) + "\n", encoding="utf-8", newline="\n")
     return {
@@ -758,6 +813,7 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         "unique_evidence_rows": len(evidence_by_id),
         "evidence_reference_count": stats["evidence_reference_count"],
         "dependency_count": len(dependency_rows),
+        "machine_bundle_hash": package["machine_bundle_hash"],
         "query_ready": readiness["query_ready"],
         "readiness_status": readiness["readiness_status"],
         "paths": package["paths"],
@@ -1268,6 +1324,7 @@ __all__ = [
     "SemanticCorpusError",
     "audit_semantic_corpus",
     "compile_semantic_corpus",
+    "compute_machine_bundle_hash",
     "confirm_v0_sources",
     "retrieve_metadata_candidates",
     "semantic_stats",

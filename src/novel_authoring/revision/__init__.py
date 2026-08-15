@@ -6,6 +6,7 @@ from novel_authoring.revision.models import (
     ImpactPacket,
     RevisionDraftOutput,
     RevisionSpec,
+    RevisionStrategy,
     RevisionUnit,
 )
 from novel_authoring.revision.service import (
@@ -30,6 +31,7 @@ __all__ = [
     "ImpactPacket",
     "RevisionDraftOutput",
     "RevisionSpec",
+    "RevisionStrategy",
     "RevisionUnit",
     "RevisionWorkflowError",
     "REVISION_APPROVAL_PHRASE",

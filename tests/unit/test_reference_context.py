@@ -7,8 +7,10 @@ import pytest
 
 from novel_authoring.reference_corpus.context import (
     ReferenceContextConflict,
+    ReferenceContextIntegrityError,
     ReferenceContextSnapshot,
     freeze_reference_context,
+    load_reference_context_snapshot,
 )
 from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryEcho,
@@ -107,6 +109,28 @@ def test_snapshot_hash_is_stable_and_reference_only(tmp_path: Path) -> None:
     assert "observation_summary" not in json.dumps(left.model_dump(mode="json"))
 
 
+def test_snapshot_identity_uses_machine_bundle_not_legacy_package_hash() -> None:
+    request, response = _response("package-a")
+    response.machine_bundle_hash = "bundle-a"
+    left = freeze_reference_context(
+        request,
+        response,
+        book_id="book-under-write",
+        edition_id="base",
+        operation_id="plan-task-1",
+    )
+    response.package_hash = "package-generated-at-changed"
+    right = freeze_reference_context(
+        request,
+        response,
+        book_id="book-under-write",
+        edition_id="base",
+        operation_id="plan-task-1",
+    )
+    assert left.snapshot_id == right.snapshot_id
+    assert left.snapshot_hash == right.snapshot_hash
+
+
 def test_snapshot_is_immutable_and_replays_after_package_change(tmp_path: Path) -> None:
     request, response = _response()
     path = tmp_path / "reference_context_snapshot.json"
@@ -139,6 +163,25 @@ def test_snapshot_is_immutable_and_replays_after_package_change(tmp_path: Path) 
         )
 
 
+def test_strict_snapshot_loader_rejects_tampering(tmp_path: Path) -> None:
+    request, response = _response()
+    path = tmp_path / "reference_context_snapshot.json"
+    freeze_reference_context(
+        request,
+        response,
+        book_id="book-under-write",
+        edition_id="base",
+        operation_id="plan-task-1",
+        output_path=path,
+    )
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["compact_cards"][0]["mechanism"] = "篡改后的机制"
+    path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+
+    with pytest.raises(ReferenceContextIntegrityError):
+        load_reference_context_snapshot(path)
+
+
 def test_snapshot_rejects_raw_source_fields() -> None:
     request, response = _response()
     payload = freeze_reference_context(
@@ -149,5 +192,10 @@ def test_snapshot_rejects_raw_source_fields() -> None:
         operation_id="plan-task-1",
     ).model_dump(mode="json")
     payload["compact_cards"][0]["source_quote"] = "不得保存"
+    with pytest.raises(ValueError, match="来源正文字段"):
+        ReferenceContextSnapshot.model_validate(payload)
+
+    payload["compact_cards"][0].pop("source_quote")
+    payload["compact_cards"][0]["full DNA"] = "不得保存"
     with pytest.raises(ValueError, match="来源正文字段"):
         ReferenceContextSnapshot.model_validate(payload)

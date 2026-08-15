@@ -14,15 +14,21 @@ from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
 from novel_authoring.domain.models import InformationStatus
 from novel_authoring.drafting.service import (
+    _reference_prose_context,
     discard_draft,
     import_draft_output,
     prepare_draft_task,
 )
 from novel_authoring.ingest.service import ingest_book
 from novel_authoring.planning.models import ChapterContract
+from novel_authoring.reference_corpus.context import (
+    ReferenceContextSnapshot,
+    freeze_reference_context,
+)
 from novel_authoring.reference_corpus.query import (
     ProseControlCardProjection,
     ReferenceCorpusQueryEcho,
+    ReferenceCorpusQueryRequest,
     ReferenceCorpusQueryResponse,
 )
 from novel_authoring.utils import json_dumps, sha256_file, stable_id, utc_now
@@ -314,8 +320,92 @@ def _prose_query_response() -> ReferenceCorpusQueryResponse:
             scene_functions=["PAYOFF"],
             max_cards=4,
         ),
+        package_schema_version="reference-corpus-machine-package-v1",
+        machine_bundle_hash="machine-bundle-test",
         cards=[card],
     )
+
+
+def _freeze_prose_snapshot(path: Path) -> ReferenceContextSnapshot:
+    request = ReferenceCorpusQueryRequest(
+        purpose="PROSE",
+        scene_functions=["PAYOFF"],
+        max_cards=4,
+    )
+    return freeze_reference_context(
+        request,
+        _prose_query_response(),
+        book_id=BOOK_ID,
+        edition_id="base",
+        operation_id="draft-snapshot-test",
+        output_path=path,
+    )
+
+
+def test_existing_draft_snapshot_reuse_uses_core_loader(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, _, contract = _setup_contract(tmp_path)
+    snapshot_path = tmp_path / "reference_context_snapshot.json"
+    frozen = _freeze_prose_snapshot(snapshot_path)
+    loader_calls: list[Path] = []
+
+    def load_snapshot(path: Path) -> object:
+        loader_calls.append(path)
+        return frozen
+
+    monkeypatch.setattr(
+        "novel_authoring.drafting.service.load_reference_context_snapshot",
+        load_snapshot,
+    )
+    monkeypatch.setattr(
+        "novel_authoring.drafting.service.query_reference_corpus",
+        lambda *args, **kwargs: pytest.fail("已有 frozen snapshot 不应再次 Query"),
+    )
+
+    context = _reference_prose_context(
+        contract,
+        book_id=BOOK_ID,
+        edition_id="base",
+        operation_id="draft-snapshot-test",
+        snapshot_path=snapshot_path,
+    )
+
+    assert loader_calls == [snapshot_path]
+    assert context["snapshot_id"] == frozen.snapshot_id
+    assert context["snapshot_hash"] == frozen.snapshot_hash
+    assert context["machine_bundle_hash"] == "machine-bundle-test"
+    assert context["controls"]
+
+
+def test_tampered_draft_snapshot_is_audited_and_soft_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, _, contract = _setup_contract(tmp_path)
+    snapshot_path = tmp_path / "tampered_reference_context_snapshot.json"
+    _freeze_prose_snapshot(snapshot_path)
+    tampered = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    tampered["snapshot_hash"] = "tampered-snapshot-hash"
+    snapshot_path.write_text(json_dumps(tampered) + "\n", encoding="utf-8")
+    monkeypatch.setattr(
+        "novel_authoring.drafting.service.query_reference_corpus",
+        lambda *args, **kwargs: pytest.fail("篡改 snapshot 不应绕过审计重新 Query"),
+    )
+
+    context = _reference_prose_context(
+        contract,
+        book_id=BOOK_ID,
+        edition_id="base",
+        operation_id="tampered-draft-snapshot-test",
+        snapshot_path=snapshot_path,
+    )
+
+    assert context["status"] == "CORRUPT"
+    assert context["controls"] == []
+    warnings = context["warnings"]
+    assert isinstance(warnings, list)
+    assert any("soft-fail" in warning for warning in warnings)
+    assert any("hash" in warning.casefold() for warning in warnings)
 
 
 def test_prepare_draft_reference_prose_context_is_optional_and_compact(
@@ -333,12 +423,34 @@ def test_prepare_draft_reference_prose_context_is_optional_and_compact(
     )
     enabled_context = enabled_metadata["reference_prose_context"]
     assert enabled_context["status"] == "ENABLED"
+    assert enabled_context["machine_bundle_hash"] == "machine-bundle-test"
+    assert enabled_context["snapshot_id"]
+    assert enabled_context["snapshot_hash"]
+    assert enabled_context["selected_card_ids"] == ["prose-control-test"]
+    assert enabled_context["selected_card_types"] == ["prose-control"]
+    assert enabled_context["selected_card_count"] == 1
+    assert enabled_context["warnings"] == []
+    assert enabled_context["knowledge_gaps"] == []
     assert enabled_context["controls"][0]["control_topic"] == "动作先于解释"
     assert "source_refs" not in enabled_context["controls"][0]
     assert "source_book_ids" not in enabled_context["controls"][0]
+    protocol = enabled_metadata["prose_realization_protocol"]
+    assert {
+        "shared_with",
+        "authority",
+        "controls_may_change",
+        "controls_must_not_change",
+    } <= protocol.keys()
+    assert enabled_metadata["reference_context_snapshot"] == enabled_context["snapshot_path"]
     input_text = Path(str(enabled_task["input"])).read_text(encoding="utf-8")
     assert "Reference Corpus Prose Controls" in input_text
+    assert "Novel Prose Realization Protocol" in input_text
+    assert "machine_bundle_hash" in input_text
     assert "source_refs" not in input_text
+    assert "source_book_ids" not in input_text
+    assert "raw_prose" not in input_text
+    assert "source_quote" not in input_text
+    assert "observation_summary" not in input_text
 
     # A prepared task owns its frozen snapshot.  Use a fresh task to verify
     # disabled soft-fail without attempting to rewrite the enabled snapshot.

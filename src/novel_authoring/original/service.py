@@ -70,7 +70,10 @@ from novel_authoring.progression.service import (
     list_contract_records,
     reject_contract,
 )
-from novel_authoring.reference_corpus.context import freeze_reference_context
+from novel_authoring.reference_corpus.context import (
+    freeze_reference_context,
+    load_reference_context_snapshot,
+)
 from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryRequest,
     query_reference_corpus,
@@ -427,6 +430,17 @@ def _confirmed_progression_kernel(
     return kernel
 
 
+def _contract_payload(value: object) -> dict[str, Any]:
+    """Extract the business payload from either a ContractRecord dump or payload."""
+
+    if isinstance(value, ContractRecord):
+        return dict(value.payload)
+    if not isinstance(value, Mapping):
+        return {}
+    payload = value.get("payload")
+    return dict(payload) if isinstance(payload, Mapping) else dict(value)
+
+
 def _reference_field_values(payload: object, *keys: str) -> list[str]:
     if not isinstance(payload, Mapping):
         return []
@@ -442,25 +456,62 @@ def _reference_field_values(payload: object, *keys: str) -> list[str]:
     return list(dict.fromkeys(values))
 
 
+_REFERENCE_PROMPT_FORBIDDEN_FIELDS = frozenset(
+    {
+        "source_refs",
+        "source_book_ids",
+        "raw",
+        "full_dna",
+        "book_dna",
+        "prose_dna",
+        "source_prose",
+        "source_content",
+        "full_text",
+        "raw_text",
+    }
+)
+
+
+def _is_forbidden_reference_prompt_field(key: object) -> bool:
+    normalized = str(key).casefold().replace("-", "_").replace(" ", "_")
+    return normalized in _REFERENCE_PROMPT_FORBIDDEN_FIELDS
+
+
+def _compact_reference_prompt_value(value: object) -> object:
+    if isinstance(value, Mapping):
+        return {
+            str(key): _compact_reference_prompt_value(nested)
+            for key, nested in value.items()
+            if not _is_forbidden_reference_prompt_field(key)
+        }
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return [_compact_reference_prompt_value(item) for item in value]
+    return value
+
+
+def _compact_reference_prompt_cards(value: object) -> list[dict[str, Any]]:
+    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
+        return []
+    cards: list[dict[str, Any]] = []
+    for card in value:
+        compact = _compact_reference_prompt_value(card)
+        if isinstance(compact, dict):
+            cards.append(compact)
+    return cards
+
+
 def _original_reference_planning_context(
     request: Mapping[str, Any], *, stage: str, book_id: str
 ) -> dict[str, Any]:
     kernel = request.get("progression_kernel")
     kernel = kernel if isinstance(kernel, Mapping) else {}
-    reader = kernel.get("reader_experience")
-    reader = reader if isinstance(reader, Mapping) else {}
+    reader = _contract_payload(kernel.get("reader_experience"))
     contract_proposals = kernel.get("contract_proposals")
     contract_proposals = (
         contract_proposals if isinstance(contract_proposals, Mapping) else {}
     )
-    drive = contract_proposals.get("NARRATIVE_DRIVE", {})
-    drive = drive if isinstance(drive, Mapping) else {}
-    drive_payload = drive.get("payload", drive)
-    drive_payload = drive_payload if isinstance(drive_payload, Mapping) else {}
-    payoff = contract_proposals.get("PAYOFF_CHANNEL", {})
-    payoff = payoff if isinstance(payoff, Mapping) else {}
-    payoff_payload = payoff.get("payload", payoff)
-    payoff_payload = payoff_payload if isinstance(payoff_payload, Mapping) else {}
+    drive_payload = _contract_payload(contract_proposals.get("NARRATIVE_DRIVE", {}))
+    payoff_payload = _contract_payload(contract_proposals.get("PAYOFF_CHANNEL", {}))
     query = ReferenceCorpusQueryRequest(
         purpose="PLANNING",
         creative_problem=(
@@ -518,11 +569,42 @@ def _latest_original_reference_planning_context(
         return {}
     try:
         handoff = get_handoff(database, str(development["handoff_id"]))
-        request = _read_json(
-            Path(str(handoff["task_directory"])) / "input" / "original_request.json"
-        )
+        task_directory = Path(str(handoff["task_directory"]))
+        request = _read_json(task_directory / "input" / "original_request.json")
     except (KeyError, OSError, TypeError, ValueError):
         return {}
+    snapshot_paths = (
+        task_directory / "input" / "reference_context_snapshot.json",
+        task_directory / "reference_context_snapshot.json",
+    )
+    for snapshot_path in snapshot_paths:
+        if not snapshot_path.is_file():
+            continue
+        try:
+            snapshot = load_reference_context_snapshot(snapshot_path)
+        except (OSError, UnicodeError, TypeError, ValueError) as exc:
+            # A corrupt optional snapshot must not block Genesis authoring.
+            # Do not fall back to the tampered cards; preserve only a visible
+            # soft-fail marker and let the existing Story Engine continue.
+            return {
+                "purpose": "PLANNING",
+                "status": "CORRUPT",
+                "snapshot_id": None,
+                "snapshot_hash": None,
+                "snapshot_path": str(snapshot_path),
+                "selected_card_count": 0,
+                "selected_card_ids": [],
+                "selected_card_types": [],
+                "selected_card_knowledge_levels": [],
+                "compact_cards": [],
+                "knowledge_gaps": ["冻结的 Reference Context Snapshot 不可可靠读取"],
+                "warnings": [
+                    "soft-fail：Reference Context Snapshot 未通过 Core loader 校验："
+                    f"{type(exc).__name__}: {exc}"
+                ],
+                "usage": "REFERENCE_ONLY",
+            }
+        return snapshot.model_dump(mode="json")
     context = request.get("reference_planning_context") if isinstance(request, dict) else None
     return dict(context) if isinstance(context, dict) else {}
 
@@ -2968,15 +3050,9 @@ def select_first_chapter_candidate(
         )
         if key in reference_planning_context
     }
-    reference_prompt["compact_cards"] = [
-        {
-            key: value
-            for key, value in card.items()
-            if key not in {"source_refs", "source_book_ids"}
-        }
-        for card in reference_planning_context.get("compact_cards", [])
-        if isinstance(card, dict)
-    ]
+    reference_prompt["compact_cards"] = _compact_reference_prompt_cards(
+        reference_planning_context.get("compact_cards", [])
+    )
     if reference_planning_context:
         reference_prompt["usage"] = "REFERENCE_ONLY"
     _write_json(

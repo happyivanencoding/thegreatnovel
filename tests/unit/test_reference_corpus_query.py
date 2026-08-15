@@ -11,6 +11,7 @@ from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryRequest,
     ReferenceCorpusQueryResponse,
     query_reference_corpus,
+    reference_corpus_runtime_diagnostic,
 )
 from novel_authoring.reference_corpus.semantic import (
     retrieve_metadata_candidates,
@@ -104,6 +105,7 @@ def _write_package(root: Path, records: list[dict[str, object]]) -> None:
                 "schema_version": "reference-corpus-machine-package-v1",
                 "status": "REFERENCE_ONLY",
                 "query_ready": True,
+                "raw_text_included": False,
             },
             ensure_ascii=False,
         ),
@@ -169,6 +171,93 @@ def test_query_soft_fails_without_package_or_with_zero_results(tmp_path: Path) -
     assert not empty.cards
     assert empty.status == "ZERO_RESULTS"
     assert empty.knowledge_gaps
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "reason"),
+    [
+        ("query_ready", False, "query_ready=false"),
+        ("raw_text_included", True, "raw_text_included=true"),
+    ],
+)
+def test_query_soft_fails_when_machine_package_is_not_retrieval_ready(
+    tmp_path: Path, field: str, value: object, reason: str
+) -> None:
+    root = tmp_path / field
+    _write_package(root, [_mechanism()])
+    package_path = root / "machine" / "corpus-package.json"
+    package = json.loads(package_path.read_text(encoding="utf-8"))
+    package[field] = value
+    package_path.write_text(json.dumps(package), encoding="utf-8")
+
+    response = query_reference_corpus(
+        {"purpose": "PLANNING", "creative_problem": "pure-upside", "max_cards": 3},
+        corpus_root=root,
+    )
+
+    assert response.status == "UNAVAILABLE"
+    assert not response.cards
+    assert response.machine_bundle_hash
+    assert any(reason in warning for warning in response.warnings)
+    assert any(reason in gap for gap in response.knowledge_gaps)
+
+
+def test_machine_bundle_hash_changes_when_cards_change_without_package_hash_change(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "bundle-hash"
+    _write_package(root, [_mechanism()])
+    request = {"purpose": "PLANNING", "creative_problem": "pure-upside", "max_cards": 3}
+    before = query_reference_corpus(request, corpus_root=root)
+
+    package_path = root / "machine" / "corpus-package.json"
+    package = json.loads(package_path.read_text(encoding="utf-8"))
+    package["generated_at"] = "later-but-not-semantic"
+    package_path.write_text(json.dumps(package), encoding="utf-8")
+    generated_at_only = query_reference_corpus(request, corpus_root=root)
+    assert generated_at_only.machine_bundle_hash == before.machine_bundle_hash
+    assert generated_at_only.package_hash != before.package_hash
+
+    cards_path = root / "machine" / "cards.jsonl"
+    card = json.loads(cards_path.read_text(encoding="utf-8").splitlines()[0])
+    card["mechanism"] = "cards 改动后的机制"
+    cards_path.write_text(json.dumps(card) + "\n", encoding="utf-8")
+    after = query_reference_corpus(request, corpus_root=root)
+
+    assert after.status == "ENABLED"
+    assert after.machine_bundle_hash != before.machine_bundle_hash
+    assert after.package_hash == generated_at_only.package_hash
+
+
+def test_runtime_diagnostic_reports_configured_package_identity(tmp_path: Path) -> None:
+    root = tmp_path / "diagnostic"
+    _write_package(root, [_mechanism(), _prose_control()])
+
+    result = reference_corpus_runtime_diagnostic(corpus_root=root)
+
+    assert result["status"] == "ENABLED"
+    assert result["configured_root"] == str(root)
+    assert result["query_ready"] is True
+    assert result["machine_bundle_hash"]
+    assert result["card_count"] == 2
+
+
+def test_runtime_diagnostic_reports_not_ready_without_cards(tmp_path: Path) -> None:
+    root = tmp_path / "diagnostic-not-ready"
+    _write_package(root, [_mechanism()])
+    package_path = root / "machine" / "corpus-package.json"
+    package = json.loads(package_path.read_text(encoding="utf-8"))
+    package["query_ready"] = False
+    package["readiness_reasons"] = ["semantic validation 未通过"]
+    package_path.write_text(json.dumps(package), encoding="utf-8")
+
+    result = reference_corpus_runtime_diagnostic(corpus_root=root)
+
+    assert result["status"] == "UNAVAILABLE"
+    assert result["query_ready"] is False
+    assert result["machine_bundle_hash"]
+    assert result["card_count"] == 1
+    assert result["knowledge_gaps"] == ["semantic validation 未通过"]
 
 
 def test_query_status_disabled_when_root_is_not_configured(monkeypatch: pytest.MonkeyPatch) -> None:

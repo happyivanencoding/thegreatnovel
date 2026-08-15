@@ -1,0 +1,48 @@
+{
+  "evidence_kind": "DISPOSABLE_REFERENCE_CORPUS_CLOSURE_RUN",
+  "source_test": "tests/integration/test_reference_corpus_closure.py::test_revision_strategy_chain_uses_selected_cards_and_draft_task",
+  "production_corpus": false,
+  "campaign_id": "campaign_8643663d8613d24b4344b6f9",
+  "planning_task_id": "revision-plan-task_010e4967e9d687650e55cdf3",
+  "impact_ids": [
+    "impact_542d5a64b2947cb3656a2164",
+    "impact_2daf7cc9405c7d2b91e508ad"
+  ],
+  "reference_snapshot_id": "reference-context_45662941db81297e24515ba9",
+  "reference_snapshot_hash": "474676af16ecdb801591b09bf1d615c1f22bf699404fe8ee515c04f62b2aff4e",
+  "selected_card_ids": [
+    "contrast-closure",
+    "mechanism-closure"
+  ],
+  "revision_unit_id": "revision-unit_bcb08a2066d24bf397a833c3",
+  "revision_strategy": {
+    "strategy_summary": "如何让同一类资源修订产生不同读者反馈；让资源限制迫使角色交换或取舍，并把结果写成行动反馈。",
+    "structural_moves": [
+      "只迁移结构动作与读者效果，不迁移来源事实或人物事件。",
+      "以当前场景动作承载变化，保留可验证的结果反馈。",
+      "变化必须可被读者观察",
+      "牺牲部分解释篇幅换取现场感",
+      "以当前场景动作承载变化，保留可验证的结果反馈。",
+      "变化必须可被读者观察",
+      "牺牲部分解释篇幅换取现场感",
+      "以当前场景动作承载变化，保留可验证的结果反馈。"
+    ],
+    "reference_card_ids_used": [
+      "contrast-closure",
+      "mechanism-closure"
+    ],
+    "usage": "REFERENCE_ONLY"
+  },
+  "revision_draft_task_id": "revision-draft-task_7e926de609ca60b9000ba4eb",
+  "prose_snapshot_id": "reference-context_90648b466e91223b0969a9c6",
+  "prose_selected_card_ids": [
+    "prose-control-closure"
+  ],
+  "scene_functions": [
+    "ACTION",
+    "PAYOFF"
+  ],
+  "scene_function_source": "revision_kind_fallback",
+  "machine_bundle_hash": "8955acdd21d7ffe706bf7e0c58c61b85ea9d133bbab28cfc02ddfe063bb8da58",
+  "acceptance_statement": "Impact 没有调用 Reference；PLANNING selected cards 进入 RevisionStrategy.reference_card_ids_used，并随 strategy 写入 Revision Draft task；PROSE 只选 prose-control。"
+}

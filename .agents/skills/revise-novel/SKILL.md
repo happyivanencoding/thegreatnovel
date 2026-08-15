@@ -39,6 +39,13 @@ Impact Audit 只分析作品内部事实，不调用 Reference Corpus。Impact P
 冻结 `reference_planning_context`；它只提供可迁移的机制、对照和知识缺口，不能决定
 哪些事实必须改、选择 RevisionUnit 或覆盖 RevisionSpec。
 
+Revision Plan 的顺序固定为：`RevisionSpec/Author Intent -> deterministic Impact ->
+Impact Audit/WHAT MUST CHANGE -> PLANNING query -> HOW -> typed RevisionStrategy`。
+`RevisionStrategy` 必须带 `unit_id`、结构动作、读者效果、保留方式、失败模式和
+`reference_card_ids_used`；后者只能是 frozen planning snapshot 的
+`selected_card_ids` 子集，并保持 `REFERENCE_ONLY`。Plan task 与 draft task 必须保留
+campaign、edition、planning task、snapshot id/hash 和 strategy provenance。
+
 `prepare_revision_draft_task` 再通过同一 gateway 以 `purpose="PROSE"` 冻结
 `reference_prose_context`，并写入 `reference_context_snapshot.json` 与 `input.md`。
 Revision Draft 必须读取并遵循 `.agents/skills/novel-prose-realization/SKILL.md`，
@@ -49,6 +56,16 @@ changes、must preserve、事件顺序、人物选择、资源、知识边界或
 
 所有 Reference Context 都是 `REFERENCE_ONLY`，并在 task/plan artifact 中保留 status、
 snapshot/package identity、card count、selected card ids、warnings 和 knowledge gaps。
+读取已有 planning/prose snapshot 必须交给 Reference Corpus Core 唯一公开的
+`load_reference_context_snapshot` 接口，不得在 Revision 侧直接调用
+`ReferenceContextSnapshot.model_validate_json`；若某 checkout 尚未提供该接口，应先按
+现有 `context.py` 公开接口确认并报告跨 scope 依赖，而不是在 Revision 侧复制 loader。
+
+PROSE `scene_functions` 的优先级为：真实 target chapter features/rhythm、策略中的
+actual scene functions、RevisionSpec explicit policy、revision kind fallback；必须记录
+`scene_function_source`，且 `style_rewrite` 不得默认成 `ACTION`。GBrain/Reference gateway
+失败只允许 soft-fail 为无卡的 `REFERENCE_ONLY` context/strategy，不能改变 RevisionUnit、
+must-change、must-preserve、forbidden changes 或任何书内事实。
 
 ## 推荐命令
 

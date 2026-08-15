@@ -18,6 +18,9 @@ from novel_authoring.edition import (
 from novel_authoring.ingest.service import ingest_book
 from novel_authoring.reference_corpus.models import CardKnowledgeLevel
 from novel_authoring.reference_corpus.query import (
+    ContrastCardProjection,
+    ContrastSolutionProjection,
+    MechanismCardProjection,
     ProseControlCardProjection,
     ReferenceCorpusQueryEcho,
     ReferenceCorpusQueryRequest,
@@ -40,7 +43,10 @@ from novel_authoring.revision import (
     prepare_revision_draft_task,
     validate_revision_campaign,
 )
-from novel_authoring.revision.service import RevisionWorkflowError
+from novel_authoring.revision.service import (
+    RevisionWorkflowError,
+    _select_revision_scene_functions,
+)
 from novel_authoring.workflows.edition_export import export_edition
 
 
@@ -147,6 +153,17 @@ def test_revision_spec_rejects_unknown_fields() -> None:
     value["unknown"] = True
     with pytest.raises(ValueError):
         RevisionSpec.model_validate(value)
+
+
+def test_style_rewrite_scene_function_fallback_is_not_action() -> None:
+    value = _spec()
+    value["revision_kind"] = "style_rewrite"
+    spec = RevisionSpec.model_validate(value)
+    scene_functions, source = _select_revision_scene_functions(
+        spec, target_context={}
+    )
+    assert scene_functions == ["DIALOGUE", "AFTERMATH"]
+    assert source == "revision_kind_fallback"
 
 
 def test_edition_purpose_is_separate_from_lifecycle(tmp_path: Path) -> None:
@@ -357,11 +374,12 @@ def test_revision_reference_context_is_ordered_and_compact(
     planning_request = calls[0]
     assert planning_request.purpose == "PLANNING"
     assert planning_request.creative_problem.startswith("修订意图：")
-    assert planning_request.creative_problem_tags == ["breakthrough"]
+    assert planning_request.creative_problem_tags[:1] == ["breakthrough"]
+    assert "long-form" in planning_request.creative_problem_tags
     assert planning_request.reader_experiences == ["BREAKTHROUGH"]
     assert planning_request.narrative_drives == ["POWER_PROGRESSION"]
     assert planning_request.payoff_channels == ["POWER_BREAKTHROUGH"]
-    assert planning_request.scene_functions == ["PAYOFF"]
+    assert planning_request.scene_functions == []
     assert planning_request.max_cards == 3
     planning_context = cast(dict[str, Any], plan["reference_planning_context"])
     assert planning_context["status"] == "ZERO_RESULTS"
@@ -387,3 +405,304 @@ def test_revision_reference_context_is_ordered_and_compact(
     assert "只影响表达" in input_text
     assert "source_refs" not in input_text
     assert "source_book_ids" not in input_text
+
+
+def _planning_mechanism_card() -> MechanismCardProjection:
+    return MechanismCardProjection(
+        card_id="mechanism-card-test",
+        card_type="mechanism-card",
+        knowledge_level=CardKnowledgeLevel.CORPUS_SYNTHESIS,
+        status=SemanticStatus.REFERENCE_ONLY,
+        source_book_ids=["source-book-a"],
+        category_ids=[],
+        creative_problem_tags=["resource-pressure"],
+        reader_experiences=[],
+        narrative_drives=[],
+        payoff_channels=[],
+        evidence_scope=EvidenceScope.MULTI_CATEGORY,
+        maturity=SemanticMaturity.BROAD,
+        source_refs=[
+            SourceRefProjection(
+                source_book_id="source-book-a",
+                source_id="source-a",
+                distill_id="distill-a",
+                segment_id="segment-a",
+                line_start=1,
+                line_end=2,
+            )
+        ],
+        metadata_match_fields=["creative_problem_tags"],
+        creative_problem="资源缺口如何转成场景动作",
+        applicability_conditions=["资源缺口必须影响当前选择"],
+        mechanism="让资源限制迫使角色交换或取舍",
+        reader_payoff=["读者直接感到代价和选择的压力"],
+        action_space_effect=["把资源缺口转成可观察的行动约束"],
+        variants=["先交换再反转"],
+        when_not_to_use=["不要把卡片建议当作本书事实"],
+        contrast_cases=["不要用旁白直接宣布修订结果"],
+        failure_risks=["动作变成解释性清单"],
+        failure_basis=["缺少场景后果"],
+    )
+
+
+def _planning_contrast_card() -> ContrastCardProjection:
+    common = {
+        "source_book_ids": ["source-book-a"],
+        "description": "以当前场景动作承载变化",
+        "conditions": ["变化必须可被读者观察"],
+        "reader_experience_differences": ["让变化产生即时反馈"],
+        "tradeoffs": ["牺牲部分解释篇幅换取现场感"],
+        "failure_risks": ["把参考方案误写成事实"],
+    }
+    return ContrastCardProjection(
+        card_id="contrast-card-test",
+        card_type="contrast-card",
+        knowledge_level=CardKnowledgeLevel.CORPUS_SYNTHESIS,
+        status=SemanticStatus.REFERENCE_ONLY,
+        source_book_ids=["source-book-a", "source-book-b"],
+        category_ids=[],
+        creative_problem_tags=["resource-pressure"],
+        reader_experiences=[],
+        narrative_drives=[],
+        payoff_channels=[],
+        evidence_scope=EvidenceScope.MULTI_CATEGORY,
+        maturity=SemanticMaturity.BROAD,
+        source_refs=[
+            SourceRefProjection(
+                source_book_id="source-book-a",
+                source_id="source-a",
+                distill_id="distill-a",
+                segment_id="segment-a",
+                line_start=3,
+                line_end=4,
+            )
+        ],
+        metadata_match_fields=["creative_problem_tags"],
+        shared_creative_problem="如何让同一类修订产生不同读者反馈",
+        solutions=[
+            ContrastSolutionProjection(solution_id="solution-a", label="方案 A", **common),
+            ContrastSolutionProjection(solution_id="solution-b", label="方案 B", **common),
+            ContrastSolutionProjection(solution_id="solution-c", label="方案 C", **common),
+        ],
+        transfer_boundary="只迁移结构动作与读者效果，不迁移来源事实或人物事件",
+    )
+
+
+def test_revision_strategy_uses_frozen_cards_effective_metadata_and_real_scene_source(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database, _ = _setup(tmp_path)
+    with database.connect() as connection:
+        target_chapter_id = str(
+            connection.execute(
+                "SELECT chapter_id FROM chapters WHERE book_id=? AND ordinal=1",
+                ("revision-book",),
+            ).fetchone()["chapter_id"]
+        )
+    planning_card = _planning_mechanism_card()
+    contrast_card = _planning_contrast_card()
+    prose_card = ProseControlCardProjection(
+        card_id="prose-control-test-2",
+        card_type="prose-control",
+        knowledge_level=CardKnowledgeLevel.CORPUS_SYNTHESIS,
+        status=SemanticStatus.REFERENCE_ONLY,
+        source_book_ids=["source-book-a"],
+        category_ids=[],
+        creative_problem_tags=["prose-realization"],
+        reader_experiences=[],
+        narrative_drives=[],
+        payoff_channels=[],
+        evidence_scope=EvidenceScope.MULTI_CATEGORY,
+        maturity=SemanticMaturity.BROAD,
+        source_refs=[
+            SourceRefProjection(
+                source_book_id="source-book-a",
+                source_id="source-a",
+                distill_id="distill-a",
+                segment_id="segment-a",
+                line_start=5,
+                line_end=6,
+            )
+        ],
+        metadata_match_fields=["scene_functions"],
+        control_topic="动作先于解释",
+        applicable_scene_functions=["DIALOGUE"],
+        guidance="先写动作和反馈，再补必要解释。",
+        variants=["对话反馈"],
+        when_to_use=["场景需要即时反馈时"],
+        failure_signals=["解释替代动作"],
+        transfer_boundary="只迁移表达控制。",
+    )
+    calls: list[ReferenceCorpusQueryRequest] = []
+
+    def fake_query(
+        request: ReferenceCorpusQueryRequest, *, corpus_root: Path | None = None
+    ) -> ReferenceCorpusQueryResponse:
+        del corpus_root
+        calls.append(request)
+        payload = request.model_dump(mode="json")
+        cards = [planning_card, contrast_card]
+        if request.purpose == "PROSE":
+            cards = [prose_card]
+        return ReferenceCorpusQueryResponse(
+            schema_version="reference-corpus-query-v1",
+            purpose=request.purpose,
+            query=ReferenceCorpusQueryEcho.model_validate(
+                {key: value for key, value in payload.items() if key != "purpose"}
+            ),
+            status="ENABLED",
+            cards=cards,
+        )
+
+    monkeypatch.setattr(
+        "novel_authoring.revision.service.query_reference_corpus", fake_query
+    )
+    feature_calls: list[dict[str, object]] = []
+
+    def fake_show_features(
+        database_arg: Database,
+        book_id_arg: str,
+        *,
+        edition_id: str | None = None,
+        chapter_id: str | None = None,
+    ) -> list[dict[str, object]]:
+        feature_calls.append({"chapter_id": chapter_id})
+        del database_arg, book_id_arg, edition_id, chapter_id
+        return [
+                {
+                    "feature_id": "feature-revision-target",
+                    "chapter_id": target_chapter_id,
+                "ordinal": 1,
+                "effective_content_sha256": "feature-hash",
+                "planned_primary_function": "setup",
+                "realized_primary_function": "relationship_shift",
+                "emotional_intensity_band": "MEDIUM",
+                "opening_mode": "DIRECT_ACTION",
+                "ending_mode": "QUESTION",
+                "extractor_kind": "DETERMINISTIC",
+                "status": "ACTIVE",
+            }
+        ]
+
+    monkeypatch.setattr("novel_authoring.revision.service.show_features", fake_show_features)
+    from novel_authoring.reference_corpus.context import (
+        load_reference_context_snapshot as core_loader,
+    )
+
+    loader_calls: list[Path] = []
+
+    def tracing_loader(path: Path | str) -> Any:
+        loader_calls.append(Path(path))
+        return core_loader(path)
+
+    monkeypatch.setattr(
+        "novel_authoring.revision.service.load_reference_context_snapshot", tracing_loader
+    )
+    with database.connect() as connection:
+        for contract_type, payload in (
+            (
+                "READER_EXPERIENCE",
+                {
+                    "experience_priorities": {"BREAKTHROUGH": "HIGH"},
+                    "primary_narrative_drive": "POWER_PROGRESSION",
+                },
+            ),
+            (
+                "NARRATIVE_DRIVE",
+                {
+                    "primary_drive": "POWER_PROGRESSION",
+                    "secondary_drives": [],
+                    "drive_priorities": {"POWER_PROGRESSION": 100},
+                    "drive_payoff_channels": [{"channel": "POWER_BREAKTHROUGH"}],
+                },
+            ),
+            (
+                "PAYOFF_CHANNEL",
+                {"channels": {"POWER_BREAKTHROUGH": "CORE"}},
+            ),
+        ):
+            connection.execute(
+                """
+                INSERT INTO progression_contract_versions(
+                    contract_record_id, book_id, edition_id, contract_type,
+                    version_number, status, payload_json, effective_from_boundary,
+                    source, author_notes, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, 1, 'EFFECTIVE', ?, NULL, 'TEST', '', ?, ?)
+                """,
+                (
+                    f"contract-{contract_type.lower()}",
+                    "revision-book",
+                    "edition-r1",
+                    contract_type,
+                    json.dumps(payload),
+                    "2026-08-15T00:00:00+00:00",
+                    "2026-08-15T00:00:00+00:00",
+                ),
+            )
+
+    campaign = create_revision_campaign(
+        database, "revision-book", _spec(), edition_id="edition-r1"
+    )
+    campaign_id = str(campaign["campaign_id"])
+    impact = build_revision_impact(database, "revision-book", campaign_id)
+    assert calls == []
+    complete_revision_impact_audit(
+        database,
+        "revision-book",
+        campaign_id,
+        [
+            {"impact_id": item["impact_id"], "status": "HANDLED"}
+            for item in cast(list[dict[str, Any]], impact["items"])
+        ],
+    )
+    assert calls == []
+
+    plan = build_revision_plan(database, "revision-book", campaign_id)
+    assert len(calls) == 1
+    planning_request = calls[0]
+    assert planning_request.reader_experiences == ["BREAKTHROUGH"]
+    assert planning_request.narrative_drives == ["POWER_PROGRESSION"]
+    assert planning_request.payoff_channels == ["POWER_BREAKTHROUGH"]
+    assert planning_request.scene_functions == []
+    assert cast(dict[str, Any], plan["planning_inputs"])["query_metadata"][
+        "scene_functions"
+    ] == ["DIALOGUE", "RELATIONSHIP_SHIFT"]
+    assert "breakthrough" in cast(dict[str, Any], plan["planning_inputs"])[
+        "query_metadata"
+    ]["creative_problem_tags"]
+    planning_provenance = cast(dict[str, Any], plan["planning_provenance"])
+    unit = cast(list[dict[str, Any]], plan["units"])[0]
+    strategy = cast(dict[str, Any], plan["strategies"])[str(unit["unit_id"])]
+    assert strategy["reference_card_ids_used"] == [
+        "mechanism-card-test",
+        "contrast-card-test",
+    ]
+    assert strategy["usage"] == "REFERENCE_ONLY"
+    assert strategy["planning_task_id"] == planning_provenance["task_id"]
+    assert strategy["planning_snapshot_id"] == planning_provenance["planning_snapshot_id"]
+    assert strategy["planning_snapshot_hash"] == planning_provenance["planning_snapshot_hash"]
+    assert "让资源限制迫使角色交换或取舍" in strategy["structural_moves"]
+    assert any(
+        "只迁移结构动作与读者效果" in value
+        for value in strategy["structural_moves"]
+    )
+
+    task = prepare_revision_draft_task(
+        database, "revision-book", campaign_id, str(unit["unit_id"])
+    )
+    assert len(calls) == 2
+    assert calls[1].purpose == "PROSE"
+    assert calls[1].scene_functions == ["DIALOGUE", "RELATIONSHIP_SHIFT"]
+    assert task["scene_function_source"] == "target_chapter_features"
+    task_payload = json.loads(Path(str(task["task_path"])).read_text(encoding="utf-8"))
+    assert task_payload["revision_strategy"]["reference_card_ids_used"] == [
+        "mechanism-card-test",
+        "contrast-card-test",
+    ]
+    assert task_payload["planning_provenance"] == planning_provenance
+    input_text = Path(str(task["input_markdown"])).read_text(encoding="utf-8")
+    assert "Revision Strategy（REFERENCE_ONLY；只描述 HOW）" in input_text
+    assert "让资源限制迫使角色交换或取舍" in input_text
+    assert "只迁移结构动作与读者效果" in input_text
+    assert len(feature_calls) == 2
+    assert len(loader_calls) >= 3

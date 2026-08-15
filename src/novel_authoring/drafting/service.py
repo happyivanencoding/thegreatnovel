@@ -26,6 +26,7 @@ from novel_authoring.planning.rewards import (
 from novel_authoring.reference_corpus.context import (
     ReferenceContextSnapshot,
     freeze_reference_context,
+    load_reference_context_snapshot,
 )
 from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryRequest,
@@ -38,6 +39,55 @@ from novel_authoring.utils import json_dumps, sha256_bytes, sha256_file, stable_
 
 class DraftWorkflowError(RuntimeError):
     pass
+
+
+_PROSE_CONTROL_FIELDS = (
+    "card_id",
+    "card_type",
+    "control_topic",
+    "applicable_scene_functions",
+    "guidance",
+    "variants",
+    "when_to_use",
+    "failure_signals",
+    "transfer_boundary",
+)
+
+_PROSE_REALIZATION_PROTOCOL = {
+    "shared_with": "Revision Draft Novel Prose Realization",
+    "authority": "Chapter Contract > Canon > Current Scene Context > Prose Controls",
+    "controls_may_change": [
+        "句法、段落节奏、信息呈现、对话自然度、描写与场景收束"
+    ],
+    "controls_must_not_change": [
+        "Chapter Contract、Boundary、Canon、事件顺序、人物选择、资源、知识边界、"
+        "事实、payoff、不可逆改变或结尾状态"
+    ],
+}
+
+
+def _soft_reference_prose_context(
+    snapshot_path: Path,
+    *,
+    status: str,
+    warning: str,
+    knowledge_gap: str,
+) -> dict[str, object]:
+    return {
+        "purpose": "PROSE",
+        "status": status,
+        "controls": [],
+        "warnings": [warning],
+        "knowledge_gaps": [knowledge_gap],
+        "snapshot_id": None,
+        "snapshot_hash": None,
+        "snapshot_path": str(snapshot_path),
+        "selected_card_count": 0,
+        "machine_bundle_hash": None,
+        "selected_card_ids": [],
+        "selected_card_types": [],
+        "usage": "REFERENCE_ONLY",
+    }
 
 
 def _prose_scene_functions(contract: ChapterContract) -> list[str]:
@@ -74,19 +124,8 @@ def _reference_prose_context(
     """Return compact optional prose guidance without touching the Draft schema."""
 
     def from_snapshot(snapshot: ReferenceContextSnapshot) -> dict[str, object]:
-        allowed = (
-            "card_id",
-            "card_type",
-            "control_topic",
-            "applicable_scene_functions",
-            "guidance",
-            "variants",
-            "when_to_use",
-            "failure_signals",
-            "transfer_boundary",
-        )
         controls = [
-            {key: card[key] for key in allowed if key in card}
+            {key: card[key] for key in _PROSE_CONTROL_FIELDS if key in card}
             for card in snapshot.compact_cards
             if card.get("card_type") == "prose-control"
         ]
@@ -96,6 +135,7 @@ def _reference_prose_context(
         )
         status = "UNAVAILABLE" if legacy_unavailable else snapshot.status
         return {
+            "purpose": snapshot.purpose,
             "status": status,
             "controls": controls,
             "warnings": warnings,
@@ -105,17 +145,27 @@ def _reference_prose_context(
             "snapshot_path": str(snapshot_path),
             "selected_card_count": snapshot.selected_card_count,
             "package_schema_version": snapshot.package_schema_version,
-            "package_hash": snapshot.package_hash,
+            "machine_bundle_hash": snapshot.machine_bundle_hash,
             "selected_card_ids": snapshot.selected_card_ids,
             "selected_card_types": snapshot.selected_card_types,
+            "usage": snapshot.usage,
         }
 
     if snapshot_path.is_file():
-        return from_snapshot(
-            ReferenceContextSnapshot.model_validate_json(
-                snapshot_path.read_text(encoding="utf-8")
+        try:
+            # The Core loader is the only authority allowed to read an existing
+            # frozen snapshot.  It verifies the stored hash before returning it.
+            return from_snapshot(load_reference_context_snapshot(snapshot_path))
+        except (OSError, UnicodeError, TypeError, ValueError) as exc:
+            return _soft_reference_prose_context(
+                snapshot_path,
+                status="CORRUPT",
+                warning=(
+                    "soft-fail：Reference Context Snapshot 未通过 Core loader 校验："
+                    f"{type(exc).__name__}: {exc}"
+                ),
+                knowledge_gap="冻结的 Reference Context Snapshot 不可可靠读取",
             )
-        )
 
     configured_root: Path | None = None
     with suppress(OSError, TypeError, ValueError):
@@ -129,28 +179,40 @@ def _reference_prose_context(
         scene_functions=_prose_scene_functions(contract),
         max_cards=4,
     )
-    response = query_reference_corpus(request, corpus_root=configured_root)
-    if not configured and response.status == "ENABLED":
-        response = response.model_copy(
-            update={
-                "status": "DISABLED",
-                "package_schema_version": None,
-                "package_hash": None,
-                "cards": [],
-                "knowledge_gaps": [
-                    "当前没有可用的 Reference Corpus machine package/path"
-                ],
-                "warnings": ["soft-fail：Reference Corpus 未启用或未配置"],
-            }
+    try:
+        response = query_reference_corpus(request, corpus_root=configured_root)
+        if not configured and response.status == "ENABLED":
+            response = response.model_copy(
+                update={
+                    "status": "DISABLED",
+                    "package_schema_version": None,
+                    "package_hash": None,
+                    "machine_bundle_hash": None,
+                    "cards": [],
+                    "knowledge_gaps": [
+                        "当前没有可用的 Reference Corpus machine package/path"
+                    ],
+                    "warnings": ["soft-fail：Reference Corpus 未启用或未配置"],
+                }
+            )
+        snapshot = freeze_reference_context(
+            request,
+            response,
+            book_id=book_id,
+            edition_id=edition_id,
+            operation_id=operation_id,
+            output_path=snapshot_path,
         )
-    snapshot = freeze_reference_context(
-        request,
-        response,
-        book_id=book_id,
-        edition_id=edition_id,
-        operation_id=operation_id,
-        output_path=snapshot_path,
-    )
+    except (OSError, UnicodeError, TypeError, ValueError) as exc:
+        return _soft_reference_prose_context(
+            snapshot_path,
+            status="UNAVAILABLE",
+            warning=(
+                "soft-fail：Reference Corpus Query/Freeze 未完成："
+                f"{type(exc).__name__}: {exc}"
+            ),
+            knowledge_gap="Reference Corpus prose context 未能冻结",
+        )
     return from_snapshot(snapshot)
 
 
@@ -253,7 +315,7 @@ def prepare_draft_task(
             "当前书 Prose DNA 与作者明确风格意图优先于外部 Reference Corpus Prose Controls。",
             "",
             "```json",
-            json_dumps(reference_prose_context["controls"], indent=2),
+            json_dumps(reference_prose_context, indent=2),
             "```",
             "",
         ]
@@ -289,6 +351,14 @@ def prepare_draft_task(
             "避免连续使用‘谨慎试探—暂不下结论—保留退路—撤回’的审计型叙事，"
             "除非当前 Narrative Portfolio 明确需要这种节奏。",
             "只写 output.json，不要修改 book；系统会把合法正文导入 drafts。",
+            "",
+            "## Novel Prose Realization Protocol（Normal Draft / Revision Draft shared）",
+            "",
+            "Novel Prose Realization 只控制表达层；Chapter Contract、Canon、Boundary、"
+            "人物事实、资源、知识边界、事件顺序、payoff 与结尾状态保持不变。",
+            "```json",
+            json_dumps(_PROSE_REALIZATION_PROTOCOL, indent=2),
+            "```",
             "",
             "## Continuation Boundary Packet",
             "",
@@ -335,6 +405,8 @@ def prepare_draft_task(
         "raw_runtime_tables_loaded": include_runtime_state,
         "innovation_control": contract.innovation_control.model_dump(mode="json"),
         "reference_prose_context": reference_prose_context,
+        "reference_context_snapshot": str(task_dir / "reference_context_snapshot.json"),
+        "prose_realization_protocol": _PROSE_REALIZATION_PROTOCOL,
     }
     (task_dir / "input.md").write_text(input_text, encoding="utf-8")
     (task_dir / "schema.json").write_text(schema_json + "\n", encoding="utf-8")

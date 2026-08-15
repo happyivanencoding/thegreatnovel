@@ -60,7 +60,14 @@ from novel_authoring.progression.models import (
 )
 from novel_authoring.progression.service import (
     ProgressionContractType,
+    confirm_contract,
+    create_contract_proposal,
     list_contract_records,
+)
+from novel_authoring.reference_corpus.context import freeze_reference_context
+from novel_authoring.reference_corpus.query import (
+    ReferenceCorpusQueryRequest,
+    ReferenceCorpusQueryResponse,
 )
 from novel_authoring.serial_kernel.models import MarketCategory, NarrativeDrive
 from novel_authoring.storage.layout import BookLayout
@@ -2395,6 +2402,17 @@ def test_first_chapter_uses_contract_validation_and_explicit_approval(tmp_path: 
     selected = select_first_chapter_candidate(
         database, BOOK_ID, foundation["genesis"]["candidates"][0]["candidate_id"]
     )
+    genesis_task = json.loads(
+        (Path(str(selected["draft_task"]["input"])).parent / "task.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert genesis_task["reference_planning_context"]["usage"] == "REFERENCE_ONLY"
+    assert genesis_task["reference_planning_context"]["selected_card_count"] >= 0
+    assert all(
+        "source_refs" not in card and "source_book_ids" not in card
+        for card in genesis_task["reference_planning_context"]["compact_cards"]
+    )
     contract = ChapterContract.model_validate_json(
         Path(str(selected["contract"]["path"])).read_text(encoding="utf-8")
     )
@@ -2867,6 +2885,138 @@ def test_confirmed_creative_semantics_are_sqlite_authority_when_projection_drift
         ).fetchone()
     assert stored is not None
     assert json.loads(str(stored["confirmed_creative_semantics_json"])) == author_semantics
+
+
+def test_original_reference_query_uses_effective_contract_payloads(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, database = create_original(tmp_path)
+    confirm_original_reader_experience(
+        database,
+        BOOK_ID,
+        creative_semantics=creative_semantics_payload(),
+    )
+    interpreted = compile_kernel_contract_proposals(
+        interpret_reader_experience(
+            "仅用于 payload extraction regression 的原创 premise。",
+            genre_hint="肉身进化",
+            contract_prefix="payload-regression",
+        )
+    )
+    payoff_proposal = create_contract_proposal(
+        database,
+        book_id=BOOK_ID,
+        edition_id="base",
+        contract_type=ProgressionContractType.PAYOFF_CHANNEL,
+        payload=interpreted.payoff_channels,
+        source="TEST_EFFECTIVE_PAYOFF",
+    )
+    confirm_contract(
+        database,
+        payoff_proposal.contract_record_id,
+        effective_from_boundary=1,
+    )
+    effective = {
+        record.contract_type: record
+        for record in list_contract_records(database, book_id=BOOK_ID, edition_id="base")
+        if record.status is ContractStatus.EFFECTIVE
+    }
+    assert set(effective) >= {
+        ProgressionContractType.READER_EXPERIENCE,
+        ProgressionContractType.NARRATIVE_DRIVE,
+        ProgressionContractType.PAYOFF_CHANNEL,
+    }
+    assert "experience_priorities" not in effective[
+        ProgressionContractType.READER_EXPERIENCE
+    ].model_dump(mode="json")
+    assert "experience_priorities" in effective[
+        ProgressionContractType.READER_EXPERIENCE
+    ].payload
+
+    captured: dict[str, Any] = {}
+    real_query = original_service.query_reference_corpus
+
+    def capture_query(request: Any) -> Any:
+        captured["request"] = request
+        return real_query(request)
+
+    monkeypatch.setattr(original_service, "query_reference_corpus", capture_query)
+    original_service.prepare_original_core_innovation(database, BOOK_ID)
+
+    request = captured["request"]
+    reader_payload = effective[ProgressionContractType.READER_EXPERIENCE].payload
+    drive_payload = effective[ProgressionContractType.NARRATIVE_DRIVE].payload
+    payoff_payload = effective[ProgressionContractType.PAYOFF_CHANNEL].payload
+    assert request.reader_experiences
+    assert set(request.reader_experiences) == set(
+        str(item) for item in reader_payload["experience_priorities"]
+    )
+    assert request.narrative_drives == [
+        str(drive_payload["primary_drive"]),
+        *[str(item) for item in drive_payload["secondary_drives"]],
+    ]
+    assert request.payoff_channels
+    assert set(request.payoff_channels) == set(
+        str(item) for item in payoff_payload["channels"]
+    )
+
+
+def test_original_replay_loads_existing_reference_snapshot_through_core_loader(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _layout, database = create_original(tmp_path)
+    task_directory = tmp_path / "replay-task"
+    input_directory = task_directory / "input"
+    input_directory.mkdir(parents=True)
+    (input_directory / "original_request.json").write_text(
+        json_dumps({"reference_planning_context": {}}), encoding="utf-8"
+    )
+    query = ReferenceCorpusQueryRequest(
+        purpose="PLANNING",
+        creative_problem="replay loader regression",
+        max_cards=6,
+    )
+    response = ReferenceCorpusQueryResponse(
+        schema_version="reference-corpus-query-v1",
+        purpose="PLANNING",
+        query=query.model_dump(mode="json", exclude={"purpose"}),
+        status="ZERO_RESULTS",
+    )
+    snapshot_path = input_directory / "reference_context_snapshot.json"
+    freeze_reference_context(
+        query,
+        response,
+        book_id=BOOK_ID,
+        edition_id="base",
+        operation_id="test:replay-loader",
+        output_path=snapshot_path,
+    )
+    monkeypatch.setattr(
+        original_service,
+        "_current_development_row",
+        lambda _database, _book_id: {"handoff_id": "replay-handoff"},
+    )
+    monkeypatch.setattr(
+        original_service,
+        "get_handoff",
+        lambda _database, _handoff_id: {"task_directory": str(task_directory)},
+    )
+    loaded_paths: list[Path] = []
+    real_loader = original_service.load_reference_context_snapshot
+
+    def capture_loader(path: Path) -> Any:
+        loaded_paths.append(path)
+        return real_loader(path)
+
+    monkeypatch.setattr(original_service, "load_reference_context_snapshot", capture_loader)
+
+    replay = original_service._latest_original_reference_planning_context(
+        database, BOOK_ID
+    )
+
+    assert loaded_paths == [snapshot_path]
+    assert replay["status"] == "ZERO_RESULTS"
+    assert replay["snapshot_hash"]
 
 
 def test_reader_author_decision_rolls_back_together_on_database_failure(

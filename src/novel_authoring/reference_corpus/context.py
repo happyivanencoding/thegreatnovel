@@ -25,6 +25,10 @@ class ReferenceContextConflict(ValueError):
     """An existing immutable snapshot does not match the requested content."""
 
 
+class ReferenceContextIntegrityError(ReferenceContextConflict):
+    """A persisted snapshot fails its strict schema or canonical hash check."""
+
+
 def _contains_forbidden(value: object) -> str | None:
     forbidden = {
         "observation_summary",
@@ -35,10 +39,14 @@ def _contains_forbidden(value: object) -> str | None:
         "source_content",
         "book_dna",
         "prose_dna",
+        "full_dna",
+        "full dna",
+        "full-dna",
     }
     if isinstance(value, dict):
         for key, nested in value.items():
-            if str(key).casefold() in forbidden:
+            normalized_key = str(key).casefold()
+            if normalized_key in forbidden:
                 return str(key)
             found = _contains_forbidden(nested)
             if found:
@@ -71,6 +79,7 @@ class ReferenceContextSnapshot(BaseModel):
     max_cards: int = Field(ge=3, le=8)
     package_schema_version: str | None = None
     package_hash: str | None = None
+    machine_bundle_hash: str | None = None
     selected_card_ids: list[str] = Field(default_factory=list)
     selected_card_count: int = Field(ge=0, le=8)
     selected_card_types: list[str] = Field(default_factory=list)
@@ -91,6 +100,8 @@ class ReferenceContextSnapshot(BaseModel):
             forbidden = _contains_forbidden(card)
             if forbidden:
                 raise ValueError(f"Reference Context 不得包含来源正文字段：{forbidden}")
+            if card.get("status") != "REFERENCE_ONLY":
+                raise ValueError("Reference Context compact card 必须保持 REFERENCE_ONLY")
             # Re-validate the projection against the gateway union.  This also
             # rejects Book DNA/Prose DNA and any unbounded raw card shape.
             COMPACT_CARD_ADAPTER.validate_python(card)
@@ -98,15 +109,38 @@ class ReferenceContextSnapshot(BaseModel):
 
 
 def _hash_payload(snapshot: ReferenceContextSnapshot) -> str:
-    payload = snapshot.model_dump(mode="json", exclude={"snapshot_hash", "created_at"})
+    # package_hash is a legacy file hash and may change with generated_at;
+    # machine_bundle_hash is the retrieval identity that belongs in the seal.
+    payload = snapshot.model_dump(
+        mode="json",
+        exclude={"snapshot_hash", "created_at", "package_hash"},
+    )
     return sha256_bytes(json_dumps(payload).encode("utf-8"))
 
 
 def _read_existing(path: Path) -> ReferenceContextSnapshot:
+    return load_reference_context_snapshot(path)
+
+
+def load_reference_context_snapshot(path: Path | str) -> ReferenceContextSnapshot:
+    """Strictly load and integrity-check one persisted context snapshot."""
+
+    target = Path(path).expanduser().resolve()
     try:
-        return ReferenceContextSnapshot.model_validate_json(path.read_text(encoding="utf-8"))
+        snapshot = ReferenceContextSnapshot.model_validate_json(
+            target.read_text(encoding="utf-8"),
+            strict=True,
+        )
     except (OSError, UnicodeError, ValueError, TypeError) as exc:
-        raise ReferenceContextConflict(f"已有 Reference Context Snapshot 无法验证：{path}") from exc
+        raise ReferenceContextIntegrityError(
+            f"已有 Reference Context Snapshot 无法严格验证：{target}"
+        ) from exc
+    expected_hash = _hash_payload(snapshot)
+    if snapshot.snapshot_hash != expected_hash:
+        raise ReferenceContextIntegrityError(
+            f"Reference Context Snapshot hash 不匹配：{target}"
+        )
+    return snapshot
 
 
 def freeze_reference_context(
@@ -124,7 +158,9 @@ def freeze_reference_context(
         raise ValueError("Reference Query 与 Snapshot purpose 不一致")
     cards = [card.model_dump(mode="json") for card in response.cards]
     request_payload = request.model_dump(mode="json")
-    package_identity = response.package_hash or "NO_PACKAGE"
+    package_identity = (
+        response.machine_bundle_hash or response.package_hash or "NO_PACKAGE"
+    )
     snapshot_id = stable_id(
         "reference-context",
         operation_id,
@@ -152,6 +188,7 @@ def freeze_reference_context(
         max_cards=request.max_cards,
         package_schema_version=response.package_schema_version,
         package_hash=response.package_hash,
+        machine_bundle_hash=response.machine_bundle_hash,
         selected_card_ids=[str(card["card_id"]) for card in cards],
         selected_card_count=len(cards),
         selected_card_types=[str(card["card_type"]) for card in cards],
@@ -185,6 +222,8 @@ def freeze_reference_context(
 
 __all__ = [
     "ReferenceContextConflict",
+    "ReferenceContextIntegrityError",
     "ReferenceContextSnapshot",
     "freeze_reference_context",
+    "load_reference_context_snapshot",
 ]

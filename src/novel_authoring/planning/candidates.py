@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import shutil
+from collections.abc import Mapping, Sequence
 from itertools import combinations
 from pathlib import Path
 from typing import Any
@@ -130,7 +131,7 @@ def _kernel_author_summary(context: KernelPlanningContext) -> dict[str, Any]:
 
 
 def _reference_values(payload: object, *keys: str) -> list[str]:
-    if not isinstance(payload, dict):
+    if not isinstance(payload, Mapping):
         return []
     values: list[str] = []
     for key in keys:
@@ -142,14 +143,421 @@ def _reference_values(payload: object, *keys: str) -> list[str]:
     return list(dict.fromkeys(values))
 
 
+def _contract_payload(value: object) -> dict[str, Any]:
+    """Use effective contract business fields whether metadata is wrapped or not."""
+
+    if not isinstance(value, Mapping):
+        return {}
+    payload = value.get("payload")
+    return dict(payload) if isinstance(payload, Mapping) else dict(value)
+
+
+_CONTROLLED_CREATIVE_PROBLEM_TAGS = frozenset(
+    {
+        "opening",
+        "first-payoff",
+        "breakthrough",
+        "power-verification",
+        "resource-release",
+        "pure-upside",
+        "post-payoff-anticipation",
+        "world-expansion",
+        "map-transition",
+        "exploration",
+        "mystery-reveal",
+        "status-rise",
+        "ability-rule",
+        "artifact-ability",
+        "relationship",
+        "long-form",
+        "fatigue",
+        "ending-settlement",
+    }
+)
+
+_REFERENCE_PROMPT_FORBIDDEN_FIELDS = frozenset(
+    {
+        "source_refs",
+        "source_book_ids",
+        "raw",
+        "full_dna",
+        "book_dna",
+        "prose_dna",
+        "source_prose",
+        "source_content",
+        "full_text",
+        "raw_text",
+    }
+)
+
+
+def _is_forbidden_reference_prompt_field(key: object) -> bool:
+    normalized = str(key).casefold().replace("-", "_").replace(" ", "_")
+    return normalized in _REFERENCE_PROMPT_FORBIDDEN_FIELDS
+
+
+def _compact_reference_prompt_value(value: object) -> object:
+    if isinstance(value, Mapping):
+        return {
+            str(key): _compact_reference_prompt_value(nested)
+            for key, nested in value.items()
+            if not _is_forbidden_reference_prompt_field(key)
+        }
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return [_compact_reference_prompt_value(item) for item in value]
+    return value
+
+
+def _compact_reference_prompt_cards(value: object) -> list[dict[str, Any]]:
+    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
+        return []
+    cards: list[dict[str, Any]] = []
+    for card in value:
+        compact = _compact_reference_prompt_value(card)
+        if isinstance(compact, dict):
+            cards.append(compact)
+    return cards
+
+
+def _mapping_rows(value: object) -> list[dict[str, Any]]:
+    if isinstance(value, Mapping):
+        values = list(value.values())
+        if values and all(isinstance(item, Mapping) for item in values):
+            return [dict(item) for item in values if isinstance(item, Mapping)]
+        return [dict(value)]
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return [dict(item) for item in value if isinstance(item, Mapping)]
+    return []
+
+
+def _number(value: object) -> float | None:
+    if isinstance(value, bool) or value in (None, ""):
+        return None
+    try:
+        return float(str(value))
+    except (TypeError, ValueError):
+        return None
+
+
+def _record_value(value: object, key: str, *, depth: int = 0) -> object:
+    if depth > 3 or not isinstance(value, Mapping):
+        return None
+    nested_value = value.get(key)
+    if nested_value not in (None, ""):
+        return nested_value
+    for nested_key in ("payload", "raw", "attributes"):
+        nested = value.get(nested_key)
+        found = _record_value(nested, key, depth=depth + 1)
+        if found not in (None, ""):
+            return found
+    encoded = value.get("payload_json")
+    if isinstance(encoded, str) and encoded.strip():
+        try:
+            decoded = json.loads(encoded)
+        except (TypeError, ValueError, json.JSONDecodeError):
+            decoded = None
+        found = _record_value(decoded, key, depth=depth + 1)
+        if found not in (None, ""):
+            return found
+    return None
+
+
+def _state_rows(
+    *,
+    boundary_payload: Mapping[str, Any],
+    kernel_context: KernelPlanningContext | None,
+    story_state: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    state = story_state if story_state is not None else boundary_payload
+    if kernel_context is None:
+        active_threads = _mapping_rows(
+            state.get("active_threads", state.get("threads", []))
+        )
+        promises = _mapping_rows(state.get("promises", []))
+        debts = _mapping_rows(
+            (boundary_payload.get("narrative_portfolio") or {}).get(
+                "narrative_debts", []
+            )
+            if isinstance(boundary_payload.get("narrative_portfolio"), Mapping)
+            else []
+        )
+        progression = (
+            dict(state["progression_state"])
+            if isinstance(state.get("progression_state"), Mapping)
+            else {}
+        )
+        resources = _mapping_rows(state.get("resources", []))
+        knowledge = _mapping_rows(
+            state.get("knowledge")
+            or state.get("knowledge_state")
+            or state.get("knowledge_boundaries", [])
+        )
+        raw_world_expansion = state.get("world_expansion_state")
+        if not isinstance(raw_world_expansion, Mapping):
+            raw_world_expansion = state.get("world_expansion")
+        world_expansion = (
+            dict(raw_world_expansion) if isinstance(raw_world_expansion, Mapping) else {}
+        )
+    else:
+        active_threads = [
+            dict(item)
+            for item in kernel_context.planning_state.active_threads
+            if isinstance(item, Mapping)
+        ]
+        promises = [
+            dict(item)
+            for item in kernel_context.planning_state.promises
+            if isinstance(item, Mapping)
+        ]
+        debts = [
+            dict(item)
+            for item in kernel_context.planning_state.narrative_debts
+            if isinstance(item, Mapping)
+        ]
+        progression = dict(kernel_context.chapter_state.progression_state or {})
+        resources = [dict(item) for item in kernel_context.chapter_state.resource_state]
+        knowledge = [dict(item) for item in kernel_context.chapter_state.knowledge_state]
+        world_expansion = dict(kernel_context.chapter_state.world_expansion_state or {})
+
+    if not active_threads:
+        active_threads = _mapping_rows(state.get("active_threads") or state.get("threads", []))
+    if not promises:
+        promises = _mapping_rows(state.get("promises", []))
+    if not resources:
+        resources = _mapping_rows(state.get("resources", []))
+    if not knowledge:
+        knowledge = _mapping_rows(
+            state.get("knowledge")
+            or state.get("knowledge_state")
+            or state.get("knowledge_boundaries", [])
+        )
+    if not world_expansion:
+        raw_world_expansion = state.get("world_expansion_state")
+        if not isinstance(raw_world_expansion, Mapping):
+            raw_world_expansion = state.get("world_expansion")
+        if isinstance(raw_world_expansion, Mapping):
+            world_expansion = dict(raw_world_expansion)
+
+    portfolio = boundary_payload.get("narrative_portfolio")
+    portfolio = portfolio if isinstance(portfolio, Mapping) else {}
+    if not debts:
+        debts = _mapping_rows(portfolio.get("narrative_debts", []))
+    if not debts:
+        debts = promises
+    payoff_ready_ids = [
+        str(item)
+        for item in portfolio.get("payoff_ready_thread_ids", [])
+        if str(item).strip()
+    ]
+    overdue_ids = [
+        str(item)
+        for item in portfolio.get("overdue_debt_ids", [])
+        if str(item).strip()
+    ]
+    for item in debts:
+        status = str(_record_value(item, "status") or "").upper()
+        debt_id = str(
+            _record_value(item, "debt_id")
+            or _record_value(item, "promise_id")
+            or ""
+        ).strip()
+        thread_id = str(_record_value(item, "thread_id") or "").strip()
+        if status == "PAYOFF_READY" and thread_id:
+            payoff_ready_ids.append(thread_id)
+        if status == "OVERDUE" and debt_id:
+            overdue_ids.append(debt_id)
+
+    payoff_readiness = _mapping_rows(state.get("payoff_readiness", []))
+    for item in payoff_readiness:
+        readiness = str(
+            _record_value(item, "readiness") or _record_value(item, "status") or ""
+        ).upper()
+        if readiness in {"READY", "PAYOFF_READY"}:
+            payoff_id = str(
+                _record_value(item, "thread_id")
+                or _record_value(item, "promise_id")
+                or _record_value(item, "channel")
+                or ""
+            ).strip()
+            if payoff_id:
+                payoff_ready_ids.append(payoff_id)
+
+    recent_payoffs = _mapping_rows(state.get("recent_payoffs", []))
+    relationships = _mapping_rows(state.get("relationships", []))
+    innovation = boundary_payload.get("innovation_diagnostics")
+    innovation = innovation if isinstance(innovation, Mapping) else {}
+    recent_structures = _mapping_rows(boundary_payload.get("recent_structures", []))
+    pressure_values: list[float] = []
+    for item in active_threads:
+        for key in ("pressure", "pressure_score", "deadline_urgency", "goal_blockage"):
+            number = _number(_record_value(item, key))
+            if number is not None:
+                pressure_values.append(number)
+    for item in debts:
+        number = _number(_record_value(item, "debt_score"))
+        if number is not None:
+            pressure_values.append(number)
+    for key in ("pressure", "pressure_score"):
+        number = _number(progression.get(key))
+        if number is not None:
+            pressure_values.append(number)
+    explicit_pressure = progression.get("resource_pressure")
+    if isinstance(explicit_pressure, Mapping):
+        explicit_pressure = explicit_pressure.get("score")
+    number = _number(explicit_pressure)
+    if number is not None:
+        pressure_values.append(number)
+    current_position = boundary_payload.get("current_position")
+    current_chapter = (
+        int(current_position.get("last_canon_chapter") or 0)
+        if isinstance(current_position, Mapping)
+        else 0
+    )
+    chapter = state.get("chapter")
+    if isinstance(chapter, Mapping) and chapter.get("ordinal") is not None:
+        current_chapter = int(chapter.get("ordinal") or 0)
+    primary_axis = progression.get("primary_axis_state")
+    primary_axis = primary_axis if isinstance(primary_axis, Mapping) else {}
+    bottlenecks = [
+        str(item)
+        for item in primary_axis.get("current_bottlenecks", [])
+        if str(item).strip()
+    ]
+    missing_resources = [
+        str(item)
+        for item in progression.get("missing_resources", [])
+        if str(item).strip()
+    ]
+    pending_showcases = [
+        str(item)
+        for item in progression.get("pending_ability_showcases", [])
+        if str(item).strip()
+    ]
+    def resource_is_constrained(item: Mapping[str, Any]) -> bool:
+        status = str(_record_value(item, "status") or "").upper()
+        quantity = _number(_record_value(item, "quantity"))
+        return status in {"BLOCKED", "SHORTFALL", "EXHAUSTED"} or (
+            quantity is not None and quantity <= 0
+        )
+
+    resource_pressure = bool(missing_resources) or any(
+        resource_is_constrained(item) for item in resources
+    )
+    if number is not None and number >= 60:
+        resource_pressure = True
+    payoff_ready_ids = sorted(set(payoff_ready_ids))
+    overdue_ids = sorted(set(overdue_ids))
+    debt_types = {
+        str(_record_value(item, "debt_type") or "").upper()
+        for item in debts
+        if _record_value(item, "debt_type")
+    }
+    mystery = bool(
+        "MYSTERY" in debt_types
+        or any(
+            str(
+                _record_value(item, "state")
+                or _record_value(item, "knowledge_state")
+                or _record_value(item, "visibility_status")
+                or ""
+            ).upper()
+            == "UNKNOWN"
+            for item in knowledge
+        )
+        or bool(kernel_context and kernel_context.planning_state.reveal_agenda)
+    )
+    relationship = bool("RELATIONSHIP" in debt_types or relationships)
+    repeated_patterns = _mapping_rows(innovation.get("repeated_patterns", []))
+    repeated = bool(
+        innovation.get("repeated_patterns")
+        or str(innovation.get("recent_pattern_distance", "")).lower() == "low"
+        or repeated_patterns
+        or any(str(_record_value(item, "pattern") or "").strip() for item in recent_structures)
+    )
+    world_expansion_ready = bool(
+        world_expansion.get("stage_id")
+        or world_expansion.get("current_stage")
+        or world_expansion.get("next_stage")
+        or world_expansion.get("available_branches")
+    )
+    map_transition = any(
+        bool(world_expansion.get(key))
+        for key in ("map_transition", "region_transition", "location_transition", "next_region")
+    )
+    tags: list[str] = []
+
+    def add_tag(tag: str) -> None:
+        if tag in _CONTROLLED_CREATIVE_PROBLEM_TAGS and tag not in tags:
+            tags.append(tag)
+
+    if active_threads or overdue_ids:
+        add_tag("long-form")
+    if bottlenecks or str(progression.get("next_breakthrough_readiness", "")).upper() in {
+        "READY_TO_ATTEMPT",
+        "GATE_SATISFIED",
+    }:
+        add_tag("breakthrough")
+    if pending_showcases:
+        add_tag("power-verification")
+    if resource_pressure:
+        add_tag("resource-release")
+    if payoff_ready_ids or recent_payoffs:
+        add_tag("post-payoff-anticipation")
+    if world_expansion_ready:
+        add_tag("world-expansion")
+    if map_transition:
+        add_tag("map-transition")
+    if relationship:
+        add_tag("relationship")
+    if mystery:
+        add_tag("mystery-reveal")
+    if repeated:
+        add_tag("fatigue")
+
+    unknown: list[str] = []
+    if not pressure_values:
+        unknown.append("pressure")
+    if not payoff_ready_ids and not recent_payoffs:
+        unknown.append("payoff_readiness")
+    if not progression:
+        unknown.append("progression_bottleneck")
+    if not resource_pressure and not resources:
+        unknown.append("resource_pressure")
+    if not world_expansion_ready:
+        unknown.append("world_expansion")
+    if not relationship:
+        unknown.append("relationship")
+    if not mystery:
+        unknown.append("mystery")
+    if not repeated:
+        unknown.append("repetition")
+    return {
+        "active_threads": active_threads,
+        "pressure": max(pressure_values) if pressure_values else None,
+        "payoff_ready_ids": payoff_ready_ids,
+        "overdue_ids": overdue_ids,
+        "bottlenecks": bottlenecks,
+        "missing_resources": missing_resources,
+        "resource_pressure": resource_pressure,
+        "world_expansion_ready": world_expansion_ready,
+        "relationship": relationship,
+        "mystery": mystery,
+        "repeated": repeated,
+        "current_chapter": current_chapter,
+        "tags": tags,
+        "unknown": unknown,
+    }
+
+
 def _continuation_reference_planning_context(
     *,
     book_id: str,
     edition_id: str,
     task_id: str,
-    boundary_payload: dict[str, Any],
+    boundary_payload: Mapping[str, Any],
     thread_id: str,
     kernel_context: KernelPlanningContext | None,
+    story_state: Mapping[str, Any] | None = None,
     output_path: Path,
 ) -> dict[str, Any]:
     contracts = (
@@ -157,28 +565,37 @@ def _continuation_reference_planning_context(
         if kernel_context is None
         else kernel_context.effective_contracts.model_dump(mode="json")
     )
-    reader = contracts.get("reader_experience") or {}
-    drive = contracts.get("narrative_drive") or {}
-    payoff = contracts.get("payoff_channel") or {}
-    reference_query = boundary_payload.get("reference_query")
-    reference_query = reference_query if isinstance(reference_query, dict) else {}
-    active_threads = boundary_payload.get("active_threads")
-    active_threads = active_threads if isinstance(active_threads, list) else []
-    pressure = boundary_payload.get("current_pressure")
-    pressure = pressure if isinstance(pressure, str) else ""
+    reader = _contract_payload(contracts.get("reader_experience"))
+    drive = _contract_payload(contracts.get("narrative_drive"))
+    payoff = _contract_payload(contracts.get("payoff_channel"))
+    state = _state_rows(
+        boundary_payload=boundary_payload,
+        kernel_context=kernel_context,
+        story_state=story_state,
+    )
+    pressure = (
+        "UNKNOWN"
+        if state["pressure"] is None
+        else f"{float(state['pressure']):.1f}"
+    )
+    unknown = ",".join(state["unknown"]) if state["unknown"] else "none"
     query = ReferenceCorpusQueryRequest(
         purpose="PLANNING",
         creative_problem=(
-            f"下一章候选需要处理主线程 {thread_id} 的当前压力、承诺和行动空间；"
-            f"当前压力：{pressure or '见冻结 Boundary 与 Planning Context'}；"
-            f"活动线程数：{len(active_threads)}；"
+            f"下一章候选需要处理主线程 {thread_id} 的冻结状态与行动空间；"
+            f"active_threads={len(state['active_threads'])}；pressure={pressure}；"
+            f"payoff_ready={state['payoff_ready_ids'] or 'UNKNOWN'}；"
+            f"overdue_debt={state['overdue_ids'] or 'UNKNOWN'}；"
+            f"progression_bottleneck={state['bottlenecks'] or 'UNKNOWN'}；"
+            f"resource_pressure={'TRUE' if state['resource_pressure'] else 'UNKNOWN'}；"
+            f"world_expansion={'TRUE' if state['world_expansion_ready'] else 'UNKNOWN'}；"
+            f"relationship={'TRUE' if state['relationship'] else 'UNKNOWN'}；"
+            f"mystery={'TRUE' if state['mystery'] else 'UNKNOWN'}；"
+            f"repetition={'TRUE' if state['repeated'] else 'UNKNOWN'}；"
+            f"unknown={unknown}；"
             "Reference Corpus 只提供可迁移机制，不决定候选。"
         ),
-        creative_problem_tags=[
-            str(item)
-            for item in reference_query.get("creative_problem_tags", [])
-            if str(item).strip()
-        ],
+        creative_problem_tags=state["tags"],
         reader_experiences=_reference_values(
             reader,
             "experience_priorities",
@@ -694,6 +1111,7 @@ def prepare_candidate_task(
         boundary_payload=boundary_payload,
         thread_id=threads[0].thread_id,
         kernel_context=kernel_context,
+        story_state=boundary_payload,
         output_path=task_dir / "reference_context_snapshot.json",
     )
     reference_prompt = {
@@ -710,14 +1128,9 @@ def prepare_candidate_task(
             "warnings",
         )
     }
-    reference_prompt["compact_cards"] = [
-        {
-            key: value
-            for key, value in card.items()
-            if key not in {"source_refs", "source_book_ids"}
-        }
-        for card in reference_planning_context.get("compact_cards", [])
-    ]
+    reference_prompt["compact_cards"] = _compact_reference_prompt_cards(
+        reference_planning_context.get("compact_cards", [])
+    )
     input_text = "\n".join(
         [
             f"# 下一章候选任务 `{task_id}`",
@@ -1054,6 +1467,7 @@ def prepare_handoff_candidate_task(
         boundary_payload=boundary_payload,
         thread_id=thread_id,
         kernel_context=kernel_context,
+        story_state=world_state,
         output_path=input_dir / "reference_context_snapshot.json",
     )
     reference_prompt = {
@@ -1070,14 +1484,9 @@ def prepare_handoff_candidate_task(
             "warnings",
         )
     }
-    reference_prompt["compact_cards"] = [
-        {
-            key: value
-            for key, value in card.items()
-            if key not in {"source_refs", "source_book_ids"}
-        }
-        for card in reference_planning_context.get("compact_cards", [])
-    ]
+    reference_prompt["compact_cards"] = _compact_reference_prompt_cards(
+        reference_planning_context.get("compact_cards", [])
+    )
     schema = CandidateOutput.model_json_schema()
     metadata = {
         "task_id": task_id,

@@ -48,6 +48,18 @@ Prose Realization 不得：
 
 Humanization Audit 不是第二个 Draft，也不是故事改写器。它只把表达问题报告给 Repair Pass。
 
+## Shared Draft Protocol
+
+Normal Draft 与 Revision Draft 共用同一个 Novel Prose Realization contract。两者都必须把
+`prose_realization_protocol` 作为 task metadata/input 的兼容接口，明确：
+
+- authority 由当前 Draft 的 Chapter Contract 或 RevisionUnit、Canon、当前场景上下文和作者明确风格意图决定；
+- Reference Corpus controls 只允许改变句法、段落节奏、信息呈现、对话自然度、描写与场景收束；
+- Reference Corpus controls 不得改变 Chapter Contract/RevisionUnit、Boundary、Canon、人物事实、资源、知识边界、事件顺序、payoff、不可逆改变或结尾状态；
+- task 可以保留 Reference Context 的 status、machine bundle/snapshot identity、selected card 摘要、warnings 和 knowledge gaps，但交给 prose executor 的 projection 不得包含 source refs、source book IDs、raw prose、source quote、完整 DNA 或 `observation_summary`。
+
+Reference Context Query 的失败、未就绪、零结果或损坏只产生显式 warning/soft-fail；它不能阻断 Draft/Revision 的 hard workflow，也不能引入第二套 humanizer。
+
 # Before Writing
 
 在动笔前读取并冻结：

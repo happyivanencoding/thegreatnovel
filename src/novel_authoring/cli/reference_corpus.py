@@ -16,6 +16,7 @@ from novel_authoring.reference_corpus.query import (
     QueryPurpose,
     ReferenceCorpusQueryRequest,
     query_reference_corpus,
+    reference_corpus_runtime_diagnostic,
 )
 from novel_authoring.reference_corpus.semantic import (
     SemanticCorpusError,
@@ -140,6 +141,21 @@ def corpus_status_command(
         raise typer.Exit(code=2) from exc
 
 
+@corpus_app.command("diagnostic")
+def corpus_diagnostic_command(
+    corpus_root: Path | None = typer.Option(
+        None, "--corpus-root", help="可选；默认使用配置或 NOVEL_REFERENCE_CORPUS_ROOT"
+    ),
+) -> None:
+    """显示当前 runtime 的 machine package readiness 与 identity。"""
+
+    try:
+        _emit(reference_corpus_runtime_diagnostic(corpus_root=corpus_root))
+    except (OSError, ValueError, TypeError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+
+
 @corpus_app.command("semantic-validate")
 def corpus_semantic_validate_command(
     corpus_root: Path = typer.Option(..., "--corpus-root", exists=True, file_okay=False),
@@ -249,6 +265,7 @@ __all__ = [
     "corpus_validate_command",
     "corpus_validate_selection_command",
     "corpus_status_command",
+    "corpus_diagnostic_command",
     "corpus_audit_command",
     "corpus_compile_command",
     "corpus_confirm_sources_command",

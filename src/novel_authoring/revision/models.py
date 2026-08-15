@@ -194,6 +194,27 @@ class RevisionUnit(BaseModel):
     status: Literal["PLANNED", "DRAFTED", "VALIDATED", "COMMITTED", "REJECTED"] = "PLANNED"
 
 
+class RevisionStrategy(BaseModel):
+    """只描述 HOW 的、带 planning snapshot provenance 的改写策略。"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    unit_id: str
+    campaign_id: str
+    edition_id: str
+    planning_task_id: str
+    planning_snapshot_id: str | None = None
+    planning_snapshot_hash: str | None = None
+    strategy_summary: str = Field(min_length=1)
+    structural_moves: list[str] = Field(min_length=1)
+    reader_effect_targets: list[str] = Field(default_factory=list)
+    preserve_strategy: list[str] = Field(min_length=1)
+    failure_modes_to_avoid: list[str] = Field(default_factory=list)
+    reference_card_ids_used: list[str] = Field(default_factory=list)
+    actual_scene_functions: list[str] = Field(default_factory=list)
+    usage: Literal["REFERENCE_ONLY"] = "REFERENCE_ONLY"
+
+
 class RevisionDraftOutput(BaseModel):
     """改写草稿的唯一允许输出合同；不等同于普通续写 DraftOutput。"""
 

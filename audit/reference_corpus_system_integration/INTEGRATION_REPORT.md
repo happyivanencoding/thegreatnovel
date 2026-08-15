@@ -61,3 +61,27 @@ full Prose DNA。
 - Draft、Original、Continuation planning、Revision workflow 回归通过。
 - `ruff` 针对任务文件通过。
 - 真实浏览器验证受当前工具能力限制，见 [WEB_SMOKE_TEST.md](WEB_SMOKE_TEST.md)。
+
+## Closure addendum — 2026-08-15（Closure Fix）
+
+本节为本轮 closure 的追加状态，不覆盖上面的 P0–P6 结论。当前进程
+`NOVEL_REFERENCE_CORPUS_ROOT=<unset>`，新证据全部来自 pytest `tmp_path` 下的 disposable
+machine package；没有 production Corpus 或 browser 证据。
+
+本轮修复后的关键变化：
+
+- Revision 的顺序固定为 `Impact/Audit → RevisionUnit → PLANNING → RevisionStrategy`；
+  `Impact` 阶段的 Reference Query 调用数保持为 0。
+- `selected_card_ids → RevisionStrategy.reference_card_ids_used → Revision Draft task`
+  已成为有 typed contract、snapshot provenance 和 `REFERENCE_ONLY` 标记的真实消费链。
+- PLANNING 不再把 prose-only `scene_functions` 当作 mechanism/contrast 检索过滤条件；
+  目标章节 scene functions 保留在 planning inputs，并在 PROSE 阶段按真实章节/节奏/策略
+  选择。
+- Revision metadata 从 Effective Contract payload、target chapter/rhythm/payoff/debt 和
+  Impact shape 自动构造；RevisionSpec 显式值只作 augment。Continuation 的 state-derived
+  controlled tags、Original 的 payload extraction、machine readiness、bundle hash 和
+  snapshot self-integrity 均有回归覆盖。
+
+详细的 Issue A–H（按本轮 closure 请求的定义）逐项记录见
+[CLOSURE_REVIEW.md](CLOSURE_REVIEW.md)。`REAL_BROWSER=BLOCKED` 仍保持不变，P0 继续不能
+写成 FULL PASS；生产 Corpus 也继续不能由 disposable 证据代替。
