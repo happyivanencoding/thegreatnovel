@@ -35,6 +35,7 @@ class Settings(BaseModel):
 
     default_mode: str = "faithful_continuation"
     recent_full_chapters: int = 3
+    reference_corpus_root: Path | None = None
     ingest: IngestConfig
     metrics: dict[str, Any] = Field(default_factory=dict)
     rhythm: dict[str, Any] = Field(default_factory=dict)

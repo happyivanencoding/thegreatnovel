@@ -7,6 +7,7 @@ knowledge; they do not own Canon, author intent, candidate approval, or prose.
 
 from __future__ import annotations
 
+import re
 from enum import StrEnum
 from typing import Annotated, Literal
 
@@ -15,6 +16,8 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from novel_authoring.progression.models import PayoffChannel, ReaderExperience
 from novel_authoring.reference_corpus.models import CardKnowledgeLevel
 from novel_authoring.serial_kernel.models import NarrativeDrive
+
+_CHINESE_TEXT_RE = re.compile(r"[\u3400-\u9fff]")
 
 
 class SemanticStatus(StrEnum):
@@ -38,6 +41,52 @@ class EvidenceScope(StrEnum):
     PILOT_TWO_BOOK = "PILOT_TWO_BOOK"
     MULTI_BOOK = "MULTI_BOOK"
     MULTI_CATEGORY = "MULTI_CATEGORY"
+
+
+class AntiBiasChecks(BaseModel):
+    """Fixed semantic gates for a single-book DNA card.
+
+    The field names are part of the V1 contract.  They intentionally use
+    machine-safe snake_case names instead of the old human-readable labels.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    payoff_removal: Literal["PASS", "FAIL", "UNKNOWN"]
+    constraint_subtraction: Literal["PASS", "FAIL", "UNKNOWN"]
+    professional_operations_replacement: Literal["PASS", "FAIL", "UNKNOWN"]
+    governance_default: Literal["PASS", "FAIL", "UNKNOWN"]
+    responsibility_default: Literal["PASS", "FAIL", "UNKNOWN"]
+    cost_necessity: Literal["PASS", "FAIL", "UNKNOWN"]
+    pure_upside: Literal["PASS", "FAIL", "UNKNOWN"]
+
+    def values(self) -> tuple[str, ...]:
+        return tuple(str(value) for value in self.model_dump(mode="json").values())
+
+
+_COVERAGE_LIMIT_MARKERS = (
+    "覆盖",
+    "范围",
+    "样本",
+    "证据",
+    "限制",
+    "局部",
+    "未见",
+    "未覆盖",
+    "不足",
+    "未知",
+    "不确定",
+    "coverage",
+    "sample",
+    "evidence",
+    "limitation",
+    "unknown",
+)
+
+
+def _mentions_coverage_limit(reason: str) -> bool:
+    lowered = reason.casefold()
+    return any(marker.casefold() in lowered for marker in _COVERAGE_LIMIT_MARKERS)
 
 
 class EvidenceRef(BaseModel):
@@ -124,12 +173,19 @@ class BookDnaCard(SemanticCardBase):
     failure_fatigue_risks: list[str] = Field(min_length=1)
     transferable_variables: list[str] = Field(min_length=1)
     transfer_boundary: str = Field(min_length=1)
-    anti_bias_checks: dict[str, Literal["PASS", "FAIL", "UNKNOWN"]]
+    anti_bias_checks: AntiBiasChecks
 
     @model_validator(mode="after")
     def validate_book_identity(self) -> BookDnaCard:
         if self.source_book_id not in self.source_book_ids:
             raise ValueError("Book DNA 的 source_book_id 必须属于 source_book_ids")
+        results = self.anti_bias_checks.values()
+        if "FAIL" in results and not (
+            self.rewrite_required or self.status is SemanticStatus.STALE
+        ):
+            raise ValueError("AntiBiasChecks 存在 FAIL 时必须 rewrite_required 或标记 STALE")
+        if "UNKNOWN" in results and not _mentions_coverage_limit(self.rewrite_reason):
+            raise ValueError("AntiBiasChecks 存在 UNKNOWN 时 rewrite_reason 必须说明覆盖限制")
         return self
 
 
@@ -234,6 +290,40 @@ class ProseDnaCard(SemanticCardBase):
         return self
 
 
+class ProseControlCard(SemanticCardBase):
+    """Cross-book, abstract prose guidance for reference-only retrieval."""
+
+    card_type: Literal["prose-control"]
+    control_topic: str = Field(min_length=1, max_length=160)
+    applicable_scene_functions: list[str] = Field(min_length=1)
+    guidance: str = Field(min_length=1, max_length=360)
+    variants: list[str] = Field(min_length=1)
+    when_to_use: list[str] = Field(min_length=1)
+    failure_signals: list[str] = Field(min_length=1)
+    transfer_boundary: str = Field(min_length=1, max_length=360)
+
+    @model_validator(mode="after")
+    def validate_prose_control(self) -> ProseControlCard:
+        if self.maturity is not SemanticMaturity.PILOT:
+            if len(set(self.source_book_ids)) < 4:
+                raise ValueError("General Prose Control 至少需要 4 本 distinct books")
+            if len(set(self.category_ids)) < 3:
+                raise ValueError("General Prose Control 至少需要 3 个 distinct categories")
+        text_fields = (
+            self.control_topic,
+            self.guidance,
+            *self.variants,
+            *self.when_to_use,
+            *self.failure_signals,
+            self.transfer_boundary,
+        )
+        if any(not _CHINESE_TEXT_RE.search(value) for value in text_fields):
+            raise ValueError("Prose Control 的抽象内容必须使用中文")
+        if any(len(value) > 360 for value in self.variants):
+            raise ValueError("Prose Control 不得保存长引文或长段来源文本")
+        return self
+
+
 class ArcObservationCard(SemanticCardBase):
     card_type: Literal["arc-observation"]
     source_book_id: str = Field(min_length=1)
@@ -333,6 +423,7 @@ SemanticCard = Annotated[
     ReferenceBookCard
     | BookDnaCard
     | ProseDnaCard
+    | ProseControlCard
     | ArcObservationCard
     | AtomicObservationCard
     | MechanismCard
@@ -344,6 +435,7 @@ SemanticCard = Annotated[
 
 __all__ = [
     "ArcObservationCard",
+    "AntiBiasChecks",
     "AtomicObservationCard",
     "BookDnaCard",
     "ContrastCard",
@@ -353,6 +445,7 @@ __all__ = [
     "EvidenceScope",
     "MechanismCard",
     "ProseDnaCard",
+    "ProseControlCard",
     "ProseObservations",
     "ProseSceneWindow",
     "ProseSoftControls",

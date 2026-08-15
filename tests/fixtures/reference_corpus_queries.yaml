@@ -13,6 +13,14 @@
   payoff_channels: [POWER_BREAKTHROUGH, MASTERY]
   expected_card_families: [mechanism-card, contrast-card, observation]
   forbidden_failure_modes: [keyword_only, mandatory_cost, unsupported_universal_rule]
+- query_id: first-payoff
+  creative_problem: 长篇第一次真正兑现读者承诺时如何区分 signal、advantage、verification 与 meaningful payoff
+  reader_experiences: [PROGRESSION, POWER_VERIFICATION]
+  narrative_drives: [ABILITY_PROGRESSION, POWER_PROGRESSION]
+  payoff_channels: [NEW_ABILITY, POWER_BREAKTHROUGH, RESOURCE_GAIN]
+  expected_gap: true
+  expected_card_families: []
+  forbidden_failure_modes: [ability_as_payoff, keyword_only, fake_gap_closure]
 - query_id: first-ability
   creative_problem: 第一次能力获得后如何立刻让读者看见行动空间扩大
   reader_experiences: [ARTIFACT_OR_ABILITY, POWER_VERIFICATION]

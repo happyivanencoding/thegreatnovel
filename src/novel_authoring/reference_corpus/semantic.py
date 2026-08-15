@@ -29,6 +29,7 @@ from novel_authoring.reference_corpus.semantic_models import (
     CorpusSynthesisCard,
     EvidenceRef,
     MechanismCard,
+    ProseControlCard,
     ProseDnaCard,
     ReferenceBookCard,
     SemanticCard,
@@ -43,6 +44,7 @@ SEMANTIC_CARD_DIRS = (
     "books",
     "book-dna",
     "prose-dna",
+    "prose-controls",
     "arcs",
     "observations",
     "mechanisms",
@@ -122,7 +124,11 @@ def _card_paths(corpus_root: Path) -> list[Path]:
     for relative_dir in SEMANTIC_CARD_DIRS:
         directory = corpus_root / relative_dir
         if directory.is_dir():
-            paths.extend(sorted(directory.rglob("*.md"), key=lambda item: item.as_posix()))
+            paths.extend(
+                path
+                for path in sorted(directory.rglob("*.md"), key=lambda item: item.as_posix())
+                if path.name.casefold() != "readme.md"
+            )
     return paths
 
 
@@ -381,6 +387,17 @@ def _validate_card_specific(card: SemanticCard, errors: list[str]) -> None:
             errors.append(f"{card.card_id}: Prose DNA knowledge_level 错误")
         if card.source_style_leakage_check != "PASS":
             errors.append(f"{card.card_id}: Prose DNA source-style leakage check 未通过")
+    if isinstance(card, ProseControlCard):
+        if card.knowledge_level not in {
+            CardKnowledgeLevel.CROSS_BOOK_CONTRAST,
+            CardKnowledgeLevel.CORPUS_SYNTHESIS,
+        }:
+            errors.append(f"{card.card_id}: Prose Control knowledge_level 必须是跨书层级")
+        if card.maturity is not SemanticMaturity.PILOT:
+            if len(declared) < 4:
+                errors.append(f"{card.card_id}: General Prose Control 至少需要 4 本书")
+            if len(set(card.category_ids)) < 3:
+                errors.append(f"{card.card_id}: General Prose Control 至少需要 3 个类别")
     if isinstance(card, CorpusSynthesisCard):
         if card.knowledge_level is not CardKnowledgeLevel.CORPUS_SYNTHESIS:
             errors.append(f"{card.card_id}: Synthesis knowledge_level 错误")
@@ -414,7 +431,130 @@ def _raw_leakage(corpus_root: Path, errors: list[str]) -> None:
             errors.append(f"存在来源正文文件：{path}")
 
 
-def validate_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
+def _machine_state(
+    root: Path,
+) -> tuple[bool, list[SemanticCard], list[str]]:
+    """Read the optional compiled package once for validation/readiness checks."""
+
+    package_path = root / "machine" / "corpus-package.json"
+    cards_path = root / "machine" / "cards.jsonl"
+    if not package_path.is_file() or not cards_path.is_file():
+        return False, [], []
+    errors: list[str] = []
+    try:
+        package = json.loads(package_path.read_text(encoding="utf-8"))
+        if not isinstance(package, dict):
+            raise ValueError("package 根节点不是 object")
+        if package.get("schema_version") != MACHINE_PACKAGE_VERSION:
+            raise ValueError("package schema_version 不正确")
+        lines = [line for line in cards_path.read_text(encoding="utf-8").splitlines() if line]
+        cards = [
+            SEMANTIC_CARD_ADAPTER.validate_python(json.loads(line))
+            for line in lines
+        ]
+    except (
+        OSError,
+        UnicodeError,
+        json.JSONDecodeError,
+        ValidationError,
+        TypeError,
+        ValueError,
+    ) as exc:
+        errors.append(f"machine package 无法按统一 contract 解析：{exc}")
+        return False, [], errors
+    return True, cards, errors
+
+
+def _is_cross_book_card(card: SemanticCard) -> bool:
+    return len(set(card.source_book_ids)) > 1 or card.knowledge_level in {
+        CardKnowledgeLevel.CROSS_BOOK_CONTRAST,
+        CardKnowledgeLevel.CORPUS_SYNTHESIS,
+    }
+
+
+def _stale_card_ids(cards: Sequence[SemanticCard]) -> set[str]:
+    stale = {
+        card.card_id for card in cards if card.status is SemanticStatus.STALE
+    }
+    changed = True
+    while changed:
+        changed = False
+        for card in cards:
+            if card.card_id in stale:
+                continue
+            if any(upstream in stale for upstream in card.depends_on):
+                stale.add(card.card_id)
+                changed = True
+    return stale
+
+
+def _required_stale_cross_book_cards(cards: Sequence[SemanticCard]) -> list[str]:
+    stale = _stale_card_ids(cards)
+    return sorted(
+        card.card_id
+        for card in cards
+        if _is_cross_book_card(card)
+        and card.status is not SemanticStatus.STALE
+        and any(dep in stale for dep in card.depends_on)
+    )
+
+
+def _readiness(
+    root: Path,
+    cards: Sequence[SemanticCard],
+    *,
+    semantic_valid: bool,
+    freeze: dict[str, dict[str, Any]],
+    machine_ready: bool,
+    machine_cards: Sequence[SemanticCard],
+) -> dict[str, Any]:
+    prose_controls = [card for card in cards if isinstance(card, ProseControlCard)]
+    machine_ids = {card.card_id for card in machine_cards}
+    prose_controls_compiled = machine_ready and all(
+        card.card_id in machine_ids for card in prose_controls
+    )
+    stale_required = _required_stale_cross_book_cards(cards)
+    base_ready = (
+        semantic_valid
+        and len(freeze) == 26
+        and not stale_required
+        and prose_controls_compiled
+    )
+    query_ready = base_ready and machine_ready
+    if query_ready:
+        status = "QUERY_READY"
+    elif base_ready:
+        status = "READY_FOR_RETRIEVAL_INTEGRATION"
+    else:
+        status = "NOT_READY"
+    reasons: list[str] = []
+    if not semantic_valid:
+        reasons.append("semantic validation 未通过")
+    if len(freeze) != 26:
+        reasons.append(f"source freeze 需要 26 本，当前 {len(freeze)} 本")
+    if not machine_ready:
+        reasons.append("machine package/cards 尚未可解析")
+    if stale_required:
+        reasons.append("存在活动 cross-book cards 依赖 STALE upstream")
+    if not prose_controls_compiled:
+        reasons.append("Prose Controls 尚未完整 compile 到 machine/cards.jsonl")
+    return {
+        "query_ready": query_ready,
+        "readiness_status": status,
+        "prose_controls_compiled": prose_controls_compiled,
+        "stale_required_cross_book_cards": stale_required,
+        "readiness_reasons": reasons,
+        "machine_cards_parseable": machine_ready,
+        "source_freeze_count": len(freeze),
+        "corpus_root": str(root),
+    }
+
+
+def validate_semantic_corpus(
+    corpus_root: Path,
+    *,
+    include_machine: bool = True,
+) -> dict[str, Any]:
     """Validate V1 Markdown contracts and evidence without touching GBrain."""
 
     root = _resolved(corpus_root)
@@ -444,26 +584,20 @@ def validate_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         if card.status not in {SemanticStatus.REFERENCE_ONLY, SemanticStatus.STALE}:
             errors.append(f"{card.card_id}: status 不是 reference-only 边界")
     _raw_leakage(root, errors)
-    machine_path = root / "machine" / "cards.jsonl"
-    if machine_path.is_file():
-        try:
-            machine_lines = [
-                line
-                for line in machine_path.read_text(encoding="utf-8").splitlines()
-                if line
-            ]
-            for line in machine_lines:
-                SEMANTIC_CARD_ADAPTER.validate_python(json.loads(line))
-        except (
-            OSError,
-            UnicodeError,
-            json.JSONDecodeError,
-            ValidationError,
-            TypeError,
-            ValueError,
-        ) as exc:
-            errors.append(f"machine/cards.jsonl 无法按统一 contract 解析：{exc}")
+    if include_machine:
+        machine_ready, machine_cards, machine_errors = _machine_state(root)
+        errors.extend(machine_errors)
+    else:
+        machine_ready, machine_cards = False, []
     stats = semantic_stats(card_values, manifests)
+    readiness = _readiness(
+        root,
+        card_values,
+        semantic_valid=not errors,
+        freeze=freeze,
+        machine_ready=machine_ready,
+        machine_cards=machine_cards,
+    )
     return {
         "valid": not errors,
         "corpus_root": str(root),
@@ -471,6 +605,7 @@ def validate_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         "errors": errors,
         "warnings": warnings,
         "stats": stats,
+        **readiness,
     }
 
 
@@ -494,7 +629,7 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         )
     card_values = [item[0] for item in cards]
     manifests = _source_manifests(root, card_values)
-    validation = validate_semantic_corpus(root)
+    validation = validate_semantic_corpus(root, include_machine=False)
     if not validation["valid"]:
         raise SemanticCorpusError(
             "无法 compile 未通过 evidence/schema validation 的 Corpus：\n"
@@ -548,6 +683,14 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         ),
     )
     stats = semantic_stats(card_values, manifests)
+    readiness = _readiness(
+        root,
+        card_values,
+        semantic_valid=True,
+        freeze=_load_source_freeze(root),
+        machine_ready=True,
+        machine_cards=card_values,
+    )
     package = {
         "schema_version": MACHINE_PACKAGE_VERSION,
         "status": "REFERENCE_ONLY",
@@ -556,6 +699,9 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         "canon_committed": False,
         "edition_activated": False,
         "source_freeze": freeze_result,
+        "query_ready": readiness["query_ready"],
+        "readiness_status": readiness["readiness_status"],
+        "prose_controls_compiled": readiness["prose_controls_compiled"],
         "paths": {
             "cards": "machine/cards.jsonl",
             "evidence": "machine/evidence.jsonl",
@@ -565,7 +711,9 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         "counts": {
             "cards": len(card_values),
             "prose_dna": stats["prose_dna"],
-            "evidence": len(evidence_by_id),
+            "prose_controls": stats["prose_controls"],
+            "unique_evidence_rows": len(evidence_by_id),
+            "evidence_reference_count": stats["evidence_reference_count"],
             "dependencies": len(dependency_rows),
         },
         "stats": stats,
@@ -577,8 +725,11 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         "corpus_root": str(root),
         "package_path": str(package_path),
         "card_count": len(card_values),
-        "evidence_count": len(evidence_by_id),
+        "unique_evidence_rows": len(evidence_by_id),
+        "evidence_reference_count": stats["evidence_reference_count"],
         "dependency_count": len(dependency_rows),
+        "query_ready": readiness["query_ready"],
+        "readiness_status": readiness["readiness_status"],
         "paths": package["paths"],
     }
 
@@ -604,10 +755,31 @@ def semantic_stats(
     )
     payoff_counts = Counter(channel.value for card in cards for channel in card.payoff_channels)
     source_concentration = Counter(source for card in cards for source in card.source_book_ids)
+    evidence_references = [ref for card in cards for ref in _all_evidence_refs(card)]
+    anti_bias_fields = (
+        "payoff_removal",
+        "constraint_subtraction",
+        "professional_operations_replacement",
+        "governance_default",
+        "responsibility_default",
+        "cost_necessity",
+        "pure_upside",
+    )
+    anti_bias_distribution = {
+        field: dict(
+            Counter(
+                getattr(card.anti_bias_checks, field)
+                for card in cards
+                if isinstance(card, BookDnaCard)
+            )
+        )
+        for field in anti_bias_fields
+    }
     return {
         "reference_books": type_counts.get("reference-book", 0),
         "book_dna": type_counts.get("book-dna", 0),
         "prose_dna": type_counts.get("prose-dna", 0),
+        "prose_controls": type_counts.get("prose-control", 0),
         "arcs": type_counts.get("arc-observation", 0),
         "contiguous_arcs": span_counts.get(SpanKind.CONTIGUOUS_ARC.value, 0),
         "longitudinal_trajectories": span_counts.get(SpanKind.LONGITUDINAL_TRAJECTORY.value, 0),
@@ -633,9 +805,21 @@ def semantic_stats(
         "reader_experience_coverage": dict(sorted(experience_counts.items())),
         "payoff_channel_coverage": dict(sorted(payoff_counts.items())),
         "source_concentration": dict(source_concentration.most_common()),
-        "evidence_count": sum(len(_all_evidence_refs(card)) for card in cards),
+        "unique_evidence_rows": len({ref.evidence_id for ref in evidence_references}),
+        "evidence_reference_count": len(evidence_references),
         "dependency_count": sum(len(card.depends_on) for card in cards),
         "manifest_count": len(manifests or {}),
+        "anti_bias_check_distribution": anti_bias_distribution,
+        "book_dna_rewrite_required": sum(
+            1 for card in cards if isinstance(card, BookDnaCard) and card.rewrite_required
+        ),
+        "stale_card_count": sum(
+            1 for card in cards if card.status is SemanticStatus.STALE
+        ),
+        "stale_required_cross_book_card_count": len(
+            _required_stale_cross_book_cards(cards)
+        ),
+        "lens_mentions": _lens_counts(cards),
     }
 
 
@@ -646,7 +830,7 @@ def _card_text(card: SemanticCard) -> str:
 def _lens_counts(cards: Sequence[SemanticCard]) -> dict[str, int]:
     dna = [card for card in cards if isinstance(card, BookDnaCard)]
     return {
-        lens: sum(
+        f"{lens}_mentions": sum(
             any(term in _card_text(card) for term in terms)
             for card in dna
         )
@@ -677,6 +861,7 @@ def _write_audit_reports(root: Path, result: dict[str, Any]) -> dict[str, str]:
         ("Reference Books", "reference_books"),
         ("Book DNA", "book_dna"),
         ("Prose DNA", "prose_dna"),
+        ("Prose Controls", "prose_controls"),
         ("Arc Observations", "arcs"),
         ("CONTIGUOUS_ARC", "contiguous_arcs"),
         ("LONGITUDINAL_TRAJECTORY", "longitudinal_trajectories"),
@@ -686,7 +871,8 @@ def _write_audit_reports(root: Path, result: dict[str, Any]) -> dict[str, str]:
         ("Category Syntheses", "category_syntheses"),
         ("Cross-category Syntheses", "cross_category_syntheses"),
         ("Machine Cards", "machine_cards"),
-        ("Evidence rows", "evidence_count"),
+        ("Unique evidence rows", "unique_evidence_rows"),
+        ("Evidence references", "evidence_reference_count"),
         ("Dependency rows", "dependency_count"),
     )
     audit_lines.extend(f"- {label}: {stats[key]}" for label, key in labels)
@@ -710,12 +896,25 @@ def _write_audit_reports(root: Path, result: dict[str, Any]) -> dict[str, str]:
             + "`",
             f"- missing creative problems: {', '.join(missing) if missing else '无'}",
             "",
-            "## Lens coverage（诊断，不是总分）",
+            "## Lens mentions（诊断，不是总分）",
             "",
         ]
     )
     audit_lines.extend(
         f"- {name}: {count} / {stats['book_dna']} Book DNA" for name, count in lens.items()
+    )
+    audit_lines.extend(["", "## AntiBiasChecks 分布", ""])
+    for field, distribution in stats["anti_bias_check_distribution"].items():
+        audit_lines.append(
+            f"- {field}: "
+            + json.dumps(distribution, ensure_ascii=False, sort_keys=True)
+        )
+    audit_lines.extend(
+        [
+            f"- rewrite_required Book DNA: {stats['book_dna_rewrite_required']}",
+            f"- STALE cards: {stats['stale_card_count']}",
+            f"- STALE required cross-book cards: {stats['stale_required_cross_book_card_count']}",
+        ]
     )
     audit_lines.extend(
         [
@@ -748,11 +947,11 @@ def _write_audit_reports(root: Path, result: dict[str, Any]) -> dict[str, str]:
         "",
         "## 1–5. 当前镜头分布",
         "",
-        f"1. governance-heavy Book DNA: {lens['governance']}",
-        f"2. responsibility-heavy Book DNA: {lens['responsibility']}",
-        f"3. constraint-heavy Book DNA: {lens['constraint']}",
-        f"4. cost-heavy Book DNA: {lens['cost']}",
-        f"5. scarcity-heavy Book DNA: {lens['scarcity']}",
+        f"1. governance_mentions: {lens['governance_mentions']}",
+        f"2. responsibility_mentions: {lens['responsibility_mentions']}",
+        f"3. constraint_mentions: {lens['constraint_mentions']}",
+        f"4. cost_mentions: {lens['cost_mentions']}",
+        f"5. scarcity_mentions: {lens['scarcity_mentions']}",
         "",
         "## 正向体验覆盖",
         "",
@@ -768,9 +967,24 @@ def _write_audit_reports(root: Path, result: dict[str, Any]) -> dict[str, str]:
         "无选择影响时允许 `NOT_MATERIAL`。",
         "- 奖励是否自动制造新稀缺：由 `Pure Upside Check` 与 payoff_grammar 逐项记录。",
         "",
-        "## 需要 rewrite 的 Book DNA",
+        "## AntiBiasChecks 分布 / 状态计数",
         "",
     ]
+    bias_lines.extend(
+        f"- {field}: "
+        + json.dumps(distribution, ensure_ascii=False, sort_keys=True)
+        for field, distribution in stats["anti_bias_check_distribution"].items()
+    )
+    bias_lines.extend(
+        [
+            f"- rewrite_required Book DNA: {stats['book_dna_rewrite_required']}",
+            f"- STALE cards: {stats['stale_card_count']}",
+            f"- STALE required cross-book cards: {stats['stale_required_cross_book_card_count']}",
+            "",
+            "## 需要 rewrite 的 Book DNA",
+            "",
+        ]
+    )
     if rewrites:
         bias_lines.extend(f"- `{card.card_id}`：{card.rewrite_reason}" for card in rewrites)
     else:
@@ -806,9 +1020,13 @@ def stats_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
     if errors:
         raise SemanticCorpusError("无法统计未能解析的 V1 cards：\n" + "\n".join(errors))
     manifests = _source_manifests(root, [card for card, _path, _body in cards])
+    validation = validate_semantic_corpus(root)
     return {
         "corpus_root": str(root),
         **semantic_stats([card for card, _path, _body in cards], manifests),
+        "query_ready": validation["query_ready"],
+        "readiness_status": validation["readiness_status"],
+        "prose_controls_compiled": validation["prose_controls_compiled"],
     }
 
 
@@ -819,6 +1037,46 @@ def _query_values(value: str | Sequence[str] | None) -> set[str]:
     return {str(item).strip().casefold() for item in values if str(item).strip()}
 
 
+def _record_is_cross_book(record: dict[str, Any]) -> bool:
+    source_ids = {str(item) for item in record.get("source_book_ids", [])}
+    return len(source_ids) > 1 or str(record.get("knowledge_level")) in {
+        CardKnowledgeLevel.CROSS_BOOK_CONTRAST.value,
+        CardKnowledgeLevel.CORPUS_SYNTHESIS.value,
+    }
+
+
+def _record_representative_source(record: dict[str, Any]) -> str:
+    evidence_refs = record.get("evidence_refs", [])
+    if isinstance(evidence_refs, list):
+        for ref in evidence_refs:
+            if isinstance(ref, dict) and ref.get("source_book_id"):
+                return str(ref["source_book_id"])
+    sources = record.get("source_book_ids", [])
+    if isinstance(sources, list) and sources:
+        return str(sources[0])
+    return "UNKNOWN"
+
+
+def _record_stale_ids(records: Sequence[dict[str, Any]]) -> set[str]:
+    stale = {
+        str(record["card_id"])
+        for record in records
+        if record.get("status") == SemanticStatus.STALE.value and record.get("card_id")
+    }
+    changed = True
+    while changed:
+        changed = False
+        for record in records:
+            card_id = str(record.get("card_id", ""))
+            if not card_id or card_id in stale:
+                continue
+            depends_on = record.get("depends_on", [])
+            if isinstance(depends_on, list) and any(str(item) in stale for item in depends_on):
+                stale.add(card_id)
+                changed = True
+    return stale
+
+
 def retrieve_metadata_candidates(
     corpus_root: Path,
     *,
@@ -826,6 +1084,8 @@ def retrieve_metadata_candidates(
     reader_experiences: Sequence[str] | None = None,
     narrative_drives: Sequence[str] | None = None,
     payoff_channels: Sequence[str] | None = None,
+    scene_functions: Sequence[str] | None = None,
+    card_families: Sequence[str] | None = None,
     max_cards: int = 6,
 ) -> list[dict[str, Any]]:
     """Return metadata-prefiltered candidates without embedding or literary scoring."""
@@ -839,7 +1099,9 @@ def retrieve_metadata_candidates(
     experiences = _query_values(reader_experiences)
     drives = _query_values(narrative_drives)
     payoffs = _query_values(payoff_channels)
-    records: list[tuple[int, dict[str, Any]]] = []
+    scenes = _query_values(scene_functions)
+    allowed_families = {str(item) for item in card_families or ()}
+    parsed_records: list[dict[str, Any]] = []
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line:
             continue
@@ -849,6 +1111,21 @@ def retrieve_metadata_candidates(
             )
         except (json.JSONDecodeError, TypeError, ValidationError, ValueError) as exc:
             raise SemanticCorpusError("machine package 存在无法解析的 card") from exc
+        parsed_records.append(record)
+    stale_ids = _record_stale_ids(parsed_records)
+    records: list[tuple[int, dict[str, Any]]] = []
+    for record in parsed_records:
+        card_type = str(record.get("card_type", ""))
+        if allowed_families and card_type not in allowed_families:
+            continue
+        if record.get("status") == SemanticStatus.STALE.value:
+            continue
+        if card_type == "book-dna" and record.get("rewrite_required") is True:
+            continue
+        if _record_is_cross_book(record) and any(
+            str(upstream) in stale_ids for upstream in record.get("depends_on", [])
+        ):
+            continue
         fields = {
             "creative_problem_tags": {
                 str(item).casefold() for item in record.get("creative_problem_tags", [])
@@ -862,6 +1139,10 @@ def retrieve_metadata_candidates(
             "payoff_channels": {
                 str(item).casefold() for item in record.get("payoff_channels", [])
             },
+            "scene_functions": {
+                str(item).casefold()
+                for item in record.get("applicable_scene_functions", [])
+            },
         }
         matches = sum(
             bool(query & fields[name])
@@ -870,9 +1151,10 @@ def retrieve_metadata_candidates(
                 (experiences, "reader_experiences"),
                 (drives, "narrative_drives"),
                 (payoffs, "payoff_channels"),
+                (scenes, "scene_functions"),
             )
         )
-        if any((problems, experiences, drives, payoffs)) and matches == 0:
+        if any((problems, experiences, drives, payoffs, scenes)) and matches == 0:
             continue
         record["metadata_match_fields"] = [
             name
@@ -881,6 +1163,7 @@ def retrieve_metadata_candidates(
                 (experiences, "reader_experiences"),
                 (drives, "narrative_drives"),
                 (payoffs, "payoff_channels"),
+                (scenes, "scene_functions"),
             )
             if query & fields[name]
         ]
@@ -895,8 +1178,7 @@ def retrieve_metadata_candidates(
     result: list[dict[str, Any]] = []
     source_counts: Counter[str] = Counter()
     for _matches, record in records:
-        sources = [str(item) for item in record.get("source_book_ids", [])]
-        primary = sources[0] if sources else "UNKNOWN"
+        primary = _record_representative_source(record)
         if source_counts[primary] >= 2:
             continue
         source_counts[primary] += 1
@@ -908,9 +1190,7 @@ def retrieve_metadata_candidates(
 
 def source_diversity_guard(records: Sequence[dict[str, Any]], max_per_source: int = 2) -> bool:
     counts: Counter[str] = Counter(
-        str(source)
-        for record in records
-        for source in record.get("source_book_ids", [])[:1]
+        _record_representative_source(record) for record in records
     )
     return all(count <= max_per_source for count in counts.values())
 

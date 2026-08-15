@@ -9,8 +9,14 @@ from __future__ import annotations
 from pathlib import Path
 
 import typer
+from pydantic import ValidationError
 
 from novel_authoring.cli.legacy import _emit, app
+from novel_authoring.reference_corpus.query import (
+    QueryPurpose,
+    ReferenceCorpusQueryRequest,
+    query_reference_corpus,
+)
 from novel_authoring.reference_corpus.semantic import (
     SemanticCorpusError,
     audit_semantic_corpus,
@@ -192,6 +198,36 @@ def corpus_stats_command(
         raise typer.Exit(code=2) from exc
 
 
+@corpus_app.command("query")
+def corpus_query_command(
+    purpose: QueryPurpose = typer.Option(..., "--purpose", help="PLANNING 或 PROSE"),
+    creative_problem: str = typer.Option("", "--creative-problem"),
+    reader_experiences: list[str] = typer.Option([], "--reader-experience"),
+    narrative_drives: list[str] = typer.Option([], "--narrative-drive"),
+    payoff_channels: list[str] = typer.Option([], "--payoff-channel"),
+    scene_functions: list[str] = typer.Option([], "--scene-function"),
+    max_cards: int = typer.Option(6, "--max-cards", min=3, max=8),
+    corpus_root: Path | None = typer.Option(None, "--corpus-root"),
+) -> None:
+    """通过唯一 query seam 获取 compact Reference-only 建议。"""
+
+    try:
+        request = ReferenceCorpusQueryRequest(
+            purpose=purpose,
+            creative_problem=creative_problem,
+            reader_experiences=reader_experiences,
+            narrative_drives=narrative_drives,
+            payoff_channels=payoff_channels,
+            scene_functions=scene_functions,
+            max_cards=max_cards,
+        )
+        result = query_reference_corpus(request, corpus_root=corpus_root)
+        _emit(result.model_dump(mode="json"))
+    except (ValidationError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+
+
 @corpus_app.command("confirm-sources")
 def corpus_confirm_sources_command(
     corpus_root: Path = typer.Option(..., "--corpus-root", exists=True, file_okay=False),
@@ -216,4 +252,5 @@ __all__ = [
     "corpus_confirm_sources_command",
     "corpus_semantic_validate_command",
     "corpus_stats_command",
+    "corpus_query_command",
 ]

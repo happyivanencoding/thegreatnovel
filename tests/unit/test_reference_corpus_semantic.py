@@ -15,6 +15,7 @@ from novel_authoring.reference_corpus.semantic import (
     validate_semantic_corpus,
 )
 from novel_authoring.reference_corpus.semantic_models import (
+    AntiBiasChecks,
     BookDnaCard,
     EvidenceScope,
     SemanticMaturity,
@@ -88,13 +89,13 @@ def _book_dna_payload(source_book_id: str = "book-01") -> dict[str, object]:
             "transferable_variables": ["突破可见度", "行动空间扩张", "探索窗口"],
             "transfer_boundary": "只迁移变量，不迁移来源身份、事件、专名或句式。",
             "anti_bias_checks": {
-                "Payoff Removal": "PASS",
-                "Constraint Subtraction": "PASS",
-                "Professional Operations Replacement": "PASS",
-                "Governance Default": "PASS",
-                "Responsibility Default": "PASS",
-                "Cost Necessity": "PASS",
-                "Pure Upside": "PASS",
+                "payoff_removal": "PASS",
+                "constraint_subtraction": "PASS",
+                "professional_operations_replacement": "PASS",
+                "governance_default": "PASS",
+                "responsibility_default": "PASS",
+                "cost_necessity": "PASS",
+                "pure_upside": "PASS",
             },
         }
     )
@@ -108,6 +109,31 @@ def test_pure_upside_book_dna_and_existing_enums_are_valid() -> None:
     assert card.narrative_drives == [NarrativeDrive.POWER_PROGRESSION]
     assert card.payoff_channels == [PayoffChannel.POWER_BREAKTHROUGH]
     assert card.status is SemanticStatus.REFERENCE_ONLY
+
+
+def test_antibias_checks_are_strict_and_failures_gate_retrieval_readiness() -> None:
+    checks = _book_dna_payload()
+    checks["anti_bias_checks"] = {
+        **checks["anti_bias_checks"],
+        "constraint_subtraction": "FAIL",
+    }
+    with pytest.raises(ValueError, match="rewrite_required"):
+        BookDnaCard.model_validate(checks)
+
+    checks["status"] = "STALE"
+    stale = BookDnaCard.model_validate(checks)
+    assert stale.status is SemanticStatus.STALE
+
+    unknown = _book_dna_payload()
+    unknown["anti_bias_checks"] = {
+        **unknown["anti_bias_checks"],
+        "pure_upside": "UNKNOWN",
+    }
+    unknown["rewrite_reason"] = "当前来源覆盖不足，无法从冻结窗口判断纯上行回报。"
+    assert BookDnaCard.model_validate(unknown).anti_bias_checks.pure_upside == "UNKNOWN"
+
+    with pytest.raises(ValueError, match="extra_forbidden"):
+        AntiBiasChecks.model_validate({**unknown["anti_bias_checks"], "Pure Upside": "PASS"})
 
 
 def test_span_kind_is_explicit() -> None:
@@ -171,6 +197,17 @@ def test_compile_machine_package_and_dependency_stale_status(tmp_path: Path) -> 
     assert manifest_path.read_text(encoding="utf-8")
 
 
+def test_compile_rebuilds_an_old_machine_snapshot(tmp_path: Path) -> None:
+    root = _make_compile_fixture(tmp_path)
+    compile_semantic_corpus(root)
+    (root / "machine/cards.jsonl").write_text('{"card_type": "old-card"}\n', encoding="utf-8")
+
+    result = compile_semantic_corpus(root)
+
+    assert result["valid"] is True
+    assert result["card_count"] == 27
+
+
 def test_semantic_validation_rejects_raw_text_leakage(tmp_path: Path) -> None:
     root = _make_compile_fixture(tmp_path)
     (root / "raw").mkdir()
@@ -214,7 +251,7 @@ def test_invalid_machine_package_is_not_silently_accepted(tmp_path: Path) -> Non
     (root / "machine/cards.jsonl").write_text("{\"card_type\": \"not-real\"}\n", encoding="utf-8")
     result = validate_semantic_corpus(root)
     assert result["valid"] is False
-    assert any("machine/cards.jsonl" in error for error in result["errors"])
+    assert any("machine package" in error for error in result["errors"])
     with pytest.raises(SemanticCorpusError):
         retrieve_metadata_candidates(root, max_cards=3)
 
@@ -226,10 +263,11 @@ def test_retrieval_query_fixture_has_broad_creative_problem_coverage() -> None:
     assert len(queries) >= 30
     assert len({item["query_id"] for item in queries}) == len(queries)
     problems = " ".join(item["creative_problem"] for item in queries)
-    for phrase in ("开篇", "突破", "资源", "世界扩张", "探索", "谜团", "长篇", "结尾"):
+    for phrase in ("开篇", "突破", "资源", "世界扩张", "探索", "谜团", "长篇", "第一次", "结尾"):
         assert phrase in problems
-    assert all(
-        3 <= len(item["expected_card_families"]) <= 4
-        and "keyword_only" in item["forbidden_failure_modes"]
-        for item in queries
-    )
+    for item in queries:
+        assert "keyword_only" in item["forbidden_failure_modes"]
+        if item.get("expected_gap"):
+            assert item["expected_card_families"] == []
+        else:
+            assert 3 <= len(item["expected_card_families"]) <= 4
