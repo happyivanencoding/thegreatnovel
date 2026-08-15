@@ -11,6 +11,14 @@ from pathlib import Path
 import typer
 
 from novel_authoring.cli.legacy import _emit, app
+from novel_authoring.reference_corpus.semantic import (
+    SemanticCorpusError,
+    audit_semantic_corpus,
+    compile_semantic_corpus,
+    confirm_v0_sources,
+    stats_semantic_corpus,
+    validate_semantic_corpus,
+)
 from novel_authoring.reference_corpus.service import (
     ReferenceCorpusError,
     build_inventory,
@@ -126,10 +134,86 @@ def corpus_status_command(
         raise typer.Exit(code=2) from exc
 
 
+@corpus_app.command("semantic-validate")
+def corpus_semantic_validate_command(
+    corpus_root: Path = typer.Option(..., "--corpus-root", exists=True, file_okay=False),
+) -> None:
+    """验证 Semantic Distillation V1 的 Markdown、证据与 reference-only 边界。"""
+
+    try:
+        result = validate_semantic_corpus(corpus_root)
+        _emit(result)
+        if not result["valid"]:
+            raise typer.Exit(code=1)
+    except (SemanticCorpusError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+
+
+@corpus_app.command("compile")
+def corpus_compile_command(
+    corpus_root: Path = typer.Option(..., "--corpus-root", exists=True, file_okay=False),
+) -> None:
+    """把 V1 Markdown 投影编译成 machine package。"""
+
+    try:
+        _emit(compile_semantic_corpus(corpus_root))
+    except (SemanticCorpusError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+
+
+@corpus_app.command("audit")
+def corpus_audit_command(
+    corpus_root: Path = typer.Option(..., "--corpus-root", exists=True, file_okay=False),
+) -> None:
+    """生成 Corpus Semantic Audit 与 Lens Audit 报告。"""
+
+    try:
+        result = audit_semantic_corpus(corpus_root)
+        _emit(result)
+        if not result["valid"]:
+            raise typer.Exit(code=1)
+    except (SemanticCorpusError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+
+
+@corpus_app.command("stats")
+def corpus_stats_command(
+    corpus_root: Path = typer.Option(..., "--corpus-root", exists=True, file_okay=False),
+) -> None:
+    """输出确定性覆盖统计，不计算 literary score。"""
+
+    try:
+        _emit(stats_semantic_corpus(corpus_root))
+    except (SemanticCorpusError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+
+
+@corpus_app.command("confirm-sources")
+def corpus_confirm_sources_command(
+    corpus_root: Path = typer.Option(..., "--corpus-root", exists=True, file_okay=False),
+) -> None:
+    """冻结当前已经实际生成 V0 资产的 26 本来源，不重新运行 selection。"""
+
+    try:
+        _emit(confirm_v0_sources(corpus_root))
+    except (SemanticCorpusError, OSError, ValueError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=2) from exc
+
+
 __all__ = [
     "corpus_init_command",
     "corpus_inventory_command",
     "corpus_validate_command",
     "corpus_validate_selection_command",
     "corpus_status_command",
+    "corpus_audit_command",
+    "corpus_compile_command",
+    "corpus_confirm_sources_command",
+    "corpus_semantic_validate_command",
+    "corpus_stats_command",
 ]

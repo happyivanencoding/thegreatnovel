@@ -1,0 +1,232 @@
+# 仅用于独立元数据检索覆盖测试；不执行 embedding，不保存来源正文。
+- query_id: opening-hook
+  creative_problem: 如何让开篇承诺在首个场景内可见
+  reader_experiences: [PROGRESSION, MYSTERY]
+  narrative_drives: [KNOWLEDGE_PROGRESSION, MYSTERY_INVESTIGATION]
+  payoff_channels: [DISCOVERY, MYSTERY_REVEAL]
+  expected_card_families: [contrast-card, mechanism-card, corpus-synthesis, book-dna]
+  forbidden_failure_modes: [keyword_only, same_source_overflow, opening_without_payoff]
+- query_id: early-loop
+  creative_problem: 如何在早期建立可重复的获得线索到验证兑现循环
+  reader_experiences: [BREAKTHROUGH, POWER_VERIFICATION]
+  narrative_drives: [ABILITY_PROGRESSION, POWER_PROGRESSION]
+  payoff_channels: [POWER_BREAKTHROUGH, MASTERY]
+  expected_card_families: [mechanism-card, contrast-card, observation]
+  forbidden_failure_modes: [keyword_only, mandatory_cost, unsupported_universal_rule]
+- query_id: first-ability
+  creative_problem: 第一次能力获得后如何立刻让读者看见行动空间扩大
+  reader_experiences: [ARTIFACT_OR_ABILITY, POWER_VERIFICATION]
+  narrative_drives: [ABILITY_PROGRESSION, KNOWLEDGE_PROGRESSION]
+  payoff_channels: [NEW_ABILITY, NEW_ARTIFACT, STRATEGIC_ADVANTAGE]
+  expected_card_families: [mechanism-card, contrast-card, book-dna]
+  forbidden_failure_modes: [ability_without_use, keyword_only, same_source_overflow]
+- query_id: first-verification
+  creative_problem: 如何设计第一次能力验证而不是只做能力说明
+  reader_experiences: [POWER_VERIFICATION, COMBAT]
+  narrative_drives: [ABILITY_PROGRESSION, POWER_PROGRESSION]
+  payoff_channels: [COMBAT_DOMINANCE, UNDERDOG_VICTORY]
+  expected_card_families: [contrast-card, mechanism-card, observation]
+  forbidden_failure_modes: [exposition_only, automatic_success_without_signal, keyword_only]
+- query_id: breakthrough
+  creative_problem: 突破如何成为可感知的阶段转换
+  reader_experiences: [BREAKTHROUGH, PROGRESSION]
+  narrative_drives: [POWER_PROGRESSION, SEQUENCE_PROGRESSION]
+  payoff_channels: [POWER_BREAKTHROUGH, TRANSFORMATION]
+  expected_card_families: [mechanism-card, contrast-card, corpus-synthesis]
+  forbidden_failure_modes: [mandatory_cost, cost_as_law, keyword_only]
+- query_id: pure-upside
+  creative_problem: 如何让纯正收益本身推动后续故事而不强行附加代价
+  reader_experiences: [BREAKTHROUGH, RESOURCE_OPPORTUNITY]
+  narrative_drives: [POWER_PROGRESSION, RESOURCE_OPPORTUNITY]
+  payoff_channels: [POWER_BREAKTHROUGH, RESOURCE_GAIN]
+  expected_card_families: [book-dna, mechanism-card, observation]
+  forbidden_failure_modes: [mandatory_cost, scarcity_default, governance_default, keyword_only]
+- query_id: new-use-old-ability
+  creative_problem: 旧能力如何在新场景中产生新用途
+  reader_experiences: [ARTIFACT_OR_ABILITY, EXPLORATION]
+  narrative_drives: [ABILITY_PROGRESSION, WORLD_EXPLORATION]
+  payoff_channels: [NEW_ABILITY, DISCOVERY, STRATEGIC_ADVANTAGE]
+  expected_card_families: [mechanism-card, contrast-card, corpus-synthesis]
+  forbidden_failure_modes: [ability_reset, keyword_only, same_source_overflow]
+- query_id: resource-release
+  creative_problem: 资源释放后如何扩大选择而不是立刻制造新稀缺
+  reader_experiences: [RESOURCE_OPPORTUNITY, PROGRESSION]
+  narrative_drives: [RESOURCE_OPPORTUNITY, POWER_PROGRESSION]
+  payoff_channels: [RESOURCE_GAIN, STRATEGIC_ADVANTAGE]
+  expected_card_families: [contrast-card, mechanism-card, book-dna]
+  forbidden_failure_modes: [scarcity_default, mandatory_cost, keyword_only]
+- query_id: resource-economy
+  creative_problem: 如何描写资源循环而不把资源管理误写成唯一发动机
+  reader_experiences: [RESOURCE_OPPORTUNITY, KNOWLEDGE]
+  narrative_drives: [RESOURCE_OPPORTUNITY, KNOWLEDGE_PROGRESSION]
+  payoff_channels: [RESOURCE_GAIN, KNOWLEDGE_GAIN]
+  expected_card_families: [corpus-synthesis, mechanism-card, observation]
+  forbidden_failure_modes: [resource_only, scarcity_default, unsupported_universal_rule, keyword_only]
+- query_id: post-payoff
+  creative_problem: 大兑现之后如何保持行动继续向前
+  reader_experiences: [PROGRESSION, WORLD_EXPANSION]
+  narrative_drives: [POWER_PROGRESSION, WORLD_EXPLORATION]
+  payoff_channels: [WORLD_EXPANSION, STRATEGIC_ADVANTAGE]
+  expected_card_families: [contrast-card, mechanism-card, corpus-synthesis]
+  forbidden_failure_modes: [reset_to-zero, artificial-depowering, keyword_only]
+- query_id: world-expansion
+  creative_problem: 世界扩张如何同时带来新目标和新行动空间
+  reader_experiences: [WORLD_EXPANSION, EXPLORATION]
+  narrative_drives: [WORLD_EXPLORATION, KNOWLEDGE_PROGRESSION]
+  payoff_channels: [WORLD_EXPANSION, DISCOVERY]
+  expected_card_families: [mechanism-card, contrast-card, book-dna]
+  forbidden_failure_modes: [lore_dump, map_only, keyword_only]
+- query_id: exploration-reward
+  creative_problem: 探索如何本身产生可兑现的读者奖励
+  reader_experiences: [EXPLORATION, RESOURCE_OPPORTUNITY]
+  narrative_drives: [WORLD_EXPLORATION, RESOURCE_OPPORTUNITY]
+  payoff_channels: [DISCOVERY, RESOURCE_GAIN]
+  expected_card_families: [mechanism-card, observation, corpus-synthesis]
+  forbidden_failure_modes: [exploration_without_change, map_only, keyword_only]
+- query_id: map-transition
+  creative_problem: 地图或区域切换如何改变问题而不是只换背景
+  reader_experiences: [WORLD_EXPANSION, MYSTERY]
+  narrative_drives: [WORLD_EXPLORATION, MYSTERY_INVESTIGATION]
+  payoff_channels: [WORLD_EXPANSION, MYSTERY_REVEAL]
+  expected_card_families: [contrast-card, mechanism-card, observation]
+  forbidden_failure_modes: [map_only, same_problem_reskin, keyword_only]
+- query_id: status-rise
+  creative_problem: 身份提升如何带来新的关系和目标
+  reader_experiences: [STATUS_RISE, FACTION_CONFLICT]
+  narrative_drives: [STATUS_RISE, TERRITORY_FACTION]
+  payoff_channels: [STATUS_RISE, RECOGNITION, FACTION_ADVANCE]
+  expected_card_families: [mechanism-card, contrast-card, corpus-synthesis]
+  forbidden_failure_modes: [status_without_action, governance_default, keyword_only]
+- query_id: faction-conflict
+  creative_problem: 势力冲突如何服务于主角行动而不是停留在标签
+  reader_experiences: [FACTION_CONFLICT, COMBAT]
+  narrative_drives: [TERRITORY_FACTION, POLITICAL_STRATEGY]
+  payoff_channels: [FACTION_ADVANCE, COMBAT_DOMINANCE]
+  expected_card_families: [contrast-card, mechanism-card, observation]
+  forbidden_failure_modes: [faction_label_only, responsibility_default, keyword_only]
+- query_id: mystery-seed
+  creative_problem: 长线谜团如何在早期留下可追踪的变化
+  reader_experiences: [MYSTERY, REVEAL]
+  narrative_drives: [MYSTERY_INVESTIGATION, KNOWLEDGE_PROGRESSION]
+  payoff_channels: [MYSTERY_REVEAL, KNOWLEDGE_GAIN]
+  expected_card_families: [mechanism-card, contrast-card, book-dna]
+  forbidden_failure_modes: [mystery_without_progress, lore_dump, keyword_only]
+- query_id: mystery-reveal
+  creative_problem: 揭秘如何释放新问题而不是关闭全部动力
+  reader_experiences: [REVEAL, MYSTERY]
+  narrative_drives: [MYSTERY_REVELATION, MYSTERY_INVESTIGATION]
+  payoff_channels: [MYSTERY_REVEAL, WORLD_EXPANSION]
+  expected_card_families: [contrast-card, mechanism-card, corpus-synthesis]
+  forbidden_failure_modes: [premature_closure, reveal_without_consequence, keyword_only]
+- query_id: ability-rule
+  creative_problem: 能力规则如何既清楚又保留新的组合空间
+  reader_experiences: [POWER_VERIFICATION, KNOWLEDGE]
+  narrative_drives: [ABILITY_PROGRESSION, KNOWLEDGE_PROGRESSION]
+  payoff_channels: [MASTERY, STRATEGIC_ADVANTAGE]
+  expected_card_families: [mechanism-card, contrast-card, observation]
+  forbidden_failure_modes: [rule_as_formula, arbitrary_exception, keyword_only]
+- query_id: advantage-boundary
+  creative_problem: 特殊优势如何持续提供选择而不是代替主角行动
+  reader_experiences: [ARTIFACT_OR_ABILITY, PROGRESSION]
+  narrative_drives: [ABILITY_PROGRESSION, POWER_PROGRESSION]
+  payoff_channels: [NEW_ABILITY, STRATEGIC_ADVANTAGE]
+  expected_card_families: [book-dna, mechanism-card, corpus-synthesis]
+  forbidden_failure_modes: [deus_ex_machina, passive_protagonist, keyword_only]
+- query_id: character-agency
+  creative_problem: 主角欲望如何与外部升级线共同产生选择
+  reader_experiences: [PROGRESSION, RELATIONSHIP]
+  narrative_drives: [POWER_PROGRESSION, RELATIONSHIP_EMOTIONAL]
+  payoff_channels: [RECOGNITION, TEAM_GROWTH]
+  expected_card_families: [book-dna, observation, corpus-synthesis]
+  forbidden_failure_modes: [plot_dragged_protagonist, responsibility_default, keyword_only]
+- query_id: relationship-dynamics
+  creative_problem: 关系变化如何改变可用的行动空间
+  reader_experiences: [RELATIONSHIP, TEAM_GROWTH]
+  narrative_drives: [RELATIONSHIP_EMOTIONAL, TEAM_GROWTH]
+  payoff_channels: [RELATIONSHIP_ADVANCE, TEAM_GROWTH]
+  expected_card_families: [mechanism-card, contrast-card, observation]
+  forbidden_failure_modes: [relationship_decoration, romance_only, keyword_only]
+- query_id: team-growth
+  creative_problem: 团队成长如何带来新的问题解决方式
+  reader_experiences: [TEAM_GROWTH, POWER_VERIFICATION]
+  narrative_drives: [TEAM_GROWTH, COMPETITIVE_SKILL]
+  payoff_channels: [TEAM_GROWTH, STRATEGIC_ADVANTAGE]
+  expected_card_families: [contrast-card, mechanism-card, corpus-synthesis]
+  forbidden_failure_modes: [team_decoration, responsibility_default, keyword_only]
+- query_id: professional-mastery
+  creative_problem: 专业过程如何转化为读者可见的进展和兑现
+  reader_experiences: [KNOWLEDGE, POWER_VERIFICATION]
+  narrative_drives: [CAREER_MASTERY, CRAFT_PROFESSION]
+  payoff_channels: [MASTERY, RECOGNITION]
+  expected_card_families: [mechanism-card, contrast-card, observation]
+  forbidden_failure_modes: [technical_dump, professional_operations_only, keyword_only]
+- query_id: career-status
+  creative_problem: 职业或社会地位提升如何保持叙事张力
+  reader_experiences: [STATUS_RISE, WEALTH]
+  narrative_drives: [CAREER_MASTERY, STATUS_WEALTH]
+  payoff_channels: [STATUS_RISE, WEALTH_GAIN, RECOGNITION]
+  expected_card_families: [corpus-synthesis, contrast-card, book-dna]
+  forbidden_failure_modes: [wealth_only, governance_default, keyword_only]
+- query_id: combat-payoff
+  creative_problem: 战斗胜利如何同时兑现能力和后续选择
+  reader_experiences: [COMBAT, POWER_VERIFICATION]
+  narrative_drives: [POWER_PROGRESSION, COMPETITIVE_SKILL]
+  payoff_channels: [COMBAT_DOMINANCE, UNDERDOG_VICTORY, STRATEGIC_ADVANTAGE]
+  expected_card_families: [mechanism-card, contrast-card, observation]
+  forbidden_failure_modes: [combat_only, victory_without_change, keyword_only]
+- query_id: survival
+  creative_problem: 生存压力如何不吞没探索和成长的正向反馈
+  reader_experiences: [SURVIVAL, EXPLORATION]
+  narrative_drives: [SURVIVAL_RESOURCE, WORLD_EXPLORATION]
+  payoff_channels: [SURVIVAL_ESCAPE, DISCOVERY]
+  expected_card_families: [contrast-card, mechanism-card, corpus-synthesis]
+  forbidden_failure_modes: [survival_only, scarcity_default, keyword_only]
+- query_id: long-form-stage
+  creative_problem: 长篇如何用阶段转换维持重复循环的新鲜感
+  reader_experiences: [PROGRESSION, WORLD_EXPANSION]
+  narrative_drives: [POWER_PROGRESSION, WORLD_EXPLORATION]
+  payoff_channels: [POWER_BREAKTHROUGH, WORLD_EXPANSION]
+  expected_card_families: [book-dna, corpus-synthesis, mechanism-card]
+  forbidden_failure_modes: [same_loop_without_variation, artificial_reset, keyword_only]
+- query_id: fatigue
+  creative_problem: 如何识别连续兑现后的疲劳风险并保留正向动力
+  reader_experiences: [PROGRESSION, MYSTERY]
+  narrative_drives: [POWER_PROGRESSION, MYSTERY_INVESTIGATION]
+  payoff_channels: [DISCOVERY, KNOWLEDGE_GAIN]
+  expected_card_families: [book-dna, observation, corpus-synthesis]
+  forbidden_failure_modes: [fatigue_as_hard_gate, mandatory_cost, keyword_only]
+- query_id: failure-recovery
+  creative_problem: 失败如何改变下一次选择而不抹除已经获得的能力
+  reader_experiences: [SURVIVAL, POWER_VERIFICATION]
+  narrative_drives: [POWER_PROGRESSION, SURVIVAL_RESOURCE]
+  payoff_channels: [SURVIVAL_ESCAPE, MASTERY]
+  expected_card_families: [contrast-card, mechanism-card, observation]
+  forbidden_failure_modes: [reset_to_zero, punishment_default, keyword_only]
+- query_id: ending-settlement
+  creative_problem: 长篇结尾如何结算主要承诺并保留世界余波
+  reader_experiences: [REVEAL, STATUS_RISE]
+  narrative_drives: [MYSTERY_REVELATION, STATE_BUILDING]
+  payoff_channels: [MYSTERY_REVEAL, RECOGNITION, WORLD_EXPANSION]
+  expected_card_families: [contrast-card, corpus-synthesis, book-dna]
+  forbidden_failure_modes: [unearned_ending, unresolved_core_promise, keyword_only]
+- query_id: transfer-boundary
+  creative_problem: 如何只迁移机制变量而不复制来源小说
+  reader_experiences: [KNOWLEDGE, PROGRESSION]
+  narrative_drives: [KNOWLEDGE_PROGRESSION, CUSTOM]
+  payoff_channels: [KNOWLEDGE_GAIN, DISCOVERY]
+  expected_card_families: [book-dna, mechanism-card, corpus-synthesis]
+  forbidden_failure_modes: [source_text_leakage, name_copying, canon_contamination, keyword_only]
+- query_id: category-diversity
+  creative_problem: 如何跨题材比较同一创作问题而不把差异抹平
+  reader_experiences: [WORLD_EXPANSION, RELATIONSHIP]
+  narrative_drives: [WORLD_EXPLORATION, TEAM_GROWTH]
+  payoff_channels: [WORLD_EXPANSION, TEAM_GROWTH]
+  expected_card_families: [corpus-synthesis, contrast-card, mechanism-card]
+  forbidden_failure_modes: [genre_law, single_category_overfit, keyword_only]
+- query_id: positive-payoff
+  creative_problem: 如何识别读者获得感而不把每次兑现都解释为代价交换
+  reader_experiences: [BREAKTHROUGH, RESOURCE_OPPORTUNITY]
+  narrative_drives: [POWER_PROGRESSION, RESOURCE_OPPORTUNITY]
+  payoff_channels: [POWER_BREAKTHROUGH, RESOURCE_GAIN, RECOGNITION]
+  expected_card_families: [mechanism-card, book-dna, observation]
+  forbidden_failure_modes: [cost_necessity, scarcity_default, responsibility_default, keyword_only]
