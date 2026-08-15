@@ -29,6 +29,7 @@ from novel_authoring.reference_corpus.semantic_models import (
     CorpusSynthesisCard,
     EvidenceRef,
     MechanismCard,
+    ProseDnaCard,
     ReferenceBookCard,
     SemanticCard,
     SemanticMaturity,
@@ -41,6 +42,7 @@ from novel_authoring.utils import json_dumps
 SEMANTIC_CARD_DIRS = (
     "books",
     "book-dna",
+    "prose-dna",
     "arcs",
     "observations",
     "mechanisms",
@@ -351,7 +353,7 @@ def _validate_evidence(
 
 def _validate_card_specific(card: SemanticCard, errors: list[str]) -> None:
     declared = set(card.source_book_ids)
-    if isinstance(card, (BookDnaCard, ArcObservationCard, AtomicObservationCard)):
+    if isinstance(card, (BookDnaCard, ProseDnaCard, ArcObservationCard, AtomicObservationCard)):
         if len(declared) != 1:
             errors.append(f"{card.card_id}: 单书卡必须只有一个 source_book_id")
         if card.knowledge_level is not CardKnowledgeLevel.BOOK_OBSERVATION:
@@ -374,6 +376,11 @@ def _validate_card_specific(card: SemanticCard, errors: list[str]) -> None:
         errors.append(f"{card.card_id}: Arc 缺少 span_kind")
     if isinstance(card, AtomicObservationCard) and not card.observation_summary:
         errors.append(f"{card.card_id}: Observation 缺少 observation_summary")
+    if isinstance(card, ProseDnaCard):
+        if card.knowledge_level is not CardKnowledgeLevel.BOOK_OBSERVATION:
+            errors.append(f"{card.card_id}: Prose DNA knowledge_level 错误")
+        if card.source_style_leakage_check != "PASS":
+            errors.append(f"{card.card_id}: Prose DNA source-style leakage check 未通过")
     if isinstance(card, CorpusSynthesisCard):
         if card.knowledge_level is not CardKnowledgeLevel.CORPUS_SYNTHESIS:
             errors.append(f"{card.card_id}: Synthesis knowledge_level 错误")
@@ -557,6 +564,7 @@ def compile_semantic_corpus(corpus_root: Path) -> dict[str, Any]:
         },
         "counts": {
             "cards": len(card_values),
+            "prose_dna": stats["prose_dna"],
             "evidence": len(evidence_by_id),
             "dependencies": len(dependency_rows),
         },
@@ -599,6 +607,7 @@ def semantic_stats(
     return {
         "reference_books": type_counts.get("reference-book", 0),
         "book_dna": type_counts.get("book-dna", 0),
+        "prose_dna": type_counts.get("prose-dna", 0),
         "arcs": type_counts.get("arc-observation", 0),
         "contiguous_arcs": span_counts.get(SpanKind.CONTIGUOUS_ARC.value, 0),
         "longitudinal_trajectories": span_counts.get(SpanKind.LONGITUDINAL_TRAJECTORY.value, 0),
@@ -667,6 +676,7 @@ def _write_audit_reports(root: Path, result: dict[str, Any]) -> dict[str, str]:
     labels = (
         ("Reference Books", "reference_books"),
         ("Book DNA", "book_dna"),
+        ("Prose DNA", "prose_dna"),
         ("Arc Observations", "arcs"),
         ("CONTIGUOUS_ARC", "contiguous_arcs"),
         ("LONGITUDINAL_TRAJECTORY", "longitudinal_trajectories"),

@@ -30,6 +30,7 @@ class CardKnowledgeLevel(StrEnum):
 class CorpusCardType(StrEnum):
     REFERENCE_BOOK = "reference-book"
     BOOK_DNA = "book-dna"
+    PROSE_DNA = "prose-dna"
     ARC_OBSERVATION = "arc-observation"
     OBSERVATION = "observation"
     MECHANISM_CARD = "mechanism-card"

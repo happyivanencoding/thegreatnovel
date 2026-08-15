@@ -66,6 +66,7 @@ SCAFFOLD_DIRS = (
     "selection",
     "books",
     "book-dna",
+    "prose-dna",
     "arcs",
     "observations",
     "mechanisms",
@@ -105,6 +106,7 @@ RAW_EXTENSIONS = {
 CARD_DIRS = {
     "books",
     "book-dna",
+    "prose-dna",
     "arcs",
     "observations",
     "mechanisms",
@@ -116,7 +118,9 @@ SCHEMA_PACK_PRIMITIVES = {"entity", "media", "temporal", "annotation", "concept"
 SCHEMA_PACK_PAGE_TYPES = {
     "reference-book",
     "book-dna",
+    "prose-dna",
     "arc-observation",
+    "observation",
     "mechanism-card",
     "contrast-card",
     "corpus-synthesis",
@@ -890,7 +894,7 @@ def validate_schema_pack(path: Path) -> dict[str, Any]:
         raise ReferenceCorpusError("schema pack name 不符合 Reference Corpus V0")
     page_types = value.get("page_types")
     if not isinstance(page_types, list) or {item.get("name") for item in page_types if isinstance(item, dict)} != SCHEMA_PACK_PAGE_TYPES:
-        raise ReferenceCorpusError("schema pack page_types 必须恰好包含 V0 七种类型")
+        raise ReferenceCorpusError("schema pack page_types 必须恰好包含 Reference Corpus V1 九种类型")
     for item in page_types:
         if not isinstance(item, dict):
             raise ReferenceCorpusError("schema pack page_type 必须是 mapping")
@@ -943,7 +947,9 @@ def _schema_pack() -> dict[str, Any]:
     page_types = [
         ("reference-book", "media", "books/"),
         ("book-dna", "media", "book-dna/"),
+        ("prose-dna", "media", "prose-dna/"),
         ("arc-observation", "annotation", "arcs/"),
+        ("observation", "annotation", "observations/"),
         ("mechanism-card", "concept", "mechanisms/"),
         ("contrast-card", "media", "contrasts/"),
         ("corpus-synthesis", "media", "syntheses/"),
@@ -993,7 +999,7 @@ def create_scaffold(corpus_root: Path, raw_root: Path) -> dict[str, Any]:
     for relative in SCAFFOLD_DIRS:
         (corpus / relative).mkdir(parents=True, exist_ok=True)
     files: dict[str, str] = {
-        "RESOLVER.md": """# Reference Corpus Resolver\n\n- `reference-book`: 来源书元数据页。\n- `book-dna`: 单书整体结构观察。\n- `arc-observation`: 单书篇章结构观察。\n- `mechanism-card`: 跨书综合后的条件化可迁移机制。\n- `contrast-card`: 相近创作问题的不同解法对照。\n- `corpus-synthesis`: 类别或跨类别综合。\n- `taste-note`: 作者显式写入的喜欢/中性/不喜欢及理由。\n\nBOOK_OBSERVATION 不自动升级为 Mechanism；模型判断不自动升级为 AUTHOR_TASTE。\n""",
+        "RESOLVER.md": """# Reference Corpus Resolver\n\n- `reference-book`: 来源书元数据页。\n- `book-dna`: 单书整体结构观察。\n- `prose-dna`: 单书中文 prose 执行观察；不负责故事规划。\n- `arc-observation`: 单书篇章结构观察。\n- `mechanism-card`: 跨书综合后的条件化可迁移机制。\n- `contrast-card`: 相近创作问题的不同解法对照。\n- `corpus-synthesis`: 类别或跨类别综合。\n- `taste-note`: 作者显式写入的喜欢/中性/不喜欢及理由。\n\nBOOK_OBSERVATION 不自动升级为 Mechanism；Prose DNA 不自动升级为作者文风或 Canon；模型判断不自动升级为 AUTHOR_TASTE。\n""",
         "schema.md": """# Reference Corpus V0 Schema\n\n长期本体是 Markdown + JSON；GBrain 只提供可重建索引。\n\n每张来源性卡片必须带 `source_book_id` 与 `locator`，并可回指 chapter/segment/line range。\n知识等级只有：`BOOK_OBSERVATION`、`CROSS_BOOK_CONTRAST`、`CORPUS_SYNTHESIS`、`AUTHOR_TASTE`。\n\nGBrain 当前 schema pack 的 primitive 是封闭枚举；语义上的 analysis role 映射为 `media`，不伪造不存在的 `analysis` primitive。\n""",
         "corpus.yaml": yaml.safe_dump(_yaml_config(corpus, raw), allow_unicode=True, sort_keys=False),
         "docs/REFERENCE_CORPUS_V0_PLAN.md": """# Reference Corpus V0 后续计划\n\n本轮停在确定性 inventory、schema、架构与作者待确认的 `PROPOSED` selection。\n\n1. Phase 3：4-book smoke，至少跨两个类别，生成 Book DNA/Arc Observation/单书 Finding，不生成通用 Mechanism。\n2. Phase 4：26-book per-book distillation；每本独立、可恢复、有界并发，类别完成后才 sync/embed。\n3. Phase 5：每类别两本只形成 `PILOT TWO-BOOK CONTRAST`。\n4. Phase 6：跨类别综合，保留变体、反例与 failure mode。\n5. Phase 7：metadata filter、lexical/BM25、embedding、graph、可选 rerank；查询返回 3–8 张卡片。\n6. Phase 8：只读 `novel corpus query` adapter，不自动注入生产流程。\n7. Phase 9：至少 5 个 Seed 做 A/B，验证来源泄漏、套路收敛和作者口味。\n\n权威顺序：Hard Canon/Source facts > Explicit Author Intent > Current-book Self Understanding > Reference Corpus > Generic Model Prior。\n""",

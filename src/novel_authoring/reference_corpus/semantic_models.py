@@ -133,6 +133,107 @@ class BookDnaCard(SemanticCardBase):
         return self
 
 
+class ProseSceneWindow(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    window_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    scene_function: Literal[
+        "OPENING",
+        "ORDINARY",
+        "DIALOGUE",
+        "ACTION",
+        "PAYOFF",
+        "AFTERMATH",
+        "EXPOSITION",
+        "EMOTION",
+        "LATE",
+        "ENDING",
+        "UNKNOWN",
+        "NOT_APPLICABLE",
+    ]
+    segment_id: str = Field(pattern=r"^segment-[0-9]{4,}$")
+    line_start: int = Field(ge=1)
+    line_end: int = Field(ge=1)
+    evidence_summary: str = Field(min_length=1, max_length=320)
+
+    @model_validator(mode="after")
+    def validate_line_range(self) -> ProseSceneWindow:
+        if self.line_end < self.line_start:
+            raise ValueError("Prose DNA sample window 的 line_end 不得小于 line_start")
+        return self
+
+
+class ProseObservations(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    sentence_rhythm: str = Field(min_length=1, max_length=800)
+    paragraph_rhythm: str = Field(min_length=1, max_length=800)
+    narrative_distance: str = Field(min_length=1, max_length=800)
+    concrete_vs_abstract: str = Field(min_length=1, max_length=800)
+    dialogue: str = Field(min_length=1, max_length=800)
+    character_voice: str = Field(min_length=1, max_length=800)
+    interior_thought: str = Field(min_length=1, max_length=800)
+    action_combat: str = Field(min_length=1, max_length=800)
+    payoff_realization: str = Field(min_length=1, max_length=800)
+    description: str = Field(min_length=1, max_length=800)
+    transitions: str = Field(min_length=1, max_length=800)
+    chapter_ending: str = Field(min_length=1, max_length=800)
+    lexical_texture: str = Field(min_length=1, max_length=800)
+    punctuation: str = Field(min_length=1, max_length=800)
+    human_irregularity: str = Field(min_length=1, max_length=800)
+
+
+class ProseSoftControls(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    sentence_rhythm: str = Field(min_length=1, max_length=400)
+    paragraph_rhythm: str = Field(min_length=1, max_length=400)
+    dialogue_density: str = Field(min_length=1, max_length=400)
+    narrative_distance: str = Field(min_length=1, max_length=400)
+    interiority: str = Field(min_length=1, max_length=400)
+    exposition_mode: str = Field(min_length=1, max_length=400)
+    sensory_density: str = Field(min_length=1, max_length=400)
+    humor_mode: str = Field(min_length=1, max_length=400)
+    action_directness: str = Field(min_length=1, max_length=400)
+    payoff_realization: str = Field(min_length=1, max_length=400)
+    chapter_end_modes: str = Field(min_length=1, max_length=400)
+    lexical_texture: str = Field(min_length=1, max_length=400)
+
+
+class ProseDnaCard(SemanticCardBase):
+    """One-book prose execution evidence; never a story-planning authority."""
+
+    card_type: Literal["prose-dna"]
+    source_book_id: str = Field(min_length=1)
+    title: str = Field(min_length=1)
+    category: str = Field(min_length=1)
+    sampling_strategy: str = Field(min_length=1, max_length=400)
+    coverage_mode: Literal["SCENE_FUNCTION_WINDOWS"]
+    sample_window_count: int = Field(ge=8)
+    scene_functions: list[str] = Field(min_length=1)
+    sample_windows: list[ProseSceneWindow] = Field(min_length=8)
+    observations: ProseObservations
+    soft_controls: ProseSoftControls
+    source_style_leakage_check: Literal["PASS"]
+    source_style_leakage_note: str = Field(min_length=1, max_length=400)
+    transfer_boundary: str = Field(min_length=1, max_length=600)
+    limitations: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_prose_identity(self) -> ProseDnaCard:
+        if self.source_book_id not in self.source_book_ids:
+            raise ValueError("Prose DNA 的 source_book_id 必须属于 source_book_ids")
+        if self.sample_window_count != len(self.sample_windows):
+            raise ValueError("Prose DNA 的 sample_window_count 必须等于 sample_windows 数量")
+        window_ids = [window.window_id for window in self.sample_windows]
+        if len(window_ids) != len(set(window_ids)):
+            raise ValueError("Prose DNA 的 window_id 不得重复")
+        observed_functions = {window.scene_function for window in self.sample_windows}
+        if not observed_functions <= set(self.scene_functions):
+            raise ValueError("Prose DNA 的 scene_functions 必须覆盖 sample_windows 的场景功能")
+        return self
+
+
 class ArcObservationCard(SemanticCardBase):
     card_type: Literal["arc-observation"]
     source_book_id: str = Field(min_length=1)
@@ -231,6 +332,7 @@ class CorpusSynthesisCard(SemanticCardBase):
 SemanticCard = Annotated[
     ReferenceBookCard
     | BookDnaCard
+    | ProseDnaCard
     | ArcObservationCard
     | AtomicObservationCard
     | MechanismCard
@@ -250,6 +352,10 @@ __all__ = [
     "EvidenceRef",
     "EvidenceScope",
     "MechanismCard",
+    "ProseDnaCard",
+    "ProseObservations",
+    "ProseSceneWindow",
+    "ProseSoftControls",
     "ReferenceBookCard",
     "SemanticCard",
     "SemanticMaturity",
