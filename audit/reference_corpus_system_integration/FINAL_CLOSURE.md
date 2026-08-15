@@ -29,6 +29,18 @@
 
 这只说明 production path 未配置，不把 disposable package 的 `ENABLED` 结果冒充 production 运行证据。
 
+## Delivery validation
+
+- Final commit：`41c1ef7`（`fix: close reference corpus final integration`）。
+- 已推送：`origin/reference-corpus-semantic-v1` 与 HEAD 同步。
+- 本地工作树验证：`510 passed`、Ruff、mypy、compileall、web doctor 均通过；该结果使用了
+  工作树中原有但未纳入本轮提交的其他修改。
+- Clean checkout CI：run `31897807936` 失败于 5 个非本轮 Reference Corpus 测试。失败分别对应
+  提交外的 `canon/materialize.py`、`validation/validators.py` 与
+  `.agents/skills/interpret-original-reader-kernel/SKILL.md` 修改；本轮没有把这些无关修改
+  并入提交，也没有覆盖它们。Reference Corpus targeted tests 在 clean commit 上已由本地
+  closure tests 验证通过。
+
 ## Issue 1 — bounded RevisionUnit selector 与 Strategy → Draft chain
 
 ### Previous behavior
@@ -216,7 +228,7 @@ integrity/soft-fail 放在同一份 disposable enabled corpus regression 中。
 ## Validation and scope notes
 
 - `uv run --no-sync ruff check tests/integration/test_reference_corpus_final_closure.py`：`PASS`。
-- 未提交 Git；未执行 commit/push/reset/checkout。
+- `git diff --cached --check`：`PASS`；本轮 commit/push 已完成，未执行 reset/checkout。
 - 旧的 `tests/integration/test_reference_corpus_closure.py` disposable fixture 已补齐最终 seal 字段，
   并更新旧的“默认使用全部 cards”断言为显式 no-card fallback；完整回归不再依赖旧的错误语义。
 - `REAL_BROWSER` 未执行；本轮 closure 只提供本地 disposable workflow 证据。
@@ -226,7 +238,9 @@ integrity/soft-fail 放在同一份 disposable enabled corpus regression 中。
 代码级 closure 已完成：Revision bounded selection、machine bundle seal、Snapshot integrity、
 Original shared prompt projection、Continuation state-derived query、PLANNING/PROSE family
 隔离和 soft-fail 均有通过的测试证据。Production Corpus 当前为 `NOT_CONFIGURED`，真实
-Browser 为 `BLOCKED`；两者均未被 disposable/TestClient 结果冒充通过。
+Browser 为 `BLOCKED`；两者均未被 disposable/TestClient 结果冒充通过。Clean checkout CI 的
+失败属于提交外既有质量债务，不改变本轮四项 Reference Corpus closure 的验证结果，但已在
+最终报告中明确标记，不能写成 CI 全绿。
 
 `REFERENCE_CORPUS_INFRASTRUCTURE = CLOSED_FOR_EXPERIMENT`
 

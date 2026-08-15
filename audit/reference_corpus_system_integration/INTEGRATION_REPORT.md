@@ -88,10 +88,10 @@ machine package；没有 production Corpus 或 browser 证据。
 
 ## FINAL CLOSURE addendum — 2026-08-15
 
-本节追加最终 closure 审计，不覆盖上面的 P0–P6 和 Closure Fix 旧结论。当前状态为
-`PARTIAL / PENDING REVISION SELECTOR WIRING`：seal 与回归边界已通过 disposable corpus
-锁定，Revision bounded selector 仍在现有 `build_revision_plan` 中走空 fallback，未达到
-Unit1 `A+B2`、Unit2 `C/empty` 的最终要求。
+本节追加最终 closure 审计，不覆盖上面的 P0–P6 和 Closure Fix 旧结论。当前 Reference
+Corpus closure 状态为 `PASS_DISPOSABLE / PRODUCTION_NOT_CONFIGURED`：seal、Original
+projection 与 Revision bounded selector 已通过 disposable corpus 锁定；clean checkout
+CI 另有提交外的既有质量失败，单独记录为 `CI_BASELINE_FAILURE_OUT_OF_SCOPE`。
 
 ### Final closure evidence
 
@@ -136,6 +136,16 @@ uv run --no-sync novel web doctor
 ok=true
 ```
 
+Final clean-checkout CI：GitHub Actions `quality-gates` run `31897807936` 在 Test 阶段失败，
+共 `498 passed, 1 skipped, 5 failed`。失败项不属于本轮提交的 Reference Corpus 文件：
+
+- `tests/integration/test_draft_approval.py::test_validation_rejects_missing_materialization_owner_before_approval`：依赖工作树未提交的 `canon/materialize.py` 与 `validation/validators.py`。
+- `tests/unit/test_original_fantasy_salience_guidance.py::test_original_skills_preserve_exceptional_advantage_and_scope_realism`：依赖未提交的 Original semantic skill 文字。
+- 3 个 `tests/unit/test_realized_kernel_trace.py` 用例：依赖未提交的 `validation/validators.py` 对缺失字段的既有修复。
+
+因此本地工作树的 `510 passed` 不能写成 clean checkout CI 通过；本轮没有擅自合并这些无关
+修改，working tree 状态也在最终报告中保留。
+
 Production runtime diagnostic（使用当前 source checkout）为：`DISABLED`、
 `configured_root=null`、`query_ready=false`、`bundle_seal_valid=false`，并提示未配置
 Reference Corpus path。因此本追加段落不把 disposable `ENABLED` 结果写成 production PASS。
@@ -147,6 +157,6 @@ Reference Corpus path。因此本追加段落不把 disposable `ENABLED` 结果�
 回归已通过。真实浏览器仍未执行，且本轮报告使用的是 source checkout 的 runtime diagnostic，
 不是 production Corpus 证据。
 
-代码级 closure 已完成：
+代码级 Reference Corpus closure 已完成：
 `REFERENCE_CORPUS_INFRASTRUCTURE = CLOSED_FOR_EXPERIMENT`。
 下一阶段进入真实小说实验；不再扩展 Reference Corpus / GBrain 基础架构。
