@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -19,6 +20,11 @@ from novel_authoring.drafting.service import (
 )
 from novel_authoring.ingest.service import ingest_book
 from novel_authoring.planning.models import ChapterContract
+from novel_authoring.reference_corpus.query import (
+    ProseControlCardProjection,
+    ReferenceCorpusQueryEcho,
+    ReferenceCorpusQueryResponse,
+)
 from novel_authoring.utils import json_dumps, sha256_file, stable_id, utc_now
 from novel_authoring.validation.models import VALIDATOR_NAMES
 from novel_authoring.validation.service import validate_draft
@@ -262,6 +268,113 @@ def _valid_output(task_id: str, contract: ChapterContract) -> dict[str, Any]:
     }
 
 
+def _prose_query_response() -> ReferenceCorpusQueryResponse:
+    card = ProseControlCardProjection.model_validate(
+        {
+            "card_id": "prose-control-test",
+            "card_type": "prose-control",
+            "knowledge_level": "CORPUS_SYNTHESIS",
+            "status": "REFERENCE_ONLY",
+            "source_book_ids": ["book-01", "book-02", "book-03", "book-04"],
+            "category_ids": ["玄幻", "都市", "科幻"],
+            "creative_problem_tags": ["prose-realization"],
+            "reader_experiences": [],
+            "narrative_drives": [],
+            "payoff_channels": [],
+            "evidence_scope": "MULTI_CATEGORY",
+            "maturity": "BROAD",
+            "source_refs": [
+                {
+                    "source_book_id": "book-01",
+                    "source_id": "source-book-01",
+                    "distill_id": "distill-book-01",
+                    "segment_id": "segment-0001",
+                    "line_start": 1,
+                    "line_end": 3,
+                }
+            ],
+            "metadata_match_fields": ["scene_functions"],
+            "control_topic": "动作先于解释",
+            "applicable_scene_functions": ["ACTION"],
+            "guidance": "先让动作和反馈发生，再补场景需要的解释。",
+            "variants": ["战斗保留距离和反馈"],
+            "when_to_use": ["读者无法复述现场过程"],
+            "failure_signals": ["把技能名排成清单"],
+            "transfer_boundary": "只迁移抽象写法变量。",
+        }
+    )
+    return ReferenceCorpusQueryResponse(
+        schema_version="reference-corpus-query-v1",
+        purpose="PROSE",
+        query=ReferenceCorpusQueryEcho(
+            creative_problem="",
+            reader_experiences=[],
+            narrative_drives=[],
+            payoff_channels=[],
+            scene_functions=["PAYOFF"],
+            max_cards=4,
+        ),
+        cards=[card],
+    )
+
+
+def test_prepare_draft_reference_prose_context_is_optional_and_compact(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database, _, contract = _setup_contract(tmp_path)
+    monkeypatch.setenv("NOVEL_REFERENCE_CORPUS_ROOT", str(tmp_path / "corpus"))
+    monkeypatch.setattr(
+        "novel_authoring.drafting.service.query_reference_corpus",
+        lambda request, *, corpus_root=None: _prose_query_response(),
+    )
+    enabled_task = prepare_draft_task(database, BOOK_ID, contract.contract_id)
+    enabled_metadata = json.loads(
+        Path(str(enabled_task["input"])).with_name("task.json").read_text(encoding="utf-8")
+    )
+    enabled_context = enabled_metadata["reference_prose_context"]
+    assert enabled_context["status"] == "ENABLED"
+    assert enabled_context["controls"][0]["control_topic"] == "动作先于解释"
+    assert "source_refs" not in enabled_context["controls"][0]
+    assert "source_book_ids" not in enabled_context["controls"][0]
+    input_text = Path(str(enabled_task["input"])).read_text(encoding="utf-8")
+    assert "Reference Corpus Prose Controls" in input_text
+    assert "source_refs" not in input_text
+
+    monkeypatch.delenv("NOVEL_REFERENCE_CORPUS_ROOT")
+    disabled_task = prepare_draft_task(database, BOOK_ID, contract.contract_id)
+    disabled_metadata = json.loads(
+        Path(str(disabled_task["input"])).with_name("task.json").read_text(encoding="utf-8")
+    )
+    assert disabled_metadata["reference_prose_context"]["status"] == "DISABLED"
+    assert disabled_metadata["reference_prose_context"]["controls"] == []
+    disabled_input = Path(str(disabled_task["input"])).read_text(encoding="utf-8")
+    assert "Reference Corpus Prose Controls" not in disabled_input
+
+    monkeypatch.setenv("NOVEL_REFERENCE_CORPUS_ROOT", str(tmp_path / "broken-corpus"))
+    monkeypatch.setattr(
+        "novel_authoring.drafting.service.query_reference_corpus",
+        lambda request, *, corpus_root=None: ReferenceCorpusQueryResponse(
+            schema_version="reference-corpus-query-v1",
+            purpose="PROSE",
+            query=ReferenceCorpusQueryEcho(
+                creative_problem="",
+                reader_experiences=[],
+                narrative_drives=[],
+                payoff_channels=[],
+                scene_functions=["PAYOFF"],
+                max_cards=4,
+            ),
+            warnings=["corrupt package：测试损坏"],
+        ),
+    )
+    unavailable_task = prepare_draft_task(database, BOOK_ID, contract.contract_id)
+    unavailable_metadata = json.loads(
+        Path(str(unavailable_task["input"])).with_name("task.json").read_text(encoding="utf-8")
+    )
+    assert unavailable_metadata["reference_prose_context"]["status"] == "UNAVAILABLE"
+    assert unavailable_metadata["reference_prose_context"]["controls"] == []
+
+
 def _import_output(
     database: Database,
     contract: ChapterContract,
@@ -437,3 +550,31 @@ def test_discard_unapproved_draft_does_not_change_projection(tmp_path: Path) -> 
     after = rebuild_projection(database, BOOK_ID)
     assert result["status"] == "REJECTED"
     assert after.sha256() == before.sha256()
+
+
+def test_validation_rejects_missing_materialization_owner_before_approval(
+    tmp_path: Path,
+) -> None:
+    def mutate(output: dict[str, Any]) -> None:
+        for change in output["state_changes"]:
+            if change["kind"] == "resource":
+                payload = change["payload"]
+                assert isinstance(payload, dict)
+                payload.pop("owner_id")
+                return
+        raise AssertionError("test output has no resource state change")
+
+    database, _, contract = _setup_contract(tmp_path)
+    draft_id = _import_output(database, contract, mutate)
+    validation = validate_draft(database, BOOK_ID, draft_id)
+    canon_report = next(
+        report for report in validation.reports if report.validator == "Canon Validator"
+    )
+    assert not canon_report.passed
+    assert any(
+        finding.code == "MATERIALIZATION_REQUIRED_FIELD_MISSING"
+        for finding in canon_report.findings
+    )
+    with pytest.raises(ApprovalWorkflowError, match="当前十项校验 bundle 未全部通过"):
+        approve_draft(database, BOOK_ID, draft_id, confirmation="批准写入正史")
+    assert not rebuild_projection(database, BOOK_ID).committed_chapters

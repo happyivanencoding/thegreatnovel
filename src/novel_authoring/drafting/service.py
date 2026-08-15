@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
+from contextlib import suppress
 from pathlib import Path
 
 from pydantic import ValidationError
 
+from novel_authoring.config import load_settings
 from novel_authoring.context.router import (
     ContextPurpose,
     RuntimeContextRequest,
@@ -20,6 +23,10 @@ from novel_authoring.planning.rewards import (
     calculate_realized_innovation_reward,
     detect_semantic_policy_leak,
 )
+from novel_authoring.reference_corpus.query import (
+    ReferenceCorpusQueryRequest,
+    query_reference_corpus,
+)
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import book_root, ensure_operation, find_operation
 from novel_authoring.utils import json_dumps, sha256_bytes, sha256_file, stable_id, utc_now
@@ -27,6 +34,74 @@ from novel_authoring.utils import json_dumps, sha256_bytes, sha256_file, stable_
 
 class DraftWorkflowError(RuntimeError):
     pass
+
+
+def _prose_scene_functions(contract: ChapterContract) -> list[str]:
+    """Map frozen contract functions to the small PROSE query vocabulary."""
+
+    aliases = {
+        "setup": ["OPENING"],
+        "pressure_build": ["ACTION"],
+        "choice": ["ACTION", "DIALOGUE"],
+        "discovery": ["DISCOVERY", "EXPLORATION"],
+        "progress": ["ACTION"],
+        "partial_payoff": ["PAYOFF"],
+        "major_payoff": ["PAYOFF"],
+        "reversal": ["ACTION"],
+        "aftershock": ["AFTERMATH"],
+        "recovery": ["AFTERMATH"],
+        "relationship_shift": ["DIALOGUE", "RELATIONSHIP_SHIFT"],
+        "world_expansion": ["EXPOSITION", "EXPLORATION"],
+    }
+    functions: list[str] = []
+    for value in [contract.primary_function, *contract.secondary_functions]:
+        functions.extend(aliases.get(value.value, [value.value]))
+    return list(dict.fromkeys(functions))
+
+
+def _reference_prose_context(contract: ChapterContract) -> dict[str, object]:
+    """Return compact optional prose guidance without touching the Draft schema."""
+
+    configured_root: Path | None = None
+    with suppress(OSError, TypeError, ValueError):
+        configured_root = load_settings().reference_corpus_root
+    env_root = os.environ.get("NOVEL_REFERENCE_CORPUS_ROOT", "").strip()
+    configured = configured_root is not None or bool(env_root)
+    request = ReferenceCorpusQueryRequest(
+        purpose="PROSE",
+        creative_problem="",
+        scene_functions=_prose_scene_functions(contract),
+        max_cards=4,
+    )
+    if not configured:
+        return {"status": "DISABLED", "controls": [], "warnings": []}
+    response = query_reference_corpus(request, corpus_root=configured_root)
+    controls: list[dict[str, object]] = []
+    allowed = (
+        "card_id",
+        "card_type",
+        "control_topic",
+        "applicable_scene_functions",
+        "guidance",
+        "variants",
+        "when_to_use",
+        "failure_signals",
+        "transfer_boundary",
+    )
+    for card in response.cards:
+        payload = card.model_dump(mode="json")
+        if payload.get("card_type") == "prose-control":
+            controls.append({key: payload[key] for key in allowed if key in payload})
+    unavailable = any(
+        marker in warning.casefold()
+        for warning in response.warnings
+        for marker in ("package/path 不存在", "package/path 不完整", "corrupt package")
+    )
+    return {
+        "status": "UNAVAILABLE" if unavailable else "ENABLED",
+        "controls": controls,
+        "warnings": list(response.warnings),
+    }
 
 
 def prepare_draft_task(
@@ -89,6 +164,23 @@ def prepare_draft_task(
             include_runtime_state=include_runtime_state,
         ),
         boundary=boundary_payload,
+    )
+    reference_prose_context = _reference_prose_context(contract)
+    reference_prose_section = (
+        [
+            "## Reference Corpus Prose Controls（REFERENCE_ONLY soft context）",
+            "",
+            "以下内容只影响表达方式，不得改变 Chapter Contract、Canon、Boundary、状态、选择、"
+            "事件顺序、线索、payoff、不可逆改变或结尾状态；发生冲突时丢弃 Prose Guidance。",
+            "当前书 Prose DNA 与作者明确风格意图优先于外部 Reference Corpus Prose Controls。",
+            "",
+            "```json",
+            json_dumps(reference_prose_context["controls"], indent=2),
+            "```",
+            "",
+        ]
+        if reference_prose_context["status"] != "DISABLED"
+        else []
     )
     schema_json = json_dumps(DraftOutput.model_json_schema(), indent=2)
     task_id = stable_id("draft-task", contract_id, str(revision), str(row["contract_sha256"]))
@@ -153,6 +245,7 @@ def prepare_draft_task(
             str(row["contract_json"]),
             "```",
             "",
+            *reference_prose_section,
             "## Runtime Context Router（hard boundary + earned surface + soft controls）",
             "",
             "```json",
@@ -186,6 +279,7 @@ def prepare_draft_task(
         "runtime_ablation": "FULL_RUNTIME" if include_runtime_state else "PLANNING_ONLY",
         "raw_runtime_tables_loaded": include_runtime_state,
         "innovation_control": contract.innovation_control.model_dump(mode="json"),
+        "reference_prose_context": reference_prose_context,
     }
     (task_dir / "input.md").write_text(input_text, encoding="utf-8")
     (task_dir / "schema.json").write_text(schema_json + "\n", encoding="utf-8")

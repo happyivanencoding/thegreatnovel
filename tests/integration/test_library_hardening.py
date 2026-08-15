@@ -301,5 +301,6 @@ def test_agents_rejects_worktree_creation_instruction() -> None:
     assert "使用独立 worktree" not in text
     assert "不要永久绑定某一个开发分支" in text
     assert "当前任务指定分支时，只在该分支工作。" in text
-    assert "生产代码最终由主 Agent 负责整合和验收。" in text
+    assert "子代理不再限于只读审计或隔离 artifact。" in text
+    assert "主 Agent 负责拆解、依赖排序、冲突整合、最终验收" in text
     assert "progression-webnovel-kernel-v1" not in text

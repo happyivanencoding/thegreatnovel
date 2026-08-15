@@ -230,3 +230,31 @@ def test_antipattern_fixtures_are_structural_not_ai_scores() -> None:
     mixed_flags = _obvious_antipatterns(mixed)
     assert mixed_flags["mechanical_connectors"] >= 2
     assert mixed_flags["negative_parallel"] >= 1
+
+
+def test_novel_like_naturalness_fixture_set_is_present() -> None:
+    fixture_root = Path(__file__).parents[1] / "fixtures" / "novel_prose_antipatterns"
+    required = {
+        "payoff_explained_three_times.md",
+        "dialogue_exposition_dump.md",
+        "uniform_sentence_length.md",
+        "paragraph_summary_endings.md",
+        "natural_action_payoff.md",
+    }
+    assert required <= {path.name for path in fixture_root.glob("*.md")}
+    assert "说明" in (fixture_root / "payoff_explained_three_times.md").read_text(
+        encoding="utf-8"
+    )
+    assert "规矩" in (fixture_root / "dialogue_exposition_dump.md").read_text(encoding="utf-8")
+    assert "石阶" in (fixture_root / "natural_action_payoff.md").read_text(encoding="utf-8")
+
+
+def test_actual_draft_executor_wires_novel_prose_realization() -> None:
+    skill_path = Path(__file__).parents[2] / ".agents" / "skills" / "continue-novel" / "SKILL.md"
+    text = skill_path.read_text(encoding="utf-8")
+    realization_ref = ".agents/skills/novel-prose-realization/SKILL.md"
+    assert realization_ref in text
+    authority_at = text.index("Chapter Contract > Canon > Current Scene Context > Prose Controls")
+    naturalness_at = text.index("Novel Prose Naturalness Check")
+    assert authority_at < naturalness_at
+    assert "第二个 humanization handoff" in text

@@ -146,6 +146,28 @@ Boundary Packet 中的 `rhythm_features`、`rhythm_diagnostics` 与 `hook_diagno
 & $Novel draft import --book-id $BookId --task-id <draft-task-id>
 ```
 
+#### 6.1 Novel Prose Realization protocol
+
+本 Skill 是本次 Draft 的唯一业务 executor；在生成正文前，必须读取并应用
+`.agents/skills/novel-prose-realization/SKILL.md`。它是正文 realization protocol，
+不是第二个 handoff、第二个 Draft 或故事规划器。
+
+正文生成顺序固定为：
+
+`Chapter Contract + Canon/Boundary + Current Scene Context + Current-book style context + relevant Reference Prose Controls`
+` -> Novel Prose Realization -> Draft -> Naturalness Audit -> Targeted Repair -> existing Validation`
+
+其中 `Chapter Contract > Canon > Current Scene Context > Prose Controls`；Prose Controls
+只能改变表达层，不得改变事件顺序、人物事实、知识边界、选择、payoff、线索、不可逆改变或结尾状态。
+当前书 Prose DNA 和作者明确风格意图优先于外部 Reference Corpus Prose Controls。外部 Corpus
+只允许通过 `novel corpus query` 的 `purpose=PROSE` 得到本场景需要的 compact controls；
+实际 handoff 只消费 `prepare_draft_task` 写入的 frozen compact `reference_prose_context`，
+executor 不自行读取 Corpus 路径、Markdown 或 GBrain；
+不得读取来源正文、来源人物、整张 Prose DNA 或 planning Mechanism/Contrast/Synthesis。
+
+生成后必须执行 Novel Prose Naturalness Check；发现表达问题时只做有界 Targeted Repair，
+然后沿用现有十项 Validator。不得为了自然度增加第二个 humanization handoff。
+
 ### 7. 十项校验与定向修订
 
 ```powershell
