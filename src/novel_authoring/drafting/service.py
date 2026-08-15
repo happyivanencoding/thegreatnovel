@@ -23,6 +23,10 @@ from novel_authoring.planning.rewards import (
     calculate_realized_innovation_reward,
     detect_semantic_policy_leak,
 )
+from novel_authoring.reference_corpus.context import (
+    ReferenceContextSnapshot,
+    freeze_reference_context,
+)
 from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryRequest,
     query_reference_corpus,
@@ -59,49 +63,95 @@ def _prose_scene_functions(contract: ChapterContract) -> list[str]:
     return list(dict.fromkeys(functions))
 
 
-def _reference_prose_context(contract: ChapterContract) -> dict[str, object]:
+def _reference_prose_context(
+    contract: ChapterContract,
+    *,
+    book_id: str,
+    edition_id: str,
+    operation_id: str,
+    snapshot_path: Path,
+) -> dict[str, object]:
     """Return compact optional prose guidance without touching the Draft schema."""
+
+    def from_snapshot(snapshot: ReferenceContextSnapshot) -> dict[str, object]:
+        allowed = (
+            "card_id",
+            "card_type",
+            "control_topic",
+            "applicable_scene_functions",
+            "guidance",
+            "variants",
+            "when_to_use",
+            "failure_signals",
+            "transfer_boundary",
+        )
+        controls = [
+            {key: card[key] for key in allowed if key in card}
+            for card in snapshot.compact_cards
+            if card.get("card_type") == "prose-control"
+        ]
+        warnings = list(snapshot.warnings)
+        legacy_unavailable = snapshot.status == "ENABLED" and any(
+            "corrupt package" in warning.casefold() for warning in warnings
+        )
+        status = "UNAVAILABLE" if legacy_unavailable else snapshot.status
+        return {
+            "status": status,
+            "controls": controls,
+            "warnings": warnings,
+            "knowledge_gaps": list(snapshot.knowledge_gaps),
+            "snapshot_id": snapshot.snapshot_id,
+            "snapshot_hash": snapshot.snapshot_hash,
+            "snapshot_path": str(snapshot_path),
+            "selected_card_count": snapshot.selected_card_count,
+            "package_schema_version": snapshot.package_schema_version,
+            "package_hash": snapshot.package_hash,
+            "selected_card_ids": snapshot.selected_card_ids,
+            "selected_card_types": snapshot.selected_card_types,
+        }
+
+    if snapshot_path.is_file():
+        return from_snapshot(
+            ReferenceContextSnapshot.model_validate_json(
+                snapshot_path.read_text(encoding="utf-8")
+            )
+        )
 
     configured_root: Path | None = None
     with suppress(OSError, TypeError, ValueError):
         configured_root = load_settings().reference_corpus_root
-    env_root = os.environ.get("NOVEL_REFERENCE_CORPUS_ROOT", "").strip()
-    configured = configured_root is not None or bool(env_root)
+    configured = configured_root is not None or bool(
+        os.environ.get("NOVEL_REFERENCE_CORPUS_ROOT", "").strip()
+    )
     request = ReferenceCorpusQueryRequest(
         purpose="PROSE",
         creative_problem="",
         scene_functions=_prose_scene_functions(contract),
         max_cards=4,
     )
-    if not configured:
-        return {"status": "DISABLED", "controls": [], "warnings": []}
     response = query_reference_corpus(request, corpus_root=configured_root)
-    controls: list[dict[str, object]] = []
-    allowed = (
-        "card_id",
-        "card_type",
-        "control_topic",
-        "applicable_scene_functions",
-        "guidance",
-        "variants",
-        "when_to_use",
-        "failure_signals",
-        "transfer_boundary",
+    if not configured and response.status == "ENABLED":
+        response = response.model_copy(
+            update={
+                "status": "DISABLED",
+                "package_schema_version": None,
+                "package_hash": None,
+                "cards": [],
+                "knowledge_gaps": [
+                    "当前没有可用的 Reference Corpus machine package/path"
+                ],
+                "warnings": ["soft-fail：Reference Corpus 未启用或未配置"],
+            }
+        )
+    snapshot = freeze_reference_context(
+        request,
+        response,
+        book_id=book_id,
+        edition_id=edition_id,
+        operation_id=operation_id,
+        output_path=snapshot_path,
     )
-    for card in response.cards:
-        payload = card.model_dump(mode="json")
-        if payload.get("card_type") == "prose-control":
-            controls.append({key: payload[key] for key in allowed if key in payload})
-    unavailable = any(
-        marker in warning.casefold()
-        for warning in response.warnings
-        for marker in ("package/path 不存在", "package/path 不完整", "corrupt package")
-    )
-    return {
-        "status": "UNAVAILABLE" if unavailable else "ENABLED",
-        "controls": controls,
-        "warnings": list(response.warnings),
-    }
+    return from_snapshot(snapshot)
 
 
 def prepare_draft_task(
@@ -165,23 +215,6 @@ def prepare_draft_task(
         ),
         boundary=boundary_payload,
     )
-    reference_prose_context = _reference_prose_context(contract)
-    reference_prose_section = (
-        [
-            "## Reference Corpus Prose Controls（REFERENCE_ONLY soft context）",
-            "",
-            "以下内容只影响表达方式，不得改变 Chapter Contract、Canon、Boundary、状态、选择、"
-            "事件顺序、线索、payoff、不可逆改变或结尾状态；发生冲突时丢弃 Prose Guidance。",
-            "当前书 Prose DNA 与作者明确风格意图优先于外部 Reference Corpus Prose Controls。",
-            "",
-            "```json",
-            json_dumps(reference_prose_context["controls"], indent=2),
-            "```",
-            "",
-        ]
-        if reference_prose_context["status"] != "DISABLED"
-        else []
-    )
     schema_json = json_dumps(DraftOutput.model_json_schema(), indent=2)
     task_id = stable_id("draft-task", contract_id, str(revision), str(row["contract_sha256"]))
     operation = ensure_operation(
@@ -204,6 +237,28 @@ def prepare_draft_task(
     )
     task_dir.mkdir(parents=True, exist_ok=True)
     output_dir.mkdir(parents=True, exist_ok=True)
+    reference_prose_context = _reference_prose_context(
+        contract,
+        book_id=book_id,
+        edition_id=selected_edition,
+        operation_id=task_id,
+        snapshot_path=task_dir / "reference_context_snapshot.json",
+    )
+    reference_prose_section = (
+        [
+            "## Reference Corpus Prose Controls（REFERENCE_ONLY soft context）",
+            "",
+            "以下内容只影响表达方式，不得改变 Chapter Contract、Canon、Boundary、状态、选择、"
+            "事件顺序、线索、payoff、不可逆改变或结尾状态；发生冲突时丢弃 Prose Guidance。",
+            "当前书 Prose DNA 与作者明确风格意图优先于外部 Reference Corpus Prose Controls。",
+            "",
+            "```json",
+            json_dumps(reference_prose_context["controls"], indent=2),
+            "```",
+            "",
+        ]
+        if reference_prose_context["status"] != "DISABLED" else []
+    )
     input_text = "\n".join(
         [
             f"# 章节正文任务 `{task_id}`",

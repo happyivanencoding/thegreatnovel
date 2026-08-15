@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any, cast
 
 import pytest
 
@@ -15,6 +16,19 @@ from novel_authoring.edition import (
     get_edition,
 )
 from novel_authoring.ingest.service import ingest_book
+from novel_authoring.reference_corpus.models import CardKnowledgeLevel
+from novel_authoring.reference_corpus.query import (
+    ProseControlCardProjection,
+    ReferenceCorpusQueryEcho,
+    ReferenceCorpusQueryRequest,
+    ReferenceCorpusQueryResponse,
+    SourceRefProjection,
+)
+from novel_authoring.reference_corpus.semantic_models import (
+    EvidenceScope,
+    SemanticMaturity,
+    SemanticStatus,
+)
 from novel_authoring.revision import (
     RevisionSpec,
     approve_revision_campaign,
@@ -252,3 +266,124 @@ def test_revision_event_projection_isolated_from_base(tmp_path: Path) -> None:
             database, "revision-book", edition_id="edition-r1", persist=False
         ).facts
     )
+
+
+def test_revision_reference_context_is_ordered_and_compact(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database, _ = _setup(tmp_path)
+    calls: list[ReferenceCorpusQueryRequest] = []
+
+    def fake_query(
+        request: ReferenceCorpusQueryRequest, *, corpus_root: Path | None = None
+    ) -> ReferenceCorpusQueryResponse:
+        del corpus_root
+        calls.append(request)
+        payload = request.model_dump(mode="json")
+        prose_card = ProseControlCardProjection(
+            card_id="prose-control-test",
+            card_type="prose-control",
+            knowledge_level=CardKnowledgeLevel.CORPUS_SYNTHESIS,
+            status=SemanticStatus.REFERENCE_ONLY,
+            source_book_ids=["source-book-a", "source-book-b", "source-book-c"],
+            category_ids=["玄幻", "科幻"],
+            creative_problem_tags=["prose-realization"],
+            reader_experiences=[],
+            narrative_drives=[],
+            payoff_channels=[],
+            evidence_scope=EvidenceScope.MULTI_CATEGORY,
+            maturity=SemanticMaturity.BROAD,
+            source_refs=[
+                SourceRefProjection(
+                    source_book_id="source-book-a",
+                    source_id="source-a",
+                    distill_id="distill-a",
+                    segment_id="segment-a",
+                    line_start=1,
+                    line_end=2,
+                )
+            ],
+            metadata_match_fields=["scene_functions"],
+            control_topic="动作先于解释",
+            applicable_scene_functions=["PAYOFF"],
+            guidance="先让动作和反馈发生，再补解释。",
+            variants=["动作反馈"],
+            when_to_use=["读者只能复述能力名"],
+            failure_signals=["技能名清单"],
+            transfer_boundary="只迁移抽象表达控制。",
+        )
+        is_prose = payload["purpose"] == "PROSE"
+        return ReferenceCorpusQueryResponse(
+            schema_version="reference-corpus-query-v1",
+            purpose=payload["purpose"],
+            query=ReferenceCorpusQueryEcho.model_validate(
+                {key: value for key, value in payload.items() if key != "purpose"}
+            ),
+            status="ENABLED" if is_prose else "ZERO_RESULTS",
+            cards=[prose_card] if is_prose else [],
+            knowledge_gaps=[] if is_prose else ["测试无可用卡片"],
+            warnings=[] if is_prose else ["soft-fail：测试 Reference Corpus zero results"],
+        )
+
+    monkeypatch.setattr(
+        "novel_authoring.revision.service.query_reference_corpus", fake_query
+    )
+    spec = _spec()
+    spec["style_policy"] = {
+        "creative_problem_tags": ["breakthrough"],
+        "reader_experiences": ["BREAKTHROUGH"],
+        "narrative_drives": ["POWER_PROGRESSION"],
+        "payoff_channels": ["POWER_BREAKTHROUGH"],
+        "scene_functions": ["PAYOFF"],
+        "max_cards": 3,
+    }
+    campaign = create_revision_campaign(database, "revision-book", spec, edition_id="edition-r1")
+    campaign_id = str(campaign["campaign_id"])
+    impact = build_revision_impact(database, "revision-book", campaign_id)
+    assert calls == []
+    complete_revision_impact_audit(
+        database,
+        "revision-book",
+        campaign_id,
+        [
+            {"impact_id": item["impact_id"], "status": "HANDLED"}
+            for item in cast(list[dict[str, Any]], impact["items"])
+        ],
+    )
+    assert calls == []
+
+    plan = build_revision_plan(database, "revision-book", campaign_id)
+    assert len(calls) == 1
+    planning_request = calls[0]
+    assert planning_request.purpose == "PLANNING"
+    assert planning_request.creative_problem.startswith("修订意图：")
+    assert planning_request.creative_problem_tags == ["breakthrough"]
+    assert planning_request.reader_experiences == ["BREAKTHROUGH"]
+    assert planning_request.narrative_drives == ["POWER_PROGRESSION"]
+    assert planning_request.payoff_channels == ["POWER_BREAKTHROUGH"]
+    assert planning_request.scene_functions == ["PAYOFF"]
+    assert planning_request.max_cards == 3
+    planning_context = cast(dict[str, Any], plan["reference_planning_context"])
+    assert planning_context["status"] == "ZERO_RESULTS"
+    assert planning_context["warnings"]
+    assert Path(str(planning_context["snapshot_path"])).is_file()
+
+    units = cast(list[dict[str, Any]], plan["units"])
+    task = prepare_revision_draft_task(
+        database, "revision-book", campaign_id, str(units[0]["unit_id"])
+    )
+    assert len(calls) == 2
+    prose_request = calls[1]
+    assert prose_request.purpose == "PROSE"
+    assert prose_request.scene_functions == ["PAYOFF"]
+    metadata = json.loads(Path(str(task["task_path"])).read_text(encoding="utf-8"))
+    assert metadata["reference_planning_context"]["snapshot_id"] == planning_context["snapshot_id"]
+    assert metadata["reference_prose_context"]["status"] == "ENABLED"
+    assert metadata["reference_prose_context"]["controls"][0]["control_topic"] == "动作先于解释"
+    assert "source_refs" not in metadata["reference_prose_context"]["controls"][0]
+    assert "source_book_ids" not in metadata["reference_prose_context"]["controls"][0]
+    input_text = Path(str(task["input_markdown"])).read_text(encoding="utf-8")
+    assert "Reference Corpus Prose Controls" in input_text
+    assert "只影响表达" in input_text
+    assert "source_refs" not in input_text
+    assert "source_book_ids" not in input_text

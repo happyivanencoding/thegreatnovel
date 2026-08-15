@@ -340,8 +340,13 @@ def test_prepare_draft_reference_prose_context_is_optional_and_compact(
     assert "Reference Corpus Prose Controls" in input_text
     assert "source_refs" not in input_text
 
+    # A prepared task owns its frozen snapshot.  Use a fresh task to verify
+    # disabled soft-fail without attempting to rewrite the enabled snapshot.
+    disabled_database, _, disabled_contract = _setup_contract(tmp_path / "disabled")
     monkeypatch.delenv("NOVEL_REFERENCE_CORPUS_ROOT")
-    disabled_task = prepare_draft_task(database, BOOK_ID, contract.contract_id)
+    disabled_task = prepare_draft_task(
+        disabled_database, BOOK_ID, disabled_contract.contract_id
+    )
     disabled_metadata = json.loads(
         Path(str(disabled_task["input"])).with_name("task.json").read_text(encoding="utf-8")
     )
@@ -350,6 +355,9 @@ def test_prepare_draft_reference_prose_context_is_optional_and_compact(
     disabled_input = Path(str(disabled_task["input"])).read_text(encoding="utf-8")
     assert "Reference Corpus Prose Controls" not in disabled_input
 
+    unavailable_database, _, unavailable_contract = _setup_contract(
+        tmp_path / "unavailable"
+    )
     monkeypatch.setenv("NOVEL_REFERENCE_CORPUS_ROOT", str(tmp_path / "broken-corpus"))
     monkeypatch.setattr(
         "novel_authoring.drafting.service.query_reference_corpus",
@@ -367,7 +375,9 @@ def test_prepare_draft_reference_prose_context_is_optional_and_compact(
             warnings=["corrupt package：测试损坏"],
         ),
     )
-    unavailable_task = prepare_draft_task(database, BOOK_ID, contract.contract_id)
+    unavailable_task = prepare_draft_task(
+        unavailable_database, BOOK_ID, unavailable_contract.contract_id
+    )
     unavailable_metadata = json.loads(
         Path(str(unavailable_task["input"])).with_name("task.json").read_text(encoding="utf-8")
     )

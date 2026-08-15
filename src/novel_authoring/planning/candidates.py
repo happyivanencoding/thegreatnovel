@@ -45,6 +45,11 @@ from novel_authoring.planning.models import CandidateOutput, CandidateProposal, 
 from novel_authoring.planning.rewards import calculate_candidate_innovation_reward
 from novel_authoring.progression.context import KernelPlanningContext
 from novel_authoring.progression.evidence import KernelEvidenceCompiler
+from novel_authoring.reference_corpus.context import freeze_reference_context
+from novel_authoring.reference_corpus.query import (
+    ReferenceCorpusQueryRequest,
+    query_reference_corpus,
+)
 from novel_authoring.runtime_baseline import load_earned_surface
 from novel_authoring.storage.operations import ensure_operation, find_operation
 from novel_authoring.utils import json_dumps, sha256_bytes, stable_id, utc_now
@@ -122,6 +127,88 @@ def _kernel_author_summary(context: KernelPlanningContext) -> dict[str, Any]:
         "coverage": context.coverage.model_dump(mode="json"),
         "warnings": context.warnings,
     }
+
+
+def _reference_values(payload: object, *keys: str) -> list[str]:
+    if not isinstance(payload, dict):
+        return []
+    values: list[str] = []
+    for key in keys:
+        value = payload.get(key)
+        if isinstance(value, (dict, list)):
+            values.extend(str(item) for item in value)
+        elif value not in (None, ""):
+            values.append(str(value))
+    return list(dict.fromkeys(values))
+
+
+def _continuation_reference_planning_context(
+    *,
+    book_id: str,
+    edition_id: str,
+    task_id: str,
+    boundary_payload: dict[str, Any],
+    thread_id: str,
+    kernel_context: KernelPlanningContext | None,
+    output_path: Path,
+) -> dict[str, Any]:
+    contracts = (
+        {}
+        if kernel_context is None
+        else kernel_context.effective_contracts.model_dump(mode="json")
+    )
+    reader = contracts.get("reader_experience") or {}
+    drive = contracts.get("narrative_drive") or {}
+    payoff = contracts.get("payoff_channel") or {}
+    reference_query = boundary_payload.get("reference_query")
+    reference_query = reference_query if isinstance(reference_query, dict) else {}
+    active_threads = boundary_payload.get("active_threads")
+    active_threads = active_threads if isinstance(active_threads, list) else []
+    pressure = boundary_payload.get("current_pressure")
+    pressure = pressure if isinstance(pressure, str) else ""
+    query = ReferenceCorpusQueryRequest(
+        purpose="PLANNING",
+        creative_problem=(
+            f"下一章候选需要处理主线程 {thread_id} 的当前压力、承诺和行动空间；"
+            f"当前压力：{pressure or '见冻结 Boundary 与 Planning Context'}；"
+            f"活动线程数：{len(active_threads)}；"
+            "Reference Corpus 只提供可迁移机制，不决定候选。"
+        ),
+        creative_problem_tags=[
+            str(item)
+            for item in reference_query.get("creative_problem_tags", [])
+            if str(item).strip()
+        ],
+        reader_experiences=_reference_values(
+            reader,
+            "experience_priorities",
+            "reader_experiences",
+            "primary_experience",
+        ),
+        narrative_drives=_reference_values(
+            drive,
+            "primary_drive",
+            "secondary_drives",
+            "narrative_drives",
+        ),
+        payoff_channels=_reference_values(
+            payoff,
+            "channels",
+            "payoff_channels",
+            "primary_channel",
+        ),
+        max_cards=6,
+    )
+    response = query_reference_corpus(query)
+    snapshot = freeze_reference_context(
+        query,
+        response,
+        book_id=book_id,
+        edition_id=edition_id,
+        operation_id=task_id,
+        output_path=output_path,
+    )
+    return snapshot.model_dump(mode="json")
 
 
 def _validate_author_control_trace(
@@ -600,6 +687,37 @@ def prepare_candidate_task(
     )
     task_dir.mkdir(parents=True, exist_ok=True)
     output_dir.mkdir(parents=True, exist_ok=True)
+    reference_planning_context = _continuation_reference_planning_context(
+        book_id=book_id,
+        edition_id=selected_edition,
+        task_id=task_id,
+        boundary_payload=boundary_payload,
+        thread_id=threads[0].thread_id,
+        kernel_context=kernel_context,
+        output_path=task_dir / "reference_context_snapshot.json",
+    )
+    reference_prompt = {
+        key: reference_planning_context[key]
+        for key in (
+            "status",
+            "snapshot_id",
+            "snapshot_hash",
+            "selected_card_count",
+            "selected_card_ids",
+            "selected_card_types",
+            "selected_card_knowledge_levels",
+            "knowledge_gaps",
+            "warnings",
+        )
+    }
+    reference_prompt["compact_cards"] = [
+        {
+            key: value
+            for key, value in card.items()
+            if key not in {"source_refs", "source_book_ids"}
+        }
+        for card in reference_planning_context.get("compact_cards", [])
+    ]
     input_text = "\n".join(
         [
             f"# 下一章候选任务 `{task_id}`",
@@ -627,6 +745,14 @@ def prepare_candidate_task(
             "Python 会独立重算 InnovationRewardBreakdown，不接受 agent 自报的 reward 作为事实。",
             "先检查 Narrative Portfolio 中 PAYOFF_READY 与 overdue debt；"
             "不要为了打开新问题而免费延宕已成熟问题。",
+            "## Frozen Reference Corpus Planning Context",
+            "",
+            "下列内容是本次 task 冻结的 compact context；只提供可迁移机制和对照，"
+            "不得复制来源人物、事件、设定、句式，也不得改变 Canon、资源、知识边界或候选选择。",
+            "```json",
+            json_dumps(reference_prompt, indent=2),
+            "```",
+            "",
             "## 作者控制输入（必须显式检查）",
             "",
             json_dumps(
@@ -739,12 +865,14 @@ def prepare_candidate_task(
         "schema_sha256": sha256_bytes(schema_json.encode()),
         "created_at": utc_now(),
         "runtime_context": runtime_context.model_dump(mode="json"),
+        "reference_planning_context": reference_planning_context,
         "include_runtime_state": include_runtime_state,
         "innovation_control": selected_innovation.model_dump(mode="json"),
         "innovation_source": selected_source,
         "innovation_recommendation": boundary_payload.get("innovation_diagnostics", {}),
         "narrative_portfolio_snapshot": narrative_portfolio.model_dump(mode="json"),
         "kernel_context": str(task_dir / "kernel_context.json"),
+        "reference_context_snapshot": str(task_dir / "reference_context_snapshot.json"),
         "scheduler_recommendation": (
             None
             if kernel_context is None
@@ -777,6 +905,7 @@ def prepare_candidate_task(
         "effective_book_profile": metadata["effective_book_profile"],
         "truth_reveal": metadata["truth_reveal"],
         "kernel_context": metadata["kernel_context"],
+        "reference_planning_context": reference_planning_context,
     }
 
 
@@ -908,6 +1037,47 @@ def prepare_handoff_candidate_task(
         kernel_context.context_chapter_ordinal
     ):
         raise PlanningError("Continuation Boundary 与 Frozen Kernel Context 章节不一致")
+    active_threads = kernel_context.planning_state.active_threads
+    thread_id = (
+        str(
+            active_threads[0].get("thread_id")
+            or active_threads[0].get("id")
+            or "handoff-thread"
+        )
+        if active_threads
+        else "handoff-thread"
+    )
+    reference_planning_context = _continuation_reference_planning_context(
+        book_id=book_id,
+        edition_id=edition_id,
+        task_id=task_id,
+        boundary_payload=boundary_payload,
+        thread_id=thread_id,
+        kernel_context=kernel_context,
+        output_path=input_dir / "reference_context_snapshot.json",
+    )
+    reference_prompt = {
+        key: reference_planning_context[key]
+        for key in (
+            "status",
+            "snapshot_id",
+            "snapshot_hash",
+            "selected_card_count",
+            "selected_card_ids",
+            "selected_card_types",
+            "selected_card_knowledge_levels",
+            "knowledge_gaps",
+            "warnings",
+        )
+    }
+    reference_prompt["compact_cards"] = [
+        {
+            key: value
+            for key, value in card.items()
+            if key not in {"source_refs", "source_book_ids"}
+        }
+        for card in reference_planning_context.get("compact_cards", [])
+    ]
     schema = CandidateOutput.model_json_schema()
     metadata = {
         "task_id": task_id,
@@ -932,6 +1102,8 @@ def prepare_handoff_candidate_task(
         "handoff_input": str(handoff_input),
         "source_state_context": str(input_dir / "world_state_context.json"),
         "kernel_context": str(input_dir / "kernel_context.json"),
+        "reference_planning_context": reference_planning_context,
+        "reference_context_snapshot": str(input_dir / "reference_context_snapshot.json"),
         "effective_contract_references": [
             item.model_dump(mode="json") for item in kernel_context.contract_references
         ],
@@ -990,6 +1162,14 @@ def prepare_handoff_candidate_task(
             " Debt / Anticipation，以及偏离理由。Lens 与 Chapter Intent 是两个独立维度。",
             "Reader/Drive/Progression/Resource/World/Drift 字段只是 declared claims；"
             "Python 将依据 kernel_context.json 重新核验。",
+            "",
+            "## Frozen Reference Corpus Planning Context",
+            "",
+            "下列内容只提供 REFERENCE_ONLY 的可迁移机制和对照；不得复制来源人物、事件、"
+            "设定或句式，也不得改变 Boundary、Canon、资源、知识边界或 Candidate 选择。",
+            "```json",
+            json_dumps(reference_prompt, indent=2),
+            "```",
         ]
     )
     (input_dir / "input.md").write_text(input_text + "\n", encoding="utf-8")
@@ -1012,6 +1192,7 @@ def prepare_handoff_candidate_task(
         "expected_output": str(output_dir / "output.json"),
         "aggregate_id": aggregate_id,
         "boundary_packet_id": boundary_packet_id,
+        "reference_planning_context": reference_planning_context,
         "effective_book_profile": metadata["effective_book_profile"],
         "truth_reveal": metadata["truth_reveal"],
     }

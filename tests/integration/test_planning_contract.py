@@ -448,6 +448,14 @@ def test_boundary_candidate_ranking_and_contract(tmp_path: Path) -> None:
     database, workspace, settings = setup_planning_book(tmp_path)
     boundary = build_boundary_packet(database, "planning-book", recent_full_chapters=2)
     task = prepare_candidate_task(database, "planning-book", settings)
+    planning_task = json.loads(
+        (Path(str(task["input"])).parent / "task.json").read_text(encoding="utf-8")
+    )
+    reference_context = planning_task["reference_planning_context"]
+    assert reference_context["usage"] == "REFERENCE_ONLY"
+    assert reference_context["status"] == "DISABLED"
+    assert reference_context["selected_card_count"] == 0
+    assert Path(str(planning_task["reference_context_snapshot"])).is_file()
     task_id = str(task["task_id"])
     thread_ids = [item["thread_id"] for item in task["top_threads"]]
     candidates = [

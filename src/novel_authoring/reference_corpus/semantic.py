@@ -55,6 +55,7 @@ SEMANTIC_CARD_DIRS = (
 MACHINE_PACKAGE_VERSION = "reference-corpus-machine-package-v1"
 SOURCE_FREEZE_VERSION = "reference-corpus-source-freeze-v1"
 _FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*(?:\n|\Z)", re.DOTALL)
+_LEGACY_CREATIVE_PROBLEM_TAG_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*\Z")
 _SEGMENT_RE = re.compile(r"^segment-(\d+)$")
 _CHINESE_RE = re.compile(r"[\u3400-\u9fff]")
 _RAW_SUFFIXES = {".txt", ".epub", ".docx", ".rtf", ".html", ".htm"}
@@ -499,6 +500,31 @@ def _required_stale_cross_book_cards(cards: Sequence[SemanticCard]) -> list[str]
     )
 
 
+def _required_invalid_cross_book_cards(cards: Sequence[SemanticCard]) -> list[str]:
+    invalid = {
+        card.card_id
+        for card in cards
+        if card.status is SemanticStatus.STALE or getattr(card, "rewrite_required", False)
+    }
+    changed = True
+    while changed:
+        changed = False
+        for card in cards:
+            if card.card_id in invalid:
+                continue
+            if any(upstream in invalid for upstream in card.depends_on):
+                invalid.add(card.card_id)
+                changed = True
+    return sorted(
+        card.card_id
+        for card in cards
+        if _is_cross_book_card(card)
+        and card.status is not SemanticStatus.STALE
+        and not getattr(card, "rewrite_required", False)
+        and any(dep in invalid for dep in card.depends_on)
+    )
+
+
 def _readiness(
     root: Path,
     cards: Sequence[SemanticCard],
@@ -514,10 +540,11 @@ def _readiness(
         card.card_id in machine_ids for card in prose_controls
     )
     stale_required = _required_stale_cross_book_cards(cards)
+    invalid_required = _required_invalid_cross_book_cards(cards)
     base_ready = (
         semantic_valid
         and len(freeze) == 26
-        and not stale_required
+        and not invalid_required
         and prose_controls_compiled
     )
     query_ready = base_ready and machine_ready
@@ -536,6 +563,8 @@ def _readiness(
         reasons.append("machine package/cards 尚未可解析")
     if stale_required:
         reasons.append("存在活动 cross-book cards 依赖 STALE upstream")
+    if invalid_required and not stale_required:
+        reasons.append("存在活动 cards 依赖 rewrite_required upstream")
     if not prose_controls_compiled:
         reasons.append("Prose Controls 尚未完整 compile 到 machine/cards.jsonl")
     return {
@@ -543,6 +572,7 @@ def _readiness(
         "readiness_status": status,
         "prose_controls_compiled": prose_controls_compiled,
         "stale_required_cross_book_cards": stale_required,
+        "invalid_required_cross_book_cards": invalid_required,
         "readiness_reasons": reasons,
         "machine_cards_parseable": machine_ready,
         "source_freeze_count": len(freeze),
@@ -1037,6 +1067,18 @@ def _query_values(value: str | Sequence[str] | None) -> set[str]:
     return {str(item).strip().casefold() for item in values if str(item).strip()}
 
 
+def _legacy_creative_problem_values(value: str | Sequence[str] | None) -> set[str]:
+    if value is None:
+        return set()
+    values = [value] if isinstance(value, str) else list(value)
+    return {
+        candidate.casefold()
+        for item in values
+        if (candidate := str(item).strip())
+        and _LEGACY_CREATIVE_PROBLEM_TAG_RE.fullmatch(candidate)
+    }
+
+
 def _record_is_cross_book(record: dict[str, Any]) -> bool:
     source_ids = {str(item) for item in record.get("source_book_ids", [])}
     return len(source_ids) > 1 or str(record.get("knowledge_level")) in {
@@ -1077,10 +1119,36 @@ def _record_stale_ids(records: Sequence[dict[str, Any]]) -> set[str]:
     return stale
 
 
+def _record_invalid_ids(records: Sequence[dict[str, Any]]) -> set[str]:
+    """Return STALE/rewrite-required cards and their dependent closure."""
+
+    invalid = _record_stale_ids(records)
+    invalid.update(
+        str(record["card_id"])
+        for record in records
+        if record.get("rewrite_required") is True and record.get("card_id")
+    )
+    changed = True
+    while changed:
+        changed = False
+        for record in records:
+            card_id = str(record.get("card_id", ""))
+            if not card_id or card_id in invalid:
+                continue
+            depends_on = record.get("depends_on", [])
+            if isinstance(depends_on, list) and any(
+                str(item) in invalid for item in depends_on
+            ):
+                invalid.add(card_id)
+                changed = True
+    return invalid
+
+
 def retrieve_metadata_candidates(
     corpus_root: Path,
     *,
     creative_problem: str | Sequence[str] | None = None,
+    creative_problem_tags: Sequence[str] | None = None,
     reader_experiences: Sequence[str] | None = None,
     narrative_drives: Sequence[str] | None = None,
     payoff_channels: Sequence[str] | None = None,
@@ -1095,7 +1163,14 @@ def retrieve_metadata_candidates(
     path = _resolved(corpus_root) / "machine" / "cards.jsonl"
     if not path.is_file():
         raise SemanticCorpusError("machine package 不存在，请先运行 novel corpus compile")
-    problems = _query_values(creative_problem)
+    # ``creative_problem`` remains accepted for direct/legacy callers.  The
+    # unified query seam passes the machine field explicitly so a human
+    # sentence is never treated as one metadata tag.
+    problems = (
+        _query_values(creative_problem_tags)
+        if creative_problem_tags is not None
+        else _legacy_creative_problem_values(creative_problem)
+    )
     experiences = _query_values(reader_experiences)
     drives = _query_values(narrative_drives)
     payoffs = _query_values(payoff_channels)
@@ -1112,19 +1187,13 @@ def retrieve_metadata_candidates(
         except (json.JSONDecodeError, TypeError, ValidationError, ValueError) as exc:
             raise SemanticCorpusError("machine package 存在无法解析的 card") from exc
         parsed_records.append(record)
-    stale_ids = _record_stale_ids(parsed_records)
+    invalid_ids = _record_invalid_ids(parsed_records)
     records: list[tuple[int, dict[str, Any]]] = []
     for record in parsed_records:
         card_type = str(record.get("card_type", ""))
         if allowed_families and card_type not in allowed_families:
             continue
-        if record.get("status") == SemanticStatus.STALE.value:
-            continue
-        if card_type == "book-dna" and record.get("rewrite_required") is True:
-            continue
-        if _record_is_cross_book(record) and any(
-            str(upstream) in stale_ids for upstream in record.get("depends_on", [])
-        ):
+        if str(record.get("card_id", "")) in invalid_ids:
             continue
         fields = {
             "creative_problem_tags": {

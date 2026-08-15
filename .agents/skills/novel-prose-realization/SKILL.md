@@ -8,7 +8,7 @@ description: >-
 
 # Mission
 
-本 Skill 是 Draft 阶段的 Novel Prose Realization Layer。它回答“已经决定的事情应该怎样落到中文句子、段落、
+本 Skill 是 Draft 与 Revision Draft 共用的 Novel Prose Realization Layer。它回答“已经决定的事情应该怎样落到中文句子、段落、
 对话和场景里”，不回答“下一章发生什么”。目标是自然、具体、可读、有角色感的商业中文网文，不是文学总分，
 也不是规避 AI 检测器。
 

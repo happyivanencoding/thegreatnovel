@@ -9,6 +9,7 @@ import yaml
 from novel_authoring.progression.models import PayoffChannel, ReaderExperience
 from novel_authoring.reference_corpus.semantic import (
     SemanticCorpusError,
+    _record_invalid_ids,
     compile_semantic_corpus,
     retrieve_metadata_candidates,
     source_diversity_guard,
@@ -238,6 +239,21 @@ def test_metadata_retrieval_and_source_diversity_guard(tmp_path: Path) -> None:
     assert source_diversity_guard(records)
     with pytest.raises(ValueError):
         retrieve_metadata_candidates(root, max_cards=2)
+
+
+def test_rewrite_required_invalidates_all_dependents() -> None:
+    records = [
+        {"card_id": "book-dna-01", "rewrite_required": True, "depends_on": []},
+        {"card_id": "mechanism-01", "depends_on": ["book-dna-01"]},
+        {"card_id": "synthesis-01", "depends_on": ["mechanism-01"]},
+        {"card_id": "unrelated-01", "depends_on": []},
+    ]
+
+    assert _record_invalid_ids(records) == {
+        "book-dna-01",
+        "mechanism-01",
+        "synthesis-01",
+    }
 
 
 def test_source_diversity_guard_detects_same_source_overflow() -> None:

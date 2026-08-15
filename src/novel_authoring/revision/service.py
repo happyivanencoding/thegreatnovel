@@ -7,7 +7,7 @@ import json
 import sqlite3
 from contextlib import suppress
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Literal, cast
 
 import yaml
 from pydantic import ValidationError
@@ -24,6 +24,7 @@ from novel_authoring.canon.projection import (
     persist_projection_in_transaction,
     projection_from_connection,
 )
+from novel_authoring.config import load_settings
 from novel_authoring.db.database import Database
 from novel_authoring.domain.models import InformationStatus
 from novel_authoring.edition import (
@@ -38,6 +39,14 @@ from novel_authoring.ingest.service import verify_sources
 from novel_authoring.planning.innovation import (
     InnovationControl,
     load_book_innovation_control,
+)
+from novel_authoring.reference_corpus.context import (
+    ReferenceContextConflict,
+    freeze_reference_context,
+)
+from novel_authoring.reference_corpus.query import (
+    ReferenceCorpusQueryRequest,
+    query_reference_corpus,
 )
 from novel_authoring.revision.models import (
     ImpactAuditDecision,
@@ -121,6 +130,234 @@ def _write_json(path: Path, value: Any) -> str:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     return sha256_bytes(text.encode("utf-8"))
+
+
+_REFERENCE_PROSE_FIELDS = (
+    "card_id",
+    "card_type",
+    "control_topic",
+    "applicable_scene_functions",
+    "guidance",
+    "variants",
+    "when_to_use",
+    "failure_signals",
+    "transfer_boundary",
+)
+
+
+def _configured_reference_corpus_root() -> Path | None:
+    with suppress(OSError, TypeError, ValueError):
+        return load_settings().reference_corpus_root
+    return None
+
+
+def _reference_policy_values(spec: RevisionSpec, key: str) -> list[str]:
+    values: list[str] = []
+    for policy in (spec.style_policy, spec.completion_policy):
+        raw = policy.get(key)
+        if isinstance(raw, (list, tuple)):
+            values.extend(str(item).strip() for item in raw if str(item).strip())
+    return list(dict.fromkeys(values))
+
+
+def _reference_policy_max_cards(spec: RevisionSpec, default: int) -> int:
+    for policy in (spec.style_policy, spec.completion_policy):
+        raw = policy.get("max_cards")
+        if raw is None:
+            continue
+        try:
+            value = int(raw)
+        except (TypeError, ValueError):
+            continue
+        if 3 <= value <= 8:
+            return value
+    return default
+
+
+def _revision_prose_scene_functions(spec: RevisionSpec) -> list[str]:
+    configured = _reference_policy_values(spec, "scene_functions")
+    if configured:
+        return configured
+    return {
+        "correction": ["ACTION", "PAYOFF"],
+        "canon_retcon": ["DISCOVERY", "PAYOFF"],
+        "character_reframe": ["DIALOGUE", "RELATIONSHIP_SHIFT"],
+        "relationship_transformation": ["DIALOGUE", "RELATIONSHIP_SHIFT"],
+        "arc_rewrite": ["ACTION", "PAYOFF"],
+        "style_rewrite": ["ACTION", "DIALOGUE", "AFTERMATH"],
+    }.get(spec.revision_kind, ["ACTION", "DIALOGUE", "AFTERMATH"])
+
+
+def _reference_prose_controls(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
+    controls: list[dict[str, Any]] = []
+    for card in snapshot.get("compact_cards", []):
+        if card.get("card_type") != "prose-control":
+            continue
+        controls.append(
+            {key: card[key] for key in _REFERENCE_PROSE_FIELDS if key in card}
+        )
+    return controls
+
+
+def _reference_context_metadata(
+    snapshot: dict[str, Any], output_path: Path
+) -> dict[str, Any]:
+    warnings = [str(item) for item in snapshot.get("warnings", [])]
+    status = str(snapshot.get("status", "UNAVAILABLE"))
+    if status == "ENABLED" and any(
+        marker in warning.casefold()
+        for warning in warnings
+        for marker in ("package/path 不存在", "package/path 不完整", "corrupt package")
+    ):
+        status = "UNAVAILABLE"
+    return {
+        "purpose": snapshot.get("purpose"),
+        "status": status,
+        "snapshot_id": snapshot.get("snapshot_id"),
+        "snapshot_hash": snapshot.get("snapshot_hash"),
+        "snapshot_path": str(output_path),
+        "selected_card_count": int(
+            snapshot.get("selected_card_count", len(snapshot.get("selected_card_ids", [])))
+        ),
+        "package_schema_version": snapshot.get("package_schema_version"),
+        "package_hash": snapshot.get("package_hash"),
+        "selected_card_ids": list(snapshot.get("selected_card_ids", [])),
+        "selected_card_types": list(snapshot.get("selected_card_types", [])),
+        "selected_card_knowledge_levels": list(
+            snapshot.get("selected_card_knowledge_levels", [])
+        ),
+        "knowledge_gaps": list(snapshot.get("knowledge_gaps", [])),
+        "warnings": warnings,
+        "usage": snapshot.get("usage", "REFERENCE_ONLY"),
+    }
+
+
+def _revision_reference_context(
+    *,
+    purpose: Literal["PLANNING", "PROSE"],
+    book_id: str,
+    edition_id: str,
+    operation_id: str,
+    creative_problem: str,
+    output_path: Path,
+    creative_problem_tags: list[str] | None = None,
+    reader_experiences: list[str] | None = None,
+    narrative_drives: list[str] | None = None,
+    payoff_channels: list[str] | None = None,
+    scene_functions: list[str] | None = None,
+    max_cards: int | None = None,
+) -> dict[str, Any]:
+    request = ReferenceCorpusQueryRequest(
+        purpose=purpose,
+        creative_problem=creative_problem,
+        creative_problem_tags=list(creative_problem_tags or []),
+        reader_experiences=list(reader_experiences or []),
+        narrative_drives=list(narrative_drives or []),
+        payoff_channels=list(payoff_channels or []),
+        scene_functions=list(
+            scene_functions
+            if scene_functions is not None
+            else ([] if purpose == "PLANNING" else ["ACTION", "DIALOGUE", "AFTERMATH"])
+        ),
+        max_cards=max_cards or (6 if purpose == "PLANNING" else 4),
+    )
+    try:
+        response = query_reference_corpus(
+            request, corpus_root=_configured_reference_corpus_root()
+        )
+        snapshot = freeze_reference_context(
+            request,
+            response,
+            book_id=book_id,
+            edition_id=edition_id,
+            operation_id=operation_id,
+            output_path=output_path,
+        ).model_dump(mode="json")
+    except ReferenceContextConflict:
+        raise
+    except (OSError, TypeError, ValueError) as exc:
+        return {
+            "purpose": purpose,
+            "status": "UNAVAILABLE",
+            "snapshot_id": None,
+            "snapshot_hash": None,
+            "snapshot_path": str(output_path),
+            "package_schema_version": None,
+            "package_hash": None,
+            "selected_card_ids": [],
+            "selected_card_count": 0,
+            "selected_card_types": [],
+            "selected_card_knowledge_levels": [],
+            "knowledge_gaps": ["Reference Context 未能冻结"],
+            "warnings": [f"soft-fail：Reference Context 未能冻结：{exc}"],
+            "usage": "REFERENCE_ONLY",
+            **({"controls": []} if purpose == "PROSE" else {}),
+        }
+    metadata = _reference_context_metadata(snapshot, output_path)
+    if purpose == "PROSE":
+        metadata["controls"] = _reference_prose_controls(snapshot)
+    return metadata
+
+
+def _load_revision_planning_context(
+    plan_path: Path, fallback_snapshot_path: Path
+) -> dict[str, Any]:
+    fallback = {
+        "purpose": "PLANNING",
+        "status": "UNAVAILABLE",
+        "snapshot_id": None,
+        "snapshot_hash": None,
+        "snapshot_path": str(fallback_snapshot_path),
+        "selected_card_ids": [],
+        "selected_card_count": 0,
+        "selected_card_types": [],
+        "selected_card_knowledge_levels": [],
+        "knowledge_gaps": ["Revision Plan 未包含冻结的 Reference Context"],
+        "warnings": ["soft-fail：Revision Plan 未包含冻结的 Reference Context"],
+        "usage": "REFERENCE_ONLY",
+    }
+    try:
+        payload = json.loads(plan_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return fallback
+    context = payload.get("reference_planning_context") if isinstance(payload, dict) else None
+    return dict(context) if isinstance(context, dict) else fallback
+
+
+def _revision_draft_input_text(
+    task_id: str, unit: RevisionUnit, reference_prose_context: dict[str, Any]
+) -> str:
+    lines = [
+        f"# Revision Draft 任务 `{task_id}`",
+        "",
+        "RevisionUnit 是本任务的故事事实与改写边界；Reference Corpus 只提供表达层软控制。",
+        "不得改变 RevisionUnit 的 required changes、must preserve、事件顺序、人物选择、"
+        "资源、知识边界、dependent units 或 expected_after_state。",
+        "复用 Novel Prose Realization 共享协议：只调整句法、段落节奏、信息呈现、对话自然度、"
+        "描写与场景收束；当前书风格与作者明确意图优先。",
+        "",
+        "## Frozen Revision Unit",
+        "",
+        "```json",
+        json_dumps(unit.model_dump(mode="json"), indent=2),
+        "```",
+        "",
+    ]
+    if reference_prose_context.get("status") != "DISABLED":
+        lines.extend(
+            [
+                "## Reference Corpus Prose Controls（REFERENCE_ONLY soft context）",
+                "",
+                "以下 compact context 只影响表达，不得改变 RevisionUnit、required changes、"
+                "order 或 expected_after_state；冲突时丢弃 Reference Guidance。",
+                "",
+                "```json",
+                json_dumps(reference_prose_context, indent=2),
+                "```",
+                "",
+            ]
+        )
+    return "\n".join(lines)
 
 
 def _load_spec(value: RevisionSpec | str | Path | dict[str, Any]) -> RevisionSpec:
@@ -1048,6 +1285,30 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
             "UPDATE revision_campaigns SET status='PLANNED', version=version+1 WHERE campaign_id=?",
             (campaign_id,),
         )
+    plan_operation = _revision_operation(database, book_id, edition_id, campaign_id, "plan")
+    reference_snapshot_path = (
+        plan_operation.input / "reference_planning_context_snapshot.json"
+        if plan_operation is not None
+        else root / "reference_planning_context_snapshot.json"
+    )
+    reference_planning_context = _revision_reference_context(
+        purpose="PLANNING",
+        book_id=book_id,
+        edition_id=edition_id,
+        operation_id=f"revision-plan:{campaign_id}",
+        creative_problem=(
+            f"修订意图：{spec.intent}；必须改变：{'；'.join(spec.must_change)}。"
+            "影响包已完成；请提供可迁移的结构与表达解法，"
+            "不判断哪些事实必须改，也不选择 Revision Unit。"
+        ),
+        output_path=reference_snapshot_path,
+        creative_problem_tags=_reference_policy_values(spec, "creative_problem_tags"),
+        reader_experiences=_reference_policy_values(spec, "reader_experiences"),
+        narrative_drives=_reference_policy_values(spec, "narrative_drives"),
+        payoff_channels=_reference_policy_values(spec, "payoff_channels"),
+        scene_functions=_reference_policy_values(spec, "scene_functions"),
+        max_cards=_reference_policy_max_cards(spec, 6),
+    )
     plan = {
         "campaign_id": campaign_id,
         "book_id": book_id,
@@ -1057,14 +1318,14 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
         "units": [unit.model_dump(mode="json") for unit in units],
         "dependency_order": [unit.unit_id for unit in units],
         "innovation_control": spec.innovation_control.model_dump(mode="json"),
+        "reference_planning_context": reference_planning_context,
         "created_at": utc_now(),
     }
     plan_path = root / "revision_plan.json"
     _write_json(plan_path, plan)
-    operation = _revision_operation(database, book_id, edition_id, campaign_id, "plan")
     task_path = (
-        operation.input / "task.json"
-        if operation is not None
+        plan_operation.input / "task.json"
+        if plan_operation is not None
         else root / "agent_tasks" / "revision-plan.json"
     )
     _write_json(
@@ -1075,6 +1336,8 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
             "input": str(plan_path),
             "schema": "RevisionUnit[]",
             "innovation_control": spec.innovation_control.model_dump(mode="json"),
+            "reference_planning_context": reference_planning_context,
+            "reference_context_snapshot": str(reference_snapshot_path),
         },
     )
     return {
@@ -1083,6 +1346,7 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
         "task_path": str(task_path),
         "unit_count": len(units),
         "units": plan["units"],
+        "reference_planning_context": reference_planning_context,
     }
 
 
@@ -1097,7 +1361,8 @@ def prepare_revision_draft_task(
         campaign_id,
     )
     campaign = _campaign_row(database, book_id, campaign_id)
-    innovation_control = _spec_from_campaign(campaign).innovation_control
+    spec = _spec_from_campaign(campaign)
+    innovation_control = spec.innovation_control
     with database.connect() as connection:
         row = connection.execute(
             "SELECT * FROM revision_units WHERE campaign_id=? AND unit_id=?", (campaign_id, unit_id)
@@ -1147,6 +1412,26 @@ def prepare_revision_draft_task(
     plan_path = root / "revision_plan.json"
     packet_hash = sha256_file(packet_path) if packet_path.is_file() else ""
     plan_hash = sha256_file(plan_path) if plan_path.is_file() else ""
+    snapshot_path = (
+        operation.input / "reference_prose_context_snapshot.json"
+        if operation is not None
+        else root / "reference_prose_context_snapshot.json"
+    )
+    reference_prose_context = _revision_reference_context(
+        purpose="PROSE",
+        book_id=book_id,
+        edition_id=unit.edition_id,
+        operation_id=task_id,
+        creative_problem="",
+        output_path=snapshot_path,
+        scene_functions=_revision_prose_scene_functions(spec),
+        max_cards=_reference_policy_max_cards(spec, 4),
+    )
+    reference_planning_context = _load_revision_planning_context(
+        plan_path,
+        root / "reference_planning_context_snapshot.json",
+    )
+    input_path = task_path.with_name("input.md")
     task = {
         "task_type": REVISION_TASK_TYPES["draft"],
         "task_id": task_id,
@@ -1163,12 +1448,34 @@ def prepare_revision_draft_task(
         "allowed_revision_numbers": [1, 2, 3],
         "output_must_be": "REVISION_DRAFT",
         "innovation_control": innovation_control.model_dump(mode="json"),
+        "reference_planning_context": reference_planning_context,
+        "reference_prose_context": reference_prose_context,
+        "reference_context_snapshot": str(snapshot_path),
+        "input_markdown": str(input_path),
+        "prose_realization_protocol": {
+            "shared_with": "normal Draft Novel Prose Realization",
+            "authority": "RevisionUnit > Revision constraints > current-book style > Reference Prose Controls",
+            "controls_may_change": [
+                "句法、段落节奏、信息呈现、对话自然度、描写与场景收束"
+            ],
+            "controls_must_not_change": [
+                "RevisionUnit required changes、must preserve、事件顺序、人物选择、资源、知识边界、expected_after_state"
+            ],
+        },
     }
+    input_path.parent.mkdir(parents=True, exist_ok=True)
+    input_path.write_text(
+        _revision_draft_input_text(task_id, unit, reference_prose_context),
+        encoding="utf-8",
+    )
     _write_json(task_path, task)
     return {
         "task_id": task_id,
         "task_path": str(task_path),
         "schema_path": str(schema_path),
+        "input_markdown": str(input_path),
+        "reference_planning_context": reference_planning_context,
+        "reference_prose_context": reference_prose_context,
         "unit": unit.model_dump(mode="json"),
     }
 

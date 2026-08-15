@@ -202,6 +202,7 @@ def corpus_stats_command(
 def corpus_query_command(
     purpose: QueryPurpose = typer.Option(..., "--purpose", help="PLANNING 或 PROSE"),
     creative_problem: str = typer.Option("", "--creative-problem"),
+    creative_problem_tags: list[str] = typer.Option([], "--creative-problem-tag"),
     reader_experiences: list[str] = typer.Option([], "--reader-experience"),
     narrative_drives: list[str] = typer.Option([], "--narrative-drive"),
     payoff_channels: list[str] = typer.Option([], "--payoff-channel"),
@@ -215,6 +216,7 @@ def corpus_query_command(
         request = ReferenceCorpusQueryRequest(
             purpose=purpose,
             creative_problem=creative_problem,
+            creative_problem_tags=creative_problem_tags,
             reader_experiences=reader_experiences,
             narrative_drives=narrative_drives,
             payoff_channels=payoff_channels,

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Annotated, Any, Literal
@@ -28,9 +29,17 @@ from novel_authoring.reference_corpus.semantic_models import (
     SemanticStatus,
 )
 from novel_authoring.serial_kernel.models import NarrativeDrive
+from novel_authoring.utils import sha256_file
 
 QueryPurpose = Literal["PLANNING", "PROSE"]
 QueryUsage = Literal["REFERENCE_ONLY"]
+QueryStatus = Literal[
+    "ENABLED",
+    "ZERO_RESULTS",
+    "UNAVAILABLE",
+    "CORRUPT",
+    "DISABLED",
+]
 
 
 class ReferenceCorpusQueryRequest(BaseModel):
@@ -38,6 +47,7 @@ class ReferenceCorpusQueryRequest(BaseModel):
 
     purpose: QueryPurpose
     creative_problem: str = ""
+    creative_problem_tags: list[str] = Field(default_factory=list)
     reader_experiences: list[str] = Field(default_factory=list)
     narrative_drives: list[str] = Field(default_factory=list)
     payoff_channels: list[str] = Field(default_factory=list)
@@ -49,6 +59,7 @@ class ReferenceCorpusQueryEcho(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     creative_problem: str = ""
+    creative_problem_tags: list[str] = Field(default_factory=list)
     reader_experiences: list[str] = Field(default_factory=list)
     narrative_drives: list[str] = Field(default_factory=list)
     payoff_channels: list[str] = Field(default_factory=list)
@@ -166,6 +177,9 @@ class ReferenceCorpusQueryResponse(BaseModel):
     schema_version: Literal["reference-corpus-query-v1"]
     purpose: QueryPurpose
     query: ReferenceCorpusQueryEcho
+    status: QueryStatus = "ENABLED"
+    package_schema_version: str | None = None
+    package_hash: str | None = None
     cards: list[CompactCard] = Field(default_factory=list, max_length=8)
     knowledge_gaps: list[str] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
@@ -328,11 +342,17 @@ def _response(
     cards: list[CompactCard] | None = None,
     knowledge_gaps: list[str] | None = None,
     warnings: list[str] | None = None,
+    status: QueryStatus = "ENABLED",
+    package_schema_version: str | None = None,
+    package_hash: str | None = None,
 ) -> ReferenceCorpusQueryResponse:
     return ReferenceCorpusQueryResponse(
         schema_version="reference-corpus-query-v1",
         purpose=request.purpose,
         query=_query_echo(request),
+        status=status,
+        package_schema_version=package_schema_version,
+        package_hash=package_hash,
         cards=cards or [],
         knowledge_gaps=knowledge_gaps or [],
         warnings=warnings or [],
@@ -371,11 +391,19 @@ def query_reference_corpus(
         raise
 
     root = _root_from_config(corpus_root)
-    if root is None or not root.is_dir():
+    if root is None:
         return _response(
             query,
             knowledge_gaps=["当前没有可用的 Reference Corpus machine package/path"],
-            warnings=["soft-fail：Reference Corpus package/path 不存在或未配置"],
+            warnings=["soft-fail：Reference Corpus 未启用或未配置"],
+            status="DISABLED",
+        )
+    if not root.is_dir():
+        return _response(
+            query,
+            knowledge_gaps=["当前配置的 Reference Corpus path 不存在"],
+            warnings=["soft-fail：Reference Corpus package/path 不存在"],
+            status="UNAVAILABLE",
         )
     package_path = root / "machine" / "corpus-package.json"
     cards_path = root / "machine" / "cards.jsonl"
@@ -384,25 +412,40 @@ def query_reference_corpus(
             query,
             knowledge_gaps=["需要先 compile Reference Corpus machine package"],
             warnings=["soft-fail：machine package/path 不完整"],
+            status="UNAVAILABLE",
         )
+    package_schema_version: str | None = None
+    package_hash: str | None = None
     try:
         package = json.loads(package_path.read_text(encoding="utf-8"))
         if not isinstance(package, dict):
             raise ValueError("package 根节点不是 object")
         if package.get("schema_version") != MACHINE_PACKAGE_VERSION:
             raise ValueError("package schema_version 不正确")
+        package_schema_version = str(package["schema_version"])
+        package_hash = sha256_file(package_path)
     except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
         return _response(
             query,
             knowledge_gaps=["machine package 不能作为可靠的查询输入"],
             warnings=[f"corrupt package：{exc}"],
+            status="CORRUPT",
         )
 
     families = _PLANNING_FAMILIES if query.purpose == "PLANNING" else _PROSE_FAMILIES
+    legacy_tags = []
+    # Keep old callers that passed a single ASCII tag working, while refusing
+    # to turn a natural-language sentence into a machine tag.
+    if (
+        not query.creative_problem_tags
+        and query.creative_problem
+        and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", query.creative_problem.strip())
+    ):
+        legacy_tags = [query.creative_problem.strip()]
     try:
         records = retrieve_metadata_candidates(
             root,
-            creative_problem=query.creative_problem,
+            creative_problem_tags=query.creative_problem_tags or legacy_tags,
             reader_experiences=query.reader_experiences,
             narrative_drives=query.narrative_drives,
             payoff_channels=query.payoff_channels,
@@ -423,14 +466,26 @@ def query_reference_corpus(
             query,
             knowledge_gaps=["machine package cards 无法解析为当前 V1 contract"],
             warnings=[f"corrupt package：{exc}"],
+            status="CORRUPT",
+            package_schema_version=package_schema_version,
+            package_hash=package_hash,
         )
     if not cards:
         return _response(
             query,
             knowledge_gaps=["没有满足当前 purpose、metadata 和 source diversity 条件的卡片"],
             warnings=["soft-fail：query 返回 zero results"],
+            status="ZERO_RESULTS",
+            package_schema_version=package_schema_version,
+            package_hash=package_hash,
         )
-    return _response(query, cards=cards)
+    return _response(
+        query,
+        cards=cards,
+        status="ENABLED",
+        package_schema_version=package_schema_version,
+        package_hash=package_hash,
+    )
 
 
 query_corpus = query_reference_corpus
@@ -444,6 +499,7 @@ __all__ = [
     "ProseControlCardProjection",
     "QueryRequest",
     "QueryResponse",
+    "QueryStatus",
     "ReferenceCorpusQueryEcho",
     "ReferenceCorpusQueryRequest",
     "ReferenceCorpusQueryResponse",

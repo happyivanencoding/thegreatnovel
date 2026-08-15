@@ -32,6 +32,24 @@ Edition activation 边界保持不变，并由 Python 的 complete/approval 路�
     INFERENCE 和 CANDIDATE 不能被改写当作 CANON，Atlas refresh 必须生成新的 child 版本，
     不覆盖 base 或旧 edition artifact。
 
+## Reference Corpus 与共享 Prose Realization
+
+Impact Audit 只分析作品内部事实，不调用 Reference Corpus。Impact Packet 完成后，
+`build_revision_plan` 通过唯一的 `query_reference_corpus(purpose="PLANNING")` gateway
+冻结 `reference_planning_context`；它只提供可迁移的机制、对照和知识缺口，不能决定
+哪些事实必须改、选择 RevisionUnit 或覆盖 RevisionSpec。
+
+`prepare_revision_draft_task` 再通过同一 gateway 以 `purpose="PROSE"` 冻结
+`reference_prose_context`，并写入 `reference_context_snapshot.json` 与 `input.md`。
+Revision Draft 必须读取并遵循 `.agents/skills/novel-prose-realization/SKILL.md`，
+与普通 Draft 共用 Novel Prose Realization、Naturalness Audit 和有界 Targeted Repair
+协议；不得创建第二套 revision humanizer 或正文生成逻辑。Prose Controls 只能改变句法、
+段落节奏、信息呈现、对话自然度、描写和场景收束，不能改变 RevisionUnit、required
+changes、must preserve、事件顺序、人物选择、资源、知识边界或 expected_after_state。
+
+所有 Reference Context 都是 `REFERENCE_ONLY`，并在 task/plan artifact 中保留 status、
+snapshot/package identity、card count、selected card ids、warnings 和 knowledge gaps。
+
 ## 推荐命令
 
 ```text

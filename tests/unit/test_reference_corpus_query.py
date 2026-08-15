@@ -7,10 +7,15 @@ import pytest
 from pydantic import ValidationError
 
 from novel_authoring.reference_corpus.query import (
+    ReferenceCorpusQueryEcho,
     ReferenceCorpusQueryRequest,
+    ReferenceCorpusQueryResponse,
     query_reference_corpus,
 )
-from novel_authoring.reference_corpus.semantic import source_diversity_guard
+from novel_authoring.reference_corpus.semantic import (
+    retrieve_metadata_candidates,
+    source_diversity_guard,
+)
 from novel_authoring.reference_corpus.semantic_models import (
     ProseControlCard,
 )
@@ -124,6 +129,9 @@ def test_query_contract_limits_purpose_and_card_families(tmp_path: Path) -> None
         corpus_root=root,
     )
     assert planning.usage == "REFERENCE_ONLY"
+    assert planning.status == "ENABLED"
+    assert planning.package_schema_version == "reference-corpus-machine-package-v1"
+    assert planning.package_hash
     assert all(card.card_type == "mechanism-card" for card in planning.cards)
     assert all(card.card_type != "prose-control" for card in planning.cards)
     assert all("observation_summary" not in card.model_dump() for card in planning.cards)
@@ -137,6 +145,7 @@ def test_query_contract_limits_purpose_and_card_families(tmp_path: Path) -> None
         },
         corpus_root=root,
     )
+    assert prose.status == "ENABLED"
     assert [card.card_type for card in prose.cards] == ["prose-control"]
     assert all(card.card_type != "mechanism-card" for card in prose.cards)
     assert "source_refs" in prose.cards[0].model_dump()
@@ -148,6 +157,7 @@ def test_query_soft_fails_without_package_or_with_zero_results(tmp_path: Path) -
         corpus_root=tmp_path / "missing",
     )
     assert not missing.cards
+    assert missing.status == "UNAVAILABLE"
     assert any("soft-fail" in warning for warning in missing.warnings)
 
     root = tmp_path / "empty"
@@ -157,7 +167,135 @@ def test_query_soft_fails_without_package_or_with_zero_results(tmp_path: Path) -
         corpus_root=root,
     )
     assert not empty.cards
+    assert empty.status == "ZERO_RESULTS"
     assert empty.knowledge_gaps
+
+
+def test_query_status_disabled_when_root_is_not_configured(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        "novel_authoring.reference_corpus.query._root_from_config",
+        lambda _corpus_root: None,
+    )
+
+    response = query_reference_corpus({"purpose": "PLANNING"})
+
+    assert response.status == "DISABLED"
+    assert not response.cards
+
+
+def test_query_status_unavailable_when_machine_file_is_missing(tmp_path: Path) -> None:
+    root = tmp_path / "incomplete"
+    machine = root / "machine"
+    machine.mkdir(parents=True)
+    (machine / "corpus-package.json").write_text(
+        json.dumps({"schema_version": "reference-corpus-machine-package-v1"}),
+        encoding="utf-8",
+    )
+
+    response = query_reference_corpus({"purpose": "PLANNING"}, corpus_root=root)
+
+    assert response.status == "UNAVAILABLE"
+    assert not response.cards
+
+
+@pytest.mark.parametrize("package_text", ["{broken", json.dumps({"schema_version": "wrong"})])
+def test_query_status_corrupt_when_package_json_or_schema_is_invalid(
+    tmp_path: Path, package_text: str
+) -> None:
+    root = tmp_path / "corrupt-package"
+    machine = root / "machine"
+    machine.mkdir(parents=True)
+    (machine / "corpus-package.json").write_text(package_text, encoding="utf-8")
+    (machine / "cards.jsonl").write_text("", encoding="utf-8")
+
+    response = query_reference_corpus({"purpose": "PLANNING"}, corpus_root=root)
+
+    assert response.status == "CORRUPT"
+    assert not response.cards
+
+
+def test_query_status_corrupt_when_cards_jsonl_is_invalid(tmp_path: Path) -> None:
+    root = tmp_path / "corrupt-cards"
+    _write_package(root, [])
+    (root / "machine" / "cards.jsonl").write_text("{broken\n", encoding="utf-8")
+
+    response = query_reference_corpus({"purpose": "PLANNING"}, corpus_root=root)
+
+    assert response.status == "CORRUPT"
+    assert response.package_schema_version == "reference-corpus-machine-package-v1"
+    assert response.package_hash
+
+
+def test_query_separates_human_problem_from_machine_tags_and_keeps_legacy_tag(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "tags"
+    _write_package(root, [_mechanism()])
+
+    tagged = query_reference_corpus(
+        {
+            "purpose": "PLANNING",
+            "creative_problem": "突破如何打开新的行动空间",
+            "creative_problem_tags": ["pure-upside"],
+            "max_cards": 3,
+        },
+        corpus_root=root,
+    )
+    assert [card.card_id for card in tagged.cards] == ["mechanism-test"]
+    assert tagged.query.creative_problem == "突破如何打开新的行动空间"
+    assert tagged.query.creative_problem_tags == ["pure-upside"]
+
+    legacy = query_reference_corpus(
+        {"purpose": "PLANNING", "creative_problem": "pure-upside", "max_cards": 3},
+        corpus_root=root,
+    )
+    assert [card.card_id for card in legacy.cards] == ["mechanism-test"]
+
+    human_sentence = query_reference_corpus(
+        {
+            "purpose": "PLANNING",
+            "creative_problem": "突破 如何打开新的行动空间",
+            "scene_functions": ["DIALOGUE"],
+            "max_cards": 3,
+        },
+        corpus_root=root,
+    )
+    assert human_sentence.status == "ZERO_RESULTS"
+    assert not human_sentence.cards
+
+
+def test_retrieval_legacy_problem_only_accepts_safe_single_tags(tmp_path: Path) -> None:
+    root = tmp_path / "semantic-tags"
+    _write_package(root, [_mechanism()])
+
+    assert retrieve_metadata_candidates(
+        root,
+        creative_problem="pure-upside",
+        card_families=("mechanism-card",),
+        max_cards=3,
+    )
+    human_sentence_results = retrieve_metadata_candidates(
+        root,
+        creative_problem="突破 如何打开新的行动空间",
+        card_families=("mechanism-card",),
+        max_cards=3,
+    )
+    assert len(human_sentence_results) == 1
+    assert "creative_problem_tags" not in human_sentence_results[0][
+        "metadata_match_fields"
+    ]
+
+
+def test_response_status_defaults_for_existing_construction() -> None:
+    response = ReferenceCorpusQueryResponse(
+        schema_version="reference-corpus-query-v1",
+        purpose="PLANNING",
+        query=ReferenceCorpusQueryEcho(max_cards=3),
+    )
+
+    assert response.status == "ENABLED"
+    assert response.package_schema_version is None
+    assert response.package_hash is None
 
 
 def test_query_excludes_stale_cards_and_cards_depending_on_stale(tmp_path: Path) -> None:
@@ -184,6 +322,10 @@ def test_query_request_is_strict_and_source_diversity_is_bounded() -> None:
     with pytest.raises(ValidationError):
         ReferenceCorpusQueryRequest.model_validate(
             {"purpose": "PLANNING", "max_cards": 9, "unexpected": True}
+        )
+    with pytest.raises(ValidationError):
+        ReferenceCorpusQueryRequest.model_validate(
+            {"purpose": "PLANNING", "max_cards": 3, "unexpected": True}
         )
     records = [{"source_book_ids": ["book-01"]} for _ in range(3)]
     assert source_diversity_guard(records) is False

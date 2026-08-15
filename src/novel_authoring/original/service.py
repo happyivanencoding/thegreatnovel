@@ -70,6 +70,11 @@ from novel_authoring.progression.service import (
     list_contract_records,
     reject_contract,
 )
+from novel_authoring.reference_corpus.context import freeze_reference_context
+from novel_authoring.reference_corpus.query import (
+    ReferenceCorpusQueryRequest,
+    query_reference_corpus,
+)
 from novel_authoring.serial_kernel.classification import (
     ensure_drive_support_metadata,
     market_category_label,
@@ -422,6 +427,106 @@ def _confirmed_progression_kernel(
     return kernel
 
 
+def _reference_field_values(payload: object, *keys: str) -> list[str]:
+    if not isinstance(payload, Mapping):
+        return []
+    values: list[str] = []
+    for key in keys:
+        value = payload.get(key)
+        if isinstance(value, Mapping) or (
+            isinstance(value, Sequence) and not isinstance(value, (str, bytes))
+        ):
+            values.extend(str(item) for item in value)
+        elif value not in (None, ""):
+            values.append(str(value))
+    return list(dict.fromkeys(values))
+
+
+def _original_reference_planning_context(
+    request: Mapping[str, Any], *, stage: str, book_id: str
+) -> dict[str, Any]:
+    kernel = request.get("progression_kernel")
+    kernel = kernel if isinstance(kernel, Mapping) else {}
+    reader = kernel.get("reader_experience")
+    reader = reader if isinstance(reader, Mapping) else {}
+    contract_proposals = kernel.get("contract_proposals")
+    contract_proposals = (
+        contract_proposals if isinstance(contract_proposals, Mapping) else {}
+    )
+    drive = contract_proposals.get("NARRATIVE_DRIVE", {})
+    drive = drive if isinstance(drive, Mapping) else {}
+    drive_payload = drive.get("payload", drive)
+    drive_payload = drive_payload if isinstance(drive_payload, Mapping) else {}
+    payoff = contract_proposals.get("PAYOFF_CHANNEL", {})
+    payoff = payoff if isinstance(payoff, Mapping) else {}
+    payoff_payload = payoff.get("payload", payoff)
+    payoff_payload = payoff_payload if isinstance(payoff_payload, Mapping) else {}
+    query = ReferenceCorpusQueryRequest(
+        purpose="PLANNING",
+        creative_problem=(
+            f"{stage}：围绕作者 premise 与已确认阅读体验寻找可迁移的故事机制，"
+            "只作为 Core/Foundation/Candidate 的参考候选。"
+        ),
+        creative_problem_tags=[
+            str(item)
+            for item in (
+                request.get("creative_problem_tags", [])
+                if isinstance(request.get("creative_problem_tags", []), Sequence)
+                and not isinstance(request.get("creative_problem_tags", []), (str, bytes))
+                else []
+            )
+            if str(item).strip()
+        ],
+        reader_experiences=_reference_field_values(
+            reader,
+            "experience_priorities",
+            "reader_experiences",
+            "primary_experience",
+        ),
+        narrative_drives=_reference_field_values(
+            drive_payload,
+            "primary_drive",
+            "secondary_drives",
+            "narrative_drives",
+        ),
+        payoff_channels=_reference_field_values(
+            payoff_payload,
+            "channels",
+            "payoff_channels",
+            "primary_channel",
+        ),
+        max_cards=6,
+    )
+    response = query_reference_corpus(query)
+    snapshot = freeze_reference_context(
+        query,
+        response,
+        book_id=book_id,
+        edition_id="base",
+        operation_id=f"original:{book_id}:{stage}",
+    )
+    return snapshot.model_dump(mode="json")
+
+
+def _latest_original_reference_planning_context(
+    database: Database, book_id: str
+) -> dict[str, Any]:
+    """Reuse the frozen planning context that produced the accepted Genesis."""
+
+    development = _current_development_row(database, book_id)
+    if development is None or not development.get("handoff_id"):
+        return {}
+    try:
+        handoff = get_handoff(database, str(development["handoff_id"]))
+        request = _read_json(
+            Path(str(handoff["task_directory"])) / "input" / "original_request.json"
+        )
+    except (KeyError, OSError, TypeError, ValueError):
+        return {}
+    context = request.get("reference_planning_context") if isinstance(request, dict) else None
+    return dict(context) if isinstance(context, dict) else {}
+
+
 def prepare_original_core_innovation(database: Database, book_id: str) -> dict[str, Any]:
     request_payload = _read_json(_original_dir(database, book_id) / "request.json")
     if request_payload is None:
@@ -431,6 +536,9 @@ def prepare_original_core_innovation(database: Database, book_id: str) -> dict[s
         "requested_stage": "CORE_INNOVATION_PROPOSAL",
         "progression_kernel": _confirmed_progression_kernel(database, book_id),
     }
+    request["reference_planning_context"] = _original_reference_planning_context(
+        request, stage="CORE_INNOVATION_PROPOSAL", book_id=book_id
+    )
     completed = _reconcile_completed_core_innovation(database, book_id)
     if completed is not None:
         return {**completed, "deduplicated": True, "proposal_imported": True}
@@ -1361,6 +1469,9 @@ def prepare_original_bootstrap(database: Database, book_id: str) -> dict[str, An
         "requested_stage": "STORY_FOUNDATION_PROPOSAL",
         "progression_kernel": progression_kernel,
     }
+    request["reference_planning_context"] = _original_reference_planning_context(
+        request, stage="STORY_FOUNDATION_PROPOSAL", book_id=book_id
+    )
     completed = _reconcile_completed_original_bootstrap(database, book_id)
     if completed is not None:
         # A completed Codex handoff is already the user's requested result. Do
@@ -2303,6 +2414,9 @@ def prepare_original_foundation_development(
         "selected_story_foundation": selected_foundation,
         "kernel_contract_ids": kernel_contract_ids,
     }
+    request["reference_planning_context"] = _original_reference_planning_context(
+        request, stage="FOUNDATION_DEVELOPMENT_PROPOSAL", book_id=book_id
+    )
     handoff = create_original_bootstrap_handoff(
         database,
         book_id,
@@ -2835,6 +2949,36 @@ def select_first_chapter_candidate(
     )
     if operation is None:
         raise OriginalWorkflowError("原创项目必须使用作品目录内的创作任务空间")
+    reference_planning_context = _latest_original_reference_planning_context(
+        database, book_id
+    )
+    reference_prompt = {
+        key: reference_planning_context[key]
+        for key in (
+            "purpose",
+            "status",
+            "snapshot_id",
+            "snapshot_hash",
+            "selected_card_count",
+            "selected_card_ids",
+            "selected_card_types",
+            "selected_card_knowledge_levels",
+            "knowledge_gaps",
+            "warnings",
+        )
+        if key in reference_planning_context
+    }
+    reference_prompt["compact_cards"] = [
+        {
+            key: value
+            for key, value in card.items()
+            if key not in {"source_refs", "source_book_ids"}
+        }
+        for card in reference_planning_context.get("compact_cards", [])
+        if isinstance(card, dict)
+    ]
+    if reference_planning_context:
+        reference_prompt["usage"] = "REFERENCE_ONLY"
     _write_json(
         operation.input / "task.json",
         {
@@ -2855,6 +2999,7 @@ def select_first_chapter_candidate(
             "aggregate_id": None,
             "created_at": utc_now(),
             "information_status": "CANDIDATE",
+            "reference_planning_context": reference_prompt,
         },
     )
     with database.connect() as connection:
@@ -2886,6 +3031,11 @@ def select_first_chapter_candidate(
     draft_task = prepare_draft_task(
         database, book_id, str(contract["contract_id"]), edition_id="base"
     )
+    draft_task_path = Path(str(draft_task["input"])).with_name("task.json")
+    draft_task_payload = _read_json(draft_task_path) or {}
+    if reference_planning_context:
+        draft_task_payload["reference_planning_context"] = reference_prompt
+        _write_json(draft_task_path, draft_task_payload)
     handoff = create_continuation_handoff(
         database,
         book_id,
