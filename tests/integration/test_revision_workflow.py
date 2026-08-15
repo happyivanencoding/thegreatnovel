@@ -40,6 +40,7 @@ from novel_authoring.revision import (
     complete_revision_impact_audit,
     create_revision_campaign,
     import_revision_draft,
+    import_revision_strategy_selection,
     prepare_revision_draft_task,
     validate_revision_campaign,
 )
@@ -47,6 +48,9 @@ from novel_authoring.revision.models import RevisionUnit
 from novel_authoring.revision.service import (
     RevisionWorkflowError,
     _build_revision_strategy,
+    _load_revision_plan_artifact,
+    _revision_strategy_selection_required,
+    _revision_strategy_selector_input,
     _select_revision_scene_functions,
 )
 from novel_authoring.workflows.edition_export import export_edition
@@ -493,7 +497,7 @@ def _planning_contrast_card() -> ContrastCardProjection:
 def test_revision_strategy_uses_frozen_cards_effective_metadata_and_real_scene_source(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    database, _ = _setup(tmp_path)
+    database, workspace = _setup(tmp_path)
     with database.connect() as connection:
         target_chapter_id = str(
             connection.execute(
@@ -692,6 +696,42 @@ def test_revision_strategy_uses_frozen_cards_effective_metadata_and_real_scene_s
         selector_input["bounded_options"], ensure_ascii=False
     )
 
+    with pytest.raises(
+        RevisionWorkflowError, match="REVISION_STRATEGY_SELECTION_PENDING"
+    ):
+        prepare_revision_draft_task(
+            database, "revision-book", campaign_id, str(unit["unit_id"])
+        )
+    campaign_root = (
+        workspace
+        / "revision-book"
+        / "editions"
+        / "edition-r1"
+        / "revision_campaigns"
+        / campaign_id
+    )
+    assert not list((campaign_root / "agent_tasks").glob("draft-*.json"))
+    selector_output_path = Path(str(plan["strategy_selection"]["expected_output"]))
+    selector_output_path.write_text(
+        json.dumps(
+            {
+                "task_type": "REVISION_STRATEGY_SELECTION",
+                "task_id": planning_provenance["task_id"],
+                "campaign_id": campaign_id,
+                "edition_id": planning_provenance["edition_id"],
+                "planning_snapshot_id": planning_provenance["planning_snapshot_id"],
+                "planning_snapshot_hash": planning_provenance["planning_snapshot_hash"],
+                "strategies": plan["strategies"],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    imported = import_revision_strategy_selection(
+        database, "revision-book", campaign_id, selector_output_path
+    )
+    assert imported["status"] == "IMPORTED"
+
     task = prepare_revision_draft_task(
         database, "revision-book", campaign_id, str(unit["unit_id"])
     )
@@ -721,6 +761,173 @@ def test_revision_strategy_uses_frozen_cards_effective_metadata_and_real_scene_s
     assert "source_book_ids" not in input_text
     assert len(feature_calls) == 2
     assert len(loader_calls) >= 3
+
+
+def test_revision_strategy_selector_input_uses_unit_local_scene_and_rhythm_functions() -> None:
+    campaign_id = "campaign-unit-scene-functions"
+    edition_id = "edition-unit-scene-functions"
+    planning_context = {
+        "selected_card_ids": [],
+        "snapshot_id": "snapshot-unit-scene-functions",
+        "snapshot_hash": "hash-unit-scene-functions",
+    }
+    planning_snapshot = {
+        "purpose": "PLANNING",
+        "selected_card_ids": [],
+        "compact_cards": [],
+        "snapshot_id": "snapshot-unit-scene-functions",
+        "snapshot_hash": "hash-unit-scene-functions",
+    }
+    planning_prompt_context = {"compact_cards": []}
+
+    def make_unit(unit_id: str, chapter_id: str, ordinal: int) -> RevisionUnit:
+        return RevisionUnit(
+            unit_id=unit_id,
+            campaign_id=campaign_id,
+            book_id="book-unit-scene-functions",
+            edition_id=edition_id,
+            unit_order=ordinal,
+            base_chapter_ordinal=ordinal,
+            base_chapter_id=chapter_id,
+            base_source_span_id=f"span-{unit_id}",
+            base_content_sha256=f"content-{unit_id}",
+            original_heading="测试章节",
+            original_content="测试正文",
+            direct_change_requirements=["必须改变"],
+            must_preserve=["必须保留"],
+            forbidden_changes=["禁止改变"],
+            expected_after_state={"intent": "测试"},
+        )
+
+    unit_a = make_unit("unit-a", "chapter-a", 1)
+    unit_b = make_unit("unit-b", "chapter-b", 2)
+    target_context = {
+        "target_chapters": [
+            {"chapter_id": "chapter-a", "ordinal": 1},
+            {"chapter_id": "chapter-b", "ordinal": 2},
+        ],
+        "target_features": [
+            {
+                "chapter_id": "chapter-a",
+                "realized_primary_function": "relationship_shift",
+                "planned_primary_function": "setup",
+            },
+            {
+                "chapter_id": "chapter-b",
+                "realized_primary_function": None,
+                "planned_primary_function": None,
+            },
+        ],
+        # These are campaign-level values and must not be copied into either unit.
+        "target_scene_functions": ["ACTION"],
+        "rhythm_scene_functions": ["EXPOSITION"],
+        "rhythm_scene_functions_by_chapter": {"chapter-b": ["PAYOFF"]},
+        "rhythm": {},
+        "narrative_debt": {},
+        "payoff": {},
+    }
+
+    selector_a = _revision_strategy_selector_input(
+        unit_a,
+        planning_task_id="planning-task-unit-scene-functions",
+        planning_context=planning_context,
+        planning_snapshot=planning_snapshot,
+        planning_prompt_context=planning_prompt_context,
+        target_context=target_context,
+        effective_context={},
+    )
+    selector_b = _revision_strategy_selector_input(
+        unit_b,
+        planning_task_id="planning-task-unit-scene-functions",
+        planning_context=planning_context,
+        planning_snapshot=planning_snapshot,
+        planning_prompt_context=planning_prompt_context,
+        target_context=target_context,
+        effective_context={},
+    )
+
+    assert selector_a["target_chapter_context"]["scene_functions"] == [
+        "DIALOGUE",
+        "RELATIONSHIP_SHIFT",
+    ]
+    assert selector_a["target_chapter_context"]["rhythm_scene_functions"] == []
+    assert selector_b["target_chapter_context"]["scene_functions"] == ["PAYOFF"]
+    assert selector_b["target_chapter_context"]["rhythm_scene_functions"] == ["PAYOFF"]
+    assert "ACTION" not in selector_a["target_chapter_context"]["scene_functions"]
+    assert "ACTION" not in selector_b["target_chapter_context"]["scene_functions"]
+    assert "EXPOSITION" not in selector_b["target_chapter_context"]["rhythm_scene_functions"]
+
+
+def test_revision_strategy_selection_requirement_keeps_soft_fail_fallback() -> None:
+    snapshot = {
+        "purpose": "PLANNING",
+        "selected_card_count": 1,
+        "selected_card_ids": ["card-a"],
+        "compact_cards": [{"card_id": "card-a", "card_type": "mechanism-card"}],
+    }
+    planning_prompt_context = {
+        "compact_cards": [{"card_id": "card-a", "card_type": "mechanism-card"}]
+    }
+
+    assert _revision_strategy_selection_required(
+        {"status": "ENABLED", "selected_card_count": 1},
+        snapshot,
+        planning_prompt_context,
+    )
+    for status in ("DISABLED", "UNAVAILABLE", "CORRUPT", "ZERO_RESULTS"):
+        assert not _revision_strategy_selection_required(
+            {"status": status, "selected_card_count": 1},
+            snapshot,
+            planning_prompt_context,
+        )
+    assert not _revision_strategy_selection_required(
+        {"status": "ENABLED", "selected_card_count": 0},
+        snapshot,
+        planning_prompt_context,
+    )
+    assert not _revision_strategy_selection_required(
+        {"status": "ENABLED", "selected_card_count": 1},
+        snapshot,
+        {"compact_cards": []},
+    )
+
+
+def test_corrupt_revision_planning_snapshot_soft_fails_to_no_card_context(
+    tmp_path: Path,
+) -> None:
+    snapshot_path = tmp_path / "reference-planning-snapshot.json"
+    snapshot_path.write_text("{broken", encoding="utf-8")
+    plan_path = tmp_path / "revision-plan.json"
+    plan_path.write_text(
+        json.dumps(
+            {
+                "reference_planning_context": {
+                    "purpose": "PLANNING",
+                    "status": "CORRUPT",
+                    "snapshot_path": str(snapshot_path),
+                    "selected_card_count": 0,
+                    "selected_card_ids": [],
+                    "warnings": ["fixture corruption"],
+                },
+                "strategies": {},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    _, context, snapshot = _load_revision_plan_artifact(
+        plan_path,
+        tmp_path / "missing-snapshot.json",
+        expected_book_id="book-corrupt",
+        expected_edition_id="edition-corrupt",
+    )
+
+    assert context["status"] == "CORRUPT"
+    assert context["selected_card_count"] == 0
+    assert snapshot["status"] == "CORRUPT"
+    assert snapshot["selected_card_ids"] == []
+    assert snapshot["compact_cards"] == []
 
 
 def test_revision_strategy_selection_is_per_unit_and_bounded() -> None:

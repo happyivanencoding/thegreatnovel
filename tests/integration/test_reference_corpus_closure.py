@@ -42,8 +42,10 @@ from novel_authoring.revision import (
     build_revision_plan,
     complete_revision_impact_audit,
     create_revision_campaign,
+    import_revision_strategy_selection,
     prepare_revision_draft_task,
 )
+from novel_authoring.revision.service import RevisionWorkflowError
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.utils import json_dumps, stable_id, utc_now
 from novel_authoring.workflows.handoffs import get_handoff
@@ -611,15 +613,49 @@ def test_revision_strategy_chain_uses_selected_cards_and_draft_task(
 
     unit = plan["units"][0]
     strategy = plan["strategies"][str(unit["unit_id"])]
-    # No semantic selector result has been imported in this deterministic
-    # stage, so Python must use the explicit no-card fallback rather than
-    # pretending that retrieval selected every available card.
+    # The deterministic plan may carry a no-card fallback, but enabled cards
+    # require the explicit selector-import boundary before draft preparation.
     assert strategy["reference_card_ids_used"] == []
+    assert strategy["selected_contrast_solutions"] == []
     assert strategy["planning_snapshot_id"] == planning_context["snapshot_id"]
     assert strategy["planning_snapshot_hash"] == planning_context["snapshot_hash"]
     assert strategy["usage"] == "REFERENCE_ONLY"
     assert "semantic selector" in strategy["strategy_summary"]
     assert strategy["structural_moves"]
+
+    with pytest.raises(
+        RevisionWorkflowError, match="REVISION_STRATEGY_SELECTION_PENDING"
+    ):
+        prepare_revision_draft_task(
+            database,
+            "closure-revision",
+            campaign_id,
+            str(unit["unit_id"]),
+        )
+
+    selector_output_path = Path(str(plan["strategy_selection"]["expected_output"]))
+    selector_output_path.write_text(
+        json.dumps(
+            {
+                "task_type": "REVISION_STRATEGY_SELECTION",
+                "task_id": plan["planning_provenance"]["task_id"],
+                "campaign_id": campaign_id,
+                "edition_id": plan["planning_provenance"]["edition_id"],
+                "planning_snapshot_id": planning_snapshot.snapshot_id,
+                "planning_snapshot_hash": planning_snapshot.snapshot_hash,
+                "strategies": {str(unit["unit_id"]): strategy},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    imported = import_revision_strategy_selection(
+        database,
+        "closure-revision",
+        campaign_id,
+        selector_output_path,
+    )
+    assert imported["status"] == "IMPORTED"
 
     task = prepare_revision_draft_task(
         database,

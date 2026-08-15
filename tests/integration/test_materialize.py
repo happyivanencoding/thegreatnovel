@@ -3,7 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from novel_authoring.canon.materialize import materialize_change
+import pytest
+
+from novel_authoring.canon.materialize import MaterializationError, materialize_change
 from novel_authoring.contracts.draft import DraftStateChange
 from novel_authoring.db.database import Database
 
@@ -89,3 +91,26 @@ def test_every_approved_state_kind_materializes(tmp_path: Path) -> None:
             for table in tables
         }
     assert counts == dict.fromkeys(tables, 1)
+
+def test_materialization_contract_rejects_missing_owner_id(tmp_path: Path) -> None:
+    database = Database(tmp_path / "state.sqlite3")
+    database.initialize()
+    change = DraftStateChange(
+        kind="resource",
+        record_id="resource_missing_owner",
+        payload={"name": "木料", "after_quantity": 1},
+        evidence_quotes=["合成证据"],
+    )
+    with database.connect() as connection, pytest.raises(
+        MaterializationError, match="owner_id"
+    ):
+        materialize_change(
+            connection,
+            book_id="materialize-book",
+            change=change,
+            source_span_id="span_1",
+            event_id="event_1",
+            event_seq=1,
+            chapter_id="chapter_1",
+            ordinal=1,
+        )

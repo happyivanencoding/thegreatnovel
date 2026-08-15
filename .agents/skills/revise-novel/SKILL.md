@@ -18,7 +18,7 @@ Edition activation 边界保持不变，并由 Python 的 complete/approval 路�
 3. `RevisionSpec` 必须通过 `extra=forbid` 校验并持久化到 `library/<book>/editions/<edition>/revision_campaigns/<campaign>/`。
 4. 先 deterministic source/FTS scan，再完成 Codex 语义影响审计；任何 `MUST_REVIEW` 只能 HANDLED 或提供理由的 `EXPLICITLY_WAIVED`，不能把“扫描完成”当作“影响已处理”。
 5. 只接受 `task_type=REVISION_DRAFT` 的输出；导入前核对 task/campaign/unit/edition、章节 preimage SHA-256、schema 和文件哈希。
-6. 依次执行 impact → plan → draft-task/import → validate → preview。批准改写必须逐字输入 `批准改写版本`；批准只提交目标 edition，不自动启用。
+6. 依次执行 impact → plan → strategy selection → strategy-import → draft-task → import → validate → preview。PLANNING 为 `ENABLED` 且 `selected_card_count>0`、当前 unit 的 bounded options 非空时，必须先完成 strategy-import；在 `plan.strategy_selection_result.status=IMPORTED` 且其 task/provenance 与当前 planning 一致前，draft-task 必须明确报 `REVISION_STRATEGY_SELECTION_PENDING`，不能生成可执行 draft task。`DISABLED`、`UNAVAILABLE`、`CORRUPT`、`ZERO_RESULTS`，或 selected card count 为 0、bounded options 为空时，显式使用 `REFERENCE_ONLY` no-card fallback：reference ids 与 selected contrast solutions 为空，draft 可继续。批准改写必须逐字输入 `批准改写版本`；批准只提交目标 edition，不自动启用。
 7. 只有作者明确输入 `启用改写版本` 才能调用 edition activate。激活前确认目标 edition 为 VALIDATED，且 base projection/source hash 未漂移。
 8. 失败事务必须回滚事件、投影、variant、物化表和快照文件；discard 只将改写草稿标记为 REJECTED，不创建 variant。
 9. Direct Maintenance 模式或被修改章节实际改变时，才按目标 edition 重建

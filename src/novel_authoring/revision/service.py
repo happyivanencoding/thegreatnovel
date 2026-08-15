@@ -613,11 +613,30 @@ def _load_revision_plan_artifact(
     context = context if isinstance(context, dict) else {}
     snapshot_path = Path(str(context.get("snapshot_path") or fallback_snapshot_path))
     if snapshot_path.is_file():
-        snapshot = _load_frozen_reference_context(
-            snapshot_path,
-            expected_book_id=expected_book_id,
-            expected_edition_id=expected_edition_id,
-        )
+        try:
+            snapshot = _load_frozen_reference_context(
+                snapshot_path,
+                expected_book_id=expected_book_id,
+                expected_edition_id=expected_edition_id,
+            )
+        except ReferenceContextIntegrityError:
+            snapshot = {
+                "purpose": "PLANNING",
+                "status": "CORRUPT",
+                "snapshot_id": None,
+                "snapshot_hash": None,
+                "selected_card_ids": [],
+                "selected_card_count": 0,
+                "selected_card_types": [],
+                "selected_card_knowledge_levels": [],
+                "compact_cards": [],
+                "knowledge_gaps": ["冻结的 Reference Context Snapshot 不可可靠读取"],
+                "warnings": [
+                    *[str(item) for item in context.get("warnings", [])],
+                    "soft-fail：Reference Context Snapshot 未通过 Core loader 校验",
+                ],
+                "usage": "REFERENCE_ONLY",
+            }
         context = _reference_context_metadata(snapshot, snapshot_path)
     else:
         snapshot = {
@@ -1005,6 +1024,76 @@ def _scene_functions_for_value(value: object) -> list[str]:
     return list(_SCENE_FUNCTION_ALIASES.get(name, [name.upper()] if name else []))
 
 
+_UNKNOWN_SCENE_FUNCTION_VALUES = frozenset(
+    {"", "unknown", "unspecified", "not_applicable", "n/a"}
+)
+
+
+def _unit_selector_scene_context(
+    unit: RevisionUnit,
+    *,
+    target_features: list[Mapping[str, Any]],
+    rhythm: Mapping[str, Any],
+    rhythm_scene_functions_by_chapter: Mapping[str, Any] | None = None,
+) -> tuple[list[str], list[str]]:
+    """Return only scene evidence belonging to this selector unit.
+
+    The campaign-level target context is useful for the planning query, but it
+    is too broad for a per-unit semantic choice.  A realized/planned feature
+    for this chapter wins; a rhythm snapshot is used only when it is explicitly
+    anchored to the same chapter ordinal.
+    """
+
+    feature_functions: list[str] = []
+    for feature in target_features:
+        for key in ("realized_primary_function", "planned_primary_function"):
+            value = str(feature.get(key) or "").strip()
+            if value.casefold() in _UNKNOWN_SCENE_FUNCTION_VALUES:
+                continue
+            feature_functions.extend(_scene_functions_for_value(value))
+            break
+    feature_functions = list(dict.fromkeys(feature_functions))
+
+    rhythm_functions: list[str] = []
+    if isinstance(rhythm_scene_functions_by_chapter, Mapping):
+        raw_rhythm_functions = rhythm_scene_functions_by_chapter.get(
+            unit.base_chapter_id, []
+        )
+        if isinstance(raw_rhythm_functions, str):
+            raw_rhythm_functions = [raw_rhythm_functions]
+        if isinstance(raw_rhythm_functions, (list, tuple)):
+            for value in raw_rhythm_functions:
+                normalized = str(value or "").strip()
+                if normalized.casefold() not in _UNKNOWN_SCENE_FUNCTION_VALUES:
+                    rhythm_functions.extend(_scene_functions_for_value(normalized))
+    as_of_chapter = rhythm.get("as_of_chapter")
+    if not rhythm_functions:
+        try:
+            rhythm_is_for_unit = int(str(as_of_chapter)) == unit.base_chapter_ordinal
+        except (TypeError, ValueError):
+            rhythm_is_for_unit = False
+    else:
+        rhythm_is_for_unit = False
+    if rhythm_is_for_unit:
+        same_function = rhythm.get("same_function_streak", {})
+        if isinstance(same_function, Mapping):
+            value = str(same_function.get("function") or "").strip()
+            if value.casefold() not in _UNKNOWN_SCENE_FUNCTION_VALUES:
+                rhythm_functions.extend(_scene_functions_for_value(value))
+        if not rhythm_functions:
+            ending_streak = rhythm.get("ending_mode_streak", {})
+            if isinstance(ending_streak, Mapping):
+                rhythm_functions.extend(
+                    _RHYTHM_ENDING_SCENE_FUNCTIONS.get(
+                        str(ending_streak.get("mode") or "").casefold(), []
+                    )
+                )
+    rhythm_functions = list(dict.fromkeys(rhythm_functions))
+    if feature_functions:
+        return feature_functions, []
+    return rhythm_functions, rhythm_functions
+
+
 def _effective_revision_contract_metadata(
     database: Database, book_id: str, edition_id: str
 ) -> dict[str, Any]:
@@ -1144,6 +1233,7 @@ def _target_revision_context(
                     break
     rhythm: dict[str, Any] = {}
     rhythm_scene_functions: list[str] = []
+    rhythm_scene_functions_by_chapter: dict[str, list[str]] = {}
     if rhythm_row is not None:
         try:
             payload = json.loads(str(rhythm_row["snapshot_json"]))
@@ -1185,6 +1275,13 @@ def _target_revision_context(
                     )
         except (TypeError, ValueError, json.JSONDecodeError):
             rhythm = {}
+    rhythm_as_of_chapter = rhythm.get("as_of_chapter")
+    if rhythm_scene_functions and rhythm_as_of_chapter is not None:
+        for unit in units:
+            if str(unit.base_chapter_ordinal) == str(rhythm_as_of_chapter):
+                rhythm_scene_functions_by_chapter[unit.base_chapter_id] = list(
+                    dict.fromkeys(rhythm_scene_functions)
+                )
     state: dict[str, Any] = {}
     target_chapter_id = target_chapters[-1]["chapter_id"] if target_chapters else None
     if target_chapter_id is not None:
@@ -1229,6 +1326,7 @@ def _target_revision_context(
         "rhythm": rhythm,
         "target_scene_functions": list(dict.fromkeys(target_scene_functions)),
         "rhythm_scene_functions": list(dict.fromkeys(rhythm_scene_functions)),
+        "rhythm_scene_functions_by_chapter": rhythm_scene_functions_by_chapter,
         "narrative_debt": {"count": len(debt_ids), "ids": debt_ids},
         "payoff": payoff_summary,
     }
@@ -1571,6 +1669,28 @@ def _bounded_planning_options(
     return options
 
 
+def _revision_strategy_selection_required(
+    planning_context: Mapping[str, Any],
+    planning_snapshot: Mapping[str, Any],
+    planning_prompt_context: Mapping[str, Any],
+) -> bool:
+    """Whether an enabled planning result must pass through the selector."""
+
+    if str(planning_context.get("status") or "").upper() != "ENABLED":
+        return False
+    try:
+        selected_card_count = int(
+            planning_context.get(
+                "selected_card_count", planning_snapshot.get("selected_card_count", 0)
+            )
+            or 0
+        )
+    except (TypeError, ValueError):
+        selected_card_count = 0
+    options = _bounded_planning_options(planning_prompt_context, planning_snapshot)
+    return selected_card_count > 0 and isinstance(options, list) and bool(options)
+
+
 def _revision_strategy_selector_input(
     unit: RevisionUnit,
     *,
@@ -1593,6 +1713,20 @@ def _revision_strategy_selector_input(
         if isinstance(feature, Mapping)
         and str(feature.get("chapter_id")) == unit.base_chapter_id
     ]
+    selector_scene_functions, unit_rhythm_scene_functions = _unit_selector_scene_context(
+        unit,
+        target_features=target_feature_context,
+        rhythm=(
+            target_context.get("rhythm", {})
+            if isinstance(target_context.get("rhythm"), Mapping)
+            else {}
+        ),
+        rhythm_scene_functions_by_chapter=(
+            target_context.get("rhythm_scene_functions_by_chapter")
+            if isinstance(target_context.get("rhythm_scene_functions_by_chapter"), Mapping)
+            else None
+        ),
+    )
     return {
         "unit_id": unit.unit_id,
         "campaign_id": unit.campaign_id,
@@ -1621,10 +1755,8 @@ def _revision_strategy_selector_input(
         "target_chapter_context": {
             "chapters": target_chapter_context,
             "features": target_feature_context,
-            "scene_functions": list(target_context.get("target_scene_functions", [])),
-            "rhythm_scene_functions": list(
-                target_context.get("rhythm_scene_functions", [])
-            ),
+            "scene_functions": selector_scene_functions,
+            "rhythm_scene_functions": unit_rhythm_scene_functions,
             "rhythm": dict(target_context.get("rhythm", {}))
             if isinstance(target_context.get("rhythm"), Mapping)
             else {},
@@ -2465,13 +2597,22 @@ def build_revision_plan(database: Database, book_id: str, campaign_id: str) -> d
             "scene_functions": planning_scene_functions,
         },
     }
+    strategy_selection_required = _revision_strategy_selection_required(
+        reference_planning_context,
+        planning_snapshot,
+        planning_prompt_context,
+    )
     strategy_selection = {
         "contract": "bounded-revision-strategy-selector-v1",
         "output_type": "RevisionStrategySelectionOutput",
         "output_schema": RevisionStrategySelectionOutput.model_json_schema(),
         "input_field": "strategy_selection.units",
         "output_field": "strategies",
-        "fallback": "precomputed strategies[unit_id] (REFERENCE_ONLY, no-card fallback)",
+        "selection_required": strategy_selection_required,
+        "fallback": (
+            "仅在没有可用 planning cards 时使用 precomputed strategies[unit_id] "
+            "(REFERENCE_ONLY, no-card fallback)"
+        ),
         "units": strategy_selection_inputs,
     }
     plan_path = root / "revision_plan.json"
@@ -2743,7 +2884,6 @@ def prepare_revision_draft_task(
         if operation is not None
         else root / "schemas" / "revision-draft-output.schema.json"
     )
-    schema_hash = _write_json(schema_path, RevisionDraftOutput.model_json_schema())
     packet_path = root / "impact_packet.json"
     plan_path = root / "revision_plan.json"
     packet_hash = sha256_file(packet_path) if packet_path.is_file() else ""
@@ -2763,15 +2903,62 @@ def prepare_revision_draft_task(
             )
         ),
     )
-    raw_strategy = plan_payload.get("strategies", {}).get(unit_id)
-    if not isinstance(raw_strategy, Mapping):
-        raise RevisionWorkflowError(f"Revision Plan 缺少 unit 的 RevisionStrategy：{unit_id}")
     planning_provenance = plan_payload.get("planning_provenance", {})
     if not isinstance(planning_provenance, dict):
         raise RevisionWorkflowError("Revision Plan 缺少有效 planning provenance")
     planning_task_id = str(planning_provenance.get("task_id") or "")
     if not planning_task_id:
         raise RevisionWorkflowError("Revision Plan 缺少 planning task_id")
+    selection_result = plan_payload.get("strategy_selection_result")
+    raw_selection = plan_payload.get("strategy_selection")
+    selection_required = _revision_strategy_selection_required(
+        reference_planning_context,
+        planning_snapshot,
+        planning_prompt_context,
+    )
+    if selection_required:
+        expected_output = "<strategy-selection.json>"
+        if isinstance(raw_selection, Mapping) and raw_selection.get("expected_output"):
+            expected_output = str(raw_selection["expected_output"])
+        if not isinstance(selection_result, Mapping) or str(
+            selection_result.get("status") or ""
+        ).upper() != "IMPORTED":
+            raise RevisionWorkflowError(
+                "REVISION_STRATEGY_SELECTION_PENDING: "
+                f"campaign_id={campaign_id}; planning_task_id={planning_task_id}; "
+                f"expected_selector_output={expected_output}; "
+                "请先执行 novel revision strategy-import，再创建 Revision Draft task。"
+            )
+        if str(selection_result.get("task_id") or "") != planning_task_id:
+            raise RevisionWorkflowError(
+                "REVISION_STRATEGY_SELECTION_PENDING: strategy_selection_result.task_id "
+                "与当前 planning task 不一致；请重新执行 novel revision strategy-import。"
+            )
+        task_type = selection_result.get("task_type")
+        if task_type is not None and str(task_type) != "REVISION_STRATEGY_SELECTION":
+            raise RevisionWorkflowError(
+                "REVISION_STRATEGY_SELECTION_PENDING: strategy_selection_result.task_type "
+                "不是 REVISION_STRATEGY_SELECTION。"
+            )
+        unit_count = selection_result.get("unit_count")
+        raw_units = plan_payload.get("units")
+        if unit_count is not None and isinstance(raw_units, list):
+            try:
+                imported_unit_count = int(unit_count)
+            except (TypeError, ValueError) as exc:
+                raise RevisionWorkflowError(
+                    "REVISION_STRATEGY_SELECTION_PENDING: selector import unit_count 无效。"
+                ) from exc
+            if imported_unit_count != len(raw_units):
+                raise RevisionWorkflowError(
+                    "REVISION_STRATEGY_SELECTION_PENDING: selector import 未覆盖全部 RevisionUnit。"
+                )
+
+    raw_strategy = plan_payload.get("strategies", {}).get(unit_id)
+    if not isinstance(raw_strategy, Mapping):
+        raise RevisionWorkflowError(f"Revision Plan 缺少 unit 的 RevisionStrategy：{unit_id}")
+
+    schema_hash = _write_json(schema_path, RevisionDraftOutput.model_json_schema())
     try:
         strategy = RevisionStrategy.model_validate(raw_strategy)
     except ValidationError as exc:

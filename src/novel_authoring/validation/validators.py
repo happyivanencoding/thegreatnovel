@@ -6,6 +6,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from novel_authoring.canon.materialize import missing_materialization_fields
 from novel_authoring.canon.projection import CanonProjection
 from novel_authoring.config import Settings
 from novel_authoring.contracts.draft import DraftOutput, DraftStateChange
@@ -90,6 +91,17 @@ def _clean_payload(payload: dict[str, Any]) -> dict[str, Any]:
 
 def validate_canon(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
+    for change in context.draft.state_changes:
+        missing = missing_materialization_fields(change)
+        if missing:
+            findings.append(
+                _finding(
+                    "MATERIALIZATION_REQUIRED_FIELD_MISSING",
+                    f"{change.kind} 状态变化缺少物化必填字段: {', '.join(missing)}。",
+                    location=f"state_changes:{change.record_id}",
+                    suggested_fix="补齐物化契约字段后重新导入并运行十项校验。",
+                )
+            )
     mode = context.contract.mode
     for change in _changes(context, "fact"):
         payload = _clean_payload(change.payload)
@@ -674,7 +686,7 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
         "ending_state",
         *(f"commit:{item}" for item in context.contract.commit_updates),
     }
-    if context.contract.required_cost.strip():
+    if str(getattr(context.contract, "required_cost", "") or "").strip():
         required.add("required_cost")
     for key in sorted(required):
         quotes = context.draft.contract_evidence.get(key)

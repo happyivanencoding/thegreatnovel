@@ -49,6 +49,40 @@ def _required(payload: dict[str, Any], key: str, kind: str) -> Any:
     return value
 
 
+MATERIALIZATION_REQUIRED_FIELDS: dict[str, tuple[tuple[str, ...], ...]] = {
+    "fact": (("predicate",), ("object", "object_json")),
+    "timeline": (("label",),),
+    "character_state": (("character_id",),),
+    "knowledge": (("character_id",), ("fact_id",)),
+    "relationship": (("from_entity_id",), ("to_entity_id",)),
+    "resource": (("owner_id",), ("name",)),
+    "capability": (("owner_id",), ("name",)),
+    "thread": (("goal",), ("stakes",), ("phase",)),
+    "promise": (("statement",),),
+}
+
+
+def _has_value(payload: dict[str, Any], key: str) -> bool:
+    value = payload.get(key)
+    return value is not None and value != ""
+
+
+def missing_materialization_fields(change: DraftStateChange) -> tuple[str, ...]:
+    """Return the canonical fields required before a state change can be materialized."""
+    missing: list[str] = []
+    for alternatives in MATERIALIZATION_REQUIRED_FIELDS.get(change.kind, ()):
+        if not any(_has_value(change.payload, key) for key in alternatives):
+            missing.append("/".join(alternatives))
+    return tuple(missing)
+
+
+def validate_materialization_change(change: DraftStateChange) -> None:
+    """Fail before any event or normalized row can be written."""
+    missing = missing_materialization_fields(change)
+    if missing:
+        raise MaterializationError("状态变化缺少必填字段: " + ", ".join(missing))
+
+
 def _json(payload: dict[str, Any], key: str, default: Any) -> str:
     return json_dumps(payload.get(key, default))
 
@@ -66,6 +100,7 @@ def materialize_change(
     edition_id: str = "base",
 ) -> None:
     """把已提交事件同步到供查询的规范化表；事件仍是唯一可重放来源。"""
+    validate_materialization_change(change)
     payload = change.payload
     record_id = change.record_id
     now = utc_now()

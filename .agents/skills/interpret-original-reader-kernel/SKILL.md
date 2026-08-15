@@ -63,6 +63,14 @@ Seed 的明确约束、AI 对其余字段的重新推断。`current_ai_proposal`
 
 这些字段只允许自然语言 string / list[string]，不得创建 taxonomy、enum、数值分数、创新预算、类型到机制映射、关键词路由或预设故事模板。`semantic_evidence` 必须引用 premise，并只引用作者实际提供的非空 genre、tone_style、expected_length、must_include、forbidden、reference_traits 以及 Reader Experience / Narrative Drive 中真实存在的语义关系；未提供的字段只能记录为未知，不得补写证据。genre 为空仍需分析 premise；不得以“信息不足”返回全部 MEDIUM/NORMAL。若 `CUSTOM` 是最合适的 Drive，必须给出真实语义理由。
 
+语义层级必须保持清楚：`exceptional advantage` / `signature_fantasy` / `existing_signature_mechanism` 描述读者购买的正向特殊优势，`realism_anchors` 描述作者明确要求保持可信的局部摩擦、边界、代价与后果；二者不是同一条强弱轴。`realism_anchors` 不能把核心幻想平均化或替代，也不能把它过度现实化为普通人可复制的能力；`signature_fantasy` 也不能因为资源、运营或社会反应的现实摩擦而被削弱。两者必须同时保留：scope realism 只约束明确列出的局部范围，core fantasy salience 则保护异常优势、正向兑现与新增行动可能性。若 Seed 明确给出只有主角拥有、普通人无法复制、且会持续扩大行动可能性的规则，不能把它改写为职业技能、工程知识、管理能力或一般效率提升。特殊能力本身可以突破现实基线，除非 Seed 或作者明确要求能力也遵守现实物理上限。
+
+`existing_signature_mechanism` 必须分别说明：特殊规则是什么、谁能使用、普通人为什么不能复制、它如何反复创造新的可行动可能性，以及哪些资源或社会代价只是能力的约束。不得把代价写成能力的替代物。若能力的超现实尺度没有被作者决定，必须把“是否允许沿原功能产生突破现实上限的质变”保留在 `open_design_space`、`uncertainties` 或 `author_attention_points` 中，不得把模型的保守假设伪装成 `realism_anchors`。
+
+当 `signature_fantasy` 明确包含异常能力或特殊权限时，`anti_drift` 应包含反事实替代检查：如果拿掉该特殊机制，故事的主要活动、能力兑现和爽点不能基本保持不变；否则说明特殊幻想已经被普通职业能力稀释。
+
+本 Skill 的 Creative Semantics 只冻结作者意图、读者体验和语义边界；不调用、不扩展 Taste/文学评分模块，不产生审美排名、文学分数或新的评分门槛，也不把 scope realism 或 core fantasy salience 变成评分指标。
+
 Creative Semantics 只识别体验、既有机制、开放空间、创新焦点、边界与重复循环。即使 Seed 很具体，也不得在本阶段借机生成 Core 候选、主角职业、世界具体异常规则、敌人、地图、势力、能力清单、升级树、第一阶段、长期剧情或首章。
 
 ## 输出
