@@ -41,11 +41,11 @@ Phase 5 — Delivery
 
 ### Phase 5: Delivery
 
-- [ ] 复核仅提交本轮拥有的文件
-- [ ] commit 并 push 新分支
-- [ ] 给出 source branch/commit、new branch、final commit 和 origin 状态
+- [x] 复核仅提交本轮拥有的文件
+- [x] commit 并 push 新分支
+- [x] 给出 source branch/commit、new branch、final commit 和 origin 状态
 - [x] 明确 Reference Corpus 是否达到关闭条件；不自动启动十章实验
-- **Status:** in_progress
+- **Status:** completed
 
 ## Key Questions
 

@@ -48,9 +48,11 @@
 
 ### Phase 5: Delivery
 
-- **Status:** in_progress
+- **Status:** completed
 - Actions taken:
-  - 当前工作树仍保留任务开始前的用户改动和实验产物；下一步只 staging 本轮拥有的文件/行，commit 并 push。
+  - 当前工作树仍保留任务开始前的用户改动和实验产物；本轮只 staging 了拥有的文件/行，未执行清理或回退。
+  - 仅提交本轮拥有的 36 个文件，未提交任务开始前的用户改动或未跟踪实验产物。
+  - implementation commit `aeb8d50` 已推送到 `origin/workflow-gate-simplification-v1`；远端 SHA 与本地一致。
 
 ## Test Results
 
