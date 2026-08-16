@@ -77,17 +77,17 @@ class ContinuationBoundaryPacket(BaseModel):
 class CandidateScoreInputs(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    thread_need_fit: float = Field(ge=0, le=100)
-    pressure_curve_fit: float = Field(ge=0, le=100)
-    debt_utility: float = Field(ge=0, le=100)
-    progress_gain: float = Field(ge=0, le=100)
-    payoff_or_setup_utility: float = Field(ge=0, le=100)
-    agency_gain: float = Field(ge=0, le=100)
-    risk_fit: float = Field(ge=0, le=100)
-    structural_diversity: float = Field(ge=0, le=100)
-    style_fit: float = Field(ge=0, le=100)
-    repetition_fatigue: float = Field(ge=0, le=100)
-    future_damage: float = Field(ge=0, le=100)
+    thread_need_fit: float | None = Field(default=None, ge=0, le=100)
+    pressure_curve_fit: float | None = Field(default=None, ge=0, le=100)
+    debt_utility: float | None = Field(default=None, ge=0, le=100)
+    progress_gain: float | None = Field(default=None, ge=0, le=100)
+    payoff_or_setup_utility: float | None = Field(default=None, ge=0, le=100)
+    agency_gain: float | None = Field(default=None, ge=0, le=100)
+    risk_fit: float | None = Field(default=None, ge=0, le=100)
+    structural_diversity: float | None = Field(default=None, ge=0, le=100)
+    style_fit: float | None = Field(default=None, ge=0, le=100)
+    repetition_fatigue: float | None = Field(default=None, ge=0, le=100)
+    future_damage: float | None = Field(default=None, ge=0, le=100)
 
 
 class CandidateLens(StrEnum):
@@ -350,6 +350,75 @@ class CandidateRevealImpact(BaseModel):
     character_knowledge_delta: list[str] = Field(default_factory=list)
 
 
+class CandidateRevealImpactSubmission(BaseModel):
+    """Creative reveal choices; KEEP_HIDDEN is compiled from the frozen agenda."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    secrets_used: list[str] = Field(default_factory=list)
+    hints: list[CandidateRevealEventPreview] = Field(default_factory=list)
+    partial_reveals: list[CandidateRevealEventPreview] = Field(default_factory=list)
+    full_reveals: list[CandidateRevealEventPreview] = Field(default_factory=list)
+    reader_knowledge_delta: list[str] = Field(default_factory=list)
+    character_knowledge_delta: list[str] = Field(default_factory=list)
+
+
+class CandidateCreativeProposal(BaseModel):
+    """Only the creative decisions an executor is allowed to submit."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    local_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    title: str
+    summary: str
+    primary_thread_id: str
+    primary_function: NarrativeFunction
+    secondary_functions: list[NarrativeFunction] = Field(default_factory=list, max_length=2)
+    reader_question: str
+    event_source: str
+    solution_method: str
+    protagonist_strategy: str
+    risk_form: str
+    opportunity_cost: str
+    emotional_outcome: str
+    social_feedback: str
+    scene_topology: str
+    ending_state: str
+    state_changes: list[str] = Field(min_length=1)
+    causal_sources: list[str] = Field(min_length=1)
+    promises_to_advance: list[str] = Field(default_factory=list)
+    promises_to_pay: list[str] = Field(default_factory=list)
+    required_irreversible_change: str
+    required_cost: str
+    must_not_resolve: list[str] = Field(default_factory=list)
+    canon_constraints: list[str] = Field(default_factory=list)
+    knowledge_constraints: list[str] = Field(default_factory=list)
+    forbidden_repetitions: list[str] = Field(default_factory=list)
+    style_constraints: dict[str, str] = Field(default_factory=dict)
+    commit_updates: list[str] = Field(min_length=1)
+    pressure_before: float | None = Field(default=None, ge=0, le=100)
+    pressure_target_after: float | None = Field(default=None, ge=0, le=100)
+    lens: CandidateLens = CandidateLens.CONTINUITY_ACTIVE_THREAD
+    novelty_provenance: list[NoveltyDeclaration] = Field(default_factory=list)
+    wildcard: bool = False
+    innovation_preview: CandidateInnovationPreview | None = None
+    reveal_impact: CandidateRevealImpactSubmission = Field(
+        default_factory=CandidateRevealImpactSubmission
+    )
+    chapter_intent: str | None = None
+
+    @model_validator(mode="after")
+    def reject_retroactive_invention(self) -> CandidateCreativeProposal:
+        if any(
+            item.novelty_boundary is NoveltyBoundary.RETROACTIVE_UNSUPPORTED_INVENTION
+            for item in self.novelty_provenance
+        ):
+            raise ValueError(
+                "候选不得把未在 selected Edition 建立的状态声明为 retroactive invention"
+            )
+        return self
+
+
 class CandidateProposal(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -430,8 +499,16 @@ class CandidateOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     task_id: str
-    candidates: list[CandidateProposal] = Field(min_length=3, max_length=3)
+    candidates: list[CandidateProposal] = Field(min_length=2, max_length=3)
     innovation_control: InnovationControl | None = None
+    notes: list[str] = Field(default_factory=list)
+
+
+class CandidateCreativeOutput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: str
+    candidates: list[CandidateCreativeProposal] = Field(min_length=2, max_length=3)
     notes: list[str] = Field(default_factory=list)
 
 

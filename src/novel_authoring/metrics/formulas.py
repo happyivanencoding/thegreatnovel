@@ -451,6 +451,29 @@ def thread_need(values: Mapping[str, float], config: Mapping[str, Any]) -> float
     return _weighted(values, config["weights"])
 
 
-def candidate_score(values: Mapping[str, float], config: Mapping[str, Any]) -> float:
-    _validate_scores(values)
-    return clamp(0, 100, _weighted(values, config["weights"]))
+def candidate_score(
+    values: Mapping[str, float | None], config: Mapping[str, Any]
+) -> float:
+    available = {
+        name: float(value)
+        for name, value in values.items()
+        if value is not None
+    }
+    if not available:
+        return 0.0
+    _validate_scores(available)
+    weights = {
+        name: float(weight)
+        for name, weight in config["weights"].items()
+        if name in available
+    }
+    denominator = sum(weights.values())
+    if denominator == 0:
+        return 0.0
+    if set(available) == set(config["weights"]):
+        return clamp(0, 100, _weighted(available, config["weights"]))
+    return clamp(
+        0,
+        100,
+        sum(available[name] * weight for name, weight in weights.items()) / denominator,
+    )

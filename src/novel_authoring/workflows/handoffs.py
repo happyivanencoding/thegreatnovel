@@ -4,7 +4,7 @@ import json
 import secrets
 import shutil
 import sqlite3
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, Literal, cast
@@ -32,6 +32,8 @@ from novel_authoring.original.models import (
     FoundationDevelopmentProposal,
     OriginalReaderKernelProposal,
     StoryFoundationProposal,
+    parse_core_innovation_proposal,
+    parse_story_foundation_proposal,
 )
 from novel_authoring.original.state import is_original_book
 from novel_authoring.planning.aggregates import build_planning_aggregate
@@ -108,7 +110,6 @@ HANDOFF_DEPENDENCIES: dict[HandoffType, frozenset[str]] = {
             "source",
             "projection",
             "edition",
-            "metrics",
             "rhythm",
             "planning",
             "directives",
@@ -120,7 +121,6 @@ HANDOFF_DEPENDENCIES: dict[HandoffType, frozenset[str]] = {
             "source",
             "projection",
             "edition",
-            "metrics",
             "rhythm",
             "planning",
             "directives",
@@ -225,6 +225,12 @@ class HandoffWorkflowError(RuntimeError):
         self.error_code = error_code
         if status_code is not None:
             self.status_code = status_code
+
+
+class BusinessArtifactValidationError(HandoffWorkflowError):
+    """A produced business artifact is present but cannot satisfy its schema."""
+
+    error_code = "BUSINESS_ARTIFACT_INVALID"
 
 
 class WorkflowHandoffResult(BaseModel):
@@ -335,13 +341,20 @@ class WorkflowHandoffResult(BaseModel):
                 raise ValueError("NOVEL_DISTILLATION 完成结果必须包含 distill_skill_root")
         if atlas_type == HandoffType.ORIGINAL_BOOK_BOOTSTRAP.value:
             if requested == "CORE_INNOVATION_PROPOSAL":
-                if len(self.innovation_ids) != 3:
-                    raise ValueError("CORE_INNOVATION_PROPOSAL 必须返回三个 innovation_ids")
-            elif requested == "STORY_FOUNDATION_PROPOSAL":
-                if len(self.candidate_ids) != 3:
+                if not 2 <= len(self.innovation_ids) <= 3:
                     raise ValueError(
-                        "Story Foundation Proposal 必须返回三个 Foundation candidate_ids"
+                        "CORE_INNOVATION_PROPOSAL 必须返回至少两个、最多三个 innovation_ids"
                     )
+                if len(set(self.innovation_ids)) != len(self.innovation_ids):
+                    raise ValueError("CORE_INNOVATION_PROPOSAL 的 innovation_ids 必须唯一")
+            elif requested == "STORY_FOUNDATION_PROPOSAL":
+                if not 2 <= len(self.candidate_ids) <= 3:
+                    raise ValueError(
+                        "Story Foundation Proposal 必须返回至少两个、最多三个 "
+                        "Foundation candidate_ids"
+                    )
+                if len(set(self.candidate_ids)) != len(self.candidate_ids):
+                    raise ValueError("Story Foundation Proposal 的 candidate_ids 必须唯一")
             elif requested != "FOUNDATION_DEVELOPMENT_PROPOSAL":
                 raise ValueError(
                     "ORIGINAL_BOOK_BOOTSTRAP stage 无效"
@@ -426,11 +439,11 @@ def _workflow_result_required_fields(
     required = set(_WORKFLOW_RESULT_BUSINESS_REQUIRED)
     stage = requested_stage.upper()
     stage_fields = {
-        "PLAN_ONLY": {"candidate_ids"},
-        "DRAFT_AND_VALIDATE": {"draft_id"},
-        "IMPACT_AND_PLAN": {"campaign_id", "artifact_paths"},
-        "ATLAS_BOOTSTRAP": {"artifact_paths"},
-        "ATLAS_REFRESH": {"artifact_paths"},
+        "PLAN_ONLY": set(),
+        "DRAFT_AND_VALIDATE": set(),
+        "IMPACT_AND_PLAN": {"campaign_id"},
+        "ATLAS_BOOTSTRAP": set(),
+        "ATLAS_REFRESH": set(),
         "WORLD_MODEL_REVIEW": {"review_queue_ids"},
         "BATCH_CONTINUATION": {"batch_id", "chunk_ids"},
         "NOVEL_INITIALIZATION": {"initialization_id", "readiness"},
@@ -450,11 +463,11 @@ def _workflow_result_required_fields(
             "distill_depth",
             "distill_skill_root",
         },
-        "CORE_INNOVATION_PROPOSAL": {"innovation_ids", "artifact_paths"},
-        "STORY_FOUNDATION_PROPOSAL": {"candidate_ids", "artifact_paths"},
-        "FOUNDATION_DEVELOPMENT_PROPOSAL": {"artifact_paths"},
-        "READER_KERNEL_PROPOSAL": {"artifact_paths"},
-        "KERNEL_CONTRACT_DISCOVERY": {"artifact_paths"},
+        "CORE_INNOVATION_PROPOSAL": set(),
+        "STORY_FOUNDATION_PROPOSAL": set(),
+        "FOUNDATION_DEVELOPMENT_PROPOSAL": set(),
+        "READER_KERNEL_PROPOSAL": set(),
+        "KERNEL_CONTRACT_DISCOVERY": set(),
     }
     required.update(stage_fields.get(stage, set()))
     if handoff_type is HandoffType.ORIGINAL_BOOK_BOOTSTRAP and stage not in {
@@ -878,7 +891,13 @@ def create_handoff(
     )
     kernel_discovery_handoff = handoff_type is HandoffType.KERNEL_CONTRACT_DISCOVERY
     original_genesis = original_book and chapter_count == 0
-    metric_required = "metrics" in dependencies and not original_genesis
+    # Continuation/Revision still freeze the metric snapshot for replay, but a
+    # later metric refresh is not input drift while Canon/projection is stable.
+    metric_snapshot = (
+        "metrics" in dependencies
+        or handoff_type in {HandoffType.CONTINUATION, HandoffType.REVISION}
+    )
+    metric_required = metric_snapshot and not original_genesis
     selected_innovation: InnovationControl | None = None
     requested_innovation_source = innovation_source
     innovation_source = ""
@@ -1663,11 +1682,14 @@ def create_handoff(
         _workflow_result_required_fields(handoff_type, requested_stage)
     )
     output_schema["x-stage-rules"] = {
-        "PLAN_ONLY": {"required_non_empty": ["candidate_ids"]},
-        "DRAFT_AND_VALIDATE": {"required_non_empty": ["draft_id"]},
-        "IMPACT_AND_PLAN": {"required_non_empty": ["campaign_id", "artifact_paths"]},
-        "ATLAS_BOOTSTRAP": {"required_non_empty": ["artifact_paths"]},
-        "ATLAS_REFRESH": {"required_non_empty": ["artifact_paths"]},
+        "PLAN_ONLY": {"system_derived": ["candidate_ids", "task_ids"]},
+        "DRAFT_AND_VALIDATE": {"system_derived": ["draft_id", "contract_id", "task_ids"]},
+        "IMPACT_AND_PLAN": {
+            "required_non_empty": ["campaign_id"],
+            "system_derived": ["artifact_paths"],
+        },
+        "ATLAS_BOOTSTRAP": {"system_derived": ["artifact_paths"]},
+        "ATLAS_REFRESH": {"system_derived": ["artifact_paths"]},
         "WORLD_MODEL_REVIEW": {"required_non_empty": ["review_queue_ids"]},
         "BATCH_CONTINUATION": {"required_non_empty": ["batch_id", "chunk_ids"]},
         "NOVEL_INITIALIZATION": {
@@ -1689,17 +1711,11 @@ def create_handoff(
                 "distill_skill_root",
             ]
         },
-        "CORE_INNOVATION_PROPOSAL": {
-            "required_non_empty": ["innovation_ids", "artifact_paths"]
-        },
-        "STORY_FOUNDATION_PROPOSAL": {
-            "required_non_empty": ["candidate_ids", "artifact_paths"]
-        },
-        "FOUNDATION_DEVELOPMENT_PROPOSAL": {
-            "required_non_empty": ["artifact_paths"]
-        },
-        "READER_KERNEL_PROPOSAL": {"required_non_empty": ["artifact_paths"]},
-        "KERNEL_CONTRACT_DISCOVERY": {"required_non_empty": ["artifact_paths"]},
+        "CORE_INNOVATION_PROPOSAL": {"system_derived": ["innovation_ids", "artifact_paths"]},
+        "STORY_FOUNDATION_PROPOSAL": {"system_derived": ["candidate_ids", "artifact_paths"]},
+        "FOUNDATION_DEVELOPMENT_PROPOSAL": {"system_derived": ["artifact_paths"]},
+        "READER_KERNEL_PROPOSAL": {"system_derived": ["artifact_paths"]},
+        "KERNEL_CONTRACT_DISCOVERY": {"system_derived": ["artifact_paths"]},
     }
     if hydration_handoff:
         output_schema = SourceStateHydrationResult.model_json_schema()
@@ -2547,6 +2563,7 @@ def start_handoff(
 ) -> dict[str, Any]:
     """Atomically claim a ready handoff, then advance it to RUNNING."""
 
+    recover_stale_runners(database)
     _refresh_batch_freshness(database, handoff_id)
     contract = _execution_contract(database, handoff_id)
     claimed = claim_handoff(database, handoff_id, claimed_by)
@@ -2567,15 +2584,133 @@ def start_handoff(
     }
 
 
+def heartbeat_handoff(
+    database: Database,
+    handoff_id: str,
+    claim_token: str,
+    *,
+    current_phase: str,
+    last_progress: str | None = None,
+) -> dict[str, Any]:
+    """Record runner liveness in the existing append-only handoff ledger."""
+
+    phase = current_phase.strip()
+    if not phase:
+        raise HandoffWorkflowError("heartbeat 必须包含 current_phase")
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT status, claim_token FROM workflow_handoffs WHERE handoff_id=?",
+            (handoff_id,),
+        ).fetchone()
+    if row is None:
+        raise HandoffWorkflowError("handoff 不存在")
+    if str(row["status"]) != HandoffStatus.RUNNING.value:
+        raise HandoffWorkflowError("只有 RUNNING handoff 可以 heartbeat")
+    if str(row["claim_token"] or "") != claim_token:
+        raise HandoffWorkflowError("claim_token 无效")
+    event = append_event(
+        database,
+        handoff_id,
+        "HEARTBEAT",
+        {
+            "current_phase": phase,
+            "last_progress": last_progress.strip() if last_progress else None,
+        },
+        claim_token=claim_token,
+    )
+    return {
+        "handoff_id": handoff_id,
+        "status": HandoffStatus.RUNNING.value,
+        "event_id": event["event_id"],
+        "current_phase": phase,
+        "last_progress": last_progress.strip() if last_progress else None,
+        "heartbeat_at": event["created_at"],
+    }
+
+
+def _parse_utc_timestamp(value: object) -> datetime | None:
+    raw = str(value or "").strip()
+    if not raw:
+        return None
+    try:
+        parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed.replace(tzinfo=UTC) if parsed.tzinfo is None else parsed.astimezone(UTC)
+
+
+def recover_stale_runners(
+    database: Database,
+    *,
+    book_id: str | None = None,
+    timeout_seconds: int = 300,
+    now: str | None = None,
+) -> list[dict[str, Any]]:
+    """Reclaim only RUNNING runners with no recent ledger/file activity."""
+
+    if timeout_seconds <= 0:
+        raise ValueError("timeout_seconds 必须大于 0")
+    now_dt = _parse_utc_timestamp(now) if now else _parse_utc_timestamp(utc_now())
+    if now_dt is None:
+        raise ValueError("now 必须是 ISO timestamp")
+    with database.connect() as connection:
+        query = (
+            "SELECT handoff_id, started_at, task_running_started_at, result_path "
+            "FROM workflow_handoffs WHERE status=?"
+        )
+        params: list[Any] = [HandoffStatus.RUNNING.value]
+        if book_id is not None:
+            query += " AND book_id=?"
+            params.append(book_id)
+        rows = connection.execute(query, tuple(params)).fetchall()
+    stale: list[dict[str, Any]] = []
+    for row in rows:
+        handoff_id = str(row["handoff_id"])
+        started = _parse_utc_timestamp(row["task_running_started_at"] or row["started_at"])
+        if started is None:
+            continue
+        latest = started
+        with database.connect() as connection:
+            event = connection.execute(
+                "SELECT created_at, event_type, payload_json FROM workflow_handoff_events "
+                "WHERE handoff_id=? ORDER BY sequence DESC LIMIT 1",
+                (handoff_id,),
+            ).fetchone()
+        event_time = None if event is None else _parse_utc_timestamp(event["created_at"])
+        if event_time is not None and event_time > latest:
+            latest = event_time
+        result_path = Path(str(row["result_path"] or ""))
+        try:
+            if result_path.is_file():
+                file_time = datetime.fromtimestamp(result_path.stat().st_mtime, tz=UTC)
+                if file_time > latest:
+                    latest = file_time
+        except OSError:
+            pass
+        age = (now_dt - latest).total_seconds()
+        if age <= timeout_seconds:
+            continue
+        result = mark_stale(database, handoff_id, "STALE_RUNNER_TIMEOUT")
+        stale.append(
+            {
+                "handoff_id": handoff_id,
+                "status": result["status"],
+                "reason": "STALE_RUNNER_TIMEOUT",
+                "last_activity": latest.isoformat(),
+                "age_seconds": int(age),
+            }
+        )
+    return stale
+
+
 def complete_handoff(
     database: Database,
     handoff_id: str,
     claim_token: str,
-    result_path: Path | str,
+    result_path: Path | str | None = None,
 ) -> dict[str, Any]:
     """Validate and persist one result, including runtime drift checks."""
 
-    result_file = Path(result_path)
     with database.connect() as connection:
         row = connection.execute(
             "SELECT status, claim_token, result_path FROM workflow_handoffs WHERE handoff_id=?",
@@ -2587,6 +2722,7 @@ def complete_handoff(
         raise HandoffWorkflowError("只有 RUNNING handoff 可以提交结果")
     if str(row["claim_token"] or "") != claim_token:
         raise HandoffWorkflowError("claim_token 无效")
+    result_file = Path(str(row["result_path"])) if result_path is None else Path(result_path)
     if result_file.resolve() != Path(str(row["result_path"])).resolve():
         raise HandoffWorkflowError("result_path 必须等于 workflow start 返回的 result_target")
     try:
@@ -2610,6 +2746,161 @@ def complete_handoff(
     }
 
 
+def _set_or_verify_derived_result(
+    result: dict[str, Any],
+    field: str,
+    derived: object,
+    *,
+    unordered: bool = False,
+) -> None:
+    if derived in (None, [], ""):
+        return
+    current = result.get(field)
+    if current not in (None, [], ""):
+        if unordered:
+            current_items = current if isinstance(current, list) else []
+            derived_items = derived if isinstance(derived, list) else []
+            if sorted(str(item) for item in current_items) != sorted(
+                str(item) for item in derived_items
+            ):
+                raise HandoffWorkflowError(f"result {field} 与当前 handoff artifact 不一致")
+        elif current != derived:
+            raise HandoffWorkflowError(f"result {field} 与当前 handoff artifact 不一致")
+        return
+    result[field] = derived
+
+
+def _artifact_paths_in_operation(task_directory: Path) -> list[str]:
+    artifacts_root = task_directory / "artifacts"
+    if not artifacts_root.is_dir():
+        return []
+    return sorted(
+        path.relative_to(task_directory).as_posix()
+        for path in artifacts_root.rglob("*")
+        if path.is_file()
+    )
+
+
+def _set_or_verify_artifact_paths(
+    result: dict[str, Any], task_directory: Path, derived: list[str]
+) -> None:
+    """Accept a business-artifact subset while rejecting cross-operation paths."""
+
+    if not derived:
+        return
+    current = result.get("artifact_paths")
+    if current in (None, [], ""):
+        result["artifact_paths"] = derived
+        return
+    if not isinstance(current, list):
+        raise HandoffWorkflowError("result artifact_paths 必须是数组")
+    derived_paths = {
+        (task_directory / path).resolve() for path in derived
+    }
+    for raw_path in current:
+        path = Path(str(raw_path))
+        resolved = (path if path.is_absolute() else task_directory / path).resolve()
+        if resolved not in derived_paths:
+            raise HandoffWorkflowError(
+                "result artifact_paths 与当前 handoff artifact 不一致"
+            )
+
+
+def _derive_handoff_result(
+    connection: sqlite3.Connection,
+    row: sqlite3.Row,
+    task_directory: Path,
+    task: dict[str, Any],
+    business_result: dict[str, Any],
+) -> dict[str, Any]:
+    """Fill protocol-owned IDs and artifact paths from the frozen operation."""
+
+    result = dict(business_result)
+    stage = str(row["requested_stage"]).upper()
+    handoff_type = str(row["handoff_type"])
+    _set_or_verify_artifact_paths(
+        result, task_directory, _artifact_paths_in_operation(task_directory)
+    )
+
+    if stage == "PLAN_ONLY":
+        aggregate_id = str(row["planning_aggregate_id"] or "")
+        candidate_rows = connection.execute(
+            "SELECT candidate_id, task_id FROM candidate_plans "
+            "WHERE book_id=? AND edition_id=? AND aggregate_id=? "
+            "ORDER BY created_at DESC",
+            (str(row["book_id"]), str(row["edition_id"]), aggregate_id),
+        ).fetchall()
+        if candidate_rows:
+            task_id = str(candidate_rows[0]["task_id"] or "")
+            candidate_ids = [
+                str(item["candidate_id"])
+                for item in candidate_rows
+                if str(item["task_id"] or "") == task_id
+            ]
+            _set_or_verify_derived_result(result, "candidate_ids", candidate_ids)
+            _set_or_verify_derived_result(result, "task_ids", [task_id])
+
+    prepared_draft = task.get("prepared_draft_task")
+    if isinstance(prepared_draft, dict):
+        draft_task_id = str(prepared_draft.get("task_id") or "")
+        if draft_task_id:
+            draft_row = connection.execute(
+                "SELECT draft_id, contract_id, candidate_id FROM drafts "
+                "WHERE book_id=? AND edition_id=? AND task_id=? "
+                "ORDER BY created_at DESC LIMIT 1",
+                (str(row["book_id"]), str(row["edition_id"]), draft_task_id),
+            ).fetchone()
+            _set_or_verify_derived_result(result, "task_ids", [draft_task_id])
+            if draft_row is not None:
+                _set_or_verify_derived_result(
+                    result, "draft_id", str(draft_row["draft_id"])
+                )
+                _set_or_verify_derived_result(
+                    result, "contract_id", str(draft_row["contract_id"])
+                )
+                if draft_row["candidate_id"]:
+                    _set_or_verify_derived_result(
+                        result, "selected_candidate_id", str(draft_row["candidate_id"])
+                    )
+
+    if handoff_type == HandoffType.ORIGINAL_BOOK_BOOTSTRAP.value:
+        artifact_name = str(
+            (task.get("original_bootstrap") or {}).get("proposal_artifact") or ""
+        )
+        artifact_path = task_directory / artifact_name if artifact_name else None
+        if artifact_path is not None and artifact_path.is_file():
+            try:
+                if stage == "CORE_INNOVATION_PROPOSAL":
+                    core_proposal = parse_core_innovation_proposal(
+                        json.loads(artifact_path.read_text(encoding="utf-8"))
+                    )
+                    _set_or_verify_derived_result(
+                        result,
+                        "innovation_ids",
+                        [
+                            item.innovation_id
+                            for item in core_proposal.innovation_candidates
+                        ],
+                    )
+                elif stage == "STORY_FOUNDATION_PROPOSAL":
+                    foundation_proposal = parse_story_foundation_proposal(
+                        json.loads(artifact_path.read_text(encoding="utf-8"))
+                    )
+                    _set_or_verify_derived_result(
+                        result,
+                        "candidate_ids",
+                        [
+                            item.candidate_id
+                            for item in foundation_proposal.foundation_candidates
+                        ],
+                    )
+            except (OSError, UnicodeError, ValueError, TypeError, json.JSONDecodeError):
+                # The business artifact validator below remains the authority for
+                # malformed proposals and reports the actionable schema error.
+                pass
+    return result
+
+
 def _allowed_artifact_path(task_directory: Path, task: dict[str, Any], raw_path: str) -> Path:
     candidate = Path(raw_path)
     if not candidate.is_absolute():
@@ -2619,6 +2910,57 @@ def _allowed_artifact_path(task_directory: Path, task: dict[str, Any], raw_path:
     if not any(resolved == root or root in resolved.parents for root in allowed):
         raise HandoffWorkflowError(f"artifact 路径不在 allowed_paths 内：{raw_path}")
     return resolved
+
+
+def _validate_original_bootstrap_artifacts(
+    handoff_type: str,
+    requested_stage: str,
+    task_directory: Path,
+    task: dict[str, Any],
+    artifact_paths: list[str],
+) -> None:
+    if handoff_type != HandoffType.ORIGINAL_BOOK_BOOTSTRAP.value:
+        return
+    contracts: dict[str, tuple[str, type[BaseModel]]] = {
+        "CORE_INNOVATION_PROPOSAL": (
+            "artifacts/core_innovation/proposal.json",
+            CoreInnovationProposal,
+        ),
+        "STORY_FOUNDATION_PROPOSAL": (
+            "artifacts/story_foundation/proposal.json",
+            StoryFoundationProposal,
+        ),
+        "FOUNDATION_DEVELOPMENT_PROPOSAL": (
+            "artifacts/foundation_development/proposal.json",
+            FoundationDevelopmentProposal,
+        ),
+    }
+    contract = contracts.get(requested_stage.upper())
+    if contract is None:
+        return
+    expected_path, model = contract
+    expected = (task_directory / expected_path).resolve()
+    matching: list[Path] = []
+    for raw_path in artifact_paths:
+        artifact = _allowed_artifact_path(task_directory, task, raw_path)
+        if artifact == expected:
+            matching.append(artifact)
+    if not matching:
+        raise BusinessArtifactValidationError(
+            f"{requested_stage} result 必须包含 {expected_path}"
+        )
+    try:
+        payload = json.loads(matching[0].read_text(encoding="utf-8"))
+        if model is CoreInnovationProposal:
+            parse_core_innovation_proposal(payload)
+        elif model is StoryFoundationProposal:
+            parse_story_foundation_proposal(payload)
+        else:
+            model.model_validate(payload)
+    except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        raise BusinessArtifactValidationError(
+            f"{expected_path} 不符合 {model.__name__}：{exc}"
+        ) from exc
 
 
 def validate_handoff_result(
@@ -2640,6 +2982,17 @@ def validate_handoff_result(
         if not task_path.is_file():
             raise HandoffWorkflowError("task.json 缺失")
         task = json.loads(task_path.read_text(encoding="utf-8"))
+        if not isinstance(task, dict):
+            raise HandoffWorkflowError("task.json 必须是 object")
+        if not isinstance(result, dict):
+            raise HandoffWorkflowError("result.json 必须是 object")
+        result = _derive_handoff_result(
+            connection,
+            row,
+            task_directory,
+            task,
+            result,
+        )
         if str(row["handoff_type"]) == HandoffType.SOURCE_STATE_HYDRATION.value:
             try:
                 parsed_hydration = SourceStateHydrationResult.model_validate(result)
@@ -2767,7 +3120,35 @@ def validate_handoff_result(
         for raw_path in parsed.artifact_paths:
             artifact = _allowed_artifact_path(task_directory, task, raw_path)
             if not artifact.is_file():
-                raise HandoffWorkflowError(f"required artifact 不存在：{raw_path}")
+                raise BusinessArtifactValidationError(f"required artifact 不存在：{raw_path}")
+        _validate_original_bootstrap_artifacts(
+            str(row["handoff_type"]),
+            str(row["requested_stage"]),
+            task_directory,
+            task,
+            list(parsed.artifact_paths),
+        )
+        if (
+            str(row["handoff_type"]) == HandoffType.CONTINUATION.value
+            and str(row["requested_stage"]).upper() == "DRAFT_AND_VALIDATE"
+        ):
+            draft_row = connection.execute(
+                "SELECT contract_id, status, validation_run_id FROM drafts "
+                "WHERE book_id=? AND edition_id=? AND draft_id=?",
+                (str(row["book_id"]), str(row["edition_id"]), str(parsed.draft_id)),
+            ).fetchone()
+            if draft_row is None:
+                raise HandoffWorkflowError("DRAFT_AND_VALIDATE result 指向不存在的 Draft")
+            if str(draft_row["status"]) != "VALIDATED" or not draft_row["validation_run_id"]:
+                raise HandoffWorkflowError(
+                    "DRAFT_AND_VALIDATE result 必须指向已 VALIDATED 且有 validation run 的 Draft"
+                )
+            if parsed.contract_id is not None and str(parsed.contract_id) != str(
+                draft_row["contract_id"]
+            ):
+                raise HandoffWorkflowError(
+                    "DRAFT_AND_VALIDATE result 的 contract_id 与 Draft 不一致"
+                )
         if str(row["handoff_type"]) == HandoffType.BATCH_CONTINUATION.value:
             if parsed.batch_id != str(row["batch_id"] or ""):
                 raise HandoffWorkflowError("result batch_id 与冻结 Batch 不一致")
@@ -2930,6 +3311,8 @@ def update_handoff_status(
                 hydration_result = validated_result
             if isinstance(validated_result, ProfileReanalysisResult):
                 profile_result = validated_result
+        except BusinessArtifactValidationError as exc:
+            business_failure_reason = f"BUSINESS_ARTIFACT_INVALID: {exc}"
         except HandoffWorkflowError as exc:
             result_validation_error = str(exc)
     if hydration_result is not None and result_validation_error is None:

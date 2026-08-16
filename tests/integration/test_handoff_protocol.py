@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import tomllib
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -22,7 +23,9 @@ from novel_authoring.workflows.handoffs import (
     create_continuation_handoff,
     create_handoff,
     get_handoff,
+    heartbeat_handoff,
     load_completed_handoff_result,
+    recover_stale_runners,
     start_handoff,
     update_handoff_status,
 )
@@ -238,9 +241,59 @@ def test_workflow_start_is_one_claim_and_running_transition(tmp_path: Path) -> N
     output_schema = json.loads(
         Path(str(frozen["output_schema_path"])).read_text(encoding="utf-8")
     )
-    assert set(output_schema["required"]) == {"completed_stage", "candidate_ids"}
+    assert set(output_schema["required"]) == {"completed_stage"}
+    assert output_schema["x-stage-rules"]["PLAN_ONLY"]["system_derived"] == [
+        "candidate_ids",
+        "task_ids",
+    ]
     with pytest.raises(HandoffWorkflowError):
         start_handoff(database, str(handoff["handoff_id"]), "fast-path-b")
+
+
+def test_runner_heartbeat_prevents_stale_reclaim(tmp_path: Path) -> None:
+    database, handoff = _continuation_handoff(tmp_path)
+    started = start_handoff(database, str(handoff["handoff_id"]), "heartbeat-runner")
+    heartbeat = heartbeat_handoff(
+        database,
+        str(handoff["handoff_id"]),
+        str(started["claim_token"]),
+        current_phase="GENERATING",
+        last_progress="已完成场景骨架",
+    )
+
+    heartbeat_at = datetime.fromisoformat(str(heartbeat["heartbeat_at"]))
+    future = heartbeat_at.astimezone(UTC) + timedelta(seconds=299)
+    assert recover_stale_runners(
+        database,
+        timeout_seconds=300,
+        now=future.isoformat(),
+    ) == []
+    frozen = get_handoff(database, str(handoff["handoff_id"]))
+    assert frozen["status"] == HandoffStatus.RUNNING.value
+    assert frozen["events"][-1]["event_type"] == "HEARTBEAT"
+
+
+def test_runner_without_heartbeat_is_reclaimed(tmp_path: Path) -> None:
+    database, handoff = _continuation_handoff(tmp_path)
+    started = start_handoff(database, str(handoff["handoff_id"]), "stale-runner")
+    now = datetime.now(UTC) + timedelta(seconds=301)
+
+    reclaimed = recover_stale_runners(
+        database,
+        timeout_seconds=300,
+        now=now.isoformat(),
+    )
+    assert reclaimed == [
+        {
+            "handoff_id": str(handoff["handoff_id"]),
+            "status": HandoffStatus.STALE.value,
+            "reason": "STALE_RUNNER_TIMEOUT",
+            "last_activity": reclaimed[0]["last_activity"],
+            "age_seconds": reclaimed[0]["age_seconds"],
+        }
+    ]
+    assert get_handoff(database, str(handoff["handoff_id"]))["status"] == HandoffStatus.STALE.value
+    assert started["status"] == HandoffStatus.RUNNING.value
 
 
 def test_workflow_start_marks_frozen_input_drift_stale(tmp_path: Path) -> None:

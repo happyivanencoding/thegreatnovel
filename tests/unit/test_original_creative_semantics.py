@@ -7,6 +7,7 @@ from novel_authoring.original.models import (
     CoreInnovationProposal,
     OriginalBookRequest,
     OriginalCreativeSemantics,
+    parse_core_innovation_proposal,
 )
 
 
@@ -171,3 +172,19 @@ def test_creative_semantics_schema_contains_only_open_text_fields() -> None:
     }:
         assert properties[field_name]["type"] == "array"
         assert properties[field_name]["items"]["type"] == "string"
+
+
+def test_core_proposal_keeps_two_valid_candidates_when_third_schema_is_invalid() -> None:
+    creative = semantics(existing_signature_mechanism="有限机会", expected_scale="开放篇幅")
+    payload = core_proposal(
+        creative,
+        mechanisms=["机制一", "机制二", "机制三"],
+    ).model_dump(mode="json")
+    payload["innovation_candidates"][2]["core_mechanism"] = ""
+
+    parsed = parse_core_innovation_proposal(payload)
+
+    assert [item.innovation_id for item in parsed.innovation_candidates] == [
+        "core-1",
+        "core-2",
+    ]

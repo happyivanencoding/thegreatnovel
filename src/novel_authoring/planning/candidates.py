@@ -42,7 +42,13 @@ from novel_authoring.planning.innovation import (
     NarrativePortfolioSnapshot,
     resolve_innovation_control,
 )
-from novel_authoring.planning.models import CandidateOutput, CandidateProposal, ThreadPriority
+from novel_authoring.planning.models import (
+    CandidateCreativeOutput,
+    CandidateCreativeProposal,
+    CandidateOutput,
+    CandidateProposal,
+    ThreadPriority,
+)
 from novel_authoring.planning.rewards import calculate_candidate_innovation_reward
 from novel_authoring.progression.context import KernelPlanningContext
 from novel_authoring.progression.evidence import KernelEvidenceCompiler
@@ -669,6 +675,14 @@ def _profile_constraint_failures(
 ) -> list[str]:
     if not frozen_profile:
         return []
+    if (
+        not candidate.profile_alignment.dimensions
+        and not candidate.profile_alignment.constraint_checks
+    ):
+        # Creative submissions do not repeat system-owned alignment metadata.
+        # Unknown soft alignment is retained in the persisted score context;
+        # explicit hard violations still arrive through gate_input.
+        return []
     expected_dimensions = {
         str(item.get("dimension"))
         for item in frozen_profile.get("dimensions", [])
@@ -744,11 +758,6 @@ def _truth_reveal_failures(
     if unknown:
         raise PlanningError(
             f"候选 {candidate.local_id} 引用了未冻结的 Author Truth：{sorted(unknown)}"
-        )
-    missing = set(active) - set(alignments)
-    if missing:
-        raise PlanningError(
-            f"候选 {candidate.local_id} 未检查全部 Active Author Truth：{sorted(missing)}"
         )
     failures = [
         f"未遵守 Author Truth {item.truth_id}：{item.behavioral_effect}"
@@ -842,10 +851,165 @@ def _truth_reveal_failures(
                 f"MUST_REVEAL Truth {truth_id} 应使用 {expected_depth}，"
                 f"候选却使用 {reveal_preview.depth}"
             )
-    undeclared = keep_hidden - set(candidate.reveal_impact.kept_hidden)
-    if undeclared:
-        failures.append(f"候选未显式确认继续隐藏：{sorted(undeclared)}")
     return failures
+
+
+def _creative_candidate_text(candidate: Any) -> str:
+    values = candidate.model_dump(mode="json")
+    parts: list[str] = []
+    for key, value in values.items():
+        if key in {"novelty_provenance", "innovation_preview", "reveal_impact"}:
+            continue
+        if isinstance(value, list):
+            parts.extend(str(item) for item in value)
+        elif isinstance(value, dict):
+            parts.extend(str(item) for item in value.values())
+        elif value is not None:
+            parts.append(str(value))
+    return " ".join(parts)
+
+
+_NON_BUSINESS_FREEZE_FIELDS = frozenset(
+    {
+        "created_at",
+        "updated_at",
+        "generated_at",
+        "frozen_at",
+        "created_timestamp",
+        "updated_timestamp",
+        "generated_timestamp",
+        "equivalent_timestamp",
+    }
+)
+
+
+def _normalize_frozen_semantics(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            str(key): _normalize_frozen_semantics(item)
+            for key, item in value.items()
+            if str(key) not in _NON_BUSINESS_FREEZE_FIELDS
+        }
+    if isinstance(value, list):
+        return [_normalize_frozen_semantics(item) for item in value]
+    return value
+
+
+def _effective_kept_hidden(candidate: CandidateProposal, frozen: dict[str, Any]) -> list[str]:
+    agenda = frozen.get("reveal_agenda", {}) if isinstance(frozen, dict) else {}
+    hidden = {
+        str(item.get("truth_id"))
+        for item in agenda.get("keep_hidden", [])
+        if isinstance(item, dict) and item.get("truth_id")
+    }
+    revealed = {
+        item.truth_id
+        for item in (
+            *candidate.reveal_impact.hints,
+            *candidate.reveal_impact.partial_reveals,
+            *candidate.reveal_impact.full_reveals,
+        )
+    }
+    return sorted(hidden - revealed)
+
+
+def _compile_creative_candidate(
+    candidate: Any,
+    *,
+    metadata: dict[str, Any],
+    frozen_truth_reveal: dict[str, Any],
+) -> CandidateProposal:
+    """Compile executor creative choices into the internal planning model."""
+
+    payload = candidate.model_dump(mode="json")
+    priorities = metadata.get("thread_priorities", [])
+    priority = None
+    for item in priorities:
+        if (
+            isinstance(item, dict)
+            and str(item.get("thread_id") or "") == candidate.primary_thread_id
+        ):
+            raw_score = item.get("score")
+            if raw_score is not None:
+                priority = float(raw_score)
+                break
+    pressure_before = candidate.pressure_before
+    pressure_after = candidate.pressure_target_after
+    if pressure_before is None:
+        pressure_before = priority
+    if pressure_after is None:
+        pressure_after = priority
+    if pressure_before is None:
+        pressure_before = 0.0
+    if pressure_after is None:
+        pressure_after = pressure_before
+    payload["pressure_before"] = pressure_before
+    payload["pressure_target_after"] = pressure_after
+    reveal_payload = dict(payload.get("reveal_impact") or {})
+    reveal_payload["kept_hidden"] = []
+    payload["reveal_impact"] = reveal_payload
+    payload["score_inputs"] = {}
+    payload["score_evidence"] = {}
+    if priority is not None:
+        payload["score_inputs"] = {"thread_need_fit": priority}
+        payload["score_evidence"] = {
+            "thread_need_fit": [
+                f"冻结线程优先级：{candidate.primary_thread_id}={priority:g}"
+            ]
+        }
+    payload["gate_input"] = {
+        "character_fit_inputs": {},
+        "style_fit_inputs": {},
+    }
+    compiled = CandidateProposal.model_validate(payload)
+    compiled = compiled.model_copy(
+        update={
+            "reveal_impact": compiled.reveal_impact.model_copy(
+                update={"kept_hidden": _effective_kept_hidden(compiled, frozen_truth_reveal)}
+            )
+        }
+    )
+    return compiled
+
+
+def _parse_creative_output(raw_output: str) -> CandidateCreativeOutput:
+    """Keep valid creative candidates when an optional third item is malformed."""
+
+    try:
+        return CandidateCreativeOutput.model_validate_json(raw_output)
+    except ValidationError as original_error:
+        try:
+            payload = json.loads(raw_output)
+        except (TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise original_error from exc
+        if not isinstance(payload, dict) or set(payload) - {
+            "task_id",
+            "candidates",
+            "notes",
+        }:
+            raise original_error
+        raw_candidates = payload.get("candidates")
+        if not isinstance(raw_candidates, list) or not 2 <= len(raw_candidates) <= 3:
+            raise original_error
+        valid: list[CandidateCreativeProposal] = []
+        rejected = 0
+        for raw_candidate in raw_candidates:
+            try:
+                valid.append(CandidateCreativeProposal.model_validate(raw_candidate))
+            except ValidationError:
+                rejected += 1
+        if len(valid) < 2:
+            raise original_error
+        notes = [str(item) for item in payload.get("notes", [])]
+        notes.append(
+            f"{rejected} 个候选因创意提交 schema 无效被忽略；"
+            f"保留 {len(valid)} 个有效候选。"
+        )
+        return CandidateCreativeOutput(
+            task_id=str(payload.get("task_id") or ""),
+            candidates=valid,
+            notes=notes,
+        )
 
 
 def _current_ordinal(connection: Any, book_id: str, edition_id: str = "base") -> int:
@@ -1066,9 +1230,84 @@ def prepare_candidate_task(
             """,
             (book_id, selected_edition, book_id, selected_edition),
         ).fetchall()
-    if len(metric_rows) < 6:
-        raise PlanningError("缺少六项最新指标；请先运行 novel diagnose")
-    schema = CandidateOutput.model_json_schema()
+        if len(metric_rows) < 6:
+            v2_run = connection.execute(
+                """
+                SELECT * FROM metric_runs
+                WHERE book_id=? AND edition_id=? AND invalidated_at IS NULL
+                ORDER BY as_of_event_seq DESC, created_at DESC
+                LIMIT 1
+                """,
+                (book_id, selected_edition),
+            ).fetchone()
+            if v2_run is not None:
+                v2_results = connection.execute(
+                    """
+                    SELECT * FROM metric_run_results
+                    WHERE run_id=?
+                    ORDER BY metric_id
+                    """,
+                    (str(v2_run["run_id"]),),
+                ).fetchall()
+                metric_rows = [
+                    {
+                        **dict(row),
+                        "as_of_event_seq": v2_run["as_of_event_seq"],
+                        "metric_name": row["metric_id"],
+                        "inputs_json": row["components_json"],
+                        "evidence_json": row["evidence_summary_json"],
+                    }
+                    for row in v2_results
+                ]
+    metric_status = (
+        "COMPLETE"
+        if len(metric_rows) >= 6
+        else "PARTIAL"
+        if metric_rows
+        else "MISSING"
+    )
+    def metric_row_value(row: Any, key: str, default: Any = None) -> Any:
+        if isinstance(row, Mapping):
+            return row.get(key, default)
+        try:
+            return row[key]
+        except (IndexError, KeyError, TypeError):
+            return default
+
+    available_components = sorted(
+        {
+            str(
+                metric_row_value(row, "metric_name")
+                or metric_row_value(row, "metric_id")
+                or ""
+            )
+            for row in metric_rows
+            if metric_row_value(row, "metric_name")
+            or metric_row_value(row, "metric_id")
+        }
+    )
+    missing_components: set[str] = set()
+    for row in metric_rows:
+        raw_missing = metric_row_value(row, "missing_components_json", "[]")
+        try:
+            parsed_missing = json.loads(str(raw_missing))
+        except (TypeError, ValueError, json.JSONDecodeError):
+            parsed_missing = []
+        if isinstance(parsed_missing, list):
+            missing_components.update(str(item) for item in parsed_missing)
+    metric_context_summary = {
+        "metric_status": metric_status,
+        "status": metric_status,
+        "available_components": available_components,
+        "available_count": len(metric_rows),
+        "missing_components": sorted(missing_components),
+        "warnings": (
+            ["部分指标缺失；相关评分分量保持 UNKNOWN，规划继续。"]
+            if metric_status != "COMPLETE"
+            else []
+        ),
+    }
+    schema = CandidateCreativeOutput.model_json_schema()
     schema_json = json_dumps(schema, indent=2)
     seed = json_dumps(
         {
@@ -1077,6 +1316,7 @@ def prepare_candidate_task(
             "planning_aggregate": aggregate,
             "threads": [item.model_dump(mode="json") for item in threads],
             "metrics": [dict(row) for row in metric_rows],
+            "metric_context": metric_context_summary,
             "runtime_context": runtime_context.model_dump(mode="json"),
             "innovation_control": selected_innovation.model_dump(mode="json"),
             "narrative_portfolio": narrative_portfolio.model_dump(mode="json"),
@@ -1137,7 +1377,7 @@ def prepare_candidate_task(
             "",
             f"Boundary Packet: `{boundary['markdown_path']}`",
             "",
-            "必须提交恰好三个结构真正不同的候选；不得只换怪物、资源、地点或社会反馈名词。",
+            "目标提交三个候选；至少提交两个有效候选。不得只换怪物、资源、地点或社会反馈名词。",
             "候选应分别考虑 CONTINUITY_ACTIVE_THREAD、EARNED_OPPORTUNITY、FORWARD_EXPANSION；"
             "这是三种推理 lens，不是固定配额。",
             "当前 InnovationControl 的 creative-distance guidance："
@@ -1146,7 +1386,7 @@ def prepare_candidate_task(
             f"{selected_innovation.lens_tendency_guidance}；这不是配额，也不是 Score Bonus。",
             "所有 FORWARD_NOVELTY 必须填写 introduction_event、causal_source、"
             "new_state_if_committed、conflicts_checked；不得把未来状态倒写成既有事实。",
-            "每个候选先填写硬门证据，再填写评分输入与来源；Python 将重新计算门禁、结构差异和总分。",
+            "只填写创意决定；评分、硬门、证据、画像和 Truth 对齐由 Python 根据冻结输入编译。",
             "候选只处于 CANDIDATE，不得写正文或升级为 CANON。",
             "每个候选必须填写 innovation_preview：creative_distance、主要方向、"
             "打开的 future branches、meaningful/cosmetic 判断与 integration_cost。"
@@ -1173,11 +1413,8 @@ def prepare_candidate_task(
                 indent=2,
             ),
             "",
-            "候选输出中请说明命中了哪些作者任务/意图（task_id/intent_id），"
-            "没有命中时也要说明原因；这只是规划输入，不会自动改变正史。",
-            "每个候选必须填写 author_control_trace：author_task_hits、author_intent_hits、"
-            "author_tasks_advanced、author_intents_advanced、author_goals_not_used 和"
-            "unused_reasons。只能引用上方冻结的 ID；硬门永远优先于作者目标命中。",
+            "Python 会从创意文本与冻结作者控制输入编译可解释的命中/未命中观察；"
+            "这只是规划输入，不会自动改变正史。",
             "AUTO 方向只提供推荐；若候选实际走向不同方向，必须在 Preview 中如实标注。",
             "",
             "## Effective Global Book Profile（九维，必须逐维对齐）",
@@ -1189,9 +1426,8 @@ def prepare_candidate_task(
                 indent=2,
             ),
             "",
-            "每个候选必须填写 profile_alignment：九个 dimension 各一条，并逐项填写"
-            " MUST/MUST_NOT constraint_checks。任何 passed=false 都是硬门失败，"
-            "Innovation Reward 不得抵消。",
+            "画像契合与 MUST/MUST_NOT 约束由 Python 结合冻结 Profile 编译；"
+            "明确 hard constraint 失败仍不可被 Innovation Reward 抵消。",
             "",
             "## Author Truth + Chapter Reveal Agenda（行为约束不等于揭示许可）",
             "",
@@ -1200,9 +1436,9 @@ def prepare_candidate_task(
                 indent=2,
             ),
             "",
-            "每个候选必须填写 truth_alignment 与 reveal_impact。Active Author Truth 可以"
-            "改变人物行为；KEEP_HIDDEN 不得出现在旁白、对话或答案式解释中。"
-            "SHOULD_HINT 必须给出可读 clue，但不得确认身份；MUST_REVEAL 才允许按计划深度兑现。",
+            "候选只填写实际计划的 hints、partial/full/false-lead reveal；"
+            "KEEP_HIDDEN 从冻结 Agenda 自动保留，不回写。Active Author Truth 可以改变人物行为；"
+            "KEEP_HIDDEN 不得出现在旁白、对话或答案式解释中。",
             "",
             "## Frozen Kernel Planning Context（机器冻结输入）",
             "",
@@ -1223,6 +1459,13 @@ def prepare_candidate_task(
             "```",
             "",
             "## 最新指标",
+            "",
+            "状态："
+            + metric_status
+            + "；缺失指标保持 UNKNOWN，不得自行填入估计值。",
+            "```json",
+            json_dumps(metric_context_summary, indent=2),
+            "```",
             "",
             "```json",
             json_dumps([dict(row) for row in metric_rows], indent=2),
@@ -1270,6 +1513,7 @@ def prepare_candidate_task(
         ),
         "truth_reveal": aggregate.get("author_policy", {}).get("truth_reveal", {}),
         "metric_run_ids": aggregate["metric_run_ids"],
+        "metric_context": metric_context_summary,
         "bundle_hash": aggregate["bundle_hash"],
         "rhythm_snapshot_id": aggregate.get("rhythm_snapshot_id"),
         "registry_hash": aggregate["registry_hash"],
@@ -1425,7 +1669,9 @@ def prepare_handoff_candidate_task(
         raise PlanningError("handoff 冻结 artifact 无法解析") from exc
     if not isinstance(world_state, dict) or not isinstance(boundary_payload, dict):
         raise PlanningError("handoff 冻结 World State 或 Boundary 结构无效")
-    if frozen_kernel_payload != kernel_context.model_dump(mode="json"):
+    if _normalize_frozen_semantics(frozen_kernel_payload) != _normalize_frozen_semantics(
+        kernel_context.model_dump(mode="json")
+    ):
         raise PlanningError("handoff Kernel Context 与 Planning Aggregate 不一致")
     world_chapter = world_state.get("chapter")
     if (
@@ -1487,7 +1733,7 @@ def prepare_handoff_candidate_task(
     reference_prompt["compact_cards"] = _compact_reference_prompt_cards(
         reference_planning_context.get("compact_cards", [])
     )
-    schema = CandidateOutput.model_json_schema()
+    schema = CandidateCreativeOutput.model_json_schema()
     metadata = {
         "task_id": task_id,
         "task_type": "plan-next",
@@ -1531,13 +1777,11 @@ def prepare_handoff_candidate_task(
             f"# PLAN_ONLY 三候选任务 `{task_id}`",
             "",
             f"正式 handoff：`{handoff_id}`。先读取 handoff input 下全部冻结文件。",
-            "只生成恰好三个 Candidate，不生成正文、Chapter Contract 或 Canon Event。",
-            "三个 lens 必须分别为 CONTINUITY_ACTIVE_THREAD、EARNED_OPPORTUNITY、"
-            "FORWARD_EXPANSION，且任意两案至少三个结构维度不同。",
-            "每案必须填写 author_control_trace；命中本次 WORKFLOW_GOAL intent，并说明"
-            "冻结资源、关系、知识边界与真实代价如何进入因果链。",
-            "每案必须逐一填写九维 profile_alignment，并对全部 MUST/MUST_NOT edit_id"
-            " 给出 passed 与证据。硬约束失败不得靠创新分抵消。",
+            "目标生成三个 Candidate，至少生成两个有效 Candidate；"
+            "不生成正文、Chapter Contract 或 Canon Event。",
+            "候选 lens 可覆盖 CONTINUITY_ACTIVE_THREAD、EARNED_OPPORTUNITY、"
+            "FORWARD_EXPANSION；结构多样性是诊断与排序信号，不是整批硬失败。",
+            "只填写创意决定。author control、画像、评分、证据和门禁由 Python 根据冻结输入编译。",
             "所有事实必须来自 world_state_context.json 或 handoff 冻结证据；未来新增只能"
             "作为 CANDIDATE，并填写 novelty provenance。",
             "不得引用任何未出现在 Author Goal、World State、Resource、Relationship、"
@@ -1560,8 +1804,9 @@ def prepare_handoff_candidate_task(
             "",
             json_dumps(author_policy.get("truth_reveal", {}), indent=2),
             "",
-            "Hidden Truth 是行为约束，不是揭示许可。每案填写 truth_alignment 与"
-            " reveal_impact；KEEP_HIDDEN 不得泄露，HINT 必须有可读线索且不得直接确认。",
+            "Hidden Truth 是行为约束，不是揭示许可。只填写实际 reveal_impact；"
+            "KEEP_HIDDEN 由 Python 从冻结 Agenda 保留，不得泄露；"
+            "HINT 必须有可读线索且不得直接确认。",
             "",
             "## Frozen Kernel Planning Context",
             "",
@@ -1656,24 +1901,38 @@ def import_candidate_output(
         else workspace / "agent_outputs" / task_id / "output.json"
     )
     try:
-        output = CandidateOutput.model_validate_json(path.read_text(encoding="utf-8"))
+        raw_output = path.read_text(encoding="utf-8")
+        try:
+            creative_output = _parse_creative_output(raw_output)
+        except ValidationError:
+            # CandidateProposal remains the internal persisted planning model;
+            # this branch accepts already-materialized local artifacts, while
+            # newly prepared tasks expose only CandidateCreativeOutput.
+            output = CandidateOutput.model_validate_json(raw_output)
+            creative_output = None
     except (OSError, ValidationError) as exc:
         raise PlanningError(f"候选 output.json 不符合合同：{exc}") from exc
-    if output.task_id != task_id:
+    if creative_output is not None:
+        output = CandidateOutput(
+            task_id=creative_output.task_id,
+            candidates=[],
+            notes=creative_output.notes,
+        )
+    if (creative_output.task_id if creative_output is not None else output.task_id) != task_id:
         raise PlanningError("候选 output task_id 不匹配")
     expected_innovation = InnovationControl.model_validate(
         metadata.get("innovation_control", {})
     )
-    if output.innovation_control is not None and output.innovation_control != expected_innovation:
+    if (
+        creative_output is None
+        and output.innovation_control is not None
+        and output.innovation_control != expected_innovation
+    ):
         raise PlanningError("候选 output 的 innovation_control 与任务冻结值不一致")
     earned_surface = (
         load_earned_surface(database, book_id, edition_id=selected_edition)
         if include_runtime_state
         else None
-    )
-    portfolio = diagnose_candidate_portfolio(
-        output.candidates,
-        earned_surface=earned_surface,
     )
     portfolio_raw = metadata.get(
         "narrative_portfolio_snapshot", metadata.get("narrative_portfolio")
@@ -1742,25 +2001,55 @@ def import_candidate_output(
                     task_kernel = KernelPlanningContext.model_validate_json(
                         Path(str(kernel_path)).read_text(encoding="utf-8")
                     )
-                    if task_kernel != frozen_kernel_context:
+                    if _normalize_frozen_semantics(
+                        task_kernel.model_dump(mode="json")
+                    ) != _normalize_frozen_semantics(
+                        frozen_kernel_context.model_dump(mode="json")
+                    ):
                         raise PlanningError(
                             "候选任务的 Kernel Context 与 Planning Aggregate 不一致"
                         )
         task_truth_reveal = metadata.get("truth_reveal", {})
-        if task_truth_reveal != frozen_truth_reveal:
+        if _normalize_frozen_semantics(task_truth_reveal) != _normalize_frozen_semantics(
+            frozen_truth_reveal
+        ):
             raise PlanningError("候选任务的 Truth/Reveal 冻结快照与 Aggregate 不一致")
+    if not frozen_author_control:
+        frozen_author_control = dict(metadata.get("author_control") or {})
+    if not frozen_profile:
+        frozen_profile = dict(metadata.get("effective_book_profile") or {})
+    if not frozen_truth_reveal:
+        frozen_truth_reveal = dict(metadata.get("truth_reveal") or {})
+    if creative_output is not None:
+        output = CandidateOutput(
+            task_id=creative_output.task_id,
+            candidates=[
+                _compile_creative_candidate(
+                    item,
+                    metadata=metadata,
+                    frozen_truth_reveal=frozen_truth_reveal,
+                )
+                for item in creative_output.candidates
+            ],
+            notes=creative_output.notes,
+        )
+    portfolio = diagnose_candidate_portfolio(
+        output.candidates,
+        earned_surface=earned_surface,
+    )
     portfolio_path = path.parent / "portfolio_diagnostics.json"
     portfolio_path.write_text(
         json_dumps(portfolio.model_dump(mode="json"), indent=2) + "\n",
         encoding="utf-8",
     )
     differences: dict[str, list[int]] = {candidate.local_id: [] for candidate in output.candidates}
+    diversity_warnings: list[str] = []
     for left, right in combinations(output.candidates, 2):
         count = _difference_count(left, right)
         differences[left.local_id].append(count)
         differences[right.local_id].append(count)
         if count < 3:
-            raise PlanningError(
+            diversity_warnings.append(
                 f"候选 {left.local_id}/{right.local_id} 只有 {count} 个结构维度不同"
             )
     evaluated: list[dict[str, Any]] = []
@@ -1840,7 +2129,7 @@ def import_candidate_output(
             / (len(differences[candidate.local_id]) * len(STRUCTURE_FIELDS))
             * 100
         )
-        inputs = candidate.score_inputs.model_dump()
+        inputs = candidate.score_inputs.model_dump(exclude_none=True)
         inputs["structural_diversity"] = diversity
         score_evidence = dict(candidate.score_evidence)
         if kernel_compilation is not None:
@@ -1880,8 +2169,11 @@ def import_candidate_output(
         missing_evidence = sorted(
             key for key in required_evidence if not score_evidence.get(key)
         )
-        if missing_evidence:
-            raise PlanningError(f"候选 {candidate.local_id} 缺少评分证据：{missing_evidence}")
+        score_warnings = (
+            [f"缺少评分证据，相关分量保留为 UNKNOWN：{missing_evidence}"]
+            if missing_evidence
+            else []
+        )
         score_evidence["structural_diversity"] = [
             f"与另外两案的结构差异维度数：{differences[candidate.local_id]}"
         ]
@@ -1976,6 +2268,7 @@ def import_candidate_output(
                 "reward": reward,
                 "inputs": inputs,
                 "score_evidence": score_evidence,
+                "score_warnings": score_warnings,
                 "diversity": diversity,
                 "kernel_compilation": kernel_compilation,
             }
@@ -1984,8 +2277,10 @@ def import_candidate_output(
         (item for item in evaluated if item["gate"].passed),
         key=lambda item: (-float(item["final_selection_score"]), str(item["candidate_id"])),
     )
-    if not passed:
-        raise PlanningError("三个候选全部未通过硬门")
+    if len(passed) < 2:
+        raise PlanningError(
+            f"有效候选少于两个：{len(passed)}；请重试候选生成"
+        )
     selected_id = str(passed[0]["candidate_id"])
     best_score = float(passed[0]["final_selection_score"])
     tie_delta = float(settings.metrics["candidate_score"]["tie_delta"])
@@ -2052,7 +2347,10 @@ def import_candidate_output(
                 "innovation_reward_breakdown": item["reward"].model_dump(mode="json"),
                 "inputs": item["inputs"],
                 "evidence": item["score_evidence"],
+                "warnings": item["score_warnings"],
                 "structural_difference_counts": differences[candidate.local_id],
+                "diversity_warnings": diversity_warnings,
+                "score_warnings": item["score_warnings"],
                 "reason": reason,
                 "portfolio_diagnostics": portfolio.model_dump(mode="json"),
                 "narrative_portfolio_snapshot": narrative_portfolio.model_dump(mode="json"),
@@ -2134,4 +2432,5 @@ def import_candidate_output(
         "portfolio_diagnostics": portfolio.model_dump(mode="json"),
         "portfolio_diagnostics_path": str(portfolio_path),
         "narrative_portfolio_snapshot": narrative_portfolio.model_dump(mode="json"),
+        "diversity_warnings": diversity_warnings,
     }

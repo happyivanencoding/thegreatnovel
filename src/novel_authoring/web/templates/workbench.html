@@ -109,6 +109,7 @@
                 </dl>
                 {% if item.reader_knowledge_delta %}<p>读者认知变化：{{ item.reader_knowledge_delta|join('；') }}</p>{% endif %}
                 {% if item.character_knowledge_delta %}<p>人物认知变化：{{ item.character_knowledge_delta|join('；') }}</p>{% endif %}
+                {% if item.gate_passed and item.selection_status != 'REJECTED' %}<button class="button compact primary" type="button" data-selected-candidate-draft="{{ item.candidate_id }}">选择并准备正文任务</button><p class="wb-command-feedback" data-selected-candidate-feedback></p>{% endif %}
                 <details class="wb-technical-details"><summary>技术详情</summary><pre>{{ {'candidate_id': item.candidate_id, 'score': item.final_selection_score, 'gate_passed': item.gate_passed, 'author_control_trace': item.author_control_trace}|tojson(indent=2) }}</pre></details>
               </article>
             {% endfor %}</div>{% else %}<p class="wb-empty-state">尚未导入三候选。准备规划任务后，每个候选会按“目标 / 隐藏真相 / 揭示安排 / 全书画像对齐 / 硬约束”展示。</p>{% endif %}

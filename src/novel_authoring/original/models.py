@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from enum import StrEnum
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 from novel_authoring.domain.models import NarrativeFunction
 from novel_authoring.progression.models import (
@@ -298,20 +299,20 @@ class CoreInnovationCandidate(BaseModel):
 
 
 class CoreInnovationProposal(BaseModel):
-    """Exactly three open-ended mechanisms sharing the frozen reader kernel."""
+    """Up to three open-ended mechanisms sharing the frozen reader kernel."""
 
     model_config = ConfigDict(extra="forbid")
 
     schema_version: Literal["core-innovation-v2"] = "core-innovation-v2"
     information_status: Literal["PROPOSAL"] = "PROPOSAL"
-    innovation_candidates: list[CoreInnovationCandidate] = Field(min_length=3, max_length=3)
+    innovation_candidates: list[CoreInnovationCandidate] = Field(min_length=2, max_length=3)
     kernel_contracts: dict[str, Any]
 
     @model_validator(mode="after")
     def candidates_are_distinct(self) -> CoreInnovationProposal:
         innovation_ids = [item.innovation_id for item in self.innovation_candidates]
-        if len(set(innovation_ids)) != 3:
-            raise ValueError("Core Innovation 必须恰好包含三个不同候选")
+        if len(set(innovation_ids)) != len(innovation_ids):
+            raise ValueError("Core Innovation 候选 ID 必须唯一")
         return self
 
 
@@ -401,22 +402,66 @@ class RollingPlanning(BaseModel):
 
 
 class StoryFoundationProposal(BaseModel):
-    """Exactly three story carriers for one selected Core Innovation."""
+    """Up to three story carriers for one selected Core Innovation."""
 
     model_config = ConfigDict(extra="forbid")
 
     schema_version: Literal["story-foundation-v1"] = "story-foundation-v1"
     information_status: Literal["PROPOSAL"] = "PROPOSAL"
     core_innovation_intent: AuthorInnovationIntent
-    foundation_candidates: list[StoryFoundationCandidate] = Field(min_length=3, max_length=3)
+    foundation_candidates: list[StoryFoundationCandidate] = Field(min_length=2, max_length=3)
     kernel_contracts: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def candidates_are_distinct(self) -> StoryFoundationProposal:
         ids = [item.candidate_id for item in self.foundation_candidates]
-        if len(set(ids)) != 3:
-            raise ValueError("Story Foundation 必须恰好包含三个不同候选")
+        if len(set(ids)) != len(ids):
+            raise ValueError("Story Foundation 候选 ID 必须唯一")
         return self
+
+
+def _parse_proposal_with_valid_candidates(
+    payload: Mapping[str, Any],
+    *,
+    field_name: str,
+    candidate_model: type[BaseModel],
+    proposal_model: type[BaseModel],
+) -> BaseModel:
+    """Normalize a 2-valid-plus-1-invalid creative proposal for import."""
+
+    raw_candidates = payload.get(field_name)
+    if not isinstance(raw_candidates, list) or not 2 <= len(raw_candidates) <= 3:
+        return proposal_model.model_validate(payload)
+    valid_candidates: list[dict[str, Any]] = []
+    for raw_candidate in raw_candidates:
+        try:
+            candidate = candidate_model.model_validate(raw_candidate)
+        except ValidationError:
+            continue
+        valid_candidates.append(candidate.model_dump(mode="json"))
+    if len(valid_candidates) < 2:
+        return proposal_model.model_validate(payload)
+    normalized = dict(payload)
+    normalized[field_name] = valid_candidates
+    return proposal_model.model_validate(normalized)
+
+
+def parse_core_innovation_proposal(payload: Mapping[str, Any]) -> CoreInnovationProposal:
+    return _parse_proposal_with_valid_candidates(
+        payload,
+        field_name="innovation_candidates",
+        candidate_model=CoreInnovationCandidate,
+        proposal_model=CoreInnovationProposal,
+    )  # type: ignore[return-value]
+
+
+def parse_story_foundation_proposal(payload: Mapping[str, Any]) -> StoryFoundationProposal:
+    return _parse_proposal_with_valid_candidates(
+        payload,
+        field_name="foundation_candidates",
+        candidate_model=StoryFoundationCandidate,
+        proposal_model=StoryFoundationProposal,
+    )  # type: ignore[return-value]
 
 
 class FoundationKernelContractProposals(BaseModel):

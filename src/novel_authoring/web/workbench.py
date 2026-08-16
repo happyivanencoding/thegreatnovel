@@ -941,6 +941,7 @@ def _candidate_cards(
         handoffs = connection.execute(
             "SELECT task_manifest_path, result_json FROM workflow_handoffs "
             "WHERE book_id=? AND edition_id=? AND handoff_type='CONTINUATION' "
+            "AND requested_stage='PLAN_ONLY' AND status='COMPLETED' "
             "AND result_json IS NOT NULL ORDER BY created_at DESC",
             (book_id, edition_id),
         ).fetchall()
@@ -955,9 +956,19 @@ def _candidate_cards(
             if str(task.get("context_chapter_id") or "") != context_chapter_id:
                 continue
             result_payload = _read_json(handoff["result_json"])
-            task_ids = result_payload.get("task_ids") or []
-            if task_ids:
-                task_id = str(task_ids[0])
+            candidate_ids = [
+                str(item) for item in result_payload.get("candidate_ids", [])
+            ]
+            if not candidate_ids:
+                continue
+            placeholders = ",".join("?" for _ in candidate_ids)
+            candidate_tasks = connection.execute(
+                "SELECT DISTINCT task_id FROM candidate_plans "
+                f"WHERE book_id=? AND edition_id=? AND candidate_id IN ({placeholders})",
+                (book_id, edition_id, *candidate_ids),
+            ).fetchall()
+            if len(candidate_tasks) == 1:
+                task_id = str(candidate_tasks[0]["task_id"])
                 break
     else:
         latest = connection.execute(

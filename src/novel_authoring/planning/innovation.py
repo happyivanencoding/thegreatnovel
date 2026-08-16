@@ -803,6 +803,18 @@ def recommend_innovation_focus(
     )
 
 
+_NON_BUSINESS_TIMESTAMP_FIELDS = (
+    "created_at",
+    "updated_at",
+    "generated_at",
+    "frozen_at",
+    "created_timestamp",
+    "updated_timestamp",
+    "generated_timestamp",
+    "equivalent_timestamp",
+)
+
+
 def _without_experiment_identity(value: object, path: str = "") -> object:
     if isinstance(value, Mapping):
         ignored = {
@@ -822,9 +834,7 @@ def _without_experiment_identity(value: object, path: str = "") -> object:
             "expected_output",
             "task_directory",
             "task_created_at",
-            "created_at",
-            "frozen_at",
-            "timestamp",
+            *_NON_BUSINESS_TIMESTAMP_FIELDS,
             "innovation_control",
             "distill_id",
             "baseline_id",
@@ -894,7 +904,7 @@ def build_experiment_context_fingerprint(
             "expected_output",
             "task_directory",
             "task_created_at",
-            "created_at",
+            *_NON_BUSINESS_TIMESTAMP_FIELDS,
             "innovation_control",
             "distill_id",
             "baseline_id",

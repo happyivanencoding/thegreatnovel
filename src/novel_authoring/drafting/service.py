@@ -4,6 +4,7 @@ import json
 import os
 from contextlib import suppress
 from pathlib import Path
+from typing import Any
 
 from pydantic import ValidationError
 
@@ -340,14 +341,15 @@ def prepare_draft_task(
             "不解释这些治理规则。",
             "本章至少让一个重要状态发生可读的改变；未知可以保留，但若核心谜团继续悬置，"
             "必须推进或兑现另一条 SHORT/MID 线程。",
-            "严格填写 reveal_trace：planned 必须来自 Chapter Contract 的 Reveal Agenda，"
-            "realized 只记录正文真正发生的线索或揭示，且 evidence_quote 必须逐字存在于正文。"
+            "Reveal Agenda 由系统保留；reveal_trace.planned 可省略或只记录本次实际采用的计划，"
+            "realized 只记录正文真正发生的线索或揭示，且 evidence_quote 必须出现在正文中。"
             "KEEP_HIDDEN 的 Truth 只能约束行为，不能被旁白、对话或解释直接说破；"
             "HINT 必须留下读者可感知线索，但不能确认完整答案。",
-            "若 Chapter Contract 的 kernel_verification_status 不是 "
-            "LEGACY_NO_EFFECTIVE_CONTRACT，必须填写 RealizedKernelTrace。它只声明正文实际"
-            "兑现的部分；每条证据必须逐字出现在正文，并绑定将由 Author Approval 提交的"
-            " state_change record_id。不得把 Expected Kernel Trace 原样抄成 Realized。",
+            "RealizedKernelTrace 是可选的语义提示；系统会从正文、实际 StateChange、"
+            "Chapter Contract、Reveal 与 promises 自动编译实际 trace。若主动填写，只能"
+            "声明正文实际兑现的部分；每条证据必须逐字出现在正文，并绑定将由 Author"
+            " Approval 提交的 state_change record_id。不得把 Expected Kernel Trace 原样抄成"
+            " Realized。",
             "避免连续使用‘谨慎试探—暂不下结论—保留退路—撤回’的审计型叙事，"
             "除非当前 Narrative Portfolio 明确需要这种节奏。",
             "只写 output.json，不要修改 book；系统会把合法正文导入 drafts。",
@@ -717,6 +719,164 @@ def save_draft_content(
         "content_sha256": content_hash,
         "validation_invalidated": True,
     }
+
+
+def repair_draft_metadata(
+    database: Database,
+    book_id: str,
+    draft_id: str,
+    metadata: dict[str, Any],
+    *,
+    edition_id: str | None = None,
+    expected_content_sha256: str | None = None,
+) -> dict[str, object]:
+    """Repair DraftOutput metadata without changing the persisted prose bytes."""
+
+    selected_edition = resolve_edition_id(database, book_id, edition_id)
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT * FROM drafts WHERE book_id=? AND draft_id=? AND edition_id=?",
+            (book_id, draft_id, selected_edition),
+        ).fetchone()
+        if row is None:
+            raise DraftWorkflowError(f"草稿不存在：{draft_id}")
+        if row["status"] in {
+            DraftStatus.AUTHOR_APPROVED.value,
+            DraftStatus.CANON_COMMITTED.value,
+            DraftStatus.REJECTED.value,
+        }:
+            raise DraftWorkflowError("已批准、已提交或已拒绝草稿不可修复元数据")
+        draft_path = Path(str(row["file_path"])).expanduser().resolve()
+        edition_root = edition_workspace(database, book_id, selected_edition).resolve()
+        drafts_root = (edition_root / "drafts").resolve()
+        if drafts_root not in draft_path.parents:
+            raise DraftWorkflowError("草稿路径不在当前 edition 的 drafts 目录")
+        if not draft_path.is_file():
+            raise DraftWorkflowError(f"草稿文件不存在：{draft_path}")
+        actual_hash = sha256_file(draft_path)
+        stored_hash = str(row["content_sha256"] or "")
+        if actual_hash != stored_hash:
+            raise DraftWorkflowError("草稿正文哈希已变化，不能执行元数据修复")
+        if expected_content_sha256 is not None and actual_hash != expected_content_sha256:
+            raise DraftWorkflowError("草稿正文哈希与 expected_content_sha256 不一致")
+        try:
+            current_output = json.loads(str(row["output_json"] or "{}"))
+        except (TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise DraftWorkflowError("草稿 output_json 无法读取") from exc
+        if not isinstance(current_output, dict):
+            raise DraftWorkflowError("草稿 output_json 必须是 object")
+        if not isinstance(metadata, dict):
+            raise DraftWorkflowError("metadata 必须是 object")
+        forbidden = {"prose_markdown", "task_id", "contract_id"}
+        attempted_forbidden = sorted(forbidden & set(metadata))
+        if attempted_forbidden:
+            raise DraftWorkflowError(
+                "元数据修复不得修改正文或身份字段：" + ", ".join(attempted_forbidden)
+            )
+        unknown = sorted(set(metadata) - set(DraftOutput.model_fields))
+        if unknown:
+            raise DraftWorkflowError("未知 DraftOutput 元数据字段：" + ", ".join(unknown))
+        merged = {**current_output, **metadata}
+        merged["prose_markdown"] = str(current_output.get("prose_markdown") or "")
+        try:
+            output = DraftOutput.model_validate(merged)
+        except ValidationError as exc:
+            raise DraftWorkflowError(f"修复后的 DraftOutput 无效：{exc}") from exc
+        if str(output.task_id) != str(row["task_id"] or ""):
+            raise DraftWorkflowError("修复后的 DraftOutput task_id 与 Draft 不一致")
+        if str(output.contract_id) != str(row["contract_id"] or ""):
+            raise DraftWorkflowError("修复后的 DraftOutput contract_id 与 Draft 不一致")
+        output_json = json_dumps(output.model_dump(mode="json"))
+        previous_version = int(row["version"] or 1)
+        created_at = utc_now()
+        event_id = stable_id(
+            "draft-metadata-repair",
+            draft_id,
+            str(previous_version + 1),
+            actual_hash,
+            created_at,
+        )
+        connection.execute(
+            "UPDATE drafts SET status=?, output_json=?, validation_run_id=NULL, "
+            "version=version+1 WHERE book_id=? AND draft_id=? AND edition_id=?",
+            (
+                DraftStatus.DRAFT.value,
+                output_json,
+                book_id,
+                draft_id,
+                selected_edition,
+            ),
+        )
+        connection.execute(
+            "DELETE FROM validation_reports WHERE book_id=? AND draft_id=? AND edition_id=?",
+            (book_id, draft_id, selected_edition),
+        )
+
+    root = book_root(database, book_id)
+    validation_dir = (
+        BookLayout(root.parent).for_book(book_id).edition(selected_edition).validation
+        if (root / "book.yaml").is_file()
+        else edition_workspace(database, book_id, selected_edition) / "validation"
+    )
+    validation_dir.mkdir(parents=True, exist_ok=True)
+    old_report = validation_dir / f"{draft_id}.json"
+    if old_report.is_file():
+        old_report.unlink()
+    audit_event = {
+        "event_id": event_id,
+        "event_type": "DRAFT_METADATA_REPAIRED",
+        "draft_id": draft_id,
+        "book_id": book_id,
+        "edition_id": selected_edition,
+        "expected_content_sha256": expected_content_sha256 or actual_hash,
+        "content_sha256": actual_hash,
+        "previous_version": previous_version,
+        "new_version": previous_version + 1,
+        "changed_fields": sorted(metadata),
+        "created_at": created_at,
+    }
+    operation = find_operation(
+        database,
+        book_id,
+        selected_edition,
+        str(row["task_id"] or ""),
+    )
+    audit_path = (
+        operation.events
+        if operation is not None
+        else validation_dir / "draft_metadata_repairs.jsonl"
+    )
+    with audit_path.open("a", encoding="utf-8") as handle:
+        handle.write(json_dumps(audit_event) + "\n")
+
+    result: dict[str, object] = {
+        "draft_id": draft_id,
+        "edition_id": selected_edition,
+        "status": DraftStatus.DRAFT.value,
+        "content_sha256": actual_hash,
+        "expected_content_sha256": expected_content_sha256 or actual_hash,
+        "changed_fields": sorted(metadata),
+        "validation_invalidated": True,
+        "audit_event": audit_event,
+        "audit_path": str(audit_path),
+    }
+    from novel_authoring.validation.service import ValidationWorkflowError, validate_draft
+
+    try:
+        validation = validate_draft(
+            database,
+            book_id,
+            draft_id,
+            edition_id=selected_edition,
+        )
+    except ValidationWorkflowError as exc:
+        result["validation_error"] = str(exc)
+    else:
+        result["status"] = (
+            DraftStatus.VALIDATED.value if validation.passed else DraftStatus.DRAFT.value
+        )
+        result["validation"] = validation.model_dump(mode="json")
+    return result
 
 
 def discard_draft(

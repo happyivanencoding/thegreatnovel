@@ -76,7 +76,7 @@ from novel_authoring.author_control.truth import (
     update_author_truth,
 )
 from novel_authoring.db.database import Database
-from novel_authoring.drafting import save_draft_content
+from novel_authoring.drafting import repair_draft_metadata, save_draft_content
 from novel_authoring.edition import (
     ACTIVATE_PHRASE,
     activate_edition,
@@ -185,7 +185,11 @@ from novel_authoring.web.routes.pages import (
     observation_history,
     workflow_context,
 )
-from novel_authoring.web.routes.workflow import prepare_continuation, prepare_revision
+from novel_authoring.web.routes.workflow import (
+    prepare_continuation,
+    prepare_revision,
+    prepare_selected_candidate_draft,
+)
 from novel_authoring.web.schemas import (
     AtlasActionRequest,
     AuthorInputRequest,
@@ -195,7 +199,9 @@ from novel_authoring.web.schemas import (
     BookProfileEditRequest,
     BookProfileProposalRequest,
     BookProfileProposalResolutionRequest,
+    CandidateSelectionRequest,
     DraftContentRequest,
+    DraftMetadataRepairRequest,
     EditionActivationRequest,
     HandoffRequest,
     HiddenItemRequest,
@@ -2443,6 +2449,27 @@ def create_app(
         except (OSError, ValueError, RuntimeError) as exc:
             return _error(exc)
 
+    @app.post("/api/books/{path_book_id}/editions/{edition_id}/drafts/{draft_id}/metadata")
+    async def repair_draft_metadata_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        draft_id: str,
+        payload: DraftMetadataRepairRequest,
+    ) -> Any:
+        verify_csrf(request, request.headers.get("X-CSRF-Token"))
+        try:
+            return repair_draft_metadata(
+                _database_for_book(app, _check_id(path_book_id)),
+                _check_id(path_book_id),
+                _check_id(draft_id),
+                payload.metadata,
+                edition_id=_check_id(edition_id),
+                expected_content_sha256=payload.expected_content_sha256,
+            )
+        except (OSError, ValueError, RuntimeError) as exc:
+            return _error(exc)
+
     @app.get(
         "/books/{path_book_id}/editions/{edition_id}/atlas",
         response_class=HTMLResponse,
@@ -3464,6 +3491,31 @@ def create_app(
                     )
             return prepare_continuation(selected_database, checked_book, payload)
         except (HandoffWorkflowError, ValueError) as exc:
+            return _error(exc)
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/planning/candidates/"
+        "{candidate_id}/draft"
+    )
+    async def selected_candidate_draft_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        candidate_id: str,
+        payload: CandidateSelectionRequest,
+    ) -> Any:
+        verify_csrf(request, None)
+        try:
+            checked_book = _check_id(path_book_id)
+            checked_edition = _check_id(edition_id)
+            checked_candidate = _check_id(candidate_id)
+            if payload.candidate_id != checked_candidate:
+                raise HandoffWorkflowError("候选路径 ID 与请求体 ID 不一致")
+            payload = payload.model_copy(update={"edition_id": checked_edition})
+            return prepare_selected_candidate_draft(
+                _database_for_book(app, checked_book), checked_book, payload
+            )
+        except (HandoffWorkflowError, OSError, ValueError, RuntimeError) as exc:
             return _error(exc)
 
     @app.post("/api/handoffs/revise")

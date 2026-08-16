@@ -2,21 +2,28 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Literal
 
 from novel_authoring.canon.materialize import missing_materialization_fields
 from novel_authoring.canon.projection import CanonProjection
 from novel_authoring.config import Settings
-from novel_authoring.contracts.draft import DraftOutput, DraftStateChange
+from novel_authoring.contracts.draft import (
+    DraftOutput,
+    DraftStateChange,
+    RealizedKernelEvidence,
+    RealizedKernelTrace,
+)
 from novel_authoring.domain.models import ContinuationMode, NarrativeFunction, Severity
 from novel_authoring.metrics.formulas import (
     character_fit,
     payoff_cooldown_allowed,
     style_fit,
 )
-from novel_authoring.planning.models import ChapterContract
+from novel_authoring.planning.models import ChapterContract, ProgressionImpact
+from novel_authoring.validation.aliases import resolve_projection_alias
 from novel_authoring.validation.models import (
     ValidationFinding,
     ValidationReport,
@@ -57,6 +64,60 @@ _SEVERITY_RANK = {
     Severity.ERROR: 2,
     Severity.FATAL: 3,
 }
+
+
+EvidenceMatchStatus = Literal["EXACT", "NORMALIZED", "AMBIGUOUS", "NOT_FOUND"]
+
+_EVIDENCE_PUNCTUATION = str.maketrans(
+    {
+        "，": ",",
+        "。": ".",
+        "！": "!",
+        "？": "?",
+        "：": ":",
+        "；": ";",
+        "（": "(",
+        "）": ")",
+        "【": "[",
+        "】": "]",
+        "［": "[",
+        "］": "]",
+        "｛": "{",
+        "｝": "}",
+        "、": ",",
+        "“": '"',
+        "”": '"',
+        "‘": "'",
+        "’": "'",
+        "「": '"',
+        "」": '"',
+        "『": '"',
+        "』": '"',
+    }
+)
+
+
+def _normalize_evidence(value: str) -> str:
+    normalized = unicodedata.normalize("NFKC", value).translate(
+        _EVIDENCE_PUNCTUATION
+    )
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
+def _match_evidence(prose: str, quote: str) -> EvidenceMatchStatus:
+    if not isinstance(quote, str) or not quote.strip():
+        return "NOT_FOUND"
+    if quote in prose:
+        return "EXACT"
+    normalized_quote = _normalize_evidence(quote)
+    if not normalized_quote:
+        return "NOT_FOUND"
+    normalized_prose = _normalize_evidence(prose)
+    first = normalized_prose.find(normalized_quote)
+    if first < 0:
+        return "NOT_FOUND"
+    second = normalized_prose.find(normalized_quote, first + 1)
+    return "AMBIGUOUS" if second >= 0 else "NORMALIZED"
 
 
 def _report(
@@ -224,7 +285,20 @@ def validate_knowledge(context: ValidationContext) -> ValidationReport:
         for change in _changes(context, "knowledge")
     }
     for claim in context.draft.knowledge_claims:
-        pair = (claim.character_id, claim.fact_id)
+        character_resolution = resolve_projection_alias(
+            context.projection.entities, claim.character_id
+        )
+        if character_resolution.status in {"AMBIGUOUS", "CONFLICT"}:
+            findings.append(
+                _finding(
+                    "KNOWLEDGE_ENTITY_ALIAS_AMBIGUOUS",
+                    f"角色/实体别名 {claim.character_id} 无法唯一解析："
+                    f"{character_resolution.matches}",
+                    location="knowledge_claims",
+                )
+            )
+        character_id = character_resolution.canonical_id or claim.character_id
+        pair = (character_id, claim.fact_id)
         if claim.basis == "already_known" and pair not in known:
             findings.append(
                 _finding(
@@ -256,7 +330,8 @@ def validate_character(context: ValidationContext) -> ValidationReport:
             findings.append(
                 _finding(
                     "CHARACTER_FIT_BELOW_MINIMUM",
-                    f"人物契合度 {score:.2f} 低于硬门 {minimum:.2f}。",
+                    f"人物契合度 {score:.2f} 低于参考线 {minimum:.2f}，建议人工复核。",
+                    severity=Severity.WARNING,
                     location="character_fit_inputs",
                 )
             )
@@ -265,6 +340,7 @@ def validate_character(context: ValidationContext) -> ValidationReport:
             _finding(
                 "CHARACTER_FIT_INPUT_INVALID",
                 f"人物契合度输入无效：{exc}",
+                severity=Severity.WARNING,
                 location="character_fit_inputs",
             )
         )
@@ -284,10 +360,47 @@ def validate_economy_power(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
     for change in _changes(context, "resource"):
         payload = change.payload
+        resolution = resolve_projection_alias(
+            context.projection.resources, change.record_id
+        )
+        resource_name = str(
+            payload.get("resource_name")
+            or payload.get("name")
+            or payload.get("title")
+            or ""
+        ).strip()
+        if resolution.status == "NOT_FOUND" and resource_name:
+            resolution = resolve_projection_alias(
+                context.projection.resources, resource_name
+            )
+        if resolution.status in {"AMBIGUOUS", "CONFLICT"}:
+            findings.append(
+                _finding(
+                    "RESOURCE_ALIAS_AMBIGUOUS",
+                    f"资源引用 {change.record_id} 无法唯一解析：{resolution.matches}",
+                    location=f"state_changes:{change.record_id}",
+                )
+            )
+        elif (
+            resolution.status == "NOT_FOUND"
+            and context.projection.resources
+            and payload.get("before_quantity") is not None
+        ):
+            findings.append(
+                _finding(
+                    "RESOURCE_ALIAS_NOT_FOUND",
+                    f"资源引用 {change.record_id} 在当前 Canon Projection 中不存在。",
+                    location=f"state_changes:{change.record_id}",
+                )
+            )
         before = _number(payload.get("before_quantity"))
         delta = _number(payload.get("delta"))
         after = _number(payload.get("after_quantity", payload.get("quantity")))
-        existing = context.projection.resources.get(change.record_id)
+        existing = (
+            None
+            if resolution.canonical_id is None
+            else context.projection.resources.get(resolution.canonical_id)
+        )
         existing_quantity = (
             None if existing is None else _number(existing.get("quantity"))
         )
@@ -371,25 +484,54 @@ def _quotes_in_prose(
     quotes: list[str],
     key: str,
     findings: list[ValidationFinding],
+    *,
+    contract_requirement: bool = False,
+    match_records: list[dict[str, Any]] | None = None,
 ) -> None:
     if not quotes:
+        if match_records is not None:
+            match_records.append({"key": key, "quote": "", "status": "NOT_FOUND"})
         findings.append(
             _finding(
                 "CONTRACT_EVIDENCE_EMPTY",
                 f"合同证据 {key} 为空。",
+                severity=Severity.WARNING if contract_requirement else Severity.ERROR,
                 location=f"contract_evidence:{key}",
             )
         )
+        return
     for quote in quotes:
-        if quote not in prose:
-            findings.append(
-                _finding(
-                    "EVIDENCE_NOT_IN_PROSE",
-                    f"证据短句不在正文中：{quote}",
-                    evidence=[quote],
-                    location=key,
-                )
+        status = _match_evidence(prose, quote)
+        if match_records is not None:
+            match_records.append({"key": key, "quote": quote, "status": status})
+        if status == "EXACT":
+            continue
+        if status == "NORMALIZED" and not contract_requirement:
+            continue
+        severity = (
+            Severity.WARNING
+            if contract_requirement or status != "NOT_FOUND"
+            else Severity.ERROR
+        )
+        code = {
+            "NORMALIZED": "EVIDENCE_NORMALIZED",
+            "AMBIGUOUS": "EVIDENCE_AMBIGUOUS",
+            "NOT_FOUND": "EVIDENCE_NOT_IN_PROSE",
+        }[status]
+        message = (
+            f"证据短句匹配状态为 {status}：{quote}"
+            if status != "NOT_FOUND"
+            else f"证据短句不在正文中（{status}）：{quote}"
+        )
+        findings.append(
+            _finding(
+                code,
+                message,
+                severity=severity,
+                evidence=[quote],
+                location=key,
             )
+        )
 
 
 def _kernel_claims(value: object, *, key: str | None = None) -> set[str]:
@@ -417,11 +559,100 @@ def _stage_target(value: object) -> str:
     return parts[-1] if parts else ""
 
 
+def _compiled_realized_kernel_trace(
+    context: ValidationContext,
+) -> RealizedKernelTrace:
+    """Compile the observable trace from authoritative draft fields."""
+
+    axis_advanced: list[str] = []
+    progression_delta_type: list[str] = []
+    stage_change: str | None = None
+    resource_change: list[str] = []
+    ability_unlock: list[str] = []
+    growth_cost: list[str] = []
+    resource_changes: list[str] = []
+    world_expansion_changes: list[str] = []
+    evidence: list[RealizedKernelEvidence] = []
+    knowledge_by_truth: dict[str, str] = {}
+    for change in context.draft.state_changes:
+        payload = change.payload
+        if change.kind == "knowledge":
+            truth_id = str(payload.get("truth_id") or "").strip()
+            if truth_id:
+                knowledge_by_truth[truth_id] = change.record_id
+        progression = payload.get("progression")
+        if isinstance(progression, dict):
+            for key, target in (
+                ("axis_advanced", axis_advanced),
+                ("progression_delta_type", progression_delta_type),
+                ("growth_cost", growth_cost),
+            ):
+                raw = progression.get(key, [])
+                if isinstance(raw, list):
+                    target.extend(str(item) for item in raw if str(item).strip())
+            raw_stage = progression.get("stage_change")
+            if raw_stage:
+                stage_change = str(raw_stage)
+        if change.kind == "resource":
+            resource_id = str(
+                payload.get("resource_id") or payload.get("name") or change.record_id
+            )
+            resource_change.append(resource_id)
+            resource_changes.append(resource_id)
+        if change.kind == "capability":
+            ability_unlock.append(
+                str(payload.get("capability_id") or payload.get("name") or change.record_id)
+            )
+        if isinstance(payload.get("world_expansion"), dict):
+            world_expansion_changes.append(change.record_id)
+        if change.evidence_quotes:
+            evidence.append(
+                RealizedKernelEvidence(
+                    claim=f"{change.kind}:{change.record_id}",
+                    state_change_record_ids=[change.record_id],
+                    evidence_quotes=list(change.evidence_quotes),
+                )
+            )
+    for event in context.draft.reveal_trace.realized:
+        record_id = knowledge_by_truth.get(event.truth_id)
+        if record_id:
+            evidence.append(
+                RealizedKernelEvidence(
+                    claim=f"reveal:{event.truth_id}",
+                    state_change_record_ids=[record_id],
+                    evidence_quotes=[event.evidence_quote],
+                )
+            )
+    return RealizedKernelTrace(
+        expected_contract_id=context.contract.contract_id,
+        reader_promises_served=list(
+            dict.fromkeys(
+                [*context.draft.promises_advanced, *context.draft.promises_paid]
+            )
+        ),
+        progression_impact=ProgressionImpact(
+            axis_advanced=list(dict.fromkeys(axis_advanced)),
+            progression_delta_type=list(dict.fromkeys(progression_delta_type)),
+            stage_change=stage_change,
+            resource_change=list(dict.fromkeys(resource_change)),
+            ability_unlock=list(dict.fromkeys(ability_unlock)),
+            growth_cost=list(dict.fromkeys(growth_cost)),
+        ),
+        resource_changes=list(dict.fromkeys(resource_changes)),
+        world_expansion_changes=list(dict.fromkeys(world_expansion_changes)),
+        payoff_channels_realized=list(dict.fromkeys(context.draft.promises_paid)),
+        debts_advanced=list(dict.fromkeys(context.draft.promises_advanced)),
+        debts_paid=list(dict.fromkeys(context.draft.promises_paid)),
+        evidence=evidence,
+    )
+
+
 def _validate_realized_kernel_trace(
     context: ValidationContext,
 ) -> tuple[list[ValidationFinding], dict[str, Any]]:
     findings: list[ValidationFinding] = []
     status = context.contract.kernel_verification_status
+    compiled_trace = _compiled_realized_kernel_trace(context)
     trace = context.draft.realized_kernel_trace
     if status == "LEGACY_NO_EFFECTIVE_CONTRACT":
         if trace is not None:
@@ -433,16 +664,29 @@ def _validate_realized_kernel_trace(
                     location="realized_kernel_trace",
                 )
             )
-        return findings, {"status": status, "expected": {}, "realized": {}}
+        return findings, {
+            "status": status,
+            "expected": {},
+            "realized": {},
+            "compiled": compiled_trace.model_dump(mode="json"),
+        }
     if trace is None:
         findings.append(
             _finding(
                 "REALIZED_KERNEL_TRACE_MISSING",
-                "本章合同含 Verified Kernel Trace，草稿必须声明 RealizedKernelTrace。",
+                "草稿未提供 RealizedKernelTrace 提示；已由 Python 根据正文、StateChange、"
+                "Reveal 与 promises 编译实际 trace。",
+                severity=Severity.WARNING,
                 location="realized_kernel_trace",
             )
         )
-        return findings, {"status": status, "expected": context.contract.verified_kernel_trace}
+        return findings, {
+            "status": status,
+            "expected": context.contract.verified_kernel_trace,
+            "evidence_matches": [],
+            "realized": compiled_trace.model_dump(mode="json"),
+            "compiled": compiled_trace.model_dump(mode="json"),
+        }
     if trace.expected_contract_id != context.contract.contract_id:
         findings.append(
             _finding(
@@ -453,6 +697,7 @@ def _validate_realized_kernel_trace(
         )
 
     state_changes = {item.record_id: item for item in context.draft.state_changes}
+    evidence_matches: list[dict[str, Any]] = []
     for item in trace.evidence:
         unknown = set(item.state_change_record_ids) - set(state_changes)
         if unknown:
@@ -468,6 +713,7 @@ def _validate_realized_kernel_trace(
             item.evidence_quotes,
             f"realized_kernel_trace:{item.claim}",
             findings,
+            match_records=evidence_matches,
         )
 
     impact = trace.progression_impact
@@ -567,6 +813,7 @@ def _validate_realized_kernel_trace(
                 _finding(
                     "REALIZED_KERNEL_EXCEEDS_VERIFIED_CONTRACT",
                     f"Realized {label} 超出 Verified Kernel Trace：{sorted(extras)}",
+                    severity=Severity.WARNING,
                     location="realized_kernel_trace",
                 )
             )
@@ -588,6 +835,7 @@ def _validate_realized_kernel_trace(
                 "REALIZED_PRIMARY_INTENT_MISMATCH",
                 "实际 Primary Intent "
                 f"{trace.primary_intent} 与合同 {expected_intent or 'NONE'} 不一致。",
+                severity=Severity.WARNING,
                 location="realized_kernel_trace.primary_intent",
             )
         )
@@ -607,6 +855,7 @@ def _validate_realized_kernel_trace(
             _finding(
                 "REALIZED_STAGE_TRANSITION_MISMATCH",
                 f"实际阶段目标 {realized_stage} 与核验合同 {expected_stage or 'NONE'} 不一致。",
+                severity=Severity.WARNING,
                 location="realized_kernel_trace.progression_impact.stage_change",
             )
         )
@@ -676,11 +925,14 @@ def _validate_realized_kernel_trace(
         "realized": trace.model_dump(mode="json"),
         "underdelivered": underdelivered,
         "unexpected": unexpected,
+        "evidence_matches": evidence_matches,
+        "compiled": compiled_trace.model_dump(mode="json"),
     }
 
 
 def validate_contract(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
+    evidence_matches: list[dict[str, Any]] = []
     required = {
         "required_irreversible_change",
         "ending_state",
@@ -691,6 +943,7 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
     for key in sorted(required):
         quotes = context.draft.contract_evidence.get(key)
         if quotes is None:
+            evidence_matches.append({"key": key, "quote": "", "status": "NOT_FOUND"})
             findings.append(
                 _finding(
                     "CONTRACT_REQUIREMENT_MISSING",
@@ -699,13 +952,21 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
                 )
             )
             continue
-        _quotes_in_prose(context.draft.prose_markdown, quotes, key, findings)
+        _quotes_in_prose(
+            context.draft.prose_markdown,
+            quotes,
+            key,
+            findings,
+            contract_requirement=True,
+            match_records=evidence_matches,
+        )
     for change in context.draft.state_changes:
         _quotes_in_prose(
             context.draft.prose_markdown,
             change.evidence_quotes,
             f"state_changes:{change.record_id}",
             findings,
+            match_records=evidence_matches,
         )
     kernel_findings, kernel_comparison = _validate_realized_kernel_trace(context)
     findings.extend(kernel_findings)
@@ -789,11 +1050,31 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
                         location="reveal_trace.realized",
                     )
                 )
-            if event.evidence_quote not in context.draft.prose_markdown:
+            evidence_status = _match_evidence(
+                context.draft.prose_markdown, event.evidence_quote
+            )
+            evidence_matches.append(
+                {
+                    "key": f"reveal_trace:{event.truth_id}",
+                    "quote": event.evidence_quote,
+                    "status": evidence_status,
+                }
+            )
+            if evidence_status == "AMBIGUOUS":
+                findings.append(
+                    _finding(
+                        "REVEAL_EVIDENCE_AMBIGUOUS",
+                        f"Reveal {event.truth_id} 的证据短句匹配状态为 AMBIGUOUS。",
+                        severity=Severity.WARNING,
+                        evidence=[event.evidence_quote],
+                        location="reveal_trace.realized",
+                    )
+                )
+            elif evidence_status == "NOT_FOUND":
                 findings.append(
                     _finding(
                         "REVEAL_EVIDENCE_NOT_IN_PROSE",
-                        f"Reveal {event.truth_id} 的证据短句不在正文中。",
+                        f"Reveal {event.truth_id} 的证据短句不在正文中（NOT_FOUND）。",
                         evidence=[event.evidence_quote],
                         location="reveal_trace.realized",
                     )
@@ -843,19 +1124,20 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
                 _finding(
                     "REVEAL_PLANNED_DUPLICATE",
                     "RevealTrace.planned 存在重复 truth_id。",
+                    severity=Severity.WARNING,
                     location="reveal_trace.planned",
                 )
             )
-        required_planned = must_reveal | should_hint | keep_hidden
-        if set(planned) != required_planned:
+        unknown_planned = set(planned) - set(agenda_items)
+        if unknown_planned:
             findings.append(
                 _finding(
-                    "REVEAL_PLANNED_NOT_FROZEN_AGENDA",
-                    "RevealTrace.planned 必须精确声明本章 MUST/SHOULD/KEEP Agenda。",
+                    "REVEAL_PLANNED_NOT_IN_AGENDA",
+                    "RevealTrace.planned 包含未在合同 Agenda 中的 Truth。",
                     evidence=[
-                        f"missing={sorted(required_planned - set(planned))}",
-                        f"unknown={sorted(set(planned) - required_planned)}",
+                        f"unknown={sorted(unknown_planned)}",
                     ],
+                    severity=Severity.WARNING,
                     location="reveal_trace.planned",
                 )
             )
@@ -953,6 +1235,7 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
         {
             "requirements_checked": len(required),
             "kernel_trace_comparison": kernel_comparison,
+            "evidence_matches": evidence_matches,
             "reveal_requirements_checked": sum(
                 len(agenda.get(key, []))
                 for key in ("must_reveal", "should_hint", "keep_hidden")
@@ -1001,6 +1284,7 @@ def validate_debt(context: ValidationContext) -> ValidationReport:
             _finding(
                 "DEBT_HOOK_OVERLOAD",
                 f"新增重大悬念 {context.draft.new_major_hooks}，合同只允许 {allowed}。",
+                severity=Severity.WARNING,
                 location="new_major_hooks",
             )
         )
@@ -1040,6 +1324,7 @@ def validate_payoff(context: ValidationContext) -> ValidationReport:
                     _finding(
                         "PAYOFF_AFTERSHOCK_PLAN_MISSING",
                         "重大兑现必须列出至少四类余波义务。",
+                        severity=Severity.WARNING,
                         location=f"state_changes:{change.record_id}",
                     )
                 )
@@ -1053,6 +1338,7 @@ def validate_payoff(context: ValidationContext) -> ValidationReport:
                     _finding(
                         "PAYOFF_COOLDOWN_EVIDENCE_MISSING",
                         "重大兑现必须声明 cooldown_group 与同子类型历史次数。",
+                        severity=Severity.WARNING,
                         location=f"state_changes:{change.record_id}",
                     )
                 )
@@ -1071,6 +1357,7 @@ def validate_payoff(context: ValidationContext) -> ValidationReport:
                         _finding(
                             "PAYOFF_COOLDOWN_INPUT_INVALID",
                             f"爽点冷却证据无效：{exc}",
+                            severity=Severity.WARNING,
                             location=f"state_changes:{change.record_id}",
                         )
                     )
@@ -1080,6 +1367,7 @@ def validate_payoff(context: ValidationContext) -> ValidationReport:
                             _finding(
                                 "PAYOFF_COOLDOWN_ACTIVE",
                                 "同子类型爽点仍在冷却期或已是一生一次事件。",
+                                severity=Severity.WARNING,
                                 location=f"state_changes:{change.record_id}",
                             )
                         )
@@ -1112,6 +1400,7 @@ def validate_repetition(context: ValidationContext) -> ValidationReport:
             _finding(
                 "RECENT_STRUCTURE_REUSED",
                 f"结构标签与近期记录完全重复：{repeated}",
+                severity=Severity.WARNING,
                 location="structure_tags",
             )
         )
@@ -1140,6 +1429,7 @@ def validate_style(context: ValidationContext) -> ValidationReport:
             _finding(
                 "STYLE_FIT_INPUT_INVALID",
                 f"文风契合度输入无效：{exc}",
+                severity=Severity.WARNING,
                 location="style_fit_inputs",
             )
         )

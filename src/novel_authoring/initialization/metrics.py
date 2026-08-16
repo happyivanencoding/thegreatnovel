@@ -873,9 +873,6 @@ def import_metric_bootstrap(
     evidence_added = sum(len(observation.evidence_links) for observation in pending)
     if added:
         rebuild_features(database, book_id, edition_id=selected)
-        from novel_authoring.planning.aggregates import invalidate_planning_aggregates
-
-        invalidate_planning_aggregates(database, book_id, selected)
         run_ids = rebuild_metric_runs(database, book_id, selected, [record.chapter_id for record in records])
     else:
         run_ids = []

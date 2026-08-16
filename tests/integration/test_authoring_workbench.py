@@ -635,6 +635,106 @@ def test_draft_is_provisional_and_explicit_save_does_not_touch_canon(tmp_path: P
     assert _read_only_snapshot(database) == before
 
 
+def test_metadata_repair_preserves_prose_hash_and_records_audit(tmp_path: Path) -> None:
+    from novel_authoring.drafting import repair_draft_metadata
+    from novel_authoring.utils import sha256_file
+
+    database = _book(tmp_path, "metadata-repair-book")
+    root = tmp_path / "workspace" / "metadata-repair-book"
+    draft_path = root / "drafts" / "draft-repair.md"
+    draft_path.parent.mkdir(parents=True, exist_ok=True)
+    draft_path.write_text("正文不变\n", encoding="utf-8")
+    content_hash = sha256_file(draft_path)
+    output = {
+        "task_id": "task-repair",
+        "contract_id": "contract-repair",
+        "chapter_title": "第4章",
+        "prose_markdown": "正文不变",
+        "state_changes": [
+            {
+                "kind": "fact",
+                "record_id": "fact-repair",
+                "payload": {},
+                "evidence_quotes": ["正文不变"],
+            }
+        ],
+        "contract_evidence": {},
+        "character_fit_inputs": {},
+        "style_fit_inputs": {},
+    }
+    with database.connect() as connection:
+        connection.execute(
+            """
+            INSERT INTO chapter_contracts(
+                contract_id, book_id, candidate_id, target_chapter_ordinal,
+                mode, contract_json, contract_sha256, status, created_at,
+                version, edition_id
+            ) VALUES (?, ?, NULL, 4, 'faithful_continuation', ?, 'contract',
+                      'READY', 'now', 1, 'base')
+            """,
+            (
+                "contract-repair",
+                "metadata-repair-book",
+                json.dumps({"lens": "CONTINUITY_ACTIVE_THREAD"}),
+            ),
+        )
+        connection.execute(
+            """
+            INSERT INTO drafts(
+                draft_id, book_id, contract_id, candidate_id, file_path,
+                content_sha256, status, revision, created_at, task_id,
+                edition_id, chapter_title, output_json, base_event_seq,
+                base_projection_hash, validation_run_id
+            ) VALUES (?, ?, ?, NULL, ?, ?, 'VALIDATED', 1, 'now', ?, 'base',
+                      '第4章', ?, 0, 'empty', 'run-repair')
+            """,
+            (
+                "draft-repair",
+                "metadata-repair-book",
+                "contract-repair",
+                str(draft_path),
+                content_hash,
+                "task-repair",
+                json.dumps(output, ensure_ascii=False),
+            ),
+        )
+        connection.execute(
+            """
+            INSERT INTO validation_reports(
+                report_id, book_id, draft_id, validator, severity, passed,
+                report_json, created_at, version
+            ) VALUES ('report-repair', ?, 'draft-repair', 'test', 'INFO', 1, '{}', 'now', 1)
+            """,
+            ("metadata-repair-book",),
+        )
+
+    result = repair_draft_metadata(
+        database,
+        "metadata-repair-book",
+        "draft-repair",
+        {"notes": ["补齐元数据"]},
+        expected_content_sha256=content_hash,
+    )
+    assert result["content_sha256"] == content_hash
+    assert result["status"] == "DRAFT"
+    assert draft_path.read_text(encoding="utf-8") == "正文不变\n"
+    assert Path(str(result["audit_path"])).is_file()
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT status, validation_run_id, version, output_json "
+            "FROM drafts WHERE draft_id='draft-repair'"
+        ).fetchone()
+        report_count = connection.execute(
+            "SELECT COUNT(*) FROM validation_reports WHERE draft_id='draft-repair'"
+        ).fetchone()[0]
+    assert row is not None
+    assert row["status"] == "DRAFT"
+    assert row["validation_run_id"] is None
+    assert row["version"] == 2
+    assert json.loads(str(row["output_json"]))["notes"] == ["补齐元数据"]
+    assert report_count == 0
+
+
 def test_web_doctor_checks_native_workbench_surface() -> None:
     result = web_doctor()
 

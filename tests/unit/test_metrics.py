@@ -249,6 +249,7 @@ def test_fit_thread_and_candidate_vectors() -> None:
 
     all_candidate = dict.fromkeys(CONFIG["candidate_score"]["weights"], 50)
     assert candidate_score(all_candidate, CONFIG["candidate_score"]) == 40
+    assert candidate_score({"progress_gain": 50}, CONFIG["candidate_score"]) == 50
 
 
 def test_agency_legibility_and_uncertainty_diagnostics() -> None:

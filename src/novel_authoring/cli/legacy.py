@@ -176,6 +176,7 @@ from novel_authoring.workflows.handoffs import (
     create_story_atlas_handoff,
     complete_handoff,
     get_handoff,
+    heartbeat_handoff,
     mark_stale,
     start_handoff,
 )
@@ -2838,6 +2839,31 @@ def workflow_stale_command(
     _emit(mark_stale(_book_database(workspace, book_id, library_root), handoff_id))
 
 
+@workflow_app.command("heartbeat")
+def workflow_heartbeat_command(
+    handoff_id: str = typer.Option(..., "--handoff-id"),
+    claim_token: str = typer.Option(..., "--claim-token"),
+    current_phase: str = typer.Option(..., "--current-phase"),
+    last_progress: str | None = typer.Option(None, "--last-progress"),
+    workspace: Workspace = Path("workspace"),
+    book_id: BookId = typer.Option(...),
+    library_root: LibraryRoot = None,
+) -> None:
+    try:
+        _emit(
+            heartbeat_handoff(
+                _book_database(workspace, book_id, library_root),
+                handoff_id,
+                claim_token,
+                current_phase=current_phase,
+                last_progress=last_progress,
+            )
+        )
+    except (HandoffWorkflowError, ValueError, OSError) as exc:
+        typer.echo(str(exc), err=True)
+        raise typer.Exit(code=3) from exc
+
+
 @workflow_app.command("mark-stale")
 def workflow_mark_stale_command(
     handoff_id: str = typer.Option(..., "--handoff-id"),
@@ -2852,7 +2878,7 @@ def workflow_mark_stale_command(
 def workflow_complete_command(
     handoff_id: str = typer.Option(..., "--handoff-id"),
     claim_token: str = typer.Option(..., "--claim-token"),
-    result_path: Path = typer.Option(..., "--result-path"),
+    result_path: Path | None = typer.Option(None, "--result-path"),
     workspace: Workspace = Path("workspace"),
     book_id: BookId = typer.Option(...),
     library_root: LibraryRoot = None,

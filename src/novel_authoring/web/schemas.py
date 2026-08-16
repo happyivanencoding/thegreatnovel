@@ -56,6 +56,20 @@ class DraftContentRequest(BaseModel):
     expected_content_sha256: str | None = None
 
 
+class DraftMetadataRepairRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    expected_content_sha256: str | None = None
+
+
+class CandidateSelectionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    candidate_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    edition_id: str | None = None
+
+
 class HandoffRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

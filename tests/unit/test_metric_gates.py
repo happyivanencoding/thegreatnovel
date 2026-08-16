@@ -6,7 +6,7 @@ from novel_authoring.metrics.gates import HardGateInput, evaluate_hard_gates
 CONFIG = load_settings().metrics
 
 
-def test_character_fit_below_75_requires_bridge_and_blocks() -> None:
+def test_character_fit_below_75_is_a_soft_warning() -> None:
     gate = HardGateInput(
         character_fit_inputs={
             "motivation_alignment": 70,
@@ -18,8 +18,9 @@ def test_character_fit_below_75_requires_bridge_and_blocks() -> None:
         style_fit_inputs=dict.fromkeys(CONFIG["style_fit"]["weights"], 100),
     )
     report = evaluate_hard_gates(gate, CONFIG)
-    assert not report.passed
+    assert report.passed
     assert report.requires_character_bridge
+    assert report.soft_warnings
     assert report.character_fit == 70
 
 
@@ -46,3 +47,17 @@ def test_exact_character_threshold_passes() -> None:
     )
     assert report.passed
     assert not report.requires_character_bridge
+
+
+def test_payoff_cooldown_is_soft_review() -> None:
+    report = evaluate_hard_gates(
+        HardGateInput(
+            payoff_cooldown_violations=["同组爽点冷却不足"],
+            character_fit_inputs=dict.fromkeys(CONFIG["character_fit"]["weights"], 80),
+            style_fit_inputs=dict.fromkeys(CONFIG["style_fit"]["weights"], 80),
+        ),
+        CONFIG,
+    )
+
+    assert report.passed
+    assert report.soft_warnings == ["payoff cooldown review: 同组爽点冷却不足"]

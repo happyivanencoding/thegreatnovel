@@ -1,15 +1,19 @@
 from __future__ import annotations
 
+import json
 import uuid
+from pathlib import Path
 from typing import Any
 
 from novel_authoring.author_control.service import execute_author_intent
+from novel_authoring.drafting import prepare_draft_task
 from novel_authoring.edition import (
     EditionPurpose,
     create_edition,
     get_edition,
     resolve_edition_id,
 )
+from novel_authoring.planning.contracts import build_chapter_contract
 from novel_authoring.planning.innovation import resolve_innovation_control
 from novel_authoring.utils import stable_id, utc_now
 from novel_authoring.workflows.handoffs import (
@@ -163,3 +167,99 @@ def prepare_revision(database: Any, book_id: str, request: Any) -> dict[str, Any
     handoff["author_intent"] = author_intent
     handoff["created_edition"] = created_edition.model_dump(mode="json")
     return handoff
+
+
+def prepare_selected_candidate_draft(
+    database: Any,
+    book_id: str,
+    request: Any,
+) -> dict[str, Any]:
+    """Advance one explicitly selected current candidate to a Draft handoff."""
+
+    candidate_id = str(request.candidate_id).strip()
+    selected_edition = resolve_edition_id(database, book_id, request.edition_id)
+    with database.connect() as connection:
+        candidate = connection.execute(
+            "SELECT * FROM candidate_plans WHERE book_id=? AND edition_id=? "
+            "AND candidate_id=?",
+            (book_id, selected_edition, candidate_id),
+        ).fetchone()
+        if candidate is None:
+            raise ValueError(f"候选不存在：{candidate_id}")
+        if str(candidate["status"]) != "CANDIDATE":
+            raise ValueError("当前候选不是可推进的 CANDIDATE")
+        gate = json.loads(str(candidate["gate_report_json"] or "{}"))
+        if not bool(gate.get("passed", False)):
+            raise ValueError("硬门未通过的候选不能生成 Chapter Contract")
+        task_id = str(candidate["task_id"])
+        handoffs = connection.execute(
+            "SELECT task_manifest_path, result_json FROM workflow_handoffs "
+            "WHERE book_id=? AND edition_id=? AND handoff_type=? "
+            "AND requested_stage='PLAN_ONLY' AND status='COMPLETED' "
+            "AND result_json IS NOT NULL ORDER BY created_at DESC",
+            (book_id, selected_edition, HandoffType.CONTINUATION.value),
+        ).fetchall()
+    current_plan_handoff: dict[str, Any] | None = None
+    for handoff in handoffs:
+        try:
+            result = json.loads(str(handoff["result_json"] or "{}"))
+            candidate_ids = {str(item) for item in result.get("candidate_ids", [])}
+            task_path = Path(str(handoff["task_manifest_path"] or ""))
+            task = json.loads(task_path.read_text(encoding="utf-8"))
+        except (OSError, TypeError, ValueError, json.JSONDecodeError):
+            continue
+        if candidate_id not in candidate_ids:
+            continue
+        if str(task.get("task_id") or "") != task_id:
+            continue
+        current_plan_handoff = {
+            "task": task,
+            "task_manifest_path": str(task_path),
+        }
+        break
+    if current_plan_handoff is None:
+        raise ValueError("候选不属于当前 edition 最近一次已完成的 PLAN_ONLY 任务")
+
+    with database.connect() as connection:
+        connection.execute(
+            "UPDATE candidate_plans SET selection_status='NOT_SELECTED' "
+            "WHERE book_id=? AND edition_id=? AND task_id=? "
+            "AND status='CANDIDATE' AND selection_status='SELECTED'",
+            (book_id, selected_edition, task_id),
+        )
+        connection.execute(
+            "UPDATE candidate_plans SET selection_status='SELECTED' "
+            "WHERE book_id=? AND edition_id=? AND task_id=? AND candidate_id=?",
+            (book_id, selected_edition, task_id, candidate_id),
+        )
+
+    contract = build_chapter_contract(
+        database,
+        book_id,
+        candidate_id,
+        edition_id=selected_edition,
+    )
+    draft_task = prepare_draft_task(
+        database,
+        book_id,
+        str(contract["contract_id"]),
+        edition_id=selected_edition,
+    )
+    plan_task = current_plan_handoff["task"]
+    context_chapter_id = str(plan_task.get("context_chapter_id") or "").strip() or None
+    handoff = create_continuation_handoff(
+        database,
+        book_id,
+        edition_id=selected_edition,
+        requested_stage="DRAFT_AND_VALIDATE",
+        context_chapter_id=context_chapter_id,
+        prepared_draft_task=draft_task,
+    )
+    return {
+        "transition": "CANDIDATE_SELECTED_TO_CONTRACT_TO_DRAFT_HANDOFF",
+        "candidate_id": candidate_id,
+        "task_id": task_id,
+        "contract": contract,
+        "draft_task": draft_task,
+        "handoff": handoff,
+    }

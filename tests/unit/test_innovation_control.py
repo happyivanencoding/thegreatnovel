@@ -125,3 +125,25 @@ def test_context_fingerprint_detects_semantic_difference() -> None:
         {"visible_source": {"text": "one"}},
         {"visible_source": {"text": "two"}},
     ) == ["visible_source.text"]
+
+
+def test_context_comparison_normalizes_only_non_business_timestamps() -> None:
+    left = {
+        "created_at": "2026-08-16T10:00:00+00:00",
+        "updated_at": "2026-08-16T10:01:00+00:00",
+        "generated_at": "2026-08-16T10:02:00+00:00",
+        "equivalent_timestamp": "2026-08-16T10:03:00+00:00",
+        "contract_payload": {"ending_state": "保持门未开"},
+    }
+    right = {
+        "created_at": "2026-08-16T11:00:00+01:00",
+        "updated_at": "2026-08-16T11:01:00+01:00",
+        "generated_at": "2026-08-16T11:02:00+01:00",
+        "equivalent_timestamp": "2026-08-16T11:03:00+01:00",
+        "contract_payload": {"ending_state": "保持门未开"},
+    }
+    assert compare_experiment_contexts(left, right) == []
+    right["contract_payload"] = {"ending_state": "打开门"}
+    assert compare_experiment_contexts(left, right) == [
+        "contract_payload.ending_state"
+    ]

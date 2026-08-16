@@ -31,7 +31,7 @@ from novel_authoring.db.database import Database
 from novel_authoring.drafting.service import import_draft_output, prepare_draft_task
 from novel_authoring.ingest.service import ingest_book
 from novel_authoring.metrics.engine import MetricInputBundle, diagnose_bundle, persist_results
-from novel_authoring.planning.boundary import PlanningError, build_boundary_packet
+from novel_authoring.planning.boundary import build_boundary_packet
 from novel_authoring.planning.candidates import (
     import_candidate_output,
     prepare_candidate_task,
@@ -702,7 +702,9 @@ def test_effective_kernel_candidate_claims_are_verified_before_contract(
     assert selected_card["kernel_trace"]["verified"]
 
 
-def test_candidate_output_rejects_renamed_same_structure(tmp_path: Path) -> None:
+def test_candidate_output_keeps_renamed_same_structure_as_soft_diagnostic(
+    tmp_path: Path,
+) -> None:
     database, workspace, settings = setup_planning_book(tmp_path)
     task = prepare_candidate_task(database, "planning-book", settings)
     task_id = str(task["task_id"])
@@ -713,8 +715,8 @@ def test_candidate_output_rejects_renamed_same_structure(tmp_path: Path) -> None
     third = candidate_payload("three", "radio-caller", score=70, variant=1)
     output = write_candidates(workspace, task_id, [base, renamed, third])
 
-    with pytest.raises(PlanningError, match="结构维度不同"):
-        import_candidate_output(database, "planning-book", task_id, settings, output)
+    imported = import_candidate_output(database, "planning-book", task_id, settings, output)
+    assert imported["diversity_warnings"]
 
 
 def test_hard_gate_rejected_candidate_is_preserved_with_reason(tmp_path: Path) -> None:

@@ -646,8 +646,9 @@ class KernelEvidenceCompiler:
                     "Payoff Channel 未在 Effective Profile 启用："
                     + ", ".join(sorted(unknown_channels))
                 )
-            payoff_value = 0.0
-            if verified_channels:
+            repetition_score = candidate.score_inputs.repetition_fatigue
+            payoff_value: float | None = None
+            if verified_channels and repetition_score is not None:
                 anticipation_items = (
                     context.planning_state.anticipation_surface or {}
                 ).get("items", [])
@@ -664,7 +665,7 @@ class KernelEvidenceCompiler:
                     impact=max(progression_values.values()),
                     causality=100.0 if candidate.causal_sources else 0.0,
                     after_value=progression_values["strategy_expansion"],
-                    repetition_fatigue_score=candidate.score_inputs.repetition_fatigue,
+                    repetition_fatigue_score=repetition_score,
                     structural_fit=100.0 if candidate.promises_to_pay else 60.0,
                     future_damage=min(
                         100.0,
@@ -686,16 +687,13 @@ class KernelEvidenceCompiler:
                     "source": "KERNEL_VERIFIED_PLUS_EXISTING_REPETITION_INPUT",
                     "score": payoff_value,
                 }
-            score_overrides["payoff_or_setup_utility"] = payoff_value
-            score_sources["payoff_or_setup_utility"] = metric_values.get(
-                "payoff",
-                {
-                    "score": 0.0,
-                    "evidence": ["no_verified_payoff_channel"],
-                    "completeness": "COMPLETE",
-                    "source": "KERNEL_VERIFIED_EVIDENCE",
-                },
-            )
+            if verified_channels and payoff_value is not None:
+                score_overrides["payoff_or_setup_utility"] = payoff_value
+                score_sources["payoff_or_setup_utility"] = metric_values["payoff"]
+            elif verified_channels:
+                warnings.append(
+                    "Payoff Score 缺少 repetition_fatigue，保留 UNKNOWN，不伪造分数。"
+                )
             score_overrides["agency_gain"] = (
                 100.0
                 if progression_changed and candidate.protagonist_strategy.strip()

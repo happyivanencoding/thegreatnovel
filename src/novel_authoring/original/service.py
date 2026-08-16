@@ -7,6 +7,7 @@ import sqlite3
 import uuid
 from collections.abc import Mapping, Sequence
 from contextlib import suppress
+from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -37,6 +38,8 @@ from novel_authoring.original.models import (
     OriginalReaderKernelProposal,
     OriginalState,
     StoryFoundationProposal,
+    parse_core_innovation_proposal,
+    parse_story_foundation_proposal,
 )
 from novel_authoring.original.state import original_record
 from novel_authoring.planning.boundary import build_boundary_packet
@@ -118,6 +121,20 @@ class OriginalWorkflowError(RuntimeError):
     pass
 
 
+_NON_BUSINESS_CONTRACT_FIELDS = frozenset(
+    {
+        "created_at",
+        "updated_at",
+        "generated_at",
+        "frozen_at",
+        "created_timestamp",
+        "updated_timestamp",
+        "generated_timestamp",
+        "equivalent_timestamp",
+    }
+)
+
+
 def _enum_options(enum_type: type[StrEnum]) -> list[dict[str, str]]:
     return [
         {"value": item.value, "label": item.value.replace("_", " ").title()}
@@ -151,6 +168,31 @@ def _read_json(path: Path) -> dict[str, Any] | None:
     except (OSError, UnicodeError, json.JSONDecodeError):
         return None
     return payload if isinstance(payload, dict) else None
+
+
+def _normalize_contract_value(value: Any) -> Any:
+    if isinstance(value, Mapping):
+        return {
+            key: _normalize_contract_value(item)
+            for key, item in value.items()
+            if str(key).lower() not in _NON_BUSINESS_CONTRACT_FIELDS
+        }
+    if isinstance(value, list):
+        return [_normalize_contract_value(item) for item in value]
+    if isinstance(value, str):
+        try:
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            return value
+        if parsed.tzinfo is None:
+            return value
+        return parsed.astimezone(UTC).isoformat()
+    return value
+
+
+def _contract_payloads_match(left: Any, right: Any) -> bool:
+    """Compare frozen contracts by content, not by timezone rendering."""
+    return bool(_normalize_contract_value(left) == _normalize_contract_value(right))
 
 
 def _reader_kernel_author_overrides(
@@ -1799,12 +1841,15 @@ def import_original_core_innovation_proposal(
             break
     if proposal_path is None:
         raise OriginalWorkflowError("handoff 未返回 core_innovation/proposal.json")
-    proposal = CoreInnovationProposal.model_validate_json(
-        proposal_path.read_text(encoding="utf-8")
-    )
+    proposal_payload = _read_json(proposal_path)
+    if proposal_payload is None:
+        raise OriginalWorkflowError("Core Innovation Proposal 不是有效 JSON 对象")
+    proposal = parse_core_innovation_proposal(proposal_payload)
     handoff_request = _read_json(task_directory / "input" / "original_request.json") or {}
     expected_kernel = handoff_request.get("progression_kernel")
-    if expected_kernel and proposal.kernel_contracts != expected_kernel:
+    if expected_kernel and not _contract_payloads_match(
+        proposal.kernel_contracts, expected_kernel
+    ):
         raise OriginalWorkflowError(
             "Core Innovation Proposal 不得修改已确认的 Reader Experience / Kernel"
         )
@@ -2166,12 +2211,15 @@ def import_original_bootstrap_proposal(
             break
     if proposal_path is None:
         raise OriginalWorkflowError("handoff 未返回 story_foundation/proposal.json")
-    proposal = StoryFoundationProposal.model_validate_json(
-        proposal_path.read_text(encoding="utf-8")
-    )
+    proposal_payload = _read_json(proposal_path)
+    if proposal_payload is None:
+        raise OriginalWorkflowError("Story Foundation Proposal 不是有效 JSON 对象")
+    proposal = parse_story_foundation_proposal(proposal_payload)
     handoff_request = _read_json(task_directory / "input" / "original_request.json") or {}
     expected_kernel = handoff_request.get("progression_kernel")
-    if expected_kernel and proposal.kernel_contracts != expected_kernel:
+    if expected_kernel and not _contract_payloads_match(
+        proposal.kernel_contracts, expected_kernel
+    ):
         raise OriginalWorkflowError(
             "Foundation Proposal 必须原样携带已冻结的 Progression Kernel Contracts"
         )
@@ -2717,7 +2765,9 @@ def import_original_foundation_development(
         raise OriginalWorkflowError("Development Proposal 不得替换已选 Foundation 内容")
     handoff_request = _read_json(task_directory / "input" / "original_request.json") or {}
     expected_kernel = handoff_request.get("progression_kernel")
-    if expected_kernel and proposal.kernel_contracts != expected_kernel:
+    if expected_kernel and not _contract_payloads_match(
+        proposal.kernel_contracts, expected_kernel
+    ):
         raise OriginalWorkflowError("Development Proposal 不得替换已确认的 Reader/Drive")
     frozen_ids = dict(handoff_request.get("kernel_contract_ids") or {})
     structured = proposal.kernel_contract_proposals

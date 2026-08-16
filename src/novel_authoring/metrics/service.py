@@ -1426,7 +1426,6 @@ class AuthorMetricInputService:
             observation.scope_type,
             observation.scope_id,
         )
-        self._stale_planning(observation.book_id, observation.edition_id)
         result = assembler.rebuild(
             observation.book_id,
             edition_id=observation.edition_id,
@@ -1440,25 +1439,6 @@ class AuthorMetricInputService:
             if item["missing_components"]
         }
         return result
-
-    def _stale_planning(self, book_id: str, edition_id: str) -> None:
-        with self.database.connect() as connection:
-            for table in ("candidate_plans", "chapter_contracts"):
-                connection.execute(
-                    f"UPDATE {table} SET status='STALE', stale_reason=? WHERE book_id=? "
-                    "AND edition_id=? "
-                    "AND status NOT IN ('STALE', 'ARCHIVED')",
-                    ("metric observation changed; re-plan required", book_id, edition_id),
-                )
-            connection.execute(
-                "UPDATE workflow_handoffs SET status='STALE', stale_at=?, "
-                "error_message=? WHERE book_id=? AND edition_id=? "
-                "AND status IN ('DRAFT', 'READY_FOR_CODEX')",
-                (utc_now(), "metric observation changed; recreate handoff", book_id, edition_id),
-            )
-        from novel_authoring.planning.aggregates import invalidate_planning_aggregates
-
-        invalidate_planning_aggregates(self.database, book_id, edition_id)
 
     def retract(
         self,
@@ -1505,7 +1485,6 @@ class AuthorMetricInputService:
         )
         assembler = MetricsAssembler(self.database, self.registry)
         assembler.invalidate_scope(book_id, edition_id, scope_type, scope_id)
-        self._stale_planning(book_id, edition_id)
         return assembler.rebuild(
             book_id,
             edition_id=edition_id,
