@@ -63,6 +63,12 @@ class DraftMetadataRepairRequest(BaseModel):
     expected_content_sha256: str | None = None
 
 
+class DraftApprovalRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    confirmation: str = ""
+
+
 class CandidateSelectionRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

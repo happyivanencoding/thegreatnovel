@@ -5,6 +5,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from novel_authoring.author_control.reveal import RevealTrace
+from novel_authoring.continuation_quality import ProgressionDelta, ReaderVisibleClaim
 from novel_authoring.planning.innovation import (
     InnovationControl,
     InnovationDirectionAlignment,
@@ -102,6 +103,7 @@ class ChapterRealizationBrief(BaseModel):
     target_scene_count: int = Field(default=1, ge=1)
     dramatization_targets: list[str] = Field(default_factory=list)
     realization_scope: str = "CONTRACT_BOUND"
+    contract_realization_status: Literal["SUFFICIENT", "UNDERSPECIFIED", "UNKNOWN"] = "UNKNOWN"
     adaptive: bool = True
     micro_event_rule: str = (
         "允许只改变人物感知、动作或场面反应的 realization-only micro-event；"
@@ -119,6 +121,8 @@ class DraftCreativeOutput(BaseModel):
     chapter_title: str
     prose_markdown: str = Field(min_length=1)
     state_changes: list[DraftCreativeStateChange] = Field(min_length=1)
+    reader_visible_claims: list[ReaderVisibleClaim] = Field(default_factory=list)
+    progression_deltas: list[ProgressionDelta] = Field(default_factory=list)
     knowledge_claims: list[KnowledgeClaim] = Field(default_factory=list)
     reveal_trace: RevealTrace = Field(default_factory=RevealTrace)
     promises_advanced: list[str] = Field(default_factory=list)
@@ -135,6 +139,8 @@ class DraftOutput(BaseModel):
     chapter_title: str
     prose_markdown: str = Field(min_length=1)
     state_changes: list[DraftStateChange] = Field(min_length=1)
+    reader_visible_claims: list[ReaderVisibleClaim] = Field(default_factory=list)
+    progression_deltas: list[ProgressionDelta] = Field(default_factory=list)
     contract_evidence: dict[str, list[str]] = Field(default_factory=dict)
     knowledge_claims: list[KnowledgeClaim] = Field(default_factory=list)
     reveal_trace: RevealTrace = Field(default_factory=RevealTrace)
@@ -159,4 +165,9 @@ class DraftOutput(BaseModel):
     # Existing hand-authored DraftOutput fixtures retain their strict evidence
     # semantics.  The new compiler sets COMPILED_SOFT for normal continuation.
     evidence_policy: Literal["STRICT_LEGACY", "COMPILED_SOFT"] = "STRICT_LEGACY"
+    semantic_review_status: Literal["NOT_REQUESTED", "UNKNOWN", "REVIEWED"] = "UNKNOWN"
+    deterministic_measurements: dict[str, Any] = Field(default_factory=dict)
+    contract_surface_coverage: dict[str, Any] = Field(default_factory=dict)
+    publication_review_findings: list[dict[str, Any]] = Field(default_factory=list)
+    intentional_short_chapter: bool = False
     notes: list[str] = Field(default_factory=list)

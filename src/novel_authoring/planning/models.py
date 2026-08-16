@@ -6,6 +6,7 @@ from typing import Any
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from novel_authoring.author_control.book_profile import PROFILE_DIMENSIONS
+from novel_authoring.continuation_quality import ProgressionDelta
 from novel_authoring.domain.models import ContinuationMode, NarrativeFunction
 from novel_authoring.metrics.gates import HardGateInput
 from novel_authoring.planning.innovation import (
@@ -203,6 +204,7 @@ class ProgressionImpact(BaseModel):
     growth_cost: list[str] = Field(default_factory=list)
     new_ceiling_visibility: list[str] = Field(default_factory=list)
     future_progression_space: list[str] = Field(default_factory=list)
+    deltas: list[ProgressionDelta] = Field(default_factory=list)
 
 
 class NoveltyProvenance(StrEnum):
@@ -384,6 +386,7 @@ class CandidateCreativeProposal(BaseModel):
     social_feedback: str
     scene_topology: str
     ending_state: str
+    ending_action: str = ""
     state_changes: list[str] = Field(min_length=1)
     causal_sources: list[str] = Field(min_length=1)
     promises_to_advance: list[str] = Field(default_factory=list)
@@ -398,6 +401,13 @@ class CandidateCreativeProposal(BaseModel):
     relationship_delta: str = ""
     world_scale_delta: str = ""
     core_promise_delivery: str = ""
+    opposition_source: str = ""
+    primary_subject: str = ""
+    choice_type: str = ""
+    cost_type: str = ""
+    payoff_channel: str = ""
+    reader_visible_delta: str = ""
+    progression_delta_type: str = ""
     lens: CandidateLens = CandidateLens.CONTINUITY_ACTIVE_THREAD
     novelty_provenance: list[NoveltyDeclaration] = Field(default_factory=list)
     wildcard: bool = False
@@ -405,6 +415,7 @@ class CandidateCreativeProposal(BaseModel):
     reveal_impact: CandidateRevealImpactSubmission = Field(
         default_factory=CandidateRevealImpactSubmission
     )
+    reference_application: dict[str, Any] = Field(default_factory=dict)
     chapter_intent: str | None = None
 
     @model_validator(mode="after")
@@ -417,6 +428,16 @@ class CandidateCreativeProposal(BaseModel):
                 "候选不得把未在 selected Edition 建立的状态声明为 retroactive invention"
             )
         return self
+
+
+class ReferenceApplicationStatus(StrEnum):
+    UNAVAILABLE = "UNAVAILABLE"
+    ZERO_RESULTS = "ZERO_RESULTS"
+    NOT_OFFERED = "NOT_OFFERED"
+    OFFERED = "OFFERED"
+    APPLIED = "APPLIED"
+    OFFERED_NOT_APPLIED = "OFFERED_NOT_APPLIED"
+    REJECTED_DUE_TO_CONFLICT = "REJECTED_DUE_TO_CONFLICT"
 
 
 class PlanningReferenceProvenance(BaseModel):
@@ -433,6 +454,18 @@ class PlanningReferenceProvenance(BaseModel):
     match_tier: str = "EXACT"
     usage: str = "REFERENCE_ONLY"
     reuse_reason: str | None = None
+    application_status: ReferenceApplicationStatus = ReferenceApplicationStatus.NOT_OFFERED
+    applied_dimensions: list[str] = Field(default_factory=list)
+    application_evidence: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def infer_offered_status(self) -> PlanningReferenceProvenance:
+        if (
+            self.application_status is ReferenceApplicationStatus.NOT_OFFERED
+            and (self.card_ids_used or self.selected_solutions)
+        ):
+            self.application_status = ReferenceApplicationStatus.OFFERED
+        return self
 
 
 class PlanningReferenceStrategy(BaseModel):
@@ -474,6 +507,7 @@ class CandidateProposal(BaseModel):
     social_feedback: str
     scene_topology: str
     ending_state: str
+    ending_action: str = ""
     state_changes: list[str] = Field(min_length=1)
     causal_sources: list[str] = Field(min_length=1)
     promises_to_advance: list[str] = Field(default_factory=list)
@@ -495,6 +529,13 @@ class CandidateProposal(BaseModel):
     relationship_delta: str = ""
     world_scale_delta: str = ""
     core_promise_delivery: str = ""
+    opposition_source: str = ""
+    primary_subject: str = ""
+    choice_type: str = ""
+    cost_type: str = ""
+    payoff_channel: str = ""
+    reader_visible_delta: str = ""
+    progression_delta_type: str = ""
     score_inputs: CandidateScoreInputs
     score_evidence: dict[str, list[str]]
     gate_input: HardGateInput
@@ -528,6 +569,7 @@ class CandidateProposal(BaseModel):
     reference_provenance: PlanningReferenceProvenance = Field(
         default_factory=PlanningReferenceProvenance
     )
+    reference_application: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def reject_retroactive_invention(self) -> CandidateProposal:
@@ -577,6 +619,35 @@ class ChapterExperienceSignature(BaseModel):
     relationship_delta: str = ""
     world_scale_delta: str = ""
     core_promise_delivery: str = ""
+    opposition_source: str = ""
+    primary_subject: str = ""
+    choice_type: str = ""
+    cost_type: str = ""
+    payoff_channel: str = ""
+    reader_visible_delta: str = ""
+    progression_delta_type: str = ""
+    ending_action: str = ""
+    chapter_ordinal: int | None = Field(default=None, ge=0)
+
+
+class SerialExperiencePortfolio(BaseModel):
+    """Structural experience history for a serialized novel.
+
+    Horizon cutoffs are supplied by the active contract/configuration.  An
+    absent policy deliberately leaves horizons UNKNOWN rather than inventing
+    a universal chapter count.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    current_chapter: int | None = Field(default=None, ge=0)
+    horizon_policy: dict[str, int | None] = Field(default_factory=dict)
+    signatures: list[ChapterExperienceSignature] = Field(default_factory=list)
+    horizon_counts: dict[str, int] = Field(default_factory=dict)
+    unknown_horizon_count: int = Field(default=0, ge=0)
+    repeated_structure_pairs: list[dict[str, Any]] = Field(default_factory=list)
+    reader_promise_targets: list[str] = Field(default_factory=list)
+    underserved_reader_promises: list[str] = Field(default_factory=list)
 
 
 class ThreadPriority(BaseModel):
@@ -647,6 +718,7 @@ class ChapterContract(BaseModel):
     genre_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
     genre_evolution_diagnostic: dict[str, Any] = Field(default_factory=dict)
     narrative_drive_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
+    serial_experience_portfolio: SerialExperiencePortfolio | None = None
     declared_kernel_trace: dict[str, Any] = Field(default_factory=dict)
     verified_kernel_trace: dict[str, Any] = Field(default_factory=dict)
     kernel_verification_status: str = "LEGACY_NO_EFFECTIVE_CONTRACT"

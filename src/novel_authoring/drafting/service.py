@@ -50,6 +50,45 @@ class DraftWorkflowError(RuntimeError):
     pass
 
 
+def _healthy_realization_lengths(
+    database: Database, book_id: str, edition_id: str
+) -> list[int]:
+    """Read only healthy, already-reviewed drafts for the next soft baseline."""
+
+    lengths: list[int] = []
+    with database.connect() as connection:
+        rows = connection.execute(
+            "SELECT output_json, status FROM drafts "
+            "WHERE book_id=? AND edition_id=? "
+            "AND status IN ('VALIDATED', 'AUTHOR_APPROVED', 'CANON_COMMITTED') "
+            "ORDER BY created_at DESC",
+            (book_id, edition_id),
+        ).fetchall()
+    for row in rows:
+        try:
+            output = json.loads(str(row["output_json"] or "{}"))
+        except (TypeError, ValueError, json.JSONDecodeError):
+            continue
+        if not isinstance(output, dict):
+            continue
+        diagnostics = output.get("realization_diagnostics")
+        if not isinstance(diagnostics, dict):
+            continue
+        code = str(diagnostics.get("code") or "")
+        accepted_short = bool(output.get("intentional_short_chapter")) or (
+            str(diagnostics.get("status") or "").upper() == "ACCEPTED"
+        )
+        if (
+            code not in {"SCENE_REALIZATION_CLEAR", "SCENE_REALIZATION_ACCEPTED"}
+            and not accepted_short
+        ):
+            continue
+        prose = str(output.get("prose_markdown") or "").strip()
+        if prose:
+            lengths.append(len(prose))
+    return lengths
+
+
 _PROSE_CONTROL_FIELDS = (
     "card_id",
     "card_type",
@@ -337,11 +376,9 @@ def prepare_draft_task(
         ]
         if reference_prose_context["status"] != "DISABLED" else []
     )
-    recent_lengths = [
-        len(str(item.get("content") or ""))
-        for item in boundary_payload.get("recent_full_chapters", [])
-        if isinstance(item, dict)
-    ]
+    recent_lengths = _healthy_realization_lengths(
+        database, book_id, selected_edition
+    )
     realization_brief = build_chapter_realization_brief(
         contract,
         recent_lengths=recent_lengths,
@@ -354,6 +391,13 @@ def prepare_draft_task(
             "",
             "严格依据下面的 Boundary Packet 与 Chapter Contract 写正文。",
             "正文不得声明新事实已自动进入正史；state_changes 只声明正文实际发生的状态变化。",
+            "可选 reader_visible_claims 只填写正文中读者能直接观察到的高价值声明；"
+            "每条声明带 subject_ref、predicate、value 或 before/after，并提供 evidence_quote；"
+            "不要把自然语言推断写成声明。",
+            "可选 progression_deltas 必须区分 REUSE/SHOWCASE 与 UPGRADE/BREAKTHROUGH；"
+            "成长变化要写 before_state、after_state、reader_visible_delta，突破要说明新增行动空间、"
+            "范围或可靠性。资源/能力的 usage_constraints 必须写在对应 StateChange payload 中，"
+            "新章节不会自动复位 DAILY、COMBAT_SCENE、RESOURCE_GATED 或 ONE_TIME。",
             "不要填写 contract_evidence、evidence_quotes、character_fit_inputs、"
             "style_fit_inputs、structure_tags、RealizedKernelTrace 或系统评分；"
             "这些由 Python 编译。",

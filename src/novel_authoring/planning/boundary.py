@@ -228,7 +228,7 @@ def build_boundary_packet(
     database: Database,
     book_id: str,
     *,
-    recent_full_chapters: int = 3,
+    recent_full_chapters: int | None = None,
     edition_id: str | None = None,
     batch_id: str | None = None,
     innovation_control: InnovationControl | None = None,
@@ -284,17 +284,20 @@ def build_boundary_packet(
         batch_anchor = batch_projection.model_dump(mode="json")
     with database.connect() as connection:
         if selected_edition == "base":
-            recent_rows = connection.execute(
-                """
+            query = """
                 SELECT c.chapter_id, c.ordinal, c.raw_heading, c.content, s.span_id
                 FROM chapters c JOIN source_spans s ON s.chapter_id=c.chapter_id
                 WHERE c.book_id=?
                   AND s.kind IN ('chapter', 'AUTHOR_APPROVED_CHAPTER')
-                ORDER BY c.ordinal DESC LIMIT ?
-                """,
-                (book_id, recent_full_chapters),
-            ).fetchall()
+                ORDER BY c.ordinal DESC
+            """
+            params: list[object] = [book_id]
+            if recent_full_chapters is not None:
+                query += " LIMIT ?"
+                params.append(max(1, int(recent_full_chapters)))
+            recent_rows = connection.execute(query, params).fetchall()
         else:
+            all_edition_rows = edition_chapters(connection, book_id, selected_edition)
             recent_rows = [
                 {
                     "chapter_id": row["chapter_id"],
@@ -303,9 +306,11 @@ def build_boundary_packet(
                     "content": row["content"],
                     "span_id": row.get("source_span_id", ""),
                 }
-                for row in edition_chapters(connection, book_id, selected_edition)[
-                    -recent_full_chapters:
-                ]
+                for row in (
+                    all_edition_rows
+                    if recent_full_chapters is None
+                    else all_edition_rows[-max(1, int(recent_full_chapters)) :]
+                )
             ]
         recent_rows = list(reversed(recent_rows))
         first_recent = int(recent_rows[0]["ordinal"]) if recent_rows else 1
@@ -540,7 +545,9 @@ def build_boundary_packet(
             "event_seq": projection.through_event_seq,
             "projection": projection.sha256(),
             "last_chapter": total,
-            "recent_full_chapters": recent_full_chapters,
+            "recent_full_chapters": (
+                "ALL" if recent_full_chapters is None else recent_full_chapters
+            ),
             "recent_chapter_ids": [str(row["chapter_id"]) for row in recent_rows],
             "directives": [dict(row) for row in directive_rows],
             "planning_context": {

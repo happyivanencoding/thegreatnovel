@@ -71,8 +71,12 @@ def test_creative_draft_compiles_python_owned_evidence_and_soft_audits() -> None
     assert compiled.evidence_policy == "COMPILED_SOFT"
     assert compiled.contract_evidence["required_cost"] == ["最后一枚螺栓耗尽"]
     assert compiled.state_changes[0].evidence_quotes == ["最后一枚螺栓"]
-    assert compiled.character_fit_inputs
-    assert compiled.style_fit_inputs
+    assert compiled.character_fit_inputs == {}
+    assert compiled.style_fit_inputs == {}
+    assert compiled.semantic_review_status == "UNKNOWN"
+    assert compiled.deterministic_measurements["character_count"] == len(
+        creative.prose_markdown
+    )
     assert compiled.realized_kernel_trace is not None
 
 

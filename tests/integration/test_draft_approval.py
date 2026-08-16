@@ -549,7 +549,10 @@ def test_creative_draft_output_is_compiled_before_persisting(
     persisted = json.loads(str(row["output_json"]))
     assert persisted["evidence_policy"] == "COMPILED_SOFT"
     assert persisted["state_changes"][0]["evidence_quotes"]
-    assert persisted["character_fit_inputs"]
+    assert persisted["character_fit_inputs"] == {}
+    assert persisted["style_fit_inputs"] == {}
+    assert persisted["semantic_review_status"] == "UNKNOWN"
+    assert persisted["deterministic_measurements"]["sentence_count"] > 0
     assert persisted["realized_kernel_trace"] is not None
 
 

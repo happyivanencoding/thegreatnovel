@@ -11,8 +11,13 @@ import re
 import unicodedata
 from collections.abc import Iterable, Mapping, Sequence
 from statistics import median
-from typing import Any
+from typing import Any, Literal
 
+from novel_authoring.continuation_quality import (
+    ProgressionDelta,
+    ReaderClaimStatus,
+    ReaderVisibleClaim,
+)
 from novel_authoring.contracts.draft import (
     ChapterRealizationBrief,
     DraftCreativeOutput,
@@ -225,43 +230,101 @@ def _contract_evidence(prose: str, contract: ChapterContract | None) -> dict[str
     }
 
 
-def _soft_character_audit(
-    prose: str, contract: ChapterContract | None
-) -> dict[str, float]:
-    keys = (
-        "motivation_alignment",
-        "knowledge_alignment",
-        "capability_alignment",
-        "relationship_alignment",
-        "emotional_continuity",
-    )
-    if contract is None:
-        return {}
-    anchors = [
-        contract.primary_thread,
-        contract.reader_question,
-        contract.required_irreversible_change,
-        contract.ending_state,
-    ]
-    anchor_hits = sum(bool(item.strip()) and _evidence_present(prose, item) for item in anchors)
-    base = min(100.0, 70.0 + 7.5 * anchor_hits)
-    return {key: base for key in keys}
+def _deterministic_measurements(prose: str) -> dict[str, Any]:
+    """Return observable form measurements, never a literary quality score."""
 
-
-def _soft_style_audit(prose: str) -> dict[str, float]:
-    if not prose.strip():
-        return {}
-    sentence_count = max(1, len(re.findall(r"[。！？!?]", prose)))
-    paragraph_count = max(1, len([item for item in prose.splitlines() if item.strip()]))
-    has_dialogue = any(mark in prose for mark in ('“', '”', '「', '」', '"'))
+    paragraphs = _paragraphs(prose)
+    sentences = len(re.findall(r"[。！？!?]", prose))
+    dialogue_chars = sum(prose.count(mark) for mark in ('“', '”', '「', '」', '"'))
     return {
-        "pov_and_tense": 75.0,
-        "diction_register": 75.0,
-        "sentence_rhythm": min(100.0, 60.0 + min(sentence_count, 8) * 5.0),
-        "dialogue_voice": 80.0 if has_dialogue else 68.0,
-        "exposition_density": min(100.0, 70.0 + min(paragraph_count, 6) * 3.0),
-        "emotional_distance": 75.0,
+        "character_count": len(prose.strip()),
+        "paragraph_count": len(paragraphs),
+        "sentence_count": sentences,
+        "dialogue_marker_count": dialogue_chars,
+        "dialogue_marker_ratio": round(dialogue_chars / max(1, len(prose.strip())), 4),
+        "average_sentence_character_count": round(
+            len(prose.strip()) / max(1, sentences), 2
+        ),
     }
+
+
+def _contract_surface_coverage(
+    contract: ChapterContract | None, evidence: Mapping[str, list[str]]
+) -> dict[str, Any]:
+    if contract is None:
+        return {"required": [], "observed": [], "missing": [], "status": "UNSCOPED"}
+    required = [
+        key
+        for key, value in {
+            "required_irreversible_change": contract.required_irreversible_change,
+            "ending_state": contract.ending_state,
+            "required_cost": contract.required_cost,
+            **{f"commit:{item}": item for item in contract.commit_updates},
+        }.items()
+        if str(value or "").strip()
+    ]
+    observed = [key for key in required if evidence.get(key)]
+    missing = [key for key in required if key not in observed]
+    return {
+        "required": required,
+        "observed": observed,
+        "missing": missing,
+        "observed_count": len(observed),
+        "required_count": len(required),
+        "status": "COMPLETE" if not missing else "PARTIAL",
+    }
+
+
+def _compile_reader_visible_claims(
+    prose: str, claims: Sequence[ReaderVisibleClaim]
+) -> list[ReaderVisibleClaim]:
+    compiled: list[ReaderVisibleClaim] = []
+    for claim in claims:
+        quote = claim.evidence_quote.strip()
+        if not quote:
+            candidates = [claim.predicate]
+            for value in (claim.value, claim.after_value):
+                if value not in (None, ""):
+                    candidates.append(str(value))
+            quote = next(
+                (item for item in candidates if _evidence_present(prose, item)),
+                "",
+            )
+        status = (
+            ReaderClaimStatus.OBSERVED
+            if quote and _evidence_present(prose, quote)
+            else ReaderClaimStatus.UNOBSERVED
+        )
+        compiled.append(
+            claim.model_copy(update={"evidence_quote": quote, "status": status})
+        )
+    return compiled
+
+
+def _progression_deltas(
+    creative_deltas: Sequence[ProgressionDelta], changes: Sequence[DraftStateChange]
+) -> list[ProgressionDelta]:
+    values: list[ProgressionDelta] = list(creative_deltas)
+    for change in changes:
+        progression = change.payload.get("progression")
+        if not isinstance(progression, Mapping):
+            continue
+        raw = progression.get("deltas", [])
+        if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)):
+            continue
+        for item in raw:
+            try:
+                values.append(ProgressionDelta.model_validate(item))
+            except (TypeError, ValueError):
+                continue
+    seen: set[str] = set()
+    result: list[ProgressionDelta] = []
+    for item in values:
+        if item.delta_id in seen:
+            continue
+        seen.add(item.delta_id)
+        result.append(item)
+    return result
 
 
 def _experience_signature(
@@ -270,6 +333,7 @@ def _experience_signature(
     contract: ChapterContract | None,
     promises_advanced: list[str],
     promises_paid: list[str],
+    progression_deltas: Sequence[ProgressionDelta] = (),
 ) -> ChapterExperienceSignature | None:
     if contract is None:
         return None
@@ -288,12 +352,33 @@ def _experience_signature(
         "relationship_delta",
         "world_scale_delta",
         "core_promise_delivery",
+        "opposition_source",
+        "primary_subject",
+        "choice_type",
+        "cost_type",
+        "payoff_channel",
+        "reader_visible_delta",
+        "progression_delta_type",
+        "ending_action",
     )
-    values = {field: "" for field in signature_fields}
+    values: dict[str, Any] = {field: "" for field in signature_fields}
+    values["chapter_ordinal"] = contract.chapter
+    target_values = contract.experience_target.model_dump(mode="json")
     for change in state_changes:
         for field in signature_fields:
             declared = change.payload.get(field)
-            if declared not in (None, "") and not values[field]:
+            if declared not in (None, ""):
+                values[field] = str(declared).strip()
+        progression = change.payload.get("progression")
+        if isinstance(progression, Mapping):
+            for field in signature_fields:
+                declared = progression.get(field)
+                if declared not in (None, ""):
+                    values[field] = str(declared).strip()
+    for field in signature_fields:
+        if not values[field]:
+            declared = target_values.get(field)
+            if declared not in (None, ""):
                 values[field] = str(declared).strip()
     if not values["event_source"]:
         values["event_source"] = ";".join(
@@ -316,6 +401,18 @@ def _experience_signature(
         values["core_promise_delivery"] = ";".join(
             promises_paid if promises_paid else promises_advanced
         )
+    if not values["progression_delta_type"] and progression_deltas:
+        values["progression_delta_type"] = ";".join(
+            dict.fromkeys(item.kind.value for item in progression_deltas)
+        )
+    if not values["reader_visible_delta"] and progression_deltas:
+        values["reader_visible_delta"] = ";".join(
+            dict.fromkeys(
+                item.reader_visible_delta
+                for item in progression_deltas
+                if item.reader_visible_delta
+            )
+        )
     return ChapterExperienceSignature.model_validate(values)
 
 
@@ -325,6 +422,7 @@ def _trace(
     contract: ChapterContract | None,
     promises_advanced: list[str],
     promises_paid: list[str],
+    progression_deltas: Sequence[ProgressionDelta] = (),
 ) -> RealizedKernelTrace | None:
     if contract is None:
         return None
@@ -356,6 +454,7 @@ def _trace(
                 if change.kind in {"capability", "knowledge", "relationship"}
             ],
             resource_change=list(resource_changes),
+            deltas=list(progression_deltas),
         ),
         resource_changes=list(resource_changes),
         world_expansion_changes=list(world_expansion),
@@ -375,11 +474,10 @@ def build_chapter_realization_brief(
 
     clean_lengths = [int(value) for value in recent_lengths if int(value) > 0]
     anchor = int(median(clean_lengths)) if clean_lengths else 0
-    # A no-history chapter still needs useful expression guidance.  This is a
-    # soft character-range hint only; diagnose_scene_realization never turns it
-    # into a hard validation gate.
+    # Without a healthy history there is no defensible global word-count
+    # baseline; the brief remains scoped to the Contract's observable targets.
     target_range = (
-        (1800, 3200)
+        (0, 0)
         if anchor <= 0
         else (max(1, int(anchor * 0.65)), int(anchor * 1.45))
     )
@@ -390,11 +488,20 @@ def build_chapter_realization_brief(
             for item in (contract.required_irreversible_change, contract.ending_state)
             if item.strip()
         ]
+    contract_status: Literal["SUFFICIENT", "UNDERSPECIFIED"] = (
+        "SUFFICIENT"
+        if contract.required_irreversible_change.strip()
+        and contract.ending_state.strip()
+        and contract.commit_updates
+        else "UNDERSPECIFIED"
+    )
     return ChapterRealizationBrief(
         target_word_range=target_range,
-        target_scene_count=max(1, min(5, 1 + len(contract.secondary_functions))),
+        target_scene_count=max(1, 1 + len(contract.secondary_functions)),
         dramatization_targets=targets,
         realization_scope=contract.realization_scope,
+        contract_realization_status=contract_status,
+        adaptive=anchor > 0,
     )
 
 
@@ -408,6 +515,19 @@ def diagnose_scene_realization(
     sentences = len(re.findall(r"[。！？!?]", prose))
     too_thin = bool(lower and len(prose.strip()) < lower)
     too_summary_like = len(paragraphs) < brief.target_scene_count and sentences < 3
+    if brief.contract_realization_status == "UNDERSPECIFIED":
+        return {
+            "code": "CONTRACT_REALIZATION_UNDERSPECIFIED",
+            "severity": "ERROR",
+            "status": "RETURN_TO_PLANNING",
+            "character_count": len(prose.strip()),
+            "target_word_range": [lower, upper],
+            "baseline_status": "HEALTHY_HISTORY" if lower else "UNKNOWN",
+            "suggested_fix": (
+                "返回 Planning/Contract，补齐独立章节的变化、结果、反应或代价；"
+                "不要只堆描写。"
+            ),
+        }
     if not (too_thin or too_summary_like):
         return {
             "code": "SCENE_REALIZATION_CLEAR",
@@ -415,6 +535,7 @@ def diagnose_scene_realization(
             "status": "CLEAR",
             "character_count": len(prose.strip()),
             "target_word_range": [lower, upper],
+            "baseline_status": "HEALTHY_HISTORY" if lower else "UNKNOWN",
         }
     reasons = []
     if too_thin:
@@ -427,6 +548,7 @@ def diagnose_scene_realization(
         "status": "REVIEW",
         "character_count": len(prose.strip()),
         "target_word_range": [lower, upper],
+        "baseline_status": "HEALTHY_HISTORY" if lower else "UNKNOWN",
         "reasons": reasons,
         "suggested_fix": "只补充动作、感官、人物反应或场面后果；不得新增 Contract 外的状态变化。",
     }
@@ -450,6 +572,12 @@ def compile_draft_output(
         )
         for item in creative_output.state_changes
     ]
+    reader_visible_claims = _compile_reader_visible_claims(
+        prose, creative_output.reader_visible_claims
+    )
+    progression_deltas = _progression_deltas(
+        creative_output.progression_deltas, changes
+    )
     promises_advanced = list(dict.fromkeys(creative_output.promises_advanced))
     promises_paid = list(dict.fromkeys(creative_output.promises_paid))
     if contract is not None:
@@ -471,9 +599,16 @@ def compile_draft_output(
         if brief is not None
         else {"code": "SCENE_REALIZATION_UNSCOPED", "severity": "INFO", "status": "UNKNOWN"}
     )
+    measurements = _deterministic_measurements(prose)
+    coverage = _contract_surface_coverage(contract, _contract_evidence(prose, contract))
     notes = list(creative_output.notes)
     if diagnostics.get("code") == "SCENE_REALIZATION_THIN":
         notes.append("SCENE_REALIZATION_THIN：仅提示表达层复核，不阻止 VALIDATED_DRAFT。")
+    elif diagnostics.get("code") == "CONTRACT_REALIZATION_UNDERSPECIFIED":
+        notes.append(
+            "CONTRACT_REALIZATION_UNDERSPECIFIED：应返回 Planning/Contract，"
+            "不以补字数代替章节设计。"
+        )
     reference = (
         contract.reference_provenance
         if contract is not None
@@ -488,8 +623,8 @@ def compile_draft_output(
         contract_evidence=_contract_evidence(prose, contract),
         knowledge_claims=list(creative_output.knowledge_claims),
         reveal_trace=creative_output.reveal_trace,
-        character_fit_inputs=_soft_character_audit(prose, contract),
-        style_fit_inputs=_soft_style_audit(prose),
+        character_fit_inputs={},
+        style_fit_inputs={},
         promises_advanced=promises_advanced,
         promises_paid=promises_paid,
         new_major_hooks=creative_output.new_major_hooks,
@@ -503,14 +638,29 @@ def compile_draft_output(
         ),
         innovation_control=None if contract is None else contract.innovation_control,
         realized_kernel_trace=_trace(
-            prose, changes, contract, promises_advanced, promises_paid
+            prose,
+            changes,
+            contract,
+            promises_advanced,
+            promises_paid,
+            progression_deltas,
         ),
         chapter_experience_signature=_experience_signature(
-            prose, changes, contract, promises_advanced, promises_paid
+            prose,
+            changes,
+            contract,
+            promises_advanced,
+            promises_paid,
+            progression_deltas,
         ),
         realization_diagnostics=diagnostics,
         reference_provenance=reference,
         evidence_policy="COMPILED_SOFT",
+        reader_visible_claims=reader_visible_claims,
+        progression_deltas=progression_deltas,
+        semantic_review_status="UNKNOWN",
+        deterministic_measurements=measurements,
+        contract_surface_coverage=coverage,
         notes=notes,
     )
 

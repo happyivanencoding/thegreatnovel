@@ -6,13 +6,14 @@
   <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v={{ asset_version }}">
 </head>
 <body>
-<header class="topbar"><a class="brand" href="/">小说作者工作台</a><span class="muted">只读审核面板</span></header>
+<header class="topbar"><a class="brand" href="/">小说作者工作台</a><span class="muted">作者审核面板</span></header>
 <main class="shell narrow">
   <div class="page-heading"><div><p class="eyebrow">Draft Review</p><h1>草稿审核</h1></div><span class="badge">尚未进入正史</span></div>
-  <p class="callout">此页只读展示 Validator、hard errors、soft warnings、指标变化和 Approval Preview；没有批准按钮，也不会调用 shell、模型或外部 API。</p>
+  <p class="callout">此页展示 Validator、hard errors、soft warnings、指标变化和 Approval Preview。批准仍需作者明确点击；请求会经过同一份 stale、transaction、Canon boundary 检查。</p>
   {% for draft in drafts %}
   <article class="panel draft-card">
     <div class="panel-heading"><h2>{{ draft.draft_id }}</h2><span class="status status-{{ draft.display_status|lower }}">{{ draft.display_status }}</span></div>
+    {% if draft.status == 'VALIDATED' %}<div class="original-actions"><button class="button primary" type="button" data-approval-action data-approval-endpoint="/api/books/{{ book_id }}/editions/{{ edition_id }}/drafts/{{ draft.draft_id }}/approve">批准写入正史</button><span class="library-feedback" data-approval-feedback aria-live="polite"></span></div>{% endif %}
     <p>Contract：<code>{{ draft.contract_id }}</code> · Candidate：<code>{{ draft.candidate_id or '—' }}</code></p>
     <p>正文路径：<code>{{ draft.file_path }}</code> · Content SHA-256：<code>{{ draft.content_sha256 }}</code></p>
     <details open><summary>Draft 正文</summary><pre class="draft-prose">{{ draft.content }}</pre></details>
@@ -42,10 +43,11 @@
         "direction_alignment": draft.output.get("direction_alignment")
       }|tojson(indent=2) }}</pre>
     </section>
-    <details class="approval-preview"><summary>Approval Preview（只读）</summary><pre>{{ draft.approval_preview|tojson(indent=2) }}</pre><p class="muted">批准前仍需作者当前明确确认；当前页面不会运行 <code>novel approve</code>。</p></details>
+    <details class="approval-preview"><summary>Approval Preview</summary><pre>{{ draft.approval_preview|tojson(indent=2) }}</pre><p class="muted">页面按钮只提交作者明确批准短语；不会绕过 server-side stale、校验 bundle 或事务检查。</p></details>
   </article>
   {% else %}<section class="panel"><p>暂无草稿。</p></section>{% endfor %}
 </main>
+<script src="{{ url_for('static', path='approval.js') }}?v={{ asset_version }}" defer></script>
 <script src="{{ url_for('static', path='app.js') }}?v={{ asset_version }}" defer></script>
 </body>
 </html>

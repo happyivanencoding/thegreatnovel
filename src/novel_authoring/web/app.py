@@ -200,6 +200,7 @@ from novel_authoring.web.schemas import (
     BookProfileProposalRequest,
     BookProfileProposalResolutionRequest,
     CandidateSelectionRequest,
+    DraftApprovalRequest,
     DraftContentRequest,
     DraftMetadataRepairRequest,
     EditionActivationRequest,
@@ -227,6 +228,7 @@ from novel_authoring.web.schemas import (
     UserResponseRequest,
 )
 from novel_authoring.web.workbench import build_workbench_context
+from novel_authoring.workflows.approval import approve_draft
 from novel_authoring.workflows.handoffs import (
     HandoffStatus,
     HandoffType,
@@ -1367,6 +1369,34 @@ def create_app(
             )
         except (OSError, RuntimeError, ValueError) as exc:
             return _error(exc)
+
+    @app.post(
+        "/api/books/{path_book_id}/editions/{edition_id}/drafts/{draft_id}/approve"
+    )
+    async def draft_approve_api(
+        request: Request,
+        path_book_id: str,
+        edition_id: str,
+        draft_id: str,
+        payload: DraftApprovalRequest,
+    ) -> Any:
+        """Page-native author approval; the shared workflow remains authoritative."""
+
+        verify_csrf(request, None)
+        checked_book = _check_id(path_book_id)
+        checked_edition = _check_id(edition_id)
+        checked_draft = _check_id(draft_id)
+        try:
+            result = approve_draft(
+                _database_for_book(app, checked_book),
+                checked_book,
+                checked_draft,
+                confirmation=payload.confirmation,
+                edition_id=checked_edition,
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            return _error(exc)
+        return {**result, "canon_changed": True}
 
     @app.get("/library/technical", response_class=HTMLResponse)
     async def technical_library_page(request: Request) -> Any:
@@ -2750,7 +2780,12 @@ def create_app(
             templates,
             "draft_review.html",
             request,
-            {"drafts": drafts, "csrf_token": app.state.csrf_token},
+            {
+                "drafts": drafts,
+                "book_id": _check_id(path_book_id),
+                "edition_id": _check_id(edition_id),
+                "csrf_token": app.state.csrf_token,
+            },
         )
 
     @app.get("/api/books")

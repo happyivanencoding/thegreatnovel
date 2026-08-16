@@ -34,12 +34,13 @@ class Settings(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     default_mode: str = "faithful_continuation"
-    recent_full_chapters: int = 3
+    recent_full_chapters: int | None = None
     reference_corpus_root: Path | None = None
     ingest: IngestConfig
     metrics: dict[str, Any] = Field(default_factory=dict)
     rhythm: dict[str, Any] = Field(default_factory=dict)
     atlas: dict[str, Any] = Field(default_factory=dict)
+    continuation_quality: dict[str, Any] = Field(default_factory=dict)
 
 
 def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:

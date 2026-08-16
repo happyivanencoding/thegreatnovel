@@ -466,8 +466,6 @@
   function bindWorkflow(current) {
     current.querySelectorAll("[data-activate-edition]").forEach(function (button) {
       button.addEventListener("click", function () {
-        var name = button.dataset.editionName || "这个版本";
-        if (!window.confirm("将“" + name + "”设为当前正式版本。原正式版本会保留并归档，正式正文不会被删除。是否继续？")) return;
         button.disabled = true;
         postJson("/api/books/" + encodeURIComponent(current.dataset.bookId) + "/editions/" + encodeURIComponent(current.dataset.editionId) + "/activate", { confirmed: true }).then(function (result) {
           location.assign(result.redirect_url);

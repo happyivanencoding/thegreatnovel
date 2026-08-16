@@ -357,8 +357,7 @@
     const form = new FormData(event.currentTarget);
     const selected = String(form.get("selected_primary_innovation_id") || "").trim();
     if (!selected) { show("请选择一个核心玩法。", true); return; }
-    if (event.currentTarget.dataset.reselection && !window.confirm("修改核心玩法会使基于旧核心玩法生成的故事基础和 Development 失效，但不会删除历史，也不会修改 Canon。")) return;
-    show("正在冻结核心玩法，并准备 Story Foundation Proposal…");
+    show("正在冻结核心玩法，并准备 Story Foundation Proposal；不会删除历史，也不会修改 Canon…");
     try {
       await post(`/api/books/${bookId}/original/core-innovation/select`, {
         selected_primary_innovation_id: selected,
@@ -372,8 +371,7 @@
     const form = new FormData(event.currentTarget);
     const selected = String(form.get("selected_foundation_id") || "").trim();
     if (!selected) { show("请选择一个故事基础。", true); return; }
-    if (event.currentTarget.dataset.reselection && !window.confirm("更换故事基础会使依赖旧选择的 Development 失效，但会保留 Reader Kernel、核心玩法、Foundation Proposal 历史且不会修改 Canon。")) return;
-    show("正在冻结本次故事基础选择并准备 Development Proposal…");
+    show("正在冻结本次故事基础选择并准备 Development Proposal；不会删除历史，也不会修改 Canon…");
     try {
       await post(`/api/books/${bookId}/original/foundation/select`, {
         selected_foundation_id: selected,
@@ -405,8 +403,6 @@
       event.preventDefault();
       const form = new FormData(wizard);
       const selectedFoundation = String(form.get("selected_foundation_id") || "");
-      const title = String(form.get("title_override") || form.get("selected_title") || "").trim();
-      if (!window.confirm(`确认《${title}》的故事基础并开始准备第一章？\n\n这会写入作者幕后设定、全书画像和剧情方向，但不会创建或批准正式正文。`)) return;
       const settingStrengths = {};
       const openQuestionActions = {};
       const hiddenTruthActions = {};
@@ -530,7 +526,6 @@
         renderComparison(value);
         button.disabled = false;
       } else if (action === "replace-proposal") {
-        if (!window.confirm("用新方案替换当前待确认方案？已经确认的作者设定和正式正文不会改变。")) { button.disabled = false; return; }
         await post(`/api/books/${bookId}/original/proposals/${button.dataset.proposalVersionId}/resolve`, {action: "REPLACE_CURRENT"});
         window.location.replace(window.location.href);
       } else if (action === "keep-proposal") {
@@ -545,9 +540,12 @@
         await post(`/api/books/${bookId}/original/first-chapter/validate`, {draft_id: button.dataset.draftId, confirmation: ""});
         window.location.replace(window.location.href);
       } else if (action === "approve") {
-        if (!window.confirm("批准后，第一章草稿将写入正式正文，并成为后续创作的权威边界。是否继续？")) { button.disabled = false; return; }
         show("正在写入正式正文…");
-        await post(`/api/books/${bookId}/original/first-chapter/approve`, {draft_id: button.dataset.draftId, confirmation: "批准写入正史"});
+        await window.CodexApproval.submit(
+          button,
+          `/api/books/${bookId}/original/first-chapter/approve`,
+          {draft_id: button.dataset.draftId},
+        );
         window.location.replace(window.location.href);
       }
     } catch (error) {

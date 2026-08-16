@@ -16,6 +16,7 @@ from novel_authoring.planning.models import (
     ChapterContract,
     ChapterExperienceSignature,
     PlanningReferenceProvenance,
+    SerialExperiencePortfolio,
 )
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import book_root, find_operation
@@ -125,44 +126,69 @@ def build_chapter_contract(
     reference_strategy = task_metadata.get("reference_strategy", {})
     if not isinstance(reference_strategy, dict):
         reference_strategy = {}
+    reference_seed = candidate.reference_provenance.model_dump(mode="python")
     reference_provenance = PlanningReferenceProvenance(
-        reference_strategy_id=(
-            str(reference_strategy["strategy_id"])
-            if reference_strategy.get("strategy_id")
-            else None
-        ),
-        snapshot_id=(
-            str(reference_strategy.get("snapshot_id") or reference_context.get("snapshot_id"))
-            if reference_strategy.get("snapshot_id") or reference_context.get("snapshot_id")
-            else None
-        ),
-        snapshot_hash=(
-            str(reference_strategy.get("snapshot_hash") or reference_context.get("snapshot_hash"))
-            if reference_strategy.get("snapshot_hash") or reference_context.get("snapshot_hash")
-            else None
-        ),
-        card_ids_used=[
-            str(item)
-            for item in (
-                reference_strategy.get("selected_card_ids")
-                or reference_context.get("selected_card_ids")
-                or []
-            )
-        ],
-        selected_solutions=[
-            str(item)
-            for item in (
-                reference_strategy.get("selected_contrast_solutions")
-                or reference_strategy.get("selected_solutions")
-                or []
-            )
-        ],
-        application_summary=str(reference_strategy.get("application_summary") or ""),
-        match_tier=str(
-            reference_strategy.get("match_tier")
-            or reference_context.get("match_tier")
-            or "EXACT"
-        ),
+        **{
+            **reference_seed,
+            "reference_strategy_id": (
+                candidate.reference_provenance.reference_strategy_id
+                or (
+                    str(reference_strategy["strategy_id"])
+                    if reference_strategy.get("strategy_id")
+                    else None
+                )
+            ),
+            "snapshot_id": (
+                candidate.reference_provenance.snapshot_id
+                or str(
+                    reference_strategy.get("snapshot_id")
+                    or reference_context.get("snapshot_id")
+                    or ""
+                )
+                or None
+            ),
+            "snapshot_hash": (
+                candidate.reference_provenance.snapshot_hash
+                or str(
+                    reference_strategy.get("snapshot_hash")
+                    or reference_context.get("snapshot_hash")
+                    or ""
+                )
+                or None
+            ),
+            "card_ids_used": (
+                candidate.reference_provenance.card_ids_used
+                or [
+                    str(item)
+                    for item in (
+                        reference_strategy.get("selected_card_ids")
+                        or reference_context.get("selected_card_ids")
+                        or []
+                    )
+                ]
+            ),
+            "selected_solutions": (
+                candidate.reference_provenance.selected_solutions
+                or [
+                    str(item)
+                    for item in (
+                        reference_strategy.get("selected_contrast_solutions")
+                        or reference_strategy.get("selected_solutions")
+                        or []
+                    )
+                ]
+            ),
+            "application_summary": (
+                candidate.reference_provenance.application_summary
+                or str(reference_strategy.get("application_summary") or "")
+            ),
+            "match_tier": str(
+                candidate.reference_provenance.match_tier
+                or reference_strategy.get("match_tier")
+                or reference_context.get("match_tier")
+                or "EXACT"
+            ),
+        }
     )
     experience_target = ChapterExperienceSignature(
         event_source=candidate.event_source,
@@ -183,6 +209,20 @@ def build_chapter_contract(
         relationship_delta=candidate.relationship_delta,
         world_scale_delta=candidate.world_scale_delta,
         core_promise_delivery=candidate.core_promise_delivery,
+        opposition_source=candidate.opposition_source,
+        primary_subject=candidate.primary_subject,
+        choice_type=candidate.choice_type,
+        cost_type=candidate.cost_type,
+        payoff_channel=candidate.payoff_channel,
+        reader_visible_delta=candidate.reader_visible_delta,
+        progression_delta_type=candidate.progression_delta_type,
+        ending_action=candidate.ending_action,
+    )
+    serial_experience_raw = task_metadata.get("serial_experience_portfolio")
+    serial_experience_portfolio = (
+        SerialExperiencePortfolio.model_validate(serial_experience_raw)
+        if isinstance(serial_experience_raw, dict)
+        else None
     )
     rhythm_diagnostics = dict(boundary_json.get("rhythm_diagnostics", {}))
     rhythm_constraints: dict[str, object] = {}
@@ -282,6 +322,7 @@ def build_chapter_contract(
         innovation_preview=candidate.innovation_preview,
         innovation_commitments=innovation_commitments,
         narrative_portfolio=narrative_portfolio,
+        serial_experience_portfolio=serial_experience_portfolio,
         effective_book_profile=dict(task_metadata.get("effective_book_profile", {})),
         active_author_truths=list(truth_reveal.get("active_author_truths", [])),
         reveal_agenda=dict(truth_reveal.get("reveal_agenda", {})),

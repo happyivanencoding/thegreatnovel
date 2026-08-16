@@ -30,6 +30,14 @@ _EXPORTS: dict[str, tuple[str, str]] = {
     "get_batch_projection": ("novel_authoring.planning.batch", "get_batch_projection"),
     "get_chunk_context": ("novel_authoring.planning.batch", "get_chunk_context"),
     "build_chapter_contract": ("novel_authoring.planning.contracts", "build_chapter_contract"),
+    "SerialExperiencePortfolio": (
+        "novel_authoring.planning.models",
+        "SerialExperiencePortfolio",
+    ),
+    "build_serial_experience_portfolio": (
+        "novel_authoring.planning.experience_portfolio",
+        "build_serial_experience_portfolio",
+    ),
     "import_candidate_output": ("novel_authoring.planning.candidates", "import_candidate_output"),
     "prepare_candidate_task": ("novel_authoring.planning.candidates", "prepare_candidate_task"),
     "PlanningAggregate": ("novel_authoring.planning.aggregates", "PlanningAggregate"),

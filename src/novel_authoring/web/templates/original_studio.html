@@ -425,6 +425,7 @@
     {% if original.historical_proposal_versions %}<details class="panel wb-technical-details"><summary>历史故事方案</summary>{% for version in original.historical_proposal_versions %}<p>方案 {{ version.version_number }} · {{ version.status }} · {{ version.updated_at }}</p>{% endfor %}</details>{% endif %}
     {% endif %}
   </main>
+  <script src="{{ url_for('static', path='approval.js') }}?v={{ asset_version }}" defer></script>
   <script src="{{ url_for('static', path='original.js') }}?v={{ asset_version }}" defer></script>
 </body>
 </html>

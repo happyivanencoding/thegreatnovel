@@ -10,6 +10,13 @@ from typing import Any, Literal
 from novel_authoring.canon.materialize import missing_materialization_fields
 from novel_authoring.canon.projection import CanonProjection
 from novel_authoring.config import Settings
+from novel_authoring.continuation_quality import (
+    ProgressionDelta,
+    QualityIssue,
+    UsageConstraint,
+    progression_delta_issues,
+    usage_constraint_issues,
+)
 from novel_authoring.contracts.draft import (
     DraftOutput,
     DraftStateChange,
@@ -28,6 +35,10 @@ from novel_authoring.validation.models import (
     ValidationFinding,
     ValidationReport,
     ValidatorName,
+)
+from novel_authoring.validation.publication_boundary import (
+    edge_publication_findings,
+    internal_workflow_language_hits,
 )
 
 
@@ -150,8 +161,302 @@ def _clean_payload(payload: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in payload.items() if not key.startswith("_")}
 
 
-def validate_canon(context: ValidationContext) -> ValidationReport:
+def _projection_value(
+    projection: CanonProjection, subject_ref: str, predicate: str
+) -> tuple[bool, Any]:
+    """Resolve only direct projection fields; do not infer natural-language facts."""
+
+    collections = (
+        projection.facts,
+        projection.entities,
+        projection.character_states,
+        projection.knowledge,
+        projection.relationships,
+        projection.resources,
+        projection.capabilities,
+        projection.threads,
+        projection.promises,
+    )
+    for collection in collections:
+        item = collection.get(subject_ref)
+        if isinstance(item, dict) and predicate in item:
+            return True, item[predicate]
+        for key, candidate in collection.items():
+            if not isinstance(candidate, dict):
+                continue
+            identifiers = {
+                str(key),
+                str(candidate.get("id") or ""),
+                str(candidate.get("record_id") or ""),
+                str(candidate.get("resource_id") or ""),
+                str(candidate.get("capability_id") or ""),
+                str(candidate.get("character_id") or ""),
+                str(candidate.get("entity_id") or ""),
+                str(candidate.get("relationship_id") or ""),
+                str(candidate.get("name") or ""),
+            }
+            if subject_ref in identifiers and predicate in candidate:
+                return True, candidate[predicate]
+    return False, None
+
+
+def _projection_subject_exists(projection: CanonProjection, subject_ref: str) -> bool:
+    collections = (
+        projection.facts,
+        projection.entities,
+        projection.character_states,
+        projection.knowledge,
+        projection.relationships,
+        projection.resources,
+        projection.capabilities,
+        projection.threads,
+        projection.promises,
+    )
+    for collection in collections:
+        if subject_ref in collection:
+            return True
+        for key, candidate in collection.items():
+            if not isinstance(candidate, dict):
+                continue
+            identifiers = {
+                str(key),
+                str(candidate.get("id") or ""),
+                str(candidate.get("record_id") or ""),
+                str(candidate.get("resource_id") or ""),
+                str(candidate.get("capability_id") or ""),
+                str(candidate.get("character_id") or ""),
+                str(candidate.get("entity_id") or ""),
+                str(candidate.get("relationship_id") or ""),
+                str(candidate.get("name") or ""),
+            }
+            if subject_ref in identifiers:
+                return True
+    return False
+
+
+def _reader_visible_claim_findings(context: ValidationContext) -> list[ValidationFinding]:
     findings: list[ValidationFinding] = []
+    state_changes = {
+        change.record_id: change for change in context.draft.state_changes
+    }
+    for claim in context.draft.reader_visible_claims:
+        location = f"reader_visible_claims:{claim.claim_id}"
+        evidence_status = _match_evidence(
+            context.draft.prose_markdown, claim.evidence_quote
+        )
+        if not claim.evidence_quote or evidence_status == "NOT_FOUND":
+            findings.append(
+                _finding(
+                    "READER_VISIBLE_CLAIM_NOT_OBSERVED",
+                    f"读者可见声明 {claim.claim_id} 没有正文证据。",
+                    location=location,
+                    suggested_fix="补充正文中可直接观察到的 evidence_quote，或删除该声明。",
+                )
+            )
+        elif evidence_status == "AMBIGUOUS":
+            findings.append(
+                _finding(
+                    "READER_VISIBLE_CLAIM_EVIDENCE_AMBIGUOUS",
+                    f"读者可见声明 {claim.claim_id} 的 evidence_quote 在正文中出现多次。",
+                    severity=Severity.WARNING,
+                    location=location,
+                )
+            )
+        transition = state_changes.get(claim.transition_source)
+        has_transition = transition is not None
+        transition_payload = transition.payload if transition is not None else {}
+        if (
+            not _projection_subject_exists(context.projection, claim.subject_ref)
+            and not has_transition
+        ):
+            findings.append(
+                _finding(
+                    "READER_VISIBLE_CLAIM_SUBJECT_NOT_FOUND",
+                    f"声明 {claim.claim_id} 引用了 Projection 中不存在的实体/主体。",
+                    location=location,
+                )
+            )
+        contract_record_ids = set(
+            getattr(context.contract, "state_change_record_ids", []) or []
+        )
+        if (
+            has_transition
+            and contract_record_ids
+            and claim.transition_source not in contract_record_ids
+        ):
+            findings.append(
+                _finding(
+                    "READER_VISIBLE_CLAIM_OUTSIDE_CONTRACT",
+                    f"声明 {claim.claim_id} 绑定的 StateChange 不在当前 Chapter Contract。",
+                    location=location,
+                )
+            )
+        if claim.before_value is not None and claim.after_value is not None:
+            if not claim.transition_source or not has_transition:
+                unbound_code = {
+                    "LOCATION": "LOCATION_CHANGE_WITHOUT_TRANSITION",
+                    "OWNERSHIP": "OWNERSHIP_CHANGE_WITHOUT_EVENT",
+                    "TEMPORAL": "TEMPORAL_RESET_WITHOUT_TRANSITION",
+                    "TEMPORAL_STATE": "TEMPORAL_RESET_WITHOUT_TRANSITION",
+                }.get(
+                    claim.claim_kind.value,
+                    "READER_VISIBLE_CLAIM_TRANSITION_UNBOUND",
+                )
+                findings.append(
+                    _finding(
+                        unbound_code,
+                        f"声明 {claim.claim_id} 有 before/after，但没有绑定本章 StateChange。",
+                        location=location,
+                    )
+                )
+            found, current = _projection_value(
+                context.projection, claim.subject_ref, claim.predicate
+            )
+            if found and current != claim.before_value:
+                findings.append(
+                    _finding(
+                        "STATE_CONTRADICTION",
+                        (
+                            f"声明 {claim.claim_id} 的 before_value={claim.before_value!r} "
+                            f"与 Projection 当前值={current!r} 不一致。"
+                        ),
+                        location=location,
+                    )
+                )
+            elif (
+                claim.claim_kind.value == "QUANTITY"
+                and claim.before_value != claim.after_value
+                and not any(
+                    transition_payload.get(key)
+                    for key in ("source", "causal_source", "cause", "event_id", "origin")
+                )
+            ):
+                findings.append(
+                    _finding(
+                        "QUANTITY_JUMP_WITHOUT_SOURCE",
+                        f"数量声明 {claim.claim_id} 有变化，但 StateChange 没有来源。",
+                        location=location,
+                    )
+                )
+            elif (
+                claim.claim_kind.value
+                in {"CAPABILITY", "CAPABILITY_STATE", "CAPABILITY_USE"}
+                and str(claim.before_value).casefold()
+                in {"depleted", "empty", "unavailable", "false", "0"}
+                and str(claim.after_value).casefold()
+                in {"available", "ready", "true", "1"}
+                and not any(
+                    transition_payload.get(key)
+                    for key in (
+                        "usage_reset",
+                        "reset_condition_satisfied",
+                        "reset_event",
+                        "source",
+                        "causal_source",
+                        "cause",
+                    )
+                )
+            ):
+                findings.append(
+                    _finding(
+                        "CAPABILITY_AVAILABLE_AFTER_DEPLETION",
+                        f"能力声明 {claim.claim_id} 从耗尽/不可用恢复，但没有 reset 或来源事件。",
+                        location=location,
+                    )
+                )
+        if claim.value is not None and claim.temporal_scope.upper() == "CURRENT":
+            found, current = _projection_value(
+                context.projection, claim.subject_ref, claim.predicate
+            )
+            if found and current != claim.value and not has_transition:
+                findings.append(
+                    _finding(
+                        "READER_VISIBLE_CLAIM_NOT_MATERIALIZED",
+                        (
+                            f"声明 {claim.claim_id} 报告当前值 {claim.value!r}，"
+                            "但 Projection 当前值为 "
+                            f"{current!r}，且没有绑定 StateChange。"
+                        ),
+                        location=location,
+                    )
+                )
+    return findings
+
+
+def _publication_boundary_findings(context: ValidationContext) -> list[ValidationFinding]:
+    findings: list[ValidationFinding] = []
+    for term in internal_workflow_language_hits(context.draft.prose_markdown):
+        findings.append(
+            _finding(
+                "INTERNAL_WORKFLOW_LANGUAGE_LEAK",
+                f"正文包含内部工作流术语：{term}。",
+                evidence=[term],
+                location="prose_markdown",
+                suggested_fix="改写为读者可理解的故事事实，不暴露系统合同、字段或状态名。",
+            )
+        )
+    for index, item in enumerate(
+        edge_publication_findings(context.draft.publication_review_findings)
+    ):
+        quote = item["evidence_quote"]
+        if not quote:
+            findings.append(
+                _finding(
+                    "PUBLICATION_REVIEW_EVIDENCE_MISSING",
+                    "语义出版审阅提出了问题，但没有正文 evidence_quote。",
+                    location=f"publication_review_findings:{index}",
+                )
+            )
+            continue
+        match_status = _match_evidence(context.draft.prose_markdown, quote)
+        if match_status == "NOT_FOUND":
+            findings.append(
+                _finding(
+                    "PUBLICATION_REVIEW_EVIDENCE_NOT_FOUND",
+                    f"语义出版审阅的 evidence_quote 不在正文中：{quote}",
+                    location=f"publication_review_findings:{index}",
+                    evidence=[quote],
+                )
+            )
+        elif match_status == "AMBIGUOUS":
+            findings.append(
+                _finding(
+                    "PUBLICATION_REVIEW_EVIDENCE_AMBIGUOUS",
+                    f"语义出版审阅的 evidence_quote 在正文中出现多次：{quote}",
+                    severity=Severity.WARNING,
+                    location=f"publication_review_findings:{index}",
+                    evidence=[quote],
+                )
+            )
+        else:
+            findings.append(
+                _finding(
+                    "PUBLICATION_SEMANTIC_REVIEW_FINDING",
+                    item["reason"] or "边缘语义审阅报告了出版边界问题。",
+                    location=f"publication_review_findings:{index}",
+                    evidence=[quote],
+                )
+            )
+    return findings
+
+
+def _quality_findings(issues: list[QualityIssue]) -> list[ValidationFinding]:
+    return [
+        _finding(
+            item.code,
+            item.message,
+            severity=Severity.ERROR if item.severity == "ERROR" else Severity.WARNING,
+            location=item.location,
+        )
+        for item in issues
+    ]
+
+
+def validate_canon(context: ValidationContext) -> ValidationReport:
+    findings: list[ValidationFinding] = [
+        *_reader_visible_claim_findings(context),
+        *_publication_boundary_findings(context),
+    ]
     for change in context.draft.state_changes:
         missing = missing_materialization_fields(change)
         if missing:
@@ -322,28 +627,32 @@ def validate_knowledge(context: ValidationContext) -> ValidationReport:
 def validate_character(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
     score: float | None = None
-    try:
-        config = context.settings.metrics["character_fit"]
-        score = character_fit(context.draft.character_fit_inputs, config)
-        minimum = float(config["minimum"])
-        if score < minimum:
+    if context.draft.evidence_policy == "COMPILED_SOFT":
+        semantic_status = "UNKNOWN"
+    else:
+        try:
+            config = context.settings.metrics["character_fit"]
+            score = character_fit(context.draft.character_fit_inputs, config)
+            minimum = float(config["minimum"])
+            if score < minimum:
+                findings.append(
+                    _finding(
+                        "CHARACTER_FIT_BELOW_MINIMUM",
+                        f"人物契合度 {score:.2f} 低于参考线 {minimum:.2f}，建议人工复核。",
+                        severity=Severity.WARNING,
+                        location="character_fit_inputs",
+                    )
+                )
+        except (KeyError, TypeError, ValueError) as exc:
             findings.append(
                 _finding(
-                    "CHARACTER_FIT_BELOW_MINIMUM",
-                    f"人物契合度 {score:.2f} 低于参考线 {minimum:.2f}，建议人工复核。",
+                    "CHARACTER_FIT_INPUT_INVALID",
+                    f"人物契合度输入无效：{exc}",
                     severity=Severity.WARNING,
                     location="character_fit_inputs",
                 )
             )
-    except (KeyError, TypeError, ValueError) as exc:
-        findings.append(
-            _finding(
-                "CHARACTER_FIT_INPUT_INVALID",
-                f"人物契合度输入无效：{exc}",
-                severity=Severity.WARNING,
-                location="character_fit_inputs",
-            )
-        )
+        semantic_status = "EXPLICIT_INPUT"
     for violation in context.draft.character_bottom_line_violations:
         findings.append(
             _finding(
@@ -353,7 +662,15 @@ def validate_character(context: ValidationContext) -> ValidationReport:
                 location="character_bottom_line_violations",
             )
         )
-    return _report("Character Validator", findings, {"character_fit": score})
+    return _report(
+        "Character Validator",
+        findings,
+        {
+            "character_fit": score,
+            "semantic_review_status": semantic_status,
+            "measurements": context.draft.deterministic_measurements,
+        },
+    )
 
 
 def validate_economy_power(context: ValidationContext) -> ValidationReport:
@@ -474,6 +791,111 @@ def validate_economy_power(context: ValidationContext) -> ValidationReport:
                     "CAPABILITY_SOURCE_MISSING",
                     "战力提升缺少可追溯来源。",
                     location=f"state_changes:{change.record_id}",
+                )
+            )
+    delta_values = list(context.draft.progression_deltas)
+    for change in context.draft.state_changes:
+        progression = change.payload.get("progression")
+        raw_deltas = progression.get("deltas", []) if isinstance(progression, dict) else []
+        change_deltas: list[ProgressionDelta] = []
+        if isinstance(progression, dict) and not raw_deltas:
+            before_index = progression.get(
+                "before_index", progression.get("before_progression_index")
+            )
+            after_index = progression.get("after_index", progression.get("progression_index"))
+            if before_index is not None and after_index is not None and before_index != after_index:
+                findings.append(
+                    _finding(
+                        "PROGRESSION_INDEX_WITHOUT_DELTA",
+                        "progression index 发生变化，但没有对应的 ProgressionDelta。",
+                        location=f"state_changes:{change.record_id}:progression",
+                    )
+                )
+        if isinstance(raw_deltas, list):
+            for item in raw_deltas:
+                try:
+                    parsed_delta = ProgressionDelta.model_validate(item)
+                    delta_values.append(parsed_delta)
+                    change_deltas.append(parsed_delta)
+                except (TypeError, ValueError) as exc:
+                    findings.append(
+                        _finding(
+                            "PROGRESSION_DELTA_INVALID",
+                            f"progression delta 无效：{exc}",
+                            location=f"state_changes:{change.record_id}:progression.deltas",
+                        )
+                    )
+            for item in change_deltas:
+                if item.kind.value in {"REUSE", "SHOWCASE"} and isinstance(progression, dict):
+                    before_index = progression.get(
+                        "before_index", progression.get("before_progression_index")
+                    )
+                    after_index = progression.get(
+                        "after_index", progression.get("progression_index")
+                    )
+                    if (
+                        before_index is not None
+                        and after_index is not None
+                        and before_index != after_index
+                    ):
+                        findings.append(
+                            _finding(
+                                "PROGRESSION_REUSE_ADVANCES_INDEX",
+                                f"{item.delta_id} 声明为 {item.kind.value}，"
+                                "但 progression index 发生变化。",
+                                location=f"state_changes:{change.record_id}:progression",
+                            )
+                        )
+    findings.extend(_quality_findings(progression_delta_issues(delta_values)))
+
+    for change in context.draft.state_changes:
+        payload = change.payload
+        raw_constraints = payload.get("usage_constraints", payload.get("usage_constraint", []))
+        if isinstance(raw_constraints, dict):
+            raw_constraints = [raw_constraints]
+        if not isinstance(raw_constraints, list):
+            findings.append(
+                _finding(
+                    "USAGE_CONSTRAINT_INVALID",
+                    "usage_constraint(s) 必须是 object 或 object 列表。",
+                    location=f"state_changes:{change.record_id}:usage_constraints",
+                )
+            )
+            continue
+        for index, raw in enumerate(raw_constraints):
+            try:
+                constraint = UsageConstraint.model_validate(raw)
+            except (TypeError, ValueError) as exc:
+                findings.append(
+                    _finding(
+                        "USAGE_CONSTRAINT_INVALID",
+                        f"usage constraint 无效：{exc}",
+                        location=f"state_changes:{change.record_id}:usage_constraints:{index}",
+                    )
+                )
+                continue
+            quantity: float | None = None
+            if constraint.resource_ref:
+                resolution = resolve_projection_alias(
+                    context.projection.resources, constraint.resource_ref
+                )
+                if resolution.canonical_id:
+                    resource = context.projection.resources.get(resolution.canonical_id)
+                    if resource is not None:
+                        quantity = _number(resource.get("quantity"))
+            reset_observed = bool(
+                payload.get("usage_reset")
+                or payload.get("reset_condition_satisfied")
+                or payload.get("reset_event")
+            )
+            findings.extend(
+                _quality_findings(
+                    usage_constraint_issues(
+                        constraint,
+                        resource_quantity=quantity,
+                        reset_observed=reset_observed,
+                        location=f"state_changes:{change.record_id}:usage_constraints",
+                    )
                 )
             )
     return _report("Economy / Power Validator", findings)
@@ -599,6 +1021,7 @@ def _compiled_realized_kernel_trace(
     resource_changes: list[str] = []
     world_expansion_changes: list[str] = []
     evidence: list[RealizedKernelEvidence] = []
+    progression_deltas: list[ProgressionDelta] = list(context.draft.progression_deltas)
     knowledge_by_truth: dict[str, str] = {}
     for change in context.draft.state_changes:
         payload = change.payload
@@ -619,6 +1042,13 @@ def _compiled_realized_kernel_trace(
             raw_stage = progression.get("stage_change")
             if raw_stage:
                 stage_change = str(raw_stage)
+            raw_deltas = progression.get("deltas", [])
+            if isinstance(raw_deltas, list):
+                for item in raw_deltas:
+                    try:
+                        progression_deltas.append(ProgressionDelta.model_validate(item))
+                    except (TypeError, ValueError):
+                        continue
         if change.kind == "resource":
             resource_id = str(
                 payload.get("resource_id") or payload.get("name") or change.record_id
@@ -663,6 +1093,7 @@ def _compiled_realized_kernel_trace(
             resource_change=list(dict.fromkeys(resource_change)),
             ability_unlock=list(dict.fromkeys(ability_unlock)),
             growth_cost=list(dict.fromkeys(growth_cost)),
+            deltas=list({item.delta_id: item for item in progression_deltas}.values()),
         ),
         resource_changes=list(dict.fromkeys(resource_changes)),
         world_expansion_changes=list(dict.fromkeys(world_expansion_changes)),
@@ -960,6 +1391,17 @@ def _validate_realized_kernel_trace(
 def validate_contract(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
     evidence_matches: list[dict[str, Any]] = []
+    if (
+        context.draft.realization_diagnostics.get("code")
+        == "CONTRACT_REALIZATION_UNDERSPECIFIED"
+    ):
+        findings.append(
+            _finding(
+                "CONTRACT_REALIZATION_UNDERSPECIFIED",
+                "当前 Chapter Contract 不足以承载独立章节，应返回 Planning/Contract。",
+                location="realization_diagnostics",
+            )
+        )
     required = {
         "required_irreversible_change",
         "ending_state",
@@ -1451,29 +1893,33 @@ def validate_repetition(context: ValidationContext) -> ValidationReport:
 def validate_style(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
     score: float | None = None
-    try:
-        score = style_fit(
-            context.draft.style_fit_inputs,
-            context.settings.metrics["style_fit"],
-        )
-        if score < 75:
+    if context.draft.evidence_policy == "COMPILED_SOFT":
+        semantic_status = "UNKNOWN"
+    else:
+        try:
+            score = style_fit(
+                context.draft.style_fit_inputs,
+                context.settings.metrics["style_fit"],
+            )
+            if score < 75:
+                findings.append(
+                    _finding(
+                        "STYLE_FIT_LOW",
+                        f"文风契合度仅 {score:.2f}，建议人工复核。",
+                        severity=Severity.WARNING,
+                        location="style_fit_inputs",
+                    )
+                )
+        except (KeyError, TypeError, ValueError) as exc:
             findings.append(
                 _finding(
-                    "STYLE_FIT_LOW",
-                    f"文风契合度仅 {score:.2f}，建议人工复核。",
+                    "STYLE_FIT_INPUT_INVALID",
+                    f"文风契合度输入无效：{exc}",
                     severity=Severity.WARNING,
                     location="style_fit_inputs",
                 )
             )
-    except (KeyError, TypeError, ValueError) as exc:
-        findings.append(
-            _finding(
-                "STYLE_FIT_INPUT_INVALID",
-                f"文风契合度输入无效：{exc}",
-                severity=Severity.WARNING,
-                location="style_fit_inputs",
-            )
-        )
+        semantic_status = "EXPLICIT_INPUT"
     for violation in context.draft.style_boundary_violations:
         findings.append(
             _finding(
@@ -1496,7 +1942,12 @@ def validate_style(context: ValidationContext) -> ValidationReport:
     return _report(
         "Style Validator",
         findings,
-        {"style_fit": score, "realization": realization},
+        {
+            "style_fit": score,
+            "realization": realization,
+            "semantic_review_status": semantic_status,
+            "measurements": context.draft.deterministic_measurements,
+        },
     )
 
 

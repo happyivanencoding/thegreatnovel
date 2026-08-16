@@ -1,5 +1,12 @@
 default_mode: faithful_continuation
-recent_full_chapters: 3
+recent_full_chapters: null
+continuation_quality:
+  serial_experience:
+    history_limit: null
+    horizons:
+      SHORT: 12
+      MID: 60
+      LONG: 240
 
 atlas:
   schema_version: story-atlas-v1

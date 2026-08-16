@@ -15,6 +15,10 @@ from novel_authoring.context.router import (
     RuntimeContextRequest,
     route_runtime_context,
 )
+from novel_authoring.continuation_quality import (
+    STRUCTURAL_EXPERIENCE_FIELDS,
+    structural_overlap,
+)
 from novel_authoring.db.database import Database
 from novel_authoring.edition import edition_workspace, resolve_edition_id
 from novel_authoring.metrics.formulas import (
@@ -37,6 +41,9 @@ from novel_authoring.planning.diagnostics import (
     build_narrative_portfolio_snapshot,
     diagnose_candidate_portfolio,
 )
+from novel_authoring.planning.experience_portfolio import (
+    build_serial_experience_portfolio,
+)
 from novel_authoring.planning.innovation import (
     InnovationControl,
     NarrativePortfolioSnapshot,
@@ -49,6 +56,7 @@ from novel_authoring.planning.models import (
     CandidateProposal,
     ChapterExperienceSignature,
     PlanningReferenceProvenance,
+    ReferenceApplicationStatus,
     ThreadPriority,
 )
 from novel_authoring.planning.reference_strategy import (
@@ -79,6 +87,14 @@ STRUCTURE_FIELDS = (
     "social_feedback",
     "scene_topology",
     "ending_state",
+    "opposition_source",
+    "primary_subject",
+    "choice_type",
+    "cost_type",
+    "payoff_channel",
+    "reader_visible_delta",
+    "progression_delta_type",
+    "ending_action",
 )
 
 
@@ -1056,6 +1072,44 @@ def _derive_candidate_defensive_fields(
     }
 
 
+def _reference_evidence_matches_frozen(
+    evidence: Sequence[str],
+    reference_context: Mapping[str, Any],
+    reference_strategy: Mapping[str, Any],
+) -> bool:
+    """Accept application evidence only when it points into frozen cards."""
+
+    cards = reference_strategy.get("selected_cards")
+    if not isinstance(cards, Sequence) or isinstance(cards, (str, bytes)):
+        cards = reference_context.get("compact_cards")
+    if not isinstance(cards, Sequence) or isinstance(cards, (str, bytes)) or not cards:
+        return False
+    frozen_text = json_dumps(list(cards)).casefold()
+    markers: set[str] = set()
+    for card in cards:
+        if not isinstance(card, Mapping):
+            continue
+        for key in ("card_id", "title", "label", "summary", "description"):
+            value = str(card.get(key) or "").strip().casefold()
+            if value:
+                markers.add(value)
+        solutions = card.get("solutions", [])
+        if isinstance(solutions, Sequence) and not isinstance(solutions, (str, bytes)):
+            for solution in solutions:
+                if not isinstance(solution, Mapping):
+                    continue
+                for key in ("solution_id", "label", "description"):
+                    value = str(solution.get(key) or "").strip().casefold()
+                    if value:
+                        markers.add(value)
+    return all(
+        any(marker in item.casefold() for marker in markers)
+        or item.casefold() in frozen_text
+        for item in evidence
+        if str(item).strip()
+    )
+
+
 def _compile_creative_candidate(
     candidate: Any,
     *,
@@ -1110,6 +1164,65 @@ def _compile_creative_candidate(
         reference_strategy = {}
     if not isinstance(reference_context, dict):
         reference_context = {}
+    application = candidate.reference_application
+    selected_reference = bool(
+        reference_strategy.get("selected_card_ids")
+        or reference_context.get("selected_card_ids")
+        or reference_strategy.get("selected_contrast_solutions")
+        or reference_strategy.get("selected_solutions")
+    )
+    application_summary = str(application.get("summary") or "").strip()
+    applied_dimensions = [
+        str(item).strip()
+        for item in application.get("applied_dimensions", [])
+        if str(item).strip()
+    ] if isinstance(application.get("applied_dimensions"), list) else []
+    application_evidence = [
+        str(item).strip()
+        for item in application.get("evidence", [])
+        if str(item).strip()
+    ] if isinstance(application.get("evidence"), list) else []
+    allowed_application_dimensions = set(STRUCTURAL_EXPERIENCE_FIELDS)
+    valid_application_dimensions = [
+        item for item in applied_dimensions if item in allowed_application_dimensions
+    ]
+    application_evidence_from_snapshot = _reference_evidence_matches_frozen(
+        application_evidence,
+        reference_context,
+        reference_strategy,
+    )
+    recent_signatures = metadata.get("recent_experience_signatures", [])
+    structural_change_verified = not recent_signatures
+    if isinstance(recent_signatures, Sequence) and recent_signatures:
+        structural_change_verified = any(
+            any(
+                str(getattr(candidate, field, "") or "").strip().casefold()
+                != str(signature.get(field) or "").strip().casefold()
+                for field in valid_application_dimensions
+            )
+            for signature in recent_signatures
+            if isinstance(signature, Mapping)
+        )
+    reference_context_status = str(reference_context.get("status") or "").upper()
+    if not selected_reference and reference_context_status == "UNAVAILABLE":
+        reference_status = ReferenceApplicationStatus.UNAVAILABLE
+    elif not selected_reference and reference_context_status == "ZERO_RESULTS":
+        reference_status = ReferenceApplicationStatus.ZERO_RESULTS
+    elif not selected_reference:
+        reference_status = ReferenceApplicationStatus.NOT_OFFERED
+    elif bool(application.get("conflict")):
+        reference_status = ReferenceApplicationStatus.REJECTED_DUE_TO_CONFLICT
+    elif (
+        application_summary
+        and valid_application_dimensions
+        and len(valid_application_dimensions) == len(applied_dimensions)
+        and application_evidence
+        and application_evidence_from_snapshot
+        and structural_change_verified
+    ):
+        reference_status = ReferenceApplicationStatus.APPLIED
+    else:
+        reference_status = ReferenceApplicationStatus.OFFERED_NOT_APPLIED
     payload["reference_provenance"] = PlanningReferenceProvenance(
         reference_strategy_id=(
             str(reference_strategy.get("strategy_id"))
@@ -1150,12 +1263,18 @@ def _compile_creative_candidate(
                 or []
             )
         ],
-        application_summary=str(reference_strategy.get("application_summary") or ""),
+        application_summary=(
+            application_summary
+            or str(reference_strategy.get("application_summary") or "")
+        ),
         match_tier=str(
             reference_strategy.get("match_tier")
             or reference_context.get("match_tier")
             or "EXACT"
         ),
+        application_status=reference_status,
+        applied_dimensions=applied_dimensions,
+        application_evidence=application_evidence,
     ).model_dump(mode="json")
     reveal_payload = dict(payload.get("reveal_impact") or {})
     reveal_payload["kept_hidden"] = []
@@ -1236,18 +1355,27 @@ def _recent_experience_signatures(
     book_id: str,
     edition_id: str,
     *,
-    limit: int = 5,
+    limit: int | None = None,
 ) -> list[dict[str, Any]]:
-    """Read only validated/approved soft signatures for the next plan prompt."""
+    """Read validated/approved signatures using an optional caller policy.
+
+    With no policy the portfolio is not truncated by a hidden chapter window;
+    a book/edition caller may provide a bounded history when its contract or
+    configuration explicitly requires one.
+    """
 
     with database.connect() as connection:
-        rows = connection.execute(
+        query = (
             "SELECT contract_id, output_json FROM drafts "
             "WHERE book_id=? AND edition_id=? "
             "AND status IN ('VALIDATED','AUTHOR_APPROVED','CANON_COMMITTED') "
-            "ORDER BY created_at DESC LIMIT ?",
-            (book_id, edition_id, max(1, min(limit * 3, 30))),
-        ).fetchall()
+            "ORDER BY created_at DESC"
+        )
+        params: list[object] = [book_id, edition_id]
+        if limit is not None:
+            query += " LIMIT ?"
+            params.append(max(1, int(limit)))
+        rows = connection.execute(query, params).fetchall()
     signatures: list[dict[str, Any]] = []
     seen_contracts: set[str] = set()
     for row in rows:
@@ -1263,25 +1391,26 @@ def _recent_experience_signatures(
         if contract_id:
             seen_contracts.add(contract_id)
         signatures.append(parsed.model_dump(mode="json"))
-        if len(signatures) >= max(1, min(limit, 10)):
+        if limit is not None and len(signatures) >= max(1, int(limit)):
             break
     return signatures
 
 
-_EXPERIENCE_SIGNATURE_FIELDS = (
-    "event_source",
-    "solution_method",
-    "protagonist_strategy",
-    "risk_form",
-    "emotional_outcome",
-    "social_feedback",
-    "scene_topology",
-    "ending_mode",
-    "outcome_magnitude",
-    "action_space_delta",
-    "knowledge_delta",
-    "relationship_delta",
-    "world_scale_delta",
+_EXPERIENCE_SIGNATURE_FIELDS = tuple(
+    dict.fromkeys(
+        [
+            *STRUCTURAL_EXPERIENCE_FIELDS,
+            "protagonist_strategy",
+            "risk_form",
+            "emotional_outcome",
+            "social_feedback",
+            "outcome_magnitude",
+            "action_space_delta",
+            "knowledge_delta",
+            "relationship_delta",
+            "world_scale_delta",
+        ]
+    )
 )
 
 
@@ -1294,6 +1423,9 @@ def _candidate_experience_overlap(
     best = 0
     candidate_values = candidate.model_dump(mode="json")
     for recent in recent_signatures:
+        structural = structural_overlap(candidate_values, recent)
+        if structural["repeated"]:
+            return 8
         overlap = sum(
             bool(candidate_values.get(field))
             and str(candidate_values.get(field)).strip()
@@ -1301,7 +1433,7 @@ def _candidate_experience_overlap(
             for field in _EXPERIENCE_SIGNATURE_FIELDS
         )
         best = max(best, overlap)
-    return min(8, max(0, best - 1) * 2)
+    return min(6, max(0, best - 2))
 
 
 def _recent_reference_memory(
@@ -1309,15 +1441,19 @@ def _recent_reference_memory(
     book_id: str,
     edition_id: str,
     *,
-    limit: int = 10,
+    limit: int | None = None,
 ) -> tuple[list[str], list[str]]:
     with database.connect() as connection:
-        rows = connection.execute(
+        query = (
             "SELECT output_json FROM drafts WHERE book_id=? AND edition_id=? "
             "AND status IN ('VALIDATED','AUTHOR_APPROVED','CANON_COMMITTED') "
-            "ORDER BY created_at DESC LIMIT ?",
-            (book_id, edition_id, max(1, min(limit, 10))),
-        ).fetchall()
+            "ORDER BY created_at DESC"
+        )
+        params: list[object] = [book_id, edition_id]
+        if limit is not None:
+            query += " LIMIT ?"
+            params.append(max(1, int(limit)))
+        rows = connection.execute(query, params).fetchall()
     ids: list[str] = []
     solution_ids: list[str] = []
     for row in rows:
@@ -1665,8 +1801,38 @@ def prepare_candidate_task(
     recent_reference_card_ids, recent_reference_solution_ids = _recent_reference_memory(
         database, book_id, selected_edition
     )
+    serial_quality = settings.continuation_quality.get("serial_experience", {})
+    serial_quality = serial_quality if isinstance(serial_quality, Mapping) else {}
+    horizon_policy = serial_quality.get("horizons", {})
+    horizon_policy = horizon_policy if isinstance(horizon_policy, Mapping) else {}
+    raw_history_limit = serial_quality.get("history_limit")
+    history_limit = (
+        None
+        if raw_history_limit in (None, "")
+        else max(1, int(str(raw_history_limit)))
+    )
     recent_experience_signatures = _recent_experience_signatures(
-        database, book_id, selected_edition
+        database, book_id, selected_edition, limit=history_limit
+    )
+    reader_contract = {}
+    if kernel_context is not None:
+        effective_contracts = kernel_context.effective_contracts.model_dump(mode="json")
+        reader_contract = _contract_payload(effective_contracts.get("reader_experience"))
+    reader_promise_targets = _reference_values(
+        reader_contract,
+        "experience_priorities",
+        "reader_experiences",
+        "promised_experiences",
+        "reader_promises",
+        "primary_experience",
+    )
+    serial_experience_portfolio = build_serial_experience_portfolio(
+        recent_experience_signatures,
+        current_chapter=int(
+            boundary_payload.get("current_position", {}).get("last_canon_chapter", 0)
+        ),
+        horizon_policy={str(key): value for key, value in horizon_policy.items()},
+        reader_promise_targets=reader_promise_targets,
     )
     reference_planning_context = _continuation_reference_planning_context(
         book_id=book_id,
@@ -1741,8 +1907,9 @@ def prepare_candidate_task(
             "",
             "## Recent Chapter Experience Signatures（soft guidance）",
             "",
-            "下面是最近 3—5 个已校验章节的体验签名。重复解决方式、风险形态或结尾模式只"
-            "产生软提醒，不构成硬失败；必须说明本案为何复用或如何变化。",
+            "下面是按当前 Serial Experience policy 冻结的体验签名历史。重复解决方式、"
+            "风险形态、结尾动作或回报通道只产生诊断，不构成普遍硬失败；必须说明本案为何"
+            "复用或如何变化。",
             "```json",
             json_dumps(recent_experience_signatures, indent=2),
             "```",
@@ -1791,6 +1958,13 @@ def prepare_candidate_task(
             "",
             "不要填写 scheduler_alignment、评分、硬门或内部 provenance；Scheduler 是冻结输入，"
             "Python 会根据候选创意与 kernel_context.json 计算对齐和偏离诊断。",
+            "若实际采用 Reference Corpus 的结构机制，填写 reference_application 的 summary、"
+            "applied_dimensions 和 evidence；只有明确写出应用证据才会标为 APPLIED，"
+            "只看到 frozen card 只能保持 OFFERED/OFFERED_NOT_APPLIED。",
+            "请在候选中明确 opposition_source、primary_subject、choice_type、cost_type、"
+            "payoff_channel、reader_visible_delta、progression_delta_type 与 ending_action；"
+            "这些用于结构比较，"
+            "不绑定任何特定题材或统一战力公式。",
             "",
             "## 三条优先线程",
             "",
@@ -1830,6 +2004,23 @@ def prepare_candidate_task(
                         "innovation_diagnostics", {}
                     ),
                     "narrative_portfolio": narrative_portfolio.model_dump(mode="json"),
+                    "serial_experience_portfolio": serial_experience_portfolio.model_dump(
+                        mode="json"
+                    ),
+                },
+                indent=2,
+            ),
+            "```",
+            "",
+            "## Reader Experience underserved diagnostics（soft guidance）",
+            "",
+            "以下只提示当前冻结 Reader Experience 中尚未在历史签名出现的承诺；不构成统一题材规则，"
+            "也不替代作者对本章是否兑现的判断。",
+            "```json",
+            json_dumps(
+                {
+                    "targets": serial_experience_portfolio.reader_promise_targets,
+                    "underserved": serial_experience_portfolio.underserved_reader_promises,
                 },
                 indent=2,
             ),
@@ -1865,6 +2056,9 @@ def prepare_candidate_task(
         "reference_planning_context": reference_planning_context,
         "reference_strategy": strategy_payload,
         "recent_experience_signatures": recent_experience_signatures,
+        "serial_experience_portfolio": serial_experience_portfolio.model_dump(
+            mode="json"
+        ),
         "recent_reference_card_ids": recent_reference_card_ids,
         "recent_reference_solution_ids": recent_reference_solution_ids,
         "include_runtime_state": include_runtime_state,
@@ -2056,6 +2250,33 @@ def prepare_handoff_candidate_task(
     recent_experience_signatures = _recent_experience_signatures(
         database, book_id, edition_id
     )
+    handoff_serial_policy = handoff_task.get("serial_experience_policy", {})
+    if not isinstance(handoff_serial_policy, Mapping):
+        handoff_serial_policy = {}
+    handoff_horizons = handoff_serial_policy.get("horizons", {})
+    if not isinstance(handoff_horizons, Mapping):
+        handoff_horizons = {}
+    handoff_reader_contract = _contract_payload(
+        kernel_context.effective_contracts.model_dump(mode="json").get(
+            "reader_experience", {}
+        )
+    )
+    handoff_reader_targets = _reference_values(
+        handoff_reader_contract,
+        "experience_priorities",
+        "reader_experiences",
+        "promised_experiences",
+        "reader_promises",
+        "primary_experience",
+    )
+    serial_experience_portfolio = build_serial_experience_portfolio(
+        recent_experience_signatures,
+        current_chapter=int(
+            boundary_payload.get("current_position", {}).get("last_canon_chapter", 0)
+        ),
+        horizon_policy={str(key): value for key, value in handoff_horizons.items()},
+        reader_promise_targets=handoff_reader_targets,
+    )
     reference_planning_context = _continuation_reference_planning_context(
         book_id=book_id,
         edition_id=edition_id,
@@ -2119,6 +2340,9 @@ def prepare_handoff_candidate_task(
         "reference_planning_context": reference_planning_context,
         "reference_strategy": strategy_payload,
         "recent_experience_signatures": recent_experience_signatures,
+        "serial_experience_portfolio": serial_experience_portfolio.model_dump(
+            mode="json"
+        ),
         "recent_reference_card_ids": recent_reference_card_ids,
         "recent_reference_solution_ids": recent_reference_solution_ids,
         "reference_context_snapshot": str(input_dir / "reference_context_snapshot.json"),
@@ -2193,6 +2417,20 @@ def prepare_handoff_candidate_task(
             "重复体验模式只产生软提醒，不构成整批候选硬失败；请在创意摘要中保留变化或复用理由。",
             "```json",
             json_dumps(recent_experience_signatures, indent=2),
+            "```",
+            "",
+            "## Reader Experience underserved diagnostics（soft guidance）",
+            "",
+            "以下只提示当前冻结 Reader Experience 中尚未在历史签名出现的承诺；不构成统一题材规则，"
+            "也不替代作者对本章是否兑现的判断。",
+            "```json",
+            json_dumps(
+                {
+                    "targets": serial_experience_portfolio.reader_promise_targets,
+                    "underserved": serial_experience_portfolio.underserved_reader_promises,
+                },
+                indent=2,
+            ),
             "```",
         ]
     )
