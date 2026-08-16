@@ -1,0 +1,64 @@
+{
+  "schema_version": "continuation-expansion-experiment-report-v1",
+  "experiment_id": "v3_10_chapter_continuation_expansion",
+  "generated_at": "2026-08-16",
+  "book_id": "original-e56a54687506",
+  "library_root": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816",
+  "browser_smoke_url": "http://127.0.0.1:8065/books/original-e56a54687506/editions/base/workbench",
+  "workflow_result": {
+    "status": "COMPLETED",
+    "mode": "sequential_per_chapter",
+    "canon_chapters": 10,
+    "canon_commits": 10,
+    "canonical_drafts": 10,
+    "noncanonical_drafts": 2,
+    "book_state": "WRITING_READY",
+    "handoffs": {
+      "COMPLETED": 23,
+      "STALE": 5,
+      "FAILED": 1
+    },
+    "formal_batch_not_claimed": true,
+    "formal_batch_reason": "isolated book had no ACTIVE Story Atlas with FAR horizon"
+  },
+  "corpus": {
+    "status": "ENABLED",
+    "query_ready": true,
+    "bundle_seal_valid": true,
+    "card_count": 367,
+    "machine_bundle_hash": "3120e088142f5d75ad3f2d1d18eca36f5b89251369228b4f73c7f63e796ff9f9",
+    "warnings": [],
+    "knowledge_gaps": [],
+    "query_results": [
+      {"purpose": "PLANNING", "match_tier": "EXACT", "card_count": 1},
+      {"purpose": "PLANNING", "match_tier": "FALLBACK", "card_count": 5},
+      {"purpose": "PROSE", "match_tier": "EXACT", "card_count": 3}
+    ],
+    "usage": "REFERENCE_ONLY"
+  },
+  "reader_audits": {
+    "auditor_a": "PARTIAL",
+    "auditor_b": "READABLE",
+    "aggregate": "PARTIAL",
+    "continue_chapter_11": true
+  },
+  "source_boundary": {
+    "production_book_written_by_experiment": false,
+    "tracked_book_diff_at_close": false,
+    "preexisting_untracked_book_inputs_preserved": true
+  },
+  "code_commits": [
+    "1fcb4bc",
+    "dd0199b",
+    "e78e504"
+  ],
+  "verification": {
+    "pytest_passed": 538,
+    "pytest_failed": 1,
+    "pytest_failure": "preexisting deleted root AGENTS.md required by test_library_hardening",
+    "mypy": "passed",
+    "compileall": "passed",
+    "ruff_full_repo": "failed_on_188_existing_findings"
+  },
+  "quality_status": "PARTIAL"
+}
