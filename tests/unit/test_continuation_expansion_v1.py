@@ -76,6 +76,39 @@ def test_creative_draft_compiles_python_owned_evidence_and_soft_audits() -> None
     assert compiled.realized_kernel_trace is not None
 
 
+def test_compiler_locates_a_paraphrased_state_change_in_the_realized_paragraph() -> None:
+    creative = DraftCreativeOutput(
+        task_id="draft-task-1",
+        contract_id="contract-1",
+        chapter_title="互信",
+        prose_markdown=(
+            "他把机械门的加固重新检查一遍，门板终于不再晃动。\n\n"
+            "林晚把后背交给主角，第一次没有回头确认。"
+        ),
+        state_changes=[
+            DraftCreativeStateChange(
+                kind="fact",
+                record_id="fact-door",
+                payload={"statement": "机械门已完成加固"},
+            ),
+            DraftCreativeStateChange(
+                kind="relationship",
+                record_id="relationship-trust",
+                payload={"statement": "林晚与主角建立互信"},
+            ),
+        ],
+    )
+
+    compiled = compile_draft_output(creative, _contract())
+
+    assert compiled.state_changes[0].evidence_quotes == [
+        "他把机械门的加固重新检查一遍，门板终于不再晃动。"
+    ]
+    assert compiled.state_changes[1].evidence_quotes == [
+        "林晚把后背交给主角，第一次没有回头确认。"
+    ]
+
+
 def test_missing_state_change_is_still_a_hard_input_failure() -> None:
     with pytest.raises(ValidationError):
         DraftCreativeOutput(
@@ -143,6 +176,68 @@ def test_planning_reference_strategy_deprioritizes_recent_solutions() -> None:
 
     assert selected.selected_card_ids[0] == "mechanism-new"
     assert selected.reuse_reason is not None
+
+
+def test_planning_reference_selector_chooses_one_relevant_contrast_solution() -> None:
+    selected = select_planning_reference_strategy(
+        {
+            "snapshot_id": "snapshot-semantic",
+            "snapshot_hash": "hash-semantic",
+            "match_tier": "EXACT",
+            "compact_cards": [
+                {
+                    "card_id": "A",
+                    "card_type": "mechanism-card",
+                    "metadata_match_fields": ["reader_experiences"],
+                    "reader_experiences": ["BREAKTHROUGH"],
+                    "creative_problem": "突破扩大行动空间",
+                    "mechanism": "让新能力改变原本不能完成的动作。",
+                },
+                {
+                    "card_id": "B",
+                    "card_type": "contrast-card",
+                    "metadata_match_fields": ["narrative_drives"],
+                    "narrative_drives": ["POWER_PROGRESSION"],
+                    "shared_creative_problem": "突破扩大行动空间",
+                    "solutions": [
+                        {
+                            "solution_id": "B1",
+                            "label": "只展示数值",
+                            "description": "只改变数字，不改变行动。",
+                        },
+                        {
+                            "solution_id": "B2",
+                            "label": "扩大行动空间",
+                            "description": "让主角用突破完成此前不能完成的动作。",
+                        },
+                        {
+                            "solution_id": "B3",
+                            "label": "立刻兑现余波",
+                            "description": "只处理突破后的社会反馈。",
+                        },
+                    ],
+                },
+                {
+                    "card_id": "C",
+                    "card_type": "corpus-synthesis",
+                    "metadata_match_fields": [],
+                    "title": "无关样本",
+                    "shared_creative_problem": "无关问题",
+                },
+            ],
+        },
+        creative_problem="下一章要让突破扩大行动空间",
+        reader_experiences=["BREAKTHROUGH"],
+        narrative_drives=["POWER_PROGRESSION"],
+        recent_signatures=[{"scene_topology": "DIALOGUE"}],
+    )
+
+    assert "A" in selected.selected_card_ids
+    assert "B" in selected.selected_card_ids
+    assert selected.selected_contrast_solutions == ["B2"]
+    assert "B1" not in selected.selected_contrast_solutions
+    assert "B3" not in selected.selected_contrast_solutions
+    assert "A" in selected.application_summary and "B" in selected.application_summary
 
 
 def test_candidate_creative_schema_does_not_expose_internal_scoring_fields() -> None:

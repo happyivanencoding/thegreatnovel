@@ -487,6 +487,7 @@ def _quotes_in_prose(
     *,
     contract_requirement: bool = False,
     soft_missing: bool = False,
+    actual_state_change: bool = False,
     match_records: list[dict[str, Any]] | None = None,
 ) -> None:
     if not quotes:
@@ -494,14 +495,26 @@ def _quotes_in_prose(
             match_records.append({"key": key, "quote": "", "status": "NOT_FOUND"})
         findings.append(
             _finding(
-                "CONTRACT_EVIDENCE_EMPTY",
-                f"合同证据 {key} 为空。",
-                severity=(
-                    Severity.WARNING
-                    if contract_requirement or soft_missing
-                    else Severity.ERROR
+                (
+                    "STATE_CHANGE_NOT_OBSERVED_IN_PROSE"
+                    if actual_state_change
+                    else "CONTRACT_EVIDENCE_EMPTY"
                 ),
-                location=f"contract_evidence:{key}",
+                (
+                    f"StateChange {key} 没有可由正文观察到的证据。"
+                    if actual_state_change
+                    else f"合同证据 {key} 为空。"
+                ),
+                severity=(
+                    Severity.ERROR
+                    if actual_state_change
+                    else (
+                        Severity.WARNING
+                        if contract_requirement or soft_missing
+                        else Severity.ERROR
+                    )
+                ),
+                location=(key if actual_state_change else f"contract_evidence:{key}"),
             )
         )
         return
@@ -514,15 +527,23 @@ def _quotes_in_prose(
         if status == "NORMALIZED" and not contract_requirement:
             continue
         severity = (
-            Severity.WARNING
-            if contract_requirement or soft_missing or status != "NOT_FOUND"
-            else Severity.ERROR
+            Severity.ERROR
+            if actual_state_change and status == "NOT_FOUND"
+            else (
+                Severity.WARNING
+                if contract_requirement or soft_missing or status != "NOT_FOUND"
+                else Severity.ERROR
+            )
         )
-        code = {
+        code = (
+            "STATE_CHANGE_NOT_OBSERVED_IN_PROSE"
+            if actual_state_change and status == "NOT_FOUND"
+            else {
             "NORMALIZED": "EVIDENCE_NORMALIZED",
             "AMBIGUOUS": "EVIDENCE_AMBIGUOUS",
             "NOT_FOUND": "EVIDENCE_NOT_IN_PROSE",
-        }[status]
+            }[status]
+        )
         message = (
             f"证据短句匹配状态为 {status}：{quote}"
             if status != "NOT_FOUND"
@@ -972,7 +993,7 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
             change.evidence_quotes,
             f"state_changes:{change.record_id}",
             findings,
-            soft_missing=context.draft.evidence_policy == "COMPILED_SOFT",
+            actual_state_change=True,
             match_records=evidence_matches,
         )
     kernel_findings, kernel_comparison = _validate_realized_kernel_trace(context)
@@ -1393,6 +1414,19 @@ def validate_repetition(context: ValidationContext) -> ValidationReport:
                 _finding(
                     "FORBIDDEN_REPETITION",
                     f"命中合同禁止的近期结构：{forbidden}",
+                    location="structure_tags",
+                )
+            )
+    for recent in context.contract.recent_avoid_repetitions:
+        normalized = recent.strip().casefold()
+        if normalized in normalized_tags or any(
+            normalized and normalized in tag for tag in normalized_tags
+        ):
+            findings.append(
+                _finding(
+                    "RECENT_STRUCTURE_AVOIDANCE",
+                    f"命中近期结构软避让提示：{recent}",
+                    severity=Severity.WARNING,
                     location="structure_tags",
                 )
             )

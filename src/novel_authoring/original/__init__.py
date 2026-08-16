@@ -13,6 +13,7 @@ from novel_authoring.original.models import (
     StoryFoundationCandidate,
     StoryFoundationProposal,
     StoryRoute,
+    parse_foundation_development_proposal,
 )
 
 __all__ = [
@@ -30,4 +31,5 @@ __all__ = [
     "StoryFoundationCandidate",
     "StoryFoundationProposal",
     "StoryRoute",
+    "parse_foundation_development_proposal",
 ]

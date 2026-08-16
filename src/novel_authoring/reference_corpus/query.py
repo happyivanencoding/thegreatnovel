@@ -586,11 +586,10 @@ def query_reference_corpus(
             metadata[field] = []
             relaxed_fields.append(field)
             effective_query = _query_echo_with_metadata(query, metadata)
-            # A natural-language creative problem is human context, not a
-            # machine retrieval key.  Even when one structured dimension was
-            # supplied, never relax it into a broad corpus match.
-            if has_natural_language_problem:
-                break
+            # A natural-language creative problem remains human context, not
+            # a machine retrieval key.  Structured dimensions can still be
+            # relaxed one at a time and each tier must actually retrieve before
+            # the next dimension is cleared.
             cards = retrieve_cards(metadata)
             if cards:
                 return _response(

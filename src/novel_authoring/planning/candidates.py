@@ -57,7 +57,10 @@ from novel_authoring.planning.reference_strategy import (
 from novel_authoring.planning.rewards import calculate_candidate_innovation_reward
 from novel_authoring.progression.context import KernelPlanningContext
 from novel_authoring.progression.evidence import KernelEvidenceCompiler
-from novel_authoring.reference_corpus.context import freeze_reference_context
+from novel_authoring.reference_corpus.context import (
+    freeze_reference_context,
+    load_reference_context_snapshot,
+)
 from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryRequest,
     query_reference_corpus,
@@ -571,6 +574,7 @@ def _continuation_reference_planning_context(
     story_state: Mapping[str, Any] | None = None,
     recent_card_ids: Sequence[str] = (),
     recent_solution_ids: Sequence[str] = (),
+    recent_signatures: Sequence[Mapping[str, Any]] = (),
     output_path: Path,
 ) -> dict[str, Any]:
     contracts = (
@@ -643,6 +647,12 @@ def _continuation_reference_planning_context(
         context,
         recent_card_ids=recent_card_ids,
         recent_solution_ids=recent_solution_ids,
+        creative_problem=query.creative_problem,
+        reader_experiences=query.reader_experiences,
+        narrative_drives=query.narrative_drives,
+        payoff_channels=query.payoff_channels,
+        scene_functions=query.scene_functions,
+        recent_signatures=recent_signatures,
     )
     strategy_payload = strategy.model_dump(mode="json")
     strategy_path = output_path.with_name("reference_strategy.json")
@@ -653,6 +663,39 @@ def _continuation_reference_planning_context(
     context["reference_strategy"] = strategy_payload
     context["reference_strategy_path"] = str(strategy_path)
     return context
+
+
+def _load_frozen_reference_inputs(metadata: dict[str, Any]) -> None:
+    """Use the persisted snapshot/strategy instead of a mutable task copy."""
+
+    planning_context = metadata.get("reference_planning_context")
+    if not isinstance(planning_context, Mapping):
+        return
+    snapshot_path = Path(str(metadata.get("reference_context_snapshot") or ""))
+    if snapshot_path.is_file():
+        snapshot = load_reference_context_snapshot(snapshot_path)
+        expected_snapshot_hash = str(planning_context.get("snapshot_hash") or "")
+        if expected_snapshot_hash and snapshot.snapshot_hash != expected_snapshot_hash:
+            raise PlanningError("冻结 Reference Context Snapshot 与 task.json 不一致")
+    strategy_path = Path(
+        str(
+            planning_context.get("reference_strategy_path")
+            or metadata.get("reference_strategy_path")
+            or ""
+        )
+    )
+    if not strategy_path.is_file():
+        return
+    try:
+        frozen_strategy = json.loads(strategy_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise PlanningError("冻结 reference_strategy.json 无法读取") from exc
+    if not isinstance(frozen_strategy, dict):
+        raise PlanningError("冻结 reference_strategy.json 必须是 object")
+    embedded = metadata.get("reference_strategy")
+    if isinstance(embedded, Mapping) and dict(embedded) != frozen_strategy:
+        raise PlanningError("冻结 reference_strategy.json 与 task.json 不一致")
+    metadata["reference_strategy"] = frozen_strategy
 
 
 def _validate_author_control_trace(
@@ -983,13 +1026,20 @@ def _derive_candidate_defensive_fields(
             "UNAVAILABLE",
         }:
             knowledge_constraints.append(f"{character_id}: {json_dumps(dict(value))}")
-    forbidden_repetitions = []
+    forbidden_repetitions: list[str] = []
+    recent_avoid_repetitions: list[str] = []
     for item in boundary.get("recent_structures", []):
         if not isinstance(item, Mapping):
             continue
         signature = item.get("signature") or item.get("pattern") or item.get("tag")
         if signature:
-            forbidden_repetitions.append(str(signature))
+            recent_avoid_repetitions.append(str(signature))
+    forbidden_repetitions.extend(
+        str(item["content"])
+        for item in directives
+        if str(item.get("directive_type") or item.get("type") or "").casefold()
+        in {"forbidden_repetition", "repetition_forbidden", "must_not_repeat"}
+    )
     style_constraints: dict[str, str] = {}
     profiles = boundary.get("style_profiles", [])
     if isinstance(profiles, list) and profiles and isinstance(profiles[-1], Mapping):
@@ -1001,6 +1051,7 @@ def _derive_candidate_defensive_fields(
         "canon_constraints": list(dict.fromkeys(canon_constraints)),
         "knowledge_constraints": list(dict.fromkeys(knowledge_constraints)),
         "forbidden_repetitions": list(dict.fromkeys(forbidden_repetitions)),
+        "recent_avoid_repetitions": list(dict.fromkeys(recent_avoid_repetitions)),
         "style_constraints": style_constraints,
     }
 
@@ -1191,22 +1242,66 @@ def _recent_experience_signatures(
 
     with database.connect() as connection:
         rows = connection.execute(
-            "SELECT output_json FROM drafts "
+            "SELECT contract_id, output_json FROM drafts "
             "WHERE book_id=? AND edition_id=? "
             "AND status IN ('VALIDATED','AUTHOR_APPROVED','CANON_COMMITTED') "
             "ORDER BY created_at DESC LIMIT ?",
-            (book_id, edition_id, max(1, min(limit, 10))),
+            (book_id, edition_id, max(1, min(limit * 3, 30))),
         ).fetchall()
     signatures: list[dict[str, Any]] = []
+    seen_contracts: set[str] = set()
     for row in rows:
+        contract_id = str(row["contract_id"] or "")
+        if contract_id and contract_id in seen_contracts:
+            continue
         try:
             payload = json.loads(str(row["output_json"] or "{}"))
             signature = payload.get("chapter_experience_signature")
             parsed = ChapterExperienceSignature.model_validate(signature)
         except (TypeError, ValueError, json.JSONDecodeError, ValidationError):
             continue
+        if contract_id:
+            seen_contracts.add(contract_id)
         signatures.append(parsed.model_dump(mode="json"))
+        if len(signatures) >= max(1, min(limit, 10)):
+            break
     return signatures
+
+
+_EXPERIENCE_SIGNATURE_FIELDS = (
+    "event_source",
+    "solution_method",
+    "protagonist_strategy",
+    "risk_form",
+    "emotional_outcome",
+    "social_feedback",
+    "scene_topology",
+    "ending_mode",
+    "outcome_magnitude",
+    "action_space_delta",
+    "knowledge_delta",
+    "relationship_delta",
+    "world_scale_delta",
+)
+
+
+def _candidate_experience_overlap(
+    candidate: CandidateProposal,
+    recent_signatures: Sequence[Mapping[str, Any]],
+) -> int:
+    """Return a small soft repetition penalty in score points."""
+
+    best = 0
+    candidate_values = candidate.model_dump(mode="json")
+    for recent in recent_signatures:
+        overlap = sum(
+            bool(candidate_values.get(field))
+            and str(candidate_values.get(field)).strip()
+            == str(recent.get(field) or "").strip()
+            for field in _EXPERIENCE_SIGNATURE_FIELDS
+        )
+        best = max(best, overlap)
+    return min(8, max(0, best - 1) * 2)
 
 
 def _recent_reference_memory(
@@ -1570,6 +1665,9 @@ def prepare_candidate_task(
     recent_reference_card_ids, recent_reference_solution_ids = _recent_reference_memory(
         database, book_id, selected_edition
     )
+    recent_experience_signatures = _recent_experience_signatures(
+        database, book_id, selected_edition
+    )
     reference_planning_context = _continuation_reference_planning_context(
         book_id=book_id,
         edition_id=selected_edition,
@@ -1580,10 +1678,8 @@ def prepare_candidate_task(
         story_state=boundary_payload,
         recent_card_ids=recent_reference_card_ids,
         recent_solution_ids=recent_reference_solution_ids,
+        recent_signatures=recent_experience_signatures,
         output_path=task_dir / "reference_context_snapshot.json",
-    )
-    recent_experience_signatures = _recent_experience_signatures(
-        database, book_id, selected_edition
     )
     reference_prompt = {
         key: reference_planning_context[key]
@@ -1957,6 +2053,9 @@ def prepare_handoff_candidate_task(
     recent_reference_card_ids, recent_reference_solution_ids = _recent_reference_memory(
         database, book_id, edition_id
     )
+    recent_experience_signatures = _recent_experience_signatures(
+        database, book_id, edition_id
+    )
     reference_planning_context = _continuation_reference_planning_context(
         book_id=book_id,
         edition_id=edition_id,
@@ -1967,10 +2066,8 @@ def prepare_handoff_candidate_task(
         story_state=world_state,
         recent_card_ids=recent_reference_card_ids,
         recent_solution_ids=recent_reference_solution_ids,
+        recent_signatures=recent_experience_signatures,
         output_path=input_dir / "reference_context_snapshot.json",
-    )
-    recent_experience_signatures = _recent_experience_signatures(
-        database, book_id, edition_id
     )
     reference_prompt = {
         key: reference_planning_context[key]
@@ -2159,6 +2256,7 @@ def import_candidate_output(
     if not task_path.exists():
         raise PlanningError(f"候选任务不存在：{task_id}")
     metadata = json.loads(task_path.read_text(encoding="utf-8"))
+    _load_frozen_reference_inputs(metadata)
     selected_edition = str(edition_id or metadata.get("edition_id", "base"))
     workspace = edition_workspace(database, book_id, selected_edition)
     operation = find_operation(database, book_id, selected_edition, task_id)
@@ -2227,6 +2325,9 @@ def import_candidate_output(
         json.loads(Path(str(boundary_path)).read_text(encoding="utf-8"))
         if boundary_path and Path(str(boundary_path)).is_file()
         else {}
+    )
+    recent_experience_signatures = _recent_experience_signatures(
+        database, book_id, selected_edition
     )
     aggregate_id = str(metadata.get("aggregate_id") or "")
     frozen_author_control: dict[str, Any] = {}
@@ -2530,6 +2631,18 @@ def import_candidate_output(
             eligible=gate.passed,
             ineligibility_reasons=gate.hard_failures,
         )
+        experience_repetition_penalty = (
+            _candidate_experience_overlap(candidate, recent_experience_signatures)
+            if gate.passed
+            else 0
+        )
+        if experience_repetition_penalty:
+            score_warnings.append(
+                "近期已实现体验签名相似；仅施加软避让扣分，不构成硬门。"
+            )
+        final_selection_score = (
+            reward.final_selection_score - experience_repetition_penalty
+        )
         evaluated.append(
             {
                 "candidate": candidate,
@@ -2537,7 +2650,8 @@ def import_candidate_output(
                 "gate": gate,
                 "score": base_score,
                 "base_score": base_score,
-                "final_selection_score": reward.final_selection_score,
+                "final_selection_score": final_selection_score,
+                "experience_repetition_penalty": experience_repetition_penalty,
                 "reward": reward,
                 "inputs": inputs,
                 "score_evidence": score_evidence,
@@ -2616,7 +2730,10 @@ def import_candidate_output(
             score_json = {
                 "score": item["score"],
                 "base_candidate_score": item["base_score"],
-                "final_selection_score": item["reward"].final_selection_score,
+                "final_selection_score": item["final_selection_score"],
+                "experience_repetition_penalty": item[
+                    "experience_repetition_penalty"
+                ],
                 "innovation_reward_breakdown": item["reward"].model_dump(mode="json"),
                 "inputs": item["inputs"],
                 "evidence": item["score_evidence"],
@@ -2677,7 +2794,10 @@ def import_candidate_output(
                 "title": item["candidate"].title,
                 "score": item["score"],
                 "base_score": item["base_score"],
-                "final_selection_score": item["reward"].final_selection_score,
+                "final_selection_score": item["final_selection_score"],
+                "experience_repetition_penalty": item[
+                    "experience_repetition_penalty"
+                ],
                 "innovation_reward_breakdown": item["reward"].model_dump(mode="json"),
                 "passed": item["gate"].passed,
                 "selection_status": "SELECTED"

@@ -484,6 +484,7 @@ class CandidateProposal(BaseModel):
     canon_constraints: list[str] = Field(default_factory=list)
     knowledge_constraints: list[str] = Field(default_factory=list)
     forbidden_repetitions: list[str] = Field(default_factory=list)
+    recent_avoid_repetitions: list[str] = Field(default_factory=list)
     style_constraints: dict[str, str] = Field(default_factory=dict)
     commit_updates: list[str] = Field(min_length=1)
     pressure_before: float = Field(ge=0, le=100)
@@ -611,6 +612,7 @@ class ChapterContract(BaseModel):
     knowledge_constraints: list[str]
     must_not_resolve: list[str]
     forbidden_repetitions: list[str]
+    recent_avoid_repetitions: list[str] = Field(default_factory=list)
     style_constraints: dict[str, str]
     ending_state: str
     commit_updates: list[str] = Field(min_length=1)

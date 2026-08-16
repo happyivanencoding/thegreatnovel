@@ -87,6 +87,112 @@ def _string_leaves(value: object) -> Iterable[str]:
             yield from _string_leaves(nested)
 
 
+_NON_EVIDENCE_PAYLOAD_KEYS = frozenset(
+    {
+        "id",
+        "ids",
+        "record_id",
+        "fact_id",
+        "resource_id",
+        "character_id",
+        "thread_id",
+        "source",
+        "source_id",
+        "source_ids",
+        "causal_source",
+        "causal_sources",
+        "kind",
+        "status",
+        "type",
+    }
+)
+
+
+def _meaningful_payload_strings(value: object, *, key: str = "") -> Iterable[str]:
+    """Yield human-observable payload text, excluding machine locators."""
+
+    normalized_key = key.casefold().replace("-", "_")
+    if isinstance(value, str):
+        candidate = value.strip()
+        if (
+            len(candidate) >= 2
+            and normalized_key not in _NON_EVIDENCE_PAYLOAD_KEYS
+            and not normalized_key.endswith("_id")
+            and not (
+                re.fullmatch(r"[A-Za-z0-9._:-]+", candidate)
+                and (
+                    candidate.isdigit()
+                    or any(marker in candidate for marker in (".", ":", "_", "-"))
+                )
+            )
+        ):
+            yield candidate
+        return
+    if isinstance(value, Mapping):
+        for nested_key, nested in value.items():
+            yield from _meaningful_payload_strings(
+                nested, key=str(nested_key)
+            )
+        return
+    if isinstance(value, Sequence) and not isinstance(value, (bytes, bytearray)):
+        for nested in value:
+            yield from _meaningful_payload_strings(nested, key=key)
+
+
+def _semantic_tokens(value: str) -> set[str]:
+    """Build small deterministic concept tokens for paragraph location."""
+
+    tokens: set[str] = set()
+    for run in re.findall(r"[\u4e00-\u9fff]+|[A-Za-z0-9_]+", normalize_evidence(value)):
+        if re.fullmatch(r"[\u4e00-\u9fff]+", run):
+            tokens.update(run[index : index + 2] for index in range(len(run) - 1))
+        else:
+            tokens.add(run.casefold())
+    return {token for token in tokens if len(token) >= 2}
+
+
+def _paragraphs(prose: str) -> list[str]:
+    paragraphs = [
+        item.strip()
+        for item in re.split(r"\r?\n\s*(?:\r?\n)?", prose)
+        if item.strip()
+    ]
+    return paragraphs or ([prose.strip()] if prose.strip() else [])
+
+
+def _semantic_paragraph_quote(prose: str, payload: Mapping[str, Any]) -> str | None:
+    """Locate one prose paragraph that realizes the declared payload.
+
+    This is deliberately a bounded locator, not a second semantic validator:
+    it requires at least two shared concept tokens and returns the actual
+    paragraph so the normal evidence matcher remains authoritative.
+    """
+
+    values = list(dict.fromkeys(_meaningful_payload_strings(payload)))
+    if not values:
+        return None
+    value_tokens = set().union(*(_semantic_tokens(value) for value in values))
+    if len(value_tokens) < 2:
+        return None
+    best: tuple[int, str] | None = None
+    for paragraph in _paragraphs(prose):
+        overlap = len(value_tokens & _semantic_tokens(paragraph))
+        if overlap < 2:
+            continue
+        candidate = (overlap, paragraph)
+        if best is None or candidate[0] > best[0]:
+            best = candidate
+    return None if best is None else best[1]
+
+
+def _state_change_quotes(prose: str, payload: Mapping[str, Any]) -> list[str]:
+    exact = _matched_quotes(prose, _meaningful_payload_strings(payload))
+    if exact:
+        return exact
+    semantic = _semantic_paragraph_quote(prose, payload)
+    return [] if semantic is None else [semantic]
+
+
 def _matched_quotes(prose: str, values: Iterable[str], *, limit: int = 4) -> list[str]:
     seen: set[str] = set()
     matches: list[str] = []
@@ -167,22 +273,49 @@ def _experience_signature(
 ) -> ChapterExperienceSignature | None:
     if contract is None:
         return None
-    target = contract.experience_target
-    ending_mode = (
-        "DIALOGUE"
-        if any(mark in prose for mark in ("“", "”", "「", "」"))
-        else "CONSEQUENCE"
+    signature_fields = (
+        "event_source",
+        "solution_method",
+        "protagonist_strategy",
+        "risk_form",
+        "emotional_outcome",
+        "social_feedback",
+        "scene_topology",
+        "ending_mode",
+        "outcome_magnitude",
+        "action_space_delta",
+        "knowledge_delta",
+        "relationship_delta",
+        "world_scale_delta",
+        "core_promise_delivery",
     )
-    values = target.model_dump(mode="json")
-    values.update(
-        {
-            "ending_mode": target.ending_mode or ending_mode,
-            "core_promise_delivery": target.core_promise_delivery
-            or (";".join(promises_paid) if promises_paid else ";".join(promises_advanced)),
-        }
-    )
-    if not values.get("event_source"):
-        values["event_source"] = ";".join(dict.fromkeys(change.kind for change in state_changes))
+    values = {field: "" for field in signature_fields}
+    for change in state_changes:
+        for field in signature_fields:
+            declared = change.payload.get(field)
+            if declared not in (None, "") and not values[field]:
+                values[field] = str(declared).strip()
+    if not values["event_source"]:
+        values["event_source"] = ";".join(
+            dict.fromkeys(change.kind for change in state_changes)
+        )
+    if not values["scene_topology"]:
+        values["scene_topology"] = (
+            "DIALOGUE"
+            if any(mark in prose for mark in ("“", "”", "「", "」", '"'))
+            else "ACTION"
+        )
+    if not values["ending_mode"]:
+        last_paragraph = _paragraphs(prose)[-1] if _paragraphs(prose) else ""
+        values["ending_mode"] = (
+            "DIALOGUE"
+            if any(mark in last_paragraph for mark in ("“", "”", "「", "」", '"'))
+            else "CONSEQUENCE"
+        )
+    if not values["core_promise_delivery"]:
+        values["core_promise_delivery"] = ";".join(
+            promises_paid if promises_paid else promises_advanced
+        )
     return ChapterExperienceSignature.model_validate(values)
 
 
@@ -242,7 +375,14 @@ def build_chapter_realization_brief(
 
     clean_lengths = [int(value) for value in recent_lengths if int(value) > 0]
     anchor = int(median(clean_lengths)) if clean_lengths else 0
-    target_range = (0, 0) if anchor <= 0 else (max(1, int(anchor * 0.65)), int(anchor * 1.45))
+    # A no-history chapter still needs useful expression guidance.  This is a
+    # soft character-range hint only; diagnose_scene_realization never turns it
+    # into a hard validation gate.
+    target_range = (
+        (1800, 3200)
+        if anchor <= 0
+        else (max(1, int(anchor * 0.65)), int(anchor * 1.45))
+    )
     targets = list(contract.dramatization_targets)
     if not targets:
         targets = [
@@ -306,7 +446,7 @@ def compile_draft_output(
             kind=item.kind,
             record_id=item.record_id,
             payload=dict(item.payload),
-            evidence_quotes=_matched_quotes(prose, _string_leaves(item.payload)),
+            evidence_quotes=_state_change_quotes(prose, item.payload),
         )
         for item in creative_output.state_changes
     ]

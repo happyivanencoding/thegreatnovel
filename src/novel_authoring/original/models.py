@@ -497,7 +497,7 @@ class FoundationDevelopmentProposal(BaseModel):
     core_innovation_intent: AuthorInnovationIntent
     selected_foundation_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
     selected_foundation: StoryFoundationCandidate
-    title_candidates: list[str] = Field(min_length=3, max_length=3)
+    title_candidates: list[str] = Field(min_length=2, max_length=3)
     expanded_premise: str = Field(min_length=1)
     protagonist: str = Field(min_length=1)
     protagonist_goal: str = Field(min_length=1)
@@ -508,7 +508,7 @@ class FoundationDevelopmentProposal(BaseModel):
     foundation_settings: list[FoundationSetting] = Field(min_length=1)
     characters: list[str] = Field(min_length=1)
     factions: list[str] = Field(default_factory=list)
-    routes: list[StoryRoute] = Field(min_length=3, max_length=3)
+    routes: list[StoryRoute] = Field(min_length=2, max_length=3)
     recommended_route_id: str = Field(min_length=1)
     recommendation_reason: str = Field(min_length=1)
     progression_grammar: list[str] = Field(min_length=1)
@@ -518,7 +518,7 @@ class FoundationDevelopmentProposal(BaseModel):
     first_phase_objective: str = Field(min_length=1)
     rolling_planning: RollingPlanning
     book_profile_draft: BookProfileDraft
-    first_chapter_candidates: list[FirstChapterCandidate] = Field(min_length=3, max_length=3)
+    first_chapter_candidates: list[FirstChapterCandidate] = Field(min_length=2, max_length=3)
     open_questions: list[str] = Field(default_factory=list)
     hidden_truth_candidates: list[HiddenTruthCandidate] = Field(default_factory=list)
     risks: list[str] = Field(default_factory=list)
@@ -536,15 +536,48 @@ class FoundationDevelopmentProposal(BaseModel):
             "首章": [item.candidate_id for item in self.first_chapter_candidates],
         }
         for label, values in collections.items():
-            if len(set(values)) != 3:
-                raise ValueError(f"{label}必须恰好包含三个不同候选")
+            if len(set(values)) != len(values):
+                raise ValueError(f"{label}必须包含不同候选")
         if self.recommended_route_id not in {item.route_id for item in self.routes}:
-            raise ValueError("recommended_route_id 必须指向三条路线之一")
+            raise ValueError("recommended_route_id 必须指向当前路线之一")
         if self.selected_foundation.candidate_id != self.selected_foundation_id:
             raise ValueError("Development Proposal 的 Foundation 快照与选择不一致")
         if self.first_phase.selected_foundation_id != self.selected_foundation_id:
             raise ValueError("First Phase 必须绑定作者选择的 Story Foundation")
         return self
+
+
+def parse_foundation_development_proposal(
+    payload: Mapping[str, Any],
+) -> FoundationDevelopmentProposal:
+    """Keep two valid candidates when one submitted list item is malformed."""
+
+    normalized = dict(payload)
+    candidate_specs: tuple[tuple[str, type[BaseModel]], ...] = (
+        ("routes", StoryRoute),
+        ("first_chapter_candidates", FirstChapterCandidate),
+    )
+    for field, model in candidate_specs:
+        raw_items = normalized.get(field)
+        if not isinstance(raw_items, list) or not 2 <= len(raw_items) <= 3:
+            continue
+        valid: list[dict[str, Any]] = []
+        for item in raw_items:
+            try:
+                parsed = model.model_validate(item)
+            except ValidationError:
+                continue
+            valid.append(parsed.model_dump(mode="json"))
+        if len(valid) >= 2:
+            normalized[field] = valid
+    titles = normalized.get("title_candidates")
+    if isinstance(titles, list) and 2 <= len(titles) <= 3:
+        valid_titles = [
+            item.strip() for item in titles if isinstance(item, str) and item.strip()
+        ]
+        if len(valid_titles) >= 2:
+            normalized["title_candidates"] = valid_titles
+    return FoundationDevelopmentProposal.model_validate(normalized)
 
 
 class OriginalFoundationConfirmation(BaseModel):

@@ -9,7 +9,7 @@ description: 为 creation_mode=ORIGINAL 且无来源正文的新小说，依次�
 
 1. `CORE_INNOVATION_PROPOSAL`：在作者已经确认的 Reader Experience / Narrative Drive / Creative Semantics 边界内，解决最高杠杆的开放创作问题，生成恰好三个核心玩法候选。
 2. `STORY_FOUNDATION_PROPOSAL`：读取作者已经选择并冻结的核心玩法，在同一生成机制下生成三个故事基础承载方案。
-3. `FOUNDATION_DEVELOPMENT_PROPOSAL`：只针对作者已经选择的一个 Story Foundation，生成长期成长、扩张、兑现、第一阶段、画像、路线与三个首章候选。
+3. `FOUNDATION_DEVELOPMENT_PROPOSAL`：只针对作者已经选择的一个 Story Foundation，生成长期成长、扩张、兑现、第一阶段、画像、2–3 条路线与 2–3 个首章候选。
 
 它不替作者选择、不批准、不生成首章正文，也不把 Proposal 写入 Canon。
 

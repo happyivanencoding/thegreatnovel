@@ -309,7 +309,7 @@ def build_genesis_apply_plan(
         CandidateLens.CONTINUITY_ACTIVE_THREAD,
         CandidateLens.EARNED_OPPORTUNITY,
         CandidateLens.FORWARD_EXPANSION,
-    )
+    )[: len(proposal.first_chapter_candidates)]
     first_chapter_candidates = []
     for rank, (source, lens) in enumerate(
         zip(proposal.first_chapter_candidates, lenses, strict=True), start=1

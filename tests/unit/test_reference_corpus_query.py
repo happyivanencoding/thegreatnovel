@@ -404,15 +404,39 @@ def test_query_separates_human_problem_from_machine_tags_and_keeps_legacy_tag(
         },
         corpus_root=root,
     )
-    assert human_sentence.status == "ZERO_RESULTS"
-    assert not human_sentence.cards
-    assert human_sentence.match_tier == "ZERO_RESULTS"
+    assert human_sentence.status == "ENABLED"
+    assert [card.card_id for card in human_sentence.cards] == ["mechanism-test"]
+    assert human_sentence.match_tier == "FALLBACK"
     assert human_sentence.relaxed_fields == ["scene_functions"]
     assert human_sentence.effective_query is not None
     assert human_sentence.effective_query.scene_functions == []
-    assert human_sentence.zero_result_reason == (
-        "NO_MATCH_WITHOUT_NATURAL_LANGUAGE_METADATA_FALLBACK"
+    assert human_sentence.zero_result_reason is None
+
+
+def test_natural_language_context_relaxes_each_structured_dimension_and_retrieves(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "natural-fallback"
+    _write_package(root, [_mechanism()])
+
+    response = query_reference_corpus(
+        {
+            "purpose": "PLANNING",
+            "creative_problem": "如何让一次突破真正扩大行动空间",
+            "creative_problem_tags": ["missing-tag"],
+            "reader_experiences": ["unmatched-reader"],
+            "max_cards": 3,
+        },
+        corpus_root=root,
     )
+
+    assert response.status == "ENABLED"
+    assert response.match_tier == "FALLBACK"
+    assert [card.card_id for card in response.cards] == ["mechanism-test"]
+    assert response.relaxed_fields == ["creative_problem_tags", "reader_experiences"]
+    assert response.effective_query is not None
+    assert response.effective_query.creative_problem == "如何让一次突破真正扩大行动空间"
+    assert response.effective_query.reader_experiences == []
 
 
 def test_query_fallback_is_bounded_for_planning_and_prose(tmp_path: Path) -> None:

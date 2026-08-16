@@ -39,6 +39,7 @@ from novel_authoring.original.models import (
     OriginalState,
     StoryFoundationProposal,
     parse_core_innovation_proposal,
+    parse_foundation_development_proposal,
     parse_story_foundation_proposal,
 )
 from novel_authoring.original.state import original_record
@@ -2744,8 +2745,8 @@ def import_original_foundation_development(
         )
     if expected not in paths or not expected.is_file():
         raise OriginalWorkflowError("handoff 未返回 foundation_development/proposal.json")
-    proposal = FoundationDevelopmentProposal.model_validate_json(
-        expected.read_text(encoding="utf-8")
+    proposal = parse_foundation_development_proposal(
+        json.loads(expected.read_text(encoding="utf-8"))
     )
     selected_core = _selected_innovation_intent(database, book_id)
     selected_foundation = _selected_foundation(database, book_id)

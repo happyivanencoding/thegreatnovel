@@ -38,8 +38,8 @@ class DraftStateChange(BaseModel):
     kind: StateChangeKind
     record_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
     payload: dict[str, Any]
-    # Evidence is compiled from the prose.  An empty list is a soft diagnostic
-    # state, not a reason to reject an otherwise present state change.
+    # Evidence is compiled from the prose.  An empty list is a hard failure for
+    # an actual StateChange; contract locator evidence remains soft.
     evidence_quotes: list[str] = Field(default_factory=list)
 
 
@@ -152,6 +152,7 @@ class DraftOutput(BaseModel):
     realized_kernel_trace: RealizedKernelTrace | None = None
     chapter_experience_signature: ChapterExperienceSignature | None = None
     realization_diagnostics: dict[str, Any] = Field(default_factory=dict)
+    realization_repair_count: int = Field(default=0, ge=0, le=1)
     reference_provenance: PlanningReferenceProvenance = Field(
         default_factory=PlanningReferenceProvenance
     )

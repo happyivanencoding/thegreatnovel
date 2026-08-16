@@ -172,7 +172,11 @@ def build_chapter_contract(
         emotional_outcome=candidate.emotional_outcome,
         social_feedback=candidate.social_feedback,
         scene_topology=candidate.scene_topology,
-        ending_mode=candidate.scene_topology,
+        ending_mode=(
+            "DIALOGUE"
+            if any(mark in candidate.ending_state for mark in ("“", "”", "「", "」", '"'))
+            else "CONSEQUENCE"
+        ),
         outcome_magnitude=candidate.outcome_magnitude,
         action_space_delta=candidate.action_space_delta,
         knowledge_delta=candidate.knowledge_delta,
@@ -267,6 +271,7 @@ def build_chapter_contract(
         knowledge_constraints=candidate.knowledge_constraints,
         must_not_resolve=candidate.must_not_resolve,
         forbidden_repetitions=candidate.forbidden_repetitions,
+        recent_avoid_repetitions=candidate.recent_avoid_repetitions,
         style_constraints=candidate.style_constraints,
         ending_state=candidate.ending_state,
         commit_updates=candidate.commit_updates,

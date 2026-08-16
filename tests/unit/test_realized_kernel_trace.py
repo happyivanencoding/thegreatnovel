@@ -144,6 +144,7 @@ def test_contract_evidence_not_found_is_warning_but_state_change_is_hard() -> No
                     evidence_quotes=["不存在的 StateChange 证据"],
                 )
             ],
+            "evidence_policy": "COMPILED_SOFT",
         }
     )
 
@@ -158,10 +159,53 @@ def test_contract_evidence_not_found_is_warning_but_state_change_is_hard() -> No
     state_change_finding = next(
         finding
         for finding in report.findings
-        if finding.code == "EVIDENCE_NOT_IN_PROSE"
+        if finding.code == "STATE_CHANGE_NOT_OBSERVED_IN_PROSE"
         and finding.location == "state_changes:fact-1"
     )
     assert contract_finding.severity.value == "WARNING"
     assert state_change_finding.severity.value == "ERROR"
     matches = report.measurements["evidence_matches"]
     assert {item["status"] for item in matches} >= {"NOT_FOUND", "EXACT"}
+
+
+def test_compiled_soft_missing_fact_relationship_and_resource_evidence_are_errors() -> None:
+    draft = _draft(None).model_copy(
+        update={
+            "evidence_policy": "COMPILED_SOFT",
+            "state_changes": [
+                DraftStateChange(
+                    kind="fact",
+                    record_id="fact-missing",
+                    payload={},
+                    evidence_quotes=[],
+                ),
+                DraftStateChange(
+                    kind="relationship",
+                    record_id="relationship-missing",
+                    payload={},
+                    evidence_quotes=[],
+                ),
+                DraftStateChange(
+                    kind="resource",
+                    record_id="resource-missing",
+                    payload={},
+                    evidence_quotes=[],
+                ),
+            ],
+        }
+    )
+
+    report = _validate(draft)
+
+    failures = [
+        finding
+        for finding in report.findings
+        if finding.code == "STATE_CHANGE_NOT_OBSERVED_IN_PROSE"
+    ]
+    assert {finding.location for finding in failures} == {
+        "state_changes:fact-missing",
+        "state_changes:relationship-missing",
+        "state_changes:resource-missing",
+    }
+    assert all(finding.severity.value == "ERROR" for finding in failures)
+    assert not report.passed

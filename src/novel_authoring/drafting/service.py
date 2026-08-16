@@ -72,6 +72,13 @@ _PROSE_REALIZATION_PROTOCOL = {
         "Chapter Contract、Boundary、Canon、事件顺序、人物选择、资源、知识边界、"
         "事实、payoff、不可逆改变或结尾状态"
     ],
+    "thin_scene_repair": {
+        "maximum_attempts": 1,
+        "scope": "REALIZATION_ONLY",
+        "must_not_change": [
+            "state_changes、abilities、resources、Chapter Contract 或 ending_state"
+        ],
+    },
 }
 
 
@@ -749,13 +756,23 @@ def save_draft_content(
         if not content.strip():
             raise DraftWorkflowError("Draft 正文不能为空")
 
+        try:
+            output = json.loads(str(row["output_json"] or "{}"))
+        except (TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise DraftWorkflowError("草稿 output_json 无法读取") from exc
+        if not isinstance(output, dict):
+            raise DraftWorkflowError("草稿 output_json 必须是 object")
+        repair_count = int(output.get("realization_repair_count") or 0)
+        if repair_count >= 1:
+            raise DraftWorkflowError(
+                "SCENE_REALIZATION_THIN 只允许一次 realization-only repair"
+            )
+
         normalized = content if content.endswith("\n") else content + "\n"
         draft_path.write_text(normalized, encoding="utf-8")
         content_hash = sha256_file(draft_path)
-        output = json.loads(str(row["output_json"] or "{}"))
-        if not isinstance(output, dict):
-            output = {}
         output["prose_markdown"] = normalized.rstrip("\n")
+        output["realization_repair_count"] = repair_count + 1
         previous_trace = output.get("reveal_trace")
         if isinstance(previous_trace, dict):
             output["reveal_trace"] = {
@@ -767,6 +784,9 @@ def save_draft_content(
             if not isinstance(notes, list):
                 notes = []
             notes.append("正文已手动编辑；旧 Reveal realized trace 已失效，必须重新声明。")
+            notes.append(
+                "正文只允许一次 realization-only repair；不得新增 StateChange、资源或能力。"
+            )
             output["notes"] = notes
         connection.execute(
             """
