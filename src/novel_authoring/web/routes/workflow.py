@@ -15,6 +15,7 @@ from novel_authoring.edition import (
 )
 from novel_authoring.planning.contracts import build_chapter_contract
 from novel_authoring.planning.innovation import resolve_innovation_control
+from novel_authoring.storage.operations import find_operation
 from novel_authoring.utils import stable_id, utc_now
 from novel_authoring.workflows.handoffs import (
     HandoffType,
@@ -210,6 +211,24 @@ def prepare_selected_candidate_draft(
             continue
         if candidate_id not in candidate_ids:
             continue
+        if str(task.get("task_id") or "") != task_id:
+            # PLAN_ONLY freezes its workflow handoff separately from the
+            # candidate task Operation Workspace.  Resolve the latter by the
+            # candidate's task_id instead of treating the handoff manifest as
+            # the candidate task manifest.
+            candidate_operation = find_operation(
+                database, book_id, selected_edition, task_id
+            )
+            if candidate_operation is None:
+                continue
+            candidate_task_path = candidate_operation.input / "task.json"
+            if not candidate_task_path.is_file():
+                continue
+            try:
+                task = json.loads(candidate_task_path.read_text(encoding="utf-8"))
+            except (OSError, TypeError, ValueError, json.JSONDecodeError):
+                continue
+            task_path = candidate_task_path
         if str(task.get("task_id") or "") != task_id:
             continue
         current_plan_handoff = {

@@ -2283,12 +2283,6 @@ def import_candidate_output(
             creative_output = None
     except (OSError, ValidationError) as exc:
         raise PlanningError(f"候选 output.json 不符合合同：{exc}") from exc
-    if creative_output is not None:
-        output = CandidateOutput(
-            task_id=creative_output.task_id,
-            candidates=[],
-            notes=creative_output.notes,
-        )
     if (creative_output.task_id if creative_output is not None else output.task_id) != task_id:
         raise PlanningError("候选 output task_id 不匹配")
     expected_innovation = InnovationControl.model_validate(
