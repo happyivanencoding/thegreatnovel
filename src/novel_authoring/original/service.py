@@ -2631,7 +2631,8 @@ def prepare_original_foundation_development(
         ).fetchone()
     if generating is not None and generating["handoff_id"]:
         handoff = get_handoff(database, str(generating["handoff_id"]))
-        if str(handoff["status"]) in {
+        handoff_status = str(handoff["status"])
+        if handoff_status in {
             "READY_FOR_CODEX",
             "CLAIMED",
             "RUNNING",
@@ -2644,6 +2645,15 @@ def prepare_original_foundation_development(
                 ),
                 "deduplicated": True,
             }
+        if handoff_status == "FAILED":
+            now = utc_now()
+            with database.connect() as connection:
+                connection.execute(
+                    "UPDATE original_development_versions SET status='ARCHIVED', "
+                    "archived_at=?, updated_at=?, version=version+1 "
+                    "WHERE development_proposal_version_id=? AND status='GENERATING'",
+                    (now, now, str(generating["development_proposal_version_id"])),
+                )
     kernel = _confirmed_progression_kernel(
         database, book_id, core_innovation=selected_core
     )

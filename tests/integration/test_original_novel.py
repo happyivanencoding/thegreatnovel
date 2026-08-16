@@ -1860,6 +1860,42 @@ def test_same_core_and_foundation_selection_reuse_existing_downstream(
     assert get_handoff(database, development_handoff_id)["status"] == "READY_FOR_CODEX"
 
 
+def test_failed_foundation_development_can_be_retried(
+    tmp_path: Path,
+) -> None:
+    _, database = create_original(tmp_path)
+    handoff_id = complete_bootstrap_handoff(database)
+    import_original_bootstrap_proposal(database, BOOK_ID, handoff_id)
+    selected = select_original_foundation(database, BOOK_ID, "foundation-1")
+    failed_handoff_id = str(selected["handoff"]["handoff_id"])
+    claim = claim_handoff(database, failed_handoff_id, "test-worker")
+    token = str(claim["claim_token"])
+    update_handoff_status(
+        database, failed_handoff_id, HandoffStatus.RUNNING, claim_token=token
+    )
+    update_handoff_status(
+        database,
+        failed_handoff_id,
+        HandoffStatus.FAILED,
+        claim_token=token,
+        error_message="模拟业务 artifact 校验失败",
+    )
+
+    retried = original_service.prepare_original_foundation_development(
+        database, BOOK_ID
+    )
+
+    assert retried["handoff_id"] != failed_handoff_id
+    assert retried["status"]["status"] == "READY_FOR_CODEX"
+    with database.connect() as connection:
+        archived_status = connection.execute(
+            "SELECT status FROM original_development_versions "
+            "WHERE handoff_id=?",
+            (failed_handoff_id,),
+        ).fetchone()[0]
+    assert archived_status == "ARCHIVED"
+
+
 def test_replacing_foundation_proposal_invalidates_only_downstream_selection(
     tmp_path: Path,
 ) -> None:
