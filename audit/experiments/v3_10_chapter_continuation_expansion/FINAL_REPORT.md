@@ -86,3 +86,7 @@ handoff 共 29 个：23 `COMPLETED`、5 `STALE`、1 `FAILED`。失败和未采�
 - 全仓 ruff：188 条既有 lint 债务；本次两个修改文件的命中均在旧代码行，未对全仓做无关清理。
 
 本实验只使用隔离 `library/original-e56a54687506`，没有向生产 `book/` 写入 Canon；工作树中原有删除、未跟踪素材和其他实验产物均未被回退或纳入本次提交。
+
+## 合订正文
+
+为便于外部审阅，本目录提供 [`TEN_CHAPTERS_COMBINED.md`](TEN_CHAPTERS_COMBINED.md)。该文件按 `canon/` 下的 10 个 `CANON_COMMITTED` 章节文件顺序拼接，正文未改写；每章前保留来源路径注释。

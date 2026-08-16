@@ -4,6 +4,7 @@
   "generated_at": "2026-08-16",
   "book_id": "original-e56a54687506",
   "library_root": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816",
+  "combined_canon_document": "TEN_CHAPTERS_COMBINED.md",
   "browser_smoke_url": "http://127.0.0.1:8065/books/original-e56a54687506/editions/base/workbench",
   "workflow_result": {
     "status": "COMPLETED",
