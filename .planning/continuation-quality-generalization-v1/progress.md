@@ -305,3 +305,9 @@ Inspect current live source/test/UI entry points. Before each search or test, ad
 - **具体失败：** 当前分支、远端、merge-base 或两次提交的归属可能与目标不一致，导致推送到错误分支、覆盖已有远端分支，或无法证明代码/工件分离。
 - **如果失败：** 停止 push，修正分支/暂存/提交关系后再检查；不执行 force push，不改写远端历史。
 - **结果：** 当前分支为 `continuation-quality-generalization-v1`；`origin` 为项目远端；同名远端分支此前不存在；代码提交为 `804ddff`、工件提交为当前 HEAD 的前一提交；`merge-base(origin/main)` 为 `a9945fb`；普通工作树仍有 359 个本轮前已存在或独立实验状态项，未进入本轮提交。
+
+### Post-push remote verification
+
+- **具体失败：** push 可能没有把本地目标分支完整发布，或误留下 staged 内容/混入错误文件边界。
+- **如果失败：** 只重新核对目标分支与提交边界；若远端缺失则重试普通 push，若边界异常则停止交付并保留证据。
+- **结果：** `origin/continuation-quality-generalization-v1` 与本地 HEAD 同为 `36e159b`；staged entries 为 0；代码提交和工件提交文件集合分别独立；工作树 359 项未被本轮交付触碰。
