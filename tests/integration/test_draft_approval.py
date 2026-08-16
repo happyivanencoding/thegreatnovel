@@ -513,6 +513,46 @@ def _import_output(
     return str(result["draft_id"])
 
 
+def test_creative_draft_output_is_compiled_before_persisting(
+    tmp_path: Path,
+) -> None:
+    database, _, contract = _setup_contract(tmp_path)
+    task = prepare_draft_task(database, BOOK_ID, contract.contract_id)
+    legacy = _valid_output(str(task["task_id"]), contract)
+    creative = {
+        key: value
+        for key, value in legacy.items()
+        if key
+        not in {
+            "contract_evidence",
+            "character_fit_inputs",
+            "style_fit_inputs",
+            "character_bottom_line_violations",
+            "style_boundary_violations",
+            "structure_tags",
+        }
+    }
+    creative["state_changes"] = [
+        {key: value for key, value in change.items() if key != "evidence_quotes"}
+        for change in legacy["state_changes"]
+    ]
+    output_path = Path(str(task["expected_output"]))
+    output_path.write_text(json_dumps(creative, indent=2) + "\n", encoding="utf-8")
+
+    imported = import_draft_output(database, BOOK_ID, str(task["task_id"]))
+
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT output_json FROM drafts WHERE draft_id=?",
+            (str(imported["draft_id"]),),
+        ).fetchone()
+    persisted = json.loads(str(row["output_json"]))
+    assert persisted["evidence_policy"] == "COMPILED_SOFT"
+    assert persisted["state_changes"][0]["evidence_quotes"]
+    assert persisted["character_fit_inputs"]
+    assert persisted["realized_kernel_trace"] is not None
+
+
 def test_ten_validators_approval_snapshot_and_rebuild(tmp_path: Path) -> None:
     database, source_path, contract = _setup_contract(tmp_path)
     source_hash = sha256_file(source_path)

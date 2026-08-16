@@ -38,3 +38,34 @@
 - 先检查当前代码和 clean-branch CI，再决定是否修改；不因引用审计中的旧 SHA 直接改代码。
 - 主 Agent 持有共享 handoff/revision interfaces；任何 worker 必须获得明确不重叠文件所有权。
 - fallback 继续是软路径；只有“已启用且有可用卡片但 selection 未导入”才阻断 draft task。
+
+## Reopened audit — implementation scope correction
+
+- 引用线程最新回复不是旧的 S1/S2 审计，而是对上一轮 docs-only 交付的否定；其核心
+  指出普通 continuation 仍缺少 DraftCreativeOutput、realization brief、体验签名、
+  continuation GBrain selector/fallback/provenance，以及 clean-checkout 的 5 个失败
+  根因修复。
+- 这些内容尚未被当前仓库证明存在；不得从 Revision 已有 selector 直接推断普通
+  continuation 已经具备同等能力。
+- 本轮需要先以 `rg`/测试/模型定义定位真实入口，再决定哪些提议可以用现有结构完成。
+  不预先创建第二套 workflow、Vector/Embedding 或固定字数 hard gate。
+
+## Live implementation evidence
+
+- `DraftCreativeOutput` 只暴露正文、StateChange 和创意语义；`compile_draft_output()` 在
+  Python 侧生成 normalized evidence、Character/Style soft audit、Experience Signature、
+  Realized Kernel Trace 和 Draft 内部 provenance。缺少 StateChange 仍是输入错误；已有
+  StateChange 的 evidence 缺失只形成 warning。
+- `ChapterRealizationBrief` 使用最近章节长度生成 advisory range；`SCENE_REALIZATION_THIN`
+  只记录 warning/repair trigger，不形成字数 hard gate，也不授权 Contract 外的状态变化。
+- 普通 continuation 的 Reference Corpus 链路已闭合为 query diagnostics
+  (`EXACT/FALLBACK/ZERO_RESULTS`) -> frozen snapshot -> bounded `PlanningReferenceStrategy`
+  -> Candidate -> Contract -> Draft provenance。selector 最多选择 3 张卡；近期 10 个已校验
+  Draft 的 card/solution provenance 会降低重复项优先级，无卡/禁用/损坏均保留 soft fallback。
+- 最近 5 个已校验章节的 `ChapterExperienceSignature` 会进入下一次候选规划；重复体验只
+  产生 soft guidance。Candidate 的内部防守字段由 Boundary/Directive/Reveal/Style 冻结输入
+  编译，不再由创意 schema 回填。
+- 验证证据：targeted 67 passed；全量 `pytest` 532 passed；全量 Ruff passed；mypy
+  `Success: no issues found in 200 source files`；compileall passed。直接运行 mypy.exe 的
+  GBK `.pth` 失败属于本机入口问题，UTF-8 `python -S -X utf8` 入口已通过同一检查。
+- 工作树中的用户既有修改和运行产物仍未纳入本轮所有权；十章实验尚未启动。

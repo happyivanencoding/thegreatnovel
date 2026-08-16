@@ -1,6 +1,6 @@
 ---
 name: continue-novel
-description: 严格依据 Novel_Authoring_System_Constitution_V2.md，在本项目中执行可审计的下一章续写工作流。用户说“续写下一章”“给我三个续写候选”“根据校验修订草稿”或“批准写入正史”时使用；覆盖状态检查、作者指令、指标、三线程/三候选、Boundary Packet、Chapter Contract、Codex 文件任务、十项校验、最多两轮修订和显式批准。不得用于绕过批准、直接编辑 book 或采用根 CONSTITUTION.md。
+description: 严格依据 Novel_Authoring_System_Constitution_V2.md，在本项目中执行可审计的下一章续写工作流。用户说“续写下一章”“给我续写候选”“根据校验修订草稿”或“批准写入正史”时使用；覆盖状态检查、作者指令、指标、三线程/候选集、Boundary Packet、Chapter Contract、Codex 文件任务、十项校验、最多两轮修订和显式批准。不得用于绕过批准、直接编辑 book 或采用根 CONSTITUTION.md。
 ---
 
 # 宪法约束小说续写
@@ -34,7 +34,8 @@ $BookId = "<book-id>"
 
 当任务目录存在 `task.json` 且 `workflow start` 已成功返回
 `status=RUNNING`、`executor_skill=continue-novel` 时，直接进入本次
-`requested_stage`。只读取 `task.json` 列出的 `business_input_files`，复用其中冻结的
+`requested_stage`。Web 不启动模型，但可以执行 Python 已授权的确定性准备、校验和
+handoff 创建。只读取 `task.json` 列出的 `business_input_files`，复用其中冻结的
 Boundary、Runtime、Rhythm、Metrics 和 Planning Context。
 
 Handoff Mode 不再无条件运行 `status`、`source verify`、`boundary build`、
@@ -102,7 +103,7 @@ Boundary Packet 中的 `rhythm_features`、`rhythm_diagnostics` 与 `hook_diagno
 `same_function_streak`、标题/首尾重复和高压连续只产生建议或 WARNING；`HOLD/ADVANCE/RESOLVE/OVERDUE`
 用于调整线程优先级和合同约束，不得让模型自行伪造诊断结果。
 
-### 4. 三线程与三个候选
+### 4. 三线程与候选集
 
 先生成候选任务包：
 
@@ -110,15 +111,15 @@ Boundary Packet 中的 `rhythm_features`、`rhythm_diagnostics` 与 `hook_diagno
 & $Novel plan-next --book-id $BookId
 ```
 
-读取命令返回的 `input`、`schema` 和 `expected_output`。在 `output.json` 中必须交付恰好三个候选，并保证任意两案至少三个结构维度不同；不能只换标题或名词。然后导入：
+读取命令返回的 `input`、`schema` 和 `expected_output`。在 `output.json` 中目标交付 3 个候选，至少保留 2 个有效候选；不能只换标题或名词。结构差异不足只产生诊断 warning，不构成整批硬失败。然后导入：
 
 ```powershell
 & $Novel plan-next --book-id $BookId --task-id <task-id>
 ```
 
-保留三个候选、门禁结果、分数、未选择原因和前三优先线程。默认采用通过硬门且综合分最高的候选；分差小于 8 时明确告诉用户它们处于同一可选区间。
+保留有效候选、门禁结果、分数、未选择原因和前三优先线程。默认采用通过硬门且综合分最高的候选；分差小于 8 时明确告诉用户它们处于同一可选区间。
 
-如果用户说“先给我候选，不要写正文”，到此停止，输出三个候选及推荐理由。
+如果用户说“先给我候选，不要写正文”，到此停止，输出当前有效候选及推荐理由。
 
 ### 5. Chapter Contract
 
@@ -140,7 +141,7 @@ Boundary Packet 中的 `rhythm_features`、`rhythm_diagnostics` 与 `hook_diagno
 & $Novel draft prepare --book-id $BookId --contract-id <contract-id>
 ```
 
-严格按任务目录的 `schema.json` 写 `expected_output` 指向的 `output.json`。正文必须让每个关键状态变化在 prose 中出现可逐字定位的短证据，并填写 contract evidence、knowledge claims、Character/Style Fit 输入、债务推进、结构标签和 payoff/aftershock 计划。导入后只允许进入 DRAFT：
+严格按任务目录的 `schema.json` 写 `expected_output` 指向的 `output.json`。正文只提交创意正文、实际 StateChange 声明和可选的知识/reveal 语义；不要提交 contract evidence、evidence_quotes、Character/Style Fit 输入、结构标签、系统评分、provenance 或 RealizedKernelTrace。这些由 Python 根据冻结 Contract 和正文编译。导入后只允许进入 DRAFT：
 
 ```powershell
 & $Novel draft import --book-id $BookId --task-id <draft-task-id>
@@ -177,7 +178,7 @@ executor 不自行读取 Corpus 路径、Markdown 或 GBrain；
 
 必须确认以下十项报告全部存在且通过：Canon、Timeline、Knowledge、Character、Economy / Power、Contract、Debt、Payoff、Repetition、Style。
 
-若失败，只针对报告中的冲突和定位修订：再次运行 `draft prepare` 生成新 revision，写新 output，导入并重新执行全部十项校验。最多两轮修订；仍失败则停止并报告，不能降级门槛。
+若失败，只针对报告中的冲突和定位修订：再次运行 `draft prepare` 生成新 revision，写新 output，导入并重新执行全部十项校验。表达层的 `SCENE_REALIZATION_THIN`、人物/文风拟合、重复与节奏提示默认是 warning，不阻断 `VALIDATED_DRAFT`；Canon、Timeline、Knowledge、Capability、非法状态变化、合同身份和作者硬约束仍然阻断。最多两轮修订；仍失败则停止并报告，不能降级门槛。
 
 ### 8. 停止在 VALIDATED_DRAFT
 
@@ -194,7 +195,7 @@ executor 不自行读取 Corpus 路径、Markdown 或 GBrain；
 
 ### 8.1 外部审计 Git 交付
 
-所有新生成的 draft 正文都必须保留为可审计 Git 工件。完成导入和十项校验后：
+只有当前用户和仓库交付策略明确要求 Git 交付时，才把 draft 正文作为可审计 Git 工件提交。完成导入和十项校验后：
 
 1. 确认 draft 文件位于 `library/<book_id>/editions/<edition_id>/writing/drafts/`；改写 draft
    位于对应 `writing/revisions/`；
@@ -213,7 +214,7 @@ Draft 上传不等于批准，不改变 Canon、Edition active state 或 Approva
 & $Novel approve --book-id $BookId --draft-id <draft-id> --confirm "批准写入正史"
 ```
 
-阅读命令先显示的 approval preview。命令复用已持久化的当前 validation bundle，并复核源文件哈希和 Boundary 投影；若 bundle 已失效则拒绝批准，不在 Approval 边界重新运行整套 Validator。通过后以事务写入 AUTHOR_APPROVED、状态变化、CANON_CHAPTER_COMMITTED、规范化查询表、Canon Projection 和 Snapshot。重大兑现还必须产生四类 Aftershock Obligations。
+阅读命令先显示的 approval preview。命令复用已持久化的当前 validation bundle，并复核源文件哈希和 Boundary 投影；若 bundle 已失效则拒绝批准，不在 Approval 边界重新运行整套 Validator。通过后以事务写入 AUTHOR_APPROVED、状态变化、CANON_CHAPTER_COMMITTED、规范化查询表、Canon Projection 和 Snapshot。重大兑现的余波由 Contract/Validator 作为软诊断提示，不要求模型填写固定四类模板；若当前产品合同另有明确硬要求，仍以该合同为准。
 
 提交后运行：
 

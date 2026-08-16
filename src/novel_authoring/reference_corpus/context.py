@@ -16,7 +16,9 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from novel_authoring.reference_corpus.query import (
     COMPACT_CARD_ADAPTER,
+    QueryMatchTier,
     QueryStatus,
+    ReferenceCorpusQueryEcho,
     ReferenceCorpusQueryRequest,
     ReferenceCorpusQueryResponse,
 )
@@ -79,6 +81,11 @@ class ReferenceContextSnapshot(BaseModel):
     payoff_channels: list[str] = Field(default_factory=list)
     scene_functions: list[str] = Field(default_factory=list)
     max_cards: int = Field(ge=3, le=8)
+    match_tier: QueryMatchTier | None = None
+    original_query: ReferenceCorpusQueryEcho | None = None
+    effective_query: ReferenceCorpusQueryEcho | None = None
+    relaxed_fields: list[str] = Field(default_factory=list)
+    zero_result_reason: str | None = None
     package_schema_version: str | None = None
     package_hash: str | None = None
     machine_bundle_hash: str | None = None
@@ -113,6 +120,11 @@ class ReferenceContextSnapshot(BaseModel):
 _PROMPT_SNAPSHOT_FIELDS = (
     "purpose",
     "status",
+    "match_tier",
+    "original_query",
+    "effective_query",
+    "relaxed_fields",
+    "zero_result_reason",
     "snapshot_id",
     "snapshot_hash",
     "machine_bundle_hash",
@@ -263,12 +275,28 @@ def freeze_reference_context(
     package_identity = (
         response.machine_bundle_hash or response.package_hash or "NO_PACKAGE"
     )
+    query_diagnostics = {
+        "match_tier": response.match_tier,
+        "original_query": (
+            response.original_query.model_dump(mode="json")
+            if response.original_query is not None
+            else None
+        ),
+        "effective_query": (
+            response.effective_query.model_dump(mode="json")
+            if response.effective_query is not None
+            else None
+        ),
+        "relaxed_fields": list(response.relaxed_fields),
+        "zero_result_reason": response.zero_result_reason,
+    }
     snapshot_id = stable_id(
         "reference-context",
         operation_id,
         request.purpose,
         json_dumps(request_payload),
         package_identity,
+        json_dumps(query_diagnostics),
     )
     metadata_matches = {
         str(card["card_id"]): list(card.get("metadata_match_fields", []))
@@ -288,6 +316,11 @@ def freeze_reference_context(
         payoff_channels=list(request.payoff_channels),
         scene_functions=list(request.scene_functions),
         max_cards=request.max_cards,
+        match_tier=response.match_tier,
+        original_query=response.original_query,
+        effective_query=response.effective_query,
+        relaxed_fields=list(response.relaxed_fields),
+        zero_result_reason=response.zero_result_reason,
         package_schema_version=response.package_schema_version,
         package_hash=response.package_hash,
         machine_bundle_hash=response.machine_bundle_hash,

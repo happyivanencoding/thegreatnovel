@@ -70,7 +70,10 @@ Reference Context Query 的失败、未就绪、零结果或损坏只产生显�
 4. 参与角色的当前语气与关系距离；
 5. 当前书的 `prose-dna/<source_book_id>.md` 或 ORIGINAL 小说的 `Original Prose Profile`；
 6. 只加载本场景真正需要的 `prose-controls/`，并把它们当作软提示；
-7. 明确哪些信息角色知道、哪些信息读者知道、哪些信息暂时不能解释。
+7. 明确哪些信息角色知道、哪些信息读者知道、哪些信息暂时不能解释；
+8. 读取 Python 冻结的 `ChapterRealizationBrief`。其中的 adaptive word range、scene count
+   和 dramatization targets 只是表达层参考，不是固定最低字数或硬门；必要时可以加入不改变
+   Contract/Canon/Knowledge/Resource/Capability 的 realization-only micro-event。
 
 如果当前书没有 Prose DNA（例如 ORIGINAL），使用 Reader Kernel、Genre/Tone、Narrative Drive 和选定的
 Prose Controls 形成目标书的 `Original Prose Profile`，不得随机挑一本来源书模仿。
@@ -150,6 +153,8 @@ Prose Controls 形成目标书的 `Original Prose Profile`，不得随机挑一�
 - 是否保留 Chapter Contract 的事件顺序、选择、线索、payoff、不可逆改变和结尾状态。
 
 这些是 review triggers，不是逐词禁用清单。Humanizer-zh 的文章/营销规则不能直接当成小说硬规则。
+如果场景只概述结果、动作/反应/后果展开不足，记录 `SCENE_REALIZATION_THIN` WARNING；它只触发
+有界的 realization-only repair，不阻断 `VALIDATED_DRAFT`，也不允许借修复之名改变 Chapter Contract。
 
 # Repair Pass
 

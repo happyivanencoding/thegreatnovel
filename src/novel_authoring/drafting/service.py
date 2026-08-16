@@ -14,9 +14,17 @@ from novel_authoring.context.router import (
     RuntimeContextRequest,
     route_runtime_context,
 )
-from novel_authoring.contracts.draft import DraftOutput
+from novel_authoring.contracts.draft import (
+    ChapterRealizationBrief,
+    DraftCreativeOutput,
+    DraftOutput,
+)
 from novel_authoring.db.database import Database
 from novel_authoring.domain.models import DraftStatus
+from novel_authoring.drafting.compiler import (
+    build_chapter_realization_brief,
+    compile_draft_output,
+)
 from novel_authoring.edition import edition_workspace, resolve_edition_id
 from novel_authoring.planning.boundary import _workspace
 from novel_authoring.planning.models import ChapterContract
@@ -278,7 +286,7 @@ def prepare_draft_task(
         ),
         boundary=boundary_payload,
     )
-    schema_json = json_dumps(DraftOutput.model_json_schema(), indent=2)
+    schema_json = json_dumps(DraftCreativeOutput.model_json_schema(), indent=2)
     task_id = stable_id("draft-task", contract_id, str(revision), str(row["contract_sha256"]))
     operation = ensure_operation(
         database,
@@ -322,6 +330,15 @@ def prepare_draft_task(
         ]
         if reference_prose_context["status"] != "DISABLED" else []
     )
+    recent_lengths = [
+        len(str(item.get("content") or ""))
+        for item in boundary_payload.get("recent_full_chapters", [])
+        if isinstance(item, dict)
+    ]
+    realization_brief = build_chapter_realization_brief(
+        contract,
+        recent_lengths=recent_lengths,
+    )
     input_text = "\n".join(
         [
             f"# 章节正文任务 `{task_id}`",
@@ -329,7 +346,10 @@ def prepare_draft_task(
             f"revision: {revision}",
             "",
             "严格依据下面的 Boundary Packet 与 Chapter Contract 写正文。",
-            "正文不得声明新事实已自动进入正史；state_changes 必须逐项给出正文短证据。",
+            "正文不得声明新事实已自动进入正史；state_changes 只声明正文实际发生的状态变化。",
+            "不要填写 contract_evidence、evidence_quotes、character_fit_inputs、"
+            "style_fit_inputs、structure_tags、RealizedKernelTrace 或系统评分；"
+            "这些由 Python 编译。",
             "按 Chapter Contract 中冻结的 InnovationControl 执行；它只改变创作距离，"
             "不改变 Canon、Timeline、Knowledge、Capability、Resource、Approval 或 "
             "Edition hard gates。",
@@ -345,14 +365,20 @@ def prepare_draft_task(
             "realized 只记录正文真正发生的线索或揭示，且 evidence_quote 必须出现在正文中。"
             "KEEP_HIDDEN 的 Truth 只能约束行为，不能被旁白、对话或解释直接说破；"
             "HINT 必须留下读者可感知线索，但不能确认完整答案。",
-            "RealizedKernelTrace 是可选的语义提示；系统会从正文、实际 StateChange、"
-            "Chapter Contract、Reveal 与 promises 自动编译实际 trace。若主动填写，只能"
-            "声明正文实际兑现的部分；每条证据必须逐字出现在正文，并绑定将由 Author"
-            " Approval 提交的 state_change record_id。不得把 Expected Kernel Trace 原样抄成"
-            " Realized。",
+            "系统会从正文、实际 StateChange、Chapter Contract、Reveal 与 promises"
+            "自动编译实际 trace；不要把 Expected Kernel Trace 或系统审计字段写进正文输出。",
             "避免连续使用‘谨慎试探—暂不下结论—保留退路—撤回’的审计型叙事，"
             "除非当前 Narrative Portfolio 明确需要这种节奏。",
             "只写 output.json，不要修改 book；系统会把合法正文导入 drafts。",
+            "",
+            "## Chapter Realization Brief（soft guidance）",
+            "",
+            "以下范围只用于调节场景展开，不是最低字数硬门；可以用更短或更长的自然场景，"
+            "但不得用摘要跳过关键动作、反应与后果。允许 realization-only micro-event，"
+            "不得改变 Contract、Canon、Knowledge、Resource 或 Capability。",
+            "```json",
+            json_dumps(realization_brief.model_dump(mode="json"), indent=2),
+            "```",
             "",
             "## Novel Prose Realization Protocol（Normal Draft / Revision Draft shared）",
             "",
@@ -409,6 +435,8 @@ def prepare_draft_task(
         "reference_prose_context": reference_prose_context,
         "reference_context_snapshot": str(task_dir / "reference_context_snapshot.json"),
         "prose_realization_protocol": _PROSE_REALIZATION_PROTOCOL,
+        "chapter_realization_brief": realization_brief.model_dump(mode="json"),
+        "output_contract": "DraftCreativeOutput",
     }
     (task_dir / "input.md").write_text(input_text, encoding="utf-8")
     (task_dir / "schema.json").write_text(schema_json + "\n", encoding="utf-8")
@@ -463,18 +491,47 @@ def import_draft_output(
         if operation is not None
         else workspace / "agent_outputs" / task_id / "output.json"
     )
+    creative_output: DraftCreativeOutput | None = None
+    output: DraftOutput | None = None
     try:
-        output = DraftOutput.model_validate_json(path.read_text(encoding="utf-8"))
-    except (OSError, ValidationError) as exc:
+        raw_payload = json.loads(path.read_text(encoding="utf-8"))
+        try:
+            creative_output = DraftCreativeOutput.model_validate(raw_payload)
+            output = None
+        except ValidationError as creative_error:
+            # Existing persisted/local fixtures are internal DraftOutput
+            # artifacts, not the schema exposed to a new executor.  Keep this
+            # narrow read path so already-created work remains importable while
+            # prepare_draft_task only publishes DraftCreativeOutput.
+            legacy_keys = {
+                "contract_evidence",
+                "character_fit_inputs",
+                "style_fit_inputs",
+                "structure_tags",
+                "realized_kernel_trace",
+                "innovation_trace",
+                "direction_alignment",
+            }
+            if not isinstance(raw_payload, dict) or not legacy_keys.intersection(raw_payload):
+                raise creative_error
+            output = DraftOutput.model_validate(raw_payload)
+    except (OSError, TypeError, ValueError, ValidationError) as exc:
         raise DraftWorkflowError(f"Draft output 不符合合同：{exc}") from exc
-    if output.task_id != task_id or output.contract_id != metadata["contract_id"]:
+    if creative_output is None:
+        assert output is not None
+        submitted_task_id = output.task_id
+        submitted_contract_id = output.contract_id
+    else:
+        submitted_task_id = creative_output.task_id
+        submitted_contract_id = creative_output.contract_id
+    if submitted_task_id != task_id or submitted_contract_id != metadata["contract_id"]:
         raise DraftWorkflowError("Draft output 的 task_id/contract_id 不匹配")
     contract_row = None
     candidate_plan_row = None
     with database.connect() as connection:
         contract_row = connection.execute(
             "SELECT contract_json FROM chapter_contracts WHERE contract_id=? AND book_id=?",
-            (output.contract_id, book_id),
+            (submitted_contract_id, book_id),
         ).fetchone()
         if contract_row is not None:
             contract_payload = json.loads(str(contract_row["contract_json"]))
@@ -487,6 +544,25 @@ def import_draft_output(
                     selected_edition,
                 ),
             ).fetchone()
+    if creative_output is not None:
+        contract = (
+            ChapterContract.model_validate_json(str(contract_row["contract_json"]))
+            if contract_row is not None
+            else None
+        )
+        brief = None
+        raw_brief = metadata.get("chapter_realization_brief")
+        if isinstance(raw_brief, dict):
+            try:
+                brief = ChapterRealizationBrief.model_validate(raw_brief)
+            except ValidationError:
+                brief = None
+        output = compile_draft_output(
+            creative_output,
+            contract,
+            realization_brief=brief,
+        )
+    assert output is not None
     realized_reward_payload: dict[str, object] | None = None
     if contract_row is not None:
         contract = ChapterContract.model_validate_json(str(contract_row["contract_json"]))

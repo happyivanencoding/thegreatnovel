@@ -486,6 +486,7 @@ def _quotes_in_prose(
     findings: list[ValidationFinding],
     *,
     contract_requirement: bool = False,
+    soft_missing: bool = False,
     match_records: list[dict[str, Any]] | None = None,
 ) -> None:
     if not quotes:
@@ -495,7 +496,11 @@ def _quotes_in_prose(
             _finding(
                 "CONTRACT_EVIDENCE_EMPTY",
                 f"合同证据 {key} 为空。",
-                severity=Severity.WARNING if contract_requirement else Severity.ERROR,
+                severity=(
+                    Severity.WARNING
+                    if contract_requirement or soft_missing
+                    else Severity.ERROR
+                ),
                 location=f"contract_evidence:{key}",
             )
         )
@@ -510,7 +515,7 @@ def _quotes_in_prose(
             continue
         severity = (
             Severity.WARNING
-            if contract_requirement or status != "NOT_FOUND"
+            if contract_requirement or soft_missing or status != "NOT_FOUND"
             else Severity.ERROR
         )
         code = {
@@ -713,6 +718,7 @@ def _validate_realized_kernel_trace(
             item.evidence_quotes,
             f"realized_kernel_trace:{item.claim}",
             findings,
+            soft_missing=context.draft.evidence_policy == "COMPILED_SOFT",
             match_records=evidence_matches,
         )
 
@@ -966,6 +972,7 @@ def validate_contract(context: ValidationContext) -> ValidationReport:
             change.evidence_quotes,
             f"state_changes:{change.record_id}",
             findings,
+            soft_missing=context.draft.evidence_policy == "COMPILED_SOFT",
             match_records=evidence_matches,
         )
     kernel_findings, kernel_comparison = _validate_realized_kernel_trace(context)
@@ -1441,7 +1448,22 @@ def validate_style(context: ValidationContext) -> ValidationReport:
                 location="style_boundary_violations",
             )
         )
-    return _report("Style Validator", findings, {"style_fit": score})
+    realization = context.draft.realization_diagnostics
+    if realization.get("code") == "SCENE_REALIZATION_THIN":
+        findings.append(
+            _finding(
+                "SCENE_REALIZATION_THIN",
+                "场景展开偏薄；只需补充表达层动作、反应或后果，不改变合同状态。",
+                severity=Severity.WARNING,
+                location="realization_diagnostics",
+                suggested_fix=str(realization.get("suggested_fix") or ""),
+            )
+        )
+    return _report(
+        "Style Validator",
+        findings,
+        {"style_fit": score, "realization": realization},
+    )
 
 
 VALIDATORS: tuple[Callable[[ValidationContext], ValidationReport], ...] = (

@@ -38,6 +38,7 @@ QueryStatus = Literal[
     "CORRUPT",
     "DISABLED",
 ]
+QueryMatchTier = Literal["EXACT", "FALLBACK", "ZERO_RESULTS"]
 
 
 class ReferenceCorpusQueryRequest(BaseModel):
@@ -176,6 +177,11 @@ class ReferenceCorpusQueryResponse(BaseModel):
     purpose: QueryPurpose
     query: ReferenceCorpusQueryEcho
     status: QueryStatus = "ENABLED"
+    match_tier: QueryMatchTier | None = None
+    original_query: ReferenceCorpusQueryEcho | None = None
+    effective_query: ReferenceCorpusQueryEcho | None = None
+    relaxed_fields: list[str] = Field(default_factory=list)
+    zero_result_reason: str | None = None
     package_schema_version: str | None = None
     package_hash: str | None = None
     machine_bundle_hash: str | None = None
@@ -195,6 +201,18 @@ QueryResponse = ReferenceCorpusQueryResponse
 
 _PLANNING_FAMILIES = ("mechanism-card", "contrast-card", "corpus-synthesis")
 _PROSE_FAMILIES = ("prose-control",)
+_RELAXABLE_QUERY_FIELDS = (
+    "creative_problem_tags",
+    "reader_experiences",
+    "narrative_drives",
+    "payoff_channels",
+    "scene_functions",
+)
+_ORIGINAL_PLANNING_PREFIXES = (
+    "CORE_INNOVATION_PROPOSAL",
+    "FOUNDATION_DEVELOPMENT_PROPOSAL",
+    "STORY_FOUNDATION_PROPOSAL",
+)
 
 
 def _query_echo(request: ReferenceCorpusQueryRequest) -> ReferenceCorpusQueryEcho:
@@ -204,6 +222,16 @@ def _query_echo(request: ReferenceCorpusQueryRequest) -> ReferenceCorpusQueryEch
             exclude={"purpose"},
         )
     )
+
+
+def _query_echo_with_metadata(
+    request: ReferenceCorpusQueryRequest,
+    metadata: Mapping[str, list[str]],
+) -> ReferenceCorpusQueryEcho:
+    payload = _query_echo(request).model_dump(mode="json")
+    for field in _RELAXABLE_QUERY_FIELDS:
+        payload[field] = list(metadata[field])
+    return ReferenceCorpusQueryEcho.model_validate(payload)
 
 
 def _source_refs(record: dict[str, Any]) -> list[dict[str, Any]]:
@@ -344,6 +372,11 @@ def _response(
     knowledge_gaps: list[str] | None = None,
     warnings: list[str] | None = None,
     status: QueryStatus = "ENABLED",
+    match_tier: QueryMatchTier | None = None,
+    original_query: ReferenceCorpusQueryEcho | None = None,
+    effective_query: ReferenceCorpusQueryEcho | None = None,
+    relaxed_fields: list[str] | None = None,
+    zero_result_reason: str | None = None,
     package_schema_version: str | None = None,
     package_hash: str | None = None,
     machine_bundle_hash: str | None = None,
@@ -353,6 +386,11 @@ def _response(
         purpose=request.purpose,
         query=_query_echo(request),
         status=status,
+        match_tier=match_tier,
+        original_query=original_query,
+        effective_query=effective_query,
+        relaxed_fields=relaxed_fields or [],
+        zero_result_reason=zero_result_reason,
         package_schema_version=package_schema_version,
         package_hash=package_hash,
         machine_bundle_hash=machine_bundle_hash,
@@ -428,6 +466,8 @@ def query_reference_corpus(
     except ValidationError:
         raise
 
+    original_query = _query_echo(query)
+
     root = _root_from_config(corpus_root)
     if root is None:
         return _response(
@@ -435,6 +475,10 @@ def query_reference_corpus(
             knowledge_gaps=["当前没有可用的 Reference Corpus machine package/path"],
             warnings=["soft-fail：Reference Corpus 未启用或未配置"],
             status="DISABLED",
+            match_tier="ZERO_RESULTS",
+            original_query=original_query,
+            effective_query=original_query,
+            zero_result_reason="REFERENCE_CORPUS_DISABLED",
         )
     validation = validate_machine_package(root)
     if validation["status"] != "ENABLED":
@@ -443,6 +487,10 @@ def query_reference_corpus(
             knowledge_gaps=list(validation.get("knowledge_gaps", [])),
             warnings=list(validation.get("warnings", [])),
             status=validation["status"],
+            match_tier="ZERO_RESULTS",
+            original_query=original_query,
+            effective_query=original_query,
+            zero_result_reason=f"REFERENCE_CORPUS_{validation['status']}",
             package_schema_version=validation.get("package_schema_version"),
             package_hash=validation.get("package_hash"),
             machine_bundle_hash=validation.get("machine_bundle_hash"),
@@ -454,26 +502,109 @@ def query_reference_corpus(
 
     families = _PLANNING_FAMILIES if query.purpose == "PLANNING" else _PROSE_FAMILIES
     legacy_tags = []
+    creative_problem_text = query.creative_problem.strip()
+    is_safe_legacy_tag = bool(
+        creative_problem_text
+        and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", creative_problem_text)
+    )
     # Keep old callers that passed a single ASCII tag working, while refusing
     # to turn a natural-language sentence into a machine tag.
     if (
         not query.creative_problem_tags
-        and query.creative_problem
-        and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", query.creative_problem.strip())
+        and is_safe_legacy_tag
     ):
-        legacy_tags = [query.creative_problem.strip()]
-    try:
+        legacy_tags = [creative_problem_text]
+
+    metadata: dict[str, list[str]] = {
+        "creative_problem_tags": list(query.creative_problem_tags or legacy_tags),
+        "reader_experiences": list(query.reader_experiences),
+        "narrative_drives": list(query.narrative_drives),
+        "payoff_channels": list(query.payoff_channels),
+        "scene_functions": list(query.scene_functions),
+    }
+    effective_query = _query_echo_with_metadata(query, metadata)
+    has_natural_language_problem = bool(creative_problem_text) and not is_safe_legacy_tag
+    has_structured_metadata = any(metadata.values())
+    if (
+        query.purpose == "PLANNING"
+        and not has_structured_metadata
+        and creative_problem_text.startswith(_ORIGINAL_PLANNING_PREFIXES)
+    ):
+        # The Original adapter has no chapter metadata yet, but its stage
+        # prefix is a supported machine boundary.  Use the stable corpus tag
+        # rather than treating the premise prose as a retrieval key.
+        metadata["creative_problem_tags"] = ["long-form"]
+        effective_query = _query_echo_with_metadata(query, metadata)
+        has_structured_metadata = True
+    if has_natural_language_problem and not has_structured_metadata:
+        return _response(
+            query,
+            knowledge_gaps=["没有可用于 deterministic retrieval 的结构化 metadata"],
+            warnings=["soft-fail：query 返回 zero results"],
+            status="ZERO_RESULTS",
+            match_tier="ZERO_RESULTS",
+            original_query=original_query,
+            effective_query=effective_query,
+            zero_result_reason="NATURAL_LANGUAGE_CREATIVE_PROBLEM_NOT_METADATA",
+            package_schema_version=package_schema_version,
+            package_hash=package_hash,
+            machine_bundle_hash=machine_bundle_hash,
+        )
+
+    def retrieve_cards(current_metadata: Mapping[str, list[str]]) -> list[CompactCard]:
         records = retrieve_metadata_candidates(
             root,
-            creative_problem_tags=query.creative_problem_tags or legacy_tags,
-            reader_experiences=query.reader_experiences,
-            narrative_drives=query.narrative_drives,
-            payoff_channels=query.payoff_channels,
-            scene_functions=query.scene_functions,
+            creative_problem_tags=current_metadata["creative_problem_tags"],
+            reader_experiences=current_metadata["reader_experiences"],
+            narrative_drives=current_metadata["narrative_drives"],
+            payoff_channels=current_metadata["payoff_channels"],
+            scene_functions=current_metadata["scene_functions"],
             card_families=families,
             max_cards=query.max_cards,
         )
-        cards = [_compact_projection(record) for record in records]
+        return [_compact_projection(record) for record in records]
+
+    try:
+        cards = retrieve_cards(metadata)
+        if cards:
+            return _response(
+                query,
+                cards=cards,
+                status="ENABLED",
+                match_tier="EXACT",
+                original_query=original_query,
+                effective_query=effective_query,
+                package_schema_version=package_schema_version,
+                package_hash=package_hash,
+                machine_bundle_hash=machine_bundle_hash,
+            )
+
+        relaxed_fields: list[str] = []
+        for field in _RELAXABLE_QUERY_FIELDS:
+            if not metadata[field]:
+                continue
+            metadata[field] = []
+            relaxed_fields.append(field)
+            effective_query = _query_echo_with_metadata(query, metadata)
+            # A natural-language creative problem is human context, not a
+            # machine retrieval key.  Even when one structured dimension was
+            # supplied, never relax it into a broad corpus match.
+            if has_natural_language_problem:
+                break
+            cards = retrieve_cards(metadata)
+            if cards:
+                return _response(
+                    query,
+                    cards=cards,
+                    status="ENABLED",
+                    match_tier="FALLBACK",
+                    original_query=original_query,
+                    effective_query=effective_query,
+                    relaxed_fields=relaxed_fields,
+                    package_schema_version=package_schema_version,
+                    package_hash=package_hash,
+                    machine_bundle_hash=machine_bundle_hash,
+                )
     except (
         OSError,
         UnicodeError,
@@ -487,28 +618,39 @@ def query_reference_corpus(
             knowledge_gaps=["machine package cards 无法解析为当前 V1 contract"],
             warnings=[f"corrupt package：{exc}"],
             status="CORRUPT",
+            match_tier="ZERO_RESULTS",
+            original_query=original_query,
+            effective_query=effective_query,
+            zero_result_reason="REFERENCE_CORPUS_CORRUPT",
             package_schema_version=package_schema_version,
             package_hash=package_hash,
             machine_bundle_hash=machine_bundle_hash,
         )
     if not cards:
+        zero_result_reason = (
+            "NO_MATCH_WITHOUT_NATURAL_LANGUAGE_METADATA_FALLBACK"
+            if has_natural_language_problem
+            else (
+                "NO_MATCH_AFTER_BOUNDED_FALLBACK"
+                if has_structured_metadata
+                else "NO_MATCH_FOR_EXACT_METADATA"
+            )
+        )
         return _response(
             query,
             knowledge_gaps=["没有满足当前 purpose、metadata 和 source diversity 条件的卡片"],
             warnings=["soft-fail：query 返回 zero results"],
             status="ZERO_RESULTS",
+            match_tier="ZERO_RESULTS",
+            original_query=original_query,
+            effective_query=effective_query,
+            relaxed_fields=relaxed_fields,
+            zero_result_reason=zero_result_reason,
             package_schema_version=package_schema_version,
             package_hash=package_hash,
             machine_bundle_hash=machine_bundle_hash,
         )
-    return _response(
-        query,
-        cards=cards,
-        status="ENABLED",
-        package_schema_version=package_schema_version,
-        package_hash=package_hash,
-        machine_bundle_hash=machine_bundle_hash,
-    )
+    raise AssertionError("unreachable: query result must return exact or fallback cards")
 
 
 query_corpus = query_reference_corpus
@@ -522,6 +664,7 @@ __all__ = [
     "ProseControlCardProjection",
     "QueryRequest",
     "QueryResponse",
+    "QueryMatchTier",
     "QueryStatus",
     "ReferenceCorpusQueryEcho",
     "ReferenceCorpusQueryRequest",

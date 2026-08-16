@@ -31,7 +31,9 @@ Python 已在 start 中完成 READY_FOR_CODEX 检查、原子 claim、冻结文�
 
 ## Deterministic complete
 
-业务 Skill 将结果写入 start 返回的 `result_target`（result JSON 路径），然后运行：
+业务 Skill 将业务 artifact 写入 `task.json` 明确列出的路径；普通 Draft 可以写入其中
+`prepared_draft_task.expected_output` 指向的 output.json。最终 handoff envelope 必须写入
+start 返回的 `result_target`（result JSON 路径），然后运行：
 
 ```powershell
 uv run --no-sync novel workflow complete --library-root "<复制指令提供的绝对路径>" --book-id "<book-id>" --handoff-id "<handoff-id>" --claim-token "<workflow start 返回的 claim_token>" --result-path "<workflow start 返回的 result_target>"
@@ -43,5 +45,6 @@ complete 一次完成 deterministic envelope 注入、result schema、artifact�
 
 ## Protocol boundary
 
-结果只能写入冻结任务目录；业务边界、Canon、Edition、作者批准和 artifact 语义由冻结的
-executor Skill 与 Python complete 合同负责，本 Skill 不重复解释或判断。
+业务 artifact 只能写入冻结任务目录中被 task.json 明确列出的路径；最终 result 只能写入
+`result_target`。业务边界、Canon、Edition、作者批准和 artifact 语义由冻结的 executor
+Skill 与 Python complete 合同负责，本 Skill 不重复解释或判断。

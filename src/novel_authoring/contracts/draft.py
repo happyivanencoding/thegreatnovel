@@ -10,7 +10,11 @@ from novel_authoring.planning.innovation import (
     InnovationDirectionAlignment,
     InnovationTrace,
 )
-from novel_authoring.planning.models import ProgressionImpact
+from novel_authoring.planning.models import (
+    ChapterExperienceSignature,
+    PlanningReferenceProvenance,
+    ProgressionImpact,
+)
 
 StateChangeKind = Literal[
     "fact",
@@ -34,7 +38,19 @@ class DraftStateChange(BaseModel):
     kind: StateChangeKind
     record_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
     payload: dict[str, Any]
-    evidence_quotes: list[str] = Field(min_length=1)
+    # Evidence is compiled from the prose.  An empty list is a soft diagnostic
+    # state, not a reason to reject an otherwise present state change.
+    evidence_quotes: list[str] = Field(default_factory=list)
+
+
+class DraftCreativeStateChange(BaseModel):
+    """The small state-change declaration an executor may submit."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    kind: StateChangeKind
+    record_id: str = Field(pattern=r"^[A-Za-z0-9._-]+$")
+    payload: dict[str, Any] = Field(default_factory=dict)
 
 
 class KnowledgeClaim(BaseModel):
@@ -73,6 +89,44 @@ class RealizedKernelTrace(BaseModel):
     evidence: list[RealizedKernelEvidence] = Field(default_factory=list)
 
 
+class ChapterRealizationBrief(BaseModel):
+    """Soft expression guidance frozen before prose generation.
+
+    The range is advisory.  It never becomes a word-count hard gate and does
+    not authorize a new Canon event outside the Chapter Contract.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    target_word_range: tuple[int, int] = (0, 0)
+    target_scene_count: int = Field(default=1, ge=1)
+    dramatization_targets: list[str] = Field(default_factory=list)
+    realization_scope: str = "CONTRACT_BOUND"
+    adaptive: bool = True
+    micro_event_rule: str = (
+        "允许只改变人物感知、动作或场面反应的 realization-only micro-event；"
+        "不得改变 Contract、Canon、Knowledge、Resource 或 Capability。"
+    )
+
+
+class DraftCreativeOutput(BaseModel):
+    """LLM-facing prose output; system audits are intentionally absent."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: str
+    contract_id: str
+    chapter_title: str
+    prose_markdown: str = Field(min_length=1)
+    state_changes: list[DraftCreativeStateChange] = Field(min_length=1)
+    knowledge_claims: list[KnowledgeClaim] = Field(default_factory=list)
+    reveal_trace: RevealTrace = Field(default_factory=RevealTrace)
+    promises_advanced: list[str] = Field(default_factory=list)
+    promises_paid: list[str] = Field(default_factory=list)
+    new_major_hooks: int = Field(default=0, ge=0)
+    notes: list[str] = Field(default_factory=list)
+
+
 class DraftOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -81,11 +135,11 @@ class DraftOutput(BaseModel):
     chapter_title: str
     prose_markdown: str = Field(min_length=1)
     state_changes: list[DraftStateChange] = Field(min_length=1)
-    contract_evidence: dict[str, list[str]]
+    contract_evidence: dict[str, list[str]] = Field(default_factory=dict)
     knowledge_claims: list[KnowledgeClaim] = Field(default_factory=list)
     reveal_trace: RevealTrace = Field(default_factory=RevealTrace)
-    character_fit_inputs: dict[str, float]
-    style_fit_inputs: dict[str, float]
+    character_fit_inputs: dict[str, float] = Field(default_factory=dict)
+    style_fit_inputs: dict[str, float] = Field(default_factory=dict)
     character_bottom_line_violations: list[str] = Field(default_factory=list)
     style_boundary_violations: list[str] = Field(default_factory=list)
     promises_advanced: list[str] = Field(default_factory=list)
@@ -96,4 +150,12 @@ class DraftOutput(BaseModel):
     innovation_trace: InnovationTrace | None = None
     direction_alignment: InnovationDirectionAlignment | None = None
     realized_kernel_trace: RealizedKernelTrace | None = None
+    chapter_experience_signature: ChapterExperienceSignature | None = None
+    realization_diagnostics: dict[str, Any] = Field(default_factory=dict)
+    reference_provenance: PlanningReferenceProvenance = Field(
+        default_factory=PlanningReferenceProvenance
+    )
+    # Existing hand-authored DraftOutput fixtures retain their strict evidence
+    # semantics.  The new compiler sets COMPILED_SOFT for normal continuation.
+    evidence_policy: Literal["STRICT_LEGACY", "COMPILED_SOFT"] = "STRICT_LEGACY"
     notes: list[str] = Field(default_factory=list)

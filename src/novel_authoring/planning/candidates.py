@@ -47,7 +47,12 @@ from novel_authoring.planning.models import (
     CandidateCreativeProposal,
     CandidateOutput,
     CandidateProposal,
+    ChapterExperienceSignature,
+    PlanningReferenceProvenance,
     ThreadPriority,
+)
+from novel_authoring.planning.reference_strategy import (
+    select_planning_reference_strategy,
 )
 from novel_authoring.planning.rewards import calculate_candidate_innovation_reward
 from novel_authoring.progression.context import KernelPlanningContext
@@ -564,6 +569,8 @@ def _continuation_reference_planning_context(
     thread_id: str,
     kernel_context: KernelPlanningContext | None,
     story_state: Mapping[str, Any] | None = None,
+    recent_card_ids: Sequence[str] = (),
+    recent_solution_ids: Sequence[str] = (),
     output_path: Path,
 ) -> dict[str, Any]:
     contracts = (
@@ -631,7 +638,21 @@ def _continuation_reference_planning_context(
         operation_id=task_id,
         output_path=output_path,
     )
-    return snapshot.model_dump(mode="json")
+    context = snapshot.model_dump(mode="json")
+    strategy = select_planning_reference_strategy(
+        context,
+        recent_card_ids=recent_card_ids,
+        recent_solution_ids=recent_solution_ids,
+    )
+    strategy_payload = strategy.model_dump(mode="json")
+    strategy_path = output_path.with_name("reference_strategy.json")
+    strategy_path.write_text(
+        json_dumps(strategy_payload, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    context["reference_strategy"] = strategy_payload
+    context["reference_strategy_path"] = str(strategy_path)
+    return context
 
 
 def _validate_author_control_trace(
@@ -913,6 +934,77 @@ def _effective_kept_hidden(candidate: CandidateProposal, frozen: dict[str, Any])
     return sorted(hidden - revealed)
 
 
+def _derive_candidate_defensive_fields(
+    metadata: Mapping[str, Any],
+    frozen_truth_reveal: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Compile only explicit Boundary/Directive/Reveal/Style constraints."""
+
+    boundary: dict[str, Any] = {}
+    boundary_path = metadata.get("boundary_path")
+    if boundary_path and Path(str(boundary_path)).is_file():
+        try:
+            loaded = json.loads(Path(str(boundary_path)).read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                boundary = loaded
+        except (OSError, UnicodeError, TypeError, ValueError, json.JSONDecodeError):
+            boundary = {}
+    directives = [
+        item
+        for item in boundary.get("author_directives", [])
+        if isinstance(item, Mapping) and str(item.get("content") or "").strip()
+    ]
+    must_not_resolve = [
+        str(item["content"])
+        for item in directives
+        if str(item.get("directive_type") or item.get("type") or "").casefold()
+        in {"forbidden", "must_not"}
+    ]
+    canon_constraints = [
+        str(item["content"])
+        for item in directives
+        if str(item.get("directive_type") or item.get("type") or "").casefold()
+        in {"requirement", "canon_constraint"}
+    ]
+    agenda = frozen_truth_reveal.get("reveal_agenda", {})
+    if isinstance(agenda, Mapping):
+        must_not_resolve.extend(
+            f"KEEP_HIDDEN:{item.get('truth_id')}"
+            for item in agenda.get("keep_hidden", [])
+            if isinstance(item, Mapping) and item.get("truth_id")
+        )
+    knowledge_constraints = []
+    for character_id, value in (boundary.get("knowledge_boundaries") or {}).items():
+        if not isinstance(value, Mapping):
+            continue
+        if str(value.get("knowledge_state") or value.get("state") or "").upper() in {
+            "UNKNOWN",
+            "DENIED",
+            "UNAVAILABLE",
+        }:
+            knowledge_constraints.append(f"{character_id}: {json_dumps(dict(value))}")
+    forbidden_repetitions = []
+    for item in boundary.get("recent_structures", []):
+        if not isinstance(item, Mapping):
+            continue
+        signature = item.get("signature") or item.get("pattern") or item.get("tag")
+        if signature:
+            forbidden_repetitions.append(str(signature))
+    style_constraints: dict[str, str] = {}
+    profiles = boundary.get("style_profiles", [])
+    if isinstance(profiles, list) and profiles and isinstance(profiles[-1], Mapping):
+        for key in ("pov", "tense", "register", "dialogue", "sentence_rhythm"):
+            if profiles[-1].get(key) not in (None, ""):
+                style_constraints[key] = str(profiles[-1][key])
+    return {
+        "must_not_resolve": list(dict.fromkeys(must_not_resolve)),
+        "canon_constraints": list(dict.fromkeys(canon_constraints)),
+        "knowledge_constraints": list(dict.fromkeys(knowledge_constraints)),
+        "forbidden_repetitions": list(dict.fromkeys(forbidden_repetitions)),
+        "style_constraints": style_constraints,
+    }
+
+
 def _compile_creative_candidate(
     candidate: Any,
     *,
@@ -945,6 +1037,75 @@ def _compile_creative_candidate(
         pressure_after = pressure_before
     payload["pressure_before"] = pressure_before
     payload["pressure_target_after"] = pressure_after
+    # These are internal constraints compiled from the frozen planning
+    # context.  The executor no longer submits them as if they were scores or
+    # governance decisions.
+    payload.update(_derive_candidate_defensive_fields(metadata, frozen_truth_reveal))
+    payload["commit_updates"] = list(
+        dict.fromkeys(
+            [
+                *candidate.state_changes,
+                *(
+                    [candidate.required_irreversible_change]
+                    if candidate.required_irreversible_change.strip()
+                    else []
+                ),
+            ]
+        )
+    )
+    reference_context = metadata.get("reference_planning_context")
+    reference_strategy = metadata.get("reference_strategy")
+    if not isinstance(reference_strategy, dict):
+        reference_strategy = {}
+    if not isinstance(reference_context, dict):
+        reference_context = {}
+    payload["reference_provenance"] = PlanningReferenceProvenance(
+        reference_strategy_id=(
+            str(reference_strategy.get("strategy_id"))
+            if reference_strategy.get("strategy_id")
+            else None
+        ),
+        snapshot_id=(
+            str(
+                reference_strategy.get("snapshot_id")
+                or reference_context.get("snapshot_id")
+            )
+            if reference_strategy.get("snapshot_id")
+            or reference_context.get("snapshot_id")
+            else None
+        ),
+        snapshot_hash=(
+            str(
+                reference_strategy.get("snapshot_hash")
+                or reference_context.get("snapshot_hash")
+            )
+            if reference_strategy.get("snapshot_hash")
+            or reference_context.get("snapshot_hash")
+            else None
+        ),
+        card_ids_used=[
+            str(item)
+            for item in (
+                reference_strategy.get("selected_card_ids")
+                or reference_context.get("selected_card_ids")
+                or []
+            )
+        ],
+        selected_solutions=[
+            str(item)
+            for item in (
+                reference_strategy.get("selected_contrast_solutions")
+                or reference_strategy.get("selected_solutions")
+                or []
+            )
+        ],
+        application_summary=str(reference_strategy.get("application_summary") or ""),
+        match_tier=str(
+            reference_strategy.get("match_tier")
+            or reference_context.get("match_tier")
+            or "EXACT"
+        ),
+    ).model_dump(mode="json")
     reveal_payload = dict(payload.get("reveal_impact") or {})
     reveal_payload["kept_hidden"] = []
     payload["reveal_impact"] = reveal_payload
@@ -1017,6 +1178,68 @@ def _current_ordinal(connection: Any, book_id: str, edition_id: str = "base") ->
 
     chapters = edition_chapters(connection, book_id, edition_id)
     return max((int(row["ordinal"]) for row in chapters), default=0)
+
+
+def _recent_experience_signatures(
+    database: Database,
+    book_id: str,
+    edition_id: str,
+    *,
+    limit: int = 5,
+) -> list[dict[str, Any]]:
+    """Read only validated/approved soft signatures for the next plan prompt."""
+
+    with database.connect() as connection:
+        rows = connection.execute(
+            "SELECT output_json FROM drafts "
+            "WHERE book_id=? AND edition_id=? "
+            "AND status IN ('VALIDATED','AUTHOR_APPROVED','CANON_COMMITTED') "
+            "ORDER BY created_at DESC LIMIT ?",
+            (book_id, edition_id, max(1, min(limit, 10))),
+        ).fetchall()
+    signatures: list[dict[str, Any]] = []
+    for row in rows:
+        try:
+            payload = json.loads(str(row["output_json"] or "{}"))
+            signature = payload.get("chapter_experience_signature")
+            parsed = ChapterExperienceSignature.model_validate(signature)
+        except (TypeError, ValueError, json.JSONDecodeError, ValidationError):
+            continue
+        signatures.append(parsed.model_dump(mode="json"))
+    return signatures
+
+
+def _recent_reference_memory(
+    database: Database,
+    book_id: str,
+    edition_id: str,
+    *,
+    limit: int = 10,
+) -> tuple[list[str], list[str]]:
+    with database.connect() as connection:
+        rows = connection.execute(
+            "SELECT output_json FROM drafts WHERE book_id=? AND edition_id=? "
+            "AND status IN ('VALIDATED','AUTHOR_APPROVED','CANON_COMMITTED') "
+            "ORDER BY created_at DESC LIMIT ?",
+            (book_id, edition_id, max(1, min(limit, 10))),
+        ).fetchall()
+    ids: list[str] = []
+    solution_ids: list[str] = []
+    for row in rows:
+        try:
+            payload = json.loads(str(row["output_json"] or "{}"))
+        except (TypeError, ValueError, json.JSONDecodeError):
+            continue
+        provenance = payload.get("reference_provenance")
+        if not isinstance(provenance, Mapping):
+            continue
+        values = provenance.get("card_ids_used", [])
+        if isinstance(values, Sequence) and not isinstance(values, str):
+            ids.extend(str(item) for item in values if str(item).strip())
+        solutions = provenance.get("selected_solutions", [])
+        if isinstance(solutions, Sequence) and not isinstance(solutions, str):
+            solution_ids.extend(str(item) for item in solutions if str(item).strip())
+    return list(dict.fromkeys(ids)), list(dict.fromkeys(solution_ids))
 
 
 def rank_threads(
@@ -1344,6 +1567,9 @@ def prepare_candidate_task(
     )
     task_dir.mkdir(parents=True, exist_ok=True)
     output_dir.mkdir(parents=True, exist_ok=True)
+    recent_reference_card_ids, recent_reference_solution_ids = _recent_reference_memory(
+        database, book_id, selected_edition
+    )
     reference_planning_context = _continuation_reference_planning_context(
         book_id=book_id,
         edition_id=selected_edition,
@@ -1352,7 +1578,12 @@ def prepare_candidate_task(
         thread_id=threads[0].thread_id,
         kernel_context=kernel_context,
         story_state=boundary_payload,
+        recent_card_ids=recent_reference_card_ids,
+        recent_solution_ids=recent_reference_solution_ids,
         output_path=task_dir / "reference_context_snapshot.json",
+    )
+    recent_experience_signatures = _recent_experience_signatures(
+        database, book_id, selected_edition
     )
     reference_prompt = {
         key: reference_planning_context[key]
@@ -1368,8 +1599,14 @@ def prepare_candidate_task(
             "warnings",
         )
     }
+    strategy_payload = reference_planning_context.get("reference_strategy", {})
+    reference_prompt["reference_strategy"] = _compact_reference_prompt_value(
+        strategy_payload
+    )
     reference_prompt["compact_cards"] = _compact_reference_prompt_cards(
-        reference_planning_context.get("compact_cards", [])
+        strategy_payload.get("selected_cards", [])
+        if isinstance(strategy_payload, Mapping)
+        else []
     )
     input_text = "\n".join(
         [
@@ -1404,6 +1641,14 @@ def prepare_candidate_task(
             "不得复制来源人物、事件、设定、句式，也不得改变 Canon、资源、知识边界或候选选择。",
             "```json",
             json_dumps(reference_prompt, indent=2),
+            "```",
+            "",
+            "## Recent Chapter Experience Signatures（soft guidance）",
+            "",
+            "下面是最近 3—5 个已校验章节的体验签名。重复解决方式、风险形态或结尾模式只"
+            "产生软提醒，不构成硬失败；必须说明本案为何复用或如何变化。",
+            "```json",
+            json_dumps(recent_experience_signatures, indent=2),
             "```",
             "",
             "## 作者控制输入（必须显式检查）",
@@ -1448,9 +1693,8 @@ def prepare_candidate_task(
                 else json_dumps(_kernel_author_summary(kernel_context), indent=2)
             ),
             "",
-            "每案必须填写 scheduler_alignment。Scheduler 是建议；若选择其他 Primary Intent，"
-            "必须给出 deviation_reason。Reader/Drive/Progression/Resource/World 声明将由 Python"
-            "依据 kernel_context.json 重新核验，不能靠自报获得评分。",
+            "不要填写 scheduler_alignment、评分、硬门或内部 provenance；Scheduler 是冻结输入，"
+            "Python 会根据候选创意与 kernel_context.json 计算对齐和偏离诊断。",
             "",
             "## 三条优先线程",
             "",
@@ -1523,6 +1767,10 @@ def prepare_candidate_task(
         "created_at": utc_now(),
         "runtime_context": runtime_context.model_dump(mode="json"),
         "reference_planning_context": reference_planning_context,
+        "reference_strategy": strategy_payload,
+        "recent_experience_signatures": recent_experience_signatures,
+        "recent_reference_card_ids": recent_reference_card_ids,
+        "recent_reference_solution_ids": recent_reference_solution_ids,
         "include_runtime_state": include_runtime_state,
         "innovation_control": selected_innovation.model_dump(mode="json"),
         "innovation_source": selected_source,
@@ -1706,6 +1954,9 @@ def prepare_handoff_candidate_task(
         if active_threads
         else "handoff-thread"
     )
+    recent_reference_card_ids, recent_reference_solution_ids = _recent_reference_memory(
+        database, book_id, edition_id
+    )
     reference_planning_context = _continuation_reference_planning_context(
         book_id=book_id,
         edition_id=edition_id,
@@ -1714,7 +1965,12 @@ def prepare_handoff_candidate_task(
         thread_id=thread_id,
         kernel_context=kernel_context,
         story_state=world_state,
+        recent_card_ids=recent_reference_card_ids,
+        recent_solution_ids=recent_reference_solution_ids,
         output_path=input_dir / "reference_context_snapshot.json",
+    )
+    recent_experience_signatures = _recent_experience_signatures(
+        database, book_id, edition_id
     )
     reference_prompt = {
         key: reference_planning_context[key]
@@ -1730,8 +1986,14 @@ def prepare_handoff_candidate_task(
             "warnings",
         )
     }
+    strategy_payload = reference_planning_context.get("reference_strategy", {})
+    reference_prompt["reference_strategy"] = _compact_reference_prompt_value(
+        strategy_payload
+    )
     reference_prompt["compact_cards"] = _compact_reference_prompt_cards(
-        reference_planning_context.get("compact_cards", [])
+        strategy_payload.get("selected_cards", [])
+        if isinstance(strategy_payload, Mapping)
+        else []
     )
     schema = CandidateCreativeOutput.model_json_schema()
     metadata = {
@@ -1758,6 +2020,10 @@ def prepare_handoff_candidate_task(
         "source_state_context": str(input_dir / "world_state_context.json"),
         "kernel_context": str(input_dir / "kernel_context.json"),
         "reference_planning_context": reference_planning_context,
+        "reference_strategy": strategy_payload,
+        "recent_experience_signatures": recent_experience_signatures,
+        "recent_reference_card_ids": recent_reference_card_ids,
+        "recent_reference_solution_ids": recent_reference_solution_ids,
         "reference_context_snapshot": str(input_dir / "reference_context_snapshot.json"),
         "effective_contract_references": [
             item.model_dump(mode="json") for item in kernel_context.contract_references
@@ -1812,8 +2078,8 @@ def prepare_handoff_candidate_task(
             "",
             json_dumps(_kernel_author_summary(kernel_context), indent=2),
             "",
-            "每案必须填写 scheduler_alignment：说明是否采纳推荐 Primary Intent、服务哪些"
-            " Debt / Anticipation，以及偏离理由。Lens 与 Chapter Intent 是两个独立维度。",
+            "不要填写 scheduler_alignment、评分、硬门或内部 provenance；Lens 与 Chapter Intent"
+            "是创意决定，Python 会根据冻结输入计算 Debt / Anticipation 对齐。",
             "Reader/Drive/Progression/Resource/World/Drift 字段只是 declared claims；"
             "Python 将依据 kernel_context.json 重新核验。",
             "",
@@ -1823,6 +2089,13 @@ def prepare_handoff_candidate_task(
             "设定或句式，也不得改变 Boundary、Canon、资源、知识边界或 Candidate 选择。",
             "```json",
             json_dumps(reference_prompt, indent=2),
+            "```",
+            "",
+            "## Recent Chapter Experience Signatures（soft guidance）",
+            "",
+            "重复体验模式只产生软提醒，不构成整批候选硬失败；请在创意摘要中保留变化或复用理由。",
+            "```json",
+            json_dumps(recent_experience_signatures, indent=2),
             "```",
         ]
     )

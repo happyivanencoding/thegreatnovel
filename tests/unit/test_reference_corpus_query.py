@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
+from novel_authoring.reference_corpus.context import freeze_reference_context
 from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryEcho,
     ReferenceCorpusQueryRequest,
@@ -405,6 +406,94 @@ def test_query_separates_human_problem_from_machine_tags_and_keeps_legacy_tag(
     )
     assert human_sentence.status == "ZERO_RESULTS"
     assert not human_sentence.cards
+    assert human_sentence.match_tier == "ZERO_RESULTS"
+    assert human_sentence.relaxed_fields == ["scene_functions"]
+    assert human_sentence.effective_query is not None
+    assert human_sentence.effective_query.scene_functions == []
+    assert human_sentence.zero_result_reason == (
+        "NO_MATCH_WITHOUT_NATURAL_LANGUAGE_METADATA_FALLBACK"
+    )
+
+
+def test_query_fallback_is_bounded_for_planning_and_prose(tmp_path: Path) -> None:
+    planning_root = tmp_path / "planning-fallback"
+    _write_package(planning_root, [_mechanism()])
+    planning_request = ReferenceCorpusQueryRequest(
+        purpose="PLANNING",
+        creative_problem_tags=["missing-tag"],
+        max_cards=3,
+    )
+
+    planning = query_reference_corpus(planning_request, corpus_root=planning_root)
+
+    assert planning.status == "ENABLED"
+    assert planning.match_tier == "FALLBACK"
+    assert [card.card_id for card in planning.cards] == ["mechanism-test"]
+    assert planning.original_query is not None
+    assert planning.original_query.creative_problem_tags == ["missing-tag"]
+    assert planning.effective_query is not None
+    assert planning.effective_query.creative_problem_tags == []
+    assert planning.relaxed_fields == ["creative_problem_tags"]
+    assert planning.zero_result_reason is None
+
+    prose_root = tmp_path / "prose-fallback"
+    _write_package(prose_root, [_prose_control()])
+    prose = query_reference_corpus(
+        {
+            "purpose": "PROSE",
+            "scene_functions": ["UNMATCHED_SCENE"],
+            "max_cards": 3,
+        },
+        corpus_root=prose_root,
+    )
+
+    assert prose.status == "ENABLED"
+    assert prose.match_tier == "FALLBACK"
+    assert [card.card_id for card in prose.cards] == ["prose-control-test"]
+    assert prose.relaxed_fields == ["scene_functions"]
+    assert prose.effective_query is not None
+    assert prose.effective_query.scene_functions == []
+
+
+def test_snapshot_copies_query_diagnostics_and_hashes_them(tmp_path: Path) -> None:
+    root = tmp_path / "snapshot-diagnostics"
+    _write_package(root, [_mechanism()])
+    request = ReferenceCorpusQueryRequest(
+        purpose="PLANNING",
+        creative_problem_tags=["missing-tag"],
+        max_cards=3,
+    )
+    response = query_reference_corpus(request, corpus_root=root)
+    snapshot = freeze_reference_context(
+        request,
+        response,
+        book_id="book-under-write",
+        edition_id="base",
+        operation_id="plan-task-fallback",
+    )
+
+    assert snapshot.match_tier == "FALLBACK"
+    assert snapshot.original_query == response.original_query
+    assert snapshot.effective_query == response.effective_query
+    assert snapshot.relaxed_fields == ["creative_problem_tags"]
+    assert snapshot.zero_result_reason is None
+
+    changed = response.model_copy(
+        update={
+            "match_tier": "EXACT",
+            "effective_query": response.original_query,
+            "relaxed_fields": [],
+        }
+    )
+    changed_snapshot = freeze_reference_context(
+        request,
+        changed,
+        book_id="book-under-write",
+        edition_id="base",
+        operation_id="plan-task-fallback",
+    )
+    assert changed_snapshot.snapshot_hash != snapshot.snapshot_hash
+    assert changed_snapshot.snapshot_id != snapshot.snapshot_id
 
 
 def test_retrieval_legacy_problem_only_accepts_safe_single_tags(tmp_path: Path) -> None:
@@ -437,6 +526,11 @@ def test_response_status_defaults_for_existing_construction() -> None:
     )
 
     assert response.status == "ENABLED"
+    assert response.match_tier is None
+    assert response.original_query is None
+    assert response.effective_query is None
+    assert response.relaxed_fields == []
+    assert response.zero_result_reason is None
     assert response.package_schema_version is None
     assert response.package_hash is None
 

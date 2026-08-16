@@ -389,15 +389,15 @@ class CandidateCreativeProposal(BaseModel):
     promises_to_advance: list[str] = Field(default_factory=list)
     promises_to_pay: list[str] = Field(default_factory=list)
     required_irreversible_change: str
-    required_cost: str
-    must_not_resolve: list[str] = Field(default_factory=list)
-    canon_constraints: list[str] = Field(default_factory=list)
-    knowledge_constraints: list[str] = Field(default_factory=list)
-    forbidden_repetitions: list[str] = Field(default_factory=list)
-    style_constraints: dict[str, str] = Field(default_factory=dict)
-    commit_updates: list[str] = Field(min_length=1)
+    required_cost: str = ""
     pressure_before: float | None = Field(default=None, ge=0, le=100)
     pressure_target_after: float | None = Field(default=None, ge=0, le=100)
+    outcome_magnitude: str = ""
+    action_space_delta: str = ""
+    knowledge_delta: str = ""
+    relationship_delta: str = ""
+    world_scale_delta: str = ""
+    core_promise_delivery: str = ""
     lens: CandidateLens = CandidateLens.CONTINUITY_ACTIVE_THREAD
     novelty_provenance: list[NoveltyDeclaration] = Field(default_factory=list)
     wildcard: bool = False
@@ -417,6 +417,42 @@ class CandidateCreativeProposal(BaseModel):
                 "候选不得把未在 selected Edition 建立的状态声明为 retroactive invention"
             )
         return self
+
+
+class PlanningReferenceProvenance(BaseModel):
+    """Reference-only provenance carried through planning without becoming Canon."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    reference_strategy_id: str | None = None
+    snapshot_id: str | None = None
+    snapshot_hash: str | None = None
+    card_ids_used: list[str] = Field(default_factory=list)
+    selected_solutions: list[str] = Field(default_factory=list)
+    application_summary: str = ""
+    match_tier: str = "EXACT"
+    usage: str = "REFERENCE_ONLY"
+    reuse_reason: str | None = None
+
+
+class PlanningReferenceStrategy(BaseModel):
+    """Bounded, reference-only choice made before candidate generation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    strategy_id: str
+    snapshot_id: str | None = None
+    snapshot_hash: str | None = None
+    selected_card_ids: list[str] = Field(default_factory=list, max_length=3)
+    selected_cards: list[dict[str, Any]] = Field(default_factory=list, max_length=3)
+    selected_contrast_solutions: list[str] = Field(
+        default_factory=list, max_length=3
+    )
+    application_summary: str = ""
+    failure_modes: list[str] = Field(default_factory=list)
+    match_tier: str = "EXACT"
+    usage: str = "REFERENCE_ONLY"
+    reuse_reason: str | None = None
 
 
 class CandidateProposal(BaseModel):
@@ -443,7 +479,7 @@ class CandidateProposal(BaseModel):
     promises_to_advance: list[str] = Field(default_factory=list)
     promises_to_pay: list[str] = Field(default_factory=list)
     required_irreversible_change: str
-    required_cost: str
+    required_cost: str = ""
     must_not_resolve: list[str] = Field(default_factory=list)
     canon_constraints: list[str] = Field(default_factory=list)
     knowledge_constraints: list[str] = Field(default_factory=list)
@@ -452,6 +488,12 @@ class CandidateProposal(BaseModel):
     commit_updates: list[str] = Field(min_length=1)
     pressure_before: float = Field(ge=0, le=100)
     pressure_target_after: float = Field(ge=0, le=100)
+    outcome_magnitude: str = ""
+    action_space_delta: str = ""
+    knowledge_delta: str = ""
+    relationship_delta: str = ""
+    world_scale_delta: str = ""
+    core_promise_delivery: str = ""
     score_inputs: CandidateScoreInputs
     score_evidence: dict[str, list[str]]
     gate_input: HardGateInput
@@ -482,6 +524,9 @@ class CandidateProposal(BaseModel):
     genre_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
     genre_evolution_diagnostic: dict[str, Any] = Field(default_factory=dict)
     narrative_drive_drift_diagnostic: dict[str, Any] = Field(default_factory=dict)
+    reference_provenance: PlanningReferenceProvenance = Field(
+        default_factory=PlanningReferenceProvenance
+    )
 
     @model_validator(mode="after")
     def reject_retroactive_invention(self) -> CandidateProposal:
@@ -510,6 +555,27 @@ class CandidateCreativeOutput(BaseModel):
     task_id: str
     candidates: list[CandidateCreativeProposal] = Field(min_length=2, max_length=3)
     notes: list[str] = Field(default_factory=list)
+
+
+class ChapterExperienceSignature(BaseModel):
+    """Soft, reusable description of how a chapter delivers its experience."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    event_source: str = ""
+    solution_method: str = ""
+    protagonist_strategy: str = ""
+    risk_form: str = ""
+    emotional_outcome: str = ""
+    social_feedback: str = ""
+    scene_topology: str = ""
+    ending_mode: str = ""
+    outcome_magnitude: str = ""
+    action_space_delta: str = ""
+    knowledge_delta: str = ""
+    relationship_delta: str = ""
+    world_scale_delta: str = ""
+    core_promise_delivery: str = ""
 
 
 class ThreadPriority(BaseModel):
@@ -582,3 +648,13 @@ class ChapterContract(BaseModel):
     declared_kernel_trace: dict[str, Any] = Field(default_factory=dict)
     verified_kernel_trace: dict[str, Any] = Field(default_factory=dict)
     kernel_verification_status: str = "LEGACY_NO_EFFECTIVE_CONTRACT"
+    experience_target: ChapterExperienceSignature = Field(
+        default_factory=ChapterExperienceSignature
+    )
+    outcome_magnitude_target: str = ""
+    action_space_delta_target: str = ""
+    dramatization_targets: list[str] = Field(default_factory=list)
+    realization_scope: str = "CONTRACT_BOUND"
+    reference_provenance: PlanningReferenceProvenance = Field(
+        default_factory=PlanningReferenceProvenance
+    )

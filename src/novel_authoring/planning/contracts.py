@@ -11,7 +11,12 @@ from novel_authoring.planning.innovation import (
     InnovationControl,
     NarrativePortfolioSnapshot,
 )
-from novel_authoring.planning.models import CandidateProposal, ChapterContract
+from novel_authoring.planning.models import (
+    CandidateProposal,
+    ChapterContract,
+    ChapterExperienceSignature,
+    PlanningReferenceProvenance,
+)
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.operations import book_root, find_operation
 from novel_authoring.utils import json_dumps, sha256_bytes, stable_id, utc_now
@@ -114,6 +119,67 @@ def build_chapter_contract(
             ),
             "reveal_agenda": dict(boundary_json.get("reveal_agenda", {})),
         }
+    reference_context = task_metadata.get("reference_planning_context", {})
+    if not isinstance(reference_context, dict):
+        reference_context = {}
+    reference_strategy = task_metadata.get("reference_strategy", {})
+    if not isinstance(reference_strategy, dict):
+        reference_strategy = {}
+    reference_provenance = PlanningReferenceProvenance(
+        reference_strategy_id=(
+            str(reference_strategy["strategy_id"])
+            if reference_strategy.get("strategy_id")
+            else None
+        ),
+        snapshot_id=(
+            str(reference_strategy.get("snapshot_id") or reference_context.get("snapshot_id"))
+            if reference_strategy.get("snapshot_id") or reference_context.get("snapshot_id")
+            else None
+        ),
+        snapshot_hash=(
+            str(reference_strategy.get("snapshot_hash") or reference_context.get("snapshot_hash"))
+            if reference_strategy.get("snapshot_hash") or reference_context.get("snapshot_hash")
+            else None
+        ),
+        card_ids_used=[
+            str(item)
+            for item in (
+                reference_strategy.get("selected_card_ids")
+                or reference_context.get("selected_card_ids")
+                or []
+            )
+        ],
+        selected_solutions=[
+            str(item)
+            for item in (
+                reference_strategy.get("selected_contrast_solutions")
+                or reference_strategy.get("selected_solutions")
+                or []
+            )
+        ],
+        application_summary=str(reference_strategy.get("application_summary") or ""),
+        match_tier=str(
+            reference_strategy.get("match_tier")
+            or reference_context.get("match_tier")
+            or "EXACT"
+        ),
+    )
+    experience_target = ChapterExperienceSignature(
+        event_source=candidate.event_source,
+        solution_method=candidate.solution_method,
+        protagonist_strategy=candidate.protagonist_strategy,
+        risk_form=candidate.risk_form,
+        emotional_outcome=candidate.emotional_outcome,
+        social_feedback=candidate.social_feedback,
+        scene_topology=candidate.scene_topology,
+        ending_mode=candidate.scene_topology,
+        outcome_magnitude=candidate.outcome_magnitude,
+        action_space_delta=candidate.action_space_delta,
+        knowledge_delta=candidate.knowledge_delta,
+        relationship_delta=candidate.relationship_delta,
+        world_scale_delta=candidate.world_scale_delta,
+        core_promise_delivery=candidate.core_promise_delivery,
+    )
     rhythm_diagnostics = dict(boundary_json.get("rhythm_diagnostics", {}))
     rhythm_constraints: dict[str, object] = {}
     function_streak = rhythm_diagnostics.get("same_function_streak", {})
@@ -241,6 +307,19 @@ def build_chapter_contract(
         declared_kernel_trace=declared_kernel_trace,
         verified_kernel_trace=verified_kernel_trace,
         kernel_verification_status=kernel_verification_status,
+        experience_target=experience_target,
+        outcome_magnitude_target=candidate.outcome_magnitude,
+        action_space_delta_target=candidate.action_space_delta,
+        dramatization_targets=[
+            item
+            for item in (
+                candidate.required_irreversible_change,
+                candidate.ending_state,
+            )
+            if item.strip()
+        ],
+        realization_scope="CONTRACT_PLUS_MICRO_EVENTS",
+        reference_provenance=reference_provenance,
     )
     contract_json = json_dumps(contract.model_dump(mode="json"), indent=2)
     contract_hash = sha256_bytes(contract_json.encode())
