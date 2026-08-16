@@ -1,0 +1,26 @@
+schema_version: book-v1
+layout_version: library-v1
+book_id: original-e56a54687506
+slug: original-e56a54687506
+title: 折叠塔顶的回声
+active_edition_id: base
+database_path: _system/state.sqlite3
+source_storage_mode: NONE_ORIGINAL
+book_kind: AUTHOR
+creation_mode: ORIGINAL
+created_at: '2026-08-16T15:23:06.923287+00:00'
+latest_export: editions/base/exports/latest
+source:
+  root: source
+  files: []
+updated_at: '2026-08-16T20:15:18.219228+00:00'
+source_files: []
+readiness_status: FOUNDATION_READY
+original_state: FOUNDATION_READY
+latest_chapter: 1
+current_atlas_id: null
+current_initialization_id: null
+innovation:
+  level: medium
+  focus:
+  - auto

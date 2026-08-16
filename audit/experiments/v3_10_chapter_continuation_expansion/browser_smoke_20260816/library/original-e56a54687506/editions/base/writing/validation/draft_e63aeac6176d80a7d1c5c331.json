@@ -1,0 +1,808 @@
+{
+  "book_id": "original-e56a54687506",
+  "content_sha256": "8fdaf66ed79421969a7bc96c2862c4ec20c9aa6d41f3b89b76f2dd16bb3c665b",
+  "contract_id": "contract_c010403488e79542701e00d4",
+  "created_at": "2026-08-16T16:56:19.946261+00:00",
+  "draft_id": "draft_e63aeac6176d80a7d1c5c331",
+  "passed": false,
+  "projection_sha256": "65fa4bb87a62264ad891e732809effa8a882d105d2d4fc1a502b5f7435328050",
+  "reports": [
+    {
+      "findings": [
+        {
+          "code": "CANON_PREDICATE_CONFLICT",
+          "evidence": [
+            "\"原本平整的墙面出现一扇没有编号的门，门内广播报出十七层。\""
+          ],
+          "location": "state_changes:external-vent-window-observed",
+          "message": "None.observed_after_rearrangement 已有不同正史值（post-rearrangement-door）。",
+          "severity": "ERROR",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {},
+      "passed": false,
+      "severity": "ERROR",
+      "validator": "Canon Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "latest_order_key": null
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Timeline Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Knowledge Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "CHARACTER_FIT_BELOW_MINIMUM",
+          "evidence": [],
+          "location": "character_fit_inputs",
+          "message": "人物契合度 70.00 低于参考线 75.00，建议人工复核。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {
+        "character_fit": 70.0
+      },
+      "passed": true,
+      "severity": "WARNING",
+      "validator": "Character Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Economy / Power Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:沈砚确认一处可复核的楼外风光入口",
+          "message": "合同证据 commit:沈砚确认一处可复核的楼外风光入口 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:测距带在重排缝隙中保留第二种局部墙面关系",
+          "message": "合同证据 commit:测距带在重排缝隙中保留第二种局部墙面关系 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:测距带永久获得跨窄缝保留相邻墙面关系的可验证进化，检修窗成为已确认但危险的向外路线。",
+          "message": "合同证据 commit:测距带永久获得跨窄缝保留相邻墙面关系的可验证进化，检修窗成为已确认但危险的向外路线。 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:ending_state",
+          "message": "合同证据 ending_state 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:required_cost",
+          "message": "合同证据 required_cost 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:required_irreversible_change",
+          "message": "合同证据 required_irreversible_change 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "REALIZED_KERNEL_EXCEEDS_VERIFIED_CONTRACT",
+          "evidence": [],
+          "location": "realized_kernel_trace",
+          "message": "Realized reader promise 超出 Verified Kernel Trace：['anticipation-thread-1', 'anticipation-world-earned-spatial-frontier']",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "REALIZED_KERNEL_EXCEEDS_VERIFIED_CONTRACT",
+          "evidence": [],
+          "location": "realized_kernel_trace",
+          "message": "Realized growth axis 超出 Verified Kernel Trace：['measuring-tape-space-relation']",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "REALIZED_KERNEL_EXCEEDS_VERIFIED_CONTRACT",
+          "evidence": [],
+          "location": "realized_kernel_trace",
+          "message": "Realized narrative debt 超出 Verified Kernel Trace：['anticipation-thread-1', 'anticipation-world-earned-spatial-frontier']",
+          "severity": "WARNING",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {
+        "evidence_matches": [
+          {
+            "key": "commit:主线程从寻找广播方向推进为掌握一条向外的局部路线",
+            "quote": "主线程从寻找广播方向推进为掌握一条向外的局部路线",
+            "status": "EXACT"
+          },
+          {
+            "key": "commit:沈砚确认一处可复核的楼外风光入口",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "commit:测距带在重排缝隙中保留第二种局部墙面关系",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "commit:测距带永久获得跨窄缝保留相邻墙面关系的可验证进化，检修窗成为已确认但危险的向外路线。",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "ending_state",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "required_cost",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "required_irreversible_change",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "state_changes:measuring-tape-space-relation",
+            "quote": "测距带跨局部重排保持空间关系",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:measuring-tape-space-relation",
+            "quote": "两端之间仍是二点九四米。",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:external-vent-window-observed",
+            "quote": "他没有急着往里钻。先把钩端收回，再重新送入；第二次，墙面向外折了一寸，缝隙里出现一块锈蚀的百叶窗。百叶窗后面有风，风把灰尘吹成一条窄窄的斜线。",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:space-reading-route-evidence",
+            "quote": "他没有去追声音。测距带的带钩端还挂在窗下，带身从窗缝一直拉回原来的墙根。它把检修窗和室内的墙面连成一条可复核的向外路线。这个结果已经足够重要，重要到不需要再替广播证明它自己。",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:protagonist-local-evidence-choice-2",
+            "quote": "沈砚低头看着窗框上留下的浅白折返线，听见广播在更深处报出相反的楼层。他没有抬头。测距带的第二个固定端点还在手里，楼外风向已经确认，只是相邻塔体之间没有地面。",
+            "status": "EXACT"
+          }
+        ],
+        "kernel_trace_comparison": {
+          "compiled": {
+            "debts_advanced": [
+              "anticipation-thread-1",
+              "anticipation-world-earned-spatial-frontier"
+            ],
+            "debts_paid": [],
+            "evidence": [
+              {
+                "claim": "capability:measuring-tape-space-relation",
+                "evidence_quotes": [
+                  "测距带跨局部重排保持空间关系",
+                  "两端之间仍是二点九四米。"
+                ],
+                "state_change_record_ids": [
+                  "measuring-tape-space-relation"
+                ]
+              },
+              {
+                "claim": "fact:external-vent-window-observed",
+                "evidence_quotes": [
+                  "他没有急着往里钻。先把钩端收回，再重新送入；第二次，墙面向外折了一寸，缝隙里出现一块锈蚀的百叶窗。百叶窗后面有风，风把灰尘吹成一条窄窄的斜线。"
+                ],
+                "state_change_record_ids": [
+                  "external-vent-window-observed"
+                ]
+              },
+              {
+                "claim": "thread:space-reading-route-evidence",
+                "evidence_quotes": [
+                  "他没有去追声音。测距带的带钩端还挂在窗下，带身从窗缝一直拉回原来的墙根。它把检修窗和室内的墙面连成一条可复核的向外路线。这个结果已经足够重要，重要到不需要再替广播证明它自己。"
+                ],
+                "state_change_record_ids": [
+                  "space-reading-route-evidence"
+                ]
+              },
+              {
+                "claim": "character_state:protagonist-local-evidence-choice-2",
+                "evidence_quotes": [
+                  "沈砚低头看着窗框上留下的浅白折返线，听见广播在更深处报出相反的楼层。他没有抬头。测距带的第二个固定端点还在手里，楼外风向已经确认，只是相邻塔体之间没有地面。"
+                ],
+                "state_change_record_ids": [
+                  "protagonist-local-evidence-choice-2"
+                ]
+              }
+            ],
+            "expected_contract_id": "contract_c010403488e79542701e00d4",
+            "narrative_drives_advanced": [],
+            "payoff_channels_realized": [],
+            "primary_intent": null,
+            "progression_impact": {
+              "ability_showcase": [],
+              "ability_unlock": [
+                "测距带跨局部重排保持空间关系"
+              ],
+              "axis_advanced": [],
+              "bottleneck_change": null,
+              "branch_change": null,
+              "future_progression_space": [],
+              "growth_cost": [],
+              "new_ceiling_visibility": [],
+              "progression_delta_type": [],
+              "resource_change": [],
+              "stage_change": null
+            },
+            "reader_promises_served": [
+              "anticipation-thread-1",
+              "anticipation-world-earned-spatial-frontier"
+            ],
+            "resource_changes": [],
+            "world_expansion_changes": []
+          },
+          "evidence_matches": [
+            {
+              "key": "realized_kernel_trace:capability:measuring-tape-space-relation",
+              "quote": "测距带跨局部重排保持空间关系",
+              "status": "EXACT"
+            },
+            {
+              "key": "realized_kernel_trace:capability:measuring-tape-space-relation",
+              "quote": "两端之间仍是二点九四米。",
+              "status": "EXACT"
+            },
+            {
+              "key": "realized_kernel_trace:fact:external-vent-window-observed",
+              "quote": "他没有急着往里钻。先把钩端收回，再重新送入；第二次，墙面向外折了一寸，缝隙里出现一块锈蚀的百叶窗。百叶窗后面有风，风把灰尘吹成一条窄窄的斜线。",
+              "status": "EXACT"
+            },
+            {
+              "key": "realized_kernel_trace:thread:space-reading-route-evidence",
+              "quote": "他没有去追声音。测距带的带钩端还挂在窗下，带身从窗缝一直拉回原来的墙根。它把检修窗和室内的墙面连成一条可复核的向外路线。这个结果已经足够重要，重要到不需要再替广播证明它自己。",
+              "status": "EXACT"
+            },
+            {
+              "key": "realized_kernel_trace:character_state:protagonist-local-evidence-choice-2",
+              "quote": "沈砚低头看着窗框上留下的浅白折返线，听见广播在更深处报出相反的楼层。他没有抬头。测距带的第二个固定端点还在手里，楼外风向已经确认，只是相邻塔体之间没有地面。",
+              "status": "EXACT"
+            }
+          ],
+          "expected": {
+            "drive_drift": {
+              "evidence": [],
+              "hard_failure": false,
+              "reasons": [
+                "本章未直接服务 Primary Drive；单章缺席不是硬失败"
+              ],
+              "status": "SOFT_MISS",
+              "warning": false
+            },
+            "evidence_compilation": {
+              "candidate_local_id": "route-window-gap",
+              "completeness": "PARTIAL",
+              "declared": {
+                "anticipation_impact": [],
+                "drive_drift": {},
+                "genre_drift": {},
+                "genre_evolution": {},
+                "narrative_drive_alignment": {
+                  "drive_balance": "UNKNOWN",
+                  "drive_conflicts": [],
+                  "drives_advanced": [],
+                  "drives_deferred": [],
+                  "drives_paid_off": [],
+                  "evidence": [],
+                  "primary_drive": null,
+                  "primary_drive_effect": "",
+                  "secondary_drive_effects": {}
+                },
+                "payoff_channel_impact": [],
+                "progression_impact": {
+                  "ability_showcase": [],
+                  "ability_unlock": [],
+                  "axis_advanced": [],
+                  "bottleneck_change": null,
+                  "branch_change": null,
+                  "future_progression_space": [],
+                  "growth_cost": [],
+                  "new_ceiling_visibility": [],
+                  "progression_delta_type": [],
+                  "resource_change": [],
+                  "stage_change": null
+                },
+                "reader_promise_alignment": [],
+                "resource_impact": [],
+                "scheduler_alignment": {
+                  "alignment": "UNKNOWN",
+                  "anticipations_served": [],
+                  "candidate_primary_intent": null,
+                  "debts_served": [],
+                  "deviation_reason": "",
+                  "recommended_primary_intent": null,
+                  "risks": []
+                },
+                "world_expansion_impact": []
+              },
+              "differences": [],
+              "hard_gate_compilation": {
+                "author_constraint_violations": [],
+                "canon_conflicts": [],
+                "capability_violations": [],
+                "knowledge_violations": [],
+                "missing_causal_sources": [],
+                "payoff_cooldown_violations": [],
+                "timeline_conflicts": []
+              },
+              "soft_metric_compilation": {
+                "candidate_score_overrides": {
+                  "components": {
+                    "agency_gain": {
+                      "completeness": "COMPLETE",
+                      "evidence": [],
+                      "score": 50.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "debt_utility": {
+                      "completeness": "COMPLETE",
+                      "evidence": [],
+                      "formula": "existing:narrative_debt",
+                      "score": 0.0,
+                      "source": "FROZEN_NARRATIVE_DEBT"
+                    },
+                    "future_damage": {
+                      "completeness": "COMPLETE",
+                      "evidence": [],
+                      "score": 0.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "progress_gain": {
+                      "completeness": "COMPLETE",
+                      "components": {
+                        "goal_advance": 70.0,
+                        "knowledge_change": 60.0,
+                        "permanent_growth": 0.0,
+                        "relationship_change": 0.0,
+                        "strategy_expansion": 50.0,
+                        "world_state_change": 0.0
+                      },
+                      "evidence": {
+                        "goal_advance": [],
+                        "knowledge_change": [],
+                        "permanent_growth": [
+                          "no_verified_permanent_growth_change"
+                        ],
+                        "relationship_change": [
+                          "no_verified_relationship_change_change"
+                        ],
+                        "strategy_expansion": [],
+                        "world_state_change": [
+                          "no_verified_world_state_change_change"
+                        ]
+                      },
+                      "formula": "existing:progress",
+                      "score": 27.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "risk_fit": {
+                      "completeness": "COMPLETE",
+                      "evidence": [],
+                      "score": 100.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "thread_need_fit": {
+                      "completeness": "COMPLETE",
+                      "evidence": [
+                        "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+                      ],
+                      "score": 100.0,
+                      "source": "FROZEN_ACTIVE_THREADS"
+                    }
+                  },
+                  "source": "KERNEL_EVIDENCE_COMPILER",
+                  "values": {
+                    "agency_gain": 50.0,
+                    "debt_utility": 0.0,
+                    "future_damage": 0.0,
+                    "progress_gain": 27.0,
+                    "risk_fit": 100.0,
+                    "thread_need_fit": 100.0
+                  }
+                },
+                "progress": {
+                  "completeness": "COMPLETE",
+                  "components": {
+                    "goal_advance": 70.0,
+                    "knowledge_change": 60.0,
+                    "permanent_growth": 0.0,
+                    "relationship_change": 0.0,
+                    "strategy_expansion": 50.0,
+                    "world_state_change": 0.0
+                  },
+                  "evidence": {
+                    "goal_advance": [],
+                    "knowledge_change": [],
+                    "permanent_growth": [
+                      "no_verified_permanent_growth_change"
+                    ],
+                    "relationship_change": [
+                      "no_verified_relationship_change_change"
+                    ],
+                    "strategy_expansion": [],
+                    "world_state_change": [
+                      "no_verified_world_state_change_change"
+                    ]
+                  },
+                  "formula": "existing:progress",
+                  "score": 27.0,
+                  "source": "KERNEL_VERIFIED_EVIDENCE"
+                },
+                "resource_pressure": {
+                  "completeness": "COMPLETE",
+                  "components": {
+                    "cost_income_imbalance": 0.0,
+                    "current_shortfall": 100.0,
+                    "near_future_demand": 100.0,
+                    "reader_salience": 100.0,
+                    "recently_blocked_actions": 100.0
+                  },
+                  "evidence": [
+                    "missing_resource:真实拥有的普通非生命物品",
+                    "missing_resource:可执行的现场问题",
+                    "missing_resource:可进入的现场",
+                    "missing_resource:足够观察结果的时间",
+                    "missing_resource:至少一件已验证的进化物品",
+                    "missing_resource:新的空间压力",
+                    "bottleneck:可用物品与当前空间缺口不匹配",
+                    "bottleneck:建筑变化快于主角能完成的现场验证",
+                    "bottleneck:同一物品的下一次进化需要新的问题而非简单重复"
+                  ],
+                  "formula": "existing:resource_pressure",
+                  "score": 80.0,
+                  "source": "KERNEL_VERIFIED_EVIDENCE"
+                }
+              },
+              "verified": {
+                "drive_drift": {
+                  "evidence": [],
+                  "hard_failure": false,
+                  "reasons": [
+                    "本章未直接服务 Primary Drive；单章缺席不是硬失败"
+                  ],
+                  "status": "SOFT_MISS",
+                  "warning": false
+                },
+                "genre_drift": {
+                  "evidence": [],
+                  "hard_failure": false,
+                  "penalty": 4.0,
+                  "reasons": [
+                    "移除表层专名后，成长资源、能力与世界层级均不影响因果"
+                  ],
+                  "status": "GENRE_SKIN_ONLY",
+                  "warning": true
+                },
+                "genre_evolution": {
+                  "core_promise_preserved": true,
+                  "evidence": [],
+                  "explanation": "未检测到需要单独标记的 Genre Evolution",
+                  "status": "CLEAR"
+                },
+                "narrative_drive_alignment": {
+                  "drive_balance": "UNKNOWN",
+                  "drive_conflicts": [],
+                  "drives_advanced": [],
+                  "drives_deferred": [],
+                  "drives_paid_off": [],
+                  "evidence": [],
+                  "primary_drive": "SURVIVAL_RESOURCE",
+                  "primary_drive_effect": "",
+                  "secondary_drive_effects": {}
+                },
+                "payoff_channels": [],
+                "progression_impact": {
+                  "ability_showcases": [],
+                  "ability_unlocks": [],
+                  "axis_advanced": [],
+                  "growth_costs": [],
+                  "progression_delta_type": [],
+                  "resource_changes": [],
+                  "stage_change": null,
+                  "world_expansion": []
+                },
+                "reader_promise_alignment": [],
+                "resource_impact": [],
+                "scheduler_alignment": {
+                  "alignment": "UNKNOWN",
+                  "anticipations_served": [],
+                  "candidate_primary_intent": null,
+                  "debts_served": [],
+                  "deviation_reason": "",
+                  "recommended_primary_intent": null,
+                  "risks": []
+                },
+                "world_expansion_impact": []
+              },
+              "verified_anticipation_impact": [],
+              "verified_drive_alignment": {
+                "drive_balance": "UNKNOWN",
+                "drive_conflicts": [],
+                "drives_advanced": [],
+                "drives_deferred": [],
+                "drives_paid_off": [],
+                "evidence": [],
+                "primary_drive": "SURVIVAL_RESOURCE",
+                "primary_drive_effect": "",
+                "secondary_drive_effects": {}
+              },
+              "verified_progress_components": {
+                "completeness": "COMPLETE",
+                "components": {
+                  "goal_advance": 70.0,
+                  "knowledge_change": 60.0,
+                  "permanent_growth": 0.0,
+                  "relationship_change": 0.0,
+                  "strategy_expansion": 50.0,
+                  "world_state_change": 0.0
+                },
+                "evidence": {
+                  "goal_advance": [],
+                  "knowledge_change": [],
+                  "permanent_growth": [
+                    "no_verified_permanent_growth_change"
+                  ],
+                  "relationship_change": [
+                    "no_verified_relationship_change_change"
+                  ],
+                  "strategy_expansion": [],
+                  "world_state_change": [
+                    "no_verified_world_state_change_change"
+                  ]
+                },
+                "formula": "existing:progress",
+                "score": 27.0,
+                "source": "KERNEL_VERIFIED_EVIDENCE"
+              },
+              "verified_progression_impact": {
+                "ability_showcases": [],
+                "ability_unlocks": [],
+                "axis_advanced": [],
+                "growth_costs": [],
+                "progression_delta_type": [],
+                "resource_changes": [],
+                "stage_change": null,
+                "world_expansion": []
+              },
+              "verified_reader_promise_alignment": [],
+              "verified_resource_impact": [],
+              "verified_world_expansion_impact": [],
+              "warnings": [
+                "本候选未直接服务 CORE Reader Promise；单章缺席只记 Soft Miss。",
+                "Primary Drive 没有可验证的结构推进；单章只记 Soft Miss。",
+                "Candidate 未填写 Scheduler Alignment，保持 UNVERIFIED。"
+              ]
+            },
+            "genre_drift": {
+              "evidence": [],
+              "hard_failure": false,
+              "penalty": 4.0,
+              "reasons": [
+                "移除表层专名后，成长资源、能力与世界层级均不影响因果"
+              ],
+              "status": "GENRE_SKIN_ONLY",
+              "warning": true
+            },
+            "genre_evolution": {
+              "core_promise_preserved": true,
+              "evidence": [],
+              "explanation": "未检测到需要单独标记的 Genre Evolution",
+              "status": "CLEAR"
+            },
+            "narrative_drive_alignment": {
+              "drive_balance": "UNKNOWN",
+              "drive_conflicts": [],
+              "drives_advanced": [],
+              "drives_deferred": [],
+              "drives_paid_off": [],
+              "evidence": [],
+              "primary_drive": "SURVIVAL_RESOURCE",
+              "primary_drive_effect": "",
+              "secondary_drive_effects": {}
+            },
+            "payoff_channels": [],
+            "progression_impact": {
+              "ability_showcases": [],
+              "ability_unlocks": [],
+              "axis_advanced": [],
+              "growth_costs": [],
+              "progression_delta_type": [],
+              "resource_changes": [],
+              "stage_change": null,
+              "world_expansion": []
+            },
+            "reader_promise_alignment": [],
+            "resource_impact": [],
+            "scheduler_alignment": {
+              "alignment": "UNKNOWN",
+              "anticipations_served": [],
+              "candidate_primary_intent": null,
+              "debts_served": [],
+              "deviation_reason": "",
+              "recommended_primary_intent": null,
+              "risks": []
+            },
+            "world_expansion_impact": []
+          },
+          "realized": {
+            "debts_advanced": [
+              "anticipation-thread-1",
+              "anticipation-world-earned-spatial-frontier"
+            ],
+            "debts_paid": [],
+            "evidence": [
+              {
+                "claim": "capability:measuring-tape-space-relation",
+                "evidence_quotes": [
+                  "测距带跨局部重排保持空间关系",
+                  "两端之间仍是二点九四米。"
+                ],
+                "state_change_record_ids": [
+                  "measuring-tape-space-relation"
+                ]
+              },
+              {
+                "claim": "fact:external-vent-window-observed",
+                "evidence_quotes": [
+                  "他没有急着往里钻。先把钩端收回，再重新送入；第二次，墙面向外折了一寸，缝隙里出现一块锈蚀的百叶窗。百叶窗后面有风，风把灰尘吹成一条窄窄的斜线。"
+                ],
+                "state_change_record_ids": [
+                  "external-vent-window-observed"
+                ]
+              },
+              {
+                "claim": "thread:space-reading-route-evidence",
+                "evidence_quotes": [
+                  "他没有去追声音。测距带的带钩端还挂在窗下，带身从窗缝一直拉回原来的墙根。它把检修窗和室内的墙面连成一条可复核的向外路线。这个结果已经足够重要，重要到不需要再替广播证明它自己。"
+                ],
+                "state_change_record_ids": [
+                  "space-reading-route-evidence"
+                ]
+              },
+              {
+                "claim": "character_state:protagonist-local-evidence-choice-2",
+                "evidence_quotes": [
+                  "沈砚低头看着窗框上留下的浅白折返线，听见广播在更深处报出相反的楼层。他没有抬头。测距带的第二个固定端点还在手里，楼外风向已经确认，只是相邻塔体之间没有地面。"
+                ],
+                "state_change_record_ids": [
+                  "protagonist-local-evidence-choice-2"
+                ]
+              }
+            ],
+            "expected_contract_id": "contract_c010403488e79542701e00d4",
+            "narrative_drives_advanced": [],
+            "payoff_channels_realized": [],
+            "primary_intent": "用一次可见的空间关系验证把第一章的测距带能力推进到楼外边界，同时保留广播身份与建筑成因未知。",
+            "progression_impact": {
+              "ability_showcase": [],
+              "ability_unlock": [],
+              "axis_advanced": [
+                "measuring-tape-space-relation"
+              ],
+              "bottleneck_change": null,
+              "branch_change": null,
+              "future_progression_space": [],
+              "growth_cost": [],
+              "new_ceiling_visibility": [],
+              "progression_delta_type": [],
+              "resource_change": [],
+              "stage_change": null
+            },
+            "reader_promises_served": [
+              "anticipation-thread-1",
+              "anticipation-world-earned-spatial-frontier"
+            ],
+            "resource_changes": [],
+            "world_expansion_changes": []
+          },
+          "status": "PARTIAL",
+          "underdelivered": {},
+          "unexpected": {
+            "growth axis": [
+              "measuring-tape-space-relation"
+            ],
+            "narrative debt": [
+              "anticipation-thread-1",
+              "anticipation-world-earned-spatial-frontier"
+            ],
+            "reader promise": [
+              "anticipation-thread-1",
+              "anticipation-world-earned-spatial-frontier"
+            ]
+          }
+        },
+        "requirements_checked": 7,
+        "reveal_requirements_checked": 22
+      },
+      "passed": true,
+      "severity": "WARNING",
+      "validator": "Contract Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Debt Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Payoff Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Repetition Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "realization": {
+          "character_count": 1857,
+          "code": "SCENE_REALIZATION_CLEAR",
+          "severity": "INFO",
+          "status": "CLEAR",
+          "target_word_range": [
+            1565,
+            3491
+          ]
+        },
+        "style_fit": 81.45
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Style Validator"
+    }
+  ],
+  "run_id": "validation_b84935bd0d84c7d85c1ebcc5",
+  "through_event_seq": 8
+}

@@ -1,0 +1,1840 @@
+{
+  "$defs": {
+    "AbilityUnlockMode": {
+      "enum": [
+        "STAGE",
+        "RESOURCE",
+        "COMBAT_INSIGHT",
+        "KNOWLEDGE",
+        "ARTIFACT_OR_EQUIPMENT",
+        "COMBINATION",
+        "RELATIONSHIP",
+        "STATUS_ACCESS",
+        "IRREVERSIBLE_CHOICE",
+        "CUSTOM"
+      ],
+      "title": "AbilityUnlockMode",
+      "type": "string"
+    },
+    "AbilityUnlockRule": {
+      "additionalProperties": false,
+      "properties": {
+        "condition": {
+          "minLength": 1,
+          "title": "Condition",
+          "type": "string"
+        },
+        "effect": {
+          "minLength": 1,
+          "title": "Effect",
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/$defs/AbilityUnlockMode"
+        },
+        "provenance_required": {
+          "default": true,
+          "title": "Provenance Required",
+          "type": "boolean"
+        },
+        "unlock_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Unlock Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unlock_id",
+        "mode",
+        "condition",
+        "effect"
+      ],
+      "title": "AbilityUnlockRule",
+      "type": "object"
+    },
+    "AuthorInnovationIntent": {
+      "additionalProperties": false,
+      "description": "The author's selected mechanism boundary carried into later Genesis stages.",
+      "properties": {
+        "optional_mix_notes": {
+          "default": "",
+          "title": "Optional Mix Notes",
+          "type": "string"
+        },
+        "selected_primary_innovation_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Selected Primary Innovation Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "selected_primary_innovation_id"
+      ],
+      "title": "AuthorInnovationIntent",
+      "type": "object"
+    },
+    "BookProfileDimensionDraft": {
+      "additionalProperties": false,
+      "properties": {
+        "core_commitments": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Core Commitments",
+          "type": "array"
+        },
+        "open_questions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Open Questions",
+          "type": "array"
+        },
+        "preferences": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Preferences",
+          "type": "array"
+        },
+        "risks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Risks",
+          "type": "array"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "summary"
+      ],
+      "title": "BookProfileDimensionDraft",
+      "type": "object"
+    },
+    "BookProfileDraft": {
+      "additionalProperties": false,
+      "properties": {
+        "characters": {
+          "$ref": "#/$defs/BookProfileDimensionDraft"
+        },
+        "continuity": {
+          "$ref": "#/$defs/BookProfileDimensionDraft"
+        },
+        "dialogue": {
+          "$ref": "#/$defs/BookProfileDimensionDraft"
+        },
+        "narrative": {
+          "$ref": "#/$defs/BookProfileDimensionDraft"
+        },
+        "pacing": {
+          "$ref": "#/$defs/BookProfileDimensionDraft"
+        },
+        "plot": {
+          "$ref": "#/$defs/BookProfileDimensionDraft"
+        },
+        "style": {
+          "$ref": "#/$defs/BookProfileDimensionDraft"
+        },
+        "themes": {
+          "$ref": "#/$defs/BookProfileDimensionDraft"
+        },
+        "worldbuilding": {
+          "$ref": "#/$defs/BookProfileDimensionDraft"
+        }
+      },
+      "required": [
+        "worldbuilding",
+        "characters",
+        "plot",
+        "style",
+        "narrative",
+        "dialogue",
+        "pacing",
+        "themes",
+        "continuity"
+      ],
+      "title": "BookProfileDraft",
+      "type": "object"
+    },
+    "BreakthroughGate": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_requirements": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Requirements",
+          "type": "array"
+        },
+        "gate_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Gate Id",
+          "type": "string"
+        },
+        "gate_type": {
+          "$ref": "#/$defs/BreakthroughGateType"
+        },
+        "irreversible": {
+          "default": false,
+          "title": "Irreversible",
+          "type": "boolean"
+        },
+        "required_resources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Resources",
+          "type": "array"
+        },
+        "requirement": {
+          "minLength": 1,
+          "title": "Requirement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gate_id",
+        "gate_type",
+        "requirement",
+        "evidence_requirements"
+      ],
+      "title": "BreakthroughGate",
+      "type": "object"
+    },
+    "BreakthroughGateType": {
+      "enum": [
+        "ACCUMULATION",
+        "RESOURCE_GATE",
+        "RITUAL_GATE",
+        "INSIGHT_GATE",
+        "COMBAT_GATE",
+        "BODY_TRANSFORMATION",
+        "KNOWLEDGE_GATE",
+        "RELATIONSHIP_GATE",
+        "STATUS_GATE",
+        "SACRIFICE_GATE",
+        "CHOICE_GATE",
+        "MIXED",
+        "CUSTOM"
+      ],
+      "title": "BreakthroughGateType",
+      "type": "string"
+    },
+    "BreakthroughModel": {
+      "additionalProperties": false,
+      "properties": {
+        "all_gates_required": {
+          "default": true,
+          "title": "All Gates Required",
+          "type": "boolean"
+        },
+        "gates": {
+          "items": {
+            "$ref": "#/$defs/BreakthroughGate"
+          },
+          "minItems": 1,
+          "title": "Gates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "gates"
+      ],
+      "title": "BreakthroughModel",
+      "type": "object"
+    },
+    "ContractStatus": {
+      "enum": [
+        "INFERRED_PROPOSAL",
+        "SOFT_REFERENCE",
+        "NEEDS_REVIEW",
+        "EFFECTIVE",
+        "REJECTED",
+        "SUPERSEDED"
+      ],
+      "title": "ContractStatus",
+      "type": "string"
+    },
+    "ExpansionStage": {
+      "additionalProperties": false,
+      "properties": {
+        "expansion_types": {
+          "items": {
+            "$ref": "#/$defs/WorldExpansionType"
+          },
+          "minItems": 1,
+          "title": "Expansion Types",
+          "type": "array"
+        },
+        "faction_ceiling": {
+          "default": "",
+          "title": "Faction Ceiling",
+          "type": "string"
+        },
+        "knowledge_ceiling": {
+          "default": "",
+          "title": "Knowledge Ceiling",
+          "type": "string"
+        },
+        "known_map": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Known Map",
+          "type": "array"
+        },
+        "mystery_ceiling": {
+          "default": "",
+          "title": "Mystery Ceiling",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "order": {
+          "minimum": 0,
+          "title": "Order",
+          "type": "integer"
+        },
+        "power_ceiling": {
+          "default": "",
+          "title": "Power Ceiling",
+          "type": "string"
+        },
+        "reader_question": {
+          "minLength": 1,
+          "title": "Reader Question",
+          "type": "string"
+        },
+        "resource_ceiling": {
+          "default": "",
+          "title": "Resource Ceiling",
+          "type": "string"
+        },
+        "stage_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Stage Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/StageStatus",
+          "default": "AVAILABLE"
+        },
+        "transition_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Transition Conditions",
+          "type": "array"
+        },
+        "world_scope": {
+          "minLength": 1,
+          "title": "World Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage_id",
+        "name",
+        "order",
+        "expansion_types",
+        "world_scope",
+        "reader_question"
+      ],
+      "title": "ExpansionStage",
+      "type": "object"
+    },
+    "FirstChapterCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "central_choice": {
+          "minLength": 1,
+          "title": "Central Choice",
+          "type": "string"
+        },
+        "chapter_goal": {
+          "minLength": 1,
+          "title": "Chapter Goal",
+          "type": "string"
+        },
+        "conflict": {
+          "minLength": 1,
+          "title": "Conflict",
+          "type": "string"
+        },
+        "cost": {
+          "default": "",
+          "title": "Cost",
+          "type": "string"
+        },
+        "distinctiveness": {
+          "minLength": 1,
+          "title": "Distinctiveness",
+          "type": "string"
+        },
+        "ending_turn": {
+          "minLength": 1,
+          "title": "Ending Turn",
+          "type": "string"
+        },
+        "hook": {
+          "minLength": 1,
+          "title": "Hook",
+          "type": "string"
+        },
+        "irreversible_change": {
+          "minLength": 1,
+          "title": "Irreversible Change",
+          "type": "string"
+        },
+        "opening_situation": {
+          "minLength": 1,
+          "title": "Opening Situation",
+          "type": "string"
+        },
+        "primary_function": {
+          "$ref": "#/$defs/NarrativeFunction",
+          "default": "setup"
+        },
+        "protagonist_action": {
+          "minLength": 1,
+          "title": "Protagonist Action",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "title",
+        "opening_situation",
+        "hook",
+        "chapter_goal",
+        "central_choice",
+        "conflict",
+        "protagonist_action",
+        "irreversible_change",
+        "ending_turn",
+        "distinctiveness"
+      ],
+      "title": "FirstChapterCandidate",
+      "type": "object"
+    },
+    "FirstPhaseProposal": {
+      "additionalProperties": false,
+      "properties": {
+        "after_climax_change": {
+          "minLength": 1,
+          "title": "After Climax Change",
+          "type": "string"
+        },
+        "first_concrete_goal": {
+          "minLength": 1,
+          "title": "First Concrete Goal",
+          "type": "string"
+        },
+        "first_meaningful_escalation": {
+          "minLength": 1,
+          "title": "First Meaningful Escalation",
+          "type": "string"
+        },
+        "first_payoff": {
+          "minLength": 1,
+          "title": "First Payoff",
+          "type": "string"
+        },
+        "first_progression_opportunity": {
+          "minLength": 1,
+          "title": "First Progression Opportunity",
+          "type": "string"
+        },
+        "first_resource_bottleneck": {
+          "default": "",
+          "title": "First Resource Bottleneck",
+          "type": "string"
+        },
+        "opening_pressure": {
+          "minLength": 1,
+          "title": "Opening Pressure",
+          "type": "string"
+        },
+        "selected_foundation_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Selected Foundation Id",
+          "type": "string"
+        },
+        "stage_climax": {
+          "minLength": 1,
+          "title": "Stage Climax",
+          "type": "string"
+        }
+      },
+      "required": [
+        "selected_foundation_id",
+        "opening_pressure",
+        "first_concrete_goal",
+        "first_progression_opportunity",
+        "first_payoff",
+        "first_meaningful_escalation",
+        "stage_climax",
+        "after_climax_change"
+      ],
+      "title": "FirstPhaseProposal",
+      "type": "object"
+    },
+    "FoundationKernelContractProposals": {
+      "additionalProperties": false,
+      "description": "Existing runtime contract shapes proposed by Foundation Development.",
+      "properties": {
+        "genre": {
+          "$ref": "#/$defs/GenreContract"
+        },
+        "payoff_channel": {
+          "$ref": "#/$defs/PayoffChannelProfile"
+        },
+        "progression": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProgressionContract"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "world_expansion": {
+          "$ref": "#/$defs/WorldExpansionContract"
+        }
+      },
+      "required": [
+        "genre",
+        "world_expansion",
+        "payoff_channel"
+      ],
+      "title": "FoundationKernelContractProposals",
+      "type": "object"
+    },
+    "FoundationSetting": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "minLength": 1,
+          "title": "Category",
+          "type": "string"
+        },
+        "setting_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Setting Id",
+          "type": "string"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "strength": {
+          "$ref": "#/$defs/SettingStrength"
+        }
+      },
+      "required": [
+        "setting_id",
+        "category",
+        "statement",
+        "strength"
+      ],
+      "title": "FoundationSetting",
+      "type": "object"
+    },
+    "GenreContract": {
+      "additionalProperties": false,
+      "properties": {
+        "author_overrides": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Author Overrides",
+          "type": "array"
+        },
+        "capabilities": {
+          "$ref": "#/$defs/RuntimeGenreCapabilities"
+        },
+        "expected_payoff_channels": {
+          "items": {
+            "$ref": "#/$defs/PayoffChannel"
+          },
+          "title": "Expected Payoff Channels",
+          "type": "array"
+        },
+        "expected_progression_shape": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected Progression Shape",
+          "type": "array"
+        },
+        "forbidden_drift_patterns": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Drift Patterns",
+          "type": "array"
+        },
+        "genre_contract_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Genre Contract Id",
+          "type": "string"
+        },
+        "genre_drift_risks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Genre Drift Risks",
+          "type": "array"
+        },
+        "genre_native_conflicts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Genre Native Conflicts",
+          "type": "array"
+        },
+        "genre_native_engines": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Genre Native Engines",
+          "type": "array"
+        },
+        "genre_native_resource_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Genre Native Resource Types",
+          "type": "array"
+        },
+        "genre_native_scene_types": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Genre Native Scene Types",
+          "type": "array"
+        },
+        "genre_promises": {
+          "items": {
+            "$ref": "#/$defs/GenrePromise"
+          },
+          "minItems": 1,
+          "title": "Genre Promises",
+          "type": "array"
+        },
+        "primary_genre": {
+          "$ref": "#/$defs/PrimaryFamily"
+        },
+        "reader_experience_contract_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Reader Experience Contract Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ContractStatus",
+          "default": "NEEDS_REVIEW"
+        },
+        "subgenres": {
+          "items": {
+            "$ref": "#/$defs/PrimaryFamily"
+          },
+          "title": "Subgenres",
+          "type": "array"
+        },
+        "world_expansion_expectation": {
+          "default": "",
+          "title": "World Expansion Expectation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "genre_contract_id",
+        "primary_genre",
+        "reader_experience_contract_id",
+        "genre_promises",
+        "capabilities"
+      ],
+      "title": "GenreContract",
+      "type": "object"
+    },
+    "GenrePromise": {
+      "additionalProperties": false,
+      "properties": {
+        "promise_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Promise Id",
+          "type": "string"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "strength": {
+          "$ref": "#/$defs/GenrePromiseStrength"
+        }
+      },
+      "required": [
+        "promise_id",
+        "statement",
+        "strength"
+      ],
+      "title": "GenrePromise",
+      "type": "object"
+    },
+    "GenrePromiseStrength": {
+      "enum": [
+        "CORE",
+        "IMPORTANT",
+        "OPTIONAL",
+        "DISABLED"
+      ],
+      "title": "GenrePromiseStrength",
+      "type": "string"
+    },
+    "GrowthAxis": {
+      "additionalProperties": false,
+      "properties": {
+        "axis_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Axis Id",
+          "type": "string"
+        },
+        "axis_type": {
+          "$ref": "#/$defs/GrowthAxisType"
+        },
+        "bottlenecks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Bottlenecks",
+          "type": "array"
+        },
+        "costs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Costs",
+          "type": "array"
+        },
+        "current_stage_schema": {
+          "minLength": 1,
+          "title": "Current Stage Schema",
+          "type": "string"
+        },
+        "evidence_requirements": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Requirements",
+          "type": "array"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "progress_measure": {
+          "minLength": 1,
+          "title": "Progress Measure",
+          "type": "string"
+        },
+        "stage_definitions": {
+          "items": {
+            "$ref": "#/$defs/ProgressionStageDefinition"
+          },
+          "title": "Stage Definitions",
+          "type": "array"
+        },
+        "stage_order": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Stage Order",
+          "type": "array"
+        },
+        "unlock_effects": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unlock Effects",
+          "type": "array"
+        },
+        "visibility": {
+          "$ref": "#/$defs/UpperCeilingVisibility",
+          "default": "PARTIAL"
+        }
+      },
+      "required": [
+        "axis_id",
+        "name",
+        "axis_type",
+        "current_stage_schema",
+        "progress_measure"
+      ],
+      "title": "GrowthAxis",
+      "type": "object"
+    },
+    "GrowthAxisType": {
+      "enum": [
+        "POWER_STAGE",
+        "BODY_EVOLUTION",
+        "ABILITY_UNLOCK",
+        "KNOWLEDGE",
+        "CRAFT",
+        "EQUIPMENT",
+        "BLOODLINE",
+        "SEQUENCE",
+        "STATUS",
+        "TEAM",
+        "FACTION_AUTHORITY",
+        "CIVILIZATION",
+        "TERRITORY",
+        "IDENTITY",
+        "CUSTOM"
+      ],
+      "title": "GrowthAxisType",
+      "type": "string"
+    },
+    "HiddenTruthCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "confidence": {
+          "default": 0.5,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "statement": {
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "title",
+        "statement"
+      ],
+      "title": "HiddenTruthCandidate",
+      "type": "object"
+    },
+    "NarrativeFunction": {
+      "enum": [
+        "setup",
+        "pressure_build",
+        "choice",
+        "discovery",
+        "progress",
+        "partial_payoff",
+        "major_payoff",
+        "reversal",
+        "aftershock",
+        "recovery",
+        "relationship_shift",
+        "world_expansion"
+      ],
+      "title": "NarrativeFunction",
+      "type": "string"
+    },
+    "PayoffChannel": {
+      "enum": [
+        "POWER_BREAKTHROUGH",
+        "NEW_ABILITY",
+        "NEW_TECHNIQUE",
+        "NEW_ARTIFACT",
+        "RESOURCE_GAIN",
+        "COMBAT_DOMINANCE",
+        "UNDERDOG_VICTORY",
+        "STATUS_RISE",
+        "RANKING_RISE",
+        "RECOGNITION",
+        "REVENGE",
+        "MYSTERY_REVEAL",
+        "WORLD_EXPANSION",
+        "FACTION_ADVANCE",
+        "TEAM_GROWTH",
+        "RELATIONSHIP_ADVANCE",
+        "WEALTH_GAIN",
+        "SURVIVAL_ESCAPE",
+        "KNOWLEDGE_GAIN",
+        "MASTERY",
+        "DISCOVERY",
+        "TRANSFORMATION",
+        "STRATEGIC_ADVANTAGE",
+        "CUSTOM"
+      ],
+      "title": "PayoffChannel",
+      "type": "string"
+    },
+    "PayoffChannelProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "channels": {
+          "additionalProperties": {
+            "$ref": "#/$defs/GenrePromiseStrength"
+          },
+          "propertyNames": {
+            "$ref": "#/$defs/PayoffChannel"
+          },
+          "title": "Channels",
+          "type": "object"
+        },
+        "effective_from_boundary": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effective From Boundary"
+        },
+        "status": {
+          "$ref": "#/$defs/ContractStatus",
+          "default": "NEEDS_REVIEW"
+        }
+      },
+      "required": [
+        "channels"
+      ],
+      "title": "PayoffChannelProfile",
+      "type": "object"
+    },
+    "PrimaryFamily": {
+      "enum": [
+        "PROGRESSION_FANTASY",
+        "MYSTERY_PROGRESSION",
+        "SURVIVAL_PROGRESSION",
+        "TEAM_PROGRESSION",
+        "COSMIC_PROGRESSION",
+        "EVOLUTION_PROGRESSION",
+        "CIVILIZATION_PROGRESSION",
+        "CUSTOM"
+      ],
+      "title": "PrimaryFamily",
+      "type": "string"
+    },
+    "ProgressionContract": {
+      "additionalProperties": false,
+      "properties": {
+        "ability_unlock_model": {
+          "items": {
+            "$ref": "#/$defs/AbilityUnlockRule"
+          },
+          "title": "Ability Unlock Model",
+          "type": "array"
+        },
+        "allowed_delta_types": {
+          "items": {
+            "$ref": "#/$defs/ProgressionDeltaType"
+          },
+          "minItems": 1,
+          "title": "Allowed Delta Types",
+          "type": "array"
+        },
+        "artifact_or_equipment_model": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifact Or Equipment Model",
+          "type": "array"
+        },
+        "author_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Author Constraints",
+          "type": "array"
+        },
+        "breakthrough_model": {
+          "$ref": "#/$defs/BreakthroughModel"
+        },
+        "effective_from_boundary": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effective From Boundary"
+        },
+        "growth_costs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Growth Costs",
+          "type": "array"
+        },
+        "next_ceiling_model": {
+          "minLength": 1,
+          "title": "Next Ceiling Model",
+          "type": "string"
+        },
+        "primary_axis": {
+          "$ref": "#/$defs/GrowthAxis"
+        },
+        "progression_contract_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Progression Contract Id",
+          "type": "string"
+        },
+        "progression_promises": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Progression Promises",
+          "type": "array"
+        },
+        "progression_subject": {
+          "$ref": "#/$defs/ProgressionSubject"
+        },
+        "resource_economy": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Resource Economy",
+          "type": "array"
+        },
+        "secondary_axes": {
+          "items": {
+            "$ref": "#/$defs/GrowthAxis"
+          },
+          "title": "Secondary Axes",
+          "type": "array"
+        },
+        "stage_model": {
+          "minLength": 1,
+          "title": "Stage Model",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ContractStatus",
+          "default": "NEEDS_REVIEW"
+        },
+        "status_rise_model": {
+          "default": "",
+          "title": "Status Rise Model",
+          "type": "string"
+        },
+        "topology": {
+          "items": {
+            "$ref": "#/$defs/ProgressionTopology"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Topology",
+          "type": "array"
+        },
+        "upper_ceiling_visibility": {
+          "$ref": "#/$defs/UpperCeilingVisibility"
+        },
+        "verification_modes": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Verification Modes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "progression_contract_id",
+        "progression_subject",
+        "primary_axis",
+        "topology",
+        "allowed_delta_types",
+        "stage_model",
+        "breakthrough_model",
+        "verification_modes",
+        "next_ceiling_model",
+        "upper_ceiling_visibility",
+        "progression_promises"
+      ],
+      "title": "ProgressionContract",
+      "type": "object"
+    },
+    "ProgressionDeltaType": {
+      "enum": [
+        "ADVANCE",
+        "UNLOCK",
+        "BRANCH",
+        "CONVERT",
+        "SACRIFICE",
+        "REGRESS",
+        "REBUILD",
+        "MERGE",
+        "SPLIT",
+        "LOCK_OUT",
+        "TRANSFORM",
+        "TRANSFER",
+        "CUSTOM"
+      ],
+      "title": "ProgressionDeltaType",
+      "type": "string"
+    },
+    "ProgressionStageDefinition": {
+      "additionalProperties": false,
+      "properties": {
+        "entry_requirements": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Entry Requirements",
+          "type": "array"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "next_stage_candidates": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Next Stage Candidates",
+          "type": "array"
+        },
+        "order": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Order"
+        },
+        "reader_visible": {
+          "default": true,
+          "title": "Reader Visible",
+          "type": "boolean"
+        },
+        "stage_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Stage Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/StageStatus",
+          "default": "AVAILABLE"
+        },
+        "typical_capabilities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Typical Capabilities",
+          "type": "array"
+        },
+        "typical_costs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Typical Costs",
+          "type": "array"
+        },
+        "validation_expectations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Validation Expectations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "stage_id",
+        "name"
+      ],
+      "title": "ProgressionStageDefinition",
+      "type": "object"
+    },
+    "ProgressionSubject": {
+      "enum": [
+        "CHARACTER",
+        "MULTIPLE_CHARACTERS",
+        "TEAM",
+        "FACTION",
+        "SETTLEMENT",
+        "ORGANIZATION",
+        "CIVILIZATION",
+        "COLLECTIVE",
+        "WORLD",
+        "HYBRID",
+        "CUSTOM"
+      ],
+      "title": "ProgressionSubject",
+      "type": "string"
+    },
+    "ProgressionTopology": {
+      "enum": [
+        "LINEAR",
+        "MULTI_AXIS",
+        "BRANCHING",
+        "NETWORK",
+        "TRANSFORMATIVE",
+        "CYCLICAL",
+        "ACCUMULATIVE",
+        "TRADEOFF",
+        "CUSTOM"
+      ],
+      "title": "ProgressionTopology",
+      "type": "string"
+    },
+    "RollingPlanning": {
+      "additionalProperties": false,
+      "properties": {
+        "long": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Long",
+          "type": "array"
+        },
+        "mid": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Mid",
+          "type": "array"
+        },
+        "short": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Short",
+          "type": "array"
+        }
+      },
+      "required": [
+        "short",
+        "mid",
+        "long"
+      ],
+      "title": "RollingPlanning",
+      "type": "object"
+    },
+    "RuntimeGenreCapabilities": {
+      "additionalProperties": false,
+      "description": "Adapter-neutral structural capabilities consumed by runtime services.",
+      "properties": {
+        "has_ability_unlock": {
+          "default": false,
+          "title": "Has Ability Unlock",
+          "type": "boolean"
+        },
+        "has_knowledge_gate": {
+          "default": false,
+          "title": "Has Knowledge Gate",
+          "type": "boolean"
+        },
+        "has_mystery_binding": {
+          "default": false,
+          "title": "Has Mystery Binding",
+          "type": "boolean"
+        },
+        "has_progression_axis": {
+          "default": false,
+          "title": "Has Progression Axis",
+          "type": "boolean"
+        },
+        "has_resource_gate": {
+          "default": false,
+          "title": "Has Resource Gate",
+          "type": "boolean"
+        },
+        "has_stage_transition": {
+          "default": false,
+          "title": "Has Stage Transition",
+          "type": "boolean"
+        },
+        "has_status_progression": {
+          "default": false,
+          "title": "Has Status Progression",
+          "type": "boolean"
+        },
+        "has_team_progression": {
+          "default": false,
+          "title": "Has Team Progression",
+          "type": "boolean"
+        },
+        "has_verification_requirement": {
+          "default": false,
+          "title": "Has Verification Requirement",
+          "type": "boolean"
+        },
+        "has_world_expansion": {
+          "default": false,
+          "title": "Has World Expansion",
+          "type": "boolean"
+        }
+      },
+      "title": "RuntimeGenreCapabilities",
+      "type": "object"
+    },
+    "SettingStrength": {
+      "enum": [
+        "CORE",
+        "PREFERENCE",
+        "OPEN"
+      ],
+      "title": "SettingStrength",
+      "type": "string"
+    },
+    "StageStatus": {
+      "enum": [
+        "AVAILABLE",
+        "LOCKED",
+        "UNKNOWN",
+        "RETIRED"
+      ],
+      "title": "StageStatus",
+      "type": "string"
+    },
+    "StoryFoundationCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "author_facing_pitch": {
+          "minLength": 1,
+          "title": "Author Facing Pitch",
+          "type": "string"
+        },
+        "candidate_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "core_reading_promise": {
+          "minLength": 1,
+          "title": "Core Reading Promise",
+          "type": "string"
+        },
+        "first_stage_objective": {
+          "minLength": 1,
+          "title": "First Stage Objective",
+          "type": "string"
+        },
+        "innovation_fit": {
+          "minLength": 1,
+          "title": "Innovation Fit",
+          "type": "string"
+        },
+        "main_conflict": {
+          "minLength": 1,
+          "title": "Main Conflict",
+          "type": "string"
+        },
+        "opening_situation": {
+          "minLength": 1,
+          "title": "Opening Situation",
+          "type": "string"
+        },
+        "premise_relationship": {
+          "minLength": 1,
+          "title": "Premise Relationship",
+          "type": "string"
+        },
+        "protagonist": {
+          "minLength": 1,
+          "title": "Protagonist",
+          "type": "string"
+        },
+        "protagonist_competence": {
+          "minLength": 1,
+          "title": "Protagonist Competence",
+          "type": "string"
+        },
+        "protagonist_goal": {
+          "minLength": 1,
+          "title": "Protagonist Goal",
+          "type": "string"
+        },
+        "protagonist_weakness": {
+          "minLength": 1,
+          "title": "Protagonist Weakness",
+          "type": "string"
+        },
+        "resource_structure": {
+          "minLength": 1,
+          "title": "Resource Structure",
+          "type": "string"
+        },
+        "risk_structure": {
+          "minLength": 1,
+          "title": "Risk Structure",
+          "type": "string"
+        },
+        "social_configuration": {
+          "minLength": 1,
+          "title": "Social Configuration",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "typical_choice": {
+          "minLength": 1,
+          "title": "Typical Choice",
+          "type": "string"
+        },
+        "world_carrier": {
+          "minLength": 1,
+          "title": "World Carrier",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "title",
+        "core_reading_promise",
+        "protagonist",
+        "protagonist_competence",
+        "protagonist_weakness",
+        "protagonist_goal",
+        "main_conflict",
+        "world_carrier",
+        "first_stage_objective",
+        "risk_structure",
+        "social_configuration",
+        "resource_structure",
+        "premise_relationship",
+        "author_facing_pitch",
+        "opening_situation",
+        "typical_choice",
+        "innovation_fit"
+      ],
+      "title": "StoryFoundationCandidate",
+      "type": "object"
+    },
+    "StoryRoute": {
+      "additionalProperties": false,
+      "properties": {
+        "central_pressure": {
+          "minLength": 1,
+          "title": "Central Pressure",
+          "type": "string"
+        },
+        "commitments": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Commitments",
+          "type": "array"
+        },
+        "direction": {
+          "minLength": 1,
+          "title": "Direction",
+          "type": "string"
+        },
+        "open_alternatives": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Open Alternatives",
+          "type": "array"
+        },
+        "opportunity": {
+          "minLength": 1,
+          "title": "Opportunity",
+          "type": "string"
+        },
+        "risk": {
+          "minLength": 1,
+          "title": "Risk",
+          "type": "string"
+        },
+        "route_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Route Id",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "route_id",
+        "title",
+        "direction",
+        "central_pressure",
+        "opportunity",
+        "risk",
+        "commitments"
+      ],
+      "title": "StoryRoute",
+      "type": "object"
+    },
+    "UpperCeilingVisibility": {
+      "enum": [
+        "VISIBLE",
+        "PARTIAL",
+        "HINTED",
+        "UNKNOWN"
+      ],
+      "title": "UpperCeilingVisibility",
+      "type": "string"
+    },
+    "WorldExpansionContract": {
+      "additionalProperties": false,
+      "properties": {
+        "current_stage_id": {
+          "title": "Current Stage Id",
+          "type": "string"
+        },
+        "effective_from_boundary": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effective From Boundary"
+        },
+        "expansion_promises": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Expansion Promises",
+          "type": "array"
+        },
+        "ladder_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Ladder Id",
+          "type": "string"
+        },
+        "stages": {
+          "items": {
+            "$ref": "#/$defs/ExpansionStage"
+          },
+          "minItems": 1,
+          "title": "Stages",
+          "type": "array"
+        },
+        "stagnation_policy": {
+          "minLength": 1,
+          "title": "Stagnation Policy",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/ContractStatus",
+          "default": "NEEDS_REVIEW"
+        },
+        "transition_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Transition Rules",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ladder_id",
+        "stages",
+        "current_stage_id",
+        "expansion_promises",
+        "stagnation_policy"
+      ],
+      "title": "WorldExpansionContract",
+      "type": "object"
+    },
+    "WorldExpansionType": {
+      "enum": [
+        "GEOGRAPHIC",
+        "SOCIAL",
+        "POWER",
+        "CIVILIZATIONAL",
+        "COSMIC",
+        "HISTORICAL",
+        "MYSTERY",
+        "KNOWLEDGE",
+        "IDENTITY",
+        "ONTOLOGICAL"
+      ],
+      "title": "WorldExpansionType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Long-form development for the author-selected Story Foundation.",
+  "properties": {
+    "avoid_cliches": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Avoid Cliches",
+      "type": "array"
+    },
+    "book_profile_draft": {
+      "$ref": "#/$defs/BookProfileDraft"
+    },
+    "characters": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Characters",
+      "type": "array"
+    },
+    "core_innovation_intent": {
+      "$ref": "#/$defs/AuthorInnovationIntent"
+    },
+    "expanded_premise": {
+      "minLength": 1,
+      "title": "Expanded Premise",
+      "type": "string"
+    },
+    "expansion_grammar": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Expansion Grammar",
+      "type": "array"
+    },
+    "factions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Factions",
+      "type": "array"
+    },
+    "first_chapter_candidates": {
+      "items": {
+        "$ref": "#/$defs/FirstChapterCandidate"
+      },
+      "maxItems": 3,
+      "minItems": 2,
+      "title": "First Chapter Candidates",
+      "type": "array"
+    },
+    "first_phase": {
+      "$ref": "#/$defs/FirstPhaseProposal"
+    },
+    "first_phase_objective": {
+      "minLength": 1,
+      "title": "First Phase Objective",
+      "type": "string"
+    },
+    "foundation_settings": {
+      "items": {
+        "$ref": "#/$defs/FoundationSetting"
+      },
+      "minItems": 1,
+      "title": "Foundation Settings",
+      "type": "array"
+    },
+    "hidden_truth_candidates": {
+      "items": {
+        "$ref": "#/$defs/HiddenTruthCandidate"
+      },
+      "title": "Hidden Truth Candidates",
+      "type": "array"
+    },
+    "information_status": {
+      "const": "PROPOSAL",
+      "default": "PROPOSAL",
+      "title": "Information Status",
+      "type": "string"
+    },
+    "kernel_contract_proposals": {
+      "$ref": "#/$defs/FoundationKernelContractProposals"
+    },
+    "kernel_contracts": {
+      "additionalProperties": true,
+      "title": "Kernel Contracts",
+      "type": "object"
+    },
+    "open_questions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Open Questions",
+      "type": "array"
+    },
+    "payoff_grammar": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Payoff Grammar",
+      "type": "array"
+    },
+    "progression_grammar": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Progression Grammar",
+      "type": "array"
+    },
+    "protagonist": {
+      "minLength": 1,
+      "title": "Protagonist",
+      "type": "string"
+    },
+    "protagonist_conflict": {
+      "minLength": 1,
+      "title": "Protagonist Conflict",
+      "type": "string"
+    },
+    "protagonist_cost": {
+      "default": "",
+      "title": "Protagonist Cost",
+      "type": "string"
+    },
+    "protagonist_goal": {
+      "minLength": 1,
+      "title": "Protagonist Goal",
+      "type": "string"
+    },
+    "protagonist_growth": {
+      "minLength": 1,
+      "title": "Protagonist Growth",
+      "type": "string"
+    },
+    "recommendation_reason": {
+      "minLength": 1,
+      "title": "Recommendation Reason",
+      "type": "string"
+    },
+    "recommended_route_id": {
+      "minLength": 1,
+      "title": "Recommended Route Id",
+      "type": "string"
+    },
+    "risks": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Risks",
+      "type": "array"
+    },
+    "rolling_planning": {
+      "$ref": "#/$defs/RollingPlanning"
+    },
+    "routes": {
+      "items": {
+        "$ref": "#/$defs/StoryRoute"
+      },
+      "maxItems": 3,
+      "minItems": 2,
+      "title": "Routes",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "foundation-development-v1",
+      "default": "foundation-development-v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "selected_foundation": {
+      "$ref": "#/$defs/StoryFoundationCandidate"
+    },
+    "selected_foundation_id": {
+      "pattern": "^[A-Za-z0-9._-]+$",
+      "title": "Selected Foundation Id",
+      "type": "string"
+    },
+    "title_candidates": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3,
+      "minItems": 2,
+      "title": "Title Candidates",
+      "type": "array"
+    },
+    "world_rules": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "World Rules",
+      "type": "array"
+    }
+  },
+  "required": [
+    "core_innovation_intent",
+    "selected_foundation_id",
+    "selected_foundation",
+    "title_candidates",
+    "expanded_premise",
+    "protagonist",
+    "protagonist_goal",
+    "protagonist_conflict",
+    "protagonist_growth",
+    "world_rules",
+    "foundation_settings",
+    "characters",
+    "routes",
+    "recommended_route_id",
+    "recommendation_reason",
+    "progression_grammar",
+    "expansion_grammar",
+    "payoff_grammar",
+    "first_phase",
+    "first_phase_objective",
+    "rolling_planning",
+    "book_profile_draft",
+    "first_chapter_candidates",
+    "kernel_contract_proposals"
+  ],
+  "title": "FoundationDevelopmentProposal",
+  "type": "object"
+}

@@ -1,0 +1,83 @@
+{
+  "allowed_paths": [
+    "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_27797ad0d00e56ff6ce2962c\\artifacts",
+    "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_27797ad0d00e56ff6ce2962c"
+  ],
+  "atlas_output_directory": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_27797ad0d00e56ff6ce2962c\\artifacts\\story_atlas",
+  "atlas_required_artifacts": [],
+  "author_directives_hash": "8eb636685ca92e785c8cde1f0b4b42d0ec478618fafc6be1f29a3dc1ff3d0edb",
+  "author_goal": null,
+  "author_task_ids": [],
+  "base_event_seq": 57,
+  "base_projection_hash": "672e446823e83a33f6b0a0956ac4528cfed15193d7e4e78ebadbe1d0db5f59f9",
+  "batch_context_path": null,
+  "batch_id": null,
+  "batch_plan_hash": null,
+  "batch_plan_path": null,
+  "book_id": "original-e56a54687506",
+  "boundary_packet_id": "boundary_b2206619ec539e4f31371398",
+  "boundary_packet_json_path": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\writing\\boundaries\\boundary_b2206619ec539e4f31371398.json",
+  "boundary_packet_markdown_path": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\writing\\boundaries\\boundary_b2206619ec539e4f31371398.md",
+  "boundary_packet_sha256": "9fc9a5383da21420f3e12626d9fdb40955185e8753691468d66a80d296d40ad9",
+  "business_input_files": [
+    "metric_context.json",
+    "kernel_context.json",
+    "world_state_context.json",
+    "boundary_packet.json",
+    "rhythm_context.json"
+  ],
+  "config_hash": "685a5acc8a728524c2a6e407ffccc2b3b76e433e3f3c10c319fbf61b2e1b4ce3",
+  "context_chapter_id": "canon-chapter_8671fae6fd24fb586a1654c3",
+  "created_at": "2026-08-16T17:25:07.228889+00:00",
+  "current_atlas_id": null,
+  "current_atlas_manifest_hash": null,
+  "current_atlas_version": null,
+  "current_horizon_hash": null,
+  "edition_id": "base",
+  "effective_content_sha256": "dd71c3ecc1b41f166cd0cace182a5f0e9a84170cd9140cc854aadca5c1057af2",
+  "executor_skill": "continue-novel",
+  "expected_outputs": [
+    "events.jsonl",
+    "result.json",
+    "status.json"
+  ],
+  "forbidden_actions": [
+    "不得修改book",
+    "不得批准正史",
+    "不得批准改写Campaign",
+    "不得启用Edition",
+    "不得删除历史草稿",
+    "不得绕过Validator",
+    "不得把 Story Atlas 的 INFERENCE/CANDIDATE/SPECULATIVE 内容写入 Canon",
+    "不得把 FAR Horizon 写成逐章固定大纲"
+  ],
+  "handoff_id": "handoff_27797ad0d00e56ff6ce2962c",
+  "innovation_control": {
+    "focus": [
+      "auto"
+    ],
+    "level": "medium"
+  },
+  "innovation_source": "book_default",
+  "kernel_context_path": "kernel_context.json",
+  "metric_bundle_hash": "188847290c3ca365db25e12e5e38205d559b9ee81f651846abba0c9e3769ea85",
+  "metric_run_id": null,
+  "planning_aggregate_hash": "15fe191eac25a4c514c108f7702f84e33e27f8e2600677d747ca44049b976004",
+  "planning_aggregate_id": "planning-aggregate_ae484aaa6281a9989340d6ff",
+  "prepared_draft_task": {
+    "contract_id": "contract_c9f39d7d21f722f39ffabb37",
+    "expected_output": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\draft-task_2a96cc8f82d432629587b749\\output\\output.json",
+    "input": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\draft-task_2a96cc8f82d432629587b749\\input\\input.md",
+    "revision": 1,
+    "schema": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\draft-task_2a96cc8f82d432629587b749\\input\\schema.json",
+    "task_id": "draft-task_2a96cc8f82d432629587b749"
+  },
+  "readiness_status": null,
+  "registry_hash": "cc3c44febd2467e5c34991daf6c2217130673be36ad4043882188e0e6262a1c7",
+  "requested_stage": "DRAFT_AND_VALIDATE",
+  "rhythm_snapshot_id": "rhythm-snapshot_e5d27c49db4a1808caa3fd56",
+  "source_manifest_sha256": "",
+  "task_schema_version": "handoff-v1",
+  "task_type": "CONTINUATION",
+  "world_state_context_path": "world_state_context.json"
+}

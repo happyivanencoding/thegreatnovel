@@ -1,0 +1,326 @@
+{
+  "book_id": "original-e56a54687506",
+  "compact_cards": [
+    {
+      "applicable_scene_functions": [
+        "ACTION",
+        "OPENING",
+        "EXPLORATION",
+        "PAYOFF"
+      ],
+      "card_id": "prose-control-action-before-interpretation",
+      "card_type": "prose-control",
+      "category_ids": [
+        "玄幻",
+        "仙侠",
+        "科幻",
+        "奇幻",
+        "历史",
+        "高武",
+        "都市"
+      ],
+      "control_topic": "动作先于解释",
+      "creative_problem_tags": [
+        "prose-realization",
+        "action",
+        "concrete-process"
+      ],
+      "evidence_scope": "MULTI_CATEGORY",
+      "failure_signals": [
+        "技能名、境界、术语和抽象胜利宣告排成清单。",
+        "为追求速度删除所有空间位置和反馈。"
+      ],
+      "guidance": "先让位置、目标、触发、操作、身体反应或环境反馈发生，再补当前场景真正需要的规则和意义。",
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "maturity": "BROAD",
+      "metadata_match_fields": [
+        "scene_functions"
+      ],
+      "narrative_drives": [],
+      "payoff_channels": [],
+      "reader_experiences": [],
+      "source_book_ids": [
+        "rcv0-01-xuanhuan-wangu-shendi",
+        "rcv0-02-xianxia-bailian-chengxian",
+        "rcv0-04-kehuan-taxing",
+        "rcv0-09-qihuan-damowang",
+        "rcv0-11-lishi-daizhecangku-daming",
+        "rcv0-19-gaowu-wozai-jingshenbingyuan-xue-zhanshen",
+        "rcv0-22-xuanhuan-wulian-dianfeng",
+        "rcv0-24-dushi-shoushu-zhibojian"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_f389802a813a26ff237f787a",
+          "line_end": 9397,
+          "line_start": 9129,
+          "segment_id": "segment-0004",
+          "source_book_id": "rcv0-01-xuanhuan-wangu-shendi",
+          "source_id": "book-01-42b60207"
+        },
+        {
+          "distill_id": "distill_f51c8e00eb0f61e0193bf055",
+          "line_end": 51,
+          "line_start": 14,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-02-xianxia-bailian-chengxian",
+          "source_id": "book-01-a84bb41f"
+        },
+        {
+          "distill_id": "distill_ab8777f43b56841c1ab56aa9",
+          "line_end": 104,
+          "line_start": 26,
+          "segment_id": "segment-0004",
+          "source_book_id": "rcv0-04-kehuan-taxing",
+          "source_id": "book-01-e3501da3"
+        },
+        {
+          "distill_id": "distill_703be341cc2ee9ff4b3322e6",
+          "line_end": 30,
+          "line_start": 13,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-09-qihuan-damowang",
+          "source_id": "book-01-23b3eef4"
+        },
+        {
+          "distill_id": "distill_865bd5ccbf6e40d3431c2726",
+          "line_end": 28,
+          "line_start": 16,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-11-lishi-daizhecangku-daming",
+          "source_id": "book-01-a2f4f985"
+        },
+        {
+          "distill_id": "distill_77e2de55d36d4601c91559ec",
+          "line_end": 34,
+          "line_start": 11,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-19-gaowu-wozai-jingshenbingyuan-xue-zhanshen",
+          "source_id": "book-01-5ce8e361"
+        },
+        {
+          "distill_id": "distill_d501558efe627239954c9e90",
+          "line_end": 79,
+          "line_start": 12,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-22-xuanhuan-wulian-dianfeng",
+          "source_id": "book-01-795a97b8"
+        },
+        {
+          "distill_id": "distill_9d1930d9ef665f9b4ad71ef1",
+          "line_end": 97,
+          "line_start": 8,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-24-dushi-shoushu-zhibojian",
+          "source_id": "book-01-077536af"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "transfer_boundary": "只迁移动作承载信息的抽象变量，不迁移来源人物、事件、专名、句式或口吻。",
+      "variants": [
+        "战斗用距离、方向、出手、反制和伤害呈现过程。",
+        "专业操作用观察、判断、指令、操作和结果呈现过程。",
+        "调查、谈判和公共行动也要保留目标、反馈与后果链。"
+      ],
+      "when_to_use": [
+        "读者只能复述能力名称或胜负结论，无法复述现场发生了什么。",
+        "说明段开始脱离人物当下的操作、判断或风险。"
+      ]
+    },
+    {
+      "applicable_scene_functions": [
+        "EXPOSITION",
+        "DIALOGUE",
+        "OPENING",
+        "ACTION"
+      ],
+      "card_id": "prose-control-exposition-anchored-in-need",
+      "card_type": "prose-control",
+      "category_ids": [
+        "仙侠",
+        "科幻",
+        "历史",
+        "都市",
+        "游戏",
+        "灵异",
+        "高武"
+      ],
+      "control_topic": "由场景需要锚定说明",
+      "creative_problem_tags": [
+        "prose-realization",
+        "exposition",
+        "information-anchoring"
+      ],
+      "evidence_scope": "MULTI_CATEGORY",
+      "failure_signals": [
+        "先把百科讲完，再寻找场景来承载它。",
+        "以首先、其次、最后替代当前场景的真实因果顺序。"
+      ],
+      "guidance": "让规则、历史、世界、机构或专业知识由当前问题、门槛、任务、物件、报告、对话或身体反馈触发，并回到人物的选择、操作或认知变化。",
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "maturity": "BROAD",
+      "metadata_match_fields": [
+        "scene_functions"
+      ],
+      "narrative_drives": [],
+      "payoff_channels": [],
+      "reader_experiences": [],
+      "source_book_ids": [
+        "rcv0-02-xianxia-bailian-chengxian",
+        "rcv0-04-kehuan-taxing",
+        "rcv0-11-lishi-daizhecangku-daming",
+        "rcv0-12-lishi-ming",
+        "rcv0-16-youxi-hupozhijian",
+        "rcv0-18-lingyi-daogui-yixian",
+        "rcv0-20-gaowu-quanqiu-gaowu",
+        "rcv0-24-dushi-shoushu-zhibojian"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_f51c8e00eb0f61e0193bf055",
+          "line_end": 51,
+          "line_start": 14,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-02-xianxia-bailian-chengxian",
+          "source_id": "book-01-a84bb41f"
+        },
+        {
+          "distill_id": "distill_ab8777f43b56841c1ab56aa9",
+          "line_end": 104,
+          "line_start": 26,
+          "segment_id": "segment-0004",
+          "source_book_id": "rcv0-04-kehuan-taxing",
+          "source_id": "book-01-e3501da3"
+        },
+        {
+          "distill_id": "distill_865bd5ccbf6e40d3431c2726",
+          "line_end": 28,
+          "line_start": 16,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-11-lishi-daizhecangku-daming",
+          "source_id": "book-01-a2f4f985"
+        },
+        {
+          "distill_id": "distill_d704aa423b4153f1d6d356cd",
+          "line_end": 8460,
+          "line_start": 8440,
+          "segment_id": "segment-0006",
+          "source_book_id": "rcv0-12-lishi-ming",
+          "source_id": "book-01-b1291008"
+        },
+        {
+          "distill_id": "distill_b465f70612f058025786bfb7",
+          "line_end": 35,
+          "line_start": 12,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-16-youxi-hupozhijian",
+          "source_id": "book-01-33d9f377"
+        },
+        {
+          "distill_id": "distill_4f0a2c0d9691803bb89e7f46",
+          "line_end": 29,
+          "line_start": 6,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-18-lingyi-daogui-yixian",
+          "source_id": "book-01-ea099238"
+        },
+        {
+          "distill_id": "distill_feb8a21049f9ac2154ff7a7c",
+          "line_end": 32,
+          "line_start": 9,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-20-gaowu-quanqiu-gaowu",
+          "source_id": "book-01-540fda77"
+        },
+        {
+          "distill_id": "distill_9d1930d9ef665f9b4ad71ef1",
+          "line_end": 97,
+          "line_start": 8,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-24-dushi-shoushu-zhibojian",
+          "source_id": "book-01-077536af"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "transfer_boundary": "只迁移让说明服从人物需要的抽象控制，不迁移来源世界、机构、术语、专名或解释段句式。",
+      "variants": [
+        "门槛型在角色需要通过资格、交易或规则时出现。",
+        "物件型用器械、文件、资源或屏幕让抽象规则可见。",
+        "专业型用病例、流程、数据或操作验证说明。"
+      ],
+      "when_to_use": [
+        "背景段脱离 POV，读者不知道信息会改变什么。",
+        "连续抽象名词没有回到人物当前的任务或风险。"
+      ]
+    }
+  ],
+  "created_at": "2026-08-16T16:22:44.167941+00:00",
+  "creative_problem": "",
+  "creative_problem_tags": [],
+  "edition_id": "base",
+  "effective_query": {
+    "creative_problem": "",
+    "creative_problem_tags": [],
+    "max_cards": 4,
+    "narrative_drives": [],
+    "payoff_channels": [],
+    "reader_experiences": [],
+    "scene_functions": [
+      "OPENING"
+    ]
+  },
+  "knowledge_gaps": [],
+  "machine_bundle_hash": "3120e088142f5d75ad3f2d1d18eca36f5b89251369228b4f73c7f63e796ff9f9",
+  "match_tier": "EXACT",
+  "max_cards": 4,
+  "metadata_match_fields": {
+    "prose-control-action-before-interpretation": [
+      "scene_functions"
+    ],
+    "prose-control-exposition-anchored-in-need": [
+      "scene_functions"
+    ]
+  },
+  "narrative_drives": [],
+  "operation_id": "draft-task_7ff942998af9bb352a54375b",
+  "original_query": {
+    "creative_problem": "",
+    "creative_problem_tags": [],
+    "max_cards": 4,
+    "narrative_drives": [],
+    "payoff_channels": [],
+    "reader_experiences": [],
+    "scene_functions": [
+      "OPENING"
+    ]
+  },
+  "package_hash": "62e68bee9ee27f36888c20846ad59f8f5a9ef6c253183bca08bd026400ccde3e",
+  "package_schema_version": "reference-corpus-machine-package-v1",
+  "payoff_channels": [],
+  "purpose": "PROSE",
+  "reader_experiences": [],
+  "relaxed_fields": [],
+  "scene_functions": [
+    "OPENING"
+  ],
+  "schema_version": "reference-context-snapshot-v1",
+  "selected_card_count": 2,
+  "selected_card_ids": [
+    "prose-control-action-before-interpretation",
+    "prose-control-exposition-anchored-in-need"
+  ],
+  "selected_card_knowledge_levels": [
+    "CORPUS_SYNTHESIS",
+    "CORPUS_SYNTHESIS"
+  ],
+  "selected_card_types": [
+    "prose-control",
+    "prose-control"
+  ],
+  "snapshot_hash": "6a2054bd4b70c7dda3db2005989494cb890c3d20ab9c4e298d3a8c017d378dfc",
+  "snapshot_id": "reference-context_1346dea5c0f982baf04d3a2c",
+  "status": "ENABLED",
+  "usage": "REFERENCE_ONLY",
+  "warnings": [],
+  "zero_result_reason": null
+}

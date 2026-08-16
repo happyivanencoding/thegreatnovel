@@ -1,0 +1,294 @@
+{
+  "book_id": "original-e56a54687506",
+  "content_sha256": "113da8a685045e389580fbea6131a7e2c67fad6ab4e25fb3655e005292158e39",
+  "contract_id": "contract_d1955693b3c1166033b242e9",
+  "created_at": "2026-08-16T16:34:50.568762+00:00",
+  "draft_id": "draft_ce0c7d4b54a10ed17a3ec776",
+  "passed": false,
+  "projection_sha256": "0abb455305413d32981f6981a8fc510c98cdecdbe70c6861dda1b79c6e3f1448",
+  "reports": [
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Canon Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "latest_order_key": null
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Timeline Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Knowledge Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "CHARACTER_FIT_BELOW_MINIMUM",
+          "evidence": [],
+          "location": "character_fit_inputs",
+          "message": "人物契合度 70.00 低于参考线 75.00，建议人工复核。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {
+        "character_fit": 70.0
+      },
+      "passed": true,
+      "severity": "WARNING",
+      "validator": "Character Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Economy / Power Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:character_state:protagonist",
+          "message": "合同证据 commit:character_state:protagonist 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:thread_status:thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+          "message": "合同证据 commit:thread_status:thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:ending_state",
+          "message": "合同证据 ending_state 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:required_cost",
+          "message": "合同证据 required_cost 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:required_irreversible_change",
+          "message": "合同证据 required_irreversible_change 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "STATE_CHANGE_NOT_OBSERVED_IN_PROSE",
+          "evidence": [],
+          "location": "state_changes:measuring-tape-space-relation",
+          "message": "StateChange state_changes:measuring-tape-space-relation 没有可由正文观察到的证据。",
+          "severity": "ERROR",
+          "suggested_fix": null
+        },
+        {
+          "code": "STATE_CHANGE_NOT_OBSERVED_IN_PROSE",
+          "evidence": [],
+          "location": "state_changes:water-half-bottle-recovered",
+          "message": "StateChange state_changes:water-half-bottle-recovered 没有可由正文观察到的证据。",
+          "severity": "ERROR",
+          "suggested_fix": null
+        },
+        {
+          "code": "STATE_CHANGE_NOT_OBSERVED_IN_PROSE",
+          "evidence": [],
+          "location": "state_changes:post-rearrangement-door",
+          "message": "StateChange state_changes:post-rearrangement-door 没有可由正文观察到的证据。",
+          "severity": "ERROR",
+          "suggested_fix": null
+        },
+        {
+          "code": "STATE_CHANGE_NOT_OBSERVED_IN_PROSE",
+          "evidence": [],
+          "location": "state_changes:space-reading-route-evidence",
+          "message": "StateChange state_changes:space-reading-route-evidence 没有可由正文观察到的证据。",
+          "severity": "ERROR",
+          "suggested_fix": null
+        },
+        {
+          "code": "STATE_CHANGE_NOT_OBSERVED_IN_PROSE",
+          "evidence": [],
+          "location": "state_changes:protagonist-local-evidence-choice",
+          "message": "StateChange state_changes:protagonist-local-evidence-choice 没有可由正文观察到的证据。",
+          "severity": "ERROR",
+          "suggested_fix": null
+        },
+        {
+          "code": "KERNEL_TRACE_WITHOUT_EFFECTIVE_CONTRACT",
+          "evidence": [],
+          "location": "realized_kernel_trace",
+          "message": "Legacy 合同没有 Verified Kernel Trace；草稿声明只作为未核验备注。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {
+        "evidence_matches": [
+          {
+            "key": "commit:character_state:protagonist",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "commit:thread_status:thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "ending_state",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "required_cost",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "required_irreversible_change",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "state_changes:measuring-tape-space-relation",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "state_changes:water-half-bottle-recovered",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "state_changes:post-rearrangement-door",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "state_changes:space-reading-route-evidence",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "state_changes:protagonist-local-evidence-choice",
+            "quote": "",
+            "status": "NOT_FOUND"
+          }
+        ],
+        "kernel_trace_comparison": {
+          "compiled": {
+            "debts_advanced": [],
+            "debts_paid": [
+              "在第一次重排中获得一条可复核的空间关系并取回饮水。"
+            ],
+            "evidence": [],
+            "expected_contract_id": "contract_d1955693b3c1166033b242e9",
+            "narrative_drives_advanced": [],
+            "payoff_channels_realized": [
+              "在第一次重排中获得一条可复核的空间关系并取回饮水。"
+            ],
+            "primary_intent": null,
+            "progression_impact": {
+              "ability_showcase": [],
+              "ability_unlock": [
+                "测距带跨局部重排保持空间关系"
+              ],
+              "axis_advanced": [],
+              "bottleneck_change": null,
+              "branch_change": null,
+              "future_progression_space": [],
+              "growth_cost": [],
+              "new_ceiling_visibility": [],
+              "progression_delta_type": [],
+              "resource_change": [
+                "半瓶水"
+              ],
+              "stage_change": null
+            },
+            "reader_promises_served": [
+              "在第一次重排中获得一条可复核的空间关系并取回饮水。"
+            ],
+            "resource_changes": [
+              "半瓶水"
+            ],
+            "world_expansion_changes": []
+          },
+          "expected": {},
+          "realized": {},
+          "status": "LEGACY_NO_EFFECTIVE_CONTRACT"
+        },
+        "requirements_checked": 5,
+        "reveal_requirements_checked": 22
+      },
+      "passed": false,
+      "severity": "ERROR",
+      "validator": "Contract Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Debt Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Payoff Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Repetition Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "realization": {
+          "character_count": 2387,
+          "code": "SCENE_REALIZATION_CLEAR",
+          "severity": "INFO",
+          "status": "CLEAR",
+          "target_word_range": [
+            1800,
+            3200
+          ]
+        },
+        "style_fit": 81.45
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Style Validator"
+    }
+  ],
+  "run_id": "validation_fd288b2f21ec85990aa11165",
+  "through_event_seq": 0
+}

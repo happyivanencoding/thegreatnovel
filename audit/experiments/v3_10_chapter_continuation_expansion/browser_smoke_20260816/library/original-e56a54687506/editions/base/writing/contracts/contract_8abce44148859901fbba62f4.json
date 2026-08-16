@@ -1,0 +1,2171 @@
+{
+  "action_space_delta_target": "获得脚印变化的比较基准，但没有新增可通行路线。",
+  "active_author_truths": [
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "沈砚，灾变前为城市旧楼做测绘和安全复核的自由接单人；他擅长记住墙体、回声、风向与转折关系，却没有强悍体力，也不擅长在不完整证据下相信别人。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "主角",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-1",
+      "truth_type": "CHARACTER_IDENTITY",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "全球灾变后，幸存者被困在各自的废弃建筑中，建筑结构会周期性改变，旧路线和门后空间不能默认保持不变。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "WORLD_RULE",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-10",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "主角每天只能从自己真正拥有并能接触到的普通非生命物品中选择一件，使它沿原有功能发生一次永久进化；同一物品可以继续进化。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "WORLD_RULE",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-11",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "物品进化必须保留可辨认的原功能，并在具体行动中显示超出普通人能力范围的结果；不能用普通工程、职业知识或一般效率解释替代。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "WORLD_RULE",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-12",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "一次选择不能同时进化多件物品，也不能远程选择不在主角手边的对象；错配会留下真实的机会与时间压力。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "WORLD_RULE",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-13",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "建筑变化造成的空间、路线和资源后果必须能被第三人称限知视角观察和复核；建筑成因、广播来源和其他幸存者规则暂保持候选状态。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "WORLD_RULE",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-14",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "每一次有效兑现先改变主角当下能做什么，再把更大的空间、资源或规则问题交给下一轮选择，不用同场景的维护或牺牲把收益抵消为无效。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "WORLD_RULE",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-15",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "沈砚：主角，旧楼测绘与安全复核接单人；以空间记录为 supporting competence，特殊优势仍来自每日物品进化。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "CHARACTER",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-16",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "广播中的声音：持续提供互相矛盾的楼层提示，既可能是幸存者留下的路线，也可能正在利用建筑变化诱导行动；身份保持候选。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "CHARACTER",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-17",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "门后幸存者：在不同重排状态下留下水位、粉笔线、收音机和反向楼层编号，为沈砚提供局部观测，也可能争夺同一条安全路线。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "CHARACTER",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-18",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "楼外天气的目击者候选：只在沈砚进入更高空间后以可验证的物理痕迹进入故事，不预先确定其身份或可信度。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "CHARACTER",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-19",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "主角目标",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-2",
+      "truth_type": "CHARACTER_GOAL",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "塔内临时幸存者小群体：围绕水、照明和安全层交换局部信息，规模与立场随事实发展。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "FACTION",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-20",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "广播维护者或信号来源：作为待辨认的压力节点，不预设为万能幕后组织。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "FACTION",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-21",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "其他变化建筑中的幸存者网络：在世界扩张后才由真实路线和资源交换形成，不提前固定政治结构。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "FACTION",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-22",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "建筑把上下关系周期性打乱，广播又给出互相矛盾的提示；每次进化只能解决一个空间缺口，追声、找水、保留退路不能同时满足。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "主冲突",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-3",
+      "truth_type": "PLOT_TRUTH",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "体力、饮水、照明和当日唯一进化机会会随位置与判断被消耗；这些是选择的现实后果，不预设每次能力兑现都必须牺牲某种叙事价值。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "主角代价",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-4",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "从只相信完整地图和充分证据的测绘者，成长为能在局部证据下作出唯一选择、让异常物品先打开行动可能，再用行动补足知识的人；他的上限表现为能处理更大、更不稳定的空间关系，而不是只拥有更多物资。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "主角成长空间",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-5",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "在下一次大幅重排前，用一次物品进化确认一条可返回的空间关系，取回饮水，并带走能复核路线的现场记录。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "第一阶段目标",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-6",
+      "truth_type": "FUTURE_EVENT_PRECONDITION",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "主要故事承载是一座会把住宅层、商场中庭、地下设备层和封闭屋顶重新拼接的高层综合楼。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "WORLD_CARRIER",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-7",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "每日唯一的物品进化是主角反复改变行动可能的第一发动机，不建立脱离它的第二成长系统。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "SIGNATURE_RULE",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-8",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "author_layer": "AUTHOR_TRUTH",
+      "book_id": "original-e56a54687506",
+      "compatibility_status": "COMPATIBLE_WITH_GAPS",
+      "compatibility_summary": "原创项目从第一章起生效",
+      "confidence": 1.0,
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "",
+      "edition_id": "base",
+      "effective_from_chapter": 1,
+      "effective_until_chapter": null,
+      "introduced_by": "AUTHOR_CONFIRMED",
+      "metadata": {
+        "foundation_candidate_id": "foundation-folded-tower",
+        "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb"
+      },
+      "must_remain_true": true,
+      "object_id": null,
+      "object_type": null,
+      "requires_revision": false,
+      "retroactive_scope": "FORWARD_ONLY",
+      "statement": "使用第三人称限知，让物品结果、空间错位和广播可信度都通过主角能观察到的后果逐步确认。",
+      "status": "ACTIVE_TRUTH",
+      "subject_id": null,
+      "subject_type": "STORY_FOUNDATION",
+      "tags": [
+        "ORIGINAL_GENESIS"
+      ],
+      "title": "NARRATIVE_FORM",
+      "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-9",
+      "truth_type": "CUSTOM",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    }
+  ],
+  "anticipation_impact": [],
+  "boundary_packet_id": "boundary_03b6d18d9e1e450f707e0572",
+  "candidate_id": "candidate_19d19a005cb2743f0048c3a8",
+  "canon_constraints": [],
+  "chapter": 8,
+  "chapter_intent": "用线索余波改变脚印的稳定性，推动主角建立比较方法。",
+  "commit_updates": [
+    "测距带记录脚印前后端点与风道位置关系",
+    "沈砚确认线索会被重排和风向共同改写",
+    "脚印变化成为可持续比较的未知问题",
+    "脚印前后端点与风道位置的变化被测距带固定为可比较的未知线索。"
+  ],
+  "continuation_boundary": {
+    "base_event_seq": 50,
+    "base_projection_hash": "f2f9eb224bce0ba298def42727ae475400da064922d9708eb962767a5884fb1c",
+    "batch_anchor": {},
+    "last_canon_chapter": 7,
+    "story_atlas_anchor": {}
+  },
+  "contract_id": "contract_8abce44148859901fbba62f4",
+  "declared_kernel_trace": {
+    "anticipation_impact": [],
+    "drive_drift": {},
+    "genre_drift": {},
+    "genre_evolution": {},
+    "narrative_drive_alignment": {
+      "drive_balance": "UNKNOWN",
+      "drive_conflicts": [],
+      "drives_advanced": [],
+      "drives_deferred": [],
+      "drives_paid_off": [],
+      "evidence": [],
+      "primary_drive": null,
+      "primary_drive_effect": "",
+      "secondary_drive_effects": {}
+    },
+    "payoff_channel_impact": [],
+    "progression_impact": {
+      "ability_showcase": [],
+      "ability_unlock": [],
+      "axis_advanced": [],
+      "bottleneck_change": null,
+      "branch_change": null,
+      "future_progression_space": [],
+      "growth_cost": [],
+      "new_ceiling_visibility": [],
+      "progression_delta_type": [],
+      "resource_change": [],
+      "stage_change": null
+    },
+    "reader_promise_alignment": [],
+    "resource_impact": [],
+    "scheduler_alignment": {
+      "alignment": "UNKNOWN",
+      "anticipations_served": [],
+      "candidate_primary_intent": null,
+      "debts_served": [],
+      "deviation_reason": "",
+      "recommended_primary_intent": null,
+      "risks": []
+    },
+    "world_expansion_impact": []
+  },
+  "dramatization_targets": [
+    "脚印前后端点与风道位置的变化被测距带固定为可比较的未知线索。",
+    "脚印前后端点被记录为一组变化证据，来源和方向继续未知。"
+  ],
+  "effective_book_profile": {
+    "active_directives": [],
+    "dimensions": [
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "末日废弃建筑不是静态背景，而是会把路线、资源和谜团重新排列的可行动世界。",
+        "dimension": "worldbuilding",
+        "draft": {
+          "core_commitments": [
+            "建筑变化必须持续制造可验证的生存问题",
+            "异常尺度只围绕每日物品进化扩大"
+          ],
+          "open_questions": [
+            "建筑变化的原因与其他使用者范围"
+          ],
+          "preferences": [
+            "以具体空间关系承载中等神秘度",
+            "世界扩张保持开放"
+          ],
+          "risks": [
+            "规则说明压过现场行动",
+            "世界规模扩张过快"
+          ],
+          "summary": "末日废弃建筑不是静态背景，而是会把路线、资源和谜团重新排列的可行动世界。"
+        },
+        "effective_source": "ORIGINAL_FOUNDATION_PROPOSAL",
+        "filename": "worldbuilding.md",
+        "label": "世界观",
+        "source": "ORIGINAL_FOUNDATION_PROPOSAL"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "人物首先通过私人目标和选择行动，社会关系保持低中心度但能制造证据与资源压力。",
+        "dimension": "characters",
+        "draft": {
+          "core_commitments": [
+            "沈砚想掌握离开之路而非先经营组织",
+            "人物弱点必须在验证与行动的迟疑中产生后果"
+          ],
+          "open_questions": [
+            "广播声音和幸存者的真实动机"
+          ],
+          "preferences": [
+            "角色以现场动作区分",
+            "关系以局部交换和互相矛盾观测进入"
+          ],
+          "risks": [
+            "把角色写成能力的说明工具",
+            "群像抢走主角的唯一选择"
+          ],
+          "summary": "人物首先通过私人目标和选择行动，社会关系保持低中心度但能制造证据与资源压力。"
+        },
+        "effective_source": "ORIGINAL_FOUNDATION_PROPOSAL",
+        "filename": "characters.md",
+        "label": "人物",
+        "source": "ORIGINAL_FOUNDATION_PROPOSAL"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "情节由建筑压力、当天选择、现场验证和新瓶颈连续推动，不冻结逐章大纲。",
+        "dimension": "plot",
+        "draft": {
+          "core_commitments": [
+            "每次兑现都改变可行动范围",
+            "新问题在当前后果之后出现"
+          ],
+          "open_questions": [
+            "路线之间何时发生交叉"
+          ],
+          "preferences": [
+            "短期行动具体，长期谜团留有弹性"
+          ],
+          "risks": [
+            "重复找路",
+            "靠巧合解释资源和广播"
+          ],
+          "summary": "情节由建筑压力、当天选择、现场验证和新瓶颈连续推动，不冻结逐章大纲。"
+        },
+        "effective_source": "ORIGINAL_FOUNDATION_PROPOSAL",
+        "filename": "plot.md",
+        "label": "剧情",
+        "source": "ORIGINAL_FOUNDATION_PROPOSAL"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "语言紧张、具体、克制，优先写触感、距离、声音、光线和行动结果。",
+        "dimension": "style",
+        "draft": {
+          "core_commitments": [
+            "第三人称限知",
+            "异常结果先被看见再被理解"
+          ],
+          "open_questions": [
+            "更高尺度的异常如何保持可读"
+          ],
+          "preferences": [
+            "保留爽点但避免夸张说明",
+            "让物品原功能可识别"
+          ],
+          "risks": [
+            "说明书化",
+            "抽象名词替代现场"
+          ],
+          "summary": "语言紧张、具体、克制，优先写触感、距离、声音、光线和行动结果。"
+        },
+        "effective_source": "ORIGINAL_FOUNDATION_PROPOSAL",
+        "filename": "style.md",
+        "label": "文风",
+        "source": "ORIGINAL_FOUNDATION_PROPOSAL"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "核心叙事节奏是压力逼近、唯一选择、异常验证、纯收益兑现和更大问题。",
+        "dimension": "narrative",
+        "draft": {
+          "core_commitments": [
+            "生存资源保持第一驱动力",
+            "知识与谜团必须回到下一次选择"
+          ],
+          "open_questions": [
+            "不同阶段的回报密度"
+          ],
+          "preferences": [
+            "可以用广播和回声延迟信息",
+            "不预设固定回合长度"
+          ],
+          "risks": [
+            "悬念长期不改变行动",
+            "战斗变成主线"
+          ],
+          "summary": "核心叙事节奏是压力逼近、唯一选择、异常验证、纯收益兑现和更大问题。"
+        },
+        "effective_source": "ORIGINAL_FOUNDATION_PROPOSAL",
+        "filename": "narrative.md",
+        "label": "叙事",
+        "source": "ORIGINAL_FOUNDATION_PROPOSAL"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "对话主要交换路线、资源和可信度，不承担大段世界设定讲解。",
+        "dimension": "dialogue",
+        "draft": {
+          "core_commitments": [
+            "广播提示必须与现场后果形成张力",
+            "幸存者说法保留局部立场"
+          ],
+          "open_questions": [
+            "广播是否由单一声音持续发出"
+          ],
+          "preferences": [
+            "短句、具体指令和可核验细节"
+          ],
+          "risks": [
+            "角色用台词直接公布真相",
+            "关系戏脱离生存压力"
+          ],
+          "summary": "对话主要交换路线、资源和可信度，不承担大段世界设定讲解。"
+        },
+        "effective_source": "ORIGINAL_FOUNDATION_PROPOSAL",
+        "filename": "dialogue.md",
+        "label": "对话",
+        "source": "ORIGINAL_FOUNDATION_PROPOSAL"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "每轮保持可感知的选择与结果，但兑现之后允许新的压力自然打开。",
+        "dimension": "pacing",
+        "draft": {
+          "core_commitments": [
+            "不把每日选择机械映射为固定章节模板",
+            "能力验证要有实际后果"
+          ],
+          "open_questions": [
+            "建筑变化的周期和不规则性"
+          ],
+          "preferences": [
+            "在重排前压缩时间，在验证后给结果留出重量"
+          ],
+          "risks": [
+            "每次都强行加伤亡或牺牲",
+            "只有赶路没有回报"
+          ],
+          "summary": "每轮保持可感知的选择与结果，但兑现之后允许新的压力自然打开。"
+        },
+        "effective_source": "ORIGINAL_FOUNDATION_PROPOSAL",
+        "filename": "pacing.md",
+        "label": "节奏",
+        "source": "ORIGINAL_FOUNDATION_PROPOSAL"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "主题只在具体选择中显现：有限资源如何改变人的判断，以及可复核的知识是否足以支撑行动。",
+        "dimension": "themes",
+        "draft": {
+          "core_commitments": [
+            "不把主题凌驾于生存和进化",
+            "让选择后果自然形成主题"
+          ],
+          "open_questions": [
+            "广播和其他幸存者是否形成更广的社会主题"
+          ],
+          "preferences": [
+            "克制处理责任与信任"
+          ],
+          "risks": [
+            "说教",
+            "用宏大主题替代能力兑现"
+          ],
+          "summary": "主题只在具体选择中显现：有限资源如何改变人的判断，以及可复核的知识是否足以支撑行动。"
+        },
+        "effective_source": "ORIGINAL_FOUNDATION_PROPOSAL",
+        "filename": "themes.md",
+        "label": "主题 / 价值观",
+        "source": "ORIGINAL_FOUNDATION_PROPOSAL"
+      },
+      {
+        "author_edit_count": 0,
+        "author_edits": [],
+        "available": true,
+        "content": "连续性依靠物品拥有关系、进化边界、建筑状态、路线证据和知识不确定性维持。",
+        "dimension": "continuity",
+        "draft": {
+          "core_commitments": [
+            "每次物品进化保留原功能与已验证边界",
+            "局部样本不能自动升级为全局规则"
+          ],
+          "open_questions": [
+            "连续进化如何累积",
+            "建筑重排是否存在周期"
+          ],
+          "preferences": [
+            "使用可追溯的现场记录",
+            "允许已知与未知并存"
+          ],
+          "risks": [
+            "忘记物品位置或能力边界",
+            "把候选真相写成 Canon"
+          ],
+          "summary": "连续性依靠物品拥有关系、进化边界、建筑状态、路线证据和知识不确定性维持。"
+        },
+        "effective_source": "ORIGINAL_FOUNDATION_PROPOSAL",
+        "filename": "continuity.md",
+        "label": "连续性",
+        "source": "ORIGINAL_FOUNDATION_PROPOSAL"
+      }
+    ],
+    "hard_constraints": {
+      "must": [],
+      "must_not": []
+    },
+    "profile_version_id": "book-profile-proposal-e39fee0d664e4e06923df0f31beee8eb",
+    "version_number": 1
+  },
+  "ending_state": "脚印前后端点被记录为一组变化证据，来源和方向继续未知。",
+  "experience_target": {
+    "action_space_delta": "获得脚印变化的比较基准，但没有新增可通行路线。",
+    "core_promise_delivery": "测量能力保存变化本身，让悬念通过方法而非解释延续。",
+    "emotional_outcome": "未知线索不再稳定，沈砚获得方法却失去依赖痕迹的安全感。",
+    "ending_mode": "CONSEQUENCE",
+    "event_source": "上方风道突然加速，白色脚印被吹向相反方向并在另一面墙上重新出现。",
+    "knowledge_delta": "确认脚印并非稳定地图；变化原因未知。",
+    "outcome_magnitude": "中等强度的线索余波",
+    "protagonist_strategy": "接受线索会被重排改写，先建立比较基准而不追逐每一次变化。",
+    "relationship_delta": "广播对脚印的解释与可见变化继续冲突。",
+    "risk_form": "风道收窄会把脚印和测距带一起卷入空段，记录不完成就失去比较基准。",
+    "scene_topology": "检修窗—风道—白色脚印前端—移动墙面—退回端点。",
+    "social_feedback": "广播把脚印改称墙体裂纹，现场痕迹继续移动。",
+    "solution_method": "用测距带记录脚印前后端点和风道位置的关系，只保留可比较的两处痕迹。",
+    "world_scale_delta": "高处风道的线索进入跨状态比较阶段。"
+  },
+  "forbidden_repetitions": [],
+  "genre_alignment": [],
+  "genre_drift_diagnostic": {},
+  "genre_evolution_diagnostic": {},
+  "innovation_commitments": {
+    "expected_cross_horizon_synergies": [],
+    "expected_element_synergies": [],
+    "expected_future_options_opened": [],
+    "expected_horizon_roles": {},
+    "expected_innovation_elements": [],
+    "expected_new_debts": [],
+    "expected_payoffs": [],
+    "hard_gate_exception": false,
+    "minimum_meaningful_delta": null,
+    "soft_contract": true
+  },
+  "innovation_control": {
+    "focus": [
+      "auto"
+    ],
+    "level": "medium"
+  },
+  "innovation_preview": null,
+  "innovation_trace": null,
+  "kernel_verification_status": "PARTIAL",
+  "knowledge_constraints": [],
+  "lens": "CONTINUITY_ACTIVE_THREAD",
+  "mode": "constrained_innovation",
+  "must_not_resolve": [
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-16",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-17",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-18",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-19",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-20",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-21",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-22",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-9",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-8",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-7",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-10",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-11",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-12",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-13",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-14",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-15",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-3",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-1",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-4",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-5",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-2",
+    "KEEP_HIDDEN:truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-6"
+  ],
+  "narrative_debt": {
+    "advance": [
+      "anticipation-world-earned-spatial-frontier"
+    ],
+    "fully_pay": [],
+    "new_major_hooks_allowed": 1
+  },
+  "narrative_drive_alignment": {
+    "drive_balance": "UNKNOWN",
+    "drive_conflicts": [],
+    "drives_advanced": [],
+    "drives_deferred": [],
+    "drives_paid_off": [],
+    "evidence": [],
+    "primary_drive": null,
+    "primary_drive_effect": "",
+    "secondary_drive_effects": {}
+  },
+  "narrative_drive_drift_diagnostic": {},
+  "narrative_portfolio": {
+    "consecutive_deferrals": 0,
+    "current_chapter": 7,
+    "long_threads": [],
+    "mid_threads": [
+      {
+        "debt_ids": [],
+        "horizon": "MID",
+        "last_advanced": 0,
+        "lifecycle": "SETUP",
+        "maturity": 0.0,
+        "maturity_note": "",
+        "name": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "opened_chapter": 0,
+        "thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+      },
+      {
+        "debt_ids": [],
+        "horizon": "MID",
+        "last_advanced": 7,
+        "lifecycle": "DEVELOPING",
+        "maturity": 0.0,
+        "maturity_note": "",
+        "name": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "opened_chapter": 1,
+        "thread_id": "space-reading-route-evidence"
+      }
+    ],
+    "narrative_debts": [],
+    "overdue_debt_ids": [],
+    "payoff_ready_thread_ids": [],
+    "short_threads": [],
+    "snapshot_id": "portfolio_9fe32670f3eec014255712f8",
+    "warnings": []
+  },
+  "novelty_provenance": [
+    {
+      "causal_source": "第七章高处风道中的脚印边缘",
+      "conflicts_checked": [
+        "不确认脚印作者",
+        "不把脚印当稳定地图",
+        "不改变每日一次选择"
+      ],
+      "introduction_event": "第七章确认风道位置和白色脚印",
+      "new_state_if_committed": "脚印移动成为可比较的未知线索",
+      "novelty_boundary": "FORWARD_CANON_COMPATIBLE",
+      "provenance": "FORWARD_NOVELTY",
+      "retroactive_claim": false
+    }
+  ],
+  "outcome_magnitude_target": "中等强度的线索余波",
+  "payoff_channel_impact": [],
+  "payoff_plan": {
+    "causal_sources": [
+      "canon capability measuring-tape-roof-wind-ch7",
+      "canon fact roof-wind-channel-observed-ch7",
+      "canon thread space-reading-route-evidence"
+    ],
+    "must_change_behavior": [
+      "测距带记录脚印前后端点与风道位置关系",
+      "沈砚确认线索会被重排和风向共同改写",
+      "脚印变化成为可持续比较的未知问题",
+      "脚印前后端点与风道位置的变化被测距带固定为可比较的未知线索。"
+    ],
+    "state_changes": [
+      "测距带记录脚印前后端点与风道位置关系",
+      "沈砚确认线索会被重排和风向共同改写",
+      "脚印变化成为可持续比较的未知问题"
+    ]
+  },
+  "pressure": {
+    "before": 85.0,
+    "target_after": 92.0
+  },
+  "primary_function": "aftershock",
+  "primary_thread": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+  "progress": {
+    "minimum_score": 25.0,
+    "required_irreversible_change": "脚印前后端点与风道位置的变化被测距带固定为可比较的未知线索。"
+  },
+  "progress_preview": null,
+  "progression_debt_impact": [],
+  "progression_impact": {
+    "ability_showcase": [],
+    "ability_unlock": [],
+    "axis_advanced": [],
+    "bottleneck_change": null,
+    "branch_change": null,
+    "future_progression_space": [],
+    "growth_cost": [],
+    "new_ceiling_visibility": [],
+    "progression_delta_type": [],
+    "resource_change": [],
+    "stage_change": null
+  },
+  "reader_promise_alignment": [],
+  "reader_question": "脚印是否真的代表一条路线，还是风和建筑共同制造的重复痕迹？",
+  "realization_scope": "CONTRACT_PLUS_MICRO_EVENTS",
+  "recent_avoid_repetitions": [],
+  "reference_provenance": {
+    "application_summary": "按 reader_experiences、narrative_drives、payoff_channels、creative_problem_tags 从冻结卡片中选择 contrast-payoff-fatigue、synth-category-01、synth-category-02；仅选对照方案 contrast-payoff-fatigue-1；仅迁移可复用机制，当前书事实、状态与最终选择仍由本次合同决定。",
+    "card_ids_used": [
+      "contrast-payoff-fatigue",
+      "synth-category-01",
+      "synth-category-02"
+    ],
+    "match_tier": "EXACT",
+    "reference_strategy_id": "planning-reference-strategy_635c4ad40ae6ab47da5ef887",
+    "reuse_reason": null,
+    "selected_solutions": [
+      "contrast-payoff-fatigue-1"
+    ],
+    "snapshot_hash": "ed3fdaa254e563f00520a09ba2f74fc2916ff5cad06acfb7caf7cd0419030a7b",
+    "snapshot_id": "reference-context_2fc4074cc109252db7913979",
+    "usage": "REFERENCE_ONLY"
+  },
+  "required_cost": "再次消耗当天唯一进化机会，并放弃追声和取水的即时行动。",
+  "required_irreversible_change": "脚印前后端点与风道位置的变化被测距带固定为可比较的未知线索。",
+  "resource_opportunity_impact": [],
+  "reveal_agenda": {
+    "book_id": "original-e56a54687506",
+    "chapter_ordinal": 8,
+    "counts": {
+      "keep_hidden": 22,
+      "must_reveal": 0,
+      "optional": 0,
+      "should_hint": 0
+    },
+    "debt_integration": {
+      "engine": "Narrative Debt / Promise",
+      "secret_obligations": [],
+      "separate_reveal_debt_engine": false
+    },
+    "edition_id": "base",
+    "keep_hidden": [
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "沈砚：主角，旧楼测绘与安全复核接单人；以空间记录为 supporting competence，特殊优势仍来自每日物品进化。",
+        "target_character_state": "UNKNOWN",
+        "title": "CHARACTER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-16",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "广播中的声音：持续提供互相矛盾的楼层提示，既可能是幸存者留下的路线，也可能正在利用建筑变化诱导行动；身份保持候选。",
+        "target_character_state": "UNKNOWN",
+        "title": "CHARACTER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-17",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "门后幸存者：在不同重排状态下留下水位、粉笔线、收音机和反向楼层编号，为沈砚提供局部观测，也可能争夺同一条安全路线。",
+        "target_character_state": "UNKNOWN",
+        "title": "CHARACTER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-18",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "楼外天气的目击者候选：只在沈砚进入更高空间后以可验证的物理痕迹进入故事，不预先确定其身份或可信度。",
+        "target_character_state": "UNKNOWN",
+        "title": "CHARACTER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-19",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "塔内临时幸存者小群体：围绕水、照明和安全层交换局部信息，规模与立场随事实发展。",
+        "target_character_state": "UNKNOWN",
+        "title": "FACTION",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-20",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "广播维护者或信号来源：作为待辨认的压力节点，不预设为万能幕后组织。",
+        "target_character_state": "UNKNOWN",
+        "title": "FACTION",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-21",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "其他变化建筑中的幸存者网络：在世界扩张后才由真实路线和资源交换形成，不提前固定政治结构。",
+        "target_character_state": "UNKNOWN",
+        "title": "FACTION",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-22",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "使用第三人称限知，让物品结果、空间错位和广播可信度都通过主角能观察到的后果逐步确认。",
+        "target_character_state": "UNKNOWN",
+        "title": "NARRATIVE_FORM",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-9",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "每日唯一的物品进化是主角反复改变行动可能的第一发动机，不建立脱离它的第二成长系统。",
+        "target_character_state": "UNKNOWN",
+        "title": "SIGNATURE_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-8",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "主要故事承载是一座会把住宅层、商场中庭、地下设备层和封闭屋顶重新拼接的高层综合楼。",
+        "target_character_state": "UNKNOWN",
+        "title": "WORLD_CARRIER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-7",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "全球灾变后，幸存者被困在各自的废弃建筑中，建筑结构会周期性改变，旧路线和门后空间不能默认保持不变。",
+        "target_character_state": "UNKNOWN",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-10",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "主角每天只能从自己真正拥有并能接触到的普通非生命物品中选择一件，使它沿原有功能发生一次永久进化；同一物品可以继续进化。",
+        "target_character_state": "UNKNOWN",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-11",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "物品进化必须保留可辨认的原功能，并在具体行动中显示超出普通人能力范围的结果；不能用普通工程、职业知识或一般效率解释替代。",
+        "target_character_state": "UNKNOWN",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-12",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "一次选择不能同时进化多件物品，也不能远程选择不在主角手边的对象；错配会留下真实的机会与时间压力。",
+        "target_character_state": "UNKNOWN",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-13",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "建筑变化造成的空间、路线和资源后果必须能被第三人称限知视角观察和复核；建筑成因、广播来源和其他幸存者规则暂保持候选状态。",
+        "target_character_state": "UNKNOWN",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-14",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "每一次有效兑现先改变主角当下能做什么，再把更大的空间、资源或规则问题交给下一轮选择，不用同场景的维护或牺牲把收益抵消为无效。",
+        "target_character_state": "UNKNOWN",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-15",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "建筑把上下关系周期性打乱，广播又给出互相矛盾的提示；每次进化只能解决一个空间缺口，追声、找水、保留退路不能同时满足。",
+        "target_character_state": "UNKNOWN",
+        "title": "主冲突",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-3",
+        "truth_type": "PLOT_TRUTH"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "沈砚，灾变前为城市旧楼做测绘和安全复核的自由接单人；他擅长记住墙体、回声、风向与转折关系，却没有强悍体力，也不擅长在不完整证据下相信别人。",
+        "target_character_state": "UNKNOWN",
+        "title": "主角",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-1",
+        "truth_type": "CHARACTER_IDENTITY"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "体力、饮水、照明和当日唯一进化机会会随位置与判断被消耗；这些是选择的现实后果，不预设每次能力兑现都必须牺牲某种叙事价值。",
+        "target_character_state": "UNKNOWN",
+        "title": "主角代价",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-4",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "从只相信完整地图和充分证据的测绘者，成长为能在局部证据下作出唯一选择、让异常物品先打开行动可能，再用行动补足知识的人；他的上限表现为能处理更大、更不稳定的空间关系，而不是只拥有更多物资。",
+        "target_character_state": "UNKNOWN",
+        "title": "主角成长空间",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-5",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "target_character_state": "UNKNOWN",
+        "title": "主角目标",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-2",
+        "truth_type": "CHARACTER_GOAL"
+      },
+      {
+        "agenda_bucket": "KEEP_HIDDEN",
+        "behavioral_constraint": true,
+        "can_reveal": false,
+        "keep_hidden": true,
+        "must_hint": false,
+        "must_reveal": false,
+        "plan": null,
+        "priority": 100,
+        "reader_state": "UNKNOWN",
+        "reveal_depth": null,
+        "reveal_permission": false,
+        "source": "DEFAULT_CONCEALMENT",
+        "statement": "在下一次大幅重排前，用一次物品进化确认一条可返回的空间关系，取回饮水，并带走能复核路线的现场记录。",
+        "target_character_state": "UNKNOWN",
+        "title": "第一阶段目标",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-6",
+        "truth_type": "FUTURE_EVENT_PRECONDITION"
+      }
+    ],
+    "must_reveal": [],
+    "optional": [],
+    "reveal_budget": {
+      "hard_gate": false,
+      "hint_guideline": "1–3",
+      "partial_or_full_guideline": "0–1",
+      "planned_hints": 0,
+      "planned_partial_or_full": 0,
+      "status": "WITHIN_GUIDELINE"
+    },
+    "rule": "Hidden Truth 是行为约束，不等于揭示许可；拖动 Agenda 不改变任何 Knowledge。",
+    "should_hint": []
+  },
+  "rhythm_constraints": {
+    "advance_due_promises": [],
+    "avoid_repeated_ending_mode": "unknown",
+    "resolve_due_promises": []
+  },
+  "scheduler_alignment": {
+    "alignment": "UNKNOWN",
+    "anticipations_served": [],
+    "candidate_primary_intent": null,
+    "debts_served": [],
+    "deviation_reason": "",
+    "recommended_primary_intent": null,
+    "risks": []
+  },
+  "secondary_functions": [
+    "discovery",
+    "progress"
+  ],
+  "style_constraints": {},
+  "truth_reveal_commitments": {
+    "reveal_impact": {
+      "character_knowledge_delta": [],
+      "full_reveals": [],
+      "hints": [],
+      "kept_hidden": [
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-1",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-10",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-11",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-12",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-13",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-14",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-15",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-16",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-17",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-18",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-19",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-2",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-20",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-21",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-22",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-3",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-4",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-5",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-6",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-7",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-8",
+        "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-9"
+      ],
+      "partial_reveals": [],
+      "reader_knowledge_delta": [],
+      "secrets_used": []
+    },
+    "rule": "Hidden Truth 只作为行为约束；未获 Agenda 授权不得向读者或角色揭示。",
+    "truth_alignment": []
+  },
+  "verified_kernel_trace": {
+    "drive_drift": {
+      "evidence": [],
+      "hard_failure": false,
+      "reasons": [
+        "本章未直接服务 Primary Drive；单章缺席不是硬失败"
+      ],
+      "status": "SOFT_MISS",
+      "warning": false
+    },
+    "evidence_compilation": {
+      "candidate_local_id": "wind-channel-debt",
+      "completeness": "PARTIAL",
+      "declared": {
+        "anticipation_impact": [],
+        "drive_drift": {},
+        "genre_drift": {},
+        "genre_evolution": {},
+        "narrative_drive_alignment": {
+          "drive_balance": "UNKNOWN",
+          "drive_conflicts": [],
+          "drives_advanced": [],
+          "drives_deferred": [],
+          "drives_paid_off": [],
+          "evidence": [],
+          "primary_drive": null,
+          "primary_drive_effect": "",
+          "secondary_drive_effects": {}
+        },
+        "payoff_channel_impact": [],
+        "progression_impact": {
+          "ability_showcase": [],
+          "ability_unlock": [],
+          "axis_advanced": [],
+          "bottleneck_change": null,
+          "branch_change": null,
+          "future_progression_space": [],
+          "growth_cost": [],
+          "new_ceiling_visibility": [],
+          "progression_delta_type": [],
+          "resource_change": [],
+          "stage_change": null
+        },
+        "reader_promise_alignment": [],
+        "resource_impact": [],
+        "scheduler_alignment": {
+          "alignment": "UNKNOWN",
+          "anticipations_served": [],
+          "candidate_primary_intent": null,
+          "debts_served": [],
+          "deviation_reason": "",
+          "recommended_primary_intent": null,
+          "risks": []
+        },
+        "world_expansion_impact": []
+      },
+      "differences": [],
+      "hard_gate_compilation": {
+        "author_constraint_violations": [],
+        "canon_conflicts": [],
+        "capability_violations": [],
+        "knowledge_violations": [],
+        "missing_causal_sources": [],
+        "payoff_cooldown_violations": [],
+        "timeline_conflicts": []
+      },
+      "soft_metric_compilation": {
+        "candidate_score_overrides": {
+          "components": {
+            "agency_gain": {
+              "completeness": "COMPLETE",
+              "evidence": [],
+              "score": 50.0,
+              "source": "KERNEL_VERIFIED_EVIDENCE"
+            },
+            "debt_utility": {
+              "completeness": "COMPLETE",
+              "evidence": [],
+              "formula": "existing:narrative_debt",
+              "score": 0.0,
+              "source": "FROZEN_NARRATIVE_DEBT"
+            },
+            "future_damage": {
+              "completeness": "COMPLETE",
+              "evidence": [],
+              "score": 0.0,
+              "source": "KERNEL_VERIFIED_EVIDENCE"
+            },
+            "progress_gain": {
+              "completeness": "COMPLETE",
+              "components": {
+                "goal_advance": 70.0,
+                "knowledge_change": 0.0,
+                "permanent_growth": 0.0,
+                "relationship_change": 0.0,
+                "strategy_expansion": 50.0,
+                "world_state_change": 0.0
+              },
+              "evidence": {
+                "goal_advance": [],
+                "knowledge_change": [
+                  "no_verified_knowledge_change_change"
+                ],
+                "permanent_growth": [
+                  "no_verified_permanent_growth_change"
+                ],
+                "relationship_change": [
+                  "no_verified_relationship_change_change"
+                ],
+                "strategy_expansion": [],
+                "world_state_change": [
+                  "no_verified_world_state_change_change"
+                ]
+              },
+              "formula": "existing:progress",
+              "score": 18.0,
+              "source": "KERNEL_VERIFIED_EVIDENCE"
+            },
+            "risk_fit": {
+              "completeness": "COMPLETE",
+              "evidence": [],
+              "score": 100.0,
+              "source": "KERNEL_VERIFIED_EVIDENCE"
+            },
+            "thread_need_fit": {
+              "completeness": "COMPLETE",
+              "evidence": [
+                "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+              ],
+              "score": 100.0,
+              "source": "FROZEN_ACTIVE_THREADS"
+            }
+          },
+          "source": "KERNEL_EVIDENCE_COMPILER",
+          "values": {
+            "agency_gain": 50.0,
+            "debt_utility": 0.0,
+            "future_damage": 0.0,
+            "progress_gain": 18.0,
+            "risk_fit": 100.0,
+            "thread_need_fit": 100.0
+          }
+        },
+        "progress": {
+          "completeness": "COMPLETE",
+          "components": {
+            "goal_advance": 70.0,
+            "knowledge_change": 0.0,
+            "permanent_growth": 0.0,
+            "relationship_change": 0.0,
+            "strategy_expansion": 50.0,
+            "world_state_change": 0.0
+          },
+          "evidence": {
+            "goal_advance": [],
+            "knowledge_change": [
+              "no_verified_knowledge_change_change"
+            ],
+            "permanent_growth": [
+              "no_verified_permanent_growth_change"
+            ],
+            "relationship_change": [
+              "no_verified_relationship_change_change"
+            ],
+            "strategy_expansion": [],
+            "world_state_change": [
+              "no_verified_world_state_change_change"
+            ]
+          },
+          "formula": "existing:progress",
+          "score": 18.0,
+          "source": "KERNEL_VERIFIED_EVIDENCE"
+        },
+        "resource_pressure": {
+          "completeness": "COMPLETE",
+          "components": {
+            "cost_income_imbalance": 0.0,
+            "current_shortfall": 100.0,
+            "near_future_demand": 100.0,
+            "reader_salience": 100.0,
+            "recently_blocked_actions": 100.0
+          },
+          "evidence": [
+            "missing_resource:真实拥有的普通非生命物品",
+            "missing_resource:可执行的现场问题",
+            "missing_resource:可进入的现场",
+            "missing_resource:足够观察结果的时间",
+            "missing_resource:至少一件已验证的进化物品",
+            "missing_resource:新的空间压力",
+            "bottleneck:可用物品与当前空间缺口不匹配",
+            "bottleneck:建筑变化快于主角能完成的现场验证",
+            "bottleneck:同一物品的下一次进化需要新的问题而非简单重复"
+          ],
+          "formula": "existing:resource_pressure",
+          "score": 80.0,
+          "source": "KERNEL_VERIFIED_EVIDENCE"
+        }
+      },
+      "verified": {
+        "drive_drift": {
+          "evidence": [],
+          "hard_failure": false,
+          "reasons": [
+            "本章未直接服务 Primary Drive；单章缺席不是硬失败"
+          ],
+          "status": "SOFT_MISS",
+          "warning": false
+        },
+        "genre_drift": {
+          "evidence": [],
+          "hard_failure": false,
+          "penalty": 4.0,
+          "reasons": [
+            "移除表层专名后，成长资源、能力与世界层级均不影响因果"
+          ],
+          "status": "GENRE_SKIN_ONLY",
+          "warning": true
+        },
+        "genre_evolution": {
+          "core_promise_preserved": true,
+          "evidence": [],
+          "explanation": "未检测到需要单独标记的 Genre Evolution",
+          "status": "CLEAR"
+        },
+        "narrative_drive_alignment": {
+          "drive_balance": "UNKNOWN",
+          "drive_conflicts": [],
+          "drives_advanced": [],
+          "drives_deferred": [],
+          "drives_paid_off": [],
+          "evidence": [],
+          "primary_drive": "SURVIVAL_RESOURCE",
+          "primary_drive_effect": "",
+          "secondary_drive_effects": {}
+        },
+        "payoff_channels": [],
+        "progression_impact": {
+          "ability_showcases": [],
+          "ability_unlocks": [],
+          "axis_advanced": [],
+          "growth_costs": [],
+          "progression_delta_type": [],
+          "resource_changes": [],
+          "stage_change": null,
+          "world_expansion": []
+        },
+        "reader_promise_alignment": [],
+        "resource_impact": [],
+        "scheduler_alignment": {
+          "alignment": "UNKNOWN",
+          "anticipations_served": [],
+          "candidate_primary_intent": null,
+          "debts_served": [],
+          "deviation_reason": "",
+          "recommended_primary_intent": null,
+          "risks": []
+        },
+        "world_expansion_impact": []
+      },
+      "verified_anticipation_impact": [],
+      "verified_drive_alignment": {
+        "drive_balance": "UNKNOWN",
+        "drive_conflicts": [],
+        "drives_advanced": [],
+        "drives_deferred": [],
+        "drives_paid_off": [],
+        "evidence": [],
+        "primary_drive": "SURVIVAL_RESOURCE",
+        "primary_drive_effect": "",
+        "secondary_drive_effects": {}
+      },
+      "verified_progress_components": {
+        "completeness": "COMPLETE",
+        "components": {
+          "goal_advance": 70.0,
+          "knowledge_change": 0.0,
+          "permanent_growth": 0.0,
+          "relationship_change": 0.0,
+          "strategy_expansion": 50.0,
+          "world_state_change": 0.0
+        },
+        "evidence": {
+          "goal_advance": [],
+          "knowledge_change": [
+            "no_verified_knowledge_change_change"
+          ],
+          "permanent_growth": [
+            "no_verified_permanent_growth_change"
+          ],
+          "relationship_change": [
+            "no_verified_relationship_change_change"
+          ],
+          "strategy_expansion": [],
+          "world_state_change": [
+            "no_verified_world_state_change_change"
+          ]
+        },
+        "formula": "existing:progress",
+        "score": 18.0,
+        "source": "KERNEL_VERIFIED_EVIDENCE"
+      },
+      "verified_progression_impact": {
+        "ability_showcases": [],
+        "ability_unlocks": [],
+        "axis_advanced": [],
+        "growth_costs": [],
+        "progression_delta_type": [],
+        "resource_changes": [],
+        "stage_change": null,
+        "world_expansion": []
+      },
+      "verified_reader_promise_alignment": [],
+      "verified_resource_impact": [],
+      "verified_world_expansion_impact": [],
+      "warnings": [
+        "本候选未直接服务 CORE Reader Promise；单章缺席只记 Soft Miss。",
+        "Primary Drive 没有可验证的结构推进；单章只记 Soft Miss。",
+        "Candidate 未填写 Scheduler Alignment，保持 UNVERIFIED。"
+      ]
+    },
+    "genre_drift": {
+      "evidence": [],
+      "hard_failure": false,
+      "penalty": 4.0,
+      "reasons": [
+        "移除表层专名后，成长资源、能力与世界层级均不影响因果"
+      ],
+      "status": "GENRE_SKIN_ONLY",
+      "warning": true
+    },
+    "genre_evolution": {
+      "core_promise_preserved": true,
+      "evidence": [],
+      "explanation": "未检测到需要单独标记的 Genre Evolution",
+      "status": "CLEAR"
+    },
+    "narrative_drive_alignment": {
+      "drive_balance": "UNKNOWN",
+      "drive_conflicts": [],
+      "drives_advanced": [],
+      "drives_deferred": [],
+      "drives_paid_off": [],
+      "evidence": [],
+      "primary_drive": "SURVIVAL_RESOURCE",
+      "primary_drive_effect": "",
+      "secondary_drive_effects": {}
+    },
+    "payoff_channels": [],
+    "progression_impact": {
+      "ability_showcases": [],
+      "ability_unlocks": [],
+      "axis_advanced": [],
+      "growth_costs": [],
+      "progression_delta_type": [],
+      "resource_changes": [],
+      "stage_change": null,
+      "world_expansion": []
+    },
+    "reader_promise_alignment": [],
+    "resource_impact": [],
+    "scheduler_alignment": {
+      "alignment": "UNKNOWN",
+      "anticipations_served": [],
+      "candidate_primary_intent": null,
+      "debts_served": [],
+      "deviation_reason": "",
+      "recommended_primary_intent": null,
+      "risks": []
+    },
+    "world_expansion_impact": []
+  },
+  "world_expansion_impact": []
+}

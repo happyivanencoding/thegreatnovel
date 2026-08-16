@@ -1,0 +1,181 @@
+{
+  "$defs": {
+    "AuthorInnovationIntent": {
+      "additionalProperties": false,
+      "description": "The author's selected mechanism boundary carried into later Genesis stages.",
+      "properties": {
+        "optional_mix_notes": {
+          "default": "",
+          "title": "Optional Mix Notes",
+          "type": "string"
+        },
+        "selected_primary_innovation_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Selected Primary Innovation Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "selected_primary_innovation_id"
+      ],
+      "title": "AuthorInnovationIntent",
+      "type": "object"
+    },
+    "StoryFoundationCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "author_facing_pitch": {
+          "minLength": 1,
+          "title": "Author Facing Pitch",
+          "type": "string"
+        },
+        "candidate_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "core_reading_promise": {
+          "minLength": 1,
+          "title": "Core Reading Promise",
+          "type": "string"
+        },
+        "first_stage_objective": {
+          "minLength": 1,
+          "title": "First Stage Objective",
+          "type": "string"
+        },
+        "innovation_fit": {
+          "minLength": 1,
+          "title": "Innovation Fit",
+          "type": "string"
+        },
+        "main_conflict": {
+          "minLength": 1,
+          "title": "Main Conflict",
+          "type": "string"
+        },
+        "opening_situation": {
+          "minLength": 1,
+          "title": "Opening Situation",
+          "type": "string"
+        },
+        "premise_relationship": {
+          "minLength": 1,
+          "title": "Premise Relationship",
+          "type": "string"
+        },
+        "protagonist": {
+          "minLength": 1,
+          "title": "Protagonist",
+          "type": "string"
+        },
+        "protagonist_competence": {
+          "minLength": 1,
+          "title": "Protagonist Competence",
+          "type": "string"
+        },
+        "protagonist_goal": {
+          "minLength": 1,
+          "title": "Protagonist Goal",
+          "type": "string"
+        },
+        "protagonist_weakness": {
+          "minLength": 1,
+          "title": "Protagonist Weakness",
+          "type": "string"
+        },
+        "resource_structure": {
+          "minLength": 1,
+          "title": "Resource Structure",
+          "type": "string"
+        },
+        "risk_structure": {
+          "minLength": 1,
+          "title": "Risk Structure",
+          "type": "string"
+        },
+        "social_configuration": {
+          "minLength": 1,
+          "title": "Social Configuration",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "typical_choice": {
+          "minLength": 1,
+          "title": "Typical Choice",
+          "type": "string"
+        },
+        "world_carrier": {
+          "minLength": 1,
+          "title": "World Carrier",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "title",
+        "core_reading_promise",
+        "protagonist",
+        "protagonist_competence",
+        "protagonist_weakness",
+        "protagonist_goal",
+        "main_conflict",
+        "world_carrier",
+        "first_stage_objective",
+        "risk_structure",
+        "social_configuration",
+        "resource_structure",
+        "premise_relationship",
+        "author_facing_pitch",
+        "opening_situation",
+        "typical_choice",
+        "innovation_fit"
+      ],
+      "title": "StoryFoundationCandidate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Up to three story carriers for one selected Core Innovation.",
+  "properties": {
+    "core_innovation_intent": {
+      "$ref": "#/$defs/AuthorInnovationIntent"
+    },
+    "foundation_candidates": {
+      "items": {
+        "$ref": "#/$defs/StoryFoundationCandidate"
+      },
+      "maxItems": 3,
+      "minItems": 2,
+      "title": "Foundation Candidates",
+      "type": "array"
+    },
+    "information_status": {
+      "const": "PROPOSAL",
+      "default": "PROPOSAL",
+      "title": "Information Status",
+      "type": "string"
+    },
+    "kernel_contracts": {
+      "additionalProperties": true,
+      "title": "Kernel Contracts",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "story-foundation-v1",
+      "default": "story-foundation-v1",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "core_innovation_intent",
+    "foundation_candidates"
+  ],
+  "title": "StoryFoundationProposal",
+  "type": "object"
+}

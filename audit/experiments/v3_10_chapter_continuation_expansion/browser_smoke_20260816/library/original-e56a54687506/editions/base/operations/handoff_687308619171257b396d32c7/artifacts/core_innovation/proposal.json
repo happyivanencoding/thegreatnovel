@@ -1,0 +1,486 @@
+{
+  "information_status": "PROPOSAL",
+  "schema_version": "core-innovation-v2",
+  "kernel_contracts": {
+    "contract_proposals": {
+      "MARKET_CATEGORY": {
+        "author_notes": "作者在 Step 0 一并确认 Market Category",
+        "book_id": "original-e56a54687506",
+        "contract_record_id": "progression-contract-8f0100e5b6f54f419c1484b250e8783f",
+        "contract_type": "MARKET_CATEGORY",
+        "created_at": "2026-08-16T15:29:37.791526+00:00",
+        "edition_id": "base",
+        "effective_from_boundary": 1,
+        "payload": {
+          "display_labels": [
+            "末日生存",
+            "物品进化成长",
+            "男频爽文"
+          ],
+          "metadata_id": "original-e56a54687506-market-category",
+          "primary_market_category": "CUSTOM",
+          "secondary_market_categories": [
+            "SUPERNATURAL"
+          ],
+          "source": "AUTHOR_PREMISE_INTERPRETATION",
+          "status": "EFFECTIVE"
+        },
+        "source": "ORIGINAL_READER_SEMANTIC_FIRST_READ",
+        "status": "EFFECTIVE",
+        "updated_at": "2026-08-16T15:30:11.761739+00:00",
+        "version_number": 1
+      },
+      "NARRATIVE_DRIVE": {
+        "author_notes": "作者在 Step 0 一并确认 Narrative Drive",
+        "book_id": "original-e56a54687506",
+        "contract_record_id": "progression-contract-dd48e00d2e7a4024b424e204ac9a8ade",
+        "contract_type": "NARRATIVE_DRIVE",
+        "created_at": "2026-08-16T15:30:11.761739+00:00",
+        "edition_id": "base",
+        "effective_from_boundary": 1,
+        "payload": {
+          "author_overrides": [
+            "AUTHOR_CONFIRMED_DRIVE"
+          ],
+          "drive_contract_id": "original-e56a54687506-narrative-drive",
+          "drive_debt_types": {
+            "ABILITY_PROGRESSION": [
+              "新能力的适用边界尚未被验证",
+              "累积进化与当前危机之间的错配"
+            ],
+            "KNOWLEDGE_PROGRESSION": [
+              "观察到的规律仍可能只是局部样本",
+              "理解规则所需的时间与即时生存压力冲突"
+            ],
+            "MYSTERY_INVESTIGATION": [
+              "灾变原因与当前生存问题之间尚未闭合的线索",
+              "过早解释可能遮蔽现场可验证的后果"
+            ],
+            "SURVIVAL_RESOURCE": [
+              "物资不足",
+              "错过一次进化机会后的补救压力",
+              "选择一种用途就放弃其他用途"
+            ],
+            "WORLD_EXPLORATION": [
+              "未知区域与安全路线之间的信息缺口",
+              "建筑变化造成的空间记忆失效"
+            ]
+          },
+          "drive_fatigue_risks": {
+            "ABILITY_PROGRESSION": [
+              "如果进化只表现为无代价的数值变强，单次选择的戏剧性会消失。"
+            ],
+            "KNOWLEDGE_PROGRESSION": [
+              "如果规律解释先于现场后果，故事会从生存行动滑向说明书。"
+            ],
+            "MYSTERY_INVESTIGATION": [
+              "如果谜底长期只延迟而不改变当下选择，悬念会与主线生存脱节。"
+            ],
+            "SURVIVAL_RESOURCE": [
+              "如果每次危机都只是重复缺水、缺食和找出口，资源压力会失去新鲜度。"
+            ],
+            "WORLD_EXPLORATION": [
+              "如果空间变化没有带来新的可行动问题，探索会变成换皮走图。"
+            ]
+          },
+          "drive_payoff_channels": [
+            {
+              "associated_drive": "SURVIVAL_RESOURCE",
+              "channel": "SURVIVAL_ESCAPE"
+            },
+            {
+              "associated_drive": "ABILITY_PROGRESSION",
+              "channel": "NEW_ABILITY"
+            },
+            {
+              "associated_drive": "WORLD_EXPLORATION",
+              "channel": "WORLD_EXPANSION"
+            },
+            {
+              "associated_drive": "KNOWLEDGE_PROGRESSION",
+              "channel": "KNOWLEDGE_GAIN"
+            },
+            {
+              "associated_drive": "MYSTERY_INVESTIGATION",
+              "channel": "DISCOVERY"
+            }
+          ],
+          "drive_priorities": {
+            "ABILITY_PROGRESSION": 70,
+            "KNOWLEDGE_PROGRESSION": 85,
+            "MYSTERY_INVESTIGATION": 55,
+            "SURVIVAL_RESOURCE": 100,
+            "WORLD_EXPLORATION": 40
+          },
+          "drive_promises": {
+            "ABILITY_PROGRESSION": [
+              "永久进化逐步增加主角能够采取的行动，但每次增加都来自明确的单次选择。"
+            ],
+            "KNOWLEDGE_PROGRESSION": [
+              "对建筑变化、物品功能边界和选择后果的认识，会成为下一次判断的优势。"
+            ],
+            "MYSTERY_INVESTIGATION": [
+              "全球灾变与建筑变化留下需要逐步辨认的原因、规则和关联线索。"
+            ],
+            "SURVIVAL_RESOURCE": [
+              "建筑每次变化都会把已有物品、储备与安全位置重新变成可权衡的生存问题。",
+              "每天只能选择一件物品进化，机会成本会持续存在并影响后续行动。"
+            ],
+            "WORLD_EXPLORATION": [
+              "变化的建筑空间不断逼迫幸存者进入未知区域，重新理解可用空间与路线。"
+            ]
+          },
+          "drive_states": [
+            {
+              "drive": "SURVIVAL_RESOURCE",
+              "evidence": [
+                "Seed 明确写出末日环境、废弃建筑、不断变化的结构，以及幸存者的生存和资源重组压力。"
+              ],
+              "state": "EXPLICIT_SEED"
+            },
+            {
+              "drive": "ABILITY_PROGRESSION",
+              "evidence": [
+                "Seed 明确写出主角每天只能让一件普通非生命物品沿原有功能发生永久进化，且同一物品可以继续进化。"
+              ],
+              "state": "EXPLICIT_SEED"
+            },
+            {
+              "drive": "WORLD_EXPLORATION",
+              "evidence": [
+                "Seed 明确写出建筑会周期性改变结构并逼迫幸存者不断探索。"
+              ],
+              "state": "EXPLICIT_SEED"
+            },
+            {
+              "drive": "KNOWLEDGE_PROGRESSION",
+              "evidence": [
+                "要在变化建筑与每日一次的选择中持续生存，读者可以期待对规则和物品边界的认识逐步增加；但 Seed 未冻结具体认知路径。"
+              ],
+              "state": "IMPLIED_BY_PREMISE"
+            },
+            {
+              "drive": "MYSTERY_INVESTIGATION",
+              "evidence": [
+                "全球灾变和会变化的废弃建筑构成未解释的世界问题；Seed 未明确要求谜底或调查结构，因此仅作待审阅的次级驱动。"
+              ],
+              "state": "IMPLIED_BY_PREMISE"
+            }
+          ],
+          "primary_drive": "SURVIVAL_RESOURCE",
+          "progression_engine_enabled": true,
+          "secondary_drives": [
+            "KNOWLEDGE_PROGRESSION",
+            "ABILITY_PROGRESSION",
+            "MYSTERY_INVESTIGATION",
+            "WORLD_EXPLORATION"
+          ],
+          "status": "EFFECTIVE"
+        },
+        "source": "AUTHOR_CONFIRMED_NARRATIVE_DRIVE",
+        "status": "EFFECTIVE",
+        "updated_at": "2026-08-16T15:30:11.761739+00:00",
+        "version_number": 2
+      },
+      "READER_EXPERIENCE": {
+        "author_notes": "作者选择：CONFIRM",
+        "book_id": "original-e56a54687506",
+        "contract_record_id": "progression-contract-25dee2add48441a3936b5cb6e2aa4921",
+        "contract_type": "READER_EXPERIENCE",
+        "created_at": "2026-08-16T15:30:11.760752+00:00",
+        "edition_id": "base",
+        "effective_from_boundary": 1,
+        "payload": {
+          "author_notes": "这是基于 INITIAL Seed 的首次语义提案；Seed 没有提供作者覆盖项。三项合同均保留为 NEEDS_REVIEW，特别需要作者确认特殊规则的适用范围、进化上限以及未知建筑规则在追读中的比重。",
+          "contract_id": "original-e56a54687506-reader-experience",
+          "drive_priority_order": [
+            "SURVIVAL_RESOURCE",
+            "KNOWLEDGE_PROGRESSION",
+            "ABILITY_PROGRESSION",
+            "MYSTERY_INVESTIGATION",
+            "WORLD_EXPLORATION"
+          ],
+          "expected_drive_interactions": [
+            "生存与资源为主要驱动力"
+          ],
+          "experience_priorities": {
+            "ARTIFACT_OR_ABILITY": "VERY_HIGH",
+            "BREAKTHROUGH": "VERY_HIGH",
+            "COMBAT": "MEDIUM",
+            "EXPLORATION": "VERY_HIGH",
+            "FACTION_CONFLICT": "LOW",
+            "KNOWLEDGE": "HIGH",
+            "MYSTERY": "HIGH",
+            "POWER_VERIFICATION": "HIGH",
+            "PROGRESSION": "VERY_HIGH",
+            "RELATIONSHIP": "LOW",
+            "RESOURCE_OPPORTUNITY": "VERY_HIGH",
+            "REVEAL": "HIGH",
+            "REVENGE": "OFF",
+            "ROMANCE": "OFF",
+            "SOCIAL_THEME": "LOW",
+            "STATUS_RISE": "LOW",
+            "SURVIVAL": "VERY_HIGH",
+            "TEAM_GROWTH": "LOW",
+            "WEALTH": "LOW",
+            "WORLD_EXPANSION": "HIGH"
+          },
+          "explanation_style": "BALANCED",
+          "growth_centrality": "VERY_HIGH",
+          "must_deliver": [
+            "每日唯一的进化选择必须在后续生存处境中产生可感知、可验证的行动优势或代价。",
+            "建筑结构变化必须持续制造探索、路线和资源重组压力，而不是只作为背景设定。",
+            "普通非生命物品沿原有功能发生的质变必须打开读者能理解并期待兑现的新行动可能性。",
+            "选择的机会成本和失败后果不能被无限资源、无限次数或无代价多选抵消。"
+          ],
+          "must_not_drift_into": [
+            "把永久进化稀释成普通求生技巧、职业知识、工程改造或一般效率提升。",
+            "让战斗、恋爱、阵营争霸或社会地位长期压过生存选择与物品进化的核心追读动力。",
+            "把建筑变化变成静态背景，或用一套脱离物品选择的复杂系统替代现场生存后果。"
+          ],
+          "mystery_centrality": "HIGH",
+          "mysticism_level": "MEDIUM",
+          "primary_family": "SURVIVAL_PROGRESSION",
+          "primary_narrative_drive": "SURVIVAL_RESOURCE",
+          "relationship_centrality": "LOW",
+          "secondary_families": [
+            "EVOLUTION_PROGRESSION"
+          ],
+          "secondary_narrative_drives": [
+            "KNOWLEDGE_PROGRESSION",
+            "ABILITY_PROGRESSION",
+            "MYSTERY_INVESTIGATION",
+            "WORLD_EXPLORATION"
+          ],
+          "serial_form": "LONG_SERIAL",
+          "setting_skin": "APOCALYPSE",
+          "status": "EFFECTIVE",
+          "team_centrality": "LOW",
+          "theme_centrality": "LOW",
+          "tone": [
+            "紧张",
+            "具体",
+            "克制",
+            "有爽点"
+          ],
+          "world_expansion_centrality": "HIGH"
+        },
+        "source": "AUTHOR_ADJUSTED_READER_EXPERIENCE",
+        "status": "EFFECTIVE",
+        "updated_at": "2026-08-16T15:30:11.761739+00:00",
+        "version_number": 2
+      }
+    },
+    "creative_semantics": {
+      "anti_drift": [
+        "不能把永久进化写成普通求生技巧、职业知识、工程改造或一般效率提升。",
+        "不能让拿掉特殊进化机制后，故事仍可由相同的搜索、战斗、经营或社交活动维持主要行动和爽点；特殊机制必须真正改变可行动可能性。",
+        "不能把每天一次的选择变成无限刷新、无限物品或无代价多选。",
+        "不能让建筑变化只做静态背景，也不能让世界揭秘、阵营争霸、恋爱或复仇长期取代生存成长与选择兑现。",
+        "不能把局部现实锚点误写成对超现实能力本身的全面削弱，或用现实职业能力替代作者已经给出的异常优势。"
+      ],
+      "complexity_boundaries": [
+        "不额外引入与每日单件进化无关的职业技能树、数值面板或独立升级体系。",
+        "不让庞大的科技或魔法百科、复杂阵营政治、经营经济和社会制度解释抢走现场生存选择。",
+        "不把建筑变化拆成另一套脱离物品选择的成长系统，也不让抽象规则说明替代具体行动与后果。",
+        "不为了制造升级感而堆叠不可验证的能力清单、敌人清单、地图层级或长期剧情结构。"
+      ],
+      "existing_signature_mechanism": "Seed 已明确：主角每天只能从自己真正拥有的普通非生命物品中选择一件，让它沿原有功能发生一次永久进化，同一物品还可以继续进化。已明确的使用者是主角；其他幸存者是否也拥有同一规则、还是只有主角拥有，Seed 没有说明，因此本阶段不冻结使用者范围。普通人不能靠职业、工程知识或一般效率训练复制这条特殊规则；它要求每日唯一选择与规则本身的永久质变。该机制会反复打开新的行动可能性，而每天一次、物品必须真实拥有、建筑周期变化和选择错配带来的资源与时机成本只是能力的约束，不是能力的替代物。",
+      "novelty_focus": [
+        "把每日唯一机会、普通物品原功能的质变和会重排的建筑空间绑定成一个可重复的选择—验证—再选择循环。",
+        "新奇感集中在同一物品如何沿原功能打开原本不存在的生存行动，而不是堆砌新名词或另起一套系统。",
+        "让‘拥有何物’与‘今天愿意牺牲哪一种潜在用途’本身成为持续变化的创意来源。"
+      ],
+      "open_design_space": [
+        "沿原有功能的进化是否可以突破现实物理上限，以及突破的尺度和可解释程度。",
+        "物品进化结果能否提前判断、判断需要什么证据，以及同一物品连续进化的递进方式。",
+        "建筑周期变化的触发、边界、可预测度和原因，以及它与每日选择之间如何形成新的生存问题。",
+        "永久进化之间是否会产生协同、冲突或新的代价；这些关系应服务于核心选择，而不是另起一套成长系统。",
+        "其他幸存者是否具备同类规则，以及由此产生的资源竞争、合作或知识交换在故事中占多大比重。"
+      ],
+      "payoff_texture": [
+        "在紧张的取舍中看到一个具体物品立刻改变可行动范围。",
+        "进化结果必须能在现场被验证，带来‘这次选择没有浪费’的确定性满足。",
+        "前期看似普通的物品在新的建筑结构和资源压力中兑现，形成以小博大、临场反转的爽点。",
+        "能力突破可以超出日常现实基线，但仍要让读者看懂代价、限制和后果，而不是无代价碾压。"
+      ],
+      "realism_anchors": [
+        "物品来源必须是主角真正拥有的普通非生命物品，携带、位置、可达性和使用条件应保持直观。",
+        "每日只能选择一件，错过机会、选择错配、资源消耗、受伤和失败后果应具体可感。",
+        "进化仍沿原有功能展开，局部用途和后果要能被第三人称限知视角观察与验证。",
+        "建筑变化造成的路线、空间和资源摩擦应保持清楚；这些局部锚点约束超现实质变的使用成本，但不把核心幻想普通化。"
+      ],
+      "repeatable_reader_loop": [
+        "当前建筑变化或生存危机暴露一个具体缺口。",
+        "主角盘点真正拥有的普通物品，在当天唯一的进化机会中进行取舍。",
+        "被选物品沿原有功能永久进化，主角用具体行动验证收益并承担限制或代价。",
+        "新的空间、资源或规则问题被打开，下一次选择因此更有价值也更难。"
+      ],
+      "signature_fantasy": "在人人被困且环境不断改写的灾变世界里，主角能把自己真正拥有的普通非生命物品沿原有功能永久进化，并用每天唯一的选择把有限资源变成新的生存可能性。读者真正购买的是在绝境中亲手做出聪明取舍、看到普通东西发生质变，并用这次质变解决原本无法解决的问题的持续爽感。"
+    },
+    "foundation_rules": [
+      "Foundation 必须保留已确认的 Reader Experience、Primary Narrative Drive 与 Creative Semantics",
+      "三个 Foundation 候选必须共享并实质依赖作者选择的同一个 Core Innovation；selected Core 内部仍开放的问题可以被具体化，但不得重新打开已由 Core selection 关闭的同等级机制分叉",
+      "不得为追求候选差异新增未经 Seed、Creative Semantics 或 Core Intent 需要的竞争性第二核心机制"
+    ],
+    "reader_experience": {
+      "author_notes": "作者选择：CONFIRM",
+      "book_id": "original-e56a54687506",
+      "contract_record_id": "progression-contract-25dee2add48441a3936b5cb6e2aa4921",
+      "contract_type": "READER_EXPERIENCE",
+      "created_at": "2026-08-16T15:30:11.760752+00:00",
+      "edition_id": "base",
+      "effective_from_boundary": 1,
+      "payload": {
+        "author_notes": "这是基于 INITIAL Seed 的首次语义提案；Seed 没有提供作者覆盖项。三项合同均保留为 NEEDS_REVIEW，特别需要作者确认特殊规则的适用范围、进化上限以及未知建筑规则在追读中的比重。",
+        "contract_id": "original-e56a54687506-reader-experience",
+        "drive_priority_order": [
+          "SURVIVAL_RESOURCE",
+          "KNOWLEDGE_PROGRESSION",
+          "ABILITY_PROGRESSION",
+          "MYSTERY_INVESTIGATION",
+          "WORLD_EXPLORATION"
+        ],
+        "expected_drive_interactions": [
+          "生存与资源为主要驱动力"
+        ],
+        "experience_priorities": {
+          "ARTIFACT_OR_ABILITY": "VERY_HIGH",
+          "BREAKTHROUGH": "VERY_HIGH",
+          "COMBAT": "MEDIUM",
+          "EXPLORATION": "VERY_HIGH",
+          "FACTION_CONFLICT": "LOW",
+          "KNOWLEDGE": "HIGH",
+          "MYSTERY": "HIGH",
+          "POWER_VERIFICATION": "HIGH",
+          "PROGRESSION": "VERY_HIGH",
+          "RELATIONSHIP": "LOW",
+          "RESOURCE_OPPORTUNITY": "VERY_HIGH",
+          "REVEAL": "HIGH",
+          "REVENGE": "OFF",
+          "ROMANCE": "OFF",
+          "SOCIAL_THEME": "LOW",
+          "STATUS_RISE": "LOW",
+          "SURVIVAL": "VERY_HIGH",
+          "TEAM_GROWTH": "LOW",
+          "WEALTH": "LOW",
+          "WORLD_EXPANSION": "HIGH"
+        },
+        "explanation_style": "BALANCED",
+        "growth_centrality": "VERY_HIGH",
+        "must_deliver": [
+          "每日唯一的进化选择必须在后续生存处境中产生可感知、可验证的行动优势或代价。",
+          "建筑结构变化必须持续制造探索、路线和资源重组压力，而不是只作为背景设定。",
+          "普通非生命物品沿原有功能发生的质变必须打开读者能理解并期待兑现的新行动可能性。",
+          "选择的机会成本和失败后果不能被无限资源、无限次数或无代价多选抵消。"
+        ],
+        "must_not_drift_into": [
+          "把永久进化稀释成普通求生技巧、职业知识、工程改造或一般效率提升。",
+          "让战斗、恋爱、阵营争霸或社会地位长期压过生存选择与物品进化的核心追读动力。",
+          "把建筑变化变成静态背景，或用一套脱离物品选择的复杂系统替代现场生存后果。"
+        ],
+        "mystery_centrality": "HIGH",
+        "mysticism_level": "MEDIUM",
+        "primary_family": "SURVIVAL_PROGRESSION",
+        "primary_narrative_drive": "SURVIVAL_RESOURCE",
+        "relationship_centrality": "LOW",
+        "secondary_families": [
+          "EVOLUTION_PROGRESSION"
+        ],
+        "secondary_narrative_drives": [
+          "KNOWLEDGE_PROGRESSION",
+          "ABILITY_PROGRESSION",
+          "MYSTERY_INVESTIGATION",
+          "WORLD_EXPLORATION"
+        ],
+        "serial_form": "LONG_SERIAL",
+        "setting_skin": "APOCALYPSE",
+        "status": "EFFECTIVE",
+        "team_centrality": "LOW",
+        "theme_centrality": "LOW",
+        "tone": [
+          "紧张",
+          "具体",
+          "克制",
+          "有爽点"
+        ],
+        "world_expansion_centrality": "HIGH"
+      },
+      "source": "AUTHOR_ADJUSTED_READER_EXPERIENCE",
+      "status": "EFFECTIVE",
+      "updated_at": "2026-08-16T15:30:11.761739+00:00",
+      "version_number": 2
+    }
+  },
+  "innovation_candidates": [
+    {
+      "innovation_id": "spatial-reconfiguration",
+      "title": "把变形建筑变成可被改写的路线",
+      "plain_language_pitch": "建筑每次变形都把熟悉的路变成断层、死角或新入口。主角当天只选一件真正拥有的东西进化，让它沿原功能获得一次改变空间关系的能力，然后立刻拿它验证一条原本走不通的路。每天的爽点不是捡到万能工具，而是看见一个普通物品在错误的建筑里把“无路可走”变成可行动的路线。",
+      "concrete_example": "NON_CANON 示意（仅用于说明玩法，不是 Story Foundation、Canon 或必然发生的未来事件）：主角手里的普通粉笔沿“标记”功能发生质变，写下的记号能在建筑再次折叠后短时间留住同一面墙的空间关系；他借此确认一条会重复出现的窄缝，带着一瓶水从坍塌楼梯后的储物间取回药品。这里的效果、物品和场景只是示意，不冻结具体未来事件。",
+      "reader_anticipation": "下一次建筑重排时，读者会期待主角今天舍弃哪些潜在用途、哪件身边物品能让一条新断路变得可验证，以及旧物品在全新空间里是否打开更远、更危险的路线。",
+      "unresolved_design_choices": [
+        "进化对空间的作用是先从记录与定位延伸，还是很快允许跨越、固定或短暂改写局部边界；尺度如何由现场证据逐步确定。",
+        "建筑重排是否存在可观察的先兆和局部规律，以及这些规律与物品进化如何互相提供选择依据。",
+        "同一件物品连续进化后，是扩大可作用的空间范围、提高持续性，还是获得新的但仍沿原功能的空间用法。"
+      ],
+      "core_mechanism": "冻结的每日一次规则不变：主角从自己真正拥有的普通非生命物品中选一件，使其沿原有功能永久质变；本候选把最高杠杆的未决方向放在物品质变与建筑重排的空间互相咬合——物品不是抽象加成，而是在变化建筑中把某种原本不存在的到达、辨认、固定或穿行动作变成可能。每次选择都由当前空间缺口驱动，并在现场结果中验证。",
+      "protagonist_special_rule": "主角每天只有一次机会，且必须选择自己此刻真实拥有并能接触到的普通非生命物品。被选物品不会变成脱离用途的万能法器，而是沿原功能获得一次永久异常能力：例如标记物能在空间重排后保留关系、照明物能让变化区域显出可追踪边界。普通幸存者可以使用物品，却不能靠知识或训练复制这次永久质变；主角因此能把别人眼中的死路、断层或无法确认的区域变成可验证的行动路线。",
+      "choice_generation": "选择来自三者的交叉：眼前建筑造成的具体空间缺口、主角手中真正可用的物品、以及此前验证过的进化边界。主角必须在立即脱险、取回资源、保存路线信息和为下一次重排留出余地之间取舍；不是按固定菜单挑能力，也不能多选。",
+      "progression_generation": "进化的推进表现为行动可能性的扩大：从确认一段空间关系，到在更复杂的折叠、遮蔽、断裂和多入口结构中保持辨认、固定、照明、测量或穿行的能力。旧物品连续进化会让空间行动更远、更稳定或更能处理新的建筑状态，但每一步仍须沿原功能，并由新的现场问题验证，不使用固定等级树。",
+      "payoff_generation": "建筑把主角逼到一条普通人无法确认的断路前，读者先看到选择的紧迫性，再看到物品在空间中产生可见的异常结果：路线被确认、边界被固定、远处资源被取回或未知区域第一次变得可进入。兑现先改变主角当下能做什么，随后才打开更大的空间、资源和规则问题。",
+      "limitation": "每天只能进化一件；对象必须真实拥有、非生命且仍沿原功能发展；结果不能替代主角观察、携带、到达和承担建筑变化带来的现实摩擦。错配会消耗当日机会，空间效果也只解决它实际覆盖的关系或动作，不自动包办生存、战斗和谜底。",
+      "expansion_grammar": "随着建筑空间从局部断裂扩大到跨楼层、跨区域和难以记忆的重排，进化物品会不断把“能否到达、辨认、固定”的问题改写成新的选择。扩张来自更复杂的空间状态、旧能力在新环境中的再兑现、以及不同物品之间对路线的互补；不预设固定层级或地图阶段，始终让建筑问题先提出压力，再由一次选择产生新的行动范围。",
+      "long_form_capacity": "长篇容量来自两个方向的交替：建筑每次变化带来新的可行动空间和资源缺口，既有进化物品在新几何关系中获得不同价值；主角对先兆、边界和连续进化的认识又让后续选择更精准、更危险。这样可以持续引出探索、资源重组、规则发现和逐步扩大的世界舞台，同时保持每日唯一选择是叙事发动机。",
+      "novelty_source": "新奇感来自同一件普通物品在不同建筑状态下的功能质变：读者先熟悉它原本能做什么，再看到它在新的空间关系中完成原本不可能的动作。变化不是换名词，而是物品、拥有关系、建筑缺口和当天取舍的具体组合。",
+      "repetition_risk": "若每天都只是用一件物品打开一扇门，会退化为换皮解谜。风险在于空间问题只有“找路”一种形态，或旧能力只重复同一动作。需要让每次建筑变化同时改变资源可达性、路线记忆、保全关系或进入未知区域的依据，并让旧物品的异常用法在新的空间条件下获得不同后果，而不是简单叠加强度。",
+      "fit_with_reader_promise": "它直接兑现生存资源的首要驱动：建筑变化造成可见的路线和物资压力，主角每天唯一的物品选择给出明确机会成本；普通物品的永久质变提供非常高频的能力、突破和力量验证，空间行动把探索、知识增长、谜团线索和世界扩张绑回现场。战斗、阵营和关系只作为局部压力，不取代选择—验证—再选择循环。"
+    },
+    {
+      "innovation_id": "composed-survival-assets",
+      "title": "让每一次进化都成为下一次组合的缺口",
+      "plain_language_pitch": "主角每天只进化一件物品，但真正的难题常常不是缺一件万能工具，而是手里的几件东西还差一环才能一起完成行动。一次选择可以补上这条链，也可能让另一条链永远错过当天的机会；读者会看到普通物品彼此接上之后，如何把一个原本无法完成的生存动作变成现实。",
+      "concrete_example": "NON_CANON 示意（仅用于说明玩法，不是 Story Foundation、Canon 或必然发生的未来事件）：主角已经拥有沿“覆盖”功能质变的旧雨布和沿“容纳、加热”功能质变的铝锅，当天选择一枚普通螺栓沿“固定”功能进化。螺栓钉入变化墙面后能在结构重排时保持连接，雨布因此成为短时隔绝裂缝的通道，铝锅接住缝隙里凝出的水。这个组合、物品和结果只是示意，不冻结具体未来事件。",
+      "reader_anticipation": "下一次危机中，读者会期待主角到底进化哪一件物品来补上当前行动链，是立刻让某件东西变强，还是为一组已经拥有的物品打开一次更大的合力兑现。",
+      "unresolved_design_choices": [
+        "不同物品的协同是由物理接触、功能互补还是建筑状态触发；协同边界如何保持可观察而不变成独立配方系统。",
+        "同一件物品连续进化后，是承担更多链路、改变组合顺序，还是让原本不能同时使用的物品出现新的协同。",
+        "其他幸存者是否会围绕主角已经进化的物品形成合作、争夺或知识交换，以及这类社会压力占多大比重。"
+      ],
+      "core_mechanism": "冻结的每日一次规则不变：主角每天从真实拥有的普通非生命物品中选一件，让它沿原功能永久进化；本候选把未决方向放在多件已进化物品如何在具体生存行动中互补。协同不是新的抽卡、配方或升级树，而是一次选择改变一条现实行动链中的缺口，使已有物品在变化建筑和资源压力下产生原本不存在的组合结果。",
+      "protagonist_special_rule": "主角拥有普通人无法复制的每日永久进化机会：他能把自己真正拥有的一件非生命物品沿原功能推进到异常尺度，并让这件物品与手中其他物品形成可见的行动差异。普通人可以搬运、使用和交换这些东西，却不能复制进化本身；主角因此能把一堆各自有限的普通物品接成一项普通人单件物品无法完成的生存动作。",
+      "choice_generation": "选择来自当前缺口与已有物品之间的断点：主角先判断这次危机要完成什么动作，再比较一件物品的直接增强、另一件物品的链路补全、以及为后续建筑变化保留机会之间的价值。每次只能选一件，协同必须从具体拥有关系、功能和现场条件中长出来，不由固定菜单预先列出。",
+      "progression_generation": "进化推进不只是让单件物品更强，而是逐步打开新的组合可能：一件物品可以承担新的连接、保护、承载、探测或转换环节，旧物品也会在新的建筑状态中获得不同搭配。主角能够完成的行动从单点补救扩大到多环节、跨空间和需要连续验证的生存方案，但不建立独立的组合等级或数值树。",
+      "payoff_generation": "读者先看到缺口和取舍，再看到一件刚进化的普通物品补上关键环节，几件有限物品在现场共同完成原本无法完成的动作：隔开危险、保持通路、转移水源、保护资源或穿过重排中的结构。兑现应留下真实的新增行动空间，新的压力在优势已经产生后再从建筑、资源或更高目标中出现。",
+      "limitation": "每天只能进化一件真实拥有的普通非生命物品，且质变必须沿原功能继续；组合不保证自动成功，需要物品实际可达、可连接和符合当前建筑条件。链路的错位可能浪费当日选择或让某个方案暂时无法使用，但这不是每次进化都必须支付的额外惩罚，也不能用多选抵消机会成本。",
+      "expansion_grammar": "扩张来自行动链的复杂化和重新编排：建筑变化提出新的断点，主角用一次物品进化改变已有物品的关系，进而获得新的进入、保存、转移或验证方式。旧物品可以被重新放入不同组合，新的组合也会暴露更高层的资源与空间问题；不预设固定配方、等级或组合数量，变化始终由生存现场和物品原功能推动。",
+      "long_form_capacity": "长篇可以持续使用‘已有能力在新约束下重新组合’制造差异，而不是每天添一件更大的装备。建筑重排会改变物品之间的距离、顺序和使用条件，资源压力会迫使主角在即时链路和长期链路之间取舍，偶尔出现的协同兑现又能自然带出探索、知识、能力突破和世界扩张。主角的优势会扩大，但每日一次仍让库存与判断保持紧张。",
+      "novelty_source": "新奇感来自普通物品之间意外却可理解的功能衔接：同一件东西单独看很有限，放进变化建筑的具体动作链后却能完成原本不可能的结果。创意来源是‘今天进化哪一环’以及旧物品如何被重新使用，而不是另起一套能力来源。",
+      "repetition_risk": "若每次都只寻找一件缺失零件，故事会退化为固定配方的拼装。风险在于协同被写成可预测的万能组合，或所有兑现都只是把资源搬得更远。需要让建筑状态、物品拥有关系、即时目标和先前验证共同改变链路；有时最优选择也应是强化单件物品、放弃组合或改变行动顺序，而不是机械补齐。",
+      "fit_with_reader_promise": "它把生存资源的权衡变成可见的物品选择，把非常高优先级的能力、突破和力量验证落在普通物品合力完成的现场动作上；变化建筑不断重排组合条件，带来探索、资源机会、知识和谜团线索，世界扩张表现为可完成的行动范围扩大。组合只是每日进化的兑现方式，不会压过主核心，也不依赖高关系或阵营主线。"
+    },
+    {
+      "innovation_id": "evidence-driven-evolution",
+      "title": "从一次选择读出建筑的下一条规则",
+      "plain_language_pitch": "每一次进化既要解决眼前的缺口，也可能告诉主角建筑到底在按什么规律变化。主角必须在立刻活下来和换取一条可靠线索之间做唯一选择；当进化结果在现场被验证，读者会看到他不是靠说明书变强，而是靠一次次危险的实验证明下一次该把什么变成不可能的工具。",
+      "concrete_example": "NON_CANON 示意（仅用于说明玩法，不是 Story Foundation、Canon 或必然发生的未来事件）：主角把自己拥有的普通钢卷尺沿“测量”功能永久进化，使它能测出折叠建筑中两个开口之间实际可通行的空间距离。读数让他发现看似相邻的门并不相连，于是避开一条会把人送回原处的走廊，先取回饮水再记录重排前的差异。这个效果、物品和场景只是示意，不冻结具体未来事件。",
+      "reader_anticipation": "下一次唯一选择会让读者同时期待两件事：主角能不能用某件普通物品解决当前危机，以及这次质变会不会验证一条关于建筑、物品边界或下一次重排的更大规律，从而改变下一步取舍。",
+      "unresolved_design_choices": [
+        "进化结果能否被提前预测、需要哪些局部证据才能判断，以及证据不足时主角如何在生存和试探之间取舍。",
+        "建筑变化的先兆、周期和原因能被认识到什么程度；知识增长如何始终改变现场行动，而不变成脱离生存的说明。",
+        "其他幸存者是否拥有同类规则、如何验证彼此的说法，以及信息竞争或交换在核心生存循环中占多大比重。"
+      ],
+      "core_mechanism": "冻结的每日一次规则不变：主角从自己真正拥有的普通非生命物品中选一件，让它沿原有功能永久质变；本候选把最高杠杆的未决方向放在‘如何知道今天值得进化什么’。每次选择同时是一次求生行动和一次受现场约束的边界验证，物品的质变帮助主角获得可用证据，但证据只有在真实危机中产生后果才有价值，不另设独立调查或知识升级系统。",
+      "protagonist_special_rule": "主角每天能把一件自己真实拥有的普通非生命物品沿原功能永久推进到普通人无法复制的异常尺度，例如让测量、接收、记录或照明不再受建筑表面规律限制。普通人可以观察结果，却不能用职业训练重现这种质变；主角因此能在别人只能猜测的断路、错位和变化前兆中得到可验证的行动依据，并把一次选择转成下一次生存机会。",
+      "choice_generation": "选择来自即时生存缺口、已有证据的可靠程度和某件物品能否验证关键假设。主角可能选择直接解决危险的物品，也可能选择能让一条路线或建筑规律变得可测量的物品；每次只能选一件，信息价值不能脱离现场后果单独胜出，错误判断会改变后续路线和资源机会。",
+      "progression_generation": "进化推进表现为判断边界和行动可能性的共同扩大：从验证一个局部距离、方向或持续时间，到在更大范围的重排、遮蔽和未知区域中取得可操作证据。主角不是获得全知，而是让更多普通物品可以沿原功能捕捉、记录、测量或确认原本无法确认的关系，再用这些结果选择下一件物品；不设置固定知识等级或谜底进度表。",
+      "payoff_generation": "兑现先以可见的异常能力解决或改变当前生存动作，例如测出真实可通行距离、记录重排留下的稳定痕迹、在危险前确认一条可撤路线；随后同一结果让读者看见一条关于建筑或物品边界的新线索。知识回报必须改变下一次资源、路线或进化选择，谜团不能只延迟解释而不改变当下。",
+      "limitation": "每天只有一次进化机会，物品必须真实拥有、非生命且沿原功能发展；结果只提供它实际能验证的局部关系，不自动给出建筑真相或未来答案。主角仍受位置、携带、时间、伤势和空间变化限制，证据不足时可能做错选择，但不把‘必须付出损失’设为能力的固定税。",
+      "expansion_grammar": "扩张来自证据范围和问题空间的扩大：局部物品效果先改变眼前行动，随后把建筑重排、资源位置、未知区域和幸存者信息连接成更大的可验证问题。旧物品的连续进化可以提高观测和行动的有效范围，新的建筑状态又会推翻过窄的解释；不预设固定揭秘节奏或谜团层级，每条知识都必须回到选择与现场后果。",
+      "long_form_capacity": "长篇容量来自‘危机—唯一选择—现场验证—更难的问题’的自然递进。每次新建筑变化都可以同时提出生存压力和认识缺口，已验证的物品边界会让主角更有判断优势，却不会消除未知；其他幸存者、跨区域空间和灾变原因可以逐步进入，但只能在改变资源选择、行动路线或能力验证时占据篇幅。",
+      "novelty_source": "新奇感来自普通物品把不可测、不可记或不可确认的空间关系变成能亲眼验证的结果，同时仍沿着测量、记录、接收、照明等原功能展开。读者期待的是下一件物品会把哪一个‘只能猜’的问题变成‘可以行动’的证据，而不是获得一套抽象解释。",
+      "repetition_risk": "若每天都先做实验、最后用知识解释一切，故事会变成说明书，生存压力也会被推迟。风险需要由现场约束抵消：每条证据都必须在当前路线、资源或安全判断中立即有后果，局部规律也可能在新的建筑状态下失效；选择仍需在直接收益和信息价值之间产生真正取舍。",
+      "fit_with_reader_promise": "它把最高优先级的生存资源驱动放在每次‘现在活下来还是先确认规则’的选择里，把物品永久质变、突破和力量验证落成可观察的行动；建筑变化持续提供探索与世界扩张，知识、谜团和发现回报直接改变下一次进化和资源安排。战斗、关系与阵营不夺走核心篇幅，神秘感服务于更具体的现场生存问题。"
+    }
+  ]
+}

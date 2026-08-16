@@ -1,0 +1,143 @@
+{
+  "book_id": "original-e56a54687506",
+  "edition_id": "base",
+  "snapshot_id": "snapshot_dd13a40ba418bba06c0e6c4b",
+  "state": {
+    "book_id": "original-e56a54687506",
+    "capabilities": {
+      "measuring-tape-space-relation": {
+        "_edition_id": "base",
+        "_event_id": "event_0c50697347ecb8094273da84",
+        "_event_seq": 2,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "capability_id": "measuring-tape-space-relation",
+        "character_id": "protagonist",
+        "description": "测距带在局部空间重排后仍保持两端对同一墙面的测量关系，已形成一条可复核的异常路线证据。",
+        "evidence": "正文中二点九四米的两端关系在楼梯断开、墙面折叠和重排后仍保持。",
+        "name": "测距带跨局部重排保持空间关系",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "source_draft_id": "draft_8bb76c611125c76689997a74",
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2",
+        "status": "ACTIVE"
+      }
+    },
+    "character_states": {
+      "protagonist-local-evidence-choice": {
+        "_edition_id": "base",
+        "_event_id": "event_a80ff58c44e66e2dc777f43a",
+        "_event_seq": 6,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "change": "在缺乏完整证据时选择以测距带保留空间关系，放弃强化手电的即时照明收益。",
+        "character_id": "protagonist",
+        "cost": "手电在回程前耗尽，后续行动依靠已有电量和测距带提供的关系判断。",
+        "source_draft_id": "draft_8bb76c611125c76689997a74",
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2",
+        "state_id": "protagonist-local-evidence-choice"
+      }
+    },
+    "committed_chapters": {
+      "canon-chapter_96f6a1794bf43a1659c7fba2": {
+        "_edition_id": "base",
+        "_event_id": "event_e78c8dd9ce1c47d7dc0f11c1",
+        "_event_seq": 8,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "aftershock_obligation_ids": [],
+        "chapter_id": "canon-chapter_96f6a1794bf43a1659c7fba2",
+        "content_sha256": "81b9f177e416edf8a46c35623764c76937a4fb7980d8b1b51b196ef49db80d95",
+        "contract_id": "contract_d1955693b3c1166033b242e9",
+        "document_id": "canon-document_96f6a1794bf43a1659c7fba2",
+        "draft_id": "draft_8bb76c611125c76689997a74",
+        "ordinal": 1,
+        "reveal_event_ids": [],
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2",
+        "title": "第一章 墙还在，路没了"
+      }
+    },
+    "edition_id": "base",
+    "entities": {},
+    "facts": {
+      "post-rearrangement-door": {
+        "_edition_id": "base",
+        "_event_id": "event_1f1743812945cdf22326c4d3",
+        "_event_seq": 4,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "description": "重排结束后，原本平整的墙面出现一扇没有编号的门；门内广播报出十七层。",
+        "fact_id": "post-rearrangement-door",
+        "knowledge_status": "UNKNOWN",
+        "location_relation": "same_wall_as_measuring_tape",
+        "object": "原本平整的墙面出现一扇没有编号的门，门内广播报出十七层。",
+        "predicate": "observed_after_rearrangement",
+        "source_draft_id": "draft_8bb76c611125c76689997a74",
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2",
+        "status": "observed"
+      }
+    },
+    "knowledge": {},
+    "payoffs": {},
+    "promises": {},
+    "relationships": {},
+    "repetition": {
+      "repetition_632fb4e8d7d6c1e533b6e361": {
+        "_edition_id": "base",
+        "_event_id": "event_192e2f94dcf7b11a61d2bf71",
+        "_event_seq": 7,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "candidate_id": "genesis-candidate-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-chapter-measuring-tape",
+        "signature": "function:setup",
+        "source_draft_id": "draft_8bb76c611125c76689997a74",
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2",
+        "structure_tags": [
+          "function:setup"
+        ],
+        "tag_id": "repetition_632fb4e8d7d6c1e533b6e361"
+      }
+    },
+    "resources": {
+      "water-half-bottle-recovered": {
+        "_edition_id": "base",
+        "_event_id": "event_34aec5c02d27eedb1ffc9f6c",
+        "_event_seq": 3,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "amount": "half_bottle",
+        "change": "recovered",
+        "character_id": "protagonist",
+        "evidence": "沈砚从重排后的对面平台取回半瓶水并饮用一口。",
+        "name": "半瓶水",
+        "owner_id": "protagonist",
+        "resource": "water",
+        "resource_id": "water-half-bottle-recovered",
+        "source_draft_id": "draft_8bb76c611125c76689997a74",
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2"
+      }
+    },
+    "style_profiles": {},
+    "threads": {
+      "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower": {
+        "_edition_id": "base",
+        "_event_id": "event_f7d0c8a99735005b5ae4308e",
+        "_event_seq": 5,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "evidence": "沈砚获得测距带保留的墙面关系、取回饮水并带走刻有折返线的旧铝牌。",
+        "goal": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "phase": "setup",
+        "source_draft_id": "draft_8bb76c611125c76689997a74",
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2",
+        "stakes": "建筑把上下关系周期性打乱，广播又给出互相矛盾的提示；每次进化只能解决一个空间缺口，追声、找水、保留退路不能同时满足。",
+        "status": "ADVANCED",
+        "thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+      }
+    },
+    "through_event_seq": 8,
+    "timeline": {}
+  },
+  "state_sha256": "65fa4bb87a62264ad891e732809effa8a882d105d2d4fc1a502b5f7435328050",
+  "through_event_seq": 8
+}

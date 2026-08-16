@@ -1,0 +1,84 @@
+{
+  "analyzer_versions": {
+    "deterministic": "rhythm-deterministic-v1",
+    "semantic": "rhythm-semantic-v1"
+  },
+  "as_of_chapter": 8,
+  "as_of_event_seq": 57,
+  "book_id": "original-e56a54687506",
+  "config_hash": "c1261d246fb0e8f72174caa4174f70586d1839ee5c56f4eb7049518ffaf87d4a",
+  "created_at": "2026-08-16T17:23:22.603842+00:00",
+  "edition_id": "base",
+  "ending_mode_streak": {
+    "count": 8,
+    "mode": "unknown",
+    "severity": "STRONG_WARNING"
+  },
+  "ending_similarity": {
+    "matching_chapters": [],
+    "max_similarity_last_4": 0.0,
+    "severity": "NONE"
+  },
+  "evidence": [
+    {
+      "chapter_id": "canon-chapter_527cd52fb85756bbad483200",
+      "extractor_kind": "DETERMINISTIC",
+      "ordinal": 5
+    },
+    {
+      "chapter_id": "canon-chapter_307f36eeb3ff4ba659fb82a0",
+      "extractor_kind": "DETERMINISTIC",
+      "ordinal": 6
+    },
+    {
+      "chapter_id": "canon-chapter_3d7222ba4bef08abceb1b38b",
+      "extractor_kind": "DETERMINISTIC",
+      "ordinal": 7
+    },
+    {
+      "chapter_id": "canon-chapter_8671fae6fd24fb586a1654c3",
+      "extractor_kind": "DETERMINISTIC",
+      "ordinal": 8
+    }
+  ],
+  "high_emotion_streak": {
+    "bands": [],
+    "climax_bonus": 2,
+    "count": 0,
+    "severity": "NONE"
+  },
+  "hooks": {
+    "advance_due": [],
+    "overdue": [],
+    "resolve_due": []
+  },
+  "opening_similarity": {
+    "matching_chapters": [],
+    "max_similarity_last_4": 0.0,
+    "severity": "NONE"
+  },
+  "projection_hash": "672e446823e83a33f6b0a0956ac4528cfed15193d7e4e78ebadbe1d0db5f59f9",
+  "same_function_streak": {
+    "count": 0,
+    "function": null,
+    "severity": "NONE",
+    "source": "planned_primary_function"
+  },
+  "snapshot_id": "rhythm-snapshot_e5d27c49db4a1808caa3fd56",
+  "title_repetition": {
+    "exact_duplicates": [],
+    "matching_chapters": [],
+    "max_similarity_last_20": 0.1,
+    "series_markers": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "severity": "NONE"
+  }
+}

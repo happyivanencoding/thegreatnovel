@@ -1,0 +1,1348 @@
+{
+  "abilities": [
+    {
+      "attributes": [
+        {
+          "author_visible": false,
+          "key": "description",
+          "label": "description",
+          "value": "测距带记录检修窗与广播回声开口之间的闭合关系，能够把假屋顶路线固定为可复核的排除证据。"
+        },
+        {
+          "author_visible": false,
+          "key": "evidence",
+          "label": "evidence",
+          "value": "带钩端卡在孔里，带壳端却没有随着墙体后退。"
+        },
+        {
+          "author_visible": false,
+          "key": "object_id",
+          "label": "object_id",
+          "value": "measuring-tape"
+        },
+        {
+          "author_visible": false,
+          "key": "owner_id",
+          "label": "owner_id",
+          "value": "protagonist"
+        },
+        {
+          "author_visible": false,
+          "key": "source_draft_id",
+          "label": "source_draft_id",
+          "value": "draft_bf2bb3f1e46011392b83b872"
+        },
+        {
+          "author_visible": false,
+          "key": "source_span_id",
+          "label": "source_span_id",
+          "value": "canon-span_6a551b7a462d002ea780f449"
+        },
+        {
+          "author_visible": true,
+          "key": "status",
+          "label": "状态",
+          "value": "ACTIVE"
+        }
+      ],
+      "category": "capability",
+      "changed_this_chapter": false,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "测距带记录闭合回声关系",
+      "owner_name": "protagonist",
+      "raw": {
+        "_edition_id": "base",
+        "_event_id": "event_3abb8e5a7dfebd1198e3c4ea",
+        "_event_seq": 24,
+        "_source_id": "draft_bf2bb3f1e46011392b83b872",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "capability_id": "measuring-tape-false-roof-relation",
+        "character_id": "protagonist",
+        "description": "测距带记录检修窗与广播回声开口之间的闭合关系，能够把假屋顶路线固定为可复核的排除证据。",
+        "evidence": "带钩端卡在孔里，带壳端却没有随着墙体后退。",
+        "name": "测距带记录闭合回声关系",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "source_draft_id": "draft_bf2bb3f1e46011392b83b872",
+        "source_span_id": "canon-span_6a551b7a462d002ea780f449",
+        "status": "ACTIVE"
+      },
+      "record_id": "measuring-tape-false-roof-relation",
+      "statement": "测距带记录检修窗与广播回声开口之间的闭合关系，能够把假屋顶路线固定为可复核的排除证据。",
+      "status": "ACTIVE",
+      "status_label": "正史已确认"
+    },
+    {
+      "attributes": [
+        {
+          "author_visible": false,
+          "key": "description",
+          "label": "description",
+          "value": "测距带在外侧平台重排后保持检修窗与平台边缘的相对关系，形成可返回的向上端点。"
+        },
+        {
+          "author_visible": false,
+          "key": "evidence",
+          "label": "evidence",
+          "value": "带身绷成一条直线，带壳端却没有被窗框拖走。"
+        },
+        {
+          "author_visible": false,
+          "key": "object_id",
+          "label": "object_id",
+          "value": "measuring-tape"
+        },
+        {
+          "author_visible": false,
+          "key": "owner_id",
+          "label": "owner_id",
+          "value": "protagonist"
+        },
+        {
+          "author_visible": false,
+          "key": "source_draft_id",
+          "label": "source_draft_id",
+          "value": "draft_78fbd961bd5cc5becb7a897f"
+        },
+        {
+          "author_visible": false,
+          "key": "source_span_id",
+          "label": "source_span_id",
+          "value": "canon-span_b93129f324cb473a95a8a1b8"
+        },
+        {
+          "author_visible": true,
+          "key": "status",
+          "label": "状态",
+          "value": "ACTIVE"
+        }
+      ],
+      "category": "capability",
+      "changed_this_chapter": false,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "测距带跨局部重排保持空间关系",
+      "owner_name": "protagonist",
+      "raw": {
+        "_edition_id": "base",
+        "_event_id": "event_f09aece7643886d7552d9888",
+        "_event_seq": 17,
+        "_source_id": "draft_78fbd961bd5cc5becb7a897f",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "capability_id": "measuring-tape-space-relation",
+        "character_id": "protagonist",
+        "description": "测距带在外侧平台重排后保持检修窗与平台边缘的相对关系，形成可返回的向上端点。",
+        "evidence": "带身绷成一条直线，带壳端却没有被窗框拖走。",
+        "name": "测距带跨局部重排保持空间关系",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "source_draft_id": "draft_78fbd961bd5cc5becb7a897f",
+        "source_span_id": "canon-span_b93129f324cb473a95a8a1b8",
+        "status": "ACTIVE"
+      },
+      "record_id": "measuring-tape-space-relation",
+      "statement": "测距带在外侧平台重排后保持检修窗与平台边缘的相对关系，形成可返回的向上端点。",
+      "status": "ACTIVE",
+      "status_label": "正史已确认"
+    }
+  ],
+  "all_abilities": [
+    {
+      "attributes": [
+        {
+          "author_visible": false,
+          "key": "description",
+          "label": "description",
+          "value": "测距带记录检修窗与广播回声开口之间的闭合关系，能够把假屋顶路线固定为可复核的排除证据。"
+        },
+        {
+          "author_visible": false,
+          "key": "evidence",
+          "label": "evidence",
+          "value": "带钩端卡在孔里，带壳端却没有随着墙体后退。"
+        },
+        {
+          "author_visible": false,
+          "key": "object_id",
+          "label": "object_id",
+          "value": "measuring-tape"
+        },
+        {
+          "author_visible": false,
+          "key": "owner_id",
+          "label": "owner_id",
+          "value": "protagonist"
+        },
+        {
+          "author_visible": false,
+          "key": "source_draft_id",
+          "label": "source_draft_id",
+          "value": "draft_bf2bb3f1e46011392b83b872"
+        },
+        {
+          "author_visible": false,
+          "key": "source_span_id",
+          "label": "source_span_id",
+          "value": "canon-span_6a551b7a462d002ea780f449"
+        },
+        {
+          "author_visible": true,
+          "key": "status",
+          "label": "状态",
+          "value": "ACTIVE"
+        }
+      ],
+      "category": "capability",
+      "changed_this_chapter": false,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "测距带记录闭合回声关系",
+      "owner_name": "protagonist",
+      "raw": {
+        "_edition_id": "base",
+        "_event_id": "event_3abb8e5a7dfebd1198e3c4ea",
+        "_event_seq": 24,
+        "_source_id": "draft_bf2bb3f1e46011392b83b872",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "capability_id": "measuring-tape-false-roof-relation",
+        "character_id": "protagonist",
+        "description": "测距带记录检修窗与广播回声开口之间的闭合关系，能够把假屋顶路线固定为可复核的排除证据。",
+        "evidence": "带钩端卡在孔里，带壳端却没有随着墙体后退。",
+        "name": "测距带记录闭合回声关系",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "source_draft_id": "draft_bf2bb3f1e46011392b83b872",
+        "source_span_id": "canon-span_6a551b7a462d002ea780f449",
+        "status": "ACTIVE"
+      },
+      "record_id": "measuring-tape-false-roof-relation",
+      "statement": "测距带记录检修窗与广播回声开口之间的闭合关系，能够把假屋顶路线固定为可复核的排除证据。",
+      "status": "ACTIVE",
+      "status_label": "正史已确认"
+    },
+    {
+      "attributes": [
+        {
+          "author_visible": false,
+          "key": "description",
+          "label": "description",
+          "value": "测距带在外侧平台重排后保持检修窗与平台边缘的相对关系，形成可返回的向上端点。"
+        },
+        {
+          "author_visible": false,
+          "key": "evidence",
+          "label": "evidence",
+          "value": "带身绷成一条直线，带壳端却没有被窗框拖走。"
+        },
+        {
+          "author_visible": false,
+          "key": "object_id",
+          "label": "object_id",
+          "value": "measuring-tape"
+        },
+        {
+          "author_visible": false,
+          "key": "owner_id",
+          "label": "owner_id",
+          "value": "protagonist"
+        },
+        {
+          "author_visible": false,
+          "key": "source_draft_id",
+          "label": "source_draft_id",
+          "value": "draft_78fbd961bd5cc5becb7a897f"
+        },
+        {
+          "author_visible": false,
+          "key": "source_span_id",
+          "label": "source_span_id",
+          "value": "canon-span_b93129f324cb473a95a8a1b8"
+        },
+        {
+          "author_visible": true,
+          "key": "status",
+          "label": "状态",
+          "value": "ACTIVE"
+        }
+      ],
+      "category": "capability",
+      "changed_this_chapter": false,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "测距带跨局部重排保持空间关系",
+      "owner_name": "protagonist",
+      "raw": {
+        "_edition_id": "base",
+        "_event_id": "event_f09aece7643886d7552d9888",
+        "_event_seq": 17,
+        "_source_id": "draft_78fbd961bd5cc5becb7a897f",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "capability_id": "measuring-tape-space-relation",
+        "character_id": "protagonist",
+        "description": "测距带在外侧平台重排后保持检修窗与平台边缘的相对关系，形成可返回的向上端点。",
+        "evidence": "带身绷成一条直线，带壳端却没有被窗框拖走。",
+        "name": "测距带跨局部重排保持空间关系",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "source_draft_id": "draft_78fbd961bd5cc5becb7a897f",
+        "source_span_id": "canon-span_b93129f324cb473a95a8a1b8",
+        "status": "ACTIVE"
+      },
+      "record_id": "measuring-tape-space-relation",
+      "statement": "测距带在外侧平台重排后保持检修窗与平台边缘的相对关系，形成可返回的向上端点。",
+      "status": "ACTIVE",
+      "status_label": "正史已确认"
+    }
+  ],
+  "all_equipment": [],
+  "all_inventory": [
+    {
+      "attributes": [
+        {
+          "author_visible": false,
+          "key": "amount",
+          "label": "amount",
+          "value": "half_bottle"
+        },
+        {
+          "author_visible": false,
+          "key": "change",
+          "label": "change",
+          "value": "recovered"
+        },
+        {
+          "author_visible": false,
+          "key": "evidence",
+          "label": "evidence",
+          "value": "沈砚从重排后的对面平台取回半瓶水并饮用一口。"
+        },
+        {
+          "author_visible": false,
+          "key": "owner_id",
+          "label": "owner_id",
+          "value": "protagonist"
+        },
+        {
+          "author_visible": false,
+          "key": "resource",
+          "label": "resource",
+          "value": "water"
+        },
+        {
+          "author_visible": false,
+          "key": "source_draft_id",
+          "label": "source_draft_id",
+          "value": "draft_8bb76c611125c76689997a74"
+        },
+        {
+          "author_visible": false,
+          "key": "source_span_id",
+          "label": "source_span_id",
+          "value": "canon-span_96f6a1794bf43a1659c7fba2"
+        }
+      ],
+      "category": "resource",
+      "changed_this_chapter": false,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "半瓶水",
+      "owner_name": "protagonist",
+      "raw": {
+        "_edition_id": "base",
+        "_event_id": "event_34aec5c02d27eedb1ffc9f6c",
+        "_event_seq": 3,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "amount": "half_bottle",
+        "change": "recovered",
+        "character_id": "protagonist",
+        "evidence": "沈砚从重排后的对面平台取回半瓶水并饮用一口。",
+        "name": "半瓶水",
+        "owner_id": "protagonist",
+        "resource": "water",
+        "resource_id": "water-half-bottle-recovered",
+        "source_draft_id": "draft_8bb76c611125c76689997a74",
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2"
+      },
+      "record_id": "water-half-bottle-recovered",
+      "statement": "",
+      "status": "CANON",
+      "status_label": "正史已确认"
+    }
+  ],
+  "all_relationships": [],
+  "anticipation": null,
+  "author_intents": [
+    {
+      "book_id": "original-e56a54687506",
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "在事实支持后判断变化建筑是否存在互联关系；逐步扩大物品进化能处理的空间尺度，同时保持原功能连续性；让楼外天气、全球灾变和其他幸存者规则保持多个候选解释，直到行动证据要求收敛",
+      "edition_id": "base",
+      "horizon": "LONG",
+      "intent_id": "intent-proposal-e39fee0d664e4e06923df0f31beee8eb-long",
+      "intent_type": "ROLLING_PLANNING",
+      "layer": "AUTHOR_INTENT",
+      "layer_label": "作者目标",
+      "payload": {
+        "fixed_chapter_outline": false,
+        "items": [
+          "在事实支持后判断变化建筑是否存在互联关系",
+          "逐步扩大物品进化能处理的空间尺度，同时保持原功能连续性",
+          "让楼外天气、全球灾变和其他幸存者规则保持多个候选解释，直到行动证据要求收敛"
+        ],
+        "route_id": "route-space-reading"
+      },
+      "payload_json": "{\"fixed_chapter_outline\": false, \"items\": [\"在事实支持后判断变化建筑是否存在互联关系\", \"逐步扩大物品进化能处理的空间尺度，同时保持原功能连续性\", \"让楼外天气、全球灾变和其他幸存者规则保持多个候选解释，直到行动证据要求收敛\"], \"route_id\": \"route-space-reading\"}",
+      "priority": 100,
+      "status": "PLANNED",
+      "subject_id": "foundation-folded-tower",
+      "subject_type": "STORY_FOUNDATION",
+      "target_chapter_id": null,
+      "title": "长期可能性",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "book_id": "original-e56a54687506",
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "比较测距带、照明物和标记物在不同楼层状态中的异常边界；在不建立稳定聚落的前提下交换一次路线与资源观测；追查广播是否会在建筑变化前后留下可验证的空间偏差",
+      "edition_id": "base",
+      "horizon": "MID",
+      "intent_id": "intent-proposal-e39fee0d664e4e06923df0f31beee8eb-mid",
+      "intent_type": "ROLLING_PLANNING",
+      "layer": "AUTHOR_INTENT",
+      "layer_label": "作者目标",
+      "payload": {
+        "fixed_chapter_outline": false,
+        "items": [
+          "比较测距带、照明物和标记物在不同楼层状态中的异常边界",
+          "在不建立稳定聚落的前提下交换一次路线与资源观测",
+          "追查广播是否会在建筑变化前后留下可验证的空间偏差"
+        ],
+        "route_id": "route-space-reading"
+      },
+      "payload_json": "{\"fixed_chapter_outline\": false, \"items\": [\"比较测距带、照明物和标记物在不同楼层状态中的异常边界\", \"在不建立稳定聚落的前提下交换一次路线与资源观测\", \"追查广播是否会在建筑变化前后留下可验证的空间偏差\"], \"route_id\": \"route-space-reading\"}",
+      "priority": 100,
+      "status": "PLANNED",
+      "subject_id": "foundation-folded-tower",
+      "subject_type": "STORY_FOUNDATION",
+      "target_chapter_id": null,
+      "title": "中期方向",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    },
+    {
+      "book_id": "original-e56a54687506",
+      "created_at": "2026-08-16T16:22:26.798563+00:00",
+      "description": "记录第一次提前重排的墙面、楼梯和广播位置；从手边物品中选择一次能验证断路关系的进化；取回饮水并保留一份能在重排后复核的现场证据",
+      "edition_id": "base",
+      "horizon": "SHORT",
+      "intent_id": "intent-proposal-e39fee0d664e4e06923df0f31beee8eb-short",
+      "intent_type": "ROLLING_PLANNING",
+      "layer": "AUTHOR_INTENT",
+      "layer_label": "作者目标",
+      "payload": {
+        "fixed_chapter_outline": false,
+        "items": [
+          "记录第一次提前重排的墙面、楼梯和广播位置",
+          "从手边物品中选择一次能验证断路关系的进化",
+          "取回饮水并保留一份能在重排后复核的现场证据"
+        ],
+        "route_id": "route-space-reading"
+      },
+      "payload_json": "{\"fixed_chapter_outline\": false, \"items\": [\"记录第一次提前重排的墙面、楼梯和广播位置\", \"从手边物品中选择一次能验证断路关系的进化\", \"取回饮水并保留一份能在重排后复核的现场证据\"], \"route_id\": \"route-space-reading\"}",
+      "priority": 100,
+      "status": "PLANNED",
+      "subject_id": "foundation-folded-tower",
+      "subject_type": "STORY_FOUNDATION",
+      "target_chapter_id": null,
+      "title": "近期方向",
+      "updated_at": "2026-08-16T16:22:26.798563+00:00",
+      "version": 1
+    }
+  ],
+  "availability": "CANON_EVENT_PROJECTION",
+  "availability_label": "正史已确认",
+  "book_id": "original-e56a54687506",
+  "chapter": {
+    "chapter_id": "canon-chapter_6a551b7a462d002ea780f449",
+    "ordinal": 4,
+    "title": "屋顶在墙后"
+  },
+  "chapter_delta": {
+    "changed": false,
+    "confirmed": [],
+    "uncertain": []
+  },
+  "character": {
+    "attributes": [
+      {
+        "author_visible": false,
+        "key": "change",
+        "label": "change",
+        "value": "在缺乏完整证据时选择以测距带保留空间关系，放弃强化手电的即时照明收益。"
+      },
+      {
+        "author_visible": false,
+        "key": "cost",
+        "label": "cost",
+        "value": "手电在回程前耗尽，后续行动依靠已有电量和测距带提供的关系判断。"
+      },
+      {
+        "author_visible": false,
+        "key": "source_draft_id",
+        "label": "source_draft_id",
+        "value": "draft_8bb76c611125c76689997a74"
+      },
+      {
+        "author_visible": false,
+        "key": "source_span_id",
+        "label": "source_span_id",
+        "value": "canon-span_96f6a1794bf43a1659c7fba2"
+      },
+      {
+        "author_visible": false,
+        "key": "state_id",
+        "label": "state_id",
+        "value": "protagonist-local-evidence-choice"
+      }
+    ],
+    "available": true,
+    "character_id": "protagonist",
+    "description": "",
+    "layer": "CANON",
+    "message": "以下内容来自选定章节时间点之前已经提交的正史事件。",
+    "name": "protagonist",
+    "raw": {
+      "_edition_id": "base",
+      "_event_id": "event_a80ff58c44e66e2dc777f43a",
+      "_event_seq": 6,
+      "_source_id": "draft_8bb76c611125c76689997a74",
+      "_source_kind": "AUTHOR_APPROVED_DRAFT",
+      "change": "在缺乏完整证据时选择以测距带保留空间关系，放弃强化手电的即时照明收益。",
+      "character_id": "protagonist",
+      "cost": "手电在回程前耗尽，后续行动依靠已有电量和测距带提供的关系判断。",
+      "source_draft_id": "draft_8bb76c611125c76689997a74",
+      "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2",
+      "state_id": "protagonist-local-evidence-choice"
+    },
+    "status": "CANON",
+    "status_label": "正史已确认"
+  },
+  "character_workspaces": [
+    {
+      "abilities": [
+        {
+          "attributes": [
+            {
+              "author_visible": false,
+              "key": "description",
+              "label": "description",
+              "value": "测距带记录检修窗与广播回声开口之间的闭合关系，能够把假屋顶路线固定为可复核的排除证据。"
+            },
+            {
+              "author_visible": false,
+              "key": "evidence",
+              "label": "evidence",
+              "value": "带钩端卡在孔里，带壳端却没有随着墙体后退。"
+            },
+            {
+              "author_visible": false,
+              "key": "object_id",
+              "label": "object_id",
+              "value": "measuring-tape"
+            },
+            {
+              "author_visible": false,
+              "key": "owner_id",
+              "label": "owner_id",
+              "value": "protagonist"
+            },
+            {
+              "author_visible": false,
+              "key": "source_draft_id",
+              "label": "source_draft_id",
+              "value": "draft_bf2bb3f1e46011392b83b872"
+            },
+            {
+              "author_visible": false,
+              "key": "source_span_id",
+              "label": "source_span_id",
+              "value": "canon-span_6a551b7a462d002ea780f449"
+            },
+            {
+              "author_visible": true,
+              "key": "status",
+              "label": "状态",
+              "value": "ACTIVE"
+            }
+          ],
+          "category": "capability",
+          "changed_this_chapter": false,
+          "layer": "CANON",
+          "layer_label": "正史已确认",
+          "name": "测距带记录闭合回声关系",
+          "owner_name": "protagonist",
+          "raw": {
+            "_edition_id": "base",
+            "_event_id": "event_3abb8e5a7dfebd1198e3c4ea",
+            "_event_seq": 24,
+            "_source_id": "draft_bf2bb3f1e46011392b83b872",
+            "_source_kind": "AUTHOR_APPROVED_DRAFT",
+            "capability_id": "measuring-tape-false-roof-relation",
+            "character_id": "protagonist",
+            "description": "测距带记录检修窗与广播回声开口之间的闭合关系，能够把假屋顶路线固定为可复核的排除证据。",
+            "evidence": "带钩端卡在孔里，带壳端却没有随着墙体后退。",
+            "name": "测距带记录闭合回声关系",
+            "object_id": "measuring-tape",
+            "owner_id": "protagonist",
+            "source_draft_id": "draft_bf2bb3f1e46011392b83b872",
+            "source_span_id": "canon-span_6a551b7a462d002ea780f449",
+            "status": "ACTIVE"
+          },
+          "record_id": "measuring-tape-false-roof-relation",
+          "statement": "测距带记录检修窗与广播回声开口之间的闭合关系，能够把假屋顶路线固定为可复核的排除证据。",
+          "status": "ACTIVE",
+          "status_label": "正史已确认"
+        },
+        {
+          "attributes": [
+            {
+              "author_visible": false,
+              "key": "description",
+              "label": "description",
+              "value": "测距带在外侧平台重排后保持检修窗与平台边缘的相对关系，形成可返回的向上端点。"
+            },
+            {
+              "author_visible": false,
+              "key": "evidence",
+              "label": "evidence",
+              "value": "带身绷成一条直线，带壳端却没有被窗框拖走。"
+            },
+            {
+              "author_visible": false,
+              "key": "object_id",
+              "label": "object_id",
+              "value": "measuring-tape"
+            },
+            {
+              "author_visible": false,
+              "key": "owner_id",
+              "label": "owner_id",
+              "value": "protagonist"
+            },
+            {
+              "author_visible": false,
+              "key": "source_draft_id",
+              "label": "source_draft_id",
+              "value": "draft_78fbd961bd5cc5becb7a897f"
+            },
+            {
+              "author_visible": false,
+              "key": "source_span_id",
+              "label": "source_span_id",
+              "value": "canon-span_b93129f324cb473a95a8a1b8"
+            },
+            {
+              "author_visible": true,
+              "key": "status",
+              "label": "状态",
+              "value": "ACTIVE"
+            }
+          ],
+          "category": "capability",
+          "changed_this_chapter": false,
+          "layer": "CANON",
+          "layer_label": "正史已确认",
+          "name": "测距带跨局部重排保持空间关系",
+          "owner_name": "protagonist",
+          "raw": {
+            "_edition_id": "base",
+            "_event_id": "event_f09aece7643886d7552d9888",
+            "_event_seq": 17,
+            "_source_id": "draft_78fbd961bd5cc5becb7a897f",
+            "_source_kind": "AUTHOR_APPROVED_DRAFT",
+            "capability_id": "measuring-tape-space-relation",
+            "character_id": "protagonist",
+            "description": "测距带在外侧平台重排后保持检修窗与平台边缘的相对关系，形成可返回的向上端点。",
+            "evidence": "带身绷成一条直线，带壳端却没有被窗框拖走。",
+            "name": "测距带跨局部重排保持空间关系",
+            "object_id": "measuring-tape",
+            "owner_id": "protagonist",
+            "source_draft_id": "draft_78fbd961bd5cc5becb7a897f",
+            "source_span_id": "canon-span_b93129f324cb473a95a8a1b8",
+            "status": "ACTIVE"
+          },
+          "record_id": "measuring-tape-space-relation",
+          "statement": "测距带在外侧平台重排后保持检修窗与平台边缘的相对关系，形成可返回的向上端点。",
+          "status": "ACTIVE",
+          "status_label": "正史已确认"
+        }
+      ],
+      "character_id": "protagonist",
+      "counts": {
+        "abilities": 2,
+        "equipment": 0,
+        "inventory": 1,
+        "relationships": 0
+      },
+      "description": "",
+      "equipment": [],
+      "inventory": [
+        {
+          "attributes": [
+            {
+              "author_visible": false,
+              "key": "amount",
+              "label": "amount",
+              "value": "half_bottle"
+            },
+            {
+              "author_visible": false,
+              "key": "change",
+              "label": "change",
+              "value": "recovered"
+            },
+            {
+              "author_visible": false,
+              "key": "evidence",
+              "label": "evidence",
+              "value": "沈砚从重排后的对面平台取回半瓶水并饮用一口。"
+            },
+            {
+              "author_visible": false,
+              "key": "owner_id",
+              "label": "owner_id",
+              "value": "protagonist"
+            },
+            {
+              "author_visible": false,
+              "key": "resource",
+              "label": "resource",
+              "value": "water"
+            },
+            {
+              "author_visible": false,
+              "key": "source_draft_id",
+              "label": "source_draft_id",
+              "value": "draft_8bb76c611125c76689997a74"
+            },
+            {
+              "author_visible": false,
+              "key": "source_span_id",
+              "label": "source_span_id",
+              "value": "canon-span_96f6a1794bf43a1659c7fba2"
+            }
+          ],
+          "category": "resource",
+          "changed_this_chapter": false,
+          "layer": "CANON",
+          "layer_label": "正史已确认",
+          "name": "半瓶水",
+          "owner_name": "protagonist",
+          "raw": {
+            "_edition_id": "base",
+            "_event_id": "event_34aec5c02d27eedb1ffc9f6c",
+            "_event_seq": 3,
+            "_source_id": "draft_8bb76c611125c76689997a74",
+            "_source_kind": "AUTHOR_APPROVED_DRAFT",
+            "amount": "half_bottle",
+            "change": "recovered",
+            "character_id": "protagonist",
+            "evidence": "沈砚从重排后的对面平台取回半瓶水并饮用一口。",
+            "name": "半瓶水",
+            "owner_id": "protagonist",
+            "resource": "water",
+            "resource_id": "water-half-bottle-recovered",
+            "source_draft_id": "draft_8bb76c611125c76689997a74",
+            "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2"
+          },
+          "record_id": "water-half-bottle-recovered",
+          "statement": "",
+          "status": "CANON",
+          "status_label": "正史已确认"
+        }
+      ],
+      "is_selectable": true,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "protagonist",
+      "recent_changes": [],
+      "relationships": [],
+      "state": {
+        "attributes": [
+          {
+            "author_visible": false,
+            "key": "change",
+            "label": "change",
+            "value": "在缺乏完整证据时选择以测距带保留空间关系，放弃强化手电的即时照明收益。"
+          },
+          {
+            "author_visible": false,
+            "key": "cost",
+            "label": "cost",
+            "value": "手电在回程前耗尽，后续行动依靠已有电量和测距带提供的关系判断。"
+          },
+          {
+            "author_visible": false,
+            "key": "source_draft_id",
+            "label": "source_draft_id",
+            "value": "draft_8bb76c611125c76689997a74"
+          },
+          {
+            "author_visible": false,
+            "key": "source_span_id",
+            "label": "source_span_id",
+            "value": "canon-span_96f6a1794bf43a1659c7fba2"
+          },
+          {
+            "author_visible": false,
+            "key": "state_id",
+            "label": "state_id",
+            "value": "protagonist-local-evidence-choice"
+          }
+        ],
+        "available": true,
+        "character_id": "protagonist",
+        "description": "",
+        "layer": "CANON",
+        "message": "以下内容来自选定章节时间点之前已经提交的正史事件。",
+        "name": "protagonist",
+        "raw": {
+          "_edition_id": "base",
+          "_event_id": "event_a80ff58c44e66e2dc777f43a",
+          "_event_seq": 6,
+          "_source_id": "draft_8bb76c611125c76689997a74",
+          "_source_kind": "AUTHOR_APPROVED_DRAFT",
+          "change": "在缺乏完整证据时选择以测距带保留空间关系，放弃强化手电的即时照明收益。",
+          "character_id": "protagonist",
+          "cost": "手电在回程前耗尽，后续行动依靠已有电量和测距带提供的关系判断。",
+          "source_draft_id": "draft_8bb76c611125c76689997a74",
+          "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2",
+          "state_id": "protagonist-local-evidence-choice"
+        },
+        "status": "CANON",
+        "status_label": "正史已确认"
+      },
+      "status_label": "正史已确认"
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "protagonist",
+      "description": "",
+      "is_selectable": true,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "protagonist",
+      "status_label": "正史已确认"
+    }
+  ],
+  "counts": {
+    "abilities": 2,
+    "characters": 1,
+    "equipment": 0,
+    "factions": 0,
+    "inventory": 1,
+    "knowledge_topics": 0,
+    "locations": 0,
+    "promises": 0,
+    "relationships": 0,
+    "resources": 1,
+    "tasks": 0,
+    "threads": 1,
+    "world_rules": 0
+  },
+  "coverage": {
+    "book_id": "original-e56a54687506",
+    "chapter_id": "canon-chapter_6a551b7a462d002ea780f449",
+    "chapter_ordinal": 4,
+    "completed_at": null,
+    "coverage_id": "source-coverage:original-e56a54687506:base:canon-chapter_6a551b7a462d002ea780f449",
+    "edition_id": "base",
+    "error_message": null,
+    "handoff_id": null,
+    "started_at": null,
+    "status": "NOT_STARTED",
+    "task_id": null,
+    "uncertain_finding_count": 0,
+    "updated_at": "",
+    "verified_delta_count": 0,
+    "version": 1
+  },
+  "coverage_status": "NOT_STARTED",
+  "coverage_summary": {
+    "analyzed": 0,
+    "failed": 0,
+    "no_changes": 0,
+    "not_started": 4,
+    "partial": 0,
+    "percentage": 0.0,
+    "ready": 0,
+    "running": 0,
+    "total": 4,
+    "with_changes": 0
+  },
+  "edition_id": "base",
+  "equipment": [],
+  "faction_inspector": [],
+  "factions": [],
+  "inventory": [
+    {
+      "attributes": [
+        {
+          "author_visible": false,
+          "key": "amount",
+          "label": "amount",
+          "value": "half_bottle"
+        },
+        {
+          "author_visible": false,
+          "key": "change",
+          "label": "change",
+          "value": "recovered"
+        },
+        {
+          "author_visible": false,
+          "key": "evidence",
+          "label": "evidence",
+          "value": "沈砚从重排后的对面平台取回半瓶水并饮用一口。"
+        },
+        {
+          "author_visible": false,
+          "key": "owner_id",
+          "label": "owner_id",
+          "value": "protagonist"
+        },
+        {
+          "author_visible": false,
+          "key": "resource",
+          "label": "resource",
+          "value": "water"
+        },
+        {
+          "author_visible": false,
+          "key": "source_draft_id",
+          "label": "source_draft_id",
+          "value": "draft_8bb76c611125c76689997a74"
+        },
+        {
+          "author_visible": false,
+          "key": "source_span_id",
+          "label": "source_span_id",
+          "value": "canon-span_96f6a1794bf43a1659c7fba2"
+        }
+      ],
+      "category": "resource",
+      "changed_this_chapter": false,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "半瓶水",
+      "owner_name": "protagonist",
+      "raw": {
+        "_edition_id": "base",
+        "_event_id": "event_34aec5c02d27eedb1ffc9f6c",
+        "_event_seq": 3,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "amount": "half_bottle",
+        "change": "recovered",
+        "character_id": "protagonist",
+        "evidence": "沈砚从重排后的对面平台取回半瓶水并饮用一口。",
+        "name": "半瓶水",
+        "owner_id": "protagonist",
+        "resource": "water",
+        "resource_id": "water-half-bottle-recovered",
+        "source_draft_id": "draft_8bb76c611125c76689997a74",
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2"
+      },
+      "record_id": "water-half-bottle-recovered",
+      "statement": "",
+      "status": "CANON",
+      "status_label": "正史已确认"
+    }
+  ],
+  "knowledge": [],
+  "knowledge_matrix": [],
+  "knowledge_states": [
+    {
+      "label": "知道",
+      "value": "KNOWN"
+    },
+    {
+      "label": "亲眼见过",
+      "value": "SEEN"
+    },
+    {
+      "label": "听说",
+      "value": "HEARD"
+    },
+    {
+      "label": "怀疑",
+      "value": "SUSPECTED"
+    },
+    {
+      "label": "误解",
+      "value": "MISUNDERSTOOD"
+    },
+    {
+      "label": "尚未知",
+      "value": "UNKNOWN"
+    }
+  ],
+  "knowledge_topics": [],
+  "knowledge_visibility": [],
+  "knowledge_visibility_edges": [],
+  "locations": [],
+  "message": "当前内容按选定章节的正史事件投影；原文状态和作者规划仍以独立层展示。",
+  "opportunity_surface": null,
+  "payoff_readiness": [],
+  "progression_state": null,
+  "promises": [],
+  "provisional_draft_overlay": [
+    {
+      "candidate_id": "candidate_0f95654d1507f487a9bd8248",
+      "commit_updates": [
+        "测距带记录一处广播回声与真实端点不一致的闭合关系",
+        "沈砚排除不能保留回程的假屋顶开口",
+        "白色脚印继续作为未确认的高处线索",
+        "测距带把假屋顶开口与检修窗之间的闭合关系固定为可复核的排除证据。"
+      ],
+      "draft_id": "draft_bf2bb3f1e46011392b83b872",
+      "layer": "PROVISIONAL",
+      "layer_label": "当前草稿",
+      "revision": 1,
+      "state_changes": [
+        "测距带记录一处广播回声与真实端点不一致的闭合关系",
+        "沈砚排除不能保留回程的假屋顶开口",
+        "白色脚印继续作为未确认的高处线索"
+      ],
+      "status": "CANON_COMMITTED"
+    }
+  ],
+  "relationship_graph": {
+    "edges": [],
+    "nodes": [
+      {
+        "layer": "CANON",
+        "name": "protagonist",
+        "node_id": "protagonist",
+        "node_type": "CHARACTER"
+      }
+    ]
+  },
+  "relationship_inspector": [],
+  "relationships": [],
+  "resources": [
+    {
+      "attributes": [
+        {
+          "author_visible": false,
+          "key": "amount",
+          "label": "amount",
+          "value": "half_bottle"
+        },
+        {
+          "author_visible": false,
+          "key": "change",
+          "label": "change",
+          "value": "recovered"
+        },
+        {
+          "author_visible": false,
+          "key": "evidence",
+          "label": "evidence",
+          "value": "沈砚从重排后的对面平台取回半瓶水并饮用一口。"
+        },
+        {
+          "author_visible": false,
+          "key": "owner_id",
+          "label": "owner_id",
+          "value": "protagonist"
+        },
+        {
+          "author_visible": false,
+          "key": "resource",
+          "label": "resource",
+          "value": "water"
+        },
+        {
+          "author_visible": false,
+          "key": "source_draft_id",
+          "label": "source_draft_id",
+          "value": "draft_8bb76c611125c76689997a74"
+        },
+        {
+          "author_visible": false,
+          "key": "source_span_id",
+          "label": "source_span_id",
+          "value": "canon-span_96f6a1794bf43a1659c7fba2"
+        }
+      ],
+      "category": "resource",
+      "changed_this_chapter": false,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "半瓶水",
+      "raw": {
+        "_edition_id": "base",
+        "_event_id": "event_34aec5c02d27eedb1ffc9f6c",
+        "_event_seq": 3,
+        "_source_id": "draft_8bb76c611125c76689997a74",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "amount": "half_bottle",
+        "change": "recovered",
+        "character_id": "protagonist",
+        "evidence": "沈砚从重排后的对面平台取回半瓶水并饮用一口。",
+        "name": "半瓶水",
+        "owner_id": "protagonist",
+        "resource": "water",
+        "resource_id": "water-half-bottle-recovered",
+        "source_draft_id": "draft_8bb76c611125c76689997a74",
+        "source_span_id": "canon-span_96f6a1794bf43a1659c7fba2"
+      },
+      "record_id": "water-half-bottle-recovered",
+      "statement": "",
+      "status": "CANON",
+      "status_label": "正史已确认"
+    }
+  ],
+  "safety": {
+    "author_command_required": true,
+    "canon_mutation_allowed": false,
+    "message": "状态面板是投影；拖拽和编辑只提交 Author Command，不直接改正史。"
+  },
+  "scope_counts": {
+    "global": {
+      "abilities": 2,
+      "characters": 1,
+      "equipment": 0,
+      "inventory": 1,
+      "relationships": 0
+    },
+    "selected_character": {
+      "abilities": 2,
+      "characters": 1,
+      "equipment": 0,
+      "inventory": 1,
+      "relationships": 0
+    }
+  },
+  "selected_character_id": "protagonist",
+  "soft_reference": {
+    "available": false,
+    "graphs": {},
+    "layer": "SOFT_REFERENCE"
+  },
+  "soft_relationships": [],
+  "source_ability_references": [],
+  "source_state": {
+    "baseline": {
+      "available": false,
+      "boundary_chapter": null,
+      "partial_entry_count": 0,
+      "verified_entry_count": 0,
+      "visible_entry_count": 0
+    },
+    "chapter_delta": {
+      "changed": false,
+      "confirmed": [],
+      "uncertain": []
+    },
+    "coverage": {
+      "book_id": "original-e56a54687506",
+      "chapter_id": "canon-chapter_6a551b7a462d002ea780f449",
+      "chapter_ordinal": 4,
+      "completed_at": null,
+      "coverage_id": "source-coverage:original-e56a54687506:base:canon-chapter_6a551b7a462d002ea780f449",
+      "edition_id": "base",
+      "error_message": null,
+      "handoff_id": null,
+      "started_at": null,
+      "status": "NOT_STARTED",
+      "task_id": null,
+      "uncertain_finding_count": 0,
+      "updated_at": "",
+      "verified_delta_count": 0,
+      "version": 1
+    },
+    "coverage_status": "NOT_STARTED",
+    "coverage_summary": {
+      "analyzed": 0,
+      "failed": 0,
+      "no_changes": 0,
+      "not_started": 4,
+      "partial": 0,
+      "percentage": 0.0,
+      "ready": 0,
+      "running": 0,
+      "total": 4,
+      "with_changes": 0
+    },
+    "hydration": {
+      "handoff": null,
+      "progress": [],
+      "queued": false,
+      "required": true,
+      "task": null
+    },
+    "layer": "UNKNOWN",
+    "layer_label": "尚未知",
+    "ledger": {
+      "available": false,
+      "chapter_delta": {
+        "changed": false,
+        "confirmed": [],
+        "uncertain": []
+      },
+      "chapter_uncertain_delta_count": 0,
+      "chapter_verified_delta_count": 0,
+      "coverage": {
+        "book_id": "original-e56a54687506",
+        "chapter_id": "canon-chapter_6a551b7a462d002ea780f449",
+        "chapter_ordinal": 4,
+        "completed_at": null,
+        "coverage_id": "source-coverage:original-e56a54687506:base:canon-chapter_6a551b7a462d002ea780f449",
+        "edition_id": "base",
+        "error_message": null,
+        "handoff_id": null,
+        "started_at": null,
+        "status": "NOT_STARTED",
+        "task_id": null,
+        "uncertain_finding_count": 0,
+        "updated_at": "",
+        "verified_delta_count": 0,
+        "version": 1
+      },
+      "coverage_status": "NOT_STARTED",
+      "hydration": {
+        "handoff": null,
+        "progress": [],
+        "queued": false,
+        "required": true,
+        "task": null
+      },
+      "layer": "SOURCE_VERIFIED",
+      "ledger_delta_count": 0,
+      "previous_projection_chapter_ordinal": null,
+      "projection_status": "MISSING",
+      "records": {},
+      "snapshot_chapter_ordinal": null,
+      "state_changed": false,
+      "uncertain_delta_count": 0,
+      "uncertain_records": [],
+      "verified_delta_count": 0,
+      "verified_history": []
+    },
+    "message": "当前内容按选定章节的正史事件投影；原文状态和作者规划仍以独立层展示。",
+    "state_changed": false,
+    "status": "MISSING",
+    "status_label": "正在补齐这一章的故事状态"
+  },
+  "state_changed": false,
+  "tasks": [],
+  "technical": {
+    "edition_id": "base",
+    "projection_record_counts": {
+      "baseline_visible_entries": 0,
+      "capabilities": 2,
+      "character_states": 4,
+      "knowledge": 0,
+      "relationships": 0,
+      "resources": 1,
+      "source_state_deltas": 0,
+      "source_verified_deltas": 0
+    },
+    "through_event_seq": 29
+  },
+  "threads": [
+    {
+      "attributes": [
+        {
+          "author_visible": false,
+          "key": "evidence",
+          "label": "evidence",
+          "value": "沈砚退回窗边，仍能沿测距带找回走廊。"
+        },
+        {
+          "author_visible": true,
+          "key": "goal",
+          "label": "当前目标",
+          "value": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。"
+        },
+        {
+          "author_visible": false,
+          "key": "phase",
+          "label": "phase",
+          "value": "escalation"
+        },
+        {
+          "author_visible": false,
+          "key": "source_draft_id",
+          "label": "source_draft_id",
+          "value": "draft_bf2bb3f1e46011392b83b872"
+        },
+        {
+          "author_visible": false,
+          "key": "source_span_id",
+          "label": "source_span_id",
+          "value": "canon-span_6a551b7a462d002ea780f449"
+        },
+        {
+          "author_visible": false,
+          "key": "stakes",
+          "label": "stakes",
+          "value": "广播把无法保留回程的开口报成屋顶，错误进入会让测距带和回程一起被建筑夹断。"
+        },
+        {
+          "author_visible": true,
+          "key": "status",
+          "label": "状态",
+          "value": "ADVANCED"
+        },
+        {
+          "author_visible": false,
+          "key": "thread_id",
+          "label": "thread_id",
+          "value": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+        }
+      ],
+      "category": "thread",
+      "changed_this_chapter": false,
+      "layer": "CANON",
+      "layer_label": "正史已确认",
+      "name": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+      "raw": {
+        "_edition_id": "base",
+        "_event_id": "event_9441705ee99b7c754c3625ca",
+        "_event_seq": 26,
+        "_source_id": "draft_bf2bb3f1e46011392b83b872",
+        "_source_kind": "AUTHOR_APPROVED_DRAFT",
+        "evidence": "沈砚退回窗边，仍能沿测距带找回走廊。",
+        "goal": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "phase": "escalation",
+        "source_draft_id": "draft_bf2bb3f1e46011392b83b872",
+        "source_span_id": "canon-span_6a551b7a462d002ea780f449",
+        "stakes": "广播把无法保留回程的开口报成屋顶，错误进入会让测距带和回程一起被建筑夹断。",
+        "status": "ADVANCED",
+        "thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+      },
+      "record_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+      "statement": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+      "status": "ADVANCED",
+      "status_label": "正史已确认"
+    }
+  ],
+  "timepoint": {
+    "after_event_seq": 29,
+    "before_event_seq": 22,
+    "historical": true,
+    "source_projection_available": false,
+    "source_projection_status": "MISSING"
+  },
+  "unknown_abilities": [],
+  "view": "AFTER_CHAPTER",
+  "world_expansion": null,
+  "world_rules": []
+}

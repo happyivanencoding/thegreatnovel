@@ -1,0 +1,302 @@
+{
+  "schema_version": "original-reader-kernel-v2",
+  "information_status": "PROPOSAL",
+  "summary": "这是一部把末日生存压力、每日唯一的物品进化机会和不断改写的建筑空间绑在一起的长篇成长爽文。读者持续追读的核心，不是单纯等待更大的战力，而是看主角在每次只能选一件真正拥有的普通物品的情况下，如何用一次永久质变打开新的行动可能性，再用具体、可验证的生存后果证明选择是否正确。建筑结构周期性变化会持续制造新的缺口、路线和资源取舍；成长因此既扩大行动空间，也提高下一次选择的机会成本。该判断仍是作者审阅用 Proposal，不能直接视为 Effective 合同。",
+  "reader_experience": {
+    "contract_id": "original-e56a54687506-reader-experience",
+    "primary_family": "SURVIVAL_PROGRESSION",
+    "secondary_families": [
+      "EVOLUTION_PROGRESSION"
+    ],
+    "setting_skin": "APOCALYPSE",
+    "experience_priorities": {
+      "PROGRESSION": "VERY_HIGH",
+      "BREAKTHROUGH": "VERY_HIGH",
+      "POWER_VERIFICATION": "HIGH",
+      "COMBAT": "MEDIUM",
+      "EXPLORATION": "VERY_HIGH",
+      "RESOURCE_OPPORTUNITY": "VERY_HIGH",
+      "ARTIFACT_OR_ABILITY": "VERY_HIGH",
+      "WORLD_EXPANSION": "HIGH",
+      "FACTION_CONFLICT": "LOW",
+      "MYSTERY": "HIGH",
+      "REVEAL": "HIGH",
+      "TEAM_GROWTH": "LOW",
+      "RELATIONSHIP": "LOW",
+      "ROMANCE": "OFF",
+      "STATUS_RISE": "LOW",
+      "REVENGE": "OFF",
+      "SURVIVAL": "VERY_HIGH",
+      "KNOWLEDGE": "HIGH",
+      "WEALTH": "LOW",
+      "SOCIAL_THEME": "LOW"
+    },
+    "growth_centrality": "VERY_HIGH",
+    "world_expansion_centrality": "HIGH",
+    "mystery_centrality": "HIGH",
+    "team_centrality": "LOW",
+    "relationship_centrality": "LOW",
+    "theme_centrality": "LOW",
+    "primary_narrative_drive": "SURVIVAL_RESOURCE",
+    "secondary_narrative_drives": [
+      "ABILITY_PROGRESSION",
+      "WORLD_EXPLORATION",
+      "KNOWLEDGE_PROGRESSION",
+      "MYSTERY_INVESTIGATION"
+    ],
+    "drive_priority_order": [
+      "SURVIVAL_RESOURCE",
+      "ABILITY_PROGRESSION",
+      "WORLD_EXPLORATION",
+      "KNOWLEDGE_PROGRESSION",
+      "MYSTERY_INVESTIGATION"
+    ],
+    "expected_drive_interactions": [
+      "生存资源压力迫使主角在每日唯一机会中取舍，进化结果再改变可走的路线、可用的资源和下一次选择。",
+      "建筑探索不断暴露新的生存缺口，知识积累可以提高选择判断，但不能取代物品选择本身。",
+      "永久进化扩大行动空间，同时每日只能选择一件物品的稀缺性保留持续的机会成本。"
+    ],
+    "explanation_style": "BALANCED",
+    "mysticism_level": "MEDIUM",
+    "serial_form": "LONG_SERIAL",
+    "tone": [
+      "紧张",
+      "具体",
+      "克制",
+      "有爽点"
+    ],
+    "must_deliver": [
+      "每日唯一的进化选择必须在后续生存处境中产生可感知、可验证的行动优势或代价。",
+      "建筑结构变化必须持续制造探索、路线和资源重组压力，而不是只作为背景设定。",
+      "普通非生命物品沿原有功能发生的质变必须打开读者能理解并期待兑现的新行动可能性。",
+      "选择的机会成本和失败后果不能被无限资源、无限次数或无代价多选抵消。"
+    ],
+    "must_not_drift_into": [
+      "把永久进化稀释成普通求生技巧、职业知识、工程改造或一般效率提升。",
+      "让战斗、恋爱、阵营争霸或社会地位长期压过生存选择与物品进化的核心追读动力。",
+      "把建筑变化变成静态背景，或用一套脱离物品选择的复杂系统替代现场生存后果。"
+    ],
+    "author_notes": "这是基于 INITIAL Seed 的首次语义提案；Seed 没有提供作者覆盖项。三项合同均保留为 NEEDS_REVIEW，特别需要作者确认特殊规则的适用范围、进化上限以及未知建筑规则在追读中的比重。",
+    "status": "NEEDS_REVIEW"
+  },
+  "market_category": {
+    "metadata_id": "original-e56a54687506-market-category",
+    "primary_market_category": "CUSTOM",
+    "secondary_market_categories": [
+      "SUPERNATURAL"
+    ],
+    "display_labels": [
+      "末日生存",
+      "物品进化成长",
+      "男频爽文"
+    ],
+    "source": "AUTHOR_PREMISE_INTERPRETATION",
+    "status": "NEEDS_REVIEW"
+  },
+  "narrative_drive": {
+    "drive_contract_id": "original-e56a54687506-narrative-drive",
+    "primary_drive": "SURVIVAL_RESOURCE",
+    "secondary_drives": [
+      "ABILITY_PROGRESSION",
+      "WORLD_EXPLORATION",
+      "KNOWLEDGE_PROGRESSION",
+      "MYSTERY_INVESTIGATION"
+    ],
+    "progression_engine_enabled": true,
+    "drive_priorities": {
+      "SURVIVAL_RESOURCE": 10,
+      "ABILITY_PROGRESSION": 9,
+      "WORLD_EXPLORATION": 8,
+      "KNOWLEDGE_PROGRESSION": 7,
+      "MYSTERY_INVESTIGATION": 6
+    },
+    "drive_promises": {
+      "SURVIVAL_RESOURCE": [
+        "建筑每次变化都会把已有物品、储备与安全位置重新变成可权衡的生存问题。",
+        "每天只能选择一件物品进化，机会成本会持续存在并影响后续行动。"
+      ],
+      "ABILITY_PROGRESSION": [
+        "永久进化逐步增加主角能够采取的行动，但每次增加都来自明确的单次选择。"
+      ],
+      "WORLD_EXPLORATION": [
+        "变化的建筑空间不断逼迫幸存者进入未知区域，重新理解可用空间与路线。"
+      ],
+      "KNOWLEDGE_PROGRESSION": [
+        "对建筑变化、物品功能边界和选择后果的认识，会成为下一次判断的优势。"
+      ],
+      "MYSTERY_INVESTIGATION": [
+        "全球灾变与建筑变化留下需要逐步辨认的原因、规则和关联线索。"
+      ]
+    },
+    "drive_debt_types": {
+      "SURVIVAL_RESOURCE": [
+        "物资不足",
+        "错过一次进化机会后的补救压力",
+        "选择一种用途就放弃其他用途"
+      ],
+      "ABILITY_PROGRESSION": [
+        "新能力的适用边界尚未被验证",
+        "累积进化与当前危机之间的错配"
+      ],
+      "WORLD_EXPLORATION": [
+        "未知区域与安全路线之间的信息缺口",
+        "建筑变化造成的空间记忆失效"
+      ],
+      "KNOWLEDGE_PROGRESSION": [
+        "观察到的规律仍可能只是局部样本",
+        "理解规则所需的时间与即时生存压力冲突"
+      ],
+      "MYSTERY_INVESTIGATION": [
+        "灾变原因与当前生存问题之间尚未闭合的线索",
+        "过早解释可能遮蔽现场可验证的后果"
+      ]
+    },
+    "drive_fatigue_risks": {
+      "SURVIVAL_RESOURCE": [
+        "如果每次危机都只是重复缺水、缺食和找出口，资源压力会失去新鲜度。"
+      ],
+      "ABILITY_PROGRESSION": [
+        "如果进化只表现为无代价的数值变强，单次选择的戏剧性会消失。"
+      ],
+      "WORLD_EXPLORATION": [
+        "如果空间变化没有带来新的可行动问题，探索会变成换皮走图。"
+      ],
+      "KNOWLEDGE_PROGRESSION": [
+        "如果规律解释先于现场后果，故事会从生存行动滑向说明书。"
+      ],
+      "MYSTERY_INVESTIGATION": [
+        "如果谜底长期只延迟而不改变当下选择，悬念会与主线生存脱节。"
+      ]
+    },
+    "drive_states": [
+      {
+        "drive": "SURVIVAL_RESOURCE",
+        "state": "EXPLICIT_SEED",
+        "evidence": [
+          "Seed 明确写出末日环境、废弃建筑、不断变化的结构，以及幸存者的生存和资源重组压力。"
+        ]
+      },
+      {
+        "drive": "ABILITY_PROGRESSION",
+        "state": "EXPLICIT_SEED",
+        "evidence": [
+          "Seed 明确写出主角每天只能让一件普通非生命物品沿原有功能发生永久进化，且同一物品可以继续进化。"
+        ]
+      },
+      {
+        "drive": "WORLD_EXPLORATION",
+        "state": "EXPLICIT_SEED",
+        "evidence": [
+          "Seed 明确写出建筑会周期性改变结构并逼迫幸存者不断探索。"
+        ]
+      },
+      {
+        "drive": "KNOWLEDGE_PROGRESSION",
+        "state": "IMPLIED_BY_PREMISE",
+        "evidence": [
+          "要在变化建筑与每日一次的选择中持续生存，读者可以期待对规则和物品边界的认识逐步增加；但 Seed 未冻结具体认知路径。"
+        ]
+      },
+      {
+        "drive": "MYSTERY_INVESTIGATION",
+        "state": "IMPLIED_BY_PREMISE",
+        "evidence": [
+          "全球灾变和会变化的废弃建筑构成未解释的世界问题；Seed 未明确要求谜底或调查结构，因此仅作待审阅的次级驱动。"
+        ]
+      }
+    ],
+    "drive_payoff_channels": [
+      {
+        "associated_drive": "SURVIVAL_RESOURCE",
+        "channel": "SURVIVAL_ESCAPE"
+      },
+      {
+        "associated_drive": "ABILITY_PROGRESSION",
+        "channel": "NEW_ABILITY"
+      },
+      {
+        "associated_drive": "WORLD_EXPLORATION",
+        "channel": "DISCOVERY"
+      },
+      {
+        "associated_drive": "KNOWLEDGE_PROGRESSION",
+        "channel": "KNOWLEDGE_GAIN"
+      },
+      {
+        "associated_drive": "MYSTERY_INVESTIGATION",
+        "channel": "MYSTERY_REVEAL"
+      }
+    ],
+    "author_overrides": [],
+    "status": "NEEDS_REVIEW"
+  },
+  "creative_semantics": {
+    "signature_fantasy": "在人人被困且环境不断改写的灾变世界里，主角能把自己真正拥有的普通非生命物品沿原有功能永久进化，并用每天唯一的选择把有限资源变成新的生存可能性。读者真正购买的是在绝境中亲手做出聪明取舍、看到普通东西发生质变，并用这次质变解决原本无法解决的问题的持续爽感。",
+    "existing_signature_mechanism": "Seed 已明确：主角每天只能从自己真正拥有的普通非生命物品中选择一件，让它沿原有功能发生一次永久进化，同一物品还可以继续进化。已明确的使用者是主角；其他幸存者是否也拥有同一规则、还是只有主角拥有，Seed 没有说明，因此本阶段不冻结使用者范围。普通人不能靠职业、工程知识或一般效率训练复制这条特殊规则；它要求每日唯一选择与规则本身的永久质变。该机制会反复打开新的行动可能性，而每天一次、物品必须真实拥有、建筑周期变化和选择错配带来的资源与时机成本只是能力的约束，不是能力的替代物。",
+    "open_design_space": [
+      "沿原有功能的进化是否可以突破现实物理上限，以及突破的尺度和可解释程度。",
+      "物品进化结果能否提前判断、判断需要什么证据，以及同一物品连续进化的递进方式。",
+      "建筑周期变化的触发、边界、可预测度和原因，以及它与每日选择之间如何形成新的生存问题。",
+      "永久进化之间是否会产生协同、冲突或新的代价；这些关系应服务于核心选择，而不是另起一套成长系统。",
+      "其他幸存者是否具备同类规则，以及由此产生的资源竞争、合作或知识交换在故事中占多大比重。"
+    ],
+    "payoff_texture": [
+      "在紧张的取舍中看到一个具体物品立刻改变可行动范围。",
+      "进化结果必须能在现场被验证，带来‘这次选择没有浪费’的确定性满足。",
+      "前期看似普通的物品在新的建筑结构和资源压力中兑现，形成以小博大、临场反转的爽点。",
+      "能力突破可以超出日常现实基线，但仍要让读者看懂代价、限制和后果，而不是无代价碾压。"
+    ],
+    "novelty_focus": [
+      "把每日唯一机会、普通物品原功能的质变和会重排的建筑空间绑定成一个可重复的选择—验证—再选择循环。",
+      "新奇感集中在同一物品如何沿原功能打开原本不存在的生存行动，而不是堆砌新名词或另起一套系统。",
+      "让‘拥有何物’与‘今天愿意牺牲哪一种潜在用途’本身成为持续变化的创意来源。"
+    ],
+    "realism_anchors": [
+      "物品来源必须是主角真正拥有的普通非生命物品，携带、位置、可达性和使用条件应保持直观。",
+      "每日只能选择一件，错过机会、选择错配、资源消耗、受伤和失败后果应具体可感。",
+      "进化仍沿原有功能展开，局部用途和后果要能被第三人称限知视角观察与验证。",
+      "建筑变化造成的路线、空间和资源摩擦应保持清楚；这些局部锚点约束超现实质变的使用成本，但不把核心幻想普通化。"
+    ],
+    "complexity_boundaries": [
+      "不额外引入与每日单件进化无关的职业技能树、数值面板或独立升级体系。",
+      "不让庞大的科技或魔法百科、复杂阵营政治、经营经济和社会制度解释抢走现场生存选择。",
+      "不把建筑变化拆成另一套脱离物品选择的成长系统，也不让抽象规则说明替代具体行动与后果。",
+      "不为了制造升级感而堆叠不可验证的能力清单、敌人清单、地图层级或长期剧情结构。"
+    ],
+    "repeatable_reader_loop": [
+      "当前建筑变化或生存危机暴露一个具体缺口。",
+      "主角盘点真正拥有的普通物品，在当天唯一的进化机会中进行取舍。",
+      "被选物品沿原有功能永久进化，主角用具体行动验证收益并承担限制或代价。",
+      "新的空间、资源或规则问题被打开，下一次选择因此更有价值也更难。"
+    ],
+    "anti_drift": [
+      "不能把永久进化写成普通求生技巧、职业知识、工程改造或一般效率提升。",
+      "不能让拿掉特殊进化机制后，故事仍可由相同的搜索、战斗、经营或社交活动维持主要行动和爽点；特殊机制必须真正改变可行动可能性。",
+      "不能把每天一次的选择变成无限刷新、无限物品或无代价多选。",
+      "不能让建筑变化只做静态背景，也不能让世界揭秘、阵营争霸、恋爱或复仇长期取代生存成长与选择兑现。",
+      "不能把局部现实锚点误写成对超现实能力本身的全面削弱，或用现实职业能力替代作者已经给出的异常优势。"
+    ]
+  },
+  "semantic_evidence": [
+    "premise：全球灾变后，每个人醒来时都被困在一座会不断变化的废弃建筑中。",
+    "premise：主角每天只能选择一件自己真正拥有的普通非生命物品，使它沿原有功能发生一次永久进化；每天只能选择一件，同一物品可以继续进化。",
+    "premise：建筑会周期性改变结构，逼迫幸存者不断探索、生存和重新组织资源。",
+    "genre：末日/生存/成长/男频爽文。",
+    "tone_style：紧张、具体、克制但有爽点。",
+    "pov：第三人称限知。",
+    "expected_length：长篇；本次执行连续10章实验。"
+  ],
+  "uncertainties": [
+    "物品进化能否突破现实物理上限，以及突破的尺度、稳定性和可解释程度，尚未由作者确定。",
+    "该规则是否只有主角拥有，还是幸存者普遍拥有，Seed 未说明。",
+    "建筑周期变化的触发方式、边界、可预测性、变化原因和与进化规则的关系尚未确定。",
+    "进化结果是否可提前判断、同一物品连续进化的条件和递进方式尚未确定。",
+    "幸存者之间的合作、竞争、组织关系以及战斗在整体追读动力中的占比，Seed 未冻结。"
+  ],
+  "author_attention_points": [
+    "请确认物品进化规则的适用范围：只有主角可用，还是每名幸存者都可能拥有；这会直接改变社会压力与读者预期。",
+    "请确认沿原功能的永久进化是否允许突破现实物理上限，以及作者希望读者看到的突破感与限制感如何平衡。",
+    "请确认建筑变化更偏向可学习的生存规则、持续谜团，还是主要作为探索与资源压力来源；本提案暂保留三者的可调整空间。",
+    "请确认战斗、团队与社会关系是否只是低频摩擦，还是需要提高其在长篇中的体验优先级；当前 Seed 只明确生存、成长、探索和资源重组。"
+  ]
+}

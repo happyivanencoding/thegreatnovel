@@ -1,0 +1,18 @@
+{
+  "candidate_count": 3,
+  "continuity_count": 3,
+  "earned_surface_usage_coverage": 0.0,
+  "earned_usage_count": 0,
+  "forward_novelty_count": 3,
+  "lens_counts": {
+    "CONTINUITY_ACTIVE_THREAD": 3
+  },
+  "payoff_count": 0,
+  "relationship_count": 1,
+  "social_count": 1,
+  "warnings": [
+    "候选 lens 覆盖不足；这是诊断提示，不是固定配额门槛"
+  ],
+  "wildcard_count": 0,
+  "world_count": 0
+}

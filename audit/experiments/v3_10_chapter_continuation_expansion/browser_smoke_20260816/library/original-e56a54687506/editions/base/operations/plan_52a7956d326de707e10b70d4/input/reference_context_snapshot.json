@@ -1,0 +1,178 @@
+{
+  "book_id": "original-e56a54687506",
+  "compact_cards": [],
+  "created_at": "2026-08-16T16:48:25.980439+00:00",
+  "creative_problem": "下一章候选需要处理主线程 handoff-thread 的冻结状态与行动空间；active_threads=1；pressure=UNKNOWN；payoff_ready=UNKNOWN；overdue_debt=UNKNOWN；progression_bottleneck=['可用物品与当前空间缺口不匹配', '建筑变化快于主角能完成的现场验证', '同一物品的下一次进化需要新的问题而非简单重复']；resource_pressure=TRUE；world_expansion=TRUE；relationship=UNKNOWN；mystery=TRUE；repetition=UNKNOWN；unknown=pressure,payoff_readiness,relationship,repetition；Reference Corpus 只提供可迁移机制，不决定候选。",
+  "creative_problem_tags": [
+    "long-form",
+    "breakthrough",
+    "resource-release",
+    "world-expansion",
+    "mystery-reveal"
+  ],
+  "edition_id": "base",
+  "effective_query": {
+    "creative_problem": "下一章候选需要处理主线程 handoff-thread 的冻结状态与行动空间；active_threads=1；pressure=UNKNOWN；payoff_ready=UNKNOWN；overdue_debt=UNKNOWN；progression_bottleneck=['可用物品与当前空间缺口不匹配', '建筑变化快于主角能完成的现场验证', '同一物品的下一次进化需要新的问题而非简单重复']；resource_pressure=TRUE；world_expansion=TRUE；relationship=UNKNOWN；mystery=TRUE；repetition=UNKNOWN；unknown=pressure,payoff_readiness,relationship,repetition；Reference Corpus 只提供可迁移机制，不决定候选。",
+    "creative_problem_tags": [
+      "long-form",
+      "breakthrough",
+      "resource-release",
+      "world-expansion",
+      "mystery-reveal"
+    ],
+    "max_cards": 6,
+    "narrative_drives": [
+      "SURVIVAL_RESOURCE",
+      "KNOWLEDGE_PROGRESSION",
+      "ABILITY_PROGRESSION",
+      "MYSTERY_INVESTIGATION",
+      "WORLD_EXPLORATION"
+    ],
+    "payoff_channels": [
+      "DISCOVERY",
+      "KNOWLEDGE_GAIN",
+      "NEW_ABILITY",
+      "POWER_BREAKTHROUGH",
+      "RESOURCE_GAIN",
+      "SURVIVAL_ESCAPE",
+      "WORLD_EXPANSION"
+    ],
+    "reader_experiences": [
+      "ARTIFACT_OR_ABILITY",
+      "BREAKTHROUGH",
+      "COMBAT",
+      "EXPLORATION",
+      "FACTION_CONFLICT",
+      "KNOWLEDGE",
+      "MYSTERY",
+      "POWER_VERIFICATION",
+      "PROGRESSION",
+      "RELATIONSHIP",
+      "RESOURCE_OPPORTUNITY",
+      "REVEAL",
+      "REVENGE",
+      "ROMANCE",
+      "SOCIAL_THEME",
+      "STATUS_RISE",
+      "SURVIVAL",
+      "TEAM_GROWTH",
+      "WEALTH",
+      "WORLD_EXPANSION"
+    ],
+    "scene_functions": []
+  },
+  "knowledge_gaps": [
+    "当前没有可用的 Reference Corpus machine package/path"
+  ],
+  "machine_bundle_hash": null,
+  "match_tier": "ZERO_RESULTS",
+  "max_cards": 6,
+  "metadata_match_fields": {},
+  "narrative_drives": [
+    "SURVIVAL_RESOURCE",
+    "KNOWLEDGE_PROGRESSION",
+    "ABILITY_PROGRESSION",
+    "MYSTERY_INVESTIGATION",
+    "WORLD_EXPLORATION"
+  ],
+  "operation_id": "plan_52a7956d326de707e10b70d4",
+  "original_query": {
+    "creative_problem": "下一章候选需要处理主线程 handoff-thread 的冻结状态与行动空间；active_threads=1；pressure=UNKNOWN；payoff_ready=UNKNOWN；overdue_debt=UNKNOWN；progression_bottleneck=['可用物品与当前空间缺口不匹配', '建筑变化快于主角能完成的现场验证', '同一物品的下一次进化需要新的问题而非简单重复']；resource_pressure=TRUE；world_expansion=TRUE；relationship=UNKNOWN；mystery=TRUE；repetition=UNKNOWN；unknown=pressure,payoff_readiness,relationship,repetition；Reference Corpus 只提供可迁移机制，不决定候选。",
+    "creative_problem_tags": [
+      "long-form",
+      "breakthrough",
+      "resource-release",
+      "world-expansion",
+      "mystery-reveal"
+    ],
+    "max_cards": 6,
+    "narrative_drives": [
+      "SURVIVAL_RESOURCE",
+      "KNOWLEDGE_PROGRESSION",
+      "ABILITY_PROGRESSION",
+      "MYSTERY_INVESTIGATION",
+      "WORLD_EXPLORATION"
+    ],
+    "payoff_channels": [
+      "DISCOVERY",
+      "KNOWLEDGE_GAIN",
+      "NEW_ABILITY",
+      "POWER_BREAKTHROUGH",
+      "RESOURCE_GAIN",
+      "SURVIVAL_ESCAPE",
+      "WORLD_EXPANSION"
+    ],
+    "reader_experiences": [
+      "ARTIFACT_OR_ABILITY",
+      "BREAKTHROUGH",
+      "COMBAT",
+      "EXPLORATION",
+      "FACTION_CONFLICT",
+      "KNOWLEDGE",
+      "MYSTERY",
+      "POWER_VERIFICATION",
+      "PROGRESSION",
+      "RELATIONSHIP",
+      "RESOURCE_OPPORTUNITY",
+      "REVEAL",
+      "REVENGE",
+      "ROMANCE",
+      "SOCIAL_THEME",
+      "STATUS_RISE",
+      "SURVIVAL",
+      "TEAM_GROWTH",
+      "WEALTH",
+      "WORLD_EXPANSION"
+    ],
+    "scene_functions": []
+  },
+  "package_hash": null,
+  "package_schema_version": null,
+  "payoff_channels": [
+    "DISCOVERY",
+    "KNOWLEDGE_GAIN",
+    "NEW_ABILITY",
+    "POWER_BREAKTHROUGH",
+    "RESOURCE_GAIN",
+    "SURVIVAL_ESCAPE",
+    "WORLD_EXPANSION"
+  ],
+  "purpose": "PLANNING",
+  "reader_experiences": [
+    "ARTIFACT_OR_ABILITY",
+    "BREAKTHROUGH",
+    "COMBAT",
+    "EXPLORATION",
+    "FACTION_CONFLICT",
+    "KNOWLEDGE",
+    "MYSTERY",
+    "POWER_VERIFICATION",
+    "PROGRESSION",
+    "RELATIONSHIP",
+    "RESOURCE_OPPORTUNITY",
+    "REVEAL",
+    "REVENGE",
+    "ROMANCE",
+    "SOCIAL_THEME",
+    "STATUS_RISE",
+    "SURVIVAL",
+    "TEAM_GROWTH",
+    "WEALTH",
+    "WORLD_EXPANSION"
+  ],
+  "relaxed_fields": [],
+  "scene_functions": [],
+  "schema_version": "reference-context-snapshot-v1",
+  "selected_card_count": 0,
+  "selected_card_ids": [],
+  "selected_card_knowledge_levels": [],
+  "selected_card_types": [],
+  "snapshot_hash": "33551e43671c9db368e720a68ac955ebf1f56ff8ec39b79ccd0f89f922b6c1f5",
+  "snapshot_id": "reference-context_84fe6e8423db2d7b21873c08",
+  "status": "DISABLED",
+  "usage": "REFERENCE_ONLY",
+  "warnings": [
+    "soft-fail：Reference Corpus 未启用或未配置"
+  ],
+  "zero_result_reason": "REFERENCE_CORPUS_DISABLED"
+}

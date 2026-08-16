@@ -1,0 +1,58 @@
+{
+  "task_id": "draft-task_0b22408d5f9cbd9344fa1ba3",
+  "contract_id": "contract_8abce44148859901fbba62f4",
+  "chapter_title": "风把脚印吹回去",
+  "prose_markdown": "风道里的风突然变大，七步白印被一层灰雾盖住。沈砚把测距带绕在腕上，带壳端压住窗台，盯着最靠近断口的两道痕迹。广播在头顶报：“屋顶安全。”\n\n风从上方落下，脚印却向相反方向移动。第一道白印被吹到风道另一侧，第二道留在原处，像两条路线在同一面墙上错开。沈砚没有追。脚印可能属于人，也可能只是建筑把别处的残痕推到眼前；现在能确认的只有位置发生了变化。\n\n他把带钩端甩向风道边缘。钩子卡住一块金属，带身绷直。沈砚先记下脚印前端与窗台的刻度，再等建筑完成一次移动。风道向左折，第二道脚印随墙面消失，第一道却停在更高的一截灰白边缘。\n\n脚印前后端点与风道位置的变化被测距带固定下来。线索不是稳定地图，它会被重排和风向共同改写；测量能留下变化，却不能替他解释变化。\n\n广播改报西侧楼梯。声音从空段下方回弹，像在催他去追刚才消失的那一道白印。沈砚把带钩端收回，没有向上爬。风道边缘没有地面，唯一能回来的端点还在窗台。\n\n最后一阵风把第一道脚印也吹散，只留下两处更深的鞋底痕。沈砚把它们记在铝牌上，和倒写标记、空白距离并排放好。未知线索不再稳定，但他至少拥有一套比较方法：下一次它们再次出现时，先看它们离哪里更近，再决定是否相信。",
+  "state_changes": [
+    {
+      "kind": "capability",
+      "record_id": "measuring-tape-footprint-drift-ch8",
+      "payload": {
+        "character_id": "protagonist",
+        "description": "测距带记录脚印前后端点与风道位置的变化，保留线索被重排改写的可比较证据。",
+        "evidence": "脚印前后端点与风道位置的变化被测距带固定下来。",
+        "name": "测距带记录脚印漂移",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "kind": "fact",
+      "record_id": "footprint-drift-observed-ch8",
+      "payload": {
+        "description": "上方风道中的白色脚印在风向和建筑重排作用下改变位置并部分消失。",
+        "knowledge_status": "UNKNOWN",
+        "location_relation": "upper_wind_channel",
+        "object": "白色脚印",
+        "predicate": "footprint_drift_observed",
+        "status": "observed"
+      }
+    },
+    {
+      "kind": "thread",
+      "record_id": "space-reading-route-evidence",
+      "payload": {
+        "evidence": "沈砚把脚印前后端点记录在铝牌上，没有向上爬，随后沿窗边端点退回。",
+        "goal": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "phase": "escalation",
+        "stakes": "线索会随风和重排改写，追逐脚印会让主角失去唯一回程。",
+        "status": "ADVANCED",
+        "thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+      }
+    },
+    {
+      "kind": "character_state",
+      "record_id": "protagonist-local-evidence-choice-8",
+      "payload": {
+        "change": "沈砚接受线索会被重排改写，先建立比较方法而不追逐每一次变化。",
+        "character_id": "protagonist",
+        "cost": "再次消耗当天唯一进化机会，并放弃追入风道获取即时答案。"
+      }
+    }
+  ],
+  "promises_advanced": ["anticipation-world-earned-spatial-frontier"],
+  "promises_paid": [],
+  "new_major_hooks": 0,
+  "notes": ["脚印作者、风道成因、广播身份和屋顶状态保持未知；本章确认的只有线索位置发生漂移。"]
+}

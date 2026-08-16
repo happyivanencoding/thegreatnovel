@@ -1,0 +1,18 @@
+{
+  "candidate_count": 3,
+  "continuity_count": 3,
+  "earned_surface_usage_coverage": 0.0,
+  "earned_usage_count": 0,
+  "forward_novelty_count": 3,
+  "lens_counts": {
+    "CONTINUITY_ACTIVE_THREAD": 1,
+    "EARNED_OPPORTUNITY": 1,
+    "FORWARD_EXPANSION": 1
+  },
+  "payoff_count": 1,
+  "relationship_count": 1,
+  "social_count": 1,
+  "warnings": [],
+  "wildcard_count": 0,
+  "world_count": 1
+}

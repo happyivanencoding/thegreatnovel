@@ -1,0 +1,69 @@
+{
+  "atlas_required_artifacts": [],
+  "author_directives_hash": "8eb636685ca92e785c8cde1f0b4b42d0ec478618fafc6be1f29a3dc1ff3d0edb",
+  "author_goal": null,
+  "author_task_ids": [],
+  "base_projection_hash": "c7f13f58a071cb755982e1f47f0ed685dce7e3bd6610d002b1a776736655ee0a",
+  "batch_context_path": null,
+  "batch_id": null,
+  "batch_plan_hash": null,
+  "book_id": "original-e56a54687506",
+  "boundary_packet_id": "boundary_532965aba3384ed565f32a21",
+  "boundary_packet_json_path": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\writing\\boundaries\\boundary_532965aba3384ed565f32a21.json",
+  "boundary_packet_markdown_path": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\writing\\boundaries\\boundary_532965aba3384ed565f32a21.md",
+  "boundary_packet_sha256": "bd7a751743431c24f70962f4b27d49488b3f09eba673dddae399ff2decf76374",
+  "business_input_files": [
+    "metric_context.json",
+    "kernel_context.json",
+    "world_state_context.json",
+    "boundary_packet.json",
+    "rhythm_context.json"
+  ],
+  "config_hash": "685a5acc8a728524c2a6e407ffccc2b3b76e433e3f3c10c319fbf61b2e1b4ce3",
+  "context_chapter_id": "canon-chapter_527cd52fb85756bbad483200",
+  "current_atlas_id": null,
+  "current_atlas_manifest_hash": null,
+  "current_atlas_version": null,
+  "current_horizon_hash": null,
+  "edition_id": "base",
+  "edition_status": "ACTIVE",
+  "effective_content_sha256": "928d7d826af436eaba6641d82e729310623e88d5dea258d41a90fe8e96760f1f",
+  "executor_skill": "continue-novel",
+  "file_hashes": {
+    "boundary_packet.json": "9d14fb4d6f208e84553246bfe78ff0c482e1901bef418e0543657a206446a97c",
+    "kernel_context.json": "25dc3304aaca72fbfda0fc1d13bb11efb28b68e49c58b30634833d63c72c42eb",
+    "metric_context.json": "e3f61d3451ef14de02f256ed7e64ed05d5bf816f196ae44a4a9c09a4b9ac5139",
+    "output_schema.json": "7c41a1fbbd55232f67d0cb6cc8f14906f520ca71c3fdab86a40b2f75723f82dd",
+    "prompt.md": "9af704a44549b2de262f0fa9aa299ff74bfa9b3cc4f64e2a78efc38147b425cb",
+    "rhythm_context.json": "8c95d725c753d2e78b98ac037e01dceedf8fd38241c16c14aa0066a8b61b82e0",
+    "task.json": "faac6a613a06bd2fb9369ed4b9fbe4b5e7ce55c9570d92a8ec1c976ff618d9a0",
+    "world_state_context.json": "1702e49a3c39ef985cdfc06d08a2d3dc19f52d2c7f3fbb0386acedc00fa5f336"
+  },
+  "frozen_at": "2026-08-16T17:15:12.928717+00:00",
+  "innovation_control": {
+    "focus": [
+      "auto"
+    ],
+    "level": "medium"
+  },
+  "innovation_source": "book_default",
+  "kernel_context_path": "kernel_context.json",
+  "metric_bundle_hash": "8eb926cc2e379d620a73280e915d58017673ce7b2cb88d9bb8ee6bd0fd591d5b",
+  "original_intent_hash": null,
+  "paths": [
+    "task.json",
+    "prompt.md",
+    "metric_context.json",
+    "output_schema.json",
+    "kernel_context.json",
+    "world_state_context.json",
+    "boundary_packet.json",
+    "rhythm_context.json"
+  ],
+  "planning_aggregate_hash": "cc90f9e5ac3db843ed300af2576761af93748344013a60f20e15f3b363a705b9",
+  "planning_aggregate_id": "planning-aggregate_b75188ef7154fd5c99f936ac",
+  "readiness_status": null,
+  "registry_hash": "cc3c44febd2467e5c34991daf6c2217130673be36ad4043882188e0e6262a1c7",
+  "source_manifest_sha256": "",
+  "world_state_context_path": "world_state_context.json"
+}

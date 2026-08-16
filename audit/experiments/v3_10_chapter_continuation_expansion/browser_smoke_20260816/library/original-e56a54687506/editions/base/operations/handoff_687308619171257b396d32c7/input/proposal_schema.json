@@ -1,0 +1,155 @@
+{
+  "$defs": {
+    "CoreInnovationCandidate": {
+      "additionalProperties": false,
+      "description": "An open semantic mechanism proposal, not a classified innovation type.",
+      "properties": {
+        "choice_generation": {
+          "minLength": 1,
+          "title": "Choice Generation",
+          "type": "string"
+        },
+        "concrete_example": {
+          "minLength": 1,
+          "title": "Concrete Example",
+          "type": "string"
+        },
+        "core_mechanism": {
+          "minLength": 1,
+          "title": "Core Mechanism",
+          "type": "string"
+        },
+        "expansion_grammar": {
+          "minLength": 1,
+          "title": "Expansion Grammar",
+          "type": "string"
+        },
+        "fit_with_reader_promise": {
+          "minLength": 1,
+          "title": "Fit With Reader Promise",
+          "type": "string"
+        },
+        "innovation_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Innovation Id",
+          "type": "string"
+        },
+        "limitation": {
+          "minLength": 1,
+          "title": "Limitation",
+          "type": "string"
+        },
+        "long_form_capacity": {
+          "minLength": 1,
+          "title": "Long Form Capacity",
+          "type": "string"
+        },
+        "novelty_source": {
+          "minLength": 1,
+          "title": "Novelty Source",
+          "type": "string"
+        },
+        "payoff_generation": {
+          "minLength": 1,
+          "title": "Payoff Generation",
+          "type": "string"
+        },
+        "plain_language_pitch": {
+          "minLength": 1,
+          "title": "Plain Language Pitch",
+          "type": "string"
+        },
+        "progression_generation": {
+          "minLength": 1,
+          "title": "Progression Generation",
+          "type": "string"
+        },
+        "protagonist_special_rule": {
+          "minLength": 1,
+          "title": "Protagonist Special Rule",
+          "type": "string"
+        },
+        "reader_anticipation": {
+          "minLength": 1,
+          "title": "Reader Anticipation",
+          "type": "string"
+        },
+        "repetition_risk": {
+          "minLength": 1,
+          "title": "Repetition Risk",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "unresolved_design_choices": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Unresolved Design Choices",
+          "type": "array"
+        }
+      },
+      "required": [
+        "innovation_id",
+        "title",
+        "plain_language_pitch",
+        "concrete_example",
+        "reader_anticipation",
+        "unresolved_design_choices",
+        "core_mechanism",
+        "protagonist_special_rule",
+        "choice_generation",
+        "progression_generation",
+        "payoff_generation",
+        "limitation",
+        "expansion_grammar",
+        "long_form_capacity",
+        "novelty_source",
+        "repetition_risk",
+        "fit_with_reader_promise"
+      ],
+      "title": "CoreInnovationCandidate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Up to three open-ended mechanisms sharing the frozen reader kernel.",
+  "properties": {
+    "information_status": {
+      "const": "PROPOSAL",
+      "default": "PROPOSAL",
+      "title": "Information Status",
+      "type": "string"
+    },
+    "innovation_candidates": {
+      "items": {
+        "$ref": "#/$defs/CoreInnovationCandidate"
+      },
+      "maxItems": 3,
+      "minItems": 2,
+      "title": "Innovation Candidates",
+      "type": "array"
+    },
+    "kernel_contracts": {
+      "additionalProperties": true,
+      "title": "Kernel Contracts",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "core-innovation-v2",
+      "default": "core-innovation-v2",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "innovation_candidates",
+    "kernel_contracts"
+  ],
+  "title": "CoreInnovationProposal",
+  "type": "object"
+}

@@ -1,0 +1,70 @@
+{
+  "book_id": "original-e56a54687506",
+  "compact_cards": [],
+  "created_at": "2026-08-16T16:53:10.648490+00:00",
+  "creative_problem": "",
+  "creative_problem_tags": [],
+  "edition_id": "base",
+  "effective_query": {
+    "creative_problem": "",
+    "creative_problem_tags": [],
+    "max_cards": 4,
+    "narrative_drives": [],
+    "payoff_channels": [],
+    "reader_experiences": [],
+    "scene_functions": [
+      "DISCOVERY",
+      "EXPLORATION",
+      "ACTION",
+      "EXPOSITION"
+    ]
+  },
+  "knowledge_gaps": [
+    "当前没有可用的 Reference Corpus machine package/path"
+  ],
+  "machine_bundle_hash": null,
+  "match_tier": "ZERO_RESULTS",
+  "max_cards": 4,
+  "metadata_match_fields": {},
+  "narrative_drives": [],
+  "operation_id": "draft-task_34d273bc851ea4fec36bb22f",
+  "original_query": {
+    "creative_problem": "",
+    "creative_problem_tags": [],
+    "max_cards": 4,
+    "narrative_drives": [],
+    "payoff_channels": [],
+    "reader_experiences": [],
+    "scene_functions": [
+      "DISCOVERY",
+      "EXPLORATION",
+      "ACTION",
+      "EXPOSITION"
+    ]
+  },
+  "package_hash": null,
+  "package_schema_version": null,
+  "payoff_channels": [],
+  "purpose": "PROSE",
+  "reader_experiences": [],
+  "relaxed_fields": [],
+  "scene_functions": [
+    "DISCOVERY",
+    "EXPLORATION",
+    "ACTION",
+    "EXPOSITION"
+  ],
+  "schema_version": "reference-context-snapshot-v1",
+  "selected_card_count": 0,
+  "selected_card_ids": [],
+  "selected_card_knowledge_levels": [],
+  "selected_card_types": [],
+  "snapshot_hash": "3b7c67c368b0929ac3f5b06e45d99f2923838569bc1a23a0f698cb7ded3900ea",
+  "snapshot_id": "reference-context_aeed3f39905ac64eaa7c29a6",
+  "status": "DISABLED",
+  "usage": "REFERENCE_ONLY",
+  "warnings": [
+    "soft-fail：Reference Corpus 未启用或未配置"
+  ],
+  "zero_result_reason": "REFERENCE_CORPUS_DISABLED"
+}

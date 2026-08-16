@@ -1,0 +1,80 @@
+{
+  "allowed_paths": [
+    "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_b14bee051f1fd7754807d718\\artifacts",
+    "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_b14bee051f1fd7754807d718"
+  ],
+  "atlas_output_directory": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_b14bee051f1fd7754807d718\\artifacts\\story_atlas",
+  "atlas_required_artifacts": [],
+  "author_directives_hash": "8eb636685ca92e785c8cde1f0b4b42d0ec478618fafc6be1f29a3dc1ff3d0edb",
+  "author_goal": "这是原创小说 Genesis 首章。只使用已经选择的 candidate_id=genesis-candidate-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-chapter-measuring-tape、contract_id=contract_d1955693b3c1166033b242e9 与 draft task_id=draft-task_7ff942998af9bb352a54375b；完成正文导入和十项校验，停在 VALIDATED。",
+  "author_task_ids": [],
+  "base_event_seq": 0,
+  "base_projection_hash": "0abb455305413d32981f6981a8fc510c98cdecdbe70c6861dda1b79c6e3f1448",
+  "batch_context_path": null,
+  "batch_id": null,
+  "batch_plan_hash": null,
+  "batch_plan_path": null,
+  "book_id": "original-e56a54687506",
+  "boundary_packet_id": null,
+  "boundary_packet_json_path": null,
+  "boundary_packet_markdown_path": null,
+  "boundary_packet_sha256": null,
+  "business_input_files": [
+    "metric_context.json",
+    "rhythm_context.json"
+  ],
+  "config_hash": "",
+  "context_chapter_id": null,
+  "created_at": "2026-08-16T16:22:44.374898+00:00",
+  "current_atlas_id": null,
+  "current_atlas_manifest_hash": null,
+  "current_atlas_version": null,
+  "current_horizon_hash": null,
+  "edition_id": "base",
+  "effective_content_sha256": null,
+  "executor_skill": "continue-novel",
+  "expected_outputs": [
+    "events.jsonl",
+    "result.json",
+    "status.json"
+  ],
+  "forbidden_actions": [
+    "不得修改book",
+    "不得批准正史",
+    "不得批准改写Campaign",
+    "不得启用Edition",
+    "不得删除历史草稿",
+    "不得绕过Validator",
+    "不得把 Story Atlas 的 INFERENCE/CANDIDATE/SPECULATIVE 内容写入 Canon",
+    "不得把 FAR Horizon 写成逐章固定大纲"
+  ],
+  "handoff_id": "handoff_b14bee051f1fd7754807d718",
+  "innovation_control": {
+    "focus": [
+      "auto"
+    ],
+    "level": "medium"
+  },
+  "innovation_source": "book_default",
+  "kernel_context_path": null,
+  "metric_bundle_hash": null,
+  "metric_run_id": null,
+  "planning_aggregate_hash": "e4c3866a6c3bd2bf9085cf03f327e1545627c87feea8bab2762b71c69c0efe67",
+  "planning_aggregate_id": "planning-aggregate_d2e986f7d0615b61cd5ad142",
+  "prepared_draft_task": {
+    "contract_id": "contract_d1955693b3c1166033b242e9",
+    "expected_output": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\draft-task_7ff942998af9bb352a54375b\\output\\output.json",
+    "input": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\draft-task_7ff942998af9bb352a54375b\\input\\input.md",
+    "revision": 1,
+    "schema": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\draft-task_7ff942998af9bb352a54375b\\input\\schema.json",
+    "task_id": "draft-task_7ff942998af9bb352a54375b"
+  },
+  "readiness_status": null,
+  "registry_hash": "",
+  "requested_stage": "DRAFT_AND_VALIDATE",
+  "rhythm_snapshot_id": "rhythm-snapshot_aaf105266066ce01400a3c7c",
+  "source_manifest_sha256": "",
+  "task_schema_version": "handoff-v1",
+  "task_type": "CONTINUATION",
+  "world_state_context_path": null
+}

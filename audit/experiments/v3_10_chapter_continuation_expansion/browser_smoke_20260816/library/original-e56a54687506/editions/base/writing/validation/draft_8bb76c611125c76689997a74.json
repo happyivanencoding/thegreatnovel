@@ -1,0 +1,300 @@
+{
+  "book_id": "original-e56a54687506",
+  "content_sha256": "113da8a685045e389580fbea6131a7e2c67fad6ab4e25fb3655e005292158e39",
+  "contract_id": "contract_d1955693b3c1166033b242e9",
+  "created_at": "2026-08-16T16:30:58.295681+00:00",
+  "draft_id": "draft_8bb76c611125c76689997a74",
+  "passed": true,
+  "projection_sha256": "0abb455305413d32981f6981a8fc510c98cdecdbe70c6861dda1b79c6e3f1448",
+  "reports": [
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Canon Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "latest_order_key": null
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Timeline Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Knowledge Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "CHARACTER_FIT_BELOW_MINIMUM",
+          "evidence": [],
+          "location": "character_fit_inputs",
+          "message": "人物契合度 70.00 低于参考线 75.00，建议人工复核。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {
+        "character_fit": 70.0
+      },
+      "passed": true,
+      "severity": "WARNING",
+      "validator": "Character Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Economy / Power Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:character_state:protagonist",
+          "message": "合同证据 commit:character_state:protagonist 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:thread_status:thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+          "message": "合同证据 commit:thread_status:thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:ending_state",
+          "message": "合同证据 ending_state 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:required_cost",
+          "message": "合同证据 required_cost 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:required_irreversible_change",
+          "message": "合同证据 required_irreversible_change 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "KERNEL_TRACE_WITHOUT_EFFECTIVE_CONTRACT",
+          "evidence": [],
+          "location": "realized_kernel_trace",
+          "message": "Legacy 合同没有 Verified Kernel Trace；草稿声明只作为未核验备注。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {
+        "evidence_matches": [
+          {
+            "key": "commit:character_state:protagonist",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "commit:thread_status:thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "ending_state",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "required_cost",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "required_irreversible_change",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "state_changes:measuring-tape-space-relation",
+            "quote": "沈砚抓住测距带，准备沿原路回去。带壳的一端仍压在他身后的墙根，带钩的一端却不再悬在断口对面。两端都贴着同一面灰墙，一左一右，之间隔着完整的二点九四米。刚才那两段互不相连的楼梯不见了，脚下只剩一块狭窄的楼面，墙面平整地立在前方。",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:water-half-bottle-recovered",
+            "quote": "半瓶水",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:post-rearrangement-door",
+            "quote": "第一道裂缝从蓝色标牌下方出现。对面的平台没有向后退，它朝他折了过来。墙上的瓷砖一块接一块错开，边缘擦出白色粉末；那块十七层的标牌被挤得翻转，蓝色的一面朝向他，像一只迟到的眼睛。",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:space-reading-route-evidence",
+            "quote": "门内的声音没有再催促，只留下短促的回声，沿着新出现的楼道向更深处传去。沈砚握紧测距带，把铝牌和水瓶重新压稳，站在那条旧地图无法解释的关系上。",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:protagonist-local-evidence-choice",
+            "quote": "沈砚没有去追。手电的光照不到那里，身体也没有余力让他跳过去。他只把测距带绷紧，顺着带身确认两面墙的关系：身后的墙角在左，带钩的墙面在右；中间的距离仍是二点九四。空间在变，关系没有散。",
+            "status": "EXACT"
+          }
+        ],
+        "kernel_trace_comparison": {
+          "compiled": {
+            "debts_advanced": [],
+            "debts_paid": [
+              "在第一次重排中获得一条可复核的空间关系并取回饮水。"
+            ],
+            "evidence": [
+              {
+                "claim": "capability:measuring-tape-space-relation",
+                "evidence_quotes": [
+                  "沈砚抓住测距带，准备沿原路回去。带壳的一端仍压在他身后的墙根，带钩的一端却不再悬在断口对面。两端都贴着同一面灰墙，一左一右，之间隔着完整的二点九四米。刚才那两段互不相连的楼梯不见了，脚下只剩一块狭窄的楼面，墙面平整地立在前方。"
+                ],
+                "state_change_record_ids": [
+                  "measuring-tape-space-relation"
+                ]
+              },
+              {
+                "claim": "resource:water-half-bottle-recovered",
+                "evidence_quotes": [
+                  "半瓶水"
+                ],
+                "state_change_record_ids": [
+                  "water-half-bottle-recovered"
+                ]
+              },
+              {
+                "claim": "fact:post-rearrangement-door",
+                "evidence_quotes": [
+                  "第一道裂缝从蓝色标牌下方出现。对面的平台没有向后退，它朝他折了过来。墙上的瓷砖一块接一块错开，边缘擦出白色粉末；那块十七层的标牌被挤得翻转，蓝色的一面朝向他，像一只迟到的眼睛。"
+                ],
+                "state_change_record_ids": [
+                  "post-rearrangement-door"
+                ]
+              },
+              {
+                "claim": "thread:space-reading-route-evidence",
+                "evidence_quotes": [
+                  "门内的声音没有再催促，只留下短促的回声，沿着新出现的楼道向更深处传去。沈砚握紧测距带，把铝牌和水瓶重新压稳，站在那条旧地图无法解释的关系上。"
+                ],
+                "state_change_record_ids": [
+                  "space-reading-route-evidence"
+                ]
+              },
+              {
+                "claim": "character_state:protagonist-local-evidence-choice",
+                "evidence_quotes": [
+                  "沈砚没有去追。手电的光照不到那里，身体也没有余力让他跳过去。他只把测距带绷紧，顺着带身确认两面墙的关系：身后的墙角在左，带钩的墙面在右；中间的距离仍是二点九四。空间在变，关系没有散。"
+                ],
+                "state_change_record_ids": [
+                  "protagonist-local-evidence-choice"
+                ]
+              }
+            ],
+            "expected_contract_id": "contract_d1955693b3c1166033b242e9",
+            "narrative_drives_advanced": [],
+            "payoff_channels_realized": [
+              "在第一次重排中获得一条可复核的空间关系并取回饮水。"
+            ],
+            "primary_intent": null,
+            "progression_impact": {
+              "ability_showcase": [],
+              "ability_unlock": [
+                "测距带跨局部重排保持空间关系"
+              ],
+              "axis_advanced": [],
+              "bottleneck_change": null,
+              "branch_change": null,
+              "future_progression_space": [],
+              "growth_cost": [],
+              "new_ceiling_visibility": [],
+              "progression_delta_type": [],
+              "resource_change": [
+                "半瓶水"
+              ],
+              "stage_change": null
+            },
+            "reader_promises_served": [
+              "在第一次重排中获得一条可复核的空间关系并取回饮水。"
+            ],
+            "resource_changes": [
+              "半瓶水"
+            ],
+            "world_expansion_changes": []
+          },
+          "expected": {},
+          "realized": {},
+          "status": "LEGACY_NO_EFFECTIVE_CONTRACT"
+        },
+        "requirements_checked": 5,
+        "reveal_requirements_checked": 22
+      },
+      "passed": true,
+      "severity": "WARNING",
+      "validator": "Contract Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Debt Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Payoff Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Repetition Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "realization": {
+          "character_count": 2387,
+          "code": "SCENE_REALIZATION_CLEAR",
+          "severity": "INFO",
+          "status": "CLEAR",
+          "target_word_range": [
+            1800,
+            3200
+          ]
+        },
+        "style_fit": 81.45
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Style Validator"
+    }
+  ],
+  "run_id": "validation_1a4f85f76555e81837b22841",
+  "through_event_seq": 0
+}

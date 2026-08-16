@@ -1,0 +1,343 @@
+{
+  "$defs": {
+    "AgendaBucket": {
+      "enum": [
+        "MUST_REVEAL",
+        "SHOULD_HINT",
+        "KEEP_HIDDEN",
+        "OPTIONAL"
+      ],
+      "title": "AgendaBucket",
+      "type": "string"
+    },
+    "DraftCreativeStateChange": {
+      "additionalProperties": false,
+      "description": "The small state-change declaration an executor may submit.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "fact",
+            "timeline",
+            "character_state",
+            "knowledge",
+            "relationship",
+            "resource",
+            "capability",
+            "thread",
+            "promise",
+            "payoff",
+            "repetition",
+            "style"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        },
+        "record_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Record Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "record_id"
+      ],
+      "title": "DraftCreativeStateChange",
+      "type": "object"
+    },
+    "KnowledgeClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "enum": [
+            "already_known",
+            "learned_in_draft"
+          ],
+          "title": "Basis",
+          "type": "string"
+        },
+        "character_id": {
+          "title": "Character Id",
+          "type": "string"
+        },
+        "fact_id": {
+          "title": "Fact Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "character_id",
+        "fact_id",
+        "basis"
+      ],
+      "title": "KnowledgeClaim",
+      "type": "object"
+    },
+    "KnowledgeState": {
+      "enum": [
+        "UNKNOWN",
+        "HINTED",
+        "SUSPECTED",
+        "PARTIALLY_REVEALED",
+        "KNOWN",
+        "MISLEADING_BELIEF",
+        "CONFIRMED"
+      ],
+      "title": "KnowledgeState",
+      "type": "string"
+    },
+    "KnowledgeTransition": {
+      "additionalProperties": false,
+      "properties": {
+        "after": {
+          "$ref": "#/$defs/KnowledgeState"
+        },
+        "before": {
+          "$ref": "#/$defs/KnowledgeState"
+        },
+        "target": {
+          "$ref": "#/$defs/RevealTarget"
+        },
+        "target_entity_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Entity Id"
+        },
+        "truth_id": {
+          "title": "Truth Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "truth_id",
+        "target",
+        "before",
+        "after"
+      ],
+      "title": "KnowledgeTransition",
+      "type": "object"
+    },
+    "PlannedReveal": {
+      "additionalProperties": false,
+      "properties": {
+        "agenda_bucket": {
+          "$ref": "#/$defs/AgendaBucket"
+        },
+        "depth": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RevealDepth"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "truth_id": {
+          "title": "Truth Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "truth_id",
+        "agenda_bucket"
+      ],
+      "title": "PlannedReveal",
+      "type": "object"
+    },
+    "RevealDepth": {
+      "enum": [
+        "HINT",
+        "STRONG_HINT",
+        "PARTIAL_REVEAL",
+        "FALSE_LEAD",
+        "CONFIRMATION",
+        "FULL_REVEAL"
+      ],
+      "title": "RevealDepth",
+      "type": "string"
+    },
+    "RevealEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "depth": {
+          "$ref": "#/$defs/RevealDepth"
+        },
+        "evidence_quote": {
+          "minLength": 1,
+          "title": "Evidence Quote",
+          "type": "string"
+        },
+        "expected_knowledge_change": {
+          "$ref": "#/$defs/KnowledgeState"
+        },
+        "reveal_plan_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reveal Plan Id"
+        },
+        "target": {
+          "$ref": "#/$defs/RevealTarget"
+        },
+        "target_entity_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Entity Id"
+        },
+        "truth_id": {
+          "title": "Truth Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "truth_id",
+        "target",
+        "depth",
+        "evidence_quote",
+        "expected_knowledge_change"
+      ],
+      "title": "RevealEvent",
+      "type": "object"
+    },
+    "RevealTarget": {
+      "enum": [
+        "READER",
+        "CHARACTER",
+        "FACTION",
+        "PUBLIC_WORLD"
+      ],
+      "title": "RevealTarget",
+      "type": "string"
+    },
+    "RevealTrace": {
+      "additionalProperties": false,
+      "properties": {
+        "knowledge_transitions": {
+          "items": {
+            "$ref": "#/$defs/KnowledgeTransition"
+          },
+          "title": "Knowledge Transitions",
+          "type": "array"
+        },
+        "planned": {
+          "items": {
+            "$ref": "#/$defs/PlannedReveal"
+          },
+          "title": "Planned",
+          "type": "array"
+        },
+        "realized": {
+          "items": {
+            "$ref": "#/$defs/RevealEvent"
+          },
+          "title": "Realized",
+          "type": "array"
+        }
+      },
+      "title": "RevealTrace",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "LLM-facing prose output; system audits are intentionally absent.",
+  "properties": {
+    "chapter_title": {
+      "title": "Chapter Title",
+      "type": "string"
+    },
+    "contract_id": {
+      "title": "Contract Id",
+      "type": "string"
+    },
+    "knowledge_claims": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeClaim"
+      },
+      "title": "Knowledge Claims",
+      "type": "array"
+    },
+    "new_major_hooks": {
+      "default": 0,
+      "minimum": 0,
+      "title": "New Major Hooks",
+      "type": "integer"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "promises_advanced": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Promises Advanced",
+      "type": "array"
+    },
+    "promises_paid": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Promises Paid",
+      "type": "array"
+    },
+    "prose_markdown": {
+      "minLength": 1,
+      "title": "Prose Markdown",
+      "type": "string"
+    },
+    "reveal_trace": {
+      "$ref": "#/$defs/RevealTrace"
+    },
+    "state_changes": {
+      "items": {
+        "$ref": "#/$defs/DraftCreativeStateChange"
+      },
+      "minItems": 1,
+      "title": "State Changes",
+      "type": "array"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "contract_id",
+    "chapter_title",
+    "prose_markdown",
+    "state_changes"
+  ],
+  "title": "DraftCreativeOutput",
+  "type": "object"
+}

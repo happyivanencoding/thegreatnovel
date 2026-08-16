@@ -1,0 +1,6 @@
+{
+  "handoff_id": "handoff_e3812487bdb31ad27f2d4b61",
+  "reason": "BUSINESS_ARTIFACT_INVALID: artifacts/foundation_development/proposal.json 不符合 FoundationDevelopmentProposal：1 validation error for FoundationDevelopmentProposal\nfirst_chapter_candidates\n  Field required [type=missing, input_value={'schema_version': 'found...'status': 'UNKNOWN'}]}}}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing",
+  "status": "FAILED",
+  "updated_at": "2026-08-16T15:54:10.499575+00:00"
+}

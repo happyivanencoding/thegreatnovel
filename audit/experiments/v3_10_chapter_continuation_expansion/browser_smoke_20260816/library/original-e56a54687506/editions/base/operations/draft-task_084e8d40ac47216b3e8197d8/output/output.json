@@ -1,0 +1,58 @@
+{
+  "task_id": "draft-task_084e8d40ac47216b3e8197d8",
+  "contract_id": "contract_32a5d989ace0cf017740ad10",
+  "chapter_title": "塔顶没有答案",
+  "prose_markdown": "第三次重排留下的窗口只开了很短一段时间。\n\n沈砚把三块铝牌扣在掌心，带壳端压住检修窗，带钩端沿着已经测过的关系向上甩出。钩子卡住风道上缘，带身绷直。空段的黑暗在脚下收拢，窗台和风道之间只剩一条能被刻度解释的线。\n\n他先把身体探出去，再把另一只脚放到风道边缘。那里没有完整地面，只有一片被风磨白的水泥和向外倾斜的灰雾。沈砚没有继续追白色脚印。脚印在更高处停着，来源仍然未知；今天他要确认的是楼外视野，而不是把每个未知都变成答案。\n\n风从下方卷上来。广播在墙内说：“屋顶安全。”声音清晰，却没有跟上他的脚步。沈砚沿测距带移动半步，看到风道上缘之外出现一线真实天光。天光下面是灰雾，灰雾中有相邻建筑的轮廓：一栋楼的破碎窗列横着移动，另一栋楼的外墙像折断的纸片，远处还有更高的黑色边缘。\n\n楼外天光和相邻建筑确实存在。沈砚把铝牌贴在水泥上，记下风向、视线高度和测距带刻度。塔顶边缘没有安全平台，广播所说的屋顶只是一句没有落脚证据的声音。测距带把检修窗与风道上缘固定为可返回关系，真正的视野却比任何播报都更大。\n\n重排开始回收窗口。风道上缘向下错了一寸，空段的黑暗从边缘翻起。沈砚立刻向后退，带钩端震动了一下仍没有脱开。最后一刻，他把钩子收回，风道和灰雾一起退到墙后。\n\n他回到走廊，掌心被带身勒出一道红痕。广播再次报出西侧楼梯，像什么都没有发生。沈砚没有反驳，只把三块铝牌按顺序放好：竖口、空段、风道。它们已经把他带到能看见楼外的位置，也把更大的问题推到下一次选择面前。\n\n塔顶没有答案，但有天光，有相邻建筑，有一条还可以被测量的回程。沈砚看着检修窗重新变成黑线，知道下一次重排，他不必再相信声音告诉他哪里是屋顶。",
+  "state_changes": [
+    {
+      "kind": "capability",
+      "record_id": "measuring-tape-roof-edge-ch10",
+      "payload": {
+        "character_id": "protagonist",
+        "description": "测距带在局部重排窗口中固定检修窗与风道上缘的可返回关系，让沈砚完成一次楼外高处观察。",
+        "evidence": "测距带把检修窗与风道上缘固定为可返回关系。",
+        "name": "测距带固定高处回程",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "kind": "fact",
+      "record_id": "outside-skyline-observed-ch10",
+      "payload": {
+        "description": "沈砚从风道上缘看见真实楼外天光和灰雾中的相邻建筑轮廓，确认外部视野存在但没有安全平台。",
+        "knowledge_status": "KNOWN",
+        "location_relation": "upper_wind_channel_external_edge",
+        "object": "楼外天光与相邻建筑轮廓",
+        "predicate": "outside_skyline_observed",
+        "status": "observed"
+      }
+    },
+    {
+      "kind": "thread",
+      "record_id": "space-reading-route-evidence",
+      "payload": {
+        "evidence": "沈砚看见楼外天光后沿测距带退回走廊，保住可测量的回程。",
+        "goal": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "phase": "escalation",
+        "stakes": "高处边缘没有完整地面，窗口关闭时唯一回程会先于视野消失。",
+        "status": "ADVANCED",
+        "thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+      }
+    },
+    {
+      "kind": "character_state",
+      "record_id": "protagonist-local-evidence-choice-10",
+      "payload": {
+        "change": "沈砚把阶段目标定为确认楼外视野，不追逐脚印、不寻找广播来源、不把边缘当成出口。",
+        "character_id": "protagonist",
+        "cost": "再次消耗当天唯一进化机会，并在没有完整地面的塔顶边缘暴露于风和灰雾。"
+      }
+    }
+  ],
+  "promises_advanced": ["anticipation-thread-1", "anticipation-world-earned-spatial-frontier"],
+  "promises_paid": ["anticipation-world-earned-spatial-frontier"],
+  "new_major_hooks": 1,
+  "notes": ["本章完成阶段性空间兑现；广播身份、脚印作者、建筑成因和高处之后的世界保持未知，留给十章之后。"]
+}

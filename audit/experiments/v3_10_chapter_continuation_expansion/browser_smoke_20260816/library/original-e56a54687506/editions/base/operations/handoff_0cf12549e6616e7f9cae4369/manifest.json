@@ -1,0 +1,21 @@
+{
+  "book_id": "original-e56a54687506",
+  "created_at": "2026-08-16T15:36:44.900702+00:00",
+  "edition_id": "base",
+  "input": {
+    "context_manifest.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_0cf12549e6616e7f9cae4369\\input\\context_manifest.json",
+    "metric_context.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_0cf12549e6616e7f9cae4369\\input\\metric_context.json",
+    "original_request.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_0cf12549e6616e7f9cae4369\\input\\original_request.json",
+    "output_schema.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_0cf12549e6616e7f9cae4369\\input\\output_schema.json",
+    "prompt.md": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_0cf12549e6616e7f9cae4369\\input\\prompt.md",
+    "proposal_schema.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_0cf12549e6616e7f9cae4369\\input\\proposal_schema.json",
+    "task.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_0cf12549e6616e7f9cae4369\\input\\task.json"
+  },
+  "legacy_imported": false,
+  "operation_id": "handoff_0cf12549e6616e7f9cae4369",
+  "operation_kind": "WORKFLOW_HANDOFF",
+  "output": {
+    "result": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_0cf12549e6616e7f9cae4369\\output\\result.json"
+  },
+  "reference_context_snapshot": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_0cf12549e6616e7f9cae4369\\reference_context_snapshot.json"
+}

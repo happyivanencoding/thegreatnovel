@@ -1,0 +1,2 @@
+{"created_at": "2026-08-16T16:48:20.468067+00:00", "event_id": "handoff-event_f35e5dce580133cf44d5e962", "event_type": "READY_FOR_CODEX", "handoff_id": "handoff_c25a239f6da2eda278554290", "payload": {"requested_stage": "PLAN_ONLY"}, "sequence": 1}
+{"created_at": "2026-08-16T17:29:05.840320+00:00", "event_id": "handoff-event_a947cdbe49ae4d998e928df1", "event_type": "STALE", "handoff_id": "handoff_c25a239f6da2eda278554290", "payload": {"reason": "unused diagnostic/revision path after isolated experiment closure"}, "sequence": 2}

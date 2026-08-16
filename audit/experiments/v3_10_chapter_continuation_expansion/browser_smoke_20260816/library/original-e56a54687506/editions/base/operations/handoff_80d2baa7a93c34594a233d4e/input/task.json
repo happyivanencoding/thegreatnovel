@@ -1,0 +1,751 @@
+{
+  "allowed_paths": [
+    "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_80d2baa7a93c34594a233d4e\\artifacts",
+    "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_80d2baa7a93c34594a233d4e"
+  ],
+  "atlas_output_directory": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_80d2baa7a93c34594a233d4e\\artifacts\\story_atlas",
+  "atlas_required_artifacts": [],
+  "author_directives_hash": "",
+  "author_goal": null,
+  "author_task_ids": [],
+  "base_event_seq": 0,
+  "base_projection_hash": "0abb455305413d32981f6981a8fc510c98cdecdbe70c6861dda1b79c6e3f1448",
+  "batch_context_path": null,
+  "batch_id": null,
+  "batch_plan_hash": null,
+  "batch_plan_path": null,
+  "book_id": "original-e56a54687506",
+  "boundary_packet_id": null,
+  "boundary_packet_json_path": null,
+  "boundary_packet_markdown_path": null,
+  "boundary_packet_sha256": null,
+  "business_input_files": [
+    "original_request.json"
+  ],
+  "config_hash": "",
+  "context_chapter_id": null,
+  "created_at": "2026-08-16T15:23:07.061910+00:00",
+  "current_atlas_id": null,
+  "current_atlas_manifest_hash": null,
+  "current_atlas_version": null,
+  "current_horizon_hash": null,
+  "edition_id": "base",
+  "effective_content_sha256": null,
+  "executor_skill": "interpret-original-reader-kernel",
+  "expected_outputs": [
+    "events.jsonl",
+    "result.json",
+    "status.json"
+  ],
+  "forbidden_actions": [
+    "不得修改book",
+    "不得批准正史",
+    "不得批准改写Campaign",
+    "不得启用Edition",
+    "不得删除历史草稿",
+    "不得绕过Validator",
+    "不得把 Story Atlas 的 INFERENCE/CANDIDATE/SPECULATIVE 内容写入 Canon",
+    "不得把 FAR Horizon 写成逐章固定大纲"
+  ],
+  "handoff_id": "handoff_80d2baa7a93c34594a233d4e",
+  "innovation_control": null,
+  "innovation_source": null,
+  "kernel_context_path": null,
+  "metric_bundle_hash": null,
+  "metric_run_id": null,
+  "original_intent_hash": "bd7c3da1f955be9122b4c3a499d0743102a846b29a7c4c4355ef348b0f48f4f6",
+  "original_reader_interpretation": {
+    "author_confirmation_required": true,
+    "canon_boundary": "NO_CHAPTER_NO_CANON",
+    "contract_ids": {
+      "market_category_metadata_id": "original-e56a54687506-market-category",
+      "narrative_drive_contract_id": "original-e56a54687506-narrative-drive",
+      "reader_experience_contract_id": "original-e56a54687506-reader-experience"
+    },
+    "information_status": "PROPOSAL",
+    "proposal_artifact": "artifacts/reader_kernel/proposal.json",
+    "proposal_schema": {
+      "$defs": {
+        "ContractStatus": {
+          "enum": [
+            "INFERRED_PROPOSAL",
+            "SOFT_REFERENCE",
+            "NEEDS_REVIEW",
+            "EFFECTIVE",
+            "REJECTED",
+            "SUPERSEDED"
+          ],
+          "title": "ContractStatus",
+          "type": "string"
+        },
+        "DrivePayoffChannel": {
+          "additionalProperties": false,
+          "description": "A mapping onto the existing payoff infrastructure.",
+          "properties": {
+            "associated_drive": {
+              "$ref": "#/$defs/NarrativeDrive"
+            },
+            "channel": {
+              "$ref": "#/$defs/PayoffChannel"
+            }
+          },
+          "required": [
+            "channel",
+            "associated_drive"
+          ],
+          "title": "DrivePayoffChannel",
+          "type": "object"
+        },
+        "DriveState": {
+          "additionalProperties": false,
+          "properties": {
+            "drive": {
+              "$ref": "#/$defs/NarrativeDrive"
+            },
+            "evidence": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Evidence",
+              "type": "array"
+            },
+            "state": {
+              "default": "UNKNOWN",
+              "title": "State",
+              "type": "string"
+            }
+          },
+          "required": [
+            "drive"
+          ],
+          "title": "DriveState",
+          "type": "object"
+        },
+        "ExperiencePriority": {
+          "enum": [
+            "VERY_HIGH",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "OFF"
+          ],
+          "title": "ExperiencePriority",
+          "type": "string"
+        },
+        "ExplanationStyle": {
+          "enum": [
+            "MYSTICAL",
+            "MIXED_MYSTICAL",
+            "BALANCED",
+            "MIXED_HARD",
+            "HARD_EXPLANATION"
+          ],
+          "title": "ExplanationStyle",
+          "type": "string"
+        },
+        "MarketCategory": {
+          "enum": [
+            "XUANHUAN",
+            "XIANXIA",
+            "URBAN",
+            "SCIENCE_FICTION",
+            "FANTASY",
+            "HISTORY",
+            "WUXIA",
+            "GAME",
+            "HIGH_MARTIAL",
+            "SUPERNATURAL",
+            "CUSTOM"
+          ],
+          "title": "MarketCategory",
+          "type": "string"
+        },
+        "MarketCategoryMetadata": {
+          "additionalProperties": false,
+          "properties": {
+            "display_labels": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Display Labels",
+              "type": "array"
+            },
+            "metadata_id": {
+              "pattern": "^[A-Za-z0-9._-]+$",
+              "title": "Metadata Id",
+              "type": "string"
+            },
+            "primary_market_category": {
+              "$ref": "#/$defs/MarketCategory"
+            },
+            "secondary_market_categories": {
+              "items": {
+                "$ref": "#/$defs/MarketCategory"
+              },
+              "maxItems": 4,
+              "title": "Secondary Market Categories",
+              "type": "array"
+            },
+            "source": {
+              "default": "AUTHOR_PREMISE_INTERPRETATION",
+              "title": "Source",
+              "type": "string"
+            },
+            "status": {
+              "$ref": "#/$defs/ContractStatus",
+              "default": "NEEDS_REVIEW"
+            }
+          },
+          "required": [
+            "metadata_id",
+            "primary_market_category"
+          ],
+          "title": "MarketCategoryMetadata",
+          "type": "object"
+        },
+        "NarrativeDrive": {
+          "enum": [
+            "POWER_PROGRESSION",
+            "KNOWLEDGE_PROGRESSION",
+            "ABILITY_PROGRESSION",
+            "BODY_EVOLUTION",
+            "SEQUENCE_PROGRESSION",
+            "STATUS_PROGRESSION",
+            "MYSTERY_INVESTIGATION",
+            "MYSTERY_REVELATION",
+            "CAREER_MASTERY",
+            "CRAFT_PROFESSION",
+            "STATUS_WEALTH",
+            "STATUS_RISE",
+            "TERRITORY_FACTION",
+            "POLITICAL_STRATEGY",
+            "STATE_BUILDING",
+            "COMPETITIVE_SKILL",
+            "COMPETITIVE_RANK",
+            "SURVIVAL_RESOURCE",
+            "BASE_BUILDING",
+            "TEAM_GROWTH",
+            "RELATIONSHIP_EMOTIONAL",
+            "WORLD_EXPLORATION",
+            "RESOURCE_OPPORTUNITY",
+            "IDENTITY_PRESSURE",
+            "COMEDY_EXPECTATION",
+            "CUSTOM"
+          ],
+          "title": "NarrativeDrive",
+          "type": "string"
+        },
+        "NarrativeDriveContract": {
+          "additionalProperties": false,
+          "properties": {
+            "author_overrides": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Author Overrides",
+              "type": "array"
+            },
+            "drive_contract_id": {
+              "pattern": "^[A-Za-z0-9._-]+$",
+              "title": "Drive Contract Id",
+              "type": "string"
+            },
+            "drive_debt_types": {
+              "additionalProperties": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "propertyNames": {
+                "$ref": "#/$defs/NarrativeDrive"
+              },
+              "title": "Drive Debt Types",
+              "type": "object"
+            },
+            "drive_fatigue_risks": {
+              "additionalProperties": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "propertyNames": {
+                "$ref": "#/$defs/NarrativeDrive"
+              },
+              "title": "Drive Fatigue Risks",
+              "type": "object"
+            },
+            "drive_payoff_channels": {
+              "items": {
+                "$ref": "#/$defs/DrivePayoffChannel"
+              },
+              "title": "Drive Payoff Channels",
+              "type": "array"
+            },
+            "drive_priorities": {
+              "additionalProperties": {
+                "type": "integer"
+              },
+              "propertyNames": {
+                "$ref": "#/$defs/NarrativeDrive"
+              },
+              "title": "Drive Priorities",
+              "type": "object"
+            },
+            "drive_promises": {
+              "additionalProperties": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "propertyNames": {
+                "$ref": "#/$defs/NarrativeDrive"
+              },
+              "title": "Drive Promises",
+              "type": "object"
+            },
+            "drive_states": {
+              "items": {
+                "$ref": "#/$defs/DriveState"
+              },
+              "title": "Drive States",
+              "type": "array"
+            },
+            "primary_drive": {
+              "$ref": "#/$defs/NarrativeDrive"
+            },
+            "progression_engine_enabled": {
+              "default": false,
+              "title": "Progression Engine Enabled",
+              "type": "boolean"
+            },
+            "secondary_drives": {
+              "items": {
+                "$ref": "#/$defs/NarrativeDrive"
+              },
+              "maxItems": 4,
+              "minItems": 0,
+              "title": "Secondary Drives",
+              "type": "array"
+            },
+            "status": {
+              "$ref": "#/$defs/ContractStatus",
+              "default": "NEEDS_REVIEW"
+            }
+          },
+          "required": [
+            "drive_contract_id",
+            "primary_drive",
+            "drive_priorities",
+            "drive_promises"
+          ],
+          "title": "NarrativeDriveContract",
+          "type": "object"
+        },
+        "OriginalCreativeSemantics": {
+          "additionalProperties": false,
+          "description": "Open author-intent semantics from the ORIGINAL first read.",
+          "properties": {
+            "anti_drift": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Anti Drift",
+              "type": "array"
+            },
+            "complexity_boundaries": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Complexity Boundaries",
+              "type": "array"
+            },
+            "existing_signature_mechanism": {
+              "default": "",
+              "title": "Existing Signature Mechanism",
+              "type": "string"
+            },
+            "novelty_focus": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Novelty Focus",
+              "type": "array"
+            },
+            "open_design_space": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Open Design Space",
+              "type": "array"
+            },
+            "payoff_texture": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Payoff Texture",
+              "type": "array"
+            },
+            "realism_anchors": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Realism Anchors",
+              "type": "array"
+            },
+            "repeatable_reader_loop": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Repeatable Reader Loop",
+              "type": "array"
+            },
+            "signature_fantasy": {
+              "minLength": 1,
+              "title": "Signature Fantasy",
+              "type": "string"
+            }
+          },
+          "required": [
+            "signature_fantasy",
+            "open_design_space",
+            "payoff_texture",
+            "novelty_focus",
+            "realism_anchors",
+            "complexity_boundaries",
+            "repeatable_reader_loop",
+            "anti_drift"
+          ],
+          "title": "OriginalCreativeSemantics",
+          "type": "object"
+        },
+        "PayoffChannel": {
+          "enum": [
+            "POWER_BREAKTHROUGH",
+            "NEW_ABILITY",
+            "NEW_TECHNIQUE",
+            "NEW_ARTIFACT",
+            "RESOURCE_GAIN",
+            "COMBAT_DOMINANCE",
+            "UNDERDOG_VICTORY",
+            "STATUS_RISE",
+            "RANKING_RISE",
+            "RECOGNITION",
+            "REVENGE",
+            "MYSTERY_REVEAL",
+            "WORLD_EXPANSION",
+            "FACTION_ADVANCE",
+            "TEAM_GROWTH",
+            "RELATIONSHIP_ADVANCE",
+            "WEALTH_GAIN",
+            "SURVIVAL_ESCAPE",
+            "KNOWLEDGE_GAIN",
+            "MASTERY",
+            "DISCOVERY",
+            "TRANSFORMATION",
+            "STRATEGIC_ADVANTAGE",
+            "CUSTOM"
+          ],
+          "title": "PayoffChannel",
+          "type": "string"
+        },
+        "PrimaryFamily": {
+          "enum": [
+            "PROGRESSION_FANTASY",
+            "MYSTERY_PROGRESSION",
+            "SURVIVAL_PROGRESSION",
+            "TEAM_PROGRESSION",
+            "COSMIC_PROGRESSION",
+            "EVOLUTION_PROGRESSION",
+            "CIVILIZATION_PROGRESSION",
+            "CUSTOM"
+          ],
+          "title": "PrimaryFamily",
+          "type": "string"
+        },
+        "ReaderExperience": {
+          "enum": [
+            "PROGRESSION",
+            "BREAKTHROUGH",
+            "POWER_VERIFICATION",
+            "COMBAT",
+            "EXPLORATION",
+            "RESOURCE_OPPORTUNITY",
+            "ARTIFACT_OR_ABILITY",
+            "WORLD_EXPANSION",
+            "FACTION_CONFLICT",
+            "MYSTERY",
+            "REVEAL",
+            "TEAM_GROWTH",
+            "RELATIONSHIP",
+            "ROMANCE",
+            "STATUS_RISE",
+            "REVENGE",
+            "SURVIVAL",
+            "KNOWLEDGE",
+            "WEALTH",
+            "SOCIAL_THEME"
+          ],
+          "title": "ReaderExperience",
+          "type": "string"
+        },
+        "ReaderExperienceContract": {
+          "additionalProperties": false,
+          "description": "The reader-facing promise confirmed before story-foundation generation.",
+          "properties": {
+            "author_notes": {
+              "default": "",
+              "title": "Author Notes",
+              "type": "string"
+            },
+            "contract_id": {
+              "pattern": "^[A-Za-z0-9._-]+$",
+              "title": "Contract Id",
+              "type": "string"
+            },
+            "drive_priority_order": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 5,
+              "title": "Drive Priority Order",
+              "type": "array"
+            },
+            "expected_drive_interactions": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Expected Drive Interactions",
+              "type": "array"
+            },
+            "experience_priorities": {
+              "additionalProperties": {
+                "$ref": "#/$defs/ExperiencePriority"
+              },
+              "propertyNames": {
+                "$ref": "#/$defs/ReaderExperience"
+              },
+              "title": "Experience Priorities",
+              "type": "object"
+            },
+            "explanation_style": {
+              "$ref": "#/$defs/ExplanationStyle",
+              "default": "BALANCED"
+            },
+            "growth_centrality": {
+              "$ref": "#/$defs/ExperiencePriority"
+            },
+            "must_deliver": {
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "title": "Must Deliver",
+              "type": "array"
+            },
+            "must_not_drift_into": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Must Not Drift Into",
+              "type": "array"
+            },
+            "mystery_centrality": {
+              "$ref": "#/$defs/ExperiencePriority"
+            },
+            "mysticism_level": {
+              "$ref": "#/$defs/ExperiencePriority",
+              "default": "MEDIUM"
+            },
+            "primary_family": {
+              "$ref": "#/$defs/PrimaryFamily"
+            },
+            "primary_narrative_drive": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Primary Narrative Drive"
+            },
+            "relationship_centrality": {
+              "$ref": "#/$defs/ExperiencePriority"
+            },
+            "secondary_families": {
+              "items": {
+                "$ref": "#/$defs/PrimaryFamily"
+              },
+              "maxItems": 3,
+              "title": "Secondary Families",
+              "type": "array"
+            },
+            "secondary_narrative_drives": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 4,
+              "title": "Secondary Narrative Drives",
+              "type": "array"
+            },
+            "serial_form": {
+              "$ref": "#/$defs/SerialForm",
+              "default": "LONG_SERIAL"
+            },
+            "setting_skin": {
+              "$ref": "#/$defs/SettingSkin"
+            },
+            "status": {
+              "$ref": "#/$defs/ContractStatus",
+              "default": "NEEDS_REVIEW"
+            },
+            "team_centrality": {
+              "$ref": "#/$defs/ExperiencePriority"
+            },
+            "theme_centrality": {
+              "$ref": "#/$defs/ExperiencePriority"
+            },
+            "tone": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Tone",
+              "type": "array"
+            },
+            "world_expansion_centrality": {
+              "$ref": "#/$defs/ExperiencePriority"
+            }
+          },
+          "required": [
+            "contract_id",
+            "primary_family",
+            "setting_skin",
+            "experience_priorities",
+            "growth_centrality",
+            "world_expansion_centrality",
+            "mystery_centrality",
+            "team_centrality",
+            "relationship_centrality",
+            "theme_centrality",
+            "must_deliver"
+          ],
+          "title": "ReaderExperienceContract",
+          "type": "object"
+        },
+        "SerialForm": {
+          "enum": [
+            "LONG_SERIAL",
+            "SEASONAL_SERIAL",
+            "OPEN_ENDED_SERIAL",
+            "CUSTOM"
+          ],
+          "title": "SerialForm",
+          "type": "string"
+        },
+        "SettingSkin": {
+          "enum": [
+            "ANCIENT_FANTASY",
+            "OTHERWORLD",
+            "MODERN_CITY",
+            "NEAR_FUTURE",
+            "APOCALYPSE",
+            "COSMIC",
+            "STEAMPUNK",
+            "CUSTOM"
+          ],
+          "title": "SettingSkin",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Semantic first read for author review; never an Effective contract.",
+      "properties": {
+        "author_attention_points": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Author Attention Points",
+          "type": "array"
+        },
+        "creative_semantics": {
+          "$ref": "#/$defs/OriginalCreativeSemantics"
+        },
+        "information_status": {
+          "const": "PROPOSAL",
+          "default": "PROPOSAL",
+          "title": "Information Status",
+          "type": "string"
+        },
+        "market_category": {
+          "$ref": "#/$defs/MarketCategoryMetadata"
+        },
+        "narrative_drive": {
+          "$ref": "#/$defs/NarrativeDriveContract"
+        },
+        "reader_experience": {
+          "$ref": "#/$defs/ReaderExperienceContract"
+        },
+        "schema_version": {
+          "const": "original-reader-kernel-v2",
+          "default": "original-reader-kernel-v2",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "semantic_evidence": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Semantic Evidence",
+          "type": "array"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "uncertainties": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Uncertainties",
+          "type": "array"
+        }
+      },
+      "required": [
+        "summary",
+        "reader_experience",
+        "market_category",
+        "narrative_drive",
+        "creative_semantics",
+        "semantic_evidence"
+      ],
+      "title": "OriginalReaderKernelProposal",
+      "type": "object"
+    },
+    "request_path": "original_request.json"
+  },
+  "planning_aggregate_hash": null,
+  "planning_aggregate_id": null,
+  "planning_aggregate_required": false,
+  "readiness_status": null,
+  "registry_hash": "",
+  "requested_stage": "READER_KERNEL_PROPOSAL",
+  "rhythm_snapshot_id": null,
+  "source_manifest_sha256": "",
+  "task_schema_version": "handoff-v1",
+  "task_type": "ORIGINAL_READER_INTERPRETATION",
+  "world_state_context_path": null
+}

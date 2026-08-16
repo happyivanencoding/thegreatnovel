@@ -1,0 +1,13 @@
+{
+  "application_summary": "当前没有可用 Reference Corpus card；候选生成沿用当前书的冻结 Boundary/Kernel。",
+  "failure_modes": [],
+  "match_tier": "ZERO_RESULTS",
+  "reuse_reason": "ZERO_RESULTS_OR_REFERENCE_UNAVAILABLE",
+  "selected_card_ids": [],
+  "selected_cards": [],
+  "selected_contrast_solutions": [],
+  "snapshot_hash": "33551e43671c9db368e720a68ac955ebf1f56ff8ec39b79ccd0f89f922b6c1f5",
+  "snapshot_id": "reference-context_84fe6e8423db2d7b21873c08",
+  "strategy_id": "planning-reference-strategy_44bc2224364a773e273df07c",
+  "usage": "REFERENCE_ONLY"
+}

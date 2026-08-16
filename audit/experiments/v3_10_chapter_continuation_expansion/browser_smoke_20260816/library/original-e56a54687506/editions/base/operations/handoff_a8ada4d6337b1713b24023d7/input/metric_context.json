@@ -1,0 +1,16 @@
+{
+  "as_of_chapter": 8,
+  "as_of_event_seq": 57,
+  "book_id": "original-e56a54687506",
+  "components": {},
+  "config_hash": "685a5acc8a728524c2a6e407ffccc2b3b76e433e3f3c10c319fbf61b2e1b4ce3",
+  "edition_id": "base",
+  "effective_content_sha256": "dd71c3ecc1b41f166cd0cace182a5f0e9a84170cd9140cc854aadca5c1057af2",
+  "evidence": {},
+  "input_bundle_hash": "188847290c3ca365db25e12e5e38205d559b9ee81f651846abba0c9e3769ea85",
+  "projection_hash": "672e446823e83a33f6b0a0956ac4528cfed15193d7e4e78ebadbe1d0db5f59f9",
+  "registry_hash": "cc3c44febd2467e5c34991daf6c2217130673be36ad4043882188e0e6262a1c7",
+  "requested_metric_ids": null,
+  "scope_id": "canon-chapter_8671fae6fd24fb586a1654c3",
+  "scope_type": "CHAPTER"
+}

@@ -1,0 +1,22 @@
+{
+  "book_id": "original-e56a54687506",
+  "created_at": "2026-08-16T16:58:26.552446+00:00",
+  "edition_id": "base",
+  "input": {
+    "boundary_packet.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\input\\boundary_packet.json",
+    "context_manifest.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\input\\context_manifest.json",
+    "kernel_context.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\input\\kernel_context.json",
+    "metric_context.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\input\\metric_context.json",
+    "output_schema.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\input\\output_schema.json",
+    "prompt.md": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\input\\prompt.md",
+    "rhythm_context.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\input\\rhythm_context.json",
+    "task.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\input\\task.json",
+    "world_state_context.json": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\input\\world_state_context.json"
+  },
+  "legacy_imported": false,
+  "operation_id": "handoff_5731a8747ea9510b04f7faa2",
+  "operation_kind": "WORKFLOW_HANDOFF",
+  "output": {
+    "result": "C:\\dev\\小说续写系统\\audit\\experiments\\v3_10_chapter_continuation_expansion\\browser_smoke_20260816\\library\\original-e56a54687506\\editions\\base\\operations\\handoff_5731a8747ea9510b04f7faa2\\output\\result.json"
+  }
+}

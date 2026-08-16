@@ -1,0 +1,58 @@
+{
+  "task_id": "draft-task_c4c4221e84b00a5d54e9c2aa",
+  "contract_id": "contract_ef0a63f05b6211db32074bc4",
+  "chapter_title": "倒着写的门",
+  "prose_markdown": "广播改报西侧楼梯后，检修窗外的风没有立刻停。沈砚把铝牌上的新刻短线压在窗台边，测距带仍绕在腕上。上一轮竖口已经合拢，墙面看起来完整，只有一块灰白色粉痕从墙脚反向爬上去，像有人把门框倒着写在墙上。\n\n他没有马上靠近。粉痕离窗台三步，方向却指向已经消失的平台。广播又说了一次屋顶安全，声音比刚才更远，尾音被墙体切成两段。沈砚蹲下，用手电照那道痕。灰白线条不是新鲜粉笔，边缘被潮气泡过，里面还压着细小的水泥颗粒。\n\n楼层开始移动。墙根向外鼓起，倒写的痕迹被拉长，半扇门的轮廓从粉痕后显出来。门缝朝向窗外，门把手却在墙里。沈砚把测距带的带壳端压住窗台，带钩端轻轻碰到门缝上方的金属边。\n\n门没有开，距离先变了。\n\n带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。\n\n门后传来很轻的一声敲击。\n\n一下，停顿，再一下。\n\n他想起高处风道里的七步白印，却没有把敲击和脚印接在一起。现在能确认的只有声音、痕迹和一条不稳定的关系。门把手仍在墙里，门缝下面没有可见的地面；只要再向前半步，带钩端就会被门框夹住。\n\n沈砚把铝牌翻过来，写下倒着的方向。他先把陌生标记当作观察数据，不因为它像求救就越过证据边界。广播突然停了，墙后的敲击也跟着消失。沉默没有回答他，却让门缝显得比刚才更近。\n\n他没有开门。\n\n建筑再次重排，粉痕从中间断开，半扇门向墙内折去。沈砚向后收带，带钩端擦过门边，带壳端仍压在窗台。等最后一线缝隙闭上，他退回走廊，掌心留下细细的白粉。\n\n倒写标记还在铝牌上，门却不在了。沈砚知道楼里可能存在别人的路径，却不能把一条痕迹写成一个人。他把铝牌收进衣袋，重新看向西侧楼梯的方向。下一次重排前，他至少保住了一个问题：是谁在不同的建筑状态里，试图留下同一条路？",
+  "state_changes": [
+    {
+      "kind": "capability",
+      "record_id": "measuring-tape-reverse-mark-ch5",
+      "payload": {
+        "character_id": "protagonist",
+        "description": "测距带记录倒写标记与检修窗的方向关系，能把跨重排留下的陌生路线痕迹固定为可复核证据。",
+        "evidence": "倒写标记与检修窗的方向关系被测距带留在铝牌上。",
+        "name": "测距带记录跨重排标记方向",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "kind": "fact",
+      "record_id": "reverse-mark-observed-ch5",
+      "payload": {
+        "description": "检修窗附近出现一条指向已消失平台的倒写门框标记，标记在重排后仍留下可复核的方向关系。",
+        "knowledge_status": "UNKNOWN",
+        "location_relation": "behind_external_vent_window",
+        "object": "倒写门框粉痕",
+        "predicate": "reverse_mark_observed",
+        "status": "observed"
+      }
+    },
+    {
+      "kind": "thread",
+      "record_id": "space-reading-route-evidence",
+      "payload": {
+        "evidence": "沈砚记录倒写标记后退回窗边，仍能沿测距带找回走廊。",
+        "goal": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "phase": "escalation",
+        "stakes": "陌生标记可能属于其他行动者，也可能只是建筑残留；打开门会丢失可返回端点。",
+        "status": "ADVANCED",
+        "thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+      }
+    },
+    {
+      "kind": "character_state",
+      "record_id": "protagonist-local-evidence-choice-5",
+      "payload": {
+        "change": "沈砚把陌生标记当作观察数据，不因为它像求救就越过证据边界。",
+        "character_id": "protagonist",
+        "cost": "再次消耗当天唯一进化机会，并放弃打开可能通向他人的门。"
+      }
+    }
+  ],
+  "promises_advanced": ["anticipation-thread-1"],
+  "promises_paid": [],
+  "new_major_hooks": 0,
+  "notes": ["标记作者、敲击来源、广播身份和建筑成因保持未知；本章只推进物理痕迹与回程证据。"]
+}

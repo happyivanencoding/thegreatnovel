@@ -1,0 +1,62 @@
+{
+  "analyzer_versions": {
+    "deterministic": "rhythm-deterministic-v1",
+    "semantic": "rhythm-semantic-v1"
+  },
+  "as_of_chapter": 1,
+  "as_of_event_seq": 8,
+  "book_id": "original-e56a54687506",
+  "config_hash": "c1261d246fb0e8f72174caa4174f70586d1839ee5c56f4eb7049518ffaf87d4a",
+  "created_at": "2026-08-16T16:39:36.864621+00:00",
+  "edition_id": "base",
+  "ending_mode_streak": {
+    "count": 1,
+    "mode": "unknown",
+    "severity": "NONE"
+  },
+  "ending_similarity": {
+    "matching_chapters": [],
+    "max_similarity_last_4": 0.0,
+    "severity": "NONE"
+  },
+  "evidence": [
+    {
+      "chapter_id": "canon-chapter_96f6a1794bf43a1659c7fba2",
+      "extractor_kind": "DETERMINISTIC",
+      "ordinal": 1
+    }
+  ],
+  "high_emotion_streak": {
+    "bands": [],
+    "climax_bonus": 2,
+    "count": 0,
+    "severity": "NONE"
+  },
+  "hooks": {
+    "advance_due": [],
+    "overdue": [],
+    "resolve_due": []
+  },
+  "opening_similarity": {
+    "matching_chapters": [],
+    "max_similarity_last_4": 0.0,
+    "severity": "NONE"
+  },
+  "projection_hash": "65fa4bb87a62264ad891e732809effa8a882d105d2d4fc1a502b5f7435328050",
+  "same_function_streak": {
+    "count": 0,
+    "function": null,
+    "severity": "NONE",
+    "source": "planned_primary_function"
+  },
+  "snapshot_id": "rhythm-snapshot_22d699e14337cc8178b4666f",
+  "title_repetition": {
+    "exact_duplicates": [],
+    "matching_chapters": [],
+    "max_similarity_last_20": 0.0,
+    "series_markers": [
+      null
+    ],
+    "severity": "NONE"
+  }
+}

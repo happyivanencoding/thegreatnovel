@@ -1,0 +1,4 @@
+{"created_at": "2026-08-16T16:22:44.395933+00:00", "event_id": "handoff-event_736445363302c518a2a7e306", "event_type": "READY_FOR_CODEX", "handoff_id": "handoff_b14bee051f1fd7754807d718", "payload": {"requested_stage": "DRAFT_AND_VALIDATE"}, "sequence": 1}
+{"created_at": "2026-08-16T16:25:02.876668+00:00", "event_id": "handoff-event_2df04e66dc2adf3cdbe556fa", "event_type": "CLAIMED", "handoff_id": "handoff_b14bee051f1fd7754807d718", "payload": {"claimed_by": "codex-desktop"}, "sequence": 2}
+{"created_at": "2026-08-16T16:25:02.884670+00:00", "event_id": "handoff-event_d4066c845670e1253b03b1b9", "event_type": "RUNNING", "handoff_id": "handoff_b14bee051f1fd7754807d718", "payload": {"error_message": ""}, "sequence": 3}
+{"created_at": "2026-08-16T16:35:56.385061+00:00", "event_id": "handoff-event_b71c9c6331a3b41bd3dd5daf", "event_type": "COMPLETED", "handoff_id": "handoff_b14bee051f1fd7754807d718", "payload": {"error_message": ""}, "sequence": 4}

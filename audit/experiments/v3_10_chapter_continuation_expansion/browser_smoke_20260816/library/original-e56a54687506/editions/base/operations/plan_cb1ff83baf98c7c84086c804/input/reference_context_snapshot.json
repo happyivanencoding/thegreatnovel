@@ -1,0 +1,856 @@
+{
+  "book_id": "original-e56a54687506",
+  "compact_cards": [
+    {
+      "card_id": "contrast-payoff-fatigue",
+      "card_type": "contrast-card",
+      "category_ids": [
+        "科幻",
+        "UNKNOWN",
+        "灵异"
+      ],
+      "creative_problem_tags": [
+        "fatigue"
+      ],
+      "evidence_scope": "MULTI_CATEGORY",
+      "knowledge_level": "CROSS_BOOK_CONTRAST",
+      "maturity": "PILOT",
+      "metadata_match_fields": [
+        "creative_problem_tags",
+        "reader_experiences",
+        "narrative_drives",
+        "payoff_channels"
+      ],
+      "narrative_drives": [
+        "POWER_PROGRESSION",
+        "WORLD_EXPLORATION",
+        "MYSTERY_REVELATION"
+      ],
+      "payoff_channels": [
+        "POWER_BREAKTHROUGH",
+        "DISCOVERY",
+        "STATUS_RISE",
+        "WORLD_EXPANSION"
+      ],
+      "reader_experiences": [
+        "BREAKTHROUGH",
+        "POWER_VERIFICATION",
+        "EXPLORATION",
+        "MYSTERY",
+        "STATUS_RISE"
+      ],
+      "shared_creative_problem": "重复回报疲劳的不同风险",
+      "solutions": [
+        {
+          "conditions": [
+            "该解法在来源中有局部动作或结构证据。"
+          ],
+          "description": "连续把能力验证写成同一类更高位对撞。",
+          "failure_risks": [
+            "INFERRED_RISK：若没有后续变化，解法可能重复。"
+          ],
+          "label": "同形对撞",
+          "reader_experience_differences": [
+            "读者获得与其他解法不同的期待入口。"
+          ],
+          "solution_id": "contrast-payoff-fatigue-1",
+          "source_book_ids": [
+            "rcv0-08-kehuan-kongsuxinghen"
+          ],
+          "tradeoffs": [
+            "会把注意力集中到该解法对应的体验，不能同时保证所有回报。"
+          ]
+        },
+        {
+          "conditions": [
+            "该解法在来源中有局部动作或结构证据。"
+          ],
+          "description": "保留能力但改变场景和组合。",
+          "failure_risks": [
+            "INFERRED_RISK：若没有后续变化，解法可能重复。"
+          ],
+          "label": "旧机制换用途",
+          "reader_experience_differences": [
+            "读者获得与其他解法不同的期待入口。"
+          ],
+          "solution_id": "contrast-payoff-fatigue-2",
+          "source_book_ids": [
+            "rcv0-17-lingyi-wo-you-yi-zuo-maoxianwu"
+          ],
+          "tradeoffs": [
+            "会把注意力集中到该解法对应的体验，不能同时保证所有回报。"
+          ]
+        },
+        {
+          "conditions": [
+            "该解法在来源中有局部动作或结构证据。"
+          ],
+          "description": "把读者注意力转给新关系或未知发现。",
+          "failure_risks": [
+            "INFERRED_RISK：若没有后续变化，解法可能重复。"
+          ],
+          "label": "关系/探索转向",
+          "reader_experience_differences": [
+            "读者获得与其他解法不同的期待入口。"
+          ],
+          "solution_id": "contrast-payoff-fatigue-3",
+          "source_book_ids": [
+            "rcv0-18-lingyi-daogui-yixian"
+          ],
+          "tradeoffs": [
+            "会把注意力集中到该解法对应的体验，不能同时保证所有回报。"
+          ]
+        }
+      ],
+      "source_book_ids": [
+        "rcv0-08-kehuan-kongsuxinghen",
+        "rcv0-17-lingyi-wo-you-yi-zuo-maoxianwu",
+        "rcv0-18-lingyi-daogui-yixian"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_d285af37759f0b38cfdca607",
+          "line_end": 23,
+          "line_start": 15,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-08-kehuan-kongsuxinghen",
+          "source_id": "book-01-cd518cb6"
+        },
+        {
+          "distill_id": "distill_6c360acccb6d0a3151d21bea",
+          "line_end": 66364,
+          "line_start": 66341,
+          "segment_id": "segment-1150",
+          "source_book_id": "rcv0-17-lingyi-wo-you-yi-zuo-maoxianwu",
+          "source_id": "book-01-e55aab50"
+        },
+        {
+          "distill_id": "distill_4f0a2c0d9691803bb89e7f46",
+          "line_end": 51513,
+          "line_start": 51490,
+          "segment_id": "segment-0900",
+          "source_book_id": "rcv0-18-lingyi-daogui-yixian",
+          "source_id": "book-01-ea099238"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "transfer_boundary": "Contrast 只比较同一创作问题的解法，不表示 A 好、B 差，也不要求每种解法都有 cost。"
+    },
+    {
+      "card_id": "synth-category-01",
+      "card_type": "corpus-synthesis",
+      "category_ids": [
+        "玄幻"
+      ],
+      "creative_problem_tags": [
+        "category-synthesis",
+        "breakthrough",
+        "world-expansion"
+      ],
+      "distinctive_mechanisms": [
+        "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+      ],
+      "evidence_scope": "MULTI_BOOK",
+      "failure_fatigue_risks": [
+        "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+      ],
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "major_divergences": [
+        "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+        "成本、治理和责任并非每本书的主轴。"
+      ],
+      "maturity": "PILOT",
+      "metadata_match_fields": [
+        "creative_problem_tags",
+        "reader_experiences",
+        "narrative_drives",
+        "payoff_channels"
+      ],
+      "narrative_drives": [
+        "POWER_PROGRESSION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [
+        "POWER_BREAKTHROUGH",
+        "WORLD_EXPANSION",
+        "DISCOVERY"
+      ],
+      "payoff_differences": [
+        "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+      ],
+      "progression_differences": [
+        "量变、质变、知识、身份和组合式进阶并存。"
+      ],
+      "reader_experiences": [
+        "PROGRESSION",
+        "BREAKTHROUGH",
+        "WORLD_EXPANSION"
+      ],
+      "shared_creative_problem": "当前玄幻样本如何持续提供读者回报",
+      "shared_tendencies": [
+        "样本都保留可识别的阶段推进和回报窗口。",
+        "世界扩大与角色目标之间存在可追踪连接。"
+      ],
+      "source_book_ids": [
+        "rcv0-01-xuanhuan-wangu-shendi",
+        "rcv0-05-xuanhuan-feisheng-zhihou",
+        "rcv0-22-xuanhuan-wulian-dianfeng"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_f389802a813a26ff237f787a",
+          "line_end": 9188,
+          "line_start": 9137,
+          "segment_id": "segment-0004",
+          "source_book_id": "rcv0-01-xuanhuan-wangu-shendi",
+          "source_id": "book-01-42b60207"
+        },
+        {
+          "distill_id": "distill_23edecae99eaa291b4e059a2",
+          "line_end": 42,
+          "line_start": 1,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-05-xuanhuan-feisheng-zhihou",
+          "source_id": "book-01-ecd9522c"
+        },
+        {
+          "distill_id": "distill_d501558efe627239954c9e90",
+          "line_end": 23,
+          "line_start": 15,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-22-xuanhuan-wulian-dianfeng",
+          "source_id": "book-01-795a97b8"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "synthesis_kind": "CATEGORY",
+      "title": "当前玄幻样本中的结构对照",
+      "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+      "what_sample_cannot_tell_us": [
+        "不能由当前样本判断该类别所有作品的有效公式。"
+      ],
+      "world_expansion_differences": [
+        "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+      ]
+    },
+    {
+      "card_id": "synth-category-02",
+      "card_type": "corpus-synthesis",
+      "category_ids": [
+        "仙侠"
+      ],
+      "creative_problem_tags": [
+        "category-synthesis",
+        "breakthrough",
+        "world-expansion"
+      ],
+      "distinctive_mechanisms": [
+        "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+      ],
+      "evidence_scope": "MULTI_BOOK",
+      "failure_fatigue_risks": [
+        "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+      ],
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "major_divergences": [
+        "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+        "成本、治理和责任并非每本书的主轴。"
+      ],
+      "maturity": "PILOT",
+      "metadata_match_fields": [
+        "creative_problem_tags",
+        "reader_experiences",
+        "narrative_drives",
+        "payoff_channels"
+      ],
+      "narrative_drives": [
+        "POWER_PROGRESSION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [
+        "POWER_BREAKTHROUGH",
+        "WORLD_EXPANSION",
+        "DISCOVERY"
+      ],
+      "payoff_differences": [
+        "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+      ],
+      "progression_differences": [
+        "量变、质变、知识、身份和组合式进阶并存。"
+      ],
+      "reader_experiences": [
+        "PROGRESSION",
+        "BREAKTHROUGH",
+        "WORLD_EXPANSION"
+      ],
+      "shared_creative_problem": "当前仙侠样本如何持续提供读者回报",
+      "shared_tendencies": [
+        "样本都保留可识别的阶段推进和回报窗口。",
+        "世界扩大与角色目标之间存在可追踪连接。"
+      ],
+      "source_book_ids": [
+        "rcv0-02-xianxia-bailian-chengxian",
+        "rcv0-06-xianxia-xiaoxingji",
+        "rcv0-23-xianxia-jiantu-zhi-lu"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_f51c8e00eb0f61e0193bf055",
+          "line_end": 51,
+          "line_start": 14,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-02-xianxia-bailian-chengxian",
+          "source_id": "book-01-a84bb41f"
+        },
+        {
+          "distill_id": "distill_86b7a94f5b15c9ebcff8bee6",
+          "line_end": 36186,
+          "line_start": 36157,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-06-xianxia-xiaoxingji",
+          "source_id": "book-01-8fe60b9e"
+        },
+        {
+          "distill_id": "distill_1effda84e8fc8642f6fbe6a3",
+          "line_end": 43,
+          "line_start": 34,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-23-xianxia-jiantu-zhi-lu",
+          "source_id": "book-01-51b1e64a"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "synthesis_kind": "CATEGORY",
+      "title": "当前仙侠样本中的结构对照",
+      "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+      "what_sample_cannot_tell_us": [
+        "不能由当前样本判断该类别所有作品的有效公式。"
+      ],
+      "world_expansion_differences": [
+        "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+      ]
+    },
+    {
+      "card_id": "synth-category-03",
+      "card_type": "corpus-synthesis",
+      "category_ids": [
+        "都市"
+      ],
+      "creative_problem_tags": [
+        "category-synthesis",
+        "breakthrough",
+        "world-expansion"
+      ],
+      "distinctive_mechanisms": [
+        "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+      ],
+      "evidence_scope": "MULTI_BOOK",
+      "failure_fatigue_risks": [
+        "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+      ],
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "major_divergences": [
+        "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+        "成本、治理和责任并非每本书的主轴。"
+      ],
+      "maturity": "PILOT",
+      "metadata_match_fields": [
+        "creative_problem_tags",
+        "reader_experiences",
+        "narrative_drives",
+        "payoff_channels"
+      ],
+      "narrative_drives": [
+        "POWER_PROGRESSION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [
+        "POWER_BREAKTHROUGH",
+        "WORLD_EXPANSION",
+        "DISCOVERY"
+      ],
+      "payoff_differences": [
+        "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+      ],
+      "progression_differences": [
+        "量变、质变、知识、身份和组合式进阶并存。"
+      ],
+      "reader_experiences": [
+        "PROGRESSION",
+        "BREAKTHROUGH",
+        "WORLD_EXPANSION"
+      ],
+      "shared_creative_problem": "当前都市样本如何持续提供读者回报",
+      "shared_tendencies": [
+        "样本都保留可识别的阶段推进和回报窗口。",
+        "世界扩大与角色目标之间存在可追踪连接。"
+      ],
+      "source_book_ids": [
+        "rcv0-03-dushi-xiuzhen-chatianqun",
+        "rcv0-07-dushi-huakaizhe",
+        "rcv0-24-dushi-shoushu-zhibojian"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_11e980402f3ae5110018ea64",
+          "line_end": 194,
+          "line_start": 94,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-03-dushi-xiuzhen-chatianqun",
+          "source_id": "book-01-db14ba01"
+        },
+        {
+          "distill_id": "distill_63b9e556c44fd1a34dabbc51",
+          "line_end": 6228,
+          "line_start": 6199,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-07-dushi-huakaizhe",
+          "source_id": "book-01-bb884701"
+        },
+        {
+          "distill_id": "distill_9d1930d9ef665f9b4ad71ef1",
+          "line_end": 111,
+          "line_start": 101,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-24-dushi-shoushu-zhibojian",
+          "source_id": "book-01-077536af"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "synthesis_kind": "CATEGORY",
+      "title": "当前都市样本中的结构对照",
+      "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+      "what_sample_cannot_tell_us": [
+        "不能由当前样本判断该类别所有作品的有效公式。"
+      ],
+      "world_expansion_differences": [
+        "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+      ]
+    },
+    {
+      "card_id": "synth-category-04",
+      "card_type": "corpus-synthesis",
+      "category_ids": [
+        "科幻"
+      ],
+      "creative_problem_tags": [
+        "category-synthesis",
+        "breakthrough",
+        "world-expansion"
+      ],
+      "distinctive_mechanisms": [
+        "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+      ],
+      "evidence_scope": "MULTI_BOOK",
+      "failure_fatigue_risks": [
+        "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+      ],
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "major_divergences": [
+        "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+        "成本、治理和责任并非每本书的主轴。"
+      ],
+      "maturity": "PILOT",
+      "metadata_match_fields": [
+        "creative_problem_tags",
+        "reader_experiences",
+        "narrative_drives",
+        "payoff_channels"
+      ],
+      "narrative_drives": [
+        "POWER_PROGRESSION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [
+        "POWER_BREAKTHROUGH",
+        "WORLD_EXPANSION",
+        "DISCOVERY"
+      ],
+      "payoff_differences": [
+        "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+      ],
+      "progression_differences": [
+        "量变、质变、知识、身份和组合式进阶并存。"
+      ],
+      "reader_experiences": [
+        "PROGRESSION",
+        "BREAKTHROUGH",
+        "WORLD_EXPANSION"
+      ],
+      "shared_creative_problem": "当前科幻样本如何持续提供读者回报",
+      "shared_tendencies": [
+        "样本都保留可识别的阶段推进和回报窗口。",
+        "世界扩大与角色目标之间存在可追踪连接。"
+      ],
+      "source_book_ids": [
+        "rcv0-04-kehuan-taxing",
+        "rcv0-08-kehuan-kongsuxinghen",
+        "rcv0-25-kehuan-dijiu-tequ"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_ab8777f43b56841c1ab56aa9",
+          "line_end": 104,
+          "line_start": 26,
+          "segment_id": "segment-0004",
+          "source_book_id": "rcv0-04-kehuan-taxing",
+          "source_id": "book-01-e3501da3"
+        },
+        {
+          "distill_id": "distill_d285af37759f0b38cfdca607",
+          "line_end": 23,
+          "line_start": 15,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-08-kehuan-kongsuxinghen",
+          "source_id": "book-01-cd518cb6"
+        },
+        {
+          "distill_id": "distill_17e8b54f1cca2f08c69155e2",
+          "line_end": 22,
+          "line_start": 15,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-25-kehuan-dijiu-tequ",
+          "source_id": "book-01-4652d2bc"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "synthesis_kind": "CATEGORY",
+      "title": "当前科幻样本中的结构对照",
+      "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+      "what_sample_cannot_tell_us": [
+        "不能由当前样本判断该类别所有作品的有效公式。"
+      ],
+      "world_expansion_differences": [
+        "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+      ]
+    },
+    {
+      "card_id": "synth-category-05",
+      "card_type": "corpus-synthesis",
+      "category_ids": [
+        "奇幻"
+      ],
+      "creative_problem_tags": [
+        "category-synthesis",
+        "breakthrough",
+        "world-expansion"
+      ],
+      "distinctive_mechanisms": [
+        "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+      ],
+      "evidence_scope": "MULTI_BOOK",
+      "failure_fatigue_risks": [
+        "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+      ],
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "major_divergences": [
+        "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+        "成本、治理和责任并非每本书的主轴。"
+      ],
+      "maturity": "PILOT",
+      "metadata_match_fields": [
+        "creative_problem_tags",
+        "reader_experiences",
+        "narrative_drives",
+        "payoff_channels"
+      ],
+      "narrative_drives": [
+        "POWER_PROGRESSION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [
+        "POWER_BREAKTHROUGH",
+        "WORLD_EXPANSION",
+        "DISCOVERY"
+      ],
+      "payoff_differences": [
+        "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+      ],
+      "progression_differences": [
+        "量变、质变、知识、身份和组合式进阶并存。"
+      ],
+      "reader_experiences": [
+        "PROGRESSION",
+        "BREAKTHROUGH",
+        "WORLD_EXPANSION"
+      ],
+      "shared_creative_problem": "当前奇幻样本如何持续提供读者回报",
+      "shared_tendencies": [
+        "样本都保留可识别的阶段推进和回报窗口。",
+        "世界扩大与角色目标之间存在可追踪连接。"
+      ],
+      "source_book_ids": [
+        "rcv0-09-qihuan-damowang",
+        "rcv0-10-qihuan-zichuan",
+        "rcv0-26-qihuan-tianqi-yubao"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_703be341cc2ee9ff4b3322e6",
+          "line_end": 30,
+          "line_start": 13,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-09-qihuan-damowang",
+          "source_id": "book-01-23b3eef4"
+        },
+        {
+          "distill_id": "distill_b6c2bbd54aad92ae6cfad5a3",
+          "line_end": 21710,
+          "line_start": 21682,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-10-qihuan-zichuan",
+          "source_id": "book-01-8dc1f751"
+        },
+        {
+          "distill_id": "distill_b9a2ff9e2a089e1f2bb47b8f",
+          "line_end": 143,
+          "line_start": 135,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-26-qihuan-tianqi-yubao",
+          "source_id": "book-01-1c5801b5"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "synthesis_kind": "CATEGORY",
+      "title": "当前奇幻样本中的结构对照",
+      "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+      "what_sample_cannot_tell_us": [
+        "不能由当前样本判断该类别所有作品的有效公式。"
+      ],
+      "world_expansion_differences": [
+        "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+      ]
+    }
+  ],
+  "created_at": "2026-08-16T17:04:48.041357+00:00",
+  "creative_problem": "下一章候选需要处理主线程 handoff-thread 的冻结状态与行动空间；active_threads=1；pressure=UNKNOWN；payoff_ready=UNKNOWN；overdue_debt=UNKNOWN；progression_bottleneck=['可用物品与当前空间缺口不匹配', '建筑变化快于主角能完成的现场验证', '同一物品的下一次进化需要新的问题而非简单重复']；resource_pressure=TRUE；world_expansion=TRUE；relationship=UNKNOWN；mystery=TRUE；repetition=TRUE；unknown=pressure,payoff_readiness,relationship；Reference Corpus 只提供可迁移机制，不决定候选。",
+  "creative_problem_tags": [
+    "long-form",
+    "breakthrough",
+    "resource-release",
+    "world-expansion",
+    "mystery-reveal",
+    "fatigue"
+  ],
+  "edition_id": "base",
+  "effective_query": {
+    "creative_problem": "下一章候选需要处理主线程 handoff-thread 的冻结状态与行动空间；active_threads=1；pressure=UNKNOWN；payoff_ready=UNKNOWN；overdue_debt=UNKNOWN；progression_bottleneck=['可用物品与当前空间缺口不匹配', '建筑变化快于主角能完成的现场验证', '同一物品的下一次进化需要新的问题而非简单重复']；resource_pressure=TRUE；world_expansion=TRUE；relationship=UNKNOWN；mystery=TRUE；repetition=TRUE；unknown=pressure,payoff_readiness,relationship；Reference Corpus 只提供可迁移机制，不决定候选。",
+    "creative_problem_tags": [
+      "long-form",
+      "breakthrough",
+      "resource-release",
+      "world-expansion",
+      "mystery-reveal",
+      "fatigue"
+    ],
+    "max_cards": 6,
+    "narrative_drives": [
+      "SURVIVAL_RESOURCE",
+      "KNOWLEDGE_PROGRESSION",
+      "ABILITY_PROGRESSION",
+      "MYSTERY_INVESTIGATION",
+      "WORLD_EXPLORATION"
+    ],
+    "payoff_channels": [
+      "DISCOVERY",
+      "KNOWLEDGE_GAIN",
+      "NEW_ABILITY",
+      "POWER_BREAKTHROUGH",
+      "RESOURCE_GAIN",
+      "SURVIVAL_ESCAPE",
+      "WORLD_EXPANSION"
+    ],
+    "reader_experiences": [
+      "ARTIFACT_OR_ABILITY",
+      "BREAKTHROUGH",
+      "COMBAT",
+      "EXPLORATION",
+      "FACTION_CONFLICT",
+      "KNOWLEDGE",
+      "MYSTERY",
+      "POWER_VERIFICATION",
+      "PROGRESSION",
+      "RELATIONSHIP",
+      "RESOURCE_OPPORTUNITY",
+      "REVEAL",
+      "REVENGE",
+      "ROMANCE",
+      "SOCIAL_THEME",
+      "STATUS_RISE",
+      "SURVIVAL",
+      "TEAM_GROWTH",
+      "WEALTH",
+      "WORLD_EXPANSION"
+    ],
+    "scene_functions": []
+  },
+  "knowledge_gaps": [],
+  "machine_bundle_hash": "3120e088142f5d75ad3f2d1d18eca36f5b89251369228b4f73c7f63e796ff9f9",
+  "match_tier": "EXACT",
+  "max_cards": 6,
+  "metadata_match_fields": {
+    "contrast-payoff-fatigue": [
+      "creative_problem_tags",
+      "reader_experiences",
+      "narrative_drives",
+      "payoff_channels"
+    ],
+    "synth-category-01": [
+      "creative_problem_tags",
+      "reader_experiences",
+      "narrative_drives",
+      "payoff_channels"
+    ],
+    "synth-category-02": [
+      "creative_problem_tags",
+      "reader_experiences",
+      "narrative_drives",
+      "payoff_channels"
+    ],
+    "synth-category-03": [
+      "creative_problem_tags",
+      "reader_experiences",
+      "narrative_drives",
+      "payoff_channels"
+    ],
+    "synth-category-04": [
+      "creative_problem_tags",
+      "reader_experiences",
+      "narrative_drives",
+      "payoff_channels"
+    ],
+    "synth-category-05": [
+      "creative_problem_tags",
+      "reader_experiences",
+      "narrative_drives",
+      "payoff_channels"
+    ]
+  },
+  "narrative_drives": [
+    "SURVIVAL_RESOURCE",
+    "KNOWLEDGE_PROGRESSION",
+    "ABILITY_PROGRESSION",
+    "MYSTERY_INVESTIGATION",
+    "WORLD_EXPLORATION"
+  ],
+  "operation_id": "plan_cb1ff83baf98c7c84086c804",
+  "original_query": {
+    "creative_problem": "下一章候选需要处理主线程 handoff-thread 的冻结状态与行动空间；active_threads=1；pressure=UNKNOWN；payoff_ready=UNKNOWN；overdue_debt=UNKNOWN；progression_bottleneck=['可用物品与当前空间缺口不匹配', '建筑变化快于主角能完成的现场验证', '同一物品的下一次进化需要新的问题而非简单重复']；resource_pressure=TRUE；world_expansion=TRUE；relationship=UNKNOWN；mystery=TRUE；repetition=TRUE；unknown=pressure,payoff_readiness,relationship；Reference Corpus 只提供可迁移机制，不决定候选。",
+    "creative_problem_tags": [
+      "long-form",
+      "breakthrough",
+      "resource-release",
+      "world-expansion",
+      "mystery-reveal",
+      "fatigue"
+    ],
+    "max_cards": 6,
+    "narrative_drives": [
+      "SURVIVAL_RESOURCE",
+      "KNOWLEDGE_PROGRESSION",
+      "ABILITY_PROGRESSION",
+      "MYSTERY_INVESTIGATION",
+      "WORLD_EXPLORATION"
+    ],
+    "payoff_channels": [
+      "DISCOVERY",
+      "KNOWLEDGE_GAIN",
+      "NEW_ABILITY",
+      "POWER_BREAKTHROUGH",
+      "RESOURCE_GAIN",
+      "SURVIVAL_ESCAPE",
+      "WORLD_EXPANSION"
+    ],
+    "reader_experiences": [
+      "ARTIFACT_OR_ABILITY",
+      "BREAKTHROUGH",
+      "COMBAT",
+      "EXPLORATION",
+      "FACTION_CONFLICT",
+      "KNOWLEDGE",
+      "MYSTERY",
+      "POWER_VERIFICATION",
+      "PROGRESSION",
+      "RELATIONSHIP",
+      "RESOURCE_OPPORTUNITY",
+      "REVEAL",
+      "REVENGE",
+      "ROMANCE",
+      "SOCIAL_THEME",
+      "STATUS_RISE",
+      "SURVIVAL",
+      "TEAM_GROWTH",
+      "WEALTH",
+      "WORLD_EXPANSION"
+    ],
+    "scene_functions": []
+  },
+  "package_hash": "62e68bee9ee27f36888c20846ad59f8f5a9ef6c253183bca08bd026400ccde3e",
+  "package_schema_version": "reference-corpus-machine-package-v1",
+  "payoff_channels": [
+    "DISCOVERY",
+    "KNOWLEDGE_GAIN",
+    "NEW_ABILITY",
+    "POWER_BREAKTHROUGH",
+    "RESOURCE_GAIN",
+    "SURVIVAL_ESCAPE",
+    "WORLD_EXPANSION"
+  ],
+  "purpose": "PLANNING",
+  "reader_experiences": [
+    "ARTIFACT_OR_ABILITY",
+    "BREAKTHROUGH",
+    "COMBAT",
+    "EXPLORATION",
+    "FACTION_CONFLICT",
+    "KNOWLEDGE",
+    "MYSTERY",
+    "POWER_VERIFICATION",
+    "PROGRESSION",
+    "RELATIONSHIP",
+    "RESOURCE_OPPORTUNITY",
+    "REVEAL",
+    "REVENGE",
+    "ROMANCE",
+    "SOCIAL_THEME",
+    "STATUS_RISE",
+    "SURVIVAL",
+    "TEAM_GROWTH",
+    "WEALTH",
+    "WORLD_EXPANSION"
+  ],
+  "relaxed_fields": [],
+  "scene_functions": [],
+  "schema_version": "reference-context-snapshot-v1",
+  "selected_card_count": 6,
+  "selected_card_ids": [
+    "contrast-payoff-fatigue",
+    "synth-category-01",
+    "synth-category-02",
+    "synth-category-03",
+    "synth-category-04",
+    "synth-category-05"
+  ],
+  "selected_card_knowledge_levels": [
+    "CROSS_BOOK_CONTRAST",
+    "CORPUS_SYNTHESIS",
+    "CORPUS_SYNTHESIS",
+    "CORPUS_SYNTHESIS",
+    "CORPUS_SYNTHESIS",
+    "CORPUS_SYNTHESIS"
+  ],
+  "selected_card_types": [
+    "contrast-card",
+    "corpus-synthesis",
+    "corpus-synthesis",
+    "corpus-synthesis",
+    "corpus-synthesis",
+    "corpus-synthesis"
+  ],
+  "snapshot_hash": "67ed5febf30ea47afb7f33970e4df0f11a16c4d3ab215340304e4b4273fe5ec8",
+  "snapshot_id": "reference-context_7b22ce1c29d2503ba49fb4a5",
+  "status": "ENABLED",
+  "usage": "REFERENCE_ONLY",
+  "warnings": [],
+  "zero_result_reason": null
+}

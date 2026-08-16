@@ -1,0 +1,300 @@
+{
+  "application_summary": "按 reader_experiences、narrative_drives、payoff_channels、creative_problem_tags 从冻结卡片中选择 synth-category-05、synth-category-06、synth-category-01；仅迁移可复用机制，当前书事实、状态与最终选择仍由本次合同决定。",
+  "failure_modes": [],
+  "match_tier": "EXACT",
+  "reuse_reason": "复用近期卡片并未找到更合适的 bounded card",
+  "selected_card_ids": [
+    "synth-category-05",
+    "synth-category-06",
+    "synth-category-01"
+  ],
+  "selected_cards": [
+    {
+      "card_id": "synth-category-05",
+      "card_type": "corpus-synthesis",
+      "category_ids": [
+        "奇幻"
+      ],
+      "creative_problem_tags": [
+        "category-synthesis",
+        "breakthrough",
+        "world-expansion"
+      ],
+      "distinctive_mechanisms": [
+        "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+      ],
+      "evidence_scope": "MULTI_BOOK",
+      "failure_fatigue_risks": [
+        "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+      ],
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "major_divergences": [
+        "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+        "成本、治理和责任并非每本书的主轴。"
+      ],
+      "maturity": "PILOT",
+      "metadata_match_fields": [
+        "creative_problem_tags",
+        "reader_experiences",
+        "narrative_drives",
+        "payoff_channels"
+      ],
+      "narrative_drives": [
+        "POWER_PROGRESSION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [
+        "POWER_BREAKTHROUGH",
+        "WORLD_EXPANSION",
+        "DISCOVERY"
+      ],
+      "payoff_differences": [
+        "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+      ],
+      "progression_differences": [
+        "量变、质变、知识、身份和组合式进阶并存。"
+      ],
+      "reader_experiences": [
+        "PROGRESSION",
+        "BREAKTHROUGH",
+        "WORLD_EXPANSION"
+      ],
+      "shared_creative_problem": "当前奇幻样本如何持续提供读者回报",
+      "shared_tendencies": [
+        "样本都保留可识别的阶段推进和回报窗口。",
+        "世界扩大与角色目标之间存在可追踪连接。"
+      ],
+      "source_book_ids": [
+        "rcv0-09-qihuan-damowang",
+        "rcv0-10-qihuan-zichuan",
+        "rcv0-26-qihuan-tianqi-yubao"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_703be341cc2ee9ff4b3322e6",
+          "line_end": 30,
+          "line_start": 13,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-09-qihuan-damowang",
+          "source_id": "book-01-23b3eef4"
+        },
+        {
+          "distill_id": "distill_b6c2bbd54aad92ae6cfad5a3",
+          "line_end": 21710,
+          "line_start": 21682,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-10-qihuan-zichuan",
+          "source_id": "book-01-8dc1f751"
+        },
+        {
+          "distill_id": "distill_b9a2ff9e2a089e1f2bb47b8f",
+          "line_end": 143,
+          "line_start": 135,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-26-qihuan-tianqi-yubao",
+          "source_id": "book-01-1c5801b5"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "synthesis_kind": "CATEGORY",
+      "title": "当前奇幻样本中的结构对照",
+      "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+      "what_sample_cannot_tell_us": [
+        "不能由当前样本判断该类别所有作品的有效公式。"
+      ],
+      "world_expansion_differences": [
+        "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+      ]
+    },
+    {
+      "card_id": "synth-category-06",
+      "card_type": "corpus-synthesis",
+      "category_ids": [
+        "历史"
+      ],
+      "creative_problem_tags": [
+        "category-synthesis",
+        "breakthrough",
+        "world-expansion"
+      ],
+      "distinctive_mechanisms": [
+        "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+      ],
+      "evidence_scope": "PILOT_TWO_BOOK",
+      "failure_fatigue_risks": [
+        "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+      ],
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "major_divergences": [
+        "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+        "成本、治理和责任并非每本书的主轴。"
+      ],
+      "maturity": "PILOT",
+      "metadata_match_fields": [
+        "creative_problem_tags",
+        "reader_experiences",
+        "narrative_drives",
+        "payoff_channels"
+      ],
+      "narrative_drives": [
+        "POWER_PROGRESSION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [
+        "POWER_BREAKTHROUGH",
+        "WORLD_EXPANSION",
+        "DISCOVERY"
+      ],
+      "payoff_differences": [
+        "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+      ],
+      "progression_differences": [
+        "量变、质变、知识、身份和组合式进阶并存。"
+      ],
+      "reader_experiences": [
+        "PROGRESSION",
+        "BREAKTHROUGH",
+        "WORLD_EXPANSION"
+      ],
+      "shared_creative_problem": "当前历史样本如何持续提供读者回报",
+      "shared_tendencies": [
+        "样本都保留可识别的阶段推进和回报窗口。",
+        "世界扩大与角色目标之间存在可追踪连接。"
+      ],
+      "source_book_ids": [
+        "rcv0-11-lishi-daizhecangku-daming",
+        "rcv0-12-lishi-ming"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_865bd5ccbf6e40d3431c2726",
+          "line_end": 87,
+          "line_start": 16,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-11-lishi-daizhecangku-daming",
+          "source_id": "book-01-a2f4f985"
+        },
+        {
+          "distill_id": "distill_d704aa423b4153f1d6d356cd",
+          "line_end": 4890,
+          "line_start": 4734,
+          "segment_id": "segment-0004",
+          "source_book_id": "rcv0-12-lishi-ming",
+          "source_id": "book-01-b1291008"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "synthesis_kind": "CATEGORY",
+      "title": "当前历史样本中的结构对照",
+      "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+      "what_sample_cannot_tell_us": [
+        "不能由当前样本判断该类别所有作品的有效公式。"
+      ],
+      "world_expansion_differences": [
+        "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+      ]
+    },
+    {
+      "card_id": "synth-category-01",
+      "card_type": "corpus-synthesis",
+      "category_ids": [
+        "玄幻"
+      ],
+      "creative_problem_tags": [
+        "category-synthesis",
+        "breakthrough",
+        "world-expansion"
+      ],
+      "distinctive_mechanisms": [
+        "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+      ],
+      "evidence_scope": "MULTI_BOOK",
+      "failure_fatigue_risks": [
+        "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+      ],
+      "knowledge_level": "CORPUS_SYNTHESIS",
+      "major_divergences": [
+        "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+        "成本、治理和责任并非每本书的主轴。"
+      ],
+      "maturity": "PILOT",
+      "metadata_match_fields": [
+        "creative_problem_tags",
+        "reader_experiences",
+        "narrative_drives",
+        "payoff_channels"
+      ],
+      "narrative_drives": [
+        "POWER_PROGRESSION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [
+        "POWER_BREAKTHROUGH",
+        "WORLD_EXPANSION",
+        "DISCOVERY"
+      ],
+      "payoff_differences": [
+        "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+      ],
+      "progression_differences": [
+        "量变、质变、知识、身份和组合式进阶并存。"
+      ],
+      "reader_experiences": [
+        "PROGRESSION",
+        "BREAKTHROUGH",
+        "WORLD_EXPANSION"
+      ],
+      "shared_creative_problem": "当前玄幻样本如何持续提供读者回报",
+      "shared_tendencies": [
+        "样本都保留可识别的阶段推进和回报窗口。",
+        "世界扩大与角色目标之间存在可追踪连接。"
+      ],
+      "source_book_ids": [
+        "rcv0-01-xuanhuan-wangu-shendi",
+        "rcv0-05-xuanhuan-feisheng-zhihou",
+        "rcv0-22-xuanhuan-wulian-dianfeng"
+      ],
+      "source_refs": [
+        {
+          "distill_id": "distill_f389802a813a26ff237f787a",
+          "line_end": 9188,
+          "line_start": 9137,
+          "segment_id": "segment-0004",
+          "source_book_id": "rcv0-01-xuanhuan-wangu-shendi",
+          "source_id": "book-01-42b60207"
+        },
+        {
+          "distill_id": "distill_23edecae99eaa291b4e059a2",
+          "line_end": 42,
+          "line_start": 1,
+          "segment_id": "segment-0001",
+          "source_book_id": "rcv0-05-xuanhuan-feisheng-zhihou",
+          "source_id": "book-01-ecd9522c"
+        },
+        {
+          "distill_id": "distill_d501558efe627239954c9e90",
+          "line_end": 23,
+          "line_start": 15,
+          "segment_id": "segment-0002",
+          "source_book_id": "rcv0-22-xuanhuan-wulian-dianfeng",
+          "source_id": "book-01-795a97b8"
+        }
+      ],
+      "status": "REFERENCE_ONLY",
+      "synthesis_kind": "CATEGORY",
+      "title": "当前玄幻样本中的结构对照",
+      "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+      "what_sample_cannot_tell_us": [
+        "不能由当前样本判断该类别所有作品的有效公式。"
+      ],
+      "world_expansion_differences": [
+        "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+      ]
+    }
+  ],
+  "selected_contrast_solutions": [],
+  "snapshot_hash": "c728ff7f1df54d897b10e5c8e6a78c249cc6493b358dc264b0e1215f66193fea",
+  "snapshot_id": "reference-context_d91b3142c5ab62d022f58ee7",
+  "strategy_id": "planning-reference-strategy_6825f856fb836998e6b614d0",
+  "usage": "REFERENCE_ONLY"
+}

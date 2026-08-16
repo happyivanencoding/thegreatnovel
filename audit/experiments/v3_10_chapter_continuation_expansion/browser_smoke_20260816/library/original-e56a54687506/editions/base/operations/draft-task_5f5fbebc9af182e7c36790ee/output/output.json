@@ -1,0 +1,58 @@
+{
+  "task_id": "draft-task_5f5fbebc9af182e7c36790ee",
+  "contract_id": "contract_8768fd30207f66c29597cca1",
+  "chapter_title": "没有回声的楼梯",
+  "prose_markdown": "沈砚把铝牌收进衣袋时，墙后的敲击声又响了一次。\n\n这一次没有门，也没有广播。检修窗外的墙面向内折，露出一截向下的楼梯。楼梯只有六级，台阶边缘全是灰，像从一座被水泡过的旧楼里截出来。沈砚把手电照下去，光柱落在第五级，那里没有墙，也没有底。\n\n他没有先听楼梯通向哪里，而是听自己的呼吸。声音贴着窗框返回，台阶上的声音却没有回来。沈砚捏紧测距带，把带壳端压在窗台，带钩端碰向第三节扶手。\n\n钩子没有钩住实体。\n\n它穿过扶手下方的黑暗，落在更低处。带身先向下绷，随后又在同一刻度上松开。沈砚盯着刻度变化，确认那不是楼梯延长，而是楼梯下方存在一段没有回声、也没有可见地面的空段。测距带记录了无回声楼梯与窗台的空段关系。\n\n广播突然从远处响起：“西侧楼梯安全。”\n\n沈砚没有回答。刚才这截楼梯就在西侧墙后，声音却像从它下面传来。安全两个字没有重量，只有他的带钩端和窗台还在同一条线上。\n\n他把身体探出半步。冷气沿台阶向上涌，第三节以下的黑暗没有回风。手电光落下去，像被一层没有反射的水吞掉。那里可能有地面，也可能只有建筑重排后留下的空白；当前没有任何证据允许他选择其中一个解释。\n\n他只记录空段，不进入没有回声和地面的楼梯。\n\n墙体开始收拢。楼梯第一节向上折，扶手擦过测距带，金属声短促地响了一下。沈砚向后收带，带壳端仍压在窗台；当楼梯只剩两级时，带钩端终于滑脱，黑暗和台阶一起被墙面抹平。\n\n广播继续报着西侧楼梯，声音越来越远。沈砚看着测距带上的一段空白刻度，那是刚才没有回声的距离。它没有告诉他楼梯通向哪里，却证明建筑里确实存在一块无法用声音填满的空间。\n\n他把空白距离写在铝牌背面，和倒写标记并排放好。下一次重排前，他要先找到能让这段空白出现第二次的端点。",
+  "state_changes": [
+    {
+      "kind": "capability",
+      "record_id": "measuring-tape-silent-gap-ch6",
+      "payload": {
+        "character_id": "protagonist",
+        "description": "测距带记录无回声楼梯与检修窗之间的空段关系，保留一处不可见但可复核的建筑断层。",
+        "evidence": "测距带记录了无回声楼梯与窗台的空段关系。",
+        "name": "测距带记录无回声空段",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "kind": "fact",
+      "record_id": "silent-stair-gap-observed-ch6",
+      "payload": {
+        "description": "检修窗外短暂出现一截向下楼梯，台阶下存在没有回声和可见地面的空段。",
+        "knowledge_status": "UNKNOWN",
+        "location_relation": "behind_external_vent_window",
+        "object": "无回声楼梯与黑暗空段",
+        "predicate": "silent_stair_gap_observed",
+        "status": "observed"
+      }
+    },
+    {
+      "kind": "thread",
+      "record_id": "space-reading-route-evidence",
+      "payload": {
+        "evidence": "沈砚只记录空段，不进入没有回声和地面的楼梯，随后沿测距带退回窗边。",
+        "goal": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "phase": "escalation",
+        "stakes": "无回声楼梯可能通向空白空间，进入会让测距带和回程一起被墙体吞掉。",
+        "status": "ADVANCED",
+        "thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+      }
+    },
+    {
+      "kind": "character_state",
+      "record_id": "protagonist-local-evidence-choice-6",
+      "payload": {
+        "change": "沈砚接受局部证据也可能没有答案，只记录空段，不追入无回声楼梯。",
+        "character_id": "protagonist",
+        "cost": "再次消耗当天唯一进化机会，并放弃追入楼梯获取即时答案。"
+      }
+    }
+  ],
+  "promises_advanced": ["anticipation-thread-1"],
+  "promises_paid": [],
+  "new_major_hooks": 0,
+  "notes": ["楼梯去向、空段成因、广播身份和建筑机制保持未知；本章只确认可测量的无回声断层。"]
+}

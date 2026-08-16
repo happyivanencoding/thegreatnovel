@@ -1,0 +1,12 @@
+{
+  "book_id": "original-e56a54687506",
+  "created_at": "2026-08-16T16:22:43.894938+00:00",
+  "edition_id": "base",
+  "legacy_imported": false,
+  "metadata": {
+    "boundary_packet_id": "boundary_259d824b858568b09c2a05fd",
+    "chapter": 1
+  },
+  "operation_id": "genesis-plan-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+  "operation_kind": "GENESIS_PLAN"
+}

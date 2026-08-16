@@ -1,0 +1,12 @@
+{
+  "book_id": "original-e56a54687506",
+  "created_at": "2026-08-16T17:26:13.385755+00:00",
+  "edition_id": "base",
+  "legacy_imported": false,
+  "metadata": {
+    "handoff_id": "handoff_2065a92d10d25a7ae92c1be5",
+    "planning_aggregate_id": "planning-aggregate_a6cc426b2b0dc03d94e0bbb4"
+  },
+  "operation_id": "plan_1265418c659beacd41b5df95",
+  "operation_kind": "PLAN_NEXT"
+}

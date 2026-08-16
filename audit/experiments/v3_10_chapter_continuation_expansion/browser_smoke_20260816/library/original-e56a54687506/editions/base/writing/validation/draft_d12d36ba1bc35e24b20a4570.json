@@ -1,0 +1,800 @@
+{
+  "book_id": "original-e56a54687506",
+  "content_sha256": "f97c8ef328322011c75f445c6aa877dbddee1ec3f2852a4b81c72eee6ca72297",
+  "contract_id": "contract_ef0a63f05b6211db32074bc4",
+  "created_at": "2026-08-16T17:14:15.494608+00:00",
+  "draft_id": "draft_d12d36ba1bc35e24b20a4570",
+  "passed": true,
+  "projection_sha256": "ac3e2d937ecc3e9209b1af6d937e6c18f55c2a4b1a823b3999915fd435cedf31",
+  "reports": [
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Canon Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {
+        "latest_order_key": null
+      },
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Timeline Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Knowledge Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "CHARACTER_FIT_BELOW_MINIMUM",
+          "evidence": [],
+          "location": "character_fit_inputs",
+          "message": "人物契合度 70.00 低于参考线 75.00，建议人工复核。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {
+        "character_fit": 70.0
+      },
+      "passed": true,
+      "severity": "WARNING",
+      "validator": "Character Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Economy / Power Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:倒写标记与检修窗的方向关系被测距带记录为可复核的未知路径证据。",
+          "message": "合同证据 commit:倒写标记与检修窗的方向关系被测距带记录为可复核的未知路径证据。 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:沈砚确认标记来自不同重排状态的可见痕迹",
+          "message": "合同证据 commit:沈砚确认标记来自不同重排状态的可见痕迹 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:测距带记录倒写标记与检修窗的空间方向",
+          "message": "合同证据 commit:测距带记录倒写标记与检修窗的空间方向 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:commit:陌生路径线索进入主线程但来源保持未知",
+          "message": "合同证据 commit:陌生路径线索进入主线程但来源保持未知 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:ending_state",
+          "message": "合同证据 ending_state 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:required_cost",
+          "message": "合同证据 required_cost 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "CONTRACT_EVIDENCE_EMPTY",
+          "evidence": [],
+          "location": "contract_evidence:required_irreversible_change",
+          "message": "合同证据 required_irreversible_change 为空。",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "REALIZED_KERNEL_EXCEEDS_VERIFIED_CONTRACT",
+          "evidence": [],
+          "location": "realized_kernel_trace",
+          "message": "Realized reader promise 超出 Verified Kernel Trace：['anticipation-thread-1']",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "REALIZED_KERNEL_EXCEEDS_VERIFIED_CONTRACT",
+          "evidence": [],
+          "location": "realized_kernel_trace",
+          "message": "Realized growth axis 超出 Verified Kernel Trace：['measuring-tape-reverse-mark-ch5']",
+          "severity": "WARNING",
+          "suggested_fix": null
+        },
+        {
+          "code": "REALIZED_KERNEL_EXCEEDS_VERIFIED_CONTRACT",
+          "evidence": [],
+          "location": "realized_kernel_trace",
+          "message": "Realized narrative debt 超出 Verified Kernel Trace：['anticipation-thread-1']",
+          "severity": "WARNING",
+          "suggested_fix": null
+        }
+      ],
+      "measurements": {
+        "evidence_matches": [
+          {
+            "key": "commit:倒写标记与检修窗的方向关系被测距带记录为可复核的未知路径证据。",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "commit:沈砚确认标记来自不同重排状态的可见痕迹",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "commit:测距带记录倒写标记与检修窗的空间方向",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "commit:陌生路径线索进入主线程但来源保持未知",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "ending_state",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "required_cost",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "required_irreversible_change",
+            "quote": "",
+            "status": "NOT_FOUND"
+          },
+          {
+            "key": "state_changes:measuring-tape-reverse-mark-ch5",
+            "quote": "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:reverse-mark-observed-ch5",
+            "quote": "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:space-reading-route-evidence",
+            "quote": "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。",
+            "status": "EXACT"
+          },
+          {
+            "key": "state_changes:protagonist-local-evidence-choice-5",
+            "quote": "沈砚把铝牌翻过来，写下倒着的方向。他先把陌生标记当作观察数据，不因为它像求救就越过证据边界。广播突然停了，墙后的敲击也跟着消失。沉默没有回答他，却让门缝显得比刚才更近。",
+            "status": "EXACT"
+          }
+        ],
+        "kernel_trace_comparison": {
+          "compiled": {
+            "debts_advanced": [
+              "anticipation-thread-1"
+            ],
+            "debts_paid": [],
+            "evidence": [
+              {
+                "claim": "capability:measuring-tape-reverse-mark-ch5",
+                "evidence_quotes": [
+                  "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。"
+                ],
+                "state_change_record_ids": [
+                  "measuring-tape-reverse-mark-ch5"
+                ]
+              },
+              {
+                "claim": "fact:reverse-mark-observed-ch5",
+                "evidence_quotes": [
+                  "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。"
+                ],
+                "state_change_record_ids": [
+                  "reverse-mark-observed-ch5"
+                ]
+              },
+              {
+                "claim": "thread:space-reading-route-evidence",
+                "evidence_quotes": [
+                  "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。"
+                ],
+                "state_change_record_ids": [
+                  "space-reading-route-evidence"
+                ]
+              },
+              {
+                "claim": "character_state:protagonist-local-evidence-choice-5",
+                "evidence_quotes": [
+                  "沈砚把铝牌翻过来，写下倒着的方向。他先把陌生标记当作观察数据，不因为它像求救就越过证据边界。广播突然停了，墙后的敲击也跟着消失。沉默没有回答他，却让门缝显得比刚才更近。"
+                ],
+                "state_change_record_ids": [
+                  "protagonist-local-evidence-choice-5"
+                ]
+              }
+            ],
+            "expected_contract_id": "contract_ef0a63f05b6211db32074bc4",
+            "narrative_drives_advanced": [],
+            "payoff_channels_realized": [],
+            "primary_intent": null,
+            "progression_impact": {
+              "ability_showcase": [],
+              "ability_unlock": [
+                "测距带记录跨重排标记方向"
+              ],
+              "axis_advanced": [],
+              "bottleneck_change": null,
+              "branch_change": null,
+              "future_progression_space": [],
+              "growth_cost": [],
+              "new_ceiling_visibility": [],
+              "progression_delta_type": [],
+              "resource_change": [],
+              "stage_change": null
+            },
+            "reader_promises_served": [
+              "anticipation-thread-1"
+            ],
+            "resource_changes": [],
+            "world_expansion_changes": []
+          },
+          "evidence_matches": [
+            {
+              "key": "realized_kernel_trace:capability:measuring-tape-reverse-mark-ch5",
+              "quote": "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。",
+              "status": "EXACT"
+            },
+            {
+              "key": "realized_kernel_trace:fact:reverse-mark-observed-ch5",
+              "quote": "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。",
+              "status": "EXACT"
+            },
+            {
+              "key": "realized_kernel_trace:thread:space-reading-route-evidence",
+              "quote": "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。",
+              "status": "EXACT"
+            },
+            {
+              "key": "realized_kernel_trace:character_state:protagonist-local-evidence-choice-5",
+              "quote": "沈砚把铝牌翻过来，写下倒着的方向。他先把陌生标记当作观察数据，不因为它像求救就越过证据边界。广播突然停了，墙后的敲击也跟着消失。沉默没有回答他，却让门缝显得比刚才更近。",
+              "status": "EXACT"
+            }
+          ],
+          "expected": {
+            "drive_drift": {
+              "evidence": [],
+              "hard_failure": false,
+              "reasons": [
+                "本章未直接服务 Primary Drive；单章缺席不是硬失败"
+              ],
+              "status": "SOFT_MISS",
+              "warning": false
+            },
+            "evidence_compilation": {
+              "candidate_local_id": "reverse-mark",
+              "completeness": "PARTIAL",
+              "declared": {
+                "anticipation_impact": [],
+                "drive_drift": {},
+                "genre_drift": {},
+                "genre_evolution": {},
+                "narrative_drive_alignment": {
+                  "drive_balance": "UNKNOWN",
+                  "drive_conflicts": [],
+                  "drives_advanced": [],
+                  "drives_deferred": [],
+                  "drives_paid_off": [],
+                  "evidence": [],
+                  "primary_drive": null,
+                  "primary_drive_effect": "",
+                  "secondary_drive_effects": {}
+                },
+                "payoff_channel_impact": [],
+                "progression_impact": {
+                  "ability_showcase": [],
+                  "ability_unlock": [],
+                  "axis_advanced": [],
+                  "bottleneck_change": null,
+                  "branch_change": null,
+                  "future_progression_space": [],
+                  "growth_cost": [],
+                  "new_ceiling_visibility": [],
+                  "progression_delta_type": [],
+                  "resource_change": [],
+                  "stage_change": null
+                },
+                "reader_promise_alignment": [],
+                "resource_impact": [],
+                "scheduler_alignment": {
+                  "alignment": "UNKNOWN",
+                  "anticipations_served": [],
+                  "candidate_primary_intent": null,
+                  "debts_served": [],
+                  "deviation_reason": "",
+                  "recommended_primary_intent": null,
+                  "risks": []
+                },
+                "world_expansion_impact": []
+              },
+              "differences": [],
+              "hard_gate_compilation": {
+                "author_constraint_violations": [],
+                "canon_conflicts": [],
+                "capability_violations": [],
+                "knowledge_violations": [],
+                "missing_causal_sources": [],
+                "payoff_cooldown_violations": [],
+                "timeline_conflicts": []
+              },
+              "soft_metric_compilation": {
+                "candidate_score_overrides": {
+                  "components": {
+                    "agency_gain": {
+                      "completeness": "COMPLETE",
+                      "evidence": [],
+                      "score": 50.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "debt_utility": {
+                      "completeness": "COMPLETE",
+                      "evidence": [],
+                      "formula": "existing:narrative_debt",
+                      "score": 0.0,
+                      "source": "FROZEN_NARRATIVE_DEBT"
+                    },
+                    "future_damage": {
+                      "completeness": "COMPLETE",
+                      "evidence": [],
+                      "score": 0.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "progress_gain": {
+                      "completeness": "COMPLETE",
+                      "components": {
+                        "goal_advance": 70.0,
+                        "knowledge_change": 60.0,
+                        "permanent_growth": 0.0,
+                        "relationship_change": 0.0,
+                        "strategy_expansion": 50.0,
+                        "world_state_change": 0.0
+                      },
+                      "evidence": {
+                        "goal_advance": [],
+                        "knowledge_change": [],
+                        "permanent_growth": [
+                          "no_verified_permanent_growth_change"
+                        ],
+                        "relationship_change": [
+                          "no_verified_relationship_change_change"
+                        ],
+                        "strategy_expansion": [],
+                        "world_state_change": [
+                          "no_verified_world_state_change_change"
+                        ]
+                      },
+                      "formula": "existing:progress",
+                      "score": 27.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "risk_fit": {
+                      "completeness": "COMPLETE",
+                      "evidence": [],
+                      "score": 100.0,
+                      "source": "KERNEL_VERIFIED_EVIDENCE"
+                    },
+                    "thread_need_fit": {
+                      "completeness": "COMPLETE",
+                      "evidence": [
+                        "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+                      ],
+                      "score": 100.0,
+                      "source": "FROZEN_ACTIVE_THREADS"
+                    }
+                  },
+                  "source": "KERNEL_EVIDENCE_COMPILER",
+                  "values": {
+                    "agency_gain": 50.0,
+                    "debt_utility": 0.0,
+                    "future_damage": 0.0,
+                    "progress_gain": 27.0,
+                    "risk_fit": 100.0,
+                    "thread_need_fit": 100.0
+                  }
+                },
+                "progress": {
+                  "completeness": "COMPLETE",
+                  "components": {
+                    "goal_advance": 70.0,
+                    "knowledge_change": 60.0,
+                    "permanent_growth": 0.0,
+                    "relationship_change": 0.0,
+                    "strategy_expansion": 50.0,
+                    "world_state_change": 0.0
+                  },
+                  "evidence": {
+                    "goal_advance": [],
+                    "knowledge_change": [],
+                    "permanent_growth": [
+                      "no_verified_permanent_growth_change"
+                    ],
+                    "relationship_change": [
+                      "no_verified_relationship_change_change"
+                    ],
+                    "strategy_expansion": [],
+                    "world_state_change": [
+                      "no_verified_world_state_change_change"
+                    ]
+                  },
+                  "formula": "existing:progress",
+                  "score": 27.0,
+                  "source": "KERNEL_VERIFIED_EVIDENCE"
+                },
+                "resource_pressure": {
+                  "completeness": "COMPLETE",
+                  "components": {
+                    "cost_income_imbalance": 0.0,
+                    "current_shortfall": 100.0,
+                    "near_future_demand": 100.0,
+                    "reader_salience": 100.0,
+                    "recently_blocked_actions": 100.0
+                  },
+                  "evidence": [
+                    "missing_resource:真实拥有的普通非生命物品",
+                    "missing_resource:可执行的现场问题",
+                    "missing_resource:可进入的现场",
+                    "missing_resource:足够观察结果的时间",
+                    "missing_resource:至少一件已验证的进化物品",
+                    "missing_resource:新的空间压力",
+                    "bottleneck:可用物品与当前空间缺口不匹配",
+                    "bottleneck:建筑变化快于主角能完成的现场验证",
+                    "bottleneck:同一物品的下一次进化需要新的问题而非简单重复"
+                  ],
+                  "formula": "existing:resource_pressure",
+                  "score": 80.0,
+                  "source": "KERNEL_VERIFIED_EVIDENCE"
+                }
+              },
+              "verified": {
+                "drive_drift": {
+                  "evidence": [],
+                  "hard_failure": false,
+                  "reasons": [
+                    "本章未直接服务 Primary Drive；单章缺席不是硬失败"
+                  ],
+                  "status": "SOFT_MISS",
+                  "warning": false
+                },
+                "genre_drift": {
+                  "evidence": [],
+                  "hard_failure": false,
+                  "penalty": 4.0,
+                  "reasons": [
+                    "移除表层专名后，成长资源、能力与世界层级均不影响因果"
+                  ],
+                  "status": "GENRE_SKIN_ONLY",
+                  "warning": true
+                },
+                "genre_evolution": {
+                  "core_promise_preserved": true,
+                  "evidence": [],
+                  "explanation": "未检测到需要单独标记的 Genre Evolution",
+                  "status": "CLEAR"
+                },
+                "narrative_drive_alignment": {
+                  "drive_balance": "UNKNOWN",
+                  "drive_conflicts": [],
+                  "drives_advanced": [],
+                  "drives_deferred": [],
+                  "drives_paid_off": [],
+                  "evidence": [],
+                  "primary_drive": "SURVIVAL_RESOURCE",
+                  "primary_drive_effect": "",
+                  "secondary_drive_effects": {}
+                },
+                "payoff_channels": [],
+                "progression_impact": {
+                  "ability_showcases": [],
+                  "ability_unlocks": [],
+                  "axis_advanced": [],
+                  "growth_costs": [],
+                  "progression_delta_type": [],
+                  "resource_changes": [],
+                  "stage_change": null,
+                  "world_expansion": []
+                },
+                "reader_promise_alignment": [],
+                "resource_impact": [],
+                "scheduler_alignment": {
+                  "alignment": "UNKNOWN",
+                  "anticipations_served": [],
+                  "candidate_primary_intent": null,
+                  "debts_served": [],
+                  "deviation_reason": "",
+                  "recommended_primary_intent": null,
+                  "risks": []
+                },
+                "world_expansion_impact": []
+              },
+              "verified_anticipation_impact": [],
+              "verified_drive_alignment": {
+                "drive_balance": "UNKNOWN",
+                "drive_conflicts": [],
+                "drives_advanced": [],
+                "drives_deferred": [],
+                "drives_paid_off": [],
+                "evidence": [],
+                "primary_drive": "SURVIVAL_RESOURCE",
+                "primary_drive_effect": "",
+                "secondary_drive_effects": {}
+              },
+              "verified_progress_components": {
+                "completeness": "COMPLETE",
+                "components": {
+                  "goal_advance": 70.0,
+                  "knowledge_change": 60.0,
+                  "permanent_growth": 0.0,
+                  "relationship_change": 0.0,
+                  "strategy_expansion": 50.0,
+                  "world_state_change": 0.0
+                },
+                "evidence": {
+                  "goal_advance": [],
+                  "knowledge_change": [],
+                  "permanent_growth": [
+                    "no_verified_permanent_growth_change"
+                  ],
+                  "relationship_change": [
+                    "no_verified_relationship_change_change"
+                  ],
+                  "strategy_expansion": [],
+                  "world_state_change": [
+                    "no_verified_world_state_change_change"
+                  ]
+                },
+                "formula": "existing:progress",
+                "score": 27.0,
+                "source": "KERNEL_VERIFIED_EVIDENCE"
+              },
+              "verified_progression_impact": {
+                "ability_showcases": [],
+                "ability_unlocks": [],
+                "axis_advanced": [],
+                "growth_costs": [],
+                "progression_delta_type": [],
+                "resource_changes": [],
+                "stage_change": null,
+                "world_expansion": []
+              },
+              "verified_reader_promise_alignment": [],
+              "verified_resource_impact": [],
+              "verified_world_expansion_impact": [],
+              "warnings": [
+                "本候选未直接服务 CORE Reader Promise；单章缺席只记 Soft Miss。",
+                "Primary Drive 没有可验证的结构推进；单章只记 Soft Miss。",
+                "Candidate 未填写 Scheduler Alignment，保持 UNVERIFIED。"
+              ]
+            },
+            "genre_drift": {
+              "evidence": [],
+              "hard_failure": false,
+              "penalty": 4.0,
+              "reasons": [
+                "移除表层专名后，成长资源、能力与世界层级均不影响因果"
+              ],
+              "status": "GENRE_SKIN_ONLY",
+              "warning": true
+            },
+            "genre_evolution": {
+              "core_promise_preserved": true,
+              "evidence": [],
+              "explanation": "未检测到需要单独标记的 Genre Evolution",
+              "status": "CLEAR"
+            },
+            "narrative_drive_alignment": {
+              "drive_balance": "UNKNOWN",
+              "drive_conflicts": [],
+              "drives_advanced": [],
+              "drives_deferred": [],
+              "drives_paid_off": [],
+              "evidence": [],
+              "primary_drive": "SURVIVAL_RESOURCE",
+              "primary_drive_effect": "",
+              "secondary_drive_effects": {}
+            },
+            "payoff_channels": [],
+            "progression_impact": {
+              "ability_showcases": [],
+              "ability_unlocks": [],
+              "axis_advanced": [],
+              "growth_costs": [],
+              "progression_delta_type": [],
+              "resource_changes": [],
+              "stage_change": null,
+              "world_expansion": []
+            },
+            "reader_promise_alignment": [],
+            "resource_impact": [],
+            "scheduler_alignment": {
+              "alignment": "UNKNOWN",
+              "anticipations_served": [],
+              "candidate_primary_intent": null,
+              "debts_served": [],
+              "deviation_reason": "",
+              "recommended_primary_intent": null,
+              "risks": []
+            },
+            "world_expansion_impact": []
+          },
+          "realized": {
+            "debts_advanced": [
+              "anticipation-thread-1"
+            ],
+            "debts_paid": [],
+            "evidence": [
+              {
+                "claim": "capability:measuring-tape-reverse-mark-ch5",
+                "evidence_quotes": [
+                  "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。"
+                ],
+                "state_change_record_ids": [
+                  "measuring-tape-reverse-mark-ch5"
+                ]
+              },
+              {
+                "claim": "fact:reverse-mark-observed-ch5",
+                "evidence_quotes": [
+                  "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。"
+                ],
+                "state_change_record_ids": [
+                  "reverse-mark-observed-ch5"
+                ]
+              },
+              {
+                "claim": "thread:space-reading-route-evidence",
+                "evidence_quotes": [
+                  "带身向右绷直，门缝却向左退。沈砚盯着刻度，确认那不是门在墙上滑动，而是墙后的空间绕着窗台换了一面。倒写标记与检修窗的方向关系被测距带留在铝牌上：它来自另一个重排状态，并且在当前状态仍能被复核。"
+                ],
+                "state_change_record_ids": [
+                  "space-reading-route-evidence"
+                ]
+              },
+              {
+                "claim": "character_state:protagonist-local-evidence-choice-5",
+                "evidence_quotes": [
+                  "沈砚把铝牌翻过来，写下倒着的方向。他先把陌生标记当作观察数据，不因为它像求救就越过证据边界。广播突然停了，墙后的敲击也跟着消失。沉默没有回答他，却让门缝显得比刚才更近。"
+                ],
+                "state_change_record_ids": [
+                  "protagonist-local-evidence-choice-5"
+                ]
+              }
+            ],
+            "expected_contract_id": "contract_ef0a63f05b6211db32074bc4",
+            "narrative_drives_advanced": [],
+            "payoff_channels_realized": [],
+            "primary_intent": "让潜在他者以物理痕迹进入故事，但继续遵守知识边界和回程压力。",
+            "progression_impact": {
+              "ability_showcase": [],
+              "ability_unlock": [],
+              "axis_advanced": [
+                "measuring-tape-reverse-mark-ch5"
+              ],
+              "bottleneck_change": null,
+              "branch_change": null,
+              "future_progression_space": [],
+              "growth_cost": [],
+              "new_ceiling_visibility": [],
+              "progression_delta_type": [],
+              "resource_change": [],
+              "stage_change": null
+            },
+            "reader_promises_served": [
+              "anticipation-thread-1"
+            ],
+            "resource_changes": [],
+            "world_expansion_changes": []
+          },
+          "status": "PARTIAL",
+          "underdelivered": {},
+          "unexpected": {
+            "growth axis": [
+              "measuring-tape-reverse-mark-ch5"
+            ],
+            "narrative debt": [
+              "anticipation-thread-1"
+            ],
+            "reader promise": [
+              "anticipation-thread-1"
+            ]
+          }
+        },
+        "requirements_checked": 7,
+        "reveal_requirements_checked": 22
+      },
+      "passed": true,
+      "severity": "WARNING",
+      "validator": "Contract Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Debt Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Payoff Validator"
+    },
+    {
+      "findings": [],
+      "measurements": {},
+      "passed": true,
+      "severity": "INFO",
+      "validator": "Repetition Validator"
+    },
+    {
+      "findings": [
+        {
+          "code": "SCENE_REALIZATION_THIN",
+          "evidence": [],
+          "location": "realization_diagnostics",
+          "message": "场景展开偏薄；只需补充表达层动作、反应或后果，不改变合同状态。",
+          "severity": "WARNING",
+          "suggested_fix": "只补充动作、感官、人物反应或场面后果；不得新增 Contract 外的状态变化。"
+        }
+      ],
+      "measurements": {
+        "realization": {
+          "character_count": 795,
+          "code": "SCENE_REALIZATION_THIN",
+          "reasons": [
+            "正文低于自适应软范围"
+          ],
+          "severity": "WARNING",
+          "status": "REVIEW",
+          "suggested_fix": "只补充动作、感官、人物反应或场面后果；不得新增 Contract 外的状态变化。",
+          "target_word_range": [
+            841,
+            1876
+          ]
+        },
+        "style_fit": 79.65
+      },
+      "passed": true,
+      "severity": "WARNING",
+      "validator": "Style Validator"
+    }
+  ],
+  "run_id": "validation_a8b9e7b31661ee94e06020f6",
+  "through_event_seq": 29
+}

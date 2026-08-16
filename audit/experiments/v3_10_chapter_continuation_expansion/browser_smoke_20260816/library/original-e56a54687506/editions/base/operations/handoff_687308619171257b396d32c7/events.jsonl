@@ -1,0 +1,4 @@
+{"created_at": "2026-08-16T15:30:12.046456+00:00", "event_id": "handoff-event_5a953db96c1ef0437ad51fdd", "event_type": "READY_FOR_CODEX", "handoff_id": "handoff_687308619171257b396d32c7", "payload": {"requested_stage": "CORE_INNOVATION_PROPOSAL"}, "sequence": 1}
+{"created_at": "2026-08-16T15:32:04.398707+00:00", "event_id": "handoff-event_ce5102f7ace22c2a13f1b90e", "event_type": "CLAIMED", "handoff_id": "handoff_687308619171257b396d32c7", "payload": {"claimed_by": "codex-desktop"}, "sequence": 2}
+{"created_at": "2026-08-16T15:32:04.411707+00:00", "event_id": "handoff-event_fbba26ed7da1f8f2e790accd", "event_type": "RUNNING", "handoff_id": "handoff_687308619171257b396d32c7", "payload": {"error_message": ""}, "sequence": 3}
+{"created_at": "2026-08-16T15:35:54.739541+00:00", "event_id": "handoff-event_3b39f752c82a8fc87925b43b", "event_type": "COMPLETED", "handoff_id": "handoff_687308619171257b396d32c7", "payload": {"error_message": ""}, "sequence": 4}

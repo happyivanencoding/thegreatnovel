@@ -1,0 +1,58 @@
+{
+  "task_id": "draft-task_2a96cc8f82d432629587b749",
+  "contract_id": "contract_c9f39d7d21f722f39ffabb37",
+  "chapter_title": "第三次重排",
+  "prose_markdown": "沈砚把三块铝牌摊在窗台上。\n\n第一块记着竖口闭合时的距离，第二块记着无回声楼梯的空段，第三块记着风道里脚印的漂移。它们并不相同，却都指向同一面墙。广播提前报出屋顶，声音落下之后，窗台开始发出细响。\n\n第三次重排来了。\n\n墙体先向后退，再向左折。黑线外的风道、空段和脚印按此前的顺序短暂露出。沈砚把测距带的带壳端压住窗台，带钩端依次碰过风道边缘和空段上沿，刻度在两个位置之间跳了一次。\n\n三组重排端点的局部循环和时间窗口被测距带固定下来。它不是一张完整地图，只是一扇会在很短时间内打开的窄门。沈砚盯着墙面，记下风道出现到空段收拢之间的呼吸数，又等了一次移动。\n\n循环没有完全重复。\n\n第二次出现时，风道偏了半掌，脚印少了一道，窗台边缘却仍按同一方向收回。沈砚没有把局部循环外推成整栋建筑的规则。他把偏差也写进铝牌，确认能预测的只是下一次等待，不是建筑为什么这样变化。\n\n广播改报西侧楼梯。声音比前一轮提前了一拍，像在催他离开窗边。沈砚没有追声，也没有立刻爬向风道。他只把带钩端收回，保住这段短暂窗口的测量结果。\n\n墙体合拢，三块铝牌上第一次出现同一方向的刻线。沈砚把它们按顺序扣好。下一轮重排时，他可以在窗口打开的第一刻把手伸向更高处；但窗口很短，错一步，空段就会先于他闭上。",
+  "state_changes": [
+    {
+      "kind": "capability",
+      "record_id": "measuring-tape-rearrangement-cycle-ch9",
+      "payload": {
+        "character_id": "protagonist",
+        "description": "测距带对照三组重排端点并记录局部循环和时间窗口，为下一轮接近高处端点提供有限条件。",
+        "evidence": "三组重排端点的局部循环和时间窗口被测距带固定下来。",
+        "name": "测距带记录局部重排循环",
+        "object_id": "measuring-tape",
+        "owner_id": "protagonist",
+        "status": "ACTIVE"
+      }
+    },
+    {
+      "kind": "fact",
+      "record_id": "local-rearrangement-cycle-observed-ch9",
+      "payload": {
+        "description": "检修窗、风道和无回声空段按近似顺序重复出现，但位置存在偏差，局部循环不能外推为整栋建筑规则。",
+        "knowledge_status": "UNKNOWN",
+        "location_relation": "external_vent_window_local_cycle",
+        "object": "第三次重排端点",
+        "predicate": "local_rearrangement_cycle_observed",
+        "status": "observed"
+      }
+    },
+    {
+      "kind": "thread",
+      "record_id": "space-reading-route-evidence",
+      "payload": {
+        "evidence": "沈砚保住这段短暂窗口的测量结果，准备下一轮在窗口打开时接近高处端点。",
+        "goal": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "phase": "escalation",
+        "stakes": "局部循环存在偏差，窗口很短，错一步空段会先于主角闭合。",
+        "status": "ADVANCED",
+        "thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+      }
+    },
+    {
+      "kind": "character_state",
+      "record_id": "protagonist-local-evidence-choice-9",
+      "payload": {
+        "change": "沈砚把偏差也写进铝牌，确认能预测的只是下一次等待，不是建筑为什么变化。",
+        "character_id": "protagonist",
+        "cost": "再次消耗当天唯一进化机会，并放弃在本轮追入风道。"
+      }
+    }
+  ],
+  "promises_advanced": ["anticipation-thread-1", "anticipation-world-earned-spatial-frontier"],
+  "promises_paid": [],
+  "new_major_hooks": 0,
+  "notes": ["局部循环、屋顶状态、广播身份、脚印作者和建筑成因保持未知；本章只建立下一轮有限行动窗口。"]
+}

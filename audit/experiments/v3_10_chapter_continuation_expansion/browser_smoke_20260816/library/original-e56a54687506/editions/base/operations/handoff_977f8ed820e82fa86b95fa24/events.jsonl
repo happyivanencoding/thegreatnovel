@@ -1,0 +1,4 @@
+{"created_at": "2026-08-16T17:11:29.435831+00:00", "event_id": "handoff-event_aee2c6682b347efe6ab4820f", "event_type": "READY_FOR_CODEX", "handoff_id": "handoff_977f8ed820e82fa86b95fa24", "payload": {"requested_stage": "PLAN_ONLY"}, "sequence": 1}
+{"created_at": "2026-08-16T17:12:54.739443+00:00", "event_id": "handoff-event_852aaa7fd8b89ec103c7cf56", "event_type": "CLAIMED", "handoff_id": "handoff_977f8ed820e82fa86b95fa24", "payload": {"claimed_by": "codex-chapter5-plan"}, "sequence": 2}
+{"created_at": "2026-08-16T17:12:54.748403+00:00", "event_id": "handoff-event_d2248c407b3bfb38996e2a63", "event_type": "RUNNING", "handoff_id": "handoff_977f8ed820e82fa86b95fa24", "payload": {"error_message": ""}, "sequence": 3}
+{"created_at": "2026-08-16T17:13:34.766031+00:00", "event_id": "handoff-event_dfe59b0693579bd1337eef4c", "event_type": "COMPLETED", "handoff_id": "handoff_977f8ed820e82fa86b95fa24", "payload": {"error_message": ""}, "sequence": 4}

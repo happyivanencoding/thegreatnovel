@@ -1,0 +1,1108 @@
+{
+  "apply_id": "genesis-apply-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+  "apply_plan": {
+    "author_truths": [
+      {
+        "statement": "沈砚，灾变前为城市旧楼做测绘和安全复核的自由接单人；他擅长记住墙体、回声、风向与转折关系，却没有强悍体力，也不擅长在不完整证据下相信别人。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "主角",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-1",
+        "truth_type": "CHARACTER_IDENTITY"
+      },
+      {
+        "statement": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "主角目标",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-2",
+        "truth_type": "CHARACTER_GOAL"
+      },
+      {
+        "statement": "建筑把上下关系周期性打乱，广播又给出互相矛盾的提示；每次进化只能解决一个空间缺口，追声、找水、保留退路不能同时满足。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "主冲突",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-3",
+        "truth_type": "PLOT_TRUTH"
+      },
+      {
+        "statement": "体力、饮水、照明和当日唯一进化机会会随位置与判断被消耗；这些是选择的现实后果，不预设每次能力兑现都必须牺牲某种叙事价值。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "主角代价",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-4",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "从只相信完整地图和充分证据的测绘者，成长为能在局部证据下作出唯一选择、让异常物品先打开行动可能，再用行动补足知识的人；他的上限表现为能处理更大、更不稳定的空间关系，而不是只拥有更多物资。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "主角成长空间",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-5",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "在下一次大幅重排前，用一次物品进化确认一条可返回的空间关系，取回饮水，并带走能复核路线的现场记录。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "第一阶段目标",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-6",
+        "truth_type": "FUTURE_EVENT_PRECONDITION"
+      },
+      {
+        "statement": "主要故事承载是一座会把住宅层、商场中庭、地下设备层和封闭屋顶重新拼接的高层综合楼。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "WORLD_CARRIER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-7",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "每日唯一的物品进化是主角反复改变行动可能的第一发动机，不建立脱离它的第二成长系统。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "SIGNATURE_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-8",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "使用第三人称限知，让物品结果、空间错位和广播可信度都通过主角能观察到的后果逐步确认。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "NARRATIVE_FORM",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-9",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "全球灾变后，幸存者被困在各自的废弃建筑中，建筑结构会周期性改变，旧路线和门后空间不能默认保持不变。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-10",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "主角每天只能从自己真正拥有并能接触到的普通非生命物品中选择一件，使它沿原有功能发生一次永久进化；同一物品可以继续进化。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-11",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "物品进化必须保留可辨认的原功能，并在具体行动中显示超出普通人能力范围的结果；不能用普通工程、职业知识或一般效率解释替代。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-12",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "一次选择不能同时进化多件物品，也不能远程选择不在主角手边的对象；错配会留下真实的机会与时间压力。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-13",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "建筑变化造成的空间、路线和资源后果必须能被第三人称限知视角观察和复核；建筑成因、广播来源和其他幸存者规则暂保持候选状态。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-14",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "每一次有效兑现先改变主角当下能做什么，再把更大的空间、资源或规则问题交给下一轮选择，不用同场景的维护或牺牲把收益抵消为无效。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "WORLD_RULE",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-15",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "沈砚：主角，旧楼测绘与安全复核接单人；以空间记录为 supporting competence，特殊优势仍来自每日物品进化。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "CHARACTER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-16",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "广播中的声音：持续提供互相矛盾的楼层提示，既可能是幸存者留下的路线，也可能正在利用建筑变化诱导行动；身份保持候选。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "CHARACTER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-17",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "门后幸存者：在不同重排状态下留下水位、粉笔线、收音机和反向楼层编号，为沈砚提供局部观测，也可能争夺同一条安全路线。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "CHARACTER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-18",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "楼外天气的目击者候选：只在沈砚进入更高空间后以可验证的物理痕迹进入故事，不预先确定其身份或可信度。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "CHARACTER",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-19",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "塔内临时幸存者小群体：围绕水、照明和安全层交换局部信息，规模与立场随事实发展。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "FACTION",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-20",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "广播维护者或信号来源：作为待辨认的压力节点，不预设为万能幕后组织。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "FACTION",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-21",
+        "truth_type": "CUSTOM"
+      },
+      {
+        "statement": "其他变化建筑中的幸存者网络：在世界扩张后才由真实路线和资源交换形成，不提前固定政治结构。",
+        "subject_type": "STORY_FOUNDATION",
+        "title": "FACTION",
+        "truth_id": "truth-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-22",
+        "truth_type": "CUSTOM"
+      }
+    ],
+    "core_innovation_intent": {
+      "optional_mix_notes": "",
+      "selected_primary_innovation_id": "spatial-reconfiguration"
+    },
+    "first_chapter_candidates": [
+      {
+        "candidate_id": "genesis-candidate-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-chapter-measuring-tape",
+        "chapter_goal": "在下一次震动前确认一条能带他取回饮水并返回的空间关系。",
+        "cost": "他放弃了当天强化手电的可能，回程只能依靠已有电量和测距带提供的关系判断。",
+        "future_space": "重排结束后，测距带两端仍指向同一面墙，但那面墙上多出一扇原本不存在的门，广播从门内报出沈砚尚未说出口的楼层。",
+        "gate_status": "NOT_RUN",
+        "irreversible_change": "第一件普通物品永久获得跨局部重排保持空间关系的异常能力，沈砚从此拥有一条不能被旧地图解释的路线证据。",
+        "lens": "CONTINUITY_ACTIVE_THREAD",
+        "plan": {
+          "action_space_delta": "",
+          "anticipation_impact": [],
+          "author_control_trace": {
+            "author_goals_not_used": [],
+            "author_intent_hits": [],
+            "author_intents_advanced": [],
+            "author_task_hits": [],
+            "author_tasks_advanced": [],
+            "unused_reasons": {}
+          },
+          "canon_constraints": [
+            "全球灾变后，幸存者被困在各自的废弃建筑中，建筑结构会周期性改变，旧路线和门后空间不能默认保持不变。",
+            "主角每天只能从自己真正拥有并能接触到的普通非生命物品中选择一件，使它沿原有功能发生一次永久进化；同一物品可以继续进化。",
+            "物品进化必须保留可辨认的原功能，并在具体行动中显示超出普通人能力范围的结果；不能用普通工程、职业知识或一般效率解释替代。",
+            "一次选择不能同时进化多件物品，也不能远程选择不在主角手边的对象；错配会留下真实的机会与时间压力。",
+            "建筑变化造成的空间、路线和资源后果必须能被第三人称限知视角观察和复核；建筑成因、广播来源和其他幸存者规则暂保持候选状态。",
+            "每一次有效兑现先改变主角当下能做什么，再把更大的空间、资源或规则问题交给下一轮选择，不用同场景的维护或牺牲把收益抵消为无效。"
+          ],
+          "causal_sources": [
+            "作者确认的故事基础方案与创作起点"
+          ],
+          "chapter_intent": null,
+          "commit_updates": [
+            "thread_status:thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+            "character_state:protagonist"
+          ],
+          "core_promise_delivery": "",
+          "emotional_outcome": "重排结束后，测距带两端仍指向同一面墙，但那面墙上多出一扇原本不存在的门，广播从门内报出沈砚尚未说出口的楼层。",
+          "ending_state": "重排结束后，测距带两端仍指向同一面墙，但那面墙上多出一扇原本不存在的门，广播从门内报出沈砚尚未说出口的楼层。",
+          "event_source": "沈砚在第一次提前重排中卡在两段互不相连的楼梯之间，半瓶水和一块能记录路线的旧标牌落在对面，门外的蓝色楼层标记却出现在不可能的位置。",
+          "forbidden_repetitions": [],
+          "gate_input": {
+            "author_constraint_violations": [],
+            "canon_conflicts": [],
+            "capability_violations": [],
+            "character_bottom_line_violation": false,
+            "character_fit_inputs": {},
+            "knowledge_violations": [],
+            "missing_causal_sources": [],
+            "payoff_cooldown_violations": [],
+            "style_boundary_violations": [],
+            "style_fit_inputs": {},
+            "timeline_conflicts": []
+          },
+          "genre_alignment": [],
+          "genre_drift_diagnostic": {},
+          "genre_evolution_diagnostic": {},
+          "innovation_preview": null,
+          "knowledge_constraints": [
+            "不得让角色无依据知晓幕后设定"
+          ],
+          "knowledge_delta": "",
+          "lens": "CONTINUITY_ACTIVE_THREAD",
+          "local_id": "chapter-measuring-tape",
+          "must_not_resolve": [
+            "不得在首章锁死长期路线或结局"
+          ],
+          "narrative_drive_alignment": {
+            "drive_balance": "UNKNOWN",
+            "drive_conflicts": [],
+            "drives_advanced": [],
+            "drives_deferred": [],
+            "drives_paid_off": [],
+            "evidence": [],
+            "primary_drive": null,
+            "primary_drive_effect": "",
+            "secondary_drive_effects": {}
+          },
+          "narrative_drive_drift_diagnostic": {},
+          "novelty_provenance": [],
+          "opportunity_cost": "他放弃了当天强化手电的可能，回程只能依靠已有电量和测距带提供的关系判断。",
+          "outcome_magnitude": "",
+          "payoff_channel_impact": [],
+          "pressure_before": 0.0,
+          "pressure_target_after": 35.0,
+          "primary_function": "setup",
+          "primary_thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+          "profile_alignment": {
+            "constraint_checks": [],
+            "dimensions": []
+          },
+          "progress_preview": null,
+          "progression_debt_impact": [],
+          "progression_impact": {
+            "ability_showcase": [],
+            "ability_unlock": [],
+            "axis_advanced": [],
+            "bottleneck_change": null,
+            "branch_change": null,
+            "future_progression_space": [],
+            "growth_cost": [],
+            "new_ceiling_visibility": [],
+            "progression_delta_type": [],
+            "resource_change": [],
+            "stage_change": null
+          },
+          "promises_to_advance": [],
+          "promises_to_pay": [],
+          "protagonist_strategy": "把当天唯一机会用在让测距带保留墙面关系，还是用在让手电照亮危险落脚点。",
+          "reader_promise_alignment": [],
+          "reader_question": "广播说“别相信蓝色楼层”，下一秒蓝色标牌后传来水声，而楼梯的墙面正在向内折。",
+          "recent_avoid_repetitions": [],
+          "reference_provenance": {
+            "application_summary": "",
+            "card_ids_used": [],
+            "match_tier": "EXACT",
+            "reference_strategy_id": null,
+            "reuse_reason": null,
+            "selected_solutions": [],
+            "snapshot_hash": null,
+            "snapshot_id": null,
+            "usage": "REFERENCE_ONLY"
+          },
+          "relationship_delta": "",
+          "required_cost": "他放弃了当天强化手电的可能，回程只能依靠已有电量和测距带提供的关系判断。",
+          "required_irreversible_change": "第一件普通物品永久获得跨局部重排保持空间关系的异常能力，沈砚从此拥有一条不能被旧地图解释的路线证据。",
+          "resource_opportunity_impact": [],
+          "reveal_impact": {
+            "character_knowledge_delta": [],
+            "full_reveals": [],
+            "hints": [],
+            "kept_hidden": [],
+            "partial_reveals": [],
+            "reader_knowledge_delta": [],
+            "secrets_used": []
+          },
+          "risk_form": "断梯、缺水、不断变化的空间和互相矛盾的广播同时逼近，任何选择都会放弃另一种即时保障。",
+          "scene_topology": "沈砚在第一次提前重排中卡在两段互不相连的楼梯之间，半瓶水和一块能记录路线的旧标牌落在对面，门外的蓝色楼层标记却出现在不可能的位置。",
+          "scheduler_alignment": {
+            "alignment": "UNKNOWN",
+            "anticipations_served": [],
+            "candidate_primary_intent": null,
+            "debts_served": [],
+            "deviation_reason": "",
+            "recommended_primary_intent": null,
+            "risks": []
+          },
+          "score_evidence": {
+            "agency_gain": [],
+            "debt_utility": [],
+            "future_damage": [],
+            "payoff_or_setup_utility": [],
+            "pressure_curve_fit": [],
+            "progress_gain": [],
+            "repetition_fatigue": [],
+            "risk_fit": [],
+            "structural_diversity": [],
+            "style_fit": [],
+            "thread_need_fit": []
+          },
+          "score_inputs": {
+            "agency_gain": 0.0,
+            "debt_utility": 0.0,
+            "future_damage": 0.0,
+            "payoff_or_setup_utility": 0.0,
+            "pressure_curve_fit": 0.0,
+            "progress_gain": 0.0,
+            "repetition_fatigue": 0.0,
+            "risk_fit": 0.0,
+            "structural_diversity": 0.0,
+            "style_fit": 0.0,
+            "thread_need_fit": 0.0
+          },
+          "secondary_functions": [],
+          "social_feedback": "用物品质变直接验证空间异常，首章回报是可走的路线和饮水，谜团只作为改变下一次选择的证据出现。",
+          "solution_method": "沈砚选择测距带，让它沿测量功能在折叠后仍指向同一段墙面，随后以身体攀爬和逐点记录完成取水。",
+          "state_changes": [
+            "第一件普通物品永久获得跨局部重排保持空间关系的异常能力，沈砚从此拥有一条不能被旧地图解释的路线证据。",
+            "重排结束后，测距带两端仍指向同一面墙，但那面墙上多出一扇原本不存在的门，广播从门内报出沈砚尚未说出口的楼层。"
+          ],
+          "style_constraints": {
+            "pov": "第三人称限知",
+            "tone_style": "紧张、具体、克制但有爽点"
+          },
+          "summary": "在下一次震动前确认一条能带他取回饮水并返回的空间关系。",
+          "title": "断梯两端",
+          "truth_alignment": [],
+          "wildcard": false,
+          "world_expansion_impact": [],
+          "world_scale_delta": ""
+        },
+        "protagonist_action": "沈砚选择测距带，让它沿测量功能在折叠后仍指向同一段墙面，随后以身体攀爬和逐点记录完成取水。",
+        "rank": 1,
+        "risk": "用物品质变直接验证空间异常，首章回报是可走的路线和饮水，谜团只作为改变下一次选择的证据出现。",
+        "score_status": "NOT_COMPUTED",
+        "source_candidate_id": "chapter-measuring-tape",
+        "title": "断梯两端"
+      },
+      {
+        "candidate_id": "genesis-candidate-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-chapter-boundary-flashlight",
+        "chapter_goal": "在雨声消失前判断这道边界是否连接到可取水的空间，而不是被声音带进死层。",
+        "cost": "当天的进化机会没有用于直接增加饮水，沈砚必须先用已有容器和体力把异常边界兑现成资源。",
+        "future_space": "光痕在设备层消失后仍从屋顶方向亮起，显示另一座建筑的轮廓，证明这次重排可能不止改变一栋楼。",
+        "gate_status": "NOT_RUN",
+        "irreversible_change": "手电永久能够让特定变化空间的边界留下可追踪光痕，普通照明不再只是看见障碍，而成为可验证路线的一部分。",
+        "lens": "EARNED_OPPORTUNITY",
+        "plan": {
+          "action_space_delta": "",
+          "anticipation_impact": [],
+          "author_control_trace": {
+            "author_goals_not_used": [],
+            "author_intent_hits": [],
+            "author_intents_advanced": [],
+            "author_task_hits": [],
+            "author_tasks_advanced": [],
+            "unused_reasons": {}
+          },
+          "canon_constraints": [
+            "全球灾变后，幸存者被困在各自的废弃建筑中，建筑结构会周期性改变，旧路线和门后空间不能默认保持不变。",
+            "主角每天只能从自己真正拥有并能接触到的普通非生命物品中选择一件，使它沿原有功能发生一次永久进化；同一物品可以继续进化。",
+            "物品进化必须保留可辨认的原功能，并在具体行动中显示超出普通人能力范围的结果；不能用普通工程、职业知识或一般效率解释替代。",
+            "一次选择不能同时进化多件物品，也不能远程选择不在主角手边的对象；错配会留下真实的机会与时间压力。",
+            "建筑变化造成的空间、路线和资源后果必须能被第三人称限知视角观察和复核；建筑成因、广播来源和其他幸存者规则暂保持候选状态。",
+            "每一次有效兑现先改变主角当下能做什么，再把更大的空间、资源或规则问题交给下一轮选择，不用同场景的维护或牺牲把收益抵消为无效。"
+          ],
+          "causal_sources": [
+            "作者确认的故事基础方案与创作起点"
+          ],
+          "chapter_intent": null,
+          "commit_updates": [
+            "thread_status:thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+            "character_state:protagonist"
+          ],
+          "core_promise_delivery": "",
+          "emotional_outcome": "光痕在设备层消失后仍从屋顶方向亮起，显示另一座建筑的轮廓，证明这次重排可能不止改变一栋楼。",
+          "ending_state": "光痕在设备层消失后仍从屋顶方向亮起，显示另一座建筑的轮廓，证明这次重排可能不止改变一栋楼。",
+          "event_source": "楼体重排后，封死的设备层里落着只向上流的雨声，沈砚能听见水，却找不到墙后的入口；他手边只有手电、空杯和一小截绳。",
+          "forbidden_repetitions": [],
+          "gate_input": {
+            "author_constraint_violations": [],
+            "canon_conflicts": [],
+            "capability_violations": [],
+            "character_bottom_line_violation": false,
+            "character_fit_inputs": {},
+            "knowledge_violations": [],
+            "missing_causal_sources": [],
+            "payoff_cooldown_violations": [],
+            "style_boundary_violations": [],
+            "style_fit_inputs": {},
+            "timeline_conflicts": []
+          },
+          "genre_alignment": [],
+          "genre_drift_diagnostic": {},
+          "genre_evolution_diagnostic": {},
+          "innovation_preview": null,
+          "knowledge_constraints": [
+            "不得让角色无依据知晓幕后设定"
+          ],
+          "knowledge_delta": "",
+          "lens": "EARNED_OPPORTUNITY",
+          "local_id": "chapter-boundary-flashlight",
+          "must_not_resolve": [
+            "不得在首章锁死长期路线或结局"
+          ],
+          "narrative_drive_alignment": {
+            "drive_balance": "UNKNOWN",
+            "drive_conflicts": [],
+            "drives_advanced": [],
+            "drives_deferred": [],
+            "drives_paid_off": [],
+            "evidence": [],
+            "primary_drive": null,
+            "primary_drive_effect": "",
+            "secondary_drive_effects": {}
+          },
+          "narrative_drive_drift_diagnostic": {},
+          "novelty_provenance": [],
+          "opportunity_cost": "当天的进化机会没有用于直接增加饮水，沈砚必须先用已有容器和体力把异常边界兑现成资源。",
+          "outcome_magnitude": "",
+          "payoff_channel_impact": [],
+          "pressure_before": 0.0,
+          "pressure_target_after": 35.0,
+          "primary_function": "choice",
+          "primary_thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+          "profile_alignment": {
+            "constraint_checks": [],
+            "dimensions": []
+          },
+          "progress_preview": null,
+          "progression_debt_impact": [],
+          "progression_impact": {
+            "ability_showcase": [],
+            "ability_unlock": [],
+            "axis_advanced": [],
+            "bottleneck_change": null,
+            "branch_change": null,
+            "future_progression_space": [],
+            "growth_cost": [],
+            "new_ceiling_visibility": [],
+            "progression_delta_type": [],
+            "resource_change": [],
+            "stage_change": null
+          },
+          "promises_to_advance": [],
+          "promises_to_pay": [],
+          "protagonist_strategy": "进化手电去显出变化区域的边界，还是进化空杯去扩大当前可得的饮水。",
+          "reader_promise_alignment": [],
+          "reader_question": "手电照到的不是墙，而是一道会随着楼层震动移动的黑色边界，广播把它称作“通往屋外的门缝”。",
+          "recent_avoid_repetitions": [],
+          "reference_provenance": {
+            "application_summary": "",
+            "card_ids_used": [],
+            "match_tier": "EXACT",
+            "reference_strategy_id": null,
+            "reuse_reason": null,
+            "selected_solutions": [],
+            "snapshot_hash": null,
+            "snapshot_id": null,
+            "usage": "REFERENCE_ONLY"
+          },
+          "relationship_delta": "",
+          "required_cost": "当天的进化机会没有用于直接增加饮水，沈砚必须先用已有容器和体力把异常边界兑现成资源。",
+          "required_irreversible_change": "手电永久能够让特定变化空间的边界留下可追踪光痕，普通照明不再只是看见障碍，而成为可验证路线的一部分。",
+          "resource_opportunity_impact": [],
+          "reveal_impact": {
+            "character_knowledge_delta": [],
+            "full_reveals": [],
+            "hints": [],
+            "kept_hidden": [],
+            "partial_reveals": [],
+            "reader_knowledge_delta": [],
+            "secrets_used": []
+          },
+          "risk_form": "水声和广播诱导他追逐未知，设备层地面在每次震动后改变倾角，错误的边界判断会让他丢失回程。",
+          "scene_topology": "楼体重排后，封死的设备层里落着只向上流的雨声，沈砚能听见水，却找不到墙后的入口；他手边只有手电、空杯和一小截绳。",
+          "scheduler_alignment": {
+            "alignment": "UNKNOWN",
+            "anticipations_served": [],
+            "candidate_primary_intent": null,
+            "debts_served": [],
+            "deviation_reason": "",
+            "recommended_primary_intent": null,
+            "risks": []
+          },
+          "score_evidence": {
+            "agency_gain": [],
+            "debt_utility": [],
+            "future_damage": [],
+            "payoff_or_setup_utility": [],
+            "pressure_curve_fit": [],
+            "progress_gain": [],
+            "repetition_fatigue": [],
+            "risk_fit": [],
+            "structural_diversity": [],
+            "style_fit": [],
+            "thread_need_fit": []
+          },
+          "score_inputs": {
+            "agency_gain": 0.0,
+            "debt_utility": 0.0,
+            "future_damage": 0.0,
+            "payoff_or_setup_utility": 0.0,
+            "pressure_curve_fit": 0.0,
+            "progress_gain": 0.0,
+            "repetition_fatigue": 0.0,
+            "risk_fit": 0.0,
+            "structural_diversity": 0.0,
+            "style_fit": 0.0,
+            "thread_need_fit": 0.0
+          },
+          "secondary_functions": [],
+          "social_feedback": "首章以照明物的异常边界能力建立空间悬念，先给出可验证的饮水结果，再把世界扩张的线索推到下一轮。",
+          "solution_method": "沈砚选择手电，让光线沿照明功能显出重排前后仍可对照的边界，借绳固定身体，沿边界找到一处真实积水。",
+          "state_changes": [
+            "手电永久能够让特定变化空间的边界留下可追踪光痕，普通照明不再只是看见障碍，而成为可验证路线的一部分。",
+            "光痕在设备层消失后仍从屋顶方向亮起，显示另一座建筑的轮廓，证明这次重排可能不止改变一栋楼。"
+          ],
+          "style_constraints": {
+            "pov": "第三人称限知",
+            "tone_style": "紧张、具体、克制但有爽点"
+          },
+          "summary": "在雨声消失前判断这道边界是否连接到可取水的空间，而不是被声音带进死层。",
+          "title": "雨在屋顶里面",
+          "truth_alignment": [],
+          "wildcard": false,
+          "world_expansion_impact": [],
+          "world_scale_delta": ""
+        },
+        "protagonist_action": "沈砚选择手电，让光线沿照明功能显出重排前后仍可对照的边界，借绳固定身体，沿边界找到一处真实积水。",
+        "rank": 2,
+        "risk": "首章以照明物的异常边界能力建立空间悬念，先给出可验证的饮水结果，再把世界扩张的线索推到下一轮。",
+        "score_status": "NOT_COMPUTED",
+        "source_candidate_id": "chapter-boundary-flashlight",
+        "title": "雨在屋顶里面"
+      },
+      {
+        "candidate_id": "genesis-candidate-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-chapter-chalk-mark",
+        "chapter_goal": "在下一次重排前判断哪一个出口能通向饮水和回程，而不是只追逐风声。",
+        "cost": "他暂时放弃追查收音机信号，必须接受广播可能在下一次重排前改换位置。",
+        "future_space": "返程时第三扇门后出现了原本只在广播里出现的屋顶风，粉笔箭头却指向门外，说明标记记录的不是墙面，而是更大的空间关系。",
+        "gate_status": "NOT_RUN",
+        "irreversible_change": "粉笔永久获得在局部空间重排后保留标记关系的异常能力，沈砚第一次能把建筑的错位写成可复核的路径。",
+        "lens": "FORWARD_EXPANSION",
+        "plan": {
+          "action_space_delta": "",
+          "anticipation_impact": [],
+          "author_control_trace": {
+            "author_goals_not_used": [],
+            "author_intent_hits": [],
+            "author_intents_advanced": [],
+            "author_task_hits": [],
+            "author_tasks_advanced": [],
+            "unused_reasons": {}
+          },
+          "canon_constraints": [
+            "全球灾变后，幸存者被困在各自的废弃建筑中，建筑结构会周期性改变，旧路线和门后空间不能默认保持不变。",
+            "主角每天只能从自己真正拥有并能接触到的普通非生命物品中选择一件，使它沿原有功能发生一次永久进化；同一物品可以继续进化。",
+            "物品进化必须保留可辨认的原功能，并在具体行动中显示超出普通人能力范围的结果；不能用普通工程、职业知识或一般效率解释替代。",
+            "一次选择不能同时进化多件物品，也不能远程选择不在主角手边的对象；错配会留下真实的机会与时间压力。",
+            "建筑变化造成的空间、路线和资源后果必须能被第三人称限知视角观察和复核；建筑成因、广播来源和其他幸存者规则暂保持候选状态。",
+            "每一次有效兑现先改变主角当下能做什么，再把更大的空间、资源或规则问题交给下一轮选择，不用同场景的维护或牺牲把收益抵消为无效。"
+          ],
+          "causal_sources": [
+            "作者确认的故事基础方案与创作起点"
+          ],
+          "chapter_intent": null,
+          "commit_updates": [
+            "thread_status:thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+            "character_state:protagonist"
+          ],
+          "core_promise_delivery": "",
+          "emotional_outcome": "返程时第三扇门后出现了原本只在广播里出现的屋顶风，粉笔箭头却指向门外，说明标记记录的不是墙面，而是更大的空间关系。",
+          "ending_state": "返程时第三扇门后出现了原本只在广播里出现的屋顶风，粉笔箭头却指向门外，说明标记记录的不是墙面，而是更大的空间关系。",
+          "event_source": "沈砚在一段反复回到原点的走廊里发现三道同样的门，半瓶水、旧收音机和一盒普通粉笔在脚边，门后却传来不同方向的风。",
+          "forbidden_repetitions": [],
+          "gate_input": {
+            "author_constraint_violations": [],
+            "canon_conflicts": [],
+            "capability_violations": [],
+            "character_bottom_line_violation": false,
+            "character_fit_inputs": {},
+            "knowledge_violations": [],
+            "missing_causal_sources": [],
+            "payoff_cooldown_violations": [],
+            "style_boundary_violations": [],
+            "style_fit_inputs": {},
+            "timeline_conflicts": []
+          },
+          "genre_alignment": [],
+          "genre_drift_diagnostic": {},
+          "genre_evolution_diagnostic": {},
+          "innovation_preview": null,
+          "knowledge_constraints": [
+            "不得让角色无依据知晓幕后设定"
+          ],
+          "knowledge_delta": "",
+          "lens": "FORWARD_EXPANSION",
+          "local_id": "chapter-chalk-mark",
+          "must_not_resolve": [
+            "不得在首章锁死长期路线或结局"
+          ],
+          "narrative_drive_alignment": {
+            "drive_balance": "UNKNOWN",
+            "drive_conflicts": [],
+            "drives_advanced": [],
+            "drives_deferred": [],
+            "drives_paid_off": [],
+            "evidence": [],
+            "primary_drive": null,
+            "primary_drive_effect": "",
+            "secondary_drive_effects": {}
+          },
+          "narrative_drive_drift_diagnostic": {},
+          "novelty_provenance": [],
+          "opportunity_cost": "他暂时放弃追查收音机信号，必须接受广播可能在下一次重排前改换位置。",
+          "outcome_magnitude": "",
+          "payoff_channel_impact": [],
+          "pressure_before": 0.0,
+          "pressure_target_after": 35.0,
+          "primary_function": "discovery",
+          "primary_thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+          "profile_alignment": {
+            "constraint_checks": [],
+            "dimensions": []
+          },
+          "progress_preview": null,
+          "progression_debt_impact": [],
+          "progression_impact": {
+            "ability_showcase": [],
+            "ability_unlock": [],
+            "axis_advanced": [],
+            "bottleneck_change": null,
+            "branch_change": null,
+            "future_progression_space": [],
+            "growth_cost": [],
+            "new_ceiling_visibility": [],
+            "progression_delta_type": [],
+            "resource_change": [],
+            "stage_change": null
+          },
+          "promises_to_advance": [],
+          "promises_to_pay": [],
+          "protagonist_strategy": "进化粉笔保存空间标记关系，还是进化收音机去追广播的来源。",
+          "reader_promise_alignment": [],
+          "reader_question": "他在第一面墙上画下箭头，建筑一震，箭头没有留在墙上，却在另一段不相邻的走廊亮起。",
+          "recent_avoid_repetitions": [],
+          "reference_provenance": {
+            "application_summary": "",
+            "card_ids_used": [],
+            "match_tier": "EXACT",
+            "reference_strategy_id": null,
+            "reuse_reason": null,
+            "selected_solutions": [],
+            "snapshot_hash": null,
+            "snapshot_id": null,
+            "usage": "REFERENCE_ONLY"
+          },
+          "relationship_delta": "",
+          "required_cost": "他暂时放弃追查收音机信号，必须接受广播可能在下一次重排前改换位置。",
+          "required_irreversible_change": "粉笔永久获得在局部空间重排后保留标记关系的异常能力，沈砚第一次能把建筑的错位写成可复核的路径。",
+          "resource_opportunity_impact": [],
+          "reveal_impact": {
+            "character_knowledge_delta": [],
+            "full_reveals": [],
+            "hints": [],
+            "kept_hidden": [],
+            "partial_reveals": [],
+            "reader_knowledge_delta": [],
+            "secrets_used": []
+          },
+          "risk_form": "三个出口不断交换位置，风向提供的线索互相冲突，沈砚只能把一次能力验证投入标记或声音其中之一。",
+          "scene_topology": "沈砚在一段反复回到原点的走廊里发现三道同样的门，半瓶水、旧收音机和一盒普通粉笔在脚边，门后却传来不同方向的风。",
+          "scheduler_alignment": {
+            "alignment": "UNKNOWN",
+            "anticipations_served": [],
+            "candidate_primary_intent": null,
+            "debts_served": [],
+            "deviation_reason": "",
+            "recommended_primary_intent": null,
+            "risks": []
+          },
+          "score_evidence": {
+            "agency_gain": [],
+            "debt_utility": [],
+            "future_damage": [],
+            "payoff_or_setup_utility": [],
+            "pressure_curve_fit": [],
+            "progress_gain": [],
+            "repetition_fatigue": [],
+            "risk_fit": [],
+            "structural_diversity": [],
+            "style_fit": [],
+            "thread_need_fit": []
+          },
+          "score_inputs": {
+            "agency_gain": 0.0,
+            "debt_utility": 0.0,
+            "future_damage": 0.0,
+            "payoff_or_setup_utility": 0.0,
+            "pressure_curve_fit": 0.0,
+            "progress_gain": 0.0,
+            "repetition_fatigue": 0.0,
+            "risk_fit": 0.0,
+            "structural_diversity": 0.0,
+            "style_fit": 0.0,
+            "thread_need_fit": 0.0
+          },
+          "secondary_functions": [],
+          "social_feedback": "首章把普通记录物变成跨重排的路线证据，用资源目标和广播谜团共同检验选择，回报与悬念都直接服务每日进化。",
+          "solution_method": "沈砚选择粉笔，让标记沿记录功能在空间折叠后保留相邻关系，借重复出现的箭头找到储水间并留下返程证据。",
+          "state_changes": [
+            "粉笔永久获得在局部空间重排后保留标记关系的异常能力，沈砚第一次能把建筑的错位写成可复核的路径。",
+            "返程时第三扇门后出现了原本只在广播里出现的屋顶风，粉笔箭头却指向门外，说明标记记录的不是墙面，而是更大的空间关系。"
+          ],
+          "style_constraints": {
+            "pov": "第三人称限知",
+            "tone_style": "紧张、具体、克制但有爽点"
+          },
+          "summary": "在下一次重排前判断哪一个出口能通向饮水和回程，而不是只追逐风声。",
+          "title": "墙上的第三个出口",
+          "truth_alignment": [],
+          "wildcard": true,
+          "world_expansion_impact": [],
+          "world_scale_delta": ""
+        },
+        "protagonist_action": "沈砚选择粉笔，让标记沿记录功能在空间折叠后保留相邻关系，借重复出现的箭头找到储水间并留下返程证据。",
+        "rank": 3,
+        "risk": "首章把普通记录物变成跨重排的路线证据，用资源目标和广播谜团共同检验选择，回报与悬念都直接服务每日进化。",
+        "score_status": "NOT_COMPUTED",
+        "source_candidate_id": "chapter-chalk-mark",
+        "title": "墙上的第三个出口"
+      }
+    ],
+    "first_phase": {
+      "after_climax_change": "他获得第一条能跨越塔内重排的可验证路线，并知道广播确实与更大空间有关；同时塔内已无稳定退路，下一轮选择必须面对楼层之外的未知。",
+      "first_concrete_goal": "在下一次大幅重排前，用一次物品进化确认一条可返回的空间关系，取回饮水，并带走能复核路线的现场记录。",
+      "first_meaningful_escalation": "成功取水后，建筑把重排范围从一段楼梯扩大到整层，广播从一个本来不存在的门后传来，并指向屋顶外的天气；原有安全点不再可靠。",
+      "first_payoff": "沈砚用进化后的测距带确认折断楼梯与储物间之间的关系，实际取回饮水和一份路线记录；能力先带来清楚的逃生与资源收益。",
+      "first_progression_opportunity": "让测距带沿测量功能发生永久质变，使它的两端在建筑局部折叠后仍能指向同一段墙面，从而把普通人无法确认的断路变成可验证路线。",
+      "first_resource_bottleneck": "半瓶水、手电电池和可携带记录工具都在身边，但位置被断梯分开；每天只有一次选择，不能同时补齐照明、路线和取水。",
+      "opening_pressure": "第一次建筑重排提前发生，沈砚被夹在两段不再相连的楼梯之间；半瓶水在另一侧，广播却警告他不要相信蓝色楼层，下一次震动已经在逼近。",
+      "selected_foundation_id": "foundation-folded-tower",
+      "stage_climax": "沈砚在下一次大重排中把测距带、旧标牌和真实攀爬结合，登上一个原本不可能接近的高位缺口，现场看见能改变他离开目标的外部光线或天气证据。"
+    },
+    "growth_grammar": {
+      "expansion": [
+        "先从一座塔内的局部断裂、楼层错位和资源缺口开始，让每次空间扩张都由正在发生的生存问题提出。",
+        "当一次进化让更远或更高的区域可验证，扩张才进入跨楼层、跨建筑或楼外未知，不预设固定地图层数。",
+        "旧物品在新建筑几何关系中产生不同的兑现，扩张优先改变行动范围和问题形态，而非只增加敌人或物资数量。",
+        "世界谜团、广播与其他幸存者只在具体空间结果改变主角选择时推进，不能独立成为第二成长系统。",
+        "新的世界尺度必须提供新的资源机会、路线判断、规则反例或能力上限，并保留未知，不写成逐章固定大纲。",
+        "空间、知识和本体层的扩张由事实与后续作者确认共同决定，长期规划只冻结方向、问题和连续性边界。"
+      ],
+      "payoff": [
+        "先让生存压力迫使主角作出当天唯一选择，再让物品质变在当前现场产生真实且可见的行动结果。",
+        "主要回报是普通人无法复制的空间行动：确认断路关系、固定重排后的边界、取回隔绝资源或进入此前不可进入的区域。",
+        "能力突破必须让读者看见改变前后行动空间的差异；解释可以延后，但结果不能只停留在概念。",
+        "在一轮兑现充分发生后，再由更复杂的重排、资源位置、广播反制或规则反例打开下一轮欲望和瓶颈。",
+        "纯收益可以成立：主角可以成功取水、获得新路线或解锁新区域，不要求同场景同时失去另一项资源；后续压力来自新空间和更高能力上限。",
+        "知识获得和谜团发现必须改变下一次选择，而不是脱离现场的说明书奖励。",
+        "世界扩张的满足来自可行动范围真正变大，同时保持每天只能选择一件物品的核心约束。"
+      ],
+      "progression": [
+        "当前建筑变化或生存危机暴露一个具体缺口。",
+        "主角盘点真正拥有的普通物品，在当天唯一的进化机会中进行取舍。",
+        "被选物品沿原有功能永久进化，主角用具体行动验证收益并承担限制或代价。",
+        "新的空间、资源或规则问题被打开，下一次选择因此更有价值也更难。",
+        "成长的第一判断是主角能否完成之前真正不可能的动作；产能、稳定性和携带规模只能作为后果或辅助。",
+        "同一物品的连续进化由新的建筑问题触发，不写成固定等级或数值面板。",
+        "多件物品的协同必须分别留下现场证据，只放大空间选择与验证，不生成第二种超能力来源。",
+        "知识增长来自成功、失败和前后状态对照，并且必须反过来改变下一次物品取舍。"
+      ]
+    },
+    "main_thread": {
+      "foundation_candidate_id": "foundation-folded-tower",
+      "goal": "确认广播里反复出现的楼外天气是否真实，并找到一条自己能够掌握、而不是被声音牵着走的离开室内之路。",
+      "route_id": "route-space-reading",
+      "stakes": "建筑把上下关系周期性打乱，广播又给出互相矛盾的提示；每次进化只能解决一个空间缺口，追声、找水、保留退路不能同时满足。",
+      "thread_id": "thread-original-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+    },
+    "narrative_spine": {
+      "central_pressure": "建筑每次重排都会让旧地图失效，验证速度赶不上水、药品和退路被重新分开的速度。",
+      "commitments": [
+        "每次重大行动都留下可被下一次重排检验的现场关系。",
+        "让新能力先在具体路线或资源结果中兑现，再讨论建筑谜团。"
+      ],
+      "direction": "以局部空间证据和连续物品验证为主，先建立一套能在重排后复核的路线语言，再向更高缺口推进。",
+      "open_alternatives": [
+        "局部规律可能最终指向楼外结构，也可能只是建筑内部的异常重复。",
+        "连续进化优先扩大作用范围还是改变空间用法，保持开放。"
+      ],
+      "opportunity": "把测距带、标记物、照明物等既有进化分别变成空间证据，逐步获得处理更大错位关系的行动能力。",
+      "risk": "过度追求复核可能错过即时资源或被广播诱导进入无出口设备层。",
+      "route_id": "route-space-reading",
+      "spine_id": "spine-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower"
+    },
+    "open_questions": [
+      {
+        "question": "建筑重排的触发、周期和可预测先兆会在什么事实后被更精确地描述？",
+        "question_id": "question-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-1",
+        "title": "开放问题"
+      },
+      {
+        "question": "其他幸存者是否拥有同类每日进化规则，若拥有，规则的使用边界是否相同？",
+        "question_id": "question-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-2",
+        "title": "开放问题"
+      },
+      {
+        "question": "测距带、手电和粉笔的连续进化更可能扩大作用范围、延长保持时间，还是打开新的原功能用法？",
+        "question_id": "question-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-3",
+        "title": "开放问题"
+      },
+      {
+        "question": "广播是否来自塔外、另一座建筑、过去留下的记录，或建筑自身的异常回声？",
+        "question_id": "question-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-4",
+        "title": "开放问题"
+      },
+      {
+        "question": "楼外天气的可见证据会先作为资源机会、路线线索还是世界谜团出现？",
+        "question_id": "question-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-5",
+        "title": "开放问题"
+      },
+      {
+        "question": "建筑变化的触发、边界、周期和原因只保留到能支持下一次生存选择的程度，先由现场证据逐步逼近。",
+        "question_id": "question-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-setting-1",
+        "title": "OPEN_WORLD_MYSTERY"
+      },
+      {
+        "question": "其他幸存者是否具备同类规则、规则是否只属于沈砚，保持作者后续审阅的开放问题。",
+        "question_id": "question-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-setting-2",
+        "title": "OPEN_ABILITY_SCOPE"
+      }
+    ],
+    "persistent_directives": [
+      {
+        "content": "整体紧张、具体、克制，但每次明确的能力验证要给出可感知的爽点。",
+        "directive_id": "directive-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-preference-1",
+        "directive_type": "preference"
+      }
+    ],
+    "profile_dimensions": {
+      "characters": {
+        "core_commitments": [
+          "沈砚想掌握离开之路而非先经营组织",
+          "人物弱点必须在验证与行动的迟疑中产生后果"
+        ],
+        "open_questions": [
+          "广播声音和幸存者的真实动机"
+        ],
+        "preferences": [
+          "角色以现场动作区分",
+          "关系以局部交换和互相矛盾观测进入"
+        ],
+        "risks": [
+          "把角色写成能力的说明工具",
+          "群像抢走主角的唯一选择"
+        ],
+        "summary": "人物首先通过私人目标和选择行动，社会关系保持低中心度但能制造证据与资源压力。"
+      },
+      "continuity": {
+        "core_commitments": [
+          "每次物品进化保留原功能与已验证边界",
+          "局部样本不能自动升级为全局规则"
+        ],
+        "open_questions": [
+          "连续进化如何累积",
+          "建筑重排是否存在周期"
+        ],
+        "preferences": [
+          "使用可追溯的现场记录",
+          "允许已知与未知并存"
+        ],
+        "risks": [
+          "忘记物品位置或能力边界",
+          "把候选真相写成 Canon"
+        ],
+        "summary": "连续性依靠物品拥有关系、进化边界、建筑状态、路线证据和知识不确定性维持。"
+      },
+      "dialogue": {
+        "core_commitments": [
+          "广播提示必须与现场后果形成张力",
+          "幸存者说法保留局部立场"
+        ],
+        "open_questions": [
+          "广播是否由单一声音持续发出"
+        ],
+        "preferences": [
+          "短句、具体指令和可核验细节"
+        ],
+        "risks": [
+          "角色用台词直接公布真相",
+          "关系戏脱离生存压力"
+        ],
+        "summary": "对话主要交换路线、资源和可信度，不承担大段世界设定讲解。"
+      },
+      "narrative": {
+        "core_commitments": [
+          "生存资源保持第一驱动力",
+          "知识与谜团必须回到下一次选择"
+        ],
+        "open_questions": [
+          "不同阶段的回报密度"
+        ],
+        "preferences": [
+          "可以用广播和回声延迟信息",
+          "不预设固定回合长度"
+        ],
+        "risks": [
+          "悬念长期不改变行动",
+          "战斗变成主线"
+        ],
+        "summary": "核心叙事节奏是压力逼近、唯一选择、异常验证、纯收益兑现和更大问题。"
+      },
+      "pacing": {
+        "core_commitments": [
+          "不把每日选择机械映射为固定章节模板",
+          "能力验证要有实际后果"
+        ],
+        "open_questions": [
+          "建筑变化的周期和不规则性"
+        ],
+        "preferences": [
+          "在重排前压缩时间，在验证后给结果留出重量"
+        ],
+        "risks": [
+          "每次都强行加伤亡或牺牲",
+          "只有赶路没有回报"
+        ],
+        "summary": "每轮保持可感知的选择与结果，但兑现之后允许新的压力自然打开。"
+      },
+      "plot": {
+        "core_commitments": [
+          "每次兑现都改变可行动范围",
+          "新问题在当前后果之后出现"
+        ],
+        "open_questions": [
+          "路线之间何时发生交叉"
+        ],
+        "preferences": [
+          "短期行动具体，长期谜团留有弹性"
+        ],
+        "risks": [
+          "重复找路",
+          "靠巧合解释资源和广播"
+        ],
+        "summary": "情节由建筑压力、当天选择、现场验证和新瓶颈连续推动，不冻结逐章大纲。"
+      },
+      "style": {
+        "core_commitments": [
+          "第三人称限知",
+          "异常结果先被看见再被理解"
+        ],
+        "open_questions": [
+          "更高尺度的异常如何保持可读"
+        ],
+        "preferences": [
+          "保留爽点但避免夸张说明",
+          "让物品原功能可识别"
+        ],
+        "risks": [
+          "说明书化",
+          "抽象名词替代现场"
+        ],
+        "summary": "语言紧张、具体、克制，优先写触感、距离、声音、光线和行动结果。"
+      },
+      "themes": {
+        "core_commitments": [
+          "不把主题凌驾于生存和进化",
+          "让选择后果自然形成主题"
+        ],
+        "open_questions": [
+          "广播和其他幸存者是否形成更广的社会主题"
+        ],
+        "preferences": [
+          "克制处理责任与信任"
+        ],
+        "risks": [
+          "说教",
+          "用宏大主题替代能力兑现"
+        ],
+        "summary": "主题只在具体选择中显现：有限资源如何改变人的判断，以及可复核的知识是否足以支撑行动。"
+      },
+      "worldbuilding": {
+        "core_commitments": [
+          "建筑变化必须持续制造可验证的生存问题",
+          "异常尺度只围绕每日物品进化扩大"
+        ],
+        "open_questions": [
+          "建筑变化的原因与其他使用者范围"
+        ],
+        "preferences": [
+          "以具体空间关系承载中等神秘度",
+          "世界扩张保持开放"
+        ],
+        "risks": [
+          "规则说明压过现场行动",
+          "世界规模扩张过快"
+        ],
+        "summary": "末日废弃建筑不是静态背景，而是会把路线、资源和谜团重新排列的可行动世界。"
+      }
+    },
+    "proposal_version_id": "proposal-e39fee0d664e4e06923df0f31beee8eb",
+    "rolling_planning": {
+      "long": [
+        "在事实支持后判断变化建筑是否存在互联关系",
+        "逐步扩大物品进化能处理的空间尺度，同时保持原功能连续性",
+        "让楼外天气、全球灾变和其他幸存者规则保持多个候选解释，直到行动证据要求收敛"
+      ],
+      "mid": [
+        "比较测距带、照明物和标记物在不同楼层状态中的异常边界",
+        "在不建立稳定聚落的前提下交换一次路线与资源观测",
+        "追查广播是否会在建筑变化前后留下可验证的空间偏差"
+      ],
+      "short": [
+        "记录第一次提前重排的墙面、楼梯和广播位置",
+        "从手边物品中选择一次能验证断路关系的进化",
+        "取回饮水并保留一份能在重排后复核的现场证据"
+      ]
+    },
+    "secret_candidates": [
+      {
+        "candidate_id": "secret-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-hidden-1",
+        "confidence": 0.38,
+        "statement": "变化可能不是单栋高楼的局部故障，而是多个建筑被某种空间关系暂时拼接；这只能在跨建筑现场证据出现后继续判断。",
+        "title": "建筑不是孤立的建筑"
+      },
+      {
+        "candidate_id": "secret-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-hidden-2",
+        "confidence": 0.34,
+        "statement": "广播可能掌握或模拟幸存者的局部路线记录，故意把可验证的空间提示和错误方向混在一起；它的目的与身份保持未知。",
+        "title": "广播在利用已知路线"
+      },
+      {
+        "candidate_id": "secret-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower-hidden-3",
+        "confidence": 0.22,
+        "statement": "其他幸存者或许也能让真实拥有的物品发生质变，但他们的行动若与沈砚不同，才能作为证据而非设定说明。",
+        "title": "每日规则并非只属于一人"
+      }
+    ],
+    "selected_foundation": {
+      "author_facing_pitch": "沈砚醒在一座没有底层的高楼里，头顶的广播说屋顶还有阳光，脚下的楼梯却在每次震动后通向不同的楼层。别人只能凭记忆赌一扇门，他只能从手边挑一件东西进化。第一次，他放弃把手电变亮，选择了那卷廉价测距带；当楼体折叠时，带子的两端仍指向同一段墙面，让一条看似断掉的楼梯重新有了方向。可广播里的人正在用同样的方式把他引向更高处。",
+      "candidate_id": "foundation-folded-tower",
+      "core_reading_promise": "在每次楼层重排逼近时，一件平凡的随身物都可能完成一次无法替代的质变；主角借它读懂错误的空间、取回活命资源，并在越来越高的未知里把回声变成下一条可走的路。",
+      "first_stage_objective": "在下一次大幅重排前，沿着三段互相矛盾的广播找到一个能看见外界的高位缺口，带回饮水和一份能让路线复核的现场记录。",
+      "innovation_fit": "这个承载把已选 Core 的“物品质变—空间缺口—现场验证”放在垂直建筑里反复发生。测距带、记录物或照明物的异常仍沿测量、记录、照明原功能，只负责确认、保持或显出空间关系，不替代攀爬和生存判断；每次楼层重排都能把同一能力推入新的高度、遮蔽和回声条件。它优先兑现生存逃脱、能力验证、探索和知识增长，也给建筑原因留下可由现场后果逐步逼近的谜团，不另起独立成长系统。",
+      "main_conflict": "建筑把上下关系周期性打乱，广播又给出互相矛盾的提示；每次进化只能解决一个空间缺口，追声、找水、保留退路不能同时满足。",
+      "opening_situation": "第一次重排提前发生，沈砚被困在两段彼此不相邻的楼梯之间；门外传来“别相信蓝色楼层”的广播，唯一的饮水在折断的楼梯另一侧，脚边只有手电、测距带和半瓶水。",
+      "premise_relationship": "建筑变化不再只是背景，而是每一次求生行动的空间谜题：向上不再等于接近屋顶，熟悉的门也可能通向另一段楼层；每日一件物品的质变成为把错位读成路线的异常优势。",
+      "protagonist": "沈砚，灾变前给城市做旧楼测绘的自由接单人，习惯把建筑当作可以被记录和复核的对象。",
+      "protagonist_competence": "他能从墙体厚度、回声、风向和楼梯转折中记住空间关系，擅长用简陋材料做记录；体力一般，缺少正面搏斗和长时间负重的能力。",
+      "protagonist_goal": "他想登上这座楼真正存在过的最高处，确认广播里反复出现的“楼外天气”是否真实，并把那条能让自己离开室内的路握在手里。",
+      "protagonist_weakness": "他过分相信自己记下的路线，面对无法解释的错位会迟疑；独处太久后，容易把救命选择拖成验证谜底。",
+      "resource_structure": "水、照明电池、绳索和可携带记录工具是短缺品；资源散落在会互换的楼层，拥有何物以及能否把物资带回安全层决定当天选择。",
+      "risk_structure": "走错一次可能落入无出口的设备层并丢掉当天的进化机会；登高会消耗水和体力，追逐广播也可能错过安全位置。能力兑现只能让路线可验证，不能替他承担攀爬、负重和回程风险。",
+      "social_configuration": "楼内没有稳定聚落，偶尔从门后、对讲机和楼层痕迹遇到其他幸存者；他们提供互相矛盾的观测，合作只围绕一次路线交换，关系不成为主轴。",
+      "title": "折叠塔顶的回声",
+      "typical_choice": "他可以进化手电去看清黑暗里的落脚点，也可以进化测距带去确认两段楼梯是否仍属于同一条空间关系；他选测距带，先让一条断路变得可验证，再冒险取水，结果发现墙后还有一块被重排保留下来的旧标牌。",
+      "world_carrier": "一座被掏空的高层综合楼：住宅层、商场中庭、地下设备层和封闭屋顶在重排中互换位置，灯光、风和回声留下可观察但不完整的先兆。"
+    },
+    "selected_route": {
+      "central_pressure": "建筑每次重排都会让旧地图失效，验证速度赶不上水、药品和退路被重新分开的速度。",
+      "commitments": [
+        "每次重大行动都留下可被下一次重排检验的现场关系。",
+        "让新能力先在具体路线或资源结果中兑现，再讨论建筑谜团。"
+      ],
+      "direction": "以局部空间证据和连续物品验证为主，先建立一套能在重排后复核的路线语言，再向更高缺口推进。",
+      "open_alternatives": [
+        "局部规律可能最终指向楼外结构，也可能只是建筑内部的异常重复。",
+        "连续进化优先扩大作用范围还是改变空间用法，保持开放。"
+      ],
+      "opportunity": "把测距带、标记物、照明物等既有进化分别变成空间证据，逐步获得处理更大错位关系的行动能力。",
+      "risk": "过度追求复核可能错过即时资源或被广播诱导进入无出口设备层。",
+      "route_id": "route-space-reading",
+      "title": "先把塔读懂"
+    },
+    "selected_title": "折叠塔顶的回声"
+  },
+  "confirmed_at": "2026-08-16T16:22:26.798563+00:00",
+  "genesis_task_id": "genesis-plan-proposal-e39fee0d664e4e06923df0f31beee8eb-foundation-folded-tower",
+  "information_status": "AUTHOR_CONFIRMED",
+  "schema_version": "original-foundation-v2",
+  "selected_foundation_id": "foundation-folded-tower",
+  "selected_route_id": "route-space-reading",
+  "selected_title": "折叠塔顶的回声"
+}

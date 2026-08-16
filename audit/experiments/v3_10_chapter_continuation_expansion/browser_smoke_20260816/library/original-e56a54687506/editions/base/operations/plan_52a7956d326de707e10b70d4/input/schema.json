@@ -1,0 +1,1497 @@
+{
+  "$defs": {
+    "CandidateCreativeProposal": {
+      "additionalProperties": false,
+      "description": "Only the creative decisions an executor is allowed to submit.",
+      "properties": {
+        "action_space_delta": {
+          "default": "",
+          "title": "Action Space Delta",
+          "type": "string"
+        },
+        "causal_sources": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Causal Sources",
+          "type": "array"
+        },
+        "chapter_intent": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Chapter Intent"
+        },
+        "core_promise_delivery": {
+          "default": "",
+          "title": "Core Promise Delivery",
+          "type": "string"
+        },
+        "emotional_outcome": {
+          "title": "Emotional Outcome",
+          "type": "string"
+        },
+        "ending_state": {
+          "title": "Ending State",
+          "type": "string"
+        },
+        "event_source": {
+          "title": "Event Source",
+          "type": "string"
+        },
+        "innovation_preview": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CandidateInnovationPreview"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "knowledge_delta": {
+          "default": "",
+          "title": "Knowledge Delta",
+          "type": "string"
+        },
+        "lens": {
+          "$ref": "#/$defs/CandidateLens",
+          "default": "CONTINUITY_ACTIVE_THREAD"
+        },
+        "local_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Local Id",
+          "type": "string"
+        },
+        "novelty_provenance": {
+          "items": {
+            "$ref": "#/$defs/NoveltyDeclaration"
+          },
+          "title": "Novelty Provenance",
+          "type": "array"
+        },
+        "opportunity_cost": {
+          "title": "Opportunity Cost",
+          "type": "string"
+        },
+        "outcome_magnitude": {
+          "default": "",
+          "title": "Outcome Magnitude",
+          "type": "string"
+        },
+        "pressure_before": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pressure Before"
+        },
+        "pressure_target_after": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pressure Target After"
+        },
+        "primary_function": {
+          "$ref": "#/$defs/NarrativeFunction"
+        },
+        "primary_thread_id": {
+          "title": "Primary Thread Id",
+          "type": "string"
+        },
+        "promises_to_advance": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Promises To Advance",
+          "type": "array"
+        },
+        "promises_to_pay": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Promises To Pay",
+          "type": "array"
+        },
+        "protagonist_strategy": {
+          "title": "Protagonist Strategy",
+          "type": "string"
+        },
+        "reader_question": {
+          "title": "Reader Question",
+          "type": "string"
+        },
+        "relationship_delta": {
+          "default": "",
+          "title": "Relationship Delta",
+          "type": "string"
+        },
+        "required_cost": {
+          "default": "",
+          "title": "Required Cost",
+          "type": "string"
+        },
+        "required_irreversible_change": {
+          "title": "Required Irreversible Change",
+          "type": "string"
+        },
+        "reveal_impact": {
+          "$ref": "#/$defs/CandidateRevealImpactSubmission"
+        },
+        "risk_form": {
+          "title": "Risk Form",
+          "type": "string"
+        },
+        "scene_topology": {
+          "title": "Scene Topology",
+          "type": "string"
+        },
+        "secondary_functions": {
+          "items": {
+            "$ref": "#/$defs/NarrativeFunction"
+          },
+          "maxItems": 2,
+          "title": "Secondary Functions",
+          "type": "array"
+        },
+        "social_feedback": {
+          "title": "Social Feedback",
+          "type": "string"
+        },
+        "solution_method": {
+          "title": "Solution Method",
+          "type": "string"
+        },
+        "state_changes": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "State Changes",
+          "type": "array"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "wildcard": {
+          "default": false,
+          "title": "Wildcard",
+          "type": "boolean"
+        },
+        "world_scale_delta": {
+          "default": "",
+          "title": "World Scale Delta",
+          "type": "string"
+        }
+      },
+      "required": [
+        "local_id",
+        "title",
+        "summary",
+        "primary_thread_id",
+        "primary_function",
+        "reader_question",
+        "event_source",
+        "solution_method",
+        "protagonist_strategy",
+        "risk_form",
+        "opportunity_cost",
+        "emotional_outcome",
+        "social_feedback",
+        "scene_topology",
+        "ending_state",
+        "state_changes",
+        "causal_sources",
+        "required_irreversible_change"
+      ],
+      "title": "CandidateCreativeProposal",
+      "type": "object"
+    },
+    "CandidateInnovationPreview": {
+      "additionalProperties": false,
+      "description": "作者可读的候选创新预览，不是评分，也不是实际结果。",
+      "properties": {
+        "creative_distance": {
+          "$ref": "#/$defs/InnovationLevel"
+        },
+        "expected_cross_horizon_synergies": {
+          "items": {
+            "$ref": "#/$defs/CrossHorizonSynergy"
+          },
+          "title": "Expected Cross Horizon Synergies",
+          "type": "array"
+        },
+        "expected_earned_recombinations": {
+          "items": {
+            "$ref": "#/$defs/EarnedRecombination"
+          },
+          "title": "Expected Earned Recombinations",
+          "type": "array"
+        },
+        "expected_element_synergies": {
+          "items": {
+            "$ref": "#/$defs/InnovationSynergy"
+          },
+          "title": "Expected Element Synergies",
+          "type": "array"
+        },
+        "expected_horizon_roles": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/NarrativeHorizon"
+            },
+            "type": "array"
+          },
+          "title": "Expected Horizon Roles",
+          "type": "object"
+        },
+        "expected_innovation_elements": {
+          "items": {
+            "$ref": "#/$defs/InnovationElement"
+          },
+          "title": "Expected Innovation Elements",
+          "type": "array"
+        },
+        "expected_innovation_reward": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/InnovationRewardBreakdown"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "expected_narrative_delta": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NarrativeDelta"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "expected_new_debts": {
+          "items": {
+            "$ref": "#/$defs/ExpectedNarrativeDebt"
+          },
+          "title": "Expected New Debts",
+          "type": "array"
+        },
+        "expected_payoffs": {
+          "items": {
+            "$ref": "#/$defs/NarrativePayoff"
+          },
+          "title": "Expected Payoffs",
+          "type": "array"
+        },
+        "future_options_opened": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Future Options Opened",
+          "type": "array"
+        },
+        "integration_cost": {
+          "$ref": "#/$defs/IntegrationCost",
+          "default": "low"
+        },
+        "local_branch_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Local Branch Count",
+          "type": "integer"
+        },
+        "main_innovations": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Main Innovations",
+          "type": "array"
+        },
+        "major_branch_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Major Branch Count",
+          "type": "integer"
+        },
+        "new_future_branches": {
+          "items": {
+            "type": "string"
+          },
+          "title": "New Future Branches",
+          "type": "array"
+        },
+        "novelty_quality": {
+          "$ref": "#/$defs/NoveltyQuality",
+          "default": "MEANINGFUL_NOVELTY"
+        },
+        "primary_directions": {
+          "items": {
+            "$ref": "#/$defs/InnovationFocus"
+          },
+          "minItems": 1,
+          "title": "Primary Directions",
+          "type": "array"
+        },
+        "uses_earned_assets": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Uses Earned Assets",
+          "type": "array"
+        }
+      },
+      "required": [
+        "creative_distance",
+        "primary_directions",
+        "main_innovations"
+      ],
+      "title": "CandidateInnovationPreview",
+      "type": "object"
+    },
+    "CandidateLens": {
+      "enum": [
+        "CONTINUITY_ACTIVE_THREAD",
+        "EARNED_OPPORTUNITY",
+        "FORWARD_EXPANSION"
+      ],
+      "title": "CandidateLens",
+      "type": "string"
+    },
+    "CandidateRevealEventPreview": {
+      "additionalProperties": false,
+      "properties": {
+        "character_knowledge_delta": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Character Knowledge Delta",
+          "type": "object"
+        },
+        "clue": {
+          "default": "",
+          "title": "Clue",
+          "type": "string"
+        },
+        "depth": {
+          "title": "Depth",
+          "type": "string"
+        },
+        "reader_knowledge_delta": {
+          "default": "UNCHANGED",
+          "title": "Reader Knowledge Delta",
+          "type": "string"
+        },
+        "target": {
+          "default": "READER",
+          "title": "Target",
+          "type": "string"
+        },
+        "target_entity_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Entity Id"
+        },
+        "truth_id": {
+          "title": "Truth Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "truth_id",
+        "depth"
+      ],
+      "title": "CandidateRevealEventPreview",
+      "type": "object"
+    },
+    "CandidateRevealImpactSubmission": {
+      "additionalProperties": false,
+      "description": "Creative reveal choices; KEEP_HIDDEN is compiled from the frozen agenda.",
+      "properties": {
+        "character_knowledge_delta": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Character Knowledge Delta",
+          "type": "array"
+        },
+        "full_reveals": {
+          "items": {
+            "$ref": "#/$defs/CandidateRevealEventPreview"
+          },
+          "title": "Full Reveals",
+          "type": "array"
+        },
+        "hints": {
+          "items": {
+            "$ref": "#/$defs/CandidateRevealEventPreview"
+          },
+          "title": "Hints",
+          "type": "array"
+        },
+        "partial_reveals": {
+          "items": {
+            "$ref": "#/$defs/CandidateRevealEventPreview"
+          },
+          "title": "Partial Reveals",
+          "type": "array"
+        },
+        "reader_knowledge_delta": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reader Knowledge Delta",
+          "type": "array"
+        },
+        "secrets_used": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Secrets Used",
+          "type": "array"
+        }
+      },
+      "title": "CandidateRevealImpactSubmission",
+      "type": "object"
+    },
+    "CrossHorizonSynergy": {
+      "additionalProperties": false,
+      "description": "A causal chain that changes more than one narrative horizon.",
+      "properties": {
+        "causal_link": {
+          "title": "Causal Link",
+          "type": "string"
+        },
+        "element_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Element Ids",
+          "type": "array"
+        },
+        "future_option_effect": {
+          "title": "Future Option Effect",
+          "type": "string"
+        },
+        "horizons": {
+          "items": {
+            "$ref": "#/$defs/NarrativeHorizon"
+          },
+          "minItems": 2,
+          "title": "Horizons",
+          "type": "array"
+        },
+        "joint_state_change": {
+          "title": "Joint State Change",
+          "type": "string"
+        },
+        "reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Reward",
+          "type": "number"
+        },
+        "synergy_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Synergy Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "synergy_id",
+        "element_ids",
+        "horizons",
+        "causal_link",
+        "joint_state_change",
+        "future_option_effect"
+      ],
+      "title": "CrossHorizonSynergy",
+      "type": "object"
+    },
+    "DebtResolutionMode": {
+      "enum": [
+        "COMBAT",
+        "ESCAPE",
+        "RESCUE",
+        "EXPLORATION",
+        "CRAFT",
+        "NEGOTIATION",
+        "RULE_BREAK",
+        "STRATEGY"
+      ],
+      "title": "DebtResolutionMode",
+      "type": "string"
+    },
+    "EarnedRecombination": {
+      "additionalProperties": false,
+      "description": "Reuse of an earned asset in a genuinely new context.",
+      "properties": {
+        "causal_source": {
+          "default": "",
+          "title": "Causal Source",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "earned_asset_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Earned Asset Ids",
+          "type": "array"
+        },
+        "magnitude": {
+          "$ref": "#/$defs/InnovationMagnitude",
+          "default": "LOCAL"
+        },
+        "new_strategy": {
+          "default": "",
+          "title": "New Strategy",
+          "type": "string"
+        },
+        "recombination_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Recombination Id",
+          "type": "string"
+        },
+        "reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Reward",
+          "type": "number"
+        }
+      },
+      "required": [
+        "recombination_id",
+        "description"
+      ],
+      "title": "EarnedRecombination",
+      "type": "object"
+    },
+    "ExpectedNarrativeDebt": {
+      "additionalProperties": false,
+      "description": "A new question/promise intentionally opened by a candidate.",
+      "properties": {
+        "allowed_resolution_modes": {
+          "items": {
+            "$ref": "#/$defs/DebtResolutionMode"
+          },
+          "title": "Allowed Resolution Modes",
+          "type": "array"
+        },
+        "debt_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Debt Id",
+          "type": "string"
+        },
+        "debt_type": {
+          "$ref": "#/$defs/NarrativeDebtType",
+          "default": "PLOT"
+        },
+        "drive_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Drive Type"
+        },
+        "engine_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Engine Type"
+        },
+        "expected_payoff_window": {
+          "title": "Expected Payoff Window",
+          "type": "string"
+        },
+        "horizon": {
+          "$ref": "#/$defs/NarrativeHorizon"
+        },
+        "magnitude": {
+          "$ref": "#/$defs/InnovationMagnitude",
+          "default": "LOCAL"
+        },
+        "question_or_promise": {
+          "title": "Question Or Promise",
+          "type": "string"
+        },
+        "source_event": {
+          "title": "Source Event",
+          "type": "string"
+        }
+      },
+      "required": [
+        "debt_id",
+        "question_or_promise",
+        "horizon",
+        "source_event",
+        "expected_payoff_window"
+      ],
+      "title": "ExpectedNarrativeDebt",
+      "type": "object"
+    },
+    "GenrePromiseRewardBreakdown": {
+      "additionalProperties": false,
+      "description": "Small auditable add-on inside the existing post-gate reward path.",
+      "properties": {
+        "anticipation_utility": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Anticipation Utility",
+          "type": "number"
+        },
+        "genre_drift_penalty": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Genre Drift Penalty",
+          "type": "number"
+        },
+        "genre_evolution_value": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Genre Evolution Value",
+          "type": "number"
+        },
+        "genre_native_synergy": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Genre Native Synergy",
+          "type": "number"
+        },
+        "power_showcase_utility": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Power Showcase Utility",
+          "type": "number"
+        },
+        "progression_gain": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Progression Gain",
+          "type": "number"
+        },
+        "progression_payoff": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Progression Payoff",
+          "type": "number"
+        },
+        "reader_promise_alignment": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Reader Promise Alignment",
+          "type": "number"
+        },
+        "resource_opportunity_utility": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Resource Opportunity Utility",
+          "type": "number"
+        },
+        "stagnation_penalty": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Stagnation Penalty",
+          "type": "number"
+        },
+        "total_reward": {
+          "default": 0,
+          "title": "Total Reward",
+          "type": "number"
+        },
+        "world_expansion_utility": {
+          "default": 0,
+          "minimum": 0,
+          "title": "World Expansion Utility",
+          "type": "number"
+        }
+      },
+      "title": "GenrePromiseRewardBreakdown",
+      "type": "object"
+    },
+    "InnovationElement": {
+      "additionalProperties": false,
+      "description": "One explicit, forward-facing unit of creative change.\n\nThis is an expected or realized planning observation, never a Canon event.\n``causal_source`` and ``evidence_or_forward_introduction`` deliberately\nallow an empty value so a soft diagnostic can report an orphaned element\ninstead of silently inventing provenance.",
+      "properties": {
+        "causal_source": {
+          "default": "",
+          "title": "Causal Source",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "element_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Element Id",
+          "type": "string"
+        },
+        "evidence_or_forward_introduction": {
+          "default": "",
+          "title": "Evidence Or Forward Introduction",
+          "type": "string"
+        },
+        "focus": {
+          "$ref": "#/$defs/InnovationFocus"
+        },
+        "future_options_closed": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Future Options Closed",
+          "type": "array"
+        },
+        "future_options_opened": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Future Options Opened",
+          "type": "array"
+        },
+        "horizon_roles": {
+          "items": {
+            "$ref": "#/$defs/NarrativeHorizon"
+          },
+          "title": "Horizon Roles",
+          "type": "array"
+        },
+        "magnitude": {
+          "$ref": "#/$defs/InnovationMagnitude",
+          "default": "LOCAL"
+        },
+        "novelty_type": {
+          "$ref": "#/$defs/NoveltyQuality",
+          "default": "MEANINGFUL_NOVELTY"
+        },
+        "state_after_if_realized": {
+          "default": "",
+          "title": "State After If Realized",
+          "type": "string"
+        },
+        "state_before": {
+          "default": "",
+          "title": "State Before",
+          "type": "string"
+        }
+      },
+      "required": [
+        "element_id",
+        "focus",
+        "description"
+      ],
+      "title": "InnovationElement",
+      "type": "object"
+    },
+    "InnovationFocus": {
+      "enum": [
+        "auto",
+        "plot",
+        "character",
+        "relationship",
+        "world",
+        "mechanism",
+        "narrative_structure",
+        "style"
+      ],
+      "title": "InnovationFocus",
+      "type": "string"
+    },
+    "InnovationLevel": {
+      "enum": [
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "bold"
+      ],
+      "title": "InnovationLevel",
+      "type": "string"
+    },
+    "InnovationMagnitude": {
+      "enum": [
+        "LOCAL",
+        "SUBSTANTIAL",
+        "MAJOR"
+      ],
+      "title": "InnovationMagnitude",
+      "type": "string"
+    },
+    "InnovationRewardBreakdown": {
+      "additionalProperties": false,
+      "description": "Auditable reward components applied only after Hard Gates pass.",
+      "properties": {
+        "answer_and_expand_reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Answer And Expand Reward",
+          "type": "number"
+        },
+        "base_candidate_score": {
+          "default": 0,
+          "title": "Base Candidate Score",
+          "type": "number"
+        },
+        "capped_innovation_reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Capped Innovation Reward",
+          "type": "number"
+        },
+        "cosmetic_penalty": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Cosmetic Penalty",
+          "type": "number"
+        },
+        "cross_horizon_reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Cross Horizon Reward",
+          "type": "number"
+        },
+        "cross_horizon_synergies": {
+          "items": {
+            "$ref": "#/$defs/CrossHorizonSynergy"
+          },
+          "title": "Cross Horizon Synergies",
+          "type": "array"
+        },
+        "earned_recombination_reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Earned Recombination Reward",
+          "type": "number"
+        },
+        "earned_recombinations": {
+          "items": {
+            "$ref": "#/$defs/EarnedRecombination"
+          },
+          "title": "Earned Recombinations",
+          "type": "array"
+        },
+        "element_rewards": {
+          "items": {
+            "$ref": "#/$defs/InnovationRewardLine"
+          },
+          "title": "Element Rewards",
+          "type": "array"
+        },
+        "element_synergies": {
+          "items": {
+            "$ref": "#/$defs/InnovationSynergy"
+          },
+          "title": "Element Synergies",
+          "type": "array"
+        },
+        "element_synergy_reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Element Synergy Reward",
+          "type": "number"
+        },
+        "eligible": {
+          "default": true,
+          "title": "Eligible",
+          "type": "boolean"
+        },
+        "final_selection_score": {
+          "default": 0,
+          "title": "Final Selection Score",
+          "type": "number"
+        },
+        "focus_alignment_reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Focus Alignment Reward",
+          "type": "number"
+        },
+        "genre_promise_reward": {
+          "$ref": "#/$defs/GenrePromiseRewardBreakdown"
+        },
+        "ineligibility_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Ineligibility Reasons",
+          "type": "array"
+        },
+        "innovation_elements": {
+          "items": {
+            "$ref": "#/$defs/InnovationElement"
+          },
+          "title": "Innovation Elements",
+          "type": "array"
+        },
+        "integration_cost_penalty": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Integration Cost Penalty",
+          "type": "number"
+        },
+        "level_multiplier": {
+          "minimum": 0,
+          "title": "Level Multiplier",
+          "type": "number"
+        },
+        "narrative_delta": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NarrativeDelta"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "new_narrative_debt_cost": {
+          "default": 0,
+          "minimum": 0,
+          "title": "New Narrative Debt Cost",
+          "type": "number"
+        },
+        "orphan_penalty": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Orphan Penalty",
+          "type": "number"
+        },
+        "over_deferral_penalty": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Over Deferral Penalty",
+          "type": "number"
+        },
+        "overdue_debt_penalty": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Overdue Debt Penalty",
+          "type": "number"
+        },
+        "payoff_reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Payoff Reward",
+          "type": "number"
+        },
+        "payoffs": {
+          "items": {
+            "$ref": "#/$defs/NarrativePayoff"
+          },
+          "title": "Payoffs",
+          "type": "array"
+        },
+        "question_balance": {
+          "$ref": "#/$defs/QuestionBalance"
+        },
+        "raw_innovation_reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Raw Innovation Reward",
+          "type": "number"
+        },
+        "repetition_penalty": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Repetition Penalty",
+          "type": "number"
+        },
+        "requested_level": {
+          "$ref": "#/$defs/InnovationLevel"
+        },
+        "reward_cap": {
+          "minimum": 0,
+          "title": "Reward Cap",
+          "type": "number"
+        },
+        "scaled_innovation_reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Scaled Innovation Reward",
+          "type": "number"
+        }
+      },
+      "required": [
+        "requested_level",
+        "level_multiplier",
+        "reward_cap"
+      ],
+      "title": "InnovationRewardBreakdown",
+      "type": "object"
+    },
+    "InnovationRewardLine": {
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "title": "Item Id",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "reward": {
+          "minimum": 0,
+          "title": "Reward",
+          "type": "number"
+        }
+      },
+      "required": [
+        "item_id",
+        "reward",
+        "reason"
+      ],
+      "title": "InnovationRewardLine",
+      "type": "object"
+    },
+    "InnovationSynergy": {
+      "additionalProperties": false,
+      "description": "A causal interaction between innovation elements.",
+      "properties": {
+        "causal_link": {
+          "title": "Causal Link",
+          "type": "string"
+        },
+        "element_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Element Ids",
+          "type": "array"
+        },
+        "focuses": {
+          "items": {
+            "$ref": "#/$defs/InnovationFocus"
+          },
+          "minItems": 2,
+          "title": "Focuses",
+          "type": "array"
+        },
+        "future_option_effect": {
+          "title": "Future Option Effect",
+          "type": "string"
+        },
+        "joint_state_change": {
+          "title": "Joint State Change",
+          "type": "string"
+        },
+        "reward": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Reward",
+          "type": "number"
+        },
+        "synergy_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Synergy Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "synergy_id",
+        "element_ids",
+        "focuses",
+        "causal_link",
+        "joint_state_change",
+        "future_option_effect"
+      ],
+      "title": "InnovationSynergy",
+      "type": "object"
+    },
+    "IntegrationCost": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "IntegrationCost",
+      "type": "string"
+    },
+    "NarrativeDebtType": {
+      "enum": [
+        "PLOT",
+        "MYSTERY",
+        "RELATIONSHIP",
+        "PROGRESSION",
+        "POWER_SHOWCASE",
+        "RESOURCE",
+        "WORLD_EXPANSION",
+        "STATUS",
+        "TEAM",
+        "ANTICIPATION"
+      ],
+      "title": "NarrativeDebtType",
+      "type": "string"
+    },
+    "NarrativeDelta": {
+      "additionalProperties": false,
+      "description": "The meaningful before/after state change of a candidate or draft.",
+      "properties": {
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "irreversible_changes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Irreversible Changes",
+          "type": "array"
+        },
+        "meaningful": {
+          "default": false,
+          "title": "Meaningful",
+          "type": "boolean"
+        },
+        "new_questions_opened": {
+          "items": {
+            "type": "string"
+          },
+          "title": "New Questions Opened",
+          "type": "array"
+        },
+        "questions_answered": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Questions Answered",
+          "type": "array"
+        },
+        "questions_materially_advanced": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Questions Materially Advanced",
+          "type": "array"
+        },
+        "questions_partially_paid": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Questions Partially Paid",
+          "type": "array"
+        },
+        "state_after": {
+          "title": "State After",
+          "type": "string"
+        },
+        "state_before": {
+          "title": "State Before",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state_before",
+        "state_after",
+        "description"
+      ],
+      "title": "NarrativeDelta",
+      "type": "object"
+    },
+    "NarrativeFunction": {
+      "enum": [
+        "setup",
+        "pressure_build",
+        "choice",
+        "discovery",
+        "progress",
+        "partial_payoff",
+        "major_payoff",
+        "reversal",
+        "aftershock",
+        "recovery",
+        "relationship_shift",
+        "world_expansion"
+      ],
+      "title": "NarrativeFunction",
+      "type": "string"
+    },
+    "NarrativeHorizon": {
+      "enum": [
+        "SHORT",
+        "MID",
+        "LONG"
+      ],
+      "title": "NarrativeHorizon",
+      "type": "string"
+    },
+    "NarrativePayoff": {
+      "additionalProperties": false,
+      "description": "A full or partial payoff of an existing narrative debt.",
+      "properties": {
+        "associated_drive": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Associated Drive"
+        },
+        "debt_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Debt Id"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "engine_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Engine Type"
+        },
+        "evidence_or_forward_introduction": {
+          "default": "",
+          "title": "Evidence Or Forward Introduction",
+          "type": "string"
+        },
+        "extent": {
+          "$ref": "#/$defs/PayoffExtent",
+          "default": "FULL"
+        },
+        "horizon": {
+          "$ref": "#/$defs/NarrativeHorizon"
+        },
+        "payoff_id": {
+          "pattern": "^[A-Za-z0-9._-]+$",
+          "title": "Payoff Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "payoff_id",
+        "description",
+        "horizon"
+      ],
+      "title": "NarrativePayoff",
+      "type": "object"
+    },
+    "NoveltyBoundary": {
+      "enum": [
+        "FORWARD_CANON_COMPATIBLE",
+        "RETROACTIVE_UNSUPPORTED_INVENTION"
+      ],
+      "title": "NoveltyBoundary",
+      "type": "string"
+    },
+    "NoveltyDeclaration": {
+      "additionalProperties": false,
+      "description": "Provenance for a candidate's new state or creative opportunity.",
+      "properties": {
+        "causal_source": {
+          "default": "",
+          "title": "Causal Source",
+          "type": "string"
+        },
+        "conflicts_checked": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Conflicts Checked",
+          "type": "array"
+        },
+        "introduction_event": {
+          "default": "",
+          "title": "Introduction Event",
+          "type": "string"
+        },
+        "new_state_if_committed": {
+          "default": "",
+          "title": "New State If Committed",
+          "type": "string"
+        },
+        "novelty_boundary": {
+          "$ref": "#/$defs/NoveltyBoundary",
+          "default": "FORWARD_CANON_COMPATIBLE"
+        },
+        "provenance": {
+          "$ref": "#/$defs/NoveltyProvenance"
+        },
+        "retroactive_claim": {
+          "default": false,
+          "title": "Retroactive Claim",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "provenance"
+      ],
+      "title": "NoveltyDeclaration",
+      "type": "object"
+    },
+    "NoveltyProvenance": {
+      "enum": [
+        "EXISTING_RUNTIME",
+        "SOURCE_EARNED",
+        "FORWARD_NOVELTY",
+        "AUTHOR_DIRECTED",
+        "DISTILLED_INSPIRATION"
+      ],
+      "title": "NoveltyProvenance",
+      "type": "string"
+    },
+    "NoveltyQuality": {
+      "enum": [
+        "MEANINGFUL_NOVELTY",
+        "COSMETIC_NOVELTY"
+      ],
+      "title": "NoveltyQuality",
+      "type": "string"
+    },
+    "PayoffExtent": {
+      "enum": [
+        "PARTIAL",
+        "FULL"
+      ],
+      "title": "PayoffExtent",
+      "type": "string"
+    },
+    "QuestionBalance": {
+      "additionalProperties": false,
+      "properties": {
+        "answered": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Answered",
+          "type": "integer"
+        },
+        "materially_advanced": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Materially Advanced",
+          "type": "integer"
+        },
+        "newly_opened": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Newly Opened",
+          "type": "integer"
+        },
+        "over_deferred": {
+          "default": false,
+          "title": "Over Deferred",
+          "type": "boolean"
+        },
+        "partially_paid": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Partially Paid",
+          "type": "integer"
+        },
+        "penalty": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Penalty",
+          "type": "number"
+        }
+      },
+      "title": "QuestionBalance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/CandidateCreativeProposal"
+      },
+      "maxItems": 3,
+      "minItems": 2,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "candidates"
+  ],
+  "title": "CandidateCreativeOutput",
+  "type": "object"
+}

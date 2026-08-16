@@ -1,0 +1,975 @@
+{
+  "expected_length": "长篇；本次执行连续10章实验",
+  "forbidden": [],
+  "genre": "末日/生存/成长/男频爽文",
+  "must_include": [],
+  "pov": "第三人称限知",
+  "premise": "全球灾变后，每个人醒来时都被困在一座会不断变化的废弃建筑中。主角每天只能选择一件自己真正拥有的普通非生命物品，使它沿原有功能发生一次永久进化；每天只能选择一件，同一物品可以继续进化。建筑会周期性改变结构，逼迫幸存者不断探索、生存和重新组织资源。",
+  "progression_kernel": {
+    "contract_proposals": {
+      "MARKET_CATEGORY": {
+        "author_notes": "作者在 Step 0 一并确认 Market Category",
+        "book_id": "original-e56a54687506",
+        "contract_record_id": "progression-contract-8f0100e5b6f54f419c1484b250e8783f",
+        "contract_type": "MARKET_CATEGORY",
+        "created_at": "2026-08-16T15:29:37.791526+00:00",
+        "edition_id": "base",
+        "effective_from_boundary": 1,
+        "payload": {
+          "display_labels": [
+            "末日生存",
+            "物品进化成长",
+            "男频爽文"
+          ],
+          "metadata_id": "original-e56a54687506-market-category",
+          "primary_market_category": "CUSTOM",
+          "secondary_market_categories": [
+            "SUPERNATURAL"
+          ],
+          "source": "AUTHOR_PREMISE_INTERPRETATION",
+          "status": "EFFECTIVE"
+        },
+        "source": "ORIGINAL_READER_SEMANTIC_FIRST_READ",
+        "status": "EFFECTIVE",
+        "updated_at": "2026-08-16T15:30:11.761739+00:00",
+        "version_number": 1
+      },
+      "NARRATIVE_DRIVE": {
+        "author_notes": "作者在 Step 0 一并确认 Narrative Drive",
+        "book_id": "original-e56a54687506",
+        "contract_record_id": "progression-contract-dd48e00d2e7a4024b424e204ac9a8ade",
+        "contract_type": "NARRATIVE_DRIVE",
+        "created_at": "2026-08-16T15:30:11.761739+00:00",
+        "edition_id": "base",
+        "effective_from_boundary": 1,
+        "payload": {
+          "author_overrides": [
+            "AUTHOR_CONFIRMED_DRIVE"
+          ],
+          "drive_contract_id": "original-e56a54687506-narrative-drive",
+          "drive_debt_types": {
+            "ABILITY_PROGRESSION": [
+              "新能力的适用边界尚未被验证",
+              "累积进化与当前危机之间的错配"
+            ],
+            "KNOWLEDGE_PROGRESSION": [
+              "观察到的规律仍可能只是局部样本",
+              "理解规则所需的时间与即时生存压力冲突"
+            ],
+            "MYSTERY_INVESTIGATION": [
+              "灾变原因与当前生存问题之间尚未闭合的线索",
+              "过早解释可能遮蔽现场可验证的后果"
+            ],
+            "SURVIVAL_RESOURCE": [
+              "物资不足",
+              "错过一次进化机会后的补救压力",
+              "选择一种用途就放弃其他用途"
+            ],
+            "WORLD_EXPLORATION": [
+              "未知区域与安全路线之间的信息缺口",
+              "建筑变化造成的空间记忆失效"
+            ]
+          },
+          "drive_fatigue_risks": {
+            "ABILITY_PROGRESSION": [
+              "如果进化只表现为无代价的数值变强，单次选择的戏剧性会消失。"
+            ],
+            "KNOWLEDGE_PROGRESSION": [
+              "如果规律解释先于现场后果，故事会从生存行动滑向说明书。"
+            ],
+            "MYSTERY_INVESTIGATION": [
+              "如果谜底长期只延迟而不改变当下选择，悬念会与主线生存脱节。"
+            ],
+            "SURVIVAL_RESOURCE": [
+              "如果每次危机都只是重复缺水、缺食和找出口，资源压力会失去新鲜度。"
+            ],
+            "WORLD_EXPLORATION": [
+              "如果空间变化没有带来新的可行动问题，探索会变成换皮走图。"
+            ]
+          },
+          "drive_payoff_channels": [
+            {
+              "associated_drive": "SURVIVAL_RESOURCE",
+              "channel": "SURVIVAL_ESCAPE"
+            },
+            {
+              "associated_drive": "ABILITY_PROGRESSION",
+              "channel": "NEW_ABILITY"
+            },
+            {
+              "associated_drive": "WORLD_EXPLORATION",
+              "channel": "WORLD_EXPANSION"
+            },
+            {
+              "associated_drive": "KNOWLEDGE_PROGRESSION",
+              "channel": "KNOWLEDGE_GAIN"
+            },
+            {
+              "associated_drive": "MYSTERY_INVESTIGATION",
+              "channel": "DISCOVERY"
+            }
+          ],
+          "drive_priorities": {
+            "ABILITY_PROGRESSION": 70,
+            "KNOWLEDGE_PROGRESSION": 85,
+            "MYSTERY_INVESTIGATION": 55,
+            "SURVIVAL_RESOURCE": 100,
+            "WORLD_EXPLORATION": 40
+          },
+          "drive_promises": {
+            "ABILITY_PROGRESSION": [
+              "永久进化逐步增加主角能够采取的行动，但每次增加都来自明确的单次选择。"
+            ],
+            "KNOWLEDGE_PROGRESSION": [
+              "对建筑变化、物品功能边界和选择后果的认识，会成为下一次判断的优势。"
+            ],
+            "MYSTERY_INVESTIGATION": [
+              "全球灾变与建筑变化留下需要逐步辨认的原因、规则和关联线索。"
+            ],
+            "SURVIVAL_RESOURCE": [
+              "建筑每次变化都会把已有物品、储备与安全位置重新变成可权衡的生存问题。",
+              "每天只能选择一件物品进化，机会成本会持续存在并影响后续行动。"
+            ],
+            "WORLD_EXPLORATION": [
+              "变化的建筑空间不断逼迫幸存者进入未知区域，重新理解可用空间与路线。"
+            ]
+          },
+          "drive_states": [
+            {
+              "drive": "SURVIVAL_RESOURCE",
+              "evidence": [
+                "Seed 明确写出末日环境、废弃建筑、不断变化的结构，以及幸存者的生存和资源重组压力。"
+              ],
+              "state": "EXPLICIT_SEED"
+            },
+            {
+              "drive": "ABILITY_PROGRESSION",
+              "evidence": [
+                "Seed 明确写出主角每天只能让一件普通非生命物品沿原有功能发生永久进化，且同一物品可以继续进化。"
+              ],
+              "state": "EXPLICIT_SEED"
+            },
+            {
+              "drive": "WORLD_EXPLORATION",
+              "evidence": [
+                "Seed 明确写出建筑会周期性改变结构并逼迫幸存者不断探索。"
+              ],
+              "state": "EXPLICIT_SEED"
+            },
+            {
+              "drive": "KNOWLEDGE_PROGRESSION",
+              "evidence": [
+                "要在变化建筑与每日一次的选择中持续生存，读者可以期待对规则和物品边界的认识逐步增加；但 Seed 未冻结具体认知路径。"
+              ],
+              "state": "IMPLIED_BY_PREMISE"
+            },
+            {
+              "drive": "MYSTERY_INVESTIGATION",
+              "evidence": [
+                "全球灾变和会变化的废弃建筑构成未解释的世界问题；Seed 未明确要求谜底或调查结构，因此仅作待审阅的次级驱动。"
+              ],
+              "state": "IMPLIED_BY_PREMISE"
+            }
+          ],
+          "primary_drive": "SURVIVAL_RESOURCE",
+          "progression_engine_enabled": true,
+          "secondary_drives": [
+            "KNOWLEDGE_PROGRESSION",
+            "ABILITY_PROGRESSION",
+            "MYSTERY_INVESTIGATION",
+            "WORLD_EXPLORATION"
+          ],
+          "status": "EFFECTIVE"
+        },
+        "source": "AUTHOR_CONFIRMED_NARRATIVE_DRIVE",
+        "status": "EFFECTIVE",
+        "updated_at": "2026-08-16T15:30:11.761739+00:00",
+        "version_number": 2
+      },
+      "READER_EXPERIENCE": {
+        "author_notes": "作者选择：CONFIRM",
+        "book_id": "original-e56a54687506",
+        "contract_record_id": "progression-contract-25dee2add48441a3936b5cb6e2aa4921",
+        "contract_type": "READER_EXPERIENCE",
+        "created_at": "2026-08-16T15:30:11.760752+00:00",
+        "edition_id": "base",
+        "effective_from_boundary": 1,
+        "payload": {
+          "author_notes": "这是基于 INITIAL Seed 的首次语义提案；Seed 没有提供作者覆盖项。三项合同均保留为 NEEDS_REVIEW，特别需要作者确认特殊规则的适用范围、进化上限以及未知建筑规则在追读中的比重。",
+          "contract_id": "original-e56a54687506-reader-experience",
+          "drive_priority_order": [
+            "SURVIVAL_RESOURCE",
+            "KNOWLEDGE_PROGRESSION",
+            "ABILITY_PROGRESSION",
+            "MYSTERY_INVESTIGATION",
+            "WORLD_EXPLORATION"
+          ],
+          "expected_drive_interactions": [
+            "生存与资源为主要驱动力"
+          ],
+          "experience_priorities": {
+            "ARTIFACT_OR_ABILITY": "VERY_HIGH",
+            "BREAKTHROUGH": "VERY_HIGH",
+            "COMBAT": "MEDIUM",
+            "EXPLORATION": "VERY_HIGH",
+            "FACTION_CONFLICT": "LOW",
+            "KNOWLEDGE": "HIGH",
+            "MYSTERY": "HIGH",
+            "POWER_VERIFICATION": "HIGH",
+            "PROGRESSION": "VERY_HIGH",
+            "RELATIONSHIP": "LOW",
+            "RESOURCE_OPPORTUNITY": "VERY_HIGH",
+            "REVEAL": "HIGH",
+            "REVENGE": "OFF",
+            "ROMANCE": "OFF",
+            "SOCIAL_THEME": "LOW",
+            "STATUS_RISE": "LOW",
+            "SURVIVAL": "VERY_HIGH",
+            "TEAM_GROWTH": "LOW",
+            "WEALTH": "LOW",
+            "WORLD_EXPANSION": "HIGH"
+          },
+          "explanation_style": "BALANCED",
+          "growth_centrality": "VERY_HIGH",
+          "must_deliver": [
+            "每日唯一的进化选择必须在后续生存处境中产生可感知、可验证的行动优势或代价。",
+            "建筑结构变化必须持续制造探索、路线和资源重组压力，而不是只作为背景设定。",
+            "普通非生命物品沿原有功能发生的质变必须打开读者能理解并期待兑现的新行动可能性。",
+            "选择的机会成本和失败后果不能被无限资源、无限次数或无代价多选抵消。"
+          ],
+          "must_not_drift_into": [
+            "把永久进化稀释成普通求生技巧、职业知识、工程改造或一般效率提升。",
+            "让战斗、恋爱、阵营争霸或社会地位长期压过生存选择与物品进化的核心追读动力。",
+            "把建筑变化变成静态背景，或用一套脱离物品选择的复杂系统替代现场生存后果。"
+          ],
+          "mystery_centrality": "HIGH",
+          "mysticism_level": "MEDIUM",
+          "primary_family": "SURVIVAL_PROGRESSION",
+          "primary_narrative_drive": "SURVIVAL_RESOURCE",
+          "relationship_centrality": "LOW",
+          "secondary_families": [
+            "EVOLUTION_PROGRESSION"
+          ],
+          "secondary_narrative_drives": [
+            "KNOWLEDGE_PROGRESSION",
+            "ABILITY_PROGRESSION",
+            "MYSTERY_INVESTIGATION",
+            "WORLD_EXPLORATION"
+          ],
+          "serial_form": "LONG_SERIAL",
+          "setting_skin": "APOCALYPSE",
+          "status": "EFFECTIVE",
+          "team_centrality": "LOW",
+          "theme_centrality": "LOW",
+          "tone": [
+            "紧张",
+            "具体",
+            "克制",
+            "有爽点"
+          ],
+          "world_expansion_centrality": "HIGH"
+        },
+        "source": "AUTHOR_ADJUSTED_READER_EXPERIENCE",
+        "status": "EFFECTIVE",
+        "updated_at": "2026-08-16T15:30:11.761739+00:00",
+        "version_number": 2
+      }
+    },
+    "creative_semantics": {
+      "anti_drift": [
+        "不能把永久进化写成普通求生技巧、职业知识、工程改造或一般效率提升。",
+        "不能让拿掉特殊进化机制后，故事仍可由相同的搜索、战斗、经营或社交活动维持主要行动和爽点；特殊机制必须真正改变可行动可能性。",
+        "不能把每天一次的选择变成无限刷新、无限物品或无代价多选。",
+        "不能让建筑变化只做静态背景，也不能让世界揭秘、阵营争霸、恋爱或复仇长期取代生存成长与选择兑现。",
+        "不能把局部现实锚点误写成对超现实能力本身的全面削弱，或用现实职业能力替代作者已经给出的异常优势。"
+      ],
+      "complexity_boundaries": [
+        "不额外引入与每日单件进化无关的职业技能树、数值面板或独立升级体系。",
+        "不让庞大的科技或魔法百科、复杂阵营政治、经营经济和社会制度解释抢走现场生存选择。",
+        "不把建筑变化拆成另一套脱离物品选择的成长系统，也不让抽象规则说明替代具体行动与后果。",
+        "不为了制造升级感而堆叠不可验证的能力清单、敌人清单、地图层级或长期剧情结构。"
+      ],
+      "existing_signature_mechanism": "Seed 已明确：主角每天只能从自己真正拥有的普通非生命物品中选择一件，让它沿原有功能发生一次永久进化，同一物品还可以继续进化。已明确的使用者是主角；其他幸存者是否也拥有同一规则、还是只有主角拥有，Seed 没有说明，因此本阶段不冻结使用者范围。普通人不能靠职业、工程知识或一般效率训练复制这条特殊规则；它要求每日唯一选择与规则本身的永久质变。该机制会反复打开新的行动可能性，而每天一次、物品必须真实拥有、建筑周期变化和选择错配带来的资源与时机成本只是能力的约束，不是能力的替代物。",
+      "novelty_focus": [
+        "把每日唯一机会、普通物品原功能的质变和会重排的建筑空间绑定成一个可重复的选择—验证—再选择循环。",
+        "新奇感集中在同一物品如何沿原功能打开原本不存在的生存行动，而不是堆砌新名词或另起一套系统。",
+        "让‘拥有何物’与‘今天愿意牺牲哪一种潜在用途’本身成为持续变化的创意来源。"
+      ],
+      "open_design_space": [
+        "沿原有功能的进化是否可以突破现实物理上限，以及突破的尺度和可解释程度。",
+        "物品进化结果能否提前判断、判断需要什么证据，以及同一物品连续进化的递进方式。",
+        "建筑周期变化的触发、边界、可预测度和原因，以及它与每日选择之间如何形成新的生存问题。",
+        "永久进化之间是否会产生协同、冲突或新的代价；这些关系应服务于核心选择，而不是另起一套成长系统。",
+        "其他幸存者是否具备同类规则，以及由此产生的资源竞争、合作或知识交换在故事中占多大比重。"
+      ],
+      "payoff_texture": [
+        "在紧张的取舍中看到一个具体物品立刻改变可行动范围。",
+        "进化结果必须能在现场被验证，带来‘这次选择没有浪费’的确定性满足。",
+        "前期看似普通的物品在新的建筑结构和资源压力中兑现，形成以小博大、临场反转的爽点。",
+        "能力突破可以超出日常现实基线，但仍要让读者看懂代价、限制和后果，而不是无代价碾压。"
+      ],
+      "realism_anchors": [
+        "物品来源必须是主角真正拥有的普通非生命物品，携带、位置、可达性和使用条件应保持直观。",
+        "每日只能选择一件，错过机会、选择错配、资源消耗、受伤和失败后果应具体可感。",
+        "进化仍沿原有功能展开，局部用途和后果要能被第三人称限知视角观察与验证。",
+        "建筑变化造成的路线、空间和资源摩擦应保持清楚；这些局部锚点约束超现实质变的使用成本，但不把核心幻想普通化。"
+      ],
+      "repeatable_reader_loop": [
+        "当前建筑变化或生存危机暴露一个具体缺口。",
+        "主角盘点真正拥有的普通物品，在当天唯一的进化机会中进行取舍。",
+        "被选物品沿原有功能永久进化，主角用具体行动验证收益并承担限制或代价。",
+        "新的空间、资源或规则问题被打开，下一次选择因此更有价值也更难。"
+      ],
+      "signature_fantasy": "在人人被困且环境不断改写的灾变世界里，主角能把自己真正拥有的普通非生命物品沿原有功能永久进化，并用每天唯一的选择把有限资源变成新的生存可能性。读者真正购买的是在绝境中亲手做出聪明取舍、看到普通东西发生质变，并用这次质变解决原本无法解决的问题的持续爽感。"
+    },
+    "foundation_rules": [
+      "Foundation 必须保留已确认的 Reader Experience、Primary Narrative Drive 与 Creative Semantics",
+      "三个 Foundation 候选必须共享并实质依赖作者选择的同一个 Core Innovation；selected Core 内部仍开放的问题可以被具体化，但不得重新打开已由 Core selection 关闭的同等级机制分叉",
+      "不得为追求候选差异新增未经 Seed、Creative Semantics 或 Core Intent 需要的竞争性第二核心机制"
+    ],
+    "reader_experience": {
+      "author_notes": "作者选择：CONFIRM",
+      "book_id": "original-e56a54687506",
+      "contract_record_id": "progression-contract-25dee2add48441a3936b5cb6e2aa4921",
+      "contract_type": "READER_EXPERIENCE",
+      "created_at": "2026-08-16T15:30:11.760752+00:00",
+      "edition_id": "base",
+      "effective_from_boundary": 1,
+      "payload": {
+        "author_notes": "这是基于 INITIAL Seed 的首次语义提案；Seed 没有提供作者覆盖项。三项合同均保留为 NEEDS_REVIEW，特别需要作者确认特殊规则的适用范围、进化上限以及未知建筑规则在追读中的比重。",
+        "contract_id": "original-e56a54687506-reader-experience",
+        "drive_priority_order": [
+          "SURVIVAL_RESOURCE",
+          "KNOWLEDGE_PROGRESSION",
+          "ABILITY_PROGRESSION",
+          "MYSTERY_INVESTIGATION",
+          "WORLD_EXPLORATION"
+        ],
+        "expected_drive_interactions": [
+          "生存与资源为主要驱动力"
+        ],
+        "experience_priorities": {
+          "ARTIFACT_OR_ABILITY": "VERY_HIGH",
+          "BREAKTHROUGH": "VERY_HIGH",
+          "COMBAT": "MEDIUM",
+          "EXPLORATION": "VERY_HIGH",
+          "FACTION_CONFLICT": "LOW",
+          "KNOWLEDGE": "HIGH",
+          "MYSTERY": "HIGH",
+          "POWER_VERIFICATION": "HIGH",
+          "PROGRESSION": "VERY_HIGH",
+          "RELATIONSHIP": "LOW",
+          "RESOURCE_OPPORTUNITY": "VERY_HIGH",
+          "REVEAL": "HIGH",
+          "REVENGE": "OFF",
+          "ROMANCE": "OFF",
+          "SOCIAL_THEME": "LOW",
+          "STATUS_RISE": "LOW",
+          "SURVIVAL": "VERY_HIGH",
+          "TEAM_GROWTH": "LOW",
+          "WEALTH": "LOW",
+          "WORLD_EXPANSION": "HIGH"
+        },
+        "explanation_style": "BALANCED",
+        "growth_centrality": "VERY_HIGH",
+        "must_deliver": [
+          "每日唯一的进化选择必须在后续生存处境中产生可感知、可验证的行动优势或代价。",
+          "建筑结构变化必须持续制造探索、路线和资源重组压力，而不是只作为背景设定。",
+          "普通非生命物品沿原有功能发生的质变必须打开读者能理解并期待兑现的新行动可能性。",
+          "选择的机会成本和失败后果不能被无限资源、无限次数或无代价多选抵消。"
+        ],
+        "must_not_drift_into": [
+          "把永久进化稀释成普通求生技巧、职业知识、工程改造或一般效率提升。",
+          "让战斗、恋爱、阵营争霸或社会地位长期压过生存选择与物品进化的核心追读动力。",
+          "把建筑变化变成静态背景，或用一套脱离物品选择的复杂系统替代现场生存后果。"
+        ],
+        "mystery_centrality": "HIGH",
+        "mysticism_level": "MEDIUM",
+        "primary_family": "SURVIVAL_PROGRESSION",
+        "primary_narrative_drive": "SURVIVAL_RESOURCE",
+        "relationship_centrality": "LOW",
+        "secondary_families": [
+          "EVOLUTION_PROGRESSION"
+        ],
+        "secondary_narrative_drives": [
+          "KNOWLEDGE_PROGRESSION",
+          "ABILITY_PROGRESSION",
+          "MYSTERY_INVESTIGATION",
+          "WORLD_EXPLORATION"
+        ],
+        "serial_form": "LONG_SERIAL",
+        "setting_skin": "APOCALYPSE",
+        "status": "EFFECTIVE",
+        "team_centrality": "LOW",
+        "theme_centrality": "LOW",
+        "tone": [
+          "紧张",
+          "具体",
+          "克制",
+          "有爽点"
+        ],
+        "world_expansion_centrality": "HIGH"
+      },
+      "source": "AUTHOR_ADJUSTED_READER_EXPERIENCE",
+      "status": "EFFECTIVE",
+      "updated_at": "2026-08-16T15:30:11.761739+00:00",
+      "version_number": 2
+    }
+  },
+  "reference_planning_context": {
+    "compact_cards": [
+      {
+        "card_id": "contrast-ability-rule",
+        "card_type": "contrast-card",
+        "category_ids": [
+          "科幻",
+          "玄幻"
+        ],
+        "creative_problem_tags": [
+          "ability-rule"
+        ],
+        "evidence_scope": "MULTI_CATEGORY",
+        "knowledge_level": "CROSS_BOOK_CONTRAST",
+        "maturity": "PILOT",
+        "metadata_match_fields": [
+          "reader_experiences",
+          "narrative_drives"
+        ],
+        "narrative_drives": [
+          "POWER_PROGRESSION",
+          "WORLD_EXPLORATION",
+          "MYSTERY_REVELATION"
+        ],
+        "payoff_channels": [
+          "POWER_BREAKTHROUGH",
+          "DISCOVERY",
+          "STATUS_RISE",
+          "WORLD_EXPANSION"
+        ],
+        "reader_experiences": [
+          "BREAKTHROUGH",
+          "POWER_VERIFICATION",
+          "EXPLORATION",
+          "MYSTERY",
+          "STATUS_RISE"
+        ],
+        "shared_creative_problem": "能力规则如何被读者读懂",
+        "solutions": [
+          {
+            "conditions": [
+              "该解法在来源中有局部动作或结构证据。"
+            ],
+            "description": "让规则从动作实验中被推导。",
+            "failure_risks": [
+              "INFERRED_RISK：若没有后续变化，解法可能重复。"
+            ],
+            "label": "实验验证",
+            "reader_experience_differences": [
+              "读者获得与其他解法不同的期待入口。"
+            ],
+            "solution_id": "contrast-ability-rule-1",
+            "tradeoffs": [
+              "会把注意力集中到该解法对应的体验，不能同时保证所有回报。"
+            ]
+          },
+          {
+            "conditions": [
+              "该解法在来源中有局部动作或结构证据。"
+            ],
+            "description": "在对抗中显示可用范围与反制空间。",
+            "failure_risks": [
+              "INFERRED_RISK：若没有后续变化，解法可能重复。"
+            ],
+            "label": "战斗边界",
+            "reader_experience_differences": [
+              "读者获得与其他解法不同的期待入口。"
+            ],
+            "solution_id": "contrast-ability-rule-2",
+            "tradeoffs": [
+              "会把注意力集中到该解法对应的体验，不能同时保证所有回报。"
+            ]
+          },
+          {
+            "conditions": [
+              "该解法在来源中有局部动作或结构证据。"
+            ],
+            "description": "让能否使用能力取决于身份、场所或关系。",
+            "failure_risks": [
+              "INFERRED_RISK：若没有后续变化，解法可能重复。"
+            ],
+            "label": "社会权限",
+            "reader_experience_differences": [
+              "读者获得与其他解法不同的期待入口。"
+            ],
+            "solution_id": "contrast-ability-rule-3",
+            "tradeoffs": [
+              "会把注意力集中到该解法对应的体验，不能同时保证所有回报。"
+            ]
+          }
+        ],
+        "status": "REFERENCE_ONLY",
+        "transfer_boundary": "Contrast 只比较同一创作问题的解法，不表示 A 好、B 差，也不要求每种解法都有 cost。"
+      },
+      {
+        "card_id": "contrast-opening-pressure",
+        "card_type": "contrast-card",
+        "category_ids": [
+          "科幻",
+          "玄幻",
+          "都市"
+        ],
+        "creative_problem_tags": [
+          "opening"
+        ],
+        "evidence_scope": "MULTI_CATEGORY",
+        "knowledge_level": "CROSS_BOOK_CONTRAST",
+        "maturity": "PILOT",
+        "metadata_match_fields": [
+          "reader_experiences",
+          "narrative_drives"
+        ],
+        "narrative_drives": [
+          "POWER_PROGRESSION",
+          "WORLD_EXPLORATION",
+          "MYSTERY_REVELATION"
+        ],
+        "payoff_channels": [
+          "POWER_BREAKTHROUGH",
+          "DISCOVERY",
+          "STATUS_RISE",
+          "WORLD_EXPANSION"
+        ],
+        "reader_experiences": [
+          "BREAKTHROUGH",
+          "POWER_VERIFICATION",
+          "EXPLORATION",
+          "MYSTERY",
+          "STATUS_RISE"
+        ],
+        "shared_creative_problem": "第一次强期待如何建立",
+        "solutions": [
+          {
+            "conditions": [
+              "该解法在来源中有局部动作或结构证据。"
+            ],
+            "description": "先给出可感知的异常能力，再补齐世界规则。",
+            "failure_risks": [
+              "INFERRED_RISK：若没有后续变化，解法可能重复。"
+            ],
+            "label": "能力先行",
+            "reader_experience_differences": [
+              "读者获得与其他解法不同的期待入口。"
+            ],
+            "solution_id": "contrast-opening-pressure-1",
+            "tradeoffs": [
+              "会把注意力集中到该解法对应的体验，不能同时保证所有回报。"
+            ]
+          },
+          {
+            "conditions": [
+              "该解法在来源中有局部动作或结构证据。"
+            ],
+            "description": "先制造身份、关系或时间断裂，再延迟解释逆转。",
+            "failure_risks": [
+              "INFERRED_RISK：若没有后续变化，解法可能重复。"
+            ],
+            "label": "身份断裂",
+            "reader_experience_differences": [
+              "读者获得与其他解法不同的期待入口。"
+            ],
+            "solution_id": "contrast-opening-pressure-2",
+            "tradeoffs": [
+              "会把注意力集中到该解法对应的体验，不能同时保证所有回报。"
+            ]
+          },
+          {
+            "conditions": [
+              "该解法在来源中有局部动作或结构证据。"
+            ],
+            "description": "先把职业或生活难题写到必须马上处理，再以专业结果建立回报。",
+            "failure_risks": [
+              "INFERRED_RISK：若没有后续变化，解法可能重复。"
+            ],
+            "label": "日常专业问题",
+            "reader_experience_differences": [
+              "读者获得与其他解法不同的期待入口。"
+            ],
+            "solution_id": "contrast-opening-pressure-3",
+            "tradeoffs": [
+              "会把注意力集中到该解法对应的体验，不能同时保证所有回报。"
+            ]
+          }
+        ],
+        "status": "REFERENCE_ONLY",
+        "transfer_boundary": "Contrast 只比较同一创作问题的解法，不表示 A 好、B 差，也不要求每种解法都有 cost。"
+      },
+      {
+        "card_id": "synth-category-01",
+        "card_type": "corpus-synthesis",
+        "category_ids": [
+          "玄幻"
+        ],
+        "creative_problem_tags": [
+          "category-synthesis",
+          "breakthrough",
+          "world-expansion"
+        ],
+        "distinctive_mechanisms": [
+          "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+        ],
+        "evidence_scope": "MULTI_BOOK",
+        "failure_fatigue_risks": [
+          "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+        ],
+        "knowledge_level": "CORPUS_SYNTHESIS",
+        "major_divergences": [
+          "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+          "成本、治理和责任并非每本书的主轴。"
+        ],
+        "maturity": "PILOT",
+        "metadata_match_fields": [
+          "reader_experiences",
+          "narrative_drives"
+        ],
+        "narrative_drives": [
+          "POWER_PROGRESSION",
+          "WORLD_EXPLORATION"
+        ],
+        "payoff_channels": [
+          "POWER_BREAKTHROUGH",
+          "WORLD_EXPANSION",
+          "DISCOVERY"
+        ],
+        "payoff_differences": [
+          "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+        ],
+        "progression_differences": [
+          "量变、质变、知识、身份和组合式进阶并存。"
+        ],
+        "reader_experiences": [
+          "PROGRESSION",
+          "BREAKTHROUGH",
+          "WORLD_EXPANSION"
+        ],
+        "shared_creative_problem": "当前玄幻样本如何持续提供读者回报",
+        "shared_tendencies": [
+          "样本都保留可识别的阶段推进和回报窗口。",
+          "世界扩大与角色目标之间存在可追踪连接。"
+        ],
+        "status": "REFERENCE_ONLY",
+        "synthesis_kind": "CATEGORY",
+        "title": "当前玄幻样本中的结构对照",
+        "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+        "what_sample_cannot_tell_us": [
+          "不能由当前样本判断该类别所有作品的有效公式。"
+        ],
+        "world_expansion_differences": [
+          "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+        ]
+      },
+      {
+        "card_id": "synth-category-02",
+        "card_type": "corpus-synthesis",
+        "category_ids": [
+          "仙侠"
+        ],
+        "creative_problem_tags": [
+          "category-synthesis",
+          "breakthrough",
+          "world-expansion"
+        ],
+        "distinctive_mechanisms": [
+          "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+        ],
+        "evidence_scope": "MULTI_BOOK",
+        "failure_fatigue_risks": [
+          "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+        ],
+        "knowledge_level": "CORPUS_SYNTHESIS",
+        "major_divergences": [
+          "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+          "成本、治理和责任并非每本书的主轴。"
+        ],
+        "maturity": "PILOT",
+        "metadata_match_fields": [
+          "reader_experiences",
+          "narrative_drives"
+        ],
+        "narrative_drives": [
+          "POWER_PROGRESSION",
+          "WORLD_EXPLORATION"
+        ],
+        "payoff_channels": [
+          "POWER_BREAKTHROUGH",
+          "WORLD_EXPANSION",
+          "DISCOVERY"
+        ],
+        "payoff_differences": [
+          "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+        ],
+        "progression_differences": [
+          "量变、质变、知识、身份和组合式进阶并存。"
+        ],
+        "reader_experiences": [
+          "PROGRESSION",
+          "BREAKTHROUGH",
+          "WORLD_EXPANSION"
+        ],
+        "shared_creative_problem": "当前仙侠样本如何持续提供读者回报",
+        "shared_tendencies": [
+          "样本都保留可识别的阶段推进和回报窗口。",
+          "世界扩大与角色目标之间存在可追踪连接。"
+        ],
+        "status": "REFERENCE_ONLY",
+        "synthesis_kind": "CATEGORY",
+        "title": "当前仙侠样本中的结构对照",
+        "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+        "what_sample_cannot_tell_us": [
+          "不能由当前样本判断该类别所有作品的有效公式。"
+        ],
+        "world_expansion_differences": [
+          "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+        ]
+      },
+      {
+        "card_id": "synth-category-03",
+        "card_type": "corpus-synthesis",
+        "category_ids": [
+          "都市"
+        ],
+        "creative_problem_tags": [
+          "category-synthesis",
+          "breakthrough",
+          "world-expansion"
+        ],
+        "distinctive_mechanisms": [
+          "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+        ],
+        "evidence_scope": "MULTI_BOOK",
+        "failure_fatigue_risks": [
+          "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+        ],
+        "knowledge_level": "CORPUS_SYNTHESIS",
+        "major_divergences": [
+          "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+          "成本、治理和责任并非每本书的主轴。"
+        ],
+        "maturity": "PILOT",
+        "metadata_match_fields": [
+          "reader_experiences",
+          "narrative_drives"
+        ],
+        "narrative_drives": [
+          "POWER_PROGRESSION",
+          "WORLD_EXPLORATION"
+        ],
+        "payoff_channels": [
+          "POWER_BREAKTHROUGH",
+          "WORLD_EXPANSION",
+          "DISCOVERY"
+        ],
+        "payoff_differences": [
+          "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+        ],
+        "progression_differences": [
+          "量变、质变、知识、身份和组合式进阶并存。"
+        ],
+        "reader_experiences": [
+          "PROGRESSION",
+          "BREAKTHROUGH",
+          "WORLD_EXPANSION"
+        ],
+        "shared_creative_problem": "当前都市样本如何持续提供读者回报",
+        "shared_tendencies": [
+          "样本都保留可识别的阶段推进和回报窗口。",
+          "世界扩大与角色目标之间存在可追踪连接。"
+        ],
+        "status": "REFERENCE_ONLY",
+        "synthesis_kind": "CATEGORY",
+        "title": "当前都市样本中的结构对照",
+        "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+        "what_sample_cannot_tell_us": [
+          "不能由当前样本判断该类别所有作品的有效公式。"
+        ],
+        "world_expansion_differences": [
+          "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+        ]
+      },
+      {
+        "card_id": "synth-category-04",
+        "card_type": "corpus-synthesis",
+        "category_ids": [
+          "科幻"
+        ],
+        "creative_problem_tags": [
+          "category-synthesis",
+          "breakthrough",
+          "world-expansion"
+        ],
+        "distinctive_mechanisms": [
+          "同一创作问题在不同作品中通过能力、身份、资源、谜团或关系解决。"
+        ],
+        "evidence_scope": "MULTI_BOOK",
+        "failure_fatigue_risks": [
+          "INFERRED_RISK：当前样本数量有限，不可推广为类别规律。"
+        ],
+        "knowledge_level": "CORPUS_SYNTHESIS",
+        "major_divergences": [
+          "有的样本偏能力/探索，有的偏身份/关系或资源经营。",
+          "成本、治理和责任并非每本书的主轴。"
+        ],
+        "maturity": "PILOT",
+        "metadata_match_fields": [
+          "reader_experiences",
+          "narrative_drives"
+        ],
+        "narrative_drives": [
+          "POWER_PROGRESSION",
+          "WORLD_EXPLORATION"
+        ],
+        "payoff_channels": [
+          "POWER_BREAKTHROUGH",
+          "WORLD_EXPANSION",
+          "DISCOVERY"
+        ],
+        "payoff_differences": [
+          "纯收益、力量验证、认可、发现和关系回报的比例不同。"
+        ],
+        "progression_differences": [
+          "量变、质变、知识、身份和组合式进阶并存。"
+        ],
+        "reader_experiences": [
+          "PROGRESSION",
+          "BREAKTHROUGH",
+          "WORLD_EXPANSION"
+        ],
+        "shared_creative_problem": "当前科幻样本如何持续提供读者回报",
+        "shared_tendencies": [
+          "样本都保留可识别的阶段推进和回报窗口。",
+          "世界扩大与角色目标之间存在可追踪连接。"
+        ],
+        "status": "REFERENCE_ONLY",
+        "synthesis_kind": "CATEGORY",
+        "title": "当前科幻样本中的结构对照",
+        "transfer_boundary": "只迁移对照变量和适用条件，不迁移该类别的来源身份、情节或固定模板。",
+        "what_sample_cannot_tell_us": [
+          "不能由当前样本判断该类别所有作品的有效公式。"
+        ],
+        "world_expansion_differences": [
+          "地理、知识、阵营、社会层、本体层各自可能成为入口。"
+        ]
+      }
+    ],
+    "effective_query": {
+      "creative_problem": "CORE_INNOVATION_PROPOSAL：围绕作者 premise 与已确认阅读体验寻找可迁移的故事机制，只作为 Core/Foundation/Candidate 的参考候选。",
+      "creative_problem_tags": [],
+      "max_cards": 6,
+      "narrative_drives": [
+        "SURVIVAL_RESOURCE",
+        "KNOWLEDGE_PROGRESSION",
+        "ABILITY_PROGRESSION",
+        "MYSTERY_INVESTIGATION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [],
+      "reader_experiences": [
+        "ARTIFACT_OR_ABILITY",
+        "BREAKTHROUGH",
+        "COMBAT",
+        "EXPLORATION",
+        "FACTION_CONFLICT",
+        "KNOWLEDGE",
+        "MYSTERY",
+        "POWER_VERIFICATION",
+        "PROGRESSION",
+        "RELATIONSHIP",
+        "RESOURCE_OPPORTUNITY",
+        "REVEAL",
+        "REVENGE",
+        "ROMANCE",
+        "SOCIAL_THEME",
+        "STATUS_RISE",
+        "SURVIVAL",
+        "TEAM_GROWTH",
+        "WEALTH",
+        "WORLD_EXPANSION"
+      ],
+      "scene_functions": []
+    },
+    "knowledge_gaps": [],
+    "machine_bundle_hash": "3120e088142f5d75ad3f2d1d18eca36f5b89251369228b4f73c7f63e796ff9f9",
+    "match_tier": "EXACT",
+    "original_query": {
+      "creative_problem": "CORE_INNOVATION_PROPOSAL：围绕作者 premise 与已确认阅读体验寻找可迁移的故事机制，只作为 Core/Foundation/Candidate 的参考候选。",
+      "creative_problem_tags": [],
+      "max_cards": 6,
+      "narrative_drives": [
+        "SURVIVAL_RESOURCE",
+        "KNOWLEDGE_PROGRESSION",
+        "ABILITY_PROGRESSION",
+        "MYSTERY_INVESTIGATION",
+        "WORLD_EXPLORATION"
+      ],
+      "payoff_channels": [],
+      "reader_experiences": [
+        "ARTIFACT_OR_ABILITY",
+        "BREAKTHROUGH",
+        "COMBAT",
+        "EXPLORATION",
+        "FACTION_CONFLICT",
+        "KNOWLEDGE",
+        "MYSTERY",
+        "POWER_VERIFICATION",
+        "PROGRESSION",
+        "RELATIONSHIP",
+        "RESOURCE_OPPORTUNITY",
+        "REVEAL",
+        "REVENGE",
+        "ROMANCE",
+        "SOCIAL_THEME",
+        "STATUS_RISE",
+        "SURVIVAL",
+        "TEAM_GROWTH",
+        "WEALTH",
+        "WORLD_EXPANSION"
+      ],
+      "scene_functions": []
+    },
+    "purpose": "PLANNING",
+    "relaxed_fields": [],
+    "selected_card_count": 6,
+    "selected_card_ids": [
+      "contrast-ability-rule",
+      "contrast-opening-pressure",
+      "synth-category-01",
+      "synth-category-02",
+      "synth-category-03",
+      "synth-category-04"
+    ],
+    "selected_card_knowledge_levels": [
+      "CROSS_BOOK_CONTRAST",
+      "CROSS_BOOK_CONTRAST",
+      "CORPUS_SYNTHESIS",
+      "CORPUS_SYNTHESIS",
+      "CORPUS_SYNTHESIS",
+      "CORPUS_SYNTHESIS"
+    ],
+    "selected_card_types": [
+      "contrast-card",
+      "contrast-card",
+      "corpus-synthesis",
+      "corpus-synthesis",
+      "corpus-synthesis",
+      "corpus-synthesis"
+    ],
+    "snapshot_hash": "625205d63fdb8680fa3b681f380bb4f3e43ade4b5a3a137fe158e7e9a77cba1b",
+    "snapshot_id": "reference-context_56287750652bee6f35ed3f40",
+    "status": "ENABLED",
+    "usage": "REFERENCE_ONLY",
+    "warnings": [],
+    "zero_result_reason": null
+  },
+  "reference_traits": [],
+  "requested_stage": "CORE_INNOVATION_PROPOSAL",
+  "tone_style": "紧张、具体、克制但有爽点"
+}
