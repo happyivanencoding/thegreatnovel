@@ -696,6 +696,7 @@ def create_app(
     library_root: Path | None = None,
     discovery_root: Path | None = None,
     developer_mode: bool = False,
+    story_program_reference_root: Path | None = None,
 ) -> Any:
     if FastAPI is None or Jinja2Templates is None:
         raise RuntimeError("Web 功能需要安装可选依赖：pip install '.[web]'")
@@ -711,6 +712,11 @@ def create_app(
         )
     )
     app.state.developer_mode = developer_mode
+    app.state.story_program_reference_root = (
+        None
+        if story_program_reference_root is None
+        else Path(story_program_reference_root).expanduser().resolve()
+    )
     app.state.csrf_token = create_csrf_token()
     template_dir = Path(__file__).parent / "templates"
     templates = Jinja2Templates(directory=str(template_dir))
@@ -755,6 +761,15 @@ def create_app(
         app.mount(
             "/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static"
         )
+
+    from novel_authoring.web.routes.story_program import register_story_program_routes
+
+    register_story_program_routes(
+        app,
+        templates,
+        render_template=_template,
+        asset_version=STATIC_ASSET_VERSION,
+    )
 
     @app.get("/health")
     async def health() -> dict[str, Any]:
@@ -3638,6 +3653,14 @@ def web_doctor() -> dict[str, Any]:
             "ok": all((static_dir / name).is_file() for name in ("app.js", "style.css")),
             "paths": [str(static_dir / name) for name in ("app.js", "style.css")],
         },
+        "story_program": {
+            "ok": (template_dir / "story_program.html").is_file()
+            and (static_dir / "story_program.js").is_file(),
+            "paths": [
+                str(template_dir / "story_program.html"),
+                str(static_dir / "story_program.js"),
+            ],
+        },
         "frontend": {
             "ok": True,
             "mode": "native-javascript-css",
@@ -3660,6 +3683,10 @@ def web_doctor() -> dict[str, Any]:
             "/health",
             "/",
             "/library",
+            "/story-program",
+            "/books/{path_book_id}/story-program",
+            "/api/books/{path_book_id}/story-program",
+            "/api/books/{path_book_id}/story-program/prompt",
             "/api/library",
             "/api/library/catalog",
             "/api/library/books/{path_book_id}",
@@ -3707,6 +3734,7 @@ def serve(
     library_root: Path | None = None,
     discovery_root: Path | None = None,
     developer_mode: bool = False,
+    story_program_reference_root: Path | None = None,
 ) -> None:
     if host not in ("127.0.0.1", "localhost", "::1") and not allow_remote:
         raise ValueError("默认只允许本机绑定；需要远程访问时显式传入 allow_remote")
@@ -3726,6 +3754,7 @@ def serve(
             library_root=library_root,
             discovery_root=discovery_root,
             developer_mode=developer_mode,
+            story_program_reference_root=story_program_reference_root,
         ),
         host=host,
         port=port,

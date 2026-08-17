@@ -10,7 +10,7 @@
 <body class="library-body">
   <header class="library-topbar">
     <a class="wb-brand" href="/library">Novel Studio</a>
-    <nav><a class="{% if not technical_library %}is-active{% endif %}" href="/library">创作项目</a>{% if developer_mode %}<a class="{% if technical_library %}is-active{% endif %}" href="/library/technical">技术书库</a>{% endif %}</nav>
+    <nav><a class="{% if not technical_library %}is-active{% endif %}" href="/library">创作项目</a><a href="/story-program">GBrain Story Studio</a>{% if developer_mode %}<a class="{% if technical_library %}is-active{% endif %}" href="/library/technical">技术书库</a>{% endif %}</nav>
   </header>
   <main class="library-shell" data-library-catalog data-catalog-revision="{{ catalog.revision }}">
     <header class="library-hero">

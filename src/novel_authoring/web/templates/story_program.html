@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% if selected_book %}{{ selected_book.title }} · {% endif %}GBrain Story Studio</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v={{ asset_version }}">
+</head>
+<body class="library-body story-program-body" data-story-program-book-id="{{ selected_book.book_id if selected_book else '' }}" data-story-program-provisional="{{ 'true' if story_program and story_program.include_provisional else 'false' }}">
+  <header class="library-topbar story-program-topbar">
+    <a class="wb-brand" href="/library">Novel Studio</a>
+    <nav>
+      <a href="/library">书库</a>
+      {% if selected_book %}<a class="is-active" href="/books/{{ selected_book.book_id }}/story-program">GBrain Story Studio</a>{% endif %}
+      {% if selected_book and selected_book.creation_mode == 'ORIGINAL' %}<a href="/books/{{ selected_book.book_id }}/original">原创新书</a>{% endif %}
+      {% if selected_book %}<a href="/books/{{ selected_book.book_id }}/editions/base/workbench">小说工作台</a>{% endif %}
+    </nav>
+  </header>
+
+  {% if not selected_book %}
+  <main class="story-program-select shell">
+    <header class="story-program-hero">
+      <p class="wb-kicker">作者优先 · 透明 Prompt 协议</p>
+      <h1>GBrain Story Studio</h1>
+      <p>从一句话创意开始，作者看见、修改、复制每一份 Prompt；Codex 返回只进入 Proposal，明确采用后才进入 Book Board。</p>
+    </header>
+    <section class="story-program-create-grid">
+      <article class="panel">
+        <div class="story-program-section-heading"><div><p class="wb-kicker">选择已有作品</p><h2>进入一份 Book Board</h2></div></div>
+        {% if books %}<div class="story-program-book-list">{% for book in books %}<a class="story-program-book-option" href="/books/{{ book.book_id }}/story-program"><strong>{{ book.title }}</strong><span>{{ book.book_id }} · {{ book.creation_mode }}</span></a>{% endfor %}</div>{% else %}<p class="muted">当前作者书库还没有可选作品。</p>{% endif %}
+      </article>
+      <form class="panel story-program-create-form" data-story-program-create>
+        <p class="wb-kicker">创建新书工作板</p><h2>从一句话创意开始</h2>
+        <label>暂定书名<input name="title" required placeholder="例如：废药与夜班药铺"></label>
+        <label>一句话创意<textarea name="premise" rows="4" required placeholder="主角在什么具体压力下，发现了什么能持续改变行动空间的异常？"></textarea></label>
+        <div class="story-program-form-grid"><label>书籍 ID（可选）<input name="book_id" pattern="[A-Za-z0-9._-]+" placeholder="留空则自动生成"></label><label>类型<input name="genre" placeholder="例如：都市超凡 / 职业成长"></label></div>
+        <label>期待的读者体验<textarea name="reader_experience" rows="3" placeholder="前期为什么追、中期为什么继续追、希望获得什么满足"></textarea></label>
+        <label>不希望出现的写法<textarea name="forbidden_style" rows="3" placeholder="每行一项，例如：抽象升级、工具人配角、静默改规则"></textarea></label>
+        <div class="story-program-actions"><button class="button primary" type="submit">创建并进入 GBrain Story Studio</button></div>
+        <p class="story-program-feedback" data-story-program-feedback aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  {% else %}
+  {% set summary = story_program.summary %}
+  <main class="story-program-shell shell" data-story-program>
+    <header class="story-program-hero story-program-hero-compact">
+      <div><p class="wb-kicker">GBrain Story Studio · 透明作者工作台</p><h1>{{ selected_book.title }}</h1><p>所有 Prompt、参考输入和 Proposal 都在本页可见；正式内容只在作者明确保存或采用后改变。</p></div>
+      <div class="story-program-hero-actions"><a class="button" href="/story-program">切换书籍</a><a class="button" href="/books/{{ selected_book.book_id }}/editions/base/workbench">返回小说工作台</a></div>
+    </header>
+
+    <section class="story-program-status-grid" aria-label="当前故事位置">
+      <article><span>已完成章节</span><strong>{{ summary.completed_chapters }}</strong><small>下一章：第{{ story_program.next_chapter_number }}章</small></article>
+      <article><span>当前大型剧情块</span><strong>{{ summary.current_block }}</strong><small>未来100章方向：{{ '已建立' if summary.future_direction_ready else '尚未建立' }}</small></article>
+      <article><span>当前十章模块</span><strong>{{ summary.current_module }}</strong><small>未来十章：{{ '已准备' if summary.next_ten_ready else '尚未准备' }}</small></article>
+      <article><span>下一章发生什么</span><strong>{{ summary.next_chapter }}</strong><small>重要未兑现承诺：{{ summary.important_debt }}</small></article>
+    </section>
+
+    <p class="story-program-feedback" data-story-program-feedback aria-live="polite"></p>
+    <div class="story-program-layout">
+      <aside class="story-program-board-column">
+        <section class="panel story-program-board-card">
+          <header class="story-program-section-heading"><div><p class="wb-kicker">作者权威工作板</p><h2>Book Board</h2></div><span class="story-program-approval-tag">{{ '已保存' if story_program.board_is_saved else '尚未保存' }}</span></header>
+          <p class="muted">Proposal 不会自动写入这里。手动修改后点击“保存 Book Board”，或在 Proposal 区选择区块并明确采用。</p>
+          <div class="story-program-board-sections">{% for section in story_program.board_sections %}<details class="story-program-board-section"{% if loop.index <= 4 %} open{% endif %}><summary>{{ section.title }}</summary><pre>{{ section.body }}</pre></details>{% endfor %}</div>
+          <label class="story-program-label">查看/编辑原始 Markdown<textarea id="board-markdown" data-board-markdown rows="24">{{ story_program.board_markdown }}</textarea></label>
+          <button class="button primary" type="button" data-save-board>保存 Book Board</button>
+          <p class="story-program-save-note">只有此按钮、Proposal 采用按钮或章节批准按钮会改变正式文件。</p>
+        </section>
+        <details class="panel story-program-technical"><summary>Developer Mode · 文件位置</summary><dl><dt>Book Board</dt><dd><code>{{ story_program.paths.board }}</code></dd><dt>Prompt 模板</dt><dd><code>{{ story_program.paths.prompts }}</code></dd><dt>Proposal Draft</dt><dd><code>{{ story_program.paths.proposal }}</code></dd><dt>章节目录</dt><dd><code>{{ story_program.paths.chapters }}</code></dd><dt>Reference Programs</dt><dd><code>{{ story_program.reference_root }}</code></dd></dl></details>
+      </aside>
+
+      <section class="story-program-main-column">
+        <section class="panel story-program-prompt-card">
+          <header class="story-program-section-heading"><div><p class="wb-kicker">完整、可编辑、可复制</p><h2>Prompt 工作区</h2></div><span class="story-program-approval-tag">不自动调用 LLM</span></header>
+          <div class="story-program-mode-row"><label>Prompt 模式<select data-prompt-mode><option value="new_book">模式一：新书总控 Prompt</option><option value="next_batch">模式二：下一批十章 Prompt</option><option value="current_chapter">模式三：当前章节 Prompt</option><option value="review">模式四：十章复盘与远期调整 Prompt</option></select></label><button class="button primary" type="button" data-generate-prompt>生成完整 Prompt</button><button class="button" type="button" data-copy-prompt>复制当前 Prompt</button></div>
+          <div class="story-program-input-grid">
+            <label data-prompt-input="title">暂定书名<input data-prompt-field="title" value="{{ selected_book.title }}"></label>
+            <label data-prompt-input="premise">一句话创意<textarea data-prompt-field="premise" rows="2"></textarea></label>
+            <label data-prompt-input="genre">类型<input data-prompt-field="genre"></label>
+            <label data-prompt-input="reader_experience">期待的读者体验<textarea data-prompt-field="reader_experience" rows="2"></textarea></label>
+            <label data-prompt-input="forbidden_style">不希望出现的写法<textarea data-prompt-field="forbidden_style" rows="2"></textarea></label>
+            <label data-prompt-input="reference_profile">参考小说整体画像<textarea data-prompt-field="reference_profile" rows="5" placeholder="完整粘贴；只有勾选“进入 Prompt”后才会进入。"></textarea></label>
+            <label class="story-program-checkbox"><input type="checkbox" data-prompt-field="include_reference_profile" checked>将整体蒸馏画像进入本轮 Prompt</label>
+            <label data-prompt-input="completed_summaries">已完成章节摘要<textarea data-prompt-field="completed_summaries" rows="3"></textarea></label>
+            <label data-prompt-input="current_block">当前大型剧情块<textarea data-prompt-field="current_block" rows="2"></textarea></label>
+            <label data-prompt-input="current_module">当前十章模块<textarea data-prompt-field="current_module" rows="2"></textarea></label>
+            <label data-prompt-input="current_state">当前故事状态<textarea data-prompt-field="current_state" rows="3">{{ summary.state_preview }}</textarea></label>
+            <label data-prompt-input="debts">当前未兑现承诺<textarea data-prompt-field="debts" rows="3">{{ summary.important_debt }}</textarea></label>
+            <label data-prompt-input="original_ten_plan">原十章中纲<textarea data-prompt-field="original_ten_plan" rows="3"></textarea></label>
+            <label data-prompt-input="ten_chapter_plan">十章逐章小纲<textarea data-prompt-field="ten_chapter_plan" rows="3"></textarea></label>
+            <label data-prompt-input="actual_summaries">实际十章摘要<textarea data-prompt-field="actual_summaries" rows="3"></textarea></label>
+            <label data-prompt-input="core_promise">核心类型与读者承诺<textarea data-prompt-field="core_promise" rows="3"></textarea></label>
+            <label data-prompt-input="world_rules">必要世界规则<textarea data-prompt-field="world_rules" rows="3"></textarea></label>
+            <label data-prompt-input="decision_mode">主角稳定决策模式<textarea data-prompt-field="decision_mode" rows="3"></textarea></label>
+            <label class="story-program-input-wide" data-prompt-input="chapter_plan">当前章具体小纲<textarea data-prompt-field="chapter_plan" rows="9" placeholder="必须写：触发事件、推动事件的人、主角行动、对手或世界反应、直接结果、状态变化、叙事功能、结尾推动力"></textarea></label>
+            <label data-prompt-input="recent_summaries">最近1—3章摘要<textarea data-prompt-field="recent_summaries" rows="3">{% for item in summary.recent_chapter_summaries %}第{{ item.number }}章 {{ item.title }}：{{ item.summary }}
+{% endfor %}</textarea></label>
+            <label data-prompt-input="hard_facts">本章不能违反的事实<textarea data-prompt-field="hard_facts" rows="3"></textarea></label>
+            <label data-prompt-input="reference_reason">本轮采用参考结构的原因<textarea data-prompt-field="reference_reason" rows="3" placeholder="为什么这一轮需要它？具体改造成什么？"></textarea></label>
+          </div>
+          <section class="story-program-reference-picker"><header><h3>Reference Programs · 人工选择 1—3 个</h3><p>默认只加载 VALIDATED；PROVISIONAL 只有打开后才会显示并且必须明确允许进入 Prompt。</p></header><div class="story-program-reference-tools"><input data-reference-query placeholder="关键词过滤，不自动排名"><a class="button compact" href="?include_provisional=1">显示 PROVISIONAL</a>{% if story_program.include_provisional %}<span class="story-program-warning">已开启 PROVISIONAL：证据尚不完整</span>{% endif %}</div><div class="story-program-reference-list">{% for program in story_program.programs %}<article class="story-program-reference-card {% if program.status == 'PROVISIONAL' %}is-provisional{% endif %}" data-reference-card data-program-id="{{ program.program_id }}"><label class="story-program-reference-select"><input type="checkbox" data-program-checkbox value="{{ program.program_id }}"{% if program.status == 'PROVISIONAL' %} data-provisional{% endif %}><strong>{{ program.program_id }}</strong><span>{{ program.status }} · {{ program.source_book_id }}</span></label>{% if program.status == 'PROVISIONAL' %}<p class="story-program-warning">该 Program 的连续证据尚不完整。</p>{% endif %}<dl><dt>story_phase</dt><dd>{{ program.story_phase }}</dd><dt>input_state</dt><dd>{{ program.input_state }}</dd><dt>reader_promise</dt><dd>{{ program.reader_promise }}</dd><dt>central_pressure</dt><dd>{{ program.central_pressure }}</dd><dt>reusable_program</dt><dd>{{ program.reusable_program }}</dd><dt>output_state</dt><dd>{{ program.output_state }}</dd><dt>applicable_conditions</dt><dd>{{ program.applicable_conditions|join('；') }}</dd><dt>failure_modes</dt><dd>{{ program.failure_modes|join('；') }}</dd><dt>anti_repetition_notes</dt><dd>{{ program.anti_repetition_notes|join('；') }}</dd></dl><small data-prompt-included="{{ program.program_id }}">勾选后，这些字段和禁止复制边界会进入 Prompt</small></article>{% else %}<p class="muted">没有找到符合条件的 Reference Program。检查 Reference Programs 路径或关键词。</p>{% endfor %}</div></section>
+          <details class="story-program-template"><summary>查看 GBRAIN_PROMPTS.md 模板原文</summary><pre>{{ story_program.prompt_templates }}</pre></details>
+          <label class="story-program-label">页面当前显示的完整 Prompt<textarea id="prompt-output" data-prompt-output rows="26" spellcheck="false" placeholder="点击“生成完整 Prompt”后显示。复制内容与此文本框完全一致。"></textarea></label>
+          <div class="story-program-gate" data-concrete-gate aria-live="polite">当前没有运行 Concrete Plan Gate。</div>
+          <div class="story-program-warning-list" data-soft-warnings></div>
+        </section>
+
+        <section class="panel story-program-proposal-card">
+          <header class="story-program-section-heading"><div><p class="wb-kicker">Proposal · 非正式内容</p><h2>Codex 返回结果</h2></div><span class="story-program-approval-tag">未采用前不改变 Book Board</span></header>
+          <p>把 Codex 原文粘贴到这里。系统只做固定 Markdown 标题解析；解析失败时保留完整原文，不丢失内容，也不自动覆盖正式工作板。</p>
+          <textarea data-proposal-raw rows="16" placeholder="# Book Board\n\n## 1. 新书整体画像\n...">{{ story_program.proposal.raw }}</textarea>
+          <div class="story-program-actions"><button class="button" type="button" data-import-proposal>导入为 Proposal Draft</button><button class="button primary" type="button" data-adopt-selected>采用选中的区块</button><button class="button" type="button" data-adopt-all>全部采用</button><button class="button" type="button" data-reject-proposal>拒绝</button></div>
+          <p class="story-program-proposal-error" data-proposal-error>{{ story_program.proposal.parse_error or '' }}</p>
+          <div class="story-program-proposal-sections" data-proposal-sections>{% for section in story_program.proposal.sections if section.adoptable %}<label><input type="checkbox" data-proposal-section value="{{ section.key }}" checked><strong>{{ section.title }}</strong><pre>{{ section.body }}</pre></label>{% endfor %}</div>
+          <details><summary>查看 Codex 原始返回</summary><pre data-proposal-raw-preview>{{ story_program.proposal.raw }}</pre></details>
+        </section>
+
+        <section class="panel story-program-chapter-card">
+          <header class="story-program-section-heading"><div><p class="wb-kicker">Writer · Author Approval Gate</p><h2>当前章节</h2></div><span class="story-program-approval-tag">第{{ story_program.next_chapter_number }}章</span></header>
+          <p>只有 Concrete Plan Gate 通过时才会生成当前章节 Prompt。Codex 正文粘贴回来后，必须点击“批准并保存章节”才会创建 Markdown 文件；不会自动进入旧 Canon。</p>
+          <div class="story-program-form-grid"><label>章节编号<input data-chapter-number type="number" min="1" value="{{ story_program.next_chapter_number }}"></label><label>章节标题<input data-chapter-title placeholder="例如：废药突然涨价"></label></div>
+          <label>Codex 返回正文<textarea data-chapter-markdown rows="18" placeholder="粘贴 Codex 返回的正文和本章结果摘要"></textarea></label>
+          <label>Chapter Commit（可选）<textarea data-chapter-commit rows="8" placeholder="本章摘要、人物变化、能力变化、资源变化、关系变化、知识变化、身份变化、新增承诺、已兑现承诺、下一章压力"></textarea></label>
+          <div class="story-program-actions"><button class="button" type="button" data-generate-chapter-prompt>生成当前章节 Prompt</button><button class="button primary" type="button" data-save-chapter>批准并保存章节</button></div>
+          <p class="story-program-chapter-result" data-chapter-result aria-live="polite"></p>
+          <details><summary>已保存章节</summary><div class="story-program-chapter-list">{% for chapter in story_program.chapters %}<article><strong>第{{ chapter.number }}章 · {{ chapter.title }}</strong><small><code>{{ chapter.path }}</code></small><pre>{{ chapter.summary }}</pre></article>{% else %}<p class="muted">尚未保存正式章节。</p>{% endfor %}</div></details>
+        </section>
+      </section>
+    </div>
+  </main>
+  {% endif %}
+  <script src="{{ url_for('static', path='story_program.js') }}?v={{ asset_version }}" defer></script>
+</body>
+</html>
