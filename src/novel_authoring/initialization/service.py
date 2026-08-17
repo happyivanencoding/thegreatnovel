@@ -14,6 +14,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from novel_authoring.db.database import Database
 from novel_authoring.edition import edition_chapters, resolve_edition_id
+from novel_authoring.original.state import is_original_book
 from novel_authoring.readiness import (
     ContinuationBoundaryReadiness,
     evaluate_continuation_boundary,
@@ -1653,6 +1654,17 @@ def prepare_action_deepening(
     selected = resolve_edition_id(database, book_id, edition_id)
     current = latest_initialization(database, book_id, selected)
     if current is None:
+        if is_original_book(database, book_id) and action.strip().upper() == "CONTINUE":
+            return {
+                "status": "ACTION_CONTEXT_READY",
+                "action": "CONTINUE",
+                "initialization_id": None,
+                "required_chapter_ids": [],
+                "selected_chapter_ids": [],
+                "missing_chapter_ids": [],
+                "relevance": [],
+                "source_mode": "ORIGINAL_NO_SOURCE",
+            }
         raise InitializationError("尚未建立结构索引，不能准备按操作补齐")
     root = Path(str(current["root"]))
     manifest = InitializationManifest.model_validate(current["manifest"])
