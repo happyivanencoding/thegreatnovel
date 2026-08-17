@@ -6,7 +6,14 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
+from novel_authoring.db.database import Database
+from novel_authoring.domain.models import ContinuationMode
+from novel_authoring.edition import ensure_base_edition
+from novel_authoring.original.models import OriginalState
+from novel_authoring.storage.layout import BookLayout
+from novel_authoring.storage.registry import BookKind, BookRegistry, CreationMode
 from novel_authoring.story_program.board import (
     StoryProgramPaths,
     board_summary,
@@ -25,6 +32,7 @@ from novel_authoring.story_program.reference_programs import (
     DEFAULT_REFERENCE_ROOT,
     load_reference_programs,
 )
+from novel_authoring.utils import safe_book_id, utc_now
 
 _CHAPTER_RE = re.compile(r"^chapter-(\d{4})\.md$")
 _PROMPT_TEMPLATE_PATH = Path(__file__).with_name("GBRAIN_PROMPTS.md")
@@ -45,6 +53,69 @@ class ChapterFile:
             "path": str(self.path),
             "summary": self.summary,
         }
+
+
+def create_story_program_book(
+    layout: BookLayout,
+    *,
+    book_id: str | None,
+    title: str,
+    premise: str,
+) -> Path:
+    """Register a minimal original Book without starting the legacy genesis flow."""
+
+    selected_id = safe_book_id(book_id or f"original-{uuid4().hex[:12]}")
+    paths = layout.for_book(selected_id)
+    if paths.root.exists():
+        raise ValueError(f"书籍已存在：{selected_id}")
+    layout.library_root.mkdir(parents=True, exist_ok=True)
+    paths = layout.ensure_book(selected_id)
+    for directory in paths.edition("base").all_directories():
+        directory.mkdir(parents=True, exist_ok=True)
+
+    database = Database(paths.database)
+    database.initialize()
+    now = utc_now()
+    with database.connect() as connection:
+        connection.execute(
+            "INSERT INTO books(book_id, title, mode, source_root, workspace_root, "
+            "created_at, updated_at, version) VALUES (?, ?, ?, ?, ?, ?, ?, 1)",
+            (
+                selected_id,
+                title,
+                ContinuationMode.CONSTRAINED_INNOVATION.value,
+                str(paths.source),
+                str(paths.root),
+                now,
+                now,
+            ),
+        )
+    ensure_base_edition(database, selected_id)
+    with database.connect() as connection:
+        connection.execute(
+            "INSERT INTO original_states(book_id, edition_id, state, updated_at, version) "
+            "VALUES (?, 'base', ?, ?, 1)",
+            (selected_id, OriginalState.ORIGINAL_SEED.value, now),
+        )
+
+    registry = BookRegistry(layout)
+    registry.ensure(
+        selected_id,
+        title=title,
+        active_edition_id="base",
+        readiness_status=OriginalState.ORIGINAL_SEED.value,
+        book_kind=BookKind.AUTHOR,
+        creation_mode=CreationMode.ORIGINAL,
+    )
+    values = registry.read(selected_id)
+    values["original_state"] = OriginalState.ORIGINAL_SEED.value
+    values["source_storage_mode"] = "NONE_ORIGINAL"
+    values["source"] = {"root": "source", "files": []}
+    values["source_files"] = []
+    values["premise"] = premise
+    registry.write(paths, values)
+    registry.write_readme(paths, values)
+    return paths.root
 
 
 def prepare_paths(book_root: Path) -> StoryProgramPaths:
@@ -246,6 +317,7 @@ def save_chapter(
 __all__ = [
     "ChapterFile",
     "adopt_proposal",
+    "create_story_program_book",
     "import_proposal",
     "list_chapters",
     "prepare_paths",

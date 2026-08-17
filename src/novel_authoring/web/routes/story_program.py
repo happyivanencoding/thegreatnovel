@@ -10,9 +10,6 @@ from typing import Any
 from fastapi import HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 
-from novel_authoring.db.database import Database
-from novel_authoring.original.models import OriginalBookRequest
-from novel_authoring.original.service import create_original_book
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.registry import BookKind, BookRecord, BookRegistry
 from novel_authoring.story_program.board import read_board
@@ -31,16 +28,12 @@ from novel_authoring.story_program.service import (
     save_story_board,
     story_program_view,
 )
-from novel_authoring.utils import safe_book_id, utc_now
+from novel_authoring.story_program.service import (
+    create_story_program_book as create_story_program_book_workspace,
+)
 from novel_authoring.web.dependencies import verify_csrf
 
 _ID = re.compile(r"^[A-Za-z0-9._-]+$")
-
-
-def _split_lines(value: object) -> list[str]:
-    if isinstance(value, list):
-        return [str(item).strip() for item in value if str(item).strip()]
-    return [line.strip() for line in str(value or "").splitlines() if line.strip()]
 
 
 def _checked_id(value: object, label: str = "book_id") -> str:
@@ -156,7 +149,7 @@ def register_story_program_routes(
         return view
 
     @app.post("/api/story-program/books")
-    async def create_story_program_book(request: Request) -> dict[str, Any]:
+    async def create_story_program_book_api(request: Request) -> dict[str, Any]:
         verify_csrf(request, None)
         payload = await request.json()
         if not isinstance(payload, dict):
@@ -167,32 +160,16 @@ def register_story_program_routes(
             raise HTTPException(status_code=400, detail="暂定书名和一句话创意不能为空")
         requested_id = str(payload.get("book_id") or "").strip()
         book_id = _checked_id(requested_id) if requested_id else None
-        request_model = OriginalBookRequest(
-            premise=premise,
-            genre=str(payload.get("genre") or ""),
-            tone_style=str(payload.get("tone_style") or ""),
-            pov=str(payload.get("pov") or ""),
-            expected_length=str(payload.get("expected_length") or ""),
-            must_include=_split_lines(payload.get("must_include")),
-            forbidden=_split_lines(payload.get("forbidden_style")),
-            reference_traits=_split_lines(payload.get("reference_traits")),
-        )
-        created = create_original_book(BookLayout(library_root()), request_model, book_id=book_id)
-        created_id = safe_book_id(str(created["book_id"]))
         layout = BookLayout(library_root())
-        registry = BookRegistry(layout)
-        values = registry.read(created_id)
-        values["title"] = title
-        values["updated_at"] = utc_now()
-        registry.write(layout.for_book(created_id), values)
-        registry.write_readme(layout.for_book(created_id), values)
-        with Database(layout.for_book(created_id).database).connect() as connection:
-            connection.execute(
-                "UPDATE books SET title=?, updated_at=? WHERE book_id=?",
-                (title, utc_now(), created_id),
-            )
+        created_root = create_story_program_book_workspace(
+            layout,
+            book_id=book_id,
+            title=title,
+            premise=premise,
+        )
+        created_id = created_root.name
         save_initial_story_board(
-            layout.for_book(created_id).root,
+            created_root,
             title=title,
             premise=premise,
             genre=str(payload.get("genre") or ""),

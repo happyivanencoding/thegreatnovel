@@ -122,6 +122,9 @@ def test_new_book_form_creates_markdown_story_program_workspace(
     assert board_path.is_file()
     assert "废药与夜班药铺" in board_path.read_text(encoding="utf-8")
     assert (new_paths.root / "story_program" / "GBRAIN_PROMPTS.md").is_file()
+    with Database(new_paths.database).connect() as connection:
+        handoffs = connection.execute("SELECT COUNT(*) FROM workflow_handoffs").fetchone()[0]
+    assert handoffs == 0
 
 
 def test_prompt_contains_only_visible_template_board_and_selected_reference(
