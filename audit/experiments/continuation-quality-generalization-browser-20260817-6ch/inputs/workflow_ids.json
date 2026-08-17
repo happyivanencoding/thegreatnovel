@@ -1,0 +1,12 @@
+{
+  "book_id": "original-d336a8f607cd",
+  "chapters": [
+    {"chapter":1,"title":"名籍之外的第一场挑战","draft_handoff":"handoff_f53bd6dd77d55c4ae98315cb","task_id":"draft-task_e30f8dfd874236ae2045e429","contract_id":"contract_af86010ff780b145665eb622","draft_id":"draft_a74dcaafaf1a1fa99ad56f71","validation_run_id":"validation_76652e3b62c77207318dd714"},
+    {"chapter":2,"title":"记录上的下一道门","plan_handoff":"handoff_38224af2a3f8abd2e4039d79","draft_handoff":"handoff_cc63d405ca8cc7ae7b9dfb96","task_id":"draft-task_2dc8d174ff3655cd9538c127","contract_id":"contract_7ef34b360ed187cd91f57b3a","draft_id":"draft_278411fc6304b09107d4a9d3","validation_run_id":"validation_db96e83160a489fa3024db65"},
+    {"chapter":3,"title":"被看见之后的邀请","plan_handoff":"handoff_edee4dd15ab8dc110db4e4c3","draft_handoff":"handoff_8db371c6d2a99d83e4762ca8","task_id":"draft-task_f8a605a9aeefa45355905809","contract_id":"contract_9e15bec120590b9b4915692f","draft_id":"draft_8eef86a3b857ee8ae165cba7","validation_run_id":"validation_a5bd686436ba8dcf1cf4d2c1"},
+    {"chapter":4,"title":"渡口规则的第一道门","plan_handoff":"handoff_ec5b7792096e6f0b6ffe2ea3","draft_handoff":"handoff_7a753752d49ab7205182f92c","task_id":"draft-task_908f10f4c44aab1dcfbc0c89","contract_id":"contract_08a1c857406c47c184b95e33","draft_id":"draft_f8d9fa01ca9d9dcb0412bdb7","validation_run_id":"validation_01ff15535c99cba946d8adc9"},
+    {"chapter":5,"title":"黑石前的第二次判定","plan_handoff":"handoff_665c68633dc35389ff1ca703","draft_handoff":"handoff_21a74e4d2d5e043bff425b47","task_id":"draft-task_662143fcaedaa87a45d51e67","contract_id":"contract_80c06c932ed9a4e856259054","draft_id":"draft_8db2135be157eed857948ad3","validation_run_id":"validation_fbf6d2cd3e6213bae1ba7faa"},
+    {"chapter":6,"title":"见证者名单上的新名字","plan_handoff":"handoff_f38d69f3782eba6668fb25b1","draft_handoff":"handoff_18c548fb36b8428cb2b76c26","task_id":"draft-task_9d90b79be09eb21c5ff77199","contract_id":"contract_a44fb5d352054ff5ee91dfc3","draft_id":"draft_930c3197afbad2c6c5a27b61","validation_run_id":"validation_e7d1cde797dc6f198b5f46f9"}
+  ],
+  "canon_commits": ["canon-commit_9ccb975a8a997ba4d3fc56c4","canon-commit_af65d712e850921c56e6e480","canon-commit_f31950f27f0db74be2e10c29","canon-commit_efa72a3c7830d57190394781","canon-commit_a339bc7c6fb17abf09028eec","canon-commit_205e3257fad8d9edffbaea79"]
+}

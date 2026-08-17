@@ -1,0 +1,73 @@
+{
+  "schema_version": "continuation-quality-generalization-browser-audit-v1",
+  "experiment_id": "continuation-quality-generalization-browser-20260817-6ch",
+  "status": "STOPPED_AT_USER_REQUEST_AFTER_CHAPTER_6",
+  "book_id": "original-d336a8f607cd",
+  "edition_id": "base",
+  "creation_mode": "ORIGINAL",
+  "requested_initially": {
+    "target_chapters": 10,
+    "execution_mode": "browser_per_chapter"
+  },
+  "actual_close": {
+    "canon_chapters": 6,
+    "canon_commits": 6,
+    "canonical_drafts": 6,
+    "validation_reports": 60,
+    "validation_failures": 0,
+    "semantic_publication_reviews": 6,
+    "semantic_review_status": "REVIEWED",
+    "stopped_by_user": true,
+    "chapters_7_to_10_created": false
+  },
+  "family": {
+    "premise": "失去武者身份的边城少年，在公开竞争中用被禁用的观星步法争回身份，并承受更高对手与社会记录压力。",
+    "narrative_drives": [
+      "COMPETITIVE_RANK",
+      "POWER_PROGRESSION",
+      "STATUS_RISE",
+      "IDENTITY_PRESSURE"
+    ],
+    "not_the_v3_survival_resource_family": true
+  },
+  "approval_protocol": "Browser Draft Review explicit approval only",
+  "runtime_root": "C:\\Users\\jingx\\AppData\\Local\\Temp\\thegreatnovel-original-e2e-20260817-a",
+  "artifact_policy": {
+    "copied": [
+      "Canon prose",
+      "compact IDs and hashes",
+      "deterministic reports",
+      "blind reviews"
+    ],
+    "excluded": [
+      "state.sqlite3",
+      "state.sqlite3-wal",
+      "state.sqlite3-shm",
+      "operations",
+      "cache"
+    ]
+  },
+  "quality_status": "PARTIAL_BY_SCOPE",
+  "ten_chapter_claim": "NOT_CLAIMED",
+  "code_commits": [
+    "f0d3815",
+    "b1c6f27",
+    "734edf5",
+    "cf24e3f",
+    "035f344"
+  ],
+  "verification": {
+    "runtime": "project .venv via -S and manual site-packages",
+    "full_pytest": {
+      "passed": 573,
+      "failed": 1,
+      "skipped": null,
+      "preexisting_failure": "root AGENTS.md already deleted in dirty worktree"
+    },
+    "mypy": "passed: 203 source files",
+    "compileall": "passed",
+    "ruff": "passed: E,F,I,UP,B,SIM touched-file rules",
+    "targeted_tests": "32 passed",
+    "browser_e2e": "6 chapters; 60 validator passes; 6 REVIEWED reviews; 6 browser approvals"
+  }
+}

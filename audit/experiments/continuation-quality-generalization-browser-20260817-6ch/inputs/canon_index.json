@@ -1,0 +1,11 @@
+{
+  "book_id": "original-d336a8f607cd",
+  "chapters": [
+    {"ordinal":1,"title":"名籍之外的第一场挑战","chars":2028,"content_sha256":"806b68f6bbde5e3c202f12adcd9109998f5c3170050e433e9bf35ffe7160aaa6","commit_id":"canon-commit_9ccb975a8a997ba4d3fc56c4","event_start":1,"event_end":5,"snapshot_id":"snapshot_11796c4c2cb52b5ffd3f48c0","projection_state_sha256":"f13b948fdeaab4923a11590e1747d3cf9c5e026589c55496e652c558080795f2"},
+    {"ordinal":2,"title":"记录上的下一道门","chars":1930,"content_sha256":"f136b40450a408c50037e164db652bd4cdbb741a5e69f6b92f3beb0eeb5bfa39","commit_id":"canon-commit_af65d712e850921c56e6e480","event_start":6,"event_end":11,"snapshot_id":"snapshot_1e905cdc56d7fbb36edd91cd","projection_state_sha256":"c2e07f8319774d6580dd2a30a3b21c36c0e5b7b56b78c6f12298be4c285f5bb5"},
+    {"ordinal":3,"title":"被看见之后的邀请","chars":2249,"content_sha256":"d1bb9f3421bb95c07aac2ea8531c0e307507697b35f947f4f30f33f1a4c14c6d","commit_id":"canon-commit_f31950f27f0db74be2e10c29","event_start":12,"event_end":17,"snapshot_id":"snapshot_9648150ee621b0224611411d","projection_state_sha256":"91711a5157a64abf2cf71d88deee3152bd904c68b1f53c6fac249da15b914aa9"},
+    {"ordinal":4,"title":"渡口规则的第一道门","chars":1781,"content_sha256":"b38bfd477756fc82cfb58b666a02b1532a2cf4139530182a421f55a06dd7392d","commit_id":"canon-commit_efa72a3c7830d57190394781","event_start":18,"event_end":23,"snapshot_id":"snapshot_e4d54a3fb07900edd2b4ca01","projection_state_sha256":"a6069f0ae88af4631063a4ee6eaa8119544149c2d5e9a1e3d2a41dd75af4c5ce"},
+    {"ordinal":5,"title":"黑石前的第二次判定","chars":895,"content_sha256":"d54119b8c57b3e8b530d7dfd2e519fb9d68957fdbd7d3551060552d7244344c3","commit_id":"canon-commit_a339bc7c6fb17abf09028eec","event_start":24,"event_end":29,"snapshot_id":"snapshot_1e33adeec813849a5b1b4b1c","projection_state_sha256":"64d2f52d3a783c3d239d9520c99540b5b3a5aaa2f4b74ef671d00980154985ff"},
+    {"ordinal":6,"title":"见证者名单上的新名字","chars":1352,"content_sha256":"bc9ff09e550106b23229c7b6bcd559be42cc02dcef0ec3adfa46e8aedc54d4fc","commit_id":"canon-commit_205e3257fad8d9edffbaea79","event_start":30,"event_end":35,"snapshot_id":"snapshot_2d4bbabe3c2c9a5001b2dd1a","projection_state_sha256":"d9100dbd89273a3cdf8b7e88546f087a17ad5aba01fd71820a522d7534608303"}
+  ]
+}

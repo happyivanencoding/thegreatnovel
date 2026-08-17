@@ -311,3 +311,86 @@ Inspect current live source/test/UI entry points. Before each search or test, ad
 - **具体失败：** push 可能没有把本地目标分支完整发布，或误留下 staged 内容/混入错误文件边界。
 - **如果失败：** 只重新核对目标分支与提交边界；若远端缺失则重试普通 push，若边界异常则停止交付并保留证据。
 - **结果：** `origin/continuation-quality-generalization-v1` 与本地 HEAD 同为 `36e159b`；staged entries 为 0；代码提交和工件提交文件集合分别独立；工作树 359 项未被本轮交付触碰。
+
+## Semantic publication review boundary v2
+
+### Pre-check implementation audit
+
+- **具体失败：** 正文中模型漏报高价值事实时，现有 Python 只检查 creative claims，可能把 `semantic_review_status=UNKNOWN` 的 Draft 当作自动验证完成。
+- **如果失败：** 只接入独立 review artifact、正文 hash/身份核对、claim 合并冲突和自动流程硬边界；不新增 Canon、State Store、向量库或故事专有规则。
+- **结果：** 当前缺口已确认存在：compiler 只消费 `DraftCreativeOutput.reader_visible_claims`，没有独立 producer；开始实现最小闭环。
+
+### Review implementation checks
+
+- **具体失败：** 独立 review 文件可能缺失、复用错误正文、与 creative claim 冲突却被静默去重，或 evidence 不在正文仍可通过。
+- **如果失败：** 修正 Draft operation 的 review schema/导入边界和共享 validator；不放宽旧手工 Draft 的 `semantic_review_required=false` 路径。
+- **已实现：** `SemanticPublicationReview` 与 `PublicationReviewFinding`；自动 handoff 的 task metadata/独立 schema/output 路径；reviewed prose hash、task/contract 身份校验；creative+review claims 合并与冲突状态；`REVIEWED`/`UNKNOWN` gate；review evidence missing、claim conflict 和 Projection contradiction findings；四个最小回归 case 与 importer hash test 已加入，待运行验证。
+
+### Semantic review targeted test attempt 1
+
+- **具体失败：** 新增四个 review case 和 Draft importer hash test 是否能真正进入预期分支，并确认旧 compiled-soft/approval 测试未回归。
+- **如果失败：** 根据 traceback 只修 fixture 或 review boundary；不删除失败 case。
+- **结果：** 使用 venv `-S` + 手动 site-packages 路径后测试进入代码，40 passed、1 failed；唯一失败是新测试构造 `CanonProjection` 漏传既有必需的 `book_id`，已补齐。
+
+### Semantic review integration attempt 1
+
+- **具体失败：** handoff/approval/Original tests 是否仍能走到 Draft import、十项 Validation 和审批边界；尤其不能用旧内部 DraftOutput 绕过自动 review。
+- **如果失败：** 将旧 fixture 转成正式 executor 的 creative output + 独立 review artifact；不放宽生产门禁。
+- **结果：** 集合进入代码并得到 59 passed、1 failed；唯一失败是既有 Original fixture 仍提交 legacy DraftOutput，已改为真实的 DraftCreativeOutput 与 hash-bound `SemanticPublicationReview`。
+
+### Semantic review integration attempt 2
+
+- **具体失败：** 转换后的 Original creative fixture 是否能通过原有十项 Contract Validator，避免把 review 接线错误误报为语义审阅问题。
+- **如果失败：** 检查 compiler 的通用 Contract/StateChange evidence mapping；只补通用映射或 fixture 的实际正文事实，不恢复 legacy bypass。
+- **结果：** 首次复跑仍为 59 passed、1 failed；具体 findings 是 `commit:character_state` 与 `commit:thread_status` 证据没有从 StateChange 绑定。已增加通用 commit→StateChange ID 映射并补充 fixture 的真实状态事实；单项复跑通过（1 passed）。
+
+### Semantic review integration final targeted rerun
+
+- **具体失败：** 最终 review import、自动 handoff metadata、shared approval web、Original fixture 和既有 handoff protocol 可能存在跨模块回归。
+- **如果失败：** 按具体 traceback 修复本轮边界；不直接修改 SQLite 或放宽 `VALIDATED`/approval 条件。
+- **结果：** 完整集合 **60 passed**。
+
+### Semantic review static verification
+
+- **具体失败：** 新增 review schema、compiler merge、自动 handoff inference 和 validator gate 可能有语法、类型或项目规则问题。
+- **如果失败：** 只修触及本轮的静态错误；不清理既有文件债务。
+- **结果：** compileall 无输出、退出码 0；full-source strict mypy `Success: no issues found in 203 source files`；项目规则集 Ruff（`E,F,I,UP,B,SIM`，line length 100）最终 `All checks passed`。中间的 mypy/Ruff 报告均已按具体错误修复并复跑。
+
+### Pre-browser semantic boundary gate
+
+- **具体失败：** 最终代码调整后，review regression、Draft approval、shared web、handoff 和 Original 可能出现未覆盖的跨模块回归；若不通过，不得进入十章实验。
+- **如果失败：** 修复本轮生产代码/fixture 后重新验证；不在浏览器实验中用人工状态修改掩盖失败。
+- **结果：** 组合定向集合 **101 passed**（41 review/approval + 60 handoff/web/Original）。满足进入浏览器实验的代码门槛。
+
+## Browser Original E2E close at user-requested Chapter 6
+
+### Concrete acceptance boundary
+
+- **具体失败：** browser-created PLAN/DRAFT handoff、独立 publication review、10 validators 或 browser approval 任一环节可能写入错误状态；若失败，停止当前章并按真实 artifact 修复，不直接改 SQLite Canon。
+- **结果：** 原创项目 `original-d336a8f607cd` 从 Browser 创建开始，完成第 1–6 章逐章 Candidate → Contract → Draft → independent review → 10 validators → Browser approval；60/60 validator reports PASS，6/6 semantic review `REVIEWED`，6/6 Canon commit 已写入。
+
+### Actual close
+
+- 第 1–6 章 event ranges 连续为 `1–5, 6–11, 12–17, 18–23, 24–29, 30–35`。
+- Browser Workbench 最终可见 `正文 6` 与“见证者名单上的新名字 正史”；无 JS dialog、window.confirm 或 blocking modal。
+- 用户随后明确要求停止；第 7–10 章没有创建、校验或批准，未做十章质量宣称。
+- 精简审计包：`audit/experiments/continuation-quality-generalization-browser-20260817-6ch/`；未复制 SQLite、operations 或 cache。
+
+### Browser-discovered production fixes during E2E
+
+- Original 无来源续写路径允许空 source context 进入 continuation handoff：`b1c6f27`。
+- descriptive Contract commit labels 绑定 StateChange evidence：`734edf5`。
+- 实际候选使用的 `world/social state changes` 标签映射缺口：`cf24e3f`，并有回归测试；第 3–6 章在补丁后均零 hard error 通过。
+
+### Audit handoff
+
+- `README.md`、`experiment_manifest.json`、`inputs/`、`canon/`、`SIX_CHAPTERS_COMBINED.md`、`TEN_CHAPTERS_COMBINED.md` 停止标记、逐章质量报告、deterministic audit、两份 blind review、v3 对照和 browser workflow audit 已准备。
+- 质量结论保持 `PARTIAL_BY_SCOPE`：确定性审批层绿，不等价于六章文学质量全通过，更不等价于十章成熟度。
+
+### Final close verification after Chapter 6 stop
+
+- **具体失败：** 全量 pytest 的运行时如果缺少 FastAPI，收集失败不能被误判为产品回归；修正运行时后仍需区分本轮失败与 dirty worktree 根文档删除。
+- **结果：** Anaconda 运行时收集阶段因缺少 FastAPI 产生 16 个环境错误；项目 `.venv -S` 正确运行后为 **573 passed, 1 failed**。唯一失败为当前工作树预先删除的 `AGENTS.md`。
+- **具体失败：** semantic review status 的 Literal 推断可能在完整生产类型检查中拒绝 `EXPLICIT_INPUT`。
+- **结果：** 补充 `semantic_status: str` 后全源严格 mypy **203 source files passed**；compileall 通过；项目规则 Ruff（E,F,I,UP,B,SIM，line length 100）通过；最终定向测试 **32 passed**。
+- **审计包自检：** 6 个 Canon 文件、6 章合订正文、4 个 JSON 输入/index 均存在且可解析；artifact 内没有 SQLite、operations 或 cache 文件。
