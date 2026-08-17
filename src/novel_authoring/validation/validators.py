@@ -1928,6 +1928,7 @@ def validate_repetition(context: ValidationContext) -> ValidationReport:
 def validate_style(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
     score: float | None = None
+    semantic_status: str = "UNKNOWN"
     if context.draft.evidence_policy == "COMPILED_SOFT":
         semantic_status = context.draft.semantic_review_status
     else:
