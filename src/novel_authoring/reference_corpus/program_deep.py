@@ -971,6 +971,42 @@ def audit_program_deep(
         lines.extend(
             ["", "## 输入警告", "", *[f"- {warning}" for warning in validation["warnings"]]]
         )
+    worker_root = output / "operations" / "workers"
+    worker_coverage = sorted(worker_root.glob("*/coverage.json")) if worker_root.is_dir() else []
+    if worker_coverage:
+        lines.extend(
+            [
+                "",
+                "## Worker checkpoint",
+                "",
+                "| worker | status | semantic rows | completed | remaining |",
+                "|---|---|---:|---|---|",
+            ]
+        )
+        for coverage_path in worker_coverage:
+            coverage = _read_json(coverage_path)
+            completed_count = coverage.get(
+                "total_semantic_complete_rows",
+                coverage.get("semantic_complete_rows", coverage.get("completed_unit_count", 0)),
+            )
+            completed_ranges = coverage.get("completed_ranges", "per-book")
+            remaining_ranges = coverage.get("remaining_ranges", "per-book")
+            lines.append(
+                f"| {coverage_path.parent.name} | {coverage.get('status', 'UNKNOWN')} | "
+                f"{completed_count} | `{completed_ranges}` | `{remaining_ranges}` |"
+            )
+    rejected_root = output / "operations" / "rejected"
+    rejected = (
+        sorted(
+            path.relative_to(output).as_posix()
+            for path in rejected_root.rglob("*")
+            if path.is_dir()
+        )
+        if rejected_root.is_dir()
+        else []
+    )
+    if rejected:
+        lines.extend(["", "## Rejected artifacts", "", *[f"- `{path}`" for path in rejected]])
     report = output / "operations" / "PROGRAM_DEEP_AUDIT.md"
     report.parent.mkdir(parents=True, exist_ok=True)
     report.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
