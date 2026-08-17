@@ -217,6 +217,19 @@ def _commit_matches_change(change: DraftStateChange, commit_update: str) -> bool
     prefix, separator, target = commit_update.partition(":")
     if not separator or not target.strip():
         return False
+    descriptive_kind = {
+        "thread status advances": "thread",
+        "character state changes": "character_state",
+        "social status changes": None,
+    }.get(prefix.strip().casefold())
+    if prefix.strip().casefold() in {
+        "thread status advances",
+        "character state changes",
+        "social status changes",
+    }:
+        if descriptive_kind is not None and change.kind != descriptive_kind:
+            return False
+        return any(target.strip() in quote for quote in change.evidence_quotes)
     expected_kind = {
         "thread_status": "thread",
         "character_state": "character_state",

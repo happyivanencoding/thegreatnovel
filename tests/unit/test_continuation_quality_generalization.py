@@ -19,6 +19,7 @@ from novel_authoring.continuation_quality import (
 )
 from novel_authoring.contracts.draft import (
     DraftCreativeOutput,
+    DraftStateChange,
     SemanticPublicationReview,
 )
 from novel_authoring.db.database import Database
@@ -370,6 +371,47 @@ def test_compiled_soft_output_has_no_pseudo_character_or_style_scores() -> None:
     assert compiled.style_fit_inputs == {}
     assert compiled.semantic_review_status == "UNKNOWN"
     assert compiled.deterministic_measurements["sentence_count"] > 0
+
+
+def test_compiler_binds_descriptive_commit_updates_to_state_change_evidence() -> None:
+    from novel_authoring.drafting.compiler import _contract_evidence
+
+    contract = _contract().model_copy(
+        update={
+            "commit_updates": [
+                "thread status advances: 资格记录进入下一场复核",
+                "character state changes: 主角主动争取正式挑战资格",
+                "social status changes: 记录者开始将主角视为待验证竞争者",
+            ]
+        }
+    )
+    changes = [
+        DraftStateChange(
+            kind="thread",
+            record_id="thread",
+            payload={},
+            evidence_quotes=["资格记录进入下一场复核"],
+        ),
+        DraftStateChange(
+            kind="character_state",
+            record_id="character",
+            payload={},
+            evidence_quotes=["主角主动争取正式挑战资格"],
+        ),
+        DraftStateChange(
+            kind="fact",
+            record_id="social",
+            payload={},
+            evidence_quotes=["记录者开始将主角视为待验证竞争者"],
+        ),
+    ]
+    evidence = _contract_evidence(
+        "资格记录进入下一场复核。主角主动争取正式挑战资格。"
+        "记录者开始将主角视为待验证竞争者。",
+        contract,
+        changes,
+    )
+    assert all(evidence["commit:" + key] for key in contract.commit_updates)
 
 
 def test_independent_publication_review_catches_creative_omission_and_contradiction() -> None:
