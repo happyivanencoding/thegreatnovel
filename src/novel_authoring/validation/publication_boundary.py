@@ -39,10 +39,18 @@ def edge_publication_findings(value: object) -> Iterable[dict[str, str]]:
     for item in value:
         if not isinstance(item, dict):
             continue
+        code = str(item.get("code") or "PUBLICATION_SEMANTIC_REVIEW_FINDING").strip()
         quote = str(item.get("evidence_quote") or item.get("quote") or "").strip()
         reason = str(item.get("reason") or item.get("message") or "").strip()
         if quote or reason:
-            result.append({"evidence_quote": quote, "reason": reason})
+            result.append(
+                {
+                    "code": code,
+                    "evidence_quote": quote,
+                    "reason": reason,
+                    "severity": str(item.get("severity") or "ERROR").upper(),
+                }
+            )
     return result
 
 

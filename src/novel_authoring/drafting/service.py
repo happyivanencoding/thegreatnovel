@@ -18,6 +18,7 @@ from novel_authoring.contracts.draft import (
     ChapterRealizationBrief,
     DraftCreativeOutput,
     DraftOutput,
+    SemanticPublicationReview,
 )
 from novel_authoring.db.database import Database
 from novel_authoring.domain.models import DraftStatus
@@ -278,10 +279,24 @@ def prepare_draft_task(
     *,
     edition_id: str | None = None,
     include_runtime_state: bool = True,
+    semantic_review_required: bool | None = None,
 ) -> dict[str, object]:
     database.initialize()
     selected_edition = resolve_edition_id(database, book_id, edition_id)
     with database.connect() as connection:
+        if semantic_review_required is None:
+            semantic_review_required = (
+                connection.execute(
+                    "SELECT 1 FROM workflow_handoffs "
+                    "WHERE book_id=? AND edition_id=? "
+                    "AND handoff_type='CONTINUATION' "
+                    "AND requested_stage='DRAFT_AND_VALIDATE' "
+                    "AND status IN ('READY_FOR_CODEX', 'CLAIMED', 'RUNNING') "
+                    "LIMIT 1",
+                    (book_id, selected_edition),
+                ).fetchone()
+                is not None
+            )
         row = connection.execute(
             "SELECT * FROM chapter_contracts WHERE book_id=? AND contract_id=? AND edition_id=?",
             (book_id, contract_id, selected_edition),
@@ -333,6 +348,9 @@ def prepare_draft_task(
         boundary=boundary_payload,
     )
     schema_json = json_dumps(DraftCreativeOutput.model_json_schema(), indent=2)
+    publication_review_schema_json = json_dumps(
+        SemanticPublicationReview.model_json_schema(), indent=2
+    )
     task_id = stable_id("draft-task", contract_id, str(revision), str(row["contract_sha256"]))
     operation = ensure_operation(
         database,
@@ -422,6 +440,25 @@ def prepare_draft_task(
             "除非当前 Narrative Portfolio 明确需要这种节奏。",
             "只写 output.json，不要修改 book；系统会把合法正文导入 drafts。",
             "",
+            "## Independent Semantic Publication Review",
+            "",
+            (
+                "本次 DRAFT_AND_VALIDATE 要求在正文完成后执行一次独立的语义出版审阅。"
+                "先完成 output.json，再重新阅读正文；不得把 creative output 的 claims 原样改名"
+                "为 review claims。只读取本任务中的正文、Chapter Contract、相关 Projection/"
+                "StateChanges/Knowledge Boundary，输出独立的 publication_review.json。"
+                if semantic_review_required
+                else "本次任务未要求自动语义出版审阅；不要伪造 review artifact。"
+            ),
+            (
+                f"review schema：{output_dir / 'publication_review.json'}；"
+                f"schema：{task_dir / 'publication_review_schema.json'}。"
+                "若正文没有高价值连续性事实，status=REVIEWED、reader_visible_claims=[]、"
+                "publication_review_findings=[]，不要为了填字段制造 claim。"
+                if semantic_review_required
+                else ""
+            ),
+            "",
             "## Chapter Realization Brief（soft guidance）",
             "",
             "以下范围只用于调节场景展开，不是最低字数硬门；可以用更短或更长的自然场景，"
@@ -488,9 +525,15 @@ def prepare_draft_task(
         "prose_realization_protocol": _PROSE_REALIZATION_PROTOCOL,
         "chapter_realization_brief": realization_brief.model_dump(mode="json"),
         "output_contract": "DraftCreativeOutput",
+        "semantic_review_required": semantic_review_required,
+        "publication_review_schema": str(task_dir / "publication_review_schema.json"),
+        "publication_review_output": str(output_dir / "publication_review.json"),
     }
     (task_dir / "input.md").write_text(input_text, encoding="utf-8")
     (task_dir / "schema.json").write_text(schema_json + "\n", encoding="utf-8")
+    (task_dir / "publication_review_schema.json").write_text(
+        publication_review_schema_json + "\n", encoding="utf-8"
+    )
     (task_dir / "task.json").write_text(json_dumps(metadata, indent=2) + "\n", encoding="utf-8")
     return {
         "task_id": task_id,
@@ -499,6 +542,9 @@ def prepare_draft_task(
         "input": str(task_dir / "input.md"),
         "schema": str(task_dir / "schema.json"),
         "expected_output": str(output_dir / "output.json"),
+        "publication_review_schema": str(task_dir / "publication_review_schema.json"),
+        "publication_review_output": str(output_dir / "publication_review.json"),
+        "semantic_review_required": semantic_review_required,
     }
 
 
@@ -575,6 +621,33 @@ def import_draft_output(
     else:
         submitted_task_id = creative_output.task_id
         submitted_contract_id = creative_output.contract_id
+    semantic_review_required = bool(metadata.get("semantic_review_required", False))
+    if semantic_review_required and creative_output is None:
+        raise DraftWorkflowError(
+            "自动 Draft workflow 必须提交 DraftCreativeOutput，不能用 legacy "
+            "DraftOutput 绕过独立 review"
+        )
+    publication_review: SemanticPublicationReview | None = None
+    if creative_output is not None and semantic_review_required:
+        review_path = Path(str(metadata.get("publication_review_output") or ""))
+        if review_path.is_file():
+            try:
+                publication_review = SemanticPublicationReview.model_validate_json(
+                    review_path.read_text(encoding="utf-8")
+                )
+            except (OSError, TypeError, ValueError, ValidationError) as exc:
+                raise DraftWorkflowError(
+                    f"独立 semantic publication review 不符合合同：{exc}"
+                ) from exc
+            if (
+                publication_review.task_id != task_id
+                or publication_review.contract_id != submitted_contract_id
+            ):
+                raise DraftWorkflowError(
+                    "semantic publication review 的 task_id/contract_id 不匹配"
+                )
+        else:
+            publication_review = None
     if submitted_task_id != task_id or submitted_contract_id != metadata["contract_id"]:
         raise DraftWorkflowError("Draft output 的 task_id/contract_id 不匹配")
     contract_row = None
@@ -612,6 +685,8 @@ def import_draft_output(
             creative_output,
             contract,
             realization_brief=brief,
+            publication_review=publication_review,
+            semantic_review_required=semantic_review_required,
         )
     assert output is not None
     realized_reward_payload: dict[str, object] | None = None
@@ -652,6 +727,14 @@ def import_draft_output(
             }
     content = output.prose_markdown.strip() + "\n"
     content_hash = sha256_bytes(content.encode())
+    if (
+        publication_review is not None
+        and publication_review.status == "REVIEWED"
+        and publication_review.reviewed_prose_sha256 != content_hash
+    ):
+        raise DraftWorkflowError(
+            "semantic publication review 的 reviewed_prose_sha256 与最终正文不匹配"
+        )
     draft_id = stable_id("draft", output.contract_id, str(metadata["revision"]), content_hash)
     drafts_dir = workspace / "drafts"
     drafts_dir.mkdir(parents=True, exist_ok=True)

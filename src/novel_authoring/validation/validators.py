@@ -239,6 +239,31 @@ def _reader_visible_claim_findings(context: ValidationContext) -> list[Validatio
     state_changes = {
         change.record_id: change for change in context.draft.state_changes
     }
+    publication_review_claim_ids = {
+        claim.claim_id for claim in context.draft.publication_review_claims
+    }
+    for claim in context.draft.reader_visible_claims:
+        if claim.status.value == "CONFLICT":
+            findings.append(
+                _finding(
+                    "PUBLICATION_REVIEW_CLAIM_CONFLICT",
+                    "独立语义出版审阅与 creative claim 对同一主体/谓词报告了不同事实："
+                    f"{claim.claim_id}",
+                    location=f"reader_visible_claims:{claim.claim_id}",
+                )
+            )
+    if (
+        context.draft.semantic_review_required
+        and context.draft.semantic_review_status != "REVIEWED"
+    ):
+        findings.append(
+            _finding(
+                "SEMANTIC_PUBLICATION_REVIEW_REQUIRED",
+                "当前自动 Draft workflow 要求独立 semantic publication review，"
+                "但 review 尚未完成。",
+                location="semantic_review_status",
+            )
+        )
     for claim in context.draft.reader_visible_claims:
         location = f"reader_visible_claims:{claim.claim_id}"
         evidence_status = _match_evidence(
@@ -247,7 +272,11 @@ def _reader_visible_claim_findings(context: ValidationContext) -> list[Validatio
         if not claim.evidence_quote or evidence_status == "NOT_FOUND":
             findings.append(
                 _finding(
-                    "READER_VISIBLE_CLAIM_NOT_OBSERVED",
+                    (
+                        "PUBLICATION_REVIEW_EVIDENCE_NOT_FOUND"
+                        if claim.claim_id in publication_review_claim_ids
+                        else "READER_VISIBLE_CLAIM_NOT_OBSERVED"
+                    ),
                     f"读者可见声明 {claim.claim_id} 没有正文证据。",
                     location=location,
                     suggested_fix="补充正文中可直接观察到的 evidence_quote，或删除该声明。",
@@ -371,7 +400,7 @@ def _reader_visible_claim_findings(context: ValidationContext) -> list[Validatio
             if found and current != claim.value and not has_transition:
                 findings.append(
                     _finding(
-                        "READER_VISIBLE_CLAIM_NOT_MATERIALIZED",
+                        "STATE_CONTRADICTION",
                         (
                             f"声明 {claim.claim_id} 报告当前值 {claim.value!r}，"
                             "但 Projection 当前值为 "
@@ -402,7 +431,7 @@ def _publication_boundary_findings(context: ValidationContext) -> list[Validatio
         if not quote:
             findings.append(
                 _finding(
-                    "PUBLICATION_REVIEW_EVIDENCE_MISSING",
+                    item.get("code", "PUBLICATION_REVIEW_EVIDENCE_MISSING"),
                     "语义出版审阅提出了问题，但没有正文 evidence_quote。",
                     location=f"publication_review_findings:{index}",
                 )
@@ -412,7 +441,7 @@ def _publication_boundary_findings(context: ValidationContext) -> list[Validatio
         if match_status == "NOT_FOUND":
             findings.append(
                 _finding(
-                    "PUBLICATION_REVIEW_EVIDENCE_NOT_FOUND",
+                    item.get("code", "PUBLICATION_REVIEW_EVIDENCE_NOT_FOUND"),
                     f"语义出版审阅的 evidence_quote 不在正文中：{quote}",
                     location=f"publication_review_findings:{index}",
                     evidence=[quote],
@@ -431,8 +460,13 @@ def _publication_boundary_findings(context: ValidationContext) -> list[Validatio
         else:
             findings.append(
                 _finding(
-                    "PUBLICATION_SEMANTIC_REVIEW_FINDING",
+                    item.get("code", "PUBLICATION_SEMANTIC_REVIEW_FINDING"),
                     item["reason"] or "边缘语义审阅报告了出版边界问题。",
+                    severity=(
+                        Severity.WARNING
+                        if item.get("severity") == "WARNING"
+                        else Severity.ERROR
+                    ),
                     location=f"publication_review_findings:{index}",
                     evidence=[quote],
                 )
@@ -627,8 +661,9 @@ def validate_knowledge(context: ValidationContext) -> ValidationReport:
 def validate_character(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
     score: float | None = None
+    semantic_status: str
     if context.draft.evidence_policy == "COMPILED_SOFT":
-        semantic_status = "UNKNOWN"
+        semantic_status = context.draft.semantic_review_status
     else:
         try:
             config = context.settings.metrics["character_fit"]
@@ -1894,7 +1929,7 @@ def validate_style(context: ValidationContext) -> ValidationReport:
     findings: list[ValidationFinding] = []
     score: float | None = None
     if context.draft.evidence_policy == "COMPILED_SOFT":
-        semantic_status = "UNKNOWN"
+        semantic_status = context.draft.semantic_review_status
     else:
         try:
             score = style_fit(

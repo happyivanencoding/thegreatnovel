@@ -17,7 +17,10 @@ from novel_authoring.continuation_quality import (
     structural_overlap,
     usage_constraint_issues,
 )
-from novel_authoring.contracts.draft import DraftCreativeOutput
+from novel_authoring.contracts.draft import (
+    DraftCreativeOutput,
+    SemanticPublicationReview,
+)
 from novel_authoring.db.database import Database
 from novel_authoring.domain.models import ContinuationMode, NarrativeFunction
 from novel_authoring.drafting.compiler import build_chapter_realization_brief
@@ -31,7 +34,12 @@ from novel_authoring.planning.models import (
     PlanningReferenceProvenance,
     ReferenceApplicationStatus,
 )
-from novel_authoring.validation.validators import ValidationContext, validate_canon
+from novel_authoring.validation.validators import (
+    ValidationContext,
+    validate_canon,
+    validate_character,
+    validate_style,
+)
 
 
 def _contract() -> ChapterContract:
@@ -362,6 +370,190 @@ def test_compiled_soft_output_has_no_pseudo_character_or_style_scores() -> None:
     assert compiled.style_fit_inputs == {}
     assert compiled.semantic_review_status == "UNKNOWN"
     assert compiled.deterministic_measurements["sentence_count"] > 0
+
+
+def test_independent_publication_review_catches_creative_omission_and_contradiction() -> None:
+    from novel_authoring.drafting.compiler import compile_draft_output
+
+    creative = DraftCreativeOutput(
+        task_id="publication-review-task",
+        contract_id="quality-contract",
+        chapter_title="独立审阅",
+        prose_markdown="X 已经打开。",
+        state_changes=[
+            {"kind": "fact", "record_id": "scene", "payload": {"statement": "X 已经打开"}}
+        ],
+        reader_visible_claims=[],
+    )
+    review = SemanticPublicationReview(
+        task_id=creative.task_id,
+        contract_id=creative.contract_id,
+        status="REVIEWED",
+        reader_visible_claims=[
+            ReaderVisibleClaim(
+                claim_id="review-x-open",
+                subject_ref="X",
+                predicate="state",
+                value="OPEN",
+                evidence_quote="X 已经打开",
+            )
+        ],
+    )
+    compiled = compile_draft_output(
+        creative,
+        _contract(),
+        publication_review=review,
+        semantic_review_required=True,
+    )
+    context = ValidationContext(
+        draft=compiled,
+        contract=_contract(),
+        projection=CanonProjection(
+            book_id="quality-book",
+            entities={"X": {"state": "CLOSED"}},
+        ),
+        settings=load_settings(),
+    )
+    codes = {item.code for item in validate_canon(context).findings}
+    assert compiled.semantic_review_status == "REVIEWED"
+    assert compiled.publication_review_claims
+    assert "STATE_CONTRADICTION" in codes
+    assert validate_character(context).measurements["semantic_review_status"] == "REVIEWED"
+    assert validate_style(context).measurements["semantic_review_status"] == "REVIEWED"
+
+
+def test_publication_review_and_creative_claims_are_deduplicated_when_consistent() -> None:
+    from novel_authoring.drafting.compiler import compile_draft_output
+
+    claim = ReaderVisibleClaim(
+        claim_id="same-fact",
+        subject_ref="door",
+        predicate="state",
+        value="OPEN",
+        evidence_quote="门开了",
+    )
+    creative = DraftCreativeOutput(
+        task_id="publication-dedupe-task",
+        contract_id="quality-contract",
+        chapter_title="去重",
+        prose_markdown="门开了。",
+        state_changes=[
+            {"kind": "fact", "record_id": "door-change", "payload": {"statement": "门开了"}}
+        ],
+        reader_visible_claims=[claim],
+    )
+    review = SemanticPublicationReview(
+        task_id=creative.task_id,
+        contract_id=creative.contract_id,
+        status="REVIEWED",
+        reader_visible_claims=[claim.model_copy(update={"claim_id": "review-same-fact"})],
+    )
+    compiled = compile_draft_output(
+        creative,
+        _contract(),
+        publication_review=review,
+        semantic_review_required=True,
+    )
+    assert len(compiled.reader_visible_claims) == 1
+    assert len(compiled.publication_review_claims) == 1
+    assert not any(
+        item.code == "PUBLICATION_REVIEW_CLAIM_CONFLICT"
+        for item in validate_canon(
+            ValidationContext(
+                draft=compiled,
+                contract=_contract(),
+                projection=CanonProjection(book_id="quality-book"),
+                settings=load_settings(),
+            )
+        ).findings
+    )
+
+
+def test_publication_review_evidence_must_be_in_finished_prose() -> None:
+    from novel_authoring.drafting.compiler import compile_draft_output
+
+    creative = DraftCreativeOutput(
+        task_id="publication-evidence-task",
+        contract_id="quality-contract",
+        chapter_title="证据",
+        prose_markdown="他转身离开。",
+        state_changes=[
+            {"kind": "fact", "record_id": "scene", "payload": {"statement": "他转身离开"}}
+        ],
+    )
+    review = SemanticPublicationReview(
+        task_id=creative.task_id,
+        contract_id=creative.contract_id,
+        status="REVIEWED",
+        reader_visible_claims=[
+            ReaderVisibleClaim(
+                claim_id="missing-quote",
+                subject_ref="door",
+                predicate="state",
+                value="OPEN",
+                evidence_quote="正文不存在的证据",
+            )
+        ],
+    )
+    compiled = compile_draft_output(
+        creative,
+        _contract(),
+        publication_review=review,
+        semantic_review_required=True,
+    )
+    codes = {
+        item.code
+        for item in validate_canon(
+            ValidationContext(
+                draft=compiled,
+                contract=_contract(),
+                projection=CanonProjection(book_id="quality-book"),
+                settings=load_settings(),
+            )
+        ).findings
+    }
+    assert "PUBLICATION_REVIEW_EVIDENCE_NOT_FOUND" in codes
+
+
+def test_reviewed_publication_pass_can_legitimately_find_no_high_value_claims() -> None:
+    from novel_authoring.drafting.compiler import compile_draft_output
+
+    creative = DraftCreativeOutput(
+        task_id="publication-empty-task",
+        contract_id="quality-contract",
+        chapter_title="纯动作",
+        prose_markdown="他抬手，挡住迎面而来的雨。",
+        state_changes=[
+            {"kind": "fact", "record_id": "scene", "payload": {"statement": "他挡住雨"}}
+        ],
+    )
+    review = SemanticPublicationReview(
+        task_id=creative.task_id,
+        contract_id=creative.contract_id,
+        status="REVIEWED",
+        reader_visible_claims=[],
+        publication_review_findings=[],
+    )
+    compiled = compile_draft_output(
+        creative,
+        _contract(),
+        publication_review=review,
+        semantic_review_required=True,
+    )
+    codes = {
+        item.code
+        for item in validate_canon(
+            ValidationContext(
+                draft=compiled,
+                contract=_contract(),
+                projection=CanonProjection(book_id="quality-book"),
+                settings=load_settings(),
+            )
+        ).findings
+    }
+    assert compiled.semantic_review_status == "REVIEWED"
+    assert compiled.reader_visible_claims == []
+    assert "SEMANTIC_PUBLICATION_REVIEW_REQUIRED" not in codes
 
 
 def test_reader_visible_claim_is_checked_against_projection_before_state() -> None:

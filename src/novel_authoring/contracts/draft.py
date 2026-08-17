@@ -111,6 +111,37 @@ class ChapterRealizationBrief(BaseModel):
     )
 
 
+class PublicationReviewFinding(BaseModel):
+    """An edge semantic finding tied to an exact quote in the finished prose."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    code: str = Field(min_length=1)
+    reason: str = Field(min_length=1)
+    evidence_quote: str = Field(min_length=1)
+    severity: Literal["ERROR", "WARNING"] = "ERROR"
+
+
+class SemanticPublicationReview(BaseModel):
+    """Independent post-prose semantic pass, separate from creative output."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: str
+    contract_id: str
+    review_mode: Literal["INDEPENDENT_PROSE_PASS"] = "INDEPENDENT_PROSE_PASS"
+    reviewed_prose_sha256: str | None = Field(
+        default=None,
+        pattern=r"^[0-9a-f]{64}$",
+    )
+    status: Literal["UNKNOWN", "REVIEWED"] = "UNKNOWN"
+    reader_visible_claims: list[ReaderVisibleClaim] = Field(default_factory=list)
+    publication_review_findings: list[PublicationReviewFinding] = Field(
+        default_factory=list
+    )
+    notes: list[str] = Field(default_factory=list)
+
+
 class DraftCreativeOutput(BaseModel):
     """LLM-facing prose output; system audits are intentionally absent."""
 
@@ -165,7 +196,9 @@ class DraftOutput(BaseModel):
     # Existing hand-authored DraftOutput fixtures retain their strict evidence
     # semantics.  The new compiler sets COMPILED_SOFT for normal continuation.
     evidence_policy: Literal["STRICT_LEGACY", "COMPILED_SOFT"] = "STRICT_LEGACY"
+    semantic_review_required: bool = False
     semantic_review_status: Literal["NOT_REQUESTED", "UNKNOWN", "REVIEWED"] = "UNKNOWN"
+    publication_review_claims: list[ReaderVisibleClaim] = Field(default_factory=list)
     deterministic_measurements: dict[str, Any] = Field(default_factory=dict)
     contract_surface_coverage: dict[str, Any] = Field(default_factory=dict)
     publication_review_findings: list[dict[str, Any]] = Field(default_factory=list)

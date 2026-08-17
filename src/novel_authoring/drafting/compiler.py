@@ -25,6 +25,7 @@ from novel_authoring.contracts.draft import (
     DraftStateChange,
     RealizedKernelEvidence,
     RealizedKernelTrace,
+    SemanticPublicationReview,
 )
 from novel_authoring.planning.models import (
     ChapterContract,
@@ -212,7 +213,39 @@ def _matched_quotes(prose: str, values: Iterable[str], *, limit: int = 4) -> lis
     return matches
 
 
-def _contract_evidence(prose: str, contract: ChapterContract | None) -> dict[str, list[str]]:
+def _commit_matches_change(change: DraftStateChange, commit_update: str) -> bool:
+    prefix, separator, target = commit_update.partition(":")
+    if not separator or not target.strip():
+        return False
+    expected_kind = {
+        "thread_status": "thread",
+        "character_state": "character_state",
+        "resource": "resource",
+        "capability": "capability",
+        "knowledge": "knowledge",
+        "relationship": "relationship",
+    }.get(prefix.strip().casefold(), prefix.strip().casefold())
+    if change.kind != expected_kind:
+        return False
+    identifiers = {
+        str(change.record_id),
+        str(change.payload.get("id") or ""),
+        str(change.payload.get("record_id") or ""),
+        str(change.payload.get("thread_id") or ""),
+        str(change.payload.get("character_id") or ""),
+        str(change.payload.get("resource_id") or ""),
+        str(change.payload.get("capability_id") or ""),
+        str(change.payload.get("relationship_id") or ""),
+        str(change.payload.get("knowledge_id") or ""),
+    }
+    return target.strip() in identifiers
+
+
+def _contract_evidence(
+    prose: str,
+    contract: ChapterContract | None,
+    changes: Sequence[DraftStateChange] = (),
+) -> dict[str, list[str]]:
     if contract is None:
         return {}
     requirements: dict[str, str] = {
@@ -224,10 +257,17 @@ def _contract_evidence(prose: str, contract: ChapterContract | None) -> dict[str
     requirements.update(
         {f"commit:{item}": item for item in contract.commit_updates if item.strip()}
     )
-    return {
-        key: _matched_quotes(prose, [value]) if value.strip() else []
-        for key, value in requirements.items()
-    }
+    evidence: dict[str, list[str]] = {}
+    for key, value in requirements.items():
+        matches = _matched_quotes(prose, [value]) if value.strip() else []
+        if key.startswith("commit:") and not matches:
+            for change in changes:
+                if not _commit_matches_change(change, key.removeprefix("commit:")):
+                    continue
+                matches.extend(change.evidence_quotes)
+            matches = list(dict.fromkeys(matches))
+        evidence[key] = matches
+    return evidence
 
 
 def _deterministic_measurements(prose: str) -> dict[str, Any]:
@@ -299,6 +339,58 @@ def _compile_reader_visible_claims(
             claim.model_copy(update={"evidence_quote": quote, "status": status})
         )
     return compiled
+
+
+def _claim_identity(claim: ReaderVisibleClaim) -> tuple[str, str, str]:
+    return (
+        claim.subject_ref.strip().casefold(),
+        claim.predicate.strip().casefold(),
+        claim.temporal_scope.strip().casefold(),
+    )
+
+
+def _claim_value_signature(claim: ReaderVisibleClaim) -> tuple[str, str, str]:
+    return (
+        repr(claim.value),
+        repr(claim.before_value),
+        repr(claim.after_value),
+    )
+
+
+def _merge_reader_visible_claims(
+    creative_claims: Sequence[ReaderVisibleClaim],
+    review_claims: Sequence[ReaderVisibleClaim],
+) -> list[ReaderVisibleClaim]:
+    """Merge an independent review while retaining disagreements for validation."""
+
+    merged = list(creative_claims)
+    by_identity: dict[tuple[str, str, str], int] = {
+        _claim_identity(claim): index for index, claim in enumerate(merged)
+    }
+    for review_claim in review_claims:
+        identity = _claim_identity(review_claim)
+        existing_index = by_identity.get(identity)
+        if existing_index is None:
+            by_identity[identity] = len(merged)
+            merged.append(review_claim)
+            continue
+        existing = merged[existing_index]
+        if _claim_value_signature(existing) != _claim_value_signature(review_claim):
+            merged.append(review_claim.model_copy(update={"status": ReaderClaimStatus.CONFLICT}))
+            continue
+        updates: dict[str, Any] = {}
+        if not existing.evidence_quote and review_claim.evidence_quote:
+            updates["evidence_quote"] = review_claim.evidence_quote
+        if not existing.transition_source and review_claim.transition_source:
+            updates["transition_source"] = review_claim.transition_source
+        if (
+            existing.status is not ReaderClaimStatus.OBSERVED
+            and review_claim.status is ReaderClaimStatus.OBSERVED
+        ):
+            updates["status"] = ReaderClaimStatus.OBSERVED
+        if updates:
+            merged[existing_index] = existing.model_copy(update=updates)
+    return merged
 
 
 def _progression_deltas(
@@ -559,6 +651,8 @@ def compile_draft_output(
     contract: ChapterContract | None = None,
     *,
     realization_brief: ChapterRealizationBrief | None = None,
+    publication_review: SemanticPublicationReview | None = None,
+    semantic_review_required: bool = False,
 ) -> DraftOutput:
     """Compile executor prose into the internal, validator-facing output."""
 
@@ -574,6 +668,15 @@ def compile_draft_output(
     ]
     reader_visible_claims = _compile_reader_visible_claims(
         prose, creative_output.reader_visible_claims
+    )
+    publication_review_claims = (
+        _compile_reader_visible_claims(prose, publication_review.reader_visible_claims)
+        if publication_review is not None
+        else []
+    )
+    merged_reader_visible_claims = _merge_reader_visible_claims(
+        reader_visible_claims,
+        publication_review_claims,
     )
     progression_deltas = _progression_deltas(
         creative_output.progression_deltas, changes
@@ -600,7 +703,8 @@ def compile_draft_output(
         else {"code": "SCENE_REALIZATION_UNSCOPED", "severity": "INFO", "status": "UNKNOWN"}
     )
     measurements = _deterministic_measurements(prose)
-    coverage = _contract_surface_coverage(contract, _contract_evidence(prose, contract))
+    contract_evidence = _contract_evidence(prose, contract, changes)
+    coverage = _contract_surface_coverage(contract, contract_evidence)
     notes = list(creative_output.notes)
     if diagnostics.get("code") == "SCENE_REALIZATION_THIN":
         notes.append("SCENE_REALIZATION_THIN：仅提示表达层复核，不阻止 VALIDATED_DRAFT。")
@@ -620,7 +724,7 @@ def compile_draft_output(
         chapter_title=creative_output.chapter_title,
         prose_markdown=prose,
         state_changes=changes,
-        contract_evidence=_contract_evidence(prose, contract),
+        contract_evidence=contract_evidence,
         knowledge_claims=list(creative_output.knowledge_claims),
         reveal_trace=creative_output.reveal_trace,
         character_fit_inputs={},
@@ -656,11 +760,23 @@ def compile_draft_output(
         realization_diagnostics=diagnostics,
         reference_provenance=reference,
         evidence_policy="COMPILED_SOFT",
-        reader_visible_claims=reader_visible_claims,
+        semantic_review_required=semantic_review_required,
+        reader_visible_claims=merged_reader_visible_claims,
+        publication_review_claims=publication_review_claims,
         progression_deltas=progression_deltas,
-        semantic_review_status="UNKNOWN",
+        semantic_review_status=(
+            "UNKNOWN" if publication_review is None else publication_review.status
+        ),
         deterministic_measurements=measurements,
         contract_surface_coverage=coverage,
+        publication_review_findings=(
+            [
+                item.model_dump(mode="json")
+                for item in publication_review.publication_review_findings
+            ]
+            if publication_review is not None
+            else []
+        ),
         notes=notes,
     )
 

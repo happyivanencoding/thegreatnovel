@@ -141,7 +141,15 @@ Boundary Packet 中的 `rhythm_features`、`rhythm_diagnostics` 与 `hook_diagno
 & $Novel draft prepare --book-id $BookId --contract-id <contract-id>
 ```
 
-严格按任务目录的 `schema.json` 写 `expected_output` 指向的 `output.json`。正文只提交创意正文、实际 StateChange 声明和可选的知识/reveal 语义；不要提交 contract evidence、evidence_quotes、Character/Style Fit 输入、结构标签、系统评分、provenance 或 RealizedKernelTrace。这些由 Python 根据冻结 Contract 和正文编译。导入后只允许进入 DRAFT：
+严格按任务目录的 `schema.json` 写 `expected_output` 指向的 `output.json`。如果 `task.json`
+的 `semantic_review_required=true`，在正文完成后必须执行一次独立的 semantic publication
+review：重新阅读最终 prose，只使用任务中冻结的 Chapter Contract、相关 Projection、
+StateChanges 和 Knowledge Boundary，按 `publication_review_schema` 写入独立的
+`publication_review_output`。不得把 creative output 的 `reader_visible_claims` 原样复制为
+review；没有高价值事实时必须写 `status=REVIEWED`、`reader_visible_claims=[]`、
+`publication_review_findings=[]`。review 完成后才运行 `draft import`。
+
+正文只提交创意正文、实际 StateChange 声明和可选的知识/reveal 语义；不要提交 contract evidence、evidence_quotes、Character/Style Fit 输入、结构标签、系统评分、provenance 或 RealizedKernelTrace。这些由 Python 根据冻结 Contract 和正文编译。导入后只允许进入 DRAFT：
 
 ```powershell
 & $Novel draft import --book-id $BookId --task-id <draft-task-id>
@@ -167,7 +175,9 @@ executor 不自行读取 Corpus 路径、Markdown 或 GBrain；
 不得读取来源正文、来源人物、整张 Prose DNA 或 planning Mechanism/Contrast/Synthesis。
 
 生成后必须执行 Novel Prose Naturalness Check；发现表达问题时只做有界 Targeted Repair，
-然后沿用现有十项 Validator。不得为了自然度增加第二个 humanization handoff。
+然后沿用现有十项 Validator。自动 `DRAFT_AND_VALIDATE` 与 Original 首章必须看到
+`semantic_review_status=REVIEWED`；缺失或 `UNKNOWN` 不得进入 `VALIDATED`。不得为了自然度
+增加第二个 humanization handoff。
 
 ### 7. 十项校验与定向修订
 

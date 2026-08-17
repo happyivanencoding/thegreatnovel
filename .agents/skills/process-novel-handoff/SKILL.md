@@ -45,6 +45,8 @@ complete 一次完成 deterministic envelope 注入、result schema、artifact�
 
 ## Protocol boundary
 
-业务 artifact 只能写入冻结任务目录中被 task.json 明确列出的路径；最终 result 只能写入
-`result_target`。业务边界、Canon、Edition、作者批准和 artifact 语义由冻结的 executor
-Skill 与 Python complete 合同负责，本 Skill 不重复解释或判断。
+业务 artifact 只能写入冻结任务目录中被 task.json 明确列出的路径；普通 Draft 的
+`output.json` 与在 `semantic_review_required=true` 时的独立 `publication_review_output`
+都属于冻结路径；最终 result 只能写入 `result_target`。业务边界、Canon、Edition、作者批准
+和 artifact 语义由冻结的 executor Skill 与 Python complete 合同负责，本 Skill 不重复解释
+或判断。

@@ -3286,7 +3286,11 @@ def select_first_chapter_candidate(
         )
     contract = build_chapter_contract(database, book_id, candidate_id, edition_id="base")
     draft_task = prepare_draft_task(
-        database, book_id, str(contract["contract_id"]), edition_id="base"
+        database,
+        book_id,
+        str(contract["contract_id"]),
+        edition_id="base",
+        semantic_review_required=True,
     )
     draft_task_path = Path(str(draft_task["input"])).with_name("task.json")
     draft_task_payload = _read_json(draft_task_path) or {}

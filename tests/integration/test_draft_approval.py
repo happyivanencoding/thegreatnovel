@@ -11,9 +11,11 @@ import novel_authoring.validation.service as validation_service
 from novel_authoring.canon.events import EventStatus, EventStore
 from novel_authoring.canon.projection import rebuild_projection
 from novel_authoring.config import load_settings
+from novel_authoring.contracts.draft import SemanticPublicationReview
 from novel_authoring.db.database import Database
 from novel_authoring.domain.models import InformationStatus
 from novel_authoring.drafting.service import (
+    DraftWorkflowError,
     _reference_prose_context,
     discard_draft,
     import_draft_output,
@@ -31,7 +33,7 @@ from novel_authoring.reference_corpus.query import (
     ReferenceCorpusQueryRequest,
     ReferenceCorpusQueryResponse,
 )
-from novel_authoring.utils import json_dumps, sha256_file, stable_id, utc_now
+from novel_authoring.utils import json_dumps, sha256_bytes, sha256_file, stable_id, utc_now
 from novel_authoring.validation.models import VALIDATOR_NAMES
 from novel_authoring.validation.service import validate_draft
 from novel_authoring.workflows.approval import ApprovalWorkflowError, approve_draft
@@ -554,6 +556,68 @@ def test_creative_draft_output_is_compiled_before_persisting(
     assert persisted["semantic_review_status"] == "UNKNOWN"
     assert persisted["deterministic_measurements"]["sentence_count"] > 0
     assert persisted["realized_kernel_trace"] is not None
+
+
+def test_required_publication_review_is_independent_and_hash_bound(
+    tmp_path: Path,
+) -> None:
+    database, _, contract = _setup_contract(tmp_path)
+    task = prepare_draft_task(
+        database,
+        BOOK_ID,
+        contract.contract_id,
+        semantic_review_required=True,
+    )
+    task_id = str(task["task_id"])
+    legacy = _valid_output(task_id, contract)
+    creative = {
+        key: value
+        for key, value in legacy.items()
+        if key
+        not in {
+            "contract_evidence",
+            "character_fit_inputs",
+            "style_fit_inputs",
+            "character_bottom_line_violations",
+            "style_boundary_violations",
+            "structure_tags",
+        }
+    }
+    creative["state_changes"] = [
+        {key: value for key, value in change.items() if key != "evidence_quotes"}
+        for change in legacy["state_changes"]
+    ]
+    Path(str(task["expected_output"])).write_text(
+        json_dumps(creative, indent=2) + "\n", encoding="utf-8"
+    )
+    review = SemanticPublicationReview(
+        task_id=task_id,
+        contract_id=contract.contract_id,
+        status="REVIEWED",
+        reviewed_prose_sha256="0" * 64,
+    )
+    review_path = Path(str(task["publication_review_output"]))
+    review_path.write_text(
+        json_dumps(review.model_dump(mode="json"), indent=2) + "\n", encoding="utf-8"
+    )
+    with pytest.raises(DraftWorkflowError, match="reviewed_prose_sha256"):
+        import_draft_output(database, BOOK_ID, task_id)
+
+    review.reviewed_prose_sha256 = sha256_bytes(
+        (str(creative["prose_markdown"]).strip() + "\n").encode()
+    )
+    review_path.write_text(
+        json_dumps(review.model_dump(mode="json"), indent=2) + "\n", encoding="utf-8"
+    )
+    imported = import_draft_output(database, BOOK_ID, task_id)
+    with database.connect() as connection:
+        row = connection.execute(
+            "SELECT output_json FROM drafts WHERE draft_id=?",
+            (str(imported["draft_id"]),),
+        ).fetchone()
+    persisted = json.loads(str(row["output_json"]))
+    assert persisted["semantic_review_required"] is True
+    assert persisted["semantic_review_status"] == "REVIEWED"
 
 
 def test_ten_validators_approval_snapshot_and_rebuild(tmp_path: Path) -> None:

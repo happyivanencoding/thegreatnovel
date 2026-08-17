@@ -9,7 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from novel_authoring.config import load_settings
-from novel_authoring.contracts.draft import DraftOutput
+from novel_authoring.contracts.draft import DraftOutput, SemanticPublicationReview
 from novel_authoring.db.database import Database
 from novel_authoring.drafting.service import import_draft_output
 from novel_authoring.library_catalog import build_library_catalog, studio_access
@@ -72,7 +72,7 @@ from novel_authoring.reference_corpus.query import (
 from novel_authoring.serial_kernel.models import MarketCategory, NarrativeDrive
 from novel_authoring.storage.layout import BookLayout
 from novel_authoring.storage.registry import BookKind, BookRegistry, CreationMode
-from novel_authoring.utils import json_dumps
+from novel_authoring.utils import json_dumps, sha256_bytes
 from novel_authoring.web.app import create_app
 from novel_authoring.workflows.handoffs import (
     HandoffStatus,
@@ -2644,6 +2644,7 @@ def test_first_chapter_uses_contract_validation_and_explicit_approval(tmp_path: 
             contract.required_irreversible_change,
             contract.required_cost,
             contract.ending_state,
+            "他要找回被删除的情感，继续删除将令城市失去选择能力。",
             "线程状态完成更新，林默决定继续追查情绪空洞。",
             "人物状态完成更新，他主动带走了非法档案。",
         ]
@@ -2707,9 +2708,46 @@ def test_first_chapter_uses_contract_validation_and_explicit_approval(tmp_path: 
             "notes": ["固定本地测试输出，不调用远程模型"],
         }
     )
+    creative_payload = draft_output.model_dump(mode="json")
+    for key in {
+        "contract_evidence",
+        "character_fit_inputs",
+        "style_fit_inputs",
+        "character_bottom_line_violations",
+        "style_boundary_violations",
+        "structure_tags",
+        "innovation_control",
+        "innovation_trace",
+        "direction_alignment",
+        "realized_kernel_trace",
+        "chapter_experience_signature",
+        "realization_diagnostics",
+        "realization_repair_count",
+        "reference_provenance",
+        "evidence_policy",
+        "semantic_review_required",
+        "semantic_review_status",
+        "publication_review_claims",
+        "deterministic_measurements",
+        "contract_surface_coverage",
+        "publication_review_findings",
+        "intentional_short_chapter",
+    }:
+        creative_payload.pop(key, None)
+    creative_payload["state_changes"] = [
+        {key: value for key, value in change.items() if key != "evidence_quotes"}
+        for change in creative_payload["state_changes"]
+    ]
     output_path = Path(str(selected["draft_task"]["expected_output"]))
-    output_path.write_text(
-        json_dumps(draft_output.model_dump(mode="json"), indent=2), encoding="utf-8"
+    output_path.write_text(json_dumps(creative_payload, indent=2), encoding="utf-8")
+    review = SemanticPublicationReview(
+        task_id=str(selected["draft_task"]["task_id"]),
+        contract_id=contract.contract_id,
+        status="REVIEWED",
+        reviewed_prose_sha256=sha256_bytes((prose.strip() + "\n").encode()),
+    )
+    Path(str(selected["draft_task"]["publication_review_output"])).write_text(
+        json_dumps(review.model_dump(mode="json"), indent=2), encoding="utf-8"
     )
     imported = import_draft_output(database, BOOK_ID, str(selected["draft_task"]["task_id"]))
     draft_id = str(imported["draft_id"])

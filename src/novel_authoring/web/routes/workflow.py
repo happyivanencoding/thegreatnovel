@@ -263,6 +263,7 @@ def prepare_selected_candidate_draft(
         book_id,
         str(contract["contract_id"]),
         edition_id=selected_edition,
+        semantic_review_required=True,
     )
     plan_task = current_plan_handoff["task"]
     context_chapter_id = str(plan_task.get("context_chapter_id") or "").strip() or None
