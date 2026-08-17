@@ -221,11 +221,13 @@ def _commit_matches_change(change: DraftStateChange, commit_update: str) -> bool
         "thread status advances": "thread",
         "character state changes": "character_state",
         "social status changes": None,
+        "world/social state changes": None,
     }.get(prefix.strip().casefold())
     if prefix.strip().casefold() in {
         "thread status advances",
         "character state changes",
         "social status changes",
+        "world/social state changes",
     }:
         if descriptive_kind is not None and change.kind != descriptive_kind:
             return False

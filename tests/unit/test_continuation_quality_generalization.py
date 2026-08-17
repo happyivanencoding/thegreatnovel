@@ -382,6 +382,7 @@ def test_compiler_binds_descriptive_commit_updates_to_state_change_evidence() ->
                 "thread status advances: 资格记录进入下一场复核",
                 "character state changes: 主角主动争取正式挑战资格",
                 "social status changes: 记录者开始将主角视为待验证竞争者",
+                "world/social state changes: 城市之外的竞争者开始关注主角",
             ]
         }
     )
@@ -404,10 +405,17 @@ def test_compiler_binds_descriptive_commit_updates_to_state_change_evidence() ->
             payload={},
             evidence_quotes=["记录者开始将主角视为待验证竞争者"],
         ),
+        DraftStateChange(
+            kind="fact",
+            record_id="external-attention",
+            payload={},
+            evidence_quotes=["城市之外的竞争者开始关注主角"],
+        ),
     ]
     evidence = _contract_evidence(
         "资格记录进入下一场复核。主角主动争取正式挑战资格。"
-        "记录者开始将主角视为待验证竞争者。",
+        "记录者开始将主角视为待验证竞争者。"
+        "城市之外的竞争者开始关注主角。",
         contract,
         changes,
     )
