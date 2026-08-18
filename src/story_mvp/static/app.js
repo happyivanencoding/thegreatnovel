@@ -359,7 +359,6 @@ async function generatePrompt() {
       body: JSON.stringify(promptPayload()),
     });
     $("prompt-text").value = payload.prompt;
-    $("proposal-editor").value = "";
     showStatus("Prompt 已生成，可继续编辑后复制");
   } catch (error) {
     const missing = error.payload?.detail?.missing_fields;

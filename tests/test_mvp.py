@@ -676,6 +676,19 @@ def test_proposal_source_is_explicit_and_editor_only() -> None:
     assert '$("proposal-editor").addEventListener("input"' not in js
 
 
+def test_generate_prompt_does_not_clear_proposal_editor() -> None:
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    start = js.index("async function generatePrompt()")
+    end = js.index("async function generateIdeaPrompt", start)
+    function_body = js[start:end]
+    assert 'const payload = await requestJson("/api/prompt"' in function_body
+    assert '$("prompt-text").value = payload.prompt;' in function_body
+    assert "proposal-editor" not in function_body
+    assert "codex-response" not in function_body
+    assert "composeBookContent" not in function_body
+    assert "saveBook" not in function_body
+
+
 def test_previous_chapter_fetch_failure_is_visible_and_does_not_clear_context() -> None:
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
     start = js.index("async function refreshPreviousChapterText()")
