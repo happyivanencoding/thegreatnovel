@@ -253,6 +253,8 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
     assert "阶段变异" in prompt
     assert "POWER_BREAKTHROUGH" not in prompt
     assert "资源 → 修炼" not in prompt
+    assert "经典成长模式是一等公民" in prompt
+    assert "一个主循环和零到多个辅助循环" in prompt
     assert "4—8 个自然剧情块" in prompt
     assert all(f"## {number}." in prompt for number in range(1, 13))
     assert "完整输出所有剧情块" in prompt
@@ -369,6 +371,8 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert "秘境" not in js
     assert "历史建设" not in js
     assert "都市职业" not in js
+    assert "想保留的成长链或元素" in js
+    assert "不要强迫所有书采用同一条经典成长链" in js
 
 
 def test_page_shows_twelve_design_sections_and_panorama_controls() -> None:
@@ -403,10 +407,14 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert direction_doc.is_file()
     direction_text = direction_doc.read_text(encoding="utf-8")
     assert "Composable Growth Genome" in Path("docs/COMPOSABLE_GROWTH_GENOME.md").read_text(encoding="utf-8")
+    assert "Classic Patterns Are First-Class Citizens" in Path("docs/COMPOSABLE_GROWTH_GENOME.md").read_text(encoding="utf-8")
     assert "累积成长与可组合成长" in direction_text
     assert all("成长" in templates[mode] for mode in ("idea", "outline"))
     assert "成长组合" in templates["idea"]
     assert "初始转换网络" in templates["idea"]
+    assert "经典成长模式是一等公民" in templates["idea"]
+    assert "经典成长模式是一等公民" in templates["outline"]
+    assert "作者输入、GBrain证据或当前创意表明" in templates["idea"]
     assert "## 0. 本书成长基因图" in templates["outline"]
     assert "POWER_BREAKTHROUGH" not in Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
 

@@ -263,7 +263,7 @@ function defaultGbrainQuery() {
   const retrievalFocus = "Reader Promise；Character Desire & Agency；Advantage / Special Capability；Repeatable Reader Loop；Core Progression Grammar；Action-Space Expansion；World Expansion Grammar；Social / Relationship Dynamics；Resource / Economy；Narrative Drive；Phase Transition；Failure / Fatigue Risks；Book DNA；Mechanism；Contrast；Reference Program";
   const growthGenome = $("design-growth_genome").value.trim() || "（尚未形成本书成长基因图）";
   if (mode === "outline") {
-    return `针对以下主角成长型虚构世界小说：\n创作方向：${direction}\n初始缺口：${$("design-type_promise").value.trim() || "（未填写）"}\n可能的非对称位置：${$("design-protagonist_model").value.trim() || "（未填写）"}\n期望读者体验：主角主动扩大自己能够理解、影响、控制、进入或创造的范围。\n当前成长基因图（如有）：${growthGenome}\n\n寻找小说蒸馏知识中的 ${retrievalFocus}，重点帮助生成这本书自己的变量、转换网络、循环族和阶段变异，不要套用其它题材的固定成长链。`;
+    return `针对以下主角成长型虚构世界小说：\n创作方向 / 想保留的成长链或元素：${direction}\n初始缺口：${$("design-type_promise").value.trim() || "（未填写）"}\n可能的非对称位置：${$("design-protagonist_model").value.trim() || "（未填写）"}\n期望读者体验：主角主动扩大自己能够理解、影响、控制、进入或创造的范围。\n当前成长基因图（如有）：${growthGenome}\n\n寻找小说蒸馏知识中的 ${retrievalFocus}，重点帮助生成这本书自己的变量、转换网络、循环族和阶段变异。不要强迫所有书采用同一条经典成长链；如果作者输入或 GBrain 证据支持成熟主干，就围绕该主干嫁接新优势和新机制。`;
   }
   if (mode === "review") {
     return `这是一本主角成长型虚构世界小说，创作方向为“${direction}”。\n本书成长基因图：${growthGenome}\n当前大型剧情块：${$("current-long-block").value.trim() || "（未填写）"}\n实际完成十章：${$("actual-summaries").value.trim() || "（未填写）"}\n当前重复风险：${$("unfulfilled-promises").value.trim() || "（未填写）"}\n\n寻找能够继续兑现本书 Reader Promise、改变玩法、扩大行动空间并避免疲劳的 ${retrievalFocus}。`;
