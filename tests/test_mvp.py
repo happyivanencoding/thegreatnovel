@@ -362,6 +362,8 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="gbrain-query"' in page.text
     assert 'id="gbrain-results"' in page.text
     assert 'id="design-growth_genome"' in page.text
+    assert 'id="creative-direction" value=""' in page.text
+    assert "例如：传统仙侠；资源→战斗→身份" in page.text
     assert "GBrain 范围：全 Brain" in page.text
     assert "从 GBrain 取灵感" in page.text
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
@@ -373,6 +375,17 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert "都市职业" not in js
     assert "想保留的成长链或元素" in js
     assert "不要强迫所有书采用同一条经典成长链" in js
+
+
+def test_idea_default_query_does_not_read_book_design_fields() -> None:
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    start = js.index("function defaultGbrainQuery()")
+    idea_start = js.index('if (mode === "idea")', start)
+    idea_end = js.index('if (mode === "review")', idea_start)
+    idea_branch = js[idea_start:idea_end]
+    assert "design-type_promise" not in idea_branch
+    assert "design-protagonist_model" not in idea_branch
+    assert "作者尚未指定成长链" in js[start:idea_end]
 
 
 def test_page_shows_twelve_design_sections_and_panorama_controls() -> None:
@@ -415,6 +428,7 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert "经典成长模式是一等公民" in templates["idea"]
     assert "经典成长模式是一等公民" in templates["outline"]
     assert "作者输入、GBrain证据或当前创意表明" in templates["idea"]
+    assert "作者明确保留" in templates["outline"]
     assert "## 0. 本书成长基因图" in templates["outline"]
     assert "POWER_BREAKTHROUGH" not in Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
 
