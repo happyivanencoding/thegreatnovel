@@ -260,13 +260,14 @@ function defaultGbrainQuery() {
   const direction = $("creative-direction").value.trim() || "当前创作方向";
   const mode = $("prompt-mode").value;
   const novelKnowledge = "reference-corpus-program-deep-v1 修仙小说素材库 book-dna syntheses observations Reference Program";
+  const powerFantasySearch = "Payoff Grammar Core Progression Grammar Advantage / Special Capability Action-Space Expansion World Expansion Grammar Repeatable Reader Loop POWER_BREAKTHROUGH NEW_TECHNIQUE COMBAT_DOMINANCE UNDERDOG_VICTORY RESOURCE_GAIN STATUS_RISE WORLD_EXPANSION STRATEGIC_ADVANTAGE";
   if (mode === "outline") {
-    return `针对以下中文男频成长爽文设定：\n${novelKnowledge}\n创作方向：${direction}\n一句话创意与读者承诺：${$("design-type_promise").value.trim() || "（未填写）"}\n主角模型与人物弧：${$("design-protagonist_model").value.trim() || "（未填写）"}\n当前状态：${$("section-status").value.trim() || "（未填写）"}\n\n只寻找小说蒸馏知识中的男频成长循环、金手指玩法、资源循环、身份跃迁、公开证明、payoff、世界压力升级、关系变化、行动空间扩大、中期换挡、避免重复、Book DNA、Mechanism、Contrast 和 Reference Program。`;
+    return `针对以下中文男频成长爽文设定：\n${novelKnowledge}\n${powerFantasySearch}\n仙侠 玄幻 高武 修炼 突破 战斗验证 秘境 身份跃迁\n创作方向：${direction}\n一句话创意与读者承诺：${$("design-type_promise").value.trim() || "（未填写）"}\n主角模型与人物弧：${$("design-protagonist_model").value.trim() || "（未填写）"}\n当前状态：${$("section-status").value.trim() || "（未填写）"}\n\n寻找能够让资源转化为修为、功法、技法、战斗优势、新身份和新地图的小说蒸馏知识；同时寻找男频成长循环、公开证明、中期换挡、避免重复、Book DNA、Mechanism、Contrast 和 Reference Program。`;
   }
   if (mode === "review") {
-    return `当前小说是中文男频成长爽文，方向为“${direction}”。\n${novelKnowledge}\n当前真实状态：${$("review-state").value.trim() || $("section-status").value.trim() || "（未填写）"}\n实际十章摘要：${$("actual-summaries").value.trim() || "（未填写）"}\n未兑现承诺：${$("unfulfilled-promises").value.trim() || "（未填写）"}\n\n只寻找小说蒸馏知识中的 loop break、男频成长循环、身份变化、关系压力、新行动空间、资源复利、中期换挡、不同类型 payoff、Book DNA、Mechanism、Contrast 和避免重复案例。`;
+    return `当前小说是中文男频成长爽文，方向为“${direction}”。\n${novelKnowledge}\n${powerFantasySearch}\n当前真实状态：${$("review-state").value.trim() || $("section-status").value.trim() || "（未填写）"}\n实际十章摘要：${$("actual-summaries").value.trim() || "（未填写）"}\n未兑现承诺：${$("unfulfilled-promises").value.trim() || "（未填写）"}\n\n寻找小说蒸馏知识中的 loop break、力量兑现、身份变化、关系压力、新行动空间、资源复利、中期换挡、不同类型 payoff、Book DNA、Mechanism、Contrast 和避免重复案例。`;
   }
-  return `${novelKnowledge}；中文男频成长爽文；\n只寻找与“${direction}”相关的男频成长循环、核心爽点、金手指玩法、资源循环、信息差、身份跃迁、公开证明、payoff、早期兑现、长篇世界扩张、容易重复的失败模式和可借鉴的结构机制。`;
+  return `${novelKnowledge}；${powerFantasySearch}；仙侠 玄幻 高武 修炼 突破 战斗验证 秘境 身份跃迁；中文男频成长爽文；\n只寻找与“${direction}”相关的男频成长循环、核心爽点、金手指玩法、资源转修为、信息差、公开证明、payoff、早期兑现、长篇世界扩张、容易重复的失败模式和可借鉴的结构机制。`;
 }
 
 function setDefaultGbrainQuery() {

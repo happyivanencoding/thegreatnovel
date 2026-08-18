@@ -333,6 +333,10 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="gbrain-results"' in page.text
     assert "GBrain 范围：全 Brain" in page.text
     assert "从 GBrain 取灵感" in page.text
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    assert "Payoff Grammar" in js
+    assert "POWER_BREAKTHROUGH" in js
+    assert "资源转修为" in js
 
 
 def test_page_shows_twelve_design_sections_and_panorama_controls() -> None:
@@ -363,8 +367,14 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert response.status_code == 200
     templates = response.json()["templates"]
     assert set(templates) == {"idea", "outline", "chapter", "review"}
-    assert Path("docs/MVP_PRODUCT_DIRECTION.md").is_file()
+    direction_doc = Path("docs/MVP_PRODUCT_DIRECTION.md")
+    assert direction_doc.is_file()
+    assert "Power Fantasy First" in direction_doc.read_text(encoding="utf-8")
     assert all("中文男频成长爽文" in templates[mode] for mode in ("idea", "outline", "review"))
+    assert "Power Fantasy First" in templates["idea"]
+    assert "Power Fantasy First" in templates["outline"]
+    assert "POWER_BREAKTHROUGH" in templates["idea"]
+    assert "资源 → 修炼" in templates["outline"]
     assert "中文男频成长爽文" not in templates["chapter"]
 
 
