@@ -187,9 +187,20 @@
           <textarea id="codex-response" rows="12"></textarea>
         </label>
 
+        <label class="field">
+          <span>正式正文（保存内容；只在提取后进入 chapter-NNNN.md）</span>
+          <textarea id="chapter-body-for-save" rows="12"></textarea>
+        </label>
+
+        <label class="field">
+          <span>章节事实摘要（审计查看；不会写入正文）</span>
+          <textarea id="chapter-fact-summary" rows="4"></textarea>
+        </label>
+
         <div class="action-row wrap">
           <button id="apply-response">应用到编辑区</button>
           <button id="apply-outline-to-book">应用总纲到 BOOK 编辑区</button>
+          <button id="extract-chapter-body">提取正式正文</button>
           <button id="save-proposal">保存 Proposal</button>
           <button id="approve-chapter" class="primary">批准并保存章节</button>
         </div>

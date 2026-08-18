@@ -380,6 +380,9 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="creative-direction"' in page.text
     assert 'id="gbrain-query"' in page.text
     assert 'id="gbrain-results"' in page.text
+    assert 'id="chapter-body-for-save"' in page.text
+    assert 'id="chapter-fact-summary"' in page.text
+    assert 'id="extract-chapter-body"' in page.text
     assert 'id="design-growth_genome"' in page.text
     assert 'id="creative-direction" value=""' in page.text
     assert "例如：传统仙侠；资源→战斗→身份" in page.text
@@ -490,3 +493,18 @@ def test_previous_chapter_fetch_failure_is_visible_and_does_not_clear_context() 
     assert "读取第${number}章连续性上下文失败：${error.message}" in function_body
     assert "catch {" not in function_body
     assert 'target.value = "";' not in function_body.split("const first", 1)[1]
+
+
+def test_chapter_response_contract_saves_only_extracted_body() -> None:
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    start = js.index("function extractChapterArtifact")
+    end = js.index("async function saveBook", start)
+    parser = js[start:end]
+    assert 'const bodyHeading = "# 正式正文";' in parser
+    assert 'const summaryHeading = "# 章节事实摘要";' in parser
+    approve_start = js.index("async function approveChapter")
+    approve_end = js.index("async function createBook", approve_start)
+    approve = js[approve_start:approve_end]
+    assert 'const chapterBody = $("chapter-body-for-save").value.trim();' in approve
+    assert 'content: chapterBody' in approve
+    assert 'content: $("codex-response").value' not in approve

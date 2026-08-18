@@ -158,6 +158,8 @@ function populateBook(book) {
   $("template-review").value = templates.review || $("template-review").value;
   $("proposal-editor").value = book.proposal || "";
   $("codex-response").value = "";
+  $("chapter-body-for-save").value = "";
+  $("chapter-fact-summary").value = "";
   state.proposalDraftActive = Boolean(book.proposal);
   renderLongPlanPanorama();
   refreshPreviousChapterText();
@@ -443,6 +445,34 @@ function applyOutlineToBook() {
   showStatus(`已将 ${applied} 个 BOOK 区域应用到浏览器编辑区，尚未写盘`);
 }
 
+function extractChapterArtifact(response) {
+  const bodyHeading = "# 正式正文";
+  const summaryHeading = "# 章节事实摘要";
+  const bodyStart = response.indexOf(bodyHeading);
+  if (bodyStart < 0) return null;
+  const bodyContentStart = bodyStart + bodyHeading.length;
+  const summaryStart = response.indexOf(summaryHeading, bodyContentStart);
+  const bodyEnd = summaryStart >= 0 ? summaryStart : response.length;
+  const body = response.slice(bodyContentStart, bodyEnd).trim();
+  if (!body) return null;
+  const summary = summaryStart >= 0
+    ? response.slice(summaryStart + summaryHeading.length).trim()
+    : "";
+  return { body, summary };
+}
+
+function extractChapterBody() {
+  const artifact = extractChapterArtifact($("codex-response").value);
+  if (!artifact) {
+    showStatus("返回文本没有找到“# 正式正文”区块，未改变保存内容", true);
+    return false;
+  }
+  $("chapter-body-for-save").value = artifact.body;
+  $("chapter-fact-summary").value = artifact.summary;
+  showStatus("已提取正式正文；审计信息和事实摘要不会写入章节文件");
+  return true;
+}
+
 async function saveBook() {
   if (!state.bookId) return showStatus("请先加载小说", true);
   try {
@@ -493,12 +523,16 @@ async function saveProposal() {
 
 async function approveChapter() {
   if (!state.bookId) return showStatus("请先加载小说", true);
+  const chapterBody = $("chapter-body-for-save").value.trim();
+  if (!chapterBody) {
+    return showStatus("请先从 Codex 返回文本提取正式正文，再保存章节", true);
+  }
   try {
     const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/chapters`, {
       method: "POST",
       body: JSON.stringify({
         chapter_number: Number($("chapter-number").value),
-        content: $("codex-response").value,
+        content: chapterBody,
       }),
     });
     await refreshPreviousChapterText();
@@ -553,7 +587,11 @@ $("query-gbrain").addEventListener("click", queryGbrain);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
 $("generate-prompt").addEventListener("click", generatePrompt);
 $("copy-prompt").addEventListener("click", copyPrompt);
-$("chapter-number").addEventListener("change", refreshPreviousChapterText);
+$("chapter-number").addEventListener("change", () => {
+  $("chapter-body-for-save").value = "";
+  $("chapter-fact-summary").value = "";
+  refreshPreviousChapterText();
+});
 $("expand-design").addEventListener("click", () => setDesignDetails(true));
 $("collapse-design").addEventListener("click", () => setDesignDetails(false));
 $("section-long_plan").addEventListener("input", renderLongPlanPanorama);
@@ -563,6 +601,7 @@ $("apply-response").addEventListener("click", () => {
   showStatus("返回文本已应用到浏览器编辑区，尚未写盘");
 });
 $("apply-outline-to-book").addEventListener("click", applyOutlineToBook);
+$("extract-chapter-body").addEventListener("click", extractChapterBody);
 $("codex-response").addEventListener("input", () => {
   state.proposalDraftActive = false;
 });
