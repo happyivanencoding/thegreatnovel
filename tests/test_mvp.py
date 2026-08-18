@@ -29,6 +29,8 @@ def test_new_book_has_only_the_four_requested_items(tmp_path: Path) -> None:
     assert (book_dir / "chapters").is_dir()
     payload = read_book_payload("demo", tmp_path)
     assert set(payload["prompt_templates"]) == {"idea", "outline", "chapter", "review"}
+    assert set(payload["sections"]) == {"design", "long_plan", "small_plan", "status"}
+    assert len(payload["design_sections"]) == 12
 
 
 def test_new_book_has_no_database_or_old_system_directory(tmp_path: Path) -> None:
@@ -127,6 +129,13 @@ def test_approved_chapter_gets_correct_numbered_markdown_file(tmp_path: Path, mo
     assert saved.status_code == 200
     assert saved.json()["file"] == "chapter-0007.md"
     assert (tmp_path / "demo" / "chapters" / "chapter-0007.md").read_text(encoding="utf-8") == "chapter body"
+    duplicate = client.post(
+        "/api/books/demo/chapters",
+        json={"chapter_number": 7, "content": "replacement body"},
+    )
+    assert duplicate.status_code == 400
+    assert "已经存在" in duplicate.json()["detail"]
+    assert (tmp_path / "demo" / "chapters" / "chapter-0007.md").read_text(encoding="utf-8") == "chapter body"
 
 
 def test_gbrain_query_calls_public_cli_and_preserves_stdout(monkeypatch) -> None:
@@ -216,15 +225,16 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
         book_content="BOOK",
     )
     for heading in (
-        "# 小说核心与读者承诺",
-        "# 价值观与世界观",
-        "# 主角、能力与关键关系",
+        "# 小说总体设计画像",
         "# 未来100章大型剧情块",
         "# 未来十章逐章小纲",
         "# 当前状态、未兑现承诺与作者备注",
     ):
         assert heading in prompt
     assert "4—8 个自然剧情块" in prompt
+    assert all(f"## {number}." in prompt for number in range(1, 13))
+    assert "完整输出所有剧情块" in prompt
+    assert "覆盖第1章到第100章" in prompt
     assert "具体发生" in prompt
     assert "结果 / 状态变化" in prompt
     assert "结尾推动" in prompt
@@ -258,12 +268,61 @@ def test_chapter_prompt_does_not_start_a_gbrain_query(monkeypatch) -> None:
             "mode": "chapter",
             "template": "CHAPTER TEMPLATE",
             "book_content": "BOOK",
+            "current_long_block": "当前块：废丹秘密与第一次生产循环",
             "current_outline": outline,
             "gbrain_inspiration": "本十章已选灵感",
         },
     )
     assert response.status_code == 200
     assert "本十章已选灵感" in response.json()["prompt"]
+
+
+def test_chapter_prompt_uses_relevant_design_without_full_image_or_plan() -> None:
+    book = """# 小说总体设计画像
+
+## 1. 核心类型与读者承诺
+男频成长爽文；主角从废丹套利进入药行。
+
+## 2. 世界观结构
+修炼等级和资源市场互相咬合。
+
+## 4. 主角模型、人物弧与核心矛盾
+发现信息 → 小规模验证 → 隐藏优势 → 建立渠道。
+
+## 5. 配角与关系系统
+周安是长期利益伙伴。
+
+## 8. 文风与可操作参数
+短段落、高信息密度、对话用于博弈。
+
+## 9. 对话特点
+角色说话都带有交易目的。
+
+## 12. 当前设计最强点与最弱点
+强点是资源到身份的因果链。
+
+# 未来100章大型剧情块
+FULL_PLAN_SHOULD_NOT_ENTER
+
+# 当前状态、未兑现承诺与作者备注
+当前在第一章前。
+"""
+    outline = "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    prompt = generate_prompt(
+        mode="chapter",
+        template="CHAPTER TEMPLATE",
+        book_content=book,
+        current_long_block="当前块：废丹秘密与第一次生产循环",
+        current_outline=outline,
+    )
+    assert "男频成长爽文" in prompt
+    assert "废丹套利" in prompt
+    assert "当前块：废丹秘密与第一次生产循环" in prompt
+    assert "FULL_PLAN_SHOULD_NOT_ENTER" not in prompt
+    assert "## 12. 当前设计最强点与最弱点" not in prompt
 
 
 def test_page_shows_editable_gbrain_query_and_results() -> None:
@@ -274,6 +333,29 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="gbrain-results"' in page.text
     assert "GBrain 范围：全 Brain" in page.text
     assert "从 GBrain 取灵感" in page.text
+
+
+def test_page_shows_twelve_design_sections_and_panorama_controls() -> None:
+    page = client.get("/")
+    assert page.status_code == 200
+    assert 'id="expand-design"' in page.text
+    assert 'id="collapse-design"' in page.text
+    assert 'id="long-plan-panorama"' in page.text
+    assert page.text.count('class="design-card"') == 12
+
+
+def test_panorama_and_apply_contracts_refresh_without_book_write() -> None:
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    assert "function parseLongPlanBlocks" in js
+    assert "function renderLongPlanPanorama" in js
+    assert '$("section-long_plan").addEventListener("input", renderLongPlanPanorama)' in js
+    apply_start = js.index("function applyOutlineToBook()")
+    apply_end = js.index("async function saveBook()", apply_start)
+    apply_body = js[apply_start:apply_end]
+    assert "renderLongPlanPanorama()" in apply_body
+    assert "designTitles" in apply_body
+    assert "section-${key}" in apply_body
+    assert "requestJson" not in apply_body
 
 
 def test_default_prompt_templates_include_idea_mode() -> None:

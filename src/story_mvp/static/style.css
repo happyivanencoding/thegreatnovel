@@ -97,6 +97,20 @@ textarea:focus, input:focus, select:focus { border-color: var(--accent); outline
 .hint { margin-bottom: 12px; }
 .count { background: var(--accent-soft); border-radius: 12px; color: var(--accent); font-size: 12px; padding: 4px 8px; white-space: nowrap; }
 .path-note { border-bottom: 1px solid var(--line); margin-bottom: 10px; padding-bottom: 9px; }
+.design-toolbar, .panorama-heading { align-items: center; border-top: 1px solid var(--line); display: flex; justify-content: space-between; margin-top: 14px; padding-top: 11px; }
+.design-toolbar .action-row { margin: 0; }
+.design-sections { display: grid; gap: 6px; margin-top: 8px; }
+.design-card { border: 1px solid var(--line); border-radius: 5px; padding: 7px 9px; }
+.design-card summary { cursor: pointer; font-size: 12px; font-weight: 650; }
+.design-card textarea { margin-top: 8px; }
+.panorama-heading { border-top: 0; }
+.long-plan-panorama { display: grid; gap: 8px; margin: 8px 0 14px; }
+.panorama-empty { color: var(--muted); font-size: 12px; margin: 0; }
+.panorama-card { background: #f8fafb; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 5px; padding: 9px 10px; }
+.panorama-range { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .03em; }
+.panorama-card h4 { font-size: 14px; margin: 3px 0 7px; }
+.panorama-card p { font-size: 12px; margin: 5px 0 0; }
+.panorama-card p strong { color: var(--muted); }
 .gbrain-workspace { border-bottom: 1px solid var(--line); margin-bottom: 12px; padding-bottom: 12px; }
 .gbrain-workspace input { width: 100%; }
 .references-section { margin-top: 12px; }

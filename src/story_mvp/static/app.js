@@ -5,12 +5,25 @@ const state = {
 };
 
 const sectionTitles = {
-  core: "# 小说核心与读者承诺",
-  values_world: "# 价值观与世界观",
-  protagonist: "# 主角、能力与关键关系",
+  design: "# 小说总体设计画像",
   long_plan: "# 未来100章大型剧情块",
   small_plan: "# 未来十章逐章小纲",
   status: "# 当前状态、未兑现承诺与作者备注",
+};
+
+const designTitles = {
+  type_promise: "## 1. 核心类型与读者承诺",
+  world_structure: "## 2. 世界观结构",
+  world_pressure: "## 3. 世界如何持续制造剧情压力",
+  protagonist_model: "## 4. 主角模型、人物弧与核心矛盾",
+  relationships: "## 5. 配角与关系系统",
+  plot_engine: "## 6. 核心情节发动机",
+  narrative_structure: "## 7. 叙事结构",
+  prose: "## 8. 文风与可操作参数",
+  dialogue: "## 9. 对话特点",
+  rhythm: "## 10. 节奏结构",
+  theme: "## 11. 主题、价值观与长期问题",
+  strengths_risks: "## 12. 当前设计最强点与最弱点",
 };
 
 const $ = (id) => document.getElementById(id);
@@ -37,15 +50,104 @@ async function requestJson(url, options = {}) {
 }
 
 function composeBookContent() {
+  const design = Object.entries(designTitles)
+    .map(([key, title]) => `${title}\n\n${$(`design-${key}`).value.trim()}`)
+    .join("\n\n");
   return Object.entries(sectionTitles)
-    .map(([key, title]) => `${title}\n\n${$(`section-${key}`).value.trim()}`)
+    .map(([key, title]) => `${title}\n\n${key === "design" ? design : $(`section-${key}`).value.trim()}`)
     .join("\n\n") + "\n";
+}
+
+function parseLongPlanBlocks(text) {
+  const headingPattern = /^\s*##\s*第\s*(\d+)\s*[—–-]\s*(\d+)\s*章\s*[：:]\s*(.+?)\s*$/;
+  const lines = text.split(/\r?\n/);
+  const blocks = [];
+  let current = null;
+  for (const line of lines) {
+    const match = line.match(headingPattern);
+    if (match) {
+      if (current) blocks.push(current);
+      current = { start: Number(match[1]), end: Number(match[2]), title: match[3], lines: [] };
+    } else if (current) {
+      current.lines.push(line);
+    }
+  }
+  if (current) blocks.push(current);
+  return blocks;
+}
+
+function panoramaField(lines, label) {
+  const labelPattern = new RegExp(`^\\s*${label}\\s*[：:]\\s*(.*)$`);
+  const stopPattern = /^\s*(具体发生|阶段结果|叙事功能|推向下一块)\s*[：:]/;
+  const start = lines.findIndex((line) => labelPattern.test(line));
+  if (start < 0) return "";
+  const first = lines[start].match(labelPattern)?.[1] || "";
+  const rest = [];
+  for (const line of lines.slice(start + 1)) {
+    if (stopPattern.test(line)) break;
+    rest.push(line);
+  }
+  return [first, ...rest].join("\n").trim();
+}
+
+function renderLongPlanPanorama() {
+  const container = $("long-plan-panorama");
+  if (!container) return;
+  const blocks = parseLongPlanBlocks($("section-long_plan").value);
+  $("panorama-count").textContent = `${blocks.length} 个剧情块`;
+  container.replaceChildren();
+  if (!blocks.length) {
+    const empty = document.createElement("p");
+    empty.className = "panorama-empty";
+    empty.textContent = "尚未识别到 ## 第X—Y章：标题 格式；原文仍可正常编辑和保存。";
+    container.appendChild(empty);
+    return;
+  }
+  for (const block of blocks) {
+    const card = document.createElement("article");
+    card.className = "panorama-card";
+    const range = document.createElement("div");
+    range.className = "panorama-range";
+    range.textContent = `${block.start}—${block.end}章`;
+    const title = document.createElement("h4");
+    title.textContent = block.title;
+    card.append(range, title);
+    const stage = panoramaField(block.lines, "阶段结果");
+    const functionText = panoramaField(block.lines, "叙事功能");
+    const next = panoramaField(block.lines, "推向下一块");
+    const fields = [
+      ["核心变化", stage],
+      ["关键兑现 / 功能", functionText],
+      ["进入下一块", next],
+    ];
+    for (const [label, value] of fields) {
+      if (!value) continue;
+      const line = document.createElement("p");
+      const name = document.createElement("strong");
+      name.textContent = `${label}：`;
+      line.append(name, document.createTextNode(value));
+      card.appendChild(line);
+    }
+    if (!stage && !functionText && !next) {
+      const fallback = document.createElement("p");
+      fallback.textContent = block.lines.filter((line) => line.trim()).slice(0, 3).join(" ");
+      card.appendChild(fallback);
+    }
+    container.appendChild(card);
+  }
+}
+
+function setDesignDetails(open) {
+  document.querySelectorAll(".design-card").forEach((card) => { card.open = open; });
 }
 
 function populateBook(book) {
   state.bookId = book.book_id;
   $("book-id").value = book.book_id;
-  for (const key of Object.keys(sectionTitles)) {
+  for (const key of Object.keys(designTitles)) {
+    $(`design-${key}`).value = book.design_sections?.[key] || "";
+  }
+  for (const key of ["long_plan", "small_plan", "status"]) {
     $(`section-${key}`).value = book.sections?.[key] || "";
   }
   const templates = book.prompt_templates || {};
@@ -56,6 +158,7 @@ function populateBook(book) {
   $("proposal-editor").value = book.proposal || "";
   $("codex-response").value = "";
   state.proposalDraftActive = Boolean(book.proposal);
+  renderLongPlanPanorama();
   showStatus(`已加载 ${book.book_id}`);
 }
 
@@ -158,7 +261,7 @@ function defaultGbrainQuery() {
   const mode = $("prompt-mode").value;
   const novelKnowledge = "reference-corpus-program-deep-v1 修仙小说素材库 book-dna syntheses observations Reference Program";
   if (mode === "outline") {
-    return `针对以下中文男频成长爽文设定：\n${novelKnowledge}\n创作方向：${direction}\n一句话创意与希望解决的问题：${$("section-core").value.trim() || "（未填写）"}\n主角核心优势：${$("section-protagonist").value.trim() || "（未填写）"}\n当前状态：${$("section-status").value.trim() || "（未填写）"}\n\n只寻找小说蒸馏知识中的男频成长循环、金手指玩法、资源循环、身份跃迁、公开证明、payoff、世界压力升级、关系变化、行动空间扩大、中期换挡、避免重复、Book DNA、Mechanism、Contrast 和 Reference Program。`;
+    return `针对以下中文男频成长爽文设定：\n${novelKnowledge}\n创作方向：${direction}\n一句话创意与读者承诺：${$("design-type_promise").value.trim() || "（未填写）"}\n主角模型与人物弧：${$("design-protagonist_model").value.trim() || "（未填写）"}\n当前状态：${$("section-status").value.trim() || "（未填写）"}\n\n只寻找小说蒸馏知识中的男频成长循环、金手指玩法、资源循环、身份跃迁、公开证明、payoff、世界压力升级、关系变化、行动空间扩大、中期换挡、避免重复、Book DNA、Mechanism、Contrast 和 Reference Program。`;
   }
   if (mode === "review") {
     return `当前小说是中文男频成长爽文，方向为“${direction}”。\n${novelKnowledge}\n当前真实状态：${$("review-state").value.trim() || $("section-status").value.trim() || "（未填写）"}\n实际十章摘要：${$("actual-summaries").value.trim() || "（未填写）"}\n未兑现承诺：${$("unfulfilled-promises").value.trim() || "（未填写）"}\n\n只寻找小说蒸馏知识中的 loop break、男频成长循环、身份变化、关系压力、新行动空间、资源复利、中期换挡、不同类型 payoff、Book DNA、Mechanism、Contrast 和避免重复案例。`;
@@ -182,6 +285,7 @@ function promptPayload() {
     template: currentTemplate(),
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
+    current_long_block: $("current-long-block").value,
     current_outline: $("current-outline").value,
     recent_summaries: $("recent-summaries").value,
     selected_references: selectedReferences(),
@@ -260,35 +364,50 @@ function applyResponseToEditor(response, editor) {
   editor.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
-function applyOutlineToBook() {
-  const source = state.proposalDraftActive ? $("proposal-editor").value : $("codex-response").value;
+function splitHeadingBlocks(text, titles) {
   const headingToKey = Object.fromEntries(
-    Object.entries(sectionTitles).map(([key, heading]) => [heading, key]),
+    Object.entries(titles).map(([key, heading]) => [heading, key]),
   );
+  const result = {};
   let currentKey = "";
   let lines = [];
-  let applied = 0;
-
-  const saveSection = () => {
-    if (!currentKey) return;
-    $(`section-${currentKey}`).value = lines.join("\n").trim();
-    applied += 1;
+  const save = () => {
+    if (currentKey) result[currentKey] = lines.join("\n").trim();
   };
-
-  for (const line of source.split(/\r?\n/)) {
+  for (const line of text.split(/\r?\n/)) {
     const key = headingToKey[line.trim()];
     if (key) {
-      saveSection();
+      save();
       currentKey = key;
       lines = [];
     } else if (currentKey) {
       lines.push(line);
     }
   }
-  saveSection();
+  save();
+  return result;
+}
+
+function applyOutlineToBook() {
+  const source = state.proposalDraftActive ? $("proposal-editor").value : $("codex-response").value;
+  const sections = splitHeadingBlocks(source, sectionTitles);
+  let applied = 0;
+  for (const [key, content] of Object.entries(sections)) {
+    if (key === "design") {
+      const designSections = splitHeadingBlocks(content, designTitles);
+      for (const [designKey, designContent] of Object.entries(designSections)) {
+        $(`design-${designKey}`).value = designContent;
+        applied += 1;
+      }
+    } else {
+      $(`section-${key}`).value = content;
+      applied += 1;
+    }
+  }
+  renderLongPlanPanorama();
 
   if (!applied) {
-    showStatus("返回文本没有找到 BOOK 的六个固定标题，未改变 BOOK 编辑区", true);
+    showStatus("返回文本没有找到 BOOK 的四个固定标题或总体画像标题，未改变 BOOK 编辑区", true);
     return;
   }
   showStatus(`已将 ${applied} 个 BOOK 区域应用到浏览器编辑区，尚未写盘`);
@@ -376,6 +495,7 @@ async function createBook() {
 
 async function initialize() {
   try {
+    renderLongPlanPanorama();
     const defaultTemplates = await requestJson("/api/prompt-templates");
     populatePromptTemplates(defaultTemplates.templates);
     setDefaultGbrainQuery();
@@ -402,6 +522,9 @@ $("query-gbrain").addEventListener("click", queryGbrain);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
 $("generate-prompt").addEventListener("click", generatePrompt);
 $("copy-prompt").addEventListener("click", copyPrompt);
+$("expand-design").addEventListener("click", () => setDesignDetails(true));
+$("collapse-design").addEventListener("click", () => setDesignDetails(false));
+$("section-long_plan").addEventListener("input", renderLongPlanPanorama);
 $("apply-response").addEventListener("click", () => {
   applyResponseToEditor($("codex-response"), $("proposal-editor"));
   state.proposalDraftActive = true;

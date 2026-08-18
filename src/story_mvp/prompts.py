@@ -51,27 +51,45 @@ DEFAULT_PROMPT_TEMPLATES = {
 
 {DEFAULT_PRODUCT_DIRECTION}
 
-请输出：
-1. 核心类型与读者承诺；
-2. 小说价值观；
-3. 会主动制造压力的世界观；
-4. 主角稳定决策模式；
-5. 能力玩法及代价；
-6. 关键长期关系；
-7. 4—8 个未来 100 章大型剧情块；
-8. 第一批未来十章逐章小纲；
-9. 主要重复风险。
+先建立整本书的总体设计画像，再据此规划 100 章和第一批十章。最终返回内容必须按以下四个一级 Markdown 标题逐字输出，不能增加其它一级标题：
 
-最终返回内容必须使用以下六个一级 Markdown 标题，标题文字逐字一致，并且只能用这六个一级标题承载可直接填回 BOOK.md 的内容：
-
-# 小说核心与读者承诺
-# 价值观与世界观
-# 主角、能力与关键关系
+# 小说总体设计画像
 # 未来100章大型剧情块
 # 未来十章逐章小纲
 # 当前状态、未兑现承诺与作者备注
 
+在“小说总体设计画像”下完整输出以下 12 个二级标题，不生成 JSON/YAML，不评分，不把任何一项变成 Hard Gate：
+
+## 1. 核心类型与读者承诺
+说明本质类型、前中远期读者为什么继续追，以及类型升级由什么具体故事变化产生。
+## 2. 世界观结构
+只写真正决定剧情的 2—4 条核心坐标轴，并说明它们怎样咬合、每次成长打开什么行动空间。
+## 3. 世界如何持续制造剧情压力
+说明垄断、生产周期、认证、市场、地域、秘境或利益冲突怎样自动制造问题、机会和上升通道。
+## 4. 主角模型、人物弧与核心矛盾
+写稳定决策模式、稳定底线、长期人物弧和一个能持续产生选择的核心矛盾。
+## 5. 配角与关系系统
+写长期角色、各自利益、关系变化与反转、情绪价值，以及关系系统最容易失败的地方。
+## 6. 核心情节发动机
+写可反复运行的循环、它为什么好看、如何持续几十章，以及第2/3/4次运行如何改变资源、风险、身份、规模或收益形式。
+## 7. 叙事结构
+写主要视角、切换条件、切换目的，以及前后期场景叙事和总结叙事的变化；说明如何用他人反应展示主角地位变化。
+## 8. 文风与可操作参数
+写目标单章长度、段落、信息/描写/对话/内心/战斗密度、系统信息频率、每章推进台阶和禁止形成的机械文风；这些是创作目标，不是代码限制。
+## 9. 对话特点
+写核心角色的节奏、信息量、身份、隐藏目的、直接或试探方式，以及对话承担的博弈功能。
+## 10. 节奏结构
+分别说明单章、约10章、大型剧情块和100章推进什么，如何交替小爽点、中型兑现、阶段大兑现、afterward与新压力，并指出节奏重复风险。
+## 11. 主题、价值观与长期问题
+写故事赞赏什么、警惕什么、主角相信什么、世界迫使他面对什么反例，以及主题如何从实际机制中浮现。
+## 12. 当前设计最强点与最弱点
+写设计统一性、当前最弱处和写作时真正需要防止的 2—5 个问题，不生成风险清单。
+
+画像必须是作者可修改的创作模型，而不是百科全书或机械模板。
+
 未来 100 章写 4—8 个自然剧情块，不要套固定 5 × 20。每个剧情块必须使用以下顺序：
+
+所有大型剧情块必须共同覆盖第1章到第100章：第一块从第1章开始，最后一块结束于第100章，相邻章节范围必须清楚衔接。必须完整输出所有剧情块，不能只展示第一个块，不能用“后续类似”“后面略”省略。越靠后的块可以稍粗，但仍必须明确核心人物、主要事件、主角行动、核心转折、高潮、得到什么、失去或承担什么，以及如何进入下一块。
 
 ## 第X—Y章：具体块名
 具体发生：先写具体人物、具体地点、具体事件、主角行动、对手或世界反应、转折、高潮和新问题；不要只写“建立资源循环”或“敌人升级”。
@@ -89,8 +107,12 @@ DEFAULT_PROMPT_TEMPLATES = {
 
 每章都必须有具体人物、具体事件、主角具体行动、直接结果、状态变化、叙事功能和结尾推动。禁止用“主角继续调查”“危机升级”“爆发点”“关系深化”“敌人变强”代替剧情。
 
+必须连续逐章列出完整的十章，不能合并章节，不能省略后几章。
+
+最后在当前状态一级标题下写出故事开始前的初始状态、已经建立的远期承诺、当前未解决问题和作者备注。
+
 不要把抽象主题当作事件链，不要自动替作者批准或保存任何内容。""",
-    "chapter": """你是透明协作的 GBrain 章节写作助手。只根据作者当前页面提供的 BOOK、当前章小纲、最近章节摘要、当前十章已经选定的 GBrain Inspiration Results 和选中的 Reference Programs 写作，不调用任何外部服务。
+    "chapter": """你是透明协作的 GBrain 章节写作助手。只根据作者当前页面提供的 BOOK 执行相关画像、当前大型剧情块、当前章小纲、最近章节摘要、当前十章已经选定的 GBrain Inspiration Results 和选中的 Reference Programs 写作，不调用任何外部服务。
 
 先遵守当前章小纲，再在必要时做有明确原因的细节调整。输出：
 1. 章节正文；
@@ -109,6 +131,12 @@ DEFAULT_PROMPT_TEMPLATES = {
 2. 重复或未兑现的问题；
 3. 对远期计划的有限建议；
 4. 下一批十章逐章小纲。
+
+如果实际写作已经证明总体画像需要变化，先输出：
+
+## 总体画像需要调整的地方
+
+只写被已发生事实支持的有限建议，不自动修改 BOOK；如果没有必要调整，明确写“暂不调整”。
 
 在逐章小纲之前，先写：
 
@@ -192,12 +220,48 @@ def _input_block(title: str, value: str) -> str:
     return f"## {title}\n\n{value.strip() or '（未填写）'}"
 
 
+def _extract_markdown_block(content: str, heading: str) -> str:
+    lines = content.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() != heading:
+            continue
+        collected: list[str] = []
+        for next_line in lines[index + 1:]:
+            stripped = next_line.strip()
+            if stripped.startswith("# ") or (heading.startswith("## ") and stripped.startswith("## ")):
+                break
+            collected.append(next_line)
+        return "\n".join(collected).strip()
+    return ""
+
+
+def _chapter_book_context(book_content: str) -> str:
+    headings = (
+        "## 1. 核心类型与读者承诺",
+        "## 2. 世界观结构",
+        "## 4. 主角模型、人物弧与核心矛盾",
+        "## 5. 配角与关系系统",
+        "## 8. 文风与可操作参数",
+        "## 9. 对话特点",
+    )
+    blocks = [
+        f"{heading}\n\n{_extract_markdown_block(book_content, heading)}"
+        for heading in headings
+        if _extract_markdown_block(book_content, heading)
+    ]
+    status = _extract_markdown_block(book_content, "# 当前状态、未兑现承诺与作者备注")
+    if status:
+        blocks.append(f"# 当前状态、未兑现承诺与作者备注\n\n{status}")
+    return "\n\n".join(blocks)
+
+
 def generate_prompt(
     *,
     mode: str,
     template: str,
     book_content: str,
     creative_direction: str = "",
+    current_long_block: str = "",
     current_outline: str = "",
     recent_summaries: str = "",
     selected_references: list[Mapping[str, Any]] | None = None,
@@ -222,6 +286,9 @@ def generate_prompt(
     elif mode == "review":
         parts.append(_input_block("原计划", book_content))
         parts.append(_input_block("创作方向", creative_direction))
+    elif mode == "chapter":
+        parts.append(_input_block("当前 BOOK 的执行相关画像与状态", _chapter_book_context(book_content)))
+        parts.append(_input_block("当前大型剧情块", current_long_block))
     else:
         parts.append(_input_block("当前 BOOK.md", book_content))
         parts.append(_input_block("创作方向", creative_direction))

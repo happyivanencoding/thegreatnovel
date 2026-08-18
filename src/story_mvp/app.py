@@ -60,6 +60,7 @@ class PromptRequest(BaseModel):
     template: str = ""
     book_content: str = ""
     creative_direction: str = ""
+    current_long_block: str = ""
     current_outline: str = ""
     recent_summaries: str = ""
     selected_references: list[dict[str, Any]] = Field(default_factory=list)

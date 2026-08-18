@@ -8,12 +8,25 @@ from .prompts import DEFAULT_PROMPT_TEMPLATES
 
 
 SECTION_TITLES = {
-    "core": "# 小说核心与读者承诺",
-    "values_world": "# 价值观与世界观",
-    "protagonist": "# 主角、能力与关键关系",
+    "design": "# 小说总体设计画像",
     "long_plan": "# 未来100章大型剧情块",
     "small_plan": "# 未来十章逐章小纲",
     "status": "# 当前状态、未兑现承诺与作者备注",
+}
+
+DESIGN_SECTION_TITLES = {
+    "type_promise": "## 1. 核心类型与读者承诺",
+    "world_structure": "## 2. 世界观结构",
+    "world_pressure": "## 3. 世界如何持续制造剧情压力",
+    "protagonist_model": "## 4. 主角模型、人物弧与核心矛盾",
+    "relationships": "## 5. 配角与关系系统",
+    "plot_engine": "## 6. 核心情节发动机",
+    "narrative_structure": "## 7. 叙事结构",
+    "prose": "## 8. 文风与可操作参数",
+    "dialogue": "## 9. 对话特点",
+    "rhythm": "## 10. 节奏结构",
+    "theme": "## 11. 主题、价值观与长期问题",
+    "strengths_risks": "## 12. 当前设计最强点与最弱点",
 }
 
 PROMPT_TEMPLATE_LABELS = {
@@ -27,10 +40,11 @@ BOOK_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
 
 
 def default_book_content() -> str:
+    design_bodies = {
+        key: "（请填写这项总体设计。）" for key in DESIGN_SECTION_TITLES
+    }
     bodies = {
-        "core": "一句话创意：\n\n读者承诺：",
-        "values_world": "价值观：\n\n会主动制造压力的世界规则：",
-        "protagonist": "稳定决策模式：\n\n能力玩法及代价：\n\n关键长期关系：",
+        "design": compose_design_content(design_bodies),
         "long_plan": "（先写具体事件链，再写叙事功能。）",
         "small_plan": "（每章请使用八个字段写出可执行的小纲。）",
         "status": "当前状态：\n\n未兑现承诺：\n\n作者备注：",
@@ -45,9 +59,36 @@ def compose_book_content(sections: dict[str, str]) -> str:
     return "\n\n".join(chunks).rstrip() + "\n"
 
 
+def compose_design_content(design_sections: dict[str, str]) -> str:
+    chunks: list[str] = []
+    for key, title in DESIGN_SECTION_TITLES.items():
+        chunks.append(f"{title}\n\n{design_sections.get(key, '').strip()}")
+    return "\n\n".join(chunks).rstrip() + "\n"
+
+
 def parse_book_sections(content: str) -> dict[str, str]:
     headings = {title: key for key, title in SECTION_TITLES.items()}
     sections = {key: "" for key in SECTION_TITLES}
+    current_key: str | None = None
+    lines: list[str] = []
+    for line in content.splitlines():
+        title = line.strip()
+        if title in headings:
+            if current_key is not None:
+                sections[current_key] = "\n".join(lines).strip()
+            current_key = headings[title]
+            lines = []
+            continue
+        if current_key is not None:
+            lines.append(line)
+    if current_key is not None:
+        sections[current_key] = "\n".join(lines).strip()
+    return sections
+
+
+def parse_design_sections(content: str) -> dict[str, str]:
+    headings = {title: key for key, title in DESIGN_SECTION_TITLES.items()}
+    sections = {key: "" for key in DESIGN_SECTION_TITLES}
     current_key: str | None = None
     lines: list[str] = []
     for line in content.splitlines():
@@ -143,10 +184,12 @@ def read_book_payload(book_id: str, workspace: Path) -> dict[str, Any]:
     directory = require_book(book_id, workspace)
     book_content = (directory / "BOOK.md").read_text(encoding="utf-8")
     prompt_content = (directory / "PROMPTS.md").read_text(encoding="utf-8")
+    sections = parse_book_sections(book_content)
     return {
         "book_id": book_id,
         "book_content": book_content,
-        "sections": parse_book_sections(book_content),
+        "sections": sections,
+        "design_sections": parse_design_sections(sections["design"]),
         "prompt_templates": text_to_prompt_templates(prompt_content),
         "proposal": (directory / "PROPOSAL.md").read_text(encoding="utf-8"),
         "chapters": sorted(path.name for path in (directory / "chapters").glob("chapter-*.md")),
@@ -180,5 +223,7 @@ def save_chapter(book_id: str, chapter_number: int, content: str, workspace: Pat
     if not content.strip():
         raise ValueError("章节正文不能为空")
     target = directory / "chapters" / f"chapter-{chapter_number:04d}.md"
+    if target.exists():
+        raise ValueError(f"第{chapter_number}章已经存在，请先明确处理已有章节")
     target.write_text(content, encoding="utf-8")
     return target
