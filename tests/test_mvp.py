@@ -30,7 +30,9 @@ def test_new_book_has_only_the_four_requested_items(tmp_path: Path) -> None:
     payload = read_book_payload("demo", tmp_path)
     assert set(payload["prompt_templates"]) == {"idea", "outline", "chapter", "review"}
     assert set(payload["sections"]) == {"design", "long_plan", "small_plan", "status"}
-    assert len(payload["design_sections"]) == 12
+    assert len(payload["design_sections"]) == 13
+    assert "growth_genome" in payload["design_sections"]
+    assert "## 0. 本书成长基因图" in payload["book_content"]
 
 
 def test_new_book_has_no_database_or_old_system_directory(tmp_path: Path) -> None:
@@ -209,13 +211,26 @@ def test_gbrain_result_enters_review_prompt() -> None:
     prompt = generate_prompt(
         mode="review",
         template="REVIEW TEMPLATE",
-        book_content="BOOK CONTENT",
+        book_content="# 小说总体设计画像\n\n## 0. 本书成长基因图\n\n知识 → 职业 → 世界入口",
         creative_direction="求生建造",
         gbrain_inspiration="Contrast：从个人套利转为组织能力",
         actual_summaries="实际十章内容",
     )
     assert "求生建造" in prompt
     assert "组织能力" in prompt
+    assert "知识 → 职业 → 世界入口" in prompt
+
+
+def test_review_prompt_discusses_growth_loop_variation() -> None:
+    prompt = generate_prompt(
+        mode="review",
+        template=DEFAULT_PROMPT_TEMPLATES["review"],
+        book_content="# 小说总体设计画像\n\n## 0. 本书成长基因图\n\n规则理解 × 关系网络",
+    )
+    assert "本书成长基因图" in prompt
+    assert "当前实际运行了什么成长循环" in prompt
+    assert "是否重复使用同一路径" in prompt
+    assert "成长基因图是否需要更新" in prompt
 
 
 def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
@@ -231,6 +246,13 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
         "# 当前状态、未兑现承诺与作者备注",
     ):
         assert heading in prompt
+    assert "## 0. 本书成长基因图" in prompt
+    assert "核心组合" in prompt
+    assert "转换网络" in prompt
+    assert "循环族" in prompt
+    assert "阶段变异" in prompt
+    assert "POWER_BREAKTHROUGH" not in prompt
+    assert "资源 → 修炼" not in prompt
     assert "4—8 个自然剧情块" in prompt
     assert all(f"## {number}." in prompt for number in range(1, 13))
     assert "完整输出所有剧情块" in prompt
@@ -280,6 +302,9 @@ def test_chapter_prompt_does_not_start_a_gbrain_query(monkeypatch) -> None:
 def test_chapter_prompt_uses_relevant_design_without_full_image_or_plan() -> None:
     book = """# 小说总体设计画像
 
+## 0. 本书成长基因图
+知识 → 职业 → 世界入口；循环在中期换挡。
+
 ## 1. 核心类型与读者承诺
 男频成长爽文；主角从废丹套利进入药行。
 
@@ -319,10 +344,13 @@ FULL_PLAN_SHOULD_NOT_ENTER
         current_outline=outline,
     )
     assert "男频成长爽文" in prompt
+    assert "知识 → 职业 → 世界入口" in prompt
     assert "废丹套利" in prompt
     assert "当前块：废丹秘密与第一次生产循环" in prompt
     assert "FULL_PLAN_SHOULD_NOT_ENTER" not in prompt
     assert "## 12. 当前设计最强点与最弱点" not in prompt
+    assert "MVP_PRODUCT_DIRECTION" not in prompt
+    assert "诡秘之主" not in prompt
 
 
 def test_page_shows_editable_gbrain_query_and_results() -> None:
@@ -331,12 +359,16 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="creative-direction"' in page.text
     assert 'id="gbrain-query"' in page.text
     assert 'id="gbrain-results"' in page.text
+    assert 'id="design-growth_genome"' in page.text
     assert "GBrain 范围：全 Brain" in page.text
     assert "从 GBrain 取灵感" in page.text
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
-    assert "Payoff Grammar" in js
-    assert "POWER_BREAKTHROUGH" in js
-    assert "资源转修为" in js
+    assert "Reader Promise" in js
+    assert "Core Progression Grammar" in js
+    assert "POWER_BREAKTHROUGH" not in js
+    assert "秘境" not in js
+    assert "历史建设" not in js
+    assert "都市职业" not in js
 
 
 def test_page_shows_twelve_design_sections_and_panorama_controls() -> None:
@@ -345,7 +377,7 @@ def test_page_shows_twelve_design_sections_and_panorama_controls() -> None:
     assert 'id="expand-design"' in page.text
     assert 'id="collapse-design"' in page.text
     assert 'id="long-plan-panorama"' in page.text
-    assert page.text.count('class="design-card"') == 12
+    assert page.text.count('class="design-card"') == 13
 
 
 def test_panorama_and_apply_contracts_refresh_without_book_write() -> None:
@@ -369,13 +401,14 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert set(templates) == {"idea", "outline", "chapter", "review"}
     direction_doc = Path("docs/MVP_PRODUCT_DIRECTION.md")
     assert direction_doc.is_file()
-    assert "Power Fantasy First" in direction_doc.read_text(encoding="utf-8")
-    assert all("中文男频成长爽文" in templates[mode] for mode in ("idea", "outline", "review"))
-    assert "Power Fantasy First" in templates["idea"]
-    assert "Power Fantasy First" in templates["outline"]
-    assert "POWER_BREAKTHROUGH" in templates["idea"]
-    assert "资源 → 修炼" in templates["outline"]
-    assert "中文男频成长爽文" not in templates["chapter"]
+    direction_text = direction_doc.read_text(encoding="utf-8")
+    assert "Composable Growth Genome" in Path("docs/COMPOSABLE_GROWTH_GENOME.md").read_text(encoding="utf-8")
+    assert "累积成长与可组合成长" in direction_text
+    assert all("成长" in templates[mode] for mode in ("idea", "outline"))
+    assert "成长组合" in templates["idea"]
+    assert "初始转换网络" in templates["idea"]
+    assert "## 0. 本书成长基因图" in templates["outline"]
+    assert "POWER_BREAKTHROUGH" not in Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
 
 
 def test_outline_prompt_injects_book_content_once() -> None:

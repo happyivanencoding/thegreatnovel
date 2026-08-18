@@ -12,6 +12,7 @@ const sectionTitles = {
 };
 
 const designTitles = {
+  growth_genome: "## 0. 本书成长基因图",
   type_promise: "## 1. 核心类型与读者承诺",
   world_structure: "## 2. 世界观结构",
   world_pressure: "## 3. 世界如何持续制造剧情压力",
@@ -259,15 +260,15 @@ function currentTemplate() {
 function defaultGbrainQuery() {
   const direction = $("creative-direction").value.trim() || "当前创作方向";
   const mode = $("prompt-mode").value;
-  const novelKnowledge = "reference-corpus-program-deep-v1 修仙小说素材库 book-dna syntheses observations Reference Program";
-  const powerFantasySearch = "Payoff Grammar Core Progression Grammar Advantage / Special Capability Action-Space Expansion World Expansion Grammar Repeatable Reader Loop POWER_BREAKTHROUGH NEW_TECHNIQUE COMBAT_DOMINANCE UNDERDOG_VICTORY RESOURCE_GAIN STATUS_RISE WORLD_EXPANSION STRATEGIC_ADVANTAGE";
+  const retrievalFocus = "Reader Promise；Character Desire & Agency；Advantage / Special Capability；Repeatable Reader Loop；Core Progression Grammar；Action-Space Expansion；World Expansion Grammar；Social / Relationship Dynamics；Resource / Economy；Narrative Drive；Phase Transition；Failure / Fatigue Risks；Book DNA；Mechanism；Contrast；Reference Program";
+  const growthGenome = $("design-growth_genome").value.trim() || "（尚未形成本书成长基因图）";
   if (mode === "outline") {
-    return `针对以下中文男频成长爽文设定：\n${novelKnowledge}\n${powerFantasySearch}\n仙侠 玄幻 高武 修炼 突破 战斗验证 秘境 身份跃迁\n创作方向：${direction}\n一句话创意与读者承诺：${$("design-type_promise").value.trim() || "（未填写）"}\n主角模型与人物弧：${$("design-protagonist_model").value.trim() || "（未填写）"}\n当前状态：${$("section-status").value.trim() || "（未填写）"}\n\n寻找能够让资源转化为修为、功法、技法、战斗优势、新身份和新地图的小说蒸馏知识；同时寻找男频成长循环、公开证明、中期换挡、避免重复、Book DNA、Mechanism、Contrast 和 Reference Program。`;
+    return `针对以下主角成长型虚构世界小说：\n创作方向：${direction}\n初始缺口：${$("design-type_promise").value.trim() || "（未填写）"}\n可能的非对称位置：${$("design-protagonist_model").value.trim() || "（未填写）"}\n期望读者体验：主角主动扩大自己能够理解、影响、控制、进入或创造的范围。\n当前成长基因图（如有）：${growthGenome}\n\n寻找小说蒸馏知识中的 ${retrievalFocus}，重点帮助生成这本书自己的变量、转换网络、循环族和阶段变异，不要套用其它题材的固定成长链。`;
   }
   if (mode === "review") {
-    return `当前小说是中文男频成长爽文，方向为“${direction}”。\n${novelKnowledge}\n${powerFantasySearch}\n当前真实状态：${$("review-state").value.trim() || $("section-status").value.trim() || "（未填写）"}\n实际十章摘要：${$("actual-summaries").value.trim() || "（未填写）"}\n未兑现承诺：${$("unfulfilled-promises").value.trim() || "（未填写）"}\n\n寻找小说蒸馏知识中的 loop break、力量兑现、身份变化、关系压力、新行动空间、资源复利、中期换挡、不同类型 payoff、Book DNA、Mechanism、Contrast 和避免重复案例。`;
+    return `这是一本主角成长型虚构世界小说，创作方向为“${direction}”。\n本书成长基因图：${growthGenome}\n当前大型剧情块：${$("current-long-block").value.trim() || "（未填写）"}\n实际完成十章：${$("actual-summaries").value.trim() || "（未填写）"}\n当前重复风险：${$("unfulfilled-promises").value.trim() || "（未填写）"}\n\n寻找能够继续兑现本书 Reader Promise、改变玩法、扩大行动空间并避免疲劳的 ${retrievalFocus}。`;
   }
-  return `${novelKnowledge}；${powerFantasySearch}；仙侠 玄幻 高武 修炼 突破 战斗验证 秘境 身份跃迁；中文男频成长爽文；\n只寻找与“${direction}”相关的男频成长循环、核心爽点、金手指玩法、资源转修为、信息差、公开证明、payoff、早期兑现、长篇世界扩张、容易重复的失败模式和可借鉴的结构机制。`;
+  return `主角成长型虚构世界小说；创作方向：${direction}；初始缺口：${$("design-type_promise").value.trim() || "（未填写）"}；可能的非对称位置：${$("design-protagonist_model").value.trim() || "（未填写）"}。\n寻找与作者期望读者体验相关的 ${retrievalFocus}，关注可组合的成长变量、转换网络、循环族和长篇阶段变异。`;
 }
 
 function setDefaultGbrainQuery() {

@@ -25,7 +25,7 @@ REQUIRED_OUTLINE_FIELDS = (
 
 DEFAULT_PRODUCT_DIRECTION = """当前产品默认目标是成熟中文男频成长爽文。优先寻找具有主角主动性、非对称优势、可重复利用、复利增长、早期兑现和持续行动空间扩大的具体故事。创新应优先体现在玩法和成长路径上，而不是单纯通过悲剧代价、伦理折磨或反爽机制制造“高级感”。这是创作方向，不是机械模板；如果作者明确要求其他类型，以作者要求为准。"""
 
-DEFAULT_POWER_FANTASY_DIRECTION = """Power Fantasy First：当前“爽”首先是主角获得过去没有的能力，并产生直接、可感知、逐渐扩大的正向结果。资源经营只能作为发动机之一，必须持续转换为修为、功法、技法、装备、战斗胜利、身份、机缘或新地图。直接爽感（突破、新术、越阶胜利、机缘、实力反转）与间接爽感（财富、渠道、组织、席位）都可以存在，但不能让多个大型剧情块只停留在间接层。可用 payoff channel 包括 POWER_BREAKTHROUGH、NEW_TECHNIQUE、COMBAT_DOMINANCE、UNDERDOG_VICTORY、RESOURCE_GAIN、TREASURE_GAIN、STATUS_RISE、PUBLIC_RECOGNITION、KNOWLEDGE_ADVANTAGE、STRATEGIC_ADVANTAGE、WORLD_EXPANSION、ACTION_SPACE_EXPANSION；按题材选择，不要求全部出现。"""
+DEFAULT_COMPOSABLE_GROWTH_DIRECTION = """当前产品只提供主角成长型虚构世界男频长篇的启动方向。不要预设所有书都沿同一条力量链成长；优先寻找本书自己的非对称位置、成长对象、转换网络、可重复循环、阶段变异和核心不变量。成长可以来自力量、知识、职业、规则、身份、造物、组织、关系、世界通行能力或它们的组合；作者选定具体创意后，以本书成长基因为准。"""
 
 
 DEFAULT_PROMPT_TEMPLATES = {
@@ -33,11 +33,21 @@ DEFAULT_PROMPT_TEMPLATES = {
 
 {DEFAULT_PRODUCT_DIRECTION}
 
-{DEFAULT_POWER_FANTASY_DIRECTION}
+{DEFAULT_COMPOSABLE_GROWTH_DIRECTION}
 
 默认创作偏置：主角要有明显主动性；金手指要形成可重复、可放大的非对称优势；代价服务于策略，不负责抵消爽感；1—3 章出现核心异常或优势，3—10 章完成第一次明确利用，10—30 章形成稳定循环或公开证明；成长要打开新的行动空间，每次扩大都带来新的玩法。
 
 核心能力必须有纵向成长路线：早期能做什么，随后如何恢复/放大/反推规则，进一步如何服务修炼、技法、战斗准备、传承或新地图。每个候选都要写至少一个直接爽感 payoff 和一个间接爽感 payoff。
+
+每个候选还必须输出：
+## 成长组合
+说明本候选把哪些变量和循环组合在一起。
+## 初始转换网络
+用箭头说明主角最初怎样把一种优势转换成新的行动能力，允许分叉、反馈和条件转换。
+## 长篇变异潜力
+说明 100 章内成长对象、行动方式、主要循环或世界理解怎样发生至少几次本质变化，而不是只让敌人变强。
+## 与其它候选的真正差异
+说明转换网络或循环关系的不同，不能只换题材名、金手指名字、敌人或地图。
 
 不要为了显得高级，默认使用失忆、寿命、感情、伦理诅咒或越成功越痛苦等抵消型代价。除非作者明确要求，否则优先寻找可以复利、早期兑现并自然扩大到 100 章的玩法。
 
@@ -57,7 +67,7 @@ DEFAULT_PROMPT_TEMPLATES = {
 
 {DEFAULT_PRODUCT_DIRECTION}
 
-{DEFAULT_POWER_FANTASY_DIRECTION}
+{DEFAULT_COMPOSABLE_GROWTH_DIRECTION}
 
 先建立整本书的总体设计画像，再据此规划 100 章和第一批十章。最终返回内容必须按以下四个一级 Markdown 标题逐字输出，不能增加其它一级标题：
 
@@ -66,7 +76,17 @@ DEFAULT_PROMPT_TEMPLATES = {
 # 未来十章逐章小纲
 # 当前状态、未兑现承诺与作者备注
 
-在“小说总体设计画像”下完整输出以下 12 个二级标题，不生成 JSON/YAML，不评分，不把任何一项变成 Hard Gate：
+在“小说总体设计画像”下，先完整输出以下开放的成长基因图，再输出 1—12 个总体画像区块。不生成 JSON/YAML，不评分，不把任何一项变成 Hard Gate：
+
+## 0. 本书成长基因图
+用普通 Markdown 描述本书的核心组合、关键变量、转换网络、循环族、阶段变异、核心不变量和退化风险。变量名称、数量和循环名称由本书决定，不要复制产品示例，不要强制使用资源→修为→战斗链。
+核心组合：说明哪些机制被组合在一起。
+关键变量：只列本书真正需要的成长对象。
+转换网络：用箭头说明一对多、多对一、反馈、条件转换、延迟兑现、负反馈或中期失效。
+循环族：生成 2—4 个真正不同的循环，说明各自的阅读满足、阶段、互相供能和何时退居次要；如果本书不需要 2—4 个，按具体判断。
+阶段变异：说明成长对象、行动方式、冲突、验证场景、关系、时间尺度、世界认识或读者好奇心怎样换挡。
+核心不变量：只写 1—3 条长期必须持续给读者的体验。
+退化风险：只写本书最可能的 1—3 种退化。
 
 ## 1. 核心类型与读者承诺
 说明本质类型、前中远期读者为什么继续追，以及类型升级由什么具体故事变化产生。
@@ -79,7 +99,7 @@ DEFAULT_PROMPT_TEMPLATES = {
 ## 5. 配角与关系系统
 写长期角色、各自利益、关系变化与反转、情绪价值，以及关系系统最容易失败的地方。关系可以承担崇拜、友情、师徒、竞争、嫉妒、恐惧、爱慕、忠诚、背叛和旧日轻视后的重新评价；不要把所有角色都写成制度利益方，也不要让所有人只做同一种反应。
 ## 6. 核心情节发动机
-至少写两个并行循环：A. 优势复利循环（发现/加工/放大资源并获得更高级资源）；B. 力量兑现循环（资源进入修炼/新术/实战，突破或领先后获得新身份、秘境资格和更高级资源）。说明两者如何互相驱动，以及第2/3/4次运行如何改变资源、风险、身份、规模或收益形式。
+根据成长基因图写本书真正需要的 2—4 个循环族，说明每个循环的阅读满足、适用阶段、互相供能方式、何时退居次要，以及第2/3/4次运行如何改变变量、风险、身份、规模或收益形式。不要强制所有小说都拥有“优势复利循环”和“力量兑现循环”。
 ## 7. 叙事结构
 写主要视角、切换条件、切换目的，以及前后期场景叙事和总结叙事的变化；说明如何用他人反应展示主角地位变化。
 ## 8. 文风与可操作参数
@@ -105,9 +125,7 @@ DEFAULT_PROMPT_TEMPLATES = {
 叙事功能：说明这组具体事件完成了什么兑现、换挡或压力升级。
 推向下一块：写出下一块从哪个具体问题开始。
 
-每个大型剧情块还必须明确：这一块结束后，读者具体看到了主角更强、更富、更自由、更有地位或更有选择权中的哪一种变化，并尽量改变 payoff channel。对仙侠、玄幻或高武，100 章内应自然出现明确境界/能力成长、新功法或技巧、战斗/高压验证、同辈或强敌比较、资源/宝物争夺、秘境/遗迹/新地图、公开实力证明或更高层人物重新评价；具体多少由故事决定，不是 Python 检查。
-
-资源经营必须服务于力量成长：资源 → 修炼/新术/装备 → 实战胜利或能力证明 → 新身份/机缘/地图 → 更高级资源。不要让卖丹、开店、扩渠道本身取代主角变强。
+每个大型剧情块还必须说明：当前使用成长基因图中的哪条循环、通过哪条转换路径产生变化、哪个旧变量被重新解释或失效、哪个新变量进入故事、下一块为什么必须换用另一条路径。不要强制每块使用不同 payoff 标签或固定阶段顺序。
 
 未来十章必须是一个连续的小故事，而不是十个独立主题。每章使用：
 
@@ -136,13 +154,31 @@ DEFAULT_PROMPT_TEMPLATES = {
 不要替作者写入文件，不要把未发生的结果说成既定事实。""",
     "review": f"""你是透明协作的 GBrain 故事复盘助手。只根据作者当前页面提供的原计划、实际十章摘要、当前状态、未兑现承诺、尚未发生的远期方向和作者编辑过的 GBrain Inspiration Results，生成一份可编辑 Proposal，不调用任何外部服务。
 
-{DEFAULT_PRODUCT_DIRECTION}
+以页面提供的本书成长基因图、总体设计画像和已经发生的正文事实为优先，不重复注入产品默认方向，不把任何固定成长链当作本书规则。
 
 请输出：
 1. 实际完成内容；
 2. 重复或未兑现的问题；
 3. 对远期计划的有限建议；
 4. 下一批十章逐章小纲。
+
+先输出：
+
+## 当前实际运行了什么成长循环
+
+说明过去十章主要依靠了哪些变量和转换关系，提供了什么阅读满足。
+
+## 实际产生了什么变化
+
+说明主角能够做、理解、影响、控制或进入的范围发生了什么改变。
+
+## 是否重复使用同一路径
+
+如果过去两批依赖同一种转换方式，说明下一批怎样换另一个循环、改变关键变量、让旧循环失效、连接两个循环，或让之前的副循环成为主循环。
+
+## 成长基因图是否需要更新
+
+只有正文已经证明原设计不准确时才提出 Proposal；否则写“当前成长基因图暂不调整”。
 
 如果实际写作已经证明总体画像需要变化，先输出：
 
@@ -248,6 +284,10 @@ def _extract_markdown_block(content: str, heading: str) -> str:
 
 
 def _chapter_book_context(book_content: str) -> str:
+    blocks: list[str] = []
+    growth_genome = _extract_markdown_block(book_content, "## 0. 本书成长基因图")
+    if growth_genome:
+        blocks.append(f"## 0. 本书成长基因图\n\n{growth_genome}")
     headings = (
         "## 1. 核心类型与读者承诺",
         "## 2. 世界观结构",
@@ -256,11 +296,11 @@ def _chapter_book_context(book_content: str) -> str:
         "## 8. 文风与可操作参数",
         "## 9. 对话特点",
     )
-    blocks = [
+    blocks.extend([
         f"{heading}\n\n{_extract_markdown_block(book_content, heading)}"
         for heading in headings
         if _extract_markdown_block(book_content, heading)
-    ]
+    ])
     status = _extract_markdown_block(book_content, "# 当前状态、未兑现承诺与作者备注")
     if status:
         blocks.append(f"# 当前状态、未兑现承诺与作者备注\n\n{status}")
@@ -306,6 +346,8 @@ def generate_prompt(
         parts.append(_input_block("创作方向", creative_direction))
     parts.append(_input_block("选中的 Reference Programs", format_references(selected_references or [])))
     parts.append(_input_block("GBrain Inspiration Results（作者可编辑原文）", gbrain_inspiration))
+    if mode == "review":
+        parts.append(_input_block("本书成长基因图", _extract_markdown_block(book_content, "## 0. 本书成长基因图")))
 
     if mode == "chapter":
         parts.append(_input_block("当前章具体小纲", current_outline))

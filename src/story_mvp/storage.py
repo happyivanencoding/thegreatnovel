@@ -15,6 +15,7 @@ SECTION_TITLES = {
 }
 
 DESIGN_SECTION_TITLES = {
+    "growth_genome": "## 0. 本书成长基因图",
     "type_promise": "## 1. 核心类型与读者承诺",
     "world_structure": "## 2. 世界观结构",
     "world_pressure": "## 3. 世界如何持续制造剧情压力",

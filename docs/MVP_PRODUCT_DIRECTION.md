@@ -18,17 +18,17 @@ Story MVP 当前首先解决的不是“生成任意类型小说”，而是快�
 - 每隔一段时间有明确兑现；兑现之后产生新的可能性和更大压力。
 - 读者能清楚感觉到主角已经和以前不一样了。
 
-## Power Fantasy First
+## 累积成长与可组合成长
 
-当前 MVP 的“爽”首先意味着：主角获得过去没有的能力，并且这个能力产生直接、可感知、越来越大的正向结果。
+当前 MVP 优先生成主角成长型虚构世界男频长篇。主角必须持续扩大自己能够理解、影响、控制、进入或创造的范围；具体成长可以是力量，也可以是知识、职业、规则、身份、造物、组织、关系网络、世界通行能力或它们的组合。
 
-直接爽感包括境界突破、新功法或技法、法宝到手、越阶胜利、绝境翻盘、机缘、公开实力证明和过去高高在上的人物改变态度。间接爽感包括财富、渠道、工坊、组织和制度席位；间接收益必须不断转换成修为、技术、装备、战斗优势、身份、机缘或新地图，不能连续多个大型剧情块只停留在间接层。
+保留主角主动性、非对称位置、优势可发展、可见阶段兑现、行动空间扩大和长篇阶段换挡，但不规定所有题材都要战斗、突破、资源转修为、固定 payoff 顺序、身份/势力/地图顺序或伦理矛盾。
 
-可用的 payoff channel 包括：POWER_BREAKTHROUGH、NEW_TECHNIQUE、COMBAT_DOMINANCE、UNDERDOG_VICTORY、RESOURCE_GAIN、TREASURE_GAIN、STATUS_RISE、PUBLIC_RECOGNITION、KNOWLEDGE_ADVANTAGE、STRATEGIC_ADVANTAGE、WORLD_EXPANSION、ACTION_SPACE_EXPANSION。具体小说不需要全部拥有，但必须持续出现读者能感知的成长兑现。
+既有 payoff channel 词可以作为研究观察词，但不是运行时必填项或默认组合。每本书应由自己的成长基因图决定主要兑现方式。
 
 ## 核心爽感来源
 
-根据题材选择，不要求每本书全部具备：信息差、认知差、资源差、效率差、成长速度差、生产能力、规则理解、身份跃迁、财富增长、势力增长、专业能力碾压、隐藏实力、公开证明、他人反应、低成本获得高价值成果，以及把一次优势转成长期渠道或组织/世界级优势。对仙侠、玄幻和高武，资源经营应服务于修为、功法、技法、装备、战斗和新地图，而不是替代主角变强。
+根据题材选择，不要求每本书全部具备：信息差、认知差、资源差、效率差、成长速度差、生产能力、规则理解、身份跃迁、财富增长、势力增长、专业能力、隐藏实力、公开证明、他人反应、低成本获得高价值成果，以及把一次优势转成长期渠道或新的世界通行能力。资源经营只是可组合的发动机之一，不能替代本书真正的成长对象。
 
 ## 对创新的默认理解
 
@@ -38,7 +38,7 @@ Story MVP 当前首先解决的不是“生成任意类型小说”，而是快�
 
 默认优先设计能改变玩法的优势，而不是单纯增加数值。每个优势应尽量回答：主角能做什么别人做不到？为什么不能轻易复制？第一次如何获利？第二次如何做得更大？如何形成资源、知识、身份或关系复利？如何打开新的故事空间？
 
-例如：识别被判废的丹药剩余药性 → 修复废丹 → 获得低成本资源 → 修炼速度超过同阶 → 学会别人承担不起的新术 → 在试炼中越阶取胜 → 获得更高传承 → 继续修复更高阶废丹。经营渠道可以并行存在，但必须持续给力量成长供能。
+例如某本修仙书可以把被判废的丹药转成修炼机会；另一本文明探索小说也可以把残缺知识转成职业条件、世界入口或组织权威。具体转换由本书成长基因图决定，经营渠道只是可组合的一个循环，不能预先规定所有书的成长终点。
 
 ## 代价与开局偏置
 
@@ -48,12 +48,12 @@ Story MVP 当前首先解决的不是“生成任意类型小说”，而是快�
 
 ## 100 章扩张
 
-100 章不应只是同一循环重复十次，也不应只是黑市、药铺、认证、供应链和议价的制度升级。默认期待行动空间与实力多次升级，例如：只能解决自己的问题 → 稳定获利并突破 → 获得新术或装备 → 在实战中证明 → 进入秘境/新地图 → 影响周围的人 → 拥有渠道或团队 → 进入新阶层 → 卷入更高层规则 → 主动选择更大的目标。具体结构随题材变化，不套固定阶段。
+100 章不应只是同一循环重复十次，也不应套用固定的“发展—争霸”顺序。默认期待成长网络发生多次组合换挡：主角改变能做、理解、影响、控制、进入或创造的范围；具体换挡可以来自成长对象、行动方式、冲突、验证场景、关系、时间尺度或世界认识的变化。具体结构随题材变化，不套固定阶段。
 
 所有规划先写具体发生什么，再写叙事功能。事件链应先交代触发、行动、反应、转折、高潮、结果和新问题，再说明它如何完成公开证明、身份变化、资源升级或新的压力。
 
 ## GBrain 与 Prompt 默认方向
 
-idea、outline、review 的默认 GBrain 查询优先寻找男频成长循环、爽点 DNA、Payoff Grammar、Core Progression Grammar、Advantage / Special Capability、Action-Space Expansion、World Expansion Grammar、POWER_BREAKTHROUGH、NEW_TECHNIQUE、COMBAT_DOMINANCE、UNDERDOG_VICTORY、RESOURCE_GAIN、STATUS_RISE、世界压力升级、中期换挡、避免重复、Book DNA、Mechanism、Contrast 和 Reference Program。
+idea、outline、review 的默认 GBrain 查询优先寻找 Reader Promise、Character Desire & Agency、Advantage / Special Capability、Repeatable Reader Loop、Core Progression Grammar、Action-Space Expansion、World Expansion Grammar、Social / Relationship Dynamics、Resource / Economy、Narrative Drive、Phase Transition、Failure / Fatigue Risks、Book DNA、Mechanism、Contrast 和 Reference Program。
 
 除非作者方向明确需要，不把 tragic cost、哲学冲突、道德困境、反套路或身份损失作为默认检索中心。作者可以手动修改创作方向、查询、结果和 Prompt；本产品方向不是题材白名单、评分器、拒绝机制或新的治理流程。
