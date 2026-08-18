@@ -1,0 +1,128 @@
+:root {
+  color-scheme: light;
+  --ink: #1f2933;
+  --muted: #66717c;
+  --line: #d9dee5;
+  --panel: #ffffff;
+  --paper: #f3f5f7;
+  --accent: #245c82;
+  --accent-soft: #e7f0f6;
+  --danger: #a33a34;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+  line-height: 1.45;
+}
+
+button, input, select, textarea { font: inherit; }
+
+button {
+  border: 1px solid #b9c4cf;
+  border-radius: 5px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 7px 11px;
+}
+
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.topbar {
+  align-items: flex-end;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  padding: 22px 28px 18px;
+}
+
+h1, h2, p { margin-top: 0; }
+h1 { font-size: 25px; margin-bottom: 4px; }
+h2 { font-size: 18px; margin-bottom: 0; }
+.eyebrow { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .09em; margin-bottom: 5px; }
+.subtle, .hint, .workspace-info, .path-note { color: var(--muted); font-size: 12px; }
+.workspace-info { max-width: 360px; text-align: right; }
+.workspace-info code, .path-note { overflow-wrap: anywhere; }
+
+.book-toolbar {
+  align-items: center;
+  background: #eef2f5;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 28px;
+}
+
+input, select, textarea {
+  border: 1px solid #c7d0d9;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+}
+input, select { padding: 6px 8px; }
+textarea { display: block; min-height: 70px; padding: 8px; resize: vertical; width: 100%; }
+textarea:focus, input:focus, select:focus { border-color: var(--accent); outline: 2px solid var(--accent-soft); }
+#book-id { width: 150px; }
+#book-select { min-width: 150px; }
+.status { color: var(--accent); font-size: 12px; margin-left: 8px; }
+.status.error { color: var(--danger); }
+
+.studio-grid {
+  align-items: start;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(260px, 1fr) minmax(300px, 1.1fr) minmax(380px, 1.45fr);
+  padding: 14px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  min-width: 0;
+  padding: 15px;
+}
+
+.panel-heading { align-items: start; display: flex; gap: 10px; justify-content: space-between; margin-bottom: 7px; }
+.field { display: block; margin: 12px 0; }
+.field > span { display: block; font-size: 12px; font-weight: 650; margin-bottom: 5px; }
+.hint { margin-bottom: 12px; }
+.count { background: var(--accent-soft); border-radius: 12px; color: var(--accent); font-size: 12px; padding: 4px 8px; white-space: nowrap; }
+.path-note { border-bottom: 1px solid var(--line); margin-bottom: 10px; padding-bottom: 9px; }
+.reference-list { display: grid; gap: 10px; }
+.reference-card { border: 1px solid var(--line); border-radius: 5px; padding: 9px; }
+.reference-header { align-items: center; background: #f7f9fa; display: flex; gap: 7px; margin: -9px -9px 7px; padding: 8px 9px; }
+.reference-header label { cursor: pointer; font-size: 13px; font-weight: 700; overflow-wrap: anywhere; }
+.reference-field { border-top: 1px solid #edf0f2; display: grid; gap: 6px; grid-template-columns: 135px 1fr; padding: 5px 0; }
+.reference-field strong { color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+.reference-field span { font-size: 12px; overflow-wrap: anywhere; }
+.prompt-inputs { border-bottom: 1px solid var(--line); }
+.action-row { align-items: center; display: flex; gap: 8px; margin: 12px 0; }
+.action-row.wrap { flex-wrap: wrap; }
+.chapter-number { align-items: center; display: inline-flex; font-size: 12px; gap: 5px; margin-left: auto; }
+.chapter-number input { width: 75px; }
+.prompt-panel #prompt-text { min-height: 340px; }
+.template-editor { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 12px; }
+.template-editor summary { cursor: pointer; font-size: 13px; font-weight: 700; }
+
+@media (max-width: 1180px) {
+  .studio-grid { grid-template-columns: 1fr 1fr; }
+  .prompt-panel { grid-column: 1 / -1; }
+}
+
+@media (max-width: 720px) {
+  .topbar { align-items: start; flex-direction: column; gap: 12px; }
+  .workspace-info { text-align: left; }
+  .studio-grid { display: block; padding: 8px; }
+  .panel { margin-bottom: 10px; }
+  .book-toolbar { padding: 10px; }
+  .chapter-number { margin-left: 0; }
+}
