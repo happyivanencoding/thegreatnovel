@@ -228,3 +228,13 @@ def save_chapter(book_id: str, chapter_number: int, content: str, workspace: Pat
         raise ValueError(f"第{chapter_number}章已经存在，请先明确处理已有章节")
     target.write_text(content, encoding="utf-8")
     return target
+
+
+def read_chapter(book_id: str, chapter_number: int, workspace: Path) -> str:
+    directory = require_book(book_id, workspace)
+    if chapter_number < 1 or chapter_number > 9999:
+        raise ValueError("章节编号必须在 1 到 9999 之间")
+    target = directory / "chapters" / f"chapter-{chapter_number:04d}.md"
+    if not target.is_file():
+        return ""
+    return target.read_text(encoding="utf-8")

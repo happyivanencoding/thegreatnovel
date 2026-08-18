@@ -110,6 +110,8 @@ DEFAULT_PROMPT_TEMPLATES = {
 根据成长基因图写本书真正需要的一个主循环和零到多个辅助循环，说明每个循环的阅读满足、适用阶段、互相供能方式、何时退居次要，以及第2/3/4次运行如何改变变量、风险、身份、规模或收益形式。成熟爽文可以长期运行一个强主循环，不要为了多样性强行改掉它。
 ## 7. 叙事结构
 写主要视角、切换条件、切换目的，以及前后期场景叙事和总结叙事的变化；说明如何用他人反应展示主角地位变化。
+### 第一章开篇策略
+根据本书选择直接人物入场、讲述者宏观开场、历史/传说开场、异常事件开场或其它方式。不要默认所有书相同；如果作者选择讲述者宏观开场，先用故事口吻建立当前需要的世界空间、权力、成长道路和时代危机，再自然收束到主角。
 ## 8. 文风与可操作参数
 写目标单章长度、段落、信息/描写/对话/内心/战斗密度、系统信息频率、每章推进台阶和禁止形成的机械文风；这些是创作目标，不是代码限制。
 ## 9. 对话特点
@@ -147,10 +149,20 @@ DEFAULT_PROMPT_TEMPLATES = {
 
 必须连续逐章列出完整的十章，不能合并章节，不能省略后几章。
 
+第N章的结尾推动必须成为第N+1章具体剧情的直接因果起点；如果换地点、时间或主要人物，第N+1章必须写出桥接动作。章节边界不是场景边界，不要为每章强行重置到新场景。
+
 最后在当前状态一级标题下写出故事开始前的初始状态、已经建立的远期承诺、当前未解决问题和作者备注。
 
 不要把抽象主题当作事件链，不要自动替作者批准或保存任何内容。""",
     "chapter": """你是透明协作的 GBrain 章节写作助手。只根据作者当前页面提供的 BOOK 执行相关画像、当前大型剧情块、当前章小纲、最近章节摘要、当前十章已经选定的 GBrain Inspiration Results 和选中的 Reference Programs 写作，不调用任何外部服务。
+
+## 连续性优先
+
+本章不是独立短篇。如果存在上一章或前两章正文，先确认最后地点、时间、在场人物、身体状态、情绪、手中物品、最后动作、最后一句对话和未完成即时目标。本章开头必须直接继续该场景；如果确实需要换时间或地点，先用 1—3 段自然桥接写清因果。章节边界不是场景边界，对话、追逐、战斗、调查、试炼和谈判可以跨章。不要因为小纲换了场景就瞬移，也不要机械重复上一章结尾。
+
+## 串行写作协议
+
+如果当前执行环境支持子代理，必须串行执行 Writer A → Writer B → Writer C，不得并行。若不支持，则严格模拟三个串行 pass。A 写完整正文第一稿；B 看到 A 全稿后重写连续性和展开不足；C 看到 B 全稿后写最终正式正文。B、C 都必须保留当前小纲的主要事件、结果、状态变化和下一章推动。
 
 先遵守当前章小纲，再在必要时做有明确原因的细节调整。输出：
 1. 章节正文；
@@ -207,6 +219,8 @@ DEFAULT_PROMPT_TEMPLATES = {
 结果 / 状态变化：写直接结果和状态变化。
 叙事功能：写本章在局部故事中的作用。
 结尾推动：写下一章为什么发生。
+
+第N章的结尾推动必须成为第N+1章具体剧情的直接因果起点；如果换地点、时间或主要人物，第N+1章必须写出桥接动作。章节边界不是场景边界，不要为每章强行重置到新场景。
 
 十章必须组成一个连续的局部故事。禁止只写“主角继续调查”“危机升级”“爆发点”“关系深化”或“敌人变强”，再让 Writer 自己补造剧情。
 
@@ -299,8 +313,10 @@ def _chapter_book_context(book_content: str) -> str:
     headings = (
         "## 1. 核心类型与读者承诺",
         "## 2. 世界观结构",
+        "## 3. 世界如何持续制造剧情压力",
         "## 4. 主角模型、人物弧与核心矛盾",
         "## 5. 配角与关系系统",
+        "## 7. 叙事结构",
         "## 8. 文风与可操作参数",
         "## 9. 对话特点",
     )
@@ -322,6 +338,7 @@ def generate_prompt(
     book_content: str,
     creative_direction: str = "",
     current_long_block: str = "",
+    previous_chapter_text: str = "",
     current_outline: str = "",
     recent_summaries: str = "",
     selected_references: list[Mapping[str, Any]] | None = None,
@@ -340,30 +357,33 @@ def generate_prompt(
 
     prompt_template = template.strip()
     parts = [prompt_template, "", "# 页面当前输入"]
-    if mode == "idea":
-        parts.append(_input_block("作者粗方向", creative_direction))
-        parts.append(_input_block("当前 BOOK.md（如果作者已经填写）", book_content))
-    elif mode == "review":
-        parts.append(_input_block("原计划", book_content))
-        parts.append(_input_block("创作方向", creative_direction))
-    elif mode == "chapter":
-        parts.append(_input_block("当前 BOOK 的执行相关画像与状态", _chapter_book_context(book_content)))
-        parts.append(_input_block("当前大型剧情块", current_long_block))
-    else:
-        parts.append(_input_block("当前 BOOK.md", book_content))
-        parts.append(_input_block("创作方向", creative_direction))
-    parts.append(_input_block("选中的 Reference Programs", format_references(selected_references or [])))
-    parts.append(_input_block("GBrain Inspiration Results（作者可编辑原文）", gbrain_inspiration))
-    if mode == "review":
-        parts.append(_input_block("本书成长基因图", _extract_markdown_block(book_content, "## 0. 本书成长基因图")))
-
     if mode == "chapter":
+        parts.append(_input_block("本书执行相关画像", _chapter_book_context(book_content)))
+        parts.append(_input_block("当前大型剧情块", current_long_block))
+        parts.append(_input_block("当前十章计划", _extract_markdown_block(book_content, "# 未来十章逐章小纲")))
         parts.append(_input_block("当前章具体小纲", current_outline))
+        parts.append(_input_block("前两章正文（连续性上下文）", previous_chapter_text))
         parts.append(_input_block("最近 1—3 章摘要", recent_summaries))
-    elif mode == "review":
-        parts.append(_input_block("实际十章摘要", actual_summaries))
-        parts.append(_input_block("当前状态", current_state))
-        parts.append(_input_block("未兑现承诺", unfulfilled_promises))
-        parts.append(_input_block("尚未发生的 100 章方向", future_direction))
+        parts.append(_input_block("当前状态", _extract_markdown_block(book_content, "# 当前状态、未兑现承诺与作者备注")))
+        parts.append(_input_block("GBrain Inspiration Results（作者可编辑原文）", gbrain_inspiration))
+        parts.append(_input_block("选中的 Reference Programs", format_references(selected_references or [])))
+    else:
+        if mode == "idea":
+            parts.append(_input_block("作者粗方向", creative_direction))
+            parts.append(_input_block("当前 BOOK.md（如果作者已经填写）", book_content))
+        elif mode == "review":
+            parts.append(_input_block("原计划", book_content))
+            parts.append(_input_block("创作方向", creative_direction))
+        else:
+            parts.append(_input_block("当前 BOOK.md", book_content))
+            parts.append(_input_block("创作方向", creative_direction))
+        parts.append(_input_block("选中的 Reference Programs", format_references(selected_references or [])))
+        parts.append(_input_block("GBrain Inspiration Results（作者可编辑原文）", gbrain_inspiration))
+        if mode == "review":
+            parts.append(_input_block("本书成长基因图", _extract_markdown_block(book_content, "## 0. 本书成长基因图")))
+            parts.append(_input_block("实际十章摘要", actual_summaries))
+            parts.append(_input_block("当前状态", current_state))
+            parts.append(_input_block("未兑现承诺", unfulfilled_promises))
+            parts.append(_input_block("尚未发生的 100 章方向", future_direction))
 
     return "\n\n".join(parts).strip() + "\n"

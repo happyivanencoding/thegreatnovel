@@ -160,6 +160,7 @@ function populateBook(book) {
   $("codex-response").value = "";
   state.proposalDraftActive = Boolean(book.proposal);
   renderLongPlanPanorama();
+  refreshPreviousChapterText();
   showStatus(`已加载 ${book.book_id}`);
 }
 
@@ -173,6 +174,25 @@ async function refreshBookList() {
     option.textContent = bookId;
     select.appendChild(option);
   }
+}
+
+async function refreshPreviousChapterText() {
+  const target = $("previous-chapter-text");
+  if (!target || !state.bookId) return;
+  const chapterNumber = Number($("chapter-number").value);
+  target.value = "";
+  if (!Number.isInteger(chapterNumber) || chapterNumber <= 1) return;
+  const first = Math.max(1, chapterNumber - 2);
+  const chapters = [];
+  for (let number = first; number < chapterNumber; number += 1) {
+    try {
+      const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/chapters/${number}`);
+      if (payload.content) chapters.push(`# ${number}章正文\n\n${payload.content}`);
+    } catch {
+      // Missing previous chapters leave the editable context empty.
+    }
+  }
+  target.value = chapters.join("\n\n");
 }
 
 async function loadBook(bookId) {
@@ -292,6 +312,7 @@ function promptPayload() {
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
     current_long_block: $("current-long-block").value,
+    previous_chapter_text: $("previous-chapter-text").value,
     current_outline: $("current-outline").value,
     recent_summaries: $("recent-summaries").value,
     selected_references: selectedReferences(),
@@ -477,6 +498,7 @@ async function approveChapter() {
         content: $("codex-response").value,
       }),
     });
+    await refreshPreviousChapterText();
     showStatus(`${payload.file} 已保存`);
   } catch (error) {
     showStatus(error.message, true);
@@ -528,6 +550,7 @@ $("query-gbrain").addEventListener("click", queryGbrain);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
 $("generate-prompt").addEventListener("click", generatePrompt);
 $("copy-prompt").addEventListener("click", copyPrompt);
+$("chapter-number").addEventListener("change", refreshPreviousChapterText);
 $("expand-design").addEventListener("click", () => setDesignDetails(true));
 $("collapse-design").addEventListener("click", () => setDesignDetails(false));
 $("section-long_plan").addEventListener("input", renderLongPlanPanorama);

@@ -16,6 +16,7 @@ from .references import REFERENCE_ROOT, load_validated_references
 from .storage import (
     create_book,
     list_books,
+    read_chapter,
     read_book_payload,
     save_chapter,
     write_book,
@@ -61,6 +62,7 @@ class PromptRequest(BaseModel):
     book_content: str = ""
     creative_direction: str = ""
     current_long_block: str = ""
+    previous_chapter_text: str = ""
     current_outline: str = ""
     recent_summaries: str = ""
     selected_references: list[dict[str, Any]] = Field(default_factory=list)
@@ -121,6 +123,17 @@ def get_book(book_id: str) -> dict[str, Any]:
         raise not_found(error) from error
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/chapters/{chapter_number}")
+def get_chapter(book_id: str, chapter_number: int) -> dict[str, str | int]:
+    try:
+        content = read_chapter(book_id, chapter_number, workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"chapter_number": chapter_number, "content": content}
 
 
 @app.get("/api/references")

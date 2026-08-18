@@ -131,6 +131,12 @@ def test_approved_chapter_gets_correct_numbered_markdown_file(tmp_path: Path, mo
     assert saved.status_code == 200
     assert saved.json()["file"] == "chapter-0007.md"
     assert (tmp_path / "demo" / "chapters" / "chapter-0007.md").read_text(encoding="utf-8") == "chapter body"
+    read_saved = client.get("/api/books/demo/chapters/7")
+    read_missing = client.get("/api/books/demo/chapters/6")
+    assert read_saved.status_code == 200
+    assert read_saved.json()["content"] == "chapter body"
+    assert read_missing.status_code == 200
+    assert read_missing.json()["content"] == ""
     duplicate = client.post(
         "/api/books/demo/chapters",
         json={"chapter_number": 7, "content": "replacement body"},
@@ -262,6 +268,8 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
     assert "具体发生" in prompt
     assert "结果 / 状态变化" in prompt
     assert "结尾推动" in prompt
+    assert "第一章开篇策略" in prompt
+    assert "第N章的结尾推动必须成为第N+1章具体剧情的直接因果起点" in prompt
 
 
 def test_review_prompt_uses_the_concrete_small_outline_format() -> None:
@@ -275,6 +283,7 @@ def test_review_prompt_uses_the_concrete_small_outline_format() -> None:
     assert "具体剧情：用 2—4 句" in prompt
     assert "结果 / 状态变化" in prompt
     assert "结尾推动" in prompt
+    assert "第N章的结尾推动必须成为第N+1章具体剧情的直接因果起点" in prompt
 
 
 def test_chapter_prompt_does_not_start_a_gbrain_query(monkeypatch) -> None:
@@ -293,12 +302,14 @@ def test_chapter_prompt_does_not_start_a_gbrain_query(monkeypatch) -> None:
             "template": "CHAPTER TEMPLATE",
             "book_content": "BOOK",
             "current_long_block": "当前块：废丹秘密与第一次生产循环",
+            "previous_chapter_text": "# 第1章正文\n\n上一章最后一句：门外有人敲门。",
             "current_outline": outline,
             "gbrain_inspiration": "本十章已选灵感",
         },
     )
     assert response.status_code == 200
     assert "本十章已选灵感" in response.json()["prompt"]
+    assert "上一章最后一句：门外有人敲门" in response.json()["prompt"]
 
 
 def test_chapter_prompt_uses_relevant_design_without_full_image_or_plan() -> None:
@@ -313,11 +324,17 @@ def test_chapter_prompt_uses_relevant_design_without_full_image_or_plan() -> Non
 ## 2. 世界观结构
 修炼等级和资源市场互相咬合。
 
+## 3. 世界如何持续制造剧情压力
+资源断供和敌人试探会推动主角行动。
+
 ## 4. 主角模型、人物弧与核心矛盾
 发现信息 → 小规模验证 → 隐藏优势 → 建立渠道。
 
 ## 5. 配角与关系系统
 周安是长期利益伙伴。
+
+## 7. 叙事结构
+贴近主角第三人称，必要时使用他人反应。
 
 ## 8. 文风与可操作参数
 短段落、高信息密度、对话用于博弈。
@@ -347,6 +364,8 @@ FULL_PLAN_SHOULD_NOT_ENTER
     )
     assert "男频成长爽文" in prompt
     assert "知识 → 职业 → 世界入口" in prompt
+    assert "世界如何持续制造剧情压力" in prompt
+    assert "叙事结构" in prompt
     assert "废丹套利" in prompt
     assert "当前块：废丹秘密与第一次生产循环" in prompt
     assert "FULL_PLAN_SHOULD_NOT_ENTER" not in prompt
@@ -429,6 +448,7 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert "经典成长模式是一等公民" in templates["outline"]
     assert "作者输入、GBrain证据或当前创意表明" in templates["idea"]
     assert "作者明确保留" in templates["outline"]
+    assert "串行写作协议" in templates["chapter"]
     assert "## 0. 本书成长基因图" in templates["outline"]
     assert "POWER_BREAKTHROUGH" not in Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
 
