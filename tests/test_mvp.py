@@ -231,8 +231,11 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
 def test_default_prompt_templates_include_idea_mode() -> None:
     response = client.get("/api/prompt-templates")
     assert response.status_code == 200
-    assert set(response.json()["templates"]) == {"idea", "outline", "chapter", "review"}
-    assert "商业男频成长爽文" in response.json()["templates"]["idea"]
+    templates = response.json()["templates"]
+    assert set(templates) == {"idea", "outline", "chapter", "review"}
+    assert Path("docs/MVP_PRODUCT_DIRECTION.md").is_file()
+    assert all("中文男频成长爽文" in templates[mode] for mode in ("idea", "outline", "review"))
+    assert "中文男频成长爽文" not in templates["chapter"]
 
 
 def test_outline_prompt_injects_book_content_once() -> None:
