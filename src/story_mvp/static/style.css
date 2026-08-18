@@ -97,6 +97,11 @@ textarea:focus, input:focus, select:focus { border-color: var(--accent); outline
 .hint { margin-bottom: 12px; }
 .count { background: var(--accent-soft); border-radius: 12px; color: var(--accent); font-size: 12px; padding: 4px 8px; white-space: nowrap; }
 .path-note { border-bottom: 1px solid var(--line); margin-bottom: 10px; padding-bottom: 9px; }
+.gbrain-workspace { border-bottom: 1px solid var(--line); margin-bottom: 12px; padding-bottom: 12px; }
+.gbrain-workspace input { width: 100%; }
+.references-section { margin-top: 12px; }
+.references-section summary { cursor: pointer; font-size: 13px; font-weight: 700; }
+.references-section summary .count { margin-left: 5px; }
 .reference-list { display: grid; gap: 10px; }
 .reference-card { border: 1px solid var(--line); border-radius: 5px; padding: 9px; }
 .reference-header { align-items: center; background: #f7f9fa; display: flex; gap: 7px; margin: -9px -9px 7px; padding: 8px 9px; }

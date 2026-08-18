@@ -17,6 +17,7 @@ SECTION_TITLES = {
 }
 
 PROMPT_TEMPLATE_LABELS = {
+    "idea": "男频爽文创意生成",
     "outline": "新书/总纲规划",
     "chapter": "当前章节写作",
     "review": "十章复盘与下一批十章",

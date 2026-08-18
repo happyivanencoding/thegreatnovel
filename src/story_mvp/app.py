@@ -10,7 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
-from .prompts import HardGateError, generate_prompt
+from .gbrain import GBrainQueryError, query_gbrain
+from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
 from .storage import (
     create_book,
@@ -44,18 +45,24 @@ class PromptTemplatesRequest(BaseModel):
     templates: dict[str, str] = Field(default_factory=dict)
 
 
+class GBrainQueryRequest(BaseModel):
+    query: str
+
+
 class ChapterRequest(BaseModel):
     chapter_number: int
     content: str
 
 
 class PromptRequest(BaseModel):
-    mode: Literal["outline", "chapter", "review"]
+    mode: Literal["idea", "outline", "chapter", "review"]
     template: str = ""
     book_content: str = ""
+    creative_direction: str = ""
     current_outline: str = ""
     recent_summaries: str = ""
     selected_references: list[dict[str, Any]] = Field(default_factory=list)
+    gbrain_inspiration: str = ""
     actual_summaries: str = ""
     current_state: str = ""
     unfulfilled_promises: str = ""
@@ -88,6 +95,11 @@ def get_books() -> dict[str, list[str]]:
     return {"books": list_books(workspace_path())}
 
 
+@app.get("/api/prompt-templates")
+def get_prompt_templates() -> dict[str, dict[str, str]]:
+    return {"templates": dict(DEFAULT_PROMPT_TEMPLATES)}
+
+
 @app.post("/api/books", status_code=201)
 def post_book(payload: BookCreateRequest) -> dict[str, Any]:
     try:
@@ -115,6 +127,17 @@ def get_references() -> dict[str, Any]:
         "root": str(REFERENCE_ROOT),
         "references": load_validated_references(),
     }
+
+
+@app.post("/api/gbrain/query")
+def post_gbrain_query(payload: GBrainQueryRequest) -> dict[str, str]:
+    try:
+        result = query_gbrain(payload.query)
+    except GBrainQueryError as error:
+        raise HTTPException(status_code=502, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "available", "query": payload.query, "result": result}
 
 
 @app.post("/api/prompt")

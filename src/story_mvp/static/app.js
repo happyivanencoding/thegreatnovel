@@ -49,9 +49,10 @@ function populateBook(book) {
     $(`section-${key}`).value = book.sections?.[key] || "";
   }
   const templates = book.prompt_templates || {};
-  $("template-outline").value = templates.outline || "";
-  $("template-chapter").value = templates.chapter || "";
-  $("template-review").value = templates.review || "";
+  $("template-idea").value = templates.idea || $("template-idea").value;
+  $("template-outline").value = templates.outline || $("template-outline").value;
+  $("template-chapter").value = templates.chapter || $("template-chapter").value;
+  $("template-review").value = templates.review || $("template-review").value;
   $("proposal-editor").value = book.proposal || "";
   $("codex-response").value = "";
   state.proposalDraftActive = Boolean(book.proposal);
@@ -145,10 +146,33 @@ function selectedReferences() {
 
 function currentTemplate() {
   return {
+    idea: $("template-idea").value,
     outline: $("template-outline").value,
     chapter: $("template-chapter").value,
     review: $("template-review").value,
   }[$("prompt-mode").value];
+}
+
+function defaultGbrainQuery() {
+  const direction = $("creative-direction").value.trim() || "当前创作方向";
+  const mode = $("prompt-mode").value;
+  if (mode === "outline") {
+    return `针对以下男频长篇设定：\n创作方向：${direction}\n一句话创意与希望解决的问题：${$("section-core").value.trim() || "（未填写）"}\n主角核心优势：${$("section-protagonist").value.trim() || "（未填写）"}\n当前状态：${$("section-status").value.trim() || "（未填写）"}\n\n寻找能够帮助规划前100章的资源循环建立与打破、身份跃迁、公开证明、关系变化、敌人升级方式、世界观压力升级、payoff之后的新瓶颈和避免重复的机制。`;
+  }
+  if (mode === "review") {
+    return `当前小说方向是“${direction}”。\n当前真实状态：${$("review-state").value.trim() || $("section-status").value.trim() || "（未填写）"}\n实际十章摘要：${$("actual-summaries").value.trim() || "（未填写）"}\n未兑现承诺：${$("unfulfilled-promises").value.trim() || "（未填写）"}\n\n寻找 loop break、身份变化、关系压力、新行动空间、不同类型的 payoff 和避免重复的案例。`;
+  }
+  return `中文男频成长爽文；\n寻找与“${direction}”相关的：核心爽点、金手指玩法、资源循环、信息差、身份跃迁、早期兑现、长篇世界扩张、容易重复的失败模式和可借鉴的结构机制。`;
+}
+
+function setDefaultGbrainQuery() {
+  $("gbrain-query").value = defaultGbrainQuery();
+}
+
+function populatePromptTemplates(templates) {
+  for (const key of ["idea", "outline", "chapter", "review"]) {
+    $(`template-${key}`).value = templates[key] || "";
+  }
 }
 
 function promptPayload() {
@@ -156,14 +180,40 @@ function promptPayload() {
     mode: $("prompt-mode").value,
     template: currentTemplate(),
     book_content: composeBookContent(),
+    creative_direction: $("creative-direction").value,
     current_outline: $("current-outline").value,
     recent_summaries: $("recent-summaries").value,
     selected_references: selectedReferences(),
+    gbrain_inspiration: $("gbrain-results").value,
     actual_summaries: $("actual-summaries").value,
     current_state: $("review-state").value || $("section-status").value,
     unfulfilled_promises: $("unfulfilled-promises").value,
     future_direction: $("future-direction").value,
   };
+}
+
+async function queryGbrain() {
+  const query = $("gbrain-query").value.trim();
+  if (!query) {
+    $("gbrain-status").textContent = "GBrain：查询失败 — 查询不能为空";
+    $("gbrain-status").classList.add("error");
+    return showStatus("GBrain 查询不能为空", true);
+  }
+  try {
+    const payload = await requestJson("/api/gbrain/query", {
+      method: "POST",
+      body: JSON.stringify({ query }),
+    });
+    $("gbrain-results").value = payload.result;
+    $("gbrain-status").textContent = "GBrain：可用";
+    $("gbrain-status").classList.remove("error");
+    showStatus("GBrain 灵感已返回，可删改后进入 Prompt");
+  } catch (error) {
+    $("gbrain-results").value = "";
+    $("gbrain-status").textContent = `GBrain：查询失败 — ${error.message}`;
+    $("gbrain-status").classList.add("error");
+    showStatus(error.message, true);
+  }
 }
 
 async function generatePrompt() {
@@ -180,6 +230,11 @@ async function generatePrompt() {
     const missing = error.payload?.detail?.missing_fields;
     showStatus(missing?.length ? `当前章节 Prompt 被阻止：${missing.join("、")}` : error.message, true);
   }
+}
+
+async function generateIdeaPrompt() {
+  $("prompt-mode").value = "idea";
+  await generatePrompt();
 }
 
 async function copyPrompt() {
@@ -223,6 +278,7 @@ async function saveTemplates() {
       method: "PUT",
       body: JSON.stringify({
         templates: {
+          idea: $("template-idea").value,
           outline: $("template-outline").value,
           chapter: $("template-chapter").value,
           review: $("template-review").value,
@@ -284,6 +340,9 @@ async function createBook() {
 
 async function initialize() {
   try {
+    const defaultTemplates = await requestJson("/api/prompt-templates");
+    populatePromptTemplates(defaultTemplates.templates);
+    setDefaultGbrainQuery();
     const payload = await requestJson("/api/references");
     state.references = payload.references;
     $("reference-root").textContent = `来源：${payload.root}`;
@@ -302,6 +361,9 @@ async function initialize() {
 
 $("new-book").addEventListener("click", createBook);
 $("load-book").addEventListener("click", () => loadBook($("book-select").value));
+$("default-gbrain-query").addEventListener("click", setDefaultGbrainQuery);
+$("query-gbrain").addEventListener("click", queryGbrain);
+$("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
 $("generate-prompt").addEventListener("click", generatePrompt);
 $("copy-prompt").addEventListener("click", copyPrompt);
 $("apply-response").addEventListener("click", () => {

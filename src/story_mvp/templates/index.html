@@ -71,14 +71,37 @@
       <section class="panel reference-panel">
         <div class="panel-heading">
           <div>
-            <p class="eyebrow">02 · REFERENCE PROGRAMS</p>
-            <h2>GBrain 参考</h2>
+            <p class="eyebrow">02 · HYBRID INSPIRATION</p>
+            <h2>GBrain 灵感</h2>
           </div>
-          <span id="reference-count" class="count">0 / 3</span>
+          <span id="gbrain-status" class="status">GBrain：未查询</span>
         </div>
-        <p class="hint">只读加载 VALIDATED；不排名、不检索。勾选后，卡片中的字段会原样进入 Prompt。</p>
-        <div id="reference-root" class="path-note"></div>
-        <div id="references" class="reference-list"></div>
+        <div class="gbrain-workspace">
+          <label class="field">
+            <span>创作方向</span>
+            <input id="creative-direction" value="修仙 + 资源经营 + 冷静主角" autocomplete="off">
+          </label>
+          <div class="action-row wrap">
+            <button id="default-gbrain-query">生成默认查询</button>
+            <button id="query-gbrain" class="primary">从 GBrain 取灵感</button>
+          </div>
+          <label class="field">
+            <span>GBrain 查询（完整可见、可编辑）</span>
+            <textarea id="gbrain-query" rows="8"></textarea>
+          </label>
+          <label class="field">
+            <span>GBrain Inspiration Results（原样文本，可删改）</span>
+            <textarea id="gbrain-results" rows="16" placeholder="查询成功后，GBrain 的 stdout 会原样出现在这里。"></textarea>
+          </label>
+          <button id="generate-idea-prompt" class="primary">生成男频爽文创意 Prompt</button>
+        </div>
+
+        <details class="references-section" open>
+          <summary>手动选择 Reference Programs <span id="reference-count" class="count">0 / 3</span></summary>
+          <p class="hint">只读加载 VALIDATED；不排名、不检索。勾选后，卡片中的字段会原样进入 Prompt。</p>
+          <div id="reference-root" class="path-note"></div>
+          <div id="references" class="reference-list"></div>
+        </details>
       </section>
 
       <section class="panel prompt-panel">
@@ -88,6 +111,7 @@
             <h2>Prompt 与 Codex 返回</h2>
           </div>
           <select id="prompt-mode" aria-label="Prompt 模式">
+            <option value="idea">男频爽文创意生成</option>
             <option value="outline">新书/总纲规划</option>
             <option value="chapter">当前章节写作</option>
             <option value="review">十章复盘与下一批十章</option>
@@ -149,8 +173,9 @@
         </label>
 
         <details class="template-editor">
-          <summary>编辑并保存三个 Prompt 模板（PROMPTS.md）</summary>
+          <summary>编辑并保存四个 Prompt 模板（PROMPTS.md）</summary>
           <p class="hint">模板参与下一次生成；保存模板和生成 Prompt 是两个独立动作。</p>
+          <label class="field"><span>男频爽文创意生成模板</span><textarea id="template-idea" rows="12"></textarea></label>
           <label class="field"><span>新书/总纲规划模板</span><textarea id="template-outline" rows="10"></textarea></label>
           <label class="field"><span>当前章节写作模板</span><textarea id="template-chapter" rows="9"></textarea></label>
           <label class="field"><span>十章复盘与下一批十章模板</span><textarea id="template-review" rows="9"></textarea></label>
