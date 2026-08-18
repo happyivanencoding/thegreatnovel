@@ -30,7 +30,7 @@ DEFAULT_COMPOSABLE_GROWTH_DIRECTION = """当前产品只提供主角成长型虚
 CLASSIC_PATTERN_DIRECTION = """经典成长模式是一等公民：可组合只表示不强迫所有作品相同，不表示主动回避成熟主干。资源→成长→战斗→身份→更高级资源→更大世界，以及职业→技能→任务→身份、探索→机缘→成长→新区域、内容副本→战斗→战利品→构筑等，都可以成为本书主干。如果作者输入、GBrain证据或当前创意表明某条经典链最适合本书，应当保留它，创新放在新优势、世界机制、转换方式、关系反馈或阶段变异上。"""
 
 
-PROSE_REALIZATION_CONTRACT = """本合同只负责“how to say”，不重规划“what happens”。前文正文与 BOOK 当前状态是已经发生的事实；当前章小纲的八个字段——触发事件、推动事件的人、主角行动、对手或世界反应、直接结果、状态变化、叙事功能、结尾推动力——是本章必须完成的事件合同。若前文事实与小纲冲突，保留已发生事实并显式暴露冲突，不用润色偷偷改故事。
+PROSE_REALIZATION_CONTRACT = """本合同只负责“how to say”，不重规划“what happens”。已批准的前文正文是已发生事实的最高来源；BOOK 当前状态和最近摘要只是正文事实的压缩索引；若摘要、当前状态或旧计划与正式正文冲突，以正式正文为准。当前章小纲只决定尚未发生的本章事件，不能覆盖正式正文；任何冲突必须写入 Writer Audit，不得偷偷改写过去。当前章小纲的八个字段——触发事件、推动事件的人、主角行动、对手或世界反应、直接结果、状态变化、叙事功能、结尾推动力——是本章必须完成的事件合同。若前文事实与小纲冲突，保留已发生事实并显式暴露冲突，不用润色偷偷改故事。
 
 ## Authority and profile
 
@@ -373,9 +373,6 @@ def _chapter_book_context(book_content: str) -> str:
         for heading in headings
         if _extract_markdown_block(book_content, heading)
     ])
-    status = _extract_markdown_block(book_content, "# 当前状态、未兑现承诺与作者备注")
-    if status:
-        blocks.append(f"# 当前状态、未兑现承诺与作者备注\n\n{status}")
     return "\n\n".join(blocks)
 
 

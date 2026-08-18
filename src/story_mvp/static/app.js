@@ -1,7 +1,6 @@
 const state = {
   bookId: "",
   references: [],
-  proposalDraftActive: false,
 };
 
 const sectionTitles = {
@@ -160,7 +159,6 @@ function populateBook(book) {
   $("codex-response").value = "";
   $("chapter-body-for-save").value = "";
   $("chapter-fact-summary").value = "";
-  state.proposalDraftActive = Boolean(book.proposal);
   renderLongPlanPanorama();
   refreshPreviousChapterText();
   showStatus(`已加载 ${book.book_id}`);
@@ -362,7 +360,6 @@ async function generatePrompt() {
     });
     $("prompt-text").value = payload.prompt;
     $("proposal-editor").value = "";
-    state.proposalDraftActive = false;
     showStatus("Prompt 已生成，可继续编辑后复制");
   } catch (error) {
     const missing = error.payload?.detail?.missing_fields;
@@ -421,7 +418,7 @@ function splitHeadingBlocks(text, titles) {
 }
 
 function applyOutlineToBook() {
-  const source = state.proposalDraftActive ? $("proposal-editor").value : $("codex-response").value;
+  const source = $("proposal-editor").value;
   const sections = splitHeadingBlocks(source, sectionTitles);
   let applied = 0;
   for (const [key, content] of Object.entries(sections)) {
@@ -439,10 +436,10 @@ function applyOutlineToBook() {
   renderLongPlanPanorama();
 
   if (!applied) {
-    showStatus("返回文本没有找到 BOOK 的四个固定标题或总体画像标题，未改变 BOOK 编辑区", true);
+    showStatus("Proposal 编辑区没有找到 BOOK 的四个固定标题或总体画像标题，未改变 BOOK 编辑区", true);
     return;
   }
-  showStatus(`已将 ${applied} 个 BOOK 区域应用到浏览器编辑区，尚未写盘`);
+  showStatus(`已将 Proposal 编辑区中的 ${applied} 个 BOOK 区域应用到浏览器编辑区，尚未写盘`);
 }
 
 function extractChapterArtifact(response) {
@@ -508,14 +505,13 @@ async function saveTemplates() {
 
 async function saveProposal() {
   if (!state.bookId) return showStatus("请先加载小说", true);
-  const draft = state.proposalDraftActive ? $("proposal-editor").value : $("codex-response").value;
+  const draft = $("proposal-editor").value;
   try {
     await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/proposal`, {
       method: "PUT",
       body: JSON.stringify({ content: draft }),
     });
-    $("proposal-editor").value = draft;
-    showStatus("PROPOSAL.md 已保存");
+    showStatus("Proposal 编辑区已保存到 PROPOSAL.md");
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -597,17 +593,10 @@ $("collapse-design").addEventListener("click", () => setDesignDetails(false));
 $("section-long_plan").addEventListener("input", renderLongPlanPanorama);
 $("apply-response").addEventListener("click", () => {
   applyResponseToEditor($("codex-response"), $("proposal-editor"));
-  state.proposalDraftActive = true;
-  showStatus("返回文本已应用到浏览器编辑区，尚未写盘");
+  showStatus("Codex 返回已放入 Proposal 编辑区，尚未写盘");
 });
 $("apply-outline-to-book").addEventListener("click", applyOutlineToBook);
 $("extract-chapter-body").addEventListener("click", extractChapterBody);
-$("codex-response").addEventListener("input", () => {
-  state.proposalDraftActive = false;
-});
-$("proposal-editor").addEventListener("input", () => {
-  state.proposalDraftActive = true;
-});
 $("save-book").addEventListener("click", saveBook);
 $("save-templates").addEventListener("click", saveTemplates);
 $("save-proposal").addEventListener("click", saveProposal);

@@ -161,6 +161,45 @@ FULL_PLAN_MARKER_GAMMA
     assert "STRENGTHS_MARKER_BETA" not in prompt
 
 
+def test_chapter_prompt_uses_formal_body_as_status_authority() -> None:
+    book = """# 小说总体设计画像
+
+## 7. 叙事结构
+NARRATIVE_MARKER
+
+## 8. 文风与可操作参数
+PROSE_MARKER
+
+## 9. 对话特点
+DIALOGUE_MARKER
+
+## 10. 节奏结构
+RHYTHM_MARKER
+
+# 当前状态、未兑现承诺与作者备注
+STATUS_MARKER
+"""
+    outline = "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    prompt = generate_prompt(
+        mode="chapter",
+        template="CHAPTER TEMPLATE",
+        book_content=book,
+        current_outline=outline,
+    )
+    assert prompt.count("STATUS_MARKER") == 1
+    for marker in (
+        "已批准的前文正文是已发生事实的最高来源",
+        "BOOK 当前状态和最近摘要只是正文事实的压缩索引",
+        "以正式正文为准",
+        "当前章小纲只决定尚未发生的本章事件",
+        "任何冲突必须写入 Writer Audit",
+    ):
+        assert marker in prompt
+
+
 def test_legacy_chapter_template_receives_prose_contract_once() -> None:
     outline = "\n".join(f"{field}：内容" for field in (
         "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
@@ -606,6 +645,35 @@ def test_apply_outline_to_book_is_browser_only() -> None:
     assert "requestJson" not in function_body
     assert "fetch(" not in function_body
     assert "/book" not in function_body
+
+
+def test_proposal_source_is_explicit_and_editor_only() -> None:
+    html = Path("src/story_mvp/templates/index.html").read_text(encoding="utf-8")
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    assert "proposalDraftActive" not in js
+    assert "将 Codex 返回放入 Proposal 编辑区" in html
+    assert "将 Proposal 应用到 BOOK 编辑区" in html
+    assert "唯一 Proposal 来源" in html
+
+    apply_start = js.index("function applyOutlineToBook()")
+    apply_end = js.index("function extractChapterArtifact", apply_start)
+    apply_body = js[apply_start:apply_end]
+    assert 'const source = $("proposal-editor").value;' in apply_body
+    assert '$("codex-response").value' not in apply_body
+    assert "Proposal 编辑区中的" in apply_body
+
+    save_start = js.index("async function saveProposal()")
+    save_end = js.index("async function approveChapter", save_start)
+    save_body = js[save_start:save_end]
+    assert 'const draft = $("proposal-editor").value;' in save_body
+    assert '$("codex-response").value' not in save_body
+    assert "Proposal 编辑区已保存到 PROPOSAL.md" in save_body
+
+    assert '$("apply-response").addEventListener("click"' in js
+    assert 'applyResponseToEditor($("codex-response"), $("proposal-editor"));' in js
+    assert '$("proposal-editor").value = $("codex-response").value' not in js
+    assert '$("codex-response").addEventListener("input"' not in js
+    assert '$("proposal-editor").addEventListener("input"' not in js
 
 
 def test_previous_chapter_fetch_failure_is_visible_and_does_not_clear_context() -> None:
