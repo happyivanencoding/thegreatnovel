@@ -206,10 +206,10 @@ def test_gbrain_result_enters_outline_prompt() -> None:
         mode="outline",
         template="OUTLINE TEMPLATE",
         book_content="BOOK CONTENT",
-        creative_direction="修仙资源经营",
+        creative_direction="AUTHOR_DIRECTION_ALPHA",
         gbrain_inspiration="Book DNA：阶段回报窗口",
     )
-    assert "修仙资源经营" in prompt
+    assert "AUTHOR_DIRECTION_ALPHA" in prompt
     assert "阶段回报窗口" in prompt
 
 
@@ -301,7 +301,7 @@ def test_chapter_prompt_does_not_start_a_gbrain_query(monkeypatch) -> None:
             "mode": "chapter",
             "template": "CHAPTER TEMPLATE",
             "book_content": "BOOK",
-            "current_long_block": "当前块：废丹秘密与第一次生产循环",
+            "current_long_block": "CURRENT_LONG_BLOCK_DELTA",
             "previous_chapter_text": "# 第1章正文\n\n上一章最后一句：门外有人敲门。",
             "current_outline": outline,
             "gbrain_inspiration": "本十章已选灵感",
@@ -316,22 +316,22 @@ def test_chapter_prompt_uses_relevant_design_without_full_image_or_plan() -> Non
     book = """# 小说总体设计画像
 
 ## 0. 本书成长基因图
-知识 → 职业 → 世界入口；循环在中期换挡。
+GENOME_MARKER_ALPHA；循环在中期换挡。
 
 ## 1. 核心类型与读者承诺
-男频成长爽文；主角从废丹套利进入药行。
+主角成长型虚构世界；读者期待能力改变行动空间。
 
 ## 2. 世界观结构
-修炼等级和资源市场互相咬合。
+WORLD_RULE_ALPHA：两套规则互相咬合。
 
 ## 3. 世界如何持续制造剧情压力
-资源断供和敌人试探会推动主角行动。
+WORLD_PRESSURE_BETA：环境压力和敌人试探会推动主角行动。
 
 ## 4. 主角模型、人物弧与核心矛盾
-发现信息 → 小规模验证 → 隐藏优势 → 建立渠道。
+PROTAGONIST_STYLE_BETA：发现信息 → 小规模验证 → 隐藏优势。
 
 ## 5. 配角与关系系统
-周安是长期利益伙伴。
+RELATION_MARKER_GAMMA：长期关系会改变主角选择。
 
 ## 7. 叙事结构
 贴近主角第三人称，必要时使用他人反应。
@@ -359,15 +359,15 @@ FULL_PLAN_SHOULD_NOT_ENTER
         mode="chapter",
         template="CHAPTER TEMPLATE",
         book_content=book,
-        current_long_block="当前块：废丹秘密与第一次生产循环",
+        current_long_block="CURRENT_LONG_BLOCK_DELTA",
         current_outline=outline,
     )
-    assert "男频成长爽文" in prompt
-    assert "知识 → 职业 → 世界入口" in prompt
-    assert "世界如何持续制造剧情压力" in prompt
-    assert "叙事结构" in prompt
-    assert "废丹套利" in prompt
-    assert "当前块：废丹秘密与第一次生产循环" in prompt
+    assert "GENOME_MARKER_ALPHA" in prompt
+    assert "WORLD_RULE_ALPHA" in prompt
+    assert "WORLD_PRESSURE_BETA" in prompt
+    assert "PROTAGONIST_STYLE_BETA" in prompt
+    assert "RELATION_MARKER_GAMMA" in prompt
+    assert "CURRENT_LONG_BLOCK_DELTA" in prompt
     assert "FULL_PLAN_SHOULD_NOT_ENTER" not in prompt
     assert "## 12. 当前设计最强点与最弱点" not in prompt
     assert "MVP_PRODUCT_DIRECTION" not in prompt
@@ -441,6 +441,7 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert "Composable Growth Genome" in Path("docs/COMPOSABLE_GROWTH_GENOME.md").read_text(encoding="utf-8")
     assert "Classic Patterns Are First-Class Citizens" in Path("docs/COMPOSABLE_GROWTH_GENOME.md").read_text(encoding="utf-8")
     assert "累积成长与可组合成长" in direction_text
+    assert "Experiment Boundary" in direction_text
     assert all("成长" in templates[mode] for mode in ("idea", "outline"))
     assert "成长组合" in templates["idea"]
     assert "初始转换网络" in templates["idea"]
@@ -449,6 +450,11 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert "作者输入、GBrain证据或当前创意表明" in templates["idea"]
     assert "作者明确保留" in templates["outline"]
     assert "串行写作协议" in templates["chapter"]
+    assert "选择性展开" in templates["chapter"]
+    assert "SUBAGENT_MODE: actual" in templates["chapter"]
+    assert "SUBAGENT_MODE: simulated" in templates["chapter"]
+    assert "如果本书需要且对当前故事重要" in templates["outline"]
+    assert "第一章开篇策略完全由作者和本书 BOOK 决定" in templates["outline"]
     assert "## 0. 本书成长基因图" in templates["outline"]
     assert "POWER_BREAKTHROUGH" not in Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
 
@@ -472,3 +478,15 @@ def test_apply_outline_to_book_is_browser_only() -> None:
     assert "requestJson" not in function_body
     assert "fetch(" not in function_body
     assert "/book" not in function_body
+
+
+def test_previous_chapter_fetch_failure_is_visible_and_does_not_clear_context() -> None:
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    start = js.index("async function refreshPreviousChapterText()")
+    end = js.index("async function loadBook", start)
+    function_body = js[start:end]
+    assert "const chapters = [];" in function_body
+    assert "target.value = chapters.join" in function_body
+    assert "读取第${number}章连续性上下文失败：${error.message}" in function_body
+    assert "catch {" not in function_body
+    assert 'target.value = "";' not in function_body.split("const first", 1)[1]

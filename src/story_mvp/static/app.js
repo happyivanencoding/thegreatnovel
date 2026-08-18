@@ -180,16 +180,19 @@ async function refreshPreviousChapterText() {
   const target = $("previous-chapter-text");
   if (!target || !state.bookId) return;
   const chapterNumber = Number($("chapter-number").value);
-  target.value = "";
-  if (!Number.isInteger(chapterNumber) || chapterNumber <= 1) return;
+  if (!Number.isInteger(chapterNumber) || chapterNumber <= 1) {
+    target.value = "";
+    return;
+  }
   const first = Math.max(1, chapterNumber - 2);
   const chapters = [];
   for (let number = first; number < chapterNumber; number += 1) {
     try {
       const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/chapters/${number}`);
       if (payload.content) chapters.push(`# ${number}章正文\n\n${payload.content}`);
-    } catch {
-      // Missing previous chapters leave the editable context empty.
+    } catch (error) {
+      showStatus(`读取第${number}章连续性上下文失败：${error.message}`, true);
+      return;
     }
   }
   target.value = chapters.join("\n\n");

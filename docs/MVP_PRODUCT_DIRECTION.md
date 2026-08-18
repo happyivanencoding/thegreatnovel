@@ -61,3 +61,7 @@ Story MVP 当前首先解决的不是“生成任意类型小说”，而是快�
 idea、outline、review 的默认 GBrain 查询优先寻找 Reader Promise、Character Desire & Agency、Advantage / Special Capability、Repeatable Reader Loop、Core Progression Grammar、Action-Space Expansion、World Expansion Grammar、Social / Relationship Dynamics、Resource / Economy、Narrative Drive、Phase Transition、Failure / Fatigue Risks、Book DNA、Mechanism、Contrast 和 Reference Program。
 
 除非作者方向明确需要，不把 tragic cost、哲学冲突、道德困境、反套路或身份损失作为默认检索中心。作者可以手动修改创作方向、查询、结果和 Prompt；本产品方向不是题材白名单、评分器、拒绝机制或新的治理流程。
+
+## Experiment Boundary
+
+真实小说实验用于发现系统能力问题，但单本小说的具体创作修正不会自动升级为产品默认。只有跨小说仍然成立的问题，才进入通用 Prompt 或代码；单本小说的世界、角色、能力历史、开篇选择和成长体系只保留在该书的 BOOK.md、章节或 Proposal 中。
