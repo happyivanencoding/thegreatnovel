@@ -27,6 +27,7 @@ from .storage import (
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES_DIR = PROJECT_ROOT / "src" / "story_mvp" / "templates"
 STATIC_DIR = PROJECT_ROOT / "src" / "story_mvp" / "static"
+GBRAIN_SCOPE_LABEL = "全 Brain"
 
 app = FastAPI(title="Transparent GBrain Story Studio")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -137,7 +138,12 @@ def post_gbrain_query(payload: GBrainQueryRequest) -> dict[str, str]:
         raise HTTPException(status_code=502, detail=str(error)) from error
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
-    return {"status": "available", "query": payload.query, "result": result}
+    return {
+        "status": "available",
+        "scope": GBRAIN_SCOPE_LABEL,
+        "query": payload.query,
+        "result": result,
+    }
 
 
 @app.post("/api/prompt")

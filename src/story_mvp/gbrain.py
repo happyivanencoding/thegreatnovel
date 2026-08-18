@@ -5,31 +5,34 @@ import subprocess
 from pathlib import Path
 
 
-HERMES_COMMAND = Path(r"C:\GoogleDrive\hermes\gbrain")
+HERMES_CLI = Path(r"C:\GoogleDrive\hermes\gbrain\src\cli.ts")
 
 
 class GBrainQueryError(RuntimeError):
     """The public GBrain query command could not return usable text."""
 
 
-def _resolve_command() -> str:
+def resolve_command_prefix() -> list[str]:
     command = shutil.which("gbrain")
     if command:
-        return command
-    if HERMES_COMMAND.is_file():
-        return str(HERMES_COMMAND)
-    raise GBrainQueryError("找不到可用的 gbrain 公共 CLI")
+        return [command]
+    bun = shutil.which("bun")
+    if bun and HERMES_CLI.is_file():
+        return [bun, "run", str(HERMES_CLI)]
+    raise GBrainQueryError("找不到可用的 gbrain 公共 CLI 或 Bun CLI")
 
 
-def query_gbrain(text: str) -> str:
+def query_gbrain(text: str, source: str | None = None) -> str:
     query = text.strip()
     if not query:
         raise ValueError("GBrain 查询不能为空")
+    if source:
+        raise ValueError("当前已验证的 gbrain query CLI 没有 source 参数")
 
-    command = _resolve_command()
+    command = resolve_command_prefix()
     try:
         completed = subprocess.run(
-            [command, "query", query, "--limit", "8", "--detail", "medium"],
+            command + ["query", query, "--limit", "8", "--detail", "medium"],
             capture_output=True,
             text=True,
             encoding="utf-8",

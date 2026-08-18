@@ -9,8 +9,8 @@ from fastapi.testclient import TestClient
 import story_mvp.app as app_module
 import story_mvp.gbrain as gbrain_module
 from story_mvp.app import app
-from story_mvp.gbrain import GBrainQueryError, query_gbrain
-from story_mvp.prompts import HardGateError, generate_prompt
+from story_mvp.gbrain import GBrainQueryError, query_gbrain, resolve_command_prefix
+from story_mvp.prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from story_mvp.references import load_validated_references
 from story_mvp.storage import create_book, read_book_payload
 
@@ -146,6 +146,19 @@ def test_gbrain_query_calls_public_cli_and_preserves_stdout(monkeypatch) -> None
     assert calls["kwargs"]["capture_output"] is True
 
 
+def test_gbrain_query_uses_bun_cli_when_path_command_is_missing(tmp_path: Path, monkeypatch) -> None:
+    cli_file = tmp_path / "src" / "cli.ts"
+    cli_file.parent.mkdir()
+    cli_file.write_text("// test cli", encoding="utf-8")
+    monkeypatch.setattr(gbrain_module, "HERMES_CLI", cli_file)
+
+    def fake_which(name: str):
+        return {"gbrain": None, "bun": "bun.exe"}.get(name)
+
+    monkeypatch.setattr(gbrain_module.shutil, "which", fake_which)
+    assert resolve_command_prefix() == ["bun.exe", "run", str(cli_file)]
+
+
 def test_failed_gbrain_query_is_returned_as_error_without_fake_result(monkeypatch) -> None:
     def fail_query(_query: str) -> str:
         raise GBrainQueryError("真实 CLI 失败")
@@ -196,6 +209,40 @@ def test_gbrain_result_enters_review_prompt() -> None:
     assert "组织能力" in prompt
 
 
+def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
+    prompt = generate_prompt(
+        mode="outline",
+        template=DEFAULT_PROMPT_TEMPLATES["outline"],
+        book_content="BOOK",
+    )
+    for heading in (
+        "# 小说核心与读者承诺",
+        "# 价值观与世界观",
+        "# 主角、能力与关键关系",
+        "# 未来100章大型剧情块",
+        "# 未来十章逐章小纲",
+        "# 当前状态、未兑现承诺与作者备注",
+    ):
+        assert heading in prompt
+    assert "4—8 个自然剧情块" in prompt
+    assert "具体发生" in prompt
+    assert "结果 / 状态变化" in prompt
+    assert "结尾推动" in prompt
+
+
+def test_review_prompt_uses_the_concrete_small_outline_format() -> None:
+    prompt = generate_prompt(
+        mode="review",
+        template=DEFAULT_PROMPT_TEMPLATES["review"],
+        book_content="BOOK",
+    )
+    assert "## 下一批十章总体事件链" in prompt
+    assert "3—6 句话" in prompt
+    assert "具体剧情：用 2—4 句" in prompt
+    assert "结果 / 状态变化" in prompt
+    assert "结尾推动" in prompt
+
+
 def test_chapter_prompt_does_not_start_a_gbrain_query(monkeypatch) -> None:
     def unexpected_query(_query: str) -> str:
         raise AssertionError("chapter prompt must not query GBrain")
@@ -225,6 +272,7 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="creative-direction"' in page.text
     assert 'id="gbrain-query"' in page.text
     assert 'id="gbrain-results"' in page.text
+    assert "GBrain 范围：全 Brain" in page.text
     assert "从 GBrain 取灵感" in page.text
 
 
@@ -245,3 +293,15 @@ def test_outline_prompt_injects_book_content_once() -> None:
         book_content="UNIQUE BOOK CONTENT",
     )
     assert prompt.count("UNIQUE BOOK CONTENT") == 1
+
+
+def test_apply_outline_to_book_is_browser_only() -> None:
+    html = Path("src/story_mvp/templates/index.html").read_text(encoding="utf-8")
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    assert 'id="apply-outline-to-book"' in html
+    start = js.index("function applyOutlineToBook()")
+    end = js.index("async function saveBook()", start)
+    function_body = js[start:end]
+    assert "requestJson" not in function_body
+    assert "fetch(" not in function_body
+    assert "/book" not in function_body
