@@ -187,7 +187,39 @@ def test_default_chapter_prompt_has_no_source_style_leakage() -> None:
         book_content="",
         current_outline=outline,
     )
-    for marker in ("《第一序列》", "《将夜》", "《诡秘之主》", "模仿《", "仿写《"):
+    for marker in (
+        "《第一序列》", "《将夜》", "《诡秘之主》", "模仿《", "仿写《",
+        "PROSE_DISTILLATION_THREE_CLASSICS.md", ".agents/skills/novel-prose-realization",
+    ):
+        assert marker not in prompt
+
+
+def test_chapter_prompt_includes_diction_and_sentence_controls() -> None:
+    outline = "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="",
+        current_outline=outline,
+    )
+    for marker in (
+        "具体名词",
+        "方向、接触对象与实际结果",
+        "真实不确定性",
+        "语体服从人物身份、关系与当前压力",
+        "sentence realization",
+        "锚点→动作→反应→条件改变",
+        "观察→暂定解释→新细节→修正→行动",
+        "可选关系，不是每段都套用的模板",
+    ):
+        assert marker in prompt
+    for marker in (
+        "《第一序列》", "《将夜》", "《诡秘之主》",
+        "会说话的肘子", "猫腻", "爱潜水的乌贼", "C:\\dev\\tgn-story-mvp",
+    ):
         assert marker not in prompt
 
 
@@ -206,6 +238,11 @@ def test_outline_template_requests_executable_prose_profile() -> None:
     assert "高低压力场景的句段变化" in template
     assert "词汇、句长、礼貌、攻击性、避答和沉默方式" in template
     assert "opening、ordinary、dialogue、action、payoff、aftermath、emotion、ending" in template
+    assert "名词具体度" in template
+    assert "动词的方向/接触/结果" in template
+    assert "修饰词使用倾向" in template
+    assert "不确定词使用边界" in template
+    assert "口语/庄重/专业语体边界" in template
 
 
 def test_approved_chapter_gets_correct_numbered_markdown_file(tmp_path: Path, monkeypatch) -> None:
