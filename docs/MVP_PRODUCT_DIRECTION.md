@@ -65,3 +65,7 @@ idea、outline、review 的默认 GBrain 查询优先寻找 Reader Promise、Cha
 ## Experiment Boundary
 
 真实小说实验用于发现系统能力问题，但单本小说的具体创作修正不会自动升级为产品默认。只有跨小说仍然成立的问题，才进入通用 Prompt 或代码；单本小说的世界、角色、能力历史、开篇选择和成长体系只保留在该书的 BOOK.md、章节或 Proposal 中。
+
+## 故事规划与正文实现
+
+故事规划决定发生什么，prose realization 决定如何把已决定的事件写成正文。BOOK §7—§10 构成当前书的 prose profile；详细设计见 `docs/NOVEL_PROSE_REALIZATION.md`。三书蒸馏只是研究证据，不是默认作者模仿。

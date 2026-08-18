@@ -10,7 +10,12 @@ import story_mvp.app as app_module
 import story_mvp.gbrain as gbrain_module
 from story_mvp.app import app
 from story_mvp.gbrain import GBrainQueryError, query_gbrain, resolve_command_prefix
-from story_mvp.prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
+from story_mvp.prompts import (
+    DEFAULT_PROMPT_TEMPLATES,
+    PROSE_REALIZATION_CONTRACT,
+    HardGateError,
+    generate_prompt,
+)
 from story_mvp.references import load_validated_references
 from story_mvp.storage import create_book, read_book_payload
 
@@ -118,6 +123,89 @@ def test_non_empty_eight_outline_fields_allow_chapter_prompt() -> None:
     )
     assert "template" in prompt
     assert "结尾推动力：内容" in prompt
+
+
+def test_chapter_prompt_includes_rhythm_profile_without_full_plan_or_strengths() -> None:
+    book = """# 小说总体设计画像
+
+## 7. 叙事结构
+视角 marker
+
+## 8. 文风与可操作参数
+文风 marker
+
+## 9. 对话特点
+对话 marker
+
+## 10. 节奏结构
+RHYTHM_MARKER_ALPHA
+
+## 12. 当前设计最强点与最弱点
+STRENGTHS_MARKER_BETA
+
+# 未来100章大型剧情块
+FULL_PLAN_MARKER_GAMMA
+"""
+    outline = "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    prompt = generate_prompt(
+        mode="chapter",
+        template="CHAPTER TEMPLATE",
+        book_content=book,
+        current_outline=outline,
+    )
+    assert "RHYTHM_MARKER_ALPHA" in prompt
+    assert "FULL_PLAN_MARKER_GAMMA" not in prompt
+    assert "STRENGTHS_MARKER_BETA" not in prompt
+
+
+def test_legacy_chapter_template_receives_prose_contract_once() -> None:
+    outline = "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    prompt = generate_prompt(
+        mode="chapter",
+        template="LEGACY CHAPTER TEMPLATE",
+        book_content="",
+        current_outline=outline,
+    )
+    assert "# Story MVP Prose Realization Contract" in prompt
+    assert prompt.count(PROSE_REALIZATION_CONTRACT) == 1
+
+
+def test_default_chapter_prompt_has_no_source_style_leakage() -> None:
+    outline = "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="",
+        current_outline=outline,
+    )
+    for marker in ("《第一序列》", "《将夜》", "《诡秘之主》", "模仿《", "仿写《"):
+        assert marker not in prompt
+
+
+def test_chapter_template_exposes_writer_responsibilities() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["chapter"]
+    assert "Writer A — Scene Draft" in template
+    assert "Writer B — Continuity & Realization" in template
+    assert "Writer C — Prose Realization & Bounded Humanization" in template
+    assert "不把小纲扩写成更长概述" in template
+    assert "不能改变事实、事件顺序" in template
+
+
+def test_outline_template_requests_executable_prose_profile() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "何时贴近或拉远" in template
+    assert "高低压力场景的句段变化" in template
+    assert "词汇、句长、礼貌、攻击性、避答和沉默方式" in template
+    assert "opening、ordinary、dialogue、action、payoff、aftermath、emotion、ending" in template
 
 
 def test_approved_chapter_gets_correct_numbered_markdown_file(tmp_path: Path, monkeypatch) -> None:
