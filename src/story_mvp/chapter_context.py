@@ -18,6 +18,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
@@ -68,6 +69,12 @@ PROSE_PROFILE_HEADINGS = (
     "## 10. 节奏结构",
 )
 
+GROWTH_PROJECTION_LABELS = (
+    "一级成长变化",
+    "二级收益结算",
+    "反哺下一轮",
+)
+
 
 @dataclass(frozen=True)
 class ChapterContextPacket:
@@ -81,6 +88,7 @@ class ChapterContextPacket:
     rolling_plan: str
     prose_profile: str
     optional_inspiration: str
+    growth_benefit_projection: str = ""
 
 
 def _markdown_block(content: str, heading: str) -> str:
@@ -129,12 +137,57 @@ def render_event_contract(current_outline: str) -> str:
     return "\n".join(lines)
 
 
+def _extract_growth_projection_value(texts: Iterable[str], label: str) -> str:
+    labels = set(GROWTH_PROJECTION_LABELS)
+    for text in texts:
+        lines = text.splitlines()
+        for index, line in enumerate(lines):
+            match = re.match(rf"^\s*{re.escape(label)}\s*[：:]\s*(.*)$", line)
+            if not match:
+                continue
+            values = [match.group(1).strip()] if match.group(1).strip() else []
+            for next_line in lines[index + 1 :]:
+                stripped = next_line.strip()
+                if any(
+                    re.match(rf"^\s*{re.escape(next_label)}\s*[：:]", next_line)
+                    for next_label in labels
+                ) or stripped.startswith("#"):
+                    break
+                if stripped:
+                    values.append(stripped)
+            return "\n".join(values).strip()
+    return ""
+
+
+def render_growth_benefit_projection(
+    *,
+    current_long_block: str = "",
+    current_chapter_plan: str = "",
+    current_outline: str = "",
+) -> str:
+    """从当前计划的可见标签生成三行非门禁成长投影。"""
+
+    texts = (current_long_block, current_chapter_plan, current_outline)
+    values = {
+        label: _extract_growth_projection_value(texts, label)
+        for label in GROWTH_PROJECTION_LABELS
+    }
+    return "\n".join(
+        (
+            f"本章一级成长推进：{values['一级成长变化'] or '本章不推进'}",
+            f"本章二级收益结算：{values['二级收益结算'] or '本章不结算'}",
+            f"本章反哺：{values['反哺下一轮']}" if values["反哺下一轮"] else "本章反哺：",
+        )
+    )
+
+
 def build_chapter_context(
     *,
     book_content: str = "",
     current_long_block: str = "",
     previous_chapter_text: str = "",
     current_outline: str = "",
+    current_chapter_plan: str = "",
     recent_summaries: str = "",
     gbrain_inspiration: str = "",
     selected_references: Iterable[Mapping[str, Any]] | None = None,
@@ -190,6 +243,11 @@ def build_chapter_context(
         f"GBrain Inspiration Results（作者可编辑原文）\n\n{inspiration}\n\n"
         f"选中的 Reference Programs（可选参考，不与事件合同并列为硬要求）\n\n{references}"
     )
+    growth_benefit_projection = render_growth_benefit_projection(
+        current_long_block=current_long_block,
+        current_chapter_plan=current_chapter_plan,
+        current_outline=current_outline,
+    )
 
     return ChapterContextPacket(
         authority=MINIMAL_AUTHORITY_RULE,
@@ -200,4 +258,5 @@ def build_chapter_context(
         rolling_plan=rolling_plan,
         prose_profile=prose_profile,
         optional_inspiration=optional_inspiration,
+        growth_benefit_projection=growth_benefit_projection,
     )

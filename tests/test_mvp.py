@@ -14,6 +14,7 @@ from story_mvp.chapter_context import (
     MINIMAL_AUTHORITY_RULE,
     ChapterContextPacket,
     build_chapter_context,
+    render_growth_benefit_projection,
 )
 from story_mvp.gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, query_gbrain, resolve_command_prefix
 from story_mvp.gbrain_retrieval import (
@@ -36,12 +37,14 @@ from story_mvp.hybrid_runtime import (
     extract_opening_strategy,
     extract_primary_draft,
     extract_primary_fact_summary,
+    drop_growth_hierarchy,
 )
 from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     DEFAULT_STATE_DELTA_TEMPLATE,
     PROMPT_MODES,
     PROSE_REALIZATION_CONTRACT,
+    REQUIRED_OUTLINE_FIELDS,
     SINGLE_WRITER_RUNTIME_NOTE,
     WRITER_AUDIT_RULE,
     HardGateError,
@@ -1553,6 +1556,95 @@ def test_hybrid_page_defaults_to_full_mode_and_exposes_all_nodes() -> None:
         assert f'id="{node_id}"' in page.text
     assert 'id="extract-integrator-body"' in page.text
     assert 'id="adopt-primary-draft"' in page.text
+
+
+def test_growth_benefit_hierarchy_is_present_in_idea_outline_and_review_prompts() -> None:
+    idea = DEFAULT_PROMPT_TEMPLATES["idea"]
+    for marker in ("## 一级成长收益", "## 一级成长阶段", "## 二级成长收益", "## 反哺关系", "## 主次失衡风险"):
+        assert marker in idea
+    outline = DEFAULT_PROMPT_TEMPLATES["outline"]
+    for marker in ("### 一级成长收益", "### 二级成长收益", "### 反哺关系", "### 主次关系"):
+        assert marker in outline
+    assert "职位、行政权限、社会信用、组织规模和公共责任默认属于二级收益" in outline
+    assert "一级成长变化：" in outline
+    assert "二级收益结算：" in outline
+    assert "反哺下一轮：" in outline
+    review = DEFAULT_PROMPT_TEMPLATES["review"]
+    for marker in (
+        "## 一级成长实际发生了什么",
+        "## 二级收益实际获得了什么",
+        "## 二级收益是否吞掉一级成长",
+        "## 下一批如何反哺一级成长",
+    ):
+        assert marker in review
+
+
+def test_growth_projection_is_three_lines_and_not_an_outline_gate() -> None:
+    projection = render_growth_benefit_projection(
+        current_long_block=(
+            "一级成长变化：砾角第一次完成贴壁进化。\n"
+            "二级收益结算：获得一笔赏金和红根路线牌。\n"
+            "反哺下一轮：路线牌让主角进入血统兽斗场。"
+        )
+    )
+    assert "本章一级成长推进：砾角第一次完成贴壁进化。" in projection
+    assert "本章二级收益结算：获得一笔赏金和红根路线牌。" in projection
+    assert "本章反哺：路线牌让主角进入血统兽斗场。" in projection
+    assert len(REQUIRED_OUTLINE_FIELDS) == 8
+    assert "一级成长变化" not in REQUIRED_OUTLINE_FIELDS
+    assert "二级收益结算" not in REQUIRED_OUTLINE_FIELDS
+
+
+def test_hybrid_nodes_receive_only_growth_projection_not_full_hierarchy() -> None:
+    outline = "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    book = """# 小说总体设计画像
+## 0. 本书成长基因图
+FULL_GROWTH_HIERARCHY_MARKER
+## 1. 核心类型与读者承诺
+BOOK_MARKER
+# 当前状态、未兑现承诺与作者备注
+状态
+"""
+    current_block = "一级成长变化：本章完成第一次进化。\n二级收益结算：获得赏金。\n反哺下一轮：进入斗场。"
+    curator = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content=book,
+        current_long_block=current_block,
+        current_outline=outline,
+    )
+    assert "FULL_GROWTH_HIERARCHY_MARKER" not in curator
+    assert "本章一级成长推进：本章完成第一次进化。" in curator
+    primary = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content=book,
+        current_long_block=current_block,
+        current_outline=outline,
+        curated_context="# Curated Chapter Context\n\n## Relevant Plan\n\n本章一级成长推进：本章完成第一次进化。",
+    )
+    assert "FULL_GROWTH_HIERARCHY_MARKER" not in primary
+    assert "本章一级成长推进：本章完成第一次进化。" in primary
+    assert "Growth Benefit Hierarchy：" not in primary
+    assert "FULL_GROWTH_HIERARCHY_MARKER" not in drop_growth_hierarchy(
+        "## 0. 本书成长基因图\nFULL_GROWTH_HIERARCHY_MARKER\n## 1. 核心类型与读者承诺\nBOOK_MARKER"
+    )
+
+
+def test_state_delta_does_not_receive_growth_hierarchy() -> None:
+    prompt = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content="# 小说总体设计画像\n## 0. 本书成长基因图\nFULL_GROWTH_HIERARCHY_MARKER\n# 当前状态、未兑现承诺与作者备注\n状态",
+        chapter_number=1,
+        chapter_prose="本章正式正文。",
+    )
+    assert "FULL_GROWTH_HIERARCHY_MARKER" not in prompt
+    assert "一级成长收益" not in prompt
+    assert "二级成长收益" not in prompt
 
 
 def test_hybrid_runtime_extractors_are_deterministic() -> None:

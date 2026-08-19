@@ -38,6 +38,11 @@ DEFAULT_COMPOSABLE_GROWTH_DIRECTION = """当前产品只提供主角成长型虚
 
 CLASSIC_PATTERN_DIRECTION = """经典成长模式是一等公民：可组合只表示不强迫所有作品相同，不表示主动回避成熟主干。资源→成长→战斗→身份→更高级资源→更大世界，以及职业→技能→任务→身份、探索→机缘→成长→新区域、内容副本→战斗→战利品→构筑等，都可以成为本书主干。如果作者输入、GBrain证据或当前创意表明某条经典链最适合本书，应当保留它，创新放在新优势、世界机制、转换方式、关系反馈或阶段变异上。"""
 
+GROWTH_BENEFIT_HIERARCHY = """Growth Benefit Hierarchy：
+一级成长收益是读者长期期待主角本人越来越能做什么，优先是个人力量、战斗能力、核心技能、知识运用、造物、操控、组合或创造能力；它通常保持一条稳定主轴，阶段变异必须改变行动语法，不能只增加数值、范围、职位、信用或权限。
+二级成长收益是一级能力运行后的外部结算，例如财富、资源、装备、身份、声望、信用、权限、关系、追随者、队伍、组织、领地、地图和世界入口。除非作者明确选择经营、领主、战争或组织建设题材，职位、行政权限、社会信用、组织规模和公共责任默认属于二级收益。
+反哺关系必须成立：一级能力 → 二级收益 → 新资源/场景/敌人/问题/入口 → 下一轮一级能力成长。二级收益可以阶段性成为剧情焦点，但不得长期取代一级能力成为唯一主线结算。"""
+
 
 WRITER_AUDIT_RULE = """Writer Audit 只报告实际存在的事项：
 - 本次正式正文字符数；
@@ -82,6 +87,8 @@ DEFAULT_PROMPT_TEMPLATES = {
 
 {CLASSIC_PATTERN_DIRECTION}
 
+{GROWTH_BENEFIT_HIERARCHY}
+
 默认创作偏置：主角要有明显主动性；金手指要形成可重复、可放大的非对称优势；代价服务于策略，不负责抵消爽感；1—3 章出现核心异常或优势，3—10 章完成第一次明确利用，10—30 章形成稳定循环或公开证明；成长要打开新的行动空间，每次扩大都带来新的玩法。
 
 核心优势或成长对象必须有纵向成长路线：早期能做什么，随后如何恢复、放大、反推或重新组合，进一步如何打开本书自己的新问题、新关系、新规则或新世界。每个候选说明本书最重要的读者满足和它如何变化，不要求套用直接/间接 payoff 分类。
@@ -109,7 +116,17 @@ DEFAULT_PROMPT_TEMPLATES = {
 第一个公开证明：主角什么时候让别人第一次真正意识到他的价值、实力或异常。
 100章扩张方向：小能力怎样扩大为资源、身份、组织、地域或世界行动能力。
 关键关系：至少一个会随主角成长持续改变的人。
-最大的重复风险：这个玩法写久以后最容易重复什么。""",
+最大的重复风险：这个玩法写久以后最容易重复什么。
+## 一级成长收益
+说明读者长期最期待主角哪一项个人核心能力成长；写清当前亲自能做什么，而不是职位、信用或权限。
+## 一级成长阶段
+分别说明早期、中期和约100章时，主角具体多会了什么，至少写出三次玩法质变，不能只写数值、范围或声望扩大。
+## 二级成长收益
+说明财富、资源、装备、身份、关系、队伍、组织、领地或世界入口如何由一级能力运行产生；不要求每类都存在。
+## 反哺关系
+用箭头说明二级收益怎样提供资源、使用机会、新敌人、新问题或新入口，推动下一轮一级能力成长。
+## 主次失衡风险
+说明这个创意最可能怎样让二级收益吞掉一级能力主线，以及如何保持主次关系。""",
     "outline": f"""你是透明协作的 GBrain 故事规划助手。只根据下方作者输入、作者编辑过的 GBrain Inspiration Results 与参考程序，生成一份完整、具体、可编辑的故事规划提案，不调用任何外部服务。
 
 {DEFAULT_PRODUCT_DIRECTION}
@@ -117,6 +134,8 @@ DEFAULT_PROMPT_TEMPLATES = {
 {DEFAULT_COMPOSABLE_GROWTH_DIRECTION}
 
 {CLASSIC_PATTERN_DIRECTION}
+
+{GROWTH_BENEFIT_HIERARCHY}
 
 作者已选择 / 编辑的规划种子规则：如果下方“作者已选择 / 编辑的规划种子”区域非空，它代表作者已经从 Idea Proposal 中选择并编辑过的创意。它的核心设定、成长优势和 Reader Promise 权威高于默认产品方向和 GBrain，Outline 必须展开这个创意，不得重新换一本书。可以补充世界、人物、成长机制、长期阶段和具体事件，但不得静默修改作者选择的核心创意。
 
@@ -134,6 +153,14 @@ DEFAULT_PROMPT_TEMPLATES = {
 ## 0. 本书成长基因图
 ### 作者明确保留
 如果作者明确输入了成长链、核心玩法、必须保留的元素或不希望被改掉的方向，原样或忠实压缩记录在这里；如果作者没有明确指定，写“作者暂未锁定具体成长主干”。这是普通作者内容，不是 Hard Gate。
+### 一级成长收益
+必须写：核心成长对象、初始能力、当前限制、第一次质变、第二次质变、第三次质变、约100章能力状态，以及核心玩法如何变化。一级成长必须是主角本人越来越能做什么，不得只写职位、信用、权限、关系或组织规模。
+### 二级成长收益
+分别说明本书实际需要的资源/财富、身份/声望、关系/队伍、组织/领地、地图/世界入口；不需要的类别明确写“本书不使用”或省略，不强行补齐。
+### 反哺关系
+用箭头说明二级收益怎样为一级成长提供资源、使用机会、新敌人、新问题、新环境或更高世界入口。
+### 主次关系
+明确本书长期主要书写什么，哪些内容只是结算与放大器，二级收益何时可以阶段性成为焦点，以及如何防止它取代一级成长。
 用普通 Markdown 描述本书的核心组合、关键变量、转换网络、循环族、阶段变异、核心不变量和退化风险。变量名称、数量和循环名称由本书决定，不要复制产品示例。如果作者或证据明确支持资源→成长→战斗→身份等经典链，应把它作为本书主干，不要为了显得创新而回避。
 核心组合：说明哪些机制被组合在一起。
 关键变量：只列本书真正需要的成长对象。
@@ -181,6 +208,9 @@ DEFAULT_PROMPT_TEMPLATES = {
 阶段结果：说明主角获得或失去什么资源、能力、身份、关系或行动空间，以及下一块为什么必然发生。
 叙事功能：说明这组具体事件完成了什么兑现、换挡或压力升级。
 推向下一块：写出下一块从哪个具体问题开始。
+一级成长变化：主角本人的核心能力发生了什么可感知变化；没有变化时说明本块不推进一级成长。
+二级收益结算：本块产生了什么资源、身份、关系、组织、领地或世界入口；没有时说明本块不结算。
+反哺下一轮：这些收益怎样让下一块能够推进新的一级成长。
 
 每个大型剧情块还必须说明：当前使用成长基因图中的哪条循环、通过哪条转换路径产生变化、哪个旧变量被重新解释或失效、哪个新变量进入故事、下一块为什么必须换用另一条路径。不要强制每块使用不同 payoff 标签或固定阶段顺序。
 
@@ -204,6 +234,8 @@ DEFAULT_PROMPT_TEMPLATES = {
     "chapter_prep": """你是透明协作的当前章执行小纲助手。只根据作者当前页面提供的 BOOK 执行相关画像、当前大型剧情块、当前章对应的十章计划条目、前一章或前两章正式正文、最近章节摘要和当前状态，生成当前章真正用于写正文的八字段合同，不调用任何外部服务。
 
 当前章执行小纲只负责把已经批准的中期计划落实为本章可执行合同。正式正文是已发生事实的最高来源；如果正式正文与旧计划冲突，优先服从正式正文，并在八字段中做最小必要调整。不得重新规划整本书，不得重新选择题材或创意，不得把十章计划改写成另一条故事。
+
+页面可能提供本章成长收益短投影：本章一级成长推进、本章二级收益结算、本章反哺。它们只是辅助规划信息，不是第九、第十或更多字段；普通承接章、情绪章和调查章可以写“本章不推进”或“本章不结算”。
 
 必须只输出以下八个字段，每项都必须填写具体内容：
 触发事件：
@@ -253,6 +285,22 @@ DEFAULT_PROMPT_TEMPLATES = {
 
 说明主角能够做、理解、影响、控制或进入的范围发生了什么改变。
 
+## 一级成长实际发生了什么
+
+说明主角相较十章前，亲自多能做了什么。若没有真实变化，直接写“没有真实的一级成长变化”，不要制造成长。
+
+## 二级收益实际获得了什么
+
+说明资源、财富、身份、声望、关系、队伍、组织、领地或世界入口发生了什么变化。
+
+## 二级收益是否吞掉一级成长
+
+检查过去十章是否主要只写权限、信用、职位、关系、组织、责任或外界评价，而主角核心能力没有新玩法或质变。没有时明确写“未发现二级收益吞掉一级成长”。
+
+## 下一批如何反哺一级成长
+
+只调整下一批计划：说明已经获得的二级收益如何提供资源、使用机会、新敌人、新问题、新环境或更高入口，推动下一轮一级能力成长。
+
 ## 是否重复使用同一路径
 
 如果过去两批依赖同一种转换方式，说明下一批怎样换另一个循环、改变关键变量、让旧循环失效、连接两个循环，或让之前的副循环成为主循环。
@@ -272,6 +320,7 @@ DEFAULT_PROMPT_TEMPLATES = {
 ## 下一批十章总体事件链
 
 用 3—6 句话说明这一批十章从什么具体状态开始、出现什么问题、主角准备怎么解决、中途发生什么转折、第十章左右具体兑现什么，以及留下什么新问题。
+其中必须额外写出：本批一级成长目标、本批二级收益目标、本批反哺关系。它们是规划说明，不是单章必填字段。
 
 下一批十章必须使用与 outline 完全相同的格式：
 
@@ -329,7 +378,7 @@ HYBRID_PROMPT_TEMPLATES = {
 ## Opening Strategy
 ## Relevant Inspiration
 
-只选择当前章需要的信息，不复制完整 BOOK、完整十章计划或完整前文，不输出内部推理。""",
+只选择当前章需要的信息，不复制完整 BOOK、完整十章计划或完整前文；如果提供了本章成长收益短投影，只把三行短投影放在 `## Relevant Plan` 的末尾，不解释整套 Growth Benefit Hierarchy；不输出内部推理。""",
     "primary_writer": """你是透明协作的 Primary Writer。先独立写出一篇完整章节；四个专项 Agent 尚未提供任何修改，不要预先采用它们的意见。正文必须落实当前章事件合同，包含自然的叙事、对话、动作、内心、描写和结尾推动，而不是骨架或分镜。保持统一叙事声音，不为了连续性反复盘点已经清楚的物品、资源和交易。
 
 Curated Context 为空时，明确把下方完整必要上下文作为 fallback 使用；这不是失败，也不自动重试。
@@ -781,6 +830,7 @@ def generate_prompt(
             current_long_block=current_long_block,
             previous_chapter_text=previous_chapter_text,
             current_outline=current_outline,
+            current_chapter_plan=current_chapter_plan,
             recent_summaries=recent_summaries,
             gbrain_inspiration=gbrain_inspiration,
             selected_references=selected_references,
@@ -795,6 +845,7 @@ def generate_prompt(
             _annotated_block(BOOK_CONTRACT_BLOCK_NOTE, packet.book_contract),
         ))
         parts.append(_input_block("CHAPTER MISSION——本章事件合同（PLAN）", packet.chapter_mission))
+        parts.append(_input_block("本章成长收益短投影（非门禁）", packet.growth_benefit_projection))
         parts.append(_input_block("CANON PROSE——前文正文（已发生事实的最高来源）", packet.recent_prose))
         parts.append(_input_block(
             "CANON INDEX——已发生事实的压缩索引",
@@ -812,6 +863,7 @@ def generate_prompt(
             build_curator_context,
             build_integrator_context,
             build_specialist_context,
+            drop_growth_hierarchy,
         )
 
         packet = build_chapter_context(
@@ -819,6 +871,7 @@ def generate_prompt(
             current_long_block=current_long_block,
             previous_chapter_text=previous_chapter_text,
             current_outline=current_outline,
+            current_chapter_plan=current_chapter_plan,
             recent_summaries=recent_summaries,
             gbrain_inspiration=gbrain_inspiration,
             selected_references=selected_references,
@@ -831,6 +884,7 @@ def generate_prompt(
                     _input_block("AUTHORITY", context.authority),
                     _input_block("当前章事件合同", context.chapter_mission),
                     _input_block("BOOK CONTRACT", context.book_contract),
+                    _input_block("本章成长收益短投影（非长期理论）", context.growth_benefit_projection),
                     _input_block("规范化 CANON INDEX", context.canon_index),
                     _input_block("当前大型剧情块与十章计划", context.rolling_plan),
                     _input_block("PROSE PROFILE", context.prose_profile),
@@ -847,10 +901,11 @@ def generate_prompt(
                     _input_block("Chapter Mission——当前章事件合同", packet.chapter_mission),
                     _input_block("CANON PROSE——必要前文正文", packet.recent_prose),
                     _input_block("CANON INDEX——规范化已发生事实索引", packet.canon_context),
+                    _input_block("本章成长收益短投影（非长期理论）", packet.growth_benefit_projection),
                     _input_block(
                         "Curated Chapter Context" if not fallback else "Curated Chapter Context（缺失时的显式 fallback）",
                         curated or "Curator 未提供，使用完整上下文 fallback：\n\n"
-                        + packet.book_contract
+                        + drop_growth_hierarchy(packet.book_contract)
                         + "\n\n"
                         + packet.rolling_plan
                         + "\n\n"
@@ -870,6 +925,7 @@ def generate_prompt(
                 [
                     _input_block("当前章事件合同", context.chapter_mission),
                     _input_block("Primary Draft——唯一待评议正文底稿", context.primary_draft),
+                    _input_block("本章成长收益短投影（非长期理论）", context.growth_benefit_projection),
                     _input_block("本专项相关 Curated Context", context.relevant_curated_context),
                     _input_block("必要的前文章末衔接片段", context.transition_context),
                 ]
@@ -900,6 +956,7 @@ def generate_prompt(
                     _input_block("CANON INDEX", context.canon_index),
                     _input_block("Curated Chapter Context", context.curated_context),
                     _input_block("Primary Draft——唯一正文底稿", context.primary_draft),
+                    _input_block("本章成长收益短投影（非长期理论）", context.growth_benefit_projection),
                     _input_block("Opening Specialist Response", context.specialist_responses["opening"]),
                     _input_block("Dialogue Specialist Response", context.specialist_responses["dialogue"]),
                     _input_block("Action Specialist Response", context.specialist_responses["action"]),
@@ -907,10 +964,20 @@ def generate_prompt(
                 ]
             )
     elif mode == "chapter_prep":
+        from .chapter_context import render_growth_benefit_projection
+
         parts.append("# 页面当前输入")
         parts.append(_input_block("本书执行相关画像", _chapter_book_context(book_content)))
         parts.append(_input_block("当前大型剧情块", current_long_block))
         parts.append(_input_block("当前章对应的十章计划条目", current_chapter_plan))
+        parts.append(_input_block(
+            "本章成长收益短投影（非第九字段）",
+            render_growth_benefit_projection(
+                current_long_block=current_long_block,
+                current_chapter_plan=current_chapter_plan,
+                current_outline=current_outline,
+            ),
+        ))
         parts.append(_input_block("前两章正文（连续性上下文）", previous_chapter_text))
         parts.append(_input_block("最近 1—3 章摘要", recent_summaries))
         status_block = _extract_markdown_block(book_content, CURRENT_STATE_HEADING)

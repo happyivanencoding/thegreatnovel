@@ -49,6 +49,7 @@ class CuratorContextPacket:
     rolling_plan: str
     prose_profile: str
     optional_inspiration: str
+    growth_benefit_projection: str
     transition_context: str
 
 
@@ -58,6 +59,7 @@ class SpecialistContextPacket:
     chapter_mission: str
     primary_draft: str
     relevant_curated_context: str
+    growth_benefit_projection: str
     transition_context: str
 
 
@@ -69,6 +71,7 @@ class IntegratorContextPacket:
     canon_index: str
     curated_context: str
     primary_draft: str
+    growth_benefit_projection: str
     specialist_responses: Mapping[str, str]
 
 
@@ -110,6 +113,24 @@ def _extract_subsection(content: str, heading: str) -> str:
             collected.append(next_line)
         return "\n".join(collected).strip()
     return ""
+
+
+def drop_growth_hierarchy(book_contract: str) -> str:
+    """从章节上下文中移除完整成长基因图，只保留其它 BOOK Contract 区块。"""
+
+    lines = book_contract.splitlines()
+    kept: list[str] = []
+    skipping = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped == "## 0. 本书成长基因图":
+            skipping = True
+            continue
+        if skipping and stripped.startswith("## "):
+            skipping = False
+        if not skipping:
+            kept.append(line)
+    return "\n".join(kept).strip()
 
 
 def extract_last_transition_context(text: str, max_chars: int = 1800) -> str:
@@ -174,11 +195,12 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
     return CuratorContextPacket(
         authority=packet.authority,
         chapter_mission=packet.chapter_mission,
-        book_contract=packet.book_contract,
+        book_contract=drop_growth_hierarchy(packet.book_contract),
         canon_index=packet.canon_context,
         rolling_plan=packet.rolling_plan,
         prose_profile=packet.prose_profile,
         optional_inspiration=packet.optional_inspiration,
+        growth_benefit_projection=packet.growth_benefit_projection,
         transition_context=extract_last_transition_context(packet.recent_prose),
     )
 
@@ -210,6 +232,7 @@ def build_specialist_context(
         chapter_mission=packet.chapter_mission,
         primary_draft=primary_draft,
         relevant_curated_context=_relevant_curated_context(curated_response, specialist),
+        growth_benefit_projection=packet.growth_benefit_projection,
         transition_context=extract_last_transition_context(packet.recent_prose),
     )
 
@@ -231,5 +254,6 @@ def build_integrator_context(
         canon_index=packet.canon_context,
         curated_context=curated_response.strip() or "（Curator 未提供，使用完整上下文。）",
         primary_draft=primary_draft,
+        growth_benefit_projection=packet.growth_benefit_projection,
         specialist_responses=responses,
     )
