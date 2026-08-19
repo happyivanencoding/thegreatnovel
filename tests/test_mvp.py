@@ -654,6 +654,28 @@ XIANXIA_BOOK = """# 小说总体设计画像
 仙侠世界；修炼体系；境界突破；宗门资源。
 """
 
+REAL_URBAN_FULL_HYBRID_BOOK = """# 小说总体设计画像
+
+## 0. 本书成长基因图
+现代都市男频成长爽文。现实社会结构仍然是主要基底，故事主要发生在当代现实城市，公司、大学、医院、警察、互联网、房地产、金融、交通和商业体系都正常存在；这个世界同时存在灵气复苏，一部分人可以修炼，修炼拥有明确境界，城市中存在公开或半公开的宗门、武馆和异常事务机构，部分高阶空间异常会形成副本，某些副本与异世界相连。
+
+## 1. 核心类型与读者承诺
+主角通过工作、人际关系、信息差和第一次修炼机会进入更大的世界；异能、修炼、境界、灵气、宗门、武道等级、副本和异世界入口共同组成现代社会与超自然成长体系的咬合。
+
+## 2. 世界观结构
+现代社会结构与异常组织、修炼资源、空间入口和不同能力阶段并行运行。
+"""
+
+REAL_URBAN_ONLY_OTHERWORLD_BOOK = """# 小说总体设计画像
+现代都市；现实世界；存在异能；存在修炼；存在境界；存在宗门；存在副本；存在异世界入口。
+本书不使用修炼体系。
+"""
+
+REAL_URBAN_ONLY_NO_OTHERWORLD_BOOK = """# 小说总体设计画像
+现代都市；现实世界；存在异能；存在修炼；存在境界；存在宗门；存在副本。
+本书不使用异世界。
+"""
+
 SUPERPOWER_PAGE = """---
 type: concept
 ---
@@ -700,6 +722,19 @@ type: concept
 
 def _page(heading: str, content: str) -> str:
     return f"---\ntype: concept\n---\n\n## {heading}\n\n{content}\n\n## Transfer Boundary\n\n只迁移抽象结构，不迁移来源故事。"
+
+
+HYBRID_PAGES = {
+    "mechanisms/information-superpower": _page("Mechanism", "异能提供隐藏信息，但不直接解决调查、关系和责任。"),
+    "mechanisms/cultivation-entry": _page("Mechanism", "现代社会中的第一次修炼方法通过资源、训练和风险形成成长。"),
+    "mechanisms/realm-breakthrough": _page("Core Progression Grammar", "明确境界突破改变行动、资源需求和社会层级。"),
+    "mechanisms/modern-sect-network": _page("Mechanism", "现代城市中的宗门通过师承、资源、身份和任务形成协作网络。"),
+    "mechanisms/dungeon-loop": _page("Repeatable Reader Loop", "异常入口连接准备资源、局部规则、副本行动和现实社会回报。"),
+    "mechanisms/other-world-gateway": _page("World Expansion Grammar", "现代城市中的稳定入口连接异世界，返回资源改变职业与组织关系。"),
+    "mechanisms/urban-career-growth": _page("Mechanism", "公司记录、关系和现实职业行动把异常线索变成可验证结果。"),
+    "prose-controls/action/action-before-interpretation": _page("Control", "先让位置、目标、操作和反馈发生，再补当前需要的规则。"),
+    "syntheses/modern-social-pressure": _page("Shared Tendencies", "社会结构与成长机制共同改变主角的行动空间和关系。"),
+}
 
 
 def test_retrieval_brief_is_book_and_chapter_aware() -> None:
@@ -850,6 +885,105 @@ def test_three_fixture_spaces_keep_their_distinct_constraint_semantics() -> None
     assert "无修炼体系" not in xianxia
     assert "现实世界" in pure_real and "现实世界" in superpower
     assert "现实世界" not in xianxia
+
+
+def test_real_urban_setting_does_not_imply_any_mechanic_ban() -> None:
+    constraints = extract_hard_constraints(REAL_URBAN_FULL_HYBRID_BOOK)
+    assert constraints == ["现实世界"]
+    assert _forbidden_terms(constraints) == ()
+
+
+def test_real_urban_hybrid_brief_preserves_all_positive_mechanism_signals() -> None:
+    brief = build_retrieval_brief(
+        mode="chapter",
+        book_content=REAL_URBAN_FULL_HYBRID_BOOK,
+        creative_direction="现代都市超凡成长",
+        current_outline="主角通过工作和第一次修炼机会进入异常组织，处理副本与异世界入口的现实后果。",
+    )
+    for marker in ("现代都市", "现实社会", "灵气复苏", "异能", "修炼", "境界", "宗门", "副本", "异世界"):
+        assert marker in brief
+    for marker in ("无超自然", "无修炼体系", "无副本", "无异世界"):
+        assert marker not in brief
+
+
+def test_real_urban_hybrid_accepts_cultivation_realm_sect_dungeon_and_other_world() -> None:
+    slugs = [
+        "mechanisms/cultivation-entry",
+        "mechanisms/realm-breakthrough",
+        "mechanisms/modern-sect-network",
+        "mechanisms/dungeon-loop",
+        "mechanisms/other-world-gateway",
+    ]
+    raw = "\n".join(f"[{0.99 - index / 100:.2f}] {slug} -- positive mechanism" for index, slug in enumerate(slugs))
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_URBAN_FULL_HYBRID_BOOK,
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=HYBRID_PAGES.__getitem__,
+    )
+    assert [item["slug"] for item in result["accepted"]] == slugs
+    assert result["rejected"] == []
+
+
+def test_real_urban_hybrid_accepts_superpower_career_prose_and_synthesis() -> None:
+    slugs = [
+        "mechanisms/information-superpower",
+        "mechanisms/urban-career-growth",
+        "prose-controls/action/action-before-interpretation",
+        "syntheses/modern-social-pressure",
+    ]
+    raw = "\n".join(f"[{0.99 - index / 100:.2f}] {slug} -- positive mechanism" for index, slug in enumerate(slugs))
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_URBAN_FULL_HYBRID_BOOK,
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=HYBRID_PAGES.__getitem__,
+    )
+    assert [item["slug"] for item in result["accepted"]] == slugs
+    assert result["rejected"] == []
+
+
+def test_real_urban_only_explicitly_banned_other_world_is_rejected() -> None:
+    raw = "\n".join(
+        [
+            "[0.99] mechanisms/information-superpower -- superpower",
+            "[0.98] mechanisms/cultivation-entry -- cultivation",
+            "[0.97] mechanisms/realm-breakthrough -- realm",
+            "[0.96] mechanisms/modern-sect-network -- sect",
+            "[0.95] mechanisms/dungeon-loop -- dungeon",
+        ]
+    )
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_URBAN_ONLY_NO_OTHERWORLD_BOOK,
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=HYBRID_PAGES.__getitem__,
+    )
+    assert result["accepted_count"] == 5
+    assert "异能" in result["result"]
+    assert "修炼" in result["result"]
+    assert "副本" in result["result"]
+
+    gateway = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_URBAN_ONLY_NO_OTHERWORLD_BOOK,
+        query_func=lambda _query, **_kwargs: "[0.99] mechanisms/other-world-gateway -- gateway",
+        page_func=HYBRID_PAGES.__getitem__,
+    )
+    assert gateway["accepted_count"] == 0
+    assert gateway["rejected"][0]["reason"] == "与 BOOK 的现实模式冲突"
+
+
+def test_real_urban_no_cultivation_does_not_ban_other_world() -> None:
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_URBAN_ONLY_OTHERWORLD_BOOK,
+        query_func=lambda _query, **_kwargs: "[0.99] mechanisms/other-world-gateway -- gateway\n[0.98] mechanisms/cultivation-entry -- cultivation",
+        page_func=HYBRID_PAGES.__getitem__,
+    )
+    assert [item["slug"] for item in result["accepted"]] == ["mechanisms/other-world-gateway"]
+    assert result["rejected"][0]["slug"] == "mechanisms/cultivation-entry"
+    assert result["rejected"][0]["reason"] == "与 BOOK 的现实模式冲突"
 
 
 def test_query_result_parser_ignores_noise_and_preserves_order() -> None:
