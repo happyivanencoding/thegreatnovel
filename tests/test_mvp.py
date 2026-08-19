@@ -10,6 +10,14 @@ import story_mvp.app as app_module
 import story_mvp.gbrain as gbrain_module
 from story_mvp.app import app
 from story_mvp.gbrain import GBrainQueryError, query_gbrain, resolve_command_prefix
+from story_mvp.gbrain_retrieval import (
+    EMPTY_RESULT,
+    FINAL_RESULT_LIMIT,
+    RAW_RESULT_LIMIT,
+    build_retrieval_brief,
+    parse_query_results,
+    retrieve_gbrain,
+)
 from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     PROSE_REALIZATION_CONTRACT,
@@ -324,7 +332,24 @@ def test_gbrain_query_calls_public_cli_and_preserves_stdout(monkeypatch) -> None
     assert query_gbrain("方向查询") == "[0.9] slug -- raw result"
     assert calls["command"][:2] == ["gbrain.CMD", "query"]
     assert "方向查询" in calls["command"]
+    assert "--limit" in calls["command"]
+    assert "8" in calls["command"]
+    assert "--detail" in calls["command"]
     assert calls["kwargs"]["capture_output"] is True
+
+
+def test_gbrain_get_calls_public_cli(monkeypatch) -> None:
+    calls: dict[str, object] = {}
+    monkeypatch.setattr(gbrain_module.shutil, "which", lambda name: "gbrain.CMD")
+
+    def fake_run(command, **kwargs):
+        calls["command"] = command
+        calls["kwargs"] = kwargs
+        return SimpleNamespace(returncode=0, stdout="---\ntype: concept\n---\n\n## Mechanism\n\nfull page", stderr="")
+
+    monkeypatch.setattr(gbrain_module.subprocess, "run", fake_run)
+    assert "## Mechanism" in gbrain_module.get_gbrain("mechanisms/example")
+    assert calls["command"] == ["gbrain.CMD", "get", "mechanisms/example"]
 
 
 def test_gbrain_query_uses_bun_cli_when_path_command_is_missing(tmp_path: Path, monkeypatch) -> None:
@@ -341,11 +366,11 @@ def test_gbrain_query_uses_bun_cli_when_path_command_is_missing(tmp_path: Path, 
 
 
 def test_failed_gbrain_query_is_returned_as_error_without_fake_result(monkeypatch) -> None:
-    def fail_query(_query: str) -> str:
+    def fail_query(**_kwargs):
         raise GBrainQueryError("真实 CLI 失败")
 
-    monkeypatch.setattr(app_module, "query_gbrain", fail_query)
-    response = client.post("/api/gbrain/query", json={"query": "test"})
+    monkeypatch.setattr(app_module, "retrieve_gbrain", fail_query)
+    response = client.post("/api/gbrain/query", json={"mode": "idea"})
     assert response.status_code == 502
     assert response.json()["detail"] == "真实 CLI 失败"
     assert "result" not in response.json()
@@ -454,7 +479,7 @@ def test_chapter_prompt_does_not_start_a_gbrain_query(monkeypatch) -> None:
     def unexpected_query(_query: str) -> str:
         raise AssertionError("chapter prompt must not query GBrain")
 
-    monkeypatch.setattr(app_module, "query_gbrain", unexpected_query)
+    monkeypatch.setattr(app_module, "retrieve_gbrain", unexpected_query)
     outline = "\n".join(f"{field}：内容" for field in (
         "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
         "直接结果", "状态变化", "叙事功能", "结尾推动力",
@@ -544,34 +569,285 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="creative-direction"' in page.text
     assert 'id="gbrain-query"' in page.text
     assert 'id="gbrain-results"' in page.text
+    assert 'id="gbrain-raw-results"' in page.text
+    assert 'id="gbrain-rejections"' in page.text
+    assert 'id="gbrain-count"' in page.text
     assert 'id="chapter-body-for-save"' in page.text
     assert 'id="chapter-fact-summary"' in page.text
     assert 'id="extract-chapter-body"' in page.text
     assert 'id="design-growth_genome"' in page.text
     assert 'id="creative-direction" value=""' in page.text
     assert "例如：传统仙侠；资源→战斗→身份" in page.text
-    assert "GBrain 范围：全 Brain" in page.text
+    assert "GBrain 范围：全 Brain 检索 → BOOK 兼容性筛选" in page.text
     assert "从 GBrain 取灵感" in page.text
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
-    assert "Reader Promise" in js
-    assert "Core Progression Grammar" in js
+    assert "function gbrainContextPayload" in js
+    assert "query_override" in js
+    assert "raw_stdout" in js
     assert "POWER_BREAKTHROUGH" not in js
     assert "秘境" not in js
     assert "历史建设" not in js
     assert "都市职业" not in js
-    assert "想保留的成长链或元素" in js
-    assert "不要强迫所有书采用同一条经典成长链" in js
+    assert "BOOK-aware Retrieval Brief" in page.text
+    assert "/api/gbrain/brief" in js
 
 
-def test_idea_default_query_does_not_read_book_design_fields() -> None:
+def test_default_retrieval_query_uses_context_instead_of_generic_prefix() -> None:
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
-    start = js.index("function defaultGbrainQuery()")
-    idea_start = js.index('if (mode === "idea")', start)
-    idea_end = js.index('if (mode === "review")', idea_start)
-    idea_branch = js[idea_start:idea_end]
-    assert "design-type_promise" not in idea_branch
-    assert "design-protagonist_model" not in idea_branch
-    assert "作者尚未指定成长链" in js[start:idea_end]
+    start = js.index("function gbrainContextPayload")
+    end = js.index("async function setDefaultGbrainQuery", start)
+    context_body = js[start:end]
+    assert 'book_content: composeBookContent()' in context_body
+    assert 'current_long_block' in context_body
+    assert 'current_outline' in context_body
+    assert 'recent_summaries' in context_body
+    assert "主角成长型虚构世界小说" not in js[start:]
+
+
+REAL_COLD_CHAIN_BOOK = """# 小说总体设计画像
+
+## 0. 本书成长基因图
+现代都市职业成长；冷链调度；返程空载；仓库时间窗；司机信用；结算与责任。
+
+## 1. 核心类型与读者承诺
+现实世界职业成长。
+
+## 2. 世界观结构
+司机、仓库、门店、订单和时间窗。
+
+# 当前状态、未兑现承诺与作者备注
+现实世界；没有超自然；没有修炼；没有战斗升级；没有副本或异世界。
+"""
+
+REAL_COLD_CHAIN_OUTLINE = """触发事件：主角被收走车队权限并接到急单。
+推动事件的人：采购和车队负责人。
+主角行动：翻出三个月返程空载记录，寻找第一段现实路线。
+对手或世界反应：车辆能到第一城，但没有第二城预约号。
+直接结果：第一段路线出现，第二段无法直送。
+状态变化：主角失去公司担保但保留个人记录。
+叙事功能：把职业优势落到现场行动。
+结尾推动力：继续寻找夜班仓库节点。
+"""
+
+
+def _page(heading: str, content: str) -> str:
+    return f"---\ntype: concept\n---\n\n## {heading}\n\n{content}\n\n## Transfer Boundary\n\n只迁移抽象结构，不迁移来源故事。"
+
+
+def test_retrieval_brief_is_book_and_chapter_aware() -> None:
+    brief = build_retrieval_brief(
+        mode="chapter",
+        book_content=REAL_COLD_CHAIN_BOOK,
+        creative_direction="现代都市职业成长",
+        current_long_block="冷链调度中把返程空载接到仓库时间窗。",
+        current_outline=REAL_COLD_CHAIN_OUTLINE,
+    )
+    for marker in (
+        "现代都市职业成长",
+        "冷链调度",
+        "返程空载",
+        "仓库时间窗",
+        "司机信用",
+        "结算与责任",
+        "主角被收走车队权限",
+        "无超自然",
+        "无修炼体系",
+        "无战斗升级",
+        "无副本",
+        "无异世界",
+    ):
+        assert marker in brief
+    assert "主角成长型虚构世界小说" not in brief
+
+
+def test_query_result_parser_ignores_noise_and_preserves_order() -> None:
+    parsed = parse_query_results(
+        "杂项\n[0.9] mechanisms/example -- first snippet\ncontinuation noise\n"
+        "[0.7] prose-controls/example -- second snippet\n"
+    )
+    assert [item["slug"] for item in parsed] == ["mechanisms/example", "prose-controls/example"]
+    assert parsed[0]["score"] == 0.9
+    assert parsed[1]["snippet"] == "second snippet"
+
+
+def test_chapter_filters_sources_and_builds_bundle_from_full_pages() -> None:
+    raw = "\n".join(
+        [
+            "[0.99] arcs/old -- 修真 arc",
+            "[0.98] book-dna/old -- 修炼 book",
+            "[0.97] prose-dna/old -- 境界 prose",
+            "[0.96] maps/progression -- map",
+            "[0.95] prose-controls/action-neutral -- action snippet",
+            "[0.94] syntheses/example-neutral -- synthesis snippet",
+            "[0.93] mechanisms/example-neutral -- mechanism snippet",
+        ]
+    )
+    calls: list[str] = []
+    pages = {
+        "prose-controls/action-neutral": _page("Control", "先让位置和操作发生，再补当前需要的规则和反馈。"),
+        "syntheses/example-neutral": _page("Shared Tendencies", "阶段推进必须通过具体结果打开新的行动空间。"),
+        "mechanisms/example-neutral": _page("Mechanism", "旧资源经过可验证转换，变成新的可用路径。"),
+    }
+
+    def fake_query(_query: str, **kwargs) -> str:
+        assert kwargs == {"limit": RAW_RESULT_LIMIT, "detail": "medium"}
+        return raw
+
+    def fake_get(slug: str) -> str:
+        calls.append(slug)
+        return pages[slug]
+
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_COLD_CHAIN_BOOK,
+        current_outline=REAL_COLD_CHAIN_OUTLINE,
+        query_func=fake_query,
+        page_func=fake_get,
+    )
+    assert calls == list(pages)
+    assert result["accepted_count"] == 3
+    assert "旧资源经过可验证转换" in result["result"]
+    assert "Evidence" not in result["result"]
+    assert "source_book_id" not in result["result"]
+    assert "修真" not in result["result"]
+    assert any(item["reason"].startswith("chapter 模式不自动使用 arcs") for item in result["rejected"])
+    assert any(item["reason"].startswith("chapter 模式不自动使用 book-dna") for item in result["rejected"])
+    assert any(item["reason"].startswith("chapter 模式不自动使用 prose-dna") for item in result["rejected"])
+    assert any(item["reason"].startswith("chapter 模式不自动使用 maps") for item in result["rejected"])
+
+
+def test_get_failure_does_not_fallback_to_query_snippet() -> None:
+    def fake_query(_query: str, **_kwargs) -> str:
+        return "[0.9] mechanisms/failing -- snippet must not enter bundle"
+
+    def fake_get(_slug: str) -> str:
+        raise GBrainQueryError("get failed")
+
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_COLD_CHAIN_BOOK,
+        query_func=fake_query,
+        page_func=fake_get,
+    )
+    assert result["accepted_count"] == 0
+    assert result["result"] == EMPTY_RESULT
+    assert "snippet must not enter bundle" not in result["result"]
+    assert result["rejected"] == [{"slug": "mechanisms/failing", "reason": "完整页面读取失败"}]
+
+
+def test_query_override_is_effective_but_book_constraints_still_apply() -> None:
+    seen: list[str] = []
+
+    def fake_query(query: str, **_kwargs) -> str:
+        seen.append(query)
+        return "[0.9] book-dna/incompatible -- 修真"
+
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_COLD_CHAIN_BOOK,
+        query_override="作者当前可见的手工查询",
+        query_func=fake_query,
+        page_func=lambda _slug: _page("Mechanism", "不应读取"),
+    )
+    assert seen == ["作者当前可见的手工查询"]
+    assert result["effective_query"] == "作者当前可见的手工查询"
+    assert result["accepted_count"] == 0
+    assert result["rejected"][0]["reason"].startswith("chapter 模式不自动使用 book-dna")
+
+
+def test_all_incompatible_sources_return_successful_empty_result() -> None:
+    called = False
+
+    def fake_query(_query: str, **_kwargs) -> str:
+        return "[0.9] book-dna/old -- old\n[0.8] arcs/old -- old"
+
+    def fake_get(_slug: str) -> str:
+        nonlocal called
+        called = True
+        return _page("Mechanism", "should not be read")
+
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_COLD_CHAIN_BOOK,
+        query_func=fake_query,
+        page_func=fake_get,
+    )
+    assert result["status"] == "available"
+    assert result["accepted_count"] == 0
+    assert result["result"] == EMPTY_RESULT
+    assert called is False
+
+
+def test_application_and_final_limits_bound_overlong_cli_output() -> None:
+    raw = "\n".join(f"[{1 - index / 100:.2f}] mechanisms/item-{index} -- snippet" for index in range(20))
+    calls: list[str] = []
+
+    def fake_query(_query: str, **kwargs) -> str:
+        assert kwargs["limit"] == RAW_RESULT_LIMIT
+        return raw
+
+    def fake_get(slug: str) -> str:
+        calls.append(slug)
+        return _page("Mechanism", f"抽象材料 {slug}")
+
+    result = retrieve_gbrain(mode="chapter", book_content="现实世界；无超自然", query_func=fake_query, page_func=fake_get)
+    assert result["raw_count"] == 20
+    assert result["requested_limit"] == RAW_RESULT_LIMIT
+    assert result["final_limit"] == FINAL_RESULT_LIMIT
+    assert result["accepted_count"] == FINAL_RESULT_LIMIT
+    assert len(calls) == FINAL_RESULT_LIMIT
+    assert sum(item["reason"] == "超过原始数量上限" for item in result["rejected"]) == 12
+
+
+def test_idea_and_outline_keep_broader_sources_without_real_constraint() -> None:
+    raw = "[0.9] book-dna/example -- broad\n[0.8] arcs/example -- broad"
+    calls: list[str] = []
+
+    def fake_query(_query: str, **_kwargs) -> str:
+        return raw
+
+    def fake_get(slug: str) -> str:
+        calls.append(slug)
+        return _page("Mechanism", "经典成长材料的抽象转换。")
+
+    for mode in ("idea", "outline"):
+        result = retrieve_gbrain(mode=mode, book_content="都市成长故事", query_func=fake_query, page_func=fake_get)
+        assert result["accepted_count"] == 2
+    assert calls == ["book-dna/example", "arcs/example", "book-dna/example", "arcs/example"]
+
+
+def test_brief_and_query_api_expose_filter_counts(monkeypatch) -> None:
+    monkeypatch.setattr(
+        app_module,
+        "retrieve_gbrain",
+        lambda **_kwargs: {
+            "status": "available",
+            "scope": "全 Brain 检索 → BOOK 兼容性筛选",
+            "effective_query": "visible brief",
+            "raw_count": 8,
+            "accepted_count": 1,
+            "rejected_count": 7,
+            "requested_limit": 8,
+            "final_limit": 5,
+            "result": "FILTERED_BUNDLE",
+            "raw_stdout": "RAW_STDOUT_MUST_STAY_OUTSIDE_PROMPT",
+            "raw_results": [],
+            "rejected": [],
+        },
+    )
+    brief = client.post(
+        "/api/gbrain/brief",
+        json={"mode": "chapter", "book_content": REAL_COLD_CHAIN_BOOK, "current_outline": REAL_COLD_CHAIN_OUTLINE},
+    )
+    assert brief.status_code == 200
+    assert "返程空载" in brief.json()["effective_query"]
+    queried = client.post("/api/gbrain/query", json={"mode": "chapter"})
+    assert queried.status_code == 200
+    assert queried.json()["effective_query"] == "visible brief"
+    assert queried.json()["raw_count"] == 8
+    prompt = generate_prompt(mode="chapter", template="T", book_content="BOOK", current_outline=REAL_COLD_CHAIN_OUTLINE, gbrain_inspiration=queried.json()["result"])
+    assert "FILTERED_BUNDLE" in prompt
+    assert "RAW_STDOUT_MUST_STAY_OUTSIDE_PROMPT" not in prompt
 
 
 def test_page_shows_twelve_design_sections_and_panorama_controls() -> None:

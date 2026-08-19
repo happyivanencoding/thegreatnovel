@@ -22,17 +22,11 @@ def resolve_command_prefix() -> list[str]:
     raise GBrainQueryError("找不到可用的 gbrain 公共 CLI 或 Bun CLI")
 
 
-def query_gbrain(text: str, source: str | None = None) -> str:
-    query = text.strip()
-    if not query:
-        raise ValueError("GBrain 查询不能为空")
-    if source:
-        raise ValueError("当前已验证的 gbrain query CLI 没有 source 参数")
-
+def _run_cli(arguments: list[str]) -> str:
     command = resolve_command_prefix()
     try:
         completed = subprocess.run(
-            command + ["query", query, "--limit", "8", "--detail", "medium"],
+            command + arguments,
             capture_output=True,
             text=True,
             encoding="utf-8",
@@ -41,12 +35,30 @@ def query_gbrain(text: str, source: str | None = None) -> str:
             check=False,
         )
     except (OSError, subprocess.TimeoutExpired) as error:
-        raise GBrainQueryError(f"无法完成 GBrain 查询：{error}") from error
+        raise GBrainQueryError(f"无法完成 GBrain 操作：{error}") from error
 
     if completed.returncode != 0:
         detail = (completed.stderr or completed.stdout).strip()
-        raise GBrainQueryError(detail or f"GBrain 查询失败，退出码 {completed.returncode}")
+        raise GBrainQueryError(detail or f"GBrain 操作失败，退出码 {completed.returncode}")
     result = completed.stdout.strip()
     if not result:
-        raise GBrainQueryError("GBrain 查询成功但没有返回文本")
+        raise GBrainQueryError("GBrain 操作成功但没有返回文本")
     return result
+
+
+def query_gbrain(text: str, *, limit: int = 8, detail: str = "medium") -> str:
+    query = text.strip()
+    if not query:
+        raise ValueError("GBrain 查询不能为空")
+    if limit < 1:
+        raise ValueError("GBrain 查询 limit 必须大于 0")
+    if detail not in {"low", "medium", "high"}:
+        raise ValueError("GBrain 查询 detail 必须是 low、medium 或 high")
+    return _run_cli(["query", query, "--limit", str(limit), "--detail", detail])
+
+
+def get_gbrain(slug: str) -> str:
+    page_slug = slug.strip()
+    if not page_slug:
+        raise ValueError("GBrain 页面 slug 不能为空")
+    return _run_cli(["get", page_slug])

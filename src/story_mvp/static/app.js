@@ -205,6 +205,7 @@ async function loadBook(bookId) {
   }
   try {
     populateBook(await requestJson(`/api/books/${encodeURIComponent(bookId)}`));
+    await setDefaultGbrainQuery();
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -280,26 +281,29 @@ function currentTemplate() {
   }[$("prompt-mode").value];
 }
 
-function defaultGbrainQuery() {
-  const directionInput = $("creative-direction").value.trim();
-  const direction = directionInput || "作者尚未指定成长链，请返回具有明显差异的可组合成长机制";
-  const mode = $("prompt-mode").value;
-  const retrievalFocus = "Reader Promise；Character Desire & Agency；Advantage / Special Capability；Repeatable Reader Loop；Core Progression Grammar；Action-Space Expansion；World Expansion Grammar；Social / Relationship Dynamics；Resource / Economy；Narrative Drive；Phase Transition；Failure / Fatigue Risks；Book DNA；Mechanism；Contrast；Reference Program";
-  const growthGenome = $("design-growth_genome").value.trim() || "（尚未形成本书成长基因图）";
-  if (mode === "outline") {
-    return `针对以下主角成长型虚构世界小说：\n创作方向 / 想保留的成长链或元素：${direction}\n初始缺口：${$("design-type_promise").value.trim() || "（未填写）"}\n可能的非对称位置：${$("design-protagonist_model").value.trim() || "（未填写）"}\n期望读者体验：主角主动扩大自己能够理解、影响、控制、进入或创造的范围。\n当前成长基因图（如有）：${growthGenome}\n\n寻找小说蒸馏知识中的 ${retrievalFocus}，重点帮助生成这本书自己的变量、转换网络、循环族和阶段变异。不要强迫所有书采用同一条经典成长链；如果作者输入或 GBrain 证据支持成熟主干，就围绕该主干嫁接新优势和新机制。`;
-  }
-  if (mode === "idea") {
-    return `主角成长型虚构世界小说；作者创作方向：${direction}。\n寻找 ${retrievalFocus}，生成可以自由采用经典主干、新型组合或混合结构的创意。不要从当前 BOOK 设计猜测作者未表达的方向。`;
-  }
-  if (mode === "review") {
-    return `这是一本主角成长型虚构世界小说，创作方向为“${direction}”。\n本书成长基因图：${growthGenome}\n当前大型剧情块：${$("current-long-block").value.trim() || "（未填写）"}\n实际完成十章：${$("actual-summaries").value.trim() || "（未填写）"}\n当前重复风险：${$("unfulfilled-promises").value.trim() || "（未填写）"}\n\n寻找能够继续兑现本书 Reader Promise、改变玩法、扩大行动空间并避免疲劳的 ${retrievalFocus}。`;
-  }
-  return `主角成长型虚构世界小说；作者创作方向：${direction}。\n寻找与作者期望读者体验相关的 ${retrievalFocus}，关注可组合的成长变量、转换网络、循环族和长篇阶段变异。`;
+function gbrainContextPayload(queryOverride = "") {
+  return {
+    mode: $("prompt-mode").value,
+    book_content: composeBookContent(),
+    creative_direction: $("creative-direction").value,
+    current_long_block: $("current-long-block").value,
+    current_outline: $("current-outline").value,
+    recent_summaries: $("recent-summaries").value,
+    query_override: queryOverride,
+  };
 }
 
-function setDefaultGbrainQuery() {
-  $("gbrain-query").value = defaultGbrainQuery();
+async function setDefaultGbrainQuery() {
+  try {
+    const payload = await requestJson("/api/gbrain/brief", {
+      method: "POST",
+      body: JSON.stringify(gbrainContextPayload()),
+    });
+    $("gbrain-query").value = payload.effective_query || payload.retrieval_brief || "";
+    $("gbrain-scope").textContent = "GBrain 范围：全 Brain 检索 → BOOK 兼容性筛选";
+  } catch (error) {
+    showStatus(`生成 BOOK-aware Retrieval Brief 失败：${error.message}`, true);
+  }
 }
 
 function populatePromptTemplates(templates) {
@@ -337,15 +341,23 @@ async function queryGbrain() {
   try {
     const payload = await requestJson("/api/gbrain/query", {
       method: "POST",
-      body: JSON.stringify({ query }),
+      body: JSON.stringify(gbrainContextPayload(query)),
     });
     $("gbrain-results").value = payload.result;
-    $("gbrain-scope").textContent = `GBrain 范围：${payload.scope || "全 Brain"}`;
-    $("gbrain-status").textContent = "GBrain：可用";
+    $("gbrain-raw-results").value = payload.raw_stdout || "（没有可解析的原始检索结果）";
+    $("gbrain-rejections").value = (payload.rejected || [])
+      .map((item) => `${item.slug}：${item.reason}`)
+      .join("\n") || "（没有排除项）";
+    $("gbrain-count").textContent = `raw ${payload.raw_count} / accepted ${payload.accepted_count} / rejected ${payload.rejected_count} / limit ${payload.requested_limit} / final ${payload.final_limit}`;
+    $("gbrain-scope").textContent = payload.scope || "GBrain 范围：全 Brain 检索 → BOOK 兼容性筛选";
+    $("gbrain-status").textContent = "GBrain：可用，已完成 BOOK 筛选";
     $("gbrain-status").classList.remove("error");
-    showStatus("GBrain 灵感已返回，可删改后进入 Prompt");
+    showStatus("已生成可编辑 Inspiration Bundle；原始结果和排除原因留在折叠面板");
   } catch (error) {
     $("gbrain-results").value = "";
+    $("gbrain-raw-results").value = "";
+    $("gbrain-rejections").value = "";
+    $("gbrain-count").textContent = "raw 0 / accepted 0 / rejected 0";
     $("gbrain-status").textContent = `GBrain：查询失败 — ${error.message}`;
     $("gbrain-status").classList.add("error");
     showStatus(error.message, true);
@@ -547,6 +559,7 @@ async function createBook() {
     populateBook(book);
     await refreshBookList();
     $("book-select").value = bookId;
+    await setDefaultGbrainQuery();
     showStatus(`已创建并加载 ${bookId}`);
   } catch (error) {
     showStatus(error.message, true);
@@ -558,7 +571,6 @@ async function initialize() {
     renderLongPlanPanorama();
     const defaultTemplates = await requestJson("/api/prompt-templates");
     populatePromptTemplates(defaultTemplates.templates);
-    setDefaultGbrainQuery();
     const payload = await requestJson("/api/references");
     state.references = payload.references;
     $("reference-root").textContent = `来源：${payload.root}`;
@@ -569,6 +581,7 @@ async function initialize() {
       await loadBook($("book-select").value);
     } else {
       showStatus("请先新建小说");
+      await setDefaultGbrainQuery();
     }
   } catch (error) {
     showStatus(error.message, true);
@@ -587,6 +600,7 @@ $("chapter-number").addEventListener("change", () => {
   $("chapter-fact-summary").value = "";
   refreshPreviousChapterText();
 });
+$("prompt-mode").addEventListener("change", setDefaultGbrainQuery);
 $("expand-design").addEventListener("click", () => setDesignDetails(true));
 $("collapse-design").addEventListener("click", () => setDesignDetails(false));
 $("section-long_plan").addEventListener("input", renderLongPlanPanorama);

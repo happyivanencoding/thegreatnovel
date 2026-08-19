@@ -10,7 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
-from .gbrain import GBrainQueryError, query_gbrain
+from .gbrain import GBrainQueryError
+from .gbrain_retrieval import build_retrieval_brief, extract_hard_constraints, retrieve_gbrain
 from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
 from .storage import (
@@ -28,7 +29,6 @@ from .storage import (
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES_DIR = PROJECT_ROOT / "src" / "story_mvp" / "templates"
 STATIC_DIR = PROJECT_ROOT / "src" / "story_mvp" / "static"
-GBRAIN_SCOPE_LABEL = "全 Brain"
 
 app = FastAPI(title="Transparent GBrain Story Studio")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -47,8 +47,18 @@ class PromptTemplatesRequest(BaseModel):
     templates: dict[str, str] = Field(default_factory=dict)
 
 
-class GBrainQueryRequest(BaseModel):
-    query: str
+class GBrainContextRequest(BaseModel):
+    mode: Literal["idea", "outline", "chapter", "review"] = "idea"
+    book_content: str = ""
+    creative_direction: str = ""
+    current_long_block: str = ""
+    current_outline: str = ""
+    recent_summaries: str = ""
+    query_override: str = ""
+
+
+class GBrainQueryRequest(GBrainContextRequest):
+    pass
 
 
 class ChapterRequest(BaseModel):
@@ -144,20 +154,31 @@ def get_references() -> dict[str, Any]:
     }
 
 
+@app.post("/api/gbrain/brief")
+def post_gbrain_brief(payload: GBrainContextRequest) -> dict[str, Any]:
+    brief = build_retrieval_brief(**payload.model_dump(exclude={"query_override"}))
+    return {
+        "mode": payload.mode,
+        "effective_query": brief,
+        "retrieval_brief": brief,
+        "hard_constraints": extract_hard_constraints(
+            payload.creative_direction,
+            payload.book_content,
+            payload.current_long_block,
+            payload.current_outline,
+            payload.recent_summaries,
+        ),
+    }
+
+
 @app.post("/api/gbrain/query")
-def post_gbrain_query(payload: GBrainQueryRequest) -> dict[str, str]:
+def post_gbrain_query(payload: GBrainQueryRequest) -> dict[str, Any]:
     try:
-        result = query_gbrain(payload.query)
+        return retrieve_gbrain(**payload.model_dump())
     except GBrainQueryError as error:
         raise HTTPException(status_code=502, detail=str(error)) from error
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
-    return {
-        "status": "available",
-        "scope": GBRAIN_SCOPE_LABEL,
-        "query": payload.query,
-        "result": result,
-    }
 
 
 @app.post("/api/prompt")

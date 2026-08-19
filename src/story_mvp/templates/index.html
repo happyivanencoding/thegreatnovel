@@ -93,7 +93,7 @@
           </div>
           <span id="gbrain-status" class="status">GBrain：未查询</span>
         </div>
-        <div id="gbrain-scope" class="path-note">GBrain 范围：全 Brain</div>
+        <div id="gbrain-scope" class="path-note">GBrain 范围：全 Brain 检索 → BOOK 兼容性筛选</div>
         <div class="gbrain-workspace">
           <label class="field">
             <span>创作方向 / 想保留的成长链或元素</span>
@@ -104,13 +104,24 @@
             <button id="query-gbrain" class="primary">从 GBrain 取灵感</button>
           </div>
           <label class="field">
-            <span>GBrain 查询（完整可见、可编辑）</span>
+            <span>BOOK-aware Retrieval Brief / GBrain 查询（完整可见、可编辑）</span>
             <textarea id="gbrain-query" rows="8"></textarea>
           </label>
           <label class="field">
-            <span>GBrain Inspiration Results（原样文本，可删改）</span>
-            <textarea id="gbrain-results" rows="16" placeholder="查询成功后，GBrain 的 stdout 会原样出现在这里。"></textarea>
+            <span>最终 Inspiration Bundle（可编辑；只有这里进入 Prompt）</span>
+            <textarea id="gbrain-results" rows="16" placeholder="查询成功后，BOOK 兼容的抽象 Inspiration Bundle 会出现在这里。"></textarea>
           </label>
+          <details class="gbrain-diagnostics">
+            <summary>原始检索结果与排除原因 <span id="gbrain-count" class="count">raw 0 / accepted 0 / rejected 0</span></summary>
+            <label class="field">
+              <span>原始 GBrain stdout（只读；不进入 Prompt）</span>
+              <textarea id="gbrain-raw-results" rows="10" readonly></textarea>
+            </label>
+            <label class="field">
+              <span>排除摘要（只读）</span>
+              <textarea id="gbrain-rejections" rows="8" readonly></textarea>
+            </label>
+          </details>
           <button id="generate-idea-prompt" class="primary">生成男频爽文创意 Prompt</button>
         </div>
 
