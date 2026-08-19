@@ -21,6 +21,7 @@ from story_mvp.gbrain_retrieval import (
     EMPTY_RESULT,
     FINAL_RESULT_LIMIT,
     RAW_RESULT_LIMIT,
+    QUERY_RECALL_LIMIT,
     _forbidden_terms,
     build_retrieval_brief,
     extract_hard_constraints,
@@ -679,7 +680,7 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="design-growth_genome"' in page.text
     assert 'id="creative-direction" value=""' in page.text
     assert "例如：传统仙侠；资源→战斗→身份" in page.text
-    assert "GBrain 范围：全 Brain 检索 → BOOK 兼容性筛选" in page.text
+    assert "GBrain 范围：全 Brain 宽召回 → 小说蒸馏来源过滤 → BOOK 兼容性筛选" in page.text
     assert "从 GBrain 取灵感" in page.text
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
     assert "function gbrainContextPayload" in js
@@ -1170,6 +1171,93 @@ def test_query_result_parser_ignores_noise_and_preserves_order() -> None:
     assert parsed[1]["snippet"] == "second snippet"
 
 
+def test_novel_source_filter_happens_before_candidate_limit_and_skips_unrelated_pages() -> None:
+    raw = "\n".join(
+        [
+            "[0.99] 30_education/foo -- math",
+            "[0.98] 99_system/foo -- system",
+            "[0.97] 20_knowledge/foo -- finance",
+            "[0.96] 30_education/bar -- education",
+            "[0.95] 99_system/bar -- template",
+            "[0.94] 20_knowledge/bar -- ai",
+            "[0.93] 50_research/foo -- research",
+            "[0.92] 99_system/baz -- system",
+            "[0.80] arcs/novel-a -- arc",
+            "[0.79] mechanisms/novel-b -- mechanism",
+        ]
+    )
+    pages = {
+        "arcs/novel-a": _page("Progression", "身份门槛转成关系与行动空间的持续扩张。"),
+        "mechanisms/novel-b": _page("Mechanism", "受限优势经过现实行动，转成可验证的成长路径。"),
+    }
+    calls: list[str] = []
+
+    def fake_query(_query: str, **kwargs) -> str:
+        assert kwargs == {"limit": QUERY_RECALL_LIMIT, "detail": "medium"}
+        return raw
+
+    def fake_get(slug: str) -> str:
+        calls.append(slug)
+        return pages[slug]
+
+    result = retrieve_gbrain(mode="outline", book_content="都市成长故事", query_func=fake_query, page_func=fake_get)
+
+    assert calls == ["arcs/novel-a", "mechanisms/novel-b"]
+    assert [item["slug"] for item in result["accepted"]] == calls
+    assert result["accepted_count"] == 2
+    assert all(not slug.startswith(("30_education/", "20_knowledge/", "50_research/", "99_system/")) for slug in calls)
+    assert all(
+        any(item["slug"] == slug and "不自动使用" in item["reason"] for item in result["rejected"])
+        for slug in (
+            "30_education/foo",
+            "20_knowledge/foo",
+            "50_research/foo",
+            "99_system/foo",
+        )
+    )
+
+
+def test_raw_result_limit_applies_to_novel_candidates_only() -> None:
+    non_novel_slugs = [f"30_education/item-{index}" for index in range(20)]
+    novel_slugs = [f"mechanisms/novel-{index}" for index in range(10)]
+    raw = "\n".join(
+        [f"[{1 - index / 100:.2f}] {slug} -- snippet" for index, slug in enumerate(non_novel_slugs + novel_slugs)]
+    )
+    calls: list[str] = []
+
+    def fake_get(slug: str) -> str:
+        calls.append(slug)
+        return _page("Evidence", "不属于可提取的抽象区块。")
+
+    result = retrieve_gbrain(
+        mode="idea",
+        book_content="都市成长故事",
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=fake_get,
+    )
+
+    assert calls == novel_slugs[:RAW_RESULT_LIMIT]
+    assert result["accepted_count"] == 0
+    assert sum(item["reason"] == "超过小说候选数量上限" for item in result["rejected"]) == len(novel_slugs) - RAW_RESULT_LIMIT
+    assert all(
+        any(item["slug"] == slug and "不自动使用" in item["reason"] for item in result["rejected"])
+        for slug in non_novel_slugs
+    )
+
+
+def test_xuanhuan_arc_is_accepted_when_abstract_is_transferable() -> None:
+    slug = "arcs/rcv0-xx-xuanhuan-xxx"
+    result = retrieve_gbrain(
+        mode="outline",
+        book_content="现代都市超凡成长；现实社会结构；有限异常优势。",
+        query_func=lambda _query, **_kwargs: f"[0.9] {slug} -- 玄幻成长 arc",
+        page_func=lambda _slug: _page("Progression", "身份门槛推动关系建立，并逐步打开新的行动空间。"),
+    )
+
+    assert result["accepted_count"] == 1
+    assert result["accepted"][0]["slug"] == slug
+
+
 def test_chapter_filters_sources_and_builds_bundle_from_full_pages() -> None:
     raw = "\n".join(
         [
@@ -1190,7 +1278,7 @@ def test_chapter_filters_sources_and_builds_bundle_from_full_pages() -> None:
     }
 
     def fake_query(_query: str, **kwargs) -> str:
-        assert kwargs == {"limit": RAW_RESULT_LIMIT, "detail": "medium"}
+        assert kwargs == {"limit": QUERY_RECALL_LIMIT, "detail": "medium"}
         return raw
 
     def fake_get(slug: str) -> str:
@@ -1290,7 +1378,7 @@ def test_application_and_final_limits_bound_overlong_cli_output() -> None:
     calls: list[str] = []
 
     def fake_query(_query: str, **kwargs) -> str:
-        assert kwargs["limit"] == RAW_RESULT_LIMIT
+        assert kwargs["limit"] == QUERY_RECALL_LIMIT
         return raw
 
     def fake_get(slug: str) -> str:
@@ -1303,7 +1391,7 @@ def test_application_and_final_limits_bound_overlong_cli_output() -> None:
     assert result["final_limit"] == FINAL_RESULT_LIMIT
     assert result["accepted_count"] == FINAL_RESULT_LIMIT
     assert len(calls) == FINAL_RESULT_LIMIT
-    assert sum(item["reason"] == "超过原始数量上限" for item in result["rejected"]) == 12
+    assert sum(item["reason"] == "超过小说候选数量上限" for item in result["rejected"]) == 12
 
 
 def test_idea_and_outline_keep_broader_sources_without_real_constraint() -> None:
@@ -1329,7 +1417,7 @@ def test_brief_and_query_api_expose_filter_counts(monkeypatch) -> None:
         "retrieve_gbrain",
         lambda **_kwargs: {
             "status": "available",
-            "scope": "全 Brain 检索 → BOOK 兼容性筛选",
+            "scope": "全 Brain 宽召回 → 小说蒸馏来源过滤 → BOOK 兼容性筛选",
             "effective_query": "visible brief",
             "raw_count": 8,
             "accepted_count": 1,

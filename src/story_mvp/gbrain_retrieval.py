@@ -8,11 +8,13 @@ from .gbrain import GBrainQueryError, get_gbrain, query_gbrain
 
 
 RAW_RESULT_LIMIT = 8
+# CLI 无原生小说域 scope；宽召回只为避免无关结果挤掉小说候选。
+QUERY_RECALL_LIMIT = 24
 FINAL_RESULT_LIMIT = 5
 #: Chapter Runtime Lite v1：chapter 模式灵感负担减半，最多 2 条；其他模式不受影响。
 CHAPTER_FINAL_RESULT_LIMIT = 2
 EMPTY_RESULT = "（本次没有找到与 BOOK 硬约束和当前章节任务兼容的 GBrain 证据；不要用不相关材料补位。）"
-GBRAIN_SCOPE_LABEL = "全 Brain 检索 → BOOK 兼容性筛选"
+GBRAIN_SCOPE_LABEL = "全 Brain 宽召回 → 小说蒸馏来源过滤 → BOOK 兼容性筛选"
 
 SOURCE_CATEGORIES = frozenset(
     {"mechanisms", "contrasts", "syntheses", "prose-controls", "book-dna", "prose-dna", "maps", "arcs"}
@@ -344,7 +346,7 @@ def retrieve_gbrain(
     effective_query = query_override.strip() or retrieval_brief
     query_runner = query_func or query_gbrain
     page_reader = page_func or get_gbrain
-    stdout = query_runner(effective_query, limit=RAW_RESULT_LIMIT, detail="medium")
+    stdout = query_runner(effective_query, limit=QUERY_RECALL_LIMIT, detail="medium")
     parsed = parse_query_results(stdout)
     constraints = extract_hard_constraints(
         creative_direction,
@@ -355,17 +357,23 @@ def retrieve_gbrain(
     )
     allowed_categories = MODE_ALLOWED_CATEGORIES[mode]
     final_limit = CHAPTER_FINAL_RESULT_LIMIT if mode == "chapter" else FINAL_RESULT_LIMIT
-    visible = parsed[:RAW_RESULT_LIMIT]
-    rejected: list[dict[str, str]] = [
-        {"slug": hit["slug"], "reason": "超过原始数量上限"}
-        for hit in parsed[RAW_RESULT_LIMIT:]
-    ]
-    accepted: list[dict[str, Any]] = []
-    for hit in visible:
+    novel_candidates: list[dict[str, Any]] = []
+    rejected: list[dict[str, str]] = []
+    for hit in parsed:
         category = source_category(hit["slug"])
         if category not in allowed_categories:
             rejected.append({"slug": hit["slug"], "reason": f"{mode} 模式不自动使用 {category or '未知来源类别'}"})
             continue
+        novel_candidates.append(hit)
+
+    visible = novel_candidates[:RAW_RESULT_LIMIT]
+    rejected.extend(
+        {"slug": hit["slug"], "reason": "超过小说候选数量上限"}
+        for hit in novel_candidates[RAW_RESULT_LIMIT:]
+    )
+    accepted: list[dict[str, Any]] = []
+    for hit in visible:
+        category = source_category(hit["slug"])
         if _has_surface_conflict(hit["snippet"], constraints):
             rejected.append({"slug": hit["slug"], "reason": "与 BOOK 的明确硬约束冲突"})
             continue
@@ -400,11 +408,14 @@ def retrieve_gbrain(
         "retrieval_brief": retrieval_brief,
         "hard_constraints": constraints,
         "raw_count": len(parsed),
+        "novel_candidate_count": len(novel_candidates),
         "accepted_count": len(accepted),
         "rejected_count": len(rejected),
+        "query_limit": QUERY_RECALL_LIMIT,
         "requested_limit": RAW_RESULT_LIMIT,
         "final_limit": final_limit,
         "raw_stdout": stdout,
+        "novel_candidates": novel_candidates,
         "raw_results": visible,
         "accepted": accepted,
         "rejected": rejected,
