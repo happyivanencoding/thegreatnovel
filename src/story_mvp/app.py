@@ -67,7 +67,7 @@ class ChapterRequest(BaseModel):
 
 
 class PromptRequest(BaseModel):
-    mode: Literal["idea", "outline", "chapter_prep", "chapter", "review"]
+    mode: Literal["idea", "outline", "chapter_prep", "chapter", "review", "state_delta"]
     template: str = ""
     book_content: str = ""
     creative_direction: str = ""
@@ -83,6 +83,9 @@ class PromptRequest(BaseModel):
     current_state: str = ""
     unfulfilled_promises: str = ""
     future_direction: str = ""
+    chapter_number: int = Field(default=0, ge=0)
+    chapter_prose: str = ""
+    chapter_fact_summary: str = ""
 
 
 def workspace_path() -> Path:
@@ -183,8 +186,26 @@ def post_gbrain_query(payload: GBrainQueryRequest) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
 
+def _validate_state_delta_input(payload: PromptRequest) -> None:
+    """State Delta Prompt 生成动作的输入校验。
+
+    只拦截「生成 State Delta Prompt」本身，不是章节门禁：
+    不影响章节提取、批准或保存路径。
+    """
+    if payload.chapter_number <= 0:
+        raise HTTPException(
+            status_code=400, detail="生成 State Delta Prompt 需要正整数的当前章节编号"
+        )
+    if not payload.chapter_prose.strip():
+        raise HTTPException(
+            status_code=400, detail="生成 State Delta Prompt 需要非空的本次正式章节正文"
+        )
+
+
 @app.post("/api/prompt")
 def post_prompt(payload: PromptRequest) -> dict[str, str]:
+    if payload.mode == "state_delta":
+        _validate_state_delta_input(payload)
     try:
         prompt = generate_prompt(**payload.model_dump())
     except HardGateError as error:
@@ -192,6 +213,17 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
             status_code=422,
             detail={"message": str(error), "missing_fields": error.missing_fields},
         ) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"prompt": prompt}
+
+
+@app.post("/api/prompt/state-delta")
+def post_state_delta_prompt(payload: PromptRequest) -> dict[str, str]:
+    """State Delta Prompt 专用入口：只生成页面可见、可复制的 Prompt，不写任何文件。"""
+    _validate_state_delta_input(payload)
+    try:
+        prompt = generate_prompt(**{**payload.model_dump(), "mode": "state_delta"})
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     return {"prompt": prompt}

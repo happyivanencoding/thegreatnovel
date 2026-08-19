@@ -174,6 +174,7 @@
             <span>最近 1—3 章摘要</span>
             <textarea id="recent-summaries" rows="5"></textarea>
           </label>
+          <p class="hint">页面摘要会覆盖 BOOK 状态区内嵌摘要，生成章节 Prompt 前请先与 BOOK 同步。</p>
           <label class="field">
             <span>实际十章摘要（复盘模式）</span>
             <textarea id="actual-summaries" rows="5"></textarea>
@@ -217,6 +218,18 @@
           <span>章节事实摘要（审计查看；不会写入正文）</span>
           <textarea id="chapter-fact-summary" rows="4"></textarea>
         </label>
+
+        <div class="state-delta-block">
+          <div class="action-row wrap">
+            <button id="generate-state-delta-prompt">生成 State Delta Prompt</button>
+            <button id="apply-canon-index-proposal">将 Proposed Canon Index 应用到 BOOK 状态编辑区</button>
+          </div>
+          <label class="field">
+            <span>State Delta Proposal（粘贴模型返回；只提取 `# Proposed Canon Index`）</span>
+            <textarea id="state-delta-response" rows="10" placeholder="批准章节后粘贴模型返回；应用时只提取 `# Proposed Canon Index` 区块，模型返回不会自动写盘。"></textarea>
+          </label>
+          <p class="hint">State Delta 不是章节门禁：生成或应用失败不阻止正文生成、批准或保存。应用按钮只修改浏览器页面上的 BOOK 状态编辑区：不调用保存 API、不自动写 BOOK.md、不修改其它 BOOK 区块；作者仍必须点“保存 BOOK.md”才写盘。</p>
+        </div>
 
         <div class="action-row wrap">
           <button id="apply-response">将 Codex 返回放入 Proposal 编辑区</button>

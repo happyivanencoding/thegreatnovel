@@ -29,11 +29,16 @@ from story_mvp.gbrain_retrieval import (
 )
 from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
+    DEFAULT_STATE_DELTA_TEMPLATE,
+    PROMPT_MODES,
     PROSE_REALIZATION_CONTRACT,
     SINGLE_WRITER_RUNTIME_NOTE,
     WRITER_AUDIT_RULE,
     HardGateError,
+    canon_index_has_labels,
     generate_prompt,
+    parse_canon_index,
+    render_canon_index,
     sanitize_chapter_template,
     validate_current_outline,
 )
@@ -1905,3 +1910,557 @@ def test_default_chapter_prompt_audit_only_reports_actual_items() -> None:
     for heading in ("# Writer Audit", "# 正式正文", "# 章节事实摘要"):
         assert heading in prompt
     assert "只放 100—200 字事实摘要" in prompt
+
+
+# ---------------------------------------------------------------------------
+# State Delta Proposal v1 + Canon Index Normalization（任务 #2）
+# ---------------------------------------------------------------------------
+
+
+STATE_DELTA_STATUS_FIXTURE = """当前已完成第3章。
+
+最近章节摘要：
+第1章：林砚补上最小连接，挡住碎石雨。
+第2章：
+- 林砚修复完整火符；
+- 完整火符卖给葛宁。
+
+当前状态：
+林砚在废弃升降井；手持八枚铜角。
+
+未兑现承诺：
+- 浮空城为什么持续下沉；
+- 学院试炼尚未发生。
+作者备注：前三章可接受；继续观察。"""
+
+STATE_DELTA_BOOK = f"""# 小说总体设计画像
+
+## 2. 世界观结构
+CONTRACT_WORLD_MARKER
+
+## 8. 文风与可操作参数
+PROSE_STYLE_MARKER
+
+# 未来100章大型剧情块
+FULL_PLAN_MARKER
+
+# 当前状态、未兑现承诺与作者备注
+当前已完成第3章。
+
+最近章节摘要：
+BOOK_RECENT_SUMMARY_MARKER
+
+当前状态：
+林砚在废弃升降井。
+
+未兑现承诺：
+- 浮空城为什么持续下沉。
+
+作者备注：前三章可接受；继续观察。
+"""
+
+LABELED_STATUS_BOOK = """# 小说总体设计画像
+
+## 2. 世界观结构
+CONTRACT_WORLD_MARKER
+
+# 当前状态、未兑现承诺与作者备注
+当前已完成第2章。
+
+最近章节摘要：
+BOOK_RECENT_SUMMARY_MARKER
+
+当前状态：
+现场状态标记。
+
+未兑现承诺：
+- 承诺标记。
+
+作者备注：
+作者备注标记。
+"""
+
+
+def test_authority_rule_is_three_dimensional_with_canon_prose_over_canon_index() -> None:
+    # 验收点 1：已发生事实规则明确为 CANON PROSE > CANON INDEX，
+    # 且权威改为三维度规则，不再是六级总排名。
+    assert "已发生事实：CANON PROSE > CANON INDEX" in MINIMAL_AUTHORITY_RULE
+    assert "未来创作意图：BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION" in MINIMAL_AUTHORITY_RULE
+    assert "表达控制：PROSE PROFILE 只控制表达方式，不能修改已发生事实或未来计划" in MINIMAL_AUTHORITY_RULE
+    assert "跨维度冲突" in MINIMAL_AUTHORITY_RULE
+    assert "权威层级（从高到低）" not in MINIMAL_AUTHORITY_RULE
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="",
+        current_outline=_full_eight_field_outline(),
+    )
+    assert "已发生事实：CANON PROSE > CANON INDEX" in prompt
+    assert "PROSE PROFILE 只控制表达方式" in prompt
+
+
+def test_book_contract_cannot_override_facts_that_already_happened() -> None:
+    # 验收点 2：BOOK CONTRACT 不得覆盖已发生事实。
+    assert "已发生事实不能被 BOOK CONTRACT 或 PLAN 覆盖" in MINIMAL_AUTHORITY_RULE
+    assert "不能修改已发生事实或未来计划" in MINIMAL_AUTHORITY_RULE
+
+
+def test_writer_reports_drift_only_and_state_delta_does_not_check_drift() -> None:
+    # 验收点 3：BOOK CONTRACT drift 只在 Writer/章节运行期报告、不自动修改；
+    # state_delta 文案不要求检查或报告 drift。
+    assert "在 Writer Audit 中报告 BOOK CONTRACT drift" in MINIMAL_AUTHORITY_RULE
+    assert "不得自动修改 BOOK CONTRACT" in MINIMAL_AUTHORITY_RULE
+    assert "drift" not in DEFAULT_STATE_DELTA_TEMPLATE.lower()
+    prompt = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=STATE_DELTA_BOOK,
+        chapter_number=4,
+        chapter_prose="NEW_CHAPTER_PROSE_MARKER",
+    )
+    assert "drift" not in prompt.lower()
+    assert "无需要报告的状态冲突或不确定项" in prompt
+
+
+def test_parse_canon_index_reads_the_four_fields_from_real_status_format() -> None:
+    # 验收点 4：状态区能解析 current_state / recent_summaries / open_promises / author_notes。
+    fields = parse_canon_index(STATE_DELTA_STATUS_FIXTURE)
+    assert set(fields) == {"current_state", "recent_summaries", "open_promises", "author_notes"}
+    assert fields["current_state"].startswith("当前已完成第3章。")
+    assert "林砚在废弃升降井；手持八枚铜角。" in fields["current_state"]
+    assert "第1章：林砚补上最小连接，挡住碎石雨。" in fields["recent_summaries"]
+    assert "- 完整火符卖给葛宁。" in fields["recent_summaries"]
+    assert "浮空城为什么持续下沉" in fields["open_promises"]
+    assert "学院试炼尚未发生" in fields["open_promises"]
+    assert fields["author_notes"] == "前三章可接受；继续观察。"
+    # 空输入与默认模板格式都不抛错，四键始终在场。
+    assert set(parse_canon_index("")) == {
+        "current_state", "recent_summaries", "open_promises", "author_notes"
+    }
+    default_fields = parse_canon_index("当前状态：\n\n未兑现承诺：\n\n作者备注：")
+    assert set(default_fields) == {
+        "current_state", "recent_summaries", "open_promises", "author_notes"
+    }
+
+
+def test_recent_summaries_are_injected_only_once_in_state_delta_and_chapter_prompts() -> None:
+    # 验收点 5：页面显式 recent_summaries 与 BOOK 内摘要不会重复注入。
+    explicit = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=STATE_DELTA_BOOK,
+        chapter_number=4,
+        chapter_prose="PROSE_MARKER",
+        recent_summaries="PAGE_SUMMARY_MARKER",
+    )
+    assert explicit.count("PAGE_SUMMARY_MARKER") == 1
+    assert "BOOK_RECENT_SUMMARY_MARKER" not in explicit
+
+    fallback = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=STATE_DELTA_BOOK,
+        chapter_number=4,
+        chapter_prose="PROSE_MARKER",
+    )
+    assert fallback.count("BOOK_RECENT_SUMMARY_MARKER") == 1
+    assert "本次只注入这一份" in fallback
+
+    # chapter 模式同样只注入一份。
+    chapter_explicit = generate_prompt(
+        mode="chapter",
+        template="CHAPTER TEMPLATE",
+        book_content=LABELED_STATUS_BOOK,
+        current_outline=_full_eight_field_outline(),
+        recent_summaries="PAGE_SUMMARY_MARKER",
+    )
+    assert chapter_explicit.count("PAGE_SUMMARY_MARKER") == 1
+    assert "BOOK_RECENT_SUMMARY_MARKER" not in chapter_explicit
+
+    chapter_fallback = generate_prompt(
+        mode="chapter",
+        template="CHAPTER TEMPLATE",
+        book_content=LABELED_STATUS_BOOK,
+        current_outline=_full_eight_field_outline(),
+    )
+    assert chapter_fallback.count("BOOK_RECENT_SUMMARY_MARKER") == 1
+
+
+def test_author_notes_are_marked_as_meta_control() -> None:
+    # 验收点 6：AUTHOR NOTES 被标为元控制，不属于 Canon 事实。
+    rendered = render_canon_index(parse_canon_index(STATE_DELTA_STATUS_FIXTURE))
+    assert "作者元控制" in rendered
+    assert "不属于 Canon 事实" in rendered
+    assert "State Delta 不得自动修改或删除" in rendered
+    assert "前三章可接受；继续观察。" in rendered
+    prompt = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=STATE_DELTA_BOOK,
+        chapter_number=4,
+        chapter_prose="PROSE_MARKER",
+    )
+    assert "作者元控制" in prompt
+    assert "前三章可接受；继续观察。" in prompt
+    assert "作者备注：（原样保留旧 AUTHOR NOTES，不得增删改写）" in prompt
+
+
+def test_state_delta_prompt_excludes_gbrain_references_full_plan_and_prose_profile() -> None:
+    # 验收点 7：State Delta Prompt 不含 GBrain、Reference Programs、完整百章计划或 prose profile。
+    assert "state_delta" in PROMPT_MODES
+    prompt = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=STATE_DELTA_BOOK,
+        chapter_number=4,
+        chapter_prose="NEW_CHAPTER_PROSE_MARKER",
+        chapter_fact_summary="FACT_SUMMARY_MARKER",
+        previous_chapter_text="PREVIOUS_PROSE_MARKER",
+        gbrain_inspiration="GBRAIN_MARKER",
+        selected_references=[{"program_id": "REF_MARKER"}],
+        current_long_block="LONG_BLOCK_MARKER",
+    )
+    for marker in (
+        "GBRAIN_MARKER",
+        "REF_MARKER",
+        "FULL_PLAN_MARKER",
+        "PROSE_STYLE_MARKER",
+        "CONTRACT_WORLD_MARKER",
+        "PREVIOUS_PROSE_MARKER",
+        "LONG_BLOCK_MARKER",
+        "GBrain Inspiration Results",
+        "Reference Program 1",
+    ):
+        assert marker not in prompt
+    assert "NEW_CHAPTER_PROSE_MARKER" in prompt
+
+
+def test_state_delta_prompt_marks_formal_prose_as_top_source_and_summary_as_auxiliary() -> None:
+    # 验收点 8：正式正文是 State Delta 的最高来源，章节事实摘要仅作辅助。
+    assert "本次正式正文是 State Delta 的最高事实来源" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "仅作辅助，冲突时以正式正文为准" in DEFAULT_STATE_DELTA_TEMPLATE
+    prompt = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=STATE_DELTA_BOOK,
+        chapter_number=4,
+        chapter_prose="NEW_CHAPTER_PROSE_MARKER",
+        chapter_fact_summary="FACT_SUMMARY_MARKER",
+    )
+    assert "本次新正式章节正文（State Delta 的最高事实来源）" in prompt
+    assert "Writer 章节事实摘要（仅辅助；与正式正文冲突时以正式正文为准）" in prompt
+    assert "NEW_CHAPTER_PROSE_MARKER" in prompt
+    assert "FACT_SUMMARY_MARKER" in prompt
+    # 输出合同：两个一级标题与禁止项
+    assert "# State Delta Audit" in prompt
+    assert "# Proposed Canon Index" in prompt
+    assert "禁止：输出 JSON/YAML；输出 chain-of-thought" in prompt
+    assert "修改 BOOK CONTRACT、PLAN 或正式章节正文" in prompt
+
+
+def test_apply_canon_index_proposal_requires_heading_and_content() -> None:
+    # 验收点 9：模型返回缺少 `# Proposed Canon Index`（或内容为空）时不修改页面。
+    html = Path("src/story_mvp/templates/index.html").read_text(encoding="utf-8")
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    for marker in (
+        'id="generate-state-delta-prompt"',
+        'id="state-delta-response"',
+        'id="apply-canon-index-proposal"',
+        "State Delta 不是章节门禁",
+    ):
+        assert marker in html
+    start = js.index("function extractProposedCanonIndex")
+    end = js.index("function applyCanonIndexProposal", start)
+    extractor = js[start:end]
+    # 精确化后：行首一级标题匹配 + 围栏代码块剥离 + 终止限定下一个一级标题。
+    assert r"const heading = /^# Proposed Canon Index[ \t]*$/;" in extractor
+    assert "if (start < 0) return null;" in extractor
+    # 内容为空同样返回 null，不会应用空提案。
+    assert "return content ? content : null;" in extractor
+    apply_start = js.index("function applyCanonIndexProposal")
+    apply_end = js.index("async function saveBook", apply_start)
+    apply_body = js[apply_start:apply_end]
+    assert "if (!proposed)" in apply_body
+    assert "未修改 BOOK 状态编辑区" in apply_body
+
+
+def test_apply_canon_index_proposal_is_browser_only_and_touches_status_editor_only() -> None:
+    # 验收点 10：应用 Proposal 只修改页面状态编辑区，不调用 API。
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    apply_start = js.index("function applyCanonIndexProposal")
+    apply_end = js.index("async function saveBook", apply_start)
+    apply_body = js[apply_start:apply_end]
+    assert '$("section-status").value = proposed;' in apply_body
+    assert "requestJson" not in apply_body
+    assert "fetch(" not in apply_body
+    assert "PUT" not in apply_body
+    assert "尚未写盘" in apply_body
+    # 不触碰其它 BOOK 区块编辑区。
+    for other in ('$("section-long_plan")', '$("section-small_plan")', '$("design-'):
+        assert other not in apply_body
+
+
+def test_save_book_remains_the_only_book_write_action() -> None:
+    # 验收点 11：Save BOOK 仍是唯一写盘动作；State Delta 控件不调用保存 API。
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    save_start = js.index("async function saveBook")
+    save_end = js.index("async function saveTemplates", save_start)
+    save_body = js[save_start:save_end]
+    assert 'method: "PUT"' in save_body
+    assert "composeBookContent()" in save_body
+
+    gen_start = js.index("async function generateStateDeltaPrompt")
+    gen_end = js.index("async function copyPrompt", gen_start)
+    gen_body = js[gen_start:gen_end]
+    assert '"/api/prompt/state-delta"' in gen_body
+    for marker in ("PUT", "/book", "/chapters", "saveBook"):
+        assert marker not in gen_body
+
+
+def test_state_delta_flow_does_not_write_book_or_chapters() -> None:
+    # 验收点 12：State Delta 不修改 BOOK CONTRACT、PLAN 或章节文件；
+    # 章节批准/保存也不自动触发 State Delta。
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    approve_start = js.index("async function approveChapter")
+    approve_end = js.index("async function createBook", approve_start)
+    approve_body = js[approve_start:approve_end]
+    assert "state-delta" not in approve_body
+    assert "generateStateDeltaPrompt" not in approve_body
+
+
+def test_state_delta_prompt_generation_does_not_touch_files(tmp_path: Path, monkeypatch) -> None:
+    # 验收点 12（API 层）：生成 State Delta Prompt 不写 BOOK、不写章节、不写 PROMPTS。
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    client.post("/api/books", json={"book_id": "demo"})
+    client.post(
+        "/api/books/demo/chapters",
+        json={"chapter_number": 1, "content": "chapter one body"},
+    )
+    book_path = tmp_path / "demo" / "BOOK.md"
+    prompts_path = tmp_path / "demo" / "PROMPTS.md"
+    before_book = book_path.read_text(encoding="utf-8")
+    before_prompts = prompts_path.read_text(encoding="utf-8")
+    before_chapters = sorted(
+        path.name for path in (tmp_path / "demo" / "chapters").iterdir()
+    )
+
+    for url in ("/api/prompt/state-delta", "/api/prompt"):
+        response = client.post(
+            url,
+            json={
+                "mode": "state_delta",
+                "book_content": STATE_DELTA_BOOK,
+                "chapter_number": 4,
+                "chapter_prose": "NEW_CHAPTER_PROSE_MARKER",
+                "chapter_fact_summary": "FACT_SUMMARY_MARKER",
+                "recent_summaries": "PAGE_SUMMARY_MARKER",
+            },
+        )
+        assert response.status_code == 200
+        prompt = response.json()["prompt"]
+        assert "NEW_CHAPTER_PROSE_MARKER" in prompt
+        assert "# Proposed Canon Index" in prompt
+
+    assert book_path.read_text(encoding="utf-8") == before_book
+    assert prompts_path.read_text(encoding="utf-8") == before_prompts
+    assert sorted(path.name for path in (tmp_path / "demo" / "chapters").iterdir()) == before_chapters
+    assert (tmp_path / "demo" / "chapters" / "chapter-0001.md").read_text(encoding="utf-8") == "chapter one body"
+
+
+# ---------------------------------------------------------------------------
+# 三维度代码评审修复项（任务 #4 修复阶段）
+# ---------------------------------------------------------------------------
+
+
+UNLABELED_STATUS_BOOK = """# 小说总体设计画像
+
+# 当前状态、未兑现承诺与作者备注
+当前已完成第3章。
+林砚在废弃升降井休整。
+旧格式自由文本状态。
+"""
+
+
+def test_state_delta_unlabeled_status_falls_back_to_raw_injection() -> None:
+    # 修复 1：state_delta 无标签旧格式状态区原样注入，不被 parse 静默清空。
+    prompt = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=UNLABELED_STATUS_BOOK,
+        chapter_number=4,
+        chapter_prose="PROSE_MARKER",
+    )
+    assert "当前已完成第3章。" in prompt
+    assert "旧格式自由文本状态。" in prompt
+    assert "CURRENT STATE（已发生事实的压缩状态）" not in prompt
+
+    # 无标签回退时页面显式摘要单独注入一份，不重复也不丢失。
+    with_page = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=UNLABELED_STATUS_BOOK,
+        chapter_number=4,
+        chapter_prose="PROSE_MARKER",
+        recent_summaries="PAGE_SUMMARY_MARKER",
+    )
+    assert with_page.count("PAGE_SUMMARY_MARKER") == 1
+    assert "旧格式自由文本状态。" in with_page
+    # 有标签状态区仍走标签路径（real-exp-001 路径不受影响）。
+    labeled = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=STATE_DELTA_BOOK,
+        chapter_number=4,
+        chapter_prose="PROSE_MARKER",
+    )
+    assert "CURRENT STATE（已发生事实的压缩状态）" in labeled
+
+
+def test_parse_canon_index_keeps_pre_label_lines_in_current_state() -> None:
+    # 修复 3：首个标签前的无标签行并入 current_state（前导无标签行用例固化）。
+    fields = parse_canon_index("当前已完成第2章。\n林砚刚到浮空城。\n\n当前状态：\n在集市门口。")
+    assert fields["current_state"] == "当前已完成第2章。\n林砚刚到浮空城。\n在集市门口。"
+    unlabeled_only = parse_canon_index("当前已完成第1章。\n状态行一。\n状态行二。")
+    assert unlabeled_only["current_state"] == "当前已完成第1章。\n状态行一。\n状态行二。"
+    # 确定性行为固化：内容行以标签+冒号开头会整体切换字段。
+    switch = parse_canon_index("当前状态：\n林砚手持铜角。\n作者备注：继续观察。")
+    assert switch["current_state"] == "林砚手持铜角。"
+    assert switch["author_notes"] == "继续观察。"
+    # 该约束在函数 docstring 与 State Delta 文案中显式记录。
+    assert "内容行不应以" in (parse_canon_index.__doc__ or "")
+    assert "各字段内容行不得以" in DEFAULT_STATE_DELTA_TEMPLATE
+
+
+def test_canon_index_has_labels_requires_at_least_one_field_label() -> None:
+    # 追加修复 C：仅含「当前已完成第N章。」无字段标签时判定为无标签。
+    assert canon_index_has_labels("当前已完成第3章。\n自由文本状态。") is False
+    assert canon_index_has_labels("") is False
+    assert canon_index_has_labels("当前状态：\n在集市门口。") is True
+    assert canon_index_has_labels("作者备注：尚可。") is True
+    assert canon_index_has_labels(STATE_DELTA_STATUS_FIXTURE) is True
+    # chapter 模式：仅完成行的状态区原样注入，不渲染「（未填写）」占位块。
+    book = (
+        "# 小说总体设计画像\n\n"
+        "# 当前状态、未兑现承诺与作者备注\n"
+        "当前已完成第1章。\n自由状态文本。"
+    )
+    packet = build_chapter_context(book_content=book)
+    assert "自由状态文本。" in packet.canon_context
+    assert "CURRENT STATE（已发生事实的压缩状态）" not in packet.canon_context
+
+
+def test_chapter_prep_injects_recent_summaries_only_once() -> None:
+    # 追加修复 A：页面显式摘要非空时，chapter_prep 扣除标签化状态区内嵌摘要。
+    explicit = generate_prompt(
+        mode="chapter_prep",
+        template="PREP TEMPLATE",
+        book_content=LABELED_STATUS_BOOK,
+        recent_summaries="PAGE_SUMMARY_MARKER",
+    )
+    assert explicit.count("PAGE_SUMMARY_MARKER") == 1
+    assert "BOOK_RECENT_SUMMARY_MARKER" not in explicit
+    # 其余状态段仍注入。
+    assert "现场状态标记。" in explicit
+    assert "- 承诺标记。" in explicit
+    # 页面摘要为空时保持注入 BOOK 内摘要。
+    fallback = generate_prompt(
+        mode="chapter_prep",
+        template="PREP TEMPLATE",
+        book_content=LABELED_STATUS_BOOK,
+    )
+    assert fallback.count("BOOK_RECENT_SUMMARY_MARKER") == 1
+
+
+def test_state_delta_template_exclusion_lists_ten_chapter_plan_and_references() -> None:
+    # 追加修复 B-1：排除声明补全十章计划与 Reference Programs。
+    assert (
+        "BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、"
+        "Reference Programs 与前两章正文都不在本次输入中"
+    ) in DEFAULT_STATE_DELTA_TEMPLATE
+
+
+def test_authority_wording_is_dimension_based_not_rank_based() -> None:
+    # 追加修复 B-2：两处「权威层级」残留改为三维度语义表述。
+    assert "权威规则（按维度划分）与冲突处理" in PROSE_REALIZATION_CONTRACT
+    assert "权威层级" not in PROSE_REALIZATION_CONTRACT
+    prompt = generate_prompt(
+        mode="chapter",
+        template="CHAPTER TEMPLATE",
+        book_content="",
+        current_outline=_full_eight_field_outline(),
+    )
+    assert "## AUTHORITY——权威规则（按维度划分）与冲突处理" in prompt
+    assert "权威层级" not in prompt
+
+
+def test_extract_proposed_canon_index_ignores_code_blocks_and_keeps_subheadings() -> None:
+    # 修复 2：代码块/Audit 中的引用不误提取；提案内 ## 子标题不被截断。
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    start = js.index("function extractProposedCanonIndex")
+    end = js.index("function applyCanonIndexProposal", start)
+    extractor = js[start:end]
+    # 先剥离围栏代码块，代码块内或 Audit 中的引用不会命中。
+    assert "response.replace(" in extractor
+    assert "```" in extractor
+    # 行首一级标题匹配；终止条件限定下一个一级标题（## 子标题不截断）。
+    assert r"/^#(?!\#)/" in extractor
+    # 两个守卫保留。
+    assert "if (start < 0) return null;" in extractor
+    assert "return content ? content : null;" in extractor
+
+
+def test_state_delta_generation_rejects_invalid_chapter_number_or_empty_prose(tmp_path: Path, monkeypatch) -> None:
+    # 修复 4：生成动作用 400 拦截；不是章节门禁，章节保存不受影响。
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    client.post("/api/books", json={"book_id": "demo"})
+    base = {"mode": "state_delta", "book_content": STATE_DELTA_BOOK}
+
+    empty_prose = client.post(
+        "/api/prompt/state-delta", json={**base, "chapter_number": 4, "chapter_prose": "   "}
+    )
+    assert empty_prose.status_code == 400
+    zero_chapter = client.post(
+        "/api/prompt/state-delta", json={**base, "chapter_number": 0, "chapter_prose": "PROSE"}
+    )
+    assert zero_chapter.status_code == 400
+    negative_chapter = client.post(
+        "/api/prompt/state-delta", json={**base, "chapter_number": -1, "chapter_prose": "PROSE"}
+    )
+    assert negative_chapter.status_code == 422  # PromptRequest.chapter_number ge=0
+    # /api/prompt 入口同样拦截。
+    assert client.post(
+        "/api/prompt", json={**base, "chapter_number": 0, "chapter_prose": "PROSE"}
+    ).status_code == 400
+    # 合法输入仍正常生成。
+    ok = client.post(
+        "/api/prompt/state-delta", json={**base, "chapter_number": 4, "chapter_prose": "PROSE"}
+    )
+    assert ok.status_code == 200
+    # 拦截不是章节门禁：无效生成请求之后章节保存照常可用。
+    saved = client.post(
+        "/api/books/demo/chapters", json={"chapter_number": 4, "content": "chapter four body"}
+    )
+    assert saved.status_code == 200
+
+
+def test_generate_state_delta_prompt_front_guards_and_output_notice() -> None:
+    # 修复 4（前端）+ 追加修复 E：空正文/无效章节号阻止生成；成功文案提示已替换输出区。
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    gen_start = js.index("async function generateStateDeltaPrompt")
+    gen_end = js.index("async function copyPrompt", gen_start)
+    gen_body = js[gen_start:gen_end]
+    assert "需要正整数的当前章节编号" in gen_body
+    assert "正式正文为空，无法生成 State Delta Prompt" in gen_body
+    # 守卫在发起请求之前。
+    assert gen_body.index("chapter-body-for-save") < gen_body.index("requestJson")
+    # 成功状态文案提示已替换共用 Prompt 输出区内容。
+    assert "已替换原 Prompt 输出区内容" in gen_body
+
+
+def test_recent_summaries_hint_warns_about_overriding_book_summaries() -> None:
+    # 追加修复 D：页面摘要输入框附近提示会覆盖 BOOK 内嵌摘要。
+    html = Path("src/story_mvp/templates/index.html").read_text(encoding="utf-8")
+    start = html.index('id="recent-summaries"')
+    end = html.index('id="actual-summaries"', start)
+    region = html[start:end]
+    assert "页面摘要会覆盖 BOOK 状态区内嵌摘要，生成章节 Prompt 前请先与 BOOK 同步" in region

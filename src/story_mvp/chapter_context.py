@@ -7,9 +7,13 @@
 - BOOK CONTRACT：作者批准的长期设计（BOOK §0—§5），约束未来，不等于已经发生
 - CANON INDEX：当前状态与最近摘要，只是正式正文的压缩索引
 - PLAN：尚未发生的当前意图（当前大型剧情块、十章计划与八字段小纲）
-- PROSE PROFILE：软表达控制（BOOK §7—§10 节奏/文风画像）
+- PROSE PROFILE：软表达控制（BOOK §7—§10 节奏/文风画像），只控制表达方式
 - OPTIONAL INSPIRATION：可选参考（GBrain 结果与 Reference Programs），
   不得覆盖以上任何层级
+
+权威不再使用单条总排名，而是按维度划分（见 MINIMAL_AUTHORITY_RULE）：
+已发生事实（CANON PROSE > CANON INDEX）、未来创作意图
+（BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION）、表达控制（PROSE PROFILE）。
 """
 
 from __future__ import annotations
@@ -18,17 +22,22 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from .prompts import CURRENT_STATE_HEADING, format_references, parse_outline_fields
+from .prompts import (
+    CURRENT_STATE_HEADING,
+    canon_index_has_labels,
+    format_references,
+    parse_canon_index,
+    parse_outline_fields,
+    render_canon_index,
+)
 
-#: authority 区块只放这一份最小权威规则（权威层级 + 冲突处理方式），
+#: authority 区块只放这一份最小权威规则（按维度划分 + 冲突处理方式），
 #: 整份运行合同不再重复注入。
-MINIMAL_AUTHORITY_RULE = """权威层级（从高到低）：
-1. CANON PROSE：已批准的正式前文；已经发生事实的最高来源。
-2. BOOK CONTRACT：作者批准的长期设计、世界规则、读者承诺和人物方向。它约束未来，但不表示其中所有人物弧和阶段方向已经发生。若正式正文已经与旧设计出现冲突，不得改写过去，应在 Audit 中报告。
-3. CANON INDEX：当前状态和最近摘要，是正式正文的压缩索引；与正式正文冲突时以正式正文为准。
-4. PLAN：当前大型剧情块、十章计划和当前章事件合同；只决定尚未发生的内容。
-5. PROSE PROFILE：软表达控制。
-6. OPTIONAL INSPIRATION：可选参考，不能覆盖以上任何层级。
+MINIMAL_AUTHORITY_RULE = """权威规则按维度划分（不使用单条总排名）：
+1. 已发生事实：CANON PROSE > CANON INDEX。CANON PROSE 是已批准的正式前文；已经发生事实的最高来源。CANON INDEX 是当前状态和最近摘要，是正式正文的压缩索引；与正式正文冲突时以正式正文为准。
+2. 未来创作意图：BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION。BOOK CONTRACT 是作者批准的长期设计、世界规则、读者承诺和人物方向；它约束未来，但不表示其中所有人物弧和阶段方向已经发生。PLAN 是当前大型剧情块、十章计划和当前章事件合同，只决定尚未发生的内容。OPTIONAL INSPIRATION 是可选参考，不能覆盖 BOOK CONTRACT、PLAN 或已发生事实。
+3. 表达控制：PROSE PROFILE 只控制表达方式，不能修改已发生事实或未来计划。
+4. 跨维度冲突：已发生事实不能被 BOOK CONTRACT 或 PLAN 覆盖；如果正文或 CANON INDEX 证明旧 BOOK CONTRACT 已经失效，保留已发生事实，并在 Writer Audit 中报告 BOOK CONTRACT drift；不得自动修改 BOOK CONTRACT。
 任何冲突必须写入 Writer Audit，不得偷偷改写过去。"""
 
 #: 事件合同重点呈现的六项；「推动事件的人」作为场景上下文，「叙事功能」降级为规划备注。
@@ -145,10 +154,23 @@ def build_chapter_context(
 
     canon_parts: list[str] = []
     status = _markdown_block(book_content, CANON_INDEX_STATUS_HEADING)
+    page_summaries = recent_summaries.strip()
+    summaries_rendered = False
     if status:
-        canon_parts.append(f"当前状态、未兑现承诺与作者备注\n\n{status}")
-    if recent_summaries.strip():
-        canon_parts.append(f"最近 1—3 章摘要\n\n{recent_summaries.strip()}")
+        if canon_index_has_labels(status):
+            # 规范化 CANON INDEX：四段语义分开渲染；最近摘要只注入一份
+            # （页面显式传入优先，否则用 BOOK 状态区内解析出的摘要）。
+            canon_parts.append(
+                "当前状态、未兑现承诺与作者备注（规范化 CANON INDEX）\n\n"
+                + render_canon_index(
+                    parse_canon_index(status), page_recent_summaries=page_summaries
+                )
+            )
+            summaries_rendered = True
+        else:
+            canon_parts.append(f"当前状态、未兑现承诺与作者备注\n\n{status}")
+    if page_summaries and not summaries_rendered:
+        canon_parts.append(f"最近 1—3 章摘要\n\n{page_summaries}")
     canon_context = "\n\n".join(canon_parts)
 
     plan_parts: list[str] = []

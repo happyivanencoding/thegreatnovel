@@ -173,6 +173,7 @@ function populateBook(book) {
   $("codex-response").value = "";
   $("chapter-body-for-save").value = "";
   $("chapter-fact-summary").value = "";
+  $("state-delta-response").value = "";
   renderLongPlanPanorama();
   refreshPreviousChapterText();
   showStatus(`已加载 ${book.book_id}`);
@@ -460,6 +461,41 @@ async function generateChapterPrepPrompt() {
   await generatePrompt();
 }
 
+function stateDeltaPayload() {
+  return {
+    mode: "state_delta",
+    book_content: composeBookContent(),
+    chapter_number: Number($("chapter-number").value),
+    recent_summaries: $("recent-summaries").value,
+    chapter_prose: $("chapter-body-for-save").value,
+    chapter_fact_summary: $("chapter-fact-summary").value,
+  };
+}
+
+async function generateStateDeltaPrompt() {
+  // 只拦截「生成 State Delta Prompt」动作本身，不是章节门禁：
+  // 不影响正式正文提取、章节批准或保存路径。
+  const chapterNumber = Number($("chapter-number").value);
+  if (!Number.isInteger(chapterNumber) || chapterNumber < 1) {
+    showStatus("生成 State Delta Prompt 需要正整数的当前章节编号", true);
+    return;
+  }
+  if (!$("chapter-body-for-save").value.trim()) {
+    showStatus("正式正文为空，无法生成 State Delta Prompt；请先提取或粘贴本章正式正文", true);
+    return;
+  }
+  try {
+    const payload = await requestJson("/api/prompt/state-delta", {
+      method: "POST",
+      body: JSON.stringify(stateDeltaPayload()),
+    });
+    $("prompt-text").value = payload.prompt;
+    showStatus("State Delta Prompt 已生成，可复制给模型；它不会写盘，也不是章节门禁。已替换原 Prompt 输出区内容");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
 async function copyPrompt() {
   const text = $("prompt-text").value;
   if (!text) {
@@ -556,6 +592,33 @@ function extractChapterBody() {
   $("chapter-fact-summary").value = artifact.summary;
   showStatus("已提取正式正文；审计信息和事实摘要不会写入章节文件");
   return true;
+}
+
+function extractProposedCanonIndex(response) {
+  // 先剥离围栏代码块，避免命中代码块内或 Audit 中的引用；
+  // 只匹配行首一级标题，终止条件限定下一个一级标题（提案内 ## 子标题不截断）。
+  const heading = /^# Proposed Canon Index[ \t]*$/;
+  const stripped = response.replace(/^```[^\n]*\n[\s\S]*?^```[ \t]*$/gm, "");
+  const lines = stripped.split(/\r?\n/);
+  const start = lines.findIndex((line) => heading.test(line));
+  if (start < 0) return null;
+  const collected = [];
+  for (const line of lines.slice(start + 1)) {
+    if (/^#(?!\#)/.test(line)) break;
+    collected.push(line);
+  }
+  const content = collected.join("\n").trim();
+  return content ? content : null;
+}
+
+function applyCanonIndexProposal() {
+  const proposed = extractProposedCanonIndex($("state-delta-response").value);
+  if (!proposed) {
+    showStatus("模型返回缺少 `# Proposed Canon Index` 一级标题或内容为空，未修改 BOOK 状态编辑区", true);
+    return;
+  }
+  $("section-status").value = proposed;
+  showStatus("Proposed Canon Index 已应用到浏览器 BOOK 状态编辑区，尚未写盘；确认后请点“保存 BOOK.md”");
 }
 
 async function saveBook() {
@@ -711,6 +774,8 @@ $("apply-response").addEventListener("click", () => {
 });
 $("apply-outline-to-book").addEventListener("click", applyOutlineToBook);
 $("extract-chapter-body").addEventListener("click", extractChapterBody);
+$("generate-state-delta-prompt").addEventListener("click", generateStateDeltaPrompt);
+$("apply-canon-index-proposal").addEventListener("click", applyCanonIndexProposal);
 $("save-book").addEventListener("click", saveBook);
 $("save-templates").addEventListener("click", saveTemplates);
 $("save-proposal").addEventListener("click", saveProposal);

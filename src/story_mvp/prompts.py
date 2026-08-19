@@ -11,6 +11,7 @@ PROMPT_MODES = {
     "chapter_prep": "当前章执行小纲",
     "chapter": "当前章节写作",
     "review": "十章复盘与下一批十章",
+    "state_delta": "State Delta 提案与 Canon Index 更新",
 }
 
 REQUIRED_OUTLINE_FIELDS = (
@@ -40,7 +41,7 @@ WRITER_AUDIT_RULE = """Writer Audit 只报告实际存在的事项：
 不要把正常的场景安排、遣词选择、句段变化或普通润色包装成问题。不要为了满足数量而制造发现。不要输出 chain-of-thought。"""
 
 
-PROSE_REALIZATION_CONTRACT = f"""本合同只负责“how to say”，不重规划“what happens”。本次为单 Writer 直接写作：根据已批准的当前章事件合同直接写出可提交的正式正文，不模拟多 Writer 串行稿件，不输出内部推理。权威层级与冲突处理以运行期上下文中的 AUTHORITY 最小权威规则为准，只注入一次，不在这里复述。
+PROSE_REALIZATION_CONTRACT = f"""本合同只负责“how to say”，不重规划“what happens”。本次为单 Writer 直接写作：根据已批准的当前章事件合同直接写出可提交的正式正文，不模拟多 Writer 串行稿件，不输出内部推理。权威规则（按维度划分）与冲突处理以运行期上下文中的 AUTHORITY 最小权威规则为准，只注入一次，不在这里复述。
 
 ## Output boundary
 
@@ -56,7 +57,7 @@ PROSE_REALIZATION_CONTRACT = f"""本合同只负责“how to say”，不重规�
 
 ## Prose profile 地位
 
-BOOK 的 `## 7. 叙事结构`、`## 8. 文风与可操作参数`、`## 9. 对话特点`、`## 10. 节奏结构` 共同构成当前书的 prose profile。它们是作者可编辑的软控制：决定叙述距离、句段变化、说明进入方式、角色声音和场景压力，不是禁词表、固定句长或硬性风格评分。GBrain Inspiration Results 与 Reference Programs 只是 OPTIONAL INSPIRATION 可选参考，不能覆盖 PROSE PROFILE、CANON PROSE、CANON INDEX 或 PLAN。"""
+BOOK 的 `## 7. 叙事结构`、`## 8. 文风与可操作参数`、`## 9. 对话特点`、`## 10. 节奏结构` 共同构成当前书的 prose profile。它们是作者可编辑的软控制：决定叙述距离、句段变化、说明进入方式、角色声音和场景压力，不是禁词表、固定句长或硬性风格评分。GBrain Inspiration Results 与 Reference Programs 只是 OPTIONAL INSPIRATION 可选参考，不能覆盖 BOOK CONTRACT、CANON PROSE、CANON INDEX、PLAN 或 PROSE PROFILE。"""
 
 SINGLE_WRITER_RUNTIME_NOTE = "运行期声明：本次为单 Writer 直接写作；任何多 Writer 协议已被本运行合同取代。"
 
@@ -281,6 +282,152 @@ DEFAULT_PROMPT_TEMPLATES = {
 }
 
 
+#: state_delta 模式的内置模板（页面不提供可编辑模板；为空时由 generate_prompt 自动使用）。
+#: 职责限定为书记员：只根据正式正文更新状态区提案；不检查 BOOK CONTRACT，不是章节门禁。
+DEFAULT_STATE_DELTA_TEMPLATE = """你是透明协作的 State Delta 书记员。只根据下方当前章节编号、当前规范化 CANON INDEX、本次新提取的正式正文和 Writer 章节事实摘要，生成 BOOK 状态区的完整替换提案，不调用任何外部服务。
+
+本次正式正文是 State Delta 的最高事实来源；Writer 章节事实摘要仅作辅助，冲突时以正式正文为准。AUTHOR NOTES 是作者元控制，不属于 Canon 事实，必须原样保留。
+
+你不检查、也不报告 BOOK CONTRACT 或任何长期设计的状态；BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、Reference Programs 与前两章正文都不在本次输入中，不要猜测它们。
+
+最终返回必须使用两个一级标题：
+
+# State Delta Audit
+只报告实际存在的事项：
+- 本次正式正文与旧 CANON INDEX 的冲突；
+- 无法从正式正文确定的状态。
+没有时写：无需要报告的状态冲突或不确定项。
+
+# Proposed Canon Index
+完整状态区替换提案，必须使用以下格式：
+当前已完成第N章。
+最近章节摘要：（只保留当前产品实际需要的最近章节；新摘要必须来自正式正文；不复制 Writer Audit；不把计划写成事实）
+当前状态：（只写当前确实成立的地点、人物、资源、物品、能力、知识、关系、伤势、即时目标和外部压力；只更新正文真实改变的项目）
+未兑现承诺：（保留仍有效的旧承诺；新增正文真实建立的新承诺；删除或标记已兑现/失败/失效的承诺；不把普通悬念升级为长期承诺）
+作者备注：（原样保留旧 AUTHOR NOTES，不得增删改写）
+
+注意：各字段内容行不得以「最近章节摘要：」「当前状态：」「未兑现承诺：」「作者备注：」四个标签开头，否则会被确定性解析为新字段的开始。
+
+禁止：输出 JSON/YAML；输出 chain-of-thought；修改 BOOK CONTRACT、PLAN 或正式章节正文；把 AUTHOR NOTES 当成 Canon 事实修改；替作者写入任何文件。"""
+
+
+#: 规范化 CANON INDEX 的四个字段；只支持本项目真实使用的标签与格式。
+CANON_INDEX_FIELDS = ("current_state", "recent_summaries", "open_promises", "author_notes")
+
+_CANON_COMPLETED_CHAPTER_PATTERN = re.compile(r"^当前已完成第\s*(\d+)\s*章。?$")
+
+_CANON_FIELD_LABELS = (
+    ("最近章节摘要", "recent_summaries"),
+    ("当前状态", "current_state"),
+    ("未兑现承诺", "open_promises"),
+    ("作者备注", "author_notes"),
+)
+
+
+def _match_canon_field_label(stripped: str) -> tuple[str, str] | None:
+    """行以四个字段标签之一加冒号开头时返回（字段 key, 行内剩余内容），否则 None。"""
+    for label, key in _CANON_FIELD_LABELS:
+        if not stripped.startswith(label):
+            continue
+        rest = stripped[len(label):]
+        if not rest or rest[0] not in "：:":
+            continue
+        return key, rest[1:].strip()
+    return None
+
+
+def parse_canon_index(status_text: str) -> dict[str, str]:
+    """确定性解析 BOOK 状态区为规范化 CANON INDEX 四字段（纯函数）。
+
+    只支持本项目真实使用的标签与格式：「当前已完成第N章。」「最近章节摘要：」
+    「当前状态：」「未兑现承诺：」「作者备注：」。不调用 LLM，不写文件，
+    不建通用 Markdown 框架。缺失字段返回空字符串。
+    「当前已完成第N章。」计入 current_state（已发生事实的压缩状态）。
+
+    边界约束（确定性行为）：
+    - 首个字段标签出现前的无标签行并入 current_state（与「当前已完成第N章。」
+      的归属一致），不静默丢弃；
+    - 字段内容中一旦某行以四个标签之一加冒号开头，即整体切换到该字段；
+      因此内容行不应以「最近章节摘要：」「当前状态：」「未兑现承诺：」
+      「作者备注：」四个标签开头。
+    """
+    collected: dict[str, list[str]] = {key: [] for key in CANON_INDEX_FIELDS}
+    completed: list[str] = []
+    current_key: str | None = None
+    for raw_line in status_text.splitlines():
+        stripped = raw_line.strip()
+        if current_key is None and _CANON_COMPLETED_CHAPTER_PATTERN.match(stripped):
+            completed.append(stripped)
+            continue
+        matched = _match_canon_field_label(stripped)
+        if matched is not None:
+            current_key, inline = matched
+            if inline:
+                collected[current_key].append(inline)
+            continue
+        if current_key is not None:
+            collected[current_key].append(raw_line)
+        elif stripped:
+            collected["current_state"].append(stripped)
+    fields = {key: "\n".join(lines).strip() for key, lines in collected.items()}
+    if completed:
+        head = "\n".join(completed)
+        body = fields["current_state"]
+        fields["current_state"] = f"{head}\n{body}".strip() if body else head
+    return fields
+
+
+def canon_index_has_labels(status_text: str) -> bool:
+    """状态区是否使用了本项目支持的 CANON INDEX 字段标签格式。
+
+    收紧判定：至少命中一个字段标签（当前状态/最近章节摘要/未兑现承诺/作者备注）
+    才算有标签；只含「当前已完成第N章。」与无标签自由文本时判定为无标签，
+    调用方应原样注入，避免渲染出「（未填写）」占位块改变逐字注入行为。
+    """
+    return any(
+        _match_canon_field_label(line.strip()) is not None
+        for line in status_text.splitlines()
+    )
+
+
+def render_canon_index(
+    fields: Mapping[str, str], *, page_recent_summaries: str = ""
+) -> str:
+    """渲染规范化 CANON INDEX 四段；最近摘要只注入一份。
+
+    页面显式传入 recent_summaries 时用它，否则用解析出的 BOOK 内摘要；
+    两者不会同时出现。AUTHOR NOTES 明确标注为作者元控制。
+    """
+    recent = page_recent_summaries.strip() or fields.get("recent_summaries", "").strip()
+    blocks = (
+        ("CURRENT STATE（已发生事实的压缩状态）", fields.get("current_state", "").strip()),
+        ("RECENT SUMMARIES（最近章节事实摘要；本次只注入这一份）", recent),
+        ("OPEN PROMISES（未兑现承诺；不等于已发生事实）", fields.get("open_promises", "").strip()),
+        (
+            "AUTHOR NOTES（作者元控制；不属于 Canon 事实；State Delta 不得自动修改或删除）",
+            fields.get("author_notes", "").strip(),
+        ),
+    )
+    return "\n\n".join(f"{title}：\n{body or '（未填写）'}" for title, body in blocks)
+
+
+def _render_canon_status_without_summaries(status_block: str) -> str:
+    """标签化状态区只渲染 current_state/open_promises/author_notes 三段。
+
+    供 chapter_prep 在页面显式摘要非空时扣除内嵌最近章节摘要段，避免重复注入。
+    """
+    fields = parse_canon_index(status_block)
+    blocks = (
+        ("CURRENT STATE（已发生事实的压缩状态）", fields.get("current_state", "").strip()),
+        ("OPEN PROMISES（未兑现承诺；不等于已发生事实）", fields.get("open_promises", "").strip()),
+        (
+            "AUTHOR NOTES（作者元控制；不属于 Canon 事实；State Delta 不得自动修改或删除）",
+            fields.get("author_notes", "").strip(),
+        ),
+    )
+    return "\n\n".join(f"{title}：\n{body or '（未填写）'}" for title, body in blocks)
+
+
 class HardGateError(ValueError):
     def __init__(self, missing_fields: list[str]) -> None:
         self.missing_fields = missing_fields
@@ -405,6 +552,7 @@ BOOK_CONTRACT_BLOCK_NOTE = (
     "这里可以包含未来人物弧、未来关系变化、阶段方向和读者承诺。"
     "Writer 应让当前章节与其保持方向一致，但不得把其中尚未发生的内容写成当前事实，"
     "也不得因为局部计划调整就把它当作 Canon 冲突。"
+    "已发生事实不能被 BOOK CONTRACT 覆盖；若正文证明旧设计已失效，保留已发生事实并在 Writer Audit 报告。"
 )
 CANON_INDEX_BLOCK_NOTE = "它低于正式正文；若与正式正文冲突，以正式正文为准。"
 
@@ -488,6 +636,9 @@ def generate_prompt(
     current_state: str = "",
     unfulfilled_promises: str = "",
     future_direction: str = "",
+    chapter_number: int = 0,
+    chapter_prose: str = "",
+    chapter_fact_summary: str = "",
 ) -> str:
     if mode not in PROMPT_MODES:
         raise ValueError(f"未知 Prompt 模式：{mode}")
@@ -500,6 +651,8 @@ def generate_prompt(
     stripped_legacy_writer = False
     if mode == "chapter":
         prompt_template, stripped_legacy_writer = sanitize_chapter_template(template)
+    elif mode == "state_delta" and not prompt_template:
+        prompt_template = DEFAULT_STATE_DELTA_TEMPLATE
     parts = [prompt_template, ""]
     if mode == "chapter":
         if stripped_legacy_writer:
@@ -519,7 +672,7 @@ def generate_prompt(
         )
         parts.append("# 页面当前输入（章节运行期上下文）")
         parts.append(_input_block(
-            "AUTHORITY——权威层级与冲突处理（最小权威规则，仅此一份）",
+            "AUTHORITY——权威规则（按维度划分）与冲突处理（最小权威规则，仅此一份）",
             packet.authority,
         ))
         parts.append(_input_block(
@@ -545,7 +698,44 @@ def generate_prompt(
         parts.append(_input_block("当前章对应的十章计划条目", current_chapter_plan))
         parts.append(_input_block("前两章正文（连续性上下文）", previous_chapter_text))
         parts.append(_input_block("最近 1—3 章摘要", recent_summaries))
-        parts.append(_input_block("当前状态", _extract_markdown_block(book_content, CURRENT_STATE_HEADING)))
+        status_block = _extract_markdown_block(book_content, CURRENT_STATE_HEADING)
+        if recent_summaries.strip() and canon_index_has_labels(status_block):
+            # 页面显式摘要非空时，扣除标签化状态区内嵌的最近章节摘要段，
+            # 避免同一 Prompt 出现两份摘要；页面摘要为空时保持注入 BOOK 内摘要。
+            status_display = _render_canon_status_without_summaries(status_block)
+        else:
+            status_display = status_block
+        parts.append(_input_block("当前状态", status_display))
+    elif mode == "state_delta":
+        # State Delta 只注入四组输入；默认不注入完整 BOOK CONTRACT、完整百章计划、
+        # GBrain、Reference Programs、prose profile 或前两章完整正文。
+        status_block = _extract_markdown_block(book_content, CURRENT_STATE_HEADING)
+        if canon_index_has_labels(status_block):
+            canon_index = render_canon_index(
+                parse_canon_index(status_block), page_recent_summaries=recent_summaries
+            )
+        else:
+            # 无标签旧格式状态区原样注入，避免 parse_canon_index 静默清空旧状态；
+            # 页面显式摘要此时单独注入一份（与 chapter 模式语义一致，不重复注入）。
+            page_summaries = recent_summaries.strip()
+            canon_index = status_block
+            if page_summaries:
+                summary_block = f"最近 1—3 章摘要\n\n{page_summaries}"
+                canon_index = f"{canon_index}\n\n{summary_block}" if canon_index else summary_block
+        parts.append("# 页面当前输入（State Delta 上下文）")
+        parts.append(_input_block("当前章节编号", str(chapter_number) if chapter_number else ""))
+        parts.append(_input_block(
+            "CANON INDEX——当前规范化 Canon Index（已发生事实的压缩状态）",
+            canon_index,
+        ))
+        parts.append(_input_block(
+            "本次新正式章节正文（State Delta 的最高事实来源）",
+            chapter_prose,
+        ))
+        parts.append(_input_block(
+            "Writer 章节事实摘要（仅辅助；与正式正文冲突时以正式正文为准）",
+            chapter_fact_summary,
+        ))
     else:
         parts.append("# 页面当前输入")
         if mode == "idea":
