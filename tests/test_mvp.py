@@ -25,6 +25,7 @@ from story_mvp.prompts import (
     PROSE_REALIZATION_CONTRACT,
     HardGateError,
     generate_prompt,
+    validate_current_outline,
 )
 from story_mvp.references import load_validated_references
 from story_mvp.storage import create_book, read_book_payload
@@ -43,7 +44,7 @@ def test_new_book_has_only_the_four_requested_items(tmp_path: Path) -> None:
     }
     assert (book_dir / "chapters").is_dir()
     payload = read_book_payload("demo", tmp_path)
-    assert set(payload["prompt_templates"]) == {"idea", "outline", "chapter", "review"}
+    assert set(payload["prompt_templates"]) == {"idea", "outline", "chapter_prep", "chapter", "review"}
     assert set(payload["sections"]) == {"design", "long_plan", "small_plan", "status"}
     assert len(payload["design_sections"]) == 13
     assert "growth_genome" in payload["design_sections"]
@@ -77,6 +78,72 @@ def test_prompt_is_built_from_submitted_visible_inputs() -> None:
     assert "VISIBLE IDEA" in prompt
     assert "visible-program" in prompt
     assert "hidden" not in prompt
+
+
+def test_outline_uses_only_the_author_edited_proposal_context() -> None:
+    prompt = generate_prompt(
+        mode="outline",
+        template=DEFAULT_PROMPT_TEMPLATES["outline"],
+        book_content="BOOK_DIRECTION",
+        proposal_context="## 候选1：保留方案\nSELECTED_IDEA_ALPHA",
+    )
+    assert "SELECTED_IDEA_ALPHA" in prompt
+    assert "UNSELECTED_IDEA_BETA" not in prompt
+    assert "不得重新换一本书" in prompt
+
+
+def test_outline_without_proposal_is_explicitly_empty() -> None:
+    prompt = generate_prompt(
+        mode="outline",
+        template="OUTLINE TEMPLATE",
+        book_content="BOOK_DIRECTION",
+        proposal_context="",
+    )
+    assert "作者已选择 / 编辑的规划种子" in prompt
+    assert "（未选择 Idea Proposal）" in prompt
+
+
+def test_chapter_prep_builds_eight_field_contract_from_the_selected_plan() -> None:
+    plan = """## 第1章：仓库门口的急单
+具体剧情：主角在夜班仓库接到临时调度。
+结果 / 状态变化：他拿到第一张可验证的路线单。
+叙事功能：把职业优势落到现场。
+结尾推动：下一章必须去第二个仓库核对记录。"""
+    prompt = generate_prompt(
+        mode="chapter_prep",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter_prep"],
+        book_content="# 小说总体设计画像\n\n## 7. 叙事结构\n连续推进\n\n# 当前状态、未兑现承诺与作者备注\n\n当前状态：夜班开始。",
+        current_long_block="第1—10章：冷链路线验证",
+        current_chapter_plan=plan,
+        previous_chapter_text="# 第1章正文\n\n上一章最后一句：门锁响了。",
+        recent_summaries="最近摘要：主角刚失去公司担保。",
+    )
+    assert plan in prompt
+    assert "上一章最后一句：门锁响了" in prompt
+    for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ):
+        assert f"{field}：" in prompt
+
+    fixture = "\n".join(f"{field}：fixture" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    validate_current_outline(fixture)
+
+
+def test_chapter_prep_chapter_two_uses_chapter_two_plan_and_chapter_one_prose() -> None:
+    prompt = generate_prompt(
+        mode="chapter_prep",
+        template="CHAPTER PREP TEMPLATE",
+        book_content="BOOK",
+        current_chapter_plan="## 第2章：第二章计划\nCHAPTER_TWO_PLAN_MARKER",
+        previous_chapter_text="# 第1章正文\n\nCHAPTER_ONE_FORMAL_PROSE_MARKER",
+    )
+    assert "CHAPTER_TWO_PLAN_MARKER" in prompt
+    assert "CHAPTER_ONE_FORMAL_PROSE_MARKER" in prompt
+    assert "CHAPTER_ONE_PLAN_MARKER" not in prompt
 
 
 def test_clipboard_code_uses_prompt_textarea_value() -> None:
@@ -604,6 +671,50 @@ def test_default_retrieval_query_uses_context_instead_of_generic_prefix() -> Non
     assert 'current_outline' in context_body
     assert 'recent_summaries' in context_body
     assert "主角成长型虚构世界小说" not in js[start:]
+
+
+def test_current_chapter_prep_controls_and_exact_plan_parser_are_visible() -> None:
+    page = client.get("/")
+    assert page.status_code == 200
+    for marker in (
+        'id="load-current-chapter-plan"',
+        'id="generate-chapter-prep"',
+        'id="current-chapter-plan"',
+        'id="apply-chapter-prep"',
+        'value="chapter_prep"',
+        "未来十章中没有找到第 ${chapterNumber} 章",
+    ):
+        assert marker in page.text or marker in Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    assert "function parseChapterPlanEntry" in js
+    assert "第\\s*(\\d+)\\s*章" in js
+    assert "## 第N章：标题" in page.text
+    assert "current_chapter_plan: $(\"current-chapter-plan\").value" in js
+    assert 'applyResponseToEditor($("codex-response"), $("current-outline"));' in js
+
+
+def test_gbrain_results_and_reference_selection_are_invalidated_on_context_changes() -> None:
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    start = js.index("function invalidateGbrainResults")
+    end = js.index("async function requestJson", start)
+    invalidation = js[start:end]
+    for marker in (
+        '$("gbrain-results").value = ""',
+        '$("gbrain-raw-results").value = ""',
+        '$("gbrain-rejections").value = ""',
+        '$("gbrain-count").textContent = "raw 0 / accepted 0 / rejected 0"',
+        'GBrain：上下文已变化，请重新查询',
+    ):
+        assert marker in invalidation
+    assert "function clearReferenceSelection" in js
+    populate_start = js.index("function populateBook")
+    populate_end = js.index("async function refreshBookList", populate_start)
+    assert "invalidateGbrainResults(\"切换小说\")" in js[populate_start:populate_end]
+    assert "clearReferenceSelection()" in js[populate_start:populate_end]
+    mode_start = js.index("async function handlePromptModeChange")
+    mode_end = js.index("async function activatePromptMode", mode_start)
+    assert "invalidateGbrainResults(\"切换 Prompt 模式\")" in js[mode_start:mode_end]
+    assert '"creative-direction", "current-long-block", "current-outline", "recent-summaries"' in js
 
 
 REAL_COLD_CHAIN_BOOK = """# 小说总体设计画像
@@ -1203,7 +1314,7 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     response = client.get("/api/prompt-templates")
     assert response.status_code == 200
     templates = response.json()["templates"]
-    assert set(templates) == {"idea", "outline", "chapter", "review"}
+    assert set(templates) == {"idea", "outline", "chapter_prep", "chapter", "review"}
     direction_doc = Path("docs/MVP_PRODUCT_DIRECTION.md")
     assert direction_doc.is_file()
     direction_text = direction_doc.read_text(encoding="utf-8")

@@ -18,6 +18,7 @@ SOURCE_CATEGORIES = frozenset(
 MODE_ALLOWED_CATEGORIES = {
     "idea": SOURCE_CATEGORIES,
     "outline": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls", "book-dna", "arcs"}),
+    "chapter_prep": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
     "chapter": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
     "review": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
 }
@@ -193,7 +194,7 @@ def build_retrieval_brief(
     if recent_summaries.strip():
         lines.append(f"最近章节摘要：\n{_compact(recent_summaries, 500)}")
     lines.append(f"明确硬约束：{'、'.join(constraints) if constraints else '未检测到明确题材硬约束'}")
-    if mode in {"chapter", "review"}:
+    if mode in {"chapter_prep", "chapter", "review"}:
         lines.append("章节精度优先：寻找可迁移的 mechanisms、contrasts、syntheses、prose-controls；不引入来源作品表层故事。")
     elif mode == "outline":
         lines.append("规划用途：允许较广的 Book DNA、Arc、Mechanism、Contrast、Synthesis，但必须服从上述明确硬约束。")

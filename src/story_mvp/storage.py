@@ -33,6 +33,7 @@ DESIGN_SECTION_TITLES = {
 PROMPT_TEMPLATE_LABELS = {
     "idea": "男频爽文创意生成",
     "outline": "新书/总纲规划",
+    "chapter_prep": "当前章执行小纲",
     "chapter": "当前章节写作",
     "review": "十章复盘与下一批十章",
 }
@@ -47,7 +48,7 @@ def default_book_content() -> str:
     bodies = {
         "design": compose_design_content(design_bodies),
         "long_plan": "（先写具体事件链，再写叙事功能。）",
-        "small_plan": "（每章请使用八个字段写出可执行的小纲。）",
+        "small_plan": "（每章请写具体剧情、结果 / 状态变化、叙事功能和结尾推动。）",
         "status": "当前状态：\n\n未兑现承诺：\n\n作者备注：",
     }
     return compose_book_content(bodies)

@@ -34,6 +34,16 @@ function showStatus(message, isError = false) {
   target.classList.toggle("error", isError);
 }
 
+function invalidateGbrainResults(reason = "") {
+  $("gbrain-results").value = "";
+  $("gbrain-raw-results").value = "";
+  $("gbrain-rejections").value = "";
+  $("gbrain-count").textContent = "raw 0 / accepted 0 / rejected 0";
+  $("gbrain-status").textContent = "GBrain：上下文已变化，请重新查询";
+  $("gbrain-status").classList.remove("error");
+  if (reason) showStatus(`GBrain 结果已失效：${reason}`);
+}
+
 async function requestJson(url, options = {}) {
   const response = await fetch(url, {
     headers: { "Content-Type": "application/json" },
@@ -142,6 +152,8 @@ function setDesignDetails(open) {
 }
 
 function populateBook(book) {
+  invalidateGbrainResults("切换小说");
+  clearReferenceSelection();
   state.bookId = book.book_id;
   $("book-id").value = book.book_id;
   for (const key of Object.keys(designTitles)) {
@@ -153,9 +165,11 @@ function populateBook(book) {
   const templates = book.prompt_templates || {};
   $("template-idea").value = templates.idea || $("template-idea").value;
   $("template-outline").value = templates.outline || $("template-outline").value;
+  $("template-chapter_prep").value = templates.chapter_prep || $("template-chapter_prep").value;
   $("template-chapter").value = templates.chapter || $("template-chapter").value;
   $("template-review").value = templates.review || $("template-review").value;
   $("proposal-editor").value = book.proposal || "";
+  $("current-chapter-plan").value = "";
   $("codex-response").value = "";
   $("chapter-body-for-save").value = "";
   $("chapter-fact-summary").value = "";
@@ -263,6 +277,13 @@ function renderReferences(references) {
   updateReferenceCount();
 }
 
+function clearReferenceSelection() {
+  document.querySelectorAll(".reference-card input:checked").forEach((checkbox) => {
+    checkbox.checked = false;
+  });
+  updateReferenceCount();
+}
+
 function updateReferenceCount() {
   $("reference-count").textContent = `${document.querySelectorAll(".reference-card input:checked").length} / 3`;
 }
@@ -276,6 +297,7 @@ function currentTemplate() {
   return {
     idea: $("template-idea").value,
     outline: $("template-outline").value,
+    chapter_prep: $("template-chapter_prep").value,
     chapter: $("template-chapter").value,
     review: $("template-review").value,
   }[$("prompt-mode").value];
@@ -306,8 +328,20 @@ async function setDefaultGbrainQuery() {
   }
 }
 
+async function handlePromptModeChange() {
+  clearReferenceSelection();
+  invalidateGbrainResults("切换 Prompt 模式");
+  await setDefaultGbrainQuery();
+}
+
+async function activatePromptMode(mode) {
+  const changed = $("prompt-mode").value !== mode;
+  $("prompt-mode").value = mode;
+  if (changed) await handlePromptModeChange();
+}
+
 function populatePromptTemplates(templates) {
-  for (const key of ["idea", "outline", "chapter", "review"]) {
+  for (const key of ["idea", "outline", "chapter_prep", "chapter", "review"]) {
     $(`template-${key}`).value = templates[key] || "";
   }
 }
@@ -321,9 +355,11 @@ function promptPayload() {
     current_long_block: $("current-long-block").value,
     previous_chapter_text: $("previous-chapter-text").value,
     current_outline: $("current-outline").value,
+    current_chapter_plan: $("current-chapter-plan").value,
     recent_summaries: $("recent-summaries").value,
     selected_references: selectedReferences(),
     gbrain_inspiration: $("gbrain-results").value,
+    proposal_context: $("proposal-editor").value,
     actual_summaries: $("actual-summaries").value,
     current_state: $("review-state").value || $("section-status").value,
     unfulfilled_promises: $("unfulfilled-promises").value,
@@ -379,7 +415,48 @@ async function generatePrompt() {
 }
 
 async function generateIdeaPrompt() {
-  $("prompt-mode").value = "idea";
+  await activatePromptMode("idea");
+  await generatePrompt();
+}
+
+function parseChapterPlanEntry(text, chapterNumber) {
+  const headingPattern = /^\s*##\s*第\s*(\d+)\s*章\s*[：:]\s*(.+?)\s*$/;
+  let current = null;
+  for (const line of text.split(/\r?\n/)) {
+    const match = line.match(headingPattern);
+    if (match) {
+      if (current && current.number === chapterNumber) return current.lines.join("\n").trim();
+      current = { number: Number(match[1]), lines: [line.trim()] };
+      continue;
+    }
+    if (current) current.lines.push(line);
+  }
+  if (current && current.number === chapterNumber) return current.lines.join("\n").trim();
+  return "";
+}
+
+function loadCurrentChapterPlan() {
+  const chapterNumber = Number($("chapter-number").value);
+  if (!Number.isInteger(chapterNumber) || chapterNumber < 1) {
+    $("current-chapter-plan").value = "";
+    showStatus("章节编号必须是正整数", true);
+    return false;
+  }
+  const plan = parseChapterPlanEntry($("section-small_plan").value, chapterNumber);
+  if (!plan) {
+    $("current-chapter-plan").value = "";
+    showStatus(`未来十章中没有找到第 ${chapterNumber} 章`, true);
+    return false;
+  }
+  $("current-chapter-plan").value = plan;
+  invalidateGbrainResults("当前章计划已加载");
+  showStatus(`已加载第 ${chapterNumber} 章十章计划，可生成当前章执行小纲 Prompt`);
+  return true;
+}
+
+async function generateChapterPrepPrompt() {
+  await activatePromptMode("chapter_prep");
+  if (!loadCurrentChapterPlan()) return;
   await generatePrompt();
 }
 
@@ -503,6 +580,7 @@ async function saveTemplates() {
         templates: {
           idea: $("template-idea").value,
           outline: $("template-outline").value,
+          chapter_prep: $("template-chapter_prep").value,
           chapter: $("template-chapter").value,
           review: $("template-review").value,
         },
@@ -594,16 +672,39 @@ $("default-gbrain-query").addEventListener("click", setDefaultGbrainQuery);
 $("query-gbrain").addEventListener("click", queryGbrain);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
 $("generate-prompt").addEventListener("click", generatePrompt);
+$("load-current-chapter-plan").addEventListener("click", loadCurrentChapterPlan);
+$("generate-chapter-prep").addEventListener("click", generateChapterPrepPrompt);
 $("copy-prompt").addEventListener("click", copyPrompt);
+$("apply-chapter-prep").addEventListener("click", () => {
+  applyResponseToEditor($("codex-response"), $("current-outline"));
+  showStatus("Codex 返回已放入当前章小纲，尚未写盘");
+});
 $("chapter-number").addEventListener("change", () => {
   $("chapter-body-for-save").value = "";
   $("chapter-fact-summary").value = "";
+  $("current-chapter-plan").value = "";
+  invalidateGbrainResults("切换章节");
   refreshPreviousChapterText();
 });
-$("prompt-mode").addEventListener("change", setDefaultGbrainQuery);
+$("prompt-mode").addEventListener("change", handlePromptModeChange);
 $("expand-design").addEventListener("click", () => setDesignDetails(true));
 $("collapse-design").addEventListener("click", () => setDesignDetails(false));
 $("section-long_plan").addEventListener("input", renderLongPlanPanorama);
+$("section-long_plan").addEventListener("input", () => {
+  invalidateGbrainResults("未来100章剧情块已变化");
+});
+$("section-small_plan").addEventListener("input", () => {
+  $("current-chapter-plan").value = "";
+  invalidateGbrainResults("未来十章计划已变化");
+});
+for (const id of [
+  "creative-direction", "current-long-block", "current-outline", "recent-summaries",
+]) {
+  $(id).addEventListener("input", () => invalidateGbrainResults(`${id} 已变化`));
+}
+for (const key of Object.keys(designTitles)) {
+  $(`design-${key}`).addEventListener("input", () => invalidateGbrainResults("BOOK 核心设计已变化"));
+}
 $("apply-response").addEventListener("click", () => {
   applyResponseToEditor($("codex-response"), $("proposal-editor"));
   showStatus("Codex 返回已放入 Proposal 编辑区，尚未写盘");

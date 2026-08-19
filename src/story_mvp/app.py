@@ -48,7 +48,7 @@ class PromptTemplatesRequest(BaseModel):
 
 
 class GBrainContextRequest(BaseModel):
-    mode: Literal["idea", "outline", "chapter", "review"] = "idea"
+    mode: Literal["idea", "outline", "chapter_prep", "chapter", "review"] = "idea"
     book_content: str = ""
     creative_direction: str = ""
     current_long_block: str = ""
@@ -67,13 +67,15 @@ class ChapterRequest(BaseModel):
 
 
 class PromptRequest(BaseModel):
-    mode: Literal["idea", "outline", "chapter", "review"]
+    mode: Literal["idea", "outline", "chapter_prep", "chapter", "review"]
     template: str = ""
     book_content: str = ""
     creative_direction: str = ""
+    proposal_context: str = ""
     current_long_block: str = ""
     previous_chapter_text: str = ""
     current_outline: str = ""
+    current_chapter_plan: str = ""
     recent_summaries: str = ""
     selected_references: list[dict[str, Any]] = Field(default_factory=list)
     gbrain_inspiration: str = ""
