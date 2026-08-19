@@ -14,7 +14,9 @@ from story_mvp.gbrain_retrieval import (
     EMPTY_RESULT,
     FINAL_RESULT_LIMIT,
     RAW_RESULT_LIMIT,
+    _forbidden_terms,
     build_retrieval_brief,
+    extract_hard_constraints,
     parse_query_results,
     retrieve_gbrain,
 )
@@ -629,6 +631,72 @@ REAL_COLD_CHAIN_OUTLINE = """触发事件：主角被收走车队权限并接到
 结尾推动力：继续寻找夜班仓库节点。
 """
 
+REAL_WORLD_SUPERPOWER_BOOK = """# 小说总体设计画像
+
+## 0. 本书成长基因图
+现代都市；现实世界；现实社会结构；存在少量异能；主角拥有异常感知能力。
+
+## 1. 核心类型与读者承诺
+职业调查、信息差、人际关系、资源、身份与组织博弈。
+
+## 2. 世界观结构
+真实公司、警察、医院、学校、互联网、金融、交通、劳动合同和法律制度；异能不改变社会基础设施。
+
+# 当前状态、未兑现承诺与作者备注
+不使用修炼体系；没有境界升级；没有灵气；没有宗门；没有武道等级；没有学院试炼；没有副本；没有遗迹探索；没有异世界穿越。
+"""
+
+REAL_WORLD_BOOK = """# 小说总体设计画像
+现代都市；现实世界；现实社会结构；没有超自然；没有异能；没有修炼体系。
+"""
+
+XIANXIA_BOOK = """# 小说总体设计画像
+仙侠世界；修炼体系；境界突破；宗门资源。
+"""
+
+SUPERPOWER_PAGE = """---
+type: concept
+---
+
+## Mechanism
+
+主角通过一种别人无法获得的信息渠道发现隐藏事实，异常能力只提供信息，不直接解决现实中的执行、关系和责任问题。
+
+## Failure Modes
+
+如果异能直接代替调查、谈判和行动，故事会退化成自动答案机。
+
+## Transfer Boundary
+
+保留信息差与使用限制；具体能力实现服从当前 BOOK。
+"""
+
+CULTIVATION_PAGE = """---
+type: concept
+---
+
+## Mechanism
+
+主角通过吸收灵气修炼功法，不断突破新的境界，并依靠宗门资源成长。
+
+## Transfer Boundary
+
+保留修炼突破，不迁移具体来源故事。
+"""
+
+REAL_WORLD_MECHANISM_PAGE = """---
+type: concept
+---
+
+## Mechanism
+
+主角通过公司记录、医院流程和访谈把异常线索转成可验证的调查行动。
+
+## Transfer Boundary
+
+只迁移调查与责任链，不迁移来源故事。
+"""
+
 
 def _page(heading: str, content: str) -> str:
     return f"---\ntype: concept\n---\n\n## {heading}\n\n{content}\n\n## Transfer Boundary\n\n只迁移抽象结构，不迁移来源故事。"
@@ -658,6 +726,130 @@ def test_retrieval_brief_is_book_and_chapter_aware() -> None:
     ):
         assert marker in brief
     assert "主角成长型虚构世界小说" not in brief
+
+
+def test_real_world_does_not_imply_no_supernatural() -> None:
+    constraints = extract_hard_constraints(REAL_WORLD_SUPERPOWER_BOOK)
+    forbidden = _forbidden_terms(constraints)
+    assert "现实世界" in constraints
+    assert "无超自然" not in constraints
+    assert "无修炼体系" in constraints
+    assert "异能" not in forbidden
+    assert "超自然" not in forbidden
+
+
+def test_superpower_book_brief_preserves_setting_and_does_not_invent_no_supernatural() -> None:
+    brief = build_retrieval_brief(
+        mode="chapter",
+        book_content=REAL_WORLD_SUPERPOWER_BOOK,
+        creative_direction="现代都市男频成长小说",
+        current_outline="主角用异常感知能力追查物品最近一次主动使用者。",
+    )
+    for marker in ("现代都市", "现实社会结构", "存在少量异能", "异常感知能力", "职业调查", "组织博弈"):
+        assert marker in brief
+    assert "明确硬约束：" in brief
+    assert "无超自然" not in brief
+    assert "无修炼体系" in brief
+
+
+def test_real_world_superpower_keeps_superpower_mechanism() -> None:
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_WORLD_SUPERPOWER_BOOK,
+        query_func=lambda _query, **_kwargs: "[0.95] mechanisms/information-superpower -- 异能带来的信息差",
+        page_func=lambda _slug: SUPERPOWER_PAGE,
+    )
+    assert result["accepted_count"] == 1
+    assert "异能" in result["result"]
+    assert "信息渠道" in result["result"]
+    assert "自动答案机" in result["result"]
+
+
+def test_real_world_superpower_still_rejects_cultivation() -> None:
+    pages = {
+        "mechanisms/information-superpower": SUPERPOWER_PAGE,
+        "mechanisms/cultivation-breakthrough": CULTIVATION_PAGE,
+    }
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_WORLD_SUPERPOWER_BOOK,
+        query_func=lambda _query, **_kwargs: "\n".join(
+            [
+                "[0.95] mechanisms/information-superpower -- 异能信息差",
+                "[0.94] mechanisms/cultivation-breakthrough -- 修炼境界",
+            ]
+        ),
+        page_func=pages.__getitem__,
+    )
+    assert [item["slug"] for item in result["accepted"]] == ["mechanisms/information-superpower"]
+    assert any(
+        item["slug"] == "mechanisms/cultivation-breakthrough"
+        and item["reason"] == "与 BOOK 的明确硬约束冲突"
+        for item in result["rejected"]
+    )
+
+
+def test_explicit_no_supernatural_rejects_superpower_in_pure_real_book() -> None:
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_WORLD_BOOK,
+        query_func=lambda _query, **_kwargs: "[0.95] mechanisms/information-superpower -- 异能信息差",
+        page_func=lambda _slug: SUPERPOWER_PAGE,
+    )
+    assert result["accepted_count"] == 0
+    assert result["result"] == EMPTY_RESULT
+    assert result["rejected"][0]["reason"] == "与 BOOK 的明确硬约束冲突"
+
+
+def test_pure_real_book_keeps_reality_mechanism_and_rejects_forbidden_surfaces() -> None:
+    pages = {
+        "mechanisms/urban-investigation": REAL_WORLD_MECHANISM_PAGE,
+        "mechanisms/information-superpower": SUPERPOWER_PAGE,
+        "mechanisms/cultivation-breakthrough": CULTIVATION_PAGE,
+    }
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_WORLD_BOOK,
+        query_func=lambda _query, **_kwargs: "\n".join(
+            [
+                "[0.97] mechanisms/urban-investigation -- 现实职业调查",
+                "[0.96] mechanisms/information-superpower -- 异能信息差",
+                "[0.95] mechanisms/cultivation-breakthrough -- 修炼境界",
+            ]
+        ),
+        page_func=pages.__getitem__,
+    )
+    assert [item["slug"] for item in result["accepted"]] == ["mechanisms/urban-investigation"]
+    assert "公司记录" in result["result"]
+    assert {item["slug"] for item in result["rejected"]} == {
+        "mechanisms/information-superpower",
+        "mechanisms/cultivation-breakthrough",
+    }
+
+
+def test_xianxia_without_negative_constraints_keeps_cultivation() -> None:
+    constraints = extract_hard_constraints(XIANXIA_BOOK)
+    assert "现实世界" not in constraints
+    assert "无修炼体系" not in constraints
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content=XIANXIA_BOOK,
+        query_func=lambda _query, **_kwargs: "[0.95] mechanisms/cultivation-breakthrough -- 修炼境界",
+        page_func=lambda _slug: CULTIVATION_PAGE,
+    )
+    assert result["accepted_count"] == 1
+    assert "修炼" in result["result"]
+
+
+def test_three_fixture_spaces_keep_their_distinct_constraint_semantics() -> None:
+    pure_real = extract_hard_constraints(REAL_WORLD_BOOK)
+    superpower = extract_hard_constraints(REAL_WORLD_SUPERPOWER_BOOK)
+    xianxia = extract_hard_constraints(XIANXIA_BOOK)
+    assert "无超自然" in pure_real and "无超自然" not in superpower
+    assert "无修炼体系" in pure_real and "无修炼体系" in superpower
+    assert "无修炼体系" not in xianxia
+    assert "现实世界" in pure_real and "现实世界" in superpower
+    assert "现实世界" not in xianxia
 
 
 def test_query_result_parser_ignores_noise_and_preserves_order() -> None:

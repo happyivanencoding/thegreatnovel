@@ -224,13 +224,8 @@ def source_category(slug: str) -> str:
 
 def _forbidden_terms(constraints: Iterable[str]) -> tuple[str, ...]:
     terms: list[str] = []
-    active = set(constraints)
-    if "现实世界" in active:
-        for values in FORBIDDEN_SURFACES.values():
-            terms.extend(values)
-    else:
-        for constraint in active:
-            terms.extend(FORBIDDEN_SURFACES.get(constraint, ()))
+    for constraint in set(constraints):
+        terms.extend(FORBIDDEN_SURFACES.get(constraint, ()))
     return tuple(dict.fromkeys(terms))
 
 
