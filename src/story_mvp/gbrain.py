@@ -6,6 +6,9 @@ from pathlib import Path
 
 
 HERMES_CLI = Path(r"C:\GoogleDrive\hermes\gbrain\src\cli.ts")
+NOVEL_GBRAIN_SCOPE = ",".join(
+    ("mechanisms", "contrasts", "syntheses", "prose-controls", "book-dna", "prose-dna", "maps", "arcs")
+)
 
 
 class GBrainQueryError(RuntimeError):
@@ -46,7 +49,13 @@ def _run_cli(arguments: list[str]) -> str:
     return result
 
 
-def query_gbrain(text: str, *, limit: int = 8, detail: str = "medium") -> str:
+def query_gbrain(
+    text: str,
+    *,
+    limit: int = 8,
+    detail: str = "medium",
+    scope: str | None = NOVEL_GBRAIN_SCOPE,
+) -> str:
     query = text.strip()
     if not query:
         raise ValueError("GBrain 查询不能为空")
@@ -54,7 +63,10 @@ def query_gbrain(text: str, *, limit: int = 8, detail: str = "medium") -> str:
         raise ValueError("GBrain 查询 limit 必须大于 0")
     if detail not in {"low", "medium", "high"}:
         raise ValueError("GBrain 查询 detail 必须是 low、medium 或 high")
-    return _run_cli(["query", query, "--limit", str(limit), "--detail", detail])
+    arguments = ["query", query, "--limit", str(limit), "--detail", detail]
+    if scope:
+        arguments.extend(["--scope", scope])
+    return _run_cli(arguments)
 
 
 def get_gbrain(slug: str) -> str:

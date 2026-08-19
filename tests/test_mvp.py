@@ -15,7 +15,7 @@ from story_mvp.chapter_context import (
     ChapterContextPacket,
     build_chapter_context,
 )
-from story_mvp.gbrain import GBrainQueryError, query_gbrain, resolve_command_prefix
+from story_mvp.gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, query_gbrain, resolve_command_prefix
 from story_mvp.gbrain_retrieval import (
     CHAPTER_FINAL_RESULT_LIMIT,
     EMPTY_RESULT,
@@ -434,6 +434,8 @@ def test_gbrain_query_calls_public_cli_and_preserves_stdout(monkeypatch) -> None
     assert "--limit" in calls["command"]
     assert "8" in calls["command"]
     assert "--detail" in calls["command"]
+    assert "--scope" in calls["command"]
+    assert NOVEL_GBRAIN_SCOPE in calls["command"]
     assert calls["kwargs"]["capture_output"] is True
 
 
@@ -680,7 +682,7 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="design-growth_genome"' in page.text
     assert 'id="creative-direction" value=""' in page.text
     assert "例如：传统仙侠；资源→战斗→身份" in page.text
-    assert "GBrain 范围：全 Brain 宽召回 → 小说蒸馏来源过滤 → BOOK 兼容性筛选" in page.text
+    assert "GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选" in page.text
     assert "从 GBrain 取灵感" in page.text
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
     assert "function gbrainContextPayload" in js
@@ -1417,7 +1419,7 @@ def test_brief_and_query_api_expose_filter_counts(monkeypatch) -> None:
         "retrieve_gbrain",
         lambda **_kwargs: {
             "status": "available",
-            "scope": "全 Brain 宽召回 → 小说蒸馏来源过滤 → BOOK 兼容性筛选",
+            "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
             "effective_query": "visible brief",
             "raw_count": 8,
             "accepted_count": 1,

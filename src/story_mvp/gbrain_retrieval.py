@@ -4,17 +4,17 @@ import re
 from collections.abc import Callable, Iterable, Mapping
 from typing import Any
 
-from .gbrain import GBrainQueryError, get_gbrain, query_gbrain
+from .gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, get_gbrain, query_gbrain
 
 
 RAW_RESULT_LIMIT = 8
-# CLI 无原生小说域 scope；宽召回只为避免无关结果挤掉小说候选。
+# Hermes query scope selects the novel distilled domain before candidate limits.
 QUERY_RECALL_LIMIT = 24
 FINAL_RESULT_LIMIT = 5
 #: Chapter Runtime Lite v1：chapter 模式灵感负担减半，最多 2 条；其他模式不受影响。
 CHAPTER_FINAL_RESULT_LIMIT = 2
 EMPTY_RESULT = "（本次没有找到与 BOOK 硬约束和当前章节任务兼容的 GBrain 证据；不要用不相关材料补位。）"
-GBRAIN_SCOPE_LABEL = "全 Brain 宽召回 → 小说蒸馏来源过滤 → BOOK 兼容性筛选"
+GBRAIN_SCOPE_LABEL = "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选"
 
 SOURCE_CATEGORIES = frozenset(
     {"mechanisms", "contrasts", "syntheses", "prose-controls", "book-dna", "prose-dna", "maps", "arcs"}
@@ -406,6 +406,7 @@ def retrieve_gbrain(
         "mode": mode,
         "effective_query": effective_query,
         "retrieval_brief": retrieval_brief,
+        "query_scope": NOVEL_GBRAIN_SCOPE,
         "hard_constraints": constraints,
         "raw_count": len(parsed),
         "novel_candidate_count": len(novel_candidates),
