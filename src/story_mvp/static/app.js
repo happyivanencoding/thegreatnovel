@@ -168,12 +168,23 @@ function populateBook(book) {
   $("template-chapter_prep").value = templates.chapter_prep || $("template-chapter_prep").value;
   $("template-chapter").value = templates.chapter || $("template-chapter").value;
   $("template-review").value = templates.review || $("template-review").value;
+  for (const key of [
+    "context_curator", "primary_writer", "specialist_opening", "specialist_dialogue",
+    "specialist_action", "specialist_emotion", "chapter_integrator",
+  ]) {
+    $(`template-${key}`).value = templates[key] || $(`template-${key}`).value;
+  }
   $("proposal-editor").value = book.proposal || "";
   $("current-chapter-plan").value = "";
   $("codex-response").value = "";
   $("chapter-body-for-save").value = "";
   $("chapter-fact-summary").value = "";
   $("state-delta-response").value = "";
+  for (const id of [
+    "curator-response", "primary-writer-response", "opening-specialist-response",
+    "dialogue-specialist-response", "action-specialist-response",
+    "emotion-specialist-response", "integrator-response",
+  ]) $(id).value = "";
   renderLongPlanPanorama();
   refreshPreviousChapterText();
   showStatus(`已加载 ${book.book_id}`);
@@ -301,6 +312,13 @@ function currentTemplate() {
     chapter_prep: $("template-chapter_prep").value,
     chapter: $("template-chapter").value,
     review: $("template-review").value,
+    context_curator: $("template-context_curator").value,
+    primary_writer: $("template-primary_writer").value,
+    specialist_opening: $("template-specialist_opening").value,
+    specialist_dialogue: $("template-specialist_dialogue").value,
+    specialist_action: $("template-specialist_action").value,
+    specialist_emotion: $("template-specialist_emotion").value,
+    chapter_integrator: $("template-chapter_integrator").value,
   }[$("prompt-mode").value];
 }
 
@@ -342,7 +360,11 @@ async function activatePromptMode(mode) {
 }
 
 function populatePromptTemplates(templates) {
-  for (const key of ["idea", "outline", "chapter_prep", "chapter", "review"]) {
+  for (const key of [
+    "idea", "outline", "chapter_prep", "chapter", "review",
+    "context_curator", "primary_writer", "specialist_opening", "specialist_dialogue",
+    "specialist_action", "specialist_emotion", "chapter_integrator",
+  ]) {
     $(`template-${key}`).value = templates[key] || "";
   }
 }
@@ -351,6 +373,7 @@ function promptPayload() {
   return {
     mode: $("prompt-mode").value,
     template: currentTemplate(),
+    writer_mode: $("writer-mode").value,
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
     current_long_block: $("current-long-block").value,
@@ -365,6 +388,21 @@ function promptPayload() {
     current_state: $("review-state").value || $("section-status").value,
     unfulfilled_promises: $("unfulfilled-promises").value,
     future_direction: $("future-direction").value,
+    curator_response: $("curator-response").value,
+    curated_context: $("curator-response").value,
+    primary_writer_response: $("primary-writer-response").value,
+    primary_draft: extractPrimaryDraft($("primary-writer-response").value),
+    primary_fact_summary: extractPrimaryFactSummary($("primary-writer-response").value),
+    specialist_opening_response: $("opening-specialist-response").value,
+    specialist_dialogue_response: $("dialogue-specialist-response").value,
+    specialist_action_response: $("action-specialist-response").value,
+    specialist_emotion_response: $("emotion-specialist-response").value,
+    enabled_specialists: {
+      opening: $("specialist-opening-enabled").checked,
+      dialogue: $("specialist-dialogue-enabled").checked,
+      action: $("specialist-action-enabled").checked,
+      emotion: $("specialist-emotion-enabled").checked,
+    },
   };
 }
 
@@ -582,6 +620,56 @@ function extractChapterArtifact(response) {
   return { body, summary };
 }
 
+function extractPrimaryDraft(response) {
+  const heading = "# Primary Draft";
+  const start = response.indexOf(heading);
+  if (start < 0) return "";
+  const contentStart = start + heading.length;
+  const end = response.indexOf("# Primary Fact Summary", contentStart);
+  return response.slice(contentStart, end >= 0 ? end : response.length).trim();
+}
+
+function extractPrimaryFactSummary(response) {
+  const heading = "# Primary Fact Summary";
+  const start = response.indexOf(heading);
+  if (start < 0) return "";
+  return response.slice(start + heading.length).trim();
+}
+
+function applyHybridResponse(response, editorId) {
+  applyResponseToEditor($("codex-response"), $(editorId));
+  showStatus(`已将当前 Codex 返回放入 ${editorId}，尚未自动采用或写盘`);
+}
+
+async function generateHybridNodePrompt(mode) {
+  await activatePromptMode(mode);
+  await generatePrompt();
+}
+
+function extractIntegratorBody() {
+  const artifact = extractChapterArtifact($("integrator-response").value);
+  if (!artifact) {
+    showStatus("Integrator 返回缺少非空 `# 正式正文`，未改变保存内容", true);
+    return false;
+  }
+  $("chapter-body-for-save").value = artifact.body;
+  $("chapter-fact-summary").value = artifact.summary;
+  showStatus("已从 Integrator 提取正式正文；尚未保存章节");
+  return true;
+}
+
+function adoptPrimaryDraft() {
+  const body = extractPrimaryDraft($("primary-writer-response").value);
+  if (!body) {
+    showStatus("Primary Writer 返回缺少非空 `# Primary Draft`，未改变保存内容", true);
+    return false;
+  }
+  $("chapter-body-for-save").value = body;
+  $("chapter-fact-summary").value = extractPrimaryFactSummary($("primary-writer-response").value);
+  showStatus("已显式采用 Primary Draft 作为最终正文；尚未保存章节");
+  return true;
+}
+
 function extractChapterBody() {
   const artifact = extractChapterArtifact($("codex-response").value);
   if (!artifact) {
@@ -646,6 +734,13 @@ async function saveTemplates() {
           chapter_prep: $("template-chapter_prep").value,
           chapter: $("template-chapter").value,
           review: $("template-review").value,
+          context_curator: $("template-context_curator").value,
+          primary_writer: $("template-primary_writer").value,
+          specialist_opening: $("template-specialist_opening").value,
+          specialist_dialogue: $("template-specialist_dialogue").value,
+          specialist_action: $("template-specialist_action").value,
+          specialist_emotion: $("template-specialist_emotion").value,
+          chapter_integrator: $("template-chapter_integrator").value,
         },
       }),
     });
@@ -735,6 +830,21 @@ $("default-gbrain-query").addEventListener("click", setDefaultGbrainQuery);
 $("query-gbrain").addEventListener("click", queryGbrain);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
 $("generate-prompt").addEventListener("click", generatePrompt);
+$("generate-curator-prompt").addEventListener("click", () => generateHybridNodePrompt("context_curator"));
+$("generate-primary-writer-prompt").addEventListener("click", () => generateHybridNodePrompt("primary_writer"));
+$("generate-opening-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_opening"));
+$("generate-dialogue-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_dialogue"));
+$("generate-action-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_action"));
+$("generate-emotion-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_emotion"));
+$("generate-integrator-prompt").addEventListener("click", () => generateHybridNodePrompt("chapter_integrator"));
+$("apply-curator-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "curator-response"));
+$("apply-primary-writer-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "primary-writer-response"));
+$("apply-opening-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "opening-specialist-response"));
+$("apply-dialogue-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "dialogue-specialist-response"));
+$("apply-action-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "action-specialist-response"));
+$("apply-emotion-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "emotion-specialist-response"));
+$("extract-integrator-body").addEventListener("click", extractIntegratorBody);
+$("adopt-primary-draft").addEventListener("click", adoptPrimaryDraft);
 $("load-current-chapter-plan").addEventListener("click", loadCurrentChapterPlan);
 $("generate-chapter-prep").addEventListener("click", generateChapterPrepPrompt);
 $("copy-prompt").addEventListener("click", copyPrompt);
@@ -746,6 +856,11 @@ $("chapter-number").addEventListener("change", () => {
   $("chapter-body-for-save").value = "";
   $("chapter-fact-summary").value = "";
   $("current-chapter-plan").value = "";
+  for (const id of [
+    "curator-response", "primary-writer-response", "opening-specialist-response",
+    "dialogue-specialist-response", "action-specialist-response",
+    "emotion-specialist-response", "integrator-response",
+  ]) $(id).value = "";
   invalidateGbrainResults("切换章节");
   refreshPreviousChapterText();
 });

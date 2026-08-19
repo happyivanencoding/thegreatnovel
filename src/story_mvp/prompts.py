@@ -11,6 +11,13 @@ PROMPT_MODES = {
     "chapter_prep": "当前章执行小纲",
     "chapter": "当前章节写作",
     "review": "十章复盘与下一批十章",
+    "context_curator": "Hybrid Context Curator",
+    "primary_writer": "Hybrid Primary Writer",
+    "specialist_opening": "Opening & Scene Entry Specialist",
+    "specialist_dialogue": "Dialogue & Character Voice Specialist",
+    "specialist_action": "Action & Spatial Logic Specialist",
+    "specialist_emotion": "Emotion & Aftermath Specialist",
+    "chapter_integrator": "Hybrid Revision Integrator",
     "state_delta": "State Delta 提案与 Canon Index 更新",
 }
 
@@ -280,6 +287,93 @@ DEFAULT_PROMPT_TEMPLATES = {
 
 建议必须尊重已经发生的事实，不能自动采用、保存或重写 BOOK。""",
 }
+
+
+def _specialist_prompt_template(label: str, duties: str) -> str:
+    return f"""你是透明协作的 {label} 专项 Agent。你是建议者，不是审判者：不评分、不拒绝 Primary Writer、不要求必须发现问题、不输出整章重写，也不触发上游重跑。只根据当前章事件合同、Primary Draft、分配给你的 Curated Context 和必要的前文章末衔接片段，提出真正有效的局部修改建议。
+
+职责：
+{duties}
+
+固定输出格式：
+# Specialist Audit
+只写真实发现的问题；没有时必须写：未发现需要修改的事项。
+
+# Proposed Patches
+没有建议时写：无。
+有建议时最多写 3 个局部 Patch，每个使用以下结构：
+## Patch N
+目标锚点：
+操作：replace / insert_before / insert_after
+建议文本：
+理由：
+
+Patch 不能改变主要事件、直接结果、人物决定、资源状态或章节结尾推动。不要给正文打分，不要输出 chain-of-thought。"""
+
+
+HYBRID_PROMPT_TEMPLATES = {
+    "context_curator": """你是透明协作的 Context Curator。只从较长设计输入中筛选本章真正相关的信息，压缩上下文，不重写 CANON PROSE，不重新规划本章，不创造新事实。BOOK CONTRACT、计划和 Inspiration 中尚未发生的内容不得写成既成事实；AUTHOR NOTES 不是 Canon。字符数只是观察值，不是门禁。
+
+固定输出格式：
+# Curator Audit
+只报告输入中的明确冲突或无法判断是否相关的项目；没有时写：无需要报告的冲突或不确定项。
+
+# Curated Chapter Context
+必须使用以下二级标题，全部保留；无相关内容时写“无”：
+## Relevant Book Contract
+## Relevant Characters and Relationships
+## Relevant World Rules
+## Relevant Open Promises
+## Relevant Plan
+## Relevant Prose Controls
+## Opening Strategy
+## Relevant Inspiration
+
+只选择当前章需要的信息，不复制完整 BOOK、完整十章计划或完整前文，不输出内部推理。""",
+    "primary_writer": """你是透明协作的 Primary Writer。先独立写出一篇完整章节；四个专项 Agent 尚未提供任何修改，不要预先采用它们的意见。正文必须落实当前章事件合同，包含自然的叙事、对话、动作、内心、描写和结尾推动，而不是骨架或分镜。保持统一叙事声音，不为了连续性反复盘点已经清楚的物品、资源和交易。
+
+Curated Context 为空时，明确把下方完整必要上下文作为 fallback 使用；这不是失败，也不自动重试。
+
+固定输出格式：
+# Primary Writer Audit
+只报告实际冲突、必要桥接和实质调整；没有时写：无。
+# Primary Draft
+一篇完整的正式章节正文。
+# Primary Fact Summary
+只写本 Draft 已经成立的事实摘要，不写计划或内部推理。""",
+    "specialist_opening": _specialist_prompt_template(
+        "Opening & Scene Entry Agent",
+        "检查 BOOK 已选择的开篇策略是否被执行；第一章若为讲述者宏观开场，检查世界远景→运行秩序/力量结构→当前压力→具体地域→主角现场→主角行动的收束；检查说明是否只服务未来约 30 章必要信息、是否仍像小说、镜头是否交给主角。非第一章检查章首承接和换景因果。不得把普通章节擅自改成宏观开场。",
+    ),
+    "specialist_dialogue": _specialist_prompt_template(
+        "Dialogue & Character Voice Agent",
+        "检查核心角色声音是否可区分；对话是否改变信息、关系、决定或行动；是否有同质化、纯说明式对白、缺乏潜台词/拒绝/回避/立场。不得改变主要事件和人物决定。",
+    ),
+    "specialist_action": _specialist_prompt_template(
+        "Action & Spatial Logic Agent",
+        "检查动作方向、位置、对象和结果；人物与物品是否无故出现或消失；调查、追逐、操作和空间移动是否连贯；世界规则是否通过行动产生后果；是否遗漏改变局面的关键动作。不得把正文改成战术说明书。",
+    ),
+    "specialist_emotion": _specialist_prompt_template(
+        "Emotion & Aftermath Agent",
+        "检查重大行动、胜利、失败和关系变化的真实余波；情绪是否通过动作、选择、沉默或感官进入；配角是否只有功能反应；payoff 后是否缺少确认与新压力；是否重复解释情绪。不得强制增加痛苦、悲剧代价或伦理惩罚。",
+    ),
+    "chapter_integrator": """你是透明协作的 Revision Integrator。Primary Draft 是唯一正文底稿。逐项判断四个专项 Agent 的局部 Patch 是否真正改善正文；冲突、重复、改变事件结果、破坏人物声音或重新规划章节的建议必须拒绝。四类建议不必全部采纳，全部不采纳也是正常结果。保持 Primary Writer 的主要叙事声音，不做第二轮自我审稿，不输出整章重写说明或内部推理。
+
+固定输出格式：
+# Writer Audit
+报告正式正文字符数、实际采用的专项修改类型、未采用的冲突/无必要建议，以及实际 Canon / Plan 冲突或实质调整；没有时写：无。
+# 正式正文
+只输出最终整合后的正式小说正文；它必须以 Primary Draft 为底稿。
+# 章节事实摘要
+根据最终整合正文重新生成，只写最终正文已经成立的事实，不能机械复用 Primary Fact Summary。""",
+}
+
+DEFAULT_PROMPT_TEMPLATES.update(HYBRID_PROMPT_TEMPLATES)
+
+HYBRID_PROMPT_MODES = frozenset(HYBRID_PROMPT_TEMPLATES)
+SPECIALIST_PROMPT_MODES = frozenset(
+    {f"specialist_{name}" for name in ("opening", "dialogue", "action", "emotion")}
+)
 
 
 #: state_delta 模式的内置模板（页面不提供可编辑模板；为空时由 generate_prompt 自动使用）。
@@ -639,15 +733,36 @@ def generate_prompt(
     chapter_number: int = 0,
     chapter_prose: str = "",
     chapter_fact_summary: str = "",
+    writer_mode: str = "hybrid_full",
+    curator_response: str = "",
+    curated_context: str = "",
+    primary_writer_response: str = "",
+    primary_draft: str = "",
+    primary_fact_summary: str = "",
+    specialist_opening_response: str = "",
+    specialist_dialogue_response: str = "",
+    specialist_action_response: str = "",
+    specialist_emotion_response: str = "",
+    enabled_specialists: Mapping[str, bool] | None = None,
 ) -> str:
     if mode not in PROMPT_MODES:
         raise ValueError(f"未知 Prompt 模式：{mode}")
     if len(selected_references or []) > 3:
         raise ValueError("最多只能选择 3 个 Reference Program")
-    if mode == "chapter":
+    if mode == "chapter" or mode in HYBRID_PROMPT_MODES:
         validate_current_outline(current_outline)
 
+    if mode in SPECIALIST_PROMPT_MODES or mode == "chapter_integrator":
+        if not primary_draft.strip():
+            from .hybrid_runtime import extract_primary_draft
+
+            primary_draft = extract_primary_draft(primary_writer_response)
+        if not primary_draft.strip():
+            raise ValueError("Primary Draft 为空，无法进入专项或 Integrator 阶段")
+
     prompt_template = template.strip()
+    if mode in HYBRID_PROMPT_MODES and not prompt_template:
+        prompt_template = DEFAULT_PROMPT_TEMPLATES[mode]
     stripped_legacy_writer = False
     if mode == "chapter":
         prompt_template, stripped_legacy_writer = sanitize_chapter_template(template)
@@ -691,6 +806,106 @@ def generate_prompt(
             "OPTIONAL INSPIRATION——可选参考（不得覆盖以上任何层级）",
             packet.optional_inspiration,
         ))
+    elif mode in HYBRID_PROMPT_MODES:
+        from .chapter_context import build_chapter_context
+        from .hybrid_runtime import (
+            build_curator_context,
+            build_integrator_context,
+            build_specialist_context,
+        )
+
+        packet = build_chapter_context(
+            book_content=book_content,
+            current_long_block=current_long_block,
+            previous_chapter_text=previous_chapter_text,
+            current_outline=current_outline,
+            recent_summaries=recent_summaries,
+            gbrain_inspiration=gbrain_inspiration,
+            selected_references=selected_references,
+        )
+        parts.append(f"# Hybrid Runtime\n\nwriter_mode: {writer_mode}")
+        if mode == "context_curator":
+            context = build_curator_context(packet)
+            parts.extend(
+                [
+                    _input_block("AUTHORITY", context.authority),
+                    _input_block("当前章事件合同", context.chapter_mission),
+                    _input_block("BOOK CONTRACT", context.book_contract),
+                    _input_block("规范化 CANON INDEX", context.canon_index),
+                    _input_block("当前大型剧情块与十章计划", context.rolling_plan),
+                    _input_block("PROSE PROFILE", context.prose_profile),
+                    _input_block("OPTIONAL INSPIRATION", context.optional_inspiration),
+                    _input_block("前文章末局部衔接片段", context.transition_context),
+                ]
+            )
+        elif mode == "primary_writer":
+            curated = curated_context.strip() or curator_response.strip()
+            fallback = not curated
+            parts.extend(
+                [
+                    _input_block("AUTHORITY", packet.authority),
+                    _input_block("Chapter Mission——当前章事件合同", packet.chapter_mission),
+                    _input_block("CANON PROSE——必要前文正文", packet.recent_prose),
+                    _input_block("CANON INDEX——规范化已发生事实索引", packet.canon_context),
+                    _input_block(
+                        "Curated Chapter Context" if not fallback else "Curated Chapter Context（缺失时的显式 fallback）",
+                        curated or "Curator 未提供，使用完整上下文 fallback：\n\n"
+                        + packet.book_contract
+                        + "\n\n"
+                        + packet.rolling_plan
+                        + "\n\n"
+                        + packet.prose_profile,
+                    ),
+                ]
+            )
+        elif mode in SPECIALIST_PROMPT_MODES:
+            specialist = mode.removeprefix("specialist_")
+            context = build_specialist_context(
+                packet,
+                curated_context.strip() or curator_response.strip(),
+                primary_draft,
+                specialist,
+            )
+            parts.extend(
+                [
+                    _input_block("当前章事件合同", context.chapter_mission),
+                    _input_block("Primary Draft——唯一待评议正文底稿", context.primary_draft),
+                    _input_block("本专项相关 Curated Context", context.relevant_curated_context),
+                    _input_block("必要的前文章末衔接片段", context.transition_context),
+                ]
+            )
+        else:
+            specialists = {
+                "opening": specialist_opening_response,
+                "dialogue": specialist_dialogue_response,
+                "action": specialist_action_response,
+                "emotion": specialist_emotion_response,
+            }
+            enabled = dict(enabled_specialists or {})
+            specialists = {
+                name: value if enabled.get(name, True) else "未提供（作者未启用）"
+                for name, value in specialists.items()
+            }
+            context = build_integrator_context(
+                packet,
+                curated_context.strip() or curator_response.strip(),
+                primary_draft,
+                specialists,
+            )
+            parts.extend(
+                [
+                    _input_block("AUTHORITY", context.authority),
+                    _input_block("当前章事件合同", context.chapter_mission),
+                    _input_block("必要 CANON PROSE", context.canon_prose),
+                    _input_block("CANON INDEX", context.canon_index),
+                    _input_block("Curated Chapter Context", context.curated_context),
+                    _input_block("Primary Draft——唯一正文底稿", context.primary_draft),
+                    _input_block("Opening Specialist Response", context.specialist_responses["opening"]),
+                    _input_block("Dialogue Specialist Response", context.specialist_responses["dialogue"]),
+                    _input_block("Action Specialist Response", context.specialist_responses["action"]),
+                    _input_block("Emotion Specialist Response", context.specialist_responses["emotion"]),
+                ]
+            )
     elif mode == "chapter_prep":
         parts.append("# 页面当前输入")
         parts.append(_input_block("本书执行相关画像", _chapter_book_context(book_content)))

@@ -144,10 +144,68 @@
             <option value="idea">男频爽文创意生成</option>
             <option value="outline">新书/总纲规划</option>
             <option value="chapter_prep">当前章执行小纲</option>
-            <option value="chapter">当前章节写作</option>
+            <option value="chapter">单 Writer 当前章节写作</option>
             <option value="review">十章复盘与下一批十章</option>
+            <option value="context_curator">Hybrid Context Curator</option>
+            <option value="primary_writer">Hybrid Primary Writer</option>
+            <option value="specialist_opening">Opening &amp; Scene Entry Specialist</option>
+            <option value="specialist_dialogue">Dialogue &amp; Character Voice Specialist</option>
+            <option value="specialist_action">Action &amp; Spatial Logic Specialist</option>
+            <option value="specialist_emotion">Emotion &amp; Aftermath Specialist</option>
+            <option value="chapter_integrator">Hybrid Revision Integrator</option>
           </select>
         </div>
+
+        <details class="hybrid-run" open>
+          <summary>Hybrid Multi-Agent Chapter Run</summary>
+          <p class="hint">所有节点只生成可编辑 Prompt；作者负责复制、执行、粘贴和显式采用。专项 Agent 是建议者，不是质量门禁。</p>
+          <div class="hybrid-controls">
+            <label>Writer Mode
+              <select id="writer-mode">
+                <option value="hybrid_full" selected>hybrid_full</option>
+                <option value="single">single</option>
+              </select>
+            </label>
+            <span class="hybrid-label">启用专项 Agent</span>
+            <label><input id="specialist-opening-enabled" type="checkbox" checked> Opening</label>
+            <label><input id="specialist-dialogue-enabled" type="checkbox" checked> Dialogue</label>
+            <label><input id="specialist-action-enabled" type="checkbox" checked> Action</label>
+            <label><input id="specialist-emotion-enabled" type="checkbox" checked> Emotion</label>
+          </div>
+          <div class="hybrid-node-grid">
+            <div class="hybrid-node">
+              <div class="hybrid-node-heading"><strong>Context Curator Response</strong><button id="generate-curator-prompt">生成 Prompt</button><button id="apply-curator-response">采用当前返回</button></div>
+              <textarea id="curator-response" rows="8" placeholder="# Curator Audit\n\n# Curated Chapter Context"></textarea>
+            </div>
+            <div class="hybrid-node">
+              <div class="hybrid-node-heading"><strong>Primary Writer Response</strong><button id="generate-primary-writer-prompt">生成 Prompt</button><button id="apply-primary-writer-response">采用当前返回</button></div>
+              <textarea id="primary-writer-response" rows="10" placeholder="# Primary Writer Audit\n\n# Primary Draft\n\n# Primary Fact Summary"></textarea>
+            </div>
+            <div class="hybrid-node">
+              <div class="hybrid-node-heading"><strong>Opening Specialist Response</strong><button id="generate-opening-prompt">生成 Prompt</button><button id="apply-opening-response">采用当前返回</button></div>
+              <textarea id="opening-specialist-response" rows="7" placeholder="# Specialist Audit\n\n# Proposed Patches"></textarea>
+            </div>
+            <div class="hybrid-node">
+              <div class="hybrid-node-heading"><strong>Dialogue Specialist Response</strong><button id="generate-dialogue-prompt">生成 Prompt</button><button id="apply-dialogue-response">采用当前返回</button></div>
+              <textarea id="dialogue-specialist-response" rows="7" placeholder="# Specialist Audit\n\n# Proposed Patches"></textarea>
+            </div>
+            <div class="hybrid-node">
+              <div class="hybrid-node-heading"><strong>Action Specialist Response</strong><button id="generate-action-prompt">生成 Prompt</button><button id="apply-action-response">采用当前返回</button></div>
+              <textarea id="action-specialist-response" rows="7" placeholder="# Specialist Audit\n\n# Proposed Patches"></textarea>
+            </div>
+            <div class="hybrid-node">
+              <div class="hybrid-node-heading"><strong>Emotion Specialist Response</strong><button id="generate-emotion-prompt">生成 Prompt</button><button id="apply-emotion-response">采用当前返回</button></div>
+              <textarea id="emotion-specialist-response" rows="7" placeholder="# Specialist Audit\n\n# Proposed Patches"></textarea>
+            </div>
+            <div class="hybrid-node hybrid-node-wide">
+              <div class="hybrid-node-heading"><strong>Integrator Response</strong><button id="generate-integrator-prompt">生成 Prompt</button><button id="extract-integrator-body">从 Integrator 提取正式正文</button></div>
+              <textarea id="integrator-response" rows="10" placeholder="# Writer Audit\n\n# 正式正文\n\n# 章节事实摘要"></textarea>
+            </div>
+          </div>
+          <div class="action-row wrap">
+            <button id="adopt-primary-draft">采用 Primary Draft 作为最终正文</button>
+          </div>
+        </details>
 
         <div class="prompt-inputs">
           <label class="field">
@@ -247,13 +305,20 @@
         <p class="hint">生成 Outline 前，请在 Proposal 编辑区只保留/编辑你准备继续发展的候选。</p>
 
         <details class="template-editor">
-          <summary>编辑并保存五个 Prompt 模板（PROMPTS.md）</summary>
+          <summary>编辑并保存十二个 Prompt 模板（PROMPTS.md）</summary>
           <p class="hint">模板参与下一次生成；保存模板和生成 Prompt 是两个独立动作。</p>
           <label class="field"><span>男频爽文创意生成模板</span><textarea id="template-idea" rows="12"></textarea></label>
           <label class="field"><span>新书/总纲规划模板</span><textarea id="template-outline" rows="10"></textarea></label>
           <label class="field"><span>当前章执行小纲模板</span><textarea id="template-chapter_prep" rows="9"></textarea></label>
           <label class="field"><span>当前章节写作模板</span><textarea id="template-chapter" rows="9"></textarea></label>
           <label class="field"><span>十章复盘与下一批十章模板</span><textarea id="template-review" rows="9"></textarea></label>
+          <label class="field"><span>Hybrid Context Curator 模板</span><textarea id="template-context_curator" rows="9"></textarea></label>
+          <label class="field"><span>Hybrid Primary Writer 模板</span><textarea id="template-primary_writer" rows="9"></textarea></label>
+          <label class="field"><span>Opening &amp; Scene Entry Specialist 模板</span><textarea id="template-specialist_opening" rows="9"></textarea></label>
+          <label class="field"><span>Dialogue &amp; Character Voice Specialist 模板</span><textarea id="template-specialist_dialogue" rows="9"></textarea></label>
+          <label class="field"><span>Action &amp; Spatial Logic Specialist 模板</span><textarea id="template-specialist_action" rows="9"></textarea></label>
+          <label class="field"><span>Emotion &amp; Aftermath Specialist 模板</span><textarea id="template-specialist_emotion" rows="9"></textarea></label>
+          <label class="field"><span>Hybrid Revision Integrator 模板</span><textarea id="template-chapter_integrator" rows="9"></textarea></label>
           <button id="save-templates">保存 Prompt 模板</button>
         </details>
       </section>

@@ -48,7 +48,20 @@ class PromptTemplatesRequest(BaseModel):
 
 
 class GBrainContextRequest(BaseModel):
-    mode: Literal["idea", "outline", "chapter_prep", "chapter", "review"] = "idea"
+    mode: Literal[
+        "idea",
+        "outline",
+        "chapter_prep",
+        "chapter",
+        "review",
+        "context_curator",
+        "primary_writer",
+        "specialist_opening",
+        "specialist_dialogue",
+        "specialist_action",
+        "specialist_emotion",
+        "chapter_integrator",
+    ] = "idea"
     book_content: str = ""
     creative_direction: str = ""
     current_long_block: str = ""
@@ -67,8 +80,23 @@ class ChapterRequest(BaseModel):
 
 
 class PromptRequest(BaseModel):
-    mode: Literal["idea", "outline", "chapter_prep", "chapter", "review", "state_delta"]
+    mode: Literal[
+        "idea",
+        "outline",
+        "chapter_prep",
+        "chapter",
+        "review",
+        "state_delta",
+        "context_curator",
+        "primary_writer",
+        "specialist_opening",
+        "specialist_dialogue",
+        "specialist_action",
+        "specialist_emotion",
+        "chapter_integrator",
+    ]
     template: str = ""
+    writer_mode: Literal["hybrid_full", "single"] = "hybrid_full"
     book_content: str = ""
     creative_direction: str = ""
     proposal_context: str = ""
@@ -86,6 +114,16 @@ class PromptRequest(BaseModel):
     chapter_number: int = Field(default=0, ge=0)
     chapter_prose: str = ""
     chapter_fact_summary: str = ""
+    curator_response: str = ""
+    curated_context: str = ""
+    primary_writer_response: str = ""
+    primary_draft: str = ""
+    primary_fact_summary: str = ""
+    specialist_opening_response: str = ""
+    specialist_dialogue_response: str = ""
+    specialist_action_response: str = ""
+    specialist_emotion_response: str = ""
+    enabled_specialists: dict[str, bool] = Field(default_factory=dict)
 
 
 def workspace_path() -> Path:

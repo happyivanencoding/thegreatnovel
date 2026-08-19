@@ -129,6 +129,17 @@ textarea:focus, input:focus, select:focus { border-color: var(--accent); outline
 .chapter-number { align-items: center; display: inline-flex; font-size: 12px; gap: 5px; margin-left: auto; }
 .chapter-number input { width: 75px; }
 .prompt-panel #prompt-text { min-height: 340px; }
+.hybrid-run { border: 1px solid var(--line); border-radius: 5px; margin: 10px 0 14px; padding: 9px; }
+.hybrid-run > summary { cursor: pointer; font-size: 13px; font-weight: 700; }
+.hybrid-controls { align-items: center; background: #f8fafb; border: 1px solid #edf0f2; border-radius: 4px; display: flex; flex-wrap: wrap; gap: 9px; margin: 9px 0; padding: 8px; }
+.hybrid-controls label { align-items: center; display: inline-flex; font-size: 12px; gap: 4px; }
+.hybrid-label { color: var(--muted); font-size: 12px; font-weight: 650; }
+.hybrid-node-grid { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+.hybrid-node { border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
+.hybrid-node-wide { grid-column: 1 / -1; }
+.hybrid-node-heading { align-items: center; display: flex; flex-wrap: wrap; gap: 5px; justify-content: space-between; margin-bottom: 6px; }
+.hybrid-node-heading strong { font-size: 12px; }
+.hybrid-node-heading button { font-size: 11px; padding: 4px 7px; }
 .template-editor { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 12px; }
 .template-editor summary { cursor: pointer; font-size: 13px; font-weight: 700; }
 
@@ -144,4 +155,6 @@ textarea:focus, input:focus, select:focus { border-color: var(--accent); outline
   .panel { margin-bottom: 10px; }
   .book-toolbar { padding: 10px; }
   .chapter-number { margin-left: 0; }
+  .hybrid-node-grid { display: block; }
+  .hybrid-node { margin-bottom: 8px; }
 }

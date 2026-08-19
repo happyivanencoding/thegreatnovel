@@ -28,6 +28,15 @@ from story_mvp.gbrain_retrieval import (
     parse_query_results,
     retrieve_gbrain,
 )
+from story_mvp.hybrid_runtime import (
+    build_curator_context,
+    count_specialist_patches,
+    extract_final_chapter_artifact,
+    extract_last_transition_context,
+    extract_opening_strategy,
+    extract_primary_draft,
+    extract_primary_fact_summary,
+)
 from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     DEFAULT_STATE_DELTA_TEMPLATE,
@@ -64,7 +73,20 @@ def test_new_book_has_only_the_four_requested_items(tmp_path: Path) -> None:
     }
     assert (book_dir / "chapters").is_dir()
     payload = read_book_payload("demo", tmp_path)
-    assert set(payload["prompt_templates"]) == {"idea", "outline", "chapter_prep", "chapter", "review"}
+    assert set(payload["prompt_templates"]) == {
+        "idea",
+        "outline",
+        "chapter_prep",
+        "chapter",
+        "review",
+        "context_curator",
+        "primary_writer",
+        "specialist_opening",
+        "specialist_dialogue",
+        "specialist_action",
+        "specialist_emotion",
+        "chapter_integrator",
+    }
     assert set(payload["sections"]) == {"design", "long_plan", "small_plan", "status"}
     assert len(payload["design_sections"]) == 13
     assert "growth_genome" in payload["design_sections"]
@@ -1474,7 +1496,20 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     response = client.get("/api/prompt-templates")
     assert response.status_code == 200
     templates = response.json()["templates"]
-    assert set(templates) == {"idea", "outline", "chapter_prep", "chapter", "review"}
+    assert set(templates) == {
+        "idea",
+        "outline",
+        "chapter_prep",
+        "chapter",
+        "review",
+        "context_curator",
+        "primary_writer",
+        "specialist_opening",
+        "specialist_dialogue",
+        "specialist_action",
+        "specialist_emotion",
+        "chapter_integrator",
+    }
     direction_doc = Path("docs/MVP_PRODUCT_DIRECTION.md")
     assert direction_doc.is_file()
     direction_text = direction_doc.read_text(encoding="utf-8")
@@ -1498,6 +1533,193 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert "第一章开篇策略完全由作者和本书 BOOK 决定" in templates["outline"]
     assert "## 0. 本书成长基因图" in templates["outline"]
     assert "POWER_BREAKTHROUGH" not in Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+
+
+def test_hybrid_page_defaults_to_full_mode_and_exposes_all_nodes() -> None:
+    page = client.get("/")
+    assert page.status_code == 200
+    assert 'id="writer-mode"' in page.text
+    assert 'value="hybrid_full" selected' in page.text
+    assert page.text.count('type="checkbox" checked') == 4
+    for node_id in (
+        "curator-response",
+        "primary-writer-response",
+        "opening-specialist-response",
+        "dialogue-specialist-response",
+        "action-specialist-response",
+        "emotion-specialist-response",
+        "integrator-response",
+    ):
+        assert f'id="{node_id}"' in page.text
+    assert 'id="extract-integrator-body"' in page.text
+    assert 'id="adopt-primary-draft"' in page.text
+
+
+def test_hybrid_runtime_extractors_are_deterministic() -> None:
+    response = "# Primary Writer Audit\n\n无。\n# Primary Draft\n\n完整正文。\n# Primary Fact Summary\n\n事实摘要。"
+    assert extract_primary_draft(response) == "完整正文。"
+    assert extract_primary_fact_summary(response) == "事实摘要。"
+    assert extract_final_chapter_artifact("# Writer Audit\n\n# 正式正文\n\n最终正文\n# 章节事实摘要\n\n最终事实") == (
+        "最终正文",
+        "最终事实",
+    )
+    assert extract_final_chapter_artifact("# Writer Audit\n\n没有正文") is None
+    assert count_specialist_patches("# Proposed Patches\n## Patch 1\n## Patch 2") == 2
+    long_text = "前文开头" + ("x" * 2500) + "\n\n前文最后动作"
+    transition = extract_last_transition_context(long_text)
+    assert "前文最后动作" in transition
+    assert len(transition) <= 1800
+
+
+def test_old_book_gets_code_default_hybrid_templates_without_prompt_file_write(tmp_path: Path) -> None:
+    book_dir = create_book("old-book", tmp_path)
+    legacy_prompts = "# 男频爽文创意生成\n\nLEGACY IDEA\n\n# 新书/总纲规划\n\nLEGACY OUTLINE\n"
+    prompts_path = book_dir / "PROMPTS.md"
+    prompts_path.write_text(legacy_prompts, encoding="utf-8")
+    before = prompts_path.read_bytes()
+    payload = read_book_payload("old-book", tmp_path)
+    assert payload["prompt_templates"]["context_curator"] == DEFAULT_PROMPT_TEMPLATES["context_curator"]
+    assert payload["prompt_templates"]["specialist_emotion"] == DEFAULT_PROMPT_TEMPLATES["specialist_emotion"]
+    assert payload["prompt_templates"]["idea"] == "LEGACY IDEA"
+    assert prompts_path.read_bytes() == before
+
+
+def test_context_curator_prompt_uses_tail_and_opening_strategy_only() -> None:
+    book = """# 小说总体设计画像
+
+## 0. 本书成长基因图
+BOOK_CONTRACT_MARKER
+## 1. 核心类型与读者承诺
+CHARACTERS_MARKER
+## 7. 叙事结构
+### 第一章开篇策略
+城市远景 → 具体现场 → 主角行动
+## 8. 文风与可操作参数
+PROSE_PROFILE_MARKER
+## 11. 未来设计
+FULL_BOOK_FUTURE_MARKER
+
+# 当前状态、未兑现承诺与作者备注
+当前状态：已在现场。
+"""
+    outline = "\n".join(f"{field}：本章{field}" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    previous = "前文开头" + ("y" * 2500) + "\n\n前文最后动作"
+    prompt = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content=book,
+        current_long_block="CURRENT_BLOCK_MARKER",
+        current_outline=outline,
+        previous_chapter_text=previous,
+        gbrain_inspiration="INSPIRATION_MARKER",
+    )
+    assert "CURRENT_BLOCK_MARKER" in prompt
+    assert "INSPIRATION_MARKER" in prompt
+    assert "城市远景 → 具体现场 → 主角行动" in prompt
+    assert "前文最后动作" in prompt
+    assert "前文开头" not in prompt
+    assert "FULL_BOOK_FUTURE_MARKER" not in prompt
+
+
+def test_primary_writer_prompt_uses_curated_projection_and_explicit_fallback() -> None:
+    outline = "\n".join(f"{field}：本章{field}" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    book = """# 小说总体设计画像
+## 0. 本书成长基因图
+BOOK_CONTRACT_MARKER
+## 7. 叙事结构
+PROSE_PROFILE_SHOULD_NOT_REPEAT
+## 8. 文风与可操作参数
+FULL_PROSE_PROFILE_MARKER
+## 11. 尚未注入的未来区块
+FULL_BOOK_CONTRACT_MARKER
+# 当前状态、未兑现承诺与作者备注
+当前状态：已发生事实。
+"""
+    curated = "# Curated Chapter Context\n\n## Relevant Plan\n\nCURATED_ONLY_MARKER"
+    prompt = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content=book,
+        current_outline=outline,
+        previous_chapter_text="CANON_PROSE_MARKER",
+        curated_context=curated,
+    )
+    assert "AUTHORITY" in prompt
+    assert "Chapter Mission" in prompt
+    assert "CANON_PROSE_MARKER" in prompt
+    assert "CANON INDEX" in prompt
+    assert "CURATED_ONLY_MARKER" in prompt
+    assert "FULL_PROSE_PROFILE_MARKER" not in prompt
+    assert "FULL_BOOK_CONTRACT_MARKER" not in prompt
+
+    fallback = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content=book,
+        current_outline=outline,
+    )
+    assert "Curator 未提供，使用完整上下文 fallback" in fallback
+
+
+def test_specialists_receive_primary_draft_without_raw_gbrain_and_integrator_allows_missing() -> None:
+    outline = "\n".join(f"{field}：本章{field}" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    book = "# 小说总体设计画像\n## 7. 叙事结构\n开篇策略\n# 当前状态、未兑现承诺与作者备注\n当前状态：现场"
+    curated = """# Curated Chapter Context
+
+## Relevant Characters and Relationships
+CHARACTER_CONTEXT
+## Relevant World Rules
+WORLD_CONTEXT
+## Relevant Plan
+PLAN_CONTEXT
+## Relevant Prose Controls
+PROSE_CONTEXT
+## Opening Strategy
+OPENING_CONTEXT
+"""
+    primary = "PRIMARY_DRAFT_MARKER"
+    for mode in (
+        "specialist_opening",
+        "specialist_dialogue",
+        "specialist_action",
+        "specialist_emotion",
+    ):
+        prompt = generate_prompt(
+            mode=mode,
+            template="",
+            book_content=book,
+            current_outline=outline,
+            curated_context=curated,
+            primary_draft=primary,
+            gbrain_inspiration="RAW_GBRAIN_MARKER",
+        )
+        assert primary in prompt
+        assert "RAW_GBRAIN_MARKER" not in prompt
+    integrator = generate_prompt(
+        mode="chapter_integrator",
+        template="",
+        book_content=book,
+        current_outline=outline,
+        curated_context=curated,
+        primary_draft=primary,
+        specialist_opening_response="OPENING_RESPONSE",
+        specialist_action_response="ACTION_RESPONSE",
+    )
+    assert "PRIMARY_DRAFT_MARKER" in integrator
+    assert "OPENING_RESPONSE" in integrator
+    assert "ACTION_RESPONSE" in integrator
+    assert "Dialogue Specialist Response" in integrator
+    assert "未提供" in integrator
+    assert "不必全部采纳" in integrator
 
 
 def test_outline_prompt_injects_book_content_once() -> None:

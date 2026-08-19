@@ -36,6 +36,13 @@ PROMPT_TEMPLATE_LABELS = {
     "chapter_prep": "当前章执行小纲",
     "chapter": "当前章节写作",
     "review": "十章复盘与下一批十章",
+    "context_curator": "Hybrid Context Curator",
+    "primary_writer": "Hybrid Primary Writer",
+    "specialist_opening": "Opening & Scene Entry Specialist",
+    "specialist_dialogue": "Dialogue & Character Voice Specialist",
+    "specialist_action": "Action & Spatial Logic Specialist",
+    "specialist_emotion": "Emotion & Aftermath Specialist",
+    "chapter_integrator": "Hybrid Revision Integrator",
 }
 
 BOOK_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
@@ -187,12 +194,19 @@ def read_book_payload(book_id: str, workspace: Path) -> dict[str, Any]:
     book_content = (directory / "BOOK.md").read_text(encoding="utf-8")
     prompt_content = (directory / "PROMPTS.md").read_text(encoding="utf-8")
     sections = parse_book_sections(book_content)
+    stored_templates = text_to_prompt_templates(prompt_content)
+    prompt_templates = default_prompt_templates()
+    prompt_templates.update({
+        key: value
+        for key, value in stored_templates.items()
+        if value.strip()
+    })
     return {
         "book_id": book_id,
         "book_content": book_content,
         "sections": sections,
         "design_sections": parse_design_sections(sections["design"]),
-        "prompt_templates": text_to_prompt_templates(prompt_content),
+        "prompt_templates": prompt_templates,
         "proposal": (directory / "PROPOSAL.md").read_text(encoding="utf-8"),
         "chapters": sorted(path.name for path in (directory / "chapters").glob("chapter-*.md")),
     }

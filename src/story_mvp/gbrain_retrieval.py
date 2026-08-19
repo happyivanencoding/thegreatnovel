@@ -24,6 +24,13 @@ MODE_ALLOWED_CATEGORIES = {
     "outline": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls", "book-dna", "arcs"}),
     "chapter_prep": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
     "chapter": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
+    "context_curator": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
+    "primary_writer": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
+    "specialist_opening": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
+    "specialist_dialogue": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
+    "specialist_action": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
+    "specialist_emotion": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
+    "chapter_integrator": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
     "review": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
 }
 
@@ -198,7 +205,18 @@ def build_retrieval_brief(
     if recent_summaries.strip():
         lines.append(f"最近章节摘要：\n{_compact(recent_summaries, 500)}")
     lines.append(f"明确硬约束：{'、'.join(constraints) if constraints else '未检测到明确题材硬约束'}")
-    if mode in {"chapter_prep", "chapter", "review"}:
+    if mode in {
+        "chapter_prep",
+        "chapter",
+        "context_curator",
+        "primary_writer",
+        "specialist_opening",
+        "specialist_dialogue",
+        "specialist_action",
+        "specialist_emotion",
+        "chapter_integrator",
+        "review",
+    }:
         lines.append("章节精度优先：寻找可迁移的 mechanisms、contrasts、syntheses、prose-controls；不引入来源作品表层故事。")
     elif mode == "outline":
         lines.append("规划用途：允许较广的 Book DNA、Arc、Mechanism、Contrast、Synthesis，但必须服从上述明确硬约束。")
