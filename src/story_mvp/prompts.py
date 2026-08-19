@@ -31,33 +31,21 @@ DEFAULT_COMPOSABLE_GROWTH_DIRECTION = """当前产品只提供主角成长型虚
 CLASSIC_PATTERN_DIRECTION = """经典成长模式是一等公民：可组合只表示不强迫所有作品相同，不表示主动回避成熟主干。资源→成长→战斗→身份→更高级资源→更大世界，以及职业→技能→任务→身份、探索→机缘→成长→新区域、内容副本→战斗→战利品→构筑等，都可以成为本书主干。如果作者输入、GBrain证据或当前创意表明某条经典链最适合本书，应当保留它，创新放在新优势、世界机制、转换方式、关系反馈或阶段变异上。"""
 
 
-PROSE_REALIZATION_CONTRACT = """本合同只负责“how to say”，不重规划“what happens”。已批准的前文正文是已发生事实的最高来源；BOOK 当前状态和最近摘要只是正文事实的压缩索引；若摘要、当前状态或旧计划与正式正文冲突，以正式正文为准。当前章小纲只决定尚未发生的本章事件，不能覆盖正式正文；任何冲突必须写入 Writer Audit，不得偷偷改写过去。当前章小纲的八个字段——触发事件、推动事件的人、主角行动、对手或世界反应、直接结果、状态变化、叙事功能、结尾推动力——是本章必须完成的事件合同。若前文事实与小纲冲突，保留已发生事实并显式暴露冲突，不用润色偷偷改故事。
-
-## Authority and profile
-
-BOOK 的 `## 7. 叙事结构`、`## 8. 文风与可操作参数`、`## 9. 对话特点`、`## 10. 节奏结构` 共同构成当前书的 prose profile。它们是作者可编辑的软控制：决定叙述距离、句段变化、说明进入方式、角色声音和场景压力，不是禁词表、固定句长或硬性风格评分。GBrain Inspiration Results 与 Reference Programs 只提供故事结构、压力、成长和事件参考，不能覆盖 BOOK prose profile。
-
-## Writers
-
-Writer A — Scene Draft：让人物、动作、对话、环境、反应、payoff、结果和状态变化真实发生，先把场景写成正在发生的事件，不把小纲扩写成更长概述。
-
-Writer B — Continuity & Realization：承接上一章最后状态和钩子，修复时间、地点、人物、物品、能力、知识和关系的跳切；补足必要因果桥、对手反应、空间变化和过薄的关键场景，但不改变小纲主要事件、结果、状态变化和章末推动。
-
-Writer C — Prose Realization & Bounded Humanization：让正文具体、连续、有角色差异和可读节奏，修复结构性重复、均匀句段、资料型对话、泛化描写、机械连接、无必要总结和 payoff 的重复解释。可以重组句段，不能改事实、事件及其顺序、人物意图、资源、能力、线索、payoff、直接结果、状态变化和结尾。
-
-## Scene controls
-
-具体先于重复解释；节奏随场景压力变化，高压收紧，低压保留观察、关系和必要呼吸。对话必须改变现场，至少改变信息、决定、关系、风险或空间条件。动作保持“观察—行动—反应—空间/条件变化—下一步”的因果链；内心必须影响下一步。说明只在当前行动需要时进入，情绪允许延迟、沉默和不完整。payoff 不做“预告—展示—总结”三重说明，选择最有力的一次落地，并让章末携带真实状态变化。
-
-不要模仿来源作者，不注入来源书名、作者名、来源句法或原文片段；只把抽象表达控制重新落实到当前 BOOK、人物、空间和事件中。不要为了“像人”添加禁词、禁标点、固定句长、AI 分数或无依据的口语化。
-
-## Diction and sentence realization
-
-遣词只作软控制：优先 POV 可接触的具体名词；动词写方向、接触对象与实际结果；修饰词只保留真正影响判断的性质；似乎、可能等不确定词只用于真实不确定性；语体服从人物身份、关系与当前压力；不设词汇黑名单。句法按场景选择可用关系：锚点→动作→反应→条件改变；观察→暂定解释→新细节→修正→行动；物象→关系/记忆→判断→简短落点；一句话→微动作/停顿→对方行动/拒绝；当前需要→最少必要事实→选择/风险变化→回到动作；动作/物件→未完全说出的感受→选择/沉默；执行→可见结果→外界反应→一次确认→新空间/压力。这些是可选关系，不是每段都套用的模板。长句承载空间、关系、因果、观察和犹豫，中句承担推进，短句落在决断、转折、危险、笑点和余波；多写短句不是 Humanizer 目标，不要让整章保持同一种句段长度。
+PROSE_REALIZATION_CONTRACT = """本合同只负责“how to say”，不重规划“what happens”。本次为单 Writer 直接写作：根据已批准的当前章事件合同直接写出可提交的正式正文，不模拟多 Writer 串行稿件，不输出内部推理。权威层级与冲突处理以运行期上下文中的 AUTHORITY 最小权威规则为准，只注入一次，不在这里复述。
 
 ## Output boundary
 
-遵守调用方已有的 chapter response contract：正式正文、Writer audit、字符数、事实摘要、SUBAGENT_MODE 和 provenance 分离。`chapter-NNNN.md` 只保存正式小说正文；不把 audit、摘要或内部推理写进正文，不自动修改 BOOK、事实、资源、能力、线索、结果、状态变化或结尾。"""
+最终返回必须使用三个一级标题：`# Writer Audit`、`# 正式正文`、`# 章节事实摘要`。`# 章节事实摘要` 只放 100—200 字事实摘要，不写入章节正文文件。Writer Audit 只写本次正式正文字符数、主要解决的 2—5 个连续性问题和 2—5 个表达实现问题；不要输出 chain-of-thought。`chapter-NNNN.md` 只保存正式小说正文；不把 audit、摘要或内部推理写进正文，不自动修改 BOOK、事实、资源、能力、线索、结果、状态变化或结尾。
+
+## Continuity
+
+承接 CANON 前文正文的最后状态（地点、时间、在场人物、身体状态、情绪、手中物品、最后动作、未完成即时目标）；章节边界不是场景边界，对话、追逐、战斗、调查、试炼和谈判可以跨章。连续性应通过自然动作和场景表现：不要为了证明物品归属、数量或交易完成而重复盘点已经清楚的事实。
+
+## Prose profile 地位
+
+BOOK 的 `## 7. 叙事结构`、`## 8. 文风与可操作参数`、`## 9. 对话特点`、`## 10. 节奏结构` 共同构成当前书的 prose profile。它们是作者可编辑的软控制：决定叙述距离、句段变化、说明进入方式、角色声音和场景压力，不是禁词表、固定句长或硬性风格评分。GBrain Inspiration Results 与 Reference Programs 只是 OPTIONAL INSPIRATION 可选参考，不能覆盖 BOOK prose profile、CANON 或 PLAN。"""
+
+SINGLE_WRITER_RUNTIME_NOTE = "运行期声明：本次为单 Writer 直接写作；任何多 Writer 协议已被本运行合同取代。"
 
 
 DEFAULT_PROMPT_TEMPLATES = {
@@ -203,40 +191,21 @@ DEFAULT_PROMPT_TEMPLATES = {
 结尾推动力：
 
 不要输出正文，不要输出章节概述，不要增加其它字段、一级标题、解释、审计或内部推理。不要改变十章计划中的主要事件、预定结果、状态变化、叙事功能和下一章推动；只有正式正文已使旧计划局部不可执行时，才做最小必要调整。八项全部必填。""",
-    "chapter": """你是透明协作的 GBrain 章节写作助手。只根据作者当前页面提供的 BOOK 执行相关画像、当前大型剧情块、当前章小纲、最近章节摘要、当前十章已经选定的 GBrain Inspiration Results 和选中的 Reference Programs 写作，不调用任何外部服务。
+    "chapter": """你是透明协作的 GBrain 章节写作助手。本次为单 Writer 直接写作：根据已批准的当前章事件合同，直接写出可提交的正式正文，不模拟多 Writer 串行稿件。只依据页面上提供的章节运行期上下文（AUTHORITY / CANON / PLAN / PROSE PROFILE / OPTIONAL INSPIRATION）写作，不调用任何外部服务。
 
 ## 连续性优先
 
-本章不是独立短篇。如果存在上一章或前两章正文，先确认最后地点、时间、在场人物、身体状态、情绪、手中物品、最后动作、最后一句对话和未完成即时目标。本章开头必须直接继续该场景；如果确实需要换时间或地点，先用 1—3 段自然桥接写清因果。章节边界不是场景边界，对话、追逐、战斗、调查、试炼和谈判可以跨章。不要因为小纲换了场景就瞬移，也不要机械重复上一章结尾。
+本章不是独立短篇。如果 CANON 区块提供了上一章或前两章正文，先承接其最后地点、时间、在场人物、身体状态、情绪、手中物品、最后动作、最后一句对话和未完成即时目标。本章开头必须直接继续该场景；如果确实需要换时间或地点，先用 1—3 段自然桥接写清因果。章节边界不是场景边界，对话、追逐、战斗、调查、试炼和谈判可以跨章。不要因为小纲换了场景就瞬移，也不要机械重复上一章结尾。
 
 ## 选择性展开
 
 连续不等于所有过程都详细书写。优先展开会改变人物决定或关系、第一次展示重要世界规则、冲突或悬念真正变化、payoff发生、后面会复用的信息，以及空间本身参与冲突的动作。可以压缩没有新信息的普通路程、已明确的重复疼痛、相同担忧的重复表达、没有新博弈的讨价还价和已经理解的规则复述。重要桥接必须存在，但桥接不等于流水账。
 
-## 串行写作协议
-
-执行前先确认当前执行环境是否实际支持子代理。如果支持，必须真正串行调用 Writer A → Writer B → Writer C，不得并行，并在最终报告写 `SUBAGENT_MODE: actual`；如果不支持，写 `SUBAGENT_MODE: simulated`，并用一句话说明原因。禁止假装调用了子代理；如果运行时提供 agent/task ID，可以报告真实 ID，否则不伪造。不要输出内部推理过程。
-
-### Writer A — Scene Draft
-写完整正文第一稿，让人物、动作、对话、环境、反应、payoff、结果和状态变化真实发生；先完成场景和因果，不把小纲扩写成更长概述。
-
-### Writer B — Continuity & Realization
-看到 A 全稿后重写连续性和选择性展开，修正时间/地点跳切、因果断裂、重要动作被压缩、关系不连续，以及人物、物品、能力或知识突然出现；补足必要桥接和空间变化，但不改变当前小纲的主要事件、结果、状态变化和下一章推动。
-
-### Writer C — Prose Realization & Bounded Humanization
-看到 B 全稿后写最终正式正文，修复结构性重复、重复身体状态、重复能力解释、重复情绪、均匀句段、资料型对话、泛化描写、机械连接、过长普通路程、一次性路人过多篇幅和无新状态的对话；可以重组句段，不能改变事实、事件顺序、人物意图、线索、能力、资源、payoff、直接结果、状态变化和结尾。每段至少承担剧情、人物、世界、情绪、悬念或节奏中的一个作用。
-
 前 3—10 章不要默认给所有功能角色正式名字。只有会复现、会形成关系、会影响后续或作者明确保留的角色才命名；已经建立的重要角色不得被机械改成身份称呼。
 
-最终给作者的 Codex 返回必须使用以下三个一级标题，便于页面保留审计信息、只提取正文保存：
-# Writer Audit
-只写 SUBAGENT_MODE、Writer A/B/C 正文字符数、Writer B 主要解决的 2—5 个问题和 Writer C 主要解决的 2—5 个问题；不要输出 chain-of-thought。
-# 正式正文
-只放 Writer C 的完整小说正文。
-# 章节事实摘要
-只放 100—200 字事实摘要；这部分不会写入章节正文文件。
+最终返回必须使用三个一级标题：# Writer Audit、# 正式正文、# 章节事实摘要；审计信息和事实摘要不得混入正式正文区块。
 
-先遵守当前章小纲，再在必要时做有明确原因的细节调整。作者最终主要阅读“# 正式正文”；A/B 中间稿、审计信息和事实摘要不得混入该区块。
+先遵守当前章事件合同，再在必要时做有明确原因的细节调整。作者最终主要阅读“# 正式正文”。
 
 不要替作者写入文件，不要把未发生的结果说成既定事实。""",
     "review": f"""你是透明协作的 GBrain 故事复盘助手。只根据作者当前页面提供的原计划、实际十章摘要、当前状态、未兑现承诺、尚未发生的远期方向和作者编辑过的 GBrain Inspiration Results，生成一份可编辑 Proposal，不调用任何外部服务。
@@ -396,6 +365,77 @@ def _chapter_book_context(book_content: str) -> str:
     return "\n\n".join(blocks)
 
 
+_MULTI_WRITER_HEADING_PATTERN = re.compile(
+    r"^#{1,6}\s*(?:串行写作协议|Writer\s*[ABC](?![0-9A-Za-z]))"
+)
+#: 多 Writer 特征行：串行调度 Writer A、SUBAGENT_MODE 报告，或任何单独的 Writer A/B/C
+#: 职责标记（lookahead 与测试守卫 _WRITER_ABC_PATTERN 口径一致，不误伤 Writer Audit）。
+_MULTI_WRITER_LINE_PATTERN = re.compile(
+    r"(?:串行(?:调用)?\s*Writer\s*A|SUBAGENT_MODE|Writer\s*[ABC](?![0-9A-Za-z]))"
+)
+_SINGLE_WRITER_AUDIT_LINE = (
+    "只写本次正式正文字符数、主要解决的 2—5 个连续性问题和 2—5 个表达实现问题；不要输出 chain-of-thought。"
+)
+_SINGLE_WRITER_BODY_LINE = "只放本次直接写作的完整小说正文。"
+
+
+#: 三标题输出合同中需要注入单 Writer 替换行的合同标题。
+_SINGLE_WRITER_CONTRACT_HEADINGS = ("# Writer Audit", "# 正式正文")
+
+
+def sanitize_chapter_template(template: str) -> tuple[str, bool]:
+    """单 Writer 合同的确定性执行机制（组装期净化），不是数据/API 兼容层。
+
+    chapter 组装时对提交模板做确定性净化，只影响 prompt 组装，不修改任何文件：
+
+    - 「串行写作协议 / Writer A / Writer B / Writer C」标题区块内逐行判断：
+      只丢弃命中多 Writer 特征的行（_MULTI_WRITER_LINE_PATTERN、以「只放 Writer」
+      开头的行、多 Writer 子标题行），同区块内的普通作者内容（如命名规则、
+      三标题输出合同引导句）原样保留；
+    - 把三标题输出合同中引用 Writer A/B/C 中间稿的行替换为单 Writer 描述；
+      注入依据「最近保留的输出合同标题」状态（last_contract_heading），
+      不依赖该行与合同标题物理相邻；
+    - 删除其余描述 Writer A/B/C 串行写作的行。
+    """
+    kept: list[str] = []
+    changed = False
+    skip_level = 0
+    last_contract_heading: str | None = None
+    for line in template.splitlines():
+        stripped = line.strip()
+        is_heading = stripped.startswith("#")
+        heading_level = len(stripped) - len(stripped.lstrip("#")) if is_heading else 0
+        if skip_level and is_heading and heading_level <= skip_level:
+            skip_level = 0
+        if is_heading and _MULTI_WRITER_HEADING_PATTERN.match(stripped):
+            skip_level = heading_level
+            changed = True
+            continue
+        if is_heading:
+            last_contract_heading = (
+                stripped if stripped in _SINGLE_WRITER_CONTRACT_HEADINGS else None
+            )
+            kept.append(line)
+            continue
+        if re.match(r"^只放\s*Writer\s*[ABC]", stripped):
+            kept.append(_SINGLE_WRITER_BODY_LINE)
+            changed = True
+            continue
+        if _MULTI_WRITER_LINE_PATTERN.search(line):
+            if last_contract_heading == "# Writer Audit":
+                kept.append(_SINGLE_WRITER_AUDIT_LINE)
+            elif last_contract_heading == "# 正式正文":
+                kept.append(_SINGLE_WRITER_BODY_LINE)
+            changed = True
+            continue
+        if "A/B 中间稿、" in line:
+            kept.append(line.replace("A/B 中间稿、", ""))
+            changed = True
+            continue
+        kept.append(line)
+    return "\n".join(kept).strip(), changed
+
+
 def generate_prompt(
     *,
     mode: str,
@@ -423,21 +463,45 @@ def generate_prompt(
         validate_current_outline(current_outline)
 
     prompt_template = template.strip()
+    stripped_legacy_writer = False
+    if mode == "chapter":
+        prompt_template, stripped_legacy_writer = sanitize_chapter_template(template)
     parts = [prompt_template, ""]
     if mode == "chapter":
+        if stripped_legacy_writer:
+            parts.append(SINGLE_WRITER_RUNTIME_NOTE)
         parts.extend(["# Story MVP Prose Realization Contract", PROSE_REALIZATION_CONTRACT])
-    parts.append("# 页面当前输入")
-    if mode == "chapter":
-        parts.append(_input_block("本书执行相关画像", _chapter_book_context(book_content)))
-        parts.append(_input_block("当前大型剧情块", current_long_block))
-        parts.append(_input_block("当前十章计划", _extract_markdown_block(book_content, "# 未来十章逐章小纲")))
-        parts.append(_input_block("当前章具体小纲", current_outline))
-        parts.append(_input_block("前两章正文（连续性上下文）", previous_chapter_text))
-        parts.append(_input_block("最近 1—3 章摘要", recent_summaries))
-        parts.append(_input_block("当前状态", _extract_markdown_block(book_content, "# 当前状态、未兑现承诺与作者备注")))
-        parts.append(_input_block("GBrain Inspiration Results（作者可编辑原文）", gbrain_inspiration))
-        parts.append(_input_block("选中的 Reference Programs", format_references(selected_references or [])))
+        # 惰性导入：chapter_context 顶层依赖本模块，模块级互相导入会构成循环导入。
+        from .chapter_context import build_chapter_context
+
+        packet = build_chapter_context(
+            book_content=book_content,
+            current_long_block=current_long_block,
+            previous_chapter_text=previous_chapter_text,
+            current_outline=current_outline,
+            recent_summaries=recent_summaries,
+            gbrain_inspiration=gbrain_inspiration,
+            selected_references=selected_references,
+        )
+        parts.append("# 页面当前输入（章节运行期上下文）")
+        parts.append(_input_block(
+            "AUTHORITY——权威层级与冲突处理（最小权威规则，仅此一份）",
+            packet.authority,
+        ))
+        parts.append(_input_block("CHAPTER MISSION——本章事件合同（PLAN）", packet.chapter_mission))
+        parts.append(_input_block("CANON——前文正文（已发生事实的最高来源）", packet.recent_prose))
+        parts.append(_input_block(
+            "CANON——已确认设定、状态与摘要（已经发生，不得修改）",
+            packet.canon_context,
+        ))
+        parts.append(_input_block("PLAN——滚动计划（尚未发生的当前意图）", packet.rolling_plan))
+        parts.append(_input_block("PROSE PROFILE——BOOK §7—§10 软表达控制", packet.prose_profile))
+        parts.append(_input_block(
+            "OPTIONAL INSPIRATION——可选参考（不得覆盖 CANON 或 PLAN）",
+            packet.optional_inspiration,
+        ))
     elif mode == "chapter_prep":
+        parts.append("# 页面当前输入")
         parts.append(_input_block("本书执行相关画像", _chapter_book_context(book_content)))
         parts.append(_input_block("当前大型剧情块", current_long_block))
         parts.append(_input_block("当前章对应的十章计划条目", current_chapter_plan))
@@ -445,6 +509,7 @@ def generate_prompt(
         parts.append(_input_block("最近 1—3 章摘要", recent_summaries))
         parts.append(_input_block("当前状态", _extract_markdown_block(book_content, "# 当前状态、未兑现承诺与作者备注")))
     else:
+        parts.append("# 页面当前输入")
         if mode == "idea":
             parts.append(_input_block("作者粗方向", creative_direction))
             parts.append(_input_block("当前 BOOK.md（如果作者已经填写）", book_content))

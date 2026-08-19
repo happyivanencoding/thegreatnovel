@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -9,8 +10,14 @@ from fastapi.testclient import TestClient
 import story_mvp.app as app_module
 import story_mvp.gbrain as gbrain_module
 from story_mvp.app import app
+from story_mvp.chapter_context import (
+    MINIMAL_AUTHORITY_RULE,
+    ChapterContextPacket,
+    build_chapter_context,
+)
 from story_mvp.gbrain import GBrainQueryError, query_gbrain, resolve_command_prefix
 from story_mvp.gbrain_retrieval import (
+    CHAPTER_FINAL_RESULT_LIMIT,
     EMPTY_RESULT,
     FINAL_RESULT_LIMIT,
     RAW_RESULT_LIMIT,
@@ -23,8 +30,10 @@ from story_mvp.gbrain_retrieval import (
 from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     PROSE_REALIZATION_CONTRACT,
+    SINGLE_WRITER_RUNTIME_NOTE,
     HardGateError,
     generate_prompt,
+    sanitize_chapter_template,
     validate_current_outline,
 )
 from story_mvp.references import load_validated_references
@@ -32,6 +41,10 @@ from story_mvp.storage import create_book, read_book_payload
 
 
 client = TestClient(app)
+
+#: 匹配多 Writer 职责标记；「Writer Audit」是三标题响应合同，必须保留，不能误伤。
+#: lookahead 口径与 prompts._MULTI_WRITER_HEADING_PATTERN / _MULTI_WRITER_LINE_PATTERN 统一。
+_WRITER_ABC_PATTERN = re.compile(r"Writer\s*[ABC](?![0-9A-Za-z])")
 
 
 def test_new_book_has_only_the_four_requested_items(tmp_path: Path) -> None:
@@ -310,7 +323,7 @@ def test_default_chapter_prompt_has_no_source_style_leakage() -> None:
         assert marker not in prompt
 
 
-def test_chapter_prompt_includes_diction_and_sentence_controls() -> None:
+def test_chapter_contract_is_compressed_without_generic_prose_sections() -> None:
     outline = "\n".join(f"{field}：内容" for field in (
         "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
         "直接结果", "状态变化", "叙事功能", "结尾推动力",
@@ -321,17 +334,26 @@ def test_chapter_prompt_includes_diction_and_sentence_controls() -> None:
         book_content="",
         current_outline=outline,
     )
+    # 重复的通用 prose 说明与多 Writer 职责已被删除
     for marker in (
-        "具体名词",
-        "方向、接触对象与实际结果",
-        "真实不确定性",
-        "语体服从人物身份、关系与当前压力",
-        "sentence realization",
+        "## Scene controls",
+        "## Diction and sentence realization",
+        "## Writers",
+        "Writer A — Scene Draft",
         "锚点→动作→反应→条件改变",
-        "观察→暂定解释→新细节→修正→行动",
-        "可选关系，不是每段都套用的模板",
+    ):
+        assert marker not in prompt
+    # 只保留真正影响当前动作的短执行投影
+    for marker in (
+        "连续性应通过自然动作和场景表现",
+        "不要为了证明物品归属、数量或交易完成而重复盘点已经清楚的事实",
+        "chapter-NNNN.md",
+        "不是禁词表、固定句长或硬性风格评分",
     ):
         assert marker in prompt
+    # 未引入新风格门禁
+    for marker in ("句长评分", "AI 检测", "词汇黑名单"):
+        assert marker not in prompt
     for marker in (
         "《第一序列》", "《将夜》", "《诡秘之主》",
         "会说话的肘子", "猫腻", "爱潜水的乌贼", "C:\\dev\\tgn-story-mvp",
@@ -339,13 +361,14 @@ def test_chapter_prompt_includes_diction_and_sentence_controls() -> None:
         assert marker not in prompt
 
 
-def test_chapter_template_exposes_writer_responsibilities() -> None:
+def test_chapter_template_is_single_writer_direct_writing() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["chapter"]
-    assert "Writer A — Scene Draft" in template
-    assert "Writer B — Continuity & Realization" in template
-    assert "Writer C — Prose Realization & Bounded Humanization" in template
-    assert "不把小纲扩写成更长概述" in template
-    assert "不能改变事实、事件顺序" in template
+    assert "本次为单 Writer 直接写作" in template
+    assert "直接写出可提交的正式正文" in template
+    assert "选择性展开" in template
+    assert not _WRITER_ABC_PATTERN.search(template)
+    for marker in ("串行写作协议", "SUBAGENT_MODE"):
+        assert marker not in template
 
 
 def test_outline_template_requests_executable_prose_profile() -> None:
@@ -1027,7 +1050,7 @@ def test_real_urban_hybrid_accepts_cultivation_realm_sect_dungeon_and_other_worl
     ]
     raw = "\n".join(f"[{0.99 - index / 100:.2f}] {slug} -- positive mechanism" for index, slug in enumerate(slugs))
     result = retrieve_gbrain(
-        mode="chapter",
+        mode="chapter_prep",
         book_content=REAL_URBAN_FULL_HYBRID_BOOK,
         query_func=lambda _query, **_kwargs: raw,
         page_func=HYBRID_PAGES.__getitem__,
@@ -1045,7 +1068,7 @@ def test_real_urban_hybrid_accepts_superpower_career_prose_and_synthesis() -> No
     ]
     raw = "\n".join(f"[{0.99 - index / 100:.2f}] {slug} -- positive mechanism" for index, slug in enumerate(slugs))
     result = retrieve_gbrain(
-        mode="chapter",
+        mode="chapter_prep",
         book_content=REAL_URBAN_FULL_HYBRID_BOOK,
         query_func=lambda _query, **_kwargs: raw,
         page_func=HYBRID_PAGES.__getitem__,
@@ -1065,7 +1088,7 @@ def test_real_urban_only_explicitly_banned_other_world_is_rejected() -> None:
         ]
     )
     result = retrieve_gbrain(
-        mode="chapter",
+        mode="chapter_prep",
         book_content=REAL_URBAN_ONLY_NO_OTHERWORLD_BOOK,
         query_func=lambda _query, **_kwargs: raw,
         page_func=HYBRID_PAGES.__getitem__,
@@ -1076,13 +1099,44 @@ def test_real_urban_only_explicitly_banned_other_world_is_rejected() -> None:
     assert "副本" in result["result"]
 
     gateway = retrieve_gbrain(
-        mode="chapter",
+        mode="chapter_prep",
         book_content=REAL_URBAN_ONLY_NO_OTHERWORLD_BOOK,
         query_func=lambda _query, **_kwargs: "[0.99] mechanisms/other-world-gateway -- gateway",
         page_func=HYBRID_PAGES.__getitem__,
     )
     assert gateway["accepted_count"] == 0
     assert gateway["rejected"][0]["reason"] == "与 BOOK 的现实模式冲突"
+
+    # chapter 模式组合覆盖：hybrid BOOK × 硬约束过滤 × 上限 2；
+    # 被 BOOK 显式禁止的 other-world slug 在 chapter 路径仍被拒绝。
+    chapter_raw = "\n".join(
+        [
+            "[0.99] mechanisms/other-world-gateway -- gateway",
+            "[0.98] mechanisms/cultivation-entry -- cultivation",
+            "[0.97] mechanisms/realm-breakthrough -- realm",
+            "[0.96] mechanisms/modern-sect-network -- sect",
+        ]
+    )
+    chapter = retrieve_gbrain(
+        mode="chapter",
+        book_content=REAL_URBAN_ONLY_NO_OTHERWORLD_BOOK,
+        query_func=lambda _query, **_kwargs: chapter_raw,
+        page_func=HYBRID_PAGES.__getitem__,
+    )
+    assert chapter["final_limit"] == CHAPTER_FINAL_RESULT_LIMIT
+    assert chapter["accepted_count"] == CHAPTER_FINAL_RESULT_LIMIT
+    assert [item["slug"] for item in chapter["accepted"]] == [
+        "mechanisms/cultivation-entry",
+        "mechanisms/realm-breakthrough",
+    ]
+    assert any(
+        item["slug"] == "mechanisms/modern-sect-network" and item["reason"] == "超过最终数量上限"
+        for item in chapter["rejected"]
+    )
+    assert any(
+        item["slug"] == "mechanisms/other-world-gateway" and item["reason"] == "与 BOOK 的现实模式冲突"
+        for item in chapter["rejected"]
+    )
 
 
 def test_real_urban_no_cultivation_does_not_ban_other_world() -> None:
@@ -1141,12 +1195,19 @@ def test_chapter_filters_sources_and_builds_bundle_from_full_pages() -> None:
         query_func=fake_query,
         page_func=fake_get,
     )
-    assert calls == list(pages)
-    assert result["accepted_count"] == 3
-    assert "旧资源经过可验证转换" in result["result"]
+    assert calls == ["prose-controls/action-neutral", "syntheses/example-neutral"]
+    assert result["accepted_count"] == CHAPTER_FINAL_RESULT_LIMIT
+    assert result["final_limit"] == CHAPTER_FINAL_RESULT_LIMIT
+    assert [item["slug"] for item in result["accepted"]] == calls
+    assert "先让位置和操作发生" in result["result"]
+    assert "旧资源经过可验证转换" not in result["result"]
     assert "Evidence" not in result["result"]
     assert "source_book_id" not in result["result"]
     assert "修真" not in result["result"]
+    assert any(
+        item["slug"] == "mechanisms/example-neutral" and item["reason"] == "超过最终数量上限"
+        for item in result["rejected"]
+    )
     assert any(item["reason"].startswith("chapter 模式不自动使用 arcs") for item in result["rejected"])
     assert any(item["reason"].startswith("chapter 模式不自动使用 book-dna") for item in result["rejected"])
     assert any(item["reason"].startswith("chapter 模式不自动使用 prose-dna") for item in result["rejected"])
@@ -1227,7 +1288,7 @@ def test_application_and_final_limits_bound_overlong_cli_output() -> None:
         calls.append(slug)
         return _page("Mechanism", f"抽象材料 {slug}")
 
-    result = retrieve_gbrain(mode="chapter", book_content="现实世界；无超自然", query_func=fake_query, page_func=fake_get)
+    result = retrieve_gbrain(mode="idea", book_content="现实世界；无超自然", query_func=fake_query, page_func=fake_get)
     assert result["raw_count"] == 20
     assert result["requested_limit"] == RAW_RESULT_LIMIT
     assert result["final_limit"] == FINAL_RESULT_LIMIT
@@ -1329,10 +1390,11 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert "经典成长模式是一等公民" in templates["outline"]
     assert "作者输入、GBrain证据或当前创意表明" in templates["idea"]
     assert "作者明确保留" in templates["outline"]
-    assert "串行写作协议" in templates["chapter"]
+    assert "本次为单 Writer 直接写作" in templates["chapter"]
     assert "选择性展开" in templates["chapter"]
-    assert "SUBAGENT_MODE: actual" in templates["chapter"]
-    assert "SUBAGENT_MODE: simulated" in templates["chapter"]
+    assert not _WRITER_ABC_PATTERN.search(templates["chapter"])
+    for marker in ("串行写作协议", "SUBAGENT_MODE"):
+        assert marker not in templates["chapter"]
     assert "如果本书需要且对当前故事重要" in templates["outline"]
     assert "第一章开篇策略完全由作者和本书 BOOK 决定" in templates["outline"]
     assert "## 0. 本书成长基因图" in templates["outline"]
@@ -1427,3 +1489,250 @@ def test_chapter_response_contract_saves_only_extracted_body() -> None:
     assert 'const chapterBody = $("chapter-body-for-save").value.trim();' in approve
     assert 'content: chapterBody' in approve
     assert 'content: $("codex-response").value' not in approve
+
+
+def _full_eight_field_outline() -> str:
+    return "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+
+
+def test_default_chapter_prompt_has_no_writer_a_b_c() -> None:
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="",
+        current_outline=_full_eight_field_outline(),
+    )
+    assert not _WRITER_ABC_PATTERN.search(prompt)
+
+
+def test_sanitize_chapter_template_strips_writer_heading_blocks_and_keeps_other_sections() -> None:
+    legacy = "\n".join(
+        [
+            "## 串行写作协议",
+            "必须串行调用 Writer A → Writer B → Writer C。",
+            "### Writer A — Scene Draft",
+            "第一稿职责。",
+            "## 命名规则",
+            "功能角色默认不命名。",
+        ]
+    )
+    sanitized, changed = sanitize_chapter_template(legacy)
+    assert changed is True
+    assert "## 命名规则" in sanitized
+    assert "功能角色默认不命名。" in sanitized
+    assert not _WRITER_ABC_PATTERN.search(sanitized)
+    assert "串行写作协议" not in sanitized
+
+
+def test_sanitize_injects_single_writer_lines_by_contract_heading_state_not_adjacency() -> None:
+    # 单 Writer 替换行的注入依据「最近保留的输出合同标题」状态，
+    # 不依赖多 Writer 行与合同标题物理相邻（中间隔空行仍可注入）。
+    legacy = "\n".join(
+        [
+            "# Writer Audit",
+            "",
+            "只写 SUBAGENT_MODE 和 Writer A/B/C 的中间稿问题。",
+            "# 正式正文",
+            "",
+            "汇总 Writer B 终稿作为正式正文。",
+        ]
+    )
+    sanitized, changed = sanitize_chapter_template(legacy)
+    assert changed is True
+    assert "只写本次正式正文字符数、主要解决的 2—5 个连续性问题和 2—5 个表达实现问题" in sanitized
+    assert "只放本次直接写作的完整小说正文。" in sanitized
+    assert not _WRITER_ABC_PATTERN.search(sanitized)
+
+
+def test_legacy_book_level_chapter_template_is_sanitized_to_single_writer() -> None:
+    prompts_path = Path("books/real-exp-001/PROMPTS.md")
+    prompts_md = prompts_path.read_text(encoding="utf-8")
+    start = prompts_md.index("# 当前章节写作")
+    end = prompts_md.index("# 十章复盘与下一批十章", start)
+    legacy_template = prompts_md[start:end]
+    assert "串行写作协议" in legacy_template
+    prompt = generate_prompt(
+        mode="chapter",
+        template=legacy_template,
+        book_content="",
+        current_outline=_full_eight_field_outline(),
+        previous_chapter_text="上一章最后一句：门锁响了。",
+    )
+    assert not _WRITER_ABC_PATTERN.search(prompt)
+    assert "串行写作协议" not in prompt
+    assert "SUBAGENT_MODE" not in prompt
+    assert SINGLE_WRITER_RUNTIME_NOTE in prompt
+    assert "门锁响了" in prompt
+    assert "连续性优先" in prompt
+    assert "# Writer Audit" in prompt
+    assert "# 章节事实摘要" in prompt
+    # 逐行净化：多 Writer 区块内的非多 Writer 内容必须幸存
+    assert "前 3—10 章不要默认给所有功能角色正式名字" in prompt
+    assert "已经建立的重要角色不得被机械改成身份称呼" in prompt
+    assert "最终给作者的 Codex 返回必须使用以下三个一级标题" in prompt
+    # 摘要长度约束在净化后旧模板路径仍然在场
+    assert "只放 100—200 字事实摘要" in prompt
+    # 净化只作用于 prompt 组装，PROMPTS.md 文件本身不被修改
+    assert "串行写作协议" in prompts_path.read_text(encoding="utf-8")
+
+
+def test_chapter_prompt_injects_minimal_authority_rule_once() -> None:
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="",
+        current_outline=_full_eight_field_outline(),
+    )
+    assert MINIMAL_AUTHORITY_RULE in prompt
+    assert prompt.count(MINIMAL_AUTHORITY_RULE) == 1
+    assert prompt.count("已批准的前文正文是已发生事实的最高来源") == 1
+    assert prompt.count(PROSE_REALIZATION_CONTRACT) == 1
+    # 摘要长度约束的唯一权威来源：PROSE_REALIZATION_CONTRACT 的 Output boundary，
+    # 默认模板路径与净化后旧模板路径因此一致（旧模板路径另见
+    # test_legacy_book_level_chapter_template_is_sanitized_to_single_writer）。
+    assert "`# 章节事实摘要` 只放 100—200 字事实摘要，不写入章节正文文件。" in prompt
+    assert "只放 100—200 字事实摘要" in prompt
+
+
+def test_narrative_function_is_a_planning_note_not_a_hard_constraint() -> None:
+    outline = "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "结尾推动力",
+    )) + "\n叙事功能：本章完成第一次公开兑现"
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="",
+        current_outline=outline,
+    )
+    assert "叙事功能：本章完成第一次公开兑现" in prompt
+    assert "规划备注（planning note）" in prompt
+    assert "不要求正文显式表达它" in prompt
+    assert "场景上下文——推动事件的人：内容" in prompt
+
+
+def test_chapter_context_packet_separates_canon_plan_profile_and_optional_inspiration() -> None:
+    book = """# 小说总体设计画像
+
+## 2. 世界观结构
+WORLD_SETTING_MARKER
+
+## 6. 某中段设计
+SECTION_SIX_MARKER
+
+## 10. 节奏结构
+PROSE_PROFILE_MARKER
+
+## 11. 某后置设计
+SECTION_ELEVEN_MARKER
+
+# 未来十章逐章小纲
+
+## 第1章：小纲
+具体剧情：待写。
+
+# 当前状态、未兑现承诺与作者备注
+CANON_STATUS_MARKER
+"""
+    outline = _full_eight_field_outline()
+    packet = build_chapter_context(
+        book_content=book,
+        current_long_block="PLAN_BLOCK_MARKER",
+        previous_chapter_text="CANON_PROSE_MARKER",
+        current_outline=outline,
+        recent_summaries="CANON_SUMMARY_MARKER",
+        gbrain_inspiration="INSPIRATION_MARKER",
+        selected_references=[{"program_id": "ref-alpha"}],
+    )
+    assert isinstance(packet, ChapterContextPacket)
+    # 确定性：同一输入两次构建完全一致
+    assert packet == build_chapter_context(
+        book_content=book,
+        current_long_block="PLAN_BLOCK_MARKER",
+        previous_chapter_text="CANON_PROSE_MARKER",
+        current_outline=outline,
+        recent_summaries="CANON_SUMMARY_MARKER",
+        gbrain_inspiration="INSPIRATION_MARKER",
+        selected_references=[{"program_id": "ref-alpha"}],
+    )
+    assert packet.authority == MINIMAL_AUTHORITY_RULE
+    assert "CANON_PROSE_MARKER" in packet.recent_prose
+    assert "CANON_STATUS_MARKER" in packet.canon_context
+    assert "CANON_SUMMARY_MARKER" in packet.canon_context
+    assert "WORLD_SETTING_MARKER" in packet.canon_context
+    assert "PLAN_BLOCK_MARKER" in packet.rolling_plan
+    assert "第1章：小纲" in packet.rolling_plan
+    assert "PROSE_PROFILE_MARKER" in packet.prose_profile
+    assert "INSPIRATION_MARKER" in packet.optional_inspiration
+    assert "ref-alpha" in packet.optional_inspiration
+    assert "触发事件：内容" in packet.chapter_mission
+    # 验收点 8：packet 各区块都不含 §6 中段设计与 §11 后置设计的内容
+    for block in (
+        packet.authority,
+        packet.chapter_mission,
+        packet.canon_context,
+        packet.recent_prose,
+        packet.rolling_plan,
+        packet.prose_profile,
+        packet.optional_inspiration,
+    ):
+        assert "SECTION_SIX_MARKER" not in block
+        assert "SECTION_ELEVEN_MARKER" not in block
+
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content=book,
+        current_long_block="PLAN_BLOCK_MARKER",
+        previous_chapter_text="CANON_PROSE_MARKER",
+        current_outline=outline,
+        recent_summaries="CANON_SUMMARY_MARKER",
+        gbrain_inspiration="INSPIRATION_MARKER",
+        selected_references=[{"program_id": "ref-alpha"}],
+    )
+    for label in ("AUTHORITY", "CANON", "PLAN", "PROSE PROFILE", "OPTIONAL INSPIRATION"):
+        assert label in prompt
+
+
+def test_chapter_prompt_without_inspiration_still_generates_and_marks_optional_block() -> None:
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="",
+        current_outline=_full_eight_field_outline(),
+    )
+    assert "OPTIONAL INSPIRATION" in prompt
+    assert "不得覆盖 BOOK、当前小纲或 CANON" in prompt
+    assert "允许空结果，不补位" in prompt
+
+
+def test_chapter_mode_accepts_at_most_two_gbrain_inspirations() -> None:
+    slugs = [f"mechanisms/item-{index}" for index in range(4)]
+    raw = "\n".join(f"[{0.99 - index / 100:.2f}] {slug} -- snippet" for index, slug in enumerate(slugs))
+    result = retrieve_gbrain(
+        mode="chapter",
+        book_content="现实世界；无超自然",
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=lambda slug: _page("Mechanism", f"抽象机制 {slug}"),
+    )
+    assert CHAPTER_FINAL_RESULT_LIMIT == 2
+    assert result["final_limit"] == CHAPTER_FINAL_RESULT_LIMIT
+    assert result["accepted_count"] == CHAPTER_FINAL_RESULT_LIMIT
+    assert [item["slug"] for item in result["accepted"]] == slugs[:2]
+    assert any(item["reason"] == "超过最终数量上限" for item in result["rejected"])
+
+
+def test_idea_outline_review_keep_original_final_limit() -> None:
+    raw = "\n".join(f"[{0.99 - index / 100:.2f}] mechanisms/item-{index} -- snippet" for index in range(7))
+    for mode in ("idea", "outline", "review"):
+        result = retrieve_gbrain(
+            mode=mode,
+            book_content="都市成长故事",
+            query_func=lambda _query, **_kwargs: raw,
+            page_func=lambda _slug: _page("Mechanism", "抽象材料。"),
+        )
+        assert result["final_limit"] == FINAL_RESULT_LIMIT
+        assert result["accepted_count"] == FINAL_RESULT_LIMIT

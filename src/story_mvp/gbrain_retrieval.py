@@ -9,6 +9,8 @@ from .gbrain import GBrainQueryError, get_gbrain, query_gbrain
 
 RAW_RESULT_LIMIT = 8
 FINAL_RESULT_LIMIT = 5
+#: Chapter Runtime Lite v1：chapter 模式灵感负担减半，最多 2 条；其他模式不受影响。
+CHAPTER_FINAL_RESULT_LIMIT = 2
 EMPTY_RESULT = "（本次没有找到与 BOOK 硬约束和当前章节任务兼容的 GBrain 证据；不要用不相关材料补位。）"
 GBRAIN_SCOPE_LABEL = "全 Brain 检索 → BOOK 兼容性筛选"
 
@@ -352,6 +354,7 @@ def retrieve_gbrain(
         recent_summaries,
     )
     allowed_categories = MODE_ALLOWED_CATEGORIES[mode]
+    final_limit = CHAPTER_FINAL_RESULT_LIMIT if mode == "chapter" else FINAL_RESULT_LIMIT
     visible = parsed[:RAW_RESULT_LIMIT]
     rejected: list[dict[str, str]] = [
         {"slug": hit["slug"], "reason": "超过原始数量上限"}
@@ -366,7 +369,7 @@ def retrieve_gbrain(
         if _has_surface_conflict(hit["snippet"], constraints):
             rejected.append({"slug": hit["slug"], "reason": "与 BOOK 的明确硬约束冲突"})
             continue
-        if len(accepted) >= FINAL_RESULT_LIMIT:
+        if len(accepted) >= final_limit:
             rejected.append({"slug": hit["slug"], "reason": "超过最终数量上限"})
             continue
         try:
@@ -400,7 +403,7 @@ def retrieve_gbrain(
         "accepted_count": len(accepted),
         "rejected_count": len(rejected),
         "requested_limit": RAW_RESULT_LIMIT,
-        "final_limit": FINAL_RESULT_LIMIT,
+        "final_limit": final_limit,
         "raw_stdout": stdout,
         "raw_results": visible,
         "accepted": accepted,
