@@ -13,6 +13,7 @@ from story_mvp.app import app
 from story_mvp.chapter_context import (
     MINIMAL_AUTHORITY_RULE,
     ChapterContextPacket,
+    compact_growth_genome_for_chapter,
     build_chapter_context,
     render_growth_benefit_projection,
 )
@@ -1580,19 +1581,107 @@ def test_growth_benefit_hierarchy_is_present_in_idea_outline_and_review_prompts(
 
 
 def test_growth_projection_is_three_lines_and_not_an_outline_gate() -> None:
-    projection = render_growth_benefit_projection(
+    stage_only = render_growth_benefit_projection(
         current_long_block=(
             "一级成长变化：砾角第一次完成贴壁进化。\n"
             "二级收益结算：获得一笔赏金和红根路线牌。\n"
             "反哺下一轮：路线牌让主角进入血统兽斗场。"
         )
     )
-    assert "本章一级成长推进：砾角第一次完成贴壁进化。" in projection
-    assert "本章二级收益结算：获得一笔赏金和红根路线牌。" in projection
-    assert "本章反哺：路线牌让主角进入血统兽斗场。" in projection
+    assert "本章一级成长推进：\n未在本章计划中明确；不强制本章推进。" in stage_only
+    assert "当前剧情块一级成长目标仅供参照：砾角第一次完成贴壁进化。" in stage_only
+    assert "本章二级收益结算：\n未在本章计划中明确；不强制本章结算。" in stage_only
+    assert "当前剧情块二级收益目标仅供参照：获得一笔赏金和红根路线牌。" in stage_only
+    assert "当前剧情块反哺目标仅供参照：路线牌让主角进入血统兽斗场。" in stage_only
+    explicit = render_growth_benefit_projection(
+        current_long_block="一级成长变化：LONG_BLOCK_LEVEL_UP。\n二级收益结算：LONG_BLOCK_REWARD。",
+        current_chapter_plan="一级成长变化：CHAPTER_PLAN_LEVEL_UP。\n二级收益结算：CHAPTER_PLAN_REWARD。",
+        current_outline="反哺下一轮：OUTLINE_FEEDBACK。",
+    )
+    assert "本章一级成长推进：CHAPTER_PLAN_LEVEL_UP。" in explicit
+    assert "本章二级收益结算：CHAPTER_PLAN_REWARD。" in explicit
+    assert "本章反哺：OUTLINE_FEEDBACK。" in explicit
+    assert "LONG_BLOCK_LEVEL_UP" not in explicit
+    bold_plan = render_growth_benefit_projection(
+        current_chapter_plan="**一级成长变化：**BOLD_CHAPTER_PLAN_LEVEL_UP。"
+    )
+    assert "本章一级成长推进：BOLD_CHAPTER_PLAN_LEVEL_UP。" in bold_plan
+    empty = render_growth_benefit_projection()
+    assert "本章一级成长推进：本章不推进。" in empty
+    assert "本章二级收益结算：本章不结算。" in empty
     assert len(REQUIRED_OUTLINE_FIELDS) == 8
     assert "一级成长变化" not in REQUIRED_OUTLINE_FIELDS
     assert "二级收益结算" not in REQUIRED_OUTLINE_FIELDS
+
+
+def test_compact_growth_genome_keeps_only_author_invariants_and_risks() -> None:
+    book = """# 小说总体设计画像
+## 0. 本书成长基因图
+### 作者明确保留
+AUTHOR_MARKER
+### 一级成长收益
+FULL_PRIMARY_MARKER
+### 二级成长收益
+FULL_SECONDARY_MARKER
+### 反哺关系
+FULL_FEEDBACK_MARKER
+### 核心不变量
+INVARIANT_MARKER
+### 退化风险
+RISK_MARKER
+## 1. 核心类型与读者承诺
+BOOK_MARKER
+"""
+    compact = compact_growth_genome_for_chapter(book)
+    assert "AUTHOR_MARKER" in compact
+    assert "INVARIANT_MARKER" in compact
+    assert "RISK_MARKER" in compact
+    for marker in ("FULL_PRIMARY_MARKER", "FULL_SECONDARY_MARKER", "FULL_FEEDBACK_MARKER"):
+        assert marker not in compact
+
+
+def test_single_and_curator_use_compact_genome_projection() -> None:
+    book = """# 小说总体设计画像
+## 0. 本书成长基因图
+### 作者明确保留
+AUTHOR_MARKER
+### 一级成长收益
+FULL_PRIMARY_MARKER
+### 二级成长收益
+FULL_SECONDARY_MARKER
+### 反哺关系
+FULL_FEEDBACK_MARKER
+### 核心不变量
+INVARIANT_MARKER
+### 退化风险
+RISK_MARKER
+## 1. 核心类型与读者承诺
+BOOK_MARKER
+# 当前状态、未兑现承诺与作者备注
+STATUS_MARKER
+"""
+    outline = "\n".join(f"{field}：内容" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    single = generate_prompt(
+        mode="chapter",
+        template="SINGLE TEMPLATE",
+        book_content=book,
+        current_outline=outline,
+    )
+    curator = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content=book,
+        current_outline=outline,
+    )
+    for prompt in (single, curator):
+        assert "AUTHOR_MARKER" in prompt
+        assert "INVARIANT_MARKER" in prompt
+        assert "RISK_MARKER" in prompt
+        for marker in ("FULL_PRIMARY_MARKER", "FULL_SECONDARY_MARKER", "FULL_FEEDBACK_MARKER"):
+            assert marker not in prompt
 
 
 def test_hybrid_nodes_receive_only_growth_projection_not_full_hierarchy() -> None:
@@ -1617,7 +1706,8 @@ BOOK_MARKER
         current_outline=outline,
     )
     assert "FULL_GROWTH_HIERARCHY_MARKER" not in curator
-    assert "本章一级成长推进：本章完成第一次进化。" in curator
+    assert "本章一级成长推进：\n未在本章计划中明确；不强制本章推进。" in curator
+    assert "当前剧情块一级成长目标仅供参照：本章完成第一次进化。" in curator
     primary = generate_prompt(
         mode="primary_writer",
         template="",
@@ -1627,7 +1717,7 @@ BOOK_MARKER
         curated_context="# Curated Chapter Context\n\n## Relevant Plan\n\n本章一级成长推进：本章完成第一次进化。",
     )
     assert "FULL_GROWTH_HIERARCHY_MARKER" not in primary
-    assert "本章一级成长推进：本章完成第一次进化。" in primary
+    assert "本章一级成长推进：\n未在本章计划中明确；不强制本章推进。" in primary
     assert "Growth Benefit Hierarchy：" not in primary
     assert "FULL_GROWTH_HIERARCHY_MARKER" not in drop_growth_hierarchy(
         "## 0. 本书成长基因图\nFULL_GROWTH_HIERARCHY_MARKER\n## 1. 核心类型与读者承诺\nBOOK_MARKER"
@@ -2203,8 +2293,12 @@ def test_book_contract_takes_future_design_from_real_book_and_canon_stays_factua
     start = prompt.index("## BOOK CONTRACT——长期设计与稳定方向，不等于已经发生")
     end = prompt.index("## CHAPTER MISSION——", start)
     contract_block = prompt[start:end]
-    for marker in future_markers:
-        assert marker in contract_block
+    assert future_markers[0] not in contract_block
+    assert future_markers[1] in contract_block
+    assert future_markers[2] in contract_block
+    assert "传统奇幻成长爽文" in contract_block
+    assert "主角每次学会新术式" in contract_block
+    assert "学院内容变成解释设定" in contract_block
     # BOOK CONTRACT 区块不混入当前状态（已发生事实）
     assert "当前已完成第3章" not in contract_block
 

@@ -824,6 +824,7 @@ def generate_prompt(
         parts.extend(["# Story MVP Prose Realization Contract", PROSE_REALIZATION_CONTRACT])
         # 惰性导入：chapter_context 顶层依赖本模块，模块级互相导入会构成循环导入。
         from .chapter_context import build_chapter_context
+        from .hybrid_runtime import compact_book_contract_for_chapter
 
         packet = build_chapter_context(
             book_content=book_content,
@@ -842,7 +843,12 @@ def generate_prompt(
         ))
         parts.append(_input_block(
             "BOOK CONTRACT——长期设计与稳定方向，不等于已经发生",
-            _annotated_block(BOOK_CONTRACT_BLOCK_NOTE, packet.book_contract),
+            _annotated_block(
+                BOOK_CONTRACT_BLOCK_NOTE,
+                compact_book_contract_for_chapter(
+                    packet.book_contract, packet.growth_genome_compact
+                ),
+            ),
         ))
         parts.append(_input_block("CHAPTER MISSION——本章事件合同（PLAN）", packet.chapter_mission))
         parts.append(_input_block("本章成长收益短投影（非门禁）", packet.growth_benefit_projection))
@@ -883,6 +889,7 @@ def generate_prompt(
                 [
                     _input_block("AUTHORITY", context.authority),
                     _input_block("当前章事件合同", context.chapter_mission),
+                    _input_block("压缩 Growth Genome（本章相关固定小节）", context.growth_genome_compact),
                     _input_block("BOOK CONTRACT", context.book_contract),
                     _input_block("本章成长收益短投影（非长期理论）", context.growth_benefit_projection),
                     _input_block("规范化 CANON INDEX", context.canon_index),

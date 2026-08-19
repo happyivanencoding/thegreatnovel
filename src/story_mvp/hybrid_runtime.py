@@ -45,6 +45,7 @@ class CuratorContextPacket:
     authority: str
     chapter_mission: str
     book_contract: str
+    growth_genome_compact: str
     canon_index: str
     rolling_plan: str
     prose_profile: str
@@ -133,6 +134,18 @@ def drop_growth_hierarchy(book_contract: str) -> str:
     return "\n".join(kept).strip()
 
 
+def compact_book_contract_for_chapter(
+    book_contract: str, growth_genome_compact: str
+) -> str:
+    """用固定 §0 压缩投影替换完整成长基因图。"""
+
+    remainder = drop_growth_hierarchy(book_contract)
+    compact = growth_genome_compact.strip()
+    if not compact:
+        return remainder
+    return "\n\n".join(part for part in (compact, remainder) if part).strip()
+
+
 def extract_last_transition_context(text: str, max_chars: int = 1800) -> str:
     """保留前文最后几个完整段落，作为章首的必要衔接片段。"""
 
@@ -192,10 +205,17 @@ def count_specialist_patches(response: str) -> int:
 
 
 def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
+    compact = packet.growth_genome_compact
+    if not any(
+        heading in compact
+        for heading in ("### 作者明确保留", "### 核心不变量", "### 退化风险")
+    ):
+        compact = "（旧 BOOK 未提供 Growth Genome 的三个章节压缩小节。）"
     return CuratorContextPacket(
         authority=packet.authority,
         chapter_mission=packet.chapter_mission,
         book_contract=drop_growth_hierarchy(packet.book_contract),
+        growth_genome_compact=compact,
         canon_index=packet.canon_context,
         rolling_plan=packet.rolling_plan,
         prose_profile=packet.prose_profile,

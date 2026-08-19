@@ -89,6 +89,7 @@ class ChapterContextPacket:
     prose_profile: str
     optional_inspiration: str
     growth_benefit_projection: str = ""
+    growth_genome_compact: str = ""
 
 
 def _markdown_block(content: str, heading: str) -> str:
@@ -142,14 +143,16 @@ def _extract_growth_projection_value(texts: Iterable[str], label: str) -> str:
     for text in texts:
         lines = text.splitlines()
         for index, line in enumerate(lines):
-            match = re.match(rf"^\s*{re.escape(label)}\s*[：:]\s*(.*)$", line)
+            normalized_line = line.replace("**", "").strip()
+            match = re.match(rf"^{re.escape(label)}\s*[：:]\s*(.*)$", normalized_line)
             if not match:
                 continue
             values = [match.group(1).strip()] if match.group(1).strip() else []
             for next_line in lines[index + 1 :]:
-                stripped = next_line.strip()
+                normalized_next_line = next_line.replace("**", "").strip()
+                stripped = normalized_next_line
                 if any(
-                    re.match(rf"^\s*{re.escape(next_label)}\s*[：:]", next_line)
+                    re.match(rf"^{re.escape(next_label)}\s*[：:]", normalized_next_line)
                     for next_label in labels
                 ) or stripped.startswith("#"):
                     break
@@ -157,6 +160,45 @@ def _extract_growth_projection_value(texts: Iterable[str], label: str) -> str:
                     values.append(stripped)
             return "\n".join(values).strip()
     return ""
+
+
+def _markdown_subsection(content: str, heading: str) -> str:
+    lines = content.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() != heading:
+            continue
+        collected: list[str] = []
+        for next_line in lines[index + 1 :]:
+            if next_line.strip().startswith("#"):
+                break
+            collected.append(next_line)
+        return "\n".join(collected).strip()
+    return ""
+
+
+def compact_growth_genome_for_chapter(book_content: str) -> str:
+    """保留章节 Agent 需要的固定三段 §0 压缩投影。"""
+
+    genome = _markdown_block(book_content, "## 0. 本书成长基因图")
+    if not genome:
+        return "（BOOK 未提供成长基因图。）"
+    headings = ("### 作者明确保留", "### 核心不变量", "### 退化风险")
+    blocks = [
+        f"{heading}\n\n{_markdown_subsection(genome, heading)}"
+        for heading in headings
+        if _markdown_subsection(genome, heading)
+    ]
+    if not blocks:
+        # 旧书没有新固定小节时保留原有短/旧 §0，保证旧书可继续运行。
+        return f"## 0. 本书成长基因图\n\n{genome}"
+    return "## 0. 本书成长基因图（章节压缩）\n\n" + "\n\n".join(blocks)
+
+
+def _growth_projection_values(text: str) -> dict[str, str]:
+    return {
+        label: _extract_growth_projection_value((text,), label)
+        for label in GROWTH_PROJECTION_LABELS
+    }
 
 
 def render_growth_benefit_projection(
@@ -167,16 +209,51 @@ def render_growth_benefit_projection(
 ) -> str:
     """从当前计划的可见标签生成三行非门禁成长投影。"""
 
-    texts = (current_long_block, current_chapter_plan, current_outline)
-    values = {
-        label: _extract_growth_projection_value(texts, label)
-        for label in GROWTH_PROJECTION_LABELS
-    }
+    outline_values = _growth_projection_values(current_outline)
+    chapter_plan_values = _growth_projection_values(current_chapter_plan)
+    long_block_values = _growth_projection_values(current_long_block)
+
+    def render_value(
+        prefix: str,
+        label: str,
+        empty_default: str,
+        reference_default: str,
+        reference_label: str,
+    ) -> str:
+        explicit = outline_values[label] or chapter_plan_values[label]
+        if explicit:
+            return f"{prefix}{explicit}"
+        reference = long_block_values[label]
+        if reference:
+            return (
+                f"{prefix}\n未在本章计划中明确；{reference_default}\n"
+                f"当前剧情块{reference_label}仅供参照：{reference}"
+            )
+        return f"{prefix}{empty_default}"
+
     return "\n".join(
         (
-            f"本章一级成长推进：{values['一级成长变化'] or '本章不推进'}",
-            f"本章二级收益结算：{values['二级收益结算'] or '本章不结算'}",
-            f"本章反哺：{values['反哺下一轮']}" if values["反哺下一轮"] else "本章反哺：",
+            render_value(
+                "本章一级成长推进：",
+                "一级成长变化",
+                "本章不推进。",
+                "不强制本章推进。",
+                "一级成长目标",
+            ),
+            render_value(
+                "本章二级收益结算：",
+                "二级收益结算",
+                "本章不结算。",
+                "不强制本章结算。",
+                "二级收益目标",
+            ),
+            render_value(
+                "本章反哺：",
+                "反哺下一轮",
+                "本章反哺为空。",
+                "未在本章计划中明确。",
+                "反哺目标",
+            ),
         )
     )
 
@@ -248,6 +325,7 @@ def build_chapter_context(
         current_chapter_plan=current_chapter_plan,
         current_outline=current_outline,
     )
+    growth_genome_compact = compact_growth_genome_for_chapter(book_content)
 
     return ChapterContextPacket(
         authority=MINIMAL_AUTHORITY_RULE,
@@ -259,4 +337,5 @@ def build_chapter_context(
         prose_profile=prose_profile,
         optional_inspiration=optional_inspiration,
         growth_benefit_projection=growth_benefit_projection,
+        growth_genome_compact=growth_genome_compact,
     )
