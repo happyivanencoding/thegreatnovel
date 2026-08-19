@@ -31,6 +31,7 @@ from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     PROSE_REALIZATION_CONTRACT,
     SINGLE_WRITER_RUNTIME_NOTE,
+    WRITER_AUDIT_RULE,
     HardGateError,
     generate_prompt,
     sanitize_chapter_template,
@@ -281,10 +282,10 @@ STATUS_MARKER
     )
     assert prompt.count("STATUS_MARKER") == 1
     for marker in (
-        "已批准的前文正文是已发生事实的最高来源",
-        "BOOK 当前状态和最近摘要只是正文事实的压缩索引",
-        "以正式正文为准",
-        "当前章小纲只决定尚未发生的本章事件",
+        "已批准的正式前文；已经发生事实的最高来源",
+        "是正式正文的压缩索引",
+        "与正式正文冲突时以正式正文为准",
+        "只决定尚未发生的内容",
         "任何冲突必须写入 Writer Audit",
     ):
         assert marker in prompt
@@ -653,6 +654,9 @@ FULL_PLAN_SHOULD_NOT_ENTER
     assert "## 12. 当前设计最强点与最弱点" not in prompt
     assert "MVP_PRODUCT_DIRECTION" not in prompt
     assert "诡秘之主" not in prompt
+    # §0—§5 相关设计经由 BOOK CONTRACT 进入，不再被标为「已经发生，不得修改」
+    assert "BOOK CONTRACT——长期设计与稳定方向，不等于已经发生" in prompt
+    assert "已经发生，不得修改" not in prompt
 
 
 def test_page_shows_editable_gbrain_query_and_results() -> None:
@@ -1542,7 +1546,19 @@ def test_sanitize_injects_single_writer_lines_by_contract_heading_state_not_adja
     )
     sanitized, changed = sanitize_chapter_template(legacy)
     assert changed is True
-    assert "只写本次正式正文字符数、主要解决的 2—5 个连续性问题和 2—5 个表达实现问题" in sanitized
+    assert "Writer Audit 只报告实际存在的事项" in sanitized
+    assert "无需要报告的冲突或实质调整" in sanitized
+    # sanitize 只注入一行短句；完整 WRITER_AUDIT_RULE 全文由合同只注入一次。
+    assert sanitized.count(WRITER_AUDIT_RULE) == 0
+    prompt = generate_prompt(
+        mode="chapter",
+        template=legacy,
+        book_content="",
+        current_outline=_full_eight_field_outline(),
+    )
+    assert prompt.count(WRITER_AUDIT_RULE) == 1
+    assert "2—5 个连续性问题" not in sanitized
+    assert "2—5 个表达实现问题" not in sanitized
     assert "只放本次直接写作的完整小说正文。" in sanitized
     assert not _WRITER_ABC_PATTERN.search(sanitized)
 
@@ -1575,6 +1591,14 @@ def test_legacy_book_level_chapter_template_is_sanitized_to_single_writer() -> N
     assert "最终给作者的 Codex 返回必须使用以下三个一级标题" in prompt
     # 摘要长度约束在净化后旧模板路径仍然在场
     assert "只放 100—200 字事实摘要" in prompt
+    # Audit 合同被替换为新「只报实际事项，无则写无」规则，不再强迫制造问题
+    assert "Writer Audit 只报告实际存在的事项" in prompt
+    assert "无需要报告的冲突或实质调整" in prompt
+    # 完整 WRITER_AUDIT_RULE 全文只由 PROSE_REALIZATION_CONTRACT 注入一次，
+    # sanitize 的 Audit 替换行只是一行短句，不得造成双注入。
+    assert prompt.count(WRITER_AUDIT_RULE) == 1
+    assert "2—5 个连续性问题" not in prompt
+    assert "2—5 个表达实现问题" not in prompt
     # 净化只作用于 prompt 组装，PROMPTS.md 文件本身不被修改
     assert "串行写作协议" in prompts_path.read_text(encoding="utf-8")
 
@@ -1588,7 +1612,7 @@ def test_chapter_prompt_injects_minimal_authority_rule_once() -> None:
     )
     assert MINIMAL_AUTHORITY_RULE in prompt
     assert prompt.count(MINIMAL_AUTHORITY_RULE) == 1
-    assert prompt.count("已批准的前文正文是已发生事实的最高来源") == 1
+    assert prompt.count("已批准的正式前文；已经发生事实的最高来源") == 1
     assert prompt.count(PROSE_REALIZATION_CONTRACT) == 1
     # 摘要长度约束的唯一权威来源：PROSE_REALIZATION_CONTRACT 的 Output boundary，
     # 默认模板路径与净化后旧模板路径因此一致（旧模板路径另见
@@ -1662,7 +1686,9 @@ CANON_STATUS_MARKER
     assert "CANON_PROSE_MARKER" in packet.recent_prose
     assert "CANON_STATUS_MARKER" in packet.canon_context
     assert "CANON_SUMMARY_MARKER" in packet.canon_context
-    assert "WORLD_SETTING_MARKER" in packet.canon_context
+    # §0—§5 长期设计进入 BOOK CONTRACT，不再混入 CANON INDEX
+    assert "WORLD_SETTING_MARKER" in packet.book_contract
+    assert "WORLD_SETTING_MARKER" not in packet.canon_context
     assert "PLAN_BLOCK_MARKER" in packet.rolling_plan
     assert "第1章：小纲" in packet.rolling_plan
     assert "PROSE_PROFILE_MARKER" in packet.prose_profile
@@ -1672,6 +1698,7 @@ CANON_STATUS_MARKER
     # 验收点 8：packet 各区块都不含 §6 中段设计与 §11 后置设计的内容
     for block in (
         packet.authority,
+        packet.book_contract,
         packet.chapter_mission,
         packet.canon_context,
         packet.recent_prose,
@@ -1693,7 +1720,7 @@ CANON_STATUS_MARKER
         gbrain_inspiration="INSPIRATION_MARKER",
         selected_references=[{"program_id": "ref-alpha"}],
     )
-    for label in ("AUTHORITY", "CANON", "PLAN", "PROSE PROFILE", "OPTIONAL INSPIRATION"):
+    for label in ("AUTHORITY", "BOOK CONTRACT", "CHAPTER MISSION", "CANON PROSE", "CANON INDEX", "PLAN", "PROSE PROFILE", "OPTIONAL INSPIRATION"):
         assert label in prompt
 
 
@@ -1705,7 +1732,7 @@ def test_chapter_prompt_without_inspiration_still_generates_and_marks_optional_b
         current_outline=_full_eight_field_outline(),
     )
     assert "OPTIONAL INSPIRATION" in prompt
-    assert "不得覆盖 BOOK、当前小纲或 CANON" in prompt
+    assert "不得覆盖以上任何层级（含 BOOK CONTRACT、CANON PROSE、CANON INDEX、PLAN）" in prompt
     assert "允许空结果，不补位" in prompt
 
 
@@ -1736,3 +1763,145 @@ def test_idea_outline_review_keep_original_final_limit() -> None:
         )
         assert result["final_limit"] == FINAL_RESULT_LIMIT
         assert result["accepted_count"] == FINAL_RESULT_LIMIT
+
+
+def test_book_contract_takes_future_design_from_real_book_and_canon_stays_factual() -> None:
+    # 验收点 1：BOOK §0—§5 的未来设计进 BOOK CONTRACT，不进 CANON INDEX，
+    # 且最终 prompt 不再把这些未来内容标为「已经发生」。
+    book = Path("books/real-exp-001/BOOK.md").read_text(encoding="utf-8")
+    packet = build_chapter_context(
+        book_content=book,
+        current_outline=_full_eight_field_outline(),
+    )
+    # 三个中文 marker 是 BOOK.md（books/real-exp-001/BOOK.md）的受保护锚点：
+    # 作者修订长期设计文字时需同步更新这里的断言文本。
+    future_markers = (
+        "16—35章转为学院试炼和战斗构筑",
+        "人物弧从底层修补工到学院试炼胜者",
+        "先轻视主角、再承认",
+    )
+    for marker in future_markers:
+        assert marker in packet.book_contract
+        assert marker not in packet.canon_context
+
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content=book,
+        current_outline=_full_eight_field_outline(),
+    )
+    assert "已经发生，不得修改" not in prompt
+    start = prompt.index("## BOOK CONTRACT——长期设计与稳定方向，不等于已经发生")
+    end = prompt.index("## CHAPTER MISSION——", start)
+    contract_block = prompt[start:end]
+    for marker in future_markers:
+        assert marker in contract_block
+    # BOOK CONTRACT 区块不混入当前状态（已发生事实）
+    assert "当前已完成第3章" not in contract_block
+
+
+def test_canon_index_holds_status_and_summaries_and_canon_prose_stays_top_source() -> None:
+    # 验收点 2：当前状态与最近摘要进 CANON INDEX；正式前文只进 recent_prose，
+    # 且权威层级文案确认正式前文仍是最高事实来源。
+    book = """# 小说总体设计画像
+
+## 2. 世界观结构
+CONTRACT_WORLD_MARKER
+
+# 当前状态、未兑现承诺与作者备注
+INDEX_STATUS_MARKER
+"""
+    packet = build_chapter_context(
+        book_content=book,
+        previous_chapter_text="CANON_PROSE_TOP_MARKER",
+        current_outline=_full_eight_field_outline(),
+        recent_summaries="INDEX_SUMMARY_MARKER",
+    )
+    assert "INDEX_STATUS_MARKER" in packet.canon_context
+    assert "INDEX_SUMMARY_MARKER" in packet.canon_context
+    assert "CANON_PROSE_TOP_MARKER" in packet.recent_prose
+    assert "CANON_PROSE_TOP_MARKER" not in packet.canon_context
+    assert "CANON_PROSE_TOP_MARKER" not in packet.book_contract
+    assert "CONTRACT_WORLD_MARKER" in packet.book_contract
+    assert "CONTRACT_WORLD_MARKER" not in packet.canon_context
+    assert "已批准的正式前文；已经发生事实的最高来源" in MINIMAL_AUTHORITY_RULE
+    assert "与正式正文冲突时以正式正文为准" in MINIMAL_AUTHORITY_RULE
+
+
+def test_chapter_prompt_renders_six_authority_blocks_with_separated_semantics() -> None:
+    # 验收点 3：六个权威标签都在场，且各自只承担自己的语义。
+    book = """# 小说总体设计画像
+
+## 0. 本书成长基因图
+CONTRACT_GENOME_MARKER
+
+## 7. 叙事结构
+PROFILE_NARRATIVE_MARKER
+
+# 当前状态、未兑现承诺与作者备注
+INDEX_STATUS_MARKER
+"""
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content=book,
+        previous_chapter_text="CANON_PROSE_TOP_MARKER",
+        current_outline=_full_eight_field_outline(),
+        recent_summaries="INDEX_SUMMARY_MARKER",
+    )
+    for label in (
+        "CANON PROSE",
+        "BOOK CONTRACT",
+        "CANON INDEX",
+        "PLAN",
+        "PROSE PROFILE",
+        "OPTIONAL INSPIRATION",
+    ):
+        assert label in prompt
+    titles = (
+        "## AUTHORITY——",
+        "## BOOK CONTRACT——",
+        "## CHAPTER MISSION——",
+        "## CANON PROSE——",
+        "## CANON INDEX——",
+        "## PLAN——",
+        "## PROSE PROFILE——",
+        "## OPTIONAL INSPIRATION——",
+    )
+    positions = {title: prompt.index(title) for title in titles}
+
+    def _block(title: str) -> str:
+        start = positions[title]
+        later = [positions[other] for other in titles if positions[other] > start]
+        end = min(later) if later else len(prompt)
+        return prompt[start:end]
+
+    contract_block = _block("## BOOK CONTRACT——")
+    index_block = _block("## CANON INDEX——")
+    assert "CONTRACT_GENOME_MARKER" in contract_block
+    assert "INDEX_STATUS_MARKER" not in contract_block
+    assert "INDEX_STATUS_MARKER" in index_block
+    assert "INDEX_SUMMARY_MARKER" in index_block
+    assert "CONTRACT_GENOME_MARKER" not in index_block
+    assert "## 0. 本书成长基因图" not in index_block
+    assert "CANON_PROSE_TOP_MARKER" in _block("## CANON PROSE——")
+    assert "PROFILE_NARRATIVE_MARKER" in _block("## PROSE PROFILE——")
+
+
+def test_default_chapter_prompt_audit_only_reports_actual_items() -> None:
+    # 验收点 4：Audit 允许没有问题；不再强迫制造 2—5 个发现。
+    prompt = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="",
+        current_outline=_full_eight_field_outline(),
+    )
+    assert "Writer Audit 只报告实际存在的事项" in prompt
+    assert "无需要报告的冲突或实质调整" in prompt
+    assert "不要把正常的场景安排、遣词选择、句段变化或普通润色包装成问题" in prompt
+    assert "2—5 个连续性问题" not in prompt
+    assert "2—5 个表达实现问题" not in prompt
+    # 三标题输出合同与摘要 100—200 字约束保留
+    for heading in ("# Writer Audit", "# 正式正文", "# 章节事实摘要"):
+        assert heading in prompt
+    assert "只放 100—200 字事实摘要" in prompt

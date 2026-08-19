@@ -31,21 +31,38 @@ DEFAULT_COMPOSABLE_GROWTH_DIRECTION = """当前产品只提供主角成长型虚
 CLASSIC_PATTERN_DIRECTION = """经典成长模式是一等公民：可组合只表示不强迫所有作品相同，不表示主动回避成熟主干。资源→成长→战斗→身份→更高级资源→更大世界，以及职业→技能→任务→身份、探索→机缘→成长→新区域、内容副本→战斗→战利品→构筑等，都可以成为本书主干。如果作者输入、GBrain证据或当前创意表明某条经典链最适合本书，应当保留它，创新放在新优势、世界机制、转换方式、关系反馈或阶段变异上。"""
 
 
-PROSE_REALIZATION_CONTRACT = """本合同只负责“how to say”，不重规划“what happens”。本次为单 Writer 直接写作：根据已批准的当前章事件合同直接写出可提交的正式正文，不模拟多 Writer 串行稿件，不输出内部推理。权威层级与冲突处理以运行期上下文中的 AUTHORITY 最小权威规则为准，只注入一次，不在这里复述。
+WRITER_AUDIT_RULE = """Writer Audit 只报告实际存在的事项：
+- 本次正式正文字符数；
+- 实际发现的 CANON PROSE / BOOK CONTRACT / CANON INDEX / PLAN 冲突；
+- 为承接前文而补入的必要桥接；
+- 对当前章事件合同作出的实质调整及原因。
+没有冲突、必要桥接或实质调整时，明确写：无需要报告的冲突或实质调整。
+不要把正常的场景安排、遣词选择、句段变化或普通润色包装成问题。不要为了满足数量而制造发现。不要输出 chain-of-thought。"""
+
+
+PROSE_REALIZATION_CONTRACT = f"""本合同只负责“how to say”，不重规划“what happens”。本次为单 Writer 直接写作：根据已批准的当前章事件合同直接写出可提交的正式正文，不模拟多 Writer 串行稿件，不输出内部推理。权威层级与冲突处理以运行期上下文中的 AUTHORITY 最小权威规则为准，只注入一次，不在这里复述。
 
 ## Output boundary
 
-最终返回必须使用三个一级标题：`# Writer Audit`、`# 正式正文`、`# 章节事实摘要`。`# 章节事实摘要` 只放 100—200 字事实摘要，不写入章节正文文件。Writer Audit 只写本次正式正文字符数、主要解决的 2—5 个连续性问题和 2—5 个表达实现问题；不要输出 chain-of-thought。`chapter-NNNN.md` 只保存正式小说正文；不把 audit、摘要或内部推理写进正文，不自动修改 BOOK、事实、资源、能力、线索、结果、状态变化或结尾。
+最终返回必须使用三个一级标题：`# Writer Audit`、`# 正式正文`、`# 章节事实摘要`。`# 章节事实摘要` 只放 100—200 字事实摘要，不写入章节正文文件。
+
+{WRITER_AUDIT_RULE}
+
+`chapter-NNNN.md` 只保存正式小说正文；不把 audit、摘要或内部推理写进正文，不自动修改 BOOK、事实、资源、能力、线索、结果、状态变化或结尾。
 
 ## Continuity
 
-承接 CANON 前文正文的最后状态（地点、时间、在场人物、身体状态、情绪、手中物品、最后动作、未完成即时目标）；章节边界不是场景边界，对话、追逐、战斗、调查、试炼和谈判可以跨章。连续性应通过自然动作和场景表现：不要为了证明物品归属、数量或交易完成而重复盘点已经清楚的事实。
+承接 CANON PROSE 前文正文的最后状态（地点、时间、在场人物、身体状态、情绪、手中物品、最后动作、未完成即时目标）；章节边界不是场景边界，对话、追逐、战斗、调查、试炼和谈判可以跨章。连续性应通过自然动作和场景表现：不要为了证明物品归属、数量或交易完成而重复盘点已经清楚的事实。
 
 ## Prose profile 地位
 
-BOOK 的 `## 7. 叙事结构`、`## 8. 文风与可操作参数`、`## 9. 对话特点`、`## 10. 节奏结构` 共同构成当前书的 prose profile。它们是作者可编辑的软控制：决定叙述距离、句段变化、说明进入方式、角色声音和场景压力，不是禁词表、固定句长或硬性风格评分。GBrain Inspiration Results 与 Reference Programs 只是 OPTIONAL INSPIRATION 可选参考，不能覆盖 BOOK prose profile、CANON 或 PLAN。"""
+BOOK 的 `## 7. 叙事结构`、`## 8. 文风与可操作参数`、`## 9. 对话特点`、`## 10. 节奏结构` 共同构成当前书的 prose profile。它们是作者可编辑的软控制：决定叙述距离、句段变化、说明进入方式、角色声音和场景压力，不是禁词表、固定句长或硬性风格评分。GBrain Inspiration Results 与 Reference Programs 只是 OPTIONAL INSPIRATION 可选参考，不能覆盖 PROSE PROFILE、CANON PROSE、CANON INDEX 或 PLAN。"""
 
 SINGLE_WRITER_RUNTIME_NOTE = "运行期声明：本次为单 Writer 直接写作；任何多 Writer 协议已被本运行合同取代。"
+
+#: BOOK.md「当前状态、未兑现承诺与作者备注」一级标题受保护锚点；
+#: chapter_prep 与 chapter_context（CANON_INDEX_STATUS_HEADING）都引用本常量。
+CURRENT_STATE_HEADING = "# 当前状态、未兑现承诺与作者备注"
 
 
 DEFAULT_PROMPT_TEMPLATES = {
@@ -191,11 +208,11 @@ DEFAULT_PROMPT_TEMPLATES = {
 结尾推动力：
 
 不要输出正文，不要输出章节概述，不要增加其它字段、一级标题、解释、审计或内部推理。不要改变十章计划中的主要事件、预定结果、状态变化、叙事功能和下一章推动；只有正式正文已使旧计划局部不可执行时，才做最小必要调整。八项全部必填。""",
-    "chapter": """你是透明协作的 GBrain 章节写作助手。本次为单 Writer 直接写作：根据已批准的当前章事件合同，直接写出可提交的正式正文，不模拟多 Writer 串行稿件。只依据页面上提供的章节运行期上下文（AUTHORITY / CANON / PLAN / PROSE PROFILE / OPTIONAL INSPIRATION）写作，不调用任何外部服务。
+    "chapter": """你是透明协作的 GBrain 章节写作助手。本次为单 Writer 直接写作：根据已批准的当前章事件合同，直接写出可提交的正式正文，不模拟多 Writer 串行稿件。只依据页面上提供的章节运行期上下文（AUTHORITY / BOOK CONTRACT / CHAPTER MISSION / CANON PROSE / CANON INDEX / PLAN / PROSE PROFILE / OPTIONAL INSPIRATION）写作，不调用任何外部服务。
 
 ## 连续性优先
 
-本章不是独立短篇。如果 CANON 区块提供了上一章或前两章正文，先承接其最后地点、时间、在场人物、身体状态、情绪、手中物品、最后动作、最后一句对话和未完成即时目标。本章开头必须直接继续该场景；如果确实需要换时间或地点，先用 1—3 段自然桥接写清因果。章节边界不是场景边界，对话、追逐、战斗、调查、试炼和谈判可以跨章。不要因为小纲换了场景就瞬移，也不要机械重复上一章结尾。
+本章不是独立短篇。如果 CANON PROSE 区块提供了上一章或前两章正文，先承接其最后地点、时间、在场人物、身体状态、情绪、手中物品、最后动作、最后一句对话和未完成即时目标。本章开头必须直接继续该场景；如果确实需要换时间或地点，先用 1—3 段自然桥接写清因果。章节边界不是场景边界，对话、追逐、战斗、调查、试炼和谈判可以跨章。不要因为小纲换了场景就瞬移，也不要机械重复上一章结尾。
 
 ## 选择性展开
 
@@ -373,10 +390,27 @@ _MULTI_WRITER_HEADING_PATTERN = re.compile(
 _MULTI_WRITER_LINE_PATTERN = re.compile(
     r"(?:串行(?:调用)?\s*Writer\s*A|SUBAGENT_MODE|Writer\s*[ABC](?![0-9A-Za-z]))"
 )
+#: sanitize 的 Audit 替换行只放一行短句；完整 WRITER_AUDIT_RULE 全文由
+#: PROSE_REALIZATION_CONTRACT 只注入一次，避免旧模板路径双注入。
 _SINGLE_WRITER_AUDIT_LINE = (
-    "只写本次正式正文字符数、主要解决的 2—5 个连续性问题和 2—5 个表达实现问题；不要输出 chain-of-thought。"
+    "Writer Audit 只报告实际存在的事项；完整规则见本 Prompt 的 "
+    "Story MVP Prose Realization Contract，没有冲突或实质调整时写："
+    "无需要报告的冲突或实质调整。"
 )
 _SINGLE_WRITER_BODY_LINE = "只放本次直接写作的完整小说正文。"
+
+
+#: BOOK CONTRACT 与 CANON INDEX 区块标签附带的语义说明（渲染时前置）。
+BOOK_CONTRACT_BLOCK_NOTE = (
+    "这里可以包含未来人物弧、未来关系变化、阶段方向和读者承诺。"
+    "Writer 应让当前章节与其保持方向一致，但不得把其中尚未发生的内容写成当前事实，"
+    "也不得因为局部计划调整就把它当作 Canon 冲突。"
+)
+CANON_INDEX_BLOCK_NOTE = "它低于正式正文；若与正式正文冲突，以正式正文为准。"
+
+
+def _annotated_block(note: str, content: str) -> str:
+    return f"{note}\n\n{content.strip()}" if content.strip() else note
 
 
 #: 三标题输出合同中需要注入单 Writer 替换行的合同标题。
@@ -488,16 +522,20 @@ def generate_prompt(
             "AUTHORITY——权威层级与冲突处理（最小权威规则，仅此一份）",
             packet.authority,
         ))
-        parts.append(_input_block("CHAPTER MISSION——本章事件合同（PLAN）", packet.chapter_mission))
-        parts.append(_input_block("CANON——前文正文（已发生事实的最高来源）", packet.recent_prose))
         parts.append(_input_block(
-            "CANON——已确认设定、状态与摘要（已经发生，不得修改）",
-            packet.canon_context,
+            "BOOK CONTRACT——长期设计与稳定方向，不等于已经发生",
+            _annotated_block(BOOK_CONTRACT_BLOCK_NOTE, packet.book_contract),
+        ))
+        parts.append(_input_block("CHAPTER MISSION——本章事件合同（PLAN）", packet.chapter_mission))
+        parts.append(_input_block("CANON PROSE——前文正文（已发生事实的最高来源）", packet.recent_prose))
+        parts.append(_input_block(
+            "CANON INDEX——已发生事实的压缩索引",
+            _annotated_block(CANON_INDEX_BLOCK_NOTE, packet.canon_context),
         ))
         parts.append(_input_block("PLAN——滚动计划（尚未发生的当前意图）", packet.rolling_plan))
         parts.append(_input_block("PROSE PROFILE——BOOK §7—§10 软表达控制", packet.prose_profile))
         parts.append(_input_block(
-            "OPTIONAL INSPIRATION——可选参考（不得覆盖 CANON 或 PLAN）",
+            "OPTIONAL INSPIRATION——可选参考（不得覆盖以上任何层级）",
             packet.optional_inspiration,
         ))
     elif mode == "chapter_prep":
@@ -507,7 +545,7 @@ def generate_prompt(
         parts.append(_input_block("当前章对应的十章计划条目", current_chapter_plan))
         parts.append(_input_block("前两章正文（连续性上下文）", previous_chapter_text))
         parts.append(_input_block("最近 1—3 章摘要", recent_summaries))
-        parts.append(_input_block("当前状态", _extract_markdown_block(book_content, "# 当前状态、未兑现承诺与作者备注")))
+        parts.append(_input_block("当前状态", _extract_markdown_block(book_content, CURRENT_STATE_HEADING)))
     else:
         parts.append("# 页面当前输入")
         if mode == "idea":
