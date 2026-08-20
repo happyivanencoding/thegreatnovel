@@ -10,7 +10,7 @@
 - Long-term runway：`LONG_TERM_RUNWAY_PRESERVED`
 - 总判定：`PACING_FIX_VALIDATED`
 - `LOCAL_FIX_GLOBAL_DAMAGE`：未发现
-- 建议正式记录：`CREATIVE_CHAIN_FROZEN_V2` + `OUTLINE_FROZEN_V2`
+- 正式记录：`CREATIVE_CHAIN_FROZEN_V2` + `OUTLINE_FROZEN_V2`
 - 本轮不进入正文，不修改 Director、Writer、Chapter、Canon、State Delta 或角色系统。
 
 结论不是“把100改成另一个数字”。A Treatment 把原先前100章内的区域法则、仙域、终局和仙道终点重新放回远期路线，在当前层级增加城市、关系、资源、记录、遗迹和社会生态玩法；B Treatment 没有被强行拖慢，而是在约百章完成移动洞天，同时增加有效的公共生活、维护和迁移玩法。
@@ -126,7 +126,7 @@ Blind reports：
 - `EVENTIZATION_PRESERVED`
 - `LONG_TERM_RUNWAY_PRESERVED`
 - `PACING_FIX_VALIDATED`
-- 建议记录 `CREATIVE_CHAIN_FROZEN_V2`
-- 建议记录 `OUTLINE_FROZEN_V2`
+- 已记录 `CREATIVE_CHAIN_FROZEN_V2`
+- 已记录 `OUTLINE_FROZEN_V2`
 
 后续没有真实跨作品失败，不再因为单作品的 N 应为60、96、100或其它数字而修改全局 Prompt。本轮完成后停止，不进入正文。
