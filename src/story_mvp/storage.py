@@ -14,10 +14,11 @@ from .prompts import (
 
 SECTION_TITLES = {
     "design": "# 小说总体设计画像",
-    "long_plan": "# 未来100章大型剧情块",
+    "long_plan": "# 当前中期规划窗口",
     "small_plan": "# 未来十章逐章小纲",
     "status": "# 当前状态、未兑现承诺与作者备注",
 }
+LEGACY_SECTION_TITLES = {"# 未来100章大型剧情块": "long_plan"}
 
 DESIGN_SECTION_TITLES = {
     "growth_genome": "## 0. 本书成长基因图",
@@ -122,6 +123,7 @@ def compose_design_content(design_sections: dict[str, str]) -> str:
 
 def parse_book_sections(content: str) -> dict[str, str]:
     headings = {title: key for key, title in SECTION_TITLES.items()}
+    headings.update(LEGACY_SECTION_TITLES)
     sections = {key: "" for key in SECTION_TITLES}
     current_key: str | None = None
     lines: list[str] = []

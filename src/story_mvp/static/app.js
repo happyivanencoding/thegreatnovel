@@ -36,9 +36,12 @@ const creativeUi = {
 
 const sectionTitles = {
   design: "# 小说总体设计画像",
-  long_plan: "# 未来100章大型剧情块",
+  long_plan: "# 当前中期规划窗口",
   small_plan: "# 未来十章逐章小纲",
   status: "# 当前状态、未兑现承诺与作者备注",
+};
+const legacySectionTitleAliases = {
+  "# 未来100章大型剧情块": "long_plan",
 };
 
 const designTitles = {
@@ -874,6 +877,7 @@ function splitHeadingBlocks(text, titles) {
   const headingToKey = Object.fromEntries(
     Object.entries(titles).map(([key, heading]) => [heading, key]),
   );
+  if (titles === sectionTitles) Object.assign(headingToKey, legacySectionTitleAliases);
   const result = {};
   let currentKey = "";
   let lines = [];
@@ -1333,8 +1337,8 @@ $("prompt-mode").addEventListener("change", handlePromptModeChange);
 $("expand-design").addEventListener("click", () => setDesignDetails(true));
 $("collapse-design").addEventListener("click", () => setDesignDetails(false));
 $("section-long_plan").addEventListener("input", renderLongPlanPanorama);
-$("section-long_plan").addEventListener("input", () => {
-  invalidateGbrainResults("未来100章剧情块已变化");
+  $("section-long_plan").addEventListener("input", () => {
+  invalidateGbrainResults("当前中期规划窗口已变化");
 });
 $("section-small_plan").addEventListener("input", () => {
   $("current-chapter-plan").value = "";

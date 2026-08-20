@@ -59,7 +59,7 @@ from story_mvp.prompts import (
     validate_current_outline,
 )
 from story_mvp.references import load_validated_references
-from story_mvp.storage import create_book, read_book_payload
+from story_mvp.storage import compose_book_content, create_book, parse_book_sections, read_book_payload
 
 
 client = TestClient(app)
@@ -130,6 +130,15 @@ def test_new_book_has_no_database_or_old_system_directory(tmp_path: Path) -> Non
     names = {path.name.lower() for path in book_dir.rglob("*")}
     assert not any(name.endswith((".db", ".sqlite", ".sqlite3")) for name in names)
     assert not {"edition", "atlas", "novel_authoring"} & names
+
+
+def test_legacy_long_plan_heading_is_read_and_new_heading_is_written() -> None:
+    legacy = "# 小说总体设计画像\n\n设计\n\n# 未来100章大型剧情块\n\n旧版剧情\n\n# 未来十章逐章小纲\n\n十章\n\n# 当前状态、未兑现承诺与作者备注\n\n状态\n"
+    sections = parse_book_sections(legacy)
+    assert sections["long_plan"] == "旧版剧情"
+    rewritten = compose_book_content(sections)
+    assert "# 当前中期规划窗口" in rewritten
+    assert "# 未来100章大型剧情块" not in rewritten
 
 
 def test_old_book_without_creative_files_still_loads_and_legacy_proposal_is_not_approved(tmp_path: Path) -> None:
@@ -282,9 +291,10 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
         "### 第一次标志性奇观",
         "### 长期增长发动机",
         "### 第一次主动兑现",
-        "### 10章超越",
-        "### 30章超越",
-        "### 100章超越",
+        "### 早期兑现（约10章）",
+        "### 稳定循环（约30章）",
+        "### 中期里程碑",
+        "### 远期升格方向",
     ):
         assert marker in fantasy
 
@@ -307,6 +317,11 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
         "世界资源、利益与机会结构",
         "持续冲突来源",
         "第一次决定性兑现",
+        "早期成长锚点与长期升格",
+        "早期兑现",
+        "稳定循环",
+        "中期里程碑",
+        "远期升格方向",
     ):
         assert marker in world
 
@@ -801,7 +816,7 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
     )
     for heading in (
         "# 小说总体设计画像",
-        "# 未来100章大型剧情块",
+        "# 当前中期规划窗口",
         "# 未来十章逐章小纲",
         "# 当前状态、未兑现承诺与作者备注",
     ):
@@ -816,16 +831,66 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
     assert "POWER_BREAKTHROUGH" not in prompt
     assert "不强制每块失去或承担什么" in prompt
     assert "每块必须公开验证" not in prompt
-    assert "4—8 个自然剧情块" in prompt
+    assert "通常约 4—10 块" in prompt
     assert all(f"## {number}." in prompt for number in range(1, 13))
-    assert "完整输出所有剧情块" in prompt
-    assert "覆盖第1章到第100章" in prompt
+    assert "完整输出当前窗口的所有剧情块" in prompt
+    assert "覆盖第1章到本窗口预计终点" in prompt
+    assert "规划范围：预计第1—N章" in prompt
+    assert "窗口终点：" in prompt
     assert "具体发生" in prompt
     assert "结果 / 状态变化" in prompt
     assert "结尾推动" in prompt
     assert "第一章开篇策略" in prompt
     assert "本批核心幻想兑现" in prompt
     assert "不要求每章都成长或结算" in prompt
+
+
+def test_long_form_pacing_uses_soft_anchors_and_dynamic_outline_window() -> None:
+    fantasy = generate_prompt(
+        mode="fantasy_seed",
+        template=DEFAULT_PROMPT_TEMPLATES["fantasy_seed"],
+        book_content="",
+        creative_direction="DIRECTION",
+    )
+    assert "### 早期兑现（约10章）" in fantasy
+    assert "### 稳定循环（约30章）" in fantasy
+    assert "### 中期里程碑" in fantasy
+    assert "### 远期升格方向" in fantasy
+    assert "不是第10章的固定期限" in fantasy
+
+    world = generate_prompt(
+        mode="world_vision",
+        template=DEFAULT_PROMPT_TEMPLATES["world_vision"],
+        book_content="",
+        fantasy_seed="旧版 Seed：### 10章超越\n### 30章超越\n### 100章超越",
+        creative_state={"fantasy_seed": {"status": "author_approved"}},
+    )
+    assert "## 早期成长锚点与长期升格" in world
+    assert "兼容解释为" in world
+    assert "不要因为 legacy 字段名里写着100" in world
+
+    story = generate_prompt(
+        mode="idea",
+        template=DEFAULT_PROMPT_TEMPLATES["idea"],
+        book_content="",
+        **approved_creative_inputs(),
+    )
+    assert "### 早期锚点、中期里程碑与远期升格" in story
+    assert "大型阶段不分配固定章节额度" in story
+    assert "横向开发" not in story
+    assert "不把远期升格强塞进固定百章窗口" in story
+
+    outline = generate_prompt(
+        mode="outline",
+        template=DEFAULT_PROMPT_TEMPLATES["outline"],
+        book_content="BOOK",
+        **approved_creative_inputs(),
+    )
+    assert "# 当前中期规划窗口" in outline
+    assert "规划范围：预计第1—N章" in outline
+    assert "当前中期规划窗口只展开 Story Program" in outline
+    assert "通常约 4—10 块" in outline
+    assert "# 未来100章大型剧情块" not in outline
 
 
 def test_review_prompt_uses_the_concrete_small_outline_format() -> None:
@@ -946,6 +1011,7 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="chapter-fact-summary"' in page.text
     assert 'id="extract-chapter-body"' in page.text
     assert 'id="design-growth_genome"' in page.text
+    assert "当前中期规划窗口（完整 Markdown）" in page.text
     assert 'id="creative-direction" value=""' in page.text
     assert "例如：传统仙侠；资源→战斗→身份" in page.text
     assert "GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选" in page.text
@@ -960,6 +1026,8 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert "都市职业" not in js
     assert "BOOK-aware Retrieval Brief" in page.text
     assert "/api/gbrain/brief" in js
+    assert 'long_plan: "# 当前中期规划窗口"' in js
+    assert '"# 未来100章大型剧情块": "long_plan"' in js
 
 
 def test_default_retrieval_query_uses_context_instead_of_generic_prefix() -> None:
