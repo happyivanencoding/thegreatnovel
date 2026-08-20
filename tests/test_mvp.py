@@ -280,8 +280,8 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
         "### 主角最强欲望",
         "### 力量占有欲",
         "### 第一次标志性奇观",
-        "### 不可调和的压迫",
-        "### 第一次情绪爆发",
+        "### 持续阻力与压力",
+        "### 第一次情绪兑现",
         "### 10章超越",
         "### 30章超越",
         "### 100章超越",
@@ -301,7 +301,13 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
     assert "APPROVED_SEED_MARKER" in world
     for marker in ("BOOK_MARKER", "GBRAIN_MARKER", "REFERENCE_MARKER"):
         assert marker not in world
-    for marker in ("世界最震撼的三幅画面", "力量的升格方向", "阶层与压迫", "对手谱系", "第一次决定性反转"):
+    for marker in (
+        "世界最震撼的三幅画面",
+        "力量的升格方向",
+        "世界阶层、利益与行动压力",
+        "持续冲突来源",
+        "第一次决定性兑现",
+    ):
         assert marker in world
 
 
@@ -1801,10 +1807,18 @@ def test_hybrid_page_defaults_to_full_mode_and_exposes_all_nodes() -> None:
     assert 'id="adopt-primary-draft"' in page.text
 
 
-def test_growth_benefit_hierarchy_is_present_in_idea_outline_and_review_prompts() -> None:
+def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None:
     idea = DEFAULT_PROMPT_TEMPLATES["idea"]
-    for marker in ("### 核心优势怎样实际使用", "### 主循环", "### 二级收益与反哺", "### 成本节奏"):
+    for marker in (
+        "### 核心优势与长期玩法",
+        "### 长期故事主线",
+        "主角一级成长",
+        "二级收益",
+        "世界扩张",
+    ):
         assert marker in idea
+    assert "### 成本节奏" not in idea
+    assert "自然产生的后果或余波（如果有）" in idea
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
     for marker in ("### 一级成长主轴", "### 二级收益与反哺", "### 主循环", "### 成本节奏"):
         assert marker in outline
