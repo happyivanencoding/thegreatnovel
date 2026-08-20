@@ -280,7 +280,7 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
         "### 主角最强欲望",
         "### 力量占有欲",
         "### 第一次标志性奇观",
-        "### 持续阻力与压力",
+        "### 长期增长发动机",
         "### 第一次主动兑现",
         "### 10章超越",
         "### 30章超越",
@@ -304,7 +304,7 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
     for marker in (
         "世界最震撼的三幅画面",
         "力量的升格方向",
-        "世界阶层、利益与行动压力",
+        "世界资源、利益与机会结构",
         "持续冲突来源",
         "第一次决定性兑现",
     ):
@@ -1787,6 +1787,37 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert "POWER_BREAKTHROUGH" not in Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
 
 
+def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
+    for mode in ("fantasy_seed", "world_vision", "idea"):
+        template = DEFAULT_PROMPT_TEMPLATES[mode]
+        assert "COMPOUNDING_GROWTH_DIRECTION" in template
+        assert "净新增" in template
+        assert "每轮结束重新归零" in template
+
+    fantasy = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    assert "世界为什么因此自然打开更高价值的新机会、竞争、敌人或区域" in fantasy
+    assert "长期不能每次从零开始" in fantasy
+    assert "最好明确留下第一笔以后仍可再次利用的积累" in fantasy
+    assert "### 持续阻力与压力" not in fantasy
+
+    world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    assert "## 世界资源、利益与机会结构" in world
+    assert "形成自己的构筑、体系、库存、网络、领地、技艺组合、个人规则或其它不可逆积累" in world
+    assert "主角体外" in world
+    assert "## 世界阶层、利益与行动压力" not in world
+
+    story_program = DEFAULT_PROMPT_TEMPLATES["idea"]
+    for marker in (
+        "当前最值得争取的机会 / 目标：",
+        "核心优势怎样产生超额结果：",
+        "阶段净新增：",
+        "推向下一阶段的更大机会、欲望、竞争或压力：",
+    ):
+        assert marker in story_program
+    assert "二级收益：写本阶段" not in story_program
+    assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
+
+
 def test_hybrid_page_defaults_to_full_mode_and_exposes_all_nodes() -> None:
     page = client.get("/")
     assert page.status_code == 200
@@ -1813,7 +1844,7 @@ def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None
         "### 核心优势与长期玩法",
         "### 长期故事主线",
         "主角一级成长",
-        "二级收益",
+        "阶段净新增",
         "世界扩张",
     ):
         assert marker in idea
