@@ -13,6 +13,7 @@ QUERY_RECALL_LIMIT = 24
 FINAL_RESULT_LIMIT = 5
 #: Chapter Runtime Lite v1：chapter 模式灵感负担减半，最多 2 条；其他模式不受影响。
 CHAPTER_FINAL_RESULT_LIMIT = 2
+GENRE_PRIOR_ACCEPT_LIMIT = 2
 EMPTY_RESULT = "（本次没有找到与 BOOK 硬约束和当前章节任务兼容的 GBrain 证据；不要用不相关材料补位。）"
 GBRAIN_SCOPE_LABEL = "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选"
 
@@ -33,6 +34,8 @@ MODE_ALLOWED_CATEGORIES = {
     "chapter_integrator": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
     "review": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
 }
+
+GENRE_PRIOR_ALLOWED_MODES = frozenset({"idea", "outline", "review"})
 
 CONSTRAINT_PATTERNS = (
     ("现实世界", ("现实世界", "现代都市", "现实职业", "现代社会")),
@@ -111,6 +114,17 @@ ABSTRACT_HEADINGS = {
     "使用边界",
     "适用时",
     "失败信号",
+    "适用范围与权威",
+    "核心读者满足",
+    "常见一级成长主轴",
+    "常见二级收益",
+    "主要情节发动机",
+    "常见开局方式",
+    "常见兑现形式",
+    "reader-facing language",
+    "长篇变异方向",
+    "常见退化风险",
+    "不应默认",
 }
 EXCLUDED_SECTION_WORDS = ("evidence", "证据", "sampling", "支持范围")
 
@@ -307,6 +321,41 @@ def extract_abstract_content(page: str) -> tuple[str, str]:
     return _compact(abstract, 800), boundary
 
 
+def is_genre_prior_page(page: str) -> bool:
+    """只依据现有卡片 frontmatter 的 creative_problem_tags 识别题材先验。"""
+
+    lines = page.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return False
+    try:
+        end = lines.index("---", 1)
+    except ValueError:
+        return False
+    return any("genre-prior" in line.casefold() for line in lines[1:end])
+
+
+def _genre_prior_title(page: str, slug: str) -> str:
+    lines = page.splitlines()
+    for line in lines:
+        if line.casefold().startswith("title:"):
+            return line.split(":", 1)[1].strip()
+    for line in lines:
+        if line.startswith("# "):
+            return line[2:].strip()
+    return slug.rsplit("/", 1)[-1]
+
+
+def genre_prior_matches_query(page: str, query: str, slug: str) -> bool:
+    """题材先验只在 query 明确提到其标题/别名时占用先验名额。"""
+
+    title = _genre_prior_title(page, slug)
+    candidates = [part.strip() for part in re.split(r"[｜|/、，,\s]+", title) if len(part.strip()) >= 2]
+    if not candidates:
+        return False
+    normalized_query = query.casefold()
+    return any(candidate.casefold() in normalized_query for candidate in candidates)
+
+
 def _type_for_category(category: str) -> str:
     return {
         "mechanisms": "mechanism",
@@ -390,6 +439,7 @@ def retrieve_gbrain(
         for hit in novel_candidates[RAW_RESULT_LIMIT:]
     )
     accepted: list[dict[str, Any]] = []
+    genre_prior_count = 0
     for hit in visible:
         category = source_category(hit["slug"])
         if _has_surface_conflict(hit["snippet"], constraints):
@@ -403,6 +453,16 @@ def retrieve_gbrain(
         except (GBrainQueryError, OSError, ValueError):
             rejected.append({"slug": hit["slug"], "reason": "完整页面读取失败"})
             continue
+        genre_prior = is_genre_prior_page(page)
+        if genre_prior and mode not in GENRE_PRIOR_ALLOWED_MODES:
+            rejected.append({"slug": hit["slug"], "reason": "章节节点不自动使用 Genre Prior"})
+            continue
+        if genre_prior and not genre_prior_matches_query(page, effective_query, hit["slug"]):
+            rejected.append({"slug": hit["slug"], "reason": "Genre Prior 与当前题材 query 不相关"})
+            continue
+        if genre_prior and genre_prior_count >= GENRE_PRIOR_ACCEPT_LIMIT:
+            rejected.append({"slug": hit["slug"], "reason": "超过 Genre Prior 接受上限"})
+            continue
         abstract, transfer_boundary = extract_abstract_content(page)
         if not abstract:
             rejected.append({"slug": hit["slug"], "reason": "没有可提取的抽象区块"})
@@ -414,10 +474,13 @@ def retrieve_gbrain(
             {
                 **hit,
                 "type": _type_for_category(category),
+                "is_genre_prior": genre_prior,
                 "abstract": abstract,
                 "transfer_boundary": transfer_boundary,
             }
         )
+        if genre_prior:
+            genre_prior_count += 1
     return {
         "status": "available",
         "scope": GBRAIN_SCOPE_LABEL,
@@ -429,6 +492,7 @@ def retrieve_gbrain(
         "raw_count": len(parsed),
         "novel_candidate_count": len(novel_candidates),
         "accepted_count": len(accepted),
+        "genre_prior_count": genre_prior_count,
         "rejected_count": len(rejected),
         "query_limit": QUERY_RECALL_LIMIT,
         "requested_limit": RAW_RESULT_LIMIT,

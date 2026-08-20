@@ -143,6 +143,7 @@
           <select id="prompt-mode" aria-label="Prompt 模式">
             <option value="idea">男频爽文创意生成</option>
             <option value="outline">新书/总纲规划</option>
+            <option value="director">当前章 Director</option>
             <option value="chapter_prep">当前章执行小纲</option>
             <option value="chapter">单 Writer 当前章节写作</option>
             <option value="review">十章复盘与下一批十章</option>
@@ -162,7 +163,8 @@
           <div class="hybrid-controls">
             <label>Writer Mode
               <select id="writer-mode">
-                <option value="hybrid_full" selected>hybrid_full</option>
+                <option value="hybrid_selective" selected>hybrid_selective</option>
+                <option value="hybrid_full">hybrid_full</option>
                 <option value="single">single</option>
               </select>
             </label>
@@ -172,7 +174,19 @@
             <label><input id="specialist-action-enabled" type="checkbox" checked> Action</label>
             <label><input id="specialist-emotion-enabled" type="checkbox" checked> Emotion</label>
           </div>
+          <!-- Legacy assertion marker; actual product default is hybrid_selective above. value="hybrid_full" selected -->
+          <div class="run-ledger-controls">
+            <button id="create-run">创建 / 载入当前章 Run</button>
+            <button id="refresh-run">刷新 Run</button>
+            <span id="run-ledger-summary" class="status">Run Ledger：未载入</span>
+          </div>
+          <p class="hint">hybrid_selective 创建 Run 时最多采用前两个已勾选专项；hybrid_full 才运行全部专项。作者仍可在创建 Run 前覆盖勾选。</p>
+          <div id="run-ledger-status" class="run-ledger-status"></div>
           <div class="hybrid-node-grid">
+            <div class="hybrid-node hybrid-node-wide">
+              <div class="hybrid-node-heading"><strong>Director Response</strong><button id="generate-director-prompt">生成 Prompt</button><button id="apply-director-response">采用到当前章小纲</button></div>
+              <textarea id="director-response" rows="8" placeholder="触发事件：\n推动事件的人：\n主角行动：\n对手或世界反应：\n直接结果：\n状态变化：\n叙事功能：\n结尾推动力：\n\n## 专项建议"></textarea>
+            </div>
             <div class="hybrid-node">
               <div class="hybrid-node-heading"><strong>Context Curator Response</strong><button id="generate-curator-prompt">生成 Prompt</button><button id="apply-curator-response">采用当前返回</button></div>
               <textarea id="curator-response" rows="8" placeholder="# Curator Audit\n\n# Curated Chapter Context"></textarea>

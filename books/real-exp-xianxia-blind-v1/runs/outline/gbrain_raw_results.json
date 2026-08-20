@@ -1,0 +1,42 @@
+[
+  {
+    "score": 0.8944,
+    "slug": "syntheses/genre-priors/修仙",
+    "snippet": "# 题材先验｜修仙｜玄幻修仙｜修真"
+  },
+  {
+    "score": 0.8662,
+    "slug": "syntheses/genre-priors/西幻",
+    "snippet": "# 题材先验｜西幻｜奇幻｜魔法｜骑士"
+  },
+  {
+    "score": 0.8536,
+    "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+    "snippet": "## Evidence Coverage"
+  },
+  {
+    "score": 0.8304,
+    "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu",
+    "snippet": "## Evidence Coverage"
+  },
+  {
+    "score": 0.8199,
+    "slug": "arcs/rcv0-23-xianxia-jiantu-zhi-lu-arc-v1-03",
+    "snippet": "## Local Creative Problem"
+  },
+  {
+    "score": 0.8081,
+    "slug": "book-dna/rcv0-28-xuanhuan-jiangye",
+    "snippet": "## Evidence Coverage"
+  },
+  {
+    "score": 0.7967,
+    "slug": "syntheses/categories/synth-category-02",
+    "snippet": "## Evidence Scope"
+  },
+  {
+    "score": 0.7857,
+    "slug": "syntheses/genre-priors/高武",
+    "snippet": "# 题材先验｜高武｜都市高武｜武道成长"
+  }
+]

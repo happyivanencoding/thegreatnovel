@@ -1,0 +1,27 @@
+[
+  {
+    "chapter": 1,
+    "valid": true,
+    "error": null
+  },
+  {
+    "chapter": 2,
+    "valid": true,
+    "error": null
+  },
+  {
+    "chapter": 3,
+    "valid": true,
+    "error": null
+  },
+  {
+    "chapter": 4,
+    "valid": false,
+    "error": "State Delta 缺少必要标题或内容：audit"
+  },
+  {
+    "chapter": 5,
+    "valid": true,
+    "error": null
+  }
+]

@@ -25,10 +25,13 @@ from typing import Any
 
 from .prompts import (
     CURRENT_STATE_HEADING,
+    canon_memory_has_labels,
     canon_index_has_labels,
     format_references,
+    parse_canon_memory,
     parse_canon_index,
     parse_outline_fields,
+    render_canon_memory,
     render_canon_index,
 )
 
@@ -86,6 +89,9 @@ class ChapterContextPacket:
     canon_context: str
     recent_prose: str
     rolling_plan: str
+    chapter_plan_context: str
+    current_long_block: str
+    current_chapter_plan: str
     prose_profile: str
     optional_inspiration: str
     growth_benefit_projection: str = ""
@@ -258,6 +264,23 @@ def render_growth_benefit_projection(
     )
 
 
+def _without_genre_prior(text: str) -> str:
+    """章节节点不携带原始 Genre Prior；保留同一 Bundle 中的具体机制材料。"""
+
+    clean = text.strip()
+    if not clean:
+        return ""
+    blocks = re.split(r"(?=^###\s+Inspiration\s+\d+\s*$)", clean, flags=re.MULTILINE)
+    if len(blocks) == 1:
+        return "" if any(marker in clean.casefold() for marker in ("genre-prior", "题材先验")) else clean
+    kept = [
+        block.strip()
+        for block in blocks
+        if block.strip() and not any(marker in block.casefold() for marker in ("genre-prior", "题材先验"))
+    ]
+    return "\n\n".join(kept).strip()
+
+
 def build_chapter_context(
     *,
     book_content: str = "",
@@ -287,7 +310,15 @@ def build_chapter_context(
     page_summaries = recent_summaries.strip()
     summaries_rendered = False
     if status:
-        if canon_index_has_labels(status):
+        if canon_memory_has_labels(status):
+            canon_parts.append(
+                "当前状态、未兑现承诺与作者备注（Canon Memory v2）\n\n"
+                + render_canon_memory(
+                    parse_canon_memory(status), page_recent_summaries=page_summaries
+                )
+            )
+            summaries_rendered = True
+        elif canon_index_has_labels(status):
             # 规范化 CANON INDEX：四段语义分开渲染；最近摘要只注入一份
             # （页面显式传入优先，否则用 BOOK 状态区内解析出的摘要）。
             canon_parts.append(
@@ -310,8 +341,14 @@ def build_chapter_context(
     if small_plan:
         plan_parts.append(f"当前十章计划\n\n{small_plan}")
     rolling_plan = "\n\n".join(plan_parts)
+    chapter_plan_parts: list[str] = []
+    if current_long_block.strip():
+        chapter_plan_parts.append(f"当前大型剧情块\n\n{current_long_block.strip()}")
+    if current_chapter_plan.strip():
+        chapter_plan_parts.append(f"当前章十章计划条目\n\n{current_chapter_plan.strip()}")
+    chapter_plan_context = "\n\n".join(chapter_plan_parts)
 
-    inspiration = gbrain_inspiration.strip() or "（本次没有提供灵感；允许空结果，不补位。）"
+    inspiration = _without_genre_prior(gbrain_inspiration) or "（本次没有提供灵感；允许空结果，不补位。）"
     references = format_references(selected_references or [])
     optional_inspiration = (
         "可选参考声明：以下灵感与 Reference Programs 只是可选参考，"
@@ -334,8 +371,57 @@ def build_chapter_context(
         canon_context=canon_context,
         recent_prose=previous_chapter_text.strip(),
         rolling_plan=rolling_plan,
+        chapter_plan_context=chapter_plan_context,
+        current_long_block=current_long_block.strip(),
+        current_chapter_plan=current_chapter_plan.strip(),
         prose_profile=prose_profile,
         optional_inspiration=optional_inspiration,
         growth_benefit_projection=growth_benefit_projection,
         growth_genome_compact=growth_genome_compact,
+    )
+
+
+@dataclass(frozen=True)
+class DirectorContextPacket:
+    current_long_block: str
+    current_chapter_plan: str
+    growth_genome_compact: str
+    canon_index: str
+    recent_summary: str
+    transition_context: str
+    author_intent: str
+
+
+def _tail_for_director(text: str, max_chars: int = 1800) -> str:
+    clean = text.strip()
+    if len(clean) <= max_chars:
+        return clean
+    paragraphs = [part.strip() for part in re.split(r"\n\s*\n", clean) if part.strip()]
+    selected: list[str] = []
+    size = 0
+    for paragraph in reversed(paragraphs):
+        added = len(paragraph) + (2 if selected else 0)
+        if selected and size + added > max_chars:
+            break
+        selected.insert(0, paragraph)
+        size += added
+    return "\n\n".join(selected) or clean[-max_chars:]
+
+
+def build_director_context(
+    packet: ChapterContextPacket,
+    *,
+    recent_summaries: str = "",
+    author_intent: str = "",
+) -> DirectorContextPacket:
+    """Director 的固定轻量投影，不读取完整 BOOK 或完整十章计划。"""
+
+    return DirectorContextPacket(
+        current_long_block=packet.current_long_block or "（未提供当前大型剧情块。）",
+        current_chapter_plan=packet.current_chapter_plan or "（未提供当前章十章计划条目。）",
+        growth_genome_compact=packet.growth_genome_compact,
+        canon_index=packet.canon_context or "（当前 Canon Index 为空。）",
+        recent_summary=_tail_for_director(recent_summaries) or "（未提供最近一章摘要。）",
+        transition_context=_tail_for_director(packet.recent_prose) or "（无前文章末衔接片段。）",
+        author_intent=author_intent.strip() or "（未提供额外作者章意图。）",
     )

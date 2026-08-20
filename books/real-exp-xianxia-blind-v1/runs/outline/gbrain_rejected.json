@@ -1,0 +1,30 @@
+[
+  {
+    "slug": "maps/long-form-transition",
+    "reason": "outline 模式不自动使用 maps"
+  },
+  {
+    "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "arcs/arc-uncertainty-to-three-realm-duty-v1",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "arcs/arc-03-craft-to-second-floor",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/西幻",
+    "reason": "Genre Prior 与当前题材 query 不相关"
+  },
+  {
+    "slug": "syntheses/categories/synth-category-02",
+    "reason": "超过最终数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/高武",
+    "reason": "超过最终数量上限"
+  }
+]

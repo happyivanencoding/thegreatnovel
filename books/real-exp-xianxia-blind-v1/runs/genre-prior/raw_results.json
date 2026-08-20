@@ -1,0 +1,42 @@
+[
+  {
+    "score": 0.9192,
+    "slug": "syntheses/genre-priors/修仙",
+    "snippet": "# 题材先验｜修仙｜玄幻修仙｜修真"
+  },
+  {
+    "score": 0.8881,
+    "slug": "syntheses/genre-priors/西幻",
+    "snippet": "# 题材先验｜西幻｜奇幻｜魔法｜骑士"
+  },
+  {
+    "score": 0.8598,
+    "slug": "syntheses/categories/synth-category-02",
+    "snippet": "## Evidence Scope"
+  },
+  {
+    "score": 0.8487,
+    "slug": "syntheses/genre-priors/宫斗宅斗",
+    "snippet": "# 题材先验｜宫斗宅斗｜宫斗｜宅斗"
+  },
+  {
+    "score": 0.8377,
+    "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+    "snippet": "## Evidence Coverage"
+  },
+  {
+    "score": 0.8259,
+    "slug": "syntheses/genre-priors/历史古代",
+    "snippet": "# 题材先验｜历史古代｜古代历史｜争霸权谋"
+  },
+  {
+    "score": 0.8137,
+    "slug": "syntheses/genre-priors/幻想言情",
+    "snippet": "# 题材先验｜幻想言情｜玄幻言情"
+  },
+  {
+    "score": 0.8034,
+    "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu",
+    "snippet": "## Evidence Coverage"
+  }
+]

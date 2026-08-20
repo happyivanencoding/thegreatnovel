@@ -1,0 +1,66 @@
+[
+  {
+    "slug": "syntheses/genre-priors/科幻",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/黑暗题材",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/categories/synth-category-07",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/无限流",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/悬疑灵异",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "book-dna/rcv0-14-wuxia-langzi-jianghu",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/系统流",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/都市脑洞",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/都市异能",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "book-dna/rcv0-13-wuxia-jinyong-shijie-daoshi",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/高武",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/电竞",
+    "reason": "超过小说候选数量上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/宫斗宅斗",
+    "reason": "超过 Genre Prior 接受上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/历史古代",
+    "reason": "超过 Genre Prior 接受上限"
+  },
+  {
+    "slug": "syntheses/genre-priors/幻想言情",
+    "reason": "超过 Genre Prior 接受上限"
+  }
+]

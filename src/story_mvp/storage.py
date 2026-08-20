@@ -4,7 +4,11 @@ import re
 from pathlib import Path
 from typing import Any
 
-from .prompts import DEFAULT_PROMPT_TEMPLATES
+from .prompts import (
+    DEFAULT_PROMPT_TEMPLATES,
+    parse_canon_memory,
+    parse_state_delta_v2,
+)
 
 
 SECTION_TITLES = {
@@ -46,6 +50,33 @@ PROMPT_TEMPLATE_LABELS = {
 }
 
 BOOK_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
+
+CHAPTER_BODY_FORBIDDEN_MARKERS = (
+    "# Writer Audit",
+    "# Primary Writer Audit",
+    "# Primary Draft",
+    "# Primary Fact Summary",
+    "# 章节事实摘要",
+    "---FACT_SUMMARY---",
+    "\\n---FACT_SUMMARY---",
+    "# State Delta Audit",
+    "# Proposed Active Scene State",
+    "# Proposed Persistent Canon",
+    "# Proposed Chapter Summary",
+    "# Proposed Open Promises",
+    "# Proposed Canon Index",
+)
+
+
+def validate_chapter_body_for_save(content: str) -> None:
+    """只允许正式小说正文进入 chapter-NNNN.md。"""
+
+    if not content.strip():
+        raise ValueError("章节正文不能为空")
+    for line in content.splitlines():
+        for marker in CHAPTER_BODY_FORBIDDEN_MARKERS:
+            if line.startswith(marker):
+                raise ValueError(f"正式章节正文不能包含内部区块标记：{marker}")
 
 
 def default_book_content() -> str:
@@ -232,12 +263,43 @@ def write_proposal(book_id: str, content: str, workspace: Path) -> None:
     (directory / "PROPOSAL.md").write_text(content, encoding="utf-8")
 
 
+def apply_state_delta_to_book(
+    book_content: str, chapter_number: int, state_delta_response: str
+) -> str:
+    """确定性构造 State Delta v2 的 BOOK 状态区；调用方仍需显式写盘。"""
+
+    if chapter_number < 1:
+        raise ValueError("State Delta 应用需要正整数章节编号")
+    proposal = parse_state_delta_v2(state_delta_response)
+    sections = parse_book_sections(book_content)
+    current = parse_canon_memory(sections["status"])
+    previous = current.get("recent_summaries", "").strip()
+    if previous == "当前尚无已完成正文或已批准章节摘要。":
+        previous = ""
+    summary_text = proposal["chapter_summary"].strip()
+    if re.match(rf"^第\s*{chapter_number}\s*章\s*[：:]", summary_text):
+        summary = summary_text
+    else:
+        summary = f"第{chapter_number}章：{summary_text}"
+    recent = "\n".join(part for part in (previous, summary) if part).strip()
+    sections["status"] = "\n\n".join(
+        (
+            f"当前已完成第{chapter_number}章。",
+            "## ACTIVE SCENE STATE\n\n" + proposal["active_scene_state"],
+            "## PERSISTENT CANON\n\n" + proposal["persistent_canon"],
+            "## RECENT SUMMARIES\n\n" + recent,
+            "## OPEN PROMISES\n\n" + proposal["open_promises"],
+            "## AUTHOR NOTES\n\n" + current.get("author_notes", ""),
+        )
+    ).strip()
+    return compose_book_content(sections)
+
+
 def save_chapter(book_id: str, chapter_number: int, content: str, workspace: Path) -> Path:
     directory = require_book(book_id, workspace)
     if chapter_number < 1 or chapter_number > 9999:
         raise ValueError("章节编号必须在 1 到 9999 之间")
-    if not content.strip():
-        raise ValueError("章节正文不能为空")
+    validate_chapter_body_for_save(content)
     target = directory / "chapters" / f"chapter-{chapter_number:04d}.md"
     if target.exists():
         raise ValueError(f"第{chapter_number}章已经存在，请先明确处理已有章节")

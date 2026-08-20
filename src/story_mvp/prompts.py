@@ -8,6 +8,7 @@ from typing import Any
 PROMPT_MODES = {
     "idea": "男频爽文创意生成",
     "outline": "新书/总纲规划",
+    "director": "当前章 Director",
     "chapter_prep": "当前章执行小纲",
     "chapter": "当前章节写作",
     "review": "十章复盘与下一批十章",
@@ -71,11 +72,49 @@ PROSE_REALIZATION_CONTRACT = f"""本合同只负责“how to say”，不重规�
 
 BOOK 的 `## 7. 叙事结构`、`## 8. 文风与可操作参数`、`## 9. 对话特点`、`## 10. 节奏结构` 共同构成当前书的 prose profile。它们是作者可编辑的软控制：决定叙述距离、句段变化、说明进入方式、角色声音和场景压力，不是禁词表、固定句长或硬性风格评分。GBrain Inspiration Results 与 Reference Programs 只是 OPTIONAL INSPIRATION 可选参考，不能覆盖 BOOK CONTRACT、CANON PROSE、CANON INDEX、PLAN 或 PROSE PROFILE。"""
 
+
+READER_FIRST_PROSE_CONTRACT = """Reader-First Prose Contract：这是表达层合同，不重规划本章事实。
+
+1. 动作先于术语：第一次出现本书独有概念时，先让读者看见对象、动作和结果，再由人物用普通话形成理解；只有反复使用确实能减少解释时才固定命名。
+2. 常见题材词可以自然使用；本书新造的机制、部件、阵法和抽象关系必须先通过场景成立，不要为了显得原创而给普通动作换名字。
+3. 普通语言优先：能用“借力、卡住、撞开、绕过去、压下来、黏住、看见、躲开、把力量送过去”说清楚时，不默认升级成工程或审计术语。
+4. 已经通过动作成立的边界只在发生新变化时更新，不连续用“不是、没有、尚未、并不、不代表、还不能算”重复证明旧边界。
+5. 段落要有真实节拍变化；连续动作、观察或判断保持自然段，单句段留给冲击、决定、翻转、停顿、强烈反应和章末钩子。
+6. 重大首次兑现先写结果、外界反应、主角实际收益和行动空间，再写必要的限制或代价；不要用三种同义表述同时削弱兑现。
+7. 主角的判断要带着自己的经历、习惯、偏见、欲望、幽默或刻薄，不把人物写成通用的冷静正确男主。
+
+准确机制仍须保留，但优先通过可见动作、直接结果、人物理解和后续选择让读者理解。"""
+
+
+READER_FIRST_PROSE_SHORT = """Reader-First 短投影：以可见对象、人物动作、现场结果和普通语言优先；新造术语先用场景成立，已通过动作成立的边界不重复解释；连续动作保持自然段，重大兑现先落地再写必要限制。"""
+
 SINGLE_WRITER_RUNTIME_NOTE = "运行期声明：本次为单 Writer 直接写作；任何多 Writer 协议已被本运行合同取代。"
 
 #: BOOK.md「当前状态、未兑现承诺与作者备注」一级标题受保护锚点；
 #: chapter_prep 与 chapter_context（CANON_INDEX_STATUS_HEADING）都引用本常量。
 CURRENT_STATE_HEADING = "# 当前状态、未兑现承诺与作者备注"
+
+
+DEFAULT_DIRECTOR_TEMPLATE = """你是透明协作的当前章 Director。只根据当前大型剧情块的压缩摘要、当前章十章计划条目、压缩成长基因、当前 Canon Index、最近一章摘要、前文章末衔接和作者当前章意图，生成本章可执行的八字段事件合同。你不读取完整 BOOK、完整百章计划、完整十章计划、GBrain 原始结果、Genre Prior 或前两章完整正文，不重新规划整本书，不创造已发生事实。
+
+必须输出以下八个字段，全部具体填写：
+触发事件：
+推动事件的人：
+主角行动：
+对手或世界反应：
+直接结果：
+状态变化：
+叙事功能：
+结尾推动力：
+
+八字段之后可以输出一个非必填区块：
+## 专项建议
+Opening：启用 / 不启用；理由
+Dialogue：启用 / 不启用；理由
+Action：启用 / 不启用；理由
+Emotion：启用 / 不启用；理由
+
+专项建议只是作者可覆盖的运行建议，不是第九个 Hard Gate。通常只建议真正有价值的 0—2 个专项。不要输出正文、审计、评分、完整计划或内部推理。"""
 
 
 DEFAULT_PROMPT_TEMPLATES = {
@@ -378,6 +417,18 @@ HYBRID_PROMPT_TEMPLATES = {
 ## Opening Strategy
 ## Relevant Inspiration
 
+## Reader-Facing Language
+只写本章需要的正文表达建议：内部机制用普通话如何落到对象、动作和结果；哪些题材常用词可以直接使用；哪些本书新造词必须先用动作解释；哪些策划术语不应直接进入正文。不得改写剧情。
+
+## Already Established — Do Not Re-explain
+列出最近正文已经通过动作清楚证明、且本章没有新变化的边界。它们仍然有效，但 Writer 不需要再次解释。
+
+## Recent Repetition Risks
+只列最近两章真实重复的主导场景、主要感官、动作方式、冲突方式、解决套路、否定式说明或章末钩子形式。它是提醒，不是失败判定。
+
+## Payoff and Promise Window
+明确区分已经拿到的收益对象、已经兑换或到账的收益、已经改变生活或行动空间的收益，以及仍未兑现的近期读者承诺。不得把待兑换物品写成已经到账。
+
 只选择当前章需要的信息，不复制完整 BOOK、完整十章计划或完整前文；如果提供了本章成长收益短投影，只把三行短投影放在 `## Relevant Plan` 的末尾，不解释整套 Growth Benefit Hierarchy；不输出内部推理。""",
     "primary_writer": """你是透明协作的 Primary Writer。先独立写出一篇完整章节；四个专项 Agent 尚未提供任何修改，不要预先采用它们的意见。正文必须落实当前章事件合同，包含自然的叙事、对话、动作、内心、描写和结尾推动，而不是骨架或分镜。保持统一叙事声音，不为了连续性反复盘点已经清楚的物品、资源和交易。
 
@@ -392,21 +443,21 @@ Curated Context 为空时，明确把下方完整必要上下文作为 fallback 
 只写本 Draft 已经成立的事实摘要，不写计划或内部推理。""",
     "specialist_opening": _specialist_prompt_template(
         "Opening & Scene Entry Agent",
-        "检查 BOOK 已选择的开篇策略是否被执行；第一章若为讲述者宏观开场，检查世界远景→运行秩序/力量结构→当前压力→具体地域→主角现场→主角行动的收束；检查说明是否只服务未来约 30 章必要信息、是否仍像小说、镜头是否交给主角。非第一章检查章首承接和换景因果。不得把普通章节擅自改成宏观开场。",
+        "检查 BOOK 已选择的开篇策略是否被执行；第一章若为讲述者宏观开场，检查世界远景→运行秩序/力量结构→当前压力→具体地域→主角现场→主角行动的收束；检查说明是否只服务未来约 30 章必要信息、是否仍像小说、镜头是否交给主角。非第一章检查章首承接和换景因果。额外检查陌生世界信息是否通过故事和具体命运进入、是否连续堆出陌生名词、是否把已经成立的规则重新介绍。准确不等于术语化。不得把普通章节擅自改成宏观开场。",
     ),
     "specialist_dialogue": _specialist_prompt_template(
         "Dialogue & Character Voice Agent",
-        "检查核心角色声音是否可区分；对话是否改变信息、关系、决定或行动；是否有同质化、纯说明式对白、缺乏潜台词/拒绝/回避/立场。不得改变主要事件和人物决定。",
+        "检查核心角色声音是否可区分；对话是否改变信息、关系、决定或行动；是否有同质化、纯说明式对白、缺乏潜台词/拒绝/回避/立场；人物是否说普通人会说的话，专业词是否有现场上下文，是否有人像策划文档一样背诵设定。不得改变主要事件和人物决定。",
     ),
     "specialist_action": _specialist_prompt_template(
         "Action & Spatial Logic Agent",
-        "检查动作方向、位置、对象和结果；人物与物品是否无故出现或消失；调查、追逐、操作和空间移动是否连贯；世界规则是否通过行动产生后果；是否遗漏改变局面的关键动作。不得把正文改成战术说明书。",
+        "检查动作方向、位置、对象和结果；人物与物品是否无故出现或消失；调查、追逐、操作和空间移动是否连贯；世界规则是否通过行动产生后果；是否遗漏改变局面的关键动作。准确不等于术语化；能用方向词、接触词和结果词说清楚时，不建议新增机械名称。不得把正文改成战术说明书。",
     ),
     "specialist_emotion": _specialist_prompt_template(
         "Emotion & Aftermath Agent",
-        "检查重大行动、胜利、失败和关系变化的真实余波；情绪是否通过动作、选择、沉默或感官进入；配角是否只有功能反应；payoff 后是否缺少确认与新压力；是否重复解释情绪。不得强制增加痛苦、悲剧代价或伦理惩罚。",
+        "检查重大行动、胜利、失败和关系变化的真实余波；情绪是否通过动作、选择、沉默或感官进入；配角是否只有功能反应；payoff 后是否缺少确认与新压力；是否重复解释情绪或用否定句证明旧边界。不得强制增加痛苦、悲剧代价或伦理惩罚。",
     ),
-    "chapter_integrator": """你是透明协作的 Revision Integrator。Primary Draft 是唯一正文底稿。逐项判断四个专项 Agent 的局部 Patch 是否真正改善正文；冲突、重复、改变事件结果、破坏人物声音或重新规划章节的建议必须拒绝。四类建议不必全部采纳，全部不采纳也是正常结果。保持 Primary Writer 的主要叙事声音，不做第二轮自我审稿，不输出整章重写说明或内部推理。
+    "chapter_integrator": """你是透明协作的 Revision Integrator。Primary Draft 是唯一正文底稿。只接收有效局部 Patch；逐项判断它们是否真正改善正文，冲突、重复、改变事件结果、破坏人物声音或重新规划章节的建议必须拒绝。四类建议不必全部采纳，全部不采纳也是正常结果。保持 Primary Writer 的主要叙事声音，删除策划语言泄漏、同义重复解释和没有节拍变化的微段；不做第二轮全面审稿，不输出整章重写说明或内部推理。
 
 固定输出格式：
 # Writer Audit
@@ -433,7 +484,7 @@ DEFAULT_STATE_DELTA_TEMPLATE = """你是透明协作的 State Delta 书记员。
 
 你不检查、也不报告 BOOK CONTRACT 或任何长期设计的状态；BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、Reference Programs 与前两章正文都不在本次输入中，不要猜测它们。
 
-最终返回必须使用两个一级标题：
+最终返回必须使用以下五个一级标题；缺少任一标题只阻止 State Delta 应用，不阻止章节保存：
 
 # State Delta Audit
 只报告实际存在的事项：
@@ -441,15 +492,20 @@ DEFAULT_STATE_DELTA_TEMPLATE = """你是透明协作的 State Delta 书记员。
 - 无法从正式正文确定的状态。
 没有时写：无需要报告的状态冲突或不确定项。
 
-# Proposed Canon Index
-完整状态区替换提案，必须使用以下格式：
-当前已完成第N章。
-最近章节摘要：（只保留当前产品实际需要的最近章节；新摘要必须来自正式正文；不复制 Writer Audit；不把计划写成事实）
-当前状态：（只写当前确实成立的地点、人物、资源、物品、能力、知识、关系、伤势、即时目标和外部压力；只更新正文真实改变的项目）
-未兑现承诺：（保留仍有效的旧承诺；新增正文真实建立的新承诺；删除或标记已兑现/失败/失效的承诺；不把普通悬念升级为长期承诺）
-作者备注：（原样保留旧 AUTHOR NOTES，不得增删改写）
+# Proposed Active Scene State
+输出下一章立即需要的完整 Active Scene State：当前地点、在场人物、即时伤势、手中关键物品、当前敌人或追兵、当前倒计时、下一步直接目标。下一章可以整体替换旧 Active Scene State。
 
-注意：各字段内容行不得以「最近章节摘要：」「当前状态：」「未兑现承诺：」「作者备注：」四个标签开头，否则会被确定性解析为新字段的开始。
+# Proposed Persistent Canon
+输出更新后的、简短的长期 Persistent Canon：已证明能力、能力限制、关系阶段、持久资源、长期身份、确认知识、长期伤势和重要敌我状态。只保留仍会影响未来章节的信息。不要把本章暂时位置或追兵重复写成长期开关。
+
+# Proposed Chapter Summary
+只输出本章一个事实摘要；摘要必须来自正式正文，不复制 Writer Audit，不把计划写成事实。
+
+# Proposed Open Promises
+输出更新后的未兑现承诺列表：保留仍有效的旧承诺，新增正文真实建立的新承诺，删除或标记已兑现/失败/失效的承诺；不要把普通悬念升级为长期承诺。
+
+不要输出 AUTHOR NOTES。AUTHOR NOTES 由代码逐字保留；如果模型返回任何 `# AUTHOR NOTES` 或 `## AUTHOR NOTES` 标题，应用时显示明确错误并完全不应用。
+作者备注：（原样保留旧 AUTHOR NOTES，不得增删改写）。各字段内容行不得以旧格式标签开头；AUTHOR NOTES 仍由代码保留。
 
 禁止：输出 JSON/YAML；输出 chain-of-thought；修改 BOOK CONTRACT、PLAN 或正式章节正文；把 AUTHOR NOTES 当成 Canon 事实修改；替作者写入任何文件。"""
 
@@ -531,6 +587,136 @@ def canon_index_has_labels(status_text: str) -> bool:
         _match_canon_field_label(line.strip()) is not None
         for line in status_text.splitlines()
     )
+
+
+CANON_MEMORY_FIELDS = (
+    "active_scene_state",
+    "persistent_canon",
+    "recent_summaries",
+    "open_promises",
+    "author_notes",
+)
+
+_CANON_MEMORY_HEADINGS = (
+    ("## ACTIVE SCENE STATE", "active_scene_state"),
+    ("## PERSISTENT CANON", "persistent_canon"),
+    ("## RECENT SUMMARIES", "recent_summaries"),
+    ("## OPEN PROMISES", "open_promises"),
+    ("## AUTHOR NOTES", "author_notes"),
+)
+
+
+def canon_memory_has_labels(status_text: str) -> bool:
+    """返回状态区是否已经使用 Canon Memory v2 的五个固定二级标题。"""
+
+    headings = {heading for heading, _ in _CANON_MEMORY_HEADINGS}
+    return any(line.strip() in headings for line in status_text.splitlines())
+
+
+def parse_canon_memory(status_text: str) -> dict[str, str]:
+    """解析 Canon Memory v2；旧状态区只把旧「当前状态」映射为 Persistent Canon。
+
+    这是一次确定性读取投影，不创建迁移文件，也不修改输入。完成章节行单独保留在
+    ``completed_chapter``，供调用方在写回时避免重复；它不是新的 Canon 字段。
+    """
+
+    fields = {key: "" for key in CANON_MEMORY_FIELDS}
+    completed: list[str] = []
+    heading_map = dict(_CANON_MEMORY_HEADINGS)
+    current_key: str | None = None
+    for raw_line in status_text.splitlines():
+        stripped = raw_line.strip()
+        if _CANON_COMPLETED_CHAPTER_PATTERN.match(stripped):
+            completed.append(stripped)
+            continue
+        if stripped in heading_map:
+            current_key = heading_map[stripped]
+            continue
+        if current_key is not None:
+            fields[current_key] = (
+                f"{fields[current_key]}\n{raw_line}" if fields[current_key] else raw_line
+            ).strip()
+    if canon_memory_has_labels(status_text):
+        fields["completed_chapter"] = completed[-1] if completed else ""
+        return fields
+
+    legacy = parse_canon_index(status_text)
+    fields["persistent_canon"] = legacy["current_state"]
+    fields["recent_summaries"] = legacy["recent_summaries"]
+    fields["open_promises"] = legacy["open_promises"]
+    fields["author_notes"] = legacy["author_notes"]
+    fields["completed_chapter"] = ""
+    if legacy["current_state"]:
+        match = _CANON_COMPLETED_CHAPTER_PATTERN.search(legacy["current_state"])
+        if match:
+            fields["completed_chapter"] = match.group(0)
+            fields["persistent_canon"] = legacy["current_state"][match.end():].strip()
+    return fields
+
+
+def render_canon_memory(
+    fields: Mapping[str, str], *, page_recent_summaries: str = ""
+) -> str:
+    """渲染给章节节点的 Canon Memory v2 轻量投影。"""
+
+    recent = page_recent_summaries.strip() or fields.get("recent_summaries", "").strip()
+    completed = fields.get("completed_chapter", "").strip()
+    blocks = []
+    if completed:
+        blocks.append(completed)
+    values = (
+        ("ACTIVE SCENE STATE", fields.get("active_scene_state", "")),
+        ("PERSISTENT CANON", fields.get("persistent_canon", "")),
+        ("RECENT SUMMARIES", recent),
+        ("OPEN PROMISES", fields.get("open_promises", "")),
+        (
+            "AUTHOR NOTES（作者元控制；不属于 Canon 事实；State Delta 不得自动修改或删除）",
+            fields.get("author_notes", ""),
+        ),
+    )
+    blocks.extend(
+        f"## {heading}：\n{value.strip() or '（未填写）'}" for heading, value in values
+    )
+    return "\n\n".join(blocks)
+
+
+STATE_DELTA_V2_HEADINGS = (
+    "# State Delta Audit",
+    "# Proposed Active Scene State",
+    "# Proposed Persistent Canon",
+    "# Proposed Chapter Summary",
+    "# Proposed Open Promises",
+)
+
+
+def parse_state_delta_v2(response: str) -> dict[str, str]:
+    """解析 State Delta v2 提案；缺标题或模型输出 AUTHOR NOTES 时直接失败。"""
+
+    if re.search(r"^#{1,2}\s+AUTHOR NOTES\s*$", response, flags=re.MULTILINE):
+        raise ValueError("State Delta 返回不得包含 AUTHOR NOTES；旧 AUTHOR NOTES 必须由代码保留")
+    mapping = {
+        "# State Delta Audit": "audit",
+        "# Proposed Active Scene State": "active_scene_state",
+        "# Proposed Persistent Canon": "persistent_canon",
+        "# Proposed Chapter Summary": "chapter_summary",
+        "# Proposed Open Promises": "open_promises",
+    }
+    lines = response.splitlines()
+    result: dict[str, str] = {}
+    for index, line in enumerate(lines):
+        key = mapping.get(line.strip())
+        if not key:
+            continue
+        collected: list[str] = []
+        for next_line in lines[index + 1 :]:
+            if next_line.startswith("# "):
+                break
+            collected.append(next_line)
+        result[key] = "\n".join(collected).strip()
+    missing = [key for key in mapping.values() if not result.get(key)]
+    if missing:
+        raise ValueError("State Delta 缺少必要标题或内容：" + "、".join(missing))
+    return result
 
 
 def render_canon_index(
@@ -782,7 +968,7 @@ def generate_prompt(
     chapter_number: int = 0,
     chapter_prose: str = "",
     chapter_fact_summary: str = "",
-    writer_mode: str = "hybrid_full",
+    writer_mode: str = "hybrid_selective",
     curator_response: str = "",
     curated_context: str = "",
     primary_writer_response: str = "",
@@ -812,13 +998,45 @@ def generate_prompt(
     prompt_template = template.strip()
     if mode in HYBRID_PROMPT_MODES and not prompt_template:
         prompt_template = DEFAULT_PROMPT_TEMPLATES[mode]
+    elif mode == "director" and not prompt_template:
+        prompt_template = DEFAULT_DIRECTOR_TEMPLATE
     stripped_legacy_writer = False
     if mode == "chapter":
         prompt_template, stripped_legacy_writer = sanitize_chapter_template(template)
     elif mode == "state_delta" and not prompt_template:
         prompt_template = DEFAULT_STATE_DELTA_TEMPLATE
     parts = [prompt_template, ""]
-    if mode == "chapter":
+    if mode == "director":
+        from .chapter_context import build_chapter_context, build_director_context
+
+        packet = build_chapter_context(
+            book_content=book_content,
+            current_long_block=current_long_block,
+            previous_chapter_text=previous_chapter_text,
+            current_outline=current_outline,
+            current_chapter_plan=current_chapter_plan,
+            recent_summaries=recent_summaries,
+            gbrain_inspiration="",
+            selected_references=[],
+        )
+        context = build_director_context(
+            packet,
+            recent_summaries=recent_summaries,
+            author_intent=creative_direction,
+        )
+        parts.append("# Director Context")
+        parts.extend(
+            [
+                _input_block("当前大型剧情块（压缩摘要）", context.current_long_block),
+                _input_block("当前章十章计划条目", context.current_chapter_plan),
+                _input_block("compact Growth Genome", context.growth_genome_compact),
+                _input_block("当前 Canon Index", context.canon_index),
+                _input_block("最近一章摘要", context.recent_summary),
+                _input_block("前文章末必要衔接", context.transition_context),
+                _input_block("作者当前章意图", context.author_intent),
+            ]
+        )
+    elif mode == "chapter":
         if stripped_legacy_writer:
             parts.append(SINGLE_WRITER_RUNTIME_NOTE)
         parts.extend(["# Story MVP Prose Realization Contract", PROSE_REALIZATION_CONTRACT])
@@ -870,6 +1088,7 @@ def generate_prompt(
             build_integrator_context,
             build_specialist_context,
             drop_growth_hierarchy,
+            extract_primary_prose_context,
         )
 
         packet = build_chapter_context(
@@ -883,6 +1102,9 @@ def generate_prompt(
             selected_references=selected_references,
         )
         parts.append(f"# Hybrid Runtime\n\nwriter_mode: {writer_mode}")
+        if mode in SPECIALIST_PROMPT_MODES or mode in {"primary_writer", "chapter_integrator"}:
+            contract = READER_FIRST_PROSE_SHORT if mode == "chapter_integrator" else READER_FIRST_PROSE_CONTRACT
+            parts.extend(["# Reader-First Prose Contract", contract])
         if mode == "context_curator":
             context = build_curator_context(packet)
             parts.extend(
@@ -902,11 +1124,12 @@ def generate_prompt(
         elif mode == "primary_writer":
             curated = curated_context.strip() or curator_response.strip()
             fallback = not curated
+            primary_prose = extract_primary_prose_context(packet.recent_prose)
             parts.extend(
                 [
                     _input_block("AUTHORITY", packet.authority),
                     _input_block("Chapter Mission——当前章事件合同", packet.chapter_mission),
-                    _input_block("CANON PROSE——必要前文正文", packet.recent_prose),
+                    _input_block("CANON PROSE——上一章全文与上上章必要章末", primary_prose),
                     _input_block("CANON INDEX——规范化已发生事实索引", packet.canon_context),
                     _input_block("本章成长收益短投影（非长期理论）", packet.growth_benefit_projection),
                     _input_block(
@@ -914,7 +1137,7 @@ def generate_prompt(
                         curated or "Curator 未提供，使用完整上下文 fallback：\n\n"
                         + drop_growth_hierarchy(packet.book_contract)
                         + "\n\n"
-                        + packet.rolling_plan
+                        + packet.chapter_plan_context
                         + "\n\n"
                         + packet.prose_profile,
                     ),
@@ -959,9 +1182,7 @@ def generate_prompt(
                 [
                     _input_block("AUTHORITY", context.authority),
                     _input_block("当前章事件合同", context.chapter_mission),
-                    _input_block("必要 CANON PROSE", context.canon_prose),
                     _input_block("CANON INDEX", context.canon_index),
-                    _input_block("Curated Chapter Context", context.curated_context),
                     _input_block("Primary Draft——唯一正文底稿", context.primary_draft),
                     _input_block("本章成长收益短投影（非长期理论）", context.growth_benefit_projection),
                     _input_block("Opening Specialist Response", context.specialist_responses["opening"]),
@@ -986,20 +1207,32 @@ def generate_prompt(
             ),
         ))
         parts.append(_input_block("前两章正文（连续性上下文）", previous_chapter_text))
-        parts.append(_input_block("最近 1—3 章摘要", recent_summaries))
         status_block = _extract_markdown_block(book_content, CURRENT_STATE_HEADING)
-        if recent_summaries.strip() and canon_index_has_labels(status_block):
+        if canon_memory_has_labels(status_block):
+            status_display = render_canon_memory(
+                parse_canon_memory(status_block), page_recent_summaries=recent_summaries
+            )
+            summary_rendered = True
+        elif recent_summaries.strip() and canon_index_has_labels(status_block):
             # 页面显式摘要非空时，扣除标签化状态区内嵌的最近章节摘要段，
             # 避免同一 Prompt 出现两份摘要；页面摘要为空时保持注入 BOOK 内摘要。
             status_display = _render_canon_status_without_summaries(status_block)
+            summary_rendered = False
         else:
             status_display = status_block
+            summary_rendered = False
+        if not summary_rendered:
+            parts.append(_input_block("最近 1—3 章摘要", recent_summaries))
         parts.append(_input_block("当前状态", status_display))
     elif mode == "state_delta":
         # State Delta 只注入四组输入；默认不注入完整 BOOK CONTRACT、完整百章计划、
         # GBrain、Reference Programs、prose profile 或前两章完整正文。
         status_block = _extract_markdown_block(book_content, CURRENT_STATE_HEADING)
-        if canon_index_has_labels(status_block):
+        if canon_memory_has_labels(status_block):
+            canon_index = render_canon_memory(
+                parse_canon_memory(status_block), page_recent_summaries=recent_summaries
+            )
+        elif canon_index_has_labels(status_block):
             canon_index = render_canon_index(
                 parse_canon_index(status_block), page_recent_summaries=recent_summaries
             )
@@ -1011,6 +1244,11 @@ def generate_prompt(
             if page_summaries:
                 summary_block = f"最近 1—3 章摘要\n\n{page_summaries}"
                 canon_index = f"{canon_index}\n\n{summary_block}" if canon_index else summary_block
+        if status_block and not canon_memory_has_labels(status_block):
+            canon_index = (
+                f"{canon_index}\n\n旧格式历史标题（仅用于识别旧状态区，不得输出或应用）："
+                "# Proposed Canon Index"
+            )
         parts.append("# 页面当前输入（State Delta 上下文）")
         parts.append(_input_block("当前章节编号", str(chapter_number) if chapter_number else ""))
         parts.append(_input_block(

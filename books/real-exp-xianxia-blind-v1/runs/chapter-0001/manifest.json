@@ -1,0 +1,84 @@
+{
+  "chapter_number": 1,
+  "writer_mode": "hybrid_selective",
+  "run_status": "completed",
+  "selected_specialists": [
+    "opening",
+    "action"
+  ],
+  "final_source": "integrator",
+  "nodes": {
+    "director": {
+      "status": "completed",
+      "attempts": 1,
+      "prompt_file": "director_prompt.md",
+      "response_file": "director_response.md",
+      "prompt_chars": 2944,
+      "response_chars": 800
+    },
+    "curator": {
+      "status": "completed",
+      "attempts": 1,
+      "prompt_file": "curator_prompt.md",
+      "response_file": "curator_response.md",
+      "prompt_chars": 7350,
+      "response_chars": 1772
+    },
+    "primary": {
+      "status": "completed",
+      "attempts": 1,
+      "prompt_file": "primary_prompt.md",
+      "response_file": "primary_response.md",
+      "prompt_chars": 5445,
+      "response_chars": 2923
+    },
+    "opening": {
+      "status": "completed",
+      "attempts": 1,
+      "prompt_file": "opening_prompt.md",
+      "response_file": "opening_response.md",
+      "prompt_chars": 4645,
+      "response_chars": 54
+    },
+    "dialogue": {
+      "status": "skipped",
+      "attempts": 0,
+      "prompt_file": null,
+      "response_file": null,
+      "prompt_chars": 0,
+      "response_chars": 0
+    },
+    "action": {
+      "status": "completed",
+      "attempts": 1,
+      "prompt_file": "action_prompt.md",
+      "response_file": "action_response.md",
+      "prompt_chars": 5567,
+      "response_chars": 332
+    },
+    "emotion": {
+      "status": "skipped",
+      "attempts": 0,
+      "prompt_file": null,
+      "response_file": null,
+      "prompt_chars": 0,
+      "response_chars": 0
+    },
+    "integrator": {
+      "status": "adopted",
+      "attempts": 1,
+      "prompt_file": "integrator_prompt.md",
+      "response_file": "integrator_response.md",
+      "prompt_chars": 6253,
+      "response_chars": 3142
+    },
+    "state_delta": {
+      "status": "completed",
+      "attempts": 1,
+      "prompt_file": "state_delta_prompt.md",
+      "response_file": "state_delta_response.md",
+      "prompt_chars": 5436,
+      "response_chars": 1697
+    }
+  }
+}

@@ -21,21 +21,25 @@ _SPECIALIST_HEADINGS = {
         "## Opening Strategy",
         "## Relevant Prose Controls",
         "## Relevant Plan",
+        "## Reader-Facing Language",
     ),
     "dialogue": (
         "## Relevant Characters and Relationships",
         "## Relevant Prose Controls",
         "## Relevant Plan",
+        "## Reader-Facing Language",
     ),
     "action": (
         "## Relevant World Rules",
         "## Relevant Plan",
         "## Relevant Characters and Relationships",
+        "## Reader-Facing Language",
     ),
     "emotion": (
         "## Relevant Characters and Relationships",
         "## Relevant Open Promises",
         "## Relevant Prose Controls",
+        "## Reader-Facing Language",
     ),
 }
 
@@ -168,6 +172,55 @@ def extract_last_transition_context(text: str, max_chars: int = 1800) -> str:
     return "\n\n".join(selected) or clean[-max_chars:]
 
 
+def _extract_front_context(text: str, max_chars: int) -> str:
+    clean = text.strip()
+    if len(clean) <= max_chars:
+        return clean
+    paragraphs = [part.strip() for part in re.split(r"\n\s*\n", clean) if part.strip()]
+    selected: list[str] = []
+    size = 0
+    for paragraph in paragraphs:
+        added = len(paragraph) + (2 if selected else 0)
+        if selected and size + added > max_chars:
+            break
+        if not selected and len(paragraph) > max_chars:
+            return paragraph[:max_chars]
+        selected.append(paragraph)
+        size += added
+    return "\n\n".join(selected) or clean[:max_chars]
+
+
+def _extract_dialogue_context(text: str, max_chars: int = 3600) -> str:
+    paragraphs = [part.strip() for part in re.split(r"\n\s*\n", text.strip()) if part.strip()]
+    if not paragraphs:
+        return ""
+    dialogue_pattern = re.compile(r"[“”「」『』]|(?:^|\n)\s*[^\n]{0,30}[：:]\s*[^\n]+")
+    selected_indexes: set[int] = set()
+    for index, paragraph in enumerate(paragraphs):
+        if dialogue_pattern.search(paragraph):
+            selected_indexes.update({index - 1, index, index + 1})
+    selected = [paragraphs[index] for index in sorted(selected_indexes) if 0 <= index < len(paragraphs)]
+    if not selected:
+        return _extract_front_context(text, max_chars)
+    return _extract_front_context("\n\n".join(selected), max_chars)
+
+
+def extract_primary_prose_context(text: str, previous_tail_chars: int = 1800) -> str:
+    """Primary Writer 保留上一章全文；上上章仅保留必要章末片段。"""
+
+    clean = text.strip()
+    markers = list(re.finditer(r"(?m)^#\s*\d+章正文\s*$", clean))
+    if len(markers) < 2:
+        return clean
+    previous_start = markers[-2].start()
+    current_start = markers[-1].start()
+    previous = clean[previous_start:current_start].strip()
+    current = clean[current_start:].strip()
+    return "\n\n".join(
+        part for part in (extract_last_transition_context(previous, previous_tail_chars), current) if part
+    )
+
+
 def extract_opening_strategy(book_content: str) -> str:
     """从 BOOK §7 提取作者明确选择的第一章开篇策略。"""
 
@@ -204,6 +257,35 @@ def count_specialist_patches(response: str) -> int:
     return len(re.findall(r"^##\s+Patch\s+\d+\s*$", response, flags=re.MULTILINE))
 
 
+def extract_specialist_patches(response: str) -> str:
+    """只提取有效 Patch，排除 Specialist Audit 和其它整段建议。"""
+
+    if count_specialist_patches(response) == 0:
+        # 正式 Specialist 合同总会带有「# Proposed Patches」；没有该合同的
+        # 手工粘贴只作为可见原文保留，真正的 Ledger 运行会把无 Patch 合同视为无效。
+        return response.strip() if "# Proposed Patches" not in response else ""
+    lines = response.splitlines()
+    start = next(
+        (index for index, line in enumerate(lines) if line.strip() == "# Proposed Patches"),
+        None,
+    )
+    if start is None:
+        return ""
+    collected = [lines[start]]
+    for line in lines[start + 1 :]:
+        if line.startswith("# "):
+            break
+        if line.strip().startswith("## Patch ") or collected[-1].strip().startswith("## Patch "):
+            collected.append(line)
+        elif any(item.strip().startswith("## Patch ") for item in collected):
+            collected.append(line)
+    return "\n".join(collected).strip()
+
+
+def has_valid_specialist_patches(responses: Mapping[str, str]) -> bool:
+    return any(extract_specialist_patches(response) for response in responses.values())
+
+
 def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
     compact = packet.growth_genome_compact
     if not any(
@@ -217,7 +299,7 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
         book_contract=drop_growth_hierarchy(packet.book_contract),
         growth_genome_compact=compact,
         canon_index=packet.canon_context,
-        rolling_plan=packet.rolling_plan,
+        rolling_plan=packet.chapter_plan_context or packet.rolling_plan,
         prose_profile=packet.prose_profile,
         optional_inspiration=packet.optional_inspiration,
         growth_benefit_projection=packet.growth_benefit_projection,
@@ -247,10 +329,18 @@ def build_specialist_context(
 ) -> SpecialistContextPacket:
     if specialist not in SPECIALIST_NAMES:
         raise ValueError(f"未知专项 Agent：{specialist}")
+    if specialist == "opening":
+        projected_draft = _extract_front_context(primary_draft, 1800)
+    elif specialist == "dialogue":
+        projected_draft = _extract_dialogue_context(primary_draft)
+    elif specialist == "emotion":
+        projected_draft = extract_last_transition_context(primary_draft, 2500)
+    else:
+        projected_draft = primary_draft
     return SpecialistContextPacket(
         specialist=specialist,
         chapter_mission=packet.chapter_mission,
-        primary_draft=primary_draft,
+        primary_draft=projected_draft,
         relevant_curated_context=_relevant_curated_context(curated_response, specialist),
         growth_benefit_projection=packet.growth_benefit_projection,
         transition_context=extract_last_transition_context(packet.recent_prose),
@@ -264,13 +354,13 @@ def build_integrator_context(
     specialist_responses: Mapping[str, str],
 ) -> IntegratorContextPacket:
     responses = {
-        name: specialist_responses.get(name, "").strip() or "未提供"
+        name: extract_specialist_patches(specialist_responses.get(name, "")) or "无有效 Patch（未提供）"
         for name in SPECIALIST_NAMES
     }
     return IntegratorContextPacket(
         authority=packet.authority,
         chapter_mission=packet.chapter_mission,
-        canon_prose=packet.recent_prose,
+        canon_prose=extract_last_transition_context(packet.recent_prose),
         canon_index=packet.canon_context,
         curated_context=curated_response.strip() or "（Curator 未提供，使用完整上下文。）",
         primary_draft=primary_draft,

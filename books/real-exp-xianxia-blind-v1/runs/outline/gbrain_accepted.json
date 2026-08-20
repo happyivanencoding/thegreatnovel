@@ -1,0 +1,47 @@
+[
+  {
+    "score": 0.8944,
+    "slug": "syntheses/genre-priors/修仙",
+    "snippet": "# 题材先验｜修仙｜玄幻修仙｜修真",
+    "type": "synthesis",
+    "is_genre_prior": true,
+    "abstract": "适用范围与权威：适合写人在长时间尺度、资源稀缺和超常法则下追求生存、自由、知识或长生的故事。它可以关注个人修行，也可以关注家族、宗门、师徒或其他组织的资源协作；但本卡不要求固定境界、地图、组织或升级顺序。它只是低权威提示，作者意图、Proposal、BOOK 与当前小说事实优先。\n核心读者满足：读者期待积累能被看见：一次谨慎准备、一项技艺、一份资源或一个盟友，在更大风险来临时改变选择空间。满足感来自以有限信息活下来、把所得投入下一轮成长，以及力量增加后仍需承担新的因果。\n常见一级成长主轴：从只会应付眼前危机，成长为能理解规则、管理风险并主动配置资源的人。若故事选择家族、门派或城镇，组织建设可成为一级成长；个人境界只是工具，不必代替治理、信任和责任。\n常见二级收益：更稳定的修炼条件、可持续的资源来源、可靠的合作网络、在强者面前保留拒绝权、对世界法则和自身欲望的重新认识。\n主要情节发动机：1. 资源与信息稀缺，传闻、探索、争夺和使用之间存在可追溯的成本，不会凭空送出收益。 2. 一次突破扩大能力，也扩大暴露面、债务或责任；新力量会改变旧关系，而不是只增加数字。 3. 机缘的价值取决于前置技能、判断和转化能力，同一件东西落在不同人物手里会产生不同结果。 4. 个人选择牵动组织与环境，救一个人、占一处资源或守一条约定都可能改变长期局面。\n常见开局方式：- 人物接到一份低报酬、却能接触关键知识的差事。 - 一次失败的修炼或交易暴露出长期被忽略的限制。 - 人物背负债务、承诺或保护对象，必须在有限资源中做第一笔投入。 - 一个看似普通的工艺、地块或旧物显示出可验证但危险的异常价值。\n常见兑现形式：用能力在具体局面中改变判断，而不是只宣布层级变化；让前期积累转化为工具、关系、制度或退路；让胜利支付时间、伤势、名声、资源或承诺成本。高处的兑现可以是看见更大规则，也可以是终于拥有选择不争的…",
+    "transfer_boundary": ""
+  },
+  {
+    "score": 0.8536,
+    "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+    "snippet": "## Evidence Coverage",
+    "type": "book-dna",
+    "is_genre_prior": false,
+    "abstract": "Reader Promise：资质普通甚至受限的修士，通过勤修、资源、准备和危险路径持续获得可验证的能力、地位与生存空间。\nRepeatable Reader Loop：瓶颈显形→训练、资源或秘法准备→在试炼中验证→突破或取得局部优势→换取准入、保护和更高难题。\nCore Progression Grammar：以可见境界、功法、法宝和资源把长期努力拆成可验证的战斗、试炼和身份节点；突破既是数值变化也是行动选项增加。\nPayoff Grammar：POWER_BREAKTHROUGH；NEW_TECHNIQUE；COMBAT_DOMINANCE；RESOURCE_GAIN；UNDERDOG_VICTORY；STATUS_RISE；WORLD_EXPANSION；KNOWLEDGE_GAIN；TEAM_GROWTH；STRATEGIC_ADVANTAGE\nAdvantage / Special Capability：特殊能力首先提供直接的新选项和能力愉悦，再在战斗、阵法或借力场景中接受验证；证据不足的能力代价保持 UNKNOWN，不把能力自动写成负担。\nWorld Expansion Grammar：个人修炼通过宗门、试炼、区域、敌对势力和更高层级资源逐步接入公共秩序。\nNovelty / Recombination：把普通资质、极端准备、危险捷径和防守资源重组为可持续的逆袭路线。\nSocial / Relationship Dynamics：保护、师承、同伴和宗门准入既是 payoff 也是行动空间，不应被单向解释成责任。\nResource / Economy：灵石、丹药、阵法、法宝、时间和借力额度构成明确的准备经济；资源耗尽会改变防守与突破方式。\nOptional Constraints / Costs：已观察到资源消耗、借力限制、反制和守护压力；未观察到的能力成本标为…",
+    "transfer_boundary": "可迁移的是准备—验证—行动空间变化的结构变量，不迁移具体境界、功法名、设定规则或单书因果。"
+  },
+  {
+    "score": 0.8304,
+    "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu",
+    "snippet": "## Evidence Coverage",
+    "type": "book-dna",
+    "is_genre_prior": false,
+    "abstract": "Reader Promise：读者先享受重生带来的资源套利、制度误读和武科竞争，再追逐个人战力、身份地位与世界版图扩大；终局要求主角在不完备信息下为三界后果作出不可逆选择。\nRepeatable Reader Loop：制度信号被误读或暴露机会 → 主角进行财富/资源/武科算计 → 竞争或发言验证身份与力量 → 阵营和世界范围扩大 → 信息不完备迫使主角信任某人并作出更大选择 → 新的制度信号或公共危机出现。\nCore Progression Grammar：重生私人套利 → 武科资格与排名 → 学校/阵营位置 → 高层力量和三界地图 → 身份敏感的公开行动 → 不完备信息下的公共抉择。\nPayoff Grammar：重生套利、武科/战斗实力增长、身份地位提升和直接掌控高层力量。；武科排名、公共认可、三界探索、阵营推进和不确定信息下的战略反转。\nAdvantage / Special Capability：重生信息差、资源计算、武道成长和高层力量收取构成多层优势；晚段明确保留“先变强”的纯能力动力，不能只写成公共责任。\nWorld Expansion Grammar：家庭/学校 → 武科制度与城市 → 阵营和高层力量 → 三界与种子级世界问题；制度信号在每层改变身份、合法性和资源流。\nNovelty / Recombination：把重生者的现实算计、武科制度、身份敏感的公共发言和三界道德抉择串成一条连续弧线；后期责任来自早期实用主义的扩大，而非替换人物。\nSocial / Relationship Dynamics：家庭、同学、学校、阵营和强者之间的身份差异决定资源与发言风险；共同体信任在终局成为不完备信息下的行动依据。\nResource / Economy：家庭现金、武科报名资源、财富套利、排名、气血/力量和高层本源构成递进资源轴；具体力量账本与终局治理保持 UNKN…",
+    "transfer_boundary": "只迁移制度误读、资源套利、身份敏感发言和不完备信息决策的变量，不迁移来源人物、阵营、命名物件或三界设定。；不能把后期公共责任反推成重生、财富、排名和能力的唯一意义。；终章可作为公共选择观察，不足以提供普遍治理或新世界稳定性结论。"
+  },
+  {
+    "score": 0.8199,
+    "slug": "arcs/rcv0-23-xianxia-jiantu-zhi-lu-arc-v1-03",
+    "snippet": "## Local Creative Problem",
+    "type": "arcs",
+    "is_genre_prior": false,
+    "abstract": "Local Creative Problem：如何让一个看似无欲望的成年人拥有足以启动长篇的具体欲望。\nSetup：职业、婚姻和日常生活都趋于平淡，但剑术距离感给出可测量天赋。\nPromise：被制度拒绝的技艺会重新获得行动和身份位置。\nAction-Space Change：从被动生活转为可选择的训练、调查和战斗。\nProgression：技艺先提供精确掌控，再成为跨世界决策的底层判断语法。\nPayoff：读者得到技艺 技艺掌握、职业身份恢复和重新行动的转换感。\nVerification：击剑比赛、教练责任和异常事件中的风险判断提供分层验证。\nAftermath：技艺重返同时带来更大尺度的规则问题，主角不能再只追求个人位置。\nFuture Opening：可继续让专业判断与关系、制度和宇宙规则发生新冲突。\nOptional Pressure / Cost：压力：身体资格、制度风险和未知事件推动选择。；成本：职业资格是明确代价，但剑术愉悦并不必然依赖身体损耗。",
+    "transfer_boundary": ""
+  },
+  {
+    "score": 0.8081,
+    "slug": "book-dna/rcv0-28-xuanhuan-jiangye",
+    "snippet": "## Evidence Coverage",
+    "type": "book-dna",
+    "is_genre_prior": false,
+    "abstract": "Reader Promise：一个边城少年先为活命和照护同伴而行动，随后被迫进入书院、修行、战争与信仰的更大世界；每次能力回报都改变关系与责任，终局仍要回答两个人如何在新世界继续过日子。证据锚点：`source_book_id=rcv0-28-xuanhuan-jiangye; source_id=book-01-589504c3; distill_id=distill_02d0528f5946f7946ebbca79; segment_id=segment-0002; line_start=111; line_end=162`；`segment_id=segment-1129; line_start=85585; line_end=85959`。\nRepeatable Reader Loop：现实危机先以生计、伏击、病情或身份风险出现，主角以观察、身体技能、文字/符道或关系协作试探，再用受伤、失败或误认逼出选择；回报表现为能力、资源、身份或关系变化，并立即打开新的行动面。证据锚点：`segment_id=segment-0006; line_start=288; line_end=334`；`segment_id=segment-0009; line_start=444; line_end=481`；`segment_id=segment-0504; line_start=35417; line_end=35473`；`segment_id=segment-1085; line_start=81546; line_end=81650`。\nCore Progression Grammar：成长不是从“弱”直接跳到“强”，而是把边城经验、书写、二层楼资格、符道、浩然气、佛法和人间信念逐层并入同一行动系统；每层都增加保护对象，也会关闭某些退路。证据锚点：`segment_id…",
+    "transfer_boundary": "可迁移的是生存压力、技能变现、有限协作、能力—代价绑定、公共谈判、集体信念和家常收束等变量；不可迁移专名、人物、世界规则、事件顺序、原句或作者身份。全部结论均为 `REFERENCE_ONLY`，不进入 Canon。"
+  }
+]

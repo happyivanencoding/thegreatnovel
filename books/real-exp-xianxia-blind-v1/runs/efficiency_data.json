@@ -1,0 +1,143 @@
+{
+  "old_prompt": [
+    94104,
+    89725,
+    104483,
+    104283,
+    123425
+  ],
+  "old_response": [
+    20353,
+    12386,
+    14025,
+    15558,
+    18746
+  ],
+  "new": [
+    {
+      "chapter": 1,
+      "calls": 7,
+      "prompt_chars": 37640,
+      "response_chars": 10720,
+      "selected_specialists": [
+        "opening",
+        "action"
+      ],
+      "patches": 1,
+      "integrator": "adopted",
+      "final_source": "integrator",
+      "body_chars": 2661,
+      "paragraphs": 53,
+      "nodes": [
+        "director: 2944/800",
+        "curator: 7350/1772",
+        "primary: 5445/2923",
+        "opening: 4645/54",
+        "action: 5567/332",
+        "integrator: 6253/3142",
+        "state_delta: 5436/1697"
+      ]
+    },
+    {
+      "chapter": 2,
+      "calls": 7,
+      "prompt_chars": 54595,
+      "response_chars": 13829,
+      "selected_specialists": [
+        "dialogue",
+        "action"
+      ],
+      "patches": 4,
+      "integrator": "adopted",
+      "final_source": "integrator",
+      "body_chars": 2626,
+      "paragraphs": 81,
+      "nodes": [
+        "director: 5258/943",
+        "curator: 9663/3815",
+        "primary: 10577/2985",
+        "dialogue: 7598/660",
+        "action: 8131/596",
+        "integrator: 7398/3189",
+        "state_delta: 5970/1641"
+      ]
+    },
+    {
+      "chapter": 3,
+      "calls": 7,
+      "prompt_chars": 57556,
+      "response_chars": 14926,
+      "selected_specialists": [
+        "opening",
+        "action"
+      ],
+      "patches": 5,
+      "integrator": "adopted",
+      "final_source": "integrator",
+      "body_chars": 3503,
+      "paragraphs": 80,
+      "nodes": [
+        "director: 4985/1000",
+        "curator: 9858/2816",
+        "primary: 12398/3778",
+        "opening: 6605/532",
+        "action: 8269/818",
+        "integrator: 8400/4231",
+        "state_delta: 7041/1751"
+      ]
+    },
+    {
+      "chapter": 4,
+      "calls": 7,
+      "prompt_chars": 61650,
+      "response_chars": 16667,
+      "selected_specialists": [
+        "opening",
+        "action"
+      ],
+      "patches": 5,
+      "integrator": "adopted",
+      "final_source": "integrator",
+      "body_chars": 3889,
+      "paragraphs": 132,
+      "nodes": [
+        "director: 5128/748",
+        "curator: 9520/3967",
+        "primary: 14189/4428",
+        "opening: 7184/455",
+        "action: 9232/1033",
+        "integrator: 8790/4592",
+        "state_delta: 7607/1444"
+      ]
+    },
+    {
+      "chapter": 5,
+      "calls": 7,
+      "prompt_chars": 70595,
+      "response_chars": 21358,
+      "selected_specialists": [
+        "dialogue",
+        "action"
+      ],
+      "patches": 5,
+      "integrator": "adopted",
+      "final_source": "integrator",
+      "body_chars": 5476,
+      "paragraphs": 160,
+      "nodes": [
+        "director: 5195/855",
+        "curator: 9659/4790",
+        "primary: 16359/5994",
+        "dialogue: 8843/860",
+        "action: 10735/807",
+        "integrator: 10568/5901",
+        "state_delta: 9236/2151"
+      ]
+    }
+  ],
+  "totals": {
+    "prompt": 282036,
+    "response": 77500,
+    "patches": 20
+  }
+}

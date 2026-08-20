@@ -134,6 +134,12 @@ textarea:focus, input:focus, select:focus { border-color: var(--accent); outline
 .hybrid-controls { align-items: center; background: #f8fafb; border: 1px solid #edf0f2; border-radius: 4px; display: flex; flex-wrap: wrap; gap: 9px; margin: 9px 0; padding: 8px; }
 .hybrid-controls label { align-items: center; display: inline-flex; font-size: 12px; gap: 4px; }
 .hybrid-label { color: var(--muted); font-size: 12px; font-weight: 650; }
+.run-ledger-controls { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; margin: 9px 0; }
+.run-ledger-status { margin: 8px 0; overflow-x: auto; }
+.run-ledger-table { border-collapse: collapse; font-size: 11px; min-width: 680px; width: 100%; }
+.run-ledger-table th, .run-ledger-table td { border-top: 1px solid #edf0f2; padding: 5px 6px; text-align: left; white-space: nowrap; }
+.run-ledger-table th { color: var(--muted); font-weight: 700; }
+.run-ledger-table button { font-size: 11px; margin-right: 4px; padding: 3px 6px; }
 .hybrid-node-grid { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
 .hybrid-node { border: 1px solid var(--line); border-radius: 4px; padding: 8px; }
 .hybrid-node-wide { grid-column: 1 / -1; }

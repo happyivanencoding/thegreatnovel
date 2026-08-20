@@ -1,0 +1,18 @@
+{
+  "demo": true,
+  "source_chapter": 3,
+  "node": "action",
+  "formal_chapters_unchanged": true,
+  "before_status": "completed",
+  "after_failed_status": "failed",
+  "after_retry_status": "completed",
+  "attempts": 2,
+  "upstream_director": "completed",
+  "upstream_curator": "completed",
+  "upstream_primary": "completed",
+  "integrator_after": "stale",
+  "state_delta_after": "stale",
+  "reused_prompt": "action_prompt.md",
+  "response_file": "action_response_attempt-2.md",
+  "note": "演示副本；未改正式 chapter-0003.md 或正式 manifest。"
+}

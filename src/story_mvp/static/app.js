@@ -1,6 +1,7 @@
 const state = {
   bookId: "",
   references: [],
+  currentRun: null,
 };
 
 const sectionTitles = {
@@ -32,6 +33,159 @@ function showStatus(message, isError = false) {
   const target = $("status");
   target.textContent = message;
   target.classList.toggle("error", isError);
+}
+
+const runNodeByMode = {
+  director: "director",
+  context_curator: "curator",
+  primary_writer: "primary",
+  specialist_opening: "opening",
+  specialist_dialogue: "dialogue",
+  specialist_action: "action",
+  specialist_emotion: "emotion",
+  chapter_integrator: "integrator",
+  state_delta: "state_delta",
+};
+
+function currentChapterNumber() {
+  return Number($("chapter-number").value);
+}
+
+function selectedSpecialistNames() {
+  const selected = ["opening", "dialogue", "action", "emotion"]
+    .filter((name) => $(`specialist-${name}-enabled`).checked);
+  if ($("writer-mode").value === "single") return [];
+  if ($("writer-mode").value === "hybrid_selective") return selected.slice(0, 2);
+  return selected;
+}
+
+function runBaseUrl() {
+  return `/api/books/${encodeURIComponent(state.bookId)}/runs/${currentChapterNumber()}`;
+}
+
+function renderRunLedger(manifest) {
+  state.currentRun = manifest;
+  const summary = $("run-ledger-summary");
+  const container = $("run-ledger-status");
+  if (!summary || !container) return;
+  if (!manifest) {
+    summary.textContent = "Run Ledger：未载入";
+    container.replaceChildren();
+    return;
+  }
+  summary.textContent = `Run Ledger：${manifest.run_status} · final=${manifest.final_source || "未采用"}`;
+  container.replaceChildren();
+  const table = document.createElement("table");
+  table.className = "run-ledger-table";
+  const head = document.createElement("tr");
+  ["节点", "状态", "attempts", "Prompt", "Response", "操作"].forEach((label) => {
+    const cell = document.createElement("th");
+    cell.textContent = label;
+    head.appendChild(cell);
+  });
+  table.appendChild(head);
+  for (const [node, info] of Object.entries(manifest.nodes || {})) {
+    const row = document.createElement("tr");
+    [node, info.status, String(info.attempts || 0), info.prompt_file || "—", info.response_file || "—"]
+      .forEach((value) => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
+    const actions = document.createElement("td");
+    if (["failed", "stale"].includes(info.status)) {
+      const retry = document.createElement("button");
+      retry.textContent = "重试节点";
+      retry.addEventListener("click", () => retryRunNode(node));
+      actions.appendChild(retry);
+    }
+    if (["completed", "adopted"].includes(info.status) && ["primary", "integrator"].includes(node)) {
+      const adopt = document.createElement("button");
+      adopt.textContent = `采用${node === "primary" ? "Primary" : "Integrator"}`;
+      adopt.addEventListener("click", () => adoptRunSource(node));
+      actions.appendChild(adopt);
+    }
+    row.appendChild(actions);
+    table.appendChild(row);
+  }
+  container.appendChild(table);
+}
+
+async function loadRun() {
+  if (!state.bookId || !Number.isInteger(currentChapterNumber()) || currentChapterNumber() < 1) return;
+  try {
+    renderRunLedger(await requestJson(runBaseUrl()));
+  } catch (error) {
+    if (error.payload?.detail && String(error.payload.detail).includes("尚未创建 Run")) {
+      renderRunLedger(null);
+      return;
+    }
+    showStatus(`读取 Run 失败：${error.message}`, true);
+  }
+}
+
+async function createRun() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  try {
+    const payload = await requestJson(runBaseUrl(), {
+      method: "POST",
+      body: JSON.stringify({
+        writer_mode: $("writer-mode").value,
+        selected_specialists: selectedSpecialistNames(),
+      }),
+    });
+    renderRunLedger(payload);
+    showStatus("当前章 Run 已创建或载入");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function saveRunPromptForMode(mode, prompt) {
+  const node = runNodeByMode[mode];
+  if (!node || !state.currentRun || !prompt.trim()) return;
+  try {
+    renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/prompt`, {
+      method: "PUT",
+      body: JSON.stringify({ content: prompt }),
+    }));
+  } catch (error) {
+    showStatus(`保存 ${node} Prompt 到 Run 失败：${error.message}`, true);
+  }
+}
+
+async function saveRunResponseForMode(mode, response) {
+  const node = runNodeByMode[mode];
+  if (!node || !state.currentRun || !response.trim()) return;
+  try {
+    renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/response`, {
+      method: "PUT",
+      body: JSON.stringify({ content: response }),
+    }));
+  } catch (error) {
+    showStatus(`保存 ${node} Response 到 Run 失败：${error.message}`, true);
+  }
+}
+
+async function retryRunNode(node) {
+  try {
+    renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/retry`, { method: "POST" }));
+    showStatus(`${node} 已按原 Prompt 准备重试`);
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function adoptRunSource(source) {
+  try {
+    renderRunLedger(await requestJson(`${runBaseUrl()}/adopt`, {
+      method: "POST",
+      body: JSON.stringify({ source }),
+    }));
+    showStatus(`已在 Run Ledger 中采用 ${source}；章节仍需作者显式保存`);
+  } catch (error) {
+    showStatus(error.message, true);
+  }
 }
 
 function invalidateGbrainResults(reason = "") {
@@ -176,17 +330,21 @@ function populateBook(book) {
   }
   $("proposal-editor").value = book.proposal || "";
   $("current-chapter-plan").value = "";
+  $("director-response").value = "";
   $("codex-response").value = "";
   $("chapter-body-for-save").value = "";
   $("chapter-fact-summary").value = "";
   $("state-delta-response").value = "";
   for (const id of [
+    "director-response",
     "curator-response", "primary-writer-response", "opening-specialist-response",
     "dialogue-specialist-response", "action-specialist-response",
     "emotion-specialist-response", "integrator-response",
   ]) $(id).value = "";
+  renderRunLedger(null);
   renderLongPlanPanorama();
   refreshPreviousChapterText();
+  loadRun();
   showStatus(`已加载 ${book.book_id}`);
 }
 
@@ -440,12 +598,14 @@ async function queryGbrain() {
 }
 
 async function generatePrompt() {
+  const mode = $("prompt-mode").value;
   try {
     const payload = await requestJson("/api/prompt", {
       method: "POST",
       body: JSON.stringify(promptPayload()),
     });
     $("prompt-text").value = payload.prompt;
+    await saveRunPromptForMode(mode, payload.prompt);
     showStatus("Prompt 已生成，可继续编辑后复制");
   } catch (error) {
     const missing = error.payload?.detail?.missing_fields;
@@ -528,6 +688,7 @@ async function generateStateDeltaPrompt() {
       body: JSON.stringify(stateDeltaPayload()),
     });
     $("prompt-text").value = payload.prompt;
+    await saveRunPromptForMode("state_delta", payload.prompt);
     showStatus("State Delta Prompt 已生成，可复制给模型；它不会写盘，也不是章节门禁。已替换原 Prompt 输出区内容");
   } catch (error) {
     showStatus(error.message, true);
@@ -577,6 +738,18 @@ function splitHeadingBlocks(text, titles) {
   }
   save();
   return result;
+}
+
+async function skipIntegratorWithoutPatches(responses) {
+  try {
+    renderRunLedger(await requestJson(`${runBaseUrl()}/integrator/skip-if-no-patches`, {
+      method: "POST",
+      body: JSON.stringify({ specialist_responses: responses }),
+    }));
+    showStatus("所有已运行专项都没有有效 Patch，Integrator 已 skipped；可直接采用 Primary");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
 }
 
 function applyOutlineToBook() {
@@ -636,17 +809,62 @@ function extractPrimaryFactSummary(response) {
   return response.slice(start + heading.length).trim();
 }
 
-function applyHybridResponse(response, editorId) {
+async function applyDirectorResponse() {
+  const response = $("codex-response").value;
+  if (!response.trim()) {
+    showStatus("Director 返回为空，未改变当前章小纲", true);
+    return;
+  }
+  $("director-response").value = response;
+  const lines = [];
+  for (const line of response.split(/\r?\n/)) {
+    if (/^#{1,2}\s/.test(line) && lines.length) break;
+    if (/^(触发事件|推动事件的人|主角行动|对手或世界反应|直接结果|状态变化|叙事功能|结尾推动力)\s*[：:]/.test(line.trim())) {
+      lines.push(line.trim());
+    }
+  }
+  if (lines.length !== 8) {
+    showStatus("Director 返回没有完整八字段，未改变当前章小纲", true);
+    return;
+  }
+  $("current-outline").value = lines.join("\n");
+  await saveRunResponseForMode("director", response);
+  showStatus("Director 八字段已采用到当前章小纲；尚未写盘");
+}
+
+async function applyHybridResponse(response, editorId) {
   applyResponseToEditor($("codex-response"), $(editorId));
+  const modeByEditor = {
+    "curator-response": "context_curator",
+    "primary-writer-response": "primary_writer",
+    "opening-specialist-response": "specialist_opening",
+    "dialogue-specialist-response": "specialist_dialogue",
+    "action-specialist-response": "specialist_action",
+    "emotion-specialist-response": "specialist_emotion",
+  };
+  await saveRunResponseForMode(modeByEditor[editorId] || "", response);
   showStatus(`已将当前 Codex 返回放入 ${editorId}，尚未自动采用或写盘`);
 }
 
 async function generateHybridNodePrompt(mode) {
   await activatePromptMode(mode);
+  if (mode === "chapter_integrator" && state.currentRun) {
+    const responses = {
+      opening: $("opening-specialist-response").value,
+      dialogue: $("dialogue-specialist-response").value,
+      action: $("action-specialist-response").value,
+      emotion: $("emotion-specialist-response").value,
+    };
+    const hasPatch = Object.values(responses).some((value) => /^##\s+Patch\s+\d+/m.test(value));
+    if (!hasPatch) {
+      await skipIntegratorWithoutPatches(responses);
+      return;
+    }
+  }
   await generatePrompt();
 }
 
-function extractIntegratorBody() {
+async function extractIntegratorBody() {
   const artifact = extractChapterArtifact($("integrator-response").value);
   if (!artifact) {
     showStatus("Integrator 返回缺少非空 `# 正式正文`，未改变保存内容", true);
@@ -654,11 +872,12 @@ function extractIntegratorBody() {
   }
   $("chapter-body-for-save").value = artifact.body;
   $("chapter-fact-summary").value = artifact.summary;
+  await saveRunResponseForMode("chapter_integrator", $("integrator-response").value);
   showStatus("已从 Integrator 提取正式正文；尚未保存章节");
   return true;
 }
 
-function adoptPrimaryDraft() {
+async function adoptPrimaryDraft() {
   const body = extractPrimaryDraft($("primary-writer-response").value);
   if (!body) {
     showStatus("Primary Writer 返回缺少非空 `# Primary Draft`，未改变保存内容", true);
@@ -666,6 +885,8 @@ function adoptPrimaryDraft() {
   }
   $("chapter-body-for-save").value = body;
   $("chapter-fact-summary").value = extractPrimaryFactSummary($("primary-writer-response").value);
+  await saveRunResponseForMode("primary_writer", $("primary-writer-response").value);
+  await adoptRunSource("primary");
   showStatus("已显式采用 Primary Draft 作为最终正文；尚未保存章节");
   return true;
 }
@@ -699,14 +920,95 @@ function extractProposedCanonIndex(response) {
   return content ? content : null;
 }
 
+function extractStateDeltaV2(response) {
+  const stripped = response.replace(/^```[^\n]*\n[\s\S]*?^```[ \t]*$/gm, "");
+  if (/^#{1,2}\s+AUTHOR NOTES\s*$/m.test(stripped)) {
+    return { error: "State Delta 返回不得包含 AUTHOR NOTES；旧 AUTHOR NOTES 必须由代码逐字保留" };
+  }
+  const headings = {
+    "# Proposed Active Scene State": "active_scene_state",
+    "# Proposed Persistent Canon": "persistent_canon",
+    "# Proposed Chapter Summary": "chapter_summary",
+    "# Proposed Open Promises": "open_promises",
+  };
+  const lines = stripped.split(/\r?\n/);
+  const result = {};
+  for (const [heading, key] of Object.entries(headings)) {
+    const start = lines.findIndex((line) => line.trim() === heading);
+    if (start < 0) continue;
+    const collected = [];
+    for (const line of lines.slice(start + 1)) {
+      if (/^#(?!#)/.test(line)) break;
+      collected.push(line);
+    }
+    const content = collected.join("\n").trim();
+    if (content) result[key] = content;
+  }
+  const missing = Object.values(headings).filter((key) => !result[key]);
+  if (missing.length) return null;
+  return result;
+}
+
+function existingCanonSection(status, v2Heading, legacyLabel) {
+  const lines = status.split(/\r?\n/);
+  const start = lines.findIndex((line) => line.trim() === v2Heading || line.trim().startsWith(`${legacyLabel}：`) || line.trim().startsWith(`${legacyLabel}:`));
+  if (start < 0) return "";
+  const first = lines[start].trim() === v2Heading ? "" : lines[start].replace(/^.*?[：:]/, "").trim();
+  const collected = first ? [first] : [];
+  for (const line of lines.slice(start + 1)) {
+    if (line.trim().startsWith("## ") || line.trim().startsWith("# ") || /^(最近章节摘要|当前状态|未兑现承诺|作者备注)[：:]/.test(line.trim())) break;
+    collected.push(line);
+  }
+  return collected.join("\n").trim();
+}
+
+function existingAuthorNotes(status) {
+  return existingCanonSection(status, "## AUTHOR NOTES", "作者备注");
+}
+
+function buildCanonMemoryStatus(proposed) {
+  const chapterNumber = currentChapterNumber();
+  const oldStatus = $("section-status").value;
+  const previousSummaries = existingCanonSection(oldStatus, "## RECENT SUMMARIES", "最近章节摘要");
+  const summaries = [
+    previousSummaries,
+    `第${chapterNumber}章：${proposed.chapter_summary}`,
+  ].filter(Boolean).join("\n");
+  const authorNotes = existingAuthorNotes(oldStatus);
+  return [
+    `当前已完成第${chapterNumber}章。`,
+    "## ACTIVE SCENE STATE",
+    proposed.active_scene_state,
+    "## PERSISTENT CANON",
+    proposed.persistent_canon,
+    "## RECENT SUMMARIES",
+    summaries,
+    "## OPEN PROMISES",
+    proposed.open_promises,
+    "## AUTHOR NOTES",
+    authorNotes,
+  ].join("\n\n").trim();
+}
+
 function applyCanonIndexProposal() {
+  const v2 = extractStateDeltaV2($("state-delta-response").value);
+  if (v2?.error) {
+    showStatus(v2.error, true);
+    return;
+  }
+  if (v2) {
+    $("section-status").value = buildCanonMemoryStatus(v2);
+    saveRunResponseForMode("state_delta", $("state-delta-response").value);
+    showStatus("Canon Memory v2 已应用到浏览器 BOOK 状态编辑区，尚未写盘；确认后请点“保存 BOOK.md”");
+    return;
+  }
   const proposed = extractProposedCanonIndex($("state-delta-response").value);
   if (!proposed) {
     showStatus("模型返回缺少 `# Proposed Canon Index` 一级标题或内容为空，未修改 BOOK 状态编辑区", true);
     return;
   }
-  $("section-status").value = proposed;
-  showStatus("Proposed Canon Index 已应用到浏览器 BOOK 状态编辑区，尚未写盘；确认后请点“保存 BOOK.md”");
+  // 旧版路径曾使用 $("section-status").value = proposed; v2 缺标题时现在明确拒绝。
+  showStatus("旧版 Proposed Canon Index 不能应用；State Delta 必须同时提供 v2 的四个 Proposed 标题，未修改 BOOK 状态编辑区，尚未写盘", true);
 }
 
 async function saveBook() {
@@ -830,6 +1132,7 @@ $("default-gbrain-query").addEventListener("click", setDefaultGbrainQuery);
 $("query-gbrain").addEventListener("click", queryGbrain);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
 $("generate-prompt").addEventListener("click", generatePrompt);
+$("generate-director-prompt").addEventListener("click", () => generateHybridNodePrompt("director"));
 $("generate-curator-prompt").addEventListener("click", () => generateHybridNodePrompt("context_curator"));
 $("generate-primary-writer-prompt").addEventListener("click", () => generateHybridNodePrompt("primary_writer"));
 $("generate-opening-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_opening"));
@@ -838,6 +1141,7 @@ $("generate-action-prompt").addEventListener("click", () => generateHybridNodePr
 $("generate-emotion-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_emotion"));
 $("generate-integrator-prompt").addEventListener("click", () => generateHybridNodePrompt("chapter_integrator"));
 $("apply-curator-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "curator-response"));
+$("apply-director-response").addEventListener("click", applyDirectorResponse);
 $("apply-primary-writer-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "primary-writer-response"));
 $("apply-opening-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "opening-specialist-response"));
 $("apply-dialogue-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "dialogue-specialist-response"));
@@ -857,13 +1161,17 @@ $("chapter-number").addEventListener("change", () => {
   $("chapter-fact-summary").value = "";
   $("current-chapter-plan").value = "";
   for (const id of [
+    "director-response",
     "curator-response", "primary-writer-response", "opening-specialist-response",
     "dialogue-specialist-response", "action-specialist-response",
     "emotion-specialist-response", "integrator-response",
   ]) $(id).value = "";
   invalidateGbrainResults("切换章节");
   refreshPreviousChapterText();
+  loadRun();
 });
+$("create-run").addEventListener("click", createRun);
+$("refresh-run").addEventListener("click", loadRun);
 $("prompt-mode").addEventListener("change", handlePromptModeChange);
 $("expand-design").addEventListener("click", () => setDesignDetails(true));
 $("collapse-design").addEventListener("click", () => setDesignDetails(false));

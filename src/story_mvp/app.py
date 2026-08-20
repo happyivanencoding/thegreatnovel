@@ -14,11 +14,24 @@ from .gbrain import GBrainQueryError
 from .gbrain_retrieval import build_retrieval_brief, extract_hard_constraints, retrieve_gbrain
 from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
+from .run_ledger import (
+    adopt_final_source,
+    create_or_load_run,
+    load_run,
+    mark_node_failed,
+    mark_node_skipped,
+    next_actionable_node,
+    retry_node,
+    save_node_prompt,
+    save_node_response,
+    skip_integrator_if_no_patches,
+)
 from .storage import (
     create_book,
     list_books,
     read_chapter,
     read_book_payload,
+    require_book,
     save_chapter,
     write_book,
     write_prompt_templates,
@@ -51,6 +64,7 @@ class GBrainContextRequest(BaseModel):
     mode: Literal[
         "idea",
         "outline",
+        "director",
         "chapter_prep",
         "chapter",
         "review",
@@ -79,10 +93,28 @@ class ChapterRequest(BaseModel):
     content: str
 
 
+class RunRequest(BaseModel):
+    writer_mode: Literal["hybrid_selective", "hybrid_full", "single"] = "hybrid_selective"
+    selected_specialists: list[str] = Field(default_factory=list)
+
+
+class RunNodeContentRequest(BaseModel):
+    content: str
+
+
+class RunAdoptRequest(BaseModel):
+    source: Literal["primary", "integrator"]
+
+
+class RunIntegratorSkipRequest(BaseModel):
+    specialist_responses: dict[str, str] = Field(default_factory=dict)
+
+
 class PromptRequest(BaseModel):
     mode: Literal[
         "idea",
         "outline",
+        "director",
         "chapter_prep",
         "chapter",
         "review",
@@ -96,7 +128,7 @@ class PromptRequest(BaseModel):
         "chapter_integrator",
     ]
     template: str = ""
-    writer_mode: Literal["hybrid_full", "single"] = "hybrid_full"
+    writer_mode: Literal["hybrid_selective", "hybrid_full", "single"] = "hybrid_selective"
     book_content: str = ""
     creative_direction: str = ""
     proposal_context: str = ""
@@ -187,6 +219,126 @@ def get_chapter(book_id: str, chapter_number: int) -> dict[str, str | int]:
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     return {"chapter_number": chapter_number, "content": content}
+
+
+def _book_directory(book_id: str) -> Path:
+    return require_book(book_id, workspace_path())
+
+
+@app.post("/api/books/{book_id}/runs/{chapter_number}")
+def post_run(book_id: str, chapter_number: int, payload: RunRequest) -> dict[str, Any]:
+    try:
+        manifest = create_or_load_run(
+            _book_directory(book_id),
+            chapter_number,
+            writer_mode=payload.writer_mode,
+            selected_specialists=payload.selected_specialists,
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return manifest
+
+
+@app.get("/api/books/{book_id}/runs/{chapter_number}")
+def get_run(book_id: str, chapter_number: int) -> dict[str, Any]:
+    try:
+        return load_run(_book_directory(book_id), chapter_number)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/runs/{chapter_number}/next")
+def get_next_run_node(book_id: str, chapter_number: int) -> dict[str, str | None]:
+    try:
+        return {"node": next_actionable_node(_book_directory(book_id), chapter_number)}
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/prompt")
+def put_run_node_prompt(
+    book_id: str, chapter_number: int, node: str, payload: RunNodeContentRequest
+) -> dict[str, Any]:
+    try:
+        return save_node_prompt(_book_directory(book_id), chapter_number, node, payload.content)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/response")
+def put_run_node_response(
+    book_id: str, chapter_number: int, node: str, payload: RunNodeContentRequest
+) -> dict[str, Any]:
+    try:
+        return save_node_response(_book_directory(book_id), chapter_number, node, payload.content)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/failed")
+def post_run_node_failed(book_id: str, chapter_number: int, node: str) -> dict[str, Any]:
+    try:
+        return mark_node_failed(_book_directory(book_id), chapter_number, node)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/skipped")
+def post_run_node_skipped(book_id: str, chapter_number: int, node: str) -> dict[str, Any]:
+    try:
+        return mark_node_skipped(_book_directory(book_id), chapter_number, node)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/retry")
+def post_run_node_retry(book_id: str, chapter_number: int, node: str) -> dict[str, Any]:
+    try:
+        return retry_node(_book_directory(book_id), chapter_number, node)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/runs/{chapter_number}/adopt")
+def post_run_adopt(
+    book_id: str, chapter_number: int, payload: RunAdoptRequest
+) -> dict[str, Any]:
+    try:
+        return adopt_final_source(_book_directory(book_id), chapter_number, payload.source)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/runs/{chapter_number}/integrator/skip-if-no-patches")
+def post_integrator_skip_if_no_patches(
+    book_id: str, chapter_number: int, payload: RunIntegratorSkipRequest
+) -> dict[str, Any]:
+    try:
+        return skip_integrator_if_no_patches(
+            _book_directory(book_id), chapter_number, payload.specialist_responses
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.get("/api/references")
