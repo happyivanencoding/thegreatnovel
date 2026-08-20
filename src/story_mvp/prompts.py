@@ -6,7 +6,9 @@ from typing import Any
 
 
 PROMPT_MODES = {
-    "idea": "男频爽文创意生成",
+    "idea": "Story Program / 商业化结构方案",
+    "fantasy_seed": "Fantasy Seed / 核心幻想种子",
+    "world_vision": "World Vision / 世界幻想画像",
     "outline": "新书/总纲规划",
     "director": "当前章 Director",
     "chapter_prep": "当前章执行小纲",
@@ -33,16 +35,20 @@ REQUIRED_OUTLINE_FIELDS = (
     "结尾推动力",
 )
 
-DEFAULT_PRODUCT_DIRECTION = """当前产品默认目标是成熟中文男频成长爽文。优先寻找具有主角主动性、非对称优势、可重复利用、复利增长、早期兑现和持续行动空间扩大的具体故事。创新应优先体现在玩法和成长路径上，而不是单纯通过悲剧代价、伦理折磨或反爽机制制造“高级感”。这是创作方向，不是机械模板；如果作者明确要求其他类型，以作者要求为准。"""
+DEFAULT_PRODUCT_DIRECTION = """当前产品默认目标是成熟中文男频成长长篇。先让读者清楚感到主角获得了值得拥有的力量、自由、生命层次、身份逆转、探索机会或命运掌控，再让世界和长期故事承载它。创新优先体现在可感知的能力快感、主动行动和阶段升格，而不是用固定痛苦抵消高光。这是创作方向，不是机械模板；如果作者明确要求其他类型，以作者要求为准。"""
 
-DEFAULT_COMPOSABLE_GROWTH_DIRECTION = """当前产品只提供主角成长型虚构世界男频长篇的启动方向。不要预设所有书都沿同一条力量链成长；优先寻找本书自己的非对称位置、成长对象、转换网络、可重复循环、阶段变异和核心不变量。成长可以来自力量、知识、职业、规则、身份、造物、组织、关系、世界通行能力或它们的组合；作者选定具体创意后，以本书成长基因为准。"""
+DEFAULT_COMPOSABLE_GROWTH_DIRECTION = """Growth Genome 是整理工具，不是创造世界的第一语言。它只负责在核心幻想、世界画像和长期故事方向已经批准后，整理一级成长、二级收益、阶段升格、主循环、反哺关系和重复风险，帮助故事运行到更长篇幅。它不选择核心幻想，不替主角决定欲望，不决定力量是否令人向往，也不要求所有故事制度化。"""
 
 CLASSIC_PATTERN_DIRECTION = """经典成长模式是一等公民：可组合只表示不强迫所有作品相同，不表示主动回避成熟主干。资源→成长→战斗→身份→更高级资源→更大世界，以及职业→技能→任务→身份、探索→机缘→成长→新区域、内容副本→战斗→战利品→构筑等，都可以成为本书主干。如果作者输入、GBrain证据或当前创意表明某条经典链最适合本书，应当保留它，创新放在新优势、世界机制、转换方式、关系反馈或阶段变异上。"""
 
 GROWTH_BENEFIT_HIERARCHY = """Growth Benefit Hierarchy：
-一级成长收益是读者长期期待主角本人越来越能做什么，优先是个人力量、战斗能力、核心技能、知识运用、造物、操控、组合或创造能力；它通常保持一条稳定主轴，阶段变异必须改变行动语法，不能只增加数值、范围、职位、信用或权限。
-二级成长收益是一级能力运行后的外部结算，例如财富、资源、装备、身份、声望、信用、权限、关系、追随者、队伍、组织、领地、地图和世界入口。除非作者明确选择经营、领主、战争或组织建设题材，职位、行政权限、社会信用、组织规模和公共责任默认属于二级收益。
-反哺关系必须成立：一级能力 → 二级收益 → 新资源/场景/敌人/问题/入口 → 下一轮一级能力成长。二级收益可以阶段性成为剧情焦点，但不得长期取代一级能力成为唯一主线结算。"""
+一级成长收益是读者长期期待主角本人越来越能做什么，优先写力量、战斗、神通、技艺、生命层次、规则掌控、造物或其它个人能力；它是主轴，不是职位、权限或组织规模。
+二级成长收益是一级能力运行后的外部结算，例如财富、资源、装备、身份、关系、势力、领地和世界入口；它们只在真实需要时出现，并服务于下一次一级成长。
+Growth Genome 可以用一级能力 → 二级收益 → 新资源/场景/敌人/入口 → 下一轮一级成长整理长期因果，但不要求每本书都使用复杂网络。"""
+
+INTERNAL_REALISM_DIRECTION = """内部因果必须可信，但可信不等于现代程序真实。玄幻、仙侠、奇幻、科幻和异世界优先使用本世界的力量、阶层、资源、信仰、血脉、地域、种族、宗门、王朝、神明、天道与超凡规则制造因果。只有作者明确选择现实职业或制度题材时，现代工业流程、项目管理、质量控制、学术实验、行政审批、合同责任、合规审查和数据留痕才可以成为主要发动机。"""
+
+PAYOFF_FIRST_COST_RHYTHM = """Payoff-first 成本节奏：成熟不等于每次胜利立即受伤、负债、被审查或承担新责任。默认顺序是：胜利或突破真正发生 → 外界反应 → 主角获得实际收益 → 收益改变行动空间 → 再决定是否需要代价或余波。普通小胜允许明显净收益；阶段大胜通常应当收益明显大于当前成本。成本只在真实需要时限制选择、迫使策略或推动换挡，不作为每次 Payoff 的固定税。"""
 
 
 WRITER_AUDIT_RULE = """Writer Audit 只报告实际存在的事项：
@@ -470,6 +476,301 @@ Curated Context 为空时，明确把下方完整必要上下文作为 fallback 
 
 DEFAULT_PROMPT_TEMPLATES.update(HYBRID_PROMPT_TEMPLATES)
 
+
+FANTASY_SEED_TEMPLATE = f"""你是透明协作的 Fantasy Seed 创作助手。只读取作者粗方向、作者明确题材、作者明确要求保留的内容和作者明确禁止的内容。不要读取或提及任何其它资料。你的唯一问题是：这本书最值得让读者幻想什么？
+
+生成 3—5 个真正不同的候选。不评分、不排名、不自动选择。先写能力快感、力量占有欲和世界吸引力，再写必要的压迫与长期升格；不要把创意先写成运行手册。
+
+每个候选严格使用：
+
+## 候选N：概念名
+
+### 核心幻想
+读者代入主角后，最直接想获得的力量、自由、寿命、身份逆转、世界位置或命运掌控是什么？
+
+### 主角最强欲望
+主角最想获得、夺回、摆脱、毁掉或超越什么。除非作者明确选择现实职业题材，不要默认写成职业资格、专业判断、行业认可、标准改革或从业牌照。
+
+### 力量占有欲
+为什么读者会直接产生“我也想拥有这种能力”的欲望？先写能力快感和收益，不先写成本。
+
+### 第一次标志性奇观
+写一幅具体场面，代表这项能力与世界的吸引力。不要写组织图、流程图或制度说明。
+
+### 不可调和的压迫
+写一种不能只靠解释、证明、数据、协商、公开试验或对方承认错误解决的敌人、阶层、命运或世界规则。必须存在需要击败、夺取、逃脱、摧毁、拒绝或超越的压力。
+
+### 非对称优势
+主角怎样靠独有能力、信息差、特殊资源、身份、血脉、规则位置或机会，获得明显不成比例的结果？不要要求长期边际微利。
+
+### 第一次情绪爆发
+说明前面压抑了什么，主角怎样反转，谁的态度、地位或命运被改变，以及主角获得什么实际力量或自由。
+
+### 10章超越
+主角第一次跨过什么过去不可触碰的界限？
+
+### 30章超越
+主角获得什么新的力量、生命状态或行动自由？
+
+### 100章超越
+主角已经能做到什么开局时完全不可能的事？
+
+### 世界扩张欲望
+为什么读者想跟随主角进入更高层世界？
+
+### 不能退化成什么
+写该候选最不能被写成的形状，例如职业程序文、行业认证文、科研实验记录、技术质检文、制度协调文、无限成本核算或组织治理吞掉个人成长。
+
+不要输出成长整理、变量图、复杂网络、循环、风险矩阵、资源账本、成本矩阵、长期章节规划、完整能力限制或组织治理方案。
+
+{PAYOFF_FIRST_COST_RHYTHM}"""
+
+
+WORLD_VISION_TEMPLATE = f"""你是透明协作的 World Vision 创作助手。只有作者已经明确批准 Fantasy Seed 时，才执行本 Prompt。只读取作者粗方向、已批准 Fantasy Seed 全文和作者额外说明，不读取其它资料。你的职责是说明世界怎样承载已批准的核心幻想，不重新发明核心幻想，也不把未知全部改造成技术问题。
+
+最终严格输出：
+
+# 世界幻想画像
+
+## 核心幻想不变量
+用 3—6 句说明无论后续怎样规划，本书必须持续给读者什么体验。
+
+## 主角最强欲望
+写主角真正想得到、摆脱、夺回、摧毁或超越什么。
+
+## 主角身份与生命状态跃迁
+开局是什么人，长期将成为什么存在？优先写力量、寿命、自由、拒绝权、世界位置与命运掌控。
+
+## 世界最震撼的三幅画面
+分别体现世界核心规则、主角力量上限、终极冲突或世界秘密。
+
+## 世界决定命运的核心规则
+什么真正决定力量、阶层、寿命、自由或命运？规则必须制造故事，但不写成操作手册。
+
+## 力量带来的直接体验
+主角使用核心能力时看见什么、感到什么、能做什么、过去做不到什么、外界怎样反应。
+
+## 力量的升格方向
+说明核心能力怎样从小尺度用途，逐渐触及本书适合的强敌、大阵、山河、世界、生死、时间、因果、天道、法则或世界边界。不能只增加精度、范围、同时处理数量、职位、权限或组织规模。
+
+## 阶层与压迫
+写这个世界怎样压住主角，不要默认一切压迫都来自合理流程。
+
+## 对手谱系
+允许同时存在掠夺或压迫型、竞争型、复杂型对手，不强求三类平均，不强求所有冲突和解。
+
+## 第一次决定性反转
+写主角第一次真正改变权力关系的事件，不能只靠对方承认主角判断正确。
+
+## 10 / 30 / 100章超越阶梯
+忠实展开 Fantasy Seed 中的三次超越。
+
+## 神秘、未知与世界入口
+说明读者最想继续探索什么，不要把所有未知立即改造成技术问题。
+
+## 必须保留的情绪体验
+从敬畏、狂喜、反杀、夺取、自由、升格、探索、长生、复仇、重新评价、关系兑现或其它真实体验中选择 1—3 项。
+
+## 最容易退化成什么
+明确防止职业程序文、技术质检文、行业认证文、只做控制变量实验、所有胜利附带等量成本、所有高潮变成公开讨论、所有反派靠沟通和解或个人成长被组织治理取代。
+
+World Vision 不负责证明故事一定能长期运行，不负责完整平衡、全部限制、全部成本、成长整理或正文。
+
+{PAYOFF_FIRST_COST_RHYTHM}"""
+
+
+STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 商业化结构方案助手。只有 World Vision 已经由作者明确批准时，才为已批准幻想提出 2—3 种长期运行方式。你不能重新决定核心幻想、主角最强欲望、力量上限、标志性奇观、不可调和压迫或 10/30/100章超越。只读取作者粗方向、已批准 Fantasy Seed、已批准 World Vision 和作者手动选择的 Reference Programs；本阶段不读取其它灵感结果。
+
+{DEFAULT_PRODUCT_DIRECTION}
+
+{PAYOFF_FIRST_COST_RHYTHM}
+
+每个方案严格使用：
+
+## 方案N：方案名
+
+### 已批准幻想怎样落地
+说明本方案怎样忠实保留 Fantasy Seed 与 World Vision。
+
+### 核心优势怎样实际使用
+写主角怎样主动使用能力。
+
+### 主循环
+使用简短因果链：主角主动行动 → 一级成长或能力结果 → 二级收益 → 新的敌人、世界入口或更高问题。不要先画复杂网络。
+
+### 非对称盈余
+为什么主角能获得明显高于普通人的结果？
+
+### 第一次完整兑现
+必须同时包含能力结果、现实或资源收益、他人反应、行动空间变化与情绪释放。
+
+### 冲突方式
+说明哪些冲突可以谈，哪些冲突必须击败、夺取、逃脱、摧毁或拒绝。
+
+### 成本节奏
+说明哪些阶段允许明显净收益，哪些关键节点成本迫使主角选择，以及怎样避免每次胜利自动追加伤病、债务、责任或惩罚。
+
+### 100章阶段升格
+说明核心能力至少三次真正改变玩法与力量层级。
+
+### 二级收益与反哺
+简短说明资源、身份、关系、势力和世界入口怎样服务一级成长。
+
+### 最大退化风险
+只写本方案最真实的 1—3 项风险。
+
+不要输出新的核心幻想、完整能力限制、复杂变量图、转换网络、循环族、负反馈图、公开验证流程、资格晋升链、百章计划、十章计划或正文。"""
+
+
+OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必须确认 Fantasy Seed、World Vision 和 Story Program 都已由作者明确批准；模型生成、模型选择、作者编辑和 legacy_unknown 都不是批准。已批准的三份创意产物高于产品默认模板，不能被静默改写。
+
+{DEFAULT_PRODUCT_DIRECTION}
+
+{DEFAULT_COMPOSABLE_GROWTH_DIRECTION}
+
+{INTERNAL_REALISM_DIRECTION}
+
+{PAYOFF_FIRST_COST_RHYTHM}
+
+先忠实复现已批准的核心幻想、力量占有欲、主角欲望、世界奇观、不可调和压迫、决定性反转与 10/30/100章超越。不得把力量、长生、反杀、探索、超越或世界奇观重新解释成专业能力、职业资格、行业标准、公开试验、制度责任或组织治理。
+
+最终只能使用以下四个一级标题：
+
+# 小说总体设计画像
+# 未来100章大型剧情块
+# 未来十章逐章小纲
+# 当前状态、未兑现承诺与作者备注
+
+在总体设计画像下，先输出以下新的成长整理小节，再输出 1—12 个画像区块。Growth Genome 只整理已经批准的幻想，不选择核心幻想，不决定主角欲望，不决定每次收益必须有成本，也不决定故事必须制度化。
+
+## 0. 本书成长基因图
+### 已批准幻想不变量
+忠实压缩 Fantasy Seed 与 World Vision，保留长期读者体验。
+### 主角核心欲望与超越
+主角长期想摆脱、夺回、获得或成为的东西，以及 10/30/100章超越。
+### 一级成长主轴
+主角本人越来越能做什么，写个人力量、战斗、神通、技艺、生命层次或规则掌控，不以职位、权限、组织规模替代。
+### 核心优势阶段升格
+至少说明三次真正改变力量层级、行动方式、战斗方式或世界关系的升格。
+### 二级收益与反哺
+说明财富、资源、身份、关系、势力和世界入口怎样服务一级成长。
+### 主循环
+只要求一个主循环；确有必要时才补辅助循环。
+### 成本节奏
+说明哪些阶段允许明显净收益，哪些关键节点成本用于制造选择，怎样防止每次 Payoff 被等量抵消。
+### 核心不变量
+只写 1—3 项长期读者体验。
+### 退化风险
+只写 1—3 项最真实的退化风险。
+
+以下 1—12 区块服务于已批准幻想：
+## 1. 核心类型与读者承诺
+优先写核心幻想、力量占有欲、主角最强欲望、第一次决定性反转、10/30/100章超越和前中远期情绪兑现。
+## 2. 世界观结构
+说明最震撼的景象、最向往或恐惧的区域、力量怎样改变生命状态、主角成长后能进入什么过去不可触碰的地方，以及哪些未知无法只靠技术验证解决；如果本书需要且对当前故事重要，再补充空间/层级、权力关系和力量道路。
+## 3. 世界如何持续制造剧情压力
+从境界压制、血脉阶层、资源争夺、宗门垄断、王朝、神明、天道、异族、妖兽、秘境、战争、强敌、身份暴露或世界毁灭中选择真实需要的来源，也可以使用作者明确选择的制度矛盾；不得默认市场、认证、合同和审计占据主要位置。
+## 4. 主角模型、人物弧与核心矛盾
+回答主角不能忍受什么、渴望什么、愿意为何主动冒险、哪种胜利最让读者痛快，以及最终从什么人变成什么存在。
+## 5. 配角与关系系统
+允许崇拜、友情、师徒、竞争、嫉妒、恐惧、爱慕、忠诚、背叛和重新评价，不要求所有对手都有公共利益理由，不要求所有冲突互相理解。
+## 6. 核心情节发动机
+主循环首先回答主角如何主动使用优势，获得力量、资源、地位和更大的自由。试验、记录、复盘和准入只有本书真实需要时才出现。
+## 7. 叙事结构
+写视角、第一章开篇策略、场景与总结的比例，以及如何用他人反应展示地位变化。
+## 8. 文风与可操作参数
+写可执行的表达目标，不把它变成禁词表、固定句长或评分器。
+## 9. 对话特点
+写角色声音、潜台词、拒绝、回避、立场和对话如何改变现场。
+## 10. 节奏结构
+安排小爽点、中型兑现、阶段大兑现、余波与新压力的节拍，不要求每次高光立即抵消。
+## 11. 主题、价值观与长期问题
+让主题从实际行动和世界规则中自然浮现，不强制伦理惩罚。
+## 12. 当前设计最强点与最弱点
+只写当前最真实的 1—3 项风险，不生成机械风险清单。
+
+未来 100 章写 4—8 个自然剧情块，完整覆盖第1章到第100章。完整输出所有剧情块，不能省略后面区块。每块严格使用：
+
+## 第X—Y章：具体块名
+具体发生：写人物、地点、事件、主角行动、敌人反应、转折与高潮。
+核心幻想推进：读者在本块获得什么力量、自由、反转、探索或升格体验？
+一级成长变化：主角本人真正多能做了什么？
+主要情绪兑现：本块压抑了什么，最后怎样释放？
+二级收益结算：获得什么资源、身份、关系、势力、领地或世界入口？
+世界扩张：进入什么过去无法进入的地图、层级、秘密或敌人范围？
+代价或余波（可选）：只有本块真实需要时才写，不得为了显得成熟强制制造等量损失。
+推向下一块：哪个具体事件、新敌人或新入口导致下一块发生？
+
+同一强主循环可以多次运行，只要能力、敌人、结果、情绪或世界尺度发生真实变化。不强制每块失去或承担什么，不强制负反馈、变量失效、新变量、公开验证、资格变化或不同转换路径。
+
+未来十章开头先写批次说明：
+本批核心幻想兑现：
+本批一级成长目标：
+本批第一次决定性反转：
+本批实际净收益：
+本批打开的新行动空间：
+本批主要情绪颜色：
+
+随后保留现有单章格式，连续列出十章：
+## 第N章：具体标题
+具体剧情：用 2—4 句写具体人物、事件和主角行动。
+结果 / 状态变化：写直接结果和状态变化。
+叙事功能：写本章在局部故事中的作用。
+结尾推动：写下一章为什么发生。
+
+这些批次说明不成为每章必填字段，十章内不要求每章都成长或结算。整批结束时明确回答主角真正多能做了什么、得到什么实际净收益、谁重新评价了主角、行动自由扩大到哪里、下一个更大世界入口是什么。
+
+最后写故事开始前的初始状态、已经建立的远期承诺、当前未解决问题和作者备注。"""
+
+
+REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作者提供的已发生正文摘要、当前状态、未兑现承诺、远期方向和当前设计，调整未来计划；Review 只用于调整未来，不自动重写或否定已完成正文。
+
+{PAYOFF_FIRST_COST_RHYTHM}
+
+## 核心幻想是否仍在兑现
+最近章节是否仍然提供最初承诺的力量、自由、长生、探索、反杀、夺取、升格、关系或身份反转。
+
+## 一级成长是否仍是主轴
+主角本人是否真正多能做了什么，还是只增加职位、资格、权限、责任、组织规模或外界评价。
+
+## 幻想盈余是否为正
+检查是否每次胜利都被等量成本抵消、每次资格都增加更重责任、每次高光都立即被三种限制削弱、长期净收益过低。
+
+## 冲突是否过度理性化
+检查是否所有反派都是合理利益方、所有高潮都靠公开验证、所有冲突都靠承认不足，以及是否仍有击败、夺取、逃脱、拒绝、摧毁或决定性反转。
+
+## 世界是否被程序化
+检查是否退化为行业认证、技术质检、项目管理、合规审查、行政协调、职业晋升或学术实验。
+
+以上只用于调整未来计划，不自动改写已完成正文。
+
+随后输出：
+1. 实际完成内容；
+2. 最近兑现与未兑现的问题；
+3. 下一批十章总体事件链；
+4. 下一批十章逐章小纲。
+
+## 下一批十章总体事件链
+用 3—6 句话说明起点、问题、主角行动、转折、第十章左右的具体兑现和新入口，并写出本批核心幻想兑现、本批一级成长目标、本批实际净收益、本批打开的新行动空间和本批主要情绪颜色。
+
+逐章使用：
+## 第N章：具体标题
+具体剧情：用 2—4 句写具体人物、事件和主角行动。
+结果 / 状态变化：写直接结果和状态变化。
+叙事功能：写本章在局部故事中的作用。
+结尾推动：写下一章为什么发生。
+
+十章必须连续；第N章的结尾推动必须成为第N+1章具体剧情的直接因果起点；不要求每章都成长或结算。结尾补充：主角真正多能做了什么、得到什么实际净收益、谁重新评价了主角、行动自由扩大到哪里、下一个更大世界入口是什么。"""
+
+
+DEFAULT_PROMPT_TEMPLATES.update({
+    "fantasy_seed": FANTASY_SEED_TEMPLATE,
+    "world_vision": WORLD_VISION_TEMPLATE,
+    "idea": STORY_PROGRAM_TEMPLATE,
+    "outline": OUTLINE_TEMPLATE,
+    "review": REVIEW_TEMPLATE,
+})
+
 HYBRID_PROMPT_MODES = frozenset(HYBRID_PROMPT_TEMPLATES)
 SPECIALIST_PROMPT_MODES = frozenset(
     {f"specialist_{name}" for name in ("opening", "dialogue", "action", "emotion")}
@@ -758,9 +1059,29 @@ def _render_canon_status_without_summaries(status_block: str) -> str:
 
 
 class HardGateError(ValueError):
-    def __init__(self, missing_fields: list[str]) -> None:
+    def __init__(self, missing_fields: list[str], message: str | None = None) -> None:
         self.missing_fields = missing_fields
-        super().__init__("当前章小纲缺少非空字段：" + "、".join(missing_fields))
+        super().__init__(message or ("当前章小纲缺少非空字段：" + "、".join(missing_fields)))
+
+
+class CreativeApprovalError(HardGateError):
+    def __init__(self, missing_artifacts: list[str]) -> None:
+        self.missing_artifacts = missing_artifacts
+        labels = {
+            "fantasy_seed": "Fantasy Seed",
+            "world_vision": "World Vision",
+            "proposal": "Story Program",
+        }
+        detail = "、".join(labels[item] for item in missing_artifacts)
+        message = (
+            f"当前{detail}尚未由作者明确批准。模型生成或模型选择不等于作者批准。"
+            if len(missing_artifacts) == 1
+            else f"以下创意产物尚未由作者明确批准：{detail}。模型生成或模型选择不等于作者批准。"
+        )
+        super().__init__(
+            missing_artifacts,
+            message,
+        )
 
 
 def parse_outline_fields(outline: str) -> dict[str, str]:
@@ -953,6 +1274,9 @@ def generate_prompt(
     template: str,
     book_content: str,
     creative_direction: str = "",
+    fantasy_seed: str = "",
+    world_vision: str = "",
+    creative_state: Mapping[str, Any] | None = None,
     proposal_context: str = "",
     current_long_block: str = "",
     previous_chapter_text: str = "",
@@ -984,6 +1308,20 @@ def generate_prompt(
         raise ValueError(f"未知 Prompt 模式：{mode}")
     if len(selected_references or []) > 3:
         raise ValueError("最多只能选择 3 个 Reference Program")
+    state = creative_state or {}
+    required_approvals = {
+        "world_vision": ["fantasy_seed"],
+        "idea": ["world_vision"],
+        "outline": ["fantasy_seed", "world_vision", "proposal"],
+    }.get(mode, [])
+    missing_approvals = [
+        artifact
+        for artifact in required_approvals
+        if not isinstance(state.get(artifact), Mapping)
+        or state[artifact].get("status") != "author_approved"
+    ]
+    if missing_approvals:
+        raise CreativeApprovalError(missing_approvals)
     if mode == "chapter" or mode in HYBRID_PROMPT_MODES:
         validate_current_outline(current_outline)
 
@@ -1000,6 +1338,8 @@ def generate_prompt(
         prompt_template = DEFAULT_PROMPT_TEMPLATES[mode]
     elif mode == "director" and not prompt_template:
         prompt_template = DEFAULT_DIRECTOR_TEMPLATE
+    elif mode in {"fantasy_seed", "world_vision", "idea", "outline", "review"} and not prompt_template:
+        prompt_template = DEFAULT_PROMPT_TEMPLATES[mode]
     stripped_legacy_writer = False
     if mode == "chapter":
         prompt_template, stripped_legacy_writer = sanitize_chapter_template(template)
@@ -1263,6 +1603,35 @@ def generate_prompt(
             "Writer 章节事实摘要（仅辅助；与正式正文冲突时以正式正文为准）",
             chapter_fact_summary,
         ))
+    elif mode in {"fantasy_seed", "world_vision", "idea", "outline", "review"}:
+        parts.append("# 页面当前输入")
+        if mode == "fantasy_seed":
+            parts.append(_input_block("作者粗方向与明确约束", creative_direction))
+        elif mode == "world_vision":
+            parts.append(_input_block("作者粗方向与额外说明", creative_direction))
+            parts.append(_input_block("已批准 Fantasy Seed", fantasy_seed))
+        elif mode == "idea":
+            parts.append(_input_block("作者粗方向", creative_direction))
+            parts.append(_input_block("已批准 Fantasy Seed", fantasy_seed))
+            parts.append(_input_block("已批准 World Vision", world_vision))
+            parts.append(_input_block("手动选择的 Reference Programs", format_references(selected_references or [])))
+        elif mode == "outline":
+            parts.append(_input_block("作者粗方向", creative_direction))
+            parts.append(_input_block("已批准 Fantasy Seed", fantasy_seed))
+            parts.append(_input_block("已批准 World Vision", world_vision))
+            parts.append(_input_block("作者已批准的 Story Program", proposal_context))
+            parts.append(_input_block("当前 BOOK.md（只作为已批准创意的承载草稿）", book_content))
+            parts.append(_input_block("手动选择的 Reference Programs", format_references(selected_references or [])))
+            parts.append(_input_block("GBrain Inspiration Results（可选，不能覆盖批准产物）", gbrain_inspiration))
+        else:
+            parts.append(_input_block("当前设计与原计划", book_content))
+            parts.append(_input_block("创作方向", creative_direction))
+            parts.append(_input_block("实际十章摘要", actual_summaries))
+            parts.append(_input_block("当前状态", current_state))
+            parts.append(_input_block("未兑现承诺", unfulfilled_promises))
+            parts.append(_input_block("尚未发生的远期方向", future_direction))
+            parts.append(_input_block("当前成长整理", _extract_markdown_block(book_content, "## 0. 本书成长基因图")))
+            parts.append(_input_block("GBrain Inspiration Results（可选）", gbrain_inspiration))
     else:
         parts.append("# 页面当前输入")
         if mode == "idea":

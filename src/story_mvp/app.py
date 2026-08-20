@@ -27,15 +27,17 @@ from .run_ledger import (
     skip_integrator_if_no_patches,
 )
 from .storage import (
+    approve_creative_artifact,
     create_book,
     list_books,
     read_chapter,
     read_book_payload,
+    read_creative_payload,
     require_book,
     save_chapter,
     write_book,
+    write_creative_artifact,
     write_prompt_templates,
-    write_proposal,
 )
 
 
@@ -54,6 +56,11 @@ class BookCreateRequest(BaseModel):
 
 class TextRequest(BaseModel):
     content: str = ""
+
+
+class CreativeArtifactRequest(BaseModel):
+    content: str = ""
+    origin: Literal["model_generated", "model_selected", "author_edited"] | None = None
 
 
 class PromptTemplatesRequest(BaseModel):
@@ -113,6 +120,8 @@ class RunIntegratorSkipRequest(BaseModel):
 class PromptRequest(BaseModel):
     mode: Literal[
         "idea",
+        "fantasy_seed",
+        "world_vision",
         "outline",
         "director",
         "chapter_prep",
@@ -127,10 +136,14 @@ class PromptRequest(BaseModel):
         "specialist_emotion",
         "chapter_integrator",
     ]
+    book_id: str = ""
     template: str = ""
     writer_mode: Literal["hybrid_selective", "hybrid_full", "single"] = "hybrid_selective"
     book_content: str = ""
     creative_direction: str = ""
+    fantasy_seed: str = ""
+    world_vision: str = ""
+    creative_state: dict[str, Any] = Field(default_factory=dict)
     proposal_context: str = ""
     current_long_block: str = ""
     previous_chapter_text: str = ""
@@ -376,6 +389,22 @@ def post_gbrain_query(payload: GBrainQueryRequest) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
 
+def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
+    values = payload.model_dump(exclude={"book_id", "creative_state"})
+    if payload.book_id.strip():
+        creative = read_creative_payload(payload.book_id, workspace_path())
+        values["creative_state"] = creative["creative_state"]
+        if not values.get("fantasy_seed"):
+            values["fantasy_seed"] = creative["fantasy_seed"]
+        if not values.get("world_vision"):
+            values["world_vision"] = creative["world_vision"]
+        if not values.get("proposal_context"):
+            values["proposal_context"] = creative["proposal"]
+    else:
+        values["creative_state"] = payload.creative_state
+    return values
+
+
 def _validate_state_delta_input(payload: PromptRequest) -> None:
     """State Delta Prompt 生成动作的输入校验。
 
@@ -397,11 +426,19 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
     if payload.mode == "state_delta":
         _validate_state_delta_input(payload)
     try:
-        prompt = generate_prompt(**payload.model_dump())
+        prompt = generate_prompt(**_prompt_kwargs(payload))
+    except FileNotFoundError as error:
+        raise not_found(error) from error
     except HardGateError as error:
+        detail: dict[str, Any] = {
+            "message": str(error),
+            "missing_fields": error.missing_fields,
+        }
+        if hasattr(error, "missing_artifacts"):
+            detail["missing_artifacts"] = error.missing_artifacts
         raise HTTPException(
             status_code=422,
-            detail={"message": str(error), "missing_fields": error.missing_fields},
+            detail=detail,
         ) from error
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
@@ -413,7 +450,9 @@ def post_state_delta_prompt(payload: PromptRequest) -> dict[str, str]:
     """State Delta Prompt 专用入口：只生成页面可见、可复制的 Prompt，不写任何文件。"""
     _validate_state_delta_input(payload)
     try:
-        prompt = generate_prompt(**{**payload.model_dump(), "mode": "state_delta"})
+        prompt = generate_prompt(**{**_prompt_kwargs(payload), "mode": "state_delta"})
+    except FileNotFoundError as error:
+        raise not_found(error) from error
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     return {"prompt": prompt}
@@ -440,12 +479,94 @@ def put_prompt_templates(
 
 
 @app.put("/api/books/{book_id}/proposal")
-def put_proposal(book_id: str, payload: TextRequest) -> dict[str, str]:
+def put_proposal(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
     try:
-        write_proposal(book_id, payload.content, workspace_path())
+        creative = write_creative_artifact(
+            book_id,
+            "proposal",
+            payload.content,
+            workspace_path(),
+            origin=payload.origin,
+        )
     except FileNotFoundError as error:
         raise not_found(error) from error
-    return {"status": "saved", "file": "PROPOSAL.md"}
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "saved", "file": "PROPOSAL.md", **creative}
+
+
+@app.get("/api/books/{book_id}/creative")
+def get_creative(book_id: str) -> dict[str, Any]:
+    try:
+        return read_creative_payload(book_id, workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/fantasy-seed")
+def put_fantasy_seed(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
+    try:
+        creative = write_creative_artifact(
+            book_id,
+            "fantasy_seed",
+            payload.content,
+            workspace_path(),
+            origin=payload.origin,
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "saved", "file": "FANTASY_SEED.md", **creative}
+
+
+@app.put("/api/books/{book_id}/world-vision")
+def put_world_vision(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
+    try:
+        creative = write_creative_artifact(
+            book_id,
+            "world_vision",
+            payload.content,
+            workspace_path(),
+            origin=payload.origin,
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "saved", "file": "WORLD_VISION.md", **creative}
+
+
+@app.post("/api/books/{book_id}/fantasy-seed/approve")
+def approve_fantasy_seed(book_id: str) -> dict[str, Any]:
+    try:
+        return approve_creative_artifact(book_id, "fantasy_seed", workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/world-vision/approve")
+def approve_world_vision(book_id: str) -> dict[str, Any]:
+    try:
+        return approve_creative_artifact(book_id, "world_vision", workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/proposal/approve")
+def approve_proposal(book_id: str) -> dict[str, Any]:
+    try:
+        return approve_creative_artifact(book_id, "proposal", workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.post("/api/books/{book_id}/chapters")

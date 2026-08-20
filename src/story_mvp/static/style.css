@@ -96,6 +96,11 @@ textarea:focus, input:focus, select:focus { border-color: var(--accent); outline
 .field > span { display: block; font-size: 12px; font-weight: 650; margin-bottom: 5px; }
 .hint { margin-bottom: 12px; }
 .count { background: var(--accent-soft); border-radius: 12px; color: var(--accent); font-size: 12px; padding: 4px 8px; white-space: nowrap; }
+.creative-panel { grid-column: 1 / -1; }
+.creative-stage { border: 1px solid var(--line); border-radius: 5px; margin-top: 8px; padding: 8px 10px; }
+.creative-stage > summary { cursor: pointer; font-size: 13px; font-weight: 700; }
+.creative-stage > summary .count { float: right; font-size: 11px; font-weight: 500; }
+.creative-stage textarea { min-height: 150px; }
 .path-note { border-bottom: 1px solid var(--line); margin-bottom: 10px; padding-bottom: 9px; }
 .design-toolbar, .panorama-heading { align-items: center; border-top: 1px solid var(--line); display: flex; justify-content: space-between; margin-top: 14px; padding-top: 11px; }
 .design-toolbar .action-row { margin: 0; }

@@ -2,6 +2,36 @@ const state = {
   bookId: "",
   references: [],
   currentRun: null,
+  creativeState: {},
+  creativeArtifacts: {},
+  creativeSources: {},
+};
+
+const creativeUi = {
+  fantasy_seed: {
+    editor: "creative-fantasy-seed",
+    meta: "creative-meta-fantasy-seed",
+    save: "save-fantasy-seed",
+    approve: "approve-fantasy-seed",
+    generate: "generate-fantasy-seed-prompt",
+    apply: "apply-fantasy-seed-response",
+  },
+  world_vision: {
+    editor: "creative-world-vision",
+    meta: "creative-meta-world-vision",
+    save: "save-world-vision",
+    approve: "approve-world-vision",
+    generate: "generate-world-vision-prompt",
+    apply: "apply-world-vision-response",
+  },
+  proposal: {
+    editor: "proposal-editor",
+    meta: "creative-meta-proposal",
+    save: "save-proposal",
+    approve: "approve-proposal",
+    generate: "generate-story-program-prompt",
+    apply: "apply-story-program-response",
+  },
 };
 
 const sectionTitles = {
@@ -33,6 +63,112 @@ function showStatus(message, isError = false) {
   const target = $("status");
   target.textContent = message;
   target.classList.toggle("error", isError);
+}
+
+function renderCreativeMeta(artifact) {
+  const ui = creativeUi[artifact];
+  const value = state.creativeArtifacts[artifact] || state.creativeState[artifact] || {};
+  const target = $(ui.meta);
+  if (!target) return;
+  target.textContent = `${value.origin || "empty"} · ${value.status || "empty"}`;
+}
+
+function setCreativePayload(payload) {
+  state.creativeState = payload?.creative_state || {};
+  state.creativeArtifacts = payload?.creative_artifacts || {};
+  state.creativeSources = {};
+  for (const artifact of Object.keys(creativeUi)) {
+    const ui = creativeUi[artifact];
+    const value = state.creativeArtifacts[artifact] || {
+      content: payload?.[artifact] || "",
+      origin: state.creativeState[artifact]?.origin || "empty",
+      status: state.creativeState[artifact]?.status || "empty",
+    };
+    state.creativeArtifacts[artifact] = value;
+    $(ui.editor).value = value.content || "";
+    renderCreativeMeta(artifact);
+  }
+}
+
+function markCreativeEdited(artifact) {
+  const current = state.creativeArtifacts[artifact] || {};
+  state.creativeSources[artifact] = "author_edited";
+  state.creativeArtifacts[artifact] = {
+    content: $(creativeUi[artifact].editor).value,
+    origin: "author_edited",
+    status: "draft",
+  };
+  state.creativeState[artifact] = {
+    origin: state.creativeArtifacts[artifact].origin,
+    status: state.creativeArtifacts[artifact].status,
+  };
+  if (!current.content && !$(creativeUi[artifact].editor).value.trim()) {
+    state.creativeArtifacts[artifact] = { content: "", origin: "empty", status: "empty" };
+    state.creativeState[artifact] = { origin: "empty", status: "empty" };
+  }
+  renderCreativeMeta(artifact);
+}
+
+function applyCreativeResponse(artifact) {
+  const ui = creativeUi[artifact];
+  if (artifact === "proposal") {
+    applyResponseToEditor($("codex-response"), $("proposal-editor"));
+  } else {
+    applyResponseToEditor($("codex-response"), $(ui.editor));
+  }
+  state.creativeSources[artifact] = "model_generated";
+  state.creativeArtifacts[artifact] = {
+    content: $(ui.editor).value,
+    origin: "model_generated",
+    status: "draft",
+  };
+  state.creativeState[artifact] = {
+    origin: "model_generated",
+    status: "draft",
+  };
+  renderCreativeMeta(artifact);
+  showStatus(`模型返回已放入 ${artifact} 编辑器，仍为 draft，尚未保存或批准`);
+}
+
+async function saveCreativeArtifact(artifact) {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  const ui = creativeUi[artifact];
+  const path = artifact === "fantasy_seed"
+    ? "fantasy-seed"
+    : artifact === "world_vision" ? "world-vision" : "proposal";
+  try {
+    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/${path}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        content: $(ui.editor).value,
+        origin: state.creativeSources[artifact] || null,
+      }),
+    });
+    setCreativePayload(payload);
+    showStatus(`${artifact} 已保存，仍需作者明确批准`);
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function approveCreativeArtifact(artifact) {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  const path = artifact === "fantasy_seed"
+    ? "fantasy-seed" : artifact === "world_vision" ? "world-vision" : "proposal";
+  try {
+    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/${path}/approve`, {
+      method: "POST",
+    });
+    setCreativePayload(payload);
+    showStatus(`${artifact} 已由作者明确批准`);
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function generateCreativePrompt(mode) {
+  await activatePromptMode(mode);
+  await generatePrompt();
 }
 
 const runNodeByMode = {
@@ -242,7 +378,7 @@ function parseLongPlanBlocks(text) {
 
 function panoramaField(lines, label) {
   const labelPattern = new RegExp(`^\\s*${label}\\s*[：:]\\s*(.*)$`);
-  const stopPattern = /^\s*(具体发生|阶段结果|叙事功能|推向下一块)\s*[：:]/;
+  const stopPattern = /^\s*(具体发生|阶段结果|叙事功能|推向下一块|核心幻想推进|一级成长变化|主要情绪兑现|二级收益结算|世界扩张|代价或余波(?:（可选）)?)\s*[：:]/;
   const start = lines.findIndex((line) => labelPattern.test(line));
   if (start < 0) return "";
   const first = lines[start].match(labelPattern)?.[1] || "";
@@ -276,12 +412,14 @@ function renderLongPlanPanorama() {
     const title = document.createElement("h4");
     title.textContent = block.title;
     card.append(range, title);
-    const stage = panoramaField(block.lines, "阶段结果");
-    const functionText = panoramaField(block.lines, "叙事功能");
+    const stage = panoramaField(block.lines, "阶段结果") || panoramaField(block.lines, "一级成长变化");
+    const functionText = panoramaField(block.lines, "叙事功能") || panoramaField(block.lines, "核心幻想推进");
+    const emotion = panoramaField(block.lines, "主要情绪兑现");
     const next = panoramaField(block.lines, "推向下一块");
     const fields = [
       ["核心变化", stage],
       ["关键兑现 / 功能", functionText],
+      ["主要情绪", emotion],
       ["进入下一块", next],
     ];
     for (const [label, value] of fields) {
@@ -310,6 +448,7 @@ function populateBook(book) {
   clearReferenceSelection();
   state.bookId = book.book_id;
   $("book-id").value = book.book_id;
+  setCreativePayload(book);
   for (const key of Object.keys(designTitles)) {
     $(`design-${key}`).value = book.design_sections?.[key] || "";
   }
@@ -317,6 +456,8 @@ function populateBook(book) {
     $(`section-${key}`).value = book.sections?.[key] || "";
   }
   const templates = book.prompt_templates || {};
+  $("template-fantasy_seed").value = templates.fantasy_seed || $("template-fantasy_seed").value;
+  $("template-world_vision").value = templates.world_vision || $("template-world_vision").value;
   $("template-idea").value = templates.idea || $("template-idea").value;
   $("template-outline").value = templates.outline || $("template-outline").value;
   $("template-chapter_prep").value = templates.chapter_prep || $("template-chapter_prep").value;
@@ -465,6 +606,8 @@ function selectedReferences() {
 
 function currentTemplate() {
   return {
+    fantasy_seed: $("template-fantasy_seed").value,
+    world_vision: $("template-world_vision").value,
     idea: $("template-idea").value,
     outline: $("template-outline").value,
     chapter_prep: $("template-chapter_prep").value,
@@ -493,6 +636,7 @@ function gbrainContextPayload(queryOverride = "") {
 }
 
 async function setDefaultGbrainQuery() {
+  if (["fantasy_seed", "world_vision", "idea"].includes($("prompt-mode").value)) return;
   try {
     const payload = await requestJson("/api/gbrain/brief", {
       method: "POST",
@@ -519,7 +663,7 @@ async function activatePromptMode(mode) {
 
 function populatePromptTemplates(templates) {
   for (const key of [
-    "idea", "outline", "chapter_prep", "chapter", "review",
+    "fantasy_seed", "world_vision", "idea", "outline", "chapter_prep", "chapter", "review",
     "context_curator", "primary_writer", "specialist_opening", "specialist_dialogue",
     "specialist_action", "specialist_emotion", "chapter_integrator",
   ]) {
@@ -530,10 +674,14 @@ function populatePromptTemplates(templates) {
 function promptPayload() {
   return {
     mode: $("prompt-mode").value,
+    book_id: state.bookId,
     template: currentTemplate(),
     writer_mode: $("writer-mode").value,
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
+    fantasy_seed: $("creative-fantasy-seed").value,
+    world_vision: $("creative-world-vision").value,
+    creative_state: state.creativeState,
     current_long_block: $("current-long-block").value,
     previous_chapter_text: $("previous-chapter-text").value,
     current_outline: $("current-outline").value,
@@ -609,7 +757,13 @@ async function generatePrompt() {
     showStatus("Prompt 已生成，可继续编辑后复制");
   } catch (error) {
     const missing = error.payload?.detail?.missing_fields;
-    showStatus(missing?.length ? `当前章节 Prompt 被阻止：${missing.join("、")}` : error.message, true);
+    const missingArtifacts = error.payload?.detail?.missing_artifacts;
+    showStatus(
+      missingArtifacts?.length
+        ? `${error.payload.detail.message}（缺少：${missingArtifacts.join("、")}）`
+        : missing?.length ? `当前章节 Prompt 被阻止：${missing.join("、")}` : error.message,
+      true,
+    );
   }
 }
 
@@ -1031,6 +1185,8 @@ async function saveTemplates() {
       method: "PUT",
       body: JSON.stringify({
         templates: {
+          fantasy_seed: $("template-fantasy_seed").value,
+          world_vision: $("template-world_vision").value,
           idea: $("template-idea").value,
           outline: $("template-outline").value,
           chapter_prep: $("template-chapter_prep").value,
@@ -1053,17 +1209,7 @@ async function saveTemplates() {
 }
 
 async function saveProposal() {
-  if (!state.bookId) return showStatus("请先加载小说", true);
-  const draft = $("proposal-editor").value;
-  try {
-    await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/proposal`, {
-      method: "PUT",
-      body: JSON.stringify({ content: draft }),
-    });
-    showStatus("Proposal 编辑区已保存到 PROPOSAL.md");
-  } catch (error) {
-    showStatus(error.message, true);
-  }
+  await saveCreativeArtifact("proposal");
 }
 
 async function approveChapter() {
@@ -1131,6 +1277,17 @@ $("load-book").addEventListener("click", () => loadBook($("book-select").value))
 $("default-gbrain-query").addEventListener("click", setDefaultGbrainQuery);
 $("query-gbrain").addEventListener("click", queryGbrain);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
+$("generate-fantasy-seed-prompt").addEventListener("click", () => generateCreativePrompt("fantasy_seed"));
+$("generate-world-vision-prompt").addEventListener("click", () => generateCreativePrompt("world_vision"));
+$("generate-story-program-prompt").addEventListener("click", () => generateCreativePrompt("idea"));
+$("apply-fantasy-seed-response").addEventListener("click", () => applyCreativeResponse("fantasy_seed"));
+$("apply-world-vision-response").addEventListener("click", () => applyCreativeResponse("world_vision"));
+$("apply-story-program-response").addEventListener("click", () => applyCreativeResponse("proposal"));
+$("save-fantasy-seed").addEventListener("click", () => saveCreativeArtifact("fantasy_seed"));
+$("save-world-vision").addEventListener("click", () => saveCreativeArtifact("world_vision"));
+$("approve-fantasy-seed").addEventListener("click", () => approveCreativeArtifact("fantasy_seed"));
+$("approve-world-vision").addEventListener("click", () => approveCreativeArtifact("world_vision"));
+$("approve-proposal").addEventListener("click", () => approveCreativeArtifact("proposal"));
 $("generate-prompt").addEventListener("click", generatePrompt);
 $("generate-director-prompt").addEventListener("click", () => generateHybridNodePrompt("director"));
 $("generate-curator-prompt").addEventListener("click", () => generateHybridNodePrompt("context_curator"));
@@ -1192,8 +1349,7 @@ for (const key of Object.keys(designTitles)) {
   $(`design-${key}`).addEventListener("input", () => invalidateGbrainResults("BOOK 核心设计已变化"));
 }
 $("apply-response").addEventListener("click", () => {
-  applyResponseToEditor($("codex-response"), $("proposal-editor"));
-  showStatus("Codex 返回已放入 Proposal 编辑区，尚未写盘");
+  applyCreativeResponse("proposal");
 });
 $("apply-outline-to-book").addEventListener("click", applyOutlineToBook);
 $("extract-chapter-body").addEventListener("click", extractChapterBody);
@@ -1203,4 +1359,7 @@ $("save-book").addEventListener("click", saveBook);
 $("save-templates").addEventListener("click", saveTemplates);
 $("save-proposal").addEventListener("click", saveProposal);
 $("approve-chapter").addEventListener("click", approveChapter);
+for (const artifact of Object.keys(creativeUi)) {
+  $(creativeUi[artifact].editor).addEventListener("input", () => markCreativeEdited(artifact));
+}
 initialize();

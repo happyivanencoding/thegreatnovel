@@ -32,6 +32,53 @@
     </section>
 
     <main class="studio-grid">
+      <section class="panel creative-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">00 · CREATIVE AUTHORITY</p>
+            <h2>创意阶段</h2>
+          </div>
+          <span class="status">模型建议 ≠ 作者批准</span>
+        </div>
+        <p class="hint">按 Fantasy Seed → World Vision → Story Program 的顺序推进。模型生成、模型选择和作者编辑都只是 draft；只有作者点击“批准”才成为创意权威。</p>
+
+        <details class="creative-stage" open>
+          <summary>Fantasy Seed / 核心幻想种子 <span id="creative-meta-fantasy-seed" class="count">empty · empty</span></summary>
+          <p class="hint">只输入作者粗方向、明确题材、要保留和禁止的内容；不带入 BOOK、GBrain、Reference 或 Growth Genome。</p>
+          <label class="field"><span>Fantasy Seed 编辑器</span><textarea id="creative-fantasy-seed" rows="18" placeholder="模型候选或作者编辑内容"></textarea></label>
+          <div class="action-row wrap">
+            <button id="generate-fantasy-seed-prompt" class="primary">生成 Fantasy Seed Prompt</button>
+            <button id="apply-fantasy-seed-response">应用模型返回</button>
+            <button id="save-fantasy-seed">保存 Fantasy Seed</button>
+            <button id="approve-fantasy-seed" class="primary">批准 Fantasy Seed</button>
+          </div>
+        </details>
+
+        <details class="creative-stage">
+          <summary>World Vision / 世界幻想画像 <span id="creative-meta-world-vision" class="count">empty · empty</span></summary>
+          <p class="hint">Fantasy Seed 获作者批准后才能生成；World Vision 承载幻想，不重新决定核心幻想。</p>
+          <label class="field"><span>World Vision 编辑器</span><textarea id="creative-world-vision" rows="18" placeholder="模型返回或作者编辑内容"></textarea></label>
+          <div class="action-row wrap">
+            <button id="generate-world-vision-prompt" class="primary">生成 World Vision Prompt</button>
+            <button id="apply-world-vision-response">应用模型返回</button>
+            <button id="save-world-vision">保存 World Vision</button>
+            <button id="approve-world-vision" class="primary">批准 World Vision</button>
+          </div>
+        </details>
+
+        <details class="creative-stage">
+          <summary>Story Program / 商业化结构方案 <span id="creative-meta-proposal" class="count">empty · empty</span></summary>
+          <p class="hint">旧 mode key 仍为 idea；本阶段只为已批准幻想提出长期运行方式，不重新选择幻想。Proposal 编辑区是唯一 Proposal 来源。</p>
+          <label class="field"><span>Story Program 编辑器</span><textarea id="proposal-editor" rows="18" placeholder="模型返回或作者选择/编辑后的方案"></textarea></label>
+          <div class="action-row wrap">
+            <button id="generate-story-program-prompt" class="primary">生成 Story Program Prompt</button>
+            <button id="apply-story-program-response">应用模型返回</button>
+            <button id="save-proposal">保存 Story Program</button>
+            <button id="approve-proposal" class="primary">批准 Story Program</button>
+          </div>
+        </details>
+      </section>
+
       <section class="panel book-panel">
         <div class="panel-heading">
           <div>
@@ -50,7 +97,7 @@
           </div>
         </div>
         <div id="design-sections" class="design-sections">
-          <details class="design-card" open><summary>## 0. 本书成长基因图</summary><textarea id="design-growth_genome" rows="12" placeholder="用普通 Markdown 写这本书的核心组合、关键变量、转换网络、循环族、阶段变异、核心不变量和退化风险。不要写 JSON/YAML。"></textarea></details>
+          <details class="design-card" open><summary>## 0. 本书成长基因图</summary><textarea id="design-growth_genome" rows="12" placeholder="整理已批准幻想不变量、主角欲望、一级成长主轴、阶段升格、二级收益与反哺、主循环、成本节奏、核心不变量和退化风险。只有本书真实需要时才补充网络或循环。不要写 JSON/YAML。"></textarea></details>
           <details class="design-card"><summary>## 1. 核心类型与读者承诺</summary><textarea id="design-type_promise" rows="7"></textarea></details>
           <details class="design-card"><summary>## 2. 世界观结构</summary><textarea id="design-world_structure" rows="7"></textarea></details>
           <details class="design-card"><summary>## 3. 世界如何持续制造剧情压力</summary><textarea id="design-world_pressure" rows="7"></textarea></details>
@@ -123,7 +170,7 @@
               <textarea id="gbrain-rejections" rows="8" readonly></textarea>
             </label>
           </details>
-          <button id="generate-idea-prompt" class="primary">生成男频爽文创意 Prompt</button>
+          <button id="generate-idea-prompt" class="primary">生成 Story Program Prompt</button>
         </div>
 
         <details class="references-section" open>
@@ -141,7 +188,9 @@
             <h2>Prompt 与 Codex 返回</h2>
           </div>
           <select id="prompt-mode" aria-label="Prompt 模式">
-            <option value="idea">男频爽文创意生成</option>
+            <option value="fantasy_seed">Fantasy Seed / 核心幻想种子</option>
+            <option value="world_vision">World Vision / 世界幻想画像</option>
+            <option value="idea">Story Program / 商业化结构方案</option>
             <option value="outline">新书/总纲规划</option>
             <option value="director">当前章 Director</option>
             <option value="chapter_prep">当前章执行小纲</option>
@@ -308,20 +357,15 @@
           <button id="apply-chapter-prep">将 Codex 返回放入当前章小纲</button>
           <button id="apply-outline-to-book">将 Proposal 应用到 BOOK 编辑区</button>
           <button id="extract-chapter-body">提取正式正文</button>
-          <button id="save-proposal">保存 Proposal</button>
           <button id="approve-chapter" class="primary">批准并保存章节</button>
         </div>
 
-        <label class="field">
-          <span>Proposal 编辑区（唯一 Proposal 来源；点击保存才写 PROPOSAL.md）</span>
-          <textarea id="proposal-editor" rows="9"></textarea>
-        </label>
-        <p class="hint">生成 Outline 前，请在 Proposal 编辑区只保留/编辑你准备继续发展的候选。</p>
-
         <details class="template-editor">
-          <summary>编辑并保存十二个 Prompt 模板（PROMPTS.md）</summary>
+          <summary>编辑并保存十四个 Prompt 模板（PROMPTS.md）</summary>
           <p class="hint">模板参与下一次生成；保存模板和生成 Prompt 是两个独立动作。</p>
-          <label class="field"><span>男频爽文创意生成模板</span><textarea id="template-idea" rows="12"></textarea></label>
+          <label class="field"><span>Fantasy Seed 模板</span><textarea id="template-fantasy_seed" rows="12"></textarea></label>
+          <label class="field"><span>World Vision 模板</span><textarea id="template-world_vision" rows="12"></textarea></label>
+          <label class="field"><span>Story Program 模板（mode key: idea）</span><textarea id="template-idea" rows="12"></textarea></label>
           <label class="field"><span>新书/总纲规划模板</span><textarea id="template-outline" rows="10"></textarea></label>
           <label class="field"><span>当前章执行小纲模板</span><textarea id="template-chapter_prep" rows="9"></textarea></label>
           <label class="field"><span>当前章节写作模板</span><textarea id="template-chapter" rows="9"></textarea></label>

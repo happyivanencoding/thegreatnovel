@@ -1,0 +1,14 @@
+{
+  "fantasy_seed": {
+    "origin": "model_selected",
+    "status": "draft"
+  },
+  "world_vision": {
+    "origin": "empty",
+    "status": "empty"
+  },
+  "proposal": {
+    "origin": "empty",
+    "status": "empty"
+  }
+}

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 from typing import Any
@@ -35,7 +36,9 @@ DESIGN_SECTION_TITLES = {
 }
 
 PROMPT_TEMPLATE_LABELS = {
-    "idea": "男频爽文创意生成",
+    "idea": "Story Program / 商业化结构方案",
+    "fantasy_seed": "Fantasy Seed / 核心幻想种子",
+    "world_vision": "World Vision / 世界幻想画像",
     "outline": "新书/总纲规划",
     "chapter_prep": "当前章执行小纲",
     "chapter": "当前章节写作",
@@ -48,6 +51,17 @@ PROMPT_TEMPLATE_LABELS = {
     "specialist_emotion": "Emotion & Aftermath Specialist",
     "chapter_integrator": "Hybrid Revision Integrator",
 }
+LEGACY_PROMPT_TEMPLATE_HEADINGS = {"# 男频爽文创意生成": "idea"}
+
+CREATIVE_ARTIFACT_FILES = {
+    "fantasy_seed": "FANTASY_SEED.md",
+    "world_vision": "WORLD_VISION.md",
+    "proposal": "PROPOSAL.md",
+}
+CREATIVE_ORIGINS = frozenset(
+    {"empty", "model_generated", "model_selected", "author_edited", "legacy_unknown"}
+)
+CREATIVE_STATUSES = frozenset({"empty", "draft", "author_approved"})
 
 BOOK_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
 
@@ -155,6 +169,7 @@ def prompt_templates_to_text(templates: dict[str, str]) -> str:
 
 def text_to_prompt_templates(content: str) -> dict[str, str]:
     headings = {f"# {label}": key for key, label in PROMPT_TEMPLATE_LABELS.items()}
+    headings.update(LEGACY_PROMPT_TEMPLATE_HEADINGS)
     templates = {key: "" for key in PROMPT_TEMPLATE_LABELS}
     current_key: str | None = None
     lines: list[str] = []
@@ -199,7 +214,11 @@ def create_book(book_id: str, workspace: Path) -> Path:
     (directory / "PROMPTS.md").write_text(
         prompt_templates_to_text(default_prompt_templates()), encoding="utf-8"
     )
+    for artifact, filename in CREATIVE_ARTIFACT_FILES.items():
+        if artifact != "proposal":
+            (directory / filename).write_text("", encoding="utf-8")
     (directory / "PROPOSAL.md").write_text("", encoding="utf-8")
+    _write_creative_state(directory, _empty_creative_state())
     return directory
 
 
@@ -220,10 +239,134 @@ def require_book(book_id: str, workspace: Path) -> Path:
     return directory
 
 
+def _empty_creative_state() -> dict[str, dict[str, str]]:
+    return {
+        artifact: {"origin": "empty", "status": "empty"}
+        for artifact in ("fantasy_seed", "world_vision", "proposal")
+    }
+
+
+def _read_creative_state(directory: Path) -> dict[str, dict[str, str]]:
+    state_path = directory / "CREATIVE_STATE.json"
+    if not state_path.is_file():
+        return _empty_creative_state()
+    try:
+        raw = json.loads(state_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("CREATIVE_STATE.json 不是有效 JSON") from error
+    if not isinstance(raw, dict):
+        raise ValueError("CREATIVE_STATE.json 必须是对象")
+    state = _empty_creative_state()
+    for artifact in state:
+        value = raw.get(artifact, {})
+        if not isinstance(value, dict):
+            raise ValueError(f"CREATIVE_STATE.json 的 {artifact} 状态必须是对象")
+        origin = value.get("origin", "empty")
+        status = value.get("status", "empty")
+        if origin not in CREATIVE_ORIGINS or status not in CREATIVE_STATUSES:
+            raise ValueError(f"CREATIVE_STATE.json 的 {artifact} 状态值无效")
+        state[artifact] = {"origin": origin, "status": status}
+    return state
+
+
+def _write_creative_state(directory: Path, state: dict[str, dict[str, str]]) -> None:
+    normalized = _empty_creative_state()
+    for artifact in normalized:
+        value = state.get(artifact, {})
+        origin = value.get("origin", "empty")
+        status = value.get("status", "empty")
+        if origin not in CREATIVE_ORIGINS or status not in CREATIVE_STATUSES:
+            raise ValueError(f"{artifact} 创意状态值无效")
+        normalized[artifact] = {"origin": origin, "status": status}
+    (directory / "CREATIVE_STATE.json").write_text(
+        json.dumps(normalized, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _read_creative_text(directory: Path, artifact: str) -> str:
+    filename = CREATIVE_ARTIFACT_FILES[artifact]
+    path = directory / filename
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
+
+
+def read_creative_payload(book_id: str, workspace: Path) -> dict[str, Any]:
+    directory = require_book(book_id, workspace)
+    state = _read_creative_state(directory)
+    contents = {
+        artifact: _read_creative_text(directory, artifact)
+        for artifact in CREATIVE_ARTIFACT_FILES
+    }
+    if contents["proposal"].strip() and state["proposal"]["origin"] == "empty":
+        state["proposal"] = {"origin": "legacy_unknown", "status": "draft"}
+    for artifact in ("fantasy_seed", "world_vision"):
+        if contents[artifact].strip() and state[artifact]["origin"] == "empty":
+            state[artifact] = {"origin": "legacy_unknown", "status": "draft"}
+    return {
+        "creative_state": state,
+        "creative_artifacts": {
+            artifact: {
+                "content": contents[artifact],
+                **state[artifact],
+            }
+            for artifact in CREATIVE_ARTIFACT_FILES
+        },
+        "fantasy_seed": contents["fantasy_seed"],
+        "world_vision": contents["world_vision"],
+        "proposal": contents["proposal"],
+    }
+
+
+def write_creative_artifact(
+    book_id: str,
+    artifact: str,
+    content: str,
+    workspace: Path,
+    *,
+    origin: str | None = None,
+) -> dict[str, Any]:
+    if artifact not in CREATIVE_ARTIFACT_FILES:
+        raise ValueError(f"未知创意产物：{artifact}")
+    directory = require_book(book_id, workspace)
+    new_content = str(content)
+    old_content = _read_creative_text(directory, artifact)
+    state = _read_creative_state(directory)
+    if old_content != new_content:
+        source = origin if origin in {"model_generated", "model_selected"} else "author_edited"
+        state[artifact] = {"origin": source, "status": "draft"}
+    elif origin in {"model_generated", "model_selected"} and new_content.strip():
+        state[artifact] = {"origin": origin, "status": "draft"}
+    elif state[artifact]["origin"] == "empty" and new_content.strip():
+        state[artifact] = {"origin": "author_edited", "status": "draft"}
+    (directory / CREATIVE_ARTIFACT_FILES[artifact]).write_text(
+        new_content, encoding="utf-8"
+    )
+    _write_creative_state(directory, state)
+    return read_creative_payload(book_id, workspace)
+
+
+def approve_creative_artifact(
+    book_id: str, artifact: str, workspace: Path
+) -> dict[str, Any]:
+    if artifact not in CREATIVE_ARTIFACT_FILES:
+        raise ValueError(f"未知创意产物：{artifact}")
+    directory = require_book(book_id, workspace)
+    content = _read_creative_text(directory, artifact)
+    if not content.strip():
+        raise ValueError(f"{CREATIVE_ARTIFACT_FILES[artifact]} 不能为空，无法批准")
+    state = _read_creative_state(directory)
+    if state[artifact]["origin"] == "empty":
+        state[artifact] = {"origin": "author_edited", "status": "draft"}
+    state[artifact]["status"] = "author_approved"
+    _write_creative_state(directory, state)
+    return read_creative_payload(book_id, workspace)
+
+
 def read_book_payload(book_id: str, workspace: Path) -> dict[str, Any]:
     directory = require_book(book_id, workspace)
     book_content = (directory / "BOOK.md").read_text(encoding="utf-8")
-    prompt_content = (directory / "PROMPTS.md").read_text(encoding="utf-8")
+    prompt_path = directory / "PROMPTS.md"
+    prompt_content = prompt_path.read_text(encoding="utf-8") if prompt_path.is_file() else ""
     sections = parse_book_sections(book_content)
     stored_templates = text_to_prompt_templates(prompt_content)
     prompt_templates = default_prompt_templates()
@@ -232,13 +375,14 @@ def read_book_payload(book_id: str, workspace: Path) -> dict[str, Any]:
         for key, value in stored_templates.items()
         if value.strip()
     })
+    creative = read_creative_payload(book_id, workspace)
     return {
         "book_id": book_id,
         "book_content": book_content,
         "sections": sections,
         "design_sections": parse_design_sections(sections["design"]),
         "prompt_templates": prompt_templates,
-        "proposal": (directory / "PROPOSAL.md").read_text(encoding="utf-8"),
+        **creative,
         "chapters": sorted(path.name for path in (directory / "chapters").glob("chapter-*.md")),
     }
 
@@ -259,8 +403,7 @@ def write_prompt_templates(book_id: str, templates: dict[str, str], workspace: P
 
 
 def write_proposal(book_id: str, content: str, workspace: Path) -> None:
-    directory = require_book(book_id, workspace)
-    (directory / "PROPOSAL.md").write_text(content, encoding="utf-8")
+    write_creative_artifact(book_id, "proposal", content, workspace)
 
 
 def apply_state_delta_to_book(

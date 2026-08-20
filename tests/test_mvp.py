@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
 import yaml
 from fastapi.testclient import TestClient
 
@@ -43,6 +44,7 @@ from story_mvp.hybrid_runtime import (
 from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     DEFAULT_STATE_DELTA_TEMPLATE,
+    CreativeApprovalError,
     PROMPT_MODES,
     PROSE_REALIZATION_CONTRACT,
     REQUIRED_OUTLINE_FIELDS,
@@ -62,23 +64,43 @@ from story_mvp.storage import create_book, read_book_payload
 
 client = TestClient(app)
 
+APPROVED_CREATIVE_STATE = {
+    "fantasy_seed": {"origin": "author_edited", "status": "author_approved"},
+    "world_vision": {"origin": "author_edited", "status": "author_approved"},
+    "proposal": {"origin": "author_edited", "status": "author_approved"},
+}
+
+
+def approved_creative_inputs() -> dict[str, object]:
+    return {
+        "creative_state": APPROVED_CREATIVE_STATE,
+        "fantasy_seed": "APPROVED_FANTASY_SEED",
+        "world_vision": "APPROVED_WORLD_VISION",
+        "proposal_context": "APPROVED_STORY_PROGRAM",
+    }
+
 #: 匹配多 Writer 职责标记；「Writer Audit」是三标题响应合同，必须保留，不能误伤。
 #: lookahead 口径与 prompts._MULTI_WRITER_HEADING_PATTERN / _MULTI_WRITER_LINE_PATTERN 统一。
 _WRITER_ABC_PATTERN = re.compile(r"Writer\s*[ABC](?![0-9A-Za-z])")
 
 
-def test_new_book_has_only_the_four_requested_items(tmp_path: Path) -> None:
+def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None:
     book_dir = create_book("demo", tmp_path)
     assert {path.name for path in book_dir.iterdir()} == {
         "BOOK.md",
         "PROMPTS.md",
         "PROPOSAL.md",
+        "FANTASY_SEED.md",
+        "WORLD_VISION.md",
+        "CREATIVE_STATE.json",
         "chapters",
     }
     assert (book_dir / "chapters").is_dir()
     payload = read_book_payload("demo", tmp_path)
     assert set(payload["prompt_templates"]) == {
         "idea",
+        "fantasy_seed",
+        "world_vision",
         "outline",
         "chapter_prep",
         "chapter",
@@ -95,6 +117,12 @@ def test_new_book_has_only_the_four_requested_items(tmp_path: Path) -> None:
     assert len(payload["design_sections"]) == 13
     assert "growth_genome" in payload["design_sections"]
     assert "## 0. 本书成长基因图" in payload["book_content"]
+    assert payload["creative_state"] == {
+        "fantasy_seed": {"origin": "empty", "status": "empty"},
+        "world_vision": {"origin": "empty", "status": "empty"},
+        "proposal": {"origin": "empty", "status": "empty"},
+    }
+    assert set(payload["creative_artifacts"]) == {"fantasy_seed", "world_vision", "proposal"}
 
 
 def test_new_book_has_no_database_or_old_system_directory(tmp_path: Path) -> None:
@@ -102,6 +130,198 @@ def test_new_book_has_no_database_or_old_system_directory(tmp_path: Path) -> Non
     names = {path.name.lower() for path in book_dir.rglob("*")}
     assert not any(name.endswith((".db", ".sqlite", ".sqlite3")) for name in names)
     assert not {"edition", "atlas", "novel_authoring"} & names
+
+
+def test_old_book_without_creative_files_still_loads_and_legacy_proposal_is_not_approved(tmp_path: Path) -> None:
+    book_dir = tmp_path / "old-book"
+    book_dir.mkdir()
+    (book_dir / "BOOK.md").write_text("# 小说总体设计画像\n\n旧书", encoding="utf-8")
+    (book_dir / "PROMPTS.md").write_text("", encoding="utf-8")
+    (book_dir / "PROPOSAL.md").write_text("旧书 Proposal", encoding="utf-8")
+    (book_dir / "chapters").mkdir()
+
+    payload = read_book_payload("old-book", tmp_path)
+
+    assert payload["creative_state"]["proposal"] == {
+        "origin": "legacy_unknown",
+        "status": "draft",
+    }
+    assert payload["creative_state"]["fantasy_seed"] == {"origin": "empty", "status": "empty"}
+    assert not (book_dir / "FANTASY_SEED.md").exists()
+    assert not (book_dir / "WORLD_VISION.md").exists()
+    assert not (book_dir / "CREATIVE_STATE.json").exists()
+
+
+def test_creative_state_sources_and_explicit_approval_api(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    local_client = TestClient(app)
+    assert local_client.post("/api/books", json={"book_id": "creative"}).status_code == 201
+
+    generated = local_client.put(
+        "/api/books/creative/fantasy-seed",
+        json={"content": "MODEL_GENERATED_SEED", "origin": "model_generated"},
+    )
+    assert generated.status_code == 200
+    assert generated.json()["creative_state"]["fantasy_seed"] == {
+        "origin": "model_generated",
+        "status": "draft",
+    }
+
+    selected = local_client.put(
+        "/api/books/creative/world-vision",
+        json={"content": "MODEL_SELECTED_WORLD", "origin": "model_selected"},
+    )
+    assert selected.status_code == 200
+    assert selected.json()["creative_state"]["world_vision"] == {
+        "origin": "model_selected",
+        "status": "draft",
+    }
+    proposal = local_client.put(
+        "/api/books/creative/proposal",
+        json={"content": "MODEL_SELECTED_PROGRAM", "origin": "model_selected"},
+    )
+    assert proposal.json()["creative_state"]["proposal"] == {
+        "origin": "model_selected",
+        "status": "draft",
+    }
+
+    cannot_approve_in_put = local_client.put(
+        "/api/books/creative/proposal",
+        json={"content": "FORGED_APPROVAL", "origin": "author_approved"},
+    )
+    assert cannot_approve_in_put.status_code == 422
+
+    approved_seed = local_client.post("/api/books/creative/fantasy-seed/approve")
+    assert approved_seed.json()["creative_state"]["fantasy_seed"]["status"] == "author_approved"
+    approved_world = local_client.post("/api/books/creative/world-vision/approve")
+    assert approved_world.json()["creative_state"]["world_vision"]["status"] == "author_approved"
+    approved_proposal = local_client.post("/api/books/creative/proposal/approve")
+    assert approved_proposal.json()["creative_state"]["proposal"]["status"] == "author_approved"
+
+    edited = local_client.put(
+        "/api/books/creative/fantasy-seed",
+        json={"content": "AUTHOR_EDITED_AFTER_APPROVAL"},
+    )
+    assert edited.json()["creative_state"]["fantasy_seed"] == {
+        "origin": "author_edited",
+        "status": "draft",
+    }
+    edited_world = local_client.put(
+        "/api/books/creative/world-vision",
+        json={"content": "AUTHOR_EDITED_WORLD_AFTER_APPROVAL"},
+    )
+    assert edited_world.json()["creative_state"]["world_vision"] == {
+        "origin": "author_edited",
+        "status": "draft",
+    }
+    edited_proposal = local_client.put(
+        "/api/books/creative/proposal",
+        json={"content": "AUTHOR_EDITED_PROGRAM_AFTER_APPROVAL"},
+    )
+    assert edited_proposal.json()["creative_state"]["proposal"] == {
+        "origin": "author_edited",
+        "status": "draft",
+    }
+
+
+def test_creative_prompt_approval_boundaries_and_outline_authority(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    local_client = TestClient(app)
+    assert local_client.post("/api/books", json={"book_id": "gates"}).status_code == 201
+    base = {
+        "book_id": "gates",
+        "template": "VISIBLE_TEMPLATE",
+        "creative_direction": "AUTHOR_DIRECTION",
+        "fantasy_seed": "SEED",
+        "world_vision": "WORLD",
+        "proposal_context": "PROGRAM",
+    }
+
+    assert local_client.post("/api/prompt", json={**base, "mode": "fantasy_seed"}).status_code == 200
+    world_blocked = local_client.post("/api/prompt", json={**base, "mode": "world_vision"})
+    assert world_blocked.status_code == 422
+    assert world_blocked.json()["detail"]["missing_artifacts"] == ["fantasy_seed"]
+    program_blocked = local_client.post("/api/prompt", json={**base, "mode": "idea"})
+    assert program_blocked.status_code == 422
+
+    for artifact, path in (
+        ("fantasy_seed", "fantasy-seed"),
+        ("world_vision", "world-vision"),
+        ("proposal", "proposal"),
+    ):
+        saved = local_client.put(
+            f"/api/books/gates/{path}",
+            json={"content": artifact.upper(), "origin": "model_generated"},
+        )
+        assert saved.status_code == 200
+        assert saved.json()["creative_state"][artifact]["status"] == "draft"
+
+    assert local_client.post("/api/prompt", json={**base, "mode": "outline"}).status_code == 422
+    for path in ("fantasy-seed", "world-vision", "proposal"):
+        assert local_client.post(f"/api/books/gates/{path}/approve").status_code == 200
+    final = local_client.post("/api/prompt", json={**base, "mode": "outline"})
+    assert final.status_code == 200
+    assert "VISIBLE_TEMPLATE" in final.json()["prompt"]
+
+
+def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
+    fantasy = generate_prompt(
+        mode="fantasy_seed",
+        template=DEFAULT_PROMPT_TEMPLATES["fantasy_seed"],
+        book_content="BOOK_MARKER",
+        creative_direction="DIRECTION_MARKER",
+        gbrain_inspiration="GBRAIN_MARKER",
+        selected_references=[{"program_id": "REFERENCE_MARKER"}],
+    )
+    for marker in ("BOOK_MARKER", "GBRAIN_MARKER", "REFERENCE_MARKER"):
+        assert marker not in fantasy
+    for marker in (
+        "### 核心幻想",
+        "### 主角最强欲望",
+        "### 力量占有欲",
+        "### 第一次标志性奇观",
+        "### 不可调和的压迫",
+        "### 第一次情绪爆发",
+        "### 10章超越",
+        "### 30章超越",
+        "### 100章超越",
+    ):
+        assert marker in fantasy
+
+    world = generate_prompt(
+        mode="world_vision",
+        template=DEFAULT_PROMPT_TEMPLATES["world_vision"],
+        book_content="BOOK_MARKER",
+        creative_direction="DIRECTION_MARKER",
+        fantasy_seed="APPROVED_SEED_MARKER",
+        gbrain_inspiration="GBRAIN_MARKER",
+        selected_references=[{"program_id": "REFERENCE_MARKER"}],
+        creative_state={"fantasy_seed": {"origin": "author_edited", "status": "author_approved"}},
+    )
+    assert "APPROVED_SEED_MARKER" in world
+    for marker in ("BOOK_MARKER", "GBRAIN_MARKER", "REFERENCE_MARKER"):
+        assert marker not in world
+    for marker in ("世界最震撼的三幅画面", "力量的升格方向", "阶层与压迫", "对手谱系", "第一次决定性反转"):
+        assert marker in world
+
+
+def test_model_selected_story_program_is_not_outline_authority() -> None:
+    state = {
+        "fantasy_seed": {"origin": "author_edited", "status": "author_approved"},
+        "world_vision": {"origin": "author_edited", "status": "author_approved"},
+        "proposal": {"origin": "model_selected", "status": "draft"},
+    }
+    with pytest.raises(CreativeApprovalError) as error:
+        generate_prompt(
+            mode="outline",
+            template="OUTLINE",
+            book_content="BOOK",
+            fantasy_seed="SEED",
+            world_vision="WORLD",
+            proposal_context="SELECTED_PROGRAM",
+            creative_state=state,
+        )
+    assert error.value.missing_artifacts == ["proposal"]
 
 
 def test_only_validated_reference_programs_are_loaded(tmp_path: Path) -> None:
@@ -119,6 +339,7 @@ def test_prompt_is_built_from_submitted_visible_inputs() -> None:
         template="VISIBLE TEMPLATE",
         book_content="VISIBLE IDEA",
         selected_references=[{"program_id": "visible-program", "output_state": "visible state"}],
+        **approved_creative_inputs(),
     )
     assert "VISIBLE TEMPLATE" in prompt
     assert "VISIBLE IDEA" in prompt
@@ -132,21 +353,25 @@ def test_outline_uses_only_the_author_edited_proposal_context() -> None:
         template=DEFAULT_PROMPT_TEMPLATES["outline"],
         book_content="BOOK_DIRECTION",
         proposal_context="## 候选1：保留方案\nSELECTED_IDEA_ALPHA",
+        creative_state=APPROVED_CREATIVE_STATE,
+        fantasy_seed="APPROVED_SEED",
+        world_vision="APPROVED_WORLD",
     )
     assert "SELECTED_IDEA_ALPHA" in prompt
     assert "UNSELECTED_IDEA_BETA" not in prompt
-    assert "不得重新换一本书" in prompt
+    assert "已批准的三份创意产物高于产品默认模板" in prompt
 
 
-def test_outline_without_proposal_is_explicitly_empty() -> None:
-    prompt = generate_prompt(
-        mode="outline",
-        template="OUTLINE TEMPLATE",
-        book_content="BOOK_DIRECTION",
-        proposal_context="",
-    )
-    assert "作者已选择 / 编辑的规划种子" in prompt
-    assert "（未选择 Idea Proposal）" in prompt
+def test_outline_without_author_approval_is_blocked_even_with_proposal_text() -> None:
+    with pytest.raises(CreativeApprovalError) as error:
+        generate_prompt(
+            mode="outline",
+            template="OUTLINE TEMPLATE",
+            book_content="BOOK_DIRECTION",
+            proposal_context="MODEL_SELECTED_BUT_NOT_APPROVED",
+        )
+    assert set(error.value.missing_artifacts) == {"fantasy_seed", "world_vision", "proposal"}
+    assert "模型生成或模型选择不等于作者批准" in str(error.value)
 
 
 def test_chapter_prep_builds_eight_field_contract_from_the_selected_plan() -> None:
@@ -205,9 +430,10 @@ def test_prompt_generation_and_response_do_not_write_book_before_save(tmp_path: 
     response = client.post(
         "/api/prompt",
         json={
-            "mode": "outline",
+            "mode": "fantasy_seed",
             "template": "template",
             "book_content": "page-visible-book",
+            "creative_direction": "author direction",
             "selected_references": [],
         },
     )
@@ -406,15 +632,12 @@ def test_chapter_template_is_single_writer_direct_writing() -> None:
 
 def test_outline_template_requests_executable_prose_profile() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "何时贴近或拉远" in template
-    assert "高低压力场景的句段变化" in template
-    assert "词汇、句长、礼貌、攻击性、避答和沉默方式" in template
-    assert "opening、ordinary、dialogue、action、payoff、aftermath、emotion、ending" in template
-    assert "名词具体度" in template
-    assert "动词的方向/接触/结果" in template
-    assert "修饰词使用倾向" in template
-    assert "不确定词使用边界" in template
-    assert "口语/庄重/专业语体边界" in template
+    assert "已批准的三份创意产物高于产品默认模板" in template
+    assert "内部因果必须可信，但可信不等于现代程序真实" in template
+    assert "核心幻想、力量占有欲、主角欲望" in template
+    assert "代价或余波（可选）" in template
+    assert "本批核心幻想兑现" in template
+    assert "不要求每章都成长或结算" in template
 
 
 def test_approved_chapter_gets_correct_numbered_markdown_file(tmp_path: Path, monkeypatch) -> None:
@@ -503,7 +726,7 @@ def test_failed_gbrain_query_is_returned_as_error_without_fake_result(monkeypatc
     assert "result" not in response.json()
 
 
-def test_gbrain_result_enters_idea_prompt() -> None:
+def test_story_program_uses_approved_creative_inputs_and_excludes_gbrain() -> None:
     prompt = generate_prompt(
         mode="idea",
         template="IDEA TEMPLATE",
@@ -511,9 +734,14 @@ def test_gbrain_result_enters_idea_prompt() -> None:
         creative_direction="都市异能，信息差优势",
         gbrain_inspiration="[0.9] mechanism -- 可重复资源循环",
         selected_references=[{"program_id": "manual-reference"}],
+        creative_state={"world_vision": {"origin": "author_edited", "status": "author_approved"}},
+        fantasy_seed="SEED_MARKER",
+        world_vision="WORLD_MARKER",
     )
     assert "都市异能，信息差优势" in prompt
-    assert "可重复资源循环" in prompt
+    assert "可重复资源循环" not in prompt
+    assert "SEED_MARKER" in prompt
+    assert "WORLD_MARKER" in prompt
     assert "manual-reference" in prompt
 
 
@@ -524,6 +752,7 @@ def test_gbrain_result_enters_outline_prompt() -> None:
         book_content="BOOK CONTENT",
         creative_direction="AUTHOR_DIRECTION_ALPHA",
         gbrain_inspiration="Book DNA：阶段回报窗口",
+        **approved_creative_inputs(),
     )
     assert "AUTHOR_DIRECTION_ALPHA" in prompt
     assert "阶段回报窗口" in prompt
@@ -550,9 +779,11 @@ def test_review_prompt_discusses_growth_loop_variation() -> None:
         book_content="# 小说总体设计画像\n\n## 0. 本书成长基因图\n\n规则理解 × 关系网络",
     )
     assert "本书成长基因图" in prompt
-    assert "当前实际运行了什么成长循环" in prompt
-    assert "是否重复使用同一路径" in prompt
-    assert "成长基因图是否需要更新" in prompt
+    assert "核心幻想是否仍在兑现" in prompt
+    assert "一级成长是否仍是主轴" in prompt
+    assert "幻想盈余是否为正" in prompt
+    assert "冲突是否过度理性化" in prompt
+    assert "世界是否被程序化" in prompt
 
 
 def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
@@ -560,6 +791,7 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
         mode="outline",
         template=DEFAULT_PROMPT_TEMPLATES["outline"],
         book_content="BOOK",
+        **approved_creative_inputs(),
     )
     for heading in (
         "# 小说总体设计画像",
@@ -569,14 +801,15 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
     ):
         assert heading in prompt
     assert "## 0. 本书成长基因图" in prompt
-    assert "核心组合" in prompt
-    assert "转换网络" in prompt
-    assert "循环族" in prompt
-    assert "阶段变异" in prompt
+    assert "已批准幻想不变量" in prompt
+    assert "主角核心欲望与超越" in prompt
+    assert "一级成长主轴" in prompt
+    assert "核心优势阶段升格" in prompt
+    assert "主循环" in prompt
+    assert "成本节奏" in prompt
     assert "POWER_BREAKTHROUGH" not in prompt
-    assert "资源 → 修炼" not in prompt
-    assert "经典成长模式是一等公民" in prompt
-    assert "一个主循环和零到多个辅助循环" in prompt
+    assert "不强制每块失去或承担什么" in prompt
+    assert "每块必须公开验证" not in prompt
     assert "4—8 个自然剧情块" in prompt
     assert all(f"## {number}." in prompt for number in range(1, 13))
     assert "完整输出所有剧情块" in prompt
@@ -585,7 +818,8 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
     assert "结果 / 状态变化" in prompt
     assert "结尾推动" in prompt
     assert "第一章开篇策略" in prompt
-    assert "第N章的结尾推动必须成为第N+1章具体剧情的直接因果起点" in prompt
+    assert "本批核心幻想兑现" in prompt
+    assert "不要求每章都成长或结算" in prompt
 
 
 def test_review_prompt_uses_the_concrete_small_outline_format() -> None:
@@ -1502,6 +1736,8 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     templates = response.json()["templates"]
     assert set(templates) == {
         "idea",
+        "fantasy_seed",
+        "world_vision",
         "outline",
         "chapter_prep",
         "chapter",
@@ -1521,20 +1757,26 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert "Classic Patterns Are First-Class Citizens" in Path("docs/COMPOSABLE_GROWTH_GENOME.md").read_text(encoding="utf-8")
     assert "累积成长与可组合成长" in direction_text
     assert "Experiment Boundary" in direction_text
-    assert all("成长" in templates[mode] for mode in ("idea", "outline"))
-    assert "成长组合" in templates["idea"]
-    assert "初始转换网络" in templates["idea"]
-    assert "经典成长模式是一等公民" in templates["idea"]
-    assert "经典成长模式是一等公民" in templates["outline"]
-    assert "作者输入、GBrain证据或当前创意表明" in templates["idea"]
-    assert "作者明确保留" in templates["outline"]
+    assert all("成长" in templates[mode] for mode in ("idea", "fantasy_seed", "world_vision", "outline"))
+    assert "已批准 Fantasy Seed" in templates["idea"]
+    assert "已批准 World Vision" in templates["idea"]
+    assert "成长组合" not in templates["idea"]
+    assert "转换网络" not in templates["fantasy_seed"]
+    assert "GBrain" not in templates["fantasy_seed"]
+    assert "Reference Programs" not in templates["fantasy_seed"]
+    assert "BOOK" not in templates["fantasy_seed"]
+    assert "GBrain" not in templates["world_vision"]
+    assert "Reference Programs" not in templates["world_vision"]
+    assert "BOOK" not in templates["world_vision"]
+    assert "已批准幻想不变量" in templates["outline"]
+    assert "内部因果必须可信，但可信不等于现代程序真实" in templates["outline"]
     assert "本次为单 Writer 直接写作" in templates["chapter"]
     assert "选择性展开" in templates["chapter"]
     assert not _WRITER_ABC_PATTERN.search(templates["chapter"])
     for marker in ("串行写作协议", "SUBAGENT_MODE"):
         assert marker not in templates["chapter"]
     assert "如果本书需要且对当前故事重要" in templates["outline"]
-    assert "第一章开篇策略完全由作者和本书 BOOK 决定" in templates["outline"]
+    assert "第一章开篇策略" in templates["outline"]
     assert "## 0. 本书成长基因图" in templates["outline"]
     assert "POWER_BREAKTHROUGH" not in Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
 
@@ -1561,21 +1803,20 @@ def test_hybrid_page_defaults_to_full_mode_and_exposes_all_nodes() -> None:
 
 def test_growth_benefit_hierarchy_is_present_in_idea_outline_and_review_prompts() -> None:
     idea = DEFAULT_PROMPT_TEMPLATES["idea"]
-    for marker in ("## 一级成长收益", "## 一级成长阶段", "## 二级成长收益", "## 反哺关系", "## 主次失衡风险"):
+    for marker in ("### 核心优势怎样实际使用", "### 主循环", "### 二级收益与反哺", "### 成本节奏"):
         assert marker in idea
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
-    for marker in ("### 一级成长收益", "### 二级成长收益", "### 反哺关系", "### 主次关系"):
+    for marker in ("### 一级成长主轴", "### 二级收益与反哺", "### 主循环", "### 成本节奏"):
         assert marker in outline
-    assert "职位、行政权限、社会信用、组织规模和公共责任默认属于二级收益" in outline
-    assert "一级成长变化：" in outline
-    assert "二级收益结算：" in outline
-    assert "反哺下一轮：" in outline
+    assert "代价或余波（可选）" in outline
+    assert "不强制每块失去或承担什么" in outline
     review = DEFAULT_PROMPT_TEMPLATES["review"]
     for marker in (
-        "## 一级成长实际发生了什么",
-        "## 二级收益实际获得了什么",
-        "## 二级收益是否吞掉一级成长",
-        "## 下一批如何反哺一级成长",
+        "## 核心幻想是否仍在兑现",
+        "## 一级成长是否仍是主轴",
+        "## 幻想盈余是否为正",
+        "## 冲突是否过度理性化",
+        "## 世界是否被程序化",
     ):
         assert marker in review
 
@@ -1909,6 +2150,7 @@ def test_outline_prompt_injects_book_content_once() -> None:
         mode="outline",
         template="OUTLINE TEMPLATE",
         book_content="UNIQUE BOOK CONTENT",
+        **approved_creative_inputs(),
     )
     assert prompt.count("UNIQUE BOOK CONTENT") == 1
 
@@ -1943,15 +2185,13 @@ def test_proposal_source_is_explicit_and_editor_only() -> None:
     save_start = js.index("async function saveProposal()")
     save_end = js.index("async function approveChapter", save_start)
     save_body = js[save_start:save_end]
-    assert 'const draft = $("proposal-editor").value;' in save_body
-    assert '$("codex-response").value' not in save_body
-    assert "Proposal 编辑区已保存到 PROPOSAL.md" in save_body
+    assert "saveCreativeArtifact(\"proposal\")" in save_body
 
     assert '$("apply-response").addEventListener("click"' in js
     assert 'applyResponseToEditor($("codex-response"), $("proposal-editor"));' in js
     assert '$("proposal-editor").value = $("codex-response").value' not in js
     assert '$("codex-response").addEventListener("input"' not in js
-    assert '$("proposal-editor").addEventListener("input"' not in js
+    assert "markCreativeEdited(artifact)" in js
 
 
 def test_generate_prompt_does_not_clear_proposal_editor() -> None:
