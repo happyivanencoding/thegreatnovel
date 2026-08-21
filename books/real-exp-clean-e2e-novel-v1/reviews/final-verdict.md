@@ -2,6 +2,12 @@
 
 ## 0. 审查范围
 
+## 0.1 结果交付提交
+
+- 结果交付时当前分支最新提交：`2863503eda7e1a11b1173ac51dbdbefa6bb1fbff`
+- 提交主题：`test: record parallel three-chapter execution stress test`
+- 说明：本报告中的 `HEAD` 是冻结/起始基线；以上字段记录实验结果交付时的分支 tip。
+
 本报告只依据本轮列出的源产物与 Reviewer 结果，根目录为：
 
 `C:\dev\tgn-story-mvp\books\real-exp-clean-e2e-novel-v1`

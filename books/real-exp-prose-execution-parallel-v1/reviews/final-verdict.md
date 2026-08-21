@@ -9,6 +9,12 @@
 - frozen state：`CREATIVE_CHAIN_FROZEN_V2` + `OUTLINE_FROZEN_V2`
 - GBrain：OFF；Reference Programs：OFF；Candidate B：未读取
 
+## 结果交付提交
+
+- 结果交付时当前分支最新提交：`2863503eda7e1a11b1173ac51dbdbefa6bb1fbff`
+- 提交主题：`test: record parallel three-chapter execution stress test`
+- 说明：上方 `HEAD` 表示实验冻结/起始基线，不表示结果交付时的分支 tip。
+
 ## 两本结果
 
 | Candidate | Reader | World Engine | Execution Pipeline | Nearest Failure Layer |

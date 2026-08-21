@@ -1,5 +1,11 @@
 # Frozen Upstream + 3-Chapter Execution & World Engine Test v1：最终报告
 
+## 0. 结果交付提交
+
+- 结果交付时当前分支最新提交：`2863503eda7e1a11b1173ac51dbdbefa6bb1fbff`
+- 提交主题：`test: record parallel three-chapter execution stress test`
+- 说明：下方 `experiment start HEAD` 仍是本实验的冻结/起始基线，不代表结果交付时的分支 tip。
+
 ## 1. 实验结论
 
 - Reader Verdict：`STRONG_OPENING`
