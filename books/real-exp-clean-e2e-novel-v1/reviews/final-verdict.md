@@ -18,6 +18,17 @@
 - HEAD subject：`docs: record dynamic pacing freeze verdict`
 - Freeze 时间：2026-08-21，Europe/Paris
 
+### Run-end observed Git state
+
+长时间实验运行期间，checkout 在未由本轮操作发起的外部提交后从冻结 HEAD `5992f62d…` 变为 `367d0d25…`；本轮随后只提交了实验目录，提交为：
+
+- branch：`principal_dev_new_sys`
+- experiment commit：`80d1762870b2255462b2575fc1bd6eedc4c3d5a7` — `test: run clean end-to-end novel generation`
+- primary experiment submission HEAD：`80d1762870b2255462b2575fc1bd6eedc4c3d5a7`
+- 本 final-verdict 的 Git 状态修订随后作为同一实验范围内的 docs-only 收尾提交；最终 checkout HEAD 以交付时复核为准。
+- `git diff --name-only`：无输出
+- `git status --short`：仍有 109 个不属于本轮的未跟踪文件，全部位于 `books/real-exp-prose-execution-parallel-v1/**`；本轮未读取、未修改、未暂存、未提交这些文件。
+
 ## 2. Frozen production baseline 与有效 Prompt source
 
 本轮冻结的有效生产 Prompt source：
