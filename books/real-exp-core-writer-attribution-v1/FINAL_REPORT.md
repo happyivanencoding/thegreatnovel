@@ -4,6 +4,9 @@
 
 - branch：`principal_dev_new_sys`
 - BASE_SHA：`c405b7d1b6d7ad89fc7a41ce1a4da4126aa4dc42`
+- EXPERIMENT_ARTIFACT_COMMIT：`91eb1f9`（完整实验产物提交）
+- FINAL_SHA：以最终主分支 handoff 为准
+- pushed：以最终主分支 handoff 为准
 - Experiment generation base：`d4e2dd6f3377f967d8930480016f15a450b74e1b`
 - production backend modified：`no`
 - frontend modified by this task：`no`
@@ -78,5 +81,5 @@ Curator-Primary 在 snapshot-03 对动作/空间、对白、正确判断密度�
 
 - `prepare_core_writer_experiment.py`：通过；正式 `generate_prompt()` 渲染。
 - `package_core_writer_results.py`：通过；现有正文提取函数、A/B/C 盲位包装通过。
-- `py_compile`：待提交前执行。
+- `py_compile`：通过。
 - Reader：3 个真实独立 subagents，分别完成一个 snapshot 的盲读；不参与 content generation。
