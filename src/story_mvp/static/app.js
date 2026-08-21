@@ -242,10 +242,46 @@ async function refreshExecutorStatus() {
     const executors = await requestJson("/api/executors");
     const openai = executors.openai_api || {};
     $("openai-executor-status").textContent = openai.configured
-      ? "OpenAI API：已配置 · " + openai.model
+      ? "OpenAI API：已配置 · " + (openai.name || openai.model)
       : "OpenAI API：未配置";
   } catch (error) {
     $("openai-executor-status").textContent = "OpenAI API：读取失败";
+  }
+}
+
+async function loadOpenAISettings() {
+  try {
+    const settings = await requestJson("/api/settings/openai");
+    $("settings-api-name").value = settings.name || "";
+    $("settings-api-url").value = settings.url || "";
+    $("settings-api-key").value = "";
+    $("settings-status").textContent = settings.configured
+      ? "已配置：" + (settings.name || "未命名") + "（Key 不回显）"
+      : "未配置";
+  } catch (error) {
+    $("settings-status").textContent = `读取失败：${error.message}`;
+  }
+}
+
+async function saveOpenAISettings() {
+  try {
+    const settings = await requestJson("/api/settings/openai", {
+      method: "PUT",
+      body: JSON.stringify({
+        name: $("settings-api-name").value,
+        url: $("settings-api-url").value,
+        api_key: $("settings-api-key").value,
+      }),
+    });
+    $("settings-api-key").value = "";
+    $("settings-status").textContent = settings.configured
+      ? "已保存：" + (settings.name || "未命名") + "（Key 不回显）"
+      : "未配置";
+    await refreshExecutorStatus();
+    showStatus("OpenAI API 设置已保存到当前后端进程");
+  } catch (error) {
+    $("settings-status").textContent = `保存失败：${error.message}`;
+    showStatus(error.message, true);
   }
 }
 
@@ -1547,6 +1583,7 @@ async function initialize() {
   try {
     renderLongPlanPanorama();
     await refreshExecutorStatus();
+    await loadOpenAISettings();
     const defaultTemplates = await requestJson("/api/prompt-templates");
     populatePromptTemplates(defaultTemplates.templates);
     const payload = await requestJson("/api/references");
@@ -1568,6 +1605,12 @@ async function initialize() {
 
 $("new-book").addEventListener("click", createBook);
 $("load-book").addEventListener("click", () => loadBook($("book-select").value));
+$("settings-button").addEventListener("click", async () => {
+  await loadOpenAISettings();
+  $("settings-dialog").showModal();
+});
+$("close-settings").addEventListener("click", () => $("settings-dialog").close());
+$("save-settings").addEventListener("click", saveOpenAISettings);
 $("default-gbrain-query").addEventListener("click", setDefaultGbrainQuery);
 $("query-gbrain").addEventListener("click", queryGbrain);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);

@@ -28,8 +28,36 @@
         <option value="">（暂无）</option>
       </select>
       <button id="load-book">加载</button>
+      <button id="settings-button" type="button">设置</button>
       <span id="status" class="status" role="status"></span>
     </section>
+
+    <dialog id="settings-dialog" class="settings-dialog">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">APP SETTINGS</p>
+          <h2>OpenAI API 设置</h2>
+        </div>
+        <button id="close-settings" type="button">关闭</button>
+      </div>
+      <p class="hint">设置只保存在当前 FastAPI 进程内，不写入浏览器存储、小说文件或 Git。API Key 留空表示保留当前后端配置。</p>
+      <label class="field">
+        <span>配置名称</span>
+        <input id="settings-api-name" type="text" placeholder="例如：OpenAI 主账号" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>API URL（可留空使用官方默认地址）</span>
+        <input id="settings-api-url" type="url" placeholder="https://api.openai.com/v1" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>API Key</span>
+        <input id="settings-api-key" type="password" placeholder="输入新的 API Key；不会回显" autocomplete="new-password">
+      </label>
+      <div class="action-row">
+        <button id="save-settings" class="primary" type="button">保存设置</button>
+        <span id="settings-status" class="status"></span>
+      </div>
+    </dialog>
 
     <section id="workflow-panel" class="workflow-panel" aria-label="Story Workflow">
       <div class="workflow-heading">

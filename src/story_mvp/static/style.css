@@ -74,6 +74,10 @@ textarea:focus, input:focus, select:focus { border-color: var(--accent); outline
 #book-select { min-width: 150px; }
 .status { color: var(--accent); font-size: 12px; margin-left: 8px; }
 .status.error { color: var(--danger); }
+.settings-dialog { border: 1px solid var(--line); border-radius: 7px; max-width: 520px; padding: 16px; width: calc(100% - 28px); }
+.settings-dialog::backdrop { background: rgb(31 41 51 / 28%); }
+.settings-dialog h2 { margin: 0; }
+.settings-dialog input { width: 100%; }
 
 .workflow-panel {
   background: #fff;

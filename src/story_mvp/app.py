@@ -12,7 +12,14 @@ from pydantic import BaseModel, Field
 
 from .gbrain import GBrainQueryError
 from .gbrain_retrieval import build_retrieval_brief, extract_hard_constraints, retrieve_gbrain
-from .openai_executor import OpenAIExecutorError, configured as openai_configured, default_model, generate_text
+from .openai_executor import (
+    OpenAIExecutorError,
+    configure_settings,
+    configured as openai_configured,
+    default_model,
+    generate_text,
+    settings_status,
+)
 from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
 from .run_ledger import (
@@ -64,6 +71,12 @@ class TextRequest(BaseModel):
 class OpenAIExecutorRequest(BaseModel):
     prompt: str = ""
     model: str = ""
+
+
+class OpenAISettingsRequest(BaseModel):
+    name: str = ""
+    url: str = ""
+    api_key: str = ""
 
 
 class CreativeArtifactRequest(BaseModel):
@@ -212,11 +225,30 @@ def get_prompt_templates() -> dict[str, dict[str, str]]:
 
 @app.get("/api/executors")
 def get_executors() -> dict[str, Any]:
+    openai_settings = settings_status()
     return {
         "manual": {"available": True},
         "codex_external": {"available": True},
-        "openai_api": {"available": True, "configured": openai_configured(), "model": default_model()},
+        "openai_api": {
+            "available": True,
+            "configured": openai_configured(),
+            "model": default_model(),
+            "name": openai_settings["name"],
+        },
     }
+
+
+@app.get("/api/settings/openai")
+def get_openai_settings() -> dict[str, str | bool]:
+    return settings_status()
+
+
+@app.put("/api/settings/openai")
+def put_openai_settings(payload: OpenAISettingsRequest) -> dict[str, str | bool]:
+    try:
+        return configure_settings(payload.name, payload.url, payload.api_key)
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.post("/api/executors/openai")

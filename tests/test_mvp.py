@@ -1261,6 +1261,12 @@ def test_workflow_ui_and_executor_controls_are_visible() -> None:
         'id="executor-mode"',
         'id="codex-task-wrapper"',
         'id="openai-executor-status"',
+        'id="settings-button"',
+        'id="settings-dialog"',
+        'id="settings-api-url"',
+        'id="settings-api-key"',
+        'id="settings-api-name"',
+        'id="save-settings"',
     ):
         assert marker in page.text
     for marker in (
