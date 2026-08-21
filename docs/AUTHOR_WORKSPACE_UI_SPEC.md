@@ -22,6 +22,10 @@
 - 记忆：Canon Memory / Current State 默认阅读态，复用 BOOK status 保存路径。
 - 工具：Prompt Templates、OpenAI Settings、References、Workflow Debug。
 
+章节主 CTA 由 Workflow snapshot 的 `next_actionable_node` 驱动：继续写作会自动选择当前章节、载入可用的十章计划，并将 Director / 执行小纲 / 正文 / Hybrid 节点映射到作者可读的中文动作；Prompt Mode、完整 Prompt、Response 和 Codex Task 仅在右侧 Drawer 可见。
+
+Future 10 和记忆保留显式编辑入口；保存仍统一走 BOOK 保存路径，stale / Impact 由现有 Workflow State 计算。小于 800px 时左侧导航转为顶部横向导航，右侧 Drawer 覆盖打开且页面不产生横向溢出。
+
 ## 高级透明性
 
 右侧 Drawer 按需打开，复用现有 DOM 编辑器和输出区，不创建第二份内容来源；可查看完整 Prompt、Codex Response、Run Ledger、Dependency Impact、revision/source/file path、Hybrid 节点和 State Delta。
@@ -33,3 +37,6 @@
 - Manual、Codex External、OpenAI API 只改变 Response 产生方式，共享同一 Prompt、Apply、Save 和 Workflow State。
 - 本轮不生成新章节、不运行小说质量实验。
 
+## 浏览器证据
+
+1440×900 的冻结基线与当前 Author Workspace 截图保存在 `docs/ui-audit/`：`before.png`、`after-overview.png`、`after-chapter.png`、`after-design.png`。

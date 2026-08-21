@@ -48,3 +48,26 @@ def test_author_workspace_keeps_existing_prompt_and_save_paths() -> None:
         "saveRunPromptForMode", "saveRunResponseForMode",
     ):
         assert f"function {function_name}" in APP_JS or f"async function {function_name}" in APP_JS
+
+
+def test_chapter_primary_action_is_workflow_driven_and_advanced_controls_are_scoped() -> None:
+    assert 'id="generate-prompt"' in TEMPLATE
+    assert 'id="chapter-generation-target"' in TEMPLATE
+    assert 'id="prompt-mode-control"' in TEMPLATE
+    assert 'id="chapter-advanced-actions"' in TEMPLATE
+    assert 'id="state-delta-block"' in TEMPLATE
+    assert 'id="template-editor"' in TEMPLATE
+    assert 'id="save-memory"' in TEMPLATE
+    assert 'id="edit-future10"' in TEMPLATE
+    assert "chapterActionForNode" in APP_JS
+    assert "generateCurrentChapterAction" in APP_JS
+    assert "next_actionable_node" in APP_JS
+
+
+def test_workspace_hides_path_and_keeps_prompt_response_in_drawer_mount() -> None:
+    assert 'class="workspace-info"' not in TEMPLATE
+    assert 'id="workspace-path"' in TEMPLATE
+    assert 'id="prompt-response-advanced"' in TEMPLATE
+    assert '"prompt-mode-control", "prompt-response-advanced"' in APP_JS
+    assert 'navigateToView("tools", "打开 Prompt Templates")' in APP_JS
+    assert 'navigateToView("memory", "打开记忆编辑区")' in APP_JS

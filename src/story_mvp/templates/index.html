@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Transparent GBrain Story Studio</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=4">
   </head>
   <body>
     <header class="topbar">
@@ -12,10 +12,6 @@
         <p class="eyebrow">LOCAL · SINGLE AUTHOR · CLEANROOM MVP</p>
         <h1>Transparent GBrain Story Studio</h1>
         <p class="subtle">作者保留判断权：页面只生成、展示、复制和保存你主动确认的文本。</p>
-      </div>
-      <div class="workspace-info">
-        <span>小说工作区</span>
-        <code id="workspace-path">{{ workspace }}</code>
       </div>
     </header>
 
@@ -56,6 +52,11 @@
         <button id="save-settings" class="primary" type="button">保存设置</button>
         <span id="settings-status" class="status"></span>
       </div>
+      <details class="advanced-settings">
+        <summary>高级工作区信息</summary>
+        <p class="hint">仅供定位本地文件和 Codex External 任务使用。</p>
+        <code id="workspace-path">{{ workspace }}</code>
+      </details>
     </dialog>
 
     <div class="author-shell">
@@ -116,8 +117,15 @@
             <span id="memory-revision" class="status">未加载</span>
           </div>
           <div id="memory-cards" class="memory-cards"></div>
+          <div id="memory-status-editor" class="field raw-editor">
+            <label class="field">
+              <span>当前状态、未兑现承诺与作者备注</span>
+              <textarea id="section-status" data-section="status" rows="9"></textarea>
+            </label>
+          </div>
           <div class="overview-action-row">
             <button id="open-memory-editor" type="button">编辑记忆</button>
+            <button id="save-memory" type="button">保存记忆</button>
             <button id="memory-open-workflow" type="button">查看记忆节点状态</button>
           </div>
         </section>
@@ -136,6 +144,25 @@
             <button id="open-references" type="button"><strong>References</strong><span>打开创意工作区的手动 Reference Programs</span></button>
             <button id="open-workflow-from-tools" type="button"><strong>Workflow Debug</strong><span>查看 Workflow State、Run Ledger、Impact 与 Codex Task</span></button>
           </div>
+          <details id="template-editor" class="template-editor">
+            <summary>编辑并保存十四个 Prompt 模板（PROMPTS.md）</summary>
+            <p class="hint">模板参与下一次生成；保存模板和生成 Prompt 是两个独立动作。</p>
+            <label class="field"><span>Fantasy Seed 模板</span><textarea id="template-fantasy_seed" rows="12"></textarea></label>
+            <label class="field"><span>World Vision 模板</span><textarea id="template-world_vision" rows="12"></textarea></label>
+            <label class="field"><span>Story Program 模板（mode key: idea）</span><textarea id="template-idea" rows="12"></textarea></label>
+            <label class="field"><span>新书/总纲规划模板</span><textarea id="template-outline" rows="10"></textarea></label>
+            <label class="field"><span>当前章执行小纲模板</span><textarea id="template-chapter_prep" rows="9"></textarea></label>
+            <label class="field"><span>当前章节写作模板</span><textarea id="template-chapter" rows="9"></textarea></label>
+            <label class="field"><span>十章复盘与下一批十章模板</span><textarea id="template-review" rows="9"></textarea></label>
+            <label class="field"><span>Hybrid Context Curator 模板</span><textarea id="template-context_curator" rows="9"></textarea></label>
+            <label class="field"><span>Hybrid Primary Writer 模板</span><textarea id="template-primary_writer" rows="9"></textarea></label>
+            <label class="field"><span>Opening &amp; Scene Entry Specialist 模板</span><textarea id="template-specialist_opening" rows="9"></textarea></label>
+            <label class="field"><span>Dialogue &amp; Character Voice Specialist 模板</span><textarea id="template-specialist_dialogue" rows="9"></textarea></label>
+            <label class="field"><span>Action &amp; Spatial Logic Specialist 模板</span><textarea id="template-specialist_action" rows="9"></textarea></label>
+            <label class="field"><span>Emotion &amp; Aftermath Specialist 模板</span><textarea id="template-specialist_emotion" rows="9"></textarea></label>
+            <label class="field"><span>Hybrid Revision Integrator 模板</span><textarea id="template-chapter_integrator" rows="9"></textarea></label>
+            <button id="save-templates">保存 Prompt 模板</button>
+          </details>
         </section>
 
     <section id="workflow-panel" class="workflow-panel" aria-label="Story Workflow" data-drawer-panel>
@@ -147,10 +174,10 @@
         </div>
         <div class="workflow-actions">
           <button id="close-workflow-drawer" type="button">关闭抽屉</button>
-          <label>Executor Mode
+          <label>生成方式
             <select id="executor-mode">
-              <option value="manual" selected>Manual / Copy-Paste</option>
-              <option value="codex_external">Codex External</option>
+              <option value="manual" selected>复制 Prompt</option>
+              <option value="codex_external">Codex</option>
               <option value="openai_api">OpenAI API</option>
             </select>
           </label>
@@ -195,6 +222,7 @@
         <details class="creative-stage">
           <summary>Fantasy Seed / 核心幻想种子 <span id="creative-meta-fantasy-seed" class="count">empty · empty</span></summary>
           <p id="creative-preview-fantasy-seed" class="reading-preview">尚未填写核心幻想种子。</p>
+          <div class="creative-read-actions"><button type="button" data-creative-edit="fantasy_seed">编辑</button></div>
           <p class="hint">只输入作者粗方向、明确题材、要保留和禁止的内容；不带入 BOOK、GBrain、Reference 或 Growth Genome。</p>
           <label class="field"><span>Fantasy Seed 编辑器</span><textarea id="creative-fantasy-seed" rows="18" placeholder="模型候选或作者编辑内容"></textarea></label>
           <div class="action-row wrap">
@@ -208,6 +236,7 @@
         <details class="creative-stage">
           <summary>World Vision / 世界幻想画像 <span id="creative-meta-world-vision" class="count">empty · empty</span></summary>
           <p id="creative-preview-world-vision" class="reading-preview">尚未填写世界幻想画像。</p>
+          <div class="creative-read-actions"><button type="button" data-creative-edit="world_vision">编辑</button></div>
           <p class="hint">Fantasy Seed 获作者批准后才能生成；World Vision 承载幻想，不重新决定核心幻想。</p>
           <label class="field"><span>World Vision 编辑器</span><textarea id="creative-world-vision" rows="18" placeholder="模型返回或作者编辑内容"></textarea></label>
           <div class="action-row wrap">
@@ -221,6 +250,7 @@
         <details class="creative-stage">
           <summary>Story Program / 商业化结构方案 <span id="creative-meta-proposal" class="count">empty · empty</span></summary>
           <p id="creative-preview-proposal" class="reading-preview">尚未填写 Story Program。</p>
+          <div class="creative-read-actions"><button type="button" data-creative-edit="proposal">编辑</button></div>
           <p class="hint">旧 mode key 仍为 idea；本阶段只为已批准幻想提出长期运行方式，不重新选择幻想。Proposal 编辑区是唯一 Proposal 来源。</p>
           <label class="field"><span>Story Program 编辑器</span><textarea id="proposal-editor" rows="18" placeholder="模型返回或作者选择/编辑后的方案"></textarea></label>
           <div class="action-row wrap">
@@ -289,7 +319,10 @@
         <div id="design-future10-view" class="design-tab-view" data-design-view="future10" hidden>
         <div class="panorama-heading">
           <strong>未来十章阅读卡片</strong>
-          <span id="future10-count" class="count">0 章</span>
+          <div class="panorama-actions">
+            <span id="future10-count" class="count">0 章</span>
+            <button id="edit-future10" type="button">编辑 Future 10</button>
+          </div>
         </div>
         <div id="future10-cards" class="future10-cards"></div>
         <label id="small-plan-editor" class="field raw-editor">
@@ -297,12 +330,6 @@
           <textarea id="section-small_plan" data-section="small_plan" rows="11"></textarea>
         </label>
         <p class="hint">未来十章继续承担中期规划：具体剧情、结果 / 状态变化、叙事功能和结尾推动。当前章八字段请通过“当前章执行小纲”步骤生成。</p>
-        </div>
-        <div id="memory-status-editor" class="field raw-editor">
-        <label class="field">
-          <span>当前状态、未兑现承诺与作者备注</span>
-          <textarea id="section-status" data-section="status" rows="9"></textarea>
-        </label>
         </div>
       </section>
 
@@ -362,24 +389,8 @@
           <div>
             <p class="eyebrow">03 · PROMPT + CODEX RETURN</p>
             <h2>章节写作</h2>
+            <p id="chapter-generation-target" class="subtle">下一步由 Workflow State 驱动</p>
           </div>
-          <select id="prompt-mode" aria-label="Prompt 模式">
-            <option value="fantasy_seed">Fantasy Seed / 核心幻想种子</option>
-            <option value="world_vision">World Vision / 世界幻想画像</option>
-            <option value="idea">Story Program / 商业化结构方案</option>
-            <option value="outline">新书/总纲规划</option>
-            <option value="director">当前章 Director</option>
-            <option value="chapter_prep">当前章执行小纲</option>
-            <option value="chapter">单 Writer 当前章节写作</option>
-            <option value="review">十章复盘与下一批十章</option>
-            <option value="context_curator">Hybrid Context Curator</option>
-            <option value="primary_writer">Hybrid Primary Writer</option>
-            <option value="specialist_opening">Opening &amp; Scene Entry Specialist</option>
-            <option value="specialist_dialogue">Dialogue &amp; Character Voice Specialist</option>
-            <option value="specialist_action">Action &amp; Spatial Logic Specialist</option>
-            <option value="specialist_emotion">Emotion &amp; Aftermath Specialist</option>
-            <option value="chapter_integrator">Hybrid Revision Integrator</option>
-          </select>
         </div>
 
         <div class="chapter-workspace-toolbar">
@@ -390,6 +401,7 @@
           <div class="chapter-toolbar-actions">
             <button id="chapter-previous" type="button">上一章</button>
             <button id="chapter-next" type="button">下一章</button>
+            <button id="open-prompt-drawer" type="button">查看生成输入</button>
             <button id="open-executor-drawer" type="button">执行详情</button>
           </div>
         </div>
@@ -401,6 +413,10 @@
         <div class="chapter-context-toolbar">
           <span class="subtle">章节正文、Prompt 和模型返回不会自动保存。</span>
           <button id="toggle-chapter-context" type="button">显示上下文</button>
+        </div>
+
+        <div class="chapter-primary-action-row">
+          <button id="generate-prompt" class="primary" type="button">生成当前节点</button>
         </div>
 
         <details id="chapter-execution-details" class="hybrid-run execution-details">
@@ -472,9 +488,8 @@
             <span>当前大型剧情块（章节 / 当前章执行小纲模式）</span>
             <textarea id="current-long-block" rows="7" placeholder="从 100 章大型剧情块中粘贴当前所在块；不会自动注入完整100章。"></textarea>
           </label>
-          <div class="action-row wrap">
+          <div id="chapter-outline-actions" class="action-row wrap">
             <button id="load-current-chapter-plan">加载当前章计划</button>
-            <button id="generate-chapter-prep" class="primary">生成当前章执行小纲 Prompt</button>
           </div>
           <label class="field">
             <span>当前章对应的十章计划条目（按 ## 第N章：标题 严格解析）</span>
@@ -511,24 +526,7 @@
           </label>
         </div>
 
-        <div class="action-row">
-          <button id="generate-prompt" class="primary">生成当前 Prompt</button>
-          <button id="copy-prompt">复制 Prompt</button>
-          <label class="chapter-number">章节编号 <input id="chapter-number" type="number" min="1" max="9999" value="1"></label>
-        </div>
-
-        <div id="prompt-response-advanced" class="drawer-section">
-        <label class="field">
-          <span>完整 Prompt（可编辑）</span>
-          <textarea id="prompt-text" rows="19"></textarea>
-        </label>
-
-        <label class="field">
-          <span>Codex 返回文本（粘贴到这里；点击“将 Codex 返回放入 Proposal 编辑区”才会进入 Proposal 编辑区）</span>
-          <textarea id="codex-response" rows="12"></textarea>
-        </label>
-        </div>
-
+        <div id="chapter-body-editor" class="chapter-body-editor">
         <label class="field">
           <span>正式正文（保存内容；只在提取后进入 chapter-NNNN.md）</span>
           <textarea id="chapter-body-for-save" rows="12"></textarea>
@@ -536,13 +534,19 @@
         <div class="action-row wrap">
           <button id="load-current-chapter-body" type="button">加载当前正式正文</button>
         </div>
+        </div>
 
+        <div id="chapter-advanced-actions" class="chapter-advanced-actions" hidden>
+        <div class="action-row wrap">
+          <label class="chapter-number">高级章节编号 <input id="chapter-number" type="number" min="1" max="9999" value="1"></label>
+          <button id="generate-chapter-prep">生成当前章执行小纲 Prompt（高级）</button>
+        </div>
         <label class="field">
           <span>章节事实摘要（审计查看；不会写入正文）</span>
           <textarea id="chapter-fact-summary" rows="4"></textarea>
         </label>
 
-        <div class="state-delta-block">
+        <div id="state-delta-block" class="state-delta-block">
           <div class="action-row wrap">
             <button id="generate-state-delta-prompt">生成 State Delta Prompt</button>
             <button id="apply-canon-index-proposal">将 Proposed Canon Index 应用到 BOOK 状态编辑区</button>
@@ -561,26 +565,45 @@
           <button id="extract-chapter-body">提取正式正文</button>
           <button id="approve-chapter" class="primary">批准并保存章节</button>
         </div>
+        </div>
 
-        <details id="template-editor" class="template-editor">
-          <summary>编辑并保存十四个 Prompt 模板（PROMPTS.md）</summary>
-          <p class="hint">模板参与下一次生成；保存模板和生成 Prompt 是两个独立动作。</p>
-          <label class="field"><span>Fantasy Seed 模板</span><textarea id="template-fantasy_seed" rows="12"></textarea></label>
-          <label class="field"><span>World Vision 模板</span><textarea id="template-world_vision" rows="12"></textarea></label>
-          <label class="field"><span>Story Program 模板（mode key: idea）</span><textarea id="template-idea" rows="12"></textarea></label>
-          <label class="field"><span>新书/总纲规划模板</span><textarea id="template-outline" rows="10"></textarea></label>
-          <label class="field"><span>当前章执行小纲模板</span><textarea id="template-chapter_prep" rows="9"></textarea></label>
-          <label class="field"><span>当前章节写作模板</span><textarea id="template-chapter" rows="9"></textarea></label>
-          <label class="field"><span>十章复盘与下一批十章模板</span><textarea id="template-review" rows="9"></textarea></label>
-          <label class="field"><span>Hybrid Context Curator 模板</span><textarea id="template-context_curator" rows="9"></textarea></label>
-          <label class="field"><span>Hybrid Primary Writer 模板</span><textarea id="template-primary_writer" rows="9"></textarea></label>
-          <label class="field"><span>Opening &amp; Scene Entry Specialist 模板</span><textarea id="template-specialist_opening" rows="9"></textarea></label>
-          <label class="field"><span>Dialogue &amp; Character Voice Specialist 模板</span><textarea id="template-specialist_dialogue" rows="9"></textarea></label>
-          <label class="field"><span>Action &amp; Spatial Logic Specialist 模板</span><textarea id="template-specialist_action" rows="9"></textarea></label>
-          <label class="field"><span>Emotion &amp; Aftermath Specialist 模板</span><textarea id="template-specialist_emotion" rows="9"></textarea></label>
-          <label class="field"><span>Hybrid Revision Integrator 模板</span><textarea id="template-chapter_integrator" rows="9"></textarea></label>
-          <button id="save-templates">保存 Prompt 模板</button>
-        </details>
+        <div id="prompt-mode-control" class="drawer-section">
+          <label class="field">
+            <span>生成节点（高级）</span>
+            <select id="prompt-mode" aria-label="Prompt 模式">
+              <option value="fantasy_seed">Fantasy Seed / 核心幻想种子</option>
+              <option value="world_vision">World Vision / 世界幻想画像</option>
+              <option value="idea">Story Program / 商业化结构方案</option>
+              <option value="outline">新书/总纲规划</option>
+              <option value="director">当前章 Director</option>
+              <option value="chapter_prep">当前章执行小纲</option>
+              <option value="chapter">单 Writer 当前章节写作</option>
+              <option value="review">十章复盘与下一批十章</option>
+              <option value="context_curator">Hybrid Context Curator</option>
+              <option value="primary_writer">Hybrid Primary Writer</option>
+              <option value="specialist_opening">Opening &amp; Scene Entry Specialist</option>
+              <option value="specialist_dialogue">Dialogue &amp; Character Voice Specialist</option>
+              <option value="specialist_action">Action &amp; Spatial Logic Specialist</option>
+              <option value="specialist_emotion">Emotion &amp; Aftermath Specialist</option>
+              <option value="chapter_integrator">Hybrid Revision Integrator</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="prompt-response-advanced" class="drawer-section">
+        <label class="field">
+          <span>完整 Prompt（可编辑）</span>
+          <textarea id="prompt-text" rows="19"></textarea>
+        </label>
+
+        <label class="field">
+          <span>Codex 返回文本（粘贴到这里；点击“将 Codex 返回放入 Proposal 编辑区”才会进入 Proposal 编辑区）</span>
+          <textarea id="codex-response" rows="12"></textarea>
+        </label>
+        <div class="action-row">
+          <button id="copy-prompt">复制 Prompt</button>
+        </div>
+        </div>
       </section>
     </main>
       </div>
@@ -600,6 +623,6 @@
       </div>
     </aside>
 
-    <script src="{{ url_for('static', path='app.js') }}"></script>
+    <script src="{{ url_for('static', path='app.js') }}?v=4"></script>
   </body>
 </html>

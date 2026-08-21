@@ -118,7 +118,7 @@ function setView(view, updateHash = true) {
     link.classList.toggle("active", link.dataset.viewTarget === view);
   });
   document.body.dataset.view = view;
-  if (view !== "design") document.body.classList.remove("memory-editor-open");
+  if (view !== "memory") document.body.classList.remove("memory-editor-open");
   if (updateHash && window.location.hash !== `#${view}`) window.location.hash = view;
   if (view === "chapter") {
     if (["fantasy_seed", "world_vision", "idea", "outline", "review"].includes($("prompt-mode")?.value)) {
@@ -133,7 +133,10 @@ function setView(view, updateHash = true) {
 }
 
 function navigateToView(view, action = "离开当前工作区") {
-  if (view === state.view || confirmDiscardIfNeeded(action)) setView(view, true);
+  if (view === state.view) return true;
+  if (!confirmDiscardIfNeeded(action)) return false;
+  setView(view, true);
+  return true;
 }
 
 function setDesignTab(tab) {
@@ -164,12 +167,13 @@ function setChapterTab(tab) {
     const wrapper = element.closest("label") || element.closest(".state-delta-block") || element;
     wrapper.hidden = !visible;
   };
+  toggle("chapter-outline-actions", showOutline);
   toggle("current-chapter-plan", showOutline);
   toggle("current-outline", showOutline);
-  toggle("chapter-body-for-save", showBody);
-  toggle("chapter-fact-summary", showBody);
-  const delta = $("state-delta-block");
-  if (delta) delta.hidden = !showExecution;
+  const bodyEditor = $("chapter-body-editor");
+  if (bodyEditor) bodyEditor.hidden = !showBody;
+  const advanced = $("chapter-advanced-actions");
+  if (advanced) advanced.hidden = !showExecution;
   const execution = $("chapter-execution-details");
   if (execution) execution.hidden = !showExecution;
   const contextButton = $("toggle-chapter-context");
@@ -179,12 +183,15 @@ function setChapterTab(tab) {
 
 function updateChapterWorkspace() {
   const chapter = currentChapterNumber();
+  const action = chapterActionForNode(state.workflow?.next_actionable_node);
   const title = $("chapter-workspace-title");
   if (title) title.textContent = `第 ${chapter} 章`;
   const next = $("chapter-workspace-next");
-  if (next) next.textContent = state.workflow?.next_actionable_node ? `下一节点：${state.workflow.next_actionable_node}` : "等待 Workflow";
+  if (next) next.textContent = state.workflow ? `下一步：${action.title}` : "等待 Workflow";
+  const target = $("chapter-generation-target");
+  if (target) target.textContent = state.workflow ? `Workflow 下一步：${action.title}` : "加载小说后由 Workflow State 决定下一步";
   const button = $("generate-prompt");
-  if (button && $("prompt-mode")?.value === "chapter") button.textContent = "生成正文 Prompt";
+  if (button) button.textContent = action.button;
   const sidebarChapter = $("sidebar-book-chapter");
   if (sidebarChapter) sidebarChapter.textContent = `当前第 ${chapter} 章`;
 }
@@ -286,12 +293,13 @@ function renderOverview(snapshot) {
   const artifacts = snapshot?.artifacts || {};
   const stale = Object.values(artifacts).filter((entry) => entry.status === "STALE").length;
   const next = snapshot?.next_actionable_node || "等待 Workflow";
+  const nextAction = chapterActionForNode(snapshot?.next_actionable_node);
   $("overview-book").textContent = book;
-  $("overview-book-path").textContent = book === "未加载" ? "请从上方加载小说" : $("workspace-path")?.textContent || "本地工作区";
+  $("overview-book-path").textContent = book === "未加载" ? "请从上方加载小说" : "本地工作区已连接";
   $("overview-chapter").textContent = snapshot ? `第 ${chapter} 章` : "—";
   $("overview-chapter-state").textContent = snapshot ? (artifacts[`chapter.${chapter}.body`]?.status || "正文未载入") : "—";
-  $("overview-next").textContent = next;
-  $("overview-next-detail").textContent = snapshot ? "来自当前 Workflow State" : "加载小说后显示";
+  $("overview-next").textContent = snapshot ? nextAction.title : next;
+  $("overview-next-detail").textContent = snapshot ? `主操作：${nextAction.button}` : "加载小说后显示";
   $("overview-stale").textContent = snapshot ? `${stale} 项 stale` : "—";
   $("overview-stale-detail").textContent = stale ? "打开执行透明度查看依赖影响" : "暂无需要处理的 stale";
   $("continue-chapter").textContent = snapshot ? `继续写第 ${chapter} 章` : "继续写作";
@@ -309,7 +317,7 @@ function renderOverview(snapshot) {
 function mountRightDrawer() {
   const body = $("right-drawer-body");
   if (!body) return;
-  for (const id of ["workflow-panel", "prompt-response-advanced"]) {
+  for (const id of ["workflow-panel", "prompt-mode-control", "prompt-response-advanced"]) {
     const element = $(id);
     if (element && element.parentElement !== body) body.appendChild(element);
   }
@@ -362,6 +370,35 @@ const workflowLabels = {
   "book.future_10": "未来十章",
   "book.canon_state": "记忆状态",
 };
+
+const chapterActionDefaults = {
+  director: { mode: "director", title: "当前章 Director", button: "生成当前章 Director", tab: "outline" },
+  chapter_prep: { mode: "chapter_prep", title: "当前章执行小纲", button: "生成执行小纲", tab: "outline" },
+  curator: { mode: "context_curator", title: "上下文整理", button: "生成上下文整理", tab: "execution" },
+  primary: { mode: "primary_writer", title: "主稿正文", button: "生成正文草稿", tab: "body" },
+  opening: { mode: "specialist_opening", title: "开场建议", button: "生成开场建议", tab: "execution" },
+  dialogue: { mode: "specialist_dialogue", title: "对话建议", button: "生成对话建议", tab: "execution" },
+  action: { mode: "specialist_action", title: "动作建议", button: "生成动作建议", tab: "execution" },
+  emotion: { mode: "specialist_emotion", title: "情绪建议", button: "生成情绪建议", tab: "execution" },
+  integrator: { mode: "chapter_integrator", title: "整合正文", button: "生成整合正文", tab: "execution" },
+  state_delta: { mode: "state_delta", title: "状态更新", button: "生成状态更新 Prompt", tab: "execution" },
+};
+
+function chapterActionForNode(node) {
+  if (node === "primary" && $("writer-mode")?.value === "single") {
+    return { mode: "chapter", title: "正式正文", button: "生成正文 Prompt", tab: "body" };
+  }
+  return chapterActionDefaults[node] || {
+    mode: "chapter",
+    title: "正式正文",
+    button: "生成正文 Prompt",
+    tab: "body",
+  };
+}
+
+function currentChapterActionNode() {
+  return state.workflow?.next_actionable_node || "director";
+}
 
 let selectedWorkflowArtifact = "";
 
@@ -1107,19 +1144,25 @@ async function loadBook(bookId) {
 }
 
 function openMemoryEditor() {
-  navigateToView("design", "打开记忆编辑区");
-  setDesignTab("overall");
+  if (!navigateToView("memory", "打开记忆编辑区")) return;
   document.body.classList.add("memory-editor-open");
   $("memory-status-editor")?.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function openPromptTemplates() {
-  navigateToView("chapter", "打开 Prompt Templates");
+  if (!navigateToView("tools", "打开 Prompt Templates")) return;
   const editor = $("template-editor");
   if (editor) {
     editor.open = true;
     editor.scrollIntoView({ behavior: "smooth", block: "center" });
   }
+}
+
+function editFuture10() {
+  if (!navigateToView("design", "编辑 Future 10")) return;
+  setDesignTab("future10");
+  setDesignEditing(true);
+  $("small-plan-editor")?.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 function referenceValue(value) {
@@ -1459,6 +1502,70 @@ async function generateChapterPrepPrompt() {
   await activatePromptMode("chapter_prep");
   if (!loadCurrentChapterPlan()) return;
   await generatePrompt();
+}
+
+function setPromptModeSilently(mode) {
+  const select = $("prompt-mode");
+  if (!select || ![...select.options].some((option) => option.value === mode)) return;
+  select.value = mode;
+}
+
+function chapterNeedsPlan(node) {
+  return [
+    "director", "chapter_prep", "curator", "primary", "opening", "dialogue", "action", "emotion", "integrator",
+  ].includes(node);
+}
+
+async function ensureChapterRun() {
+  if (state.currentRun) return true;
+  await createRun();
+  return Boolean(state.currentRun);
+}
+
+async function prepareChapterAction() {
+  const node = currentChapterActionNode();
+  const action = chapterActionForNode(node);
+  setPromptModeSilently(action.mode);
+  setChapterTab(action.tab);
+  if (chapterNeedsPlan(node) && !$("current-chapter-plan").value.trim()) loadCurrentChapterPlan();
+  updateChapterWorkspace();
+  return { node, action };
+}
+
+async function generateCurrentChapterAction() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  const { node, action } = await prepareChapterAction();
+  if (["director", "curator", "primary", "opening", "dialogue", "action", "emotion", "integrator", "state_delta"].includes(node)) {
+    if (!await ensureChapterRun()) return;
+  }
+  if (node === "chapter_prep") {
+    await generateChapterPrepPrompt();
+  } else if (node === "state_delta") {
+    await generateStateDeltaPrompt();
+  } else if (node === "director") {
+    await generateHybridNodePrompt("director");
+  } else if (node === "primary" && action.mode === "chapter") {
+    await activatePromptMode("chapter");
+    await generatePrompt();
+  } else if (node === "primary") {
+    await generateHybridNodePrompt("primary_writer");
+  } else if (node === "curator") {
+    await generateHybridNodePrompt("context_curator");
+  } else if (node === "opening") {
+    await generateHybridNodePrompt("specialist_opening");
+  } else if (node === "dialogue") {
+    await generateHybridNodePrompt("specialist_dialogue");
+  } else if (node === "action") {
+    await generateHybridNodePrompt("specialist_action");
+  } else if (node === "emotion") {
+    await generateHybridNodePrompt("specialist_emotion");
+  } else if (node === "integrator") {
+    await generateHybridNodePrompt("chapter_integrator");
+  } else {
+    await activatePromptMode(action.mode);
+    await generatePrompt();
+  }
+  openRightDrawer();
 }
 
 function stateDeltaPayload() {
@@ -1993,7 +2100,7 @@ $("save-world-vision").addEventListener("click", () => saveCreativeArtifact("wor
 $("approve-fantasy-seed").addEventListener("click", () => approveCreativeArtifact("fantasy_seed"));
 $("approve-world-vision").addEventListener("click", () => approveCreativeArtifact("world_vision"));
 $("approve-proposal").addEventListener("click", () => approveCreativeArtifact("proposal"));
-$("generate-prompt").addEventListener("click", generatePrompt);
+$("generate-prompt").addEventListener("click", generateCurrentChapterAction);
 $("generate-director-prompt").addEventListener("click", () => generateHybridNodePrompt("director"));
 $("generate-curator-prompt").addEventListener("click", () => generateHybridNodePrompt("context_curator"));
 $("generate-primary-writer-prompt").addEventListener("click", () => generateHybridNodePrompt("primary_writer"));
@@ -2046,6 +2153,7 @@ $("chapter-number").addEventListener("change", () => {
   invalidateGbrainResults("切换章节");
   refreshPreviousChapterText();
   loadRun();
+  updateChapterWorkspace();
 });
 $("create-run").addEventListener("click", createRun);
 $("refresh-run").addEventListener("click", loadRun);
@@ -2077,12 +2185,21 @@ $("extract-chapter-body").addEventListener("click", extractChapterBody);
 $("generate-state-delta-prompt").addEventListener("click", generateStateDeltaPrompt);
 $("apply-canon-index-proposal").addEventListener("click", applyCanonIndexProposal);
 $("save-book").addEventListener("click", saveBook);
+$("save-memory").addEventListener("click", saveBook);
 $("save-templates").addEventListener("click", saveTemplates);
 $("save-proposal").addEventListener("click", saveProposal);
 $("approve-chapter").addEventListener("click", approveChapter);
 for (const artifact of Object.keys(creativeUi)) {
   $(creativeUi[artifact].editor).addEventListener("input", () => markCreativeEdited(artifact));
 }
+document.querySelectorAll("[data-creative-edit]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const stage = button.closest(".creative-stage");
+    if (!stage) return;
+    stage.open = true;
+    stage.classList.add("stage-editing");
+  });
+});
 
 document.querySelectorAll(".nav-link").forEach((link) => {
   link.addEventListener("click", (event) => {
@@ -2109,6 +2226,7 @@ document.querySelectorAll("[data-design-tab]").forEach((button) => {
   button.addEventListener("click", () => setDesignTab(button.dataset.designTab));
 });
 $("toggle-design-editor").addEventListener("click", () => setDesignEditing(!state.designEditing));
+$("edit-future10").addEventListener("click", editFuture10);
 document.querySelectorAll("[data-chapter-tab]").forEach((button) => {
   button.addEventListener("click", () => setChapterTab(button.dataset.chapterTab));
 });
@@ -2131,7 +2249,8 @@ $("chapter-next").addEventListener("click", () => {
 });
 $("continue-chapter").addEventListener("click", () => {
   if (state.workflow?.current_chapter) $("chapter-number").value = state.workflow.current_chapter;
-  navigateToView("chapter", "继续写作");
+  if (!navigateToView("chapter", "继续写作")) return;
+  prepareChapterAction();
   updateChapterWorkspace();
 });
 $("overview-open-workflow").addEventListener("click", openRightDrawer);
@@ -2142,6 +2261,7 @@ $("open-executor-drawer").addEventListener("click", () => {
   setChapterTab("execution");
   openRightDrawer();
 });
+$("open-prompt-drawer").addEventListener("click", openRightDrawer);
 $("close-right-drawer").addEventListener("click", closeRightDrawer);
 $("close-workflow-drawer").addEventListener("click", closeRightDrawer);
 document.querySelectorAll("[data-close-drawer]").forEach((element) => element.addEventListener("click", closeRightDrawer));
