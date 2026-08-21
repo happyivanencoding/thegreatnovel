@@ -1,0 +1,22 @@
+{
+  "old_snapshot_01": {
+    "status": "INVALID_CONTEXT_CONTAMINATION",
+    "target": "Chapter 1",
+    "reason": "frozen-input/BOOK.md already contained Chapter 1-3 summaries, Rift Cutter, fire-scale embryo, rescued furnace workers, and post-Chapter-3 branch state"
+  },
+  "old_snapshot_02": {
+    "status": "CLEAN",
+    "target": "《炉藏万象》 Chapter 3",
+    "source": "old-snapshot-02"
+  },
+  "old_snapshot_03": {
+    "status": "CLEAN",
+    "target": "《掌中天工》 Chapter 2",
+    "source": "old-snapshot-03"
+  },
+  "replacement_snapshot_b2": {
+    "status": "CLEAN",
+    "target": "《炉藏万象》 Chapter 2",
+    "source": "replacement-snapshot"
+  }
+}

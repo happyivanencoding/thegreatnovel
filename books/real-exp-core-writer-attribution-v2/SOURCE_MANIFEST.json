@@ -1,0 +1,34 @@
+{
+  "experiment_generation_base": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+  "code_audit_base": "d8f0a43219986cbe758647d65665062f8f8be66a",
+  "snapshot": "《炉藏万象》 Chapter 2 replacement",
+  "legacy_snapshots": {
+    "old_snapshot_01": {
+      "status": "INVALID_CONTEXT_CONTAMINATION",
+      "source": "books/real-exp-core-writer-attribution-v1/snapshot-01"
+    },
+    "snapshot_b3": {
+      "status": "CLEAN",
+      "source": "books/real-exp-core-writer-attribution-v1/snapshot-02"
+    },
+    "snapshot_c2": {
+      "status": "CLEAN",
+      "source": "books/real-exp-core-writer-attribution-v1/snapshot-03"
+    }
+  },
+  "source_paths": {
+    "book": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/runs/chapter-0001/BOOK_after_state_delta.md",
+    "outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/outline/outline_response.md",
+    "current_outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/runs/chapter-0002/chapter_prep_response.md",
+    "previous_prose": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/chapters/chapter-0001.md",
+    "fantasy_seed": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/fantasy_seed.md",
+    "world_vision": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/world_vision.md",
+    "story_program": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/story_program.md"
+  },
+  "arms": [
+    "single",
+    "primary-fallback",
+    "curator",
+    "curator-primary"
+  ]
+}

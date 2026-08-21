@@ -1,0 +1,160 @@
+{
+  "replacement": {
+    "chapter": 2,
+    "source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-core-writer-attribution-v2\\replacement-snapshot",
+    "blind": "snapshot-b2",
+    "arms": {
+      "single": {
+        "prompt_chars": 31145,
+        "response_chars": 7044,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_chars": 6672,
+        "blind_body_chars": 6672,
+        "fact_summary_chars": 152,
+        "outer_title_removed": null,
+        "presentation_format_only": true,
+        "content_scope": "CLEAN"
+      },
+      "primary-fallback": {
+        "prompt_chars": 26593,
+        "response_chars": 8326,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_chars": 7760,
+        "blind_body_chars": 7744,
+        "fact_summary_chars": 494,
+        "outer_title_removed": "## 第二章：断镐铸成裂路器",
+        "presentation_format_only": true,
+        "content_scope": "CLEAN"
+      },
+      "curator-primary": {
+        "prompt_chars": 18210,
+        "response_chars": 6826,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_chars": 6264,
+        "blind_body_chars": 6264,
+        "fact_summary_chars": 368,
+        "outer_title_removed": null,
+        "presentation_format_only": true,
+        "content_scope": "CLEAN"
+      }
+    },
+    "blind_order": [
+      "single",
+      "primary-fallback",
+      "curator-primary"
+    ],
+    "prompt_source": "books/real-exp-core-writer-attribution-v2/replacement-snapshot"
+  },
+  "snapshot_b3": {
+    "chapter": 3,
+    "source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-core-writer-attribution-v1\\snapshot-02",
+    "blind": "snapshot-b3",
+    "arms": {
+      "single": {
+        "prompt_chars": 36493,
+        "response_chars": 8200,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_chars": 7734,
+        "blind_body_chars": 7722,
+        "fact_summary_chars": 140,
+        "outer_title_removed": "## 第3章：火鳞门",
+        "presentation_format_only": true,
+        "content_scope": "CLEAN"
+      },
+      "primary-fallback": {
+        "prompt_chars": 31965,
+        "response_chars": 6492,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_chars": 6150,
+        "blind_body_chars": 6134,
+        "fact_summary_chars": 272,
+        "outer_title_removed": "## 第3章：废窟门后的火鳞",
+        "presentation_format_only": true,
+        "content_scope": "CLEAN"
+      },
+      "curator-primary": {
+        "prompt_chars": 22624,
+        "response_chars": 6886,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_chars": 6440,
+        "blind_body_chars": 6440,
+        "fact_summary_chars": 375,
+        "outer_title_removed": null,
+        "presentation_format_only": true,
+        "content_scope": "CLEAN"
+      }
+    },
+    "blind_order": [
+      "single",
+      "curator-primary",
+      "primary-fallback"
+    ],
+    "prompt_source": "books/real-exp-core-writer-attribution-v1/snapshot-02"
+  },
+  "snapshot_c2": {
+    "chapter": 2,
+    "source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-core-writer-attribution-v1\\snapshot-03",
+    "blind": "snapshot-c2",
+    "arms": {
+      "single": {
+        "prompt_chars": 29805,
+        "response_chars": 8130,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_chars": 7760,
+        "blind_body_chars": 7747,
+        "fact_summary_chars": 152,
+        "outer_title_removed": "## 第二章　灵回护腕",
+        "presentation_format_only": true,
+        "content_scope": "CLEAN"
+      },
+      "primary-fallback": {
+        "prompt_chars": 24369,
+        "response_chars": 7062,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_chars": 6559,
+        "blind_body_chars": 6542,
+        "fact_summary_chars": 394,
+        "outer_title_removed": "## 第二章　护腕收回第二口气",
+        "presentation_format_only": true,
+        "content_scope": "CLEAN"
+      },
+      "curator-primary": {
+        "prompt_chars": 14985,
+        "response_chars": 6902,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_chars": 6479,
+        "blind_body_chars": 6468,
+        "fact_summary_chars": 352,
+        "outer_title_removed": "## 第二章　断轨",
+        "presentation_format_only": true,
+        "content_scope": "CLEAN"
+      }
+    },
+    "blind_order": [
+      "single",
+      "primary-fallback",
+      "curator-primary"
+    ],
+    "prompt_source": "books/real-exp-core-writer-attribution-v1/snapshot-03"
+  },
+  "reader_calls": 3,
+  "new_content_calls": 4
+}
