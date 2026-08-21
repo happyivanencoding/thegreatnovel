@@ -16,6 +16,7 @@ from story_mvp.storage import (
     write_creative_artifact,
 )
 from story_mvp.workflow_state import workflow_impact, workflow_status
+from story_mvp.workflow_cli import apply_response
 
 
 def _book_content(
@@ -134,6 +135,9 @@ def test_editing_chapter_body_stales_its_state_delta_and_later_runs_only(tmp_pat
     assert artifacts["chapter.2.run"]["status"] == "STALE"
     assert artifacts["chapter.3.run"]["status"] == "STALE"
     assert "chapter.1.body" not in artifacts["chapter.1.body"].get("stale_from", [])
+    impact = workflow_impact(book_dir, "chapter.1.body")
+    assert "chapter.1.state_delta" in impact["existing_nodes_affected"]
+    assert "chapter.2.run" in impact["existing_nodes_affected"]
 
 
 def test_same_content_does_not_increment_revision_or_stale(tmp_path: Path) -> None:
@@ -210,3 +214,51 @@ def test_existing_chapter_can_be_manually_edited_through_unified_save_path(
     )
     assert edited.status_code == 200
     assert client.get("/api/books/chapter-edit/chapters/1").json()["content"] == "edited body"
+
+
+def test_codex_external_apply_uses_shared_service_and_cleans_workflow_temp(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    create_book("external", tmp_path)
+    write_book("external", _book_content(), tmp_path)
+    book_dir = tmp_path / "external"
+    temp_dir = book_dir / ".workflow_tmp"
+    temp_dir.mkdir()
+    response = temp_dir / "future-10.md"
+    response.write_text("## 第18章：十八\n具体剧情：外部更新", encoding="utf-8")
+
+    result = apply_response(
+        book_id="external",
+        artifact="book.future_10",
+        input_path=response,
+        source="codex_external",
+    )
+
+    assert result["status"] == "applied"
+    assert result["source"] == "codex_external"
+    assert not response.exists()
+    assert "外部更新" in (book_dir / "BOOK.md").read_text(encoding="utf-8")
+
+
+def test_codex_external_apply_run_response_uses_run_ledger(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    book_dir = create_book("external-run", tmp_path)
+    _run(book_dir, 18)
+    response = tmp_path / "response.md"
+    response.write_text("DIRECTOR RESPONSE", encoding="utf-8")
+
+    apply_response(
+        book_id="external-run",
+        artifact="chapter.18.run",
+        input_path=response,
+        source="codex_external",
+        chapter=18,
+        node="director",
+    )
+
+    manifest = json.loads(
+        (book_dir / "runs" / "chapter-0018" / "manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["nodes"]["director"]["status"] == "completed"
+    assert (book_dir / "runs" / "chapter-0018" / "director_response.md").read_text(encoding="utf-8") == "DIRECTOR RESPONSE"

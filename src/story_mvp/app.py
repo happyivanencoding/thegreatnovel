@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 
 from .gbrain import GBrainQueryError
 from .gbrain_retrieval import build_retrieval_brief, extract_hard_constraints, retrieve_gbrain
+from .openai_executor import OpenAIExecutorError, configured as openai_configured, default_model, generate_text
 from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
 from .run_ledger import (
@@ -58,6 +59,11 @@ class BookCreateRequest(BaseModel):
 
 class TextRequest(BaseModel):
     content: str = ""
+
+
+class OpenAIExecutorRequest(BaseModel):
+    prompt: str = ""
+    model: str = ""
 
 
 class CreativeArtifactRequest(BaseModel):
@@ -202,6 +208,24 @@ def get_books() -> dict[str, list[str]]:
 @app.get("/api/prompt-templates")
 def get_prompt_templates() -> dict[str, dict[str, str]]:
     return {"templates": dict(DEFAULT_PROMPT_TEMPLATES)}
+
+
+@app.get("/api/executors")
+def get_executors() -> dict[str, Any]:
+    return {
+        "manual": {"available": True},
+        "codex_external": {"available": True},
+        "openai_api": {"available": True, "configured": openai_configured(), "model": default_model()},
+    }
+
+
+@app.post("/api/executors/openai")
+def post_openai_executor(payload: OpenAIExecutorRequest) -> dict[str, str]:
+    try:
+        return generate_text(payload.prompt, model=payload.model)
+    except OpenAIExecutorError as error:
+        status_code = 503 if not error.configured else 502
+        raise HTTPException(status_code=status_code, detail=str(error)) from error
 
 
 @app.post("/api/books", status_code=201)

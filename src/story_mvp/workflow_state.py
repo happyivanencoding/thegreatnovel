@@ -277,13 +277,20 @@ def _mark_run_stale(book_directory: Path, chapter_number: int) -> None:
         return
 
 
-def _existing_future_run_numbers(book_directory: Path, *, allowed: set[int] | None = None) -> list[int]:
+def _existing_future_run_numbers(
+    book_directory: Path,
+    *,
+    allowed: set[int] | None = None,
+    after: int | None = None,
+) -> list[int]:
     protected = _protected_chapters(book_directory)
     numbers = []
     for number, _, _ in _manifest_files(book_directory):
         if number in protected:
             continue
         if allowed is not None and number not in allowed:
+            continue
+        if after is not None and number <= after:
             continue
         numbers.append(number)
     return sorted(set(numbers))
@@ -634,6 +641,20 @@ def workflow_status(book_directory: Path) -> dict[str, Any]:
 
 def _dependents_for_impact(book_directory: Path, artifact: str) -> list[str]:
     state = ensure_workflow_state(book_directory)
+    parsed = parse_chapter_artifact_key(artifact)
+    if parsed:
+        chapter_number, kind = parsed
+        if kind == "body":
+            result = [chapter_artifact_key(chapter_number, "state_delta")]
+            result.extend(
+                chapter_artifact_key(number, "run")
+                for number in _existing_future_run_numbers(book_directory, after=chapter_number)
+            )
+            return [key for key in result if key in state["artifacts"]]
+        if kind == "run":
+            return []
+        if kind == "state_delta":
+            return []
     if artifact == "book.future_10":
         content = _read_text(book_directory / "BOOK.md")
         from .storage import parse_book_sections

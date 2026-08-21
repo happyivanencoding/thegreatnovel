@@ -10,6 +10,7 @@ requires-python = ">=3.11"
 dependencies = [
   "fastapi>=0.115",
   "jinja2>=3.1",
+  "openai>=1.0",
   "PyYAML>=6.0",
   "uvicorn[standard]>=0.30",
 ]
@@ -19,6 +20,7 @@ test = ["pytest>=8.0", "httpx>=0.27"]
 
 [project.scripts]
 story-mvp = "story_mvp.__main__:main"
+story-mvp-workflow = "story_mvp.workflow_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
