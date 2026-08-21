@@ -1,0 +1,44 @@
+{
+  "experiment_generation_base": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+  "experiment_generation_tree": "books/real-exp-opening-pipeline-comparison-v2",
+  "code_audit_base": "53394ea356393c904e82d988e7b5ae634d2487f7",
+  "v1_source_tree": "books/real-exp-opening-pipeline-comparison-v1",
+  "v1_source_commit": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+  "candidate_c_chapters": [
+    {
+      "primary_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/primary_response.md",
+      "final_formal_prose": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/final_formal_prose.md",
+      "integrator_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/integrator_response.md",
+      "manifest": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/manifest.json",
+      "execution": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/execution.json",
+      "selected_specialists": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/_operation/chapter-0001/selected_specialists.md",
+      "specialists": {
+        "opening": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/opening_response.md",
+        "action": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/action_response.md"
+      }
+    },
+    {
+      "primary_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/primary_response.md",
+      "final_formal_prose": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/final_formal_prose.md",
+      "integrator_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/integrator_response.md",
+      "manifest": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/manifest.json",
+      "execution": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/execution.json",
+      "selected_specialists": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/_operation/chapter-0002/selected_specialists.md",
+      "specialists": {
+        "dialogue": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/dialogue_response.md",
+        "action": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/action_response.md"
+      }
+    },
+    {
+      "primary_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/primary_response.md",
+      "final_formal_prose": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/final_formal_prose.md",
+      "integrator_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/integrator_response.md",
+      "manifest": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/manifest.json",
+      "execution": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/execution.json",
+      "selected_specialists": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/_operation/chapter-0003/selected_specialists.md",
+      "specialists": {
+        "action": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/action_response.md"
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "candidate": "candidate-b",
+    "book": "《炉藏万象》",
+    "chapter": 1,
+    "source_commit": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+    "source_path": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/runs/chapter-0001/execution.json",
+    "selected_specialists": [],
+    "integrator_executed": false,
+    "final_source": "primary",
+    "model_calls": 5
+  },
+  {
+    "candidate": "candidate-b",
+    "book": "《炉藏万象》",
+    "chapter": 2,
+    "source_commit": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+    "source_path": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/runs/chapter-0002/execution.json",
+    "selected_specialists": [],
+    "integrator_executed": false,
+    "final_source": "primary",
+    "model_calls": 5
+  },
+  {
+    "candidate": "candidate-b",
+    "book": "《炉藏万象》",
+    "chapter": 3,
+    "source_commit": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+    "source_path": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/runs/chapter-0003/execution.json",
+    "selected_specialists": [],
+    "integrator_executed": false,
+    "final_source": "primary",
+    "model_calls": 5
+  }
+]

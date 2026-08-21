@@ -1,0 +1,164 @@
+[
+  {
+    "candidate": "candidate-c",
+    "book": "《掌中天工》",
+    "chapter": 1,
+    "source_commit": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+    "source_paths": {
+      "primary_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/primary_response.md",
+      "final_formal_prose": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/final_formal_prose.md",
+      "integrator_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/integrator_response.md",
+      "manifest": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/manifest.json",
+      "execution": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/execution.json",
+      "selected_specialists": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/_operation/chapter-0001/selected_specialists.md",
+      "specialists": {
+        "opening": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/opening_response.md",
+        "action": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/action_response.md"
+      }
+    },
+    "selected_specialists_file": [
+      "opening",
+      "action"
+    ],
+    "completed_specialists": [
+      "opening",
+      "action"
+    ],
+    "specialist_call_count": 2,
+    "integrator_call_count": 1,
+    "integrator_final_source": "integrator",
+    "model_calls": 8,
+    "proposed_patches": [
+      {
+        "specialist": "action",
+        "number": 1,
+        "text": "## Patch 1\n目标锚点：“第三个人爬到一半，肩膀被一块落石擦过，唐鹭用膝盖顶住车架，硬是把他推了出来。”之后、“四个人一个接一个滚到外面的碎石地上。”之前\n操作：insert_after\n建议文本：唐鹭确认三个人都过了缝，才侧身从车架下抽出被压住的手臂，贴着矿车留下的窄缝一点点挪出来。她最后滚过塌口，肩背擦着落石，落到外面的碎石地上。\n理由：补足唐鹭从受压位置到出口外的可见路径，使后文“四个人”与前文三名矿奴的逐个脱险对应起来，同时不新增事件或改变救援结果。"
+      }
+    ],
+    "accepted_patch_count": 1,
+    "change_class": "B_LOCAL_REPAIR_WITH_RHYTHM_REGRESSION",
+    "blind_position": {
+      "option_a": "primary",
+      "option_b": "final"
+    },
+    "primary_chars": 4524,
+    "final_chars": 4595,
+    "textual_diff_size": 71,
+    "changed_paragraph_count": 1,
+    "primary_paragraphs": 136,
+    "final_paragraphs": 137,
+    "final_equals_primary": false
+  },
+  {
+    "candidate": "candidate-c",
+    "book": "《掌中天工》",
+    "chapter": 2,
+    "source_commit": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+    "source_paths": {
+      "primary_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/primary_response.md",
+      "final_formal_prose": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/final_formal_prose.md",
+      "integrator_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/integrator_response.md",
+      "manifest": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/manifest.json",
+      "execution": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/execution.json",
+      "selected_specialists": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/_operation/chapter-0002/selected_specialists.md",
+      "specialists": {
+        "dialogue": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/dialogue_response.md",
+        "action": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/action_response.md"
+      }
+    },
+    "selected_specialists_file": [
+      "dialogue",
+      "action"
+    ],
+    "completed_specialists": [
+      "dialogue",
+      "action"
+    ],
+    "specialist_call_count": 2,
+    "integrator_call_count": 1,
+    "integrator_final_source": "integrator",
+    "model_calls": 8,
+    "proposed_patches": [
+      {
+        "specialist": "dialogue",
+        "number": 1,
+        "text": "## Patch 1\n目标锚点：从 `“你知道这车哪里坏？”唐鹭问。` 至 `“所以得快。”`\n操作：replace\n建议文本：\n“你知道这车哪里坏？”唐鹭问。\n\n沈砚摸过车底裂口：“承重骨裂了，前轮会在断轨上卡死。”\n\n“那还推？”\n\n“推到它卡。”\n\n唐鹭盯着他：“你故意的？”\n\n“等阵盘断灵。”\n\n“车里的人呢？”\n\n沈砚抬眼看向车斗：“我先接住车。”\n理由：把沈砚主动等待断灵、以矿车作为试点的风险选择交给对白，同时保留唐鹭对车上人的直接关切；两人的短句分别体现器物判断和人员退路，不改变后续卡车、断灵与两次修补的事件顺序。"
+      },
+      {
+        "specialist": "dialogue",
+        "number": 2,
+        "text": "## Patch 2\n目标锚点：从 `“下一班，”他说，“跟我进去。”` 至 `“那条不该有灵气的巷子。”`\n操作：replace\n建议文本：\n“下一班，”他说，“跟我进去。”\n\n唐鹭皱眉：“你听见什么了？”\n\n“下面有人在喘。”\n\n“矿奴？”\n\n“成片的，气都在往下沉。”\n\n唐鹭看向霍沉刚下令的中央矿脉：“他把人往那边赶，你还要进那条不该有灵气的巷子？”\n\n“正要趁没人进去。”\n\n她抹掉掌根的血：“我跟你去。你要是再拿一车人试路，先告诉我。”\n理由：先用可听见的呼吸和下沉动作承接破阵片的异常，再让唐鹭明确选择跟随并给沈砚设下协作边界；保留进入支巷、调查吞息脉动和下一章推动，不新增决定或资源变化。"
+      }
+    ],
+    "accepted_patch_count": 1,
+    "change_class": "C_DIALOGUE_AND_CHARACTER_REPAIR",
+    "blind_position": {
+      "option_a": "final",
+      "option_b": "primary"
+    },
+    "primary_chars": 6629,
+    "final_chars": 6713,
+    "textual_diff_size": 130,
+    "changed_paragraph_count": 8,
+    "primary_paragraphs": 220,
+    "final_paragraphs": 224,
+    "final_equals_primary": false
+  },
+  {
+    "candidate": "candidate-c",
+    "book": "《掌中天工》",
+    "chapter": 3,
+    "source_commit": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+    "source_paths": {
+      "primary_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/primary_response.md",
+      "final_formal_prose": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/final_formal_prose.md",
+      "integrator_response": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/integrator_response.md",
+      "manifest": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/manifest.json",
+      "execution": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/execution.json",
+      "selected_specialists": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/_operation/chapter-0003/selected_specialists.md",
+      "specialists": {
+        "action": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0003/action_response.md"
+      }
+    },
+    "selected_specialists_file": [
+      "action"
+    ],
+    "completed_specialists": [
+      "action"
+    ],
+    "specialist_call_count": 1,
+    "integrator_call_count": 1,
+    "integrator_final_source": "integrator",
+    "model_calls": 7,
+    "proposed_patches": [
+      {
+        "specialist": "action",
+        "number": 1,
+        "text": "## Patch 1\n\n目标锚点：`“把它拖到废弃支巷口，写维修记录。”霍沉说，`\n操作：insert_after\n建议文本：\n\n`霍沉从腰间取出一枚空白记录片，拍进沈砚手里：“修完带回来。”沈砚将记录片收进袖口。`\n\n理由：在霍沉要求写维修记录的当下交代记录片来源，使章末拿出并伪造记录的动作连续，不改变伪造内容或结尾推动。"
+      },
+      {
+        "specialist": "action",
+        "number": 2,
+        "text": "## Patch 2\n\n目标锚点：`她把短锁塞回怀里，又顺手从散落的工具中捡起一把窄口钳，转身时用鞋尖把两枚旧铜销踢到沈砚脚边。`\n操作：insert_after\n建议文本：\n\n`沈砚从旁边散落的工具里拿起一柄短锤，别在腰后。`\n\n理由：为随后敲平滑轮轴孔、撬动扁铁以及在记录片上划字的同一件工具建立来源，不增加新的能力或资源。"
+      },
+      {
+        "specialist": "action",
+        "number": 3,
+        "text": "## Patch 3\n\n目标锚点：`片上的半圈残纹没有发光，只是微微发热。原本断开的沟槽贴住阵壁之后，三条细线从黑铜片边缘显出来：一条向左，接进矿脉；一条向上，穿过他们脚下的门框，像是连着每一个戴炉印的人；还有一条向下，落在石壁下方一圈不断收缩的黑色凹槽里。`\n操作：replace\n建议文本：\n\n`片上的半圈残纹没有发光，只是微微发热。原本断开的沟槽贴住阵壁之后，三条细线从黑铜片边缘显出来：一条向左，接进矿脉；一条向上，沿门框穿回窄门外，像是连着每一个戴炉印的人；还有一条向下，落在石壁下方一圈不断收缩的黑色凹槽里。`\n\n理由：把连接炉印的线路明确落到窄门外的矿道，修正“脚下的门框”造成的方位冲突，同时保留三条线汇入阵眼及后续抽取判断。"
+      }
+    ],
+    "accepted_patch_count": 3,
+    "change_class": "C_ACTION_CONTINUITY_AND_SPATIAL_REPAIR",
+    "blind_position": {
+      "option_a": "primary",
+      "option_b": "final"
+    },
+    "primary_chars": 8023,
+    "final_chars": 8090,
+    "textual_diff_size": 81,
+    "changed_paragraph_count": 4,
+    "primary_paragraphs": 289,
+    "final_paragraphs": 291,
+    "final_equals_primary": false
+  }
+]
