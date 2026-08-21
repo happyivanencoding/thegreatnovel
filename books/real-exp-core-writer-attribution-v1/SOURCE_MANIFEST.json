@@ -1,0 +1,94 @@
+{
+  "experiment_generation_base": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+  "code_audit_base": "c405b7d1b6d7ad89fc7a41ce1a4da4126aa4dc42",
+  "arms": {
+    "single": {
+      "content_calls": 1,
+      "mode": "chapter"
+    },
+    "primary-fallback": {
+      "content_calls": 1,
+      "mode": "primary_writer",
+      "curator_response": ""
+    },
+    "curator": {
+      "content_calls": 1,
+      "mode": "context_curator"
+    },
+    "curator-primary": {
+      "content_calls": 1,
+      "mode": "primary_writer",
+      "curator_response": "raw curator response"
+    }
+  },
+  "snapshots": {
+    "snapshot-01": {
+      "book": "《炉藏万象》",
+      "candidate": "candidate-b",
+      "chapter": 1,
+      "purpose": "Opening、第一异能高光、世界到主角收缩",
+      "source_paths": {
+        "book": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/BOOK.md",
+        "outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/outline/outline_response.md",
+        "current_outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/runs/chapter-0001/chapter_prep_response.md",
+        "previous_prose": [],
+        "fantasy_seed": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/fantasy_seed.md",
+        "world_vision": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/world_vision.md",
+        "story_program": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/story_program.md"
+      },
+      "prompt_files": {
+        "single": "snapshot-01/single/prompt.md",
+        "primary-fallback": "snapshot-01/primary-fallback/prompt.md",
+        "curator": "snapshot-01/curator/prompt.md",
+        "curator-primary": "snapshot-01/curator-primary/prompt.md (after curator response)"
+      }
+    },
+    "snapshot-02": {
+      "book": "《炉藏万象》",
+      "candidate": "candidate-b",
+      "chapter": 3,
+      "purpose": "资产复利、人物协作、空间和下一阶段入口",
+      "source_paths": {
+        "book": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/runs/chapter-0002/BOOK_after_state_delta.md",
+        "outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/outline/outline_response.md",
+        "current_outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/runs/chapter-0003/chapter_prep_response.md",
+        "previous_prose": [
+          "books/real-exp-opening-pipeline-comparison-v2/candidate-b/chapters/chapter-0001.md",
+          "books/real-exp-opening-pipeline-comparison-v2/candidate-b/chapters/chapter-0002.md"
+        ],
+        "fantasy_seed": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/fantasy_seed.md",
+        "world_vision": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/world_vision.md",
+        "story_program": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/story_program.md"
+      },
+      "prompt_files": {
+        "single": "snapshot-02/single/prompt.md",
+        "primary-fallback": "snapshot-02/primary-fallback/prompt.md",
+        "curator": "snapshot-02/curator/prompt.md",
+        "curator-primary": "snapshot-02/curator-primary/prompt.md (after curator response)"
+      }
+    },
+    "snapshot-03": {
+      "book": "《掌中天工》",
+      "candidate": "candidate-c",
+      "chapter": 2,
+      "purpose": "动作、机械空间、对白、能力第二次应用",
+      "source_paths": {
+        "book": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/BOOK_after_state_delta.md",
+        "outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/outline/outline_response.md",
+        "current_outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/chapter_prep_response.md",
+        "previous_prose": [
+          "books/real-exp-opening-pipeline-comparison-v2/candidate-c/chapters/chapter-0001.md"
+        ],
+        "fantasy_seed": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/source/fantasy_seed.md",
+        "world_vision": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/source/world_vision.md",
+        "story_program": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/source/story_program.md"
+      },
+      "prompt_files": {
+        "single": "snapshot-03/single/prompt.md",
+        "primary-fallback": "snapshot-03/primary-fallback/prompt.md",
+        "curator": "snapshot-03/curator/prompt.md",
+        "curator-primary": "snapshot-03/curator-primary/prompt.md (after curator response)"
+      }
+    }
+  }
+}

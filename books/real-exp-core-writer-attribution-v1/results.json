@@ -1,0 +1,303 @@
+{
+  "blind_seed": 20260821,
+  "content_call_count": 12,
+  "snapshots": {
+    "snapshot-01": {
+      "curator": {
+        "prompt_chars": 10096,
+        "response_chars": 4670,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Curated Chapter Context",
+          "Opening Three Chapter Contract",
+          "前文章末局部衔接片段"
+        ]
+      },
+      "single": {
+        "prompt_chars": 14210,
+        "response_chars": 4127,
+        "body_chars": 3641,
+        "fact_summary_chars": 184,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_headings": [],
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CHAPTER MISSION",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Opening Three Chapter Contract"
+        ],
+        "format_notes": [
+          "BODY_HAS_NO_MARKDOWN_CHAPTER_HEADING"
+        ]
+      },
+      "primary-fallback": {
+        "prompt_chars": 9662,
+        "response_chars": 4584,
+        "body_chars": 3980,
+        "fact_summary_chars": 300,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_headings": [
+          "## 第四章　火线尽头"
+        ],
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Curated Chapter Context",
+          "Opening Three Chapter Contract"
+        ],
+        "format_notes": [
+          "BODY_TITLE_CHAPTER_MISMATCH_EXPECTED_CHAPTER_1"
+        ]
+      },
+      "curator-primary": {
+        "prompt_chars": 10675,
+        "response_chars": 5709,
+        "body_chars": 5125,
+        "fact_summary_chars": 366,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_headings": [],
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Curated Chapter Context",
+          "Opening Three Chapter Contract"
+        ],
+        "format_notes": [
+          "BODY_HAS_NO_MARKDOWN_CHAPTER_HEADING"
+        ]
+      },
+      "blind_order": [
+        "curator-primary",
+        "primary-fallback",
+        "single"
+      ]
+    },
+    "snapshot-02": {
+      "curator": {
+        "prompt_chars": 22131,
+        "response_chars": 4350,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Curated Chapter Context",
+          "Opening Three Chapter Contract",
+          "前文章末局部衔接片段"
+        ]
+      },
+      "single": {
+        "prompt_chars": 36493,
+        "response_chars": 8200,
+        "body_chars": 7734,
+        "fact_summary_chars": 140,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_headings": [
+          "## 第3章：火鳞门"
+        ],
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CHAPTER MISSION",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Opening Three Chapter Contract"
+        ],
+        "format_notes": []
+      },
+      "primary-fallback": {
+        "prompt_chars": 31965,
+        "response_chars": 6492,
+        "body_chars": 6150,
+        "fact_summary_chars": 272,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_headings": [
+          "## 第3章：废窟门后的火鳞"
+        ],
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Curated Chapter Context",
+          "Opening Three Chapter Contract"
+        ],
+        "format_notes": []
+      },
+      "curator-primary": {
+        "prompt_chars": 22624,
+        "response_chars": 6886,
+        "body_chars": 6440,
+        "fact_summary_chars": 375,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_headings": [],
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Curated Chapter Context",
+          "Opening Three Chapter Contract"
+        ],
+        "format_notes": [
+          "BODY_HAS_NO_MARKDOWN_CHAPTER_HEADING"
+        ]
+      },
+      "blind_order": [
+        "primary-fallback",
+        "single",
+        "curator-primary"
+      ]
+    },
+    "snapshot-03": {
+      "curator": {
+        "prompt_chars": 22080,
+        "response_chars": 4266,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Curated Chapter Context",
+          "Opening Three Chapter Contract",
+          "前文章末局部衔接片段"
+        ]
+      },
+      "single": {
+        "prompt_chars": 29805,
+        "response_chars": 8130,
+        "body_chars": 7760,
+        "fact_summary_chars": 152,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_headings": [
+          "## 第二章　灵回护腕"
+        ],
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CHAPTER MISSION",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Opening Three Chapter Contract"
+        ],
+        "format_notes": []
+      },
+      "primary-fallback": {
+        "prompt_chars": 24369,
+        "response_chars": 7062,
+        "body_chars": 6559,
+        "fact_summary_chars": 394,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_headings": [
+          "## 第二章　护腕收回第二口气"
+        ],
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Curated Chapter Context",
+          "Opening Three Chapter Contract"
+        ],
+        "format_notes": []
+      },
+      "curator-primary": {
+        "prompt_chars": 14985,
+        "response_chars": 6902,
+        "body_chars": 6479,
+        "fact_summary_chars": 352,
+        "actual_input_tokens": "UNKNOWN",
+        "actual_output_tokens": "UNKNOWN",
+        "call_count": 1,
+        "body_headings": [
+          "## 第二章　断轨"
+        ],
+        "prompt_context_labels": [
+          "AUTHORITY",
+          "BOOK CONTRACT",
+          "CANON PROSE",
+          "CANON INDEX",
+          "PLAN",
+          "PROSE PROFILE",
+          "OPTIONAL INSPIRATION",
+          "Curated Chapter Context",
+          "Opening Three Chapter Contract"
+        ],
+        "format_notes": []
+      },
+      "blind_order": [
+        "single",
+        "primary-fallback",
+        "curator-primary"
+      ]
+    }
+  },
+  "tokens": "UNKNOWN"
+}

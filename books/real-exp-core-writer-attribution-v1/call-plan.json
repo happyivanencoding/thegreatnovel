@@ -1,0 +1,9 @@
+{
+  "snapshots": [
+    "snapshot-01",
+    "snapshot-02",
+    "snapshot-03"
+  ],
+  "maximum_content_calls": 12,
+  "planned_calls": 12
+}

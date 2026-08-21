@@ -1,0 +1,20 @@
+{
+  "candidate": "candidate-c",
+  "book": "《掌中天工》",
+  "chapter": 2,
+  "purpose": "动作、机械空间、对白、能力第二次应用",
+  "source_commit": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+  "source_paths": {
+    "book": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0001/BOOK_after_state_delta.md",
+    "outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/outline/outline_response.md",
+    "current_outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/runs/chapter-0002/chapter_prep_response.md",
+    "previous_prose": [
+      "books/real-exp-opening-pipeline-comparison-v2/candidate-c/chapters/chapter-0001.md"
+    ],
+    "fantasy_seed": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/source/fantasy_seed.md",
+    "world_vision": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/source/world_vision.md",
+    "story_program": "books/real-exp-opening-pipeline-comparison-v2/candidate-c/source/story_program.md"
+  },
+  "gbrain_inspiration": "",
+  "optional_inspiration_source": "EMPTY_BY_FROZEN_V2_RUNTIME"
+}

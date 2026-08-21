@@ -1,0 +1,18 @@
+{
+  "candidate": "candidate-b",
+  "book": "《炉藏万象》",
+  "chapter": 1,
+  "purpose": "Opening、第一异能高光、世界到主角收缩",
+  "source_commit": "d4e2dd6f3377f967d8930480016f15a450b74e1b",
+  "source_paths": {
+    "book": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/BOOK.md",
+    "outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/outline/outline_response.md",
+    "current_outline": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/runs/chapter-0001/chapter_prep_response.md",
+    "previous_prose": [],
+    "fantasy_seed": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/fantasy_seed.md",
+    "world_vision": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/world_vision.md",
+    "story_program": "books/real-exp-opening-pipeline-comparison-v2/candidate-b/source/story_program.md"
+  },
+  "gbrain_inspiration": "",
+  "optional_inspiration_source": "EMPTY_BY_FROZEN_V2_RUNTIME"
+}
