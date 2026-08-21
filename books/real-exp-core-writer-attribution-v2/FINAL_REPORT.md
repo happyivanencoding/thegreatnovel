@@ -4,13 +4,14 @@
 
 - branch：`principal_dev_new_sys`
 - BASE_SHA：`d8f0a43219986cbe758647d65665062f8f8be66a`
-- FINAL_SHA：最终 handoff 回填
-- pushed：最终 handoff 回填
+- EXPERIMENT_ARTIFACT_COMMIT：`47198c0579b259571ce9b02d0015627745f0eeee`
+- FINAL_SHA：`47198c0579b259571ce9b02d0015627745f0eeee`（实验内容提交）
+- pushed：`yes`
 - no new branch：确认未创建
 - production backend modified：`no`
 - frontend modified：`no`
 - Prompt modified：`no`
-- git status：最终 handoff 核对
+- git status：handoff 前核对 clean
 
 ## Validity
 
