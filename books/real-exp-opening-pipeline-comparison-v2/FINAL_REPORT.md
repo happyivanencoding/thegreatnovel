@@ -4,8 +4,8 @@
 
 - BASE_SHA：`bf5259c91e9ea2c007fd049f4b0500117121c290`
 - branch：`backend-opening-pipeline-comparison-v1`
-- final commit(s)：`d8d9858` + 本报告 finalization commit（HEAD）
-- pushed：yes（待本次 finalization commit 推送）
+- final commit(s)：`d8d9858`、`8c07bff` + 本次状态修正 commit（HEAD）
+- pushed：yes
 - 实验主目录：`books/real-exp-opening-pipeline-comparison-v2/`
 - v1 处理：`real-exp-opening-pipeline-comparison-v1` 保留为原始证据；因 Chapter 2 被并行执行流竞争写入，未作为最终比较结果。
 
