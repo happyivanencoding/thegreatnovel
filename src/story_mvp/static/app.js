@@ -6,6 +6,11 @@ const state = {
   creativeArtifacts: {},
   creativeSources: {},
   workflow: null,
+  view: "overview",
+  designTab: "overall",
+  chapterTab: "outline",
+  designEditing: false,
+  dirtyEditors: new Set(),
 };
 
 const creativeUi = {
@@ -63,6 +68,283 @@ const designTitles = {
 
 const $ = (id) => document.getElementById(id);
 
+const viewNames = new Set(["overview", "creative", "design", "chapter", "memory", "tools"]);
+
+function currentViewFromHash() {
+  const value = window.location.hash.replace(/^#/, "");
+  return viewNames.has(value) ? value : "overview";
+}
+
+function dirtyEditorIds() {
+  return [...document.querySelectorAll("textarea:not([readonly])"), $("creative-direction")]
+    .map((element) => element.id)
+    .filter(Boolean);
+}
+
+function markEditorDirty(id) {
+  if (!id || !state.bookId) return;
+  state.dirtyEditors.add(id);
+  renderDirtyState();
+}
+
+function clearEditorDirty(ids = dirtyEditorIds()) {
+  for (const id of ids) state.dirtyEditors.delete(id);
+  renderDirtyState();
+}
+
+function hasDirtyEditors() {
+  return state.dirtyEditors.size > 0;
+}
+
+function confirmDiscardIfNeeded(action = "离开当前工作区") {
+  if (!hasDirtyEditors()) return true;
+  return window.confirm(`当前有未保存的编辑，${action}不会自动保存。继续吗？`);
+}
+
+function renderDirtyState() {
+  const count = state.dirtyEditors.size;
+  const overview = $("overview-dirty");
+  if (overview) overview.textContent = count ? `未保存编辑 ${count} 项` : "";
+  document.body.classList.toggle("has-unsaved-edits", count > 0);
+}
+
+function setView(view, updateHash = true) {
+  if (!viewNames.has(view)) view = "overview";
+  state.view = view;
+  document.querySelectorAll(".workspace-view").forEach((element) => {
+    element.hidden = element.dataset.view !== view;
+  });
+  document.querySelectorAll(".nav-link").forEach((link) => {
+    link.classList.toggle("active", link.dataset.viewTarget === view);
+  });
+  document.body.dataset.view = view;
+  if (view !== "design") document.body.classList.remove("memory-editor-open");
+  if (updateHash && window.location.hash !== `#${view}`) window.location.hash = view;
+  if (view === "chapter") {
+    if (["fantasy_seed", "world_vision", "idea", "outline", "review"].includes($("prompt-mode")?.value)) {
+      $("prompt-mode").value = "chapter";
+    }
+    setChapterTab(state.chapterTab);
+    updateChapterWorkspace();
+  }
+  if (view === "design") setDesignTab(state.designTab);
+  if (view === "memory") renderMemoryWorkspace();
+  renderDirtyState();
+}
+
+function navigateToView(view, action = "离开当前工作区") {
+  if (view === state.view || confirmDiscardIfNeeded(action)) setView(view, true);
+}
+
+function setDesignTab(tab) {
+  if (!["overall", "midterm", "future10"].includes(tab)) tab = "overall";
+  state.designTab = tab;
+  document.querySelectorAll("[data-design-view]").forEach((element) => {
+    element.hidden = element.dataset.designView !== tab;
+  });
+  document.querySelectorAll("[data-design-tab]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.designTab === tab);
+  });
+  if (tab === "midterm") renderLongPlanPanorama();
+  if (tab === "future10") renderFuture10Cards();
+}
+
+function setChapterTab(tab) {
+  if (!["outline", "body", "execution"].includes(tab)) tab = "outline";
+  state.chapterTab = tab;
+  document.querySelectorAll("[data-chapter-tab]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.chapterTab === tab);
+  });
+  const showOutline = tab === "outline" || tab === "execution";
+  const showBody = tab === "body" || tab === "execution";
+  const showExecution = tab === "execution";
+  const toggle = (id, visible) => {
+    const element = $(id);
+    if (!element) return;
+    const wrapper = element.closest("label") || element.closest(".state-delta-block") || element;
+    wrapper.hidden = !visible;
+  };
+  toggle("current-chapter-plan", showOutline);
+  toggle("current-outline", showOutline);
+  toggle("chapter-body-for-save", showBody);
+  toggle("chapter-fact-summary", showBody);
+  const delta = $("state-delta-block");
+  if (delta) delta.hidden = !showExecution;
+  const execution = $("chapter-execution-details");
+  if (execution) execution.hidden = !showExecution;
+  const contextButton = $("toggle-chapter-context");
+  if (contextButton) contextButton.textContent = document.body.classList.contains("chapter-context-open") ? "隐藏上下文" : "显示上下文";
+  document.body.dataset.chapterTab = tab;
+}
+
+function updateChapterWorkspace() {
+  const chapter = currentChapterNumber();
+  const title = $("chapter-workspace-title");
+  if (title) title.textContent = `第 ${chapter} 章`;
+  const next = $("chapter-workspace-next");
+  if (next) next.textContent = state.workflow?.next_actionable_node ? `下一节点：${state.workflow.next_actionable_node}` : "等待 Workflow";
+  const button = $("generate-prompt");
+  if (button && $("prompt-mode")?.value === "chapter") button.textContent = "生成正文 Prompt";
+  const sidebarChapter = $("sidebar-book-chapter");
+  if (sidebarChapter) sidebarChapter.textContent = `当前第 ${chapter} 章`;
+}
+
+function renderDesignPreviews() {
+  for (const key of Object.keys(designTitles)) {
+    const target = $("design-preview-" + key);
+    const source = $("design-" + key);
+    if (!target || !source) continue;
+    const value = source.value.trim().replace(/\s+/g, " ");
+    target.textContent = value ? (value.length > 220 ? `${value.slice(0, 220)}…` : value) : "尚未填写。";
+  }
+}
+
+function parseFuture10Entries(text) {
+  const headingPattern = /^\s*##\s*第\s*(\d+)\s*章\s*[：:]\s*(.+?)\s*$/;
+  const entries = [];
+  let current = null;
+  for (const line of text.split(/\r?\n/)) {
+    const match = line.match(headingPattern);
+    if (match) {
+      if (current) entries.push(current);
+      current = { number: Number(match[1]), title: match[2], lines: [] };
+    } else if (current) {
+      current.lines.push(line);
+    }
+  }
+  if (current) entries.push(current);
+  return entries;
+}
+
+function renderFuture10Cards() {
+  const container = $("future10-cards");
+  if (!container) return;
+  const entries = parseFuture10Entries($("section-small_plan")?.value || "");
+  $("future10-count").textContent = `${entries.length} 章`;
+  container.replaceChildren();
+  if (!entries.length) {
+    const empty = document.createElement("p");
+    empty.className = "panorama-empty";
+    empty.textContent = "尚未识别到 ## 第N章：标题 格式；原文仍可编辑。";
+    container.appendChild(empty);
+    return;
+  }
+  for (const entry of entries) {
+    const card = document.createElement("article");
+    card.className = "future10-card";
+    const heading = document.createElement("strong");
+    heading.textContent = `第${entry.number}章 · ${entry.title}`;
+    const summary = document.createElement("p");
+    summary.textContent = entry.lines.filter((line) => line.trim()).slice(0, 4).join(" ") || "尚未填写章节小纲。";
+    card.append(heading, summary);
+    container.appendChild(card);
+  }
+}
+
+function memorySection(text, heading) {
+  const lines = text.split(/\r?\n/);
+  const index = lines.findIndex((line) => line.trim().toUpperCase() === `## ${heading}`);
+  if (index < 0) return "";
+  const result = [];
+  for (const line of lines.slice(index + 1)) {
+    if (/^##\s+/.test(line.trim())) break;
+    result.push(line);
+  }
+  return result.join("\n").trim();
+}
+
+function renderMemoryWorkspace() {
+  const container = $("memory-cards");
+  if (!container) return;
+  const status = $("section-status")?.value || "";
+  container.replaceChildren();
+  const sections = [
+    ["ACTIVE SCENE STATE", "当前场景状态"],
+    ["PERSISTENT CANON", "持久正史"],
+    ["RECENT SUMMARIES", "最近摘要"],
+    ["OPEN PROMISES", "未兑现承诺"],
+    ["AUTHOR NOTES", "作者备注"],
+  ];
+  for (const [heading, label] of sections) {
+    const card = document.createElement("article");
+    card.className = "memory-card";
+    const title = document.createElement("h3");
+    title.textContent = label;
+    const body = document.createElement("p");
+    const value = memorySection(status, heading);
+    body.textContent = value ? (value.length > 420 ? `${value.slice(0, 420)}…` : value) : "尚未记录。";
+    card.append(title, body);
+    container.appendChild(card);
+  }
+  const entry = state.workflow?.artifacts?.["book.canon_state"];
+  $("memory-revision").textContent = entry ? `rev ${entry.revision || 0} · ${entry.status || "EMPTY"}` : "未加载";
+}
+
+function renderOverview(snapshot) {
+  const book = state.bookId || "未加载";
+  const chapter = snapshot?.current_chapter || currentChapterNumber();
+  const artifacts = snapshot?.artifacts || {};
+  const stale = Object.values(artifacts).filter((entry) => entry.status === "STALE").length;
+  const next = snapshot?.next_actionable_node || "等待 Workflow";
+  $("overview-book").textContent = book;
+  $("overview-book-path").textContent = book === "未加载" ? "请从上方加载小说" : $("workspace-path")?.textContent || "本地工作区";
+  $("overview-chapter").textContent = snapshot ? `第 ${chapter} 章` : "—";
+  $("overview-chapter-state").textContent = snapshot ? (artifacts[`chapter.${chapter}.body`]?.status || "正文未载入") : "—";
+  $("overview-next").textContent = next;
+  $("overview-next-detail").textContent = snapshot ? "来自当前 Workflow State" : "加载小说后显示";
+  $("overview-stale").textContent = snapshot ? `${stale} 项 stale` : "—";
+  $("overview-stale-detail").textContent = stale ? "打开执行透明度查看依赖影响" : "暂无需要处理的 stale";
+  $("continue-chapter").textContent = snapshot ? `继续写第 ${chapter} 章` : "继续写作";
+  const flow = $("overview-flow");
+  if (!flow) return;
+  flow.replaceChildren();
+  for (const stage of workflowStages) {
+    const item = document.createElement("span");
+    item.className = "flow-step";
+    item.textContent = stage.title;
+    flow.appendChild(item);
+  }
+}
+
+function mountRightDrawer() {
+  const body = $("right-drawer-body");
+  if (!body) return;
+  for (const id of ["workflow-panel", "prompt-response-advanced"]) {
+    const element = $(id);
+    if (element && element.parentElement !== body) body.appendChild(element);
+  }
+}
+
+function openRightDrawer() {
+  mountRightDrawer();
+  const drawer = $("right-drawer");
+  if (!drawer) return;
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden", "false");
+}
+
+function closeRightDrawer() {
+  const drawer = $("right-drawer");
+  if (!drawer) return;
+  drawer.classList.remove("open");
+  drawer.setAttribute("aria-hidden", "true");
+}
+
+function initializeReadingState() {
+  document.querySelectorAll(".creative-stage").forEach((stage) => {
+    stage.open = true;
+    const summary = stage.querySelector("summary");
+    if (!summary || summary.dataset.readingBound) return;
+    summary.dataset.readingBound = "true";
+    summary.addEventListener("click", (event) => {
+      event.preventDefault();
+      stage.classList.toggle("stage-editing");
+      stage.open = true;
+    });
+  });
+  document.querySelectorAll(".design-card").forEach((card) => { card.open = true; });
+}
+
 const workflowStages = [
   { title: "创意", keys: ["creative.fantasy_seed", "creative.world_vision", "creative.story_program"] },
   { title: "设计", keys: ["book.design"] },
@@ -117,6 +399,11 @@ function renderWorkflow(snapshot) {
   if (!stages) return;
   stages.replaceChildren();
   state.workflow = snapshot;
+  renderOverview(snapshot);
+  renderMemoryWorkspace();
+  renderDesignPreviews();
+  renderFuture10Cards();
+  updateChapterWorkspace();
   if (!snapshot) {
     $("workflow-current").textContent = "Workflow：未加载";
     $("workflow-impact").textContent = "点击节点后显示实际存在的受影响下游。";
@@ -127,6 +414,9 @@ function renderWorkflow(snapshot) {
   const artifacts = snapshot.artifacts || {};
   const staleCount = Object.values(artifacts).filter((entry) => entry.status === "STALE").length;
   $("workflow-current").textContent = `当前：Chapter ${snapshot.current_chapter} · Next：${snapshot.next_actionable_node || "—"} · STALE ${staleCount}`;
+  $("chapter-workspace-next").textContent = snapshot.next_actionable_node
+    ? `下一节点：${snapshot.next_actionable_node}`
+    : "没有下一节点";
   for (const stage of workflowStages) {
     const card = document.createElement("div");
     card.className = "workflow-stage";
@@ -200,8 +490,11 @@ function locateWorkflowArtifact() {
   const match = selectedWorkflowArtifact.match(/^chapter\.(\d+)\.(run|body|state_delta)$/);
   if (match) {
     $("chapter-number").value = match[1];
+    navigateToView("chapter", "定位章节节点");
     if (match[2] === "body") loadCurrentChapterBody();
     else loadRun();
+    setChapterTab(match[2] === "body" ? "body" : "execution");
+    closeRightDrawer();
   }
   const targets = {
     "creative.fantasy_seed": "creative-fantasy-seed",
@@ -213,6 +506,11 @@ function locateWorkflowArtifact() {
     "book.canon_state": "section-status",
   };
   const target = $(targets[selectedWorkflowArtifact] || "prompt-panel");
+  if (selectedWorkflowArtifact.startsWith("creative.")) navigateToView("creative", "定位创意节点");
+  if (selectedWorkflowArtifact === "book.design") navigateToView("design", "定位设计节点");
+  if (selectedWorkflowArtifact === "book.long_plan") { navigateToView("design", "定位中期规划"); setDesignTab("midterm"); }
+  if (selectedWorkflowArtifact === "book.future_10") { navigateToView("design", "定位未来十章"); setDesignTab("future10"); }
+  if (selectedWorkflowArtifact === "book.canon_state") { navigateToView("memory", "定位记忆节点"); }
   target?.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
@@ -299,6 +597,15 @@ function renderCreativeMeta(artifact) {
   target.textContent = `${value.origin || "empty"} · ${value.status || "empty"}`;
 }
 
+function renderCreativePreview(artifact) {
+  const ui = creativeUi[artifact];
+  const target = $("creative-preview-" + (artifact === "proposal" ? "proposal" : artifact.replaceAll("_", "-")));
+  const source = $(ui.editor);
+  if (!target || !source) return;
+  const value = source.value.trim().replace(/\s+/g, " ");
+  target.textContent = value ? (value.length > 260 ? `${value.slice(0, 260)}…` : value) : "尚未填写。";
+}
+
 function setCreativePayload(payload) {
   state.creativeState = payload?.creative_state || {};
   state.creativeArtifacts = payload?.creative_artifacts || {};
@@ -313,6 +620,7 @@ function setCreativePayload(payload) {
     state.creativeArtifacts[artifact] = value;
     $(ui.editor).value = value.content || "";
     renderCreativeMeta(artifact);
+    renderCreativePreview(artifact);
   }
 }
 
@@ -333,6 +641,7 @@ function markCreativeEdited(artifact) {
     state.creativeState[artifact] = { origin: "empty", status: "empty" };
   }
   renderCreativeMeta(artifact);
+  renderCreativePreview(artifact);
 }
 
 function applyCreativeResponse(artifact) {
@@ -353,6 +662,7 @@ function applyCreativeResponse(artifact) {
     status: "draft",
   };
   renderCreativeMeta(artifact);
+  renderCreativePreview(artifact);
   showStatus(`模型返回已放入 ${artifact} 编辑器，仍为 draft，尚未保存或批准`);
 }
 
@@ -371,6 +681,7 @@ async function saveCreativeArtifact(artifact) {
       }),
     });
     setCreativePayload(payload);
+    clearEditorDirty([ui.editor]);
     await refreshWorkflow();
     showStatus(`${artifact} 已保存，仍需作者明确批准`);
   } catch (error) {
@@ -387,6 +698,7 @@ async function approveCreativeArtifact(artifact) {
       method: "POST",
     });
     setCreativePayload(payload);
+    clearEditorDirty([creativeUi[artifact].editor]);
     await refreshWorkflow();
     showStatus(`${artifact} 已由作者明确批准`);
   } catch (error) {
@@ -677,13 +989,29 @@ function setDesignDetails(open) {
   document.querySelectorAll(".design-card").forEach((card) => { card.open = open; });
 }
 
+function setDesignEditing(open) {
+  state.designEditing = open;
+  document.body.classList.toggle("design-editor-open", open);
+  document.querySelectorAll(".design-card").forEach((card) => card.classList.toggle("is-editing", open));
+  for (const id of ["long-plan-editor", "small-plan-editor"]) {
+    const element = $(id);
+    if (element) element.classList.toggle("is-editing", open);
+  }
+  const button = $("toggle-design-editor");
+  if (button) button.textContent = open ? "收起原文编辑" : "编辑原文";
+}
+
 function populateBook(book) {
   invalidateGbrainResults("切换小说");
   clearReferenceSelection();
+  clearEditorDirty();
+  setDesignEditing(false);
+  document.querySelectorAll(".creative-stage").forEach((stage) => stage.classList.remove("stage-editing"));
   state.bookId = book.book_id;
   state.workflow = null;
   selectedWorkflowArtifact = "";
   $("book-id").value = book.book_id;
+  $("sidebar-book-name").textContent = book.book_id;
   setCreativePayload(book);
   for (const key of Object.keys(designTitles)) {
     $(`design-${key}`).value = book.design_sections?.[key] || "";
@@ -720,6 +1048,10 @@ function populateBook(book) {
   ]) $(id).value = "";
   renderRunLedger(null);
   renderLongPlanPanorama();
+  renderFuture10Cards();
+  renderDesignPreviews();
+  renderMemoryWorkspace();
+  updateChapterWorkspace();
   refreshPreviousChapterText();
   loadRun();
   refreshWorkflow();
@@ -765,11 +1097,28 @@ async function loadBook(bookId) {
     showStatus("请先输入或选择小说 ID", true);
     return;
   }
+  if (bookId !== state.bookId && !confirmDiscardIfNeeded("加载另一本小说")) return;
   try {
     populateBook(await requestJson(`/api/books/${encodeURIComponent(bookId)}`));
     await setDefaultGbrainQuery();
   } catch (error) {
     showStatus(error.message, true);
+  }
+}
+
+function openMemoryEditor() {
+  navigateToView("design", "打开记忆编辑区");
+  setDesignTab("overall");
+  document.body.classList.add("memory-editor-open");
+  $("memory-status-editor")?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function openPromptTemplates() {
+  navigateToView("chapter", "打开 Prompt Templates");
+  const editor = $("template-editor");
+  if (editor) {
+    editor.open = true;
+    editor.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 }
 
@@ -1211,18 +1560,22 @@ function applyOutlineToBook() {
   const sections = splitHeadingBlocks(source, sectionTitles);
   let applied = 0;
   for (const [key, content] of Object.entries(sections)) {
-    if (key === "design") {
+      if (key === "design") {
       const designSections = splitHeadingBlocks(content, designTitles);
       for (const [designKey, designContent] of Object.entries(designSections)) {
         $(`design-${designKey}`).value = designContent;
+        markEditorDirty(`design-${designKey}`);
         applied += 1;
       }
     } else {
       $(`section-${key}`).value = content;
+      markEditorDirty(`section-${key}`);
       applied += 1;
     }
   }
   renderLongPlanPanorama();
+  renderFuture10Cards();
+  renderDesignPreviews();
 
   if (!applied) {
     showStatus("Proposal 编辑区没有找到 BOOK 的四个固定标题或总体画像标题，未改变 BOOK 编辑区", true);
@@ -1293,6 +1646,7 @@ async function applyDirectorResponse() {
     return;
   }
   $("current-outline").value = lines.join("\n");
+  markEditorDirty("current-outline");
   await saveRunResponseForMode("director", response);
   showStatus("Director 八字段已采用到当前章小纲；尚未写盘");
 }
@@ -1337,6 +1691,8 @@ async function extractIntegratorBody() {
   }
   $("chapter-body-for-save").value = artifact.body;
   $("chapter-fact-summary").value = artifact.summary;
+  markEditorDirty("chapter-body-for-save");
+  markEditorDirty("chapter-fact-summary");
   await saveRunResponseForMode("chapter_integrator", $("integrator-response").value);
   showStatus("已从 Integrator 提取正式正文；尚未保存章节");
   return true;
@@ -1350,6 +1706,8 @@ async function adoptPrimaryDraft() {
   }
   $("chapter-body-for-save").value = body;
   $("chapter-fact-summary").value = extractPrimaryFactSummary($("primary-writer-response").value);
+  markEditorDirty("chapter-body-for-save");
+  markEditorDirty("chapter-fact-summary");
   await saveRunResponseForMode("primary_writer", $("primary-writer-response").value);
   await adoptRunSource("primary");
   showStatus("已显式采用 Primary Draft 作为最终正文；尚未保存章节");
@@ -1364,6 +1722,8 @@ function extractChapterBody() {
   }
   $("chapter-body-for-save").value = artifact.body;
   $("chapter-fact-summary").value = artifact.summary;
+  markEditorDirty("chapter-body-for-save");
+  markEditorDirty("chapter-fact-summary");
   showStatus("已提取正式正文；审计信息和事实摘要不会写入章节文件");
   return true;
 }
@@ -1463,6 +1823,8 @@ function applyCanonIndexProposal() {
   }
   if (v2) {
     $("section-status").value = buildCanonMemoryStatus(v2);
+    markEditorDirty("section-status");
+    renderMemoryWorkspace();
     saveRunResponseForMode("state_delta", $("state-delta-response").value);
     showStatus("Canon Memory v2 已应用到浏览器 BOOK 状态编辑区，尚未写盘；确认后请点“保存 BOOK.md”");
     return;
@@ -1484,6 +1846,10 @@ async function saveBook() {
       body: JSON.stringify({ content: composeBookContent() }),
     });
     await refreshWorkflow();
+    clearEditorDirty([
+      ...Object.keys(designTitles).map((key) => `design-${key}`),
+      "section-long_plan", "section-small_plan", "section-status",
+    ]);
     showStatus("BOOK.md 已保存");
   } catch (error) {
     showStatus(error.message, true);
@@ -1514,6 +1880,7 @@ async function saveTemplates() {
         },
       }),
     });
+    clearEditorDirty([...document.querySelectorAll(".template-editor textarea")].map((element) => element.id));
     showStatus("PROMPTS.md 已保存");
   } catch (error) {
     showStatus(error.message, true);
@@ -1544,6 +1911,7 @@ async function approveChapter() {
     );
     await refreshPreviousChapterText();
     await refreshWorkflow();
+    clearEditorDirty(["chapter-body-for-save", "chapter-fact-summary"]);
     showStatus(`${payload.file} 已保存`);
   } catch (error) {
     showStatus(error.message, true);
@@ -1690,6 +2058,7 @@ $("section-long_plan").addEventListener("input", renderLongPlanPanorama);
 });
 $("section-small_plan").addEventListener("input", () => {
   $("current-chapter-plan").value = "";
+  renderFuture10Cards();
   invalidateGbrainResults("未来十章计划已变化");
 });
 for (const id of [
@@ -1714,4 +2083,83 @@ $("approve-chapter").addEventListener("click", approveChapter);
 for (const artifact of Object.keys(creativeUi)) {
   $(creativeUi[artifact].editor).addEventListener("input", () => markCreativeEdited(artifact));
 }
+
+document.querySelectorAll(".nav-link").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const target = link.dataset.viewTarget;
+    if (target !== state.view && !confirmDiscardIfNeeded("切换工作区")) event.preventDefault();
+  });
+});
+window.addEventListener("hashchange", () => {
+  const next = currentViewFromHash();
+  if (next !== state.view && !confirmDiscardIfNeeded("切换工作区")) {
+    window.history.replaceState(null, "", `#${state.view}`);
+    return;
+  }
+  setView(next, false);
+});
+
+document.addEventListener("input", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement)) return;
+  if (dirtyEditorIds().includes(target.id)) markEditorDirty(target.id);
+});
+
+document.querySelectorAll("[data-design-tab]").forEach((button) => {
+  button.addEventListener("click", () => setDesignTab(button.dataset.designTab));
+});
+$("toggle-design-editor").addEventListener("click", () => setDesignEditing(!state.designEditing));
+document.querySelectorAll("[data-chapter-tab]").forEach((button) => {
+  button.addEventListener("click", () => setChapterTab(button.dataset.chapterTab));
+});
+$("toggle-chapter-context").addEventListener("click", () => {
+  document.body.classList.toggle("chapter-context-open");
+  setChapterTab(state.chapterTab);
+});
+$("chapter-previous").addEventListener("click", () => {
+  if (!confirmDiscardIfNeeded("切换章节")) return;
+  const next = Math.max(1, currentChapterNumber() - 1);
+  $("chapter-number").value = next;
+  $("chapter-number").dispatchEvent(new Event("change"));
+  updateChapterWorkspace();
+});
+$("chapter-next").addEventListener("click", () => {
+  if (!confirmDiscardIfNeeded("切换章节")) return;
+  $("chapter-number").value = currentChapterNumber() + 1;
+  $("chapter-number").dispatchEvent(new Event("change"));
+  updateChapterWorkspace();
+});
+$("continue-chapter").addEventListener("click", () => {
+  if (state.workflow?.current_chapter) $("chapter-number").value = state.workflow.current_chapter;
+  navigateToView("chapter", "继续写作");
+  updateChapterWorkspace();
+});
+$("overview-open-workflow").addEventListener("click", openRightDrawer);
+$("memory-open-workflow").addEventListener("click", openRightDrawer);
+$("open-workflow-drawer").addEventListener("click", openRightDrawer);
+$("open-workflow-from-tools").addEventListener("click", openRightDrawer);
+$("open-executor-drawer").addEventListener("click", () => {
+  setChapterTab("execution");
+  openRightDrawer();
+});
+$("close-right-drawer").addEventListener("click", closeRightDrawer);
+$("close-workflow-drawer").addEventListener("click", closeRightDrawer);
+document.querySelectorAll("[data-close-drawer]").forEach((element) => element.addEventListener("click", closeRightDrawer));
+$("open-memory-editor").addEventListener("click", openMemoryEditor);
+$("open-prompt-templates").addEventListener("click", openPromptTemplates);
+$("open-settings-from-tools").addEventListener("click", () => $("settings-button").click());
+$("open-references").addEventListener("click", () => {
+  navigateToView("creative", "打开 References");
+  const section = document.querySelector(".references-section");
+  if (section) {
+    section.open = true;
+    section.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+});
+
+mountRightDrawer();
+initializeReadingState();
+setView(currentViewFromHash(), false);
+setDesignEditing(false);
+renderDirtyState();
 initialize();

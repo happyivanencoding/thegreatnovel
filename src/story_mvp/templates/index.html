@@ -28,7 +28,6 @@
         <option value="">（暂无）</option>
       </select>
       <button id="load-book">加载</button>
-      <button id="settings-button" type="button">设置</button>
       <span id="status" class="status" role="status"></span>
     </section>
 
@@ -59,7 +58,87 @@
       </div>
     </dialog>
 
-    <section id="workflow-panel" class="workflow-panel" aria-label="Story Workflow">
+    <div class="author-shell">
+      <aside class="author-sidebar" aria-label="作者工作区导航">
+        <div class="sidebar-book">
+          <span class="eyebrow">CURRENT BOOK</span>
+          <strong id="sidebar-book-name">未加载小说</strong>
+          <span id="sidebar-book-chapter" class="subtle">等待加载</span>
+        </div>
+        <nav class="author-nav" aria-label="工作区">
+          <a class="nav-link active" href="#overview" data-view-target="overview">概览</a>
+          <a class="nav-link" href="#creative" data-view-target="creative">创意</a>
+          <a class="nav-link" href="#design" data-view-target="design">故事设计</a>
+          <a class="nav-link" href="#chapter" data-view-target="chapter">章节写作</a>
+          <a class="nav-link" href="#memory" data-view-target="memory">记忆</a>
+          <a class="nav-link" href="#tools" data-view-target="tools">工具</a>
+        </nav>
+        <div class="sidebar-footer">
+          <button id="open-workflow-drawer" type="button">执行透明度</button>
+          <button id="settings-button" type="button">设置</button>
+          <span class="sidebar-caption">所有保存、批准与重跑仍由作者明确触发</span>
+        </div>
+      </aside>
+
+      <div class="author-content">
+        <section id="overview-workspace" class="workspace-view panel overview-workspace" data-view="overview" aria-labelledby="overview-title">
+          <div class="workspace-header">
+            <div>
+              <p class="eyebrow">AUTHOR WORKSPACE</p>
+              <h2 id="overview-title">概览</h2>
+              <p class="subtle">只看现在该做什么；完整 Prompt、Response 和依赖细节在执行透明度抽屉中。</p>
+            </div>
+            <span id="overview-dirty" class="status"></span>
+          </div>
+          <div class="overview-grid">
+            <article class="overview-card"><span>当前小说</span><strong id="overview-book">未加载</strong><small id="overview-book-path">—</small></article>
+            <article class="overview-card"><span>当前章节</span><strong id="overview-chapter">—</strong><small id="overview-chapter-state">—</small></article>
+            <article class="overview-card"><span>下一步</span><strong id="overview-next">—</strong><small id="overview-next-detail">跟随 Workflow State</small></article>
+            <article class="overview-card overview-card-alert"><span>需要关注</span><strong id="overview-stale">—</strong><small id="overview-stale-detail">暂无状态</small></article>
+          </div>
+          <div class="overview-action-row">
+            <button id="continue-chapter" class="primary" type="button">继续写作</button>
+            <button id="overview-open-workflow" type="button">查看 Workflow 与 Impact</button>
+          </div>
+          <div class="story-flow-block">
+            <div class="section-heading"><strong>Story Flow</strong><span class="subtle">创意 → 设计 → 规划 → 当前章节 → 记忆</span></div>
+            <div id="overview-flow" class="overview-flow"></div>
+          </div>
+        </section>
+
+        <section id="memory-workspace" class="workspace-view panel memory-workspace" data-view="memory" aria-labelledby="memory-title">
+          <div class="workspace-header">
+            <div>
+              <p class="eyebrow">CANON MEMORY</p>
+              <h2 id="memory-title">记忆</h2>
+              <p class="subtle">阅读当前正史记忆与开放承诺；修改仍回到 BOOK 状态编辑区并由作者保存。</p>
+            </div>
+            <span id="memory-revision" class="status">未加载</span>
+          </div>
+          <div id="memory-cards" class="memory-cards"></div>
+          <div class="overview-action-row">
+            <button id="open-memory-editor" type="button">编辑记忆</button>
+            <button id="memory-open-workflow" type="button">查看记忆节点状态</button>
+          </div>
+        </section>
+
+        <section id="tools-workspace" class="workspace-view panel tools-workspace" data-view="tools" aria-labelledby="tools-title">
+          <div class="workspace-header">
+            <div>
+              <p class="eyebrow">LOW-FREQUENCY TOOLS</p>
+              <h2 id="tools-title">工具</h2>
+              <p class="subtle">低频配置与调试入口；它们不改变生成、批准或保存语义。</p>
+            </div>
+          </div>
+          <div class="tools-list">
+            <button id="open-prompt-templates" type="button"><strong>Prompt Templates</strong><span>编辑并保存 PROMPTS.md</span></button>
+            <button id="open-settings-from-tools" type="button"><strong>OpenAI Settings</strong><span>配置名称、URL 和 API Key</span></button>
+            <button id="open-references" type="button"><strong>References</strong><span>打开创意工作区的手动 Reference Programs</span></button>
+            <button id="open-workflow-from-tools" type="button"><strong>Workflow Debug</strong><span>查看 Workflow State、Run Ledger、Impact 与 Codex Task</span></button>
+          </div>
+        </section>
+
+    <section id="workflow-panel" class="workflow-panel" aria-label="Story Workflow" data-drawer-panel>
       <div class="workflow-heading">
         <div>
           <p class="eyebrow">WORKFLOW STATE · DEPENDENCY IMPACT</p>
@@ -67,6 +146,7 @@
           <span id="workflow-current" class="status">Workflow：未加载</span>
         </div>
         <div class="workflow-actions">
+          <button id="close-workflow-drawer" type="button">关闭抽屉</button>
           <label>Executor Mode
             <select id="executor-mode">
               <option value="manual" selected>Manual / Copy-Paste</option>
@@ -101,7 +181,7 @@
     </section>
 
     <main class="studio-grid">
-      <section class="panel creative-panel">
+      <section class="panel workspace-view creative-panel" data-view="creative">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">00 · CREATIVE AUTHORITY</p>
@@ -110,9 +190,11 @@
           <span class="status">模型建议 ≠ 作者批准</span>
         </div>
         <p class="hint">按 Fantasy Seed → World Vision → Story Program 的顺序推进。模型生成、模型选择和作者编辑都只是 draft；只有作者点击“批准”才成为创意权威。</p>
+        <p class="hint">默认是阅读态；点击阶段标题进入编辑。GBrain 与 References 保持折叠，只有作者主动展开。</p>
 
-        <details class="creative-stage" open>
+        <details class="creative-stage">
           <summary>Fantasy Seed / 核心幻想种子 <span id="creative-meta-fantasy-seed" class="count">empty · empty</span></summary>
+          <p id="creative-preview-fantasy-seed" class="reading-preview">尚未填写核心幻想种子。</p>
           <p class="hint">只输入作者粗方向、明确题材、要保留和禁止的内容；不带入 BOOK、GBrain、Reference 或 Growth Genome。</p>
           <label class="field"><span>Fantasy Seed 编辑器</span><textarea id="creative-fantasy-seed" rows="18" placeholder="模型候选或作者编辑内容"></textarea></label>
           <div class="action-row wrap">
@@ -125,6 +207,7 @@
 
         <details class="creative-stage">
           <summary>World Vision / 世界幻想画像 <span id="creative-meta-world-vision" class="count">empty · empty</span></summary>
+          <p id="creative-preview-world-vision" class="reading-preview">尚未填写世界幻想画像。</p>
           <p class="hint">Fantasy Seed 获作者批准后才能生成；World Vision 承载幻想，不重新决定核心幻想。</p>
           <label class="field"><span>World Vision 编辑器</span><textarea id="creative-world-vision" rows="18" placeholder="模型返回或作者编辑内容"></textarea></label>
           <div class="action-row wrap">
@@ -137,6 +220,7 @@
 
         <details class="creative-stage">
           <summary>Story Program / 商业化结构方案 <span id="creative-meta-proposal" class="count">empty · empty</span></summary>
+          <p id="creative-preview-proposal" class="reading-preview">尚未填写 Story Program。</p>
           <p class="hint">旧 mode key 仍为 idea；本阶段只为已批准幻想提出长期运行方式，不重新选择幻想。Proposal 编辑区是唯一 Proposal 来源。</p>
           <label class="field"><span>Story Program 编辑器</span><textarea id="proposal-editor" rows="18" placeholder="模型返回或作者选择/编辑后的方案"></textarea></label>
           <div class="action-row wrap">
@@ -148,7 +232,7 @@
         </details>
       </section>
 
-      <section class="panel book-panel">
+      <section class="panel workspace-view book-panel" data-view="design">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">01 · STORY CONTENT</p>
@@ -159,50 +243,70 @@
         <p class="hint">BOOK.md 只保留四个一级区块。编辑后只有点击保存才会写入磁盘。</p>
 
         <div class="design-toolbar">
-          <strong>小说总体设计画像</strong>
+          <strong>故事设计</strong>
           <div class="action-row">
             <button id="expand-design">全部展开</button>
             <button id="collapse-design">全部收起</button>
+            <button id="toggle-design-editor" type="button">编辑原文</button>
           </div>
         </div>
+        <div id="design-tabs" class="workspace-tabs" role="tablist" aria-label="故事设计视图">
+          <button type="button" class="workspace-tab active" data-design-tab="overall">总体设计</button>
+          <button type="button" class="workspace-tab" data-design-tab="midterm">中期规划</button>
+          <button type="button" class="workspace-tab" data-design-tab="future10">未来十章</button>
+        </div>
+        <div id="design-overall-view" class="design-tab-view" data-design-view="overall">
         <div id="design-sections" class="design-sections">
-          <details class="design-card" open><summary>## 0. 本书成长基因图</summary><textarea id="design-growth_genome" rows="12" placeholder="整理已批准幻想不变量、主角欲望、一级成长主轴、阶段升格、二级收益与反哺、主循环、成本节奏、核心不变量和退化风险。只有本书真实需要时才补充网络或循环。不要写 JSON/YAML。"></textarea></details>
-          <details class="design-card"><summary>## 1. 核心类型与读者承诺</summary><textarea id="design-type_promise" rows="7"></textarea></details>
-          <details class="design-card"><summary>## 2. 世界观结构</summary><textarea id="design-world_structure" rows="7"></textarea></details>
-          <details class="design-card"><summary>## 3. 世界如何持续制造剧情压力</summary><textarea id="design-world_pressure" rows="7"></textarea></details>
-          <details class="design-card"><summary>## 4. 主角模型、人物弧与核心矛盾</summary><textarea id="design-protagonist_model" rows="8"></textarea></details>
-          <details class="design-card"><summary>## 5. 配角与关系系统</summary><textarea id="design-relationships" rows="8"></textarea></details>
-          <details class="design-card"><summary>## 6. 核心情节发动机</summary><textarea id="design-plot_engine" rows="8"></textarea></details>
-          <details class="design-card"><summary>## 7. 叙事结构</summary><textarea id="design-narrative_structure" rows="7"></textarea></details>
-          <details class="design-card"><summary>## 8. 文风与可操作参数</summary><textarea id="design-prose" rows="7"></textarea></details>
-          <details class="design-card"><summary>## 9. 对话特点</summary><textarea id="design-dialogue" rows="7"></textarea></details>
-          <details class="design-card"><summary>## 10. 节奏结构</summary><textarea id="design-rhythm" rows="7"></textarea></details>
-          <details class="design-card"><summary>## 11. 主题、价值观与长期问题</summary><textarea id="design-theme" rows="7"></textarea></details>
-          <details class="design-card"><summary>## 12. 当前设计最强点与最弱点</summary><textarea id="design-strengths_risks" rows="7"></textarea></details>
+          <details class="design-card" open><summary>## 0. 本书成长基因图</summary><p id="design-preview-growth_genome" class="reading-preview">尚未填写。</p><textarea id="design-growth_genome" rows="12" placeholder="整理已批准幻想不变量、主角欲望、一级成长主轴、阶段升格、二级收益与反哺、主循环、成本节奏、核心不变量和退化风险。只有本书真实需要时才补充网络或循环。不要写 JSON/YAML。"></textarea></details>
+          <details class="design-card"><summary>## 1. 核心类型与读者承诺</summary><p id="design-preview-type_promise" class="reading-preview">尚未填写。</p><textarea id="design-type_promise" rows="7"></textarea></details>
+          <details class="design-card"><summary>## 2. 世界观结构</summary><p id="design-preview-world_structure" class="reading-preview">尚未填写。</p><textarea id="design-world_structure" rows="7"></textarea></details>
+          <details class="design-card"><summary>## 3. 世界如何持续制造剧情压力</summary><p id="design-preview-world_pressure" class="reading-preview">尚未填写。</p><textarea id="design-world_pressure" rows="7"></textarea></details>
+          <details class="design-card"><summary>## 4. 主角模型、人物弧与核心矛盾</summary><p id="design-preview-protagonist_model" class="reading-preview">尚未填写。</p><textarea id="design-protagonist_model" rows="8"></textarea></details>
+          <details class="design-card"><summary>## 5. 配角与关系系统</summary><p id="design-preview-relationships" class="reading-preview">尚未填写。</p><textarea id="design-relationships" rows="8"></textarea></details>
+          <details class="design-card"><summary>## 6. 核心情节发动机</summary><p id="design-preview-plot_engine" class="reading-preview">尚未填写。</p><textarea id="design-plot_engine" rows="8"></textarea></details>
+          <details class="design-card"><summary>## 7. 叙事结构</summary><p id="design-preview-narrative_structure" class="reading-preview">尚未填写。</p><textarea id="design-narrative_structure" rows="7"></textarea></details>
+          <details class="design-card"><summary>## 8. 文风与可操作参数</summary><p id="design-preview-prose" class="reading-preview">尚未填写。</p><textarea id="design-prose" rows="7"></textarea></details>
+          <details class="design-card"><summary>## 9. 对话特点</summary><p id="design-preview-dialogue" class="reading-preview">尚未填写。</p><textarea id="design-dialogue" rows="7"></textarea></details>
+          <details class="design-card"><summary>## 10. 节奏结构</summary><p id="design-preview-rhythm" class="reading-preview">尚未填写。</p><textarea id="design-rhythm" rows="7"></textarea></details>
+          <details class="design-card"><summary>## 11. 主题、价值观与长期问题</summary><p id="design-preview-theme" class="reading-preview">尚未填写。</p><textarea id="design-theme" rows="7"></textarea></details>
+          <details class="design-card"><summary>## 12. 当前设计最强点与最弱点</summary><p id="design-preview-strengths_risks" class="reading-preview">尚未填写。</p><textarea id="design-strengths_risks" rows="7"></textarea></details>
+        </div>
         </div>
 
+        <div id="design-midterm-view" class="design-tab-view" data-design-view="midterm" hidden>
         <div class="panorama-heading">
           <strong>当前中期规划窗口</strong>
           <span id="panorama-count" class="count">0 个剧情块</span>
         </div>
         <div id="long-plan-panorama" class="long-plan-panorama"></div>
 
-        <label class="field">
+        <label id="long-plan-editor" class="field raw-editor">
           <span>当前中期规划窗口（完整 Markdown）</span>
           <textarea id="section-long_plan" data-section="long_plan" rows="15"></textarea>
         </label>
-        <label class="field">
+        </div>
+
+        <div id="design-future10-view" class="design-tab-view" data-design-view="future10" hidden>
+        <div class="panorama-heading">
+          <strong>未来十章阅读卡片</strong>
+          <span id="future10-count" class="count">0 章</span>
+        </div>
+        <div id="future10-cards" class="future10-cards"></div>
+        <label id="small-plan-editor" class="field raw-editor">
           <span>未来十章逐章小纲</span>
           <textarea id="section-small_plan" data-section="small_plan" rows="11"></textarea>
         </label>
         <p class="hint">未来十章继续承担中期规划：具体剧情、结果 / 状态变化、叙事功能和结尾推动。当前章八字段请通过“当前章执行小纲”步骤生成。</p>
+        </div>
+        <div id="memory-status-editor" class="field raw-editor">
         <label class="field">
           <span>当前状态、未兑现承诺与作者备注</span>
           <textarea id="section-status" data-section="status" rows="9"></textarea>
         </label>
+        </div>
       </section>
 
-      <section class="panel reference-panel">
+      <section class="panel workspace-view reference-panel" data-view="creative">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">02 · HYBRID INSPIRATION</p>
@@ -210,6 +314,8 @@
           </div>
           <span id="gbrain-status" class="status">GBrain：未查询</span>
         </div>
+        <details id="gbrain-details" class="source-details">
+          <summary>GBrain 灵感与检索</summary>
         <div id="gbrain-scope" class="path-note">GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选</div>
         <div class="gbrain-workspace">
           <label class="field">
@@ -241,8 +347,9 @@
           </details>
           <button id="generate-idea-prompt" class="primary">生成 Story Program Prompt</button>
         </div>
+        </details>
 
-        <details class="references-section" open>
+        <details class="references-section">
           <summary>手动选择 Reference Programs <span id="reference-count" class="count">0 / 3</span></summary>
           <p class="hint">只读加载 VALIDATED；不排名、不检索。勾选后，卡片中的字段会原样进入 Prompt。</p>
           <div id="reference-root" class="path-note"></div>
@@ -250,11 +357,11 @@
         </details>
       </section>
 
-      <section class="panel prompt-panel">
+      <section class="panel workspace-view prompt-panel" data-view="chapter">
         <div class="panel-heading">
           <div>
             <p class="eyebrow">03 · PROMPT + CODEX RETURN</p>
-            <h2>Prompt 与 Codex 返回</h2>
+            <h2>章节写作</h2>
           </div>
           <select id="prompt-mode" aria-label="Prompt 模式">
             <option value="fantasy_seed">Fantasy Seed / 核心幻想种子</option>
@@ -275,7 +382,28 @@
           </select>
         </div>
 
-        <details class="hybrid-run" open>
+        <div class="chapter-workspace-toolbar">
+          <div>
+            <strong id="chapter-workspace-title">第 1 章</strong>
+            <span id="chapter-workspace-next" class="subtle">等待加载 Workflow</span>
+          </div>
+          <div class="chapter-toolbar-actions">
+            <button id="chapter-previous" type="button">上一章</button>
+            <button id="chapter-next" type="button">下一章</button>
+            <button id="open-executor-drawer" type="button">执行详情</button>
+          </div>
+        </div>
+        <div id="chapter-tabs" class="workspace-tabs" role="tablist" aria-label="章节写作视图">
+          <button type="button" class="workspace-tab active" data-chapter-tab="outline">小纲</button>
+          <button type="button" class="workspace-tab" data-chapter-tab="body">正文</button>
+          <button type="button" class="workspace-tab" data-chapter-tab="execution">执行详情</button>
+        </div>
+        <div class="chapter-context-toolbar">
+          <span class="subtle">章节正文、Prompt 和模型返回不会自动保存。</span>
+          <button id="toggle-chapter-context" type="button">显示上下文</button>
+        </div>
+
+        <details id="chapter-execution-details" class="hybrid-run execution-details">
           <summary>Hybrid Multi-Agent Chapter Run</summary>
           <p class="hint">所有节点只生成可编辑 Prompt；作者负责复制、执行、粘贴和显式采用。专项 Agent 是建议者，不是质量门禁。</p>
           <div class="hybrid-controls">
@@ -340,7 +468,7 @@
         </details>
 
         <div class="prompt-inputs">
-          <label class="field">
+          <label class="field chapter-context-advanced" data-context="advanced">
             <span>当前大型剧情块（章节 / 当前章执行小纲模式）</span>
             <textarea id="current-long-block" rows="7" placeholder="从 100 章大型剧情块中粘贴当前所在块；不会自动注入完整100章。"></textarea>
           </label>
@@ -352,7 +480,7 @@
             <span>当前章对应的十章计划条目（按 ## 第N章：标题 严格解析）</span>
             <textarea id="current-chapter-plan" rows="8" readonly placeholder="点击“加载当前章计划”后显示，不会猜测缺失章节。"></textarea>
           </label>
-          <label class="field">
+          <label class="field chapter-context-advanced" data-context="advanced">
             <span>前两章正文（连续性上下文，可编辑）</span>
             <textarea id="previous-chapter-text" rows="16" placeholder="第2章自动读取第1章；第N章自动读取第N-2和第N-1章。没有文件时保持为空。"></textarea>
           </label>
@@ -360,24 +488,24 @@
             <span>当前章具体小纲（章节模式的唯一 Hard Gate 输入）</span>
             <textarea id="current-outline" rows="10" placeholder="触发事件：\n推动事件的人：\n主角行动：\n对手或世界反应：\n直接结果：\n状态变化：\n叙事功能：\n结尾推动力："></textarea>
           </label>
-          <label class="field">
+          <label class="field chapter-context-advanced" data-context="advanced">
             <span>最近 1—3 章摘要</span>
             <textarea id="recent-summaries" rows="5"></textarea>
           </label>
           <p class="hint">页面摘要会覆盖 BOOK 状态区内嵌摘要，生成章节 Prompt 前请先与 BOOK 同步。</p>
-          <label class="field">
+          <label class="field chapter-context-advanced" data-context="advanced">
             <span>实际十章摘要（复盘模式）</span>
             <textarea id="actual-summaries" rows="5"></textarea>
           </label>
-          <label class="field">
+          <label class="field chapter-context-advanced" data-context="advanced">
             <span>复盘当前状态</span>
             <textarea id="review-state" rows="4"></textarea>
           </label>
-          <label class="field">
+          <label class="field chapter-context-advanced" data-context="advanced">
             <span>未兑现承诺</span>
             <textarea id="unfulfilled-promises" rows="4"></textarea>
           </label>
-          <label class="field">
+          <label class="field chapter-context-advanced" data-context="advanced">
             <span>尚未发生的 100 章方向</span>
             <textarea id="future-direction" rows="4"></textarea>
           </label>
@@ -389,6 +517,7 @@
           <label class="chapter-number">章节编号 <input id="chapter-number" type="number" min="1" max="9999" value="1"></label>
         </div>
 
+        <div id="prompt-response-advanced" class="drawer-section">
         <label class="field">
           <span>完整 Prompt（可编辑）</span>
           <textarea id="prompt-text" rows="19"></textarea>
@@ -398,6 +527,7 @@
           <span>Codex 返回文本（粘贴到这里；点击“将 Codex 返回放入 Proposal 编辑区”才会进入 Proposal 编辑区）</span>
           <textarea id="codex-response" rows="12"></textarea>
         </label>
+        </div>
 
         <label class="field">
           <span>正式正文（保存内容；只在提取后进入 chapter-NNNN.md）</span>
@@ -432,7 +562,7 @@
           <button id="approve-chapter" class="primary">批准并保存章节</button>
         </div>
 
-        <details class="template-editor">
+        <details id="template-editor" class="template-editor">
           <summary>编辑并保存十四个 Prompt 模板（PROMPTS.md）</summary>
           <p class="hint">模板参与下一次生成；保存模板和生成 Prompt 是两个独立动作。</p>
           <label class="field"><span>Fantasy Seed 模板</span><textarea id="template-fantasy_seed" rows="12"></textarea></label>
@@ -453,6 +583,22 @@
         </details>
       </section>
     </main>
+      </div>
+    </div>
+
+    <aside id="right-drawer" class="right-drawer" aria-hidden="true" aria-label="执行透明度">
+      <div class="right-drawer-backdrop" data-close-drawer></div>
+      <div class="right-drawer-panel">
+        <div class="right-drawer-heading">
+          <div>
+            <p class="eyebrow">EXECUTION TRANSPARENCY</p>
+            <h2>执行详情</h2>
+          </div>
+          <button id="close-right-drawer" type="button">关闭</button>
+        </div>
+        <div id="right-drawer-body" class="right-drawer-body"></div>
+      </div>
+    </aside>
 
     <script src="{{ url_for('static', path='app.js') }}"></script>
   </body>
