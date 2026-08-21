@@ -1,0 +1,63 @@
+{
+  "candidate": "《炉藏万象》",
+  "chapter": 1,
+  "writer_mode": "hybrid_selective",
+  "selected_specialists": [],
+  "integrator_executed": false,
+  "final_source": "primary",
+  "model": "gpt-5.6-luna via real subagent",
+  "model_calls": 5,
+  "input_tokens": "UNKNOWN",
+  "output_tokens": "UNKNOWN",
+  "total_tokens": "UNKNOWN",
+  "nodes": {
+    "director": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 2437,
+      "response_chars": 1009
+    },
+    "chapter_prep": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 6768,
+      "response_chars": 980
+    },
+    "curator": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 7772,
+      "response_chars": 3490
+    },
+    "primary": {
+      "status": "adopted",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 7666,
+      "response_chars": 6015
+    },
+    "integrator": {
+      "status": "skipped",
+      "model_call": "none",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": "UNKNOWN",
+      "response_chars": "UNKNOWN"
+    },
+    "state_delta": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 7760,
+      "response_chars": 1803
+    }
+  }
+}
