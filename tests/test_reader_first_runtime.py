@@ -71,6 +71,17 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         curated_context="# Curated Chapter Context\n\n## Reader-Facing Language\n动作优先",
     )
     assert primary.count(READER_FIRST_PROSE_CONTRACT) == 1
+    for marker in (
+        "清楚 > 顺畅 > 有画面 > 文学感",
+        "普通中文男频网文读者",
+        "明确写人物、对象、动作、原因和结果",
+        "重要能力、物品和规则第一次出现时",
+        "少连续使用“不是……”",
+        "对话像人在现场传递信息",
+        "世界观和空间信息只解释当前行动需要的最小部分",
+        "简单不等于空泛",
+    ):
+        assert marker in primary
     specialist = generate_prompt(
         mode="specialist_action",
         template="",
