@@ -3,6 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from fastapi.testclient import TestClient
+
+from story_mvp.app import app
 from story_mvp.run_ledger import create_or_load_run, save_node_prompt
 from story_mvp.storage import (
     compose_book_content,
@@ -172,3 +175,38 @@ def test_old_book_lazy_state_does_not_rewrite_existing_files(tmp_path: Path) -> 
     assert (book_dir / "WORKFLOW_STATE.json").is_file()
     state = json.loads((book_dir / "WORKFLOW_STATE.json").read_text(encoding="utf-8"))
     assert "# 小说总体设计画像" not in json.dumps(state, ensure_ascii=False)
+
+
+def test_workflow_and_impact_api_use_real_book_state(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    client = TestClient(app)
+    assert client.post("/api/books", json={"book_id": "api-demo"}).status_code == 201
+    book = _book_content()
+    assert client.put("/api/books/api-demo/book", json={"content": book}).status_code == 200
+    workflow = client.get("/api/books/api-demo/workflow")
+    assert workflow.status_code == 200
+    assert workflow.json()["version"] == 1
+    impact = client.get(
+        "/api/books/api-demo/workflow/impact",
+        params={"artifact": "book.future_10"},
+    )
+    assert impact.status_code == 200
+    assert impact.json()["artifact"] == "book.future_10"
+
+
+def test_existing_chapter_can_be_manually_edited_through_unified_save_path(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    client = TestClient(app)
+    assert client.post("/api/books", json={"book_id": "chapter-edit"}).status_code == 201
+    assert client.post(
+        "/api/books/chapter-edit/chapters",
+        json={"chapter_number": 1, "content": "first body"},
+    ).status_code == 200
+    edited = client.put(
+        "/api/books/chapter-edit/chapters/1",
+        json={"content": "edited body"},
+    )
+    assert edited.status_code == 200
+    assert client.get("/api/books/chapter-edit/chapters/1").json()["content"] == "edited body"

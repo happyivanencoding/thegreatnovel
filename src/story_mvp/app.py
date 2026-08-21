@@ -33,12 +33,14 @@ from .storage import (
     read_chapter,
     read_book_payload,
     read_creative_payload,
+    replace_chapter,
     require_book,
     save_chapter,
     write_book,
     write_creative_artifact,
     write_prompt_templates,
 )
+from .workflow_state import workflow_impact, workflow_status
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -217,6 +219,26 @@ def post_book(payload: BookCreateRequest) -> dict[str, Any]:
 def get_book(book_id: str) -> dict[str, Any]:
     try:
         return read_book_payload(book_id, workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/workflow")
+def get_workflow(book_id: str) -> dict[str, Any]:
+    try:
+        return workflow_status(_book_directory(book_id))
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/workflow/impact")
+def get_workflow_impact(book_id: str, artifact: str) -> dict[str, Any]:
+    try:
+        return workflow_impact(_book_directory(book_id), artifact)
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:
@@ -575,6 +597,24 @@ def post_chapter(book_id: str, payload: ChapterRequest) -> dict[str, str]:
         target = save_chapter(
             book_id,
             payload.chapter_number,
+            payload.content,
+            workspace_path(),
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "saved", "file": target.name}
+
+
+@app.put("/api/books/{book_id}/chapters/{chapter_number}")
+def put_chapter(
+    book_id: str, chapter_number: int, payload: TextRequest
+) -> dict[str, str]:
+    try:
+        target = replace_chapter(
+            book_id,
+            chapter_number,
             payload.content,
             workspace_path(),
         )
