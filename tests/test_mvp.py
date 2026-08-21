@@ -46,6 +46,7 @@ from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     DEFAULT_STATE_DELTA_TEMPLATE,
     DIRECTOR_CHAPTER_BUDGET_RULE,
+    DIRECTOR_REPETITION_RULE,
     CreativeApprovalError,
     OPENING_THREE_CHAPTER_CONTRACT,
     PROMPT_MODES,
@@ -53,6 +54,7 @@ from story_mvp.prompts import (
     RESULT_STOP_RULE,
     REQUIRED_OUTLINE_FIELDS,
     SINGLE_WRITER_RUNTIME_NOTE,
+    STAGE_CHANGE_PLANNING_RULE,
     WRITER_AUDIT_RULE,
     HardGateError,
     canon_index_has_labels,
@@ -545,6 +547,42 @@ def test_director_prompt_contains_chapter_budget_boundary() -> None:
     assert DIRECTOR_CHAPTER_BUDGET_RULE in prompt
 
 
+def test_director_prompt_uses_recent_three_summaries_and_soft_repetition_rule() -> None:
+    prompt = generate_prompt(
+        mode="director",
+        template="",
+        book_content="BOOK",
+        chapter_number=4,
+        current_long_block="CURRENT_BLOCK",
+        current_chapter_plan="CURRENT_CHAPTER_PLAN",
+        recent_summaries=(
+            "第1章：OLD_SUMMARY\n"
+            "第2章：SECOND_SUMMARY\n"
+            "第3章：THIRD_SUMMARY\n"
+            "第4章：FOURTH_SUMMARY"
+        ),
+    )
+    assert DIRECTOR_REPETITION_RULE in prompt
+    assert "最近 1—3 章摘要" in prompt
+    assert "第1章：OLD_SUMMARY" not in prompt
+    for marker in ("第2章：SECOND_SUMMARY", "第3章：THIRD_SUMMARY", "第4章：FOURTH_SUMMARY"):
+        assert marker in prompt
+    for field in REQUIRED_OUTLINE_FIELDS:
+        assert prompt.count(f"{field}：") == 1
+
+
+def test_stage_change_planning_rule_is_in_outline_and_review() -> None:
+    assert STAGE_CHANGE_PLANNING_RULE in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert STAGE_CHANGE_PLANNING_RULE in DEFAULT_PROMPT_TEMPLATES["review"]
+    for marker in (
+        "事件推进和阶段推进",
+        "主角主动目标改变或升级",
+        "章末推动力不默认等于新危险",
+        "不是固定频率、评分项或 Hard Gate",
+    ):
+        assert marker in STAGE_CHANGE_PLANNING_RULE
+
+
 def test_writer_result_stop_rule_is_rendered_once_in_single_and_hybrid_writer_prompts() -> None:
     single = generate_prompt(
         mode="chapter",
@@ -575,6 +613,9 @@ def test_writer_result_stop_rule_is_rendered_once_in_single_and_hybrid_writer_pr
 
 def test_opening_three_chapter_rules_are_conditionally_rendered_in_active_prompts() -> None:
     assert OPENING_THREE_CHAPTER_CONTRACT in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "具体的人正在面对什么问题" in OPENING_THREE_CHAPTER_CONTRACT
+    assert "普通读者用一句朴素的话暂时知道主角现在能做什么" in OPENING_THREE_CHAPTER_CONTRACT
+    assert "世界尺度 → 当前时代/大秩序/大危机" not in OPENING_THREE_CHAPTER_CONTRACT
 
     director = generate_prompt(
         mode="director",

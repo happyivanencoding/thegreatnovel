@@ -387,7 +387,7 @@ class DirectorContextPacket:
     current_chapter_plan: str
     growth_genome_compact: str
     canon_index: str
-    recent_summary: str
+    recent_summaries: str
     transition_context: str
     author_intent: str
 
@@ -408,6 +408,51 @@ def _tail_for_director(text: str, max_chars: int = 1800) -> str:
     return "\n\n".join(selected) or clean[-max_chars:]
 
 
+def _recent_summaries_for_director(text: str, max_chars: int = 1800) -> str:
+    """给 Director 保留最近 1—3 个摘要，避免只突出最后一章。"""
+
+    clean = text.strip()
+    if not clean:
+        return ""
+    chapter_starts = list(re.finditer(r"(?m)^(?:[-*]\s*)?第\s*\d+\s*章\s*[：:].*$", clean))
+    if chapter_starts:
+        selected_starts = chapter_starts[-3:]
+        blocks = [
+            clean[start.start() : (chapter_starts[index + 1].start() if index + 1 < len(chapter_starts) else len(clean))].strip()
+            for index, start in enumerate(
+                selected_starts,
+                start=len(chapter_starts) - len(selected_starts),
+            )
+        ]
+        return _tail_for_director("\n\n".join(blocks), max_chars)
+    paragraphs = [part.strip() for part in re.split(r"\n\s*\n", clean) if part.strip()]
+    return _tail_for_director("\n\n".join(paragraphs[-3:]), max_chars)
+
+
+def _without_recent_summaries_for_director(text: str) -> str:
+    """Director 单独注入最近摘要；Canon Index 保留其它状态，避免重复。"""
+
+    lines = text.splitlines()
+    collected: list[str] = []
+    skipping = False
+    recent_heading = re.compile(
+        r"^(?:##\s+)?(?:RECENT SUMMARIES|最近 1—3 章摘要|最近章节摘要)(?:（|\(|：|:|$)"
+    )
+    next_heading = re.compile(
+        r"^(?:##\s+)?(?:OPEN PROMISES|AUTHOR NOTES|CURRENT STATE)(?:（|\(|：|:|$)"
+    )
+    for line in lines:
+        stripped = line.strip()
+        if recent_heading.match(stripped):
+            skipping = True
+            continue
+        if skipping and next_heading.match(stripped):
+            skipping = False
+        if not skipping:
+            collected.append(line)
+    return "\n".join(collected).strip()
+
+
 def build_director_context(
     packet: ChapterContextPacket,
     *,
@@ -420,8 +465,11 @@ def build_director_context(
         current_long_block=packet.current_long_block or "（未提供当前大型剧情块。）",
         current_chapter_plan=packet.current_chapter_plan or "（未提供当前章十章计划条目。）",
         growth_genome_compact=packet.growth_genome_compact,
-        canon_index=packet.canon_context or "（当前 Canon Index 为空。）",
-        recent_summary=_tail_for_director(recent_summaries) or "（未提供最近一章摘要。）",
+        canon_index=(
+            _without_recent_summaries_for_director(packet.canon_context)
+            or "（当前 Canon Index 为空。）"
+        ),
+        recent_summaries=_recent_summaries_for_director(recent_summaries) or "（未提供最近 1—3 章摘要。）",
         transition_context=_tail_for_director(packet.recent_prose) or "（无前文章末衔接片段。）",
         author_intent=author_intent.strip() or "（未提供额外作者章意图。）",
     )

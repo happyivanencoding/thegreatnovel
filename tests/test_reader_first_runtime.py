@@ -80,6 +80,11 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "对话像人在现场传递信息",
         "世界观和空间信息只解释当前行动需要的最小部分",
         "简单不等于空泛",
+        "当前读者主问题",
+        "具名的重要物品一旦明确换了持有人或位置",
+        "关键因果节点",
+        "第一息 / 第二息 / 第三息",
+        "新章不要原样或近似复述上一章最后一句",
     ):
         assert marker in primary
     specialist = generate_prompt(
@@ -143,6 +148,10 @@ def test_canon_memory_v2_and_state_delta_parser() -> None:
 
 ## PERSISTENT CANON
 砾角能在湿壁上短暂借力；关系阶段：容忍同行。
+### Active Relationships
+沈禾｜寻找失踪弟弟｜与主角暂时合作｜主角救过她一次｜答应提供旧矿图
+### Tracked Assets
+黑炉钥匙｜沈砚｜废井腰包｜可开旧炉门｜刚从主角转交
 
 ## RECENT SUMMARIES
 第3章：主角打开闸门。
@@ -155,10 +164,17 @@ def test_canon_memory_v2_and_state_delta_parser() -> None:
     fields = parse_canon_memory(status)
     assert fields["active_scene_state"].startswith("废井")
     assert "短暂借力" in fields["persistent_canon"]
+    assert "Active Relationships" in fields["persistent_canon"]
+    assert "Tracked Assets" in fields["persistent_canon"]
     assert fields["author_notes"] == "逐字保留这句。"
     rendered = render_canon_memory(fields)
     assert "## ACTIVE SCENE STATE" in rendered
     assert "## PERSISTENT CANON" in rendered
+    assert "沈禾｜寻找失踪弟弟" in rendered
+    assert "黑炉钥匙｜沈砚" in rendered
+    assert "当前主动目标" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "### Active Relationships" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "### Tracked Assets" in DEFAULT_STATE_DELTA_TEMPLATE
 
     proposal = parse_state_delta_v2(
         """# State Delta Audit
@@ -207,6 +223,10 @@ def test_canon_memory_v2_and_state_delta_parser() -> None:
 新场景
 # Proposed Persistent Canon
 新能力限制
+### Active Relationships
+沈禾｜寻找弟弟｜暂时合作｜主角救援｜提供旧矿图
+### Tracked Assets
+黑炉钥匙｜沈禾｜回收册｜已转交｜刚从主角转出
 # Proposed Chapter Summary
 第一章事实
 # Proposed Open Promises
@@ -215,6 +235,8 @@ def test_canon_memory_v2_and_state_delta_parser() -> None:
     assert "当前已完成第1章。" in updated
     assert "第1章：第一章事实" in updated
     assert "作者原话。" in updated
+    assert "沈禾｜寻找弟弟" in updated
+    assert "黑炉钥匙｜沈禾" in updated
     assert "旧场景" not in updated
 
     prefixed = apply_state_delta_to_book(
