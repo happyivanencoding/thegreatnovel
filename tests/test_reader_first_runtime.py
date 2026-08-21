@@ -261,7 +261,12 @@ def test_run_ledger_retries_one_failed_node_and_keeps_upstream(tmp_path: Path) -
     book_dir = tmp_path / "demo"
     (book_dir / "BOOK.md").parent.mkdir(parents=True)
     (book_dir / "BOOK.md").write_text("# book", encoding="utf-8")
-    manifest = create_or_load_run(book_dir, 1, selected_specialists=["opening"])
+    manifest = create_or_load_run(
+        book_dir,
+        1,
+        writer_mode="hybrid_selective",
+        selected_specialists=["opening"],
+    )
     assert manifest["nodes"]["dialogue"]["status"] == "skipped"
     save_node_prompt(book_dir, 1, "director", "DIRECTOR_PROMPT")
     save_node_response(book_dir, 1, "director", "DIRECTOR_RESPONSE")

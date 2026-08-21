@@ -23,6 +23,7 @@ from .openai_executor import (
 from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
 from .run_ledger import (
+    activate_optional_repair,
     adopt_final_source,
     create_or_load_run,
     load_run,
@@ -122,7 +123,9 @@ class ChapterRequest(BaseModel):
 
 
 class RunRequest(BaseModel):
-    writer_mode: Literal["hybrid_selective", "hybrid_full", "single"] = "hybrid_selective"
+    writer_mode: Literal[
+        "single", "curator_primary", "hybrid_selective", "hybrid_full"
+    ] = "curator_primary"
     selected_specialists: list[str] = Field(default_factory=list)
 
 
@@ -136,6 +139,10 @@ class RunAdoptRequest(BaseModel):
 
 class RunIntegratorSkipRequest(BaseModel):
     specialist_responses: dict[str, str] = Field(default_factory=dict)
+
+
+class RunRepairSpecialistsRequest(BaseModel):
+    selected_specialists: list[str] = Field(default_factory=list)
 
 
 class PromptRequest(BaseModel):
@@ -159,7 +166,9 @@ class PromptRequest(BaseModel):
     ]
     book_id: str = ""
     template: str = ""
-    writer_mode: Literal["hybrid_selective", "hybrid_full", "single"] = "hybrid_selective"
+    writer_mode: Literal[
+        "single", "curator_primary", "hybrid_selective", "hybrid_full"
+    ] = "curator_primary"
     book_content: str = ""
     creative_direction: str = ""
     fantasy_seed: str = ""
@@ -330,6 +339,20 @@ def post_run(book_id: str, chapter_number: int, payload: RunRequest) -> dict[str
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
     return manifest
+
+
+@app.put("/api/books/{book_id}/runs/{chapter_number}/repair-specialists")
+def put_run_repair_specialists(
+    book_id: str, chapter_number: int, payload: RunRepairSpecialistsRequest
+) -> dict[str, Any]:
+    try:
+        return activate_optional_repair(
+            _book_directory(book_id), chapter_number, payload.selected_specialists
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.get("/api/books/{book_id}/runs/{chapter_number}")

@@ -87,12 +87,17 @@ def create_or_load_run(
     book_directory: Path,
     chapter_number: int,
     *,
-    writer_mode: str = "hybrid_selective",
+    writer_mode: str = "curator_primary",
     selected_specialists: list[str] | None = None,
 ) -> dict[str, Any]:
     """创建或载入固定节点 Run；已有 manifest 不被覆盖。"""
 
-    if writer_mode not in {"single", "hybrid_selective", "hybrid_full"}:
+    if writer_mode not in {
+        "single",
+        "curator_primary",
+        "hybrid_selective",
+        "hybrid_full",
+    }:
         raise ValueError(f"未知 writer_mode：{writer_mode}")
     requested = selected_specialists
     if requested is None:
@@ -100,6 +105,10 @@ def create_or_load_run(
     unknown = sorted(set(requested) - set(SPECIALIST_NODES))
     if unknown:
         raise ValueError("未知专项 Agent：" + "、".join(unknown))
+    if writer_mode == "curator_primary" and requested:
+        raise ValueError(
+            "curator_primary 的 Specialist 必须在 Primary 完成后通过 repair endpoint 显式启用"
+        )
 
     manifest_path = _manifest_path(book_directory, chapter_number)
     if manifest_path.is_file():
@@ -111,6 +120,8 @@ def create_or_load_run(
     for node in SPECIALIST_NODES:
         if node not in requested:
             nodes[node]["status"] = "skipped"
+    if writer_mode == "curator_primary":
+        nodes["integrator"]["status"] = "skipped"
     manifest = {
         "chapter_number": chapter_number,
         "writer_mode": writer_mode,
@@ -161,10 +172,14 @@ def _require_node(manifest: dict[str, Any], node: str) -> dict[str, Any]:
 
 def _save(manifest: dict[str, Any], book_directory: Path) -> dict[str, Any]:
     statuses = [info.get("status") for info in manifest.get("nodes", {}).values()]
-    if manifest.get("final_source") and manifest["nodes"]["state_delta"].get("status") == "completed":
-        manifest["run_status"] = "completed"
-    elif "failed" in statuses:
+    if "failed" in statuses:
         manifest["run_status"] = "failed"
+    elif (
+        manifest.get("final_source")
+        and manifest["nodes"]["state_delta"].get("status") == "completed"
+        and all(status in {"skipped", "completed", "adopted"} for status in statuses)
+    ):
+        manifest["run_status"] = "completed"
     else:
         manifest["run_status"] = "in_progress"
     _write_manifest(_manifest_path(book_directory, int(manifest["chapter_number"])), manifest)
@@ -313,6 +328,33 @@ def adopt_final_source(
 
 def should_run_integrator(specialist_responses: Mapping[str, str]) -> bool:
     return any(count_specialist_patches(value) > 0 for value in specialist_responses.values())
+
+
+def activate_optional_repair(
+    book_directory: Path, chapter_number: int, selected_specialists: list[str]
+) -> dict[str, Any]:
+    """作者在 Primary 完成后显式启用 curator_primary 的局部修复层。"""
+
+    manifest = load_run(book_directory, chapter_number)
+    if manifest.get("writer_mode") != "curator_primary":
+        raise ValueError("只有 curator_primary Run 可以通过 repair endpoint 启用 Specialist")
+    if not selected_specialists:
+        raise ValueError("至少需要选择一个 Specialist")
+    unknown = sorted(set(selected_specialists) - set(SPECIALIST_NODES))
+    if unknown:
+        raise ValueError("未知专项 Agent：" + "、".join(unknown))
+    primary_status = _require_node(manifest, "primary").get("status")
+    if primary_status not in {"completed", "adopted"}:
+        raise ValueError("Primary 尚未完成，不能启用 repair Specialist")
+
+    selected = set(selected_specialists)
+    manifest["selected_specialists"] = list(selected_specialists)
+    for node in SPECIALIST_NODES:
+        _require_node(manifest, node)["status"] = (
+            "pending" if node in selected else "skipped"
+        )
+    _require_node(manifest, "integrator")["status"] = "pending"
+    return _save(manifest, book_directory)
 
 
 def skip_integrator_if_no_patches(
