@@ -42,7 +42,41 @@ def settings_status() -> dict[str, str | bool]:
         "url": url,
         "configured": bool(key),
         "source": "memory" if _runtime_settings.get("api_key", "").strip() else "environment" if key else "none",
+        "persistent": bool(_runtime_settings.get("persistent", False)),
     }
+
+
+def _persist_user_environment(name: str, url: str, api_key: str) -> None:
+    if os.name != "nt":
+        raise ValueError("系统环境变量设置目前只支持 Windows")
+    import ctypes
+    import winreg
+
+    values = {
+        "STORY_MVP_API_PROFILE": name,
+        "OPENAI_API_KEY": api_key,
+    }
+    if url:
+        values["OPENAI_BASE_URL"] = url
+    with winreg.OpenKey(
+        winreg.HKEY_CURRENT_USER,
+        "Environment",
+        0,
+        winreg.KEY_SET_VALUE,
+    ) as environment_key:
+        for variable, value in values.items():
+            winreg.SetValueEx(environment_key, variable, 0, winreg.REG_SZ, value)
+        if not url:
+            try:
+                winreg.DeleteValue(environment_key, "OPENAI_BASE_URL")
+            except FileNotFoundError:
+                pass
+    try:
+        ctypes.windll.user32.SendMessageTimeoutW(
+            0xFFFF, 0x001A, 0, "Environment", 0x0002, 1000, None
+        )
+    except (AttributeError, OSError):
+        pass
 
 
 def configure_settings(name: str, url: str, api_key: str) -> dict[str, str | bool]:
@@ -54,15 +88,19 @@ def configure_settings(name: str, url: str, api_key: str) -> dict[str, str | boo
         parsed = urlparse(clean_url)
         if parsed.scheme not in {"http", "https"} or not parsed.netloc:
             raise ValueError("API URL 必须是完整的 http(s) URL")
-    if api_key.strip():
-        _runtime_settings["api_key"] = api_key.strip()
-        os.environ["OPENAI_API_KEY"] = _runtime_settings["api_key"]
-    elif not _runtime_or_environment("api_key"):
+    resolved_key = api_key.strip() or _runtime_or_environment("api_key")
+    if not resolved_key:
         raise ValueError("API Key 不能为空")
+    _persist_user_environment(clean_name, clean_url, resolved_key)
+    _runtime_settings["api_key"] = resolved_key
     _runtime_settings["name"] = clean_name
     _runtime_settings["url"] = clean_url
+    _runtime_settings["persistent"] = True
+    os.environ["OPENAI_API_KEY"] = resolved_key
     if clean_url:
         os.environ["OPENAI_BASE_URL"] = clean_url
+    else:
+        os.environ.pop("OPENAI_BASE_URL", None)
     return settings_status()
 
 

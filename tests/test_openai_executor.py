@@ -77,6 +77,12 @@ def test_openai_settings_accept_url_and_key_without_echoing_or_persisting_key(mo
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_BASE_URL", raising=False)
     monkeypatch.setattr(executor_module, "_runtime_settings", {"url": "", "api_key": ""})
+    persisted: dict[str, str] = {}
+    monkeypatch.setattr(
+        executor_module,
+        "_persist_user_environment",
+        lambda name, url, api_key: persisted.update(name=name, url=url, api_key=api_key),
+    )
     client = TestClient(app)
 
     saved = client.put(
@@ -89,8 +95,14 @@ def test_openai_settings_accept_url_and_key_without_echoing_or_persisting_key(mo
         "url": "https://example.test/v1",
         "configured": True,
         "source": "memory",
+        "persistent": True,
     }
     assert "SECRET_TEST_KEY" not in saved.text
+    assert persisted == {
+        "name": "Test Profile",
+        "url": "https://example.test/v1",
+        "api_key": "SECRET_TEST_KEY",
+    }
     current = client.get("/api/settings/openai")
     assert current.json() == saved.json()
     assert "SECRET_TEST_KEY" not in current.text

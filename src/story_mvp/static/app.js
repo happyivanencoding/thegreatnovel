@@ -256,7 +256,7 @@ async function loadOpenAISettings() {
     $("settings-api-url").value = settings.url || "";
     $("settings-api-key").value = "";
     $("settings-status").textContent = settings.configured
-      ? "已配置：" + (settings.name || "未命名") + "（Key 不回显）"
+      ? "已配置：" + (settings.name || "未命名") + (settings.persistent ? "（用户环境变量；Key 不回显）" : "（Key 不回显）")
       : "未配置";
   } catch (error) {
     $("settings-status").textContent = `读取失败：${error.message}`;
@@ -275,7 +275,7 @@ async function saveOpenAISettings() {
     });
     $("settings-api-key").value = "";
     $("settings-status").textContent = settings.configured
-      ? "已保存：" + (settings.name || "未命名") + "（Key 不回显）"
+      ? "已保存：" + (settings.name || "未命名") + (settings.persistent ? "（用户环境变量；Key 不回显）" : "（Key 不回显）")
       : "未配置";
     await refreshExecutorStatus();
     showStatus("OpenAI API 设置已保存到当前后端进程");
