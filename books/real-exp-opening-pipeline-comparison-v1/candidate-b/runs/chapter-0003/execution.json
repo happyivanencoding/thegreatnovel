@@ -1,0 +1,87 @@
+{
+  "candidate": "《炉藏万象》",
+  "chapter": 3,
+  "writer_mode": "hybrid_selective",
+  "selected_specialists": [
+    "action",
+    "emotion"
+  ],
+  "executed_specialists": [
+    "action",
+    "emotion"
+  ],
+  "selection_mismatch": false,
+  "integrator_executed": true,
+  "final_source": "integrator",
+  "model": "gpt-5.6-luna via real subagent",
+  "model_calls": 8,
+  "input_tokens": "UNKNOWN",
+  "output_tokens": "UNKNOWN",
+  "total_tokens": "UNKNOWN",
+  "nodes": {
+    "director": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 16319,
+      "response_chars": 1423
+    },
+    "chapter_prep": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 31448,
+      "response_chars": 809
+    },
+    "curator": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 21446,
+      "response_chars": 4229
+    },
+    "primary": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 22939,
+      "response_chars": 6022
+    },
+    "action": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 12694,
+      "response_chars": 823
+    },
+    "emotion": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 9133,
+      "response_chars": 761
+    },
+    "integrator": {
+      "status": "adopted",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 12510,
+      "response_chars": 6468
+    },
+    "state_delta": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 9460,
+      "response_chars": 2072
+    }
+  }
+}

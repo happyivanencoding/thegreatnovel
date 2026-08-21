@@ -1,0 +1,73 @@
+{
+  "candidate": "《掌中天工》",
+  "chapter": 3,
+  "writer_mode": "hybrid_selective",
+  "selected_specialists": [
+    "action"
+  ],
+  "integrator_executed": true,
+  "final_source": "integrator",
+  "model": "gpt-5.6-luna via real subagent",
+  "model_calls": 7,
+  "input_tokens": "UNKNOWN",
+  "output_tokens": "UNKNOWN",
+  "total_tokens": "UNKNOWN",
+  "nodes": {
+    "director": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 16384,
+      "response_chars": 1185
+    },
+    "chapter_prep": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 32268,
+      "response_chars": 910
+    },
+    "curator": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 22648,
+      "response_chars": 5244
+    },
+    "primary": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 23146,
+      "response_chars": 8584
+    },
+    "action": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 15803,
+      "response_chars": 874
+    },
+    "integrator": {
+      "status": "adopted",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 15005,
+      "response_chars": 8671
+    },
+    "state_delta": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 12054,
+      "response_chars": 2146
+    }
+  }
+}

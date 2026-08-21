@@ -1,0 +1,87 @@
+{
+  "candidate": "《掌中天工》",
+  "chapter": 3,
+  "writer_mode": "hybrid_selective",
+  "selected_specialists": [
+    "dialogue",
+    "action"
+  ],
+  "executed_specialists": [
+    "dialogue",
+    "action"
+  ],
+  "selection_mismatch": false,
+  "integrator_executed": true,
+  "final_source": "integrator",
+  "model": "gpt-5.6-luna via real subagent",
+  "model_calls": 8,
+  "input_tokens": "UNKNOWN",
+  "output_tokens": "UNKNOWN",
+  "total_tokens": "UNKNOWN",
+  "nodes": {
+    "director": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 16441,
+      "response_chars": 1304
+    },
+    "chapter_prep": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 31781,
+      "response_chars": 1141
+    },
+    "curator": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 22875,
+      "response_chars": 5093
+    },
+    "primary": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 22739,
+      "response_chars": 10441
+    },
+    "dialogue": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 11353,
+      "response_chars": 550
+    },
+    "action": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 17773,
+      "response_chars": 899
+    },
+    "integrator": {
+      "status": "adopted",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 17423,
+      "response_chars": 10872
+    },
+    "state_delta": {
+      "status": "completed",
+      "model_call": "single_call",
+      "input_tokens": "UNKNOWN",
+      "output_tokens": "UNKNOWN",
+      "prompt_chars": 14068,
+      "response_chars": 2723
+    }
+  }
+}
