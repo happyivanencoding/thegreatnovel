@@ -105,7 +105,10 @@ def apply_response(
 
     result = workflow_status(directory)
     impact = workflow_impact(directory, artifact)
-    if input_path.parent.name == ".workflow_tmp" and directory in input_path.resolve().parents:
+    if (
+        input_path.parent.name == ".workflow_tmp"
+        and directory.resolve() in input_path.resolve().parents
+    ):
         input_path.unlink()
     return {
         "status": "applied",
