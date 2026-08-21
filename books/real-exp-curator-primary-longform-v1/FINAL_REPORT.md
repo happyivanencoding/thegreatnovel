@@ -8,8 +8,9 @@
 
 - branch = `principal_dev_new_sys`
 - BASE_SHA = `5ecda7d48354dca629bc184c2eb60d4cdbb5022c`
-- FINAL_SHA = 以最终提交后的 `git rev-parse HEAD` 为准，并在最终 handoff 报告
-- pushed = 待最终提交后执行 `git push origin principal_dev_new_sys`
+- FINAL_SHA = `36bf66c5fcda7df681b94153b597137f495b032d`（包含全部实验产物的 artifact commit）
+- pushed = yes；已推送至 `origin/principal_dev_new_sys`
+- report metadata follow-up = 本次仅更新 Git 字段的报告提交；最终 HEAD 以 handoff 中的 `git rev-parse HEAD` 为准
 - no new branch = yes
 - production backend / frontend / Prompt diff = no（除实验目录外）
 
