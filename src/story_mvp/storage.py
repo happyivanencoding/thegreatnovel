@@ -326,12 +326,16 @@ def write_creative_artifact(
     workspace: Path,
     *,
     origin: str | None = None,
+    workflow_source: str = "author_edit",
 ) -> dict[str, Any]:
     if artifact not in CREATIVE_ARTIFACT_FILES:
         raise ValueError(f"未知创意产物：{artifact}")
     directory = require_book(book_id, workspace)
     new_content = str(content)
     old_content = _read_creative_text(directory, artifact)
+    from .workflow_state import ensure_workflow_state
+
+    ensure_workflow_state(directory)
     state = _read_creative_state(directory)
     if old_content != new_content:
         source = origin if origin in {"model_generated", "model_selected"} else "author_edited"
@@ -344,6 +348,18 @@ def write_creative_artifact(
         new_content, encoding="utf-8"
     )
     _write_creative_state(directory, state)
+    from .workflow_state import record_content_change
+
+    workflow_artifact = (
+        "creative.story_program" if artifact == "proposal" else f"creative.{artifact}"
+    )
+    record_content_change(
+        directory,
+        workflow_artifact,
+        old_content,
+        new_content,
+        source=workflow_source,
+    )
     return read_creative_payload(book_id, workspace)
 
 
@@ -389,9 +405,23 @@ def read_book_payload(book_id: str, workspace: Path) -> dict[str, Any]:
     }
 
 
-def write_book(book_id: str, content: str, workspace: Path) -> None:
+def write_book(
+    book_id: str,
+    content: str,
+    workspace: Path,
+    *,
+    source: str = "author_edit",
+) -> None:
     directory = require_book(book_id, workspace)
-    (directory / "BOOK.md").write_text(content, encoding="utf-8")
+    path = directory / "BOOK.md"
+    old_content = path.read_text(encoding="utf-8")
+    from .workflow_state import ensure_workflow_state
+
+    ensure_workflow_state(directory)
+    path.write_text(content, encoding="utf-8")
+    from .workflow_state import record_book_change
+
+    record_book_change(directory, old_content, content, source=source)
 
 
 def write_prompt_templates(book_id: str, templates: dict[str, str], workspace: Path) -> None:
@@ -440,7 +470,14 @@ def apply_state_delta_to_book(
     return compose_book_content(sections)
 
 
-def save_chapter(book_id: str, chapter_number: int, content: str, workspace: Path) -> Path:
+def save_chapter(
+    book_id: str,
+    chapter_number: int,
+    content: str,
+    workspace: Path,
+    *,
+    source: str = "author_edit",
+) -> Path:
     directory = require_book(book_id, workspace)
     if chapter_number < 1 or chapter_number > 9999:
         raise ValueError("章节编号必须在 1 到 9999 之间")
@@ -448,7 +485,42 @@ def save_chapter(book_id: str, chapter_number: int, content: str, workspace: Pat
     target = directory / "chapters" / f"chapter-{chapter_number:04d}.md"
     if target.exists():
         raise ValueError(f"第{chapter_number}章已经存在，请先明确处理已有章节")
+    from .workflow_state import ensure_workflow_state
+
+    ensure_workflow_state(directory)
     target.write_text(content, encoding="utf-8")
+    from .workflow_state import record_chapter_body_change
+
+    record_chapter_body_change(directory, chapter_number, "", content, source=source)
+    return target
+
+
+def replace_chapter(
+    book_id: str,
+    chapter_number: int,
+    content: str,
+    workspace: Path,
+    *,
+    source: str = "author_edit",
+) -> Path:
+    directory = require_book(book_id, workspace)
+    if chapter_number < 1 or chapter_number > 9999:
+        raise ValueError("章节编号必须在 1 到 9999 之间")
+    validate_chapter_body_for_save(content)
+    target = directory / "chapters" / f"chapter-{chapter_number:04d}.md"
+    if not target.is_file():
+        raise FileNotFoundError(f"第{chapter_number}章尚未保存，不能编辑")
+    from .workflow_state import ensure_workflow_state
+
+    ensure_workflow_state(directory)
+    old_content = target.read_text(encoding="utf-8")
+    if old_content != content:
+        target.write_text(content, encoding="utf-8")
+    from .workflow_state import record_chapter_body_change
+
+    record_chapter_body_change(
+        directory, chapter_number, old_content, content, source=source
+    )
     return target
 
 

@@ -168,6 +168,9 @@ def _save(manifest: dict[str, Any], book_directory: Path) -> dict[str, Any]:
     else:
         manifest["run_status"] = "in_progress"
     _write_manifest(_manifest_path(book_directory, int(manifest["chapter_number"])), manifest)
+    from .workflow_state import sync_run_manifest
+
+    sync_run_manifest(book_directory, manifest)
     return manifest
 
 
@@ -246,6 +249,26 @@ def save_node_response(
 def mark_node_failed(book_directory: Path, chapter_number: int, node: str) -> dict[str, Any]:
     manifest = load_run(book_directory, chapter_number)
     _require_node(manifest, node)["status"] = "failed"
+    return _save(manifest, book_directory)
+
+
+def mark_run_stale(book_directory: Path, chapter_number: int) -> dict[str, Any]:
+    """将已有未来 Run 的真实节点整体标记 stale；不触发任何生成。"""
+
+    manifest = load_run(book_directory, chapter_number)
+    for info in manifest["nodes"].values():
+        if info.get("status") != "skipped":
+            info["status"] = "stale"
+    return _save(manifest, book_directory)
+
+
+def mark_node_stale(
+    book_directory: Path, chapter_number: int, node: str
+) -> dict[str, Any]:
+    manifest = load_run(book_directory, chapter_number)
+    node_manifest = _require_node(manifest, node)
+    if node_manifest.get("status") != "skipped":
+        node_manifest["status"] = "stale"
     return _save(manifest, book_directory)
 
 

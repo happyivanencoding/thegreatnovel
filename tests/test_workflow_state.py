@@ -1,0 +1,174 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from story_mvp.run_ledger import create_or_load_run, save_node_prompt
+from story_mvp.storage import (
+    compose_book_content,
+    create_book,
+    replace_chapter,
+    save_chapter,
+    write_book,
+    write_creative_artifact,
+)
+from story_mvp.workflow_state import workflow_impact, workflow_status
+
+
+def _book_content(
+    *,
+    design: str = "DESIGN",
+    long_plan: str = "LONG_PLAN",
+    future_10: str = "## 第18章：十八\n具体剧情：A\n\n## 第19章：十九\n具体剧情：B",
+    canon_state: str = "CANON",
+) -> str:
+    return compose_book_content(
+        {
+            "design": design,
+            "long_plan": long_plan,
+            "small_plan": future_10,
+            "status": canon_state,
+        }
+    )
+
+
+def _run(book_dir: Path, chapter: int) -> None:
+    create_or_load_run(book_dir, chapter, writer_mode="single")
+    save_node_prompt(book_dir, chapter, "director", "PROMPT")
+
+
+def _artifacts(workspace: Path, book_id: str) -> dict[str, dict[str, object]]:
+    return workflow_status(workspace / book_id)["artifacts"]
+
+
+def test_fantasy_seed_stales_future_chain_but_protects_completed_body(tmp_path: Path) -> None:
+    book_dir = create_book("demo", tmp_path)
+    write_creative_artifact("demo", "fantasy_seed", "SEED-1", tmp_path)
+    write_creative_artifact("demo", "world_vision", "WORLD-1", tmp_path)
+    write_creative_artifact("demo", "proposal", "PROGRAM-1", tmp_path)
+    write_book("demo", _book_content(), tmp_path)
+    _run(book_dir, 1)
+    save_chapter("demo", 1, "chapter one", tmp_path)
+    _run(book_dir, 18)
+
+    write_creative_artifact("demo", "fantasy_seed", "SEED-2", tmp_path)
+    artifacts = _artifacts(tmp_path, "demo")
+
+    for key in (
+        "creative.world_vision",
+        "creative.story_program",
+        "book.design",
+        "book.long_plan",
+        "book.future_10",
+        "chapter.18.run",
+    ):
+        assert artifacts[key]["status"] == "STALE"
+    assert artifacts["chapter.1.body"]["status"] == "DONE"
+    assert artifacts["chapter.1.body"]["freshness"] == "fresh"
+
+
+def test_world_vision_does_not_stale_fantasy_seed(tmp_path: Path) -> None:
+    create_book("demo", tmp_path)
+    write_creative_artifact("demo", "fantasy_seed", "SEED", tmp_path)
+    write_creative_artifact("demo", "world_vision", "WORLD-1", tmp_path)
+    before = _artifacts(tmp_path, "demo")
+    write_creative_artifact("demo", "world_vision", "WORLD-2", tmp_path)
+    after = _artifacts(tmp_path, "demo")
+
+    assert after["creative.fantasy_seed"]["status"] == before["creative.fantasy_seed"]["status"]
+    assert after["creative.world_vision"]["revision"] == before["creative.world_vision"]["revision"] + 1
+
+
+def test_future_10_change_only_stales_existing_runs_in_changed_entries(tmp_path: Path) -> None:
+    book_dir = create_book("demo", tmp_path)
+    write_book(
+        "demo",
+        _book_content(
+            future_10="## 第18章：十八\n具体剧情：A\n\n## 第19章：十九\n具体剧情：B"
+        ),
+        tmp_path,
+    )
+    _run(book_dir, 18)
+    _run(book_dir, 19)
+    before = _artifacts(tmp_path, "demo")
+    changed = _book_content(
+        future_10="## 第18章：十八\n具体剧情：CHANGED\n\n## 第19章：十九\n具体剧情：B"
+    )
+    write_book("demo", changed, tmp_path)
+    after = _artifacts(tmp_path, "demo")
+
+    assert after["chapter.18.run"]["status"] == "STALE"
+    assert after["chapter.19.run"]["status"] == before["chapter.19.run"]["status"]
+    impact = workflow_impact(book_dir, "book.future_10")
+    assert impact["existing_nodes_affected"] == ["chapter.18.run"]
+    assert impact["protected_completed_chapters"] == []
+
+
+def test_canon_change_stales_future_runs_without_staling_plans(tmp_path: Path) -> None:
+    book_dir = create_book("demo", tmp_path)
+    write_book("demo", _book_content(canon_state="CANON-1"), tmp_path)
+    _run(book_dir, 18)
+    before = _artifacts(tmp_path, "demo")
+    write_book("demo", _book_content(canon_state="CANON-2"), tmp_path)
+    after = _artifacts(tmp_path, "demo")
+
+    assert after["book.long_plan"]["status"] == before["book.long_plan"]["status"]
+    assert after["book.future_10"]["status"] == before["book.future_10"]["status"]
+    assert after["chapter.18.run"]["status"] == "STALE"
+
+
+def test_editing_chapter_body_stales_its_state_delta_and_later_runs_only(tmp_path: Path) -> None:
+    book_dir = create_book("demo", tmp_path)
+    write_book("demo", _book_content(), tmp_path)
+    _run(book_dir, 1)
+    save_chapter("demo", 1, "chapter one", tmp_path)
+    _run(book_dir, 2)
+    _run(book_dir, 3)
+    replace_chapter("demo", 1, "chapter one edited", tmp_path)
+    artifacts = _artifacts(tmp_path, "demo")
+
+    assert artifacts["chapter.1.state_delta"]["status"] == "STALE"
+    assert artifacts["chapter.2.run"]["status"] == "STALE"
+    assert artifacts["chapter.3.run"]["status"] == "STALE"
+    assert "chapter.1.body" not in artifacts["chapter.1.body"].get("stale_from", [])
+
+
+def test_same_content_does_not_increment_revision_or_stale(tmp_path: Path) -> None:
+    create_book("demo", tmp_path)
+    content = _book_content()
+    write_book("demo", content, tmp_path)
+    before = _artifacts(tmp_path, "demo")
+    write_book("demo", content, tmp_path)
+    after = _artifacts(tmp_path, "demo")
+
+    assert after == before
+
+
+def test_book_section_diff_only_changes_future_10_revision(tmp_path: Path) -> None:
+    create_book("demo", tmp_path)
+    initial = _book_content()
+    write_book("demo", initial, tmp_path)
+    before = _artifacts(tmp_path, "demo")
+    write_book("demo", _book_content(future_10="## 第18章：十八\n具体剧情：CHANGED"), tmp_path)
+    after = _artifacts(tmp_path, "demo")
+
+    assert after["book.future_10"]["revision"] == before["book.future_10"]["revision"] + 1
+    for key in ("book.design", "book.long_plan", "book.canon_state"):
+        assert after[key]["revision"] == before[key]["revision"]
+
+
+def test_old_book_lazy_state_does_not_rewrite_existing_files(tmp_path: Path) -> None:
+    book_dir = tmp_path / "old-book"
+    book_dir.mkdir()
+    book_text = "# 小说总体设计画像\n\n旧书内容\n"
+    (book_dir / "BOOK.md").write_text(book_text, encoding="utf-8")
+    (book_dir / "PROMPTS.md").write_text("", encoding="utf-8")
+    (book_dir / "chapters").mkdir()
+
+    snapshot = workflow_status(book_dir)
+
+    assert snapshot["version"] == 1
+    assert (book_dir / "BOOK.md").read_text(encoding="utf-8") == book_text
+    assert (book_dir / "WORKFLOW_STATE.json").is_file()
+    state = json.loads((book_dir / "WORKFLOW_STATE.json").read_text(encoding="utf-8"))
+    assert "# 小说总体设计画像" not in json.dumps(state, ensure_ascii=False)
