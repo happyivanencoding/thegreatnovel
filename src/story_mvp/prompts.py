@@ -55,6 +55,25 @@ INTERNAL_REALISM_DIRECTION = """内部因果必须可信，但可信不等于现
 PAYOFF_FIRST_COST_RHYTHM = """Payoff-first 成本节奏：成熟不等于每次胜利立即受伤、负债、被审查或承担新责任。默认顺序是：胜利或突破真正发生 → 外界反应 → 主角获得实际收益 → 收益改变行动空间 → 再决定是否需要代价或余波。普通小胜允许明显净收益；阶段大胜通常应当收益明显大于当前成本。成本只在真实需要时限制选择、迫使策略或推动换挡，不作为每次 Payoff 的固定税。"""
 
 
+OPENING_THREE_CHAPTER_CONTRACT = """开书前三章专用合同（只适用于本书开头第1—3章，不扩展为全书每三章的规律，也不是 Schema 或 Hard Gate）：
+
+第一章的进入顺序优先为：世界尺度 → 当前时代/大秩序/大危机 → 当前区域、势力或制度 → 主角此刻的具体位置与处境 → 立即行动。宏观信息必须直接解释主角为何在这里、当前秩序怎样压到他身上，并迅速收缩到人物、地点和行动；不要写成设定集，也不要在主角出现后继续补全世界百科。先建立读者能理解的本世界常识，再让核心异能打破这条常识。
+
+第一章必须让主角面对逼近的现实问题并采取行动。章末前，核心非对称优势必须造成一次真实、可见、不可替代的现实结果；只听见、看见、感知、得到坐标、知道未来、出现面板、能力似乎觉醒或“下章再试”都不算兑现。先让动作、结果、他人反应和主角实际所得成立，再保留尚未解释的成长空间；第一次展示要强，但不要提前结算第二章本应完成的能力拥有、第二次使用或正式升级。
+
+第二章优先把第一次震撼变成主角真正可以保留、再次调用或据为己有的优势，例如能力、装备、资源、身份、入口、控制权、情报或关系优势，并让世界或人物因这个结果改变行动；不要连续停留在发现、确认、再确认。
+
+第三章优先让前两章的收益进入下一轮主动行动，得到新的资源、能力、关系变化、位置或机会，形成第一次小复利闭环。前三章不要把找到方向、确认坐标、准备进入、即将获得连续当作主要结果。
+
+关键选择除了“正确”，还应暴露本书主角自己的欲望、偏执、野心、护短、贪欲、傲气、好奇、狠劲或独特习惯；不要机械添加缺点，也不要把所有主角统一写成狂傲或冷静正确的执行者。"""
+
+
+DIRECTOR_CHAPTER_BUDGET_RULE = """章节事件预算边界：场景可以跨章，但本章事件预算不得跨章。本章只完成当前章计划明确分配的直接结果与状态变化。下一章事件可以以压力、线索、未完成动作、新入口或外界反应出现，但不得在本章提前完成或结算。结尾推动力回答“为什么下一章必然发生”，不是授权本章额外完成下一章结果。第一章尤其不能为了写得完整，提前结算第二章的能力拥有、第二次使用或正式升级；展示要强，但仍服从本章计划。"""
+
+
+RESULT_STOP_RULE = """结果发生后，停止“再证明一次”：当前章直接结果已经通过动作、物体变化、人物反应和现实后果成立后，只继续写必要的现场余波、主角实际得到或失去什么、重要人物怎样改变行动和章末推动，随后停止。不要再解释一次已经成立的机制，不要追加主角正确理解、旁白总结、NPC 重复确认、同义重述、主题结论或下一章任务清单。第一次异能高光尤其要让读者感到“这件事已经发生”，而不是感到作者已经把能力定义完整。"""
+
+
 WRITER_AUDIT_RULE = """Writer Audit 只报告实际存在的事项：
 - 本次正式正文字符数；
 - 实际发现的 CANON PROSE / BOOK CONTRACT / CANON INDEX / PLAN 冲突；
@@ -74,6 +93,10 @@ PROSE_REALIZATION_CONTRACT = f"""本合同只负责“how to say”，不重规�
 
 `chapter-NNNN.md` 只保存正式小说正文；不把 audit、摘要或内部推理写进正文，不自动修改 BOOK、事实、资源、能力、线索、结果、状态变化或结尾。
 
+## 结果停止规则
+
+{RESULT_STOP_RULE}
+
 ## Continuity
 
 承接 CANON PROSE 前文正文的最后状态（地点、时间、在场人物、身体状态、情绪、手中物品、最后动作、未完成即时目标）；章节边界不是场景边界，对话、追逐、战斗、调查、试炼和谈判可以跨章。连续性应通过自然动作和场景表现：不要为了证明物品归属、数量或交易完成而重复盘点已经清楚的事实。
@@ -83,7 +106,7 @@ PROSE_REALIZATION_CONTRACT = f"""本合同只负责“how to say”，不重规�
 BOOK 的 `## 7. 叙事结构`、`## 8. 文风与可操作参数`、`## 9. 对话特点`、`## 10. 节奏结构` 共同构成当前书的 prose profile。它们是作者可编辑的软控制：决定叙述距离、句段变化、说明进入方式、角色声音和场景压力，不是禁词表、固定句长或硬性风格评分。GBrain Inspiration Results 与 Reference Programs 只是 OPTIONAL INSPIRATION 可选参考，不能覆盖 BOOK CONTRACT、CANON PROSE、CANON INDEX、PLAN 或 PROSE PROFILE。"""
 
 
-READER_FIRST_PROSE_CONTRACT = """Reader-First Prose Contract：这是表达层合同，不重规划本章事实。
+READER_FIRST_PROSE_CONTRACT = f"""Reader-First Prose Contract：这是表达层合同，不重规划本章事实。
 
 1. 动作先于术语：第一次出现本书独有概念时，先让读者看见对象、动作和结果，再由人物用普通话形成理解；只有反复使用确实能减少解释时才固定命名。
 2. 常见题材词可以自然使用；本书新造的机制、部件、阵法和抽象关系必须先通过场景成立，不要为了显得原创而给普通动作换名字。
@@ -93,10 +116,15 @@ READER_FIRST_PROSE_CONTRACT = """Reader-First Prose Contract：这是表达层�
 6. 重大首次兑现先写结果、外界反应、主角实际收益和行动空间，再写必要的限制或代价；不要用三种同义表述同时削弱兑现。
 7. 主角的判断要带着自己的经历、习惯、偏见、欲望、幽默或刻薄，不把人物写成通用的冷静正确男主。
 
-准确机制仍须保留，但优先通过可见动作、直接结果、人物理解和后续选择让读者理解。"""
+准确机制仍须保留，但优先通过可见动作、直接结果、人物理解和后续选择让读者理解。
+
+{RESULT_STOP_RULE}
+"""
 
 
-READER_FIRST_PROSE_SHORT = """Reader-First 短投影：以可见对象、人物动作、现场结果和普通语言优先；新造术语先用场景成立，已通过动作成立的边界不重复解释；连续动作保持自然段，重大兑现先落地再写必要限制。"""
+READER_FIRST_PROSE_SHORT = f"""Reader-First 短投影：以可见对象、人物动作、现场结果和普通语言优先；新造术语先用场景成立，已通过动作成立的边界不重复解释；连续动作保持自然段，重大兑现先落地再写必要限制。
+
+{RESULT_STOP_RULE}"""
 
 SINGLE_WRITER_RUNTIME_NOTE = "运行期声明：本次为单 Writer 直接写作；任何多 Writer 协议已被本运行合同取代。"
 
@@ -105,7 +133,7 @@ SINGLE_WRITER_RUNTIME_NOTE = "运行期声明：本次为单 Writer 直接写作
 CURRENT_STATE_HEADING = "# 当前状态、未兑现承诺与作者备注"
 
 
-DEFAULT_DIRECTOR_TEMPLATE = """你是透明协作的当前章 Director。只根据当前大型剧情块的压缩摘要、当前章十章计划条目、压缩成长基因、当前 Canon Index、最近一章摘要、前文章末衔接和作者当前章意图，生成本章可执行的八字段事件合同。你不读取完整 BOOK、完整百章计划、完整十章计划、GBrain 原始结果、Genre Prior 或前两章完整正文，不重新规划整本书，不创造已发生事实。
+DEFAULT_DIRECTOR_TEMPLATE = f"""你是透明协作的当前章 Director。只根据当前大型剧情块的压缩摘要、当前章十章计划条目、压缩成长基因、当前 Canon Index、最近一章摘要、前文章末衔接和作者当前章意图，生成本章可执行的八字段事件合同。你不读取完整 BOOK、完整百章计划、完整十章计划、GBrain 原始结果、Genre Prior 或前两章完整正文，不重新规划整本书，不创造已发生事实。
 
 必须输出以下八个字段，全部具体填写：
 触发事件：
@@ -124,7 +152,10 @@ Dialogue：启用 / 不启用；理由
 Action：启用 / 不启用；理由
 Emotion：启用 / 不启用；理由
 
-专项建议只是作者可覆盖的运行建议，不是第九个 Hard Gate。通常只建议真正有价值的 0—2 个专项。不要输出正文、审计、评分、完整计划或内部推理。"""
+专项建议只是作者可覆盖的运行建议，不是第九个 Hard Gate。通常只建议真正有价值的 0—2 个专项。不要输出正文、审计、评分、完整计划或内部推理。
+
+{DIRECTOR_CHAPTER_BUDGET_RULE}
+"""
 
 
 DEFAULT_PROMPT_TEMPLATES = {
@@ -285,6 +316,8 @@ DEFAULT_PROMPT_TEMPLATES = {
 当前章执行小纲只负责把已经批准的中期计划落实为本章可执行合同。正式正文是已发生事实的最高来源；如果正式正文与旧计划冲突，优先服从正式正文，并在八字段中做最小必要调整。不得重新规划整本书，不得重新选择题材或创意，不得把十章计划改写成另一条故事。
 
 页面可能提供本章成长收益短投影：本章一级成长推进、本章二级收益结算、本章反哺。它们只是辅助规划信息，不是第九、第十或更多字段；普通承接章、情绪章和调查章可以写“本章不推进”或“本章不结算”。
+
+填写八字段时，直接结果必须写“这一章已经发生了什么”，不要主要写找到方向、确认位置、准备尝试、明白机制、即将进入或下一章可以做什么。状态变化优先回答主角现在多能做什么、手里真正多了什么、在场人物或敌人是否因结果改变行动；不要求每章三项都有，但第一章核心异能造成现实结果后必须存在真实的个人状态或行动能力变化。结尾推动力优先写“因为本章已经发生了某个结果，所以新的问题出现”，少写“因为本章还没完成，所以下章继续完成最后一步”。主角行动除了正确，还要暴露本书自己的欲望和性格。
 
 必须只输出以下八个字段，每项都必须填写具体内容：
 触发事件：
@@ -677,6 +710,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {INTERNAL_REALISM_DIRECTION}
 
 {PAYOFF_FIRST_COST_RHYTHM}
+
+{OPENING_THREE_CHAPTER_CONTRACT}
 
 先忠实复现已批准的核心幻想、力量占有欲、主角欲望、世界奇观、不可调和压迫、决定性反转、早期兑现、稳定循环、中期里程碑和远期升格方向。不得把力量、长生、反杀、探索、超越或世界奇观重新解释成专业能力、职业资格、行业标准、公开试验、制度责任或组织治理。
 
@@ -1138,16 +1173,40 @@ class CreativeApprovalError(HardGateError):
 
 
 def parse_outline_fields(outline: str) -> dict[str, str]:
-    """Parse the eight supported outline fields from individual lines."""
+    """Parse the eight supported outline fields from inline or block values."""
+
     values: dict[str, str] = {}
-    for line in outline.splitlines():
-        match = re.match(r"^\s*(?:[-*]\s*)?([^：:]+?)\s*[：:]\s*(.*?)\s*$", line)
-        if not match:
+    current_label: str | None = None
+    current_lines: list[str] = []
+
+    def flush() -> None:
+        if current_label is None:
+            return
+        value = "\n".join(current_lines).strip()
+        if value:
+            values[current_label] = value
+
+    field_labels = "|".join(re.escape(field) for field in REQUIRED_OUTLINE_FIELDS)
+    field_pattern = re.compile(
+        rf"^\s*(?:[-*]\s*)?({field_labels})\s*[：:](.*)$"
+    )
+    for raw_line in outline.splitlines():
+        stripped = raw_line.strip()
+        if re.match(r"^#{1,6}(?:\s|$)", stripped):
+            flush()
+            current_label = None
+            current_lines = []
             continue
-        label = match.group(1).strip()
-        value = match.group(2).strip()
-        if label in REQUIRED_OUTLINE_FIELDS and value:
-            values[label] = value
+        match = field_pattern.match(raw_line)
+        if match:
+            flush()
+            current_label = match.group(1)
+            inline_value = match.group(2).strip()
+            current_lines = [inline_value] if inline_value else []
+            continue
+        if current_label is not None and stripped:
+            current_lines.append(stripped)
+    flush()
     return values
 
 
@@ -1399,6 +1458,7 @@ def generate_prompt(
     elif mode == "state_delta" and not prompt_template:
         prompt_template = DEFAULT_STATE_DELTA_TEMPLATE
     parts = [prompt_template, ""]
+    opening_contract = OPENING_THREE_CHAPTER_CONTRACT if 1 <= chapter_number <= 3 else ""
     if mode == "director":
         from .chapter_context import build_chapter_context, build_director_context
 
@@ -1417,6 +1477,8 @@ def generate_prompt(
             recent_summaries=recent_summaries,
             author_intent=creative_direction,
         )
+        if opening_contract:
+            parts.extend(["# Opening Three Chapter Contract", opening_contract])
         parts.append("# Director Context")
         parts.extend(
             [
@@ -1433,6 +1495,8 @@ def generate_prompt(
         if stripped_legacy_writer:
             parts.append(SINGLE_WRITER_RUNTIME_NOTE)
         parts.extend(["# Story MVP Prose Realization Contract", PROSE_REALIZATION_CONTRACT])
+        if opening_contract:
+            parts.extend(["# Opening Three Chapter Contract", opening_contract])
         # 惰性导入：chapter_context 顶层依赖本模块，模块级互相导入会构成循环导入。
         from .chapter_context import build_chapter_context
         from .hybrid_runtime import compact_book_contract_for_chapter
@@ -1498,6 +1562,8 @@ def generate_prompt(
         if mode in SPECIALIST_PROMPT_MODES or mode in {"primary_writer", "chapter_integrator"}:
             contract = READER_FIRST_PROSE_SHORT if mode == "chapter_integrator" else READER_FIRST_PROSE_CONTRACT
             parts.extend(["# Reader-First Prose Contract", contract])
+        if opening_contract:
+            parts.extend(["# Opening Three Chapter Contract", opening_contract])
         if mode == "context_curator":
             context = build_curator_context(packet)
             parts.extend(
@@ -1588,6 +1654,8 @@ def generate_prompt(
         from .chapter_context import render_growth_benefit_projection
 
         parts.append("# 页面当前输入")
+        if opening_contract:
+            parts.extend(["# Opening Three Chapter Contract", opening_contract])
         parts.append(_input_block("本书执行相关画像", _chapter_book_context(book_content)))
         parts.append(_input_block("当前大型剧情块", current_long_block))
         parts.append(_input_block("当前章对应的十章计划条目", current_chapter_plan))

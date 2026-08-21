@@ -680,6 +680,7 @@ function promptPayload() {
     book_id: state.bookId,
     template: currentTemplate(),
     writer_mode: $("writer-mode").value,
+    chapter_number: Number($("chapter-number").value),
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
     fantasy_seed: $("creative-fantasy-seed").value,
@@ -975,13 +976,24 @@ async function applyDirectorResponse() {
   }
   $("director-response").value = response;
   const lines = [];
+  const fieldLabels = new Set();
+  let afterField = false;
   for (const line of response.split(/\r?\n/)) {
-    if (/^#{1,2}\s/.test(line) && lines.length) break;
-    if (/^(触发事件|推动事件的人|主角行动|对手或世界反应|直接结果|状态变化|叙事功能|结尾推动力)\s*[：:]/.test(line.trim())) {
-      lines.push(line.trim());
+    const trimmed = line.trim();
+    if (/^#{1,6}\s/.test(trimmed)) {
+      if (afterField) break;
+      continue;
+    }
+    const fieldMatch = /^(触发事件|推动事件的人|主角行动|对手或世界反应|直接结果|状态变化|叙事功能|结尾推动力)\s*[：:]/.exec(trimmed);
+    if (fieldMatch) {
+      fieldLabels.add(fieldMatch[1]);
+      afterField = true;
+      lines.push(trimmed);
+    } else if (afterField && trimmed) {
+      lines.push(trimmed);
     }
   }
-  if (lines.length !== 8) {
+  if (fieldLabels.size !== 8) {
     showStatus("Director 返回没有完整八字段，未改变当前章小纲", true);
     return;
   }

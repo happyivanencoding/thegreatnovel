@@ -1,0 +1,36 @@
+{
+  "candidate": "《掌中天工》",
+  "chapter": 2,
+  "writer_mode": "single",
+  "token_usage": "UNKNOWN",
+  "nodes": {
+    "director": {
+      "status": "completed",
+      "prompt_file": "director_prompt.md",
+      "response_file": "director_response.md",
+      "token_usage": "UNKNOWN",
+      "generation": "single_call"
+    },
+    "chapter_prep": {
+      "status": "completed",
+      "prompt_file": "chapter_prep_prompt.md",
+      "response_file": "chapter_prep_response.md",
+      "token_usage": "UNKNOWN",
+      "generation": "single_call"
+    },
+    "chapter": {
+      "status": "completed",
+      "prompt_file": "chapter_prompt.md",
+      "response_file": "chapter_response.md",
+      "token_usage": "UNKNOWN",
+      "generation": "single_call"
+    },
+    "state_delta": {
+      "status": "completed",
+      "prompt_file": "state_delta_prompt.md",
+      "response_file": "state_delta_response.md",
+      "token_usage": "UNKNOWN",
+      "generation": "single_call"
+    }
+  }
+}

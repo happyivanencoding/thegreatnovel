@@ -1,0 +1,8 @@
+{
+  "candidate": "《掌中天工》",
+  "fantasy_seed": "source/fantasy_seed.md",
+  "world_vision": "source/world_vision.md",
+  "story_program": "source/story_program.md",
+  "generation": "single_call",
+  "token_usage": "UNKNOWN"
+}

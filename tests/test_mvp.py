@@ -16,6 +16,7 @@ from story_mvp.chapter_context import (
     ChapterContextPacket,
     compact_growth_genome_for_chapter,
     build_chapter_context,
+    render_event_contract,
     render_growth_benefit_projection,
 )
 from story_mvp.gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, query_gbrain, resolve_command_prefix
@@ -44,15 +45,19 @@ from story_mvp.hybrid_runtime import (
 from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     DEFAULT_STATE_DELTA_TEMPLATE,
+    DIRECTOR_CHAPTER_BUDGET_RULE,
     CreativeApprovalError,
+    OPENING_THREE_CHAPTER_CONTRACT,
     PROMPT_MODES,
     PROSE_REALIZATION_CONTRACT,
+    RESULT_STOP_RULE,
     REQUIRED_OUTLINE_FIELDS,
     SINGLE_WRITER_RUNTIME_NOTE,
     WRITER_AUDIT_RULE,
     HardGateError,
     canon_index_has_labels,
     generate_prompt,
+    parse_outline_fields,
     parse_canon_index,
     render_canon_index,
     sanitize_chapter_template,
@@ -69,6 +74,9 @@ APPROVED_CREATIVE_STATE = {
     "world_vision": {"origin": "author_edited", "status": "author_approved"},
     "proposal": {"origin": "author_edited", "status": "author_approved"},
 }
+
+
+OUTLINE = "\n".join(f"{field}：内容" for field in REQUIRED_OUTLINE_FIELDS)
 
 
 def approved_creative_inputs() -> dict[str, object]:
@@ -425,6 +433,93 @@ def test_chapter_prep_builds_eight_field_contract_from_the_selected_plan() -> No
     validate_current_outline(fixture)
 
 
+def test_parse_outline_fields_accepts_existing_inline_format() -> None:
+    values = parse_outline_fields(OUTLINE)
+    assert values == {field: "内容" for field in REQUIRED_OUTLINE_FIELDS}
+
+
+def test_parse_outline_fields_accepts_all_multiline_format() -> None:
+    outline = "\n".join(
+        f"{field}：\n{field}第一行\n{field}第二行"
+        for field in REQUIRED_OUTLINE_FIELDS
+    )
+    values = parse_outline_fields(outline)
+    assert values["触发事件"] == "触发事件第一行\n触发事件第二行"
+    assert values["结尾推动力"] == "结尾推动力第一行\n结尾推动力第二行"
+    validate_current_outline(outline)
+
+
+def test_parse_outline_fields_accepts_mixed_inline_and_multiline_format() -> None:
+    outline = "\n".join(
+        (
+            "触发事件：同行内容",
+            "推动事件的人：",
+            "多行推动者内容",
+            "主角行动：同行行动",
+            "对手或世界反应：",
+            "多行反应第一行",
+            "多行反应第二行",
+            "直接结果：同行结果",
+            "状态变化：",
+            "多行状态",
+            "叙事功能：同行功能",
+            "结尾推动力：",
+            "多行推动力",
+        )
+    )
+    values = parse_outline_fields(outline)
+    assert values["触发事件"] == "同行内容"
+    assert values["推动事件的人"] == "多行推动者内容"
+    assert values["对手或世界反应"] == "多行反应第一行\n多行反应第二行"
+    assert values["结尾推动力"] == "多行推动力"
+    validate_current_outline(outline)
+
+
+def test_parse_outline_fields_still_rejects_missing_or_empty_fields() -> None:
+    missing = "\n".join(
+        f"{field}：内容"
+        for field in REQUIRED_OUTLINE_FIELDS
+        if field != "直接结果"
+    )
+    with pytest.raises(HardGateError) as missing_error:
+        validate_current_outline(missing)
+    assert missing_error.value.missing_fields == ["直接结果"]
+
+    empty = "\n".join(
+        f"{field}：" if field == "直接结果" else f"{field}：内容"
+        for field in REQUIRED_OUTLINE_FIELDS
+    )
+    with pytest.raises(HardGateError) as empty_error:
+        validate_current_outline(empty)
+    assert empty_error.value.missing_fields == ["直接结果"]
+
+
+def test_parse_outline_fields_does_not_swallow_markdown_section_after_last_field() -> None:
+    outline = OUTLINE + "\n\n## 专项建议\nOpening：启用；只作为运行建议。"
+    values = parse_outline_fields(outline)
+    assert values["结尾推动力"] == "内容"
+    assert "Opening" not in values["结尾推动力"]
+    validate_current_outline(outline)
+
+
+def test_real_parallel_pilot_multiline_response_is_a_fixed_parser_regression() -> None:
+    response_path = (
+        Path(__file__).parents[1]
+        / "books"
+        / "real-exp-prose-execution-parallel-v1"
+        / "candidate-c"
+        / "chapter-03"
+        / "director_response.md"
+    )
+    response = response_path.read_text(encoding="utf-8")
+    values = parse_outline_fields(response)
+    validate_current_outline(response)
+    assert values["触发事件"].startswith("沈砚沿带冷风的上行斜缝")
+    assert values["结尾推动力"].startswith("就在第一批人和一小片土地完成接入")
+    assert "专项建议" not in values["结尾推动力"]
+    assert "沈砚沿带冷风的上行斜缝" in render_event_contract(response)
+
+
 def test_chapter_prep_chapter_two_uses_chapter_two_plan_and_chapter_one_prose() -> None:
     prompt = generate_prompt(
         mode="chapter_prep",
@@ -436,6 +531,97 @@ def test_chapter_prep_chapter_two_uses_chapter_two_plan_and_chapter_one_prose() 
     assert "CHAPTER_TWO_PLAN_MARKER" in prompt
     assert "CHAPTER_ONE_FORMAL_PROSE_MARKER" in prompt
     assert "CHAPTER_ONE_PLAN_MARKER" not in prompt
+
+
+def test_director_prompt_contains_chapter_budget_boundary() -> None:
+    prompt = generate_prompt(
+        mode="director",
+        template="",
+        book_content="BOOK",
+        chapter_number=1,
+        current_long_block="CURRENT_BLOCK",
+        current_chapter_plan="CURRENT_CHAPTER_PLAN",
+    )
+    assert DIRECTOR_CHAPTER_BUDGET_RULE in prompt
+
+
+def test_writer_result_stop_rule_is_rendered_once_in_single_and_hybrid_writer_prompts() -> None:
+    single = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="BOOK",
+        current_outline=OUTLINE,
+    )
+    assert single.count(RESULT_STOP_RULE) == 1
+
+    hybrid = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="BOOK",
+        current_outline=OUTLINE,
+        primary_draft="PRIMARY_DRAFT",
+    )
+    assert hybrid.count(RESULT_STOP_RULE) == 1
+
+    integrator = generate_prompt(
+        mode="chapter_integrator",
+        template="",
+        book_content="BOOK",
+        current_outline=OUTLINE,
+        primary_draft="PRIMARY_DRAFT",
+    )
+    assert integrator.count(RESULT_STOP_RULE) == 1
+
+
+def test_opening_three_chapter_rules_are_conditionally_rendered_in_active_prompts() -> None:
+    assert OPENING_THREE_CHAPTER_CONTRACT in DEFAULT_PROMPT_TEMPLATES["outline"]
+
+    director = generate_prompt(
+        mode="director",
+        template="",
+        book_content="BOOK",
+        chapter_number=1,
+    )
+    prep = generate_prompt(
+        mode="chapter_prep",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter_prep"],
+        book_content="BOOK",
+        chapter_number=2,
+    )
+    writer = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="BOOK",
+        chapter_number=3,
+        current_outline=OUTLINE,
+    )
+    hybrid = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="BOOK",
+        chapter_number=3,
+        current_outline=OUTLINE,
+        primary_draft="PRIMARY_DRAFT",
+    )
+    for prompt in (director, prep, writer, hybrid):
+        assert prompt.count(OPENING_THREE_CHAPTER_CONTRACT) == 1
+
+    default_chapter = generate_prompt(
+        mode="director",
+        template="",
+        book_content="BOOK",
+        chapter_number=0,
+    )
+    assert OPENING_THREE_CHAPTER_CONTRACT not in default_chapter
+
+    later_writer = generate_prompt(
+        mode="chapter",
+        template=DEFAULT_PROMPT_TEMPLATES["chapter"],
+        book_content="BOOK",
+        chapter_number=4,
+        current_outline=OUTLINE,
+    )
+    assert OPENING_THREE_CHAPTER_CONTRACT not in later_writer
 
 
 def test_clipboard_code_uses_prompt_textarea_value() -> None:
@@ -1059,6 +1245,9 @@ def test_current_chapter_prep_controls_and_exact_plan_parser_are_visible() -> No
     assert "第\\s*(\\d+)\\s*章" in js
     assert "## 第N章：标题" in page.text
     assert "current_chapter_plan: $(\"current-chapter-plan\").value" in js
+    assert 'chapter_number: Number($("chapter-number").value)' in js
+    assert "const fieldLabels = new Set();" in js
+    assert "else if (afterField && trimmed)" in js
     assert 'applyResponseToEditor($("codex-response"), $("current-outline"));' in js
 
 
