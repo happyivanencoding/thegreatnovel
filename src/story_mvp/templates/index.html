@@ -15,7 +15,7 @@
       </div>
       <div class="workspace-info">
         <span>小说工作区</span>
-        <code>{{ workspace }}</code>
+        <code id="workspace-path">{{ workspace }}</code>
       </div>
     </header>
 
@@ -29,6 +29,47 @@
       </select>
       <button id="load-book">加载</button>
       <span id="status" class="status" role="status"></span>
+    </section>
+
+    <section id="workflow-panel" class="workflow-panel" aria-label="Story Workflow">
+      <div class="workflow-heading">
+        <div>
+          <p class="eyebrow">WORKFLOW STATE · DEPENDENCY IMPACT</p>
+          <strong>创意 → 设计 → 规划 → 当前章节 → 记忆</strong>
+          <span id="workflow-current" class="status">Workflow：未加载</span>
+        </div>
+        <div class="workflow-actions">
+          <label>Executor Mode
+            <select id="executor-mode">
+              <option value="manual" selected>Manual / Copy-Paste</option>
+              <option value="codex_external">Codex External</option>
+              <option value="openai_api">OpenAI API</option>
+            </select>
+          </label>
+          <input id="openai-model" aria-label="OpenAI Model ID" placeholder="默认模型" autocomplete="off">
+          <span id="openai-executor-status" class="status">OpenAI API：未查询</span>
+          <button id="refresh-workflow">刷新状态</button>
+        </div>
+      </div>
+      <div id="workflow-stages" class="workflow-stages"></div>
+      <div class="workflow-detail-grid">
+        <div>
+          <strong>节点详情</strong>
+          <p id="workflow-detail" class="workflow-detail">点击节点查看状态和实际影响。</p>
+          <button id="locate-workflow-artifact" type="button" disabled>定位编辑区</button>
+        </div>
+        <div>
+          <strong>Dependency Impact</strong>
+          <p id="workflow-impact" class="workflow-detail">点击节点后显示实际存在的受影响下游。</p>
+        </div>
+      </div>
+      <div id="codex-task-wrapper-panel" class="codex-task-wrapper" hidden>
+        <div class="workflow-inline-heading">
+          <strong>Codex External Task Wrapper</strong>
+          <button id="copy-codex-task" type="button">复制 Codex 任务</button>
+        </div>
+        <textarea id="codex-task-wrapper" rows="7" readonly></textarea>
+      </div>
     </section>
 
     <main class="studio-grid">
@@ -334,6 +375,9 @@
           <span>正式正文（保存内容；只在提取后进入 chapter-NNNN.md）</span>
           <textarea id="chapter-body-for-save" rows="12"></textarea>
         </label>
+        <div class="action-row wrap">
+          <button id="load-current-chapter-body" type="button">加载当前正式正文</button>
+        </div>
 
         <label class="field">
           <span>章节事实摘要（审计查看；不会写入正文）</span>

@@ -1251,6 +1251,28 @@ def test_current_chapter_prep_controls_and_exact_plan_parser_are_visible() -> No
     assert 'applyResponseToEditor($("codex-response"), $("current-outline"));' in js
 
 
+def test_workflow_ui_and_executor_controls_are_visible() -> None:
+    page = client.get("/")
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    for marker in (
+        'id="workflow-panel"',
+        'id="workflow-stages"',
+        'id="refresh-workflow"',
+        'id="executor-mode"',
+        'id="codex-task-wrapper"',
+        'id="openai-executor-status"',
+    ):
+        assert marker in page.text
+    for marker in (
+        "/api/books/",
+        "/workflow",
+        "/api/executors/openai",
+        "story-mvp-workflow apply",
+        "function refreshWorkflow",
+    ):
+        assert marker in js
+
+
 def test_gbrain_results_and_reference_selection_are_invalidated_on_context_changes() -> None:
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
     start = js.index("function invalidateGbrainResults")

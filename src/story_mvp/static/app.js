@@ -5,6 +5,7 @@ const state = {
   creativeState: {},
   creativeArtifacts: {},
   creativeSources: {},
+  workflow: null,
 };
 
 const creativeUi = {
@@ -61,6 +62,192 @@ const designTitles = {
 };
 
 const $ = (id) => document.getElementById(id);
+
+const workflowStages = [
+  { title: "创意", keys: ["creative.fantasy_seed", "creative.world_vision", "creative.story_program"] },
+  { title: "设计", keys: ["book.design"] },
+  { title: "规划", keys: ["book.long_plan", "book.future_10"] },
+  { title: "当前章节", keys: [] },
+  { title: "记忆", keys: ["book.canon_state"] },
+];
+
+const workflowLabels = {
+  "creative.fantasy_seed": "核心幻想",
+  "creative.world_vision": "世界幻想",
+  "creative.story_program": "故事方案",
+  "book.design": "总体设计",
+  "book.long_plan": "中期规划",
+  "book.future_10": "未来十章",
+  "book.canon_state": "记忆状态",
+};
+
+let selectedWorkflowArtifact = "";
+
+function workflowArtifactLabel(artifact) {
+  if (workflowLabels[artifact]) return workflowLabels[artifact];
+  const match = artifact.match(/^chapter\.(\d+)\.(run|body|state_delta)$/);
+  if (!match) return artifact;
+  const labels = { run: "Run", body: "正式正文", state_delta: "State Delta" };
+  return `第${match[1]}章 ${labels[match[2]]}`;
+}
+
+function workflowLocation(artifact) {
+  const staticPaths = {
+    "creative.fantasy_seed": "FANTASY_SEED.md",
+    "creative.world_vision": "WORLD_VISION.md",
+    "creative.story_program": "PROPOSAL.md",
+    "book.design": "BOOK.md · design",
+    "book.long_plan": "BOOK.md · long_plan",
+    "book.future_10": "BOOK.md · small_plan",
+    "book.canon_state": "BOOK.md · status",
+  };
+  if (staticPaths[artifact]) return staticPaths[artifact];
+  const match = artifact.match(/^chapter\.(\d+)\.(run|body|state_delta)$/);
+  if (!match) return artifact;
+  const files = { run: "runs/chapter-NNNN/manifest.json", body: "chapters/chapter-NNNN.md", state_delta: "runs/chapter-NNNN/manifest.json" };
+  return files[match[2]].replace("NNNN", String(match[1]).padStart(4, "0"));
+}
+
+function workflowStatusLabel(status) {
+  return status || "EMPTY";
+}
+
+function renderWorkflow(snapshot) {
+  const stages = $("workflow-stages");
+  if (!stages) return;
+  stages.replaceChildren();
+  state.workflow = snapshot;
+  if (!snapshot) {
+    $("workflow-current").textContent = "Workflow：未加载";
+    $("workflow-impact").textContent = "点击节点后显示实际存在的受影响下游。";
+    $("workflow-detail").textContent = "点击节点查看状态和实际影响。";
+    $("locate-workflow-artifact").disabled = true;
+    return;
+  }
+  const artifacts = snapshot.artifacts || {};
+  const staleCount = Object.values(artifacts).filter((entry) => entry.status === "STALE").length;
+  $("workflow-current").textContent = `当前：Chapter ${snapshot.current_chapter} · Next：${snapshot.next_actionable_node || "—"} · STALE ${staleCount}`;
+  for (const stage of workflowStages) {
+    const card = document.createElement("div");
+    card.className = "workflow-stage";
+    const title = document.createElement("div");
+    title.className = "workflow-stage-title";
+    title.textContent = stage.title;
+    card.appendChild(title);
+    const list = document.createElement("div");
+    list.className = "workflow-node-list";
+    let keys = [...stage.keys];
+    if (stage.title === "当前章节") {
+      const chapter = snapshot.current_chapter;
+      keys = ["run", "body", "state_delta"].map((kind) => `chapter.${chapter}.${kind}`)
+        .filter((key) => artifacts[key]);
+      if (!keys.length) {
+        const empty = document.createElement("span");
+        empty.className = "workflow-detail";
+        empty.textContent = `第${chapter}章 · Run 尚未创建`;
+        list.appendChild(empty);
+      }
+    }
+    for (const key of keys) {
+      const entry = artifacts[key];
+      if (!entry) continue;
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "workflow-node";
+      button.dataset.artifact = key;
+      const name = document.createElement("span");
+      name.textContent = workflowArtifactLabel(key);
+      const status = document.createElement("span");
+      status.className = `workflow-node-status ${String(entry.status || "").toLowerCase()}`;
+      status.textContent = `${workflowStatusLabel(entry.status)} · rev ${entry.revision || 0}`;
+      button.append(name, status);
+      button.addEventListener("click", () => showWorkflowArtifact(key));
+      list.appendChild(button);
+    }
+    card.appendChild(list);
+    stages.appendChild(card);
+  }
+}
+
+async function showWorkflowArtifact(artifact) {
+  selectedWorkflowArtifact = artifact;
+  const entry = state.workflow?.artifacts?.[artifact] || {};
+  $("workflow-detail").textContent = [
+    `节点：${workflowArtifactLabel(artifact)}`,
+    `状态：${entry.status || "EMPTY"}`,
+    `revision：${entry.revision || 0}`,
+    `最后来源：${entry.last_source || "—"}`,
+    `真实位置：${workflowLocation(artifact)}`,
+    `stale 原因：${(entry.stale_from || []).join("、") || "—"}`,
+  ].join("\n");
+  $("locate-workflow-artifact").disabled = false;
+  try {
+    const impact = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/workflow/impact?artifact=${encodeURIComponent(artifact)}`);
+    const actual = impact.existing_nodes_affected || [];
+    const protectedChapters = impact.protected_completed_chapters || [];
+    $("workflow-impact").textContent = [
+      `直接下游：${(impact.direct_dependents || []).map(workflowArtifactLabel).join("、") || "无"}`,
+      `实际受影响：${actual.map(workflowArtifactLabel).join("、") || "无"}`,
+      `保护历史章节：${protectedChapters.join("、") || "无"}`,
+    ].join("\n");
+  } catch (error) {
+    $("workflow-impact").textContent = `Impact 读取失败：${error.message}`;
+  }
+}
+
+function locateWorkflowArtifact() {
+  if (!selectedWorkflowArtifact) return;
+  const match = selectedWorkflowArtifact.match(/^chapter\.(\d+)\.(run|body|state_delta)$/);
+  if (match) {
+    $("chapter-number").value = match[1];
+    if (match[2] === "body") loadCurrentChapterBody();
+    else loadRun();
+  }
+  const targets = {
+    "creative.fantasy_seed": "creative-fantasy-seed",
+    "creative.world_vision": "creative-world-vision",
+    "creative.story_program": "proposal-editor",
+    "book.design": "design-sections",
+    "book.long_plan": "section-long_plan",
+    "book.future_10": "section-small_plan",
+    "book.canon_state": "section-status",
+  };
+  const target = $(targets[selectedWorkflowArtifact] || "prompt-panel");
+  target?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+async function refreshWorkflow() {
+  if (!state.bookId) {
+    renderWorkflow(null);
+    return;
+  }
+  try {
+    const [workflow, executors] = await Promise.all([
+      requestJson(`/api/books/${encodeURIComponent(state.bookId)}/workflow`),
+      requestJson("/api/executors"),
+    ]);
+    renderWorkflow(workflow);
+    const openai = executors.openai_api || {};
+    $("openai-executor-status").textContent = openai.configured
+      ? `OpenAI API：已配置 · ${openai.model}`
+      : "OpenAI API：未配置";
+  } catch (error) {
+    renderWorkflow(null);
+    showStatus(`Workflow 刷新失败：${error.message}`, true);
+  }
+}
+
+async function refreshExecutorStatus() {
+  try {
+    const executors = await requestJson("/api/executors");
+    const openai = executors.openai_api || {};
+    $("openai-executor-status").textContent = openai.configured
+      ? "OpenAI API：已配置 · " + openai.model
+      : "OpenAI API：未配置";
+  } catch (error) {
+    $("openai-executor-status").textContent = "OpenAI API：读取失败";
+  }
+}
 
 function showStatus(message, isError = false) {
   const target = $("status");
@@ -148,6 +335,7 @@ async function saveCreativeArtifact(artifact) {
       }),
     });
     setCreativePayload(payload);
+    await refreshWorkflow();
     showStatus(`${artifact} 已保存，仍需作者明确批准`);
   } catch (error) {
     showStatus(error.message, true);
@@ -163,6 +351,7 @@ async function approveCreativeArtifact(artifact) {
       method: "POST",
     });
     setCreativePayload(payload);
+    await refreshWorkflow();
     showStatus(`${artifact} 已由作者明确批准`);
   } catch (error) {
     showStatus(error.message, true);
@@ -175,6 +364,7 @@ async function generateCreativePrompt(mode) {
 }
 
 const runNodeByMode = {
+  chapter: "primary",
   director: "director",
   context_curator: "curator",
   primary_writer: "primary",
@@ -274,6 +464,7 @@ async function createRun() {
       }),
     });
     renderRunLedger(payload);
+    await refreshWorkflow();
     showStatus("当前章 Run 已创建或载入");
   } catch (error) {
     showStatus(error.message, true);
@@ -288,6 +479,7 @@ async function saveRunPromptForMode(mode, prompt) {
       method: "PUT",
       body: JSON.stringify({ content: prompt }),
     }));
+    await refreshWorkflow();
   } catch (error) {
     showStatus(`保存 ${node} Prompt 到 Run 失败：${error.message}`, true);
   }
@@ -301,6 +493,7 @@ async function saveRunResponseForMode(mode, response) {
       method: "PUT",
       body: JSON.stringify({ content: response }),
     }));
+    await refreshWorkflow();
   } catch (error) {
     showStatus(`保存 ${node} Response 到 Run 失败：${error.message}`, true);
   }
@@ -309,6 +502,7 @@ async function saveRunResponseForMode(mode, response) {
 async function retryRunNode(node) {
   try {
     renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/retry`, { method: "POST" }));
+    await refreshWorkflow();
     showStatus(`${node} 已按原 Prompt 准备重试`);
   } catch (error) {
     showStatus(error.message, true);
@@ -321,6 +515,7 @@ async function adoptRunSource(source) {
       method: "POST",
       body: JSON.stringify({ source }),
     }));
+    await refreshWorkflow();
     showStatus(`已在 Run Ledger 中采用 ${source}；章节仍需作者显式保存`);
   } catch (error) {
     showStatus(error.message, true);
@@ -450,6 +645,8 @@ function populateBook(book) {
   invalidateGbrainResults("切换小说");
   clearReferenceSelection();
   state.bookId = book.book_id;
+  state.workflow = null;
+  selectedWorkflowArtifact = "";
   $("book-id").value = book.book_id;
   setCreativePayload(book);
   for (const key of Object.keys(designTitles)) {
@@ -489,6 +686,7 @@ function populateBook(book) {
   renderLongPlanPanorama();
   refreshPreviousChapterText();
   loadRun();
+  refreshWorkflow();
   showStatus(`已加载 ${book.book_id}`);
 }
 
@@ -758,6 +956,8 @@ async function generatePrompt() {
     });
     $("prompt-text").value = payload.prompt;
     await saveRunPromptForMode(mode, payload.prompt);
+    renderCodexTaskWrapper(mode);
+    if (currentExecutorMode() === "openai_api") await executeOpenAI(payload.prompt);
     showStatus("Prompt 已生成，可继续编辑后复制");
   } catch (error) {
     const missing = error.payload?.detail?.missing_fields;
@@ -774,6 +974,65 @@ async function generatePrompt() {
 async function generateIdeaPrompt() {
   await activatePromptMode("idea");
   await generatePrompt();
+}
+
+function currentExecutorMode() {
+  return $("executor-mode").value;
+}
+
+function externalArtifactForMode(mode) {
+  const creative = {
+    fantasy_seed: "creative.fantasy_seed",
+    world_vision: "creative.world_vision",
+    idea: "creative.story_program",
+  };
+  if (creative[mode]) return creative[mode];
+  const node = runNodeByMode[mode];
+  if (node) return `chapter.${currentChapterNumber()}.run`;
+  return mode === "outline" || mode === "review" ? "book.future_10" : "book.future_10";
+}
+
+function renderCodexTaskWrapper(mode) {
+  const panel = $("codex-task-wrapper-panel");
+  const output = $("codex-task-wrapper");
+  if (currentExecutorMode() !== "codex_external" || !state.bookId) {
+    panel.hidden = true;
+    output.value = "";
+    return;
+  }
+  const artifact = externalArtifactForMode(mode);
+  const node = runNodeByMode[mode] || "";
+  const chapter = currentChapterNumber();
+  const workspace = $("workspace-path")?.textContent.trim() || "<workspace>";
+  const promptPath = node && state.currentRun
+    ? `${workspace}\\${state.bookId}\\runs\\chapter-${String(chapter).padStart(4, "0")}\\${node}_prompt.md`
+    : "当前页面的完整 Prompt 文本框（请先保存/复制）";
+  const tempPath = `${workspace}\\${state.bookId}\\.workflow_tmp\\${artifact.replaceAll(".", "-")}-response.md`;
+  const nodeArgs = node ? ` --chapter ${chapter} --node ${node}` : "";
+  output.value = [
+    "在当前 thegreatnovel 工作区执行 Story MVP 节点。",
+    "",
+    `Book: ${state.bookId}`,
+    `Artifact: ${artifact}`,
+    `读取已经保存的 Prompt：${promptPath}`,
+    "严格按该 Prompt 生成最终输出。",
+    "不要修改其它上游文件。",
+    `把最终输出暂存到：${tempPath}`,
+    "然后运行：",
+    `story-mvp-workflow apply --book ${state.bookId} --artifact ${artifact} --input "${tempPath}" --source codex_external${nodeArgs}`,
+    "完成后报告：node、output path、workflow status、stale dependents。",
+    "不要继续运行下一节点。",
+  ].join("\n");
+  panel.hidden = false;
+}
+
+async function executeOpenAI(prompt) {
+  const payload = await requestJson("/api/executors/openai", {
+    method: "POST",
+    body: JSON.stringify({ prompt, model: $("openai-model").value.trim() }),
+  });
+  $("codex-response").value = payload.output_text;
+  showStatus(`OpenAI API 已返回 ${payload.model}；结果仍需作者 Apply / Save`);
 }
 
 function parseChapterPlanEntry(text, chapterNumber) {
@@ -1188,6 +1447,7 @@ async function saveBook() {
       method: "PUT",
       body: JSON.stringify({ content: composeBookContent() }),
     });
+    await refreshWorkflow();
     showStatus("BOOK.md 已保存");
   } catch (error) {
     showStatus(error.message, true);
@@ -1235,15 +1495,32 @@ async function approveChapter() {
     return showStatus("请先从 Codex 返回文本提取正式正文，再保存章节", true);
   }
   try {
-    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/chapters`, {
-      method: "POST",
-      body: JSON.stringify({
-        chapter_number: Number($("chapter-number").value),
-        content: chapterBody,
-      }),
-    });
+    const chapterNumber = Number($("chapter-number").value);
+    const existing = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/chapters/${chapterNumber}`);
+    const payload = await requestJson(
+      `/api/books/${encodeURIComponent(state.bookId)}/chapters${existing.content ? `/${chapterNumber}` : ""}`,
+      {
+        method: existing.content ? "PUT" : "POST",
+        body: existing.content
+          ? JSON.stringify({ content: chapterBody })
+          : JSON.stringify({ chapter_number: chapterNumber, content: chapterBody }),
+      },
+    );
     await refreshPreviousChapterText();
+    await refreshWorkflow();
     showStatus(`${payload.file} 已保存`);
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function loadCurrentChapterBody() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  const chapterNumber = currentChapterNumber();
+  try {
+    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/chapters/${chapterNumber}`);
+    $("chapter-body-for-save").value = payload.content || "";
+    showStatus(payload.content ? `已加载第${chapterNumber}章正式正文，可编辑后保存` : `第${chapterNumber}章尚未保存`);
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -1269,6 +1546,7 @@ async function createBook() {
 async function initialize() {
   try {
     renderLongPlanPanorama();
+    await refreshExecutorStatus();
     const defaultTemplates = await requestJson("/api/prompt-templates");
     populatePromptTemplates(defaultTemplates.templates);
     const payload = await requestJson("/api/references");
@@ -1325,6 +1603,21 @@ $("adopt-primary-draft").addEventListener("click", adoptPrimaryDraft);
 $("load-current-chapter-plan").addEventListener("click", loadCurrentChapterPlan);
 $("generate-chapter-prep").addEventListener("click", generateChapterPrepPrompt);
 $("copy-prompt").addEventListener("click", copyPrompt);
+$("refresh-workflow").addEventListener("click", refreshWorkflow);
+$("locate-workflow-artifact").addEventListener("click", locateWorkflowArtifact);
+$("copy-codex-task").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText($("codex-task-wrapper").value);
+    showStatus("Codex External 任务已复制");
+  } catch (error) {
+    showStatus("复制 Codex 任务失败，请手动复制", true);
+  }
+});
+$("executor-mode").addEventListener("change", () => {
+  renderCodexTaskWrapper($("prompt-mode").value);
+  showStatus("Executor Mode：" + $("executor-mode").selectedOptions[0].textContent);
+});
+$("load-current-chapter-body").addEventListener("click", loadCurrentChapterBody);
 $("apply-chapter-prep").addEventListener("click", () => {
   applyResponseToEditor($("codex-response"), $("current-outline"));
   showStatus("Codex 返回已放入当前章小纲，尚未写盘");
