@@ -6,8 +6,9 @@
 - 起始基线：`origin/principal_dev_new_sys`
 - 起始 principal_dev_new_sys full SHA：`56dae5f6f94fc45899520071fb3c9117c5e4ce32`
 - 实验分支：`opening-pipeline-comparison-v1`
-- 实验产物提交 full SHA：`<INITIAL_EXPERIMENT_COMMIT_SHA>`（提交后回填）
-- pushed：`<PUSH_RESULT>`（push 后回填）
+- 共享工作树实际提交分支：`backend-opening-pipeline-comparison-v1`
+- 实验产物提交 full SHA：`3d03ad68dd4b755c175b875b8e54665bfd7d60f9`
+- pushed：`yes`；已推送到 `origin/opening-pipeline-comparison-v1` 与 `origin/backend-opening-pipeline-comparison-v1`
 - 本轮没有修改生产代码、生产 Prompt、`RunRequest.writer_mode` 或 UI 默认 Writer Mode。
 
 ## 冻结输入与对照
@@ -73,4 +74,4 @@ System Reviewer 最终四选一：
 
 ## Git
 
-本报告生成时工作树包含本实验 v1 和同一分支并行新增的 v2；按作者明确指示最终使用 `git add -A` 一并提交并 push。最终 clean status 与 push 结果在提交后回填本文件。
+首轮提交已包含本实验 v1、同一分支并行新增的 v2，以及提交时存在的其它本地改动；按作者明确指示使用 `git add -A` 一并提交并 push。本次报告回填会形成一个很小的后续报告提交；最终 head full SHA 在最终交付消息中给出。
