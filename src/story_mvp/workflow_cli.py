@@ -18,6 +18,7 @@ from .storage import (
     replace_chapter,
     require_book,
     save_chapter,
+    save_prologue,
     write_book,
     write_creative_artifact,
 )
@@ -77,6 +78,8 @@ def apply_response(
             origin="author_edited",
             workflow_source=source,
         )
+    elif artifact == "book.prologue":
+        save_prologue(book_id, content, workspace_path(), source=source)
     elif artifact in BOOK_SECTIONS:
         _apply_book_section(book_id, artifact, content, source)
     else:

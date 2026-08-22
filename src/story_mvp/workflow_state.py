@@ -29,6 +29,7 @@ BOOK_ARTIFACT_KEYS = (
     "book.long_plan",
     "book.future_10",
     "book.canon_state",
+    "book.prologue",
 )
 STATIC_ARTIFACT_KEYS = CREATIVE_ARTIFACT_KEYS + BOOK_ARTIFACT_KEYS
 
@@ -52,6 +53,7 @@ ARTIFACT_LABELS = {
     "book.long_plan": "中期规划",
     "book.future_10": "未来十章",
     "book.canon_state": "记忆状态",
+    "book.prologue": "序章",
 }
 
 _CHAPTER_ARTIFACT_PATTERN = re.compile(r"^chapter\.(\d+)\.(run|body|state_delta)$")
@@ -345,6 +347,15 @@ def _initialize_state(book_directory: Path) -> dict[str, Any]:
             source="legacy" if content.strip() else "empty",
         )
 
+    prologue = _read_text(book_directory / "PROLOGUE.md")
+    _ensure_entry(
+        state,
+        "book.prologue",
+        revision=1 if prologue.strip() else 0,
+        status=_content_status(prologue),
+        source="legacy" if prologue.strip() else "empty",
+    )
+
     revisions = _all_revision_inputs(state)
     for number, _, manifest in _manifest_files(book_directory):
         run_key = chapter_artifact_key(number, "run")
@@ -388,6 +399,10 @@ def _refresh_state(state: dict[str, Any], book_directory: Path) -> bool:
         if entry.get("status") != "STALE":
             entry["status"] = _content_status(sections[section])
             entry["freshness"] = "fresh"
+    prologue_entry = _ensure_entry(state, "book.prologue")
+    if prologue_entry.get("status") != "STALE":
+        prologue_entry["status"] = _content_status(_read_text(book_directory / "PROLOGUE.md"))
+        prologue_entry["freshness"] = "fresh"
 
     revisions = _all_revision_inputs(state)
     observed_runs = {number: manifest for number, _, manifest in _manifest_files(book_directory)}
@@ -491,6 +506,14 @@ def _apply_content_change(
                 allowed=changed_chapters or set(),
             )
         )
+    elif artifact == "book.prologue":
+        run_key = chapter_artifact_key(1, "run")
+        if run_key in state["artifacts"]:
+            if 1 not in _protected_chapters(book_directory):
+                _mark_stale(state, run_key, artifact)
+                _mark_stale(state, chapter_artifact_key(1, "state_delta"), artifact)
+                _mark_run_stale(book_directory, 1)
+            affected.append(run_key)
     elif artifact == "book.canon_state":
         current_revision = int(entry["revision"])
         for number, _, _ in _manifest_files(book_directory):
@@ -662,6 +685,9 @@ def _dependents_for_impact(book_directory: Path, artifact: str) -> list[str]:
         section = parse_book_sections(content)["small_plan"]
         allowed = set(_future_chapter_entries(section))
         return [chapter_artifact_key(number, "run") for number in _existing_future_run_numbers(book_directory, allowed=allowed)]
+    if artifact == "book.prologue":
+        run_key = chapter_artifact_key(1, "run")
+        return [run_key] if run_key in state["artifacts"] else []
     if artifact == "book.canon_state":
         return [
             chapter_artifact_key(number, "run")

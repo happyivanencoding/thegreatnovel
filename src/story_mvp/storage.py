@@ -253,14 +253,27 @@ def save_prologue(
     book_id: str,
     content: str,
     workspace: Path,
+    *,
+    source: str = "author_edit",
 ) -> Path:
     """保存可选序章；它是独立正文，不进入章节或 State Delta。"""
 
     directory = require_book(book_id, workspace)
+    target = directory / PROLOGUE_FILENAME
+    old_content = target.read_text(encoding="utf-8") if target.is_file() else ""
     if content.strip():
         validate_chapter_body_for_save(content)
-    target = directory / PROLOGUE_FILENAME
+    from .workflow_state import ensure_workflow_state, record_content_change
+
+    ensure_workflow_state(directory)
     target.write_text(content, encoding="utf-8")
+    record_content_change(
+        directory,
+        "book.prologue",
+        old_content,
+        content,
+        source=source,
+    )
     return target
 
 
