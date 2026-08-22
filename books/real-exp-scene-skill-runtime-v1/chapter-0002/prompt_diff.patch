@@ -1,0 +1,23 @@
+--- without_scene_skill
++++ with_scene_skill
+@@ -268,6 +268,20 @@
+ 本章二级收益结算：本章计划未明确；不强制本章结算。
+ 本章反哺：本章计划未明确；不强制本章反哺。
+ 
++## ACTIVE SCENE SKILLS——只控制场景如何落成正文
++
++Scene Skill Runtime v1：下列 Skill 只控制 HOW TO REALIZE THE SCENE；不得修改 Chapter Mission、Canon、直接结果、资源状态、人物决定或章末推动，也不要求新增场景。
++
++## Primary: social_bargain_decision
++
++# social_bargain_decision
++
++**Primary Reading Question:** 谁想让谁做什么，最后谁改变了决定、承诺、立场或条件？
++
++把对话当行动，而不是信息搬运。先明确每个核心人物此刻想从对方那里得到什么，以及为什么不能直接得到。每一轮重要对白都应是一种策略：试探、条件、拒绝、威胁、让步、隐瞒、交换、招募、说服、审讯或表态。人物回应前先承受上一句话带来的压力，不能像轮流念台词。转折来自某人改变策略、暴露底牌、拒绝预期选择或重新估值对方。
++
++**Stop when:** 决定、条件、承诺或关系位置已经改变，继续说只是在重复同一立场。
++
+ ## Curated Chapter Context
+ 
+ # Curator Audit

@@ -1,0 +1,33 @@
+--- without_scene_skill
++++ with_scene_skill
+@@ -451,6 +451,30 @@
+ 本章二级收益结算：本章计划未明确；不强制本章结算。
+ 本章反哺：本章计划未明确；不强制本章反哺。
+ 
++## ACTIVE SCENE SKILLS——只控制场景如何落成正文
++
++Scene Skill Runtime v1：下列 Skill 只控制 HOW TO REALIZE THE SCENE；不得修改 Chapter Mission、Canon、直接结果、资源状态、人物决定或章末推动，也不要求新增场景。
++
++## Primary: trial_challenge
++
++# trial_challenge
++
++**Primary Reading Question:** 在明确外部规则和成功线下，人物怎样跨过这道门槛？
++
++先让规则、判定和失败代价清楚。第一次尝试用于暴露真实难点，而不是直接通过；随后人物调整能力组合、节奏、资源或合作方式，再次逼近成功线。Trial 与 Training 的区别是这里存在外部判定；与 Showcase 的区别是目标不是给别人看，而是过关。
++
++**Stop when:** 规则确认成功/失败，或人物发现当前阶段根本无法完成而转入训练、资源获取等准备。
++
++## Secondary: combat
++
++# combat
++
++**Primary Reading Question:** 现在谁占优势，为什么；下一次行动会怎样改变胜负关键？
++
++围绕目标而非招式写战斗。动作链保持“看见/判断 → 行动 → 对方真实回应 → 空间或条件改变 → 新胜负问题”。只展开会改变局势的动作；技术解释只解释为什么这一下有效、失败或迫使策略改变。团队战要持续更新位置、分工、救援与目标切换；大型战争用局部 POV 承载整体态势，不逐兵逐卒。
++
++**Stop when:** 胜负、撤退、目标转换或新的高优先级威胁已经成立。不要每招后补一句同义胜负总结。
++
+ ## Curated Chapter Context
+ 
+ # Curator Audit

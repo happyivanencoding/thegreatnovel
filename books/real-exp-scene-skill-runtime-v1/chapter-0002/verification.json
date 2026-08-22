@@ -1,0 +1,15 @@
+{
+  "chapter": 2,
+  "primary": "social_bargain_decision",
+  "secondary": "none",
+  "curator_catalog_present": true,
+  "active_block_absent_before": true,
+  "active_block_present_after": true,
+  "raw_selection_stripped_from_primary": true,
+  "specialist_has_no_active_scene_skill": true,
+  "unrelated_investigation_skill_absent": true,
+  "before_chars": 16453,
+  "after_chars": 16935,
+  "delta_chars": 482,
+  "primary_skill_body_present": true
+}
