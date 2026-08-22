@@ -2221,8 +2221,12 @@ def test_growth_projection_is_three_lines_and_not_an_outline_gate() -> None:
     )
     assert "本章一级成长推进：BOLD_CHAPTER_PLAN_LEVEL_UP。" in bold_plan
     empty = render_growth_benefit_projection()
-    assert "本章一级成长推进：本章不推进。" in empty
-    assert "本章二级收益结算：本章不结算。" in empty
+    assert "本章一级成长推进：本章计划未明确；不强制本章推进。" in empty
+    assert "本章二级收益结算：本章计划未明确；不强制本章结算。" in empty
+    assert "本章反哺：本章计划未明确；不强制本章反哺。" in empty
+    assert "本章不推进。" not in empty
+    assert "本章不结算。" not in empty
+    assert "本章反哺为空。" not in empty
     assert len(REQUIRED_OUTLINE_FIELDS) == 8
     assert "一级成长变化" not in REQUIRED_OUTLINE_FIELDS
     assert "二级收益结算" not in REQUIRED_OUTLINE_FIELDS
