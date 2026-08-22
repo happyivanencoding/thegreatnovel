@@ -35,3 +35,9 @@
 - 旧稿保留了台心合格牌、取牌回线、周既明越线、顾长川回到自己的白线，以及“尚未正式入内门”。
 - 新稿改成了白线内有效触肩反制，没有出现取牌回线；并写成顾长川取得内门弟子身份。State Delta 也把这一漂移写入了本实验副本的 BOOK.md。
 - 因此，本轮可以证明新规则在当前输入下确实进入了 Director、Curator 和 Primary，并且正文出现了更具体的短反应；但不能把新旧正文的全部差异归因于 Human Reaction 修复，因为上游 Director/Curator 同时改变了本章事件合同和结果事实。
+
+## Harness 根因与本次修正
+
+- 上一轮 `EXPERIMENT.md` 声称冻结原 Chapter 3 核心事实，但实际 `CHAPTER_PLANS.md` / `FIXED_CORE.md` 没有把“台心合格牌、取牌回线、周既明越线、尚未正式入内门”等具体事实写入 Director 可见的当前章输入。
+- `render_experiment.py` 的 `chapter_plan()` 会把完整 Chapter 3 计划段落传入 Director 的 `current_chapter_plan`；本次已把上述事实明确写入该段落，并同步写入 `FIXED_CORE.md`，未来重跑时可以直接核对 Prompt。
+- 本次只修正输入定义和说明，没有重跑 Chapter 3，没有覆盖任何 raw Prompt / Response，也没有新增模型调用。

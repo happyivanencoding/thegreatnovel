@@ -14,7 +14,23 @@
     "old_chapter_3": "books/real-exp-opening-reader-first-fresh-v1/chapters/chapter-0003.md",
     "fixed_core": "books/real-exp-opening-reader-first-fresh-v1/FIXED_CORE.md",
     "chapter_plans": "books/real-exp-opening-reader-first-fresh-v1/CHAPTER_PLANS.md",
-    "reader_first_addendum": "books/real-exp-opening-reader-first-fresh-v1/READER_IMMEDIATE_UNDERSTANDING.md"
+    "reader_first_addendum": "books/real-exp-opening-reader-first-fresh-v1/READER_IMMEDIATE_UNDERSTANDING.md",
+    "frozen_event_facts": [
+      "台心合格牌与取牌回线",
+      "周既明越线",
+      "顾长川本轮公开升院合格但尚未正式入内门",
+      "一次回身卸力步在真实进攻后使用并消失",
+      "许照确认守约",
+      "周既明成为公开竞争者"
+    ]
+  },
+  "effective_inputs_for_future_rerun": {
+    "book": "books/real-exp-human-reaction-ch3-v1/BOOK.md",
+    "chapter_1": "books/real-exp-human-reaction-ch3-v1/chapters/chapter-0001.md",
+    "chapter_2": "books/real-exp-human-reaction-ch3-v1/chapters/chapter-0002.md",
+    "fixed_core": "books/real-exp-human-reaction-ch3-v1/FIXED_CORE.md",
+    "chapter_plans": "books/real-exp-human-reaction-ch3-v1/CHAPTER_PLANS.md",
+    "reader_first_addendum": "books/real-exp-human-reaction-ch3-v1/READER_IMMEDIATE_UNDERSTANDING.md"
   },
   "runtime": {
     "chapters": [3],

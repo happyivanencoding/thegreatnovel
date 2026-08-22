@@ -71,6 +71,12 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
     ):
         assert marker in curator
     assert "## Character Card" not in curator
+    for marker in (
+        "关系阶段、状态变化、社会评价、收益结算等抽象内容属于 Writer 的内部理解",
+        "不能直接复制总结",
+        "Curator 不必自行把这些内容改写成正文句子",
+    ):
+        assert marker in curator
 
     primary = generate_prompt(
         mode="primary_writer",
@@ -99,6 +105,12 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "有反应后选择压住",
         "重大胜利、失败、羞辱、翻盘",
         "不必每句高效",
+        "核心欲望、自尊、恐惧或期待",
+        "不要只用疼痛、战术判断、看一眼或状态确认代替它",
+        "策划层可以使用抽象关系和状态语言",
+        "不要再追加同义的抽象旁白",
+        "不要再用抽象旁白总结同一意义",
+        "策划层的关系阶段、状态变化、社会评价和收益结算属于内部理解",
     ):
         assert marker in primary
     assert primary.count("人物不是状态更新器") == 2
