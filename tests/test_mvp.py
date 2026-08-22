@@ -2206,6 +2206,7 @@ def test_growth_projection_is_three_lines_and_not_an_outline_gate() -> None:
     assert "当前剧情块一级成长目标仅供参照：砾角第一次完成贴壁进化。" in stage_only
     assert "本章二级收益结算：\n未在本章计划中明确；不强制本章结算。" in stage_only
     assert "当前剧情块二级收益目标仅供参照：获得一笔赏金和红根路线牌。" in stage_only
+    assert "本章反哺：\n未在本章计划中明确；不强制本章反哺。" in stage_only
     assert "当前剧情块反哺目标仅供参照：路线牌让主角进入血统兽斗场。" in stage_only
     explicit = render_growth_benefit_projection(
         current_long_block="一级成长变化：LONG_BLOCK_LEVEL_UP。\n二级收益结算：LONG_BLOCK_REWARD。",
