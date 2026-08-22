@@ -1,0 +1,16 @@
+{
+  "experiment": "real-exp-clean-e2e-scene-skill-v11-10ch",
+  "status": "scaffold_ready_generation_not_started",
+  "branch": "principal_dev_new_sys",
+  "production_baseline_commit": "4dbc289",
+  "scene_skill_v11_commit": "f15190b",
+  "scene_skill_v11_freeze_tag": "freeze/principal_dev_new_sys-scene-skill-v1.1-validated-f15190b",
+  "scene_skill_prose_validation_commit": "4dbc289",
+  "chapters_planned": 10,
+  "writer_mode": "curator_primary",
+  "llm_execution": "Codex subagents only",
+  "external_api_calls": false,
+  "specialists_enabled": false,
+  "integrator_enabled": false,
+  "manual_scene_skill_selection": false
+}
