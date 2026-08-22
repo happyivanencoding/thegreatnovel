@@ -24,5 +24,11 @@
   "run_ledger_used": false,
   "state_delta_used": false,
   "chapter_number": 0,
-  "content_calls": 1
+  "content_calls": 2
+  ,"rewrite": {
+    "previous_prologue": "PROLOGUE_v1.md",
+    "rewrite_prompt": "rewrite_prompt.md",
+    "rewrite_response": "response_v2.md",
+    "rewrite_call_count": 1
+  }
 }
