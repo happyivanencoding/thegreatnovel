@@ -12,6 +12,7 @@ from story_mvp.hybrid_runtime import (
 )
 from story_mvp.prompts import (
     DEFAULT_STATE_DELTA_TEMPLATE,
+    REQUIRED_OUTLINE_FIELDS,
     READER_FIRST_PROSE_CONTRACT,
     generate_prompt,
     parse_canon_memory,
@@ -62,6 +63,14 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
     ):
         assert heading in curator
     assert "Reader-First Prose Contract" not in curator
+    for marker in (
+        "当前最在意的事",
+        "自尊/恐惧/欲望",
+        "行为习惯或说话声音",
+        "不要生成 Character Card",
+    ):
+        assert marker in curator
+    assert "## Character Card" not in curator
 
     primary = generate_prompt(
         mode="primary_writer",
@@ -85,8 +94,14 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "关键因果节点",
         "第一息 / 第二息 / 第三息",
         "新章不要原样或近似复述上一章最后一句",
+        "朴素、直接不等于情绪中性",
+        "人物不是状态更新器",
+        "有反应后选择压住",
+        "重大胜利、失败、羞辱、翻盘",
+        "不必每句高效",
     ):
         assert marker in primary
+    assert primary.count("人物不是状态更新器") == 2
     specialist = generate_prompt(
         mode="specialist_action",
         template="",
@@ -130,6 +145,11 @@ def test_director_prompt_uses_only_light_projection_and_selective_default() -> N
         assert marker in prompt
     assert "writer_mode" not in prompt
     assert "专项建议" in prompt
+    director_contract = prompt.split("# Director Context", 1)[0]
+    for field in REQUIRED_OUTLINE_FIELDS:
+        assert f"{field}：" in director_contract
+    assert "八个字段仍是唯一事件合同字段" in director_contract
+    assert "情绪字段：" not in director_contract
 
     hybrid = generate_prompt(
         mode="context_curator",
