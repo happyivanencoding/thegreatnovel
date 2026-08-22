@@ -1,0 +1,39 @@
+[
+  {
+    "kind": "context_curator",
+    "chapter": 2,
+    "group": null,
+    "model_requested": "gpt-5.6",
+    "prompt_chars": 11761,
+    "started_at": "2026-08-22T20:48:19.262668+00:00",
+    "status": "failed",
+    "error_type": "OpenAIExecutorError",
+    "error": "OpenAI Python SDK 未安装，请安装项目依赖",
+    "completed_at": "2026-08-22T20:48:19.263736+00:00"
+  },
+  {
+    "kind": "context_curator",
+    "chapter": 2,
+    "group": null,
+    "model_requested": "gpt-5.6",
+    "prompt_chars": 11761,
+    "started_at": "2026-08-22T20:49:10.528818+00:00",
+    "status": "failed",
+    "error_type": "OpenAIExecutorError",
+    "error": "OpenAI Responses API 请求失败",
+    "completed_at": "2026-08-22T20:49:12.758325+00:00"
+  },
+  {
+    "kind": "context_curator",
+    "chapter": 2,
+    "group": null,
+    "model_requested": "glm-5.3",
+    "adapter": "openai_compatible_chat_completions",
+    "prompt_chars": 11761,
+    "started_at": "2026-08-22T20:50:16.527050+00:00",
+    "status": "failed",
+    "error_type": "RateLimitError",
+    "error": "Error code: 429 - {'error': {'code': '1113', 'message': 'Insufficient balance or no resource package. Please recharge.'}}",
+    "completed_at": "2026-08-22T20:50:19.346249+00:00"
+  }
+]

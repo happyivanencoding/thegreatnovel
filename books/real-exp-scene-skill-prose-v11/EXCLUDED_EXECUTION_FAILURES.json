@@ -1,0 +1,7 @@
+[
+  {
+    "agent_id": "01a02b40-32be-71b2-b232-afa335a74fba",
+    "status": "excluded_execution_failure",
+    "reason": "Chapter 3 source prompt file was missing before the single allowed retry; no experiment response was produced."
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "actual_primary": "social_bargain_decision",
+  "actual_secondary": "hunt_acquisition",
+  "selection_valid": true,
+  "selection_matches_expected": false,
+  "expected_for_review_only": {
+    "primary": "social_bargain_decision",
+    "secondary": "none"
+  },
+  "effective_for_ab_comparison": {
+    "primary": "social_bargain_decision",
+    "secondary": "hunt_acquisition"
+  }
+}

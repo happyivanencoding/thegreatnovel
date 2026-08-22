@@ -1,0 +1,62 @@
+[
+  {
+    "chapter": 2,
+    "group": "A_no_skill",
+    "status": "completed",
+    "response_file": "chapter-0002\\A_no_skill\\primary_response.md",
+    "chapter_file": "chapter-0002\\A_no_skill\\chapter.md",
+    "fact_summary_file": "chapter-0002\\A_no_skill\\chapter_fact_summary.md",
+    "draft_chars": 3602,
+    "fact_summary_chars": 297
+  },
+  {
+    "chapter": 2,
+    "group": "B_scene_skill_v1",
+    "status": "completed",
+    "response_file": "chapter-0002\\B_scene_skill_v1\\primary_response.md",
+    "chapter_file": "chapter-0002\\B_scene_skill_v1\\chapter.md",
+    "fact_summary_file": "chapter-0002\\B_scene_skill_v1\\chapter_fact_summary.md",
+    "draft_chars": 3123,
+    "fact_summary_chars": 441
+  },
+  {
+    "chapter": 2,
+    "group": "C_scene_skill_v11",
+    "status": "completed",
+    "response_file": "chapter-0002\\C_scene_skill_v11\\primary_response.md",
+    "chapter_file": "chapter-0002\\C_scene_skill_v11\\chapter.md",
+    "fact_summary_file": "chapter-0002\\C_scene_skill_v11\\chapter_fact_summary.md",
+    "draft_chars": 3743,
+    "fact_summary_chars": 460
+  },
+  {
+    "chapter": 3,
+    "group": "A_no_skill",
+    "status": "completed",
+    "response_file": "chapter-0003\\A_no_skill\\primary_response.md",
+    "chapter_file": "chapter-0003\\A_no_skill\\chapter.md",
+    "fact_summary_file": "chapter-0003\\A_no_skill\\chapter_fact_summary.md",
+    "draft_chars": 2398,
+    "fact_summary_chars": 400
+  },
+  {
+    "chapter": 3,
+    "group": "B_scene_skill_v1",
+    "status": "completed",
+    "response_file": "chapter-0003\\B_scene_skill_v1\\primary_response.md",
+    "chapter_file": "chapter-0003\\B_scene_skill_v1\\chapter.md",
+    "fact_summary_file": "chapter-0003\\B_scene_skill_v1\\chapter_fact_summary.md",
+    "draft_chars": 3356,
+    "fact_summary_chars": 366
+  },
+  {
+    "chapter": 3,
+    "group": "C_scene_skill_v11",
+    "status": "completed",
+    "response_file": "chapter-0003\\C_scene_skill_v11\\primary_response.md",
+    "chapter_file": "chapter-0003\\C_scene_skill_v11\\chapter.md",
+    "fact_summary_file": "chapter-0003\\C_scene_skill_v11\\chapter_fact_summary.md",
+    "draft_chars": 3346,
+    "fact_summary_chars": 239
+  }
+]

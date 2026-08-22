@@ -1,0 +1,9 @@
+{
+  "status": "excluded_from_A_B_C",
+  "reason": "Three agents were spawned before a batch hit the thread limit; their group mapping was not recoverable, so their results are not used for comparison.",
+  "agent_ids": [
+    "01a02b43-587a-7e00-9db8-01a5e39ecbd0",
+    "01a02b43-560c-7190-abb0-b979da1afdb0",
+    "01a02b43-5b2f-7903-a966-f53f39908c09"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "actual_primary": "trial_challenge",
+  "actual_secondary": "combat",
+  "selection_valid": true,
+  "selection_matches_expected": true,
+  "expected_for_review_only": {
+    "primary": "trial_challenge",
+    "secondary": "combat"
+  },
+  "effective_for_ab_comparison": {
+    "primary": "trial_challenge",
+    "secondary": "combat"
+  }
+}

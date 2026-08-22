@@ -1,0 +1,41 @@
+{
+  "experiment": "real-exp-scene-skill-prose-v11",
+  "branch": "principal_dev_new_sys",
+  "head": "f15190b58840ae4148e8a88a9831dbe7f4565ac6",
+  "baseline_commit": "f15190b",
+  "old_scene_skill_commit": "c5be62c",
+  "model": "Codex subagent（具体底层模型由当前环境决定）",
+  "executor_adapter": "codex_subagent",
+  "executor": {
+    "kind": "codex_subagent",
+    "external_model_api_used_for_experiment": false
+  },
+  "frozen_prompt_root": "books\\real-exp-scene-skill-runtime-v1",
+  "chapters": {
+    "2": {
+      "curator_prompt": "books/real-exp-scene-skill-runtime-v1/chapter-0002/curator_prompt_with_catalog.md",
+      "primary_base_prompt": "books/real-exp-scene-skill-runtime-v1/chapter-0002/primary_prompt_without_scene_skill.md",
+      "frozen_director": "books/real-exp-opening-reader-first-fresh-v1/runs/chapter-0002/director_response.md",
+      "expected_scene_review": {
+        "primary": "social_bargain_decision",
+        "secondary": "none"
+      }
+    },
+    "3": {
+      "curator_prompt": "books/real-exp-scene-skill-runtime-v1/chapter-0003/curator_prompt_with_catalog.md",
+      "primary_base_prompt": "books/real-exp-scene-skill-runtime-v1/chapter-0003/primary_prompt_without_scene_skill.md",
+      "frozen_director": "books/real-exp-human-reaction-ch3-v1/after-v2/director_response.md",
+      "expected_scene_review": {
+        "primary": "trial_challenge",
+        "secondary": "combat"
+      }
+    }
+  },
+  "groups": [
+    "A_no_skill",
+    "B_scene_skill_v1",
+    "C_scene_skill_v11"
+  ],
+  "call_policy": "one call per listed node; no automatic retry",
+  "external_api_calls": "not part of experiment; see EXTERNAL_API_ATTEMPTS.json"
+}
