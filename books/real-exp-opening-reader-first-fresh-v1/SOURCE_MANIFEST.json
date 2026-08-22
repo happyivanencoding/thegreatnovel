@@ -1,0 +1,47 @@
+{
+  "experiment": "real-exp-opening-reader-first-fresh-v1",
+  "book": "《借我一招》",
+  "branch": "principal_dev_new_sys",
+  "baseline_head_at_setup": "7bd37fd0563f69807bf4f81d453fe80cfffc37e9",
+  "author_input": {
+    "path": "C:/Users/jingx/.codex/attachments/ebcdf623-56bf-4cbc-accf-d69891f4a57a/pasted-text.txt",
+    "role": "author_frozen_experiment_request",
+    "status": "read_directly_after_txt_parser_rejected_extension"
+  },
+  "frozen_experiment_inputs": [
+    {
+      "path": "books/real-exp-opening-reader-first-fresh-v1/FIXED_CORE.md",
+      "role": "author-supplied core setting transcription"
+    },
+    {
+      "path": "books/real-exp-opening-reader-first-fresh-v1/BOOK.md",
+      "role": "minimal experiment BOOK and initial state"
+    },
+    {
+      "path": "books/real-exp-opening-reader-first-v1/CHAPTER_PLANS.md",
+      "role": "author-bounded Chapter 1-3 mechanism contract"
+    },
+    {
+      "path": "books/real-exp-opening-reader-first-fresh-v1/READER_IMMEDIATE_UNDERSTANDING.md",
+      "role": "author-supplied temporary prose priority addendum"
+    }
+  ],
+  "prior_novel_inputs": [],
+  "production_runtime_read_only": [
+    "src/story_mvp/prompts.py",
+    "src/story_mvp/chapter_context.py",
+    "src/story_mvp/hybrid_runtime.py",
+    "src/story_mvp/storage.py",
+    "src/story_mvp/run_ledger.py",
+    "src/story_mvp/workflow_state.py"
+  ],
+  "planned_content_calls": 12,
+  "nodes_per_chapter": ["director", "context_curator", "primary_writer", "state_delta"],
+  "chapters": [1, 2, 3],
+  "prologue_used": false,
+  "specialists_used": false,
+  "integrator_used": false,
+  "reviewer_used": false,
+  "production_mutation_expected": false,
+  "unrelated_existing_untracked_preserved": "books/real-exp-curator-primary-longform-v1/炉藏万象_Chapter01-10.txt"
+}

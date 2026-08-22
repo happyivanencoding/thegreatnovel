@@ -1,0 +1,32 @@
+{
+  "model": "gpt-5.6-luna via luna_worker",
+  "total_content_calls": 12,
+  "retries": 0,
+  "specialist_calls": 0,
+  "integrator_calls": 0,
+  "reviewer_calls": 0,
+  "state_delta_calls": 3,
+  "prologue_calls": 0,
+  "reader_priority_addendum": {
+    "applied": true,
+    "full_addendum_in_downstream_prompts_from_sequence": 2,
+    "sequence_1_director_started_before_addendum_arrived": true,
+    "sequence_1_response_was_not_rerun": true
+  },
+  "calls": [
+    {"sequence": 1, "chapter": 1, "node": "director", "agent_id": "01a02863-5c9f-7182-9cf3-b1e64a9fa8ee", "prompt_chars": 3480, "response_chars": 1387, "prompt_file": "runs/chapter-0001/director_prompt.md", "response_file": "runs/chapter-0001/director_response.md", "status": "completed"},
+    {"sequence": 2, "chapter": 1, "node": "context_curator", "agent_id": "01a02868-0555-7f93-93f8-7b49a1474d4a", "prompt_chars": 7538, "response_chars": 3399, "prompt_file": "runs/chapter-0001/curator_prompt.md", "response_file": "runs/chapter-0001/curator_response.md", "status": "completed"},
+    {"sequence": 3, "chapter": 1, "node": "primary_writer", "agent_id": "01a0286a-c1d8-7a41-98fc-ac6b460e0c74", "prompt_chars": 9437, "response_chars": 3279, "prompt_file": "runs/chapter-0001/primary_prompt.md", "response_file": "runs/chapter-0001/primary_response.md", "status": "completed"},
+    {"sequence": 4, "chapter": 1, "node": "state_delta", "agent_id": "01a0286d-cc7e-75f2-8f16-8e8df4a0d6c4", "prompt_chars": 5228, "response_chars": 1824, "prompt_file": "runs/chapter-0001/state_delta_prompt.md", "response_file": "runs/chapter-0001/state_delta_response.md", "status": "completed"},
+    {"sequence": 5, "chapter": 2, "node": "director", "agent_id": "01a0286f-a475-7723-bf7e-2904389d9789", "prompt_chars": 8471, "response_chars": 1797, "prompt_file": "runs/chapter-0002/director_prompt.md", "response_file": "runs/chapter-0002/director_response.md", "status": "completed"},
+    {"sequence": 6, "chapter": 2, "node": "context_curator", "agent_id": "01a02873-0089-7b81-ba0c-6ad29948bc79", "prompt_chars": 10832, "response_chars": 5134, "prompt_file": "runs/chapter-0002/curator_prompt.md", "response_file": "runs/chapter-0002/curator_response.md", "status": "completed"},
+    {"sequence": 7, "chapter": 2, "node": "primary_writer", "agent_id": "01a02875-50d2-76a3-8db5-605553ced150", "prompt_chars": 15479, "response_chars": 4202, "prompt_file": "runs/chapter-0002/primary_prompt.md", "response_file": "runs/chapter-0002/primary_response.md", "status": "completed"},
+    {"sequence": 8, "chapter": 2, "node": "state_delta", "agent_id": "01a02879-600f-7ba3-a47d-8a6baf89f249", "prompt_chars": 7301, "response_chars": 1931, "prompt_file": "runs/chapter-0002/state_delta_prompt.md", "response_file": "runs/chapter-0002/state_delta_response.md", "status": "completed"},
+    {"sequence": 9, "chapter": 3, "node": "director", "agent_id": "01a0287c-96f9-7390-9c79-bdcd143a5be5", "prompt_chars": 9049, "response_chars": 2548, "prompt_file": "runs/chapter-0003/director_prompt.md", "response_file": "runs/chapter-0003/director_response.md", "status": "completed"},
+    {"sequence": 10, "chapter": 3, "node": "context_curator", "agent_id": "01a0287f-fc74-7f00-9fc6-cdcbb0983801", "prompt_chars": 12153, "response_chars": 5153, "prompt_file": "runs/chapter-0003/curator_prompt.md", "response_file": "runs/chapter-0003/curator_response.md", "status": "completed"},
+    {"sequence": 11, "chapter": 3, "node": "primary_writer", "agent_id": "01a02883-c2c5-7bd0-a39b-cfde7d3baae7", "prompt_chars": 20633, "response_chars": 4286, "prompt_file": "runs/chapter-0003/primary_prompt.md", "response_file": "runs/chapter-0003/primary_response.md", "status": "completed"},
+    {"sequence": 12, "chapter": 3, "node": "state_delta", "agent_id": "01a02888-4837-7ba0-9dc4-cc8c8a558664", "prompt_chars": 7999, "response_chars": 2806, "prompt_file": "runs/chapter-0003/state_delta_prompt.md", "response_file": "runs/chapter-0003/state_delta_response.md", "status": "completed"}
+  ],
+  "chapter_4_generated": false,
+  "production_llm_calls": 0
+}

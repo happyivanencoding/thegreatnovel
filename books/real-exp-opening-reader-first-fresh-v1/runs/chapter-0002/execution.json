@@ -1,0 +1,35 @@
+{
+  "book": "《借我一招》",
+  "chapter": 2,
+  "writer_mode": "curator_primary",
+  "model": "gpt-5.6-luna via real luna_worker",
+  "model_calls": 4,
+  "selected_specialists": [],
+  "integrator_executed": false,
+  "nodes": {
+    "director": {
+      "status": "completed",
+      "model_call": "single_call",
+      "prompt_chars": 8471,
+      "response_chars": 1797
+    },
+    "curator": {
+      "status": "completed",
+      "model_call": "single_call",
+      "prompt_chars": 10832,
+      "response_chars": 5134
+    },
+    "primary": {
+      "status": "completed",
+      "model_call": "single_call",
+      "prompt_chars": 15479,
+      "response_chars": 4202
+    },
+    "state_delta": {
+      "status": "completed",
+      "model_call": "single_call",
+      "prompt_chars": 7301,
+      "response_chars": 1931
+    }
+  }
+}
