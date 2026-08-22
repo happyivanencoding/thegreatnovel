@@ -1,0 +1,54 @@
+{
+  "model": "gpt-5.6-luna via luna_worker",
+  "total_content_calls": 4,
+  "retries": 0,
+  "calls": [
+    {
+      "sequence": 1,
+      "node": "prologue",
+      "agent_id": "01a0284e-c179-7612-96d9-6e6f69eee603",
+      "prompt_file": "prologue_prompt.md",
+      "response_file": "prologue_response.md",
+      "prompt_chars": 40649,
+      "response_chars": 1867,
+      "status": "completed"
+    },
+    {
+      "sequence": 2,
+      "node": "chapter-0001_director",
+      "agent_id": "01a02853-88cc-7db2-b1bd-ad7a63613397",
+      "prompt_file": "chapter-0001_director_prompt.md",
+      "response_file": "chapter-0001_director_response.md",
+      "prompt_chars": 42590,
+      "response_chars": 999,
+      "status": "completed"
+    },
+    {
+      "sequence": 3,
+      "node": "chapter-0001_curator",
+      "agent_id": "01a02855-6d1f-74c2-84c9-122cea367da2",
+      "prompt_file": "chapter-0001_curator_prompt.md",
+      "response_file": "chapter-0001_curator_response.md",
+      "prompt_chars": 43669,
+      "response_chars": 2890,
+      "status": "completed"
+    },
+    {
+      "sequence": 4,
+      "node": "chapter-0001_primary",
+      "agent_id": "01a02857-c3e2-7771-bfa1-707584c41cdd",
+      "prompt_file": "chapter-0001_primary_prompt.md",
+      "response_file": "chapter-0001_primary_response.md",
+      "prompt_chars": 47724,
+      "response_chars": 5568,
+      "status": "completed"
+    }
+  ],
+  "non_content_operations": [
+    "render_prompts.py",
+    "freeze_artifacts.py"
+  ],
+  "chapter-0002_to_0010_generated": false,
+  "reviewer_calls": 0,
+  "state_delta_calls": 0
+}

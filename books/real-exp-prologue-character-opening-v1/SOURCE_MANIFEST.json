@@ -1,0 +1,61 @@
+{
+  "experiment": "real-exp-prologue-character-opening-v1",
+  "book": "《炉藏万象》",
+  "branch": "principal_dev_new_sys",
+  "baseline_head_at_setup": "edc8aa173f3459e2882f048cf371a85bfee00c72",
+  "source_tree_commit": "36bf66c5fcda7df681b94153b597137f495b032d",
+  "source_root": "books/real-exp-curator-primary-longform-v1/candidate-b",
+  "source_files": [
+    {
+      "role": "Fantasy Seed",
+      "path": "books/real-exp-curator-primary-longform-v1/candidate-b/source/fantasy_seed.md",
+      "use": "核心幻想、主角欲望、核心能力、第一次主动兑现和长期增长"
+    },
+    {
+      "role": "World Vision",
+      "path": "books/real-exp-curator-primary-longform-v1/candidate-b/source/world_vision.md",
+      "use": "力量来源、黑炉镇 / 玄烬仙宗的世界结构、人物与早期兑现"
+    },
+    {
+      "role": "Story Program",
+      "path": "books/real-exp-curator-primary-longform-v1/candidate-b/source/story_program.md",
+      "use": "长期故事主线、关系结构、第一阶段和早期完整兑现"
+    },
+    {
+      "role": "BOOK design",
+      "path": "books/real-exp-curator-primary-longform-v1/candidate-b/source/BOOK_after_old_experiment.md",
+      "use": "BOOK 的设计画像与表达控制；忽略其中旧实验运行状态，不把旧 Canon 当作本轮已发生事实"
+    },
+    {
+      "role": "Frozen Outline / Future 10",
+      "path": "books/real-exp-curator-primary-longform-v1/candidate-b/source/frozen_outline.md",
+      "use": "第 1—3 章窗口和未来十章逐章小纲"
+    },
+    {
+      "role": "Frozen Hybrid Chapter 1",
+      "path": "books/real-exp-curator-primary-longform-v1/candidate-b/chapters/chapter-0001.md",
+      "use": "只作为比较基线，不注入新正文 prompt"
+    },
+    {
+      "role": "Frozen Hybrid Chapter 1 fact summary",
+      "path": "books/real-exp-curator-primary-longform-v1/candidate-b/_operation/chapter-0001/chapter_fact_summary.md",
+      "use": "锁定本轮 Chapter 1 必须保留的现实结果"
+    }
+  ],
+  "production_files_read_only": [
+    "src/story_mvp/prompts.py",
+    "src/story_mvp/hybrid_runtime.py",
+    "src/story_mvp/chapter_context.py",
+    "src/story_mvp/run_ledger.py",
+    "src/story_mvp/storage.py",
+    "src/story_mvp/workflow_state.py",
+    "src/story_mvp/app.py",
+    "src/story_mvp/openai_executor.py"
+  ],
+  "planned_content_calls": 4,
+  "planned_chapters": [1],
+  "production_mutation": false,
+  "canon_mutation": false,
+  "state_delta": false,
+  "unrelated_existing_untracked_preserved": "books/real-exp-curator-primary-longform-v1/炉藏万象_Chapter01-10.txt"
+}
