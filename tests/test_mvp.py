@@ -2442,6 +2442,8 @@ FULL_BOOK_CONTRACT_MARKER
         mode="primary_writer",
         template="",
         book_content=book,
+        current_long_block="RAW_LONG_BLOCK_MUST_NOT_REACH_PRIMARY",
+        current_chapter_plan="RAW_CHAPTER_PLAN_MUST_NOT_REACH_PRIMARY",
         current_outline=outline,
         previous_chapter_text="CANON_PROSE_MARKER",
         curated_context=curated,
@@ -2451,8 +2453,12 @@ FULL_BOOK_CONTRACT_MARKER
     assert "CANON_PROSE_MARKER" in prompt
     assert "CANON INDEX" in prompt
     assert "CURATED_ONLY_MARKER" in prompt
+    assert "RAW_LONG_BLOCK_MUST_NOT_REACH_PRIMARY" not in prompt
+    assert "RAW_CHAPTER_PLAN_MUST_NOT_REACH_PRIMARY" not in prompt
     assert "FULL_PROSE_PROFILE_MARKER" not in prompt
     assert "FULL_BOOK_CONTRACT_MARKER" not in prompt
+    assert "WHAT HAPPENS" in prompt
+    assert "不是正文措辞来源" in prompt
 
     fallback = generate_prompt(
         mode="primary_writer",
@@ -2493,6 +2499,8 @@ OPENING_CONTEXT
             mode=mode,
             template="",
             book_content=book,
+            current_long_block="RAW_LONG_BLOCK_MUST_NOT_REACH_SPECIALIST",
+            current_chapter_plan="RAW_CHAPTER_PLAN_MUST_NOT_REACH_SPECIALIST",
             current_outline=outline,
             curated_context=curated,
             primary_draft=primary,
@@ -2500,10 +2508,15 @@ OPENING_CONTEXT
         )
         assert primary in prompt
         assert "RAW_GBRAIN_MARKER" not in prompt
+        assert "RAW_LONG_BLOCK_MUST_NOT_REACH_SPECIALIST" not in prompt
+        assert "RAW_CHAPTER_PLAN_MUST_NOT_REACH_SPECIALIST" not in prompt
+        assert "单 Writer 职责" not in prompt
     integrator = generate_prompt(
         mode="chapter_integrator",
         template="",
         book_content=book,
+        current_long_block="RAW_LONG_BLOCK_MUST_NOT_REACH_INTEGRATOR",
+        current_chapter_plan="RAW_CHAPTER_PLAN_MUST_NOT_REACH_INTEGRATOR",
         current_outline=outline,
         curated_context=curated,
         primary_draft=primary,
@@ -2513,6 +2526,10 @@ OPENING_CONTEXT
     assert "PRIMARY_DRAFT_MARKER" in integrator
     assert "OPENING_RESPONSE" in integrator
     assert "ACTION_RESPONSE" in integrator
+    assert "CURATED_ONLY_MARKER" not in integrator
+    assert "RAW_LONG_BLOCK_MUST_NOT_REACH_INTEGRATOR" not in integrator
+    assert "RAW_CHAPTER_PLAN_MUST_NOT_REACH_INTEGRATOR" not in integrator
+    assert "单 Writer 职责" not in integrator
     assert "Dialogue Specialist Response" in integrator
     assert "未提供" in integrator
     assert "不必全部采纳" in integrator
@@ -2747,6 +2764,8 @@ def test_narrative_function_is_a_planning_note_not_a_hard_constraint() -> None:
     assert "叙事功能：本章完成第一次公开兑现" in prompt
     assert "规划备注（planning note）" in prompt
     assert "不要求正文显式表达它" in prompt
+    assert "WHAT HAPPENS，不决定 HOW TO SAY" in prompt
+    assert "这是事实约束，不是正文措辞来源" in prompt
     assert "场景上下文——推动事件的人：内容" in prompt
 
 

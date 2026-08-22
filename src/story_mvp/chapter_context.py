@@ -115,18 +115,18 @@ def _markdown_block(content: str, heading: str) -> str:
 
 
 def render_event_contract(current_outline: str) -> str:
-    """把八字段小纲渲染为单 Writer 执行合同。
+    """把八字段小纲渲染为下游节点共用的事件合同。
 
     六项合同字段按原文保留“字段：内容”形式；「推动事件的人」呈现为场景上下文；
     「叙事功能」明确标为规划备注，不要求正文显式表达。
     """
     values = parse_outline_fields(current_outline)
     lines = [
-        "单 Writer 职责：根据下方已批准的事件合同直接写出可提交的正式正文，不把小纲扩写成更长概述。",
+        "当前章事件合同：下方八字段决定 WHAT HAPPENS，不决定 HOW TO SAY；下游节点按各自职责使用这些事实约束，不把小纲扩写成更长概述。",
         "",
         f"场景上下文——推动事件的人：{values.get('推动事件的人') or '（未填写）'}",
         "",
-        "事件合同（六项必须落实）：",
+        "事件合同（六项必须落实；这是事实约束，不是正文措辞来源）：",
     ]
     lines.extend(
         f"{field}：{values.get(field) or '（未填写）'}" for field in EVENT_CONTRACT_FIELDS

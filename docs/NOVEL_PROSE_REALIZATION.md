@@ -44,7 +44,7 @@ Novel Prose Realization 是 Story MVP 的章节表达合同。
 1. 一份可维护的设计文档；
 2. 一个 Agent Skill；
 3. 注入章节 Prompt 的短执行投影；
-4. Writer A / B / C 的清晰职责；
+4. Director / Curator / Primary Writer / optional repair 的清晰职责；
 5. 与正文分离的审阅结果。
 
 ---
@@ -215,78 +215,57 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ## 6. Pipeline Position
 
-当前最小管线：
+当前默认的透明运行管线：
 
 `BOOK / Plan / Saved Chapters`
 
 → `Current Chapter Outline Hard Gate`
 
-→ `Chapter Prompt`
+→ `Director`
 
-→ `Writer A: Scene Draft`
+→ `Context Curator`
 
-→ `Writer B: Continuity & Realization`
+→ `Primary Writer`
 
-→ `Writer C: Prose Realization & Bounded Humanization`
+→ `0—2 个作者选择的 Specialist`
 
-→ `Separated Audit`
+→ `Revision Integrator（有有效 Patch 时）`
+
+→ `Separated Audit / State Delta`
 
 → `Author Approval`
 
 → `chapter-NNNN.md`
 
-Prose Realization 不新增第二个 Draft API，也不在章节保存后盲目重写正文。
+`curator_primary` 默认只运行 Director → Curator → Primary → State Delta；Specialist 与 Integrator 是作者明确触发的有限修复。旧的单 Writer `chapter` Prompt 仍使用同一表达合同，但不增加第二个 Draft API，也不在章节保存后盲目重写正文。
 
 ---
 
-## 7. Writer Protocol
+## 7. Runtime Responsibilities
 
-### Writer A — Scene Draft
+### Director — Event Contract
 
-目标：让小纲中决定的事情真的发生。
+只决定本章发生什么：八字段事件合同、直接结果、状态变化和结尾推动。它可以使用精确的抽象策划语言；八字段合同是事实约束，不是正文句式来源。
 
-重点：
+### Context Curator — Context Projection
 
-- 场景；
-- 动作；
-- 人物反应；
-- 对话；
-- 空间；
-- payoff；
-- 因果桥接。
+从 BOOK、Canon、当前计划、Prose Profile、可选 Inspiration 和前文章末中选择 Writer 真正需要的本章信息。它输出 `Reader-Facing Language`，提示机制如何落到对象、动作和结果，但不重规划、不新增事实、不自行写正文。
 
-A 不追求最终润色，但不能只把小纲扩写成概述。
+### Primary Writer — Reader Experience
 
-### Writer B — Continuity & Realization
+以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补情绪；Planning 的抽象标签不直接变成旁白总结。
 
-B 完整看到 A 后修复：
+### Specialist / Integrator — Bounded Repair
 
-- 时间或地点跳切；
-- 人物、能力或物品突然出现；
-- 重要动作被一句话跳过；
-- 对手或世界没有反应；
-- 关系不连续；
-- 桥接不存在；
-- 关键场景过薄。
+Specialist 只看职责相关的 Primary Draft 局部和 Curated Context，最多给局部 Patch；Integrator 只以 Primary Draft 为底稿，并且只在真实存在下列问题时有限修复：
 
-B 不得改变当前章主要事件、直接结果、状态变化和结尾推动。
+- Planning summary 替代了场景结果；
+- 重大事件没有人物反应；
+- 结果前堆积了机制说明；
+- payoff 被重复解释；
+- 对话、动作或 POV 声音被抽象总结覆盖。
 
-### Writer C — Prose Realization & Bounded Humanization
-
-C 完整看到 B 后处理：
-
-- 重复能力说明；
-- 重复身体状态；
-- 重复情绪；
-- 泛化措辞；
-- 均匀句段；
-- 不自然对话；
-- 无功能连接；
-- payoff 重复解释；
-- 多余总结；
-- POV 声音漂移。
-
-C 可以重组句子和段落，但不得改动 B 已确定的事实和因果。
+如果 Primary Draft 已经自然，Integrator 保持原文；任何修复都不得改变主要事件、直接结果、人物决定、资源/能力状态或章节结尾推动。
 
 ---
 

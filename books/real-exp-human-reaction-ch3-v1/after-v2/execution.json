@@ -1,0 +1,13 @@
+{
+  "experiment": "real-exp-human-reaction-ch3-v1-after-v2",
+  "branch": "principal_dev_new_sys",
+  "head_at_artifact_generation": "cae0ca6a96cdf9837a099841815b451fc4505f6a",
+  "effective_nodes": ["director", "context_curator", "primary_writer", "state_delta"],
+  "persisted_node_responses": 4,
+  "specialists": 0,
+  "integrator": false,
+  "reviewer": false,
+  "production_mutation": false,
+  "state_delta_applied_to_experiment_copy": true,
+  "control_note": "原有工作树实验未覆盖；Chapter 2 BOOK 快照作为起点。Primary Prompt 已由当前工作树生成并保存。一次未产出 Primary response 的 worker 尝试被中止，未写入 run response；保留本记录以避免把本次 artifact 当作严格 benchmark。"
+}

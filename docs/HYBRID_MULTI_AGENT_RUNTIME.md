@@ -10,6 +10,8 @@
 
 Curator 只从 BOOK Contract、规范化 Canon Index、当前计划、Prose Profile、可选 Inspiration 和前文章末局部片段中选择本章相关信息。Primary Writer 先独立写完整章节；专项 Agent 只看 Primary Draft 与职责相关的局部上下文，并返回最多三个可选局部 Patch。Integrator 以 Primary Draft 为唯一正文底稿，可以全部拒绝专项建议。
 
+Planning → Prose 边界由 Prompt 合同承担：Director 可以保留抽象策划语言；Curator 在 `Reader-Facing Language` 中只说明如何落到对象、动作和结果；Primary Writer 使用完整 Reader-First 合同；Specialist 与 Integrator 使用短投影。八字段 Chapter Contract 继续保留，但只决定本章发生什么，不决定正文措辞。Primary 有 Curator 时不再额外注入完整当前大型剧情块或当前章原始计划；只有 Curator 缺失时才使用显式 fallback。Integrator 不重新接收 Curator 的完整规划文本。
+
 章节节点只接收本章三行成长短投影：`本章一级成长推进`、`本章二级收益结算`、`本章反哺`。它们不是第九字段，也不是文学质量门禁；完整 Growth Benefit Hierarchy 只进入 Idea、Outline 和 Review Prompt，不注入 Primary Writer、专项 Agent 或 Integrator。
 
 ## Prompt modes

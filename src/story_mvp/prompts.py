@@ -85,7 +85,10 @@ DIRECTOR_CHAPTER_BUDGET_RULE = """章节事件预算边界：场景可以跨章�
 DIRECTOR_REPETITION_RULE = """轻量反重复判断（软提醒，不是新增字段、评分或 Hard Gate）：先看最近 1—3 章摘要，判断当前章的主要压力、主要解法和主要结算方式是否正在重复最近章节。如果重复，而且 BOOK 没有明确要求这种连续重复产生新的阶段效果，就在当前计划允许的事件范围内优先选择能改变身份、关系、资源、主动目标、行动舞台或敌人策略的执行方式。不要因此篡改 BOOK、抢先完成下一章，也不要为了形式变化强行换戏；重复确有新的阶段意义时正常执行。"""
 
 
-RESULT_STOP_RULE = """结果发生后，停止“再证明一次”：当前章直接结果已经通过动作、物体变化、人物反应和现实后果成立后，只继续写必要的现场余波、主角实际得到或失去什么、重要人物怎样改变行动和章末推动，随后停止。不要再解释一次已经成立的机制，不要追加主角正确理解、旁白总结、NPC 重复确认、同义重述、主题结论或下一章任务清单。当人物对白或动作已经清楚表现关系变化或结果意义时，不要再用旁白抽象总结同一意义；直接停止，或进入下一动作。策划层的抽象关系、状态、社会评价和收益结算属于内部理解，不是正文措辞；只有在 POV 确实需要意识到变化时，才翻译成当下人物能自然想到的具体含义。第一次异能高光尤其要让读者感到“这件事已经发生”，而不是感到作者已经把能力定义完整。"""
+RESULT_STOP_RULE = """结果发生后，停止“再证明一次”：当前章直接结果已经通过动作、物体变化、人物反应和现实后果成立后，只继续写必要的现场余波、主角实际得到或失去什么、重要人物怎样改变行动和章末推动，随后停止。不要再解释一次已经成立的机制，不要追加主角正确理解、旁白总结、NPC 重复确认、同义重述、主题结论或下一章任务清单。当人物对白或动作已经清楚表现关系变化或结果意义时，不要再用旁白抽象总结同一意义；直接停止，或进入下一动作。第一次异能高光尤其要让读者感到“这件事已经发生”，而不是感到作者已经把能力定义完整。"""
+
+
+PLANNING_TO_PROSE_BOUNDARY = """Planning → Prose 边界：Director、Plan、Canon 和 Audit 可以使用“验证、闭环、阶段推进、价值兑现、成长空间、建立优势”等抽象标签；它们是语义输入，不是正文措辞。这些词本身不是禁词，但不要把后台标签原样扩写成作者总结。先让人物、对象、动作、关系反应和具体结果承担意义；只有当前 POV 必须理解并据此选择时，才翻译成当下人物自然会想到的具体判断。动作、对白或结果已经成立后，不再追加同义的抽象解释。"""
 
 
 WRITER_AUDIT_RULE = """Writer Audit 只报告实际存在的事项：
@@ -106,6 +109,9 @@ PROSE_REALIZATION_CONTRACT = f"""本合同只负责“how to say”，不重规�
 {WRITER_AUDIT_RULE}
 
 `chapter-NNNN.md` 只保存正式小说正文；不把 audit、摘要或内部推理写进正文，不自动修改 BOOK、事实、资源、能力、线索、结果、状态变化或结尾。
+
+## Planning → Prose 边界
+{PLANNING_TO_PROSE_BOUNDARY}
 
 ## 结果停止规则
 
@@ -140,7 +146,7 @@ READER_FIRST_PROSE_CONTRACT = f"""Reader-First Prose Contract：这是表达层�
 
 当重大结果直接撞到角色的核心欲望、自尊、恐惧或期待时，默认允许出现一个可辨认的情绪倾向，不要只用疼痛、战术判断、看一眼或状态确认代替它。它可以很克制，仍通过动作、语气、注意力或选择表现；不要求每个角色、每章都有，也不要直接用强情绪标签。人物总体克制不等于无情绪：重大欲望兑现后，除非已有明确理由压住，至少让读者感到他确实在乎。
 
-策划层可以使用抽象关系和状态语言，正式正文不要直接复述这些总结。动作、对白或结果已经让读者看出关系改变、信任增加、身份变化、交易兑现或社会评价变化时，不要再追加同义的抽象旁白；如果 POV 确实需要意识到变化，把它翻译成当下人物能自然想到的具体含义、动作或对白，否则直接进入下一动作。
+{PLANNING_TO_PROSE_BOUNDARY}
 
 写完关键动作或转折时，优先自问：第一次接触这个世界的普通读者快速读过，能不能立刻知道人物做了什么、为什么做、做成以后发生了什么？如果不能，先改清楚，再考虑增加文学性。
 
@@ -167,6 +173,8 @@ READER_FIRST_PROSE_CONTRACT = f"""Reader-First Prose Contract：这是表达层�
 
 
 READER_FIRST_PROSE_SHORT = f"""Reader-First 短投影：以可见对象、人物动作、现场结果和普通语言优先；新造术语先用场景成立，已通过动作成立的边界不重复解释；连续动作保持自然段，重大兑现先落地再写必要限制；重大结果需要时给相关人物一个短暂反应窗口，人物可以克制，但克制应表现为有反应后选择压住，不把情绪只写成状态总结；重大结果碰到核心欲望时，不要只写疼痛、策略或状态确认，保留一个可辨认但不强行命名的情绪倾向。
+
+{PLANNING_TO_PROSE_BOUNDARY}
 
 {RESULT_STOP_RULE}"""
 
@@ -522,7 +530,7 @@ HYBRID_PROMPT_TEMPLATES = {
 其中 `## Relevant Characters and Relationships` 只保留本章真正会用到的信息：除目标、关系、能力和当前条件外，顺带保留角色当前最在意的事、最容易被刺到的自尊/恐惧/欲望、最近关系变化带来的态度，以及正文已经形成的明显行为习惯或说话声音。只有输入明确支持且本章会用到时才写；不要生成 Character Card、心理档案或新增固定字段。
 
 ## Reader-Facing Language
-只写本章需要的正文表达建议：内部机制用普通话如何落到对象、动作和结果；哪些题材常用词可以直接使用；哪些本书新造词必须先用动作解释；哪些策划术语不应直接进入正文。不得改写剧情。关系阶段、状态变化、社会评价、收益结算等抽象内容属于 Writer 的内部理解，不是正文措辞；若进入正文，应通过人物动作、对白和具体结果表现，不能直接复制总结。Curator 不必自行把这些内容改写成正文句子。
+只写本章需要的正文表达建议：内部机制用普通话如何落到对象、动作和结果；哪些题材常用词可以直接使用；哪些本书新造词必须先用动作解释；哪些策划术语不应直接进入正文。不得改写剧情。关系阶段、状态变化、社会评价、收益结算等抽象内容属于 Writer 的内部理解，不是正文措辞；若进入正文，应通过人物动作、对白和具体结果表现，不能直接复制总结。Curator 不必自行把这些内容改写成正文句子。像“验证、闭环、阶段推进、价值兑现、成长空间、建立优势”这类词可以保留为内部语义，但不要把它们扩写成正文旁白；这些词不是禁词。
 
 ## Already Established — Do Not Re-explain
 列出最近正文已经通过动作清楚证明、且本章没有新变化的边界。它们仍然有效，但 Writer 不需要再次解释。
@@ -533,13 +541,8 @@ HYBRID_PROMPT_TEMPLATES = {
 ## Payoff and Promise Window
 明确区分已经拿到的收益对象、已经兑换或到账的收益、已经改变生活或行动空间的收益，以及仍未兑现的近期读者承诺。不得把待兑换物品写成已经到账。
 
-只选择当前章需要的信息，不复制完整 BOOK、完整十章计划或完整前文；如果提供了本章成长收益短投影，只把三行短投影放在 `## Relevant Plan` 的末尾，不解释整套 Growth Benefit Hierarchy；不输出内部推理。""",
+只选择当前章需要的信息，不复制完整 BOOK、完整十章计划或完整前文；本章成长收益短投影只作为筛选依据，不在 `## Relevant Plan` 中原样回显；如果它改变了本章选择或结果，只保留相关事实含义，不解释整套 Growth Benefit Hierarchy；不输出内部推理。""",
     "primary_writer": """你是透明协作的 Primary Writer。先独立写出一篇完整章节；四个专项 Agent 尚未提供任何修改，不要预先采用它们的意见。正文必须落实当前章事件合同，包含自然的叙事、对话、动作、内心、描写和结尾推动，而不是骨架或分镜。保持统一叙事声音，不为了连续性反复盘点已经清楚的物品、资源和交易。
-
-人物不是状态更新器：写重大事件时，不只写它改变了什么，也写它落到人身上是什么感觉；人物可以克制，但克制应表现为有反应后选择压住。角色的情绪最好改变至少一个可见行为、注意力、语气或选择，不要把情绪全部留给旁白总结。只在事件真实碰到人物的欲望、自尊、利益、恐惧、关系或期待时使用，不按情绪清单补戏。
-
-策划层的关系阶段、状态变化、社会评价和收益结算属于内部理解，不是正文措辞；如果动作、对白或结果已经让读者看出这些意义，不要再用抽象旁白总结同一意义，必要时只翻译成 POV 当下自然的具体想法或行动。重大结果撞到角色核心欲望、自尊、恐惧或期待时，疼痛和战术判断不能自动代替可辨认的情绪倾向；允许人物很克制，但要让读者感到他确实在乎，不按清单补戏。
-
 Curated Context 为空时，明确把下方完整必要上下文作为 fallback 使用；这不是失败，也不自动重试。
 
 固定输出格式：
@@ -565,7 +568,7 @@ Curated Context 为空时，明确把下方完整必要上下文作为 fallback 
         "Emotion & Aftermath Agent",
         "检查重大行动、胜利、失败和关系变化的真实余波；情绪是否通过动作、选择、沉默或感官进入；配角是否只有功能反应；payoff 后是否缺少确认与新压力；是否重复解释情绪或用否定句证明旧边界。不得强制增加痛苦、悲剧代价或伦理惩罚。",
     ),
-    "chapter_integrator": """你是透明协作的 Revision Integrator。Primary Draft 是唯一正文底稿。只接收有效局部 Patch；逐项判断它们是否真正改善正文，冲突、重复、改变事件结果、破坏人物声音或重新规划章节的建议必须拒绝。四类建议不必全部采纳，全部不采纳也是正常结果。保持 Primary Writer 的主要叙事声音，删除策划语言泄漏、同义重复解释和没有节拍变化的微段；不做第二轮全面审稿，不输出整章重写说明或内部推理。
+    "chapter_integrator": """你是透明协作的 Revision Integrator。Primary Draft 是唯一正文底稿。只接收有效局部 Patch；逐项判断它们是否真正改善正文，冲突、重复、改变事件结果、破坏人物声音或重新规划章节的建议必须拒绝。四类建议不必全部采纳，全部不采纳也是正常结果。保持 Primary Writer 的主要叙事声音；只在 Primary 实际出现策划总结替代场景结果、重大事件没有人物反应、结果前堆积机制说明或 payoff 重复解释时做有限修复；如果正文已经自然，就保持原段落，不做第二轮全面审稿或整章重写，不输出内部推理。
 
 固定输出格式：
 # Writer Audit
@@ -1623,7 +1626,7 @@ def generate_prompt(
             ),
         ))
         parts.append(_input_block("CHAPTER MISSION——本章事件合同（PLAN）", packet.chapter_mission))
-        parts.append(_input_block("本章成长收益短投影（非门禁）", packet.growth_benefit_projection))
+        parts.append(_input_block("本章成长收益短投影（规划提示，不是正文措辞）", packet.growth_benefit_projection))
         parts.append(_input_block("CANON PROSE——前文正文（已发生事实的最高来源）", packet.recent_prose))
         if packet.prologue_reader_knowledge:
             parts.append(_input_block(
@@ -1664,9 +1667,9 @@ def generate_prompt(
         )
         parts.append(f"# Hybrid Runtime\n\nwriter_mode: {writer_mode}")
         if mode in SPECIALIST_PROMPT_MODES or mode in {"primary_writer", "chapter_integrator"}:
-            contract = READER_FIRST_PROSE_SHORT if mode == "chapter_integrator" else READER_FIRST_PROSE_CONTRACT
+            contract = READER_FIRST_PROSE_CONTRACT if mode == "primary_writer" else READER_FIRST_PROSE_SHORT
             parts.extend(["# Reader-First Prose Contract", contract])
-        if opening_contract:
+        if opening_contract and (mode == "primary_writer" or mode == "specialist_opening"):
             parts.extend(["# Opening Three Chapter Contract", opening_contract])
         if packet.prologue_reader_knowledge:
             parts.extend(["# CANON PROLOGUE / READER ALREADY KNOWS", packet.prologue_reader_knowledge])
@@ -1678,7 +1681,7 @@ def generate_prompt(
                     _input_block("当前章事件合同", context.chapter_mission),
                     _input_block("压缩 Growth Genome（本章相关固定小节）", context.growth_genome_compact),
                     _input_block("BOOK CONTRACT", context.book_contract),
-                    _input_block("本章成长收益短投影（非长期理论）", context.growth_benefit_projection),
+                    _input_block("本章成长收益短投影（规划提示，不是正文措辞）", context.growth_benefit_projection),
                     _input_block("规范化 CANON INDEX", context.canon_index),
                     _input_block("当前大型剧情块与十章计划", context.rolling_plan),
                     _input_block("PROSE PROFILE", context.prose_profile),
@@ -1695,8 +1698,8 @@ def generate_prompt(
                     _input_block("AUTHORITY", packet.authority),
                     _input_block("Chapter Mission——当前章事件合同", packet.chapter_mission),
                     _input_block("CANON PROSE——上一章全文与上上章必要章末", primary_prose),
-                    _input_block("CANON INDEX——规范化已发生事实索引", packet.canon_context),
-                    _input_block("本章成长收益短投影（非长期理论）", packet.growth_benefit_projection),
+                    _input_block("CANON INDEX——规范化已发生事实索引（事实输入，不是正文措辞）", packet.canon_context),
+                    _input_block("本章成长收益短投影（规划提示，不是正文措辞）", packet.growth_benefit_projection),
                     _input_block(
                         "Curated Chapter Context" if not fallback else "Curated Chapter Context（缺失时的显式 fallback）",
                         curated or "Curator 未提供，使用完整上下文 fallback：\n\n"
@@ -1720,7 +1723,7 @@ def generate_prompt(
                 [
                     _input_block("当前章事件合同", context.chapter_mission),
                     _input_block("Primary Draft——唯一待评议正文底稿", context.primary_draft),
-                    _input_block("本章成长收益短投影（非长期理论）", context.growth_benefit_projection),
+                    _input_block("本章成长收益短投影（规划提示，不是正文措辞）", context.growth_benefit_projection),
                     _input_block("本专项相关 Curated Context", context.relevant_curated_context),
                     _input_block("必要的前文章末衔接片段", context.transition_context),
                 ]
@@ -1747,9 +1750,9 @@ def generate_prompt(
                 [
                     _input_block("AUTHORITY", context.authority),
                     _input_block("当前章事件合同", context.chapter_mission),
-                    _input_block("CANON INDEX", context.canon_index),
+                    _input_block("CANON INDEX（事实输入，不是正文措辞）", context.canon_index),
                     _input_block("Primary Draft——唯一正文底稿", context.primary_draft),
-                    _input_block("本章成长收益短投影（非长期理论）", context.growth_benefit_projection),
+                    _input_block("本章成长收益短投影（规划提示，不是正文措辞）", context.growth_benefit_projection),
                     _input_block("Opening Specialist Response", context.specialist_responses["opening"]),
                     _input_block("Dialogue Specialist Response", context.specialist_responses["dialogue"]),
                     _input_block("Action Specialist Response", context.specialist_responses["action"]),

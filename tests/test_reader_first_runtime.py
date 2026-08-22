@@ -14,6 +14,7 @@ from story_mvp.prompts import (
     DEFAULT_STATE_DELTA_TEMPLATE,
     REQUIRED_OUTLINE_FIELDS,
     READER_FIRST_PROSE_CONTRACT,
+    READER_FIRST_PROSE_SHORT,
     generate_prompt,
     parse_canon_memory,
     parse_state_delta_v2,
@@ -70,11 +71,13 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "不要生成 Character Card",
     ):
         assert marker in curator
+    assert "单 Writer 职责" not in curator
     assert "## Character Card" not in curator
     for marker in (
         "关系阶段、状态变化、社会评价、收益结算等抽象内容属于 Writer 的内部理解",
         "不能直接复制总结",
         "Curator 不必自行把这些内容改写成正文句子",
+        "不在 `## Relevant Plan` 中原样回显",
     ):
         assert marker in curator
 
@@ -107,13 +110,13 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "不必每句高效",
         "核心欲望、自尊、恐惧或期待",
         "不要只用疼痛、战术判断、看一眼或状态确认代替它",
-        "策划层可以使用抽象关系和状态语言",
-        "不要再追加同义的抽象旁白",
-        "不要再用抽象旁白总结同一意义",
-        "策划层的关系阶段、状态变化、社会评价和收益结算属于内部理解",
+        "Planning → Prose 边界",
+        "验证、闭环、阶段推进、价值兑现、成长空间、建立优势",
+        "不要把后台标签原样扩写成作者总结",
+        "动作、对白或结果已经成立后，不再追加同义的抽象解释",
     ):
         assert marker in primary
-    assert primary.count("人物不是状态更新器") == 2
+    assert primary.count("人物不是状态更新器") == 1
     specialist = generate_prompt(
         mode="specialist_action",
         template="",
@@ -121,7 +124,56 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         current_outline=OUTLINE,
         primary_draft="正文底稿",
     )
-    assert specialist.count(READER_FIRST_PROSE_CONTRACT) == 1
+    assert specialist.count(READER_FIRST_PROSE_CONTRACT) == 0
+    assert specialist.count(READER_FIRST_PROSE_SHORT) == 1
+    assert "验证、闭环、阶段推进、价值兑现、成长空间、建立优势" in specialist
+
+
+def test_opening_contract_is_scoped_to_planning_and_opening_nodes() -> None:
+    primary = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        current_chapter_plan="当前章计划",
+        chapter_number=3,
+    )
+    opening = generate_prompt(
+        mode="specialist_opening",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        primary_draft="正文底稿",
+        chapter_number=3,
+    )
+    assert primary.count("# Opening Three Chapter Contract") == 1
+    assert opening.count("# Opening Three Chapter Contract") == 1
+
+    for mode in (
+        "context_curator",
+        "specialist_dialogue",
+        "specialist_action",
+        "specialist_emotion",
+    ):
+        prompt = generate_prompt(
+            mode=mode,
+            template="",
+            book_content="",
+            current_outline=OUTLINE,
+            primary_draft="正文底稿" if mode != "context_curator" else "",
+            chapter_number=3,
+        )
+        assert "# Opening Three Chapter Contract" not in prompt
+
+    integrator = generate_prompt(
+        mode="chapter_integrator",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        primary_draft="正文底稿",
+        chapter_number=3,
+    )
+    assert "# Opening Three Chapter Contract" not in integrator
 
 
 def test_specialist_patch_projection_excludes_audit_and_context_is_cropped() -> None:
