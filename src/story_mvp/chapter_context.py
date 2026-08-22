@@ -96,6 +96,7 @@ class ChapterContextPacket:
     optional_inspiration: str
     growth_benefit_projection: str = ""
     growth_genome_compact: str = ""
+    prologue_reader_knowledge: str = ""
 
 
 def _markdown_block(content: str, heading: str) -> str:
@@ -166,6 +167,29 @@ def _extract_growth_projection_value(texts: Iterable[str], label: str) -> str:
                     values.append(stripped)
             return "\n".join(values).strip()
     return ""
+
+
+def build_prologue_context(
+    *,
+    book_content: str = "",
+    current_long_block: str = "",
+    current_chapter_plan: str = "",
+    author_intent: str = "",
+) -> str:
+    """为一次性 Prologue Writer 选择最小的确定性世界上下文。"""
+
+    parts: list[str] = []
+    for heading in ("## 2. 世界观结构", "## 3. 世界如何持续制造剧情压力", "## 7. 叙事结构"):
+        block = _markdown_block(book_content, heading)
+        if block:
+            parts.append(f"{heading}\n\n{block}")
+    if current_long_block.strip():
+        parts.append(f"当前第一个大型剧情块\n\n{current_long_block.strip()}")
+    if current_chapter_plan.strip():
+        parts.append(f"第一章计划与 Prologue 边界\n\n{current_chapter_plan.strip()}")
+    if author_intent.strip():
+        parts.append(f"作者当前 Prologue 意图\n\n{author_intent.strip()}")
+    return "\n\n".join(parts).strip()
 
 
 def _markdown_subsection(content: str, heading: str) -> str:
@@ -291,6 +315,8 @@ def build_chapter_context(
     recent_summaries: str = "",
     gbrain_inspiration: str = "",
     selected_references: Iterable[Mapping[str, Any]] | None = None,
+    prologue_text: str = "",
+    chapter_number: int = 0,
 ) -> ChapterContextPacket:
     """由现有页面输入确定性地构建章节运行期上下文包。"""
     prose_profile = "\n\n".join(
@@ -363,6 +389,14 @@ def build_chapter_context(
         current_outline=current_outline,
     )
     growth_genome_compact = compact_growth_genome_for_chapter(book_content)
+    prologue_reader_knowledge = ""
+    if chapter_number == 1 and prologue_text.strip():
+        prologue_reader_knowledge = (
+            "这是读者已经读过的正式序章。它不是 Chapter 1 的即时前场，"
+            "不要求 Chapter 1 承接序章见证者、地点或最后动作；只把其中已经清楚建立的世界常识视为读者已知，"
+            "不要在 Chapter 1 再完整介绍同一世界信息。\n\n"
+            + prologue_text.strip()
+        )
 
     return ChapterContextPacket(
         authority=MINIMAL_AUTHORITY_RULE,
@@ -378,6 +412,7 @@ def build_chapter_context(
         optional_inspiration=optional_inspiration,
         growth_benefit_projection=growth_benefit_projection,
         growth_genome_compact=growth_genome_compact,
+        prologue_reader_knowledge=prologue_reader_knowledge,
     )
 
 

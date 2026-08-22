@@ -41,6 +41,7 @@ PROMPT_TEMPLATE_LABELS = {
     "fantasy_seed": "Fantasy Seed / 核心幻想种子",
     "world_vision": "World Vision / 世界幻想画像",
     "outline": "新书/总纲规划",
+    "prologue": "可选序章 / Prologue",
     "chapter_prep": "当前章执行小纲",
     "chapter": "当前章节写作",
     "review": "十章复盘与下一批十章",
@@ -65,6 +66,7 @@ CREATIVE_ORIGINS = frozenset(
 CREATIVE_STATUSES = frozenset({"empty", "draft", "author_approved"})
 
 BOOK_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
+PROLOGUE_FILENAME = "PROLOGUE.md"
 
 CHAPTER_BODY_FORBIDDEN_MARKERS = (
     "# Writer Audit",
@@ -241,6 +243,27 @@ def require_book(book_id: str, workspace: Path) -> Path:
     return directory
 
 
+def read_prologue(book_id: str, workspace: Path) -> str:
+    directory = require_book(book_id, workspace)
+    path = directory / PROLOGUE_FILENAME
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
+
+
+def save_prologue(
+    book_id: str,
+    content: str,
+    workspace: Path,
+) -> Path:
+    """保存可选序章；它是独立正文，不进入章节或 State Delta。"""
+
+    directory = require_book(book_id, workspace)
+    if content.strip():
+        validate_chapter_body_for_save(content)
+    target = directory / PROLOGUE_FILENAME
+    target.write_text(content, encoding="utf-8")
+    return target
+
+
 def _empty_creative_state() -> dict[str, dict[str, str]]:
     return {
         artifact: {"origin": "empty", "status": "empty"}
@@ -400,6 +423,7 @@ def read_book_payload(book_id: str, workspace: Path) -> dict[str, Any]:
         "sections": sections,
         "design_sections": parse_design_sections(sections["design"]),
         "prompt_templates": prompt_templates,
+        "prologue": read_prologue(book_id, workspace),
         **creative,
         "chapters": sorted(path.name for path in (directory / "chapters").glob("chapter-*.md")),
     }

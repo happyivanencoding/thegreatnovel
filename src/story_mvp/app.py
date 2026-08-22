@@ -42,9 +42,11 @@ from .storage import (
     read_chapter,
     read_book_payload,
     read_creative_payload,
+    read_prologue,
     replace_chapter,
     require_book,
     save_chapter,
+    save_prologue,
     write_book,
     write_creative_artifact,
     write_prompt_templates,
@@ -151,6 +153,7 @@ class PromptRequest(BaseModel):
         "fantasy_seed",
         "world_vision",
         "outline",
+        "prologue",
         "director",
         "chapter_prep",
         "chapter",
@@ -180,6 +183,7 @@ class PromptRequest(BaseModel):
     current_outline: str = ""
     current_chapter_plan: str = ""
     recent_summaries: str = ""
+    prologue_text: str = ""
     selected_references: list[dict[str, Any]] = Field(default_factory=list)
     gbrain_inspiration: str = ""
     actual_summaries: str = ""
@@ -355,6 +359,25 @@ def put_run_repair_specialists(
         raise HTTPException(status_code=400, detail=str(error)) from error
 
 
+@app.get("/api/books/{book_id}/prologue")
+def get_prologue(book_id: str) -> dict[str, str]:
+    try:
+        return {"file": "PROLOGUE.md", "content": read_prologue(book_id, workspace_path())}
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+
+
+@app.put("/api/books/{book_id}/prologue")
+def put_prologue(book_id: str, payload: TextRequest) -> dict[str, str]:
+    try:
+        target = save_prologue(book_id, payload.content, workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "saved", "file": target.name}
+
+
 @app.get("/api/books/{book_id}/runs/{chapter_number}")
 def get_run(book_id: str, chapter_number: int) -> dict[str, Any]:
     try:
@@ -501,6 +524,8 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
             values["world_vision"] = creative["world_vision"]
         if not values.get("proposal_context"):
             values["proposal_context"] = creative["proposal"]
+        if not values.get("prologue_text"):
+            values["prologue_text"] = read_prologue(payload.book_id, workspace_path())
     else:
         values["creative_state"] = payload.creative_state
     return values

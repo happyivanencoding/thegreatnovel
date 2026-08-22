@@ -1,0 +1,21 @@
+{
+  "model": "gpt-5.6-luna via luna_worker",
+  "content_calls": 1,
+  "calls": [
+    {
+      "sequence": 1,
+      "node": "prologue_writer",
+      "agent_id": "01a02895-c7fc-7cd1-a8de-bf09e88686d8",
+      "prompt_file": "prompt.md",
+      "response_file": "response.md",
+      "prompt_chars": 1619,
+      "response_chars": 1124,
+      "status": "completed"
+    }
+  ],
+  "director_calls": 0,
+  "curator_calls": 0,
+  "state_delta_calls": 0,
+  "chapter_numbers_created": [],
+  "run_ledger_used": false
+}
