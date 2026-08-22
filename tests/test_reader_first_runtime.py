@@ -21,6 +21,7 @@ from story_mvp.prompts import (
     render_canon_memory,
 )
 from story_mvp.gbrain_retrieval import genre_prior_matches_query, is_genre_prior_page, retrieve_gbrain
+from story_mvp.scene_skills import parse_scene_skill_selection, render_selected_scene_skills
 from story_mvp.run_ledger import (
     create_or_load_run,
     load_run,
@@ -127,6 +128,69 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
     assert specialist.count(READER_FIRST_PROSE_CONTRACT) == 0
     assert specialist.count(READER_FIRST_PROSE_SHORT) == 1
     assert "验证、闭环、阶段推进、价值兑现、成长空间、建立优势" in specialist
+
+
+def test_scene_skill_runtime_is_curator_selected_and_primary_only() -> None:
+    curator = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+    )
+    assert "## Scene Skill Selection" in curator
+    assert "SCENE SKILL CATALOG" in curator
+    assert "- trial_challenge:" in curator
+    assert "- combat:" in curator
+    assert "在明确外部规则和成功线下" in curator
+
+    curated = """# Curated Chapter Context
+
+## Scene Skill Selection
+Primary: trial_challenge
+Secondary: combat
+
+## Reader-Facing Language
+动作优先
+"""
+    assert parse_scene_skill_selection(curated) == ("trial_challenge", "combat")
+    active = render_selected_scene_skills(curated)
+    assert "## Primary: trial_challenge" in active
+    assert "## Secondary: combat" in active
+    assert "# investigation" not in active
+
+    primary = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curated_context=curated,
+    )
+    assert primary.count("ACTIVE SCENE SKILLS——只控制场景如何落成正文") == 1
+    assert "## Primary: trial_challenge" in primary
+    assert "## Secondary: combat" in primary
+    assert "# investigation" not in primary
+    assert "## Scene Skill Selection" not in primary
+
+    invalid_primary = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curated_context="# Curated Chapter Context\n\n## Scene Skill Selection\nPrimary: unknown_skill\nSecondary: combat",
+    )
+    assert "ACTIVE SCENE SKILLS——只控制场景如何落成正文" not in invalid_primary
+    assert "unknown_skill" not in invalid_primary
+
+    specialist = generate_prompt(
+        mode="specialist_action",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curated_context=curated,
+        primary_draft="正文底稿",
+    )
+    assert "ACTIVE SCENE SKILLS——只控制场景如何落成正文" not in specialist
+    assert "## Primary: trial_challenge" not in specialist
 
 
 def test_opening_contract_is_scoped_to_planning_and_opening_nodes() -> None:

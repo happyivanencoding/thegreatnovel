@@ -525,7 +525,13 @@ HYBRID_PROMPT_TEMPLATES = {
 ## Relevant Plan
 ## Relevant Prose Controls
 ## Opening Strategy
+## Scene Skill Selection
 ## Relevant Inspiration
+
+`## Scene Skill Selection` 只从下方 `SCENE SKILL CATALOG` 中选择当前章最主要的场景发动机，固定写两行：
+Primary: <skill_id 或 none>
+Secondary: <skill_id 或 none>
+默认选择 1 个 Primary；只有第二种场景发动机确实同时重要时才选 1 个 Secondary。不得新增剧情、改写事件合同或为了匹配 Skill 改变结果；第一版不选择 Utility / Modifier。没有合适项或目录不可用时写 none。
 
 其中 `## Relevant Characters and Relationships` 只保留本章真正会用到的信息：除目标、关系、能力和当前条件外，顺带保留角色当前最在意的事、最容易被刺到的自尊/恐惧/欲望、最近关系变化带来的态度，以及正文已经形成的明显行为习惯或说话声音。只有输入明确支持且本章会用到时才写；不要生成 Character Card、心理档案或新增固定字段。
 
@@ -1652,6 +1658,11 @@ def generate_prompt(
             drop_growth_hierarchy,
             extract_primary_prose_context,
         )
+        from .scene_skills import (
+            render_scene_skill_catalog,
+            render_selected_scene_skills,
+            strip_scene_skill_selection,
+        )
 
         packet = build_chapter_context(
             book_content=book_content,
@@ -1685,14 +1696,20 @@ def generate_prompt(
                     _input_block("规范化 CANON INDEX", context.canon_index),
                     _input_block("当前大型剧情块与十章计划", context.rolling_plan),
                     _input_block("PROSE PROFILE", context.prose_profile),
+                    _input_block(
+                        "SCENE SKILL CATALOG——只用于选择 1 个 Primary 与可选 1 个 Secondary",
+                        render_scene_skill_catalog(),
+                    ),
                     _input_block("OPTIONAL INSPIRATION", context.optional_inspiration),
                     _input_block("前文章末局部衔接片段", context.transition_context),
                 ]
             )
         elif mode == "primary_writer":
             curated = curated_context.strip() or curator_response.strip()
-            fallback = not curated
             primary_prose = extract_primary_prose_context(packet.recent_prose)
+            active_scene_skills = render_selected_scene_skills(curated)
+            curated_for_writer = strip_scene_skill_selection(curated)
+            fallback = not curated_for_writer
             parts.extend(
                 [
                     _input_block("AUTHORITY", packet.authority),
@@ -1700,16 +1717,20 @@ def generate_prompt(
                     _input_block("CANON PROSE——上一章全文与上上章必要章末", primary_prose),
                     _input_block("CANON INDEX——规范化已发生事实索引（事实输入，不是正文措辞）", packet.canon_context),
                     _input_block("本章成长收益短投影（规划提示，不是正文措辞）", packet.growth_benefit_projection),
-                    _input_block(
-                        "Curated Chapter Context" if not fallback else "Curated Chapter Context（缺失时的显式 fallback）",
-                        curated or "Curator 未提供，使用完整上下文 fallback：\n\n"
-                        + drop_growth_hierarchy(packet.book_contract)
-                        + "\n\n"
-                        + packet.chapter_plan_context
-                        + "\n\n"
-                        + packet.prose_profile,
-                    ),
                 ]
+            )
+            if active_scene_skills:
+                parts.append(_input_block("ACTIVE SCENE SKILLS——只控制场景如何落成正文", active_scene_skills))
+            parts.append(
+                _input_block(
+                    "Curated Chapter Context" if not fallback else "Curated Chapter Context（缺失时的显式 fallback）",
+                    curated_for_writer or "Curator 未提供，使用完整上下文 fallback：\n\n"
+                    + drop_growth_hierarchy(packet.book_contract)
+                    + "\n\n"
+                    + packet.chapter_plan_context
+                    + "\n\n"
+                    + packet.prose_profile,
+                )
             )
         elif mode in SPECIALIST_PROMPT_MODES:
             specialist = mode.removeprefix("specialist_")
