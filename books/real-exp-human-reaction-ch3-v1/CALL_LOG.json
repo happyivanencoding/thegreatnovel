@@ -1,0 +1,69 @@
+{
+  "experiment": "real-exp-human-reaction-ch3-v1",
+  "baseline_head": "26df07a72ecbb126ec66f2b3609621ce16f8f15e",
+  "model": "gpt-5.6-luna via luna_worker",
+  "chapters": [3],
+  "planned_content_calls": 4,
+  "actual_content_calls": 4,
+  "retries": 0,
+  "specialist_calls": 0,
+  "emotion_specialist_calls": 0,
+  "integrator_calls": 0,
+  "reviewer_calls": 0,
+  "automatic_rewrites": 0,
+  "production_llm_calls": 0,
+  "non_model_orchestration_notes": [
+    "一次错误的 worker 调度参数在创建前被工具拒绝，没有产生模型调用。",
+    "一次 apply-state 漏传章节号，没有写入；随后用正确参数执行，没有产生模型调用。"
+  ],
+  "calls": [
+    {
+      "sequence": 1,
+      "chapter": 3,
+      "node": "director",
+      "agent_id": "01a028d3-1590-73d1-8de3-0341413405e7",
+      "prompt_file": "runs/chapter-0003/director_prompt.md",
+      "response_file": "runs/chapter-0003/director_response.md",
+      "prompt_chars": 9194,
+      "response_chars": 1825,
+      "status": "completed",
+      "call_count_for_node": 1
+    },
+    {
+      "sequence": 2,
+      "chapter": 3,
+      "node": "context_curator",
+      "agent_id": "01a028d5-dd84-7111-acb2-c0f5e4a1bcb4",
+      "prompt_file": "runs/chapter-0003/curator_prompt.md",
+      "response_file": "runs/chapter-0003/curator_response.md",
+      "prompt_chars": 11628,
+      "response_chars": 6093,
+      "status": "completed",
+      "call_count_for_node": 1
+    },
+    {
+      "sequence": 3,
+      "chapter": 3,
+      "node": "primary_writer",
+      "agent_id": "01a028d9-40ee-7c03-8d9e-5862568a1590",
+      "prompt_file": "runs/chapter-0003/primary_prompt.md",
+      "response_file": "runs/chapter-0003/primary_response.md",
+      "prompt_chars": 21454,
+      "response_chars": 3212,
+      "status": "completed",
+      "call_count_for_node": 1
+    },
+    {
+      "sequence": 4,
+      "chapter": 3,
+      "node": "state_delta",
+      "agent_id": "01a028dd-223b-7c11-a8b9-6c1eaa6a3f46",
+      "prompt_file": "runs/chapter-0003/state_delta_prompt.md",
+      "response_file": "runs/chapter-0003/state_delta_response.md",
+      "prompt_chars": 6925,
+      "response_chars": 1927,
+      "status": "completed",
+      "call_count_for_node": 1
+    }
+  ]
+}

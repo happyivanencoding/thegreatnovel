@@ -1,0 +1,28 @@
+{
+  "experiment": "real-exp-human-reaction-ch3-v1",
+  "book": "《借我一招》",
+  "baseline": {
+    "branch": "principal_dev_new_sys",
+    "origin_ref": "origin/principal_dev_new_sys",
+    "head": "26df07a72ecbb126ec66f2b3609621ce16f8f15e"
+  },
+  "frozen_sources": {
+    "source_experiment": "books/real-exp-opening-reader-first-fresh-v1/",
+    "chapter_1": "books/real-exp-opening-reader-first-fresh-v1/chapters/chapter-0001.md",
+    "chapter_2": "books/real-exp-opening-reader-first-fresh-v1/chapters/chapter-0002.md",
+    "book_after_chapter_2": "books/real-exp-opening-reader-first-fresh-v1/runs/chapter-0002/BOOK_after_state_delta.md",
+    "old_chapter_3": "books/real-exp-opening-reader-first-fresh-v1/chapters/chapter-0003.md",
+    "fixed_core": "books/real-exp-opening-reader-first-fresh-v1/FIXED_CORE.md",
+    "chapter_plans": "books/real-exp-opening-reader-first-fresh-v1/CHAPTER_PLANS.md",
+    "reader_first_addendum": "books/real-exp-opening-reader-first-fresh-v1/READER_IMMEDIATE_UNDERSTANDING.md"
+  },
+  "runtime": {
+    "chapters": [3],
+    "nodes": ["director", "context_curator", "primary_writer", "state_delta"],
+    "specialists": [],
+    "integrator": false,
+    "reviewer": false,
+    "retries": 0,
+    "production_mutation": false
+  }
+}
