@@ -1,0 +1,15 @@
+﻿{
+  "model": "gpt-5.6-terra",
+  "reasoning": "high",
+  "session_id": "acps_f6efcaeaefdefd556df86bcd",
+  "run_id": "acpr_26dfebcabb2e8a37828a6ead",
+  "status": "completed",
+  "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S1_negotiation\\A_baseline_prompt.md",
+  "output_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S1_negotiation\\A_baseline_response.md",
+  "usage": {
+    "sessionUpdate": "usage_update",
+    "size": 828400,
+    "used": 46980
+  },
+  "ended_at": "2026-08-24T00:20:00.2298840+02:00"
+}

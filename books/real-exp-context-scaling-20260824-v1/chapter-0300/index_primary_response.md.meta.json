@@ -1,0 +1,15 @@
+﻿{
+  "model": "gpt-5.6-terra",
+  "reasoning": "high",
+  "session_id": "acps_6e87f8aae3d2fa664b9fc47c",
+  "run_id": "acpr_904f5ab9c960cb6c25b69ff8",
+  "status": "completed",
+  "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0300\\index_primary_prompt.md",
+  "output_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0300\\index_primary_response.md",
+  "usage": {
+    "sessionUpdate": "usage_update",
+    "size": 828400,
+    "used": 37112
+  },
+  "ended_at": "2026-08-24T00:35:05.6899897+02:00"
+}

@@ -1,0 +1,15 @@
+﻿{
+  "model": "gpt-5.6-luna",
+  "reasoning": "high",
+  "session_id": "acps_59473a05ea58b37bc41ed344",
+  "run_id": "acpr_d0dada6699d6b9e9bb754520",
+  "status": "completed",
+  "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\blind_context_judge_2_prompt.md",
+  "output_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\blind_context_judge_2_response.md",
+  "usage": {
+    "sessionUpdate": "usage_update",
+    "size": 828400,
+    "used": 63787
+  },
+  "ended_at": "2026-08-24T00:46:05.9922922+02:00"
+}

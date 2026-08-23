@@ -1,0 +1,15 @@
+﻿{
+  "model": "gpt-5.6-luna",
+  "reasoning": "high",
+  "session_id": "acps_93fadc8fff14e636885d991e",
+  "run_id": "acpr_2454278cd4bf2774d8761a3b",
+  "status": "completed",
+  "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0300\\index_curator_prompt.md",
+  "output_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0300\\index_curator_response.md",
+  "usage": {
+    "sessionUpdate": "usage_update",
+    "size": 828400,
+    "used": 34408
+  },
+  "ended_at": "2026-08-24T00:27:27.0386362+02:00"
+}

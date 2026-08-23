@@ -1,0 +1,47 @@
+﻿[
+  {
+    "id": "S1_negotiation",
+    "description": "谈判/身份门槛：回灯集入场与路线价值博弈",
+    "source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-clean-e2e-scene-skill-v11-10ch\\chapter-0004\\primary_prompt.md",
+    "baseline_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S1_negotiation\\A_baseline_prompt.md",
+    "texture_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S1_negotiation\\B_texture_prompt.md",
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "id": "S2_combat_payoff",
+    "description": "公开战斗/身份兑现：升院考核",
+    "source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-human-reaction-ch3-v1\\runs\\chapter-0003\\primary_prompt.md",
+    "baseline_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S2_combat_payoff\\A_baseline_prompt.md",
+    "texture_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S2_combat_payoff\\B_texture_prompt.md",
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "id": "S3_reward_status",
+    "description": "高价值获得/身份变化：自由行籍、药物、装备、灵砂到账",
+    "source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-clean-e2e-scene-skill-v11-10ch\\chapter-0008\\primary_prompt.md",
+    "baseline_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S3_reward_status\\A_baseline_prompt.md",
+    "texture_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S3_reward_status\\B_texture_prompt.md",
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "id": "S4_relationship_choice",
+    "description": "高压关系选择/余波：拒绝独自离开、护住队伍",
+    "source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-curator-primary-longform-v1\\candidate-b\\runs\\chapter-0006\\primary_prompt.md",
+    "baseline_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S4_relationship_choice\\A_baseline_prompt.md",
+    "texture_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S4_relationship_choice\\B_texture_prompt.md",
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "id": "S5_large_payoff",
+    "description": "大型阶段兑现：封炉总门裂开、居民获得离开选择",
+    "source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-curator-primary-longform-v1\\candidate-b\\runs\\chapter-0009\\primary_prompt.md",
+    "baseline_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S5_large_payoff\\A_baseline_prompt.md",
+    "texture_prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\S5_large_payoff\\B_texture_prompt.md",
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  }
+]

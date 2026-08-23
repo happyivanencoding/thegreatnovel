@@ -1,0 +1,66 @@
+[
+  {
+    "chapter": 30,
+    "variant": "index",
+    "prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0030\\index_primary_prompt.md",
+    "prompt_chars": 7424,
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "chapter": 30,
+    "variant": "full",
+    "prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0030\\full_primary_prompt.md",
+    "prompt_chars": 7458,
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "chapter": 120,
+    "variant": "index",
+    "prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0120\\index_primary_prompt.md",
+    "prompt_chars": 7320,
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "chapter": 120,
+    "variant": "full",
+    "prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0120\\full_primary_prompt.md",
+    "prompt_chars": 7444,
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "chapter": 300,
+    "variant": "index",
+    "prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0300\\index_primary_prompt.md",
+    "prompt_chars": 7693,
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "chapter": 300,
+    "variant": "full",
+    "prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0300\\full_primary_prompt.md",
+    "prompt_chars": 7609,
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "chapter": 600,
+    "variant": "index",
+    "prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0600\\index_primary_prompt.md",
+    "prompt_chars": 7849,
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  },
+  {
+    "chapter": 600,
+    "variant": "full",
+    "prompt": "C:\\dev\\tgn-story-mvp\\books\\real-exp-context-scaling-20260824-v1\\chapter-0600\\full_primary_prompt.md",
+    "prompt_chars": 8053,
+    "model": "gpt-5.6-terra",
+    "reasoning": "high"
+  }
+]

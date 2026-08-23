@@ -1,0 +1,4 @@
+ch30: X=full, Y=index
+ch120: X=full, Y=index
+ch300: X=full, Y=index
+ch600: X=index, Y=full

@@ -1,0 +1,15 @@
+﻿{
+  "model": "gpt-5.6-luna",
+  "reasoning": "high",
+  "session_id": "acps_19af64b9f141c717b1c95991",
+  "run_id": "acpr_e97f11c653c7b73654c87431",
+  "status": "completed",
+  "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\blind_judge_1_prompt.md",
+  "output_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-story-bearing-texture-ab-20260824-v1\\blind_judge_1_response.md",
+  "usage": {
+    "sessionUpdate": "usage_update",
+    "size": 828400,
+    "used": 62189
+  },
+  "ended_at": "2026-08-24T00:33:43.0308375+02:00"
+}

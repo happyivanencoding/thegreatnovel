@@ -1,0 +1,5 @@
+S1_negotiation: X=texture, Y=baseline
+S2_combat_payoff: X=texture, Y=baseline
+S3_reward_status: X=texture, Y=baseline
+S4_relationship_choice: X=texture, Y=baseline
+S5_large_payoff: X=texture, Y=baseline
