@@ -290,7 +290,7 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
     compact = packet.growth_genome_compact
     if not any(
         heading in compact
-        for heading in ("### 作者明确保留", "### 核心不变量", "### 退化风险")
+        for heading in ("### 已批准幻想不变量", "### 作者明确保留", "### 核心不变量", "### 退化风险")
     ):
         compact = "（旧 BOOK 未提供 Growth Genome 的三个章节压缩小节。）"
     return CuratorContextPacket(

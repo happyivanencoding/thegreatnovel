@@ -148,6 +148,60 @@ def test_story_planning_prefers_story_value_over_procedure_detail() -> None:
     assert "观察环境 → 分析规律 → 按步骤验证 → 安全通过/取回/修复" in director
 
 
+def test_fantasy_salience_rules_are_scoped_to_planning_layers() -> None:
+    shared_markers = (
+        "Core Fantasy Invariant",
+        "Fantasy Compounding > Operational Compounding",
+        "Plot Engine Diversity",
+        "经营文 Decision > Implementation",
+    )
+    for mode in ("idea", "outline", "review"):
+        for marker in shared_markers:
+            assert marker in DEFAULT_PROMPT_TEMPLATES[mode]
+
+    for mode in ("outline", "review"):
+        assert "Outline Fantasy Proof" in DEFAULT_PROMPT_TEMPLATES[mode]
+
+    for mode in ("fantasy_seed", "world_vision"):
+        assert "经营文 Decision > Implementation" in DEFAULT_PROMPT_TEMPLATES[mode]
+
+    director = generate_prompt(
+        mode="director",
+        template="",
+        book_content=(
+            "# 小说总体设计画像\n"
+            "## 0. 本书成长基因图\n"
+            "### 已批准幻想不变量\n"
+            "FANTASY_INVARIANT_MARKER\n"
+            "### 核心不变量\n"
+            "持续让主角获得超凡主动权"
+        ),
+        current_outline=OUTLINE,
+    )
+    assert "FANTASY_INVARIANT_MARKER" in director
+    assert "Core Fantasy Invariant" in director
+    assert "Director Narrative Salience" in director
+    assert "经营文 Decision > Implementation" in director
+    assert "Plot Engine Diversity" not in director
+
+    primary = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curated_context="# Curated Chapter Context\n\n## Relevant Plan\n只保留本章事实",
+    )
+    for marker in (
+        "Core Fantasy Invariant",
+        "Fantasy Compounding > Operational Compounding",
+        "Outline Fantasy Proof",
+        "Plot Engine Diversity",
+        "Director Narrative Salience",
+        "经营文 Decision > Implementation",
+    ):
+        assert marker not in primary
+
+
 def test_scene_skill_runtime_is_curator_selected_and_primary_only() -> None:
     curator = generate_prompt(
         mode="context_curator",

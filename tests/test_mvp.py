@@ -2259,6 +2259,28 @@ BOOK_MARKER
         assert marker not in compact
 
 
+def test_compact_growth_genome_keeps_new_approved_fantasy_invariant() -> None:
+    book = """# 小说总体设计画像
+## 0. 本书成长基因图
+### 已批准幻想不变量
+FANTASY_INVARIANT_MARKER
+### 一级成长主轴
+FULL_PRIMARY_MARKER
+### 核心不变量
+INVARIANT_MARKER
+### 退化风险
+RISK_MARKER
+## 1. 核心类型与读者承诺
+BOOK_MARKER
+"""
+    compact = compact_growth_genome_for_chapter(book)
+    assert "### 已批准幻想不变量" in compact
+    assert "FANTASY_INVARIANT_MARKER" in compact
+    assert "INVARIANT_MARKER" in compact
+    assert "RISK_MARKER" in compact
+    assert "FULL_PRIMARY_MARKER" not in compact
+
+
 def test_single_and_curator_use_compact_genome_projection() -> None:
     book = """# 小说总体设计画像
 ## 0. 本书成长基因图

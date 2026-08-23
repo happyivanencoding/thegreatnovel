@@ -227,12 +227,18 @@ def compact_growth_genome_for_chapter(book_content: str) -> str:
     genome = _markdown_block(book_content, "## 0. 本书成长基因图")
     if not genome:
         return "（BOOK 未提供成长基因图。）"
-    headings = ("### 作者明确保留", "### 核心不变量", "### 退化风险")
-    blocks = [
-        f"{heading}\n\n{_markdown_subsection(genome, heading)}"
-        for heading in headings
-        if _markdown_subsection(genome, heading)
-    ]
+    blocks: list[str] = []
+    fantasy_heading = "### 已批准幻想不变量"
+    fantasy = _markdown_subsection(genome, fantasy_heading)
+    if not fantasy:
+        fantasy_heading = "### 作者明确保留"
+        fantasy = _markdown_subsection(genome, fantasy_heading)
+    if fantasy:
+        blocks.append(f"{fantasy_heading}\n\n{fantasy}")
+    for heading in ("### 核心不变量", "### 退化风险"):
+        body = _markdown_subsection(genome, heading)
+        if body:
+            blocks.append(f"{heading}\n\n{body}")
     if not blocks:
         # 旧书没有新固定小节时保留原有短/旧 §0，保证旧书可继续运行。
         return f"## 0. 本书成长基因图\n\n{genome}"

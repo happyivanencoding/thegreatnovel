@@ -55,6 +55,18 @@ INTERNAL_REALISM_DIRECTION = """内部因果必须可信，但可信不等于现
 
 STORY_VALUE_OVER_PROCEDURE_DIRECTION = """具体不等于把过程写细。除非作者明确选择工程、经营、建设、职业程序或硬技术解题型作品，玄幻/仙侠/奇幻的主要可复述内容优先落在人与人的欲望和对抗、力量差、身份变化、利益争夺、资源得失、关系选择、超凡奇观与不可逆结果上。路线、机关、地形、承重、制作、搬运、检测、计算和逐步操作可以成为阻力、证据或手段，但不应连续成为剧情本体；如果一段故事主要只能复述成“观察环境 → 分析规律 → 按步骤验证 → 安全通过/取回/修复”，就压缩操作过程，把篇幅让给谁在逼谁、主角真正想拿到什么、对方怎样阻止、核心优势怎样迫使局势改变，以及兑现后谁具体得到或失去什么。不要只是把现代工程流程换成仙侠名词。"""
 
+CORE_FANTASY_INVARIANT = """Core Fantasy Invariant：Fantasy Seed 与 World Vision 一旦由作者批准，后续 Story Program、Outline、Review 和单章规划可以改变地图、敌人、关系、资源与具体玩法，但不能静默替换这本书最值得幻想的东西。核心幻想不变量不是要求反复解释同一设定，而是要求读者持续得到同一种根本欲望的更强兑现：主角越来越能拥有、驾驭、突破、夺取、探索、反杀、长生、自由行动或实现本书自己承诺的体验。路线规模、流程效率、经营网络、资格、权限、组织与资产都可以增长，但它们只能承载或放大核心幻想，不能逐步取代核心幻想成为故事本体。"""
+
+FANTASY_COMPOUNDING_DIRECTION = """Fantasy Compounding > Operational Compounding：长篇复利首先放大核心幻想本身，再放大承载它的运营结构。上一轮积累最好让主角下一轮出现新的能力用法、更大的主动权、更高价值的目标、更强的支配力、更危险也更值得的对手或过去进不去的世界，而不只是把同一件事做得更快、更稳、更多、更标准化。路线更多、货量更大、流程更顺、联系人更多、产能更高都可以是二级复利，但如果它们没有进一步改变主角“亲自能做什么”和读者能感到的核心幻想，就不要把这种规模化本身当作主要成长。"""
+
+OUTLINE_FANTASY_PROOF_RULE = """Outline Fantasy Proof（软规划原则，不新增字段或 Hard Gate）：对承担主要推进职责的大型剧情块，优先在现有“具体发生 / 核心幻想推进 / 一级成长变化 / 收益与反哺”等位置写出一个具体、不可逆、可复述的场面或结果，让读者能够一句话说明“这次核心幻想真的又发生了什么”。未来十章整体也应有清楚的近期 Fantasy Proof；纯承接或蓄势章节可以服务这次兑现，不要求每章单独证明。不要用“能力理解更深、体系更完善、路网扩大、经营更稳定、影响力提升”这种摘要替代证明。"""
+
+PLOT_ENGINE_DIVERSITY_DIRECTION = """Plot Engine Diversity：同一个强主循环可以长期复用，但相邻剧情块不能只是更换地图、货物、任务名或对手名字后重复同一种发动方式。判断整体故事时，优先让目标性质、对手行动方式、冲突来源、主角必须做的关键决定、核心优势的使用方式、兑现形态或世界后果发生至少一种真正有故事意义的变化。不要把这个原则实现成逐项打勾；变化已经足以产生不同阅读体验时就正常推进。尤其避免长期退化为“接到问题 → 分析规则 → 按步骤解决 → 得到结算 → 接下一个类似问题”。"""
+
+DIRECTOR_NARRATIVE_SALIENCE = """Director Narrative Salience：Director 面对十章计划和 Canon 中很多可执行细节时，八字段优先抓住本章最值得读的那一个人物冲突、关键选择、力量使用、反转、利益得失或兑现结果。操作步骤只有在它会改变人物选择、风险、胜负或结果时才进入“主角行动”；不要把“主角行动”写成施工单、路线单、检测流程或完整操作清单。不能删改计划规定的结果，但可以把实现过程压缩到足够支撑因果的最小程度，让“谁逼谁、主角决定什么、局势怎样被改变”保持前景。"""
+
+BUSINESS_DECISION_OVER_IMPLEMENTATION = """经营文 Decision > Implementation：作者明确选择经营、建设、职业、生产或组织成长题材时，不需要回避经营细节，但主要戏剧价值优先来自决策而不是实施流水账：押注什么、资源投向哪里、舍弃什么机会、怎样定价或扩张、与谁合作或竞争、承担什么风险、对手如何回应，以及一次选择怎样改变后续局面。采购、排班、搬运、施工、生产、核验、重复执行等实施步骤，只在其中仍存在关键不确定性、选择、冲突或反转时展开；决定已经做完以后，普通实施默认压缩。规模增长最好带来新的战略选择与竞争格局，而不是只有吞吐量、节点数和流程精度增加。"""
+
 PAYOFF_FIRST_COST_RHYTHM = """Payoff-first 成本节奏：成熟不等于每次胜利立即受伤、负债、被审查或承担新责任。默认顺序是：胜利或突破真正发生 → 外界反应 → 主角获得实际收益 → 收益改变行动空间 → 再决定是否需要代价或余波。普通小胜允许明显净收益；阶段大胜通常应当收益明显大于当前成本。成本只在真实需要时限制选择、迫使策略或推动换挡，不作为每次 Payoff 的固定税。"""
 
 
@@ -215,6 +227,12 @@ Emotion：启用 / 不启用；理由
 {DIRECTOR_REPETITION_RULE}
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
+
+{CORE_FANTASY_INVARIANT}
+
+{DIRECTOR_NARRATIVE_SALIENCE}
+
+{BUSINESS_DECISION_OVER_IMPLEMENTATION}
 """
 
 
@@ -602,6 +620,8 @@ FANTASY_SEED_TEMPLATE = f"""你是透明协作的 Fantasy Seed 创作助手。�
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
+{BUSINESS_DECISION_OVER_IMPLEMENTATION}
+
 生成 3—5 个真正不同的候选。不评分、不排名、不自动选择。候选之间的差异优先体现在：主角反复做什么、每轮永久留下什么、积累怎样产生下一次超额收益，以及世界为什么因此继续扩大。仅更换能力名词、世界规则术语、敌对组织或私人创伤，而长期发动机相同，不算真正不同。先写能力快感、力量占有欲和世界吸引力，再写长期增长与升格；不要把创意先写成运行手册。
 
 每个候选严格使用：
@@ -654,6 +674,8 @@ WORLD_VISION_TEMPLATE = f"""你是透明协作的 World Vision 创作助手。�
 {LONG_FORM_PACING_DIRECTION}
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
+
+{BUSINESS_DECISION_OVER_IMPLEMENTATION}
 
 最终严格输出：
 
@@ -727,6 +749,14 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
+{CORE_FANTASY_INVARIANT}
+
+{FANTASY_COMPOUNDING_DIRECTION}
+
+{PLOT_ENGINE_DIVERSITY_DIRECTION}
+
+{BUSINESS_DECISION_OVER_IMPLEMENTATION}
+
 先写总览，再严格使用以下结构：
 
 ## 世界观与故事主线
@@ -798,6 +828,16 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {INTERNAL_REALISM_DIRECTION}
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
+
+{CORE_FANTASY_INVARIANT}
+
+{FANTASY_COMPOUNDING_DIRECTION}
+
+{OUTLINE_FANTASY_PROOF_RULE}
+
+{PLOT_ENGINE_DIVERSITY_DIRECTION}
+
+{BUSINESS_DECISION_OVER_IMPLEMENTATION}
 
 {PAYOFF_FIRST_COST_RHYTHM}
 
@@ -910,6 +950,16 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {STAGE_CHANGE_PLANNING_RULE}
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
+
+{CORE_FANTASY_INVARIANT}
+
+{FANTASY_COMPOUNDING_DIRECTION}
+
+{OUTLINE_FANTASY_PROOF_RULE}
+
+{PLOT_ENGINE_DIVERSITY_DIRECTION}
+
+{BUSINESS_DECISION_OVER_IMPLEMENTATION}
 
 ## 核心幻想是否仍在兑现
 最近章节是否仍然提供最初承诺的力量、自由、长生、探索、反杀、夺取、升格、关系或身份反转。
