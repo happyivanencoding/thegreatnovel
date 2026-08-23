@@ -16,9 +16,9 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 ## TGN 阶段消费
 
 - `Fantasy Seed`：继续保持隔离，不自动读取 GBrain，先保证核心幻想来自当前作者方向与模型本身。
-- `World Vision`：可读取作者选择/编辑过的 GBrain；只借鉴 world fantasy / world entry / narrative compounding，不能覆盖已批准 Fantasy Seed。
-- `Story Program`（UI mode=`idea`）：可读取 GBrain；优先借鉴 Plot Engine 变异、thread ecology/collision、配角自治、story-state compounding 与 Reward/Opportunity 体验变异，不能覆盖已批准 Seed / World Vision。
-- `Outline`：继续读取 GBrain；把长线、身份揭露、离队归来、牺牲/二次兑现、高价值获得等落实为具体故事锚点。
+- `World Vision`：默认 GBrain ON，最多 3 条 focused inspiration；借鉴 world fantasy / world entry / narrative compounding，不能覆盖已批准 Fantasy Seed。
+- `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流与 Reward/Opportunity，不能覆盖已批准 Seed / World Vision。
+- `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。
 - `Director`：不负责凭空发明长期大奖励或重新设计 Story Program。
 - `Curator / Primary`：Scene Skills 只控制 HOW TO REALIZE THE SCENE，不改变 Chapter Mission 或 Canon。
 - `State Extraction`：继续用当前 `current_state` 记录重要能力、物品、规则、持有人与状态变化；不新增 Inventory 数据库。
@@ -44,14 +44,61 @@ Outline 负责：具体机会怎样出现，主角为什么想要，谁阻止，
 
 Director/Writer 不应为了“这一章需要爽点”自行添加计划外的长期大奖励。
 
-## Model Routing（GBrain 蒸馏）
+## Model Routing：规划生成与 GBrain 蒸馏
 
-- Terra high：原文事实、Scene Evidence、Reward Event Evidence、source fidelity。
-- Luna high：Book DNA、World Fantasy、Reward/Opportunity synthesis、Scene Skill synthesis。
-- Sol high：Longitudinal Threads、Thread Braid、Story Program 跨书高级综合。
+### 规划生成模型
 
-简化理解：Terra 看清发生了什么；Luna 理解为什么让人想要/想继续看；Sol 理解这些东西为什么跨几十/几百章仍然有效。
+| 阶段 | 当前默认 | 为什么 |
+|---|---|---|
+| Fantasy Seed | GPT-5.6 Luna high | 幻想抽象强、速度合理；此阶段 GBrain OFF，避免参考库过早锚定核心创意 |
+| World Vision | GPT-5.6 Luna high | 擅长把核心幻想转成世界欲望、力量体验与进入更大世界的理由 |
+| Story Program | GPT-5.6 Sol high | 当前 Sol 最值得发挥的位置：长期玩法变异、人物自主性、敌人策略、关系回流、Thread Ecology、Reward 变化 |
+| Outline | GPT-5.6 Luna high | 能高质量执行正确 Program，把长期结构落实成故事锚点而不过度膨胀 |
+| Director | GPT-5.6 Luna high | 需要 Narrative Salience 与对 Outline 的稳定理解 |
+| Curator | GPT-5.6 Terra high | 任务偏筛选、压缩和去 planning leakage；快速与克制比继续发散更重要 |
+| Primary Writer | GPT-5.6 Luna high（暂定） | 正文尚未完成严格 Terra/Luna/Sol 同输入盲测，规划测试不能替代 prose 测试 |
+| State Extraction | 更快、更便宜；GPT-5.6 系列时优先 Terra | 只记录已发生事实，不需要高级创作推理 |
 
+模型不是线性排名：
+
+- **Terra high**：快、直接、克制，适合 evidence、fidelity、Curator、快速 A/B；
+- **Luna high**：当前最佳综合主力，适合 Fantasy/World/Outline 与复杂约束执行；
+- **Sol high**：长篇“多想一层”最强，但明显更慢，默认只集中在 Story Program 或 Deep Planning 修复；
+- **Luna max**：仅用于疑难创意救援、最高质量基线和关键重构，不日常使用；
+- **GPT-5.4 high**：当前实测中比 Luna high 慢且没有补偿性优势，更易系统/Build 化，不作为默认创作模型。
+
+### GBrain 蒸馏模型
+
+- **Terra high**：原文事实、Scene Evidence、Reward Event Evidence、Source Fidelity。重点是“原作实际上发生了什么”。
+- **Luna high**：Book DNA、World Fantasy、人物/关系解释、Reward/Opportunity synthesis、Scene Skill synthesis。重点是“为什么让人想要、为什么好看”。
+- **Sol high**：Longitudinal Threads、Thread Braid、Story Program patterns、跨书高级 synthesis。重点是“几十/几百章以后为什么仍然有效”。
+
+简化理解：**Terra 看清事实 → Luna 理解吸引力 → Sol 理解长篇结构。**
+
+### Fast / Default / Deep 模式
+
+- Fast：需要大量试书、Seed A/B 时可用 Terra high；
+- Default：Luna high 为主要规划模型，Story Program 单独使用 Sol high；
+- Deep / Repair：当长期主线机械重复、同一能力不停换皮、配角缺少自主性或作者明确要求“想深一层”时，优先只升级/重跑 Story Program，而不是整链切到 Sol；
+- Max：Luna max 只用于少量高风险重构或最高质量基线。
+
+## GBrain OFF / ON 规划 A/B 结论
+
+2026-08-23 使用同一个已批准 Fantasy Seed“看见别人看不见的路”，冻结模型和 Prompt，完整比较：
+
+`World Vision(Luna high) → Story Program(Sol high) → Outline(Luna high)`
+
+两组唯一主要变量是 GBrain OFF / v3 ON。结果：
+
+- OFF 已能产出合格且明显避免工程蓝领化的规划；
+- ON 的主要提升发生在 **Story Program 与 Outline**：同一个“隐路”更早从空间封锁换挡到目标、人物、身份/资格和世界归属问题；
+- ON 更稳定地产生 Thread Ecology、人物自主目标、高价值获得→立即证明→后续反哺，以及旧奖励在新语境重释；
+- ON 能把完整中期故事单位连续规划到约 60—70 章，而 OFF 更容易在约 30 章后留下下一轮再规划；
+- 两组输出长度接近，并行测试中没有观察到 GBrain ON 带来明显 wall-clock 负担。
+
+因此当前默认保持：**Seed OFF；World 3 条 ON；Program 3 条 ON；Outline 4/5 条 ON。** GBrain 的作用不是替模型提供故事答案，而是给已经很强的模型提供少量长期小说 craft reminders。
+
+这只是一个高风险 Seed 的实测，不把 29 张 v3 Pilot 直接提升成正式 machine VALIDATED；继续通过真实新书验证后再 promotion。
 ## 检索退化兼容
 
 当前 GBrain 的 hybrid query 只有在进程可用 `OPENAI_API_KEY` 时才生成 query embedding；没有 key 时会退化成 keyword-only。TGN 因此：

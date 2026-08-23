@@ -74,20 +74,21 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 能力、装备、资源、关系、身份、领地等可以承载复利，但不要为了证明成长主动堆成路线网、权限树、库存、节点网络或组合系统。
 
-### 2.5 Story Value > Procedure
+### 2.5 Supporting Logic Must Not Automatically Become Story Engine
 
-“具体”不等于“把操作过程写细”。
+这是当前系统非常重要的一条统一准则。它把过去分别表现为“治理化、工程化、蓝领职业化、过度验证”的问题归到同一个根因：**LLM 看见一个合理问题以后，容易把“让因果成立”继续推演成“把这个问题完整解决”，最后 supporting logic 反客为主。**
 
-除非作者明确选择工程、经营、建设、职业程序或硬技术解题题材，否则主要可复述内容优先落在：
+必须持续区分：
 
-- 谁想得到什么；
-- 谁阻止谁；
-- 主角做了什么关键选择；
-- 核心优势怎样改变力量差或局势；
-- 谁因此失去或获得什么；
-- 哪段关系、身份、世界位置或行动空间发生不可逆变化。
+- **World Complexity ≠ Narrative Focus**：世界可以复杂，某种风险或制度理由可以真实存在，但不自动成为作品主要讨论对象。
+- **Opponent Rationale ≠ Authorial Truth ≠ Protagonist Duty**：对手可以有真实理由，甚至局部是对的；这首先用于制造冲突，不因为主角力量变大就自动推出“主角有义务管理所有人”。
+- **Mechanism Reality ≠ Implementation Detail**：阵法、地形、规则、制作、技术过程可以存在，但只展开足以支撑当前人物选择和结果的部分。
+- **Ability ≠ Occupation**：能力可以重复使用，但长期成长优先扩大主动权、敌人策略、关系、身份、机缘和世界入口，不自然职业化成探路、检测、维护、运输、生产或运营工作。
+- **Verification Exists ≠ Verification Is The Story**：能力可信性优先嵌入有真实目标和利害关系的行动中证明，不单独搭建测试场景穷举机制与限制。
 
-如果一段剧情只能复述为“观察 → 分析 → 验证 → 执行 → 完成”，而删掉这些步骤以后没有人物利益、力量差、关系变化或不可逆结果，就说明故事正在程序化。
+因此，“具体”优先具体在：谁想得到什么、谁阻止、主角决定什么、核心优势怎样改变局势、谁因此得到或失去什么、什么从此不可回滚。观察、分析、测试、验证、调整、实施如果没有新的关键选择、冲突或反转，就压缩到足以支撑因果的最小程度。
+
+这条准则不是禁词表，也不禁止工程、经营、治理、研究等题材；如果作者明确选择这些题材，它们可以成为主发动机。关键是 **supporting logic 只有在本书真的把它选为主要阅读体验时，才升级为 story engine。**
 
 ### 2.6 Few Deep Rules > Many Hard Gates
 
@@ -428,37 +429,65 @@ Review 只调整未来计划，不自动重写已完成正文，也不推翻作�
 
 ---
 
-## 8. 当前模型路由（经验配置，不是方法论硬依赖）
+## 8. 当前模型与 GBrain 路由（基于实测，不是方法论硬依赖）
 
-基于实际规划链 A/B 测试，目前推荐：
+模型选择按**阶段职责**，不是按“谁最强就全链使用谁”。当前证据最充分的规划配置是：
 
-- Fantasy Seed：GPT-5.6 Luna，reasoning high；
-- World Vision：GPT-5.6 Luna，reasoning high；
-- Story Program：GPT-5.6 Sol，reasoning high；
-- Outline：GPT-5.6 Luna，reasoning high；
-- Director：GPT-5.6 Luna，reasoning high；
-- Curator：GPT-5.6 Terra，reasoning high；
-- Primary Writer：暂用 GPT-5.6 Luna high，正文专项 A/B 后再定；
-- State Extraction：优先更快、更便宜的模型。
+| 阶段 | 默认模型 | GBrain | 说明 |
+|---|---|---|---|
+| Fantasy Seed | GPT-5.6 Luna high | **OFF** | 保持核心幻想先由作者方向与模型自身产生，避免参考库过早锚定创意 |
+| World Vision | GPT-5.6 Luna high | **ON，最多 3 条 focused inspiration** | Luna 擅长把核心幻想抽象成世界欲望、世界入口与力量体验 |
+| Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | 当前最值得使用 Sol 的位置：玩法换挡、长线生态、人物自治、敌人策略、高价值获得 |
+| Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把正确的长期 Program 展开成连续故事锚点、Thread Collision、身份揭露、Reward Recontextualization |
+| Director | GPT-5.6 Luna high | 章节相关精选上下文 | 负责当前章事件合同与 Narrative Salience，不重新设计长期故事 |
+| Curator | GPT-5.6 Terra high | Index-first 后的少量相关材料 | 任务偏筛选、压缩、去 planning leakage，不需要最慢模型 |
+| Primary Writer | GPT-5.6 Luna high（暂定） | 只读 Curator 输出/Scene Skills | 正文模型尚未完成严格 Terra/Luna/Sol 同输入盲测，不能把规划结论直接外推到 prose |
+| State Extraction | 更快、更便宜的模型；GPT-5.6 系列时优先 Terra | 不需要创作型 GBrain | 只抽取已发生事实，reasoning 使用满足正确性的最低合理档位 |
 
-为什么 Sol 优先放 Story Program：它在测试中最擅长长期玩法变异、人物自主性、敌人策略升级、关系回流，并且最能避免“核心能力→Build/系统”的长期退化。Sol 不需要贯穿整条链。
+### 为什么这样分
 
-Luna max 不作为日常默认，只用于疑难创意救援、关键架构诊断或建立最高质量基线。
+- **Terra high**：快、直接、克制，适合事实抽取、Scene/Reward Evidence、Source Fidelity、Curator，以及大量快速 A/B。它擅长“看清发生了什么”。
+- **Luna high**：当前最佳综合主力。擅长核心幻想抽象、复杂约束下的稳定规划和把正确 Program 展开成具体故事。它擅长“理解为什么好看，并可靠执行”。
+- **Sol high**：最强优势集中在几十/几百章的长期变异：人物自主性、关系回流、对手策略、同一能力换 Plot Engine，以及把资产重新转回人物/世界后果。它擅长“理解为什么很久以后仍然好看”。由于明显更慢，不默认贯穿全链。
+- **Luna max**：不作为日常默认；只用于疑难创意救援、关键架构诊断、最高质量基线或明确要求最大推理深度的重构。
+- **GPT-5.4 high**：当前实测中比 Luna high 更慢，幻想抽象和输出稳定性没有补偿性优势，也更容易出现系统/Build 语言；当前不设默认 niche，只用于回归或模型对照。
 
-快速大量 A/B 创意测试可以使用 Terra high。
+### 已验证的 GBrain A/B 结论
+
+同一个“看见别人看不见的路”Fantasy Seed，完整跑 `World Vision(Luna high) → Story Program(Sol high) → Outline(Luna high)`：
+
+- GBrain OFF 已经能产出合格规划；
+- GBrain v3 ON 的主要增益集中在 **Story Program 与 Outline**：更早换 Plot Engine、人物更有自主目标、长中短线更完整、高价值获得更自然，并能把一个完整中期故事单位规划到约 60—70 章；
+- ON 没有观察到明显的输出膨胀或可见延迟负担；
+- 当前 **3 / 3 / 4（最多5）条** 的 focused inspiration 已经有效，不应因为有效就扩成每层十几张卡。
+
+因此当前默认不是“让 GBrain 替模型想故事”，而是：**先让强模型拥有自己的创作，再用少量高质量 GBrain 提醒它不要忘记长篇还需要玩法换挡、线程生态、奖励复利和人物回流。**
+
+### GBrain 蒸馏模型路由
+
+GBrain 本身也不使用统一模型：
+
+- Terra high：章节事实、Scene Evidence、Reward Event Evidence、Source Fidelity；
+- Luna high：Book DNA、World Fantasy、人物/关系解释、Reward/Opportunity synthesis、Scene Skill synthesis；
+- Sol high：Longitudinal Threads、Thread Braid、Story Program patterns、跨书高阶 synthesis。
+
+简化理解：**Terra 看清事实 → Luna 理解吸引力 → Sol 理解长篇结构。**
+
+快速试书或大量 A/B 可把规划链临时切到 Terra high；当 Story Program 明显机械、同一能力连续重复、人物自主性不足或作者明确要求 Deep Planning 时，优先只把 **Story Program** 升到 Sol，而不是整条链升级。
 
 ---
 
 ## 9. 接手项目时建议先看这些文件
 
-1. `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` —— 先理解系统为什么这样分层；
+1. `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` —— 先理解系统为什么这样分层、Supporting Logic 原则和模型职责；
 2. `docs/MVP_PRODUCT_DIRECTION.md` —— 产品目标与 Fantasy-first 边界；
-3. `src/story_mvp/prompts.py` —— 当前实际创作原则与各阶段 Prompt；
-4. `src/story_mvp/chapter_context.py` —— Director / chapter context 的确定性投影；
-5. `src/story_mvp/hybrid_runtime.py` —— Curator / Primary 的上下文边界与 Index-first；
-6. `docs/READER_FIRST_PROSE_RUNTIME.md` —— 正文层如何避免设定说明先于读者理解；
-7. `docs/CANON_MEMORY_V2.md` —— 记忆层只保存什么；
-8. `docs/CHAPTER_RUN_LEDGER.md` —— 章节运行节点和保存边界。
+3. `docs/GBRAIN_STORY_CRAFT_V3.md` —— GBrain 四类知识、ON/OFF 边界、规划/蒸馏模型路由和当前 A/B 证据；
+4. `src/story_mvp/prompts.py` —— 当前实际创作原则与各阶段 Prompt；
+5. `src/story_mvp/chapter_context.py` —— Director / chapter context 的确定性投影；
+6. `src/story_mvp/hybrid_runtime.py` —— Curator / Primary 的上下文边界与 Index-first；
+7. `docs/READER_FIRST_PROSE_RUNTIME.md` —— 正文层如何避免设定说明先于读者理解；
+8. `docs/CANON_MEMORY_V2.md` —— 记忆层只保存什么；
+9. `docs/CHAPTER_RUN_LEDGER.md` —— 章节运行节点和保存边界。
 
 如果要修改系统，先判断问题属于“创意语义、长期结构、中层事件、单章执行、正文实现、状态记忆”中的哪一层，再动对应文件。
 
