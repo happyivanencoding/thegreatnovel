@@ -2138,6 +2138,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
         assert "COMPOUNDING_GROWTH_DIRECTION" in template
         assert "净新增" in template
         assert "每轮结束重新归零" in template
+        assert "不要求每个阶段都新增一种资产" in template
+        assert "不要为了表现复利主动堆出路线、权限、网络、库存或组合组件" in template
 
     fantasy = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
     assert "世界为什么因此自然打开更高价值的新机会、竞争、敌人或区域" in fantasy
@@ -2147,8 +2149,10 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
 
     world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
     assert "## 世界资源、利益与机会结构" in world
-    assert "形成自己的构筑、体系、库存、网络、领地、技艺组合、个人规则或其它不可逆积累" in world
-    assert "主角体外" in world
+    assert "主角下一轮能做什么过去做不到的新事" in world
+    assert "会迫使什么人物或势力改变应对" in world
+    assert "不要为了证明复利，主动把收益整理成构筑、库存、权限树、路线网、节点网络或组合系统" in world
+    assert "形成自己的构筑、体系、库存、网络、领地、技艺组合、个人规则或其它不可逆积累" not in world
     assert "## 世界阶层、利益与行动压力" not in world
 
     story_program = DEFAULT_PROMPT_TEMPLATES["idea"]
@@ -2159,6 +2163,11 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
         "推向下一阶段的更大机会、欲望、竞争或压力：",
     ):
         assert marker in story_program
+    assert "新的主动行动、对手新的针对方式、人物关系出现的新选择" in story_program
+    assert "不要主动把它们整理成构筑、库存、权限树、路线网、节点网络或组合系统" in story_program
+    assert "主角从此多能做什么、对手以后必须怎样改变" in story_program
+    assert "不要为了填这个字段人为制造路线、权限、节点、网络、库存或构筑" in story_program
+    assert "稳定控制、调用或从中取得复利收益的外部结构" not in story_program
     assert "二级收益：写本阶段" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
 
