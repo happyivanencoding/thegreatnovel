@@ -127,7 +127,7 @@ def render_selected_scene_skills(curated_context: str) -> str:
         return ""
 
     blocks = [
-        "Scene Skill Runtime v1：下列 Skill 只控制 HOW TO REALIZE THE SCENE；不得修改 Chapter Mission、Canon、直接结果、资源状态、人物决定或章末推动，也不要求新增场景。",
+        "Scene Skill Runtime v1：下列 Skill 只控制 HOW TO REALIZE THE SCENE；不得修改 Chapter Mission、Canon、直接结果、资源状态、人物决定或章末推动，也不要求新增场景。执行 Skill 时只在其关键 beat 上提高细节密度：优先少量承载故事的动作、物件、空间、身体反馈、力量可见后果和人物差异化反应，不把整章都提高修饰密度。",
         f"## Primary: {primary}\n\n{load_scene_skill(primary)}",
     ]
     if secondary:

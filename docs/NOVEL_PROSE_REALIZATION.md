@@ -255,6 +255,8 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补情绪；Planning 的抽象标签不直接变成旁白总结。
 
+**Story-bearing Texture > Decorative Density**：正文不以“多写”或“多修饰”制造丰富感。每个主要 beat 选择少量真正改变画面的具体动作、物件/空间、身体反馈、力量后果和人物差异化反应；感官细节选择最有辨识度的少数锚点，不机械覆盖五感。细节如果不承载人物、冲突、因果或幻想体验，就继续压缩。
+
 ### Specialist / Integrator — Bounded Repair
 
 Specialist 只看职责相关的 Primary Draft 局部和 Curated Context，最多给局部 Patch；Integrator 只以 Primary Draft 为底稿，并且只在真实存在下列问题时有限修复：

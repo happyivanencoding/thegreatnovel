@@ -82,6 +82,10 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "操作步骤重新列成 Writer 必须演示的场景说明",
         "具体性优先落在谁想得到什么、谁在阻止",
         "不在 `## Relevant Plan` 中原样回显",
+        "1—3 个可感知锚点",
+        "人物差异化反应",
+        "不为凑丰富度罗列五感",
+        "不要替 Writer 预写修辞句",
     ):
         assert marker in curator
 
@@ -118,6 +122,11 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "验证、闭环、阶段推进、价值兑现、成长空间、建立优势",
         "不要把后台标签原样扩写成作者总结",
         "动作、对白或结果已经成立后，不再追加同义的抽象解释",
+        "Story-bearing Texture：丰富不是修饰堆积",
+        "正文的丰富感优先来自承载故事的具体细节",
+        "力量造成的可见后果",
+        "不机械覆盖视觉、听觉、嗅觉、触觉",
+        "不要为了“写得丰富”延长章节",
     ):
         assert marker in primary
     assert primary.count("人物不是状态更新器") == 1
@@ -238,6 +247,8 @@ Secondary: combat
     active = render_selected_scene_skills(curated)
     assert "## Primary: trial_challenge" in active
     assert "## Secondary: combat" in active
+    assert "只在其关键 beat 上提高细节密度" in active
+    assert "不把整章都提高修饰密度" in active
     assert "# investigation" not in active
 
     primary = generate_prompt(
