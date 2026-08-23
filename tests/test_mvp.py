@@ -2167,6 +2167,11 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "不要主动把它们整理成构筑、库存、权限树、路线网、节点网络或组合系统" in story_program
     assert "主角从此多能做什么、对手以后必须怎样改变" in story_program
     assert "不要为了填这个字段人为制造路线、权限、节点、网络、库存或构筑" in story_program
+    assert "Relationship Reconfiguration" in story_program
+    assert "谁过去能命令、忽视、利用、封锁、定价或支配他" in story_program
+    assert "关系重构的价值在于让上一轮胜利自然生长出新的欲望、联盟、背叛、争夺和对手反应" in story_program
+    assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "稳定控制、调用或从中取得复利收益的外部结构" not in story_program
     assert "二级收益：写本阶段" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]

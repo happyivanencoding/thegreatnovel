@@ -1,5 +1,7 @@
 # Story MVP 产品方向
 
+> 接手项目时，建议先阅读 `docs/PIPELINE_METHODOLOGY_AND_VALUES.md`。它解释 Fantasy Seed、World Vision、Story Program、Outline、Director、Curator、Primary Writer 与 State Extraction 的职责边界、方法论和常见退化模式；本文聚焦产品方向与创意权威边界。
+
 ## 一句话产品目标
 
 Story MVP 先帮助作者确定一部成熟中文男频成长长篇最值得让读者幻想什么，再让世界观和长期结构承载这份幻想，最后才进入 Outline 与章节 Runtime。
