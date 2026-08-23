@@ -55,5 +55,4 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 
 ## Pilot Active / HOLD
 
-当前 v3 共有 29 张 Pilot：27 张可作为 active inspiration；partner-reward-agency-v3 与 eward-timing-variation-v3 保持 HOLD。TGN 对显式 ctive_inspiration: false 的页面自动跳过。v3 尚未写入正式 eference-corpus/machine，避免在 Pilot 阶段污染旧 validated snapshot。
-
+当前 v3 共有 29 张 Pilot：27 张可作为 active inspiration；`partner-reward-agency-v3` 与 `reward-timing-variation-v3` 保持 HOLD。TGN 对显式 `active_inspiration: false` 的页面自动跳过。v3 尚未写入正式 `reference-corpus/machine`，避免在 Pilot 阶段污染旧 validated snapshot。
