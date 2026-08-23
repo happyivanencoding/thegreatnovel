@@ -1,5 +1,7 @@
 # TGN — TheGreatNovel
 
+[简体中文](README.zh-CN.md) | English
+
 TGN is an experimental long-form AI novel authoring system focused on structured planning, controllable chapter execution, continuity, and reusable story-craft knowledge.
 
 > Status: active development. The architecture and prompts are still evolving through real generation experiments.
