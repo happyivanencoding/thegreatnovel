@@ -48,6 +48,7 @@ _SPECIALIST_HEADINGS = {
 class CuratorContextPacket:
     authority: str
     chapter_mission: str
+    context_index: str
     book_contract: str
     growth_genome_compact: str
     canon_index: str
@@ -239,11 +240,125 @@ def extract_opening_strategy(book_content: str) -> str:
 
 
 def extract_primary_draft(response: str) -> str:
-    return _extract_level_one_section(response, "# Primary Draft")
+    """读取新版 Primary 正文，同时兼容旧三段式 Primary 返回。"""
+
+    body = _extract_level_one_section(response, "# 正式正文")
+    if body:
+        return body
+    body = _extract_level_one_section(response, "# Primary Draft")
+    if body:
+        return body
+    clean = response.strip()
+    if not clean or re.search(
+        r"(?m)^#\s+(?:Primary Writer Audit|Primary Fact Summary|Writer Audit|章节事实摘要)\s*$",
+        clean,
+    ):
+        return ""
+    # 手工/外部执行器可以只返回纯正文；没有 pipeline 标题时整段视为正文。
+    return clean
 
 
 def extract_primary_fact_summary(response: str) -> str:
+    """仅兼容旧 Run；新版 Primary 不再生成事实摘要。"""
+
     return _extract_level_one_section(response, "# Primary Fact Summary")
+
+
+def _context_directory(label: str, text: str) -> str:
+    """只暴露结构标题，不复制正文；供 Curator 先定位再读取确定性预取。"""
+
+    headings = [
+        line.strip()
+        for line in text.splitlines()
+        if re.match(r"^#{2,3}\s+", line.strip())
+    ]
+    if not headings:
+        return f"{label}: （无结构标题）"
+    return "\n".join([f"{label}:", *(f"- {heading}" for heading in headings)])
+
+
+def _relevance_terms(text: str) -> set[str]:
+    """用中文三字片段和英文词做轻量确定性相关性，不调用模型或检索服务。"""
+
+    terms: set[str] = set()
+    for token in re.findall(r"[A-Za-z0-9_]{3,}|[\u4e00-\u9fff]{3,}", text.casefold()):
+        if re.fullmatch(r"[\u4e00-\u9fff]+", token):
+            if len(token) <= 6:
+                terms.add(token)
+            terms.update(token[index : index + 3] for index in range(len(token) - 2))
+        else:
+            terms.add(token)
+    return terms
+
+
+def _project_indexed_text(text: str, query: str, *, max_chars: int) -> str:
+    """Index-first 的确定性正文预取：每个结构块保留入口，再补相关段落。"""
+
+    clean = text.strip()
+    if not clean or len(clean) <= max_chars:
+        return clean
+    query_terms = _relevance_terms(query)
+    raw_sections = re.split(r"(?m)(?=^##\s+)", clean)
+    sections = [section.strip() for section in raw_sections if section.strip()]
+    if not sections:
+        return clean[:max_chars].rstrip()
+
+    parsed: list[tuple[str, list[str]]] = []
+    candidates: list[tuple[int, int, int, str]] = []
+    for section_index, section in enumerate(sections):
+        lines = section.splitlines()
+        heading = lines[0].strip() if lines and lines[0].lstrip().startswith("## ") else ""
+        body = "\n".join(lines[1:] if heading else lines).strip()
+        paragraphs = [part.strip() for part in re.split(r"\n\s*\n", body) if part.strip()]
+        parsed.append((heading, paragraphs))
+        for paragraph_index, paragraph in enumerate(paragraphs[1:], start=1):
+            score = len(query_terms & _relevance_terms(paragraph))
+            if score:
+                candidates.append((score, section_index, paragraph_index, paragraph))
+
+    selected: dict[int, set[int]] = {}
+    used = 0
+    for section_index, (heading, paragraphs) in enumerate(parsed):
+        base_cost = len(heading) + 2
+        selected.setdefault(section_index, set())
+        if paragraphs:
+            first = paragraphs[0]
+            if len(first) > 700:
+                first = first[:700].rstrip() + "…"
+                paragraphs[0] = first
+            base_cost += len(first) + 2
+            selected[section_index].add(0)
+        if used + base_cost <= max_chars or section_index == 0:
+            used += base_cost
+        else:
+            selected.pop(section_index, None)
+
+    for _, section_index, paragraph_index, paragraph in sorted(
+        candidates, key=lambda item: (-item[0], item[1], item[2])
+    ):
+        if section_index not in selected or paragraph_index in selected[section_index]:
+            continue
+        extra = min(len(paragraph), 1200) + 2
+        if used + extra > max_chars:
+            continue
+        selected[section_index].add(paragraph_index)
+        used += extra
+
+    rendered: list[str] = []
+    for section_index, (heading, paragraphs) in enumerate(parsed):
+        indexes = selected.get(section_index)
+        if indexes is None:
+            continue
+        section_parts = [heading] if heading else []
+        for paragraph_index in sorted(indexes):
+            paragraph = paragraphs[paragraph_index]
+            if len(paragraph) > 1200:
+                paragraph = paragraph[:1200].rstrip() + "…"
+            section_parts.append(paragraph)
+        if len(indexes) < len(paragraphs):
+            section_parts.append("（其余段落未进入本章确定性预取。）")
+        rendered.append("\n\n".join(part for part in section_parts if part))
+    return "\n\n".join(rendered).strip()
 
 
 def extract_final_chapter_artifact(response: str) -> tuple[str, str] | None:
@@ -293,15 +408,40 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
         for heading in ("### 已批准幻想不变量", "### 作者明确保留", "### 核心不变量", "### 退化风险")
     ):
         compact = "（旧 BOOK 未提供 Growth Genome 的三个章节压缩小节。）"
+    full_book_contract = drop_growth_hierarchy(packet.book_contract)
+    relevance_query = "\n\n".join(
+        part
+        for part in (
+            packet.chapter_mission,
+            packet.chapter_plan_context,
+            packet.growth_benefit_projection,
+            extract_last_transition_context(packet.recent_prose, 1200),
+        )
+        if part.strip()
+    )
+    context_index = "\n\n".join(
+        (
+            _context_directory("BOOK CONTRACT", full_book_contract),
+            _context_directory("CANON INDEX", packet.canon_context),
+            _context_directory("PROSE PROFILE", packet.prose_profile),
+        )
+    )
     return CuratorContextPacket(
         authority=packet.authority,
         chapter_mission=packet.chapter_mission,
-        book_contract=drop_growth_hierarchy(packet.book_contract),
+        context_index=context_index,
+        book_contract=_project_indexed_text(
+            full_book_contract, relevance_query, max_chars=6200
+        ),
         growth_genome_compact=compact,
-        canon_index=packet.canon_context,
+        canon_index=_project_indexed_text(
+            packet.canon_context, relevance_query, max_chars=5200
+        ),
         rolling_plan=packet.chapter_plan_context or packet.rolling_plan,
         prose_profile=packet.prose_profile,
-        optional_inspiration=packet.optional_inspiration,
+        optional_inspiration=_project_indexed_text(
+            packet.optional_inspiration, relevance_query, max_chars=3200
+        ),
         growth_benefit_projection=packet.growth_benefit_projection,
         transition_context=extract_last_transition_context(packet.recent_prose),
     )

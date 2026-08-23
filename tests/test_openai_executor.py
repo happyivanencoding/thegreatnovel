@@ -37,6 +37,7 @@ def test_openai_executor_uses_responses_output_text_without_network(monkeypatch)
 def test_openai_status_does_not_expose_api_key(monkeypatch) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "secret-value")
     monkeypatch.setenv("STORY_MVP_MODEL", "configured-model")
+    monkeypatch.setenv("STORY_MVP_STATE_MODEL", "cheap-state-model")
     response = TestClient(app).get("/api/executors")
 
     assert response.status_code == 200
@@ -44,6 +45,7 @@ def test_openai_status_does_not_expose_api_key(monkeypatch) -> None:
         "available": True,
         "configured": True,
         "model": "configured-model",
+        "state_model": "cheap-state-model",
         "name": "",
     }
     assert "secret-value" not in response.text
@@ -52,7 +54,13 @@ def test_openai_status_does_not_expose_api_key(monkeypatch) -> None:
 def test_openai_endpoint_returns_fake_output_without_saving_artifact(monkeypatch) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "configured")
     fake = FakeClient()
-    monkeypatch.setattr(app_module, "generate_text", lambda prompt, model="": generate_text(prompt, model=model, client=fake))
+    monkeypatch.setattr(
+        app_module,
+        "generate_text",
+        lambda prompt, model="", purpose="default": generate_text(
+            prompt, model=model, purpose=purpose, client=fake
+        ),
+    )
     response = TestClient(app).post(
         "/api/executors/openai",
         json={"prompt": "FULL PROMPT", "model": "test-model"},
@@ -60,6 +68,22 @@ def test_openai_endpoint_returns_fake_output_without_saving_artifact(monkeypatch
 
     assert response.status_code == 200
     assert response.json() == {"output_text": "FAKE OUTPUT", "model": "test-model"}
+
+
+def test_state_extraction_can_use_separate_default_model(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("STORY_MVP_MODEL", "main-model")
+    monkeypatch.setenv("STORY_MVP_STATE_MODEL", "cheap-state-model")
+    client = FakeClient()
+
+    result = generate_text(
+        "STATE PROMPT", purpose="state_extraction", client=client
+    )
+
+    assert result["model"] == "cheap-state-model"
+    assert client.responses.calls == [
+        {"model": "cheap-state-model", "input": "STATE PROMPT"}
+    ]
 
 
 def test_openai_endpoint_reports_unconfigured_without_changing_prompt_or_artifact(monkeypatch) -> None:

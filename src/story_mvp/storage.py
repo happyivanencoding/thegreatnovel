@@ -7,6 +7,8 @@ from typing import Any
 
 from .prompts import (
     DEFAULT_PROMPT_TEMPLATES,
+    compact_open_promises,
+    compact_recent_summaries,
     parse_canon_memory,
     parse_state_delta_v2,
 )
@@ -493,14 +495,17 @@ def apply_state_delta_to_book(
         summary = summary_text
     else:
         summary = f"第{chapter_number}章：{summary_text}"
-    recent = "\n".join(part for part in (previous, summary) if part).strip()
+    recent = compact_recent_summaries(
+        "\n".join(part for part in (previous, summary) if part).strip()
+    )
+    open_promises = compact_open_promises(proposal["open_promises"])
     sections["status"] = "\n\n".join(
         (
             f"当前已完成第{chapter_number}章。",
             "## ACTIVE SCENE STATE\n\n" + proposal["active_scene_state"],
             "## PERSISTENT CANON\n\n" + proposal["persistent_canon"],
             "## RECENT SUMMARIES\n\n" + recent,
-            "## OPEN PROMISES\n\n" + proposal["open_promises"],
+            "## OPEN PROMISES\n\n" + open_promises,
             "## AUTHOR NOTES\n\n" + current.get("author_notes", ""),
         )
     ).strip()

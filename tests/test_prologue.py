@@ -135,7 +135,7 @@ def test_state_delta_never_receives_prologue() -> None:
     )
 
     assert "CHAPTER_PROSE" in prompt
-    assert "CHAPTER_FACTS" in prompt
+    assert "CHAPTER_FACTS" not in prompt
     assert "PROLOGUE_MUST_NOT_ENTER_STATE_DELTA" not in prompt
 
 

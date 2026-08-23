@@ -569,7 +569,7 @@ async function refreshWorkflow() {
     renderWorkflow(workflow);
     const openai = executors.openai_api || {};
     $("openai-executor-status").textContent = openai.configured
-      ? `OpenAI API：已配置 · ${openai.model}`
+      ? `OpenAI API：已配置 · main=${openai.model} · state=${openai.state_model || openai.model}`
       : "OpenAI API：未配置";
   } catch (error) {
     renderWorkflow(null);
@@ -582,7 +582,7 @@ async function refreshExecutorStatus() {
     const executors = await requestJson("/api/executors");
     const openai = executors.openai_api || {};
     $("openai-executor-status").textContent = openai.configured
-      ? "OpenAI API：已配置 · " + (openai.name || openai.model)
+      ? `OpenAI API：已配置 · ${openai.name || openai.model} · state=${openai.state_model || openai.model}`
       : "OpenAI API：未配置";
   } catch (error) {
     $("openai-executor-status").textContent = "OpenAI API：读取失败";
@@ -770,10 +770,14 @@ function currentChapterNumber() {
   return Number($("chapter-number").value);
 }
 
-function selectedSpecialistNames() {
-  const selected = ["opening", "dialogue", "action", "emotion"]
+function checkedSpecialistNames() {
+  return ["opening", "dialogue", "action", "emotion"]
     .filter((name) => $(`specialist-${name}-enabled`).checked);
-  if ($("writer-mode").value === "single") return [];
+}
+
+function selectedSpecialistNames() {
+  const selected = checkedSpecialistNames();
+  if (["single", "curator_primary"].includes($("writer-mode").value)) return [];
   if ($("writer-mode").value === "hybrid_selective") return selected.slice(0, 2);
   return selected;
 }
@@ -856,6 +860,23 @@ async function createRun() {
     renderRunLedger(payload);
     await refreshWorkflow();
     showStatus("当前章 Run 已创建或载入");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function activateSelectedRepair() {
+  if (!state.bookId || !state.currentRun) return showStatus("请先创建当前章 Run", true);
+  const selected = checkedSpecialistNames();
+  if (!selected.length) return showStatus("请至少勾选一个 Specialist", true);
+  try {
+    const payload = await requestJson(`${runBaseUrl()}/repair-specialists`, {
+      method: "PUT",
+      body: JSON.stringify({ selected_specialists: selected }),
+    });
+    renderRunLedger(payload);
+    await refreshWorkflow();
+    showStatus(`已显式启用 repair：${selected.join("、")}；默认主链仍保持 curator_primary。`);
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -1396,7 +1417,7 @@ async function generatePrompt() {
     $("prompt-text").value = payload.prompt;
     await saveRunPromptForMode(mode, payload.prompt);
     renderCodexTaskWrapper(mode);
-    if (currentExecutorMode() === "openai_api") await executeOpenAI(payload.prompt);
+    if (currentExecutorMode() === "openai_api") await executeOpenAI(payload.prompt, mode);
     showStatus("Prompt 已生成，可继续编辑后复制");
   } catch (error) {
     const missing = error.payload?.detail?.missing_fields;
@@ -1466,10 +1487,18 @@ function renderCodexTaskWrapper(mode) {
   panel.hidden = false;
 }
 
-async function executeOpenAI(prompt) {
+async function executeOpenAI(prompt, mode = "") {
+  const isStateExtraction = mode === "state_delta";
+  const explicitModel = isStateExtraction
+    ? $("state-model").value.trim()
+    : $("openai-model").value.trim();
   const payload = await requestJson("/api/executors/openai", {
     method: "POST",
-    body: JSON.stringify({ prompt, model: $("openai-model").value.trim() }),
+    body: JSON.stringify({
+      prompt,
+      model: explicitModel,
+      purpose: isStateExtraction ? "state_extraction" : "default",
+    }),
   });
   $("codex-response").value = payload.output_text;
   showStatus(`OpenAI API 已返回 ${payload.model}；结果仍需作者 Apply / Save`);
@@ -1587,7 +1616,6 @@ function stateDeltaPayload() {
     chapter_number: Number($("chapter-number").value),
     recent_summaries: $("recent-summaries").value,
     chapter_prose: $("chapter-body-for-save").value,
-    chapter_fact_summary: $("chapter-fact-summary").value,
   };
 }
 
@@ -1610,7 +1638,8 @@ async function generateStateDeltaPrompt() {
     });
     $("prompt-text").value = payload.prompt;
     await saveRunPromptForMode("state_delta", payload.prompt);
-    showStatus("State Delta Prompt 已生成，可复制给模型；它不会写盘，也不是章节门禁。已替换原 Prompt 输出区内容");
+    if (currentExecutorMode() === "openai_api") await executeOpenAI(payload.prompt, "state_delta");
+    showStatus("轻量 State Extraction Prompt 已生成；OpenAI 模式可使用独立 State 模型。它不会写盘，也不是章节门禁。");
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -1720,12 +1749,21 @@ function extractChapterArtifact(response) {
 }
 
 function extractPrimaryDraft(response) {
-  const heading = "# Primary Draft";
-  const start = response.indexOf(heading);
-  if (start < 0) return "";
-  const contentStart = start + heading.length;
-  const end = response.indexOf("# Primary Fact Summary", contentStart);
-  return response.slice(contentStart, end >= 0 ? end : response.length).trim();
+  const formalHeading = "# 正式正文";
+  const formalStart = response.indexOf(formalHeading);
+  if (formalStart >= 0) {
+    return response.slice(formalStart + formalHeading.length).trim();
+  }
+  const legacyHeading = "# Primary Draft";
+  const legacyStart = response.indexOf(legacyHeading);
+  if (legacyStart >= 0) {
+    const contentStart = legacyStart + legacyHeading.length;
+    const end = response.indexOf("# Primary Fact Summary", contentStart);
+    return response.slice(contentStart, end >= 0 ? end : response.length).trim();
+  }
+  const clean = response.trim();
+  if (/^#\s+(Primary Writer Audit|Primary Fact Summary|Writer Audit|章节事实摘要)\s*$/m.test(clean)) return "";
+  return clean;
 }
 
 function extractPrimaryFactSummary(response) {
@@ -1820,16 +1858,15 @@ async function extractIntegratorBody() {
 async function adoptPrimaryDraft() {
   const body = extractPrimaryDraft($("primary-writer-response").value);
   if (!body) {
-    showStatus("Primary Writer 返回缺少非空 `# Primary Draft`，未改变保存内容", true);
+    showStatus("Primary Writer 返回缺少非空正式正文，未改变保存内容", true);
     return false;
   }
   $("chapter-body-for-save").value = body;
-  $("chapter-fact-summary").value = extractPrimaryFactSummary($("primary-writer-response").value);
+  $("chapter-fact-summary").value = "";
   markEditorDirty("chapter-body-for-save");
-  markEditorDirty("chapter-fact-summary");
   await saveRunResponseForMode("primary_writer", $("primary-writer-response").value);
   await adoptRunSource("primary");
-  showStatus("已显式采用 Primary Draft 作为最终正文；尚未保存章节");
+  showStatus("已采用 Primary 正式正文；下一步直接进入轻量 State Extraction。尚未保存章节");
   return true;
 }
 
@@ -1910,14 +1947,51 @@ function existingAuthorNotes(status) {
   return existingCanonSection(status, "## AUTHOR NOTES", "作者备注");
 }
 
+function compactPromiseWindow(text, maxEntries = 12) {
+  const entries = [];
+  const seen = new Set();
+  for (const rawLine of text.split(/\r?\n/)) {
+    let clean = rawLine.replace(/^\s*(?:[-*+]\s+|\d+[.)、]\s*)/, "").trim();
+    if (!clean) continue;
+    clean = clean.replace(/\s+/g, " ");
+    const key = clean.replace(/[\s，。；;：:！？!?、]/g, "").toLowerCase();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    if (clean.length > 240) clean = `${clean.slice(0, 239).trim()}…`;
+    entries.push(clean);
+    if (entries.length >= maxEntries) break;
+  }
+  return entries.length ? entries.map((entry) => `- ${entry}`).join("\n") : "无。";
+}
+
+function compactRecentSummaryWindow(text, keep = 3) {
+  const clean = text.trim();
+  if (!clean) return "";
+  const lines = clean.split(/\r?\n/);
+  const blocks = [];
+  let current = [];
+  const chapterHeading = /^(?:[-*]\s*)?第\s*\d+\s*章\s*[：:].*$/;
+  for (const line of lines) {
+    if (chapterHeading.test(line.trim())) {
+      if (current.length) blocks.push(current.join("\n").trim());
+      current = [line];
+    } else if (current.length) {
+      current.push(line);
+    }
+  }
+  if (current.length) blocks.push(current.join("\n").trim());
+  if (blocks.length) return blocks.slice(-keep).join("\n");
+  return clean.split(/\n\s*\n/).filter(Boolean).slice(-keep).join("\n\n");
+}
+
 function buildCanonMemoryStatus(proposed) {
   const chapterNumber = currentChapterNumber();
   const oldStatus = $("section-status").value;
   const previousSummaries = existingCanonSection(oldStatus, "## RECENT SUMMARIES", "最近章节摘要");
-  const summaries = [
+  const summaries = compactRecentSummaryWindow([
     previousSummaries,
     `第${chapterNumber}章：${proposed.chapter_summary}`,
-  ].filter(Boolean).join("\n");
+  ].filter(Boolean).join("\n"));
   const authorNotes = existingAuthorNotes(oldStatus);
   return [
     `当前已完成第${chapterNumber}章。`,
@@ -1928,7 +2002,7 @@ function buildCanonMemoryStatus(proposed) {
     "## RECENT SUMMARIES",
     summaries,
     "## OPEN PROMISES",
-    proposed.open_promises,
+    compactPromiseWindow(proposed.open_promises),
     "## AUTHOR NOTES",
     authorNotes,
   ].join("\n\n").trim();
@@ -2204,6 +2278,7 @@ $("chapter-number").addEventListener("change", () => {
 });
 $("create-run").addEventListener("click", createRun);
 $("refresh-run").addEventListener("click", loadRun);
+$("activate-repair-specialists").addEventListener("click", activateSelectedRepair);
 $("prompt-mode").addEventListener("change", handlePromptModeChange);
 $("expand-design").addEventListener("click", () => setDesignDetails(true));
 $("collapse-design").addEventListener("click", () => setDesignDetails(false));

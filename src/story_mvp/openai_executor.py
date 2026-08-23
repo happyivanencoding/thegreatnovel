@@ -108,6 +108,12 @@ def default_model() -> str:
     return os.environ.get("STORY_MVP_MODEL", "").strip() or DEFAULT_OPENAI_MODEL
 
 
+def state_extraction_model() -> str:
+    """State Extraction 可单独使用更便宜/更快模型；未配置时安全回退主模型。"""
+
+    return os.environ.get("STORY_MVP_STATE_MODEL", "").strip() or default_model()
+
+
 def _create_client() -> Any:
     try:
         from openai import OpenAI
@@ -122,15 +128,24 @@ def _create_client() -> Any:
     return OpenAI(**kwargs)
 
 
-def generate_text(prompt: str, *, model: str = "", client: Any = None) -> dict[str, str]:
+def generate_text(
+    prompt: str,
+    *,
+    model: str = "",
+    purpose: str = "default",
+    client: Any = None,
+) -> dict[str, str]:
     if not prompt.strip():
         raise OpenAIExecutorError("Prompt 不能为空", configured=configured())
     if not configured() and client is None:
         raise OpenAIExecutorError("OPENAI_API_KEY 未配置", configured=False)
     executor = client or _create_client()
+    resolved_model = model.strip() or (
+        state_extraction_model() if purpose == "state_extraction" else default_model()
+    )
     try:
         response = executor.responses.create(
-            model=model.strip() or default_model(),
+            model=resolved_model,
             input=prompt,
         )
     except Exception as error:  # SDK errors vary by installed SDK version.
@@ -138,4 +153,4 @@ def generate_text(prompt: str, *, model: str = "", client: Any = None) -> dict[s
     output = str(getattr(response, "output_text", "") or "").strip()
     if not output:
         raise OpenAIExecutorError("OpenAI Responses API 没有返回文本", configured=True)
-    return {"output_text": output, "model": model.strip() or default_model()}
+    return {"output_text": output, "model": resolved_model}

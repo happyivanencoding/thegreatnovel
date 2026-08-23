@@ -41,8 +41,7 @@ MINIMAL_AUTHORITY_RULE = """权威规则按维度划分（不使用单条总排�
 1. 已发生事实：CANON PROSE > CANON INDEX。CANON PROSE 是已批准的正式前文；已经发生事实的最高来源。CANON INDEX 是当前状态和最近摘要，是正式正文的压缩索引；与正式正文冲突时以正式正文为准。
 2. 未来创作意图：BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION。BOOK CONTRACT 是作者批准的长期设计、世界规则、读者承诺和人物方向；它约束未来，但不表示其中所有人物弧和阶段方向已经发生。PLAN 是当前大型剧情块、十章计划和当前章事件合同，只决定尚未发生的内容。OPTIONAL INSPIRATION 是可选参考，不能覆盖 BOOK CONTRACT、PLAN 或已发生事实。
 3. 表达控制：PROSE PROFILE 只控制表达方式，不能修改已发生事实或未来计划。
-4. 跨维度冲突：已发生事实不能被 BOOK CONTRACT 或 PLAN 覆盖；如果正文或 CANON INDEX 证明旧 BOOK CONTRACT 已经失效，保留已发生事实，并在 Writer Audit 中报告 BOOK CONTRACT drift；不得自动修改 BOOK CONTRACT。
-任何冲突必须写入 Writer Audit，不得偷偷改写过去。"""
+4. 跨维度冲突：已发生事实不能被 BOOK CONTRACT 或 PLAN 覆盖；如果正文或 CANON INDEX 证明旧 BOOK CONTRACT 已经失效，保留已发生事实，不得自动修改 BOOK CONTRACT。Curator 负责在 Curator Audit 中暴露会影响本章执行的明确冲突；Primary 不承担冲突报告或其它 pipeline bookkeeping，只服从已经投影出的有效事实与计划。"""
 
 #: 事件合同重点呈现的六项；「推动事件的人」作为场景上下文，「叙事功能」降级为规划备注。
 EVENT_CONTRACT_FIELDS = (

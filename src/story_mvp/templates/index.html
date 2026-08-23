@@ -183,6 +183,7 @@
             </select>
           </label>
           <input id="openai-model" aria-label="OpenAI Model ID" placeholder="默认模型" autocomplete="off">
+          <input id="state-model" aria-label="State Extraction Model ID" placeholder="State 模型（空=环境配置/主模型）" autocomplete="off">
           <span id="openai-executor-status" class="status">OpenAI API：未查询</span>
           <button id="refresh-workflow">刷新状态</button>
         </div>
@@ -421,26 +422,27 @@
         </div>
 
         <details id="chapter-execution-details" class="hybrid-run execution-details">
-          <summary>Hybrid Multi-Agent Chapter Run</summary>
-          <p class="hint">所有节点只生成可编辑 Prompt；作者负责复制、执行、粘贴和显式采用。专项 Agent 是建议者，不是质量门禁。</p>
+          <summary>Chapter Run · Curator Primary Default</summary>
+          <p class="hint">默认主链是 Director → Curator → Primary → 轻量 State Extraction。专项 Agent 只在 Primary 后人工启用 repair，不进入默认每章调用。</p>
           <div class="hybrid-controls">
             <label>Writer Mode
               <select id="writer-mode">
-                <option value="hybrid_selective" selected>hybrid_selective</option>
-                <option value="hybrid_full">hybrid_full</option>
+                <option value="curator_primary" selected>curator_primary</option>
+                <option value="hybrid_selective">hybrid_selective (manual repair)</option>
+                <option value="hybrid_full">hybrid_full (experiment)</option>
                 <option value="single">single</option>
               </select>
             </label>
             <span class="hybrid-label">启用专项 Agent</span>
-            <label><input id="specialist-opening-enabled" type="checkbox" checked> Opening</label>
-            <label><input id="specialist-dialogue-enabled" type="checkbox" checked> Dialogue</label>
-            <label><input id="specialist-action-enabled" type="checkbox" checked> Action</label>
-            <label><input id="specialist-emotion-enabled" type="checkbox" checked> Emotion</label>
+            <label><input id="specialist-opening-enabled" type="checkbox"> Opening</label>
+            <label><input id="specialist-dialogue-enabled" type="checkbox"> Dialogue</label>
+            <label><input id="specialist-action-enabled" type="checkbox"> Action</label>
+            <label><input id="specialist-emotion-enabled" type="checkbox"> Emotion</label>
           </div>
-          <!-- Legacy assertion marker; actual product default is hybrid_selective above. value="hybrid_full" selected -->
           <div class="run-ledger-controls">
             <button id="create-run">创建 / 载入当前章 Run</button>
             <button id="refresh-run">刷新 Run</button>
+            <button id="activate-repair-specialists" type="button">启用勾选 Repair</button>
             <span id="run-ledger-summary" class="status">Run Ledger：未载入</span>
           </div>
           <p class="hint">hybrid_selective 创建 Run 时最多采用前两个已勾选专项；hybrid_full 才运行全部专项。作者仍可在创建 Run 前覆盖勾选。</p>
@@ -456,7 +458,7 @@
             </div>
             <div class="hybrid-node">
               <div class="hybrid-node-heading"><strong>Primary Writer Response</strong><button id="generate-primary-writer-prompt">生成 Prompt</button><button id="apply-primary-writer-response">采用当前返回</button></div>
-              <textarea id="primary-writer-response" rows="10" placeholder="# Primary Writer Audit\n\n# Primary Draft\n\n# Primary Fact Summary"></textarea>
+              <textarea id="primary-writer-response" rows="10" placeholder="# 正式正文\n\n只写小说正文"></textarea>
             </div>
             <div class="hybrid-node">
               <div class="hybrid-node-heading"><strong>Opening Specialist Response</strong><button id="generate-opening-prompt">生成 Prompt</button><button id="apply-opening-response">采用当前返回</button></div>

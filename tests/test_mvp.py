@@ -66,7 +66,14 @@ from story_mvp.prompts import (
     validate_current_outline,
 )
 from story_mvp.references import load_validated_references
-from story_mvp.storage import compose_book_content, create_book, parse_book_sections, read_book_payload
+from story_mvp.storage import (
+    compact_open_promises,
+    compact_recent_summaries,
+    compose_book_content,
+    create_book,
+    parse_book_sections,
+    read_book_payload,
+)
 
 
 client = TestClient(app)
@@ -793,7 +800,8 @@ STATUS_MARKER
         "是正式正文的压缩索引",
         "与正式正文冲突时以正式正文为准",
         "只决定尚未发生的内容",
-        "任何冲突必须写入 Writer Audit",
+        "Curator 负责在 Curator Audit 中暴露",
+        "Primary 不承担冲突报告或其它 pipeline bookkeeping",
     ):
         assert marker in prompt
 
@@ -2146,12 +2154,15 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
 
 
-def test_hybrid_page_defaults_to_full_mode_and_exposes_all_nodes() -> None:
+def test_chapter_page_defaults_to_curator_primary_and_keeps_repair_nodes_optional() -> None:
     page = client.get("/")
     assert page.status_code == 200
     assert 'id="writer-mode"' in page.text
-    assert 'value="hybrid_full" selected' in page.text
-    assert page.text.count('type="checkbox" checked') == 4
+    assert 'value="curator_primary" selected' in page.text
+    assert 'value="hybrid_selective"' in page.text
+    assert page.text.count('type="checkbox" checked') == 0
+    assert 'id="state-model"' in page.text
+    assert 'id="activate-repair-specialists"' in page.text
     for node_id in (
         "curator-response",
         "primary-writer-response",
@@ -2281,6 +2292,60 @@ BOOK_MARKER
     assert "FULL_PRIMARY_MARKER" not in compact
 
 
+def test_curator_index_first_prefetch_keeps_relevant_detail_and_drops_unrelated_tail() -> None:
+    unrelated = "无关旧设定段落。" * 90
+    relevant = "陆砚必须面对谢三更的压价；这次真正冲突是路线控制权和入市资格。"
+    book_contract = (
+        "## 2. 世界观结构\n\n入口摘要。\n\n"
+        + "\n\n".join(unrelated + str(index) for index in range(12))
+        + "\n\n"
+        + relevant
+        + "\n\nUNRELATED_TAIL_MARKER"
+    )
+    packet = ChapterContextPacket(
+        authority="AUTH",
+        book_contract=book_contract,
+        chapter_mission="主角行动：陆砚拒绝谢三更压价，并争夺路线控制权。",
+        canon_context="## PERSISTENT CANON：\n陆砚已经掌握一条隐秘路线。",
+        recent_prose="谢三更看着陆砚，没有立刻开价。",
+        rolling_plan="PLAN",
+        chapter_plan_context="当前章计划：谢三更提出交易，陆砚决定反向争价。",
+        current_long_block="BLOCK",
+        current_chapter_plan="PLAN",
+        prose_profile="## 8. 文风与可操作参数\n直接、清楚。",
+        optional_inspiration="",
+        growth_benefit_projection="",
+        growth_genome_compact="### 核心不变量\n主角主动争夺更大自由。",
+    )
+
+    context = build_curator_context(packet)
+
+    assert "## 2. 世界观结构" in context.context_index
+    assert relevant in context.book_contract
+    assert "UNRELATED_TAIL_MARKER" not in context.book_contract
+    assert "UNRELATED_TAIL_MARKER" not in context.context_index
+    assert "其余段落未进入本章确定性预取" in context.book_contract
+
+
+def test_open_promises_and_recent_summaries_are_deterministically_bounded() -> None:
+    promises = "\n".join(
+        ["- 同一个承诺", "2. 同一个承诺"]
+        + [f"- 承诺{i}" for i in range(1, 15)]
+    )
+    compact = compact_open_promises(promises)
+    promise_lines = [line for line in compact.splitlines() if line.startswith("- ")]
+    assert len(promise_lines) == 12
+    assert promise_lines.count("- 同一个承诺") == 1
+    assert "承诺12" not in compact
+
+    summaries = "\n".join(f"第{i}章：SUMMARY_{i}" for i in range(1, 6))
+    recent = compact_recent_summaries(summaries)
+    assert "SUMMARY_1" not in recent
+    assert "SUMMARY_2" not in recent
+    for marker in ("SUMMARY_3", "SUMMARY_4", "SUMMARY_5"):
+        assert marker in recent
+
+
 def test_single_and_curator_use_compact_genome_projection() -> None:
     book = """# 小说总体设计画像
 ## 0. 本书成长基因图
@@ -2384,6 +2449,8 @@ def test_hybrid_runtime_extractors_are_deterministic() -> None:
     response = "# Primary Writer Audit\n\n无。\n# Primary Draft\n\n完整正文。\n# Primary Fact Summary\n\n事实摘要。"
     assert extract_primary_draft(response) == "完整正文。"
     assert extract_primary_fact_summary(response) == "事实摘要。"
+    assert extract_primary_draft("# 正式正文\n\n新版完整正文。") == "新版完整正文。"
+    assert extract_primary_draft("直接返回的纯正文。") == "直接返回的纯正文。"
     assert extract_final_chapter_artifact("# Writer Audit\n\n# 正式正文\n\n最终正文\n# 章节事实摘要\n\n最终事实") == (
         "最终正文",
         "最终事实",
@@ -2394,6 +2461,19 @@ def test_hybrid_runtime_extractors_are_deterministic() -> None:
     transition = extract_last_transition_context(long_text)
     assert "前文最后动作" in transition
     assert len(transition) <= 1800
+
+
+def test_primary_writer_contract_is_body_only_without_pipeline_bookkeeping() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["primary_writer"]
+    assert "# 正式正文" in template
+    for marker in (
+        "# Primary Writer Audit",
+        "# Primary Draft",
+        "# Primary Fact Summary",
+    ):
+        assert marker not in template
+    assert "不要承担 pipeline bookkeeping" in template
+    assert "不输出 Audit、事实摘要、状态更新、计划说明、质量自评或修改清单" in template
 
 
 def test_old_book_gets_code_default_hybrid_templates_without_prompt_file_write(tmp_path: Path) -> None:
@@ -3177,9 +3257,10 @@ def test_book_contract_cannot_override_facts_that_already_happened() -> None:
 
 
 def test_writer_reports_drift_only_and_state_delta_does_not_check_drift() -> None:
-    # 验收点 3：BOOK CONTRACT drift 只在 Writer/章节运行期报告、不自动修改；
-    # state_delta 文案不要求检查或报告 drift。
-    assert "在 Writer Audit 中报告 BOOK CONTRACT drift" in MINIMAL_AUTHORITY_RULE
+    # BOOK CONTRACT drift 由 Curator 暴露，Primary 不做 pipeline bookkeeping；
+    # state extraction 不检查或报告 drift。
+    assert "Curator 负责在 Curator Audit 中暴露" in MINIMAL_AUTHORITY_RULE
+    assert "Primary 不承担冲突报告" in MINIMAL_AUTHORITY_RULE
     assert "不得自动修改 BOOK CONTRACT" in MINIMAL_AUTHORITY_RULE
     assert "drift" not in DEFAULT_STATE_DELTA_TEMPLATE.lower()
     prompt = generate_prompt(
@@ -3190,7 +3271,7 @@ def test_writer_reports_drift_only_and_state_delta_does_not_check_drift() -> Non
         chapter_prose="NEW_CHAPTER_PROSE_MARKER",
     )
     assert "drift" not in prompt.lower()
-    assert "无需要报告的状态冲突或不确定项" in prompt
+    assert "不输出审计" in prompt
 
 
 def test_parse_canon_index_reads_the_four_fields_from_real_status_format() -> None:
@@ -3273,7 +3354,7 @@ def test_author_notes_are_marked_as_meta_control() -> None:
     )
     assert "作者元控制" in prompt
     assert "前三章可接受；继续观察。" in prompt
-    assert "作者备注：（原样保留旧 AUTHOR NOTES，不得增删改写）" in prompt
+    assert "AUTHOR NOTES 由代码逐字保留" in prompt
 
 
 def test_state_delta_prompt_excludes_gbrain_references_full_plan_and_prose_profile() -> None:
@@ -3306,10 +3387,9 @@ def test_state_delta_prompt_excludes_gbrain_references_full_plan_and_prose_profi
     assert "NEW_CHAPTER_PROSE_MARKER" in prompt
 
 
-def test_state_delta_prompt_marks_formal_prose_as_top_source_and_summary_as_auxiliary() -> None:
-    # 验收点 8：正式正文是 State Delta 的最高来源，章节事实摘要仅作辅助。
+def test_state_delta_prompt_uses_formal_prose_directly_without_writer_summary() -> None:
+    # Primary 不再做事实摘要；State Extraction 直接从正式正文提取。
     assert "本次正式正文是 State Delta 的最高事实来源" in DEFAULT_STATE_DELTA_TEMPLATE
-    assert "仅作辅助，冲突时以正式正文为准" in DEFAULT_STATE_DELTA_TEMPLATE
     prompt = generate_prompt(
         mode="state_delta",
         template="",
@@ -3319,14 +3399,56 @@ def test_state_delta_prompt_marks_formal_prose_as_top_source_and_summary_as_auxi
         chapter_fact_summary="FACT_SUMMARY_MARKER",
     )
     assert "本次新正式章节正文（State Delta 的最高事实来源）" in prompt
-    assert "Writer 章节事实摘要（仅辅助；与正式正文冲突时以正式正文为准）" in prompt
     assert "NEW_CHAPTER_PROSE_MARKER" in prompt
-    assert "FACT_SUMMARY_MARKER" in prompt
-    # 输出合同：两个一级标题与禁止项
-    assert "# State Delta Audit" in prompt
-    assert "# Proposed Canon Index" in prompt
-    assert "禁止：输出 JSON/YAML；输出 chain-of-thought" in prompt
-    assert "修改 BOOK CONTRACT、PLAN 或正式章节正文" in prompt
+    assert "FACT_SUMMARY_MARKER" not in prompt
+    assert "# State Delta Audit" not in prompt
+    for heading in (
+        "# Proposed Active Scene State",
+        "# Proposed Persistent Canon",
+        "# Proposed Chapter Summary",
+        "# Proposed Open Promises",
+    ):
+        assert heading in prompt
+    assert "最多 12 条" in prompt
+    assert "不要输出 JSON/YAML" in prompt
+
+
+def test_state_extraction_compacts_existing_long_memory_before_llm_input() -> None:
+    summaries = "\n".join(f"第{i}章：SUMMARY_{i}" for i in range(1, 6))
+    promises = "\n".join(f"- PROMISE_{i}" for i in range(1, 16))
+    book = f"""# 当前状态、未兑现承诺与作者备注
+当前已完成第5章。
+
+## ACTIVE SCENE STATE
+当前地点：集市。
+
+## PERSISTENT CANON
+已证明能力：识路。
+
+## RECENT SUMMARIES
+{summaries}
+
+## OPEN PROMISES
+{promises}
+
+## AUTHOR NOTES
+继续观察。
+"""
+    prompt = generate_prompt(
+        mode="state_delta",
+        template="",
+        book_content=book,
+        chapter_number=6,
+        chapter_prose="第六章正式正文。",
+    )
+
+    assert "SUMMARY_1" not in prompt
+    assert "SUMMARY_2" not in prompt
+    for marker in ("SUMMARY_3", "SUMMARY_4", "SUMMARY_5"):
+        assert marker in prompt
+    assert "PROMISE_12" in prompt
+    for marker in ("PROMISE_13", "PROMISE_14", "PROMISE_15"):
+        assert marker not in prompt
 
 
 def test_apply_canon_index_proposal_requires_heading_and_content() -> None:
@@ -3499,7 +3621,7 @@ def test_parse_canon_index_keeps_pre_label_lines_in_current_state() -> None:
     assert switch["author_notes"] == "继续观察。"
     # 该约束在函数 docstring 与 State Delta 文案中显式记录。
     assert "内容行不应以" in (parse_canon_index.__doc__ or "")
-    assert "各字段内容行不得以" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "各字段内容行不要以旧格式" in DEFAULT_STATE_DELTA_TEMPLATE
 
 
 def test_canon_index_has_labels_requires_at_least_one_field_label() -> None:
@@ -3624,8 +3746,19 @@ def test_generate_state_delta_prompt_front_guards_and_output_notice() -> None:
     assert "正式正文为空，无法生成 State Delta Prompt" in gen_body
     # 守卫在发起请求之前。
     assert gen_body.index("chapter-body-for-save") < gen_body.index("requestJson")
-    # 成功状态文案提示已替换共用 Prompt 输出区内容。
-    assert "已替换原 Prompt 输出区内容" in gen_body
+    assert 'executeOpenAI(payload.prompt, "state_delta")' in gen_body
+    assert "独立 State 模型" in gen_body
+
+
+def test_browser_state_delta_apply_uses_bounded_memory_windows() -> None:
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    assert "function compactPromiseWindow(text, maxEntries = 12)" in js
+    assert "function compactRecentSummaryWindow(text, keep = 3)" in js
+    start = js.index("function buildCanonMemoryStatus")
+    end = js.index("function applyCanonIndexProposal", start)
+    body = js[start:end]
+    assert "compactRecentSummaryWindow" in body
+    assert "compactPromiseWindow(proposed.open_promises)" in body
 
 
 def test_recent_summaries_hint_warns_about_overriding_book_summaries() -> None:

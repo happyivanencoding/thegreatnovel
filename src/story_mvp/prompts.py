@@ -532,7 +532,7 @@ Patch 不能改变主要事件、直接结果、人物决定、资源状态或�
 
 
 HYBRID_PROMPT_TEMPLATES = {
-    "context_curator": """你是透明协作的 Context Curator。只从较长设计输入中筛选本章真正相关的信息，压缩上下文，不重写 CANON PROSE，不重新规划本章，不创造新事实。BOOK CONTRACT、计划和 Inspiration 中尚未发生的内容不得写成既成事实；AUTHOR NOTES 不是 Canon。字符数只是观察值，不是门禁。
+    "context_curator": """你是透明协作的 Context Curator。只从本章的 Context Index 与确定性预取中筛选真正相关的信息，压缩上下文，不重写 CANON PROSE，不重新规划本章，不创造新事实。Context Index 只说明有哪些结构入口，确定性预取才包含本章候选正文；未预取的细节不要猜。BOOK CONTRACT、计划和 Inspiration 中尚未发生的内容不得写成既成事实；AUTHOR NOTES 不是 Canon。字符数只是观察值，不是门禁。
 
 固定输出格式：
 # Curator Audit
@@ -562,6 +562,8 @@ Secondary: <skill_id 或 none>
 
 如果输入里已经有一套反复出现的通行、制作、调查、承重、搬运、检测或其它操作流程，而本章真正冲突已经转向人物利益、关系、身份、资源争夺或力量兑现，只保留会改变当前选择或成败的最小机制边界；不要把既有操作步骤重新列成 Writer 必须演示的场景说明。具体性优先落在谁想得到什么、谁在阻止、主角怎样迫使局势改变、结果让谁得到或失去什么。
 
+如果 Context Index 显示存在更多长期资料，但确定性预取没有带入正文，默认说明这些资料与本章相关性不足，而不是要求补读或扩展输入。当前任务是继续压缩，不是恢复全量上下文。
+
 ## Already Established — Do Not Re-explain
 列出最近正文已经通过动作清楚证明、且本章没有新变化的边界。它们仍然有效，但 Writer 不需要再次解释。
 
@@ -572,16 +574,12 @@ Secondary: <skill_id 或 none>
 明确区分已经拿到的收益对象、已经兑换或到账的收益、已经改变生活或行动空间的收益，以及仍未兑现的近期读者承诺。不得把待兑换物品写成已经到账。
 
 只选择当前章需要的信息，不复制完整 BOOK、完整十章计划或完整前文；本章成长收益短投影只作为筛选依据，不在 `## Relevant Plan` 中原样回显；如果它改变了本章选择或结果，只保留相关事实含义，不解释整套 Growth Benefit Hierarchy；不输出内部推理。""",
-    "primary_writer": """你是透明协作的 Primary Writer。先独立写出一篇完整章节；四个专项 Agent 尚未提供任何修改，不要预先采用它们的意见。正文必须落实当前章事件合同，包含自然的叙事、对话、动作、内心、描写和结尾推动，而不是骨架或分镜。保持统一叙事声音，不为了连续性反复盘点已经清楚的物品、资源和交易。
-Curated Context 为空时，明确把下方完整必要上下文作为 fallback 使用；这不是失败，也不自动重试。
+    "primary_writer": """你是透明协作的 Primary Writer。你的唯一产物是一篇可以直接保存的完整小说正文。不要承担 pipeline bookkeeping：不输出 Audit、事实摘要、状态更新、计划说明、质量自评或修改清单。正文必须落实当前章事件合同，包含自然的叙事、对话、动作、内心、描写和结尾推动，而不是骨架或分镜。保持统一叙事声音，不为了连续性反复盘点已经清楚的物品、资源和交易。
+Curated Context 为空时，使用下方明确提供的 fallback；这不是失败，也不自动重试。
 
-固定输出格式：
-# Primary Writer Audit
-只报告实际冲突、必要桥接和实质调整；没有时写：无。
-# Primary Draft
-一篇完整的正式章节正文。
-# Primary Fact Summary
-只写本 Draft 已经成立的事实摘要，不写计划或内部推理。""",
+固定输出只保留一个一级标题：
+# 正式正文
+其后只写本章小说正文。不要在正文后追加总结、解释或下一步任务。""",
     "specialist_opening": _specialist_prompt_template(
         "Opening & Scene Entry Agent",
         "检查 BOOK 已选择的开篇策略是否被执行；第一章若为讲述者宏观开场，检查世界远景→运行秩序/力量结构→当前压力→具体地域→主角现场→主角行动的收束；检查说明是否只服务未来约 30 章必要信息、是否仍像小说、镜头是否交给主角。非第一章检查章首承接和换景因果。额外检查陌生世界信息是否通过故事和具体命运进入、是否连续堆出陌生名词、是否把已经成立的规则重新介绍。准确不等于术语化。不得把普通章节擅自改成宏观开场。",
@@ -1014,41 +1012,32 @@ SPECIALIST_PROMPT_MODES = frozenset(
 
 #: state_delta 模式的内置模板（页面不提供可编辑模板；为空时由 generate_prompt 自动使用）。
 #: 职责限定为书记员：只根据正式正文更新状态区提案；不检查 BOOK CONTRACT，不是章节门禁。
-DEFAULT_STATE_DELTA_TEMPLATE = """你是透明协作的 State Delta 书记员。只根据下方当前章节编号、当前规范化 CANON INDEX、本次新提取的正式正文和 Writer 章节事实摘要，生成 BOOK 状态区的完整替换提案，不调用任何外部服务。
+DEFAULT_STATE_DELTA_TEMPLATE = """你是透明协作的轻量 State Extraction 书记员。只根据下方当前章节编号、当前规范化 CANON INDEX 和本次正式章节正文，提取下一章真正需要的状态变化。不检查 BOOK CONTRACT，不复盘写作质量，不输出审计，不调用任何外部服务。
 
-本次正式正文是 State Delta 的最高事实来源；Writer 章节事实摘要仅作辅助，冲突时以正式正文为准。AUTHOR NOTES 是作者元控制，不属于 Canon 事实，必须原样保留。
+本次正式正文是 State Delta 的最高事实来源，也是本次唯一的新事实来源；旧 CANON INDEX 只提供此前状态。AUTHOR NOTES 是作者元控制，不属于 Canon 事实，必须由代码原样保留。
 
-你不检查、也不报告 BOOK CONTRACT 或任何长期设计的状态；BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、Reference Programs 与前两章正文都不在本次输入中，不要猜测它们。
+BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、Reference Programs 与前两章正文都不在本次输入中，不要猜测它们。
 
-最终返回必须使用以下五个一级标题；缺少任一标题只阻止 State Delta 应用，不阻止章节保存：
-
-# State Delta Audit
-只报告实际存在的事项：
-- 本次正式正文与旧 CANON INDEX 的冲突；
-- 无法从正式正文确定的状态。
-没有时写：无需要报告的状态冲突或不确定项。
+最终只输出以下四个一级标题；内容保持短、可直接替换：
 
 # Proposed Active Scene State
-输出下一章立即需要的完整 Active Scene State：当前地点、在场人物、即时伤势、手中关键物品、当前敌人或追兵、当前倒计时、下一步直接目标。主角已经形成明确主动目标时，用“当前主动目标：……”记录；目标发生真正变化时才更新，不要每章机械改写。下一章可以整体替换旧 Active Scene State。
+输出下一章立即需要的完整 Active Scene State：当前地点、在场人物、即时伤势、手中关键物品、当前敌人或追兵、当前倒计时、下一步直接目标。主角已经形成明确主动目标时，用“当前主动目标：……”记录；目标真正变化时才更新。只写会影响下一章行动的内容。
 
 # Proposed Persistent Canon
-输出更新后的、简短的长期 Persistent Canon：已证明能力、能力限制、关系阶段、持久资源、长期身份、确认知识、长期伤势和重要敌我状态。只保留仍会影响未来章节的信息。不要把本章暂时位置或追兵重复写成长期开关。
-只有真实需要时才维护以下两个轻量小节，不要为所有人物或物品建档：
+输出更新后的简短长期 Canon：已证明能力、能力限制、关系阶段、持久资源、长期身份、确认知识、长期伤势和重要敌我状态。只保留以后仍会改变选择的信息。
+只有真实需要时才维护两个轻量小节：
 ### Active Relationships
-只追踪当前真正重要或活跃的人物，使用“人物｜当前目标或立场｜与主角当前关系｜最近一次重要变化｜未决动作/承诺”。
+人物｜当前目标或立场｜与主角当前关系｜最近一次重要变化｜未决动作/承诺
 ### Tracked Assets
-只追踪高价值物品、核心工具、当前正在争夺或使用的物品，以及最近发生持有人或地点转移的重要物品，使用“物品｜当前持有人｜当前位置｜状态｜最近一次明确转移”。
+物品｜当前持有人｜当前位置｜状态｜最近一次明确转移
 
 # Proposed Chapter Summary
-只输出本章一个事实摘要；摘要必须来自正式正文，不复制 Writer Audit，不把计划写成事实。
+只写本章一个事实摘要，优先 80—160 字；只写正文已经发生的事实。
 
 # Proposed Open Promises
-输出更新后的未兑现承诺列表：保留仍有效的旧承诺，新增正文真实建立的新承诺，删除或标记已兑现/失败/失效的承诺；不要把普通悬念升级为长期承诺。
+维护一个有界的 Active Promise Window：最多 12 条，每条一行，按“近期会影响选择/行动”优先，其次保留少量真正长期承诺。合并同义或同一因果链的重复项；已经兑现、失败、失效或只剩普通悬念的项目删除。新增项必须由本章正文真实建立。不要为了凑数量制造 Promise。
 
-不要输出 AUTHOR NOTES。AUTHOR NOTES 由代码逐字保留；如果模型返回任何 `# AUTHOR NOTES` 或 `## AUTHOR NOTES` 标题，应用时显示明确错误并完全不应用。
-作者备注：（原样保留旧 AUTHOR NOTES，不得增删改写）。各字段内容行不得以旧格式标签开头；AUTHOR NOTES 仍由代码保留。
-
-禁止：输出 JSON/YAML；输出 chain-of-thought；修改 BOOK CONTRACT、PLAN 或正式章节正文；把 AUTHOR NOTES 当成 Canon 事实修改；替作者写入任何文件。"""
+不要输出 AUTHOR NOTES。AUTHOR NOTES 由代码逐字保留；各字段内容行不要以旧格式“当前状态：”“最近章节摘要：”“未兑现承诺：”“作者备注：”开头。不要输出 JSON/YAML、chain-of-thought、Audit、BOOK CONTRACT、PLAN 或任何写作评价。"""
 
 
 #: 规范化 CANON INDEX 的四个字段；只支持本项目真实使用的标签与格式。
@@ -1222,7 +1211,6 @@ def render_canon_memory(
 
 
 STATE_DELTA_V2_HEADINGS = (
-    "# State Delta Audit",
     "# Proposed Active Scene State",
     "# Proposed Persistent Canon",
     "# Proposed Chapter Summary",
@@ -1236,7 +1224,7 @@ def parse_state_delta_v2(response: str) -> dict[str, str]:
     if re.search(r"^#{1,2}\s+AUTHOR NOTES\s*$", response, flags=re.MULTILINE):
         raise ValueError("State Delta 返回不得包含 AUTHOR NOTES；旧 AUTHOR NOTES 必须由代码保留")
     mapping = {
-        "# State Delta Audit": "audit",
+        "# State Delta Audit": "audit",  # legacy optional section
         "# Proposed Active Scene State": "active_scene_state",
         "# Proposed Persistent Canon": "persistent_canon",
         "# Proposed Chapter Summary": "chapter_summary",
@@ -1254,10 +1242,51 @@ def parse_state_delta_v2(response: str) -> dict[str, str]:
                 break
             collected.append(next_line)
         result[key] = "\n".join(collected).strip()
-    missing = [key for key in mapping.values() if not result.get(key)]
+    required = ("active_scene_state", "persistent_canon", "chapter_summary", "open_promises")
+    missing = [key for key in required if not result.get(key)]
     if missing:
         raise ValueError("State Delta 缺少必要标题或内容：" + "、".join(missing))
+    result.setdefault("audit", "")
     return result
+
+
+def compact_open_promises(text: str, *, max_entries: int = 12) -> str:
+    """把 Active Promise Window 确定性收敛为有界一行列表。"""
+
+    entries: list[str] = []
+    seen: set[str] = set()
+    for raw_line in text.splitlines():
+        clean = re.sub(r"^\s*(?:[-*+]\s+|\d+[.)、]\s*)", "", raw_line).strip()
+        if not clean:
+            continue
+        clean = re.sub(r"\s+", " ", clean)
+        key = re.sub(r"[\s，。；;：:！？!?、]", "", clean).casefold()
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        if len(clean) > 240:
+            clean = clean[:239].rstrip() + "…"
+        entries.append(clean)
+        if len(entries) >= max_entries:
+            break
+    return "\n".join(f"- {entry}" for entry in entries) or "无。"
+
+
+def compact_recent_summaries(text: str, *, keep: int = 3) -> str:
+    """RECENT SUMMARIES 永远只保留最近若干章。"""
+
+    clean = text.strip()
+    if not clean:
+        return ""
+    starts = list(re.finditer(r"(?m)^(?:[-*]\s*)?第\s*\d+\s*章\s*[：:].*$", clean))
+    if starts:
+        blocks = [
+            clean[match.start() : (starts[index + 1].start() if index + 1 < len(starts) else len(clean))].strip()
+            for index, match in enumerate(starts)
+        ]
+        return "\n".join(blocks[-keep:]).strip()
+    paragraphs = [part.strip() for part in re.split(r"\n\s*\n", clean) if part.strip()]
+    return "\n\n".join(paragraphs[-keep:]).strip()
 
 
 def render_canon_index(
@@ -1761,10 +1790,20 @@ def generate_prompt(
                 [
                     _input_block("AUTHORITY", context.authority),
                     _input_block("当前章事件合同", context.chapter_mission),
+                    _input_block(
+                        "CONTEXT INDEX——只含可见结构入口，不含被省略正文",
+                        context.context_index,
+                    ),
                     _input_block("压缩 Growth Genome（本章相关固定小节）", context.growth_genome_compact),
-                    _input_block("BOOK CONTRACT", context.book_contract),
+                    _input_block(
+                        "BOOK CONTRACT——本章确定性预取",
+                        context.book_contract,
+                    ),
                     _input_block("本章成长收益短投影（规划提示，不是正文措辞）", context.growth_benefit_projection),
-                    _input_block("规范化 CANON INDEX", context.canon_index),
+                    _input_block(
+                        "CANON INDEX——本章确定性预取",
+                        context.canon_index,
+                    ),
                     _input_block("当前大型剧情块与十章计划", context.rolling_plan),
                     _input_block("PROSE PROFILE", context.prose_profile),
                     _input_block(
@@ -1906,12 +1945,28 @@ def generate_prompt(
         # GBrain、Reference Programs、prose profile 或前两章完整正文。
         status_block = _extract_markdown_block(book_content, CURRENT_STATE_HEADING)
         if canon_memory_has_labels(status_block):
+            fields = parse_canon_memory(status_block)
+            recent_window = compact_recent_summaries(
+                recent_summaries.strip() or fields.get("recent_summaries", "")
+            )
+            fields["recent_summaries"] = recent_window
+            fields["open_promises"] = compact_open_promises(
+                fields.get("open_promises", "")
+            )
             canon_index = render_canon_memory(
-                parse_canon_memory(status_block), page_recent_summaries=recent_summaries
+                fields, page_recent_summaries=recent_window
             )
         elif canon_index_has_labels(status_block):
+            fields = parse_canon_index(status_block)
+            recent_window = compact_recent_summaries(
+                recent_summaries.strip() or fields.get("recent_summaries", "")
+            )
+            fields["recent_summaries"] = recent_window
+            fields["open_promises"] = compact_open_promises(
+                fields.get("open_promises", "")
+            )
             canon_index = render_canon_index(
-                parse_canon_index(status_block), page_recent_summaries=recent_summaries
+                fields, page_recent_summaries=recent_window
             )
         else:
             # 无标签旧格式状态区原样注入，避免 parse_canon_index 静默清空旧状态；
@@ -1936,10 +1991,7 @@ def generate_prompt(
             "本次新正式章节正文（State Delta 的最高事实来源）",
             chapter_prose,
         ))
-        parts.append(_input_block(
-            "Writer 章节事实摘要（仅辅助；与正式正文冲突时以正式正文为准）",
-            chapter_fact_summary,
-        ))
+
     elif mode in {"fantasy_seed", "world_vision", "idea", "outline", "review"}:
         parts.append("# 页面当前输入")
         if mode == "fantasy_seed":

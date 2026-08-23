@@ -19,6 +19,7 @@ from .openai_executor import (
     default_model,
     generate_text,
     settings_status,
+    state_extraction_model,
 )
 from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
@@ -74,6 +75,7 @@ class TextRequest(BaseModel):
 class OpenAIExecutorRequest(BaseModel):
     prompt: str = ""
     model: str = ""
+    purpose: Literal["default", "state_extraction"] = "default"
 
 
 class OpenAISettingsRequest(BaseModel):
@@ -246,6 +248,7 @@ def get_executors() -> dict[str, Any]:
             "available": True,
             "configured": openai_configured(),
             "model": default_model(),
+            "state_model": state_extraction_model(),
             "name": openai_settings["name"],
         },
     }
@@ -267,7 +270,9 @@ def put_openai_settings(payload: OpenAISettingsRequest) -> dict[str, str | bool]
 @app.post("/api/executors/openai")
 def post_openai_executor(payload: OpenAIExecutorRequest) -> dict[str, str]:
     try:
-        return generate_text(payload.prompt, model=payload.model)
+        return generate_text(
+            payload.prompt, model=payload.model, purpose=payload.purpose
+        )
     except OpenAIExecutorError as error:
         status_code = 503 if not error.configured else 502
         raise HTTPException(status_code=status_code, detail=str(error)) from error
