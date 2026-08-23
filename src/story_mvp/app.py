@@ -11,7 +11,12 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
 from .gbrain import GBrainQueryError
-from .gbrain_retrieval import build_retrieval_brief, extract_hard_constraints, retrieve_gbrain
+from .gbrain_retrieval import (
+    build_retrieval_brief,
+    default_effective_query,
+    extract_hard_constraints,
+    retrieve_gbrain,
+)
 from .openai_executor import (
     OpenAIExecutorError,
     configure_settings,
@@ -95,6 +100,7 @@ class PromptTemplatesRequest(BaseModel):
 
 class GBrainContextRequest(BaseModel):
     mode: Literal[
+        "world_vision",
         "idea",
         "outline",
         "director",
@@ -111,6 +117,9 @@ class GBrainContextRequest(BaseModel):
     ] = "idea"
     book_content: str = ""
     creative_direction: str = ""
+    fantasy_seed: str = ""
+    world_vision: str = ""
+    proposal_context: str = ""
     current_long_block: str = ""
     current_outline: str = ""
     recent_summaries: str = ""
@@ -494,12 +503,17 @@ def get_references() -> dict[str, Any]:
 @app.post("/api/gbrain/brief")
 def post_gbrain_brief(payload: GBrainContextRequest) -> dict[str, Any]:
     brief = build_retrieval_brief(**payload.model_dump(exclude={"query_override"}))
+    effective_query, query_strategy = default_effective_query(payload.mode, brief)
     return {
         "mode": payload.mode,
-        "effective_query": brief,
+        "effective_query": effective_query,
+        "query_strategy": query_strategy,
         "retrieval_brief": brief,
         "hard_constraints": extract_hard_constraints(
             payload.creative_direction,
+            payload.fantasy_seed,
+            payload.world_vision,
+            payload.proposal_context,
             payload.book_content,
             payload.current_long_block,
             payload.current_outline,

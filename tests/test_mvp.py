@@ -22,12 +22,16 @@ from story_mvp.chapter_context import (
 from story_mvp.gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, query_gbrain, resolve_command_prefix
 from story_mvp.gbrain_retrieval import (
     CHAPTER_FINAL_RESULT_LIMIT,
+    CREATIVE_PLANNING_FINAL_RESULT_LIMIT,
     EMPTY_RESULT,
     FINAL_RESULT_LIMIT,
     RAW_RESULT_LIMIT,
     QUERY_RECALL_LIMIT,
     _forbidden_terms,
+    active_inspiration_allowed,
     build_retrieval_brief,
+    dedupe_query_hits_by_slug,
+    default_effective_query,
     extract_hard_constraints,
     parse_query_results,
     retrieve_gbrain,
@@ -327,7 +331,8 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
         creative_state={"fantasy_seed": {"origin": "author_edited", "status": "author_approved"}},
     )
     assert "APPROVED_SEED_MARKER" in world
-    for marker in ("BOOK_MARKER", "GBRAIN_MARKER", "REFERENCE_MARKER"):
+    assert "GBRAIN_MARKER" in world
+    for marker in ("BOOK_MARKER", "REFERENCE_MARKER"):
         assert marker not in world
     for marker in (
         "世界最震撼的三幅画面",
@@ -983,23 +988,39 @@ def test_failed_gbrain_query_is_returned_as_error_without_fake_result(monkeypatc
     assert "result" not in response.json()
 
 
-def test_story_program_uses_approved_creative_inputs_and_excludes_gbrain() -> None:
+def test_story_program_uses_approved_creative_inputs_and_optional_gbrain() -> None:
     prompt = generate_prompt(
         mode="idea",
         template="IDEA TEMPLATE",
         book_content="",
         creative_direction="都市异能，信息差优势",
-        gbrain_inspiration="[0.9] mechanism -- 可重复资源循环",
+        gbrain_inspiration="[0.9] mechanism -- 长线换发动机",
         selected_references=[{"program_id": "manual-reference"}],
         creative_state={"world_vision": {"origin": "author_edited", "status": "author_approved"}},
         fantasy_seed="SEED_MARKER",
         world_vision="WORLD_MARKER",
     )
     assert "都市异能，信息差优势" in prompt
-    assert "可重复资源循环" not in prompt
+    assert "长线换发动机" in prompt
+    assert "GBrain Inspiration Results（可选，只借鉴长期故事结构" in prompt
     assert "SEED_MARKER" in prompt
     assert "WORLD_MARKER" in prompt
     assert "manual-reference" in prompt
+
+
+def test_world_vision_accepts_optional_gbrain_without_replacing_seed() -> None:
+    prompt = generate_prompt(
+        mode="world_vision",
+        template="WORLD TEMPLATE",
+        book_content="",
+        creative_direction="玄幻成长",
+        fantasy_seed="APPROVED_SEED_MARKER",
+        gbrain_inspiration="WORLD_FANTASY_MARKER",
+        creative_state={"fantasy_seed": {"origin": "author_edited", "status": "author_approved"}},
+    )
+    assert "APPROVED_SEED_MARKER" in prompt
+    assert "WORLD_FANTASY_MARKER" in prompt
+    assert "不能覆盖已批准 Fantasy Seed" in prompt
 
 
 def test_gbrain_result_enters_outline_prompt() -> None:
@@ -1282,8 +1303,13 @@ def test_default_retrieval_query_uses_context_instead_of_generic_prefix() -> Non
     context_body = js[start:end]
     assert 'book_content: composeBookContent()' in context_body
     assert 'current_long_block' in context_body
+    assert 'fantasy_seed' in context_body
+    assert 'world_vision' in context_body
+    assert 'proposal_context' in context_body
     assert 'current_outline' in context_body
     assert 'recent_summaries' in context_body
+    assert 'state.gbrainDefaultBrief = payload.retrieval_brief || ""' in js
+    assert 'const manualOverride = query === state.gbrainDefaultBrief ? "" : query;' in js
     assert "主角成长型虚构世界小说" not in js[start:]
 
 
@@ -1773,6 +1799,114 @@ def test_real_urban_no_cultivation_does_not_ban_other_world() -> None:
     assert result["rejected"][0]["reason"] == "与 BOOK 的现实模式冲突"
 
 
+def test_planning_retrieval_uses_hidden_keyword_aliases_without_query_embedding(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    seen: list[str] = []
+
+    def fake_query(query: str, **kwargs) -> str:
+        seen.append(query)
+        assert kwargs["limit"] == QUERY_RECALL_LIMIT
+        assert kwargs["detail"] == "medium"
+        assert "mechanisms" in kwargs["scope"]
+        return "[0.99] mechanisms/world-desire-ladder-v3 -- world fantasy reader desire ladder"
+
+    result = retrieve_gbrain(
+        mode="world_vision",
+        creative_direction="玄幻成长",
+        fantasy_seed="已批准核心幻想：看见别人看不见的路",
+        query_func=fake_query,
+        page_func=lambda _slug: _page("Mechanism", "世界扩张每一层都新增读者想进入、想获得或想知道的具体欲望。"),
+    )
+    assert seen == ['"world fantasy" OR "world entry" OR "narrative compounding"']
+    assert result["query_strategy"] == "planning_keyword_aliases"
+    assert "看见别人看不见的路" in result["retrieval_brief"]
+    assert result["accepted_count"] == 1
+    assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+
+
+def test_planning_retrieval_keeps_full_chinese_brief_when_semantic_query_is_available(monkeypatch) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    brief = build_retrieval_brief(
+        mode="idea",
+        creative_direction="玄幻成长",
+        fantasy_seed="SEED_ALPHA",
+        world_vision="WORLD_BETA",
+    )
+    effective, strategy = default_effective_query("idea", brief)
+    assert effective == brief
+    assert strategy == "semantic_brief"
+    assert "SEED_ALPHA" in effective
+    assert "WORLD_BETA" in effective
+
+
+def test_story_program_keyword_fallback_merges_craft_and_reward_queries(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    seen: list[str] = []
+    pages = {
+        "mechanisms/plot": _page("Mechanism", "同一核心能力通过对手与目标变化切换故事发动机。"),
+        "mechanisms/thread": _page("Mechanism", "长中短线允许沉睡并在新条件成熟时回流。"),
+        "mechanisms/reward": _page("Mechanism", "高价值获得来自当前欲望与故事机会，并改变下一步行动。"),
+    }
+    def fake_query(query: str, **_kwargs) -> str:
+        seen.append(query)
+        if "plot engine variation" in query:
+            return "[0.99] mechanisms/plot -- plot"
+        return "[0.98] mechanisms/thread -- thread\n[0.97] mechanisms/reward -- reward"
+    result = retrieve_gbrain(
+        mode="idea",
+        creative_direction="玄幻成长",
+        world_vision="已批准世界幻想",
+        query_func=fake_query,
+        page_func=pages.__getitem__,
+    )
+    assert len(seen) == 2
+    assert any("plot engine variation" in q for q in seen)
+    assert any("reward opportunity" in q for q in seen)
+    assert [item["slug"] for item in result["accepted"]] == [
+        "mechanisms/plot", "mechanisms/thread", "mechanisms/reward"
+    ]
+    assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+
+
+def test_world_vision_gbrain_brief_api_keeps_chinese_visible_and_alias_internal(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    response = client.post(
+        "/api/gbrain/brief",
+        json={
+            "mode": "world_vision",
+            "creative_direction": "玄幻成长",
+            "fantasy_seed": "已批准幻想：隐藏道路",
+        },
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert "已批准幻想：隐藏道路" in payload["retrieval_brief"]
+    assert payload["effective_query"] == '"world fantasy" OR "world entry" OR "narrative compounding"'
+    assert payload["query_strategy"] == "planning_keyword_aliases"
+
+
+def test_gbrain_duplicate_chunks_do_not_consume_multiple_inspiration_slots() -> None:
+    raw = "\n".join([
+        "[0.99] mechanisms/same-page -- first chunk",
+        "[0.98] mechanisms/same-page -- second chunk",
+        "[0.97] mechanisms/other-page -- other chunk",
+    ])
+    parsed = parse_query_results(raw)
+    unique = dedupe_query_hits_by_slug(parsed)
+    assert [item["slug"] for item in unique] == ["mechanisms/same-page", "mechanisms/other-page"]
+
+    result = retrieve_gbrain(
+        mode="outline",
+        query_override="manual test",
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=lambda slug: _page("Mechanism", f"{slug} 的中文抽象机制。"),
+    )
+    assert result["raw_count"] == 3
+    assert result["unique_raw_count"] == 2
+    assert result["accepted_count"] == 2
+    assert [item["slug"] for item in result["accepted"]] == ["mechanisms/same-page", "mechanisms/other-page"]
+
+
 def test_query_result_parser_ignores_noise_and_preserves_order() -> None:
     parsed = parse_query_results(
         "杂项\n[0.9] mechanisms/example -- first snippet\ncontinuation noise\n"
@@ -1805,7 +1939,9 @@ def test_novel_source_filter_happens_before_candidate_limit_and_skips_unrelated_
     calls: list[str] = []
 
     def fake_query(_query: str, **kwargs) -> str:
-        assert kwargs == {"limit": QUERY_RECALL_LIMIT, "detail": "medium"}
+        assert kwargs["limit"] == QUERY_RECALL_LIMIT
+        assert kwargs["detail"] == "medium"
+        assert "mechanisms" in kwargs["scope"]
         return raw
 
     def fake_get(slug: str) -> str:
@@ -1890,7 +2026,9 @@ def test_chapter_filters_sources_and_builds_bundle_from_full_pages() -> None:
     }
 
     def fake_query(_query: str, **kwargs) -> str:
-        assert kwargs == {"limit": QUERY_RECALL_LIMIT, "detail": "medium"}
+        assert kwargs["limit"] == QUERY_RECALL_LIMIT
+        assert kwargs["detail"] == "medium"
+        assert "mechanisms" in kwargs["scope"]
         return raw
 
     def fake_get(slug: str) -> str:
@@ -1998,16 +2136,21 @@ def test_application_and_final_limits_bound_overlong_cli_output() -> None:
         return _page("Mechanism", f"抽象材料 {slug}")
 
     result = retrieve_gbrain(mode="idea", book_content="现实世界；无超自然", query_func=fake_query, page_func=fake_get)
-    assert result["raw_count"] == 20
+    assert result["raw_count"] == 40
+    assert result["unique_raw_count"] == 20
     assert result["requested_limit"] == RAW_RESULT_LIMIT
-    assert result["final_limit"] == FINAL_RESULT_LIMIT
-    assert result["accepted_count"] == FINAL_RESULT_LIMIT
-    assert len(calls) == FINAL_RESULT_LIMIT
+    assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+    assert result["accepted_count"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+    assert len(calls) == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
     assert sum(item["reason"] == "超过小说候选数量上限" for item in result["rejected"]) == 12
 
 
-def test_idea_and_outline_keep_broader_sources_without_real_constraint() -> None:
-    raw = "[0.9] book-dna/example -- broad\n[0.8] arcs/example -- broad"
+def test_story_program_uses_cross_book_patterns_while_outline_keeps_source_specific_arcs() -> None:
+    raw = "\n".join([
+        "[0.95] mechanisms/example -- pattern",
+        "[0.90] book-dna/example -- broad",
+        "[0.85] arcs/example -- longitudinal",
+    ])
     calls: list[str] = []
 
     def fake_query(_query: str, **_kwargs) -> str:
@@ -2017,10 +2160,13 @@ def test_idea_and_outline_keep_broader_sources_without_real_constraint() -> None
         calls.append(slug)
         return _page("Mechanism", "经典成长材料的抽象转换。")
 
-    for mode in ("idea", "outline"):
-        result = retrieve_gbrain(mode=mode, book_content="都市成长故事", query_func=fake_query, page_func=fake_get)
-        assert result["accepted_count"] == 2
-    assert calls == ["book-dna/example", "arcs/example", "book-dna/example", "arcs/example"]
+    story = retrieve_gbrain(mode="idea", book_content="都市成长故事", query_override="manual", query_func=fake_query, page_func=fake_get)
+    assert [item["slug"] for item in story["accepted"]] == ["mechanisms/example"]
+    assert story["query_scope"] == "contrasts,mechanisms,syntheses"
+
+    outline = retrieve_gbrain(mode="outline", book_content="都市成长故事", query_override="manual", query_func=fake_query, page_func=fake_get)
+    assert [item["slug"] for item in outline["accepted"]] == ["mechanisms/example", "book-dna/example", "arcs/example"]
+    assert "arcs" in outline["query_scope"]
 
 
 def test_brief_and_query_api_expose_filter_counts(monkeypatch) -> None:
@@ -2116,7 +2262,9 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     assert "GBrain" not in templates["fantasy_seed"]
     assert "Reference Programs" not in templates["fantasy_seed"]
     assert "BOOK" not in templates["fantasy_seed"]
-    assert "GBrain" not in templates["world_vision"]
+    assert "GBrain" in templates["world_vision"]
+    assert "OPTIONAL INSPIRATION" in templates["world_vision"]
+    assert "不得覆盖或改写已批准 Fantasy Seed" in templates["world_vision"]
     assert "Reference Programs" not in templates["world_vision"]
     assert "BOOK" not in templates["world_vision"]
     assert "已批准幻想不变量" in templates["outline"]
@@ -2175,6 +2323,24 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "稳定控制、调用或从中取得复利收益的外部结构" not in story_program
     assert "二级收益：写本阶段" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
+
+
+def test_high_value_acquisition_guidance_lives_in_story_program_and_outline_only() -> None:
+    for mode in ("idea", "outline"):
+        template = DEFAULT_PROMPT_TEMPLATES[mode]
+        assert "High-Value Acquisition / Reward Opportunity" in template
+        assert "阶段可以没有新的标志性获得" in template
+        assert "奖励类型与出现顺序由本书因果决定" in template
+    assert "High-Value Acquisition / Reward Opportunity" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
+
+    director = generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    primary = generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
+    assert "High-Value Acquisition / Reward Opportunity" not in director
+    assert "High-Value Acquisition / Reward Opportunity" not in primary
+    from story_mvp.gbrain_retrieval import PLANNING_KEYWORD_QUERIES
+    assert "reward opportunity" in PLANNING_KEYWORD_QUERIES["idea"]
+    assert "reward recontextualization" in PLANNING_KEYWORD_QUERIES["outline"]
+    assert CREATIVE_PLANNING_FINAL_RESULT_LIMIT == 3
 
 
 def test_chapter_page_defaults_to_curator_primary_and_keeps_repair_nodes_optional() -> None:
@@ -3027,17 +3193,39 @@ def test_chapter_mode_accepts_at_most_two_gbrain_inspirations() -> None:
     assert any(item["reason"] == "超过最终数量上限" for item in result["rejected"])
 
 
-def test_idea_outline_review_keep_original_final_limit() -> None:
+def test_creative_planning_and_existing_modes_keep_their_intended_final_limits() -> None:
     raw = "\n".join(f"[{0.99 - index / 100:.2f}] mechanisms/item-{index} -- snippet" for index in range(7))
-    for mode in ("idea", "outline", "review"):
+    for mode, expected_limit in (("world_vision", CREATIVE_PLANNING_FINAL_RESULT_LIMIT), ("idea", CREATIVE_PLANNING_FINAL_RESULT_LIMIT), ("outline", FINAL_RESULT_LIMIT), ("review", FINAL_RESULT_LIMIT)):
         result = retrieve_gbrain(
             mode=mode,
             book_content="都市成长故事",
+            query_override="manual test",
             query_func=lambda _query, **_kwargs: raw,
             page_func=lambda _slug: _page("Mechanism", "抽象材料。"),
         )
-        assert result["final_limit"] == FINAL_RESULT_LIMIT
-        assert result["accepted_count"] == FINAL_RESULT_LIMIT
+        assert result["final_limit"] == expected_limit
+        assert result["accepted_count"] == expected_limit
+
+
+def test_explicit_inactive_gbrain_card_is_not_used_as_inspiration() -> None:
+    page = """---
+active_inspiration: false
+---
+
+## Mechanism
+
+这是仍保留在 GBrain 的 HOLD Pilot。
+"""
+    assert active_inspiration_allowed(page) is False
+    result = retrieve_gbrain(
+        mode="outline",
+        book_content="玄幻成长故事",
+        query_override="manual test",
+        query_func=lambda _query, **_kwargs: "[0.9] mechanisms/hold-pilot -- hold",
+        page_func=lambda _slug: page,
+    )
+    assert result["accepted_count"] == 0
+    assert result["rejected"][0]["reason"] == "卡片当前未启用为 active inspiration"
 
 
 def test_book_contract_takes_future_design_from_real_book_and_canon_stays_factual() -> None:

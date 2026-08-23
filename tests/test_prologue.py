@@ -187,7 +187,7 @@ def test_prologue_ui_wiring_is_visible_and_explicit(tmp_path: Path, monkeypatch)
     assert "async function savePrologue" in js
     assert 'prologue: $("template-prologue").value' in js
     assert 'prologue_text: $("prologue-body").value' in js
-    assert 'if (["fantasy_seed", "world_vision", "idea", "prologue"].includes' in js
+    assert 'if (["fantasy_seed", "prologue"].includes' in js
 
 
 def test_prologue_revision_stales_unfixed_chapter_one_run(tmp_path: Path) -> None:

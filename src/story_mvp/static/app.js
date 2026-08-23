@@ -12,6 +12,7 @@ const state = {
   chapterTab: "outline",
   designEditing: false,
   dirtyEditors: new Set(),
+  gbrainDefaultBrief: "",
 };
 
 const creativeUi = {
@@ -1288,6 +1289,9 @@ function gbrainContextPayload(queryOverride = "") {
     mode: $("prompt-mode").value,
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
+    fantasy_seed: $("creative-fantasy-seed").value,
+    world_vision: $("creative-world-vision").value,
+    proposal_context: $("proposal-editor").value,
     current_long_block: $("current-long-block").value,
     current_outline: $("current-outline").value,
     recent_summaries: $("recent-summaries").value,
@@ -1296,13 +1300,14 @@ function gbrainContextPayload(queryOverride = "") {
 }
 
 async function setDefaultGbrainQuery() {
-  if (["fantasy_seed", "world_vision", "idea", "prologue"].includes($("prompt-mode").value)) return;
+  if (["fantasy_seed", "prologue"].includes($("prompt-mode").value)) return;
   try {
     const payload = await requestJson("/api/gbrain/brief", {
       method: "POST",
       body: JSON.stringify(gbrainContextPayload()),
     });
-    $("gbrain-query").value = payload.effective_query || payload.retrieval_brief || "";
+    state.gbrainDefaultBrief = payload.retrieval_brief || "";
+    $("gbrain-query").value = state.gbrainDefaultBrief;
     $("gbrain-scope").textContent = "GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选";
   } catch (error) {
     showStatus(`生成 BOOK-aware Retrieval Brief 失败：${error.message}`, true);
@@ -1382,9 +1387,10 @@ async function queryGbrain() {
     return showStatus("GBrain 查询不能为空", true);
   }
   try {
+    const manualOverride = query === state.gbrainDefaultBrief ? "" : query;
     const payload = await requestJson("/api/gbrain/query", {
       method: "POST",
-      body: JSON.stringify(gbrainContextPayload(query)),
+      body: JSON.stringify(gbrainContextPayload(manualOverride)),
     });
     $("gbrain-results").value = payload.result;
     $("gbrain-raw-results").value = payload.raw_stdout || "（没有可解析的原始检索结果）";

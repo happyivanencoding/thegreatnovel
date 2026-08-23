@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import re
 from collections.abc import Callable, Iterable, Mapping
 from typing import Any
@@ -13,6 +14,7 @@ QUERY_RECALL_LIMIT = 24
 FINAL_RESULT_LIMIT = 5
 #: Chapter Runtime Lite v1：chapter 模式灵感负担减半，最多 2 条；其他模式不受影响。
 CHAPTER_FINAL_RESULT_LIMIT = 2
+CREATIVE_PLANNING_FINAL_RESULT_LIMIT = 3
 GENRE_PRIOR_ACCEPT_LIMIT = 2
 EMPTY_RESULT = "（本次没有找到与 BOOK 硬约束和当前章节任务兼容的 GBrain 证据；不要用不相关材料补位。）"
 GBRAIN_SCOPE_LABEL = "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选"
@@ -21,8 +23,9 @@ SOURCE_CATEGORIES = frozenset(
     {"mechanisms", "contrasts", "syntheses", "prose-controls", "book-dna", "prose-dna", "maps", "arcs"}
 )
 MODE_ALLOWED_CATEGORIES = {
-    "idea": SOURCE_CATEGORIES,
-    "outline": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls", "book-dna", "arcs"}),
+    "world_vision": frozenset({"mechanisms", "syntheses", "book-dna"}),
+    "idea": frozenset({"mechanisms", "contrasts", "syntheses"}),
+    "outline": frozenset({"mechanisms", "contrasts", "syntheses", "book-dna", "arcs"}),
     "chapter_prep": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
     "chapter": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
     "context_curator": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
@@ -36,6 +39,22 @@ MODE_ALLOWED_CATEGORIES = {
 }
 
 GENRE_PRIOR_ALLOWED_MODES = frozenset({"idea", "outline", "review"})
+
+
+# GBrain 当前在没有 OPENAI_API_KEY 时会退化为 English FTS keyword-only。
+# 规划节点使用少量、可检索的 v3 craft aliases；完整 BOOK-aware brief 仍单独保留给作者查看。
+PLANNING_KEYWORD_QUERIES = {
+    "world_vision": '"world fantasy" OR "world entry" OR "narrative compounding"',
+    "idea": '"plot engine variation" OR "thread ecology" OR "reward opportunity"',
+    "outline": '"thread collision" OR "hidden identity reveal" OR "departure vacancy" OR "reunion reentry" OR "sacrifice convergence" OR "reward recontextualization"',
+}
+
+PLANNING_KEYWORD_QUERY_BATCHES = {
+    "idea": (
+        '"plot engine variation"',
+        '"thread ecology" OR "reward opportunity"',
+    ),
+}
 
 CONSTRAINT_PATTERNS = (
     ("现实世界", ("现实世界", "现代都市", "现实职业", "现代社会")),
@@ -196,12 +215,18 @@ def build_retrieval_brief(
     mode: str,
     book_content: str = "",
     creative_direction: str = "",
+    fantasy_seed: str = "",
+    world_vision: str = "",
+    proposal_context: str = "",
     current_long_block: str = "",
     current_outline: str = "",
     recent_summaries: str = "",
 ) -> str:
     constraints = extract_hard_constraints(
         creative_direction,
+        fantasy_seed,
+        world_vision,
+        proposal_context,
         book_content,
         current_long_block,
         current_outline,
@@ -210,6 +235,12 @@ def build_retrieval_brief(
     lines = [f"检索模式：{mode}"]
     if creative_direction.strip():
         lines.append(f"作者当前方向：{_compact(creative_direction, 500)}")
+    if fantasy_seed.strip():
+        lines.append(f"已批准 Fantasy Seed：\n{_compact(fantasy_seed, 1200)}")
+    if world_vision.strip():
+        lines.append(f"已批准 World Vision：\n{_compact(world_vision, 1600)}")
+    if proposal_context.strip():
+        lines.append(f"已批准 Story Program：\n{_compact(proposal_context, 1600)}")
     if book_content.strip():
         lines.append(f"BOOK 关键事实与成长上下文：\n{_compact(_book_signal(book_content), 2200)}")
     if current_long_block.strip():
@@ -232,11 +263,27 @@ def build_retrieval_brief(
         "review",
     }:
         lines.append("章节精度优先：寻找可迁移的 mechanisms、contrasts、syntheses、prose-controls；不引入来源作品表层故事。")
+    elif mode == "world_vision":
+        lines.append("World Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不改写已批准 Fantasy Seed。")
+    elif mode == "idea":
+        lines.append("Story Program 用途：优先寻找 Plot Engine 变异、thread ecology/collision、配角自治、story-state compounding 与高价值获得体验；只作为可选灵感，不改写已批准 Seed / World Vision。")
     elif mode == "outline":
-        lines.append("规划用途：允许较广的 Book DNA、Arc、Mechanism、Contrast、Synthesis，但必须服从上述明确硬约束。")
+        lines.append("Outline 用途：优先寻找长中短线编织、身份揭露、离队归来、牺牲/二次兑现、多线合流与高价值获得/旧奖励重释；必须服从已批准 Seed / World Vision / Story Program。")
     else:
         lines.append("创意用途：允许寻找不同成长玩法，但仍不得违反上述明确硬约束。")
     return "\n".join(lines).strip()
+
+
+def _semantic_query_available() -> bool:
+    return bool(os.environ.get("OPENAI_API_KEY", "").strip())
+
+
+def default_effective_query(mode: str, retrieval_brief: str) -> tuple[str, str]:
+    """选择实际查询文本；不增加 LLM/reranker 调用。"""
+
+    if mode in PLANNING_KEYWORD_QUERIES and not _semantic_query_available():
+        return PLANNING_KEYWORD_QUERIES[mode], "planning_keyword_aliases"
+    return retrieval_brief, "semantic_brief"
 
 
 def parse_query_results(stdout: str) -> list[dict[str, Any]]:
@@ -253,6 +300,20 @@ def parse_query_results(stdout: str) -> list[dict[str, Any]]:
             }
         )
     return results
+
+
+def dedupe_query_hits_by_slug(hits: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """同一页面可能由多个 chunk 命中；只保留排序最靠前的一条。"""
+
+    seen: set[str] = set()
+    unique: list[dict[str, Any]] = []
+    for hit in hits:
+        slug = str(hit.get("slug", "")).strip()
+        if not slug or slug in seen:
+            continue
+        seen.add(slug)
+        unique.append(hit)
+    return unique
 
 
 def source_category(slug: str) -> str:
@@ -319,6 +380,23 @@ def extract_abstract_content(page: str) -> tuple[str, str]:
         return "", boundary
     abstract = "\n".join(f"{heading}：{body}" for heading, body in selected)
     return _compact(abstract, 800), boundary
+
+
+def active_inspiration_allowed(page: str) -> bool:
+    """显式 HOLD/Pilot exclusion；未声明的既有卡保持原行为。"""
+
+    lines = page.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return True
+    try:
+        end = lines.index("---", 1)
+    except ValueError:
+        return True
+    for line in lines[1:end]:
+        key, sep, value = line.partition(":")
+        if sep and key.strip().casefold() == "active_inspiration":
+            return value.strip().casefold() not in {"false", "no", "0"}
+    return True
 
 
 def is_genre_prior_page(page: str) -> bool:
@@ -393,6 +471,9 @@ def retrieve_gbrain(
     mode: str,
     book_content: str = "",
     creative_direction: str = "",
+    fantasy_seed: str = "",
+    world_vision: str = "",
+    proposal_context: str = "",
     current_long_block: str = "",
     current_outline: str = "",
     recent_summaries: str = "",
@@ -406,27 +487,58 @@ def retrieve_gbrain(
         mode=mode,
         book_content=book_content,
         creative_direction=creative_direction,
+        fantasy_seed=fantasy_seed,
+        world_vision=world_vision,
+        proposal_context=proposal_context,
         current_long_block=current_long_block,
         current_outline=current_outline,
         recent_summaries=recent_summaries,
     )
-    effective_query = query_override.strip() or retrieval_brief
+    if query_override.strip():
+        effective_query = query_override.strip()
+        query_strategy = "manual_override"
+    else:
+        effective_query, query_strategy = default_effective_query(mode, retrieval_brief)
     query_runner = query_func or query_gbrain
     page_reader = page_func or get_gbrain
-    stdout = query_runner(effective_query, limit=QUERY_RECALL_LIMIT, detail="medium")
+    allowed_categories = MODE_ALLOWED_CATEGORIES[mode]
+    query_scope = ",".join(sorted(allowed_categories))
+    query_texts = (
+        PLANNING_KEYWORD_QUERY_BATCHES.get(mode, (effective_query,))
+        if query_strategy == "planning_keyword_aliases"
+        else (effective_query,)
+    )
+    stdout_parts = [
+        query_runner(
+            query_text,
+            limit=QUERY_RECALL_LIMIT,
+            detail="medium",
+            scope=query_scope,
+        )
+        for query_text in query_texts
+    ]
+    stdout = "\n".join(part for part in stdout_parts if part)
     parsed = parse_query_results(stdout)
+    unique_hits = dedupe_query_hits_by_slug(parsed)
     constraints = extract_hard_constraints(
         creative_direction,
+        fantasy_seed,
+        world_vision,
+        proposal_context,
         book_content,
         current_long_block,
         current_outline,
         recent_summaries,
     )
-    allowed_categories = MODE_ALLOWED_CATEGORIES[mode]
-    final_limit = CHAPTER_FINAL_RESULT_LIMIT if mode == "chapter" else FINAL_RESULT_LIMIT
+    if mode == "chapter":
+        final_limit = CHAPTER_FINAL_RESULT_LIMIT
+    elif mode in {"world_vision", "idea"}:
+        final_limit = CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+    else:
+        final_limit = FINAL_RESULT_LIMIT
     novel_candidates: list[dict[str, Any]] = []
     rejected: list[dict[str, str]] = []
-    for hit in parsed:
+    for hit in unique_hits:
         category = source_category(hit["slug"])
         if category not in allowed_categories:
             rejected.append({"slug": hit["slug"], "reason": f"{mode} 模式不自动使用 {category or '未知来源类别'}"})
@@ -452,6 +564,9 @@ def retrieve_gbrain(
             page = page_reader(hit["slug"])
         except (GBrainQueryError, OSError, ValueError):
             rejected.append({"slug": hit["slug"], "reason": "完整页面读取失败"})
+            continue
+        if not active_inspiration_allowed(page):
+            rejected.append({"slug": hit["slug"], "reason": "卡片当前未启用为 active inspiration"})
             continue
         genre_prior = is_genre_prior_page(page)
         if genre_prior and mode not in GENRE_PRIOR_ALLOWED_MODES:
@@ -486,10 +601,13 @@ def retrieve_gbrain(
         "scope": GBRAIN_SCOPE_LABEL,
         "mode": mode,
         "effective_query": effective_query,
+        "query_strategy": query_strategy,
+        "query_texts": list(query_texts),
         "retrieval_brief": retrieval_brief,
-        "query_scope": NOVEL_GBRAIN_SCOPE,
+        "query_scope": query_scope,
         "hard_constraints": constraints,
         "raw_count": len(parsed),
+        "unique_raw_count": len(unique_hits),
         "novel_candidate_count": len(novel_candidates),
         "accepted_count": len(accepted),
         "genre_prior_count": genre_prior_count,

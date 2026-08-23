@@ -213,6 +213,8 @@ def test_scene_skill_runtime_is_curator_selected_and_primary_only() -> None:
     assert "SCENE SKILL CATALOG" in curator
     assert "- trial_challenge:" in curator
     assert "- combat:" in curator
+    for skill_id in ("identity_reveal", "departure_vacancy", "sacrifice_convergence", "reunion_reentry"):
+        assert f"- {skill_id}:" in curator
     assert "在明确外部规则和成功线下" in curator
 
     curated = """# Curated Chapter Context

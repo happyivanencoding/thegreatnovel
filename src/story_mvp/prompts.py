@@ -69,6 +69,9 @@ PLOT_ENGINE_DIVERSITY_DIRECTION = """Plot Engine Diversity：同一个强主循�
 
 DIRECTOR_NARRATIVE_SALIENCE = """Director Narrative Salience：Director 面对十章计划和 Canon 中很多可执行细节时，八字段优先抓住本章最值得读的那一个人物冲突、关键选择、力量使用、反转、利益得失或兑现结果。操作步骤只有在它会改变人物选择、风险、胜负或结果时才进入“主角行动”；不要把“主角行动”写成施工单、路线单、检测流程或完整操作清单。不能删改计划规定的结果，但可以把实现过程压缩到足够支撑因果的最小程度，让“谁逼谁、主角决定什么、局势怎样被改变”保持前景。"""
 
+HIGH_VALUE_ACQUISITION_DIRECTION = """High-Value Acquisition / Reward Opportunity（Story Program / Outline 软规划原则，不新增字段、评分或 Hard Gate）：成熟男频长篇可以持续让主角得到真正值得想要的东西，但“奖励”是广义获得，不只指宝物，也可以是力量、功法、身体/血脉变化、标志性武器、稀有知识、伙伴、身份、称号、进入资格、世界入口、传承或规则层能力。高价值获得优先经过故事机会与主角行动真正变成主角可用的东西；重要奖励最好尽快通过一个具体场面证明“它真值”，并让主角从此能做过去做不到的事、让别人改变判断或打开新的世界入口。旧奖励可以在几十章后换场景复用，或从工具重新解释成身份、秘密、关系承诺、世界入口乃至更高层条件；这种复用属于叙事复利。奖励只在当前故事存在真实欲望、机会与后续用途时出现；阶段可以没有新的标志性获得，奖励类型与出现顺序由本书因果决定。Story Program 只需要规划阶段之间获得体验怎样自然变化；Outline 再把真正重要的机会、争夺/选择、到手、第一次证明和后续回收落进具体故事锚点，Director 不负责凭空发明计划之外的大奖励。"""
+
+
 BUSINESS_DECISION_OVER_IMPLEMENTATION = """经营文 Decision > Implementation：作者明确选择经营、建设、职业、生产或组织成长题材时，不需要回避经营细节，但主要戏剧价值优先来自决策而不是实施流水账：押注什么、资源投向哪里、舍弃什么机会、怎样定价或扩张、与谁合作或竞争、承担什么风险、对手如何回应，以及一次选择怎样改变后续局面。采购、排班、搬运、施工、生产、核验、重复执行等实施步骤，只在其中仍存在关键不确定性、选择、冲突或反转时展开；决定已经做完以后，普通实施默认压缩。规模增长最好带来新的战略选择与竞争格局，而不是只有吞吐量、节点数和流程精度增加。"""
 
 PAYOFF_FIRST_COST_RHYTHM = """Payoff-first 成本节奏：成熟不等于每次胜利立即受伤、负债、被审查或承担新责任。默认顺序是：胜利或突破真正发生 → 外界反应 → 主角获得实际收益 → 收益改变行动空间 → 再决定是否需要代价或余波。普通小胜允许明显净收益；阶段大胜通常应当收益明显大于当前成本。成本只在真实需要时限制选择、迫使策略或推动换挡，不作为每次 Payoff 的固定税。"""
@@ -669,7 +672,7 @@ FANTASY_SEED_TEMPLATE = f"""你是透明协作的 Fantasy Seed 创作助手。�
 不要输出成长整理、变量图、复杂网络、长期章节规划或完整能力限制。"""
 
 
-WORLD_VISION_TEMPLATE = f"""你是透明协作的 World Vision 创作助手。当前创作目标是为成熟中文男频玄幻/修仙成长长篇承载核心幻想；作者明确指定其他类型时，以作者要求为准。只有作者已经明确批准 Fantasy Seed 时，才执行本 Prompt。只读取作者粗方向、已批准 Fantasy Seed 全文和作者额外说明，不读取其它资料。你的职责是说明世界怎样承载已批准的核心幻想，不重新发明核心幻想，也不把未知提前还原成单一解释。
+WORLD_VISION_TEMPLATE = f"""你是透明协作的 World Vision 创作助手。当前创作目标是为成熟中文男频玄幻/修仙成长长篇承载核心幻想；作者明确指定其他类型时，以作者要求为准。只有作者已经明确批准 Fantasy Seed 时，才执行本 Prompt。只读取作者粗方向、已批准 Fantasy Seed 全文、作者额外说明和作者当前页面明确选择/编辑过的 GBrain Inspiration Results。GBrain 只是 OPTIONAL INSPIRATION：可以借鉴世界欲望、世界入口、叙事复利等抽象经验，但不得覆盖或改写已批准 Fantasy Seed。你的职责是说明世界怎样承载已批准的核心幻想，不重新发明核心幻想，也不把未知提前还原成单一解释。
 
 {COMPOUNDING_GROWTH_DIRECTION}
 
@@ -737,7 +740,7 @@ WORLD_VISION_TEMPLATE = f"""你是透明协作的 World Vision 创作助手。�
 World Vision 不要求在本阶段穷尽长期主线、完整能力限制、所有成本、成长整理或正文。"""
 
 
-STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线设计助手。只有 World Vision 已经由作者明确批准时，才基于已批准 Fantasy Seed 与 World Vision 生成一条由 5—7 个自然大型阶段组成的长期故事主线。你不能重新决定已经批准的核心幻想、主角最强欲望、力量上限、标志性奇观、早期兑现、稳定循环、中期里程碑和远期升格方向；但具体章节分布由故事密度和后续 Outline 自然决定，不把远期升格强塞进固定百章窗口。只读取作者粗方向、已批准 Fantasy Seed、已批准 World Vision 和作者手动选择的 Reference Programs；本阶段不读取其它灵感结果。
+STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线设计助手。只有 World Vision 已经由作者明确批准时，才基于已批准 Fantasy Seed 与 World Vision 生成一条由 5—7 个自然大型阶段组成的长期故事主线。你不能重新决定已经批准的核心幻想、主角最强欲望、力量上限、标志性奇观、早期兑现、稳定循环、中期里程碑和远期升格方向；但具体章节分布由故事密度和后续 Outline 自然决定，不把远期升格强塞进固定百章窗口。只读取作者粗方向、已批准 Fantasy Seed、已批准 World Vision、作者手动选择的 Reference Programs，以及作者当前页面明确选择/编辑过的 GBrain Inspiration Results。GBrain 只是 OPTIONAL INSPIRATION：优先借鉴 Plot Engine 变异、长中短线编织、配角自治回流、故事状态复利和高价值获得节奏；不得覆盖已批准 Seed / World Vision，也不得把参考作品的表层人物、世界设定或事件照搬进本书。
 
 本阶段回答“这本书实际上如何展开”：以已批准的欲望、力量、行动、结果与变化组织主线，具体的冲突走向和终局形式由作品自身生长。
 
@@ -746,6 +749,8 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 {LONG_FORM_PACING_DIRECTION}
 
 {COMPOUNDING_GROWTH_DIRECTION}
+
+{HIGH_VALUE_ACQUISITION_DIRECTION}
 
 {INTERNAL_REALISM_DIRECTION}
 
@@ -840,6 +845,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {OUTLINE_FANTASY_PROOF_RULE}
 
 {OUTLINE_STORY_ANCHOR_DENSITY_RULE}
+
+{HIGH_VALUE_ACQUISITION_DIRECTION}
 
 {PLOT_ENGINE_DIVERSITY_DIRECTION}
 
@@ -2008,11 +2015,13 @@ def generate_prompt(
         elif mode == "world_vision":
             parts.append(_input_block("作者粗方向与额外说明", creative_direction))
             parts.append(_input_block("已批准 Fantasy Seed", fantasy_seed))
+            parts.append(_input_block("GBrain Inspiration Results（可选，只借鉴抽象世界/幻想经验，不能覆盖已批准 Fantasy Seed）", gbrain_inspiration))
         elif mode == "idea":
             parts.append(_input_block("作者粗方向", creative_direction))
             parts.append(_input_block("已批准 Fantasy Seed", fantasy_seed))
             parts.append(_input_block("已批准 World Vision", world_vision))
             parts.append(_input_block("手动选择的 Reference Programs", format_references(selected_references or [])))
+            parts.append(_input_block("GBrain Inspiration Results（可选，只借鉴长期故事结构，不能覆盖已批准 Seed / World Vision）", gbrain_inspiration))
         elif mode == "outline":
             parts.append(_input_block("作者粗方向", creative_direction))
             parts.append(_input_block("已批准 Fantasy Seed", fantasy_seed))

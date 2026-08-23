@@ -13,6 +13,10 @@ from pathlib import Path
 SCENE_SKILL_IDS = (
     "social_bargain_decision",
     "relationship",
+    "identity_reveal",
+    "departure_vacancy",
+    "sacrifice_convergence",
+    "reunion_reentry",
     "comedy_banter",
     "investigation",
     "deduction_reveal",
