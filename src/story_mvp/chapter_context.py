@@ -115,7 +115,7 @@ def _markdown_block(content: str, heading: str) -> str:
 
 
 def render_event_contract(current_outline: str) -> str:
-    """把八字段小纲渲染为下游节点共用的事件合同。
+    """把八字段小纲渲染为规划/筛选节点共用的完整事件合同。
 
     六项合同字段按原文保留“字段：内容”形式；「推动事件的人」呈现为场景上下文；
     「叙事功能」明确标为规划备注，不要求正文显式表达。
@@ -143,6 +143,21 @@ def render_event_contract(current_outline: str) -> str:
         ]
     )
     return "\n".join(lines)
+
+
+def project_event_contract_for_prose(chapter_mission: str) -> str:
+    """给正文节点的最小事件合同：保留必须发生的现场语义，移除纯规划备注。"""
+
+    mission = chapter_mission.strip()
+    if not mission:
+        return mission
+    mission = mission.split("\n规划备注（planning note）：", 1)[0].rstrip()
+    mission = mission.replace(
+        "当前章事件合同：下方八字段决定 WHAT HAPPENS，不决定 HOW TO SAY；下游节点按各自职责使用这些事实约束，不把小纲扩写成更长概述。",
+        "正文执行合同：只保留本章必须发生的行动、反应、结果与状态变化；这些是事实目标，不是正文措辞。",
+        1,
+    )
+    return mission
 
 
 def _extract_growth_projection_value(texts: Iterable[str], label: str) -> str:

@@ -2303,7 +2303,7 @@ STATUS_MARKER
             assert marker not in prompt
 
 
-def test_hybrid_nodes_receive_only_growth_projection_not_full_hierarchy() -> None:
+def test_curator_receives_growth_projection_writer_receives_only_curated_meaning() -> None:
     outline = "\n".join(f"{field}：内容" for field in (
         "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
         "直接结果", "状态变化", "叙事功能", "结尾推动力",
@@ -2336,7 +2336,9 @@ BOOK_MARKER
         curated_context="# Curated Chapter Context\n\n## Relevant Plan\n\n本章一级成长推进：本章完成第一次进化。",
     )
     assert "FULL_GROWTH_HIERARCHY_MARKER" not in primary
-    assert "本章一级成长推进：\n未在本章计划中明确；不强制本章推进。" in primary
+    assert "本章一级成长推进：本章完成第一次进化。" in primary
+    assert "本章一级成长推进：\n未在本章计划中明确；不强制本章推进。" not in primary
+    assert "当前剧情块一级成长目标仅供参照" not in primary
     assert "Growth Benefit Hierarchy：" not in primary
     assert "FULL_GROWTH_HIERARCHY_MARKER" not in drop_growth_hierarchy(
         "## 0. 本书成长基因图\nFULL_GROWTH_HIERARCHY_MARKER\n## 1. 核心类型与读者承诺\nBOOK_MARKER"
@@ -2455,15 +2457,18 @@ FULL_BOOK_CONTRACT_MARKER
     )
     assert "AUTHORITY" in prompt
     assert "Chapter Mission" in prompt
+    assert "正文可见最小事件合同" in prompt
     assert "CANON_PROSE_MARKER" in prompt
-    assert "CANON INDEX" in prompt
+    assert "CANON INDEX——Curator 缺失时的事实 fallback" not in prompt
+    assert "本章成长收益短投影——Curator 缺失时的规划 fallback" not in prompt
+    assert "叙事功能：本章叙事功能" not in prompt
+    assert "规划备注（planning note）" not in prompt
     assert "CURATED_ONLY_MARKER" in prompt
     assert "RAW_LONG_BLOCK_MUST_NOT_REACH_PRIMARY" not in prompt
     assert "RAW_CHAPTER_PLAN_MUST_NOT_REACH_PRIMARY" not in prompt
     assert "FULL_PROSE_PROFILE_MARKER" not in prompt
     assert "FULL_BOOK_CONTRACT_MARKER" not in prompt
-    assert "WHAT HAPPENS" in prompt
-    assert "不是正文措辞来源" in prompt
+    assert "事实目标，不是正文措辞" in prompt
 
     fallback = generate_prompt(
         mode="primary_writer",
@@ -2472,6 +2477,8 @@ FULL_BOOK_CONTRACT_MARKER
         current_outline=outline,
     )
     assert "Curator 未提供，使用完整上下文 fallback" in fallback
+    assert "CANON INDEX——Curator 缺失时的事实 fallback" in fallback
+    assert "本章成长收益短投影——Curator 缺失时的规划 fallback" in fallback
 
 
 def test_specialists_receive_primary_draft_without_raw_gbrain_and_integrator_allows_missing() -> None:
@@ -2515,6 +2522,9 @@ OPENING_CONTEXT
         assert "RAW_GBRAIN_MARKER" not in prompt
         assert "RAW_LONG_BLOCK_MUST_NOT_REACH_SPECIALIST" not in prompt
         assert "RAW_CHAPTER_PLAN_MUST_NOT_REACH_SPECIALIST" not in prompt
+        assert "本章成长收益短投影（规划提示，不是正文措辞）" not in prompt
+        assert "叙事功能：本章叙事功能" not in prompt
+        assert "规划备注（planning note）" not in prompt
         assert "单 Writer 职责" not in prompt
     integrator = generate_prompt(
         mode="chapter_integrator",
@@ -2534,6 +2544,11 @@ OPENING_CONTEXT
     assert "CURATED_ONLY_MARKER" not in integrator
     assert "RAW_LONG_BLOCK_MUST_NOT_REACH_INTEGRATOR" not in integrator
     assert "RAW_CHAPTER_PLAN_MUST_NOT_REACH_INTEGRATOR" not in integrator
+    assert "CHARACTER_CONTEXT" in integrator
+    assert "本章成长收益短投影（规划提示，不是正文措辞）" not in integrator
+    assert "CANON INDEX（事实输入，不是正文措辞）" not in integrator
+    assert "叙事功能：本章叙事功能" not in integrator
+    assert "规划备注（planning note）" not in integrator
     assert "单 Writer 职责" not in integrator
     assert "Dialogue Specialist Response" in integrator
     assert "未提供" in integrator
@@ -2755,7 +2770,7 @@ def test_chapter_prompt_injects_minimal_authority_rule_once() -> None:
     assert "只放 100—200 字事实摘要" in prompt
 
 
-def test_narrative_function_is_a_planning_note_not_a_hard_constraint() -> None:
+def test_narrative_function_stays_in_planning_and_is_not_exposed_to_writer() -> None:
     outline = "\n".join(f"{field}：内容" for field in (
         "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
         "直接结果", "状态变化", "结尾推动力",
@@ -2766,11 +2781,10 @@ def test_narrative_function_is_a_planning_note_not_a_hard_constraint() -> None:
         book_content="",
         current_outline=outline,
     )
-    assert "叙事功能：本章完成第一次公开兑现" in prompt
-    assert "规划备注（planning note）" in prompt
-    assert "不要求正文显式表达它" in prompt
-    assert "WHAT HAPPENS，不决定 HOW TO SAY" in prompt
-    assert "这是事实约束，不是正文措辞来源" in prompt
+    assert "叙事功能：本章完成第一次公开兑现" not in prompt
+    assert "规划备注（planning note）" not in prompt
+    assert "正文可见最小事件合同" in prompt
+    assert "事实目标，不是正文措辞" in prompt
     assert "场景上下文——推动事件的人：内容" in prompt
 
 

@@ -53,6 +53,8 @@ Growth Genome 可以用一级能力 → 二级收益 → 新资源/场景/敌人
 
 INTERNAL_REALISM_DIRECTION = """内部因果必须可信，但可信不等于现代程序真实。玄幻、仙侠、奇幻、科幻和异世界优先使用本世界的力量、阶层、资源、信仰、血脉、地域、种族、宗门、王朝、神明、天道与超凡规则制造因果。只有作者明确选择现实职业或制度题材时，现代工业流程、项目管理、质量控制、学术实验、行政审批、合同责任、合规审查和数据留痕才可以成为主要发动机。"""
 
+STORY_VALUE_OVER_PROCEDURE_DIRECTION = """具体不等于把过程写细。除非作者明确选择工程、经营、建设、职业程序或硬技术解题型作品，玄幻/仙侠/奇幻的主要可复述内容优先落在人与人的欲望和对抗、力量差、身份变化、利益争夺、资源得失、关系选择、超凡奇观与不可逆结果上。路线、机关、地形、承重、制作、搬运、检测、计算和逐步操作可以成为阻力、证据或手段，但不应连续成为剧情本体；如果一段故事主要只能复述成“观察环境 → 分析规律 → 按步骤验证 → 安全通过/取回/修复”，就压缩操作过程，把篇幅让给谁在逼谁、主角真正想拿到什么、对方怎样阻止、核心优势怎样迫使局势改变，以及兑现后谁具体得到或失去什么。不要只是把现代工程流程换成仙侠名词。"""
+
 PAYOFF_FIRST_COST_RHYTHM = """Payoff-first 成本节奏：成熟不等于每次胜利立即受伤、负债、被审查或承担新责任。默认顺序是：胜利或突破真正发生 → 外界反应 → 主角获得实际收益 → 收益改变行动空间 → 再决定是否需要代价或余波。普通小胜允许明显净收益；阶段大胜通常应当收益明显大于当前成本。成本只在真实需要时限制选择、迫使策略或推动换挡，不作为每次 Payoff 的固定税。"""
 
 
@@ -211,6 +213,8 @@ Emotion：启用 / 不启用；理由
 {DIRECTOR_CHAPTER_BUDGET_RULE}
 
 {DIRECTOR_REPETITION_RULE}
+
+{STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 """
 
 
@@ -538,6 +542,8 @@ Secondary: <skill_id 或 none>
 ## Reader-Facing Language
 只写本章需要的正文表达建议：内部机制用普通话如何落到对象、动作和结果；哪些题材常用词可以直接使用；哪些本书新造词必须先用动作解释；哪些策划术语不应直接进入正文。不得改写剧情。关系阶段、状态变化、社会评价、收益结算等抽象内容属于 Writer 的内部理解，不是正文措辞；若进入正文，应通过人物动作、对白和具体结果表现，不能直接复制总结。Curator 不必自行把这些内容改写成正文句子。像“验证、闭环、阶段推进、价值兑现、成长空间、建立优势”这类词可以保留为内部语义，但不要把它们扩写成正文旁白；这些词不是禁词。
 
+如果输入里已经有一套反复出现的通行、制作、调查、承重、搬运、检测或其它操作流程，而本章真正冲突已经转向人物利益、关系、身份、资源争夺或力量兑现，只保留会改变当前选择或成败的最小机制边界；不要把既有操作步骤重新列成 Writer 必须演示的场景说明。具体性优先落在谁想得到什么、谁在阻止、主角怎样迫使局势改变、结果让谁得到或失去什么。
+
 ## Already Established — Do Not Re-explain
 列出最近正文已经通过动作清楚证明、且本章没有新变化的边界。它们仍然有效，但 Writer 不需要再次解释。
 
@@ -594,6 +600,8 @@ FANTASY_SEED_TEMPLATE = f"""你是透明协作的 Fantasy Seed 创作助手。�
 
 {LONG_FORM_PACING_DIRECTION}
 
+{STORY_VALUE_OVER_PROCEDURE_DIRECTION}
+
 生成 3—5 个真正不同的候选。不评分、不排名、不自动选择。候选之间的差异优先体现在：主角反复做什么、每轮永久留下什么、积累怎样产生下一次超额收益，以及世界为什么因此继续扩大。仅更换能力名词、世界规则术语、敌对组织或私人创伤，而长期发动机相同，不算真正不同。先写能力快感、力量占有欲和世界吸引力，再写长期增长与升格；不要把创意先写成运行手册。
 
 每个候选严格使用：
@@ -644,6 +652,8 @@ WORLD_VISION_TEMPLATE = f"""你是透明协作的 World Vision 创作助手。�
 {COMPOUNDING_GROWTH_DIRECTION}
 
 {LONG_FORM_PACING_DIRECTION}
+
+{STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
 最终严格输出：
 
@@ -712,6 +722,10 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 {LONG_FORM_PACING_DIRECTION}
 
 {COMPOUNDING_GROWTH_DIRECTION}
+
+{INTERNAL_REALISM_DIRECTION}
+
+{STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
 先写总览，再严格使用以下结构：
 
@@ -782,6 +796,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {DEFAULT_COMPOSABLE_GROWTH_DIRECTION}
 
 {INTERNAL_REALISM_DIRECTION}
+
+{STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
 {PAYOFF_FIRST_COST_RHYTHM}
 
@@ -892,6 +908,8 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {PAYOFF_FIRST_COST_RHYTHM}
 
 {STAGE_CHANGE_PLANNING_RULE}
+
+{STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
 ## 核心幻想是否仍在兑现
 最近章节是否仍然提供最初承诺的力量、自由、长生、探索、反杀、夺取、升格、关系或身份反转。
@@ -1602,7 +1620,7 @@ def generate_prompt(
         if opening_contract:
             parts.extend(["# Opening Three Chapter Contract", opening_contract])
         # 惰性导入：chapter_context 顶层依赖本模块，模块级互相导入会构成循环导入。
-        from .chapter_context import build_chapter_context
+        from .chapter_context import build_chapter_context, project_event_contract_for_prose
         from .hybrid_runtime import compact_book_contract_for_chapter
 
         packet = build_chapter_context(
@@ -1631,7 +1649,10 @@ def generate_prompt(
                 ),
             ),
         ))
-        parts.append(_input_block("CHAPTER MISSION——本章事件合同（PLAN）", packet.chapter_mission))
+        parts.append(_input_block(
+            "CHAPTER MISSION——正文可见最小事件合同（PLAN）",
+            project_event_contract_for_prose(packet.chapter_mission),
+        ))
         parts.append(_input_block("本章成长收益短投影（规划提示，不是正文措辞）", packet.growth_benefit_projection))
         parts.append(_input_block("CANON PROSE——前文正文（已发生事实的最高来源）", packet.recent_prose))
         if packet.prologue_reader_knowledge:
@@ -1650,7 +1671,7 @@ def generate_prompt(
             packet.optional_inspiration,
         ))
     elif mode in HYBRID_PROMPT_MODES:
-        from .chapter_context import build_chapter_context
+        from .chapter_context import build_chapter_context, project_event_contract_for_prose
         from .hybrid_runtime import (
             build_curator_context,
             build_integrator_context,
@@ -1713,12 +1734,26 @@ def generate_prompt(
             parts.extend(
                 [
                     _input_block("AUTHORITY", packet.authority),
-                    _input_block("Chapter Mission——当前章事件合同", packet.chapter_mission),
+                    _input_block(
+                        "Chapter Mission——正文可见最小事件合同",
+                        project_event_contract_for_prose(packet.chapter_mission),
+                    ),
                     _input_block("CANON PROSE——上一章全文与上上章必要章末", primary_prose),
-                    _input_block("CANON INDEX——规范化已发生事实索引（事实输入，不是正文措辞）", packet.canon_context),
-                    _input_block("本章成长收益短投影（规划提示，不是正文措辞）", packet.growth_benefit_projection),
                 ]
             )
+            if fallback:
+                parts.extend(
+                    [
+                        _input_block(
+                            "CANON INDEX——Curator 缺失时的事实 fallback",
+                            packet.canon_context,
+                        ),
+                        _input_block(
+                            "本章成长收益短投影——Curator 缺失时的规划 fallback",
+                            packet.growth_benefit_projection,
+                        ),
+                    ]
+                )
             if active_scene_skills:
                 parts.append(_input_block("ACTIVE SCENE SKILLS——只控制场景如何落成正文", active_scene_skills))
             parts.append(
@@ -1742,9 +1777,8 @@ def generate_prompt(
             )
             parts.extend(
                 [
-                    _input_block("当前章事件合同", context.chapter_mission),
+                    _input_block("当前章事件合同——正文可见最小投影", context.chapter_mission),
                     _input_block("Primary Draft——唯一待评议正文底稿", context.primary_draft),
-                    _input_block("本章成长收益短投影（规划提示，不是正文措辞）", context.growth_benefit_projection),
                     _input_block("本专项相关 Curated Context", context.relevant_curated_context),
                     _input_block("必要的前文章末衔接片段", context.transition_context),
                 ]
@@ -1770,10 +1804,12 @@ def generate_prompt(
             parts.extend(
                 [
                     _input_block("AUTHORITY", context.authority),
-                    _input_block("当前章事件合同", context.chapter_mission),
-                    _input_block("CANON INDEX（事实输入，不是正文措辞）", context.canon_index),
+                    _input_block("当前章事件合同——正文可见最小投影", context.chapter_mission),
                     _input_block("Primary Draft——唯一正文底稿", context.primary_draft),
-                    _input_block("本章成长收益短投影（规划提示，不是正文措辞）", context.growth_benefit_projection),
+                    _input_block(
+                        "Curated Chapter Context——仅用于判断局部 Patch 是否越界",
+                        context.curated_context,
+                    ),
                     _input_block("Opening Specialist Response", context.specialist_responses["opening"]),
                     _input_block("Dialogue Specialist Response", context.specialist_responses["dialogue"]),
                     _input_block("Action Specialist Response", context.specialist_responses["action"]),

@@ -11,6 +11,7 @@ from story_mvp.hybrid_runtime import (
     extract_specialist_patches,
 )
 from story_mvp.prompts import (
+    DEFAULT_PROMPT_TEMPLATES,
     DEFAULT_STATE_DELTA_TEMPLATE,
     REQUIRED_OUTLINE_FIELDS,
     READER_FIRST_PROSE_CONTRACT,
@@ -78,6 +79,8 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "关系阶段、状态变化、社会评价、收益结算等抽象内容属于 Writer 的内部理解",
         "不能直接复制总结",
         "Curator 不必自行把这些内容改写成正文句子",
+        "操作步骤重新列成 Writer 必须演示的场景说明",
+        "具体性优先落在谁想得到什么、谁在阻止",
         "不在 `## Relevant Plan` 中原样回显",
     ):
         assert marker in curator
@@ -128,6 +131,21 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
     assert specialist.count(READER_FIRST_PROSE_CONTRACT) == 0
     assert specialist.count(READER_FIRST_PROSE_SHORT) == 1
     assert "验证、闭环、阶段推进、价值兑现、成长空间、建立优势" in specialist
+
+
+def test_story_planning_prefers_story_value_over_procedure_detail() -> None:
+    marker = "不要只是把现代工程流程换成仙侠名词"
+    for mode in ("fantasy_seed", "world_vision", "idea", "outline", "review"):
+        assert marker in DEFAULT_PROMPT_TEMPLATES[mode]
+
+    director = generate_prompt(
+        mode="director",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+    )
+    assert marker in director
+    assert "观察环境 → 分析规律 → 按步骤验证 → 安全通过/取回/修复" in director
 
 
 def test_scene_skill_runtime_is_curator_selected_and_primary_only() -> None:

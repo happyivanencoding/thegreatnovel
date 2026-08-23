@@ -11,7 +11,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Mapping
 
-from .chapter_context import ChapterContextPacket
+from .chapter_context import ChapterContextPacket, project_event_contract_for_prose
 
 
 SPECIALIST_NAMES = ("opening", "dialogue", "action", "emotion")
@@ -339,7 +339,7 @@ def build_specialist_context(
         projected_draft = primary_draft
     return SpecialistContextPacket(
         specialist=specialist,
-        chapter_mission=packet.chapter_mission,
+        chapter_mission=project_event_contract_for_prose(packet.chapter_mission),
         primary_draft=projected_draft,
         relevant_curated_context=_relevant_curated_context(curated_response, specialist),
         growth_benefit_projection=packet.growth_benefit_projection,
@@ -359,7 +359,7 @@ def build_integrator_context(
     }
     return IntegratorContextPacket(
         authority=packet.authority,
-        chapter_mission=packet.chapter_mission,
+        chapter_mission=project_event_contract_for_prose(packet.chapter_mission),
         canon_prose=extract_last_transition_context(packet.recent_prose),
         canon_index=packet.canon_context,
         curated_context=curated_response.strip() or "（Curator 未提供，使用完整上下文。）",
