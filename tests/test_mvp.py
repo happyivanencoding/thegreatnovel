@@ -1074,6 +1074,15 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
     assert "规划范围：预计第1—N章" in prompt
     assert "窗口终点：" in prompt
     assert "具体发生" in prompt
+    assert "Outline Story Anchor Density" in prompt
+    assert "Director 可以直接执行的故事骨架" in prompt
+    assert "通常 3—5 个锚点" in prompt
+    assert "只有很短的剧情块可以 2 个" in prompt
+    assert "这只是内容密度参考，不是 Hard Gate" in prompt
+    assert "锚点是故事转折，不是场景分镜或操作步骤" in prompt
+    assert "提高故事确定性，不是提高施工步骤确定性" in prompt
+    assert "推进、转折或结算当前剧情块中的某个故事锚点" in prompt
+    assert "不要为了填章数，把一个锚点拆成连续几章" in prompt
     assert "结果 / 状态变化" in prompt
     assert "结尾推动" in prompt
     assert "第一章开篇策略" in prompt
