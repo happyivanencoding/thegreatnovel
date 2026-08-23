@@ -168,7 +168,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 11. 章末必须留下新状态或新理解；
 12. Humanizer 审查结构，不建立禁词和禁标点表。
 
-完整证据和单书差异见 `PROSE_DISTILLATION_THREE_CLASSICS.md`。
+这些规则已经被吸收为当前 prose contract；具体作品参考不再作为 Runtime 文档依赖，参考作品知识统一由 GBrain 独立维护。
 
 ---
 

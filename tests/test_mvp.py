@@ -839,7 +839,7 @@ def test_default_chapter_prompt_has_no_source_style_leakage() -> None:
     )
     for marker in (
         "《第一序列》", "《将夜》", "《诡秘之主》", "模仿《", "仿写《",
-        "PROSE_DISTILLATION_THREE_CLASSICS.md", ".agents/skills/novel-prose-realization",
+        ".agents/skills/novel-prose-realization",
     ):
         assert marker not in prompt
 
@@ -2250,8 +2250,9 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     direction_doc = Path("docs/MVP_PRODUCT_DIRECTION.md")
     assert direction_doc.is_file()
     direction_text = direction_doc.read_text(encoding="utf-8")
-    assert "Composable Growth Genome" in Path("docs/COMPOSABLE_GROWTH_GENOME.md").read_text(encoding="utf-8")
-    assert "Classic Patterns Are First-Class Citizens" in Path("docs/COMPOSABLE_GROWTH_GENOME.md").read_text(encoding="utf-8")
+    methodology_text = Path("docs/PIPELINE_METHODOLOGY_AND_VALUES.md").read_text(encoding="utf-8")
+    assert "Growth Genome：整理，不创造" in methodology_text
+    assert "Classic Patterns Are First-Class Citizens" in methodology_text
     assert "累积成长与可组合成长" in direction_text
     assert "Experiment Boundary" in direction_text
     assert all("成长" in templates[mode] for mode in ("idea", "fantasy_seed", "world_vision", "outline"))

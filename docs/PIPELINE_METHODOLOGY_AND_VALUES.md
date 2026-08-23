@@ -195,6 +195,12 @@ Story Program 如果已经把“核心优势”降维成工作流、Build 或系
 
 Growth Genome 是投影和记忆工具，不是创意权威。
 
+#### Classic Patterns Are First-Class Citizens
+
+可组合不等于主动回避成熟男频主干。资源 → 成长 → 战斗 → 身份 → 更大资源/世界、探索 → 机缘 → 成长 → 新区域等结构都可以直接使用；创新优先放在本书自己的核心幻想、能力玩法、人物关系和阶段换挡，而不是为了显得新而绕开有效结构。
+
+一级成长始终优先回答“主角本人越来越能做什么”；财富、装备、身份、关系、势力、领地和世界入口属于二级收益，优先反哺下一轮一级成长。
+
 #### 负责
 
 - 整理一级成长；
@@ -500,15 +506,14 @@ GBrain 本身也不使用统一模型：
 
 ## 9. 接手项目时建议先看这些文件
 
-1. `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` —— 先理解系统为什么这样分层、Supporting Logic 原则和模型职责；
-2. `docs/MVP_PRODUCT_DIRECTION.md` —— 产品目标与 Fantasy-first 边界；
-3. `docs/GBRAIN_STORY_CRAFT_V3.md` —— GBrain 四类知识、ON/OFF 边界、规划/蒸馏模型路由和当前 A/B 证据；
-4. `src/story_mvp/prompts.py` —— 当前实际创作原则与各阶段 Prompt；
-5. `src/story_mvp/chapter_context.py` —— Director / chapter context 的确定性投影；
-6. `src/story_mvp/hybrid_runtime.py` —— Curator / Primary 的上下文边界与 Index-first；
-7. `docs/READER_FIRST_PROSE_RUNTIME.md` —— 正文层如何避免设定说明先于读者理解；
-8. `docs/CANON_MEMORY_V2.md` —— 记忆层只保存什么；
-9. `docs/CHAPTER_RUN_LEDGER.md` —— 章节运行节点和保存边界。
+1. `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` —— 第一权威入口：分层方法论、Anti-Goals、Supporting Logic、模型职责；
+2. `docs/MVP_PRODUCT_DIRECTION.md` —— 产品目标、Fantasy-first 与作者权威边界；
+3. `docs/GBRAIN_STORY_CRAFT_V3.md` —— GBrain 知识、ON/OFF 边界、规划/蒸馏模型路由；
+4. `docs/CHAPTER_RUNTIME_AND_STATE.md` —— 当前 `curator_primary` 章节链、Canon Memory、Run Ledger 与恢复边界；
+5. `docs/NOVEL_PROSE_REALIZATION.md` —— Reader-First、Story-bearing Texture、Scene realization 与正文控制；
+6. `docs/AUTHOR_WORKSPACE_UI_SPEC.md` —— 当前作者工作台的信息架构；
+7. `src/story_mvp/prompts.py` —— 实际运行 Prompt 真源；
+8. `src/story_mvp/chapter_context.py` / `hybrid_runtime.py` —— 当前确定性上下文投影。
 
 如果要修改系统，先判断问题属于“创意语义、长期结构、中层事件、单章执行、正文实现、状态记忆”中的哪一层，再动对应文件。
 
