@@ -68,7 +68,7 @@ ChapterContextPacket、Director 八字段、REQUIRED_OUTLINE_FIELDS、Context Cu
 - World Vision：Luna high，GBrain ON，最多 3 条 focused inspiration；
 - Story Program：Sol high，GBrain ON，最多 3 条 focused inspiration；
 - Outline：Luna high，GBrain ON，通常 4 条、最多 5 条；
-- Director：Luna high；Curator：Terra high；Primary Writer 暂用 Luna high，等待正文专项 A/B；State Extraction 优先更快、更便宜的模型。
+- 章节 Balanced 默认：Director 用 Luna high，Curator 用 Luna high，Primary Writer 用 Terra high，State Extraction 用 Luna low。Terra Primary 是正文克制性选择；若优先最低延迟，可把 Director/Curator 切到 Terra high/medium。
 
 GBrain 蒸馏采用不同模型分工：Terra high 做事实与 evidence，Luna high 做 Book/World/Reward/Scene synthesis，Sol high 做 Longitudinal Threads、Thread Braid 与跨书 Story Program synthesis。
 

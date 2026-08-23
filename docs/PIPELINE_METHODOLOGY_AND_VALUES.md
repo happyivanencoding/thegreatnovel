@@ -439,18 +439,20 @@ Review 只调整未来计划，不自动重写已完成正文，也不推翻作�
 | World Vision | GPT-5.6 Luna high | **ON，最多 3 条 focused inspiration** | Luna 擅长把核心幻想抽象成世界欲望、世界入口与力量体验 |
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | 当前最值得使用 Sol 的位置：玩法换挡、长线生态、人物自治、敌人策略、高价值获得 |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把正确的长期 Program 展开成连续故事锚点、Thread Collision、身份揭露、Reward Recontextualization |
-| Director | GPT-5.6 Luna high | 章节相关精选上下文 | 负责当前章事件合同与 Narrative Salience，不重新设计长期故事 |
-| Curator | GPT-5.6 Terra high | Index-first 后的少量相关材料 | 任务偏筛选、压缩、去 planning leakage，不需要最慢模型 |
-| Primary Writer | GPT-5.6 Luna high（暂定） | 只读 Curator 输出/Scene Skills | 正文模型尚未完成严格 Terra/Luna/Sol 同输入盲测，不能把规划结论直接外推到 prose |
-| State Extraction | 更快、更便宜的模型；GPT-5.6 系列时优先 Terra | 不需要创作型 GBrain | 只抽取已发生事实，reasoning 使用满足正确性的最低合理档位 |
+| Director | GPT-5.6 Luna high | 章节相关精选上下文 | 当前 Balanced 默认；与 Terra high 质量接近但成本显著更低，若优先最低延迟可切 Terra high |
+| Curator | GPT-5.6 Luna high | Index-first 后的少量相关材料 | Balanced 默认；应继续压短输出合同。若优先最短延迟与更克制输出，可切 Terra medium |
+| Primary Writer | GPT-5.6 Terra high | 只读 Curator 输出/Scene Skills | 正文 A/B 中更克制、较少 procedural expansion、更愿意在章节合同位置停下；这是质量/行为选择，不是成本选择 |
+| State Extraction | GPT-5.6 Luna low | 不需要创作型 GBrain | 当前成本优先默认；只抽取已发生事实，不需要高级创作推理 |
 
 ### 为什么这样分
 
-- **Terra high**：快、直接、克制，适合事实抽取、Scene/Reward Evidence、Source Fidelity、Curator，以及大量快速 A/B。它擅长“看清发生了什么”。
-- **Luna high**：当前最佳综合主力。擅长核心幻想抽象、复杂约束下的稳定规划和把正确 Program 展开成具体故事。它擅长“理解为什么好看，并可靠执行”。
-- **Sol high**：最强优势集中在几十/几百章的长期变异：人物自主性、关系回流、对手策略、同一能力换 Plot Engine，以及把资产重新转回人物/世界后果。它擅长“理解为什么很久以后仍然好看”。由于明显更慢，不默认贯穿全链。
-- **Luna max**：不作为日常默认；只用于疑难创意救援、关键架构诊断、最高质量基线或明确要求最大推理深度的重构。
-- **GPT-5.4 high**：当前实测中比 Luna high 更慢，幻想抽象和输出稳定性没有补偿性优势，也更容易出现系统/Build 语言；当前不设默认 niche，只用于回归或模型对照。
+- **Terra**：这轮章节 A/B 中 wall-clock 通常最快、输出更克制；Primary 的优势尤其明显。但 Terra 单价显著高于 Luna，因此“更快”不等于“更便宜”。
+- **Luna**：当前单价最低，也是规划链的默认综合主力；Director/Curator 质量足够且成本优势很大，但正文与 Curator 更容易输出偏长。
+- **Sol high**：最强优势集中在几十/几百章的长期变异；单价最高且通常最慢，因此默认只放 Story Program / Deep Planning，不进入常规章节链。
+- **Luna max**：不作为日常默认；只用于疑难创意救援、关键架构诊断和最高质量基线。
+- **GPT-5.4 high**：当前没有相对 Luna 的补偿性优势，只用于回归或模型对照。
+
+章节模型选择必须分开看 **生成质量 / wall-clock / 实际成本**。2026-08-23 的配对正文实验里，当前最推荐的 Balanced 路由是 `Luna Director → Luna Curator → Terra Primary → Luna State`；Terra Primary 是正文行为选择，不是成本选择。若优先更短延迟，可把 Director/Curator 切到 Terra high/medium；若质量优先且希望 Curator更精简，可只把 Curator切到 Terra medium。Sol 不进入常规章节链。
 
 ### 已验证的 GBrain A/B 结论
 

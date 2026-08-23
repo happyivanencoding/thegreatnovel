@@ -54,18 +54,20 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 | World Vision | GPT-5.6 Luna high | 擅长把核心幻想转成世界欲望、力量体验与进入更大世界的理由 |
 | Story Program | GPT-5.6 Sol high | 当前 Sol 最值得发挥的位置：长期玩法变异、人物自主性、敌人策略、关系回流、Thread Ecology、Reward 变化 |
 | Outline | GPT-5.6 Luna high | 能高质量执行正确 Program，把长期结构落实成故事锚点而不过度膨胀 |
-| Director | GPT-5.6 Luna high | 需要 Narrative Salience 与对 Outline 的稳定理解 |
-| Curator | GPT-5.6 Terra high | 任务偏筛选、压缩和去 planning leakage；快速与克制比继续发散更重要 |
-| Primary Writer | GPT-5.6 Luna high（暂定） | 正文尚未完成严格 Terra/Luna/Sol 同输入盲测，规划测试不能替代 prose 测试 |
-| State Extraction | 更快、更便宜；GPT-5.6 系列时优先 Terra | 只记录已发生事实，不需要高级创作推理 |
+| Director | GPT-5.6 Luna high | Balanced 默认；质量与 Terra high 接近但成本更低，最低延迟模式可切 Terra high |
+| Curator | GPT-5.6 Luna high | Balanced 默认；继续压短输出合同。若优先最短延迟与更克制输出，可切 Terra medium |
+| Primary Writer | GPT-5.6 Terra high | 正文 A/B 中更克制、较少 procedural expansion、更愿意按 Chapter Contract 停下；这是质量/行为选择，不是成本选择 |
+| State Extraction | GPT-5.6 Luna low | 当前成本优先默认，只记录已发生事实 |
 
 模型不是线性排名：
 
-- **Terra high**：快、直接、克制，适合 evidence、fidelity、Curator、快速 A/B；
-- **Luna high**：当前最佳综合主力，适合 Fantasy/World/Outline 与复杂约束执行；
-- **Sol high**：长篇“多想一层”最强，但明显更慢，默认只集中在 Story Program 或 Deep Planning 修复；
+- **Terra**：章节实测 wall-clock 通常最快、输出更克制，但单价显著高于 Luna；Primary 的优势是正文行为，不是便宜。
+- **Luna**：当前单价最低，也是规划与章节理解层的默认主力；Director/Curator 性价比高，但输出更容易偏长。
+- **Sol high**：长期故事结构最强，同时单价最高且通常最慢；默认只集中在 Story Program / Deep Planning。
 - **Luna max**：仅用于疑难创意救援、最高质量基线和关键重构，不日常使用；
-- **GPT-5.4 high**：当前实测中比 Luna high 慢且没有补偿性优势，更易系统/Build 化，不作为默认创作模型。
+- **GPT-5.4 high**：当前没有相对 Luna 的补偿性优势，不作为默认创作模型。
+
+章节路由要分开看 **质量 / wall-clock / 实际成本**。当前 Balanced 推荐为 `Luna Director → Luna Curator → Terra Primary → Luna State`；若优先最低延迟，可把 Director/Curator 切到 Terra high/medium；若优先 Curator 的极简输出，可只把 Curator 切到 Terra medium。Sol 不进入常规章节链。
 
 ### GBrain 蒸馏模型
 
