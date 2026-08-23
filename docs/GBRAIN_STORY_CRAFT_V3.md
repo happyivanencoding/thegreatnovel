@@ -23,6 +23,17 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 - `Curator / Primary`：Scene Skills 只控制 HOW TO REALIZE THE SCENE，不改变 Chapter Mission 或 Canon。
 - `State Extraction`：继续用当前 `current_state` 记录重要能力、物品、规则、持有人与状态变化；不新增 Inventory 数据库。
 
+## 统一的 Supporting Logic 原则
+
+TGN 不为治理化、工程化、蓝领职业化和过度验证分别增加 Reviewer。它们共用一条上游原则：世界中的合理解释、风险、技术机制和组织逻辑可以存在，但 supporting logic 不自动升级为 story engine。
+
+- 对手或势力的理由可以真实成立，但不自动成为作者结论或主角长期职责；主角的职责从核心欲望、具体关系和人物选择中生长。
+- 能力可信性优先嵌入有真实目标和利害关系的行动中证明，不单独搭建测试场景来穷举机制。
+- 观察、分析、测试、验证、调整、实施只有在其中仍有关键选择、冲突或反转时展开；其余压缩到足以支撑因果。
+- 可重复能力优先扩大主角的主动权、敌人策略、人物关系、身份、机缘和世界入口，不因可重复使用就自然职业化。
+
+该原则直接复用现有 World Vision → Story Program → Outline → Director 的共享 Prompt 规则，不新增 Agent、Hard Gate、评分器或 LLM 调用。
+
 ## Reward 职责
 
 高价值获得不是随机掉宝器，也不是固定章数节拍器。

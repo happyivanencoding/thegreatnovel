@@ -133,10 +133,18 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
     assert "验证、闭环、阶段推进、价值兑现、成长空间、建立优势" in specialist
 
 
-def test_story_planning_prefers_story_value_over_procedure_detail() -> None:
-    marker = "不要只是把现代工程流程换成仙侠名词"
+def test_supporting_logic_does_not_become_story_engine() -> None:
+    markers = (
+        "Supporting Logic Must Not Automatically Become Story Engine",
+        "不自动成为叙事前景、主角职业、长期职责或作品认可的公共答案",
+        "不从力量规模自动推出",
+        "能力可信性优先在有真实目标和利害关系的行动中证明",
+        "观察、分析、测试、验证、调整和实施",
+        "不因能力可重复使用就自然职业化成维护、检测、生产、搬运或运营流程",
+    )
     for mode in ("fantasy_seed", "world_vision", "idea", "outline", "review"):
-        assert marker in DEFAULT_PROMPT_TEMPLATES[mode]
+        for marker in markers:
+            assert marker in DEFAULT_PROMPT_TEMPLATES[mode]
 
     director = generate_prompt(
         mode="director",
@@ -144,8 +152,8 @@ def test_story_planning_prefers_story_value_over_procedure_detail() -> None:
         book_content="",
         current_outline=OUTLINE,
     )
-    assert marker in director
-    assert "观察环境 → 分析规律 → 按步骤验证 → 安全通过/取回/修复" in director
+    for marker in markers:
+        assert marker in director
 
 
 def test_fantasy_salience_rules_are_scoped_to_planning_layers() -> None:
