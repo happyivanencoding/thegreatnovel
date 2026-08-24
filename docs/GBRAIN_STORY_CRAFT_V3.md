@@ -152,6 +152,9 @@ GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks
 
 这是一层确定性 fallback，不新增 LLM、reranker、Agent 或 Hard Gate。
 
+## Prose Craft v1
+
+Story Craft 负责“长期故事为什么好看”；正文表达层另有 `docs/GBRAIN_PROSE_CRAFT_V1.md`。Prose Craft v1 使用六本经典的 85 个 bounded scene windows 建立 source-specific Prose DNA，再跨书收敛为 7 张 production-facing Prose Controls。Prose DNA 不直接进入 Primary Writer；Prose Controls 只影响 HOW TO SAY，不覆盖 BOOK Prose Profile、Chapter Mission 或 Canon。当前完成 GBrain import + embedding（15705/15705），自动 Curator 路由仍待正文 A/B 后冻结。
 ## Pilot Active / HOLD
 
 当前 v3 staging 共 **47 张 Pilot：45 active / 2 HOLD**。HOLD 仍是：
