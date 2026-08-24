@@ -61,24 +61,28 @@ CURATOR_PROSE_CONTROL_FALLBACK_MODES = frozenset({"context_curator"})
 # When query embeddings are unavailable, keep Curator prose retrieval useful without
 # adding another model call. Rules are intentionally small and scene-family based.
 PROSE_CONTROL_ALIAS_RULES = (
-    (("谈判", "对话", "交涉", "审问", "试探", "拒答", "报价", "称呼", "多人对峙"),
+    (("谈判", "交涉", "审问", "报价", "议价", "拒答", "多人对峙", "交易条件", "筹码"),
      '"dialogue negotiation" OR "relationship pressure"'),
-    (("战斗", "追逐", "追杀", "突围", "救援", "夹击", "站位", "受力", "落点"),
+    (("追逐", "追捕", "搜捕", "追杀", "突围", "围堵", "错误支路", "站位", "诱敌", "夹击", "多入口", "路线变化"),
      '"action combat" OR "spatial clarity"'),
-    (("证明", "兑现", "反杀", "大胜", "突破", "认可", "公开", "余波", "旁观者"),
-     '"payoff power proof" OR "public proof"'),
-    (("奇观", "尺度", "巨大", "宏大", "宇宙", "飞升", "天穹"),
+    (("公开能力证明", "公开证明", "兑现", "大胜", "身份翻转", "获得资格", "结果已经成立", "公开认可", "余波"),
+     None),
+    (("奇观", "尺度", "天穹", "悬城", "世界边界", "远超既有", "巨大尺度"),
      '"scale anchored wonder" OR "world wonder"'),
-    (("遗迹", "秘境", "入口", "边界", "陌生空间", "第一次进入", "进入新"),
+    (("第一次进入", "进入陌生", "初到", "踏入", "新地点", "新空间", "陌生空间", "入口和边界", "进入新区域"),
      '"action anchored grounding" OR "scene entry exploration"'),
-    (("重逢", "离别", "牺牲", "情绪", "克制", "照护", "微反应", "旧友", "想念", "伤痛"),
+    (("重逢", "离别", "告别", "牺牲", "想念", "信任", "照护", "心结", "关系距离", "私人反应", "关系边界", "依赖", "疏远"),
      '"emotion relationship" OR "embodied detail"'),
-    (("发现", "揭示", "揭露", "真相", "规则", "线索", "推断", "旧物", "解释"),
+    (("验证", "复现", "推断", "异常", "线索", "规律", "试压", "裂纹", "可重复", "再次出现", "仍未知", "未验证"),
      '"evidence first limited reveal" OR "discovery reveal"'),
-    (("日常", "吃饭", "生活", "休息", "低压", "返乡", "恢复"),
+    (("日常", "吃饭", "休息", "低压", "生活动作", "恢复期", "闲谈"),
      '"ordinary life prose" OR "embodied detail"'),
 )
-PROSE_CONTROL_DEFAULT_QUERY = '"scene entry exploration" OR "prose realization"'
+PROSE_CONTROL_MIN_SIGNAL_SCORE = 2
+PROSE_CONTROL_COMPLEX_ACTION_QUERY = '"action combat" OR "spatial clarity"'
+PROSE_CONTROL_COMPLEX_ACTION_HARD_ANCHORS = (
+    "追逐", "追捕", "搜捕", "追杀", "突围", "围堵", "错误支路", "诱敌", "夹击", "多入口", "路线变化",
+)
 
 CONSTRAINT_PATTERNS = (
     ("现实世界", ("现实世界", "现代都市", "现实职业", "现代社会")),
@@ -302,11 +306,72 @@ def _semantic_query_available() -> bool:
     return bool(os.environ.get("OPENAI_API_KEY", "").strip())
 
 
-def _chapter_prose_control_alias_query(retrieval_brief: str) -> str:
-    for terms, query in PROSE_CONTROL_ALIAS_RULES:
-        if any(term in retrieval_brief for term in terms):
-            return query
-    return PROSE_CONTROL_DEFAULT_QUERY
+def _chapter_task_from_retrieval_brief(retrieval_brief: str) -> str:
+    marker = "当前章任务："
+    start = retrieval_brief.find(marker)
+    if start < 0:
+        return retrieval_brief
+    task = retrieval_brief[start + len(marker):]
+    boundaries = [
+        position
+        for position in (
+            task.find("最近章节摘要："),
+            task.find("明确硬约束："),
+            task.find("章节精度优先："),
+        )
+        if position >= 0
+    ]
+    if boundaries:
+        task = task[: min(boundaries)]
+    return task.strip()
+
+
+def _positive_scene_signal_count(text: str, term: str, *, cap: int = 2) -> int:
+    """Count scene terms only when they are not negated in the same short clause."""
+
+    count = 0
+    clause_breaks = "，。；;：:\n"
+    negations = ("没有", "并无", "无", "未", "不是", "并非", "不含", "不存在")
+    for match in re.finditer(re.escape(term), text):
+        clause_start = max(text.rfind(mark, 0, match.start()) for mark in clause_breaks) + 1
+        prefix = text[clause_start: match.start()]
+        if any(negation in prefix for negation in negations):
+            continue
+        count += 1
+        if count >= cap:
+            break
+    return count
+
+
+def _chapter_prose_control_alias_query(retrieval_brief: str) -> str | None:
+    """High-precision no-key fallback for Curator prose candidates.
+
+    Only the compact current-chapter task is scored. BOOK/Growth/planning commentary
+    is intentionally excluded because incidental terms there caused false routing.
+    Ambiguous or weak scenes return NONE; a false negative is safer than forwarding
+    the wrong prose method to the Curator.
+    """
+
+    task = _chapter_task_from_retrieval_brief(retrieval_brief)
+    scored: list[tuple[int, int, str | None]] = []
+    for index, (terms, query) in enumerate(PROSE_CONTROL_ALIAS_RULES):
+        score = sum(_positive_scene_signal_count(task, term) for term in terms)
+        if score:
+            scored.append((score, index, query))
+    if not scored:
+        return None
+    scored.sort(key=lambda item: (-item[0], item[1]))
+    best_score, _best_index, best_query = scored[0]
+    if best_score < PROSE_CONTROL_MIN_SIGNAL_SCORE:
+        return None
+    if len(scored) > 1 and scored[1][0] == best_score:
+        return None
+    if best_query == PROSE_CONTROL_COMPLEX_ACTION_QUERY and not any(
+        _positive_scene_signal_count(task, anchor, cap=1)
+        for anchor in PROSE_CONTROL_COMPLEX_ACTION_HARD_ANCHORS
+    ):
+        return None
+    return best_query
 
 
 def default_effective_query(mode: str, retrieval_brief: str) -> tuple[str, str]:
@@ -316,7 +381,10 @@ def default_effective_query(mode: str, retrieval_brief: str) -> tuple[str, str]:
         if mode in PLANNING_KEYWORD_QUERIES:
             return PLANNING_KEYWORD_QUERIES[mode], "planning_keyword_aliases"
         if mode in CURATOR_PROSE_CONTROL_FALLBACK_MODES:
-            return _chapter_prose_control_alias_query(retrieval_brief), "prose_control_keyword_aliases"
+            alias_query = _chapter_prose_control_alias_query(retrieval_brief)
+            if alias_query is None:
+                return "", "prose_control_none"
+            return alias_query, "prose_control_keyword_aliases"
     return retrieval_brief, "semantic_brief"
 
 
@@ -538,7 +606,9 @@ def retrieve_gbrain(
     allowed_categories = MODE_ALLOWED_CATEGORIES[mode]
     query_scope = ",".join(sorted(allowed_categories))
     query_texts = (
-        PLANNING_KEYWORD_QUERY_BATCHES.get(mode, (effective_query,))
+        ()
+        if query_strategy == "prose_control_none"
+        else PLANNING_KEYWORD_QUERY_BATCHES.get(mode, (effective_query,))
         if query_strategy == "planning_keyword_aliases"
         else (effective_query,)
     )

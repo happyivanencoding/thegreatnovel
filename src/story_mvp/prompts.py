@@ -567,12 +567,14 @@ HYBRID_PROMPT_TEMPLATES = {
 ## Relevant World Rules
 ## Relevant Open Promises
 ## Relevant Plan
-## Relevant Prose Controls
+## Scene Prose Projection
 ## Opening Strategy
 ## Scene Skill Selection
 ## Relevant Inspiration
 
-`## Relevant Prose Controls` 只从 OPTIONAL INSPIRATION 中保留当前场景真正相关的表达控制：默认 1 条；只有第二条解决不同的表达问题时最多 2 条。它们只控制 how to say（词、句、段、细节、反应与信息顺序），不得改变 Chapter Mission、Canon 或 PROSE PROFILE；不要把来源作品 Prose DNA、人物、事件或作者风格直接投影给 Primary Writer。
+`## Scene Prose Projection` 不是 Control 清单，而是把 BOOK PROSE PROFILE、当前章 Mission / Canon / 人物状态、当前 Scene 与 OPTIONAL INSPIRATION 中真正相关的 Prose Controls 编译成 Writer 此刻需要的局部表达压力。先在内部判断：读者此刻最该注意什么、什么应压缩、当前 POV 有资格知道到哪里、哪个具体细节最值得承重、句段应跟随哪个 state change、什么已经成立应停止解释。不要把这六项逐项回显。
+
+如果 BOOK PROSE PROFILE 与当前场景本来已经足够明确，写 `NONE`。`NONE` 是正常结果，优先于弱投影：如果你能补充的只是重复 Reader-Facing Language、Opening Strategy、已选 Scene Skill 或已经清楚的现场事实，或者必须新增未冻结细节才能让建议显得具体，也写 `NONE`。不要仅因为 Scene Family 有匹配 Control 就生成 Projection；当 Chapter Mission / Canon 已经让即时目标、关键位置、主要因果和结果停点自然可读时，匹配卡本身不构成使用理由。否则只写 2—4 句自然中文；每句都必须针对本章具体人物、物件、关系、动作或信息边界，并优先使用正目标：当前注意什么、展开哪里、保留什么未知、哪个细节承担变化、结果在哪里停。不得写 Control 名称、来源作品、Prose DNA 术语、禁词表、评分标准或通用 Humanizer 口号；不得为了“更像场景”新增交易条件、过去事实、世界机制或动作步骤。动作、对白、物体变化或人物反应已经让意义成立时，不再追加同义抽象解释；只有当前 POV 必须据此作下一步选择时，才保留一条具体判断。结果已经发生但现场仍读不出局面变化时，只选择一个会改变行为、关系或行动空间的必要后果；已经清楚就停止。Projection 只控制 how to say，不得改变 Chapter Mission、Canon 或 PROSE PROFILE。
 
 `## Scene Skill Selection` 只从下方 `SCENE SKILL CATALOG` 中选择当前章最主要的场景发动机，固定写两行：
 Primary: <skill_id 或 none>
@@ -1795,6 +1797,7 @@ def generate_prompt(
             drop_growth_hierarchy,
             extract_primary_prose_context,
             extract_unresolved_fact_boundary,
+            strip_legacy_prose_controls,
         )
         from .scene_skills import (
             render_scene_skill_catalog,
@@ -1856,7 +1859,7 @@ def generate_prompt(
             curated = curated_context.strip() or curator_response.strip()
             primary_prose = extract_primary_prose_context(packet.recent_prose)
             active_scene_skills = render_selected_scene_skills(curated)
-            curated_for_writer = strip_scene_skill_selection(curated)
+            curated_for_writer = strip_legacy_prose_controls(strip_scene_skill_selection(curated))
             unresolved_fact_boundary = extract_unresolved_fact_boundary(curated)
             fallback = not curated_for_writer
             parts.extend(

@@ -62,7 +62,7 @@ v1 不保存“冷峻、宏大、细腻、华丽”作为主要生产知识，�
 
 ## Prose DNA：证据层
 
-六张正式 Prose DNA 已写入 `reference-corpus/prose-dna/`。它们保留单书的 Scene Window 与微观 prose 观察，并全部设置：
+六张 v1 Prose DNA 与六张 **Selection Prose DNA v2** 均已写入 `reference-corpus/prose-dna/`。v2 不重新取证，而是完整继承 85 个 canonical scene refs，把微观观察重组为“作者在什么条件下选择什么进入文本”的 evidence layer。它们全部设置：
 
 `active_inspiration: false`
 
@@ -70,7 +70,7 @@ v1 不保存“冷峻、宏大、细腻、华丽”作为主要生产知识，�
 
 ## Production Prose Controls
 
-跨书 Luna synthesis → Luna integrator → Terra final fidelity audit 后，最终保留 **7 张 active prose-controls**：
+跨书 Luna synthesis → Luna integrator → Terra final fidelity audit 后，当前保留 **6 张 active prose-controls + 1 张 merged/reference-only payoff card**。完整研究卡只为 Curator 提供可选知识，不直接进入 Primary：
 
 ### 1. action-anchored-grounding-v1
 
@@ -96,11 +96,9 @@ v1 不保存“冷峻、宏大、细腻、华丽”作为主要生产知识，�
 
 先给可观察证据，再给当前人物足够使用的局部判断，只解释到当前选择需要的程度，并保留仍有价值的未知。
 
-### 5. payoff-consequence-conversion-v1
+### 5. payoff-consequence-conversion-v1 — MERGED / REFERENCE_ONLY
 
-适用：Chapter Mission / Canon 本身包含真实 payoff、胜利、获得或身份变化。
-
-先用可见结果完成 payoff，再根据场景选择最有价值的一种后果：外界重新定价，或私人 aftermath；不要求两者同时出现，也不征收固定“代价”。
+不再作为独立常规 production projection。它留下的有效原则已并入共享 result-stop：**结果已经发生但现场仍读不出局面变化时，只选择一个会改变行为、关系或行动空间的必要后果；已经清楚就停止。**
 
 ### 6. scale-anchored-wonder-v1
 
@@ -128,20 +126,30 @@ v1 的共享默认优先级：
 
 ## Runtime Soft Routing
 
-默认原则：Curator 只选择 **1 张明确相关的 Prose Control**；第二张很少出现，且必须解决不同的 prose problem。
+当前生产结构已经从“Curator 选择一张 Control”升级为 **Scene Projection Compiler**：
 
-| Scene Family | Primary | Optional second |
-|---|---|---|
-| ORDINARY | embodied-reaction-private-scale | 新地点/状态时可 action-anchored-grounding |
-| ENTRY_EXPLORATION | action-anchored-grounding | 真正尺度奇观时 scale-anchored-wonder |
-| DIALOGUE_NEGOTIATION | dialogue-state-pressure | 关系兑现时 embodied-reaction-private-scale |
-| DISCOVERY_REVEAL | evidence-first-limited-reveal | 通过移动发现时 action-anchored-grounding |
-| EXPOSITION_RULE | evidence-first-limited-reveal | 规则由即时行动学到时 action-anchored-grounding |
-| ACTION_COMBAT | spatially-traceable-causality | 默认无第二张 |
-| PAYOFF_POWER_PROOF | payoff-consequence-conversion | payoff 本身是复杂动作高潮时 spatial control |
-| EMOTION_RELATIONSHIP | embodied-reaction-private-scale | 仍有谈判压力时 dialogue-state-pressure |
+`BOOK Prose Profile + Chapter Mission / Canon / 当前人物状态 + current Scene + optional Prose Control evidence → Curator → NONE 或 2—4 句 Scene Prose Projection → Terra Primary`
 
-当前 8 类 Scene Family → approved English alias 的 **no-key retrieval fallback 已接入 `context_curator` GBrain 查询路径**；它只解决“查询时能稳定拿到哪张 control”，不等于每章默认自动开启 GBrain。是否把 Prose Controls 自动 ON 到常规章节链，仍需先做便宜 A/B，再决定是否冻结为默认 Curator 行为。
+关键边界：
+
+- `NONE` 是正常结果，并优先于弱 Projection；
+- Scene Family 有匹配 Control **不是**使用理由；当前 Mission / Canon 已让即时目标、关键位置、主要因果和结果停点自然可读时，应允许 `NONE`；
+- Projection 只写本场具体注意点、知识边界、承重细节、节奏转折与停止点，不回显 DNA / Control 名称；
+- Primary 确定性剥离 legacy `Relevant Prose Controls`，source Prose DNA 和完整研究卡不直接进入 Writer；
+- no-key retrieval fallback 采用高精度、低召回、否定感知的 scene-signal scoring：宁可无候选，也不因零散“站位 / 试探 / 公开”等词误路由；
+- Payoff 不再独立路由 Control；共享 result-stop 足够。
+
+当前高置信候选主要为：
+
+| 真实 prose problem | 可选 Control evidence |
+|---|---|
+| 复杂追逐 / 多人 / 移动地形导致方位与因果易丢失 | `spatially-traceable-causality-v1` |
+| 发现 / 规则复验需要保持证据与知识边界 | `evidence-first-limited-reveal-v1` |
+| 陌生入口确实缺少即时动作与空间承重 | `action-anchored-grounding-v1` |
+| 私人关系变化缺少可读反应 | `embodied-reaction-private-scale-v1` |
+| 高压多人谈判且基础对白无法自然读出筹码变化 | `dialogue-state-pressure-v1` |
+| 真实尺度跃迁 / 世界边界第一次显形 | `scale-anchored-wonder-v1` |
+| payoff 本身 | **NONE；使用共享 result-stop** |
 
 ## Model Routing
 
@@ -153,7 +161,7 @@ v1 的共享默认优先级：
 
 Production controls：
 
-- 7 active cards
+- 6 active cards + 1 merged/reference-only payoff card
 - 33 representative canonical evidence refs
 - 0 evidence error
 - 0 source-author / source-book surface leakage in TGN abstract output
@@ -161,7 +169,7 @@ Production controls：
 
 六张 source Prose DNA：85 scene refs / 0 error。
 
-TGN runtime validation：**224 tests passed**；8 个 Scene Family no-key Curator retrieval regression 全部命中预期 control。
+TGN runtime validation：当前完整测试基线 **229 tests passed**；no-key Curator fallback 已升级为高精度可空路由，并通过复杂 Action / Reveal / Emotion NONE / Payoff NONE 等回归。
 
 ## GBrain / Embedding
 
@@ -171,11 +179,11 @@ Prose Craft 前：
 - 15686 chunks
 - 15686 embedded
 
-Prose Craft 后：
+Selection DNA v2 / Projection Compiler 本轮完成后：
 
-- **3747 pages**
-- **15705 chunks**
-- **15705 embedded**
+- **3753 pages**
+- **15717 chunks**
+- **15717 embedded**
 
 完成标准为 `Embedded == Chunks`，已达成。从本轮起，所有 GBrain 增量统一按 `Distill → Formalize → Import → Embed → Embedded == Chunks → Retrieval Regression → Done` 收尾；没有补完 embedding 不算任务完成。
 
@@ -187,22 +195,18 @@ Windows / Git Bash 必须使用真实 executable：`~/.bun/bin/gbrain.exe`。`~/
 
 ## Retrieval
 
-TGN `context_curator` 在无 query embedding 的 Windows runtime 下，已用 8 个 Scene Family 做真实 production retrieval regression；fallback 默认只返回 1 张主 control：
+TGN `context_curator` 的 no-key fallback 不再按 8 个 Scene Family 机械映射一张卡，而采用**高精度、低召回**策略：
 
-- ORDINARY → `embodied-reaction-private-scale-v1`
-- ENTRY_EXPLORATION → `action-anchored-grounding-v1`
-- DIALOGUE_NEGOTIATION → `dialogue-state-pressure-v1`
-- DISCOVERY_REVEAL / EXPOSITION_RULE → `evidence-first-limited-reveal-v1`
-- ACTION_COMBAT → `spatially-traceable-causality-v1`
-- PAYOFF_POWER_PROOF → `payoff-consequence-conversion-v1`
-- WORLD_WONDER / SCALE → `scale-anchored-wonder-v1`
-- EMOTION_RELATIONSHIP → `embodied-reaction-private-scale-v1`
+- 只分析当前章事实任务，不让 BOOK 长期规划、Growth 术语或叙事功能备注主导 scene routing；
+- 对关键词做基本否定感知，`没有追逐 / 并非围堵` 不计为正 signal；
+- 复杂 Action 需要追逐、搜捕、围堵、支路/入口持续变化等强空间锚点，单独出现“站位”不会触发；
+- Reveal 需要复验、线索、异常、未知边界等集中证据；
+- 模糊或混合 Scene 默认返回 `NONE`；
+- 手工 query override 仍最高优先；planning 的 World 3 / Story Program 3 / Outline 4 路由不受影响。
 
-无 query embedding 时只返回 1 张主卡，避免 FTS 噪声把不相关的第二张控制送给 Curator；semantic query 可用时仍保留最多 2 条的原有空间。手工 query override 继续最高优先。`chapter`、`chapter_prep`、planning 和 review 的原行为没有改变。
+真实 production regression 已确认：复杂追逐 → spatial control；受控复验 → evidence-first；关系场景可以 `NONE`；payoff → `NONE`。
 
-Curator Prompt 同时冻结：`Relevant Prose Controls` 默认保留 1 条，只有第二条解决不同的表达问题时最多 2 条；来源 Prose DNA、人物、事件和作者风格不得直接投影给 Primary Writer。
-
-原 Story Craft 规划检索回归仍完全保持：World 3 / Story Program 3 / Outline 4。
+Curator 得到候选以后仍需判断当前场景是否真的缺少某种读法，候选卡本身不构成生成 Projection 的理由。
 
 ### 当前 GBrain scoped semantic 限制
 
@@ -242,3 +246,40 @@ Blind judge 产品判定：**KEEP OPTIONAL**。
 当前产品判断仍是 **KEEP OPTIONAL**；短 projection 比“把完整研究卡压给 Primary”更值得继续验证。完整实验见 `books/real-exp-prose-control-projection-ab-v2/AB_REPORT.md`。
 
 GBrain final hygiene: **3747 Pages / 15705 Chunks / 15705 Embedded**; updated prose-control slugs are single scoped pages with no accidental root-level duplicates.
+
+## Selection Prose DNA v2（2026-08-24）
+
+六本新经典的 85 个 scene windows 已重组为六维 Selection DNA：
+
+| DNA | 核心问题 |
+|---|---|
+| Attention DNA | 作者什么时候愿意花字，什么直接压缩？ |
+| Knowledge DNA | 哪些东西现在解释，哪些即使存在也暂时留着？ |
+| Causal DNA | 因果写到什么粒度已经足以支持下一步？ |
+| Reaction DNA | 人物状态怎样通过动作、对白、物件与社会行为泄露？ |
+| Rhythm DNA | 句段怎样跟随真实 scene beat / state change 改变？ |
+| Lexical DNA | 哪类具体名词、动作/结果动词和判断词成为功能落点？ |
+
+`Detail Selection` 横跨六维：不是增加 sensory density，而是选择删掉后会损失人物、因果、关系、身份、身体、尺度或 payoff 读法的 context-specific detail。
+
+Terra final fidelity audit：**PASS_WITH_EDITS**。六本共 **85 canonical refs**，source IDs / locators 全部可回溯；没有新增原著证据。审计要求删除《斗破》重复半稿、去掉 Production Implications 中的配额感、收窄 Dialogue / Spatial applicability、取消 Payoff 独立 projection，以及禁止为了满足 Reveal 卡而人为制造未知，均已落实。
+
+## Selection Projection Multi-Scene A/B v3（2026-08-24）
+
+本轮第一次直接测试新结构：`Selection DNA / BOOK / Canon / current Scene → Curator → 2–4句 Projection → Terra`。四组冻结同一 Primary 基线，OFF 为 `NONE`，ON 只增加 Scene Projection；一次 Luna high 联合盲评。
+
+| Scene | OFF | ON | Δ ON |
+|---|---:|---:|---:|
+| Entry | 7.8 | 6.9 | -0.9 |
+| Complex Action | 6.9 | 7.8 | +0.9 |
+| Discovery / Reveal | 8.2 | 8.7 | +0.5 |
+| Emotion / Relationship | 7.7 | 8.4 | +0.7 |
+| **Mean** | **7.65** | **7.95** | **+0.30** |
+
+ON **3胜1负**。Complex Action、Reveal、Emotion 均得到正增益；Entry 的反证表明：当基础事件链已经天然清楚时，再加局部写作压力会让动作模板化。因此产品决策不是“默认 ON”，而是：
+
+> **PROMOTE PROJECTION COMPILER / KEEP PROJECTION OPTIONAL.**
+
+Scene Projection 能力进入常规 Curator，但内容默认可空；`NONE` 是正常结果。成功标准不是每章都产生 Projection，而是需要时给 Writer 少量局部选择压力，已经足够清楚时不干预。
+
+完整实验：`books/real-exp-prose-selection-projection-v3/AB_REPORT.md`。

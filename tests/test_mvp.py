@@ -1829,7 +1829,6 @@ def test_planning_retrieval_uses_hidden_keyword_aliases_without_query_embedding(
     [
         ("本章是三方高压谈判，通过称呼、拒答和报价改变筹码。", "dialogue negotiation", "action combat"),
         ("本章是狭窄石桥上的追逐战，必须写清站位、受力和落点。", "action combat", "dialogue negotiation"),
-        ("本章在众人面前完成公开能力证明，结果必须留下具体余波。", "payoff power proof", "world wonder"),
         ("本章第一次看见远超既有尺度的奇观，天穹与距离发生变化。", "scale anchored wonder", "dialogue negotiation"),
         ("多年后重逢，人物都很克制，用微反应表现想念。", "emotion relationship", "limited reveal"),
         ("主角发现旧物的真相，只能从线索和规则推断一部分。", "evidence first limited reveal", "dialogue negotiation"),
@@ -1844,6 +1843,50 @@ def test_chapter_prose_control_keyword_fallback_tracks_scene_family(monkeypatch,
     assert strategy == "prose_control_keyword_aliases"
     assert expected in effective
     assert unexpected not in effective
+
+
+def test_payoff_scene_no_key_fallback_adds_no_regular_prose_control(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    brief = build_retrieval_brief(
+        mode="context_curator",
+        current_outline="本章在众人面前完成公开能力证明，结果已经清楚，只需要让现场承认变化。",
+    )
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert effective == ""
+    assert strategy == "prose_control_none"
+
+    seen: list[str] = []
+    result = retrieve_gbrain(
+        mode="context_curator",
+        current_outline="本章在众人面前完成公开能力证明，结果已经清楚，只需要让现场承认变化。",
+        query_func=lambda query, **_kwargs: seen.append(query) or "",
+        page_func=lambda _slug: "",
+    )
+    assert seen == []
+    assert result["query_strategy"] == "prose_control_none"
+    assert result["accepted_count"] == 0
+
+
+def test_no_key_prose_fallback_prefers_reveal_over_incidental_action_terms(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    brief = build_retrieval_brief(
+        mode="context_curator",
+        current_outline="主角用灰粉、滴水和试压复现裂纹，再据此推断局部规律；只能确认这一部分，来源仍未知。",
+    )
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert strategy == "prose_control_keyword_aliases"
+    assert "evidence first limited reveal" in effective
+
+
+def test_no_key_prose_fallback_does_not_treat_repeated_stance_as_complex_action(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    brief = build_retrieval_brief(
+        mode="context_curator",
+        current_outline="两人围绕信任边界交换条件，人物几次改变站位观察对方；没有追逐、搜捕、围堵或路线变化。",
+    )
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert effective == ""
+    assert strategy == "prose_control_none"
 
 
 def test_chapter_prose_control_fallback_returns_one_primary_control(monkeypatch) -> None:
@@ -2794,6 +2837,75 @@ FULL_BOOK_FUTURE_MARKER
     assert "前文最后动作" in prompt
     assert "前文开头" not in prompt
     assert "FULL_BOOK_FUTURE_MARKER" not in prompt
+
+
+def test_context_curator_compiles_scene_prose_projection_instead_of_forwarding_controls() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["context_curator"]
+    assert "## Scene Prose Projection" in template
+    assert "写 `NONE`" in template
+    assert "`NONE` 是正常结果，优先于弱投影" in template
+    assert "重复 Reader-Facing Language、Opening Strategy、已选 Scene Skill" in template
+    assert "只写 2—4 句自然中文" in template
+    assert "不要把这六项逐项回显" in template
+    assert "不要仅因为 Scene Family 有匹配 Control 就生成 Projection" in template
+    assert "匹配卡本身不构成使用理由" in template
+    assert "不得写 Control 名称" in template
+    assert "动作、对白、物体变化或人物反应已经让意义成立时" in template
+    assert "结果已经发生但现场仍读不出局面变化时" in template
+
+
+def test_primary_writer_strips_legacy_relevant_prose_controls() -> None:
+    outline = "\n".join(f"{field}：本章{field}" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    curated = """# Curated Chapter Context
+
+## Relevant Plan
+计划事实。
+## Relevant Prose Controls
+LEGACY_FULL_CONTROL_MUST_NOT_REACH_PRIMARY
+## Opening Strategy
+直接进入现场。
+"""
+    prompt = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="# 小说总体设计画像\n## 8. 文风与可操作参数\n简洁。",
+        current_outline=outline,
+        curated_context=curated,
+    )
+    assert "LEGACY_FULL_CONTROL_MUST_NOT_REACH_PRIMARY" not in prompt
+    assert "直接进入现场" in prompt
+
+
+def test_primary_writer_receives_scene_prose_projection_without_raw_gbrain() -> None:
+    outline = "\n".join(f"{field}：本章{field}" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    curated = """# Curated Chapter Context
+
+## Relevant Plan
+计划事实。
+## Scene Prose Projection
+本场只展开门口没有给主角留座这一处身份变化；对方改口后停止解释关系意义。
+## Scene Skill Selection
+Primary: none
+Secondary: none
+"""
+    prompt = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="# 小说总体设计画像\n## 8. 文风与可操作参数\n简洁直接。",
+        current_outline=outline,
+        previous_chapter_text="CANON_PROSE",
+        curated_context=curated,
+        gbrain_inspiration="RAW_PROSE_CONTROL_MUST_NOT_REACH_PRIMARY",
+    )
+    assert "## Scene Prose Projection" in prompt
+    assert "本场只展开门口没有给主角留座" in prompt
+    assert "RAW_PROSE_CONTROL_MUST_NOT_REACH_PRIMARY" not in prompt
 
 
 def test_primary_writer_prompt_uses_curated_projection_and_explicit_fallback() -> None:

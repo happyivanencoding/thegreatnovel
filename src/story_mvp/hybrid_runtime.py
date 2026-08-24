@@ -19,13 +19,15 @@ SPECIALIST_NAMES = ("opening", "dialogue", "action", "emotion")
 _SPECIALIST_HEADINGS = {
     "opening": (
         "## Opening Strategy",
-        "## Relevant Prose Controls",
+        "## Scene Prose Projection",
+        "## Relevant Prose Controls",  # legacy Curator output compatibility
         "## Relevant Plan",
         "## Reader-Facing Language",
     ),
     "dialogue": (
         "## Relevant Characters and Relationships",
-        "## Relevant Prose Controls",
+        "## Scene Prose Projection",
+        "## Relevant Prose Controls",  # legacy Curator output compatibility
         "## Relevant Plan",
         "## Reader-Facing Language",
     ),
@@ -38,7 +40,8 @@ _SPECIALIST_HEADINGS = {
     "emotion": (
         "## Relevant Characters and Relationships",
         "## Relevant Open Promises",
-        "## Relevant Prose Controls",
+        "## Scene Prose Projection",
+        "## Relevant Prose Controls",  # legacy Curator output compatibility
         "## Reader-Facing Language",
     ),
 }
@@ -119,6 +122,28 @@ def _extract_subsection(content: str, heading: str) -> str:
             collected.append(next_line)
         return "\n".join(collected).strip()
     return ""
+
+
+def strip_legacy_prose_controls(curated_response: str) -> str:
+    """Primary 不再接收旧版完整 Prose Control 区块。
+
+    新 Curator 应输出 `## Scene Prose Projection`。对历史 response 保持其它区块兼容，
+    但确定性删除 `## Relevant Prose Controls`，避免完整方法论重新进入 Writer。
+    """
+
+    lines = curated_response.splitlines()
+    kept: list[str] = []
+    skipping = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped == "## Relevant Prose Controls":
+            skipping = True
+            continue
+        if skipping and (stripped.startswith("## ") or stripped.startswith("# ")):
+            skipping = False
+        if not skipping:
+            kept.append(line)
+    return "\n".join(kept).strip()
 
 
 _UNRESOLVED_MARKERS = (
