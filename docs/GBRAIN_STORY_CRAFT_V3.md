@@ -100,7 +100,46 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 
 因此当前默认保持：**Seed OFF；World 3 条 ON；Program 3 条 ON；Outline 4/5 条 ON。** GBrain 的作用不是替模型提供故事答案，而是给已经很强的模型提供少量长期小说 craft reminders。
 
-这只是一个高风险 Seed 的实测，不把 29 张 v3 Pilot 直接提升成正式 machine VALIDATED；继续通过真实新书验证后再 promotion。
+这只是一个高风险 Seed 的实测；后续经典样本扩展也继续保持 PILOT overlay，不因样本数量增加就自动提升为正式 machine VALIDATED。继续通过真实新书验证后再 promotion。
+## 经典样本扩展（2026-08-24）
+
+在首轮《斗罗大陆》《诡秘之主》《将夜》《修真聊天群》之后，v3 又完成 10 本互补经典的 SOURCE-FIRST 专项蒸馏：
+
+- 《遮天》：World Desire、世界奇观、古史回流；
+- 《仙逆》：情绪长线、旧因回流、Payoff Afterlife；
+- 《极道天魔》：Power Dominance、Obstacle Reframing、Plot Engine 换挡；
+- 《斗破苍穹》：Reward、Private Acquisition / Public Proof；
+- 《盘龙》：Stage Transition、World Scale、家庭/关系 carryover；
+- 《凡人修仙传》：稳态成长、机缘、Map Transition，同时保留资源循环重复风险；
+- 《灭运图录》：境界升格如何改变故事问题；
+- 《大圣传》：强烈主角欲望、不驯化力量幻想、Power ≠ Duty；
+- 《幽冥仙途》：多方人物博弈、信息差、临时合作；
+- 《死人经》：联盟、背叛、人物自主与主角计划被他人改写。
+
+来源使用稳定 `source_book_id` 区间 `rcv0-30`—`rcv0-40`；新增三本原文已规范到 `02_仙侠/大圣传.txt`、`02_仙侠/幽冥仙途.txt`、`07_武侠/死人经.txt`。增量来源登记见 `reference-corpus/selection/corpus-sources-v3.classics.yaml`。
+
+跨书综合最初提出 4 张新机制候选。Terra Final Source Fidelity Audit 后，只保留一张真正独立的新 active mechanism：
+
+- `minimum-sufficient-public-proof-v3`：**最低充分公开证明**。Private Acquisition 解决“主角是否真的获得”，Public Proof 解决“外界是否还能继续按旧判断行动”；公开证明只展示到足以改变敌人策略、关系位置、身份或新机会。
+
+另外三项没有继续扩张 ontology，而是 MERGE：
+
+- Old Anchor Progressive Recontextualization → `narrative-compounding-v3`；
+- Payoff Afterlife → `reward-afterlife-v3` / story-state 语义；
+- Realm Change → Story Problem Change → `plot-engine-variation-v3`。
+
+同时用经典样本增强 `world-desire-ladder`、`world-entry`、`character-autonomy`、`map-transition`、`thread-ecology` 等已有机制。原则是：**新书优先增加证据，不按“每本书一个新方法论”增加卡片。**
+
+扩展后 staging 为 **47 张 Pilot：45 active / 2 HOLD**。相比扩展前 29 张，净新增 18 张主要是 source-specific Book/Arc/Observation evidence；默认规划链的 focused mechanism 数量没有同步膨胀。`observations` 只作来源证据，当前 TGN `SOURCE_CATEGORIES` 不消费它们。
+
+GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks`。导入后同 Seed 回归确认默认检索完全不变：
+
+- World Vision：`story-state-compounding / world-entry / world-desire-ladder`；
+- Story Program：`plot-engine-variation / thread-ecology / earned-high-value-acquisition`；
+- Outline：`thread-collision / sacrifice-convergence / hidden-identity-long / reward-recontextualization`。
+
+所有 active staging card 的 canonical evidence refs 已统一到稳定 `source_id / distill_id / segment_id`；最终检查为 **33 refs / 0 evidence error / 0 temporary ref / 0 Prompt-risk hit**。完整报告见 GBrain 工作区 `FINAL_CLASSIC_EXPANSION_REPORT_20260824.md`。
+
 ## 检索退化兼容
 
 当前 GBrain 的 hybrid query 只有在进程可用 `OPENAI_API_KEY` 时才生成 query embedding；没有 key 时会退化成 keyword-only。TGN 因此：
@@ -115,4 +154,9 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 
 ## Pilot Active / HOLD
 
-当前 v3 共有 29 张 Pilot：27 张可作为 active inspiration；`partner-reward-agency-v3` 与 `reward-timing-variation-v3` 保持 HOLD。TGN 对显式 `active_inspiration: false` 的页面自动跳过。v3 尚未写入正式 `reference-corpus/machine`，避免在 Pilot 阶段污染旧 validated snapshot。
+当前 v3 staging 共 **47 张 Pilot：45 active / 2 HOLD**。HOLD 仍是：
+
+- `partner-reward-agency-v3`
+- `reward-timing-variation-v3`
+
+TGN 对显式 `active_inspiration: false` 的页面自动跳过。`reference-corpus/machine` 继续保持旧 validated snapshot；经典样本扩展先作为本机 GBrain runtime 的 Pilot overlay 使用，避免在真实新书验证不足时提前 promotion。
