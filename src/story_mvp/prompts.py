@@ -10,7 +10,6 @@ PROMPT_MODES = {
     "fantasy_seed": "Fantasy Seed / 核心幻想种子",
     "world_vision": "World Vision / 世界幻想画像",
     "outline": "新书/总纲规划",
-    "prologue": "可选序章 / Prologue",
     "director": "当前章 Director",
     "chapter_prep": "当前章执行小纲",
     "chapter": "当前章节写作",
@@ -97,7 +96,7 @@ STAGE_CHANGE_PLANNING_RULE = """阶段推进优先（软规划原则，不是固
 
 OPENING_THREE_CHAPTER_CONTRACT = """开书前三章专用合同（只适用于本书开头第1—3章，不扩展为全书每三章的规律，也不是 Schema 或 Hard Gate）：
 
-第一章的进入顺序优先为：具体的人正在面对什么问题 → 失败会导致什么具体后果 → 当前行动最低限度需要理解的规则 → 主角立即行动。世界尺度或宏观秩序可以用一句强信息提前出现，但必须迅速落回具体人物、地点和行动；不要先把世界模型讲完，再把主角放进来，也不要写成设定集。先让读者知道眼前的人要解决什么，再让核心异能打破当前常识。
+第一章的进入顺序优先为：具体的人正在面对什么问题 → 失败会导致什么具体后果 → 当前行动最低限度需要理解的规则 → 主角立即行动。前三章应在相关冲突或爽点真正需要之前，让读者自然获得足够的世界坐标与度量尺（如主角/对手强弱、身份层级、关键价值尺度），但只释放理解当前故事所需的信息；不要先把世界模型讲完，再把主角放进来，也不要写成设定集。
 
 第一章必须让主角面对逼近的现实问题并采取行动。章末前，核心非对称优势必须造成一次真实、可见、不可替代的现实结果；只听见、看见、感知、得到坐标、知道未来、出现面板、能力似乎觉醒或“下章再试”都不算兑现。先让动作、结果、他人反应和主角实际所得成立，再保留尚未解释的成长空间；第一次展示要强，但不要提前结算第二章本应完成的能力拥有、第二次使用或正式升级。
 
@@ -267,17 +266,6 @@ Emotion：启用 / 不启用；理由
 
 {BUSINESS_DECISION_OVER_IMPLEMENTATION}
 """
-
-
-DEFAULT_PROLOGUE_TEMPLATE = """你是透明协作的可选 Prologue Writer。Prologue 是开书前一次性的正式正文，不是 Chapter 0，不进入章节编号，也不运行 State Delta。
-
-优先采用“具体异常事件承载世界规则”的事件见证型序章；这是一种常见执行形态，不是固定步骤，也不要求每篇序章逐项演示。可以先让一个普通、具体、熟悉日常事物的人看见异常，再用一两个有代表性的普通动作证明异常或力量差距；也可以直接从已经改变局面的事件切入。只在读者已经自然产生“为什么”的位置，补充理解当前事件所需的最低限度规则，再让权力、灾难或其它后果落到一个清楚、不可逆、容易复述的近期事实。
-
-世界规则通过对象、行动、失败或变化、人物反应、权力介入和现实后果进入正文。事件展示优先，必要解释随后进入；普通办法已经证明不够时就进入下一次真正改变局面的事件，不要枚举工具、步骤或失败方式。不要先写完整世界历史、力量体系、组织架构、资源系统、Future 10、主角能力或成长路线。
-
-正文临时优先级：立即理解 > 因果清楚 > 阅读顺畅 > 画面感 > 文学感。重要事实尽快给读者一个当前可用的大白话理解；神秘感放在“为什么”，不是“发生了什么”。关键因果、主语和对象不要为了文采省略；普通功能句可以大量存在。事实先于比喻，少用连续排除式句法、抽象总结、半句话悬停和“某种东西”式无对象指代；比喻只能帮助理解，不能代替事实。
-
-只输出正式 Prologue 正文，不输出标题、Writer Audit、事实摘要、策划说明、评分或内部推理。序章若无必要可以很短；它可以让读者看见世界压力第一次伤到具体生活、第一次看到值得向往或恐惧的力量尺度，或提前知道一个不适合塞进 Chapter 1 的具体事实。无论目的是什么，都必须通过具体场景成立，而不是百科说明；如果这本书不需要 Prologue，可以不创建它。"""
 
 
 DEFAULT_PROMPT_TEMPLATES = {
@@ -1071,7 +1059,6 @@ DEFAULT_PROMPT_TEMPLATES.update({
     "outline": OUTLINE_TEMPLATE,
     "review": REVIEW_TEMPLATE,
 })
-DEFAULT_PROMPT_TEMPLATES["prologue"] = DEFAULT_PROLOGUE_TEMPLATE
 
 HYBRID_PROMPT_MODES = frozenset(HYBRID_PROMPT_TEMPLATES)
 SPECIALIST_PROMPT_MODES = frozenset(
@@ -1655,7 +1642,6 @@ def generate_prompt(
     current_outline: str = "",
     current_chapter_plan: str = "",
     recent_summaries: str = "",
-    prologue_text: str = "",
     selected_references: list[Mapping[str, Any]] | None = None,
     gbrain_inspiration: str = "",
     actual_summaries: str = "",
@@ -1711,8 +1697,6 @@ def generate_prompt(
         prompt_template = DEFAULT_PROMPT_TEMPLATES[mode]
     elif mode == "director" and not prompt_template:
         prompt_template = DEFAULT_DIRECTOR_TEMPLATE
-    elif mode == "prologue" and not prompt_template:
-        prompt_template = DEFAULT_PROLOGUE_TEMPLATE
     elif mode in {"fantasy_seed", "world_vision", "idea", "outline", "review"} and not prompt_template:
         prompt_template = DEFAULT_PROMPT_TEMPLATES[mode]
     stripped_legacy_writer = False
@@ -1722,20 +1706,7 @@ def generate_prompt(
         prompt_template = DEFAULT_STATE_DELTA_TEMPLATE
     parts = [prompt_template, ""]
     opening_contract = OPENING_THREE_CHAPTER_CONTRACT if 1 <= chapter_number <= 3 else ""
-    if mode == "prologue":
-        from .chapter_context import build_prologue_context
-
-        parts.append("# Prologue Context")
-        parts.append(_input_block(
-            "COMPACT PROLOGUE CONTEXT",
-            build_prologue_context(
-                book_content=book_content,
-                current_long_block=current_long_block,
-                current_chapter_plan=current_chapter_plan,
-                author_intent=creative_direction,
-            ) or "（没有提供 Prologue 上下文。）",
-        ))
-    elif mode == "director":
+    if mode == "director":
         from .chapter_context import build_chapter_context, build_director_context
 
         packet = build_chapter_context(
@@ -1747,7 +1718,6 @@ def generate_prompt(
             recent_summaries=recent_summaries,
             gbrain_inspiration="",
             selected_references=[],
-            prologue_text=prologue_text,
             chapter_number=chapter_number,
         )
         context = build_director_context(
@@ -1769,8 +1739,6 @@ def generate_prompt(
                 _input_block("作者当前章意图", context.author_intent),
             ]
         )
-        if packet.prologue_reader_knowledge:
-            parts.extend(["# CANON PROLOGUE / READER ALREADY KNOWS", packet.prologue_reader_knowledge])
     elif mode == "chapter":
         if stripped_legacy_writer:
             parts.append(SINGLE_WRITER_RUNTIME_NOTE)
@@ -1790,7 +1758,6 @@ def generate_prompt(
             recent_summaries=recent_summaries,
             gbrain_inspiration=gbrain_inspiration,
             selected_references=selected_references,
-            prologue_text=prologue_text,
             chapter_number=chapter_number,
         )
         parts.append("# 页面当前输入（章节运行期上下文）")
@@ -1813,11 +1780,6 @@ def generate_prompt(
         ))
         parts.append(_input_block("本章成长收益短投影（规划提示，不是正文措辞）", packet.growth_benefit_projection))
         parts.append(_input_block("CANON PROSE——前文正文（已发生事实的最高来源）", packet.recent_prose))
-        if packet.prologue_reader_knowledge:
-            parts.append(_input_block(
-                "CANON PROLOGUE / READER ALREADY KNOWS",
-                packet.prologue_reader_knowledge,
-            ))
         parts.append(_input_block(
             "CANON INDEX——已发生事实的压缩索引",
             _annotated_block(CANON_INDEX_BLOCK_NOTE, packet.canon_context),
@@ -1854,7 +1816,6 @@ def generate_prompt(
             recent_summaries=recent_summaries,
             gbrain_inspiration=gbrain_inspiration,
             selected_references=selected_references,
-            prologue_text=prologue_text,
             chapter_number=chapter_number,
         )
         parts.append(f"# Hybrid Runtime\n\nwriter_mode: {writer_mode}")
@@ -1863,8 +1824,6 @@ def generate_prompt(
             parts.extend(["# Reader-First Prose Contract", contract])
         if opening_contract and (mode == "primary_writer" or mode == "specialist_opening"):
             parts.extend(["# Opening Three Chapter Contract", opening_contract])
-        if packet.prologue_reader_knowledge:
-            parts.extend(["# CANON PROLOGUE / READER ALREADY KNOWS", packet.prologue_reader_knowledge])
         if mode == "context_curator":
             context = build_curator_context(packet)
             parts.extend(

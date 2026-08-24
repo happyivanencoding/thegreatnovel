@@ -360,6 +360,7 @@ def test_opening_contract_is_scoped_to_planning_and_opening_nodes() -> None:
         chapter_number=3,
     )
     assert primary.count("# Opening Three Chapter Contract") == 1
+    assert "世界坐标与度量尺" in primary
     assert opening.count("# Opening Three Chapter Contract") == 1
 
     for mode in (

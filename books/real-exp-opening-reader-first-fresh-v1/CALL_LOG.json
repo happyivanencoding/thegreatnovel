@@ -6,7 +6,6 @@
   "integrator_calls": 0,
   "reviewer_calls": 0,
   "state_delta_calls": 3,
-  "prologue_calls": 0,
   "reader_priority_addendum": {
     "applied": true,
     "full_addendum_in_downstream_prompts_from_sequence": 2,

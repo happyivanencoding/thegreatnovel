@@ -38,7 +38,6 @@
   "planned_content_calls": 12,
   "nodes_per_chapter": ["director", "context_curator", "primary_writer", "state_delta"],
   "chapters": [1, 2, 3],
-  "prologue_used": false,
   "specialists_used": false,
   "integrator_used": false,
   "reviewer_used": false,

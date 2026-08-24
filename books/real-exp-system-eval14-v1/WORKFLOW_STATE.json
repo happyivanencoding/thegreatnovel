@@ -50,13 +50,6 @@
       "last_source": "system_eval14_state",
       "stale_from": []
     },
-    "book.prologue": {
-      "revision": 0,
-      "status": "EMPTY",
-      "freshness": "fresh",
-      "last_source": "empty",
-      "stale_from": []
-    },
     "chapter.1.body": {
       "revision": 2,
       "status": "DONE",

@@ -181,6 +181,27 @@ def test_old_book_lazy_state_does_not_rewrite_existing_files(tmp_path: Path) -> 
     assert "# 小说总体设计画像" not in json.dumps(state, ensure_ascii=False)
 
 
+def test_workflow_refresh_prunes_unsupported_static_artifacts(tmp_path: Path) -> None:
+    book_dir = create_book("demo", tmp_path)
+    _run(book_dir, 1)
+    workflow_status(book_dir)
+    state_path = book_dir / "WORKFLOW_STATE.json"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    state["artifacts"]["book.obsolete"] = {
+        "revision": 1,
+        "status": "DONE",
+        "freshness": "fresh",
+        "source": "legacy",
+    }
+    state["artifacts"]["chapter.1.run"]["source_revisions"]["book.obsolete"] = 1
+    state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    refreshed = workflow_status(book_dir)
+
+    assert "book.obsolete" not in refreshed["artifacts"]
+    assert "book.obsolete" not in refreshed["artifacts"]["chapter.1.run"]["source_revisions"]
+
+
 def test_workflow_and_impact_api_use_real_book_state(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
     client = TestClient(app)

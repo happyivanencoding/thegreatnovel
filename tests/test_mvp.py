@@ -78,6 +78,7 @@ from story_mvp.storage import (
     create_book,
     parse_book_sections,
     read_book_payload,
+    text_to_prompt_templates,
 )
 
 
@@ -124,7 +125,6 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
         "fantasy_seed",
         "world_vision",
         "outline",
-        "prologue",
         "chapter_prep",
         "chapter",
         "review",
@@ -146,6 +146,18 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
         "proposal": {"origin": "empty", "status": "empty"},
     }
     assert set(payload["creative_artifacts"]) == {"fantasy_seed", "world_vision", "proposal"}
+
+
+def test_prompt_template_parser_ignores_unsupported_top_level_sections() -> None:
+    parsed = text_to_prompt_templates(
+        "# 新书/总纲规划\n\nOUTLINE\n\n"
+        "# retired template\n\nOLD CONTENT\n\n"
+        "# 当前章执行小纲\n\nCHAPTER PREP\n"
+    )
+
+    assert parsed["outline"] == "OUTLINE"
+    assert parsed["chapter_prep"] == "CHAPTER PREP"
+    assert all("OLD CONTENT" not in value for value in parsed.values())
 
 
 def test_new_book_has_no_database_or_old_system_directory(tmp_path: Path) -> None:
@@ -1157,6 +1169,7 @@ def test_long_form_pacing_uses_soft_anchors_and_dynamic_outline_window() -> None
     assert "规划范围：预计第1—N章" in outline
     assert "当前中期规划窗口只展开 Story Program" in outline
     assert "通常约 4—10 块" in outline
+    assert "世界坐标与度量尺" in outline
     assert "严格的 T0 快照" in outline
     assert "第一章第一场事件发生前一刻已经真实成立的事实" in outline
     assert "模型已经规划过”不等于“故事已经发生过" in outline
@@ -2360,7 +2373,6 @@ def test_default_prompt_templates_include_idea_mode() -> None:
         "fantasy_seed",
         "world_vision",
         "outline",
-        "prologue",
         "chapter_prep",
         "chapter",
         "review",

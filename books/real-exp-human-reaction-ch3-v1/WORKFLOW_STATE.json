@@ -50,13 +50,6 @@
       "last_source": "legacy",
       "stale_from": []
     },
-    "book.prologue": {
-      "revision": 0,
-      "status": "EMPTY",
-      "freshness": "fresh",
-      "last_source": "empty",
-      "stale_from": []
-    },
     "chapter.3.run": {
       "revision": 8,
       "status": "DRAFT",
@@ -131,8 +124,7 @@
         "book.design": 1,
         "book.long_plan": 1,
         "book.future_10": 1,
-        "book.canon_state": 1,
-        "book.prologue": 0
+        "book.canon_state": 1
       }
     },
     "chapter.3.state_delta": {

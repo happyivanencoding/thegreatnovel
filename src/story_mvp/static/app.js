@@ -5,7 +5,6 @@ const state = {
   creativeState: {},
   creativeArtifacts: {},
   creativeSources: {},
-  prologue: "",
   workflow: null,
   view: "overview",
   designTab: "overall",
@@ -359,7 +358,6 @@ const workflowStages = [
   { title: "创意", keys: ["creative.fantasy_seed", "creative.world_vision", "creative.story_program"] },
   { title: "设计", keys: ["book.design"] },
   { title: "规划", keys: ["book.long_plan", "book.future_10"] },
-  { title: "开篇", keys: ["book.prologue"] },
   { title: "当前章节", keys: [] },
   { title: "记忆", keys: ["book.canon_state"] },
 ];
@@ -372,7 +370,6 @@ const workflowLabels = {
   "book.long_plan": "中期规划",
   "book.future_10": "未来十章",
   "book.canon_state": "记忆状态",
-  "book.prologue": "序章",
 };
 
 const chapterActionDefaults = {
@@ -423,7 +420,6 @@ function workflowLocation(artifact) {
     "book.long_plan": "BOOK.md · long_plan",
     "book.future_10": "BOOK.md · small_plan",
     "book.canon_state": "BOOK.md · status",
-    "book.prologue": "PROLOGUE.md",
   };
   if (staticPaths[artifact]) return staticPaths[artifact];
   const match = artifact.match(/^chapter\.(\d+)\.(run|body|state_delta)$/);
@@ -546,7 +542,6 @@ function locateWorkflowArtifact() {
     "book.long_plan": "section-long_plan",
     "book.future_10": "section-small_plan",
     "book.canon_state": "section-status",
-    "book.prologue": "prologue-body",
   };
   const target = $(targets[selectedWorkflowArtifact] || "prompt-panel");
   if (selectedWorkflowArtifact.startsWith("creative.")) navigateToView("creative", "定位创意节点");
@@ -1072,7 +1067,6 @@ function populateBook(book) {
   setDesignEditing(false);
   document.querySelectorAll(".creative-stage").forEach((stage) => stage.classList.remove("stage-editing"));
   state.bookId = book.book_id;
-  state.prologue = book.prologue || "";
   state.workflow = null;
   selectedWorkflowArtifact = "";
   $("book-id").value = book.book_id;
@@ -1089,7 +1083,6 @@ function populateBook(book) {
   $("template-world_vision").value = templates.world_vision || $("template-world_vision").value;
   $("template-idea").value = templates.idea || $("template-idea").value;
   $("template-outline").value = templates.outline || $("template-outline").value;
-  $("template-prologue").value = templates.prologue || $("template-prologue").value;
   $("template-chapter_prep").value = templates.chapter_prep || $("template-chapter_prep").value;
   $("template-chapter").value = templates.chapter || $("template-chapter").value;
   $("template-review").value = templates.review || $("template-review").value;
@@ -1100,8 +1093,6 @@ function populateBook(book) {
     $(`template-${key}`).value = templates[key] || $(`template-${key}`).value;
   }
   $("proposal-editor").value = book.proposal || "";
-  $("prologue-body").value = state.prologue;
-  $("prologue-status").textContent = state.prologue.trim() ? "已存在 PROLOGUE.md" : "未创建 Prologue";
   $("current-chapter-plan").value = "";
   $("director-response").value = "";
   $("codex-response").value = "";
@@ -1270,7 +1261,6 @@ function currentTemplate() {
     world_vision: $("template-world_vision").value,
     idea: $("template-idea").value,
     outline: $("template-outline").value,
-    prologue: $("template-prologue").value,
     chapter_prep: $("template-chapter_prep").value,
     chapter: $("template-chapter").value,
     review: $("template-review").value,
@@ -1300,7 +1290,7 @@ function gbrainContextPayload(queryOverride = "") {
 }
 
 async function setDefaultGbrainQuery() {
-  if (["fantasy_seed", "prologue"].includes($("prompt-mode").value)) return;
+  if ($("prompt-mode").value === "fantasy_seed") return;
   try {
     const payload = await requestJson("/api/gbrain/brief", {
       method: "POST",
@@ -1328,7 +1318,7 @@ async function activatePromptMode(mode) {
 
 function populatePromptTemplates(templates) {
   for (const key of [
-    "fantasy_seed", "world_vision", "idea", "outline", "prologue", "chapter_prep", "chapter", "review",
+    "fantasy_seed", "world_vision", "idea", "outline", "chapter_prep", "chapter", "review",
     "context_curator", "primary_writer", "specialist_opening", "specialist_dialogue",
     "specialist_action", "specialist_emotion", "chapter_integrator",
   ]) {
@@ -1344,7 +1334,6 @@ function promptPayload() {
     writer_mode: $("writer-mode").value,
     chapter_number: Number($("chapter-number").value),
     book_content: composeBookContent(),
-    prologue_text: $("prologue-body").value,
     creative_direction: $("creative-direction").value,
     fantasy_seed: $("creative-fantasy-seed").value,
     world_vision: $("creative-world-vision").value,
@@ -1453,7 +1442,6 @@ function externalArtifactForMode(mode) {
     idea: "creative.story_program",
   };
   if (creative[mode]) return creative[mode];
-  if (mode === "prologue") return "book.prologue";
   const node = runNodeByMode[mode];
   if (node) return `chapter.${currentChapterNumber()}.run`;
   return mode === "outline" || mode === "review" ? "book.future_10" : "book.future_10";
@@ -2066,7 +2054,6 @@ async function saveTemplates() {
           world_vision: $("template-world_vision").value,
           idea: $("template-idea").value,
           outline: $("template-outline").value,
-          prologue: $("template-prologue").value,
           chapter_prep: $("template-chapter_prep").value,
           chapter: $("template-chapter").value,
           review: $("template-review").value,
@@ -2085,37 +2072,6 @@ async function saveTemplates() {
   } catch (error) {
     showStatus(error.message, true);
   }
-}
-
-async function savePrologue() {
-  if (!state.bookId) return showStatus("请先加载小说", true);
-  try {
-    await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/prologue`, {
-      method: "PUT",
-      body: JSON.stringify({ content: $("prologue-body").value }),
-    });
-    state.prologue = $("prologue-body").value;
-    $("prologue-status").textContent = state.prologue.trim() ? "已保存 PROLOGUE.md" : "未创建 Prologue";
-    clearEditorDirty(["prologue-body"]);
-    await refreshWorkflow();
-    showStatus("PROLOGUE.md 已保存；没有创建 Chapter 0");
-  } catch (error) {
-    showStatus(error.message, true);
-  }
-}
-
-function applyPrologueResponse() {
-  const response = $("codex-response").value.trim();
-  if (!response) return showStatus("模型返回为空，未改变 Prologue", true);
-  $("prologue-body").value = response;
-  $("prologue-status").textContent = "模型返回已放入 Prologue 编辑区，尚未保存";
-  markEditorDirty("prologue-body");
-  showStatus("模型返回已放入 Prologue 编辑区；请确认后保存");
-}
-
-async function generateProloguePrompt() {
-  await activatePromptMode("prologue");
-  await generatePrompt();
 }
 
 async function saveProposal() {
@@ -2233,9 +2189,6 @@ $("generate-dialogue-prompt").addEventListener("click", () => generateHybridNode
 $("generate-action-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_action"));
 $("generate-emotion-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_emotion"));
 $("generate-integrator-prompt").addEventListener("click", () => generateHybridNodePrompt("chapter_integrator"));
-$("generate-prologue-prompt").addEventListener("click", generateProloguePrompt);
-$("apply-prologue-response").addEventListener("click", applyPrologueResponse);
-$("save-prologue").addEventListener("click", savePrologue);
 $("apply-curator-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "curator-response"));
 $("apply-director-response").addEventListener("click", applyDirectorResponse);
 $("apply-primary-writer-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "primary-writer-response"));

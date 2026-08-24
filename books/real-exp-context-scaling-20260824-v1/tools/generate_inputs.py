@@ -157,7 +157,6 @@ def packet_for(n: int) -> ChapterContextPacket:
         optional_inspiration="",
         growth_benefit_projection="本章一级成长：判断与行动空间；二级收益：旧关系/旧承诺重新可用；反哺：打开下一阶段入口。",
         growth_genome_compact=GROWTH,
-        prologue_reader_knowledge="",
     )
 
 

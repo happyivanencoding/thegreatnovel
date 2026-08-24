@@ -18,7 +18,7 @@
 
 - 创意：三阶段 Stepper；默认阅读态，编辑/生成/批准按阶段展开；GBrain/References 折叠。
 - 故事设计：总体设计 / 中期规划 / 未来十章 Tabs；section cards 默认阅读态，原文编辑显式打开。
-- 章节写作：章节选择、当前小纲/正文主体、一个主生成或保存动作；原始上下文和执行节点进入高级详情。
+- 章节写作：章节选择、当前小纲/正文主体、一个主生成或保存动作；所有开书叙事形式都从 Chapter 1 进入正常 Director → Curator → Writer → State 链，原始上下文和执行节点进入高级详情。
 - 记忆：Canon Memory / Current State 默认阅读态，复用 BOOK status 保存路径。
 - 工具：Prompt Templates、OpenAI Settings、References、Workflow Debug。
 

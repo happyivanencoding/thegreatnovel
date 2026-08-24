@@ -145,13 +145,12 @@
             <button id="open-workflow-from-tools" type="button"><strong>Workflow Debug</strong><span>查看 Workflow State、Run Ledger、Impact 与 Codex Task</span></button>
           </div>
           <details id="template-editor" class="template-editor">
-            <summary>编辑并保存十五个 Prompt 模板（PROMPTS.md）</summary>
+            <summary>编辑并保存十四个 Prompt 模板（PROMPTS.md）</summary>
             <p class="hint">模板参与下一次生成；保存模板和生成 Prompt 是两个独立动作。</p>
             <label class="field"><span>Fantasy Seed 模板</span><textarea id="template-fantasy_seed" rows="12"></textarea></label>
             <label class="field"><span>World Vision 模板</span><textarea id="template-world_vision" rows="12"></textarea></label>
             <label class="field"><span>Story Program 模板（mode key: idea）</span><textarea id="template-idea" rows="12"></textarea></label>
             <label class="field"><span>新书/总纲规划模板</span><textarea id="template-outline" rows="10"></textarea></label>
-            <label class="field"><span>可选 Prologue 模板</span><textarea id="template-prologue" rows="9"></textarea></label>
             <label class="field"><span>当前章执行小纲模板</span><textarea id="template-chapter_prep" rows="9"></textarea></label>
             <label class="field"><span>当前章节写作模板</span><textarea id="template-chapter" rows="9"></textarea></label>
             <label class="field"><span>十章复盘与下一批十章模板</span><textarea id="template-review" rows="9"></textarea></label>
@@ -529,23 +528,6 @@
           </label>
         </div>
 
-        <section id="prologue-editor" class="chapter-body-editor" aria-label="可选 Prologue">
-          <div class="hybrid-node-heading">
-            <strong>可选 Prologue</strong>
-            <span id="prologue-status" class="status">未创建 Prologue</span>
-          </div>
-          <p class="hint">独立保存为 PROLOGUE.md，不占 Chapter 0，不进入 State Delta；不存在时保持为空。</p>
-          <label class="field">
-            <span>Prologue 正文</span>
-            <textarea id="prologue-body" rows="10" placeholder="可选：确认后保存为 PROLOGUE.md"></textarea>
-          </label>
-          <div class="action-row wrap">
-            <button id="generate-prologue-prompt" type="button">生成 Prologue Prompt</button>
-            <button id="apply-prologue-response" type="button">将模型返回应用到 Prologue</button>
-            <button id="save-prologue" type="button">保存 Prologue.md</button>
-          </div>
-        </section>
-
         <div id="chapter-body-editor" class="chapter-body-editor">
         <label class="field">
           <span>正式正文（保存内容；只在提取后进入 chapter-NNNN.md）</span>
@@ -595,7 +577,6 @@
               <option value="world_vision">World Vision / 世界幻想画像</option>
               <option value="idea">Story Program / 商业化结构方案</option>
               <option value="outline">新书/总纲规划</option>
-              <option value="prologue">可选 Prologue / 序章</option>
               <option value="director">当前章 Director</option>
               <option value="chapter_prep">当前章执行小纲</option>
               <option value="chapter">单 Writer 当前章节写作</option>
