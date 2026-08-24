@@ -36,6 +36,8 @@ Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact 
 
 ## Canon Memory
 
+新书第一次进入 Chapter Runtime 时，Outline 提供的 Initial State 必须是严格的 **T0 snapshot**：只包含 Chapter 1 第一场事件发生前已经成立的事实。Outline 中刚刚规划出的 Future 10 / 中期剧情块结果仍是 Plan / Open Promises，不能因为“已被规划”而提前成为 Canon。
+
 章节状态区使用五个语义层：
 
 - `ACTIVE SCENE STATE`：下一章马上需要的地点、人物、伤势、重要物品、追兵、倒计时和直接目标；可整体替换。

@@ -244,6 +244,7 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 每个剧情块真正的故事主问题；
 - 通常 3—5 个连续故事锚点；
 - Future 10 的逐章具体事件；
+- 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
 - 每个阶段的 Fantasy Proof、一级成长、收益与反哺、下一块推动；
 - **World Model Release**：尤其前五章，决定什么时候通过事件让读者看见 World Vision 已经存在的强弱/身份/价值/能力边界，而不是把解释责任拖给 Director；
 - **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”，避免相邻高潮只换场地重复同一对手和同一翻转。

@@ -1157,6 +1157,10 @@ def test_long_form_pacing_uses_soft_anchors_and_dynamic_outline_window() -> None
     assert "规划范围：预计第1—N章" in outline
     assert "当前中期规划窗口只展开 Story Program" in outline
     assert "通常约 4—10 块" in outline
+    assert "严格的 T0 快照" in outline
+    assert "第一章第一场事件发生前一刻已经真实成立的事实" in outline
+    assert "模型已经规划过”不等于“故事已经发生过" in outline
+    assert "Current State 与 Future Plan 在时间上必须互斥" in outline
     assert "# 未来100章大型剧情块" not in outline
 
 
