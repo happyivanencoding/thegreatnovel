@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "artifacts": {
+    "creative.fantasy_seed": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_fixed_candidate1",
+      "stale_from": []
+    },
+    "creative.world_vision": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_world",
+      "stale_from": []
+    },
+    "creative.story_program": {
+      "revision": 1,
+      "status": "DRAFT",
+      "freshness": "fresh",
+      "last_source": "fresh5_program",
+      "stale_from": []
+    },
+    "book.design": {
+      "revision": 2,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "fresh5_outline",
+      "stale_from": []
+    },
+    "book.long_plan": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_outline",
+      "stale_from": []
+    },
+    "book.future_10": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_outline",
+      "stale_from": []
+    },
+    "book.canon_state": {
+      "revision": 7,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_state",
+      "stale_from": []
+    },
+    "chapter.1.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_primary",
+      "stale_from": []
+    },
+    "chapter.2.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_primary",
+      "stale_from": []
+    },
+    "chapter.3.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_primary",
+      "stale_from": []
+    },
+    "chapter.4.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_primary",
+      "stale_from": []
+    },
+    "chapter.5.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "fresh5_primary",
+      "stale_from": []
+    }
+  }
+}
