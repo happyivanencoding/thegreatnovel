@@ -545,6 +545,34 @@ def test_canon_memory_v2_and_state_delta_parser() -> None:
     assert "黑炉钥匙｜沈禾" in updated
     assert "旧场景" not in updated
 
+    preserved_prefix = """# 小说总体设计画像
+## 0. 本书成长基因图
+必须逐字保留。
+
+# 当前中期规划窗口
+PLAN
+
+# 未来十章逐章小纲
+FUTURE
+"""
+    source = preserved_prefix + "\n# 当前状态、未兑现承诺与作者备注\n\n## ACTIVE SCENE STATE\n旧\n"
+    preserved = apply_state_delta_to_book(
+        source,
+        1,
+        """# State Delta Audit
+无。
+# Proposed Active Scene State
+新
+# Proposed Persistent Canon
+长期
+# Proposed Chapter Summary
+事实
+# Proposed Open Promises
+承诺""",
+    )
+    assert preserved.startswith(preserved_prefix.rstrip() + "\n\n# 当前状态、未兑现承诺与作者备注")
+    assert "必须逐字保留。" in preserved
+
     prefixed = apply_state_delta_to_book(
         """# 小说总体设计画像
 内容

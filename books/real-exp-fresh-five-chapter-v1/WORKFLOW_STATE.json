@@ -23,25 +23,29 @@
       "stale_from": []
     },
     "book.design": {
-      "revision": 2,
-      "status": "EMPTY",
+      "revision": 3,
+      "status": "DONE",
       "freshness": "fresh",
-      "last_source": "fresh5_outline",
+      "last_source": "repair_restore_outline_design",
       "stale_from": []
     },
     "book.long_plan": {
       "revision": 2,
-      "status": "DONE",
-      "freshness": "fresh",
+      "status": "STALE",
+      "freshness": "stale",
       "last_source": "fresh5_outline",
-      "stale_from": []
+      "stale_from": [
+        "book.design"
+      ]
     },
     "book.future_10": {
       "revision": 2,
-      "status": "DONE",
-      "freshness": "fresh",
+      "status": "STALE",
+      "freshness": "stale",
       "last_source": "fresh5_outline",
-      "stale_from": []
+      "stale_from": [
+        "book.design"
+      ]
     },
     "book.canon_state": {
       "revision": 7,

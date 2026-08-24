@@ -79,6 +79,7 @@ from story_mvp.storage import (
     parse_book_sections,
     read_book_payload,
     text_to_prompt_templates,
+    validate_book_content_for_save,
 )
 
 
@@ -158,6 +159,28 @@ def test_prompt_template_parser_ignores_unsupported_top_level_sections() -> None
     assert parsed["outline"] == "OUTLINE"
     assert parsed["chapter_prep"] == "CHAPTER PREP"
     assert all("OLD CONTENT" not in value for value in parsed.values())
+
+
+def test_book_save_contract_rejects_inline_or_missing_top_level_heading(tmp_path: Path) -> None:
+    malformed = (
+        "模型说明。# 小说总体设计画像\n\n设计\n\n"
+        "# 当前中期规划窗口\n\n规划\n\n"
+        "# 未来十章逐章小纲\n\n十章\n\n"
+        "# 当前状态、未兑现承诺与作者备注\n\n状态\n"
+    )
+    with pytest.raises(ValueError, match="小说总体设计画像"):
+        validate_book_content_for_save(malformed)
+    book_dir = create_book("demo", tmp_path)
+    before = (book_dir / "BOOK.md").read_text(encoding="utf-8")
+    with pytest.raises(ValueError, match="小说总体设计画像"):
+        app_module.write_book("demo", malformed, tmp_path)
+    assert (book_dir / "BOOK.md").read_text(encoding="utf-8") == before
+
+
+def test_outline_ui_discards_model_preamble_before_book_headings() -> None:
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    assert "const firstHeadingIndex = source.indexOf(firstHeading);" in js
+    assert "if (firstHeadingIndex >= 0) source = source.slice(firstHeadingIndex);" in js
 
 
 def test_new_book_has_no_database_or_old_system_directory(tmp_path: Path) -> None:

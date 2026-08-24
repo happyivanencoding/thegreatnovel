@@ -1661,6 +1661,12 @@ function applyResponseToEditor(response, editor) {
 }
 
 function splitHeadingBlocks(text, titles) {
+  let source = text;
+  if (titles === sectionTitles) {
+    const firstHeading = sectionTitles.design;
+    const firstHeadingIndex = source.indexOf(firstHeading);
+    if (firstHeadingIndex >= 0) source = source.slice(firstHeadingIndex);
+  }
   const headingToKey = Object.fromEntries(
     Object.entries(titles).map(([key, heading]) => [heading, key]),
   );
@@ -1671,7 +1677,7 @@ function splitHeadingBlocks(text, titles) {
   const save = () => {
     if (currentKey) result[currentKey] = lines.join("\n").trim();
   };
-  for (const line of text.split(/\r?\n/)) {
+  for (const line of source.split(/\r?\n/)) {
     const key = headingToKey[line.trim()];
     if (key) {
       save();

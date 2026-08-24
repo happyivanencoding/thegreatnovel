@@ -54,7 +54,7 @@ State Delta 只提出：
 - `# Proposed Chapter Summary`
 - `# Proposed Open Promises`
 
-State Delta 不改 BOOK Contract、计划或正文；只有作者显式批准后才应用状态更新。
+State Delta 不改 BOOK Contract、计划或正文；应用状态更新时只替换 `# 当前状态、未兑现承诺与作者备注` 区块，前面的总体设计、中期规划和 Future 10 必须逐字保留，不能通过 parse → recompose 顺带重写。只有作者显式批准后才应用状态更新。
 
 ## Run Ledger
 

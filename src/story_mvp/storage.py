@@ -123,6 +123,27 @@ def compose_design_content(design_sections: dict[str, str]) -> str:
     return "\n\n".join(chunks).rstrip() + "\n"
 
 
+def validate_book_content_for_save(content: str) -> None:
+    """BOOK.md 是持久结构文件；保存前只校验四个一级区块没有被格式破坏。"""
+
+    lines = [line.strip() for line in content.splitlines()]
+    positions: list[int] = []
+    for key, title in SECTION_TITLES.items():
+        candidates = [title]
+        if key == "long_plan":
+            candidates.extend(
+                legacy_title
+                for legacy_title, legacy_key in LEGACY_SECTION_TITLES.items()
+                if legacy_key == key
+            )
+        matches = [index for index, line in enumerate(lines) if line in candidates]
+        if len(matches) != 1:
+            raise ValueError(f"BOOK.md 必须且只能包含一个独立一级标题：{title}")
+        positions.append(matches[0])
+    if positions != sorted(positions):
+        raise ValueError("BOOK.md 一级区块顺序无效")
+
+
 def parse_book_sections(content: str) -> dict[str, str]:
     headings = {title: key for key, title in SECTION_TITLES.items()}
     headings.update(LEGACY_SECTION_TITLES)
@@ -423,6 +444,7 @@ def write_book(
     directory = require_book(book_id, workspace)
     path = directory / "BOOK.md"
     old_content = path.read_text(encoding="utf-8")
+    validate_book_content_for_save(content)
     from .workflow_state import ensure_workflow_state
 
     ensure_workflow_state(directory)
@@ -468,7 +490,7 @@ def apply_state_delta_to_book(
         "\n".join(part for part in (previous, summary) if part).strip()
     )
     open_promises = compact_open_promises(proposal["open_promises"])
-    sections["status"] = "\n\n".join(
+    status_content = "\n\n".join(
         (
             f"当前已完成第{chapter_number}章。",
             "## ACTIVE SCENE STATE\n\n" + proposal["active_scene_state"],
@@ -478,7 +500,12 @@ def apply_state_delta_to_book(
             "## AUTHOR NOTES\n\n" + current.get("author_notes", ""),
         )
     ).strip()
-    return compose_book_content(sections)
+    status_title = SECTION_TITLES["status"]
+    matches = list(re.finditer(rf"(?m)^{re.escape(status_title)}\s*$", book_content))
+    if len(matches) != 1:
+        raise ValueError(f"BOOK.md 必须且只能包含一个独立一级标题：{status_title}")
+    prefix = book_content[: matches[0].start()].rstrip()
+    return f"{prefix}\n\n{status_title}\n\n{status_content}\n"
 
 
 def save_chapter(
