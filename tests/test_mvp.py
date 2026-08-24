@@ -47,6 +47,7 @@ from story_mvp.hybrid_runtime import (
     drop_growth_hierarchy,
 )
 from story_mvp.prompts import (
+    DEFAULT_DIRECTOR_TEMPLATE,
     DEFAULT_PROMPT_TEMPLATES,
     DEFAULT_STATE_DELTA_TEMPLATE,
     DIRECTOR_CHAPTER_BUDGET_RULE,
@@ -2839,6 +2840,65 @@ FULL_BOOK_FUTURE_MARKER
     assert "FULL_BOOK_FUTURE_MARKER" not in prompt
 
 
+def test_outline_parser_drops_inline_model_preamble_before_first_required_field() -> None:
+    response = (
+        "我会先遵守 Director 边界。触发事件：顾长川领取身份牌。\n"
+        "推动事件的人：执事。\n"
+        "主角行动：顾长川收好身份牌。\n"
+        "对手或世界反应：内门继续报到。\n"
+        "直接结果：完成报到。\n"
+        "状态变化：成为内门弟子。\n"
+        "叙事功能：兑现晋升。\n"
+        "结尾推动力：次日进入演武堂。"
+    )
+    validate_current_outline(response)
+    parsed = parse_outline_fields(response)
+    assert parsed["触发事件"] == "顾长川领取身份牌。"
+
+
+def test_world_vision_owns_reader_coordinates_and_core_advantage_compatibility() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    assert "Reader-Facing World Coordinates" in template
+    assert "## 读者可用的世界坐标" in template
+    assert "## 核心优势与普通规则怎样咬合" in template
+    assert "如果主角把优势用于远高于当前层级的对象" in template
+    assert "基础待遇与稀缺奖励" in template
+    assert "不强造境界名" in template
+
+
+def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "### 核心优势的选择空间与反制" in template
+    assert "表面更强的目标并不一定更值得选" in template
+    assert "不强制“单槽”" in template
+
+
+def test_outline_releases_world_model_and_varies_early_core_gameplay() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Outline World Model Release" in template
+    assert "Outline Core Gameplay Variation" in template
+    assert "前五章" in template
+    assert "长期对手可以暂时作为强弱标尺" in template
+
+
+def test_director_does_not_own_world_model_creation() -> None:
+    template = DEFAULT_DIRECTOR_TEMPLATE
+    assert "属于上游 World Vision / Story Program / Outline 已批准事实" in template
+    assert "不得为了让本章更具体而临时发明境界名、数值、货币、奖励、制度、能力限制或新世界规则" in template
+    assert "Reader-Facing World Coordinates" not in template
+    assert "Promotion Opens the World" not in template
+    assert "Core Ability Attention Alignment" not in template
+
+
+def test_curator_concretizes_only_from_upstream_world_facts() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["context_curator"]
+    assert "资源、机会、路径/路线、位置、选择、资格、收益、行动空间" in template
+    assert "BOOK / Canon / Plan 已经明确存在" in template
+    assert "上游没有给出具体世界名词时" in template
+    assert "不得为了“实体化”由 Curator 或 Writer 自己发明制度、价格、物品或待遇" in template
+    assert "细节预算优先跟随 BOOK 核心幻想真正让读者关心的对象" in template
+
+
 def test_context_curator_compiles_scene_prose_projection_instead_of_forwarding_controls() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["context_curator"]
     assert "## Scene Prose Projection" in template
@@ -2852,6 +2912,11 @@ def test_context_curator_compiles_scene_prose_projection_instead_of_forwarding_c
     assert "不得写 Control 名称" in template
     assert "动作、对白、物体变化或人物反应已经让意义成立时" in template
     assert "结果已经发生但现场仍读不出局面变化时" in template
+
+
+def test_extract_primary_draft_drops_inline_model_preamble_before_body_heading() -> None:
+    response = "我会按规范直接写作。# 正式正文\n\n顾长川拿起身份牌。"
+    assert extract_primary_draft(response) == "顾长川拿起身份牌。"
 
 
 def test_primary_writer_strips_legacy_relevant_prose_controls() -> None:

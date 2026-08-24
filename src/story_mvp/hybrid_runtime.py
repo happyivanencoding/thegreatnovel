@@ -326,9 +326,23 @@ def extract_primary_draft(response: str) -> str:
     body = _extract_level_one_section(response, "# 正式正文")
     if body:
         return body
+    # ACP/外部执行器偶尔会把一句模型前言和标题粘在同一行。
+    # 标题本身仍是明确正文边界时，确定性丢弃标题前模型自述。
+    marker = "# 正式正文"
+    if marker in response:
+        normalized = marker + "\n" + response.split(marker, 1)[1].lstrip()
+        body = _extract_level_one_section(normalized, marker)
+        if body:
+            return body
     body = _extract_level_one_section(response, "# Primary Draft")
     if body:
         return body
+    legacy_marker = "# Primary Draft"
+    if legacy_marker in response:
+        normalized = legacy_marker + "\n" + response.split(legacy_marker, 1)[1].lstrip()
+        body = _extract_level_one_section(normalized, legacy_marker)
+        if body:
+            return body
     clean = response.strip()
     if not clean or re.search(
         r"(?m)^#\s+(?:Primary Writer Audit|Primary Fact Summary|Writer Audit|章节事实摘要)\s*$",
