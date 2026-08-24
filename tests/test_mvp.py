@@ -2913,7 +2913,10 @@ def test_world_vision_owns_reader_coordinates_and_core_advantage_compatibility()
 def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["idea"]
     assert "### 核心优势的选择空间与反制" in template
-    assert "表面更强的目标并不一定更值得选" in template
+    assert "Contestable Choice" in template
+    assert "题面不要预先写出明显正确答案" in template
+    assert "真实价值、信息不完整、时机或对手干预" in template
+    assert "不要求每次选择都附带惨痛代价" in template
     assert "不强制“单槽”" in template
 
 
@@ -2924,8 +2927,11 @@ def test_outline_releases_world_model_and_varies_early_core_gameplay() -> None:
     assert "可观察的触发、结果和行动含义" in template
     assert "不要用意象、哲学定义或专属术语代替规则本身" in template
     assert "Outline Core Gameplay Variation" in template
+    assert "上一轮已证明有效的解法不要自动解决下一轮主要问题" in template
+    assert "下一轮优先攻击它尚未解决的对象、关系、资源、目标或条件" in template
+    assert "不要求机械让主角失败或每轮添加新代价" in template
     assert "前三章建立当前故事所需的最低可用坐标" in template
-    assert "长期对手可以暂时作为强弱标尺" in template
+    assert "长期对手可暂时作为强弱标尺" in template
 
 
 def test_director_does_not_own_world_model_creation() -> None:
