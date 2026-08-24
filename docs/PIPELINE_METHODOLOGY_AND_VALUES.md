@@ -256,6 +256,7 @@ Story Anchor 的作用是提前确定“真正的故事发生了什么”，降�
 - 抓本章最值得读、最值得复述的人物冲突、关键选择、力量使用、反转和结果；
 - 决定章节边界与停止位置；
 - 保证已发生事实和当前计划连续。
+- 旧人物、旧承诺、身份谜团或长期秘密回流时，在现有八字段中明确本章结束后**哪一个新事实真正成为确定事实**；若上游未授权揭晓过去原因，就明确原因仍未知，并把不可逆变化落在当下选择、证据、立场、职责、关系或行动入口。
 
 #### 不负责
 
@@ -263,6 +264,8 @@ Story Anchor 的作用是提前确定“真正的故事发生了什么”，降�
 - 重做几十章 Story Program；
 - 拯救一个已经工程化的长期大纲；
 - 把“主角行动”写成完整施工清单。
+- 用“真相进一步揭露 / 至少一条旧线发生变化”把隐藏答案留给 Writer 自行决定；
+- 为了填满本章结果，补造几十 / 几百章前未被 Canon 或上游计划确定的秘密历史。
 
 Director 的核心问题不是“这一章还能安排什么任务”，而是：
 
@@ -288,6 +291,8 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 
 当前系统使用 deterministic Index-first prefetch，目标是降低 token 和认知负担，而不是给 Curator 再增加工具调用。
 
+在长历史场景中，Curator 已识别的未解事实还会被 runtime 确定性投影成一个很短的 `UNRESOLVED FACT BOUNDARY`，紧贴 Chapter Mission 交给 Primary。它不新增 LLM Call，也不扩大 Canon schema；只是把“仍未知 / 未兑现”的事实边界提高显著性。
+
 ---
 
 ### Primary Writer：只写小说
@@ -298,6 +303,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 - Reader-First：先让读者理解人、问题和 stakes，再给最低限度规则；
 - 让人物反应、力量结果和现场变化承担信息；
 - 用少量 story-bearing detail 增加画面与人物存在感，而不是用修饰词堆积制造“丰富”；
+- 把 Canon / Curator 明确标记为 unknown / unresolved 的旧事实继续保持为未知；只有 Director Contract 明确规定本章新成立的事实才可在正文中落成 Canon；
 - 保持小说声音，而不是工作报告声音。
 
 #### 不负责
@@ -306,8 +312,11 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 - 输出 Audit、Fact Summary、状态更新；
 - 解释自己为什么这么写；
 - 为上游错误剧情方向做结构性救援。
+- 为让场景“完整”而补写长期谜团的过去经历、旧对话、隐藏动机、人物既有知识或持久世界机制。
 
-Writer 的目标是“写小说”，不是维护 pipeline bookkeeping。 正文目标不是越短越好，而是**克制但不干、丰富但不腻**：细节密度跟随故事价值，修饰密度不替代具体性。
+Writer 的目标是“写小说”，不是维护 pipeline bookkeeping。 正文目标不是越短越好，而是**克制但不干、丰富但不腻**：细节密度跟随故事价值，修饰密度不替代具体性。`Story-bearing Texture v1` 已通过 2026-08-24 五场景冻结 A/B（两个独立盲评合计 9:1）并作为当前正文基线冻结；战斗细节仍以决定性 beat、身体后果和对手反应为主，不借“丰富”恢复机制拆解。
+
+`Long-History Fact Boundary v1` 也已通过 Chapter 120 / 600 冻结 A/B：Director 用现有八字段明确“本章新成立事实 / 仍未知事实”，runtime 再把 Curator 的未解事实确定性提升到 Primary 前部；最终压力样本中，两个章节都不再把核心 unresolved 谜团补成 retrospective canon。该方案优先于新增 Character Agent、Continuity Reviewer、Knowledge Matrix 或全量历史上下文。
 
 ---
 

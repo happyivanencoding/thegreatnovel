@@ -257,6 +257,12 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 **Story-bearing Texture > Decorative Density**：正文不以“多写”或“多修饰”制造丰富感。每个主要 beat 选择少量真正改变画面的具体动作、物件/空间、身体反馈、力量后果和人物差异化反应；感官细节选择最有辨识度的少数锚点，不机械覆盖五感。细节如果不承载人物、冲突、因果或幻想体验，就继续压缩。
 
+该原则已通过 2026-08-24 五场景冻结 A/B：两个独立盲评合计 **Texture 9 胜 / Baseline 1 胜**，正式冻结为 `Story-bearing Texture v1`。冻结含义是：保持“故事承载细节而非装饰密度”的核心实现，不再以一般性“多描写”替代它。战斗 / Action 场景仍需特别压缩力路、受力、步骤和机制拆解；未来如优化，只做窄范围 Action/Combat refinement，不回退本原则。
+
+**长期历史未知边界**：Curated Context、Canon 或 Open Promise 已明确为未知、未解释、真假未定、原因未明的过去事实，不因进入正文就自动成为可补写的背景。除非 Director Contract 明确规定本章哪一个新事实成为确定事实，Primary 只能创造当前场景的动作、对白措辞、即时证据、感官和人物暂时判断；不得为了让场景显得完整，把几十 / 几百章前的秘密经历、旧对话、隐藏动机、既有知识或世界机制补成 retrospective canon。
+
+该边界已经通过 Chapter 120 / 600 压力 A/B 验证并冻结为 `Long-History Fact Boundary v1`。最终版本除 Prompt 顶层事实规则外，还把 Curator 已识别的 Open Promises / 未解机制 / 未兑现事项确定性投影为约 300 多字的 `UNRESOLVED FACT BOUNDARY`，放在 Chapter Mission 之后、正文连续性之前；不增加模型调用。冻结样本中两章的核心 unknown discipline 均达到盲评 5/5。已知残余是极少数后台章节编号可能被 Writer 自我纠正式带入正文，这属于 prose hygiene，不改变 Canon，也不应通过新增 continuity agent 解决。
+
 ### Specialist / Integrator — Bounded Repair
 
 Specialist 只看职责相关的 Primary Draft 局部和 Curated Context，最多给局部 Patch；Integrator 只以 Primary Draft 为底稿，并且只在真实存在下列问题时有限修复：

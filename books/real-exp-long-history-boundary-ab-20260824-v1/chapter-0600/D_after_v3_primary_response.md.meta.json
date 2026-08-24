@@ -1,0 +1,15 @@
+﻿{
+  "model": "gpt-5.6-terra",
+  "reasoning": "high",
+  "session_id": "acps_44b94974ad769fcf0eca0e76",
+  "run_id": "acpr_43684bb89df70962958cd749",
+  "status": "completed",
+  "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-long-history-boundary-ab-20260824-v1\\chapter-0600\\D_after_v3_primary_prompt.md",
+  "output_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-long-history-boundary-ab-20260824-v1\\chapter-0600\\D_after_v3_primary_response.md",
+  "usage": {
+    "sessionUpdate": "usage_update",
+    "size": 828400,
+    "used": 38119
+  },
+  "ended_at": "2026-08-24T07:31:52.1509902+02:00"
+}

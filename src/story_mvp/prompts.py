@@ -106,10 +106,16 @@ DIRECTOR_CHAPTER_BUDGET_RULE = """章节事件预算边界：场景可以跨章�
 DIRECTOR_REPETITION_RULE = """轻量反重复判断（软提醒，不是新增字段、评分或 Hard Gate）：先看最近 1—3 章摘要，判断当前章的主要压力、主要解法和主要结算方式是否正在重复最近章节。如果重复，而且 BOOK 没有明确要求这种连续重复产生新的阶段效果，就在当前计划允许的事件范围内优先选择能改变身份、关系、资源、主动目标、行动舞台或敌人策略的执行方式。不要因此篡改 BOOK、抢先完成下一章，也不要为了形式变化强行换戏；重复确有新的阶段意义时正常执行。"""
 
 
+DIRECTOR_LONG_HISTORY_NEW_FACT_RULE = """长期旧线本章新事实具体化（软执行原则，不新增字段）：当本章触及沉睡人物、旧承诺、身份谜团、长期秘密或 OPEN PROMISE 时，必须在现有“直接结果 / 状态变化 / 结尾推动力”里写清本章结束时**哪一个具体事实第一次成为确定事实**；如果过去原因、隐藏身份或机制仍未获上游计划授权揭晓，就明确它仍未解决，并把本章不可逆变化落在当下选择、现场证据、公开立场、职责、关系动作、持有关系或行动入口上。不要只写“至少一条旧线发生不可逆变化”“真相进一步揭露”“关系发生变化”等抽象结果，再让 Writer 自己决定隐藏答案。上游没有给出过去真相时，不为填满事件合同补造几十 / 几百章前发生过的秘密经历、对话、动机或世界机制。"""
+
+
 RESULT_STOP_RULE = """结果发生后，停止“再证明一次”：当前章直接结果已经通过动作、物体变化、人物反应和现实后果成立后，只继续写必要的现场余波、主角实际得到或失去什么、重要人物怎样改变行动和章末推动，随后停止。不要再解释一次已经成立的机制，不要追加主角正确理解、旁白总结、NPC 重复确认、同义重述、主题结论或下一章任务清单。当人物对白或动作已经清楚表现关系变化或结果意义时，不要再用旁白抽象总结同一意义；直接停止，或进入下一动作。第一次异能高光尤其要让读者感到“这件事已经发生”，而不是感到作者已经把能力定义完整。"""
 
 
 PLANNING_TO_PROSE_BOUNDARY = """Planning → Prose 边界：Director、Plan、Canon 和 Audit 可以使用“验证、闭环、阶段推进、价值兑现、成长空间、建立优势”等抽象标签；它们是语义输入，不是正文措辞。这些词本身不是禁词，但不要把后台标签原样扩写成作者总结。先让人物、对象、动作、关系反应和具体结果承担意义；只有当前 POV 必须理解并据此选择时，才翻译成当下人物自然会想到的具体判断。动作、对白或结果已经成立后，不再追加同义的抽象解释。"""
+
+
+PRIMARY_LONG_HISTORY_UNKNOWN_RULE = """长期历史未知边界（最高事实边界，优先于“把场景写完整”）：CANON / Curated Context / OPEN PROMISE 中明确标为未知、未确认、未解释、未兑现、真假未定、原因未明的过去事实，仍然是**未知**，不是 Writer 可以自由补全的留白。Chapter Mission 对某条旧线明确授权的“本章新事实”是本章可以确立的**事实上限**，不是最低要求：只授权地点，就不能顺手补身份、原因或机制；只授权关系/职责变化，就不能顺手补过去动机；只出现一个与旧人相关的信号，就不能补它过去的固定含义、传播范围或真实发送者。资料不足时，角色可以明确说不知道、只能确认当前这一点，正文也可以让谜团继续悬置。**对白不是补 Canon 的逃生口**：围绕 unresolved 主题，任何足以被 State Extraction 写进 Persistent Canon 的新陈述——过去发生了什么、某人为什么回来/离开、某物固定如何运作、谁过去知道什么、某信号过去固定代表什么——如果不在 Canon 或 Chapter Mission 中，就不能借角色之口新增。角色可以提问、拒答、承认不知道、表达怀疑/立场、提出当前请求或作出当前决定；当 Mission 授权的新事实已经说清，后续张力优先转向信不信、去不去、跟不跟、交不交、谁承担什么，而不是继续追问到模型不得不补设定。不得为了让对白更完整或因果更圆，把合理猜测扩写成几十 / 几百章前已经发生过的秘密经历、旧对话、隐藏动机、人物既有知识、持久世界机制、旧物来源或真实身份。Writer 的自由创作范围是本章当下的动作、对白措辞、即时感官、现场证据与人物暂时判断；若证据不足，判断必须仍是判断，不能由旁白升级成客观旧史。后台章节编号和 pipeline 距离也不属于人物世界：除非 BOOK 明确存在这种编号，不把“第18章 / 第411章 / 九十多章前”等写进正文，应自然写成“当年 / 那次 / 很久以前 / 很久不见”。"""
 
 
 WRITER_AUDIT_RULE = """Writer Audit 只报告实际存在的事项：
@@ -133,6 +139,9 @@ PROSE_REALIZATION_CONTRACT = f"""本合同只负责“how to say”，不重规�
 
 ## Planning → Prose 边界
 {PLANNING_TO_PROSE_BOUNDARY}
+
+## 长期历史未知边界
+{PRIMARY_LONG_HISTORY_UNKNOWN_RULE}
 
 ## 结果停止规则
 
@@ -236,6 +245,8 @@ Emotion：启用 / 不启用；理由
 {DIRECTOR_CHAPTER_BUDGET_RULE}
 
 {DIRECTOR_REPETITION_RULE}
+
+{DIRECTOR_LONG_HISTORY_NEW_FACT_RULE}
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
@@ -585,7 +596,11 @@ Secondary: <skill_id 或 none>
 明确区分已经拿到的收益对象、已经兑换或到账的收益、已经改变生活或行动空间的收益，以及仍未兑现的近期读者承诺。不得把待兑换物品写成已经到账。
 
 只选择当前章需要的信息，不复制完整 BOOK、完整十章计划或完整前文；本章成长收益短投影只作为筛选依据，不在 `## Relevant Plan` 中原样回显；如果它改变了本章选择或结果，只保留相关事实含义，不解释整套 Growth Benefit Hierarchy；不输出内部推理。""",
-    "primary_writer": """你是透明协作的 Primary Writer。你的唯一产物是一篇可以直接保存的完整小说正文。不要承担 pipeline bookkeeping：不输出 Audit、事实摘要、状态更新、计划说明、质量自评或修改清单。正文必须落实当前章事件合同，包含自然的叙事、对话、动作、内心、描写和结尾推动，而不是骨架或分镜。保持统一叙事声音，不为了连续性反复盘点已经清楚的物品、资源和交易。
+    "primary_writer": f"""你是透明协作的 Primary Writer。你的唯一产物是一篇可以直接保存的完整小说正文。不要承担 pipeline bookkeeping：不输出 Audit、事实摘要、状态更新、计划说明、质量自评或修改清单。正文必须落实当前章事件合同，包含自然的叙事、对话、动作、内心、描写和结尾推动，而不是骨架或分镜。保持统一叙事声音，不为了连续性反复盘点已经清楚的物品、资源和交易。
+
+## 最高事实边界
+{PRIMARY_LONG_HISTORY_UNKNOWN_RULE}
+
 Curated Context 为空时，使用下方明确提供的 fallback；这不是失败，也不自动重试。
 
 固定输出只保留一个一级标题：
@@ -1777,6 +1792,7 @@ def generate_prompt(
             build_specialist_context,
             drop_growth_hierarchy,
             extract_primary_prose_context,
+            extract_unresolved_fact_boundary,
         )
         from .scene_skills import (
             render_scene_skill_catalog,
@@ -1839,6 +1855,7 @@ def generate_prompt(
             primary_prose = extract_primary_prose_context(packet.recent_prose)
             active_scene_skills = render_selected_scene_skills(curated)
             curated_for_writer = strip_scene_skill_selection(curated)
+            unresolved_fact_boundary = extract_unresolved_fact_boundary(curated)
             fallback = not curated_for_writer
             parts.extend(
                 [
@@ -1846,6 +1863,10 @@ def generate_prompt(
                     _input_block(
                         "Chapter Mission——正文可见最小事件合同",
                         project_event_contract_for_prose(packet.chapter_mission),
+                    ),
+                    _input_block(
+                        "UNRESOLVED FACT BOUNDARY——仍未知/未兑现，不得由 Writer 补成旧史",
+                        unresolved_fact_boundary or "（Curator 未投影出额外未解事实；仍服从最高事实边界。）",
                     ),
                     _input_block("CANON PROSE——上一章全文与上上章必要章末", primary_prose),
                 ]

@@ -14,15 +14,17 @@ Specialist / Integrator 不在默认链；只有作者明确启动局部 repair 
 
 ### Director
 
-只根据当前剧情块、当前章计划、压缩成长信息、Canon Index、最近摘要、章末衔接和作者意图生成八字段事件合同。它决定 WHAT，不提供正文句式，不重做 World / Story Program / Outline。
+只根据当前剧情块、当前章计划、压缩成长信息、Canon Index、最近摘要、章末衔接和作者意图生成八字段事件合同。它决定 WHAT，不提供正文句式，不重做 World / Story Program / Outline。长期旧线回流时仍保持八字段，不新增 schema；但 `直接结果 / 状态变化 / 结尾推动力` 必须具体写清本章新成立的事实，或明确过去原因仍未解决，不能把“真相揭露到哪一步”留给 Primary 自行决定。
 
 ### Context Curator
 
 从确定性 Index-first 预取中筛选 Writer 真正需要的信息，压缩 BOOK Contract、Canon、计划、Prose Profile、Open Promises 与 Scene Skills。它不补读全库、不重新规划、不把 Planning Language 改写成正文。
 
+Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact projection**：从 `Curator Audit`、`Relevant Open Promises`、明确未解的 World Rules 与 `Payoff and Promise Window` 中抽取约束，形成紧贴 Chapter Mission 的 `UNRESOLVED FACT BOUNDARY`。这不是新节点、Reviewer、RAG 或 Hard Gate；它只把 Curator 已经识别出的“仍未知 / 未兑现”提高到 Primary 的高显著事实边界，避免长篇时被埋在较长 Curated Context 中。
+
 ### Primary Writer
 
-只写正式正文。输入以 Director Contract + Curated Context + 必要连续性为主；不直接读取 raw GBrain，不承担状态记账或长期结构修复。
+只写正式正文。输入以 Director Contract + `UNRESOLVED FACT BOUNDARY` + Curated Context + 必要连续性为主；不直接读取 raw GBrain，不承担状态记账或长期结构修复。Canon / Curator 已标记为未知、未解释、真假未定或原因未明的过去事实继续保持未知；除非 Director Contract 明确规定本章新成立的事实，Primary 只能创造当前场景实现细节，不得把 plausible explanation 写成 retrospective canon。对白同样不能成为补 Canon 的旁路。
 
 ### Optional Repair
 

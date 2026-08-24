@@ -1,0 +1,15 @@
+﻿{
+  "model": "gpt-5.6-luna",
+  "reasoning": "high",
+  "session_id": "acps_6426801377770bfa92fc0ebc",
+  "run_id": "acpr_12431509f065f0b8cd86ba25",
+  "status": "completed",
+  "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-long-history-boundary-ab-20260824-v1\\blind_judge_1_prompt.md",
+  "output_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-long-history-boundary-ab-20260824-v1\\blind_judge_1_response.md",
+  "usage": {
+    "sessionUpdate": "usage_update",
+    "size": 828400,
+    "used": 44219
+  },
+  "ended_at": "2026-08-24T07:24:50.1631352+02:00"
+}

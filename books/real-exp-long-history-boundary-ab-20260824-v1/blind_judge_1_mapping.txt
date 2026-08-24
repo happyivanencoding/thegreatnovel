@@ -1,0 +1,2 @@
+ch120: X=A_before, Y=B_after
+ch600: X=B_after, Y=A_before

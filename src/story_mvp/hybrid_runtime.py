@@ -121,6 +121,62 @@ def _extract_subsection(content: str, heading: str) -> str:
     return ""
 
 
+_UNRESOLVED_MARKERS = (
+    "未知",
+    "未确认",
+    "未解释",
+    "未兑现",
+    "未解决",
+    "未明确",
+    "不明",
+    "尚未",
+    "真假",
+    "不要补造",
+    "无法确认",
+    "无法判断",
+    "不提供",
+)
+
+
+def extract_unresolved_fact_boundary(curated_response: str) -> str:
+    """把 Curator 已识别的未解事实提升到 Primary 的高显著事实边界。
+
+    这是确定性投影，不做语义推断、不调用模型。Open Promises 全量保留；
+    Audit / World Rules / Payoff Window 只保留明确带未知标记的行，避免把
+    整份 Curated Context 再复制一遍。
+    """
+
+    sections: list[str] = []
+    audit = _extract_level_one_section(curated_response, "# Curator Audit")
+    if audit and "无需要报告" not in audit:
+        audit_lines = [
+            line.strip()
+            for line in audit.splitlines()
+            if line.strip() and any(marker in line for marker in _UNRESOLVED_MARKERS)
+        ]
+        if audit_lines:
+            sections.append("## Curator Uncertainty\n" + "\n".join(audit_lines))
+
+    promises = _extract_subsection(curated_response, "## Relevant Open Promises")
+    if promises and promises.strip() != "无":
+        sections.append("## Open Promises\n" + promises)
+
+    for heading, label in (
+        ("## Relevant World Rules", "## Unresolved World / Mechanism Facts"),
+        ("## Payoff and Promise Window", "## Still Unresolved / Not Yet Paid Off"),
+    ):
+        body = _extract_subsection(curated_response, heading)
+        lines = [
+            line.strip()
+            for line in body.splitlines()
+            if line.strip() and any(marker in line for marker in _UNRESOLVED_MARKERS)
+        ]
+        if lines:
+            sections.append(label + "\n" + "\n".join(lines))
+
+    return "\n\n".join(sections).strip()
+
+
 def drop_growth_hierarchy(book_contract: str) -> str:
     """从章节上下文中移除完整成长基因图，只保留其它 BOOK Contract 区块。"""
 

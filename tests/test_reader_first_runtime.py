@@ -9,6 +9,7 @@ from story_mvp.chapter_context import build_chapter_context
 from story_mvp.hybrid_runtime import (
     build_specialist_context,
     extract_specialist_patches,
+    extract_unresolved_fact_boundary,
 )
 from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
@@ -127,6 +128,16 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "力量造成的可见后果",
         "不机械覆盖视觉、听觉、嗅觉、触觉",
         "不要为了“写得丰富”延长章节",
+        "长期历史未知边界",
+        "仍然是**未知**",
+        "事实上限",
+        "只授权地点，就不能顺手补身份、原因或机制",
+        "对白不是补 Canon 的逃生口",
+        "足以被 State Extraction 写进 Persistent Canon 的新陈述",
+        "后续张力优先转向信不信、去不去、跟不跟、交不交、谁承担什么",
+        "把合理猜测扩写成几十 / 几百章前已经发生过的秘密经历",
+        "本章当下的动作、对白措辞、即时感官、现场证据与人物暂时判断",
+        "后台章节编号和 pipeline 距离也不属于人物世界",
     ):
         assert marker in primary
     assert primary.count("人物不是状态更新器") == 1
@@ -140,6 +151,51 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
     assert specialist.count(READER_FIRST_PROSE_CONTRACT) == 0
     assert specialist.count(READER_FIRST_PROSE_SHORT) == 1
     assert "验证、闭环、阶段推进、价值兑现、成长空间、建立优势" in specialist
+
+
+def test_unresolved_fact_boundary_is_deterministic_and_primary_visible() -> None:
+    curated = """# Curator Audit
+
+- 当前地点未确认；不要默认已进入塔内。
+
+# Curated Chapter Context
+
+## Relevant World Rules
+
+- 已知规则：门会打开。
+- 第三盏灯与玉牌的关系尚未解释；不要补造规则。
+
+## Relevant Open Promises
+
+- 宁青梧为何回来仍未解决。
+- 点灯者身份未知。
+
+## Payoff and Promise Window
+
+- 已到账：玉牌。
+- 仍未兑现：第三盏灯机制。
+"""
+    boundary = extract_unresolved_fact_boundary(curated)
+    assert "当前地点未确认" in boundary
+    assert "宁青梧为何回来仍未解决" in boundary
+    assert "点灯者身份未知" in boundary
+    assert "第三盏灯与玉牌的关系尚未解释" in boundary
+    assert "仍未兑现：第三盏灯机制" in boundary
+    assert "已知规则：门会打开" not in boundary
+    assert "已到账：玉牌" not in boundary
+
+    primary = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curated_context=curated,
+    )
+    marker = "UNRESOLVED FACT BOUNDARY——仍未知/未兑现，不得由 Writer 补成旧史"
+    assert marker in primary
+    assert primary.index(marker) < primary.index("CANON PROSE——上一章全文与上上章必要章末")
+    assert "宁青梧为何回来仍未解决" in primary
+    assert "第三盏灯与玉牌的关系尚未解释" in primary
 
 
 def test_supporting_logic_does_not_become_story_engine() -> None:
@@ -371,6 +427,14 @@ def test_director_prompt_uses_only_light_projection_and_selective_default() -> N
         assert f"{field}：" in director_contract
     assert "八个字段仍是唯一事件合同字段" in director_contract
     assert "情绪字段：" not in director_contract
+    for marker in (
+        "长期旧线本章新事实具体化",
+        "哪一个具体事实第一次成为确定事实",
+        "仍未解决",
+        "不要只写“至少一条旧线发生不可逆变化”",
+        "不为填满事件合同补造几十 / 几百章前发生过的秘密经历",
+    ):
+        assert marker in director_contract
 
     hybrid = generate_prompt(
         mode="context_curator",
