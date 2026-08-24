@@ -229,3 +229,16 @@ Blind judge 产品判定：**KEEP OPTIONAL**。
 因此当前不冻结“每章自动 ON Prose Controls”。保留 Curator 的 Scene Family 检索和 1 主卡选择能力，但 control 是否进入当前章仍保持 OPTIONAL。下一轮只做两个很小的验证：Action 再换一个场景复验；Dialogue / Entry 测试 Curator 将 control 压成 2—4 句 scene-specific projection 后，是否能消除 boundary drift 与 over-explanation。
 
 完整实验见 `books/real-exp-prose-control-ab-multiscene-v1/AB_REPORT.md`。
+## Micro Projection A/B v2（2026-08-24）
+
+在首轮 4 Scene A/B 的 `KEEP OPTIONAL` 基础上，进一步验证“抽象解释抑制 + 短 projection”：
+
+- 7 张 Prose Controls 均加入共享 stop rule：动作、对白、物体变化或人物反应已经让意义成立时，不追加“意味着 / 说明 / 显然 / 可以看出 / 这不是……而是……”式同义解释；只有当前 POV 必须据此选择时才保留具体判断。这不是禁词表。
+- Action 换成公开考核近身对抗复验：OFF 8.6 / ON 7.8；结合上一轮复杂路线追逐 ON +0.4，说明 `spatially-traceable-causality` 只应优先用于追逐、多人、移动地形、多入口等读者可能丢失方位/因果的 Action，不应覆盖简单一对一。
+- Dialogue 完整 Control 上轮 ON -0.3；本轮压成三句 scene projection 后仍 ON -0.3。说明问题不只在长度，当前基础 Writer 已能完成多数谈判；`dialogue-state-pressure` 继续 OPTIONAL，并禁止为执行控制新增交易条件/回合。
+- Entry 完整 Control 上轮 ON -0.3；本轮三句 projection 变为 OFF 8.1 / ON 8.5（+0.4）。因此 `action-anchored-grounding` 保留完整研究卡，但增加短 `Writer Projection` 作为生产候选；至少再跨一个 Entry 场景复验后才 promotion。
+- 抽象解释指标在 Action 1→0、Dialogue 1→0，但 Entry 0→1；因此 stop rule 有方向价值，但不能升级成机械禁词/重写门禁。
+
+当前产品判断仍是 **KEEP OPTIONAL**；短 projection 比“把完整研究卡压给 Primary”更值得继续验证。完整实验见 `books/real-exp-prose-control-projection-ab-v2/AB_REPORT.md`。
+
+GBrain final hygiene: **3747 Pages / 15705 Chunks / 15705 Embedded**; updated prose-control slugs are single scoped pages with no accidental root-level duplicates.
