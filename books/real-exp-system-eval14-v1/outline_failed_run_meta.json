@@ -1,0 +1,11 @@
+{
+  "stage": "outline",
+  "remote_session_id": "01a034c4-04f8-74d0-96eb-5602b3d78949",
+  "model": "gpt-5.6-luna",
+  "reasoning": "high",
+  "gbrain": "on:4",
+  "status": "discarded",
+  "reason": "ACP agent attempted workspace patch instead of returning final text; read-only run was aborted",
+  "book_changed": false,
+  "rerun_policy": "same system prompt/model/GBrain; inference-only ACP wrapper"
+}

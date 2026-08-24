@@ -1,0 +1,56 @@
+{
+  "stage": "ch4_director",
+  "session_id": "acps_e0046a621fa121a7b7f1dc7b",
+  "remote_session_id": "01a034fb-c4d9-7440-9586-ebe906771c68",
+  "run_id": "acpr_9f238629f7f34d11d738398d",
+  "model": "gpt-5.6-luna",
+  "reasoning": "high",
+  "mode": "read-only",
+  "gbrain": "off",
+  "status": "completed",
+  "stop_reason": "end_turn",
+  "started_at": "2026-08-24T18:15:10.6164721Z",
+  "ended_at": "2026-08-24T18:15:34.4533728Z",
+  "response_chars": 689,
+  "token_count": {
+    "type": "token_count",
+    "info": {
+      "total_token_usage": {
+        "input_tokens": 33978,
+        "cached_input_tokens": 9984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1098,
+        "reasoning_output_tokens": 516,
+        "total_tokens": 35076
+      },
+      "last_token_usage": {
+        "input_tokens": 33978,
+        "cached_input_tokens": 9984,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1098,
+        "reasoning_output_tokens": 516,
+        "total_tokens": 35076
+      },
+      "model_context_window": 828400
+    },
+    "rate_limits": {
+      "limit_id": "codex",
+      "limit_name": null,
+      "primary": {
+        "used_percent": 21.0,
+        "window_minutes": 10080,
+        "resets_at": 1788150687
+      },
+      "secondary": null,
+      "credits": {
+        "has_credits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "individual_limit": null,
+      "spend_control_reached": null,
+      "plan_type": "prolite",
+      "rate_limit_reached_type": null
+    }
+  }
+}
