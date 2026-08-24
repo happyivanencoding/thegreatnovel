@@ -210,23 +210,22 @@ GBrain 当前存在一个已观测的搜索行为：纯中文 query 在全库 hy
 
 当前生产路径应使用 Scene Family → approved English alias 的确定性 fallback 检索 Prose Controls，不依赖纯中文 scoped semantic search。
 
-## 下一步：Prose Control A/B
+## Prose Control Multi-Scene A/B（2026-08-24）
 
-在自动接入前，做同 Chapter Mission / Canon / BOOK Prose Profile / Terra Primary Writer 的便宜 A/B：
+已完成 4 个不同 Scene Family 的低成本 A/B。每组冻结同一 Chapter Mission / Canon / BOOK Prose Profile / GPT-5.6 Terra high Primary Writer，ON 组只额外增加 1 张 Scene Prose Control；最后用 1 次 Luna high 联合 blind judge，标签随机打乱。
 
-- OFF：当前正文链；
-- ON：Curator 按 Scene 选择 1 张 control，极少第二张。
+| Scene | OFF | ON | Δ ON |
+|---|---:|---:|---:|
+| Dialogue / Negotiation | 8.5 | 8.2 | -0.3 |
+| Action / Pursuit | 8.3 | 8.7 | +0.4 |
+| Payoff / Public Proof | 8.6 | 8.6 | 0.0 |
+| Entry / Opening | 8.8 | 8.5 | -0.3 |
+| Mean | 8.55 | 8.50 | -0.05 |
 
-重点比较：
+Blind judge 产品判定：**KEEP OPTIONAL**。
 
-- 一遍读懂程度；
-- 句段是否更有功能变化；
-- Story-bearing / Embodied detail 是否增加；
-- “环境很细但人物没生命”的问题是否下降；
-- 人物微反应和关系变化是否更自然；
-- 战斗空间是否更清楚；
-- payoff 后是否更有现实余波；
-- AI 式抽象总结、同义解释和 procedural expansion 是否下降；
-- 是否产生来源作者风格泄漏。
+结论：Prose Controls 有真实增量价值，但不是统一正收益。`spatially-traceable-causality-v1` 在复杂追逐中最明显改善空间链、动作接触与敌方策略变化；Dialogue 与 Entry 的完整 control 注入则更容易诱发未冻结细节、机制解释和程序化扩写；Payoff 与现有 Reader-First / Human Reaction / Public Proof 规则高度重叠，当前增量接近零。
 
-只有跨不同 Scene Family 的 A/B 稳定胜出，才把“每章自动查询并注入 Prose Controls”冻结成默认生产行为。当前已冻结的是检索能力与 Curator 选择边界，不是自动 ON。
+因此当前不冻结“每章自动 ON Prose Controls”。保留 Curator 的 Scene Family 检索和 1 主卡选择能力，但 control 是否进入当前章仍保持 OPTIONAL。下一轮只做两个很小的验证：Action 再换一个场景复验；Dialogue / Entry 测试 Curator 将 control 压成 2—4 句 scene-specific projection 后，是否能消除 boundary drift 与 over-explanation。
+
+完整实验见 `books/real-exp-prose-control-ab-multiscene-v1/AB_REPORT.md`。
