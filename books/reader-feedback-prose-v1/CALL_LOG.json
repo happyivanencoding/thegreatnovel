@@ -1,0 +1,169 @@
+[
+  {
+    "stage": "continuation_plan",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 313.305
+  },
+  {
+    "chapter": 4,
+    "stage": "director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 20.417
+  },
+  {
+    "chapter": 4,
+    "stage": "curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 109.974
+  },
+  {
+    "chapter": 4,
+    "stage": "primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 43.052
+  },
+  {
+    "chapter": 4,
+    "stage": "state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "ok": true,
+    "wall_seconds": 21.543
+  },
+  {
+    "chapter": 5,
+    "stage": "director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 26.992
+  },
+  {
+    "chapter": 5,
+    "stage": "curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 60.697
+  },
+  {
+    "chapter": 5,
+    "stage": "primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 71.399
+  },
+  {
+    "chapter": 5,
+    "stage": "state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "ok": true,
+    "wall_seconds": 21.808
+  },
+  {
+    "chapter": 6,
+    "stage": "director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 34.015
+  },
+  {
+    "chapter": 6,
+    "stage": "curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 68.033
+  },
+  {
+    "chapter": 6,
+    "stage": "primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 44.158
+  },
+  {
+    "chapter": 6,
+    "stage": "state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "ok": true,
+    "wall_seconds": 22.04
+  },
+  {
+    "chapter": 7,
+    "stage": "director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 18.743
+  },
+  {
+    "chapter": 7,
+    "stage": "curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 106.729
+  },
+  {
+    "chapter": 7,
+    "stage": "primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 49.541
+  },
+  {
+    "chapter": 7,
+    "stage": "state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "ok": true,
+    "wall_seconds": 22.505
+  },
+  {
+    "chapter": 8,
+    "stage": "director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 21.39
+  },
+  {
+    "chapter": 8,
+    "stage": "curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 58.655
+  },
+  {
+    "chapter": 8,
+    "stage": "primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "ok": true,
+    "wall_seconds": 44.27
+  },
+  {
+    "chapter": 8,
+    "stage": "state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "ok": true,
+    "wall_seconds": 22.234
+  }
+]
