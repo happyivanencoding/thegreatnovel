@@ -1824,6 +1824,83 @@ def test_planning_retrieval_uses_hidden_keyword_aliases_without_query_embedding(
     assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
 
 
+@pytest.mark.parametrize(
+    ("outline", "expected", "unexpected"),
+    [
+        ("本章是三方高压谈判，通过称呼、拒答和报价改变筹码。", "dialogue negotiation", "action combat"),
+        ("本章是狭窄石桥上的追逐战，必须写清站位、受力和落点。", "action combat", "dialogue negotiation"),
+        ("本章在众人面前完成公开能力证明，结果必须留下具体余波。", "payoff power proof", "world wonder"),
+        ("本章第一次看见远超既有尺度的奇观，天穹与距离发生变化。", "scale anchored wonder", "dialogue negotiation"),
+        ("多年后重逢，人物都很克制，用微反应表现想念。", "emotion relationship", "limited reveal"),
+        ("主角发现旧物的真相，只能从线索和规则推断一部分。", "evidence first limited reveal", "dialogue negotiation"),
+        ("主角第一次进入陌生空间，从入口和边界建立现场。", "action anchored grounding", "payoff power proof"),
+        ("本章是低压日常，吃饭休息时让关系通过生活动作显出来。", "ordinary life prose", "action combat"),
+    ],
+)
+def test_chapter_prose_control_keyword_fallback_tracks_scene_family(monkeypatch, outline, expected, unexpected) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    brief = build_retrieval_brief(mode="context_curator", current_outline=outline)
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert strategy == "prose_control_keyword_aliases"
+    assert expected in effective
+    assert unexpected not in effective
+
+
+def test_chapter_prose_control_fallback_returns_one_primary_control(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    seen: list[str] = []
+    raw = "\n".join([
+        "[0.99] prose-controls/action-a -- action combat spatial clarity",
+        "[0.98] prose-controls/action-b -- action combat spatial clarity",
+        "[0.97] prose-controls/action-c -- action combat spatial clarity",
+    ])
+
+    def fake_query(query: str, **_kwargs) -> str:
+        seen.append(query)
+        return raw
+
+    result = retrieve_gbrain(
+        mode="context_curator",
+        current_outline="追逐战，写清站位、距离、受力与落点。",
+        query_func=fake_query,
+        page_func=lambda slug: _page("Mechanism", f"{slug} 的动作写作控制。"),
+    )
+    assert seen == ['"action combat" OR "spatial clarity"']
+    assert result["query_strategy"] == "prose_control_keyword_aliases"
+    assert result["final_limit"] == 1
+    assert result["accepted_count"] == 1
+
+
+def test_chapter_prose_control_keeps_semantic_brief_when_embedding_query_is_available(monkeypatch) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    brief = build_retrieval_brief(
+        mode="context_curator",
+        current_outline="高压谈判，通过称呼与拒答改变关系。",
+    )
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert effective == brief
+    assert strategy == "semantic_brief"
+
+
+def test_manual_chapter_gbrain_query_still_overrides_prose_fallback(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    seen: list[str] = []
+
+    def fake_query(query: str, **_kwargs) -> str:
+        seen.append(query)
+        return "[0.99] prose-controls/manual -- manual"
+
+    result = retrieve_gbrain(
+        mode="context_curator",
+        current_outline="高压谈判。",
+        query_override="manual prose query",
+        query_func=fake_query,
+        page_func=lambda _slug: _page("Mechanism", "手工选择的正文控制。"),
+    )
+    assert seen == ["manual prose query"]
+    assert result["query_strategy"] == "manual_override"
+
+
 def test_planning_retrieval_keeps_full_chinese_brief_when_semantic_query_is_available(monkeypatch) -> None:
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     brief = build_retrieval_brief(

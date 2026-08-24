@@ -56,6 +56,30 @@ PLANNING_KEYWORD_QUERY_BATCHES = {
     ),
 }
 
+CURATOR_PROSE_CONTROL_FALLBACK_MODES = frozenset({"context_curator"})
+
+# When query embeddings are unavailable, keep Curator prose retrieval useful without
+# adding another model call. Rules are intentionally small and scene-family based.
+PROSE_CONTROL_ALIAS_RULES = (
+    (("谈判", "对话", "交涉", "审问", "试探", "拒答", "报价", "称呼", "多人对峙"),
+     '"dialogue negotiation" OR "relationship pressure"'),
+    (("战斗", "追逐", "追杀", "突围", "救援", "夹击", "站位", "受力", "落点"),
+     '"action combat" OR "spatial clarity"'),
+    (("证明", "兑现", "反杀", "大胜", "突破", "认可", "公开", "余波", "旁观者"),
+     '"payoff power proof" OR "public proof"'),
+    (("奇观", "尺度", "巨大", "宏大", "宇宙", "飞升", "天穹"),
+     '"scale anchored wonder" OR "world wonder"'),
+    (("遗迹", "秘境", "入口", "边界", "陌生空间", "第一次进入", "进入新"),
+     '"action anchored grounding" OR "scene entry exploration"'),
+    (("重逢", "离别", "牺牲", "情绪", "克制", "照护", "微反应", "旧友", "想念", "伤痛"),
+     '"emotion relationship" OR "embodied detail"'),
+    (("发现", "揭示", "揭露", "真相", "规则", "线索", "推断", "旧物", "解释"),
+     '"evidence first limited reveal" OR "discovery reveal"'),
+    (("日常", "吃饭", "生活", "休息", "低压", "返乡", "恢复"),
+     '"ordinary life prose" OR "embodied detail"'),
+)
+PROSE_CONTROL_DEFAULT_QUERY = '"scene entry exploration" OR "prose realization"'
+
 CONSTRAINT_PATTERNS = (
     ("现实世界", ("现实世界", "现代都市", "现实职业", "现代社会")),
     ("无超自然", ("超自然", "魔法", "法术", "异能", "系统奇迹")),
@@ -278,11 +302,21 @@ def _semantic_query_available() -> bool:
     return bool(os.environ.get("OPENAI_API_KEY", "").strip())
 
 
+def _chapter_prose_control_alias_query(retrieval_brief: str) -> str:
+    for terms, query in PROSE_CONTROL_ALIAS_RULES:
+        if any(term in retrieval_brief for term in terms):
+            return query
+    return PROSE_CONTROL_DEFAULT_QUERY
+
+
 def default_effective_query(mode: str, retrieval_brief: str) -> tuple[str, str]:
     """选择实际查询文本；不增加 LLM/reranker 调用。"""
 
-    if mode in PLANNING_KEYWORD_QUERIES and not _semantic_query_available():
-        return PLANNING_KEYWORD_QUERIES[mode], "planning_keyword_aliases"
+    if not _semantic_query_available():
+        if mode in PLANNING_KEYWORD_QUERIES:
+            return PLANNING_KEYWORD_QUERIES[mode], "planning_keyword_aliases"
+        if mode in CURATOR_PROSE_CONTROL_FALLBACK_MODES:
+            return _chapter_prose_control_alias_query(retrieval_brief), "prose_control_keyword_aliases"
     return retrieval_brief, "semantic_brief"
 
 
@@ -530,7 +564,9 @@ def retrieve_gbrain(
         current_outline,
         recent_summaries,
     )
-    if mode == "chapter":
+    if mode == "context_curator" and query_strategy == "prose_control_keyword_aliases":
+        final_limit = 1
+    elif mode in {"chapter", "context_curator"}:
         final_limit = CHAPTER_FINAL_RESULT_LIMIT
     elif mode in {"world_vision", "idea"}:
         final_limit = CREATIVE_PLANNING_FINAL_RESULT_LIMIT

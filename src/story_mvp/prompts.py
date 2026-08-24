@@ -572,6 +572,8 @@ HYBRID_PROMPT_TEMPLATES = {
 ## Scene Skill Selection
 ## Relevant Inspiration
 
+`## Relevant Prose Controls` 只从 OPTIONAL INSPIRATION 中保留当前场景真正相关的表达控制：默认 1 条；只有第二条解决不同的表达问题时最多 2 条。它们只控制 how to say（词、句、段、细节、反应与信息顺序），不得改变 Chapter Mission、Canon 或 PROSE PROFILE；不要把来源作品 Prose DNA、人物、事件或作者风格直接投影给 Primary Writer。
+
 `## Scene Skill Selection` 只从下方 `SCENE SKILL CATALOG` 中选择当前章最主要的场景发动机，固定写两行：
 Primary: <skill_id 或 none>
 Secondary: <skill_id 或 none>

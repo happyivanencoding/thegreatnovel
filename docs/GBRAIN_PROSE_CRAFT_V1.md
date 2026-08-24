@@ -141,7 +141,7 @@ v1 的共享默认优先级：
 | PAYOFF_POWER_PROOF | payoff-consequence-conversion | payoff 本身是复杂动作高潮时 spatial control |
 | EMOTION_RELATIONSHIP | embodied-reaction-private-scale | 仍有谈判压力时 dialogue-state-pressure |
 
-当前这是 **Pilot routing recommendation**，尚未硬接入每章自动链。下一步先做便宜 A/B，再决定是否冻结为默认 Curator 行为。
+当前 8 类 Scene Family → approved English alias 的 **no-key retrieval fallback 已接入 `context_curator` GBrain 查询路径**；它只解决“查询时能稳定拿到哪张 control”，不等于每章默认自动开启 GBrain。是否把 Prose Controls 自动 ON 到常规章节链，仍需先做便宜 A/B，再决定是否冻结为默认 Curator 行为。
 
 ## Model Routing
 
@@ -161,6 +161,8 @@ Production controls：
 
 六张 source Prose DNA：85 scene refs / 0 error。
 
+TGN runtime validation：**224 tests passed**；8 个 Scene Family no-key Curator retrieval regression 全部命中预期 control。
+
 ## GBrain / Embedding
 
 Prose Craft 前：
@@ -175,7 +177,7 @@ Prose Craft 后：
 - **15705 chunks**
 - **15705 embedded**
 
-完成标准为 `Embedded == Chunks`，已达成。
+完成标准为 `Embedded == Chunks`，已达成。从本轮起，所有 GBrain 增量统一按 `Distill → Formalize → Import → Embed → Embedded == Chunks → Retrieval Regression → Done` 收尾；没有补完 embedding 不算任务完成。
 
 Windows / Git Bash 必须使用真实 executable：`~/.bun/bin/gbrain.exe`。`~/bin/gbrain` 是 WSL wrapper，不作为 Git Bash 的 GBrain executable。
 
@@ -185,7 +187,20 @@ Windows / Git Bash 必须使用真实 executable：`~/.bun/bin/gbrain.exe`。`~/
 
 ## Retrieval
 
-TGN `primary_writer` 手工查询已验证七种 prose problem 都单一精准命中对应 control，并且 `extract_abstract_content()` 不返回来源书名或硬门禁语言。
+TGN `context_curator` 在无 query embedding 的 Windows runtime 下，已用 8 个 Scene Family 做真实 production retrieval regression；fallback 默认只返回 1 张主 control：
+
+- ORDINARY → `embodied-reaction-private-scale-v1`
+- ENTRY_EXPLORATION → `action-anchored-grounding-v1`
+- DIALOGUE_NEGOTIATION → `dialogue-state-pressure-v1`
+- DISCOVERY_REVEAL / EXPOSITION_RULE → `evidence-first-limited-reveal-v1`
+- ACTION_COMBAT → `spatially-traceable-causality-v1`
+- PAYOFF_POWER_PROOF → `payoff-consequence-conversion-v1`
+- WORLD_WONDER / SCALE → `scale-anchored-wonder-v1`
+- EMOTION_RELATIONSHIP → `embodied-reaction-private-scale-v1`
+
+无 query embedding 时只返回 1 张主卡，避免 FTS 噪声把不相关的第二张控制送给 Curator；semantic query 可用时仍保留最多 2 条的原有空间。手工 query override 继续最高优先。`chapter`、`chapter_prep`、planning 和 review 的原行为没有改变。
+
+Curator Prompt 同时冻结：`Relevant Prose Controls` 默认保留 1 条，只有第二条解决不同的表达问题时最多 2 条；来源 Prose DNA、人物、事件和作者风格不得直接投影给 Primary Writer。
 
 原 Story Craft 规划检索回归仍完全保持：World 3 / Story Program 3 / Outline 4。
 
@@ -214,4 +229,4 @@ GBrain 当前存在一个已观测的搜索行为：纯中文 query 在全库 hy
 - AI 式抽象总结、同义解释和 procedural expansion 是否下降；
 - 是否产生来源作者风格泄漏。
 
-只有跨不同 Scene Family 的 A/B 稳定胜出，才把 soft routing 冻结成默认生产行为。
+只有跨不同 Scene Family 的 A/B 稳定胜出，才把“每章自动查询并注入 Prose Controls”冻结成默认生产行为。当前已冻结的是检索能力与 Curator 选择边界，不是自动 ON。
