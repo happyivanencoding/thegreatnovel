@@ -2898,11 +2898,16 @@ def test_outline_parser_drops_inline_model_preamble_before_first_required_field(
 def test_world_vision_owns_reader_coordinates_and_core_advantage_compatibility() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["world_vision"]
     assert "Reader-Facing World Coordinates" in template
+    assert "读者可操作、可预测的世界事实" in template
+    assert "什么条件下会发生什么可观察变化" in template
+    assert "概念名、哲学解释和深层原因" in template
+    assert "不能只用哲学定义、象征、意象或新造概念代替" in template
     assert "## 读者可用的世界坐标" in template
     assert "## 核心优势与普通规则怎样咬合" in template
     assert "如果主角把优势用于远高于当前层级的对象" in template
     assert "基础待遇与稀缺奖励" in template
     assert "不强造境界名" in template
+    assert "不要把“眼前到底发生了什么、触发后会怎样、人物现在能不能做某件事”也一起藏起来" in template
 
 
 def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> None:
@@ -2915,8 +2920,11 @@ def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> Non
 def test_outline_releases_world_model_and_varies_early_core_gameplay() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Outline World Model Release" in template
+    assert "作者在 World Vision 里知道某个概念，不等于读者已经知道" in template
+    assert "可观察的触发、结果和行动含义" in template
+    assert "不要用意象、哲学定义或专属术语代替规则本身" in template
     assert "Outline Core Gameplay Variation" in template
-    assert "前五章" in template
+    assert "前三章建立当前故事所需的最低可用坐标" in template
     assert "长期对手可以暂时作为强弱标尺" in template
 
 
