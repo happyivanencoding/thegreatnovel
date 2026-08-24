@@ -168,7 +168,7 @@ Story Craft 负责“长期故事为什么好看”；正文表达层另有 `doc
 
 在经典样本扩展后，继续 SOURCE-FIRST 蒸馏 10 本互补长篇：《牧神记》《大奉打更人》《全球高武》《不科学御兽》《沧元图》《乱世书》《超神机械师》《明克街13号》《大王饶命》《莽荒纪》。每本由 Luna high 负责 Book DNA / World Fantasy，Sol high 负责 Longitudinal Threads / Story Program；共新增 20 张 source-specific Book/Arc Pilot。
 
-Terra Source Fidelity Audit 初审为 6 PASS / 4 PASS_WITH_EDITS / 0 FAIL；修正 locator 覆盖与 TGN Transfer 表层专名后定向 recheck **PASS**。
+Terra Source Fidelity 的最终权威链是 **direct raw-source audit → Required Edits → targeted recheck**：`outputs/source_fidelity_batch_d.json` 直接回原著行号得到 6 PASS / 4 PASS_WITH_EDITS / 0 FAIL；修正 locator 覆盖与 TGN Transfer 表层专名后，`outputs/source_fidelity_recheck_batch_d.json` 定向 recheck **PASS，无剩余项**。目录中更早的 pack-based `SOURCE_FIDELITY_AUDIT / REAUDIT` FAIL 记录保留作 provenance，它们暴露的是 audit pack RAW window 与宽 locator 不闭环的问题，已被后续 direct-source audit supersede，不作为最终 promotion verdict。
 
 跨书 World synthesis 未扩张 ontology：Reader-Facing World Coordinates、Core Advantage ↔ World Compatibility、Promotion Afterlife、Concrete Value / World Desire 均 MERGE 现有机制。跨书 Program synthesis 只保留两个真正独立的新 PILOT mechanism：
 
