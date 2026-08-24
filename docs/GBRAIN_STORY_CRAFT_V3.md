@@ -157,9 +157,28 @@ GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks
 Story Craft 负责“长期故事为什么好看”；正文表达层另有 `docs/GBRAIN_PROSE_CRAFT_V1.md`。Prose Craft v1 使用六本经典的 85 个 bounded scene windows 建立 source-specific Prose DNA，再跨书收敛为 7 张 production-facing Prose Controls。Prose DNA 不直接进入 Primary Writer；Prose Controls 只影响 HOW TO SAY，不覆盖 BOOK Prose Profile、Chapter Mission 或 Canon。当前完成 GBrain import + embedding（15705/15705），自动 Curator 路由仍待正文 A/B 后冻结。
 ## Pilot Active / HOLD
 
-当前 v3 staging 共 **47 张 Pilot：45 active / 2 HOLD**。HOLD 仍是：
+当前主 `gbrain-story-craft-v3/staging` 已确定性重建 manifest，共 **71 张 staging pages：67 active / 4 HOLD-or-reference-only**。其中真正的 HOLD mechanisms 仍是：
 
 - `partner-reward-agency-v3`
 - `reward-timing-variation-v3`
 
-TGN 对显式 `active_inspiration: false` 的页面自动跳过。`reference-corpus/machine` 继续保持旧 validated snapshot；经典样本扩展先作为本机 GBrain runtime 的 Pilot overlay 使用，避免在真实新书验证不足时提前 promotion。
+另外 2 张 Batch D cross-book synthesis 显式 `active_inspiration: false`，只保留为 provenance / research reference。新 Batch D Book/Arc 与两个新 mechanism 保持 PILOT overlay；`reference-corpus/machine` 继续保持旧 validated snapshot。TGN 对显式 `active_inspiration: false` 的页面自动跳过。
+
+## Priority Batch D 扩展（2026-08-24）
+
+在经典样本扩展后，继续 SOURCE-FIRST 蒸馏 10 本互补长篇：《牧神记》《大奉打更人》《全球高武》《不科学御兽》《沧元图》《乱世书》《超神机械师》《明克街13号》《大王饶命》《莽荒纪》。每本由 Luna high 负责 Book DNA / World Fantasy，Sol high 负责 Longitudinal Threads / Story Program；共新增 20 张 source-specific Book/Arc Pilot。
+
+Terra Source Fidelity Audit 初审为 6 PASS / 4 PASS_WITH_EDITS / 0 FAIL；修正 locator 覆盖与 TGN Transfer 表层专名后定向 recheck **PASS**。
+
+跨书 World synthesis 未扩张 ontology：Reader-Facing World Coordinates、Core Advantage ↔ World Compatibility、Promotion Afterlife、Concrete Value / World Desire 均 MERGE 现有机制。跨书 Program synthesis 只保留两个真正独立的新 PILOT mechanism：
+
+- `opponent-learning-success-condition-rewrite-v3`：敌人根据已暴露事实学习，并改写主角核心优势的成功条件；
+- `longitudinal-thread-dormancy-collision-afterlife-v3`：长线沉睡、行动性提醒、异质线程碰撞，以及第一次 payoff 后的 second payoff / afterlife。
+
+其它候选继续 MERGE：首个高光后的选择空间化 → action-space / old-ability-new-use；阶段发动机换问法并续燃旧状态 → map-transition / plot-engine-variation；首五章“证明—选择—条件变化”只作 Outline 可选语法，不成为五步 Hard Gate。
+
+本轮与 Prose Priority Batch 合并向 GBrain scoped import 32 页，runtime 从 `3753 / 15717 / 15717` 增至 **`3785 Pages / 15780 Chunks / 15780 Embedded`**；`embed --stale` 实际刷新 63 chunks，最终 embedding debt 为 0，无 root-level duplicate。
+
+TGN retrieval regression 通过：SP01 仍以 `plot-engine-variation` 为首，SP02 仍由 `thread-collision / sacrifice-convergence` 主导，SP03 仍是 `reunion / departure / character-autonomy`，OL01 `thread-ecology` 第1，WV01 `world-desire-ladder / world-entry` 第1/2；只有明确询问“敌人怎样学习并反制”时，新 `opponent-learning` 升到第1。reference-only syntheses 被 `active_inspiration: false` 正确过滤。
+
+完整本地报告：`reference-corpus/operations/gbrain-story-craft-v3/expansion-batch-d-20260824/FINAL_BATCH_D_REPORT_20260824.md`。

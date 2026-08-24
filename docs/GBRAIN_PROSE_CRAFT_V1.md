@@ -283,3 +283,17 @@ ON **3胜1负**。Complex Action、Reveal、Emotion 均得到正增益；Entry �
 Scene Projection 能力进入常规 Curator，但内容默认可空；`NONE` 是正常结果。成功标准不是每章都产生 Projection，而是需要时给 Writer 少量局部选择压力，已经足够清楚时不干预。
 
 完整实验：`books/real-exp-prose-selection-projection-v3/AB_REPORT.md`。
+
+## Priority Selection DNA v2 扩展（2026-08-24）
+
+新增把《全球高武》《修真聊天群》《第一序列》《将夜》《道诡异仙》《诡秘之主》的旧 Prose DNA 升级为 Selection Prose DNA v2。此批不重新读取原著，直接复用已有 bounded scene evidence，共 **70 canonical evidence refs**；六卡均 `active_inspiration: false`，仍只作为 Curator 研究/evidence 层。
+
+Terra fidelity audit 重点检查 evidence 越权、量化 hard rule、source-style leakage 与 Production Implication 强制化。两轮定向清理后 final recheck v2：**PASS**。
+
+跨书增量最重要的是“人物声音不是口癖，而是压力处理方式”：人物注意/误判/拒答/保护/交易的对象不同，才形成不同声音。另继续强化：具体动作/数字/待遇承担强弱与身份，Knowledge/Causal 在足够支持当前选择时停止解释，Reaction 不设人味配额，Rhythm / Attention 跟随 scene beat。
+
+唯一真正的新 Control 候选为 `character-voice-pressure-routing-v1`，当前 **HOLD / active_inspiration: false**，不加入 production routing；需要独立 A/B 后再考虑。`social-repricing-status-proof` MERGE 现有 result-stop / dialogue / scale / public-proof，不新增卡。
+
+与 Story Batch D 合并导入后 GBrain 最终为 **3785 Pages / 15780 Chunks / 15780 Embedded**，embedding debt = 0。Semantic query 可以命中新 v2 / HOLD candidate，但 TGN 会过滤所有显式 `active_inspiration: false` 页面。
+
+完整本地报告：`reference-corpus/operations/gbrain-prose-craft-v2-priority-20260824/FINAL_PRIORITY_PROSE_REPORT_20260824.md`。
