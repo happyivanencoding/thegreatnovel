@@ -1,0 +1,141 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "idea",
+  "effective_query": "\"plot engine variation\" OR \"thread ecology\" OR \"reward opportunity\"",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"plot engine variation\" OR \"gameplay counterplay\"",
+    "\"thread ecology\" OR \"longitudinal thread\" OR \"thread collision\"",
+    "\"reward opportunity\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：idea\n作者当前方向：成熟中文男频玄幻/修仙成长长篇。除此之外，不指定核心能力、主角性格、世界结构、资源类型、势力结构、冲突类型、题材子类型或长期主题，由当前 production creative chain 自主生成。\n已批准 Fantasy Seed：\n## 候选1：败器成兵\n\n### 核心幻想\n\n主角能唤醒破损兵器曾经最强的一击，并在亲手让这件兵器完成一次胜利后，将那一击真正学会。别人眼里的废剑、断枪、碎甲，在他手里都可能重新打出原主人留下的杀招。\n\n### 主角最强欲望\n\n开局驱动力：他必须找到一件被宗门当作废铁处理的残兵，因为那件兵器里藏着能救下家人的绝招。\n\n长期追逐：最初的救命问题解决后，他会继续寻找名震天下的残兵，夺取它们留下的绝学，打造一套只有自己能驾驭的杀伐兵库；他还想找到一件传说中从未真正认主的古兵。\n\n### 主角欲望人格与行为签名\n\n他贪心，但不是见什么都要，而是见到有价值的东西就不肯放过。他记仇，尤其记得别人把好东西当废物、把弱者当耗材。遇到强敌时，他偏爱先拆掉对方最得意的兵器，再用对方熟悉的招式反杀；自己人受伤时，他会优先抢回兵器和遗物，而不是讲究体面撤退。\n\n### 力量占有欲\n\n读者可以亲手摸遍废墟、兵冢和战场，把一件断裂兵器重新握在手里，让它瞬间恢复曾经的锋芒。第一次使用时，主角立刻得到一项具体杀招和一件可继续修复的特殊兵器。\n\n限制自然来自兵器本身：残缺越重，能唤醒的招式越短；只有让兵器在真实胜负中重新“证明自己”，招式才会留下来。\n\n### 第一次标志性奇观\n\n暴雨中的废弃剑冢，所有剑都锈在泥里。主角拔出一柄只剩半截的黑剑，剑身没有灵光，却在他挥下时斩开整片雨幕。远处山坡上，曾经用过这柄剑的老修士忽然抬头，认出了那一剑。\n\n### 长期增长发动机\n\n主角反复进入战场遗址、古墓、败宗遗库和强者死地，发现残兵，判断它们值得修复的价值，主动让兵器重新参与胜负。\n\n每轮可能留下：\n\n- 一件能反复使用的特殊兵器；\n- 一门真正学会的杀招；\n- 一个与兵器旧主、铸器师或争夺者相关的关系；\n- 一条通向更大兵冢、古战场或强敌的线索。\n\n已有兵器会改变下一轮行动：短剑让他擅长近身破招，旧甲让他能顶住某种攻击，残弓则让他有资格进入远程猎杀的战局。不同兵器之间还能形成战术配合，但主角必须选择带哪一件上场。\n\n世界会自然打开新的铸器师、兵冢传承、兵器拍卖、宗门遗产和以名兵为核心的强敌。\n\n### 非对称优势\n\n别人需要完整传承才能学会一门绝技，主角只需找到残兵，就能直接接触它最锋利的部分。他不一定境界最高，却能把敌人最熟悉的杀招变成自己的反击手段。\n\n多次使用后，他会从“借出一击”变成“修复兵器、固定招式、组合兵库”，甚至能根据敌人的兵器和战法，主动挑选最适合克制对方的旧兵。\n\n### 第一次主动兑现\n\n主角在黑市擂台上故意买下一柄无人要的断刀，借断刀残留的杀招击败持有灵器的对手，夺得赌注和一块进入古兵冢的令牌。\n\n他第一次真正感到的不是胜利，而是那柄断刀在胜后重新亮起一寸刀锋。以后，他拥有了第一件会随战斗逐渐修复的兵器。\n\n### 早期兑现（约10章）\n\n主角主动潜入被封锁的旧战场，找到…\n已批准 World Vision：\n# 世界幻想画像\n\n## 没有主角时，谁正在追什么，哪里正在发生什么\n\n这个世界叫“大砺界”。三百年前的“坠星大战”结束后，战争遗留下来的兵器、铸炉和战场被埋在各地。旧战场不是死地：每逢暴雨，地下兵器会随泥层上浮；每逢大规模灵潮，废弃铸炉会重新点燃。\n\n没有主角时，以下事情也会继续发生：\n\n- 黑水渡的船队正在抢运一批“雨铜”，因为雨季一到，河中铁鳞兽会逆流而上，只有雨铜打造的船钉能撑过兽潮。另一支商队准备烧毁他们的船，把雨铜价格抬到城中宗门买得起、普通人买不起的程度。\n- 裂河宗正在封锁一片旧战场，寻找三面失踪的军阵战旗。战旗一旦重新合阵，足以让一支普通军队抵挡数倍妖兽。\n- 废兵镇的老修士秦照壁一直在寻找一柄失踪的黑剑。他知道那柄剑没有名气，却曾在坠星大战中斩断过一座山门的护城阵。\n- 赤脊山的铸器师家族正在争夺一座地下古炉。古炉每七年只烧三个月，能够把普通铁矿炼成跨境斩敌的战材。\n- 四十日后，七年一开的“落星兵潮”将从北境荒原经过。兵潮会带出大量残兵，也会带来依附兵器煞气成长的荒兽、寻宝宗门和被战争遗物吸引的亡命徒。\n\n普通人的生活只是围绕这些事情被推动：船要不要出港，孩子能不能进兵坊，宗门是否征收兵奴，商队能否通过旧战场。真正值得进入故事的，是那些正在争夺残兵、古炉、军阵和活命机会的人。\n\n## 世界里真正值钱、值得想要的东西\n\n这个世界真正流通和被争夺的，不只是灵石，而是能够改变一个人命运的具体东西。\n\n- 普通价值：灵谷、药膏、制式铁兵、低阶引息法。它们能让普通人活下去、少受伤，或成为兵坊、镖队、宗门的正式杂役。\n- 重要价值：完成的兵纹、通脉功法、能承受灵息的战甲、名师一次修复、进入宗门内库或旧战场的令牌。得到它们后，一个人可以从普通兵卒变成真正的修士、铸器师或战队核心。\n- 稀缺价值：曾在大战中决定胜负的残兵、名将遗器、古铸炉的使用权、兵冢地图、能够辨认兵器战痕的师承。它们可以让一个小宗门拥有镇宗之物，也能让一个无名修士被大势力追杀或招揽。\n- 顶级价值：从未真正认主的古兵、完整战争法器、能够跨越境界斩敌的古代杀阵、天外铸场的铸造资格。得到它们，不只是实力增加，而是身份、敌人、可进入的地方和能够谈判的人全部改变。\n\n一件普通好刀只决定一个人能不能少受伤；一件重要残兵可能决定他能不能进入宗门；一件名兵则可能决定一座城由谁守、一场战争由谁赢。\n\n## 世界核心规则与力量来源\n\n普通人的力量来自灵息。灵息存在于山脉、河流、火脉和风暴中，修士通过呼吸、锻炼和药物把它引入身体，先强化皮肉骨骼，再贯通经脉，最后在体内形成能够反复运转的灵府。\n\n世界中常用的力量层次如下：\n\n- 炼身：身体比常人强，能承受兵器反震，可以独自对付数名普通武夫。\n- 通脉：灵息能贯入四肢和兵器，能够施展完整的战技，破木裂石，成为宗门弟子、军中精锐或正式镖师。\n- 开府：灵息能够离体，能够隔空伤人、驾驭阵器、独自守住城门或击溃一支普通战队。\n- 照形：可以看见灵息流动和兵阵缺口，能够在复杂战场中同时应对多名开府修士。\n- 镇域：力量足以改变一片战场的地形、灵潮和攻守格局，通常只有大宗宗主、王朝镇军或古老妖族能够达到。\n\n修为决定身体能承受多少力量、能够走多远、能否使用高阶法器，但不等于战斗一定胜利。兵器、战技、地形、伤势和战斗经验都会改变结果。\n\n兵器也有自己的成长规律：\n\n- 普通兵器只有材质和锋刃。\n- 经历过灵息淬炼和真正厮杀的兵器，会留下肉眼可见的战痕，例如刃口重新变直、甲片浮出暗纹、枪杆在夜间发热。\n- 曾经决定过生死的兵器，即使断裂，也可能保留原主人最强的一次出手。\n- 这种残留不能靠普通修补重新制造。只有兵器再次参与真实胜负，并在关键交锋中发挥作用，战痕才会继续显现。\n- 战斗必须真实，兵器必须参与决定性的胜负。演武、假战和单纯虐杀不会让残兵恢复…\n明确硬约束：未检测到明确题材硬约束\nStory Program 用途：优先寻找 Plot Engine 变异、thread ecology/collision、配角自治、story-state compounding 与高价值获得体验；只作为可选灵感，不改写已批准 Seed / World Vision。",
+  "query_scope": "contrasts,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 9,
+  "unique_raw_count": 7,
+  "novel_candidate_count": 6,
+  "accepted_count": 3,
+  "coordinate_reference_count": 0,
+  "coordinate_reference": null,
+  "coordinate_reference_error": "",
+  "genre_prior_count": 0,
+  "rejected_count": 4,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 3,
+  "raw_stdout": "[0.3383] mechanisms/plot-engine-variation-v3 -- Retrieval aliases: plot engine variation same power new engine adaptive opposition functional repurp\n[0.1941] syntheses/reader-facing-world-coordinates-batch-d-v3 -- # Retrieval Aliases\n读者坐标；世界可读坐标；力量尺；战力尺；境界尺；武技尺；技法尺；装备尺；法宝尺；神兵尺；潜力尺；资质尺；血脉上限；威胁尺；身份地位尺；价值尺；行动空间尺；世界\n[0.1941] syntheses/reader-facing-world-coordinates-batch-d-v3 -- - 其余坐标保持后台，不为完整性强行前台化。\n最小充分不意味着信息最少，而意味着没有一把尺只是重复另一把尺的结论。\n## Coordinate Cross-Calibration\n| 常见错位\n[0.3512] mechanisms/thread-collision-v3 -- Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl\n[0.2841] mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3 -- Retrieval aliases: longitudinal thread dormancy reminder collision second payoff afterlife thread br\n[0.2689] syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3 -- # Cross-Book Evidence Matrix\n> 证据边界：以下剧情事实和原文 locator 只转录自指定的 10 份 Sol 蒸馏；本轮未读取原著。结构结论属于跨书推断，不提升为 T\n[0.2689] syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3 -- - **Mechanism**：以具体欲望、关系、身份、物件或世界问题建立线程；允许其自然休眠或离屏推进；用行为、选择或新处境重新提醒；在当前事件中与其他独立因果线碰撞；产生不可回滚状态；第一次兑现后\n[0.1515] mechanisms/thread-ecology-v3 -- Retrieval aliases: thread braid long thread short thread medium thread dormancy reminder state chang\n[0.6342] mechanisms/earned-high-value-acquisition-v3 -- Retrieval aliases: high value acquisition reward opportunity earned reward immediate proof acquisiti",
+  "novel_candidates": [
+    {
+      "score": 0.3383,
+      "slug": "mechanisms/plot-engine-variation-v3",
+      "snippet": "Retrieval aliases: plot engine variation same power new engine adaptive opposition functional repurp"
+    },
+    {
+      "score": 0.3512,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl"
+    },
+    {
+      "score": 0.6342,
+      "slug": "mechanisms/earned-high-value-acquisition-v3",
+      "snippet": "Retrieval aliases: high value acquisition reward opportunity earned reward immediate proof acquisiti"
+    },
+    {
+      "score": 0.2841,
+      "slug": "mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3",
+      "snippet": "Retrieval aliases: longitudinal thread dormancy reminder collision second payoff afterlife thread br"
+    },
+    {
+      "score": 0.2689,
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "snippet": "# Cross-Book Evidence Matrix"
+    },
+    {
+      "score": 0.1515,
+      "slug": "mechanisms/thread-ecology-v3",
+      "snippet": "Retrieval aliases: thread braid long thread short thread medium thread dormancy reminder state chang"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.3383,
+      "slug": "mechanisms/plot-engine-variation-v3",
+      "snippet": "Retrieval aliases: plot engine variation same power new engine adaptive opposition functional repurp"
+    },
+    {
+      "score": 0.3512,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl"
+    },
+    {
+      "score": 0.6342,
+      "slug": "mechanisms/earned-high-value-acquisition-v3",
+      "snippet": "Retrieval aliases: high value acquisition reward opportunity earned reward immediate proof acquisiti"
+    },
+    {
+      "score": 0.2841,
+      "slug": "mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3",
+      "snippet": "Retrieval aliases: longitudinal thread dormancy reminder collision second payoff afterlife thread br"
+    },
+    {
+      "score": 0.2689,
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "snippet": "# Cross-Book Evidence Matrix"
+    },
+    {
+      "score": 0.1515,
+      "slug": "mechanisms/thread-ecology-v3",
+      "snippet": "Retrieval aliases: thread braid long thread short thread medium thread dormancy reminder state chang"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.3383,
+      "slug": "mechanisms/plot-engine-variation-v3",
+      "snippet": "Retrieval aliases: plot engine variation same power new engine adaptive opposition functional repurp",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：同一个核心能力怎样写几十/几百章而不变成“更高难度的同一任务”？\nMechanism：Plot Engine 不是地图名，而是当前阶段反复制造选择的核心问题。同一能力可以通过以下轴换挡：敌人研究主角旧成功后换攻击面；关系变化让能力的意义从“我能用”变成“我能保护谁/谁能进入”；身份公开使能力变成社会位置；世界后果让私人技巧进入战争/公开仪式/历史；人物目标从生存转复仇、保护、自由或拒绝旧解法。\nVariants：- 对手策略换挡。\n- 关系功能换挡。\n- 身份意义换挡。\n- 世界后果换挡。\n- 人物目标换挡。\n- 使用场景换挡。\n- 境界/生命状态换挡：当突破改变主角能看见什么、能进入哪里、谁还能按旧方式对待他时，境界升格可以成为换 Plot Engine 的触发器。\nReader Payoff：读者反复看到的是“同一个核心幻想还能这样玩”，而不是“又来一次同任务，只是敌人更强”。\nGuidance：规划大型阶段时，可以先用一句“当前反复制造选择的问题”帮助定义 Plot Engine。换地图不等于换发动机；留在同地图，只要问题真正改变，也可以进入新发动机。\n当大境界确实改变主角的存在位置时，优先问新的力量让哪些旧问题失效、又让什么此前不存在的问题出现；只有强度数字变化时，不必因此换发动机。\nFailure Modes：- 新阶段只换地点与敌人数值。\n- 能力不断增加组件但问题不变。\n- 对手永远使用同一种封锁/挑战。\n- 为了变异强行改变核心幻想本身。",
+      "transfer_boundary": "迁移换挡轴，不要求每种能力遍历全部轴，也不为“多样性”强行换题材。"
+    },
+    {
+      "score": 0.3512,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：怎样让一个大事件真正合流 main plot / relationship / mystery / power / world 中的若干条线，而不是只是把很多角色叫到同一场？\nMechanism：成熟的碰撞点需要一个共享因果铰链和一个不可回避的选择。这个选择同时改写若干线程的未来可行性：某条安全路径关闭、某段关系换位、某个谜团获得新解释、能力意义变化、阵营或世界事实改变。强 payoff 往往还有 narrative afterlife：旧目标完成后，其结果自然成为新承诺、新敌人、新生活问题或第二层解释。\nVariants：- 身份暴露：安全表层生活关闭，关系和敌我同时重写。\n- 牺牲/死亡：结算追捕或冲突，同时生成复活、继承、独立行动或新敌人。\n- 旧物终局用途：同时结算谜团、身份与能力来源。\n- 生活性仪式被大冲突劫持：婚礼、约战、重聚同时结算关系和旧敌。\nGuidance：不要求每次凑齐五栏。判断一个 thread 是否真的参与碰撞：移除它后，这个事件的选择、结果或后续可行性是否会改变？\nFailure Modes：- 角色都到场但因果互不相干。\n- 为了“大高潮”塞入尚未成熟的线。\n- payoff 只关旧问题，不留下任何后续状态。\n- 强制每个高潮都要求多线合流。",
+      "transfer_boundary": "迁移共享因果铰链与 narrative afterlife；碰撞强度由共同选择实际改写了多少线程的未来来决定。"
+    },
+    {
+      "score": 0.6342,
+      "slug": "mechanisms/earned-high-value-acquisition-v3",
+      "snippet": "Retrieval aliases: high value acquisition reward opportunity earned reward immediate proof acquisiti",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：怎样让主角得到真正值得想要的力量、宝物、知识、身份或世界入口，同时避免“作者突然发礼包”？\nMechanism：先建立当前欲望与能力缺口，让机会从正在发生的探索、危机、关系、竞争、旧线回流或世界入口里出现；通常需要主角通过判断、选择、交易、试验、试炼、创造、承继、使用或战斗，让机会真正变成可用的获得；偶发机缘也可以存在，但要通过后续行动确认价值。获得节点要清楚，重要奖励最好很快用一个具体场景证明价值。奖励不一定永久归主角所有：短暂阅览、借用、进入资格、身份承认，只要真实改变知识、关系或下一步行动，也可以形成高价值获得。\nVariants：- 普通目标完成时额外暴露更高一层机会。\n- 危机窗口里完成晋升或夺取。\n- 师承、关系或公共认可让已有努力被重新定价。\n- 短暂接触或资格型奖励改变下一步行动。\nReader Payoff：读者既看到“我想要的东西终于到手”，也能马上知道它为什么值钱、以后能做什么新事。\nGuidance：先建立当前欲望与缺口，再让机会从已有故事因果中出现。获得可以是物品、能力、知识、身份、资格、关系承认或短暂接触；重要的是“到手/获得成立”之后，人物能因此做什么新的事。\nFailure Modes：- 战斗结束另起一段领奖。\n- 主角看见就捡，没有主动选择。\n- 奖励只报品阶，没有第一次证明。\n- 为了节奏固定每若干章发一次大奖励。",
+      "transfer_boundary": "迁移“机会从故事中出现→主角争取→获得成立→尽快证明”的因果，不迁移来源作品的具体宝物、功法、神位或物件名称。"
+    }
+  ],
+  "rejected": [
+    {
+      "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+      "reason": "固定 World Coordinate Reference 已由已批准 World Vision 继承，不重复占 downstream creative 名额"
+    },
+    {
+      "slug": "mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "mechanisms/thread-ecology-v3",
+      "reason": "超过最终数量上限"
+    }
+  ],
+  "result": "### Inspiration 1\nsource: mechanisms/plot-engine-variation-v3\ntype: mechanism\nscore: 0.3383\n\n可用抽象：Creative Problem：同一个核心能力怎样写几十/几百章而不变成“更高难度的同一任务”？\nMechanism：Plot Engine 不是地图名，而是当前阶段反复制造选择的核心问题。同一能力可以通过以下轴换挡：敌人研究主角旧成功后换攻击面；关系变化让能力的意义从“我能用”变成“我能保护谁/谁能进入”；身份公开使能力变成社会位置；世界后果让私人技巧进入战争/公开仪式/历史；人物目标从生存转复仇、保护、自由或拒绝旧解法。\nVariants：- 对手策略换挡。\n- 关系功能换挡。\n- 身份意义换挡。\n- 世界后果换挡。\n- 人物目标换挡。\n- 使用场景换挡。\n- 境界/生命状态换挡：当突破改变主角能看见什么、能进入哪里、谁还能按旧方式对待他时，境界升格可以成为换 Plot Engine 的触发器。\nReader Payoff：读者反复看到的是“同一个核心幻想还能这样玩”，而不是“又来一次同任务，只是敌人更强”。\nGuidance：规划大型阶段时，可以先用一句“当前反复制造选择的问题”帮助定义 Plot Engine。换地图不等于换发动机；留在同地图，只要问题真正改变，也可以进入新发动机。\n当大境界确实改变主角的存在位置时，优先问新的力量让哪些旧问题失效、又让什么此前不存在的问题出现；只有强度数字变化时，不必因此换发动机。\nFailure Modes：- 新阶段只换地点与敌人数值。\n- 能力不断增加组件但问题不变。\n- 对手永远使用同一种封锁/挑战。\n- 为了变异强行改变核心幻想本身。\n\n使用边界：迁移换挡轴，不要求每种能力遍历全部轴，也不为“多样性”强行换题材。\n\n### Inspiration 2\nsource: mechanisms/thread-collision-v3\ntype: mechanism\nscore: 0.3512\n\n可用抽象：Creative Problem：怎样让一个大事件真正合流 main plot / relationship / mystery / power / world 中的若干条线，而不是只是把很多角色叫到同一场？\nMechanism：成熟的碰撞点需要一个共享因果铰链和一个不可回避的选择。这个选择同时改写若干线程的未来可行性：某条安全路径关闭、某段关系换位、某个谜团获得新解释、能力意义变化、阵营或世界事实改变。强 payoff 往往还有 narrative afterlife：旧目标完成后，其结果自然成为新承诺、新敌人、新生活问题或第二层解释。\nVariants：- 身份暴露：安全表层生活关闭，关系和敌我同时重写。\n- 牺牲/死亡：结算追捕或冲突，同时生成复活、继承、独立行动或新敌人。\n- 旧物终局用途：同时结算谜团、身份与能力来源。\n- 生活性仪式被大冲突劫持：婚礼、约战、重聚同时结算关系和旧敌。\nGuidance：不要求每次凑齐五栏。判断一个 thread 是否真的参与碰撞：移除它后，这个事件的选择、结果或后续可行性是否会改变？\nFailure Modes：- 角色都到场但因果互不相干。\n- 为了“大高潮”塞入尚未成熟的线。\n- payoff 只关旧问题，不留下任何后续状态。\n- 强制每个高潮都要求多线合流。\n\n使用边界：迁移共享因果铰链与 narrative afterlife；碰撞强度由共同选择实际改写了多少线程的未来来决定。\n\n### Inspiration 3\nsource: mechanisms/earned-high-value-acquisition-v3\ntype: mechanism\nscore: 0.6342\n\n可用抽象：Creative Problem：怎样让主角得到真正值得想要的力量、宝物、知识、身份或世界入口，同时避免“作者突然发礼包”？\nMechanism：先建立当前欲望与能力缺口，让机会从正在发生的探索、危机、关系、竞争、旧线回流或世界入口里出现；通常需要主角通过判断、选择、交易、试验、试炼、创造、承继、使用或战斗，让机会真正变成可用的获得；偶发机缘也可以存在，但要通过后续行动确认价值。获得节点要清楚，重要奖励最好很快用一个具体场景证明价值。奖励不一定永久归主角所有：短暂阅览、借用、进入资格、身份承认，只要真实改变知识、关系或下一步行动，也可以形成高价值获得。\nVariants：- 普通目标完成时额外暴露更高一层机会。\n- 危机窗口里完成晋升或夺取。\n- 师承、关系或公共认可让已有努力被重新定价。\n- 短暂接触或资格型奖励改变下一步行动。\nReader Payoff：读者既看到“我想要的东西终于到手”，也能马上知道它为什么值钱、以后能做什么新事。\nGuidance：先建立当前欲望与缺口，再让机会从已有故事因果中出现。获得可以是物品、能力、知识、身份、资格、关系承认或短暂接触；重要的是“到手/获得成立”之后，人物能因此做什么新的事。\nFailure Modes：- 战斗结束另起一段领奖。\n- 主角看见就捡，没有主动选择。\n- 奖励只报品阶，没有第一次证明。\n- 为了节奏固定每若干章发一次大奖励。\n\n使用边界：迁移“机会从故事中出现→主角争取→获得成立→尽快证明”的因果，不迁移来源作品的具体宝物、功法、神位或物件名称。"
+}

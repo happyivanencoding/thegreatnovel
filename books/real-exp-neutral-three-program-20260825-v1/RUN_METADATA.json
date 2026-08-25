@@ -1,0 +1,34 @@
+{
+  "author_direction": "成熟中文男频玄幻/修仙成长长篇。除此之外，不指定核心能力、主角性格、世界结构、资源类型、势力结构、冲突类型、题材子类型或长期主题，由当前 production creative chain 自主生成。",
+  "books": [
+    {
+      "index": 1,
+      "title": "败器成兵",
+      "world_coordinate_reference_count": 1,
+      "world_creative_count": 3,
+      "program_creative_count": 3,
+      "story_program_stage_count": 6
+    },
+    {
+      "index": 2,
+      "title": "三息先行",
+      "world_coordinate_reference_count": 1,
+      "world_creative_count": 3,
+      "program_creative_count": 3,
+      "story_program_stage_count": 6
+    },
+    {
+      "index": 3,
+      "title": "迁山入袖",
+      "world_coordinate_reference_count": 1,
+      "world_creative_count": 3,
+      "program_creative_count": 3,
+      "story_program_stage_count": 7
+    }
+  ],
+  "titles": [
+    "败器成兵",
+    "三息先行",
+    "迁山入袖"
+  ]
+}
