@@ -1,6 +1,8 @@
 读一下这三个故事题材，和顶级男频小说相比差在哪里？
 很中立的评判
 
+以下是三本故事题材的 Fantasy Seed + World Vision + Story Program 全文：
+
 # 三本中立新书｜上游合集（截至 Story Program）
 
 > 生成链：GPT-5.6 Luna high Fantasy Seed → GPT-5.6 Luna high World Vision → GPT-5.6 Sol high Story Program。
