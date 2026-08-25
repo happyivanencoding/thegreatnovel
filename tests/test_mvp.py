@@ -3153,15 +3153,18 @@ def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose()
     assert "### 不可替代的人与关系" in program
 
 
-def test_seed_prioritizes_appetite_and_story_species_diversity_without_example_anchoring() -> None:
+def test_seed_prioritizes_commercial_quality_without_example_anchoring() -> None:
     seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
     world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
     program = DEFAULT_PROMPT_TEMPLATES["idea"]
     for template in (seed, world, program):
         assert "Narrative Appetite Before Defensive Balance" in template
-    assert "故事物种差异" in seed
-    assert "Fantasy（最想拥有什么）、Gameplay（主角反复做什么）、Life Engine（为什么活、为什么继续往前）与 Human Gravity" in seed
-    assert "能力不同而人生牵引、重大选择伦理、关系重心和情绪满足高度同构" in seed
+    assert "Commercial Quality First, Diversity Second" in seed
+    assert "候选之间可以来自相近能力家族、相近成长结构或相近人物母题" in seed
+    assert "不要为了“看起来不同”主动绕开它" in seed
+    assert "多样性只是附加价值，不是 Hard Gate" in seed
+    assert "只避免近乎同案换皮" in seed
+    assert "故事物种差异" not in seed
     assert "归乡、复仇、找人、护住某个家、重建家族" not in seed
     assert "贪、好胜、护短、记仇、好奇、爱炫、谨慎、狠、恋家、重情" not in seed
     assert "宿敌、师徒、归乡、家人选择" not in program

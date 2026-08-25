@@ -140,7 +140,7 @@ Reader Coordinates 因此分成两类：
 
 ### Fantasy Seed：决定“什么最让我想要，以及这是谁的人生”
 
-Fantasy Seed 当前职责收敛为 **Fantasy + Desire + Gameplay**，但候选集需要整体呈现 **Fantasy / Gameplay / Life Engine / Human Gravity** 的故事物种差异。这里的 Human Gravity 指什么样的人与关系会持续改变主角，不新增字段或人格表。
+Fantasy Seed 当前职责收敛为 **Fantasy + Desire + Gameplay**。候选生成遵守 **Commercial Quality First, Diversity Second**：每个候选先独立追求最高商业吸引力，再把候选间差异当作附加价值；相近能力家族、成长结构或人物母题可以重复出现，只要各自仍然是强创意，不为了多样性主动回避高潜力方向。只防近乎同案换皮，不把跨书差异做成 Hard Gate。Life Engine 与 Human Gravity 仍用于保证单本人物和关系有长期驱动力，但不要求不同候选必须在这些维度彼此拉开。
 
 Seed 仍保留两条必要的长篇意识，但使用轻量投影而不是完整后台术语：**Seed Long-form Compounding** 只确认第一次爽完以后已有积累还能推动新的欲望、行动与冲突；**Seed Long-form Pacing** 只确认早期兑现不等于急着触及终极形态。完整 Net New / Irreversible State / Action Space / Fantasy Compounding 与长期节奏判断继续由 World / Story Program 等下游承担，不在 Seed 一次性展开。
 
@@ -167,7 +167,7 @@ Seed 仍保留两条必要的长篇意识，但使用轻量投影而不是完整
 
 #### 判断是否健康
 
-先问：**读者是否会明确产生“我也想拥有这个 / 我非看这个人接下来怎么干不可”的欲望？** 再问：**不讨论哲学意义，只讨论具体能力、人物欲望与关系牵引，这个 Seed 是否已经有独占性吸引力？** 最后再看候选集：如果能力机制不同，但人生牵引、重大选择伦理、关系重心和情绪满足高度同构，仍然属于候选坍缩。
+先问：**读者是否会明确产生“我也想拥有这个 / 我非看这个人接下来怎么干不可”的欲望？** 再问：**不讨论哲学意义，只讨论具体能力、人物欲望与关系牵引，这个 Seed 是否已经有独占性吸引力？** 最后再看候选集是否存在近乎同案换皮；如果几个候选恰好共享某种高潜力能力家族、人物母题或情绪满足，但各自核心玩法与故事仍然有商业吸引力，不需要为了差异强行改弱。
 
 如果 Seed 已经把能力写成职业流程、管理系统或抽象命题，World Vision 只会把错误继续放大。
 
