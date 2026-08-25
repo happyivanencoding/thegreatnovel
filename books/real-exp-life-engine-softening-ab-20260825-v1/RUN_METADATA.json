@@ -1,0 +1,45 @@
+{
+  "direction": "成熟中文男频玄幻/修仙成长长篇。除此之外，不指定核心能力、主角性格、世界结构、资源类型、势力结构、冲突类型、题材子类型或长期主题，由当前 production creative chain 自主生成。",
+  "sides": {
+    "A": [
+      {
+        "index": 1,
+        "title": "偷走一瞬巅峰",
+        "coordinate_reference_count": 1,
+        "creative_count": 3
+      },
+      {
+        "index": 2,
+        "title": "断器收养者",
+        "coordinate_reference_count": 1,
+        "creative_count": 3
+      },
+      {
+        "index": 3,
+        "title": "承诺成路",
+        "coordinate_reference_count": 1,
+        "creative_count": 3
+      }
+    ],
+    "B": [
+      {
+        "index": 1,
+        "title": "万器回锋",
+        "coordinate_reference_count": 1,
+        "creative_count": 3
+      },
+      {
+        "index": 2,
+        "title": "败法成真",
+        "coordinate_reference_count": 1,
+        "creative_count": 3
+      },
+      {
+        "index": 3,
+        "title": "旧战擂台",
+        "coordinate_reference_count": 1,
+        "creative_count": 3
+      }
+    ]
+  }
+}
