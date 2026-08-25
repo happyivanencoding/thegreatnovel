@@ -27,9 +27,9 @@ TGN 保留 World Independence、Concrete Value、High-Value Acquisition、Net Ne
 
 当前上游仍保持 **Fantasy Seed → World Vision → Story Program → Outline** 四个 artifact，不新增中间 Agent：
 
-- Fantasy Seed：Fantasy + Desire + Gameplay，并提前固定极小的 **主角欲望人格与行为签名**，回答“他会怎么要”；
+- Fantasy Seed：Fantasy + Desire + Gameplay；`主角最强欲望` 明确拆成 **眼前目标 + 能力之外仍成立的人生牵引**，再以极小的 **主角欲望人格与行为签名** 回答“他会怎么要”；
 - World Vision：先显式回答 **“没有主角时，谁正在追什么，哪里正在发生什么”** 和 **“世界里真正值钱、值得想要的东西”**，再建立 Reader Coordinates，最后才让核心优势切入这个独立世界；世界独立用其它值得看的故事证明，不用完整政治经济利益网络证明；
-- Story Program：每个大型阶段显式回答 **“本阶段关键获得、占有与首次使用”**，同时用具体事件投影 Net New / Action Space / Expectation / Mystery / Impact；Contestable Choice 由已批准主角行为签名决定，不由系统默认理性折中接管；
+- Story Program：采用 **Life / Fantasy / World Engine Braid**。Core Fantasy 是长期 Reader Promise，不是主角 Life Purpose；大型阶段可以主要由人物人生/关系、核心幻想或世界大事发动。阶段仍显式回答关键获得/净新增，但 `世界扩张` 改为 **故事局面怎样改变**，`更大机会` 改为 **下一阶段为什么自然发生**；
 - Outline：把长期方向编译成故事锚点；主题只作后验观察，没有稳定主题时允许“暂不预设”。
 
 Reader Coordinates 分成两类：世界前台尺（Power / Technique / Threat / Status / Value / World，Gear / Potential 条件性）与读者体验/故事尺（Action Space / Expectation Ladder / Mystery Depth / Impact，Reach 条件性）。后者继续真实参与生成，但只落成具体新行动、新期待、旧锚点纵深和实际影响范围，不作为小说世界内部术语。
@@ -45,6 +45,8 @@ TGN 最需要避免的不是局部文字不够漂亮，而是核心幻想在层�
 - **长篇退化成重复任务**：换地图、换敌人，却一直重复同一个 Plot Engine；
 - **人物退化成工具**：配角只发任务、给信息、被救和结算收益，没有自己的欲望与回流；
 - **人物退化成同一个理性代理人**：不同主角面对机会、强敌、羞辱和自己人时都做同一种稳妥、公平、克制、公共利益优先的选择，Seed 的欲望人格被系统价值观覆盖；
+- **能力吞掉人生**：救人、归乡、家族、宿敌等开局问题一解决，主角后半生自动变成“找更多适合金手指的目标 / 让能力更强 / 去更适合能力的地图”；Core Fantasy 从 Reader Promise 越权成了 Life Purpose；
+- **Boss 退化成技能 Counter**：重要对手先由“怎样克制主角能力”生成，而不是先有自己的欲望与人生，再在碰撞中学会反制；
 - **世界独立退化成治理模拟**：为了证明世界真实，三本不同小说都稳定长出矿权、水权、税收、户籍、迁徙权、多方利益平衡和合法身份，并让这些 supporting reality 抢走核心幻想的叙事权重；
 - **配角自治退化成永远平等谈判**：所有人物都机械“拒绝被收编、只按自身利益合作、重新谈条件”，反而失去崇拜、追随、爱慕、效忠、屈服、背叛和死敌等真实关系形态；
 - **爽点退化成固定税**：每次胜利都立即补等量成本、责任或审查，把 Payoff 抵消；
@@ -58,7 +60,8 @@ TGN 最需要避免的不是局部文字不够漂亮，而是核心幻想在层�
 系统必须区分“让世界可信的支撑逻辑”和“这本书真正要让读者追着看的故事发动机”。核心准则是：**Supporting Logic Must Not Automatically Become Story Engine。**
 
 - 世界复杂性不自动成为叙事前景；
-- **World Independence ≠ Narrative Equal Weight**：世界没有主角也有别的故事，不代表每个利益方、制度、税收、土地或治理问题都值得同等叙事权重；
+- **World Independence ≠ Narrative Equal Weight**：世界没有主角也有别的故事，不代表每个利益方、制度、税收、土地或治理问题都值得同等叙事权重；世界里还应有无法被金手指直接转换成收益的重要人物、奇观和事件；
+- **Core Fantasy ≠ Protagonist Life Purpose**：核心幻想必须长期兑现，但不要求每个大型阶段都以能力升级/Counter 为主要阅读满足；
 - **Character Autonomy ≠ Symmetric Stakeholder Power**：自主人物可以真心追随、爱慕、效忠、屈服、背叛或成为死敌，不要求所有关系保持平等谈判；
 - 对手的合理理由不自动成为作者结论，更不自动变成主角长期职责；
 - 世界机制真实存在，不等于需要完整展示实施过程；

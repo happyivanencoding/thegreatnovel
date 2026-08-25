@@ -2640,9 +2640,11 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     story_program = DEFAULT_PROMPT_TEMPLATES["idea"]
     for marker in (
         "当前最值得争取的机会 / 目标：",
-        "核心优势怎样产生超额结果：",
+        "核心优势在本阶段怎样参与：",
         "阶段净新增：",
-        "推向下一阶段的更大机会、欲望、竞争或压力：",
+        "本阶段主要阅读满足：",
+        "故事局面怎样改变：",
+        "下一阶段为什么自然发生：",
     ):
         assert marker in story_program
     assert "新的主动行动、对手新的针对方式、人物关系出现的新选择" in story_program
@@ -3109,6 +3111,31 @@ def test_protagonist_behavior_signature_is_fixed_upstream_and_drives_choices() -
     assert "主角主动行动：必须符合已批准的主角欲望人格与行为签名" in program
 
 
+def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose() -> None:
+    seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    program = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "Protagonist Life Engine" in seed
+    assert "眼前目标" in seed
+    assert "能力之外仍成立的人生牵引" in seed
+    assert "核心优势暂时不能用" in seed
+    assert "不能只是“让核心能力更强、找到更多适合能力的对象、把玩法做得更大”" in seed
+    assert "世界只给核心优势“供货”" in world
+    assert "无法被金手指直接转换成收益" in world
+    assert "Life / Fantasy / World Engine Braid" in program
+    assert "Fantasy Engine 自动吞掉另外两者" in program
+    assert "Counterplay 是冲突后果，不是 Boss 的出生理由" in program
+    assert "Core Fantasy 是长期 Reader Promise" in program
+    assert "不是 Protagonist Life Purpose" in program
+    assert "核心优势在本阶段怎样参与" in program
+    assert "本阶段主要阅读满足" in program
+    assert "故事局面怎样改变" in program
+    assert "可以完全不换地图" in program
+    assert "下一阶段为什么自然发生" in program
+    assert "下一阶段不要求“更大”" in program
+    assert "即使暂时拿掉核心优势，两个人之间仍有未完成故事" in program
+
+
 def test_world_vision_builds_story_bearing_world_and_desire_economy_before_advantage() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["world_vision"]
     independent = template.index("## 没有主角时，谁正在追什么，哪里正在发生什么")
@@ -3137,8 +3164,8 @@ def test_story_program_keeps_backstage_principles_but_outputs_concrete_acquisiti
     assert "评价和约束故事的作者语言，不是生成世界的材质" in template
     assert "本阶段关键获得、占有与首次使用" in template
     assert "无新的标志性获得" in template
-    assert "Expectation Ladder 的具体投影" in template
-    assert "Mystery Depth 的锚点" in template
+    assert "Expectation Ladder 只需让读者看见接下来具体还想看什么" in template
+    assert "若有长期谜团" in template
     assert "Impact 只作为后台尺度" in template
     assert "输出本身不要只写这些标签" in template
 
