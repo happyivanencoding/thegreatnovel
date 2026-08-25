@@ -1,0 +1,453 @@
+{
+  "ok": true,
+  "label": "program-B",
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "additionalDirectories": [],
+  "wall_seconds": 473.943,
+  "text": "我会先核对项目里已经批准的 Fantasy-First / Story Program 约束，只取与“碰撞不消解、阶段复利、不可逆局面”直接相关的部分；不会改写两份创意权威，也不会把它们校正成同一主题。现有正文类技能明确不负责故事规划，因此本轮不调用。已核对到的约束很明确：阶段按因果换挡，不按地图或战力换皮；重要获得必须“从正在发生的事里争来，并尽快第一次证明”；关系和世界线即使拿掉主角能力也要继续成立。下面我会把父债、顾锻等局部旧账留在局部结算，不把它们硬接成千年阴谋。# COLLISION STORY PROGRAM\n\n## 为什么偏偏是这个人与这个世界\n\n归潮将至，澜生界里大量原本还能凑合运转的东西，正被盐商、军府、矿镇、宗门和遗迹探索者强行推到极限：护路符必须多撑一程，旧船必须重新升空，名剑必须继续代表宗门，古代设施必须赶在关闭前启动。\n\n陆栖衡恰好擅长从失败中找回器物曾经成立的条件。但真正让碰撞变得好看的，不只是他的能力，而是他的脾气：他不肯匿名修好，不肯替名器遮丑，也不肯只收钱、不问谁承担失效后果。\n\n别人需要他救急，他却总在最不方便的时候要求写名、定责、当场验用。于是他的每次成功都会同时制造一个客户、一笔可见的资产、一个不能再装作没看见他的势力，以及一段无法只用钱结清的关系。\n\n世界没有等待他。没有陆栖衡，宋照雪仍会吞并盐场，石晚舟仍会赌上黑火井，魏停山仍会讨剑，乌芙仍会寻找白角夔，边关婚约与海国买岛也仍会发生。只是这个低阶废器匠进入以后，那些原本会被拆卖、掩埋、冒领或判废的东西，突然多了一次改变局面的机会。\n\n## 三个最值得长期惦记的人/关系\n\n1. **周禾与陆栖衡：一家人究竟靠田活，还是靠手艺活。**  \n   周禾不是不信儿子，她是不愿再把余生押在一间会被债主封掉的铺子上。陆栖衡越出名，她越担心丈夫的旧事重演。即使儿子后来拥有更大的修造行，她也未必愿意跟他走。\n\n2. **许照与陆栖衡：谁的名字写在成果上，谁又只能替别人把名字写好。**  \n   许照能让他的本事变成契约、商籍和真正收得到的钱，却不愿永远只做“陆师傅的账房”。两人既是最可靠的合伙人，也迟早要面对各自都想拥有独立招牌的事实。\n\n3. **石晚舟与陆栖衡：一艘船究竟是他的资产，还是她背负整个矿镇的家。**  \n   陆栖衡想让渡云舟成为自己第一个无法被夺走的大器物；石晚舟却会在任何时候优先拿它运人、运矿、还债。两人共同拥有它，也因此谁都无法单独决定它该去哪里。\n\n## 三个当前已经可见但尚未得到/进入/知道的对象\n\n1. **悬瓮城底层临着逆流地下河的永久铺契与正式商籍。**  \n   它意味着陆栖衡终于能把自己的名字写进交易，而不是挂在某个师父、校尉或商会名下。\n\n2. **黑火井里从未真正飞起来的古代渡云舟。**  \n   它可能只是一堆价值惊人的废料，也可能成为能带着一整个矿镇离开山脉的东西。\n\n3. **归潮前夕即将露出地面的古代书库。**  \n   陆栖衡还不知道里面是否真有炼器传承，更不知道一块被拿来垫书架的残损驿牌，会把他带到怎样的旧交通网中。\n\n### 阶段1｜盐风错响\n\n- **阶段为什么现在发生**  \n  宋照雪买空青灯盐，军府与药商被迫在归潮前加速押运。盐雾、矿尘和超载让一批护路符同时失效。\n\n- **主角此时真正想要什么**  \n  接下一笔足够大的订单，付清父亲留下的当期债款，阻止周禾把旧铺卖掉。\n\n- **世界里谁/什么本来就在行动**  \n  唐燧奉命押送青灯盐与军药；宋照雪的人催车赶路；竞争盐户则巴不得这批货在途中出事。\n\n- **两者怎样撞上**  \n  商队遇兽时，高价护路符全部失效。陆栖衡为了保住自己的修理尾款，也为了证明不是他父亲那一脉的手艺有问题，只能在兽群冲来前现场拆验。\n\n- **关键人物与关系变化**  \n  唐燧第一次发现这个匠人既能救命，又极难收为私属；许照逼着唐燧补写责任与验收条款。周禾却只看见儿子又一次把命押在商队损失上。\n\n- **Core Fantasy 在这里怎样参与（可以不是主发动机）**  \n  它是本阶段的直接发动机。陆栖衡从盐灰、车轴矿尘和符纸残迹中发现：护路符从未真正适应西岸盐风，只能被改成模拟迁徙兽群震响的装置。\n\n- **关键获得/失去/占有/首次使用**  \n  他得到第一份公开写有“修造人陆栖衡”的军府验收契，以及一套从报废车具中挑出的正式匠具。契约立刻通过整队车轮齐鸣、妖兽改道得到证明。\n\n- **本阶段最让读者上头的具体场面或期待**  \n  所有人都在车阵里准备拼命，陆栖衡却钻到车底拆掉最破的车铃；片刻后几十辆车同时发出兽群般的低鸣，冲来的妖兽从车队两侧分开。\n\n- **故事局面怎样不可逆地改变**  \n  他的名字第一次与一次成功、一次风险和一笔军府赔偿责任同时留在公开文书上。以后再有人冒领他的功劳，也必须先解释这份契约。\n\n- **下一段故事从哪里撞进来**  \n  车队运往黑火井的一根渡云舟翼梁在逃亡中断裂。石晚舟不接受远程赔钱，拿着写有陆栖衡名字的契约亲自找上门，要他去井下证明自己修的东西真能用。\n\n### 阶段2｜黑火借天\n\n- **阶段为什么现在发生**  \n  归潮即将经过黑火井，井下火脉开始抬升。石晚舟只剩这一次利用火潮让渡云舟升空的机会，债主也准备在窗口结束后拆船抵债。\n\n- **主角此时真正想要什么**  \n  修好翼梁，拿到足以买铺的巨额工钱，立刻返回矿镇。他并不想替石晚舟承担全镇人的去留。\n\n- **世界里谁/什么本来就在行动**  \n  石晚舟要把矿工、家眷和能卖的矿货一起运出去；三家铸器铺想拆船回款；顾锻受债主所托，准备证明整艘船只能报废。\n\n- **两者怎样撞上**  \n  陆栖衡发现渡云舟并非能在任何地方自由飞行。它原本依赖黑火井的上升火流、归潮星尘和特定载重同时成立。修好它，就必须赶在井塌之前完成一次不可重来的实飞。\n\n- **关键人物与关系变化**  \n  石晚舟拒绝把全船交给他，只肯按舱段给出修造权；许照坚持把“修造席”和舟契份额写清。顾锻再次使用当年那套错误术式后，不得不在众人面前承认它会让翼骨产生暗裂，但他并不因此向陆栖衡认输。\n\n- **Core Fantasy 在这里怎样参与（可以不是主发动机）**  \n  陆栖衡必须从翼梁、旧矿道风向和一次次失败点火中，逐段恢复整艘船的工作条件。它无法告诉他该牺牲哪一舱货、该先救谁，也不能替数百人承担试飞风险。\n\n- **关键获得/失去/占有/首次使用**  \n  他放弃大半现金工钱，换得渡云舟十二分之一的舟契、终身修造席以及所有修理铭文的署名权。舟契第一次证明价值，就是渡云舟载着矿镇第一批人冲出塌陷火井。与此同时，周禾已经卖掉旧铺，偿清最危险的一笔债。\n\n- **本阶段最让读者上头的具体场面或期待**  \n  船腹还在漏火，矿工吊在舷外压住失衡的一侧；陆栖衡边拆掉值钱的装饰舱，边把它们铸进翼骨。所有债主眼睁睁看着自己准备瓜分的废船从井口升空。\n\n- **故事局面怎样不可逆地改变**  \n  黑火井不再只是等死的矿镇，渡云舟也不再属于任何一家债主。陆栖衡第一次真正拥有一件大器物，却失去了自己一直想保住的旧铺。\n\n- **下一段故事从哪里撞进来**  \n  渡云舟必须到悬瓮城登记舟契、补充青灯盐并寻找新停泊地。陆栖衡决定拿自己的舟契作抵押，在悬瓮城买一间真正属于自己的铺子。\n\n### 阶段3｜瓮底写名\n\n- **阶段为什么现在发生**  \n  悬瓮城在归潮前举办大型器物公验。宋照雪需要一个不属于老盐商和宗门的匠人，为她囤积的药箱、盐仓与运输器具建立可信报价。\n\n- **主角此时真正想要什么**  \n  用渡云舟份额换到一间永久铺契，让自己的名字第一次出现在店契、招牌和器物铭文三个地方。\n\n- **世界里谁/什么本来就在行动**  \n  宋照雪要借公验压服竞争者；魏停山来到城中追讨师父的断剑；旧宗门则准备公开展示新任宗主的佩剑，证明旧案早已结束。\n\n- **两者怎样撞上**  \n  陆栖衡获得商籍的最后一项考验，恰好是替那把名剑做归潮前加固。拆验后，他发现所谓新剑的主骨正是魏停山寻找的断剑，而华丽外层正在掩盖一道会在御空时崩裂的旧伤。\n\n- **关键人物与关系变化**  \n  魏停山要求立即拆剑归还，宗门要求他只修不说，宋照雪只关心公验是否还能建立市场信任。许照则拒绝让新铺只写陆栖衡一人的名字：器物铭文归他，商账与经营权必须明确归她。\n\n- **Core Fantasy 在这里怎样参与（可以不是主发动机）**  \n  能力让他证明剑在何种条件下会断，却不能裁定它依法属于宗门、魏停山还是现任宗主。真正决定局面的，是他是否愿意把自己的新招牌押在一份虚假公验上。\n\n- **关键获得/失去/占有/首次使用**  \n  他当众演示名剑的失效条件，并提出一份同时写明旧剑来源、现有持有人与修造责任的方案。宋照雪为了保住公验信用，把悬瓮城底三十七号铺契交给他；许照取得独立经营署名。陆栖衡也因此失去宗门订单。\n\n- **本阶段最让读者上头的具体场面或期待**  \n  满堂名匠都在夸剑，陆栖衡却要求宗主御剑转过第三道瓮壁。剑鸣骤然变调，他当众剥开剑脊，露出三十年前那截带旧铭的断刃。\n\n- **故事局面怎样不可逆地改变**  \n  陆栖衡终于拥有正式铺子，也被整个悬瓮城知道为“敢拆名器的人”。魏停山讨剑之事进入公开争议，宗门再也不能把旧判决当作无人知晓的内部记录。\n\n- **下一段故事从哪里撞进来**  \n  古代书库在归潮中露出地面。宗门需要器图，宋照雪要药材保存术，唐燧要军阵档案，魏停山要旧宗门记录；陆栖衡只想找到一件能替代渡云舟临时转向匣的旧部件。\n\n### 阶段4｜书库只开一夜\n\n- **阶段为什么现在发生**  \n  书库只会在归潮星尘压住地下水时短暂开放。水位一旦回升，所有人都必须带着已经拿到的东西离开。\n\n- **主角此时真正想要什么**  \n  找到渡云舟的转向核心。现有临时部件最多再撑三次飞行，舟契若因此变成废纸，他刚得到的铺子也会被债主收走。\n\n- **世界里谁/什么本来就在行动**  \n  宗门、王朝密使、盗墓团伙、学者、附近村民和旧王朝后裔各自争抢不同区域。没人认可另一方对书库的完整所有权。\n\n- **两者怎样撞上**  \n  陆栖衡能让一条报废的书库运卷轨重新运行，因此所有人都想让他先替自己开门。他却利用这份短暂价值，换取进入器物废置间，而不是众人认定最珍贵的藏书楼。\n\n- **关键人物与关系变化**  \n  许照不再只是替他记账，而是取得抄本出售与赔偿谈判的独立权；唐燧为了军图愿意保护他，却不肯保证渡云舟不被军府征用；魏停山拿到的旧档也没有证明他完全正确，只证明当年的宗门记录被人为改过。\n\n- **Core Fantasy 在这里怎样参与（可以不是主发动机）**  \n  陆栖衡能恢复轨道和转向匣曾经工作的局部条件，却无法鉴定整座书库哪份知识最重要。他必须在不完整证据下，为自己的具体资产作选择。\n\n- **关键获得/失去/占有/首次使用**  \n  他舍弃进入主藏室的资格，拿到一只布满旧火痕的转向匣，以及一块被用作书架垫脚的残损驿牌。转向匣随即装上渡云舟，在书库回沉时完成第一次急转，保住船与已经登船的抄本。\n\n- **本阶段最让读者上头的具体场面或期待**  \n  藏书楼门即将打开，所有人都以为他会进去抢炼器秘典；陆栖衡却掉头钻进堆满废件的下层，把一只无人肯搬的沉重铁匣拖上船。\n\n- **故事局面怎样不可逆地改变**  \n  书库重新沉没，知识被多方带走，任何势力都没能独占。许照由账房变成掌握抄本生意的人；渡云舟则第一次能够离开黑火地形可靠转向。\n\n- **下一段故事从哪里撞进来**  \n  一份被抄出的旧图指出，沉铃泽水下古钟曾参与引导万兽迁徙。商路被兽群堵死后，悬瓮城商户出钱请陆栖衡修钟；乌芙也正追着白角夔进入泽中。\n\n### 阶段5｜夔踏沉铃\n\n- **阶段为什么现在发生**  \n  月蚀与归潮重叠，沉铃泽数千口古钟开始自行震动。白角夔、宗门捕兽队、牧场猎手与迁徙兽群同时抵达。\n\n- **主角此时真正想要什么**  \n  让通往悬瓮城的商路重新开放。宗门封杀已经让铺子失去高价订单，他不能再失去矿镇与普通商队的生意。\n\n- **世界里谁/什么本来就在行动**  \n  乌芙要证明白角夔不是凶兽；牧场主要保护牛群；宗门想活捉繁育；宋照雪则要保住新建盐仓和自己的垄断地位。\n\n- **两者怎样撞上**  \n  陆栖衡发现古钟完整运转后，会把兽群导向一条数百年前存在、如今已经被盐场和村镇占据的路线。所谓“修好”，会救一批人，也会毁掉另一批人的产业。\n\n- **关键人物与关系变化**  \n  乌芙拒绝让陆栖衡把白角夔当成钟阵零件；石晚舟坚持先保住渡云舟和矿镇货物；宋照雪愿意重开订单，但要求他把迁徙引向老盐户土地。陆栖衡第一次失去一个愿意付最高价的大客户。\n\n- **Core Fantasy 在这里怎样参与（可以不是主发动机）**  \n  他能看见古钟原本怎样工作，却不能把几百年后的村庄、盐场和活兽恢复成旧地图上的位置，更不能从器物痕迹中读出白角夔会选择哪条路。\n\n- **关键获得/失去/占有/首次使用**  \n  他没有得到白角、兽契或古钟，只接受乌芙以自己名义签下的一口钟修约。单钟鸣响后，白角夔带兽群踏过盐堤，避开人口最密的村镇，也毁掉宋照雪大量存盐。\n\n- **本阶段最让读者上头的具体场面或期待**  \n  月蚀下，水底万钟一口接一口亮起；白角夔踩着钟声走过镜面般的泽水，背后整片兽潮改向，而宋照雪新建的青灯盐堤正在它们前方。\n\n- **故事局面怎样不可逆地改变**  \n  西岸盐价与商路重新洗牌，宋照雪的垄断被打破，陆栖衡的铺子失去最大客户。乌芙没有成为他的驯兽师，只在师父名册上写下：此人可在器物失效时求援。\n\n- **下一段故事从哪里撞进来**  \n  兽群改道迫使边关关闭山路。赫连渡的婚约交换即将错过期限，唐燧带着军府征用令来到悬瓮城：渡云舟成了目前唯一能把新娘与被扣军户一起送过边境的载具。\n\n### 阶段6｜婚车先让军户过\n\n- **阶段为什么现在发生**  \n  婚期不能再改，扣押军户中已有老人病死。与此同时，两国都有军官希望婚约失败，好让二十年的战争继续维持现有利益。\n\n- **主角此时真正想要什么**  \n  保住渡云舟和铺子不被军府直接征走，同时拿回唐燧过去承诺的军府修造款。他不打算替两国承担停战成败。\n\n- **世界里谁/什么本来就在行动**  \n  赫连渡要用女儿的婚约换回军户；敌国守将担心交换是假袭；赫连渡的上级准备制造事故；被交换的军户只想带家人离开军营。\n\n- **两者怎样撞上**  \n  渡云舟载重不足以同时运完婚礼仪仗与军户。陆栖衡从书库残驿牌上认出一处地下驿站的启动痕迹，或许能分流一批人，却也可能被敌国视为秘密入侵通道。\n\n- **关键人物与关系变化**  \n  唐燧必须在执行征用令与兑现旧契之间选择；赫连渡的女儿拒绝先于军户登船，主动把自己变成婚约能否继续的风险承担者；许照则提出以双方军府共同承认舟契为交换条件，不肯再只做陆栖衡的代理人。\n\n- **Core Fantasy 在这里怎样参与（可以不是主发动机）**  \n  陆栖衡修复地下驿站的旧门与信号器，但婚约是否成立、军户是否相信对方、唐燧是否抗命，都不是器物能替他们决定的。\n\n- **关键获得/失去/占有/首次使用**  \n  残驿牌第一次证明价值，打开一条只能维持半夜的旧驿道。军户经地下先行，新娘最后乘渡云舟公开过关。陆栖衡保住舟契，却从此被两国军府共同登记为能够启用古代交通的人。\n\n- **本阶段最让读者上头的具体场面或期待**  \n  两军隔谷列阵，婚车停在断路前；地下却不断有人抱着孩子从灭亡王朝的驿门走出。最后渡云舟升起，新娘独自站在船首，让双方都无法假装这只是一场偷运。\n\n- **故事局面怎样不可逆地改变**  \n  婚约完成，但战争没有自动结束。赫连渡被上级视为越权者，唐燧失去原本稳定的升迁道路，归来的军户也成为两国都不知该如何安置的新人口。\n\n- **下一段故事从哪里撞进来**  \n  边境档案里出现一份海岛旧契。与此同时，海国遗民已经筹足第一笔赎岛款，宋照雪也正寻找替代被兽潮毁掉的西岸盐路。双方同时把目光投向无岸雾海边的一座旧岛。\n\n### 阶段7｜雾海西坞\n\n- **阶段为什么现在发生**  \n  商盟因盐路受损与边境动荡急需现金，决定提前出售岛屿。海国遗民若错过这次归潮航窗，筹来的钱很可能在下一轮商战中耗尽。\n\n- **主角此时真正想要什么**  \n  他已经有铺子，却发现铺子、渡云舟和自己都能被宗门、军府或大商人从陆路封死。他想要岛上那座被判废的西侧船坞——一个能停渡云舟、能接陌生器物，也能真正刻下自己名字的修造场。\n\n- **世界里谁/什么本来就在行动**  \n  海国遗民要祖坟、渔场和旧城；商盟要卖岛却永久保留航权；宋照雪要买港口重建盐运；无岸雾海中则正有一艘失踪多年的船向岛屿返航。\n\n- **两者怎样撞上**  \n  各方都需要陆栖衡确认岛上港口是否还能使用。他发现主港确已报废，但无人看得上的西坞只在特定归潮、潮位与旧驿信号同时出现时才能开启。\n\n- **关键人物与关系变化**  \n  许照第一次拥有脱离陆栖衡、独自经营海路抄本与货运的可能；石晚舟要把西坞变成渡云舟与矿镇人的新家；周禾真正看见了一块能住人的海岛土地，却选择暂时留在内陆，不肯把安稳寄托在儿子的下一次险修上。\n\n- **Core Fantasy 在这里怎样参与（可以不是主发动机）**  \n  陆栖衡能恢复西坞的启动条件，让所有人重新认识岛的价值；他不能替遗民决定是否接受放弃航权的价格，也不能解释雾海归船为什么晚了多年。\n\n- **关键获得/失去/占有/首次使用**  \n  他没有争夺整座岛，而是在所有人都认为西坞无用时，把永久坞契作为验港费用写进交易。西坞第一次开启，便让渡云舟在巨浪中安全入坞，也使海国遗民看见一条不在商盟主港账册里的旧水道。\n\n- **本阶段最让读者上头的具体场面或期待**  \n  岛契已经准备落印，陆栖衡却要求众人等到夜潮最高的一刻。荒废西坞在星尘与潮水中一层层亮起，沉没多年的泊位浮出海面；紧接着，一艘写满陌生文字的旧船从雾中撞向他的第一座船坞。\n\n- **故事局面怎样不可逆地改变**  \n  海国遗民重新拥有旧城与祖坟，商盟仍握着公开航权，陆栖衡则真正占有一座能接纳大型古器的船坞。他不再只是别人器物坏掉后临时雇来的匠人，而成为掌握一处实际世界入口的人。\n\n- **下一段故事从哪里撞进来**  \n  雾海归船上的人不认识陆栖衡，也不关心陆上的盐战、婚约或宗门旧案。他们只拿出一份早于现有岛契数百年的停泊文书，声称西坞从来不是无主废产，并要求他在下一次退潮前修好船上一件从未在澜生界出现过的器物。\n\n",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 60996,
+      "inputTokens": 5901,
+      "cachedReadTokens": 43776,
+      "outputTokens": 11319,
+      "thoughtTokens": 5178
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 60996,
+          "inputTokens": 5901,
+          "cachedInputTokens": 43776,
+          "outputTokens": 11319,
+          "reasoningOutputTokens": 5178
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-sol",
+            "token_count": {
+              "totalTokens": 60996,
+              "inputTokens": 5901,
+              "cachedInputTokens": 43776,
+              "outputTokens": 11319,
+              "reasoningOutputTokens": 5178
+            }
+          }
+        ]
+      }
+    }
+  },
+  "session": {
+    "sessionId": "01a03a82-494a-7a00-ba69-cd4a4beb405a",
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "gpt-5.6-sol[low]",
+          "name": "GPT-5.6-Sol (low)",
+          "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-sol[medium]",
+          "name": "GPT-5.6-Sol (medium)",
+          "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-sol[high]",
+          "name": "GPT-5.6-Sol (high)",
+          "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[xhigh]",
+          "name": "GPT-5.6-Sol (xhigh)",
+          "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[max]",
+          "name": "GPT-5.6-Sol (max)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[ultra]",
+          "name": "GPT-5.6-Sol (ultra)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-terra[low]",
+          "name": "GPT-5.6-Terra (low)",
+          "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-terra[medium]",
+          "name": "GPT-5.6-Terra (medium)",
+          "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-terra[high]",
+          "name": "GPT-5.6-Terra (high)",
+          "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[xhigh]",
+          "name": "GPT-5.6-Terra (xhigh)",
+          "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[max]",
+          "name": "GPT-5.6-Terra (max)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[ultra]",
+          "name": "GPT-5.6-Terra (ultra)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-luna[low]",
+          "name": "GPT-5.6-Luna (low)",
+          "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-luna[medium]",
+          "name": "GPT-5.6-Luna (medium)",
+          "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-luna[high]",
+          "name": "GPT-5.6-Luna (high)",
+          "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[xhigh]",
+          "name": "GPT-5.6-Luna (xhigh)",
+          "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[max]",
+          "name": "GPT-5.6-Luna (max)",
+          "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.5[low]",
+          "name": "GPT-5.5 (low)",
+          "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.5[medium]",
+          "name": "GPT-5.5 (medium)",
+          "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.5[high]",
+          "name": "GPT-5.5 (high)",
+          "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.5[xhigh]",
+          "name": "GPT-5.5 (xhigh)",
+          "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[low]",
+          "name": "GPT-5.4 (low)",
+          "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4[medium]",
+          "name": "GPT-5.4 (medium)",
+          "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4[high]",
+          "name": "GPT-5.4 (high)",
+          "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[xhigh]",
+          "name": "GPT-5.4 (xhigh)",
+          "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[low]",
+          "name": "GPT-5.4-Mini (low)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4-mini[medium]",
+          "name": "GPT-5.4-Mini (medium)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4-mini[high]",
+          "name": "GPT-5.4-Mini (high)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[xhigh]",
+          "name": "GPT-5.4-Mini (xhigh)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[low]",
+          "name": "GPT-5.3-Codex-Spark (low)",
+          "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[medium]",
+          "name": "GPT-5.3-Codex-Spark (medium)",
+          "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[high]",
+          "name": "GPT-5.3-Codex-Spark (high)",
+          "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[xhigh]",
+          "name": "GPT-5.3-Codex-Spark (xhigh)",
+          "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+        }
+      ],
+      "currentModelId": "gpt-5.6-luna[low]"
+    },
+    "modes": {
+      "availableModes": [
+        {
+          "id": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "id": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "id": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ],
+      "currentModeId": "read-only"
+    },
+    "configOptions": [
+      {
+        "id": "mode",
+        "name": "Mode",
+        "description": "Approval and sandboxing preset for the session",
+        "category": "mode",
+        "type": "select",
+        "currentValue": "read-only",
+        "options": [
+          {
+            "value": "read-only",
+            "name": "Read-only",
+            "description": "Requires approval to edit files and run commands."
+          },
+          {
+            "value": "agent",
+            "name": "Agent",
+            "description": "Read and edit files, and run commands."
+          },
+          {
+            "value": "agent-full-access",
+            "name": "Agent (full access)",
+            "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+          }
+        ]
+      },
+      {
+        "id": "collaboration_mode",
+        "name": "Collaboration mode",
+        "description": "How Codex collaborates for subsequent turns",
+        "category": "collaboration_mode",
+        "type": "select",
+        "currentValue": "default",
+        "options": [
+          {
+            "value": "default",
+            "name": "Default"
+          },
+          {
+            "value": "plan",
+            "name": "Plan",
+            "description": "Plan before making changes"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "name": "Model",
+        "description": "Model Codex uses for the session",
+        "category": "model",
+        "type": "select",
+        "currentValue": "gpt-5.6-luna",
+        "options": [
+          {
+            "value": "gpt-5.6-sol",
+            "name": "GPT-5.6-Sol",
+            "description": "Latest frontier agentic coding model."
+          },
+          {
+            "value": "gpt-5.6-terra",
+            "name": "GPT-5.6-Terra",
+            "description": "Balanced agentic coding model for everyday work."
+          },
+          {
+            "value": "gpt-5.6-luna",
+            "name": "GPT-5.6-Luna",
+            "description": "Fast and affordable agentic coding model."
+          },
+          {
+            "value": "gpt-5.5",
+            "name": "GPT-5.5",
+            "description": "Frontier model for complex coding, research, and real-world work."
+          },
+          {
+            "value": "gpt-5.4",
+            "name": "GPT-5.4",
+            "description": "Strong model for everyday coding."
+          },
+          {
+            "value": "gpt-5.4-mini",
+            "name": "GPT-5.4-Mini",
+            "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+          },
+          {
+            "value": "gpt-5.3-codex-spark",
+            "name": "GPT-5.3-Codex-Spark",
+            "description": "Ultra-fast coding model."
+          }
+        ]
+      },
+      {
+        "id": "reasoning_effort",
+        "name": "Reasoning effort",
+        "description": "How much reasoning effort the model should use",
+        "category": "thought_level",
+        "type": "select",
+        "currentValue": "low",
+        "options": [
+          {
+            "value": "low",
+            "name": "Low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "value": "medium",
+            "name": "Medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "value": "high",
+            "name": "High",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "value": "xhigh",
+            "name": "Xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "value": "max",
+            "name": "Max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          }
+        ]
+      },
+      {
+        "id": "fast-mode",
+        "name": "Fast mode",
+        "description": "1.5x speed, increased usage",
+        "category": "model_config",
+        "type": "select",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Off",
+            "description": "Default speed, normal usage"
+          },
+          {
+            "value": "on",
+            "name": "On",
+            "description": "1.5x speed, increased usage"
+          }
+        ]
+      }
+    ]
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

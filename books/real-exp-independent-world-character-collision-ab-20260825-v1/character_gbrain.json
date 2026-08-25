@@ -1,0 +1,73 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "idea",
+  "effective_query": "\"character autonomy\" OR \"character hook\" OR \"protagonist behavior\" OR \"protagonist identity\" OR \"relationship chemistry\"",
+  "query_strategy": "manual_override",
+  "query_texts": [
+    "\"character autonomy\" OR \"character hook\" OR \"protagonist behavior\" OR \"protagonist identity\" OR \"relationship chemistry\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：idea\n作者当前方向：成熟中文男频玄幻/修仙成长长篇。除此之外，不指定核心能力、主角性格、世界结构、资源类型、势力结构、冲突类型、题材子类型或长期主题，由当前实验架构自主生成。\n已批准 World Vision：\n# WORLD CHARACTER CONTEXT｜Facts Only\n\n## 普通人的生活与上升\n大多数人出生在河谷、山城、海港、盐场、矿镇或宗族村落。\n\n普通人的生活围绕土地、水源、牲畜、商路、兵役、婚姻和税契展开。灵气并没有让所有人都衣食无忧：一块能稳定种出灵谷的田，往往比一间普通铺面贵；能避开妖兽迁徙的村子，比靠近遗迹的村子更适合养家。\n\n没有修行天赋的人，也可以通过很多方式改变身份：\n\n- 学一门能靠灵材吃饭的手艺，例如炼药、制符、驯兽、铸兵、辨矿、修船。\n- 进入军府或城防营，靠战功获得田地、户籍和商路保护。\n- 投靠宗门、商会、世家，成为账房、管事、护卫、外门弟子或附属家族。\n- 和修士、贵族、商人联姻，改变家族的资源位置。\n- 把握归潮、矿脉、遗迹开放等机会，用一辈子积蓄换一次翻身。\n\n修士并不自动脱离日常生活。低阶修士仍要吃饭、治伤、交税、还债，也需要有人替他们种田、运货、照顾家人。一个会使三种常用符箓的匠人，未必打得过一名军府校尉，但他的收入和社会地位可能更高。\n\n在许多地方，“有本事”比“能打”更重要。\n\n## 力量体系与正常值\n澜生界的修行，本质上是让身体、神识、术式和外物之间形成稳定配合。\n\n施展力量不能凭空发生。修士通常需要经过长期锻炼的身体、可重复的术式，以及灵材、兵器、地势或天气中的至少一种支撑。越强的力量，越依赖具体条件；脱离熟悉环境后，很多修士会明显变弱。\n\n世界中大致存在这样的正常层次：\n\n- **普通人**：能辨认低等灵材，使用简单护身符，偶尔感知到妖兽或灵气变化。\n- **纳息者**：可以吸收少量灵气，体力、视力、伤口恢复速度超过常人，能使用短暂的火、风、驱尘、止血等小术。\n- **通脉修士**：地方武馆、军府精锐、宗门外门中的常见水平。能连续使用数种术式，独自对付数十名普通人，或猎杀低阶妖兽。\n- **立相修士**：一城一镇中的真正高手。能够让兵器、身体或术法形成稳定特征，短距离御空，正面击溃一支普通军队的小队。\n- **照域修士**：极其罕见，通常是大宗门长老、强国供奉、边关统帅或大商会的镇场人物。他们能影响一片街区、山谷或河段的战斗环境。\n- **更高层次**：存在于传说、古籍和少数仍活着的人身上。其力量足以左右城池、山脉或一场国家战争，但没人能证明所谓“真正无上”是否存在。\n\n世界中本来就常见的能力包括：\n\n- 强化身体、夜视、闭气、抗寒、抗毒。\n- 以符箓、阵盘、兵器放大有限力量。\n- 驯养灵兽、辨识灵植、改变水火风势。\n- 短距离腾挪、御剑或借器飞行。\n- 用药物和灵气治疗伤势，但不能随意起死回生。\n\n少数人能够做到：\n\n- 在复杂地形中同时操纵多种术式。\n- 让一件兵器随自身修为成长。\n- 以声音、香气、梦境或血液影响他人的感知。\n- 在归潮期间借助天象施展远超平日的法术。\n- 与高阶妖兽建立长期而平等的联系。\n\n这个世界不存在被普遍证实的逆转时间、真正复活、凭空创造生命、永久读心和绝对不死。古代传说里有类似记载，但所有现存证据都不足以证明它们曾经真实发生。\n\n## 社会现实与身份\n澜生界有王朝、城邦、宗门、世家、商盟、军府、海国和流动部族。它们彼此重叠，却没有一个机构能统治整个世界。\n\n一个人的身份通常由几件事共同决定：\n\n- 出身家族是否拥有田地、矿山、血缘传承或修士保护。\n- 是否有正式师承，能否使用某个宗门的术式和资源。\n- 是否拥有城籍、军籍、商籍或宗门凭证。\n- 是否欠下债务、血仇或誓约。\n- 是否在战场、商路、遗迹或地方灾难中证明过自己。\n\n宗门既是修行场所，也是家族、学校、兵营、医院和产业主。不同宗门差异很大：有的培养剑修，有的经营药山，有的替城池镇压妖患，有的靠海上贸易维持山门，还有的专门替贵族处理不能见光的事情。\n\n修士寿命越长，越容易和普通亲族产生隔阂。一个三十…\n明确硬约束：未检测到明确题材硬约束\nStory Program 用途：优先寻找 Plot Engine 变异、thread ecology/collision、配角自治、story-state compounding 与高价值获得体验；只作为可选灵感，不改写已批准 Seed / World Vision。",
+  "query_scope": "contrasts,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 2,
+  "unique_raw_count": 2,
+  "novel_candidate_count": 2,
+  "accepted_count": 2,
+  "coordinate_reference_count": 0,
+  "coordinate_reference": null,
+  "coordinate_reference_error": "",
+  "genre_prior_count": 0,
+  "rejected_count": 0,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 3,
+  "raw_stdout": "[0.0684] mechanisms/departure-vacancy-v3 -- Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac\n[0.0608] mechanisms/character-autonomy-v3 -- Retrieval aliases: character autonomy supporting cast return offscreen agency autonomous subplot ree",
+  "novel_candidates": [
+    {
+      "score": 0.0684,
+      "slug": "mechanisms/departure-vacancy-v3",
+      "snippet": "Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac"
+    },
+    {
+      "score": 0.0608,
+      "slug": "mechanisms/character-autonomy-v3",
+      "snippet": "Retrieval aliases: character autonomy supporting cast return offscreen agency autonomous subplot ree"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.0684,
+      "slug": "mechanisms/departure-vacancy-v3",
+      "snippet": "Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac"
+    },
+    {
+      "score": 0.0608,
+      "slug": "mechanisms/character-autonomy-v3",
+      "snippet": "Retrieval aliases: character autonomy supporting cast return offscreen agency autonomous subplot ree"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.0684,
+      "slug": "mechanisms/departure-vacancy-v3",
+      "snippet": "Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：角色离队、失联、沉眠或暂时不可用后，怎样让这次缺席真正改变后续故事，同时允许长线自然沉睡而不是频繁提醒？\nMechanism：离开前先让人物完成一个符合自身欲望的决定、期限、拒绝、交接或目标；离开后尽快用一个新的选择、失败、机会或敌人反应证明“旧状态已经结束”。有人会第一次自己行动，有人失去过去可依赖的选择，有人会利用空位，也可能有人因此获得新的自由。若 Canon 已有期限、物件、缺席位置或未完成承诺，可以把它作为召回器，然后允许人物长时间退出主镜头。\nVariants：- 主动离队证明自己：离开源于人物自己的目标，回归时以行动证明变化。\n- 保护者/核心人物离场：留下者开始重新决定怎么活、怎么行动。\n- 沉眠/失联：共同目标拆成其他人物自己的长期行动。\n- 群像换挡：旧中心离开后，配角不是接班工具，而是各自沿自己的欲望继续。\nReader Payoff：读者真正感到“这个人不在了”，同时拥有一个可记住但不需要每章提醒的长期期待。\nGuidance：Dormancy 不是遗忘。保留一个高辨识召回器即可；下一次提醒最好来自当前事件重新碰到旧期限、旧物、缺席位置或人物留下的实际后果。\nFailure Modes：- 告别很长，但离开后什么都没变。\n- 每隔几章机械提醒“他还在外面成长”。\n- 留下者自动无摩擦接替全部功能。\n- 还没形成缺席感就立即回归。",
+      "transfer_boundary": "只迁移“离开→空位/新选择→长线沉睡/召回”的因果，不迁移具体离队理由或回归奖励。"
+    },
+    {
+      "score": 0.0608,
+      "slug": "mechanisms/character-autonomy-v3",
+      "snippet": "Retrieval aliases: character autonomy supporting cast return offscreen agency autonomous subplot ree",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：怎样让重要配角拥有自己的故事，而不是始终站在主角旁边提供功能？\nMechanism：配角先拥有一个不以“帮助主角”为宾语的持续欲望，并拥有主角无法替代的关系、损失、知识或限制。允许其离开主镜头，在离屏期间成功、失败、受伤、换目标或形成新联盟；回流时先展示只有“离场后的他”才会做出的新行为，再补最少量背景。\n回流不应恢复旧队形，而应给当前主线带来新机会、摩擦或目标冲突。主角最好进入配角已经启动的行动，而不是重新给配角派任务。\nVariants：- 为爱情/尊严离开并独立成长。\n- 为家园、信仰、复仇或自由离屏推进。\n- 团队分散后，各成员带着不同人生状态重聚。\n- 主角沉眠/导师离开后，配角的故事发动机继续运转。\nReader Payoff：回归人物有“自己活过一段时间”的重量；读者重新见到的是改变过的人，而不是离开前角色的升级版工具。\nGuidance：不必给每个配角独立 POV。只要离屏期间存在可信因果，并在回归时带来可见 delta 即可。\nFailure Modes：- 离屏人物只是等主角召回。\n- 回归只报等级和装备。\n- 所有配角都围绕主角同一个目标。\n- 为了“群像”强迫每个配角都拥有长篇支线。",
+      "transfer_boundary": "迁移自主欲望、离屏因果与 re-entry delta，不要求所有配角长期离队或单开篇章。"
+    }
+  ],
+  "rejected": [],
+  "result": "### Inspiration 1\nsource: mechanisms/departure-vacancy-v3\ntype: mechanism\nscore: 0.0684\n\n可用抽象：Creative Problem：角色离队、失联、沉眠或暂时不可用后，怎样让这次缺席真正改变后续故事，同时允许长线自然沉睡而不是频繁提醒？\nMechanism：离开前先让人物完成一个符合自身欲望的决定、期限、拒绝、交接或目标；离开后尽快用一个新的选择、失败、机会或敌人反应证明“旧状态已经结束”。有人会第一次自己行动，有人失去过去可依赖的选择，有人会利用空位，也可能有人因此获得新的自由。若 Canon 已有期限、物件、缺席位置或未完成承诺，可以把它作为召回器，然后允许人物长时间退出主镜头。\nVariants：- 主动离队证明自己：离开源于人物自己的目标，回归时以行动证明变化。\n- 保护者/核心人物离场：留下者开始重新决定怎么活、怎么行动。\n- 沉眠/失联：共同目标拆成其他人物自己的长期行动。\n- 群像换挡：旧中心离开后，配角不是接班工具，而是各自沿自己的欲望继续。\nReader Payoff：读者真正感到“这个人不在了”，同时拥有一个可记住但不需要每章提醒的长期期待。\nGuidance：Dormancy 不是遗忘。保留一个高辨识召回器即可；下一次提醒最好来自当前事件重新碰到旧期限、旧物、缺席位置或人物留下的实际后果。\nFailure Modes：- 告别很长，但离开后什么都没变。\n- 每隔几章机械提醒“他还在外面成长”。\n- 留下者自动无摩擦接替全部功能。\n- 还没形成缺席感就立即回归。\n\n使用边界：只迁移“离开→空位/新选择→长线沉睡/召回”的因果，不迁移具体离队理由或回归奖励。\n\n### Inspiration 2\nsource: mechanisms/character-autonomy-v3\ntype: mechanism\nscore: 0.0608\n\n可用抽象：Creative Problem：怎样让重要配角拥有自己的故事，而不是始终站在主角旁边提供功能？\nMechanism：配角先拥有一个不以“帮助主角”为宾语的持续欲望，并拥有主角无法替代的关系、损失、知识或限制。允许其离开主镜头，在离屏期间成功、失败、受伤、换目标或形成新联盟；回流时先展示只有“离场后的他”才会做出的新行为，再补最少量背景。\n回流不应恢复旧队形，而应给当前主线带来新机会、摩擦或目标冲突。主角最好进入配角已经启动的行动，而不是重新给配角派任务。\nVariants：- 为爱情/尊严离开并独立成长。\n- 为家园、信仰、复仇或自由离屏推进。\n- 团队分散后，各成员带着不同人生状态重聚。\n- 主角沉眠/导师离开后，配角的故事发动机继续运转。\nReader Payoff：回归人物有“自己活过一段时间”的重量；读者重新见到的是改变过的人，而不是离开前角色的升级版工具。\nGuidance：不必给每个配角独立 POV。只要离屏期间存在可信因果，并在回归时带来可见 delta 即可。\nFailure Modes：- 离屏人物只是等主角召回。\n- 回归只报等级和装备。\n- 所有配角都围绕主角同一个目标。\n- 为了“群像”强迫每个配角都拥有长篇支线。\n\n使用边界：迁移自主欲望、离屏因果与 re-entry delta，不要求所有配角长期离队或单开篇章。"
+}
