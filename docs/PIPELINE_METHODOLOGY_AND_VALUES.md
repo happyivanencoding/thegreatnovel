@@ -492,7 +492,7 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 | 阶段 | 默认模型 | GBrain | 说明 |
 |---|---|---|---|
 | Fantasy Seed | GPT-5.6 Luna high | **OFF** | 保持核心幻想先由作者方向与模型自身产生，避免参考库过早锚定创意 |
-| World Vision | GPT-5.6 Luna high | **ON，最多 3 条 focused inspiration** | Luna 把核心幻想展开成具体世界事实、读者可预测规则、世界入口与力量体验；GBrain 的抽象经验不能原样成为世界规则 |
+| World Vision | GPT-5.6 Luna high | **ON，固定 1 条 Coordinate Reference + 最多 3 条 creative inspiration** | Coordinate Reference 固定提供力量/技法/威胁/身份/价值/行动空间等读者尺，不占 creative 名额；Luna 再用最多 3 条创作启发承载世界入口、复利与力量体验 |
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | 当前最值得使用 Sol 的位置：玩法换挡、长线生态、人物自治、敌人策略、高价值获得 |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把正确的长期 Program 展开成连续故事锚点、Thread Collision、身份揭露、Reward Recontextualization |
 | Director | GPT-5.6 Luna high | 章节相关精选上下文 | 当前 Balanced 默认；与 Terra high 质量接近但成本显著更低，若优先最低延迟可切 Terra high |
@@ -517,7 +517,7 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 - GBrain OFF 已经能产出合格规划；
 - GBrain v3 ON 的主要增益集中在 **Story Program 与 Outline**：更早换 Plot Engine、人物更有自主目标、长中短线更完整、高价值获得更自然，并能把一个完整中期故事单位规划到约 60—70 章；
 - ON 没有观察到明显的输出膨胀或可见延迟负担；
-- 当前 **3 / 3 / 4（最多5）条** 的 focused inspiration 已经有效，不应因为 GBrain 变大就同步扩大最终上下文；规划检索采用 **wide recall, narrow context**：World / Program / Outline 用互补 retrieval intents 扩候选覆盖，round-robin 去重后最多检查 12 个候选，再收敛回现有 3 / 3 / 5 上限。
+- 当前规划注入保持 **World 固定 1 Coordinate Reference + 最多 3 creative / Program 最多 3 / Outline 通常 4、最多 5**；不应因为 GBrain 变大就继续同步扩大最终上下文。规划检索采用 **wide recall, narrow context**：普通 creative 候选用互补 retrieval intents 扩覆盖，round-robin 去重后最多检查 12 个候选；World 的固定 Coordinate Reference 直接按 slug 读取，不参与 creative 排名或占位。
 
 因此当前默认不是“让 GBrain 替模型想故事”，而是：**先让强模型拥有自己的创作，再用少量高质量 GBrain 提醒它不要忘记长篇还需要玩法换挡、线程生态、奖励复利和人物回流。**
 

@@ -1386,7 +1386,8 @@ async function queryGbrain() {
     $("gbrain-rejections").value = (payload.rejected || [])
       .map((item) => `${item.slug}：${item.reason}`)
       .join("\n") || "（没有排除项）";
-    $("gbrain-count").textContent = `raw ${payload.raw_count} / accepted ${payload.accepted_count} / rejected ${payload.rejected_count} / limit ${payload.requested_limit} / final ${payload.final_limit}`;
+    const coordinateCount = payload.coordinate_reference_count || 0;
+    $("gbrain-count").textContent = `raw ${payload.raw_count} / coordinate ${coordinateCount} + creative ${payload.accepted_count} / rejected ${payload.rejected_count} / limit ${payload.requested_limit} / final ${payload.final_limit}`;
     $("gbrain-scope").textContent = payload.scope || "GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选";
     $("gbrain-status").textContent = "GBrain：可用，已完成 BOOK 筛选";
     $("gbrain-status").classList.remove("error");

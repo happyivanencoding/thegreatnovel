@@ -28,6 +28,7 @@ from story_mvp.gbrain_retrieval import (
     PLANNING_CANDIDATE_INSPECTION_LIMIT,
     RAW_RESULT_LIMIT,
     QUERY_RECALL_LIMIT,
+    WORLD_COORDINATE_REFERENCE_SLUG,
     _forbidden_terms,
     active_inspiration_allowed,
     build_retrieval_brief,
@@ -2345,6 +2346,45 @@ def test_planning_query_batches_round_robin_preserve_multiple_retrieval_intents(
     assert result["accepted_count"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
     assert [item["slug"] for item in result["accepted"]] == visible[:3]
     assert result["requested_limit"] == PLANNING_CANDIDATE_INSPECTION_LIMIT
+
+
+def test_world_vision_fixed_coordinate_reference_does_not_consume_three_creative_slots(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    raw = "\n".join(
+        [
+            f"[0.99] {WORLD_COORDINATE_REFERENCE_SLUG} -- reader coordinates",
+            "[0.98] mechanisms/world-a -- world a",
+            "[0.97] mechanisms/world-b -- world b",
+            "[0.96] mechanisms/world-c -- world c",
+        ]
+    )
+    pages = {
+        WORLD_COORDINATE_REFERENCE_SLUG: (
+            "---\nactive_inspiration: true\n---\n\n"
+            "## Guidance\n\n每本书至少建立一把当前主尺，让读者能预测强弱、边界和下一档期待。"
+        ),
+        "mechanisms/world-a": _page("Mechanism", "世界入口改变行动空间。"),
+        "mechanisms/world-b": _page("Mechanism", "世界欲望随地图自然扩大。"),
+        "mechanisms/world-c": _page("Mechanism", "上一轮结果改变下一轮世界状态。"),
+    }
+    result = retrieve_gbrain(
+        mode="world_vision",
+        fantasy_seed="已批准幻想",
+        query_override="manual world query",
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=pages.__getitem__,
+    )
+    assert result["coordinate_reference_count"] == 1
+    assert result["coordinate_reference"]["slug"] == WORLD_COORDINATE_REFERENCE_SLUG
+    assert result["accepted_count"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+    assert [item["slug"] for item in result["accepted"]] == [
+        "mechanisms/world-a",
+        "mechanisms/world-b",
+        "mechanisms/world-c",
+    ]
+    assert "### Fixed Coordinate Reference" in result["result"]
+    assert "不占 creative inspiration 名额" in result["result"]
+    assert result["result"].count("### Inspiration ") == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
 
 
 def test_planning_multi_intent_query_tolerates_one_optional_query_failure(monkeypatch) -> None:

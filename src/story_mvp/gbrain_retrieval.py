@@ -17,6 +17,7 @@ FINAL_RESULT_LIMIT = 5
 CHAPTER_FINAL_RESULT_LIMIT = 2
 CREATIVE_PLANNING_FINAL_RESULT_LIMIT = 3
 GENRE_PRIOR_ACCEPT_LIMIT = 2
+WORLD_COORDINATE_REFERENCE_SLUG = "syntheses/reader-facing-world-coordinates-batch-d-v3"
 EMPTY_RESULT = "（本次没有找到与 BOOK 硬约束和当前章节任务兼容的 GBrain 证据；不要用不相关材料补位。）"
 GBRAIN_SCOPE_LABEL = "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选"
 
@@ -605,6 +606,46 @@ def _format_bundle(items: list[Mapping[str, Any]]) -> str:
     return "\n\n".join(blocks)
 
 
+def _format_fixed_coordinate_reference(item: Mapping[str, Any] | None) -> str:
+    if not item:
+        return ""
+    boundary = item.get("transfer_boundary") or "只使用这张跨书 synthesis 的读者坐标原则，不迁移来源作品表层设定、人物、事件或数值。"
+    return "\n".join(
+        [
+            "### Fixed Coordinate Reference",
+            f"source: {item['slug']}",
+            "role: World Vision 固定读者坐标参考；不占 creative inspiration 名额",
+            "",
+            f"可用抽象：{item['abstract']}",
+            "",
+            f"使用边界：{boundary}",
+        ]
+    )
+
+
+def _load_world_coordinate_reference(
+    page_reader: Callable[[str], str], constraints: Iterable[str]
+) -> tuple[dict[str, Any] | None, str]:
+    try:
+        page = page_reader(WORLD_COORDINATE_REFERENCE_SLUG)
+    except (GBrainQueryError, OSError, ValueError, KeyError) as error:
+        return None, f"固定 Coordinate Reference 读取失败：{error}"
+    if not active_inspiration_allowed(page):
+        return None, "固定 Coordinate Reference 当前未启用为 active inspiration"
+    abstract, transfer_boundary = extract_abstract_content(page)
+    if not abstract:
+        return None, "固定 Coordinate Reference 没有可提取的抽象区块"
+    if _has_surface_conflict(abstract, constraints):
+        return None, "固定 Coordinate Reference 与 BOOK 明确硬约束冲突"
+    return {
+        "slug": WORLD_COORDINATE_REFERENCE_SLUG,
+        "type": "synthesis",
+        "score": 1.0,
+        "abstract": abstract,
+        "transfer_boundary": transfer_boundary,
+    }, ""
+
+
 def retrieve_gbrain(
     *,
     mode: str,
@@ -683,6 +724,12 @@ def retrieve_gbrain(
         current_outline,
         recent_summaries,
     )
+    coordinate_reference: dict[str, Any] | None = None
+    coordinate_reference_error = ""
+    if mode == "world_vision":
+        coordinate_reference, coordinate_reference_error = _load_world_coordinate_reference(
+            page_reader, constraints
+        )
     if mode == "context_curator" and query_strategy == "prose_control_keyword_aliases":
         final_limit = 1
     elif mode in {"chapter", "context_curator"}:
@@ -694,6 +741,8 @@ def retrieve_gbrain(
     novel_candidates: list[dict[str, Any]] = []
     rejected: list[dict[str, str]] = []
     for hit in unique_hits:
+        if mode == "world_vision" and hit["slug"] == WORLD_COORDINATE_REFERENCE_SLUG:
+            continue
         category = source_category(hit["slug"])
         if category not in allowed_categories:
             rejected.append({"slug": hit["slug"], "reason": f"{mode} 模式不自动使用 {category or '未知来源类别'}"})
@@ -756,6 +805,9 @@ def retrieve_gbrain(
         )
         if genre_prior:
             genre_prior_count += 1
+    coordinate_bundle = _format_fixed_coordinate_reference(coordinate_reference)
+    creative_bundle = _format_bundle(accepted) if accepted else ("" if coordinate_reference else EMPTY_RESULT)
+    result_bundle = "\n\n".join(part for part in (coordinate_bundle, creative_bundle) if part)
     return {
         "status": "available",
         "scope": GBRAIN_SCOPE_LABEL,
@@ -771,6 +823,9 @@ def retrieve_gbrain(
         "unique_raw_count": len(unique_hits),
         "novel_candidate_count": len(novel_candidates),
         "accepted_count": len(accepted),
+        "coordinate_reference_count": 1 if coordinate_reference else 0,
+        "coordinate_reference": coordinate_reference,
+        "coordinate_reference_error": coordinate_reference_error,
         "genre_prior_count": genre_prior_count,
         "rejected_count": len(rejected),
         "query_limit": QUERY_RECALL_LIMIT,
@@ -781,5 +836,5 @@ def retrieve_gbrain(
         "raw_results": visible,
         "accepted": accepted,
         "rejected": rejected,
-        "result": _format_bundle(accepted),
+        "result": result_bundle,
     }

@@ -16,7 +16,7 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 ## TGN 阶段消费
 
 - `Fantasy Seed`：继续保持隔离，不自动读取 GBrain，先保证核心幻想来自当前作者方向与模型本身。
-- `World Vision`：默认 GBrain ON，最多 3 条 focused inspiration；借鉴 world fantasy / world entry / narrative compounding，不能覆盖已批准 Fantasy Seed。
+- `World Vision`：默认 GBrain ON，固定读取 1 条 Reader Coordinates Reference，再选最多 3 条 creative inspiration；固定坐标参考不占 creative 名额，creative 仍借鉴 world fantasy / world entry / narrative compounding，全部服从已批准 Fantasy Seed。
 - `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流与 Reward/Opportunity，不能覆盖已批准 Seed / World Vision。
 - `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。
 - `Director`：不负责凭空发明长期大奖励或重新设计 Story Program。
@@ -98,7 +98,7 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 - ON 能把完整中期故事单位连续规划到约 60—70 章，而 OFF 更容易在约 30 章后留下下一轮再规划；
 - 两组输出长度接近，并行测试中没有观察到 GBrain ON 带来明显 wall-clock 负担。
 
-因此当前默认保持：**Seed OFF；World 3 条 ON；Program 3 条 ON；Outline 4/5 条 ON。** GBrain 的作用不是替模型提供故事答案，而是给已经很强的模型提供少量长期小说 craft reminders。
+因此当前默认保持：**Seed OFF；World 固定 1 Coordinate Reference + 最多 3 creative；Program 最多 3；Outline 通常 4 / 最多 5。** GBrain 的作用不是替模型提供故事答案，而是给已经很强的模型提供少量长期小说 craft reminders。
 
 这只是一个高风险 Seed 的实测；后续经典样本扩展也继续保持 PILOT overlay，不因样本数量增加就自动提升为正式 machine VALIDATED。继续通过真实新书验证后再 promotion。
 ## 经典样本扩展（2026-08-24）
@@ -147,7 +147,7 @@ GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks
 1. 始终生成并展示中文 BOOK-aware Retrieval Brief；
 2. 如果 semantic query 可用，后端直接使用完整 brief；
 3. 如果不可用，World Vision / Story Program / Outline 使用 2–3 组互补的内部 retrieval intents，而不是把越来越大的 GBrain 压成一个关键词 query；每组仍只做 bounded recall；
-4. 多 intent 结果按 round-robin 合并再去重，防止第一组 query 独占候选窗口；规划阶段最多检查 12 个候选，但最终注入仍保持 World 3、Program 3、Outline 最多 5；单个可选 intent 查询失败时保留其它结果，只有全部查询失败才向上报告 GBrain 错误；
+4. 多 intent 结果按 round-robin 合并再去重，防止第一组 query 独占候选窗口；普通 creative 规划阶段最多检查 12 个候选，并保持 World creative 最多 3、Program 最多 3、Outline 最多 5；World 的 Reader Coordinates 由固定 slug 单独读取，不参加 creative 排名；单个可选 intent 查询失败时保留其它结果，只有全部查询失败才向上报告 GBrain 错误；
 5. 用户手工编辑查询时，手工 query 永远优先；
 6. 返回给 LLM 的 `可用抽象` 仍来自卡片中文 Mechanism/Guidance 等正文，不把英文 aliases 注入 Prompt。
 
@@ -160,12 +160,12 @@ GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks
 Story Craft 负责“长期故事为什么好看”；正文表达层另有 `docs/GBRAIN_PROSE_CRAFT_V1.md`。Prose Craft v1 使用六本经典的 85 个 bounded scene windows 建立 source-specific Prose DNA，再跨书收敛为 7 张 production-facing Prose Controls。Prose DNA 不直接进入 Primary Writer；Prose Controls 只影响 HOW TO SAY，不覆盖 BOOK Prose Profile、Chapter Mission 或 Canon。当前完成 GBrain import + embedding（15705/15705），自动 Curator 路由仍待正文 A/B 后冻结。
 ## Pilot Active / HOLD
 
-当前主 `gbrain-story-craft-v3/staging` 已确定性重建 manifest，共 **71 张 staging pages：67 active / 4 HOLD-or-reference-only**。其中真正的 HOLD mechanisms 仍是：
+当前主 `gbrain-story-craft-v3/staging` 已确定性重建 manifest，共 **71 张 staging pages：68 active / 3 HOLD-or-reference-only**。其中真正的 HOLD mechanisms 仍是：
 
 - `partner-reward-agency-v3`
 - `reward-timing-variation-v3`
 
-另外 2 张 Batch D cross-book synthesis 显式 `active_inspiration: false`，只保留为 provenance / research reference。新 Batch D Book/Arc 与两个新 mechanism 保持 PILOT overlay；`reference-corpus/machine` 继续保持旧 validated snapshot。TGN 对显式 `active_inspiration: false` 的页面自动跳过。
+Batch D 原有 2 张 cross-book synthesis 最初均为 `active_inspiration: false`。2026-08-25 起，`reader-facing-world-coordinates-batch-d-v3` 已显式激活，并由 World Vision 固定作为 Coordinate Reference；`gameplay-counterplay-thread-afterlife-batch-d-v3` 仍保持 REFERENCE_ONLY / `active_inspiration: false`。新 Batch D Book/Arc 与两个新 mechanism 继续保持 PILOT overlay；`reference-corpus/machine` 保持旧 validated snapshot。
 
 ## Priority Batch D 扩展（2026-08-24）
 
@@ -182,20 +182,20 @@ Terra Source Fidelity 的最终权威链是 **direct raw-source audit → Requir
 
 本轮与 Prose Priority Batch 合并向 GBrain scoped import 32 页，runtime 从 `3753 / 15717 / 15717` 增至 **`3785 Pages / 15780 Chunks / 15780 Embedded`**；`embed --stale` 实际刷新 63 chunks，最终 embedding debt 为 0，无 root-level duplicate。
 
-TGN retrieval regression 通过：SP01 仍以 `plot-engine-variation` 为首，SP02 仍由 `thread-collision / sacrifice-convergence` 主导，SP03 仍是 `reunion / departure / character-autonomy`，OL01 `thread-ecology` 第1，WV01 `world-desire-ladder / world-entry` 第1/2；只有明确询问“敌人怎样学习并反制”时，新 `opponent-learning` 升到第1。reference-only syntheses 被 `active_inspiration: false` 正确过滤。
+TGN retrieval regression 通过：SP01 仍以 `plot-engine-variation` 为首，SP02 仍由 `thread-collision / sacrifice-convergence` 主导，SP03 仍是 `reunion / departure / character-autonomy`，OL01 `thread-ecology` 第1，WV01 `world-desire-ladder / world-entry` 第1/2；只有明确询问“敌人怎样学习并反制”时，新 `opponent-learning` 升到第1。该次 2026-08-24 regression 中两张 reference-only synthesis 尚未激活；Reader Coordinates 已于 2026-08-25 单独 promotion 为 World 固定参考。
 
 完整本地报告：`reference-corpus/operations/gbrain-story-craft-v3/expansion-batch-d-20260824/FINAL_BATCH_D_REPORT_20260824.md`。
 
 ## Planning Recall Widening（2026-08-25）
 
-随着 source-specific Book/Arc、Reward、Thread、Reader Coordinates 等蒸馏材料增加，规划阶段继续保持最终注入 **World 3 / Story Program 3 / Outline 最多 5**，只扩大内部候选覆盖。当前无 query embedding 的 keyword fallback 为：World Vision 2 组互补 intent，Story Program 3 组，Outline 3 组；每组 `QUERY_RECALL_LIMIT=24`，多组结果 round-robin 合并并按 slug 去重，规划阶段最多检查 12 个候选。
+随着 source-specific Book/Arc、Reward、Thread、Reader Coordinates 等蒸馏材料增加，规划阶段采用 **World 固定 1 Coordinate Reference + 最多 3 creative / Story Program 最多 3 / Outline 最多 5**。当前无 query embedding 的 keyword fallback 为：World Vision 2 组互补 creative intent，Story Program 3 组，Outline 3 组；每组 `QUERY_RECALL_LIMIT=24`，多组结果 round-robin 合并并按 slug 去重，普通 creative 最多检查 12 个候选。
 
 同一 `real-exp-system-eval14-v1` 输入的本地 regression：
 
 - World Vision：候选 `12 → 13`，最终仍 `3/3`，保持 `story-state-compounding / world-entry / world-desire-ladder`；
 - Story Program：候选 `5 → 7`，最终仍 `3/3`，从偏 Thread 的组合扩成 `plot-engine-variation / thread-collision / earned-high-value-acquisition`，Reward intent 能稳定进入竞争；
 - Outline：候选 `6 → 25`，最终 `4/5 → 5/5`，覆盖 Thread、Reunion/Departure、Action Space、Hidden Identity 等互补方向；
-- 新的 Reader Coordinates cross-book synthesis 能被宽召回发现，但因 `active_inspiration: false` 仍不会进入最终 Prompt，REFERENCE_ONLY 边界保持有效；
+- Reader Coordinates cross-book synthesis 现已显式 `active_inspiration: true`，并增加 `## Guidance` 作为可提取抽象；World Vision 固定按 slug 读取它作为独立 Coordinate Reference，不占 3 个 creative 名额，也不要求 Story Program / Outline 重复固定注入；
 - 当前 GBrain runtime 检查为 `3786 Pages / 15783 Chunks / 15783 Embedded`，embedding debt 为 0。
 
-这次没有新增 LLM、reranker、Agent 或 Hard Gate。单次本地三阶段 retrieval 观察到 wall-clock 从约 11 秒上升到约 14 秒，属于更多本地 query/page read 的成本；最终 LLM 上下文上限不变。
+这次没有新增 LLM、reranker、Agent 或 Hard Gate。单次本地三阶段 retrieval 观察到 wall-clock 从约 11 秒上升到约 14 秒，属于更多本地 query/page read 的成本；World Vision 额外固定注入 1 条压缩后的 Coordinate Reference，普通 creative 上限不变。
