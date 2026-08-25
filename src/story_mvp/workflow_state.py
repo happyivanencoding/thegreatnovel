@@ -20,8 +20,10 @@ ARTIFACT_STATUSES = frozenset({"EMPTY", "DRAFT", "DONE", "STALE", "FAILED"})
 FRESHNESS_VALUES = frozenset({"fresh", "stale"})
 
 CREATIVE_ARTIFACT_KEYS = (
-    "creative.fantasy_seed",
     "creative.world_vision",
+    "creative.power_seed",
+    "creative.human_seed",
+    "creative.character_card",
     "creative.story_program",
 )
 BOOK_ARTIFACT_KEYS = (
@@ -33,9 +35,18 @@ BOOK_ARTIFACT_KEYS = (
 STATIC_ARTIFACT_KEYS = CREATIVE_ARTIFACT_KEYS + BOOK_ARTIFACT_KEYS
 
 CREATIVE_FILES = {
-    "creative.fantasy_seed": "FANTASY_SEED.md",
     "creative.world_vision": "WORLD_VISION.md",
+    "creative.power_seed": "POWER_SEED.md",
+    "creative.human_seed": "HUMAN_SEED.md",
+    "creative.character_card": "CHARACTER.md",
     "creative.story_program": "PROPOSAL.md",
+}
+CREATIVE_STATE_KEYS = {
+    "creative.world_vision": "world_vision",
+    "creative.power_seed": "power_seed",
+    "creative.human_seed": "human_seed",
+    "creative.character_card": "character_card",
+    "creative.story_program": "proposal",
 }
 BOOK_SECTIONS = {
     "book.design": "design",
@@ -45,8 +56,10 @@ BOOK_SECTIONS = {
 }
 
 ARTIFACT_LABELS = {
-    "creative.fantasy_seed": "核心幻想",
     "creative.world_vision": "世界幻想",
+    "creative.power_seed": "力量种子",
+    "creative.human_seed": "人物种子",
+    "creative.character_card": "人物权威",
     "creative.story_program": "故事方案",
     "book.design": "总体设计",
     "book.long_plan": "中期规划",
@@ -138,7 +151,8 @@ def _creative_status(book_directory: Path, artifact: str, content: str) -> str:
     if state_path.is_file():
         try:
             state = json.loads(state_path.read_text(encoding="utf-8"))
-            if state.get(artifact.removeprefix("creative."), {}).get("status") == "author_approved":
+            state_key = CREATIVE_STATE_KEYS.get(artifact, artifact.removeprefix("creative."))
+            if state.get(state_key, {}).get("status") == "author_approved":
                 return "DONE"
         except (OSError, json.JSONDecodeError):
             pass
@@ -466,9 +480,11 @@ def _apply_content_change(
     entry["stale_from"] = []
     affected: list[str] = []
 
-    if artifact == "creative.fantasy_seed":
+    if artifact == "creative.world_vision":
         for downstream in (
-            "creative.world_vision",
+            "creative.power_seed",
+            "creative.human_seed",
+            "creative.character_card",
             "creative.story_program",
             "book.design",
             "book.long_plan",
@@ -476,7 +492,17 @@ def _apply_content_change(
         ):
             _mark_stale(state, downstream, artifact)
         affected.extend(_mark_future_runs_stale(state, book_directory, artifact))
-    elif artifact == "creative.world_vision":
+    elif artifact in {"creative.power_seed", "creative.human_seed"}:
+        for downstream in (
+            "creative.character_card",
+            "creative.story_program",
+            "book.design",
+            "book.long_plan",
+            "book.future_10",
+        ):
+            _mark_stale(state, downstream, artifact)
+        affected.extend(_mark_future_runs_stale(state, book_directory, artifact))
+    elif artifact == "creative.character_card":
         for downstream in ("creative.story_program", "book.design", "book.long_plan", "book.future_10"):
             _mark_stale(state, downstream, artifact)
         affected.extend(_mark_future_runs_stale(state, book_directory, artifact))
@@ -680,8 +706,10 @@ def _dependents_for_impact(book_directory: Path, artifact: str) -> list[str]:
             < int(state["artifacts"].get("book.canon_state", {}).get("revision", 0))
         ]
     static = {
-        "creative.fantasy_seed": ["creative.world_vision"],
-        "creative.world_vision": ["creative.story_program"],
+        "creative.world_vision": ["creative.power_seed", "creative.human_seed"],
+        "creative.power_seed": ["creative.character_card"],
+        "creative.human_seed": ["creative.character_card"],
+        "creative.character_card": ["creative.story_program"],
         "creative.story_program": ["book.design"],
         "book.design": ["book.long_plan"],
         "book.long_plan": ["book.future_10"],

@@ -22,7 +22,8 @@ def test_existing_editors_are_single_sources_and_drawer_reuses_them() -> None:
     ids = re.findall(r'id="([^"]+)"', TEMPLATE)
     assert len(ids) == len(set(ids))
     for editor_id in (
-        "creative-fantasy-seed", "proposal-editor", "section-status",
+        "creative-world-vision", "creative-power-seed", "creative-human-seed",
+        "creative-character-card", "proposal-editor", "section-status",
         "current-outline", "prompt-text", "codex-response", "chapter-body-for-save",
     ):
         assert TEMPLATE.count(f'id="{editor_id}"') == 1

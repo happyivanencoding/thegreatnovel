@@ -15,14 +15,6 @@ const state = {
 };
 
 const creativeUi = {
-  fantasy_seed: {
-    editor: "creative-fantasy-seed",
-    meta: "creative-meta-fantasy-seed",
-    save: "save-fantasy-seed",
-    approve: "approve-fantasy-seed",
-    generate: "generate-fantasy-seed-prompt",
-    apply: "apply-fantasy-seed-response",
-  },
   world_vision: {
     editor: "creative-world-vision",
     meta: "creative-meta-world-vision",
@@ -30,6 +22,20 @@ const creativeUi = {
     approve: "approve-world-vision",
     generate: "generate-world-vision-prompt",
     apply: "apply-world-vision-response",
+  },
+  power_seed: {
+    editor: "creative-power-seed",
+    meta: "creative-meta-power-seed",
+    save: "save-power-seed",
+    generate: "generate-power-seed-prompt",
+    apply: "apply-power-seed-response",
+  },
+  human_seed: {
+    editor: "creative-human-seed",
+    meta: "creative-meta-human-seed",
+    save: "save-human-seed",
+    generate: "generate-human-seed-prompt",
+    apply: "apply-human-seed-response",
   },
   proposal: {
     editor: "proposal-editor",
@@ -122,7 +128,7 @@ function setView(view, updateHash = true) {
   if (view !== "memory") document.body.classList.remove("memory-editor-open");
   if (updateHash && window.location.hash !== `#${view}`) window.location.hash = view;
   if (view === "chapter") {
-    if (["fantasy_seed", "world_vision", "idea", "outline", "review"].includes($("prompt-mode")?.value)) {
+    if (["world_vision", "power_seed", "human_seed", "idea", "outline", "review"].includes($("prompt-mode")?.value)) {
       $("prompt-mode").value = "chapter";
     }
     setChapterTab(state.chapterTab);
@@ -355,7 +361,7 @@ function initializeReadingState() {
 }
 
 const workflowStages = [
-  { title: "创意", keys: ["creative.fantasy_seed", "creative.world_vision", "creative.story_program"] },
+  { title: "创意", keys: ["creative.world_vision", "creative.power_seed", "creative.human_seed", "creative.character_card", "creative.story_program"] },
   { title: "设计", keys: ["book.design"] },
   { title: "规划", keys: ["book.long_plan", "book.future_10"] },
   { title: "当前章节", keys: [] },
@@ -363,8 +369,10 @@ const workflowStages = [
 ];
 
 const workflowLabels = {
-  "creative.fantasy_seed": "核心幻想",
   "creative.world_vision": "世界幻想",
+  "creative.power_seed": "力量种子",
+  "creative.human_seed": "人物种子",
+  "creative.character_card": "人物权威",
   "creative.story_program": "故事方案",
   "book.design": "总体设计",
   "book.long_plan": "中期规划",
@@ -413,8 +421,10 @@ function workflowArtifactLabel(artifact) {
 
 function workflowLocation(artifact) {
   const staticPaths = {
-    "creative.fantasy_seed": "FANTASY_SEED.md",
     "creative.world_vision": "WORLD_VISION.md",
+    "creative.power_seed": "POWER_SEED.md",
+    "creative.human_seed": "HUMAN_SEED.md",
+    "creative.character_card": "CHARACTER.md",
     "creative.story_program": "PROPOSAL.md",
     "book.design": "BOOK.md · design",
     "book.long_plan": "BOOK.md · long_plan",
@@ -535,8 +545,10 @@ function locateWorkflowArtifact() {
     closeRightDrawer();
   }
   const targets = {
-    "creative.fantasy_seed": "creative-fantasy-seed",
     "creative.world_vision": "creative-world-vision",
+    "creative.power_seed": "creative-power-seed",
+    "creative.human_seed": "creative-human-seed",
+    "creative.character_card": "creative-character-card",
     "creative.story_program": "proposal-editor",
     "book.design": "design-sections",
     "book.long_plan": "section-long_plan",
@@ -660,6 +672,16 @@ function setCreativePayload(payload) {
     renderCreativeMeta(artifact);
     renderCreativePreview(artifact);
   }
+  const character = state.creativeArtifacts.character_card || {
+    content: payload?.character_card || "",
+    origin: state.creativeState.character_card?.origin || "empty",
+    status: state.creativeState.character_card?.status || "empty",
+  };
+  state.creativeArtifacts.character_card = character;
+  $("creative-character-card").value = character.content || "";
+  $("creative-character-initial-state").value = payload?.character_initial_state || "";
+  $("creative-character-audition").value = payload?.character_audition || "";
+  $("creative-meta-character-card").textContent = `${character.origin || "empty"} · ${character.status || "empty"}`;
 }
 
 function markCreativeEdited(artifact) {
@@ -707,9 +729,14 @@ function applyCreativeResponse(artifact) {
 async function saveCreativeArtifact(artifact) {
   if (!state.bookId) return showStatus("请先加载小说", true);
   const ui = creativeUi[artifact];
-  const path = artifact === "fantasy_seed"
-    ? "fantasy-seed"
-    : artifact === "world_vision" ? "world-vision" : "proposal";
+  const paths = {
+    world_vision: "world-vision",
+    power_seed: "power-seed",
+    human_seed: "human-seed",
+    proposal: "proposal",
+  };
+  const path = paths[artifact];
+  if (!path) return showStatus(`未知创意产物：${artifact}`, true);
   try {
     const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/${path}`, {
       method: "PUT",
@@ -729,8 +756,9 @@ async function saveCreativeArtifact(artifact) {
 
 async function approveCreativeArtifact(artifact) {
   if (!state.bookId) return showStatus("请先加载小说", true);
-  const path = artifact === "fantasy_seed"
-    ? "fantasy-seed" : artifact === "world_vision" ? "world-vision" : "proposal";
+  const paths = { world_vision: "world-vision", proposal: "proposal" };
+  const path = paths[artifact];
+  if (!path) return showStatus("Power/Human 只通过一次 Character 批准冻结", true);
   try {
     const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/${path}/approve`, {
       method: "POST",
@@ -739,6 +767,30 @@ async function approveCreativeArtifact(artifact) {
     clearEditorDirty([creativeUi[artifact].editor]);
     await refreshWorkflow();
     showStatus(`${artifact} 已由作者明确批准`);
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function approveCharacter() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  const power = $("creative-power-seed").value;
+  const human = $("creative-human-seed").value;
+  try {
+    const base = `/api/books/${encodeURIComponent(state.bookId)}`;
+    await requestJson(`${base}/power-seed`, {
+      method: "PUT",
+      body: JSON.stringify({ content: power, origin: state.creativeSources.power_seed || "author_edited" }),
+    });
+    await requestJson(`${base}/human-seed`, {
+      method: "PUT",
+      body: JSON.stringify({ content: human, origin: state.creativeSources.human_seed || "author_edited" }),
+    });
+    const payload = await requestJson(`${base}/character/approve`, { method: "POST" });
+    setCreativePayload(payload);
+    clearEditorDirty(["creative-power-seed", "creative-human-seed"]);
+    await refreshWorkflow();
+    showStatus("Character 已批准：Power + Human 同时冻结，CHARACTER.md 已确定性合成");
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -1079,8 +1131,6 @@ function populateBook(book) {
     $(`section-${key}`).value = book.sections?.[key] || "";
   }
   const templates = book.prompt_templates || {};
-  $("template-fantasy_seed").value = templates.fantasy_seed || $("template-fantasy_seed").value;
-  $("template-world_vision").value = templates.world_vision || $("template-world_vision").value;
   $("template-idea").value = templates.idea || $("template-idea").value;
   $("template-outline").value = templates.outline || $("template-outline").value;
   $("template-chapter_prep").value = templates.chapter_prep || $("template-chapter_prep").value;
@@ -1257,8 +1307,9 @@ function selectedReferences() {
 
 function currentTemplate() {
   return {
-    fantasy_seed: $("template-fantasy_seed").value,
-    world_vision: $("template-world_vision").value,
+    world_vision: "",
+    power_seed: "",
+    human_seed: "",
     idea: $("template-idea").value,
     outline: $("template-outline").value,
     chapter_prep: $("template-chapter_prep").value,
@@ -1279,8 +1330,8 @@ function gbrainContextPayload(queryOverride = "") {
     mode: $("prompt-mode").value,
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
-    fantasy_seed: $("creative-fantasy-seed").value,
     world_vision: $("creative-world-vision").value,
+    character_card: $("creative-character-card").value,
     proposal_context: $("proposal-editor").value,
     current_long_block: $("current-long-block").value,
     current_outline: $("current-outline").value,
@@ -1290,7 +1341,6 @@ function gbrainContextPayload(queryOverride = "") {
 }
 
 async function setDefaultGbrainQuery() {
-  if ($("prompt-mode").value === "fantasy_seed") return;
   try {
     const payload = await requestJson("/api/gbrain/brief", {
       method: "POST",
@@ -1318,7 +1368,7 @@ async function activatePromptMode(mode) {
 
 function populatePromptTemplates(templates) {
   for (const key of [
-    "fantasy_seed", "world_vision", "idea", "outline", "chapter_prep", "chapter", "review",
+    "idea", "outline", "chapter_prep", "chapter", "review",
     "context_curator", "primary_writer", "specialist_opening", "specialist_dialogue",
     "specialist_action", "specialist_emotion", "chapter_integrator",
   ]) {
@@ -1335,8 +1385,11 @@ function promptPayload() {
     chapter_number: Number($("chapter-number").value),
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
-    fantasy_seed: $("creative-fantasy-seed").value,
     world_vision: $("creative-world-vision").value,
+    power_seed: $("creative-power-seed").value,
+    human_seed: $("creative-human-seed").value,
+    character_card: $("creative-character-card").value,
+    character_initial_state: $("creative-character-initial-state").value,
     creative_state: state.creativeState,
     current_long_block: $("current-long-block").value,
     previous_chapter_text: $("previous-chapter-text").value,
@@ -1438,8 +1491,9 @@ function currentExecutorMode() {
 
 function externalArtifactForMode(mode) {
   const creative = {
-    fantasy_seed: "creative.fantasy_seed",
     world_vision: "creative.world_vision",
+    power_seed: "creative.power_seed",
+    human_seed: "creative.human_seed",
     idea: "creative.story_program",
   };
   if (creative[mode]) return creative[mode];
@@ -2057,8 +2111,9 @@ async function saveTemplates() {
       method: "PUT",
       body: JSON.stringify({
         templates: {
-          fantasy_seed: $("template-fantasy_seed").value,
-          world_vision: $("template-world_vision").value,
+                world_vision: "",
+    power_seed: "",
+    human_seed: "",
           idea: $("template-idea").value,
           outline: $("template-outline").value,
           chapter_prep: $("template-chapter_prep").value,
@@ -2176,16 +2231,19 @@ $("save-settings").addEventListener("click", saveOpenAISettings);
 $("default-gbrain-query").addEventListener("click", setDefaultGbrainQuery);
 $("query-gbrain").addEventListener("click", queryGbrain);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
-$("generate-fantasy-seed-prompt").addEventListener("click", () => generateCreativePrompt("fantasy_seed"));
 $("generate-world-vision-prompt").addEventListener("click", () => generateCreativePrompt("world_vision"));
+$("generate-power-seed-prompt").addEventListener("click", () => generateCreativePrompt("power_seed"));
+$("generate-human-seed-prompt").addEventListener("click", () => generateCreativePrompt("human_seed"));
 $("generate-story-program-prompt").addEventListener("click", () => generateCreativePrompt("idea"));
-$("apply-fantasy-seed-response").addEventListener("click", () => applyCreativeResponse("fantasy_seed"));
 $("apply-world-vision-response").addEventListener("click", () => applyCreativeResponse("world_vision"));
+$("apply-power-seed-response").addEventListener("click", () => applyCreativeResponse("power_seed"));
+$("apply-human-seed-response").addEventListener("click", () => applyCreativeResponse("human_seed"));
 $("apply-story-program-response").addEventListener("click", () => applyCreativeResponse("proposal"));
-$("save-fantasy-seed").addEventListener("click", () => saveCreativeArtifact("fantasy_seed"));
 $("save-world-vision").addEventListener("click", () => saveCreativeArtifact("world_vision"));
-$("approve-fantasy-seed").addEventListener("click", () => approveCreativeArtifact("fantasy_seed"));
+$("save-power-seed").addEventListener("click", () => saveCreativeArtifact("power_seed"));
+$("save-human-seed").addEventListener("click", () => saveCreativeArtifact("human_seed"));
 $("approve-world-vision").addEventListener("click", () => approveCreativeArtifact("world_vision"));
+$("approve-character").addEventListener("click", approveCharacter);
 $("approve-proposal").addEventListener("click", () => approveCreativeArtifact("proposal"));
 $("generate-prompt").addEventListener("click", generateCurrentChapterAction);
 $("generate-director-prompt").addEventListener("click", () => generateHybridNodePrompt("director"));

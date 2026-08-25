@@ -99,8 +99,9 @@ def test_compose_character_card_does_not_reconcile_authorities_or_persist_auditi
     card = compose_character_card(power_seed="# POWER\n能力：留住半招", human_seed=human, index=1)
     assert "能力：留住半招" in card
     assert "一直想赢" in card
-    assert "想出名" in card
-    assert "INITIAL CHARACTER STATE" in card
+    assert "想出名" not in card
+    assert "INITIAL CHARACTER STATE" not in card
     assert "公开挑战冠军" not in card
+    assert "Mutable Character State" in card
     assert "不解释为什么某段童年象征某种能力" in card
     assert "留给后续 Collision Authority" in card

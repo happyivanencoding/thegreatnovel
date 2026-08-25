@@ -10,6 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
+from .character_context import project_writer_texture_context
+from .character_prompts import generate_split_prompt
 from .gbrain import GBrainQueryError
 from .gbrain_retrieval import (
     build_retrieval_brief,
@@ -42,6 +44,7 @@ from .run_ledger import (
     skip_integrator_if_no_patches,
 )
 from .storage import (
+    approve_character_artifact,
     approve_creative_artifact,
     create_book,
     list_books,
@@ -99,6 +102,8 @@ class PromptTemplatesRequest(BaseModel):
 class GBrainContextRequest(BaseModel):
     mode: Literal[
         "world_vision",
+        "power_seed",
+        "human_seed",
         "idea",
         "outline",
         "director",
@@ -115,8 +120,8 @@ class GBrainContextRequest(BaseModel):
     ] = "idea"
     book_content: str = ""
     creative_direction: str = ""
-    fantasy_seed: str = ""
     world_vision: str = ""
+    character_card: str = ""
     proposal_context: str = ""
     current_long_block: str = ""
     current_outline: str = ""
@@ -159,8 +164,9 @@ class RunRepairSpecialistsRequest(BaseModel):
 class PromptRequest(BaseModel):
     mode: Literal[
         "idea",
-        "fantasy_seed",
         "world_vision",
+        "power_seed",
+        "human_seed",
         "outline",
         "director",
         "chapter_prep",
@@ -182,8 +188,11 @@ class PromptRequest(BaseModel):
     ] = "curator_primary"
     book_content: str = ""
     creative_direction: str = ""
-    fantasy_seed: str = ""
     world_vision: str = ""
+    power_seed: str = ""
+    human_seed: str = ""
+    character_card: str = ""
+    character_initial_state: str = ""
     creative_state: dict[str, Any] = Field(default_factory=dict)
     proposal_context: str = ""
     current_long_block: str = ""
@@ -488,8 +497,8 @@ def post_gbrain_brief(payload: GBrainContextRequest) -> dict[str, Any]:
         "retrieval_brief": brief,
         "hard_constraints": extract_hard_constraints(
             payload.creative_direction,
-            payload.fantasy_seed,
             payload.world_vision,
+            payload.character_card,
             payload.proposal_context,
             payload.book_content,
             payload.current_long_block,
@@ -514,10 +523,16 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
     if payload.book_id.strip():
         creative = read_creative_payload(payload.book_id, workspace_path())
         values["creative_state"] = creative["creative_state"]
-        if not values.get("fantasy_seed"):
-            values["fantasy_seed"] = creative["fantasy_seed"]
         if not values.get("world_vision"):
             values["world_vision"] = creative["world_vision"]
+        if not values.get("power_seed"):
+            values["power_seed"] = creative["power_seed"]
+        if not values.get("human_seed"):
+            values["human_seed"] = creative["human_seed"]
+        if not values.get("character_card"):
+            values["character_card"] = creative["character_card"]
+        if not values.get("character_initial_state"):
+            values["character_initial_state"] = creative["character_initial_state"]
         if not values.get("proposal_context"):
             values["proposal_context"] = creative["proposal"]
     else:
@@ -541,12 +556,28 @@ def _validate_state_delta_input(payload: PromptRequest) -> None:
         )
 
 
+def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
+    filtered = dict(values)
+    for key in ("power_seed", "human_seed", "character_card", "character_initial_state"):
+        filtered.pop(key, None)
+    return filtered
+
+
 @app.post("/api/prompt")
 def post_prompt(payload: PromptRequest) -> dict[str, str]:
     if payload.mode == "state_delta":
         _validate_state_delta_input(payload)
     try:
-        prompt = generate_prompt(**_prompt_kwargs(payload))
+        values = _prompt_kwargs(payload)
+        split_mode = payload.mode in {"world_vision", "power_seed", "human_seed", "idea", "outline"}
+        prompt = generate_split_prompt(**values) if split_mode else generate_prompt(**_planning_only_fields_removed(values))
+
+        # World-life texture is a prose-side permission only. It never enters
+        # Human Seed / Character Canon and costs no extra model call.
+        if payload.mode in {"context_curator", "chapter"}:
+            texture = project_writer_texture_context(str(values.get("world_vision", "")))
+            if texture:
+                prompt = prompt.rstrip() + "\n\n" + texture
     except FileNotFoundError as error:
         raise not_found(error) from error
     except HardGateError as error:
@@ -570,7 +601,7 @@ def post_state_delta_prompt(payload: PromptRequest) -> dict[str, str]:
     """State Delta Prompt 专用入口：只生成页面可见、可复制的 Prompt，不写任何文件。"""
     _validate_state_delta_input(payload)
     try:
-        prompt = generate_prompt(**{**_prompt_kwargs(payload), "mode": "state_delta"})
+        prompt = generate_prompt(**{**_planning_only_fields_removed(_prompt_kwargs(payload)), "mode": "state_delta"})
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:
@@ -625,23 +656,6 @@ def get_creative(book_id: str) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
 
-@app.put("/api/books/{book_id}/fantasy-seed")
-def put_fantasy_seed(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
-    try:
-        creative = write_creative_artifact(
-            book_id,
-            "fantasy_seed",
-            payload.content,
-            workspace_path(),
-            origin=payload.origin,
-        )
-    except FileNotFoundError as error:
-        raise not_found(error) from error
-    except ValueError as error:
-        raise HTTPException(status_code=400, detail=str(error)) from error
-    return {"status": "saved", "file": "FANTASY_SEED.md", **creative}
-
-
 @app.put("/api/books/{book_id}/world-vision")
 def put_world_vision(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
     try:
@@ -659,20 +673,46 @@ def put_world_vision(book_id: str, payload: CreativeArtifactRequest) -> dict[str
     return {"status": "saved", "file": "WORLD_VISION.md", **creative}
 
 
-@app.post("/api/books/{book_id}/fantasy-seed/approve")
-def approve_fantasy_seed(book_id: str) -> dict[str, Any]:
+@app.put("/api/books/{book_id}/power-seed")
+def put_power_seed(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
     try:
-        return approve_creative_artifact(book_id, "fantasy_seed", workspace_path())
+        creative = write_creative_artifact(
+            book_id, "power_seed", payload.content, workspace_path(), origin=payload.origin
+        )
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "saved", "file": "POWER_SEED.md", **creative}
+
+
+@app.put("/api/books/{book_id}/human-seed")
+def put_human_seed(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
+    try:
+        creative = write_creative_artifact(
+            book_id, "human_seed", payload.content, workspace_path(), origin=payload.origin
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "saved", "file": "HUMAN_SEED.md", **creative}
 
 
 @app.post("/api/books/{book_id}/world-vision/approve")
 def approve_world_vision(book_id: str) -> dict[str, Any]:
     try:
         return approve_creative_artifact(book_id, "world_vision", workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/character/approve")
+def approve_character(book_id: str) -> dict[str, Any]:
+    try:
+        return approve_character_artifact(book_id, workspace_path())
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:

@@ -8,7 +8,6 @@ _ALLOWED_CHARACTER_SECTIONS = (
     "## 力量体系与正常值",
     "## 社会现实与身份",
     "## 世界里真正值钱、值得想要的东西",
-    "## Life Texture / Human Appetite",
     "## 世界知识边界",
 )
 
@@ -20,7 +19,6 @@ _CHARACTER_LIFE_SECTIONS = (
     "## 普通人的生活与上升",
     "## 社会现实与身份",
     "## 世界里真正值钱、值得想要的东西",
-    "## Life Texture / Human Appetite",
     "## 世界知识边界",
 )
 
@@ -118,7 +116,7 @@ def project_character_power_baseline(world_vision: str) -> str:
     return "\n".join(parts).strip() + "\n"
 
 
-def project_character_life_context(world_vision: str, *, life_texture: str | None = None) -> str:
+def project_character_life_context(world_vision: str) -> str:
     """Project social reality used to grow personality, desire and relationships."""
 
     parts: list[str] = ["# CHARACTER LIFE CONTEXT｜Upbringing Authority"]
@@ -130,11 +128,6 @@ def project_character_life_context(world_vision: str, *, life_texture: str | Non
             block, _ = _strip_named_mysteries(block)
         if block:
             parts += ["", block]
-    has_embedded_texture = any(part.startswith("## Life Texture / Human Appetite") for part in parts)
-    if life_texture and life_texture.strip() and not has_embedded_texture:
-        texture = life_texture.strip()
-        texture = re.sub(r"(?m)^#(?:#)?\s*Life Texture / Human Appetite\s*$", "", texture).strip()
-        parts += ["", "## Life Texture / Human Appetite", texture]
     parts += [
         "",
         "## Upbringing 生成边界",
@@ -161,3 +154,36 @@ def project_story_opportunity_layer(world_vision: str) -> str:
         if mysteries:
             parts += ["", "## Named Unresolved Mysteries", mysteries]
     return "\n".join(parts).strip() + "\n"
+
+_WRITER_TEXTURE_SECTIONS = (
+    "## 普通人的生活与上升",
+    "## 社会现实与身份",
+    "## 世界里真正值钱、值得想要的东西",
+)
+
+
+def project_writer_texture_context(world_vision: str, *, max_chars: int = 1400) -> str:
+    """Project a tiny, non-authoritative world texture reference for Curator/Writer.
+
+    This is deliberately not Human Seed input. It may only help prose occasionally
+    ground an already planned scene in ordinary world life. It cannot create Canon,
+    a new character motive, or a new story hook.
+    """
+
+    blocks = [
+        block
+        for heading in _WRITER_TEXTURE_SECTIONS
+        if (block := _section(world_vision, heading))
+    ]
+    if not blocks:
+        return ""
+    text = "\n\n".join(blocks).strip()
+    if len(text) > max_chars:
+        text = text[:max_chars].rsplit("\n", 1)[0].rstrip() + "…"
+    return (
+        "# Optional World-Life Texture Reference｜Writer-side only\n"
+        "只在当前场景自然需要时，从以下已批准世界事实里偶尔投影 0—1 个生活性细节。"
+        "它只是点缀：不得建立新规则、新人物欲望、新剧情义务或长期 Canon，也不要求每章使用。\n\n"
+        + text
+        + "\n"
+    )

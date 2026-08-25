@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from .character_seeds import compose_character_card, split_human_seed_authorities
 from .prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     compact_open_promises,
@@ -40,8 +41,6 @@ DESIGN_SECTION_TITLES = {
 
 PROMPT_TEMPLATE_LABELS = {
     "idea": "Story Program / 商业化结构方案",
-    "fantasy_seed": "Fantasy Seed / 核心幻想种子",
-    "world_vision": "World Vision / 世界幻想画像",
     "outline": "新书/总纲规划",
     "chapter_prep": "当前章执行小纲",
     "chapter": "当前章节写作",
@@ -57,12 +56,18 @@ PROMPT_TEMPLATE_LABELS = {
 LEGACY_PROMPT_TEMPLATE_HEADINGS = {"# 男频爽文创意生成": "idea"}
 
 CREATIVE_ARTIFACT_FILES = {
-    "fantasy_seed": "FANTASY_SEED.md",
     "world_vision": "WORLD_VISION.md",
+    "power_seed": "POWER_SEED.md",
+    "human_seed": "HUMAN_SEED.md",
+    "character_card": "CHARACTER.md",
     "proposal": "PROPOSAL.md",
 }
+CHARACTER_AUX_FILES = {
+    "character_initial_state": "CHARACTER_INITIAL_STATE.md",
+    "character_audition": "CHARACTER_AUDITION.md",
+}
 CREATIVE_ORIGINS = frozenset(
-    {"empty", "model_generated", "model_selected", "author_edited", "legacy_unknown"}
+    {"empty", "model_generated", "model_selected", "author_edited", "legacy_unknown", "deterministic"}
 )
 CREATIVE_STATUSES = frozenset({"empty", "draft", "author_approved"})
 
@@ -220,7 +225,17 @@ def text_to_prompt_templates(content: str) -> dict[str, str]:
 
 
 def default_prompt_templates() -> dict[str, str]:
-    return dict(DEFAULT_PROMPT_TEMPLATES)
+    # Creative split prompts (World/Power/Human) are architecture-owned and not
+    # editable per-book templates. Only downstream/runtime templates live in PROMPTS.md.
+    from .character_prompts import adapt_split_planning_template
+
+    templates = {
+        key: DEFAULT_PROMPT_TEMPLATES.get(key, "")
+        for key in PROMPT_TEMPLATE_LABELS
+    }
+    for mode in ("idea", "outline"):
+        templates[mode] = adapt_split_planning_template(templates[mode], mode=mode)
+    return templates
 
 
 def validate_book_id(book_id: str) -> str:
@@ -249,6 +264,8 @@ def create_book(book_id: str, workspace: Path) -> Path:
         if artifact != "proposal":
             (directory / filename).write_text("", encoding="utf-8")
     (directory / "PROPOSAL.md").write_text("", encoding="utf-8")
+    for filename in CHARACTER_AUX_FILES.values():
+        (directory / filename).write_text("", encoding="utf-8")
     _write_creative_state(directory, _empty_creative_state())
     return directory
 
@@ -273,7 +290,7 @@ def require_book(book_id: str, workspace: Path) -> Path:
 def _empty_creative_state() -> dict[str, dict[str, str]]:
     return {
         artifact: {"origin": "empty", "status": "empty"}
-        for artifact in ("fantasy_seed", "world_vision", "proposal")
+        for artifact in CREATIVE_ARTIFACT_FILES
     }
 
 
@@ -328,12 +345,16 @@ def read_creative_payload(book_id: str, workspace: Path) -> dict[str, Any]:
         artifact: _read_creative_text(directory, artifact)
         for artifact in CREATIVE_ARTIFACT_FILES
     }
-    if contents["proposal"].strip() and state["proposal"]["origin"] == "empty":
-        state["proposal"] = {"origin": "legacy_unknown", "status": "draft"}
-    for artifact in ("fantasy_seed", "world_vision"):
-        if contents[artifact].strip() and state[artifact]["origin"] == "empty":
+    for artifact, content in contents.items():
+        if content.strip() and state[artifact]["origin"] == "empty":
             state[artifact] = {"origin": "legacy_unknown", "status": "draft"}
-    return {
+    auxiliary = {
+        key: (directory / filename).read_text(encoding="utf-8")
+        if (directory / filename).is_file()
+        else ""
+        for key, filename in CHARACTER_AUX_FILES.items()
+    }
+    payload: dict[str, Any] = {
         "creative_state": state,
         "creative_artifacts": {
             artifact: {
@@ -342,10 +363,10 @@ def read_creative_payload(book_id: str, workspace: Path) -> dict[str, Any]:
             }
             for artifact in CREATIVE_ARTIFACT_FILES
         },
-        "fantasy_seed": contents["fantasy_seed"],
-        "world_vision": contents["world_vision"],
-        "proposal": contents["proposal"],
+        **contents,
+        **auxiliary,
     }
+    return payload
 
 
 def write_creative_artifact(
@@ -359,6 +380,8 @@ def write_creative_artifact(
 ) -> dict[str, Any]:
     if artifact not in CREATIVE_ARTIFACT_FILES:
         raise ValueError(f"未知创意产物：{artifact}")
+    if artifact == "character_card":
+        raise ValueError("CHARACTER.md 只能由 Power Seed + Human Seed 确定性合成，不能直接保存")
     directory = require_book(book_id, workspace)
     new_content = str(content)
     old_content = _read_creative_text(directory, artifact)
@@ -373,6 +396,26 @@ def write_creative_artifact(
         state[artifact] = {"origin": origin, "status": "draft"}
     elif state[artifact]["origin"] == "empty" and new_content.strip():
         state[artifact] = {"origin": "author_edited", "status": "draft"}
+    if artifact in {"power_seed", "human_seed"} and old_content != new_content:
+        # One Character approval gate freezes both seeds together. Any seed edit reopens
+        # the whole Character authority without deleting long-running Character State.
+        for seed in ("power_seed", "human_seed"):
+            if _read_creative_text(directory, seed).strip() or seed == artifact:
+                state[seed]["status"] = "draft"
+        old_character = _read_creative_text(directory, "character_card")
+        (directory / CREATIVE_ARTIFACT_FILES["character_card"]).write_text("", encoding="utf-8")
+        (directory / CHARACTER_AUX_FILES["character_audition"]).write_text("", encoding="utf-8")
+        state["character_card"] = {"origin": "empty", "status": "empty"}
+        if old_character:
+            from .workflow_state import record_content_change
+
+            record_content_change(
+                directory,
+                "creative.character_card",
+                old_character,
+                "",
+                source="seed_edit",
+            )
     (directory / CREATIVE_ARTIFACT_FILES[artifact]).write_text(
         new_content, encoding="utf-8"
     )
@@ -397,6 +440,8 @@ def approve_creative_artifact(
 ) -> dict[str, Any]:
     if artifact not in CREATIVE_ARTIFACT_FILES:
         raise ValueError(f"未知创意产物：{artifact}")
+    if artifact in {"power_seed", "human_seed", "character_card"}:
+        raise ValueError("Power/Human 不单独批准；请使用一次 Character 批准同时冻结两份 Seed")
     directory = require_book(book_id, workspace)
     content = _read_creative_text(directory, artifact)
     if not content.strip():
@@ -406,6 +451,57 @@ def approve_creative_artifact(
         state[artifact] = {"origin": "author_edited", "status": "draft"}
     state[artifact]["status"] = "author_approved"
     _write_creative_state(directory, state)
+    return read_creative_payload(book_id, workspace)
+
+
+def _validate_selected_seed(content: str, heading: str, *, label: str) -> None:
+    stripped = content.lstrip()
+    if not stripped.startswith(heading):
+        raise ValueError(f"{label} 必须先由作者从候选中选择/编辑成单独的 `{heading}`")
+    candidate_markers = ("# POWER CANDIDATE ", "# HUMAN CANDIDATE ", "# CHARACTER CANDIDATE ")
+    if any(marker in content for marker in candidate_markers):
+        raise ValueError(f"{label} 仍包含候选批次；批准 Character 前只能保留一个已选择 Seed")
+
+
+def approve_character_artifact(book_id: str, workspace: Path) -> dict[str, Any]:
+    """Freeze Power + Human with one author approval and deterministically compose Character."""
+
+    directory = require_book(book_id, workspace)
+    power = _read_creative_text(directory, "power_seed")
+    human = _read_creative_text(directory, "human_seed")
+    _validate_selected_seed(power, "# POWER SEED", label="POWER_SEED.md")
+    _validate_selected_seed(human, "# HUMAN SEED", label="HUMAN_SEED.md")
+
+    human_parts = split_human_seed_authorities(human)
+    character = compose_character_card(power_seed=power, human_seed=human)
+    character_path = directory / CREATIVE_ARTIFACT_FILES["character_card"]
+    old_character = character_path.read_text(encoding="utf-8") if character_path.is_file() else ""
+    character_path.write_text(character, encoding="utf-8")
+
+    state_path = directory / CHARACTER_AUX_FILES["character_initial_state"]
+    if not state_path.is_file() or not state_path.read_text(encoding="utf-8").strip():
+        state_path.write_text(human_parts["initial_state"], encoding="utf-8")
+    (directory / CHARACTER_AUX_FILES["character_audition"]).write_text(
+        human_parts["audition_metadata"], encoding="utf-8"
+    )
+
+    state = _read_creative_state(directory)
+    for seed in ("power_seed", "human_seed"):
+        if state[seed]["origin"] == "empty":
+            state[seed]["origin"] = "author_edited"
+        state[seed]["status"] = "author_approved"
+    state["character_card"] = {"origin": "deterministic", "status": "author_approved"}
+    _write_creative_state(directory, state)
+
+    from .workflow_state import record_content_change
+
+    record_content_change(
+        directory,
+        "creative.character_card",
+        old_character,
+        character,
+        source="character_approval",
+    )
     return read_creative_payload(book_id, workspace)
 
 
@@ -422,6 +518,10 @@ def read_book_payload(book_id: str, workspace: Path) -> dict[str, Any]:
         for key, value in stored_templates.items()
         if value.strip()
     })
+    from .character_prompts import adapt_split_planning_template
+
+    for mode in ("idea", "outline"):
+        prompt_templates[mode] = adapt_split_planning_template(prompt_templates[mode], mode=mode)
     creative = read_creative_payload(book_id, workspace)
     return {
         "book_id": book_id,

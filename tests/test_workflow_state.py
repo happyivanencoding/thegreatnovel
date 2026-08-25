@@ -8,6 +8,8 @@ from fastapi.testclient import TestClient
 from story_mvp.app import app
 from story_mvp.run_ledger import create_or_load_run, save_node_prompt
 from story_mvp.storage import (
+    approve_character_artifact,
+    approve_creative_artifact,
     compose_book_content,
     create_book,
     replace_chapter,
@@ -45,21 +47,26 @@ def _artifacts(workspace: Path, book_id: str) -> dict[str, dict[str, object]]:
     return workflow_status(workspace / book_id)["artifacts"]
 
 
-def test_fantasy_seed_stales_future_chain_but_protects_completed_body(tmp_path: Path) -> None:
+def test_world_vision_stales_split_future_chain_but_protects_completed_body(tmp_path: Path) -> None:
     book_dir = create_book("demo", tmp_path)
-    write_creative_artifact("demo", "fantasy_seed", "SEED-1", tmp_path)
     write_creative_artifact("demo", "world_vision", "WORLD-1", tmp_path)
+    approve_creative_artifact("demo", "world_vision", tmp_path)
+    write_creative_artifact("demo", "power_seed", "# POWER SEED｜能力\n\n## Core Fantasy\n能力。", tmp_path)
+    write_creative_artifact("demo", "human_seed", "# HUMAN SEED｜人物／欲望\n\n## Core Obsession\n想赢。", tmp_path)
+    approve_character_artifact("demo", tmp_path)
     write_creative_artifact("demo", "proposal", "PROGRAM-1", tmp_path)
     write_book("demo", _book_content(), tmp_path)
     _run(book_dir, 1)
     save_chapter("demo", 1, "chapter one", tmp_path)
     _run(book_dir, 18)
 
-    write_creative_artifact("demo", "fantasy_seed", "SEED-2", tmp_path)
+    write_creative_artifact("demo", "world_vision", "WORLD-2", tmp_path)
     artifacts = _artifacts(tmp_path, "demo")
 
     for key in (
-        "creative.world_vision",
+        "creative.power_seed",
+        "creative.human_seed",
+        "creative.character_card",
         "creative.story_program",
         "book.design",
         "book.long_plan",
@@ -70,18 +77,22 @@ def test_fantasy_seed_stales_future_chain_but_protects_completed_body(tmp_path: 
     assert artifacts["chapter.1.body"]["status"] == "DONE"
     assert artifacts["chapter.1.body"]["freshness"] == "fresh"
 
-
-def test_world_vision_does_not_stale_fantasy_seed(tmp_path: Path) -> None:
+def test_power_seed_change_does_not_stale_world_but_reopens_character(tmp_path: Path) -> None:
     create_book("demo", tmp_path)
-    write_creative_artifact("demo", "fantasy_seed", "SEED", tmp_path)
     write_creative_artifact("demo", "world_vision", "WORLD-1", tmp_path)
+    approve_creative_artifact("demo", "world_vision", tmp_path)
+    write_creative_artifact("demo", "power_seed", "# POWER SEED｜A\n\n## Core Fantasy\nA", tmp_path)
+    write_creative_artifact("demo", "human_seed", "# HUMAN SEED｜人／X\n\n## Core Obsession\nX", tmp_path)
+    approve_character_artifact("demo", tmp_path)
     before = _artifacts(tmp_path, "demo")
-    write_creative_artifact("demo", "world_vision", "WORLD-2", tmp_path)
+
+    write_creative_artifact("demo", "power_seed", "# POWER SEED｜B\n\n## Core Fantasy\nB", tmp_path)
     after = _artifacts(tmp_path, "demo")
 
-    assert after["creative.fantasy_seed"]["status"] == before["creative.fantasy_seed"]["status"]
-    assert after["creative.world_vision"]["revision"] == before["creative.world_vision"]["revision"] + 1
-
+    assert after["creative.world_vision"]["revision"] == before["creative.world_vision"]["revision"]
+    assert after["creative.world_vision"]["status"] == before["creative.world_vision"]["status"]
+    assert after["creative.power_seed"]["revision"] == before["creative.power_seed"]["revision"] + 1
+    assert after["creative.character_card"]["status"] == "STALE"
 
 def test_future_10_change_only_stales_existing_runs_in_changed_entries(tmp_path: Path) -> None:
     book_dir = create_book("demo", tmp_path)

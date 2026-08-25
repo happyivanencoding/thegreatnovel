@@ -1,0 +1,331 @@
+from __future__ import annotations
+
+from collections.abc import Mapping
+from typing import Any
+
+from .character_context import (
+    project_character_life_context,
+    project_character_power_baseline,
+)
+from .character_seeds import HUMAN_SEED_SCHEMA, POWER_SEED_SCHEMA
+from .prompts import HardGateError, OUTLINE_TEMPLATE, STORY_PROGRAM_TEMPLATE, format_references
+
+
+SPLIT_PROMPT_MODES = frozenset({"world_vision", "power_seed", "human_seed", "idea", "outline"})
+
+PROTAGONIST_BLIND_WORLD_TEMPLATE = """你是透明协作的 World Vision 创作助手。当前默认目标是成熟中文男频成长长篇；作者明确指定其他类型时，以作者要求为准。
+
+这一版 World Vision **不知道主角是谁，也不知道未来金手指是什么**。只读取作者粗方向与当前明确提供的 World GBrain Inspiration；不要读取或猜测未来 Power Seed、Human Seed、Character、Story Program 或 Outline。
+
+你的职责是创造一个即使最终换成完全不同主角也值得写一本书的世界。世界要有自己的普通生活、力量语法、正常值、社会现实、价值物、正在行动的人、奇观与未知。它可以非常适合男频成长，但不能先为尚不存在的主角准备钥匙孔。
+
+重要边界：
+- **World Reality ≠ Story Opportunity**：力量规则、普通生活、文化、阶层与正常分布属于世界现实；named 人物正在做的事、战争、秘境、遗迹、竞争、奇观与谜团属于世界自己的故事机会。两者都可以写，但不要暗示未来主角“应该”拥有什么钥匙来触发它。
+- 不生成主角欲望、主角童年、主角身份跃迁、核心能力、第一次能力兑现或终局使命。
+- 不把后台主题写成 ontology；不要让整个世界只讨论一个抽象命题。
+- 内部因果可信不等于现代程序真实。玄幻/仙侠优先用力量、血脉、宗门、王朝、种族、地域、修炼资源、怪物、奇观等自身材质制造因果。
+- 普通生活只写到足以让世界真实；**不要额外输出 Life Texture / Human Appetite 字段**。生活纹理以后只在 Writer 层按场景偶尔投影，不参与 Human Seed 生成。
+- 力量体系必须给出可比较的正常值与稀缺度：普通人、普通修士、天才、地方强者、高层强者大致怎样不同；哪些现象常见、稀少、几乎未被可靠证实。不要为完整而堆十几层百科。
+- 至少让一些世界人物、欲望、冲突与未来未知主角无关；世界不是测试金手指的主题乐园。
+
+严格输出以下结构：
+
+# PROTAGONIST-BLIND WORLD VISION
+
+## 普通人的生活与上升
+普通人怎样活；年轻人如何进入修炼/职业/身份上升；失败后通常怎样；不写主角。
+
+## 力量体系与正常值
+力量从哪里来、怎样获得与承载；当前故事世界真正需要的最小境界/能力坐标；普通、罕见、顶层差距以及可观察后果。
+
+## 社会现实与身份
+宗门、家族、王朝、商盟、军府、种族或本书自己的组织怎样实际影响人生；只写会改变选择的现实，不做治理百科。
+
+## 世界里真正值钱、值得想要的东西
+这个世界的人真实争什么、攒什么、羡慕什么；具体写力量、功法、装备、身份、地点、知识、伙伴、资格或本书自己的价值物，以及得到后生活/战斗怎样改变。
+
+## 世界正在发生的大事
+写 3—6 件即使未来主角从未出生仍会推进的具体人物行动、战争、争夺、迁徙、竞赛、传承、灾难或其它变化。人物先有自己的欲望。
+
+## 值得进入的地点、奇观与未知
+写真正让读者想去看、想知道、想进去的地点/奇观/危险/未知。它们不是为某个尚不存在的能力准备的插座。
+
+## 世界知识边界
+分别说明普通人、专业人士/修士、顶层势力目前大致知道什么；再列少量当前没人能完整解释的事实。未知可以保留原因，眼前可观察效果要清楚。
+"""
+
+POWER_PROMPT = """你是成熟中文男频成长长篇的 Power Seed 设计者。你只负责创造“这个世界力量正常分布里出现了什么异常”。你不知道未来持有者是谁、来自什么家庭、有什么职业、怎样性格，也看不到 Story Opportunities。
+
+只使用下方 POWER BASELINE 与 Power GBrain Craft。禁止为能力发明人物童年、姓名、人格、使命、关系或未来势力。
+
+核心方法：**World Power Normal → Legal Exception → Core Fantasy → Growth Compatibility**。
+- 先找到一个世界内可理解的正常值，再偏离它；特殊性必须是相对世界的特殊，而不是作者宣称“很特殊”。
+- 优先产生读者会直接想拥有的力量、身体状态、战斗方式、探索自由或规则位置；不要把职业效率、维修、诊断、运输、审核、合同解释做成默认金手指。
+- 这是男频成长长篇：正常修炼必须真实增强持有者本身；Exception 的掌握同时继续质变，不是外挂替代修炼。
+- High-Tier Mutation 问高阶玩法怎样质变，不允许默认升级成因果、命运、天道、世界定义等抽象终极词。
+- Legendary Power State 只写力量体验上限，不写未来身份、组织、统治地位、使命或故事结局。
+- Future Legend Image 只是 AUDIT_ONLY，不是未来 Canon。
+
+生成 3 个独立候选，不评分、不排名。候选必须匿名；不要给未来持有者取名。每个候选使用：
+
+# POWER CANDIDATE N｜能力短名
+## World Power Normal → Legal Exception
+## Core Fantasy
+## 为什么读者会馋
+## Growth Compatibility
+### 正常修炼轴
+### 异常掌握轴
+### High-Tier Mutation
+### 永久边界
+## Legendary Power State
+## Power Audit Metadata（非 Canon）
+### Future Legend Image
+
+作者选择时会把一个候选编辑成单独的 `# POWER SEED`；不要替作者选择。
+"""
+
+HUMAN_PROMPT = """你是成熟中文男频成长长篇的 Human Seed 设计者。你只负责创造“这个人原本是谁”。你完全不知道未来 Power Seed、金手指、特殊体质或特殊身份，也看不到 named Story Opportunities。
+
+只使用下方 LIFE CONTEXT 与 Human GBrain Craft。不要猜未来 Power，也不要为了一个不存在的外挂预留主题化童年。
+
+核心原则：
+- **world-conditioned, power-blind, story-independent**。
+- Formative Fact → Adaptation → Observable Behavior：经历先发生，人格是长期适应留下的选择偏差，不从性格标签反推童年。
+- Core Obsession 的长篇性**不等于可复利事业**：只要一种私人牵引在更大人生里反复改变选择就足够。不要为了证明能写长篇，自动把兴趣、审美、关系、胜负心或私人追逐升级成资产、行业标准、决策权、控制权、专业权威或组织规模。
+- Excess 只问“普通人觉得够了，他为什么还不停”，不提供人格菜单。
+- Behavior Signature 让人物核心可预测、具体手段不可预测；不要统一成理性、克制、公平、公共利益最大化代理人。
+- 关系在没有任何金手指时也必须仍有未完成故事。
+- 当前私人欲望是开书状态，**只初始化 Mutable State，不属于永久 Human Core**。
+- Character Hook 只是 audition，证明这个人本身有戏；**不绑定前三章真实事件，不进入 Canon**。
+
+生成 4 个独立候选，不评分、不排名。先保证每个人自身成立，再避免明显心理运动坍缩；不要为了多样性机械分配人格类型。
+
+每个候选使用：
+
+# HUMAN CANDIDATE N｜姓名／短标签
+## 世界中的初始位置与成长环境
+## Formative Facts → Adaptation → Observable Behavior
+## Core Obsession
+## Excess
+## Behavior Signature
+## 重要关系原点
+## Initial State Seed
+### 当前私人欲望
+## Audition Metadata（非 Canon）
+### 人物钩子
+
+作者选择时会把一个候选编辑成单独的 `# HUMAN SEED`；不要替作者选择。
+"""
+
+COLLISION_CONTRACT = """# Split Authority Collision Contract
+
+**Do Not Reconcile Away the Collision.**
+
+你第一次同时看到一个已冻结的世界和一个已冻结的人物。**不要把碰撞重新解释成命中注定的适配。**
+
+- World 是事实：不能为了让主角更合适而重写世界规则、named 机会、人物欲望或历史。
+- Character 是事实：Power Core 与 Human Core 都不能重写；不要把 Biography 解释成能力隐喻，也不要把人物欲望改成世界主题的答案。
+- 你的工作是发现：这个具体的人拿着这种独立力量进入这个独立世界后，具体会想碰谁、想拿什么、被什么吸引、得罪谁、依赖谁、误判什么，以及哪些原本存在的世界事件会因此改道。
+- Counterplay 是碰撞之后的学习结果，不是敌人的出生理由。
+- 允许不协调、绕路、偶然关系和无法被金手指直接转换的世界大事。不要 Reconcile Away the Collision。
+- 这是男频成长长篇：主角会通过正常修炼 + Power Exception 掌握真正越来越强，但 Story Program 不把每个阶段都写成能力升级说明书。
+"""
+
+
+class SplitCreativeApprovalError(HardGateError):
+    def __init__(self, missing_artifacts: list[str]) -> None:
+        self.missing_artifacts = missing_artifacts
+        labels = {
+            "world_vision": "World Vision",
+            "character_card": "Character Authority",
+            "proposal": "Story Program",
+        }
+        detail = "、".join(labels.get(item, item) for item in missing_artifacts)
+        message = (
+            f"当前{detail}尚未由作者明确批准。模型生成或模型选择不等于作者批准。"
+            if len(missing_artifacts) == 1
+            else f"以下创意产物尚未由作者明确批准：{detail}。模型生成或模型选择不等于作者批准。"
+        )
+        super().__init__(missing_artifacts, message)
+
+
+def _approved(state: Mapping[str, Any] | None, artifact: str) -> bool:
+    value = (state or {}).get(artifact, {})
+    return isinstance(value, Mapping) and value.get("status") == "author_approved"
+
+
+def _require_approved(state: Mapping[str, Any] | None, *artifacts: str) -> None:
+    missing = [artifact for artifact in artifacts if not _approved(state, artifact)]
+    if missing:
+        raise SplitCreativeApprovalError(missing)
+
+
+def _block(label: str, content: str) -> str:
+    return f"# {label}\n\n{content.strip() or '（无）'}"
+
+
+def adapt_split_planning_template(template: str, *, mode: str) -> str:
+    """Migrate planning language to split authority without destroying custom templates."""
+
+    text = template.strip()
+    if mode == "idea":
+        intro = (
+            "你是透明协作的 Story Program / 故事主线设计助手。只有 World Vision 与 Character Authority "
+            "都由作者明确批准时，才生成长期故事主线。World 与 Character 是冻结事实；本阶段第一次设计它们如何碰撞。"
+            "你可以决定早期兑现、稳定循环、中期里程碑、关系发展与长期阶段，但不能重写 Power Core、Human Core、"
+            "T0 当前欲望或 World Canon 来制造命中注定的适配。GBrain 只是 OPTIONAL INSPIRATION，不得覆盖已批准权威。"
+        )
+        old_default_prefix = "你是透明协作的 Story Program / 故事主线设计助手。只有 World Vision 已经由作者明确批准时"
+    elif mode == "outline":
+        intro = (
+            "你是透明协作的故事 Outline 助手。生成前必须确认 World Vision、Character Authority 和 Story Program "
+            "都已由作者明确批准；模型生成、模型选择和作者编辑都不是批准。已批准产物高于产品默认模板，不能被静默改写。"
+        )
+        old_default_prefix = "你是透明协作的故事 Outline 助手。生成前必须确认 Fantasy Seed、World Vision 和 Story Program"
+    else:
+        return text
+
+    # Replace only the retired TGN default contract. A genuinely custom template is
+    # preserved verbatim and receives the new authority contract as a prefix.
+    if text.startswith(old_default_prefix):
+        _, sep, rest = text.partition("\n\n")
+        text = intro + (sep + rest if sep else "")
+    elif text:
+        text = intro + "\n\n" + text
+    else:
+        text = intro
+
+    replacements = (
+        ("Fantasy Seed 与 World Vision", "Character Authority 与 World Vision"),
+        ("Fantasy Seed、World Vision 和 Story Program", "World Vision、Character Authority 和 Story Program"),
+        ("Fantasy Seed", "Character Authority"),
+        ("Seed / World Vision / Story Program", "Character Authority / World Vision / Story Program"),
+        ("Seed / World Vision", "Character Authority / World Vision"),
+        ("Seed 中有辨识度的人格", "Human Core 中有辨识度的人格"),
+        ("已批准 Seed", "已批准 Character Authority"),
+    )
+    for old, new in replacements:
+        text = text.replace(old, new)
+    return text
+
+
+def _compile_planning_with_character_authority(
+    *,
+    mode: str,
+    template: str,
+    book_content: str,
+    creative_direction: str,
+    world_vision: str,
+    character_card: str,
+    character_initial_state: str,
+    proposal_context: str,
+    selected_references: list[Mapping[str, Any]] | None,
+    gbrain_inspiration: str,
+) -> str:
+    if len(selected_references or []) > 3:
+        raise ValueError("最多只能选择 3 个 Reference Program")
+
+    base = template.strip() or (STORY_PROGRAM_TEMPLATE if mode == "idea" else OUTLINE_TEMPLATE)
+    parts = [adapt_split_planning_template(base, mode=mode), "", "# 页面当前输入"]
+    parts.append(_block("作者粗方向", creative_direction))
+    parts.append(_block("已批准 Character Authority", character_card))
+    if character_initial_state.strip():
+        parts.append(_block("Character Initial State｜T0 only", character_initial_state))
+    parts.append(_block("已批准 World Vision", world_vision))
+
+    if mode == "outline":
+        parts.append(_block("作者已批准的 Story Program", proposal_context))
+        parts.append(_block("当前 BOOK.md（只作为已批准创意的承载草稿）", book_content))
+
+    parts.append(_block("手动选择的 Reference Programs", format_references(selected_references or [])))
+    label = (
+        "GBrain Inspiration Results（可选，只借鉴长期故事结构，不能覆盖已批准 Character / World）"
+        if mode == "idea"
+        else "GBrain Inspiration Results（可选，不能覆盖批准产物）"
+    )
+    parts.append(_block(label, gbrain_inspiration))
+    return "\n\n".join(parts).strip() + "\n"
+
+
+def generate_split_prompt(
+    *,
+    mode: str,
+    template: str = "",
+    book_content: str = "",
+    creative_direction: str = "",
+    world_vision: str = "",
+    power_seed: str = "",
+    human_seed: str = "",
+    character_card: str = "",
+    character_initial_state: str = "",
+    creative_state: Mapping[str, Any] | None = None,
+    proposal_context: str = "",
+    current_long_block: str = "",
+    current_outline: str = "",
+    recent_summaries: str = "",
+    selected_references: list[Mapping[str, Any]] | None = None,
+    gbrain_inspiration: str = "",
+    **_: Any,
+) -> str:
+    if mode == "world_vision":
+        return "\n\n".join(
+            [
+                PROTAGONIST_BLIND_WORLD_TEMPLATE.strip(),
+                _block("作者粗方向", creative_direction),
+                _block("World GBrain Inspiration（可选）", gbrain_inspiration),
+            ]
+        ).strip() + "\n"
+
+    if mode == "power_seed":
+        _require_approved(creative_state, "world_vision")
+        if not world_vision.strip():
+            raise ValueError("生成 Power Seed 需要已批准的 World Vision")
+        baseline = project_character_power_baseline(world_vision)
+        return "\n\n".join(
+            [POWER_PROMPT.strip(), baseline.strip(), _block("Power GBrain Craft（可选）", gbrain_inspiration)]
+        ).strip() + "\n"
+
+    if mode == "human_seed":
+        _require_approved(creative_state, "world_vision")
+        if not world_vision.strip():
+            raise ValueError("生成 Human Seed 需要已批准的 World Vision")
+        life = project_character_life_context(world_vision)
+        return "\n\n".join(
+            [HUMAN_PROMPT.strip(), life.strip(), _block("Human GBrain Craft（可选）", gbrain_inspiration)]
+        ).strip() + "\n"
+
+    if mode == "idea":
+        _require_approved(creative_state, "world_vision", "character_card")
+        if not character_card.strip():
+            raise ValueError("生成 Story Program 需要已批准的 Character Authority")
+        planning = _compile_planning_with_character_authority(
+            mode="idea",
+            template=template,
+            book_content=book_content,
+            creative_direction=creative_direction,
+            world_vision=world_vision,
+            character_card=character_card,
+            character_initial_state=character_initial_state,
+            proposal_context=proposal_context,
+            selected_references=selected_references,
+            gbrain_inspiration=gbrain_inspiration,
+        )
+        return "\n\n".join([COLLISION_CONTRACT.strip(), planning.strip()]).strip() + "\n"
+
+    if mode == "outline":
+        _require_approved(creative_state, "world_vision", "character_card", "proposal")
+        planning = _compile_planning_with_character_authority(
+            mode="outline",
+            template=template,
+            book_content=book_content,
+            creative_direction=creative_direction,
+            world_vision=world_vision,
+            character_card=character_card,
+            character_initial_state=character_initial_state,
+            proposal_context=proposal_context,
+            selected_references=selected_references,
+            gbrain_inspiration=gbrain_inspiration,
+        )
+        return planning
+
+    raise ValueError(f"未知 Split Character Prompt 模式：{mode}")

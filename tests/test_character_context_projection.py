@@ -5,6 +5,7 @@ from story_mvp.character_context import (
     project_character_power_baseline,
     project_character_world_slice,
     project_story_opportunity_layer,
+    project_writer_texture_context,
 )
 
 
@@ -120,19 +121,22 @@ def test_life_context_shapes_upbringing_but_not_power_exception() -> None:
     assert "地下驿网" not in result
 
 
-def test_life_context_can_add_non_story_human_appetite_texture() -> None:
-    texture = "年轻人会为一年一度的夜灯赛攒钱做自己的灯，输了也会争论谁的最好看；有人愿意把几个月闲钱花在一件没有修炼用途的漂亮旧披风上。"
-    result = project_character_life_context(WORLD, life_texture=texture)
-    assert "## Life Texture / Human Appetite" in result
-    assert "夜灯赛" in result
-    assert "漂亮旧披风" in result
+
+def test_life_context_does_not_accept_writer_texture() -> None:
+    result = project_character_life_context(WORLD)
+    assert "Life Texture / Human Appetite" not in result
     assert "力量体系与正常值" not in result
     assert "地下驿网" not in result
 
 
-def test_life_context_preserves_world_native_life_texture_without_duplicate() -> None:
-    world = WORLD.replace("## 世界知识边界", "## Life Texture / Human Appetite\n年轻人会为了自己喜欢的石笛攒钱，哪怕它不提高修为。\n\n## 世界知识边界")
-    result = project_character_life_context(world, life_texture="# LIFE TEXTURE / HUMAN APPETITE\n备用纹理不应重复加入")
-    assert result.count("## Life Texture / Human Appetite") == 1
-    assert "石笛" in result
-    assert "备用纹理不应重复加入" not in result
+def test_writer_texture_reference_is_small_and_story_hook_free() -> None:
+    result = project_writer_texture_context(WORLD)
+    assert "Writer-side only" in result
+    assert "普通人的生活与上升" in result
+    assert "社会现实与身份" in result
+    assert "世界里真正值钱、值得想要的东西" in result
+    assert "0—1 个生活性细节" in result
+    assert "力量体系与正常值" not in result
+    assert "宋照雪" not in result
+    assert "沉铃泽" not in result
+    assert "地下驿网" not in result

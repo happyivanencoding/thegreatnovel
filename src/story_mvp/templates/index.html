@@ -145,10 +145,8 @@
             <button id="open-workflow-from-tools" type="button"><strong>Workflow Debug</strong><span>查看 Workflow State、Run Ledger、Impact 与 Codex Task</span></button>
           </div>
           <details id="template-editor" class="template-editor">
-            <summary>编辑并保存十四个 Prompt 模板（PROMPTS.md）</summary>
+            <summary>编辑并保存十二个 Prompt 模板（PROMPTS.md）</summary>
             <p class="hint">模板参与下一次生成；保存模板和生成 Prompt 是两个独立动作。</p>
-            <label class="field"><span>Fantasy Seed 模板</span><textarea id="template-fantasy_seed" rows="12"></textarea></label>
-            <label class="field"><span>World Vision 模板</span><textarea id="template-world_vision" rows="12"></textarea></label>
             <label class="field"><span>Story Program 模板（mode key: idea）</span><textarea id="template-idea" rows="12"></textarea></label>
             <label class="field"><span>新书/总纲规划模板</span><textarea id="template-outline" rows="10"></textarea></label>
             <label class="field"><span>当前章执行小纲模板</span><textarea id="template-chapter_prep" rows="9"></textarea></label>
@@ -217,28 +215,14 @@
           </div>
           <span class="status">模型建议 ≠ 作者批准</span>
         </div>
-        <p class="hint">按 Fantasy Seed → World Vision → Story Program 的顺序推进。模型生成、模型选择和作者编辑都只是 draft；只有作者点击“批准”才成为创意权威。</p>
+        <p class="hint">按 World Vision → Character Authority（Power Seed ∥ Human Seed，一次批准）→ Story Program 的顺序推进。Power 与 Human 是两个独立创意上下文，但不是两个审批门禁。</p>
         <p class="hint">默认是阅读态；点击阶段标题进入编辑。GBrain 与 References 保持折叠，只有作者主动展开。</p>
 
-        <details class="creative-stage">
-          <summary>Fantasy Seed / 核心幻想种子 <span id="creative-meta-fantasy-seed" class="count">empty · empty</span></summary>
-          <p id="creative-preview-fantasy-seed" class="reading-preview">尚未填写核心幻想种子。</p>
-          <div class="creative-read-actions"><button type="button" data-creative-edit="fantasy_seed">编辑</button></div>
-          <p class="hint">只输入作者粗方向、明确题材、要保留和禁止的内容；不带入 BOOK、GBrain、Reference 或 Growth Genome。</p>
-          <label class="field"><span>Fantasy Seed 编辑器</span><textarea id="creative-fantasy-seed" rows="18" placeholder="模型候选或作者编辑内容"></textarea></label>
-          <div class="action-row wrap">
-            <button id="generate-fantasy-seed-prompt" class="primary">生成 Fantasy Seed Prompt</button>
-            <button id="apply-fantasy-seed-response">应用模型返回</button>
-            <button id="save-fantasy-seed">保存 Fantasy Seed</button>
-            <button id="approve-fantasy-seed" class="primary">批准 Fantasy Seed</button>
-          </div>
-        </details>
-
-        <details class="creative-stage">
-          <summary>World Vision / 世界幻想画像 <span id="creative-meta-world-vision" class="count">empty · empty</span></summary>
-          <p id="creative-preview-world-vision" class="reading-preview">尚未填写世界幻想画像。</p>
+        <details class="creative-stage" open>
+          <summary>World Vision / Protagonist-blind 世界 <span id="creative-meta-world-vision" class="count">empty · empty</span></summary>
+          <p id="creative-preview-world-vision" class="reading-preview">尚未填写 World Vision。</p>
           <div class="creative-read-actions"><button type="button" data-creative-edit="world_vision">编辑</button></div>
-          <p class="hint">Fantasy Seed 获作者批准后才能生成；World Vision 承载幻想，不重新决定核心幻想。</p>
+          <p class="hint">World 不知道未来主角与金手指。先建立世界规则、力量正常值、社会现实、世界人物、大事、奇观与未知。</p>
           <label class="field"><span>World Vision 编辑器</span><textarea id="creative-world-vision" rows="18" placeholder="模型返回或作者编辑内容"></textarea></label>
           <div class="action-row wrap">
             <button id="generate-world-vision-prompt" class="primary">生成 World Vision Prompt</button>
@@ -249,10 +233,50 @@
         </details>
 
         <details class="creative-stage">
-          <summary>Story Program / 商业化结构方案 <span id="creative-meta-proposal" class="count">empty · empty</span></summary>
+          <summary>Character Authority / 人物权威 <span id="creative-meta-character-card" class="count">empty · empty</span></summary>
+          <p class="hint">World 批准后，Power Seed 与 Human Seed 使用独立上下文生成。两份 Seed 分别编辑，最后只点击一次“批准 Character”；CHARACTER.md 由代码确定性合成，不调用 Composer。</p>
+          <div class="character-seed-grid">
+            <div>
+              <h3>Power Seed <span id="creative-meta-power-seed" class="count">empty · empty</span></h3>
+              <p id="creative-preview-power-seed" class="reading-preview">尚未填写 Power Seed。</p>
+              <div class="creative-read-actions"><button type="button" data-creative-edit="power_seed">编辑</button></div>
+              <p class="hint">只看力量 Normal / Rarity。匿名生成 Legal Exception、Core Fantasy、成长语法与 Legendary Power State；不写人物姓名、童年或使命。</p>
+              <label class="field"><span>Power Seed 编辑器</span><textarea id="creative-power-seed" rows="16" placeholder="先生成候选；批准前只保留并编辑一个 # POWER SEED"></textarea></label>
+              <div class="action-row wrap">
+                <button id="generate-power-seed-prompt" class="primary">生成 Power Seed Prompt</button>
+                <button id="apply-power-seed-response">应用模型返回</button>
+                <button id="save-power-seed">保存 Power Seed</button>
+              </div>
+            </div>
+            <div>
+              <h3>Human Seed <span id="creative-meta-human-seed" class="count">empty · empty</span></h3>
+              <p id="creative-preview-human-seed" class="reading-preview">尚未填写 Human Seed。</p>
+              <div class="creative-read-actions"><button type="button" data-creative-edit="human_seed">编辑</button></div>
+              <p class="hint">只看 LIFE_CONTEXT，不知道 Power。Core Obsession 只需长期改变选择，不要求升级成事业、资产、权威或组织规模。</p>
+              <label class="field"><span>Human Seed 编辑器</span><textarea id="creative-human-seed" rows="16" placeholder="先生成候选；批准前只保留并编辑一个 # HUMAN SEED"></textarea></label>
+              <div class="action-row wrap">
+                <button id="generate-human-seed-prompt" class="primary">生成 Human Seed Prompt</button>
+                <button id="apply-human-seed-response">应用模型返回</button>
+                <button id="save-human-seed">保存 Human Seed</button>
+              </div>
+            </div>
+          </div>
+          <div class="action-row wrap">
+            <button id="approve-character" class="primary">批准 Character（一次冻结 Power + Human）</button>
+          </div>
+          <label class="field"><span>CHARACTER.md（确定性合成，只读）</span><textarea id="creative-character-card" rows="14" readonly></textarea></label>
+          <details class="source-details">
+            <summary>State / Audition 边界</summary>
+            <label class="field"><span>CHARACTER_INITIAL_STATE.md（T0，只读）</span><textarea id="creative-character-initial-state" rows="7" readonly></textarea></label>
+            <label class="field"><span>CHARACTER_AUDITION.md（NON-CANON，只读）</span><textarea id="creative-character-audition" rows="7" readonly></textarea></label>
+          </details>
+        </details>
+
+        <details class="creative-stage">
+          <summary>Story Program / Collision 主线 <span id="creative-meta-proposal" class="count">empty · empty</span></summary>
           <p id="creative-preview-proposal" class="reading-preview">尚未填写 Story Program。</p>
           <div class="creative-read-actions"><button type="button" data-creative-edit="proposal">编辑</button></div>
-          <p class="hint">旧 mode key 仍为 idea；本阶段只为已批准幻想提出长期运行方式，不重新选择幻想。Proposal 编辑区是唯一 Proposal 来源。</p>
+          <p class="hint">Character 批准后，Story Program 第一次同时看 Full World + Character + Story Opportunities。Do Not Reconcile Away the Collision；不得重写 World 或 Character Core 制造命中注定的适配。Proposal 编辑区是唯一 Proposal 来源。</p>
           <label class="field"><span>Story Program 编辑器</span><textarea id="proposal-editor" rows="18" placeholder="模型返回或作者选择/编辑后的方案"></textarea></label>
           <div class="action-row wrap">
             <button id="generate-story-program-prompt" class="primary">生成 Story Program Prompt</button>
@@ -573,9 +597,10 @@
           <label class="field">
             <span>生成节点（高级）</span>
             <select id="prompt-mode" aria-label="Prompt 模式">
-              <option value="fantasy_seed">Fantasy Seed / 核心幻想种子</option>
-              <option value="world_vision">World Vision / 世界幻想画像</option>
-              <option value="idea">Story Program / 商业化结构方案</option>
+              <option value="world_vision">World Vision / Protagonist-blind 世界</option>
+              <option value="power_seed">Power Seed / 力量异常</option>
+              <option value="human_seed">Human Seed / 独立人物</option>
+              <option value="idea">Story Program / Collision 主线</option>
               <option value="outline">新书/总纲规划</option>
               <option value="director">当前章 Director</option>
               <option value="chapter_prep">当前章执行小纲</option>

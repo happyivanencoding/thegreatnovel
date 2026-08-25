@@ -125,22 +125,61 @@ def extract_frozen_power_seed(candidate_text: str) -> str:
 
 
 def split_human_seed_authorities(human_seed: str) -> dict[str, str]:
-    """Separate persistent Human Core, initial mutable state, and non-Canon audition metadata."""
+    """Separate persistent Human Core, initial mutable state, and non-Canon audition metadata.
 
-    current = _section(human_seed, "## 当前私人欲望")
-    hook = _section(human_seed, "## 人物钩子")
+    Production Human Seeds use explicit top-level ``Initial State Seed`` and
+    ``Audition Metadata`` blocks. Legacy experiment outputs used direct
+    ``当前私人欲望`` / ``人物钩子`` headings, so the parser keeps a small fallback.
+    """
+
+    initial_block = _section(human_seed, "## Initial State Seed")
+    audition_block = _section(human_seed, "## Audition Metadata（非 Canon）")
+    current = _section(human_seed, "## 当前私人欲望") if not initial_block else ""
+    hook = _section(human_seed, "## 人物钩子") if not audition_block else ""
+
     core = human_seed
-    for block in (current, hook):
+    for block in (initial_block, audition_block, current, hook):
         if block:
             core = core.replace(block, "")
     core = re.sub(r"\n{3,}", "\n\n", core).strip() + "\n"
-    initial = ("# INITIAL CHARACTER STATE\n\n" + current.replace("## 当前私人欲望", "## current_desire", 1)).strip() + "\n" if current else "# INITIAL CHARACTER STATE\n\n## current_desire\n未初始化\n"
-    audition = ("# HUMAN AUDITION METADATA｜NON-CANON\n\n" + hook.replace("## 人物钩子", "## Character Hook Audition", 1)).strip() + "\n" if hook else "# HUMAN AUDITION METADATA｜NON-CANON\n\n无\n"
-    return {"human_core": core, "initial_state": initial, "audition_metadata": audition}
+
+    if initial_block:
+        body = initial_block[len("## Initial State Seed") :].strip()
+        body = body.replace("### 当前私人欲望", "## current_desire", 1)
+        initial = ("# INITIAL CHARACTER STATE\n\n" + body).strip() + "\n"
+    elif current:
+        initial = (
+            "# INITIAL CHARACTER STATE\n\n"
+            + current.replace("## 当前私人欲望", "## current_desire", 1)
+        ).strip() + "\n"
+    else:
+        initial = "# INITIAL CHARACTER STATE\n\n## current_desire\n未初始化\n"
+
+    if audition_block:
+        body = audition_block[len("## Audition Metadata（非 Canon）") :].strip()
+        body = body.replace("### 人物钩子", "## Character Hook Audition", 1)
+        audition = ("# HUMAN AUDITION METADATA｜NON-CANON\n\n" + body).strip() + "\n"
+    elif hook:
+        audition = (
+            "# HUMAN AUDITION METADATA｜NON-CANON\n\n"
+            + hook.replace("## 人物钩子", "## Character Hook Audition", 1)
+        ).strip() + "\n"
+    else:
+        audition = "# HUMAN AUDITION METADATA｜NON-CANON\n\n无\n"
+
+    return {
+        "human_core": core,
+        "initial_state": initial,
+        "audition_metadata": audition,
+    }
 
 
-def compose_character_card(*, power_seed: str, human_seed: str, index: int) -> str:
-    """Merge frozen Power/Human authorities without reconciliation; keep mutable/audition data outside Core."""
+def compose_character_card(*, power_seed: str, human_seed: str, index: int = 1) -> str:
+    """Merge stable Power/Human cores without reconciliation.
+
+    Mutable state and audition metadata are intentionally returned by
+    :func:`split_human_seed_authorities` and stored separately by production storage.
+    """
 
     human = split_human_seed_authorities(human_seed)
     return (
@@ -149,8 +188,7 @@ def compose_character_card(*, power_seed: str, human_seed: str, index: int) -> s
         f"{power_seed.strip()}\n\n"
         "## HUMAN CORE｜Frozen Authority\n\n"
         f"{human['human_core'].strip()}\n\n"
-        "## INITIAL CHARACTER STATE｜Mutable\n\n"
-        f"{human['initial_state'].strip()}\n\n"
         "## Composition Boundary\n"
-        "Power Core 与 Human Core 原样并列。此处不解释为什么某段童年象征某种能力，不重写欲望去适配金手指，也不推演世界将怎样回应。当前私人欲望属于可更新 State；Character Hook 属于非 Canon audition，不进入本卡。发现、使用、关系化学反应与真正的故事碰撞留给后续 Collision Authority。\n"
+        "Power Core 与 Human Core 原样并列。此处不解释为什么某段童年象征某种能力，不重写欲望去适配金手指，也不推演世界将怎样回应。"
+        "Mutable Character State 与 non-Canon Audition 分文件保存，不进入本卡。发现、使用、关系化学反应与真正的故事碰撞留给后续 Collision Authority。\n"
     )

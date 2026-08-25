@@ -5,6 +5,7 @@ import re
 from collections.abc import Callable, Iterable, Mapping
 from typing import Any
 
+from .character_context import project_character_life_context, project_character_power_baseline
 from .gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, get_gbrain, query_gbrain
 
 
@@ -26,6 +27,8 @@ SOURCE_CATEGORIES = frozenset(
 )
 MODE_ALLOWED_CATEGORIES = {
     "world_vision": frozenset({"mechanisms", "syntheses", "book-dna"}),
+    "power_seed": frozenset({"mechanisms", "syntheses", "book-dna"}),
+    "human_seed": frozenset({"mechanisms", "contrasts", "syntheses", "book-dna"}),
     "idea": frozenset({"mechanisms", "contrasts", "syntheses"}),
     "outline": frozenset({"mechanisms", "contrasts", "syntheses", "book-dna", "arcs"}),
     "chapter_prep": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
@@ -47,6 +50,8 @@ GENRE_PRIOR_ALLOWED_MODES = frozenset({"idea", "outline", "review"})
 # 规划节点使用少量、可检索的 v3 craft aliases；完整 BOOK-aware brief 仍单独保留给作者查看。
 PLANNING_KEYWORD_QUERIES = {
     "world_vision": '"world fantasy" OR "world entry" OR "narrative compounding"',
+    "power_seed": '"core fantasy" OR "asymmetric advantage" OR "power progression" OR "world compatibility"',
+    "human_seed": '"character hook" OR "protagonist desire" OR "behavior signature" OR "human appetite" OR "relationship gravity"',
     "idea": '"plot engine variation" OR "thread ecology" OR "reward opportunity"',
     "outline": '"thread collision" OR "hidden identity reveal" OR "departure vacancy" OR "reunion reentry" OR "sacrifice convergence" OR "reward recontextualization"',
 }
@@ -55,6 +60,14 @@ PLANNING_KEYWORD_QUERY_BATCHES = {
     "world_vision": (
         '"world fantasy" OR "world entry" OR "narrative compounding"',
         '"reader coordinates" OR "progression scale" OR "action space scale" OR "expectation ladder" OR "core advantage" OR "world compatibility" OR "power scale" OR "threat scale"',
+    ),
+    "power_seed": (
+        '"core fantasy" OR "asymmetric advantage" OR "power progression"',
+        '"world compatibility" OR "power scale" OR "growth mutation"',
+    ),
+    "human_seed": (
+        '"character hook" OR "protagonist desire" OR "behavior signature"',
+        '"human appetite" OR "relationship gravity" OR "character as payoff"',
     ),
     "idea": (
         '"plot engine variation" OR "gameplay counterplay"',
@@ -255,17 +268,22 @@ def build_retrieval_brief(
     mode: str,
     book_content: str = "",
     creative_direction: str = "",
-    fantasy_seed: str = "",
     world_vision: str = "",
+    character_card: str = "",
     proposal_context: str = "",
     current_long_block: str = "",
     current_outline: str = "",
     recent_summaries: str = "",
 ) -> str:
+    effective_world = world_vision
+    if mode == "power_seed" and world_vision.strip():
+        effective_world = project_character_power_baseline(world_vision)
+    elif mode == "human_seed" and world_vision.strip():
+        effective_world = project_character_life_context(world_vision)
     constraints = extract_hard_constraints(
         creative_direction,
-        fantasy_seed,
-        world_vision,
+        effective_world,
+        character_card,
         proposal_context,
         book_content,
         current_long_block,
@@ -275,10 +293,15 @@ def build_retrieval_brief(
     lines = [f"检索模式：{mode}"]
     if creative_direction.strip():
         lines.append(f"作者当前方向：{_compact(creative_direction, 500)}")
-    if fantasy_seed.strip():
-        lines.append(f"已批准 Fantasy Seed：\n{_compact(fantasy_seed, 1200)}")
-    if world_vision.strip():
-        lines.append(f"已批准 World Vision：\n{_compact(world_vision, 1600)}")
+    if effective_world.strip():
+        label = "已批准 World Vision"
+        if mode == "power_seed":
+            label = "Power 可见 World Baseline"
+        elif mode == "human_seed":
+            label = "Human 可见 Life Context"
+        lines.append(f"{label}：\n{_compact(effective_world, 1600)}")
+    if character_card.strip() and mode in {"idea", "outline"}:
+        lines.append(f"已批准 Character Authority：\n{_compact(character_card, 1600)}")
     if proposal_context.strip():
         lines.append(f"已批准 Story Program：\n{_compact(proposal_context, 1600)}")
     if book_content.strip():
@@ -304,11 +327,11 @@ def build_retrieval_brief(
     }:
         lines.append("章节精度优先：寻找可迁移的 mechanisms、contrasts、syntheses、prose-controls；不引入来源作品表层故事。")
     elif mode == "world_vision":
-        lines.append("World Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不改写已批准 Fantasy Seed。")
+        lines.append("World Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不替未来 Character 决定主角。")
     elif mode == "idea":
-        lines.append("Story Program 用途：优先寻找 Plot Engine 变异、thread ecology/collision、配角自治、story-state compounding 与高价值获得体验；只作为可选灵感，不改写已批准 Seed / World Vision。")
+        lines.append("Story Program 用途：优先寻找 Plot Engine 变异、thread ecology/collision、配角自治、story-state compounding 与高价值获得体验；只作为可选灵感，不改写已批准 Character Authority / World Vision。")
     elif mode == "outline":
-        lines.append("Outline 用途：优先寻找长中短线编织、身份揭露、离队归来、牺牲/二次兑现、多线合流与高价值获得/旧奖励重释；必须服从已批准 Seed / World Vision / Story Program。")
+        lines.append("Outline 用途：优先寻找长中短线编织、身份揭露、离队归来、牺牲/二次兑现、多线合流与高价值获得/旧奖励重释；必须服从已批准 Character Authority / World Vision / Story Program。")
     else:
         lines.append("创意用途：允许寻找不同成长玩法，但仍不得违反上述明确硬约束。")
     return "\n".join(lines).strip()
@@ -651,8 +674,8 @@ def retrieve_gbrain(
     mode: str,
     book_content: str = "",
     creative_direction: str = "",
-    fantasy_seed: str = "",
     world_vision: str = "",
+    character_card: str = "",
     proposal_context: str = "",
     current_long_block: str = "",
     current_outline: str = "",
@@ -667,8 +690,8 @@ def retrieve_gbrain(
         mode=mode,
         book_content=book_content,
         creative_direction=creative_direction,
-        fantasy_seed=fantasy_seed,
         world_vision=world_vision,
+        character_card=character_card,
         proposal_context=proposal_context,
         current_long_block=current_long_block,
         current_outline=current_outline,
@@ -714,10 +737,15 @@ def retrieve_gbrain(
     parsed_batches = [parse_query_results(part) for part in stdout_parts]
     parsed = [hit for batch in parsed_batches for hit in batch]
     unique_hits = merge_query_hit_batches_round_robin(parsed_batches)
+    constraint_world = world_vision
+    if mode == "power_seed" and world_vision.strip():
+        constraint_world = project_character_power_baseline(world_vision)
+    elif mode == "human_seed" and world_vision.strip():
+        constraint_world = project_character_life_context(world_vision)
     constraints = extract_hard_constraints(
         creative_direction,
-        fantasy_seed,
-        world_vision,
+        constraint_world,
+        character_card,
         proposal_context,
         book_content,
         current_long_block,
@@ -734,7 +762,7 @@ def retrieve_gbrain(
         final_limit = 1
     elif mode in {"chapter", "context_curator"}:
         final_limit = CHAPTER_FINAL_RESULT_LIMIT
-    elif mode in {"world_vision", "idea"}:
+    elif mode in {"world_vision", "power_seed", "human_seed", "idea"}:
         final_limit = CREATIVE_PLANNING_FINAL_RESULT_LIMIT
     else:
         final_limit = FINAL_RESULT_LIMIT
@@ -758,7 +786,7 @@ def retrieve_gbrain(
 
     candidate_limit = (
         PLANNING_CANDIDATE_INSPECTION_LIMIT
-        if mode in {"world_vision", "idea", "outline"}
+        if mode in {"world_vision", "power_seed", "human_seed", "idea", "outline"}
         else RAW_RESULT_LIMIT
     )
     visible = novel_candidates[:candidate_limit]
