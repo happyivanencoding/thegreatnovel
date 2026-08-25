@@ -14,12 +14,25 @@ Story MVP 先帮助作者确定一部成熟中文男频成长长篇最值得让�
 
 ## Fantasy-First 读者承诺
 
-- 先让读者明确想拥有主角的力量、自由、寿命、身份逆转、世界位置、探索机会或命运掌控。
+- 先让读者明确想拥有主角的力量、特殊身份、生命状态、探索机会或其它具体非对称优势；Fantasy Seed 优先回答“我想拥有什么、怎么玩”，不负责提前寻找终极哲学意义。
 - 主角本人越来越能做什么，是一级成长主轴。
-- 财富、装备、身份、关系、势力、领地和世界入口是二级收益，服务于下一轮一级成长。
+- 财富、装备、身份、关系、势力、领地和世界入口是重要二级收益，服务于下一轮一级成长；它们也必须具备真实的获得、占有、使用和展示价值。
 - 普通小胜允许明显净收益；阶段大胜通常收益明显大于当前成本。
 - 冲突可以包含强敌、阶层、血脉、宗门、王朝、神明、天道、战争、秘境、异族、身份暴露或作者明确选择的制度矛盾。
 - 内部因果必须可信，但玄幻、仙侠、奇幻、科幻和异世界优先使用本世界力量、资源、信仰、血脉、地域、种族、宗门、王朝、神明和超凡规则制造因果。
+
+## Creative Constitution → Stage-specific Compilation
+
+TGN 保留 World Independence、Concrete Value、High-Value Acquisition、Net New、Irreversible State、Action Space、World Entry、Reward Opportunity、Fantasy Compounding、资源反哺，以及 Expectation Ladder、Mystery Depth、Impact 等后台价值观/读者体验坐标。它们是产品方法论的重要差异化，不删除；但它们不能直接成为小说世界 ontology。
+
+当前上游仍保持 **Fantasy Seed → World Vision → Story Program → Outline** 四个 artifact，不新增中间 Agent：
+
+- Fantasy Seed：Fantasy + Desire + Gameplay；
+- World Vision：先显式回答 **“没有主角时，这个世界怎样运转”** 和 **“世界里真正值钱、值得想要的东西”**，再建立 Reader Coordinates，最后才让核心优势切入这个独立世界；
+- Story Program：每个大型阶段显式回答 **“本阶段关键获得、占有与首次使用”**，同时用具体事件投影 Net New / Action Space / Expectation / Mystery / Impact；
+- Outline：把长期方向编译成故事锚点；主题只作后验观察，没有稳定主题时允许“暂不预设”。
+
+Reader Coordinates 分成两类：世界前台尺（Power / Technique / Threat / Status / Value / World，Gear / Potential 条件性）与读者体验/故事尺（Action Space / Expectation Ladder / Mystery Depth / Impact，Reach 条件性）。后者继续真实参与生成，但只落成具体新行动、新期待、旧锚点纵深和实际影响范围，不作为小说世界内部术语。
 
 ## 产品级 Anti-Goals：系统最怕什么
 
@@ -81,7 +94,7 @@ ChapterContextPacket、Director 八字段、REQUIRED_OUTLINE_FIELDS、Context Cu
 当前规划链采用“高推理成本集中在高杠杆节点”的策略，而不是整链统一最强模型：
 
 - Fantasy Seed：Luna high，GBrain OFF；
-- World Vision：Luna high，GBrain ON，最多 3 条 focused inspiration；
+- World Vision：Luna high，GBrain ON，固定 1 条 Coordinate Reference + 最多 3 条 focused creative inspiration；固定参考同时保留世界前台尺与读者体验/故事尺，但后者只投影成具体故事事实；
 - Story Program：Sol high，GBrain ON，最多 3 条 focused inspiration；
 - Outline：Luna high，GBrain ON，通常 4 条、最多 5 条；
 - 章节 Balanced 默认：Director 用 Luna high，Curator 用 Luna high，Primary Writer 用 Terra high，State Extraction 用 Luna low。Terra Primary 是正文克制性选择；若优先最低延迟，可把 Director/Curator 切到 Terra high/medium。

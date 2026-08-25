@@ -6,7 +6,7 @@
 
 Story MVP 不是“让一个大模型从设定一路写到正文”的流水线，而是把不同尺度的创作问题拆开，让每一层只解决自己最擅长的问题：
 
-`Fantasy → Agency → Relationship Reconfiguration → Narrative Compounding → Story Anchors → Chapter Execution`
+`Fantasy + Gameplay → Independent World + Desire Economy → Relationship / Plot Reconfiguration → Narrative Compounding → Story Anchors → Chapter Execution`
 
 对应实际链路：
 
@@ -80,7 +80,28 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 能力、装备、资源、关系、身份、领地等可以承载复利，但不要为了证明成长主动堆成路线网、权限树、库存、节点网络或组合系统。
 
-### 2.5 Supporting Logic Must Not Automatically Become Story Engine
+### 2.5 Backstage Principles Must Not Become Generated Ontology
+
+TGN 会保留一组区别于模板化小说生成器的后台创作原则与读者体验坐标：World Independence、Concrete Value、High-Value Acquisition、Net New、Irreversible State、Action Space、World Entry、Reward Opportunity、Fantasy Compounding、资源反哺，以及 Expectation Ladder、Mystery Depth、Impact 等。它们非常重要，负责判断长篇是否真的在积累、换挡、制造期待、保留纵深并扩大未来故事可能性；**但它们属于 Author Model / Creative Constitution，不是小说世界里的自然名词、资源、势力理念或终极主题。**
+
+Reader Coordinates 因此分成两类：
+
+- **世界前台尺**：Power / Technique / Threat / Status / Value / World，必要时 Gear / Potential；它们可以被世界内名称、境界、身份、装备和价值体系直接承载。
+- **读者体验 / 故事尺**：Action Space / Expectation Ladder / Mystery Depth / Impact，必要时 Reach；它们必须真实参与生成，但要投影成具体故事事实，而不是变成世界内部术语。
+
+正确方向是“抽象价值观 → 阶段专属的具体创作问题”，而不是“抽象价值观 → 世界 ontology”：
+
+- World Independence 编译成：**没有主角时，这个世界怎样运转？**
+- Concrete Value / Reward Opportunity 编译成：**这里什么东西真的值钱、值得人物去争？**
+- Net New / Irreversible State / Action Space / Fantasy Compounding 编译成：**这一阶段主角真正拿到并保留了什么，谁/什么从此不能回到原状，下一阶段因此能做什么过去做不到的事？**
+- Expectation Ladder 编译成：**下一层有哪些已经看得见、尚未拿到，但读者会想要/想看的具体人、物、地点、能力、身份或奇观？**
+- Mystery Depth 编译成：**哪个已经出现的旧物、旧人、旧事实或旧异常还保留可回收的更深解释，并会触发未来行动？**
+- Impact 编译成：**这次行动实际改变了多少人物、关系、地点、阵营或世界事实？**
+- World Entry 编译成：**人物因什么具体事件去到新的地方/圈层，那里新增什么值得想要或害怕的东西？**
+
+因此可以在规划与评估中继续使用 Action Space、Expectation、Mystery、Impact、Net New 等术语，但生成世界和阶段主线时先产出人物、物品、功法、资源、地点、关系和事件，再由后台判断这些原则是否成立。**Backstage principles should constrain generation, not become generated ontology.**
+
+### 2.6 Supporting Logic Must Not Automatically Become Story Engine
 
 这是当前系统非常重要的一条统一准则。它把过去分别表现为“治理化、工程化、蓝领职业化、过度验证”的问题归到同一个根因：**LLM 看见一个合理问题以后，容易把“让因果成立”继续推演成“把这个问题完整解决”，最后 supporting logic 反客为主。**
 
@@ -96,7 +117,7 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 这条准则不是禁词表，也不禁止工程、经营、治理、研究等题材；如果作者明确选择这些题材，它们可以成为主发动机。关键是 **supporting logic 只有在本书真的把它选为主要阅读体验时，才升级为 story engine。**
 
-### 2.6 Few Deep Rules > Many Hard Gates
+### 2.7 Few Deep Rules > Many Hard Gates
 
 旧系统的重要失败之一，是规则过多以后 LLM 开始优先维护 Schema 和门禁，而不是写故事。
 
@@ -111,16 +132,18 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 ## 3. 每一层到底负责什么
 
-### Fantasy Seed：决定“这本书最值得幻想什么”
+### Fantasy Seed：决定“我想拥有什么、怎么玩”
+
+Fantasy Seed 当前职责收敛为 **Fantasy + Desire + Gameplay**。
 
 #### 负责
 
-- 核心幻想；
-- 主角最强欲望；
-- 非对称优势；
-- 第一次标志性奇观；
-- 长期增长发动机的原型；
-- 早期兑现与远期升格方向。
+- 读者最想亲自拥有的能力、特殊身份、生命状态或独特机会；
+- 主角开局可直接说出口的具体欲望，以及最初问题解决后仍能继续追的更高价值目标；
+- 非对称优势与第一次标志性奇观；
+- 主角会反复做什么、转化/利用什么、每轮具体得到并留下什么；
+- 早期兑现；
+- 远期还能出现哪些更强、更不同、更想看的**具体玩法**，以及更高层的人、物、地点、机会与反制。
 
 #### 不负责
 
@@ -128,80 +151,88 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 - 几十章大纲；
 - 复杂成长网络；
 - 操作规则手册；
+- 为能力寻找“它真正意味着什么”的终极哲学命题；
+- 因为需要远期升格，就自动从招式/资源/身份推到因果、命运、自我定义、时代答案或世界定义；
 - 为了平衡而机械添加成本。
 
 #### 判断是否健康
 
-一句话问：**读者是否会明确产生“我也想拥有这个”的欲望？**
+先问：**读者是否会明确产生“我也想拥有这个”的欲望？** 再问：**不讨论哲学意义，只讨论具体能力、目标和玩法，这个 Seed 仍然能不能让人想追下去？**
 
-如果 Seed 已经把能力写成职业流程、研究课题、管理系统，后面很难靠 Director 或 Writer 救回来。
+如果 Seed 已经把能力写成职业流程、管理系统或抽象命题，World Vision 只会把错误继续放大。
 
 ---
 
-### World Vision：让世界承载已批准的 Fantasy
+### World Vision：先建一个没有主角也活着的世界，再找核心优势切口
+
+World Vision 仍是一轮 Luna high，不拆成新模块。内部顺序固定为：**World → Desire Economy → Reader Coordinates → Core Advantage Interface**。
 
 #### 负责
 
-- 世界为什么能让核心幻想持续成立；
-- 力量、资源、阶层、地域、种族、宗门、王朝等怎样产生真实冲突；
-- 世界奇观与力量上限；
-- 地图扩大为什么意味着更高价值的新机会；
-- 敌人和世界为什么会随着主角成长改变反应；
-- **Reader-Operable World Rules**：会进入故事决策的世界规则，先落成“什么条件 → 什么可观察变化 → 人物因此能/不能做什么 → 结果怎样”的世界事实；抽象概念、象征与深层解释可以存在，但不能替代读者可预测的规则效果；
-- **Reader-Facing World Coordinates**：当读者需要比较强弱、身份、危险、价值或进入权时，给出当前故事需要的最小可读尺度；可以是境界/段位/评级，也可以只是可观察的能力阈值、权限差或现实后果，不强迫每本书都有等级表；
-- **Core Advantage ↔ World Compatibility**：明确核心优势真正复制/借用/改变/绕过的是什么，以及哪些效果仍受主角自身身体、能量、知识、材料、身份或环境约束；尤其要能回答“用在远高于当前层级的对象上会怎样”；
-- 当组织、宗门、学院、职业或阶层晋升重要时，区分该层级的正常基础条件与真正稀缺、值得争夺的额外收益；如果世界故意不给基础条件，这本身必须是明确冲突；
-- 当“资源”会推动剧情时，先定义世界里真实流通、花费、获得和争夺的具体对象及大致稀缺感，不要求提前写死每次数量。
+- **没有主角时，这个世界怎样运转**：普通人如何生活和上升，力量/财富/土地/知识/身份等怎样流动，主要人物与势力各自在争什么，以及哪些冲突即使主角消失仍会继续发生；
+- **世界里真正值钱、值得想要的东西**：建立 Desire Economy，让读者知道哪些力量、功法、装备、身体变化、师承、伙伴、身份、土地、洞府、名额、知识、入口或本书独有价值物值得人物攒钱、冒险、背叛或争夺，以及得到后会具体改变什么；
+- 力量、资源、阶层、地域、种族、宗门、王朝等怎样独立产生真实冲突；
+- 世界奇观、值得进入的地点和更高价值的新机会；
+- **Reader-Operable World Rules**：会进入故事决策的世界规则，先落成“什么条件 → 什么可观察变化 → 人物因此能/不能做什么 → 结果怎样”的世界事实；
+- **Reader-Facing Coordinates**：世界前台主尺优先是 Power / Technique / Threat / Status / Value / World，必要时再以 Gear / Potential 校准；同时必须继续使用 Action Space / Expectation Ladder / Mystery Depth / Impact 等读者体验坐标，只是把它们投影成“新行动 / 新期待 / 旧锚点纵深 / 具体影响范围”，不作为世界内部命名尺度；
+- **Core Advantage ↔ World Compatibility**：在世界已经独立成立后，再明确核心优势切入哪一部分普通规则、真正改变什么、什么仍受主角自身条件约束，以及面对高层对象时怎样；
+- 地图扩大以后为什么出现新的具体人物、物品、机会、危险和价值来源，而不是只把同一个能力语义放大。
 
 #### 不负责
 
 - 重新发明核心幻想；
+- 因为主角会拆禁，就把血脉、身份、地域、因果、轮回和世界全部统一解释成“禁”；
+- 因为主角能改变结果，就让司法、战争、资源和政治都围绕“结果是否确定”运转；
+- 把 Action Space、Net New、World Entry 等后台术语做成世界内部资源、规则或主题；
 - 为了显得完整而堆十几层境界、数值表、制度百科；
 - 把每次奖励的精确数量和价格全部提前锁死；
-- 提前决定长期剧情；
-- 把未知一次解释完；
+- 提前决定长期剧情与终极哲学命题；
 - 把长期积累整理成构筑、库存、权限树、路线网络。
 
 #### 判断是否健康
 
-World Vision 应让能力“更有世界感”，而不是把能力变成系统产品或抽象哲学。健康的 World Vision 既要给下游足够的**比较尺**，也要让核心规则能够被普通读者预测：概念名拿掉以后，仍然说得清“发生什么、为什么当前人物必须这样选、这件事做成/失败会怎样”。神秘感优先留在原因、来源和更深层世界，不要留在眼前规则效果本身。
+先做两个删除测试：**删掉主角，世界明天还有没有具体的人在生活、争夺、交易、修炼、迁徙和冲突？删掉金手指，世界的普通力量、资源、身份和地图是否仍然成立？** 如果答案是肯定的，再检查核心优势是否在这个独立世界中形成了强烈而可信的非对称切口。健康 World Vision 还应让读者很快知道“谁明显更强、什么东西真值钱、哪处地方我也想去”。
 
 ---
 
-### Story Program：决定“这本书为什么能写几百章”
+### Story Program：决定“这个具体世界里，接下来几百章会发生哪些越来越值钱的故事”
 
-这是长期规划链里最重要的高杠杆节点。
+这是长期规划链里最重要的高杠杆节点。它继续使用 Net New、Irreversible State、Action Space、World Entry、Reward Opportunity、Fantasy Compounding、资源反哺，以及 Expectation Ladder、Mystery Depth、Impact 等后台原则/读者体验坐标；这些都必须真实参与阶段设计，但**不能直接充当阶段目标或世界材质**，而要分别落成下一步可做的新行动、读者已能看见的高价值目标、可回收旧锚点和具体影响范围。
 
 #### 负责
 
 - 5—7 个自然大型阶段；
+- 每阶段主角当前真正想拿到、保住、击败、进入、救回或完成的具体目标，以及谁也在争、为什么会冲突；
 - 核心玩法怎样真正变异，而不是换地图重复；
 - 敌人策略怎样升级；
 - 重要人物怎样拥有自主目标并持续回流；
-- 上一阶段结果怎样改变下一阶段的博弈条件；
+- **本阶段关键获得、占有与首次使用**：重要能力、功法、装备、身体变化、伙伴、身份、据点/土地、名额、知识、世界入口或其它收益何时真正到手/长期可用，以及第一次怎样用具体场面证明“它真值”；没有新标志性获得时可以明确写无，不机械掉宝；
+- 上一阶段的具体人物、物品、关系、身份、知识和世界事实怎样改变下一阶段；
 - 关系重构；
-- 世界和力量怎样自然扩大；
-- 核心优势的**选择空间与反制**：如果乐趣来自选谁、选什么、何时使用、保留或舍弃，就让关键选择具有真实竞争性（Contestable Choice），避免题面预先把一个选项写成明显正确答案；不同选项可以因真实价值、信息不完整、时机或对手干预而难以简单排序，对手也可以隐藏、诱导、封锁、改变条件或逼主角提前消耗优势；不强制统一槽位/冷却模板，也不要求每次选择都附带惨痛代价；
-- 核心幻想怎样保持不变量，同时产生不同的兑现形式。
+- 世界和力量怎样自然扩大，并新增具体可欲望对象；
+- 核心优势的**选择空间与反制**：如果玩法本身确实包含选谁、选什么、何时使用、保留或舍弃，就让关键选择具有真实竞争性；这是一种玩法设计工具，不把整本书改写成“选择权”的哲学故事；
+- 核心幻想怎样保持体验不变量，同时产生不同的具体兑现形式。
 
 #### 不负责
 
 - 逐章列事件；
+- 把“扩大行动空间 / 获得选择权 / 留下不可回滚状态 / 打开世界入口”当作阶段主要剧情；
 - 把长期成长整理成技能树、权限树、资产网络；
-- 为了凑阶段强行升级世界尺度；
+- 为了凑阶段强行升级世界尺度或哲学意义；
 - 把同一 Plot Engine 重复六遍。
 
 #### 最关键的问题
 
-每个主要阶段后应优先问：
+每个主要阶段优先问：
 
-1. 主角现在多能做什么？
-2. 谁因此不能再按原来的方式对待他？
-3. 敌人必须怎样换策略？
-4. 哪段关系出现过去不会有的新选择？
-5. 下一阶段为什么会自然出现一种新的故事，而不是一个更大的同类任务？
+1. **主角这一阶段到底想要什么具体东西/结果？**
+2. **谁也想要，或谁阻止他？**
+3. **主角怎样主动行动，核心优势怎样创造超额结果？**
+4. **这一阶段真正拿到、占有并第一次使用了什么？**
+5. **哪些人物/物品/关系/身份/知识/地点从此已经不是原样？**
+6. **因此下一阶段能发生什么过去不会发生的具体故事？**
 
-Story Program 如果已经把“核心优势”降维成工作流、Build 或系统经营，Outline 只能把错误方向写得更好看，无法真正救回来。
+后台再从这些答案判断 Action Space 是否扩大、Net New 是否成立、Reward 是否反哺、世界入口是否自然。Story Program 如果已经把“核心优势”升格成世界解释框架或抽象哲学，Outline 只能把错误方向写得更具体，无法真正救回来。
 
 ---
 
@@ -248,7 +279,9 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
 - 每个阶段的 Fantasy Proof、一级成长、收益与反哺、下一块推动；
 - **World Model Release**：作者知道 World Vision 不等于读者知道。开书前三章在相关冲突或爽点需要之前，通过事件让读者获得当前需要的强弱、身份、价值与能力边界；新造概念第一次影响选择时，先让读者看到触发、可见结果和行动含义，再允许名称或深层解释进入，不把正文写成设定说明；
-- **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价。
+- **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价；
+- **Reader Experience Projection**：继续使用 Action Space / Expectation Ladder / Mystery Depth / Impact，但只投影到现有 Outline 字段：一级成长/本批打开的新行动空间写具体新行动，收益与推向下一块写下一层可欲望目标，旧物/旧人/旧事实承担 Mystery 锚点，结果/状态变化/余波写实际影响对象和范围；
+- **Theme Is Derived**：`## 11. 主题、价值观与长期问题` 只后验总结已经由人物、欲望、世界与事件自然形成的主题；没有稳定主题时允许“暂不预设”，不得反向决定世界 ontology、资源、敌人、能力升格或终局。
 
 #### 不负责
 
@@ -492,7 +525,7 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 | 阶段 | 默认模型 | GBrain | 说明 |
 |---|---|---|---|
 | Fantasy Seed | GPT-5.6 Luna high | **OFF** | 保持核心幻想先由作者方向与模型自身产生，避免参考库过早锚定创意 |
-| World Vision | GPT-5.6 Luna high | **ON，固定 1 条 Coordinate Reference + 最多 3 条 creative inspiration** | Coordinate Reference 固定提供力量/技法/威胁/身份/价值/行动空间等读者尺，不占 creative 名额；Luna 再用最多 3 条创作启发承载世界入口、复利与力量体验 |
+| World Vision | GPT-5.6 Luna high | **ON，固定 1 条 Coordinate Reference + 最多 3 条 creative inspiration** | Coordinate Reference 同时保留世界前台尺（Power/Technique/Threat/Status/Value/World）与作者侧读者体验尺（Action Space/Expectation/Mystery/Impact）；后者必须投影成具体故事事实，不作为世界内部命名尺度；固定参考不占 creative 名额 |
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | 当前最值得使用 Sol 的位置：玩法换挡、长线生态、人物自治、敌人策略、高价值获得 |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把正确的长期 Program 展开成连续故事锚点、Thread Collision、身份揭露、Reward Recontextualization |
 | Director | GPT-5.6 Luna high | 章节相关精选上下文 | 当前 Balanced 默认；与 Terra high 质量接近但成本显著更低，若优先最低延迟可切 Terra high |
@@ -509,6 +542,20 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 - **GPT-5.4 high**：当前没有相对 Luna 的补偿性优势，只用于回归或模型对照。
 
 章节模型选择必须分开看 **生成质量 / wall-clock / 实际成本**。2026-08-23 的配对正文实验里，当前最推荐的 Balanced 路由是 `Luna Director → Luna Curator → Terra Primary → Luna State`；Terra Primary 是正文行为选择，不是成本选择。若优先更短延迟，可把 Director/Curator 切到 Terra high/medium；若质量优先且希望 Curator更精简，可只把 Curator切到 Terra medium。Sol 不进入常规章节链。
+
+### 已验证的 Theme Emergent A/B 结论（2026-08-25）
+
+三本冻结作者方向、A=旧 production、B=只重划 Seed/World/Program 职责的真实模型 A/B，在统一剥离 ACP 辅助 metadata 后重新跑 6 个 Sol Story Program 与 3 个 Luna high blind judge，B **3/3 全胜**：A 平均 **4.57/10**，B 平均 **8.63/10**。
+
+实验支持的上游结论是：旧链路存在 `Fantasy Seed semantic escalation → World 能力/世界同构 → Story Program same-meaning-bigger-scale` 的“抽象意义提纯器”。生产化不新增模块，而是：
+
+- Seed 收敛到 Fantasy + Desire + Gameplay，不提前寻找能力的终极意义；
+- World 先建立独立世界与 Desire Economy，再建立坐标，最后让核心优势切入；
+- Program 让阶段由具体目标、人物、价值物、地点与冲突发动，并显式记录关键获得/占有/首次使用；
+- Theme 只后验观察；
+- Action Space / Expectation / Mystery / Impact 等高价值后台坐标继续保留并真实使用，但必须编译成具体故事事实。
+
+完整实验见 `books/real-exp-theme-emergent-ab-20260825-v1/RESULTS.md`。实验也暴露 B 的新风险：三个偏武斗方向均容易收敛到战痕/技法采集家族，所以“去哲学化”不能代替 Seed 的玩法类型多样性；后续应继续用现有候选差异原则而不是重新引入主题驱动。
 
 ### 已验证的 GBrain A/B 结论
 

@@ -2576,22 +2576,23 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     for mode in ("fantasy_seed", "world_vision", "idea"):
         template = DEFAULT_PROMPT_TEMPLATES[mode]
         assert "COMPOUNDING_GROWTH_DIRECTION" in template
-        assert "净新增" in template
+        assert "后台创作约束，不是小说世界材质" in template
         assert "每轮结束重新归零" in template
-        assert "不要求每个阶段都新增一种资产" in template
-        assert "不要为了表现复利主动堆出路线、权限、网络、库存或组合组件" in template
+        assert "Net New / Irreversible State / Action Space / Fantasy Compounding" in template
+        assert "不要让“不可回滚、扩大行动空间、产生复利”本身变成人物追求、世界规则或主题" in template
+        assert "不要为了证明复利主动堆路线、权限、网络、库存或组合组件" in template
 
     fantasy = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
-    assert "世界为什么因此自然打开更高价值的新机会、竞争、敌人或区域" in fantasy
-    assert "长期不能每次从零开始" in fantasy
-    assert "最好明确留下第一笔以后仍可再次利用的积累" in fantasy
+    assert "世界为什么会因此自然打开新的目标、敌人、地点或机会" in fantasy
+    assert "多次使用以后哪些收益会被保留下来" in fantasy
+    assert "留下第一笔以后仍可再次利用的能力、物品、关系、身份或其它具体积累" in fantasy
     assert "### 持续阻力与压力" not in fantasy
 
     world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
     assert "## 世界资源、利益与机会结构" in world
-    assert "主角下一轮能做什么过去做不到的新事" in world
-    assert "会迫使什么人物或势力改变应对" in world
-    assert "不要为了证明复利，主动把收益整理成构筑、库存、权限树、路线网、节点网络或组合系统" in world
+    assert "过去获得真正进入下一轮" in world
+    assert "至少保留若干与主角能力无关" in world
+    assert "不要让所有资源都专门为金手指设计" in world
     assert "形成自己的构筑、体系、库存、网络、领地、技艺组合、个人规则或其它不可逆积累" not in world
     assert "## 世界阶层、利益与行动压力" not in world
 
@@ -2605,8 +2606,9 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
         assert marker in story_program
     assert "新的主动行动、对手新的针对方式、人物关系出现的新选择" in story_program
     assert "不要主动把它们整理成构筑、库存、权限树、路线网、节点网络或组合系统" in story_program
-    assert "主角从此多能做什么、对手以后必须怎样改变" in story_program
-    assert "不要为了填这个字段人为制造路线、权限、节点、网络、库存或构筑" in story_program
+    assert "本阶段关键获得、占有与首次使用" in story_program
+    assert "谁死了/活了、什么东西归谁、哪段关系改变、什么身份公开" in story_program
+    assert "输出本身不要只写这些标签" in story_program
     assert "Relationship Reconfiguration" in story_program
     assert "谁过去能命令、忽视、利用、封锁、定价或支配他" in story_program
     assert "关系重构的价值在于让上一轮胜利自然生长出新的欲望、联盟、背叛、争夺和对手反应" in story_program
@@ -3039,6 +3041,55 @@ def test_world_vision_owns_reader_coordinates_and_core_advantage_compatibility()
     assert "基础待遇与稀缺奖励" in template
     assert "不强造境界名" in template
     assert "不要把“眼前到底发生了什么、触发后会怎样、人物现在能不能做某件事”也一起藏起来" in template
+
+
+def test_fantasy_seed_keeps_theme_emergent_and_future_play_concrete() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    assert "Fantasy + Desire + Gameplay" in template
+    assert "不负责替这个幻想寻找终极哲学意义" in template
+    assert "### 远期升格方向" in template
+    assert "更强、更不同、读者更想亲自看的具体用法" in template
+    assert "不先定义更高世界“哲学上意味着什么”" in template
+
+
+def test_world_vision_builds_independent_world_and_desire_economy_before_advantage() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    independent = template.index("## 没有主角时，这个世界怎样运转")
+    desire = template.index("## 世界里真正值钱、值得想要的东西")
+    coordinates = template.index("## 读者可用的世界坐标")
+    advantage = template.index("## 核心优势与普通规则怎样咬合")
+    assert independent < desire < coordinates < advantage
+    assert "即使主角明天消失也仍会发生" in template
+    assert "Desire Economy" in template
+    assert "世界前台尺" in template
+    assert "Action Space / Expectation Ladder / Mystery Depth / Impact" in template
+    assert "读者体验/故事校准尺" in template
+    assert "成长后具体多能做哪件以前做不到的事" in template
+    assert "哪个已经出现的旧物、旧人、旧事实还有可回收的更深解释" in template
+    assert "不能自动升级成世界 ontology" in template
+
+
+def test_story_program_keeps_backstage_principles_but_outputs_concrete_acquisition() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "Action Space、Net New、Irreversible State、World Entry、Reward Opportunity、Fantasy Compounding、资源反哺" in template
+    assert "Expectation Ladder、Mystery Depth、Impact" in template
+    assert "评价和约束故事的作者语言，不是生成世界的材质" in template
+    assert "本阶段关键获得、占有与首次使用" in template
+    assert "无新的标志性获得" in template
+    assert "Expectation Ladder 的具体投影" in template
+    assert "Mystery Depth 的锚点" in template
+    assert "Impact 只作为后台尺度" in template
+    assert "输出本身不要只写这些标签" in template
+
+
+def test_outline_theme_is_derived_and_may_remain_unset() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Action Space / Expectation Ladder / Mystery Depth / Impact" in template
+    assert "只投影到现有字段" in template
+    assert "## 11. 主题、价值观与长期问题" in template
+    assert "这里只后验总结" in template
+    assert "直接写“暂不预设”" in template
+    assert "不参与生成世界 ontology、资源体系、敌人设计、能力升格或终局" in template
 
 
 def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> None:

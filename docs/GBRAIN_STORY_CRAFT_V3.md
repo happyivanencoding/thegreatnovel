@@ -16,7 +16,7 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 ## TGN 阶段消费
 
 - `Fantasy Seed`：继续保持隔离，不自动读取 GBrain，先保证核心幻想来自当前作者方向与模型本身。
-- `World Vision`：默认 GBrain ON，固定读取 1 条 Reader Coordinates Reference，再选最多 3 条 creative inspiration；固定坐标参考不占 creative 名额，creative 仍借鉴 world fantasy / world entry / narrative compounding，全部服从已批准 Fantasy Seed。
+- `World Vision`：默认 GBrain ON，固定读取 1 条 Reader Coordinates Reference，再选最多 3 条 creative inspiration；固定坐标参考不占 creative 名额。Coordinate Reference 现在区分两类坐标：世界前台尺（Power / Technique / Threat / Status / Value / World，Gear / Potential 条件性）可以直接变成世界内比较尺度；读者体验/故事尺（Action Space / Expectation Ladder / Mystery Depth / Impact，Reach 条件性）继续真实参与设计，但只投影成具体新行动、新期待、旧锚点纵深和实际影响范围，不变成世界内部术语。creative 仍借鉴 world fantasy / world entry / narrative compounding，全部服从已批准 Fantasy Seed。
 - `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流与 Reward/Opportunity，不能覆盖已批准 Seed / World Vision。
 - `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。
 - `Director`：不负责凭空发明长期大奖励或重新设计 Story Program。
@@ -165,7 +165,7 @@ Story Craft 负责“长期故事为什么好看”；正文表达层另有 `doc
 - `partner-reward-agency-v3`
 - `reward-timing-variation-v3`
 
-Batch D 原有 2 张 cross-book synthesis 最初均为 `active_inspiration: false`。2026-08-25 起，`reader-facing-world-coordinates-batch-d-v3` 已显式激活，并由 World Vision 固定作为 Coordinate Reference；`gameplay-counterplay-thread-afterlife-batch-d-v3` 仍保持 REFERENCE_ONLY / `active_inspiration: false`。新 Batch D Book/Arc 与两个新 mechanism 继续保持 PILOT overlay；`reference-corpus/machine` 保持旧 validated snapshot。
+Batch D 原有 2 张 cross-book synthesis 最初均为 `active_inspiration: false`。2026-08-25 起，`reader-facing-world-coordinates-batch-d-v3` 已显式激活并提升为 production-facing **PILOT**，由 World Vision 固定作为 Coordinate Reference；其完整 cross-book 研究矩阵仍保留 Action Space / Mystery / Expectation / Impact 等坐标，但生产 Guidance 已明确区分“世界前台尺”与“读者体验/故事尺”。`gameplay-counterplay-thread-afterlife-batch-d-v3` 仍保持 REFERENCE_ONLY / `active_inspiration: false`。新 Batch D Book/Arc 与两个新 mechanism 继续保持 PILOT overlay；`reference-corpus/machine` 保持旧 validated snapshot。
 
 ## Priority Batch D 扩展（2026-08-24）
 
