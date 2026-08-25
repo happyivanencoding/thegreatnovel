@@ -221,9 +221,9 @@ def extract_hard_constraints(*texts: str) -> list[str]:
         if label == "现实世界":
             matched = any(phrase in combined for phrase in phrases)
         else:
-            matched = any(
+            matched = label in combined or any(
                 re.search(
-                    rf"(?:无|没有|不使用|不含|禁止|不得|不要)[^。；;\n]{{0,20}}{re.escape(phrase)}",
+                    rf"(?:没有|不使用|不含|禁止|不得|不要)[^。；;\n]{{0,20}}{re.escape(phrase)}",
                     combined,
                 )
                 for phrase in phrases

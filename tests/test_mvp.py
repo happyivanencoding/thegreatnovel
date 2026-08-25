@@ -1701,6 +1701,12 @@ def test_xianxia_without_negative_constraints_keeps_cultivation() -> None:
     assert "修炼" in result["result"]
 
 
+def test_story_internal_cannot_return_to_old_cultivation_system_is_not_a_genre_ban() -> None:
+    constraints = extract_hard_constraints("不可逆事件是：他从此无法回到原本的修炼体系，但也成为旧世界无法再定义的人。")
+    assert "无修炼体系" not in constraints
+    assert "无超自然" not in constraints
+
+
 def test_three_fixture_spaces_keep_their_distinct_constraint_semantics() -> None:
     pure_real = extract_hard_constraints(REAL_WORLD_BOOK)
     superpower = extract_hard_constraints(REAL_WORLD_SUPERPOWER_BOOK)
