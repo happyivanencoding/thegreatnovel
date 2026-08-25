@@ -27,12 +27,14 @@ TGN 保留 World Independence、Concrete Value、High-Value Acquisition、Net Ne
 
 当前上游仍保持 **Fantasy Seed → World Vision → Story Program → Outline** 四个 artifact，不新增中间 Agent：
 
-- Fantasy Seed：Fantasy + Desire + Gameplay；`主角最强欲望` 明确拆成 **眼前目标 + 能力之外仍成立的人生牵引**，再以极小的 **主角欲望人格与行为签名** 回答“他会怎么要”；
+- Fantasy Seed：Fantasy + Desire + Gameplay；`主角最强欲望` 明确拆成 **眼前目标 + 能力之外仍成立的人生牵引**，再以极小的 **主角欲望人格与行为签名** 回答“他会怎么要”。候选集整体追求 **Fantasy / Gameplay / Life Engine / Human Gravity** 的故事物种差异，而不是只换能力机制；同时保留轻量 **Seed Long-form Compounding / Pacing**，只确认“一次爽完以后还能继续值钱”和“早期兑现不等于急着触顶”，完整长篇后台约束下移到 World / Program；
 - World Vision：先显式回答 **“没有主角时，谁正在追什么，哪里正在发生什么”** 和 **“世界里真正值钱、值得想要的东西”**，再建立 Reader Coordinates，最后才让核心优势切入这个独立世界；世界独立用其它值得看的故事证明，不用完整政治经济利益网络证明；
-- Story Program：采用 **Life / Fantasy / World Engine Braid**。Core Fantasy 是长期 Reader Promise，不是主角 Life Purpose；大型阶段可以主要由人物人生/关系、核心幻想或世界大事发动。阶段仍显式回答关键获得/净新增，但 `世界扩张` 改为 **故事局面怎样改变**，`更大机会` 改为 **下一阶段为什么自然发生**；
+- Story Program：采用 **Life / Fantasy / World Engine Braid**。Core Fantasy 是长期 Reader Promise，不是主角 Life Purpose；大型阶段可以主要由人物人生/关系、核心幻想或世界大事发动，并必须保留少量**不可替代的人与关系**。阶段仍显式回答关键获得/净新增，但 `世界扩张` 改为 **故事局面怎样改变**，`更大机会` 改为 **下一阶段为什么自然发生**；
 - Outline：把长期方向编译成故事锚点；主题只作后验观察，没有稳定主题时允许“暂不预设”。
 
 Reader Coordinates 分成两类：世界前台尺（Power / Technique / Threat / Status / Value / World，Gear / Potential 条件性）与读者体验/故事尺（Action Space / Expectation Ladder / Mystery Depth / Impact，Reach 条件性）。后者继续真实参与生成，但只落成具体新行动、新期待、旧锚点纵深和实际影响范围，不作为小说世界内部术语。
+
+创作顺序同时遵守 **Narrative Appetite Before Defensive Balance**：Seed 先寻找最让人眼馋、兴奋、好奇、痛快或非看不可的核心欲望，不负责提前证明所有限制与 Counter 已安全闭环；World 再补最小可信边界，Program 再保证长篇变异、后果与复利。系统允许局部明显过量、偏心和不均衡，只要它带来真正的上头感，而不是为了稳定性把所有尖锐欲望磨平。
 
 ## 产品级 Anti-Goals：系统最怕什么
 
@@ -45,11 +47,13 @@ TGN 最需要避免的不是局部文字不够漂亮，而是核心幻想在层�
 - **长篇退化成重复任务**：换地图、换敌人，却一直重复同一个 Plot Engine；
 - **人物退化成工具**：配角只发任务、给信息、被救和结算收益，没有自己的欲望与回流；
 - **人物退化成同一个理性代理人**：不同主角面对机会、强敌、羞辱和自己人时都做同一种稳妥、公平、克制、公共利益优先的选择，Seed 的欲望人格被系统价值观覆盖；
+- **候选退化成同一情感母题**：能力和世界看似不同，但人生牵引、重大选择伦理、关系重心与情绪满足反复落在同一套安全母题上，形成“不同外挂版本的同一本书”；
 - **能力吞掉人生**：救人、归乡、家族、宿敌等开局问题一解决，主角后半生自动变成“找更多适合金手指的目标 / 让能力更强 / 去更适合能力的地图”；Core Fantasy 从 Reader Promise 越权成了 Life Purpose；
 - **Boss 退化成技能 Counter**：重要对手先由“怎样克制主角能力”生成，而不是先有自己的欲望与人生，再在碰撞中学会反制；
 - **世界独立退化成治理模拟**：为了证明世界真实，三本不同小说都稳定长出矿权、水权、税收、户籍、迁徙权、多方利益平衡和合法身份，并让这些 supporting reality 抢走核心幻想的叙事权重；
 - **配角自治退化成永远平等谈判**：所有人物都机械“拒绝被收编、只按自身利益合作、重新谈条件”，反而失去崇拜、追随、爱慕、效忠、屈服、背叛和死敌等真实关系形态；
 - **爽点退化成固定税**：每次胜利都立即补等量成本、责任或审查，把 Payoff 抵消；
+- **防错退化成创作抑制**：能力、人物、宝物、敌意和机缘还没真正让人上头，就先被限制、Counter、责任、平衡和防滥用条款磨平，最后只剩“不会坏”的优等生故事；
 - **正文退化成两极**：要么过度克制而干，要么靠修饰、比喻和五感清单制造 AI 式“丰富”；
 - **系统反客为主**：Agent、Gate、数据库、Context 和参考库越来越复杂，LLM 开始维护系统而不是写小说。
 

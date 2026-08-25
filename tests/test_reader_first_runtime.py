@@ -207,9 +207,14 @@ def test_supporting_logic_does_not_become_story_engine() -> None:
         "观察、分析、测试、验证、调整和实施",
         "不因能力可重复使用就自然职业化成维护、检测、生产、搬运或运营流程",
     )
-    for mode in ("fantasy_seed", "world_vision", "idea", "outline", "review"):
+    for mode in ("world_vision", "idea", "outline", "review"):
         for marker in markers:
             assert marker in DEFAULT_PROMPT_TEMPLATES[mode]
+
+    fantasy_seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    assert "Seed Supporting Logic Boundary" in fantasy_seed
+    assert "不负责把可信性问题完整解决" in fantasy_seed
+    assert "检测、维护、运输、生产、运营或其它职业流程" in fantasy_seed
 
     director = generate_prompt(
         mode="director",
@@ -235,8 +240,10 @@ def test_fantasy_salience_rules_are_scoped_to_planning_layers() -> None:
     for mode in ("outline", "review"):
         assert "Outline Fantasy Proof" in DEFAULT_PROMPT_TEMPLATES[mode]
 
-    for mode in ("fantasy_seed", "world_vision"):
-        assert "经营文 Decision > Implementation" in DEFAULT_PROMPT_TEMPLATES[mode]
+    assert "经营文 Decision > Implementation" in DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    assert "经营文 Decision > Implementation" not in DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    assert "Seed Long-form Compounding" in DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    assert "Seed Long-form Pacing" in DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
 
     director = generate_prompt(
         mode="director",

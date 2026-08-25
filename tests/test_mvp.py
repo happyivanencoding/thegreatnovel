@@ -2612,7 +2612,7 @@ def test_default_prompt_templates_include_idea_mode() -> None:
 
 
 def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
-    for mode in ("fantasy_seed", "world_vision", "idea"):
+    for mode in ("world_vision", "idea"):
         template = DEFAULT_PROMPT_TEMPLATES[mode]
         assert "COMPOUNDING_GROWTH_DIRECTION" in template
         assert "后台创作约束，不是小说世界材质" in template
@@ -2622,7 +2622,17 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
         assert "不要为了证明复利主动堆路线、权限、网络、库存或组合组件" in template
 
     fantasy = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
-    assert "世界为什么会因此自然打开新的目标、敌人、地点或机会" in fantasy
+    assert "COMPOUNDING_GROWTH_DIRECTION" not in fantasy
+    assert "LONG_FORM_PACING_DIRECTION" not in fantasy
+    assert "Supporting Logic Must Not Automatically Become Story Engine" not in fantasy
+    assert "经营文 Decision > Implementation" not in fantasy
+    assert "Narrative Appetite Before Defensive Balance" in fantasy
+    assert "Seed Long-form Compounding" in fantasy
+    assert "第一次爽完以后" in fantasy
+    assert "不要要求每轮归零" in fantasy
+    assert "Seed Long-form Pacing" in fantasy
+    assert "早期兑现不等于急着把能力推到终极形态" in fantasy
+    assert "Seed Supporting Logic Boundary" in fantasy
     assert "多次使用以后哪些收益会被保留下来" in fantasy
     assert "留下第一笔以后仍可再次利用的能力、物品、关系、身份或其它具体积累" in fantasy
     assert "### 持续阻力与压力" not in fantasy
@@ -2655,7 +2665,9 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "Relationship Reconfiguration" in story_program
     assert "Character Autonomy ≠ Symmetric Stakeholder Power" in story_program
     assert "Relationship Reconfiguration ≠ Permanent Renegotiation" in story_program
-    assert "真心崇拜、爱慕、投靠、拜师、效忠、屈服、结盟、背叛、竞争或与主角成为死敌" in story_program
+    assert "关系可以因欲望变得更近、更远、更依赖、更敌对、更不对等或彻底换位" in story_program
+    assert "### 不可替代的人与关系" in story_program
+    assert "### 关键关系（可选）" not in story_program
     assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
     assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "稳定控制、调用或从中取得复利收益的外部结构" not in story_program
@@ -3102,7 +3114,8 @@ def test_protagonist_behavior_signature_is_fixed_upstream_and_drives_choices() -
     program = DEFAULT_PROMPT_TEMPLATES["idea"]
     assert "Protagonist Behavior Signature" in seed
     assert "### 主角欲望人格与行为签名" in seed
-    assert "不要默认所有主角都理性、克制、公平、公共利益优先" in seed
+    assert "不要从预设的优秀男主标签库拼人格" in seed
+    assert "不自动修正成“靠谱有底线的优秀男主”" in seed
     assert "主角欲望人格与行为签名属于创意权威" in world
     assert "不能为了让主角更成熟、更合理或更容易协调多方利益" in world
     assert "你不能重新决定已经批准的核心幻想、主角最强欲望、主角欲望人格与行为签名" in program
@@ -3119,7 +3132,8 @@ def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose()
     assert "眼前目标" in seed
     assert "能力之外仍成立的人生牵引" in seed
     assert "核心优势暂时不能用" in seed
-    assert "不能只是“让核心能力更强、找到更多适合能力的对象、把玩法做得更大”" in seed
+    assert "不要求宏大、悲惨、道德高尚、来自家庭/创伤或永远不变" in seed
+    assert "把玩法做得更大" in seed
     assert "世界只给核心优势“供货”" in world
     assert "无法被金手指直接转换成收益" in world
     assert "Life / Fantasy / World Engine Braid" in program
@@ -3134,6 +3148,22 @@ def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose()
     assert "下一阶段为什么自然发生" in program
     assert "下一阶段不要求“更大”" in program
     assert "即使暂时拿掉核心优势，两个人之间仍有未完成故事" in program
+    assert "### 不可替代的人与关系" in program
+
+
+def test_seed_prioritizes_appetite_and_story_species_diversity_without_example_anchoring() -> None:
+    seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    program = DEFAULT_PROMPT_TEMPLATES["idea"]
+    for template in (seed, world, program):
+        assert "Narrative Appetite Before Defensive Balance" in template
+    assert "故事物种差异" in seed
+    assert "Fantasy（最想拥有什么）、Gameplay（主角反复做什么）、Life Engine（为什么活、为什么继续往前）与 Human Gravity" in seed
+    assert "能力不同而人生牵引、重大选择伦理、关系重心和情绪满足高度同构" in seed
+    assert "归乡、复仇、找人、护住某个家、重建家族" not in seed
+    assert "贪、好胜、护短、记仇、好奇、爱炫、谨慎、狠、恋家、重情" not in seed
+    assert "宿敌、师徒、归乡、家人选择" not in program
+    assert "亲情、师徒、宿敌、爱慕、旧债、承诺" not in program
 
 
 def test_world_vision_builds_story_bearing_world_and_desire_economy_before_advantage() -> None:
