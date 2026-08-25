@@ -1707,6 +1707,16 @@ def test_story_internal_cannot_return_to_old_cultivation_system_is_not_a_genre_b
     assert "无超自然" not in constraints
 
 
+def test_unrelated_no_chance_clause_does_not_become_a_cultivation_genre_ban() -> None:
+    constraints = extract_hard_constraints("他必须在一场本来没有胜算的冲突中活下来，否则连继续修炼和进入更高层世界的资格都没有。")
+    assert "无修炼体系" not in constraints
+
+
+def test_explicit_long_cultivation_ban_still_matches_within_one_clause() -> None:
+    constraints = extract_hard_constraints("作者要求：不要在故事里使用任何形式的修炼体系。")
+    assert "无修炼体系" in constraints
+
+
 def test_three_fixture_spaces_keep_their_distinct_constraint_semantics() -> None:
     pure_real = extract_hard_constraints(REAL_WORLD_BOOK)
     superpower = extract_hard_constraints(REAL_WORLD_SUPERPOWER_BOOK)
