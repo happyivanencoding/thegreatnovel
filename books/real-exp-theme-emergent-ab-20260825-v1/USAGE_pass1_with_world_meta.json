@@ -1,0 +1,270 @@
+{
+  "arms": {
+    "A": {
+      "seed": {
+        "runs": [
+          {
+            "book": 1,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 150.865,
+            "input_tokens": 19755,
+            "cached_tokens": 9984,
+            "output_tokens": 8116,
+            "total_tokens": 37855,
+            "estimated_credits": 0.347247
+          },
+          {
+            "book": 2,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 134.739,
+            "input_tokens": 19757,
+            "cached_tokens": 9984,
+            "output_tokens": 7265,
+            "total_tokens": 37006,
+            "estimated_credits": 0.321727
+          },
+          {
+            "book": 3,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 165.506,
+            "input_tokens": 19762,
+            "cached_tokens": 9984,
+            "output_tokens": 8946,
+            "total_tokens": 38692,
+            "estimated_credits": 0.372182
+          }
+        ],
+        "wall_mean": 150.37,
+        "credits_sum": 1.041156,
+        "input_sum": 59274,
+        "cached_sum": 29952,
+        "output_sum": 24327
+      },
+      "world": {
+        "runs": [
+          {
+            "book": 1,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 123.285,
+            "input_tokens": 22880,
+            "cached_tokens": 9984,
+            "output_tokens": 6590,
+            "total_tokens": 39454,
+            "estimated_credits": 0.317092
+          },
+          {
+            "book": 2,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 156.559,
+            "input_tokens": 2908,
+            "cached_tokens": 33536,
+            "output_tokens": 7946,
+            "total_tokens": 44390,
+            "estimated_credits": 0.269688
+          },
+          {
+            "book": 3,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 155.121,
+            "input_tokens": 3694,
+            "cached_tokens": 33536,
+            "output_tokens": 7966,
+            "total_tokens": 45196,
+            "estimated_credits": 0.274218
+          }
+        ],
+        "wall_mean": 144.98833333333334,
+        "credits_sum": 0.8609979999999999,
+        "input_sum": 29482,
+        "cached_sum": 77056,
+        "output_sum": 22502
+      },
+      "program": {
+        "runs": [
+          {
+            "book": 1,
+            "model": "gpt-5.6-sol",
+            "wall_seconds": 396.149,
+            "input_tokens": 4634,
+            "cached_tokens": 45824,
+            "output_tokens": 11648,
+            "total_tokens": 62106,
+            "estimated_credits": 9.88805
+          },
+          {
+            "book": 2,
+            "model": "gpt-5.6-sol",
+            "wall_seconds": 267.708,
+            "input_tokens": 33811,
+            "cached_tokens": 6912,
+            "output_tokens": 8806,
+            "total_tokens": 49529,
+            "estimated_credits": 10.917275
+          },
+          {
+            "book": 3,
+            "model": "gpt-5.6-sol",
+            "wall_seconds": 400.65,
+            "input_tokens": 4348,
+            "cached_tokens": 45824,
+            "output_tokens": 8273,
+            "total_tokens": 58445,
+            "estimated_credits": 7.32105
+          }
+        ],
+        "wall_mean": 354.83566666666667,
+        "credits_sum": 28.126375,
+        "input_sum": 42793,
+        "cached_sum": 98560,
+        "output_sum": 28727
+      },
+      "generation_credits_total": 30.028529
+    },
+    "B": {
+      "seed": {
+        "runs": [
+          {
+            "book": 1,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 180.297,
+            "input_tokens": 2854,
+            "cached_tokens": 36608,
+            "output_tokens": 8931,
+            "total_tokens": 48393,
+            "estimated_credits": 0.300504
+          },
+          {
+            "book": 2,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 115.035,
+            "input_tokens": 18454,
+            "cached_tokens": 9984,
+            "output_tokens": 6151,
+            "total_tokens": 34589,
+            "estimated_credits": 0.281792
+          },
+          {
+            "book": 3,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 176.374,
+            "input_tokens": 4181,
+            "cached_tokens": 27392,
+            "output_tokens": 9093,
+            "total_tokens": 40666,
+            "estimated_credits": 0.307391
+          }
+        ],
+        "wall_mean": 157.23533333333333,
+        "credits_sum": 0.889687,
+        "input_sum": 25489,
+        "cached_sum": 73984,
+        "output_sum": 24175
+      },
+      "world": {
+        "runs": [
+          {
+            "book": 1,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 161.488,
+            "input_tokens": 2139,
+            "cached_tokens": 31488,
+            "output_tokens": 8020,
+            "total_tokens": 41647,
+            "estimated_credits": 0.267039
+          },
+          {
+            "book": 2,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 170.085,
+            "input_tokens": 2174,
+            "cached_tokens": 32512,
+            "output_tokens": 8517,
+            "total_tokens": 43203,
+            "estimated_credits": 0.282636
+          },
+          {
+            "book": 3,
+            "model": "gpt-5.6-luna",
+            "wall_seconds": 164.611,
+            "input_tokens": 3267,
+            "cached_tokens": 30464,
+            "output_tokens": 8342,
+            "total_tokens": 42073,
+            "estimated_credits": 0.281827
+          }
+        ],
+        "wall_mean": 165.39466666666667,
+        "credits_sum": 0.831502,
+        "input_sum": 7580,
+        "cached_sum": 94464,
+        "output_sum": 24879
+      },
+      "program": {
+        "runs": [
+          {
+            "book": 1,
+            "model": "gpt-5.6-sol",
+            "wall_seconds": 374.629,
+            "input_tokens": 3910,
+            "cached_tokens": 42752,
+            "output_tokens": 9575,
+            "total_tokens": 56237,
+            "estimated_credits": 8.2044
+          },
+          {
+            "book": 2,
+            "model": "gpt-5.6-sol",
+            "wall_seconds": 618.249,
+            "input_tokens": 3457,
+            "cached_tokens": 49920,
+            "output_tokens": 10651,
+            "total_tokens": 64028,
+            "estimated_credits": 9.044375
+          },
+          {
+            "book": 3,
+            "model": "gpt-5.6-sol",
+            "wall_seconds": 467.796,
+            "input_tokens": 371,
+            "cached_tokens": 48896,
+            "output_tokens": 13631,
+            "total_tokens": 62898,
+            "estimated_credits": 10.880825
+          }
+        ],
+        "wall_mean": 486.89133333333336,
+        "credits_sum": 28.1296,
+        "input_sum": 7738,
+        "cached_sum": 141568,
+        "output_sum": 33857
+      },
+      "generation_credits_total": 29.850789
+    }
+  },
+  "judges": [
+    {
+      "book": 1,
+      "wall_seconds": 50.201,
+      "input_tokens": 46165,
+      "cached_tokens": 9984,
+      "output_tokens": 2578,
+      "estimated_credits": 0.313157
+    },
+    {
+      "book": 2,
+      "wall_seconds": 63.269,
+      "input_tokens": 1460,
+      "cached_tokens": 55040,
+      "output_tokens": 2635,
+      "estimated_credits": 0.11387
+    },
+    {
+      "book": 3,
+      "wall_seconds": 49.591,
+      "input_tokens": 47966,
+      "cached_tokens": 9984,
+      "output_tokens": 2403,
+      "estimated_credits": 0.316912
+    }
+  ]
+}

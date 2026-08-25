@@ -1,0 +1,11 @@
+{
+  "final_clean_chain_credits": {
+    "A": 32.747754,
+    "B": 26.953588999999997
+  },
+  "final_clean_judges_credits": 1.002861,
+  "invalidated_pass1_program_credits": 56.255975,
+  "invalidated_pass1_judges_credits": 0.743939,
+  "shared_seed_world_credits": 3.6233429999999998,
+  "actual_experiment_credits": 117.704118
+}
