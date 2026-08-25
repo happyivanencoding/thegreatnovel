@@ -27,7 +27,7 @@ TGN 保留 World Independence、Concrete Value、High-Value Acquisition、Net Ne
 
 当前上游仍保持 **Fantasy Seed → World Vision → Story Program → Outline** 四个 artifact，不新增中间 Agent：
 
-- Fantasy Seed：Fantasy + Desire + Gameplay；`主角最强欲望` 明确拆成 **眼前目标 + 能力之外仍成立的人生牵引**，再以极小的 **主角欲望人格与行为签名** 回答“他会怎么要”。候选生成采用 **Commercial Quality First, Diversity Second**：允许高潜力能力家族、成长结构或人物母题重复出现，只防近乎同案换皮，不为了跨书差异牺牲商业潜力；同时保留轻量 **Seed Long-form Compounding / Pacing**，只确认“一次爽完以后还能继续值钱”和“早期兑现不等于急着触顶”，完整长篇后台约束下移到 World / Program；
+- Fantasy Seed：Fantasy + Desire + Gameplay；`主角最强欲望` 明确拆成 **眼前目标 + 能力之外仍成立的人生牵引**，但人生牵引只要求能继续牵动下一段生活与行动，不强迫 Seed 一次定义成熟终身使命；它可以阶段性、私人、自利、琐碎、矛盾或后来改变，也不能从核心幻想的社会隐喻自动提纯成公共改革/制度理想。再以极小的 **主角欲望人格与行为签名** 回答“他会怎么要”。候选生成采用 **Commercial Quality First, Diversity Second**：允许高潜力能力家族、成长结构或人物母题重复出现，只防近乎同案换皮，不为了跨书差异牺牲商业潜力；同时保留轻量 **Seed Long-form Compounding / Pacing**，只确认“一次爽完以后还能继续值钱”和“早期兑现不等于急着触顶”，完整长篇后台约束下移到 World / Program；
 - World Vision：先显式回答 **“没有主角时，谁正在追什么，哪里正在发生什么”** 和 **“世界里真正值钱、值得想要的东西”**，再建立 Reader Coordinates，最后才让核心优势切入这个独立世界；世界独立用其它值得看的故事证明，不用完整政治经济利益网络证明；
 - Story Program：采用 **Life / Fantasy / World Engine Braid**。Core Fantasy 是长期 Reader Promise，不是主角 Life Purpose；大型阶段可以主要由人物人生/关系、核心幻想或世界大事发动，并必须保留少量**不可替代的人与关系**。阶段仍显式回答关键获得/净新增，但 `世界扩张` 改为 **故事局面怎样改变**，`更大机会` 改为 **下一阶段为什么自然发生**；
 - Outline：把长期方向编译成故事锚点；主题只作后验观察，没有稳定主题时允许“暂不预设”。

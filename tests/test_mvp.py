@@ -3133,7 +3133,9 @@ def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose()
     assert "眼前目标" in seed
     assert "能力之外仍成立的人生牵引" in seed
     assert "核心优势暂时不能用" in seed
-    assert "不要求宏大、悲惨、道德高尚、来自家庭/创伤或永远不变" in seed
+    assert "不要求宏大、悲惨、道德高尚" in seed
+    assert "不是必须一次定义三百万字终身使命" in seed
+    assert "公共改革、制度理想或替所有人解决问题" in seed
     assert "把玩法做得更大" in seed
     assert "世界可以明显偏向核心幻想" in world
     assert "世界被核心能力完全解释" in world
