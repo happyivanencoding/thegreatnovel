@@ -347,6 +347,7 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
     for marker in (
         "### 核心幻想",
         "### 主角最强欲望",
+        "### 主角欲望人格与行为签名",
         "### 力量占有欲",
         "### 第一次标志性奇观",
         "### 长期增长发动机",
@@ -373,10 +374,11 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
     for marker in ("BOOK_MARKER", "REFERENCE_MARKER"):
         assert marker not in world
     for marker in (
+        "没有主角时，谁正在追什么，哪里正在发生什么",
+        "世界里真正值钱、值得想要的东西",
         "世界最震撼的三幅画面",
         "力量的升格方向",
-        "世界资源、利益与机会结构",
-        "持续冲突来源",
+        "世界正在发生的欲望、冲突与机会",
         "第一次决定性兑现",
         "早期成长锚点与长期升格",
         "早期兑现",
@@ -2626,10 +2628,12 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "### 持续阻力与压力" not in fantasy
 
     world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
-    assert "## 世界资源、利益与机会结构" in world
+    assert "## 世界正在发生的欲望、冲突与机会" in world
     assert "过去获得真正进入下一轮" in world
-    assert "至少保留若干与主角能力无关" in world
-    assert "不要让所有资源都专门为金手指设计" in world
+    assert "世界还有别的故事" in world
+    assert "不要求给所有利益方平均分配戏份" in world
+    assert "税、土地、治理、迁徙、合同等若只是背景合理性，压到背景" in world
+    assert "## 世界资源、利益与机会结构" not in world
     assert "形成自己的构筑、体系、库存、网络、领地、技艺组合、个人规则或其它不可逆积累" not in world
     assert "## 世界阶层、利益与行动压力" not in world
 
@@ -2647,8 +2651,9 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "谁死了/活了、什么东西归谁、哪段关系改变、什么身份公开" in story_program
     assert "输出本身不要只写这些标签" in story_program
     assert "Relationship Reconfiguration" in story_program
-    assert "谁过去能命令、忽视、利用、封锁、定价或支配他" in story_program
-    assert "关系重构的价值在于让上一轮胜利自然生长出新的欲望、联盟、背叛、争夺和对手反应" in story_program
+    assert "Character Autonomy ≠ Symmetric Stakeholder Power" in story_program
+    assert "Relationship Reconfiguration ≠ Permanent Renegotiation" in story_program
+    assert "真心崇拜、爱慕、投靠、拜师、效忠、屈服、结盟、背叛、竞争或与主角成为死敌" in story_program
     assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
     assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "稳定控制、调用或从中取得复利收益的外部结构" not in story_program
@@ -3089,14 +3094,33 @@ def test_fantasy_seed_keeps_theme_emergent_and_future_play_concrete() -> None:
     assert "不先定义更高世界“哲学上意味着什么”" in template
 
 
-def test_world_vision_builds_independent_world_and_desire_economy_before_advantage() -> None:
+def test_protagonist_behavior_signature_is_fixed_upstream_and_drives_choices() -> None:
+    seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    program = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "Protagonist Behavior Signature" in seed
+    assert "### 主角欲望人格与行为签名" in seed
+    assert "不要默认所有主角都理性、克制、公平、公共利益优先" in seed
+    assert "主角欲望人格与行为签名属于创意权威" in world
+    assert "不能为了让主角更成熟、更合理或更容易协调多方利益" in world
+    assert "你不能重新决定已经批准的核心幻想、主角最强欲望、主角欲望人格与行为签名" in program
+    assert "没有标准答案正是让人物性格进入剧情的机会" in program
+    assert "不是自动选择最稳妥、最公平、最照顾所有利益方的折中方案" in program
+    assert "主角主动行动：必须符合已批准的主角欲望人格与行为签名" in program
+
+
+def test_world_vision_builds_story_bearing_world_and_desire_economy_before_advantage() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["world_vision"]
-    independent = template.index("## 没有主角时，这个世界怎样运转")
+    independent = template.index("## 没有主角时，谁正在追什么，哪里正在发生什么")
     desire = template.index("## 世界里真正值钱、值得想要的东西")
     coordinates = template.index("## 读者可用的世界坐标")
     advantage = template.index("## 核心优势与普通规则怎样咬合")
     assert independent < desire < coordinates < advantage
-    assert "即使主角明天消失也仍会发生" in template
+    assert "Story-Bearing World" in template
+    assert "世界还有别的故事" in template
+    assert "社会治理模型完整" in template
+    assert "World Independence ≠ Narrative Equal Weight" in template
+    assert "真实存在 ≠ 值得成为主发动机" in template
     assert "Desire Economy" in template
     assert "世界前台尺" in template
     assert "Action Space / Expectation Ladder / Mystery Depth / Impact" in template

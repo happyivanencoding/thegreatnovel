@@ -27,9 +27,9 @@ TGN 保留 World Independence、Concrete Value、High-Value Acquisition、Net Ne
 
 当前上游仍保持 **Fantasy Seed → World Vision → Story Program → Outline** 四个 artifact，不新增中间 Agent：
 
-- Fantasy Seed：Fantasy + Desire + Gameplay；
-- World Vision：先显式回答 **“没有主角时，这个世界怎样运转”** 和 **“世界里真正值钱、值得想要的东西”**，再建立 Reader Coordinates，最后才让核心优势切入这个独立世界；
-- Story Program：每个大型阶段显式回答 **“本阶段关键获得、占有与首次使用”**，同时用具体事件投影 Net New / Action Space / Expectation / Mystery / Impact；
+- Fantasy Seed：Fantasy + Desire + Gameplay，并提前固定极小的 **主角欲望人格与行为签名**，回答“他会怎么要”；
+- World Vision：先显式回答 **“没有主角时，谁正在追什么，哪里正在发生什么”** 和 **“世界里真正值钱、值得想要的东西”**，再建立 Reader Coordinates，最后才让核心优势切入这个独立世界；世界独立用其它值得看的故事证明，不用完整政治经济利益网络证明；
+- Story Program：每个大型阶段显式回答 **“本阶段关键获得、占有与首次使用”**，同时用具体事件投影 Net New / Action Space / Expectation / Mystery / Impact；Contestable Choice 由已批准主角行为签名决定，不由系统默认理性折中接管；
 - Outline：把长期方向编译成故事锚点；主题只作后验观察，没有稳定主题时允许“暂不预设”。
 
 Reader Coordinates 分成两类：世界前台尺（Power / Technique / Threat / Status / Value / World，Gear / Potential 条件性）与读者体验/故事尺（Action Space / Expectation Ladder / Mystery Depth / Impact，Reach 条件性）。后者继续真实参与生成，但只落成具体新行动、新期待、旧锚点纵深和实际影响范围，不作为小说世界内部术语。
@@ -44,6 +44,9 @@ TGN 最需要避免的不是局部文字不够漂亮，而是核心幻想在层�
 - **可信退化成验证流程**：真实冲突被观察、分析、测试、验证取代；
 - **长篇退化成重复任务**：换地图、换敌人，却一直重复同一个 Plot Engine；
 - **人物退化成工具**：配角只发任务、给信息、被救和结算收益，没有自己的欲望与回流；
+- **人物退化成同一个理性代理人**：不同主角面对机会、强敌、羞辱和自己人时都做同一种稳妥、公平、克制、公共利益优先的选择，Seed 的欲望人格被系统价值观覆盖；
+- **世界独立退化成治理模拟**：为了证明世界真实，三本不同小说都稳定长出矿权、水权、税收、户籍、迁徙权、多方利益平衡和合法身份，并让这些 supporting reality 抢走核心幻想的叙事权重；
+- **配角自治退化成永远平等谈判**：所有人物都机械“拒绝被收编、只按自身利益合作、重新谈条件”，反而失去崇拜、追随、爱慕、效忠、屈服、背叛和死敌等真实关系形态；
 - **爽点退化成固定税**：每次胜利都立即补等量成本、责任或审查，把 Payoff 抵消；
 - **正文退化成两极**：要么过度克制而干，要么靠修饰、比喻和五感清单制造 AI 式“丰富”；
 - **系统反客为主**：Agent、Gate、数据库、Context 和参考库越来越复杂，LLM 开始维护系统而不是写小说。
@@ -55,6 +58,8 @@ TGN 最需要避免的不是局部文字不够漂亮，而是核心幻想在层�
 系统必须区分“让世界可信的支撑逻辑”和“这本书真正要让读者追着看的故事发动机”。核心准则是：**Supporting Logic Must Not Automatically Become Story Engine。**
 
 - 世界复杂性不自动成为叙事前景；
+- **World Independence ≠ Narrative Equal Weight**：世界没有主角也有别的故事，不代表每个利益方、制度、税收、土地或治理问题都值得同等叙事权重；
+- **Character Autonomy ≠ Symmetric Stakeholder Power**：自主人物可以真心追随、爱慕、效忠、屈服、背叛或成为死敌，不要求所有关系保持平等谈判；
 - 对手的合理理由不自动成为作者结论，更不自动变成主角长期职责；
 - 世界机制真实存在，不等于需要完整展示实施过程；
 - 能力可以重复使用，不等于主角自然职业化成探路、检测、维护、搬运、生产或运营者；
