@@ -1,0 +1,34 @@
+[
+  {
+    "index": 1,
+    "old_power_owner_name_absent": true,
+    "current_desire_absent_from_human_core": true,
+    "hook_absent_from_human_core": true,
+    "hook_absent_from_character_card": true,
+    "mutable_state_present": true
+  },
+  {
+    "index": 2,
+    "old_power_owner_name_absent": true,
+    "current_desire_absent_from_human_core": true,
+    "hook_absent_from_human_core": true,
+    "hook_absent_from_character_card": true,
+    "mutable_state_present": true
+  },
+  {
+    "index": 3,
+    "old_power_owner_name_absent": true,
+    "current_desire_absent_from_human_core": true,
+    "hook_absent_from_human_core": true,
+    "hook_absent_from_character_card": true,
+    "mutable_state_present": true
+  },
+  {
+    "index": 4,
+    "old_power_owner_name_absent": true,
+    "current_desire_absent_from_human_core": true,
+    "hook_absent_from_human_core": true,
+    "hook_absent_from_character_card": true,
+    "mutable_state_present": true
+  }
+]

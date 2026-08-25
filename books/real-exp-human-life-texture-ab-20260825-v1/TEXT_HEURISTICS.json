@@ -1,0 +1,64 @@
+{
+  "A": {
+    "instrumental_hits": 21,
+    "noninstrumental_hits": 2,
+    "by_instrumental_term": {
+      "资产": 1,
+      "判断": 14,
+      "商路": 1,
+      "路线": 2,
+      "份额": 2,
+      "职位": 1
+    },
+    "by_human_term": {
+      "名声": 2
+    }
+  },
+  "B": {
+    "instrumental_hits": 35,
+    "noninstrumental_hits": 17,
+    "by_instrumental_term": {
+      "资产": 2,
+      "权威": 1,
+      "标准": 2,
+      "定价": 2,
+      "判断": 10,
+      "商路": 3,
+      "路线": 8,
+      "份额": 2,
+      "职位": 2,
+      "买家": 3
+    },
+    "by_human_term": {
+      "好看": 3,
+      "味道": 4,
+      "名声": 6,
+      "舍不得": 1,
+      "喜欢": 2,
+      "漂亮": 1
+    }
+  },
+  "C": {
+    "instrumental_hits": 8,
+    "noninstrumental_hits": 21,
+    "by_instrumental_term": {
+      "定价": 1,
+      "判断": 2,
+      "商路": 1,
+      "份额": 1,
+      "职位": 1,
+      "买家": 2
+    },
+    "by_human_term": {
+      "味道": 1,
+      "声音": 8,
+      "回声": 3,
+      "名声": 2,
+      "被看见": 2,
+      "喜欢": 2,
+      "丢脸": 1,
+      "浪费": 1,
+      "漂亮": 1
+    }
+  }
+}

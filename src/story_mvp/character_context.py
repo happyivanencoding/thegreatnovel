@@ -8,6 +8,7 @@ _ALLOWED_CHARACTER_SECTIONS = (
     "## 力量体系与正常值",
     "## 社会现实与身份",
     "## 世界里真正值钱、值得想要的东西",
+    "## Life Texture / Human Appetite",
     "## 世界知识边界",
 )
 
@@ -19,6 +20,7 @@ _CHARACTER_LIFE_SECTIONS = (
     "## 普通人的生活与上升",
     "## 社会现实与身份",
     "## 世界里真正值钱、值得想要的东西",
+    "## Life Texture / Human Appetite",
     "## 世界知识边界",
 )
 
@@ -116,7 +118,7 @@ def project_character_power_baseline(world_vision: str) -> str:
     return "\n".join(parts).strip() + "\n"
 
 
-def project_character_life_context(world_vision: str) -> str:
+def project_character_life_context(world_vision: str, *, life_texture: str | None = None) -> str:
     """Project social reality used to grow personality, desire and relationships."""
 
     parts: list[str] = ["# CHARACTER LIFE CONTEXT｜Upbringing Authority"]
@@ -128,6 +130,11 @@ def project_character_life_context(world_vision: str) -> str:
             block, _ = _strip_named_mysteries(block)
         if block:
             parts += ["", block]
+    has_embedded_texture = any(part.startswith("## Life Texture / Human Appetite") for part in parts)
+    if life_texture and life_texture.strip() and not has_embedded_texture:
+        texture = life_texture.strip()
+        texture = re.sub(r"(?m)^#(?:#)?\s*Life Texture / Human Appetite\s*$", "", texture).strip()
+        parts += ["", "## Life Texture / Human Appetite", texture]
     parts += [
         "",
         "## Upbringing 生成边界",

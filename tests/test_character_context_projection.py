@@ -118,3 +118,21 @@ def test_life_context_shapes_upbringing_but_not_power_exception() -> None:
     assert "宋照雪" not in result
     assert "沉铃泽" not in result
     assert "地下驿网" not in result
+
+
+def test_life_context_can_add_non_story_human_appetite_texture() -> None:
+    texture = "年轻人会为一年一度的夜灯赛攒钱做自己的灯，输了也会争论谁的最好看；有人愿意把几个月闲钱花在一件没有修炼用途的漂亮旧披风上。"
+    result = project_character_life_context(WORLD, life_texture=texture)
+    assert "## Life Texture / Human Appetite" in result
+    assert "夜灯赛" in result
+    assert "漂亮旧披风" in result
+    assert "力量体系与正常值" not in result
+    assert "地下驿网" not in result
+
+
+def test_life_context_preserves_world_native_life_texture_without_duplicate() -> None:
+    world = WORLD.replace("## 世界知识边界", "## Life Texture / Human Appetite\n年轻人会为了自己喜欢的石笛攒钱，哪怕它不提高修为。\n\n## 世界知识边界")
+    result = project_character_life_context(world, life_texture="# LIFE TEXTURE / HUMAN APPETITE\n备用纹理不应重复加入")
+    assert result.count("## Life Texture / Human Appetite") == 1
+    assert "石笛" in result
+    assert "备用纹理不应重复加入" not in result

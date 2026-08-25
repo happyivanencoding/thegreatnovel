@@ -6,6 +6,7 @@ from story_mvp.character_seeds import (
     compose_character_card,
     extract_frozen_power_seed,
     split_character_candidates,
+    split_human_seed_authorities,
 )
 
 
@@ -52,21 +53,54 @@ def test_extract_frozen_power_seed_excludes_biography_and_does_not_backfill_ambi
     assert "不应进入 Power Seed" not in power
     assert "暂不回填" in power
     assert "High-Tier Mutation" in power
+    assert power.splitlines()[0] == "# FROZEN POWER SEED 1｜能力A"
+    assert "甲" not in power
 
 
 def test_new_seed_schemas_restore_ambition_without_story_hooks() -> None:
     assert "High-Tier Mutation" in POWER_SEED_SCHEMA
-    assert "Legendary Trajectory" in POWER_SEED_SCHEMA
+    assert "Legendary Power State" in POWER_SEED_SCHEMA
+    assert "Legendary Trajectory" not in POWER_SEED_SCHEMA
     assert "Future Legend Image" in POWER_SEED_SCHEMA
     assert "Core Obsession" in HUMAN_SEED_SCHEMA
     assert "Excess" in HUMAN_SEED_SCHEMA
-    assert "人物钩子" in HUMAN_SEED_SCHEMA
+    assert "Audition Metadata（非 Canon）" in HUMAN_SEED_SCHEMA
+    assert "Initial State Seed" in HUMAN_SEED_SCHEMA
     assert "named NPC" not in HUMAN_SEED_SCHEMA
 
 
-def test_compose_character_card_does_not_reconcile_authorities() -> None:
-    card = compose_character_card(power_seed="# POWER\n能力：留住半招", human_seed="# HUMAN\n欲望：想出名", index=1)
+def test_split_human_seed_moves_current_desire_and_hook_out_of_core() -> None:
+    human = """# HUMAN SEED CANDIDATE 1｜甲／标签
+## 世界中的初始位置与成长环境
+家庭A。
+## 当前私人欲望
+现在想买船。
+## Core Obsession
+总想去更远。
+## 人物钩子
+他当众烧掉船票。
+"""
+    parts = split_human_seed_authorities(human)
+    assert "现在想买船" not in parts["human_core"]
+    assert "当众烧掉船票" not in parts["human_core"]
+    assert "现在想买船" in parts["initial_state"]
+    assert "当众烧掉船票" in parts["audition_metadata"]
+
+
+def test_compose_character_card_does_not_reconcile_authorities_or_persist_audition() -> None:
+    human = """# HUMAN SEED CANDIDATE 1｜甲／标签
+## 当前私人欲望
+想出名。
+## Core Obsession
+一直想赢。
+## 人物钩子
+公开挑战冠军。
+"""
+    card = compose_character_card(power_seed="# POWER\n能力：留住半招", human_seed=human, index=1)
     assert "能力：留住半招" in card
-    assert "欲望：想出名" in card
+    assert "一直想赢" in card
+    assert "想出名" in card
+    assert "INITIAL CHARACTER STATE" in card
+    assert "公开挑战冠军" not in card
     assert "不解释为什么某段童年象征某种能力" in card
     assert "留给后续 Collision Authority" in card
