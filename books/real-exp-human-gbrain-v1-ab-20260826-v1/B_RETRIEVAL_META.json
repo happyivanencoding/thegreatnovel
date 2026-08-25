@@ -1,0 +1,19 @@
+{
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"character hook\" OR \"protagonist desire\" OR \"behavior signature\"",
+    "\"human appetite\" OR \"relationship gravity\" OR \"character as payoff\""
+  ],
+  "raw_count": 21,
+  "accepted_count": 1,
+  "rejected_count": 11,
+  "final_limit": 3,
+  "effective_query": "\"character hook\" OR \"protagonist desire\" OR \"behavior signature\" OR \"human appetite\" OR \"relationship gravity\"",
+  "accepted": [
+    {
+      "slug": "mechanisms/private-appetite-continuity-v1",
+      "score": 0.2428
+    }
+  ],
+  "gbrain_stats_expected": "Pages 3794 / Chunks 15794 / Embedded 15794"
+}

@@ -1,0 +1,46 @@
+{
+  "A": {
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 114.241,
+    "candidate_count": 4,
+    "candidate_headings": [
+      "# HUMAN CANDIDATE 1｜林砚川／守水田契的人",
+      "# HUMAN CANDIDATE 2｜许潮生／把东西送回岸的人",
+      "# HUMAN CANDIDATE 3｜韩戍／先把责任背在身上的军户子",
+      "# HUMAN CANDIDATE 4｜谢闻璧／被人当作自己的人"
+    ],
+    "chars": 5227,
+    "sha256": "7ca67d002300f6422944f0974c4fc1edd9e98d1b5474236236ec2054fdfd1193",
+    "usage": {
+      "totalTokens": 36828,
+      "inputTokens": 20728,
+      "cachedReadTokens": 9984,
+      "outputTokens": 6116,
+      "thoughtTokens": 2466
+    }
+  },
+  "B": {
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 90.395,
+    "candidate_count": 4,
+    "candidate_headings": [
+      "# HUMAN CANDIDATE 1｜沈渡／把话送到的人",
+      "# HUMAN CANDIDATE 2｜顾迟／舍不得换掉的人",
+      "# HUMAN CANDIDATE 3｜陆闻山／想被留下的人",
+      "# HUMAN CANDIDATE 4｜谢临川／一定要亲眼看过"
+    ],
+    "chars": 5464,
+    "sha256": "7f4373a59a1b87373fdb554310d1ce2ac5dec5559c867a71890e8c1296e3eb39",
+    "usage": {
+      "totalTokens": 35483,
+      "inputTokens": 6342,
+      "cachedReadTokens": 24320,
+      "outputTokens": 4821,
+      "thoughtTokens": 1034
+    }
+  }
+}
