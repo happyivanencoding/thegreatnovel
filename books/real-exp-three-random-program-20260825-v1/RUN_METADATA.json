@@ -1,0 +1,110 @@
+{
+  "baseline": "21ba884",
+  "books": [
+    {
+      "index": 1,
+      "title": "拆禁成刃",
+      "world": {
+        "model": "gpt-5.6-luna",
+        "effort": "high",
+        "wall_seconds": 184.174,
+        "coordinate_reference_count": 1,
+        "creative_slugs": [
+          "mechanisms/story-state-compounding-v3",
+          "mechanisms/world-entry-v3",
+          "mechanisms/world-desire-ladder-v3"
+        ]
+      },
+      "program": {
+        "model": "gpt-5.6-sol",
+        "effort": "high",
+        "wall_seconds": 479.76,
+        "gbrain_slugs": [
+          "mechanisms/plot-engine-variation-v3",
+          "mechanisms/thread-collision-v3",
+          "mechanisms/earned-high-value-acquisition-v3"
+        ],
+        "stage_headings": [
+          "阶段1：从跪城到裂域",
+          "阶段2：裂口不属于旧主人",
+          "阶段3：名字成为猎场",
+          "阶段4：世上本无此路",
+          "阶段5：普通铁刀入天关",
+          "阶段6：两界之间，谁定义不可能"
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "title": "把必然改成选择",
+      "world": {
+        "model": "gpt-5.6-luna",
+        "effort": "high",
+        "wall_seconds": 232.642,
+        "coordinate_reference_count": 1,
+        "creative_slugs": [
+          "mechanisms/story-state-compounding-v3",
+          "mechanisms/world-entry-v3",
+          "mechanisms/world-desire-ladder-v3"
+        ]
+      },
+      "program": {
+        "model": "gpt-5.6-sol",
+        "effort": "high",
+        "wall_seconds": 385.636,
+        "gbrain_slugs": [
+          "mechanisms/plot-engine-variation-v3",
+          "mechanisms/thread-collision-v3",
+          "mechanisms/earned-high-value-acquisition-v3"
+        ],
+        "stage_headings": [
+          "阶段1：从刑台死人到未定之人",
+          "阶段2：旧案必须有人开口",
+          "阶段3：一座城不再只有一种归属",
+          "阶段4：必胜之战重新下注",
+          "阶段5：十万人的第二种结局",
+          "阶段6：终门不再决定唯一时代"
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "title": "以舍弃换登临",
+      "world": {
+        "model": "gpt-5.6-luna",
+        "effort": "high",
+        "wall_seconds": 172.833,
+        "coordinate_reference_count": 1,
+        "creative_slugs": [
+          "mechanisms/story-state-compounding-v3",
+          "mechanisms/world-entry-v3",
+          "mechanisms/world-desire-ladder-v3"
+        ]
+      },
+      "program": {
+        "model": "gpt-5.6-sol",
+        "effort": "high",
+        "wall_seconds": 524.764,
+        "gbrain_slugs": [
+          "mechanisms/plot-engine-variation-v3",
+          "mechanisms/thread-collision-v3",
+          "mechanisms/earned-high-value-acquisition-v3"
+        ],
+        "stage_headings": [
+          "阶段1：碎印出旧界",
+          "阶段2：万相之地",
+          "阶段3：被制造的拥有",
+          "阶段4：白色荒原",
+          "阶段5：诸界定相",
+          "阶段6：永恒之前"
+        ]
+      }
+    }
+  ],
+  "seed": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 146.74,
+    "selection": "candidates 1,2,3 frozen"
+  }
+}

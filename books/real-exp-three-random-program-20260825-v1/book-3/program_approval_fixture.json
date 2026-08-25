@@ -1,0 +1,11 @@
+{
+  "fantasy_seed": {
+    "status": "author_approved",
+    "source": "frozen_candidate",
+    "candidate": 3
+  },
+  "world_vision": {
+    "status": "author_approved",
+    "source": "experiment_auto_advance"
+  }
+}
