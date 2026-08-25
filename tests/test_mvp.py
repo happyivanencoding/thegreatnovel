@@ -25,6 +25,7 @@ from story_mvp.gbrain_retrieval import (
     CREATIVE_PLANNING_FINAL_RESULT_LIMIT,
     EMPTY_RESULT,
     FINAL_RESULT_LIMIT,
+    PLANNING_CANDIDATE_INSPECTION_LIMIT,
     RAW_RESULT_LIMIT,
     QUERY_RECALL_LIMIT,
     _forbidden_terms,
@@ -1858,8 +1859,12 @@ def test_planning_retrieval_uses_hidden_keyword_aliases_without_query_embedding(
         query_func=fake_query,
         page_func=lambda _slug: _page("Mechanism", "世界扩张每一层都新增读者想进入、想获得或想知道的具体欲望。"),
     )
-    assert seen == ['"world fantasy" OR "world entry" OR "narrative compounding"']
+    assert seen == [
+        '"world fantasy" OR "world entry" OR "narrative compounding"',
+        '"reader coordinates" OR "progression scale" OR "action space scale" OR "expectation ladder" OR "core advantage" OR "world compatibility" OR "power scale" OR "threat scale"',
+    ]
     assert result["query_strategy"] == "planning_keyword_aliases"
+    assert result["query_texts"] == seen
     assert "看见别人看不见的路" in result["retrieval_brief"]
     assert result["accepted_count"] == 1
     assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
@@ -2020,9 +2025,10 @@ def test_story_program_keyword_fallback_merges_craft_and_reward_queries(monkeypa
         query_func=fake_query,
         page_func=pages.__getitem__,
     )
-    assert len(seen) == 2
+    assert len(seen) == 3
     assert any("plot engine variation" in q for q in seen)
     assert any("reward opportunity" in q for q in seen)
+    assert any("longitudinal thread" in q for q in seen)
     assert [item["slug"] for item in result["accepted"]] == [
         "mechanisms/plot", "mechanisms/thread", "mechanisms/reward"
     ]
@@ -2139,7 +2145,7 @@ def test_raw_result_limit_applies_to_novel_candidates_only() -> None:
         return _page("Evidence", "不属于可提取的抽象区块。")
 
     result = retrieve_gbrain(
-        mode="idea",
+        mode="chapter",
         book_content="都市成长故事",
         query_func=lambda _query, **_kwargs: raw,
         page_func=fake_get,
@@ -2297,13 +2303,82 @@ def test_application_and_final_limits_bound_overlong_cli_output() -> None:
         return _page("Mechanism", f"抽象材料 {slug}")
 
     result = retrieve_gbrain(mode="idea", book_content="现实世界；无超自然", query_func=fake_query, page_func=fake_get)
-    assert result["raw_count"] == 40
+    assert result["raw_count"] == 60
     assert result["unique_raw_count"] == 20
-    assert result["requested_limit"] == RAW_RESULT_LIMIT
+    assert result["requested_limit"] == PLANNING_CANDIDATE_INSPECTION_LIMIT
     assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
     assert result["accepted_count"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
     assert len(calls) == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
-    assert sum(item["reason"] == "超过小说候选数量上限" for item in result["rejected"]) == 12
+    assert sum(item["reason"] == "超过小说候选数量上限" for item in result["rejected"]) == 8
+
+
+def test_planning_query_batches_round_robin_preserve_multiple_retrieval_intents(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    def fake_query(query: str, **_kwargs) -> str:
+        if "world fantasy" in query:
+            return "\n".join(
+                f"[{0.99 - index / 100:.2f}] mechanisms/general-{index} -- general"
+                for index in range(8)
+            )
+        if "reader coordinates" in query:
+            return (
+                "[0.80] syntheses/reader-coordinates -- reader coordinates\n"
+                "[0.70] mechanisms/world-compatibility -- compatibility"
+            )
+        return ""
+
+    result = retrieve_gbrain(
+        mode="world_vision",
+        fantasy_seed="已批准幻想",
+        query_func=fake_query,
+        page_func=lambda slug: _page("Mechanism", f"{slug} 的可迁移抽象。"),
+    )
+
+    visible = [item["slug"] for item in result["raw_results"]]
+    assert visible[:4] == [
+        "mechanisms/general-0",
+        "syntheses/reader-coordinates",
+        "mechanisms/general-1",
+        "mechanisms/world-compatibility",
+    ]
+    assert result["accepted_count"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+    assert [item["slug"] for item in result["accepted"]] == visible[:3]
+    assert result["requested_limit"] == PLANNING_CANDIDATE_INSPECTION_LIMIT
+
+
+def test_planning_multi_intent_query_tolerates_one_optional_query_failure(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    def fake_query(query: str, **_kwargs) -> str:
+        if "reader coordinates" in query:
+            raise GBrainQueryError("secondary intent unavailable")
+        return "[0.99] mechanisms/world-entry -- world entry"
+
+    result = retrieve_gbrain(
+        mode="world_vision",
+        fantasy_seed="已批准幻想",
+        query_func=fake_query,
+        page_func=lambda _slug: _page("Mechanism", "世界入口改变下一步行动空间。"),
+    )
+    assert result["accepted_count"] == 1
+    assert len(result["query_failures"]) == 1
+    assert "reader coordinates" in result["query_failures"][0]["query"]
+
+
+def test_planning_multi_intent_query_still_surfaces_total_gbrain_failure(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    def fail_query(_query: str, **_kwargs) -> str:
+        raise GBrainQueryError("gbrain unavailable")
+
+    with pytest.raises(GBrainQueryError, match="gbrain unavailable"):
+        retrieve_gbrain(
+            mode="world_vision",
+            fantasy_seed="已批准幻想",
+            query_func=fail_query,
+            page_func=lambda _slug: "",
+        )
 
 
 def test_story_program_uses_cross_book_patterns_while_outline_keeps_source_specific_arcs() -> None:

@@ -51,7 +51,7 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 | 阶段 | 当前默认 | 为什么 |
 |---|---|---|
 | Fantasy Seed | GPT-5.6 Luna high | 幻想抽象强、速度合理；此阶段 GBrain OFF，避免参考库过早锚定核心创意 |
-| World Vision | GPT-5.6 Luna high | 擅长把核心幻想转成世界欲望、力量体验与进入更大世界的理由 |
+| World Vision | GPT-5.6 Luna high | 擅长把核心幻想展开成具体世界事实、读者可用坐标、力量体验与进入更大世界的理由 |
 | Story Program | GPT-5.6 Sol high | 当前 Sol 最值得发挥的位置：长期玩法变异、人物自主性、敌人策略、关系回流、Thread Ecology、Reward 变化 |
 | Outline | GPT-5.6 Luna high | 能高质量执行正确 Program，把长期结构落实成故事锚点而不过度膨胀 |
 | Director | GPT-5.6 Luna high | Balanced 默认；质量与 Terra high 接近但成本更低，最低延迟模式可切 Terra high |
@@ -146,11 +146,14 @@ GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks
 
 1. 始终生成并展示中文 BOOK-aware Retrieval Brief；
 2. 如果 semantic query 可用，后端直接使用完整 brief；
-3. 如果不可用，规划节点后端内部使用少量英文 OR aliases；
-4. 用户手工编辑查询时，手工 query 永远优先；
-5. 返回给 LLM 的 `可用抽象` 仍来自卡片中文 Mechanism/Guidance 等正文，不把英文 aliases 注入 Prompt。
+3. 如果不可用，World Vision / Story Program / Outline 使用 2–3 组互补的内部 retrieval intents，而不是把越来越大的 GBrain 压成一个关键词 query；每组仍只做 bounded recall；
+4. 多 intent 结果按 round-robin 合并再去重，防止第一组 query 独占候选窗口；规划阶段最多检查 12 个候选，但最终注入仍保持 World 3、Program 3、Outline 最多 5；单个可选 intent 查询失败时保留其它结果，只有全部查询失败才向上报告 GBrain 错误；
+5. 用户手工编辑查询时，手工 query 永远优先；
+6. 返回给 LLM 的 `可用抽象` 仍来自卡片中文 Mechanism/Guidance 等正文，不把英文 aliases 注入 Prompt。
 
 这是一层确定性 fallback，不新增 LLM、reranker、Agent 或 Hard Gate。
+
+原则是 **wide recall, narrow context**：GBrain 变大以后优先提高候选覆盖与意图多样性，不同步扩大最终 Prompt 中的 inspiration 数量。
 
 ## Prose Craft v1
 
@@ -182,3 +185,17 @@ Terra Source Fidelity 的最终权威链是 **direct raw-source audit → Requir
 TGN retrieval regression 通过：SP01 仍以 `plot-engine-variation` 为首，SP02 仍由 `thread-collision / sacrifice-convergence` 主导，SP03 仍是 `reunion / departure / character-autonomy`，OL01 `thread-ecology` 第1，WV01 `world-desire-ladder / world-entry` 第1/2；只有明确询问“敌人怎样学习并反制”时，新 `opponent-learning` 升到第1。reference-only syntheses 被 `active_inspiration: false` 正确过滤。
 
 完整本地报告：`reference-corpus/operations/gbrain-story-craft-v3/expansion-batch-d-20260824/FINAL_BATCH_D_REPORT_20260824.md`。
+
+## Planning Recall Widening（2026-08-25）
+
+随着 source-specific Book/Arc、Reward、Thread、Reader Coordinates 等蒸馏材料增加，规划阶段继续保持最终注入 **World 3 / Story Program 3 / Outline 最多 5**，只扩大内部候选覆盖。当前无 query embedding 的 keyword fallback 为：World Vision 2 组互补 intent，Story Program 3 组，Outline 3 组；每组 `QUERY_RECALL_LIMIT=24`，多组结果 round-robin 合并并按 slug 去重，规划阶段最多检查 12 个候选。
+
+同一 `real-exp-system-eval14-v1` 输入的本地 regression：
+
+- World Vision：候选 `12 → 13`，最终仍 `3/3`，保持 `story-state-compounding / world-entry / world-desire-ladder`；
+- Story Program：候选 `5 → 7`，最终仍 `3/3`，从偏 Thread 的组合扩成 `plot-engine-variation / thread-collision / earned-high-value-acquisition`，Reward intent 能稳定进入竞争；
+- Outline：候选 `6 → 25`，最终 `4/5 → 5/5`，覆盖 Thread、Reunion/Departure、Action Space、Hidden Identity 等互补方向；
+- 新的 Reader Coordinates cross-book synthesis 能被宽召回发现，但因 `active_inspiration: false` 仍不会进入最终 Prompt，REFERENCE_ONLY 边界保持有效；
+- 当前 GBrain runtime 检查为 `3786 Pages / 15783 Chunks / 15783 Embedded`，embedding debt 为 0。
+
+这次没有新增 LLM、reranker、Agent 或 Hard Gate。单次本地三阶段 retrieval 观察到 wall-clock 从约 11 秒上升到约 14 秒，属于更多本地 query/page read 的成本；最终 LLM 上下文上限不变。

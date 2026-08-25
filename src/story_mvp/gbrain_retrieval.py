@@ -9,6 +9,7 @@ from .gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, get_gbrain, query_gbra
 
 
 RAW_RESULT_LIMIT = 8
+PLANNING_CANDIDATE_INSPECTION_LIMIT = 12
 # Hermes query scope selects the novel distilled domain before candidate limits.
 QUERY_RECALL_LIMIT = 24
 FINAL_RESULT_LIMIT = 5
@@ -50,9 +51,19 @@ PLANNING_KEYWORD_QUERIES = {
 }
 
 PLANNING_KEYWORD_QUERY_BATCHES = {
+    "world_vision": (
+        '"world fantasy" OR "world entry" OR "narrative compounding"',
+        '"reader coordinates" OR "progression scale" OR "action space scale" OR "expectation ladder" OR "core advantage" OR "world compatibility" OR "power scale" OR "threat scale"',
+    ),
     "idea": (
-        '"plot engine variation"',
-        '"thread ecology" OR "reward opportunity"',
+        '"plot engine variation" OR "gameplay counterplay"',
+        '"thread ecology" OR "longitudinal thread" OR "thread collision"',
+        '"reward opportunity"',
+    ),
+    "outline": (
+        '"thread collision" OR "hidden identity reveal"',
+        '"departure vacancy" OR "reunion reentry" OR "sacrifice convergence"',
+        '"reward recontextualization" OR "action space" OR "public proof"',
     ),
 }
 
@@ -418,6 +429,32 @@ def dedupe_query_hits_by_slug(hits: list[dict[str, Any]]) -> list[dict[str, Any]
     return unique
 
 
+def merge_query_hit_batches_round_robin(
+    batches: list[list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    """多检索意图按轮转合并，避免第一个 query 独占候选池。"""
+
+    positions = [0 for _ in batches]
+    seen: set[str] = set()
+    merged: list[dict[str, Any]] = []
+    while True:
+        added_or_advanced = False
+        for batch_index, batch in enumerate(batches):
+            while positions[batch_index] < len(batch):
+                hit = batch[positions[batch_index]]
+                positions[batch_index] += 1
+                added_or_advanced = True
+                slug = str(hit.get("slug", "")).strip()
+                if not slug or slug in seen:
+                    continue
+                seen.add(slug)
+                merged.append(hit)
+                break
+        if not added_or_advanced:
+            break
+    return merged
+
+
 def source_category(slug: str) -> str:
     return slug.split("/", 1)[0].strip().lower()
 
@@ -612,18 +649,30 @@ def retrieve_gbrain(
         if query_strategy == "planning_keyword_aliases"
         else (effective_query,)
     )
-    stdout_parts = [
-        query_runner(
-            query_text,
-            limit=QUERY_RECALL_LIMIT,
-            detail="medium",
-            scope=query_scope,
-        )
-        for query_text in query_texts
-    ]
+    stdout_parts: list[str] = []
+    query_failures: list[dict[str, str]] = []
+    first_query_error: GBrainQueryError | None = None
+    for query_text in query_texts:
+        try:
+            stdout_parts.append(
+                query_runner(
+                    query_text,
+                    limit=QUERY_RECALL_LIMIT,
+                    detail="medium",
+                    scope=query_scope,
+                )
+            )
+        except GBrainQueryError as error:
+            if first_query_error is None:
+                first_query_error = error
+            stdout_parts.append("")
+            query_failures.append({"query": query_text, "error": str(error)})
+    if query_texts and len(query_failures) == len(query_texts) and first_query_error is not None:
+        raise first_query_error
     stdout = "\n".join(part for part in stdout_parts if part)
-    parsed = parse_query_results(stdout)
-    unique_hits = dedupe_query_hits_by_slug(parsed)
+    parsed_batches = [parse_query_results(part) for part in stdout_parts]
+    parsed = [hit for batch in parsed_batches for hit in batch]
+    unique_hits = merge_query_hit_batches_round_robin(parsed_batches)
     constraints = extract_hard_constraints(
         creative_direction,
         fantasy_seed,
@@ -651,10 +700,15 @@ def retrieve_gbrain(
             continue
         novel_candidates.append(hit)
 
-    visible = novel_candidates[:RAW_RESULT_LIMIT]
+    candidate_limit = (
+        PLANNING_CANDIDATE_INSPECTION_LIMIT
+        if mode in {"world_vision", "idea", "outline"}
+        else RAW_RESULT_LIMIT
+    )
+    visible = novel_candidates[:candidate_limit]
     rejected.extend(
         {"slug": hit["slug"], "reason": "超过小说候选数量上限"}
-        for hit in novel_candidates[RAW_RESULT_LIMIT:]
+        for hit in novel_candidates[candidate_limit:]
     )
     accepted: list[dict[str, Any]] = []
     genre_prior_count = 0
@@ -709,6 +763,7 @@ def retrieve_gbrain(
         "effective_query": effective_query,
         "query_strategy": query_strategy,
         "query_texts": list(query_texts),
+        "query_failures": query_failures,
         "retrieval_brief": retrieval_brief,
         "query_scope": query_scope,
         "hard_constraints": constraints,
@@ -719,7 +774,7 @@ def retrieve_gbrain(
         "genre_prior_count": genre_prior_count,
         "rejected_count": len(rejected),
         "query_limit": QUERY_RECALL_LIMIT,
-        "requested_limit": RAW_RESULT_LIMIT,
+        "requested_limit": candidate_limit,
         "final_limit": final_limit,
         "raw_stdout": stdout,
         "novel_candidates": novel_candidates,

@@ -517,7 +517,7 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 - GBrain OFF 已经能产出合格规划；
 - GBrain v3 ON 的主要增益集中在 **Story Program 与 Outline**：更早换 Plot Engine、人物更有自主目标、长中短线更完整、高价值获得更自然，并能把一个完整中期故事单位规划到约 60—70 章；
 - ON 没有观察到明显的输出膨胀或可见延迟负担；
-- 当前 **3 / 3 / 4（最多5）条** 的 focused inspiration 已经有效，不应因为有效就扩成每层十几张卡。
+- 当前 **3 / 3 / 4（最多5）条** 的 focused inspiration 已经有效，不应因为 GBrain 变大就同步扩大最终上下文；规划检索采用 **wide recall, narrow context**：World / Program / Outline 用互补 retrieval intents 扩候选覆盖，round-robin 去重后最多检查 12 个候选，再收敛回现有 3 / 3 / 5 上限。
 
 因此当前默认不是“让 GBrain 替模型想故事”，而是：**先让强模型拥有自己的创作，再用少量高质量 GBrain 提醒它不要忘记长篇还需要玩法换挡、线程生态、奖励复利和人物回流。**
 
