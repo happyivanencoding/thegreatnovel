@@ -1,0 +1,226 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "world_vision",
+  "effective_query": "\"world fantasy\" OR \"world entry\" OR \"narrative compounding\"",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"world fantasy\" OR \"world entry\" OR \"narrative compounding\"",
+    "\"reader coordinates\" OR \"progression scale\" OR \"action space scale\" OR \"expectation ladder\" OR \"core advantage\" OR \"world compatibility\" OR \"power scale\" OR \"threat scale\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：world_vision\n作者当前方向：生成完全新的成熟中文男频成长长篇，不复用本项目此前实验里的具体主角、金手指、世界名、组织名或故事。优先强烈的“我也想拥有”感、主角主动性、具体获得、可持续玩法、丰富世界与长期追读欲。候选之间必须在“主角反复做什么、转化/利用什么、得到什么、怎样继续变强”上真正不同；不要为了差异而先设哲学主题。题材可自然落在玄幻、仙侠、高武、东方奇幻等适合方向。\n已批准 Fantasy Seed：\n## 候选3：百炼战躯\n\n### 核心幻想\n\n主角的身体能够把真正承受过的致命伤，转化成永久适应。他被火烧过，身体就能逐渐耐受更高温度；被重力压碎过，骨骼就会变得更适合承受巨力；被某种剑意斩伤过，身体便能留下对这种剑意的抵抗。\n\n### 主角最强欲望\n\n开局驱动力：他想摆脱被人一击便能杀死的废弱身体，亲手打败曾经毁掉家人的仇敌。长期追逐：即使仇人死去，他仍会主动寻找不同体系的强者、危险秘境和极限环境，让自己拥有能够与任何敌人正面搏杀的战躯。\n\n### 力量占有欲\n\n读者会想拥有一种“挨过一次，就不会永远怕它”的身体。第一次使用时，主角不是立刻无敌，而是在被毒火灼穿肺腑后，第二次面对同样的火焰时，能多走出十丈、握住原本碰不到的宝物。伤势、疼痛和濒死经历会直接转化成下一次行动的收益。\n\n### 第一次标志性奇观\n\n主角被仇敌打入熔岩湖底，皮肤寸寸裂开。数日后，他从熔岩中站起，伸手按住仇敌再次劈来的火刀，掌心冒烟，却没有被斩断；他借着这一瞬间贴近对方，一拳击碎对方的胸甲。\n\n### 长期增长发动机\n\n主角反复面对不同类型的极限敌人和环境，主动选择哪些危险值得承受，哪些伤势必须规避，并把活下来的经历转化为新的身体能力。每轮会留下永久的抗性、感知、力量、速度、恢复能力或特殊战斗习惯。已有适应让他能进入更危险的地方、挑战更怪异的对手；而敌人也会发现，第一次有效的杀招往往只能杀他一次。\n\n### 非对称优势\n\n别人需要多年修炼才能适应一种力量，主角只要在关键时刻活下来，身体就会留下真实改变。多次使用后，他可以把不同适应组合起来：耐火让他进入火域，强化骨骼让他承受重力，再用新获得的感知捕捉高速敌人的动作。优势会从被动挨打，逐步变成他主动挑选危险、设计战斗和逼迫自身突破的手段。\n\n### 第一次主动兑现\n\n主角主动引诱仇家进入一座寒煞矿洞，先用身体承受寒煞侵袭，逼出自己的第一次寒抗，再借矿洞地形拖垮对方。他夺走仇家的身份令牌和一枚珍贵丹药，也让自己的身体第一次具备对寒煞的永久适应。\n\n### 早期兑现（约10章）\n\n主角在无法通过的毒沼中反复试探，最终以重伤为代价穿过沼泽，救出一名掌握炼体秘法的少女。毒沼没有杀死他，反而让他获得基础毒抗；少女则成为他进入更高层修炼地的第一位真正同伴。\n\n### 稳定循环（约30章）\n\n主角已经经历火、寒、重压和毒素四种不同考验，身体留下明显但不万能的改变。他开始根据敌人的力量类型选择战场，也知道某些伤势无法靠适应弥补，必须用武器、同伴或计谋解决。每次挑战都同时带来新的身体收益和新的战斗风险。\n\n### 中期里程碑\n\n主角主动进入“万杀台”，连续承受七名不同体系强者的杀招，并在最后一战中击败曾经一招重创他的仇敌。他没有恢复成原来的身体，而是彻底拥有一副能够在多种力量环境中战斗的百炼战躯；这场战斗也让所有人知道，他越是被逼入绝境，越不能用同一种…\n明确硬约束：未检测到明确题材硬约束\nWorld Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不改写已批准 Fantasy Seed。",
+  "query_scope": "book-dna,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 28,
+  "unique_raw_count": 13,
+  "novel_candidate_count": 12,
+  "accepted_count": 3,
+  "coordinate_reference_count": 1,
+  "coordinate_reference": {
+    "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+    "type": "synthesis",
+    "score": 1.0,
+    "abstract": "Guidance：World Vision 使用两类坐标。第一类是**世界前台尺**：至少建立一把当前主尺，生产注入优先从 `POWER / TECHNIQUE / THREAT / STATUS / VALUE / WORLD` 中选择；题材明显依赖装备/法宝或天赋上限时，可条件性加入 `GEAR_ARTIFACT / POTENTIAL_CEILING` 校准。它们回答“现在谁能做到什么、差距造成什么结果、什么东西真值、下一层世界有什么”。第二类是**读者体验 / 故事校准尺**：`ACTION_SPACE / MYSTERY_DEPTH / EXPECTATION_LADDER / IMPACT`（必要时 `REACH`）仍然必须真实参与生产设计，但只作为作者侧坐标——分别投影成“成长后多能做哪件以前做不到的事”“哪个旧锚点仍有可回收的更深解释”“下一层已经看得见但尚未取得的具体人/物/地点/能力/身份”“一次行动实际改变多少人物、关系、地点、阵营或世界状态”。它们不得变成世界内部正式术语、资源名、势力理念或主题命题。`TEMPORAL_SCALE` 继续 HOLD。不要逐项填满，也不要建立战力数据库。",
+    "transfer_boundary": ""
+  },
+  "coordinate_reference_error": "",
+  "genre_prior_count": 0,
+  "rejected_count": 9,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 3,
+  "raw_stdout": "[0.2793] syntheses/reader-facing-world-coordinates-batch-d-v3 -- # Retrieval Aliases\n读者坐标；世界可读坐标；力量尺；战力尺；境界尺；武技尺；技法尺；装备尺；法宝尺；神兵尺；潜力尺；资质尺；血脉上限；威胁尺；身份地位尺；价值尺；行动空间尺；世界\n[0.2793] syntheses/reader-facing-world-coordinates-batch-d-v3 -- MERGE\n- supporting books/evidence\n  - 新专项：吞噬的传承／羽翼层级、完美的十万斤与仙古路径、星辰的未完成功法和遗迹资格。\n  - 经典 raw-gap：斗破\n[0.1878] mechanisms/story-state-compounding-v3 -- Retrieval aliases: story state compounding irreversible story state asset to state conversion capabi\n[0.1418] book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3 -- # Evidence Coverage\n- 开篇：第1–5章、第10章、第46–50章、第73–79章。\n- 前中期：第200章、第399–405章、第478章、第500章。\n- 中后期：第60\n[0.1418] book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3 -- **第46章 / L10817–10839**：普洱揭示艾伦家族与“血脉之外的传承”。  \n13. **第50章 / L11864–11875**：信仰选择被放进相亲和普通生活的谈话中。  \n14\n[0.1404] book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3 -- # Evidence Coverage\n覆盖窗口：\n- 开篇：第001—004章，`L19-L451`\n- 玩家机制建立：第054—063章，`L4100-L4823`\n- 公测与海蓝星主线：\n[0.1404] book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3 -- # Evidence Coverage\n抽样覆盖：\n- 开篇：第一章至第六十四章，L20-L5455。\n- 前中期：地书、桑泊、案件与身份试探，L6194-L8600、L10075-L10380\n[0.1404] mechanisms/world-entry-v3 -- Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo\n[0.1374] book-dna/rcv0-41-xuanhuan-mushenji-story-craft-v3 -- 早期禁忌 → 更大世界入口\n“天黑别出门”先是村规，后来变成暗界入口，终局又变成成道者对小宇宙生灵的保护警告（第 1、81、1834 章）。\n## 2. 小物件 → 身世与世界坐标\n玉佩从出生物\n[0.1374] book-dna/rcv0-41-xuanhuan-mushenji-story-craft-v3 -- # Evidence Coverage\n覆盖窗口：\n- 开篇：第 1–4、7–9、17–25 章。\n- 前中期：第 45–94、150–264 章。\n- 中期：第 500–675 章。\n- \n[0.1374] mechanisms/world-desire-ladder-v3 -- Retrieval aliases: world fantasy reader desire ladder world expansion desire driven progression fant\n[0.1374] book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3 -- # Core Reader Fantasy\n核心读者幻想不是单纯“升级”，而是：\n> 一个六岁时失去母亲、十五岁仍卡在凡俗门槛前的少年，靠一把越来越快的刀、一种别人无法替代的观察方式，逐步变成真正\n[0.1374] book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3 -- # Core Reader Fantasy\n核心读者幻想不是单纯“主角变成最强者”，而是：\n> 一个原本贫穷、普通、缺乏资格的小人物，突然获得一把极易读懂的力量尺；他可以用这把尺确认自己正在变强，\n[0.1374] book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3 -- **第一章 / L11-L85**：方平重生后发现武科报名、八品宗师和宗师榜已经进入普通高中生的日常认知，世界的力量秩序从开篇即公开可见。\n2. **第四章 / L325-L356**：一万元报名费\n[0.1374] book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3 -- # Core Reader Fantasy\n本书的核心幻想是：\n> 一个原本缺钱、体弱、只想过轻松生活的人，凭借一个能把“看见过的能力”转化为宠兽成长的优势，把低估、弱小、普通甚至非战斗型宠兽，逐\n[0.1374] book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3 -- # Core Reader Fantasy\n综合判断：读者持续阅读的核心，不是“主角单纯升级”，而是：\n1. 一个现代普通人被投入真实江湖，从噩梦中的重刀、妖女和血战开始，逐步拥有一条可观察、可验\n[0.1374] book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3 -- 第一章《梦》，L19–54：赵长河反复梦见血战，固定使用重阔刀，并反复被妖女割喉。\n2. 第一章《梦》，L85–122：他明确把“弄死妖女”作为目标，抽到身后眼、位置和线索三张卡。\n3. 第二章《\n[0.3436] syntheses/reader-facing-world-coordinates-batch-d-v3 -- # Retrieval Aliases\n读者坐标；世界可读坐标；力量尺；战力尺；境界尺；武技尺；技法尺；装备尺；法宝尺；神兵尺；潜力尺；资质尺；血脉上限；威胁尺；身份地位尺；价值尺；行动空间尺；世界\n[0.3436] syntheses/reader-facing-world-coordinates-batch-d-v3 -- - 其余坐标保持后台，不为完整性强行前台化。\n最小充分不意味着信息最少，而意味着没有一把尺只是重复另一把尺的结论。\n## Coordinate Cross-Calibration\n| 常见错位 \n[0.1605] book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3 -- # Evidence Coverage\n- 开篇：第1–5章、第10章、第46–50章、第73–79章。\n- 前中期：第200章、第399–405章、第478章、第500章。\n- 中后期：第60\n[0.1605] book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3 -- **第46章 / L10817–10839**：普洱揭示艾伦家族与“血脉之外的传承”。  \n13. **第50章 / L11864–11875**：信仰选择被放进相亲和普通生活的谈话中。  \n14\n[0.1600] book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3 -- # Evidence Coverage\n抽样覆盖：\n- 开篇：第一章至第六十四章，L20-L5455。\n- 前中期：地书、桑泊、案件与身份试探，L6194-L8600、L10075-L10380\n[0.1600] book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3 -- # Core Reader Fantasy\n本书的核心幻想是：\n> 一个原本缺钱、体弱、只想过轻松生活的人，凭借一个能把“看见过的能力”转化为宠兽成长的优势，把低估、弱小、普通甚至非战斗型宠兽，逐\n[0.1600] book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3 -- # Core Reader Fantasy\n综合判断：读者持续阅读的核心，不是“主角单纯升级”，而是：\n1. 一个现代普通人被投入真实江湖，从噩梦中的重刀、妖女和血战开始，逐步拥有一条可观察、可验\n[0.1600] book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3 -- 第一章《梦》，L19–54：赵长河反复梦见血战，固定使用重阔刀，并反复被妖女割喉。\n2. 第一章《梦》，L85–122：他明确把“弄死妖女”作为目标，抽到身后眼、位置和线索三张卡。\n3. 第二章《\n[0.1600] book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3 -- # Core Reader Fantasy\n核心读者幻想不是单纯“升级”，而是：\n> 一个六岁时失去母亲、十五岁仍卡在凡俗门槛前的少年，靠一把越来越快的刀、一种别人无法替代的观察方式，逐步变成真正\n[0.1600] book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3 -- # Core Reader Fantasy\n核心幻想是：\n> 一个贫穷、体弱、被世界冷落的少年，不靠传统英雄资格，而靠自己的嘴、机灵和不体面的“惹人烦”能力，把别人的情绪转化成资源；他因此获得自由\n[0.1600] book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3 -- 第1章，L12-L37：吕树和吕小鱼因糖葫芦与学费争执，贫困与共同生活立即建立。\n2. 第1章，L42-L69：火焰表演者被黑风衣带走，吕树第一次确认日常世界正在偏离。\n3. 第2章，L84-L9",
+  "novel_candidates": [
+    {
+      "score": 0.1605,
+      "slug": "book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.1878,
+      "slug": "mechanisms/story-state-compounding-v3",
+      "snippet": "Retrieval aliases: story state compounding irreversible story state asset to state conversion capabi"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1404,
+      "slug": "mechanisms/world-entry-v3",
+      "snippet": "Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1374,
+      "slug": "book-dna/rcv0-41-xuanhuan-mushenji-story-craft-v3",
+      "snippet": "早期禁忌 → 更大世界入口"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1374,
+      "slug": "mechanisms/world-desire-ladder-v3",
+      "snippet": "Retrieval aliases: world fantasy reader desire ladder world expansion desire driven progression fant"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1374,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.1605,
+      "slug": "book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.1878,
+      "slug": "mechanisms/story-state-compounding-v3",
+      "snippet": "Retrieval aliases: story state compounding irreversible story state asset to state conversion capabi"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1404,
+      "slug": "mechanisms/world-entry-v3",
+      "snippet": "Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1374,
+      "slug": "book-dna/rcv0-41-xuanhuan-mushenji-story-craft-v3",
+      "snippet": "早期禁忌 → 更大世界入口"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1374,
+      "slug": "mechanisms/world-desire-ladder-v3",
+      "snippet": "Retrieval aliases: world fantasy reader desire ladder world expansion desire driven progression fant"
+    },
+    {
+      "score": 0.16,
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1374,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.1878,
+      "slug": "mechanisms/story-state-compounding-v3",
+      "snippet": "Retrieval aliases: story state compounding irreversible story state asset to state conversion capabi",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：上一阶段结束后，怎样让故事从此多出一些无法简单回到原状的事实？\nMechanism：一种高价值的长篇复利，是让死亡与损失、公开身份、关系换位、人物已经知道的真相、敌我变化、成员资格、家园或世界现实等状态继续影响未来。能力、器物、资源、组织与身份增长同样可以长期保留；当它们改变承诺、他人判断、敌人策略或世界事实时，会进一步形成可持续的故事状态。\nVariants：- 新能力让一段承诺终于获得承认。\n- 器物从工具变成身份/继承条件。\n- 公开使用能力形成无法撤销的社会认知。\n- 关系改变后，原有行动选择永久关闭或新增。\nReader Payoff：读者感觉过去发生的事一直在“压着未来走”，角色无法简单回到第一章重新开始。\nGuidance：阶段结算时优先写清“从此以后哪些选择变了、谁会换策略、哪些关系或知识已不同”。再保留真正会进入下一阶段行动的能力、资源、身份或组织成果。\nFailure Modes：- 阶段结算只写抽象提升，看不出未来选择有什么变化。\n- 重要死亡、身份揭露或关系变化在换地图后失效。\n- 新获得很多，但没有任何一项进入后续冲突。",
+      "transfer_boundary": "迁移“不可回滚故事状态优先”的判断，不禁止资源流、组织建设或系统型题材本身。"
+    },
+    {
+      "score": 0.1404,
+      "slug": "mechanisms/world-entry-v3",
+      "snippet": "Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：怎样让世界扩张来自人物正在经历的故事，而不是突然把主角送去新地图？\nMechanism：世界入口可以是地点，也可以是关系、身份、物件、信息或上一场事件留下的后果。为了救人进入禁区、因为旧身份被揭露进入家族历史、因为误认进入秘密圈层、因为一件旧物重新打开更高规则、因为牺牲/战斗迫使人物接触更大世界，都属于有效入口。\nVariants：- 地点入口：真正需要去到某处。\n- 关系入口：救人、追人、重逢、保护、寻找失踪者。\n- 身份入口：伪装、血脉、真实归属、旧身份回归。\n- 物件入口：一个已经进入故事的东西在新阶段显示更高意义。\n- 信息入口：传闻、日记、群聊、旧史、异常现象。\n- 后果入口：上一阶段的胜利、失败、牺牲、误会或离队直接迫使下一层打开。\nReader Payoff：新世界看起来是“人物自己撞进去的”，旧剧情没有被 reset；读者既想看新地方，也关心旧关系/谜团在新层会怎样变化。\nGuidance：优先让新入口同时改变：角色能看见什么、别人如何理解他、他下一步想追求什么。\nFailure Modes：- 章节到点自动换地图。\n- 新入口和当前人物欲望无关。\n- 旧人物/旧承诺全部留在上一地图。\n- 进入新层后先停止故事解释规则。",
+      "transfer_boundary": "迁移入口类型和因果连接，不迁移源作品具体入口。"
+    },
+    {
+      "score": 0.1374,
+      "slug": "mechanisms/world-desire-ladder-v3",
+      "snippet": "Retrieval aliases: world fantasy reader desire ladder world expansion desire driven progression fant",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：世界怎样越写越大，同时让读者每进入一层都产生新的具体期待？\nMechanism：每次世界扩大都可以新增一种可感知的欲望：想进入某个地方或圈层、想获得某种力量或物件、想成为某种存在、想知道一个旧谜团、想见到此前不可见的人或存在。地理、制度、资源、种族、力量体系都可以成为世界组织方式；关键是新层级要与人物当前欲望和行动发生关系。\nVariants：- 从“异常是否真实”进入第一个秘密圈层。\n- 从“我能不能得到”进入能力/身份获取。\n- 从“我能不能留下”进入公开认可或圈层资格。\n- 从“我以为的世界是否完整”进入身份与世界真相。\n- 从“我想保住谁/什么生活”进入更高规则冲突。\nReader Payoff：读者每进入一层都拥有一个新的具体期待，而核心幻想仍保持同一个欲望内核。\nGuidance：World Vision 可以按本书最自然的方式组织世界。每打开一层时，再检查它给读者增加了什么具体想要、什么新的证明标准，以及人物通过什么事件进入。\nFailure Modes：- 世界名词增加，但人物没有新的追求。\n- 新层只把敌人数字抬高，行动与关系没有变化。\n- 新设定一次解释完，后续缺少可行动的未知。",
+      "transfer_boundary": "迁移“世界层→新欲望→新证明”的结构，不迁移具体学院、序列、书院、群聊或神位设定。"
+    }
+  ],
+  "rejected": [
+    {
+      "slug": "book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-41-xuanhuan-mushenji-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3",
+      "reason": "超过最终数量上限"
+    }
+  ],
+  "result": "### Fixed Coordinate Reference\nsource: syntheses/reader-facing-world-coordinates-batch-d-v3\nrole: World Vision 固定读者坐标参考；不占 creative inspiration 名额\n\n可用抽象：Guidance：World Vision 使用两类坐标。第一类是**世界前台尺**：至少建立一把当前主尺，生产注入优先从 `POWER / TECHNIQUE / THREAT / STATUS / VALUE / WORLD` 中选择；题材明显依赖装备/法宝或天赋上限时，可条件性加入 `GEAR_ARTIFACT / POTENTIAL_CEILING` 校准。它们回答“现在谁能做到什么、差距造成什么结果、什么东西真值、下一层世界有什么”。第二类是**读者体验 / 故事校准尺**：`ACTION_SPACE / MYSTERY_DEPTH / EXPECTATION_LADDER / IMPACT`（必要时 `REACH`）仍然必须真实参与生产设计，但只作为作者侧坐标——分别投影成“成长后多能做哪件以前做不到的事”“哪个旧锚点仍有可回收的更深解释”“下一层已经看得见但尚未取得的具体人/物/地点/能力/身份”“一次行动实际改变多少人物、关系、地点、阵营或世界状态”。它们不得变成世界内部正式术语、资源名、势力理念或主题命题。`TEMPORAL_SCALE` 继续 HOLD。不要逐项填满，也不要建立战力数据库。\n\n使用边界：只使用这张跨书 synthesis 的读者坐标原则，不迁移来源作品表层设定、人物、事件或数值。\n\n### Inspiration 1\nsource: mechanisms/story-state-compounding-v3\ntype: mechanism\nscore: 0.1878\n\n可用抽象：Creative Problem：上一阶段结束后，怎样让故事从此多出一些无法简单回到原状的事实？\nMechanism：一种高价值的长篇复利，是让死亡与损失、公开身份、关系换位、人物已经知道的真相、敌我变化、成员资格、家园或世界现实等状态继续影响未来。能力、器物、资源、组织与身份增长同样可以长期保留；当它们改变承诺、他人判断、敌人策略或世界事实时，会进一步形成可持续的故事状态。\nVariants：- 新能力让一段承诺终于获得承认。\n- 器物从工具变成身份/继承条件。\n- 公开使用能力形成无法撤销的社会认知。\n- 关系改变后，原有行动选择永久关闭或新增。\nReader Payoff：读者感觉过去发生的事一直在“压着未来走”，角色无法简单回到第一章重新开始。\nGuidance：阶段结算时优先写清“从此以后哪些选择变了、谁会换策略、哪些关系或知识已不同”。再保留真正会进入下一阶段行动的能力、资源、身份或组织成果。\nFailure Modes：- 阶段结算只写抽象提升，看不出未来选择有什么变化。\n- 重要死亡、身份揭露或关系变化在换地图后失效。\n- 新获得很多，但没有任何一项进入后续冲突。\n\n使用边界：迁移“不可回滚故事状态优先”的判断，不禁止资源流、组织建设或系统型题材本身。\n\n### Inspiration 2\nsource: mechanisms/world-entry-v3\ntype: mechanism\nscore: 0.1404\n\n可用抽象：Creative Problem：怎样让世界扩张来自人物正在经历的故事，而不是突然把主角送去新地图？\nMechanism：世界入口可以是地点，也可以是关系、身份、物件、信息或上一场事件留下的后果。为了救人进入禁区、因为旧身份被揭露进入家族历史、因为误认进入秘密圈层、因为一件旧物重新打开更高规则、因为牺牲/战斗迫使人物接触更大世界，都属于有效入口。\nVariants：- 地点入口：真正需要去到某处。\n- 关系入口：救人、追人、重逢、保护、寻找失踪者。\n- 身份入口：伪装、血脉、真实归属、旧身份回归。\n- 物件入口：一个已经进入故事的东西在新阶段显示更高意义。\n- 信息入口：传闻、日记、群聊、旧史、异常现象。\n- 后果入口：上一阶段的胜利、失败、牺牲、误会或离队直接迫使下一层打开。\nReader Payoff：新世界看起来是“人物自己撞进去的”，旧剧情没有被 reset；读者既想看新地方，也关心旧关系/谜团在新层会怎样变化。\nGuidance：优先让新入口同时改变：角色能看见什么、别人如何理解他、他下一步想追求什么。\nFailure Modes：- 章节到点自动换地图。\n- 新入口和当前人物欲望无关。\n- 旧人物/旧承诺全部留在上一地图。\n- 进入新层后先停止故事解释规则。\n\n使用边界：迁移入口类型和因果连接，不迁移源作品具体入口。\n\n### Inspiration 3\nsource: mechanisms/world-desire-ladder-v3\ntype: mechanism\nscore: 0.1374\n\n可用抽象：Creative Problem：世界怎样越写越大，同时让读者每进入一层都产生新的具体期待？\nMechanism：每次世界扩大都可以新增一种可感知的欲望：想进入某个地方或圈层、想获得某种力量或物件、想成为某种存在、想知道一个旧谜团、想见到此前不可见的人或存在。地理、制度、资源、种族、力量体系都可以成为世界组织方式；关键是新层级要与人物当前欲望和行动发生关系。\nVariants：- 从“异常是否真实”进入第一个秘密圈层。\n- 从“我能不能得到”进入能力/身份获取。\n- 从“我能不能留下”进入公开认可或圈层资格。\n- 从“我以为的世界是否完整”进入身份与世界真相。\n- 从“我想保住谁/什么生活”进入更高规则冲突。\nReader Payoff：读者每进入一层都拥有一个新的具体期待，而核心幻想仍保持同一个欲望内核。\nGuidance：World Vision 可以按本书最自然的方式组织世界。每打开一层时，再检查它给读者增加了什么具体想要、什么新的证明标准，以及人物通过什么事件进入。\nFailure Modes：- 世界名词增加，但人物没有新的追求。\n- 新层只把敌人数字抬高，行动与关系没有变化。\n- 新设定一次解释完，后续缺少可行动的未知。\n\n使用边界：迁移“世界层→新欲望→新证明”的结构，不迁移具体学院、序列、书院、群聊或神位设定。"
+}

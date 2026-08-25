@@ -1,0 +1,107 @@
+{
+  "selection_rule": "One production Fantasy Seed run; freeze candidates 1/2/3 before downstream. No cherry-pick.",
+  "seed_run": {
+    "wall_seconds": 108.029,
+    "model": "gpt-5.6-luna",
+    "effort": "high"
+  },
+  "books": [
+    {
+      "book": 1,
+      "title": "夺技铸兵",
+      "models": {
+        "seed": "gpt-5.6-luna/high",
+        "world": "gpt-5.6-luna/high",
+        "program": "gpt-5.6-sol/high",
+        "outline": "gpt-5.6-luna/high"
+      },
+      "world": {
+        "wall_seconds": 229.623,
+        "model": "gpt-5.6-luna",
+        "effort": "high",
+        "gbrain_accepted": [
+          "mechanisms/story-state-compounding-v3",
+          "mechanisms/world-entry-v3",
+          "mechanisms/world-desire-ladder-v3"
+        ],
+        "coordinate_reference_count": 1
+      },
+      "program": {
+        "wall_seconds": 685.057,
+        "model": "gpt-5.6-sol",
+        "effort": "high",
+        "gbrain_accepted": [
+          "mechanisms/plot-engine-variation-v3",
+          "mechanisms/thread-collision-v3",
+          "mechanisms/earned-high-value-acquisition-v3"
+        ],
+        "coordinate_reference_count": 0
+      }
+    },
+    {
+      "book": 2,
+      "title": "掌中洞天",
+      "models": {
+        "seed": "gpt-5.6-luna/high",
+        "world": "gpt-5.6-luna/high",
+        "program": "gpt-5.6-sol/high",
+        "outline": "gpt-5.6-luna/high"
+      },
+      "world": {
+        "wall_seconds": 193.414,
+        "model": "gpt-5.6-luna",
+        "effort": "high",
+        "gbrain_accepted": [
+          "mechanisms/story-state-compounding-v3",
+          "mechanisms/world-entry-v3",
+          "mechanisms/world-desire-ladder-v3"
+        ],
+        "coordinate_reference_count": 1
+      },
+      "program": {
+        "wall_seconds": 723.083,
+        "model": "gpt-5.6-sol",
+        "effort": "high",
+        "gbrain_accepted": [
+          "mechanisms/thread-collision-v3",
+          "mechanisms/earned-high-value-acquisition-v3",
+          "mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3"
+        ],
+        "coordinate_reference_count": 0
+      }
+    },
+    {
+      "book": 3,
+      "title": "百炼战躯",
+      "models": {
+        "seed": "gpt-5.6-luna/high",
+        "world": "gpt-5.6-luna/high",
+        "program": "gpt-5.6-sol/high",
+        "outline": "gpt-5.6-luna/high"
+      },
+      "world": {
+        "wall_seconds": 213.725,
+        "model": "gpt-5.6-luna",
+        "effort": "high",
+        "gbrain_accepted": [
+          "mechanisms/story-state-compounding-v3",
+          "mechanisms/world-entry-v3",
+          "mechanisms/world-desire-ladder-v3"
+        ],
+        "coordinate_reference_count": 1
+      },
+      "program": {
+        "wall_seconds": 607.437,
+        "model": "gpt-5.6-sol",
+        "effort": "high",
+        "gbrain_accepted": [
+          "mechanisms/plot-engine-variation-v3",
+          "mechanisms/thread-collision-v3",
+          "mechanisms/earned-high-value-acquisition-v3"
+        ],
+        "coordinate_reference_count": 0
+      }
+    }
+  ],
+  "stopped_at": "Story Program"
+}
