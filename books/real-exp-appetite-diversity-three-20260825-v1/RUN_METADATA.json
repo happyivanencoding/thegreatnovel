@@ -1,0 +1,34 @@
+{
+  "author_direction": "成熟中文男频玄幻/修仙成长长篇。除此之外，不指定核心能力、主角性格、世界结构、资源类型、势力结构、冲突类型、题材子类型或长期主题，由当前 production creative chain 自主生成。",
+  "books": [
+    {
+      "index": 1,
+      "title": "万兵借锋",
+      "world_coordinate_reference_count": 1,
+      "world_creative_count": 3,
+      "program_creative_count": 3,
+      "story_program_stage_count": 6
+    },
+    {
+      "index": 2,
+      "title": "未完之物",
+      "world_coordinate_reference_count": 1,
+      "world_creative_count": 3,
+      "program_creative_count": 3,
+      "story_program_stage_count": 6
+    },
+    {
+      "index": 3,
+      "title": "一句成契",
+      "world_coordinate_reference_count": 1,
+      "world_creative_count": 3,
+      "program_creative_count": 3,
+      "story_program_stage_count": 7
+    }
+  ],
+  "titles": [
+    "万兵借锋",
+    "未完之物",
+    "一句成契"
+  ]
+}
