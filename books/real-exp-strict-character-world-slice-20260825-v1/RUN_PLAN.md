@@ -1,0 +1,1 @@
+1. Run projection tests. 2. Project strict slice from shared world. 3. Verify named hooks excluded. 4. Run one Luna high Character generation with reused Character GBrain. 5. Materialize and compare against previous opportunity-leaking baseline. 6. Do not run Sol unless character layer passes later review.
