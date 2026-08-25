@@ -2403,6 +2403,43 @@ def test_world_vision_fixed_coordinate_reference_does_not_consume_three_creative
     assert result["result"].count("### Inspiration ") == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
 
 
+@pytest.mark.parametrize("mode", ["idea", "outline"])
+def test_world_coordinate_reference_does_not_reenter_downstream_creative_slots(mode: str) -> None:
+    raw = "\n".join(
+        [
+            f"[0.99] {WORLD_COORDINATE_REFERENCE_SLUG} -- reader coordinates",
+            "[0.98] mechanisms/plot-engine-variation-v3 -- plot",
+            "[0.97] mechanisms/thread-collision-v3 -- thread",
+            "[0.96] mechanisms/earned-high-value-acquisition-v3 -- reward",
+        ]
+    )
+    pages = {
+        WORLD_COORDINATE_REFERENCE_SLUG: _page("Guidance", "读者坐标。"),
+        "mechanisms/plot-engine-variation-v3": _page("Mechanism", "换 Plot Engine。"),
+        "mechanisms/thread-collision-v3": _page("Mechanism", "线程碰撞。"),
+        "mechanisms/earned-high-value-acquisition-v3": _page("Mechanism", "高价值获得。"),
+    }
+    result = retrieve_gbrain(
+        mode=mode,
+        fantasy_seed="已批准幻想",
+        world_vision="已批准世界",
+        query_override="manual planning query",
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=pages.__getitem__,
+    )
+    accepted_slugs = [item["slug"] for item in result["accepted"]]
+    assert WORLD_COORDINATE_REFERENCE_SLUG not in accepted_slugs
+    assert accepted_slugs[:3] == [
+        "mechanisms/plot-engine-variation-v3",
+        "mechanisms/thread-collision-v3",
+        "mechanisms/earned-high-value-acquisition-v3",
+    ]
+    assert any(
+        item["slug"] == WORLD_COORDINATE_REFERENCE_SLUG and "不重复占 downstream creative 名额" in item["reason"]
+        for item in result["rejected"]
+    )
+
+
 def test_planning_multi_intent_query_tolerates_one_optional_query_failure(monkeypatch) -> None:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
 

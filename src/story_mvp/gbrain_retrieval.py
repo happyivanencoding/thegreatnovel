@@ -741,7 +741,14 @@ def retrieve_gbrain(
     novel_candidates: list[dict[str, Any]] = []
     rejected: list[dict[str, str]] = []
     for hit in unique_hits:
-        if mode == "world_vision" and hit["slug"] == WORLD_COORDINATE_REFERENCE_SLUG:
+        if hit["slug"] == WORLD_COORDINATE_REFERENCE_SLUG and mode in {"world_vision", "idea", "outline"}:
+            if mode != "world_vision":
+                rejected.append(
+                    {
+                        "slug": hit["slug"],
+                        "reason": "固定 World Coordinate Reference 已由已批准 World Vision 继承，不重复占 downstream creative 名额",
+                    }
+                )
             continue
         category = source_category(hit["slug"])
         if category not in allowed_categories:

@@ -17,8 +17,8 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 
 - `Fantasy Seed`：继续保持隔离，不自动读取 GBrain，先保证核心幻想来自当前作者方向与模型本身。
 - `World Vision`：默认 GBrain ON，固定读取 1 条 Reader Coordinates Reference，再选最多 3 条 creative inspiration；固定坐标参考不占 creative 名额。Coordinate Reference 现在区分两类坐标：世界前台尺（Power / Technique / Threat / Status / Value / World，Gear / Potential 条件性）可以直接变成世界内比较尺度；读者体验/故事尺（Action Space / Expectation Ladder / Mystery Depth / Impact，Reach 条件性）继续真实参与设计，但只投影成具体新行动、新期待、旧锚点纵深和实际影响范围，不变成世界内部术语。creative 仍借鉴 world fantasy / world entry / narrative compounding，全部服从已批准 Fantasy Seed。
-- `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流与 Reward/Opportunity，不能覆盖已批准 Seed / World Vision。
-- `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。
+- `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流与 Reward/Opportunity，不能覆盖已批准 Seed / World Vision。World 的固定 Coordinate Reference 不再作为普通 creative 候选重复进入 Program，避免占用 3 个名额之一。
+- `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。World 的固定 Coordinate Reference 同样不重复进入 Outline creative 候选，坐标语义由已批准 World Vision 继承。
 - `Director`：不负责凭空发明长期大奖励或重新设计 Story Program。
 - `Curator / Primary`：Scene Skills 只控制 HOW TO REALIZE THE SCENE，不改变 Chapter Mission 或 Canon。
 - `State Extraction`：继续用当前 `current_state` 记录重要能力、物品、规则、持有人与状态变化；不新增 Inventory 数据库。
