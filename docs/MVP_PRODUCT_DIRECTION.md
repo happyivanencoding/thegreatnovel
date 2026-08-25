@@ -64,7 +64,7 @@ TGN 最需要避免的不是局部文字不够漂亮，而是核心幻想在层�
 系统必须区分“让世界可信的支撑逻辑”和“这本书真正要让读者追着看的故事发动机”。核心准则是：**Supporting Logic Must Not Automatically Become Story Engine。**
 
 - 世界复杂性不自动成为叙事前景；
-- **World Independence ≠ Narrative Equal Weight**：世界没有主角也有别的故事，不代表每个利益方、制度、税收、土地或治理问题都值得同等叙事权重；世界里还应有无法被金手指直接转换成收益的重要人物、奇观和事件；
+- **World Independence ≠ Narrative Equal Weight**：世界没有主角也有别的故事，不代表每个利益方、制度、税收、土地或治理问题都值得同等叙事权重；世界可以明显偏向核心幻想；风险不在 Theme Park 本身，而在所有人物、冲突与规则都只剩下一次能力使用关卡；
 - **Core Fantasy ≠ Protagonist Life Purpose**：核心幻想必须长期兑现，但不要求每个大型阶段都以能力升级/Counter 为主要阅读满足；
 - **Character Autonomy ≠ Symmetric Stakeholder Power**：自主人物可以真心追随、爱慕、效忠、屈服、背叛或成为死敌，不要求所有关系保持平等谈判；
 - 对手的合理理由不自动成为作者结论，更不自动变成主角长期职责；

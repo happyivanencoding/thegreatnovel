@@ -2641,7 +2641,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "## 世界正在发生的欲望、冲突与机会" in world
     assert "过去获得真正进入下一轮" in world
     assert "世界还有别的故事" in world
-    assert "不要求给所有利益方平均分配戏份" in world
+    assert "世界可以有大量直接服务核心幻想" in world
+    assert "不要求机械保留“与核心优势无关”的配额" in world
     assert "税、土地、治理、迁徙、合同等若只是背景合理性，压到背景" in world
     assert "## 世界资源、利益与机会结构" not in world
     assert "形成自己的构筑、体系、库存、网络、领地、技艺组合、个人规则或其它不可逆积累" not in world
@@ -3134,8 +3135,9 @@ def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose()
     assert "核心优势暂时不能用" in seed
     assert "不要求宏大、悲惨、道德高尚、来自家庭/创伤或永远不变" in seed
     assert "把玩法做得更大" in seed
-    assert "世界只给核心优势“供货”" in world
-    assert "无法被金手指直接转换成收益" in world
+    assert "世界可以明显偏向核心幻想" in world
+    assert "世界被核心能力完全解释" in world
+    assert "所有重要人物只为提供下一次能力用法" in world
     assert "Life / Fantasy / World Engine Braid" in program
     assert "Fantasy Engine 自动吞掉另外两者" in program
     assert "Counterplay 是冲突后果，不是 Boss 的出生理由" in program
@@ -3177,7 +3179,8 @@ def test_world_vision_builds_story_bearing_world_and_desire_economy_before_advan
     assert "世界还有别的故事" in template
     assert "社会治理模型完整" in template
     assert "World Independence ≠ Narrative Equal Weight" in template
-    assert "真实存在 ≠ 值得成为主发动机" in template
+    assert "世界可以明显偏向核心幻想" in template
+    assert "世界被核心能力完全解释" in template
     assert "Desire Economy" in template
     assert "世界前台尺" in template
     assert "Action Space / Expectation Ladder / Mystery Depth / Impact" in template

@@ -112,7 +112,7 @@ Reader Coordinates 因此分成两类：
 必须持续区分：
 
 - **World Complexity ≠ Narrative Focus**：世界可以复杂，某种风险或制度理由可以真实存在，但不自动成为作品主要讨论对象。
-- **World Independence ≠ Narrative Equal Weight**：世界独立只要求没有主角仍有别的故事在发生，不要求税、土地、治理、迁徙、制度和每个利益方都获得同等篇幅；核心幻想、主角人生牵引和当前最馋人的故事对象决定前景权重。世界里还应允许重要人物、奇观和事件无法被金手指直接转换成收益。
+- **World Independence ≠ Narrative Equal Weight**：世界独立只要求没有主角仍有别的故事在发生，不要求税、土地、治理、迁徙、制度和每个利益方都获得同等篇幅；核心幻想、主角人生牵引和当前最馋人的故事对象决定前景权重。世界可以强烈偏向核心幻想并大量提供适合其发挥的强敌、宝物、遗迹与奇观；只要世界不被核心能力完全解释、重要人物不只作为下一次能力关卡存在。
 - **Character Autonomy ≠ Symmetric Stakeholder Power**：人物有自己的欲望，不等于每个人都必须维持平等议价或拒绝追随；效忠、崇拜、爱慕、投靠、屈服、背叛和死敌都可以是自主选择。
 - **Opponent Rationale ≠ Authorial Truth ≠ Protagonist Duty**：对手可以有真实理由，甚至局部是对的；这首先用于制造冲突，不因为主角力量变大就自动推出“主角有义务管理所有人”。
 - **Mechanism Reality ≠ Implementation Detail**：阵法、地形、规则、制作、技术过程可以存在，但只展开足以支撑当前人物选择和结果的部分。
