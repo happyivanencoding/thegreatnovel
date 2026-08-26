@@ -1,0 +1,203 @@
+{
+  "baseline": "real-exp-private-prototype-selector-e2e-20260826-v1",
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "灯群里的失踪船",
+      "chars": 3510
+    },
+    {
+      "chapter": 2,
+      "title": "船腹裂口",
+      "chars": 2685
+    },
+    {
+      "chapter": 3,
+      "title": "一季通行签",
+      "chars": 2556
+    },
+    {
+      "chapter": 4,
+      "title": "剩下的盘缠",
+      "chars": 3109
+    },
+    {
+      "chapter": 5,
+      "title": "温梨要看的火",
+      "chars": 2153
+    }
+  ],
+  "combined_chars": 14083,
+  "calls": [
+    {
+      "stage": "outline",
+      "chapter": null,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 254.604,
+      "sessionId": "01a03e44-1a58-7d03-8c16-076154019463"
+    },
+    {
+      "stage": "director",
+      "chapter": 1,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 28.865,
+      "sessionId": "01a03e48-007f-7e50-97a0-51728a829f83"
+    },
+    {
+      "stage": "curator",
+      "chapter": 1,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 66.204,
+      "sessionId": "01a03e48-729a-7ff0-aa4b-7affb1141751"
+    },
+    {
+      "stage": "primary",
+      "chapter": 1,
+      "model": "gpt-5.6-terra",
+      "effort": "high",
+      "wall_seconds": 63.571,
+      "sessionId": "01a03e49-76af-7cf2-8433-9961d79cb6e8"
+    },
+    {
+      "stage": "state",
+      "chapter": 1,
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "wall_seconds": 21.659,
+      "sessionId": "01a03e4a-70fe-7f92-8cdd-38ffca356f60"
+    },
+    {
+      "stage": "director",
+      "chapter": 2,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 23.074,
+      "sessionId": "01a03e4a-c6f4-7342-b2a1-7e631fe32ef9"
+    },
+    {
+      "stage": "curator",
+      "chapter": 2,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 102.207,
+      "sessionId": "01a03e4b-229d-70d1-9214-8297e7ad7778"
+    },
+    {
+      "stage": "primary",
+      "chapter": 2,
+      "model": "gpt-5.6-terra",
+      "effort": "high",
+      "wall_seconds": 50.758,
+      "sessionId": "01a03e4c-b4dd-7361-a372-ee2d0b1d1ee2"
+    },
+    {
+      "stage": "state",
+      "chapter": 2,
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "wall_seconds": 22.734,
+      "sessionId": "01a03e4d-7b06-7581-bdc4-28bf719cda58"
+    },
+    {
+      "stage": "director",
+      "chapter": 3,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 70.772,
+      "sessionId": "01a03e4d-d54f-7eb0-8bab-db40dcd7d6bd"
+    },
+    {
+      "stage": "curator",
+      "chapter": 3,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 64.891,
+      "sessionId": "01a03e4e-eb87-7c61-8aa7-fc9b2d3185a7"
+    },
+    {
+      "stage": "primary",
+      "chapter": 3,
+      "model": "gpt-5.6-terra",
+      "effort": "high",
+      "wall_seconds": 51.558,
+      "sessionId": "01a03e4f-ea9d-72a1-9ac4-a145151f8a83"
+    },
+    {
+      "stage": "state",
+      "chapter": 3,
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "wall_seconds": 28.559,
+      "sessionId": "01a03e50-b5cc-70c1-a700-3928bc58a9e9"
+    },
+    {
+      "stage": "director",
+      "chapter": 4,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 37.817,
+      "sessionId": "01a03e51-26fa-77e0-8b08-558a8f910d27"
+    },
+    {
+      "stage": "curator",
+      "chapter": 4,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 85.561,
+      "sessionId": "01a03e51-bc38-76f2-a5dc-5763ca97a6ef"
+    },
+    {
+      "stage": "primary",
+      "chapter": 4,
+      "model": "gpt-5.6-terra",
+      "effort": "high",
+      "wall_seconds": 55.587,
+      "sessionId": "01a03e53-0cc7-7e51-baa8-2e0fab2eee57"
+    },
+    {
+      "stage": "state",
+      "chapter": 4,
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "wall_seconds": 26.811,
+      "sessionId": "01a03e53-e78d-7bd1-a546-ab0633d1d0cc"
+    },
+    {
+      "stage": "director",
+      "chapter": 5,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 21.559,
+      "sessionId": "01a03e54-51b2-7151-a10a-acdb3b46c75d"
+    },
+    {
+      "stage": "curator",
+      "chapter": 5,
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 143.219,
+      "sessionId": "01a03e54-a769-7ee2-92c5-ad2b3e2f8d97"
+    },
+    {
+      "stage": "primary",
+      "chapter": 5,
+      "model": "gpt-5.6-terra",
+      "effort": "high",
+      "wall_seconds": 43.56,
+      "sessionId": "01a03e56-d88f-7f32-af87-e4727703de7c"
+    },
+    {
+      "stage": "state",
+      "chapter": 5,
+      "model": "gpt-5.6-luna",
+      "effort": "low",
+      "wall_seconds": 29.718,
+      "sessionId": "01a03e57-8409-7b80-9acb-9452dca4ff64"
+    }
+  ],
+  "total_model_wall_seconds": 1293.288,
+  "pipeline_leak_scan": "PASS"
+}

@@ -1,0 +1,115 @@
+﻿2026-08-26 15:33:19 waiting for outline
+{"outline_chars": 10857, "book_valid": true}
+2026-08-26 15:35:00 outline materialized
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\director_prompt.md
+2026-08-26 15:35:00 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0001\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e48-007f-7e50-97a0-51728a829f83","wall_seconds":28.865,"stopReason":"end_turn"}
+2026-08-26 15:35:29 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\director_acp.json
+{"chapter": 1, "stage": "director", "chars": 682}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\curator_prompt.md
+{"accepted": []}
+2026-08-26 15:35:30 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0001\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e48-729a-7ff0-aa4b-7affb1141751","wall_seconds":66.204,"stopReason":"end_turn"}
+2026-08-26 15:36:36 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\curator_acp.json
+{"chapter": 1, "stage": "curator", "chars": 1949}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\primary_prompt.md
+2026-08-26 15:36:36 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0001\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a03e49-76af-7cf2-8433-9961d79cb6e8","wall_seconds":63.571,"stopReason":"end_turn"}
+2026-08-26 15:37:40 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\primary_acp.json
+{"chapter": 1, "body_chars": 3510}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\state_prompt.md
+2026-08-26 15:37:40 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0001\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a03e4a-70fe-7f92-8cdd-38ffca356f60","wall_seconds":21.659,"stopReason":"end_turn"}
+2026-08-26 15:38:02 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0001\state_acp.json
+{"chapter": 1, "book_chars": 10924}
+2026-08-26 15:38:02 CHAPTER 1 COMPLETE
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\director_prompt.md
+2026-08-26 15:38:02 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0002\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e4a-c6f4-7342-b2a1-7e631fe32ef9","wall_seconds":23.074,"stopReason":"end_turn"}
+2026-08-26 15:38:25 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\director_acp.json
+{"chapter": 2, "stage": "director", "chars": 676}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\curator_prompt.md
+{"accepted": []}
+2026-08-26 15:38:26 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0002\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e4b-229d-70d1-9214-8297e7ad7778","wall_seconds":102.207,"stopReason":"end_turn"}
+2026-08-26 15:40:08 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\curator_acp.json
+{"chapter": 2, "stage": "curator", "chars": 2318}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\primary_prompt.md
+2026-08-26 15:40:08 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0002\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a03e4c-b4dd-7361-a372-ee2d0b1d1ee2","wall_seconds":50.758,"stopReason":"end_turn"}
+2026-08-26 15:40:59 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\primary_acp.json
+{"chapter": 2, "body_chars": 2685}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\state_prompt.md
+2026-08-26 15:40:59 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0002\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a03e4d-7b06-7581-bdc4-28bf719cda58","wall_seconds":22.734,"stopReason":"end_turn"}
+2026-08-26 15:41:22 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0002\state_acp.json
+{"chapter": 2, "book_chars": 11191}
+2026-08-26 15:41:22 CHAPTER 2 COMPLETE
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\director_prompt.md
+2026-08-26 15:41:22 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0003\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e4d-d54f-7eb0-8bab-db40dcd7d6bd","wall_seconds":70.772,"stopReason":"end_turn"}
+2026-08-26 15:42:33 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\director_acp.json
+{"chapter": 3, "stage": "director", "chars": 954}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\curator_prompt.md
+{"accepted": []}
+2026-08-26 15:42:34 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0003\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e4e-eb87-7c61-8aa7-fc9b2d3185a7","wall_seconds":64.891,"stopReason":"end_turn"}
+2026-08-26 15:43:39 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\curator_acp.json
+{"chapter": 3, "stage": "curator", "chars": 1910}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\primary_prompt.md
+2026-08-26 15:43:39 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0003\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a03e4f-ea9d-72a1-9ac4-a145151f8a83","wall_seconds":51.558,"stopReason":"end_turn"}
+2026-08-26 15:44:31 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\primary_acp.json
+{"chapter": 3, "body_chars": 2556}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\state_prompt.md
+2026-08-26 15:44:31 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0003\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a03e50-b5cc-70c1-a700-3928bc58a9e9","wall_seconds":28.559,"stopReason":"end_turn"}
+2026-08-26 15:45:00 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0003\state_acp.json
+{"chapter": 3, "book_chars": 11360}
+2026-08-26 15:45:00 CHAPTER 3 COMPLETE
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\director_prompt.md
+2026-08-26 15:45:00 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0004\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e51-26fa-77e0-8b08-558a8f910d27","wall_seconds":37.817,"stopReason":"end_turn"}
+2026-08-26 15:45:38 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\director_acp.json
+{"chapter": 4, "stage": "director", "chars": 696}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\curator_prompt.md
+{"accepted": []}
+2026-08-26 15:45:38 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0004\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e51-bc38-76f2-a5dc-5763ca97a6ef","wall_seconds":85.561,"stopReason":"end_turn"}
+2026-08-26 15:47:04 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\curator_acp.json
+{"chapter": 4, "stage": "curator", "chars": 2288}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\primary_prompt.md
+2026-08-26 15:47:04 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0004\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a03e53-0cc7-7e51-baa8-2e0fab2eee57","wall_seconds":55.587,"stopReason":"end_turn"}
+2026-08-26 15:48:00 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\primary_acp.json
+{"chapter": 4, "body_chars": 3109}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\state_prompt.md
+2026-08-26 15:48:00 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0004\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a03e53-e78d-7bd1-a546-ab0633d1d0cc","wall_seconds":26.811,"stopReason":"end_turn"}
+2026-08-26 15:48:27 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0004\state_acp.json
+{"chapter": 4, "book_chars": 11508}
+2026-08-26 15:48:27 CHAPTER 4 COMPLETE
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\director_prompt.md
+2026-08-26 15:48:28 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0005\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e54-51b2-7151-a10a-acdb3b46c75d","wall_seconds":21.559,"stopReason":"end_turn"}
+2026-08-26 15:48:49 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\director_acp.json
+{"chapter": 5, "stage": "director", "chars": 529}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\curator_prompt.md
+{"accepted": []}
+2026-08-26 15:48:49 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0005\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a03e54-a769-7ee2-92c5-ad2b3e2f8d97","wall_seconds":143.219,"stopReason":"end_turn"}
+2026-08-26 15:51:13 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\curator_acp.json
+{"chapter": 5, "stage": "curator", "chars": 2385}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\primary_prompt.md
+2026-08-26 15:51:13 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0005\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a03e56-d88f-7f32-af87-e4727703de7c","wall_seconds":43.56,"stopReason":"end_turn"}
+2026-08-26 15:51:57 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\primary_acp.json
+{"chapter": 5, "body_chars": 2153}
+C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\state_prompt.md
+2026-08-26 15:51:57 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-final-novel-20260826-v1\\runs\\chapter-0005\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a03e57-8409-7b80-9acb-9452dca4ff64","wall_seconds":29.718,"stopReason":"end_turn"}
+2026-08-26 15:52:27 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-final-novel-20260826-v1\runs\chapter-0005\state_acp.json
+{"chapter": 5, "book_chars": 11497}
+2026-08-26 15:52:27 CHAPTER 5 COMPLETE
+{"combined_chars": 14022}
+2026-08-26 15:52:27 ALL COMPLETE
