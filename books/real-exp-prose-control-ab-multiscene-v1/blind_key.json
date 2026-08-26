@@ -1,0 +1,18 @@
+{
+  "dialogue": {
+    "X": "OFF",
+    "Y": "ON"
+  },
+  "action": {
+    "X": "OFF",
+    "Y": "ON"
+  },
+  "payoff": {
+    "X": "ON",
+    "Y": "OFF"
+  },
+  "entry": {
+    "X": "OFF",
+    "Y": "ON"
+  }
+}

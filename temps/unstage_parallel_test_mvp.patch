@@ -1,0 +1,23 @@
+diff --git a/tests/test_mvp.py b/tests/test_mvp.py
+index 6bf6b16..c498ee2 100644
+--- a/tests/test_mvp.py
++++ b/tests/test_mvp.py
+@@ -3116,6 +3121,9 @@ def test_protagonist_behavior_signature_is_fixed_upstream_and_drives_choices() -
+     assert "Protagonist Behavior Signature" in seed
+     assert "### 主角欲望人格与行为签名" in seed
+     assert "不要从预设的优秀男主标签库拼人格" in seed
++    assert "稳定的不是固定招式" in seed
++    assert "不可预测不等于随机" in seed
++    assert "不要求每次反套路" in seed
+     assert "不自动修正成“靠谱有底线的优秀男主”" in seed
+     assert "主角欲望人格与行为签名属于创意权威" in world
+     assert "不能为了让主角更成熟、更合理或更容易协调多方利益" in world
+@@ -3184,6 +3192,8 @@ def test_world_vision_builds_story_bearing_world_and_desire_economy_before_advan
+     assert "世界还有别的故事" in template
+     assert "社会治理模型完整" in template
+     assert "World Independence ≠ Narrative Equal Weight" in template
++    assert "拿掉这些对象对主角的直接成长收益" in template
++    assert "专名、制服、组织数量或视觉装饰" in template
+     assert "世界可以明显偏向核心幻想" in template
+     assert "世界被核心能力完全解释" in template
+     assert "Desire Economy" in template

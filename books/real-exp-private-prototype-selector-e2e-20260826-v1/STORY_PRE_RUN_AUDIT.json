@@ -1,0 +1,9 @@
+{
+  "full_world_present": true,
+  "human_present": true,
+  "power_present": true,
+  "prototype_identifier_leaks": {},
+  "collision_contract": true,
+  "prompt_chars": 14305,
+  "prompt_sha256": "d5402d38f3abdb86d467fb133b2ab887b573f58b7d0fc3f1cdd68f80e7fc42cb"
+}

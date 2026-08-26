@@ -1,0 +1,453 @@
+{
+  "ok": true,
+  "label": "world-generalization-exploration-retry",
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "additionalDirectories": [],
+  "wall_seconds": 121.998,
+  "text": "# 世界幻想画像\n\n## 核心幻想不变量\n\n主角永远拥有一种别人无法替代的进入优势：在无人敢去的废弃地点里，听见最后一名活着离开者留下的一分钟声音。\n\n声音只给方向和片段，不直接提供完整答案；真正的爽点来自主角根据残缺线索作出判断，并冒险把失落之物活着带回。\n\n每次进入都必须让世界产生不可回滚的变化：主角得到新的行动空间，某条道路重新出现，某个势力被迫改变判断，或某段被掩埋的世界历史重新影响现实。\n\n成长不是简单变强，而是能进入更危险、更陌生、原本无法被人类理解或往返的区域。\n\n## 主角最强欲望\n\n主角真正想要的是摆脱普通人的封闭命运，进入别人只能远远猜测、却永远无法抵达的地方。\n\n他想找到失落的道路、被世界抹去的地点和不该重新出现的东西，并亲手把它们带回现实，证明那些地方并非只能作为传说存在。\n\n长期而言，他要超越“只能在别人划定的安全范围内活着”的生命状态，成为能够主动选择世界入口的人。\n\n## 主角身份与生命状态跃迁\n\n开局时，主角只是一个没有显赫身份、没有可靠力量、只能依靠胆量和少量经验行动的人。他的优势让他能听见别人听不见的声音，却不能直接替他战斗、逃跑或理解声音背后的全部意义。\n\n早期，他从无人愿意接近的废弃地点中带回小规模但可验证的东西，身份从普通探索者变成“能找到活路的人”。\n\n中期，他不再只是独自进入地点，而是能够决定哪些入口值得开启、哪些道路应当保留、哪些东西不能交给任何势力。更远期，他可能成为连接多个失落世界区域的关键人物，甚至进入普通人无法判断是否仍属于“现实”的地方。\n\n他的终局不必是最高战力，而是成为一个拥有世界入口选择权、能够在未知规则中保持行动能力的人。\n\n## 世界最震撼的三幅画面\n\n第一幅：一座被封死多年的废弃城镇在夜里重新响起声音。主角站在无人敢开的门前，听见最后一个活着离开者从门内经过；声音结束后，门后出现了一条地图上从未存在过的路。\n\n第二幅：所有人都认为某片区域只进不出，主角却带着一个活人和一件改变周边势力格局的遗物走出来。身后那条路随即再次消失，只有他知道它曾经存在。\n\n第三幅：主角进入一片规模远超城镇与国家边界的废弃区域，四周没有天空、方向和熟悉的时间感。某个已经离开很久的人声在整个世界般的空间里响起，却只留下一个极短的转向提示。\n\n## 世界核心规则与力量来源\n\n这个世界的力量不是统一境界表，而是由身体、技艺、工具、经验、身份和地点规则共同决定。\n\n普通人通过训练身体、掌握战斗与求生技艺、使用特殊装备、学习旧地图和跟随有经验的人行动。有人能在普通环境中轻易击败主角，但这不代表他能在废弃地点中活着回来。\n\n废弃地点不是单纯无人居住的房屋，而是原有生活、道路或秩序已经断裂，却仍保留某种异常行为规律的空间。进入者必须面对地点本身的规则：有些地方改变方向，有些地方拒绝重复行动，有些地方会让错误的记忆变成现实。\n\n力量真正影响的是一个人能否承受风险、看懂迹象、携带东西返回，以及能否获得进入某些区域的资格。身份可以带来地图、护送和基本生存条件，但不能替代地点内部的判断。\n\n## 读者可用的世界坐标\n\n本书不使用一到九级或固定境界表，主要用“能否完成什么行动”来判断人物差距。\n\n- 普通人只能在熟悉区域活动；进入浅层废墟也需要照明、食物、绳索、药物和同伴。\n- 受过训练的探索者能处理常见危险，判断简单路径，并从低风险废弃地点返回。\n- 成熟的探路者能在规则异常的区域建立短暂的返回机会，带回同伴或完整物件。\n- 真正的深层探索者不一定战斗最强，但能识别地点的核心限制，在方向、记忆、时间或空间失效时仍作出正确选择。\n- 更高层的废弃区域会让“强者”也失去优势：力量越大只能解决直接冲突，不能保证道路存在、身份有效或出口仍然属于现实。\n\n探索者的正常待遇包括安全住所、基础补给、地图查阅、伤病救治和进入低风险区域的许可。真正稀缺的是可信路线、仍然有效的出口、完整遗物、首次发现权、深层区域的进入资格，以及愿意分享真实经验的幸存者。\n\n世界内真正流通的价值物包括：可验证的路线、失落地点的位置、能改变身体或行动条件的遗物、活着带回的证人、进入某区域的身份凭证、被掩盖的历史和对地点规则的可靠认识。\n\n## 核心优势与普通规则怎样咬合\n\n核心优势真正获得的是一段过去留下的声音，以及声音中有限的方向、动作和片段信息。它不是读取地点全部历史，也不是预知未来，更不能直接复制声音主人的力量。\n\n声音里的脚步、喘息、碰撞、门响和短句可以提供线索，但主角仍必须依靠自己的身体、装备、知识、判断和胆量完成进入与返回。声音真实，却不完整；它能指向一条曾经存在的路，不保证这条路现在仍然安全。\n\n如果目标远高于主角当前能够处理的范围，声音仍可能指出某个关键转向、错误入口或曾经的出口，但不会让主角自动获得承受该区域的能力。高层对象因此仍然令人向往：主角可以知道“哪里可能有路”，却必须先解决自身无法承受的环境、身份和规则风险。\n\n如果某个地点从未有人活着离开，主角就没有可听见的最后一分钟。若地点已经发生变化，过去声音也只能作为历史线索，不能替代当前判断。\n\n## 力量带来的直接体验\n\n主角第一次听见声音时，不会得到完整说明，而是先听见一段与现场毫无关系、却真实存在过的喘息、脚步、短句或环境声。\n\n他会突然知道：某个别人只看见封死墙壁的地方，曾经存在一个出口；某条所有人都认为走不通的路，曾经有人从那里活着离开。\n\n第一次明确收益不是战斗胜利，而是主角在众人无法判断的岔路前做出正确选择，避开最明显的入口，从被忽略的方向进入，并活着带出一件可验证的失落之物。\n\n外界会同时产生敬畏、怀疑和觊觎。有人认为他是骗子，有人想雇佣他，也有人开始担心他听见了不该被留下的东西。\n\n## 力量的升格方向\n\n早期，声音帮助主角在一座建筑、一段地道或一片废墟中找到曾经存在的入口。\n\n中期，声音不再只是帮助他逃生，而是让他重新发现一整条失落道路，使两个原本隔绝的地方重新发生联系。敌人必须从“守住一个地点”转向“控制路线、幸存者和出口信息”。\n\n更远期，主角能够面对区域、城市、山河乃至世界边界级的废弃空间。能力本身未必变成长距离侦察或完整预言，而是因为主角积累了更强的生存判断、路线经验、可信关系和世界位置，使一分钟片段足以改变更大范围的局势。\n\n每次胜利之后，主角下一轮能做的新事应当具体存在：进入此前无法抵达的区域、带出此前无法搬运的对象、让某个势力必须与他谈判，或把一个只存在于声音里的地点变成现实入口。\n\n力量的限制服务于探索玩法：声音有限、过去不等于现在、出口可能消失、带出的东西可能改变追逐者与周围规则。它不需要被机械削弱，只要始终保留“知道一条可能的路”和“能活着走完这条路”之间的差距。\n\n## 世界资源、利益与机会结构\n\n真正能改变行动空间的资源包括：\n\n- 仍然有效的道路和出口；\n- 能让普通装备适应异常环境的遗物；\n- 被地点保存下来的知识与证词；\n- 能证明某地存在过的实体物；\n- 进入封锁区域的身份与许可；\n- 愿意承担风险的同伴；\n- 对某条规则的先手认识；\n- 一个势力无法公开承认、却必须利用的秘密。\n\n不同人物争夺这些东西，是因为路线能改变贸易、逃亡、战争、领地和权力分布；遗物能改变身体与生存条件；证词能推翻某些势力对历史的垄断。\n\n主角的优势把普通人无法高效利用的“残缺线索”变成长期积累。他不只是拿到一件宝物，而是不断增加自己能判断、能进入、能带回和能谈判的范围。\n\n地图扩大后，新区域的价值不只来自更强的宝物，也来自不同的规则、不同的出口逻辑和不同的世界历史。越远的地方，越可能拥有无法在旧区域复制的机会。\n\n## 持续冲突来源\n\n持续冲突主要来自四个方向。\n\n第一是人与人的争夺：探索团体、地方势力、商人、收藏者和统治者都想控制失落路线与带回之物，有人希望利用主角，有人希望让他永远只为自己开路。\n\n第二是信息冲突：幸存者的说法可能互相矛盾，某些地点的真实出口不能公开，主角必须决定把什么告诉谁。\n\n第三是地点本身：废弃区域不会因为被发现就变得安全。道路会消失，规则会改变，带出的东西可能让地点重新寻找现实中的位置。\n\n第四是主角自身的选择：他想探索未知，却可能被迫替某个势力承担责任；他想带东西出来，却必须决定是否牺牲同伴、放弃更大收获，或让另一条道路继续沉睡。\n\n随着尺度升级，冲突会从“谁敢进入一处废墟”发展为“谁拥有一条连接区域的道路”，再发展为“哪些地方应该重新回到世界，哪些地方必须继续被遗忘”。\n\n## 第一次决定性兑现\n\n主角进入一处已经被多次封锁、所有人都认为没有活路的废弃地点。\n\n他听见最后离开者留下的一分钟声音，声音没有说明答案，只让他确认：正门不是出口，真正的方向来自一条被忽视的路径。\n\n主角在安全撤退和继续深入之间作出选择，沿声音指向的方向进入，避开地点最明显的陷阱，最终活着带出一件能够证明失落道路存在的实体物。\n\n他本人得到的不是单纯财富，而是第一次拥有了“别人无法替代的进入资格”。外界因此承认这处地点确实隐藏着道路，也开始有人追踪、拉拢或封锁主角。核心情绪是恐惧之后的确认：他真的能进入别人不敢进入的地方，并把答案带回现实。\n\n## 早期成长锚点与长期升格\n\n### 早期兑现\n\n主角第一次使用声音找到废弃地点中的隐藏入口，并带回可验证的路线凭证或遗物。\n\n这次兑现跨过的门槛不是战胜强敌，而是在声音不完整、地点有真实危险的情况下完成判断、进入和返回。\n\n### 稳定循环\n\n主角逐渐形成可持续的探索循环：\n\n寻找被放弃的地点，确认是否存在可听见的最后离开者；根据一分钟声音选择进入方向；在现场判断过去线索与当前规则的差异；作出继续、撤退或改变目标的决定；最后带回能改变下一次行动的东西。\n\n每次成功都让下一次探索拥有新的选择，而不是简单重复同一套闯关。新的路线会带来新的敌人，新的遗物会改变行动方式，新的幸存者会改变主角对某个地点的理解。\n\n### 中期里程碑\n\n第一个大型阶段的完成，不是主角达到某个境界，而是他重新打开一条被世界彻底抹去的道路，并从道路尽头带回一个原本不可能重新出现的人、物或事实。\n\n这件事不可逆地改变多个势力的利益边界：有人想占据道路，有人想毁掉证据，有人想利用主角继续深入。主角从“能够进入废弃地点的人”变成“能够让失落世界重新影响现实的人”。\n\n### 远期升格方向\n\n长期成立后，核心优势可以触及更大尺度的废弃区域：被遗弃的城市、断裂的疆域、无法确认是否仍在现实中的世界边缘。\n\n主角的变化重点是行动空间和生命状态，而非数值战力。他能在更陌生的规则中保持自我，带回更重大的对象，决定哪些道路被重新开启，并让整个世界不得不重新面对曾经抛弃的部分。\n\n## 神秘、未知与世界入口\n\n读者最想继续探索的未知包括：\n\n- 为什么废弃地点会留下最后一名活着离开的声音；\n- 是否所有废弃地点都曾有人活着离开；\n- 有些声音中的人究竟去了哪里；\n- 失落道路连接的是旧世界、另一片区域，还是某种不再遵守现实规则的地方；\n- 为什么某些势力明明知道道路存在，却宁愿让它继续消失；\n- 当主角听见一个“并非人类”的声音时，它是否也曾拥有活着离开的资格。\n\n世界入口应通过具体行动打开：一次带回的遗物、一名幸存者、一条重新出现的道路、一个被迫承认的地点，而不是通过人物提前解释完整世界真相。\n\n## 核心情绪与读者体验\n\n本书反复兑现三种体验：\n\n1. 恐惧中的判断：所有人都不敢进去时，主角必须在残缺声音与真实危险之间作出选择。\n2. 发现与带回：读者不仅看见未知，还看见主角把未知中的实物、道路或事实带回现实。\n3. 持续扩大自由：每次冒险都让主角以后能进入更多地方、影响更多人，并使下一次探索拥有过去不存在的可能。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 38067,
+      "inputTokens": 21531,
+      "cachedReadTokens": 9984,
+      "outputTokens": 6552,
+      "thoughtTokens": 3106
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 38067,
+          "inputTokens": 21531,
+          "cachedInputTokens": 9984,
+          "outputTokens": 6552,
+          "reasoningOutputTokens": 3106
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 38067,
+              "inputTokens": 21531,
+              "cachedInputTokens": 9984,
+              "outputTokens": 6552,
+              "reasoningOutputTokens": 3106
+            }
+          }
+        ]
+      }
+    }
+  },
+  "session": {
+    "sessionId": "01a034a7-6c19-7a11-9da1-f408c23b6fef",
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "gpt-5.6-sol[low]",
+          "name": "GPT-5.6-Sol (low)",
+          "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-sol[medium]",
+          "name": "GPT-5.6-Sol (medium)",
+          "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-sol[high]",
+          "name": "GPT-5.6-Sol (high)",
+          "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[xhigh]",
+          "name": "GPT-5.6-Sol (xhigh)",
+          "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[max]",
+          "name": "GPT-5.6-Sol (max)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[ultra]",
+          "name": "GPT-5.6-Sol (ultra)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-terra[low]",
+          "name": "GPT-5.6-Terra (low)",
+          "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-terra[medium]",
+          "name": "GPT-5.6-Terra (medium)",
+          "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-terra[high]",
+          "name": "GPT-5.6-Terra (high)",
+          "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[xhigh]",
+          "name": "GPT-5.6-Terra (xhigh)",
+          "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[max]",
+          "name": "GPT-5.6-Terra (max)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[ultra]",
+          "name": "GPT-5.6-Terra (ultra)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-luna[low]",
+          "name": "GPT-5.6-Luna (low)",
+          "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-luna[medium]",
+          "name": "GPT-5.6-Luna (medium)",
+          "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-luna[high]",
+          "name": "GPT-5.6-Luna (high)",
+          "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[xhigh]",
+          "name": "GPT-5.6-Luna (xhigh)",
+          "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[max]",
+          "name": "GPT-5.6-Luna (max)",
+          "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.5[low]",
+          "name": "GPT-5.5 (low)",
+          "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.5[medium]",
+          "name": "GPT-5.5 (medium)",
+          "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.5[high]",
+          "name": "GPT-5.5 (high)",
+          "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.5[xhigh]",
+          "name": "GPT-5.5 (xhigh)",
+          "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[low]",
+          "name": "GPT-5.4 (low)",
+          "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4[medium]",
+          "name": "GPT-5.4 (medium)",
+          "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4[high]",
+          "name": "GPT-5.4 (high)",
+          "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[xhigh]",
+          "name": "GPT-5.4 (xhigh)",
+          "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[low]",
+          "name": "GPT-5.4-Mini (low)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4-mini[medium]",
+          "name": "GPT-5.4-Mini (medium)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4-mini[high]",
+          "name": "GPT-5.4-Mini (high)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[xhigh]",
+          "name": "GPT-5.4-Mini (xhigh)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[low]",
+          "name": "GPT-5.3-Codex-Spark (low)",
+          "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[medium]",
+          "name": "GPT-5.3-Codex-Spark (medium)",
+          "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[high]",
+          "name": "GPT-5.3-Codex-Spark (high)",
+          "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[xhigh]",
+          "name": "GPT-5.3-Codex-Spark (xhigh)",
+          "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+        }
+      ],
+      "currentModelId": "gpt-5.6-luna[low]"
+    },
+    "modes": {
+      "availableModes": [
+        {
+          "id": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "id": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "id": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ],
+      "currentModeId": "read-only"
+    },
+    "configOptions": [
+      {
+        "id": "mode",
+        "name": "Mode",
+        "description": "Approval and sandboxing preset for the session",
+        "category": "mode",
+        "type": "select",
+        "currentValue": "read-only",
+        "options": [
+          {
+            "value": "read-only",
+            "name": "Read-only",
+            "description": "Requires approval to edit files and run commands."
+          },
+          {
+            "value": "agent",
+            "name": "Agent",
+            "description": "Read and edit files, and run commands."
+          },
+          {
+            "value": "agent-full-access",
+            "name": "Agent (full access)",
+            "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+          }
+        ]
+      },
+      {
+        "id": "collaboration_mode",
+        "name": "Collaboration mode",
+        "description": "How Codex collaborates for subsequent turns",
+        "category": "collaboration_mode",
+        "type": "select",
+        "currentValue": "default",
+        "options": [
+          {
+            "value": "default",
+            "name": "Default"
+          },
+          {
+            "value": "plan",
+            "name": "Plan",
+            "description": "Plan before making changes"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "name": "Model",
+        "description": "Model Codex uses for the session",
+        "category": "model",
+        "type": "select",
+        "currentValue": "gpt-5.6-luna",
+        "options": [
+          {
+            "value": "gpt-5.6-sol",
+            "name": "GPT-5.6-Sol",
+            "description": "Latest frontier agentic coding model."
+          },
+          {
+            "value": "gpt-5.6-terra",
+            "name": "GPT-5.6-Terra",
+            "description": "Balanced agentic coding model for everyday work."
+          },
+          {
+            "value": "gpt-5.6-luna",
+            "name": "GPT-5.6-Luna",
+            "description": "Fast and affordable agentic coding model."
+          },
+          {
+            "value": "gpt-5.5",
+            "name": "GPT-5.5",
+            "description": "Frontier model for complex coding, research, and real-world work."
+          },
+          {
+            "value": "gpt-5.4",
+            "name": "GPT-5.4",
+            "description": "Strong model for everyday coding."
+          },
+          {
+            "value": "gpt-5.4-mini",
+            "name": "GPT-5.4-Mini",
+            "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+          },
+          {
+            "value": "gpt-5.3-codex-spark",
+            "name": "GPT-5.3-Codex-Spark",
+            "description": "Ultra-fast coding model."
+          }
+        ]
+      },
+      {
+        "id": "reasoning_effort",
+        "name": "Reasoning effort",
+        "description": "How much reasoning effort the model should use",
+        "category": "thought_level",
+        "type": "select",
+        "currentValue": "low",
+        "options": [
+          {
+            "value": "low",
+            "name": "Low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "value": "medium",
+            "name": "Medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "value": "high",
+            "name": "High",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "value": "xhigh",
+            "name": "Xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "value": "max",
+            "name": "Max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          }
+        ]
+      },
+      {
+        "id": "fast-mode",
+        "name": "Fast mode",
+        "description": "1.5x speed, increased usage",
+        "category": "model_config",
+        "type": "select",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Off",
+            "description": "Default speed, normal usage"
+          },
+          {
+            "value": "on",
+            "name": "On",
+            "description": "1.5x speed, increased usage"
+          }
+        ]
+      }
+    ]
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

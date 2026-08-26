@@ -1,0 +1,66 @@
+{
+  "entry": {
+    "OFF": {
+      "chars": 2486,
+      "paragraphs": 93,
+      "sentences": 125,
+      "abstract_markers": 1,
+      "explanation_patterns": 0
+    },
+    "ON": {
+      "chars": 2234,
+      "paragraphs": 87,
+      "sentences": 115,
+      "abstract_markers": 1,
+      "explanation_patterns": 0
+    }
+  },
+  "action": {
+    "OFF": {
+      "chars": 4694,
+      "paragraphs": 217,
+      "sentences": 282,
+      "abstract_markers": 1,
+      "explanation_patterns": 0
+    },
+    "ON": {
+      "chars": 3613,
+      "paragraphs": 158,
+      "sentences": 210,
+      "abstract_markers": 2,
+      "explanation_patterns": 0
+    }
+  },
+  "reveal": {
+    "OFF": {
+      "chars": 3692,
+      "paragraphs": 133,
+      "sentences": 204,
+      "abstract_markers": 0,
+      "explanation_patterns": 0
+    },
+    "ON": {
+      "chars": 2591,
+      "paragraphs": 92,
+      "sentences": 141,
+      "abstract_markers": 2,
+      "explanation_patterns": 0
+    }
+  },
+  "emotion": {
+    "OFF": {
+      "chars": 3014,
+      "paragraphs": 120,
+      "sentences": 173,
+      "abstract_markers": 1,
+      "explanation_patterns": 0
+    },
+    "ON": {
+      "chars": 3364,
+      "paragraphs": 129,
+      "sentences": 186,
+      "abstract_markers": 0,
+      "explanation_patterns": 1
+    }
+  }
+}

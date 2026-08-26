@@ -1,0 +1,11 @@
+{
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"plot engine variation\" OR \"gameplay counterplay\"",
+    "\"thread ecology\" OR \"longitudinal thread\" OR \"thread collision\"",
+    "\"reward opportunity\""
+  ],
+  "raw_count": 9,
+  "accepted_count": 3,
+  "final_limit": 3
+}

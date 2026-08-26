@@ -54,9 +54,9 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 | 阶段 | 当前默认 | 为什么 |
 |---|---|---|
 | World Vision | GPT-5.6 Luna high | protagonist-blind 建世界：普通生活、正常力量、价值物、独立事件与奇观 |
-| Power Seed | GPT-5.6 Luna high | 以 World Normal 为比较尺生成清楚、可成长、默认偏强的 Power Asymmetry；不强制世界内合法例外；决定 growth grammar |
+| Power Seed | GPT-5.6 Luna high | 以 World Normal 为比较尺生成清楚、可成长、默认偏强的开局 Core Asymmetry；不强制世界内合法例外 |
 | Human Seed | GPT-5.6 Luna high | world-conditioned / power-blind 生成人本身；保留 competing motives 与具体关系变量 |
-| Story Program | GPT-5.6 Sol high | 当前 Sol 最值得发挥的位置：长期玩法变异、人物自主性、敌人策略、关系回流、Thread Ecology、Reward 变化 |
+| Story Program | GPT-5.6 Sol high | 负责长期优势栈：开局优势成长、新 Power Asymmetry 获得与复合，同时处理玩法变异、人物自主、敌人策略和关系回流 |
 | Outline | GPT-5.6 Luna high | 能高质量执行正确 Program，把长期结构落实成故事锚点而不过度膨胀 |
 | Director | GPT-5.6 Luna high | Balanced 默认；质量与 Terra high 接近但成本更低，最低延迟模式可切 Terra high |
 | Curator | GPT-5.6 Luna high | Balanced 默认；继续压短输出合同。若优先最短延迟与更克制输出，可切 Terra medium |

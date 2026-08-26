@@ -1,0 +1,81 @@
+{
+  "chapter_number": 9,
+  "writer_mode": "curator_primary",
+  "run_status": "in_progress",
+  "selected_specialists": [],
+  "final_source": null,
+  "nodes": {
+    "director": {
+      "status": "completed",
+      "attempts": 1,
+      "prompt_file": "director_prompt.md",
+      "response_file": "director_response.md",
+      "prompt_chars": 7750,
+      "response_chars": 799
+    },
+    "curator": {
+      "status": "completed",
+      "attempts": 1,
+      "prompt_file": "curator_prompt.md",
+      "response_file": "curator_response.md",
+      "prompt_chars": 15254,
+      "response_chars": 3406
+    },
+    "primary": {
+      "status": "pending",
+      "attempts": 0,
+      "prompt_file": null,
+      "response_file": null,
+      "prompt_chars": 0,
+      "response_chars": 0
+    },
+    "opening": {
+      "status": "skipped",
+      "attempts": 0,
+      "prompt_file": null,
+      "response_file": null,
+      "prompt_chars": 0,
+      "response_chars": 0
+    },
+    "dialogue": {
+      "status": "skipped",
+      "attempts": 0,
+      "prompt_file": null,
+      "response_file": null,
+      "prompt_chars": 0,
+      "response_chars": 0
+    },
+    "action": {
+      "status": "skipped",
+      "attempts": 0,
+      "prompt_file": null,
+      "response_file": null,
+      "prompt_chars": 0,
+      "response_chars": 0
+    },
+    "emotion": {
+      "status": "skipped",
+      "attempts": 0,
+      "prompt_file": null,
+      "response_file": null,
+      "prompt_chars": 0,
+      "response_chars": 0
+    },
+    "integrator": {
+      "status": "skipped",
+      "attempts": 0,
+      "prompt_file": null,
+      "response_file": null,
+      "prompt_chars": 0,
+      "response_chars": 0
+    },
+    "state_delta": {
+      "status": "pending",
+      "attempts": 0,
+      "prompt_file": null,
+      "response_file": null,
+      "prompt_chars": 0,
+      "response_chars": 0
+    }
+  }
+}

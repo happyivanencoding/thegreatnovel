@@ -1,0 +1,453 @@
+{
+  "ok": true,
+  "label": "private-prototype-selector-collision",
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "additionalDirectories": [],
+  "wall_seconds": 550.344,
+  "text": "# STORY PROGRAM\n\n## 核心碰撞\n\n- 谢临川没有力量也会想离开河港、看陌生城镇、买自己真心喜欢的东西，并在真正有分量的人面前赢一次。分流真元能帮助他获得通行资格和公开胜利，却不能替他决定该留在宗门、跟温梨改道，还是回家接船。\n- 分流真元诱惑他同时保住更多东西：既赢、又救人，既护住同伴、又不放走敌人。可他的真元总量并未增加。越想证明自己不是庸手，他越容易把两条真元都压到极限，在本该放弃一端时继续硬撑。\n- 温梨的身体、手艺和当下回应会真实改变他的路线。她不负责理解他的力量，也不会稳定陪他成长；她有自己的工期、兴趣和去留。谢临川可能为她错过秘境名额，也可能在她选择留下时独自离开。\n- 陆沉舟要军需矿脉，顾青炉要重铸镇器，石晚棠要矿户份额；沈砚秋要赢得掌门资格，乌辞要旧牧场，韩砺要守寒关。这些人不会因为谢临川拥有特殊力量便改变原本目标，只会在亲眼看过他的成功以后，重新判断该利用、拉拢、防备还是针对他。\n- 谢临川想被权威承认，却厌恶成为机构里可替换的一员。商盟通行令、太玄宗功法、王朝合法身份和古代飞舟都能给他真正的自由，也都附带契约、归属和征用要求。他越有分量，越难只做一个想走便走的人。\n\n## 全书成长与核心幻想兑现脊柱\n\n1. 万灯河夜渡时，谢临川第一次稳定维持两股真元：一股持续牵引渡船避开暗流，另一股维持护体术穿过撞船飞木。此前他一改法术，前一道便会中断；此后他能在低阶危局中一边维持既有动作，一边做第二件事，但两边都不及全力施术。\n2. 在赤脉山数年的护矿、修炼与实战中，他学会自由调整两股真元的比例，并在一息内交换主次。此前他的剑与护体只能各分一半，遇到重击两边都弱；此后他能先以八成真元挡下矿兽扑击，随即把八成转入赤纹剑，在敌人以为他只能防守时完成反击。\n3. 完成筑基后，他能在御器移动时持续出剑或护住另一个人。此前一旦离地，他的大部分神识都要用于御器，复杂战斗只能落地进行；此后他能在九檐石桥之间追逐、转向，同时保持剑势，不再必须在移动、进攻和救人之间逐一停顿。\n4. 到金丹、元婴阶段，他能同时运行性质不同的力量：一股驾驭水行遁法穿过海潮，另一股驱动赤纹剑上的火性真元；并能在准确时刻将两股重新合流，打出一次真正达到自身完整境界威力的爆发。此前不同性质的真元会互相干扰；此后他能先让两套动作各自推进，再用合流一击决定胜负，但合流以后必须重新分流，不能连续全力爆发。\n5. 到炼虚、合体阶段，分流不再局限于体内两条路线。他能以自身、赤纹剑和古代飞舟的阵位为临时节点，让护罩、飞舟转向、牵引索与剑势从不同位置同时推进。此前他只能亲自处在每个施法中心；此后他能隔着一段战场让几处力量彼此接续。节点越多，每一处越弱，敌人若迫使他同时承受数次重击，他仍会经脉撕裂。\n6. 大乘之后，他才真正完成传说中的力量场面：停在黑日岛上空，一道真元迎击，一道护住飞舟退路，数个短暂节点牵引法宝、岛桥与遁光，最后全部合为一剑。此前他能维持多处协同，却无法让它们在同一瞬间形成完整攻势；此后他能把整片战场编成一次攻击。这个状态只能维持数息，也不能让他以分散后的力量正面压过更高境界的敌人。\n\n## 不可替代的人与关系\n\n- **温梨**想看真正做得好的器物，也想靠自己的修复手艺决定去哪座城、接谁的活。另一个同样懂器物的人不能替代她，因为谢临川改变路线并不是为了“需要一个工匠”，而是会被她吃饭的速度、身体的靠近、看见好东西时停下来的神情和不肯配合他炫耀的态度牵动。她能让他放弃安全名额，也能因拒绝把他的牺牲当成情债而迫使他独自承担选择。\n- **谢槐安**只想把渡船和货栈稳稳交给下一代，不让全家信用毁在一次冒险上。别的船主能给谢临川工作，却不能替代父亲那份从不夸奖、仍一直留着船位的承认。父亲是否正式交出船份，会改变谢临川能否毫无牵挂地离开，也会让他后来拥有古代飞舟时仍不能把河港当成无关旧地。\n- **柳素秋**想让家里的钱、饭食和日子都能继续，不替丈夫强留儿子，也不替儿子美化任性。别人可以替谢临川算账，却不能像她一样知道每笔浪费背后到底是欲望、羞耻还是逞强。她每次把剩余盘缠摊开，都让他无法把“我愿意付代价”混同于“代价不存在”。\n- **沈砚秋**想借试剑会和开放外门证明自己有资格继承太玄宗。他不是为了成就谢临川而出现。谢临川需要的也不只是功法，而是这个有资格评断年轻修士的人在公开场合承认他赢了。沈砚秋的认可会给他师承和高阶功法，也会把他的胜负变成宗门政治的一部分；两人既可能互相成就，也可能因谢临川擅自离宗而长期失望。\n- **乌辞**想拿回旧牧场，并让南迁妖族有活路；他不接受自己只是人族和谈中的温和代表。别的妖族使者可以谈条件，却不能替代那个曾把一支部族的性命交到谢临川飞舟上的人。谢临川会因这次托付替乌辞担保，也会因误以为乌辞能约束所有迁徙部族而付出代价。\n\n## 长期故事主线\n\n### 阶段1｜万灯河夜渡\n\n**为什么现在发生：** 西州灵雨导致粮价上涨，难民和粮船开始沿河东移，河港的旧航线突然拥挤。谢槐安又准备在下一季正式决定船份归属。恰逢万灯河秋末起灯，百器商盟东河行首秦照野亲自押送一批急粮经过河港，谢临川看见了赢得通行资格和权威认可的机会。\n\n**谁想要什么：** 谢临川想让秦照野记住自己的名字，并换到跨州通行签；谢槐安想安全完成这一趟，不损坏渡船和家中信用；秦照野想确认哪条支流还能稳定运粮；温梨只想把一批替人修好的旧器送到上游，不愿因谢临川的离乡计划自动改变自己的行程。\n\n**主角的关键选择与行动：** 万灯照出一艘失踪货船残留的法术痕迹时，谢槐安主张避开，谢临川却判断船上可能仍有人，也知道秦照野正在看。他把渡船驶入逆流灯群，一股真元牵引船身，一股真元维持护体，第一次让两套基础术法稳定并行。他救回失踪船上的两人，却让自家船腹撞裂，事后没有把冒险全部说成救人，也承认自己想在秦照野面前赢一次。\n\n**这一阶段真正的阅读满足：** 分流真元第一次在具体危局中成立，低阶的谢临川同时驾船、护人，做出了普通同境修士无法连续完成的动作；一个长期被当作账房的人，终于被商盟真正有分量的人记住。\n\n**Stage Delta：** Power / Capability：谢临川能稳定维持两股低阶真元流。Identity / Access：秦照野给他一张只限一季、需完成赤脉山航程才能转正的跨州通行签。Relationship：谢槐安没有夸他，只把修船账交给他自己承担；温梨答应同行到赤脉山看火釉，却明确不保证继续往后走。\n\n**下一阶段为何自然发生：** 通行签的转正条件就是跟随商盟船队进入赤脉山矿区；温梨也确实想看矿火烧出的釉色。谢临川必须带着撞船欠账和第一次真正被看见的兴奋，进入一场本来就已开始的矿脉争夺。\n\n### 阶段2｜赤脉山，不做无名账房\n\n**为什么现在发生：** 陆沉舟、顾青炉与石晚棠已经围绕矿契、运输线和矿户份额相互施压。新增粮运使矿镇更依赖商盟，也让每一份损耗都可能被推给最弱的矿工。谢临川本来只需完成商盟航程，却在点货时发现矿石品级和工伤粮额被人混在同一套损耗账中。\n\n**谁想要什么：** 陆沉舟要尽快把高品火灵矿列入王朝军需；顾青炉要优先取得能重铸镇器的矿段；石晚棠要让矿户获得长期份额和明确伤亡补偿；谢临川想转正通行签、买下一把真正值得养成本命法宝的剑，也想证明自己不只是运输账房；温梨想进矿镇旧窑观察火釉，不愿替任何一方背书。\n\n**主角的关键选择与行动：** 谢临川没有私下拿账目向三方换好处，而是在矿契会当场指出损耗的真实去向，重演了当年得罪货栈老管事的选择，也直接危及自己的通行签。矿兽受灵火影响冲入塌陷矿道时，他又擅自把装满高品矿石的车队推去堵住裂口，放弃保货，先救被困矿工；战斗中他先把大部分真元用于护体承受扑击，再瞬间交换主次，以赤纹矿镐完成反杀。\n\n**这一阶段真正的阅读满足：** 谢临川用账目和剑在同一场争夺中迫使大人物正眼看他，并第一次把分流真元打成可反复使用的战斗节奏；读者也得到一件他本人真心想要、愿意花钱承担后果的东西。\n\n**Stage Delta：** Power / Capability：他进入稳定炼气阶段，能够快速改变两股真元比例并交换主次。Possession：石晚棠将他应得的矿工补偿份额折成一块合法登记的赤纹剑胚；谢临川花掉大半盘缠请矿镇匠人铸成第一把灵剑，当场用它斩开余火封住的矿门。Relationship：石晚棠承认他帮矿户争到了一次实利，却拒绝把他当自己人；温梨看完火釉后决定转去南方工坊，不陪他上九檐仙山。Enemy State：陆沉舟与顾青炉都记住了他在公开契约中会选哪一边，他们的属下此后不再把他当普通账房。\n\n**下一阶段为何自然发生：** 太玄宗试剑会已经公布，胜者能获得正式师承和完整筑基功法。石晚棠愿意给谢临川一份稳定矿镇职位，但他刚被看见一次，不肯就此留下；他带着赤纹剑和转正通行令前往九檐仙山。\n\n### 阶段3｜九檐试剑，赢给谁看\n\n**为什么现在发生：** 沈砚秋必须借三州试剑会证明开放外门能为太玄宗带来真正人才；裴无尘则准备利用试剑结果改变宗门权力结构。谢临川已经有了进入试剑会的合法身份，也迫切想知道，自己的胜出能否在真正的大宗门面前成立。\n\n**谁想要什么：** 沈砚秋想让非世家弟子的成绩成为自己继任的证据；裴无尘想控制决赛结果，让试剑会证明沈砚秋无法掌局；守旧派真传卫寒想守住宗门弟子对散修和外来者的天然优位；谢临川想公开击败一个被公认更强的人，得到筑基功法和赤纹剑的养炼资格。\n\n**主角的关键选择与行动：** 裴无尘的人提出让他在决赛前止步，换取功法和稳定客卿职位，谢临川明知这是更安全的长期选择，仍因厌恶被提前定价而拒绝。他故意在前半场展示固定五五分流，引诱卫寒以全力攻击他的护体；真正决胜时才连续交换两股真元主次，一边御剑越过改向石桥，一边维持护体逼近，完成公开胜出。胜后，他没有坚持完全自由，而是接受太玄宗数年的弟子契约，因为他确实想要沈砚秋亲口承认这场胜利。\n\n**这一阶段真正的阅读满足：** 一场规则清楚、观众明确、结果不能被客套抹去的试剑胜利；九檐石桥不断改向，谢临川在移动、出剑和防守之间同时推进，核心幻想出现第一次完整的宗门级展示。\n\n**Stage Delta：** Power / Capability：谢临川筑基成功，能够御器移动时持续出剑或护住他人。Identity / Access：他成为太玄宗开放外门的正式弟子，获得足以修至金丹、元婴阶段的正统功法和养炼本命法宝的资格。Relationship：沈砚秋公开承认他是试剑会真正的胜者，也把他视作开放山门成败的一部分；裴无尘则开始用宗门规矩和全力对拼来逼他暴露真元总量不足的边界。\n\n**下一阶段为何自然发生：** 谢临川原本应随宗门准备黑日岛先遣名额，温梨却已经进入西州受灾工坊。燃烧灵雨截断了她所在城镇的退路。她没有请他来，沈砚秋也没有命令他去；谢临川必须自行决定，公开胜利之后的第一份宗门机会是否比一个具体的人更重要。\n\n### 阶段4｜西州燃雨，错过那艘船\n\n**为什么现在发生：** 西州灵雨继续恶化，温梨为了保住一座老工坊的修复契约和匠人手稿，主动留在受灾城镇。与此同时，太玄宗的第一批黑日岛名额即将启程。谢临川若按时归队，就能得到最安全的秘境入口；若去西州，他会以私人理由违反刚签下不久的弟子安排。\n\n**谁想要什么：** 温梨想完成自己接下的修复，也要证明她不是等谢临川来救的人；谢临川想见到她，确认她还活着，也想保住两人尚未说清的关系；丹霞谷医师苏照想取得足够雨样，证明灵雨与大规模高阶炼丹有关；王朝巡灾官章秉想先控制难民外流，再确认地下火脉是否真是源头。\n\n**主角的关键选择与行动：** 谢临川放弃第一批黑日岛名额，向沈砚秋明说自己离宗不是奉命调查，而是为了温梨。进入燃雨区后，他没有替温梨决定该救手稿还是救人，而是服从她对工坊结构的判断，用一股真元维持冷雾、一股真元搬开燃烧梁木，承担她选定的撤离顺序。两人短暂恢复亲密后，温梨决定留下协助重建；谢临川没有把自己错过的名额变成要求她同行的债，最终独自离开西州。\n\n**这一阶段真正的阅读满足：** 一段身体吸引、旧争吵和现实代价同时存在的重逢；燃雨下的撤离紧张具体，却没有被改写成领取下一次升级的前置任务。\n\n**Stage Delta：** Relationship：谢临川与温梨重新发生亲密关系，却没有恢复固定同行；两人都承认彼此会改变自己的选择，也都拒绝保证下一次仍会留下。Identity / Access：谢临川失去太玄宗第一批黑日岛名额，沈砚秋没有逐他出门，却收回了原本给予他的优先资格。Knowledge：他亲眼确认灵雨在大型炼丹活动后加剧，却没有找到施术者，也无法证明王朝、丹霞谷或地方家族中的任何一方是源头。\n\n**下一阶段为何自然发生：** 第一批先遣队失联后，百器商盟需要自负风险的补位者。秦照野记得万灯河与赤脉山的两次结果，愿意出售一个昂贵的末位席位。谢临川必须押上未来所得和赤纹剑，才能进入那个自己已经错过一次、仍真正想看的地方。\n\n### 阶段5｜黑日岛，抢一艘会自己航行的船\n\n**为什么现在发生：** 黑日岛仍在海面，先遣队失踪使安全名额失效，也让商盟、水军和海妖王庭各自加派人手。谢临川并非奉宗门命令而来；他用通行信用、赤脉山旧份额和未来所得作抵押，买下一个没有保护承诺的补位席位。\n\n**谁想要什么：** 秦照野想带回能证明商盟远航价值的海图和飞舟技术；水军都督杜望海要确立王朝对岛屿和全部古代飞舟的所有权；海妖巡潮使鲛瑛要阻止人族取得能穿过王庭海域的航线记录；谢临川想亲眼进入倒悬宫殿，更想得到一艘无需沿固定商路行走、能由自己决定去向的古代飞舟。\n\n**主角的关键选择与行动：** 当其他队伍争夺成箱残片时，谢临川因一艘仍在无主巡航的旧飞舟改变路线，放弃了更容易折价的战利品。他与鲛瑛临时合作穿过重力倒转区，一股真元维持水行遁法，一股驱动赤纹剑上的火性真元，第一次让不同性质的力量稳定并行；在飞舟坠向天空时，他将两股真元重新合流，一剑斩断卡死的外部牵索。随后他拒绝杜望海立即接管飞舟，也拒绝鲛瑛毁掉航行中枢，亲自接通两处操舟阵位，把失散幸存者带出倒悬宫殿。\n\n**这一阶段真正的阅读满足：** 黑日岛的重力、倒悬宫殿和无人飞舟形成真正的探索奇观；谢临川争到一艘自己真心想要的古代巡航舟，并立刻驾驶它完成普通飞舟做不到的撤离。\n\n**Stage Delta：** Power / Capability：谢临川在金丹、元婴阶段掌握不同性质真元的同时运行与关键时刻合流爆发。Possession：他取得古代巡航舟“回澜”的实际驾驶权，飞舟严重受损、所有权仍被王朝和海妖王庭争议，但它已经能在他的控制下离岛。Knowledge：他带出一段巡航海图和多阵位操舟方法，没有得到黑日岛的完整历史。Enemy State：杜望海此后把他视为拒交王朝财产的危险持有者；鲛瑛承认他救过海妖，却仍准备在他把航线交给人族时夺船。\n\n**下一阶段为何自然发生：** 为保住回澜并继续取得高阶功法，谢临川把不涉及海妖腹地的航行记录交给沈砚秋，换取太玄宗的法律背书和高阶修炼资格。多年后，白骨雪原迁徙扩大，王朝依法征用能跨越断裂冰层的飞舟；征用令直接落到了回澜和谢家河港的登记名下。\n\n### 阶段6｜寒关以北，谁有权征用他的船\n\n**为什么现在发生：** 谢临川已经用回澜走过数州，并在太玄宗高阶功法和长期正常修炼下进入炼虚、合体阶段。北荒迁徙并未因他成长而停下，韩砺急需飞舟运送阵材，乌辞则要求先开放旧牧场和南迁通道。征用令到达时，谢槐安也正准备把普通渡船的正式船份交给儿子：一艘船代表家业，另一艘船却可能让整个家族承担王朝军令。\n\n**谁想要什么：** 韩砺要守住寒关粮谷，即使必须封死妖族迁徙路线；乌辞要带部族回到旧牧场，不接受只撤走妇孺的安排；谢槐安想把家船交给儿子，又不愿河港因回澜被连坐；谢临川想保住自己决定航向的权利，也不愿让回澜只成为运送攻城阵材的军船。\n\n**主角的关键选择与行动：** 谢临川先接受有限的平民撤运，以免家族信用直接被王朝取消；发现下一趟货物是封死谈判谷口的阵材后，他当场改航，私自把乌辞的使者、边军谈判人和被夹在两线之间的居民送往同一处旧牧场。他相信乌辞能约束迁徙部族，为此以自己的身份担保；但另一支不受乌辞控制的妖群仍袭击驿站，使这份担保成为真实误判。韩砺在数次观察回澜以后才学会同时重击船身、护罩和谢临川本人，迫使他把真元分得过细。谢临川由此第一次以自身、赤纹剑和飞舟阵位建立多段协同，保住谈判队伍，却无法同时阻止远处驿站被毁。\n\n**这一阶段真正的阅读满足：** 回澜、赤纹剑和分流真元在高阶战场上形成多处同时推进的力量结构；主角作出有吸引力但并不全知的选择，救下一条通道，也亲手承担错误担保造成的后果。\n\n**Stage Delta：** Power / Capability：谢临川完成高阶分流变化，能围绕自身、法宝和飞舟建立短暂协同节点。Relationship：乌辞欠他一条部族生路，却因谢临川曾试图让他代表全部妖族而与他激烈决裂；谢槐安正式把河港渡船份额交给儿子，同时要求他把回澜的王朝追责与家业分开。Identity / Access：王朝撤销谢临川的自由航行许可，太玄宗也必须在庇护他和保全宗门之间作选择。World State：寒关一段迁徙通道暂时开放，但北荒战争没有结束，乌辞也没有因此放弃旧牧场要求。Enemy State：边军和水军已经知道，攻击多个承载点能逼近谢临川的真元总量和神识极限。\n\n**下一阶段为何自然发生：** 回澜内部沉寂多年的潮历在下一次黑日岛浮现前自行启动。杜望海要凭征用令夺船，海妖王庭要抢在王朝之前封锁岛屿，商盟要求兑现旧抵押。谢临川无法只藏起飞舟，因为回澜已经开始沿古代航线自行转向沉星海。\n\n### 阶段7｜黑日再临，无人替他定航向\n\n**为什么现在发生：** 数十年过去，谢临川依靠太玄宗正统功法、真实修炼和多次生死关口进入大乘阶段。黑日岛再次浮出海面，回澜成为少数能响应岛上巡航阵位的旧飞舟之一。王朝、商盟和海妖王庭并非为谢临川而来；它们本就要争夺岛屿，只是如今都知道他的船、力量和政治弱点。\n\n**谁想要什么：** 谢临川要保住回澜，不让任何一方把自己降格为只能服从命令的操舟者，也确实想看岛上飞舟这一次会驶向哪里；温梨已经成为有名的旧器修复者，她要亲手进入回澜从未开放的内舱，不接受因与谢临川亲近便被留在安全处；杜望海要以王朝法令接管全部巡航舟；鲛瑛要封闭通往海妖腹地的古航线；秦照野要兑现当年的抵押，让商盟取得可持续使用的岛屿入口。\n\n**主角的关键选择与行动：** 谢临川拒绝把回澜独家交给任何一方，也没有无条件向所有人开放。他亲自挑选一支彼此不信任的登岛队伍，把航线控制留在自己手中。岛上旧阵启动后，各方按照此前对他的了解，同时攻击回澜阵位、赤纹剑和撤退通道，逼他在数处之间分散真元。温梨发现内舱必须有人留在重力倒转区修复，她明确选择留下；谢临川因她这个具体的人改变原定撤离时机，承担了本可避免的围攻。最终他停在岛屿上空，让一道真元迎击、一处节点护住回澜退路、一处牵引赤纹剑、数处短暂阵位维持岛桥，最后将全部力量合为一剑，斩开封锁而不是摧毁任何一方。他只维持了数息，随后经脉撕裂，必须由温梨和曾经互为敌手的船员把他带回船上。\n\n**这一阶段真正的阅读满足：** 分流真元兑现为全书可复述的传奇场面：敌人面对的不再是一招接一招，而是一整套同时展开、最后合为一击的力量结构；此前获得的剑、飞舟、师承、通行信用、敌意与关系都在同一场选择中真实生效。\n\n**Stage Delta：** Power / Capability：谢临川第一次完成传奇级多段协同与最终合流，但确认这种状态只能维持数息，且仍会造成经脉和肉身重创。Possession：回澜仍由他实际掌控，王朝、商盟和海妖王庭都未取得独占权。Relationship：温梨不再只是让他改道的人，而是曾在他失去控制后亲手把回澜驶出黑日岛的人；两人仍未承诺固定同行。Identity / Access：谢临川成为各方不能再视作无名劳力、也不能轻易纳入单一阵营的独立大修士和巡航舟主。World State：黑日岛入口被多方同时看见，旧飞舟为何巡航仍未完全解释；一次独占战争被打断，却产生了更复杂的长期争夺。\n\n**下一阶段为何自然发生：** 谢临川没有获得黑日岛的全部秘密，只带出数条互不相连的古航线和一艘仍会自行改变方向的回澜。王朝不会放弃征用，海妖王庭不会接受航线外泄，商盟也不会放弃旧债；与此同时，他必须养伤、处理河港家业，并决定下一条航线是否值得让温梨、旧同门或任何阵营登船。\n\n## 远期仍值得追的东西\n\n- 温梨会不会长期登上回澜，以及她若选择另一座城、另一份工艺或另一个亲近的人，谢临川是否仍会改道。\n- 谢槐安交出的普通渡船和柳素秋仍记着的每一笔账；谢临川拥有古代飞舟以后，是否还能承担一份不传奇却真实属于他的家业。\n- 陆沉舟、顾青炉与石晚棠对赤脉山的争夺仍未结束，谢临川当年放弃的矿石和保下的矿户已经长成新的利益格局。\n- 西州燃雨与大规模高阶炼丹之间的联系已经得到部分证据，但施术者、真实目的和持续恶化的原因仍然未知。\n- 乌辞的旧牧场、韩砺必须守住的粮谷，以及不服从任何一方的迁徙妖群；那次失败担保不会因谢临川后来变强而消失。\n- 沈砚秋与裴无尘的掌门之争，以及太玄宗是否愿意继续庇护一个公开违抗王朝征用的大修士。\n- 白骨雪原尽头会移动的巨兽骨骸、无人攻破的黑骨城墙，以及回澜古航线中为何有一条停在城墙之外。\n- 谢临川尚未真正走到渡劫境，也没有进入断天门。那扇门后的星空与黑日岛、万灯河或西州灵雨是否有关，目前都没有证据，不能被预先并成同一个答案。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 57410,
+      "inputTokens": 32364,
+      "cachedReadTokens": 6912,
+      "outputTokens": 18134,
+      "thoughtTokens": 10904
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 57410,
+          "inputTokens": 32364,
+          "cachedInputTokens": 6912,
+          "outputTokens": 18134,
+          "reasoningOutputTokens": 10904
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-sol",
+            "token_count": {
+              "totalTokens": 57410,
+              "inputTokens": 32364,
+              "cachedInputTokens": 6912,
+              "outputTokens": 18134,
+              "reasoningOutputTokens": 10904
+            }
+          }
+        ]
+      }
+    }
+  },
+  "session": {
+    "sessionId": "01a03d65-9cae-7682-9685-bdaa2b584662",
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "gpt-5.6-sol[low]",
+          "name": "GPT-5.6-Sol (low)",
+          "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-sol[medium]",
+          "name": "GPT-5.6-Sol (medium)",
+          "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-sol[high]",
+          "name": "GPT-5.6-Sol (high)",
+          "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[xhigh]",
+          "name": "GPT-5.6-Sol (xhigh)",
+          "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[max]",
+          "name": "GPT-5.6-Sol (max)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[ultra]",
+          "name": "GPT-5.6-Sol (ultra)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-terra[low]",
+          "name": "GPT-5.6-Terra (low)",
+          "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-terra[medium]",
+          "name": "GPT-5.6-Terra (medium)",
+          "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-terra[high]",
+          "name": "GPT-5.6-Terra (high)",
+          "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[xhigh]",
+          "name": "GPT-5.6-Terra (xhigh)",
+          "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[max]",
+          "name": "GPT-5.6-Terra (max)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[ultra]",
+          "name": "GPT-5.6-Terra (ultra)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-luna[low]",
+          "name": "GPT-5.6-Luna (low)",
+          "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-luna[medium]",
+          "name": "GPT-5.6-Luna (medium)",
+          "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-luna[high]",
+          "name": "GPT-5.6-Luna (high)",
+          "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[xhigh]",
+          "name": "GPT-5.6-Luna (xhigh)",
+          "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[max]",
+          "name": "GPT-5.6-Luna (max)",
+          "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.5[low]",
+          "name": "GPT-5.5 (low)",
+          "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.5[medium]",
+          "name": "GPT-5.5 (medium)",
+          "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.5[high]",
+          "name": "GPT-5.5 (high)",
+          "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.5[xhigh]",
+          "name": "GPT-5.5 (xhigh)",
+          "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[low]",
+          "name": "GPT-5.4 (low)",
+          "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4[medium]",
+          "name": "GPT-5.4 (medium)",
+          "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4[high]",
+          "name": "GPT-5.4 (high)",
+          "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[xhigh]",
+          "name": "GPT-5.4 (xhigh)",
+          "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[low]",
+          "name": "GPT-5.4-Mini (low)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4-mini[medium]",
+          "name": "GPT-5.4-Mini (medium)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4-mini[high]",
+          "name": "GPT-5.4-Mini (high)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[xhigh]",
+          "name": "GPT-5.4-Mini (xhigh)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[low]",
+          "name": "GPT-5.3-Codex-Spark (low)",
+          "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[medium]",
+          "name": "GPT-5.3-Codex-Spark (medium)",
+          "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[high]",
+          "name": "GPT-5.3-Codex-Spark (high)",
+          "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[xhigh]",
+          "name": "GPT-5.3-Codex-Spark (xhigh)",
+          "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+        }
+      ],
+      "currentModelId": "gpt-5.6-luna[max]"
+    },
+    "modes": {
+      "availableModes": [
+        {
+          "id": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "id": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "id": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ],
+      "currentModeId": "read-only"
+    },
+    "configOptions": [
+      {
+        "id": "mode",
+        "name": "Mode",
+        "description": "Approval and sandboxing preset for the session",
+        "category": "mode",
+        "type": "select",
+        "currentValue": "read-only",
+        "options": [
+          {
+            "value": "read-only",
+            "name": "Read-only",
+            "description": "Requires approval to edit files and run commands."
+          },
+          {
+            "value": "agent",
+            "name": "Agent",
+            "description": "Read and edit files, and run commands."
+          },
+          {
+            "value": "agent-full-access",
+            "name": "Agent (full access)",
+            "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+          }
+        ]
+      },
+      {
+        "id": "collaboration_mode",
+        "name": "Collaboration mode",
+        "description": "How Codex collaborates for subsequent turns",
+        "category": "collaboration_mode",
+        "type": "select",
+        "currentValue": "default",
+        "options": [
+          {
+            "value": "default",
+            "name": "Default"
+          },
+          {
+            "value": "plan",
+            "name": "Plan",
+            "description": "Plan before making changes"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "name": "Model",
+        "description": "Model Codex uses for the session",
+        "category": "model",
+        "type": "select",
+        "currentValue": "gpt-5.6-luna",
+        "options": [
+          {
+            "value": "gpt-5.6-sol",
+            "name": "GPT-5.6-Sol",
+            "description": "Latest frontier agentic coding model."
+          },
+          {
+            "value": "gpt-5.6-terra",
+            "name": "GPT-5.6-Terra",
+            "description": "Balanced agentic coding model for everyday work."
+          },
+          {
+            "value": "gpt-5.6-luna",
+            "name": "GPT-5.6-Luna",
+            "description": "Fast and affordable agentic coding model."
+          },
+          {
+            "value": "gpt-5.5",
+            "name": "GPT-5.5",
+            "description": "Frontier model for complex coding, research, and real-world work."
+          },
+          {
+            "value": "gpt-5.4",
+            "name": "GPT-5.4",
+            "description": "Strong model for everyday coding."
+          },
+          {
+            "value": "gpt-5.4-mini",
+            "name": "GPT-5.4-Mini",
+            "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+          },
+          {
+            "value": "gpt-5.3-codex-spark",
+            "name": "GPT-5.3-Codex-Spark",
+            "description": "Ultra-fast coding model."
+          }
+        ]
+      },
+      {
+        "id": "reasoning_effort",
+        "name": "Reasoning effort",
+        "description": "How much reasoning effort the model should use",
+        "category": "thought_level",
+        "type": "select",
+        "currentValue": "max",
+        "options": [
+          {
+            "value": "low",
+            "name": "Low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "value": "medium",
+            "name": "Medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "value": "high",
+            "name": "High",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "value": "xhigh",
+            "name": "Xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "value": "max",
+            "name": "Max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          }
+        ]
+      },
+      {
+        "id": "fast-mode",
+        "name": "Fast mode",
+        "description": "1.5x speed, increased usage",
+        "category": "model_config",
+        "type": "select",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Off",
+            "description": "Default speed, normal usage"
+          },
+          {
+            "value": "on",
+            "name": "On",
+            "description": "1.5x speed, increased usage"
+          }
+        ]
+      }
+    ]
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

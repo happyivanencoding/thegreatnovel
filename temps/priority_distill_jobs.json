@@ -1,0 +1,239 @@
+{
+  "gbrain_root": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库",
+  "jobs": [
+    {
+      "id": "prose-gaowu",
+      "kind": "prose",
+      "title": "全球高武",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\prompts\\gaowu_prose_v2.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\outputs\\gaowu.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "prose-chat",
+      "kind": "prose",
+      "title": "修真聊天群",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\prompts\\chat_prose_v2.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\outputs\\chat.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "prose-firstseq",
+      "kind": "prose",
+      "title": "第一序列",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\prompts\\firstseq_prose_v2.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\outputs\\firstseq.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "prose-jiangye",
+      "kind": "prose",
+      "title": "将夜",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\prompts\\jiangye_prose_v2.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\outputs\\jiangye.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "prose-daogui",
+      "kind": "prose",
+      "title": "道诡异仙",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\prompts\\daogui_prose_v2.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\outputs\\daogui.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "prose-lotm",
+      "kind": "prose",
+      "title": "诡秘之主",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\prompts\\lotm_prose_v2.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-prose-craft-v2-priority-20260824\\outputs\\lotm.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-mushenji-luna",
+      "kind": "story-luna",
+      "title": "牧神记",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\mushenji_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\mushenji.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-mushenji-sol",
+      "kind": "story-sol",
+      "title": "牧神记",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\mushenji_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\mushenji.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "id": "story-dafeng-luna",
+      "kind": "story-luna",
+      "title": "大奉打更人",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\dafeng_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\dafeng.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-dafeng-sol",
+      "kind": "story-sol",
+      "title": "大奉打更人",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\dafeng_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\dafeng.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "id": "story-gaowu-luna",
+      "kind": "story-luna",
+      "title": "全球高武",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\gaowu_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\gaowu.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-gaowu-sol",
+      "kind": "story-sol",
+      "title": "全球高武",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\gaowu_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\gaowu.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "id": "story-bukexue-luna",
+      "kind": "story-luna",
+      "title": "不科学御兽",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\bukexue_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\bukexue.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-bukexue-sol",
+      "kind": "story-sol",
+      "title": "不科学御兽",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\bukexue_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\bukexue.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "id": "story-cangyuantu-luna",
+      "kind": "story-luna",
+      "title": "沧元图",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\cangyuantu_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\cangyuantu.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-cangyuantu-sol",
+      "kind": "story-sol",
+      "title": "沧元图",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\cangyuantu_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\cangyuantu.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "id": "story-luanshishu-luna",
+      "kind": "story-luna",
+      "title": "乱世书",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\luanshishu_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\luanshishu.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-luanshishu-sol",
+      "kind": "story-sol",
+      "title": "乱世书",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\luanshishu_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\luanshishu.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "id": "story-chaoshen-luna",
+      "kind": "story-luna",
+      "title": "超神机械师",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\chaoshen_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\chaoshen.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-chaoshen-sol",
+      "kind": "story-sol",
+      "title": "超神机械师",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\chaoshen_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\chaoshen.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "id": "story-mingkejie-luna",
+      "kind": "story-luna",
+      "title": "明克街13号",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\mingkejie_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\mingkejie.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-mingkejie-sol",
+      "kind": "story-sol",
+      "title": "明克街13号",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\mingkejie_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\mingkejie.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "id": "story-dawang-luna",
+      "kind": "story-luna",
+      "title": "大王饶命",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\dawang_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\dawang.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-dawang-sol",
+      "kind": "story-sol",
+      "title": "大王饶命",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\dawang_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\dawang.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    },
+    {
+      "id": "story-manghuangji-luna",
+      "kind": "story-luna",
+      "title": "莽荒纪",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\manghuangji_luna.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\luna\\manghuangji.json",
+      "model": "gpt-5.6-luna",
+      "effort": "high"
+    },
+    {
+      "id": "story-manghuangji-sol",
+      "kind": "story-sol",
+      "title": "莽荒纪",
+      "prompt": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\prompts\\manghuangji_sol.md",
+      "output": "C:\\GoogleDrive\\笔记\\卡片盒子\\20_Knowledge\\修仙小说素材库\\reference-corpus\\operations\\gbrain-story-craft-v3\\expansion-batch-d-20260824\\outputs\\sol\\manghuangji.json",
+      "model": "gpt-5.6-sol",
+      "effort": "high"
+    }
+  ]
+}

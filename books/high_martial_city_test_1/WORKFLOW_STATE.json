@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "artifacts": {
+    "creative.fantasy_seed": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "author_edit",
+      "stale_from": []
+    },
+    "creative.world_vision": {
+      "revision": 0,
+      "status": "STALE",
+      "freshness": "stale",
+      "last_source": "empty",
+      "stale_from": [
+        "creative.fantasy_seed"
+      ]
+    },
+    "creative.story_program": {
+      "revision": 0,
+      "status": "STALE",
+      "freshness": "stale",
+      "last_source": "empty",
+      "stale_from": [
+        "creative.fantasy_seed"
+      ]
+    },
+    "book.design": {
+      "revision": 1,
+      "status": "STALE",
+      "freshness": "stale",
+      "last_source": "legacy",
+      "stale_from": [
+        "creative.fantasy_seed"
+      ]
+    },
+    "book.long_plan": {
+      "revision": 1,
+      "status": "STALE",
+      "freshness": "stale",
+      "last_source": "legacy",
+      "stale_from": [
+        "creative.fantasy_seed"
+      ]
+    },
+    "book.future_10": {
+      "revision": 1,
+      "status": "STALE",
+      "freshness": "stale",
+      "last_source": "legacy",
+      "stale_from": [
+        "creative.fantasy_seed"
+      ]
+    },
+    "book.canon_state": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "book.prologue": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    },
+    "chapter.1.run": {
+      "revision": 3,
+      "status": "DRAFT",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "in_progress",
+        "writer_mode": "hybrid_selective",
+        "final_source": null,
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "curator": {
+            "status": "pending",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "dialogue": {
+            "status": "pending",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "pending",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": null
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "pending",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "pending",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "pending",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "state_delta": {
+            "status": "pending",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.fantasy_seed": 1,
+        "creative.world_vision": 0,
+        "creative.story_program": 0,
+        "book.design": 1,
+        "book.long_plan": 1,
+        "book.future_10": 1,
+        "book.canon_state": 1,
+        "book.prologue": 0
+      }
+    },
+    "chapter.1.state_delta": {
+      "revision": 1,
+      "status": "DRAFT",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    }
+  }
+}

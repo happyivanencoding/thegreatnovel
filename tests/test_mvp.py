@@ -2752,8 +2752,8 @@ def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None
         assert marker in idea
     assert "### 成本节奏" not in idea
     assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in idea
-    assert "5—7 个大型阶段若从头到尾都没有真实的力量或能力成长" in idea
-    assert "早期第一次成立、中期新玩法、高阶质变" in idea
+    assert "长期必须让**新的 Power Asymmetry 加入**" in idea
+    assert "某些大型阶段仍可以完全没有 Power Delta" in idea
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
     for marker in (
         "### 已批准长期成长兑现",
@@ -3282,17 +3282,33 @@ def test_story_program_growth_is_longitudinal_not_a_stage_tax() -> None:
     assert "本阶段关键获得、占有与首次使用" not in template
     assert "核心优势在本阶段怎样参与：" not in template
 
-    # But the whole book must still realize observable male-progression and Core Fantasy.
-    assert "5—7 个大型阶段若从头到尾都没有真实的力量或能力成长" in template
-    assert "早期第一次成立、中期新玩法、高阶质变" in template
+    # But the whole book must still build a cumulative asymmetry stack.
+    assert "长期必须让**新的 Power Asymmetry 加入**" in template
+    assert "旧优势与新优势产生至少一种可复述的**复合效应**" in template
+    assert "不是每阶段新增能力税" in template
     assert "以前做不到什么 → 现在能做什么 / 能打谁 / 能去哪里" in template
-    assert "Power Seed 决定成长语法" in template
-    assert "Story Program 只决定这些已批准潜力在什么故事因果中真正实现" in template
+    assert "Power Seed 决定开局 Core Asymmetry 及其成长语法" in template
+    assert "也可以通过真实获得让主角后来加入新的 Power Asymmetry" in template
 
     # Acquisition / compounding survive as longitudinal story principles, not form fields.
     assert "高价值获得是读者欲望原则，不是阶段字段" in template
     assert "纵向复利是历史持续生效，不是阶段流水线" in template
-    assert "它必须在后续真实改变行动、选择、敌人应对或世界局面" in template
+    assert "旧与新还应出现真正的复合玩法" in template
+
+
+def test_asymmetry_reveal_uses_surprise_as_payoff_and_attitude_change_only_when_useful() -> None:
+    story = DEFAULT_PROMPT_TEMPLATES["idea"]
+    outline = DEFAULT_PROMPT_TEMPLATES["outline"]
+    review = DEFAULT_PROMPT_TEMPLATES["review"]
+    director = DEFAULT_DIRECTOR_TEMPLATE
+
+    for prompt in (story, outline, review, director):
+        assert "Power Asymmetry Reveal / Social Proof" in prompt
+        assert "让惊讶本身成为爽点" in prompt
+        assert "不凭空加围观者" in prompt
+        assert "只有重新估价会改变后续行动" in prompt
+        assert "否则惊讶/确认后即可停止" in prompt
+        assert "已公开优势的普通重复使用不反复演震惊" in prompt
 
 
 def test_outline_theme_is_derived_and_may_remain_unset() -> None:

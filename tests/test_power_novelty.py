@@ -62,6 +62,8 @@ def test_power_prompt_auto_injects_noncanon_novelty_sparks() -> None:
     assert "允许并鼓励有条件的越级威胁" in prompt
     assert "不要新增“超标坐标/比较表/评分”等输出字段" in prompt
     assert "不要让长期成长只剩数量、距离、持续时间越来越大" in prompt
+    assert "Power Seed 只定义**开局 Core Asymmetry**" in prompt
+    assert "后续 Story Program 可以通过真实故事获得新的 Power Asymmetry" in prompt
     assert "POWER CRAFT" in prompt
 
 

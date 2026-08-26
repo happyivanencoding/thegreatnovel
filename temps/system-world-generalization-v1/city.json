@@ -1,0 +1,453 @@
+{
+  "ok": true,
+  "label": "world-generalization-city",
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "additionalDirectories": [],
+  "wall_seconds": 95.821,
+  "text": "# 世界幻想画像\n\n## 核心幻想不变量\n\n主角总能在第一次进入一个封闭场所时，发现其中一件被所有人忽视或低估的东西。这个能力只指出“它被低估了”，不会直接告诉主角价值、用途、买家或正确答案。爽点来自主角用观察、判断、谈判和行动，把别人眼中的废物、闲置物或小机会，变成改变自身处境的实际优势。每次优势兑现，都应让主角获得新的行动空间，并进入过去无法进入的场所或圈层。\n\n## 主角最强欲望\n\n主角真正想摆脱的是“永远站在门外、只能接受别人分配位置”的人生。他想拥有不依附单一贵人也能持续选择的资格：能进入重要场所，接触真正改变命运的交易，拥有自己的资产、信誉和立足之地，并最终让那些曾经决定他能否入场的人不得不主动与他谈判。\n\n## 主角身份与生命状态跃迁\n\n开局，主角是城市底层的普通人，缺少可靠身份、资本和担保，能做的工作有限，很多商业场所和公共资源对他关闭。\n\n长期来看，他会从“被门禁决定命运的人”，成长为能够识别机会、调动资源、影响交易和改变圈层规则的城市关键人物。他未必成为最强战士，但会拥有更强的身体与有限超凡能力、更稳定的寿命和生存条件、更高的社会信誉，以及进入封闭区域、接触核心人物和发起重要行动的资格。\n\n## 世界最震撼的三幅画面\n\n第一幅：主角第一次进入一座被重重封锁的旧档案库，四周堆满贵族、商会和官方都认为无用的遗物，只有一件不起眼的旧物在他眼中发出微光。它没有立刻释放力量，却让主角看见这座城市被谁删去、被谁保留下来的另一种历史。\n\n第二幅：主角面对一名能够短暂改变整条街区防护结构的高阶施术者。他无法正面击败对方，却能在第一次进入对方控制的封闭空间时，发现一个被主人自己忽略的薄弱环节，使整个局面从单方面碾压变成必须重新谈判的危局。\n\n第三幅：城市上空的旧环城墙逐层开启，原本互不相通的城区、外域商路与封闭遗迹第一次连成一体。主角曾经只能争取一间仓库、一张通行牌，后来却成为决定哪些人能够进入新世界的人之一。\n\n## 世界核心规则与力量来源\n\n这个世界的超凡力量有限，却真实地嵌入城市生活。普通人可以通过训练、契约、血脉遗传、长期接触特殊环境或使用经过认证的器具，获得感知、强化、护身、短距移动、物质操控等有限能力。\n\n力量受到身体承受力、训练程度、材料质量、知识、身份许可和环境条件共同限制。一个有执照的施术者可以使用公共防护设施、进入特定工坊并调动有限的城市术式；没有身份的人即使知道方法，也可能无法合法使用，或者无法承担失败后果。\n\n城市里的力量不是单纯的战斗等级。更强的人能够改变更大的范围、承受更高风险、使用更昂贵的器具，也更容易获得担保和进入权。但他们仍然受契约、城市规则、资源供应、身体负担和政治关系牵制。力量越大，行动留下的痕迹和引发的回应也越明显。\n\n## 读者可用的世界坐标\n\n本书不使用修仙境界，主要用可观察的能力和社会权限判断差距。\n\n普通人可以在公开城区生活、工作、租住和交易，但无法独立处理危险术式，也不能进入大多数受保护场所。\n\n受训并登记的专业人士，拥有稳定使用一两类有限超凡能力的资格，可以进入工坊、交易所、档案馆或行业内部市场。他们的优势不是无敌，而是能安全完成普通人无法承担的行动。\n\n受到商会、贵族、官方或大型机构担保的人，能够进入封闭城区、特殊仓储、机密档案区和高价值交易场所，也能调动护卫、术式服务和信用额度。真正稀缺的不是日常食物、普通住所或基础治疗，而是可靠担保、特殊通行权、稀有器具的使用时间、关键档案、受保护的交易名额和能改变身份的长期契约。\n\n一个明显更强的施术者，可以在冲突中快速封锁道路、击穿普通防护或逼迫多人撤退；较弱者若没有地形、关系或特殊机会，不能正面抗衡。身份差距则会让同一件事产生不同结果：有担保的人违规后可以解释，底层人违规后可能直接失去工作、住所和城市资格。\n\n## 核心优势与普通规则怎样咬合\n\n核心优势真正改变的是主角对“被低估之物”的发现机会。它不复制物品的能力，不读取完整历史，不显示真实价格，也不告诉主角谁会为它付出代价。\n\n物品究竟有什么用途，仍取决于主角的知识、观察、谈判、材料条件、身份和实际环境。微光可能指向一件物品的隐藏功能，也可能指向一份被忽略的权利、一种未被看见的关系，或一项只有在特定情境下才有意义的价值。主角必须承担判断错误的风险。\n\n如果目标远高于主角当前层级，能力仍可能让他看见其中被忽略的东西，但不会让他获得目标本身的力量。他可能发现高阶器具的缺口、重要人物的错误判断或封闭场所的非核心入口，却仍无法绕过守卫、契约、术式反噬和身份审查。越高层的对象，低估往往越隐蔽，错误判断的代价也越大。\n\n能力本身不能替代战斗、资本和身份。它真正强大的地方，是让主角在别人已经完成筛选的地方，找到尚未被纳入竞争的突破口。\n\n## 力量带来的直接体验\n\n主角第一次进入一个封闭场所时，周围的声音、气味和空间感不会改变，只有某件不起眼的东西在视野边缘泛起极短暂的微光。光芒不会附带解释，主角只会清楚意识到：这里的人没有正确看待它。\n\n这会让主角第一次拥有别人没有的选择。他过去只能接受低价工作、劣质货物和别人剩下的位置，现在可以停下来观察物品与人的关系，判断谁在掩饰、谁在急于脱手、谁根本没有意识到自己手里的东西。\n\n第一次收益不会直接是巨额财富，而应是一个明确的变化：拿到低成本的关键物，获得一笔能继续行动的钱，得到一次合法进入新场所的资格，或迫使一个原本不会与他谈判的人重新开价。\n\n## 力量的升格方向\n\n早期，能力帮助主角在仓库、后室、旧铺、私人档案间和小型交易场所中发现被忽视的物品。\n\n中期，主角进入商会、贵族府邸、官方机构和受保护的特殊市场。被低估之物不再只是小物件，也可能是一个被排除的人、一份被作废的契约、一条无人相信的旧通道，或一项能改变交易格局的城市权利。主角的成长重点从“发现机会”变成“判断机会会改变谁的利益，并承受因此而来的反击”。\n\n远期，能力可以触及城墙、遗迹、跨城贸易、灾变区域和世界边界中的封闭空间。主角发现的可能是被整个时代低估的旧规则、被所有势力放弃的世界入口，或某个高层力量体系自身无法处理的盲点。但他仍需要以自身力量、身份、关系和行动来兑现发现。\n\n每次胜利都应留下后果：主角获得新的信誉或通行范围，敌人开始改变筛选和封锁方式，某段关系从施舍变成合作或竞争，新的交易与冲突因此出现。成长不是每次增加一种能力，而是让主角从只能抓住机会，变成能决定谁有资格看见机会。\n\n## 世界资源、利益与机会结构\n\n真正改变行动空间的资源包括合法身份、城市担保、可靠信用、封闭场所的进入权、特殊器具的使用权、稀有材料、关键档案、受保护的运输线路、交易名额、治疗与训练条件，以及能够让别人承担风险的关系。\n\n普通生活资源相对稳定，竞争激烈但不神秘；真正稀缺的是能改变未来选择的东西。一个仓库的短期使用权可能比仓库里的普通货物更重要，一份旧档案可能比现钱更能改变身份，一名愿意担保的人可能比一件武器更有价值。\n\n主角的优势让他能把别人懒得处理、无法判断或不愿承担风险的东西转化为长期积累。他不必囤积所有发现，而要判断哪些东西值得买下、交换、保护、公开或暂时放弃。\n\n地图扩大后，新的区域拥有不同的封闭规则和价值体系：旧城区重视身份记录，商贸区重视信用与担保，贵族区重视血统和契约，外域重视生存能力和路线知识，遗迹区则重视能否理解已经失效的旧规则。\n\n## 持续冲突来源\n\n最初的阻力来自门槛：没有身份便无法进入，没有担保便没人相信，没有资本便无法承受一次判断错误。\n\n随着主角变强，冲突会来自被他触动利益的人。原本靠信息差、身份差和封闭市场获利的商会，会试图收编、监视或污名化他；贵族和官方机构会争夺那些能改变城市秩序的发现；竞争者会故意制造假低估物，诱导他承担损失。\n\n超凡力量也会制造压力。某些封闭场所本身具有危险规则，错误进入会造成伤害；高阶人物能改变环境，使主角即使发现机会也没有足够能力兑现。更远处的冲突则来自城市资源被外域、遗迹、灾变和旧文明重新影响，迫使主角决定自己要做交易者、破局者、保护者，还是某种新秩序的参与者。\n\n## 第一次决定性兑现\n\n主角第一次进入一间即将清算的旧商号后室，看见一件被当作废品处理的旧物发出微光。他不知道它值多少钱，也不知道它究竟能做什么，只能从掌柜急于清空、伙计不愿接手和几名债主的态度中判断：这件东西可能被所有人用错误方式看待。\n\n主角没有直接炫耀发现，而是利用清算中的利益冲突，提出收取一批无人愿意负责的旧物，并用自己的判断换取低价和一份临时交易担保。随后，他在一次真实的城市交易中发现旧物能够帮助他进入一个原本不对底层人开放的交接环节，或证明一项被错误注销的资格。\n\n他得到的第一项真正收益不是暴富，而是三件具体变化：拥有继续行动的周转资本，获得一个可以被查验的城市身份凭证，并被一个更高圈层的人记住。外部影响是旧商号的清算利益被重新分配；主角第一次感受到，自己不是捡到了好运，而是让别人忽略的东西改变了自己的位置。\n\n## 早期成长锚点与长期升格\n\n### 早期兑现\n\n主角在一个低风险但真正封闭的商业场所中触发能力，取得第一件被低估之物，并通过谈判和实际行动将其转化为钱、信用或进入权。他跨过的第一个门槛，是从只能出售劳力，变成能够用判断参与交易。\n\n### 稳定循环\n\n主角开始主动争取进入不同的封闭场所，每次只面对一个新的具体问题：买下什么、相信谁、向谁隐瞒、把机会卖给谁，或者是否值得为了进入更高圈层而承担风险。\n\n前一次胜利留下的资本、信誉和关系，会让他进入下一处过去无法进入的地方；新场所又提出更复杂的利益冲突。能力从第一次奇观变成持续循环，但主角仍可能误判，不能把所有微光都自动兑换成收益。\n\n### 中期里程碑\n\n第一个大型阶段完成时，主角应能处理一场原本只有大商会、贵族或官方机构才有资格参与的城市级交易或危机。他不是靠战力碾压，而是发现被整个利益网络忽略的关键对象，迫使多个势力重新站队。\n\n不可逆事件应是：主角从被允许进入别人的场所，变成拥有一个必须由别人申请进入、谈判或争夺的位置。他的名字、信用或立场开始改变城市中的机会分配。\n\n### 远期升格方向\n\n长期成立后，核心优势不只帮助主角发现物品价值，也可能让他看见一个城市、组织或时代对某种力量的共同误判。主角的行动空间从单个封闭房间扩展到城市边界、外域入口和旧世界遗留的封闭领域。\n\n远期的升格重点不是获得无限鉴宝能力，而是让主角有资格进入更大的“被误判空间”，并有能力承担发现之后的后果：改变交易秩序、重启被放弃的道路、让被排除的人获得位置，或迫使整个世界重新定义什么值得争夺。\n\n## 神秘、未知与世界入口\n\n读者最想继续探索的，是微光究竟依据什么判断“被低估”，以及不同场所、不同群体的低估是否存在某种共同规律。\n\n能力的来源、它为何只在第一次进入封闭场所时生效、被低估的对象是否会主动改变主角的人生，都不应过早解释。新的行动空间可以通过一扇过去无法打开的门、一份被注销的记录、一场不对外公开的交易，或一个没人愿意承担后果的区域逐步打开。\n\n未知必须先表现为选择和风险，而不是立即变成设定答案。\n\n## 核心情绪与读者体验\n\n本书反复兑现三种体验：\n\n- 从被拒之门外到主动入场的身份跃迁感。\n- 看见别人忽略之物，并用自己的判断把它变成现实优势的发现与反转感。\n- 每次胜利都留下新的资本、关系、信誉和敌人，使主角越来越难以被原来的世界重新归零。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 36634,
+      "inputTokens": 21545,
+      "cachedReadTokens": 9984,
+      "outputTokens": 5105,
+      "thoughtTokens": 1653
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 36634,
+          "inputTokens": 21545,
+          "cachedInputTokens": 9984,
+          "outputTokens": 5105,
+          "reasoningOutputTokens": 1653
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 36634,
+              "inputTokens": 21545,
+              "cachedInputTokens": 9984,
+              "outputTokens": 5105,
+              "reasoningOutputTokens": 1653
+            }
+          }
+        ]
+      }
+    }
+  },
+  "session": {
+    "sessionId": "01a034a4-1a70-7531-8587-8188ffe00d14",
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "gpt-5.6-sol[low]",
+          "name": "GPT-5.6-Sol (low)",
+          "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-sol[medium]",
+          "name": "GPT-5.6-Sol (medium)",
+          "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-sol[high]",
+          "name": "GPT-5.6-Sol (high)",
+          "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[xhigh]",
+          "name": "GPT-5.6-Sol (xhigh)",
+          "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[max]",
+          "name": "GPT-5.6-Sol (max)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[ultra]",
+          "name": "GPT-5.6-Sol (ultra)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-terra[low]",
+          "name": "GPT-5.6-Terra (low)",
+          "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-terra[medium]",
+          "name": "GPT-5.6-Terra (medium)",
+          "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-terra[high]",
+          "name": "GPT-5.6-Terra (high)",
+          "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[xhigh]",
+          "name": "GPT-5.6-Terra (xhigh)",
+          "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[max]",
+          "name": "GPT-5.6-Terra (max)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[ultra]",
+          "name": "GPT-5.6-Terra (ultra)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-luna[low]",
+          "name": "GPT-5.6-Luna (low)",
+          "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-luna[medium]",
+          "name": "GPT-5.6-Luna (medium)",
+          "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-luna[high]",
+          "name": "GPT-5.6-Luna (high)",
+          "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[xhigh]",
+          "name": "GPT-5.6-Luna (xhigh)",
+          "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[max]",
+          "name": "GPT-5.6-Luna (max)",
+          "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.5[low]",
+          "name": "GPT-5.5 (low)",
+          "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.5[medium]",
+          "name": "GPT-5.5 (medium)",
+          "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.5[high]",
+          "name": "GPT-5.5 (high)",
+          "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.5[xhigh]",
+          "name": "GPT-5.5 (xhigh)",
+          "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[low]",
+          "name": "GPT-5.4 (low)",
+          "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4[medium]",
+          "name": "GPT-5.4 (medium)",
+          "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4[high]",
+          "name": "GPT-5.4 (high)",
+          "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[xhigh]",
+          "name": "GPT-5.4 (xhigh)",
+          "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[low]",
+          "name": "GPT-5.4-Mini (low)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4-mini[medium]",
+          "name": "GPT-5.4-Mini (medium)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4-mini[high]",
+          "name": "GPT-5.4-Mini (high)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[xhigh]",
+          "name": "GPT-5.4-Mini (xhigh)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[low]",
+          "name": "GPT-5.3-Codex-Spark (low)",
+          "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[medium]",
+          "name": "GPT-5.3-Codex-Spark (medium)",
+          "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[high]",
+          "name": "GPT-5.3-Codex-Spark (high)",
+          "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[xhigh]",
+          "name": "GPT-5.3-Codex-Spark (xhigh)",
+          "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+        }
+      ],
+      "currentModelId": "gpt-5.6-luna[low]"
+    },
+    "modes": {
+      "availableModes": [
+        {
+          "id": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "id": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "id": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ],
+      "currentModeId": "read-only"
+    },
+    "configOptions": [
+      {
+        "id": "mode",
+        "name": "Mode",
+        "description": "Approval and sandboxing preset for the session",
+        "category": "mode",
+        "type": "select",
+        "currentValue": "read-only",
+        "options": [
+          {
+            "value": "read-only",
+            "name": "Read-only",
+            "description": "Requires approval to edit files and run commands."
+          },
+          {
+            "value": "agent",
+            "name": "Agent",
+            "description": "Read and edit files, and run commands."
+          },
+          {
+            "value": "agent-full-access",
+            "name": "Agent (full access)",
+            "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+          }
+        ]
+      },
+      {
+        "id": "collaboration_mode",
+        "name": "Collaboration mode",
+        "description": "How Codex collaborates for subsequent turns",
+        "category": "collaboration_mode",
+        "type": "select",
+        "currentValue": "default",
+        "options": [
+          {
+            "value": "default",
+            "name": "Default"
+          },
+          {
+            "value": "plan",
+            "name": "Plan",
+            "description": "Plan before making changes"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "name": "Model",
+        "description": "Model Codex uses for the session",
+        "category": "model",
+        "type": "select",
+        "currentValue": "gpt-5.6-luna",
+        "options": [
+          {
+            "value": "gpt-5.6-sol",
+            "name": "GPT-5.6-Sol",
+            "description": "Latest frontier agentic coding model."
+          },
+          {
+            "value": "gpt-5.6-terra",
+            "name": "GPT-5.6-Terra",
+            "description": "Balanced agentic coding model for everyday work."
+          },
+          {
+            "value": "gpt-5.6-luna",
+            "name": "GPT-5.6-Luna",
+            "description": "Fast and affordable agentic coding model."
+          },
+          {
+            "value": "gpt-5.5",
+            "name": "GPT-5.5",
+            "description": "Frontier model for complex coding, research, and real-world work."
+          },
+          {
+            "value": "gpt-5.4",
+            "name": "GPT-5.4",
+            "description": "Strong model for everyday coding."
+          },
+          {
+            "value": "gpt-5.4-mini",
+            "name": "GPT-5.4-Mini",
+            "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+          },
+          {
+            "value": "gpt-5.3-codex-spark",
+            "name": "GPT-5.3-Codex-Spark",
+            "description": "Ultra-fast coding model."
+          }
+        ]
+      },
+      {
+        "id": "reasoning_effort",
+        "name": "Reasoning effort",
+        "description": "How much reasoning effort the model should use",
+        "category": "thought_level",
+        "type": "select",
+        "currentValue": "low",
+        "options": [
+          {
+            "value": "low",
+            "name": "Low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "value": "medium",
+            "name": "Medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "value": "high",
+            "name": "High",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "value": "xhigh",
+            "name": "Xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "value": "max",
+            "name": "Max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          }
+        ]
+      },
+      {
+        "id": "fast-mode",
+        "name": "Fast mode",
+        "description": "1.5x speed, increased usage",
+        "category": "model_config",
+        "type": "select",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Off",
+            "description": "Default speed, normal usage"
+          },
+          {
+            "value": "on",
+            "name": "On",
+            "description": "1.5x speed, increased usage"
+          }
+        ]
+      }
+    ]
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "action_retest": {
+    "X": "OFF",
+    "Y": "ON"
+  },
+  "dialogue_projection": {
+    "X": "ON",
+    "Y": "OFF"
+  },
+  "entry_projection": {
+    "X": "ON",
+    "Y": "OFF"
+  }
+}

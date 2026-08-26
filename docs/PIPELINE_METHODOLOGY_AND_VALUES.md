@@ -196,7 +196,7 @@ Power Seed 只读 deterministic `POWER_BASELINE`、少量 Power GBrain craft 与
 - Story Opportunities；
 - 把能力自然职业化成维修、诊断、运输、审核、构筑或流程管理。
 
-关键原则：**Power Seed 决定成长语法。** 它决定“能够怎样成长”，不决定“第几阶段发生”。
+关键原则：**Power Seed 只决定开局 Core Asymmetry 的成长语法。** 它不包办全书所有能力；后续新的 Power Asymmetry 由 Story Program 通过真实故事获得并与旧优势复合。
 
 ---
 
@@ -250,21 +250,21 @@ Story Program 是第一次同时看到完整 World 与 Character 的阶段，也
 
 #### 权威与调度必须分开
 
-- Power Seed 决定成长语法；
+- Power Seed 决定开局 Core Asymmetry 及其成长语法；
 - Human Seed 决定人物长期选择偏向与多重动机；
 - World Vision 决定世界事实与独立人物行动；
-- Story Program 不能重写以上创意权威；
-- Story Program 必须决定这些已批准潜力在什么故事因果中真正变成现实。
+- Story Program 不能重写以上创意权威，但可以通过真实获得加入新的 Power Asymmetry；
+- Story Program 决定开局优势怎样成长、新优势怎样加入，以及新旧优势怎样复合成新的具体玩法。
 
-因此：**Power Seed 决定怎样成长；Story Program 决定这些成长怎样通过故事成为现实。**
+因此：**Power Seed 决定开局核心；Story Program 决定长期优势栈怎样通过故事长出来。**
 
 #### 全书级责任
 
 - 5—7 个自然大型阶段；
 - 清楚的 **全书成长与 Core Fantasy 兑现脊柱**：4—6 次可观察质变，分布在早期、中期、高阶多个自然阶段；
-- 早期第一次成立、中期更强/更不同的新玩法、高阶真实质变必须都可复述；
-- 每次成长写成具体事实：以前打不过谁、去不了哪里、做不到什么，现在具体能怎样战斗、移动、探索或使用 Core Fantasy；
-- 如果 5—7 个阶段从头到尾都没有真实 Power / Capability progression，即使人物关系很好，也不符合成熟男频成长长篇；
+- 优势栈不能只让开局能力变大：全书要有新的 Power Asymmetry 加入，并出现新旧优势组合后单项做不到的复合玩法；这不是每阶段新增能力税；
+- 每次成长写成具体事实：以前打不过谁、去不了哪里、做不到什么，现在具体能怎样战斗、移动、探索，或哪两项优势怎样一起产生新结果；
+- 新优势/新层级/意外复合首次被他人看见时，现场已有懂行者或对手的惊讶比较可以直接承担爽点；态度转变只在会改变后续行动或关系时进入长期因果；
 - Core Fantasy 必须周期性重新证明“为什么这项力量仍值得追”，但不要求每阶段升级。
 
 #### 大型阶段发动机
@@ -356,7 +356,7 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 通常 3—5 个连续故事锚点；
 - Future 10 的逐章具体事件；
 - 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
-- **Story Program execution, not rescheduling**：Power Seed 决定 growth grammar，Story Program 决定长期 realization，Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略；
+- **Story Program execution, not rescheduling**：Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势成长、后续新 Asymmetry 获得与复合；Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略；
 - **Block Delta**：每块只记录相对本块开始真实改变的 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State，没变化的维度省略，上一块已经发生的变化不能重复包装成新 Delta；
 - **World Model Release**：作者知道 World Vision 不等于读者知道。开书前三章在相关冲突或爽点需要之前，通过事件让读者获得当前需要的强弱、身份、价值与能力边界；新造概念第一次影响选择时，先让读者看到触发、可见结果和行动含义，再允许名称或深层解释进入，不把正文写成设定说明；
 - **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价；

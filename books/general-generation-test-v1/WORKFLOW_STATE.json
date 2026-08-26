@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "artifacts": {
+    "creative.fantasy_seed": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    },
+    "creative.world_vision": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    },
+    "creative.story_program": {
+      "revision": 1,
+      "status": "DRAFT",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "book.design": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "book.long_plan": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "book.future_10": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "book.canon_state": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "book.prologue": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    }
+  }
+}

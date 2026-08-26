@@ -1,0 +1,400 @@
+diff --git a/tests/test_mvp.py b/tests/test_mvp.py
+index 6bf6b16..c498ee2 100644
+--- a/tests/test_mvp.py
++++ b/tests/test_mvp.py
+@@ -116,8 +116,12 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
+         "BOOK.md",
+         "PROMPTS.md",
+         "PROPOSAL.md",
+-        "FANTASY_SEED.md",
+         "WORLD_VISION.md",
++        "POWER_SEED.md",
++        "HUMAN_SEED.md",
++        "CHARACTER.md",
++        "CHARACTER_INITIAL_STATE.md",
++        "CHARACTER_AUDITION.md",
+         "CREATIVE_STATE.json",
+         "chapters",
+     }
+@@ -125,8 +129,6 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
+     payload = read_book_payload("demo", tmp_path)
+     assert set(payload["prompt_templates"]) == {
+         "idea",
+-        "fantasy_seed",
+-        "world_vision",
+         "outline",
+         "chapter_prep",
+         "chapter",
+@@ -144,12 +146,15 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
+     assert "growth_genome" in payload["design_sections"]
+     assert "## 0. 本书成长基因图" in payload["book_content"]
+     assert payload["creative_state"] == {
+-        "fantasy_seed": {"origin": "empty", "status": "empty"},
+         "world_vision": {"origin": "empty", "status": "empty"},
++        "power_seed": {"origin": "empty", "status": "empty"},
++        "human_seed": {"origin": "empty", "status": "empty"},
++        "character_card": {"origin": "empty", "status": "empty"},
+         "proposal": {"origin": "empty", "status": "empty"},
+     }
+-    assert set(payload["creative_artifacts"]) == {"fantasy_seed", "world_vision", "proposal"}
+-
++    assert set(payload["creative_artifacts"]) == {
++        "world_vision", "power_seed", "human_seed", "character_card", "proposal"
++    }
+ 
+ def test_prompt_template_parser_ignores_unsupported_top_level_sections() -> None:
+     parsed = text_to_prompt_templates(
+@@ -201,7 +206,7 @@ def test_legacy_long_plan_heading_is_read_and_new_heading_is_written() -> None:
+     assert "# 未来100章大型剧情块" not in rewritten
+ 
+ 
+-def test_old_book_without_creative_files_still_loads_and_legacy_proposal_is_not_approved(tmp_path: Path) -> None:
++def test_existing_book_without_split_files_loads_as_unmigrated_new_architecture(tmp_path: Path) -> None:
+     book_dir = tmp_path / "old-book"
+     book_dir.mkdir()
+     (book_dir / "BOOK.md").write_text("# 小说总体设计画像\n\n旧书", encoding="utf-8")
+@@ -215,123 +220,126 @@ def test_old_book_without_creative_files_still_loads_and_legacy_proposal_is_not_
+         "origin": "legacy_unknown",
+         "status": "draft",
+     }
+-    assert payload["creative_state"]["fantasy_seed"] == {"origin": "empty", "status": "empty"}
+-    assert not (book_dir / "FANTASY_SEED.md").exists()
++    for artifact in ("world_vision", "power_seed", "human_seed", "character_card"):
++        assert payload["creative_state"][artifact] == {"origin": "empty", "status": "empty"}
++    # Loading does not synthesize compatibility artifacts. The book must explicitly
++    # rebuild upstream creative authority through the new architecture.
+     assert not (book_dir / "WORLD_VISION.md").exists()
+-    assert not (book_dir / "CREATIVE_STATE.json").exists()
+-
++    assert not (book_dir / "POWER_SEED.md").exists()
++    assert not (book_dir / "HUMAN_SEED.md").exists()
++    assert not (book_dir / "CHARACTER.md").exists()
+ 
+-def test_creative_state_sources_and_explicit_approval_api(tmp_path: Path, monkeypatch) -> None:
++def test_creative_state_sources_and_single_character_approval_api(tmp_path: Path, monkeypatch) -> None:
+     monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+     local_client = TestClient(app)
+     assert local_client.post("/api/books", json={"book_id": "creative"}).status_code == 201
+ 
+-    generated = local_client.put(
+-        "/api/books/creative/fantasy-seed",
+-        json={"content": "MODEL_GENERATED_SEED", "origin": "model_generated"},
++    world = local_client.put(
++        "/api/books/creative/world-vision",
++        json={"content": "# PROTAGONIST-BLIND WORLD VISION\n\nWORLD", "origin": "model_generated"},
+     )
+-    assert generated.status_code == 200
+-    assert generated.json()["creative_state"]["fantasy_seed"] == {
+-        "origin": "model_generated",
+-        "status": "draft",
++    assert world.status_code == 200
++    assert world.json()["creative_state"]["world_vision"] == {
++        "origin": "model_generated", "status": "draft"
+     }
++    approved_world = local_client.post("/api/books/creative/world-vision/approve")
++    assert approved_world.status_code == 200
++    assert approved_world.json()["creative_state"]["world_vision"]["status"] == "author_approved"
+ 
+-    selected = local_client.put(
+-        "/api/books/creative/world-vision",
+-        json={"content": "MODEL_SELECTED_WORLD", "origin": "model_selected"},
+-    )
+-    assert selected.status_code == 200
+-    assert selected.json()["creative_state"]["world_vision"] == {
+-        "origin": "model_selected",
+-        "status": "draft",
++    power = local_client.put(
++        "/api/books/creative/power-seed",
++        json={"content": "# POWER SEED｜匿名能力\n\n## Core Fantasy\n能做到一件异常的事。", "origin": "model_selected"},
++    )
++    human = local_client.put(
++        "/api/books/creative/human-seed",
++        json={"content": "# HUMAN SEED｜季衡／想赢\n\n## Core Obsession\n一直想赢。\n\n## Initial State Seed\n### 当前私人欲望\n赢下眼前这一场。", "origin": "author_edited"},
++    )
++    assert power.status_code == human.status_code == 200
++    assert power.json()["creative_state"]["power_seed"]["status"] == "draft"
++    assert human.json()["creative_state"]["human_seed"]["status"] == "draft"
++
++    # Power/Human have no separate approval endpoint. One Character approval freezes both.
++    assert local_client.post("/api/books/creative/power-seed/approve").status_code == 404
++    approved_character = local_client.post("/api/books/creative/character/approve")
++    assert approved_character.status_code == 200
++    payload = approved_character.json()
++    assert payload["creative_state"]["power_seed"]["status"] == "author_approved"
++    assert payload["creative_state"]["human_seed"]["status"] == "author_approved"
++    assert payload["creative_state"]["character_card"] == {
++        "origin": "deterministic", "status": "author_approved"
+     }
++    assert "匿名能力" in payload["character_card"]
++    assert "一直想赢" in payload["character_card"]
++    assert "赢下眼前这一场" in payload["character_initial_state"]
++
+     proposal = local_client.put(
+         "/api/books/creative/proposal",
+         json={"content": "MODEL_SELECTED_PROGRAM", "origin": "model_selected"},
+     )
+     assert proposal.json()["creative_state"]["proposal"] == {
+-        "origin": "model_selected",
+-        "status": "draft",
++        "origin": "model_selected", "status": "draft"
+     }
+-
+-    cannot_approve_in_put = local_client.put(
+-        "/api/books/creative/proposal",
+-        json={"content": "FORGED_APPROVAL", "origin": "author_approved"},
+-    )
+-    assert cannot_approve_in_put.status_code == 422
+-
+-    approved_seed = local_client.post("/api/books/creative/fantasy-seed/approve")
+-    assert approved_seed.json()["creative_state"]["fantasy_seed"]["status"] == "author_approved"
+-    approved_world = local_client.post("/api/books/creative/world-vision/approve")
+-    assert approved_world.json()["creative_state"]["world_vision"]["status"] == "author_approved"
+     approved_proposal = local_client.post("/api/books/creative/proposal/approve")
+     assert approved_proposal.json()["creative_state"]["proposal"]["status"] == "author_approved"
+ 
++    # Editing either seed reopens Character authority without preserving a stale Character card.
+     edited = local_client.put(
+-        "/api/books/creative/fantasy-seed",
+-        json={"content": "AUTHOR_EDITED_AFTER_APPROVAL"},
++        "/api/books/creative/human-seed",
++        json={"content": "# HUMAN SEED｜季衡／更想赢\n\n## Core Obsession\n更想赢。"},
+     )
+-    assert edited.json()["creative_state"]["fantasy_seed"] == {
+-        "origin": "author_edited",
+-        "status": "draft",
+-    }
+-    edited_world = local_client.put(
+-        "/api/books/creative/world-vision",
+-        json={"content": "AUTHOR_EDITED_WORLD_AFTER_APPROVAL"},
+-    )
+-    assert edited_world.json()["creative_state"]["world_vision"] == {
+-        "origin": "author_edited",
+-        "status": "draft",
+-    }
+-    edited_proposal = local_client.put(
+-        "/api/books/creative/proposal",
+-        json={"content": "AUTHOR_EDITED_PROGRAM_AFTER_APPROVAL"},
+-    )
+-    assert edited_proposal.json()["creative_state"]["proposal"] == {
+-        "origin": "author_edited",
+-        "status": "draft",
+-    }
+-
++    assert edited.json()["creative_state"]["human_seed"]["status"] == "draft"
++    assert edited.json()["creative_state"]["character_card"] == {"origin": "empty", "status": "empty"}
+ 
+ def test_creative_prompt_approval_boundaries_and_outline_authority(tmp_path: Path, monkeypatch) -> None:
+     monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+     local_client = TestClient(app)
+     assert local_client.post("/api/books", json={"book_id": "gates"}).status_code == 201
+-    base = {
+-        "book_id": "gates",
+-        "template": "VISIBLE_TEMPLATE",
+-        "creative_direction": "AUTHOR_DIRECTION",
+-        "fantasy_seed": "SEED",
+-        "world_vision": "WORLD",
+-        "proposal_context": "PROGRAM",
+-    }
+ 
+-    assert local_client.post("/api/prompt", json={**base, "mode": "fantasy_seed"}).status_code == 200
+-    world_blocked = local_client.post("/api/prompt", json={**base, "mode": "world_vision"})
+-    assert world_blocked.status_code == 422
+-    assert world_blocked.json()["detail"]["missing_artifacts"] == ["fantasy_seed"]
+-    program_blocked = local_client.post("/api/prompt", json={**base, "mode": "idea"})
+-    assert program_blocked.status_code == 422
++    # World is the first creative authority and needs no upstream approval.
++    world_prompt = local_client.post(
++        "/api/prompt",
++        json={"book_id": "gates", "mode": "world_vision", "creative_direction": "AUTHOR_DIRECTION"},
++    )
++    assert world_prompt.status_code == 200
++    assert "PROTAGONIST-BLIND WORLD VISION" in world_prompt.json()["prompt"]
+ 
+-    for artifact, path in (
+-        ("fantasy_seed", "fantasy-seed"),
+-        ("world_vision", "world-vision"),
+-        ("proposal", "proposal"),
+-    ):
+-        saved = local_client.put(
+-            f"/api/books/gates/{path}",
+-            json={"content": artifact.upper(), "origin": "model_generated"},
+-        )
+-        assert saved.status_code == 200
+-        assert saved.json()["creative_state"][artifact]["status"] == "draft"
++    power_blocked = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "power_seed"})
++    human_blocked = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "human_seed"})
++    assert power_blocked.status_code == human_blocked.status_code == 422
++    assert power_blocked.json()["detail"]["missing_artifacts"] == ["world_vision"]
+ 
+-    assert local_client.post("/api/prompt", json={**base, "mode": "outline"}).status_code == 422
+-    for path in ("fantasy-seed", "world-vision", "proposal"):
+-        assert local_client.post(f"/api/books/gates/{path}/approve").status_code == 200
+-    final = local_client.post("/api/prompt", json={**base, "mode": "outline"})
+-    assert final.status_code == 200
+-    assert "VISIBLE_TEMPLATE" in final.json()["prompt"]
++    local_client.put(
++        "/api/books/gates/world-vision",
++        json={"content": "# PROTAGONIST-BLIND WORLD VISION\n\n## 力量体系与正常值\n一人一主承载。", "origin": "model_generated"},
++    )
++    assert local_client.post("/api/books/gates/world-vision/approve").status_code == 200
++    assert local_client.post("/api/prompt", json={"book_id": "gates", "mode": "power_seed"}).status_code == 200
++    assert local_client.post("/api/prompt", json={"book_id": "gates", "mode": "human_seed"}).status_code == 200
+ 
++    program_blocked = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "idea"})
++    assert program_blocked.status_code == 422
++    assert "character_card" in program_blocked.json()["detail"]["missing_artifacts"]
++
++    local_client.put(
++        "/api/books/gates/power-seed",
++        json={"content": "# POWER SEED｜双位\n\n## Core Fantasy\n保留第二位置。", "origin": "model_selected"},
++    )
++    local_client.put(
++        "/api/books/gates/human-seed",
++        json={"content": "# HUMAN SEED｜石砚／找声音\n\n## Core Obsession\n找回一个声音。", "origin": "model_selected"},
++    )
++    assert local_client.post("/api/books/gates/character/approve").status_code == 200
++    program = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "idea"})
++    assert program.status_code == 200
++    assert "Do Not Reconcile Away the Collision" in program.json()["prompt"]
++
++    outline_blocked = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "outline"})
++    assert outline_blocked.status_code == 422
++    local_client.put("/api/books/gates/proposal", json={"content": "PROGRAM", "origin": "model_generated"})
++    assert local_client.post("/api/books/gates/proposal/approve").status_code == 200
++    final = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "outline"})
++    assert final.status_code == 200
++    assert "Character Authority" in final.json()["prompt"]
+ 
+ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
+     fantasy = generate_prompt(
+@@ -731,9 +739,8 @@ def test_prompt_generation_and_response_do_not_write_book_before_save(tmp_path:
+     response = client.post(
+         "/api/prompt",
+         json={
+-            "mode": "fantasy_seed",
+-            "template": "template",
+-            "book_content": "page-visible-book",
++            "mode": "world_vision",
++            "book_id": "demo",
+             "creative_direction": "author direction",
+             "selected_references": [],
+         },
+@@ -741,7 +748,6 @@ def test_prompt_generation_and_response_do_not_write_book_before_save(tmp_path:
+     assert response.status_code == 200
+     assert (tmp_path / "demo" / "BOOK.md").read_text(encoding="utf-8") == before
+ 
+-
+ def test_empty_eight_outline_fields_block_chapter_prompt() -> None:
+     empty = "\n".join(f"{field}：" for field in (
+         "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+@@ -1348,7 +1354,8 @@ def test_default_retrieval_query_uses_context_instead_of_generic_prefix() -> Non
+     context_body = js[start:end]
+     assert 'book_content: composeBookContent()' in context_body
+     assert 'current_long_block' in context_body
+-    assert 'fantasy_seed' in context_body
++    assert 'character_card' in context_body
++    assert 'fantasy_seed' not in context_body
+     assert 'world_vision' in context_body
+     assert 'proposal_context' in context_body
+     assert 'current_outline' in context_body
+@@ -1874,7 +1881,6 @@ def test_planning_retrieval_uses_hidden_keyword_aliases_without_query_embedding(
+     result = retrieve_gbrain(
+         mode="world_vision",
+         creative_direction="玄幻成长",
+-        fantasy_seed="已批准核心幻想：看见别人看不见的路",
+         query_func=fake_query,
+         page_func=lambda _slug: _page("Mechanism", "世界扩张每一层都新增读者想进入、想获得或想知道的具体欲望。"),
+     )
+@@ -1884,7 +1890,8 @@ def test_planning_retrieval_uses_hidden_keyword_aliases_without_query_embedding(
+     ]
+     assert result["query_strategy"] == "planning_keyword_aliases"
+     assert result["query_texts"] == seen
+-    assert "看见别人看不见的路" in result["retrieval_brief"]
++    assert "玄幻成长" in result["retrieval_brief"]
++    assert "Fantasy Seed" not in result["retrieval_brief"]
+     assert result["accepted_count"] == 1
+     assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+ 
+@@ -2014,13 +2021,14 @@ def test_planning_retrieval_keeps_full_chinese_brief_when_semantic_query_is_avai
+     brief = build_retrieval_brief(
+         mode="idea",
+         creative_direction="玄幻成长",
+-        fantasy_seed="SEED_ALPHA",
+         world_vision="WORLD_BETA",
++        character_card="CHARACTER_ALPHA",
+     )
+     effective, strategy = default_effective_query("idea", brief)
+     assert effective == brief
+     assert strategy == "semantic_brief"
+-    assert "SEED_ALPHA" in effective
++    assert "CHARACTER_ALPHA" in effective
++    assert "SEED_ALPHA" not in effective
+     assert "WORLD_BETA" in effective
+ 
+ 
+@@ -2061,12 +2069,12 @@ def test_world_vision_gbrain_brief_api_keeps_chinese_visible_and_alias_internal(
+         json={
+             "mode": "world_vision",
+             "creative_direction": "玄幻成长",
+-            "fantasy_seed": "已批准幻想：隐藏道路",
+         },
+     )
+     assert response.status_code == 200
+     payload = response.json()
+-    assert "已批准幻想：隐藏道路" in payload["retrieval_brief"]
++    assert "玄幻成长" in payload["retrieval_brief"]
++    assert "Fantasy Seed" not in payload["retrieval_brief"]
+     assert payload["effective_query"] == '"world fantasy" OR "world entry" OR "narrative compounding"'
+     assert payload["query_strategy"] == "planning_keyword_aliases"
+ 
+@@ -2349,7 +2357,6 @@ def test_planning_query_batches_round_robin_preserve_multiple_retrieval_intents(
+ 
+     result = retrieve_gbrain(
+         mode="world_vision",
+-        fantasy_seed="已批准幻想",
+         query_func=fake_query,
+         page_func=lambda slug: _page("Mechanism", f"{slug} 的可迁移抽象。"),
+     )
+@@ -2387,7 +2394,6 @@ def test_world_vision_fixed_coordinate_reference_does_not_consume_three_creative
+     }
+     result = retrieve_gbrain(
+         mode="world_vision",
+-        fantasy_seed="已批准幻想",
+         query_override="manual world query",
+         query_func=lambda _query, **_kwargs: raw,
+         page_func=pages.__getitem__,
+@@ -2423,7 +2429,6 @@ def test_world_coordinate_reference_does_not_reenter_downstream_creative_slots(m
+     }
+     result = retrieve_gbrain(
+         mode=mode,
+-        fantasy_seed="已批准幻想",
+         world_vision="已批准世界",
+         query_override="manual planning query",
+         query_func=lambda _query, **_kwargs: raw,
+@@ -2452,7 +2457,6 @@ def test_planning_multi_intent_query_tolerates_one_optional_query_failure(monkey
+ 
+     result = retrieve_gbrain(
+         mode="world_vision",
+-        fantasy_seed="已批准幻想",
+         query_func=fake_query,
+         page_func=lambda _slug: _page("Mechanism", "世界入口改变下一步行动空间。"),
+     )
+@@ -2470,7 +2474,6 @@ def test_planning_multi_intent_query_still_surfaces_total_gbrain_failure(monkeyp
+     with pytest.raises(GBrainQueryError, match="gbrain unavailable"):
+         retrieve_gbrain(
+             mode="world_vision",
+-            fantasy_seed="已批准幻想",
+             query_func=fail_query,
+             page_func=lambda _slug: "",
+         )
+@@ -3025,7 +3028,9 @@ def test_old_book_gets_code_default_hybrid_templates_without_prompt_file_write(t
+     payload = read_book_payload("old-book", tmp_path)
+     assert payload["prompt_templates"]["context_curator"] == DEFAULT_PROMPT_TEMPLATES["context_curator"]
+     assert payload["prompt_templates"]["specialist_emotion"] == DEFAULT_PROMPT_TEMPLATES["specialist_emotion"]
+-    assert payload["prompt_templates"]["idea"] == "LEGACY IDEA"
++    assert "LEGACY IDEA" in payload["prompt_templates"]["idea"]
++    assert "Character Authority" in payload["prompt_templates"]["idea"]
++    assert "Fantasy Seed" not in payload["prompt_templates"]["idea"]
+     assert prompts_path.read_bytes() == before
+ 
+ 

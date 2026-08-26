@@ -1,0 +1,18 @@
+{
+  "entry": {
+    "X": "OFF",
+    "Y": "ON"
+  },
+  "action": {
+    "X": "OFF",
+    "Y": "ON"
+  },
+  "reveal": {
+    "X": "ON",
+    "Y": "OFF"
+  },
+  "emotion": {
+    "X": "OFF",
+    "Y": "ON"
+  }
+}

@@ -56,9 +56,11 @@ STORY_VALUE_OVER_PROCEDURE_DIRECTION = """支撑性逻辑不得自动成为故�
 
 CORE_FANTASY_INVARIANT = """核心幻想不变量：Fantasy Seed 与 World Vision 一旦由作者批准，后续 Story Program、Outline、Review 和单章规划不能静默替换这本书最值得幻想的东西。**核心幻想是长期读者承诺，不是主角的人生使命，也不天然拥有每个大型阶段的最高叙事权重。** 它必须持续活着、反复得到有分量的兑现，但某个阶段的主要阅读满足也可以来自人物人生、不可替代的关系或世界自身正在发生的大事。能力、装备、资源、关系、身份、领地等可以承载幻想，但不要为了证明核心幻想存在，就把每个阶段都改造成一次能力升级、能力反制或更大版本的同一玩法。"""
 
-FANTASY_COMPOUNDING_DIRECTION = """幻想复利优先于操作流程复利：长篇复利要让已经发生的幻想兑现真实进入后续，但**复利不等于每个大型阶段都继续放大能力本身**。上一轮获得的力量、物件、关系、身份、知识和世界事实，可以改变主角的人生选择、重要关系、敌人欲望、世界事件或下一次核心幻想兑现；只要过去故事持续改变未来故事，就属于有效复利。不要把“能力新用法 → 专门反制 → 更强能力新用法”变成长篇唯一升级轨道，也不要把规模、流程、资产数量增长本身当作主要成长。"""
+FANTASY_COMPOUNDING_DIRECTION = """幻想复利优先于操作流程复利：长篇中的 Power Asymmetry 应形成**持续积累的优势栈**，而不是每轮结束重新归零，也不能只让开局那一个能力无限放大。纵向成长可以同时发生三种变化：已有非对称优势继续深化；通过真实故事获得新的非对称优势；旧优势与新优势发生复合，产生任一单项都做不到的新玩法。新的非对称优势可以来自功法、技艺、身体/血脉、奇物/装备、知识经验、伴生体或本书自己的力量来源，只要它真正形成新的 Privilege Delta，而不是小便利、换皮技能或库存加一。全书层面必须让新优势加入并发生可复述的复合效应，但**不要求每个大型阶段新增一项**；人物/关系/世界阶段仍可以没有 Power Delta。开局 Core Asymmetry 继续作为辨识度锚点，新获得不应把它淘汰，而应与旧积累共同改变后续战斗、探索、选择、敌人判断或核心幻想兑现。不要把优势栈写成数据库、组件清单或“收集能力”本身的职业流程。"""
 
 RELATIONSHIP_RECONFIGURATION_DIRECTION = """Relationship Reconfiguration（Story Program 创作方向，不新增字段或 Hard Gate）：值得长期展开的核心优势可以改变原本默认成立的人际与博弈关系，但 **Character Autonomy ≠ Symmetric Stakeholder Power，Relationship Reconfiguration ≠ Permanent Renegotiation**。配角自治只要求人物有自己的欲望并据此行动，不要求每个人都维持制度意义上的独立、平等议价或拒绝靠近主角。关系可以因欲望变得更近、更远、更依赖、更敌对、更不对等或彻底换位；这些都可以是自主选择。关系重构的价值在于让上一轮故事改变以后“谁会怎样对待谁”，而不是把所有关系都改写成安全、理性、条件谈判。探索、战斗、谜团、生存与世界奇观仍可成为主发动机。"""
+
+ASYMMETRY_REVEAL_PAYOFF_DIRECTION = """Power Asymmetry Reveal / Social Proof（软原则，不新增字段或 Hard Gate）：主角在他人面前第一次显露新非对称优势、新层级或意外复合时，先让超标结果发生，再用现场已有的懂行者/对手/同伴的短反应完成“这不该是同层能做到的”比较，让惊讶本身成为爽点；不凭空加围观者，也不做群体吹捧。只有重新估价会改变后续行动（如招揽、畏惧、敌意、竞争、信任或关系位置）时才让态度转变进入剧情，否则惊讶/确认后即可停止。已公开优势的普通重复使用不反复演震惊。"""
 
 WORLD_INDEPENDENCE_NARRATIVE_WEIGHT_DIRECTION = """World Independence ≠ Narrative Equal Weight：独立世界只要求没有主角时，仍有具体的人在追求东西、具体事件即将发生、值得进入的地点/奇观/危险继续存在；不要求为所有利益方建立完整政治经济模型，也不要求每一种真实利益获得同等叙事权重。**世界可以明显偏向核心幻想，甚至大量提供与主角能力高度契合的强敌、宝物、遗迹、职业生态或奇观；这在商业男频中常常是优点。** 真正要避免的是世界被核心能力完全解释：所有重要人物只为提供下一次能力用法，所有冲突都只是下一关，所有世界规则都由金手指语义派生。真实存在也不等于值得成为主发动机；核心幻想、主角人生牵引和当前最馋人的故事对象决定叙事权重。"""
 
@@ -76,7 +78,7 @@ SEED_LONG_FORM_PACING_DIRECTION = """Seed Long-form Pacing：早期要尽快让�
 
 SEED_SUPPORTING_LOGIC_DIRECTION = """Seed Supporting Logic Boundary：Seed 只需要保证核心幻想不是明显自相矛盾，不负责把可信性问题完整解决。不要因为一个能力可重复使用，就提前把它规划成检测、维护、运输、生产、运营或其它职业流程；这些 supporting logic 只有真的会改变幻想快感时才进入 Seed。"""
 
-OUTLINE_FANTASY_PROOF_RULE = """Outline Fantasy Proof（软规划原则，不新增字段或 Hard Gate）：Growth is a longitudinal invariant, not a per-block form requirement。Power Seed 决定成长 grammar，Story Program 决定长期 growth realization；Outline 只负责把已经批准、且确实落入当前规划窗口的 Power / Capability 质变、核心幻想兑现或高价值获得，落实成具体、不可逆、可复述的故事事件。没有这类变化的剧情块可以完全不写 Power 或 Acquisition；不要为了证明核心幻想仍在，就补微升级、小奖励、新权限或新地图。反过来，Story Program 已明确安排的真实成长落入当前窗口时，Outline 不能因为人物故事更强而把它省略。不要用“能力理解更深、体系更完善、行动空间扩大、影响力提升”这种摘要替代真实变化。"""
+OUTLINE_FANTASY_PROOF_RULE = """Outline Fantasy Proof（软规划原则，不新增字段或 Hard Gate）：Growth is a longitudinal invariant, not a per-block form requirement。Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势的长期成长、后续新 Power Asymmetry 获得与复合；Outline 只负责把已经批准、且确实落入当前规划窗口的 Power / Capability 质变、核心幻想兑现或高价值获得，落实成具体、不可逆、可复述的故事事件。没有这类变化的剧情块可以完全不写 Power 或 Acquisition；不要为了证明核心幻想仍在，就补微升级、小奖励、新权限或新地图。反过来，Story Program 已明确安排的真实成长落入当前窗口时，Outline 不能因为人物故事更强而把它省略。不要用“能力理解更深、体系更完善、行动空间扩大、影响力提升”这种摘要替代真实变化。"""
 
 OUTLINE_WORLD_MODEL_RELEASE = """Outline World Model Release（新书前三章软规划原则，不新增字段或 Hard Gate）：作者在 World Vision 里知道某个概念，不等于读者已经知道。Outline 要决定读者在哪个具体事件中第一次获得它的可用含义：当一个新规则、专属名词、力量层级或身份第一次影响人物选择时，优先让同一场或相邻场先出现可观察的触发、结果和行动含义，让读者先能预测“这样会发生什么、人物因此能/不能做什么”，再允许使用概念名或保留更深原因。前三章建立当前故事所需的最低可用坐标：主角大致处在哪一层、明显更强的人能做到什么、当前争夺的东西值在哪里、核心优势面对更高层对象的真实边界；后续再随故事需要扩展。不要把这些集中成设定说明，也不要用意象、哲学定义或专属术语代替规则本身；优先通过强弱对照、具体获得/失去、能力选择/失败、身份跃迁后的实际新入口自然展示。"""
 
@@ -282,6 +284,8 @@ Emotion：启用 / 不启用；理由
 {CORE_FANTASY_INVARIANT}
 
 {PERSISTENT_READER_RULER_DIRECTION}
+
+{ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
 
 {DIRECTOR_NARRATIVE_SALIENCE}
 
@@ -826,7 +830,9 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 {PERSISTENT_READER_RULER_DIRECTION}
 
-主角必须长期真正变强，核心幻想也必须在多个自然阶段反复得到有分量、可观察的兑现；但持续成长属于**全书纵向不变量**，不等于每个大型阶段都必须同时出现新能力、新装备、新资源、新地图和一次能力演示。Power Seed 决定成长语法；Story Program 只决定这些已批准潜力在什么故事因果中真正实现，不能重写 Power Core、凭空增加 High-Tier Mutation 或绕过 Permanent Boundary。
+{ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
+
+主角必须长期真正变强，核心幻想也必须在多个自然阶段反复得到有分量、可观察的兑现；但持续成长属于**全书纵向不变量**，不等于每个大型阶段都必须同时出现新能力、新装备、新资源、新地图和一次能力演示。Power Seed 决定开局 Core Asymmetry 及其成长语法；Story Program 既负责这些已批准潜力怎样在故事中实现，也可以通过真实获得让主角后来加入新的 Power Asymmetry，并安排它们与旧优势发生复合。新增优势不是重写 Power Core：不得篡改开局 Core Asymmetry、凭空改写其 High-Tier Mutation 或绕过 Permanent Boundary。
 
 大型阶段可以主要由三类因果中的任意一种发动：
 - **人生**：私人欲望、具体关系、人生去留、自己造成的旧后果；
@@ -835,9 +841,9 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 三者可以混合，但不平均配额。若本阶段没有新的标志性力量成长或获得，就让它没有；只要全书成长与核心幻想兑现脊柱仍然清楚。不要把一个完整的关系选择或世界冲突重新解释成“这样更容易拿到下一件升级资源”，也不要因为核心幻想是长期读者承诺，就让它自动成为主角的人生使命。
 
-**高价值获得是读者欲望原则，不是阶段字段。** 当世界因果自然出现一把真想要的剑、一门功法、一个身份、一艘船、一个人、一个名额或其它高价值对象时，让人物真实争取、占有、使用和失去；没有自然机会时不要为了填表制造奖励。
+**高价值获得是读者欲望原则，不是阶段字段。** 当世界因果自然出现一把真想要的剑、一门功法、一个身份、一艘船、一个人、一个名额或其它高价值对象时，让人物真实争取、占有、使用和失去；其中真正让主角相对同层新增一种明显 Privilege Delta 的力量、功法、体质、奇物、知识等，可以成为新的 Power Asymmetry。不是每件奖励都要升级成新优势，没有自然机会时不要为了填表制造奖励。
 
-**纵向复利是历史持续生效，不是阶段流水线。** 一旦获得力量、物件、关系、身份、知识、入口或其它重要积累，它必须在后续真实改变行动、选择、敌人应对或世界局面；不要要求每阶段都输出一栏“复利成长”，也不要让旧获得写完即消失。
+**纵向复利是历史持续生效，不是阶段流水线。** Power Asymmetry 尤其不能用完即丢：开局核心优势继续成长，后续可以加入新的非对称优势，旧与新还应出现真正的复合玩法；全书不能始终只靠同一个外挂做数量/距离放大。其它力量、物件、关系、身份、知识、入口也必须在后续真实改变行动、选择、敌人应对或世界局面。不要要求每阶段都新增优势或输出一栏“复利成长”，也不要把优势栈写成清单收集。
 
 **支撑性逻辑不得自动成为故事发动机。** 职业流程、材料处理、宗门行政、运输、诊断、修复、合同、任务分配等可以支撑因果，但除非人物的关键选择真的发生在那里，否则压到背景。世界仍然大于外挂：已有世界人物首先追自己的东西；反制只能从碰撞后的学习产生，不能反推敌人的出生理由。
 
@@ -853,9 +859,9 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 写 3—5 个长期张力：哪些欲望即使没有特殊力量也会继续；力量怎样帮助、诱惑或误导这个人；哪些世界人物/事件不会因主角而改变自己的目标；哪些具体关系能真实改变主角选择。不要统一成一句终极主题。
 
 ## 全书成长与核心幻想兑现脊柱
-只写 4—6 次真正改变主角本人能力与行动方式的可观察质变，并让它们分布在早期、中期与高阶的多个自然阶段，而不是集中成一句“以后会变强”。每次都用具体事实写清“以前做不到什么 → 现在能做什么 / 能打谁 / 能去哪里 / 能怎样使用核心幻想”；拒绝用“行动空间扩大”“能力复利”“层级提升”等后台词替代故事事实。至少让早期第一次成立、中期新玩法、高阶质变都可复述；5—7 个大型阶段若从头到尾都没有真实的力量或能力成长，则不符合男频成长长篇的全书不变量。
+只写 4—6 次真正改变主角本人能力结构与行动方式的可观察质变，并让它们分布在早期、中期与高阶的多个自然阶段，而不是集中成一句“以后会变强”。全书不能只有开局 Core Asymmetry 一路放大：长期必须让**新的 Power Asymmetry 加入**，并让旧优势与新优势产生至少一种可复述的**复合效应**——不是两个能力分别使用，而是组合后出现任一单项都做不到的新玩法。每次都用具体事实写清“以前做不到什么 → 现在能做什么 / 能打谁 / 能去哪里 / 哪两个优势怎样一起产生新结果”；拒绝用“行动空间扩大”“能力复利”“层级提升”等后台词替代故事事实。这里是全书纵向要求，不是每阶段新增能力税；某些大型阶段仍可以完全没有 Power Delta。
 
-这里不重新设计 Power：正常修炼轴、异常掌握轴、高阶质变、永久边界与传奇力量状态全部继承已批准 Power Seed。Story Program 只决定它们在什么因果条件、什么代价与什么人物/世界碰撞中变成现实。
+这里不重写**开局 Core Asymmetry**：它的正常修炼轴、异常掌握轴、高阶质变、永久边界与传奇力量状态全部继承已批准 Power Seed。后续新的 Power Asymmetry 属于故事中的真实获得，可以由 Story Program 规划，但必须来自具体事件/获得并形成清楚的新 Privilege Delta，不能偷偷改写开局能力的定义来假装“新增”。
 
 ## 不可替代的人与关系
 写少量具体人物。每个人先有自己的欲望；说明为什么“同等有用的另一个人”不能替代，以及关系怎样改变主角的风险、去留、时间、暴露或机会牺牲。允许爱情、身体吸引、友情、竞争、依赖、嫉妒、效忠、背叛和敌意，不统一成安全合作。
@@ -903,6 +909,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 
 {PERSISTENT_READER_RULER_DIRECTION}
 
+{ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
+
 {OUTLINE_CORE_GAMEPLAY_VARIATION}
 
 {OUTLINE_STORY_ANCHOR_DENSITY_RULE}
@@ -921,7 +929,7 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 
 {STAGE_CHANGE_PLANNING_RULE}
 
-Outline 是 **Story Program 的执行编译层，不是第二个 Story Program**。Authority ≠ Scheduling：Power Seed 决定力量如何成长，Story Program 决定这些潜力何时、因为什么长期故事因果成为现实，Outline 只决定已批准阶段在当前窗口里通过哪些具体事件发生。不得为了让剧情块“完整”而重新安排力量成长、补小奖励、造新权限、开新地图或把人物成熟冒充 Power / Capability。
+Outline 是 **Story Program 的执行编译层，不是第二个 Story Program**。Authority ≠ Scheduling：Power Seed 决定开局 Core Asymmetry 怎样成长；Story Program 决定开局优势怎样实现、后续新 Power Asymmetry 怎样获得并与旧优势复合；Outline 只决定已批准变化在当前窗口里通过哪些具体事件发生。不得为了让剧情块“完整”而自行新增 Power Asymmetry、重新安排力量成长、补小奖励、造新权限、开新地图或把人物成熟冒充 Power / Capability。
 
 核心幻想、力量占有欲、主角欲望、人物关系和世界事件都可以成为某段故事的主要阅读满足；不要求每块平均覆盖。Supporting Logic 只在改变选择、胜负或结果时展开。Action Space / Expectation Ladder / Mystery Depth / Impact 仍可作为后台读者体验坐标，但只通过具体锚点与实际 Delta 自然显现，不生成对应必填字段。
 
@@ -1024,6 +1032,8 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {OUTLINE_FANTASY_PROOF_RULE}
 
 {PERSISTENT_READER_RULER_DIRECTION}
+
+{ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
 
 {PLOT_ENGINE_DIVERSITY_DIRECTION}
 

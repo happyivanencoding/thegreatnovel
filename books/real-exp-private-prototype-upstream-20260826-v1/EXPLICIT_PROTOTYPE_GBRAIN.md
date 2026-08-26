@@ -1,0 +1,189 @@
+### Prototype Inspiration 1
+source: book-dna/private-prototype-pwaalpha-appetite-v1
+
+---
+type: concept
+title: Private Prototype Pwaalpha Appetite V1
+status: PILOT
+card_id: private-prototype-pwaalpha-appetite-v1
+privacy: ANONYMIZED
+maturity: PILOT
+card_type: book-dna
+human_lane: appetite
+prototype_id: prism-wanderer-alpha
+source_scope: PRIVATE_EVIDENCE_OPAQUE_IDS_ONLY
+evidence_refs:
+  - PPA-E04
+  - PPA-E05
+  - PPA-E06
+  - PPA-E09
+  - PPA-E15
+  - PPA-E16
+  - PPA-E17
+  - PPA-E19
+evidence_scope: PRIVATE_MULTI_PERIOD
+schema_version: reference-corpus-card-v1
+knowledge_level: PRIVATE_SOURCE_PROTOTYPE
+active_inspiration: true
+creative_problem_tags:
+  - human-craft
+  - character-prototype
+  - experimental-prototype
+experimental_activation: EXPLICIT_PROTOTYPE_TEST
+---
+
+Retrieval aliases: pwaalpha pwaalpha-appetite
+
+# Prism Wanderer Alpha｜Appetite Prototype
+
+## Creative Problem
+
+如果这个原型被放进一个完全不同的幻想世界，什么东西即使不提高战力、资源、地位或控制权，仍然足以让他主动靠近、停留、花时间甚至改变计划？
+
+## Mechanism
+
+这个原型没有单一欲望轴。至少四类私人欲望会独立争夺行动权：
+
+1. **被看见与胜出**：出色、体面、被高权重目光注意会带来真实快感，但这种快感会递减，也可能被真正兴趣取代。
+2. **感官与审美**：光色、声音、质地、器物、风景、制作与空间氛围本身可以有价值，不必先证明有用。
+3. **情欲与肉体吸引**：身体吸引、性欲、想靠近某个具体身体可以直接改变靠近/离开判断；它可能与精神共鸣、长期兼容性或理性计划冲突，冲突本身必须保留。
+4. **鲜活的具体生活**：移动、学习、做东西、吃饭、探索、陪伴与普通日常可以重新让世界有重量。
+
+这些欲望不必互相证明对方正确。角色可以一边清楚长期判断，一边仍被身体欲望、比较心、新鲜感或眼前的美牵走。
+
+## Guidance
+
+在幻想世界里重新发明欲望对象：可能是一个人、一种身体美感、一段声色、一件器物、一种食物、一座陌生城、一门无收益的技艺或一次被强者看见的机会。让其中一项真正改变一次选择即可，不要做“爱好清单”。
+
+## When Not To Use
+
+不要把情欲改写成“审美”，也不要反过来把所有亲密都解释为性欲。不要把被认可写成纯虚荣，把学习写成职业雄心，把普通生活写成恢复生产力的后勤。尤其不要为了让欲望“有来源”而反向安排一个与欲望完美押韵的家业或职业；世界中的职业位置可以与私人欲望完全不整齐。
+
+## Transfer Boundary
+
+只迁移“哪些私人欲望能自己产生行动”的结构，不迁移现实偏好对象、具体身体特征、现代媒介、现实关系、履历或原始日记表达。
+
+### Prototype Inspiration 2
+source: book-dna/private-prototype-pwaalpha-choice-bias-v1
+
+---
+type: concept
+title: Private Prototype Pwaalpha Choice Bias V1
+status: PILOT
+card_id: private-prototype-pwaalpha-choice-bias-v1
+privacy: ANONYMIZED
+maturity: PILOT
+card_type: book-dna
+human_lane: behavior
+prototype_id: prism-wanderer-alpha
+source_scope: PRIVATE_EVIDENCE_OPAQUE_IDS_ONLY
+evidence_refs:
+  - PPA-E01
+  - PPA-E04
+  - PPA-E08
+  - PPA-E09
+  - PPA-E13
+  - PPA-E14
+  - PPA-E15
+  - PPA-E18
+evidence_scope: PRIVATE_MULTI_PERIOD
+schema_version: reference-corpus-card-v1
+knowledge_level: PRIVATE_SOURCE_PROTOTYPE
+active_inspiration: true
+creative_problem_tags:
+  - human-craft
+  - character-prototype
+  - experimental-prototype
+experimental_activation: EXPLICIT_PROTOTYPE_TEST
+---
+
+Retrieval aliases: pwaalpha pwaalpha-choice-bias
+
+# Prism Wanderer Alpha｜Choice Bias Prototype
+
+## Creative Problem
+
+怎样让这个原型有稳定可识别的选择偏向，却不变成“每次都先逃、再反思、再回头”的固定招式？
+
+## Mechanism
+
+**稳定选择偏向 + 现场生成的实现**：
+
+- 当抽象的长期价值与眼前强烈的不适、欲望或吸引发生冲突时，眼前感受经常能提高自己的权重；“知道代价”并不自动让角色选择长期最优解。
+- 当某件事仍让他觉得鲜活、好奇、被看见或值得投入时，他可以承受相当高的难度；当它只剩空转、钝化或令人窒息的重复时，离开、换路、拖延或寻找别的刺激都会变得更有吸引力。
+- 外部评价会改变姿态：被认可时可能更敢展示和靠近；失去光亮时可能收缩。但真实兴趣、情欲、具体关系或眼前目标都可能推翻这一倾向。
+
+具体做法不得预设。相同偏向在不同现场可以表现为继续、离开、暂避、直说、隐瞒、绕路、硬扛、突然投入、回返，甚至明知不好仍重复一次。
+
+## Guidance
+
+每次只问：**此刻他在保护什么、拒绝什么、忍不了什么、愿为什么付代价？** 然后让实现手段由当前世界事实、关系和压力重新生成。读者应逐渐能判断“什么会真正刺到他”，但不能提前猜出下一招。
+
+## When Not To Use
+
+不要把“反思”当固定第二步；不要把逃避写成必然前奏；不要让每次错误最终都证明他更理性、更自主、更会承担责任。洞察可以失败，欲望可以赢，关系可以打乱原本判断。也不要把家庭职业、手艺、工具或工作伦理直接翻译成一生的人格信条；职业背景只是处境证据，不是人物主题的隐喻。
+
+## Transfer Boundary
+
+只迁移稳定选择偏向，不迁移现实学习方式、职业决策、计划习惯或任何固定流程。
+
+### Prototype Inspiration 3
+source: book-dna/private-prototype-pwaalpha-relationship-v1
+
+---
+type: concept
+title: Private Prototype Pwaalpha Relationship V1
+status: PILOT
+card_id: private-prototype-pwaalpha-relationship-v1
+privacy: ANONYMIZED
+maturity: PILOT
+card_type: book-dna
+human_lane: relationship
+prototype_id: prism-wanderer-alpha
+source_scope: PRIVATE_EVIDENCE_OPAQUE_IDS_ONLY
+evidence_refs:
+  - PPA-R02
+  - PPA-R03
+  - PPA-R04
+  - PPA-R05
+  - PPA-E09
+  - PPA-E10
+evidence_scope: PRIVATE_MULTI_PERIOD
+schema_version: reference-corpus-card-v1
+knowledge_level: PRIVATE_SOURCE_PROTOTYPE
+active_inspiration: true
+creative_problem_tags:
+  - human-craft
+  - character-prototype
+  - experimental-prototype
+experimental_activation: EXPLICIT_PROTOTYPE_TEST
+---
+
+Retrieval aliases: pwaalpha pwaalpha-relationship
+
+# Prism Wanderer Alpha｜Relationship Prototype
+
+## Creative Problem
+
+什么样的“具体的人”会让这个原型偏离单纯按便利、安全、时间或长期判断得出的选择？
+
+## Mechanism
+
+关系不是“重感情”标签，而是 **A→B 的选择变量**。当前证据支持一个很窄但真实的模式：
+
+- 原本更省力的选择是独处、休息、保留原计划或维持既有生活安排；因为某个具体人提供或要求持续共同在场，实际选择可以改成同行、进入自己并不偏好的场景、放弃另一项安排，或改变停留/共同生活方式。
+- 关系中的身体吸引与情欲也是变量。一个具体人的肉体吸引可以提高靠近意愿；吸引下降、即时不适或精神互动变化又可能推动离开；距离之后某些具体品质重新显现，还可能触发回返。这里没有“理性最终获胜”的保证。
+
+关键不是对方承担什么功能，而是：**换成另一个同等有用的人，角色未必愿意支付同样的时间、便利、风险或机会。**
+
+## Guidance
+
+写关系时先建立一个不含该人的基线选择 A，再让这个具体人的在场、缺席、身体吸引、回应或共同历史真实改变至少一个变量：风险阈值、路线、停留/离开、时间分配、暴露程度、机会牺牲或未来选择。不要只写情绪变浓。
+
+## When Not To Use
+
+不要推广成团队忠诚、关系责任、讨好、交易或边界管理。不要让每段关系都拥有同样重力，也不要把情欲净化成精神吸引。共同工作、师徒职责或任务协作本身也不能替代“因为是这个具体的人，所以实际选择从 A 变成 B”；职业环境不能自动解释喜欢谁、舍不得谁。
+
+## Transfer Boundary
+
+只迁移“具体的人改变实际选择”的窄机制。不得迁移任何现实关系身份、事件地点、可识别私人属性、现实身体特征或原始私人细节。

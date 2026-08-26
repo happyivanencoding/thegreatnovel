@@ -1,0 +1,16 @@
+{
+  "prototype_selected": true,
+  "lane_counts": {
+    "appetite": 1,
+    "behavior": 1,
+    "relationship": 1
+  },
+  "query_texts": [],
+  "power_leaks": {},
+  "story_hook_leaks": {},
+  "prompt_sha256": "5eceda2b4592212434077111f858944ae732012ba6ebff87d510d9efbabab35a",
+  "prompt_chars": 6930,
+  "default_candidate_contract_hits": 0,
+  "single_seed_contract_hits": 2,
+  "legacy_fab_hits": 0
+}

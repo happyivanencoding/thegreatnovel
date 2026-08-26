@@ -1,0 +1,50 @@
+{
+  "entry": {
+    "source_dir": "books\\real-exp-clean-e2e-scene-skill-v11-10ch\\chapter-0001",
+    "retrieval_strategy": "prose_control_none",
+    "retrieval_slugs": [],
+    "mission_chars": 4156,
+    "projection": "让读者始终跟着陆砚判断下一脚是否能承重、下一声矿鸣会让哪条退路改变；规则只在他的行动必须依靠它时落到白汗、矿鸣和河面落脚点上。落脚、失衡、承重和塌方后的单向结果承担能力第一次兑现，陆砚为何能看见这些以及路印更深的意义保留未知。逃出后停在废水槽、第一枚路印和韩铁衣敲壁声改变下一步选择的位置，不追加总结性解释。",
+    "projection_chars": 154,
+    "baseline_sha256": "98d68a2de410d8e1ee2c657f7241f9bdb5aca43a0b0f092e7f7e9aa3af8282c2",
+    "off_chars": 10384,
+    "on_chars": 10534
+  },
+  "action": {
+    "source_dir": "books\\real-exp-clean-e2e-scene-skill-v11-10ch\\chapter-0006",
+    "retrieval_strategy": "prose_control_keyword_aliases",
+    "retrieval_slugs": [
+      "prose-controls/spatially-traceable-causality-v1"
+    ],
+    "mission_chars": 6882,
+    "projection": "让读者始终看清火把、墙下旧路、错误支路和水槽之间的相对位置；每次转向只保留会改变追捕判断的移动、接触与结果。陆砚的视角只知道眼前逐步出现的承重点，不提前解释完整路线；肩痛、灰灯牌或铁匣重量只在迫使他选择时出现。阮青崖走错后，现场应直接呈现追兵失去锁定和陆砚重新取得行动空间，结果成立后停止解释。",
+    "projection_chars": 147,
+    "baseline_sha256": "70de619025eb5d82e2b15bd677b4ca417416c32b139481db1ebb0d546a7470c4",
+    "off_chars": 20995,
+    "on_chars": 21138
+  },
+  "reveal": {
+    "source_dir": "books\\real-exp-xianxia-blind-v1\\runs\\chapter-0002",
+    "retrieval_strategy": "prose_control_keyword_aliases",
+    "retrieval_slugs": [
+      "prose-controls/evidence-first-limited-reveal-v1"
+    ],
+    "mission_chars": 4275,
+    "projection": "先让灰粉、水痕、敲击声和裂口变化承担判断，读者只需看见方向如何被标出、又如何在施压下重现。许砺的判断应停在“同一方向是否再次出现”，未知的来源和完整原理继续保留。罗青衡的有限认可应通过试压、记录和分配材料体现，不追加师徒式解释；结果落到许砺获得试验窗口而不是晋升，随后停止说明。",
+    "projection_chars": 139,
+    "baseline_sha256": "651dab899f25ffa76c386f53f79adf9913ffc1e839a04bb4ca3fa443a9fc4ce3",
+    "off_chars": 9423,
+    "on_chars": 9558
+  },
+  "emotion": {
+    "source_dir": "books\\real-exp-opening-reader-first-fresh-v1\\runs\\chapter-0002",
+    "retrieval_strategy": "prose_control_none",
+    "retrieval_slugs": [],
+    "mission_chars": 4280,
+    "projection": "让读者始终先看清顾长川的伤势、明日必须上台这一现实压力，以及他为何把选择条件改成“先能继续行动”。许照的拒绝、周既明的防备和宁秋禾的见证权都应通过具体站位、对白和让步呈现，不替他们补写未明示的过去动机。回身卸力步的意义落在顾长川完整看见一次、暂时保留一次调用机会，以及这会如何改变明日的选择；结果成立后停止解释，保留升院结果未知。",
+    "projection_chars": 165,
+    "baseline_sha256": "2fc9bf6c1c041706990978aaa44be45f662b55f97c4ce2947583a535b79776de",
+    "off_chars": 13361,
+    "on_chars": 13522
+  }
+}

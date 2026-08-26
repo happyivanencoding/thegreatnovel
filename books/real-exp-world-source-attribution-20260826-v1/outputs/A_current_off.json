@@ -1,0 +1,354 @@
+{
+  "ok": true,
+  "label": "A_current_off",
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "mode": "read-only",
+  "wall_seconds": 100.752,
+  "text": "# PROTAGONIST-BLIND WORLD VISION\n\n## 普通人的生活与上升\n\n这个世界的人依靠城镇、河运、山田和灵潮季节生活。大多数人一生不会真正修炼，只会使用低阶符纸、避兽香、储灵灯和经过驯化的灵兽。农户会在灵潮较弱的季节种植“沉根谷”，矿工进入浅层灵脉采掘潮晶，商旅沿着有巡潮碑保护的道路往来。\n\n年轻人通常有四条上升路径：\n\n- 参加宗门或地方武馆的试炼，成为修士、护卫、采药人或符师学徒。\n- 进入军府，从潮兽猎兵、关隘斥候或运粮官做起。\n- 通过家族、商盟或地方豪强获得功法和资源，成为账房、管事、炼器师或护院。\n- 进入危险地带采集潮晶、旧时代遗物和灵药，以财富换取修炼资格。\n\n普通人最看重的不是“成为天下第一”，而是获得一份不受潮灾影响的产业、进入安全城镇的户籍、让子女拥有正式修炼资格，或攒够一枚能治疗潮伤的药。\n\n失败者通常会留下经脉损伤、债务、失去身份资格或成为某个势力的长期契奴。修炼失败并不一定死亡，但常常意味着只能从事低阶灵材分拣、驯兽、矿井运输等工作。真正能够凭个人力量摆脱原有阶层的人很少，因此一次入门机会足以改变一个家庭三代人的生活。\n\n## 力量体系与正常值\n\n世界中的力量被统称为“潮息”。潮息来自天空、地脉、深水和生灵血肉中的灵性循环。它并非均匀存在：河谷、古战场、深矿和季节性潮口浓度最高，也最容易滋生怪物。\n\n修士需要以自身经脉承载潮息，再用固定的“息路”把力量转化为术法。术法不是凭空创造效果，而是把潮息引导成几类可观察的变化：增强肉身、改变温度和压力、驱动金石木火、扰乱感知、短暂借用地形力量。不同功法只是承载方式不同，不能无视材料、距离、消耗和反噬。\n\n当前世界真正需要的最小力量坐标如下：\n\n- **听潮**：能够感知潮息，学习最基础的呼吸法和符纸使用。普通武者中偶尔有人达到，通常只能应付一两名常人。\n- **行脉**：潮息可以在体内稳定循环。地方武馆弟子、军府正式斥候和宗门外门弟子多在这一层。三到五名行脉修士配合，足以猎杀普通潮兽。\n- **抱炉**：体内形成稳定的“潮炉”，能够储存力量并连续施术。一个抱炉修士可以独自守住小型矿场，短时间击穿木石建筑，或在野外连续战斗半日。\n- **显相**：潮炉与个人功法、兵器或血脉形成外显力量。地方宗门长老、军府校尉和大商队首领常处于此层。显相修士能够改变一片战场的局部条件，普通军阵难以正面抵抗。\n- **渡关**：能够短暂穿透地域限制，把自身潮息与山川、河流或大型灵脉连接。一个渡关强者足以改变一座关城的攻守平衡，但无法长期独自支撑一场战争。\n- **镇山河**：极少数顶层强者。其力量必须依托特定地脉、城池或仪式才能完整发挥，能够封锁潮口、改变河道、压制大范围潮兽迁徙。离开自身经营多年的地域后，实力会明显下降。\n\n大多数修士终生停在听潮或行脉。能够稳定抱炉的人已属于一城中的稀缺战力；显相修士在小国和偏远地区可以决定宗门兴衰；渡关强者数量极少，通常被王朝、超级宗门或大型商盟以资源和契约绑定。镇山河层次有明确战果记录，但不同地区对其真正上限仍有争议。\n\n力量差距可以直接观察：\n\n- 行脉修士能在短距离内追上快马，但无法长时间飞行。\n- 抱炉修士能使用真正的远程术法，却会受到储息和材料限制。\n- 显相修士出手时会留下持续数日的地形、温度或灵压变化。\n- 渡关强者必须借助地形，离开熟悉区域后并非不可战胜。\n- 顶层强者越依赖某处灵脉，越难随意离开，也越容易被敌人通过破坏节点削弱。\n\n## 社会现实与身份\n\n王朝控制主要河谷、渡口、矿区和潮灾防线。取得王朝“渡潮籍”的修士可以合法进入危险区域、购买军用灵材和使用大型传送阵；没有渡潮籍的人即使拥有力量，也可能被视为走私者或私灾者。\n\n宗门掌握完整功法、灵药配方和高阶兵器。小宗门依附城镇生存，靠护路、猎兽和收徒维持；大宗门拥有自己的灵脉、矿区和附属城池。宗门弟子并不天然高贵，但正式弟子通常享有更好的疗伤、教育和婚配机会。\n\n家族影响最直接的是资源继承。一个拥有抱炉修士的家族，可以控制矿场、药田或地方税路；失去核心修士后，家族往往会在数年内被商盟、宗门或军府拆分。\n\n商盟连接了各地无法自给的资源。它们掌握灵材价格、车队护卫和远距离消息，有时比地方官府更早知道潮灾与战争。大型商盟不会只雇佣修士，也会投资道路、仓城和水利，因此普通城镇对它们既依赖又警惕。\n\n军府负责边境、潮兽迁徙和灵脉封锁。军功可以换取修炼资源与身份，但军队中的功法偏重协同、耐久和纪律，个人突破速度往往不如宗门弟子。很多退役修士会成为城镇护卫、猎团首领或地方教习。\n\n身份真正改变选择的地方在于：无籍修士不能合法进入多数遗迹；低阶宗门弟子无法购买高阶疗伤药；商盟客卿可以获得情报，却要承担护运契约；军府校尉拥有权力，也必须服从潮灾调令。每种身份都提供道路，同时锁住一部分自由。\n\n## 世界里真正值钱、值得想要的东西\n\n- **潮晶**：储存潮息的矿物，可供修炼、炼器和大型阵法使用。纯度高的潮晶能让抱炉修士减少数年积累时间。\n- **完整息路**：不是所有功法都能修炼到显相。缺失一段关键息路，修士可能终生停在抱炉，或在突破时留下不可逆损伤。\n- **潮炉种**：形成潮炉时使用的特殊灵材。不同炉种决定修士更擅长持久战、爆发、驭器或地形术。\n- **灵脉地契**：拥有一处稳定灵脉，意味着可以收徒、炼药、开矿和建立自己的势力。许多宗门为一条小灵脉争斗数十年。\n- **渡潮籍与遗迹通行印**：它们不是力量，却决定一个人能否合法进入危险区域、接触高阶资源并保住收益。\n- **镇潮兵器**：大型兵器需要多人驱动，能把低阶修士组织成足以对抗抱炉甚至显相修士的战力。\n- **活地图**：潮口、怪物巢穴和旧遗迹都在变化，真正可靠的地图必须由探险队不断修订，因此资深向导的价值远高于普通识字者。\n- **疗潮药**：能修复经脉和潮痕。对于受伤修士而言，一瓶上品疗潮药比一件普通法器更值得争夺。\n- **可靠的同行者**：高阶遗迹需要不同息路互相配合，懂得辨识、护阵、战斗和谈判的人很难替代。背叛一个队伍，可能让整个区域的探险资格被永久封禁。\n- **安全的时间窗口**：某些遗迹只在潮汐交替的数个时辰内开启。掌握准确时间，就等于提前获得一部分财富和生存机会。\n\n得到这些价值物后，人的生活会发生具体变化：有灵脉便能让家族脱离季节性饥荒；有完整息路便能选择宗门而不是被宗门挑选；有通行印便能合法接触危险财富；有可靠队伍便能进入单人无法活着通过的区域。\n\n## 世界正在发生的大事\n\n- **沧衡王朝的“北线封潮”**：北方三座古老潮口同时提前开启，军府大将裴照川正在调集关城兵力，准备放弃两座小城，把力量集中在主关。他的目标是保住王朝粮道，而不是拯救所有边民。被放弃的城镇正在自行组织迁徙，地方豪族则趁机争夺空出的灵脉。\n- **玄砾宗的换炉之争**：玄砾宗掌门即将闭死关，宗内三位显相长老分别支持军府、商盟和旧弟子集团。长老们一面争夺掌门继承权，一面派门人寻找能够稳定“黑砂潮炉”的旧配方。宗门内部的分裂已经影响到周边数十座矿场。\n- **八川商盟的断河计划**：商盟首席舟主陆观澜准备炸开一段古代水坝，改变两条商路的流向，以夺取持续三十年的水运优势。沿河农镇反对这项计划，军府担心潮兽因此改道，商盟却已经秘密雇佣了数支抱炉猎团。\n- **赤骨诸部的南迁**：北境赤骨族群并非单纯入侵。他们的祖地正在出现无法解释的“无潮区”，灵兽、灵草和修士都在其中逐渐失去力量。族长赤罕决定带领三万族人南下，但年轻战首不愿接受王朝划定的安置地，双方正在边境形成新的战争。\n- **百城炼器会**：各方势力将在旧都举行大型炼器竞赛，胜者可以获得一座尚未分配的中型灵脉以及三张古代阵图。竞赛表面上是技艺比拼，实际上各宗门、军府和商盟都在借此测试新式镇潮兵器，许多民间炼器师也把它当作改变身份的唯一机会。\n\n这些事件即使没有任何外来人物介入，也会产生明确后果：边境版图变化、商路改道、宗门重组、族群迁徙和新式兵器扩散。不同势力的计划彼此冲突，却没有哪一方只是等待某个天选之人出现。\n\n## 值得进入的地点、奇观与未知\n\n- **倒悬天河**：一条银白色河流从大地升入云层，水流并不下落，而是在天空中缓慢移动。河岸附近的修士能施展远超自身境界的水系术法，但船只进入其中后会逐渐失去重量。\n- **无声盐城**：城中房屋、街道和牌坊保存完好，却没有任何声音能够在城内传播。进入者能看见远处的人张口说话，却听不到内容；盐晶会从墙体内部持续生长，覆盖原有文字。\n- **镜骨荒原**：地面埋着大量半透明巨骨，日照时会映出数百年前的行军影像。影像并非固定重复，有时会出现现实中从未记载的人物和军旗。\n- **万炉峡**：峡谷两侧悬挂着数千座古代炼器炉，炉火在无人看守的情况下轮流点燃。偶尔有兵器从炉中自行落下，但取走它的人会继承某种无法解除的使用限制。\n- **沉井群**：一片荒漠中分布着上百口深井，井水分别通向不同地域。井底的水位会随着远方战争、潮灾和大型灵脉变化而改变。\n- **鹿蜃海**：海面常年覆盖薄雾，雾中会出现陆地、城池和已经灭亡的船队。部分景象可以被接近，部分景象一旦触碰就会变成真实危险。\n- **天外坠痕**：大陆中央有一条贯穿数千里的黑色裂谷，裂谷内没有稳定潮息，却会周期性吐出陌生金属、异种种子和无法辨认的石碑。各方只知道这些物品会改变现有战争和炼器格局，不知道它们从何而来。\n\n这些地点各自有资源、危险和历史，不是等待某种特定能力开启的机关。没有适合的队伍、时间、身份和判断力，进入它们往往只会得到伤亡或无法带走的发现。\n\n## 世界知识边界\n\n普通人知道：\n\n- 潮灾会按季节和地区发生，巡潮碑显示的安全路线并不永远可靠。\n- 修士大致分为听潮、行脉、抱炉、显相等层次，抱炉以上的战斗会影响普通人的房屋、田地和生计。\n- 潮晶、灵药和通行籍都很贵，陌生修士未必值得信任。\n- 赤骨族、王朝军府和各大宗门之间存在长期冲突，但普通人通常只知道冲突带来的税负、迁徙和封路。\n\n专业人士与修士知道：\n\n- 潮息浓度会随地脉、气候、血肉和古代阵法变化。\n- 不同息路之间存在相互克制，境界并不能完全决定战果。\n- 灵脉、潮口和遗迹都会改变，旧地图超过一定年限便可能致命。\n- 高阶术法必须有承载物、地形或队伍配合；强行施展会形成潮痕、损伤记忆或改变身体结构。\n- 大量怪物并非自然繁殖，而是在特定潮息环境中逐渐获得固定行为模式。\n\n顶层势力知道：\n\n- 王朝现有的潮历并不完整，若干大型潮灾可能正在提前或延后。\n- 古代遗迹之间存在某种跨地域联系，部分阵图和兵器并非本地文明独立发展出来的。\n- “镇山河”强者的力量必须依赖地脉、城池或长期布置，因此顶层势力争夺的核心不是单个强者，而是能够供强者借力的地域。\n- 赤骨族祖地、倒悬天河和天外坠痕之间可能存在关联，但任何一方都没有完整证据。\n\n当前没人能完整解释的事实：\n\n- 每逢三十六年左右，世界各处会出现一次无法预测的潮息倒流。倒流期间，已经死亡的高阶修士可能留下短暂而真实的术法残响，持续时间从片刻到数月不等。\n- 无声盐城的盐晶只覆盖旧文字和旧姓名，却不会侵蚀新刻下的内容；进入城中的人离开后，部分记忆会出现顺序错乱，但身体和修为通常没有变化。\n- 镜骨荒原映出的军队有时会比实际历史早出现数百年，也有时会出现尚未发生的旗号。至今没人能证明那是预兆、残影，还是另一片地域的现实。\n- 天外坠痕吐出的金属会排斥本地多数法器，却能被某些古代阵法吸收。每次坠出新物之后，附近潮兽的迁徙路线都会发生改变。\n- 少数显相修士在突破渡关前，会看到一扇无法被他人观测的“门”。他们对门后的描述彼此矛盾，但所有人都确认：看见那扇门之后，原本稳定的功法都会出现一次不可逆的变化。",
+  "stopReason": "end_turn",
+  "sessionId": "01a03ee6-3151-7581-a895-00e753484c7f",
+  "models": {
+    "availableModels": [
+      {
+        "modelId": "gpt-5.6-sol[low]",
+        "name": "GPT-5.6-Sol (low)",
+        "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.6-sol[medium]",
+        "name": "GPT-5.6-Sol (medium)",
+        "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.6-sol[high]",
+        "name": "GPT-5.6-Sol (high)",
+        "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-sol[xhigh]",
+        "name": "GPT-5.6-Sol (xhigh)",
+        "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-sol[max]",
+        "name": "GPT-5.6-Sol (max)",
+        "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+      },
+      {
+        "modelId": "gpt-5.6-sol[ultra]",
+        "name": "GPT-5.6-Sol (ultra)",
+        "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+      },
+      {
+        "modelId": "gpt-5.6-terra[low]",
+        "name": "GPT-5.6-Terra (low)",
+        "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.6-terra[medium]",
+        "name": "GPT-5.6-Terra (medium)",
+        "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.6-terra[high]",
+        "name": "GPT-5.6-Terra (high)",
+        "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-terra[xhigh]",
+        "name": "GPT-5.6-Terra (xhigh)",
+        "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-terra[max]",
+        "name": "GPT-5.6-Terra (max)",
+        "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+      },
+      {
+        "modelId": "gpt-5.6-terra[ultra]",
+        "name": "GPT-5.6-Terra (ultra)",
+        "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+      },
+      {
+        "modelId": "gpt-5.6-luna[low]",
+        "name": "GPT-5.6-Luna (low)",
+        "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.6-luna[medium]",
+        "name": "GPT-5.6-Luna (medium)",
+        "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.6-luna[high]",
+        "name": "GPT-5.6-Luna (high)",
+        "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-luna[xhigh]",
+        "name": "GPT-5.6-Luna (xhigh)",
+        "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-luna[max]",
+        "name": "GPT-5.6-Luna (max)",
+        "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+      },
+      {
+        "modelId": "gpt-5.5[low]",
+        "name": "GPT-5.5 (low)",
+        "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.5[medium]",
+        "name": "GPT-5.5 (medium)",
+        "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.5[high]",
+        "name": "GPT-5.5 (high)",
+        "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.5[xhigh]",
+        "name": "GPT-5.5 (xhigh)",
+        "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4[low]",
+        "name": "GPT-5.4 (low)",
+        "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.4[medium]",
+        "name": "GPT-5.4 (medium)",
+        "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.4[high]",
+        "name": "GPT-5.4 (high)",
+        "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4[xhigh]",
+        "name": "GPT-5.4 (xhigh)",
+        "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4-mini[low]",
+        "name": "GPT-5.4-Mini (low)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.4-mini[medium]",
+        "name": "GPT-5.4-Mini (medium)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.4-mini[high]",
+        "name": "GPT-5.4-Mini (high)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4-mini[xhigh]",
+        "name": "GPT-5.4-Mini (xhigh)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[low]",
+        "name": "GPT-5.3-Codex-Spark (low)",
+        "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[medium]",
+        "name": "GPT-5.3-Codex-Spark (medium)",
+        "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[high]",
+        "name": "GPT-5.3-Codex-Spark (high)",
+        "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[xhigh]",
+        "name": "GPT-5.3-Codex-Spark (xhigh)",
+        "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+      }
+    ],
+    "currentModelId": "gpt-5.6-luna[max]"
+  },
+  "modes": {
+    "availableModes": [
+      {
+        "id": "read-only",
+        "name": "Read-only",
+        "description": "Requires approval to edit files and run commands."
+      },
+      {
+        "id": "agent",
+        "name": "Agent",
+        "description": "Read and edit files, and run commands."
+      },
+      {
+        "id": "agent-full-access",
+        "name": "Agent (full access)",
+        "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+      }
+    ],
+    "currentModeId": "read-only"
+  },
+  "configOptions": [
+    {
+      "id": "mode",
+      "name": "Mode",
+      "description": "Approval and sandboxing preset for the session",
+      "category": "mode",
+      "type": "select",
+      "currentValue": "read-only",
+      "options": [
+        {
+          "value": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "value": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "value": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ]
+    },
+    {
+      "id": "collaboration_mode",
+      "name": "Collaboration mode",
+      "description": "How Codex collaborates for subsequent turns",
+      "category": "collaboration_mode",
+      "type": "select",
+      "currentValue": "default",
+      "options": [
+        {
+          "value": "default",
+          "name": "Default"
+        },
+        {
+          "value": "plan",
+          "name": "Plan",
+          "description": "Plan before making changes"
+        }
+      ]
+    },
+    {
+      "id": "model",
+      "name": "Model",
+      "description": "Model Codex uses for the session",
+      "category": "model",
+      "type": "select",
+      "currentValue": "gpt-5.6-luna",
+      "options": [
+        {
+          "value": "gpt-5.6-sol",
+          "name": "GPT-5.6-Sol",
+          "description": "Latest frontier agentic coding model."
+        },
+        {
+          "value": "gpt-5.6-terra",
+          "name": "GPT-5.6-Terra",
+          "description": "Balanced agentic coding model for everyday work."
+        },
+        {
+          "value": "gpt-5.6-luna",
+          "name": "GPT-5.6-Luna",
+          "description": "Fast and affordable agentic coding model."
+        },
+        {
+          "value": "gpt-5.5",
+          "name": "GPT-5.5",
+          "description": "Frontier model for complex coding, research, and real-world work."
+        },
+        {
+          "value": "gpt-5.4",
+          "name": "GPT-5.4",
+          "description": "Strong model for everyday coding."
+        },
+        {
+          "value": "gpt-5.4-mini",
+          "name": "GPT-5.4-Mini",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+        },
+        {
+          "value": "gpt-5.3-codex-spark",
+          "name": "GPT-5.3-Codex-Spark",
+          "description": "Ultra-fast coding model."
+        }
+      ]
+    },
+    {
+      "id": "reasoning_effort",
+      "name": "Reasoning effort",
+      "description": "How much reasoning effort the model should use",
+      "category": "thought_level",
+      "type": "select",
+      "currentValue": "max",
+      "options": [
+        {
+          "value": "low",
+          "name": "Low",
+          "description": "Fast responses with lighter reasoning"
+        },
+        {
+          "value": "medium",
+          "name": "Medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "value": "high",
+          "name": "High",
+          "description": "Greater reasoning depth for complex problems"
+        },
+        {
+          "value": "xhigh",
+          "name": "Xhigh",
+          "description": "Extra high reasoning depth for complex problems"
+        },
+        {
+          "value": "max",
+          "name": "Max",
+          "description": "Maximum reasoning depth for the hardest problems"
+        }
+      ]
+    },
+    {
+      "id": "fast-mode",
+      "name": "Fast mode",
+      "description": "1.5x speed, increased usage",
+      "category": "model_config",
+      "type": "select",
+      "currentValue": "off",
+      "options": [
+        {
+          "value": "off",
+          "name": "Off",
+          "description": "Default speed, normal usage"
+        },
+        {
+          "value": "on",
+          "name": "On",
+          "description": "1.5x speed, increased usage"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "used": 34528,
+      "size": 828400,
+      "sessionUpdate": "usage_update"
+    }
+  ]
+}

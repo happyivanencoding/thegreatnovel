@@ -1,0 +1,32 @@
+{
+  "human_seed_heading_count": 1,
+  "candidate_heading_count": 0,
+  "prototype_identifier_leaks": {},
+  "power_leaks": {},
+  "relationship_choice_delta_markers": {
+    "本会": 1,
+    "因为是她": 1,
+    "改变路线": 1,
+    "错过了那份工作": 1,
+    "盘缠损失": 1
+  },
+  "sexuality_markers": {
+    "身体吸引": 2,
+    "身体靠近": 1,
+    "气味": 1,
+    "触碰": 1,
+    "喜欢她的身体": 1
+  },
+  "competing_motive_markers": {
+    "被看见": 1,
+    "胜出": 1,
+    "色彩": 1,
+    "食物": 1,
+    "身体吸引": 2,
+    "离开熟悉的河港": 1
+  },
+  "character_reconciliation_hits": 0,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "wall_seconds": 99.154
+}

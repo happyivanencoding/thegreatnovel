@@ -1,0 +1,117 @@
+{
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "wall_seconds": 550.344,
+  "chars": 8987,
+  "stage_count": 7,
+  "prototype_identifier_leaks": {},
+  "reconciliation_suspect_count": 0,
+  "reconciliation_samples": [],
+  "power_delta_stage_count": 6,
+  "relationship_delta_stage_count": 6,
+  "stage_summaries": [
+    {
+      "n": 1,
+      "title": "万灯河夜渡",
+      "chars": 774,
+      "power_delta": true,
+      "possession_delta": true,
+      "relationship_delta": true,
+      "identity_delta": true,
+      "world_delta": false,
+      "delta": "Power / Capability：谢临川能稳定维持两股低阶真元流。Identity / Access：秦照野给他一张只限一季、需完成赤脉山航程才能转正的跨州通行签。Relationship：谢槐安没有夸他，只把修船账交给他自己承担；温梨答应同行到赤脉山看火釉，却明确不保证继续往后走。",
+      "power_mentions": 1,
+      "wenli_mentions": 3
+    },
+    {
+      "n": 2,
+      "title": "赤脉山，不做无名账房",
+      "chars": 892,
+      "power_delta": true,
+      "possession_delta": true,
+      "relationship_delta": true,
+      "identity_delta": false,
+      "world_delta": false,
+      "delta": "Power / Capability：他进入稳定炼气阶段，能够快速改变两股真元比例并交换主次。Possession：石晚棠将他应得的矿工补偿份额折成一块合法登记的赤纹剑胚；谢临川花掉大半盘缠请矿镇匠人铸成第一把灵剑，当场用它斩开余火封住的矿门。Relationship：石晚棠承认他帮矿户争到了一次实利，却拒绝把他当自己人；温梨看完火釉后决定转去南方工坊，不陪他上九檐仙山。Enemy State：陆沉舟与顾青炉都记住了他在公开契约中会选哪一边，他们的属下此后不再把他当普通账房。",
+      "power_mentions": 1,
+      "wenli_mentions": 2
+    },
+    {
+      "n": 3,
+      "title": "九檐试剑，赢给谁看",
+      "chars": 864,
+      "power_delta": true,
+      "possession_delta": true,
+      "relationship_delta": true,
+      "identity_delta": true,
+      "world_delta": false,
+      "delta": "Power / Capability：谢临川筑基成功，能够御器移动时持续出剑或护住他人。Identity / Access：他成为太玄宗开放外门的正式弟子，获得足以修至金丹、元婴阶段的正统功法和养炼本命法宝的资格。Relationship：沈砚秋公开承认他是试剑会真正的胜者，也把他视作开放山门成败的一部分；裴无尘则开始用宗门规矩和全力对拼来逼他暴露真元总量不足的边界。",
+      "power_mentions": 0,
+      "wenli_mentions": 1
+    },
+    {
+      "n": 4,
+      "title": "西州燃雨，错过那艘船",
+      "chars": 852,
+      "power_delta": false,
+      "possession_delta": false,
+      "relationship_delta": true,
+      "identity_delta": true,
+      "world_delta": false,
+      "delta": "Relationship：谢临川与温梨重新发生亲密关系，却没有恢复固定同行；两人都承认彼此会改变自己的选择，也都拒绝保证下一次仍会留下。Identity / Access：谢临川失去太玄宗第一批黑日岛名额，沈砚秋没有逐他出门，却收回了原本给予他的优先资格。Knowledge：他亲眼确认灵雨在大型炼丹活动后加剧，却没有找到施术者，也无法证明王朝、丹霞谷或地方家族中的任何一方是源头。",
+      "power_mentions": 0,
+      "wenli_mentions": 6
+    },
+    {
+      "n": 5,
+      "title": "黑日岛，抢一艘会自己航行的船",
+      "chars": 917,
+      "power_delta": true,
+      "possession_delta": true,
+      "relationship_delta": false,
+      "identity_delta": false,
+      "world_delta": false,
+      "delta": "Power / Capability：谢临川在金丹、元婴阶段掌握不同性质真元的同时运行与关键时刻合流爆发。Possession：他取得古代巡航舟“回澜”的实际驾驶权，飞舟严重受损、所有权仍被王朝和海妖王庭争议，但它已经能在他的控制下离岛。Knowledge：他带出一段巡航海图和多阵位操舟方法，没有得到黑日岛的完整历史。Enemy State：杜望海此后把他视为拒交王朝财产的危险持有者；鲛瑛承认他救过海妖，却仍准备在他把航线交给人族时夺船。",
+      "power_mentions": 0,
+      "wenli_mentions": 0
+    },
+    {
+      "n": 6,
+      "title": "寒关以北，谁有权征用他的船",
+      "chars": 1050,
+      "power_delta": true,
+      "possession_delta": true,
+      "relationship_delta": true,
+      "identity_delta": true,
+      "world_delta": true,
+      "delta": "Power / Capability：谢临川完成高阶分流变化，能围绕自身、法宝和飞舟建立短暂协同节点。Relationship：乌辞欠他一条部族生路，却因谢临川曾试图让他代表全部妖族而与他激烈决裂；谢槐安正式把河港渡船份额交给儿子，同时要求他把回澜的王朝追责与家业分开。Identity / Access：王朝撤销谢临川的自由航行许可，太玄宗也必须在庇护他和保全宗门之间作选择。World State：寒关一段迁徙通道暂时开放，但北荒战争没有结束，乌辞也没有因此放弃旧牧场要求。Enemy State：边军和水军已经知道，攻击多个承载点能逼近谢临川的真元总量和神识极限。",
+      "power_mentions": 1,
+      "wenli_mentions": 0
+    },
+    {
+      "n": 7,
+      "title": "黑日再临，无人替他定航向",
+      "chars": 1623,
+      "power_delta": true,
+      "possession_delta": true,
+      "relationship_delta": true,
+      "identity_delta": true,
+      "world_delta": true,
+      "delta": "Power / Capability：谢临川第一次完成传奇级多段协同与最终合流，但确认这种状态只能维持数息，且仍会造成经脉和肉身重创。Possession：回澜仍由他实际掌控，王朝、商盟和海妖王庭都未取得独占权。Relationship：温梨不再只是让他改道的人，而是曾在他失去控制后亲手把回澜驶出黑日岛的人；两人仍未承诺固定同行。Identity / Access：谢临川成为各方不能再视作无名劳力、也不能轻易纳入单一阵营的独立大修士和巡航舟主。World State：黑日岛入口被多方同时看见，旧飞舟为何巡航仍未完全解释；一次独占战争被打断，却产生了更复杂的长期争夺。",
+      "power_mentions": 1,
+      "wenli_mentions": 6
+    }
+  ],
+  "sexuality_markers": {
+    "身体吸引": 1,
+    "身体的靠近": 1,
+    "身体": 3,
+    "欲望": 1,
+    "亲密": 2
+  },
+  "human_appetite_markers": {
+    "被看见": 2,
+    "赢": 7,
+    "喜欢": 1
+  }
+}

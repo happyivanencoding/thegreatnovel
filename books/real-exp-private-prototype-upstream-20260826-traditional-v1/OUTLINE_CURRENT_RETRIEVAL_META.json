@@ -1,0 +1,150 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "outline",
+  "effective_query": "\"thread collision\" OR \"hidden identity reveal\" OR \"departure vacancy\" OR \"reunion reentry\" OR \"sacrifice convergence\" OR \"reward recontextualization\"",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"thread collision\" OR \"hidden identity reveal\"",
+    "\"departure vacancy\" OR \"reunion reentry\" OR \"sacrifice convergence\"",
+    "\"reward recontextualization\" OR \"action space\" OR \"public proof\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：outline\n作者当前方向：成熟中文男频传统修仙成长长篇。全新虚构世界，主角长期真正变强。世界先于主角成立，不围绕未来主角定制锁孔；优先宗门、功法、法宝、丹药、符箓、阵法、灵兽、秘境、妖族、王朝、仙山洞府、奇观、强敌与可探索空间。\n\n这次明确要与“百铸身/器官植入/身体材料工程”区分：\n- 不用器官移植、骨骼改造、相材植入、身体零件组合做力量体系根基。\n- 不把主角/修士写成身体工程师、材料诊断师或生物改装玩家。\n- 也不要回到潮汐、能量导流、锚点、承载网络那类工程式 ontology。\n\n阅读感更接近传统仙侠/修仙：\n- 力量主要来自修炼功法、吐纳炼化、神魂/丹田/经脉或本世界自己的清楚修炼机制；\n- 可以有飞剑、法术、法宝、丹药、符箓、阵法、灵兽、洞府、秘境、传承等，但不要为了齐全机械全塞；\n- 修士成长应带来直观的战斗、御空、神识、寿命、肉身、法术范围、法宝驾驭、探索能力变化；\n- 高阶仍然具体、可见、可战斗、可探索、可占有、可失去，不默认变成因果、命运、天道、概念、世界定义。\n\n为了和当前 TGN 力量尺兼容，世界内部使用 1—100 的 power scale：10 个大境界 × 每境界10级。但 W…\n已批准 World Vision：\n# PROTAGONIST-BLIND WORLD VISION\n\n## 普通人的生活与上升\n\n澜照界有六州、三海与北荒。大多数人依河谷、农田、矿山、商路和城镇生活。灵气并不均匀，平原适合耕种与贸易，山地适合采矿和宗门修炼，边地则长期受妖兽、战乱与迁徙影响。\n\n普通人通常在十二至十八岁接受一次“引灵试”，确认能否感知灵气。能入门者可以进入宗门外院、王朝灵务司、军府、丹坊、器坊、符铺或商盟学徒体系。不能修炼的人也能靠识字、账房、驭兽、采药、炼器辅助、阵法维护和军役改变身份，但上升速度通常慢得多。\n\n最常见的上升路径有三种：\n\n- 进入宗门外院，以劳役、采药、守山和杂务换取基础功法，再参加内门考核。\n- 进入王朝或军府，从灵田、矿场、驿站、边军和巡妖队做起，凭功勋换功法与身份。\n- 跟随家族、商盟或师父学习丹、器、符、阵、驭兽等职业技艺，以稳定收入换取修炼资源。\n\n失败者通常不会立刻死亡。更多人会停在炼气前期，转为灵田管事、护院、矿场领班、商队护卫或低阶工匠。强行突破失败可能留下经脉损伤、神识衰弱、丹毒或寿命折损；宗门会收回核心资源，家族也可能停止供养。少数人会离开秩序覆盖区，成为散修、盗修、猎妖人或秘境掘客。\n\n一个普通家庭真正能承受的代价，往往不是一枚丹药，而是几年劳力、一次婚约、整块田产或全家的信用。\n\n## 力量体系与正常值\n\n修士通过功法感知天地灵炁，以呼吸、行功、炼化和存神将灵炁转为自身真元，积存在丹田与灵府之中。经脉是修士施法和运转真元的身体基础，但不是可拆装、植入或改造的器械系统。\n\n功法决定炼化速度、真元性质、神魂稳定性和适合使用的法术。丹药能加快积累，却会留下丹毒；法宝能放大力量，却要求神识与真元匹配；符箓和阵法能让低阶修士借助外物完成超出自身境界的单次效果，但不能永久替代境界。\n\n世界通用的力量尺为一百级，分十个大境界，每境界十级：\n\n- **引灵境，1—10级**：能够感知灵气，使用照明、净水、引火、驱虫等小术。多数有灵根者终生停留在这一境界。\n- **炼气境，11—20级**：真元可以稳定运行，能够使用低阶法术、符箓和灵器。普通宗门弟子、城镇灵务人员多在此范围。\n- **筑基境，21—30级**：丹田稳固，神识成形，可以御器短距离飞行、连续施法，并承受普通弓弩和低阶妖兽攻击。地方宗门的中坚通常从这里开始。\n- **金丹境，31—40级**：真元凝成金丹，恢复速度和法术持续力大幅提升，可以长途御剑、独立驱使中品法宝，一人足以镇守一座小城或矿区。\n- **元婴境，41—50级**：神魂拥有脱离肉身短暂行动的能力，能隔空操纵法宝、远距传讯，并在肉身受创时保留一线生机。多数州府的最高战力处于此段。\n- **化神境，51—60级**：神识范围扩展到数里至数十里，能够同时维持多种法术和法宝，施法留下的痕迹可持续数日。一个化神修士足以改变一场边地战役。\n- **炼虚境，61—70级**：可以短暂触及虚空，穿过预先稳定的空间裂隙，炼制真正意义上的空间法宝，也能进入多数大型秘境而不被环境立刻杀死。\n- **合体境，71—80级**：神魂、肉身与真元高度统一，能让自身法术与本命法宝短暂合一，战斗中同时维持攻、防、遁三类高阶手段。此境修士已是大宗门和王朝的核心支柱。\n- **大乘境，81—90级**：能够跨越山河施法，独自压制大型妖群、守住关隘或破坏小型秘境的稳定结构。天下有名的大宗主、老祖和王朝供奉多在此境。\n- **渡劫境，91—100级**：肉身、真元、神魂都接近凡界承受极限，能够在极端环境中长时间作战，跨越万里，或以一击改变山川局部形势。渡劫不是抽象的天道掌控，而是必须真实承受雷火、风灾和心神冲击的生死关。\n\n普通人通常在0—3级；经过训练的军士、猎妖人和武者约为3—7级；刚入门的修士约为6—12级。普通炼气修士为12—18级，天才…\n已批准 Character Authority：\n# CHARACTER CARD 1｜Split Authority\n\n## POWER CORE｜Frozen Authority\n\n# POWER SEED｜分流真元\n## World Power Normal → Legal Exception\n\n绝大多数修士的真元沿经脉形成单一循环。即使神识足够强，也通常只能维持一套完整施法逻辑；同时攻、防、遁行，需要更高境界、法宝或阵法配合。\n\nLegal Exception：真元完成一次循环后，可以稳定分成两股彼此独立的真元流，由同一神识同时控制。两股真元总量不变，各自威力通常只有完整真元的一部分。\n\n## Core Fantasy\n\n一个身体，同时完成两套不同的力量动作：一边出剑，一边护体；一边遁行，一边施法；一边压制敌人，一边准备下一击。\n\n## 为什么读者会馋\n\n它不是单纯增加数值，而是直接扩大“同时能做什么”。低境界也能打出复杂战斗，高境界则能把攻、防、移动、法宝和环境利用组合成连续战术。\n\n## Growth Compatibility\n\n### 正常修炼轴\n\n境界提升真实增加真元总量、法术威力、神识强度、肉身承载力和持续作战时间。\n\n### 异常掌握轴\n\n从只能粗略二分，成长到自由调整比例、快速切换主次、同时运行不同性质的功法与法术，并在关键时刻重新合流爆发。\n\n### High-Tier Mutation\n\n高阶后，分流不再只是“两股真元”，而能围绕自身、法宝或战场节点形成短暂的多段协同结构，使多种法术在不同位置同时推进，最后合并成一次完整攻势。\n\n### 永久边界\n\n真元总量不会凭空增加，两股真元不能各自发挥完整境界的力量。分流越多，神识误差、经脉负荷和肉身撕裂风险越高；境界差距也不会因为分流自动消失。\n\n## Legendary Power State\n\n真元如同两条甚至多条同时运行的河流，攻势、护体、遁光和法宝彼此衔接。敌人面对的不是一招接一招，而是一整套同时展开的力量结构。\n\n## Power Audit Metadata（非 Canon）\n\n### Future Legend Image\n\n一人在高空停步，周身数道不同方向的真元轨迹同时成形：其中一道迎敌，一道护住退路，一道牵引法宝，最后全部在同一瞬间合为一击。\n\n## HUMAN CORE｜Frozen Authority\n\n# HUMAN SEED｜陆回川／总要亲自去一趟\n\n## 世界中的初始位置与成长环境\n\n陆回川出生在大晟东部河网的一座转运渡镇，家里经营一间临河食舍，父亲替货船修缆具、船桨和车架，母亲负责灶台、账目与临时客房。\n\n家境不算贫寒，却只能承担一次普通的引灵试，无法长期供养一个脱离家务、专心修炼的孩子。陆回川从小就在食舍里打杂：搬水、收碗、记欠账、替船工送饭，也替过路人照看行李。\n\n他见过很多人带着宏大的计划经过渡口，也见过他们在另一处地方重新开始。对家里人来说，日子最重要的是能重复、能收钱、能熬过下一个雨季；对陆回川来说，重复本身渐渐变成了一种令人窒息的东西。\n\n他不是被家里虐待长大，也不是从苦难中发誓要改变世界。他只是很早就发现：一个人如果总是等“以后”，很多真正想要的东西会在等待里失去味道。\n\n## Formative Facts → Adaptation → Observable Behavior\n\n1. **食舍里的人常常说得热烈，最后却不再回来。**  \n   他听过商客谈远方生意，听过修士谈闭关突破，也听过年轻人向心上人保证来年一定回来。真正兑现的，往往只是记得某道菜的口味、按时还钱、在离开前把坏掉的灯修好。  \n   **Adaptation：** 他逐渐相信具体的行动和当下的感受，却不太相信漂亮的保证。  \n   **Observable Behavior：** 面对新的人和事，他倾向于…\n已批准 Story Program：\n# STORY PROGRAM\n\n## 核心碰撞\n\n- 陆回川没有力量也会想离开渡镇、亲眼看看海港，并确认阮棠是否愿意与他共享一段不由家庭和生计安排的生活。修炼能让他走得更远，却不能替阮棠决定去留，也不能证明两个人应该为彼此改变多少。\n- 分流真元让他能够同时处理两件事，也会诱使他误以为自己可以同时保住机会、关系、名声与承诺。真正逼迫他的往往不是“能不能兼顾”，而是当力量已经无法继续分摊时，他愿意让哪一件事落空。\n- 沈砚秋需要能证明开山路线正确的弟子，顾青炉需要赤脉山的矿，石晚棠需要矿户的长期份额，乌辞需要旧牧场，韩砺需要守住粮谷。他们不会因为陆回川出现便改变原始目标，只会在见过他的选择和战法后调整利用、招揽或压制他的方式。\n- 陆回川容易把一次具体的认可当成“这个人真正看见了我”。沈砚秋的提拔、石晚棠的履约、乌辞的并肩都可能令他投入过深；但这些人仍会为了自己的宗门、矿户或部族牺牲他的利益。\n- 阮棠能让他为了一个夜晚、一句答复或一次共同承担而改路，却不能把他的漂泊治好。她越拥有自己的生活，陆回川越无法用“以后带她去更远处”代替当下的选择。\n\n## 全书成长与核心幻想兑现脊柱\n\n1. 陆回川初入引灵境时，只能让完成一次循环的真元勉强分成两股，维持十余息。一股牵动小术扶正失控的渡船，一股撑起护身灵光；此前他只能二选一，之后他第一次能在保护自己和继续行动之间不立刻停手。\n\n2. 筑基后，他能够主动调整两股真元的强弱并快速交换主次。以前御器离地便无法稳定施法，现在可以踩着飞剑越过断桥，同时用另一股真元挡箭、牵人或出剑；面对同境修士，他不再只能等对方一招结束后还手。\n\n3. 金丹阶段，他能让两股真元分别运行不同性质的法术，并在最后一刻重新合流。以前水行遁术与火行飞剑会互相干扰，现在可以贴着矿火移动，同时驾驭飞剑压住敌人，再把两股真元合为一次足以击破金丹护体的重击；合流之后仍会出现经脉灼裂和短暂失力。\n\n4. 元婴至化神阶段，他的神识足以让一股真元远距驾驭本命飞剑，另一股维持肉身遁行、护体或救人。以前进入黑日岛的重力乱潮便必须收剑保命，现在能够让飞剑绕过倒悬宫墙追击敌人，自己同时带着人穿过向天空“坠落”的街道。\n\n5. 炼虚至合体阶段，分流开始形成短暂的多段协同结构。他可以把有限真元依次落在自身、照水剑和数个预先触及的战场位置，使护路、牵制和主攻在不同方位同时推进。以前只能守住一个关口或追杀一名强敌，现在能在白骨雪原同时截断妖兽冲阵、护住迁徙队伍的缺口并逼退敌将；但节点越多，每一处越弱，遭到逐点击破时还会反噬神魂。\n\n6. 渡劫阶段，他能在高空中让攻势、护体、遁光与法宝沿数道轨迹同时成形，再在同一瞬间汇成一击。以前面对跨越山河的高阶围攻只能逃走或选一处硬抗，现在可以一边停住断天门外的风灾，一边护住退路、牵引飞舟并与同境强者正面交锋。真元总量仍只有一份；为保住多人而把力量分薄时，他照样会被任何一道足够强的攻击重创。\n\n## 不可替代的人与关系\n\n- **阮棠**想拥有一份由自己决定去留、价格和伙伴的生活，而不是成为陆回川远行故事里的“同行之人”。别人可以陪他看海，却没有人共享食舍后院、河水与炭火的气味，也没有人如此清楚他何时是真想要、何时只是想被看见。她会让他错过更安全的出发时间、拒绝长期闭关或在已经离开后再次回来；她也可能在他回来时已经作出了不等他的决定。\n\n- **沈砚秋**想借试剑会、外门开放与东海成果取得掌门之位。她是第一个在公开场合确认陆回川的异常不是旁门邪术、并愿意为他提供完整修炼道路的人；另一位同样慷慨的长老不能替代这段最初认可。陆回川因此愿意替她承担一次本不属于自己的风险，也会在发现自己被当成开山旗帜后，把她的制度安排体验成私人背叛。\n\n- **石晚棠**想让赤脉山矿户拥有写入矿契、能够传给下一代的份额。她不崇拜陆回川，也不关心他的宗…\n明确硬约束：未检测到明确题材硬约束\nOutline 用途：优先寻找长中短线编织、身份揭露、离队归来、牺牲/二次兑现、多线合流与高价值获得/旧奖励重释；必须服从已批准 Character Authority / World Vision / Story Program。",
+  "query_scope": "arcs,book-dna,contrasts,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 30,
+  "unique_raw_count": 25,
+  "novel_candidate_count": 24,
+  "accepted_count": 5,
+  "coordinate_reference_count": 0,
+  "coordinate_reference": null,
+  "coordinate_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {},
+  "human_lane_order": [],
+  "human_lane_candidate_limit": 0,
+  "rejected_count": 20,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 5,
+  "accepted": [
+    {
+      "score": 0.281,
+      "slug": "mechanisms/thread-collision-v3",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "transfer_boundary": "迁移共享因果铰链与 narrative afterlife；碰撞强度由共同选择实际改写了多少线程的未来来决定。"
+    },
+    {
+      "score": 0.0912,
+      "slug": "mechanisms/reunion-reentry-v3",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "transfer_boundary": "只迁移“变化后重新辨认→仍有障碍→重新进入关系/行动”的结构，不迁移源角色或具体回归方式。"
+    },
+    {
+      "score": 0.0912,
+      "slug": "mechanisms/departure-vacancy-v3",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "transfer_boundary": "只迁移“离开→空位/新选择→长线沉睡/召回”的因果，不迁移具体离队理由或回归奖励。"
+    },
+    {
+      "score": 0.2026,
+      "slug": "mechanisms/mech-action-space-expansion",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "transfer_boundary": "这是 possible variant，不是普遍规律；不得迁移来源身份、事件、专名或句式。"
+    },
+    {
+      "score": 0.1702,
+      "slug": "mechanisms/hidden-identity-long-v3",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "transfer_boundary": "《斗罗大陆》《诡秘之主》《将夜》直接支持长期隐藏身份/身份重释；《修真聊天群》只提供“公共误认逐渐追上现实”的邻近证据。迁移揭露后的关系与行动变化，不把公共误认等同于长期潜伏身份。"
+    }
+  ],
+  "rejected": [
+    {
+      "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+      "reason": "固定 World Coordinate Reference 已由已批准 World Vision 继承，不重复占 downstream creative 名额"
+    },
+    {
+      "slug": "arcs/rcv0-14-wuxia-langzi-jianghu-fame-to-defense",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-13-wuxia-jinyong-shijie-daoshi-reputation-to-belonging",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-12-lishi-ming-land-to-maritime-boundary",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-05-xuanhuan-feisheng-zhihou-threshold-inversion",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-24-dushi-shoushu-zhibojian-care-calculus",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-11-lishi-daizhecangku-daming-resource-to-local-order",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-22-xuanhuan-wulian-dianfeng-power-obligation",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-26-qihuan-tianqi-yubao-misread-inheritance",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-05-xuanhuan-feisheng-zhihou",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-06-xianxia-xiaoxingji",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-07-dushi-huakaizhe",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "mechanisms/reward-action-space-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "syntheses/priority-selection-synthesis-20260824",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "mechanisms/minimum-sufficient-public-proof-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "mechanisms/reward-recontextualization-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-14-wuxia-langzi-jianghu-defense-to-strategy",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-06-xianxia-xiaoxingji-protection-and-contribution",
+      "reason": "超过最终数量上限"
+    }
+  ]
+}

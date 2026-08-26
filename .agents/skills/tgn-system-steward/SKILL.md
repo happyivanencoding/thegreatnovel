@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.1.3
+version: 0.1.5
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -94,6 +94,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Authority separation beats negative-prompt restraint when causal leakage is the problem
 - Character is a person, not a psychological proof
 - Growth is longitudinal, not a per-stage / per-block tax
+- Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
 - Story facts first; system bookkeeping second
 - High Precision / Low Noise for GBrain
 - Commercial Quality First; diversity is a search-space property, not a quota

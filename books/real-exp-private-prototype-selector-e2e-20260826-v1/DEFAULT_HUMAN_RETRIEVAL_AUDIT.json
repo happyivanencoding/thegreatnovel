@@ -1,0 +1,18 @@
+{
+  "query_strategy": "human_lane_queries",
+  "accepted": [
+    {
+      "lane": "appetite",
+      "slug": "mechanisms/private-appetite-continuity-v1",
+      "score": 0.3176
+    }
+  ],
+  "prototype_accepted": [],
+  "prototype_rejections": [],
+  "human_lane_counts": {
+    "appetite": 1,
+    "behavior": 0,
+    "relationship": 0
+  },
+  "gbrain_default_prototype_safe": true
+}

@@ -3,3 +3,7 @@ __pycache__/
 .pytest_cache/
 .venv/
 books/*/.workflow_tmp/
+
+# Machine-local state (never commit)
+%SystemDrive%/
+.local/
