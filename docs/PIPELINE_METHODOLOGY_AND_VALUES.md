@@ -172,11 +172,13 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 ### Power Seed：决定“世界正常力量里，主角合法例外在哪里”
 
-Power Seed 只读 deterministic `POWER_BASELINE` 与少量 Power GBrain craft，不读 Human Biography，也不读 named Story Opportunities。
+Power Seed 只读 deterministic `POWER_BASELINE`、少量 Power GBrain craft 与非 Canon `Power Novelty Spark`，不读 Human Biography，也不读 named Story Opportunities。Spark 只在 Power 生成时存在：为 3 个候选各采样一个“熟悉能力幻想 × 单一异常”，用于打破模型默认能力先验，生成后不向下游传播。
 
 核心语法：
 
-`World Power Normal → Legal Exception → Core Fantasy → Growth Compatibility`
+`World Power Normal → Familiar Fantasy × One Deviation → Legal Exception → Core Fantasy → Growth Compatibility`
+
+创新边界：**设定创新 ≠ 术语创新 ≠ 机制复杂化**。每个候选最多一个主异常；必须先用一句大白话讲清“别人做不到什么，我具体多能做什么”，再允许短名。为什么“馋”必须落到读者立刻想使用的具体体验；复杂玩法应由简单规则随成长自然展开。
 
 #### 负责
 

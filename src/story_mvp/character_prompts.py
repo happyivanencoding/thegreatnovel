@@ -9,6 +9,7 @@ from .character_context import (
 )
 from .character_seeds import HUMAN_SEED_SCHEMA, POWER_SEED_SCHEMA
 from .prompts import HardGateError, OUTLINE_TEMPLATE, STORY_PROGRAM_TEMPLATE, format_references
+from .power_novelty import build_power_novelty_bundle
 
 
 SPLIT_PROMPT_MODES = frozenset({"world_vision", "power_seed", "human_seed", "idea", "outline"})
@@ -60,15 +61,20 @@ POWER_PROMPT = """你是成熟中文男频成长长篇的 Power Seed 设计者�
 
 核心方法：**World Power Normal → Legal Exception → Core Fantasy → Growth Compatibility**。
 - 先找到一个世界内可理解的正常值，再偏离它；特殊性必须是相对世界的特殊，而不是作者宣称“很特殊”。
-- 优先产生读者会直接想拥有的力量、身体状态、战斗方式、探索自由或规则位置；不要把职业效率、维修、诊断、运输、审核、合同解释做成默认金手指。
+- **设定创新 ≠ 术语创新 ≠ 机制复杂化**。每个候选最多一个主异常；复杂玩法应从简单规则长期长出来，不把复杂写进初始定义。
+- **先白话、后命名**：去掉全部专有名词后，普通读者仍应在一句话内听懂“我具体多能做什么”。世界内短名可有可无，不能代替能力解释。
+- “为什么读者会馋”必须回答：如果读者明天醒来得到它，最想立刻拿来做什么？禁止用“战略自由度、成长潜力、规则位置”等抽象价值替代具体欲望。
+- 优先产生读者会直接想拥有的力量、身体状态、战斗方式或探索自由；不要把职业效率、维修、诊断、运输、审核、合同解释做成默认金手指。
 - 这是男频成长长篇：正常修炼必须真实增强持有者本身；Exception 的掌握同时继续质变，不是外挂替代修炼。
 - High-Tier Mutation 问高阶玩法怎样质变，不允许默认升级成因果、命运、天道、世界定义等抽象终极词。
 - Legendary Power State 只写力量体验上限，不写未来身份、组织、统治地位、使命或故事结局。
 - Future Legend Image 只是 AUDIT_ONLY，不是未来 Canon。
 
-生成 3 个独立候选，不评分、不排名。候选必须匿名；不要给未来持有者取名。每个候选使用：
+生成 3 个独立候选，不评分、不排名。候选必须匿名；不要给未来持有者取名。若提供了 Power Novelty Spark，Candidate 1/2/3 分别从对应 Spark 起步：只借“熟悉幻想 + 单一异常”做偏离，再按当前 World Power Normal 重新发明具体能力；不得原样抄 Spark，也不得让三个候选重新收敛成同一机制换皮。每个候选使用：
 
-# POWER CANDIDATE N｜能力短名
+# POWER CANDIDATE N｜能力短名（可选；必须建立在白话理解之后）
+## 一句话大白话
+只用普通人的既有认知说明：别人做不到什么，我具体多能做什么。
 ## World Power Normal → Legal Exception
 ## Core Fantasy
 ## 为什么读者会馋
@@ -287,6 +293,7 @@ def generate_split_prompt(
     recent_summaries: str = "",
     selected_references: list[Mapping[str, Any]] | None = None,
     gbrain_inspiration: str = "",
+    power_novelty: str | None = None,
     prototype_id: str = "",
     **_: Any,
 ) -> str:
@@ -304,9 +311,12 @@ def generate_split_prompt(
         if not world_vision.strip():
             raise ValueError("生成 Power Seed 需要已批准的 World Vision")
         baseline = project_character_power_baseline(world_vision)
-        return "\n\n".join(
-            [POWER_PROMPT.strip(), baseline.strip(), _block("Power GBrain Craft（可选）", gbrain_inspiration)]
-        ).strip() + "\n"
+        novelty = build_power_novelty_bundle() if power_novelty is None else power_novelty.strip()
+        parts = [POWER_PROMPT.strip(), baseline.strip()]
+        if novelty:
+            parts.append(_block("Power Novelty Spark（随机扰动；非 Canon）", novelty))
+        parts.append(_block("Power GBrain Craft（可选）", gbrain_inspiration))
+        return "\n\n".join(parts).strip() + "\n"
 
     if mode == "human_seed":
         _require_approved(creative_state, "world_vision")

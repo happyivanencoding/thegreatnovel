@@ -33,7 +33,9 @@ Power Seed 只读取确定性的 `POWER_BASELINE`，不看完整 Story Opportuni
 
 生成语法：
 
-`世界力量正常值 → 合法例外 → 核心幻想 → 长篇成长兼容`
+`世界力量正常值 → Power Novelty Spark → 合法例外 → 核心幻想 → 长篇成长兼容`
+
+Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个“熟悉能力幻想 × 单一异常”，只负责拉开候选起点；不进入 Human / Story Program / Outline。每个候选最多一个主异常，必须先用一句大白话讲清，再允许世界内短名；复杂玩法从简单规则长期长出来。
 
 它负责：相关正常值/稀缺度、Legal Exception、核心幻想、正常修炼轴、异常掌握轴、高阶质变、永久边界、传奇力量状态。
 
