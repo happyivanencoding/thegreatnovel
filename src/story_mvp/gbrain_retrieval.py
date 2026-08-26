@@ -58,7 +58,7 @@ GENRE_PRIOR_ALLOWED_MODES = frozenset({"idea", "outline", "review"})
 # 规划节点使用少量、可检索的 v3 craft aliases；完整 BOOK-aware brief 仍单独保留给作者查看。
 PLANNING_KEYWORD_QUERIES = {
     "world_vision": '"world fantasy" OR "world entry" OR "narrative compounding"',
-    "power_seed": '"core fantasy" OR "asymmetric advantage" OR "power progression" OR "world compatibility"',
+    "power_seed": '"core fantasy" OR "core reader fantasy" OR "asymmetric advantage" OR "power dominance" OR "power verification" OR "world compatibility"',
     "human_seed": '"character hook" OR "protagonist desire" OR "behavior signature" OR "human appetite" OR "relationship gravity"',
     "idea": '"plot engine variation" OR "thread ecology" OR "reward opportunity"',
     "outline": '"thread collision" OR "hidden identity reveal" OR "departure vacancy" OR "reunion reentry" OR "sacrifice convergence" OR "reward recontextualization"',
@@ -70,8 +70,8 @@ PLANNING_KEYWORD_QUERY_BATCHES = {
         '"reader coordinates" OR "progression scale" OR "action space scale" OR "expectation ladder" OR "core advantage" OR "world compatibility" OR "power scale" OR "threat scale"',
     ),
     "power_seed": (
-        '"core fantasy" OR "asymmetric advantage" OR "power progression"',
-        '"world compatibility" OR "power scale" OR "growth mutation"',
+        '"core fantasy" OR "core reader fantasy" OR "asymmetric advantage" OR "power dominance" OR "power verification"',
+        '"world compatibility" OR "power scale" OR "growth mutation" OR "public proof" OR "ability delight"',
     ),
     "human_seed": tuple(HUMAN_LANE_QUERIES[lane] for lane in HUMAN_LANE_ORDER),
     "idea": (
@@ -333,6 +333,8 @@ def build_retrieval_brief(
         lines.append("章节精度优先：寻找可迁移的 mechanisms、contrasts、syntheses、prose-controls；不引入来源作品表层故事。")
     elif mode == "world_vision":
         lines.append("World Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不替未来 Character 决定主角。")
+    elif mode == "power_seed":
+        lines.append("Power Seed 用途：优先寻找 core fantasy、asymmetric advantage、power dominance / verification 与可成长的能力玩法；World Normal 只作比较尺，不要求优势必须先成为世界内合法例外，也不要用世界兼容性把能力自动削弱。")
     elif mode == "idea":
         lines.append("Story Program 用途：优先寻找 Plot Engine 变异、thread ecology/collision、配角自治、story-state compounding 与高价值获得体验；只作为可选灵感，不改写已批准 Character Authority / World Vision。")
     elif mode == "outline":

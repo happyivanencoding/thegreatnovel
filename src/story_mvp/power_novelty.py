@@ -35,6 +35,7 @@ def build_power_novelty_bundle(seed: int | None = None) -> str:
         f"seed: {actual_seed}",
         "用途：只负责拉开 3 个 Power Candidate 的创意起点；不是能力答案，不得原样抄写。",
         "共同边界：每个候选最多一个主异常；先用大白话说清楚，再考虑世界内短名；专有名词不能替代理解。",
+        "强度提醒：单一异常只负责制造独特玩法，不是削弱预算；保留它的同时，最终 Power Asymmetry 仍应明显超标、让人想要。",
         "",
     ]
     for index, (label, desire, anomalies) in enumerate(selected, start=1):

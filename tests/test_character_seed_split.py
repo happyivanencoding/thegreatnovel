@@ -59,6 +59,9 @@ def test_extract_frozen_power_seed_excludes_biography_and_does_not_backfill_ambi
 
 def test_new_seed_schemas_restore_ambition_without_story_hooks() -> None:
     assert "一句话大白话" in POWER_SEED_SCHEMA
+    assert "World Power Normal → Power Asymmetry" in POWER_SEED_SCHEMA
+    assert "来源不必强制是世界内的合法例外" in POWER_SEED_SCHEMA
+    assert "默认宁强勿弱" in POWER_SEED_SCHEMA
     assert "为什么读者会馋" in POWER_SEED_SCHEMA
     assert "High-Tier Mutation" in POWER_SEED_SCHEMA
     assert "Legendary Power State" in POWER_SEED_SCHEMA

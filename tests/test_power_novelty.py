@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from story_mvp.character_prompts import generate_split_prompt
 from story_mvp.power_novelty import build_power_novelty_bundle
+from story_mvp.gbrain_retrieval import PLANNING_KEYWORD_QUERIES, PLANNING_KEYWORD_QUERY_BATCHES
 
 
 WORLD = """# PROTAGONIST-BLIND WORLD VISION
@@ -11,6 +12,13 @@ WORLD = """# PROTAGONIST-BLIND WORLD VISION
 """
 
 STATE = {"world_vision": {"status": "author_approved"}}
+
+
+def test_world_prompt_requires_reusable_social_power_rulers() -> None:
+    prompt = generate_split_prompt(mode="world_vision", creative_direction="男频修仙")
+    assert "力量尺必须能长期反复拿来比较" in prompt
+    assert "至少建立一把世界内真实使用的当前主尺" in prompt
+    assert "不要合成单一总战力分" in prompt
 
 
 def test_power_novelty_bundle_is_reproducible_and_diverse() -> None:
@@ -24,6 +32,8 @@ def test_power_novelty_bundle_is_reproducible_and_diverse() -> None:
     assert len(set(labels)) == 3
     assert "seed: 20260826" in first
     assert "每个候选最多一个主异常" in first
+    assert "单一异常只负责制造独特玩法，不是削弱预算" in first
+    assert "Power Asymmetry 仍应明显超标" in first
 
 
 def test_power_prompt_auto_injects_noncanon_novelty_sparks() -> None:
@@ -40,7 +50,25 @@ def test_power_prompt_auto_injects_noncanon_novelty_sparks() -> None:
     assert "设定创新 ≠ 术语创新 ≠ 机制复杂化" in prompt
     assert "## 一句话大白话" in prompt
     assert "如果读者明天醒来得到它" in prompt
+    assert "World Power Normal → Power Asymmetry" in prompt
+    assert "不必先被证明为世界内合法例外" in prompt
+    assert "默认强度故意偏夸张" in prompt
+    assert "宁可偏强一档" in prompt
+    assert "不要做对称平衡" in prompt
+    assert "Core Power 必须保留一块明显的纯收益区间" in prompt
+    assert "Privilege Delta" in prompt
+    assert "同层普通人通常只能做到什么" in prompt
+    assert "不能靠删除 Novelty Spark 的“单一异常”换来" in prompt
+    assert "允许并鼓励有条件的越级威胁" in prompt
+    assert "不要新增“超标坐标/比较表/评分”等输出字段" in prompt
+    assert "不要让长期成长只剩数量、距离、持续时间越来越大" in prompt
     assert "POWER CRAFT" in prompt
+
+
+def test_power_retrieval_aliases_include_power_dominance_and_verification() -> None:
+    assert "power dominance" in PLANNING_KEYWORD_QUERIES["power_seed"]
+    assert "power verification" in PLANNING_KEYWORD_QUERIES["power_seed"]
+    assert "public proof" in PLANNING_KEYWORD_QUERY_BATCHES["power_seed"][1]
 
 
 def test_power_novelty_can_be_disabled_for_control_experiments() -> None:

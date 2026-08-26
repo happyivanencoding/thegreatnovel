@@ -33,11 +33,11 @@ Power Seed 只读取确定性的 `POWER_BASELINE`，不看完整 Story Opportuni
 
 生成语法：
 
-`世界力量正常值 → Power Novelty Spark → 合法例外 → 核心幻想 → 长篇成长兼容`
+`世界力量正常值 → Power Novelty Spark → Power Asymmetry → 核心幻想 → 长篇成长兼容`
 
-Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个“熟悉能力幻想 × 单一异常”，只负责拉开候选起点；不进入 Human / Story Program / Outline。每个候选最多一个主异常，必须先用一句大白话讲清，再允许世界内短名；复杂玩法从简单规则长期长出来。
+Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个“熟悉能力幻想 × 单一异常”，只负责拉开候选起点；不进入 Human / Story Program / Outline。**Spark 负责不同，不负责强。** Power Asymmetry 才负责把候选推到明显超标：来源可以是世界内稀有天赋/体质、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加，不强制先证明为世界内合法例外。每个候选最多一个主异常，必须先用一句大白话讲清；默认宁可初稿偏强一档，也不要被 LLM 自动平衡成“更方便”。至少一个维度要让同层普通人/天才明显羡慕，Permanent Boundary 防万能但不做对称成本结算；复杂玩法从简单规则与后续功法/装备/环境等复合成长中长出来。
 
-它负责：相关正常值/稀缺度、Legal Exception、核心幻想、正常修炼轴、异常掌握轴、高阶质变、永久边界、传奇力量状态。
+它负责：相关正常值/稀缺度、Power Asymmetry、核心幻想、正常修炼轴、异常掌握轴、高阶质变、永久边界、传奇力量状态。
 
 `Future Legend Image` 只用于候选审计，不进入 Canon。Power Seed 匿名，不负责姓名与个人身份。正常成长必须真实增强主角本人，异常不能只把修炼替换成更聪明的职业技能。
 

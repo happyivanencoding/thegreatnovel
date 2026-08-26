@@ -72,6 +72,7 @@
 GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库`
 
 - GBrain 是 Optional Inspiration，不是 Canon、创意权威、Hard Gate 或原作模板。
+- **公共治理、资源分配、维护职责、责任升级不得作为 production GBrain 的通用可迁移创作机制**；来源作品确有此内容时只保留为研究证据，并退出 active inspiration。
 - 主要路径：`GBrain → World / Power / Human / Story Program / Outline → Approved Story`；以及 `GBrain 离线蒸馏 → Scene Skills → Curator / Primary`。
 - raw GBrain 不直接进入章节 Writer Runtime。
 - 蒸馏分工：Terra 看清事实/Fidelity；Luna 理解吸引力与中层 craft；Sol 理解长篇结构。
@@ -92,6 +93,8 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - Human：**经历是背景，不是人格证明**；允许多重动机、稳定选择偏向与现场变化。
 - Collision 可补少量非奠基性过去，让关系/选择更自然；不得自动悲情化、不得用过去证明整个人、不得自动变主线或一次性倾倒。
 - Growth 是全书纵向不变量，不是 stage / block / ten-chapter tax。
+- **Power Seed 生成 Power Asymmetry，不强制世界内合法例外**：World Power Normal 是比较尺，不是来源限制；非对称优势可来自世界内稀有异常、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加。默认故意偏强：Core Power 至少一个维度让同层普通人/天才明显羡慕，必要时提前拥有通常更高层才有的局部特权；Permanent Boundary 防万能但不做对称成本抵消。Novelty Spark 负责不同，不负责削弱强度。
+- **世界前台力量尺是长期读者坐标**：至少保留一把可复用主尺，并在突破、新能力/装备、公开验证、新强敌、越级结果或世界换挡时自然刷新，让读者知道主角在哪档、哪里超标、离下一档多远；不要求每章报数或单一总战力分。
 - 长篇应保留**震撼式长期重释**：重要旧事实在后续出现足够意外、回看又成立的新解释，并立刻改变力量、身份、关系或世界格局；不强制隐藏身世，也不做每阶段配额。
 - 正文：**Story-bearing Texture > Decorative Density**；克制但不干，丰富但不腻。
 - 不为治理化、工程化、蓝领职业化、过度验证分别新增 Reviewer / Agent / Scorer / Hard Gate。

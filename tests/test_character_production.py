@@ -49,7 +49,7 @@ WORLD = """# PROTAGONIST-BLIND WORLD VISION
 """
 
 POWER = """# POWER SEED｜两处同身
-## World Power Normal → Legal Exception
+## World Power Normal → Power Asymmetry
 普通人只有一个当前位置；持有者可保留第二空间锚点。
 ## Core Fantasy
 我能在第二个真实位置保留行动支点。

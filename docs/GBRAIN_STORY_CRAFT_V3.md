@@ -4,7 +4,7 @@
 
 ## 目标
 
-GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。生产知识优先保存原作如何制造：读者欲望、世界进入感、长篇玩法变异、长中短线编织、高价值获得、人物回流与关键场景兑现。
+GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。生产知识优先保存原作如何制造：读者欲望、世界进入感、长篇玩法变异、长中短线编织、高价值获得、人物回流与关键场景兑现。公共治理、资源分配、维护职责和责任升级只保留为 source-specific 研究证据，不进入 production active inspiration。
 
 蒸馏正文以中文为主。当前 GBrain 在没有 query embedding API Key 时会退化为 English FTS keyword-only，因此英文 alias 不属于创作知识正文。当前 Pilot 将它们集中记录在 `routing/retrieval-aliases-v3.yaml`，并在可搜索页面标题区保留低层 `Retrieval aliases` 行；TGN 只抽取 `##` 下的中文 Creative Problem / Mechanism / Guidance 等区块，因此 alias 不进入模型的 Inspiration Bundle，也不显示成作者默认查询。
 
@@ -54,7 +54,7 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 | 阶段 | 当前默认 | 为什么 |
 |---|---|---|
 | World Vision | GPT-5.6 Luna high | protagonist-blind 建世界：普通生活、正常力量、价值物、独立事件与奇观 |
-| Power Seed | GPT-5.6 Luna high | 把 World Normal 偏成清楚、可成长的 Legal Exception；决定 growth grammar |
+| Power Seed | GPT-5.6 Luna high | 以 World Normal 为比较尺生成清楚、可成长、默认偏强的 Power Asymmetry；不强制世界内合法例外；决定 growth grammar |
 | Human Seed | GPT-5.6 Luna high | world-conditioned / power-blind 生成人本身；保留 competing motives 与具体关系变量 |
 | Story Program | GPT-5.6 Sol high | 当前 Sol 最值得发挥的位置：长期玩法变异、人物自主性、敌人策略、关系回流、Thread Ecology、Reward 变化 |
 | Outline | GPT-5.6 Luna high | 能高质量执行正确 Program，把长期结构落实成故事锚点而不过度膨胀 |

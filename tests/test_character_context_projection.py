@@ -54,7 +54,7 @@ def test_character_world_slice_keeps_reality_and_normal_baseline() -> None:
     assert "王朝、宗门、世家、商盟、军府" in result
     assert "稳定灵田" in result
     assert "普通人知道归潮" in result
-    assert "World Normal → Legal Exception" in result
+    assert "World Normal → Power Asymmetry" in result
     assert "经历是背景，不是人格证明" in result
     assert "不要求所有人物从普通底层起步" in result
     assert "异常不能只是一项更高效的职业技能" in result
@@ -100,8 +100,11 @@ def test_power_baseline_is_power_authority_not_life_or_hooks() -> None:
     assert "Core Fantasy / 特殊能力首先相对于本区块的力量" in result
     assert "不能因为人物是矿工、匠人、账房、向导等职业" in result
     assert "这是男频成长长篇" in result
+    assert "不要为了“合法化”强行给世界补一套机制" in result
     assert "正常境界提升应真实增强主角基础力量" in result
-    assert "高阶也不能自动抹掉的硬边界" in result
+    assert "默认宁可让第一稿偏强一档" in result
+    assert "不要用等价代价把核心爽点抵消" in result
+    assert "高阶也不会自动消失的边界" in result
     assert "普通人的生活与上升" not in result
     assert "社会现实与身份" not in result
     assert "宋照雪" not in result

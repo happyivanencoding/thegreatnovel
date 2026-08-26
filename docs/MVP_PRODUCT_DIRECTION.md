@@ -25,6 +25,8 @@ TGN 要生成的是成熟中文男频成长长篇：读者明确想拥有主角�
 ## Fantasy-First 读者承诺
 
 - 主角本人越来越能做什么，是一级成长主轴；
+- Core Power 不只要新，还要形成相对同层普通人/天才清楚可比、值得羡慕的超标优势；允许有条件越级，边界防万能而不抹平爽感；
+- 世界至少保留一把长期可复用的力量主尺，并在突破、新强敌、公开验证或世界换挡时重新校准，让读者持续知道主角在哪档、强在哪里；
 - Core Fantasy 必须反复兑现，但它是长期 **Reader Promise**，不是主角唯一的人生目的；
 - 长篇需要少量**震撼式长期重释**：旧事实在后续出现意外但可回看的新解释，并立刻改变力量、身份、关系或世界格局；不强制隐藏身世或伏笔配额；
 - 财富、装备、身份、关系、势力、领地、入口和资格可以很重要，但不逐渐取代主角自身成长；
@@ -48,19 +50,19 @@ World Vision 不知道未来主角是谁，也不知道未来金手指是什么�
 - 值得进入的地点、奇观、危险和未知；
 - 普通人、专业人士、顶层势力各自知道什么。
 
-World Vision 不负责主角 Biography、主角欲望、Power Exception、第一次兑现或终局使命。
+World Vision 不负责主角 Biography、主角欲望、Power Asymmetry、第一次兑现或终局使命。
 
 世界独立通过“没有主角仍有别的故事”证明，不通过完整政治经济模拟或额外 Reviewer 证明。
 
-### Power Seed：世界正常力量中的 Legal Exception
+### Power Seed：相对世界正常力量的 Power Asymmetry
 
 Power Seed 只看 deterministic `POWER_BASELINE` 与少量 Power GBrain craft，不看 Human Biography，也不看 named Story Opportunities。
 
 核心顺序：
 
-`World Power Normal → Legal Exception → Core Fantasy → Growth Compatibility`
+`World Power Normal → Power Asymmetry → Core Fantasy → Growth Compatibility`
 
-正常修炼必须真实增强主角本人；Power Exception 同时继续质变。能力优先扩大战斗、探索、生存与行动自由，不默认职业化成维修、诊断、运输、审核或流程优化。
+World Power Normal 是比较尺，不是来源限制。Power Asymmetry 可以来自世界内稀有异常、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加；不要求故事一开始就证明“合法”。默认宁强勿弱：至少一个维度让同层人明显觉得不公平，甚至提前拥有通常更高层才有的局部特权；Permanent Boundary 只防万能，不做对称成本抵消。正常修炼仍必须真实增强主角本人，Power Asymmetry 也继续质变。能力优先扩大战斗、探索、生存与行动自由，不默认职业化成维修、诊断、运输、审核或流程优化。
 
 ### Human Seed：一个人的权威快照，不是人格证明论文
 

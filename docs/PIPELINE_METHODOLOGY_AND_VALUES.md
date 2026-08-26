@@ -90,7 +90,7 @@ TGN 会保留一组区别于模板化小说生成器的后台创作原则与读�
 
 Reader Coordinates 因此分成两类：
 
-- **世界前台尺**：Power / Technique / Threat / Status / Value / World，必要时 Gear / Potential；它们可以被世界内名称、境界、身份、装备和价值体系直接承载。
+- **世界前台尺**：Power / Technique / Threat / Status / Value / World，必要时 Gear / Potential；它们可以被世界内名称、境界、身份、装备和价值体系直接承载。至少一把当前主尺应长期复用，并在突破、新强敌、公开验证或世界换挡时重新校准，而不是开篇介绍一次就消失。
 - **读者体验 / 故事尺**：Action Space / Expectation Ladder / Mystery Depth / Impact，必要时 Reach；它们必须真实参与生成，但要投影成具体故事事实，而不是变成世界内部术语。
 
 正确方向是“抽象价值观 → 阶段专属的具体创作问题”，而不是“抽象价值观 → 世界 ontology”：
@@ -146,7 +146,7 @@ Reader Coordinates 因此分成两类：
 
 ### World Vision：先创造一个没有主角也成立的世界
 
-World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道未来 Power Exception 是什么。它仍是一轮 Luna high，不新增 World Reviewer。
+World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道未来 Power Asymmetry 是什么。它仍是一轮 Luna high，不新增 World Reviewer。
 
 #### 负责
 
@@ -161,7 +161,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 #### 不负责
 
 - 主角 Biography、欲望、关系原点；
-- Core Power / Legal Exception；
+- Core Power / Power Asymmetry；
 - 为未来能力预留“钥匙孔”；
 - 主角第一次兑现与终局使命；
 - 为证明世界独立而补完整政治经济模拟。
@@ -170,21 +170,21 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 ---
 
-### Power Seed：决定“世界正常力量里，主角合法例外在哪里”
+### Power Seed：决定“主角相对世界正常力量，哪里拥有明显非对称优势”
 
 Power Seed 只读 deterministic `POWER_BASELINE`、少量 Power GBrain craft 与非 Canon `Power Novelty Spark`，不读 Human Biography，也不读 named Story Opportunities。Spark 只在 Power 生成时存在：为 3 个候选各采样一个“熟悉能力幻想 × 单一异常”，用于打破模型默认能力先验，生成后不向下游传播。
 
 核心语法：
 
-`World Power Normal → Familiar Fantasy × One Deviation → Legal Exception → Core Fantasy → Growth Compatibility`
+`World Power Normal → Familiar Fantasy × One Deviation → Power Asymmetry → Core Fantasy → Growth Compatibility`
 
-创新边界：**设定创新 ≠ 术语创新 ≠ 机制复杂化**。每个候选最多一个主异常；必须先用一句大白话讲清“别人做不到什么，我具体多能做什么”，再允许短名。为什么“馋”必须落到读者立刻想使用的具体体验；复杂玩法应由简单规则随成长自然展开。
+创新边界：**设定创新 ≠ 术语创新 ≠ 机制复杂化，Novelty ≠ Power Fantasy 强度**。Power Asymmetry 不强制来自世界内合法例外；它可以是稀有天赋/体质、唯一奇物/际遇、外来知识/经验、外挂、正常维度上的极端天赋或少量优势叠加。每个候选最多一个主异常，必须先用一句大白话讲清“别人做不到什么，我具体多能做什么”。默认强度故意偏夸张：宁可初稿偏强一档，也不要让 LLM 把优势平衡成“更方便”；相对同层普通人/天才至少一个维度要明显超标，甚至提前拥有通常更高一大档或数档才有的局部特权。Permanent Boundary 防万能，不做对称成本结算，必须留下明显纯收益。为什么“馋”必须落到读者立刻想使用的具体体验；长期还应能与功法、装备、环境、传承等产生新化学反应，而不只增加数量与距离。
 
 #### 负责
 
 - 一句话能理解、能想拥有的 Core Fantasy；
 - 正常修炼轴：世界本来的成长怎样真实增强主角本人；
-- Exception mastery：异常掌握怎样扩大具体能力；
+- Power Asymmetry mastery：非对称优势怎样继续扩大具体能力；
 - High-Tier Mutation：高阶发生什么真正质变；
 - Permanent Boundary：高阶也不会自动消失的边界；
 - Legendary Power State：力量体验上限。

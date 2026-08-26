@@ -2684,6 +2684,12 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "震撼式长期重释" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
     assert "震撼式长期重释" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
     assert "震撼式长期重释" not in generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
+    assert "Persistent Reader Ruler" in story_program
+    assert "主角现在大致在哪一档" in story_program
+    assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "Persistent Reader Ruler" in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    assert "Persistent Reader Ruler" not in generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
     assert "## 不可替代的人与关系" in story_program
     assert "### 关键关系（可选）" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
