@@ -3,7 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from fastapi.testclient import TestClient
 
+import story_mvp.app as app_module
 from story_mvp.character_prompts import generate_split_prompt
 from story_mvp.gbrain_retrieval import (
     build_retrieval_brief,
@@ -377,3 +379,226 @@ def test_human_retrieval_leaves_lane_empty_instead_of_using_reference_only_or_wr
 
     assert result["human_lane_counts"] == {"appetite": 1, "behavior": 0, "relationship": 0}
     assert [item["slug"] for item in result["accepted"]] == ["mechanisms/appetite"]
+
+
+
+def _private_prototype_page(lane: str, slug: str, *, active: bool = True, prototype_id: str = "prism-wanderer-alpha") -> str:
+    return f"""---
+type: concept
+title: Private Prototype {lane}
+active_inspiration: {'true' if active else 'false'}
+human_lane: {lane}
+prototype_id: {prototype_id}
+experimental_activation: EXPLICIT_PROTOTYPE_TEST
+creative_problem_tags:
+  - human-craft
+  - character-prototype
+  - experimental-prototype
+---
+
+Retrieval aliases: pwaalpha {lane}
+
+## Creative Problem
+{lane} prototype problem.
+
+## Mechanism
+{lane} prototype mechanism from {slug}.
+"""
+
+
+def _private_prototype_pages() -> dict[str, str]:
+    slugs = {
+        "appetite": "book-dna/private-prototype-pwaalpha-appetite-v1",
+        "behavior": "book-dna/private-prototype-pwaalpha-choice-bias-v1",
+        "relationship": "book-dna/private-prototype-pwaalpha-relationship-v1",
+    }
+    return {slug: _private_prototype_page(lane, slug) for lane, slug in slugs.items()}
+
+
+def test_default_human_retrieval_rejects_explicit_private_prototype_even_if_query_hits_it() -> None:
+    pages = _private_prototype_pages()
+
+    def fake_query(query: str, **_kwargs) -> str:
+        if "human appetite" in query:
+            return "[0.99] book-dna/private-prototype-pwaalpha-appetite-v1 -- private appetite"
+        if "behavior signature" in query:
+            return "[0.99] book-dna/private-prototype-pwaalpha-choice-bias-v1 -- private behavior"
+        if "relationship gravity" in query:
+            return "[0.99] book-dna/private-prototype-pwaalpha-relationship-v1 -- private relationship"
+        raise AssertionError(query)
+
+    result = retrieve_gbrain(
+        mode="human_seed",
+        world_vision=WORLD,
+        query_func=fake_query,
+        page_func=pages.__getitem__,
+    )
+
+    assert result["prototype_selected"] is False
+    assert result["accepted_count"] == 0
+    assert result["human_lane_counts"] == {"appetite": 0, "behavior": 0, "relationship": 0}
+    assert all("显式 selector" in item["reason"] for item in result["rejected"])
+
+
+def test_explicit_private_prototype_selector_reads_exact_three_lanes_without_search() -> None:
+    pages = _private_prototype_pages()
+
+    def must_not_query(*_args, **_kwargs) -> str:
+        raise AssertionError("explicit prototype selector must not run semantic/keyword search")
+
+    result = retrieve_gbrain(
+        mode="human_seed",
+        world_vision=WORLD,
+        prototype_id="prism-wanderer-alpha",
+        query_func=must_not_query,
+        page_func=pages.__getitem__,
+    )
+
+    assert result["query_strategy"] == "explicit_human_prototype"
+    assert result["query_texts"] == []
+    assert result["prototype_selected"] is True
+    assert result["prototype_id"] == "prism-wanderer-alpha"
+    assert result["human_lane_counts"] == {"appetite": 1, "behavior": 1, "relationship": 1}
+    assert [(item["human_lane"], item["slug"]) for item in result["accepted"]] == [
+        ("appetite", "book-dna/private-prototype-pwaalpha-appetite-v1"),
+        ("behavior", "book-dna/private-prototype-pwaalpha-choice-bias-v1"),
+        ("relationship", "book-dna/private-prototype-pwaalpha-relationship-v1"),
+    ]
+
+
+def test_explicit_private_prototype_selector_fails_closed_on_missing_or_wrong_lane() -> None:
+    pages = _private_prototype_pages()
+    pages["book-dna/private-prototype-pwaalpha-choice-bias-v1"] = _private_prototype_page(
+        "behavior",
+        "book-dna/private-prototype-pwaalpha-choice-bias-v1",
+        prototype_id="other-prototype",
+    )
+
+    with pytest.raises(ValueError, match="缺少可用 lane：behavior"):
+        retrieve_gbrain(
+            mode="human_seed",
+            world_vision=WORLD,
+            prototype_id="prism-wanderer-alpha",
+            query_func=lambda *_args, **_kwargs: "",
+            page_func=pages.__getitem__,
+        )
+
+
+def test_unknown_private_prototype_selector_fails_instead_of_falling_back() -> None:
+    with pytest.raises(ValueError, match="未知 Human Prototype selector"):
+        retrieve_gbrain(
+            mode="human_seed",
+            world_vision=WORLD,
+            prototype_id="unknown-private-prototype",
+            query_func=lambda *_args, **_kwargs: "",
+            page_func=lambda _slug: "",
+        )
+
+
+def test_prototype_selector_is_ignored_outside_human_seed() -> None:
+    page = _human_lane_page("appetite", "Power compatible generic mechanism")
+
+    result = retrieve_gbrain(
+        mode="power_seed",
+        world_vision=WORLD,
+        prototype_id="prism-wanderer-alpha",
+        query_override="manual power query",
+        query_func=lambda _query, **_kwargs: "[0.99] mechanisms/power-generic -- generic",
+        page_func=lambda _slug: page,
+    )
+
+    assert result["query_strategy"] == "manual_override"
+    assert result["prototype_selected"] is False
+    assert result["prototype_id"] == ""
+
+
+def test_explicit_prototype_human_prompt_generates_one_fictionalized_seed_only() -> None:
+    prompt = generate_split_prompt(
+        mode="human_seed",
+        world_vision=WORLD,
+        creative_state={"world_vision": {"status": "author_approved"}},
+        prototype_id="prism-wanderer-alpha",
+        gbrain_inspiration=(
+            "human_lane: appetite\nPRIVATE APPETITE\n\n"
+            "human_lane: behavior\nPRIVATE BEHAVIOR\n\n"
+            "human_lane: relationship\nPRIVATE RELATIONSHIP"
+        ),
+    )
+
+    assert "Explicit Anonymous Human Prototype Projection" in prompt
+    assert "只生成 **1 个** fictionalized Human Seed" in prompt
+    assert "# HUMAN SEED｜幻想姓名／短标签" in prompt
+    assert "现实身份、履历、地点、机构、关系身份和身体特征都不可推断或复原" in prompt
+    assert "完全不知道 Power Seed" in prompt
+    assert "PRIVATE APPETITE" in prompt
+
+
+def test_default_human_prompt_does_not_contain_private_prototype_contract() -> None:
+    prompt = generate_split_prompt(
+        mode="human_seed",
+        world_vision=WORLD,
+        creative_state={"world_vision": {"status": "author_approved"}},
+        gbrain_inspiration="GENERIC HUMAN CRAFT",
+    )
+    assert "Explicit Anonymous Human Prototype Projection" not in prompt
+    assert "prism-wanderer-alpha" not in prompt
+
+
+def test_prompt_api_auto_resolves_explicit_prototype_bundle(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen: list[dict[str, object]] = []
+
+    def fake_retrieve(**kwargs):
+        seen.append(kwargs)
+        return {
+            "result": (
+                "human_lane: appetite\nSELECTED PRIVATE APPETITE\n\n"
+                "human_lane: behavior\nSELECTED PRIVATE BEHAVIOR\n\n"
+                "human_lane: relationship\nSELECTED PRIVATE RELATIONSHIP"
+            )
+        }
+
+    monkeypatch.setattr(app_module, "retrieve_gbrain", fake_retrieve)
+    client = TestClient(app_module.app)
+    response = client.post(
+        "/api/prompt",
+        json={
+            "mode": "human_seed",
+            "world_vision": WORLD,
+            "creative_state": {"world_vision": {"status": "author_approved"}},
+            "prototype_id": "prism-wanderer-alpha",
+            "gbrain_inspiration": "STALE GENERIC BUNDLE",
+        },
+    )
+
+    assert response.status_code == 200
+    prompt = response.json()["prompt"]
+    assert seen == [
+        {
+            "mode": "human_seed",
+            "creative_direction": "",
+            "world_vision": WORLD,
+            "prototype_id": "prism-wanderer-alpha",
+        }
+    ]
+    assert "SELECTED PRIVATE APPETITE" in prompt
+    assert "SELECTED PRIVATE BEHAVIOR" in prompt
+    assert "SELECTED PRIVATE RELATIONSHIP" in prompt
+    assert "STALE GENERIC BUNDLE" not in prompt
+    assert "只生成 **1 个** fictionalized Human Seed" in prompt
+
+
+def test_gbrain_brief_reports_explicit_prototype_without_search_query() -> None:
+    client = TestClient(app_module.app)
+    response = client.post(
+        "/api/gbrain/brief",
+        json={
+            "mode": "human_seed",
+            "world_vision": WORLD,
+            "prototype_id": "prism-wanderer-alpha",
+        },
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["query_strategy"] == "explicit_human_prototype"
+    assert payload["effective_query"] == ""
+    assert "显式匿名 Human Prototype：prism-wanderer-alpha" in payload["retrieval_brief"]

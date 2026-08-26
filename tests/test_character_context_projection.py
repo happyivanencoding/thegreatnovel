@@ -55,7 +55,7 @@ def test_character_world_slice_keeps_reality_and_normal_baseline() -> None:
     assert "稳定灵田" in result
     assert "普通人知道归潮" in result
     assert "World Normal → Legal Exception" in result
-    assert "Formative Fact → Adaptation → Observable Behavior" in result
+    assert "Biography is context, not proof" in result
     assert "不要求所有人物从普通底层起步" in result
     assert "异常不能只是一项更高效的职业技能" in result
 

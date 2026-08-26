@@ -119,6 +119,21 @@ HUMAN_PROMPT = """你是成熟中文男频成长长篇的 Human Seed 设计者�
 作者选择时会把一个候选编辑成单独的 `# HUMAN SEED`；不要替作者选择。
 """
 
+EXPLICIT_PROTOTYPE_HUMAN_CONTRACT = """# Explicit Anonymous Human Prototype Projection
+
+这是作者显式选择的匿名私人原型实验。只生成 **1 个** fictionalized Human Seed，不生成 4 个候选，也不要替作者再做人格变体搜索。
+
+- 原型卡只提供 Appetite / Behavior / Relationship 的结构性选择偏向；现实身份、履历、地点、机构、关系身份和身体特征都不可推断或复原。
+- LIFE_CONTEXT 决定幻想世界里的家庭、阶层、教育、工作/修炼接触和生活事实。不要让这些背景逐条证明原型卡；允许经历与动机弱相关、错位甚至形成新的矛盾。
+- 保留多个 competing motives，不用一句人生哲学统一人物。情欲、身体吸引、虚荣、好胜、享乐、好奇、依恋等只要原型 craft 支持就可以真实存在，不净化、不道德化。
+- 完全不知道 Power Seed。不要为了未知能力安排童年、职业、创伤或象征性人格。
+- 重要关系必须在幻想世界重新创造具体的人；不得迁移现实关系对象。
+- 输出标题直接使用 `# HUMAN SEED｜幻想姓名／短标签`。
+
+其余 Human Seed schema 与默认 Human Prompt 相同。
+"""
+
+
 COLLISION_CONTRACT = """# Split Authority Collision Contract
 
 **Do Not Reconcile Away the Collision.**
@@ -269,6 +284,7 @@ def generate_split_prompt(
     recent_summaries: str = "",
     selected_references: list[Mapping[str, Any]] | None = None,
     gbrain_inspiration: str = "",
+    prototype_id: str = "",
     **_: Any,
 ) -> str:
     if mode == "world_vision":
@@ -294,9 +310,23 @@ def generate_split_prompt(
         if not world_vision.strip():
             raise ValueError("生成 Human Seed 需要已批准的 World Vision")
         life = project_character_life_context(world_vision)
-        return "\n\n".join(
-            [HUMAN_PROMPT.strip(), life.strip(), _block("Human GBrain Craft（可选）", gbrain_inspiration)]
-        ).strip() + "\n"
+        human_prompt = HUMAN_PROMPT.strip()
+        if prototype_id.strip():
+            human_prompt = human_prompt.replace(
+                "生成 4 个独立候选，不评分、不排名。先保证每个人自身成立；不要为了多样性机械分配人格类型。",
+                "只生成 1 个匿名幻想人物，不评分、不排名；不要生成多个原型变体。",
+            ).replace(
+                "# HUMAN CANDIDATE N｜姓名／短标签",
+                "# HUMAN SEED｜幻想姓名／短标签",
+            ).replace(
+                "作者选择时会把一个候选编辑成单独的 `# HUMAN SEED`；不要替作者选择。",
+                "直接输出单个 `# HUMAN SEED`；不要生成候选列表。",
+            )
+        parts = [human_prompt]
+        if prototype_id.strip():
+            parts.append(EXPLICIT_PROTOTYPE_HUMAN_CONTRACT.strip())
+        parts.extend([life.strip(), _block("Human GBrain Craft（可选）", gbrain_inspiration)])
+        return "\n\n".join(parts).strip() + "\n"
 
     if mode == "idea":
         _require_approved(creative_state, "world_vision", "character_card")

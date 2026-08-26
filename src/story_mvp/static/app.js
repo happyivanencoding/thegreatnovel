@@ -1331,6 +1331,7 @@ function gbrainContextPayload(queryOverride = "") {
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
     world_vision: $("creative-world-vision").value,
+    prototype_id: $("human-prototype-selector")?.value || "",
     character_card: $("creative-character-card").value,
     proposal_context: $("proposal-editor").value,
     current_long_block: $("current-long-block").value,
@@ -1388,6 +1389,7 @@ function promptPayload() {
     world_vision: $("creative-world-vision").value,
     power_seed: $("creative-power-seed").value,
     human_seed: $("creative-human-seed").value,
+    prototype_id: $("human-prototype-selector")?.value || "",
     character_card: $("creative-character-card").value,
     character_initial_state: $("creative-character-initial-state").value,
     creative_state: state.creativeState,
@@ -2234,6 +2236,10 @@ $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
 $("generate-world-vision-prompt").addEventListener("click", () => generateCreativePrompt("world_vision"));
 $("generate-power-seed-prompt").addEventListener("click", () => generateCreativePrompt("power_seed"));
 $("generate-human-seed-prompt").addEventListener("click", () => generateCreativePrompt("human_seed"));
+$("human-prototype-selector").addEventListener("change", async () => {
+  invalidateGbrainResults("切换 Human Prototype");
+  if ($("prompt-mode").value === "human_seed") await setDefaultGbrainQuery();
+});
 $("generate-story-program-prompt").addEventListener("click", () => generateCreativePrompt("idea"));
 $("apply-world-vision-response").addEventListener("click", () => applyCreativeResponse("world_vision"));
 $("apply-power-seed-response").addEventListener("click", () => applyCreativeResponse("power_seed"));

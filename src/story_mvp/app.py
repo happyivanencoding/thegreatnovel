@@ -127,6 +127,7 @@ class GBrainContextRequest(BaseModel):
     current_outline: str = ""
     recent_summaries: str = ""
     query_override: str = ""
+    prototype_id: str = ""
 
 
 class GBrainQueryRequest(GBrainContextRequest):
@@ -191,6 +192,7 @@ class PromptRequest(BaseModel):
     world_vision: str = ""
     power_seed: str = ""
     human_seed: str = ""
+    prototype_id: str = ""
     character_card: str = ""
     character_initial_state: str = ""
     creative_state: dict[str, Any] = Field(default_factory=dict)
@@ -488,8 +490,12 @@ def get_references() -> dict[str, Any]:
 
 @app.post("/api/gbrain/brief")
 def post_gbrain_brief(payload: GBrainContextRequest) -> dict[str, Any]:
-    brief = build_retrieval_brief(**payload.model_dump(exclude={"query_override"}))
-    effective_query, query_strategy = default_effective_query(payload.mode, brief)
+    brief = build_retrieval_brief(**payload.model_dump(exclude={"query_override", "prototype_id"}))
+    if payload.mode == "human_seed" and payload.prototype_id.strip():
+        effective_query, query_strategy = "", "explicit_human_prototype"
+        brief = brief.rstrip() + f"\n显式匿名 Human Prototype：{payload.prototype_id.strip()}"
+    else:
+        effective_query, query_strategy = default_effective_query(payload.mode, brief)
     return {
         "mode": payload.mode,
         "effective_query": effective_query,
@@ -558,7 +564,7 @@ def _validate_state_delta_input(payload: PromptRequest) -> None:
 
 def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
     filtered = dict(values)
-    for key in ("power_seed", "human_seed", "character_card", "character_initial_state"):
+    for key in ("power_seed", "human_seed", "prototype_id", "character_card", "character_initial_state"):
         filtered.pop(key, None)
     return filtered
 
@@ -569,6 +575,14 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
         _validate_state_delta_input(payload)
     try:
         values = _prompt_kwargs(payload)
+        if payload.mode == "human_seed" and payload.prototype_id.strip():
+            prototype_bundle = retrieve_gbrain(
+                mode="human_seed",
+                creative_direction=str(values.get("creative_direction", "")),
+                world_vision=str(values.get("world_vision", "")),
+                prototype_id=payload.prototype_id.strip(),
+            )
+            values["gbrain_inspiration"] = prototype_bundle["result"]
         split_mode = payload.mode in {"world_vision", "power_seed", "human_seed", "idea", "outline"}
         prompt = generate_split_prompt(**values) if split_mode else generate_prompt(**_planning_only_fields_removed(values))
 

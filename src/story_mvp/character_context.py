@@ -86,7 +86,7 @@ def project_character_world_slice(world_vision: str) -> str:
         "人物可以深受上述世界现实塑造，并应当相对于世界正常值形成特殊性。",
         "成长环境必须来自世界真实社会层，但不要求所有人物从普通底层起步：可以来自普通家庭、富商、军户、宗门附属、专业家庭、地方权势或其它世界合法位置。关键是这个切片本身不是 named 大事件、named 秘境、named NPC、named 神兵或未来剧情路线，不是为了给剧情插座配钥匙。",
         "特殊能力/际遇优先采用 World Normal → Legal Exception：先指出普通人或普通修士通常怎样，再说明人物合法偏离了哪一条正常分布，以及这种异常为什么在本世界可被察觉、嫉妒、利用或恐惧。异常不能只是一项更高效的职业技能、诊断流程、维护技巧或行政缝隙；若它主要体现专业能力，也必须进一步形成读者能直接想拥有的个人力量、身份、关系或行动自由。",
-        "人格优先采用 Formative Fact → Adaptation → Observable Behavior：先写世界内真实经历，再写人物形成的适应方式，最后落到可观察选择；不要从性格标签反推童年。",
+        "Biography is context, not proof：先保留世界内真实生活事实，再让欲望、关系与稳定选择偏向在其中自然形成；经历可以塑造人物，但不要求每段经历逐条推出一个 Adaptation，也不从预设人格反向发明童年。",
         "Character is world-conditioned, story-independent：人物属于这个世界，但不是为世界已经准备好的故事机会而出生。",
     ]
     return "\n".join(parts).strip() + "\n"
@@ -132,7 +132,7 @@ def project_character_life_context(world_vision: str) -> str:
         "## Upbringing 生成边界",
         "本区块只负责塑造出身、阶层、家庭生态、教育、欲望、偏见、恐惧、关系与行为适应，不负责决定 Core Fantasy 的异常类型。",
         "人物可以来自世界任何合法社会位置：贫寒、普通、富裕、宗门家庭、军户、商人、专业家庭、地方权势、既得利益或天赋优越者都可以；不默认底层受压迫者。",
-        "采用 Formative Fact → Adaptation → Observable Behavior：具体经历先发生，人格是长期适应留下的选择偏差，不从性格标签或道德使命反推经历。",
+        "Biography is context, not proof：具体经历先作为生活事实成立；人物的 competing motives、关系与 Stable Choice Bias 可以受这些经历影响，但不要求逐条解释因果，也不从性格标签、职业或道德使命反推经历。",
         "不得引用未提供的 named 大事件、named NPC、named 秘境、named 神兵或未来剧情路线。",
     ]
     return "\n".join(parts).strip() + "\n"

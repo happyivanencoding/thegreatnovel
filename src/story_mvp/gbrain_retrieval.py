@@ -7,6 +7,7 @@ from typing import Any
 
 from .character_context import project_character_life_context, project_character_power_baseline
 from .gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, get_gbrain, query_gbrain
+from .human_prototypes import human_prototype_spec
 
 
 RAW_RESULT_LIMIT = 8
@@ -577,6 +578,27 @@ def _frontmatter_block(page: str) -> str:
     return "\n".join(lines[1:end])
 
 
+def _frontmatter_value(page: str, key_name: str) -> str:
+    target = key_name.strip().casefold()
+    for line in _frontmatter_block(page).splitlines():
+        key, sep, value = line.partition(":")
+        if sep and key.strip().casefold() == target:
+            return value.strip()
+    return ""
+
+
+def _is_explicit_prototype_page(page: str) -> bool:
+    return _frontmatter_value(page, "experimental_activation").casefold() == "explicit_prototype_test"
+
+
+def _prototype_page_matches(page: str, prototype_id: str, lane: str) -> bool:
+    return (
+        _is_explicit_prototype_page(page)
+        and _frontmatter_value(page, "prototype_id") == prototype_id
+        and _explicit_human_lane(page) == lane
+    )
+
+
 def _explicit_human_lane(page: str) -> str:
     for line in _frontmatter_block(page).splitlines():
         key, sep, value = line.partition(":")
@@ -759,11 +781,15 @@ def retrieve_gbrain(
     current_outline: str = "",
     recent_summaries: str = "",
     query_override: str = "",
+    prototype_id: str = "",
     query_func: Callable[..., str] | None = None,
     page_func: Callable[[str], str] | None = None,
 ) -> dict[str, Any]:
     if mode not in MODE_ALLOWED_CATEGORIES:
         raise ValueError(f"未知 GBrain 检索模式：{mode}")
+    selected_prototype = human_prototype_spec(prototype_id) if mode == "human_seed" else None
+    if mode == "human_seed" and prototype_id.strip() and selected_prototype is None:
+        raise ValueError(f"未知 Human Prototype selector：{prototype_id.strip()}")
     retrieval_brief = build_retrieval_brief(
         mode=mode,
         book_content=book_content,
@@ -775,7 +801,10 @@ def retrieve_gbrain(
         current_outline=current_outline,
         recent_summaries=recent_summaries,
     )
-    if query_override.strip():
+    if selected_prototype is not None:
+        effective_query = ""
+        query_strategy = "explicit_human_prototype"
+    elif query_override.strip():
         effective_query = query_override.strip()
         query_strategy = "manual_override"
     else:
@@ -784,7 +813,9 @@ def retrieve_gbrain(
     page_reader = page_func or get_gbrain
     allowed_categories = MODE_ALLOWED_CATEGORIES[mode]
     query_scope = ",".join(sorted(allowed_categories))
-    if query_strategy == "prose_control_none":
+    if selected_prototype is not None:
+        query_texts = ()
+    elif query_strategy == "prose_control_none":
         query_texts = ()
     elif mode == "human_seed" and not query_override.strip():
         # Human retrieval is lane-first even when semantic retrieval is available.
@@ -818,6 +849,18 @@ def retrieve_gbrain(
     stdout = "\n".join(part for part in stdout_parts if part)
     parsed_batches = [parse_query_results(part) for part in stdout_parts]
     parsed = [hit for batch in parsed_batches for hit in batch]
+    if selected_prototype is not None:
+        parsed_batches = [
+            [
+                {
+                    "score": 1.0,
+                    "slug": selected_prototype.lane_slugs[lane],
+                    "snippet": f"explicit prototype {selected_prototype.prototype_id} / {lane}",
+                }
+            ]
+            for lane in HUMAN_LANE_ORDER
+        ]
+        parsed = [hit for batch in parsed_batches for hit in batch]
     unique_hits = merge_query_hit_batches_round_robin(parsed_batches)
     constraint_world = world_vision
     if mode == "power_seed" and world_vision.strip():
@@ -902,6 +945,9 @@ def retrieve_gbrain(
         if not active_inspiration_allowed(page):
             rejected.append({"slug": hit["slug"], "reason": "卡片当前未启用为 active inspiration"})
             return None
+        if mode == "human_seed" and _is_explicit_prototype_page(page) and selected_prototype is None:
+            rejected.append({"slug": hit["slug"], "reason": "匿名 Human Prototype 只能通过显式 selector 激活"})
+            return None
         if mode == "human_seed":
             page_lane = human_lane_for_page(page, hit["slug"])
             if not page_lane:
@@ -909,6 +955,11 @@ def retrieve_gbrain(
                 return None
             if required_human_lane and page_lane != required_human_lane:
                 rejected.append({"slug": hit["slug"], "reason": f"Human Craft 属于 {page_lane} lane，不占 {required_human_lane} lane"})
+                return None
+            if selected_prototype is not None and not _prototype_page_matches(
+                page, selected_prototype.prototype_id, required_human_lane or page_lane
+            ):
+                rejected.append({"slug": hit["slug"], "reason": "显式 prototype 页面 metadata 与 selector/lane 不匹配"})
                 return None
         else:
             page_lane = ""
@@ -944,7 +995,12 @@ def retrieve_gbrain(
 
     if mode == "human_seed":
         accepted_slugs: set[str] = set()
-        if query_override.strip():
+        if selected_prototype is not None:
+            lane_pools = {
+                lane: dedupe_query_hits_by_slug(parsed_batches[index])
+                for index, lane in enumerate(HUMAN_LANE_ORDER)
+            }
+        elif query_override.strip():
             # Manual override is one candidate pool, but lane caps still apply.
             lane_pools = {lane: visible for lane in HUMAN_LANE_ORDER}
         else:
@@ -966,6 +1022,11 @@ def retrieve_gbrain(
                 accepted_slugs.add(hit["slug"])
                 human_lane_counts[lane] = 1
                 break
+        if selected_prototype is not None and any(human_lane_counts[lane] != 1 for lane in HUMAN_LANE_ORDER):
+            missing = [lane for lane in HUMAN_LANE_ORDER if human_lane_counts[lane] != 1]
+            raise ValueError(
+                f"Human Prototype {selected_prototype.prototype_id} 缺少可用 lane：{', '.join(missing)}"
+            )
     else:
         for hit in visible:
             if len(accepted) >= final_limit:
@@ -1000,6 +1061,8 @@ def retrieve_gbrain(
         "human_lane_counts": human_lane_counts if mode == "human_seed" else {},
         "human_lane_order": list(HUMAN_LANE_ORDER) if mode == "human_seed" else [],
         "human_lane_candidate_limit": HUMAN_LANE_CANDIDATE_INSPECTION_LIMIT if mode == "human_seed" else 0,
+        "prototype_id": selected_prototype.prototype_id if selected_prototype is not None else "",
+        "prototype_selected": selected_prototype is not None,
         "rejected_count": len(rejected),
         "query_limit": QUERY_RECALL_LIMIT,
         "requested_limit": candidate_limit,

@@ -146,6 +146,8 @@ Current large-stage compilation is intentionally light: why now, who wants what,
 
 High-Value Acquisition and Compounding remain longitudinal craft principles, not stage taxes. When an acquisition really occurs it should be desirable, actually possessed/used, and continue to affect later story; prior gains should not vanish after one arc. Neither principle requires a fixed per-stage field.
 
+Outline inherits the same authority boundary at finer resolution. It is an execution compiler for the approved Story Program, not a second Story Program. Each story block uses `Block Delta`: only dimensions that changed **relative to the start of that block** are written, and unchanged dimensions are omitted. A relationship/world-driven block may have no Power/Capability, Possession, or new-world delta at all; conversely, a Power change already scheduled by Story Program must be realized through concrete story anchors when its time arrives. Outline must not create micro-upgrades, filler rewards, permissions, or maps merely to complete a block form.
+
 Counterplay is learned after collision; enemies are not born merely as a mechanical counter to the protagonist.
 
 ## 7. GBrain visibility
@@ -213,3 +215,20 @@ Human Seed GBrain retrieval uses three independent lanes, not one shared Top-N p
 Each lane contributes **at most one ACTIVE craft card** and Human Seed still receives at most three cards total. A lane may remain empty; REFERENCE_ONLY / HOLD material never fills a slot merely to reach three. The same card cannot occupy two lanes. New Human Craft should declare `human_lane: appetite|behavior|relationship` in frontmatter; older cards are classified from narrow craft metadata only.
 
 The three lanes are retrieval budgets, **not three required personality dimensions or Hard Gates**.
+
+## Explicit anonymous Human Prototype experiments
+
+Private or author-specific Human prototypes are **explicit-only generation controls**, not default Human craft and not Character Canon.
+
+Current contract:
+
+- default selector is empty; ordinary books cannot silently retrieve an experimental private prototype;
+- only `human_seed` may consume a prototype selector; World / Power / Story / Outline ignore it;
+- an explicit prototype resolves an allow-listed opaque prototype ID to exact Human craft pages rather than using semantic search;
+- the prototype must supply exactly one valid Appetite, Behavior, and Relationship page. Missing, inactive, wrong-prototype, or wrong-lane pages fail closed instead of falling back to generic Human craft;
+- explicit prototype pages declare `experimental_activation: EXPLICIT_PROTOTYPE_TEST`; generic Human retrieval rejects them even if a broad query happens to hit them;
+- the selector generates **one fictionalized Human Seed**, not multiple personality variants. LIFE_CONTEXT rebuilds family, class, education, work/cultivation exposure and relationships inside the fictional world; real biography is never reconstructed;
+- Power remains invisible during Human generation. Character remains a deterministic `Power Core + Human Core` merge; no Composer explains why the prototype “deserves” the Power;
+- the opaque prototype ID is generation metadata only. It is not persisted into `CHARACTER.md`, T0 state, Story Program, Outline, or prose Canon.
+
+This mechanism exists to let an author deliberately test a private Human prototype without contaminating ordinary novel generation. Do not generalize a private prototype into a cross-book Human mechanism merely because it produces a compelling protagonist.
