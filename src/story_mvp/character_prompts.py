@@ -88,25 +88,27 @@ HUMAN_PROMPT = """你是成熟中文男频成长长篇的 Human Seed 设计者�
 
 只使用下方 LIFE CONTEXT 与 Human GBrain Craft。不要猜未来 Power，也不要为了一个不存在的外挂预留主题化童年。
 
+第一性原则：**Human Seed 是一个人的权威快照，不是解释“他为什么必然成为他”的心理学论文。** 人的过去可以塑造他，也可以只是生活；不要先决定一句人格命题，再反向发明几段恰好逐条证明它的童年。
+
 核心原则：
 - **world-conditioned, power-blind, story-independent**。
-- Formative Fact → Adaptation → Observable Behavior：经历先发生，人格是长期适应留下的选择偏差，不从性格标签反推童年。
-- Core Obsession 的长篇性**不等于可复利事业**：只要一种私人牵引在更大人生里反复改变选择就足够。不要为了证明能写长篇，自动把兴趣、审美、关系、胜负心或私人追逐升级成资产、行业标准、决策权、控制权、专业权威或组织规模。
-- Excess 只问“普通人觉得够了，他为什么还不停”，不提供人格菜单。
-- Behavior Signature 让人物核心可预测、具体手段不可预测；不要统一成理性、克制、公平、公共利益最大化代理人。
-- 关系在没有任何金手指时也必须仍有未完成故事。
+- Biography is context, not proof：先让具体生活事实成立，不逐条附上 Adaptation / 人格结论；同一种经历本来就可能塑造出不同的人。
+- Motive plurality：保留 2—4 股会长期进入选择的私人牵引。胜负、钱、审美、身体欲望、好奇、享受、面子、亲近、自由、责任、野心、报复、归属都可以真实存在并互相竞争；不要求被一个 Core Obsession 统一。
+- 长篇性来自这些牵引会在更大人生中继续改变选择，不等于自动长成事业、资产、决策权、专业权威或组织规模。
+- Behavior Signature 是 Stable Choice Bias + Variable Realization：读者逐渐知道他保护什么、拒绝什么、会为何承担代价；具体手段由当下信息、风险、能力边界和关系重新生成。不要统一成理性、克制、公平、公共利益最大化代理人。
+- 重要关系必须是 choice variable：因为是这个具体的人，去留、风险、时间、暴露或机会牺牲会真实改变；换成另一个同等有用的人未必成立。
 - 当前私人欲望是开书状态，**只初始化 Mutable State，不属于永久 Human Core**。
 - Character Hook 只是 audition，证明这个人本身有戏；**不绑定前三章真实事件，不进入 Canon**。
 
-生成 4 个独立候选，不评分、不排名。先保证每个人自身成立，再避免明显心理运动坍缩；不要为了多样性机械分配人格类型。
+生成 4 个独立候选，不评分、不排名。先保证每个人自身成立；不要为了多样性机械分配人格类型。
 
 每个候选使用：
 
 # HUMAN CANDIDATE N｜姓名／短标签
-## 世界中的初始位置与成长环境
-## Formative Facts → Adaptation → Observable Behavior
-## Core Obsession
-## Excess
+## 世界中的初始位置与生活事实
+写具体出身、家庭、教育、工作/修炼接触，以及 3—5 件真实发生过、足以让这个人有过去的事情。不要逐条写 Adaptation；允许有些事实与后面人格弱相关或留下矛盾。
+## 持续牵引与互相竞争的动机
+写 2—4 股私人牵引，以及至少一个不能同时都满足的真实冲突。人物可以在某些欲望上明显过量，但不要把全部人生总结成唯一哲学。
 ## Behavior Signature
 ## 重要关系原点
 ## Initial State Seed
@@ -169,6 +171,8 @@ def adapt_split_planning_template(template: str, *, mode: str) -> str:
 
     text = template.strip()
     if mode == "idea":
+        if not text or text == STORY_PROGRAM_TEMPLATE.strip():
+            return STORY_PROGRAM_TEMPLATE.strip()
         intro = (
             "你是透明协作的 Story Program / 故事主线设计助手。只有 World Vision 与 Character Authority "
             "都由作者明确批准时，才生成长期故事主线。World 与 Character 是冻结事实；本阶段第一次设计它们如何碰撞。"

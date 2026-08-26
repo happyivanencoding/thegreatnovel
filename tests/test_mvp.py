@@ -1187,10 +1187,10 @@ def test_long_form_pacing_uses_soft_anchors_and_dynamic_outline_window() -> None
         book_content="",
         **approved_creative_inputs(),
     )
-    assert "### 早期锚点、中期里程碑与远期升格" in story
-    assert "大型阶段不分配固定章节额度" in story
-    assert "横向开发" not in story
-    assert "不把远期升格强塞进固定百章窗口" in story
+    assert "## 全书成长与核心幻想兑现脊柱" in story
+    assert "生成 5—7 个自然大型阶段" in story
+    assert "阶段长度不平均" in story
+    assert "不等于每个大型阶段都必须同时出现新能力" in story
 
     outline = generate_prompt(
         mode="outline",
@@ -2586,11 +2586,14 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     methodology_text = Path("docs/PIPELINE_METHODOLOGY_AND_VALUES.md").read_text(encoding="utf-8")
     assert "Growth Genome：整理，不创造" in methodology_text
     assert "Classic Patterns Are First-Class Citizens" in methodology_text
-    assert "累积成长与可组合成长" in direction_text
+    assert "Growth is a longitudinal invariant, not a per-stage form requirement" in direction_text
+    assert "High-Value Acquisition 不消失" in direction_text
+    assert "Compounding 也不消失" in direction_text
     assert "Experiment Boundary" in direction_text
     assert all("成长" in templates[mode] for mode in ("idea", "fantasy_seed", "world_vision", "outline"))
-    assert "已批准 Fantasy Seed" in templates["idea"]
-    assert "已批准 World Vision" in templates["idea"]
+    assert "已批准 World 与 Character 第一次完整碰撞" in templates["idea"]
+    assert "全书成长与核心幻想兑现脊柱" in templates["idea"]
+    assert "每阶段只使用下面六项" in templates["idea"]
     assert "成长组合" not in templates["idea"]
     assert "转换网络" not in templates["fantasy_seed"]
     assert "GBrain" not in templates["fantasy_seed"]
@@ -2615,14 +2618,13 @@ def test_default_prompt_templates_include_idea_mode() -> None:
 
 
 def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
-    for mode in ("world_vision", "idea"):
-        template = DEFAULT_PROMPT_TEMPLATES[mode]
-        assert "COMPOUNDING_GROWTH_DIRECTION" in template
-        assert "后台创作约束，不是小说世界材质" in template
-        assert "每轮结束重新归零" in template
-        assert "Net New / Irreversible State / Action Space / Fantasy Compounding" in template
-        assert "不要让“不可回滚、扩大行动空间、产生复利”本身变成人物追求、世界规则或主题" in template
-        assert "不要为了证明复利主动堆路线、权限、网络、库存或组合组件" in template
+    world_template = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    assert "COMPOUNDING_GROWTH_DIRECTION" in world_template
+    assert "后台创作约束，不是小说世界材质" in world_template
+    assert "每轮结束重新归零" in world_template
+    assert "Net New / Irreversible State / Action Space / Fantasy Compounding" in world_template
+    assert "不要让“不可回滚、扩大行动空间、产生复利”本身变成人物追求、世界规则或主题" in world_template
+    assert "不要为了证明复利主动堆路线、权限、网络、库存或组合组件" in world_template
 
     fantasy = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
     assert "COMPOUNDING_GROWTH_DIRECTION" not in fantasy
@@ -2653,38 +2655,35 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
 
     story_program = DEFAULT_PROMPT_TEMPLATES["idea"]
     for marker in (
-        "当前最值得争取的机会 / 目标：",
-        "核心优势在本阶段怎样参与：",
-        "阶段净新增：",
-        "本阶段主要阅读满足：",
-        "故事局面怎样改变：",
-        "下一阶段为什么自然发生：",
+        "**为什么现在发生：**",
+        "**谁想要什么：**",
+        "**主角的关键选择与行动：**",
+        "**这一阶段真正的阅读满足：**",
+        "**Stage Delta：**",
+        "**下一阶段为何自然发生：**",
     ):
         assert marker in story_program
-    assert "新的主动行动、对手新的针对方式、人物关系出现的新选择" in story_program
-    assert "不要主动把它们整理成构筑、库存、权限树、路线网、节点网络或组合系统" in story_program
-    assert "本阶段关键获得、占有与首次使用" in story_program
-    assert "谁死了/活了、什么东西归谁、哪段关系改变、什么身份公开" in story_program
-    assert "输出本身不要只写这些标签" in story_program
-    assert "Relationship Reconfiguration" in story_program
-    assert "Character Autonomy ≠ Symmetric Stakeholder Power" in story_program
-    assert "Relationship Reconfiguration ≠ Permanent Renegotiation" in story_program
-    assert "关系可以因欲望变得更近、更远、更依赖、更敌对、更不对等或彻底换位" in story_program
-    assert "### 不可替代的人与关系" in story_program
+    assert "Story Program 是“长期因果如何继续”的编译" in story_program
+    assert "全书成长与核心幻想兑现脊柱" in story_program
+    assert "不等于每个大型阶段都必须同时出现新能力" in story_program
+    assert "Power 可以无显著升级" in story_program
+    assert "若本阶段确实发生显著成长或高价值获得" in story_program
+    assert "Compounding 是历史持续生效，不是阶段流水线" in story_program
+    assert "## 不可替代的人与关系" in story_program
     assert "### 关键关系（可选）" not in story_program
-    assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
-    assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "稳定控制、调用或从中取得复利收益的外部结构" not in story_program
-    assert "二级收益：写本阶段" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
 
 
 def test_high_value_acquisition_guidance_lives_in_story_program_and_outline_only() -> None:
-    for mode in ("idea", "outline"):
-        template = DEFAULT_PROMPT_TEMPLATES[mode]
-        assert "High-Value Acquisition / Reward Opportunity" in template
-        assert "阶段可以没有新的标志性获得" in template
-        assert "奖励类型与出现顺序由本书因果决定" in template
+    outline = DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "High-Value Acquisition / Reward Opportunity" in outline
+    assert "阶段可以没有新的标志性获得" in outline
+    assert "奖励类型与出现顺序由本书因果决定" in outline
+    idea = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "High-Value Acquisition / Reward Opportunity" not in idea
+    assert "High-Value Acquisition 是读者欲望原则，不是阶段字段" in idea
+    assert "没有自然机会时不要为了填表制造奖励" in idea
+    assert "不机械掉宝或升级" in idea
     assert "High-Value Acquisition / Reward Opportunity" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
 
     director = generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
@@ -2723,15 +2722,17 @@ def test_chapter_page_defaults_to_curator_primary_and_keeps_repair_nodes_optiona
 def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None:
     idea = DEFAULT_PROMPT_TEMPLATES["idea"]
     for marker in (
-        "### 核心优势与长期玩法",
-        "### 长期故事主线",
-        "主角一级成长",
-        "阶段净新增",
-        "世界扩张",
+        "## 全书成长与核心幻想兑现脊柱",
+        "## 长期故事主线",
+        "**主角的关键选择与行动：**",
+        "**Stage Delta：**",
+        "**下一阶段为何自然发生：**",
     ):
         assert marker in idea
     assert "### 成本节奏" not in idea
-    assert "自然产生的后果或余波（如果有）" in idea
+    assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in idea
+    assert "5—7 个大型阶段若从头到尾都没有真实 Power / Capability progression" in idea
+    assert "早期第一次成立、中期新玩法、高阶质变" in idea
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
     for marker in ("### 一级成长主轴", "### 二级收益与反哺", "### 主循环", "### 成本节奏"):
         assert marker in outline
@@ -3124,10 +3125,10 @@ def test_protagonist_behavior_signature_is_fixed_upstream_and_drives_choices() -
     assert "不自动修正成“靠谱有底线的优秀男主”" in seed
     assert "主角欲望人格与行为签名属于创意权威" in world
     assert "不能为了让主角更成熟、更合理或更容易协调多方利益" in world
-    assert "你不能重新决定已经批准的核心幻想、主角最强欲望、主角欲望人格与行为签名" in program
-    assert "没有标准答案正是让人物性格进入剧情的机会" in program
-    assert "不是自动选择最稳妥、最公平、最照顾所有利益方的折中方案" in program
-    assert "主角主动行动：必须符合已批准的主角欲望人格与行为签名" in program
+    assert "Behavior Signature 是 Stable Choice Bias + Variable Realization" in program
+    assert "稳定的是选择偏向" in program
+    assert "**主角的关键选择与行动：**" in program
+    assert "不要自动选择长期最优、最公平或最稳妥答案" in program
 
 
 def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose() -> None:
@@ -3145,26 +3146,25 @@ def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose()
     assert "世界可以明显偏向核心幻想" in world
     assert "世界被核心能力完全解释" in world
     assert "所有重要人物只为提供下一次能力用法" in world
-    assert "Life / Fantasy / World Engine Braid" in program
-    assert "Fantasy Engine 自动吞掉另外两者" in program
-    assert "Counterplay 是冲突后果，不是 Boss 的出生理由" in program
+    assert "**Life**" in program
+    assert "**Fantasy**" in program
+    assert "**World**" in program
+    assert "三者可以混合，但不平均配额" in program
+    assert "Counterplay 只能从碰撞后的学习产生" in program
     assert "Core Fantasy 是长期 Reader Promise" in program
-    assert "不是 Protagonist Life Purpose" in program
-    assert "核心优势在本阶段怎样参与" in program
-    assert "本阶段主要阅读满足" in program
-    assert "故事局面怎样改变" in program
-    assert "可以完全不换地图" in program
-    assert "下一阶段为什么自然发生" in program
-    assert "下一阶段不要求“更大”" in program
-    assert "即使暂时拿掉核心优势，两个人之间仍有未完成故事" in program
-    assert "### 不可替代的人与关系" in program
+    assert "让它自动成为 Protagonist Life Purpose" in program
+    assert "这一阶段真正的阅读满足" in program
+    assert "Power 可以无显著升级" in program
+    assert "下一阶段不要求更大" in program
+    assert "同等有用的另一个人" in program
+    assert "## 不可替代的人与关系" in program
 
 
 def test_seed_prioritizes_commercial_quality_without_example_anchoring() -> None:
     seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
     world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
     program = DEFAULT_PROMPT_TEMPLATES["idea"]
-    for template in (seed, world, program):
+    for template in (seed, world):
         assert "Narrative Appetite Before Defensive Balance" in template
     assert "Commercial Quality First, Diversity Second" in seed
     assert "候选之间可以来自相近能力家族、相近成长结构或相近人物母题" in seed
@@ -3202,15 +3202,41 @@ def test_world_vision_builds_story_bearing_world_and_desire_economy_before_advan
 
 def test_story_program_keeps_backstage_principles_but_outputs_concrete_acquisition() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["idea"]
-    assert "Action Space、Net New、Irreversible State、World Entry、Reward Opportunity、Fantasy Compounding、资源反哺" in template
-    assert "Expectation Ladder、Mystery Depth、Impact" in template
-    assert "评价和约束故事的作者语言，不是生成世界的材质" in template
-    assert "本阶段关键获得、占有与首次使用" in template
-    assert "无新的标志性获得" in template
-    assert "Expectation Ladder 只需让读者看见接下来具体还想看什么" in template
-    assert "若有长期谜团" in template
-    assert "Impact 只作为后台尺度" in template
-    assert "输出本身不要只写这些标签" in template
+    assert "Story Program 是“长期因果如何继续”的编译" in template
+    assert "不是每个大型阶段都缴一次升级税的表单" in template
+    assert "Growth is a longitudinal invariant, not a per-stage form requirement" in template
+    assert "全书成长与核心幻想兑现脊柱" in template
+    assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in template
+    assert "**Stage Delta：**" in template
+    assert "Power 可以无显著升级" in template
+    assert "High-Value Acquisition 是读者欲望原则，不是阶段字段" in template
+    assert "Compounding 是历史持续生效，不是阶段流水线" in template
+    assert "不机械掉宝或升级" in template
+    assert "下一阶段不要求更大" in template
+
+
+def test_story_program_growth_is_longitudinal_not_a_stage_tax() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["idea"]
+
+    # A stage may be complete without a power-up or acquisition.
+    assert "Power 可以无显著升级" in template
+    assert "Possession 也可以为空" in template
+    assert "某个维度没有变化就不写" in template
+    assert "主角一级成长：" not in template
+    assert "本阶段关键获得、占有与首次使用" not in template
+    assert "核心优势在本阶段怎样参与：" not in template
+
+    # But the whole book must still realize observable male-progression and Core Fantasy.
+    assert "5—7 个大型阶段若从头到尾都没有真实 Power / Capability progression" in template
+    assert "早期第一次成立、中期新玩法、高阶质变" in template
+    assert "以前做不到什么 → 现在能做什么 / 能打谁 / 能去哪里" in template
+    assert "Power Seed 决定 growth grammar" in template
+    assert "Story Program 只决定这些已批准潜力在什么故事因果中真正实现" in template
+
+    # Acquisition / compounding survive as longitudinal story principles, not form fields.
+    assert "High-Value Acquisition 是读者欲望原则，不是阶段字段" in template
+    assert "Compounding 是历史持续生效，不是阶段流水线" in template
+    assert "它必须在后续真实改变行动、选择、敌人应对或世界局面" in template
 
 
 def test_outline_theme_is_derived_and_may_remain_unset() -> None:
@@ -3225,12 +3251,10 @@ def test_outline_theme_is_derived_and_may_remain_unset() -> None:
 
 def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["idea"]
-    assert "### 核心优势的选择空间与反制" in template
     assert "Contestable Choice" in template
-    assert "题面不要预先写出明显正确答案" in template
-    assert "真实价值、信息不完整、时机或对手干预" in template
-    assert "不要求每次选择都附带惨痛代价" in template
-    assert "不强制“单槽”" in template
+    assert "不要自动选择长期最优、最公平或最稳妥答案" in template
+    assert "Counterplay 只能从碰撞后的学习产生" in template
+    assert "不能反推敌人的出生理由" in template
 
 
 def test_outline_releases_world_model_and_varies_early_core_gameplay() -> None:

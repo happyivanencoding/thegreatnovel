@@ -121,6 +121,14 @@ def test_life_context_shapes_upbringing_but_not_power_exception() -> None:
     assert "地下驿网" not in result
 
 
+def test_life_context_excludes_named_mysteries_when_world_says_facts_include() -> None:
+    world = WORLD.replace("当前没人能完整解释的事实：", "当前没人能完整解释的事实包括：")
+    result = project_character_life_context(world)
+    assert "当前没人能完整解释的事实包括" not in result
+    assert "沉铃泽" not in result
+    assert "地下驿网" not in result
+
+
 
 def test_life_context_does_not_accept_writer_texture() -> None:
     result = project_character_life_context(WORLD)

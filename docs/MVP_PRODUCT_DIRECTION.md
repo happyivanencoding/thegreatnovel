@@ -1,121 +1,222 @@
 # Story MVP 产品方向
 
-> 接手项目时，建议先阅读 `docs/PIPELINE_METHODOLOGY_AND_VALUES.md`。它解释 Fantasy Seed、World Vision、Story Program、Outline、Director、Curator、Primary Writer 与 State Extraction 的职责边界、方法论和常见退化模式；本文聚焦产品方向与创意权威边界。
+> 接手项目时先读 `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` 与 `docs/SPLIT_CHARACTER_AUTHORITY.md`。本文只定义当前产品方向、创意权威与 Anti-Goals；历史实验不自动成为当前规范。
 
 ## 一句话产品目标
 
-Story MVP 先帮助作者确定一部成熟中文男频成长长篇最值得让读者幻想什么，再让世界观和长期结构承载这份幻想，最后才进入 Outline 与章节 Runtime。
+TGN 要生成的是成熟中文男频成长长篇：读者明确想拥有主角的力量、生命状态、行动自由或其它非对称优势；主角本人长期真正变强；同时这个人仍有自己的欲望、关系与人生，世界也不是为金手指搭出来的测试场。
 
-创作顺序固定为：
+**Fantasy First 是读者价值优先级，不再是 production 阶段顺序。**
 
-`作者粗方向 → Fantasy Seed → 作者批准 → World Vision → 作者批准 → Story Program → 作者批准 → Outline 与 Growth Genome 整理 → 100章/十章 → 章节 Runtime`
+当前真实生产链路是：
 
-模型生成、模型选择和作者编辑都只是 draft；作者明确批准才是创意权威。批准是作者权威边界，不是文学质量评分。
+`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → State Extraction`
+
+没有 production Fantasy Seed，也没有 Character Composer LLM。历史实验与 legacy 模板里仍可能出现 Fantasy Seed 字样，但它们不构成当前创意权威。
+
+当前作者批准点保持紧凑：
+
+1. World Vision；
+2. Character（Power + Human 一次批准）；
+3. Story Program。
+
+模型生成、模型选择和作者编辑都只是 draft；作者明确批准才形成创意权威。
 
 ## Fantasy-First 读者承诺
 
-- 先让读者明确想拥有主角的力量、特殊身份、生命状态、探索机会或其它具体非对称优势；Fantasy Seed 优先回答“我想拥有什么、怎么玩”，不负责提前寻找终极哲学意义。
-- 主角本人越来越能做什么，是一级成长主轴。
-- 财富、装备、身份、关系、势力、领地和世界入口是重要二级收益，服务于下一轮一级成长；它们也必须具备真实的获得、占有、使用和展示价值。
-- 普通小胜允许明显净收益；阶段大胜通常收益明显大于当前成本。
-- 冲突可以包含强敌、阶层、血脉、宗门、王朝、神明、天道、战争、秘境、异族、身份暴露或作者明确选择的制度矛盾。
-- 内部因果必须可信，但玄幻、仙侠、奇幻、科幻和异世界优先使用本世界力量、资源、信仰、血脉、地域、种族、宗门、王朝、神明和超凡规则制造因果。
+- 主角本人越来越能做什么，是一级成长主轴；
+- Core Fantasy 必须反复兑现，但它是长期 **Reader Promise**，不是主角唯一的人生目的；
+- 财富、装备、身份、关系、势力、领地、入口和资格可以很重要，但不逐渐取代主角自身成长；
+- 普通小胜允许明显净收益，阶段大胜通常收益明显大于当前成本；
+- 成熟不等于每次胜利立刻补等量代价、责任或审查；
+- 世界可以强烈偏向核心幻想，提供强敌、宝物、秘境、战争与奇观；风险不在“世界适合主角”，而在世界所有重要对象都只能解释成下一次能力用法。
+
+## Split Character Authority
+
+### World Vision：世界先成立
+
+World Vision 不知道未来主角是谁，也不知道未来金手指是什么。
+
+它负责：
+
+- 普通人怎样生活与上升；
+- 本世界力量正常值、稀缺度与可观察差距；
+- 宗门、王朝、家族、商盟、种族等怎样真实改变选择；
+- 世界里什么真正值钱、值得争、值得羡慕；
+- 即使没有主角也会推进的人物行动、战争、迁徙、争夺与灾难；
+- 值得进入的地点、奇观、危险和未知；
+- 普通人、专业人士、顶层势力各自知道什么。
+
+World Vision 不负责主角 Biography、主角欲望、Power Exception、第一次兑现或终局使命。
+
+世界独立通过“没有主角仍有别的故事”证明，不通过完整政治经济模拟或额外 Reviewer 证明。
+
+### Power Seed：世界正常力量中的 Legal Exception
+
+Power Seed 只看 deterministic `POWER_BASELINE` 与少量 Power GBrain craft，不看 Human Biography，也不看 named Story Opportunities。
+
+核心顺序：
+
+`World Power Normal → Legal Exception → Core Fantasy → Growth Compatibility`
+
+正常修炼必须真实增强主角本人；Power Exception 同时继续质变。能力优先扩大战斗、探索、生存与行动自由，不默认职业化成维修、诊断、运输、审核或流程优化。
+
+### Human Seed：一个人的权威快照，不是人格证明论文
+
+Human Seed 只看 deterministic `LIFE_CONTEXT` 与 Human GBrain craft，不看 Power，也不看 named Story Opportunities。
+
+当前结构是：
+
+`生活事实 → competing motives → Stable Choice Bias under conflict → person-specific relationships`
+
+核心原则：
+
+- **Biography is context, not proof**：过去先作为真实生活存在，不要求每段经历逐条证明今天的人格；
+- **Motive plurality**：人物可以同时被胜负、钱、身体欲望、审美、好奇、享受、面子、亲近、自由、责任、野心、报复、归属等多股私人牵引影响，它们可以互相冲突与重新排序；
+- 不再要求一个 `Core Obsession + Excess` 解释整个人生；
+- **Stable Choice Bias + Variable Realization**：读者逐渐知道他保护什么、拒绝什么、愿为何付代价，但具体手段由现场重新生成；
+- 重要关系必须是 choice variable：因为是这个具体的人，路线、风险、时间、暴露或机会牺牲才发生变化；换成同等有用的人未必成立；
+- 身体吸引、情欲、虚荣、争胜、自利、反复和矛盾都可以真实存在，不自动净化成理性、负责、反控制的标准优秀人格。
+
+当前私人欲望只初始化 T0 State；Audition Hook 只用于候选辨识，不进入永久 Canon。
+
+### Character：deterministic composition
+
+`CHARACTER.md` 只把冻结的 Power Core 与 Human Core 并列组合。
+
+不新增 Character Composer 来解释“为什么这种童年注定得到这种能力”。Mismatch 是后续故事材料，不是需要消除的错误。
+
+## Story Program：第一次完整 Collision
+
+Story Program 是 World 与 Character 第一次同时进入一个模型上下文的阶段，也是默认使用 Sol high 的最高杠杆长期规划节点。
+
+核心原则：
+
+> **Growth is a longitudinal invariant, not a per-stage form requirement.**
+>
+> **成长是全书纵向不变量，不是每阶段必填表单。**
+
+全书必须有清楚的成长与核心幻想兑现脊柱，Core Fantasy 也必须在多个自然阶段持续兑现；但大型阶段可以主要由三种发动机中的任意一种发动：
+
+- **Life**：私人欲望、具体关系、人生去留或旧后果；
+- **Fantasy**：力量、战斗、获得、探索或核心玩法真正质变；
+- **World**：世界本来就在推进、即使主角不来也会发生的事件。
+
+三者不平均配额，也不要求每阶段各打一勾。
+
+当前每个大型阶段只编译六个真正的故事问题：
+
+1. 为什么现在发生；
+2. 谁想要什么；
+3. 主角的关键选择与行动；
+4. 这一阶段真正的阅读满足；
+5. Stage Delta：哪些维度真实改变；
+6. 下一阶段为何自然发生。
+
+Stage Delta 只写真实变化，不逐项填满。可包含 Power / Capability、Possession、Relationship、Identity / Access、Knowledge、Enemy State、World State 等；某项没变就不写。没有新能力、没有掉宝、甚至主角主动放弃直接成长收益，只要 Life / World 因果与永久结果成立，就是完整大型阶段。
+
+这并不削弱男频成长。**Power Seed = growth grammar；Story Program = growth realization through story。** Power Seed 决定正常修炼轴、Exception mastery、High-Tier Mutation、Permanent Boundary 与 Legendary Power State；Story Program 不能改写这些 authority，但必须决定这些已批准潜力在什么人物、冲突、选择和世界因果中真正变成现实。
+
+全书成长脊柱不能只写一句“以后会变强”。它必须分布在多个自然阶段，至少让早期第一次成立、中期出现更强/更不同的新玩法、高阶发生可复述质变，并写成具体事实：以前打不过谁、进不了哪里、做不到什么；现在具体能怎样战斗、移动、探索、承载或使用 Core Fantasy。5—7 个阶段如果从头到尾都只有人物/关系/世界变化而没有真实 Power / Capability progression，同样属于失败。
+
+**High-Value Acquisition 不消失，只从阶段字段降级为 reader-appetite principle。** 世界自然出现真正让人想要的剑、功法、身份、同伴、洞府、飞舟、名额或其它高价值对象时，可以成为强阶段燃料；没有自然机会就不制造。**Compounding 也不消失：过去得到的力量、物件、关系、身份、知识与入口一旦成立，就必须继续影响后续行动、选择、敌人应对或世界局面；只是不用每阶段填一栏 Compounding Growth。**
 
 ## Creative Constitution → Stage-specific Compilation
 
-TGN 保留 World Independence、Concrete Value、High-Value Acquisition、Net New、Irreversible State、Action Space、World Entry、Reward Opportunity、Fantasy Compounding、资源反哺，以及 Expectation Ladder、Mystery Depth、Impact 等后台价值观/读者体验坐标。它们是产品方法论的重要差异化，不删除；但它们不能直接成为小说世界 ontology。
+TGN 仍保留 World Independence、Concrete Value、High-Value Acquisition、Net New、Irreversible State、Action Space、World Entry、Reward Opportunity、Fantasy Compounding、Expectation Ladder、Mystery Depth、Impact 等后台价值观。
 
-当前上游仍保持 **Fantasy Seed → World Vision → Story Program → Outline** 四个 artifact，不新增中间 Agent：
+它们不消失，但不再要求 Story Program 把每个后台坐标变成一个输出字段。
 
-- Fantasy Seed：Fantasy + Desire + Gameplay；`主角最强欲望` 明确拆成 **眼前目标 + 能力之外仍成立的人生牵引**，但人生牵引只要求能继续牵动下一段生活与行动，不强迫 Seed 一次定义成熟终身使命；它可以阶段性、私人、自利、琐碎、矛盾或后来改变，也不能从核心幻想的社会隐喻自动提纯成公共改革/制度理想。再以极小的 **主角欲望人格与行为签名** 回答“他会怎么要”。候选生成采用 **Commercial Quality First, Diversity Second**：允许高潜力能力家族、成长结构或人物母题重复出现，只防近乎同案换皮，不为了跨书差异牺牲商业潜力；同时保留轻量 **Seed Long-form Compounding / Pacing**，只确认“一次爽完以后还能继续值钱”和“早期兑现不等于急着触顶”，完整长篇后台约束下移到 World / Program；
-- World Vision：先显式回答 **“没有主角时，谁正在追什么，哪里正在发生什么”** 和 **“世界里真正值钱、值得想要的东西”**，再建立 Reader Coordinates，最后才让核心优势切入这个独立世界；世界独立用其它值得看的故事证明，不用完整政治经济利益网络证明；
-- Story Program：采用 **Life / Fantasy / World Engine Braid**。Core Fantasy 是长期 Reader Promise，不是主角 Life Purpose；大型阶段可以主要由人物人生/关系、核心幻想或世界大事发动，并必须保留少量**不可替代的人与关系**。阶段仍显式回答关键获得/净新增，但 `世界扩张` 改为 **故事局面怎样改变**，`更大机会` 改为 **下一阶段为什么自然发生**；
-- Outline：把长期方向编译成故事锚点；主题只作后验观察，没有稳定主题时允许“暂不预设”。
+正确关系是：
 
-Reader Coordinates 分成两类：世界前台尺（Power / Technique / Threat / Status / Value / World，Gear / Potential 条件性）与读者体验/故事尺（Action Space / Expectation Ladder / Mystery Depth / Impact，Reach 条件性）。后者继续真实参与生成，但只落成具体新行动、新期待、旧锚点纵深和实际影响范围，不作为小说世界内部术语。
+`后台创作价值 → 当前阶段真正的故事问题 → 具体人物/行动/结果`
 
-创作顺序同时遵守 **Narrative Appetite Before Defensive Balance**：Seed 先寻找最让人眼馋、兴奋、好奇、痛快或非看不可的核心欲望，不负责提前证明所有限制与 Counter 已安全闭环；World 再补最小可信边界，Program 再保证长篇变异、后果与复利。系统允许局部明显过量、偏心和不均衡，只要它带来真正的上头感，而不是为了稳定性把所有尖锐欲望磨平。
+而不是：
 
-## 产品级 Anti-Goals：系统最怕什么
+`后台创作价值 → 固定表单字段 → 模型为填字段发明剧情`
 
-TGN 最需要避免的不是局部文字不够漂亮，而是核心幻想在层层规划和执行中发生方向性退化：
+## 产品级 Anti-Goals
 
-- **幻想退化成工作**：能力变成探路、检测、维护、搬运、生产或运营职业；
-- **成长退化成系统**：资产、路线、权限、节点、Build 越来越复杂，但主角本人没有更令人向往；
-- **合理性退化成责任**：对手或世界的理由被自动升级成主角必须治理、审核和维持秩序；
-- **可信退化成验证流程**：真实冲突被观察、分析、测试、验证取代；
-- **长篇退化成重复任务**：换地图、换敌人，却一直重复同一个 Plot Engine；
-- **人物退化成工具**：配角只发任务、给信息、被救和结算收益，没有自己的欲望与回流；
-- **人物退化成同一个理性代理人**：不同主角面对机会、强敌、羞辱和自己人时都做同一种稳妥、公平、克制、公共利益优先的选择，Seed 的欲望人格被系统价值观覆盖；
-- **为了差异牺牲商业潜力**：某类幻想、人物母题或成长结构已经明显更强，却为了让候选“看起来像不同物种”主动绕开它，生成更弱但更不同的题材；真正需要避免的是近乎同案换皮，而不是高潜力模式重复；
-- **能力吞掉人生**：救人、归乡、家族、宿敌等开局问题一解决，主角后半生自动变成“找更多适合金手指的目标 / 让能力更强 / 去更适合能力的地图”；Core Fantasy 从 Reader Promise 越权成了 Life Purpose；
-- **Boss 退化成技能 Counter**：重要对手先由“怎样克制主角能力”生成，而不是先有自己的欲望与人生，再在碰撞中学会反制；
-- **世界独立退化成治理模拟**：为了证明世界真实，三本不同小说都稳定长出矿权、水权、税收、户籍、迁徙权、多方利益平衡和合法身份，并让这些 supporting reality 抢走核心幻想的叙事权重；
-- **配角自治退化成永远平等谈判**：所有人物都机械“拒绝被收编、只按自身利益合作、重新谈条件”，反而失去崇拜、追随、爱慕、效忠、屈服、背叛和死敌等真实关系形态；
-- **爽点退化成固定税**：每次胜利都立即补等量成本、责任或审查，把 Payoff 抵消；
-- **防错退化成创作抑制**：能力、人物、宝物、敌意和机缘还没真正让人上头，就先被限制、Counter、责任、平衡和防滥用条款磨平，最后只剩“不会坏”的优等生故事；
-- **正文退化成两极**：要么过度克制而干，要么靠修饰、比喻和五感清单制造 AI 式“丰富”；
-- **系统反客为主**：Agent、Gate、数据库、Context 和参考库越来越复杂，LLM 开始维护系统而不是写小说。
+TGN 最怕的不是局部辞藻不够漂亮，而是系统结构把不同故事压成同一种东西：
 
-这些是方向性 Anti-Goals，不是逐项 Hard Gate。出现问题时仍遵守“修最早语义坍缩层”的原则，不为每个风险新增 Reviewer。
+- **Ability → Job**：能力退化成探路、检测、维护、搬运、生产或运营职业；
+- **Fantasy → Asset / Build / System**：库存、权限、节点和组合越来越复杂，主角本人反而不更令人向往；
+- **Supporting Logic → Story Engine**：治理、工程、医疗、制度、材料处理等支撑因果抢走叙事前景；
+- **Verification → Procedure**：观察、分析、测试、验证替代真实目标和冲突；
+- **Character → Psychological Proof**：Biography 被写成单一人格命题的逐条论证；
+- **Character → Tool**：配角只发任务、给资源、被救或做能力 Counter；
+- **Core Fantasy → Life Purpose**：主角后半生只剩继续找适合能力的对象；
+- **Story Program → Upgrade Tax**：每个大型阶段都被强迫交一次能力参与、升级、奖励和净新增；
+- **Plot Engine Repetition**：接任务 → 进危险地点 → 打竞争者 → 拿资源 → 升级 → 更大地图；
+- **Payoff → Tax**：每次胜利自动补等量代价、责任或审查；
+- **System → Story**：Agent、Gate、Context、数据库和参考库越来越复杂，LLM 开始维护系统而不是写小说。
+
+这些是方向性 Anti-Goals，不是逐项 Hard Gate。发现问题时修最早语义坍缩点，不为每一个症状再新增 Reviewer。
 
 ## Supporting Logic 边界
 
-系统必须区分“让世界可信的支撑逻辑”和“这本书真正要让读者追着看的故事发动机”。核心准则是：**Supporting Logic Must Not Automatically Become Story Engine。**
+统一准则：
 
-- 世界复杂性不自动成为叙事前景；
-- **World Independence ≠ Narrative Equal Weight**：世界没有主角也有别的故事，不代表每个利益方、制度、税收、土地或治理问题都值得同等叙事权重；世界可以明显偏向核心幻想；风险不在 Theme Park 本身，而在所有人物、冲突与规则都只剩下一次能力使用关卡；
-- **Core Fantasy ≠ Protagonist Life Purpose**：核心幻想必须长期兑现，但不要求每个大型阶段都以能力升级/Counter 为主要阅读满足；
-- **Character Autonomy ≠ Symmetric Stakeholder Power**：自主人物可以真心追随、爱慕、效忠、屈服、背叛或成为死敌，不要求所有关系保持平等谈判；
-- 对手的合理理由不自动成为作者结论，更不自动变成主角长期职责；
-- 世界机制真实存在，不等于需要完整展示实施过程；
-- 能力可以重复使用，不等于主角自然职业化成探路、检测、维护、搬运、生产或运营者；
-- 能力需要可信，不等于单独安排反复测试与验证场景。
+> **Supporting Logic Must Not Automatically Become Story Engine**
 
-优先让机制在真实目标、冲突和风险中被证明。观察、分析、测试、验证、调整、实施若没有新的关键选择、冲突或反转，只保留支撑因果所需的最小部分。这个原则统一处理治理化、工程化、蓝领修仙和过度验证，不为它们分别新增 Reviewer、Hard Gate 或评分器。
-## 累积成长与可组合成长
+- World Complexity ≠ Narrative Focus；
+- Opponent Rationale ≠ Authorial Truth ≠ Protagonist Duty；
+- Mechanism Reality ≠ Implementation Detail；
+- Ability ≠ Occupation；
+- Verification Exists ≠ Verification Is The Story。
 
-可组合只表示每本书可以选择自己的成长对象、玩法和世界承载方式，不表示主动回避成熟主干。无论采用力量、战斗、神通、技艺、生命层次、规则掌控还是其它个人能力，一级成长都应持续扩大主角的行动空间。
+内部因果必须可信，但只展开会改变人物选择、风险、胜负、关系或结果的部分。普通实施过程默认压缩。
 
 ## Growth Genome 的位置
 
-Growth Genome 只整理已经批准的 Fantasy Seed、World Vision 和 Story Program：
+Growth Genome 仍然存在，但只整理已经批准的 Character / World / Story Program 与 Outline 所需信息：
 
-- 整理一级成长、二级收益、阶段升格、主循环、反哺关系和重复风险；
-- 帮助已经选定的幻想长期运行到 100 章；
-- 不选择核心幻想，不决定主角欲望，不决定力量是否令人向往；
-- 不要求复杂转换网络、循环族、负反馈、公开验证、资格晋升或制度化故事；
-- 不进入 State Delta、Canon Memory 或 Run Ledger 的核心状态决定。
+- 一级成长主轴；
+- 二级收益与反哺；
+- 主循环与阶段升格；
+- 核心不变量与退化风险。
 
-## 成本节奏
+它不选择核心幻想，不创建人物欲望，不重新规划 Story Program，也不进入 State Delta 成为第二套状态系统。
 
-默认顺序是：胜利或突破真正发生 → 外界反应 → 主角获得实际收益 → 收益改变行动空间 → 再决定是否需要代价或余波。
+## Chapter Runtime
 
-成本可以限制选择、迫使策略、制造长期风险或推动阶段换挡，但不能成为每次 Payoff 的固定税。成熟不等于每次胜利立即受伤、负债、被审查或承担新责任。
+章节链保持：
 
-## Review 的作用
+`Luna Director → Luna Curator → Terra Primary Writer → Luna State Extraction`
 
-十章 Review 只调整未来计划，新增检查：核心幻想是否仍在兑现、一级成长是否仍是主轴、幻想盈余是否为正、冲突是否过度理性化、世界是否被程序化。它不得自动重写或否定已完成正文。
+- Director：决定本章具体发生什么；
+- Curator：只给 Writer 当前章真正需要的 Canon / Plan / Scene Skill；
+- Primary：只写小说，不做规划汇报；
+- State：只记录正式正文已经发生的事实。
 
-## 章节边界
-
-ChapterContextPacket、Director 八字段、REQUIRED_OUTLINE_FIELDS、Context Curator、Primary Writer、Specialists、Integrator、Reader-First、Canon Memory v2、State Delta v2、Run Ledger、章节保存边界和防覆盖规则保持原样。章节 Runtime 只执行已批准规划，不参与决定核心幻想。
+章节 Runtime 不直接读取 raw GBrain，也不重新决定 World / Power / Human / Story Program。
 
 ## GBrain 与模型默认路由
 
-当前规划链采用“高推理成本集中在高杠杆节点”的策略，而不是整链统一最强模型：
+当前默认：
 
-- Fantasy Seed：Luna high，GBrain OFF；
-- World Vision：Luna high，GBrain ON，固定 1 条 Coordinate Reference + 最多 3 条 focused creative inspiration；固定参考同时保留世界前台尺与读者体验/故事尺，但后者只投影成具体故事事实；
-- Story Program：Sol high，GBrain ON，最多 3 条 focused inspiration；
-- Outline：Luna high，GBrain ON，通常 4 条、最多 5 条；
-- 章节 Balanced 默认：Director 用 Luna high，Curator 用 Luna high，Primary Writer 用 Terra high，State Extraction 用 Luna low。Terra Primary 是正文克制性选择；若优先最低延迟，可把 Director/Curator 切到 Terra high/medium。
+- World Vision：GPT-5.6 Luna high，GBrain ON，固定 1 条 Reader Coordinates Reference + 最多 3 条 focused creative inspiration；固定坐标参考不占 creative 名额；
+- Power Seed：GPT-5.6 Luna high，Power lane GBrain，小 bundle；
+- Human Seed：GPT-5.6 Luna high，Human lane GBrain，Appetite / Behavior / Relationship 各最多 1 条，总计最多 3 条；
+- Story Program：GPT-5.6 Sol high，GBrain ON，最多 3 条 focused inspiration；
+- Outline：GPT-5.6 Luna high，GBrain ON，通常 4 条、最多 5 条；
+- Director：Luna high；
+- Curator：Luna high；
+- Primary Writer：Terra high；
+- State Extraction：Luna low。
 
-GBrain 蒸馏采用不同模型分工：Terra high 做事实与 evidence，Luna high 做 Book/World/Reward/Scene synthesis，Sol high 做 Longitudinal Threads、Thread Braid 与跨书 Story Program synthesis。
+模型选择看三个坐标：**生成质量 ≠ wall-clock ≠ 实际成本**。Sol 只集中在长期结构高杠杆节点，不因为它最强就整链使用。
 
-同 Seed 的 GBrain OFF/ON 实测表明：ON 的主要增益集中在 Story Program 和 Outline，能更稳定地产生 Plot Engine 换挡、人物自主线、长中短线与高价值获得；当前少量 focused inspiration 已足够，不应因为有效就扩大成大上下文。
+GBrain 详细边界见 `docs/GBRAIN_STORY_CRAFT_V3.md`。
 
-详细理由、实验边界和模型特性见 `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` 与 `docs/GBRAIN_STORY_CRAFT_V3.md`。
+## Review 与章节边界
+
+十章 Review 只调整未来，不修改已经完成的正文。它可以发现核心幻想退化、Plot Engine 重复、人物工具化或世界程序化，但不自动创建新的上游事实。
+
+ChapterContextPacket、Canon Memory、State Delta、Run Ledger 与章节保存边界保持当前 Runtime 事实。
+
 ## Experiment Boundary
 
-独立实验用于验证 Story MVP 自身的 Fantasy Seed 偏置。实验中的具体角色、能力、世界和章节不自动升级为产品默认，也不查询或修改外部灵感系统。
+`books/real-exp-*` 下的世界、人物、能力、审计、模型选择与实验输出只用于验证系统假设；模型选择不等于作者批准，实验角色也不自动进入产品默认。
+
+只有当问题跨新书稳定复现、且能定位到最早语义节点时，才改 production。一次样本的局部怪异不值得长出新的 Prompt 规则、Agent 或 Gate。

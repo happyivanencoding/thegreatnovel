@@ -1,0 +1,26 @@
+{
+  "selection_index": 3,
+  "selection_name": "离印",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"plot engine variation\" OR \"gameplay counterplay\"",
+    "\"thread ecology\" OR \"longitudinal thread\" OR \"thread collision\"",
+    "\"reward opportunity\""
+  ],
+  "accepted_count": 3,
+  "accepted": [
+    {
+      "slug": "mechanisms/plot-engine-variation-v3",
+      "score": 0.3383
+    },
+    {
+      "slug": "mechanisms/thread-collision-v3",
+      "score": 0.3512
+    },
+    {
+      "slug": "mechanisms/earned-high-value-acquisition-v3",
+      "score": 0.6342
+    }
+  ],
+  "final_limit": 3
+}

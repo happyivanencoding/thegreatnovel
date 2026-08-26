@@ -6,11 +6,11 @@
 
 Story MVP 不是“让一个大模型从设定一路写到正文”的流水线，而是把不同尺度的创作问题拆开，让每一层只解决自己最擅长的问题：
 
-`Fantasy + Gameplay → Independent World + Desire Economy → Relationship / Plot Reconfiguration → Narrative Compounding → Story Anchors → Chapter Execution`
+`Independent World → Split Power / Human Authority → Character Collision → Long-Form Causality → Story Anchors → Chapter Execution`
 
 对应实际链路：
 
-`作者粗方向 → Fantasy Seed → World Vision → Story Program → Outline → Director → Curator → Primary Writer → State Extraction`
+`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline → Director → Curator → Primary Writer → State Extraction`
 
 其中最重要的原则是：**越靠上游，越决定“这本书是什么”；越靠下游，越只负责忠实执行已经确定的故事。**
 
@@ -28,7 +28,7 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 ### 2.1 Fantasy First
 
-先回答“读者最想亲自拥有什么”，再回答世界、资源、势力和规则怎样承载它。
+Fantasy First 是读者价值优先级，不再是 production 阶段。系统仍先保护“读者最想亲自拥有什么、主角本人怎样真正变强”的承诺，但创意 authority 由 protagonist-blind World、Power Seed 与 Human Seed 分拆承担，避免一个 Seed 同时预先决定世界、能力、Biography 与人生意义。
 
 成熟男频成长长篇的一级主轴优先是：主角本人越来越能做什么、拥有怎样的力量、自由、生命状态、世界位置或命运主动权。
 
@@ -93,7 +93,8 @@ Reader Coordinates 因此分成两类：
 
 - World Independence 编译成：**没有主角时，谁正在追什么，哪里正在发生什么值得看的事？** 它证明世界还有别的故事，不要求建立完整利益社会；
 - Concrete Value / Reward Opportunity 编译成：**这里什么东西真的值钱、值得人物去争？**
-- Net New / Irreversible State / Action Space / Fantasy Compounding 编译成：**这一阶段主角真正拿到并保留了什么，谁/什么从此不能回到原状，下一阶段因此能做什么过去做不到的事？**
+- Net New / Irreversible State / Action Space 编译成 Stage Delta：**这一阶段到底有哪些维度真实改变，哪些东西从此不能回到原状？** Power / Capability、Possession、Relationship、Identity / Access、Knowledge、Enemy State、World State 只写实际变化的部分；不为后台坐标制造剧情。
+- Fantasy Compounding 编译成纵向持续性：**过去已经得到的力量、物件、关系、身份、知识或入口，是否继续改变今天的行动、选择、敌人应对与世界局面？** 它不是每阶段必填字段。
 - Expectation Ladder 编译成：**下一层有哪些已经看得见、尚未拿到，但读者会想要/想看的具体人、物、地点、能力、身份或奇观？**
 - Mystery Depth 编译成：**哪个已经出现的旧物、旧人、旧事实或旧异常还保留可回收的更深解释，并会触发未来行动？**
 - Impact 编译成：**这次行动实际改变了多少人物、关系、地点、阵营或世界事实？**
@@ -103,7 +104,7 @@ Reader Coordinates 因此分成两类：
 
 同时必须区分：**Core Fantasy 是长期 Reader Promise，不是 Protagonist Life Purpose。** TGN 的长期故事不再默认由单一 Fantasy Engine 驱动，而是允许 **Life Engine / Fantasy Engine / World Engine** 编织：人物人生欲望与未完成关系、核心幻想与力量获得、世界本来就在发生的大事都可以成为大型阶段的主要发动来源。三者不要求平均配额，也不新增打标签的 Schema；重要的是能力持续活着，但不自动决定整个人生。
 
-同时遵守 **Narrative Appetite Before Defensive Balance**：创作顺序先寻找最让人眼馋、兴奋、好奇、痛快、恼火或非看不可的东西，再补维持长篇所需的最小边界。Seed 不负责证明所有失控风险已经被堵住；World 才补最小可信边界，Program 再处理长期变异、后果与复利。允许局部明显过量、偏心、不均衡，只要这种“放纵”真正增加本书的独占性阅读欲望，而不是把合理性检查做完以后才看还剩多少爽点。
+同时遵守 **Narrative Appetite Before Defensive Balance**：先保护最让人眼馋、兴奋、好奇、痛快、恼火或非看不可的东西，再补维持长篇所需的最小边界。World 负责世界事实，Power 负责力量幻想，Human 负责人本身；Story Program 再处理它们碰撞后的长期变异、后果与复利。允许局部明显过量、偏心、不均衡，只要这种“放纵”真正增加本书的独占性阅读欲望，而不是把合理性检查做完以后才看还剩多少爽点。
 
 ### 2.6 Supporting Logic Must Not Automatically Become Story Engine
 
@@ -138,125 +139,166 @@ Reader Coordinates 因此分成两类：
 
 ## 3. 每一层到底负责什么
 
-### Fantasy Seed：决定“什么最让我想要，以及这是谁的人生”
+### World Vision：先创造一个没有主角也成立的世界
 
-Fantasy Seed 当前职责收敛为 **Fantasy + Desire + Gameplay**。候选生成遵守 **Commercial Quality First, Diversity Second**：每个候选先独立追求最高商业吸引力，再把候选间差异当作附加价值；相近能力家族、成长结构或人物母题可以重复出现，只要各自仍然是强创意，不为了多样性主动回避高潜力方向。只防近乎同案换皮，不把跨书差异做成 Hard Gate。Life Engine 与 Human Gravity 仍用于保证单本人物和关系有长期驱动力，但不要求不同候选必须在这些维度彼此拉开。
-
-Seed 仍保留两条必要的长篇意识，但使用轻量投影而不是完整后台术语：**Seed Long-form Compounding** 只确认第一次爽完以后已有积累还能推动新的欲望、行动与冲突；**Seed Long-form Pacing** 只确认早期兑现不等于急着触及终极形态。完整 Net New / Irreversible State / Action Space / Fantasy Compounding 与长期节奏判断继续由 World / Story Program 等下游承担，不在 Seed 一次性展开。
+World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道未来 Power Exception 是什么。它仍是一轮 Luna high，不新增 World Reviewer。
 
 #### 负责
 
-- 读者最想亲自拥有的能力、特殊身份、生命状态或独特机会；
-- **主角最强欲望分成两层**：眼前非做不可的具体目标，以及即使核心优势暂时不能用仍会牵动他下一段生活与行动的**人生牵引**；人生牵引不是必须一次定义终身使命，可以阶段性、尚不成熟、自私、琐碎、矛盾或后来改变；不能只是“让能力更强 / 找更多适合能力的对象 / 把玩法做大”，也不能因为核心幻想隐含某种社会不对称就自动提纯成公共改革、制度理想或替所有人解决问题；
-- **主角欲望人格与行为签名**：除了“想要什么”，还提前固定“会怎么要”；不从“优秀男主标签库”拼词，而是看巨大诱惑、风险、关系压力与力量差出现时，这个人有哪些稳定但未必正确的偏爱；
-- 非对称优势与第一次标志性奇观；
-- 主角会反复做什么、转化/利用什么、每轮具体得到并留下什么；
-- 早期兑现；
-- 远期还能出现哪些更强、更不同、更想看的**具体玩法**，以及更高层的人、物、地点、机会与反制。
+- 普通人的生活、上升与失败路径；
+- 力量体系的正常值、稀缺度、境界/能力的可观察差距；
+- 宗门、王朝、家族、商盟、种族等怎样真实影响人生；
+- 世界里真正值钱、值得人物争夺和羡慕的东西；
+- 3—6 件即使主角从未出生也会推进的人物行动、战争、迁徙、竞争或灾难；
+- 真正值得进入的地点、奇观、危险与未知；
+- 普通人 / 专业人士 / 顶层势力各自知道什么。
 
 #### 不负责
 
-- 完整世界百科；
-- 几十章大纲；
-- 复杂成长网络；
-- 操作规则手册；
-- 为能力寻找“它真正意味着什么”的终极哲学命题；
-- 因为需要远期升格，就自动从招式/资源/身份推到因果、命运、自我定义、时代答案或世界定义；
-- 为了平衡而机械添加成本；
-- 在 Seed 阶段提前证明所有能力限制、Counter、责任、对价与防滥用边界都已安全闭环。
+- 主角 Biography、欲望、关系原点；
+- Core Power / Legal Exception；
+- 为未来能力预留“钥匙孔”；
+- 主角第一次兑现与终局使命；
+- 为证明世界独立而补完整政治经济模拟。
 
-#### 判断是否健康
-
-先问：**读者是否会明确产生“我也想拥有这个 / 我非看这个人接下来怎么干不可”的欲望？** 再问：**不讨论哲学意义，只讨论具体能力、人物欲望与关系牵引，这个 Seed 是否已经有独占性吸引力？** 最后再看候选集是否存在近乎同案换皮；如果几个候选恰好共享某种高潜力能力家族、人物母题或情绪满足，但各自核心玩法与故事仍然有商业吸引力，不需要为了差异强行改弱。
-
-如果 Seed 已经把能力写成职业流程、管理系统或抽象命题，World Vision 只会把错误继续放大。
+健康判断只问：**没有主角，世界是不是仍有具体的人在做事、具体地方想去、具体东西值得争？** 不再为这个问题增加 production 正交删除测试、Reviewer 或 scorer。
 
 ---
 
-### World Vision：先建一个没有主角也有别的故事在发生的世界，再找核心优势切口
+### Power Seed：决定“世界正常力量里，主角合法例外在哪里”
 
-World Vision 仍是一轮 Luna high，不拆成新模块。内部顺序固定为：**Story-Bearing World → Desire Economy → Reader Coordinates → Core Advantage Interface**。
+Power Seed 只读 deterministic `POWER_BASELINE` 与少量 Power GBrain craft，不读 Human Biography，也不读 named Story Opportunities。
+
+核心语法：
+
+`World Power Normal → Legal Exception → Core Fantasy → Growth Compatibility`
 
 #### 负责
 
-- **没有主角时，谁正在追什么，哪里正在发生什么**：优先建立具体人物/群体正在追求、挑战、寻找或逃避的对象，以及正在开启的遗迹、竞赛、战争、奇观、怪物、传承和机会；普通生活、经济、制度和资源流只写到足以解释这些故事为什么发生，不再用完整政治经济利益网络证明“世界独立”；其中允许真正重要的人物、奇观和事件并不能被核心优势直接“吃掉”，让世界持续大于外挂；
-- **世界里真正值钱、值得想要的东西**：建立 Desire Economy，让读者知道哪些力量、功法、装备、身体变化、师承、伙伴、身份、土地、洞府、名额、知识、入口或本书独有价值物值得人物攒钱、冒险、背叛或争夺，以及得到后会具体改变什么；
-- **世界正在发生的欲望、冲突与机会**：把人物、价值物和地点连成真正值得看的故事；税、土地、治理、迁徙、合同等 supporting reality 可以存在，但若只是背景合理性就压到背景；
-- 世界奇观、值得进入的地点和更高价值的新机会；
-- **Reader-Operable World Rules**：会进入故事决策的世界规则，先落成“什么条件 → 什么可观察变化 → 人物因此能/不能做什么 → 结果怎样”的世界事实；
-- **Reader-Facing Coordinates**：世界前台主尺优先是 Power / Technique / Threat / Status / Value / World，必要时再以 Gear / Potential 校准；同时必须继续使用 Action Space / Expectation Ladder / Mystery Depth / Impact 等读者体验坐标，只是把它们投影成“新行动 / 新期待 / 旧锚点纵深 / 具体影响范围”，不作为世界内部命名尺度；
-- **Core Advantage ↔ World Compatibility**：在世界已经独立成立后，再明确核心优势切入哪一部分普通规则、真正改变什么、什么仍受主角自身条件约束，以及面对高层对象时怎样；
-- 地图扩大以后为什么出现新的具体人物、物品、机会、危险和价值来源，而不是只把同一个能力语义放大。
+- 一句话能理解、能想拥有的 Core Fantasy；
+- 正常修炼轴：世界本来的成长怎样真实增强主角本人；
+- Exception mastery：异常掌握怎样扩大具体能力；
+- High-Tier Mutation：高阶发生什么真正质变；
+- Permanent Boundary：高阶也不会自动消失的边界；
+- Legendary Power State：力量体验上限。
 
 #### 不负责
 
-- 重新发明核心幻想；
-- 因为主角会拆禁，就把血脉、身份、地域、因果、轮回和世界全部统一解释成“禁”；
-- 因为主角能改变结果，就让司法、战争、资源和政治都围绕“结果是否确定”运转；
-- 把 Action Space、Net New、World Entry 等后台术语做成世界内部资源、规则或主题；
-- 为了证明“世界独立”，自动铺开矿权、水权、税收、户籍、公共治理、迁徙权和多方利益平衡；
-- 为了让主角显得成熟合理，把 Seed 已批准的欲望人格校正成理性、克制、公平、公共利益优先的默认行动者；
-- 为了显得完整而堆十几层境界、数值表、制度百科；
-- 把每次奖励的精确数量和价格全部提前锁死；
-- 提前决定长期剧情与终极哲学命题；
-- 把长期积累整理成构筑、库存、权限树、路线网络。
+- 谁会得到这个能力；
+- 童年、家庭、人格、关系和人生使命；
+- Story Opportunities；
+- 把能力自然职业化成维修、诊断、运输、审核、构筑或流程管理。
 
-#### 判断是否健康
-
-先做两个删除测试：**删掉主角，世界里还有没有具体的人值得看、具体事情会继续发生、某些地方仍然让人想去？删掉金手指，世界的普通力量、价值物、人物目标和地图是否仍然成立？** 如果答案是肯定的，再检查核心优势是否在这个独立世界中形成强烈而可信的非对称切口。独立世界不是 stakeholder 完整性测试；健康 World Vision 应让读者很快知道“谁很强、谁很有意思、什么东西真值钱、哪里我也想去、什么事情即使主角不来我也想知道结果”。
+关键原则：**Power Seed = growth grammar。** 它决定“能够怎样成长”，不决定“第几阶段发生”。
 
 ---
 
-### Story Program：决定“这个具体世界里，接下来几百章会发生哪些越来越值钱的故事”
+### Human Seed：决定“这个人原本是谁”
 
-这是长期规划链里最重要的高杠杆节点。它继续使用 Net New、Irreversible State、Action Space、World Entry、Reward Opportunity、Fantasy Compounding、资源反哺，以及 Expectation Ladder、Mystery Depth、Impact 等后台原则/读者体验坐标；但长期结构改为 **Life / Fantasy / World Engine Braid**：人物人生与关系、核心幻想与力量获得、世界本来就在发生的大事都可以成为阶段发动机。Core Fantasy 必须持续活着，却不再天然拥有每个大型阶段的最高叙事权重。
+Human Seed 只读 deterministic `LIFE_CONTEXT` 与 Human GBrain craft，不看 Power，也不看 named Story Opportunities。
+
+当前结构：
+
+`Lived Facts → Competing Motives → Stable Choice Bias under conflict → Person-specific Relationships`
 
 #### 负责
+
+- 世界中的初始位置与具体生活事实；
+- 2—4 股会长期进入选择、可能互相冲突的私人动机；
+- Stable Choice Bias + Variable Realization；
+- 能真实改变去留、风险、时间、暴露和机会牺牲的具体关系；
+- T0 当前私人欲望（只进入 Mutable State）；
+- Audition Hook（非 Canon）。
+
+#### 不负责
+
+- 逐条用 Biography 证明人格；
+- 把一生统一成一个 `Core Obsession + Excess`；
+- 把人净化成理性、责任、自主、反控制的标准优等生；
+- 猜未来 Power 或为外挂预留主题化童年。
+
+**Biography is context, not proof。** 同样的生活事实本来就可能长出不同的人。人物辨识度来自多股动机冲突时反复暴露的选择偏向，而不是漂亮的人生哲学。
+
+---
+
+### Character：确定性组合，不做后验合理化
+
+`CHARACTER.md` 由已冻结 Power Core 与 Human Core deterministic compose，没有 Character Composer LLM。
+
+它只保留两个 authority 并列，不解释“为什么这段童年注定得到这种能力”。World / Power / Human 之间的不协调是后续 Collision 的故事材料，不是需要抹平的错误。
+
+---
+
+### Story Program：Collision + Long-Form Causality Designer
+
+Story Program 是第一次同时看到完整 World 与 Character 的阶段，也是当前默认使用 Sol high 的最高杠杆规划节点。
+
+核心身份不是“小说总体产品经理”，而是：
+
+> **这些已经存在的人、力量与世界，接下来怎样互相改变。**
+
+第一原则：
+
+> **Growth is a longitudinal invariant, not a per-stage form requirement。**
+>
+> **成长是全书纵向不变量，不是每阶段必填表单。**
+
+#### Authority ≠ Scheduling
+
+- Power Seed 决定 growth grammar；
+- Human Seed 决定人物长期选择偏向与 competing motives；
+- World Vision 决定世界事实与独立人物行动；
+- Story Program 不能重写以上 authority；
+- Story Program 必须决定这些已批准潜力在什么故事因果中真正变成现实。
+
+因此：**Power Seed = growth grammar；Story Program = growth realization through story。**
+
+#### 全书级责任
 
 - 5—7 个自然大型阶段；
-- 每阶段主角当前真正想拿到、保住、击败、进入、救回或完成的具体目标，以及谁也在争、为什么会冲突；
-- **主角人生连续性**：阶段不仅继承欲望人格与行为签名，还必须继承“眼前目标 + 能力之外仍成立的人生牵引”；即使能力暂时失效，也要知道这个人为什么继续往前；
-- **主角行为连续性**：Contestable Choice 没有标准答案时，让人物性格决定取舍，不由系统默认的理性折中方案接管；
-- **叙事权重**：继承 World 的独立人物/事件，但不平均分配篇幅；最鲜明的核心欲望、最馋人的强敌/机缘/人物/奇观优先成为阶段发动机；
-- 核心玩法怎样真正变异，而不是换地图重复；
-- **Opponent Desire First**：重要对手先有自己的欲望、关系和行动，再因为与主角碰撞而学习、换策略和形成 Counter；反制是冲突后果，不是 Boss 的出生理由；
-- **不可替代的人与关系**：必须有少量真正会长期改变主角、而不只是发任务/给奖励/提供情报/充当 Counter 的人物；至少有一部分关系即使暂时拿掉核心优势，读者仍想知道后来会怎样；
-- **本阶段关键获得、占有与首次使用**：重要能力、功法、装备、身体变化、伙伴、身份、据点/土地、名额、知识、世界入口或其它收益何时真正到手/长期可用，以及第一次怎样用具体场面证明“它真值”；没有新标志性获得时可以明确写无，不机械掉宝；
-- 上一阶段的具体人物、物品、关系、身份、知识和世界事实怎样改变下一阶段；
-- 关系重构，但 Character Autonomy 不得机械翻译成“拒绝被收编、只按自身利益合作、双方重新谈条件”；关系可以更近、更远、更依赖、更敌对、更失衡或彻底换位；
-- 故事局面怎样改变：可以换地图、力量升级，也可以主要是人物关系、生活处境或世界状态发生变化；不强制每个阶段世界扩张；
-- 核心优势的**选择空间与反制**：如果玩法本身确实包含选谁、选什么、何时使用、保留或舍弃，就让关键选择具有真实竞争性；这是一种玩法设计工具，不把整本书改写成“选择权”的哲学故事；
-- 核心幻想怎样作为长期 Reader Promise 保持活跃；某个阶段如果主要满足来自人生目标、关系或 World Engine，不必强行安排一次“能力毕业考”。
+- 清楚的 **全书成长与 Core Fantasy 兑现脊柱**：4—6 次可观察质变，分布在早期、中期、高阶多个自然阶段；
+- 早期第一次成立、中期更强/更不同的新玩法、高阶真实质变必须都可复述；
+- 每次成长写成具体事实：以前打不过谁、去不了哪里、做不到什么，现在具体能怎样战斗、移动、探索或使用 Core Fantasy；
+- 如果 5—7 个阶段从头到尾都没有真实 Power / Capability progression，即使人物关系很好，也不符合成熟男频成长长篇；
+- Core Fantasy 必须周期性重新证明“为什么这项力量仍值得追”，但不要求每阶段升级。
 
-当前大型阶段合同保留“当前目标 / 主要事件 / 主角行动 / 获得 / 净新增”等具体字段，但三处语义已调整：
+#### 大型阶段发动机
 
-- `核心优势在本阶段怎样参与`：允许核心优势是主发动机，也允许它只服务人物人生、关系或 World Engine；
-- `故事局面怎样改变`：替代强制“世界扩张”，可以不换地图；
-- `下一阶段为什么自然发生`：替代“更大机会”，不要求下一阶段更大，只要求由上一阶段留下的人物行动、关系、得失、未解决冲突或世界事件自然触发；
-- `本阶段主要阅读满足`：不再强制每个阶段都以 Core Fantasy Proof 为唯一高潮。
+阶段可以主要由任意一种发动：
+
+- **Life**：私人欲望、关系、人生去留、旧后果；
+- **Fantasy**：力量、战斗、获得、探索、新玩法；
+- **World**：世界本来就在发生的人物行动与大事。
+
+三者不平均配额。一个阶段可以没有境界突破、没有新装备、没有新技能；只要故事因果与 Stage Delta 成立，就可以完整。
+
+#### 当前轻量阶段合同
+
+每个阶段只回答：
+
+1. **为什么现在发生**；
+2. **谁想要什么**；
+3. **主角的关键选择与行动**；Power 若介入，直接写它怎样改变行动和结果，不单列能力税；
+4. **这一阶段真正的阅读满足**；
+5. **Stage Delta**：只写真实改变的维度，可包括 Power / Capability、Possession、Relationship、Identity / Access、Knowledge、Enemy State、World State；某维度没变就不写；
+6. **下一阶段为何自然发生**。
+
+#### High-Value Acquisition 与 Compounding
+
+二者保留，但从固定 stage schema 降级为纵向 reader-appetite / continuity 原则：
+
+- **High-Value Acquisition**：世界自然出现真正让人想要的剑、功法、身份、同伴、洞府、飞舟、名额或其它高价值对象时，让人物真实争取、占有、使用和可能失去；没有自然机会就不制造；
+- **Compounding**：过去得到的力量、物件、关系、身份、知识与入口一旦成立，就必须继续改变后续行动、选择、敌人应对或世界局面；不要每阶段填 `Compounding Growth`，也不要让旧获得写完即消失。
 
 #### 不负责
 
-- 逐章列事件；
-- 把“扩大行动空间 / 获得选择权 / 留下不可回滚状态 / 打开世界入口”当作阶段主要剧情；
-- 把长期成长整理成技能树、权限树、资产网络；
-- 为了凑阶段强行升级世界尺度或哲学意义；
-- 把每个阶段都写成“能力新用法 → 专门 Counter → 更强能力新用法”，让 Gameplay Engine 取代主角人生；
-- 把“拿掉核心优势仍有未完成故事”的人物关系，改造成纯功能型技能互动；
-- 把同一 Plot Engine 重复六遍。
+- 重新定义 Power / Human / World；
+- 每阶段强制 `核心优势参与 / 一级成长 / 关键获得 / High-Value Acquisition / Compounding Growth / 净新增`；
+- 把 Life / World 事件重新解释成“更好的升级路线”；
+- 把同一 Plot Engine 换地图重复六遍；
+- 为维持长篇发明未批准的新力量层。
 
-#### 最关键的问题
-
-每个主要阶段优先问：
-
-1. **主角这一阶段到底想要什么？它来自眼前目标、人生牵引、关系，还是核心幻想？**
-2. **谁也想要，或哪个世界事件主动撞上了他？**
-3. **如果暂时拿掉核心优势，这个阶段的人与关系是否仍有一部分值得追？**
-4. **主角怎样主动行动，为什么这是“这个人”会做的选择？核心优势在这里是主发动机，还是只是帮助他走这段人生？**
-5. **这一阶段真正拿到/失去什么，谁与谁从此不是原样？**
-6. **故事局面怎样改变？下一阶段为什么由这些具体后果自然发生，而不只是因为出现了更大的地图/资源/Counter？**
-
-后台再从这些答案判断 Action Space 是否扩大、Net New 是否成立、Reward 是否反哺、世界入口是否自然。Story Program 如果已经把“核心优势”变成主角全部人生，或者让所有 Boss/世界事件只为能力升级供货，Outline 同样无法真正救回来。
+健康的 Program 让读者同时看到：**这个人仍然是这个人；世界仍然大于外挂；主角确实越来越强；过去发生的事情继续改变现在。**
 
 ---
 
@@ -439,7 +481,7 @@ Review 只调整未来计划，不自动重写已完成正文，也不推翻作�
 
 创意链的权威顺序是：
 
-`作者明确要求 > 已批准 Fantasy Seed > 已批准 World Vision > 已批准 Story Program > Outline > Director > Writer`
+`作者明确要求 > 已批准 World Vision > 已批准 Power / Human（Character）> 已批准 Story Program > Outline > Director > Writer`
 
 模型生成、模型选择和作者编辑本身都不等于批准。作者明确批准才进入下一层权威链。
 
@@ -500,7 +542,7 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 
 ### 5.11 GBrain / Reference Overreach
 
-参考库从“少量创作提醒”升级成创意权威，导致不同书越来越像同一套蒸馏模板，或 raw reference 继续泄漏到 Writer。Fantasy Seed 默认保持 GBrain OFF；World / Story Program / Outline 只读少量 focused inspiration；章节 Runtime 不直接读取 raw GBrain。
+参考库从“少量创作提醒”升级成创意权威，导致不同书越来越像同一套蒸馏模板，或 raw reference 继续泄漏到 Writer。World / Power / Human / Story Program / Outline 只读各自职责内的少量 focused inspiration；章节 Runtime 不直接读取 raw GBrain。
 
 ---
 
@@ -508,7 +550,7 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 
 不要首先问“Writer 为什么写差了”，而是沿链条找第一次语义坍缩的位置：
 
-`Fantasy Seed → World Vision → Story Program → Outline → Director → Curator → Writer`
+`World Vision → Power / Human → Character → Story Program → Outline → Director → Curator → Writer`
 
 例如“看见别人看不见的路”最后变成承重、塌方、搬运：
 
@@ -548,14 +590,15 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 
 | 阶段 | 默认模型 | GBrain | 说明 |
 |---|---|---|---|
-| Fantasy Seed | GPT-5.6 Luna high | **OFF** | 保持核心幻想先由作者方向与模型自身产生，避免参考库过早锚定创意 |
-| World Vision | GPT-5.6 Luna high | **ON，固定 1 条 Coordinate Reference + 最多 3 条 creative inspiration** | Coordinate Reference 同时保留世界前台尺（Power/Technique/Threat/Status/Value/World）与作者侧读者体验尺（Action Space/Expectation/Mystery/Impact）；后者必须投影成具体故事事实，不作为世界内部命名尺度；固定参考不占 creative 名额 |
-| Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | 当前最值得使用 Sol 的位置：玩法换挡、长线生态、人物自治、敌人策略、高价值获得 |
-| Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把正确的长期 Program 展开成连续故事锚点、Thread Collision、身份揭露、Reward Recontextualization |
-| Director | GPT-5.6 Luna high | 章节相关精选上下文 | 当前 Balanced 默认；与 Terra high 质量接近但成本显著更低，若优先最低延迟可切 Terra high |
-| Curator | GPT-5.6 Luna high | Index-first 后的少量相关材料 | Balanced 默认；应继续压短输出合同。若优先最短延迟与更克制输出，可切 Terra medium |
-| Primary Writer | GPT-5.6 Terra high | 只读 Curator 输出/Scene Skills | 正文 A/B 中更克制、较少 procedural expansion、更愿意在章节合同位置停下；这是质量/行为选择，不是成本选择 |
-| State Extraction | GPT-5.6 Luna low | 不需要创作型 GBrain | 当前成本优先默认；只抽取已发生事实，不需要高级创作推理 |
+| World Vision | GPT-5.6 Luna high | **ON，固定 1 条 Coordinate Reference + 最多 3 条 creative inspiration** | protagonist-blind World；固定坐标参考不占 creative 名额，不读取未来 Power/Human |
+| Power Seed | GPT-5.6 Luna high | **ON，Power lane，小 bundle** | 只看 POWER_BASELINE；决定 growth grammar，不看 Human/Story Opportunities |
+| Human Seed | GPT-5.6 Luna high | **ON，Human lanes，最多 3 条** | Appetite / Behavior / Relationship 各最多 1 条；不看 Power/named Story Opportunities |
+| Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Collision + long-form causality；最高杠杆长期结构节点 |
+| Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |
+| Director | GPT-5.6 Luna high | 章节相关精选上下文 | Balanced 默认；若优先最低延迟可切 Terra high |
+| Curator | GPT-5.6 Luna high | raw GBrain OFF；Index-first / Scene Skills | Balanced 默认；若优先更短、更克制可切 Terra medium |
+| Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；Scene Skills | 正文更克制、较少 procedural expansion |
+| State Extraction | GPT-5.6 Luna low | OFF | 只抽取已发生事实 |
 
 ### 为什么这样分
 
@@ -571,7 +614,9 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 
 三本冻结作者方向、A=旧 production、B=只重划 Seed/World/Program 职责的真实模型 A/B，在统一剥离 ACP 辅助 metadata 后重新跑 6 个 Sol Story Program 与 3 个 Luna high blind judge，B **3/3 全胜**：A 平均 **4.57/10**，B 平均 **8.63/10**。
 
-实验支持的上游结论是：旧链路存在 `Fantasy Seed semantic escalation → World 能力/世界同构 → Story Program same-meaning-bigger-scale` 的“抽象意义提纯器”。生产化不新增模块，而是：
+> 历史说明：这是 Split Character Authority 上线前的中间实验。它证明“语义提纯 / 世界能力同构”确实存在，但下面的 Seed/World/Program 生产化方案已被 2026-08-26 的 `World → Power/Human → Character → Collision` 架构取代；不要把本节当作当前 Runtime 链路。
+
+实验支持的历史结论是：旧链路存在 `Fantasy Seed semantic escalation → World 能力/世界同构 → Story Program same-meaning-bigger-scale` 的“抽象意义提纯器”。当时的候选修法是：
 
 - Seed 收敛到 Fantasy + Desire + Gameplay，不提前寻找能力的终极意义；
 - World 先建立独立世界与 Desire Economy，再建立坐标，最后让核心优势切入；

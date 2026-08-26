@@ -49,12 +49,11 @@ def _preamble(text: str) -> str:
 
 
 def _strip_named_mysteries(knowledge_section: str) -> tuple[str, str]:
-    marker = "当前没人能完整解释的事实："
-    if marker not in knowledge_section:
+    marker = re.search(r"当前没人能完整解释的事实(?:包括)?：", knowledge_section)
+    if marker is None:
         return knowledge_section.strip(), ""
-    safe, mysteries = knowledge_section.split(marker, 1)
-    safe = safe.rstrip()
-    mysteries = (marker + mysteries).strip()
+    safe = knowledge_section[: marker.start()].rstrip()
+    mysteries = knowledge_section[marker.start() :].strip()
     return safe, mysteries
 
 

@@ -62,8 +62,10 @@ def test_new_seed_schemas_restore_ambition_without_story_hooks() -> None:
     assert "Legendary Power State" in POWER_SEED_SCHEMA
     assert "Legendary Trajectory" not in POWER_SEED_SCHEMA
     assert "Future Legend Image" in POWER_SEED_SCHEMA
+    assert "持续牵引与互相竞争的动机" in HUMAN_SEED_SCHEMA
+    assert "Biography 是生活上下文，不是人格证明" in HUMAN_SEED_SCHEMA
     assert "Core Obsession" in HUMAN_SEED_SCHEMA
-    assert "Excess" in HUMAN_SEED_SCHEMA
+    assert "不要求把全部人生统一成一个 Core Obsession" in HUMAN_SEED_SCHEMA
     assert "Audition Metadata（非 Canon）" in HUMAN_SEED_SCHEMA
     assert "Initial State Seed" in HUMAN_SEED_SCHEMA
     assert "named NPC" not in HUMAN_SEED_SCHEMA
@@ -71,12 +73,12 @@ def test_new_seed_schemas_restore_ambition_without_story_hooks() -> None:
 
 def test_split_human_seed_moves_current_desire_and_hook_out_of_core() -> None:
     human = """# HUMAN SEED CANDIDATE 1｜甲／标签
-## 世界中的初始位置与成长环境
+## 世界中的初始位置与生活事实
 家庭A。
 ## 当前私人欲望
 现在想买船。
-## Core Obsession
-总想去更远。
+## 持续牵引与互相竞争的动机
+想去更远，也想留下陪人。
 ## 人物钩子
 他当众烧掉船票。
 """
@@ -91,14 +93,14 @@ def test_compose_character_card_does_not_reconcile_authorities_or_persist_auditi
     human = """# HUMAN SEED CANDIDATE 1｜甲／标签
 ## 当前私人欲望
 想出名。
-## Core Obsession
-一直想赢。
+## 持续牵引与互相竞争的动机
+想赢，也想保住朋友。
 ## 人物钩子
 公开挑战冠军。
 """
     card = compose_character_card(power_seed="# POWER\n能力：留住半招", human_seed=human, index=1)
     assert "能力：留住半招" in card
-    assert "一直想赢" in card
+    assert "想赢，也想保住朋友" in card
     assert "想出名" not in card
     assert "INITIAL CHARACTER STATE" not in card
     assert "公开挑战冠军" not in card

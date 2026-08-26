@@ -1,0 +1,34 @@
+{
+  "hundred_level_count": 100,
+  "stage_count": 10,
+  "retired_ontology_hits": {
+    "地脉": 1,
+    "锚点": 1,
+    "天地能量": 1
+  },
+  "technical_material_terms": {
+    "植入": 6,
+    "器官": 13,
+    "相材": 36,
+    "剖": 7,
+    "修复师": 3,
+    "材料": 6,
+    "结构": 9,
+    "处理方法": 1
+  },
+  "story_bearing_terms": {
+    "强者": 3,
+    "战争": 4,
+    "巨兽": 4,
+    "争夺": 4,
+    "猎": 6,
+    "王庭": 4,
+    "城": 20,
+    "遗骸": 4,
+    "奇观": 1,
+    "未知": 1
+  },
+  "named_event_count": 5,
+  "wonder_count": 8,
+  "protagonist_mentions": 1
+}

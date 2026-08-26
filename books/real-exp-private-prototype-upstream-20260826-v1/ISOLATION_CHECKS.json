@@ -1,0 +1,19 @@
+{
+  "world_proto_marker_hits": {
+    "pwaalpha": 0,
+    "prism-wanderer-alpha": 0,
+    "情欲与肉体吸引": 0,
+    "Stable Choice Bias": 0
+  },
+  "power_prompt_proto_marker_hits": {
+    "pwaalpha": 0,
+    "prism-wanderer-alpha": 0,
+    "情欲与肉体吸引": 0,
+    "Stable Choice Bias": 0
+  },
+  "human_prompt_has_three_selector_slugs": true,
+  "world_chars": 4209,
+  "power_prompt_chars": 2999,
+  "human_prompt_chars": 8369,
+  "power_gbrain_accepted": 1
+}

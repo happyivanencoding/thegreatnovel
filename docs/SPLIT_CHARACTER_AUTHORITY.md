@@ -89,18 +89,21 @@ Human Seed sees only deterministic `LIFE_CONTEXT` plus Human GBrain craft. It is
 
 Human generation follows:
 
-`Formative Fact -> Adaptation -> Observable Behavior`
+`Lived Facts -> Competing Motives -> Stable Choice Bias under conflict`
+
+The Human Seed is a person snapshot, not a psychological proof. Biography provides world-conditioned life facts; it does not need to justify every later trait. Do not decide one elegant personality thesis and reverse-engineer childhood events that each prove it.
 
 It owns:
 - initial social position and upbringing;
-- formative facts and adaptations;
-- Core Obsession;
-- Excess;
+- concrete lived facts;
+- several persistent private drives that may compete, reorder, or be changed by relationships;
 - Behavior Signature;
 - relationship origins;
 - relatively stable identity facts.
 
-Core Obsession long-form viability does **not** mean turning every desire into an accumulating business, asset, standard, decision right, authority position, or organization. A desire is long-form compatible when it continues to alter choices after ordinary people would have stopped.
+Long-form viability does **not** require one Core Obsession or a single life philosophy. A private drive is long-form compatible when it can continue to alter choices in larger circumstances; several such drives may conflict. They do not need to turn into an accumulating business, asset, standard, decision right, authority position, or organization.
+
+Behavior Signature means **Stable Choice Bias + Variable Realization**: readers can learn what this person tends to protect, reject, overvalue, or pay for, while the actual tactic remains generated from current information, risk, power limits, and relationships. A specific relationship matters only when that specific person can change a real choice; equivalent usefulness is not enough.
 
 ### Mutable and non-Canon boundaries
 
@@ -136,6 +139,12 @@ Story Program is the first stage allowed to see:
 Core contract: **Do Not Reconcile Away the Collision.**
 
 World is fact. Character is fact. Story Program discovers what happens when they meet. It may create incidents, relationships, counterplay, consequences, phase engines, and long-form progression, but cannot rewrite either upstream authority to make them thematically neat.
+
+Authority and scheduling are different. Power Seed owns the growth grammar—normal progression, exception mastery, high-tier mutation, permanent boundary, legendary state. Story Program owns **when and through what story causality those approved possibilities become real**. It must preserve a longitudinal male-progression invariant and periodic Core Fantasy payoff without forcing every large stage to contain a new upgrade or acquisition.
+
+Current large-stage compilation is intentionally light: why now, who wants what, protagonist choice/action, primary reading satisfaction, `Stage Delta`, and why the next stage follows. `Stage Delta` writes only dimensions that actually changed (for example Power/Capability, Possession, Relationship, Identity/Access, Knowledge, Enemy State, World State). No dimension is mandatory per stage.
+
+High-Value Acquisition and Compounding remain longitudinal craft principles, not stage taxes. When an acquisition really occurs it should be desirable, actually possessed/used, and continue to affect later story; prior gains should not vanish after one arc. Neither principle requires a fixed per-stage field.
 
 Counterplay is learned after collision; enemies are not born merely as a mechanical counter to the protagonist.
 

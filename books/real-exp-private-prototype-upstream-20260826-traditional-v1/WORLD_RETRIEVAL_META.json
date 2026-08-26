@@ -1,0 +1,50 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "world_vision",
+  "effective_query": "\"world fantasy\" OR \"world entry\" OR \"narrative compounding\"",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"world fantasy\" OR \"world entry\" OR \"narrative compounding\"",
+    "\"reader coordinates\" OR \"progression scale\" OR \"action space scale\" OR \"expectation ladder\" OR \"core advantage\" OR \"world compatibility\" OR \"power scale\" OR \"threat scale\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：world_vision\n作者当前方向：成熟中文男频传统修仙成长长篇。全新虚构世界，主角长期真正变强。世界先于主角成立，不围绕未来主角定制锁孔；优先宗门、功法、法宝、丹药、符箓、阵法、灵兽、秘境、妖族、王朝、仙山洞府、奇观、强敌与可探索空间。\n\n这次明确要与“百铸身/器官植入/身体材料工程”区分：\n- 不用器官移植、骨骼改造、相材植入、身体零件组合做力量体系根基。\n- 不把主角/修士写成身体工程师、材料诊断师或生物改装玩家。\n- 也不要回到潮汐、能量导流、锚点、承载网络那类工程式 ontology。\n\n阅读感更接近传统仙侠/修仙：\n- 力量主要来自修炼功法、吐纳炼化、神魂/丹田/经脉或本世界自己的清楚修炼机制；\n- 可以有飞剑、法术、法宝、丹药、符箓、阵法、灵兽、洞府、秘境、传承等，但不要为了齐全机械全塞；\n- 修士成长应带来直观的战斗、御空、神识、寿命、肉身、法术范围、法宝驾驭、探索能力变化；\n- 高阶仍然具体、可见、可战斗、可探索、可占有、可失去，不默认变成因果、命运、天道、概念、世界定义。\n\n为了和当前 TGN 力量尺兼容，世界内部使用 1—100 的 power scale：10 个大境界 × 每境界10级。但 W…\n明确硬约束：未检测到明确题材硬约束\nWorld Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不替未来 Character 决定主角。",
+  "query_scope": "book-dna,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 28,
+  "unique_raw_count": 13,
+  "novel_candidate_count": 12,
+  "accepted_count": 3,
+  "coordinate_reference_count": 1,
+  "coordinate_reference": {
+    "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+    "type": "synthesis",
+    "score": 1.0,
+    "abstract": "Guidance：World Vision 使用两类坐标。第一类是**世界前台尺**：至少建立一把当前主尺，生产注入优先从 `POWER / TECHNIQUE / THREAT / STATUS / VALUE / WORLD` 中选择；题材明显依赖装备/法宝或天赋上限时，可条件性加入 `GEAR_ARTIFACT / POTENTIAL_CEILING` 校准。它们回答“现在谁能做到什么、差距造成什么结果、什么东西真值、下一层世界有什么”。第二类是**读者体验 / 故事校准尺**：`ACTION_SPACE / MYSTERY_DEPTH / EXPECTATION_LADDER / IMPACT`（必要时 `REACH`）仍然必须真实参与生产设计，但只作为作者侧坐标——分别投影成“成长后多能做哪件以前做不到的事”“哪个旧锚点仍有可回收的更深解释”“下一层已经看得见但尚未取得的具体人/物/地点/能力/身份”“一次行动实际改变多少人物、关系、地点、阵营或世界状态”。它们不得变成世界内部正式术语、资源名、势力理念或主题命题。`TEMPORAL_SCALE` 继续 HOLD。不要逐项填满，也不要建立战力数据库。",
+    "transfer_boundary": ""
+  },
+  "coordinate_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {},
+  "human_lane_order": [],
+  "human_lane_candidate_limit": 0,
+  "rejected_count": 9,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 3,
+  "accepted": [
+    {
+      "slug": "mechanisms/story-state-compounding-v3",
+      "score": 0.1878
+    },
+    {
+      "slug": "mechanisms/world-entry-v3",
+      "score": 0.1404
+    },
+    {
+      "slug": "mechanisms/world-desire-ladder-v3",
+      "score": 0.1374
+    }
+  ]
+}

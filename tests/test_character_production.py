@@ -162,7 +162,11 @@ def test_human_prompt_is_power_blind_and_has_no_life_texture_input() -> None:
     assert "两处同身" not in prompt
     assert "第二空间锚点" not in prompt
     assert "Life Texture / Human Appetite" not in prompt
-    assert "长篇性**不等于可复利事业" in prompt
+    assert "Human Seed 是一个人的权威快照" in prompt
+    assert "Biography is context, not proof" in prompt
+    assert "Motive plurality" in prompt
+    assert "持续牵引与互相竞争的动机" in prompt
+    assert "不要求被一个 Core Obsession 统一" in prompt
     assert "character hook craft" in prompt
 
 

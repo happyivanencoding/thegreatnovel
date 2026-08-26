@@ -1,0 +1,29 @@
+{
+  "power_prompt_prototype_hits": {
+    "prism-wanderer-alpha": 0,
+    "pwaalpha": 0,
+    "情欲与肉体吸引": 0,
+    "Stable Choice Bias": 0
+  },
+  "human_prompt_expected_bundle_hits": {
+    "prism-wanderer-alpha": 0,
+    "pwaalpha": 0,
+    "情欲与肉体吸引": 0,
+    "Stable Choice Bias": 1
+  },
+  "life_context_named_story_hits": {
+    "赤脉山": 0,
+    "白骨雪原": 0,
+    "太玄宗": 0,
+    "黑日岛": 0,
+    "西州灵雨": 0,
+    "九檐仙山": 0,
+    "万灯河": 0,
+    "断天门": 0
+  },
+  "power_prompt_named_human_seed_hits": 0,
+  "power_gbrain_accepted": 1,
+  "power_prompt_chars": 3375,
+  "human_prompt_chars": 4461,
+  "life_context_chars": 2505
+}

@@ -207,9 +207,15 @@ def test_supporting_logic_does_not_become_story_engine() -> None:
         "观察、分析、测试、验证、调整和实施",
         "不因能力可重复使用就自然职业化成维护、检测、生产、搬运或运营流程",
     )
-    for mode in ("world_vision", "idea", "outline", "review"):
+    for mode in ("world_vision", "outline", "review"):
         for marker in markers:
             assert marker in DEFAULT_PROMPT_TEMPLATES[mode]
+
+    idea = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "Supporting Logic Must Not Automatically Become Story Engine" in idea
+    assert "职业流程、材料处理、宗门行政、运输、诊断、修复、合同、任务分配" in idea
+    assert "除非人物的关键选择真的发生在那里，否则压到背景" in idea
+    assert "World 仍然大于外挂" in idea
 
     fantasy_seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
     assert "Seed Supporting Logic Boundary" in fantasy_seed
@@ -233,9 +239,15 @@ def test_fantasy_salience_rules_are_scoped_to_planning_layers() -> None:
         "Plot Engine Diversity",
         "经营文 Decision > Implementation",
     )
-    for mode in ("idea", "outline", "review"):
+    for mode in ("outline", "review"):
         for marker in shared_markers:
             assert marker in DEFAULT_PROMPT_TEMPLATES[mode]
+
+    idea = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "Core Fantasy 也必须在多个自然阶段反复得到有分量、可观察的兑现" in idea
+    assert "Compounding 是历史持续生效，不是阶段流水线" in idea
+    assert "相邻阶段避免长期退化为" in idea
+    assert "Supporting Logic Must Not Automatically Become Story Engine" in idea
 
     for mode in ("outline", "review"):
         assert "Outline Fantasy Proof" in DEFAULT_PROMPT_TEMPLATES[mode]

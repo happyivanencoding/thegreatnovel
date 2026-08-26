@@ -15,9 +15,10 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 
 ## TGN 阶段消费
 
-- `Fantasy Seed`：继续保持隔离，不自动读取 GBrain，先保证核心幻想来自当前作者方向与模型本身。
-- `World Vision`：默认 GBrain ON，固定读取 1 条 Reader Coordinates Reference，再选最多 3 条 creative inspiration；固定坐标参考不占 creative 名额。Coordinate Reference 现在区分两类坐标：世界前台尺（Power / Technique / Threat / Status / Value / World，Gear / Potential 条件性）可以直接变成世界内比较尺度；读者体验/故事尺（Action Space / Expectation Ladder / Mystery Depth / Impact，Reach 条件性）继续真实参与设计，但只投影成具体新行动、新期待、旧锚点纵深和实际影响范围，不变成世界内部术语。creative 仍借鉴 world fantasy / world entry / narrative compounding，全部服从已批准 Fantasy Seed。
-- `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流与 Reward/Opportunity，不能覆盖已批准 Seed / World Vision。World 的固定 Coordinate Reference 不再作为普通 creative 候选重复进入 Program，避免占用 3 个名额之一。
+- `World Vision`：protagonist-blind，默认 GBrain ON，固定读取 1 条 Reader Coordinates Reference，再选最多 3 条 focused creative inspiration；固定坐标参考不占 creative 名额。它只帮助世界自身的 desire、entry、奇观、正常力量坐标与独立事件成立，不读取未来 Power/Human。
+- `Power Seed`：默认 GBrain ON，小型 Power lane bundle；只看 `POWER_BASELINE`，借鉴力量幻想、成长兼容与长期玩法 craft，不读取 Human Biography 或 named Story Opportunities。
+- `Human Seed`：默认 GBrain ON，最多 3 条 Human craft，Appetite / Behavior / Relationship 各最多 1 条；只看 `LIFE_CONTEXT`，不读取 Power 或 named Story Opportunities。
+- `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流、Reward/Opportunity 与历史复用，但不能覆盖已批准 World / Character。GBrain 可以提醒“什么值得想要、旧获得怎样继续生效”，不能重新把这些原则变成每阶段 Acquisition / Compounding 表单。
 - `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。World 的固定 Coordinate Reference 同样不重复进入 Outline creative 候选，坐标语义由已批准 World Vision 继承。
 - `Director`：不负责凭空发明长期大奖励或重新设计 Story Program。
 - `Curator / Primary`：Scene Skills 只控制 HOW TO REALIZE THE SCENE，不改变 Chapter Mission 或 Canon。
@@ -32,15 +33,15 @@ TGN 不为治理化、工程化、蓝领职业化和过度验证分别增加 Rev
 - 观察、分析、测试、验证、调整、实施只有在其中仍有关键选择、冲突或反转时展开；其余压缩到足以支撑因果。
 - 可重复能力优先扩大主角的主动权、敌人策略、人物关系、身份、机缘和世界入口，不因可重复使用就自然职业化。
 
-该原则直接复用现有 World Vision → Story Program → Outline → Director 的共享 Prompt 规则，不新增 Agent、Hard Gate、评分器或 LLM 调用。
+该原则直接复用现有 World Vision → Power/Human → Character → Story Program → Outline → Director 的职责边界，不新增 Agent、Hard Gate、评分器或 LLM 调用。
 
 ## Reward 职责
 
 高价值获得不是随机掉宝器，也不是固定章数节拍器。
 
-Story Program 负责：在不同阶段选择当前最适合的“获得体验”，例如能力、宝物、知识、身份、师承、资格、伙伴、生命变化或世界入口。它们没有固定先后顺序，可以提前、后置、跳过或再次出现。
+Story Program 负责：当人物/世界因果自然产生高价值对象时，决定它怎样成为真实故事机会；不要求每个大型阶段都出现新获得。High-Value Acquisition 是 reader-appetite principle，不是阶段税。
 
-Outline 负责：具体机会怎样出现，主角为什么想要，谁阻止，主角怎样真正拿到，第一次怎样证明它值钱，以及哪一个旧奖励将在后文被复用或重新解释。
+Outline 负责：具体机会怎样出现，主角为什么想要，谁阻止，主角怎样真正拿到，第一次怎样证明它值钱，以及哪一个旧奖励将在后文被复用或重新解释。获得一旦发生，后续必须真实改变行动、选择或敌人应对；这就是有效 Compounding，不需要每阶段填写 `Compounding Growth`。
 
 Director/Writer 不应为了“这一章需要爽点”自行添加计划外的长期大奖励。
 
@@ -50,8 +51,9 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 
 | 阶段 | 当前默认 | 为什么 |
 |---|---|---|
-| Fantasy Seed | GPT-5.6 Luna high | 幻想抽象强、速度合理；此阶段 GBrain OFF，避免参考库过早锚定核心创意 |
-| World Vision | GPT-5.6 Luna high | 擅长把核心幻想展开成具体世界事实、读者可用坐标、力量体验与进入更大世界的理由 |
+| World Vision | GPT-5.6 Luna high | protagonist-blind 建世界：普通生活、正常力量、价值物、独立事件与奇观 |
+| Power Seed | GPT-5.6 Luna high | 把 World Normal 偏成清楚、可成长的 Legal Exception；决定 growth grammar |
+| Human Seed | GPT-5.6 Luna high | world-conditioned / power-blind 生成人本身；保留 competing motives 与具体关系变量 |
 | Story Program | GPT-5.6 Sol high | 当前 Sol 最值得发挥的位置：长期玩法变异、人物自主性、敌人策略、关系回流、Thread Ecology、Reward 变化 |
 | Outline | GPT-5.6 Luna high | 能高质量执行正确 Program，把长期结构落实成故事锚点而不过度膨胀 |
 | Director | GPT-5.6 Luna high | Balanced 默认；质量与 Terra high 接近但成本更低，最低延迟模式可切 Terra high |
@@ -79,7 +81,7 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 
 ### Fast / Default / Deep 模式
 
-- Fast：需要大量试书、Seed A/B 时可用 Terra high；
+- Fast：需要大量试书、上游 A/B 时可临时用 Terra high；
 - Default：Luna high 为主要规划模型，Story Program 单独使用 Sol high；
 - Deep / Repair：当长期主线机械重复、同一能力不停换皮、配角缺少自主性或作者明确要求“想深一层”时，优先只升级/重跑 Story Program，而不是整链切到 Sol；
 - Max：Luna max 只用于少量高风险重构或最高质量基线。
@@ -199,3 +201,37 @@ TGN retrieval regression 通过：SP01 仍以 `plot-engine-variation` 为首，S
 - 当前 GBrain runtime 检查为 `3786 Pages / 15783 Chunks / 15783 Embedded`，embedding debt 为 0。
 
 这次没有新增 LLM、reranker、Agent 或 Hard Gate。单次本地三阶段 retrieval 观察到 wall-clock 从约 11 秒上升到约 14 秒，属于更多本地 query/page read 的成本；World Vision 额外固定注入 1 条压缩后的 Coordinate Reference，普通 creative 上限不变。
+
+## Character / Relationship / World Hook Batch（2026-08-25）
+
+为补当前 TGN 相对较弱的“人物本人值得追更 / 关系与谜团复利 / 世界与身份本身有记忆点”，SOURCE-FIRST 蒸馏三本本地原著全文：
+
+- 《诸神愚戏》：Character Hook / Protagonist-as-IP；
+- 《十日终焉》：Relationship + Mystery Engine；
+- 《我不是戏神》：Character Identity + World/IP Hook。
+
+三本共形成 **64 个 bounded evidence windows**，全部使用 `小说整理合集` 下 GB18030 canonical TXT；locator 范围检查 64/64 通过。Terra final fidelity 直接回原著复核 23 个代表窗口，结论为 `PASS_WITH_EDITS`；修正内容主要是单窗不能独立证明长期人格、跨章边界、关系判断越窗以及“不可回滚”措辞过强，不改变三本的核心 craft verdict。
+
+跨书 Sol 去重后只新增 **1 张 active PILOT mechanism**：
+
+- `actionable-hypothesis-reconstruction-loop-v3`：当身份、记忆、共享历史或世界解释尚不完整但人物必须行动时，先建立足够支持当前行动的局部假设；行动结果、物证、关系反应或记忆差异暴露边界后，保留已证实部分、削弱旧解释并重构模型；只有新模型真实改变下一次信任、合作、保护对象、世界入口或其它选择时，Mystery 才继续复利。Relationship reaction 只是 evidence channel，不自动成为世界事实。
+
+其它候选均 **MERGE，不新增机制卡**：
+
+- Character Hook / character-as-payoff / relationship chemistry → 当前 Human Seed 的 Appetite / Behavior / Relationship lanes + `character-autonomy-v3`；
+- unit-event relationship/information residue → `thread-ecology-v3` + `story-state-compounding-v3`；
+- identity-bearing objects / place recontextualization → `narrative-compounding-v3`；
+- world desire without immediate growth utility → World Vision `Story-Bearing World` + `world-desire-ladder-v3`。
+
+这批蒸馏当时曾提出“继续给 Fantasy Seed / World Vision 加生产规则”的候选修法。2026-08-26 的 Split Authority / Collision 根因实验已经推翻这部分生产化结论：**真正需要修改的最早节点是 Human schema 与 Story Program compiler，而不是继续给 World 增加正交删除测试。** 因此这批材料保留为研究证据，但不再作为当前 Runtime 的 production 指令。
+
+当前 production 解释是：
+
+1. Behavior craft 进入 Human Seed：Stable Choice Bias + Variable Realization，与 competing motives、person-specific relationships 一起构成人物权威；
+2. World Vision 继续 protagonist-blind，只要求没有主角仍有具体人物、价值物、事件与奇观成立，不新增正交删除 Hard Rule；
+3. Story Program 使用 native Collision contract：Growth 是全书纵向不变量，不是每阶段 Acquisition / Compounding / Power Growth 税；High-Value Acquisition 与 Compounding 保留为纵向 reader-appetite / continuity 原则；
+4. Outline 继续使用既有 Story Anchor / State Change / Open Promise；Director / Curator / Primary / State **均不增加职责**。Story Craft 与 Prose DNA 继续分离，本轮不新增 Prose Control。
+
+正式 GBrain 只新增 **3 张 `REFERENCE_ONLY / active_inspiration:false` source book cards + 1 张 active PILOT mechanism**。曾尝试给 4 张旧 mechanism 增加 alias/evidence，但 retrieval regression 显示会扰动既有排序，因此该修改已撤回；最终不通过“顺手增强旧卡”制造检索噪声。
+
+Runtime 从 `3786 Pages / 15783 Chunks / 15783 Embedded` 更新为 **`3790 Pages / 15790 Chunks / 15790 Embedded`**，embedding debt = 0。明确 Mystery query 中 `actionable-hypothesis-reconstruction-loop-v3` 为 rank 1；单元关系残留 query 仍由既有 `story-state-compounding` 等机制主导；三张原著 book cards 在 production retrieval 中因 `active_inspiration:false` 被正确拒绝；Reward 等无关查询未被新 Mystery mechanism 抢占。
