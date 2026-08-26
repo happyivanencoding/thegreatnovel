@@ -1,0 +1,143 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "power_seed",
+  "effective_query": "\"core fantasy\" OR \"asymmetric advantage\" OR \"power progression\" OR \"world compatibility\"",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"core fantasy\" OR \"asymmetric advantage\" OR \"power progression\"",
+    "\"world compatibility\" OR \"power scale\" OR \"growth mutation\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：power_seed\n作者当前方向：成熟中文男频东方玄幻成长长篇。重新生成一套全新小说，不复用此前私人原型实验的世界、能力、人物或地点。\n\n核心阅读目标：强力量幻想、主动成长、真正值得想去的世界、鲜活人物关系，以及少量能够产生 shock 爽感的长期重释。世界本身必须先独立成立，未知主角只是后来撞进去的人。\n\n创意隔离：\n- 不复用河港、商盟通行签、万灯河、赤脉山、黑日岛、九檐仙山、无声天坑、白骨雪原、断天门、西州灵雨、百器商盟、分流真元等此前实验的地点/势力/能力指纹。\n- 不回到潮汐/导流/锚点/网络/流程优化等工程 ontology。\n- 不使用器官植入、身体零件、材料诊断/改造作为力量体系根基。\n- 不把治理、合同、资格、行政权限当成主要爽点或主要奖励。\n\n世界与力量方向：\n- 世界优先使用东方玄幻自身材质：山河、异兽、宗门/武道势力、遗迹、秘境、兵器、血脉/体质（若自然）、奇物、战争、城域、禁地、天空/地下/海域等；不要求机械齐全。\n- 力量必须具体、可战斗、可探索、可感知强弱；高阶仍然是读者能想象的力量、身体、移动、兵器、奇观与世界进入能力，不默认升格为“概念/因果/定义世界”。\n- 需要清楚的正常力量尺度…\nPower 可见 World Baseline：\n# CHARACTER POWER BASELINE｜Core Fantasy Authority\n\n## 力量体系与正常值\n\n天景不是幻术，而是被修炼者塑成的真实自然现象。火会烧毁木石，霜会冻结水面，雷会击穿甲胄，风会推动身体和兵器。\n\n修炼者必须先在真实环境中接触某种现象，再用功法将它凝成自己的“景相”。一套景相通常包括一种主现象和几种稳定变化，例如雷景可以发展出雷光、震荡、引爆，但不能凭空变成霜火。\n\n当前世界只需要五个力量坐标：\n\n- **引息**：能够感知景息，体魄明显超过常人。优秀武者可以跃过屋脊、短时间追上快马，抵挡普通刀箭。\n- **成景**：在身周三至二十丈内显现一种天景，足以击败数名武者，正面对抗低阶荒兽。\n- **开域**：天景扩展到百丈左右，可以改变战场地形，冻结道路、压倒城门、制造持续雷击或风墙。\n- **镇景**：影响数里范围，能够单人阻挡军阵、截断山路、掀翻林地，通常已经是宗门长老或地方强者。\n- **天灾**：极少数顶层强者能让一片区域持续数日出现异常天象，摧毁城镇，逼退大型荒兽，但仍然会被地形、伤势、伏击和多个同阶强者限制。\n\n大多数修士只能稳定维持一种景相。能够把两种天景叠合的人极少，例如将霜景和雷景结合成瞬间碎裂的冰雷场。三景同存几乎没有可靠记录。\n\n天景越强，越依赖真实环境。雷景在干燥高地容易爆发，在地下石窟则难以维持；霜景在炎热荒漠消耗巨大。高阶修士不是简单地把低阶招式放大，而是会利用兵器、地形、异兽和遗迹改变天景的性质。\n\n修士死亡后，景相通常随之消散。但少数强者会在死地留下长久不散的“死景”，形成新的危险地点，也可能成为后来者争夺的传承。\n\n## Power Exception 生成边界\nCore Fantasy / 特殊能力首先相对于本区块的力量 Normal / Rarity / Acquisition Conditions 生成，而不是相对于人物职业生成。\n先回答：这个世界绝大多数人怎样获得、承载和使用超凡力量？哪些能力常见、哪些少见、哪些尚未被可靠证实？再寻找一个仍服从底层规则但真实偏离正常分布的 Legal Exception。\n成长背景可以解释人物为什么发现、理解、珍惜、滥用或隐藏这个异常，却不能因为人物是矿工、匠人、账房、向导等职业，就把异常自动写成超级辨矿、维修诊断、路线优化、账契解释等职业强化。\n专业技能可以与异常发生化学反应，但不能替代男频 Core Fantasy 本身。\n这是男频成长长篇：Legal Exception 不能只是一次性奇遇或固定技巧。它必须与世界正常修炼体系兼容——正常境界提升应真实增强主角基础力量，异常掌握则扩大其容量、精度、组合、适用对象或行动自由；同时至少保留一条高阶也不能自动抹掉的硬边界。\n明确硬约束：未检测到明确题材硬约束\n创意用途：允许寻找不同成长玩法，但仍不得违反上述明确硬约束。",
+  "query_scope": "book-dna,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 11,
+  "unique_raw_count": 7,
+  "novel_candidate_count": 7,
+  "accepted_count": 1,
+  "coordinate_reference_count": 0,
+  "coordinate_reference": null,
+  "coordinate_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {},
+  "human_lane_order": [],
+  "human_lane_candidate_limit": 0,
+  "prototype_id": "",
+  "prototype_selected": false,
+  "rejected_count": 6,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 3,
+  "novel_candidates": [
+    {
+      "score": 0.1952,
+      "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+      "snippet": "# Retrieval Aliases"
+    },
+    {
+      "score": 0.1415,
+      "slug": "book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.1952,
+      "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+      "snippet": "# Retrieval Aliases"
+    },
+    {
+      "score": 0.1415,
+      "slug": "book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.1404,
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.1952,
+      "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+      "snippet": "# Retrieval Aliases",
+      "type": "synthesis",
+      "is_genre_prior": false,
+      "abstract": "Guidance：World Vision 使用两类坐标。第一类是**世界前台尺**：至少建立一把当前主尺，生产注入优先从 `POWER / TECHNIQUE / THREAT / STATUS / VALUE / WORLD` 中选择；题材明显依赖装备/法宝或天赋上限时，可条件性加入 `GEAR_ARTIFACT / POTENTIAL_CEILING` 校准。它们回答“现在谁能做到什么、差距造成什么结果、什么东西真值、下一层世界有什么”。第二类是**读者体验 / 故事校准尺**：`ACTION_SPACE / MYSTERY_DEPTH / EXPECTATION_LADDER / IMPACT`（必要时 `REACH`）仍然必须真实参与生产设计，但只作为作者侧坐标——分别投影成“成长后多能做哪件以前做不到的事”“哪个旧锚点仍有可回收的更深解释”“下一层已经看得见但尚未取得的具体人/物/地点/能力/身份”“一次行动实际改变多少人物、关系、地点、阵营或世界状态”。它们不得变成世界内部正式术语、资源名、势力理念或主题命题。`TEMPORAL_SCALE` 继续 HOLD。不要逐项填满，也不要建立战力数据库。",
+      "transfer_boundary": ""
+    }
+  ],
+  "rejected": [
+    {
+      "slug": "book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    }
+  ]
+}
