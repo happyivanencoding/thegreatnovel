@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.1.1
+version: 0.1.2
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -274,6 +274,34 @@ GBrain 是 craft inspiration，不是 Canon、人格菜单或剧情素材库。
 8. **Residual Risk / Next Step**：这刀没有解决什么。
 
 避免“全都很好”“继续优化即可”这类无信息结论。
+
+# Skill Update Policy
+
+本 Skill 保存的是**审计方法**，不是 production snapshot。不要因为普通代码、Prompt、模型路由或单次实验变化就同步改 Skill。
+
+**必须更新 Skill** 的情况：
+
+- 跨样本证据改变了 Stable Principle；
+- root-cause layering、source hierarchy、authority 判断或审计 operating mode 发生实质变化；
+- 实验方法、因果 A/B 标准、GBrain governance / retrieval 审计方法或 repo safety 发生实质变化；
+- 反复出现并经受控实验确认了新的系统性模型偏置，需要成为长期审计能力；
+- 当前 Skill 会系统性误判 production，且问题不能靠 live discovery 自动解决。
+
+**通常不更新 Skill** 的情况：
+
+- production 新增/删除一个阶段，但审计方法没变；
+- 默认模型、价格、GBrain 条数或文档路径变化，可由 live discovery 获取；
+- 单本书、单次实验、单个 candidate 的结论；
+- 仅修 Prompt 文案、字段名、UI 或局部实现 bug；
+- Current Default 更新但 Stable Principle 不变。
+
+每次真正更新 Skill：
+
+1. 递增版本号；
+2. `skill_package validate`；
+3. install + activate 新版本；
+4. 用一个最近已经有已知结论的系统问题做 bounded read-only smoke audit；
+5. smoke PASS 后再提交/推送；失败则修 Skill，不把失败掩盖成 production 问题。
 
 # Repo Safety
 
