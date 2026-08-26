@@ -1,0 +1,18 @@
+{
+  "snapshot": "same live GBrain: 3802 Pages / 15810 Chunks / 15810 Embedded",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"character hook\" OR \"protagonist desire\" OR \"behavior signature\"",
+    "\"human appetite\" OR \"relationship gravity\" OR \"character as payoff\""
+  ],
+  "raw_count": 36,
+  "accepted_count": 1,
+  "final_limit": 3,
+  "accepted": [
+    {
+      "slug": "mechanisms/private-appetite-continuity-v1",
+      "score": 0.2428
+    }
+  ],
+  "note": "Captured immediately before lane-routing code change against the same 3802/15810/15810 GBrain snapshot."
+}

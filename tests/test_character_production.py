@@ -5,7 +5,12 @@ from pathlib import Path
 import pytest
 
 from story_mvp.character_prompts import generate_split_prompt
-from story_mvp.gbrain_retrieval import build_retrieval_brief, default_effective_query
+from story_mvp.gbrain_retrieval import (
+    build_retrieval_brief,
+    default_effective_query,
+    human_lane_for_page,
+    retrieve_gbrain,
+)
 from story_mvp.storage import (
     approve_character_artifact,
     approve_creative_artifact,
@@ -246,3 +251,125 @@ def test_split_creative_prompts_do_not_surface_retired_fantasy_seed_concept() ->
     ]
     assert all("Fantasy Seed" not in prompt for prompt in prompts)
     assert all("FANTASY_SEED" not in prompt for prompt in prompts)
+
+def _human_lane_page(lane: str, title: str) -> str:
+    tag = {
+        "appetite": "human-appetite",
+        "behavior": "behavior-signature",
+        "relationship": "relationship-gravity",
+    }[lane]
+    return f"""---
+type: concept
+title: {title}
+active_inspiration: true
+human_lane: {lane}
+creative_problem_tags:
+  - human-craft
+  - {tag}
+---
+
+## Creative Problem
+{title} 要解决的 Human 问题。
+
+## Mechanism
+{title} 的可迁移机制。
+"""
+
+
+def test_human_lane_classifier_prefers_explicit_metadata_and_supports_existing_tags() -> None:
+    explicit = _human_lane_page("relationship", "Relationship Craft")
+    assert human_lane_for_page(explicit, "mechanisms/example") == "relationship"
+
+    legacy_appetite = """---
+active_inspiration: true
+creative_problem_tags:
+  - human-craft
+  - human-appetite
+  - private-desire
+---
+Retrieval aliases: private appetite continuity
+## Mechanism
+私人价值不会因成长自动消失。
+"""
+    assert human_lane_for_page(legacy_appetite, "mechanisms/private-appetite") == "appetite"
+
+
+def test_human_retrieval_accepts_at_most_one_active_card_per_lane() -> None:
+    pages = {
+        "mechanisms/appetite-a": _human_lane_page("appetite", "Appetite A"),
+        "mechanisms/appetite-b": _human_lane_page("appetite", "Appetite B"),
+        "mechanisms/behavior-a": _human_lane_page("behavior", "Behavior A"),
+        "mechanisms/behavior-b": _human_lane_page("behavior", "Behavior B"),
+        "mechanisms/relationship-a": _human_lane_page("relationship", "Relationship A"),
+    }
+
+    def fake_query(query: str, **_kwargs) -> str:
+        if "human appetite" in query:
+            return "\n".join([
+                "[0.99] mechanisms/appetite-a -- appetite",
+                "[0.98] mechanisms/appetite-b -- appetite",
+                "[0.97] mechanisms/behavior-a -- cross-hit",
+            ])
+        if "behavior signature" in query:
+            return "\n".join([
+                "[0.99] mechanisms/appetite-a -- cross-hit",
+                "[0.98] mechanisms/behavior-a -- behavior",
+                "[0.97] mechanisms/behavior-b -- behavior",
+            ])
+        if "relationship gravity" in query:
+            return "\n".join([
+                "[0.99] mechanisms/appetite-a -- cross-hit",
+                "[0.96] mechanisms/relationship-a -- relationship",
+            ])
+        raise AssertionError(query)
+
+    result = retrieve_gbrain(
+        mode="human_seed",
+        world_vision=WORLD,
+        query_func=fake_query,
+        page_func=pages.__getitem__,
+    )
+
+    assert result["query_strategy"] == "human_lane_queries"
+    assert result["human_lane_counts"] == {"appetite": 1, "behavior": 1, "relationship": 1}
+    assert [(item["human_lane"], item["slug"]) for item in result["accepted"]] == [
+        ("appetite", "mechanisms/appetite-a"),
+        ("behavior", "mechanisms/behavior-a"),
+        ("relationship", "mechanisms/relationship-a"),
+    ]
+    assert "mechanisms/appetite-b" not in {item["slug"] for item in result["accepted"]}
+    assert "mechanisms/behavior-b" not in {item["slug"] for item in result["accepted"]}
+    assert result["accepted_count"] == 3
+    assert result["final_limit"] == 3
+    assert "human_lane: appetite" in result["result"]
+    assert "human_lane: behavior" in result["result"]
+    assert "human_lane: relationship" in result["result"]
+
+
+def test_human_retrieval_leaves_lane_empty_instead_of_using_reference_only_or_wrong_lane() -> None:
+    pages = {
+        "mechanisms/appetite": _human_lane_page("appetite", "Appetite"),
+        "mechanisms/wrong": _human_lane_page("appetite", "Wrong Lane"),
+        "book-dna/reference-behavior": _human_lane_page("behavior", "Reference Behavior").replace(
+            "active_inspiration: true", "active_inspiration: false"
+        ),
+    }
+
+    def fake_query(query: str, **_kwargs) -> str:
+        if "human appetite" in query:
+            return "[0.99] mechanisms/appetite -- appetite"
+        if "behavior signature" in query:
+            return "[0.99] book-dna/reference-behavior -- reference only"
+        if "relationship gravity" in query:
+            return "[0.99] mechanisms/wrong -- wrong lane"
+        raise AssertionError(query)
+
+    result = retrieve_gbrain(
+        mode="human_seed",
+        world_vision=WORLD,
+        query_func=fake_query,
+        page_func=pages.__getitem__,
+    )
+
+    assert result["human_lane_counts"] == {"appetite": 1, "behavior": 0, "relationship": 0}
+    assert [item["slug"] for item in result["accepted"]] == ["mechanisms/appetite"]

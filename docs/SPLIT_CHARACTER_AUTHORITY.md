@@ -193,3 +193,14 @@ Do not add by default:
 - new hard gates for Human diversity.
 
 The architecture solves rationalization through **information boundaries**, not through growing negative-prompt walls.
+## Human GBrain lane budget
+
+Human Seed GBrain retrieval uses three independent lanes, not one shared Top-N pool:
+
+- `appetite`: what the person privately wants or values even without direct progression payoff;
+- `behavior`: stable choice bias / character hook without turning it into a personality taxonomy;
+- `relationship`: concrete people whose independent desires can change the person's choices.
+
+Each lane contributes **at most one ACTIVE craft card** and Human Seed still receives at most three cards total. A lane may remain empty; REFERENCE_ONLY / HOLD material never fills a slot merely to reach three. The same card cannot occupy two lanes. New Human Craft should declare `human_lane: appetite|behavior|relationship` in frontmatter; older cards are classified from narrow craft metadata only.
+
+The three lanes are retrieval budgets, **not three required personality dimensions or Hard Gates**.

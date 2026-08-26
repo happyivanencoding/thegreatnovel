@@ -1,0 +1,30 @@
+{
+  "query_strategy": "human_lane_queries",
+  "query_texts": [
+    "\"human appetite\" OR \"private appetite\" OR \"private desire\" OR \"non instrumental desire\"",
+    "\"behavior signature\" OR \"stable choice bias\" OR \"character hook\" OR \"protagonist as IP\"",
+    "\"relationship gravity\" OR \"relationship chemistry\" OR \"character autonomy\" OR \"reunion relationship\""
+  ],
+  "raw_count": 41,
+  "unique_raw_count": 12,
+  "accepted_count": 1,
+  "human_lane_counts": {
+    "appetite": 1,
+    "behavior": 0,
+    "relationship": 0
+  },
+  "human_lane_order": [
+    "appetite",
+    "behavior",
+    "relationship"
+  ],
+  "human_lane_candidate_limit": 12,
+  "final_limit": 3,
+  "accepted": [
+    {
+      "lane": "appetite",
+      "slug": "mechanisms/private-appetite-continuity-v1",
+      "score": 0.3176
+    }
+  ]
+}

@@ -18,6 +18,13 @@ FINAL_RESULT_LIMIT = 5
 CHAPTER_FINAL_RESULT_LIMIT = 2
 CREATIVE_PLANNING_FINAL_RESULT_LIMIT = 3
 GENRE_PRIOR_ACCEPT_LIMIT = 2
+HUMAN_LANE_ORDER = ("appetite", "behavior", "relationship")
+HUMAN_LANE_CANDIDATE_INSPECTION_LIMIT = 12
+HUMAN_LANE_QUERIES = {
+    "appetite": '"human appetite" OR "private appetite" OR "private desire" OR "non instrumental desire"',
+    "behavior": '"behavior signature" OR "stable choice bias" OR "character hook" OR "protagonist as IP"',
+    "relationship": '"relationship gravity" OR "relationship chemistry" OR "character autonomy" OR "reunion relationship"',
+}
 WORLD_COORDINATE_REFERENCE_SLUG = "syntheses/reader-facing-world-coordinates-batch-d-v3"
 EMPTY_RESULT = "（本次没有找到与 BOOK 硬约束和当前章节任务兼容的 GBrain 证据；不要用不相关材料补位。）"
 GBRAIN_SCOPE_LABEL = "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选"
@@ -65,10 +72,7 @@ PLANNING_KEYWORD_QUERY_BATCHES = {
         '"core fantasy" OR "asymmetric advantage" OR "power progression"',
         '"world compatibility" OR "power scale" OR "growth mutation"',
     ),
-    "human_seed": (
-        '"character hook" OR "protagonist desire" OR "behavior signature"',
-        '"human appetite" OR "relationship gravity" OR "character as payoff"',
-    ),
+    "human_seed": tuple(HUMAN_LANE_QUERIES[lane] for lane in HUMAN_LANE_ORDER),
     "idea": (
         '"plot engine variation" OR "gameplay counterplay"',
         '"thread ecology" OR "longitudinal thread" OR "thread collision"',
@@ -562,6 +566,79 @@ def active_inspiration_allowed(page: str) -> bool:
     return True
 
 
+def _frontmatter_block(page: str) -> str:
+    lines = page.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return ""
+    try:
+        end = lines.index("---", 1)
+    except ValueError:
+        return ""
+    return "\n".join(lines[1:end])
+
+
+def _explicit_human_lane(page: str) -> str:
+    for line in _frontmatter_block(page).splitlines():
+        key, sep, value = line.partition(":")
+        if sep and key.strip().casefold() == "human_lane":
+            lane = value.strip().casefold().replace("-", "_")
+            aliases = {
+                "appetite": "appetite",
+                "human_appetite": "appetite",
+                "behavior": "behavior",
+                "behaviour": "behavior",
+                "behavior_signature": "behavior",
+                "relationship": "relationship",
+                "relationship_gravity": "relationship",
+            }
+            return aliases.get(lane, "")
+    return ""
+
+
+def human_lane_for_page(page: str, slug: str = "") -> str:
+    """Classify Human Craft by its own metadata, not by whichever query happened to hit it.
+
+    New Human Craft should declare ``human_lane`` explicitly. Existing cards are
+    supported through narrow frontmatter / identity markers so source text mentioning
+    several human concerns cannot steal another lane.
+    """
+
+    explicit = _explicit_human_lane(page)
+    if explicit:
+        return explicit
+
+    frontmatter = _frontmatter_block(page).casefold()
+    identity_lines: list[str] = [slug.casefold()]
+    for line in page.splitlines():
+        stripped = line.strip()
+        lowered = stripped.casefold()
+        if lowered.startswith(("retrieval aliases:", "# ")):
+            identity_lines.append(lowered)
+        if len(identity_lines) >= 4:
+            break
+    identity = "\n".join(identity_lines)
+    signal = frontmatter + "\n" + identity
+
+    markers = {
+        "appetite": (
+            "human-appetite", "private-desire", "non-instrumental-desire",
+            "private appetite", "appetite continuity", "human appetite",
+        ),
+        "behavior": (
+            "behavior-signature", "behaviour-signature", "character-hook",
+            "protagonist-as-ip", "stable-choice-bias", "behavior signature",
+            "stable choice bias", "character hook",
+        ),
+        "relationship": (
+            "relationship-gravity", "relationship-chemistry", "character-autonomy",
+            "relationship gravity", "relationship chemistry", "character autonomy",
+            "irreplacable relationship", "irreplaceable relationship",
+        ),
+    }
+    matched = [lane for lane, terms in markers.items() if any(term in signal for term in terms)]
+    return matched[0] if len(matched) == 1 else ""
+
+
 def is_genre_prior_page(page: str) -> bool:
     """只依据现有卡片 frontmatter 的 creative_problem_tags 识别题材先验。"""
 
@@ -618,6 +695,7 @@ def _format_bundle(items: list[Mapping[str, Any]]) -> str:
                     f"### Inspiration {index}",
                     f"source: {item['slug']}",
                     f"type: {item['type']}",
+                    *([f"human_lane: {item['human_lane']}"] if item.get("human_lane") else []),
                     f"score: {item['score']:g}",
                     "",
                     f"可用抽象：{item['abstract']}",
@@ -706,13 +784,17 @@ def retrieve_gbrain(
     page_reader = page_func or get_gbrain
     allowed_categories = MODE_ALLOWED_CATEGORIES[mode]
     query_scope = ",".join(sorted(allowed_categories))
-    query_texts = (
-        ()
-        if query_strategy == "prose_control_none"
-        else PLANNING_KEYWORD_QUERY_BATCHES.get(mode, (effective_query,))
-        if query_strategy == "planning_keyword_aliases"
-        else (effective_query,)
-    )
+    if query_strategy == "prose_control_none":
+        query_texts = ()
+    elif mode == "human_seed" and not query_override.strip():
+        # Human retrieval is lane-first even when semantic retrieval is available.
+        # This prevents one dense Human topic from crowding the other two lanes.
+        query_texts = tuple(HUMAN_LANE_QUERIES[lane] for lane in HUMAN_LANE_ORDER)
+        query_strategy = "human_lane_queries"
+    elif query_strategy == "planning_keyword_aliases":
+        query_texts = PLANNING_KEYWORD_QUERY_BATCHES.get(mode, (effective_query,))
+    else:
+        query_texts = (effective_query,)
     stdout_parts: list[str] = []
     query_failures: list[dict[str, str]] = []
     first_query_error: GBrainQueryError | None = None
@@ -785,8 +867,10 @@ def retrieve_gbrain(
         novel_candidates.append(hit)
 
     candidate_limit = (
-        PLANNING_CANDIDATE_INSPECTION_LIMIT
-        if mode in {"world_vision", "power_seed", "human_seed", "idea", "outline"}
+        HUMAN_LANE_CANDIDATE_INSPECTION_LIMIT * len(HUMAN_LANE_ORDER)
+        if mode == "human_seed"
+        else PLANNING_CANDIDATE_INSPECTION_LIMIT
+        if mode in {"world_vision", "power_seed", "idea", "outline"}
         else RAW_RESULT_LIMIT
     )
     visible = novel_candidates[:candidate_limit]
@@ -796,50 +880,101 @@ def retrieve_gbrain(
     )
     accepted: list[dict[str, Any]] = []
     genre_prior_count = 0
-    for hit in visible:
+    human_lane_counts = {lane: 0 for lane in HUMAN_LANE_ORDER}
+    page_cache: dict[str, str] = {}
+
+    def read_candidate_page(slug: str) -> str:
+        if slug not in page_cache:
+            page_cache[slug] = page_reader(slug)
+        return page_cache[slug]
+
+    def evaluate_hit(hit: dict[str, Any], *, required_human_lane: str = "") -> dict[str, Any] | None:
+        nonlocal genre_prior_count
         category = source_category(hit["slug"])
         if _has_surface_conflict(hit["snippet"], constraints):
             rejected.append({"slug": hit["slug"], "reason": "与 BOOK 的明确硬约束冲突"})
-            continue
-        if len(accepted) >= final_limit:
-            rejected.append({"slug": hit["slug"], "reason": "超过最终数量上限"})
-            continue
+            return None
         try:
-            page = page_reader(hit["slug"])
-        except (GBrainQueryError, OSError, ValueError):
+            page = read_candidate_page(hit["slug"])
+        except (GBrainQueryError, OSError, ValueError, KeyError):
             rejected.append({"slug": hit["slug"], "reason": "完整页面读取失败"})
-            continue
+            return None
         if not active_inspiration_allowed(page):
             rejected.append({"slug": hit["slug"], "reason": "卡片当前未启用为 active inspiration"})
-            continue
+            return None
+        if mode == "human_seed":
+            page_lane = human_lane_for_page(page, hit["slug"])
+            if not page_lane:
+                rejected.append({"slug": hit["slug"], "reason": "Human Craft 未声明或无法判定 appetite / behavior / relationship lane"})
+                return None
+            if required_human_lane and page_lane != required_human_lane:
+                rejected.append({"slug": hit["slug"], "reason": f"Human Craft 属于 {page_lane} lane，不占 {required_human_lane} lane"})
+                return None
+        else:
+            page_lane = ""
         genre_prior = is_genre_prior_page(page)
         if genre_prior and mode not in GENRE_PRIOR_ALLOWED_MODES:
             rejected.append({"slug": hit["slug"], "reason": "章节节点不自动使用 Genre Prior"})
-            continue
+            return None
         if genre_prior and not genre_prior_matches_query(page, effective_query, hit["slug"]):
             rejected.append({"slug": hit["slug"], "reason": "Genre Prior 与当前题材 query 不相关"})
-            continue
+            return None
         if genre_prior and genre_prior_count >= GENRE_PRIOR_ACCEPT_LIMIT:
             rejected.append({"slug": hit["slug"], "reason": "超过 Genre Prior 接受上限"})
-            continue
+            return None
         abstract, transfer_boundary = extract_abstract_content(page)
         if not abstract:
             rejected.append({"slug": hit["slug"], "reason": "没有可提取的抽象区块"})
-            continue
+            return None
         if _has_surface_conflict(abstract, constraints):
             rejected.append({"slug": hit["slug"], "reason": "与 BOOK 的现实模式冲突"})
-            continue
-        accepted.append(
-            {
-                **hit,
-                "type": _type_for_category(category),
-                "is_genre_prior": genre_prior,
-                "abstract": abstract,
-                "transfer_boundary": transfer_boundary,
-            }
-        )
+            return None
+        candidate = {
+            **hit,
+            "type": _type_for_category(category),
+            "is_genre_prior": genre_prior,
+            "abstract": abstract,
+            "transfer_boundary": transfer_boundary,
+        }
+        if page_lane:
+            candidate["human_lane"] = page_lane
         if genre_prior:
             genre_prior_count += 1
+        return candidate
+
+    if mode == "human_seed":
+        accepted_slugs: set[str] = set()
+        if query_override.strip():
+            # Manual override is one candidate pool, but lane caps still apply.
+            lane_pools = {lane: visible for lane in HUMAN_LANE_ORDER}
+        else:
+            lane_pools = {
+                lane: [
+                    hit for hit in dedupe_query_hits_by_slug(parsed_batches[index])
+                    if source_category(hit["slug"]) in allowed_categories
+                ][:HUMAN_LANE_CANDIDATE_INSPECTION_LIMIT]
+                for index, lane in enumerate(HUMAN_LANE_ORDER)
+            }
+        for lane in HUMAN_LANE_ORDER:
+            for hit in lane_pools[lane]:
+                if hit["slug"] in accepted_slugs:
+                    continue
+                candidate = evaluate_hit(hit, required_human_lane=lane)
+                if candidate is None:
+                    continue
+                accepted.append(candidate)
+                accepted_slugs.add(hit["slug"])
+                human_lane_counts[lane] = 1
+                break
+    else:
+        for hit in visible:
+            if len(accepted) >= final_limit:
+                rejected.append({"slug": hit["slug"], "reason": "超过最终数量上限"})
+                continue
+            candidate = evaluate_hit(hit)
+            if candidate is not None:
+                accepted.append(candidate)
+
     coordinate_bundle = _format_fixed_coordinate_reference(coordinate_reference)
     creative_bundle = _format_bundle(accepted) if accepted else ("" if coordinate_reference else EMPTY_RESULT)
     result_bundle = "\n\n".join(part for part in (coordinate_bundle, creative_bundle) if part)
@@ -862,6 +997,9 @@ def retrieve_gbrain(
         "coordinate_reference": coordinate_reference,
         "coordinate_reference_error": coordinate_reference_error,
         "genre_prior_count": genre_prior_count,
+        "human_lane_counts": human_lane_counts if mode == "human_seed" else {},
+        "human_lane_order": list(HUMAN_LANE_ORDER) if mode == "human_seed" else [],
+        "human_lane_candidate_limit": HUMAN_LANE_CANDIDATE_INSPECTION_LIMIT if mode == "human_seed" else 0,
         "rejected_count": len(rejected),
         "query_limit": QUERY_RECALL_LIMIT,
         "requested_limit": candidate_limit,
