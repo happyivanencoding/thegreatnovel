@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.1.2
+version: 0.1.3
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 

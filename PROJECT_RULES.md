@@ -92,6 +92,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - Human：**经历是背景，不是人格证明**；允许多重动机、稳定选择偏向与现场变化。
 - Collision 可补少量非奠基性过去，让关系/选择更自然；不得自动悲情化、不得用过去证明整个人、不得自动变主线或一次性倾倒。
 - Growth 是全书纵向不变量，不是 stage / block / ten-chapter tax。
+- 长篇应保留**震撼式长期重释**：重要旧事实在后续出现足够意外、回看又成立的新解释，并立刻改变力量、身份、关系或世界格局；不强制隐藏身世，也不做每阶段配额。
 - 正文：**Story-bearing Texture > Decorative Density**；克制但不干，丰富但不腻。
 - 不为治理化、工程化、蓝领职业化、过度验证分别新增 Reviewer / Agent / Scorer / Hard Gate。
 

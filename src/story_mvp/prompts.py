@@ -86,6 +86,8 @@ OUTLINE_STORY_ANCHOR_DENSITY_RULE = """Outline Story Anchor Density（软规划�
 
 PLOT_ENGINE_DIVERSITY_DIRECTION = """Plot Engine Diversity：同一个强主循环可以长期复用，但相邻剧情块不能只是更换地图、货物、任务名或对手名字后重复同一种发动方式。判断整体故事时，优先让目标性质、对手行动方式、冲突来源、主角必须做的关键决定、核心优势的使用方式、兑现形态或世界后果发生至少一种真正有故事意义的变化。不要把这个原则实现成逐项打勾；变化已经足以产生不同阅读体验时就正常推进。尤其避免长期退化为“接到问题 → 分析规则 → 按步骤解决 → 得到结算 → 接下一个类似问题”。"""
 
+LONG_TERM_RECONTEXTUALIZATION_SHOCK = """震撼式长期重释（Story Program / Outline 软原则，不新增必填字段或 Hard Gate）：成熟长篇应保留少量能够让读者真正惊讶甚至产生 shock 爽感的重释机会。高价值重释同时满足三点：揭晓当下足够意外；回看前文时旧事实、旧异常、人物行为或既有证据能够重新扣合，而不是临时空降答案；揭晓后立刻改变力量理解、身份分量、关系结构、敌我判断、宝物价值或世界格局之一。来源可以是能力真相、人物身份/过去、关系、旧事件、宝物、敌我关系或世界联系，不默认等于隐藏血脉/身世，也不要求每阶段安排一次。Story Program 负责保留可回收纵深与真正有分量的重释机会；Outline 只在已批准长期因果需要时安排铺垫、误读、证据与揭晓，不为了“伏笔感”制造无意义谜语或把所有未知并成一个幕后真相。"""
+
 DIRECTOR_NARRATIVE_SALIENCE = """Director Narrative Salience：Director 面对十章计划和 Canon 中很多可执行细节时，八字段优先抓住本章最值得读的那一个人物冲突、关键选择、力量使用、反转、利益得失或兑现结果。操作步骤只有在它会改变人物选择、风险、胜负或结果时才进入“主角行动”；不要把“主角行动”写成施工单、路线单、检测流程或完整操作清单。不能删改计划规定的结果，但可以把实现过程压缩到足够支撑因果的最小程度，让“谁逼谁、主角决定什么、局势怎样被改变”保持前景。"""
 
 WORLD_READER_COORDINATES = """Reader-Facing World Coordinates（World Vision 世界建模原则，不是固定修仙模板）：World Vision 首先建立读者可操作、可预测的世界事实，不把抽象概念本身当作规则。凡是会影响人物选择、胜负、身份、危险或收益的规则，先回答“什么条件下会发生什么可观察变化、人物因此能/不能做什么、结果会怎样”；概念名、哲学解释和深层原因可以随后命名或保留为未知，但不能替代这层事实。世界前台尺优先回答 Power / Technique / Threat / Status / Value / World：谁明显更强或更成熟、差距造成什么可见结果；某种身份真正允许进入什么，并区分基础待遇与稀缺奖励；更高世界具体多出什么力量、资源、人物、地点或危险。适合明确等级时可以使用境界、段位、军衔或评级，不适合时用可观察阈值和现实后果代替。另保留 Action Space / Expectation Ladder / Mystery Depth / Impact 等作者侧读者体验坐标：它们仍用于检查成长是否打开新行动、下一层是否让人期待、旧锚点是否具有可回收纵深、一次结果实际改变了多少故事状态，但必须投影成具体人、物、地点、关系和事件，不作为世界内部的命名尺度。只建立当前故事真正需要的最小坐标，不为体系完整堆百科、十几层名称或数值表。"""
@@ -812,9 +814,11 @@ World Vision 的顺序是 **Story-Bearing World → Desire Economy → Reader Co
 World Vision 不要求在本阶段穷尽长期主线、完整能力限制、所有成本、成长整理或正文。"""
 
 
-STORY_PROGRAM_TEMPLATE = """你是透明协作的 Story Program / 故事主线设计助手。当前阶段是已批准 World 与 Character 第一次完整碰撞后的长期因果编译。只生成一套 Story Program，不逐章写 Outline，不替 Writer 写正文。
+STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线设计助手。当前阶段是已批准 World 与 Character 第一次完整碰撞后的长期因果编译。只生成一套 Story Program，不逐章写 Outline，不替 Writer 写正文。
 
 第一性原则：**Story Program 是“长期因果如何继续”的编译，不是每个大型阶段都缴一次升级税的表单。成长是全书纵向不变量，不是每个阶段的必填项。**
+
+{LONG_TERM_RECONTEXTUALIZATION_SHOCK}
 
 主角必须长期真正变强，核心幻想也必须在多个自然阶段反复得到有分量、可观察的兑现；但持续成长属于**全书纵向不变量**，不等于每个大型阶段都必须同时出现新能力、新装备、新资源、新地图和一次能力演示。Power Seed 决定成长语法；Story Program 只决定这些已批准潜力在什么故事因果中真正实现，不能重写 Power Core、凭空增加 High-Tier Mutation 或绕过 Permanent Boundary。
 
@@ -898,6 +902,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {HIGH_VALUE_ACQUISITION_DIRECTION}
 
 {PLOT_ENGINE_DIVERSITY_DIRECTION}
+
+{LONG_TERM_RECONTEXTUALIZATION_SHOCK}
 
 {BUSINESS_DECISION_OVER_IMPLEMENTATION}
 
@@ -1010,6 +1016,8 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {OUTLINE_FANTASY_PROOF_RULE}
 
 {PLOT_ENGINE_DIVERSITY_DIRECTION}
+
+{LONG_TERM_RECONTEXTUALIZATION_SHOCK}
 
 {BUSINESS_DECISION_OVER_IMPLEMENTATION}
 
