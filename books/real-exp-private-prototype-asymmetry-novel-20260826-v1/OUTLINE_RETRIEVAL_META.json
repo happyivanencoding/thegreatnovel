@@ -1,0 +1,35 @@
+{
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"thread collision\" OR \"hidden identity reveal\"",
+    "\"departure vacancy\" OR \"reunion reentry\" OR \"sacrifice convergence\"",
+    "\"reward recontextualization\" OR \"action space\" OR \"public proof\""
+  ],
+  "accepted_count": 5,
+  "accepted": [
+    {
+      "slug": "mechanisms/thread-collision-v3",
+      "score": 0.281
+    },
+    {
+      "slug": "mechanisms/reunion-reentry-v3",
+      "score": 0.0912
+    },
+    {
+      "slug": "mechanisms/departure-vacancy-v3",
+      "score": 0.0912
+    },
+    {
+      "slug": "mechanisms/mech-action-space-expansion",
+      "score": 0.2026
+    },
+    {
+      "slug": "mechanisms/hidden-identity-long-v3",
+      "score": 0.1702
+    }
+  ],
+  "rejected_count": 20,
+  "final_limit": 5,
+  "prototype_id": "",
+  "prototype_selected": false
+}

@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 10.565,
+  "sessionId": "01a0402f-78c9-70e3-bd59-d8102c12bc03",
+  "text": "SELECT: 1\n\nREASON: 最直接的欲望是把对手最强的一招削掉一块，再立刻拿来反击。相对同层普通人和天才，它能在高阶对手完成关键动作时制造清楚的越级反击窗口，敌人越强，破绽价值越高。一句话就能理解为“别人出力时，我夺走其中一部分并用回自己身上”。它还能与功法、兵器、身体和不同兽性结合，把短暂夺来的效果转化为新的连招、破甲和攻防方式，而不只是单纯增加力量。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 34555,
+      "inputTokens": 24196,
+      "cachedReadTokens": 9984,
+      "outputTokens": 375,
+      "thoughtTokens": 229
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 34555,
+          "inputTokens": 24196,
+          "cachedInputTokens": 9984,
+          "outputTokens": 375,
+          "reasoningOutputTokens": 229
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 34555,
+              "inputTokens": 24196,
+              "cachedInputTokens": 9984,
+              "outputTokens": 375,
+              "reasoningOutputTokens": 229
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

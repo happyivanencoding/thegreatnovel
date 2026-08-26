@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 50.172,
+  "sessionId": "01a0401c-ce9f-7ff1-a81e-e02ab4f91016",
+  "text": "# HUMAN SEED｜岑野／总想亲眼看一眼\n\n## 世界中的初始位置与生活事实\n\n岑野出生在北部一座依靠浮木桥和定山桩维持的小镇。父亲替车队记账、修理车轮，母亲在镇上的压伤铺帮人接骨、熬药。他家不算贫寒，却没有能让人稳定上升的关系和资源。\n\n十五岁时，他参加承骨测试，结果只够承受短时低压，没能进入正式武馆。之后他在三炉会外坊做过半年杂工，负责给坠铁打磨、搬运废料；因为嫌枯燥，又被师傅认为手不够稳，回了镇上。\n\n他真实经历过几件事：\n\n- 十二岁那年，压潮提前，镇外的浮木桥断了一截。他和父亲在桥边守了整夜，看见一辆载着活羊的车沉进改道的河里。\n- 十六岁时，他把攒下的钱买了一只颜色极漂亮、却不适合本地地势的旧铜铃，后来被母亲拿去换了药材。\n- 在三炉会外坊时，他曾因把一块废坠铁磨出奇怪的纹路，被路过的高阶铸器师多看了一眼；那人没有收他，只说了一句“还行”。\n- 他曾跟着一支短途车队走到邻镇，因贪看夜里的浮石灯阵，错过集合，害得车队多等了半个时辰。\n- 他有过一次没有结果的亲密关系。对方并不亏待他，只是不愿被他忽冷忽热的兴趣牵着走，后来先离开了。\n\n## 持续牵引与互相竞争的动机\n\n- 他想被真正有分量的人看见，尤其想证明自己不是“承骨不成、只能回家”的那类人。\n- 他会被颜色、声音、触感、器物形状和陌生地貌直接吸引；一件没有用处但足够漂亮的东西，可能让他停下来。\n- 他有明确的身体欲望，会因为一个具体人的身体吸引而靠近，也可能因此忽视长期不合适。\n- 他喜欢鲜活的日常：临时起意的出门、热食、陌生街道、亲手做出一个东西，以及和某个人并肩消磨时间。\n\n这些牵引经常不能同时满足。他想跟车队离镇挣钱、见世面，又舍不得把钱花在路上；想被强者看见，真正面对枯燥训练时却可能转身去看一件新器物；他明白某段关系并不稳定，却可能因为想靠近那个人而放弃一次更安全、更体面的机会。\n\n## Behavior Signature\n\n岑野不总是选择最安全、最便宜或最体面的办法。他会先判断眼前什么东西仍然鲜活：一个人的反应、一件器物的质感、一处尚未看懂的地势，或者一次能让自己脱离原来位置的机会。\n\n只要他觉得值得，他能忍受麻烦、疼痛和一段时间的拮据；一旦事情只剩重复、敷衍和无人看见，他会拖延、换路、突然离开，甚至把已经投入的时间当作沉没成本。他知道这样做可能吃亏，但知道代价不一定能压过当下的吸引。\n\n被重视时，他更愿意展示自己，也更容易答应冒险；被轻慢时，他可能收缩，也可能为了重新夺回目光而做出过量的举动。具体到现场，他可能直说、隐瞒、绕开、硬撑或回头，取决于当时的信息和那个人是谁。\n\n他真正难以忍受的是：自己明明在场，却被当成随时可以替换的工具；以及一个本来有颜色、有声音、有人的地方，被安排成只有用途的空壳。\n\n## 重要关系原点\n\n林绢是镇上浮桥扣件匠人的女儿，比岑野大一岁。她做事比他说话快，身上常有铁屑和河水味，手臂因为常年拧紧扣件而结实有力。岑野确实被她的身体吸引，也喜欢她不替他解释、不因他突然改变主意就急着安慰的脾气。\n\n在没有林绢时，岑野更可能独自去邻镇，或者把时间留给自己；但林绢曾在一次夜间压潮前要求他留下，帮她把一批来不及固定的桥扣送到河边。他原本已经答应随车队出发，最后却留下了，承担了错过车队、少赚一笔钱的后果。\n\n林绢不是他的救命恩人，也不承担他的未来。她有自己的工作、脾气和去留判断。她愿意同行时，岑野会为她改变路线；她拒绝被带走时，他未必能体面接受，也未必会永远留下。\n\n## Initial State Seed\n\n### 当前私人欲望\n\n岑野想在下一次压潮前离开小镇，跟一支长途车队走一趟，攒够一笔能让自己暂时不听父母安排的钱。他想见没见过的地势、吃真正陌生的食物，也想让某个有资格的人记住他的名字。\n\n但在出发前，他仍想和林绢单独去看一次夜间压潮后的河面。即使这会让他错过更好的招募机会，他也暂时不愿把这件事让给“以后”。\n\n## Audition Metadata（非 Canon）\n\n### 人物钩子\n\n- 当一次被看见的机会，要求他放弃眼前真正喜欢的人或事，他会怎样重新计算代价？\n- 当一件丑陋、有效的器物与一件漂亮、无用的器物同时属于他，他未必会选择正确的那个。\n- 他可能因为身体吸引、陌生感或短暂的荣耀，主动走进一个自己明知不适合久留的地方。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 35367,
+      "inputTokens": 22834,
+      "cachedReadTokens": 9984,
+      "outputTokens": 2549,
+      "thoughtTokens": 1113
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 35367,
+          "inputTokens": 22834,
+          "cachedInputTokens": 9984,
+          "outputTokens": 2549,
+          "reasoningOutputTokens": 1113
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 35367,
+              "inputTokens": 22834,
+              "cachedInputTokens": 9984,
+              "outputTokens": 2549,
+              "reasoningOutputTokens": 1113
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}
