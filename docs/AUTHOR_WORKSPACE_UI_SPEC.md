@@ -1,5 +1,7 @@
 # Author Workspace UI V1
 
+> 项目执行规则以根目录 `PROJECT_RULES.md` 为唯一长期权威。本文只定义 Author Workspace 的 UI 信息架构与交互语义。
+
 ## 现有真实入口
 
 - `index.html` 当前是一张长页面：创意、BOOK 设计、规划、GBrain、References、Prompt、Hybrid Run、章节输入、正文、State Delta、Prompt Templates 全部同屏。

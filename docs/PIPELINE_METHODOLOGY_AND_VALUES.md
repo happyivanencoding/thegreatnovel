@@ -1,6 +1,6 @@
 # Story MVP 分层方法论与价值观
 
-> 这是“接手项目先读”文档。目标不是描述每个 API，而是解释为什么系统要分这些层、每层负责什么创造性责任、什么问题应该在哪一层修，以及哪些方向是产品明确不希望退化成的东西。
+> 项目执行规则的唯一长期权威是根目录 `PROJECT_RULES.md`。本文只解释系统为什么这样分层、每层负责什么创造性责任、问题应在哪一层修，以及哪些方向明确不希望退化成。
 
 ## 1. 一句话理解整个系统
 
@@ -21,6 +21,10 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 判断一个修复是不是系统修复，先问：**换一本完全不同的新书，这个问题还会不会重新出现？** 如果会，就不能靠某本书的 BOOK 补字段、某一章 Director 临时发明设定、Curator 改词或 Writer 兜底。应找到最早应该产生该事实的层，并在那里建立通用职责。下游可以忠实释放、选择、压缩和表达上游事实，但不能为了救当前样本创造本来应该由上游决定的世界规则。
 
 例如：读者不知道谁强、晋升到底得到什么、核心金手指遇到高层对象会不会直接越级，这不是 Chapter 4 的局部问题，而是 World Vision 没有给下游足够的 Reader-Facing World Model；连续几章用同一能力、同一对手、同一反转，则优先是 Story Program / Outline 的玩法变异问题。修复目标不是“让这本实验书下一章正常”，而是“下一本新书从零生成时自然不会再掉进同一个坑”。
+
+### 显式系统审计
+
+系统审计不是小说 production 节点。用户明确要求“审计”时，使用当前激活的 `tgn-system-steward` 做独立审计，同时由当前 ChatGPT 复核 live code / docs / artifact，再合并结论。审计区分 **Stable Principle / Current Default / Experimental Hypothesis**，优先找最早语义坍缩点；默认不因此新增常驻 Reviewer、Scorer 或 Hard Gate。具体触发与 Skill 更新规则以 `PROJECT_RULES.md` 为准。
 
 ---
 
@@ -660,14 +664,16 @@ GBrain 本身也不使用统一模型：
 
 ## 9. 接手项目时建议先看这些文件
 
-1. `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` —— 第一权威入口：分层方法论、Anti-Goals、Supporting Logic、模型职责；
-2. `docs/MVP_PRODUCT_DIRECTION.md` —— 产品目标、Fantasy-first 与作者权威边界；
-3. `docs/GBRAIN_STORY_CRAFT_V3.md` —— GBrain 知识、ON/OFF 边界、规划/蒸馏模型路由；
-4. `docs/CHAPTER_RUNTIME_AND_STATE.md` —— 当前 `curator_primary` 章节链、Canon Memory、Run Ledger 与恢复边界；
-5. `docs/NOVEL_PROSE_REALIZATION.md` —— Reader-First、Story-bearing Texture、Scene realization 与正文控制；
-6. `docs/AUTHOR_WORKSPACE_UI_SPEC.md` —— 当前作者工作台的信息架构；
-7. `src/story_mvp/prompts.py` —— 实际运行 Prompt 真源；
-8. `src/story_mvp/chapter_context.py` / `hybrid_runtime.py` —— 当前确定性上下文投影。
+1. `PROJECT_RULES.md` —— 项目执行规则唯一长期权威；
+2. `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` —— 分层方法论、Anti-Goals、Supporting Logic、模型职责；
+3. `docs/MVP_PRODUCT_DIRECTION.md` —— 产品目标与创意权威；
+4. `docs/SPLIT_CHARACTER_AUTHORITY.md` —— 当前 World / Power / Human / Character / Collision 权威边界；
+5. `docs/GBRAIN_STORY_CRAFT_V3.md` —— GBrain 知识、ON/OFF 边界、规划/蒸馏模型路由；
+6. `docs/CHAPTER_RUNTIME_AND_STATE.md` —— 当前章节链、Canon Memory、Run Ledger 与恢复边界；
+7. `docs/NOVEL_PROSE_REALIZATION.md` —— Reader-First、Story-bearing Texture、Scene realization 与正文控制；
+8. `docs/AUTHOR_WORKSPACE_UI_SPEC.md` —— 当前作者工作台的信息架构；
+9. `src/story_mvp/prompts.py` —— 实际运行 Prompt 真源；
+10. `src/story_mvp/chapter_context.py` / `hybrid_runtime.py` —— 当前确定性上下文投影。
 
 如果要修改系统，先判断问题属于“创意语义、长期结构、中层事件、单章执行、正文实现、状态记忆”中的哪一层，再动对应文件。
 

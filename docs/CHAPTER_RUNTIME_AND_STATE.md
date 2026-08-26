@@ -1,5 +1,7 @@
 # Chapter Runtime and State
 
+> 项目执行规则以根目录 `PROJECT_RULES.md` 为唯一长期权威。本文只定义章节 Runtime、Canon、State 与恢复边界。
+
 ## 定位
 
 章节 Runtime 只负责执行已经批准的故事，不重新设计长期主线。当前默认模式是 `curator_primary`：

@@ -1,5 +1,7 @@
 # Story MVP Novel Prose Realization
 
+> 项目执行规则以根目录 `PROJECT_RULES.md` 为唯一长期权威。本文只定义章节正文的表达与实现边界。
+
 ## 定位
 
 Novel Prose Realization 是 Story MVP 的章节表达合同。
@@ -215,29 +217,11 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ## 6. Pipeline Position
 
-当前默认的透明运行管线：
+当前默认章节链：
 
-`BOOK / Plan / Saved Chapters`
+`BOOK / Plan / Saved Chapters → Director → Context Curator → Primary Writer → State Extraction → Author Approval → chapter-NNNN.md`
 
-→ `Current Chapter Outline Hard Gate`
-
-→ `Director`
-
-→ `Context Curator`
-
-→ `Primary Writer`
-
-→ `0—2 个作者选择的 Specialist`
-
-→ `Revision Integrator（有有效 Patch 时）`
-
-→ `Separated Audit / State Delta`
-
-→ `Author Approval`
-
-→ `chapter-NNNN.md`
-
-`curator_primary` 默认只运行 Director → Curator → Primary → State Delta；Specialist 与 Integrator 是作者明确触发的有限修复。旧的单 Writer `chapter` Prompt 仍使用同一表达合同，但不增加第二个 Draft API，也不在章节保存后盲目重写正文。
+`curator_primary` 默认不运行 Specialist / Integrator。只有作者明确启动局部 repair 时，才在 Primary Draft 之后临时加入少量 Specialist Patch，并在确有有效 Patch 时调用 Integrator；没有有效 Patch 就保留 Primary 原文。旧兼容 Prompt 不构成新的 production 写作层。
 
 ---
 
@@ -301,7 +285,7 @@ Humanizer 区分有功能的压力累积、仪式、关系回声、情绪回响�
 
 ## Sentence Architecture
 
-Sentence Architecture 是 Writer 根据场景选择的句法关系，不是固定模板；Writer C 主要执行，Writer A/B 也应避免明显违反，且每段不必套用。
+Sentence Architecture 是 Primary Writer 根据场景选择的句法关系，不是固定模板，也不要求每段套用。
 
 - 基础行动：`锚点 → 动作 → 反应 → 条件改变`；
 - POV 推断：`观察 → 暂定解释 → 新细节 → 修正判断 → 行动`；
@@ -451,18 +435,8 @@ GBrain Story Reference Programs 继续负责故事设计，不自动变成 prose
 
 ## 13. Output Boundary
 
-最终 `chapter-NNNN.md` 只包含 Writer C 的正式小说正文。
+最终 `chapter-NNNN.md` 只保存正式小说正文：默认来自 Primary Writer；显式 repair 时若 Integrator 产生有效最终稿，则保存该最终正文。
 
-以下内容必须与正文分离：
+以下内容必须与正文分离：Audit、事实摘要、repair notes、字符/token 统计、运行 metadata 与 provenance。
 
-- Writer A/B/C 字符数；
-- SUBAGENT_MODE；
-- continuity audit；
-- prose audit；
-- repair notes；
-- 事实摘要；
-- provenance。
-
-调用方已有正文/审计分区合同时，Skill 必须遵守现有合同，不另建第二套格式。
-
-本层不自动写 BOOK，不自动批准章节，不自动覆盖已有章节。
+调用方已有正文/审计分区合同时，继续遵守现有合同，不另建第二套格式。本层不自动写 BOOK，不自动批准章节，也不自动覆盖已有章节。

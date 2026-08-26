@@ -1,6 +1,6 @@
 # Story MVP 产品方向
 
-> 接手项目时先读 `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` 与 `docs/SPLIT_CHARACTER_AUTHORITY.md`。本文只定义当前产品方向、创意权威与 Anti-Goals；历史实验不自动成为当前规范。
+> 项目执行规则以根目录 `PROJECT_RULES.md` 为唯一长期权威。本文只定义当前产品方向、创意权威与 Anti-Goals；架构细节见 `docs/PIPELINE_METHODOLOGY_AND_VALUES.md` 与 `docs/SPLIT_CHARACTER_AUTHORITY.md`，历史实验不自动成为当前规范。
 
 ## 一句话产品目标
 
