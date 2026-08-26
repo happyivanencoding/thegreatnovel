@@ -255,3 +255,60 @@ This independently confirms the final shape on a second, conventional cultivatio
 - a Character Composer LLM.
 
 Those would reintroduce either symptom-level rules or the same form pressure the experiments identified.
+
+## 11. Outline block-tax follow-up
+
+After Human and Story Program were frozen, the next audit targeted the current production Outline contract rather than adding another upstream rule.
+
+### Current-contract evidence
+
+The legacy Outline block shape still required every block to answer `核心幻想推进 / 一级成长变化 / 收益与反哺 / 世界扩张`, even after Story Program had made Power and Acquisition optional per stage.
+
+On the frozen traditional cultivation Story Program:
+
+- a full current-contract Luna high Outline produced eight blocks for chapters 1–36; all 8/8 filled `一级成长变化` and all 8/8 filled `世界扩张`;
+- a focused Stage 5 single-block probe did not invent a new Power upgrade, showing Luna could resist the pressure when the upstream no-Power stage was explicit;
+- a harder Stage 5 three-block probe exposed the actual failure: all 3/3 blocks still filled `一级成长变化`, but with non-Power material such as clearer identity boundaries, more explicit negotiation, or willingness to own a failed trade-off. Character maturation was being relabeled as first-tier growth solely because the form demanded an answer;
+- `世界扩张` similarly drifted into institutional position / political access even when no new geography, power tier or world layer had opened.
+
+This is semantic form pressure even when it does not fabricate a literal new skill.
+
+### Block Delta A/B
+
+Holding the same Stage 5 facts fixed, the block contract was changed to:
+
+- concrete Story Anchors;
+- one `主要阅读兑现`;
+- `Block Delta` containing only dimensions that actually changed relative to the start of that block;
+- optional cost/aftermath;
+- causal handoff to the next block.
+
+Allowed Delta dimensions mirror the Story Program vocabulary: `Power / Capability`, `Possession`, `Relationship`, `Identity / Access`, `Knowledge`, `Enemy State`, `World State`.
+
+Result on the same three Stage 5 blocks:
+
+- block 1: Relationship + Knowledge only;
+- block 2: Enemy State + Knowledge only;
+- block 3: Possession + Relationship + Identity / Access + World State;
+- no Power Delta was invented in any block;
+- the real high-value acquisition (the no-expiry cultivation continuation) still arrived where the approved story actually caused it.
+
+A fidelity control on Stage 2, where the approved Program truly contains Foundation breakthrough, preserved the real growth: the breakthrough block correctly emitted `Power / Capability`, formal cultivation method possession, relationship change and enemy-state change. The preceding block, which had no breakthrough, did not invent one.
+
+### Production revalidation
+
+After moving production Outline to the actual-only Delta contract, a fresh Luna high run on the frozen traditional inputs completed in 227.821s and produced one valid Outline (8657 text chars).
+
+The model naturally chose only two blocks for the current executable window, chapters 1–20, rather than mechanically filling a target block count:
+
+- block 1 records the real `引灵 + 双股真元` Power change;
+- block 2 records the real `筑基 + 御剑时并行施法` Power change;
+- no micro-upgrade fields or per-block world-expansion fields exist anymore.
+
+Together with the Stage 5 focused A/B, this validates both sides of the contract: **real approved growth is preserved when it happens; no-growth blocks are allowed to remain no-growth.**
+
+Final Outline invariant:
+
+> **Outline is Story Program execution, not rescheduling. Growth is longitudinal, not a per-block or ten-chapter tax.**
+
+No new Agent, scorer, reviewer, Hard Gate or LLM call was added.

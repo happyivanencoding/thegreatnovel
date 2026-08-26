@@ -944,8 +944,10 @@ def test_outline_template_requests_executable_prose_profile() -> None:
     assert "内部因果必须可信，但可信不等于现代程序真实" in template
     assert "核心幻想、力量占有欲、主角欲望" in template
     assert "代价或余波（可选）" in template
-    assert "本批核心幻想兑现" in template
+    assert "Block Delta" in template
+    assert "相对本块开始" in template
     assert "不要求每章都成长或结算" in template
+    assert "本批核心幻想兑现" not in template
 
 
 def test_approved_chapter_gets_correct_numbered_markdown_file(tmp_path: Path, monkeypatch) -> None:
@@ -1104,7 +1106,8 @@ def test_review_prompt_discusses_growth_loop_variation() -> None:
     )
     assert "本书成长基因图" in prompt
     assert "核心幻想是否仍在兑现" in prompt
-    assert "一级成长是否仍是主轴" in prompt
+    assert "长期成长承诺是否仍在轨" in prompt
+    assert "不要求最近十章必须升级" in prompt
     assert "幻想盈余是否为正" in prompt
     assert "冲突是否过度理性化" in prompt
     assert "世界是否被程序化" in prompt
@@ -1126,34 +1129,32 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
         assert heading in prompt
     assert "## 0. 本书成长基因图" in prompt
     assert "已批准幻想不变量" in prompt
-    assert "主角核心欲望与超越" in prompt
-    assert "一级成长主轴" in prompt
-    assert "核心优势阶段升格" in prompt
-    assert "主循环" in prompt
+    assert "已批准长期成长兑现" in prompt
+    assert "已批准长期后果" in prompt
+    assert "数量由 Power growth grammar 与 Story Program 决定" in prompt
+    assert "至少说明三次" not in prompt
     assert "成本节奏" in prompt
     assert "POWER_BREAKTHROUGH" not in prompt
-    assert "不强制每块失去或承担什么" in prompt
+    assert "Power、奖励、权限、地图都允许整块没有" in prompt
     assert "每块必须公开验证" not in prompt
-    assert "通常约 4—10 块" in prompt
+    assert "通常 3—5 个锚点只是密度参考" in prompt
     assert all(f"## {number}." in prompt for number in range(1, 13))
-    assert "完整输出当前窗口的所有剧情块" in prompt
-    assert "覆盖第1章到本窗口预计终点" in prompt
+    assert "完整输出从第1章到本窗口预计终点的所有自然剧情块" in prompt
+    assert "不用“后续类似”省略" in prompt
     assert "规划范围：预计第1—N章" in prompt
     assert "窗口终点：" in prompt
     assert "具体发生" in prompt
     assert "Outline Story Anchor Density" in prompt
-    assert "Director 可以直接执行的故事骨架" in prompt
-    assert "通常 3—5 个锚点" in prompt
-    assert "只有很短的剧情块可以 2 个" in prompt
-    assert "这只是内容密度参考，不是 Hard Gate" in prompt
-    assert "锚点是故事转折，不是场景分镜或操作步骤" in prompt
+    assert "Story Program 的执行编译层，不是第二个 Story Program" in prompt
+    assert "通常 3—5 个锚点只是密度参考" in prompt
+    assert "每个剧情块是若干会改变局势的故事转折，不是实施步骤" in prompt
     assert "提高故事确定性，不是提高施工步骤确定性" in prompt
     assert "推进、转折或结算当前剧情块中的某个故事锚点" in prompt
     assert "不要为了填章数，把一个锚点拆成连续几章" in prompt
     assert "结果 / 状态变化" in prompt
     assert "结尾推动" in prompt
     assert "第一章开篇策略" in prompt
-    assert "本批核心幻想兑现" in prompt
+    assert "本批核心幻想兑现" not in prompt
     assert "不要求每章都成长或结算" in prompt
 
 
@@ -1201,7 +1202,7 @@ def test_long_form_pacing_uses_soft_anchors_and_dynamic_outline_window() -> None
     assert "# 当前中期规划窗口" in outline
     assert "规划范围：预计第1—N章" in outline
     assert "当前中期规划窗口只展开 Story Program" in outline
-    assert "通常约 4—10 块" in outline
+    assert "完整输出从第1章到本窗口预计终点的所有自然剧情块" in outline
     assert "世界坐标与度量尺" in outline
     assert "严格的 T0 快照" in outline
     assert "第一章第一场事件发生前一刻已经真实成立的事实" in outline
@@ -2734,19 +2735,54 @@ def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None
     assert "5—7 个大型阶段若从头到尾都没有真实 Power / Capability progression" in idea
     assert "早期第一次成立、中期新玩法、高阶质变" in idea
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
-    for marker in ("### 一级成长主轴", "### 二级收益与反哺", "### 主循环", "### 成本节奏"):
+    for marker in (
+        "### 已批准长期成长兑现",
+        "### 已批准长期后果",
+        "Block Delta",
+        "Growth is a longitudinal invariant, not a per-block form requirement",
+        "Power、奖励、权限、地图都允许整块没有",
+    ):
         assert marker in outline
+    for retired in ("### 一级成长主轴", "### 二级收益与反哺", "### 主循环", "### 成本节奏"):
+        assert retired not in outline
     assert "代价或余波（可选）" in outline
-    assert "不强制每块失去或承担什么" in outline
     review = DEFAULT_PROMPT_TEMPLATES["review"]
     for marker in (
         "## 核心幻想是否仍在兑现",
-        "## 一级成长是否仍是主轴",
+        "## 长期成长承诺是否仍在轨",
         "## 幻想盈余是否为正",
         "## 冲突是否过度理性化",
         "## 世界是否被程序化",
+        "Growth is longitudinal, not a ten-chapter tax",
     ):
         assert marker in review
+
+
+def test_outline_growth_is_longitudinal_not_a_block_or_batch_tax() -> None:
+    outline = DEFAULT_PROMPT_TEMPLATES["outline"]
+    review = DEFAULT_PROMPT_TEMPLATES["review"]
+
+    assert "Outline 是 **Story Program 的执行编译层，不是第二个 Story Program**" in outline
+    assert "Block Delta" in outline
+    assert "相对本块开始" in outline
+    assert "没变化的维度直接省略" in outline
+    assert "上一块已经发生的变化不要重复包装成这一块的新 Delta" in outline
+    assert "Power、奖励、权限、地图都允许整块没有" in outline
+    assert "不要求每十章都新增 Power、奖励、权限、地图" in outline
+
+    for retired in (
+        "一级成长变化：主角本人真正多能做了什么？",
+        "收益与反哺：写本块结束后主角永久新增",
+        "世界扩张：进入什么过去无法进入的地图",
+        "本批一级成长目标：",
+        "本批实际净收益：",
+        "本批打开的新行动空间：",
+        "至少说明三次真正改变力量层级",
+    ):
+        assert retired not in outline
+
+    assert "不要求最近十章必须升级" in review
+    assert "不要求每十章都新增 Power、奖励、权限、地图" in review
 
 
 def test_growth_projection_is_three_lines_and_not_an_outline_gate() -> None:
@@ -3242,11 +3278,11 @@ def test_story_program_growth_is_longitudinal_not_a_stage_tax() -> None:
 def test_outline_theme_is_derived_and_may_remain_unset() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Action Space / Expectation Ladder / Mystery Depth / Impact" in template
-    assert "只投影到现有字段" in template
+    assert "只通过具体锚点与实际 Delta 自然显现" in template
     assert "## 11. 主题、价值观与长期问题" in template
-    assert "这里只后验总结" in template
-    assert "直接写“暂不预设”" in template
-    assert "不参与生成世界 ontology、资源体系、敌人设计、能力升格或终局" in template
+    assert "只后验总结具体人物和事件已经自然形成的倾向" in template
+    assert "没有稳定主题时直接写“暂不预设”" in template
+    assert "不得反向生成世界 ontology、资源体系、敌人设计、能力升格或终局" in template
 
 
 def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> None:
