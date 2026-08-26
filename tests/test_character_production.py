@@ -165,10 +165,10 @@ def test_human_prompt_is_power_blind_and_has_no_life_texture_input() -> None:
     assert "第二空间锚点" not in prompt
     assert "Life Texture / Human Appetite" not in prompt
     assert "Human Seed 是一个人的权威快照" in prompt
-    assert "Biography is context, not proof" in prompt
-    assert "Motive plurality" in prompt
+    assert "经历是背景，不是人格证明" in prompt
+    assert "多重动机并存" in prompt
     assert "持续牵引与互相竞争的动机" in prompt
-    assert "不要求被一个 Core Obsession 统一" in prompt
+    assert "不要求被一个单一核心执念统一" in prompt
     assert "character hook craft" in prompt
 
 
@@ -196,7 +196,10 @@ def test_collision_prompt_first_combines_full_world_and_character() -> None:
         creative_state=_approved_state(),
         gbrain_inspiration="thread collision",
     )
-    assert "Do Not Reconcile Away the Collision" in prompt
+    assert "不要把碰撞消解成命中注定的适配" in prompt
+    assert "可以补少量过去，但不要用过去证明整个人" in prompt
+    assert "不要为了人格合理化而自动悲情化" in prompt
+    assert "过去存在，不等于现在就要告诉读者" in prompt
     assert "宋甲正在追一名叛徒" in prompt
     assert "石砚想让所有人回头" in prompt
     assert "现在想找到一块会回响的石头" in prompt

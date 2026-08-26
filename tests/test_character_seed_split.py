@@ -63,9 +63,9 @@ def test_new_seed_schemas_restore_ambition_without_story_hooks() -> None:
     assert "Legendary Trajectory" not in POWER_SEED_SCHEMA
     assert "Future Legend Image" in POWER_SEED_SCHEMA
     assert "持续牵引与互相竞争的动机" in HUMAN_SEED_SCHEMA
-    assert "Biography 是生活上下文，不是人格证明" in HUMAN_SEED_SCHEMA
-    assert "Core Obsession" in HUMAN_SEED_SCHEMA
-    assert "不要求把全部人生统一成一个 Core Obsession" in HUMAN_SEED_SCHEMA
+    assert "经历是生活上下文，不是人格证明" in HUMAN_SEED_SCHEMA
+    assert "单一核心执念" in HUMAN_SEED_SCHEMA
+    assert "不要求把全部人生统一成一个单一核心执念" in HUMAN_SEED_SCHEMA
     assert "Audition Metadata（非 Canon）" in HUMAN_SEED_SCHEMA
     assert "Initial State Seed" in HUMAN_SEED_SCHEMA
     assert "named NPC" not in HUMAN_SEED_SCHEMA

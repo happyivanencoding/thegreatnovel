@@ -83,72 +83,74 @@ The protagonist is a male-oriented progression protagonist: temporary lows are a
 
 Power Seed is anonymous. Name and personal identity never belong to Power authority.
 
-## 4. Human Seed authority
+## 4. Human Seed 权威
 
-Human Seed sees only deterministic `LIFE_CONTEXT` plus Human GBrain craft. It is power-blind and Story-Opportunity-blind.
+Human Seed 只读取确定性的 `LIFE_CONTEXT` 与 Human GBrain craft；它对 Power 和已有 Story Opportunity 都保持盲态。
 
-Human generation follows:
+Human 生成遵循：
 
-`Lived Facts -> Competing Motives -> Stable Choice Bias under conflict`
+`生活事实 → 多重动机 → 冲突中的稳定选择偏向 → 具体人物关系`
 
-The Human Seed is a person snapshot, not a psychological proof. Biography provides world-conditioned life facts; it does not need to justify every later trait. Do not decide one elegant personality thesis and reverse-engineer childhood events that each prove it.
+Human Seed 是一个人的权威快照，不是人格证明论文。过去提供受世界塑形的生活事实，但不需要为后来每一个性格特征逐条作证；不要先决定一个漂亮的人格命题，再反向发明几段恰好证明它的童年。
 
-It owns:
-- initial social position and upbringing;
-- concrete lived facts;
-- several persistent private drives that may compete, reorder, or be changed by relationships;
-- Behavior Signature;
-- relationship origins;
-- relatively stable identity facts.
+它负责：
+- 初始社会位置与成长环境；
+- 具体生活事实；
+- 数股可能竞争、重排或被关系改变的长期私人动机；
+- 行为签名；
+- 重要关系原点；
+- 相对稳定的身份事实。
 
-Long-form viability does **not** require one Core Obsession or a single life philosophy. A private drive is long-form compatible when it can continue to alter choices in larger circumstances; several such drives may conflict. They do not need to turn into an accumulating business, asset, standard, decision right, authority position, or organization.
+长篇成立**不要求**一个单一核心执念或统一人生哲学。私人动机只要能在更大处境里持续改变选择，就具有长篇生产力；多股动机可以互相冲突，也不需要自动长成事业、资产、标准、决策权、权威位置或组织规模。
 
-Behavior Signature means **Stable Choice Bias + Variable Realization**: readers can learn what this person tends to protect, reject, overvalue, or pay for, while the actual tactic remains generated from current information, risk, power limits, and relationships. A specific relationship matters only when that specific person can change a real choice; equivalent usefulness is not enough.
+行为签名遵循**稳定选择偏向 + 具体实现随现场变化**：读者可以逐渐知道这个人倾向保护什么、拒绝什么、过度看重什么、愿为什么付代价，但具体手段仍由当下信息、风险、力量边界和关系重新生成。具体关系只有在“因为是这个人”而真实改变选择时才成立；同等有用不能替代。
 
-### Mutable and non-Canon boundaries
+### 可变状态与非正式事实边界
 
-`current private desire` initializes `CHARACTER_INITIAL_STATE.md`; it is not frozen in Human Core.
+`current private desire` 只初始化 `CHARACTER_INITIAL_STATE.md`，不冻结进 Human Core。
 
-`Character Hook` belongs to `CHARACTER_AUDITION.md`; it proves the candidate can be memorable without a power, but it does not bind the opening chapters and is not Canon.
+`Character Hook` 属于 `CHARACTER_AUDITION.md`，只证明候选人物在没有特殊力量时也有辨识度；它不绑定开篇章节，也不进入正式故事事实。
 
-`CHARACTER_INITIAL_STATE.md` is T0 only. Once chapters begin, the existing BOOK Canon + State Delta pipeline remains the sole running-state authority. Do not create a second long-running character-state system.
+`CHARACTER_INITIAL_STATE.md` 只表示 T0。章节开始后，已有 BOOK Canon + State Delta 链仍是唯一运行状态权威，不再创建第二套长期人物状态系统。
 
-## 5. Character composition
+## 5. Character 确定性组合
 
-`CHARACTER.md` is a deterministic merge of frozen Power Core and Human Core.
+`CHARACTER.md` 只是冻结 Power Core 与 Human Core 的确定性合并，**没有 Character Composer LLM**。
 
-There is **no Character Composer LLM**.
+不能为了让两种权威显得“本来就匹配”而补 Biography，例如：
+- 两个家，所以得到双位置能力；
+- 童年有未完成之事，所以得到未完成术法能力；
+- 从事修理，所以得到修理型超能力。
 
-Do not reconcile the two authorities by inventing biography such as:
-- two homes therefore two-position power;
-- unfinished childhood therefore unfinished-spell power;
-- repair profession therefore repair superpower.
+不协调是创作材料，不是错误。
 
-Mismatch is creative material, not an error.
+编辑任一已选 Seed 会重新打开 Character 权威并使下游 Story/Outline 失效，但不会重写 World。
 
-Editing either selected seed reopens Character authority and stales downstream Story/Outline, but does not rewrite World.
+## 6. Collision 权威
 
-## 6. Collision authority
+Story Program 是第一次允许同时看到以下内容的阶段：
+- 完整 World；
+- 完整 Character；
+- Character T0 state；
+- Story GBrain / References。
 
-Story Program is the first stage allowed to see:
-- Full World;
-- Full Character;
-- Character T0 state;
-- Story GBrain / References.
+核心合同：**不要把碰撞消解成命中注定的适配。**
 
-Core contract: **Do Not Reconcile Away the Collision.**
+World 是事实，Character 是事实。Story Program 的职责是发现二者碰撞以后会发生什么。它可以创造事件、关系、反制、后果、阶段发动机和长期推进，但不能为了主题整齐而重写任一上游权威。
 
-World is fact. Character is fact. Story Program discovers what happens when they meet. It may create incidents, relationships, counterplay, consequences, phase engines, and long-form progression, but cannot rewrite either upstream authority to make them thematically neat.
+权威与调度必须分开。Power Seed 决定成长语法——正常修炼、异常掌握、高阶质变、永久边界、传奇状态；Story Program 决定**这些已经批准的可能性在什么时候、通过什么故事因果真正成为现实**。成长是全书纵向不变量，但不要求每个大型阶段都出现新升级或新获得。
 
-Authority and scheduling are different. Power Seed owns the growth grammar—normal progression, exception mastery, high-tier mutation, permanent boundary, legendary state. Story Program owns **when and through what story causality those approved possibilities become real**. It must preserve a longitudinal male-progression invariant and periodic Core Fantasy payoff without forcing every large stage to contain a new upgrade or acquisition.
+Collision 允许为了让当前关系、局部性格反应或某次选择更自然，补充少量**非奠基性的过去经历、共同往事或旧事件**。这些过去可以解释局部质感，但不能重写 Human Core，也不能把整个人格收束成创伤因果链；不得为了人格合理化自动制造悲惨童年、背叛、虐待或重大失去。普通、愉快、尴尬、失败、欲望、争执和错过同样可以有重量。
 
-Current large-stage compilation is intentionally light: why now, who wants what, protagonist choice/action, primary reading satisfaction, `Stage Delta`, and why the next stage follows. `Stage Delta` writes only dimensions that actually changed (for example Power/Capability, Possession, Relationship, Identity/Access, Knowledge, Enemy State, World State). No dimension is mandatory per stage.
+**历史事实与历史揭示必须分开。** 这类新补的过去不得自动成为小说主线或大型阶段发动机，也不得一次性倾倒；Story Program 可以知道它存在，Outline 只在当前故事真正需要时逐步安排读者看见其中一小部分。
 
-High-Value Acquisition and Compounding remain longitudinal craft principles, not stage taxes. When an acquisition really occurs it should be desirable, actually possessed/used, and continue to affect later story; prior gains should not vanish after one arc. Neither principle requires a fixed per-stage field.
+当前大型阶段合同保持轻量：为什么现在发生、谁想要什么、主角关键选择/行动、主要阅读满足、`Stage Delta`、下一阶段为何自然发生。`Stage Delta` 只写实际发生变化的维度，例如 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State；任何维度都不是阶段必填项。
 
-Outline inherits the same authority boundary at finer resolution. It is an execution compiler for the approved Story Program, not a second Story Program. Each story block uses `Block Delta`: only dimensions that changed **relative to the start of that block** are written, and unchanged dimensions are omitted. A relationship/world-driven block may have no Power/Capability, Possession, or new-world delta at all; conversely, a Power change already scheduled by Story Program must be realized through concrete story anchors when its time arrives. Outline must not create micro-upgrades, filler rewards, permissions, or maps merely to complete a block form.
+高价值获得与纵向复利仍是全书级创作原则，不是阶段税。真实发生获得时，应当值得想要、真正被持有/使用，并继续影响后续故事；旧获得不能写完一个阶段就消失。二者都不需要固定的阶段字段。
 
-Counterplay is learned after collision; enemies are not born merely as a mechanical counter to the protagonist.
+Outline 在更细分辨率上继承同一权威边界。它是已批准 Story Program 的执行编译层，不是第二个 Story Program。每个故事块只在 `Block Delta` 中写**相对本块开始**真实改变的维度，未变化的维度省略。关系/世界驱动的块可以完全没有 Power/Capability、Possession 或新世界变化；反过来，Story Program 已安排的真实 Power 变化到时必须通过具体故事锚点发生。Outline 不得为了填满块表单制造微升级、填充奖励、新权限或新地图。
+
+反制只能在碰撞后通过学习产生；敌人不能仅仅为了机械克制主角而出生。
 
 ## 7. GBrain visibility
 

@@ -67,15 +67,15 @@ Human Seed 只看 deterministic `LIFE_CONTEXT` 与 Human GBrain craft，不看 P
 
 当前结构是：
 
-`生活事实 → competing motives → Stable Choice Bias under conflict → person-specific relationships`
+`生活事实 → 多重动机 → 冲突中的稳定选择偏向 → 具体人物关系`
 
 核心原则：
 
-- **Biography is context, not proof**：过去先作为真实生活存在，不要求每段经历逐条证明今天的人格；
-- **Motive plurality**：人物可以同时被胜负、钱、身体欲望、审美、好奇、享受、面子、亲近、自由、责任、野心、报复、归属等多股私人牵引影响，它们可以互相冲突与重新排序；
-- 不再要求一个 `Core Obsession + Excess` 解释整个人生；
-- **Stable Choice Bias + Variable Realization**：读者逐渐知道他保护什么、拒绝什么、愿为何付代价，但具体手段由现场重新生成；
-- 重要关系必须是 choice variable：因为是这个具体的人，路线、风险、时间、暴露或机会牺牲才发生变化；换成同等有用的人未必成立；
+- **经历是背景，不是人格证明**：过去先作为真实生活存在，不要求每段经历逐条证明今天的人格；
+- **多重动机并存**：人物可以同时被胜负、钱、身体欲望、审美、好奇、享受、面子、亲近、自由、责任、野心、报复、归属等多股私人牵引影响，它们可以互相冲突与重新排序；
+- 不再要求一个“核心执念 + 过量代价”解释整个人生；
+- **稳定选择偏向 + 具体实现随现场变化**：读者逐渐知道他保护什么、拒绝什么、愿为何付代价，但具体手段由现场重新生成；
+- 重要关系必须**真实改变选择**：因为是这个具体的人，路线、风险、时间、暴露或机会牺牲才发生变化；换成同等有用的人未必成立；
 - 身体吸引、情欲、虚荣、争胜、自利、反复和矛盾都可以真实存在，不自动净化成理性、负责、反控制的标准优秀人格。
 
 当前私人欲望只初始化 T0 State；Audition Hook 只用于候选辨识，不进入永久 Canon。
@@ -92,15 +92,15 @@ Story Program 是 World 与 Character 第一次同时进入一个模型上下文
 
 核心原则：
 
-> **Growth is a longitudinal invariant, not a per-stage form requirement.**
->
-> **成长是全书纵向不变量，不是每阶段必填表单。**
+> **成长是全书纵向不变量，不是每个阶段的必填项。**
 
-全书必须有清楚的成长与核心幻想兑现脊柱，Core Fantasy 也必须在多个自然阶段持续兑现；但大型阶段可以主要由三种发动机中的任意一种发动：
+全书必须有清楚的成长与核心幻想兑现脊柱，核心幻想也必须在多个自然阶段持续兑现；但大型阶段可以主要由三种发动机中的任意一种发动：
 
-- **Life**：私人欲望、具体关系、人生去留或旧后果；
-- **Fantasy**：力量、战斗、获得、探索或核心玩法真正质变；
-- **World**：世界本来就在推进、即使主角不来也会发生的事件。
+- **人生**：私人欲望、具体关系、人生去留或旧后果；
+- **幻想**：力量、战斗、获得、探索或核心玩法真正质变；
+- **世界**：世界本来就在推进、即使主角不来也会发生的事件。
+
+Collision 可以为了让当前关系、局部性格反应或某次选择更自然，补充少量**非奠基性的过去经历、共同往事或旧事件**。这些过去可以解释局部质感，但不能重写 Human Core，也不能把整个人格收束成一条创伤因果链。不要为了人格合理化自动制造悲惨童年、背叛、虐待或重大失去；普通、愉快、尴尬、失败、欲望、争执、错过同样可以有重量。**过去存在不等于现在就要告诉读者**：这类补充历史不得自动成为小说主线或大型阶段发动机，也不得一次性倾倒；Outline 只在当前故事真正需要时逐步安排读者看见其中一小部分。
 
 三者不平均配额，也不要求每阶段各打一勾。
 
@@ -115,7 +115,7 @@ Story Program 是 World 与 Character 第一次同时进入一个模型上下文
 
 Stage Delta 只写真实变化，不逐项填满。可包含 Power / Capability、Possession、Relationship、Identity / Access、Knowledge、Enemy State、World State 等；某项没变就不写。没有新能力、没有掉宝、甚至主角主动放弃直接成长收益，只要 Life / World 因果与永久结果成立，就是完整大型阶段。
 
-这并不削弱男频成长。**Power Seed = growth grammar；Story Program = growth realization through story。** Power Seed 决定正常修炼轴、Exception mastery、High-Tier Mutation、Permanent Boundary 与 Legendary Power State；Story Program 不能改写这些 authority，但必须决定这些已批准潜力在什么人物、冲突、选择和世界因果中真正变成现实。
+这并不削弱男频成长。**Power Seed 决定成长语法；Story Program 决定这些成长怎样通过故事成为现实。** Power Seed 决定正常修炼轴、异常掌握轴、高阶质变、永久边界与传奇力量状态；Story Program 不能改写这些创意权威，但必须决定这些已批准潜力在什么人物、冲突、选择和世界因果中真正变成现实。
 
 全书成长脊柱不能只写一句“以后会变强”。它必须分布在多个自然阶段，至少让早期第一次成立、中期出现更强/更不同的新玩法、高阶发生可复述质变，并写成具体事实：以前打不过谁、进不了哪里、做不到什么；现在具体能怎样战斗、移动、探索、承载或使用 Core Fantasy。5—7 个阶段如果从头到尾都只有人物/关系/世界变化而没有真实 Power / Capability progression，同样属于失败。
 
@@ -153,17 +153,17 @@ TGN 最怕的不是局部辞藻不够漂亮，而是系统结构把不同故事�
 
 这些是方向性 Anti-Goals，不是逐项 Hard Gate。发现问题时修最早语义坍缩点，不为每一个症状再新增 Reviewer。
 
-## Supporting Logic 边界
+## 支撑性逻辑边界
 
 统一准则：
 
-> **Supporting Logic Must Not Automatically Become Story Engine**
+> **支撑性逻辑不得自动成为故事发动机**
 
-- World Complexity ≠ Narrative Focus；
-- Opponent Rationale ≠ Authorial Truth ≠ Protagonist Duty；
-- Mechanism Reality ≠ Implementation Detail；
-- Ability ≠ Occupation；
-- Verification Exists ≠ Verification Is The Story。
+- 世界复杂度 ≠ 叙事焦点；
+- 对手有理由 ≠ 作品认同 ≠ 主角有义务；
+- 机制真实存在 ≠ 必须展开实施细节；
+- 能力 ≠ 职业；
+- 可以验证 ≠ 验证过程就是故事。
 
 内部因果必须可信，但只展开会改变人物选择、风险、胜负、关系或结果的部分。普通实施过程默认压缩。
 

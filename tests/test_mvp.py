@@ -331,7 +331,13 @@ def test_creative_prompt_approval_boundaries_and_outline_authority(tmp_path: Pat
     assert local_client.post("/api/books/gates/character/approve").status_code == 200
     program = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "idea"})
     assert program.status_code == 200
-    assert "Do Not Reconcile Away the Collision" in program.json()["prompt"]
+    program_prompt = program.json()["prompt"]
+    assert "不要把碰撞消解成命中注定的适配" in program_prompt
+    assert "可以补少量过去，但不要用过去证明整个人" in program_prompt
+    assert "不要为了人格合理化而自动悲情化" in program_prompt
+    assert "过去存在，不等于现在就要告诉读者" in program_prompt
+    assert "不得自动成为小说主线或大型阶段发动机" in program_prompt
+    assert "Outline 只在当前故事真正需要时逐步安排读者看见其中一小部分" in program_prompt
 
     outline_blocked = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "outline"})
     assert outline_blocked.status_code == 422
@@ -2587,7 +2593,7 @@ def test_default_prompt_templates_include_idea_mode() -> None:
     methodology_text = Path("docs/PIPELINE_METHODOLOGY_AND_VALUES.md").read_text(encoding="utf-8")
     assert "Growth Genome：整理，不创造" in methodology_text
     assert "Classic Patterns Are First-Class Citizens" in methodology_text
-    assert "Growth is a longitudinal invariant, not a per-stage form requirement" in direction_text
+    assert "成长是全书纵向不变量，不是每个阶段的必填项" in direction_text
     assert "High-Value Acquisition 不消失" in direction_text
     assert "Compounding 也不消失" in direction_text
     assert "Experiment Boundary" in direction_text
@@ -2630,7 +2636,7 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     fantasy = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
     assert "COMPOUNDING_GROWTH_DIRECTION" not in fantasy
     assert "LONG_FORM_PACING_DIRECTION" not in fantasy
-    assert "Supporting Logic Must Not Automatically Become Story Engine" not in fantasy
+    assert "支撑性逻辑不得自动成为故事发动机" not in fantasy
     assert "经营文 Decision > Implementation" not in fantasy
     assert "Narrative Appetite Before Defensive Balance" in fantasy
     assert "Seed Long-form Compounding" in fantasy
@@ -2667,9 +2673,9 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "Story Program 是“长期因果如何继续”的编译" in story_program
     assert "全书成长与核心幻想兑现脊柱" in story_program
     assert "不等于每个大型阶段都必须同时出现新能力" in story_program
-    assert "Power 可以无显著升级" in story_program
+    assert "力量可以无显著升级" in story_program
     assert "若本阶段确实发生显著成长或高价值获得" in story_program
-    assert "Compounding 是历史持续生效，不是阶段流水线" in story_program
+    assert "纵向复利是历史持续生效，不是阶段流水线" in story_program
     assert "## 不可替代的人与关系" in story_program
     assert "### 关键关系（可选）" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -2682,7 +2688,7 @@ def test_high_value_acquisition_guidance_lives_in_story_program_and_outline_only
     assert "奖励类型与出现顺序由本书因果决定" in outline
     idea = DEFAULT_PROMPT_TEMPLATES["idea"]
     assert "High-Value Acquisition / Reward Opportunity" not in idea
-    assert "High-Value Acquisition 是读者欲望原则，不是阶段字段" in idea
+    assert "高价值获得是读者欲望原则，不是阶段字段" in idea
     assert "没有自然机会时不要为了填表制造奖励" in idea
     assert "不机械掉宝或升级" in idea
     assert "High-Value Acquisition / Reward Opportunity" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
@@ -2732,7 +2738,7 @@ def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None
         assert marker in idea
     assert "### 成本节奏" not in idea
     assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in idea
-    assert "5—7 个大型阶段若从头到尾都没有真实 Power / Capability progression" in idea
+    assert "5—7 个大型阶段若从头到尾都没有真实的力量或能力成长" in idea
     assert "早期第一次成立、中期新玩法、高阶质变" in idea
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
     for marker in (
@@ -3155,13 +3161,13 @@ def test_protagonist_behavior_signature_is_fixed_upstream_and_drives_choices() -
     seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
     world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
     program = DEFAULT_PROMPT_TEMPLATES["idea"]
-    assert "Protagonist Behavior Signature" in seed
+    assert "主角行为签名" in seed
     assert "### 主角欲望人格与行为签名" in seed
     assert "不要从预设的优秀男主标签库拼人格" in seed
     assert "不自动修正成“靠谱有底线的优秀男主”" in seed
     assert "主角欲望人格与行为签名属于创意权威" in world
     assert "不能为了让主角更成熟、更合理或更容易协调多方利益" in world
-    assert "Behavior Signature 是 Stable Choice Bias + Variable Realization" in program
+    assert "行为签名 = 稳定选择偏向 + 具体实现随现场变化" in program
     assert "稳定的是选择偏向" in program
     assert "**主角的关键选择与行动：**" in program
     assert "不要自动选择长期最优、最公平或最稳妥答案" in program
@@ -3171,7 +3177,7 @@ def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose()
     seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
     world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
     program = DEFAULT_PROMPT_TEMPLATES["idea"]
-    assert "Protagonist Life Engine" in seed
+    assert "主角人生发动机" in seed
     assert "眼前目标" in seed
     assert "能力之外仍成立的人生牵引" in seed
     assert "核心优势暂时不能用" in seed
@@ -3182,15 +3188,15 @@ def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose()
     assert "世界可以明显偏向核心幻想" in world
     assert "世界被核心能力完全解释" in world
     assert "所有重要人物只为提供下一次能力用法" in world
-    assert "**Life**" in program
-    assert "**Fantasy**" in program
-    assert "**World**" in program
+    assert "**人生**" in program
+    assert "**幻想**" in program
+    assert "**世界**" in program
     assert "三者可以混合，但不平均配额" in program
-    assert "Counterplay 只能从碰撞后的学习产生" in program
-    assert "Core Fantasy 是长期 Reader Promise" in program
-    assert "让它自动成为 Protagonist Life Purpose" in program
+    assert "反制只能从碰撞后的学习产生" in program
+    assert "核心幻想是长期读者承诺" in program
+    assert "让它自动成为主角的人生使命" in program
     assert "这一阶段真正的阅读满足" in program
-    assert "Power 可以无显著升级" in program
+    assert "力量可以无显著升级" in program
     assert "下一阶段不要求更大" in program
     assert "同等有用的另一个人" in program
     assert "## 不可替代的人与关系" in program
@@ -3240,13 +3246,13 @@ def test_story_program_keeps_backstage_principles_but_outputs_concrete_acquisiti
     template = DEFAULT_PROMPT_TEMPLATES["idea"]
     assert "Story Program 是“长期因果如何继续”的编译" in template
     assert "不是每个大型阶段都缴一次升级税的表单" in template
-    assert "Growth is a longitudinal invariant, not a per-stage form requirement" in template
+    assert "成长是全书纵向不变量，不是每个阶段的必填项" in template
     assert "全书成长与核心幻想兑现脊柱" in template
     assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in template
     assert "**Stage Delta：**" in template
-    assert "Power 可以无显著升级" in template
-    assert "High-Value Acquisition 是读者欲望原则，不是阶段字段" in template
-    assert "Compounding 是历史持续生效，不是阶段流水线" in template
+    assert "力量可以无显著升级" in template
+    assert "高价值获得是读者欲望原则，不是阶段字段" in template
+    assert "纵向复利是历史持续生效，不是阶段流水线" in template
     assert "不机械掉宝或升级" in template
     assert "下一阶段不要求更大" in template
 
@@ -3255,23 +3261,23 @@ def test_story_program_growth_is_longitudinal_not_a_stage_tax() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["idea"]
 
     # A stage may be complete without a power-up or acquisition.
-    assert "Power 可以无显著升级" in template
-    assert "Possession 也可以为空" in template
+    assert "力量可以无显著升级" in template
+    assert "持有物也可以为空" in template
     assert "某个维度没有变化就不写" in template
     assert "主角一级成长：" not in template
     assert "本阶段关键获得、占有与首次使用" not in template
     assert "核心优势在本阶段怎样参与：" not in template
 
     # But the whole book must still realize observable male-progression and Core Fantasy.
-    assert "5—7 个大型阶段若从头到尾都没有真实 Power / Capability progression" in template
+    assert "5—7 个大型阶段若从头到尾都没有真实的力量或能力成长" in template
     assert "早期第一次成立、中期新玩法、高阶质变" in template
     assert "以前做不到什么 → 现在能做什么 / 能打谁 / 能去哪里" in template
-    assert "Power Seed 决定 growth grammar" in template
+    assert "Power Seed 决定成长语法" in template
     assert "Story Program 只决定这些已批准潜力在什么故事因果中真正实现" in template
 
     # Acquisition / compounding survive as longitudinal story principles, not form fields.
-    assert "High-Value Acquisition 是读者欲望原则，不是阶段字段" in template
-    assert "Compounding 是历史持续生效，不是阶段流水线" in template
+    assert "高价值获得是读者欲望原则，不是阶段字段" in template
+    assert "纵向复利是历史持续生效，不是阶段流水线" in template
     assert "它必须在后续真实改变行动、选择、敌人应对或世界局面" in template
 
 
@@ -3287,9 +3293,9 @@ def test_outline_theme_is_derived_and_may_remain_unset() -> None:
 
 def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["idea"]
-    assert "Contestable Choice" in template
+    assert "真正存在取舍、会暴露这个人是谁的选择" in template
     assert "不要自动选择长期最优、最公平或最稳妥答案" in template
-    assert "Counterplay 只能从碰撞后的学习产生" in template
+    assert "反制只能从碰撞后的学习产生" in template
     assert "不能反推敌人的出生理由" in template
 
 
