@@ -345,3 +345,20 @@ Writer 层最常见的 AI 问题不是“句子语法错误”，而是：
 - 若删掉操作过程，人物立场、世界信息和局势变化是否仍完整？
 
 如果答案说明技术问题只是为了“让主角显得有用”，应删除 Competence Filler。**观察、站队、拒绝、跟随、守住位置、提出一句判断或作出选择，本身就可以是完整而有力的主角行动。**
+
+## 26. Unresolved Long-History Facts Must Remain Unresolved
+
+正文需要完整感，不等于 Writer 获得补写旧历史的 authority。
+
+如果 Canon、Curated Context、Open Promise 或章节上下文已把某段过去标为未知、未解释、真假未定、原因未明：
+
+- 除非 Director Contract 明确批准本章新增哪一个确定事实，否则只能写当前动作、即时证据、对白措辞、感官和人物暂时判断；
+- 不得补造几十/几百章前的秘密经历、旧对话、隐藏动机、既有知识或世界机制；
+- 不得因为 Reader Orientation 需要公共背景，就顺便回答未来 reveal；
+- State Extraction 也只能记录正文真正确定的新事实。
+
+正确边界是：
+
+> **已批准的公共事实可以直接说明；未批准的历史答案必须继续未知。**
+
+审计时若正文出现 retrospective canon，先查 Director / Curator 是否错误投放了答案；若上游仍保持 unknown，而 Writer 自行补全，才判 prose authority 越界。

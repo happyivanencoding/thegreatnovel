@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.1.11
+version: 0.1.13
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -97,6 +97,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
 - High-value Reader Orientation must be distinguished from low-value repeated explanation / implementation detail
 - Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose
+- Unresolved long-history facts must remain unresolved; Reader Orientation cannot authorize retrospective canon
 - Established non-core Supporting Skill should collapse to story result, not be re-methodized on every reuse
 - Access / Reward must not be taxed by an invented qualification process when Plan already grants the opportunity
 - Low-action chapters must not invent Competence Filler just to make the protagonist look useful
@@ -146,6 +147,8 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 因此不要把“World 里写过”当成 reader knowledge：
 
 > **Reader knowledge = fact authority × release timing × runtime delivery × realization.**
+
+还要审计相反方向的 **Long-History Fact Boundary**：如果 Canon、Curated Context 或 Open Promise 已把某段过去标为未知、未解释、真假未定或原因未明，除非 Director Contract 明确让某个新事实在本章成为确定事实，否则 Writer 只能写当前动作、即时证据、对白和人物暂时判断，不得为“场景完整”补造旧经历、旧对话、隐藏动机或世界机制。已批准公共事实可以直接说明；Reader Orientation 不授权 retrospective canon。
 
 实施化也要反向追踪：如果正文出现大量排车、绑绳、诊断、制作、路线步骤，先看 Director / Curator 是否已经把方法写进“主角行动”或 `Relevant Plan`。**前文已经成立、且不是 Core Fantasy 的 Supporting Skill，后续默认只保留它造成的故事结果；只有新边界、失败或质变才重新展开方法。**
 
@@ -214,7 +217,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - 不用一组自动词频代替文学判断；
 - 不 cherry-pick 最好 candidate 证明系统成功；
 - 对可能改变人物取舍的结构机制，做 **Character Authority Invariance**：同一 A/B 至少冻结 2—3 个动机排序明显不同的 Human；Treatment 必须产生目标结构增益，同时不能把不同人物推成同一种成长最优、关系最优或道德最优路线；
-- 要证明‘Personality → Choice → Route’时，先做 **Matched Decision Point**：让不同冻结 Human 面对同一个具体诱惑/冲突/机会，先验证选择是否真的随 Human 分叉；再放开 Story Program 看长期路线。若连触发事件都同时变化，不能把长期差异纯归因于人格；
+- 要证明‘Personality → Choice → Route’时，先做 **Matched Decision Point**：让不同冻结 Human 面对同一个具体诱惑/冲突/机会，且对每个被测 Human 都至少有两个具真实私人价值、不能同时完整取得的方向；价值强弱不必相等。先验证选择是否随 Human 分叉，再放开 Story Program 看长期路线。若触发事件也变化，或未选路线的主要机会成本被隐藏奖励立即抵消，不能把长期差异纯归因于人格；
 - 允许“架构 PASS，但 candidate 3 不好”这种健康结果；
 - 明确区分 PASS / DIRECTIONAL PASS / PARTIAL PASS / FAIL；
 - 记录 **What This Did Not Solve**。

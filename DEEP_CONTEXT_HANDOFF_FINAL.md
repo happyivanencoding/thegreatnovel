@@ -1072,9 +1072,11 @@ TGN 当前已将 Ruler 定义为压缩工具，而非战力数据库。
 
 同一结构机制必须在不同 Human 上保持不同选择。它成功识别了“结构更整齐但人物被改写”的失败。
 
-### 9.10 Matched Decision Point：已加入 Steward v0.1.11
+### 9.10 Matched Decision Point + Long-History Fact Boundary：Steward v0.1.13
 
-Skill lint、package validate、安装、激活及 smoke 均通过。Smoke 正确把“不同 Human + 不同事件 → 声称人格因果成立”判为 INVALID/CONFOUNDED。
+v0.1.11 已建立 Matched Decision Point；v0.1.12 进一步要求决策点对每个被测 Human 至少有两个真实有价值、不能同时完整取得的方向，并保留未选路线的主要机会成本，不能用隐藏奖励立即抵消。同时把 Long-History Fact Boundary 纳入正式审计：公共事实可以说明，未知旧史不能由 Writer 补造。
+
+Skill lint、package validate、安装、激活及双案例 smoke 均通过：旧史被 Writer 补成确定事实被判 FAIL / authority breach；选择虽分叉但机会成本被更强隐藏奖励完全抹平，被判 INVALID / CONFOUNDED。
 
 ### 9.11 私人匿名原型 selector：已 production 验证
 
