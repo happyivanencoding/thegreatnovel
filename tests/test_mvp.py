@@ -2697,6 +2697,9 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "State Advance After Proof / Choice → Consequence" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Context-Triggered Orientation" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "动作先制造读者问题" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Orientation 占用的是解释预算，不是事件预算" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不能为了先介绍世界新增 Prelude 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "十章批次不是把当前剧情块拉长到十章的配额" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Plot Pace ≠ Tier Pace" in story_program
     assert "Plot Pace ≠ Tier Pace" in DEFAULT_PROMPT_TEMPLATES["review"]
     assert "主人公连续升格" in story_program

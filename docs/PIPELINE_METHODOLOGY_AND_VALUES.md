@@ -361,9 +361,9 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
 - **Story Program execution, not rescheduling**：Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势成长、后续新 Asymmetry 获得与复合；Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略；
 - **Block Delta**：每块只记录相对本块开始真实改变的 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State，没变化的维度省略，上一块已经发生的变化不能重复包装成新 Delta；
-- **World Model Release / Context-Triggered Orientation**：作者知道 World Vision 不等于读者知道。开篇除强弱、身份、价值与能力边界外，还建立最低安全 / 社会 / 移动坐标；新势力、地点、资源、身份或生活方式第一次真正影响选择时，让动作先制造问题，再调度 1—3 条已批准世界事实回答“是什么 / 为什么重要 / 普通人怎么看”，随后回到动作。允许短直接旁白，不做百科；
+- **World Model Release / Context-Triggered Orientation**：作者知道 World Vision 不等于读者知道。开篇除强弱、身份、价值与能力边界外，还建立最低安全 / 社会 / 移动坐标；新势力、地点、资源、身份或生活方式第一次真正影响选择时，让动作先制造问题，再调度 1—3 条已批准世界事实回答“是什么 / 为什么重要 / 普通人怎么看”，随后回到动作。Orientation 只占解释预算，不新增 Prelude 章、不延迟第一章既定 payoff；允许短直接旁白，不做百科；
 - **Ruler = Compression**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落；
-- **State Advance After Proof / Choice → Consequence**：一个问题经动作结果与一次足够校准成立后，不再把换证据证明同一结论规划成独立 beat；社会确认只有改变机会、敌意、关系、身份、资源或行动入口时才继续。重大选择的选项与主要代价清楚后尽快做出，让后续篇幅进入选择造成的新局面；不做每章状态变化配额；
+- **State Advance After Proof / Choice → Consequence**：一个问题经动作结果与一次足够校准成立后，不再把换证据证明同一结论规划成独立 beat；社会确认只有改变机会、敌意、关系、身份、资源或行动入口时才继续。重大选择的选项与主要代价清楚后尽快做出，让后续篇幅进入选择造成的新局面；十章批次不是拉长当前剧情块的配额，块完成就进入相邻块；不做每章状态变化配额；
 - **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价；
 - **Reader Experience Projection**：Action Space / Expectation Ladder / Mystery Depth / Impact 仍作为后台阅读体验坐标，但通过具体故事锚点和实际 Delta 自然显现，不再要求每块或每十章分别填写“一级成长 / 净收益 / 新行动空间 / 世界扩张”；
 - **Theme Is Derived**：`## 11. 主题、价值观与长期问题` 只后验总结已经由人物、欲望、世界与事件自然形成的主题；没有稳定主题时允许“暂不预设”，不得反向决定世界 ontology、资源、敌人、能力升格或终局。
