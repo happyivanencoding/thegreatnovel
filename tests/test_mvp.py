@@ -2703,6 +2703,7 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "不新增 Prelude / Setup 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "该章实际事件中自然被触发" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "揭晓章之前**不得进入 Release Map**" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不能单独充当生活世界定向" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "十章批次不是把当前剧情块拉长到十章的配额" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "新书第1章不得是纯 Setup" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Opening Orientation 只能嵌在同章动作中" in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -2712,8 +2713,22 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "他已经不是原来那个位置的人了" in story_program
     assert "主人公连续升格" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "主人公连续升格" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "不默认新受众全知主角全部旧战绩/底牌" in story_program
+    assert "最低充分的新事实出现后" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "成熟第二幻想轴" in story_program
+    assert "即使完全不反哺主战力" in story_program
+    assert "成熟第二幻想轴" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "成熟第二幻想轴" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "可判定兑现债务" in story_program
+    assert "普通 Open Promise 不需要全部债务化" in story_program
+    assert "可判定兑现债务" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "可判定兑现债务" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "成熟第二幻想轴" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    assert "可判定兑现债务" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
     assert "主人公连续升格" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
     assert "主人公连续升格" not in primary_ruler
+    assert "成熟第二幻想轴" not in primary_ruler
+    assert "可判定兑现债务" not in primary_ruler
     curator_orientation = generate_prompt(
         mode="context_curator",
         template="",

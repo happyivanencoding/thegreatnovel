@@ -99,9 +99,11 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - **非对称优势显露本身可以是爽点**：首次显露新优势、新层级或意外复合时，若现场有人见证，用已有懂行者/对手/同伴的短反应完成超标比较与惊讶；不凭空加围观者、不反复群体吹捧。只有重新估价会改变后续行动或关系时才让态度转变进入剧情，否则惊讶/确认后即可停止。
 - **世界前台尺是长期读者坐标，也是信息压缩器**：力量、战绩、价值、天赋/适配、技熟、装备、排名、身份与世界层级都可作尺；当前事件碰到哪把就校准哪把。World 对当前常用少数档位/价值对象提供 1—2 个可感知 benchmark；下游优先用一次已批准比较替代多轮验证，不临时发明冲突标准，也不建战力数据库。
 - **Proof 后推进 State**：一个事实经动作结果 + 一次足够 ruler 校准成立后，不换证据继续证明；社会确认只在改变机会、敌意、关系、身份、资源或行动时继续。重大选择的选项与代价已清楚后尽快选择，让后续篇幅进入 Consequence；Supporting Skill 只保留足以改变判断的关键细节，决定后的普通实施默认压缩。
-- **Approved World Vision 是章节期一等世界事实权威**：BOOK §2 只是故事摘要，不能替代 World。Runtime 将 World Vision 确定性裁成不含 named 大事件 / 未解谜底的 `WORLD AUTHORITY`；Outline 用 `Reader Release Map` 只保存当前规划窗口里 timing-sensitive、且与该章实际事件相交的首次世界事实释放（不是每章 KPI）；未来仍作为 reveal 的答案不得提前进入 Map。Chapter Runtime 按章确定性读取并从 WORLD AUTHORITY bounded prefetch；Curator 只筛选/压缩，Writer 只表达、不自行选择或补造世界事实。高价值 Orientation 可以用短直接旁白，但不做百科、Prelude 或 Reader State 数据库。
+- **Approved World Vision 是章节期一等世界事实权威**：BOOK §2 只是故事摘要，不能替代 World。Runtime 将 World Vision 确定性裁成不含 named 大事件 / 未解谜底的 `WORLD AUTHORITY`；Outline 用 `Reader Release Map` 只保存当前规划窗口里 timing-sensitive、且与该章实际事件相交的首次世界事实释放（不是每章 KPI）；未来仍作为 reveal 的答案不得提前进入 Map。Chapter Runtime 按章确定性读取并从 WORLD AUTHORITY bounded prefetch；Curator 只筛选/压缩，Writer 只表达、不自行选择或补造世界事实。高价值 Orientation 可以用短直接旁白，但不做百科、Prelude 或 Reader State 数据库；开篇生活定向与 Ruler 分工，单纯“无境界 / 打不过敌人”不能替代安全、生活或社会坐标。
 - **Plot Pace ≠ Tier Pace**：事件、关系、发现、敌人策略、获得和玩法可以快速推进，但不因此自动升境界/等级；同一层级仍有丰富故事空间时允许承载多个完整剧情块，保持长期力量尺纵深。
-- **主人公连续升格，不是字段变化集合**：长期应让主角不断进入第一章时没有资格进入的力量层、人物圈层、世界层、真相层与选择层，并尽量形成“力量/身体变化 → 被重新估价 → 新关系/身份/入口 → 新世界与新认知 → 新欲望/敌人/选择 → 再成长”的因果螺旋；不逐阶段填 KPI，同一等级可以充分生活，不用升阶替代升格。
+- **主人公连续升格，不是字段变化集合**：长期应让主角不断进入第一章时没有资格进入的力量层、人物圈层、世界层、真相层与选择层，并尽量形成“力量/身体变化 → 被重新估价 → 新关系/身份/入口 → 新世界与新认知 → 新欲望/敌人/选择 → 再成长”的因果螺旋；进入新圈层时，新人物只按自己真实知道的旧名声/战绩/底牌先判断，再因最低充分的新事实分别更新待遇、敌意或合作，不默认全知也不靠降智轻视；不逐阶段填 KPI，同一等级可以充分生活，不用升阶替代升格。
+- **专业/副职只有本身就是强者幻想时才升格为第二幻想轴**：应有独立可比较的强弱、真正顶层人物、可见胜负/作品、稀有成果与社会价格；普通实施仍压缩，是否投入由 Human 决定，不给每本书强塞副职。
+- **少量长期承诺可以成为可判定兑现债务**：具体对象 + 至少一个可观察结算条件，让读者知道离结账还有多远；不把所有 Open Promise 债务化，不机械倒计时，也不保证主角一定赴约、追回或获胜。
 - 长篇应保留**震撼式长期重释**：重要旧事实在后续出现足够意外、回看又成立的新解释，并立刻改变力量、身份、关系或世界格局；不强制隐藏身世，也不做每阶段配额。
 - 正文：**Story-bearing Texture > Decorative Density**；克制但不干，丰富但不腻。
 - 不为治理化、工程化、蓝领职业化、过度验证分别新增 Reviewer / Agent / Scorer / Hard Gate。
@@ -115,6 +117,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - 至少记录：质量、工程/程序化倾向、Plot Engine、人物自主性、合同稳定性、tokens、wall-clock、credits/成本。
 - 结论区分 PASS / DIRECTIONAL PASS / PARTIAL PASS / FAIL / INVALID，并记录 **What This Did Not Solve**；单本书或单个 candidate 不直接升级为 production 结论。
 - 快速大规模 A/B 可用 Terra high，但不替代默认高质量规划路由。
+- **Character Authority Invariance**：凡结构机制可能改变主角取舍，默认用至少 2—3 个动机排序明显不同的冻结 Human 做同一 A/B；Treatment 除了产生目标结构增益，还必须保留 Human-specific 选择差异。若不同 Human 被推成同一种“成长最优/关系最优/道德最优”路线，即使结构更整齐也判失败或降级。
 
 ## 9. Docs 自动维护
 

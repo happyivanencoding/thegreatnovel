@@ -82,7 +82,7 @@ OUTLINE_FANTASY_PROOF_RULE = """Outline Fantasy Proof（软规划原则，不新
 
 OUTLINE_WORLD_MODEL_RELEASE = """Outline World Model Release（Reader Release Scheduler；不新增 Agent、Reader State 数据库或 Hard Gate）：Approved World Vision 决定世界事实；Outline 决定**哪些事实的首次释放时机值得被显式保存**。
 
-在 `## 2. 世界观结构` 内维护一个很短的 `### Reader Release Map`。它不是每章 KPI，也不要求覆盖所有世界设定；只记录当前规划窗口里 timing-sensitive 的首次释放，例如开篇最低生活世界模型、第一次真正进入外部世界、重要势力/地点/身份/资源首次影响选择。每条必须写**具体已批准且在该章实际事件中自然被触发的 World fact**，不能只写“介绍白角部 / 建立世界观 / 解释商队”。不要把尚未发生的旅行事实提前塞进开篇；事实第一次真正改变当前行动时再释放。格式固定为 `- 第N章｜触发：具体 World fact`；同一章最多 1—3 条，绝大多数章节可以没有。若 Future 10 / 当前剧情块把某个答案安排成后续发现、重释或 reveal，则该答案在揭晓章之前**不得进入 Release Map**，即使 World Vision 已经知道；只能释放不会回答该谜题的公共背景。若 World Vision 没有某项事实，也不准为了 Release Map 临时补造。named 未解谜底与尚未揭晓原因继续保持未知。开篇若处于陌生世界，至少保存一条非战力的生活世界定向，但它也必须与第一章实际事件相交；不要为了“开篇定向”提前释放尚未发生的旅行、势力或地点事实。
+在 `## 2. 世界观结构` 内维护一个很短的 `### Reader Release Map`。它不是每章 KPI，也不要求覆盖所有世界设定；只记录当前规划窗口里 timing-sensitive 的首次释放，例如开篇最低生活世界模型、第一次真正进入外部世界、重要势力/地点/身份/资源首次影响选择。每条必须写**具体已批准且在该章实际事件中自然被触发的 World fact**，不能只写“介绍白角部 / 建立世界观 / 解释商队”。不要把尚未发生的旅行事实提前塞进开篇；事实第一次真正改变当前行动时再释放。格式固定为 `- 第N章｜触发：具体 World fact`；同一章最多 1—3 条，绝大多数章节可以没有。若 Future 10 / 当前剧情块把某个答案安排成后续发现、重释或 reveal，则该答案在揭晓章之前**不得进入 Release Map**，即使 World Vision 已经知道；只能释放不会回答该谜题的公共背景。若 World Vision 没有某项事实，也不准为了 Release Map 临时补造。named 未解谜底与尚未揭晓原因继续保持未知。开篇若处于陌生世界，至少保存一条非战力的生活世界定向，但它也必须与第一章实际事件相交；**“普通人没有境界 / 打不过当前敌人”只属于 Ruler，不能单独充当生活世界定向**。生活定向至少回答一项安全边界、普通生活、社会位置或当前场景怎样连接更大世界。不要为了“开篇定向”提前释放尚未发生的旅行、势力或地点事实。
 
 Chapter Runtime 会按章节确定性读取这张 Map，再从 `WORLD AUTHORITY` 取对应事实；因此 Curator / Writer 不再负责猜“这章应该介绍猎墙、猎阶还是别的东西”。Opening Orientation 与 Ruler 分工：前者让读者知道自己身处怎样的生活世界，后者告诉读者强弱/价值/身份差距。两者都嵌在本来就要发生的事件里，不新增 Prelude / Setup 章，也不推迟第一章 Core Fantasy payoff。"""
 
@@ -96,7 +96,11 @@ OUTLINE_STORY_ANCHOR_DENSITY_RULE = """Outline Story Anchor Density（软规划�
 
 PLOT_PACE_TIER_PACE_DIRECTION = """Plot Pace ≠ Tier Pace（Story Program 长篇节奏原则，不新增阶段字段或升级配额）：故事事件、关系、发现、敌人策略、世界入口、高价值获得和玩法可以快速推进，但不因此同步快速消耗境界/等级主尺。一个仍有丰富对手、武技、装备、关系、探索、越级战与优势复合空间的层级，可以承载多个完整故事块；不要用“进入新阶段”自动触发升一阶或数阶，也不要把境界提升当作证明剧情有进展的默认手段。只有已批准成长因果真正成熟、当前层级的能力与风险边界已被故事充分使用时才自然升档；不规定固定章数。目标是**微观故事快、宏观力量尺有纵深**。"""
 
-PROTAGONIST_ASCENSION_TRAJECTORY = """主人公连续升格（长篇软原则，不新增字段、KPI 或 Hard Gate）：长篇成长的目标不只是让主角数值越来越强，而是让他不断进入第一章的自己原本没有资格进入的**力量层、人物圈层、世界层、真相层与选择层**，使读者持续感到“他已经不是原来那个位置的人了”。这些不是平行清单，而应尽量互相咬合成因果螺旋：力量/身体或新优势让更高层人物重新估价 → 新身份/关系/入口让他接触更大的世界与更深事实 → 新事实与关系产生新的欲望、敌人和代价 → 他获得过去没有资格作出的选择 → 再推动下一轮成长。不要逐阶段填满这些维度；同一境界/等级若仍有丰富的被看见、被轻视、被邀请、被研究、关系变化、世界入口、装备/技法与认知重释，就让主角在这个位置真正生活一段故事，而不是用升阶替代升格。认知升格尤其允许旧人物、旧物、旧事件与世界解释在后续获得更大分量，但不强制隐藏身世或把所有未知并成一个幕后真相。"""
+PROTAGONIST_ASCENSION_TRAJECTORY = """主人公连续升格（长篇软原则，不新增字段、KPI 或 Hard Gate）：长篇成长的目标不只是让主角数值越来越强，而是让他不断进入第一章的自己原本没有资格进入的**力量层、人物圈层、世界层、真相层与选择层**，使读者持续感到“他已经不是原来那个位置的人了”。这些不是平行清单，而应尽量互相咬合成因果螺旋：力量/身体或新优势让更高层人物重新估价 → 新身份/关系/入口让他接触更大的世界与更深事实 → 新事实与关系产生新的欲望、敌人和代价 → 他获得过去没有资格作出的选择 → 再推动下一轮成长。进入新圈层时，不默认新受众全知主角全部旧战绩/底牌，也不为了重演打脸而让所有人无脑轻视；不同人物只按自己真实可知的旧名声、公开战绩、身份与已暴露能力先做判断，最低充分的新事实出现后，再分别更新待遇、敌意、合作、招揽或挑战规格。不要逐阶段填满这些维度；同一境界/等级若仍有丰富的被看见、被轻视、被邀请、被研究、关系变化、世界入口、装备/技法与认知重释，就让主角在这个位置真正生活一段故事，而不是用升阶替代升格。认知升格尤其允许旧人物、旧物、旧事件与世界解释在后续获得更大分量，但不强制隐藏身世或把所有未知并成一个幕后真相。"""
+
+SECONDARY_FANTASY_AXIS_DIRECTION = """成熟第二幻想轴（Story Program / Outline / Review 软原则，不新增字段或副职配额）：职业、专业或技艺不天然只是 Supporting Logic。只有当 Approved World 已经存在一条**即使完全不反哺主战力，读者仍会想看主角把它练到顶**的强者道路——有可理解的强弱差、真正顶层人物、可见胜负或作品比较、稀有高价值成果与社会价格——它才可以在具体人物欲望支持时升格为 Secondary Fantasy Axis。普通练习、制作步骤、重复考核和实施流程继续压缩；重点写真正改变分量的作品、胜负、稀有创造、强者认可与不可替代机会。副轴可以长期停在同一等级、暂时被放下或最终不成为主角道路；是否投入、投入多深、是否为它牺牲主轴机会，必须由 Human 的具体欲望与关系决定。不要为了证明系统丰富而给每本书强塞副职。"""
+
+ADJUDICABLE_PAYOFF_DEBT_DIRECTION = """可判定兑现债务（Story Program / Outline / Review 软原则，不新增 PayoffDebt Schema）：当故事自然出现强挑战、公开承诺、期限、救人条件、比赛、赌约或其它真正值得长期追的旧债时，允许把其中**少量**做成可判定的长期牵引：有具体对象，并至少有一个读者可观察的结算条件，例如时间窗口、场域/事件、资格条件或明确结果。它的作用是让读者知道“离结账还有多远”，不是把全书变成倒计时；中间仍可由关系、世界事件、其它欲望与机会改路。债务可以错过、失效、延期、输掉或被人物主动放弃，不保证主角追回或获胜；普通 Open Promise 不需要全部债务化。"""
 
 PLOT_ENGINE_DIVERSITY_DIRECTION = """Plot Engine Diversity：同一个强主循环可以长期复用，但相邻剧情块不能只是更换地图、货物、任务名或对手名字后重复同一种发动方式。判断整体故事时，优先让目标性质、对手行动方式、冲突来源、主角必须做的关键决定、核心优势的使用方式、兑现形态或世界后果发生至少一种真正有故事意义的变化。不要把这个原则实现成逐项打勾；变化已经足以产生不同阅读体验时就正常推进。尤其避免长期退化为“接到问题 → 分析规则 → 按步骤解决 → 得到结算 → 接下一个类似问题”。"""
 
@@ -850,6 +854,10 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 {PROTAGONIST_ASCENSION_TRAJECTORY}
 
+{SECONDARY_FANTASY_AXIS_DIRECTION}
+
+{ADJUDICABLE_PAYOFF_DEBT_DIRECTION}
+
 {ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
 
 主角必须长期真正变强，核心幻想也必须在多个自然阶段反复得到有分量、可观察的兑现；但持续成长属于**全书纵向不变量**，不等于每个大型阶段都必须同时出现新能力、新装备、新资源、新地图和一次能力演示。Power Seed 决定开局 Core Asymmetry 及其成长语法；Story Program 既负责这些已批准潜力怎样在故事中实现，也可以通过真实获得让主角后来加入新的 Power Asymmetry，并安排它们与旧优势发生复合。新增优势不是重写 Power Core：不得篡改开局 Core Asymmetry、凭空改写其 High-Tier Mutation 或绕过 Permanent Boundary。
@@ -932,6 +940,10 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {OUTLINE_STATE_ADVANCE_DIRECTION}
 
 {PROTAGONIST_ASCENSION_TRAJECTORY}
+
+{SECONDARY_FANTASY_AXIS_DIRECTION}
+
+{ADJUDICABLE_PAYOFF_DEBT_DIRECTION}
 
 {ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
 
@@ -1062,6 +1074,10 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {PLOT_PACE_TIER_PACE_DIRECTION}
 
 {PROTAGONIST_ASCENSION_TRAJECTORY}
+
+{SECONDARY_FANTASY_AXIS_DIRECTION}
+
+{ADJUDICABLE_PAYOFF_DEBT_DIRECTION}
 
 {ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
 

@@ -268,7 +268,9 @@ Story Program 是第一次同时看到完整 World 与 Character 的阶段，也
 - 新优势/新层级/意外复合首次被他人看见时，现场已有懂行者或对手的惊讶比较可以直接承担爽点；态度转变只在会改变后续行动或关系时进入长期因果；
 - Core Fantasy 必须周期性重新证明“为什么这项力量仍值得追”，但不要求每阶段升级。
 - **Plot Pace ≠ Tier Pace**：事件、关系、发现、敌人策略、获得和玩法可以快速推进；同一力量层级仍有丰富故事空间时可承载多个完整阶段，不用境界提升证明“剧情有进展”，避免过早耗尽主尺。
-- **主人公连续升格**：力量/身体、身份/关系、世界入口、认知与选择权不是平行 KPI；优先让一次成长造成更高层人物重新估价，继而打开新圈层/地点/真相，再产生新欲望、敌人与过去没有资格作出的选择。目标是让读者持续感到“他已经不是第一章那个位置的人了”；同一等级可以先真正活出新的社会位置和世界位置，再自然升阶。
+- **主人公连续升格**：力量/身体、身份/关系、世界入口、认知与选择权不是平行 KPI；优先让一次成长造成更高层人物重新估价，继而打开新圈层/地点/真相，再产生新欲望、敌人与过去没有资格作出的选择。新圈层人物只按自己真实知道的旧名声/战绩/已公开底牌先判断，再因最低充分的新事实分别更新待遇、敌意或合作，不默认全知也不靠降智轻视；同一等级可以先真正活出新的社会位置和世界位置，再自然升阶。
+- **成熟第二幻想轴**：职业/专业只有在它本身就是可欲望的强者道路时才升格——有独立强弱、顶层人物、可见胜负/作品、稀有成果与社会价格；普通实施继续压缩，是否投入由 Human 决定，不强制每书有副职。
+- **可判定兑现债务**：少量自然出现的强挑战/承诺可以保留“具体对象 + 至少一个可观察结算条件”，给长期读者明确距离感；它不是倒计时 KPI，可以错过、失效、延期、输掉或被人物主动放弃。
 
 #### 大型阶段发动机
 
@@ -361,7 +363,7 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
 - **Story Program execution, not rescheduling**：Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势成长、后续新 Asymmetry 获得与复合；Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略；
 - **Block Delta**：每块只记录相对本块开始真实改变的 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State，没变化的维度省略，上一块已经发生的变化不能重复包装成新 Delta；
-- **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实；Outline 在 `## 2. 世界观结构` 内用一个很短的 `Reader Release Map` 只保存当前窗口里 timing-sensitive、且与该章实际事件相交的首次释放，格式 `第N章｜触发：具体 World fact`，不是每章 KPI。未来仍作为 discovery / reveal 的答案不得提前排入 Map；只能先释放不回答谜底的公共背景。Chapter Runtime 按章读取，再从 WORLD AUTHORITY 取对应事实；开篇同时建立最低生活世界位置与必要 ruler，但不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
+- **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实；Outline 在 `## 2. 世界观结构` 内用一个很短的 `Reader Release Map` 只保存当前窗口里 timing-sensitive、且与该章实际事件相交的首次释放，格式 `第N章｜触发：具体 World fact`，不是每章 KPI。未来仍作为 discovery / reveal 的答案不得提前排入 Map；只能先释放不回答谜底的公共背景。Chapter Runtime 按章读取，再从 WORLD AUTHORITY 取对应事实；开篇同时建立最低生活世界位置与必要 ruler；二者分工，单纯“普通人没境界 / 打不过敌人”不算生活定向。不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
 - **Ruler = Compression**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落；
 - **State Advance After Proof / Choice → Consequence**：一个问题经动作结果与一次足够校准成立后，不再把换证据证明同一结论规划成独立 beat；社会确认只有改变机会、敌意、关系、身份、资源或行动入口时才继续。重大选择的选项与主要代价清楚后尽快做出，让后续篇幅进入选择造成的新局面；十章批次不是拉长当前剧情块的配额，块完成就进入相邻块；不做每章状态变化配额；
 - **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价；
