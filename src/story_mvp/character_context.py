@@ -177,6 +177,31 @@ def _orientation_terms(text: str) -> set[str]:
     return terms
 
 
+def _orientation_category_bonus(query: str, heading: str, paragraph: str) -> int:
+    """Prefer the kind of world fact the current scene is actually asking for."""
+
+    bonus = 0
+    if any(marker in query for marker in ("迁徙", "白角", "部族", "部落", "族群", "族人")):
+        if heading == "## 社会现实与身份" and any(
+            marker in paragraph for marker in ("部族", "族群", "共同狩猎", "交易", "冲突")
+        ):
+            bonus += 100
+    if any(marker in query for marker in ("商队", "南行", "商道", "封路", "出城", "离开", "聚落", "赶路")):
+        if heading == "## 普通人的生活与上升" and any(
+            marker in paragraph for marker in ("商队", "猎队", "聚落", "猎墙", "出城", "道路", "远行")
+        ):
+            bonus += 80
+    if any(marker in query for marker in ("猎阶", "无阶", "猎手", "猎队", "入场", "准备圈", "武馆")):
+        if any(marker in paragraph for marker in ("猎阶", "猎队", "武馆", "军府", "高阶战斗圈")):
+            bonus += 50
+    if any(marker in query for marker in ("心核", "王种", "名器", "资格", "值钱", "价值")):
+        if heading == "## 世界里真正值钱、值得想要的东西" and any(
+            marker in paragraph for marker in ("心核", "王种", "名器", "资格")
+        ):
+            bonus += 70
+    return bonus
+
+
 def project_writer_texture_context(
     world_vision: str,
     *,
@@ -203,7 +228,12 @@ def project_writer_texture_context(
         for paragraph_index, paragraph in enumerate(paragraphs):
             if fallback is None:
                 fallback = (heading, paragraph)
-            score = len(query_terms & _orientation_terms(paragraph)) if query_terms else 0
+            score = (
+                _orientation_category_bonus(relevance_text, heading, paragraph)
+                + min(len(query_terms & _orientation_terms(paragraph)), 12)
+                if query_terms
+                else 0
+            )
             candidates.append((score, -section_index, heading, paragraph))
 
     if not candidates:
@@ -211,7 +241,8 @@ def project_writer_texture_context(
 
     selected: list[tuple[str, str]] = []
     used = 0
-    if fallback is not None:
+    positive = any(score > 0 for score, *_ in candidates)
+    if not positive and fallback is not None:
         selected.append(fallback)
         used += len(fallback[0]) + len(fallback[1]) + 4
 
@@ -223,7 +254,7 @@ def project_writer_texture_context(
             continue
         selected.append((heading, paragraph))
         used += extra
-        if len(selected) >= 4:
+        if len(selected) >= 3:
             break
 
     rendered: list[str] = []

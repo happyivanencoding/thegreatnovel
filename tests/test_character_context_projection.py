@@ -154,3 +154,16 @@ def test_writer_orientation_reference_is_bounded_relevant_and_story_hook_free() 
     assert "宋照雪" not in result
     assert "沉铃泽" not in result
     assert "地下驿网" not in result
+
+def test_writer_orientation_prioritizes_current_faction_category() -> None:
+    world = WORLD.replace(
+        "世界有王朝、宗门、世家、商盟、军府。身份会受师承、城籍、军籍、商籍影响。",
+        "世界有王朝、宗门、世家、商盟、军府。荒原部族有独立训练法，也会与城镇交易或冲突。",
+    )
+    result = project_writer_texture_context(
+        world,
+        relevance_text="白角部迁徙后挡住南行商队，当前第一次真正碰到这个族群。",
+    )
+    assert "荒原部族有独立训练法" in result
+    assert "宋照雪" not in result
+    assert "地下驿网" not in result

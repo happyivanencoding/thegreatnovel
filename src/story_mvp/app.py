@@ -589,16 +589,14 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
         # Reader orientation is a bounded prose-side projection only. It never enters
         # Human Seed / Character Canon and costs no extra model call.
         if payload.mode in {"context_curator", "chapter"}:
-            relevance_text = "\n\n".join(
-                str(values.get(key, ""))
-                for key in (
-                    "current_outline",
-                    "current_chapter_plan",
-                    "current_long_block",
-                    "recent_summaries",
-                )
+            local_parts = [
+                str(values.get(key, "")).strip()
+                for key in ("current_outline", "current_chapter_plan")
                 if str(values.get(key, "")).strip()
-            )
+            ]
+            if not local_parts and str(values.get("current_long_block", "")).strip():
+                local_parts.append(str(values.get("current_long_block", "")).strip())
+            relevance_text = "\n\n".join(local_parts)
             texture = project_writer_texture_context(
                 str(values.get("world_vision", "")), relevance_text=relevance_text
             )

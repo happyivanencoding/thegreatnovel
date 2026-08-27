@@ -2718,9 +2718,12 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     )
     assert "Context-Triggered Orientation" in curator_orientation
     assert "短直接旁白不是低级解释" in curator_orientation
+    assert "Opening Strategy` 负责把这些事实真正放到可执行位置" in curator_orientation
+    assert "不是本章可重新展开的素材库" in curator_orientation
     assert "决定已经做完后的普通实施默认压缩" in director_ruler
     assert "决定已经做完后的普通实施默认一句或一个短段概括" in primary_ruler
     assert "Action creates the question → Exposition answers just enough → Action continues" in primary_ruler
+    assert "Orientation 只解释新的世界坐标" in primary_ruler
     assert "## 不可替代的人与关系" in story_program
     assert "### 关键关系（可选）" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
