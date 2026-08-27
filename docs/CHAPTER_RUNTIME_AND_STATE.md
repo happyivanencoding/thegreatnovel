@@ -12,7 +12,7 @@ Specialist / Integrator 不在默认链；只有作者明确启动局部 repair 
 
 章节 Runtime 默认不直接读取 raw GBrain。GBrain 对章节层的影响只通过已批准的 Story Program / Outline，以及离线蒸馏后的 Scene Skills 间接进入。
 
-已批准 `WORLD_VISION.md` 仍是一等世界事实权威，不由 Outline 的 `BOOK §2` 摘要替代。Runtime 会把它确定性裁成不含 named 大事件 / 未解谜底的 `WORLD AUTHORITY`；Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive 的首次释放，Runtime 按当前章读取该条目，再从 WORLD AUTHORITY 做 bounded prefetch。Director 不读取完整 World，Curator 不重做 release 选择，Primary 也不自行选择世界资料。
+已批准 `WORLD_VISION.md` 仍是一等世界事实权威，不由 Outline 的 `BOOK §2` 摘要替代。Runtime 会把它确定性裁成不含 named 大事件 / 未解谜底的 `WORLD AUTHORITY`；Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive、与该章实际事件相交的首次释放；未来仍作为 reveal 的答案不能提前排入 Map。Runtime 按当前章读取该条目，再从 WORLD AUTHORITY 做 bounded prefetch。Director 不读取完整 World，Curator 不重做 release 选择，Primary 也不自行选择世界资料。
 
 ## 节点职责
 

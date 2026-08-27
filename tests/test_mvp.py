@@ -2701,6 +2701,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "哪些事实的首次释放时机值得被显式保存" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Reader Release Map" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "不新增 Prelude / Setup 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "该章实际事件中自然被触发" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "揭晓章之前**不得进入 Release Map**" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "十章批次不是把当前剧情块拉长到十章的配额" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "新书第1章不得是纯 Setup" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Opening Orientation 只能嵌在同章动作中" in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -3385,6 +3387,8 @@ def test_outline_releases_world_model_and_varies_early_core_gameplay() -> None:
     assert "哪些事实的首次释放时机值得被显式保存" in template
     assert "### Reader Release Map" in template
     assert "具体已批准 World fact" in template
+    assert "移动事实等到人物真正离开聚落时再释放" in template
+    assert "绝不能把答案提前写入 Map" in template
     assert "Outline Core Gameplay Variation" in template
     assert "上一轮已证明有效的解法不要自动解决下一轮主要问题" in template
     assert "下一轮优先攻击它尚未解决的对象、关系、资源、目标或条件" in template

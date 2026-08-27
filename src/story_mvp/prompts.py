@@ -82,7 +82,7 @@ OUTLINE_FANTASY_PROOF_RULE = """Outline Fantasy Proof（软规划原则，不新
 
 OUTLINE_WORLD_MODEL_RELEASE = """Outline World Model Release（Reader Release Scheduler；不新增 Agent、Reader State 数据库或 Hard Gate）：Approved World Vision 决定世界事实；Outline 决定**哪些事实的首次释放时机值得被显式保存**。
 
-在 `## 2. 世界观结构` 内维护一个很短的 `### Reader Release Map`。它不是每章 KPI，也不要求覆盖所有世界设定；只记录当前规划窗口里 timing-sensitive 的首次释放，例如开篇最低生活世界模型、第一次真正进入外部世界、重要势力/地点/身份/资源首次影响选择。每条必须写**具体已批准 World fact**，不能只写“介绍白角部 / 建立世界观 / 解释商队”。格式固定为 `- 第N章｜触发：具体 World fact`；同一章最多 1—3 条，绝大多数章节可以没有。若 World Vision 没有某项事实，就不准为了 Release Map 临时补造。named 未解谜底与尚未揭晓原因继续保持未知。
+在 `## 2. 世界观结构` 内维护一个很短的 `### Reader Release Map`。它不是每章 KPI，也不要求覆盖所有世界设定；只记录当前规划窗口里 timing-sensitive 的首次释放，例如开篇最低生活世界模型、第一次真正进入外部世界、重要势力/地点/身份/资源首次影响选择。每条必须写**具体已批准且在该章实际事件中自然被触发的 World fact**，不能只写“介绍白角部 / 建立世界观 / 解释商队”。不要把尚未发生的旅行事实提前塞进开篇；事实第一次真正改变当前行动时再释放。格式固定为 `- 第N章｜触发：具体 World fact`；同一章最多 1—3 条，绝大多数章节可以没有。若 Future 10 / 当前剧情块把某个答案安排成后续发现、重释或 reveal，则该答案在揭晓章之前**不得进入 Release Map**，即使 World Vision 已经知道；只能释放不会回答该谜题的公共背景。若 World Vision 没有某项事实，也不准为了 Release Map 临时补造。named 未解谜底与尚未揭晓原因继续保持未知。开篇若处于陌生世界，至少保存一条非战力的生活世界定向，但它也必须与第一章实际事件相交；不要为了“开篇定向”提前释放尚未发生的旅行、势力或地点事实。
 
 Chapter Runtime 会按章节确定性读取这张 Map，再从 `WORLD AUTHORITY` 取对应事实；因此 Curator / Writer 不再负责猜“这章应该介绍猎墙、猎阶还是别的东西”。Opening Orientation 与 Ruler 分工：前者让读者知道自己身处怎样的生活世界，后者告诉读者强弱/价值/身份差距。两者都嵌在本来就要发生的事件里，不新增 Prelude / Setup 章，也不推迟第一章 Core Fantasy payoff。"""
 
@@ -986,7 +986,7 @@ Outline 是 **Story Program 的执行编译层，不是第二个 Story Program**
 ## 2. 世界观结构
 写当前故事真正会用到的力量尺度、地点、奇观、资源与身份差异，以及成长后能进入的更大世界；如果本书需要且对当前故事重要，再补充其它层级关系，不堆百科。
 ### Reader Release Map
-只列当前规划窗口中**首次释放时机真的重要**的少量 World facts；不是每章必填。格式：`- 第N章｜触发：具体已批准 World fact`。开篇若处于陌生世界，至少保存一条非战力的生活世界定向（若 World 有事实可用）；重要势力/地点/世界入口第一次真正影响选择时再按需添加。不能写“介绍X / 建立世界观”这种任务标签，不能发明 World Vision 没有的事实，不能提前泄露 named 未解真相。
+只列当前规划窗口中**首次释放时机真的重要**的少量 World facts；不是每章必填。格式：`- 第N章｜触发：具体已批准 World fact`。Release 必须和该章实际事件直接相交：开篇只释放当前猎市/生活真正碰到的事实，移动事实等到人物真正离开聚落时再释放；重要势力/地点/世界入口第一次真正影响选择时再按需添加。如果 Future 10 仍把某个答案安排为后续发现 / reveal，则在揭晓章之前只允许公共背景，绝不能把答案提前写入 Map。不能写“介绍X / 建立世界观”这种任务标签，不能发明 World Vision 没有的事实，不能提前泄露 named 未解真相。
 ## 3. 世界如何持续制造剧情压力
 写世界中本来就在发生、会撞上主角的具体力量差、人物欲望、势力行动、危险与争夺，不把 supporting logic 自动升格为主发动机。
 ## 4. 主角模型、人物弧与核心矛盾
@@ -2168,3 +2168,5 @@ def generate_prompt(
             parts.append(_input_block("尚未发生的 100 章方向", future_direction))
 
     return "\n\n".join(parts).strip() + "\n"
+
+
