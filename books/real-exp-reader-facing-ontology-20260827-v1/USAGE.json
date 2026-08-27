@@ -1,0 +1,211 @@
+{
+  "CROSS_POWER_R1_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 160.064,
+    "inputTokens": 21779,
+    "cachedReadTokens": 9984,
+    "outputTokens": 8662,
+    "thoughtTokens": 5383,
+    "totalTokens": 40425,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "CROSS_WORLD_R1_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 109.504,
+    "inputTokens": 21620,
+    "cachedReadTokens": 9984,
+    "outputTokens": 5825,
+    "thoughtTokens": 2489,
+    "totalTokens": 37429,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "CROSS_WORLD_R2_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 121.621,
+    "inputTokens": 7284,
+    "cachedReadTokens": 24320,
+    "outputTokens": 6499,
+    "thoughtTokens": 3073,
+    "totalTokens": 38103,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "POWER_BASELINE_RERUN_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 159.911,
+    "inputTokens": 1423,
+    "cachedReadTokens": 33536,
+    "outputTokens": 7448,
+    "thoughtTokens": 4518,
+    "totalTokens": 42407,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "POWER_FINAL_R1_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 104.507,
+    "inputTokens": 21725,
+    "cachedReadTokens": 9984,
+    "outputTokens": 5558,
+    "thoughtTokens": 2728,
+    "totalTokens": 37267,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "POWER_TREATMENT_R1_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 125.235,
+    "inputTokens": 20669,
+    "cachedReadTokens": 9984,
+    "outputTokens": 6733,
+    "thoughtTokens": 3845,
+    "totalTokens": 37386,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "POWER_TREATMENT_R2_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 130.41,
+    "inputTokens": 21571,
+    "cachedReadTokens": 9984,
+    "outputTokens": 6973,
+    "thoughtTokens": 4142,
+    "totalTokens": 38528,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "POWER_TREATMENT_V2_R1_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 144.018,
+    "inputTokens": 21701,
+    "cachedReadTokens": 9984,
+    "outputTokens": 7725,
+    "thoughtTokens": 4800,
+    "totalTokens": 39410,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "POWER_TREATMENT_V2_R2_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 93.095,
+    "inputTokens": 21701,
+    "cachedReadTokens": 9984,
+    "outputTokens": 4894,
+    "thoughtTokens": 2070,
+    "totalTokens": 36579,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "STORY_H1_TREATMENT_ACP.json": {
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 278.081,
+    "inputTokens": 34456,
+    "cachedReadTokens": 6912,
+    "outputTokens": 10210,
+    "thoughtTokens": 3106,
+    "totalTokens": 51578,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "STORY_H4_TREATMENT_ACP.json": {
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 410.545,
+    "inputTokens": 34464,
+    "cachedReadTokens": 6912,
+    "outputTokens": 14486,
+    "thoughtTokens": 7250,
+    "totalTokens": 55862,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "WORLD_BASELINE_R1_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 93.604,
+    "inputTokens": 6748,
+    "cachedReadTokens": 24320,
+    "outputTokens": 4956,
+    "thoughtTokens": 2070,
+    "totalTokens": 36024,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "WORLD_BASELINE_R2_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 154.735,
+    "inputTokens": 21084,
+    "cachedReadTokens": 9984,
+    "outputTokens": 8342,
+    "thoughtTokens": 5696,
+    "totalTokens": 39410,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "WORLD_TREATMENT_R1_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 136.929,
+    "inputTokens": 6948,
+    "cachedReadTokens": 24320,
+    "outputTokens": 7370,
+    "thoughtTokens": 4253,
+    "totalTokens": 38638,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "WORLD_TREATMENT_R2_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 154.106,
+    "inputTokens": 6948,
+    "cachedReadTokens": 24320,
+    "outputTokens": 8110,
+    "thoughtTokens": 5416,
+    "totalTokens": 39378,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "WORLD_TREATMENT_R3_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 173.5,
+    "inputTokens": 6948,
+    "cachedReadTokens": 24320,
+    "outputTokens": 9384,
+    "thoughtTokens": 6732,
+    "totalTokens": 40652,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "WORLD_TREATMENT_V2_R1_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 137.826,
+    "inputTokens": 21688,
+    "cachedReadTokens": 9984,
+    "outputTokens": 7382,
+    "thoughtTokens": 4928,
+    "totalTokens": 39054,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "WORLD_TREATMENT_V2_R2_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 176.971,
+    "inputTokens": 21688,
+    "cachedReadTokens": 9984,
+    "outputTokens": 9527,
+    "thoughtTokens": 6674,
+    "totalTokens": 41199,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  },
+  "WORLD_TREATMENT_V2_R3_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 152.766,
+    "inputTokens": 21688,
+    "cachedReadTokens": 9984,
+    "outputTokens": 8225,
+    "thoughtTokens": 4963,
+    "totalTokens": 39897,
+    "credits_or_cost": "N/A: ChatGPT-login ACP payload does not expose credits/cost"
+  }
+}

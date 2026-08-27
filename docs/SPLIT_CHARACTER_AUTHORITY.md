@@ -27,6 +27,8 @@ World Vision 负责一个即使换掉未来主角也仍值得写的世界，包�
 
 它不负责主角欲望、Biography、特殊能力、命运、第一次爽点或终局使命。完整 World Canon 可以同时包含 World Reality 与 Story Opportunities，但下游可见性不同。
 
+Reader-facing 世界规则先写具体作用，再命名：基础力量应能用 1—3 句普通话说明来源、能做什么、怎样变强和怎样失败；新词只给已经理解、会反复出现的对象贴短标签，不靠多个新词互相定义。“全新”优先改变力量因果与玩法，不要求回避境界、功法、兵器、异兽等清楚题材词。默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果；除非作者明确选择认知/概念系幻想，不把路径、定义、权限等抽象关系本身当作创新证明。
+
 ## 3. Power Seed
 
 Power Seed 只读取确定性的 `POWER_BASELINE`，不看完整 Story Opportunities，也不看 Human Biography。
@@ -35,7 +37,7 @@ Power Seed 只读取确定性的 `POWER_BASELINE`，不看完整 Story Opportuni
 
 `世界力量正常值 → Power Novelty Spark → Power Asymmetry → 核心幻想 → 长篇成长兼容`
 
-Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个“熟悉能力幻想 × 单一异常”，只负责拉开候选起点；不进入 Human / Story Program / Outline。**Spark 负责不同，不负责强。** Power Asymmetry 才负责把候选推到明显超标：来源可以是世界内稀有天赋/体质、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加，不强制先证明为世界内合法例外。每个候选最多一个主异常，必须先用一句大白话讲清；默认宁可初稿偏强一档，也不要被 LLM 自动平衡成“更方便”。至少一个维度要让同层普通人/天才明显羡慕，Permanent Boundary 防万能但不做对称成本结算；复杂玩法从简单规则与后续功法/装备/环境等复合成长中长出来。
+Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个“熟悉能力幻想 × 单一异常”，只负责拉开候选起点；不进入 Human / Story Program / Outline。**Spark 负责不同，不负责强。** Power Asymmetry 才负责把候选推到明显超标：来源可以是世界内稀有天赋/体质、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加，不强制先证明为世界内合法例外。每个候选最多一个主异常，必须先用一句大白话讲清；默认宁可初稿偏强一档，也不要被 LLM 自动平衡成“更方便”。至少一个维度要让同层普通人/天才明显羡慕，Permanent Boundary 防万能但不做对称成本结算；复杂玩法从简单规则与后续功法/装备/环境等复合成长中长出来。直接型能力的后续掌握继续扩展控制、对象、战斗复合和危险场景下的稳定使用，不反向变成结构分析、材料诊断或路线计算；Legendary / Future Legend 也不能越过 Permanent Boundary。
 
 它负责：相关正常值/稀缺度、Power Asymmetry、核心幻想、正常修炼轴、异常掌握轴、高阶质变、永久边界、传奇力量状态。
 
@@ -75,7 +77,7 @@ Story Program 是第一次同时看到完整 World、完整 Character、T0 State
 
 核心合同：**不要把碰撞消解成命中注定的适配。** World 与 Character 都是既定事实；Story Program 负责它们碰撞后的事件、关系、反制、后果、阶段发动机与长期因果，不能为主题整齐重写上游。
 
-权威与调度分开：Power Seed 决定开局 Core Asymmetry 的成长语法；Story Program 决定它怎样实现，并可通过真实获得加入新的 Power Asymmetry、让新旧优势发生复合。**成长是全书纵向不变量，不是每阶段升级税。**
+权威与调度分开：Power Seed 决定开局 Core Asymmetry 的成长语法；Story Program 决定它怎样实现，并可通过真实获得加入新的 Power Asymmetry、让新旧优势发生复合。后续新 Asymmetry 继承同一 Reader-facing 边界：先写“以前做不到什么、现在具体多能做什么”，再决定是否需要短名；新名只压缩已经理解的能力。**成长是全书纵向不变量，不是每阶段升级税。**
 
 Collision 可以补少量**非奠基性的过去经历、共同往事或旧事件**，让当前关系、局部性格反应或选择更自然，但：
 
