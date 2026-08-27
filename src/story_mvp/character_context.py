@@ -154,35 +154,91 @@ def project_story_opportunity_layer(world_vision: str) -> str:
             parts += ["", "## Named Unresolved Mysteries", mysteries]
     return "\n".join(parts).strip() + "\n"
 
-_WRITER_TEXTURE_SECTIONS = (
+_WRITER_ORIENTATION_SECTIONS = (
     "## 普通人的生活与上升",
     "## 社会现实与身份",
     "## 世界里真正值钱、值得想要的东西",
 )
 
 
-def project_writer_texture_context(world_vision: str, *, max_chars: int = 1400) -> str:
-    """Project a tiny, non-authoritative world texture reference for Curator/Writer.
+def _orientation_terms(text: str) -> set[str]:
+    terms: set[str] = set()
+    for token in re.findall(r"[A-Za-z0-9_]{3,}|[\u4e00-\u9fff]{2,}", text.casefold()):
+        if re.fullmatch(r"[\u4e00-\u9fff]+", token):
+            if len(token) <= 8:
+                terms.add(token)
+            for width in (2, 3):
+                if len(token) >= width:
+                    terms.update(token[index : index + width] for index in range(len(token) - width + 1))
+        else:
+            terms.add(token)
+    if any(marker in text for marker in ("迁徙", "族人", "族群", "部落", "部族")):
+        terms.update({"部族", "荒原部族"})
+    return terms
 
-    This is deliberately not Human Seed input. It may only help prose occasionally
-    ground an already planned scene in ordinary world life. It cannot create Canon,
-    a new character motive, or a new story hook.
+
+def project_writer_texture_context(
+    world_vision: str,
+    *,
+    relevance_text: str = "",
+    max_chars: int = 1800,
+) -> str:
+    """Project bounded approved world facts for Curator/Writer orientation.
+
+    This is deliberately not Human Seed input and excludes named Story Opportunity
+    sections. It can orient an already planned scene but cannot create Canon, a new
+    character motive, a hidden cause, or a new story hook.
     """
 
-    blocks = [
-        block
-        for heading in _WRITER_TEXTURE_SECTIONS
-        if (block := _section(world_vision, heading))
-    ]
-    if not blocks:
+    candidates: list[tuple[int, int, str, str]] = []
+    query_terms = _orientation_terms(relevance_text)
+    fallback: tuple[str, str] | None = None
+    for section_index, heading in enumerate(_WRITER_ORIENTATION_SECTIONS):
+        block = _section(world_vision, heading)
+        if not block:
+            continue
+        lines = block.splitlines()
+        body = "\n".join(lines[1:]).strip()
+        paragraphs = [part.strip() for part in re.split(r"\n\s*\n", body) if part.strip()]
+        for paragraph_index, paragraph in enumerate(paragraphs):
+            if fallback is None:
+                fallback = (heading, paragraph)
+            score = len(query_terms & _orientation_terms(paragraph)) if query_terms else 0
+            candidates.append((score, -section_index, heading, paragraph))
+
+    if not candidates:
         return ""
-    text = "\n\n".join(blocks).strip()
-    if len(text) > max_chars:
-        text = text[:max_chars].rsplit("\n", 1)[0].rstrip() + "…"
+
+    selected: list[tuple[str, str]] = []
+    used = 0
+    if fallback is not None:
+        selected.append(fallback)
+        used += len(fallback[0]) + len(fallback[1]) + 4
+
+    for score, _, heading, paragraph in sorted(candidates, key=lambda item: (-item[0], item[1])):
+        if score <= 0 or (heading, paragraph) in selected:
+            continue
+        extra = len(heading) + len(paragraph) + 4
+        if used + extra > max_chars:
+            continue
+        selected.append((heading, paragraph))
+        used += extra
+        if len(selected) >= 4:
+            break
+
+    rendered: list[str] = []
+    last_heading = ""
+    for heading, paragraph in selected:
+        if heading != last_heading:
+            rendered.append(heading)
+            last_heading = heading
+        rendered.append(paragraph)
+    text = "\n\n".join(rendered).strip()
     return (
-        "# Optional World-Life Texture Reference｜Writer-side only\n"
-        "只在当前场景自然需要时，从以下已批准世界事实里偶尔投影 0—1 个生活性细节。"
-        "它只是点缀：不得建立新规则、新人物欲望、新剧情义务或长期 Canon，也不要求每章使用。\n\n"
+        "# Optional Reader Orientation Reference｜Writer-side only\n"
+        "以下只是从已批准 World Vision 中按当前章相关性确定性抽出的安全世界事实。"
+        "当本章第一次真正碰到重要地点、势力、身份、价值或生活边界时，Curator 可选 1—3 条帮助读者定向；"
+        "没有自然问题就不用。不得由此建立新规则、新人物欲望、新剧情义务或长期 Canon，也不得补写未提供的隐藏原因。\n\n"
         + text
         + "\n"
     )

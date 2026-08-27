@@ -586,10 +586,22 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
         split_mode = payload.mode in {"world_vision", "power_seed", "human_seed", "idea", "outline"}
         prompt = generate_split_prompt(**values) if split_mode else generate_prompt(**_planning_only_fields_removed(values))
 
-        # World-life texture is a prose-side permission only. It never enters
+        # Reader orientation is a bounded prose-side projection only. It never enters
         # Human Seed / Character Canon and costs no extra model call.
         if payload.mode in {"context_curator", "chapter"}:
-            texture = project_writer_texture_context(str(values.get("world_vision", "")))
+            relevance_text = "\n\n".join(
+                str(values.get(key, ""))
+                for key in (
+                    "current_outline",
+                    "current_chapter_plan",
+                    "current_long_block",
+                    "recent_summaries",
+                )
+                if str(values.get(key, "")).strip()
+            )
+            texture = project_writer_texture_context(
+                str(values.get("world_vision", "")), relevance_text=relevance_text
+            )
             if texture:
                 prompt = prompt.rstrip() + "\n\n" + texture
     except FileNotFoundError as error:

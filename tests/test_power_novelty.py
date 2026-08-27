@@ -19,6 +19,8 @@ def test_world_prompt_requires_reusable_social_power_rulers() -> None:
     assert "力量尺必须能长期反复拿来比较" in prompt
     assert "至少建立一把世界内真实使用的当前主尺" in prompt
     assert "不要合成单一总战力分" in prompt
+    assert "普通人怎样在聚落之间移动" in prompt
+    assert "谁有能力跨越危险区域" in prompt
 
 
 def test_power_novelty_bundle_is_reproducible_and_diverse() -> None:

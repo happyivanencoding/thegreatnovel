@@ -2695,6 +2695,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "Discriminative Detail Only" in director_ruler
     assert "Persistent Reader Ruler" not in primary_ruler
     assert "State Advance After Proof / Choice → Consequence" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Context-Triggered Orientation" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "动作先制造读者问题" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Plot Pace ≠ Tier Pace" in story_program
     assert "Plot Pace ≠ Tier Pace" in DEFAULT_PROMPT_TEMPLATES["review"]
     assert "主人公连续升格" in story_program
@@ -2703,6 +2705,17 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "主人公连续升格" in DEFAULT_PROMPT_TEMPLATES["review"]
     assert "主人公连续升格" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
     assert "主人公连续升格" not in primary_ruler
+    curator_orientation = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content="",
+        current_outline=REAL_COLD_CHAIN_OUTLINE,
+    )
+    assert "Context-Triggered Orientation" in curator_orientation
+    assert "短直接旁白不是低级解释" in curator_orientation
+    assert "决定已经做完后的普通实施默认压缩" in director_ruler
+    assert "决定已经做完后的普通实施默认一句或一个短段概括" in primary_ruler
+    assert "Action creates the question → Exposition answers just enough → Action continues" in primary_ruler
     assert "## 不可替代的人与关系" in story_program
     assert "### 关键关系（可选）" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]

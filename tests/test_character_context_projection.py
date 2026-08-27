@@ -140,13 +140,16 @@ def test_life_context_does_not_accept_writer_texture() -> None:
     assert "地下驿网" not in result
 
 
-def test_writer_texture_reference_is_small_and_story_hook_free() -> None:
-    result = project_writer_texture_context(WORLD)
+def test_writer_orientation_reference_is_bounded_relevant_and_story_hook_free() -> None:
+    result = project_writer_texture_context(
+        WORLD,
+        relevance_text="商盟身份影响当前选择，普通人如何生活",
+    )
     assert "Writer-side only" in result
+    assert "Optional Reader Orientation Reference" in result
     assert "普通人的生活与上升" in result
     assert "社会现实与身份" in result
-    assert "世界里真正值钱、值得想要的东西" in result
-    assert "0—1 个生活性细节" in result
+    assert "1—3 条帮助读者定向" in result
     assert "力量体系与正常值" not in result
     assert "宋照雪" not in result
     assert "沉铃泽" not in result
