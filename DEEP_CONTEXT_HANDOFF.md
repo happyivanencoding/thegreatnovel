@@ -9,7 +9,11 @@
 
 ## 0. Handoff Purpose
 
-这是一份供全新 Agent 直接接手 TGN 项目的**深层认知交接**。它不是聊天流水账，也不是当前代码文档的替代品。它试图迁移三类东西：
+这是一份供全新 Agent 直接接手 TGN 项目的**最终融合版深层认知交接**。它不是聊天流水账，也不是当前代码文档的替代品。
+
+本文件融合了此前两份独立 Handoff：`DEEP_CONTEXT_HANDOFF.md` 与 `DEEP_CONTEXT_HANDOFF_2.md`。融合不是简单拼接：重复内容去重；发生冲突时按“用户后续明确修正 → 当前 production/code/tests → 后续受控实验 → 长期稳定共识”的顺序取舍；第二份中新增但尚未冻结的研究方向被保留在 Open Questions / Experimental Hypothesis，而不会伪装成 Core Principle。
+
+它试图迁移三类东西：
 
 1. 这个项目真正想达到的读者体验与产品目标；
 2. 经过长期纠偏形成的判断模型：为什么某种方案对，为什么一个表面相似的方案仍然错；
@@ -884,6 +888,26 @@ Action Space、Net New、Impact、Compounding、World Independence 等可以用�
 
 多轮实验中最健康的行为之一，是撤销自己想加的 patch：World 正交删除测试、Director ruler projection、Cross-Ruler prompt、Power 看公共价值物等。研究经典作品不意味着 production 必须变化。
 
+### 7.11 LLM 最危险的失败经常是“太合理”，因此比明显胡编更难抓
+
+工程、验证、责任、流程、风险控制、资源安排往往局部都说得通。真正的审计问题不是“这段有没有逻辑”，而是：**它为什么获得了这么高的叙事权重？** TGN 要识别的常常不是错误事实，而是合理支撑层悄悄取代了读者真正想看的幻想、人物选择和世界进入。
+
+### 7.12 人格最有力的证明通常是机会成本，不是心理分析
+
+一个选择只有在另一条路也真正诱人时，才会暴露人物。若所有选项中只有一个显然正确，Human 再丰富也难以进入故事。因此测试人格时应让力量、关系、钱、身份、好奇等真实价值发生冲突；人物为某一项付出的**真实错失**本身就是 Character Proof。
+
+### 7.13 反 AI 纠偏本身也会过度
+
+TGN 曾从“AI 爱解释”过度纠偏到“什么都压缩”，导致正文逻辑清楚但世界薄。今后任何反偏置原则都要检查它是否误伤邻近的高价值能力：反解释不能误伤 Orientation；反阶段税不能误伤 Growth Floor；反职业流程不能误伤真正的 Secondary Fantasy Axis。
+
+### 7.14 好系统允许高质量的不均匀
+
+不是每章一样长、每阶段都升级、每段关系都改变、每个候选都一样强、每本书都有副职、每章都解释世界、每个 Promise 都债务化。Checklist 倾向会把小说平均化；系统应保护**有因果理由的不均匀注意力**。
+
+### 7.15 世界自主性与主角传奇感并不冲突
+
+世界不为主角出生，不代表主角不能越来越重要。更好的传奇感是：**世界本来就很大、很多事与我无关；但随着我真正变强和做出选择，原本独立的人与事件越来越不得不考虑我。** 这比“所有秘密早就在等主角”更有分量。
+
 ---
 
 ## 8. Important Corrections
@@ -1180,8 +1204,9 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 
 - Repo：`C:\dev\tgn-story-mvp`
 - Branch：`principal_dev_new_sys`
-- 本 Handoff 最终校正时的 HEAD：`15a389d feat(story): finalize reader orientation release`
+- 本次双 Handoff 融合开始时的 HEAD：`1760c9a docs: add deep context handoff`；接手时仍应 live-check HEAD，不把该 commit 当永久事实。
 - 前一关键提交：
+  - `15a389d feat(story): finalize reader orientation release`
   - `f81894a chore(steward): add matched decision validation`
   - `e010b8b test(story): compare personality advantage trees`
   - `2d61dae test(story): validate doupo-inspired mechanisms`
@@ -1197,7 +1222,7 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 - 若干早期/中间版 `real-exp-private-prototype-orientation-*` 实验目录；
 - 尚未形成最终结论的 `real-exp-doupo-feel-engine-*`；
 - 多个研究与重跑用 `temps/*`；
-- 一个来源不明的 `DEEP_CONTEXT_HANDOFF_2.md`，不得在未确认 owner/内容前合并或删除。
+- `DEEP_CONTEXT_HANDOFF_2.md` 已在本最终版中完成内容级融合；原文件仍保留为 provenance，不因生成 FINAL 就自动删除。
 
 接手者必须先 `git status`，不得覆盖、重置、清理或顺手提交这些并行内容。当前 Handoff 应单独处理。
 
@@ -1375,21 +1400,41 @@ Docs 只描述当前有效状态。更新时优先替换、删除、合并，不
 
 当前 6 个 chunk 未 embedding。需补齐并做 retrieval regression，才能称最近更新完整交付。
 
-### 13.7 Doupo Feel Engine / 正文气质
+### 13.7 Dominant Commercial Engine / Visible Desire Horizon
 
-工作树中存在 `real-exp-doupo-feel-engine-20260827-v1` 与相关 prompts，但尚未形成可确认的最终 RESULTS。不要把它当已验证结论。
+第二份 Handoff 补充了一个尚未冻结但很有价值的观察：有些章节各自清楚、每章都有事件，但读者仍难回答“未来 20—40 章主角最想拿到什么、离它还有多远”。候选假说是：一个阶段需要**Human 批准的可见主欲望/块级商业发动机**，让 Life / Fantasy / World 不只是平均轮换，而围绕一个读者能持续追踪的具体目标形成重力。
 
-### 13.8 Human Prompt 的人格菜单风险
+它目前仍是 Experimental Hypothesis，风险很高：若系统替 Human 发明一个“最商业”的目标，就会再次覆盖人物；也不能变成每个块必须填写 Dominant Engine 的新字段。下一步只能通过冻结 Human 的因果实验判断。
+
+### 13.8 Fantasy Heartbeat / Reward Lifecycle
+
+另一个未冻结观察：一些好东西在“拿到/展示”后容易离场，导致核心幻想在没有升阶的窗口里变弱。候选研究方向不是增加奖励频率，而是检查高价值资产是否经历完整生命周期：
+
+> 想要 → 争取/承受 → 到手 → 首次证明 → 社会兑换 → 后续复用/重释。
+
+现有 High-Value Acquisition + Compounding 已覆盖一部分原则，因此是否需要任何新 production 规则尚未证明。优先先测“旧资产在 6—10 章无升级窗口里是否仍改变选择和新问题”，避免恢复奖励税。
+
+### 13.9 Immediate Social Repricing 的强度边界
+
+已冻结原则是：Public Proof 的价值在于有利害关系者重新估价并改变行为，而不是群众震惊。尚未确定的是：**一次重要公开证明是否应更稳定地立刻改变某项现实分配**，例如报价、资格、挑战规格、敌策或合作条件。
+
+不能直接升级成“每次显露都必须发奖励”。它需要验证即时 repricing 是否增强爽感而不制造机械奖励、关系免罪或状态税。
+
+### 13.10 Doupo Feel Engine / 正文气质
+
+工作树中存在 `real-exp-doupo-feel-engine-20260827-v1` 与相关 prompts，但尚未形成可确认的最终 RESULTS。不要把它当已验证结论。其当前最有价值的未冻结线索正是上面的 Visible Desire Horizon / Reward Lifecycle / Immediate Social Repricing。
+
+### 13.11 Human Prompt 的人格菜单风险
 
 当前 Human Prompt 仍列出钱、审美、身体欲望、好奇等例子。它比单一 Core Obsession 好，但 Luna 可能机械从菜单抽 2—4 个组合。尚未有跨样本失败证据；继续观察，不因理论洁癖立即加 negative rule。
 
-### 13.9 “4—6 次质变”是否会变成新 Hard Pattern
+### 13.12 “4—6 次质变”是否会变成新 Hard Pattern
 
 目前实验自然产生 5—6 次，未见明显机械凑数。但第一性原则是 early/mid/high-tier 有真实质变，数量应由具体 Power grammar 决定。低优先级观察项。
 
-### 13.10 当前并行未提交工作
+### 13.13 当前并行未提交工作
 
-Reader Orientation、World Entry、Competence Filler 与正文 Skill 的 production 修复已随 `15a389d` 提交。当前仍未提交的是一处 `MVP_PRODUCT_DIRECTION` 文档对齐、若干早期/中间实验与研究脚本、尚未完成的 Doupo Feel Engine，以及来源不明的 `DEEP_CONTEXT_HANDOFF_2.md`。接手者应先识别 owner/意图、审阅 diff、运行测试，再决定如何分批处理；不能把它们与下一实验混成一个 commit。
+Reader Orientation、World Entry、Competence Filler 与正文 Skill 的 production 修复已随 `15a389d` 提交；第一份 Handoff 已随 `1760c9a` 提交。当前仍未提交的是一处 `MVP_PRODUCT_DIRECTION` 文档对齐、若干早期/中间实验与研究脚本、尚未完成的 Doupo Feel Engine，以及作为 provenance 保留的 `DEEP_CONTEXT_HANDOFF_2.md`。接手者应先识别 owner/意图、审阅 diff、运行测试，再决定如何分批处理；不能把它们与下一实验混成一个 commit。
 
 ---
 
@@ -1474,6 +1519,16 @@ B 不是“人格类型→能力映射”。人格只通过选择限制路线，
 7. full regression；
 8. 只 stage 自己的文件/hunk；
 9. 使用固定 Git identity 提交推送。
+
+### 14.6 第二优先研究队列
+
+如果 Personalized Advantage Tree 已完成或用户明确转回《斗破》式商业可追读性，第二优先不是再加一批 Prompt，而是分别做三个窄 A/B：
+
+1. **Visible Desire Horizon / Dominant Commercial Engine**：冻结 Human，比较“阶段有一个真正可追踪的具体欲望”是否提升 20—40 章牵引，同时不覆盖人物；
+2. **Reward Lifecycle / Fantasy Heartbeat**：选无境界升级窗口，验证旧能力/物件/身份是否通过使用、社会兑换和复用继续产生幻想心跳，而不是增加奖励频率；
+3. **Immediate Social Repricing**：比较重要公开证明后是否改变一项现实分配；拒绝机械“显露=发奖”。
+
+三项目前都属于 Experimental Hypothesis。只有单变量、跨 Human、跨样本结果稳定后才可 production 化。
 
 ---
 
