@@ -2719,6 +2719,7 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "Context-Triggered Orientation" in curator_orientation
     assert "短直接旁白不是低级解释" in curator_orientation
     assert "Opening Strategy` 负责把这些事实真正放到可执行位置" in curator_orientation
+    assert "不得拿“二阶是什么意思”冒充 Opening Orientation" in curator_orientation
     assert "不是本章可重新展开的素材库" in curator_orientation
     assert "决定已经做完后的普通实施默认压缩" in director_ruler
     assert "决定已经做完后的普通实施默认一句或一个短段概括" in primary_ruler
