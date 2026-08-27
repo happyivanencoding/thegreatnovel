@@ -1,0 +1,3 @@
+# Bounded Continuity Repair
+
+Primary raw draft incorrectly wrote `顾临川认出了顾斜阳` even though Chapter 6 is their first meeting. Official `chapter-0006.md` was repaired without changing plot/result: an injured 观日宗 disciple calls `顾斜阳` by name before 顾临川 uses it. The same raw draft improvised 顾斜阳 as female, while Chapters 8–9 independently and consistently realized him as male; upstream authority had never fixed gender, so Chapter 6 was normalized to the later two-chapter male realization. State extraction required no semantic repair because it records identity/competition but not prior acquaintance or gender.
