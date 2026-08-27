@@ -233,11 +233,11 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ### Context Curator — Context Projection
 
-从 BOOK、Canon、当前计划、Prose Profile、可选 Inspiration、前文章末与安全 World Orientation 投影中选择 Writer 真正需要的本章信息。首次重要势力 / 地点 / 身份 / 资源影响选择时，只投影 1—3 条已批准事实，回答“是什么 / 为什么重要 / 当前 POV 通常知道什么”。它输出 `Reader-Facing Language`，提示机制与世界信息怎样落到正文，但不重规划、不新增事实、不自行写正文。
+从 `WORLD AUTHORITY`、BOOK、Canon、当前计划、Prose Profile、可选 Inspiration 与前文章末中选择 Writer 真正需要的信息。`WORLD AUTHORITY` 是 Approved World Vision 的安全事实投影；Outline 在当前章 `具体剧情` 排程哪条世界事实，Curator 就保留/压缩哪条，不自行改选说明主题。它输出 `Reader-Facing Language`，但不重规划、不新增事实、不自行写正文。
 
 ### Primary Writer — Reader Experience
 
-以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。若动作自然制造“这是什么 / 为什么重要”的问题，而 Curator 已提供安全 Orientation Facts，可用 1—3 个短直接旁白段回答后立刻回到现场；不要求把世界说明伪装成对白。决定完成后的普通实施默认一句或短段概括。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补情绪；Planning 的抽象标签不直接变成旁白总结。
+以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。若 Curator 已投影当前 Plan 排程的 World fact，可用 1—3 个短直接旁白段回答后立刻回现场；Writer 不从完整 World 自选说明主题，也不要求把世界说明伪装成对白。决定完成后的普通实施默认一句或短段概括。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补情绪；Planning 的抽象标签不直接变成旁白总结。
 
 **Story-bearing Texture > Decorative Density**：正文不以“多写”或“多修饰”制造丰富感。每个主要 beat 选择少量真正改变画面的具体动作、物件/空间、身体反馈、力量后果和人物差异化反应；感官细节选择最有辨识度的少数锚点，不机械覆盖五感。细节如果不承载人物、冲突、因果或幻想体验，就继续压缩。
 

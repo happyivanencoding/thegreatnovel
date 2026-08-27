@@ -10,7 +10,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
-from .character_context import project_writer_texture_context
 from .character_prompts import generate_split_prompt
 from .gbrain import GBrainQueryError
 from .gbrain_retrieval import (
@@ -586,22 +585,6 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
         split_mode = payload.mode in {"world_vision", "power_seed", "human_seed", "idea", "outline"}
         prompt = generate_split_prompt(**values) if split_mode else generate_prompt(**_planning_only_fields_removed(values))
 
-        # Reader orientation is a bounded prose-side projection only. It never enters
-        # Human Seed / Character Canon and costs no extra model call.
-        if payload.mode in {"context_curator", "chapter"}:
-            local_parts = [
-                str(values.get(key, "")).strip()
-                for key in ("current_outline", "current_chapter_plan")
-                if str(values.get(key, "")).strip()
-            ]
-            if not local_parts and str(values.get("current_long_block", "")).strip():
-                local_parts.append(str(values.get("current_long_block", "")).strip())
-            relevance_text = "\n\n".join(local_parts)
-            texture = project_writer_texture_context(
-                str(values.get("world_vision", "")), relevance_text=relevance_text
-            )
-            if texture:
-                prompt = prompt.rstrip() + "\n\n" + texture
     except FileNotFoundError as error:
         raise not_found(error) from error
     except HardGateError as error:

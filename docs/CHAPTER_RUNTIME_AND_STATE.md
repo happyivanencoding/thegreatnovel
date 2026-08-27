@@ -12,6 +12,8 @@ Specialist / Integrator 不在默认链；只有作者明确启动局部 repair 
 
 章节 Runtime 默认不直接读取 raw GBrain。GBrain 对章节层的影响只通过已批准的 Story Program / Outline，以及离线蒸馏后的 Scene Skills 间接进入。
 
+已批准 `WORLD_VISION.md` 仍是一等世界事实权威，不由 Outline 的 `BOOK §2` 摘要替代。Runtime 会把它确定性裁成不含 named 大事件 / 未解谜底的 `WORLD AUTHORITY`；Outline 负责在当前章 `具体剧情` 排程要释放的事实，Curator 再从 WORLD AUTHORITY 做 bounded prefetch。Director 不读取完整 World，Primary 也不自行选择世界资料。
+
 ## 节点职责
 
 ### Director
@@ -20,7 +22,7 @@ Specialist / Integrator 不在默认链；只有作者明确启动局部 repair 
 
 ### Context Curator
 
-从确定性 Index-first 预取中筛选 Writer 真正需要的信息，压缩 BOOK Contract、Canon、计划、Prose Profile、Open Promises 与 Scene Skills。它不补读全库、不重新规划、不把 Planning Language 改写成正文。
+从确定性 Index-first 预取中筛选 Writer 真正需要的信息，输入包括 `WORLD AUTHORITY`、BOOK Contract、Canon、计划、Prose Profile、Open Promises 与 Scene Skills。World fact 的选择时机由 Outline 决定：Plan 排程了哪条已批准事实，Curator 就保留/压缩哪条；Plan 没排程时不自行从完整世界挑一段补课。它不补读全库、不重新规划、不把 Planning Language 改写成正文。
 
 Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact projection**：从 `Curator Audit`、`Relevant Open Promises`、明确未解的 World Rules 与 `Payoff and Promise Window` 中抽取约束，形成紧贴 Chapter Mission 的 `UNRESOLVED FACT BOUNDARY`。这不是新节点、Reviewer、RAG 或 Hard Gate；它只把 Curator 已经识别出的“仍未知 / 未兑现”提高到 Primary 的高显著事实边界，避免长篇时被埋在较长 Curated Context 中。
 

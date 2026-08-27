@@ -361,7 +361,7 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
 - **Story Program execution, not rescheduling**：Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势成长、后续新 Asymmetry 获得与复合；Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略；
 - **Block Delta**：每块只记录相对本块开始真实改变的 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State，没变化的维度省略，上一块已经发生的变化不能重复包装成新 Delta；
-- **World Model Release / Context-Triggered Orientation**：作者知道 World Vision 不等于读者知道。开篇除强弱、身份、价值与能力边界外，还建立最低安全 / 社会 / 移动坐标；新势力、地点、资源、身份或生活方式第一次真正影响选择时，让动作先制造问题，再调度 1—3 条已批准世界事实回答“是什么 / 为什么重要 / 普通人怎么看”，随后回到动作。Orientation 只占解释预算，不新增 Prelude 章、不延迟第一章既定 payoff；允许短直接旁白，不做百科；
+- **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实，Outline 只决定读者何时知道。需要世界定向时，把 1—3 条具体已批准 World fact 直接写进该章现有 `具体剧情`，不能只在 `叙事功能` 写“介绍/定向”；开篇同时建立最低生活世界位置与必要 ruler，但不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
 - **Ruler = Compression**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落；
 - **State Advance After Proof / Choice → Consequence**：一个问题经动作结果与一次足够校准成立后，不再把换证据证明同一结论规划成独立 beat；社会确认只有改变机会、敌意、关系、身份、资源或行动入口时才继续。重大选择的选项与主要代价清楚后尽快做出，让后续篇幅进入选择造成的新局面；十章批次不是拉长当前剧情块的配额，块完成就进入相邻块；不做每章状态变化配额；
 - **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价；
@@ -419,7 +419,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 - 从大量 Canon / Book Contract / Inspiration / Scene Skill 中筛选当前章真正相关信息；
 - 保留人物欲望、关系、力量、风险、承诺与当前冲突；
 - 压缩不必要的规则和机制说明；
-- 首次重要势力 / 地点 / 身份 / 资源进入当前冲突时，从确定性世界投影中选 1—3 条已批准 Orientation Facts；高价值世界定向不因“反设定倾倒”被一起删掉；
+- `WORLD AUTHORITY` 是已批准 World Vision 的安全事实源；当前章 `具体剧情` 排程了哪条 World fact，Curator 就从 deterministic prefetch 中保留/压缩哪条，不自行选择另一套世界介绍；
 - 把规划层抽象词投影成 BOOK / Canon / Plan **已经存在**的世界内具体名词和动作，让正文写人物真正拿到、失去、进入或看见什么；
 - 让细节预算跟随本书核心幻想真正值得注意的对象，而不是把“具体性”自动变成地形、受力或流程细节；
 - 发现跨维度冲突并在 Curator Audit 中报告。
@@ -444,7 +444,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 
 - 把 Director Contract + Curated Context 写成完整、可保存的正式正文；
 - Reader-First：先让读者理解人、问题和 stakes，再给最低限度规则；
-- 当动作自然提出“这是什么 / 为什么重要”的问题，而 Curator 已提供安全 Orientation Facts 时，允许用 1—3 个短直接旁白段回答到足够后立刻回场景；
+- 当动作自然提出“这是什么 / 为什么重要”的问题，而 Curator 已投影当前 Plan 排程的 World fact 时，允许用 1—3 个短直接旁白段回答到足够后立刻回场景；Writer 不自行从完整 World 选择说明主题；
 - 决定已经成立后的普通实施优先一句或短段概括，不靠实施流水账填充低动作章节；
 - 让人物反应、力量结果和现场变化承担信息；
 - 用少量 story-bearing detail 增加画面与人物存在感，而不是用修饰词堆积制造“丰富”；

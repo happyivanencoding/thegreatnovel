@@ -5,7 +5,7 @@ from story_mvp.character_context import (
     project_character_power_baseline,
     project_character_world_slice,
     project_story_opportunity_layer,
-    project_writer_texture_context,
+    project_world_reality,
 )
 
 
@@ -140,30 +140,15 @@ def test_life_context_does_not_accept_writer_texture() -> None:
     assert "地下驿网" not in result
 
 
-def test_writer_orientation_reference_is_bounded_relevant_and_story_hook_free() -> None:
-    result = project_writer_texture_context(
-        WORLD,
-        relevance_text="商盟身份影响当前选择，普通人如何生活",
-    )
-    assert "Writer-side only" in result
-    assert "Optional Reader Orientation Reference" in result
+def test_world_reality_authority_is_safe_and_complete() -> None:
+    result = project_world_reality(WORLD)
+    assert "WORLD REALITY AUTHORITY" in result
     assert "普通人的生活与上升" in result
+    assert "力量体系与正常值" in result
     assert "社会现实与身份" in result
-    assert "1—3 条帮助读者定向" in result
-    assert "力量体系与正常值" not in result
+    assert "世界里真正值钱、值得想要的东西" in result
+    assert "普通人知道归潮" in result
     assert "宋照雪" not in result
     assert "沉铃泽" not in result
     assert "地下驿网" not in result
-
-def test_writer_orientation_prioritizes_current_faction_category() -> None:
-    world = WORLD.replace(
-        "世界有王朝、宗门、世家、商盟、军府。身份会受师承、城籍、军籍、商籍影响。",
-        "世界有王朝、宗门、世家、商盟、军府。荒原部族有独立训练法，也会与城镇交易或冲突。",
-    )
-    result = project_writer_texture_context(
-        world,
-        relevance_text="白角部迁徙后挡住南行商队，当前第一次真正碰到这个族群。",
-    )
-    assert "荒原部族有独立训练法" in result
-    assert "宋照雪" not in result
-    assert "地下驿网" not in result
+    assert "当前没人能完整解释的事实" not in result

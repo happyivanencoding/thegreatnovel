@@ -52,6 +52,7 @@ class CuratorContextPacket:
     authority: str
     chapter_mission: str
     context_index: str
+    world_authority: str
     book_contract: str
     growth_genome_compact: str
     canon_index: str
@@ -456,6 +457,63 @@ def _project_indexed_text(text: str, query: str, *, max_chars: int) -> str:
     return "\n\n".join(rendered).strip()
 
 
+def _project_relevant_world_authority(text: str, query: str, *, max_chars: int = 4200) -> str:
+    """Select only world paragraphs explicitly relevant to the current planned chapter.
+
+    Unlike generic BOOK prefetch, this does not keep section lead paragraphs by
+    default. Outline is the release scheduler: if the current chapter plan does not
+    name or paraphrase a world fact, that fact should not become prose material merely
+    because it exists somewhere in World Vision.
+    """
+
+    clean = text.strip()
+    query_terms = _relevance_terms(query)
+    if not clean or not query_terms:
+        return ""
+
+    sections = [
+        section.strip()
+        for section in re.split(r"(?m)(?=^##\s+)", clean)
+        if section.strip()
+    ]
+    candidates: list[tuple[int, int, int, str, str]] = []
+    for section_index, section in enumerate(sections):
+        lines = section.splitlines()
+        heading = lines[0].strip() if lines and lines[0].lstrip().startswith("## ") else ""
+        body = "\n".join(lines[1:] if heading else lines).strip()
+        paragraphs = [part.strip() for part in re.split(r"\n\s*\n", body) if part.strip()]
+        heading_score = len(query_terms & _relevance_terms(heading))
+        for paragraph_index, paragraph in enumerate(paragraphs):
+            score = heading_score + len(query_terms & _relevance_terms(paragraph))
+            if score:
+                candidates.append((score, section_index, paragraph_index, heading, paragraph))
+
+    if not candidates:
+        return ""
+
+    selected: list[tuple[int, int, str, str]] = []
+    used = 0
+    for _, section_index, paragraph_index, heading, paragraph in sorted(
+        candidates, key=lambda item: (-item[0], item[1], item[2])
+    ):
+        extra = len(heading) + len(paragraph) + 4
+        if selected and used + extra > max_chars:
+            continue
+        selected.append((section_index, paragraph_index, heading, paragraph))
+        used += extra
+        if len(selected) >= 5:
+            break
+
+    rendered: list[str] = []
+    last_heading = ""
+    for _, _, heading, paragraph in sorted(selected, key=lambda item: (item[0], item[1])):
+        if heading and heading != last_heading:
+            rendered.append(heading)
+            last_heading = heading
+        rendered.append(paragraph)
+    return "\n\n".join(rendered).strip()
+
+
 def extract_final_chapter_artifact(response: str) -> tuple[str, str] | None:
     body = _extract_level_one_section(response, "# 正式正文")
     if not body:
@@ -516,6 +574,7 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
     )
     context_index = "\n\n".join(
         (
+            _context_directory("WORLD AUTHORITY", packet.world_authority),
             _context_directory("BOOK CONTRACT", full_book_contract),
             _context_directory("CANON INDEX", packet.canon_context),
             _context_directory("PROSE PROFILE", packet.prose_profile),
@@ -525,6 +584,14 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
         authority=packet.authority,
         chapter_mission=packet.chapter_mission,
         context_index=context_index,
+        world_authority=_project_relevant_world_authority(
+            packet.world_authority,
+            "\n\n".join(
+                part
+                for part in (packet.chapter_mission, packet.current_chapter_plan)
+                if part.strip()
+            ),
+        ),
         book_contract=_project_indexed_text(
             full_book_contract, relevance_query, max_chars=6200
         ),

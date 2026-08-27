@@ -379,7 +379,7 @@ def test_opening_contract_is_scoped_to_planning_and_opening_nodes() -> None:
         chapter_number=3,
     )
     assert primary.count("# Opening Three Chapter Contract") == 1
-    assert "世界坐标与度量尺" in primary
+    assert "World fact 的选择权在 World + Outline" in primary
     assert opening.count("# Opening Three Chapter Contract") == 1
 
     for mode in (
@@ -756,3 +756,75 @@ def test_run_ledger_api_persists_prompt_response_and_retry(tmp_path: Path, monke
     assert retried.status_code == 200
     assert retried.json()["nodes"]["director"]["attempts"] == 2
     assert (tmp_path / "ledger-api" / "runs" / "chapter-0001" / "director_prompt.md").is_file()
+
+def test_approved_world_is_first_class_curator_authority_and_plan_schedules_release() -> None:
+    world = """# PROTAGONIST-BLIND WORLD VISION
+
+## 普通人的生活与上升
+普通人住在猎墙内，离城通常跟随商队或猎队。
+
+## 力量体系与正常值
+一阶是正式猎手，二阶能独自处理大型异兽。
+
+## 社会现实与身份
+荒原部族有独立训练法，也会与城镇交易或冲突。
+
+## 世界里真正值钱、值得想要的东西
+高阶心核很值钱。
+
+## 世界正在发生的大事
+白角部正在追一头被掳走的幼年王种。
+
+## 世界知识边界
+普通人知道荒原部族存在，但不知道各部族当前目的。
+当前没人能完整解释的事实：白角部为何改变旧路线。
+"""
+    plan = "## 第4章：封路\n具体剧情：白角部第一次挡住商队去路；此处让读者知道：荒原部族有独立训练法，也会与城镇交易或冲突。"
+    packet = build_chapter_context(
+        book_content="# 小说总体设计画像\n## 1. 核心类型与读者承诺\n成长",
+        world_vision=world,
+        current_chapter_plan=plan,
+    )
+    assert "WORLD REALITY AUTHORITY" in packet.world_authority
+    assert "荒原部族有独立训练法" in packet.world_authority
+    assert "白角部正在追一头" not in packet.world_authority
+    assert "当前没人能完整解释的事实" not in packet.world_authority
+
+    from story_mvp.hybrid_runtime import build_curator_context
+
+    curator = build_curator_context(packet)
+    assert "WORLD AUTHORITY" in curator.context_index
+    assert "荒原部族有独立训练法，也会与城镇交易或冲突" in curator.world_authority
+    assert "高阶心核很值钱" not in curator.world_authority
+
+
+def test_curator_prompt_receives_world_authority_without_api_side_channel() -> None:
+    world = """# PROTAGONIST-BLIND WORLD VISION
+
+## 普通人的生活与上升
+普通人住在猎墙内，离城通常跟随商队或猎队。
+
+## 力量体系与正常值
+一阶是正式猎手。
+
+## 社会现实与身份
+荒原部族有独立训练法，也会与城镇交易或冲突。
+
+## 世界里真正值钱、值得想要的东西
+高阶心核很值钱。
+
+## 世界知识边界
+普通人知道荒原部族存在。
+"""
+    prompt = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content="# 小说总体设计画像\n## 1. 核心类型与读者承诺\n成长",
+        world_vision=world,
+        current_outline=OUTLINE,
+        current_chapter_plan="## 第4章：封路\n具体剧情：此处告诉读者荒原部族有独立训练法，也会与城镇交易或冲突。",
+        chapter_number=4,
+    )
+    assert "WORLD AUTHORITY——本章确定性预取" in prompt
+    assert "荒原部族有独立训练法，也会与城镇交易或冲突" in prompt
+    assert "Optional Reader Orientation Reference" not in prompt

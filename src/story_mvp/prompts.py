@@ -80,11 +80,13 @@ SEED_SUPPORTING_LOGIC_DIRECTION = """Seed Supporting Logic Boundary：Seed 只�
 
 OUTLINE_FANTASY_PROOF_RULE = """Outline Fantasy Proof（软规划原则，不新增字段或 Hard Gate）：Growth is a longitudinal invariant, not a per-block form requirement。Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势的长期成长、后续新 Power Asymmetry 获得与复合；Outline 只负责把已经批准、且确实落入当前规划窗口的 Power / Capability 质变、核心幻想兑现或高价值获得，落实成具体、不可逆、可复述的故事事件。没有这类变化的剧情块可以完全不写 Power 或 Acquisition；不要为了证明核心幻想仍在，就补微升级、小奖励、新权限或新地图。反过来，Story Program 已明确安排的真实成长落入当前窗口时，Outline 不能因为人物故事更强而把它省略。不要用“能力理解更深、体系更完善、行动空间扩大、影响力提升”这种摘要替代真实变化。"""
 
-OUTLINE_WORLD_MODEL_RELEASE = """Outline World Model Release / Context-Triggered Orientation（软规划原则，不新增字段或 Hard Gate）：作者在 World Vision 里知道某个概念，不等于读者已经知道。Outline 要决定读者在哪个具体事件中第一次获得它的可用含义：当一个新规则、专属名词、力量层级、身份、重要势力、地点、资源或生活方式第一次真正影响人物选择时，让**动作先制造读者问题，再用 1—3 个已批准、当前真的有用的世界事实回答到足够，随后立刻回到动作**。直接旁白是允许的压缩工具，不要求把所有说明藏进对白或暗示。
+OUTLINE_WORLD_MODEL_RELEASE = """Outline World Model Release（Reader Release Scheduler；不新增字段或 Hard Gate）：Approved World Vision 决定世界事实，Outline 不再承担“保存/重写世界设定”的职责；Outline 只决定**读者什么时候需要知道哪一条已批准事实**。
 
-开篇除了最低规则坐标，还要建立最低世界定向：读者大致知道“我现在在哪里、这里的人怎样活、谁拥有真正力量、当前生活边界之外通常怎样进入”。只释放当前故事真正需要的安全 / 社会 / 移动 / 世界坐标，不画百科地图。**Orientation 占用的是解释预算，不是事件预算**：它必须嵌进已经需要发生的动作、选择或场景，不能为了先介绍世界新增 Prelude 章、把一个既定 story beat 拆成两章，尤其不能把 `OPENING_THREE_CHAPTER_CONTRACT` 要求在第一章落地的核心优势真实结果推迟到第二章。首次进入新的重要势力或地点时，优先在现有 `具体剧情` 中顺手写清“它是什么 / 为什么此刻重要 / 普通人或当前 POV 通常怎样理解它”；未获批准的真实原因、隐藏身份与长期谜底继续保持未知。
+当一个新规则、势力、地点、身份、资源、生活方式或世界入口第一次真正影响人物选择时，先让当前事件制造读者问题，再把此刻需要释放的 **1—3 条具体 World fact 直接写进该章现有 `具体剧情`**，说明它是什么、为什么当前有分量、普通人/当前 POV 通常知道到哪里，随后继续事件。不要只在 `叙事功能` 里写“完成世界定向 / 建立世界观 / 介绍某势力”，因为这不会进入稳定章节执行；也不要把 World fact 改写成新的背景设定。
 
-力量与规则仍优先让同一场或相邻场先出现可观察的触发、结果和行动含义，让读者能预测“这样会发生什么、人物因此能/不能做什么”，再允许使用概念名或保留更深原因。前三章建立当前故事所需的最低可用坐标：主角大致处在哪一层、明显更强的人能做到什么、当前争夺的东西值在哪里、核心优势面对更高层对象的真实边界。不要集中成设定说明，也不要用意象、哲学定义或专属术语代替规则本身。"""
+开篇需要一个粗糙但正确的生活世界模型：读者应尽早知道自己大致在哪里、这里的人怎样活、谁掌握真正力量、当前生活边界之外通常怎样进入。它必须嵌在本来就要发生的第一章事件里，不能新增 Prelude / Setup 章，也不能推迟第一章 Core Fantasy payoff。力量、价值、身份等 ruler 继续承担比较；Opening Orientation 负责让读者站稳世界位置，两者不是同一件事。
+
+世界深层原因、named 未解谜底和未批准真相仍保持未知。若 Approved World Vision 没有支持某项解释，Outline 不得为了让正文好讲而补造。"""
 
 PERSISTENT_READER_RULER_DIRECTION = """Persistent Reader Ruler（长期读者坐标软原则，不新增字段、战力数据库或 Hard Gate）：世界前台的力量、战绩、价值、天赋/适配、技法熟练度、装备品阶、排名、身份与世界层级，都是读者判断优越感、风险和欲望距离的 ruler；当前事件碰到哪把尺，就优先校准哪把，不要求力量尺独占，也不合成单一总战力分。每当发生显著突破、新能力/新装备/血脉或传承变化、公开测试/比赛、新强敌、越级胜负、高价值获得或世界换挡时，通过当前事件自然刷新：主角现在大致在哪一档 / 对象值在哪一档、正常同档能做到或值到什么程度、这次哪里超标、下一档还有什么可见距离。**Ruler = Compression, not Exposition**：当动作与结果已经让一个事实成立时，优先用一次最相关的、已由 World / approved Story 提供的 benchmark 或懂行者比较替代多轮验证，然后立即推进到新的选择、机会、敌意、获得、关系或行动。Benchmark authority 在上游：Outline / Director 只选择和投影已有基准，Writer 不临时发明互相冲突的公斤、米数、价格或新等级。不要每章报表；目标是让读者在关键换挡后持续知道“现在在哪档、哪里不讲理、眼前东西到底有多值”。"""
 
@@ -128,7 +130,7 @@ STAGE_CHANGE_PLANNING_RULE = """阶段推进优先（软规划原则，不是固
 
 OPENING_THREE_CHAPTER_CONTRACT = """开书前三章专用合同（只适用于本书开头第1—3章，不扩展为全书每三章的规律，也不是 Schema 或 Hard Gate）：
 
-第一章的进入顺序优先为：具体的人正在面对什么问题 → 失败会导致什么具体后果 → 当前行动最低限度需要理解的规则 → 主角立即行动。**如果这是陌生世界的第一章，且 Curator / Opening Strategy 已给出安全、社会或生活边界的 Orientation Fact，就必须在第一轮核心冲突之前或紧贴第一次专属场景名词，用 1—2 句/一个很短段落把其中最重要的一条真正写进正文**；例如这里的人为什么怕城外、谁才有资格出城、眼前活动为什么有分量。它只能帮助读者站稳脚下，不能变成世界史，也不能推迟第一章核心行动与能力兑现。前三章应在相关冲突或爽点真正需要之前，让读者自然获得足够的世界坐标与度量尺（如主角/对手强弱、身份层级、关键价值尺度），但只释放理解当前故事所需的信息。核心优势第一次形成结果时，尽量让读者同步得到一个世界内比较：同层普通人/天才或已出现的更高层人物通常能做到什么，这次结果为什么超标；可以来自境界、测试值、战绩或懂行者反应，不必讲设定表。新造世界概念第一次影响人物选择时，先让读者知道它具体让谁或什么发生怎样的变化、人物因此能或不能做什么；名字和深层原因可以随后出现。不要先把世界模型讲完，再把主角放进来，也不要写成设定集。
+第一章的进入顺序优先为：具体的人正在面对什么问题 → 失败会导致什么具体后果 → 当前行动最低限度需要理解的世界事实 / 规则 → 主角立即行动。**World fact 的选择权在 World + Outline，不在 Writer**：如果当前章 `具体剧情` 已排程某条开篇世界定向，Curator 必须保留，Primary 用最短直接方式落实；如果 Plan 没排程，Primary 不自己从完整 World 里挑一段补课。前三章只释放理解当前故事所需的信息，同时让读者获得必要的强弱、身份、价值与世界位置；核心优势第一次形成结果时，用一次世界内比较说明为什么超标。不要先把世界模型讲完再放主角进去，也不要把世界定向做成独立 Setup 事件。
 
 第一章必须让主角面对逼近的现实问题并采取行动。章末前，核心非对称优势必须造成一次真实、可见、不可替代的现实结果；只听见、看见、感知、得到坐标、知道未来、出现面板、能力似乎觉醒或“下章再试”都不算兑现。先让动作、结果、他人反应和主角实际所得成立，再保留尚未解释的成长空间；第一次展示要强，但不要提前结算第二章本应完成的能力拥有、第二次使用或正式升级。
 
@@ -229,7 +231,7 @@ READER_FIRST_PROSE_CONTRACT = f"""Reader-First Prose Contract：这是表达层�
 
 只展开会改变人物选择、风险、能力差异或结果的关键因果节点。重点写为什么普通方法不行、主角发现了什么差异、他做了哪个决定、决定为什么有风险、结果具体改变了什么；重复搬运、普通走位、左右微调、完整受力过程、每一步碎石或火流变化、已经理解过的同一种能力执行步骤默认压缩。**决定已经做完后的普通实施默认一句或一个短段概括**；只有实施中重新出现新的选择、冲突、不确定性、失败风险或人物关系变化，才值得恢复成完整场景。因果清晰不等于完整模拟物理过程。
 
-当 Curated Context 明确给出首次重要势力、地点、身份、资源或生活方式的已批准 Orientation Facts 时，允许用 1—3 个短的直接旁白段把读者此刻最需要的世界模型补齐：它是什么、为什么重要、当前 POV/普通人通常知道到哪里。**Action creates the question → Exposition answers just enough → Action continues.** 这类高价值 Orientation 可以替代低价值实施与重复验证，但不得越过 Canon / Plan 的未知边界，也不得顺手讲完整世界史。**Orientation 只解释新的世界坐标，不重新打开 `Already Established — Do Not Re-explain` 中已经成立的旧事实**：不要借“给读者解释”之名再次检查旧痕迹、重算旧动作、重述能力边界或重复人物确认。
+当 Curated Context 按当前 Plan 携带了已批准 World fact 时，允许用 1—3 个短的直接旁白段把读者此刻需要的世界模型补齐：**Action creates the question → Exposition answers just enough → Action continues.** Writer 不负责从完整世界中选择还该介绍什么，只落实 Curator 已投影的事实；不得越过未知边界，也不得借世界说明重新打开已经成立的旧事实。
 
 “第一息 / 第二息 / 第三息”之类的微观计时，只在时间顺序本身影响成败时使用；普通动作不要为了显得精确而逐息书写。新章不要原样或近似复述上一章最后一句或最后一个动作来证明连续性；上一章已经建立的状态默认继续成立，新章从这个状态造成的下一个有意义变化进入。
 
@@ -620,9 +622,9 @@ Secondary: <skill_id 或 none>
 
 其中 `## Relevant Characters and Relationships` 只保留本章真正会用到的信息：除目标、关系、能力和当前条件外，顺带保留角色当前最在意的事、最容易被刺到的自尊/恐惧/欲望、最近关系变化带来的态度，以及正文已经形成的明显行为习惯或说话声音。只有输入明确支持且本章会用到时才写；不要生成 Character Card、心理档案或新增固定字段。
 
-`## Relevant World Rules` 不只负责机制边界，也负责 **Context-Triggered Orientation**：当本章是某个重要势力、地点、身份、资源或生活方式第一次真正阻碍/诱惑/改变人物选择时，从本章确定性预取与末尾 `Optional Reader Orientation Reference` 中只保留 1—3 条最有用的已批准事实，优先回答“它是什么 / 为什么此刻有分量 / 普通人或当前 POV 通常怎样理解它”。这类事实可以交给 Writer 用短直接旁白表达；不要因为过去反设定倾倒，就把高价值世界定向也一起删掉。若原始 World 资料包含本章尚未授权揭晓的真实原因、人物身份或长期谜底，只保留不剧透的公共事实，未知继续未知。
+`## Relevant World Rules` 的世界事实来源只有 `WORLD AUTHORITY——本章确定性预取` 与已批准 Plan / Canon。**Outline 是 Reader Release Scheduler**：如果当前章 `具体剧情` 已经排程某条 World fact，Curator 必须保留该事实并确认它没有越过未知边界；如果 Plan 没有排程，就不要仅因为 WORLD AUTHORITY 里存在某段资料而自行选择另一套世界介绍。Curator 只筛选和压缩，不重做世界介绍决策。
 
-`## Opening Strategy` 负责把这些事实真正放到可执行位置：若是第一章且读者还没有最低安全/社会/生活坐标，不要只写“从动作切入”，而要从 `Optional Reader Orientation Reference` 中明确指定 **1 条非战力尺的世界生活事实**（优先安全边界、普通人怎样活、谁能进入外部世界、当前活动为什么连接力量与普通生活），在第一轮核心冲突前或紧贴首次专属场景名词，用一句/短段旁白完成。猎阶、境界、战力比较仍在冲突中单独承担 Ruler，不得拿“二阶是什么意思”冒充 Opening Orientation。若是重要势力/地点第一次挡路，也明确指出在哪个触发动作后回答“它是什么/为什么重要”，随后立即回到现场。不要同时塞 3 条，也不要把 Orientation 拖成开场设定课。
+`## Opening Strategy` 只决定这些**已排程事实**在场景中的落点：动作先制造问题，短直接旁白回答到够用，随后回到动作。第一章也服从同一结构，不再由 Curator 临时决定“应该介绍猎阶还是猎墙”。
 
 ## Reader-Facing Language
 只写本章需要的正文表达建议：内部机制用普通话如何落到对象、动作和结果；哪些题材常用词可以直接使用；哪些本书新造词必须先用动作解释；哪些策划术语不应直接进入正文。不得改写剧情。关系阶段、状态变化、社会评价、收益结算等抽象内容属于 Writer 的内部理解，不是正文措辞；若进入正文，应通过人物动作、对白和具体结果表现，不能直接复制总结。Curator 不必自行把这些内容改写成正文句子。**短直接旁白不是低级解释**：当 `Relevant World Rules` 已投影首次重要势力/地点/身份/价值的 Orientation Facts 时，可以明确建议 Writer 用 1—3 个短旁白段回答读者自然会问的“这是什么、为什么重要、普通人怎么看”，解释完立即回到现场；不要求把这些信息全部塞进对白。像“验证、闭环、阶段推进、价值兑现、成长空间、建立优势”这类词可以保留为内部语义，但不要把它们扩写成正文旁白；这些词不是禁词。规划层常见的“资源、机会、路径/路线、位置、选择、资格、收益、行动空间”也优先在正文里投影为 BOOK / Canon / Plan 已经明确存在的世界内具体对象或动作，例如货币、药品、装备、住处、票证、权限凭证、名次、具体服务、一次训练/旁听/见面/出手机会、某个实际地点或某件能拿在手里的东西。只有人物在本世界里确实会自然使用抽象词时才保留；上游没有给出具体世界名词时，不得为了“实体化”由 Curator 或 Writer 自己发明制度、价格、物品或待遇。若本章可能因过度压缩而显得干，只从输入已经明确支持的内容中保留 1—3 个可感知锚点，例如有功能的物件/空间位置、身体反馈、力量的可见后果或人物差异化反应；这些锚点必须服务当前冲突或人物，不为凑丰富度罗列五感，也不要替 Writer 预写修辞句。细节预算优先跟随 BOOK 核心幻想真正让读者关心的对象：如果爽点在人，就看人；在力量/招式，就看力量/招式；在探索，就看未知与进入；在经营，就看关键决策与利益变化。不要因为“具体性”本身，把篇幅自动转移到与核心幻想无关的地形、受力、承重点、流程或操作步骤。
@@ -1764,6 +1766,7 @@ def generate_prompt(
 
         packet = build_chapter_context(
             book_content=book_content,
+            world_vision=world_vision,
             current_long_block=current_long_block,
             previous_chapter_text=previous_chapter_text,
             current_outline=current_outline,
@@ -1804,6 +1807,7 @@ def generate_prompt(
 
         packet = build_chapter_context(
             book_content=book_content,
+            world_vision=world_vision,
             current_long_block=current_long_block,
             previous_chapter_text=previous_chapter_text,
             current_outline=current_outline,
@@ -1817,6 +1821,10 @@ def generate_prompt(
         parts.append(_input_block(
             "AUTHORITY——权威规则（按维度划分）与冲突处理（最小权威规则，仅此一份）",
             packet.authority,
+        ))
+        parts.append(_input_block(
+            "WORLD AUTHORITY——已批准 World Vision 的安全世界事实",
+            packet.world_authority or "（未提供独立 World Authority；不得由 Writer 补造世界事实。）",
         ))
         parts.append(_input_block(
             "BOOK CONTRACT——长期设计与稳定方向，不等于已经发生",
@@ -1862,6 +1870,7 @@ def generate_prompt(
 
         packet = build_chapter_context(
             book_content=book_content,
+            world_vision=world_vision,
             current_long_block=current_long_block,
             previous_chapter_text=previous_chapter_text,
             current_outline=current_outline,
@@ -1886,6 +1895,10 @@ def generate_prompt(
                     _input_block(
                         "CONTEXT INDEX——只含可见结构入口，不含被省略正文",
                         context.context_index,
+                    ),
+                    _input_block(
+                        "WORLD AUTHORITY——本章确定性预取",
+                        context.world_authority or "（当前章 Plan 未排程需要额外释放的 World fact。）",
                     ),
                     _input_block("压缩 Growth Genome（本章相关固定小节）", context.growth_genome_compact),
                     _input_block(
@@ -1938,6 +1951,10 @@ def generate_prompt(
                         _input_block(
                             "本章成长收益短投影——Curator 缺失时的规划 fallback",
                             packet.growth_benefit_projection,
+                        ),
+                        _input_block(
+                            "WORLD AUTHORITY——Curator 缺失时的世界事实 fallback",
+                            packet.world_authority,
                         ),
                     ]
                 )

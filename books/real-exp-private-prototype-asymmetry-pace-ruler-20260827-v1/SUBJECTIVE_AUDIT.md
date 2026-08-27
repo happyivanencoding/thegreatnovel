@@ -8,10 +8,10 @@
 
 1. **World 缺口**：当前 World 已有猎墙、普通生活、猎阶和荒原部族等事实，但没有明确“普通人怎样安全跨越聚落 / 商队为什么是外部世界入口”这类移动现实。
 2. **Outline 调度缺口**：已有安全 / 社会事实没有被明确安排在开篇；白角部第一次真正影响选择时，也没有调度少量公共背景进入正文。
-3. **World→Curator projection 过于装饰性**：实验还漏走了这条产品投影，因此不能把全部责任算给 Curator；正确方向是 relevance-directed、只含已批准公共事实的安全 Orientation 投影。
+3. **更深的结构问题是 Approved World Vision 没有进入 ChapterContextPacket**：章节 Runtime 只把 Outline 生成的 `BOOK §2` 摘要当世界输入，再由 API 外围附加一个装饰性的 World→Curator side channel；这使 Curator 实际在“二次压缩世界 + 启发式补片”上工作。正确方向不是继续调 selector，而是让 Approved World Vision 成为章节期一等 `WORLD AUTHORITY`，由 Outline 排程释放、Curator bounded prefetch。
 4. **Primary 残余**：Chapter 4 Director 已经很干净，停车、排车、绑缰等决定后的普通实施仍被正文自行扩写，这一点仍然成立。
 
-同时，本文后文举出的“白角部长期与王朝交易/冲突”“整支部族迁徙通常意味着什么”等更具体说法，若当前 World 没有明确批准，就只能作为实验假设，不能直接交给 Writer。稳定原则应是：**World 提供事实 → Outline 决定首次释放时机 → Curator 选 1—3 条安全事实 → Primary 用短直接旁白表达；未知仍保持未知。**
+同时，本文后文举出的“白角部长期与王朝交易/冲突”“整支部族迁徙通常意味着什么”等更具体说法，若当前 World 没有明确批准，就只能作为实验假设，不能直接交给 Writer。稳定结构应是：**Approved World Vision 提供事实 → Outline 把当前要释放的具体事实写进 `具体剧情` → Chapter Runtime 从 `WORLD AUTHORITY` bounded prefetch → Curator 保留/压缩 → Primary 表达；未知仍保持未知。**
 
 ## 一、总判断
 

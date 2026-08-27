@@ -23,6 +23,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
+from .character_context import project_world_reality
 from .prompts import (
     CURRENT_STATE_HEADING,
     canon_memory_has_labels,
@@ -39,9 +40,10 @@ from .prompts import (
 #: 整份运行合同不再重复注入。
 MINIMAL_AUTHORITY_RULE = """权威规则按维度划分（不使用单条总排名）：
 1. 已发生事实：CANON PROSE > CANON INDEX。CANON PROSE 是已批准的正式前文；已经发生事实的最高来源。CANON INDEX 是当前状态和最近摘要，是正式正文的压缩索引；与正式正文冲突时以正式正文为准。
-2. 未来创作意图：BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION。BOOK CONTRACT 是作者批准的长期设计、世界规则、读者承诺和人物方向；它约束未来，但不表示其中所有人物弧和阶段方向已经发生。PLAN 是当前大型剧情块、十章计划和当前章事件合同，只决定尚未发生的内容。OPTIONAL INSPIRATION 是可选参考，不能覆盖 BOOK CONTRACT、PLAN 或已发生事实。
-3. 表达控制：PROSE PROFILE 只控制表达方式，不能修改已发生事实或未来计划。
-4. 跨维度冲突：已发生事实不能被 BOOK CONTRACT 或 PLAN 覆盖；如果正文或 CANON INDEX 证明旧 BOOK CONTRACT 已经失效，保留已发生事实，不得自动修改 BOOK CONTRACT。Curator 负责在 Curator Audit 中暴露会影响本章执行的明确冲突；Primary 不承担冲突报告或其它 pipeline bookkeeping，只服从已经投影出的有效事实与计划。"""
+2. 世界事实：WORLD AUTHORITY 是已批准 World Vision 的安全事实投影，负责世界规律、普通生活、力量正常值、社会现实、价值结构与公开知识边界；BOOK / PLAN 可以决定这些事实何时进入故事，但不得改写它们。named 大事件与未解谜底不在该投影中，仍服从已批准 Story / Plan 与未知边界。
+3. 未来创作意图：BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION。BOOK CONTRACT 决定长期故事方向、读者承诺和人物方向；PLAN 决定当前尚未发生的剧情；OPTIONAL INSPIRATION 不能覆盖以上任何权威。
+4. 表达控制：PROSE PROFILE 只控制表达方式，不能修改已发生事实或未来计划，也不能改写 WORLD AUTHORITY。
+5. 跨维度冲突：已发生事实不能被 BOOK CONTRACT 或 PLAN 覆盖；如果正文证明旧 BOOK CONTRACT 已经失效，保留已发生事实，不得自动修改 BOOK CONTRACT。世界事实不能被 BOOK / PLAN / Writer 临时改写。Curator 负责在 Curator Audit 中暴露会影响本章执行的明确冲突；Primary 不承担冲突报告或其它 pipeline bookkeeping，只服从已经投影出的有效事实与计划。"""
 
 #: 事件合同重点呈现的六项；「推动事件的人」作为场景上下文，「叙事功能」降级为规划备注。
 EVENT_CONTRACT_FIELDS = (
@@ -83,6 +85,7 @@ class ChapterContextPacket:
     """章节写作运行期上下文包；所有区块均为确定性文本。"""
 
     authority: str
+    world_authority: str
     book_contract: str
     chapter_mission: str
     canon_context: str
@@ -304,6 +307,7 @@ def _without_genre_prior(text: str) -> str:
 def build_chapter_context(
     *,
     book_content: str = "",
+    world_vision: str = "",
     current_long_block: str = "",
     previous_chapter_text: str = "",
     current_outline: str = "",
@@ -386,6 +390,7 @@ def build_chapter_context(
     growth_genome_compact = compact_growth_genome_for_chapter(book_content)
     return ChapterContextPacket(
         authority=MINIMAL_AUTHORITY_RULE,
+        world_authority=project_world_reality(world_vision) if world_vision.strip() else "",
         book_contract=book_contract,
         chapter_mission=render_event_contract(current_outline),
         canon_context=canon_context,

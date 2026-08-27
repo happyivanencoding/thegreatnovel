@@ -57,16 +57,16 @@ def _strip_named_mysteries(knowledge_section: str) -> tuple[str, str]:
     return safe, mysteries
 
 
-def project_character_world_slice(world_vision: str) -> str:
-    """Project world facts that may shape a character without leaking active story hooks.
 
-    The projection intentionally preserves laws, normal/rarity baselines, culture,
-    ordinary life and generic value structures. It excludes named active events,
-    named adventure locations, unresolved named mysteries and author-facing reader
-    coordinates. No LLM call is involved.
+def project_world_reality(world_vision: str) -> str:
+    """Project approved world facts safe for downstream runtime.
+
+    Keeps ordinary life, power normality, social reality, generic value structures
+    and public knowledge boundaries while excluding named active story opportunities
+    and named unresolved mysteries. This is fact authority, not prose guidance.
     """
 
-    parts: list[str] = ["# CHARACTER WORLD SLICE｜World Reality Only"]
+    parts: list[str] = ["# WORLD REALITY AUTHORITY｜Approved Facts Only"]
     preamble = _preamble(world_vision)
     if preamble:
         parts += ["", "## 世界基础现实", preamble]
@@ -79,7 +79,18 @@ def project_character_world_slice(world_vision: str) -> str:
             block, _ = _strip_named_mysteries(block)
         if block:
             parts += ["", block]
+    return "\n".join(parts).strip() + "\n"
 
+
+def project_character_world_slice(world_vision: str) -> str:
+    """Project world reality for character generation without active story hooks."""
+
+    reality = project_world_reality(world_vision).strip().replace(
+        "# WORLD REALITY AUTHORITY｜Approved Facts Only",
+        "# CHARACTER WORLD SLICE｜World Reality Only",
+        1,
+    )
+    parts: list[str] = [reality]
     parts += [
         "",
         "## Character 生成边界",
@@ -153,128 +164,3 @@ def project_story_opportunity_layer(world_vision: str) -> str:
         if mysteries:
             parts += ["", "## Named Unresolved Mysteries", mysteries]
     return "\n".join(parts).strip() + "\n"
-
-_WRITER_ORIENTATION_SECTIONS = (
-    "## 普通人的生活与上升",
-    "## 社会现实与身份",
-    "## 世界里真正值钱、值得想要的东西",
-)
-
-
-def _orientation_terms(text: str) -> set[str]:
-    terms: set[str] = set()
-    for token in re.findall(r"[A-Za-z0-9_]{3,}|[\u4e00-\u9fff]{2,}", text.casefold()):
-        if re.fullmatch(r"[\u4e00-\u9fff]+", token):
-            if len(token) <= 8:
-                terms.add(token)
-            for width in (2, 3):
-                if len(token) >= width:
-                    terms.update(token[index : index + width] for index in range(len(token) - width + 1))
-        else:
-            terms.add(token)
-    if any(marker in text for marker in ("迁徙", "族人", "族群", "部落", "部族")):
-        terms.update({"部族", "荒原部族"})
-    return terms
-
-
-def _orientation_category_bonus(query: str, heading: str, paragraph: str) -> int:
-    """Prefer the kind of world fact the current scene is actually asking for."""
-
-    bonus = 0
-    if any(marker in query for marker in ("第1章", "第一章", "猎市")):
-        if heading == "## 普通人的生活与上升" and any(
-            marker in paragraph for marker in ("猎墙", "普通人", "猎队", "异兽")
-        ):
-            bonus += 140
-    if any(marker in query for marker in ("迁徙", "白角", "部族", "部落", "族群", "族人")):
-        if heading == "## 社会现实与身份" and any(
-            marker in paragraph for marker in ("部族", "族群", "共同狩猎", "交易", "冲突")
-        ):
-            bonus += 100
-    if any(marker in query for marker in ("商队", "南行", "商道", "封路", "出城", "离开", "聚落", "赶路")):
-        if heading == "## 普通人的生活与上升" and any(
-            marker in paragraph for marker in ("商队", "猎队", "聚落", "猎墙", "出城", "道路", "远行")
-        ):
-            bonus += 80
-    if any(marker in query for marker in ("猎阶", "无阶", "猎手", "猎队", "入场", "准备圈", "武馆")):
-        if any(marker in paragraph for marker in ("猎阶", "猎队", "武馆", "军府", "高阶战斗圈")):
-            bonus += 50
-    if any(marker in query for marker in ("心核", "王种", "名器", "资格", "值钱", "价值")):
-        if heading == "## 世界里真正值钱、值得想要的东西" and any(
-            marker in paragraph for marker in ("心核", "王种", "名器", "资格")
-        ):
-            bonus += 70
-    return bonus
-
-
-def project_writer_texture_context(
-    world_vision: str,
-    *,
-    relevance_text: str = "",
-    max_chars: int = 1800,
-) -> str:
-    """Project bounded approved world facts for Curator/Writer orientation.
-
-    This is deliberately not Human Seed input and excludes named Story Opportunity
-    sections. It can orient an already planned scene but cannot create Canon, a new
-    character motive, a hidden cause, or a new story hook.
-    """
-
-    candidates: list[tuple[int, int, str, str]] = []
-    query_terms = _orientation_terms(relevance_text)
-    fallback: tuple[str, str] | None = None
-    for section_index, heading in enumerate(_WRITER_ORIENTATION_SECTIONS):
-        block = _section(world_vision, heading)
-        if not block:
-            continue
-        lines = block.splitlines()
-        body = "\n".join(lines[1:]).strip()
-        paragraphs = [part.strip() for part in re.split(r"\n\s*\n", body) if part.strip()]
-        for paragraph_index, paragraph in enumerate(paragraphs):
-            if fallback is None:
-                fallback = (heading, paragraph)
-            score = (
-                _orientation_category_bonus(relevance_text, heading, paragraph)
-                + min(len(query_terms & _orientation_terms(paragraph)), 12)
-                if query_terms
-                else 0
-            )
-            candidates.append((score, -section_index, heading, paragraph))
-
-    if not candidates:
-        return ""
-
-    selected: list[tuple[str, str]] = []
-    used = 0
-    positive = any(score > 0 for score, *_ in candidates)
-    if not positive and fallback is not None:
-        selected.append(fallback)
-        used += len(fallback[0]) + len(fallback[1]) + 4
-
-    for score, _, heading, paragraph in sorted(candidates, key=lambda item: (-item[0], item[1])):
-        if score <= 0 or (heading, paragraph) in selected:
-            continue
-        extra = len(heading) + len(paragraph) + 4
-        if used + extra > max_chars:
-            continue
-        selected.append((heading, paragraph))
-        used += extra
-        if len(selected) >= 3:
-            break
-
-    rendered: list[str] = []
-    last_heading = ""
-    for heading, paragraph in selected:
-        if heading != last_heading:
-            rendered.append(heading)
-            last_heading = heading
-        rendered.append(paragraph)
-    text = "\n\n".join(rendered).strip()
-    return (
-        "# Optional Reader Orientation Reference｜Writer-side only\n"
-        "以下只是从已批准 World Vision 中按当前章相关性确定性抽出的安全世界事实。"
-        "当本章第一次真正碰到重要地点、势力、身份、价值或生活边界时，Curator 可选 1—3 条帮助读者定向；"
-        "没有自然问题就不用。不得由此建立新规则、新人物欲望、新剧情义务或长期 Canon，也不得补写未提供的隐藏原因。\n\n"
-        + text
-        + "\n"
-    )

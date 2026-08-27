@@ -856,7 +856,7 @@ STATUS_MARKER
         "已批准的正式前文；已经发生事实的最高来源",
         "是正式正文的压缩索引",
         "与正式正文冲突时以正式正文为准",
-        "只决定尚未发生的内容",
+        "PLAN 决定当前尚未发生的剧情",
         "Curator 负责在 Curator Audit 中暴露",
         "Primary 不承担冲突报告或其它 pipeline bookkeeping",
     ):
@@ -1209,7 +1209,7 @@ def test_long_form_pacing_uses_soft_anchors_and_dynamic_outline_window() -> None
     assert "规划范围：预计第1—N章" in outline
     assert "当前中期规划窗口只展开 Story Program" in outline
     assert "完整输出从第1章到本窗口预计终点的所有自然剧情块" in outline
-    assert "世界坐标与度量尺" in outline
+    assert "Reader Release Scheduler" in outline
     assert "严格的 T0 快照" in outline
     assert "第一章第一场事件发生前一刻已经真实成立的事实" in outline
     assert "模型已经规划过”不等于“故事已经发生过" in outline
@@ -2695,10 +2695,10 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "Discriminative Detail Only" in director_ruler
     assert "Persistent Reader Ruler" not in primary_ruler
     assert "State Advance After Proof / Choice → Consequence" in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "Context-Triggered Orientation" in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "动作先制造读者问题" in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "Orientation 占用的是解释预算，不是事件预算" in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "不能为了先介绍世界新增 Prelude 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Reader Release Scheduler" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "先让当前事件制造读者问题" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "具体 World fact 直接写进该章现有 `具体剧情`" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不能新增 Prelude / Setup 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "十章批次不是把当前剧情块拉长到十章的配额" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "新书第1章不得是纯 Setup" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Opening Orientation 只能嵌在同章动作中" in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -2716,15 +2716,15 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
         book_content="",
         current_outline=REAL_COLD_CHAIN_OUTLINE,
     )
-    assert "Context-Triggered Orientation" in curator_orientation
+    assert "Outline 是 Reader Release Scheduler" in curator_orientation
     assert "短直接旁白不是低级解释" in curator_orientation
-    assert "Opening Strategy` 负责把这些事实真正放到可执行位置" in curator_orientation
-    assert "不得拿“二阶是什么意思”冒充 Opening Orientation" in curator_orientation
+    assert "Opening Strategy` 只决定这些**已排程事实**在场景中的落点" in curator_orientation
+    assert "不再由 Curator 临时决定“应该介绍猎阶还是猎墙”" in curator_orientation
     assert "不是本章可重新展开的素材库" in curator_orientation
     assert "决定已经做完后的普通实施默认压缩" in director_ruler
     assert "决定已经做完后的普通实施默认一句或一个短段概括" in primary_ruler
     assert "Action creates the question → Exposition answers just enough → Action continues" in primary_ruler
-    assert "Orientation 只解释新的世界坐标" in primary_ruler
+    assert "Writer 不负责从完整世界中选择还该介绍什么" in primary_ruler
     assert "## 不可替代的人与关系" in story_program
     assert "### 关键关系（可选）" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -2950,6 +2950,7 @@ def test_curator_index_first_prefetch_keeps_relevant_detail_and_drops_unrelated_
     )
     packet = ChapterContextPacket(
         authority="AUTH",
+        world_authority="",
         book_contract=book_contract,
         chapter_mission="主角行动：陆砚拒绝谢三更压价，并争夺路线控制权。",
         canon_context="## PERSISTENT CANON：\n陆砚已经掌握一条隐秘路线。",
@@ -3378,14 +3379,14 @@ def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> Non
 def test_outline_releases_world_model_and_varies_early_core_gameplay() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Outline World Model Release" in template
-    assert "作者在 World Vision 里知道某个概念，不等于读者已经知道" in template
-    assert "可观察的触发、结果和行动含义" in template
-    assert "不要用意象、哲学定义或专属术语代替规则本身" in template
+    assert "Approved World Vision 决定世界事实" in template
+    assert "Outline 不再承担“保存/重写世界设定”的职责" in template
+    assert "具体 World fact 直接写进该章现有 `具体剧情`" in template
     assert "Outline Core Gameplay Variation" in template
     assert "上一轮已证明有效的解法不要自动解决下一轮主要问题" in template
     assert "下一轮优先攻击它尚未解决的对象、关系、资源、目标或条件" in template
     assert "不要求机械让主角失败或每轮添加新代价" in template
-    assert "前三章建立当前故事所需的最低可用坐标" in template
+    assert "开篇需要一个粗糙但正确的生活世界模型" in template
     assert "长期对手可暂时作为强弱标尺" in template
 
 
@@ -4208,8 +4209,9 @@ BOOK_RECENT_SUMMARY_MARKER
 
 def test_authority_rule_is_three_dimensional_with_canon_prose_over_canon_index() -> None:
     # 验收点 1：已发生事实规则明确为 CANON PROSE > CANON INDEX，
-    # 且权威改为三维度规则，不再是六级总排名。
+    # 且权威按事实/世界/计划/表达分维度，不再是单条总排名。
     assert "已发生事实：CANON PROSE > CANON INDEX" in MINIMAL_AUTHORITY_RULE
+    assert "世界事实：WORLD AUTHORITY" in MINIMAL_AUTHORITY_RULE
     assert "未来创作意图：BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION" in MINIMAL_AUTHORITY_RULE
     assert "表达控制：PROSE PROFILE 只控制表达方式，不能修改已发生事实或未来计划" in MINIMAL_AUTHORITY_RULE
     assert "跨维度冲突" in MINIMAL_AUTHORITY_RULE
