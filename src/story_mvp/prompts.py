@@ -2168,5 +2168,3 @@ def generate_prompt(
             parts.append(_input_block("尚未发生的 100 章方向", future_direction))
 
     return "\n\n".join(parts).strip() + "\n"
-
-
