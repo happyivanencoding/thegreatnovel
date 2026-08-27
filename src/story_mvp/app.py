@@ -563,7 +563,7 @@ def _validate_state_delta_input(payload: PromptRequest) -> None:
 
 def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
     filtered = dict(values)
-    for key in ("power_seed", "human_seed", "prototype_id", "character_card", "character_initial_state"):
+    for key in ("power_seed", "human_seed", "prototype_id", "character_initial_state"):
         filtered.pop(key, None)
     return filtered
 

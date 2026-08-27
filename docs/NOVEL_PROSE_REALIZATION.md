@@ -233,11 +233,11 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ### Context Curator — Context Projection
 
-从 `WORLD AUTHORITY`、BOOK、Canon、当前计划、Prose Profile、可选 Inspiration 与前文章末中选择 Writer 真正需要的信息。`WORLD AUTHORITY` 是 Approved World Vision 的安全事实投影；Outline 的 `Reader Release Map` 为当前章排程哪条世界事实，Curator 就保留/压缩哪条，不自行改选说明主题。它输出 `Reader-Facing Language`，但不重规划、不新增事实、不自行写正文。
+从 `WORLD AUTHORITY`、deterministic `CHARACTER.md` 中**只截取的 Frozen Human Core**、BOOK、Canon、当前计划、Prose Profile、可选 Inspiration 与前文章末中选择 Writer 真正需要的信息；Power Core 不在章节期重复注入，可变状态仍由 BOOK/State 提供。`WORLD AUTHORITY` 是 Approved World Vision 的安全事实投影；Outline 的 `Reader Release Map` 为当前章排程哪条世界事实，Curator 就保留/压缩哪条，不自行改选说明主题。冻结 Human Core 高于最近几章行为归纳；场景自然触发已批准的身体吸引、审美、虚荣、钱、享受、好奇、偏心等私人牵引时，保留一个可直接进入 POV 的具体触发，不因连续负责/克制而把人物收束成新的道德人格。它输出 `Reader-Facing Language`，但不重规划、不新增事实、不自行写正文。
 
 ### Primary Writer — Reader Experience
 
-以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。若 Curator 已投影当前 Plan 排程的 World fact，可用 1—3 个短直接旁白段回答后立刻回现场；Writer 不从完整 World 自选说明主题，也不要求把世界说明伪装成对白。决定完成后的普通实施默认一句或短段概括。 非核心 Supporting Skill 即使承担一个关键动作，也写到“做了什么 / 为什么有效 / 结果”就停；Reader Release 已给 named 对象公开类别时，首次识别可直接说清一次。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补情绪；Planning 的抽象标签不直接变成旁白总结。
+以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。若 Curator 已投影当前 Plan 排程的 World fact，**该 Reader Release 必须在本章兑现**：用 1—3 个短直接旁白段或等价场景表达回答后立刻回现场；若同一事实还说明地点/势力/传承为什么值得争，保留一个最短价值锚点。Writer 不从完整 World 自选说明主题，也不要求把世界说明伪装成对白。Curated Context 已明确带入私人欲望且当前场景自然触发时，让一次注意力、身体反应、靠近/回避、想要或短期选择保留它，不统一净化成职责协作与成熟沟通。决定完成后的普通实施默认一句或短段概括。 非核心 Supporting Skill 即使承担一个关键动作，也写到“做了什么 / 为什么有效 / 结果”就停；Reader Release 已给 named 对象公开类别时，首次识别可直接说清一次。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补情绪；Planning 的抽象标签不直接变成旁白总结。
 
 **Story-bearing Texture > Decorative Density**：正文不以“多写”或“多修饰”制造丰富感。每个主要 beat 选择少量真正改变画面的具体动作、物件/空间、身体反馈、力量后果和人物差异化反应；感官细节选择最有辨识度的少数锚点，不机械覆盖五感。细节如果不承载人物、冲突、因果或幻想体验，就继续压缩。
 

@@ -2671,6 +2671,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     ):
         assert marker in story_program
     assert "Story Program 是“长期因果如何继续”的编译" in story_program
+    assert "最独有的**生活特权**" in story_program
+    assert "不要把独有幻想降格成同一种战斗解法反复放大" in story_program
     assert "全书成长与核心幻想兑现脊柱" in story_program
     assert "不等于每个大型阶段都必须同时出现新能力" in story_program
     assert "力量可以无显著升级" in story_program
@@ -2679,6 +2681,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "震撼式长期重释" in story_program
     assert "揭晓当下足够意外" in story_program
     assert "不默认等于隐藏血脉/身世" in story_program
+    assert "不要让所有高价值重释都只发生在世界层" in story_program
+    assert "不得为了制造 Personal Myth 凭空补身世" in story_program
     assert "震撼式长期重释" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "震撼式长期重释" in DEFAULT_PROMPT_TEMPLATES["review"]
     assert "震撼式长期重释" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
@@ -2702,6 +2706,9 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "主角只做站队、拒绝、观察、跟随、守住位置、说一句决定等简单行动也完全成立" in director_ruler
     assert "Persistent Reader Ruler" not in primary_ruler
     assert "State Advance After Proof / Choice → Consequence" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Stage Settlement = Consequence, not Process Carrier" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "报告、登记、责任说明、复盘、资格发放" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "纸、牌、契约可以确认结果" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Reader Release Scheduler" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "### Reader Release Map" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "- 第N章｜触发：具体已批准 World fact" in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -2716,6 +2723,9 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "它是什么类型的存在" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "安全公开类别" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "十章批次不是把当前剧情块拉长到十章的配额" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "World Entry = Threat + Desire + Ruler" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "机会成本只存在于计划里" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不把 Rival 只写成态度合理的人" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "新书第1章不得是纯 Setup" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Opening Orientation 只能嵌在同章动作中" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Plot Pace ≠ Tier Pace" in story_program
@@ -2747,6 +2757,10 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
         current_outline=REAL_COLD_CHAIN_OUTLINE,
     )
     assert "Reader Release 是 timing authority" in curator_orientation
+    assert "Frozen Human Core 高于最近几章的行为归纳" in curator_orientation
+    assert "不要只把它投影成职责、协作、尊重边界或成熟沟通" in curator_orientation
+    assert "Specific Relationship Trigger" in curator_orientation
+    assert "近身照料、重逢、分别、私密靠近、嫉妒、邀请" in curator_orientation
     assert "短直接旁白不是低级解释" in curator_orientation
     assert "Opening Strategy` 只决定这些**已排程事实**在场景中的落点" in curator_orientation
     assert "不再由 Curator 临时决定“应该介绍猎阶还是猎墙”" in curator_orientation
@@ -2754,6 +2768,9 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "决定已经做完后的普通实施默认压缩" in director_ruler
     assert "决定已经做完后的普通实施默认一句或一个短段概括" in primary_ruler
     assert "Action creates the question → Exposition answers just enough → Action continues" in primary_ruler
+    assert "已明确排程的 Reader Release 是本章需要落实的 timing decision" in primary_ruler
+    assert "欲望/价值锚点" in primary_ruler
+    assert "已批准的私人欲望也不要被正文自动净化" in primary_ruler
     assert "不把它再展开成一个需要逐步解决的小任务" in primary_ruler
     assert "直接用普通话说清一次类别" in primary_ruler
     assert "`## Relevant Plan` 也必须执行同样的降维" in curator_orientation
@@ -2779,11 +2796,13 @@ def test_split_world_vision_provides_reusable_reader_benchmarks_without_database
 def test_high_value_acquisition_guidance_lives_in_story_program_and_outline_only() -> None:
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "High-Value Acquisition / Reward Opportunity" in outline
+    assert "真实错失允许有空窗" in outline
     assert "阶段可以没有新的标志性获得" in outline
     assert "奖励类型与出现顺序由本书因果决定" in outline
     idea = DEFAULT_PROMPT_TEMPLATES["idea"]
     assert "High-Value Acquisition / Reward Opportunity" not in idea
     assert "高价值获得是读者欲望原则，不是阶段字段" in idea
+    assert "真实错失允许有空窗" in idea
     assert "没有自然机会时不要为了填表制造奖励" in idea
     assert "不机械掉宝或升级" in idea
     assert "High-Value Acquisition / Reward Opportunity" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]

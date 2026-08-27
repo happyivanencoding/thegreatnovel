@@ -37,6 +37,64 @@ from story_mvp.run_ledger import (
 from story_mvp.storage import apply_state_delta_to_book, save_chapter, validate_chapter_body_for_save
 
 
+def test_curator_gets_frozen_human_core_without_repeating_power_core() -> None:
+    character = """# CHARACTER CARD 1｜Split Authority
+
+## POWER CORE｜Frozen Authority
+
+POWER_ONLY_MARKER
+
+## HUMAN CORE｜Frozen Authority
+
+# HUMAN SEED｜真实嵌套结构
+
+## 持续牵引与互相竞争的动机
+
+他会被具体人的身体、气味和靠近感吸引，也在意自己的钱与被有分量的人看见。
+
+## Behavior Signature
+
+不把安全与责任永远放在第一。
+
+## Composition Boundary
+
+不做后验合理化。
+"""
+    prompt = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content="# 小说总体设计画像\n\n## 1. 核心类型与读者承诺\n\n成长",
+        character_card=character,
+        current_outline=OUTLINE,
+    )
+    assert "FROZEN HUMAN CORE——稳定人格权威" in prompt
+    assert "身体、气味和靠近感" in prompt
+    assert "POWER_ONLY_MARKER" not in prompt
+
+
+def test_prompt_api_preserves_character_card_for_chapter_curator() -> None:
+    client = TestClient(app)
+    response = client.post(
+        "/api/prompt",
+        json={
+            "mode": "context_curator",
+            "template": "",
+            "book_content": "# 小说总体设计画像\n\n## 1. 核心类型与读者承诺\n\n成长",
+            "character_card": (
+                "# CHARACTER CARD 1｜Split Authority\n\n"
+                "## POWER CORE｜Frozen Authority\n\nPOWER_API_ONLY\n\n"
+                "## HUMAN CORE｜Frozen Authority\n\n# HUMAN SEED｜API\n\n## 持续牵引与互相竞争的动机\n\nHUMAN_API_PRIVATE_DESIRE\n\n## Behavior Signature\n\nHUMAN_API_BEHAVIOR\n\n"
+                "## Composition Boundary\n\nEND"
+            ),
+            "current_outline": OUTLINE,
+        },
+    )
+    assert response.status_code == 200
+    prompt = response.json()["prompt"]
+    assert "HUMAN_API_PRIVATE_DESIRE" in prompt
+    assert "POWER_API_ONLY" not in prompt
+
+
 OUTLINE = "\n".join(
     f"{field}：内容"
     for field in (

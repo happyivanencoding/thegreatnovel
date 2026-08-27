@@ -1,0 +1,15 @@
+{
+  "story_prompt_chars": 17242,
+  "outline_prompt_chars": 34106,
+  "ch6_primary_prompt_chars": 13887,
+  "ch9_curator_prompt_chars": 19656,
+  "ch9_human_markers": {
+    "身体吸引": true,
+    "气味": true,
+    "姿态": true,
+    "靠近": true,
+    "自由钱": true,
+    "被真正有分量的人看见": true
+  },
+  "ch9_frozen_human_power_leak": false
+}

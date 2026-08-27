@@ -96,6 +96,7 @@ class ChapterContextPacket:
     current_chapter_plan: str
     prose_profile: str
     optional_inspiration: str
+    human_core: str = ""
     growth_benefit_projection: str = ""
     growth_genome_compact: str = ""
     reader_release: str = ""
@@ -115,6 +116,23 @@ def _markdown_block(content: str, heading: str) -> str:
         return "\n".join(collected).strip()
     return ""
 
+
+def project_frozen_human_core(character_card: str) -> str:
+    """只投影 deterministic CHARACTER.md 中稳定的 Human Core。"""
+
+    lines = character_card.splitlines()
+    start: int | None = None
+    collected: list[str] = []
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if start is None:
+            if stripped.startswith("## HUMAN CORE"):
+                start = index + 1
+            continue
+        if stripped == "## Composition Boundary":
+            break
+        collected.append(line)
+    return "\n".join(collected).strip()
 
 
 def extract_reader_release_for_chapter(book_content: str, chapter_number: int) -> str:
@@ -335,6 +353,7 @@ def _without_genre_prior(text: str) -> str:
 def build_chapter_context(
     *,
     book_content: str = "",
+    character_card: str = "",
     world_vision: str = "",
     current_long_block: str = "",
     previous_chapter_text: str = "",
@@ -430,6 +449,7 @@ def build_chapter_context(
         current_chapter_plan=current_chapter_plan.strip(),
         prose_profile=prose_profile,
         optional_inspiration=optional_inspiration,
+        human_core=project_frozen_human_core(character_card),
         growth_benefit_projection=growth_benefit_projection,
         growth_genome_compact=growth_genome_compact,
     )

@@ -53,6 +53,7 @@ class CuratorContextPacket:
     chapter_mission: str
     context_index: str
     world_authority: str
+    human_core: str
     book_contract: str
     growth_genome_compact: str
     canon_index: str
@@ -577,6 +578,7 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
     context_index = "\n\n".join(
         (
             _context_directory("WORLD AUTHORITY", packet.world_authority),
+            _context_directory("FROZEN HUMAN CORE", packet.human_core),
             _context_directory("BOOK CONTRACT", full_book_contract),
             _context_directory("CANON INDEX", packet.canon_context),
             _context_directory("PROSE PROFILE", packet.prose_profile),
@@ -598,6 +600,7 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
             ),
         ),
         reader_release=packet.reader_release,
+        human_core=packet.human_core,
         book_contract=_project_indexed_text(
             full_book_contract, relevance_query, max_chars=6200
         ),

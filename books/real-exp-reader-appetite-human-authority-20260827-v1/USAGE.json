@@ -1,0 +1,74 @@
+[
+  {
+    "file": "CH6_PRIMARY_TREATMENT_ACP.json",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 57.624,
+    "sessionId": "01a044eb-4d69-7061-b47b-8845738a8164",
+    "credits": "N/A",
+    "token_usage": "not_returned_by_runtime"
+  },
+  {
+    "file": "CH9_CURATOR_INVALID_R1_ACP.json",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 88.578,
+    "sessionId": "01a044eb-4d68-7d52-9cfc-2fb47fa57fb8",
+    "credits": "N/A",
+    "token_usage": "not_returned_by_runtime"
+  },
+  {
+    "file": "CH9_CURATOR_PARTIAL_R2_ACP.json",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 115.529,
+    "sessionId": "01a044ef-01b6-7482-9ed2-f12960ae2774",
+    "credits": "N/A",
+    "token_usage": "not_returned_by_runtime"
+  },
+  {
+    "file": "CH9_CURATOR_TREATMENT_ACP.json",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 104.66,
+    "sessionId": "01a044f3-305e-7113-be16-e3f9c59333a2",
+    "credits": "N/A",
+    "token_usage": "not_returned_by_runtime"
+  },
+  {
+    "file": "CH9_PRIMARY_TREATMENT_ACP.json",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 56.765,
+    "sessionId": "01a044f5-8baa-7800-96b7-327d7996b373",
+    "credits": "N/A",
+    "token_usage": "not_returned_by_runtime"
+  },
+  {
+    "file": "OUTLINE_TREATMENT_ACP.json",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 297.041,
+    "sessionId": "01a044eb-4d68-71a3-8999-4c51a70306ce",
+    "credits": "N/A",
+    "token_usage": "not_returned_by_runtime"
+  },
+  {
+    "file": "STORY_DIRECTIONAL_R1_ACP.json",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 415.622,
+    "sessionId": "01a044eb-4d7d-7ac0-8e46-f30b9e24d6e9",
+    "credits": "N/A",
+    "token_usage": "not_returned_by_runtime"
+  },
+  {
+    "file": "STORY_TREATMENT_ACP.json",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 428.762,
+    "sessionId": "01a044f4-f7f2-7ae2-81d9-c5c2cb0ee475",
+    "credits": "N/A",
+    "token_usage": "not_returned_by_runtime"
+  }
+]

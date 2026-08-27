@@ -22,13 +22,13 @@ Specialist / Integrator 不在默认链；只有作者明确启动局部 repair 
 
 ### Context Curator
 
-从确定性 Index-first 预取中筛选 Writer 真正需要的信息，输入包括 `WORLD AUTHORITY`、BOOK Contract、Canon、计划、Prose Profile、Open Promises 与 Scene Skills。World fact 的选择时机由 Outline 决定：Plan 排程了哪条已批准事实，Curator 就保留/压缩哪条；Plan 没排程时不自行从完整世界挑一段补课。它不补读全库、不重新规划、不把 Planning Language 改写成正文。
+从确定性 Index-first 预取中筛选 Writer 真正需要的信息，输入包括 `WORLD AUTHORITY`、**从 `CHARACTER.md` 确定性截取的 Frozen Human Core**、BOOK Contract、Canon、计划、Prose Profile、Open Promises 与 Scene Skills；Power Core 不在章节期重复注入，可变状态仍由 BOOK/State 提供。World fact 的选择时机由 Outline 决定：Plan 排程了哪条已批准事实，Curator 就保留/压缩哪条；Plan 没排程时不自行从完整世界挑一段补课。冻结 Human Core 高于最近几章行为归纳；近期救人、负责或克制只能改变关系预期，不能静默改写主角稳定人格。场景自然触发已批准私人欲望时，Curator 应保留一个可直接进入 POV 的具体触发，而不只剩职责协作；若 Frozen Human 明确某个具体人会改变选择，而本章正发生近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系性现场，默认属于自然触发，保留一个克制 cue 即可。它不补读全库、不重新规划、不把 Planning Language 改写成正文。
 
 Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact projection**：从 `Curator Audit`、`Relevant Open Promises`、明确未解的 World Rules 与 `Payoff and Promise Window` 中抽取约束，形成紧贴 Chapter Mission 的 `UNRESOLVED FACT BOUNDARY`。这不是新节点、Reviewer、RAG 或 Hard Gate；它只把 Curator 已经识别出的“仍未知 / 未兑现”提高到 Primary 的高显著事实边界，避免长篇时被埋在较长 Curated Context 中。
 
 ### Primary Writer
 
-只写正式正文。输入以 Director Contract + `UNRESOLVED FACT BOUNDARY` + Curated Context + 必要连续性为主；不直接读取 raw GBrain，不承担状态记账或长期结构修复。Canon / Curator 已标记为未知、未解释、真假未定或原因未明的过去事实继续保持未知；除非 Director Contract 明确规定本章新成立的事实，Primary 只能创造当前场景实现细节，不得把 plausible explanation 写成 retrospective canon。对白同样不能成为补 Canon 的旁路。
+只写正式正文。输入以 Director Contract + `UNRESOLVED FACT BOUNDARY` + Curated Context + 必要连续性为主；不直接读取 raw GBrain，不承担状态记账或长期结构修复。已排程 Reader Release 是本章要兑现的 timing decision：Curator 已投影时，用最短充分的直接旁白或场景表达说明，若同一事实包含地点/势力/传承的价值，也保留一个最短欲望锚点；只有正文同处已经自然说清才不重复。Curated Context 已明确带入私人欲望且当前场景自然触发时，不把它自动净化成职责协作或成熟沟通。Canon / Curator 已标记为未知、未解释、真假未定或原因未明的过去事实继续保持未知；除非 Director Contract 明确规定本章新成立的事实，Primary 只能创造当前场景实现细节，不得把 plausible explanation 写成 retrospective canon。对白同样不能成为补 Canon 的旁路。
 
 ### Optional Repair
 
