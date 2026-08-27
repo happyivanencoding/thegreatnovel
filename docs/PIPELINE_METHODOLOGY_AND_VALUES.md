@@ -153,7 +153,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 - 普通人的生活、上升与失败路径；
 - 当安全、地理或旅行会限制人生时，普通人怎样跨越聚落、谁能独行、哪些现实通道把当前生活连接到更大世界；
 - 力量体系的正常值、稀缺度、境界/能力的可观察差距；对当前会频繁使用的少数力量/价值/身份档位给 1—2 个可感知、可复用 benchmark，供下游稳定比较，不建战力数据库；
-- 宗门、王朝、家族、商盟、种族等怎样真实影响人生；
+- 宗门、王朝、家族、商盟、种族等怎样真实影响人生； named 势力 / 部族若会进入世界大事，同时给一个不剧透的公开类别锚点，让章节期 WORLD AUTHORITY 能回答“它是什么”；
 - 世界里真正值钱、值得人物争夺和羡慕的东西；
 - 3—6 件即使主角从未出生也会推进的人物行动、战争、迁徙、竞争或灾难；
 - 真正值得进入的地点、奇观、危险与未知；
@@ -363,7 +363,7 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
 - **Story Program execution, not rescheduling**：Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势成长、后续新 Asymmetry 获得与复合；Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略；
 - **Block Delta**：每块只记录相对本块开始真实改变的 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State，没变化的维度省略，上一块已经发生的变化不能重复包装成新 Delta；
-- **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实；Outline 在 `## 2. 世界观结构` 内用一个很短的 `Reader Release Map` 只保存当前窗口里 timing-sensitive、且与该章实际事件相交的首次释放，格式 `第N章｜触发：具体 World fact`，不是每章 KPI。未来仍作为 discovery / reveal 的答案不得提前排入 Map；只能先释放不回答谜底的公共背景。Chapter Runtime 按章读取，再从 WORLD AUTHORITY 取对应事实；开篇同时建立最低生活世界位置与必要 ruler；二者分工，单纯“普通人没境界 / 打不过敌人”不算生活定向。不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
+- **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实；Outline 在 `## 2. 世界观结构` 内用一个很短的 `Reader Release Map` 只保存当前窗口里 timing-sensitive、且与该章实际事件相交的首次释放，格式 `第N章｜触发：具体 World fact`，不是每章 KPI。未来仍作为 discovery / reveal 的答案不得提前排入 Map；只能先释放不回答谜底的公共背景。**World Entry 在人物真正跨过门槛的当章释放**：正式上路、进入新组织/内层、第一次实际使用身份入口时就解释这个入口为什么把他带进第一章时进不去的世界，不等下一章遇险才补。重要 named 势力第一次进入冲突时，若 WORLD AUTHORITY 有安全公开类别，Map 同时排程该类别，避免正文只出现一个不知是什么的专名。Chapter Runtime 按章读取，再从 WORLD AUTHORITY 取对应事实；开篇同时建立最低生活世界位置与必要 ruler；二者分工，单纯“普通人没境界 / 打不过敌人”不算生活定向。不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
 - **Ruler = Compression**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落；
 - **State Advance After Proof / Choice → Consequence**：一个问题经动作结果与一次足够校准成立后，不再把换证据证明同一结论规划成独立 beat；社会确认只有改变机会、敌意、关系、身份、资源或行动入口时才继续。重大选择的选项与主要代价清楚后尽快做出，让后续篇幅进入选择造成的新局面；十章批次不是拉长当前剧情块的配额，块完成就进入相邻块；不做每章状态变化配额；
 - **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价；
@@ -393,7 +393,9 @@ Story Anchor 的作用是提前确定“真正的故事发生了什么”，降�
 - 根据已批准长期方向、当前剧情块、Future 10 和 Canon，生成当前章事件合同；
 - 抓本章最值得读、最值得复述的人物冲突、关键选择、力量使用、反转和结果；
 - **Discriminative Detail Only**：调查、手艺、医学、制作、检测、推理等 Supporting Skill 只保留足以改变判断的少量关键细节；一旦能推出发现或决定，立即进入发现的选择、冲突与后果，不继续展开实施过程；
-- 决定已经做完后的停车、搬运、排布、绑缚、登记、普通赶路等实施默认压缩；只有重新出现选择、冲突、不确定性或失败风险才恢复成场景；
+- 决定已经做完后的停车、搬运、排布、绑缚、登记、普通赶路等实施默认压缩；只有重新出现选择、冲突、不确定性或失败风险才恢复成场景； `主角行动` 对此只保留关键决定 + 至多一个决定性动作 + 结果，不把并列实施步骤继续传下游； 若该决定性动作仍只是非核心 Supporting Skill，就只保留“做什么 / 为什么有效 / 结果”，不把技能实施本身变成第二个场景发动机； 前文已成立的 Supporting Skill 默认只写其结果，不再把“利用某判断/技巧”方法重新放进事件合同；只有新边界、失败或质变例外；
+- 不用 **Competence Filler** 填低动作章节：若真正故事是 World Entry、势力登场、立场、误判或关系变化，主角只做观察、站队、拒绝、跟随或守住位置也成立；不得为了“显得有用”临时制造排车、维修、诊断、路线、清点等专业问题；
+- Outline 已经把入口、邀请、名额、工作机会、身份待遇或奖励作为可选择/可获得条件时，不为“证明配得上”自行补试工、观察、检查、考核、登记或资格流程；Plan 没安排，就直接进入接受/拒绝及其后果；
 - 决定章节边界与停止位置；
 - 保证已发生事实和当前计划连续。
 - 旧人物、旧承诺、身份谜团或长期秘密回流时，在现有八字段中明确本章结束后**哪一个新事实真正成为确定事实**；若上游未授权揭晓过去原因，就明确原因仍未知，并把不可逆变化落在当下选择、证据、立场、职责、关系或行动入口。
@@ -421,7 +423,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 - 从大量 Canon / Book Contract / Inspiration / Scene Skill 中筛选当前章真正相关信息；
 - 保留人物欲望、关系、力量、风险、承诺与当前冲突；
 - 压缩不必要的规则和机制说明；
-- `WORLD AUTHORITY` 是已批准 World Vision 的安全事实源；`Reader Release Map` 为当前章排程了哪条 World fact，Curator 就从 deterministic prefetch 中保留/压缩哪条，不自行选择另一套世界介绍；
+- `WORLD AUTHORITY` 是已批准 World Vision 的安全事实源；`Reader Release Map` 为当前章排程了哪条 World fact，Curator 就从 deterministic prefetch 中保留/压缩哪条，不自行选择另一套世界介绍； `Relevant Plan` 同样压缩决定后的普通实施，只把决定、真正影响成败的动作和结果交给 Writer；
 - 把规划层抽象词投影成 BOOK / Canon / Plan **已经存在**的世界内具体名词和动作，让正文写人物真正拿到、失去、进入或看见什么；
 - 让细节预算跟随本书核心幻想真正值得注意的对象，而不是把“具体性”自动变成地形、受力或流程细节；
 - 发现跨维度冲突并在 Curator Audit 中报告。

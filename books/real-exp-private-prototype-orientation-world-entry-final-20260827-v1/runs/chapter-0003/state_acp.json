@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "low",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 19.079,
+  "sessionId": "01a043a2-579b-7bd0-8b08-8056a7ce0610",
+  "text": "# Proposed Active Scene State\n\n地点：南门外、商队前路。  \n在场人物：闻野舟、顾晚禾、商队成员与护卫、边军传信人。  \n即时伤势：右肩至后背仍有伤，不能用右侧发力；背负行囊行走时疼痛明显。  \n手中关键物品：护肩、暗铜临时入场牌、装有衣物和干粮的布包、剔骨刀。  \n当前敌人或追兵：无；前路因边军封锁暂时无法通行。  \n当前倒计时：南行路线被封；入场牌十日期限仍在。  \n下一步直接目标：弄清封路原因与可通行路线。  \n当前主动目标：跟上顾晚禾，随商队继续南行。\n\n# Proposed Persistent Canon\n\n- 闻野舟已明确选择南行，拒绝暂时前往北棚接战具杂工机会。\n- 商队已接纳闻野舟同行；顾晚禾要求他跟在自己身后，但未承诺照顾或等候。\n- 闻野舟目前没有猎阶，也没有正式兽性。\n- 右肩至后背伤势仍在，不能用右侧发力；长期影响未定。\n- 南行途中突遇边军封路，南边暂不许普通人通行。\n- 白角部正在向南迁移，已成为封路背景与潜在影响因素。\n\n### Active Relationships\n\n顾晚禾｜随商队南行｜与闻野舟同行但保持独立｜允许他跟随商队并要求跟在身后｜共同面对前路封锁  \n桑照｜等待闻野舟十日内到北棚｜提供临时机会的人｜已交付入场牌与期限｜闻野舟暂未赴约\n\n### Tracked Assets\n\n临时入场牌｜闻野舟｜衣襟内｜可用于北棚临时战具判断，期限仍在｜闻野舟决定南行后继续携带\n\n# Proposed Chapter Summary\n\n闻野舟决定不去北棚，收拾行囊后在第三天清晨赶上顾晚禾所在的南行商队，并获准同行。车队刚离开边镇，边军传信人便赶来封路，称南边禁止通行，白角部正在南迁。\n\n# Proposed Open Promises\n\n- 南行商队前路被边军封锁，能否继续通行尚未确定。\n- 白角部南迁将如何影响商队与闻野舟，尚未确定。\n- 闻野舟能否在不使用右侧力量的情况下跟上商队并适应荒野行程。\n- 闻野舟能否再次剥走异兽落势仍未确定。\n- 右肩至后背伤口是否留下长期影响仍待观察。\n- 桑照交付的北棚临时战具判断机会仍在十日期限内，但闻野舟已暂时选择南行。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 32233,
+      "inputTokens": 21443,
+      "cachedReadTokens": 9984,
+      "outputTokens": 806,
+      "thoughtTokens": 125
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 32233,
+          "inputTokens": 21443,
+          "cachedInputTokens": 9984,
+          "outputTokens": 806,
+          "reasoningOutputTokens": 125
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 32233,
+              "inputTokens": 21443,
+              "cachedInputTokens": 9984,
+              "outputTokens": 806,
+              "reasoningOutputTokens": 125
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

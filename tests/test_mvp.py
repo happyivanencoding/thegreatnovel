@@ -2693,6 +2693,13 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "Persistent Reader Ruler" in director_ruler
     assert "Ruler = Compression, not Exposition" in director_ruler
     assert "Discriminative Detail Only" in director_ruler
+    assert "关键决定 + 至多一个真正改变成败/判断的决定性动作 + 结果" in director_ruler
+    assert "默认连技能方法本身也不重述" in director_ruler
+    assert "只写它让主角完成了什么结果" in director_ruler
+    assert "Access / Reward 不自动征收资格流程税" in director_ruler
+    assert "不得为了“让它显得更合理/更配得上”自行补一轮试工" in director_ruler
+    assert "不要用 Competence Filler 填动作空缺" in director_ruler
+    assert "主角只做站队、拒绝、观察、跟随、守住位置、说一句决定等简单行动也完全成立" in director_ruler
     assert "Persistent Reader Ruler" not in primary_ruler
     assert "State Advance After Proof / Choice → Consequence" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Reader Release Scheduler" in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -2702,8 +2709,12 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "Reader Release Map" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "不新增 Prelude / Setup 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "该章实际事件中自然被触发" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "World Entry 的 trigger 是人物真正跨过门槛的那一章" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "直到 N+1 第一次遇险、封路或见强者时才补" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "揭晓章之前**不得进入 Release Map**" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "不能单独充当生活世界定向" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "它是什么类型的存在" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "安全公开类别" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "十章批次不是把当前剧情块拉长到十章的配额" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "新书第1章不得是纯 Setup" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Opening Orientation 只能嵌在同章动作中" in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -2743,6 +2754,11 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "决定已经做完后的普通实施默认压缩" in director_ruler
     assert "决定已经做完后的普通实施默认一句或一个短段概括" in primary_ruler
     assert "Action creates the question → Exposition answers just enough → Action continues" in primary_ruler
+    assert "不把它再展开成一个需要逐步解决的小任务" in primary_ruler
+    assert "直接用普通话说清一次类别" in primary_ruler
+    assert "`## Relevant Plan` 也必须执行同样的降维" in curator_orientation
+    assert "Curator 应删除这层未获 Plan 授权的资格流程" in curator_orientation
+    assert "Curator 应删掉这层 Competence Filler" in curator_orientation
     assert "Writer 不负责从完整世界中选择还该介绍什么" in primary_ruler
     assert "## 不可替代的人与关系" in story_program
     assert "### 关键关系（可选）" not in story_program
