@@ -181,6 +181,11 @@ def _orientation_category_bonus(query: str, heading: str, paragraph: str) -> int
     """Prefer the kind of world fact the current scene is actually asking for."""
 
     bonus = 0
+    if any(marker in query for marker in ("第1章", "第一章", "猎市")):
+        if heading == "## 普通人的生活与上升" and any(
+            marker in paragraph for marker in ("猎墙", "普通人", "猎队", "异兽")
+        ):
+            bonus += 140
     if any(marker in query for marker in ("迁徙", "白角", "部族", "部落", "族群", "族人")):
         if heading == "## 社会现实与身份" and any(
             marker in paragraph for marker in ("部族", "族群", "共同狩猎", "交易", "冲突")
