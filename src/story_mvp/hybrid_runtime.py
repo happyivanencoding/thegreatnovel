@@ -66,6 +66,20 @@ class CuratorContextPacket:
 
 
 @dataclass(frozen=True)
+class AuthorityReviserContextPacket:
+    authority: str
+    chapter_mission: str
+    curator_context: str
+    world_authority: str
+    reader_release: str
+    power_core: str
+    human_core: str
+    canon_index: str
+    transition_context: str
+    primary_draft: str
+
+
+@dataclass(frozen=True)
 class SpecialistContextPacket:
     specialist: str
     chapter_mission: str
@@ -630,6 +644,27 @@ def _relevant_curated_context(curated_response: str, specialist: str) -> str:
     if blocks:
         return "\n\n".join(blocks)
     return "（Curator 未提供与本专项对应的局部上下文。）"
+
+
+def build_authority_reviser_context(
+    packet: ChapterContextPacket,
+    curated_response: str,
+    primary_draft: str,
+) -> AuthorityReviserContextPacket:
+    """给二次修订器提供远端准确 Authority + 近端 Curator，不含 raw GBrain。"""
+
+    return AuthorityReviserContextPacket(
+        authority=packet.authority,
+        chapter_mission=packet.chapter_mission,
+        curator_context=curated_response.strip() or "（Curator 未提供；仅按冻结 Mission 与 Authority 做最小修订。）",
+        world_authority=packet.world_authority or "（未提供安全 World Authority；不得补造世界事实。）",
+        reader_release=packet.reader_release or "（本章没有排程 Reader Release。）",
+        power_core=packet.power_core or "（未提供 Frozen Power Core。）",
+        human_core=packet.human_core or "（未提供 Frozen Human Core；不得从近期行为反推人格。）",
+        canon_index=packet.canon_context or "（当前 Canon Index 为空。）",
+        transition_context=extract_last_transition_context(packet.recent_prose),
+        primary_draft=primary_draft.strip(),
+    )
 
 
 def build_specialist_context(

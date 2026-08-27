@@ -46,6 +46,8 @@ def test_openai_status_does_not_expose_api_key(monkeypatch) -> None:
         "configured": True,
         "model": "configured-model",
         "state_model": "cheap-state-model",
+        "authority_reviser_model": "gpt-5.6-luna",
+        "authority_reviser_reasoning": "high",
         "name": "",
     }
     assert "secret-value" not in response.text
@@ -57,8 +59,8 @@ def test_openai_endpoint_returns_fake_output_without_saving_artifact(monkeypatch
     monkeypatch.setattr(
         app_module,
         "generate_text",
-        lambda prompt, model="", purpose="default": generate_text(
-            prompt, model=model, purpose=purpose, client=fake
+        lambda prompt, model="", purpose="default", reasoning_effort="": generate_text(
+            prompt, model=model, purpose=purpose, reasoning_effort=reasoning_effort, client=fake
         ),
     )
     response = TestClient(app).post(
@@ -84,6 +86,31 @@ def test_state_extraction_can_use_separate_default_model(monkeypatch) -> None:
     assert client.responses.calls == [
         {"model": "cheap-state-model", "input": "STATE PROMPT"}
     ]
+
+
+def test_authority_reviser_uses_fixed_luna_high_profile(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("STORY_MVP_AUTHORITY_REVISER_MODEL", raising=False)
+    client = FakeClient()
+
+    result = generate_text(
+        "REVISER PROMPT",
+        model="SHOULD_BE_IGNORED",
+        purpose="authority_reviser",
+        reasoning_effort="low",
+        client=client,
+    )
+
+    assert result == {
+        "output_text": "FAKE OUTPUT",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "high",
+    }
+    assert client.responses.calls == [{
+        "model": "gpt-5.6-luna",
+        "input": "REVISER PROMPT",
+        "reasoning": {"effort": "high"},
+    }]
 
 
 def test_openai_endpoint_reports_unconfigured_without_changing_prompt_or_artifact(monkeypatch) -> None:

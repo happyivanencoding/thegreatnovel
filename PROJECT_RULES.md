@@ -42,7 +42,7 @@
 
 ## 4. 当前 Production 创意链
 
-`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → State Extraction`
+`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
 
 - **没有 production Fantasy Seed。**
 - **没有 Character Composer LLM。** Power/Human 不做后验主题化调和。
@@ -60,9 +60,10 @@
 | Director | GPT-5.6 Luna | high | raw GBrain OFF |
 | Curator | GPT-5.6 Luna | high | raw GBrain OFF；Scene Skills ON |
 | Primary Writer | **GPT-5.6 Terra** | high | raw GBrain OFF；Scene Skills ON |
+| Authority Reviser | GPT-5.6 Luna | **high** | raw GBrain **OFF**；safe World / Reader Release / Frozen Power + Human / Curator / Canon |
 | State Extraction | GPT-5.6 Luna | low | OFF |
 
-默认章节链：`Luna Director → Luna Curator → Terra Primary → Luna State`。
+默认章节链：`Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。Primary 在 `curator_primary` 中只是第一版，不可直接成为 `final_source`；State 只读取已采用的 Authority Revision，或显式 repair 后的 Integrator 最终稿。
 
 低延迟：Director 可切 Terra high；Curator 可切 Terra medium。只想让 Curator 更短、更克制时优先只切 Curator。
 
@@ -91,7 +92,8 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 同时：
 
 - 修最早发生语义坍缩的节点；少深层规则 > 多 Hard Gate。
-- Human：**经历是背景，不是人格证明**；允许多重动机、稳定选择偏向与现场变化。冻结 Human Core 高于最近几章的“负责/克制/救人”等行为归纳；下游不得把局部正确选择反推成新的道德人格。章节期从 `CHARACTER.md` **确定性只投影 Frozen Human Core 给 Curator**，不重复 Power Core，也不替代 BOOK/State 的可变状态；当前场景自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心等私人牵引时，应让它真实影响注意力、靠近/回避或选择，不统一净化成职责协作与成熟沟通。若 Frozen Human 已明确某个具体人会改变选择，而本章正发生近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系现场，默认属于自然触发，保留一个克制 cue 即可，不要求改写主事件。
+- Human：**经历是背景，不是人格证明**；允许多重动机、稳定选择偏向与现场变化。冻结 Human Core 高于最近几章的“负责/克制/救人”等行为归纳；下游不得把局部正确选择反推成新的道德人格。章节期从 `CHARACTER.md` 确定性投影 Frozen Human Core 给 Curator；Curator 不重复 Power Core。当前场景自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心等私人牵引时，应让它真实影响注意力、靠近/回避或选择，不统一净化成职责协作与成熟沟通。若 Frozen Human 已明确某个具体人会改变选择，而本章正发生近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系现场，默认属于自然触发，保留一个克制 cue 即可，不要求改写主事件。
+- **Primary 后固定 Authority Reviser 做 Preservation-First 的远端权威恢复，不做第二次创作**：Primary 为减负只吃近端压缩上下文，允许先完整实现一版；Reviser 再读取冻结 Mission、Curator、safe `WORLD AUTHORITY`、逐条 `Reader Release`、`CHARACTER.md` 的 Frozen Power + Human Core、Canon 与 Primary Draft。正确段落默认逐字保留，只删/压反复确认、重复证明、工程化/程序化实施和 Competence Filler，只补已批准但第一版遗漏的世界/人物/力量 realization；不得改变主要事件、人物选择、胜负、资源得失、Direct Result、State Change、Ending 或未知事实边界。删除前先确认不会丢失 State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity。raw GBrain 固定 OFF。Optional Specialist / Integrator repair 如显式启用，以 Authority Revision 而非 Primary 为底稿。
 - Collision 可补少量非奠基性过去，让关系/选择更自然；不得自动悲情化、不得用过去证明整个人、不得自动变主线或一次性倾倒。
 - Growth 是全书纵向不变量，不是 stage / block / ten-chapter tax。
 - **Power Seed 生成 Power Asymmetry，不强制世界内合法例外**：World Power Normal 是比较尺，不是来源限制；非对称优势可来自世界内稀有异常、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加。默认故意偏强：Core Power 至少一个维度让同层普通人/天才明显羡慕，必要时提前拥有通常更高层才有的局部特权；Permanent Boundary 防万能但不做对称成本抵消。Novelty Spark 负责不同，不负责削弱强度。**Reader-facing novelty = 熟悉语言 + 新作用**：World 基础力量、开局 Core 与后续新 Asymmetry 都先用普通话说明具体可观察效果，再决定是否需要短名；新词只压缩已经理解的对象，不靠新词互相定义证明原创。“全新”改变力量因果/玩法，不要求回避境界、功法、兵器、异兽等清楚题材词；若核心幻想本来是战斗、身体、移动、穿越、操控等直接能力，成长不能重新退化成结构分析、材料诊断、路线计算或验证流程。Legendary / Future Legend 不得绕过 Permanent Boundary。

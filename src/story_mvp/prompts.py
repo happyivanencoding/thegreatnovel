@@ -16,6 +16,7 @@ PROMPT_MODES = {
     "review": "十章复盘与下一批十章",
     "context_curator": "Hybrid Context Curator",
     "primary_writer": "Hybrid Primary Writer",
+    "authority_reviser": "Second-Pass Authority Reviser",
     "specialist_opening": "Opening & Scene Entry Specialist",
     "specialist_dialogue": "Dialogue & Character Voice Specialist",
     "specialist_action": "Action & Spatial Logic Specialist",
@@ -573,7 +574,7 @@ DEFAULT_PROMPT_TEMPLATES = {
 
 
 def _specialist_prompt_template(label: str, duties: str) -> str:
-    return f"""你是透明协作的 {label} 专项 Agent。你是建议者，不是审判者：不评分、不拒绝 Primary Writer、不要求必须发现问题、不输出整章重写，也不触发上游重跑。只根据当前章事件合同、Primary Draft、分配给你的 Curated Context 和必要的前文章末衔接片段，提出真正有效的局部修改建议。
+    return f"""你是透明协作的 {label} 专项 Agent。你是建议者，不是审判者：不评分、不拒绝 Primary Writer、不要求必须发现问题、不输出整章重写，也不触发上游重跑。只根据当前章事件合同、Revision Base Draft（production 默认是 Authority Revision；legacy 模式才可能是 Primary Draft）、分配给你的 Curated Context 和必要的前文章末衔接片段，提出真正有效的局部修改建议。
 
 职责：
 {duties}
@@ -657,6 +658,33 @@ Curated Context 为空时，使用下方明确提供的 fallback；这不是失�
 固定输出只保留一个一级标题：
 # 正式正文
 其后只写本章小说正文。不要在正文后追加总结、解释或下一步任务。""",
+    "authority_reviser": """你是 TGN 的 Second-Pass Authority Reviser。你接手 Primary Writer 已经完成的第一版章节。你不是第二个 Director，不重新规划剧情，不给正文打分，也不把整章重新写一遍。你的职责是在完全冻结 Chapter Mission 的前提下，用远端但更准确的 World / Power / Human Authority 与近端 Curator 校正第一版的笔墨分配和遗漏。
+
+## Preservation First｜默认不动已经正确的正文
+- 先在内部判断哪些局部存在明确问题；没有明确问题的段落和句子默认逐字保留，不做同义改写、润色、换词、重排或“顺手优化”。
+- 只修改能指出具体失败的局部：事实/连续性错误、反复确认或重复证明、工程化/程序化实施、无新选择的 Competence Filler、Curator / Reader Release 明确要求但漏掉的必要信息、Frozen Human 明确触发却被净化掉的私人 cue、或缺少会改变读者理解的必要 World / Power realization。
+- 修改使用最小跨度：一句有问题只改一句，一个短段有问题只改短段；能删除解决就不重写周围正确段落。
+- 新增只填补下方 Authority / Reader Release / Curator 明确支持且第一版确实遗漏的必要内容；不要为了“更丰富”再补第二处、第三处类似细节。
+- 如果整章没有明确问题，完整原样输出 Primary Draft。
+
+## Authority Fact Discipline
+远端资料只能按其明确陈述的强度进入正文。人物喜欢漂亮兵器，只授权他多看一眼，不授权把当前兵器判成稀有/高阶；某人为了继承资格争传承，不授权总结成普遍世界规则；计划、欲望、猜测、可能性不得升级成客观事实。未知仍保持未知。
+
+## 允许的局部修订
+1. 删除或压缩反复确认、重复能力证明、结构分析、材料诊断、路线计算、验证流程、报告/登记式展开，以及没有新选择、失败、反制、关系变化或不可逆结果的普通实施。支撑性逻辑写到足以支撑因果即可。
+2. Core Power 只在本章真的触发时恢复其独有体验；已经证明过的边界不重新解释。直接能力不得被重新写成工程分析或流程。
+3. Frozen Human Core 高于最近几章行为归纳。一次救人、负责、克制不能反推成新人格。若 Frozen Human 明确写明当前具体人物会通过外貌、气味、姿态或身体靠近牵动主角，并且 Primary Draft 本身已经存在两人的直接身体接触或近身治疗，而第一版完全漏掉这层私人注意，则在该接触点补恰好一个已批准 cue；单纯同场、并肩战斗、共同搬第三人或隔物递东西不算。不得为了触发而新造接触，不把 cue 升级成表白、关系突破或新的剧情选择。
+4. Reader Release 是已批准 timing decision：逐条检查每一条；任何明确事实若第一版尚未让读者知道，都必须用最短充分方式补一次。没有排程不自行开百科。World 说明遵循 Action creates the question → 1—3 个最短充分事实 → Action continues。若当前场景已经进入一个具体地方，而第一版因为过度任务化显得像无背景空间，可以从 WORLD REALITY AUTHORITY 中补**一个最能承载故事的生活细节**（例如已批准的房屋形制、衣着仪态、街道/器物/当地生活习惯），但必须是 Authority 已明确支持且能帮助人物/冲突/世界进入；没有权威支持的地方风俗、建筑样式或制度不得为了“生动”擅自编造。
+5. Attention Reallocation：Supporting implementation 连续占据多个段落、却没有产生新的选择/失败/关系变化/不可逆结果时，可以压缩，把笔墨还给本章真正高价值的 World Entry、Rival、Relationship、Core Fantasy、Choice、Payoff 或 Consequence。
+6. 阶段结算优先保留重新估价、实际得失、Rival 换位、Reward、新机会和新欲望。报告、登记、责任说明只是载体；可以压缩载体，但删除任何段落前都要确认：删掉后是否会丢失新的 State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity。若会，绝不能删。
+
+## 冻结边界
+不得改变主要事件顺序、人物决定、胜负、资源得失、伤势、身份结果、已建立/未建立的知识边界、Direct Result、State Change 或 Ending。若只有改剧情才能解决问题，保留原稿对应事实，不越权。
+
+固定输出只允许：
+# 正式正文
+<完整修订后的章节正文>
+不要输出 Audit、修改说明、评分、差异列表、事实摘要或思考过程。""",
     "specialist_opening": _specialist_prompt_template(
         "Opening & Scene Entry Agent",
         "检查 BOOK 已选择的开篇策略是否被执行；第一章若为讲述者宏观开场，检查世界远景→运行秩序/力量结构→当前压力→具体地域→主角现场→主角行动的收束；检查说明是否只服务未来约 30 章必要信息、是否仍像小说、镜头是否交给主角。非第一章检查章首承接和换景因果。额外检查陌生世界信息是否通过故事和具体命运进入、是否连续堆出陌生名词、是否把已经成立的规则重新介绍。准确不等于术语化。不得把普通章节擅自改成宏观开场。",
@@ -673,13 +701,13 @@ Curated Context 为空时，使用下方明确提供的 fallback；这不是失�
         "Emotion & Aftermath Agent",
         "检查重大行动、胜利、失败和关系变化的真实余波；情绪是否通过动作、选择、沉默或感官进入；配角是否只有功能反应；payoff 后是否缺少确认与新压力；是否重复解释情绪或用否定句证明旧边界。不得强制增加痛苦、悲剧代价或伦理惩罚。",
     ),
-    "chapter_integrator": """你是透明协作的 Revision Integrator。Primary Draft 是唯一正文底稿。只接收有效局部 Patch；逐项判断它们是否真正改善正文，冲突、重复、改变事件结果、破坏人物声音或重新规划章节的建议必须拒绝。四类建议不必全部采纳，全部不采纳也是正常结果。保持 Primary Writer 的主要叙事声音；只在 Primary 实际出现策划总结替代场景结果、重大事件没有人物反应、结果前堆积机制说明或 payoff 重复解释时做有限修复；如果正文已经自然，就保持原段落，不做第二轮全面审稿或整章重写，不输出内部推理。
+    "chapter_integrator": """你是透明协作的 Revision Integrator。Revision Base Draft 是唯一正文底稿；production 默认它已经是 Authority Revision，legacy 模式才可能直接是 Primary Draft。只接收有效局部 Patch；逐项判断它们是否真正改善正文，冲突、重复、改变事件结果、破坏人物声音或重新规划章节的建议必须拒绝。四类建议不必全部采纳，全部不采纳也是正常结果。保持 Revision Base 的主要叙事声音；只在底稿实际出现策划总结替代场景结果、重大事件没有人物反应、结果前堆积机制说明或 payoff 重复解释时做有限修复；如果正文已经自然，就保持原段落，不做第二轮全面审稿或整章重写，不输出内部推理。
 
 固定输出格式：
 # Writer Audit
 报告正式正文字符数、实际采用的专项修改类型、未采用的冲突/无必要建议，以及实际 Canon / Plan 冲突或实质调整；没有时写：无。
 # 正式正文
-只输出最终整合后的正式小说正文；它必须以 Primary Draft 为底稿。
+只输出最终整合后的正式小说正文；它必须以 Revision Base Draft 为底稿。
 # 章节事实摘要
 根据最终整合正文重新生成，只写最终正文已经成立的事实，不能机械复用 Primary Fact Summary。""",
 }
@@ -1760,16 +1788,20 @@ def generate_prompt(
     if mode == "chapter" or mode in HYBRID_PROMPT_MODES:
         validate_current_outline(current_outline)
 
-    if mode in SPECIALIST_PROMPT_MODES or mode == "chapter_integrator":
+    if mode in SPECIALIST_PROMPT_MODES or mode in {"authority_reviser", "chapter_integrator"}:
         if not primary_draft.strip():
             from .hybrid_runtime import extract_primary_draft
 
             primary_draft = extract_primary_draft(primary_writer_response)
         if not primary_draft.strip():
-            raise ValueError("Primary Draft 为空，无法进入专项或 Integrator 阶段")
+            if mode == "authority_reviser":
+                raise ValueError("Primary Draft 为空，无法进入 Authority Reviser 阶段")
+            raise ValueError("Revision Base Draft 为空，无法进入专项或 Integrator 阶段")
 
     prompt_template = template.strip()
-    if mode in HYBRID_PROMPT_MODES and not prompt_template:
+    if mode == "authority_reviser":
+        prompt_template = DEFAULT_PROMPT_TEMPLATES[mode]
+    elif mode in HYBRID_PROMPT_MODES and not prompt_template:
         prompt_template = DEFAULT_PROMPT_TEMPLATES[mode]
     elif mode == "director" and not prompt_template:
         prompt_template = DEFAULT_DIRECTOR_TEMPLATE
@@ -1877,6 +1909,7 @@ def generate_prompt(
     elif mode in HYBRID_PROMPT_MODES:
         from .chapter_context import build_chapter_context, project_event_contract_for_prose
         from .hybrid_runtime import (
+            build_authority_reviser_context,
             build_curator_context,
             build_integrator_context,
             build_specialist_context,
@@ -1905,7 +1938,7 @@ def generate_prompt(
             chapter_number=chapter_number,
         )
         parts.append(f"# Hybrid Runtime\n\nwriter_mode: {writer_mode}")
-        if mode in SPECIALIST_PROMPT_MODES or mode in {"primary_writer", "chapter_integrator"}:
+        if mode in SPECIALIST_PROMPT_MODES or mode in {"primary_writer", "authority_reviser", "chapter_integrator"}:
             contract = READER_FIRST_PROSE_CONTRACT if mode == "primary_writer" else READER_FIRST_PROSE_SHORT
             parts.extend(["# Reader-First Prose Contract", contract])
         if opening_contract and (mode == "primary_writer" or mode == "specialist_opening"):
@@ -2003,6 +2036,23 @@ def generate_prompt(
                     + packet.prose_profile,
                 )
             )
+        elif mode == "authority_reviser":
+            curated = curated_context.strip() or curator_response.strip()
+            context = build_authority_reviser_context(packet, curated, primary_draft)
+            parts.extend(
+                [
+                    _input_block("AUTHORITY——按维度划分的事实与计划边界", context.authority),
+                    _input_block("FROZEN CHAPTER MISSION｜不得改剧情", context.chapter_mission),
+                    _input_block("CURATOR｜本章近端注意力与实现要求", context.curator_context),
+                    _input_block("WORLD REALITY AUTHORITY｜远端安全世界事实", context.world_authority),
+                    _input_block("READER RELEASE｜本章已批准首次释放事实；逐条核对", context.reader_release),
+                    _input_block("POWER CORE｜Frozen Authority", context.power_core),
+                    _input_block("HUMAN CORE｜Frozen Authority", context.human_core),
+                    _input_block("CANON INDEX｜已发生事实压缩索引", context.canon_index),
+                    _input_block("CANON TAIL｜上一章必要衔接", context.transition_context),
+                    _input_block("PRIMARY DRAFT｜唯一待修订正文底稿", context.primary_draft),
+                ]
+            )
         elif mode in SPECIALIST_PROMPT_MODES:
             specialist = mode.removeprefix("specialist_")
             context = build_specialist_context(
@@ -2014,7 +2064,7 @@ def generate_prompt(
             parts.extend(
                 [
                     _input_block("当前章事件合同——正文可见最小投影", context.chapter_mission),
-                    _input_block("Primary Draft——唯一待评议正文底稿", context.primary_draft),
+                    _input_block("Revision Base Draft——production 默认 Authority Revision；legacy 可为 Primary", context.primary_draft),
                     _input_block("本专项相关 Curated Context", context.relevant_curated_context),
                     _input_block("必要的前文章末衔接片段", context.transition_context),
                 ]
@@ -2041,7 +2091,7 @@ def generate_prompt(
                 [
                     _input_block("AUTHORITY", context.authority),
                     _input_block("当前章事件合同——正文可见最小投影", context.chapter_mission),
-                    _input_block("Primary Draft——唯一正文底稿", context.primary_draft),
+                    _input_block("Revision Base Draft——production 默认 Authority Revision；legacy 可为 Primary", context.primary_draft),
                     _input_block(
                         "Curated Chapter Context——仅用于判断局部 Patch 是否越界",
                         context.curated_context,

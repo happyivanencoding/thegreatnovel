@@ -2581,6 +2581,7 @@ def test_default_prompt_templates_include_idea_mode() -> None:
         "review",
         "context_curator",
         "primary_writer",
+        "authority_reviser",
         "specialist_opening",
         "specialist_dialogue",
         "specialist_action",
@@ -2838,6 +2839,10 @@ def test_chapter_page_defaults_to_curator_primary_and_keeps_repair_nodes_optiona
         assert f'id="{node_id}"' in page.text
     assert 'id="extract-integrator-body"' in page.text
     assert 'id="adopt-primary-draft"' in page.text
+    assert 'id="authority-reviser-response"' in page.text
+    assert 'id="generate-authority-reviser-prompt"' in page.text
+    assert 'id="adopt-authority-revision"' in page.text
+    assert "GPT-5.6 Luna · high" in page.text
 
 
 def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None:

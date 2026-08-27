@@ -452,7 +452,7 @@
 
         <details id="chapter-execution-details" class="hybrid-run execution-details">
           <summary>Chapter Run · Curator Primary Default</summary>
-          <p class="hint">默认主链是 Director → Curator → Primary → 轻量 State Extraction。专项 Agent 只在 Primary 后人工启用 repair，不进入默认每章调用。</p>
+          <p class="hint">默认主链是 Director → Curator → Primary Draft → Authority Reviser → 轻量 State Extraction。专项 Agent 只在 Authority Reviser 后人工启用 repair，不进入默认每章调用。</p>
           <div class="hybrid-controls">
             <label>Writer Mode
               <select id="writer-mode">
@@ -490,6 +490,11 @@
               <textarea id="primary-writer-response" rows="10" placeholder="# 正式正文\n\n只写小说正文"></textarea>
             </div>
             <div class="hybrid-node">
+              <div class="hybrid-node-heading"><strong>Authority Reviser Response <small>GPT-5.6 Luna · high</small></strong><button id="generate-authority-reviser-prompt">生成 Prompt</button><button id="apply-authority-reviser-response">采用当前返回</button></div>
+              <textarea id="authority-reviser-response" rows="10" placeholder="# 正式正文\n\nPreservation First：只修明确坏点与遗漏"></textarea>
+              <div class="action-row wrap"><button id="adopt-authority-revision" class="primary">采用 Authority Revision 作为正式正文</button></div>
+            </div>
+            <div class="hybrid-node">
               <div class="hybrid-node-heading"><strong>Opening Specialist Response</strong><button id="generate-opening-prompt">生成 Prompt</button><button id="apply-opening-response">采用当前返回</button></div>
               <textarea id="opening-specialist-response" rows="7" placeholder="# Specialist Audit\n\n# Proposed Patches"></textarea>
             </div>
@@ -511,7 +516,7 @@
             </div>
           </div>
           <div class="action-row wrap">
-            <button id="adopt-primary-draft">采用 Primary Draft 作为最终正文</button>
+            <button id="adopt-primary-draft">Legacy / Fallback：采用 Primary Draft</button>
           </div>
         </details>
 
@@ -614,6 +619,7 @@
               <option value="review">十章复盘与下一批十章</option>
               <option value="context_curator">Hybrid Context Curator</option>
               <option value="primary_writer">Hybrid Primary Writer</option>
+              <option value="authority_reviser">Second-Pass Authority Reviser</option>
               <option value="specialist_opening">Opening &amp; Scene Entry Specialist</option>
               <option value="specialist_dialogue">Dialogue &amp; Character Voice Specialist</option>
               <option value="specialist_action">Action &amp; Spatial Logic Specialist</option>

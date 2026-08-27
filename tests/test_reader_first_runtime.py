@@ -907,3 +907,91 @@ def test_reader_release_map_is_optional_and_chapter_scoped() -> None:
     assert "荒原部族" not in extract_reader_release_for_chapter(book, 1)
     assert "荒原部族" in extract_reader_release_for_chapter(book, 4)
     assert extract_reader_release_for_chapter(book, 2) == ""
+
+
+def test_authority_reviser_receives_remote_authority_without_raw_gbrain_and_preserves_fixed_contract() -> None:
+    character = """# CHARACTER CARD 1｜Split Authority
+
+## POWER CORE｜Frozen Authority
+
+POWER_CORE_MARKER：可以把一个自己分成两个并行行动的身体。
+
+## HUMAN CORE｜Frozen Authority
+
+HUMAN_CORE_MARKER：会被具体人的气味、姿态和身体靠近牵动，也在意自由钱和被看见。
+
+## Composition Boundary
+
+不做后验合理化。
+"""
+    world = """# PROTAGONIST-BLIND WORLD VISION
+
+## 普通人的生活与上升
+
+WORLD_LIFE_MARKER：本地石屋沿山壁层叠，居民常穿窄袖短袍。
+
+## 力量体系与正常值
+
+WORLD_POWER_MARKER：影子可以炼成实体用于攻防。
+
+## 世界里真正值钱、值得想要的东西
+
+WORLD_VALUE_MARKER：古城遗物和珍稀药材价格很高。
+"""
+    book = """# 小说总体设计画像
+
+## 2. 世界观结构
+
+世界结构。
+
+### Reader Release Map
+- 第5章｜READER_RELEASE_A：观日宗公开传授影术。
+- 第5章｜READER_RELEASE_B：古城遗物、珍稀药材和异兽让各方争抢。
+"""
+    prompt = generate_prompt(
+        mode="authority_reviser",
+        template="CUSTOM_TEMPLATE_MUST_NOT_OVERRIDE_FIXED_REVISER",
+        writer_mode="curator_primary",
+        book_content=book,
+        world_vision=world,
+        character_card=character,
+        current_outline=OUTLINE,
+        chapter_number=5,
+        curator_response="CURATOR_ATTENTION_MARKER",
+        primary_draft="# 正式正文\n\nPRIMARY_DRAFT_MARKER",
+        previous_chapter_text="CANON_TAIL_MARKER",
+        gbrain_inspiration="RAW_GBRAIN_MARKER",
+    )
+    assert "Preservation First" in prompt
+    assert "CUSTOM_TEMPLATE_MUST_NOT_OVERRIDE_FIXED_REVISER" not in prompt
+    assert "FROZEN CHAPTER MISSION" in prompt
+    assert "CURATOR_ATTENTION_MARKER" in prompt
+    assert "WORLD_LIFE_MARKER" in prompt
+    assert "WORLD_POWER_MARKER" in prompt
+    assert "WORLD_VALUE_MARKER" in prompt
+    assert "READER_RELEASE_A" in prompt and "READER_RELEASE_B" in prompt
+    assert "POWER_CORE_MARKER" in prompt
+    assert "HUMAN_CORE_MARKER" in prompt
+    assert "CANON_TAIL_MARKER" in prompt
+    assert "PRIMARY_DRAFT_MARKER" in prompt
+    assert "RAW_GBRAIN_MARKER" not in prompt
+    assert "逐条检查" in prompt
+    assert "地方风俗、建筑样式或制度不得" in prompt
+    assert "State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity" in prompt
+
+
+def test_authority_reviser_requires_primary_draft() -> None:
+    try:
+        generate_prompt(
+            mode="authority_reviser",
+            template="",
+            book_content="",
+            current_outline=OUTLINE,
+            chapter_number=5,
+            primary_draft="",
+            primary_writer_response="",
+        )
+    except ValueError as error:
+        assert "Primary Draft" in str(error)
+    else:
+        raise AssertionError("Authority Reviser must require a Primary Draft")

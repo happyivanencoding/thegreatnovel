@@ -385,6 +385,7 @@ const chapterActionDefaults = {
   chapter_prep: { mode: "chapter_prep", title: "当前章执行小纲", button: "生成执行小纲", tab: "outline" },
   curator: { mode: "context_curator", title: "上下文整理", button: "生成上下文整理", tab: "execution" },
   primary: { mode: "primary_writer", title: "主稿正文", button: "生成正文草稿", tab: "body" },
+  authority_reviser: { mode: "authority_reviser", title: "Authority 二次修订", button: "生成二次修订", tab: "body" },
   opening: { mode: "specialist_opening", title: "开场建议", button: "生成开场建议", tab: "execution" },
   dialogue: { mode: "specialist_dialogue", title: "对话建议", button: "生成对话建议", tab: "execution" },
   action: { mode: "specialist_action", title: "动作建议", button: "生成动作建议", tab: "execution" },
@@ -806,6 +807,7 @@ const runNodeByMode = {
   director: "director",
   context_curator: "curator",
   primary_writer: "primary",
+  authority_reviser: "authority_reviser",
   specialist_opening: "opening",
   specialist_dialogue: "dialogue",
   specialist_action: "action",
@@ -870,9 +872,13 @@ function renderRunLedger(manifest) {
       retry.addEventListener("click", () => retryRunNode(node));
       actions.appendChild(retry);
     }
-    if (["completed", "adopted"].includes(info.status) && ["primary", "integrator"].includes(node)) {
+    const adoptable = manifest.writer_mode === "curator_primary"
+      ? ["authority_reviser", "integrator"]
+      : ["primary", "integrator"];
+    if (["completed", "adopted"].includes(info.status) && adoptable.includes(node)) {
       const adopt = document.createElement("button");
-      adopt.textContent = `采用${node === "primary" ? "Primary" : "Integrator"}`;
+      const label = node === "authority_reviser" ? "Authority Revision" : node === "primary" ? "Primary" : "Integrator";
+      adopt.textContent = `采用${label}`;
       adopt.addEventListener("click", () => adoptRunSource(node));
       actions.appendChild(adopt);
     }
@@ -1151,7 +1157,7 @@ function populateBook(book) {
   $("state-delta-response").value = "";
   for (const id of [
     "director-response",
-    "curator-response", "primary-writer-response", "opening-specialist-response",
+    "curator-response", "primary-writer-response", "authority-reviser-response", "opening-specialist-response",
     "dialogue-specialist-response", "action-specialist-response",
     "emotion-specialist-response", "integrator-response",
   ]) $(id).value = "";
@@ -1317,6 +1323,7 @@ function currentTemplate() {
     review: $("template-review").value,
     context_curator: $("template-context_curator").value,
     primary_writer: $("template-primary_writer").value,
+    authority_reviser: "",
     specialist_opening: $("template-specialist_opening").value,
     specialist_dialogue: $("template-specialist_dialogue").value,
     specialist_action: $("template-specialist_action").value,
@@ -1358,6 +1365,12 @@ async function setDefaultGbrainQuery() {
 async function handlePromptModeChange() {
   clearReferenceSelection();
   invalidateGbrainResults("切换 Prompt 模式");
+  if ($("prompt-mode").value === "authority_reviser") {
+    state.gbrainDefaultBrief = "";
+    $("gbrain-query").value = "";
+    $("gbrain-scope").textContent = "GBrain：Authority Reviser 固定 OFF；只读取 safe Authority Refresh Pack。";
+    return;
+  }
   await setDefaultGbrainQuery();
 }
 
@@ -1375,6 +1388,15 @@ function populatePromptTemplates(templates) {
   ]) {
     $(`template-${key}`).value = templates[key] || "";
   }
+}
+
+function revisionBaseDraftForMode() {
+  const primary = extractPrimaryDraft($("primary-writer-response").value);
+  const mode = $("prompt-mode").value;
+  if (["specialist_opening", "specialist_dialogue", "specialist_action", "specialist_emotion", "chapter_integrator"].includes(mode)) {
+    return extractPrimaryDraft($("authority-reviser-response").value) || primary;
+  }
+  return primary;
 }
 
 function promptPayload() {
@@ -1408,7 +1430,7 @@ function promptPayload() {
     curator_response: $("curator-response").value,
     curated_context: $("curator-response").value,
     primary_writer_response: $("primary-writer-response").value,
-    primary_draft: extractPrimaryDraft($("primary-writer-response").value),
+    primary_draft: revisionBaseDraftForMode(),
     primary_fact_summary: extractPrimaryFactSummary($("primary-writer-response").value),
     specialist_opening_response: $("opening-specialist-response").value,
     specialist_dialogue_response: $("dialogue-specialist-response").value,
@@ -1521,6 +1543,7 @@ function renderCodexTaskWrapper(mode) {
     : "当前页面的完整 Prompt 文本框（请先保存/复制）";
   const tempPath = `${workspace}\\${state.bookId}\\.workflow_tmp\\${artifact.replaceAll(".", "-")}-response.md`;
   const nodeArgs = node ? ` --chapter ${chapter} --node ${node}` : "";
+  const executionProfile = mode === "authority_reviser" ? "执行配置：GPT-5.6 Luna，reasoning=high。" : "";
   output.value = [
     "在当前 thegreatnovel 工作区执行 Story MVP 节点。",
     "",
@@ -1528,6 +1551,7 @@ function renderCodexTaskWrapper(mode) {
     `Artifact: ${artifact}`,
     `读取已经保存的 Prompt：${promptPath}`,
     "严格按该 Prompt 生成最终输出。",
+    executionProfile,
     "不要修改其它上游文件。",
     `把最终输出暂存到：${tempPath}`,
     "然后运行：",
@@ -1540,15 +1564,17 @@ function renderCodexTaskWrapper(mode) {
 
 async function executeOpenAI(prompt, mode = "") {
   const isStateExtraction = mode === "state_delta";
+  const isAuthorityReviser = mode === "authority_reviser";
   const explicitModel = isStateExtraction
     ? $("state-model").value.trim()
-    : $("openai-model").value.trim();
+    : isAuthorityReviser ? "" : $("openai-model").value.trim();
   const payload = await requestJson("/api/executors/openai", {
     method: "POST",
     body: JSON.stringify({
       prompt,
       model: explicitModel,
-      purpose: isStateExtraction ? "state_extraction" : "default",
+      purpose: isStateExtraction ? "state_extraction" : isAuthorityReviser ? "authority_reviser" : "default",
+      reasoning_effort: isAuthorityReviser ? "high" : "",
     }),
   });
   $("codex-response").value = payload.output_text;
@@ -1604,7 +1630,7 @@ function setPromptModeSilently(mode) {
 
 function chapterNeedsPlan(node) {
   return [
-    "director", "chapter_prep", "curator", "primary", "opening", "dialogue", "action", "emotion", "integrator",
+    "director", "chapter_prep", "curator", "primary", "authority_reviser", "opening", "dialogue", "action", "emotion", "integrator",
   ].includes(node);
 }
 
@@ -1627,7 +1653,7 @@ async function prepareChapterAction() {
 async function generateCurrentChapterAction() {
   if (!state.bookId) return showStatus("请先加载小说", true);
   const { node, action } = await prepareChapterAction();
-  if (["director", "curator", "primary", "opening", "dialogue", "action", "emotion", "integrator", "state_delta"].includes(node)) {
+  if (["director", "curator", "primary", "authority_reviser", "opening", "dialogue", "action", "emotion", "integrator", "state_delta"].includes(node)) {
     if (!await ensureChapterRun()) return;
   }
   if (node === "chapter_prep") {
@@ -1641,6 +1667,8 @@ async function generateCurrentChapterAction() {
     await generatePrompt();
   } else if (node === "primary") {
     await generateHybridNodePrompt("primary_writer");
+  } else if (node === "authority_reviser") {
+    await generateHybridNodePrompt("authority_reviser");
   } else if (node === "curator") {
     await generateHybridNodePrompt("context_curator");
   } else if (node === "opening") {
@@ -1663,6 +1691,7 @@ async function generateCurrentChapterAction() {
 function stateDeltaPayload() {
   return {
     mode: "state_delta",
+    book_id: state.bookId,
     book_content: composeBookContent(),
     chapter_number: Number($("chapter-number").value),
     recent_summaries: $("recent-summaries").value,
@@ -1754,7 +1783,7 @@ async function skipIntegratorWithoutPatches(responses) {
       method: "POST",
       body: JSON.stringify({ specialist_responses: responses }),
     }));
-    showStatus("所有已运行专项都没有有效 Patch，Integrator 已 skipped；可直接采用 Primary");
+    showStatus("所有已运行专项都没有有效 Patch，Integrator 已 skipped；继续保留 Authority Revision 作为 final_source");
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -1870,6 +1899,7 @@ async function applyHybridResponse(response, editorId) {
   const modeByEditor = {
     "curator-response": "context_curator",
     "primary-writer-response": "primary_writer",
+    "authority-reviser-response": "authority_reviser",
     "opening-specialist-response": "specialist_opening",
     "dialogue-specialist-response": "specialist_dialogue",
     "action-specialist-response": "specialist_action",
@@ -1912,7 +1942,31 @@ async function extractIntegratorBody() {
   return true;
 }
 
+async function adoptAuthorityRevision() {
+  const body = extractPrimaryDraft($("authority-reviser-response").value);
+  if (!body) {
+    showStatus("Authority Reviser 返回缺少非空正式正文，未改变保存内容", true);
+    return false;
+  }
+  $("chapter-body-for-save").value = body;
+  $("chapter-fact-summary").value = "";
+  markEditorDirty("chapter-body-for-save");
+  await saveRunResponseForMode("authority_reviser", $("authority-reviser-response").value);
+  await adoptRunSource("authority_reviser");
+  showStatus("已采用 Authority Revision 作为正式正文；State Extraction 将只读取修订稿。尚未保存章节");
+  return true;
+}
+
+async function applyAuthorityReviserResponse() {
+  await applyHybridResponse($("codex-response").value, "authority-reviser-response");
+  return adoptAuthorityRevision();
+}
+
 async function adoptPrimaryDraft() {
+  if (state.currentRun?.writer_mode === "curator_primary") {
+    showStatus("curator_primary production 必须先经过 Authority Reviser；Primary 只能作为草稿，不能直接成为 final_source。", true);
+    return false;
+  }
   const body = extractPrimaryDraft($("primary-writer-response").value);
   if (!body) {
     showStatus("Primary Writer 返回缺少非空正式正文，未改变保存内容", true);
@@ -2255,6 +2309,7 @@ $("generate-prompt").addEventListener("click", generateCurrentChapterAction);
 $("generate-director-prompt").addEventListener("click", () => generateHybridNodePrompt("director"));
 $("generate-curator-prompt").addEventListener("click", () => generateHybridNodePrompt("context_curator"));
 $("generate-primary-writer-prompt").addEventListener("click", () => generateHybridNodePrompt("primary_writer"));
+$("generate-authority-reviser-prompt").addEventListener("click", () => generateHybridNodePrompt("authority_reviser"));
 $("generate-opening-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_opening"));
 $("generate-dialogue-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_dialogue"));
 $("generate-action-prompt").addEventListener("click", () => generateHybridNodePrompt("specialist_action"));
@@ -2263,11 +2318,13 @@ $("generate-integrator-prompt").addEventListener("click", () => generateHybridNo
 $("apply-curator-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "curator-response"));
 $("apply-director-response").addEventListener("click", applyDirectorResponse);
 $("apply-primary-writer-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "primary-writer-response"));
+$("apply-authority-reviser-response").addEventListener("click", applyAuthorityReviserResponse);
 $("apply-opening-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "opening-specialist-response"));
 $("apply-dialogue-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "dialogue-specialist-response"));
 $("apply-action-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "action-specialist-response"));
 $("apply-emotion-response").addEventListener("click", () => applyHybridResponse($("codex-response").value, "emotion-specialist-response"));
 $("extract-integrator-body").addEventListener("click", extractIntegratorBody);
+$("adopt-authority-revision").addEventListener("click", adoptAuthorityRevision);
 $("adopt-primary-draft").addEventListener("click", adoptPrimaryDraft);
 $("load-current-chapter-plan").addEventListener("click", loadCurrentChapterPlan);
 $("generate-chapter-prep").addEventListener("click", generateChapterPrepPrompt);
@@ -2297,7 +2354,7 @@ $("chapter-number").addEventListener("change", () => {
   $("current-chapter-plan").value = "";
   for (const id of [
     "director-response",
-    "curator-response", "primary-writer-response", "opening-specialist-response",
+    "curator-response", "primary-writer-response", "authority-reviser-response", "opening-specialist-response",
     "dialogue-specialist-response", "action-specialist-response",
     "emotion-specialist-response", "integrator-response",
   ]) $(id).value = "";

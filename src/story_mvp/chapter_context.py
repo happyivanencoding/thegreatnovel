@@ -97,6 +97,7 @@ class ChapterContextPacket:
     prose_profile: str
     optional_inspiration: str
     human_core: str = ""
+    power_core: str = ""
     growth_benefit_projection: str = ""
     growth_genome_compact: str = ""
     reader_release: str = ""
@@ -115,6 +116,24 @@ def _markdown_block(content: str, heading: str) -> str:
             collected.append(next_line)
         return "\n".join(collected).strip()
     return ""
+
+
+def project_frozen_power_core(character_card: str) -> str:
+    """只投影 deterministic CHARACTER.md 中冻结的 Power Core。"""
+
+    lines = character_card.splitlines()
+    start: int | None = None
+    collected: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if start is None:
+            if stripped.startswith("## POWER CORE"):
+                start = 1
+            continue
+        if stripped.startswith("## HUMAN CORE"):
+            break
+        collected.append(line)
+    return "\n".join(collected).strip()
 
 
 def project_frozen_human_core(character_card: str) -> str:
@@ -450,6 +469,7 @@ def build_chapter_context(
         prose_profile=prose_profile,
         optional_inspiration=optional_inspiration,
         human_core=project_frozen_human_core(character_card),
+        power_core=project_frozen_power_core(character_card),
         growth_benefit_projection=growth_benefit_projection,
         growth_genome_compact=growth_genome_compact,
     )

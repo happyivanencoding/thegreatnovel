@@ -10,7 +10,7 @@ TGN 要生成的是成熟中文男频成长长篇：读者明确想拥有主角�
 
 当前真实生产链路是：
 
-`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → State Extraction`
+`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
 
 没有 production Fantasy Seed，也没有 Character Composer LLM。历史实验与 legacy 模板里仍可能出现 Fantasy Seed 字样，但它们不构成当前创意权威。
 

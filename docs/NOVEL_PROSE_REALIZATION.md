@@ -46,7 +46,7 @@ Novel Prose Realization 是 Story MVP 的章节表达合同。
 1. 一份可维护的设计文档；
 2. 一个 Agent Skill；
 3. 注入章节 Prompt 的短执行投影；
-4. Director / Curator / Primary Writer / optional repair 的清晰职责；
+4. Director / Curator / Primary Writer / Authority Reviser / optional repair 的清晰职责；
 5. 与正文分离的审阅结果。
 
 ---
@@ -219,9 +219,9 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 当前默认章节链：
 
-`BOOK / Plan / Saved Chapters → Director → Context Curator → Primary Writer → State Extraction → Author Approval → chapter-NNNN.md`
+`BOOK / Plan / Saved Chapters → Director → Context Curator → Primary Writer → Authority Reviser → State Extraction → Author Approval → chapter-NNNN.md`
 
-`curator_primary` 默认不运行 Specialist / Integrator。只有作者明确启动局部 repair 时，才在 Primary Draft 之后临时加入少量 Specialist Patch，并在确有有效 Patch 时调用 Integrator；没有有效 Patch 就保留 Primary 原文。旧兼容 Prompt 不构成新的 production 写作层。
+`curator_primary` 默认固定运行 Authority Reviser，但不运行 Specialist / Integrator。只有作者明确启动局部 repair 时，才在 Authority Revision 之后临时加入少量 Specialist Patch，并在确有有效 Patch 时调用 Integrator；没有有效 Patch 就保留 Authority Revision。旧兼容 Prompt 不构成新的 production 写作层。
 
 ---
 
@@ -247,9 +247,19 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 该边界已经通过 Chapter 120 / 600 压力 A/B 验证并冻结为 `Long-History Fact Boundary v1`。最终版本除 Prompt 顶层事实规则外，还把 Curator 已识别的 Open Promises / 未解机制 / 未兑现事项确定性投影为约 300 多字的 `UNRESOLVED FACT BOUNDARY`，放在 Chapter Mission 之后、正文连续性之前；不增加模型调用。冻结样本中两章的核心 unknown discipline 均达到盲评 5/5。已知残余是极少数后台章节编号可能被 Writer 自我纠正式带入正文，这属于 prose hygiene，不改变 Canon，也不应通过新增 continuity agent 解决。
 
+### Authority Reviser — Preservation-First Authority Recovery
+
+Primary Writer 先用窄上下文完成一版完整正文；Authority Reviser 再以该稿为唯一底稿，用更接近上游原始权威但仍安全的投影做**局部恢复与笔墨校正**。默认模型是 GPT-5.6 Luna high，raw GBrain OFF。
+
+Reviser 输入包括冻结 Chapter Mission、Curator、safe World Authority、逐条 Reader Release、Frozen Power + Human Core、Canon 与 Primary Draft。它首先保护已正确的正文：没有明确问题的句段默认逐字保留；只允许删除/压缩重复确认、重复证明、工程化/程序化实施和 Competence Filler，或补回第一版漏掉且已被 Authority 明确支持的 World / Power / Human realization。生活细节也必须来自 safe World Authority，不为“更生动”临时创造风俗、建筑或制度。
+
+它不是第二次剧情创作：不能改变事件顺序、人物决定、胜负、资源得失、伤势、身份结果、Direct Result、State Change、Ending 或 unknown boundary。删除程序载体时必须保留它之后真正发生的 Consequence；如果一段承载新的 State Change、Social Repricing、Reward、Relationship Change、New Desire 或 Next Opportunity，就不能因为含“报告 / 登记 / 说明”而整段删除。
+
+这个职责来自受控 A/B：同一冻结 Primary Draft 比较 Luna `low / medium / high / xhigh / max`，high 是第一个在 Ch5/6/9/10 四类压力下全部完成关键 authority 检查的档位；xhigh/max 没增加可见净收益且 Preservation 更差。该模型结论是 Current Default，不是 prose 永恒原则。
+
 ### Specialist / Integrator — Bounded Repair
 
-Specialist 只看职责相关的 Primary Draft 局部和 Curated Context，最多给局部 Patch；Integrator 只以 Primary Draft 为底稿，并且只在真实存在下列问题时有限修复：
+Specialist 只看职责相关的 Authority Revision 局部和 Curated Context，最多给局部 Patch；Integrator 只以 Authority Revision 为底稿，并且只在真实存在下列问题时有限修复：
 
 - Planning summary 替代了场景结果；
 - 重大事件没有人物反应；
@@ -257,7 +267,7 @@ Specialist 只看职责相关的 Primary Draft 局部和 Curated Context，最�
 - payoff 被重复解释；
 - 对话、动作或 POV 声音被抽象总结覆盖。
 
-如果 Primary Draft 已经自然，Integrator 保持原文；任何修复都不得改变主要事件、直接结果、人物决定、资源/能力状态或章节结尾推动。
+如果 Authority Revision 已经自然，Integrator 保持原文；任何修复都不得改变主要事件、直接结果、人物决定、资源/能力状态或章节结尾推动。
 
 ---
 
@@ -435,7 +445,7 @@ GBrain Story Reference Programs 继续负责故事设计，不自动变成 prose
 
 ## 13. Output Boundary
 
-最终 `chapter-NNNN.md` 只保存正式小说正文：默认来自 Primary Writer；显式 repair 时若 Integrator 产生有效最终稿，则保存该最终正文。
+最终 `chapter-NNNN.md` 只保存正式小说正文：默认来自 Authority Reviser；显式 repair 时若 Integrator 产生有效最终稿，则保存 Integrator 最终正文。Primary 在 `curator_primary` 中只是第一版草稿，不能直接成为最终来源；State 也只从 Run Ledger 的最终正式来源读取。
 
 以下内容必须与正文分离：Audit、事实摘要、repair notes、字符/token 统计、运行 metadata 与 provenance。
 

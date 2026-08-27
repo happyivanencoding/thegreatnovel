@@ -10,7 +10,7 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 对应实际链路：
 
-`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline → Director → Curator → Primary Writer → State Extraction`
+`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
 
 其中最重要的原则是：**越靠上游，越决定“这本书是什么”；越靠下游，越只负责忠实执行已经确定的故事。**
 
@@ -469,6 +469,31 @@ Writer 的目标是“写小说”，不是维护 pipeline bookkeeping。 正文
 
 ---
 
+### Authority Reviser：恢复远端权威，但只做局部手术
+
+Primary 为了保持注意力集中，只吃 Director Contract、Curated Context 与必要连续性；这会降低写作负担，也会让一些**远端但更准确**的 World / Power / Human 信息在第一次 realization 中被压缩掉。Authority Reviser 专门解决这类“压缩损失”，不重新决定剧情。
+
+#### 负责
+
+- 以 Primary Draft 为唯一底稿，**Preservation First**：没有明确问题的句段默认逐字保留；
+- 同时读取冻结 Mission、Curator、safe World Authority、逐条 Reader Release、Frozen Power + Human Core、Canon；
+- 删除/压缩反复确认、重复证明、工程化/程序化 Supporting Implementation 和 Competence Filler；
+- 补回 Authority 已批准但第一版遗漏的最短充分 World Orientation、Core Power 独有体验、Human 私人 cue 或一个真正承载故事的生活细节；
+- 把笔墨从普通实施还给本章真正的 World Entry / Rival / Relationship / Core Fantasy / Choice / Payoff / Consequence。
+
+#### 不负责
+
+- 重排 Chapter Mission、改变人物选择、胜负、资源得失、伤势、身份结果、Direct Result、State Change、Ending；
+- 把远端欲望/计划/可能性升级成客观事实；
+- raw GBrain 检索；
+- 把全章重新润色一遍。
+
+删除程序载体时，先判断是否同时承载新的 `State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity`；若会，就只能压缩实施，不能删除 Consequence。
+
+当前默认使用 GPT-5.6 Luna high。五档同输入对照中，medium Preservation 更高但存在 Reader Release coverage 漏项；high 首次在四类压力样本上全部通过关键 authority 检查；xhigh/max 没有补偿性收益。模型选择是 Current Default，不是 Stable Principle。
+
+---
+
 ### State Extraction：只记录已经发生的事实
 
 #### 负责
@@ -486,7 +511,7 @@ Writer 的目标是“写小说”，不是维护 pipeline bookkeeping。 正文
 - 修改规划；
 - 补写正文中没有发生的事实。
 
-State Extraction 越轻越好，优先使用更快、更便宜的模型，只要事实抽取正确。
+State Extraction 越轻越好，优先使用更快、更便宜的模型，只要事实抽取正确。默认 `curator_primary` 后端从 Run Ledger 的 `final_source` 重读正式正文，Primary 草稿不能旁路进入长期 Canon。
 
 ---
 
@@ -597,9 +622,9 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 
 当前章节默认链：
 
-`Director → Curator → Primary → lightweight State Extraction`
+`Director → Curator → Primary Draft → Authority Reviser → lightweight State Extraction`
 
-即 3 个主要生成调用 + 1 个轻量状态抽取，不默认运行 Specialist / Integrator。
+即 4 个主要生成调用 + 1 个轻量状态抽取，不默认运行 Specialist / Integrator。Reviser 的存在是为了把“Primary 窄上下文”和“远端高权威准确性”解耦，不是为了再写一次全文。
 
 确定性工作优先本地完成：
 
@@ -625,8 +650,9 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |
 | Director | GPT-5.6 Luna high | 章节相关精选上下文 | Balanced 默认；若优先最低延迟可切 Terra high |
 | Curator | GPT-5.6 Luna high | raw GBrain OFF；Index-first / Scene Skills | Balanced 默认；若优先更短、更克制可切 Terra medium |
-| Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；Scene Skills | 正文更克制、较少 procedural expansion |
-| State Extraction | GPT-5.6 Luna low | OFF | 只抽取已发生事实 |
+| Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；Scene Skills | 先完成完整第一版正文；不是默认 final source |
+| Authority Reviser | GPT-5.6 Luna high | **OFF**；safe Authority Refresh Pack | Preservation First；恢复漏失 Authority、压低重复/工程/程序化笔墨；默认 final source |
+| State Extraction | GPT-5.6 Luna low | OFF | 只抽取最终正式正文已发生事实 |
 
 ### 为什么这样分
 
@@ -636,7 +662,7 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 - **Luna max**：不作为日常默认；只用于疑难创意救援、关键架构诊断和最高质量基线。
 - **GPT-5.4 high**：当前没有相对 Luna 的补偿性优势，只用于回归或模型对照。
 
-章节模型选择必须分开看 **生成质量 / wall-clock / 实际成本**。2026-08-23 的配对正文实验里，当前最推荐的 Balanced 路由是 `Luna Director → Luna Curator → Terra Primary → Luna State`；Terra Primary 是正文行为选择，不是成本选择。若优先更短延迟，可把 Director/Curator 切到 Terra high/medium；若质量优先且希望 Curator更精简，可只把 Curator切到 Terra medium。Sol 不进入常规章节链。
+章节模型选择必须分开看 **生成质量 / wall-clock / 实际成本**。当前默认路由是 `Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。Terra Primary 是第一版正文行为选择；Luna high Reviser 是 authority-sensitive 局部修订选择。若优先更短延迟可调整 Director/Curator，但 production Reviser 当前冻结为 Luna high；Sol 不进入常规章节链。
 
 ### 已验证的 Theme Emergent A/B 结论（2026-08-25）
 

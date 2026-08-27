@@ -294,3 +294,33 @@ def test_codex_external_apply_run_response_uses_run_ledger(tmp_path: Path, monke
     )
     assert manifest["nodes"]["director"]["status"] == "completed"
     assert (book_dir / "runs" / "chapter-0018" / "director_response.md").read_text(encoding="utf-8") == "DIRECTOR RESPONSE"
+
+
+def test_codex_external_authority_reviser_auto_adopts_final_source(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    book_dir = create_book("external-reviser", tmp_path)
+    _run(book_dir, 18)
+    from story_mvp.run_ledger import save_node_prompt, save_node_response
+
+    for node in ("director", "curator", "primary"):
+        save_node_prompt(book_dir, 18, node, f"{node} prompt")
+        save_node_response(book_dir, 18, node, f"{node} response")
+    save_node_prompt(book_dir, 18, "authority_reviser", "authority prompt")
+
+    response = tmp_path / "authority-response.md"
+    response.write_text("# 正式正文\n\nREVISED FINAL", encoding="utf-8")
+    apply_response(
+        book_id="external-reviser",
+        artifact="chapter.18.run",
+        input_path=response,
+        source="codex_external",
+        chapter=18,
+        node="authority_reviser",
+    )
+
+    manifest = json.loads(
+        (book_dir / "runs" / "chapter-0018" / "manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["nodes"]["authority_reviser"]["status"] == "adopted"
+    assert manifest["final_source"] == "authority_reviser"
+    assert manifest["nodes"]["state_delta"]["status"] in {"pending", "stale"}

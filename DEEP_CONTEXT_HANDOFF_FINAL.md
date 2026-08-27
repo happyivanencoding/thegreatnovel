@@ -98,6 +98,7 @@ Canon / State Continuity
 → Director
 → Curator
 → Primary Writer
+→ Authority Reviser
 → State Extraction
 ```
 
@@ -1260,6 +1261,7 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 → Director
 → Curator
 → Primary Writer
+→ Authority Reviser
 → State Extraction
 ```
 
@@ -1281,11 +1283,12 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 - `docs/CHAPTER_RUNTIME_AND_STATE.md`：章节、Canon、State；
 - `docs/NOVEL_PROSE_REALIZATION.md`：正文表达；
 - `docs/AUTHOR_WORKSPACE_UI_SPEC.md`：UI；
-- `.agents/skills/tgn-system-steward/`：审计 Skill；
+- `tgn-system-steward`：AgentDock 审计 Skill；本次已升级并激活 **v0.1.14**，新增 Post-Writer Authority Revision Trace / Preservation-First 审计能力；
 - `.agents/skills/novel-prose-realization/`：正文实现 Skill；Reader Orientation / Supporting Skill compression 更新已随 `15a389d` 提交。
 
 ### 11.5 当前关键实验
 
+- `books/real-exp-second-pass-authority-revision-20260827-v1`：冻结 Primary Draft 的 Second-Pass Authority Revision A/B；确立 Preservation First、safe Authority Refresh、Reader Release 逐条核对与 Consequence 保护，并比较 Luna low / medium / high / xhigh / max；production 选择 Luna high。
 - `books/real-exp-doupo-system-mechanisms-20260827-v1`：三项《斗破》机制 A/B；
 - `books/real-exp-personality-advantage-tree-20260827-v1`：四 Human 优势树实验，结论 PARTIAL；
 - `books/real-exp-private-prototype-orientation-world-entry-final-20260827-v1`：Reader Orientation/World Entry 最终五章回归；
@@ -1294,7 +1297,7 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 
 ### 11.6 测试状态
 
-最近多轮完整回归均为 **294 passed**。本 Handoff 创建前读取的最新实验也记录 294 passed。由于工作树仍有并行改动，任何继续开发前仍应重新运行与任务相关的专项测试和全量回归。
+本次 Authority Reviser production 接线完成后的最新完整回归为 **306 passed**；同时通过 Python compile、`node --check` 与 `git diff --check`。由于工作树仍有并行未提交内容，任何后续开发仍应先 `git status` 并按任务重跑相关专项测试。
 
 ### 11.7 GBrain 当前真实状态
 
@@ -1306,7 +1309,21 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 
 即 **还有 6 个 chunk 未 embedding**。这与某些旧 docs 中历史上的 `Embedded == Chunks` 状态不同；以当前 stats 为准。最近《斗破》全文 Story Craft / Longitudinal / Mentor Knowledge 等材料已存在，但 GBrain 更新交付仍不能标记完全结束，直到执行 `embed --stale` 并验证 `Embedded == Chunks`。
 
-### 11.8 当前最重要的问题
+### 11.8 Authority Reviser 已进入当前 production
+
+章节实验暴露了一个与“上游事实是否正确”不同的问题：Primary 为了集中注意力只吃近端压缩上下文，虽然能更好地完成场景，但会丢失远端、已批准且更准确的 World / Power / Human realization。把完整远端资料重新塞回 Primary 会重新放大上下文与注意力负担，因此当前采用**两遍职责分离**：
+
+`Director → Curator → Terra Primary Draft → Luna high Authority Reviser → State`
+
+Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Curator、safe `WORLD AUTHORITY`、逐条 `Reader Release`、`CHARACTER.md` 的 Frozen Power + Human Core、Canon 与 Primary Draft；raw GBrain OFF。默认 **Preservation First**：没明确问题的段落逐字保留，只删/压重复确认、重复证明、工程化/程序化 Supporting Implementation、Competence Filler，只补 Authority 已批准但第一版漏掉的最短世界/人物/力量 realization；不得改剧情结果、人物选择、状态变化、章末推动或 unknown boundary。
+
+选择 Luna high 的证据不是“更贵所以更强”。同一最终 Revision Contract、同一冻结 Ch5/6/9/10 Primary Draft 上：low 5/7 关键检查；medium 6/7 且 Preservation 最好；high 7/7；xhigh/max 同为 7/7 但更慢、改动更多。当前 default 因 coverage stability 选 high；这仍是 Current Default，不是 Stable Principle。
+
+**State closure 是硬接线**：`curator_primary` 不允许 Primary 直接成为 `final_source`；State 后端从 Run Ledger 重新读取 `authority_reviser` 或显式 repair 后的 `integrator`，页面粘贴的 Primary 不能旁路进入长期 Canon。Optional Specialist/Integrator 也必须以 Authority Revision 为底稿。
+
+---
+
+### 11.9 当前最重要的问题
 
 不是“人格能不能改变剧情”——这一点已经 PASS。
 
@@ -1333,12 +1350,13 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 | Outline | GPT-5.6 Luna | high | 通常 4，最多 5 |
 | Director | GPT-5.6 Luna | high | raw GBrain OFF |
 | Curator | GPT-5.6 Luna | high | raw GBrain OFF；Scene Skills ON |
-| Primary Writer | GPT-5.6 Terra | high | raw GBrain OFF；Scene Skills ON |
-| State | GPT-5.6 Luna | low | OFF |
+| Primary Writer | GPT-5.6 Terra | high | raw GBrain OFF；Scene Skills ON；第一版草稿 |
+| Authority Reviser | GPT-5.6 Luna | high | raw GBrain OFF；safe Authority Refresh Pack；Preservation First |
+| State | GPT-5.6 Luna | low | OFF；只读最终正式来源 |
 
 默认章节链：
 
-> `Luna Director → Luna Curator → Terra Primary → Luna State`
+> `Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`
 
 模型判断必须分开：生成质量、wall-clock、实际成本。Terra Primary 是正文行为选择，不是便宜；Sol 只集中在长期高杠杆节点。
 

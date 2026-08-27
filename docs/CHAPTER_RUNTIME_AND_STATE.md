@@ -6,9 +6,9 @@
 
 章节 Runtime 只负责执行已经批准的故事，不重新设计长期主线。当前默认模式是 `curator_primary`：
 
-`Director → Context Curator → Primary Writer → State Extraction`
+`Director → Context Curator → Primary Writer → Authority Reviser → State Extraction`
 
-Specialist / Integrator 不在默认链；只有作者明确启动局部 repair 时才临时进入。`single`、`hybrid_selective`、`hybrid_full` 仅保留兼容与专项实验用途。
+Authority Reviser 是默认 `curator_primary` 的固定正文修订节点；Specialist / Integrator 不在默认链，只有作者明确启动局部 repair 时才临时进入。`single`、`hybrid_selective`、`hybrid_full` 仅保留兼容与专项实验用途。
 
 章节 Runtime 默认不直接读取 raw GBrain。GBrain 对章节层的影响只通过已批准的 Story Program / Outline，以及离线蒸馏后的 Scene Skills 间接进入。
 
@@ -30,13 +30,29 @@ Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact 
 
 只写正式正文。输入以 Director Contract + `UNRESOLVED FACT BOUNDARY` + Curated Context + 必要连续性为主；不直接读取 raw GBrain，不承担状态记账或长期结构修复。已排程 Reader Release 是本章要兑现的 timing decision：Curator 已投影时，用最短充分的直接旁白或场景表达说明，若同一事实包含地点/势力/传承的价值，也保留一个最短欲望锚点；只有正文同处已经自然说清才不重复。Curated Context 已明确带入私人欲望且当前场景自然触发时，不把它自动净化成职责协作或成熟沟通。Canon / Curator 已标记为未知、未解释、真假未定或原因未明的过去事实继续保持未知；除非 Director Contract 明确规定本章新成立的事实，Primary 只能创造当前场景实现细节，不得把 plausible explanation 写成 retrospective canon。对白同样不能成为补 Canon 的旁路。
 
+### Authority Reviser
+
+固定使用 **GPT-5.6 Luna high**。Primary Draft 是唯一待修订正文底稿；Reviser 不是第二个 Director / Writer，而是 **Preservation-First Authority Recovery**：先假设已写好的正文正确，只有能指出具体失败的局部才允许修改。
+
+它重新获得 Primary 为减负而没有直接持有的远端权威：冻结 Chapter Mission、Curator、safe `WORLD AUTHORITY`、逐条 `Reader Release`、`CHARACTER.md` 的 Frozen Power Core + Frozen Human Core、Canon Index / 上一章必要章末，以及 Primary Draft。raw GBrain 固定 OFF，完整 World / Character 原文也不直接进入；所有远端输入都是确定性安全投影。
+
+允许的修订只有三类：
+
+- 删除/压缩反复确认、重复证明、结构分析、材料诊断、路线计算、验证/报告/登记式展开和无新选择的 Competence Filler；
+- 补回 Authority / Reader Release / Curator 已批准但 Primary 漏掉的最短充分世界信息、Core Power 独有体验、Frozen Human 私人 cue 或一个有故事功能的生活细节；
+- 在不改变事实的前提下，把过多 Supporting Implementation 的笔墨还给 World Entry、Rival、Relationship、Core Fantasy、Choice、Payoff 或 Consequence。
+
+不得改变主要事件顺序、人物决定、胜负、资源得失、伤势、身份结果、Direct Result、State Change、Ending 或未知事实边界；没有明确问题的句段默认逐字保留。删除一段前必须先确认不会同时删掉新的 `State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity`。
+
+在 `curator_primary` 中 Primary 不能直接成为 `final_source`。Authority Reviser 完成后才可采用为正式正文；如果后续显式 repair 运行 Integrator，则 Integrator 可替代它。State Extraction 后端会重新读取 Run Ledger 的最终来源，页面里的 Primary 文本不能旁路进入 State。
+
 ### Optional Repair
 
-`opening / dialogue / action / emotion` Specialist 与 Integrator 只在作者显式开启 repair 时使用。Specialist 最多给局部 Patch；Integrator 以 Primary Draft 为唯一底稿，可以全部拒绝。若没有有效 Patch，Primary 直接保留。
+`opening / dialogue / action / emotion` Specialist 与 Integrator 只在作者显式开启 repair 时使用，而且必须发生在 Authority Reviser 之后。Specialist 读取 Authority Revision 的相关局部；Integrator 也以 Authority Revision 为底稿，可以全部拒绝。若没有有效 Patch，`final_source` 继续保持 Authority Reviser。
 
 ### State Extraction
 
-只从正式正文提取已经发生的事实，不读取 GBrain，不把计划、推测或参考机制写进 Canon。
+只从最终正式正文提取已经发生的事实，不读取 GBrain，不把计划、推测或参考机制写进 Canon。默认 `curator_primary` 下必须从 Run Ledger 的 `authority_reviser` / `integrator` `final_source` 重新读取正文；Primary Draft 不得直接进入 State。
 
 ## Canon Memory
 
@@ -70,14 +86,14 @@ Ledger 记录固定节点的 Prompt、Response、状态与最终采用来源，�
 
 底层节点仍可记录：
 
-`director → curator → primary → opening / dialogue / action / emotion → integrator → state_delta`
+`director → curator → primary → authority_reviser → opening / dialogue / action / emotion → integrator → state_delta`
 
-在默认 `curator_primary` 中，Specialist 与 Integrator 默认 `skipped`；需要 repair 时再显式激活。失败节点重试复用已保存 Prompt，不重跑无关上游；上游变化只让真实依赖的下游变为 `stale`。
+在默认 `curator_primary` 中，`authority_reviser` 必跑，Specialist 与 Integrator 默认 `skipped`；需要 repair 时只能在 Reviser 完成后显式激活。历史已完成 Run 不被新节点追溯改写；新/未完成 production Run 必须经过 Reviser。失败节点重试复用已保存 Prompt，不重跑无关上游；上游变化只让真实依赖的下游变为 `stale`。
 
 ## 实现边界
 
 - `chapter_context.py`：确定性上下文投影与压缩。
-- `hybrid_runtime.py`：Curator / Primary / Specialist 的局部文本投影，不调用模型。
+- `hybrid_runtime.py`：Curator / Primary / Authority Reviser / Specialist 的局部文本投影，不调用模型。
 - `run_ledger.py`：节点文件状态与恢复，不写小说事实。
 - `storage.py`：显式保存与 State Delta 应用边界。
 

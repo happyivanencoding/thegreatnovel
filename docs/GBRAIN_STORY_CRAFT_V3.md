@@ -24,6 +24,7 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 - `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。World 的固定 Coordinate Reference 同样不重复进入 Outline creative 候选，坐标语义由已批准 World Vision 继承。
 - `Director`：不负责凭空发明长期大奖励或重新设计 Story Program。
 - `Curator / Primary`：Scene Skills 只控制 HOW TO REALIZE THE SCENE，不改变 Chapter Mission 或 Canon。
+- `Authority Reviser`：raw GBrain 固定 OFF；只读取已批准 World / Reader Release / Frozen Character Authority 的安全投影与 Curator/Primary，用于 Preservation-First 局部修订，不从 GBrain 追加新灵感。
 - `State Extraction`：继续用当前 `current_state` 记录重要能力、物品、规则、持有人与状态变化；不新增 Inventory 数据库。
 
 ## 统一的 Supporting Logic 原则
@@ -60,8 +61,9 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 | Outline | GPT-5.6 Luna high | 能高质量执行正确 Program，把长期结构落实成故事锚点而不过度膨胀 |
 | Director | GPT-5.6 Luna high | Balanced 默认；质量与 Terra high 接近但成本更低，最低延迟模式可切 Terra high |
 | Curator | GPT-5.6 Luna high | Balanced 默认；继续压短输出合同。若优先最短延迟与更克制输出，可切 Terra medium |
-| Primary Writer | GPT-5.6 Terra high | 正文 A/B 中更克制、较少 procedural expansion、更愿意按 Chapter Contract 停下；这是质量/行为选择，不是成本选择 |
-| State Extraction | GPT-5.6 Luna low | 当前成本优先默认，只记录已发生事实 |
+| Primary Writer | GPT-5.6 Terra high | 正文 A/B 中更克制、较少 procedural expansion；先完成第一版正文 |
+| Authority Reviser | GPT-5.6 Luna high | safe Authority Refresh Pack；raw GBrain OFF；Preservation First，恢复漏失信息并压低重复/工程/程序化 realization |
+| State Extraction | GPT-5.6 Luna low | 当前成本优先默认，只记录最终正式正文已发生事实 |
 
 模型不是线性排名：
 
@@ -71,7 +73,7 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 - **Luna max**：仅用于疑难创意救援、最高质量基线和关键重构，不日常使用；
 - **GPT-5.4 high**：当前没有相对 Luna 的补偿性优势，不作为默认创作模型。
 
-章节路由要分开看 **质量 / wall-clock / 实际成本**。当前 Balanced 推荐为 `Luna Director → Luna Curator → Terra Primary → Luna State`；若优先最低延迟，可把 Director/Curator 切到 Terra high/medium；若优先 Curator 的极简输出，可只把 Curator 切到 Terra medium。Sol 不进入常规章节链。
+章节路由要分开看 **质量 / wall-clock / 实际成本**。当前默认是 `Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。Reviser reasoning 五档对照中 high 首次稳定完成全部关键 authority 检查；xhigh/max 没有补偿性收益。若优先最低延迟，可调整 Director/Curator；Sol 不进入常规章节链。
 
 ### GBrain 蒸馏模型
 
@@ -232,7 +234,7 @@ TGN retrieval regression 通过：SP01 仍以 `plot-engine-variation` 为首，S
 1. Behavior craft 进入 Human Seed：Stable Choice Bias + Variable Realization，与 competing motives、person-specific relationships 一起构成人物权威；
 2. World Vision 继续 protagonist-blind，只要求没有主角仍有具体人物、价值物、事件与奇观成立，不新增正交删除 Hard Rule；
 3. Story Program 使用 native Collision contract：Growth 是全书纵向不变量，不是每阶段 Acquisition / Compounding / Power Growth 税；High-Value Acquisition 与 Compounding 保留为纵向 reader-appetite / continuity 原则；
-4. Outline 继续使用既有 Story Anchor / State Change / Open Promise；Director / Curator / Primary / State **均不增加职责**。Story Craft 与 Prose DNA 继续分离，本轮不新增 Prose Control。
+4. Outline 继续使用既有 Story Anchor / State Change / Open Promise；Story Craft 与 Prose DNA 继续分离。章节期新增的 Authority Reviser 不是 GBrain 消费节点：它不读取 raw GBrain，只用已批准远端 authority 的安全投影修复 Primary realization。
 
 正式 GBrain 只新增 **3 张 `REFERENCE_ONLY / active_inspiration:false` source book cards + 1 张 active PILOT mechanism**。曾尝试给 4 张旧 mechanism 增加 alias/evidence，但 retrieval regression 显示会扰动既有排序，因此该修改已撤回；最终不通过“顺手增强旧卡”制造检索噪声。
 

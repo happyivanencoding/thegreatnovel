@@ -20,7 +20,7 @@
 
 - 创意：三阶段 Stepper；默认阅读态，编辑/生成/批准按阶段展开；GBrain/References 折叠。
 - 故事设计：总体设计 / 中期规划 / 未来十章 Tabs；section cards 默认阅读态，原文编辑显式打开。
-- 章节写作：章节选择、当前小纲/正文主体、一个主生成或保存动作；所有开书叙事形式都从 Chapter 1 进入正常 Director → Curator → Writer → State 链，原始上下文和执行节点进入高级详情。
+- 章节写作：章节选择、当前小纲/正文主体、一个主生成或保存动作；所有开书叙事形式都从 Chapter 1 进入正常 Director → Curator → Primary → Authority Reviser → State 链，原始上下文和执行节点进入高级详情。
 - 记忆：Canon Memory / Current State 默认阅读态，复用 BOOK status 保存路径。
 - 工具：Prompt Templates、OpenAI Settings、References、Workflow Debug。
 
@@ -30,11 +30,11 @@ Future 10 和记忆保留显式编辑入口；保存仍统一走 BOOK 保存路�
 
 ## 高级透明性
 
-右侧 Drawer 按需打开，复用现有 DOM 编辑器和输出区，不创建第二份内容来源；可查看完整 Prompt、Codex Response、Run Ledger、Dependency Impact、revision/source/file path、Hybrid 节点和 State Delta。
+右侧 Drawer 按需打开，复用现有 DOM 编辑器和输出区，不创建第二份内容来源；可查看完整 Prompt、Codex Response、Run Ledger、Dependency Impact、revision/source/file path、Primary / Authority Reviser / optional repair 节点和 State Delta。Authority Reviser 卡固定标示 `GPT-5.6 Luna · high`；`curator_primary` 下 Primary 只作为第一版草稿，必须采用 Authority Revision 后才能进入 State。
 
 ## 不变约束
 
-- 不修改任何生成 Prompt、Workflow dependency/stale 语义、Run Ledger、Writer Mode、Executor 后端语义或小说文件格式。
+- UI 不另造生成/保存语义；Workflow dependency、Run Ledger 与 Executor 的真实语义由 production runtime 决定。当前 `curator_primary` 已包含固定 Authority Reviser；其它 writer mode 保持兼容行为。
 - 不自动保存、不自动批准、不自动重跑 stale；真实保存仍走现有 API。
 - Manual、Codex External、OpenAI API 只改变 Response 产生方式，共享同一 Prompt、Apply、Save 和 Workflow State。
 - 本轮不生成新章节、不运行小说质量实验。

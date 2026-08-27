@@ -55,7 +55,7 @@ Human Seed 只读取确定性的 `LIFE_CONTEXT` 与 Human GBrain craft；对 Pow
 
 它负责：初始社会位置、具体生活事实、会竞争/重排的长期私人动机、行为签名、重要关系原点与相对稳定的身份事实。
 
-行为签名 = **稳定选择偏向 + 具体实现随现场变化**。具体关系只有在“因为是这个人”而真实改变选择时才成立；同等有用的人不能自动替代。章节期从 deterministic `CHARACTER.md` **只截取 Frozen Human Core 投影给 Curator**；Power Core 不重复注入，可变状态仍由 BOOK/State 管。冻结 Human Core 高于后续几章的局部行为归纳：连续负责、救人、诚实或克制可以成为已发生事实和关系预期，但不能由 Curator / Writer 反推成新的稳定道德人格。当前场景自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心等 competing motive 时，应允许它真实进入注意力与选择，不统一净化成成熟合作。
+行为签名 = **稳定选择偏向 + 具体实现随现场变化**。具体关系只有在“因为是这个人”而真实改变选择时才成立；同等有用的人不能自动替代。章节期从 deterministic `CHARACTER.md` 先只截取 Frozen Human Core 投影给 Curator；Power Core 不在 Curator 重复注入。Primary 完成第一版后，固定 Authority Reviser 会重新读取 **Frozen Human Core + Frozen Power Core** 的安全确定性投影，用于恢复被近端压缩丢掉的人格/力量 realization；它们仍是只读 authority，不允许重组 Character、改写剧情或把近期行为反推成新人格。冻结 Human Core 高于后续几章的局部行为归纳：连续负责、救人、诚实或克制可以成为已发生事实和关系预期，但不能由 Curator / Writer / Reviser 反推成新的稳定道德人格。当前场景自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心等 competing motive 时，应允许它真实进入注意力与选择，不统一净化成成熟合作。
 
 ### 可变状态与非 Canon 边界
 
@@ -114,7 +114,7 @@ Human 三个 lane 是**检索预算，不是人格必填维度**；只接受对�
 
 `Life Texture / Human Appetite` 不是上游 Human Seed 字段。
 
-当前场景自然需要时，Curator / Writer 可以从已批准 World 事实中偶尔投影 **0–1 个生活性细节**。它不得建立新世界规则、新人物动机、新剧情义务，也不因为出现一次就自动成为长期 Canon，更不要求每章使用。
+当前场景自然需要时，Curator / Writer 可以从已批准 World 事实中偶尔投影 **0–1 个生活性细节**；若 Primary 漏掉而场景因此显得像无背景空间，Authority Reviser 也可以从 safe World Authority 补回一个已批准细节。它不得建立新世界规则、新人物动机、新剧情义务，也不因为出现一次就自动成为长期 Canon，更不要求每章使用。
 
 ## 10. 审批与 stale graph
 

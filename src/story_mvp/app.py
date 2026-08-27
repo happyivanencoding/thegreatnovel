@@ -22,6 +22,7 @@ from .openai_executor import (
     OpenAIExecutorError,
     configure_settings,
     configured as openai_configured,
+    authority_reviser_model,
     default_model,
     generate_text,
     settings_status,
@@ -34,6 +35,7 @@ from .run_ledger import (
     adopt_final_source,
     create_or_load_run,
     load_run,
+    load_node_response,
     mark_node_failed,
     mark_node_skipped,
     next_actionable_node,
@@ -80,7 +82,8 @@ class TextRequest(BaseModel):
 class OpenAIExecutorRequest(BaseModel):
     prompt: str = ""
     model: str = ""
-    purpose: Literal["default", "state_extraction"] = "default"
+    purpose: Literal["default", "state_extraction", "authority_reviser"] = "default"
+    reasoning_effort: str = ""
 
 
 class OpenAISettingsRequest(BaseModel):
@@ -150,7 +153,7 @@ class RunNodeContentRequest(BaseModel):
 
 
 class RunAdoptRequest(BaseModel):
-    source: Literal["primary", "integrator"]
+    source: Literal["primary", "authority_reviser", "integrator"]
 
 
 class RunIntegratorSkipRequest(BaseModel):
@@ -175,6 +178,7 @@ class PromptRequest(BaseModel):
         "state_delta",
         "context_curator",
         "primary_writer",
+        "authority_reviser",
         "specialist_opening",
         "specialist_dialogue",
         "specialist_action",
@@ -264,6 +268,8 @@ def get_executors() -> dict[str, Any]:
             "configured": openai_configured(),
             "model": default_model(),
             "state_model": state_extraction_model(),
+            "authority_reviser_model": authority_reviser_model(),
+            "authority_reviser_reasoning": "high",
             "name": openai_settings["name"],
         },
     }
@@ -286,7 +292,7 @@ def put_openai_settings(payload: OpenAISettingsRequest) -> dict[str, str | bool]
 def post_openai_executor(payload: OpenAIExecutorRequest) -> dict[str, str]:
     try:
         return generate_text(
-            payload.prompt, model=payload.model, purpose=payload.purpose
+            payload.prompt, model=payload.model, purpose=payload.purpose, reasoning_effort=payload.reasoning_effort
         )
     except OpenAIExecutorError as error:
         status_code = 503 if not error.configured else 502
@@ -540,6 +546,41 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
             values["character_initial_state"] = creative["character_initial_state"]
         if not values.get("proposal_context"):
             values["proposal_context"] = creative["proposal"]
+
+        if payload.chapter_number > 0:
+            directory = require_book(payload.book_id, workspace_path())
+            try:
+                manifest = load_run(directory, payload.chapter_number)
+            except FileNotFoundError:
+                manifest = None
+            if manifest is not None:
+                if payload.mode == "authority_reviser":
+                    if not values.get("curator_response"):
+                        values["curator_response"] = load_node_response(directory, payload.chapter_number, "curator")
+                        values["curated_context"] = values["curator_response"]
+                    if not values.get("primary_draft") and not values.get("primary_writer_response"):
+                        values["primary_writer_response"] = load_node_response(directory, payload.chapter_number, "primary")
+                elif payload.mode in {
+                    "specialist_opening", "specialist_dialogue", "specialist_action",
+                    "specialist_emotion", "chapter_integrator",
+                }:
+                    if not values.get("curator_response"):
+                        values["curator_response"] = load_node_response(directory, payload.chapter_number, "curator")
+                        values["curated_context"] = values["curator_response"]
+                    if not values.get("primary_draft"):
+                        revised = load_node_response(directory, payload.chapter_number, "authority_reviser")
+                        values["primary_writer_response"] = revised or load_node_response(directory, payload.chapter_number, "primary")
+                elif payload.mode == "state_delta" and manifest.get("writer_mode") == "curator_primary":
+                    source = manifest.get("final_source")
+                    if source not in {"authority_reviser", "integrator"}:
+                        raise ValueError("curator_primary 的 State Extraction 必须等待 Authority Reviser 成为 final_source")
+                    response = load_node_response(directory, payload.chapter_number, source)
+                    from .hybrid_runtime import extract_primary_draft
+
+                    body = extract_primary_draft(response)
+                    if not body:
+                        raise ValueError(f"final_source={source} 没有可提取的正式正文")
+                    values["chapter_prose"] = body
     else:
         values["creative_state"] = payload.creative_state
     return values
@@ -556,9 +597,20 @@ def _validate_state_delta_input(payload: PromptRequest) -> None:
             status_code=400, detail="生成 State Delta Prompt 需要正整数的当前章节编号"
         )
     if not payload.chapter_prose.strip():
-        raise HTTPException(
-            status_code=400, detail="生成 State Delta Prompt 需要非空的本次正式章节正文"
-        )
+        has_final_run_source = False
+        if payload.book_id.strip():
+            try:
+                manifest = load_run(require_book(payload.book_id, workspace_path()), payload.chapter_number)
+                has_final_run_source = (
+                    manifest.get("writer_mode") == "curator_primary"
+                    and manifest.get("final_source") in {"authority_reviser", "integrator"}
+                )
+            except (FileNotFoundError, ValueError):
+                has_final_run_source = False
+        if not has_final_run_source:
+            raise HTTPException(
+                status_code=400, detail="生成 State Delta Prompt 需要非空的正式正文，或已采用的 Authority Revision / Integrator final_source"
+            )
 
 
 def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
