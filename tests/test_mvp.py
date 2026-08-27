@@ -2688,11 +2688,29 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "主角现在大致在哪一档" in story_program
     assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["review"]
-    assert "Persistent Reader Ruler" in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
-    assert "Persistent Reader Ruler" not in generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
+    director_ruler = generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    primary_ruler = generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
+    assert "Persistent Reader Ruler" in director_ruler
+    assert "Ruler = Compression, not Exposition" in director_ruler
+    assert "Discriminative Detail Only" in director_ruler
+    assert "Persistent Reader Ruler" not in primary_ruler
+    assert "State Advance After Proof / Choice → Consequence" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Plot Pace ≠ Tier Pace" in story_program
+    assert "Plot Pace ≠ Tier Pace" in DEFAULT_PROMPT_TEMPLATES["review"]
     assert "## 不可替代的人与关系" in story_program
     assert "### 关键关系（可选）" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
+
+
+
+def test_split_world_vision_provides_reusable_reader_benchmarks_without_database() -> None:
+    from story_mvp.character_prompts import generate_split_prompt
+
+    prompt = generate_split_prompt(mode="world_vision", creative_direction="玄幻成长")
+    assert "肉眼可感、可复用的 benchmark" in prompt
+    assert "正常 X 能做到 A，而这次竟然 Y" in prompt
+    assert "不建立战力数据库" in prompt
+    assert "不要求公斤/米" in prompt
 
 
 def test_high_value_acquisition_guidance_lives_in_story_program_and_outline_only() -> None:
