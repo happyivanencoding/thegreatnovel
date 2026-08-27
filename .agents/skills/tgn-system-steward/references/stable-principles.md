@@ -281,3 +281,67 @@ Writer 层最常见的 AI 问题不是“句子语法错误”，而是：
 修“阶段税”不等于长期成长可以缺失。
 
 每次修复都问：是否把一个默认偏置改成了另一个默认偏置？
+
+## 21. High-Value Orientation ≠ Low-Value Explanation
+
+“少解释”不是目标，**更高的信息价值密度**才是目标。
+
+审计 exposition 时先分两类：
+
+- **Low-value explanation**：一个结果已经成立后继续换证据证明；重大选择已经清楚后继续论证人物为什么会这样选；决定完成后的停车、搬运、登记、排布、检测等普通实施被完整展开。它们通常应被 Result Stop / State Advance 压缩。
+- **High-value Reader Orientation**：重要势力、地点、身份、资源、力量层、社会位置或生活方式第一次真正改变人物选择时，读者需要知道“它是什么、为什么此刻有分量、普通人或当前 POV 通常知道什么”。这类信息可以用短直接旁白高效释放，本身可以建立欲望、风险、世界尺度与期待。
+
+正确 authority 链是：
+
+`World 提供已批准事实 → Outline 决定首次释放时机 → Curator 只投当前相关安全事实 → Writer 直接、短促地表达 → 回到动作`
+
+如果 World 根本没有移动现实、社会常识或价值坐标，不允许 Writer 临时补制度；如果 World 有但正文没讲，检查 Outline / projection / Curator，而不是继续要求 Writer “show more”。反过来，也不要为了 Reader Orientation 建百科、每章 exposition 配额或新 Reviewer。
+
+## 22. Reader Knowledge = Authority × Timing × Delivery × Realization
+
+“World Vision 里写过”不等于读者知道。世界信息进入正文要分四层判断：
+
+- **Authority**：事实已批准，且属于章节期可安全使用的公共事实；
+- **Timing**：第一次真正影响当前事件时才释放，Future Plan 仍安排为 reveal 的答案不能提前；
+- **Delivery**：runtime 是否把当章需要的事实实际投给 Curator / Writer；
+- **Realization**：正文是否最短充分说清“是什么 / 为什么重要”，然后回到动作。
+
+开篇生活 Orientation 与战力 Ruler 分工：只说“普通人没境界 / 打不过二阶”仍可能让读者不知道自己生活在怎样的世界。named 势力首次重要登场时，若世界已有安全公开类别，应直接让读者知道一次“它是什么类型的存在”，而不是靠外观猜；动机和长期谜底继续未知。
+
+高价值解释应**替换**低价值重复验证或实施，而不是叠加在上面。
+
+## 23. Established Supporting Skill Should Collapse to Story Result
+
+手艺、诊断、维修、制作、路线、车具、医学、调查等 Supporting Skill 可以让人物真实，但一旦其方法已在前文成立、且它不是当前 Core Fantasy：
+
+> **后续复用默认写它让人物完成了什么，而不是重新写他怎样一步步做到。**
+
+只有本章出现新边界、失败、反制、质变，或该专业本身就是作者选择的第二幻想轴时，方法才值得重新展开。
+
+审计实施化时先追 Director / Curator：如果上游把“利用某专业判断 → 调整 A → 处理 B → 固定 C”作为事件合同或 `Relevant Plan`，Writer 的扩写往往只是忠实 realization。不要在这种情况下只给 Writer 加“少写点”。
+
+## 24. Access / Reward Must Not Pay a Qualification-Process Tax
+
+当 Outline 已经明确某个邀请、入场资格、名额、工作机会、身份待遇、奖励或高层人物认可已经真实存在时，下游不能为了“让主角显得配得上”自动补一轮试工、检查、考核、观察、登记或再次验证。
+
+先问：**这段资格流程是 Plan 真正选择的故事事件，还是 LLM 为合理化收益自动征收的流程税？**
+
+若 Plan 没安排，默认直接进入：
+
+`机会已经成立 → 主角接受 / 拒绝 / 延后 → 选择带来的后果`
+
+这不等于所有资格剧情都不该写；作者真正选择考试、竞赛、选拔、入门考核作为故事发动机时当然可以展开。审计针对的是**奖励已经成立后又被自动要求二次证明**。
+
+## 25. Do Not Invent Competence Filler to Make the Protagonist Look Useful
+
+低动作章节常见一个模型偏置：本章真正价值是 World Entry、势力首次登场、关系立场、误判、世界信息或局势换挡，但模型担心“主角没做事”，于是临时发明排车、修车、诊断、路线、搬运、清点、受力、制作等小问题，让主角表现专业能干。
+
+这会把 Supporting Logic 再次推到前台。
+
+审计时问：
+
+- Outline 是否真的安排了一个值得展开的技术问题？
+- 这个技术动作是否改变核心冲突、胜负或不可逆结果？
+- 若删掉操作过程，人物立场、世界信息和局势变化是否仍完整？
+
+如果答案说明技术问题只是为了“让主角显得有用”，应删除 Competence Filler。**观察、站队、拒绝、跟随、守住位置、提出一句判断或作出选择，本身就可以是完整而有力的主角行动。**

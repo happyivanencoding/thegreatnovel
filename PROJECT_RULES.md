@@ -118,6 +118,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - 结论区分 PASS / DIRECTIONAL PASS / PARTIAL PASS / FAIL / INVALID，并记录 **What This Did Not Solve**；单本书或单个 candidate 不直接升级为 production 结论。
 - 快速大规模 A/B 可用 Terra high，但不替代默认高质量规划路由。
 - **Character Authority Invariance**：凡结构机制可能改变主角取舍，默认用至少 2—3 个动机排序明显不同的冻结 Human 做同一 A/B；Treatment 除了产生目标结构增益，还必须保留 Human-specific 选择差异。若不同 Human 被推成同一种“成长最优/关系最优/道德最优”路线，即使结构更整齐也判失败或降级。
+- **Matched Decision Point**：要证明‘Personality → Choice → Route’时，先让不同冻结 Human 面对同一个具体诱惑/冲突/机会，验证选择本身是否随 Human 分叉；再放开长期 Story Program。若触发事件与机会池也同时变化，长期差异不能纯归因于人格。
 
 ## 9. Docs 自动维护
 

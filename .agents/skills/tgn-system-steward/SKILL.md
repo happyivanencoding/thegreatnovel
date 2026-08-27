@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.1.5
+version: 0.1.11
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -95,6 +95,11 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Character is a person, not a psychological proof
 - Growth is longitudinal, not a per-stage / per-block tax
 - Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
+- High-value Reader Orientation must be distinguished from low-value repeated explanation / implementation detail
+- Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose
+- Established non-core Supporting Skill should collapse to story result, not be re-methodized on every reuse
+- Access / Reward must not be taxed by an invented qualification process when Plan already grants the opportunity
+- Low-action chapters must not invent Competence Filler just to make the protagonist look useful
 - Story facts first; system bookkeeping second
 - High Precision / Low Noise for GBrain
 - Commercial Quality First; diversity is a search-space property, not a quota
@@ -121,6 +126,35 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Workflow / UI：审批、stale graph、artifact authority 是否正确。
 
 如果换一本完全不同的新书同样会复现，优先修上游系统层；如果只在一个 scene 的表达中出现，才修 Writer / Scene Skill。
+
+当问题表现为“解释太多 / 太少 / 世界看不懂”时，不要只按 exposition 数量审计。先区分：
+
+- **Low-value explanation**：同一结论换证据重复证明、决定后的普通实施、已经成立的能力边界反复说明；应压缩。
+- **High-value Reader Orientation**：新势力、地点、身份、资源、力量层或生活边界第一次真正影响选择时，帮助读者知道“这是什么、为什么重要、当前 POV 通常知道什么”；可以由短直接旁白承担。
+
+再沿 authority 链定位：World 是否提供安全事实 → Outline 是否调度首次释放 → Curator 是否投影相关事实 → Writer 是否只表达而没有发明。不要把 World 缺失交给 Writer，也不要因反设定倾倒把 Orientation 一起删掉。
+
+进一步做 **Information Release & Realization Trace**：
+
+1. **Fact existence**：Approved World / Canon 是否真的存在这条事实？不存在就不能让下游补。
+2. **Safe authority**：公开类别、普通常识是否进入章节期安全世界权威；named 大事件目的、隐藏关系、未解谜底与未来 reveal 是否仍被隔离。
+3. **Release timing**：事实是否在第一次真正影响当前事件时才释放；Future Plan 仍安排为 discovery / reveal 的答案不得提前。战力 Ruler 也不能单独冒充生活世界 Orientation。
+4. **Runtime delivery**：当章 release 是否真的从 safe world authority bounded prefetch 到 Curator，而不是只存在于完整 World 文件。
+5. **Curator projection**：Curator 是否保留排程事实；已成立、非核心 Supporting Skill 是否只保留结果级因果。
+6. **Primary realization**：Writer 是否最短充分说清“它是什么 / 为什么此刻重要”，然后回到动作；是否补造背景或把 Supporting Skill 扩成小型解题场。
+
+因此不要把“World 里写过”当成 reader knowledge：
+
+> **Reader knowledge = fact authority × release timing × runtime delivery × realization.**
+
+实施化也要反向追踪：如果正文出现大量排车、绑绳、诊断、制作、路线步骤，先看 Director / Curator 是否已经把方法写进“主角行动”或 `Relevant Plan`。**前文已经成立、且不是 Core Fantasy 的 Supporting Skill，后续默认只保留它造成的故事结果；只有新边界、失败或质变才重新展开方法。**
+
+还要检查两类相邻的 LLM 合理化偏置：
+
+- **Qualification Process Tax**：Outline 已经明确某个邀请、名额、入口、工作机会、身份待遇或奖励可供人物选择/取得，下游却为了“证明主角配得上”自行补试工、检查、考核、登记、观察或再次验证。先检查这层流程是否真的由 Plan 授权；没有就删，不要把奖励变成职业认证剧情。
+- **Competence Filler**：低动作章节真正价值是 World Entry、势力首次登场、关系立场、误判或世界信息，但模型因为“主角这一章总得做点有用的事”，临时制造修车、排车、诊断、路线、搬运、清点等小问题让他解决。主角只观察、站队、拒绝、跟随、守住位置或作出决定也可以是完整行动；不要把“能干”误当成每章必须证明的主角性。
+
+这两类都先向上追到 Outline / Director / Curator；只有上游已经只给简单选择与结果，而 Writer 仍自行制造流程时，才判 prose realization 问题。
 
 # Audit Operating Modes
 
@@ -179,6 +213,8 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - 先人工/结构化直接读输出，再考虑 Judge；
 - 不用一组自动词频代替文学判断；
 - 不 cherry-pick 最好 candidate 证明系统成功；
+- 对可能改变人物取舍的结构机制，做 **Character Authority Invariance**：同一 A/B 至少冻结 2—3 个动机排序明显不同的 Human；Treatment 必须产生目标结构增益，同时不能把不同人物推成同一种成长最优、关系最优或道德最优路线；
+- 要证明‘Personality → Choice → Route’时，先做 **Matched Decision Point**：让不同冻结 Human 面对同一个具体诱惑/冲突/机会，先验证选择是否真的随 Human 分叉；再放开 Story Program 看长期路线。若连触发事件都同时变化，不能把长期差异纯归因于人格；
 - 允许“架构 PASS，但 candidate 3 不好”这种健康结果；
 - 明确区分 PASS / DIRECTIONAL PASS / PARTIAL PASS / FAIL；
 - 记录 **What This Did Not Solve**。

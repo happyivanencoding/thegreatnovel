@@ -108,7 +108,40 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 “架构 PASS，候选4较弱”是健康结论。
 
-## 9. Verdict Vocabulary
+## 9. Character Authority Invariance
+
+当 Treatment 可能改变主角取舍、路线优先级或长期效用函数时，不只测一个人物。
+
+默认冻结至少 2—3 个动机排序明显不同的 Human，例如力量第一、具体关系可改路、认可/新鲜感混合型，并对每个 Human 做同一 A/B。
+
+分别验收两件事：
+
+1. Treatment 是否真的产生目标结构增益；
+2. 关键选择是否仍随 Human 改变。
+
+如果不同 Human 被 Treatment 推成同一种“成长最优”“关系最优”“道德最优”路线，即使结构更整齐，也应 FAIL 或降级。反过来，保留人物差异本身也不能证明机制有效；结构增益与 Character Authority Invariance 必须分开判断。
+
+## 10. Matched Decision Point
+
+要验证 `Personality → Choice → Route`，先让不同冻结 Human 面对**同一个具体诱惑 / 冲突 / 机会**，只比较选择是否随 Human 分叉；再放开 Story Program，观察不同选择是否长期长成不同路线。
+
+如果人物、触发事件和机会池同时变化，只能证明“生成结果不同”，不能把差异纯归因于人格。Matched Decision Point 只用于因果识别，不要求 production 把所有人物放进同一剧情。
+
+
+## 11. Information Release / Realization Causal Trace
+
+当实验目标是“世界信息进入正文”或“压缩实施细节”，不要直接做一轮大而混的全文 rewrite。优先逐层冻结：
+
+1. 同 World / Story / Canon，先比较 release scheduling 是否正确；
+2. 冻结 Outline / chapter result，检查 runtime 是否真的传入当章 safe world fact；
+3. 冻结 Director，比较 Curator 是否保留 public fact、是否把已成立 Supporting Skill 降到结果级；
+4. 最后才在同 Curator 输入下比较 Primary realization。
+
+某一层失败就保留该产物为 evidence，不继续让下游“救”。如果 Writer 仍扩写，再把残余明确归因到 realization，而不是回头重写 World。
+
+对 reveal 单独做泄漏检查：**World 已知但 Future Plan 仍安排后续发现的答案，在揭晓前不得因为 Reader Orientation 被提前投放。**
+
+## 12. Verdict Vocabulary
 
 ### PASS
 主要假设被真实输出支持，副作用可接受，可冻结/上线。
@@ -125,7 +158,7 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 ### INVALID / CONFOUNDED
 实验变量不干净、输入不同、selector 偷选、GBrain 中途变化、baseline 不一致。不得用来冻结系统结论。
 
-## 10. Always Record What It Did Not Solve
+## 13. Always Record What It Did Not Solve
 
 每个通过实验都写：
 
@@ -140,7 +173,7 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 这样下一轮不会回头破坏已经验证的层。
 
-## 11. Code Experiment Safety
+## 14. Code Experiment Safety
 
 修改 production code 前：
 
@@ -156,7 +189,7 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 不要因为旧测试失败就恢复已经明确废弃的架构。先判断测试是否属于 legacy expectation。
 
-## 12. GBrain Experiment Safety
+## 15. GBrain Experiment Safety
 
 涉及 GBrain 时记录：
 
@@ -171,7 +204,7 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 如果蒸馏仍在跑，不把 staging / materialized 文件当 live GBrain treatment。
 
-## 13. Stop Conditions
+## 16. Stop Conditions
 
 以下情况应停止继续加实验变量：
 
