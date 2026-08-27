@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 8.957,
+  "sessionId": "01a0444c-ecba-7bb0-9b8e-fce5715814b5",
+  "text": "SELECT: 3\n\nREASON: 最直接的欲望是一个人同时去冒险、战斗、修炼和学习，合并后两边收获全归自己。相对同层普通人，它直接多出一具能独立行动的完整身体，在战斗、修炼和任务分工上形成清楚特权，并存在双线夹击与越级破局窗口。能力一句话就能听懂，不需要先理解复杂术语。长期可与功法、兵器、身体和环境形成双线化学反应，且“最多一具影身、受伤后果共担、受光线与距离限制”的边界仍然保留了核心异常。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 33987,
+      "inputTokens": 23748,
+      "cachedReadTokens": 9984,
+      "outputTokens": 255,
+      "thoughtTokens": 94
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 33987,
+          "inputTokens": 23748,
+          "cachedInputTokens": 9984,
+          "outputTokens": 255,
+          "reasoningOutputTokens": 94
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 33987,
+              "inputTokens": 23748,
+              "cachedInputTokens": 9984,
+              "outputTokens": 255,
+              "reasoningOutputTokens": 94
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

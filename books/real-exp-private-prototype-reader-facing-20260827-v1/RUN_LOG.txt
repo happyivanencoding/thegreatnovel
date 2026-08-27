@@ -1,0 +1,106 @@
+2026-08-27 19:31:50 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\WORLD_PROMPT.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\WORLD_ACP.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a04447-2e99-7740-8bf1-1c4c45844071","wall_seconds":150.479,"stopReason":"end_turn"}
+2026-08-27 19:34:20 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\WORLD_ACP.json
+2026-08-27 19:34:28 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\POWER_PROMPT.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\POWER_ACP.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a04449-9a6c-7d50-971d-e7837d0a9776","wall_seconds":156.219,"stopReason":"end_turn"}
+2026-08-27 19:37:05 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\POWER_ACP.json
+2026-08-27 19:37:05 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\HUMAN_PROMPT.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\HUMAN_ACP.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a0444b-fd3b-7190-b1b2-8ae7a622bd33","wall_seconds":60.914,"stopReason":"end_turn"}
+2026-08-27 19:38:06 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\HUMAN_ACP.json
+2026-08-27 19:38:06 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\POWER_SELECTOR_PROMPT.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\POWER_SELECTOR_ACP.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a0444c-ecba-7bb0-9b8e-fce5715814b5","wall_seconds":8.957,"stopReason":"end_turn"}
+2026-08-27 19:38:15 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\POWER_SELECTOR_ACP.json
+2026-08-27 19:38:19 START gpt-5.6-sol/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\STORY_PROGRAM_PROMPT.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\STORY_PROGRAM_ACP.json","model":"gpt-5.6-sol","effort":"high","sessionId":"01a0444d-1e6e-7063-ad87-2c95ffcefddb","wall_seconds":404.513,"stopReason":"end_turn"}
+2026-08-27 19:45:04 DONE gpt-5.6-sol/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\STORY_PROGRAM_ACP.json
+2026-08-27 19:45:08 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\OUTLINE_PROMPT.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\OUTLINE_ACP.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a04453-5c00-7fe3-8612-a219593e013f","wall_seconds":266.521,"stopReason":"end_turn"}
+2026-08-27 19:49:35 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\OUTLINE_ACP.json
+2026-08-27 19:49:35 UPSTREAM COMPLETE
+2026-08-27 19:49:35 CHAPTER 1 DIRECTOR
+2026-08-27 19:49:35 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0001\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0001\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a04457-6eab-7333-989d-4e2145535176","wall_seconds":23.602,"stopReason":"end_turn"}
+2026-08-27 19:49:59 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0001\director_acp.json
+2026-08-27 19:49:59 CHAPTER 1 CURATOR
+2026-08-27 19:49:59 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0001\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0001\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a04457-cc41-7a41-a8a9-8224d1d3107b","wall_seconds":87.534,"stopReason":"end_turn"}
+2026-08-27 19:51:27 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0001\curator_acp.json
+2026-08-27 19:51:27 CHAPTER 1 PRIMARY
+2026-08-27 19:51:27 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0001\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0001\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a04459-23e2-7560-802f-22c6efcb6d32","wall_seconds":34.783,"stopReason":"end_turn"}
+2026-08-27 19:52:02 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0001\primary_acp.json
+2026-08-27 19:52:02 CHAPTER 1 STATE
+2026-08-27 19:52:02 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0001\state_prompt.md
+2026-08-27 19:53:05 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0001\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0001\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a0445a-a365-7932-8b6b-6cea51b38fc3","wall_seconds":20.633,"stopReason":"end_turn"}
+2026-08-27 19:53:26 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0001\state_acp.json
+2026-08-27 19:53:26 CHAPTER 1 COMPLETE
+2026-08-27 19:53:26 CHAPTER 2 DIRECTOR
+2026-08-27 19:53:26 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0002\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0002\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a0445a-f5ab-7691-9328-c52ed219a7f7","wall_seconds":22.978,"stopReason":"end_turn"}
+2026-08-27 19:53:49 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0002\director_acp.json
+2026-08-27 19:53:49 CHAPTER 2 CURATOR
+2026-08-27 19:53:49 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0002\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0002\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a0445b-510e-7d73-a238-f7dd1c6580be","wall_seconds":76.147,"stopReason":"end_turn"}
+2026-08-27 19:55:06 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0002\curator_acp.json
+2026-08-27 19:55:06 CHAPTER 2 PRIMARY
+2026-08-27 19:55:06 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0002\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0002\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a0445c-7c2b-73e2-b42d-1dc0e8119c70","wall_seconds":51.048,"stopReason":"end_turn"}
+2026-08-27 19:55:57 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0002\primary_acp.json
+2026-08-27 19:55:57 CHAPTER 2 STATE
+2026-08-27 19:55:57 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0002\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0002\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a0445d-44fc-7851-8a2e-e9b10a05b420","wall_seconds":20.452,"stopReason":"end_turn"}
+2026-08-27 19:56:18 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0002\state_acp.json
+2026-08-27 19:56:18 CHAPTER 2 COMPLETE
+2026-08-27 19:56:18 CHAPTER 3 DIRECTOR
+2026-08-27 19:56:18 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0003\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0003\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a0445d-9682-7933-8572-d364edbeee1c","wall_seconds":26.524,"stopReason":"end_turn"}
+2026-08-27 19:56:45 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0003\director_acp.json
+2026-08-27 19:56:45 CHAPTER 3 CURATOR
+2026-08-27 19:56:45 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0003\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0003\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a0445d-ffa9-7910-b18f-dd7696d29e70","wall_seconds":89.291,"stopReason":"end_turn"}
+2026-08-27 19:58:15 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0003\curator_acp.json
+2026-08-27 19:58:15 CHAPTER 3 PRIMARY
+2026-08-27 19:58:15 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0003\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0003\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a0445f-5dfa-7240-9ef8-1aa06e04a1a3","wall_seconds":37.711,"stopReason":"end_turn"}
+2026-08-27 19:58:53 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0003\primary_acp.json
+2026-08-27 19:58:53 CHAPTER 3 STATE
+2026-08-27 19:58:53 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0003\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0003\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a0445f-f2c9-7283-bf9c-d22f92f9287c","wall_seconds":24.372,"stopReason":"end_turn"}
+2026-08-27 19:59:18 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0003\state_acp.json
+2026-08-27 19:59:18 CHAPTER 3 COMPLETE
+2026-08-27 19:59:18 CHAPTER 4 DIRECTOR
+2026-08-27 19:59:18 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0004\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0004\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a04460-53a3-7610-a8ba-7864c1a19dbc","wall_seconds":24.382,"stopReason":"end_turn"}
+2026-08-27 19:59:42 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0004\director_acp.json
+2026-08-27 19:59:42 CHAPTER 4 CURATOR
+2026-08-27 19:59:43 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0004\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0004\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a04460-b7eb-79d0-952e-af8d103e9c43","wall_seconds":104.991,"stopReason":"end_turn"}
+2026-08-27 20:01:29 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0004\curator_acp.json
+2026-08-27 20:01:29 CHAPTER 4 PRIMARY
+2026-08-27 20:01:29 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0004\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0004\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a04462-5389-7b32-8579-cd3daeb8bff4","wall_seconds":34.878,"stopReason":"end_turn"}
+2026-08-27 20:02:04 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0004\primary_acp.json
+2026-08-27 20:02:04 CHAPTER 4 STATE
+2026-08-27 20:02:04 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0004\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0004\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a04462-de9c-72b1-8b64-36f2799f2f65","wall_seconds":21.791,"stopReason":"end_turn"}
+2026-08-27 20:02:26 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0004\state_acp.json
+2026-08-27 20:02:26 CHAPTER 4 COMPLETE
+2026-08-27 20:02:26 CHAPTER 5 DIRECTOR
+2026-08-27 20:02:27 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0005\director_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0005\\director_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a04463-3550-7f50-9a0d-5bd1303e9ca4","wall_seconds":26.351,"stopReason":"end_turn"}
+2026-08-27 20:02:53 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0005\director_acp.json
+2026-08-27 20:02:53 CHAPTER 5 CURATOR
+2026-08-27 20:02:53 START gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0005\curator_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0005\\curator_acp.json","model":"gpt-5.6-luna","effort":"high","sessionId":"01a04463-9dd3-7353-aec4-2009b6213a3b","wall_seconds":85.24,"stopReason":"end_turn"}
+2026-08-27 20:04:19 DONE gpt-5.6-luna/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0005\curator_acp.json
+2026-08-27 20:04:19 CHAPTER 5 PRIMARY
+2026-08-27 20:04:19 START gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0005\primary_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0005\\primary_acp.json","model":"gpt-5.6-terra","effort":"high","sessionId":"01a04464-ec98-7e11-a2b8-e03913fe2e95","wall_seconds":51.739,"stopReason":"end_turn"}
+2026-08-27 20:05:11 DONE gpt-5.6-terra/high :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0005\primary_acp.json
+2026-08-27 20:05:11 CHAPTER 5 STATE
+2026-08-27 20:05:11 START gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0005\state_prompt.md
+{"ok":true,"outputPath":"C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-reader-facing-20260827-v1\\runs\\chapter-0005\\state_acp.json","model":"gpt-5.6-luna","effort":"low","sessionId":"01a04465-b810-7253-bd9d-88669c3e09e6","wall_seconds":25.061,"stopReason":"end_turn"}
+2026-08-27 20:05:36 DONE gpt-5.6-luna/low :: C:\dev\tgn-story-mvp\books\real-exp-private-prototype-reader-facing-20260827-v1\runs\chapter-0005\state_acp.json
+2026-08-27 20:05:37 CHAPTER 5 COMPLETE
+2026-08-27 20:05:37 ALL COMPLETE

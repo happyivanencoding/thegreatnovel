@@ -1,0 +1,23 @@
+{
+  "query_strategy": "explicit_human_prototype",
+  "query_texts": [],
+  "accepted_count": 3,
+  "accepted": [
+    {
+      "slug": "book-dna/private-prototype-pwaalpha-appetite-v1",
+      "score": 1.0
+    },
+    {
+      "slug": "book-dna/private-prototype-pwaalpha-choice-bias-v1",
+      "score": 1.0
+    },
+    {
+      "slug": "book-dna/private-prototype-pwaalpha-relationship-v1",
+      "score": 1.0
+    }
+  ],
+  "rejected_count": 0,
+  "final_limit": 3,
+  "prototype_id": "prism-wanderer-alpha",
+  "prototype_selected": true
+}

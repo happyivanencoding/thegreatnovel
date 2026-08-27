@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "low",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 20.452,
+  "sessionId": "01a0445d-44fc-7851-8a2e-e9b10a05b420",
+  "text": "# Proposed Active Scene State\n\n地点：客舍后院商队整备处。  \n在场人物：顾临川、姚谦、陆绾、车夫、杂役、契券人员。  \n即时伤势：右肩承受货车与影身反噬，疼痛、沉重、出冷汗；手背有碎木屑擦伤。  \n手中关键物品：已盖商盟印记的护送契券、第一笔预付款钱袋。  \n当前敌人或追兵：无。  \n当前倒计时：半个时辰后商队离开客舍，明日正式出城。  \n下一步直接目标：随铜羽商队出城，护送商队货物与陆绾的伤药按时抵达驿城。  \n当前主动目标：守住商队该守的东西，完成第一趟护送。\n\n# Proposed Persistent Canon\n\n- 顾临川已正式成为铜羽商队的正式低阶护卫。\n- 顾临川已如实登记“一阶影术，可施展双身影术”。\n- 双身影术会将影身承受的冲击、重量与行动结果反馈本体；双线承压会显著加重本体负担。\n- 顾临川已获得第一笔护送预付款，钱袋由本人持有。\n- 铜羽商队明日出城，陆绾的伤药必须按时送往下一处驿城。\n- 顾临川当前无长期确认身份变化以外的新伤势。\n\n### Active Relationships\n\n姚谦｜安排并评估顾临川完成护送｜商队管事与正式低阶护卫｜正式授予护卫身份并支付预付款｜等待顾临川随队完成护送  \n陆绾｜确保伤药按时送达驿城｜同行药车负责人，与顾临川形成明确护送协作｜说明药物准时送达优先于顾临川立名｜等待顾临川按商队规矩护送药车\n\n### Tracked Assets\n\n护送契券｜顾临川｜贴身携带｜已填写姓名与双身影术，并加盖商盟正式印记｜姚谦重新交还  \n预付款钱袋｜顾临川｜贴身携带｜第一笔护送预付款｜姚谦交付\n\n# Proposed Chapter Summary\n\n顾临川在护送契券上如实确认双身影术，并在商队后院用影身同时护住货车与陆绾的药车，化解受惊角马引发的撞击，救下车夫并保住药箱与货物。姚谦据此正式授予他铜羽商队低阶护卫身份，支付第一笔预付款；商队决定半个时辰后整备，明日出城，顾临川确认随队护送药车。\n\n# Proposed Open Promises\n\n- 半个时辰后铜羽商队离开客舍，明日正式出城。\n- 顾临川须完成第一趟护送，保护商队货物与陆绾的伤药按时抵达下一处驿城。\n- 折日峡将验证分影能否承担双线任务，并暴露影身伤势与距离限制。\n- 顾斜阳将成为顾临川的现实竞争者。\n- 陆绾将继续走药材与影伤医术道路。\n- 阮青缨将因沉昼城古代影兵交易接触顾临川。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 32940,
+      "inputTokens": 22038,
+      "cachedReadTokens": 9984,
+      "outputTokens": 918,
+      "thoughtTokens": 121
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 32940,
+          "inputTokens": 22038,
+          "cachedInputTokens": 9984,
+          "outputTokens": 918,
+          "reasoningOutputTokens": 121
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 32940,
+              "inputTokens": 22038,
+              "cachedInputTokens": 9984,
+              "outputTokens": 918,
+              "reasoningOutputTokens": 121
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}
