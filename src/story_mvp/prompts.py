@@ -80,13 +80,11 @@ SEED_SUPPORTING_LOGIC_DIRECTION = """Seed Supporting Logic Boundary：Seed 只�
 
 OUTLINE_FANTASY_PROOF_RULE = """Outline Fantasy Proof（软规划原则，不新增字段或 Hard Gate）：Growth is a longitudinal invariant, not a per-block form requirement。Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势的长期成长、后续新 Power Asymmetry 获得与复合；Outline 只负责把已经批准、且确实落入当前规划窗口的 Power / Capability 质变、核心幻想兑现或高价值获得，落实成具体、不可逆、可复述的故事事件。没有这类变化的剧情块可以完全不写 Power 或 Acquisition；不要为了证明核心幻想仍在，就补微升级、小奖励、新权限或新地图。反过来，Story Program 已明确安排的真实成长落入当前窗口时，Outline 不能因为人物故事更强而把它省略。不要用“能力理解更深、体系更完善、行动空间扩大、影响力提升”这种摘要替代真实变化。"""
 
-OUTLINE_WORLD_MODEL_RELEASE = """Outline World Model Release（Reader Release Scheduler；不新增字段或 Hard Gate）：Approved World Vision 决定世界事实，Outline 不再承担“保存/重写世界设定”的职责；Outline 只决定**读者什么时候需要知道哪一条已批准事实**。
+OUTLINE_WORLD_MODEL_RELEASE = """Outline World Model Release（Reader Release Scheduler；不新增 Agent、Reader State 数据库或 Hard Gate）：Approved World Vision 决定世界事实；Outline 决定**哪些事实的首次释放时机值得被显式保存**。
 
-当一个新规则、势力、地点、身份、资源、生活方式或世界入口第一次真正影响人物选择时，先让当前事件制造读者问题，再把此刻需要释放的 **1—3 条具体 World fact 直接写进该章现有 `具体剧情`**，说明它是什么、为什么当前有分量、普通人/当前 POV 通常知道到哪里，随后继续事件。不要只在 `叙事功能` 里写“完成世界定向 / 建立世界观 / 介绍某势力”，因为这不会进入稳定章节执行；也不要把 World fact 改写成新的背景设定。
+在 `## 2. 世界观结构` 内维护一个很短的 `### Reader Release Map`。它不是每章 KPI，也不要求覆盖所有世界设定；只记录当前规划窗口里 timing-sensitive 的首次释放，例如开篇最低生活世界模型、第一次真正进入外部世界、重要势力/地点/身份/资源首次影响选择。每条必须写**具体已批准 World fact**，不能只写“介绍白角部 / 建立世界观 / 解释商队”。格式固定为 `- 第N章｜触发：具体 World fact`；同一章最多 1—3 条，绝大多数章节可以没有。若 World Vision 没有某项事实，就不准为了 Release Map 临时补造。named 未解谜底与尚未揭晓原因继续保持未知。
 
-开篇需要一个粗糙但正确的生活世界模型：读者应尽早知道自己大致在哪里、这里的人怎样活、谁掌握真正力量、当前生活边界之外通常怎样进入。它必须嵌在本来就要发生的第一章事件里，不能新增 Prelude / Setup 章，也不能推迟第一章 Core Fantasy payoff。力量、价值、身份等 ruler 继续承担比较；Opening Orientation 负责让读者站稳世界位置，两者不是同一件事。
-
-世界深层原因、named 未解谜底和未批准真相仍保持未知。若 Approved World Vision 没有支持某项解释，Outline 不得为了让正文好讲而补造。"""
+Chapter Runtime 会按章节确定性读取这张 Map，再从 `WORLD AUTHORITY` 取对应事实；因此 Curator / Writer 不再负责猜“这章应该介绍猎墙、猎阶还是别的东西”。Opening Orientation 与 Ruler 分工：前者让读者知道自己身处怎样的生活世界，后者告诉读者强弱/价值/身份差距。两者都嵌在本来就要发生的事件里，不新增 Prelude / Setup 章，也不推迟第一章 Core Fantasy payoff。"""
 
 PERSISTENT_READER_RULER_DIRECTION = """Persistent Reader Ruler（长期读者坐标软原则，不新增字段、战力数据库或 Hard Gate）：世界前台的力量、战绩、价值、天赋/适配、技法熟练度、装备品阶、排名、身份与世界层级，都是读者判断优越感、风险和欲望距离的 ruler；当前事件碰到哪把尺，就优先校准哪把，不要求力量尺独占，也不合成单一总战力分。每当发生显著突破、新能力/新装备/血脉或传承变化、公开测试/比赛、新强敌、越级胜负、高价值获得或世界换挡时，通过当前事件自然刷新：主角现在大致在哪一档 / 对象值在哪一档、正常同档能做到或值到什么程度、这次哪里超标、下一档还有什么可见距离。**Ruler = Compression, not Exposition**：当动作与结果已经让一个事实成立时，优先用一次最相关的、已由 World / approved Story 提供的 benchmark 或懂行者比较替代多轮验证，然后立即推进到新的选择、机会、敌意、获得、关系或行动。Benchmark authority 在上游：Outline / Director 只选择和投影已有基准，Writer 不临时发明互相冲突的公斤、米数、价格或新等级。不要每章报表；目标是让读者在关键换挡后持续知道“现在在哪档、哪里不讲理、眼前东西到底有多值”。"""
 
@@ -622,7 +620,7 @@ Secondary: <skill_id 或 none>
 
 其中 `## Relevant Characters and Relationships` 只保留本章真正会用到的信息：除目标、关系、能力和当前条件外，顺带保留角色当前最在意的事、最容易被刺到的自尊/恐惧/欲望、最近关系变化带来的态度，以及正文已经形成的明显行为习惯或说话声音。只有输入明确支持且本章会用到时才写；不要生成 Character Card、心理档案或新增固定字段。
 
-`## Relevant World Rules` 的世界事实来源只有 `WORLD AUTHORITY——本章确定性预取` 与已批准 Plan / Canon。**Outline 是 Reader Release Scheduler**：如果当前章 `具体剧情` 已经排程某条 World fact，Curator 必须保留该事实并确认它没有越过未知边界；如果 Plan 没有排程，就不要仅因为 WORLD AUTHORITY 里存在某段资料而自行选择另一套世界介绍。Curator 只筛选和压缩，不重做世界介绍决策。
+`## Relevant World Rules` 的世界事实来源只有 `READER RELEASE——Outline 排程的本章世界事实`、`WORLD AUTHORITY——本章确定性预取` 与已批准 Plan / Canon。**Reader Release 是 timing authority**：有条目时，Curator 必须保留其对应的已批准 World fact 并确认没有越过未知边界；没有条目时，不要仅因为 WORLD AUTHORITY 里存在某段资料而自行安排新的世界介绍。Curator 只筛选和压缩，不重做 release 决策。
 
 `## Opening Strategy` 只决定这些**已排程事实**在场景中的落点：动作先制造问题，短直接旁白回答到够用，随后回到动作。第一章也服从同一结构，不再由 Curator 临时决定“应该介绍猎阶还是猎墙”。
 
@@ -987,6 +985,8 @@ Outline 是 **Story Program 的执行编译层，不是第二个 Story Program**
 写本书最值得追的幻想、主角人生牵引、Story Program 已批准的早中远期重要兑现；不要新增升级节点。
 ## 2. 世界观结构
 写当前故事真正会用到的力量尺度、地点、奇观、资源与身份差异，以及成长后能进入的更大世界；如果本书需要且对当前故事重要，再补充其它层级关系，不堆百科。
+### Reader Release Map
+只列当前规划窗口中**首次释放时机真的重要**的少量 World facts；不是每章必填。格式：`- 第N章｜触发：具体已批准 World fact`。开篇若处于陌生世界，至少保存一条非战力的生活世界定向（若 World 有事实可用）；重要势力/地点/世界入口第一次真正影响选择时再按需添加。不能写“介绍X / 建立世界观”这种任务标签，不能发明 World Vision 没有的事实，不能提前泄露 named 未解真相。
 ## 3. 世界如何持续制造剧情压力
 写世界中本来就在发生、会撞上主角的具体力量差、人物欲望、势力行动、危险与争夺，不把 supporting logic 自动升格为主发动机。
 ## 4. 主角模型、人物弧与核心矛盾
@@ -1897,8 +1897,12 @@ def generate_prompt(
                         context.context_index,
                     ),
                     _input_block(
+                        "READER RELEASE——Outline 排程的本章世界事实",
+                        context.reader_release or "（本章没有单独排程 Reader Release。）",
+                    ),
+                    _input_block(
                         "WORLD AUTHORITY——本章确定性预取",
-                        context.world_authority or "（当前章 Plan 未排程需要额外释放的 World fact。）",
+                        context.world_authority or "（当前章 Reader Release / Plan 未命中需要额外释放的 World fact。）",
                     ),
                     _input_block("压缩 Growth Genome（本章相关固定小节）", context.growth_genome_compact),
                     _input_block(

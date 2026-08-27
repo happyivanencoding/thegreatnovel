@@ -233,7 +233,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ### Context Curator — Context Projection
 
-从 `WORLD AUTHORITY`、BOOK、Canon、当前计划、Prose Profile、可选 Inspiration 与前文章末中选择 Writer 真正需要的信息。`WORLD AUTHORITY` 是 Approved World Vision 的安全事实投影；Outline 在当前章 `具体剧情` 排程哪条世界事实，Curator 就保留/压缩哪条，不自行改选说明主题。它输出 `Reader-Facing Language`，但不重规划、不新增事实、不自行写正文。
+从 `WORLD AUTHORITY`、BOOK、Canon、当前计划、Prose Profile、可选 Inspiration 与前文章末中选择 Writer 真正需要的信息。`WORLD AUTHORITY` 是 Approved World Vision 的安全事实投影；Outline 的 `Reader Release Map` 为当前章排程哪条世界事实，Curator 就保留/压缩哪条，不自行改选说明主题。它输出 `Reader-Facing Language`，但不重规划、不新增事实、不自行写正文。
 
 ### Primary Writer — Reader Experience
 

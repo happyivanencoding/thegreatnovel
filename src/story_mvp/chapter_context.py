@@ -98,6 +98,7 @@ class ChapterContextPacket:
     optional_inspiration: str
     growth_benefit_projection: str = ""
     growth_genome_compact: str = ""
+    reader_release: str = ""
 
 
 def _markdown_block(content: str, heading: str) -> str:
@@ -113,6 +114,33 @@ def _markdown_block(content: str, heading: str) -> str:
             collected.append(next_line)
         return "\n".join(collected).strip()
     return ""
+
+
+
+def extract_reader_release_for_chapter(book_content: str, chapter_number: int) -> str:
+    """Extract one chapter's optional Reader Release Map entry from BOOK §2.
+
+    This is planning metadata, not Canon and not a per-chapter requirement. It keeps
+    Outline's timing decision visible to chapter runtime without another model call.
+    """
+
+    if chapter_number <= 0:
+        return ""
+    world_structure = _markdown_block(book_content, "## 2. 世界观结构")
+    if not world_structure:
+        return ""
+    match = re.search(
+        r"(?ms)^### Reader Release Map\s*$\n(.*?)(?=^###\s+|\Z)",
+        world_structure,
+    )
+    if not match:
+        return ""
+    target = f"第{chapter_number}章"
+    return "\n".join(
+        line.strip()
+        for line in match.group(1).splitlines()
+        if line.strip() and target in line
+    ).strip()
 
 
 def render_event_contract(current_outline: str) -> str:
@@ -391,6 +419,7 @@ def build_chapter_context(
     return ChapterContextPacket(
         authority=MINIMAL_AUTHORITY_RULE,
         world_authority=project_world_reality(world_vision) if world_vision.strip() else "",
+        reader_release=extract_reader_release_for_chapter(book_content, chapter_number),
         book_contract=book_contract,
         chapter_mission=render_event_contract(current_outline),
         canon_context=canon_context,

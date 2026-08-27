@@ -61,6 +61,7 @@ class CuratorContextPacket:
     optional_inspiration: str
     growth_benefit_projection: str
     transition_context: str
+    reader_release: str = ""
 
 
 @dataclass(frozen=True)
@@ -567,6 +568,7 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
         for part in (
             packet.chapter_mission,
             packet.chapter_plan_context,
+            packet.reader_release,
             packet.growth_benefit_projection,
             extract_last_transition_context(packet.recent_prose, 1200),
         )
@@ -588,10 +590,14 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
             packet.world_authority,
             "\n\n".join(
                 part
-                for part in (packet.chapter_mission, packet.current_chapter_plan)
+                for part in (
+                    packet.reader_release,
+                    packet.chapter_mission if packet.reader_release else packet.current_chapter_plan,
+                )
                 if part.strip()
             ),
         ),
+        reader_release=packet.reader_release,
         book_contract=_project_indexed_text(
             full_book_contract, relevance_query, max_chars=6200
         ),

@@ -190,7 +190,7 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 `Luna Director → Luna Curator → Terra Primary Writer → Luna State Extraction`
 
 - Director：决定本章具体发生什么；
-- Curator：只给 Writer 当前章真正需要的 Canon / Plan / Scene Skill，并从 Approved World Vision 的 `WORLD AUTHORITY` 中保留 Outline 已排程的世界事实；
+- Curator：只给 Writer 当前章真正需要的 Canon / Plan / Scene Skill；章节 Runtime 按 Outline 的 `Reader Release Map` 从 Approved World Vision 的 `WORLD AUTHORITY` 取本章世界事实，Curator 只保留/压缩；
 - Primary：只写小说，不做规划汇报；
 - State：只记录正式正文已经发生的事实。
 

@@ -2696,9 +2696,11 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "Persistent Reader Ruler" not in primary_ruler
     assert "State Advance After Proof / Choice → Consequence" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Reader Release Scheduler" in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "先让当前事件制造读者问题" in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "具体 World fact 直接写进该章现有 `具体剧情`" in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "不能新增 Prelude / Setup 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "### Reader Release Map" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "- 第N章｜触发：具体已批准 World fact" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "哪些事实的首次释放时机值得被显式保存" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Reader Release Map" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不新增 Prelude / Setup 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "十章批次不是把当前剧情块拉长到十章的配额" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "新书第1章不得是纯 Setup" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Opening Orientation 只能嵌在同章动作中" in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -2716,7 +2718,7 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
         book_content="",
         current_outline=REAL_COLD_CHAIN_OUTLINE,
     )
-    assert "Outline 是 Reader Release Scheduler" in curator_orientation
+    assert "Reader Release 是 timing authority" in curator_orientation
     assert "短直接旁白不是低级解释" in curator_orientation
     assert "Opening Strategy` 只决定这些**已排程事实**在场景中的落点" in curator_orientation
     assert "不再由 Curator 临时决定“应该介绍猎阶还是猎墙”" in curator_orientation
@@ -3380,13 +3382,14 @@ def test_outline_releases_world_model_and_varies_early_core_gameplay() -> None:
     template = DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Outline World Model Release" in template
     assert "Approved World Vision 决定世界事实" in template
-    assert "Outline 不再承担“保存/重写世界设定”的职责" in template
-    assert "具体 World fact 直接写进该章现有 `具体剧情`" in template
+    assert "哪些事实的首次释放时机值得被显式保存" in template
+    assert "### Reader Release Map" in template
+    assert "具体已批准 World fact" in template
     assert "Outline Core Gameplay Variation" in template
     assert "上一轮已证明有效的解法不要自动解决下一轮主要问题" in template
     assert "下一轮优先攻击它尚未解决的对象、关系、资源、目标或条件" in template
     assert "不要求机械让主角失败或每轮添加新代价" in template
-    assert "开篇需要一个粗糙但正确的生活世界模型" in template
+    assert "开篇若处于陌生世界，至少保存一条非战力的生活世界定向" in template
     assert "长期对手可暂时作为强弱标尺" in template
 
 

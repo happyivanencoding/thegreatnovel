@@ -5,7 +5,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from story_mvp.app import app
-from story_mvp.chapter_context import build_chapter_context
+from story_mvp.chapter_context import build_chapter_context, extract_reader_release_for_chapter
 from story_mvp.hybrid_runtime import (
     build_specialist_context,
     extract_specialist_patches,
@@ -828,3 +828,24 @@ def test_curator_prompt_receives_world_authority_without_api_side_channel() -> N
     assert "WORLD AUTHORITY——本章确定性预取" in prompt
     assert "荒原部族有独立训练法，也会与城镇交易或冲突" in prompt
     assert "Optional Reader Orientation Reference" not in prompt
+
+def test_reader_release_map_is_optional_and_chapter_scoped() -> None:
+    book = """# 小说总体设计画像
+## 2. 世界观结构
+世界摘要。
+### Reader Release Map
+- 第1章｜猎市起乱：城镇外有猎墙，普通人首先学会避开异兽。
+- 第4章｜白角部挡路：荒原部族拥有不同于宗门的身体训练与驯兽传统。
+## 3. 世界如何持续制造剧情压力
+压力。
+# 当前中期规划窗口
+块。
+# 未来十章逐章小纲
+计划。
+# 当前状态、未兑现承诺与作者备注
+状态。
+"""
+    assert "城镇外有猎墙" in extract_reader_release_for_chapter(book, 1)
+    assert "荒原部族" not in extract_reader_release_for_chapter(book, 1)
+    assert "荒原部族" in extract_reader_release_for_chapter(book, 4)
+    assert extract_reader_release_for_chapter(book, 2) == ""
