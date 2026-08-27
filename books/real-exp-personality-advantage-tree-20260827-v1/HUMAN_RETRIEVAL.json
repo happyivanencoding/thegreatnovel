@@ -1,0 +1,11 @@
+{
+  "query_strategy": "human_lane_queries",
+  "accepted_count": 1,
+  "accepted": [
+    {
+      "slug": "mechanisms/private-appetite-continuity-v1",
+      "score": 0.3176
+    }
+  ],
+  "final_limit": 3
+}

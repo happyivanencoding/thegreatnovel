@@ -1,0 +1,65 @@
+{
+  "COMPARISON_ACP.json": {
+    "model": "gpt-5.6-sol",
+    "wall_seconds": 530.753,
+    "totalTokens": 108068,
+    "inputTokens": 4022,
+    "outputTokens": 4974
+  },
+  "HUMAN_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "wall_seconds": 87.852,
+    "totalTokens": 35394,
+    "inputTokens": 3385,
+    "outputTokens": 4617
+  },
+  "POWER_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "wall_seconds": 83.935,
+    "totalTokens": 35727,
+    "inputTokens": 21336,
+    "outputTokens": 4407
+  },
+  "POWER_SELECTOR_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "wall_seconds": 10.663,
+    "totalTokens": 34373,
+    "inputTokens": 24085,
+    "outputTokens": 304
+  },
+  "WORLD_ACP.json": {
+    "model": "gpt-5.6-luna",
+    "wall_seconds": 192.801,
+    "totalTokens": 41450,
+    "inputTokens": 6748,
+    "outputTokens": 10382
+  },
+  "human_1\\STORY_PROGRAM_ACP.json": {
+    "model": "gpt-5.6-sol",
+    "wall_seconds": 552.043,
+    "totalTokens": 57823,
+    "inputTokens": 348,
+    "outputTokens": 16771
+  },
+  "human_2\\STORY_PROGRAM_ACP.json": {
+    "model": "gpt-5.6-sol",
+    "wall_seconds": 465.039,
+    "totalTokens": 55297,
+    "inputTokens": 34133,
+    "outputTokens": 14252
+  },
+  "human_3\\STORY_PROGRAM_ACP.json": {
+    "model": "gpt-5.6-sol",
+    "wall_seconds": 410.586,
+    "totalTokens": 53535,
+    "inputTokens": 34159,
+    "outputTokens": 12464
+  },
+  "human_4\\STORY_PROGRAM_ACP.json": {
+    "model": "gpt-5.6-sol",
+    "wall_seconds": 326.561,
+    "totalTokens": 51030,
+    "inputTokens": 34148,
+    "outputTokens": 9970
+  }
+}

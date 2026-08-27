@@ -1,0 +1,19 @@
+{
+  "query_strategy": "planning_keyword_aliases",
+  "accepted_count": 3,
+  "accepted": [
+    {
+      "slug": "mechanisms/plot-engine-variation-v3",
+      "score": 0.3383
+    },
+    {
+      "slug": "mechanisms/thread-collision-v3",
+      "score": 0.3512
+    },
+    {
+      "slug": "mechanisms/earned-high-value-acquisition-v3",
+      "score": 0.6342
+    }
+  ],
+  "final_limit": 3
+}

@@ -1,0 +1,15 @@
+{
+  "query_strategy": "planning_keyword_aliases",
+  "accepted_count": 2,
+  "accepted": [
+    {
+      "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+      "score": 0.1907
+    },
+    {
+      "slug": "book-dna/rcv0-06-xianxia-xiaoxingji",
+      "score": 0.1033
+    }
+  ],
+  "final_limit": 3
+}
