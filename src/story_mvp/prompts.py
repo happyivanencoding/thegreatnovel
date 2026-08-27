@@ -92,6 +92,8 @@ OUTLINE_STORY_ANCHOR_DENSITY_RULE = """Outline Story Anchor Density（软规划�
 
 PLOT_PACE_TIER_PACE_DIRECTION = """Plot Pace ≠ Tier Pace（Story Program 长篇节奏原则，不新增阶段字段或升级配额）：故事事件、关系、发现、敌人策略、世界入口、高价值获得和玩法可以快速推进，但不因此同步快速消耗境界/等级主尺。一个仍有丰富对手、武技、装备、关系、探索、越级战与优势复合空间的层级，可以承载多个完整故事块；不要用“进入新阶段”自动触发升一阶或数阶，也不要把境界提升当作证明剧情有进展的默认手段。只有已批准成长因果真正成熟、当前层级的能力与风险边界已被故事充分使用时才自然升档；不规定固定章数。目标是**微观故事快、宏观力量尺有纵深**。"""
 
+PROTAGONIST_ASCENSION_TRAJECTORY = """主人公连续升格（长篇软原则，不新增字段、KPI 或 Hard Gate）：长篇成长的目标不只是让主角数值越来越强，而是让他不断进入第一章的自己原本没有资格进入的**力量层、人物圈层、世界层、真相层与选择层**，使读者持续感到“他已经不是原来那个位置的人了”。这些不是平行清单，而应尽量互相咬合成因果螺旋：力量/身体或新优势让更高层人物重新估价 → 新身份/关系/入口让他接触更大的世界与更深事实 → 新事实与关系产生新的欲望、敌人和代价 → 他获得过去没有资格作出的选择 → 再推动下一轮成长。不要逐阶段填满这些维度；同一境界/等级若仍有丰富的被看见、被轻视、被邀请、被研究、关系变化、世界入口、装备/技法与认知重释，就让主角在这个位置真正生活一段故事，而不是用升阶替代升格。认知升格尤其允许旧人物、旧物、旧事件与世界解释在后续获得更大分量，但不强制隐藏身世或把所有未知并成一个幕后真相。"""
+
 PLOT_ENGINE_DIVERSITY_DIRECTION = """Plot Engine Diversity：同一个强主循环可以长期复用，但相邻剧情块不能只是更换地图、货物、任务名或对手名字后重复同一种发动方式。判断整体故事时，优先让目标性质、对手行动方式、冲突来源、主角必须做的关键决定、核心优势的使用方式、兑现形态或世界后果发生至少一种真正有故事意义的变化。不要把这个原则实现成逐项打勾；变化已经足以产生不同阅读体验时就正常推进。尤其避免长期退化为“接到问题 → 分析规则 → 按步骤解决 → 得到结算 → 接下一个类似问题”。"""
 
 LONG_TERM_RECONTEXTUALIZATION_SHOCK = """震撼式长期重释（Story Program / Outline 软原则，不新增必填字段或 Hard Gate）：成熟长篇应保留少量能够让读者真正惊讶甚至产生 shock 爽感的重释机会。高价值重释同时满足三点：揭晓当下足够意外；回看前文时旧事实、旧异常、人物行为或既有证据能够重新扣合，而不是临时空降答案；揭晓后立刻改变力量理解、身份分量、关系结构、敌我判断、宝物价值或世界格局之一。来源可以是能力真相、人物身份/过去、关系、旧事件、宝物、敌我关系或世界联系，不默认等于隐藏血脉/身世，也不要求每阶段安排一次。Story Program 负责保留可回收纵深与真正有分量的重释机会；Outline 只在已批准长期因果需要时安排铺垫、误读、证据与揭晓，不为了“伏笔感”制造无意义谜语或把所有未知并成一个幕后真相。"""
@@ -836,6 +838,8 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 {PLOT_PACE_TIER_PACE_DIRECTION}
 
+{PROTAGONIST_ASCENSION_TRAJECTORY}
+
 {ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
 
 主角必须长期真正变强，核心幻想也必须在多个自然阶段反复得到有分量、可观察的兑现；但持续成长属于**全书纵向不变量**，不等于每个大型阶段都必须同时出现新能力、新装备、新资源、新地图和一次能力演示。Power Seed 决定开局 Core Asymmetry 及其成长语法；Story Program 既负责这些已批准潜力怎样在故事中实现，也可以通过真实获得让主角后来加入新的 Power Asymmetry，并安排它们与旧优势发生复合。新增优势不是重写 Power Core：不得篡改开局 Core Asymmetry、凭空改写其 High-Tier Mutation 或绕过 Permanent Boundary。
@@ -916,6 +920,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {PERSISTENT_READER_RULER_DIRECTION}
 
 {OUTLINE_STATE_ADVANCE_DIRECTION}
+
+{PROTAGONIST_ASCENSION_TRAJECTORY}
 
 {ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
 
@@ -1042,6 +1048,8 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {PERSISTENT_READER_RULER_DIRECTION}
 
 {PLOT_PACE_TIER_PACE_DIRECTION}
+
+{PROTAGONIST_ASCENSION_TRAJECTORY}
 
 {ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
 

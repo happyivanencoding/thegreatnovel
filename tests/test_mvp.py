@@ -2697,6 +2697,12 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "State Advance After Proof / Choice → Consequence" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Plot Pace ≠ Tier Pace" in story_program
     assert "Plot Pace ≠ Tier Pace" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "主人公连续升格" in story_program
+    assert "他已经不是原来那个位置的人了" in story_program
+    assert "主人公连续升格" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "主人公连续升格" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "主人公连续升格" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    assert "主人公连续升格" not in primary_ruler
     assert "## 不可替代的人与关系" in story_program
     assert "### 关键关系（可选）" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
