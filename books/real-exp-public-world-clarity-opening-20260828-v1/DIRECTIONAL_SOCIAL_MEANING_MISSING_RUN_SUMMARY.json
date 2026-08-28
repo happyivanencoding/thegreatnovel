@@ -1,0 +1,23 @@
+{
+  "outline": {
+    "reused_existing_outline": true,
+    "chars": 9826
+  },
+  "ch1_release_lines": [
+    "- 第1章｜触发：大多数人凭影性试验决定是否进入宗门、军府、护商队或武馆；合格者拥有上升入口，未入门者通常留在普通生计中。",
+    "- 第1章｜触发：影阶是一阶、二阶等公开强弱尺；一阶能让影子伸长变硬，形成短刃、绳索和挡击，二阶能以影子护体并完成短距离牵引、攀爬。",
+    "- 第1章｜触发：聚落房屋与街道保留固定火盆和整块阴影，稳定影子既是日常生活条件，也是防止荒野夺影兽贴近人体的共同常识。"
+  ],
+  "workers": {
+    "A_BASELINE": {
+      "returncode": 0,
+      "stdout": "DONE A_BASELINE 3353\n",
+      "stderr": ""
+    },
+    "B_TREATMENT": {
+      "returncode": 0,
+      "stdout": "DONE B_TREATMENT 3326\n",
+      "stderr": ""
+    }
+  }
+}

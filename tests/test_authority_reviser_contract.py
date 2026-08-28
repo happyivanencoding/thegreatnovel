@@ -10,6 +10,9 @@ def test_authority_reviser_requires_semantic_conflict_sweep_and_value_relocation
     assert "Curator / Primary 不能折中或覆盖 Frozen Authority" in template
     assert "必须处理**全部出现位置**" in template
     assert "判断看语义，不看关键词" in template
+    assert "远程召回、跨距离沿影子回收或无需重新碰面的合并机制" in template
+    assert "Primary 只写了“凝影了 / 通过了 / 被记名”等现象或本地术语" in template
+    assert "补一次最短的新档位直称" in template
     assert "修订后再做一次内部 final sweep" in template
     assert "Value-Preserving Relocation｜修事实不顺手磨掉高价值体验" in template
     assert "Sentence-level salvage" in template

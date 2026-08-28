@@ -2716,7 +2716,9 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "哪些事实的首次释放时机值得被显式保存" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Reader Release Map" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "不新增 Prelude / Setup 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "该章实际事件中自然被触发" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "明显陌生/架空世界的第1章是公共常识定向的例外" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "默认把其中不同功能的事实拆成 2—3 条 `公共常识` Reader Release" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不同功能的公共常识分行" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "World Entry 的 trigger 是人物真正跨过门槛的那一章" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "直到 N+1 第一次遇险、封路或见强者时才补" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "揭晓章之前**不得进入 Release Map**" in DEFAULT_PROMPT_TEMPLATES["outline"]
@@ -2764,7 +2766,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "近身照料、重逢、分别、私密靠近、嫉妒、邀请" in curator_orientation
     assert "短直接旁白不是低级解释" in curator_orientation
     assert "Opening Strategy` 只决定这些**已排程事实**在场景中的落点" in curator_orientation
-    assert "不再由 Curator 临时决定“应该介绍猎阶还是猎墙”" in curator_orientation
+    assert "Curator 不再临时决定“应该介绍猎阶还是猎墙”" in curator_orientation
+    assert "第1章已排程的公共常识坐标包允许在人物/场景自然停顿处直接说明" in curator_orientation
     assert "不是本章可重新展开的素材库" in curator_orientation
     assert "决定已经做完后的普通实施默认压缩" in director_ruler
     assert "决定已经做完后的普通实施默认一句或一个短段概括" in primary_ruler

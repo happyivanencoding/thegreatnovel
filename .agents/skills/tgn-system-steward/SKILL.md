@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.2.1
+version: 0.3.3
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -97,6 +97,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
 - High-value Asymmetry Reveal needs **both** behavioral repricing and ruler calibration; first reveal, new tier/compound, new higher circle, or stale social valuation should trigger renewed reader-facing calibration rather than one-time opening exposition
 - High-value Reader Orientation must be distinguished from low-value repeated explanation / implementation detail
+- **Public / Known World = Clarity; Unknown World = Mystery**：普通人从小知道的主流力量、粗略尺度、生活危险与上升入口可以直接讲；环境纹理、道具、专名或氛围不算已经说明
 - Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose
 - Unresolved long-history facts must remain unresolved; Reader Orientation cannot authorize retrospective canon
 - Established non-core Supporting Skill should collapse to story result, not be re-methodized on every reuse
@@ -134,16 +135,29 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Low-value explanation**：同一结论换证据重复证明、决定后的普通实施、已经成立的能力边界反复说明；应压缩。
 - **High-value Reader Orientation**：新势力、地点、身份、资源、力量层或生活边界第一次真正影响选择时，帮助读者知道“这是什么、为什么重要、当前 POV 通常知道什么”；可以由短直接旁白承担。
 
+再区分 **Known / Public vs Unknown / Reveal**。普通人或当前 POV 从小就知道、且前几章反复影响理解的世界公共常识，不需要等到“动作先提出问题”才能讲；陌生世界开篇可以用很短的公共常识坐标包直接说明。审计时不能把“有火盆、有制服、有术语、有等级名”误判成读者已经知道规则：如果普通读者仍要从这些线索自己推导“力量是什么、粗略怎么分强弱、为什么这种危险改变生活、往上走通常去哪里”，Orientation 仍未完成。来源、隐藏原因、幕后关系、未来 reveal 与当前人物不知道的事实则继续保持未知。
+
 再沿 authority 链定位：World 是否提供安全事实 → Outline 是否调度首次释放 → Curator 是否投影相关事实 → Writer 是否只表达而没有发明。不要把 World 缺失交给 Writer，也不要因反设定倾倒把 Orientation 一起删掉。
 
 进一步做 **Information Release & Realization Trace**：
 
 1. **Fact existence**：Approved World / Canon 是否真的存在这条事实？不存在就不能让下游补。
 2. **Safe authority**：公开类别、普通常识是否进入章节期安全世界权威；named 大事件目的、隐藏关系、未解谜底与未来 reveal 是否仍被隔离。
-3. **Release timing**：事实是否在第一次真正影响当前事件时才释放；Future Plan 仍安排为 discovery / reveal 的答案不得提前。战力 Ruler 也不能单独冒充生活世界 Orientation。
+3. **Release timing**：普通 World Entry 通常在事实第一次真正影响当前事件时释放；但陌生/架空世界的开篇公共常识允许提前形成一个很短的坐标包，不要求先制造问题。Future Plan 仍安排为 discovery / reveal 的答案不得提前。战力 Ruler 也不能单独冒充生活世界 Orientation。
 4. **Runtime delivery**：当章 release 是否真的从 safe world authority bounded prefetch 到 Curator，而不是只存在于完整 World 文件。
 5. **Curator projection**：Curator 是否保留排程事实；已成立、非核心 Supporting Skill 是否只保留结果级因果。
-6. **Primary realization**：Writer 是否最短充分说清“它是什么 / 为什么此刻重要”，然后回到动作；是否补造背景或把 Supporting Skill 扩成小型解题场。
+6. **Primary realization**：Writer 是否最短充分说清“它是什么 / 为什么此刻重要”，然后回到动作；对开篇公共常识，标准是普通读者快速读完即可直接复述规则，环境纹理/动作暗示不能替代答案；是否补造背景或把 Supporting Skill 扩成小型解题场。
+
+对陌生世界开篇追加一个**低成本读者复述测试**，只问当前 World 真正相关的几项，不做固定 KPI：
+
+- 这个世界主要靠什么力量/规则运行？
+- 主角现在大致在哪一档，下一档意味着什么？如果本章已真实跨档，正文有没有直接命名新档位，而不是只给“凝影了 / 通过了 / 被记名”等现象让读者换算？
+- 哪种日常危险或生活常识会直接影响人怎么活？
+- 人通常通过什么入口往更大的世界走，或什么东西是大家公认值得争的？
+
+若 World/Outline 已经批准这些公共事实，而正文读完仍只能“感觉这里很特别”却说不清答案，优先诊断为 **Texture Present / Rule Missing**，沿 Outline → Curator → Primary → Reviser 查清晰度丢失；不要要求读者做阅读理解，也不要让 Steward 自己发明缺失事实。
+
+同时把**公共世界知识**与**具名机会价值**分链审计：力量、生活规则、社会 benchmark 等 World 公共事实走 `World → Reader Release → Curator → Primary/Reviser`；试场/选拔/招募/契约“为什么值得争、成功参与通常打开什么”如果由 Story Program / Plan 批准，则追 `Story Program → Outline Long Block → Future 10 Chapter Plan → Director → Curator → Primary`。特别检查 **Plan Compression Loss**：Long Block 已有“具名机会 + 当前已知价值”，但单章条目只剩“试场前训练 / 公开机会”时，不能误判为上游没定义；检查 Director runtime 是否在当章已指向同一机会时确定性恢复那一条既有 authority。恢复只能来自当前 Long Block 原文，不新增回报、不提前宣布成功、不从未来章偷事实。后者缺失时不要反过来要求 World Vision 预知未来剧情。
 
 因此不要把“World 里写过”当成 reader knowledge：
 
@@ -212,7 +226,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Authority refresh**：是否拿到冻结 Mission、safe World/Reader Release、Frozen Power/Human、Canon 与正确底稿；raw inspiration 是否仍被隔离。
 - **Preservation surface**：正确句段是否默认原样保留；修改面是否明显小于被修问题的价值。
 - **Deletion discipline**：可以删 implementation，但不得连同 State Change、Social Repricing、Reward、Relationship Change、New Desire、Next Opportunity 一起删。
-- **Fact discipline**：远端欲望/计划/可能性不能升级成事实；同一 authority 冲突必须在所有出现位置清零。
+- **Fact discipline**：远端欲望/计划/可能性不能升级成事实；同一 authority 冲突必须在所有出现位置清零。上游只批准“重新接触 / 合并”等条件时，Reviser 也不能为衔接方便把它扩写成远程召回、跨距离回收或其它未授权机制。
 - **State closure**：State 是否真的读取 revised `final_source`，而不是 UI/调用方仍能把旧 Primary 旁路进 Canon。
 
 若 Reviser 只是“重新写得更好”，而不是局部恢复 authority / 删除明确 failure，应判为 second-writer drift。

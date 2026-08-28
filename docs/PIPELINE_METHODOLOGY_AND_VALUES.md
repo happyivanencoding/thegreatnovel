@@ -153,6 +153,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 - 普通人的生活、上升与失败路径；
 - 当安全、地理或旅行会限制人生时，普通人怎样跨越聚落、谁能独行、哪些现实通道把当前生活连接到更大世界；
 - 力量体系的正常值、稀缺度、境界/能力的可观察差距；先用 1—3 句普通话说清力量来源、直接作用、成长与失败，再给会反复使用的对象/层级短名。创新放在力量因果和玩法，不靠多个新词互相解释；默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果。对当前会频繁使用的少数力量/价值/身份档位给 1—2 个可感知、可复用 benchmark，供下游稳定比较，不建战力数据库；
+- 明确区分 **Public World Knowledge / Mystery**：普通人从小知道的主流力量、粗略强弱尺、当前/下一档现实含义、日常危险、上升入口与价值物，要能被下游直接用普通话说明；环境纹理和专名不能替代基础答案。来源、隐藏原因、幕后关系与未来 reveal 继续进入知识边界；
 - 宗门、王朝、家族、商盟、种族等怎样真实影响人生； named 势力 / 部族若会进入世界大事，同时给一个不剧透的公开类别锚点，让章节期 WORLD AUTHORITY 能回答“它是什么”；
 - 世界里真正值钱、值得人物争夺和羡慕的东西；
 - 3—6 件即使主角从未出生也会推进的人物行动、战争、迁徙、竞争或灾难；
@@ -363,8 +364,8 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
 - **Story Program execution, not rescheduling**：Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势成长、后续新 Asymmetry 获得与复合；Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略；
 - **Block Delta**：每块只记录相对本块开始真实改变的 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State，没变化的维度省略，上一块已经发生的变化不能重复包装成新 Delta；
-- **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实；Outline 在 `## 2. 世界观结构` 内用一个很短的 `Reader Release Map` 只保存当前窗口里 timing-sensitive、且与该章实际事件相交的首次释放，格式 `第N章｜触发：具体 World fact`，不是每章 KPI。未来仍作为 discovery / reveal 的答案不得提前排入 Map；只能先释放不回答谜底的公共背景。**World Entry 在人物真正跨过门槛的当章释放**：正式上路、进入新组织/内层、第一次实际使用身份入口时就解释这个入口为什么把他带进第一章时进不去的世界，不等下一章遇险才补。重要 named 势力、地点、Rival、传承或高价值机会第一次进入时，除了安全公开类别，还应在已有 World / Story 权威支持下保留最短的**欲望与尺度锚点**：为什么值得靠近/争、它相对主角当前位置有多重；若后续要放弃某机会，先让读者知道它具体值什么。Chapter Runtime 按章读取，再从 WORLD AUTHORITY 取对应事实；开篇同时建立最低生活世界位置与必要 ruler；二者分工，单纯“普通人没境界 / 打不过敌人”不算生活定向。不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
-- **Ruler = Compression**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落；
+- **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实；Outline 在 `## 2. 世界观结构` 内用一个很短的 `Reader Release Map` 保存当前窗口里值得显式调度的首次释放，格式 `第N章｜触发：具体 World fact`，不是每章 KPI。未来仍作为 discovery / reveal 的答案不得提前排入 Map；只能先释放不回答谜底的公共背景。明显陌生/架空世界的第1章若 World 与前3章确实提供多类相关公共事实，默认把力量/当前与下一档 ruler、生活危险/共同常识、其它确属 World 的社会位置/价值物拆成 2—3 条 Public Common-Knowledge Release；下一档若有现实 benchmark，同时写能力效果与社会含义。**具名机会价值不混进 World Release**：若 Story Program / 当前剧情块已批准机会名与公开价值，但 Future 10 单章条目只剩泛化“试场前训练 / 争取机会”，Director runtime 只在当章已指向同一机会时，从当前剧情块确定性恢复一条“具体机会名 + 当前已知价值”；不新增回报、不提前宣布结果。**World Entry 在人物真正跨过门槛的当章释放**；重要 named 势力、地点、Rival、传承或高价值机会第一次进入时保留最短欲望与尺度锚点。Chapter Runtime 按章读取，再从 WORLD AUTHORITY 取对应事实；开篇同时建立最低生活世界位置与必要 ruler。不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
+- **Ruler = Compression**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落。若本章真实跨过已经介绍过的公开档位，结果处直接命名新档位一次，不让读者从本地术语或现象自己换算；
 - **State Advance After Proof / Choice → Consequence**：一个问题经动作结果与一次足够校准成立后，不再把换证据证明同一结论规划成独立 beat；社会确认只有改变机会、敌意、关系、身份、资源或行动入口时才继续。重大选择的选项与主要代价清楚后尽快做出，让后续篇幅进入选择造成的新局面。**Stage Settlement = Consequence, not Process Carrier**：事实已清楚时，报告、登记、责任说明、复盘、资格发放等只作一句/背景，前景放在重新估价、实际得失、Rival 换位与下一件值得想要的机会；十章批次不是拉长当前剧情块的配额，块完成就进入相邻块；不做每章状态变化配额；
 - **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价；
 - **Reader Experience Projection**：Action Space / Expectation Ladder / Mystery Depth / Impact 仍作为后台阅读体验坐标，但通过具体故事锚点和实际 Delta 自然显现，不再要求每块或每十章分别填写“一级成长 / 净收益 / 新行动空间 / 世界扩张”；

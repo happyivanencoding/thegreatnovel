@@ -1,0 +1,29 @@
+{
+  "variant": "B_TREATMENT",
+  "curator": {
+    "stem": "B_TREATMENT_CURATOR",
+    "model": "gpt-5.6-luna",
+    "reasoning": "high",
+    "wall_seconds_local": 95.596,
+    "wall_seconds_runner": 95.348,
+    "chars": 1991
+  },
+  "primary": {
+    "stem": "B_TREATMENT_PRIMARY",
+    "model": "gpt-5.6-terra",
+    "reasoning": "high",
+    "wall_seconds_local": 73.738,
+    "wall_seconds_runner": 73.494,
+    "chars": 2837
+  },
+  "reviser": {
+    "stem": "B_TREATMENT_REVISER",
+    "model": "gpt-5.6-luna",
+    "reasoning": "high",
+    "wall_seconds_local": 133.937,
+    "wall_seconds_runner": 133.739,
+    "chars": 2599
+  },
+  "primary_chars": 2829,
+  "final_chars": 2591
+}

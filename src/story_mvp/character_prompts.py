@@ -8,17 +8,25 @@ from .character_context import (
     project_character_power_baseline,
 )
 from .character_seeds import HUMAN_SEED_SCHEMA, POWER_SEED_SCHEMA
-from .prompts import HardGateError, OUTLINE_TEMPLATE, STORY_PROGRAM_TEMPLATE, format_references
+from .prompts import (
+    HardGateError,
+    OUTLINE_TEMPLATE,
+    PUBLIC_WORLD_KNOWLEDGE_CLARITY,
+    STORY_PROGRAM_TEMPLATE,
+    format_references,
+)
 from .power_novelty import build_power_novelty_bundle
 
 
 SPLIT_PROMPT_MODES = frozenset({"world_vision", "power_seed", "human_seed", "idea", "outline"})
 
-PROTAGONIST_BLIND_WORLD_TEMPLATE = """你是透明协作的 World Vision 创作助手。当前默认目标是成熟中文男频成长长篇；作者明确指定其他类型时，以作者要求为准。
+PROTAGONIST_BLIND_WORLD_TEMPLATE = f"""你是透明协作的 World Vision 创作助手。当前默认目标是成熟中文男频成长长篇；作者明确指定其他类型时，以作者要求为准。
 
 这一版 World Vision **不知道主角是谁，也不知道未来金手指是什么**。只读取作者粗方向与当前明确提供的 World GBrain Inspiration；不要读取或猜测未来 Power Seed、Human Seed、Character、Story Program 或 Outline。
 
 你的职责是创造一个即使最终换成完全不同主角也值得写一本书的世界。世界要有自己的普通生活、力量语法、正常值、社会现实、价值物、正在行动的人、奇观与未知。它可以非常适合男频成长，但不能先为尚不存在的主角准备钥匙孔。
+
+{PUBLIC_WORLD_KNOWLEDGE_CLARITY}
 
 重要边界：
 - **World Reality ≠ Story Opportunity**：力量规则、普通生活、文化、阶层与正常分布属于世界现实；named 人物正在做的事、战争、秘境、遗迹、竞争、奇观与谜团属于世界自己的故事机会。两者都可以写，但不要暗示未来主角“应该”拥有什么钥匙来触发它。

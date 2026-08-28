@@ -479,11 +479,66 @@ def build_chapter_context(
 class DirectorContextPacket:
     current_long_block: str
     current_chapter_plan: str
+    opportunity_authority: str
     growth_genome_compact: str
     canon_index: str
     recent_summaries: str
     transition_context: str
     author_intent: str
+
+
+_OPPORTUNITY_PATTERN = re.compile(
+    r"公开试场|试场|选拔|招募|报名|大比|竞赛|拍卖|契约|名额|邀请|传承机会|资格"
+)
+_OPPORTUNITY_VALUE_PATTERN = re.compile(
+    r"随队|护送契约|契约|预付款|报酬|收入|离乡|离开本镇|跨城|身份|名额|进入|入口|奖励|传承|功法|兵器|资源"
+)
+
+
+def project_current_opportunity_authority(
+    current_long_block: str,
+    current_chapter_plan: str,
+    *,
+    max_chars: int = 360,
+) -> str:
+    """Recover one approved named-opportunity value line lost by chapter-plan compression.
+
+    This is deterministic projection only. It never synthesizes a reward or promotes a
+    future result; it returns an existing sentence from the current long block only when
+    the current chapter plan already refers to the same opportunity family.
+    """
+
+    long_block = current_long_block.strip()
+    chapter_plan = current_chapter_plan.strip()
+    if not long_block or not chapter_plan:
+        return ""
+    plan_terms = set(_OPPORTUNITY_PATTERN.findall(chapter_plan))
+    if not plan_terms:
+        return ""
+
+    candidates: list[tuple[int, str]] = []
+    for raw_line in long_block.splitlines():
+        line = raw_line.strip().lstrip("-* ").strip()
+        if not line or not _OPPORTUNITY_PATTERN.search(line) or not _OPPORTUNITY_VALUE_PATTERN.search(line):
+            continue
+        overlap = sum(1 for term in plan_terms if term in line)
+        if overlap <= 0:
+            continue
+        value_hits = len(set(_OPPORTUNITY_VALUE_PATTERN.findall(line)))
+        candidates.append((overlap * 10 + value_hits, line))
+    if not candidates:
+        return ""
+
+    line = max(candidates, key=lambda item: item[0])[1]
+    sentences = [part.strip() for part in re.split(r"(?<=[。！？])", line) if part.strip()]
+    selected: list[str] = []
+    for sentence in sentences:
+        if not selected or _OPPORTUNITY_VALUE_PATTERN.search(sentence):
+            selected.append(sentence)
+        if _OPPORTUNITY_VALUE_PATTERN.search("".join(selected)):
+            break
+    result = "".join(selected).strip() or line
+    return result[:max_chars].strip()
 
 
 def _tail_for_director(text: str, max_chars: int = 1800) -> str:
@@ -558,6 +613,10 @@ def build_director_context(
     return DirectorContextPacket(
         current_long_block=packet.current_long_block or "（未提供当前大型剧情块。）",
         current_chapter_plan=packet.current_chapter_plan or "（未提供当前章十章计划条目。）",
+        opportunity_authority=project_current_opportunity_authority(
+            packet.current_long_block,
+            packet.current_chapter_plan,
+        ),
         growth_genome_compact=packet.growth_genome_compact,
         canon_index=(
             _without_recent_summaries_for_director(packet.canon_context)

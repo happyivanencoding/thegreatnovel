@@ -1,0 +1,46 @@
+{
+  "outline": {
+    "stage": "FINAL_OUTLINE",
+    "reused_existing_outline": true,
+    "chars": 9353
+  },
+  "director": {
+    "stage": "FINAL_DIRECTOR",
+    "model": "gpt-5.6-luna",
+    "reasoning": "high",
+    "wall_seconds_local": 24.909,
+    "wall_seconds_runner": 24.747,
+    "chars": 828
+  },
+  "curator": {
+    "stage": "FINAL_CURATOR",
+    "model": "gpt-5.6-luna",
+    "reasoning": "high",
+    "wall_seconds_local": 86.252,
+    "wall_seconds_runner": 86.076,
+    "chars": 1800
+  },
+  "primary": {
+    "stage": "FINAL_PRIMARY",
+    "model": "gpt-5.6-terra",
+    "reasoning": "high",
+    "wall_seconds_local": 67.131,
+    "wall_seconds_runner": 66.961,
+    "chars": 3236
+  },
+  "reviser": {
+    "stage": "FINAL_REVISER",
+    "model": "gpt-5.6-luna",
+    "reasoning": "high",
+    "wall_seconds_local": 122.716,
+    "wall_seconds_runner": 122.542,
+    "chars": 3155
+  },
+  "ch1_releases": [
+    "- 第1章｜触发：影力来自人在光照下形成的影子；一阶只能形成短刃、绳索和挡击，二阶则能护体并完成短距牵引，普通二阶通常已经足以担任城卫、猎队骨干或商队护卫。",
+    "- 第1章｜触发：聚落的房屋与街道会保留固定火盆和整块阴影，既用于日常生活，也防止夺影兽贴近人体。",
+    "- 第1章｜触发：通过影性试验的人，通常可以争取宗门、军府、护商队或地方武馆的修炼入口；未通过者仍以普通人的身份生活。"
+  ],
+  "primary_chars": 3228,
+  "final_chars": 3147
+}

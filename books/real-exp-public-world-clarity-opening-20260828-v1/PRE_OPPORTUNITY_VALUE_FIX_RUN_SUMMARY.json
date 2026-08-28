@@ -1,0 +1,27 @@
+{
+  "outline": {
+    "stem": "TREATMENT_OUTLINE",
+    "model": "gpt-5.6-luna",
+    "reasoning": "high",
+    "wall_seconds_local": 202.995,
+    "wall_seconds_runner": 202.813,
+    "chars": 9467
+  },
+  "ch1_release_lines": [
+    "- 第1章｜触发：力量来自人在光照下形成的影子；一阶能够让影子伸长、变硬，形成短刃、绳索或挡击。",
+    "- 第1章｜触发：城镇房屋与街道保留固定火盆和整块阴影，普通人依靠这些阴影生活并防范夺影兽；完全无光或失去火光会使大多数修士无法继续施展影术。",
+    "- 第1章｜触发：二阶能够以影子护体并完成短距离牵引，通常已经足以担任城卫、猎队骨干或商队护卫；顾临川当前尚未完成一阶凝影。"
+  ],
+  "workers": {
+    "A_BASELINE": {
+      "returncode": 0,
+      "stdout": "DONE A_BASELINE 2864\n",
+      "stderr": ""
+    },
+    "B_TREATMENT": {
+      "returncode": 0,
+      "stdout": "DONE B_TREATMENT 2591\n",
+      "stderr": ""
+    }
+  }
+}

@@ -229,15 +229,15 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ### Director — Event Contract
 
-只决定本章发生什么：八字段事件合同、直接结果、状态变化和结尾推动。它可以使用精确的抽象策划语言；八字段合同是事实约束，不是正文句式来源。
+只决定本章发生什么：八字段事件合同、直接结果、状态变化和结尾推动。它可以使用精确的抽象策划语言；八字段合同是事实约束，不是正文句式来源。若单章计划提到试场/选拔/招募/契约，却把同一剧情块已批准的具名机会价值压掉，runtime 会确定性投影一条匹配的 `当前具名机会权威`；Director 保留具体机会名与“成功参与通常打开什么”，不新增回报、不提前写主角成功。
 
 ### Context Curator — Context Projection
 
-从 `WORLD AUTHORITY`、deterministic `CHARACTER.md` 中**只截取的 Frozen Human Core**、BOOK、Canon、当前计划、Prose Profile、可选 Inspiration 与前文章末中选择 Writer 真正需要的信息；Power Core 不在章节期重复注入，可变状态仍由 BOOK/State 提供。Scene Skill v2 只向 Curator 暴露 `skill_id + Primary Reading Question + 一行 Projection Guidance`；Curator 选择 1 个 Primary、最多 1 个 Secondary，并只在当前场景确有 realization 缺口时把 Deep Craft 编译成 2—4 句 `Scene Prose Projection`，已经清楚则写 `NONE`。完整 Skill、原著 evidence、书名/locator 不进入 Writer。`WORLD AUTHORITY` 是 Approved World Vision 的安全事实投影；Outline 的 `Reader Release Map` 为当前章排程哪条世界事实，Curator 就保留/压缩哪条，不自行改选说明主题。冻结 Human Core 高于最近几章行为归纳；场景自然触发已批准的身体吸引、审美、虚荣、钱、享受、好奇、偏心等私人牵引时，保留一个可直接进入 POV 的具体触发，不因连续负责/克制而把人物收束成新的道德人格。若本章已批准为高价值 Asymmetry Reveal，Curator 的短 Projection 应优先同时保留两个 reader-facing 任务：`Behavioral Repricing`（一个关键观察者真的换动作）与 `Ruler Calibration`（最有资格者短促说明正常值、超标点与稀有/异常意义）；不把它们压成只有“有人震惊”或只有设定旁白。当前新 `observer-specific repricing` 卡仍是 PILOT，不因此新增 Scene Primary 或强制每章调用。它输出 `Reader-Facing Language`，但不重规划、不新增事实、不自行写正文。
+从 `WORLD AUTHORITY`、deterministic `CHARACTER.md` 中**只截取的 Frozen Human Core**、BOOK、Canon、当前计划、Prose Profile、可选 Inspiration 与前文章末中选择 Writer 真正需要的信息；Power Core 不在章节期重复注入，可变状态仍由 BOOK/State 提供。Scene Skill v2 只向 Curator 暴露 `skill_id + Primary Reading Question + 一行 Projection Guidance`；Curator 选择 1 个 Primary、最多 1 个 Secondary，并只在当前场景确有 realization 缺口时把 Deep Craft 编译成 2—4 句 `Scene Prose Projection`，已经清楚则写 `NONE`。完整 Skill、原著 evidence、书名/locator 不进入 Writer。`WORLD AUTHORITY` 是 Approved World Vision 的安全事实投影；Outline 的 `Reader Release Map` 为当前章排程哪条世界事实，Curator 就保留/压缩哪条，不自行改选说明主题。开篇 `公共常识` Release 必须保留成可以直接陈述的事实句义，不压成单个道具、环境意象或“有这个感觉”的模糊提示。冻结 Human Core 高于最近几章行为归纳；场景自然触发已批准的身体吸引、审美、虚荣、钱、享受、好奇、偏心等私人牵引时，保留一个可直接进入 POV 的具体触发，不因连续负责/克制而把人物收束成新的道德人格。若本章已批准为高价值 Asymmetry Reveal，Curator 的短 Projection 应优先同时保留两个 reader-facing 任务：`Behavioral Repricing`（一个关键观察者真的换动作）与 `Ruler Calibration`（最有资格者短促说明正常值、超标点与稀有/异常意义）；不把它们压成只有“有人震惊”或只有设定旁白。当前新 `observer-specific repricing` 卡仍是 PILOT，不因此新增 Scene Primary 或强制每章调用。它输出 `Reader-Facing Language`，但不重规划、不新增事实、不自行写正文。
 
 ### Primary Writer — Reader Experience
 
-以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。Primary **不再直接读取完整 selected Scene Skill**；Scene Craft 只通过 Curator 已编译的短 `Scene Prose Projection` 进入，允许 `NONE`。若 Curator 已投影当前 Plan 排程的 World fact，**该 Reader Release 必须在本章兑现**：用 1—3 个短直接旁白段或等价场景表达回答后立刻回现场；若同一事实还说明地点/势力/传承为什么值得争，保留一个最短价值锚点。Writer 不从完整 World 自选说明主题，也不要求把世界说明伪装成对白。Curated Context 已明确带入私人欲望且当前场景自然触发时，让一次注意力、身体反应、靠近/回避、想要或短期选择保留它，不统一净化成职责协作与成熟沟通。决定完成后的普通实施默认一句或短段概括。 非核心 Supporting Skill 即使承担一个关键动作，也写到“做了什么 / 为什么有效 / 结果”就停；Reader Release 已给 named 对象公开类别时，首次识别可直接说清一次。高价值非对称优势显露时，不把“克制”理解成只写一个停顿：若 Projection / Authority 已提供足够尺，正文同时需要一个观察者的可见行为更新，以及一个懂行者对正常值—超标点—稀有意义的短专业校准；这种校准在新层级、新复合、新圈层或旧估值过时时可以重新出现。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补群众情绪；Planning 的抽象标签不直接变成旁白总结。
+以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。Primary **不再直接读取完整 selected Scene Skill**；Scene Craft 只通过 Curator 已编译的短 `Scene Prose Projection` 进入，允许 `NONE`。若 Curator 已投影当前 Plan 排程的 World fact，**该 Reader Release 必须在本章兑现**。普通 World Entry 仍可“动作提出问题 → 1—3 个短直接旁白段回答 → 回现场”；开篇 Public Common Knowledge 则允许在自然落点直接说明，不要求先制造问题。公共常识的完成标准是普通读者读完可以直接复述规则，而不是从火盆、服装、站位、专名或氛围自己归纳；本章真实跨过已说明的公开力量/身份档位时，结果处直接命名新档位一次，不让读者自己换算。若同一事实还说明地点/势力/传承为什么值得争，保留一个最短价值锚点。Writer 不从完整 World 自选说明主题，也不要求把世界说明伪装成对白；隐藏原因与未来 reveal 继续未知。Curated Context 已明确带入私人欲望且当前场景自然触发时，让一次注意力、身体反应、靠近/回避、想要或短期选择保留它，不统一净化成职责协作与成熟沟通。决定完成后的普通实施默认一句或短段概括。 非核心 Supporting Skill 即使承担一个关键动作，也写到“做了什么 / 为什么有效 / 结果”就停；Reader Release 已给 named 对象公开类别时，首次识别可直接说清一次。高价值非对称优势显露时，不把“克制”理解成只写一个停顿：若 Projection / Authority 已提供足够尺，正文同时需要一个观察者的可见行为更新，以及一个懂行者对正常值—超标点—稀有意义的短专业校准；这种校准在新层级、新复合、新圈层或旧估值过时时可以重新出现。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补群众情绪；Planning 的抽象标签不直接变成旁白总结。
 
 **Story-bearing Texture > Decorative Density**：正文不以“多写”或“多修饰”制造丰富感。每个主要 beat 选择少量真正改变画面的具体动作、物件/空间、身体反馈、力量后果和人物差异化反应；感官细节选择最有辨识度的少数锚点，不机械覆盖五感。细节如果不承载人物、冲突、因果或幻想体验，就继续压缩。
 
@@ -254,6 +254,8 @@ Primary Writer 先用窄上下文完成一版完整正文；Authority Reviser �
 Reviser 输入包括冻结 Chapter Mission、Curator、safe World Authority、逐条 Reader Release、Frozen Power + Human Core、Canon 与 Primary Draft。若当章选中的 Scene Skill 有经过 A/B 验证、可局部安全执行的一行 `Revision Watch`，只额外注入这条 failure-triggered 提醒；完整 Generation/Revision Lens 不进入 Reviser。它首先保护已正确的正文：没有明确问题的句段默认逐字保留；只允许删除/压缩重复确认、重复证明、工程化/程序化实施和 Competence Filler，或补回第一版漏掉且已被 Authority 明确支持的 World / Power / Human realization。生活细节也必须来自 safe World Authority，不为“更生动”临时创造风俗、建筑或制度。
 
 同一维度出现冲突时，Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 高于 Curator / Primary，Reviser 必须按语义扫描最终全文，不能只修第一处。若冲突段落里有一句本身合法、只是挂在错误时点/因果上的 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing，先逐句 salvage 到最近合法位置，再继续压缩周围 process carrier；保护一句高价值文本不等于保护整段实施。
+
+开篇公共常识还要做 clarity recovery：如果 Primary 只留下了生活细节/意象，却没有让普通读者直接知道已排程的力量、强弱、危险或社会入口规则，Reviser 补最小直接说明。Texture 可以保留，但不能替代 Orientation。
 
 它不是第二次剧情创作：不能改变事件顺序、人物决定、胜负、资源得失、伤势、身份结果、Direct Result、State Change、Ending 或 unknown boundary。删除程序载体时必须保留它之后真正发生的 Consequence；如果一段承载新的 State Change、Social Repricing、Reward、Relationship Change、New Desire 或 Next Opportunity，就不能因为含“报告 / 登记 / 说明”而整段删除。
 
