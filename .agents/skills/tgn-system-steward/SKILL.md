@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.2.0
+version: 0.2.1
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -95,6 +95,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Character is a person, not a psychological proof
 - Growth is longitudinal, not a per-stage / per-block tax
 - Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
+- High-value Asymmetry Reveal needs **both** behavioral repricing and ruler calibration; first reveal, new tier/compound, new higher circle, or stale social valuation should trigger renewed reader-facing calibration rather than one-time opening exposition
 - High-value Reader Orientation must be distinguished from low-value repeated explanation / implementation detail
 - Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose
 - Unresolved long-history facts must remain unresolved; Reader Orientation cannot authorize retrospective canon
@@ -177,6 +178,32 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Competence Filler**：低动作章节真正价值是 World Entry、势力首次登场、关系立场、误判或世界信息，但模型因为“主角这一章总得做点有用的事”，临时制造修车、排车、诊断、路线、搬运、清点等小问题让他解决。主角只观察、站队、拒绝、跟随、守住位置或作出决定也可以是完整行动；不要把“能干”误当成每章必须证明的主角性。
 
 这两类都先向上追到 Outline / Director / Curator；只有上游已经只给简单选择与结果，而 Writer 仍自行制造流程时，才判 prose realization 问题。
+
+## Asymmetry Reveal / Social Calibration Trace
+
+当用户指出“主角明明很特殊但不爽”“旁人像没看见”“金手指在社会里没有分量”“世界尺忘了提醒”时，不要只检查有没有人震惊。对**高价值非对称优势显露**审计两条必须同时成立的通道：
+
+1. **Behavioral Repricing**：至少一个有资格、有利益或有关系位置的关键观察者，因为新证据改变了一个可见动作——停手、站起、改口、重新试探、退距、换装备/战术、加价、保护、限制、追问、重新安排准入等。只有表情、沉默或“很震惊”不足以证明现场真正重新估价。
+2. **Ruler Calibration**：最有资格的观察者应在当前知识边界内，用短而明确的专业判断帮助读者重新定位：**正常情况下同层/同类能做到什么 → 主角这次具体超出哪里 → 为什么罕见、异常或值得重新判断**。可以提出“可能是某种变异/异常”的有限假设，但推断不能冒充 Canon 真相。若现场没有真正懂行者，不凭空添加专家；检查是否可由最近知情者或已批准的短直接旁白承担最小校准。
+
+这两条不是二选一。只写动作而没有尺度，可能让场面活却仍让读者不知道“到底有多特殊”；只写专业解释而人物行为不变，则会退化成设定旁白。
+
+**频率也要审计，不把 Ruler Calibration 当开篇一次性说明。** 以下节点应优先重新出现一次行为反应 + 专业/世界尺校准：
+
+- Core Asymmetry 首次被外界真正看见；
+- 同一能力第一次达到新层级或出现质变；
+- 新 Asymmetry 与旧优势第一次形成意外复合；
+- 主角进入更高圈层后，第一次被更高知识层的观察者看见；
+- 旧社会估值明显落后于主角当前能力、战绩或身份时。
+
+审计时允许短期爽点本身成立：有一次行为更新 + 一次足够的 ruler 校准后即可停止，不要求每次都形成长期 Ripple。只有重新估价继续改变后续行动、关系、资源、敌意、战术或信息流时，才向 Story Program / Outline / State 追踪长期社会涟漪。
+
+典型失败诊断：
+
+- **Reaction present / Ruler missing**：教头站起来了，但没人告诉读者为什么这在一阶、二阶、三阶体系里都不正常。
+- **Ruler present / Behavior missing**：解释了“百年难遇”，但所有人仍按原报价、原战术、原关系行动。
+- **One-shot calibration**：第一章讲过一次稀有度，此后新层级、新复合、新圈层都不再重新校准，读者逐渐失去比较感。
+- **Uniform chorus**：所有观众获得同一专业解释、轮流震惊；应保留知识差，通常由一个最有资格者校准，其余人只承担必要的现场动作/群体 cue。
 
 ## Post-Writer Authority Revision Trace
 
