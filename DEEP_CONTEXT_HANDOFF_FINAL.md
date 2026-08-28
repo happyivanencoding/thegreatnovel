@@ -1,6 +1,6 @@
 # DEEP CONTEXT HANDOFF
 
-日期：2026-08-27
+日期：2026-08-28
 项目：TheGreatNovel / TGN Story MVP
 主要工作目录：`C:\dev\tgn-story-mvp`
 开发分支：`principal_dev_new_sys`
@@ -17,7 +17,7 @@
 
 1. 这个项目真正想达到的读者体验与产品目标；
 2. 经过长期纠偏形成的判断模型：为什么某种方案对，为什么一个表面相似的方案仍然错；
-3. 截至 2026-08-27 的已验证结论、当前实现、并行工作状态与下一步实验。
+3. 截至 2026-08-28 的已验证结论、当前实现、并行工作状态与下一步实验。
 
 使用方式：
 
@@ -1559,6 +1559,89 @@ production 已完成 World Fantasy Surface、Secondary Axis 主动发现/检查�
 
 都继续遵守冻结上游、近单变量、真实输出先读、Human Invariance、AGGRESSIVE/保守版本若都 authority-safe 就交作者选择的实验纪律。
 
+### 14.5 Progressive Long-form Authority 已进入 production（2026-08-28）
+
+这轮解决的是一个比“副本流支持”更通用的长篇缺口：开书 `WORLD_VISION.md` 不应该被要求一次性写完 500 章所有具体大陆、文明、力量层和未来异世界；后期主角也不能一直拿 Chapter 1 的 Power/Human 状态继续做 Story Program。
+
+冻结的新总模型：
+
+> **Stable Origins, Evolving Authorities, Periodic Fresh Re-Collision.**
+
+开书链仍是：
+
+`World Root → Power Seed + Human Seed → deterministic CHARACTER.md → first Story Program → Outline → chapters / Canon`
+
+当当前 World Horizon 真正被故事活透后，进入低频循环：
+
+`Story Program World Horizon Handoff → protagonist-blind World Expansion → optional Human Development → deterministic CURRENT_CHARACTER.md → Sol Story Refresh / Re-Collision → author-approved refreshed Story Program → Outline → chapters`
+
+#### World Rewrite 与 World Expansion 已正式分语义
+
+- **World Root Rewrite**：回头改变已经成立的根规则/旧事实；仍按旧 stale graph 使 Power/Human/Character/Story/Outline 失效。
+- **World Expansion**：旧事实不变，只向未来增加世界层；不 stale Origin Power/Human/Character，只刷新 Story/Outline 与 `effective_from` 之后的未来 Run。
+- Expansion 触发是 Story Boundary，不是固定 100 章税；100 章最多是普通长篇的观察 horizon。
+- `scope=macro`：新大陆/文明/力量圈层/社会世界层。
+- `scope=instance`：真正独立 Local World，可有 `effective_until`；离开后 Local World 从章节 `WORLD AUTHORITY` 退场，跨世界 consequence 留在 Canon。
+
+World Expansion 固定 **Luna high**、fresh context，且 protagonist-blind 一直贯彻到 GBrain retrieval：不读 Current Character、Power Stack、Human、关系、Story Program/Outline 或 BOOK 当前人物状态。它只创造世界现实。Story Program 的 Handoff 只负责 orchestration，**不注入 World Agent**，防止“当前主角需要什么”间接成为下一世界设计要求。
+
+#### 两层 Power 已接通
+
+1. `Power Origin Core`：`CHARACTER.md` Frozen Power；保存开局 Core Asymmetry 与根边界。
+2. `Current Power Portfolio`：State Extraction 在 `PERSISTENT CANON → Power / Capability` 维护后续已经真实获得/证明的 Power、身体变化、兵器权限和 Advantage Stack。
+
+后期神兵、传承、新能力/新 Asymmetry 等是 forward Power Delta，不回写 Power Seed。`CURRENT_CHARACTER.md` 会把 Origin + Current Power 一起交给后期规划。
+
+#### 三层 Human 已接通
+
+1. `Human Origin Core`：Frozen stable origin。
+2. `Current Human State`：当前欲望、关系、承诺、身份等，继续由 Canon/State 变化。
+3. `Human Development Delta`：只有长期已发生历史真的证明 Stable Choice Bias 变化时才允许新增；Luna high、GBrain OFF、看不到未来 World / Story / Reward，可直接返回 `NONE`。
+
+Human Development 是比 World Expansion 更慢的可选时钟：多世界副本可以连续换几个 Local World 而一次都不跑。后续 Delta 按生效章节顺序保留；后期 Delta 可细化/改变早期偏向，但不能删除人物历史。
+
+#### CURRENT_CHARACTER.md 是确定性 current authority，不是 Composer
+
+代码从 Frozen Origins + Persistent Canon + Human Development 确定性编译：Power Origin + Current Power、Human Origin + Human Development + Current State，以及 relationships / identity / knowledge / assets / already-happened Canon。它不调用 LLM，不看未来 World，不创造新事实。Canon 更新会让已有 Current Character stale；普通章节 Writer 不整份读取它，仍使用 Frozen Cores + bounded Canon。
+
+#### Story Refresh 是 Periodic Re-Collision
+
+Sol high 第一次同时看到：
+
+`Effective World（Root + active Expansions） × CURRENT_CHARACTER.md`
+
+它不是把旧 Program 延长，而是 fresh collision。World 不为主角重写；人物也不为新世界优化。新 Power 必须从独立世界已经成立的真实机会中获得；旧 Power/物品/关系继续复利。每次 Refresh 仍只规划当前新 World Horizon，并继续留下下一次 `World Horizon Handoff`。
+
+#### Story Program Handoff 已成为前向 Authority 边界
+
+开书 Story Program 不再具体预写所有未来世界。当前 Horizon 后段若自然接近边界，输出 `## World Horizon Handoff`：可观察 trigger、`macro / instance` scope、为什么当前层已经需要扩、必须 carry forward 的已批准/已发生事实，以及固定 orchestration：`protagonist-blind World Expansion → deterministic Current Character → Story Refresh`。
+
+若尚未到边界，写 `NOT YET`；不为格式强制扩世界。Outline / Review 不能越过未执行 Handoff 补满 Future 10 / 100 章；如果 Handoff 在当前十章内触发，只排到触发章即停止。批准/曾批准和 fresh/stale 分开：Outline 只有在 Story Program 已批准且 Workflow fresh 时才可继续；已有 Current Character 若 stale 也必须先刷新。
+
+#### Chapter WORLD AUTHORITY 只吃 Expansion safe facts
+
+`chapter_context` 按章节组合 Root + active Expansion，但只把 expansion 中已经批准的公共现实、力量/身份/价值尺度、公开地点/势力和具体价值物投给 Writer。世界人物未公开欲望、正在发生的隐藏行动、未知边界不会因为存在于 Expansion 就直接泄漏给 Writer；它们由 Story / Reader Release 决定何时进入。
+
+#### State 为长期演化提供原料，但没有新数据库
+
+`PERSISTENT CANON` 按需要维护轻量小节：`Power / Capability`、`Active Relationships`、`Identity / Access`、`Knowledge / Enemy State`、`World State`、`Tracked Assets`。只留以后仍会改变选择的信息。`World State` 是 protagonist-blind Expansion 唯一读取的 current Canon slice；不得混入主角私人欲望或未来设计请求。State Extraction 明确**不判断 Human Development**。
+
+#### 单 Agent 自洽风险已做真实 A/B
+
+实验：`books/real-exp-progressive-authority-20260828-v1/`
+
+两个 Case：普通玄幻 Ch120 扩世界 + 多世界 Ch80 新 instance。比较：
+
+- X：单 Sol high 同时做 World Expansion + Human Development + Current Character + Future Story；
+- Y：独立 World → current facts → Sol Re-Collision；
+- Z：独立 World + 独立 Human Development → deterministic Current Character → Sol Re-Collision。
+
+两组 blind judge 都没有选 X。X 的典型问题恰恰是**太自洽**：世界材料、身份、冲突、奖励会自动对准当前主角能力/人格缺口，形成“教学世界 / 钥匙孔世界”，Surprise 被提前消化。Split World 更容易保留 NPC refusal、误价、绕路、错失和旧能力在陌生世界的意外用途。
+
+跨 Case synthesis 选择 production topology Z；但两个 Human Development 输出均为 `NONE`，因此**独立 Human Agent 对真实稳定人格变化的净质量增益尚未单独证明**。它保留为低频 correctness mechanism，不宣传为已验证质量增益。
+
+专项 `tests/test_long_form_evolution.py` 当前 **12/12 PASS**；全量 **336/336 PASS**。完整实验报告：`books/real-exp-progressive-authority-20260828-v1/FINAL_REPORT.md`。明确未解决：没有做真实 500 章 E2E；没有证明最佳 World Expansion 频率；没有证明连续 10—20 个副本 Macro Variation 已稳定；没有证明 Human Development 在“人物真的改变”Case 的独立增益。
+
 ---
 
 ## 15. How to Work With the User
@@ -1678,6 +1761,14 @@ production 已完成 World Fantasy Surface、Secondary Axis 主动发现/检查�
 38. 因过去反工程化就把炼药/炼器/作品竞争等真正具备强者尺度、作品胜负和社会价格的 Secondary Fantasy Axis 一律压成背景；或反过来强迫每个主角都走副轴。
 39. 把 lexique 当完成设定/命名答案，强迫每个 Candidate 使用 primitive；或为了一个“好听名字”反向补机制、边界与第二系统。
 40. 把 Naming Craft 变成固定四字格式、统一后缀、词族配额；名字的第一职责仍是避免读者误解已批准语义。
+41. 要求开书 World Vision 预先具体设计足够支撑 500 章的所有大陆、文明、终局力量和未来异世界；长篇世界允许 forward expansion。
+42. 让一个 Agent 同时看到 Current Character 并创造下一 World，再让它顺手安排下一奖励/人物发展；这会把 Surprise 自洽成主角钥匙孔。
+43. 把 World Expansion 当 World Rewrite，重新生成/重抽 Power Seed、Human Seed 或 Character Origin；Forward Expansion 不回写过去。
+44. 每次扩世界、每个副本都强制跑出 Human Development；稳定人格没有真实长期变化时必须允许 `NONE`。
+45. 把 Story Program 的 `World Horizon Handoff` 当成下一世界设计说明书喂给 World Agent；Handoff 只管什么时候扩与 carry-forward，不能告诉独立 World 应怎样适配主角。
+46. Outline / Review 为了凑足十章/百章越过未执行 Handoff，自行发明下一大陆、下一副本、公共规则或未来 Power。
+47. 新 World Expansion 全文直接进入 Writer；章节 `WORLD AUTHORITY` 只允许 safe public facts，隐藏人物行动与未知边界仍需 Reader Release。
+48. Canon 已更新却继续用 stale `CURRENT_CHARACTER.md` / stale Story Program 做 refreshed Outline；“曾批准”不等于“仍 fresh”。
 
 ---
 
@@ -1709,7 +1800,12 @@ production 已完成 World Fantasy Surface、Secondary Axis 主动发现/检查�
 24. Small Grammar 不等于 Small World：底层规则少而稳，上层招式、身体、兵器、异兽、环境、奇物、副轴与复合可以持续丰富。
 25. World 可以主动寻找少量成熟 Secondary Fantasy Axis；Story 主动检查，Human 决定主角是否投入，不强塞副职也不被动删掉好副轴。
 26. Lexique 可以提供可丢弃 semantic primitive 和后置 naming fragrance；语义先于命名，World 已有词根优先，名字不能反向授权机制。
-27. 当前下一自然研究方向：`Choice → Route-specific Opportunity → Different Advantage Tree`、Visible Desire Horizon / Dominant Commercial Engine、Reward Lifecycle / Fantasy Heartbeat；继续冻结上游、近单变量、Human Invariance 与 AGGRESSIVE/保守作者选择协议。
+27. Stable Origins, Evolving Authorities：World Root / Power Origin / Human Origin 稳定；World、Power、Human 的后续变化只向前追加，不回写历史。
+28. Story Program 只具体规划当前 World Horizon；靠近边界时留下 Handoff，独立 World Expansion 后才用 Current Character 做 fresh Re-Collision。
+29. Power 是 Frozen Origin + Current Portfolio；Human 是 Frozen Origin + Current State + 可选 Human Development；Current Character 纯确定性编译。
+30. 新世界必须 protagonist-blind 到 retrieval 层；惊喜留到 `Effective World × Current Character` 的 Story Refresh 才发生。
+31. 多世界 `instance` Local World 可以高频进入/退场，Human Development 是更慢时钟；不要把不同长期时钟机械绑定。
+32. 当前下一自然研究方向：`Choice → Route-specific Opportunity → Different Advantage Tree`、Visible Desire Horizon / Dominant Commercial Engine、Reward Lifecycle / Fantasy Heartbeat，以及“真实人物长期改变”Case 的 Human Development A/B；继续冻结上游、近单变量、Human Invariance 与 AGGRESSIVE/保守作者选择协议。
 
 ---
 

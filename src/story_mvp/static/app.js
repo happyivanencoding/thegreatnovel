@@ -362,6 +362,7 @@ function initializeReadingState() {
 
 const workflowStages = [
   { title: "创意", keys: ["creative.world_vision", "creative.power_seed", "creative.human_seed", "creative.character_card", "creative.story_program"] },
+  { title: "长篇演化", keys: ["evolution.world", "evolution.human_development", "evolution.current_character"] },
   { title: "设计", keys: ["book.design"] },
   { title: "规划", keys: ["book.long_plan", "book.future_10"] },
   { title: "当前章节", keys: [] },
@@ -374,6 +375,9 @@ const workflowLabels = {
   "creative.human_seed": "人物种子",
   "creative.character_card": "人物权威",
   "creative.story_program": "故事方案",
+  "evolution.world": "向前世界拓展",
+  "evolution.human_development": "人物长期发展",
+  "evolution.current_character": "当前人物权威",
   "book.design": "总体设计",
   "book.long_plan": "中期规划",
   "book.future_10": "未来十章",
@@ -427,6 +431,9 @@ function workflowLocation(artifact) {
     "creative.human_seed": "HUMAN_SEED.md",
     "creative.character_card": "CHARACTER.md",
     "creative.story_program": "PROPOSAL.md",
+    "evolution.world": "world_expansions/expansion-NNNN.md",
+    "evolution.human_development": "human_development/delta-NNNN.md",
+    "evolution.current_character": "CURRENT_CHARACTER.md",
     "book.design": "BOOK.md · design",
     "book.long_plan": "BOOK.md · long_plan",
     "book.future_10": "BOOK.md · small_plan",
@@ -551,13 +558,16 @@ function locateWorkflowArtifact() {
     "creative.human_seed": "creative-human-seed",
     "creative.character_card": "creative-character-card",
     "creative.story_program": "proposal-editor",
+    "evolution.world": "evolution-world-history",
+    "evolution.human_development": "evolution-human-history",
+    "evolution.current_character": "evolution-current-character",
     "book.design": "design-sections",
     "book.long_plan": "section-long_plan",
     "book.future_10": "section-small_plan",
     "book.canon_state": "section-status",
   };
   const target = $(targets[selectedWorkflowArtifact] || "prompt-panel");
-  if (selectedWorkflowArtifact.startsWith("creative.")) navigateToView("creative", "定位创意节点");
+  if (selectedWorkflowArtifact.startsWith("creative.") || selectedWorkflowArtifact.startsWith("evolution.")) navigateToView("creative", "定位创意节点");
   if (selectedWorkflowArtifact === "book.design") navigateToView("design", "定位设计节点");
   if (selectedWorkflowArtifact === "book.long_plan") { navigateToView("design", "定位中期规划"); setDesignTab("midterm"); }
   if (selectedWorkflowArtifact === "book.future_10") { navigateToView("design", "定位未来十章"); setDesignTab("future10"); }
@@ -683,6 +693,21 @@ function setCreativePayload(payload) {
   $("creative-character-initial-state").value = payload?.character_initial_state || "";
   $("creative-character-audition").value = payload?.character_audition || "";
   $("creative-meta-character-card").textContent = `${character.origin || "empty"} · ${character.status || "empty"}`;
+  setEvolutionPayload(payload || {});
+}
+
+function setEvolutionPayload(payload) {
+  if ($("evolution-world-handoff")) $("evolution-world-handoff").value = payload?.world_horizon_handoff || "";
+  if ($("evolution-world-history")) $("evolution-world-history").value = payload?.world_expansions || "";
+  if ($("evolution-human-history")) $("evolution-human-history").value = payload?.human_development || "";
+  if ($("evolution-current-character")) $("evolution-current-character").value = payload?.current_character || "";
+}
+
+async function refreshEvolutionPayload() {
+  if (!state.bookId) return;
+  const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/evolution`);
+  setEvolutionPayload(payload);
+  if (payload.workflow) renderWorkflow(payload.workflow);
 }
 
 function markCreativeEdited(artifact) {
@@ -800,6 +825,73 @@ async function approveCharacter() {
 async function generateCreativePrompt(mode) {
   await activatePromptMode(mode);
   await generatePrompt();
+}
+
+function applyEvolutionResponse(kind) {
+  const target = kind === "world" ? $("evolution-world-candidate") : $("evolution-human-candidate");
+  applyResponseToEditor($("codex-response"), target);
+  showStatus(`${kind === "world" ? "World Expansion" : "Human Development"} 模型返回已放入候选区；尚未成为 Authority`);
+}
+
+async function approveWorldExpansion() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  const content = $("evolution-world-candidate").value.trim();
+  if (!content) return showStatus("World Expansion 候选为空", true);
+  try {
+    await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/world-expansions/approve`, {
+      method: "POST",
+      body: JSON.stringify({
+        content,
+        scope: $("evolution-world-scope").value,
+        effective_from: Number($("evolution-world-from").value),
+        effective_until: Number($("evolution-world-until").value || 0),
+      }),
+    });
+    $("evolution-world-candidate").value = "";
+    await refreshEvolutionPayload();
+    showStatus("World Expansion 已批准为 forward-only Authority；Origin Power/Human 未被重写，未来 Story/Outline 已 stale");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function approveHumanDevelopment() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  const content = $("evolution-human-candidate").value.trim();
+  if (!content) return showStatus("Human Development 候选为空；没有稳定变化时模型应明确返回 NONE", true);
+  try {
+    const result = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/human-development/approve`, {
+      method: "POST",
+      body: JSON.stringify({ content }),
+    });
+    $("evolution-human-candidate").value = "";
+    await refreshEvolutionPayload();
+    showStatus(result.status === "no_change"
+      ? "Human Development = NONE：没有制造人格变化"
+      : "Human Development 已批准；请刷新 Current Character 后再做 Story Refresh");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function refreshCurrentCharacter() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  try {
+    const result = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/current-character/refresh`, {
+      method: "POST",
+    });
+    $("evolution-current-character").value = result.content || "";
+    await refreshWorkflow();
+    showStatus(`Current Character 已确定性刷新到第${result.compiled_through}章；未调用 LLM`);
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+function applyStoryRefreshResponse() {
+  applyCreativeResponse("proposal");
+  $("proposal-editor")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  showStatus("Story Refresh 已放入 Story Program 编辑器；请阅读/编辑后走现有保存与批准流程");
 }
 
 const runNodeByMode = {
@@ -1136,6 +1228,11 @@ function populateBook(book) {
   for (const key of ["long_plan", "small_plan", "status"]) {
     $(`section-${key}`).value = book.sections?.[key] || "";
   }
+  const completed = (book.sections?.status || "").match(/当前已完成第\s*(\d+)\s*章/);
+  if ($("evolution-world-from")) $("evolution-world-from").value = String((completed ? Number(completed[1]) : 0) + 1);
+  if ($("evolution-world-until")) $("evolution-world-until").value = "0";
+  if ($("evolution-world-candidate")) $("evolution-world-candidate").value = "";
+  if ($("evolution-human-candidate")) $("evolution-human-candidate").value = "";
   const templates = book.prompt_templates || {};
   $("template-idea").value = templates.idea || $("template-idea").value;
   $("template-outline").value = templates.outline || $("template-outline").value;
@@ -1314,9 +1411,12 @@ function selectedReferences() {
 function currentTemplate() {
   return {
     world_vision: "",
+    world_expansion: "",
     power_seed: "",
     human_seed: "",
+    human_development: "",
     idea: $("template-idea").value,
+    story_refresh: "",
     outline: $("template-outline").value,
     chapter_prep: $("template-chapter_prep").value,
     chapter: $("template-chapter").value,
@@ -1365,10 +1465,12 @@ async function setDefaultGbrainQuery() {
 async function handlePromptModeChange() {
   clearReferenceSelection();
   invalidateGbrainResults("切换 Prompt 模式");
-  if ($("prompt-mode").value === "authority_reviser") {
+  if (["authority_reviser", "human_development"].includes($("prompt-mode").value)) {
     state.gbrainDefaultBrief = "";
     $("gbrain-query").value = "";
-    $("gbrain-scope").textContent = "GBrain：Authority Reviser 固定 OFF；只读取 safe Authority Refresh Pack。";
+    $("gbrain-scope").textContent = $("prompt-mode").value === "human_development"
+      ? "GBrain：Human Development 固定 OFF；只根据 Frozen Human + 已发生 Canon 判断稳定变化。"
+      : "GBrain：Authority Reviser 固定 OFF；只读取 safe Authority Refresh Pack。";
     return;
   }
   await setDefaultGbrainQuery();
@@ -1409,11 +1511,17 @@ function promptPayload() {
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
     world_vision: $("creative-world-vision").value,
+    world_expansions: $("evolution-world-history")?.value || "",
     power_seed: $("creative-power-seed").value,
     human_seed: $("creative-human-seed").value,
     prototype_id: $("human-prototype-selector")?.value || "",
     character_card: $("creative-character-card").value,
     character_initial_state: $("creative-character-initial-state").value,
+    human_development: $("evolution-human-history")?.value || "",
+    current_character: $("evolution-current-character")?.value || "",
+    evolution_scope: $("evolution-world-scope")?.value || "macro",
+    effective_from_chapter: Number($("evolution-world-from")?.value || 0),
+    effective_until_chapter: Number($("evolution-world-until")?.value || 0),
     creative_state: state.creativeState,
     current_long_block: $("current-long-block").value,
     previous_chapter_text: $("previous-chapter-text").value,
@@ -1519,6 +1627,9 @@ function externalArtifactForMode(mode) {
     power_seed: "creative.power_seed",
     human_seed: "creative.human_seed",
     idea: "creative.story_program",
+    story_refresh: "creative.story_program",
+    world_expansion: "evolution.world-candidate",
+    human_development: "evolution.human-development-candidate",
   };
   if (creative[mode]) return creative[mode];
   const node = runNodeByMode[mode];
@@ -1543,7 +1654,29 @@ function renderCodexTaskWrapper(mode) {
     : "当前页面的完整 Prompt 文本框（请先保存/复制）";
   const tempPath = `${workspace}\\${state.bookId}\\.workflow_tmp\\${artifact.replaceAll(".", "-")}-response.md`;
   const nodeArgs = node ? ` --chapter ${chapter} --node ${node}` : "";
-  const executionProfile = mode === "authority_reviser" ? "执行配置：GPT-5.6 Luna，reasoning=high。" : "";
+  const executionProfile = mode === "authority_reviser"
+    ? "执行配置：GPT-5.6 Luna，reasoning=high。"
+    : mode === "story_refresh"
+      ? "执行配置：GPT-5.6 Sol，reasoning=high。"
+      : ["world_expansion", "human_development"].includes(mode)
+        ? "执行配置：GPT-5.6 Luna，reasoning=high。"
+        : "";
+  if (["world_expansion", "human_development"].includes(mode)) {
+    output.value = [
+      "在当前 thegreatnovel 工作区执行周期性 Long-form Evolution 候选。",
+      "",
+      `Book: ${state.bookId}`,
+      `Mode: ${mode}`,
+      `读取已经保存的 Prompt：${promptPath}`,
+      executionProfile,
+      "严格按该 Prompt 生成最终输出。",
+      `把模型返回暂存到：${tempPath}`,
+      "不要运行 story-mvp-workflow apply，也不要修改任何 Authority：模型返回 ≠ 作者批准。",
+      "完成后只报告 output path；作者会在 UI 中审阅后显式批准。",
+    ].join("\n");
+    panel.hidden = false;
+    return;
+  }
   output.value = [
     "在当前 thegreatnovel 工作区执行 Story MVP 节点。",
     "",
@@ -1565,16 +1698,19 @@ function renderCodexTaskWrapper(mode) {
 async function executeOpenAI(prompt, mode = "") {
   const isStateExtraction = mode === "state_delta";
   const isAuthorityReviser = mode === "authority_reviser";
-  const explicitModel = isStateExtraction
+  const periodicModel = mode === "story_refresh"
+    ? "gpt-5.6-sol"
+    : ["world_expansion", "human_development"].includes(mode) ? "gpt-5.6-luna" : "";
+  const explicitModel = periodicModel || (isStateExtraction
     ? $("state-model").value.trim()
-    : isAuthorityReviser ? "" : $("openai-model").value.trim();
+    : isAuthorityReviser ? "" : $("openai-model").value.trim());
   const payload = await requestJson("/api/executors/openai", {
     method: "POST",
     body: JSON.stringify({
       prompt,
       model: explicitModel,
       purpose: isStateExtraction ? "state_extraction" : isAuthorityReviser ? "authority_reviser" : "default",
-      reasoning_effort: isAuthorityReviser ? "high" : "",
+      reasoning_effort: isAuthorityReviser || periodicModel ? "high" : "",
     }),
   });
   $("codex-response").value = payload.output_text;
@@ -2295,16 +2431,25 @@ $("human-prototype-selector").addEventListener("change", async () => {
   if ($("prompt-mode").value === "human_seed") await setDefaultGbrainQuery();
 });
 $("generate-story-program-prompt").addEventListener("click", () => generateCreativePrompt("idea"));
+$("generate-world-expansion-prompt").addEventListener("click", () => generateCreativePrompt("world_expansion"));
+$("generate-human-development-prompt").addEventListener("click", () => generateCreativePrompt("human_development"));
+$("generate-story-refresh-prompt").addEventListener("click", () => generateCreativePrompt("story_refresh"));
 $("apply-world-vision-response").addEventListener("click", () => applyCreativeResponse("world_vision"));
 $("apply-power-seed-response").addEventListener("click", () => applyCreativeResponse("power_seed"));
 $("apply-human-seed-response").addEventListener("click", () => applyCreativeResponse("human_seed"));
 $("apply-story-program-response").addEventListener("click", () => applyCreativeResponse("proposal"));
+$("apply-world-expansion-response").addEventListener("click", () => applyEvolutionResponse("world"));
+$("apply-human-development-response").addEventListener("click", () => applyEvolutionResponse("human"));
+$("apply-story-refresh-response").addEventListener("click", applyStoryRefreshResponse);
 $("save-world-vision").addEventListener("click", () => saveCreativeArtifact("world_vision"));
 $("save-power-seed").addEventListener("click", () => saveCreativeArtifact("power_seed"));
 $("save-human-seed").addEventListener("click", () => saveCreativeArtifact("human_seed"));
 $("approve-world-vision").addEventListener("click", () => approveCreativeArtifact("world_vision"));
 $("approve-character").addEventListener("click", approveCharacter);
 $("approve-proposal").addEventListener("click", () => approveCreativeArtifact("proposal"));
+$("approve-world-expansion").addEventListener("click", approveWorldExpansion);
+$("approve-human-development").addEventListener("click", approveHumanDevelopment);
+$("refresh-current-character").addEventListener("click", refreshCurrentCharacter);
 $("generate-prompt").addEventListener("click", generateCurrentChapterAction);
 $("generate-director-prompt").addEventListener("click", () => generateHybridNodePrompt("director"));
 $("generate-curator-prompt").addEventListener("click", () => generateHybridNodePrompt("context_curator"));

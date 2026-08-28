@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
 from typing import Any
 
@@ -8,6 +9,7 @@ from .character_context import (
     project_character_power_baseline,
 )
 from .character_seeds import HUMAN_SEED_SCHEMA, POWER_SEED_SCHEMA
+from .long_form_evolution import compose_effective_world, project_world_state_from_status
 from .prompts import (
     HardGateError,
     OUTLINE_TEMPLATE,
@@ -18,7 +20,18 @@ from .prompts import (
 from .power_novelty import build_power_lexique_bundle, build_power_novelty_bundle
 
 
-SPLIT_PROMPT_MODES = frozenset({"world_vision", "power_seed", "human_seed", "idea", "outline"})
+SPLIT_PROMPT_MODES = frozenset(
+    {
+        "world_vision",
+        "power_seed",
+        "human_seed",
+        "idea",
+        "outline",
+        "world_expansion",
+        "human_development",
+        "story_refresh",
+    }
+)
 
 PROTAGONIST_BLIND_WORLD_TEMPLATE = f"""你是透明协作的 World Vision 创作助手。当前默认目标是成熟中文男频成长长篇；作者明确指定其他类型时，以作者要求为准。
 
@@ -180,6 +193,90 @@ COLLISION_CONTRACT = """# 分离权威碰撞合同
 """
 
 
+WORLD_EXPANSION_PROMPT = """你是 TGN 的周期性 World Expansion 设计者。你负责**向前扩世界**，不是回头重写开书 World，也不是替当前主角安排下一份礼包。
+
+最重要的信息边界：**你看不到 Current Character、Power Stack、Human、关系、当前 Story Program 或未来 Outline。这个盲区是故意的。** 新世界必须先作为一个独立世界成立，惊喜来自它以后与人物碰撞，而不是你提前把世界做成主角的钥匙孔。
+
+- 已批准 World Root 与此前 World Expansions 都是事实；不得改写旧力量规则、旧历史、旧公共常识或已存在地点。
+- 只向 effective_from 之后增加过去尚未详细展开的世界层。`macro` 用于普通长篇进入更大大陆/圈层/文明/力量层；`instance` 用于多世界副本流的一次独立 Local World。
+- Expansion 不是固定百章税；调用它意味着当前故事已经真正来到新 World Horizon。
+- `macro` 优先做到“旧 Grammar 仍有效，但世界尺度、人物、价值物、危险、奇观或新幻想表面明显扩大”，不要为了扩世界就换一套宇宙底层物理。
+- `instance` 必须像一个原本就在运行的小世界：有普通生活、当地力量/危险、社会关系、价值物、人物欲望、正在发生的冲突与自己的未知；不是任务房、Boss 房或为某能力准备的谜题。
+- 可以出现令人眼馋的兵器、传承、资源、伙伴、身份、地点和机会，但它们属于世界，不知道未来主角会不会得到；不得写“特别适合主角现有能力”“正好补足当前 Build”。
+- 世界扩张应制造新的可追欲望与 Story Engine 可能性，而不是只把同一比赛/遗迹/争夺换地图放大。
+- 只保留当前世界层真正需要的 reader-facing ruler；不要一次设计到全书终局。
+- 未知仍是未知。不要因为你负责 World 就提前回答未来 mystery。
+
+严格输出：
+
+# WORLD EXPANSION
+
+## 新增公共现实与普通生活
+## 新力量 / 威胁 / 身份 / 价值尺度
+## 新地点、势力与公共识别
+## 世界人物欲望与正在发生的事
+## 真正值得想要或进入的东西
+## 仍未知的边界
+"""
+
+
+HUMAN_DEVELOPMENT_PROMPT = """你是 TGN 的周期性 Human Development 审阅者。你只判断：这个人经过已经发生的长期故事以后，稳定选择偏向是否真的发生了**可进入未来 Authority 的发展**。
+
+最重要的信息边界：**你看不到任何未来 World Expansion、未来奖励、未来 Story Program 或未来 Outline。** 不允许为了适配未来剧情提前改变人物。
+
+- Frozen Human Core 是起源，不因为最近几章行为就失效。
+- 当前目标、恋爱进度、愤怒、一次救人、连续几章负责/克制等，通常只是 Current State，不是 Stable Human Development。
+- 只有已经发生的高代价选择、长期关系事实、反复且跨情境的选择，已经让继续只用旧 Stable Choice Bias 会明显写错这个人时，才新增 Development Delta。
+- Development 是 forward-only：可以增加具体关系例外、调整某个 motive 的相对权重、形成新的稳定牵引或让旧偏向出现明确的新边界；不要把过去的自己删除成“原来其实不是这样”。
+- 发展可以让人物更依恋、更野心、更享乐、更狠、更怕失去、更愿意停留，也可以没有变化；不要默认成长等于成熟、负责、善良或公共利益。
+- 没有足够证据就输出 NONE。宁可不改，不做人格漂移。
+- 不发明正文没有发生过的心理领悟、旧对话或隐藏动机。
+
+严格输出：
+
+# HUMAN DEVELOPMENT DELTA
+
+若没有稳定变化，只写 `NONE`。
+若有，只写少量已经被历史证明的 stable delta，并明确哪些 Origin 仍然成立、哪一种未来选择判断需要从此更新，以及证据边界是什么。
+"""
+
+
+STORY_REFRESH_PROMPT = """你是 TGN 的 Periodic Re-Collision / Story Refresh。当前不是开书第一次 Collision，而是一个已经活过很多章的人第一次面对**独立生成并已冻结的新 World Horizon**。
+
+Authority：
+- Effective World = World Root + 已生效 Forward World Expansions；你只能使用，不能重写。
+- Current Character = Frozen Origins + 已发生 Power/Asset/Relationship/Identity/Knowledge + 已批准 Human Development；你只能使用，不能把人物重新优化成最适合新世界的人。
+- Existing Canon 已发生不可回滚；旧 Story Program 只保留仍未兑现且仍成立的长期因果，不强迫未来继续照旧计划演。
+
+核心方法：**Independent World × Current Character → Fresh Collision。**
+
+- 不要把新世界重新解释成“原来一直为主角准备”。真正好的结果允许不协调、绕路、错失和意外偏好。
+- Current Power Portfolio 是两层 Power 的当前态：开局 Core 继续存在，已获得 Power / 武器 / 身体变化继续有用。可以通过新世界真实事件再获得新的 Power Asymmetry，并与旧优势复合，但不能反向给 World 新造一件刚好补 Build 的东西。
+- Human 决定选择，不用“长期成长最优解”覆盖人物。新世界出现多个高价值机会时，允许人物因钱、赢、好奇、爱情、兄弟、虚荣、报复、享受、自由等走不同路线。
+- 新阶段应真正换 Story Engine / Reading Question；不要只把旧阶段的“接任务→危险地点→胜利→奖励”换皮。
+- 旧获得要继续改变新阶段；新获得以后也必须留下，而不是阶段结束 reset。
+- 世界扩张后重新校准 Reader Ruler、Social Repricing 与新 World Entry，但不把说明写成百科。
+- 普通长篇规划一个自然大型阶段；多世界 instance 则规划当前副本 + 回归后真正留下的 consequence。都不要逐章。
+- 只刷新未来，不重写已完成章节，不发明旧历史。
+- **本次 Refresh 仍然只具体规划当前新 World Horizon。** 如果这一轮世界层会在未来被真正活透，最后 1—2 个自然阶段就开始形成下一次交接条件；到边界后停止替未知未来世界规划具体内容，再次等待独立 World Expansion。不要因为已经进入第二/第三轮 Refresh，就把后面所有世界重新一次性写死。
+
+严格输出与 production Story Program 兼容的单一结构：
+
+# STORY PROGRAM
+
+## 当前 Re-Collision
+## 当前 Power / Human / World 的长期张力
+## 本阶段核心情节发动机与变化后的主要 Reading Question
+## 全书成长与核心幻想兑现脊柱（只写从当前点向前仍成立的部分）
+## 不可替代的人与关系
+## 未来大型阶段
+只规划当前已批准 World Horizon 内真正需要的阶段。每个阶段写：具体世界问题、主要推动者、主角关键选择、最主要阅读满足、真实 Power/Asset/Relationship/Identity/Knowledge/World Delta、旧积累怎样继续生效、下一阶段为何自然发生。
+## World Horizon Handoff
+若本轮 World Horizon 会在这些阶段后自然结束，写清：触发条件、`macro`/`instance` scope、为什么当前层已需要扩、必须 carry forward 的已发生事实，以及固定 orchestration：`protagonist-blind World Expansion → deterministic Current Character → Story Refresh`。不得预写下一世界宝物、能力、势力或针对当前 Build 的答案。若尚未到边界，写 `NOT YET` + 仍缺的真实边界事件。
+## 仍值得追的旧承诺与新欲望
+"""
+
+
 class SplitCreativeApprovalError(HardGateError):
     def __init__(self, missing_artifacts: list[str]) -> None:
         self.missing_artifacts = missing_artifacts
@@ -210,6 +307,25 @@ def _require_approved(state: Mapping[str, Any] | None, *artifacts: str) -> None:
 
 def _block(label: str, content: str) -> str:
     return f"# {label}\n\n{content.strip() or '（无）'}"
+
+
+def _book_status(book_content: str) -> str:
+    heading = "# 当前状态、未兑现承诺与作者备注"
+    start = book_content.find(heading)
+    return book_content[start + len(heading) :].strip() if start >= 0 else ""
+
+
+def _frozen_human_core(character_card: str) -> str:
+    start_heading = "## HUMAN CORE｜Frozen Authority"
+    end_heading = "## Composition Boundary"
+    start = character_card.find(start_heading)
+    if start < 0:
+        return ""
+    start += len(start_heading)
+    end = character_card.find(end_heading, start)
+    if end < 0:
+        end = len(character_card)
+    return character_card[start:end].strip()
 
 
 def adapt_split_planning_template(template: str, *, mode: str) -> str:
@@ -266,8 +382,10 @@ def _compile_planning_with_character_authority(
     book_content: str,
     creative_direction: str,
     world_vision: str,
+    world_expansions: str,
     character_card: str,
     character_initial_state: str,
+    current_character: str,
     proposal_context: str,
     selected_references: list[Mapping[str, Any]] | None,
     gbrain_inspiration: str,
@@ -278,10 +396,34 @@ def _compile_planning_with_character_authority(
     base = template.strip() or (STORY_PROGRAM_TEMPLATE if mode == "idea" else OUTLINE_TEMPLATE)
     parts = [adapt_split_planning_template(base, mode=mode), "", "# 页面当前输入"]
     parts.append(_block("作者粗方向", creative_direction))
-    parts.append(_block("已批准 Character Authority", character_card))
-    if character_initial_state.strip():
+    planning_character = (
+        current_character.strip()
+        if mode == "outline" and current_character.strip()
+        else character_card
+    )
+    parts.append(
+        _block(
+            "CURRENT CHARACTER｜Forward Authority"
+            if mode == "outline" and current_character.strip()
+            else "已批准 Character Authority",
+            planning_character,
+        )
+    )
+    if character_initial_state.strip() and not (mode == "outline" and current_character.strip()):
         parts.append(_block("Character Initial State｜T0 only", character_initial_state))
-    parts.append(_block("已批准 World Vision", world_vision))
+    planning_world = world_vision
+    if mode == "outline" and world_expansions.strip():
+        match = re.search(r"Compiled Through Chapter:\s*(\d+)", current_character)
+        boundary = int(match.group(1)) + 1 if match else 1
+        planning_world = compose_effective_world(world_vision, world_expansions, boundary)
+    parts.append(
+        _block(
+            "EFFECTIVE WORLD｜Root + Approved Forward Expansions"
+            if mode == "outline" and world_expansions.strip()
+            else "已批准 World Vision",
+            planning_world,
+        )
+    )
 
     if mode == "outline":
         parts.append(_block("作者已批准的 Story Program", proposal_context))
@@ -304,10 +446,13 @@ def generate_split_prompt(
     book_content: str = "",
     creative_direction: str = "",
     world_vision: str = "",
+    world_expansions: str = "",
     power_seed: str = "",
     human_seed: str = "",
     character_card: str = "",
     character_initial_state: str = "",
+    human_development: str = "",
+    current_character: str = "",
     creative_state: Mapping[str, Any] | None = None,
     proposal_context: str = "",
     current_long_block: str = "",
@@ -318,6 +463,9 @@ def generate_split_prompt(
     power_novelty: str | None = None,
     power_lexique: str | None = None,
     prototype_id: str = "",
+    evolution_scope: str = "macro",
+    effective_from_chapter: int = 0,
+    effective_until_chapter: int = 0,
     **_: Any,
 ) -> str:
     if mode == "world_vision":
@@ -367,6 +515,74 @@ def generate_split_prompt(
         parts.extend([life.strip(), _block("Human GBrain Craft（可选）", gbrain_inspiration)])
         return "\n\n".join(parts).strip() + "\n"
 
+    if mode == "world_expansion":
+        _require_approved(creative_state, "world_vision")
+        if evolution_scope not in {"macro", "instance"}:
+            raise ValueError("World Expansion scope 必须是 macro 或 instance")
+        if effective_from_chapter < 1:
+            raise ValueError("World Expansion 需要正整数 effective_from_chapter")
+        if effective_until_chapter and effective_until_chapter < effective_from_chapter:
+            raise ValueError("effective_until_chapter 不能早于 effective_from_chapter")
+        world_state = project_world_state_from_status(_book_status(book_content))
+        return "\n\n".join(
+            [
+                WORLD_EXPANSION_PROMPT.strip(),
+                _block("作者粗方向", creative_direction),
+                _block("WORLD ROOT｜Frozen Opening Authority", world_vision),
+                _block("PREVIOUS APPROVED WORLD EXPANSIONS｜World-only", world_expansions),
+                _block("CURRENT WORLD STATE｜Only explicit Canon World State", world_state),
+                _block(
+                    "Expansion Metadata",
+                    "\n".join(
+                        (
+                            f"scope: {evolution_scope}",
+                            f"effective_from_chapter: {effective_from_chapter}",
+                            f"effective_until_chapter: {effective_until_chapter}",
+                        )
+                    ),
+                ),
+                _block("World GBrain Inspiration（可选；不能借主角反向塑形）", gbrain_inspiration),
+            ]
+        ).strip() + "\n"
+
+    if mode == "human_development":
+        _require_approved(creative_state, "character_card")
+        human_core = _frozen_human_core(character_card)
+        if not human_core:
+            raise ValueError("Human Development 需要 Frozen Human Core")
+        return "\n\n".join(
+            [
+                HUMAN_DEVELOPMENT_PROMPT.strip(),
+                _block("FROZEN HUMAN CORE｜Origin Authority", human_core),
+                _block("PREVIOUS APPROVED HUMAN DEVELOPMENT", human_development),
+                _block("ALREADY-HAPPENED CANON MEMORY", _book_status(book_content)),
+            ]
+        ).strip() + "\n"
+
+    if mode == "story_refresh":
+        _require_approved(creative_state, "world_vision", "character_card", "proposal")
+        if not current_character.strip():
+            raise ValueError("Story Refresh 前必须先确定性刷新 CURRENT_CHARACTER.md")
+        boundary = effective_from_chapter
+        if boundary < 1:
+            match = re.search(r"Compiled Through Chapter:\s*(\d+)", current_character)
+            boundary = int(match.group(1)) + 1 if match else 1
+        effective_world = compose_effective_world(world_vision, world_expansions, boundary)
+        if len(selected_references or []) > 3:
+            raise ValueError("Story Refresh 最多只能选择 3 个 Reference Program")
+        return "\n\n".join(
+            [
+                STORY_REFRESH_PROMPT.strip(),
+                _block("作者粗方向", creative_direction),
+                _block("EFFECTIVE WORLD｜Independent Authority", effective_world),
+                _block("CURRENT CHARACTER｜Deterministic Forward Snapshot", current_character),
+                _block("ALREADY-HAPPENED CANON MEMORY", _book_status(book_content)),
+                _block("PREVIOUS STORY PROGRAM｜Only unresolved future obligations survive", proposal_context),
+                _block("Reference Programs（可选）", format_references(selected_references or [])),
+                _block("GBrain Inspiration（可选；不能覆盖 World / Current Character）", gbrain_inspiration),
+            ]
+        ).strip() + "\n"
+
     if mode == "idea":
         _require_approved(creative_state, "world_vision", "character_card")
         if not character_card.strip():
@@ -377,8 +593,10 @@ def generate_split_prompt(
             book_content=book_content,
             creative_direction=creative_direction,
             world_vision=world_vision,
+            world_expansions=world_expansions,
             character_card=character_card,
             character_initial_state=character_initial_state,
+            current_character=current_character,
             proposal_context=proposal_context,
             selected_references=selected_references,
             gbrain_inspiration=gbrain_inspiration,
@@ -393,8 +611,10 @@ def generate_split_prompt(
             book_content=book_content,
             creative_direction=creative_direction,
             world_vision=world_vision,
+            world_expansions=world_expansions,
             character_card=character_card,
             character_initial_state=character_initial_state,
+            current_character=current_character,
             proposal_context=proposal_context,
             selected_references=selected_references,
             gbrain_inspiration=gbrain_inspiration,

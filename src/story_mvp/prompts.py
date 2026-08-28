@@ -915,6 +915,8 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 第一性原则：**Story Program 是“长期因果如何继续”的编译，不是每个大型阶段都缴一次升级税的表单。成长是全书纵向不变量，不是每个阶段的必填项。**
 
+**当前 Story Program 只具体规划到当前已批准 World Horizon。** 开书 World Vision 不需要一次性承载 500 章全部具体世界；如果当前世界层在一个自然大型阶段末尾将被主角真正活透，Story Program 应提前在最后 1—2 个阶段制造自然交接条件，并在文末输出 `World Horizon Handoff`。Handoff 只说明“什么时候应该停止继续消费旧世界、为什么要触发一次独立 World Expansion、哪些已经发生/已批准的旧世界事实与长期线必须继续有效”；**不得替尚未生成的下一世界设计宝物、能力、势力、人物或为当前主角量身指定世界内容。** 到达 Handoff 后，停止具体规划更远世界，等待 protagonist-blind World Expansion → Current Character → Story Refresh 重新碰撞；不要为了凑 5—7 个阶段提前把未知大陆、异世界或终局写死。
+
 {PAYOFF_FIRST_COST_RHYTHM}
 
 {AGGRESSIVE_PAYOFF_BIAS}
@@ -970,7 +972,7 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 写少量具体人物。每个人先有自己的欲望；说明为什么“同等有用的另一个人”不能替代，以及关系怎样改变主角的风险、去留、时间、暴露或机会牺牲。允许爱情、身体吸引、友情、竞争、依赖、嫉妒、效忠、背叛和敌意，不统一成安全合作。
 
 ## 长期故事主线
-生成 5—7 个自然大型阶段。阶段长度不平均，也不为凑数拆分。
+通常生成 5—7 个自然大型阶段，但这只是当前已批准 World Horizon 的常见展开量，不是凑数要求：如果这个世界层自然只能支撑 3—4 个阶段，就停在真实边界；若仍有大量不同玩法，也不要因为接近某个固定章数强行扩世界。阶段长度不平均，也不为凑数拆分。最后 1—2 个阶段若已接近 World Horizon，应让“旧世界主要压力已被主角活透 / 更高入口真正可达 / 旧层已难继续产生新欲望与新尺度”等条件从故事因果中自然成立，但**不要开始替下一世界写具体内容**。
 
 每阶段只使用下面六项：
 
@@ -987,8 +989,18 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 **下一阶段为何自然发生：** 只能从已经发生的选择、关系、世界行动、未完成欲望、得失或旧谜团长出。下一阶段不要求更大，只要求因果继续成立且更值得追。
 
+## World Horizon Handoff
+这是当前 Story Program 给下一次长篇刷新留下的**交接任务**，不是下一世界设计稿。必须写：
+- **触发条件：** 用可观察故事事实说明什么时候当前 World Horizon 真正结束；优先写事件条件，可附大致章节窗口，但不设固定百章税。
+- **Expansion Scope：** `macro` 或 `instance`。普通长篇进入更大大陆/圈层/文明通常是 `macro`；真正独立的多世界副本是 `instance`。
+- **为什么此时必须扩：** 当前层已经缺少哪一种新的欲望、尺度、世界入口或不同 Story Engine；禁止只写“主角需要更强敌人”。
+- **Carry Forward：** 只列已经批准/已经发生且跨边界仍必须有效的 World 事实、未完世界事件、长期人物/关系、Power/Asset/Identity/Knowledge consequence；不要把它们解释成新世界应提供的钥匙孔。
+- **World Expansion Task：** 只写一句 orchestration 指令：`在触发条件成立后，运行 protagonist-blind World Expansion；World Agent 不读取 Current Character / Power Stack / Human / Future Story。扩展批准后再编译 Current Character，并运行 Story Refresh。` 不得在这里预写新世界答案。
+
+如果当前批准 World Horizon 在本 Story Program 结束时仍明显没有耗尽，Handoff 可以写 `NOT YET`，并说明还缺哪一个真实边界事件；不要为了形式强行安排扩世界。
+
 ## 远期仍值得追的东西
-列少量仍未完成的人、欲望、世界事件、地点、谜团或力量场面。不要把所有未知并成一个幕后真相，也不要新增隐藏力量层来维持长篇。
+只列**跨当前 World Horizon 也可能继续成立**的人、欲望、世界事件、地点、谜团或力量场面。不要把所有未知并成一个幕后真相，也不要新增隐藏力量层来维持长篇；这里是 carry-forward horizon，不是对未知下一世界的详细预告。
 """
 
 
@@ -1043,6 +1055,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {STAGE_CHANGE_PLANNING_RULE}
 
 Outline 是 **Story Program 的执行编译层，不是第二个 Story Program**。Authority ≠ Scheduling：Power Seed 决定开局 Core Asymmetry 怎样成长；Story Program 决定开局优势怎样实现、后续新 Power Asymmetry 怎样获得并与旧优势复合；Outline 只决定已批准变化在当前窗口里通过哪些具体事件发生。不得为了让剧情块“完整”而自行新增 Power Asymmetry、重新安排力量成长、补小奖励、造新权限、开新地图或把人物成熟冒充 Power / Capability。
+
+**`World Horizon Handoff` 是 Outline 的前向边界。** 如果已批准 Story Program 已明确一个尚未执行的 Handoff，Outline 只能把当前已批准 World Horizon 内的事件具体化到该触发条件成立；不得为了填满“中期窗口 / 未来十章 / 约100章”越过 Handoff 自行发明下一大陆、下一异世界、下一套公共规则、下一份新 Power 或下一阶段 Story。若 Handoff 落在当前十章批次内，Future 10 只列到 Handoff 触发章即可，剩余章数不补占位、不写“待定章节”；先执行 `World Expansion → Current Character → Story Refresh`，再由刷新后的 Story Program / Outline 继续。若 Handoff=`NOT YET`，正常规划当前世界层，不因固定章数强行扩张。
 
 核心幻想、力量占有欲、主角欲望、人物关系和世界事件都可以成为某段故事的主要阅读满足；不要求每块平均覆盖。Supporting Logic 只在改变选择、胜负或结果时展开。Action Space / Expectation Ladder / Mystery Depth / Impact 仍可作为后台读者体验坐标，但只通过具体锚点与实际 Delta 自然显现，不生成对应必填字段。
 
@@ -1105,6 +1119,8 @@ Outline 是 **Story Program 的执行编译层，不是第二个 Story Program**
 
 当前中期规划窗口只展开 Story Program 当前自然需要详细执行的部分。可以覆盖一个长期阶段，也可以跨相邻阶段的一部分；不要为了“全书完整”把后期压进来。完整输出从第1章到本窗口预计终点的所有自然剧情块，不用“后续类似”省略。每个剧情块是若干会改变局势的故事转折，不是实施步骤。
 
+如果当前窗口会触发 Story Program 的 `World Horizon Handoff`，窗口终点就停在这个触发事件本身；不要越过它继续安排尚未批准的新 World 内容。
+
 每块使用：
 
 ## 第X—Y章：具体块名
@@ -1118,14 +1134,14 @@ Block Delta：只写**相对本块开始**真正改变的维度，并只使用�
 
 先用 2—4 句写“批次定位”：这十章处在当前哪个剧情块、主要故事问题是什么、预计完成哪些已经批准的故事转折。只有当 Story Program / 当前剧情块确实把 Power、重要获得或世界入口安排在这十章时才说明；否则不补。
 
-随后连续列出十章：
+随后原则上连续列出十章；**唯一例外是已批准 `World Horizon Handoff` 会在十章内触发**，此时只列到触发章就停止，等待 World Expansion / Story Refresh，不为凑足十章跨越 Authority 边界。
 ## 第N章：具体标题
 具体剧情：用 2—4 句写具体人物、事件和主角行动；本章明确推进、转折或结算当前剧情块中的某个故事锚点，或完成必要且有故事价值的桥接。**若本章出现“为某个具名试场/选拔/招募/契约训练、准备、报名、取舍”等因果，而上游已批准其公开价值，这 2—4 句里必须有一句同时保留“具名机会 + 为什么值得争 / 成功参与通常能打开什么”；只写“某试场前训练 / 争取公开机会”仍算信息丢失。** 不要提前写主角一定成功，也不要为了填章数，把一个锚点拆成连续几章同类操作步骤。
 结果 / 状态变化：写直接结果和已经发生后的状态变化。
 叙事功能：写本章在局部故事中的作用。
 结尾推动：写下一章为什么发生。
 
-十章必须连续；上一章的结果或推动应成为下一章的直接因果起点。**新书第1章不得是纯 Setup：若当前 Core Asymmetry 尚未在正文发生，第一章章末前必须完成 `OPENING_THREE_CHAPTER_CONTRACT` 要求的真实、可见、不可替代结果；Opening Orientation 只能嵌在同章动作中，不能把兑现推到第2章。** 当前剧情块一旦自然完成，直接进入相邻剧情块；不要为了凑足十章把一次认可/结算/实施拆成数章。不要求每章都成长或结算，也不要求每十章都新增 Power、奖励、权限、地图或“更大世界入口”。如果批准的真实成长落在本批，必须通过具体事件兑现；如果没有，就让关系、选择、世界冲突或其它真实故事承担推进。
+所列章节必须连续；上一章的结果或推动应成为下一章的直接因果起点。**新书第1章不得是纯 Setup：若当前 Core Asymmetry 尚未在正文发生，第一章章末前必须完成 `OPENING_THREE_CHAPTER_CONTRACT` 要求的真实、可见、不可替代结果；Opening Orientation 只能嵌在同章动作中，不能把兑现推到第2章。** 当前剧情块一旦自然完成，直接进入相邻剧情块；不要为了凑足十章把一次认可/结算/实施拆成数章。不要求每章都成长或结算，也不要求每十章都新增 Power、奖励、权限、地图或“更大世界入口”。如果批准的真实成长落在本批，必须通过具体事件兑现；如果没有，就让关系、选择、世界冲突或其它真实故事承担推进。若本批因 World Horizon Handoff 提前结束，这不是“少规划了几章”，而是正确停止在尚未生成的新 Authority 之前。
 
 # 当前状态、未兑现承诺与作者备注
 
@@ -1133,6 +1149,8 @@ Block Delta：只写**相对本块开始**真正改变的维度，并只使用�
 
 
 REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作者提供的已发生正文摘要、当前状态、未兑现承诺、远期方向和当前设计，调整未来计划；Review 只用于调整未来，不自动重写或否定已完成正文。
+
+**Review 不得越过已批准 Story Program 的 `World Horizon Handoff`。** 若已发生摘要表明 Handoff 触发条件尚未成立，正常调整当前世界内未来计划；若触发条件已成立或下一批十章中必然成立，则下一批只规划到触发章并停止，明确下一动作是 `protagonist-blind World Expansion → deterministic Current Character → Story Refresh → Outline`。不要为了凑下一批十章由 Review 自己发明新大陆、独立副本、公共世界规则或下一阶段 Power。
 
 {PAYOFF_FIRST_COST_RHYTHM}
 
@@ -1190,6 +1208,8 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 ## 下一批十章总体事件链
 用 3—6 句话说明这十章承接当前哪个已批准 Story Program / 剧情块因果、主要问题、主角行动、关键转折与批末状态。Growth is longitudinal, not a ten-chapter tax：只有当前计划确实安排 Power / Capability、重要获得或新世界入口时才写；没有时不要为了批次完整补一个。
 
+若 World Horizon Handoff 会在本批触发，总体事件链必须以该触发事件为终点，并明确“后续待 World Expansion / Story Refresh 后再规划”；不能提前给出新世界答案。
+
 逐章使用：
 ## 第N章：具体标题
 具体剧情：用 2—4 句写具体人物、事件和主角行动。
@@ -1197,7 +1217,7 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 叙事功能：写本章在局部故事中的作用。
 结尾推动：写下一章为什么发生。
 
-十章必须连续；第N章的结尾推动必须成为第N+1章具体剧情的直接因果起点；不要求每章都成长或结算，也不要求每十章都新增 Power、奖励、权限、地图或更大世界入口。已经安排在本批发生的真实变化必须通过具体事件兑现；没有安排的维度不要填表式补位。"""
+原则上连续规划十章；第N章的结尾推动必须成为第N+1章具体剧情的直接因果起点。不要求每章都成长或结算，也不要求每十章都新增 Power、奖励、权限、地图或更大世界入口。已经安排在本批发生的真实变化必须通过具体事件兑现；没有安排的维度不要填表式补位。**若 Handoff 在十章内触发，只列到触发章即可；停止在 Authority 边界前优先于凑足十章。**"""
 
 
 DEFAULT_PROMPT_TEMPLATES.update({
@@ -1229,11 +1249,21 @@ BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、Ref
 
 # Proposed Persistent Canon
 输出更新后的简短长期 Canon：已证明能力、能力限制、关系阶段、持久资源、长期身份、确认知识、长期伤势和重要敌我状态。只保留以后仍会改变选择的信息。
-只有真实需要时才维护两个轻量小节：
+只有真实需要时才维护以下轻量小节；已有仍有效事实要保留，发生质变才更新，不为完整强行填满：
+### Power / Capability
+只写已经真实获得、证明或改变的能力/身体/武器权限与关键边界。开局 Frozen Power Core 不在这里重写；这里承载后续 Power Delta 与当前 Advantage Stack 的已发生事实。
 ### Active Relationships
 人物｜当前目标或立场｜与主角当前关系｜最近一次重要变化｜未决动作/承诺
+### Identity / Access
+只写仍会改变后续待遇、入口或选择的当前身份与长期准入。
+### Knowledge / Enemy State
+只写已确认知识、重要误解以及会继续改变敌我行动的稳定状态。
+### World State
+只写已经发生、且会影响未来世界扩展或人物选择的世界级变化；这是 protagonist-blind World Expansion 唯一会读取的 Canon 小节，因此不得混入主角私人欲望或“未来应该出现什么”。
 ### Tracked Assets
 物品｜当前持有人｜当前位置｜状态｜最近一次明确转移
+
+**不要在 State Extraction 里生成 Human Development。** 当前欲望与关系变化属于 State/Relationship；是否已经形成新的稳定选择偏向，只能由周期性的 Human Development 阶段基于更长历史判断，避免把最近几章行为反推成人格。
 
 # Proposed Chapter Summary
 只写本章一个事实摘要，优先 80—160 字；只写正文已经发生的事实。
@@ -1783,6 +1813,7 @@ def generate_prompt(
     creative_direction: str = "",
     fantasy_seed: str = "",
     world_vision: str = "",
+    world_expansions: str = "",
     character_card: str = "",
     creative_state: Mapping[str, Any] | None = None,
     proposal_context: str = "",
@@ -1866,6 +1897,7 @@ def generate_prompt(
             book_content=book_content,
             character_card=character_card,
             world_vision=world_vision,
+            world_expansions=world_expansions,
             current_long_block=current_long_block,
             previous_chapter_text=previous_chapter_text,
             current_outline=current_outline,
@@ -1920,6 +1952,7 @@ def generate_prompt(
             book_content=book_content,
             character_card=character_card,
             world_vision=world_vision,
+            world_expansions=world_expansions,
             current_long_block=current_long_block,
             previous_chapter_text=previous_chapter_text,
             current_outline=current_outline,
@@ -1985,6 +2018,7 @@ def generate_prompt(
             book_content=book_content,
             character_card=character_card,
             world_vision=world_vision,
+            world_expansions=world_expansions,
             current_long_block=current_long_block,
             previous_chapter_text=previous_chapter_text,
             current_outline=current_outline,

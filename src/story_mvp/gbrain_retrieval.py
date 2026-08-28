@@ -36,9 +36,11 @@ SOURCE_CATEGORIES = frozenset(
 )
 MODE_ALLOWED_CATEGORIES = {
     "world_vision": frozenset({"mechanisms", "syntheses", "book-dna"}),
+    "world_expansion": frozenset({"mechanisms", "syntheses", "book-dna", "arcs"}),
     "power_seed": frozenset({"mechanisms", "syntheses", "book-dna"}),
     "human_seed": frozenset({"mechanisms", "contrasts", "syntheses", "book-dna"}),
     "idea": frozenset({"mechanisms", "contrasts", "syntheses"}),
+    "story_refresh": frozenset({"mechanisms", "contrasts", "syntheses", "arcs"}),
     "outline": frozenset({"mechanisms", "contrasts", "syntheses", "book-dna", "arcs"}),
     "chapter_prep": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
     "chapter": frozenset({"mechanisms", "contrasts", "syntheses", "prose-controls"}),
@@ -59,9 +61,11 @@ GENRE_PRIOR_ALLOWED_MODES = frozenset({"idea", "outline", "review"})
 # 规划节点使用少量、可检索的 v3 craft aliases；完整 BOOK-aware brief 仍单独保留给作者查看。
 PLANNING_KEYWORD_QUERIES = {
     "world_vision": '"world fantasy" OR "world entry" OR "narrative compounding"',
+    "world_expansion": '"world expansion" OR "world entry" OR "stage transition" OR "narrative compounding"',
     "power_seed": '"core fantasy" OR "core reader fantasy" OR "asymmetric advantage" OR "power dominance" OR "power verification" OR "world compatibility"',
     "human_seed": '"character hook" OR "protagonist desire" OR "behavior signature" OR "human appetite" OR "relationship gravity"',
     "idea": '"plot engine variation" OR "thread ecology" OR "reward opportunity"',
+    "story_refresh": '"plot engine variation" OR "thread ecology" OR "reward recontextualization" OR "world entry"',
     "outline": '"thread collision" OR "hidden identity reveal" OR "departure vacancy" OR "reunion reentry" OR "sacrifice convergence" OR "reward recontextualization"',
 }
 
@@ -69,6 +73,10 @@ PLANNING_KEYWORD_QUERY_BATCHES = {
     "world_vision": (
         '"world fantasy" OR "world entry" OR "narrative compounding"',
         '"reader coordinates" OR "progression scale" OR "action space scale" OR "expectation ladder" OR "core advantage" OR "world compatibility" OR "power scale" OR "threat scale"',
+    ),
+    "world_expansion": (
+        '"world expansion" OR "world entry" OR "stage transition"',
+        '"reader coordinates" OR "expectation ladder" OR "world scale" OR "narrative compounding"',
     ),
     "power_seed": (
         '"core fantasy" OR "core reader fantasy" OR "asymmetric advantage" OR "power dominance" OR "power verification"',
@@ -79,6 +87,11 @@ PLANNING_KEYWORD_QUERY_BATCHES = {
         '"plot engine variation" OR "gameplay counterplay"',
         '"thread ecology" OR "longitudinal thread" OR "thread collision"',
         '"reward opportunity"',
+    ),
+    "story_refresh": (
+        '"plot engine variation" OR "gameplay counterplay" OR "world entry"',
+        '"thread ecology" OR "thread collision" OR "reward recontextualization"',
+        '"advantage compounding" OR "high value acquisition" OR "relationship gravity"',
     ),
     "outline": (
         '"thread collision" OR "hidden identity reveal"',
@@ -281,6 +294,16 @@ def build_retrieval_brief(
     current_outline: str = "",
     recent_summaries: str = "",
 ) -> str:
+    if mode == "world_expansion":
+        # Preserve protagonist-blind world generation all the way through retrieval.
+        # A seemingly harmless BOOK/Character-aware retrieval step would otherwise
+        # let the World Agent reconstruct the protagonist's current key shape.
+        character_card = ""
+        proposal_context = ""
+        book_content = ""
+        current_long_block = ""
+        current_outline = ""
+        recent_summaries = ""
     effective_world = world_vision
     if mode == "power_seed" and world_vision.strip():
         effective_world = project_character_power_baseline(world_vision)
@@ -306,7 +329,7 @@ def build_retrieval_brief(
         elif mode == "human_seed":
             label = "Human 可见 Life Context"
         lines.append(f"{label}：\n{_compact(effective_world, 1600)}")
-    if character_card.strip() and mode in {"idea", "outline"}:
+    if character_card.strip() and mode in {"idea", "outline", "story_refresh"}:
         lines.append(f"已批准 Character Authority：\n{_compact(character_card, 1600)}")
     if proposal_context.strip():
         lines.append(f"已批准 Story Program：\n{_compact(proposal_context, 1600)}")
@@ -334,10 +357,14 @@ def build_retrieval_brief(
         lines.append("章节精度优先：寻找可迁移的 mechanisms、contrasts、syntheses、prose-controls；不引入来源作品表层故事。")
     elif mode == "world_vision":
         lines.append("World Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不替未来 Character 决定主角。")
+    elif mode == "world_expansion":
+        lines.append("World Expansion 用途：只寻找独立世界扩张、world entry、stage transition 与 reader coordinates craft；检索层同样看不到 Character / Story / BOOK 当前人物状态，不为主角量身制造世界。")
     elif mode == "power_seed":
         lines.append("Power Seed 用途：优先寻找 core fantasy、asymmetric advantage、power dominance / verification 与可成长的能力玩法；World Normal 只作比较尺，不要求优势必须先成为世界内合法例外，也不要用世界兼容性把能力自动削弱。")
     elif mode == "idea":
         lines.append("Story Program 用途：优先寻找 Plot Engine 变异、thread ecology/collision、配角自治、story-state compounding 与高价值获得体验；只作为可选灵感，不改写已批准 Character Authority / World Vision。")
+    elif mode == "story_refresh":
+        lines.append("Story Refresh 用途：优先寻找跨阶段 Plot Engine 变异、旧获得重释/复利、thread collision 与新 World Entry；只提供 craft，不允许覆盖已经冻结的新 World Horizon 或 Current Character。")
     elif mode == "outline":
         lines.append("Outline 用途：优先寻找长中短线编织、身份揭露、离队归来、牺牲/二次兑现、多线合流与高价值获得/旧奖励重释；必须服从已批准 Character Authority / World Vision / Story Program。")
     else:
@@ -830,6 +857,15 @@ def retrieve_gbrain(
 ) -> dict[str, Any]:
     if mode not in MODE_ALLOWED_CATEGORIES:
         raise ValueError(f"未知 GBrain 检索模式：{mode}")
+    if mode == "world_expansion":
+        # Match the World Expansion prompt boundary: retrieval itself must remain
+        # protagonist-blind or it can leak a tailored keyhole indirectly.
+        character_card = ""
+        proposal_context = ""
+        book_content = ""
+        current_long_block = ""
+        current_outline = ""
+        recent_summaries = ""
     selected_prototype = human_prototype_spec(prototype_id) if mode == "human_seed" else None
     if mode == "human_seed" and prototype_id.strip() and selected_prototype is None:
         raise ValueError(f"未知 Human Prototype selector：{prototype_id.strip()}")
@@ -924,7 +960,7 @@ def retrieve_gbrain(
     coordinate_reference_error = ""
     naming_reference: dict[str, Any] | None = None
     naming_reference_error = ""
-    if mode == "world_vision":
+    if mode in {"world_vision", "world_expansion"}:
         coordinate_reference, coordinate_reference_error = _load_world_coordinate_reference(
             page_reader, constraints
         )
@@ -936,15 +972,15 @@ def retrieve_gbrain(
         final_limit = 1
     elif mode in {"chapter", "context_curator"}:
         final_limit = CHAPTER_FINAL_RESULT_LIMIT
-    elif mode in {"world_vision", "power_seed", "human_seed", "idea"}:
+    elif mode in {"world_vision", "world_expansion", "power_seed", "human_seed", "idea", "story_refresh"}:
         final_limit = CREATIVE_PLANNING_FINAL_RESULT_LIMIT
     else:
         final_limit = FINAL_RESULT_LIMIT
     novel_candidates: list[dict[str, Any]] = []
     rejected: list[dict[str, str]] = []
     for hit in unique_hits:
-        if hit["slug"] == WORLD_COORDINATE_REFERENCE_SLUG and mode in {"world_vision", "idea", "outline"}:
-            if mode != "world_vision":
+        if hit["slug"] == WORLD_COORDINATE_REFERENCE_SLUG and mode in {"world_vision", "world_expansion", "idea", "outline", "story_refresh"}:
+            if mode not in {"world_vision", "world_expansion"}:
                 rejected.append(
                     {
                         "slug": hit["slug"],
@@ -971,7 +1007,7 @@ def retrieve_gbrain(
         HUMAN_LANE_CANDIDATE_INSPECTION_LIMIT * len(HUMAN_LANE_ORDER)
         if mode == "human_seed"
         else PLANNING_CANDIDATE_INSPECTION_LIMIT
-        if mode in {"world_vision", "power_seed", "idea", "outline"}
+        if mode in {"world_vision", "world_expansion", "power_seed", "idea", "story_refresh", "outline"}
         else RAW_RESULT_LIMIT
     )
     visible = novel_candidates[:candidate_limit]

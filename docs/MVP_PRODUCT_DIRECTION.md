@@ -126,6 +126,23 @@ Stage Delta 只写真实变化，不逐项填满。可包含 Power / Capability�
 
 **High-Value Acquisition 不消失，只从阶段字段降级为 reader-appetite principle。** 世界自然出现真正让人想要的剑、功法、体质变化、奇物、知识、身份、同伴、洞府、飞舟、名额或其它高价值对象时，可以成为强阶段燃料；其中真正形成新 Privilege Delta 的获得可以进入 Power Asymmetry Stack，没有自然机会就不制造。**Compounding 也不消失：旧优势必须继续生效，并与新优势产生真实化学反应，而不是写完即消失。**
 
+## Long-form Evolution：Stable Origins, Evolving Authorities
+
+开书 World / Power / Human 是稳定 Origins，不要求一次写完 500 章所有具体世界与能力。Story Program 只具体规划当前已批准 `World Horizon`；接近本轮世界层自然终点时输出 `World Horizon Handoff`，只定义可观察触发条件、`macro / instance` scope、需要继续携带的已发生事实和 orchestration，不预写下一世界给主角什么。
+
+Handoff 真正触发后：
+
+`protagonist-blind World Expansion → optional Human Development → deterministic CURRENT_CHARACTER.md → Sol Story Refresh / Re-Collision → 作者批准刷新后的 Story Program → Outline`
+
+- **World Expansion**：Luna high，向前追加世界层；不看 Current Character / Power Stack / Human / Future Story。`instance` 可用章节范围承载独立 Local World；离开后 Local World 退场，跨世界 consequence 留在 Canon。
+- **两层 Power**：Frozen Power Origin Core + `Canon → Power / Capability` 中已经真实获得/证明的 Current Power Portfolio；后期神兵、传承、新 Asymmetry 不回写 Seed。
+- **三层 Human**：Frozen Human Origin + Current Human State + 极低频、可为 `NONE` 的 Human Development Delta。Human Development 只看已发生历史，不看未来 World / Story。
+- **Current Character**：纯确定性编译 Frozen Origins + Current Power/Human/关系/身份/知识/资产，不新增 Character Composer。
+- **Story Refresh**：Sol high 首次同时看到独立生成的 Effective World 与 Current Character；惊喜来自 Collision，不允许单 Agent 先把“世界—人物—奖励”调成天生适配。
+- **Outline / Review**：不得越过未执行的 World Horizon Handoff 补满十章/百章；到触发章即停止，先完成下一轮 Expansion / Refresh。
+
+World Root 被作者回头改写仍是 **Rewrite**，会按原依赖链 stale Power/Human/Character；Forward World Expansion 则不重做 Origins，只刷新受影响的未来 Story / Outline / Run。已完成章节永不因后期扩世界被回写。
+
 ## Creative Constitution → Stage-specific Compilation
 
 TGN 仍保留 World Independence、Concrete Value、High-Value Acquisition、Net New、Irreversible State、Action Space、World Entry、Reward Opportunity、Fantasy Compounding、Expectation Ladder、Mystery Depth、Impact 等后台价值观。
@@ -187,11 +204,12 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 章节链保持：
 
-`Luna Director → Luna Curator → Terra Primary Writer → Luna State Extraction`
+`Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State Extraction`
 
 - Director：决定本章具体发生什么；
 - Curator：只给 Writer 当前章真正需要的 Canon / Plan / Scene Skill；章节 Runtime 按 Outline 的 `Reader Release Map` 从 Approved World Vision 的 `WORLD AUTHORITY` 取本章世界事实，Curator 只保留/压缩；
-- Primary：只写小说，不做规划汇报；
+- Primary：只写小说第一版，不做规划汇报，也不是默认 final source；
+- Authority Reviser：Preservation First；重新拿到 safe World / Frozen Power+Human / Reader Release / Canon，只修明确 authority/implementation 失败，默认 final source；
 - State：只记录正式正文已经发生的事实。
 
 章节 Runtime 不直接读取 raw GBrain，也不重新决定 World / Power / Human / Story Program。
@@ -201,13 +219,18 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 当前默认：
 
 - World Vision：GPT-5.6 Luna high，GBrain ON，固定 1 条 Reader Coordinates Reference + 最多 3 条 focused creative inspiration；固定坐标参考不占 creative 名额；
+- World Expansion：GPT-5.6 Luna high，World-only GBrain + Coordinate Reference；低频、protagonist-blind；
 - Power Seed：GPT-5.6 Luna high，Power lane GBrain，小 bundle；
 - Human Seed：GPT-5.6 Luna high，Human lane GBrain，Appetite / Behavior / Relationship 各最多 1 条，总计最多 3 条；
+- Human Development：GPT-5.6 Luna high，GBrain OFF，可选慢时钟；
+- Current Character：deterministic，GBrain OFF；
 - Story Program：GPT-5.6 Sol high，GBrain ON，最多 3 条 focused inspiration；
+- Story Refresh：GPT-5.6 Sol high，GBrain ON，最多 3 条 focused inspiration；
 - Outline：GPT-5.6 Luna high，GBrain ON，通常 4 条、最多 5 条；
 - Director：Luna high；
 - Curator：Luna high；
 - Primary Writer：Terra high；
+- Authority Reviser：Luna high；
 - State Extraction：Luna low。
 
 模型选择看三个坐标：**生成质量 ≠ wall-clock ≠ 实际成本**。Sol 只集中在长期结构高杠杆节点，不因为它最强就整链使用。

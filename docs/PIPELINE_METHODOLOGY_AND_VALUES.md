@@ -6,11 +6,17 @@
 
 Story MVP 不是“让一个大模型从设定一路写到正文”的流水线，而是把不同尺度的创作问题拆开，让每一层只解决自己最擅长的问题：
 
-`Independent World → Split Power / Human Authority → Character Collision → Long-Form Causality → Story Anchors → Chapter Execution`
+`Independent World → Split Power / Human Authority → Character Collision → Long-Form Causality → Story Anchors → Chapter Execution → Forward Evolution`
 
 对应实际链路：
 
 `作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
+
+长篇不是把这条开书链一次跑完后消费 500 章。当前 World Horizon 被故事真正活透时，进入低频的向前循环：
+
+`Story Program 的 World Horizon Handoff → protagonist-blind World Expansion →（只有长期证据足够时）Human Development → deterministic Current Character → Sol Story Refresh / Re-Collision → 作者批准 Story Program → Outline → 后续章节`
+
+这里的核心是 **Stable Origins, Evolving Authorities**：开书 World / Power / Human Origin 不因后期增长被重写；新世界、新能力、人物发展和长期状态只向未来追加。World Expansion 与 Human Development 使用隔离上下文，只有 Story Refresh 第一次同时看到新 World 与 Current Character，避免单一 Agent 把“下一世界—主角现有 Build—未来奖励”预先自洽成一套钥匙孔。
 
 其中最重要的原则是：**越靠上游，越决定“这本书是什么”；越靠下游，越只负责忠实执行已经确定的故事。**
 
@@ -172,6 +178,21 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 ---
 
+### World Expansion：世界根语法稳定，故事视野向前生长
+
+开书 `WORLD_VISION.md` 是 **World Root + 当前可见 World Horizon**，不是要求第一天就写完 500 章所有大陆、文明、顶级势力和终局规则。世界真正被当前故事活透后，可以追加 forward-only World Expansion；这和作者回头修改开书世界是两种不同语义：
+
+- **World Rewrite**：改已经成立的根规则或旧事实，会使 Power / Human / Character 及全部未来下游 stale；
+- **World Expansion**：旧事实不变，只增加从某一未来章节开始才真实进入故事的新世界层，只刷新未来 Story / Outline / Run，不重做 Origin Character。
+
+触发由故事边界决定，不按“每 100 章必须扩一次”缴税。100 章可以是普通长篇的观察尺度；真正条件是当前世界层已经难以继续制造新的欲望、尺度、入口或不同 Story Engine，且人物通过具体事件真正来到更高边界。
+
+World Expansion 使用 **GPT-5.6 Luna high 的 protagonist-blind fresh context**：只看 World Root、此前已批准 Expansion、明确的 `Canon → World State` 与小型 World craft；不看 Current Character、Power Stack、Human、关系、Story Handoff 的人物化答案或未来计划。它只创造世界现实，不替 Story 设计“最适合主角的下一件宝物”。
+
+多世界副本流使用同一机制，但有双层时钟：跨世界稳定规则留在 Global / Meta World；每个真正独立新世界用 `scope=instance` 追加 Local World Authority，并可设置结束章节。离开副本后 Local World 从章节 `WORLD AUTHORITY` 退场；真正带走的 Power、物品、关系、身份、知识和 Meta consequence 继续留在 Canon。
+
+---
+
 ### Power Seed：决定“主角相对世界正常力量，哪里拥有明显非对称优势”
 
 Power Seed 只读 deterministic `POWER_BASELINE`、固定 1 条 source-blind Naming Craft Reference、少量 Power GBrain craft，以及非 Canon `Power Novelty Spark + Optional Lexique Primitive Pool`，不读 Human Biography，也不读 named Story Opportunities。Novelty Spark 为 3 个候选各采样一个“熟悉能力幻想 × 单一异常”；Lexique pool 只提供少量对象×变化 primitive，模型每个 Candidate 最多借 0—1 个、也可以全部忽略。两者都只在 Power 生成时存在，不向下游传播。
@@ -199,6 +220,13 @@ Power Seed 只读 deterministic `POWER_BASELINE`、固定 1 条 source-blind Nam
 - 把能力自然职业化成维修、诊断、运输、审核、构筑或流程管理。
 
 关键原则：**Power Seed 只决定开局 Core Asymmetry 的成长语法。** 它不包办全书所有能力；后续新的 Power Asymmetry 由 Story Program 通过真实故事获得并与旧优势复合。
+
+长篇运行时因此采用**两层 Power**：
+
+- `Power Origin Core`：开书已批准、长期冻结的核心异常与根边界；
+- `Current Power Portfolio`：正文已经真实获得/证明的后续能力、身体变化、兵器权限与 Advantage Stack，由 `PERSISTENT CANON → Power / Capability` 持续更新。
+
+例如后期拿到神兵、魂骨、传承或第二种非对称优势，是 forward Power Delta，不回头改写 Power Seed。周期性 Story Refresh 读取 Current Power，而不是拿 Chapter 1 的能力状态重新规划几百章后的主角。
 
 ---
 
@@ -228,6 +256,14 @@ Human Seed 只读 deterministic `LIFE_CONTEXT` 与 Human GBrain craft，不看 P
 
 **经历是背景，不是人格证明。** 同样的生活事实本来就可能长出不同的人。人物辨识度来自多股动机冲突时反复暴露的选择偏向，而不是漂亮的人生哲学。
 
+长篇运行时采用**三层 Human**，但三层时钟不同：
+
+- `Human Origin Core`：开书稳定选择偏向与 competing motives，长期冻结为人物起源；
+- `Current Human State`：当前欲望、关系、承诺、身份与短中期状态，随 Canon/State 正常变化；
+- `Human Development Delta`：只有几十章甚至更长的已发生历史已经稳定证明“继续只用旧 bias 会写错这个人”时，才由独立 Luna high 阶段提出 forward-only Delta；默认允许 `NONE`，不要求每次 World Expansion 或每个副本都运行。
+
+Human Development 只看 Frozen Human + 已发生 Canon，**看不到未来 World、奖励与 Story**。这样既避免“连续救人三章 → 人格被改成圣人”，也避免 Story Refresh 为了适配新世界反向把人物进化成最正确的样子。后续 Delta 按生效顺序保留；人物可以真的改变，但不能失去自己的历史。
+
 ---
 
 ### Character：确定性组合，不做后验合理化
@@ -235,6 +271,8 @@ Human Seed 只读 deterministic `LIFE_CONTEXT` 与 Human GBrain craft，不看 P
 `CHARACTER.md` 由已冻结 Power Core 与 Human Core deterministic compose，没有 Character Composer LLM。
 
 它只保留两个 authority 并列，不解释“为什么这段童年注定得到这种能力”。World / Power / Human 之间的不协调是后续 Collision 的故事材料，不是需要抹平的错误。
+
+开书 `CHARACTER.md` 仍只保存 Frozen Origins。长篇边界需要重新规划时，代码再确定性生成 `CURRENT_CHARACTER.md`：`Origin Power + Current Power + Origin Human + Human Development + Current State / Relationships / Identity / Knowledge / Assets / Canon`。这不是新的 Character Composer，也不调用 LLM；它只是把已经发生的历史压成给 Story Refresh / refreshed Outline 使用的当前人物权威。
 
 ---
 
@@ -260,9 +298,9 @@ Story Program 是第一次同时看到完整 World 与 Character 的阶段，也
 
 因此：**Power Seed 决定开局核心；Story Program 决定长期优势栈怎样通过故事长出来。**
 
-#### 全书级责任
+#### 当前 World Horizon 的长期责任
 
-- 5—7 个自然大型阶段；
+- 通常 5—7 个自然大型阶段，但只具体规划当前已批准 World Horizon；若当前世界层 3—4 个阶段就自然走到边界，就停在那里，不为凑数提前发明未知下一世界；
 - 清楚的 **全书成长与 Core Fantasy 兑现脊柱**：少数够重的结构质变分布在早期、中期、高阶自然阶段，不固定次数；结构质变少而重，但 Fantasy Surface 可以持续偏丰富，质变之间继续用既有力量语法长出新招/战斗姿态、装备/奇物、身体/物种、异兽/伴生物、环境、越级对象与复合玩法；
 - 优势栈不能只让开局能力变大：全书要有新的 Power Asymmetry 加入，并出现新旧优势组合后单项做不到的复合玩法；这不是每阶段新增能力税；
 - 每次成长写成具体事实：以前打不过谁、去不了哪里、做不到什么，现在具体能怎样战斗、移动、探索，或哪两项优势怎样一起产生新结果；
@@ -273,6 +311,7 @@ Story Program 是第一次同时看到完整 World 与 Character 的阶段，也
 - **主人公连续升格**：力量/身体、身份/关系、世界入口、认知与选择权不是平行 KPI；优先让一次成长造成更高层人物重新估价，继而打开新圈层/地点/真相，再产生新欲望、敌人与过去没有资格作出的选择。新圈层人物只按自己真实知道的旧名声/战绩/已公开底牌先判断，再因最低充分的新事实分别更新待遇、敌意或合作，不默认全知也不靠降智轻视；同一等级可以先真正活出新的社会位置和世界位置，再自然升阶。
 - **成熟第二幻想轴**：Story Program 主动检查 Approved World 中已经成立的副轴，不因它不是 Core Power 就忽略；职业/专业只有在它本身就是可欲望的强者道路时才升格——有独立强弱、顶层人物、可见胜负/作品、稀有成果与社会价格。普通实施继续压缩；主角是否投入由 Human 决定，Human 不想走就让它属于世界或配角，不强制每书有副职。
 - **可判定兑现债务**：少量自然出现的强挑战/承诺可以保留“具体对象 + 至少一个可观察结算条件”，给长期读者明确距离感；它不是倒计时 KPI，可以错过、失效、延期、输掉或被人物主动放弃。
+- **World Horizon Handoff**：当最后 1—2 个自然阶段已经把当前世界层主要压力活透，Program 要给下一轮留一个交接任务：写可观察触发条件、`macro / instance` scope、为什么此时必须扩、哪些已发生事实必须 carry forward；不得提前指定下一世界宝物、能力、势力或针对当前 Build 的答案。若还没到边界，明确 `NOT YET`，不按固定章数强行扩张。
 
 #### 大型阶段发动机
 
@@ -322,6 +361,18 @@ Story Program 可以为了让当前关系、局部性格反应或某次选择更
 
 ---
 
+### Story Refresh：Periodic Re-Collision，不把旧 Program 无限延长
+
+World Expansion 被作者批准后，先确定性刷新 `CURRENT_CHARACTER.md`；只有这个阶段，Sol high 才第一次同时看到 **Effective World × Current Character**，重新规划当前新的 World Horizon。
+
+Story Refresh 不是把旧 Program 续写几十行，而是 fresh collision：新世界不能为了主角重新改；Current Character 也不能为了适配新世界被重写。旧 Story Program 只保留仍未兑现且仍成立的因果。允许主角错过机会、NPC 拒绝、旧能力在新世界出现意外用途、Human 因私人偏好走非最优路线；新的 Power Asymmetry 只能从新世界已经独立成立的真实机会中获得。
+
+真实模型 A/B（普通玄幻 Ch120 + 多世界 Ch80）比较了“单 Sol 全包”与分权路线：单 Agent 两个 Case 都没有获胜，最典型失败是把世界材料、岗位、奖励和人物课程做成当前主角的钥匙孔。最终 production 采用：**独立 World Expansion + 可选独立 Human Development + deterministic Current Character + Sol Re-Collision**。这类 Agent 只在长篇边界运行，不进入每章链。
+
+Story Refresh 自己也只规划当前新 World Horizon，并继续输出下一次 `World Horizon Handoff`；它不会因为进入第二轮规划就重新一次性预写全书剩余世界。
+
+---
+
 ### Growth Genome：整理，不创造
 
 Growth Genome 是投影和记忆工具，不是创意权威。
@@ -364,6 +415,8 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - Future 10 的逐章具体事件；
 - 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
 - **Story Program execution, not rescheduling**：Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势成长、后续新 Asymmetry 获得与复合；Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略；
+- **Forward Authority after refresh**：开书 Outline 读取 `CHARACTER.md + T0 + WORLD_VISION.md`；周期性 Story Refresh 后，Outline 改读 deterministic `CURRENT_CHARACTER.md + Effective World（Root + 已批准 Expansion）`，不能拿 Chapter 1 的人物状态继续规划 Chapter 200；
+- **World Horizon Handoff 是前向边界**：如果批准 Story Program 的 Handoff 会在当前中期窗口 / Future 10 内触发，Outline 只排到触发章就停止。剩余章数不补占位，不自行发明下一大陆、下一副本或新规则；先完成 World Expansion / Current Character / Story Refresh，再生成新的 Outline；
 - **Block Delta**：每块只记录相对本块开始真实改变的 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State，没变化的维度省略，上一块已经发生的变化不能重复包装成新 Delta；
 - **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实；Outline 在 `## 2. 世界观结构` 内用一个很短的 `Reader Release Map` 保存当前窗口里值得显式调度的首次释放，格式 `第N章｜触发：具体 World fact`，不是每章 KPI。未来仍作为 discovery / reveal 的答案不得提前排入 Map；只能先释放不回答谜底的公共背景。明显陌生/架空世界的第1章若 World 与前3章确实提供多类相关公共事实，默认把力量/当前与下一档 ruler、生活危险/共同常识、其它确属 World 的社会位置/价值物拆成 2—3 条 Public Common-Knowledge Release；下一档若有现实 benchmark，同时写能力效果与社会含义。**具名机会价值不混进 World Release**：若 Story Program / 当前剧情块已批准机会名与公开价值，但 Future 10 单章条目只剩泛化“试场前训练 / 争取机会”，Director runtime 只在当章已指向同一机会时，从当前剧情块确定性恢复一条“具体机会名 + 当前已知价值”；不新增回报、不提前宣布结果。**World Entry 在人物真正跨过门槛的当章释放**；重要 named 势力、地点、Rival、传承或高价值机会第一次进入时保留最短欲望与尺度锚点。Chapter Runtime 按章读取，再从 WORLD AUTHORITY 取对应事实；开篇同时建立最低生活世界位置与必要 ruler。不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
 - **Ruler = Compression**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落。若本章真实跨过已经介绍过的公开档位，结果处直接命名新档位一次，不让读者从本地术语或现象自己换算；
@@ -378,6 +431,7 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 把每个锚点拆成“观察、分析、验证、执行”；
 - 重新发明 Story Program；
 - 临时重写 World Vision 的力量尺度、身份基础逻辑或核心能力兼容边界；
+- 越过尚未执行的 World Horizon Handoff 替未知下一世界写具体设定、奖励或长期 Power；
 - 把远期升格强塞进固定百章窗口。
 
 #### 为什么需要故事锚点
@@ -510,10 +564,13 @@ Primary 为了保持注意力集中，只吃 Director Contract、Curated Context
 - Open Promises；
 - 必要的关系、资产和主动目标变化。
 
+`PERSISTENT CANON` 在真实需要时维护少量语义小节：`Power / Capability`、`Active Relationships`、`Identity / Access`、`Knowledge / Enemy State`、`World State`、`Tracked Assets`。这不是新数据库：只有以后仍会改变选择的事实才留下。`Power / Capability` 承载后续 Power Delta；`World State` 只承载已经发生、未来 protagonist-blind World Expansion 需要知道的世界级变化。
+
 #### 不负责
 
 - 判断正文写得好不好；
 - 重新解释人物动机；
+- 从最近几章行为推断 Human Development；
 - 修改规划；
 - 补写正文中没有发生的事实。
 
@@ -534,13 +591,23 @@ State Extraction 越轻越好，优先使用更快、更便宜的模型，只要
 
 Review 只调整未来计划，不自动重写已完成正文，也不推翻作者已经批准的核心 Fantasy。
 
+若当前 Story Program 的 `World Horizon Handoff` 已经触发、或会在下一批中触发，Review 只规划到触发章即停止；下一动作是 `World Expansion → Current Character → Story Refresh → Outline`。Review 不从侧门替未知下一世界补满十章。
+
 ---
 
 ## 4. 权威与批准边界
 
 创意链的权威顺序是：
 
+开书时：
+
 `作者明确要求 > 已批准 World Vision > 已批准 Power / Human（Character）> 已批准 Story Program > Outline > Director > Writer`
+
+进入长期向前演化后：
+
+`作者明确要求 > World Root + 已批准 Forward World Expansions > Current Character（Frozen Origins + 已发生 Delta）> 已批准 Refresh Story Program > Outline > Director > Writer`
+
+`CURRENT_CHARACTER.md` 是确定性投影，不高于其来源 Canon / Frozen Origins；World Expansion 只对 `effective_from` 之后生效。已完成章节事实永远不会因为新 World / 新 Program 被回写。
 
 模型生成、模型选择和作者编辑本身都不等于批准。作者明确批准才进入下一层权威链。
 
@@ -609,7 +676,7 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 
 不要首先问“Writer 为什么写差了”，而是沿链条找第一次语义坍缩的位置：
 
-`World Vision → Power / Human → Character → Story Program → Outline → Director → Curator → Writer`
+`World Root / Expansion → Power / Human / Current Character → Story Program / Refresh → Outline → Director → Curator → Writer`
 
 例如“看见别人看不见的路”最后变成承重、塌方、搬运：
 
@@ -632,6 +699,8 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 
 即 4 个主要生成调用 + 1 个轻量状态抽取，不默认运行 Specialist / Integrator。Reviser 的存在是为了把“Primary 窄上下文”和“远端高权威准确性”解耦，不是为了再写一次全文。
 
+Long-form Evolution 不进入每章成本。World Expansion 只在真实 World Horizon / 新独立副本入口运行；Human Development 更低频且允许 `NONE`；Current Character 纯确定性；Story Refresh 只在扩世界后使用 Sol high 做一次高杠杆 Re-Collision。这里允许增加少量周期 Agent，因为 A/B 显示 fresh-context 分权明显优于单 Agent 全包，但不把它们升级成每章 Reviewer/Coordinator。
+
 确定性工作优先本地完成：
 
 - Index-first context prefetch；
@@ -650,9 +719,13 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 | 阶段 | 默认模型 | GBrain | 说明 |
 |---|---|---|---|
 | World Vision | GPT-5.6 Luna high | **ON，固定 1 条 Coordinate Reference + 最多 3 条 creative inspiration** | protagonist-blind World；固定坐标参考不占 creative 名额，不读取未来 Power/Human |
+| World Expansion | GPT-5.6 Luna high | **ON，World-only craft + Coordinate Reference** | 低频、protagonist-blind；只向前扩当前 World Horizon；不读 Current Character / Power Stack / Human / Future Story |
 | Power Seed | GPT-5.6 Luna high | **ON，固定 1 条 Naming Craft Reference + Power lane 小 bundle** | 只看 POWER_BASELINE；决定 growth grammar，不看 Human/Story Opportunities；固定命名参考不占 creative 名额 |
 | Human Seed | GPT-5.6 Luna high | **ON，Human lanes，最多 3 条** | Appetite / Behavior / Relationship 各最多 1 条；不看 Power/named Story Opportunities |
+| Human Development | GPT-5.6 Luna high | **OFF** | 可选慢时钟；只看 Frozen Human + 已发生 Canon；允许 `NONE`，不看未来 World / Story |
+| Current Character | deterministic | OFF | 合并 Frozen Origins + 已发生 Power/Human/关系/身份/资产/知识，不调用 LLM |
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Collision + long-form causality；最高杠杆长期结构节点 |
+| Story Refresh | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Effective World × Current Character 的周期性 fresh Re-Collision；只规划当前新 World Horizon |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |
 | Director | GPT-5.6 Luna high | 章节相关精选上下文 | Balanced 默认；若优先最低延迟可切 Terra high |
 | Curator | GPT-5.6 Luna high | raw GBrain OFF；Index-first + Scene Skill v2 compact Catalog | 编译短 `Scene Prose Projection`，允许 `NONE`；若优先更短可切 Terra medium |

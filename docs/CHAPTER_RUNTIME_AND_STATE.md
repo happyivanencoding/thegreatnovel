@@ -12,7 +12,9 @@ Authority Reviser 是默认 `curator_primary` 的固定正文修订节点；Spec
 
 章节 Runtime 默认不直接读取 raw GBrain。GBrain 对章节层的影响只通过已批准的 Story Program / Outline，以及离线深蒸馏后的 source-blind Scene Deep Craft 间接进入；原著 evidence 不进入章节模型。当前 Scene Skill v2 冻结为 **24 个 Primary + 3 个不进 Router 的 Shared Reference Lens**；Authority Reviser 目前只有 `social_bargain_decision` 与 `relationship` 两张 Skill 开放短 `Revision Watch`，其余 22 张为 `NONE`。
 
-已批准 `WORLD_VISION.md` 仍是一等世界事实权威，不由 Outline 的 `BOOK §2` 摘要替代。Runtime 会把它确定性裁成不含 named 大事件 / 未解谜底的 `WORLD AUTHORITY`；Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive、与该章实际事件相交的首次释放；未来仍作为 reveal 的答案不能提前排入 Map。Runtime 按当前章读取该条目，再从 WORLD AUTHORITY 做 bounded prefetch。Director 不读取完整 World，Curator 不重做 release 选择，Primary 也不自行选择世界资料。
+已批准 `WORLD_VISION.md` 仍是一等 World Root，不由 Outline 的 `BOOK §2` 摘要替代。长期进入新 World Horizon 后，Runtime 组合 `World Root + 当前章已生效的 Forward World Expansions`，再确定性裁成安全 `WORLD AUTHORITY`。Expansion 只投影公共现实、力量/身份/价值尺度、公开地点/势力和具体价值物；世界人物未公开欲望、隐藏行动、未知边界与未来 reveal 不因存在于 Expansion 就直接进入 Writer。`scope=instance` 只在自己的 `Effective From/Until` 章节窗口生效，离开副本后 Local World 自动退场；跨副本留下的能力、物品、关系、知识与 Meta consequence 继续由 Canon 承载。
+
+Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive、与该章实际事件相交的首次释放；未来仍作为 reveal 的答案不能提前排入 Map。Runtime 按当前章读取该条目，再从 WORLD AUTHORITY 做 bounded prefetch。Director 不读取完整 World，Curator 不重做 release 选择，Primary 也不自行选择世界资料。
 
 ## 节点职责
 
@@ -58,6 +60,17 @@ Reader Release 的“存在”与“清楚兑现”分开判断：开篇公共�
 
 只从最终正式正文提取已经发生的事实，不读取 GBrain，不把计划、推测或参考机制写进 Canon。社会反应本身不自动进入长期状态：只有某个观察者/圈层因直接目击、专业推断或二手来源形成了会继续改变后续选择的稳定知识/误解，并已经导致关系、资源、敌意、战术、准入或信息流变化时，才把“谁知道/相信什么、仍不知道什么、因此持续怎么做”写入普通 Canon；一次性惊讶或短期 Ruler Calibration 不建额外 Disclosure Ledger。默认 `curator_primary` 下必须从 Run Ledger 的 `authority_reviser` / `integrator` `final_source` 重新读取正文；Primary Draft 不得直接进入 State。
 
+State Extraction 还为长篇 Forward Evolution 提供**已经发生的原料**，但不新增一个大数据库。`PERSISTENT CANON` 仅在真实需要时维护：
+
+- `Power / Capability`：后续已获得/证明的 Power Delta、身体变化、兵器权限与关键边界；Frozen Power Core 不在这里重写；
+- `Active Relationships`：仍会改变选择的关系状态；
+- `Identity / Access`：仍会改变待遇/入口的长期身份；
+- `Knowledge / Enemy State`：确认知识、重要误解与持续敌我状态；
+- `World State`：已经发生、且未来 protagonist-blind World Expansion 需要知道的世界级变化；不得写主角私人欲望或“下一世界应该给什么”；
+- `Tracked Assets`：仍有长期选择价值的持有/位置/状态。
+
+**State Extraction 不判断 Human Development。** 当前欲望、关系变近、连续几章救人/负责都先留在 State；只有周期性的 Human Development 阶段基于更长历史才能判断 Stable Choice Bias 是否真的向前变化。
+
 ## Canon Memory
 
 新书第一次进入 Chapter Runtime 时，Outline 提供的 Initial State 必须是严格的 **T0 snapshot**：只包含 Chapter 1 第一场事件发生前已经成立的事实。Outline 中刚刚规划出的 Future 10 / 中期剧情块结果仍是 Plan / Open Promises，不能因为“已被规划”而提前成为 Canon。
@@ -80,6 +93,8 @@ State Delta 只提出：
 
 State Delta 不改 BOOK Contract、计划或正文；应用状态更新时只替换 `# 当前状态、未兑现承诺与作者备注` 区块，前面的总体设计、中期规划和 Future 10 必须逐字保留，不能通过 parse → recompose 顺带重写。只有作者显式批准后才应用状态更新。
 
+`CURRENT_CHARACTER.md` 不是章节期的新全量上下文，也不取代 Canon。它只在长篇规划边界按需从 Frozen Origins + 当前 Canon + 已批准 Human Development 确定性编译；Canon 一更新，已有 Current Character 会 stale。普通章节继续使用 Frozen Core + bounded Canon，不因此增加每章 Prompt 负担。
+
 ## Run Ledger
 
 每章目录：`books/<book_id>/runs/chapter-NNNN/`。
@@ -93,6 +108,8 @@ Ledger 记录固定节点的 Prompt、Response、状态与最终采用来源，�
 `director → curator → primary → authority_reviser → opening / dialogue / action / emotion → integrator → state_delta`
 
 在默认 `curator_primary` 中，`authority_reviser` 必跑，Specialist 与 Integrator 默认 `skipped`；需要 repair 时只能在 Reviser 完成后显式激活。历史已完成 Run 不被新节点追溯改写；新/未完成 production Run 必须经过 Reviser。失败节点重试复用已保存 Prompt，不重跑无关上游；上游变化只让真实依赖的下游变为 `stale`。
+
+Forward Evolution 继续遵守这条原则：World Root Rewrite 会按原依赖链使未来全面 stale；World Expansion 只影响 `effective_from` 之后已经存在的未来 Run，不杀死 Expansion 之前已经准备好的 Run；Human Development / Current Character / Refresh Story 只影响未来。已完成章节正文与历史 State 永远受保护。
 
 ## 实现边界
 

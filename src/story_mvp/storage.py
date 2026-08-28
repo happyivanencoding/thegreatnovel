@@ -6,6 +6,13 @@ from pathlib import Path
 from typing import Any
 
 from .character_seeds import compose_character_card, split_human_seed_authorities
+from .long_form_evolution import (
+    CURRENT_CHARACTER_FILENAME,
+    HUMAN_DEVELOPMENT_DIR,
+    WORLD_EXPANSION_DIR,
+    compile_current_character,
+    extract_world_horizon_handoff,
+)
 from .prompts import (
     DEFAULT_PROMPT_TEMPLATES,
     compact_open_promises,
@@ -365,8 +372,200 @@ def read_creative_payload(book_id: str, workspace: Path) -> dict[str, Any]:
         },
         **contents,
         **auxiliary,
+        **read_long_form_evolution_payload(directory),
+        "world_horizon_handoff": extract_world_horizon_handoff(contents["proposal"]),
     }
     return payload
+
+
+def _evolution_files(directory: Path, folder: str, prefix: str) -> list[Path]:
+    root = directory / folder
+    if not root.is_dir():
+        return []
+    return sorted(path for path in root.glob(f"{prefix}-*.md") if path.is_file())
+
+
+def _read_evolution_collection(directory: Path, folder: str, prefix: str) -> str:
+    return "\n\n".join(
+        path.read_text(encoding="utf-8").strip()
+        for path in _evolution_files(directory, folder, prefix)
+        if path.read_text(encoding="utf-8").strip()
+    ).strip()
+
+
+def read_long_form_evolution_payload(directory: Path) -> dict[str, str]:
+    current_path = directory / CURRENT_CHARACTER_FILENAME
+    return {
+        "world_expansions": _read_evolution_collection(
+            directory, WORLD_EXPANSION_DIR, "expansion"
+        ),
+        "human_development": _read_evolution_collection(
+            directory, HUMAN_DEVELOPMENT_DIR, "delta"
+        ),
+        "current_character": (
+            current_path.read_text(encoding="utf-8") if current_path.is_file() else ""
+        ),
+    }
+
+
+def _completed_chapter_from_book(directory: Path) -> int:
+    book = (directory / "BOOK.md").read_text(encoding="utf-8")
+    status = parse_book_sections(book)["status"]
+    match = re.search(r"当前已完成第\s*(\d+)\s*章", status)
+    return int(match.group(1)) if match else 0
+
+
+def _strip_model_heading(content: str, heading: str) -> str:
+    lines = content.strip().splitlines()
+    if lines and lines[0].strip().startswith(heading):
+        lines = lines[1:]
+    return "\n".join(lines).strip()
+
+
+def approve_world_expansion(
+    book_id: str,
+    content: str,
+    workspace: Path,
+    *,
+    scope: str,
+    effective_from: int,
+    effective_until: int = 0,
+    source: str = "author_approved",
+) -> dict[str, Any]:
+    """Adopt one immutable forward World expansion without rewriting the root World."""
+
+    if scope not in {"macro", "instance"}:
+        raise ValueError("World Expansion scope 必须是 macro 或 instance")
+    directory = require_book(book_id, workspace)
+    completed = _completed_chapter_from_book(directory)
+    if effective_from <= completed:
+        raise ValueError(
+            f"World Expansion 必须向前生效：当前已完成第{completed}章，effective_from 必须更大"
+        )
+    if effective_until and effective_until < effective_from:
+        raise ValueError("World Expansion 的 effective_until 不能早于 effective_from")
+    body = _strip_model_heading(content, "# WORLD EXPANSION")
+    if not body:
+        raise ValueError("World Expansion 内容不能为空")
+    folder = directory / WORLD_EXPANSION_DIR
+    folder.mkdir(exist_ok=True)
+    existing = _evolution_files(directory, WORLD_EXPANSION_DIR, "expansion")
+    index = len(existing) + 1
+    old_collection = _read_evolution_collection(directory, WORLD_EXPANSION_DIR, "expansion")
+    text = "\n".join(
+        (
+            f"# WORLD EXPANSION {index:04d}",
+            f"Scope: {scope}",
+            f"Effective From Chapter: {effective_from}",
+            f"Effective Until Chapter: {effective_until}",
+            "",
+            body,
+        )
+    ).strip() + "\n"
+    target = folder / f"expansion-{index:04d}.md"
+    target.write_text(text, encoding="utf-8")
+    new_collection = _read_evolution_collection(directory, WORLD_EXPANSION_DIR, "expansion")
+    from .workflow_state import record_content_change
+
+    record_content_change(
+        directory,
+        "evolution.world",
+        old_collection,
+        new_collection,
+        source=source,
+    )
+    return {
+        "status": "approved",
+        "file": str(target.relative_to(directory)),
+        "effective_from": effective_from,
+        "effective_until": effective_until,
+        "scope": scope,
+    }
+
+
+def approve_human_development(
+    book_id: str,
+    content: str,
+    workspace: Path,
+    *,
+    source: str = "author_approved",
+) -> dict[str, Any]:
+    """Adopt a source-backed stable Human delta; NONE creates no fake development."""
+
+    directory = require_book(book_id, workspace)
+    body = _strip_model_heading(content, "# HUMAN DEVELOPMENT DELTA")
+    if not body or body.strip().upper() == "NONE":
+        return {"status": "no_change", "file": ""}
+    completed = _completed_chapter_from_book(directory)
+    folder = directory / HUMAN_DEVELOPMENT_DIR
+    folder.mkdir(exist_ok=True)
+    existing = _evolution_files(directory, HUMAN_DEVELOPMENT_DIR, "delta")
+    index = len(existing) + 1
+    old_collection = _read_evolution_collection(directory, HUMAN_DEVELOPMENT_DIR, "delta")
+    text = "\n".join(
+        (
+            f"# HUMAN DEVELOPMENT DELTA {index:04d}",
+            f"Evidence Through Chapter: {completed}",
+            f"Effective From Chapter: {completed + 1}",
+            "",
+            body,
+        )
+    ).strip() + "\n"
+    target = folder / f"delta-{index:04d}.md"
+    target.write_text(text, encoding="utf-8")
+    new_collection = _read_evolution_collection(directory, HUMAN_DEVELOPMENT_DIR, "delta")
+    from .workflow_state import record_content_change
+
+    record_content_change(
+        directory,
+        "evolution.human_development",
+        old_collection,
+        new_collection,
+        source=source,
+    )
+    return {
+        "status": "approved",
+        "file": str(target.relative_to(directory)),
+        "evidence_through": completed,
+        "effective_from": completed + 1,
+    }
+
+
+def refresh_current_character(book_id: str, workspace: Path) -> dict[str, Any]:
+    """Compile the current Character deterministically; no future World is visible here."""
+
+    directory = require_book(book_id, workspace)
+    book = (directory / "BOOK.md").read_text(encoding="utf-8")
+    status = parse_book_sections(book)["status"]
+    completed = _completed_chapter_from_book(directory)
+    character = _read_creative_text(directory, "character_card")
+    if not character.strip():
+        raise ValueError("刷新 Current Character 前必须先有已批准 CHARACTER.md")
+    evolution = read_long_form_evolution_payload(directory)
+    new_content = compile_current_character(
+        character_card=character,
+        status_text=status,
+        human_development=evolution["human_development"],
+        chapter_number=completed + 1,
+    )
+    target = directory / CURRENT_CHARACTER_FILENAME
+    old_content = target.read_text(encoding="utf-8") if target.is_file() else ""
+    target.write_text(new_content, encoding="utf-8")
+    from .workflow_state import record_content_change
+
+    record_content_change(
+        directory,
+        "evolution.current_character",
+        old_content,
+        new_content,
+        source="deterministic_refresh",
+    )
+    return {
+        "status": "refreshed",
+        "file": CURRENT_CHARACTER_FILENAME,
+        "compiled_through": completed,
+        "content": new_content,
+    }
 
 
 def write_creative_artifact(

@@ -2,7 +2,7 @@
 
 状态：**FROZEN / production**
 
-> 项目执行规则以根目录 `PROJECT_RULES.md` 为唯一长期权威。本文只定义当前新书的上游创意权威与信息边界，不新增 Agent、Reviewer、Scorer 或审批门来重复执行这些原则。
+> 项目执行规则以根目录 `PROJECT_RULES.md` 为唯一长期权威。本文定义开书与长篇向前演化的创意权威/信息边界。默认不新增每章 Reviewer、Scorer 或审批门；只有真实 World Horizon 才运行低频 World Expansion / Story Refresh，Human Development 还是更慢的可选时钟。
 
 ## 1. Production 链
 
@@ -15,11 +15,23 @@
   → deterministic CHARACTER.md
   → Story Program（第一次完整 Collision）
   → Outline
+  → chapters / Canon
+
+到真实 World Horizon 后：
+
+Story Program Handoff
+  → protagonist-blind World Expansion
+  → 可选 Human Development
+  → deterministic CURRENT_CHARACTER.md
+  → Story Refresh（Periodic Re-Collision）
+  → 作者批准刷新后的 Story Program
+  → Outline / chapters
 ```
 
 - **没有 production Fantasy Seed。**
 - Power Seed 与 Human Seed 是两份独立创意权威，但**不是两个审批门**；作者只批准一次 Character。
 - 核心去相关机制是 **fresh context + authority isolation**，不是必须使用不同模型。
+- Long-form Evolution 也遵守同一原则：创造新世界的上下文看不到当前主角；判断人物长期发展的上下文看不到未来世界；只有 Re-Collision 同时看到二者。
 
 ## 2. World Vision
 
@@ -28,6 +40,18 @@ World Vision 负责一个即使换掉未来主角也仍值得写的世界，包�
 它不负责主角欲望、Biography、特殊能力、命运、第一次爽点或终局使命。完整 World Canon 可以同时包含 World Reality 与 Story Opportunities，但下游可见性不同。
 
 Reader-facing 世界规则先写具体作用，再命名：基础力量应能用 1—3 句普通话说明来源、能做什么、怎样变强和怎样失败；已有一到少数互补力量轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成总机制。**Small Grammar 不等于 Small World**：World 主动让旧语法长新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外，并主动寻找 0—1 条成熟 Optional Secondary Fantasy Road；没有足够好的副轴就不造，也不预设未来主角一定会走。新词只给已经理解、会反复出现的对象贴短标签，不靠多个新词互相定义。“全新”优先改变力量因果与玩法，不要求回避境界、功法、兵器、异兽等清楚题材词。默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果；除非作者明确选择认知/概念系幻想，不把路径、定义、权限等抽象关系本身当作创新证明。
+
+### 2.1 World Root 与 Forward World Expansion
+
+`WORLD_VISION.md` 不再被理解为“开书时必须把 500 章所有具体世界写完”。它冻结世界根语法、当前可见世界、公共正常值和足够的上升余量。故事真正走到边界时，使用 append-only `world_expansions/expansion-NNNN.md` 向未来增加新世界层；旧 World Root 不被改写。
+
+- `scope=macro`：普通长篇进入新大陆、新文明、新力量圈层或更高社会/世界层；
+- `scope=instance`：多世界副本流的一次独立 Local World，可设置 `Effective Until Chapter`，离开后不再进入章节 World Authority；
+- Expansion 触发来自 Story Program 的 `World Horizon Handoff` / 实际 World Entry，不是固定百章税；
+- World Expansion 用 Luna high fresh context，只读 World Root、旧 Expansion、明确 `Canon → World State` 与 World-only craft；不读 Current Character、Power Stack、Human、关系、未来 Story；
+- Story Program 的 Handoff 只负责 orchestration，**不注入 World Agent**。这样当前主角的需求不会偷偷变成下一世界的设计要求。
+
+章节期不会把 Expansion 全文直接喂给 Writer；只投影已经批准的公共现实、力量/身份/价值尺度、公开地点/势力和具体价值物。世界人物的未公开欲望、正在发生的隐藏行动与未知边界仍留给 Story / Reader Release 决定何时进入正文。
 
 ## 3. Power Seed
 
@@ -42,6 +66,13 @@ Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个
 它负责：相关正常值/稀缺度、Power Asymmetry、核心幻想、正常修炼轴、异常掌握轴、高阶质变、永久边界、传奇力量状态。
 
 `Future Legend Image` 只用于候选审计，不进入 Canon。Power Seed 匿名，不负责姓名与个人身份，也只定义**开局 Core Asymmetry**；全书后续新非对称优势由 Story Program 通过真实获得加入。正常成长必须真实增强主角本人，异常不能只把修炼替换成更聪明的职业技能。
+
+因此长篇 Power Authority 是两层而不是重抽 Seed：
+
+- `Power Origin Core`：`CHARACTER.md` 中 Frozen Power，保存开局核心异常与根边界；
+- `Current Power Portfolio`：State Extraction 在 `PERSISTENT CANON → Power / Capability` 维护已经真实获得/证明的后续 Power、身体变化、兵器权限与 Advantage Stack。
+
+后期拿到神兵、传承或第二种非对称优势，只更新 Current Power；不把它回填成“主角从一开始就是这个能力”。
 
 ## 4. Human Seed
 
@@ -63,6 +94,20 @@ Human Seed 只读取确定性的 `LIFE_CONTEXT` 与 Human GBrain craft；对 Pow
 - `Character Hook` 只进入 `CHARACTER_AUDITION.md`，用于候选辨识，不绑定前三章，也不进入 Canon。
 - `CHARACTER_INITIAL_STATE.md` 只表示 T0；章节开始后，BOOK Canon + State Delta 链仍是唯一长期运行状态权威。
 
+### 4.1 Human Development：Frozen Origin 不是永久静止
+
+Human 长期采用三层：`Frozen Human Origin → Current Human State → Human Development Delta`。Current State 正常承载当前欲望、关系和承诺；只有已经发生的长期历史足以证明 Stable Choice Bias 真正变化时，才运行独立 Luna high Human Development。
+
+Human Development：
+
+- 只读 Frozen Human、此前 Delta 与已发生 Canon；
+- 看不到 Future World / Story / Reward；
+- 可以输出 `NONE`，而且多数短周期都应该不改；
+- 只追加新的稳定例外、motive 权重变化或长期牵引，不删除人物过去；
+- 后期 Delta 按生效章节顺序约束未来，旧 Delta 仍作为人物历史保留。
+
+这不是每次 World Expansion 的必跑步骤。多世界副本可以连续换几个 Local World 而 Human Development 一次都不发生；只有人物真的活出了长期变化才写入。
+
 ## 5. Character：确定性组合
 
 `CHARACTER.md` 只是 Power Core + Human Core 的确定性合并，**没有 Character Composer LLM**。
@@ -71,6 +116,8 @@ Human Seed 只读取确定性的 `LIFE_CONTEXT` 与 Human GBrain craft；对 Pow
 
 编辑任一已选 Seed 会使 Character 及下游 Story/Outline stale，但不会重写 World。
 
+章节长期运行以后，另有一个按需生成的 deterministic `CURRENT_CHARACTER.md`。它把 Frozen Power/Human Origin 与 Canon 里的 Current Power、Current Human State、Human Development、关系、身份、知识、资产等已经发生事实编译成当前规划快照；不调用 LLM，不发明新事实，也不读取未来 World Expansion。Story Refresh 与 refreshed Outline 使用它，而普通章节 Writer 仍使用窄的 Frozen Core + Canon 投影，不把 Current Character 整份灌进每章上下文。
+
 ## 6. Story Program / Collision
 
 Story Program 是第一次同时看到完整 World、完整 Character、T0 State 与 Story GBrain / References 的阶段。
@@ -78,6 +125,8 @@ Story Program 是第一次同时看到完整 World、完整 Character、T0 State
 核心合同：**不要把碰撞消解成命中注定的适配。** World 与 Character 都是既定事实；Story Program 负责它们碰撞后的事件、关系、反制、后果、阶段发动机与长期因果，不能为主题整齐重写上游。
 
 权威与调度分开：Power Seed 决定开局 Core Asymmetry 的成长语法；Story Program 决定它怎样实现，并可通过真实获得加入新的 Power Asymmetry、让新旧优势发生复合。后续新 Asymmetry 继承同一 Reader-facing 边界：先写“以前做不到什么、现在具体多能做什么”，再决定是否需要短名；新名只压缩已经理解的能力。**成长是全书纵向不变量，不是每阶段升级税。**
+
+Story Program 只具体规划**当前已批准 World Horizon**，而不是开书时一次写死剩余 500 章。最后 1—2 个自然阶段若已经把当前世界层主要压力活透，就输出 `World Horizon Handoff`：可观察触发条件、`macro / instance` scope、为什么此时应该扩、以及哪些已发生事实必须 carry forward。它不能预写下一世界的宝物、能力、势力或针对当前主角 Build 的答案；Handoff 也不会注入 World Expansion Agent。
 
 Collision 可以补少量**非奠基性的过去经历、共同往事或旧事件**，让当前关系、局部性格反应或选择更自然，但：
 
@@ -91,11 +140,19 @@ Collision 可以补少量**非奠基性的过去经历、共同往事或旧事�
 
 高价值获得与纵向复利是全书原则，不是阶段字段税。默认采用 **AGGRESSIVE payoff** 偏置：因果已支持的主奖励真正落地；大胜可以自然连带奖金/招揽/入口，秘境可以有主目标外惊喜，大阶段可以同时带来据点、队伍、产业或长期收入。奖励数量本身不构成失败，只禁止无因果到账与同窗口近似奖励抹平真实牺牲。Power Asymmetry 要长期形成优势栈：旧优势保留，新优势通过故事加入，并出现单项做不到的复合玩法；不要求每阶段新增。结构质变少而重，但 Fantasy Surface 可以持续偏丰富。Story Program 还会主动检查 World 已经成立的成熟 Secondary Fantasy Axis；Human 真被它的作品、胜负、钱、身份、审美、人物或生活方式牵引时才投入，Human 不想走就留给世界/配角。显露新优势、新层级或意外复合时，现场已有懂行者/对手/同伴的惊讶与比较本身可以完成爽感；只有重新估价会改变后续行动或关系时才进一步写态度转变。反制只能从碰撞后的学习产生，敌人不能只为机械克制主角而出生。
 
+### 6.1 Story Refresh / Periodic Re-Collision
+
+World Expansion 被批准后，先 deterministic refresh `CURRENT_CHARACTER.md`，再由 Sol high 第一次看到 `Effective World × Current Character`。这是新的 Collision，不是旧 Story Program 自动向后延长：World 不为主角改写，人物也不为新世界重新优化。旧 Story Program 只保留仍未兑现且仍成立的长期因果；新 Power 只能从新世界已经独立成立的机会里真实获得。
+
+普通玄幻与多世界副本共用这一层：前者通常一次 Refresh 覆盖一个新的长篇世界层，后者可覆盖一个大型 instance / 一组相连副本。每次 Refresh 仍只规划当前新 World Horizon，并继续留下下一次 Handoff。
+
 ## 7. Outline：执行编译，不重新调度
 
 Outline 把已批准 Story Program 编译成当前窗口的具体 Story Anchors，不是第二个 Story Program。
 
 每块只在 `Block Delta` 中记录**相对本块开始真正变化的维度**；没有变化就省略。关系/世界驱动的块可以完全没有 Power、Possession 或新地图；反过来，Story Program 已安排在当前窗口的真实成长又不能被省略。
+
+开书 Outline 使用 `WORLD_VISION.md + CHARACTER.md + T0`；Story Refresh 后使用 `Effective World + CURRENT_CHARACTER.md`。如果 `World Horizon Handoff` 在当前窗口 / Future 10 内触发，Outline 只排到触发章即停止，不为凑十章或百章跨过 Authority 边界发明未知下一世界。
 
 不得为了填表制造微升级、填充奖励、新权限或新地图。
 
@@ -104,9 +161,12 @@ Outline 把已批准 Story Program 编译成当前窗口的具体 Story Anchors�
 GBrain retrieval 与 generation prompt 使用同一 authority 边界：
 
 - World lane：World craft；
+- World Expansion：World-only craft + Coordinate Reference；retrieval 层同样清空 Character / Story / BOOK 当前人物状态，保持 protagonist-blind；
 - Power lane：只读 `POWER_BASELINE`；
 - Human lane：只读 `LIFE_CONTEXT`，Appetite / Behavior / Relationship 各最多 1 条，总计最多 3 条，可为空；
+- Human Development：GBrain OFF，只根据 Frozen Human + 已发生 Canon；
 - Story lane：第一次允许 Full World + Character。
+- Story Refresh：允许少量长期 Story craft，但不得覆盖已冻结 Effective World / Current Character。
 
 Human 三个 lane 是**检索预算，不是人格必填维度**；只接受对应 lane 的 ACTIVE craft，REFERENCE_ONLY / HOLD 不为凑数补位，同一卡不占两个 lane。Power/Human 都只接收小型 inspiration bundle。Human GBrain 用来扩展欲望、行为与具体关系的判断能力，不做人格分类或人物类型菜单。
 
@@ -118,17 +178,27 @@ Human 三个 lane 是**检索预算，不是人格必填维度**；只接受对�
 
 ## 10. 审批与 stale graph
 
-批准点只有：
+开书创意批准点仍只有：
 
 1. World Vision；
 2. Character（Power + Human 一次批准）；
 3. Story Program。
 
-依赖方向：
+Long-form Evolution 不把这些拆成新的常驻开书审批链，但 forward Authority 必须显式采用：World Expansion 候选只有作者点击“批准向前扩展”后才生效；Human Development 候选只有作者批准后才进入人物长期权威（`NONE` 不产生 Delta）；Story Refresh 仍复用现有 Story Program 的保存/批准流程。模型生成不自动写 Authority。
+
+开书 Rewrite 依赖方向：
 
 `World → Power/Human → Character → Story Program → BOOK/Outline → chapters`
 
-下游修改永不反写上游权威。World 修改会 stale Power/Human 及以下；Power 或 Human 修改会 stale Character 及以下，但不 stale World。
+下游修改永不反写上游权威。**World Root Rewrite** 会 stale Power/Human 及以下；Power 或 Human Seed 修改会 stale Character 及以下，但不 stale World。
+
+Forward Evolution 使用另一条 stale 语义：
+
+- `World Expansion` 不 stale Power/Human/Character Origins，只 stale Story Program / BOOK / Outline 与 `effective_from` 之后已经存在的未来 Run；
+- Canon 更新会使已存在 `CURRENT_CHARACTER.md` stale；
+- Human Development 会 stale Current Character 与未来 Story / Outline；
+- refresh Current Character 会 stale未来 Story / Outline；
+- 已完成章节正文、State 与历史 Canon 受保护，不因后期扩世界被回写。
 
 ## 11. 显式匿名 Human Prototype
 

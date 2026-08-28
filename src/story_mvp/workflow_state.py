@@ -32,7 +32,12 @@ BOOK_ARTIFACT_KEYS = (
     "book.future_10",
     "book.canon_state",
 )
-STATIC_ARTIFACT_KEYS = CREATIVE_ARTIFACT_KEYS + BOOK_ARTIFACT_KEYS
+LONG_FORM_ARTIFACT_KEYS = (
+    "evolution.world",
+    "evolution.human_development",
+    "evolution.current_character",
+)
+STATIC_ARTIFACT_KEYS = CREATIVE_ARTIFACT_KEYS + BOOK_ARTIFACT_KEYS + LONG_FORM_ARTIFACT_KEYS
 
 CREATIVE_FILES = {
     "creative.world_vision": "WORLD_VISION.md",
@@ -65,6 +70,9 @@ ARTIFACT_LABELS = {
     "book.long_plan": "中期规划",
     "book.future_10": "未来十章",
     "book.canon_state": "记忆状态",
+    "evolution.world": "向前世界拓展",
+    "evolution.human_development": "人物长期发展",
+    "evolution.current_character": "当前人物权威",
 }
 
 _CHAPTER_ARTIFACT_PATTERN = re.compile(r"^chapter\.(\d+)\.(run|body|state_delta)$")
@@ -333,7 +341,7 @@ def _mark_future_runs_stale(
 
 
 def _initialize_state(book_directory: Path) -> dict[str, Any]:
-    from .storage import parse_book_sections
+    from .storage import parse_book_sections, read_long_form_evolution_payload
 
     state = _new_state()
     for artifact, filename in CREATIVE_FILES.items():
@@ -351,6 +359,20 @@ def _initialize_state(book_directory: Path) -> dict[str, Any]:
     sections = parse_book_sections(book_content)
     for artifact, section in BOOK_SECTIONS.items():
         content = sections[section]
+        _ensure_entry(
+            state,
+            artifact,
+            revision=1 if content.strip() else 0,
+            status=_content_status(content),
+            source="legacy" if content.strip() else "empty",
+        )
+
+    evolution = read_long_form_evolution_payload(book_directory)
+    for artifact, content in (
+        ("evolution.world", evolution["world_expansions"]),
+        ("evolution.human_development", evolution["human_development"]),
+        ("evolution.current_character", evolution["current_character"]),
+    ):
         _ensure_entry(
             state,
             artifact,
@@ -387,7 +409,7 @@ def _initialize_state(book_directory: Path) -> dict[str, Any]:
 def _refresh_state(state: dict[str, Any], book_directory: Path) -> bool:
     """同步真实文件/manifest 的存在与状态，不推断内容语义。"""
 
-    from .storage import parse_book_sections
+    from .storage import parse_book_sections, read_long_form_evolution_payload
 
     before = copy.deepcopy(state)
     artifacts = state.setdefault("artifacts", {})
@@ -412,6 +434,16 @@ def _refresh_state(state: dict[str, Any], book_directory: Path) -> bool:
         entry = _ensure_entry(state, artifact)
         if entry.get("status") != "STALE":
             entry["status"] = _content_status(sections[section])
+            entry["freshness"] = "fresh"
+    evolution = read_long_form_evolution_payload(book_directory)
+    for artifact, content in (
+        ("evolution.world", evolution["world_expansions"]),
+        ("evolution.human_development", evolution["human_development"]),
+        ("evolution.current_character", evolution["current_character"]),
+    ):
+        entry = _ensure_entry(state, artifact)
+        if entry.get("status") != "STALE":
+            entry["status"] = _content_status(content)
             entry["freshness"] = "fresh"
     revisions = _all_revision_inputs(state)
     observed_runs = {number: manifest for number, _, manifest in _manifest_files(book_directory)}
@@ -528,6 +560,8 @@ def _apply_content_change(
             )
         )
     elif artifact == "book.canon_state":
+        if "evolution.current_character" in state["artifacts"]:
+            _mark_stale(state, "evolution.current_character", artifact)
         current_revision = int(entry["revision"])
         for number, _, _ in _manifest_files(book_directory):
             if number in _protected_chapters(book_directory):
@@ -541,6 +575,45 @@ def _apply_content_change(
                 _mark_stale(state, delta_key, artifact)
                 _mark_run_stale(book_directory, number)
                 affected.append(run_key)
+    elif artifact == "evolution.world":
+        for downstream in (
+            "creative.story_program",
+            "book.design",
+            "book.long_plan",
+            "book.future_10",
+        ):
+            _mark_stale(state, downstream, artifact)
+        from .long_form_evolution import parse_world_expansions
+
+        entries = parse_world_expansions(new_content)
+        effective_from = entries[-1].effective_from if entries else 1
+        affected.extend(
+            _mark_future_runs_stale(
+                state,
+                book_directory,
+                artifact,
+                after=max(0, effective_from - 1),
+            )
+        )
+    elif artifact == "evolution.human_development":
+        for downstream in (
+            "evolution.current_character",
+            "creative.story_program",
+            "book.design",
+            "book.long_plan",
+            "book.future_10",
+        ):
+            _mark_stale(state, downstream, artifact)
+        affected.extend(_mark_future_runs_stale(state, book_directory, artifact))
+    elif artifact == "evolution.current_character":
+        for downstream in (
+            "creative.story_program",
+            "book.design",
+            "book.long_plan",
+            "book.future_10",
+        ):
+            _mark_stale(state, downstream, artifact)
+        affected.extend(_mark_future_runs_stale(state, book_directory, artifact))
     return affected
 
 
@@ -699,12 +772,16 @@ def _dependents_for_impact(book_directory: Path, artifact: str) -> list[str]:
         allowed = set(_future_chapter_entries(section))
         return [chapter_artifact_key(number, "run") for number in _existing_future_run_numbers(book_directory, allowed=allowed)]
     if artifact == "book.canon_state":
-        return [
+        result = [
             chapter_artifact_key(number, "run")
             for number in _existing_future_run_numbers(book_directory)
             if int(state["artifacts"].get(chapter_artifact_key(number, "run"), {}).get("source_revisions", {}).get("book.canon_state", 0))
             < int(state["artifacts"].get("book.canon_state", {}).get("revision", 0))
         ]
+        current = state["artifacts"].get("evolution.current_character", {})
+        if int(current.get("revision", 0)) > 0:
+            result.insert(0, "evolution.current_character")
+        return result
     static = {
         "creative.world_vision": ["creative.power_seed", "creative.human_seed"],
         "creative.power_seed": ["creative.character_card"],
@@ -713,6 +790,9 @@ def _dependents_for_impact(book_directory: Path, artifact: str) -> list[str]:
         "creative.story_program": ["book.design"],
         "book.design": ["book.long_plan"],
         "book.long_plan": ["book.future_10"],
+        "evolution.world": ["creative.story_program"],
+        "evolution.human_development": ["evolution.current_character"],
+        "evolution.current_character": ["creative.story_program"],
     }
     return static.get(artifact, [])
 

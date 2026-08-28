@@ -23,7 +23,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from .character_context import project_world_reality
+from .character_context import project_effective_world_reality
 from .prompts import (
     CURRENT_STATE_HEADING,
     canon_memory_has_labels,
@@ -374,6 +374,7 @@ def build_chapter_context(
     book_content: str = "",
     character_card: str = "",
     world_vision: str = "",
+    world_expansions: str = "",
     current_long_block: str = "",
     previous_chapter_text: str = "",
     current_outline: str = "",
@@ -456,7 +457,13 @@ def build_chapter_context(
     growth_genome_compact = compact_growth_genome_for_chapter(book_content)
     return ChapterContextPacket(
         authority=MINIMAL_AUTHORITY_RULE,
-        world_authority=project_world_reality(world_vision) if world_vision.strip() else "",
+        world_authority=(
+            project_effective_world_reality(
+                world_vision, world_expansions, chapter_number
+            )
+            if world_vision.strip()
+            else ""
+        ),
         reader_release=extract_reader_release_for_chapter(book_content, chapter_number),
         book_contract=book_contract,
         chapter_mission=render_event_contract(current_outline),

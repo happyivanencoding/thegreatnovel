@@ -45,13 +45,16 @@ from .run_ledger import (
     skip_integrator_if_no_patches,
 )
 from .storage import (
+    approve_human_development,
     approve_character_artifact,
     approve_creative_artifact,
+    approve_world_expansion,
     create_book,
     list_books,
     read_chapter,
     read_book_payload,
     read_creative_payload,
+    refresh_current_character,
     replace_chapter,
     require_book,
     save_chapter,
@@ -79,6 +82,13 @@ class TextRequest(BaseModel):
     content: str = ""
 
 
+class WorldExpansionApproveRequest(BaseModel):
+    content: str
+    scope: Literal["macro", "instance"] = "macro"
+    effective_from: int = Field(ge=1)
+    effective_until: int = Field(default=0, ge=0)
+
+
 class OpenAIExecutorRequest(BaseModel):
     prompt: str = ""
     model: str = ""
@@ -104,9 +114,11 @@ class PromptTemplatesRequest(BaseModel):
 class GBrainContextRequest(BaseModel):
     mode: Literal[
         "world_vision",
+        "world_expansion",
         "power_seed",
         "human_seed",
         "idea",
+        "story_refresh",
         "outline",
         "director",
         "chapter_prep",
@@ -168,8 +180,11 @@ class PromptRequest(BaseModel):
     mode: Literal[
         "idea",
         "world_vision",
+        "world_expansion",
         "power_seed",
         "human_seed",
+        "human_development",
+        "story_refresh",
         "outline",
         "director",
         "chapter_prep",
@@ -193,11 +208,17 @@ class PromptRequest(BaseModel):
     book_content: str = ""
     creative_direction: str = ""
     world_vision: str = ""
+    world_expansions: str = ""
     power_seed: str = ""
     human_seed: str = ""
     prototype_id: str = ""
     character_card: str = ""
     character_initial_state: str = ""
+    human_development: str = ""
+    current_character: str = ""
+    evolution_scope: Literal["macro", "instance"] = "macro"
+    effective_from_chapter: int = Field(default=0, ge=0)
+    effective_until_chapter: int = Field(default=0, ge=0)
     creative_state: dict[str, Any] = Field(default_factory=dict)
     proposal_context: str = ""
     current_long_block: str = ""
@@ -533,9 +554,13 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
     values = payload.model_dump(exclude={"book_id", "creative_state"})
     if payload.book_id.strip():
         creative = read_creative_payload(payload.book_id, workspace_path())
+        if not values.get("book_content"):
+            values["book_content"] = read_book_payload(payload.book_id, workspace_path())["book_content"]
         values["creative_state"] = creative["creative_state"]
         if not values.get("world_vision"):
             values["world_vision"] = creative["world_vision"]
+        if not values.get("world_expansions"):
+            values["world_expansions"] = creative.get("world_expansions", "")
         if not values.get("power_seed"):
             values["power_seed"] = creative["power_seed"]
         if not values.get("human_seed"):
@@ -544,6 +569,10 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
             values["character_card"] = creative["character_card"]
         if not values.get("character_initial_state"):
             values["character_initial_state"] = creative["character_initial_state"]
+        if not values.get("human_development"):
+            values["human_development"] = creative.get("human_development", "")
+        if not values.get("current_character"):
+            values["current_character"] = creative.get("current_character", "")
         if not values.get("proposal_context"):
             values["proposal_context"] = creative["proposal"]
 
@@ -615,7 +644,17 @@ def _validate_state_delta_input(payload: PromptRequest) -> None:
 
 def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
     filtered = dict(values)
-    for key in ("power_seed", "human_seed", "prototype_id", "character_initial_state"):
+    for key in (
+        "power_seed",
+        "human_seed",
+        "prototype_id",
+        "character_initial_state",
+        "human_development",
+        "current_character",
+        "evolution_scope",
+        "effective_from_chapter",
+        "effective_until_chapter",
+    ):
         filtered.pop(key, None)
     return filtered
 
@@ -634,7 +673,37 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
                 prototype_id=payload.prototype_id.strip(),
             )
             values["gbrain_inspiration"] = prototype_bundle["result"]
-        split_mode = payload.mode in {"world_vision", "power_seed", "human_seed", "idea", "outline"}
+        if payload.mode == "story_refresh" and payload.book_id.strip():
+            snapshot = workflow_status(require_book(payload.book_id, workspace_path()))
+            current_entry = snapshot.get("artifacts", {}).get("evolution.current_character", {})
+            if current_entry.get("status") != "DONE" or current_entry.get("freshness") != "fresh":
+                raise ValueError("Story Refresh 前必须刷新 fresh CURRENT_CHARACTER.md")
+        proposal_state = values.get("creative_state", {}).get("proposal", {})
+        if (
+            payload.mode == "outline"
+            and payload.book_id.strip()
+            and isinstance(proposal_state, dict)
+            and proposal_state.get("status") == "author_approved"
+        ):
+            snapshot = workflow_status(require_book(payload.book_id, workspace_path()))
+            story_entry = snapshot.get("artifacts", {}).get("creative.story_program", {})
+            if story_entry.get("status") != "DONE" or story_entry.get("freshness") != "fresh":
+                raise ValueError("Outline 前必须先批准 fresh Story Program；当前 Story Program 已 stale 或未完成")
+            current_entry = snapshot.get("artifacts", {}).get("evolution.current_character", {})
+            if int(current_entry.get("revision", 0)) > 0 and (
+                current_entry.get("status") != "DONE" or current_entry.get("freshness") != "fresh"
+            ):
+                raise ValueError("Refreshed Outline 前必须先刷新 fresh CURRENT_CHARACTER.md")
+        split_mode = payload.mode in {
+            "world_vision",
+            "power_seed",
+            "human_seed",
+            "idea",
+            "outline",
+            "world_expansion",
+            "human_development",
+            "story_refresh",
+        }
         prompt = generate_split_prompt(**values) if split_mode else generate_prompt(**_planning_only_fields_removed(values))
 
     except FileNotFoundError as error:
@@ -782,6 +851,64 @@ def approve_character(book_id: str) -> dict[str, Any]:
 def approve_proposal(book_id: str) -> dict[str, Any]:
     try:
         return approve_creative_artifact(book_id, "proposal", workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/evolution")
+def get_long_form_evolution(book_id: str) -> dict[str, Any]:
+    try:
+        creative = read_creative_payload(book_id, workspace_path())
+        return {
+            "world_expansions": creative.get("world_expansions", ""),
+            "human_development": creative.get("human_development", ""),
+            "current_character": creative.get("current_character", ""),
+            "world_horizon_handoff": creative.get("world_horizon_handoff", ""),
+            "workflow": workflow_status(require_book(book_id, workspace_path())),
+        }
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/world-expansions/approve")
+def post_world_expansion_approve(
+    book_id: str, payload: WorldExpansionApproveRequest
+) -> dict[str, Any]:
+    try:
+        return approve_world_expansion(
+            book_id,
+            payload.content,
+            workspace_path(),
+            scope=payload.scope,
+            effective_from=payload.effective_from,
+            effective_until=payload.effective_until,
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/human-development/approve")
+def post_human_development_approve(book_id: str, payload: TextRequest) -> dict[str, Any]:
+    try:
+        return approve_human_development(
+            book_id, payload.content, workspace_path()
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/current-character/refresh")
+def post_current_character_refresh(book_id: str) -> dict[str, Any]:
+    try:
+        return refresh_current_character(book_id, workspace_path())
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:

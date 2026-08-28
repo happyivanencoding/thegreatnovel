@@ -45,18 +45,25 @@
 
 `作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
 
+长篇到达真实 `World Horizon` 后使用低频 forward loop：`Story Program Handoff → protagonist-blind World Expansion →（仅长期证据足够时）Human Development → deterministic CURRENT_CHARACTER.md → Sol Story Refresh / Re-Collision → 作者批准刷新后的 Story Program → Outline → 后续章节`。开书 World / Power / Human 是稳定 Origin，不要求一次写完 500 章所有具体世界与能力。
+
 - **没有 production Fantasy Seed。**
 - **没有 Character Composer LLM。** Power/Human 不做后验主题化调和。
 - 批准点保持紧凑：World Vision → Character（Power + Human 一次批准）→ Story Program。
+- Forward Authority 仍需显式采用：World Expansion 候选只有作者批准后生效；Human Development 可返回 `NONE`，只有作者批准的真实 Delta 才进入长期人物权威；Story Refresh 复用 Story Program 的现有保存/批准流程。模型生成不自动成为 Authority。
 
 ## 5. 默认模型与 GBrain 路由
 
 | 阶段 | 默认模型 | Reasoning | GBrain |
 |---|---|---:|---|
 | World Vision | GPT-5.6 Luna | high | ON：固定 1 条 Reader Coordinates Reference + 最多 3 条 creative inspiration |
+| World Expansion | GPT-5.6 Luna | high | ON：World-only craft + Coordinate Reference；protagonist-blind |
 | Power Seed | GPT-5.6 Luna | high | ON：固定 1 条 Naming Craft Reference + Power lane 小 bundle |
 | Human Seed | GPT-5.6 Luna | high | ON：Appetite / Behavior / Relationship 各最多 1 条，总计最多 3 条 |
+| Human Development | GPT-5.6 Luna | high | **OFF**；低频，只看 Frozen Human + 已发生 Canon，可 `NONE` |
+| Current Character | deterministic | — | OFF；不调用 LLM |
 | Story Program | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration |
+| Story Refresh | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration；Effective World × Current Character |
 | Outline | GPT-5.6 Luna | high | ON：通常 4 条、最多 5 条 |
 | Director | GPT-5.6 Luna | high | raw GBrain OFF |
 | Curator | GPT-5.6 Luna | high | raw GBrain OFF；Scene Skill v2 Catalog + short Projection compile |
@@ -76,7 +83,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 
 - GBrain 是 Optional Inspiration，不是 Canon、创意权威、Hard Gate 或原作模板。
 - **公共治理、资源分配、维护职责、责任升级不得作为 production GBrain 的通用可迁移创作机制**；来源作品确有此内容时只保留为研究证据，并退出 active inspiration。
-- 主要路径：`GBrain → World / Power / Human / Story Program / Outline → Approved Story`；以及 `GBrain 离线深蒸馏 → source-blind 固定 Reference / Scene Deep Craft → 对应规划层或 Curator/Reviser 的窄带宽输入`。当前 World 固定读 Reader Coordinates，Power 固定读 1 条由经典跨书蒸馏得到的 Naming Craft Reference；两者都不占普通 creative inspiration 名额。
+- 主要路径：`GBrain → World / World Expansion / Power / Human / Story Program / Story Refresh / Outline → Approved Story`；以及 `GBrain 离线深蒸馏 → source-blind 固定 Reference / Scene Deep Craft → 对应规划层或 Curator/Reviser 的窄带宽输入`。当前 World/World Expansion 固定读 Reader Coordinates，Power 固定读 1 条由经典跨书蒸馏得到的 Naming Craft Reference；Human Development 固定 GBrain OFF。World Expansion 的 retrieval 同样必须 protagonist-blind，不能通过 BOOK/Character/Story 间接泄漏主角形状。
 - raw GBrain 不直接进入章节 Writer Runtime。
 - 蒸馏分工：Terra 看清事实/Fidelity；Luna 理解吸引力与中层 craft；Sol 理解长篇结构。
 - Windows / Git Bash 使用 `~/.bun/bin/gbrain.exe`；新增、修改或删除页面后执行 `embed --stale`；交付前必须 `Embedded == Chunks`。
@@ -93,11 +100,14 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 同时：
 
 - 修最早发生语义坍缩的节点；少深层规则 > 多 Hard Gate。
-- Human：**经历是背景，不是人格证明**；允许多重动机、稳定选择偏向与现场变化。冻结 Human Core 高于最近几章的“负责/克制/救人”等行为归纳；下游不得把局部正确选择反推成新的道德人格。章节期从 `CHARACTER.md` 确定性投影 Frozen Human Core 给 Curator；Curator 不重复 Power Core。当前场景自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心等私人牵引时，应让它真实影响注意力、靠近/回避或选择，不统一净化成职责协作与成熟沟通。若 Frozen Human 已明确某个具体人会改变选择，而本章正发生近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系现场，默认属于自然触发，保留一个克制 cue 即可，不要求改写主事件。
+- Human：**经历是背景，不是人格证明**；允许多重动机、稳定选择偏向与现场变化。冻结 Human Core 高于最近几章的“负责/克制/救人”等行为归纳；下游不得把局部正确选择反推成新的道德人格。人物长期允许真实发展，但只能通过低频 `Human Development Delta` 基于已发生长期历史 forward-only 更新，且允许 `NONE`；该阶段看不到未来 World/Story。章节期仍从 `CHARACTER.md` 确定性投影 Frozen Human Core 给 Curator；Curator 不重复 Power Core。当前场景自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心等私人牵引时，应让它真实影响注意力、靠近/回避或选择，不统一净化成职责协作与成熟沟通。若 Frozen Human 已明确某个具体人会改变选择，而本章正发生近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系现场，默认属于自然触发，保留一个克制 cue 即可，不要求改写主事件。
 - **Primary 后固定 Authority Reviser 做 Preservation-First 的远端权威恢复，不做第二次创作**：Primary 为减负只吃近端压缩上下文，允许先完整实现一版；Reviser 再读取冻结 Mission、Curator、safe `WORLD AUTHORITY`、逐条 `Reader Release`、`CHARACTER.md` 的 Frozen Power + Human Core、Canon 与 Primary Draft。正确段落默认逐字保留，只删/压反复确认、重复证明、工程化/程序化实施和 Competence Filler，只补已批准但第一版遗漏的世界/人物/力量 realization；不得改变主要事件、人物选择、胜负、资源得失、Direct Result、State Change、Ending 或未知事实边界。删除前先确认不会丢失 State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity。**同一维度若 Curator / Primary 与 Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 冲突，Frozen Authority 必须胜出，并在最终稿做语义级全章清零；不能只修第一处。Authority 写“重新接触 / 合并”等条件时，不得为衔接方便扩成远程召回、跨距离回收或其它未授权机制。** 修冲突段落时逐句 salvage：本身被 Authority 支持、只因错误时点/因果而失效的 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing 句，迁到最近合法位置；salvage 只保护高价值句，不保护周围报告、登记、路线或普通实施。raw GBrain 固定 OFF。Optional Specialist / Integrator repair 如显式启用，以 Authority Revision 而非 Primary 为底稿。
 - **Scene Craft 研究可以很深，章节 Runtime 必须很窄**：原著 bounded evidence、书名、locator、完整 Generation/Revision Lens 不进入 Writer。Curator 只看 `skill_id + Reading Question + 一行 Projection Guidance`，有真实 realization 缺口时编译 2—4 句 `Scene Prose Projection`，已经清楚写 `NONE`；Terra Primary 只消费这份短 Projection。Authority Reviser 只拿经 A/B 证明安全的一行 failure-triggered `Revision Watch`，无对应失败时忽略。新增 Scene Primary 必须同时证明主要阅读问题、scene state、beat engine、Stop/Handoff 都不同，且 compact conditional / existing composition 的 A/B 不足；高预算 evidence 或“这种场景很重要”本身不授权扩 taxonomy。
 - Collision 可补少量非奠基性过去，让关系/选择更自然；不得自动悲情化、不得用过去证明整个人、不得自动变主线或一次性倾倒。
 - Growth 是全书纵向不变量，不是 stage / block / ten-chapter tax。
+- **Stable Origins, Evolving Authorities**：开书 World Root / Power Origin / Human Origin 稳定；后续 World Expansion、Power Delta、Human Development 只向未来追加。`CURRENT_CHARACTER.md` 由 Frozen Origins + 已发生 Canon/Delta 确定性编译，不新增 Composer。World Expansion 与 Current Character 必须先独立，只有 Story Refresh 做 fresh Re-Collision；不要让单 Agent 预先把新世界、人物发展和奖励调成主角钥匙孔。
+- **Story Program 只具体规划当前 World Horizon**：接近自然边界时输出 `World Horizon Handoff`，只定义 trigger、`macro/instance` scope、为什么该扩、carry-forward 与 orchestration；Handoff 不注入 World Agent。Outline / Review 不得越过未执行 Handoff 为凑十章/百章发明未知下一世界。
+- **两层 Power**：Frozen Power Origin + `PERSISTENT CANON → Power / Capability` 的 Current Power Portfolio；后期神兵/传承/新 Asymmetry 不回写 Seed。**三层 Human**：Frozen Origin + Current State + 可选 Human Development Delta。
 - **World 力量优先 Small Grammar, Large Variation**：如果主流力量已经能用 1—3 句普通话讲清，且现有一到少数互补操作轴已经有辨识度，就保护它，不为了“统一”泛化成元能量/总机制。Small Grammar 不等于 Small World：后续要主动把 Variation 预算花在新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合、强度与稀有例外；只有旧语法承载不了一个长期值得追的新幻想时才新增底层机制。World 同时主动寻找 0—1 条真正成熟的 Optional Secondary Fantasy Road；没有足够好的创意就不造，也不预设主角一定会走。
 - **Power Seed 生成 Power Asymmetry，不强制世界内合法例外**：World Power Normal 是比较尺，不是来源限制；非对称优势可来自世界内稀有异常、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加。默认故意偏强：Core Power 至少一个维度让同层普通人/天才明显羡慕，必要时提前拥有通常更高层才有的局部特权；Permanent Boundary 防万能但不做对称成本抵消。Novelty Spark 负责不同，不负责削弱强度。Power 另接一小池 **Optional Lexique Primitive Spark**：对象×变化只负责偶尔找到更具体的身体/器物/空间载体或新玩法，每个 Candidate 最多借 0—1 个且可以全部忽略，不得改写既有触发、覆盖、代价、Boundary，也不得长成第二系统。**Reader-facing novelty = 熟悉语言 + 新作用**：World 基础力量、开局 Core 与后续新 Asymmetry 都先用普通话说明具体可观察效果，再决定是否需要短名；命名固定参考来自 source-blind Naming Craft；**首读语义准确高于世界气味**，只有不牺牲准确时才优先复用 World 已有具体词根，lexique 只作次级气味，也可以不用；已有普通短名已经准确时不为“更独特”强改，名字不能反向授权新机制。“全新”改变力量因果/玩法，不要求回避境界、功法、兵器、异兽等清楚题材词；若核心幻想本来是战斗、身体、移动、穿越、操控等直接能力，成长不能重新退化成结构分析、材料诊断、路线计算或验证流程。Legendary / Future Legend 不得绕过 Permanent Boundary。
 - **AGGRESSIVE Fantasy / Payoff 是当前默认审美偏置**：LLM 天然过度谨慎，当前因果已经让高价值奖励、胜利、奇遇或占有成立时，不主动少给、晚给或降成资格。大胜可以自然同时带来主奖品 + 钱/资源 + 招揽/入口；秘境可有主目标外的小惊喜；大型阶段可同时结算据点、队伍、产业、商路份额或长期收入。奖励数量本身不是缺陷，只禁止两类硬问题：剧情明确没拿到/拒付却无新因果凭空到账；以及人物刚作出高价值真实牺牲，同一窗口立刻用近似替代物把牺牲抹平。
@@ -106,7 +116,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - **世界前台尺是长期读者坐标，也是信息压缩器**：力量、战绩、价值、天赋/适配、技熟、装备、排名、身份与世界层级都可作尺；当前事件碰到哪把就校准哪把。World 对当前常用少数档位/价值对象提供 1—2 个可感知 benchmark；下游优先用一次已批准比较替代多轮验证，不临时发明冲突标准，也不建战力数据库。**本章若真实跨过前文已说明的公开力量/身份档位，结果处直接命名新档位一次**，不让读者从“凝影了 / 被记名 / 通过了”等现象自己换算。重要 World Entry / Rival / 传承或高价值机会第一次进入时，同时让读者知道为什么值得靠近或争、它相对主角当前位置有多重；若后续要放弃某个机会，先建立其具体价值，否则机会成本只存在于计划里。
 - **Public World Knowledge = Clarity；Unknown World = Mystery**：普通人/当前 POV 从小就知道、且会帮助读者理解眼前故事的公共常识——主流力量、粗略强弱尺、当前/下一档现实含义、会改变日常生活的危险规则、常见上升入口与价值物——在明显陌生/架空世界开篇若 World 与前3章确实提供多类相关事实，Outline 默认拆成 2—3 条不同功能的 Reader Release；下一档若有现实 benchmark，同时写能力效果与社会含义。Primary 用 1—3 个短说明段普通话讲清，不让读者靠火盆、服装、站位、专名或隐喻自己猜。**具名机会价值走 Story/Plan 链**：Story Program / 当前剧情块已批准某试场、选拔、招募、契约的名字与公开价值，而 Future 10 单章条目只剩“试场前训练 / 争取机会”等压缩措辞时，Director runtime 只在当章已指向同一机会的条件下，从当前剧情块确定性恢复一条“具体机会名 + 当前已知价值”；不生成新回报、不提前承诺成功、不从未来章偷事实。细节负责让画面活，不能替代基础答案；来源、隐藏原因、幕后关系、未来 reveal 和当前人物不知道的事实继续保持未知；不因此新增 Prelude、百科章、每章 exposition 配额或 Reviewer。
 - **Proof 后推进 State**：一个事实经动作结果 + 一次足够 ruler 校准成立后，不换证据继续证明；社会确认只在改变机会、敌意、关系、身份、资源或行动时继续。重大选择的选项与代价已清楚后尽快选择，让后续篇幅进入 Consequence；Supporting Skill 只保留足以改变判断的关键细节，决定后的普通实施默认压缩；非核心 Supporting Skill 即使承担关键实施，也写到效果级因果，不扩成新的小型解题场；若该技能已在前文成立，Director/Curator 默认只写它造成的结果，不重复方法，除非本章出现新边界、失败或质变。Outline 已给出的入口/邀请/名额/工作机会/奖励，不为“证明配得上”自行补试工、检查、考核或登记；低动作章也不为让主角显得能干而临时制造排车、维修、诊断、路线、清点等 **Competence Filler**。**阶段结算写 Consequence，不用程序承载戏剧**：事实已清楚时，报告、登记、责任说明、复盘、资格发放等只作一句/背景，前景放在重新估价、实际得失、Rival 换位和下一件更值得想要的机会。
-- **Approved World Vision 是章节期一等世界事实权威**：BOOK §2 只是故事摘要，不能替代 World。Runtime 将 World Vision 确定性裁成不含 named 大事件 / 未解谜底的 `WORLD AUTHORITY`；Outline 用 `Reader Release Map` 只保存当前规划窗口里 timing-sensitive、且与该章实际事件相交的首次世界事实释放（不是每章 KPI）；未来仍作为 reveal 的答案不得提前进入 Map。**World Entry 在人物真正跨过门槛的当章释放**：正式上路、进入组织/内层、第一次实际使用身份入口时，就说明该入口为什么把第一章位置的人带进过去进不去的世界，不等下一章第一次遇险再补。Chapter Runtime 按章确定性读取并从 WORLD AUTHORITY bounded prefetch；Curator 只筛选/压缩，Writer 只表达、不自行选择或补造世界事实。已排程的 Reader Release 是 timing decision，Writer 必须用最短充分的直接旁白或场景表达兑现，不能把它当可选装饰；若同一事实还说明地点/势力/传承为什么值得争，应保留一个价值锚点。高价值 Orientation 不做百科、Prelude 或 Reader State 数据库；开篇生活定向与 Ruler 分工，单纯“无境界 / 打不过敌人”不能替代安全、生活或社会坐标。named 势力首次进入故事时，若 World 已知其公开类别，该类别应存在于安全 WORLD AUTHORITY，并由当章 Reader Release 一起排程进入正文；动机、隐藏关系和后续 reveal 不进入安全层。**长期历史未知边界**：Canon / Curated Context / Open Promise 已标为未知、未解释、真假未定或原因未明的旧事实，除非 Director 明确批准本章新增确定事实，否则 Writer 不得为完整感补造旧经历、旧对话、隐藏动机或世界机制；公共 Orientation 不授权 retrospective canon。
+- **Effective World 是章节期一等世界事实权威**：BOOK §2 只是故事摘要，不能替代 World。Runtime 组合 `WORLD_VISION.md` Root + 当前章 active Forward Expansions，再确定性裁成安全 `WORLD AUTHORITY`；Expansion 只投影公共现实、力量/身份/价值尺度、公开地点/势力和具体价值物，人物隐藏行动与未知边界不直接泄漏给 Writer。`scope=instance` 只在自己的章节窗口生效，离开后 Local World 退场，跨世界 consequence 留在 Canon。Outline 用 `Reader Release Map` 只保存当前规划窗口里 timing-sensitive、且与该章实际事件相交的首次世界事实释放（不是每章 KPI）；未来仍作为 reveal 的答案不得提前进入 Map。**World Entry 在人物真正跨过门槛的当章释放**：正式上路、进入组织/内层、第一次实际使用身份入口时，就说明该入口为什么把第一章位置的人带进过去进不去的世界，不等下一章第一次遇险再补。Chapter Runtime 按章确定性读取并从 WORLD AUTHORITY bounded prefetch；Curator 只筛选/压缩，Writer 只表达、不自行选择或补造世界事实。已排程的 Reader Release 是 timing decision，Writer 必须用最短充分的直接旁白或场景表达兑现，不能把它当可选装饰；若同一事实还说明地点/势力/传承为什么值得争，应保留一个价值锚点。高价值 Orientation 不做百科、Prelude 或 Reader State 数据库；开篇生活定向与 Ruler 分工，单纯“无境界 / 打不过敌人”不能替代安全、生活或社会坐标。named 势力首次进入故事时，若 World 已知其公开类别，该类别应存在于安全 WORLD AUTHORITY，并由当章 Reader Release 一起排程进入正文；动机、隐藏关系和后续 reveal 不进入安全层。**长期历史未知边界**：Canon / Curated Context / Open Promise 已标为未知、未解释、真假未定或原因未明的旧事实，除非 Director 明确批准本章新增确定事实，否则 Writer 不得为完整感补造旧经历、旧对话、隐藏动机或世界机制；公共 Orientation 不授权 retrospective canon。
 - **Plot Pace ≠ Tier Pace**：事件、关系、发现、敌人策略、获得和玩法可以快速推进，但不因此自动升境界/等级；同一层级仍有丰富故事空间时允许承载多个完整剧情块，保持长期力量尺纵深。
 - **主人公连续升格，不是字段变化集合**：长期应让主角不断进入第一章时没有资格进入的力量层、人物圈层、世界层、真相层与选择层，并尽量形成“力量/身体变化 → 被重新估价 → 新关系/身份/入口 → 新世界与新认知 → 新欲望/敌人/选择 → 再成长”的因果螺旋；进入新圈层时，新人物只按自己真实知道的旧名声/战绩/底牌先判断，再因最低充分的新事实分别更新待遇、敌意或合作，不默认全知也不靠降智轻视；不逐阶段填 KPI，同一等级可以充分生活，不用升阶替代升格。
 - **专业/副职只有本身就是强者幻想时才升格为第二幻想轴**：World 主动寻找 0—1 条候选；Story Program 主动检查 Approved World 中已经成立的副轴，不因它不是 Core Power 就忽略。它应有独立可比较的强弱、真正顶层人物、可见胜负/作品、稀有成果与社会价格；普通实施仍压缩。主角是否投入、投入多深由 Human 决定；Human 不想走时，让它继续属于世界或配角，不给每本书强塞副职。
