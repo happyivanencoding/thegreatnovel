@@ -2859,8 +2859,8 @@ def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None
     ):
         assert marker in idea
     assert "### 成本节奏" not in idea
-    assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in idea
-    assert "长期必须让**新的 Power Asymmetry 加入**" in idea
+    assert "“可以没有”不是 withholding 指令" in idea
+    assert "长期应让**新的 Power Asymmetry 加入**" in idea
     assert "某些大型阶段仍可以完全没有 Power Delta" in idea
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
     for marker in (
@@ -3371,7 +3371,7 @@ def test_story_program_keeps_backstage_principles_but_outputs_concrete_acquisiti
     assert "不是每个大型阶段都缴一次升级税的表单" in template
     assert "成长是全书纵向不变量，不是每个阶段的必填项" in template
     assert "全书成长与核心幻想兑现脊柱" in template
-    assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in template
+    assert "“可以没有”不是 withholding 指令" in template
     assert "**Stage Delta：**" in template
     assert "力量可以无显著升级" in template
     assert "高价值获得是读者欲望原则，不是阶段字段" in template
@@ -3392,8 +3392,8 @@ def test_story_program_growth_is_longitudinal_not_a_stage_tax() -> None:
     assert "核心优势在本阶段怎样参与：" not in template
 
     # But the whole book must still build a cumulative asymmetry stack.
-    assert "长期必须让**新的 Power Asymmetry 加入**" in template
-    assert "旧优势与新优势产生至少一种可复述的**复合效应**" in template
+    assert "长期应让**新的 Power Asymmetry 加入**" in template
+    assert "旧优势与新优势产生可复述的**复合效应**" in template
     assert "不是每阶段新增能力税" in template
     assert "以前做不到什么 → 现在能做什么 / 能打谁 / 能去哪里" in template
     assert "Power Seed 决定开局 Core Asymmetry 及其成长语法" in template

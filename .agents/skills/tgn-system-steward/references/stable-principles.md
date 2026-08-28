@@ -16,6 +16,12 @@
 
 成熟不等于每次 payoff 都立刻补税。
 
+### Creative intensity adjudication
+
+当受控实验中的多个版本都通过 Canon、authority 与基本因果边界，而主要差异只是“更 aggressive、更爽、更富”与“更 conservative、更稳、更少给”时，**不要把保守本身当成质量**。Steward/Judge 应保留并向作者展示真实输出差异，由作者选择冻结强度；当前 TGN 作者偏好明确倾向 AGGRESSIVE。
+
+奖励数量、主角局部明显占便宜、一次大胜连带多种自然收益、秘境额外奇遇、本阶段拿到据点/产业/长期收入，都不能仅因“看起来给得多”被判失败。可直接淘汰的是硬错误：事实明确没拿到却无新因果到账、authority 越界、或真实高价值牺牲在同一窗口被近似奖励立刻抹平。
+
 ## 2. Fantasy First Is a Reader Priority, Not a Pipeline Religion
 
 Fantasy First 的本质是：男频成长长篇必须持续保护主角本人值得羡慕、值得代入、越来越能做什么。

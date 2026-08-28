@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.3
+version: 0.3.5
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -86,6 +86,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 最核心的几条：
 
 - Reader Appetite Before Defensive Balance
+- Do not auto-select conservative creative intensity when aggressive and conservative variants are both authority-safe; show the real tradeoff to the author, with AGGRESSIVE as the current TGN preference
 - Fantasy / Agency / Concrete Desire before process elegance
 - Fix the earliest semantic collapse
 - Few deep rules > many hard gates

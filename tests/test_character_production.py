@@ -172,6 +172,19 @@ def test_human_prompt_is_power_blind_and_has_no_life_texture_input() -> None:
     assert "character hook craft" in prompt
 
 
+
+def test_world_prompt_prefers_small_grammar_large_variation_without_forcing_one_mechanism() -> None:
+    prompt = generate_split_prompt(
+        mode="world_vision",
+        creative_direction="男频玄幻",
+        gbrain_inspiration="world craft",
+    )
+    assert "Small Grammar, Large Variation" in prompt
+    assert "现有一到少数互补操作轴" in prompt
+    assert "不要为了“更统一”上提成泛化元能量、材性或总机制" in prompt
+    assert "Variation 可以很大胆" in prompt
+
+
 def test_power_prompt_uses_world_normal_but_not_story_opportunities() -> None:
     prompt = generate_split_prompt(
         mode="power_seed",
@@ -184,6 +197,8 @@ def test_power_prompt_uses_world_normal_but_not_story_opportunities() -> None:
     assert "倒悬石城" not in prompt
     assert "Legendary Power State" in prompt
     assert "未来身份、组织、统治地位、使命" in prompt
+    assert "Permanent Boundary 优先收束成一到少数根边界" in prompt
+    assert "Boundary Stable, Privilege Expands" in prompt
 
 
 def test_collision_prompt_first_combines_full_world_and_character() -> None:
@@ -204,6 +219,13 @@ def test_collision_prompt_first_combines_full_world_and_character() -> None:
     assert "石砚想让所有人回头" in prompt
     assert "现在想找到一块会回响的石头" in prompt
     assert "Approved Fantasy Seed" not in prompt
+    assert "Aggressive Fantasy / Payoff Bias" in prompt
+    assert "Bonus Surprise is allowed" in prompt
+    assert "一个阶段只能一份大奖励" in prompt
+    assert "Gain First, Counter Earned Later" in prompt
+    assert "Growth Must Be Felt Before Reset" in prompt
+    assert "4—6 次真正改变主角本人能力结构" not in prompt
+    assert "New Asymmetry ≠ New Power System" in prompt
 
 
 def test_character_modes_have_stable_keyword_gbrain_queries(monkeypatch: pytest.MonkeyPatch) -> None:

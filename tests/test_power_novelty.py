@@ -70,7 +70,9 @@ def test_power_prompt_auto_injects_noncanon_novelty_sparks() -> None:
     assert "默认强度故意偏夸张" in prompt
     assert "宁可偏强一档" in prompt
     assert "不要做对称平衡" in prompt
-    assert "Core Power 必须保留一块明显的纯收益区间" in prompt
+    assert "Core Power 必须有明显纯收益区间" in prompt
+    assert "Permanent Boundary 优先收束成一到少数根边界" in prompt
+    assert "Boundary Stable, Privilege Expands" in prompt
     assert "Privilege Delta" in prompt
     assert "同层普通人通常只能做到什么" in prompt
     assert "不能靠删除 Novelty Spark 的“单一异常”换来" in prompt
@@ -98,6 +100,8 @@ def test_story_program_keeps_later_asymmetries_reader_facing() -> None:
     assert "后续新 Asymmetry 继承 Power Seed 的“先白话、后命名”边界" in prompt
     assert "以前做不到什么、现在具体多能做什么" in prompt
     assert "不得靠两三个新造概念互相解释来制造高级感" in prompt
+    assert "New Asymmetry ≠ New Power System" in prompt
+    assert "Bonus Surprise is allowed" in prompt
 
 
 def test_power_retrieval_aliases_include_power_dominance_and_verification() -> None:

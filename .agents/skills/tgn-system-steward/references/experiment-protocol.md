@@ -217,3 +217,6 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 - 用户目标已达到。
 
 不要为了“实验完整”继续烧 quota。
+## Creative Intensity Decision
+
+当多个 treatment 都满足 hard authority / causality，仅在爽感强度、奖励丰富度或主角局部优势上存在 trade-off 时，不由 Steward/Judge 自动向保守版收敛。保留代表性真实输出，并把 AGGRESSIVE / MODERATE / CONSERVATIVE 的关键差异交给作者选择；当前 TGN 默认审美先验偏 AGGRESSIVE。只有事实矛盾、authority 越界、或即时近似补偿抹平真实牺牲可以直接淘汰。
