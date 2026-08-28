@@ -1508,7 +1508,11 @@ GBrain 两张卡已完成 import + embedding + keyword retrieval regression；�
 
 截至 2026-08-28，Authority Reviser 已进入 production；严格 authority precedence / sentence-level salvage 已冻结。当前又完成 **Public World Knowledge Clarity** 根修：陌生世界开篇允许短 Public Common-Knowledge Reader Release，Primary 可直接用普通话说明；Story/Plan 的具名机会价值与 World Release 分链；若 Future 10 把同一 Long Block 已批准的具名机会压成泛化“试场/机会”，Director runtime 会条件式、确定性恢复一条既有 `具体机会名 + 当前已知价值`，不生成新事实。Authority Reviser 同时明确：上游只批准“重新接触 / 合并”时不得擅自扩成远程召回或跨距离回收；本章真实跨过已介绍的公开力量/身份档位时，结果处直接命名新档位一次。最终顾临川 Ch1 R3 与 Steward 0.3.3 smoke 均为 PASS，完整测试 `317 passed`。
 
-当前激活审计技能为 **`tgn-system-steward 0.3.3`**：除 `Public/Known World = Clarity`、`Texture Present / Rule Missing`、World/Story opportunity 分链、`Plan Compression Loss`、Authority 条件不得擅自扩写外，还检查 **Ruler State Change Direct Naming**：本章已真实跨过前文已介绍的公开档位时，结果处应直接命名新档位一次，不让读者从“凝影了 / 通过了 / 被记名”等现象自己换算。当前工作树仍有并行 owner 的 `docs/MVP_PRODUCT_DIRECTION.md`、`src/story_mvp/hybrid_runtime.py`、`tests/test_mvp.py` 等修改与大量 Scene Skill / Doupo / Orientation provenance；`DEEP_CONTEXT_HANDOFF_2.md` 仍为旧 provenance。接手者必须先看 `git status`，只 stage 自己的文件/hunk。
+当前激活审计技能为 **`tgn-system-steward 0.3.3`**：除 `Public/Known World = Clarity`、`Texture Present / Rule Missing`、World/Story opportunity 分链、`Plan Compression Loss`、Authority 条件不得擅自扩写外，还检查 **Ruler State Change Direct Naming**：本章已真实跨过前文已介绍的公开档位时，结果处应直接命名新档位一次，不让读者从“凝影了 / 通过了 / 被记名”等现象自己换算。
+
+**Public main 已冻结。** `main` 当前 release commit / freeze tag：`10520df97c3729ef2c970035a9e031ccf15754ce` / `tgn-freeze-2026-08-28-v1`。main 是 public production freeze，不能 fast-forward / merge dev 私有历史；发布必须以现有 main 为父节点构造 clean release commit，只带 production code、必要 runtime skills、构建配置与可公开测试。`docs/`、Handoff、`PROJECT_RULES.md`、Steward、temps、内部实验 provenance 不得进入 main；本次 main 当前树敏感路径检查为 NONE，release 测试 316/316 PASS。注意：旧 main 历史在本次规则建立前已经存在 docs；本次只清理当前树并防止未来再次加入，没有做 destructive history rewrite。
+
+当前工作树仍有并行 owner 的 `docs/MVP_PRODUCT_DIRECTION.md`、`src/story_mvp/hybrid_runtime.py`、`tests/test_mvp.py` 等修改与大量 Scene Skill / Doupo / Orientation provenance；`DEEP_CONTEXT_HANDOFF_2.md` 仍为旧 provenance。接手者必须先看 `git status`，只 stage 自己的文件/hunk。
 
 ---
 
