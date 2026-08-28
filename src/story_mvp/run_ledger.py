@@ -18,6 +18,7 @@ RUN_NODES = (
     "director",
     "curator",
     "primary",
+    "authority_reviser",
     "opening",
     "dialogue",
     "action",
@@ -29,9 +30,10 @@ SPECIALIST_NODES = ("opening", "dialogue", "action", "emotion")
 NODE_STATUSES = frozenset({"pending", "completed", "failed", "skipped", "stale", "adopted"})
 
 _DEPENDENTS = {
-    "director": ("curator", "primary", "opening", "dialogue", "action", "emotion", "integrator", "state_delta"),
-    "curator": ("primary", "opening", "dialogue", "action", "emotion", "integrator", "state_delta"),
-    "primary": ("opening", "dialogue", "action", "emotion", "integrator", "state_delta"),
+    "director": ("curator", "primary", "authority_reviser", "opening", "dialogue", "action", "emotion", "integrator", "state_delta"),
+    "curator": ("primary", "authority_reviser", "opening", "dialogue", "action", "emotion", "integrator", "state_delta"),
+    "primary": ("authority_reviser", "opening", "dialogue", "action", "emotion", "integrator", "state_delta"),
+    "authority_reviser": ("opening", "dialogue", "action", "emotion", "integrator", "state_delta"),
     "opening": ("integrator", "state_delta"),
     "dialogue": ("integrator", "state_delta"),
     "action": ("integrator", "state_delta"),
@@ -80,6 +82,16 @@ def _read_manifest(path: Path) -> dict[str, Any]:
         raise ValueError(f"无法读取章节 Run manifest：{path}") from error
     if not isinstance(value, dict) or not isinstance(value.get("nodes"), dict):
         raise ValueError(f"章节 Run manifest 结构无效：{path}")
+    if "authority_reviser" not in value["nodes"]:
+        historical_completed = (
+            value.get("run_status") == "completed"
+            or (
+                value.get("final_source") in {"primary", "integrator"}
+                and value["nodes"].get("state_delta", {}).get("status") in {"completed", "adopted"}
+            )
+        )
+        status = "skipped" if historical_completed or value.get("writer_mode") != "curator_primary" else "pending"
+        value["nodes"]["authority_reviser"] = _node_manifest("authority_reviser", status)
     return value
 
 
@@ -122,6 +134,9 @@ def create_or_load_run(
             nodes[node]["status"] = "skipped"
     if writer_mode == "curator_primary":
         nodes["integrator"]["status"] = "skipped"
+    else:
+        # Authority Reviser is the fixed production node of curator_primary; legacy/experiment modes keep their old behavior.
+        nodes["authority_reviser"]["status"] = "skipped"
     manifest = {
         "chapter_number": chapter_number,
         "writer_mode": writer_mode,
@@ -159,6 +174,18 @@ def load_run(book_directory: Path, chapter_number: int) -> dict[str, Any]:
     if not path.is_file():
         raise FileNotFoundError(f"第{chapter_number}章尚未创建 Run")
     return _read_manifest(path)
+
+
+def load_node_response(book_directory: Path, chapter_number: int, node: str) -> str:
+    """读取 Ledger 已保存的节点 Response；不做生成、不改变状态。"""
+
+    manifest = load_run(book_directory, chapter_number)
+    info = _require_node(manifest, node)
+    filename = info.get("response_file")
+    if not filename:
+        return ""
+    path = run_directory(book_directory, chapter_number) / str(filename)
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
 
 
 def _require_node(manifest: dict[str, Any], node: str) -> dict[str, Any]:
@@ -312,9 +339,11 @@ def retry_node(book_directory: Path, chapter_number: int, node: str) -> dict[str
 def adopt_final_source(
     book_directory: Path, chapter_number: int, source: str
 ) -> dict[str, Any]:
-    if source not in {"primary", "integrator"}:
-        raise ValueError("final_source 只能是 primary 或 integrator")
+    if source not in {"primary", "authority_reviser", "integrator"}:
+        raise ValueError("final_source 只能是 primary、authority_reviser 或 integrator")
     manifest = load_run(book_directory, chapter_number)
+    if manifest.get("writer_mode") == "curator_primary" and source == "primary":
+        raise ValueError("curator_primary production 的 Primary 只是第一版草稿，必须先经过 Authority Reviser")
     source_manifest = _require_node(manifest, source)
     if source_manifest["status"] not in {"completed", "adopted"}:
         raise ValueError(f"节点 {source} 尚未完成，不能采用")
@@ -322,7 +351,7 @@ def adopt_final_source(
     manifest["final_source"] = source
     source_manifest["status"] = "adopted"
     if previous != source:
-        _mark_dependents_stale(manifest, "integrator" if source == "integrator" else "primary")
+        _mark_dependents_stale(manifest, source)
     return _save(manifest, book_directory)
 
 
@@ -333,7 +362,7 @@ def should_run_integrator(specialist_responses: Mapping[str, str]) -> bool:
 def activate_optional_repair(
     book_directory: Path, chapter_number: int, selected_specialists: list[str]
 ) -> dict[str, Any]:
-    """作者在 Primary 完成后显式启用 curator_primary 的局部修复层。"""
+    """作者在 Authority Reviser 完成后显式启用 curator_primary 的可选局部 repair 层。"""
 
     manifest = load_run(book_directory, chapter_number)
     if manifest.get("writer_mode") != "curator_primary":
@@ -343,9 +372,9 @@ def activate_optional_repair(
     unknown = sorted(set(selected_specialists) - set(SPECIALIST_NODES))
     if unknown:
         raise ValueError("未知专项 Agent：" + "、".join(unknown))
-    primary_status = _require_node(manifest, "primary").get("status")
-    if primary_status not in {"completed", "adopted"}:
-        raise ValueError("Primary 尚未完成，不能启用 repair Specialist")
+    reviser_status = _require_node(manifest, "authority_reviser").get("status")
+    if reviser_status not in {"completed", "adopted"}:
+        raise ValueError("Authority Reviser 尚未完成，不能启用 repair Specialist")
 
     selected = set(selected_specialists)
     manifest["selected_specialists"] = list(selected_specialists)

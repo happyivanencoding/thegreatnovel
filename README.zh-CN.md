@@ -46,16 +46,10 @@ GBrain 是 **Optional Inspiration**，不是 Canon，也不是创意权威。原
 ```text
 src/story_mvp/   应用、Prompt、Runtime 与存储逻辑
 books/           小说工作区与生成实验
-docs/            架构、方法论与子系统文档
 tests/           回归与 Runtime 测试
 ```
 
-建议从以下文档开始：
-
-- [`docs/PIPELINE_METHODOLOGY_AND_VALUES.md`](docs/PIPELINE_METHODOLOGY_AND_VALUES.md) — 总方法论、阶段职责与 Anti-Goals
-- [`docs/MVP_PRODUCT_DIRECTION.md`](docs/MVP_PRODUCT_DIRECTION.md) — 产品方向与创意权威边界
-- [`docs/GBRAIN_STORY_CRAFT_V3.md`](docs/GBRAIN_STORY_CRAFT_V3.md) — GBrain 接入与 Story Craft 知识
-- [`docs/NOVEL_PROSE_REALIZATION.md`](docs/NOVEL_PROSE_REALIZATION.md) — 正文实现与 Reader-First 原则
+公开 `main` 分支只发布 production/runtime 代码，不包含内部架构、审计与交接文档。
 
 ## 快速开始
 

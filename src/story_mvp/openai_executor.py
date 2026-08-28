@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 
 
 DEFAULT_OPENAI_MODEL = "gpt-5.6"
+DEFAULT_AUTHORITY_REVISER_MODEL = "gpt-5.6-luna"
 _runtime_settings = {"name": "", "url": "", "api_key": ""}
 
 
@@ -114,6 +115,12 @@ def state_extraction_model() -> str:
     return os.environ.get("STORY_MVP_STATE_MODEL", "").strip() or default_model()
 
 
+def authority_reviser_model() -> str:
+    """Authority Reviser 的架构级默认模型；允许环境级运维覆盖，不接受每书模板覆盖。"""
+
+    return os.environ.get("STORY_MVP_AUTHORITY_REVISER_MODEL", "").strip() or DEFAULT_AUTHORITY_REVISER_MODEL
+
+
 def _create_client() -> Any:
     try:
         from openai import OpenAI
@@ -133,6 +140,7 @@ def generate_text(
     *,
     model: str = "",
     purpose: str = "default",
+    reasoning_effort: str = "",
     client: Any = None,
 ) -> dict[str, str]:
     if not prompt.strip():
@@ -140,17 +148,25 @@ def generate_text(
     if not configured() and client is None:
         raise OpenAIExecutorError("OPENAI_API_KEY 未配置", configured=False)
     executor = client or _create_client()
-    resolved_model = model.strip() or (
-        state_extraction_model() if purpose == "state_extraction" else default_model()
-    )
-    try:
-        response = executor.responses.create(
-            model=resolved_model,
-            input=prompt,
+    if purpose == "authority_reviser":
+        resolved_model = authority_reviser_model()
+        resolved_effort = "high"
+    else:
+        resolved_model = model.strip() or (
+            state_extraction_model() if purpose == "state_extraction" else default_model()
         )
+        resolved_effort = reasoning_effort.strip()
+    request: dict[str, Any] = {"model": resolved_model, "input": prompt}
+    if resolved_effort:
+        request["reasoning"] = {"effort": resolved_effort}
+    try:
+        response = executor.responses.create(**request)
     except Exception as error:  # SDK errors vary by installed SDK version.
         raise OpenAIExecutorError("OpenAI Responses API 请求失败", configured=True) from error
     output = str(getattr(response, "output_text", "") or "").strip()
     if not output:
         raise OpenAIExecutorError("OpenAI Responses API 没有返回文本", configured=True)
-    return {"output_text": output, "model": resolved_model}
+    result = {"output_text": output, "model": resolved_model}
+    if resolved_effort:
+        result["reasoning_effort"] = resolved_effort
+    return result

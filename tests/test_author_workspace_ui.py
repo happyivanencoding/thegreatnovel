@@ -22,7 +22,8 @@ def test_existing_editors_are_single_sources_and_drawer_reuses_them() -> None:
     ids = re.findall(r'id="([^"]+)"', TEMPLATE)
     assert len(ids) == len(set(ids))
     for editor_id in (
-        "creative-fantasy-seed", "proposal-editor", "section-status",
+        "creative-world-vision", "creative-power-seed", "creative-human-seed",
+        "creative-character-card", "proposal-editor", "section-status",
         "current-outline", "prompt-text", "codex-response", "chapter-body-for-save",
     ):
         assert TEMPLATE.count(f'id="{editor_id}"') == 1
@@ -71,3 +72,10 @@ def test_workspace_hides_path_and_keeps_prompt_response_in_drawer_mount() -> Non
     assert '"prompt-mode-control", "prompt-response-advanced"' in APP_JS
     assert 'navigateToView("tools", "打开 Prompt Templates")' in APP_JS
     assert 'navigateToView("memory", "打开记忆编辑区")' in APP_JS
+
+def test_explicit_anonymous_human_prototype_selector_is_visible_but_default_off() -> None:
+    assert 'id="human-prototype-selector"' in TEMPLATE
+    assert '<option value="">普通 Human Seed（默认）</option>' in TEMPLATE
+    assert '<option value="prism-wanderer-alpha">匿名私人原型实验</option>' in TEMPLATE
+    assert 'prototype_id: $("human-prototype-selector")?.value || ""' in APP_JS
+    assert 'invalidateGbrainResults("切换 Human Prototype")' in APP_JS

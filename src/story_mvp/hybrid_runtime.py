@@ -19,13 +19,15 @@ SPECIALIST_NAMES = ("opening", "dialogue", "action", "emotion")
 _SPECIALIST_HEADINGS = {
     "opening": (
         "## Opening Strategy",
-        "## Relevant Prose Controls",
+        "## Scene Prose Projection",
+        "## Relevant Prose Controls",  # legacy Curator output compatibility
         "## Relevant Plan",
         "## Reader-Facing Language",
     ),
     "dialogue": (
         "## Relevant Characters and Relationships",
-        "## Relevant Prose Controls",
+        "## Scene Prose Projection",
+        "## Relevant Prose Controls",  # legacy Curator output compatibility
         "## Relevant Plan",
         "## Reader-Facing Language",
     ),
@@ -38,7 +40,8 @@ _SPECIALIST_HEADINGS = {
     "emotion": (
         "## Relevant Characters and Relationships",
         "## Relevant Open Promises",
-        "## Relevant Prose Controls",
+        "## Scene Prose Projection",
+        "## Relevant Prose Controls",  # legacy Curator output compatibility
         "## Reader-Facing Language",
     ),
 }
@@ -49,6 +52,8 @@ class CuratorContextPacket:
     authority: str
     chapter_mission: str
     context_index: str
+    world_authority: str
+    human_core: str
     book_contract: str
     growth_genome_compact: str
     canon_index: str
@@ -57,6 +62,21 @@ class CuratorContextPacket:
     optional_inspiration: str
     growth_benefit_projection: str
     transition_context: str
+    reader_release: str = ""
+
+
+@dataclass(frozen=True)
+class AuthorityReviserContextPacket:
+    authority: str
+    chapter_mission: str
+    curator_context: str
+    world_authority: str
+    reader_release: str
+    power_core: str
+    human_core: str
+    canon_index: str
+    transition_context: str
+    primary_draft: str
 
 
 @dataclass(frozen=True)
@@ -119,6 +139,84 @@ def _extract_subsection(content: str, heading: str) -> str:
             collected.append(next_line)
         return "\n".join(collected).strip()
     return ""
+
+
+def strip_legacy_prose_controls(curated_response: str) -> str:
+    """Primary 不再接收旧版完整 Prose Control 区块。
+
+    新 Curator 应输出 `## Scene Prose Projection`。对历史 response 保持其它区块兼容，
+    但确定性删除 `## Relevant Prose Controls`，避免完整方法论重新进入 Writer。
+    """
+
+    lines = curated_response.splitlines()
+    kept: list[str] = []
+    skipping = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped == "## Relevant Prose Controls":
+            skipping = True
+            continue
+        if skipping and (stripped.startswith("## ") or stripped.startswith("# ")):
+            skipping = False
+        if not skipping:
+            kept.append(line)
+    return "\n".join(kept).strip()
+
+
+_UNRESOLVED_MARKERS = (
+    "未知",
+    "未确认",
+    "未解释",
+    "未兑现",
+    "未解决",
+    "未明确",
+    "不明",
+    "尚未",
+    "真假",
+    "不要补造",
+    "无法确认",
+    "无法判断",
+    "不提供",
+)
+
+
+def extract_unresolved_fact_boundary(curated_response: str) -> str:
+    """把 Curator 已识别的未解事实提升到 Primary 的高显著事实边界。
+
+    这是确定性投影，不做语义推断、不调用模型。Open Promises 全量保留；
+    Audit / World Rules / Payoff Window 只保留明确带未知标记的行，避免把
+    整份 Curated Context 再复制一遍。
+    """
+
+    sections: list[str] = []
+    audit = _extract_level_one_section(curated_response, "# Curator Audit")
+    if audit and "无需要报告" not in audit:
+        audit_lines = [
+            line.strip()
+            for line in audit.splitlines()
+            if line.strip() and any(marker in line for marker in _UNRESOLVED_MARKERS)
+        ]
+        if audit_lines:
+            sections.append("## Curator Uncertainty\n" + "\n".join(audit_lines))
+
+    promises = _extract_subsection(curated_response, "## Relevant Open Promises")
+    if promises and promises.strip() != "无":
+        sections.append("## Open Promises\n" + promises)
+
+    for heading, label in (
+        ("## Relevant World Rules", "## Unresolved World / Mechanism Facts"),
+        ("## Payoff and Promise Window", "## Still Unresolved / Not Yet Paid Off"),
+    ):
+        body = _extract_subsection(curated_response, heading)
+        lines = [
+            line.strip()
+            for line in body.splitlines()
+            if line.strip() and any(marker in line for marker in _UNRESOLVED_MARKERS)
+        ]
+        if lines:
+            sections.append(label + "\n" + "\n".join(lines))
+
+    return "\n\n".join(sections).strip()
 
 
 def drop_growth_hierarchy(book_contract: str) -> str:
@@ -245,9 +343,23 @@ def extract_primary_draft(response: str) -> str:
     body = _extract_level_one_section(response, "# 正式正文")
     if body:
         return body
+    # ACP/外部执行器偶尔会把一句模型前言和标题粘在同一行。
+    # 标题本身仍是明确正文边界时，确定性丢弃标题前模型自述。
+    marker = "# 正式正文"
+    if marker in response:
+        normalized = marker + "\n" + response.split(marker, 1)[1].lstrip()
+        body = _extract_level_one_section(normalized, marker)
+        if body:
+            return body
     body = _extract_level_one_section(response, "# Primary Draft")
     if body:
         return body
+    legacy_marker = "# Primary Draft"
+    if legacy_marker in response:
+        normalized = legacy_marker + "\n" + response.split(legacy_marker, 1)[1].lstrip()
+        body = _extract_level_one_section(normalized, legacy_marker)
+        if body:
+            return body
     clean = response.strip()
     if not clean or re.search(
         r"(?m)^#\s+(?:Primary Writer Audit|Primary Fact Summary|Writer Audit|章节事实摘要)\s*$",
@@ -361,6 +473,63 @@ def _project_indexed_text(text: str, query: str, *, max_chars: int) -> str:
     return "\n\n".join(rendered).strip()
 
 
+def _project_relevant_world_authority(text: str, query: str, *, max_chars: int = 4200) -> str:
+    """Select only world paragraphs explicitly relevant to the current planned chapter.
+
+    Unlike generic BOOK prefetch, this does not keep section lead paragraphs by
+    default. Outline is the release scheduler: if the current chapter plan does not
+    name or paraphrase a world fact, that fact should not become prose material merely
+    because it exists somewhere in World Vision.
+    """
+
+    clean = text.strip()
+    query_terms = _relevance_terms(query)
+    if not clean or not query_terms:
+        return ""
+
+    sections = [
+        section.strip()
+        for section in re.split(r"(?m)(?=^##\s+)", clean)
+        if section.strip()
+    ]
+    candidates: list[tuple[int, int, int, str, str]] = []
+    for section_index, section in enumerate(sections):
+        lines = section.splitlines()
+        heading = lines[0].strip() if lines and lines[0].lstrip().startswith("## ") else ""
+        body = "\n".join(lines[1:] if heading else lines).strip()
+        paragraphs = [part.strip() for part in re.split(r"\n\s*\n", body) if part.strip()]
+        heading_score = len(query_terms & _relevance_terms(heading))
+        for paragraph_index, paragraph in enumerate(paragraphs):
+            score = heading_score + len(query_terms & _relevance_terms(paragraph))
+            if score:
+                candidates.append((score, section_index, paragraph_index, heading, paragraph))
+
+    if not candidates:
+        return ""
+
+    selected: list[tuple[int, int, str, str]] = []
+    used = 0
+    for _, section_index, paragraph_index, heading, paragraph in sorted(
+        candidates, key=lambda item: (-item[0], item[1], item[2])
+    ):
+        extra = len(heading) + len(paragraph) + 4
+        if selected and used + extra > max_chars:
+            continue
+        selected.append((section_index, paragraph_index, heading, paragraph))
+        used += extra
+        if len(selected) >= 5:
+            break
+
+    rendered: list[str] = []
+    last_heading = ""
+    for _, _, heading, paragraph in sorted(selected, key=lambda item: (item[0], item[1])):
+        if heading and heading != last_heading:
+            rendered.append(heading)
+            last_heading = heading
+        rendered.append(paragraph)
+    return "\n\n".join(rendered).strip()
+
+
 def extract_final_chapter_artifact(response: str) -> tuple[str, str] | None:
     body = _extract_level_one_section(response, "# 正式正文")
     if not body:
@@ -414,6 +583,7 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
         for part in (
             packet.chapter_mission,
             packet.chapter_plan_context,
+            packet.reader_release,
             packet.growth_benefit_projection,
             extract_last_transition_context(packet.recent_prose, 1200),
         )
@@ -421,6 +591,8 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
     )
     context_index = "\n\n".join(
         (
+            _context_directory("WORLD AUTHORITY", packet.world_authority),
+            _context_directory("FROZEN HUMAN CORE", packet.human_core),
             _context_directory("BOOK CONTRACT", full_book_contract),
             _context_directory("CANON INDEX", packet.canon_context),
             _context_directory("PROSE PROFILE", packet.prose_profile),
@@ -430,6 +602,19 @@ def build_curator_context(packet: ChapterContextPacket) -> CuratorContextPacket:
         authority=packet.authority,
         chapter_mission=packet.chapter_mission,
         context_index=context_index,
+        world_authority=_project_relevant_world_authority(
+            packet.world_authority,
+            "\n\n".join(
+                part
+                for part in (
+                    packet.reader_release,
+                    packet.chapter_mission if packet.reader_release else packet.current_chapter_plan,
+                )
+                if part.strip()
+            ),
+        ),
+        reader_release=packet.reader_release,
+        human_core=packet.human_core,
         book_contract=_project_indexed_text(
             full_book_contract, relevance_query, max_chars=6200
         ),
@@ -459,6 +644,27 @@ def _relevant_curated_context(curated_response: str, specialist: str) -> str:
     if blocks:
         return "\n\n".join(blocks)
     return "（Curator 未提供与本专项对应的局部上下文。）"
+
+
+def build_authority_reviser_context(
+    packet: ChapterContextPacket,
+    curated_response: str,
+    primary_draft: str,
+) -> AuthorityReviserContextPacket:
+    """给二次修订器提供远端准确 Authority + 近端 Curator，不含 raw GBrain。"""
+
+    return AuthorityReviserContextPacket(
+        authority=packet.authority,
+        chapter_mission=packet.chapter_mission,
+        curator_context=curated_response.strip() or "（Curator 未提供；仅按冻结 Mission 与 Authority 做最小修订。）",
+        world_authority=packet.world_authority or "（未提供安全 World Authority；不得补造世界事实。）",
+        reader_release=packet.reader_release or "（本章没有排程 Reader Release。）",
+        power_core=packet.power_core or "（未提供 Frozen Power Core。）",
+        human_core=packet.human_core or "（未提供 Frozen Human Core；不得从近期行为反推人格。）",
+        canon_index=packet.canon_context or "（当前 Canon Index 为空。）",
+        transition_context=extract_last_transition_context(packet.recent_prose),
+        primary_draft=primary_draft.strip(),
+    )
 
 
 def build_specialist_context(

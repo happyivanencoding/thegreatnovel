@@ -3,3 +3,15 @@ __pycache__/
 .pytest_cache/
 .venv/
 books/*/.workflow_tmp/
+
+# Machine-local state (never commit)
+%SystemDrive%/
+.local/
+
+# Internal TGN methodology / handoff material must never enter public main.
+docs/
+DEEP_CONTEXT_HANDOFF*.md
+PROJECT_RULES.md
+temps/
+CURRENT_NOVEL_FOR_REVIEW.txt
+.agents/skills/tgn-system-steward/

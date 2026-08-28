@@ -150,6 +150,9 @@ textarea:focus, input:focus, select:focus { border-color: var(--accent); outline
 .creative-stage > summary { cursor: pointer; font-size: 13px; font-weight: 700; }
 .creative-stage > summary .count { float: right; font-size: 11px; font-weight: 500; }
 .creative-stage textarea { min-height: 150px; }
+.character-seed-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 10px; }
+.character-seed-grid > div { border: 1px solid var(--line); border-radius: 4px; padding: 10px; }
+.character-seed-grid h3 { font-size: 13px; margin: 0 0 8px; }
 .path-note { border-bottom: 1px solid var(--line); margin-bottom: 10px; padding-bottom: 9px; }
 .design-toolbar, .panorama-heading { align-items: center; border-top: 1px solid var(--line); display: flex; justify-content: space-between; margin-top: 14px; padding-top: 11px; }
 .design-toolbar .action-row { margin: 0; }
@@ -365,4 +368,8 @@ body.chapter-context-open .chapter-context-advanced { display: block; }
   .overview-grid, .memory-cards, .tools-list { grid-template-columns: 1fr; }
   .overview-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .chapter-workspace-toolbar, .chapter-context-toolbar { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 800px) {
+  .character-seed-grid { grid-template-columns: 1fr; }
 }

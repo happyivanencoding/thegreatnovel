@@ -25,8 +25,10 @@ from story_mvp.gbrain_retrieval import (
     CREATIVE_PLANNING_FINAL_RESULT_LIMIT,
     EMPTY_RESULT,
     FINAL_RESULT_LIMIT,
+    PLANNING_CANDIDATE_INSPECTION_LIMIT,
     RAW_RESULT_LIMIT,
     QUERY_RECALL_LIMIT,
+    WORLD_COORDINATE_REFERENCE_SLUG,
     _forbidden_terms,
     active_inspiration_allowed,
     build_retrieval_brief,
@@ -47,6 +49,7 @@ from story_mvp.hybrid_runtime import (
     drop_growth_hierarchy,
 )
 from story_mvp.prompts import (
+    DEFAULT_DIRECTOR_TEMPLATE,
     DEFAULT_PROMPT_TEMPLATES,
     DEFAULT_STATE_DELTA_TEMPLATE,
     DIRECTOR_CHAPTER_BUDGET_RULE,
@@ -77,6 +80,8 @@ from story_mvp.storage import (
     create_book,
     parse_book_sections,
     read_book_payload,
+    text_to_prompt_templates,
+    validate_book_content_for_save,
 )
 
 
@@ -111,8 +116,12 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
         "BOOK.md",
         "PROMPTS.md",
         "PROPOSAL.md",
-        "FANTASY_SEED.md",
         "WORLD_VISION.md",
+        "POWER_SEED.md",
+        "HUMAN_SEED.md",
+        "CHARACTER.md",
+        "CHARACTER_INITIAL_STATE.md",
+        "CHARACTER_AUDITION.md",
         "CREATIVE_STATE.json",
         "chapters",
     }
@@ -120,10 +129,7 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
     payload = read_book_payload("demo", tmp_path)
     assert set(payload["prompt_templates"]) == {
         "idea",
-        "fantasy_seed",
-        "world_vision",
         "outline",
-        "prologue",
         "chapter_prep",
         "chapter",
         "review",
@@ -140,11 +146,48 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
     assert "growth_genome" in payload["design_sections"]
     assert "## 0. 本书成长基因图" in payload["book_content"]
     assert payload["creative_state"] == {
-        "fantasy_seed": {"origin": "empty", "status": "empty"},
         "world_vision": {"origin": "empty", "status": "empty"},
+        "power_seed": {"origin": "empty", "status": "empty"},
+        "human_seed": {"origin": "empty", "status": "empty"},
+        "character_card": {"origin": "empty", "status": "empty"},
         "proposal": {"origin": "empty", "status": "empty"},
     }
-    assert set(payload["creative_artifacts"]) == {"fantasy_seed", "world_vision", "proposal"}
+    assert set(payload["creative_artifacts"]) == {
+        "world_vision", "power_seed", "human_seed", "character_card", "proposal"
+    }
+
+def test_prompt_template_parser_ignores_unsupported_top_level_sections() -> None:
+    parsed = text_to_prompt_templates(
+        "# 新书/总纲规划\n\nOUTLINE\n\n"
+        "# retired template\n\nOLD CONTENT\n\n"
+        "# 当前章执行小纲\n\nCHAPTER PREP\n"
+    )
+
+    assert parsed["outline"] == "OUTLINE"
+    assert parsed["chapter_prep"] == "CHAPTER PREP"
+    assert all("OLD CONTENT" not in value for value in parsed.values())
+
+
+def test_book_save_contract_rejects_inline_or_missing_top_level_heading(tmp_path: Path) -> None:
+    malformed = (
+        "模型说明。# 小说总体设计画像\n\n设计\n\n"
+        "# 当前中期规划窗口\n\n规划\n\n"
+        "# 未来十章逐章小纲\n\n十章\n\n"
+        "# 当前状态、未兑现承诺与作者备注\n\n状态\n"
+    )
+    with pytest.raises(ValueError, match="小说总体设计画像"):
+        validate_book_content_for_save(malformed)
+    book_dir = create_book("demo", tmp_path)
+    before = (book_dir / "BOOK.md").read_text(encoding="utf-8")
+    with pytest.raises(ValueError, match="小说总体设计画像"):
+        app_module.write_book("demo", malformed, tmp_path)
+    assert (book_dir / "BOOK.md").read_text(encoding="utf-8") == before
+
+
+def test_outline_ui_discards_model_preamble_before_book_headings() -> None:
+    js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
+    assert "const firstHeadingIndex = source.indexOf(firstHeading);" in js
+    assert "if (firstHeadingIndex >= 0) source = source.slice(firstHeadingIndex);" in js
 
 
 def test_new_book_has_no_database_or_old_system_directory(tmp_path: Path) -> None:
@@ -163,7 +206,7 @@ def test_legacy_long_plan_heading_is_read_and_new_heading_is_written() -> None:
     assert "# 未来100章大型剧情块" not in rewritten
 
 
-def test_old_book_without_creative_files_still_loads_and_legacy_proposal_is_not_approved(tmp_path: Path) -> None:
+def test_existing_book_without_split_files_loads_as_unmigrated_new_architecture(tmp_path: Path) -> None:
     book_dir = tmp_path / "old-book"
     book_dir.mkdir()
     (book_dir / "BOOK.md").write_text("# 小说总体设计画像\n\n旧书", encoding="utf-8")
@@ -177,123 +220,132 @@ def test_old_book_without_creative_files_still_loads_and_legacy_proposal_is_not_
         "origin": "legacy_unknown",
         "status": "draft",
     }
-    assert payload["creative_state"]["fantasy_seed"] == {"origin": "empty", "status": "empty"}
-    assert not (book_dir / "FANTASY_SEED.md").exists()
+    for artifact in ("world_vision", "power_seed", "human_seed", "character_card"):
+        assert payload["creative_state"][artifact] == {"origin": "empty", "status": "empty"}
+    # Loading does not synthesize compatibility artifacts. The book must explicitly
+    # rebuild upstream creative authority through the new architecture.
     assert not (book_dir / "WORLD_VISION.md").exists()
-    assert not (book_dir / "CREATIVE_STATE.json").exists()
+    assert not (book_dir / "POWER_SEED.md").exists()
+    assert not (book_dir / "HUMAN_SEED.md").exists()
+    assert not (book_dir / "CHARACTER.md").exists()
 
-
-def test_creative_state_sources_and_explicit_approval_api(tmp_path: Path, monkeypatch) -> None:
+def test_creative_state_sources_and_single_character_approval_api(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
     local_client = TestClient(app)
     assert local_client.post("/api/books", json={"book_id": "creative"}).status_code == 201
 
-    generated = local_client.put(
-        "/api/books/creative/fantasy-seed",
-        json={"content": "MODEL_GENERATED_SEED", "origin": "model_generated"},
-    )
-    assert generated.status_code == 200
-    assert generated.json()["creative_state"]["fantasy_seed"] == {
-        "origin": "model_generated",
-        "status": "draft",
-    }
-
-    selected = local_client.put(
+    world = local_client.put(
         "/api/books/creative/world-vision",
-        json={"content": "MODEL_SELECTED_WORLD", "origin": "model_selected"},
+        json={"content": "# PROTAGONIST-BLIND WORLD VISION\n\nWORLD", "origin": "model_generated"},
     )
-    assert selected.status_code == 200
-    assert selected.json()["creative_state"]["world_vision"] == {
-        "origin": "model_selected",
-        "status": "draft",
+    assert world.status_code == 200
+    assert world.json()["creative_state"]["world_vision"] == {
+        "origin": "model_generated", "status": "draft"
     }
+    approved_world = local_client.post("/api/books/creative/world-vision/approve")
+    assert approved_world.status_code == 200
+    assert approved_world.json()["creative_state"]["world_vision"]["status"] == "author_approved"
+
+    power = local_client.put(
+        "/api/books/creative/power-seed",
+        json={"content": "# POWER SEED｜匿名能力\n\n## Core Fantasy\n能做到一件异常的事。", "origin": "model_selected"},
+    )
+    human = local_client.put(
+        "/api/books/creative/human-seed",
+        json={"content": "# HUMAN SEED｜季衡／想赢\n\n## Core Obsession\n一直想赢。\n\n## Initial State Seed\n### 当前私人欲望\n赢下眼前这一场。", "origin": "author_edited"},
+    )
+    assert power.status_code == human.status_code == 200
+    assert power.json()["creative_state"]["power_seed"]["status"] == "draft"
+    assert human.json()["creative_state"]["human_seed"]["status"] == "draft"
+
+    # Power/Human have no separate approval endpoint. One Character approval freezes both.
+    assert local_client.post("/api/books/creative/power-seed/approve").status_code == 404
+    approved_character = local_client.post("/api/books/creative/character/approve")
+    assert approved_character.status_code == 200
+    payload = approved_character.json()
+    assert payload["creative_state"]["power_seed"]["status"] == "author_approved"
+    assert payload["creative_state"]["human_seed"]["status"] == "author_approved"
+    assert payload["creative_state"]["character_card"] == {
+        "origin": "deterministic", "status": "author_approved"
+    }
+    assert "匿名能力" in payload["character_card"]
+    assert "一直想赢" in payload["character_card"]
+    assert "赢下眼前这一场" in payload["character_initial_state"]
+
     proposal = local_client.put(
         "/api/books/creative/proposal",
         json={"content": "MODEL_SELECTED_PROGRAM", "origin": "model_selected"},
     )
     assert proposal.json()["creative_state"]["proposal"] == {
-        "origin": "model_selected",
-        "status": "draft",
+        "origin": "model_selected", "status": "draft"
     }
-
-    cannot_approve_in_put = local_client.put(
-        "/api/books/creative/proposal",
-        json={"content": "FORGED_APPROVAL", "origin": "author_approved"},
-    )
-    assert cannot_approve_in_put.status_code == 422
-
-    approved_seed = local_client.post("/api/books/creative/fantasy-seed/approve")
-    assert approved_seed.json()["creative_state"]["fantasy_seed"]["status"] == "author_approved"
-    approved_world = local_client.post("/api/books/creative/world-vision/approve")
-    assert approved_world.json()["creative_state"]["world_vision"]["status"] == "author_approved"
     approved_proposal = local_client.post("/api/books/creative/proposal/approve")
     assert approved_proposal.json()["creative_state"]["proposal"]["status"] == "author_approved"
 
+    # Editing either seed reopens Character authority without preserving a stale Character card.
     edited = local_client.put(
-        "/api/books/creative/fantasy-seed",
-        json={"content": "AUTHOR_EDITED_AFTER_APPROVAL"},
+        "/api/books/creative/human-seed",
+        json={"content": "# HUMAN SEED｜季衡／更想赢\n\n## Core Obsession\n更想赢。"},
     )
-    assert edited.json()["creative_state"]["fantasy_seed"] == {
-        "origin": "author_edited",
-        "status": "draft",
-    }
-    edited_world = local_client.put(
-        "/api/books/creative/world-vision",
-        json={"content": "AUTHOR_EDITED_WORLD_AFTER_APPROVAL"},
-    )
-    assert edited_world.json()["creative_state"]["world_vision"] == {
-        "origin": "author_edited",
-        "status": "draft",
-    }
-    edited_proposal = local_client.put(
-        "/api/books/creative/proposal",
-        json={"content": "AUTHOR_EDITED_PROGRAM_AFTER_APPROVAL"},
-    )
-    assert edited_proposal.json()["creative_state"]["proposal"] == {
-        "origin": "author_edited",
-        "status": "draft",
-    }
-
+    assert edited.json()["creative_state"]["human_seed"]["status"] == "draft"
+    assert edited.json()["creative_state"]["character_card"] == {"origin": "empty", "status": "empty"}
 
 def test_creative_prompt_approval_boundaries_and_outline_authority(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
     local_client = TestClient(app)
     assert local_client.post("/api/books", json={"book_id": "gates"}).status_code == 201
-    base = {
-        "book_id": "gates",
-        "template": "VISIBLE_TEMPLATE",
-        "creative_direction": "AUTHOR_DIRECTION",
-        "fantasy_seed": "SEED",
-        "world_vision": "WORLD",
-        "proposal_context": "PROGRAM",
-    }
 
-    assert local_client.post("/api/prompt", json={**base, "mode": "fantasy_seed"}).status_code == 200
-    world_blocked = local_client.post("/api/prompt", json={**base, "mode": "world_vision"})
-    assert world_blocked.status_code == 422
-    assert world_blocked.json()["detail"]["missing_artifacts"] == ["fantasy_seed"]
-    program_blocked = local_client.post("/api/prompt", json={**base, "mode": "idea"})
+    # World is the first creative authority and needs no upstream approval.
+    world_prompt = local_client.post(
+        "/api/prompt",
+        json={"book_id": "gates", "mode": "world_vision", "creative_direction": "AUTHOR_DIRECTION"},
+    )
+    assert world_prompt.status_code == 200
+    assert "PROTAGONIST-BLIND WORLD VISION" in world_prompt.json()["prompt"]
+
+    power_blocked = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "power_seed"})
+    human_blocked = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "human_seed"})
+    assert power_blocked.status_code == human_blocked.status_code == 422
+    assert power_blocked.json()["detail"]["missing_artifacts"] == ["world_vision"]
+
+    local_client.put(
+        "/api/books/gates/world-vision",
+        json={"content": "# PROTAGONIST-BLIND WORLD VISION\n\n## 力量体系与正常值\n一人一主承载。", "origin": "model_generated"},
+    )
+    assert local_client.post("/api/books/gates/world-vision/approve").status_code == 200
+    assert local_client.post("/api/prompt", json={"book_id": "gates", "mode": "power_seed"}).status_code == 200
+    assert local_client.post("/api/prompt", json={"book_id": "gates", "mode": "human_seed"}).status_code == 200
+
+    program_blocked = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "idea"})
     assert program_blocked.status_code == 422
+    assert "character_card" in program_blocked.json()["detail"]["missing_artifacts"]
 
-    for artifact, path in (
-        ("fantasy_seed", "fantasy-seed"),
-        ("world_vision", "world-vision"),
-        ("proposal", "proposal"),
-    ):
-        saved = local_client.put(
-            f"/api/books/gates/{path}",
-            json={"content": artifact.upper(), "origin": "model_generated"},
-        )
-        assert saved.status_code == 200
-        assert saved.json()["creative_state"][artifact]["status"] == "draft"
+    local_client.put(
+        "/api/books/gates/power-seed",
+        json={"content": "# POWER SEED｜双位\n\n## Core Fantasy\n保留第二位置。", "origin": "model_selected"},
+    )
+    local_client.put(
+        "/api/books/gates/human-seed",
+        json={"content": "# HUMAN SEED｜石砚／找声音\n\n## Core Obsession\n找回一个声音。", "origin": "model_selected"},
+    )
+    assert local_client.post("/api/books/gates/character/approve").status_code == 200
+    program = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "idea"})
+    assert program.status_code == 200
+    program_prompt = program.json()["prompt"]
+    assert "不要把碰撞消解成命中注定的适配" in program_prompt
+    assert "可以补少量过去，但不要用过去证明整个人" in program_prompt
+    assert "不要为了人格合理化而自动悲情化" in program_prompt
+    assert "过去存在，不等于现在就要告诉读者" in program_prompt
+    assert "不得自动成为小说主线或大型阶段发动机" in program_prompt
+    assert "Outline 只在当前故事真正需要时逐步安排读者看见其中一小部分" in program_prompt
 
-    assert local_client.post("/api/prompt", json={**base, "mode": "outline"}).status_code == 422
-    for path in ("fantasy-seed", "world-vision", "proposal"):
-        assert local_client.post(f"/api/books/gates/{path}/approve").status_code == 200
-    final = local_client.post("/api/prompt", json={**base, "mode": "outline"})
+    outline_blocked = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "outline"})
+    assert outline_blocked.status_code == 422
+    local_client.put("/api/books/gates/proposal", json={"content": "PROGRAM", "origin": "model_generated"})
+    assert local_client.post("/api/books/gates/proposal/approve").status_code == 200
+    final = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "outline"})
     assert final.status_code == 200
-    assert "VISIBLE_TEMPLATE" in final.json()["prompt"]
-
+    assert "Character Authority" in final.json()["prompt"]
 
 def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
     fantasy = generate_prompt(
@@ -309,6 +361,7 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
     for marker in (
         "### 核心幻想",
         "### 主角最强欲望",
+        "### 主角欲望人格与行为签名",
         "### 力量占有欲",
         "### 第一次标志性奇观",
         "### 长期增长发动机",
@@ -335,10 +388,11 @@ def test_fantasy_seed_and_world_vision_inputs_are_isolated() -> None:
     for marker in ("BOOK_MARKER", "REFERENCE_MARKER"):
         assert marker not in world
     for marker in (
+        "没有主角时，谁正在追什么，哪里正在发生什么",
+        "世界里真正值钱、值得想要的东西",
         "世界最震撼的三幅画面",
         "力量的升格方向",
-        "世界资源、利益与机会结构",
-        "持续冲突来源",
+        "世界正在发生的欲望、冲突与机会",
         "第一次决定性兑现",
         "早期成长锚点与长期升格",
         "早期兑现",
@@ -691,16 +745,14 @@ def test_prompt_generation_and_response_do_not_write_book_before_save(tmp_path: 
     response = client.post(
         "/api/prompt",
         json={
-            "mode": "fantasy_seed",
-            "template": "template",
-            "book_content": "page-visible-book",
+            "mode": "world_vision",
+            "book_id": "demo",
             "creative_direction": "author direction",
             "selected_references": [],
         },
     )
     assert response.status_code == 200
     assert (tmp_path / "demo" / "BOOK.md").read_text(encoding="utf-8") == before
-
 
 def test_empty_eight_outline_fields_block_chapter_prompt() -> None:
     empty = "\n".join(f"{field}：" for field in (
@@ -804,7 +856,7 @@ STATUS_MARKER
         "已批准的正式前文；已经发生事实的最高来源",
         "是正式正文的压缩索引",
         "与正式正文冲突时以正式正文为准",
-        "只决定尚未发生的内容",
+        "PLAN 决定当前尚未发生的剧情",
         "Curator 负责在 Curator Audit 中暴露",
         "Primary 不承担冲突报告或其它 pipeline bookkeeping",
     ):
@@ -898,8 +950,10 @@ def test_outline_template_requests_executable_prose_profile() -> None:
     assert "内部因果必须可信，但可信不等于现代程序真实" in template
     assert "核心幻想、力量占有欲、主角欲望" in template
     assert "代价或余波（可选）" in template
-    assert "本批核心幻想兑现" in template
+    assert "Block Delta" in template
+    assert "相对本块开始" in template
     assert "不要求每章都成长或结算" in template
+    assert "本批核心幻想兑现" not in template
 
 
 def test_approved_chapter_gets_correct_numbered_markdown_file(tmp_path: Path, monkeypatch) -> None:
@@ -1058,7 +1112,8 @@ def test_review_prompt_discusses_growth_loop_variation() -> None:
     )
     assert "本书成长基因图" in prompt
     assert "核心幻想是否仍在兑现" in prompt
-    assert "一级成长是否仍是主轴" in prompt
+    assert "长期成长承诺是否仍在轨" in prompt
+    assert "不要求最近十章必须升级" in prompt
     assert "幻想盈余是否为正" in prompt
     assert "冲突是否过度理性化" in prompt
     assert "世界是否被程序化" in prompt
@@ -1080,34 +1135,32 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
         assert heading in prompt
     assert "## 0. 本书成长基因图" in prompt
     assert "已批准幻想不变量" in prompt
-    assert "主角核心欲望与超越" in prompt
-    assert "一级成长主轴" in prompt
-    assert "核心优势阶段升格" in prompt
-    assert "主循环" in prompt
+    assert "已批准长期成长兑现" in prompt
+    assert "已批准长期后果" in prompt
+    assert "数量由 Power growth grammar 与 Story Program 决定" in prompt
+    assert "至少说明三次" not in prompt
     assert "成本节奏" in prompt
     assert "POWER_BREAKTHROUGH" not in prompt
-    assert "不强制每块失去或承担什么" in prompt
+    assert "Power、奖励、权限、地图都允许整块没有" in prompt
     assert "每块必须公开验证" not in prompt
-    assert "通常约 4—10 块" in prompt
+    assert "通常 3—5 个锚点只是密度参考" in prompt
     assert all(f"## {number}." in prompt for number in range(1, 13))
-    assert "完整输出当前窗口的所有剧情块" in prompt
-    assert "覆盖第1章到本窗口预计终点" in prompt
+    assert "完整输出从第1章到本窗口预计终点的所有自然剧情块" in prompt
+    assert "不用“后续类似”省略" in prompt
     assert "规划范围：预计第1—N章" in prompt
     assert "窗口终点：" in prompt
     assert "具体发生" in prompt
     assert "Outline Story Anchor Density" in prompt
-    assert "Director 可以直接执行的故事骨架" in prompt
-    assert "通常 3—5 个锚点" in prompt
-    assert "只有很短的剧情块可以 2 个" in prompt
-    assert "这只是内容密度参考，不是 Hard Gate" in prompt
-    assert "锚点是故事转折，不是场景分镜或操作步骤" in prompt
+    assert "Story Program 的执行编译层，不是第二个 Story Program" in prompt
+    assert "通常 3—5 个锚点只是密度参考" in prompt
+    assert "每个剧情块是若干会改变局势的故事转折，不是实施步骤" in prompt
     assert "提高故事确定性，不是提高施工步骤确定性" in prompt
     assert "推进、转折或结算当前剧情块中的某个故事锚点" in prompt
     assert "不要为了填章数，把一个锚点拆成连续几章" in prompt
     assert "结果 / 状态变化" in prompt
     assert "结尾推动" in prompt
     assert "第一章开篇策略" in prompt
-    assert "本批核心幻想兑现" in prompt
+    assert "本批核心幻想兑现" not in prompt
     assert "不要求每章都成长或结算" in prompt
 
 
@@ -1141,10 +1194,10 @@ def test_long_form_pacing_uses_soft_anchors_and_dynamic_outline_window() -> None
         book_content="",
         **approved_creative_inputs(),
     )
-    assert "### 早期锚点、中期里程碑与远期升格" in story
-    assert "大型阶段不分配固定章节额度" in story
-    assert "横向开发" not in story
-    assert "不把远期升格强塞进固定百章窗口" in story
+    assert "## 全书成长与核心幻想兑现脊柱" in story
+    assert "生成 5—7 个自然大型阶段" in story
+    assert "阶段长度不平均" in story
+    assert "不等于每个大型阶段都必须同时出现新能力" in story
 
     outline = generate_prompt(
         mode="outline",
@@ -1155,7 +1208,12 @@ def test_long_form_pacing_uses_soft_anchors_and_dynamic_outline_window() -> None
     assert "# 当前中期规划窗口" in outline
     assert "规划范围：预计第1—N章" in outline
     assert "当前中期规划窗口只展开 Story Program" in outline
-    assert "通常约 4—10 块" in outline
+    assert "完整输出从第1章到本窗口预计终点的所有自然剧情块" in outline
+    assert "Reader Release Scheduler" in outline
+    assert "严格的 T0 快照" in outline
+    assert "第一章第一场事件发生前一刻已经真实成立的事实" in outline
+    assert "模型已经规划过”不等于“故事已经发生过" in outline
+    assert "Current State 与 Future Plan 在时间上必须互斥" in outline
     assert "# 未来100章大型剧情块" not in outline
 
 
@@ -1303,7 +1361,8 @@ def test_default_retrieval_query_uses_context_instead_of_generic_prefix() -> Non
     context_body = js[start:end]
     assert 'book_content: composeBookContent()' in context_body
     assert 'current_long_block' in context_body
-    assert 'fantasy_seed' in context_body
+    assert 'character_card' in context_body
+    assert 'fantasy_seed' not in context_body
     assert 'world_vision' in context_body
     assert 'proposal_context' in context_body
     assert 'current_outline' in context_body
@@ -1658,6 +1717,22 @@ def test_xianxia_without_negative_constraints_keeps_cultivation() -> None:
     assert "修炼" in result["result"]
 
 
+def test_story_internal_cannot_return_to_old_cultivation_system_is_not_a_genre_ban() -> None:
+    constraints = extract_hard_constraints("不可逆事件是：他从此无法回到原本的修炼体系，但也成为旧世界无法再定义的人。")
+    assert "无修炼体系" not in constraints
+    assert "无超自然" not in constraints
+
+
+def test_unrelated_no_chance_clause_does_not_become_a_cultivation_genre_ban() -> None:
+    constraints = extract_hard_constraints("他必须在一场本来没有胜算的冲突中活下来，否则连继续修炼和进入更高层世界的资格都没有。")
+    assert "无修炼体系" not in constraints
+
+
+def test_explicit_long_cultivation_ban_still_matches_within_one_clause() -> None:
+    constraints = extract_hard_constraints("作者要求：不要在故事里使用任何形式的修炼体系。")
+    assert "无修炼体系" in constraints
+
+
 def test_three_fixture_spaces_keep_their_distinct_constraint_semantics() -> None:
     pure_real = extract_hard_constraints(REAL_WORLD_BOOK)
     superpower = extract_hard_constraints(REAL_WORLD_SUPERPOWER_BOOK)
@@ -1813,15 +1888,139 @@ def test_planning_retrieval_uses_hidden_keyword_aliases_without_query_embedding(
     result = retrieve_gbrain(
         mode="world_vision",
         creative_direction="玄幻成长",
-        fantasy_seed="已批准核心幻想：看见别人看不见的路",
         query_func=fake_query,
         page_func=lambda _slug: _page("Mechanism", "世界扩张每一层都新增读者想进入、想获得或想知道的具体欲望。"),
     )
-    assert seen == ['"world fantasy" OR "world entry" OR "narrative compounding"']
+    assert seen == [
+        '"world fantasy" OR "world entry" OR "narrative compounding"',
+        '"reader coordinates" OR "progression scale" OR "action space scale" OR "expectation ladder" OR "core advantage" OR "world compatibility" OR "power scale" OR "threat scale"',
+    ]
     assert result["query_strategy"] == "planning_keyword_aliases"
-    assert "看见别人看不见的路" in result["retrieval_brief"]
+    assert result["query_texts"] == seen
+    assert "玄幻成长" in result["retrieval_brief"]
+    assert "Fantasy Seed" not in result["retrieval_brief"]
     assert result["accepted_count"] == 1
     assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+
+
+@pytest.mark.parametrize(
+    ("outline", "expected", "unexpected"),
+    [
+        ("本章是三方高压谈判，通过称呼、拒答和报价改变筹码。", "dialogue negotiation", "action combat"),
+        ("本章是狭窄石桥上的追逐战，必须写清站位、受力和落点。", "action combat", "dialogue negotiation"),
+        ("本章第一次看见远超既有尺度的奇观，天穹与距离发生变化。", "scale anchored wonder", "dialogue negotiation"),
+        ("多年后重逢，人物都很克制，用微反应表现想念。", "emotion relationship", "limited reveal"),
+        ("主角发现旧物的真相，只能从线索和规则推断一部分。", "evidence first limited reveal", "dialogue negotiation"),
+        ("主角第一次进入陌生空间，从入口和边界建立现场。", "action anchored grounding", "payoff power proof"),
+        ("本章是低压日常，吃饭休息时让关系通过生活动作显出来。", "ordinary life prose", "action combat"),
+    ],
+)
+def test_chapter_prose_control_keyword_fallback_tracks_scene_family(monkeypatch, outline, expected, unexpected) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    brief = build_retrieval_brief(mode="context_curator", current_outline=outline)
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert strategy == "prose_control_keyword_aliases"
+    assert expected in effective
+    assert unexpected not in effective
+
+
+def test_payoff_scene_no_key_fallback_adds_no_regular_prose_control(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    brief = build_retrieval_brief(
+        mode="context_curator",
+        current_outline="本章在众人面前完成公开能力证明，结果已经清楚，只需要让现场承认变化。",
+    )
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert effective == ""
+    assert strategy == "prose_control_none"
+
+    seen: list[str] = []
+    result = retrieve_gbrain(
+        mode="context_curator",
+        current_outline="本章在众人面前完成公开能力证明，结果已经清楚，只需要让现场承认变化。",
+        query_func=lambda query, **_kwargs: seen.append(query) or "",
+        page_func=lambda _slug: "",
+    )
+    assert seen == []
+    assert result["query_strategy"] == "prose_control_none"
+    assert result["accepted_count"] == 0
+
+
+def test_no_key_prose_fallback_prefers_reveal_over_incidental_action_terms(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    brief = build_retrieval_brief(
+        mode="context_curator",
+        current_outline="主角用灰粉、滴水和试压复现裂纹，再据此推断局部规律；只能确认这一部分，来源仍未知。",
+    )
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert strategy == "prose_control_keyword_aliases"
+    assert "evidence first limited reveal" in effective
+
+
+def test_no_key_prose_fallback_does_not_treat_repeated_stance_as_complex_action(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    brief = build_retrieval_brief(
+        mode="context_curator",
+        current_outline="两人围绕信任边界交换条件，人物几次改变站位观察对方；没有追逐、搜捕、围堵或路线变化。",
+    )
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert effective == ""
+    assert strategy == "prose_control_none"
+
+
+def test_chapter_prose_control_fallback_returns_one_primary_control(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    seen: list[str] = []
+    raw = "\n".join([
+        "[0.99] prose-controls/action-a -- action combat spatial clarity",
+        "[0.98] prose-controls/action-b -- action combat spatial clarity",
+        "[0.97] prose-controls/action-c -- action combat spatial clarity",
+    ])
+
+    def fake_query(query: str, **_kwargs) -> str:
+        seen.append(query)
+        return raw
+
+    result = retrieve_gbrain(
+        mode="context_curator",
+        current_outline="追逐战，写清站位、距离、受力与落点。",
+        query_func=fake_query,
+        page_func=lambda slug: _page("Mechanism", f"{slug} 的动作写作控制。"),
+    )
+    assert seen == ['"action combat" OR "spatial clarity"']
+    assert result["query_strategy"] == "prose_control_keyword_aliases"
+    assert result["final_limit"] == 1
+    assert result["accepted_count"] == 1
+
+
+def test_chapter_prose_control_keeps_semantic_brief_when_embedding_query_is_available(monkeypatch) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
+    brief = build_retrieval_brief(
+        mode="context_curator",
+        current_outline="高压谈判，通过称呼与拒答改变关系。",
+    )
+    effective, strategy = default_effective_query("context_curator", brief)
+    assert effective == brief
+    assert strategy == "semantic_brief"
+
+
+def test_manual_chapter_gbrain_query_still_overrides_prose_fallback(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    seen: list[str] = []
+
+    def fake_query(query: str, **_kwargs) -> str:
+        seen.append(query)
+        return "[0.99] prose-controls/manual -- manual"
+
+    result = retrieve_gbrain(
+        mode="context_curator",
+        current_outline="高压谈判。",
+        query_override="manual prose query",
+        query_func=fake_query,
+        page_func=lambda _slug: _page("Mechanism", "手工选择的正文控制。"),
+    )
+    assert seen == ["manual prose query"]
+    assert result["query_strategy"] == "manual_override"
 
 
 def test_planning_retrieval_keeps_full_chinese_brief_when_semantic_query_is_available(monkeypatch) -> None:
@@ -1829,13 +2028,14 @@ def test_planning_retrieval_keeps_full_chinese_brief_when_semantic_query_is_avai
     brief = build_retrieval_brief(
         mode="idea",
         creative_direction="玄幻成长",
-        fantasy_seed="SEED_ALPHA",
         world_vision="WORLD_BETA",
+        character_card="CHARACTER_ALPHA",
     )
     effective, strategy = default_effective_query("idea", brief)
     assert effective == brief
     assert strategy == "semantic_brief"
-    assert "SEED_ALPHA" in effective
+    assert "CHARACTER_ALPHA" in effective
+    assert "SEED_ALPHA" not in effective
     assert "WORLD_BETA" in effective
 
 
@@ -1859,9 +2059,10 @@ def test_story_program_keyword_fallback_merges_craft_and_reward_queries(monkeypa
         query_func=fake_query,
         page_func=pages.__getitem__,
     )
-    assert len(seen) == 2
+    assert len(seen) == 3
     assert any("plot engine variation" in q for q in seen)
     assert any("reward opportunity" in q for q in seen)
+    assert any("longitudinal thread" in q for q in seen)
     assert [item["slug"] for item in result["accepted"]] == [
         "mechanisms/plot", "mechanisms/thread", "mechanisms/reward"
     ]
@@ -1875,12 +2076,12 @@ def test_world_vision_gbrain_brief_api_keeps_chinese_visible_and_alias_internal(
         json={
             "mode": "world_vision",
             "creative_direction": "玄幻成长",
-            "fantasy_seed": "已批准幻想：隐藏道路",
         },
     )
     assert response.status_code == 200
     payload = response.json()
-    assert "已批准幻想：隐藏道路" in payload["retrieval_brief"]
+    assert "玄幻成长" in payload["retrieval_brief"]
+    assert "Fantasy Seed" not in payload["retrieval_brief"]
     assert payload["effective_query"] == '"world fantasy" OR "world entry" OR "narrative compounding"'
     assert payload["query_strategy"] == "planning_keyword_aliases"
 
@@ -1978,7 +2179,7 @@ def test_raw_result_limit_applies_to_novel_candidates_only() -> None:
         return _page("Evidence", "不属于可提取的抽象区块。")
 
     result = retrieve_gbrain(
-        mode="idea",
+        mode="chapter",
         book_content="都市成长故事",
         query_func=lambda _query, **_kwargs: raw,
         page_func=fake_get,
@@ -2136,13 +2337,153 @@ def test_application_and_final_limits_bound_overlong_cli_output() -> None:
         return _page("Mechanism", f"抽象材料 {slug}")
 
     result = retrieve_gbrain(mode="idea", book_content="现实世界；无超自然", query_func=fake_query, page_func=fake_get)
-    assert result["raw_count"] == 40
+    assert result["raw_count"] == 60
     assert result["unique_raw_count"] == 20
-    assert result["requested_limit"] == RAW_RESULT_LIMIT
+    assert result["requested_limit"] == PLANNING_CANDIDATE_INSPECTION_LIMIT
     assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
     assert result["accepted_count"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
     assert len(calls) == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
-    assert sum(item["reason"] == "超过小说候选数量上限" for item in result["rejected"]) == 12
+    assert sum(item["reason"] == "超过小说候选数量上限" for item in result["rejected"]) == 8
+
+
+def test_planning_query_batches_round_robin_preserve_multiple_retrieval_intents(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    def fake_query(query: str, **_kwargs) -> str:
+        if "world fantasy" in query:
+            return "\n".join(
+                f"[{0.99 - index / 100:.2f}] mechanisms/general-{index} -- general"
+                for index in range(8)
+            )
+        if "reader coordinates" in query:
+            return (
+                "[0.80] syntheses/reader-coordinates -- reader coordinates\n"
+                "[0.70] mechanisms/world-compatibility -- compatibility"
+            )
+        return ""
+
+    result = retrieve_gbrain(
+        mode="world_vision",
+        query_func=fake_query,
+        page_func=lambda slug: _page("Mechanism", f"{slug} 的可迁移抽象。"),
+    )
+
+    visible = [item["slug"] for item in result["raw_results"]]
+    assert visible[:4] == [
+        "mechanisms/general-0",
+        "syntheses/reader-coordinates",
+        "mechanisms/general-1",
+        "mechanisms/world-compatibility",
+    ]
+    assert result["accepted_count"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+    assert [item["slug"] for item in result["accepted"]] == visible[:3]
+    assert result["requested_limit"] == PLANNING_CANDIDATE_INSPECTION_LIMIT
+
+
+def test_world_vision_fixed_coordinate_reference_does_not_consume_three_creative_slots(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    raw = "\n".join(
+        [
+            f"[0.99] {WORLD_COORDINATE_REFERENCE_SLUG} -- reader coordinates",
+            "[0.98] mechanisms/world-a -- world a",
+            "[0.97] mechanisms/world-b -- world b",
+            "[0.96] mechanisms/world-c -- world c",
+        ]
+    )
+    pages = {
+        WORLD_COORDINATE_REFERENCE_SLUG: (
+            "---\nactive_inspiration: true\n---\n\n"
+            "## Guidance\n\n每本书至少建立一把当前主尺，让读者能预测强弱、边界和下一档期待。"
+        ),
+        "mechanisms/world-a": _page("Mechanism", "世界入口改变行动空间。"),
+        "mechanisms/world-b": _page("Mechanism", "世界欲望随地图自然扩大。"),
+        "mechanisms/world-c": _page("Mechanism", "上一轮结果改变下一轮世界状态。"),
+    }
+    result = retrieve_gbrain(
+        mode="world_vision",
+        query_override="manual world query",
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=pages.__getitem__,
+    )
+    assert result["coordinate_reference_count"] == 1
+    assert result["coordinate_reference"]["slug"] == WORLD_COORDINATE_REFERENCE_SLUG
+    assert result["accepted_count"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+    assert [item["slug"] for item in result["accepted"]] == [
+        "mechanisms/world-a",
+        "mechanisms/world-b",
+        "mechanisms/world-c",
+    ]
+    assert "### Fixed Coordinate Reference" in result["result"]
+    assert "不占 creative inspiration 名额" in result["result"]
+    assert result["result"].count("### Inspiration ") == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+
+
+@pytest.mark.parametrize("mode", ["idea", "outline"])
+def test_world_coordinate_reference_does_not_reenter_downstream_creative_slots(mode: str) -> None:
+    raw = "\n".join(
+        [
+            f"[0.99] {WORLD_COORDINATE_REFERENCE_SLUG} -- reader coordinates",
+            "[0.98] mechanisms/plot-engine-variation-v3 -- plot",
+            "[0.97] mechanisms/thread-collision-v3 -- thread",
+            "[0.96] mechanisms/earned-high-value-acquisition-v3 -- reward",
+        ]
+    )
+    pages = {
+        WORLD_COORDINATE_REFERENCE_SLUG: _page("Guidance", "读者坐标。"),
+        "mechanisms/plot-engine-variation-v3": _page("Mechanism", "换 Plot Engine。"),
+        "mechanisms/thread-collision-v3": _page("Mechanism", "线程碰撞。"),
+        "mechanisms/earned-high-value-acquisition-v3": _page("Mechanism", "高价值获得。"),
+    }
+    result = retrieve_gbrain(
+        mode=mode,
+        world_vision="已批准世界",
+        query_override="manual planning query",
+        query_func=lambda _query, **_kwargs: raw,
+        page_func=pages.__getitem__,
+    )
+    accepted_slugs = [item["slug"] for item in result["accepted"]]
+    assert WORLD_COORDINATE_REFERENCE_SLUG not in accepted_slugs
+    assert accepted_slugs[:3] == [
+        "mechanisms/plot-engine-variation-v3",
+        "mechanisms/thread-collision-v3",
+        "mechanisms/earned-high-value-acquisition-v3",
+    ]
+    assert any(
+        item["slug"] == WORLD_COORDINATE_REFERENCE_SLUG and "不重复占 downstream creative 名额" in item["reason"]
+        for item in result["rejected"]
+    )
+
+
+def test_planning_multi_intent_query_tolerates_one_optional_query_failure(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    def fake_query(query: str, **_kwargs) -> str:
+        if "reader coordinates" in query:
+            raise GBrainQueryError("secondary intent unavailable")
+        return "[0.99] mechanisms/world-entry -- world entry"
+
+    result = retrieve_gbrain(
+        mode="world_vision",
+        query_func=fake_query,
+        page_func=lambda _slug: _page("Mechanism", "世界入口改变下一步行动空间。"),
+    )
+    assert result["accepted_count"] == 1
+    assert len(result["query_failures"]) == 1
+    assert "reader coordinates" in result["query_failures"][0]["query"]
+
+
+def test_planning_multi_intent_query_still_surfaces_total_gbrain_failure(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+
+    def fail_query(_query: str, **_kwargs) -> str:
+        raise GBrainQueryError("gbrain unavailable")
+
+    with pytest.raises(GBrainQueryError, match="gbrain unavailable"):
+        retrieve_gbrain(
+            mode="world_vision",
+            query_func=fail_query,
+            page_func=lambda _slug: "",
+        )
 
 
 def test_story_program_uses_cross_book_patterns_while_outline_keeps_source_specific_arcs() -> None:
@@ -2235,29 +2576,22 @@ def test_default_prompt_templates_include_idea_mode() -> None:
         "fantasy_seed",
         "world_vision",
         "outline",
-        "prologue",
         "chapter_prep",
         "chapter",
         "review",
         "context_curator",
         "primary_writer",
+        "authority_reviser",
         "specialist_opening",
         "specialist_dialogue",
         "specialist_action",
         "specialist_emotion",
         "chapter_integrator",
     }
-    direction_doc = Path("docs/MVP_PRODUCT_DIRECTION.md")
-    assert direction_doc.is_file()
-    direction_text = direction_doc.read_text(encoding="utf-8")
-    methodology_text = Path("docs/PIPELINE_METHODOLOGY_AND_VALUES.md").read_text(encoding="utf-8")
-    assert "Growth Genome：整理，不创造" in methodology_text
-    assert "Classic Patterns Are First-Class Citizens" in methodology_text
-    assert "累积成长与可组合成长" in direction_text
-    assert "Experiment Boundary" in direction_text
     assert all("成长" in templates[mode] for mode in ("idea", "fantasy_seed", "world_vision", "outline"))
-    assert "已批准 Fantasy Seed" in templates["idea"]
-    assert "已批准 World Vision" in templates["idea"]
+    assert "已批准 World 与 Character 第一次完整碰撞" in templates["idea"]
+    assert "全书成长与核心幻想兑现脊柱" in templates["idea"]
+    assert "每阶段只使用下面六项" in templates["idea"]
     assert "成长组合" not in templates["idea"]
     assert "转换网络" not in templates["fantasy_seed"]
     assert "GBrain" not in templates["fantasy_seed"]
@@ -2282,56 +2616,189 @@ def test_default_prompt_templates_include_idea_mode() -> None:
 
 
 def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
-    for mode in ("fantasy_seed", "world_vision", "idea"):
-        template = DEFAULT_PROMPT_TEMPLATES[mode]
-        assert "COMPOUNDING_GROWTH_DIRECTION" in template
-        assert "净新增" in template
-        assert "每轮结束重新归零" in template
-        assert "不要求每个阶段都新增一种资产" in template
-        assert "不要为了表现复利主动堆出路线、权限、网络、库存或组合组件" in template
+    world_template = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    assert "COMPOUNDING_GROWTH_DIRECTION" in world_template
+    assert "后台创作约束，不是小说世界材质" in world_template
+    assert "每轮结束重新归零" in world_template
+    assert "Net New / Irreversible State / Action Space / Fantasy Compounding" in world_template
+    assert "不要让“不可回滚、扩大行动空间、产生复利”本身变成人物追求、世界规则或主题" in world_template
+    assert "不要为了证明复利主动堆路线、权限、网络、库存或组合组件" in world_template
 
     fantasy = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
-    assert "世界为什么因此自然打开更高价值的新机会、竞争、敌人或区域" in fantasy
-    assert "长期不能每次从零开始" in fantasy
-    assert "最好明确留下第一笔以后仍可再次利用的积累" in fantasy
+    assert "COMPOUNDING_GROWTH_DIRECTION" not in fantasy
+    assert "LONG_FORM_PACING_DIRECTION" not in fantasy
+    assert "支撑性逻辑不得自动成为故事发动机" not in fantasy
+    assert "经营文 Decision > Implementation" not in fantasy
+    assert "Narrative Appetite Before Defensive Balance" in fantasy
+    assert "Seed Long-form Compounding" in fantasy
+    assert "第一次爽完以后" in fantasy
+    assert "不要要求每轮归零" in fantasy
+    assert "Seed Long-form Pacing" in fantasy
+    assert "早期兑现不等于急着把能力推到终极形态" in fantasy
+    assert "Seed Supporting Logic Boundary" in fantasy
+    assert "多次使用以后哪些收益会被保留下来" in fantasy
+    assert "留下第一笔以后仍可再次利用的能力、物品、关系、身份或其它具体积累" in fantasy
     assert "### 持续阻力与压力" not in fantasy
 
     world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
-    assert "## 世界资源、利益与机会结构" in world
-    assert "主角下一轮能做什么过去做不到的新事" in world
-    assert "会迫使什么人物或势力改变应对" in world
-    assert "不要为了证明复利，主动把收益整理成构筑、库存、权限树、路线网、节点网络或组合系统" in world
+    assert "## 世界正在发生的欲望、冲突与机会" in world
+    assert "过去获得真正进入下一轮" in world
+    assert "世界还有别的故事" in world
+    assert "世界可以有大量直接服务核心幻想" in world
+    assert "不要求机械保留“与核心优势无关”的配额" in world
+    assert "税、土地、治理、迁徙、合同等若只是背景合理性，压到背景" in world
+    assert "## 世界资源、利益与机会结构" not in world
     assert "形成自己的构筑、体系、库存、网络、领地、技艺组合、个人规则或其它不可逆积累" not in world
     assert "## 世界阶层、利益与行动压力" not in world
 
     story_program = DEFAULT_PROMPT_TEMPLATES["idea"]
     for marker in (
-        "当前最值得争取的机会 / 目标：",
-        "核心优势怎样产生超额结果：",
-        "阶段净新增：",
-        "推向下一阶段的更大机会、欲望、竞争或压力：",
+        "**为什么现在发生：**",
+        "**谁想要什么：**",
+        "**主角的关键选择与行动：**",
+        "**这一阶段真正的阅读满足：**",
+        "**Stage Delta：**",
+        "**下一阶段为何自然发生：**",
     ):
         assert marker in story_program
-    assert "新的主动行动、对手新的针对方式、人物关系出现的新选择" in story_program
-    assert "不要主动把它们整理成构筑、库存、权限树、路线网、节点网络或组合系统" in story_program
-    assert "主角从此多能做什么、对手以后必须怎样改变" in story_program
-    assert "不要为了填这个字段人为制造路线、权限、节点、网络、库存或构筑" in story_program
-    assert "Relationship Reconfiguration" in story_program
-    assert "谁过去能命令、忽视、利用、封锁、定价或支配他" in story_program
-    assert "关系重构的价值在于让上一轮胜利自然生长出新的欲望、联盟、背叛、争夺和对手反应" in story_program
-    assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
-    assert "Relationship Reconfiguration" not in DEFAULT_PROMPT_TEMPLATES["outline"]
-    assert "稳定控制、调用或从中取得复利收益的外部结构" not in story_program
-    assert "二级收益：写本阶段" not in story_program
+    assert "Story Program 是“长期因果如何继续”的编译" in story_program
+    assert "最独有的**生活特权**" in story_program
+    assert "不要把独有幻想降格成同一种战斗解法反复放大" in story_program
+    assert "全书成长与核心幻想兑现脊柱" in story_program
+    assert "不等于每个大型阶段都必须同时出现新能力" in story_program
+    assert "力量可以无显著升级" in story_program
+    assert "若本阶段确实发生显著成长或高价值获得" in story_program
+    assert "纵向复利是历史持续生效，不是阶段流水线" in story_program
+    assert "震撼式长期重释" in story_program
+    assert "揭晓当下足够意外" in story_program
+    assert "不默认等于隐藏血脉/身世" in story_program
+    assert "不要让所有高价值重释都只发生在世界层" in story_program
+    assert "不得为了制造 Personal Myth 凭空补身世" in story_program
+    assert "震撼式长期重释" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "震撼式长期重释" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "震撼式长期重释" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    assert "震撼式长期重释" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    assert "震撼式长期重释" not in generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
+    assert "Persistent Reader Ruler" in story_program
+    assert "主角现在大致在哪一档" in story_program
+    assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["review"]
+    director_ruler = generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    primary_ruler = generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
+    assert "Persistent Reader Ruler" in director_ruler
+    assert "Ruler = Compression, not Exposition" in director_ruler
+    assert "Discriminative Detail Only" in director_ruler
+    assert "关键决定 + 至多一个真正改变成败/判断的决定性动作 + 结果" in director_ruler
+    assert "默认连技能方法本身也不重述" in director_ruler
+    assert "只写它让主角完成了什么结果" in director_ruler
+    assert "Access / Reward 不自动征收资格流程税" in director_ruler
+    assert "不得为了“让它显得更合理/更配得上”自行补一轮试工" in director_ruler
+    assert "不要用 Competence Filler 填动作空缺" in director_ruler
+    assert "主角只做站队、拒绝、观察、跟随、守住位置、说一句决定等简单行动也完全成立" in director_ruler
+    assert "Persistent Reader Ruler" not in primary_ruler
+    assert "State Advance After Proof / Choice → Consequence" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Stage Settlement = Consequence, not Process Carrier" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "报告、登记、责任说明、复盘、资格发放" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "纸、牌、契约可以确认结果" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Reader Release Scheduler" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "### Reader Release Map" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "- 第N章｜触发：具体已批准 World fact" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "哪些事实的首次释放时机值得被显式保存" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Reader Release Map" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不新增 Prelude / Setup 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "明显陌生/架空世界的第1章是公共常识定向的例外" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "默认把其中不同功能的事实拆成 2—3 条 `公共常识` Reader Release" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不同功能的公共常识分行" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "World Entry 的 trigger 是人物真正跨过门槛的那一章" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "直到 N+1 第一次遇险、封路或见强者时才补" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "揭晓章之前**不得进入 Release Map**" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不能单独充当生活世界定向" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "它是什么类型的存在" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "安全公开类别" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "十章批次不是把当前剧情块拉长到十章的配额" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "World Entry = Threat + Desire + Ruler" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "机会成本只存在于计划里" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不把 Rival 只写成态度合理的人" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "新书第1章不得是纯 Setup" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Opening Orientation 只能嵌在同章动作中" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Plot Pace ≠ Tier Pace" in story_program
+    assert "Plot Pace ≠ Tier Pace" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "主人公连续升格" in story_program
+    assert "他已经不是原来那个位置的人了" in story_program
+    assert "主人公连续升格" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "主人公连续升格" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "不默认新受众全知主角全部旧战绩/底牌" in story_program
+    assert "最低充分的新事实出现后" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "成熟第二幻想轴" in story_program
+    assert "即使完全不反哺主战力" in story_program
+    assert "成熟第二幻想轴" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "成熟第二幻想轴" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "可判定兑现债务" in story_program
+    assert "普通 Open Promise 不需要全部债务化" in story_program
+    assert "可判定兑现债务" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "可判定兑现债务" in DEFAULT_PROMPT_TEMPLATES["review"]
+    assert "成熟第二幻想轴" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    assert "可判定兑现债务" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    assert "主人公连续升格" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
+    assert "主人公连续升格" not in primary_ruler
+    assert "成熟第二幻想轴" not in primary_ruler
+    assert "可判定兑现债务" not in primary_ruler
+    curator_orientation = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content="",
+        current_outline=REAL_COLD_CHAIN_OUTLINE,
+    )
+    assert "Reader Release 是 timing authority" in curator_orientation
+    assert "Frozen Human Core 高于最近几章的行为归纳" in curator_orientation
+    assert "不要只把它投影成职责、协作、尊重边界或成熟沟通" in curator_orientation
+    assert "Specific Relationship Trigger" in curator_orientation
+    assert "近身照料、重逢、分别、私密靠近、嫉妒、邀请" in curator_orientation
+    assert "短直接旁白不是低级解释" in curator_orientation
+    assert "Opening Strategy` 只决定这些**已排程事实**在场景中的落点" in curator_orientation
+    assert "Curator 不再临时决定“应该介绍猎阶还是猎墙”" in curator_orientation
+    assert "第1章已排程的公共常识坐标包允许在人物/场景自然停顿处直接说明" in curator_orientation
+    assert "不是本章可重新展开的素材库" in curator_orientation
+    assert "决定已经做完后的普通实施默认压缩" in director_ruler
+    assert "决定已经做完后的普通实施默认一句或一个短段概括" in primary_ruler
+    assert "Action creates the question → Exposition answers just enough → Action continues" in primary_ruler
+    assert "已明确排程的 Reader Release 是本章需要落实的 timing decision" in primary_ruler
+    assert "欲望/价值锚点" in primary_ruler
+    assert "已批准的私人欲望也不要被正文自动净化" in primary_ruler
+    assert "不把它再展开成一个需要逐步解决的小任务" in primary_ruler
+    assert "直接用普通话说清一次类别" in primary_ruler
+    assert "`## Relevant Plan` 也必须执行同样的降维" in curator_orientation
+    assert "Curator 应删除这层未获 Plan 授权的资格流程" in curator_orientation
+    assert "Curator 应删掉这层 Competence Filler" in curator_orientation
+    assert "Writer 不负责从完整世界中选择还该介绍什么" in primary_ruler
+    assert "## 不可替代的人与关系" in story_program
+    assert "### 关键关系（可选）" not in story_program
     assert "阶段净新增" not in DEFAULT_PROMPT_TEMPLATES["outline"]
 
 
+
+def test_split_world_vision_provides_reusable_reader_benchmarks_without_database() -> None:
+    from story_mvp.character_prompts import generate_split_prompt
+
+    prompt = generate_split_prompt(mode="world_vision", creative_direction="玄幻成长")
+    assert "肉眼可感、可复用的 benchmark" in prompt
+    assert "正常 X 能做到 A，而这次竟然 Y" in prompt
+    assert "不建立战力数据库" in prompt
+    assert "不要求公斤/米" in prompt
+
+
 def test_high_value_acquisition_guidance_lives_in_story_program_and_outline_only() -> None:
-    for mode in ("idea", "outline"):
-        template = DEFAULT_PROMPT_TEMPLATES[mode]
-        assert "High-Value Acquisition / Reward Opportunity" in template
-        assert "阶段可以没有新的标志性获得" in template
-        assert "奖励类型与出现顺序由本书因果决定" in template
+    outline = DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "High-Value Acquisition / Reward Opportunity" in outline
+    assert "真实错失允许有空窗" in outline
+    assert "阶段可以没有新的标志性获得" in outline
+    assert "奖励类型与出现顺序由本书因果决定" in outline
+    idea = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "High-Value Acquisition / Reward Opportunity" not in idea
+    assert "高价值获得是读者欲望原则，不是阶段字段" in idea
+    assert "真实错失允许有空窗" in idea
+    assert "没有自然机会时不要为了填表制造奖励" in idea
+    assert "不机械掉宝或升级" in idea
     assert "High-Value Acquisition / Reward Opportunity" not in DEFAULT_PROMPT_TEMPLATES["world_vision"]
 
     director = generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
@@ -2365,34 +2832,75 @@ def test_chapter_page_defaults_to_curator_primary_and_keeps_repair_nodes_optiona
         assert f'id="{node_id}"' in page.text
     assert 'id="extract-integrator-body"' in page.text
     assert 'id="adopt-primary-draft"' in page.text
+    assert 'id="authority-reviser-response"' in page.text
+    assert 'id="generate-authority-reviser-prompt"' in page.text
+    assert 'id="adopt-authority-revision"' in page.text
+    assert "GPT-5.6 Luna · high" in page.text
 
 
 def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None:
     idea = DEFAULT_PROMPT_TEMPLATES["idea"]
     for marker in (
-        "### 核心优势与长期玩法",
-        "### 长期故事主线",
-        "主角一级成长",
-        "阶段净新增",
-        "世界扩张",
+        "## 全书成长与核心幻想兑现脊柱",
+        "## 长期故事主线",
+        "**主角的关键选择与行动：**",
+        "**Stage Delta：**",
+        "**下一阶段为何自然发生：**",
     ):
         assert marker in idea
     assert "### 成本节奏" not in idea
-    assert "自然产生的后果或余波（如果有）" in idea
+    assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in idea
+    assert "长期必须让**新的 Power Asymmetry 加入**" in idea
+    assert "某些大型阶段仍可以完全没有 Power Delta" in idea
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
-    for marker in ("### 一级成长主轴", "### 二级收益与反哺", "### 主循环", "### 成本节奏"):
+    for marker in (
+        "### 已批准长期成长兑现",
+        "### 已批准长期后果",
+        "Block Delta",
+        "Growth is a longitudinal invariant, not a per-block form requirement",
+        "Power、奖励、权限、地图都允许整块没有",
+    ):
         assert marker in outline
+    for retired in ("### 一级成长主轴", "### 二级收益与反哺", "### 主循环", "### 成本节奏"):
+        assert retired not in outline
     assert "代价或余波（可选）" in outline
-    assert "不强制每块失去或承担什么" in outline
     review = DEFAULT_PROMPT_TEMPLATES["review"]
     for marker in (
         "## 核心幻想是否仍在兑现",
-        "## 一级成长是否仍是主轴",
+        "## 长期成长承诺是否仍在轨",
         "## 幻想盈余是否为正",
         "## 冲突是否过度理性化",
         "## 世界是否被程序化",
+        "Growth is longitudinal, not a ten-chapter tax",
     ):
         assert marker in review
+
+
+def test_outline_growth_is_longitudinal_not_a_block_or_batch_tax() -> None:
+    outline = DEFAULT_PROMPT_TEMPLATES["outline"]
+    review = DEFAULT_PROMPT_TEMPLATES["review"]
+
+    assert "Outline 是 **Story Program 的执行编译层，不是第二个 Story Program**" in outline
+    assert "Block Delta" in outline
+    assert "相对本块开始" in outline
+    assert "没变化的维度直接省略" in outline
+    assert "上一块已经发生的变化不要重复包装成这一块的新 Delta" in outline
+    assert "Power、奖励、权限、地图都允许整块没有" in outline
+    assert "不要求每十章都新增 Power、奖励、权限、地图" in outline
+
+    for retired in (
+        "一级成长变化：主角本人真正多能做了什么？",
+        "收益与反哺：写本块结束后主角永久新增",
+        "世界扩张：进入什么过去无法进入的地图",
+        "本批一级成长目标：",
+        "本批实际净收益：",
+        "本批打开的新行动空间：",
+        "至少说明三次真正改变力量层级",
+    ):
+        assert retired not in outline
+
+    assert "不要求最近十章必须升级" in review
+    assert "不要求每十章都新增 Power、奖励、权限、地图" in review
 
 
 def test_growth_projection_is_three_lines_and_not_an_outline_gate() -> None:
@@ -2494,6 +3002,7 @@ def test_curator_index_first_prefetch_keeps_relevant_detail_and_drops_unrelated_
     )
     packet = ChapterContextPacket(
         authority="AUTH",
+        world_authority="",
         book_contract=book_contract,
         chapter_mission="主角行动：陆砚拒绝谢三更压价，并争夺路线控制权。",
         canon_context="## PERSISTENT CANON：\n陆砚已经掌握一条隐秘路线。",
@@ -2675,7 +3184,9 @@ def test_old_book_gets_code_default_hybrid_templates_without_prompt_file_write(t
     payload = read_book_payload("old-book", tmp_path)
     assert payload["prompt_templates"]["context_curator"] == DEFAULT_PROMPT_TEMPLATES["context_curator"]
     assert payload["prompt_templates"]["specialist_emotion"] == DEFAULT_PROMPT_TEMPLATES["specialist_emotion"]
-    assert payload["prompt_templates"]["idea"] == "LEGACY IDEA"
+    assert "LEGACY IDEA" in payload["prompt_templates"]["idea"]
+    assert "Character Authority" in payload["prompt_templates"]["idea"]
+    assert "Fantasy Seed" not in payload["prompt_templates"]["idea"]
     assert prompts_path.read_bytes() == before
 
 
@@ -2717,6 +3228,313 @@ FULL_BOOK_FUTURE_MARKER
     assert "前文最后动作" in prompt
     assert "前文开头" not in prompt
     assert "FULL_BOOK_FUTURE_MARKER" not in prompt
+
+
+def test_outline_parser_drops_inline_model_preamble_before_first_required_field() -> None:
+    response = (
+        "我会先遵守 Director 边界。触发事件：顾长川领取身份牌。\n"
+        "推动事件的人：执事。\n"
+        "主角行动：顾长川收好身份牌。\n"
+        "对手或世界反应：内门继续报到。\n"
+        "直接结果：完成报到。\n"
+        "状态变化：成为内门弟子。\n"
+        "叙事功能：兑现晋升。\n"
+        "结尾推动力：次日进入演武堂。"
+    )
+    validate_current_outline(response)
+    parsed = parse_outline_fields(response)
+    assert parsed["触发事件"] == "顾长川领取身份牌。"
+
+
+def test_world_vision_owns_reader_coordinates_and_core_advantage_compatibility() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    assert "Reader-Facing World Coordinates" in template
+    assert "读者可操作、可预测的世界事实" in template
+    assert "什么条件下会发生什么可观察变化" in template
+    assert "概念名、哲学解释和深层原因" in template
+    assert "不能只用哲学定义、象征、意象或新造概念代替" in template
+    assert "## 读者可用的世界坐标" in template
+    assert "## 核心优势与普通规则怎样咬合" in template
+    assert "如果主角把优势用于远高于当前层级的对象" in template
+    assert "基础待遇与稀缺奖励" in template
+    assert "不强造境界名" in template
+    assert "不要把“眼前到底发生了什么、触发后会怎样、人物现在能不能做某件事”也一起藏起来" in template
+
+
+def test_fantasy_seed_keeps_theme_emergent_and_future_play_concrete() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    assert "Fantasy + Desire + Gameplay" in template
+    assert "不负责替这个幻想寻找终极哲学意义" in template
+    assert "### 远期升格方向" in template
+    assert "更强、更不同、读者更想亲自看的具体用法" in template
+    assert "不先定义更高世界“哲学上意味着什么”" in template
+
+
+def test_protagonist_behavior_signature_is_fixed_upstream_and_drives_choices() -> None:
+    seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    program = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "主角行为签名" in seed
+    assert "### 主角欲望人格与行为签名" in seed
+    assert "不要从预设的优秀男主标签库拼人格" in seed
+    assert "不自动修正成“靠谱有底线的优秀男主”" in seed
+    assert "主角欲望人格与行为签名属于创意权威" in world
+    assert "不能为了让主角更成熟、更合理或更容易协调多方利益" in world
+    assert "行为签名 = 稳定选择偏向 + 具体实现随现场变化" in program
+    assert "稳定的是选择偏向" in program
+    assert "**主角的关键选择与行动：**" in program
+    assert "不要自动选择长期最优、最公平或最稳妥答案" in program
+
+
+def test_life_fantasy_world_braid_prevents_gameplay_from_becoming_life_purpose() -> None:
+    seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    program = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "主角人生发动机" in seed
+    assert "眼前目标" in seed
+    assert "能力之外仍成立的人生牵引" in seed
+    assert "核心优势暂时不能用" in seed
+    assert "不要求宏大、悲惨、道德高尚" in seed
+    assert "不是必须一次定义三百万字终身使命" in seed
+    assert "公共改革、制度理想或替所有人解决问题" in seed
+    assert "把玩法做得更大" in seed
+    assert "世界可以明显偏向核心幻想" in world
+    assert "世界被核心能力完全解释" in world
+    assert "所有重要人物只为提供下一次能力用法" in world
+    assert "**人生**" in program
+    assert "**幻想**" in program
+    assert "**世界**" in program
+    assert "三者可以混合，但不平均配额" in program
+    assert "反制只能从碰撞后的学习产生" in program
+    assert "核心幻想是长期读者承诺" in program
+    assert "让它自动成为主角的人生使命" in program
+    assert "这一阶段真正的阅读满足" in program
+    assert "力量可以无显著升级" in program
+    assert "下一阶段不要求更大" in program
+    assert "同等有用的另一个人" in program
+    assert "## 不可替代的人与关系" in program
+
+
+def test_seed_prioritizes_commercial_quality_without_example_anchoring() -> None:
+    seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    world = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    program = DEFAULT_PROMPT_TEMPLATES["idea"]
+    for template in (seed, world):
+        assert "Narrative Appetite Before Defensive Balance" in template
+    assert "Commercial Quality First, Diversity Second" in seed
+    assert "候选之间可以来自相近能力家族、相近成长结构或相近人物母题" in seed
+    assert "不要为了“看起来不同”主动绕开它" in seed
+    assert "多样性只是附加价值，不是 Hard Gate" in seed
+    assert "只避免近乎同案换皮" in seed
+    assert "故事物种差异" not in seed
+    assert "归乡、复仇、找人、护住某个家、重建家族" not in seed
+    assert "贪、好胜、护短、记仇、好奇、爱炫、谨慎、狠、恋家、重情" not in seed
+    assert "宿敌、师徒、归乡、家人选择" not in program
+    assert "亲情、师徒、宿敌、爱慕、旧债、承诺" not in program
+
+
+def test_world_vision_builds_story_bearing_world_and_desire_economy_before_advantage() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    independent = template.index("## 没有主角时，谁正在追什么，哪里正在发生什么")
+    desire = template.index("## 世界里真正值钱、值得想要的东西")
+    coordinates = template.index("## 读者可用的世界坐标")
+    advantage = template.index("## 核心优势与普通规则怎样咬合")
+    assert independent < desire < coordinates < advantage
+    assert "Story-Bearing World" in template
+    assert "世界还有别的故事" in template
+    assert "社会治理模型完整" in template
+    assert "World Independence ≠ Narrative Equal Weight" in template
+    assert "世界可以明显偏向核心幻想" in template
+    assert "世界被核心能力完全解释" in template
+    assert "Desire Economy" in template
+    assert "世界前台尺" in template
+    assert "Action Space / Expectation Ladder / Mystery Depth / Impact" in template
+    assert "读者体验/故事校准尺" in template
+    assert "成长后具体多能做哪件以前做不到的事" in template
+    assert "哪个已经出现的旧物、旧人、旧事实还有可回收的更深解释" in template
+    assert "不能自动升级成世界 ontology" in template
+
+
+def test_story_program_keeps_backstage_principles_but_outputs_concrete_acquisition() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "Story Program 是“长期因果如何继续”的编译" in template
+    assert "不是每个大型阶段都缴一次升级税的表单" in template
+    assert "成长是全书纵向不变量，不是每个阶段的必填项" in template
+    assert "全书成长与核心幻想兑现脊柱" in template
+    assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in template
+    assert "**Stage Delta：**" in template
+    assert "力量可以无显著升级" in template
+    assert "高价值获得是读者欲望原则，不是阶段字段" in template
+    assert "纵向复利是历史持续生效，不是阶段流水线" in template
+    assert "不机械掉宝或升级" in template
+    assert "下一阶段不要求更大" in template
+
+
+def test_story_program_growth_is_longitudinal_not_a_stage_tax() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["idea"]
+
+    # A stage may be complete without a power-up or acquisition.
+    assert "力量可以无显著升级" in template
+    assert "持有物也可以为空" in template
+    assert "某个维度没有变化就不写" in template
+    assert "主角一级成长：" not in template
+    assert "本阶段关键获得、占有与首次使用" not in template
+    assert "核心优势在本阶段怎样参与：" not in template
+
+    # But the whole book must still build a cumulative asymmetry stack.
+    assert "长期必须让**新的 Power Asymmetry 加入**" in template
+    assert "旧优势与新优势产生至少一种可复述的**复合效应**" in template
+    assert "不是每阶段新增能力税" in template
+    assert "以前做不到什么 → 现在能做什么 / 能打谁 / 能去哪里" in template
+    assert "Power Seed 决定开局 Core Asymmetry 及其成长语法" in template
+    assert "也可以通过真实获得让主角后来加入新的 Power Asymmetry" in template
+
+    # Acquisition / compounding survive as longitudinal story principles, not form fields.
+    assert "高价值获得是读者欲望原则，不是阶段字段" in template
+    assert "纵向复利是历史持续生效，不是阶段流水线" in template
+    assert "旧与新还应出现真正的复合玩法" in template
+
+
+def test_asymmetry_reveal_uses_surprise_as_payoff_and_attitude_change_only_when_useful() -> None:
+    story = DEFAULT_PROMPT_TEMPLATES["idea"]
+    outline = DEFAULT_PROMPT_TEMPLATES["outline"]
+    review = DEFAULT_PROMPT_TEMPLATES["review"]
+    director = DEFAULT_DIRECTOR_TEMPLATE
+
+    for prompt in (story, outline, review, director):
+        assert "Power Asymmetry Reveal / Social Proof" in prompt
+        assert "让惊讶本身成为爽点" in prompt
+        assert "不凭空加围观者" in prompt
+        assert "只有重新估价会改变后续行动" in prompt
+        assert "否则惊讶/确认后即可停止" in prompt
+        assert "已公开优势的普通重复使用不反复演震惊" in prompt
+
+
+def test_outline_theme_is_derived_and_may_remain_unset() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Action Space / Expectation Ladder / Mystery Depth / Impact" in template
+    assert "只通过具体锚点与实际 Delta 自然显现" in template
+    assert "## 11. 主题、价值观与长期问题" in template
+    assert "只后验总结具体人物和事件已经自然形成的倾向" in template
+    assert "没有稳定主题时直接写“暂不预设”" in template
+    assert "不得反向生成世界 ontology、资源体系、敌人设计、能力升格或终局" in template
+
+
+def test_story_program_owns_core_advantage_choice_space_and_counterplay() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "真正存在取舍、会暴露这个人是谁的选择" in template
+    assert "不要自动选择长期最优、最公平或最稳妥答案" in template
+    assert "反制只能从碰撞后的学习产生" in template
+    assert "不能反推敌人的出生理由" in template
+
+
+def test_outline_releases_world_model_and_varies_early_core_gameplay() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "Outline World Model Release" in template
+    assert "Approved World Vision 决定世界事实" in template
+    assert "哪些事实的首次释放时机值得被显式保存" in template
+    assert "### Reader Release Map" in template
+    assert "具体已批准 World fact" in template
+    assert "移动事实等到人物真正离开聚落时再释放" in template
+    assert "绝不能把答案提前写入 Map" in template
+    assert "Outline Core Gameplay Variation" in template
+    assert "上一轮已证明有效的解法不要自动解决下一轮主要问题" in template
+    assert "下一轮优先攻击它尚未解决的对象、关系、资源、目标或条件" in template
+    assert "不要求机械让主角失败或每轮添加新代价" in template
+    assert "开篇若处于陌生世界，至少保存一条非战力的生活世界定向" in template
+    assert "长期对手可暂时作为强弱标尺" in template
+
+
+def test_director_does_not_own_world_model_creation() -> None:
+    template = DEFAULT_DIRECTOR_TEMPLATE
+    assert "属于上游 World Vision / Story Program / Outline 已批准事实" in template
+    assert "不得为了让本章更具体而临时发明境界名、数值、货币、奖励、制度、能力限制或新世界规则" in template
+    assert "Reader-Facing World Coordinates" not in template
+    assert "Promotion Opens the World" not in template
+    assert "Core Ability Attention Alignment" not in template
+
+
+def test_curator_concretizes_only_from_upstream_world_facts() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["context_curator"]
+    assert "资源、机会、路径/路线、位置、选择、资格、收益、行动空间" in template
+    assert "BOOK / Canon / Plan 已经明确存在" in template
+    assert "上游没有给出具体世界名词时" in template
+    assert "不得为了“实体化”由 Curator 或 Writer 自己发明制度、价格、物品或待遇" in template
+    assert "细节预算优先跟随 BOOK 核心幻想真正让读者关心的对象" in template
+
+
+def test_context_curator_compiles_scene_prose_projection_instead_of_forwarding_controls() -> None:
+    template = DEFAULT_PROMPT_TEMPLATES["context_curator"]
+    assert "## Scene Prose Projection" in template
+    assert "写 `NONE`" in template
+    assert "`NONE` 是正常结果，优先于弱投影" in template
+    assert "重复 Reader-Facing Language、Opening Strategy、已选 Scene Skill" in template
+    assert "只写 2—4 句自然中文" in template
+    assert "不要把这六项逐项回显" in template
+    assert "不要仅因为 Scene Family 有匹配 Control 就生成 Projection" in template
+    assert "匹配卡本身不构成使用理由" in template
+    assert "不得写 Control 名称" in template
+    assert "动作、对白、物体变化或人物反应已经让意义成立时" in template
+    assert "结果已经发生但现场仍读不出局面变化时" in template
+
+
+def test_extract_primary_draft_drops_inline_model_preamble_before_body_heading() -> None:
+    response = "我会按规范直接写作。# 正式正文\n\n顾长川拿起身份牌。"
+    assert extract_primary_draft(response) == "顾长川拿起身份牌。"
+
+
+def test_primary_writer_strips_legacy_relevant_prose_controls() -> None:
+    outline = "\n".join(f"{field}：本章{field}" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    curated = """# Curated Chapter Context
+
+## Relevant Plan
+计划事实。
+## Relevant Prose Controls
+LEGACY_FULL_CONTROL_MUST_NOT_REACH_PRIMARY
+## Opening Strategy
+直接进入现场。
+"""
+    prompt = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="# 小说总体设计画像\n## 8. 文风与可操作参数\n简洁。",
+        current_outline=outline,
+        curated_context=curated,
+    )
+    assert "LEGACY_FULL_CONTROL_MUST_NOT_REACH_PRIMARY" not in prompt
+    assert "直接进入现场" in prompt
+
+
+def test_primary_writer_receives_scene_prose_projection_without_raw_gbrain() -> None:
+    outline = "\n".join(f"{field}：本章{field}" for field in (
+        "触发事件", "推动事件的人", "主角行动", "对手或世界反应",
+        "直接结果", "状态变化", "叙事功能", "结尾推动力",
+    ))
+    curated = """# Curated Chapter Context
+
+## Relevant Plan
+计划事实。
+## Scene Prose Projection
+本场只展开门口没有给主角留座这一处身份变化；对方改口后停止解释关系意义。
+## Scene Skill Selection
+Primary: none
+Secondary: none
+"""
+    prompt = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="# 小说总体设计画像\n## 8. 文风与可操作参数\n简洁直接。",
+        current_outline=outline,
+        previous_chapter_text="CANON_PROSE",
+        curated_context=curated,
+        gbrain_inspiration="RAW_PROSE_CONTROL_MUST_NOT_REACH_PRIMARY",
+    )
+    assert "## Scene Prose Projection" in prompt
+    assert "本场只展开门口没有给主角留座" in prompt
+    assert "RAW_PROSE_CONTROL_MUST_NOT_REACH_PRIMARY" not in prompt
 
 
 def test_primary_writer_prompt_uses_curated_projection_and_explicit_fallback() -> None:
@@ -3446,8 +4264,9 @@ BOOK_RECENT_SUMMARY_MARKER
 
 def test_authority_rule_is_three_dimensional_with_canon_prose_over_canon_index() -> None:
     # 验收点 1：已发生事实规则明确为 CANON PROSE > CANON INDEX，
-    # 且权威改为三维度规则，不再是六级总排名。
+    # 且权威按事实/世界/计划/表达分维度，不再是单条总排名。
     assert "已发生事实：CANON PROSE > CANON INDEX" in MINIMAL_AUTHORITY_RULE
+    assert "世界事实：WORLD AUTHORITY" in MINIMAL_AUTHORITY_RULE
     assert "未来创作意图：BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION" in MINIMAL_AUTHORITY_RULE
     assert "表达控制：PROSE PROFILE 只控制表达方式，不能修改已发生事实或未来计划" in MINIMAL_AUTHORITY_RULE
     assert "跨维度冲突" in MINIMAL_AUTHORITY_RULE

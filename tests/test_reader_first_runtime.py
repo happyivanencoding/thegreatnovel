@@ -5,10 +5,11 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from story_mvp.app import app
-from story_mvp.chapter_context import build_chapter_context
+from story_mvp.chapter_context import build_chapter_context, extract_reader_release_for_chapter
 from story_mvp.hybrid_runtime import (
     build_specialist_context,
     extract_specialist_patches,
+    extract_unresolved_fact_boundary,
 )
 from story_mvp.prompts import (
     DEFAULT_PROMPT_TEMPLATES,
@@ -34,6 +35,64 @@ from story_mvp.run_ledger import (
     skip_integrator_if_no_patches,
 )
 from story_mvp.storage import apply_state_delta_to_book, save_chapter, validate_chapter_body_for_save
+
+
+def test_curator_gets_frozen_human_core_without_repeating_power_core() -> None:
+    character = """# CHARACTER CARD 1｜Split Authority
+
+## POWER CORE｜Frozen Authority
+
+POWER_ONLY_MARKER
+
+## HUMAN CORE｜Frozen Authority
+
+# HUMAN SEED｜真实嵌套结构
+
+## 持续牵引与互相竞争的动机
+
+他会被具体人的身体、气味和靠近感吸引，也在意自己的钱与被有分量的人看见。
+
+## Behavior Signature
+
+不把安全与责任永远放在第一。
+
+## Composition Boundary
+
+不做后验合理化。
+"""
+    prompt = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content="# 小说总体设计画像\n\n## 1. 核心类型与读者承诺\n\n成长",
+        character_card=character,
+        current_outline=OUTLINE,
+    )
+    assert "FROZEN HUMAN CORE——稳定人格权威" in prompt
+    assert "身体、气味和靠近感" in prompt
+    assert "POWER_ONLY_MARKER" not in prompt
+
+
+def test_prompt_api_preserves_character_card_for_chapter_curator() -> None:
+    client = TestClient(app)
+    response = client.post(
+        "/api/prompt",
+        json={
+            "mode": "context_curator",
+            "template": "",
+            "book_content": "# 小说总体设计画像\n\n## 1. 核心类型与读者承诺\n\n成长",
+            "character_card": (
+                "# CHARACTER CARD 1｜Split Authority\n\n"
+                "## POWER CORE｜Frozen Authority\n\nPOWER_API_ONLY\n\n"
+                "## HUMAN CORE｜Frozen Authority\n\n# HUMAN SEED｜API\n\n## 持续牵引与互相竞争的动机\n\nHUMAN_API_PRIVATE_DESIRE\n\n## Behavior Signature\n\nHUMAN_API_BEHAVIOR\n\n"
+                "## Composition Boundary\n\nEND"
+            ),
+            "current_outline": OUTLINE,
+        },
+    )
+    assert response.status_code == 200
+    prompt = response.json()["prompt"]
+    assert "HUMAN_API_PRIVATE_DESIRE" in prompt
+    assert "POWER_API_ONLY" not in prompt
 
 
 OUTLINE = "\n".join(
@@ -104,7 +163,9 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "重要能力、物品和规则第一次出现时",
         "少连续使用“不是……”",
         "对话像人在现场传递信息",
-        "世界观和空间信息只解释当前行动需要的最小部分",
+        "世界观和空间信息只解释当前故事与开篇定向需要的最小部分",
+        "公共常识要直接讲清",
+        "不要只摆出火盆、服装、站位、专名或异常现象让读者自己推",
         "简单不等于空泛",
         "当前读者主问题",
         "具名的重要物品一旦明确换了持有人或位置",
@@ -127,6 +188,16 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "力量造成的可见后果",
         "不机械覆盖视觉、听觉、嗅觉、触觉",
         "不要为了“写得丰富”延长章节",
+        "长期历史未知边界",
+        "仍然是**未知**",
+        "事实上限",
+        "只授权地点，就不能顺手补身份、原因或机制",
+        "对白不是补 Canon 的逃生口",
+        "足以被 State Extraction 写进 Persistent Canon 的新陈述",
+        "后续张力优先转向信不信、去不去、跟不跟、交不交、谁承担什么",
+        "把合理猜测扩写成几十 / 几百章前已经发生过的秘密经历",
+        "本章当下的动作、对白措辞、即时感官、现场证据与人物暂时判断",
+        "后台章节编号和 pipeline 距离也不属于人物世界",
     ):
         assert marker in primary
     assert primary.count("人物不是状态更新器") == 1
@@ -142,18 +213,74 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
     assert "验证、闭环、阶段推进、价值兑现、成长空间、建立优势" in specialist
 
 
+def test_unresolved_fact_boundary_is_deterministic_and_primary_visible() -> None:
+    curated = """# Curator Audit
+
+- 当前地点未确认；不要默认已进入塔内。
+
+# Curated Chapter Context
+
+## Relevant World Rules
+
+- 已知规则：门会打开。
+- 第三盏灯与玉牌的关系尚未解释；不要补造规则。
+
+## Relevant Open Promises
+
+- 宁青梧为何回来仍未解决。
+- 点灯者身份未知。
+
+## Payoff and Promise Window
+
+- 已到账：玉牌。
+- 仍未兑现：第三盏灯机制。
+"""
+    boundary = extract_unresolved_fact_boundary(curated)
+    assert "当前地点未确认" in boundary
+    assert "宁青梧为何回来仍未解决" in boundary
+    assert "点灯者身份未知" in boundary
+    assert "第三盏灯与玉牌的关系尚未解释" in boundary
+    assert "仍未兑现：第三盏灯机制" in boundary
+    assert "已知规则：门会打开" not in boundary
+    assert "已到账：玉牌" not in boundary
+
+    primary = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curated_context=curated,
+    )
+    marker = "UNRESOLVED FACT BOUNDARY——仍未知/未兑现，不得由 Writer 补成旧史"
+    assert marker in primary
+    assert primary.index(marker) < primary.index("CANON PROSE——上一章全文与上上章必要章末")
+    assert "宁青梧为何回来仍未解决" in primary
+    assert "第三盏灯与玉牌的关系尚未解释" in primary
+
+
 def test_supporting_logic_does_not_become_story_engine() -> None:
     markers = (
-        "Supporting Logic Must Not Automatically Become Story Engine",
+        "支撑性逻辑不得自动成为故事发动机",
         "不自动成为叙事前景、主角职业、长期职责或作品认可的公共答案",
         "不从力量规模自动推出",
         "能力可信性优先在有真实目标和利害关系的行动中证明",
         "观察、分析、测试、验证、调整和实施",
         "不因能力可重复使用就自然职业化成维护、检测、生产、搬运或运营流程",
     )
-    for mode in ("fantasy_seed", "world_vision", "idea", "outline", "review"):
+    for mode in ("world_vision", "outline", "review"):
         for marker in markers:
             assert marker in DEFAULT_PROMPT_TEMPLATES[mode]
+
+    idea = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "支撑性逻辑不得自动成为故事发动机" in idea
+    assert "职业流程、材料处理、宗门行政、运输、诊断、修复、合同、任务分配" in idea
+    assert "除非人物的关键选择真的发生在那里，否则压到背景" in idea
+    assert "世界仍然大于外挂" in idea
+
+    fantasy_seed = DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    assert "Seed Supporting Logic Boundary" in fantasy_seed
+    assert "不负责把可信性问题完整解决" in fantasy_seed
+    assert "检测、维护、运输、生产、运营或其它职业流程" in fantasy_seed
 
     director = generate_prompt(
         mode="director",
@@ -167,20 +294,28 @@ def test_supporting_logic_does_not_become_story_engine() -> None:
 
 def test_fantasy_salience_rules_are_scoped_to_planning_layers() -> None:
     shared_markers = (
-        "Core Fantasy Invariant",
-        "Fantasy Compounding > Operational Compounding",
+        "核心幻想不变量",
+        "幻想复利优先于操作流程复利",
         "Plot Engine Diversity",
         "经营文 Decision > Implementation",
     )
-    for mode in ("idea", "outline", "review"):
+    for mode in ("outline", "review"):
         for marker in shared_markers:
             assert marker in DEFAULT_PROMPT_TEMPLATES[mode]
+
+    idea = DEFAULT_PROMPT_TEMPLATES["idea"]
+    assert "核心幻想也必须在多个自然阶段反复得到有分量、可观察的兑现" in idea
+    assert "纵向复利是历史持续生效，不是阶段流水线" in idea
+    assert "相邻阶段避免长期退化为" in idea
+    assert "支撑性逻辑不得自动成为故事发动机" in idea
 
     for mode in ("outline", "review"):
         assert "Outline Fantasy Proof" in DEFAULT_PROMPT_TEMPLATES[mode]
 
-    for mode in ("fantasy_seed", "world_vision"):
-        assert "经营文 Decision > Implementation" in DEFAULT_PROMPT_TEMPLATES[mode]
+    assert "经营文 Decision > Implementation" in DEFAULT_PROMPT_TEMPLATES["world_vision"]
+    assert "经营文 Decision > Implementation" not in DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    assert "Seed Long-form Compounding" in DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
+    assert "Seed Long-form Pacing" in DEFAULT_PROMPT_TEMPLATES["fantasy_seed"]
 
     director = generate_prompt(
         mode="director",
@@ -196,7 +331,7 @@ def test_fantasy_salience_rules_are_scoped_to_planning_layers() -> None:
         current_outline=OUTLINE,
     )
     assert "FANTASY_INVARIANT_MARKER" in director
-    assert "Core Fantasy Invariant" in director
+    assert "核心幻想不变量" in director
     assert "Director Narrative Salience" in director
     assert "经营文 Decision > Implementation" in director
     assert "Plot Engine Diversity" not in director
@@ -209,8 +344,8 @@ def test_fantasy_salience_rules_are_scoped_to_planning_layers() -> None:
         curated_context="# Curated Chapter Context\n\n## Relevant Plan\n只保留本章事实",
     )
     for marker in (
-        "Core Fantasy Invariant",
-        "Fantasy Compounding > Operational Compounding",
+        "核心幻想不变量",
+        "幻想复利优先于操作流程复利",
         "Outline Fantasy Proof",
         "Plot Engine Diversity",
         "Director Narrative Salience",
@@ -232,7 +367,8 @@ def test_scene_skill_runtime_is_curator_selected_and_primary_only() -> None:
     assert "- combat:" in curator
     for skill_id in ("identity_reveal", "departure_vacancy", "sacrifice_convergence", "reunion_reentry"):
         assert f"- {skill_id}:" in curator
-    assert "在明确外部规则和成功线下" in curator
+    assert "Projection Guidance:" in curator
+    assert "trial_challenge" in curator
 
     curated = """# Curated Chapter Context
 
@@ -258,9 +394,9 @@ Secondary: combat
         current_outline=OUTLINE,
         curated_context=curated,
     )
-    assert primary.count("ACTIVE SCENE SKILLS——只控制场景如何落成正文") == 1
-    assert "## Primary: trial_challenge" in primary
-    assert "## Secondary: combat" in primary
+    assert "ACTIVE SCENE SKILLS——只控制场景如何落成正文" not in primary
+    assert "## Primary: trial_challenge" not in primary
+    assert "## Secondary: combat" not in primary
     assert "# investigation" not in primary
     assert "## Scene Skill Selection" not in primary
 
@@ -286,6 +422,58 @@ Secondary: combat
     assert "## Primary: trial_challenge" not in specialist
 
 
+def test_scene_skill_v2_catalog_projects_guidance_and_reviser_only_gets_short_watch() -> None:
+    curator_prompt = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+    )
+    assert "Projection Guidance:" in curator_prompt
+    assert "胜负尺" in curator_prompt
+    assert "## Generation Lens" not in curator_prompt
+    assert "## Revision Lens" not in curator_prompt
+
+    curated = """# Curated Chapter Context
+
+## Scene Prose Projection
+只让这一轮对白改变一个真实条件；条件成立后停。
+
+## Scene Skill Selection
+Primary: social_bargain_decision
+Secondary: relationship
+
+## Reader-Facing Language
+直接写人。
+"""
+    primary = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curated_context=curated,
+    )
+    assert "只让这一轮对白改变一个真实条件" in primary
+    assert "## Generation Lens" not in primary
+    assert "Revision Watch" not in primary
+
+    reviser = generate_prompt(
+        mode="authority_reviser",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curator_response=curated,
+        primary_draft="# 正式正文\n\n原稿。",
+    )
+    assert "ACTIVE SCENE REVISION WATCH" in reviser
+    assert "social_bargain_decision" in reviser
+    assert "relationship" in reviser
+    assert "连续对白无结算" in reviser
+    assert "单方付出被写成双向确认" in reviser
+    assert "## Generation Lens" not in reviser
+    assert "## Revision Lens" not in reviser
+
+
 def test_opening_contract_is_scoped_to_planning_and_opening_nodes() -> None:
     primary = generate_prompt(
         mode="primary_writer",
@@ -304,6 +492,7 @@ def test_opening_contract_is_scoped_to_planning_and_opening_nodes() -> None:
         chapter_number=3,
     )
     assert primary.count("# Opening Three Chapter Contract") == 1
+    assert "World fact 的选择权在 World + Outline" in primary
     assert opening.count("# Opening Three Chapter Contract") == 1
 
     for mode in (
@@ -371,6 +560,14 @@ def test_director_prompt_uses_only_light_projection_and_selective_default() -> N
         assert f"{field}：" in director_contract
     assert "八个字段仍是唯一事件合同字段" in director_contract
     assert "情绪字段：" not in director_contract
+    for marker in (
+        "长期旧线本章新事实具体化",
+        "哪一个具体事实第一次成为确定事实",
+        "仍未解决",
+        "不要只写“至少一条旧线发生不可逆变化”",
+        "不为填满事件合同补造几十 / 几百章前发生过的秘密经历",
+    ):
+        assert marker in director_contract
 
     hybrid = generate_prompt(
         mode="context_curator",
@@ -479,6 +676,34 @@ def test_canon_memory_v2_and_state_delta_parser() -> None:
     assert "沈禾｜寻找弟弟" in updated
     assert "黑炉钥匙｜沈禾" in updated
     assert "旧场景" not in updated
+
+    preserved_prefix = """# 小说总体设计画像
+## 0. 本书成长基因图
+必须逐字保留。
+
+# 当前中期规划窗口
+PLAN
+
+# 未来十章逐章小纲
+FUTURE
+"""
+    source = preserved_prefix + "\n# 当前状态、未兑现承诺与作者备注\n\n## ACTIVE SCENE STATE\n旧\n"
+    preserved = apply_state_delta_to_book(
+        source,
+        1,
+        """# State Delta Audit
+无。
+# Proposed Active Scene State
+新
+# Proposed Persistent Canon
+长期
+# Proposed Chapter Summary
+事实
+# Proposed Open Promises
+承诺""",
+    )
+    assert preserved.startswith(preserved_prefix.rstrip() + "\n\n# 当前状态、未兑现承诺与作者备注")
+    assert "必须逐字保留。" in preserved
 
     prefixed = apply_state_delta_to_book(
         """# 小说总体设计画像
@@ -644,3 +869,184 @@ def test_run_ledger_api_persists_prompt_response_and_retry(tmp_path: Path, monke
     assert retried.status_code == 200
     assert retried.json()["nodes"]["director"]["attempts"] == 2
     assert (tmp_path / "ledger-api" / "runs" / "chapter-0001" / "director_prompt.md").is_file()
+
+def test_approved_world_is_first_class_curator_authority_and_plan_schedules_release() -> None:
+    world = """# PROTAGONIST-BLIND WORLD VISION
+
+## 普通人的生活与上升
+普通人住在猎墙内，离城通常跟随商队或猎队。
+
+## 力量体系与正常值
+一阶是正式猎手，二阶能独自处理大型异兽。
+
+## 社会现实与身份
+荒原部族有独立训练法，也会与城镇交易或冲突。
+
+## 世界里真正值钱、值得想要的东西
+高阶心核很值钱。
+
+## 世界正在发生的大事
+白角部正在追一头被掳走的幼年王种。
+
+## 世界知识边界
+普通人知道荒原部族存在，但不知道各部族当前目的。
+当前没人能完整解释的事实：白角部为何改变旧路线。
+"""
+    plan = "## 第4章：封路\n具体剧情：白角部第一次挡住商队去路；此处让读者知道：荒原部族有独立训练法，也会与城镇交易或冲突。"
+    packet = build_chapter_context(
+        book_content="# 小说总体设计画像\n## 1. 核心类型与读者承诺\n成长",
+        world_vision=world,
+        current_chapter_plan=plan,
+    )
+    assert "WORLD REALITY AUTHORITY" in packet.world_authority
+    assert "荒原部族有独立训练法" in packet.world_authority
+    assert "白角部正在追一头" not in packet.world_authority
+    assert "当前没人能完整解释的事实" not in packet.world_authority
+
+    from story_mvp.hybrid_runtime import build_curator_context
+
+    curator = build_curator_context(packet)
+    assert "WORLD AUTHORITY" in curator.context_index
+    assert "荒原部族有独立训练法，也会与城镇交易或冲突" in curator.world_authority
+    assert "高阶心核很值钱" not in curator.world_authority
+
+
+def test_curator_prompt_receives_world_authority_without_api_side_channel() -> None:
+    world = """# PROTAGONIST-BLIND WORLD VISION
+
+## 普通人的生活与上升
+普通人住在猎墙内，离城通常跟随商队或猎队。
+
+## 力量体系与正常值
+一阶是正式猎手。
+
+## 社会现实与身份
+荒原部族有独立训练法，也会与城镇交易或冲突。
+
+## 世界里真正值钱、值得想要的东西
+高阶心核很值钱。
+
+## 世界知识边界
+普通人知道荒原部族存在。
+"""
+    prompt = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content="# 小说总体设计画像\n## 1. 核心类型与读者承诺\n成长",
+        world_vision=world,
+        current_outline=OUTLINE,
+        current_chapter_plan="## 第4章：封路\n具体剧情：此处告诉读者荒原部族有独立训练法，也会与城镇交易或冲突。",
+        chapter_number=4,
+    )
+    assert "WORLD AUTHORITY——本章确定性预取" in prompt
+    assert "荒原部族有独立训练法，也会与城镇交易或冲突" in prompt
+    assert "Optional Reader Orientation Reference" not in prompt
+
+def test_reader_release_map_is_optional_and_chapter_scoped() -> None:
+    book = """# 小说总体设计画像
+## 2. 世界观结构
+世界摘要。
+### Reader Release Map
+- 第1章｜猎市起乱：城镇外有猎墙，普通人首先学会避开异兽。
+- 第4章｜白角部挡路：荒原部族拥有不同于宗门的身体训练与驯兽传统。
+## 3. 世界如何持续制造剧情压力
+压力。
+# 当前中期规划窗口
+块。
+# 未来十章逐章小纲
+计划。
+# 当前状态、未兑现承诺与作者备注
+状态。
+"""
+    assert "城镇外有猎墙" in extract_reader_release_for_chapter(book, 1)
+    assert "荒原部族" not in extract_reader_release_for_chapter(book, 1)
+    assert "荒原部族" in extract_reader_release_for_chapter(book, 4)
+    assert extract_reader_release_for_chapter(book, 2) == ""
+
+
+def test_authority_reviser_receives_remote_authority_without_raw_gbrain_and_preserves_fixed_contract() -> None:
+    character = """# CHARACTER CARD 1｜Split Authority
+
+## POWER CORE｜Frozen Authority
+
+POWER_CORE_MARKER：可以把一个自己分成两个并行行动的身体。
+
+## HUMAN CORE｜Frozen Authority
+
+HUMAN_CORE_MARKER：会被具体人的气味、姿态和身体靠近牵动，也在意自由钱和被看见。
+
+## Composition Boundary
+
+不做后验合理化。
+"""
+    world = """# PROTAGONIST-BLIND WORLD VISION
+
+## 普通人的生活与上升
+
+WORLD_LIFE_MARKER：本地石屋沿山壁层叠，居民常穿窄袖短袍。
+
+## 力量体系与正常值
+
+WORLD_POWER_MARKER：影子可以炼成实体用于攻防。
+
+## 世界里真正值钱、值得想要的东西
+
+WORLD_VALUE_MARKER：古城遗物和珍稀药材价格很高。
+"""
+    book = """# 小说总体设计画像
+
+## 2. 世界观结构
+
+世界结构。
+
+### Reader Release Map
+- 第5章｜READER_RELEASE_A：观日宗公开传授影术。
+- 第5章｜READER_RELEASE_B：古城遗物、珍稀药材和异兽让各方争抢。
+"""
+    prompt = generate_prompt(
+        mode="authority_reviser",
+        template="CUSTOM_TEMPLATE_MUST_NOT_OVERRIDE_FIXED_REVISER",
+        writer_mode="curator_primary",
+        book_content=book,
+        world_vision=world,
+        character_card=character,
+        current_outline=OUTLINE,
+        chapter_number=5,
+        curator_response="CURATOR_ATTENTION_MARKER",
+        primary_draft="# 正式正文\n\nPRIMARY_DRAFT_MARKER",
+        previous_chapter_text="CANON_TAIL_MARKER",
+        gbrain_inspiration="RAW_GBRAIN_MARKER",
+    )
+    assert "Preservation First" in prompt
+    assert "CUSTOM_TEMPLATE_MUST_NOT_OVERRIDE_FIXED_REVISER" not in prompt
+    assert "FROZEN CHAPTER MISSION" in prompt
+    assert "CURATOR_ATTENTION_MARKER" in prompt
+    assert "WORLD_LIFE_MARKER" in prompt
+    assert "WORLD_POWER_MARKER" in prompt
+    assert "WORLD_VALUE_MARKER" in prompt
+    assert "READER_RELEASE_A" in prompt and "READER_RELEASE_B" in prompt
+    assert "POWER_CORE_MARKER" in prompt
+    assert "HUMAN_CORE_MARKER" in prompt
+    assert "CANON_TAIL_MARKER" in prompt
+    assert "PRIMARY_DRAFT_MARKER" in prompt
+    assert "RAW_GBRAIN_MARKER" not in prompt
+    assert "逐条检查" in prompt
+    assert "地方风俗、建筑样式或制度不得" in prompt
+    assert "State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity" in prompt
+
+
+def test_authority_reviser_requires_primary_draft() -> None:
+    try:
+        generate_prompt(
+            mode="authority_reviser",
+            template="",
+            book_content="",
+            current_outline=OUTLINE,
+            chapter_number=5,
+            primary_draft="",
+            primary_writer_response="",
+        )
+    except ValueError as error:
+        assert "Primary Draft" in str(error)
+    else:
+        raise AssertionError("Authority Reviser must require a Primary Draft")

@@ -23,6 +23,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
+from .character_context import project_world_reality
 from .prompts import (
     CURRENT_STATE_HEADING,
     canon_memory_has_labels,
@@ -39,9 +40,10 @@ from .prompts import (
 #: 整份运行合同不再重复注入。
 MINIMAL_AUTHORITY_RULE = """权威规则按维度划分（不使用单条总排名）：
 1. 已发生事实：CANON PROSE > CANON INDEX。CANON PROSE 是已批准的正式前文；已经发生事实的最高来源。CANON INDEX 是当前状态和最近摘要，是正式正文的压缩索引；与正式正文冲突时以正式正文为准。
-2. 未来创作意图：BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION。BOOK CONTRACT 是作者批准的长期设计、世界规则、读者承诺和人物方向；它约束未来，但不表示其中所有人物弧和阶段方向已经发生。PLAN 是当前大型剧情块、十章计划和当前章事件合同，只决定尚未发生的内容。OPTIONAL INSPIRATION 是可选参考，不能覆盖 BOOK CONTRACT、PLAN 或已发生事实。
-3. 表达控制：PROSE PROFILE 只控制表达方式，不能修改已发生事实或未来计划。
-4. 跨维度冲突：已发生事实不能被 BOOK CONTRACT 或 PLAN 覆盖；如果正文或 CANON INDEX 证明旧 BOOK CONTRACT 已经失效，保留已发生事实，不得自动修改 BOOK CONTRACT。Curator 负责在 Curator Audit 中暴露会影响本章执行的明确冲突；Primary 不承担冲突报告或其它 pipeline bookkeeping，只服从已经投影出的有效事实与计划。"""
+2. 世界事实：WORLD AUTHORITY 是已批准 World Vision 的安全事实投影，负责世界规律、普通生活、力量正常值、社会现实、价值结构与公开知识边界；BOOK / PLAN 可以决定这些事实何时进入故事，但不得改写它们。named 大事件与未解谜底不在该投影中，仍服从已批准 Story / Plan 与未知边界。
+3. 未来创作意图：BOOK CONTRACT > PLAN > OPTIONAL INSPIRATION。BOOK CONTRACT 决定长期故事方向、读者承诺和人物方向；PLAN 决定当前尚未发生的剧情；OPTIONAL INSPIRATION 不能覆盖以上任何权威。
+4. 表达控制：PROSE PROFILE 只控制表达方式，不能修改已发生事实或未来计划，也不能改写 WORLD AUTHORITY。
+5. 跨维度冲突：已发生事实不能被 BOOK CONTRACT 或 PLAN 覆盖；如果正文证明旧 BOOK CONTRACT 已经失效，保留已发生事实，不得自动修改 BOOK CONTRACT。世界事实不能被 BOOK / PLAN / Writer 临时改写。Curator 负责在 Curator Audit 中暴露会影响本章执行的明确冲突；Primary 不承担冲突报告或其它 pipeline bookkeeping，只服从已经投影出的有效事实与计划。"""
 
 #: 事件合同重点呈现的六项；「推动事件的人」作为场景上下文，「叙事功能」降级为规划备注。
 EVENT_CONTRACT_FIELDS = (
@@ -83,6 +85,7 @@ class ChapterContextPacket:
     """章节写作运行期上下文包；所有区块均为确定性文本。"""
 
     authority: str
+    world_authority: str
     book_contract: str
     chapter_mission: str
     canon_context: str
@@ -93,9 +96,11 @@ class ChapterContextPacket:
     current_chapter_plan: str
     prose_profile: str
     optional_inspiration: str
+    human_core: str = ""
+    power_core: str = ""
     growth_benefit_projection: str = ""
     growth_genome_compact: str = ""
-    prologue_reader_knowledge: str = ""
+    reader_release: str = ""
 
 
 def _markdown_block(content: str, heading: str) -> str:
@@ -111,6 +116,68 @@ def _markdown_block(content: str, heading: str) -> str:
             collected.append(next_line)
         return "\n".join(collected).strip()
     return ""
+
+
+def project_frozen_power_core(character_card: str) -> str:
+    """只投影 deterministic CHARACTER.md 中冻结的 Power Core。"""
+
+    lines = character_card.splitlines()
+    start: int | None = None
+    collected: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if start is None:
+            if stripped.startswith("## POWER CORE"):
+                start = 1
+            continue
+        if stripped.startswith("## HUMAN CORE"):
+            break
+        collected.append(line)
+    return "\n".join(collected).strip()
+
+
+def project_frozen_human_core(character_card: str) -> str:
+    """只投影 deterministic CHARACTER.md 中稳定的 Human Core。"""
+
+    lines = character_card.splitlines()
+    start: int | None = None
+    collected: list[str] = []
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if start is None:
+            if stripped.startswith("## HUMAN CORE"):
+                start = index + 1
+            continue
+        if stripped == "## Composition Boundary":
+            break
+        collected.append(line)
+    return "\n".join(collected).strip()
+
+
+def extract_reader_release_for_chapter(book_content: str, chapter_number: int) -> str:
+    """Extract one chapter's optional Reader Release Map entry from BOOK §2.
+
+    This is planning metadata, not Canon and not a per-chapter requirement. It keeps
+    Outline's timing decision visible to chapter runtime without another model call.
+    """
+
+    if chapter_number <= 0:
+        return ""
+    world_structure = _markdown_block(book_content, "## 2. 世界观结构")
+    if not world_structure:
+        return ""
+    match = re.search(
+        r"(?ms)^### Reader Release Map\s*$\n(.*?)(?=^###\s+|\Z)",
+        world_structure,
+    )
+    if not match:
+        return ""
+    target = f"第{chapter_number}章"
+    return "\n".join(
+        line.strip()
+        for line in match.group(1).splitlines()
+        if line.strip() and target in line
+    ).strip()
 
 
 def render_event_contract(current_outline: str) -> str:
@@ -181,29 +248,6 @@ def _extract_growth_projection_value(texts: Iterable[str], label: str) -> str:
                     values.append(stripped)
             return "\n".join(values).strip()
     return ""
-
-
-def build_prologue_context(
-    *,
-    book_content: str = "",
-    current_long_block: str = "",
-    current_chapter_plan: str = "",
-    author_intent: str = "",
-) -> str:
-    """为一次性 Prologue Writer 选择最小的确定性世界上下文。"""
-
-    parts: list[str] = []
-    for heading in ("## 2. 世界观结构", "## 3. 世界如何持续制造剧情压力", "## 7. 叙事结构"):
-        block = _markdown_block(book_content, heading)
-        if block:
-            parts.append(f"{heading}\n\n{block}")
-    if current_long_block.strip():
-        parts.append(f"当前第一个大型剧情块\n\n{current_long_block.strip()}")
-    if current_chapter_plan.strip():
-        parts.append(f"第一章计划与 Prologue 边界\n\n{current_chapter_plan.strip()}")
-    if author_intent.strip():
-        parts.append(f"作者当前 Prologue 意图\n\n{author_intent.strip()}")
-    return "\n\n".join(parts).strip()
 
 
 def _markdown_subsection(content: str, heading: str) -> str:
@@ -328,6 +372,8 @@ def _without_genre_prior(text: str) -> str:
 def build_chapter_context(
     *,
     book_content: str = "",
+    character_card: str = "",
+    world_vision: str = "",
     current_long_block: str = "",
     previous_chapter_text: str = "",
     current_outline: str = "",
@@ -335,7 +381,6 @@ def build_chapter_context(
     recent_summaries: str = "",
     gbrain_inspiration: str = "",
     selected_references: Iterable[Mapping[str, Any]] | None = None,
-    prologue_text: str = "",
     chapter_number: int = 0,
 ) -> ChapterContextPacket:
     """由现有页面输入确定性地构建章节运行期上下文包。"""
@@ -409,17 +454,10 @@ def build_chapter_context(
         current_outline=current_outline,
     )
     growth_genome_compact = compact_growth_genome_for_chapter(book_content)
-    prologue_reader_knowledge = ""
-    if chapter_number == 1 and prologue_text.strip():
-        prologue_reader_knowledge = (
-            "这是读者已经读过的正式序章。它不是 Chapter 1 的即时前场，"
-            "不要求 Chapter 1 承接序章见证者、地点或最后动作；只把其中已经清楚建立的世界常识视为读者已知，"
-            "不要在 Chapter 1 再完整介绍同一世界信息。\n\n"
-            + prologue_text.strip()
-        )
-
     return ChapterContextPacket(
         authority=MINIMAL_AUTHORITY_RULE,
+        world_authority=project_world_reality(world_vision) if world_vision.strip() else "",
+        reader_release=extract_reader_release_for_chapter(book_content, chapter_number),
         book_contract=book_contract,
         chapter_mission=render_event_contract(current_outline),
         canon_context=canon_context,
@@ -430,9 +468,10 @@ def build_chapter_context(
         current_chapter_plan=current_chapter_plan.strip(),
         prose_profile=prose_profile,
         optional_inspiration=optional_inspiration,
+        human_core=project_frozen_human_core(character_card),
+        power_core=project_frozen_power_core(character_card),
         growth_benefit_projection=growth_benefit_projection,
         growth_genome_compact=growth_genome_compact,
-        prologue_reader_knowledge=prologue_reader_knowledge,
     )
 
 
@@ -440,11 +479,66 @@ def build_chapter_context(
 class DirectorContextPacket:
     current_long_block: str
     current_chapter_plan: str
+    opportunity_authority: str
     growth_genome_compact: str
     canon_index: str
     recent_summaries: str
     transition_context: str
     author_intent: str
+
+
+_OPPORTUNITY_PATTERN = re.compile(
+    r"公开试场|试场|选拔|招募|报名|大比|竞赛|拍卖|契约|名额|邀请|传承机会|资格"
+)
+_OPPORTUNITY_VALUE_PATTERN = re.compile(
+    r"随队|护送契约|契约|预付款|报酬|收入|离乡|离开本镇|跨城|身份|名额|进入|入口|奖励|传承|功法|兵器|资源"
+)
+
+
+def project_current_opportunity_authority(
+    current_long_block: str,
+    current_chapter_plan: str,
+    *,
+    max_chars: int = 360,
+) -> str:
+    """Recover one approved named-opportunity value line lost by chapter-plan compression.
+
+    This is deterministic projection only. It never synthesizes a reward or promotes a
+    future result; it returns an existing sentence from the current long block only when
+    the current chapter plan already refers to the same opportunity family.
+    """
+
+    long_block = current_long_block.strip()
+    chapter_plan = current_chapter_plan.strip()
+    if not long_block or not chapter_plan:
+        return ""
+    plan_terms = set(_OPPORTUNITY_PATTERN.findall(chapter_plan))
+    if not plan_terms:
+        return ""
+
+    candidates: list[tuple[int, str]] = []
+    for raw_line in long_block.splitlines():
+        line = raw_line.strip().lstrip("-* ").strip()
+        if not line or not _OPPORTUNITY_PATTERN.search(line) or not _OPPORTUNITY_VALUE_PATTERN.search(line):
+            continue
+        overlap = sum(1 for term in plan_terms if term in line)
+        if overlap <= 0:
+            continue
+        value_hits = len(set(_OPPORTUNITY_VALUE_PATTERN.findall(line)))
+        candidates.append((overlap * 10 + value_hits, line))
+    if not candidates:
+        return ""
+
+    line = max(candidates, key=lambda item: item[0])[1]
+    sentences = [part.strip() for part in re.split(r"(?<=[。！？])", line) if part.strip()]
+    selected: list[str] = []
+    for sentence in sentences:
+        if not selected or _OPPORTUNITY_VALUE_PATTERN.search(sentence):
+            selected.append(sentence)
+        if _OPPORTUNITY_VALUE_PATTERN.search("".join(selected)):
+            break
+    result = "".join(selected).strip() or line
+    return result[:max_chars].strip()
 
 
 def _tail_for_director(text: str, max_chars: int = 1800) -> str:
@@ -519,6 +613,10 @@ def build_director_context(
     return DirectorContextPacket(
         current_long_block=packet.current_long_block or "（未提供当前大型剧情块。）",
         current_chapter_plan=packet.current_chapter_plan or "（未提供当前章十章计划条目。）",
+        opportunity_authority=project_current_opportunity_authority(
+            packet.current_long_block,
+            packet.current_chapter_plan,
+        ),
         growth_genome_compact=packet.growth_genome_compact,
         canon_index=(
             _without_recent_summaries_for_director(packet.canon_context)

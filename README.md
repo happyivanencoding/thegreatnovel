@@ -46,16 +46,10 @@ The repository does not require or include private/local source corpora.
 ```text
 src/story_mvp/   Application, prompts, runtime and storage logic
 books/           Book workspaces and generation experiments
-docs/            Architecture, methodology and subsystem documentation
 tests/           Regression and runtime tests
 ```
 
-Start with:
-
-- [`docs/PIPELINE_METHODOLOGY_AND_VALUES.md`](docs/PIPELINE_METHODOLOGY_AND_VALUES.md) — system methodology, stage responsibilities and anti-goals
-- [`docs/MVP_PRODUCT_DIRECTION.md`](docs/MVP_PRODUCT_DIRECTION.md) — product direction and creative-authority boundaries
-- [`docs/GBRAIN_STORY_CRAFT_V3.md`](docs/GBRAIN_STORY_CRAFT_V3.md) — GBrain integration and story-craft knowledge
-- [`docs/NOVEL_PROSE_REALIZATION.md`](docs/NOVEL_PROSE_REALIZATION.md) — prose realization and Reader-First principles
+The public `main` branch intentionally ships production/runtime code without private architecture, audit, or handoff documents.
 
 ## Quick Start
 

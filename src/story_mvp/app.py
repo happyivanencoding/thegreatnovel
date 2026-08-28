@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
+from .character_prompts import generate_split_prompt
 from .gbrain import GBrainQueryError
 from .gbrain_retrieval import (
     build_retrieval_brief,
@@ -21,6 +22,7 @@ from .openai_executor import (
     OpenAIExecutorError,
     configure_settings,
     configured as openai_configured,
+    authority_reviser_model,
     default_model,
     generate_text,
     settings_status,
@@ -33,6 +35,7 @@ from .run_ledger import (
     adopt_final_source,
     create_or_load_run,
     load_run,
+    load_node_response,
     mark_node_failed,
     mark_node_skipped,
     next_actionable_node,
@@ -42,17 +45,16 @@ from .run_ledger import (
     skip_integrator_if_no_patches,
 )
 from .storage import (
+    approve_character_artifact,
     approve_creative_artifact,
     create_book,
     list_books,
     read_chapter,
     read_book_payload,
     read_creative_payload,
-    read_prologue,
     replace_chapter,
     require_book,
     save_chapter,
-    save_prologue,
     write_book,
     write_creative_artifact,
     write_prompt_templates,
@@ -80,7 +82,8 @@ class TextRequest(BaseModel):
 class OpenAIExecutorRequest(BaseModel):
     prompt: str = ""
     model: str = ""
-    purpose: Literal["default", "state_extraction"] = "default"
+    purpose: Literal["default", "state_extraction", "authority_reviser"] = "default"
+    reasoning_effort: str = ""
 
 
 class OpenAISettingsRequest(BaseModel):
@@ -101,6 +104,8 @@ class PromptTemplatesRequest(BaseModel):
 class GBrainContextRequest(BaseModel):
     mode: Literal[
         "world_vision",
+        "power_seed",
+        "human_seed",
         "idea",
         "outline",
         "director",
@@ -117,13 +122,14 @@ class GBrainContextRequest(BaseModel):
     ] = "idea"
     book_content: str = ""
     creative_direction: str = ""
-    fantasy_seed: str = ""
     world_vision: str = ""
+    character_card: str = ""
     proposal_context: str = ""
     current_long_block: str = ""
     current_outline: str = ""
     recent_summaries: str = ""
     query_override: str = ""
+    prototype_id: str = ""
 
 
 class GBrainQueryRequest(GBrainContextRequest):
@@ -147,7 +153,7 @@ class RunNodeContentRequest(BaseModel):
 
 
 class RunAdoptRequest(BaseModel):
-    source: Literal["primary", "integrator"]
+    source: Literal["primary", "authority_reviser", "integrator"]
 
 
 class RunIntegratorSkipRequest(BaseModel):
@@ -161,10 +167,10 @@ class RunRepairSpecialistsRequest(BaseModel):
 class PromptRequest(BaseModel):
     mode: Literal[
         "idea",
-        "fantasy_seed",
         "world_vision",
+        "power_seed",
+        "human_seed",
         "outline",
-        "prologue",
         "director",
         "chapter_prep",
         "chapter",
@@ -172,6 +178,7 @@ class PromptRequest(BaseModel):
         "state_delta",
         "context_curator",
         "primary_writer",
+        "authority_reviser",
         "specialist_opening",
         "specialist_dialogue",
         "specialist_action",
@@ -185,8 +192,12 @@ class PromptRequest(BaseModel):
     ] = "curator_primary"
     book_content: str = ""
     creative_direction: str = ""
-    fantasy_seed: str = ""
     world_vision: str = ""
+    power_seed: str = ""
+    human_seed: str = ""
+    prototype_id: str = ""
+    character_card: str = ""
+    character_initial_state: str = ""
     creative_state: dict[str, Any] = Field(default_factory=dict)
     proposal_context: str = ""
     current_long_block: str = ""
@@ -194,7 +205,6 @@ class PromptRequest(BaseModel):
     current_outline: str = ""
     current_chapter_plan: str = ""
     recent_summaries: str = ""
-    prologue_text: str = ""
     selected_references: list[dict[str, Any]] = Field(default_factory=list)
     gbrain_inspiration: str = ""
     actual_summaries: str = ""
@@ -258,6 +268,8 @@ def get_executors() -> dict[str, Any]:
             "configured": openai_configured(),
             "model": default_model(),
             "state_model": state_extraction_model(),
+            "authority_reviser_model": authority_reviser_model(),
+            "authority_reviser_reasoning": "high",
             "name": openai_settings["name"],
         },
     }
@@ -280,7 +292,7 @@ def put_openai_settings(payload: OpenAISettingsRequest) -> dict[str, str | bool]
 def post_openai_executor(payload: OpenAIExecutorRequest) -> dict[str, str]:
     try:
         return generate_text(
-            payload.prompt, model=payload.model, purpose=payload.purpose
+            payload.prompt, model=payload.model, purpose=payload.purpose, reasoning_effort=payload.reasoning_effort
         )
     except OpenAIExecutorError as error:
         status_code = 503 if not error.configured else 502
@@ -371,25 +383,6 @@ def put_run_repair_specialists(
         raise not_found(error) from error
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
-
-
-@app.get("/api/books/{book_id}/prologue")
-def get_prologue(book_id: str) -> dict[str, str]:
-    try:
-        return {"file": "PROLOGUE.md", "content": read_prologue(book_id, workspace_path())}
-    except FileNotFoundError as error:
-        raise not_found(error) from error
-
-
-@app.put("/api/books/{book_id}/prologue")
-def put_prologue(book_id: str, payload: TextRequest) -> dict[str, str]:
-    try:
-        target = save_prologue(book_id, payload.content, workspace_path())
-    except FileNotFoundError as error:
-        raise not_found(error) from error
-    except ValueError as error:
-        raise HTTPException(status_code=400, detail=str(error)) from error
-    return {"status": "saved", "file": target.name}
 
 
 @app.get("/api/books/{book_id}/runs/{chapter_number}")
@@ -502,8 +495,12 @@ def get_references() -> dict[str, Any]:
 
 @app.post("/api/gbrain/brief")
 def post_gbrain_brief(payload: GBrainContextRequest) -> dict[str, Any]:
-    brief = build_retrieval_brief(**payload.model_dump(exclude={"query_override"}))
-    effective_query, query_strategy = default_effective_query(payload.mode, brief)
+    brief = build_retrieval_brief(**payload.model_dump(exclude={"query_override", "prototype_id"}))
+    if payload.mode == "human_seed" and payload.prototype_id.strip():
+        effective_query, query_strategy = "", "explicit_human_prototype"
+        brief = brief.rstrip() + f"\n显式匿名 Human Prototype：{payload.prototype_id.strip()}"
+    else:
+        effective_query, query_strategy = default_effective_query(payload.mode, brief)
     return {
         "mode": payload.mode,
         "effective_query": effective_query,
@@ -511,8 +508,8 @@ def post_gbrain_brief(payload: GBrainContextRequest) -> dict[str, Any]:
         "retrieval_brief": brief,
         "hard_constraints": extract_hard_constraints(
             payload.creative_direction,
-            payload.fantasy_seed,
             payload.world_vision,
+            payload.character_card,
             payload.proposal_context,
             payload.book_content,
             payload.current_long_block,
@@ -537,14 +534,53 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
     if payload.book_id.strip():
         creative = read_creative_payload(payload.book_id, workspace_path())
         values["creative_state"] = creative["creative_state"]
-        if not values.get("fantasy_seed"):
-            values["fantasy_seed"] = creative["fantasy_seed"]
         if not values.get("world_vision"):
             values["world_vision"] = creative["world_vision"]
+        if not values.get("power_seed"):
+            values["power_seed"] = creative["power_seed"]
+        if not values.get("human_seed"):
+            values["human_seed"] = creative["human_seed"]
+        if not values.get("character_card"):
+            values["character_card"] = creative["character_card"]
+        if not values.get("character_initial_state"):
+            values["character_initial_state"] = creative["character_initial_state"]
         if not values.get("proposal_context"):
             values["proposal_context"] = creative["proposal"]
-        if not values.get("prologue_text"):
-            values["prologue_text"] = read_prologue(payload.book_id, workspace_path())
+
+        if payload.chapter_number > 0:
+            directory = require_book(payload.book_id, workspace_path())
+            try:
+                manifest = load_run(directory, payload.chapter_number)
+            except FileNotFoundError:
+                manifest = None
+            if manifest is not None:
+                if payload.mode == "authority_reviser":
+                    if not values.get("curator_response"):
+                        values["curator_response"] = load_node_response(directory, payload.chapter_number, "curator")
+                        values["curated_context"] = values["curator_response"]
+                    if not values.get("primary_draft") and not values.get("primary_writer_response"):
+                        values["primary_writer_response"] = load_node_response(directory, payload.chapter_number, "primary")
+                elif payload.mode in {
+                    "specialist_opening", "specialist_dialogue", "specialist_action",
+                    "specialist_emotion", "chapter_integrator",
+                }:
+                    if not values.get("curator_response"):
+                        values["curator_response"] = load_node_response(directory, payload.chapter_number, "curator")
+                        values["curated_context"] = values["curator_response"]
+                    if not values.get("primary_draft"):
+                        revised = load_node_response(directory, payload.chapter_number, "authority_reviser")
+                        values["primary_writer_response"] = revised or load_node_response(directory, payload.chapter_number, "primary")
+                elif payload.mode == "state_delta" and manifest.get("writer_mode") == "curator_primary":
+                    source = manifest.get("final_source")
+                    if source not in {"authority_reviser", "integrator"}:
+                        raise ValueError("curator_primary 的 State Extraction 必须等待 Authority Reviser 成为 final_source")
+                    response = load_node_response(directory, payload.chapter_number, source)
+                    from .hybrid_runtime import extract_primary_draft
+
+                    body = extract_primary_draft(response)
+                    if not body:
+                        raise ValueError(f"final_source={source} 没有可提取的正式正文")
+                    values["chapter_prose"] = body
     else:
         values["creative_state"] = payload.creative_state
     return values
@@ -561,9 +597,27 @@ def _validate_state_delta_input(payload: PromptRequest) -> None:
             status_code=400, detail="生成 State Delta Prompt 需要正整数的当前章节编号"
         )
     if not payload.chapter_prose.strip():
-        raise HTTPException(
-            status_code=400, detail="生成 State Delta Prompt 需要非空的本次正式章节正文"
-        )
+        has_final_run_source = False
+        if payload.book_id.strip():
+            try:
+                manifest = load_run(require_book(payload.book_id, workspace_path()), payload.chapter_number)
+                has_final_run_source = (
+                    manifest.get("writer_mode") == "curator_primary"
+                    and manifest.get("final_source") in {"authority_reviser", "integrator"}
+                )
+            except (FileNotFoundError, ValueError):
+                has_final_run_source = False
+        if not has_final_run_source:
+            raise HTTPException(
+                status_code=400, detail="生成 State Delta Prompt 需要非空的正式正文，或已采用的 Authority Revision / Integrator final_source"
+            )
+
+
+def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
+    filtered = dict(values)
+    for key in ("power_seed", "human_seed", "prototype_id", "character_initial_state"):
+        filtered.pop(key, None)
+    return filtered
 
 
 @app.post("/api/prompt")
@@ -571,7 +625,18 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
     if payload.mode == "state_delta":
         _validate_state_delta_input(payload)
     try:
-        prompt = generate_prompt(**_prompt_kwargs(payload))
+        values = _prompt_kwargs(payload)
+        if payload.mode == "human_seed" and payload.prototype_id.strip():
+            prototype_bundle = retrieve_gbrain(
+                mode="human_seed",
+                creative_direction=str(values.get("creative_direction", "")),
+                world_vision=str(values.get("world_vision", "")),
+                prototype_id=payload.prototype_id.strip(),
+            )
+            values["gbrain_inspiration"] = prototype_bundle["result"]
+        split_mode = payload.mode in {"world_vision", "power_seed", "human_seed", "idea", "outline"}
+        prompt = generate_split_prompt(**values) if split_mode else generate_prompt(**_planning_only_fields_removed(values))
+
     except FileNotFoundError as error:
         raise not_found(error) from error
     except HardGateError as error:
@@ -595,7 +660,7 @@ def post_state_delta_prompt(payload: PromptRequest) -> dict[str, str]:
     """State Delta Prompt 专用入口：只生成页面可见、可复制的 Prompt，不写任何文件。"""
     _validate_state_delta_input(payload)
     try:
-        prompt = generate_prompt(**{**_prompt_kwargs(payload), "mode": "state_delta"})
+        prompt = generate_prompt(**{**_planning_only_fields_removed(_prompt_kwargs(payload)), "mode": "state_delta"})
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:
@@ -650,23 +715,6 @@ def get_creative(book_id: str) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail=str(error)) from error
 
 
-@app.put("/api/books/{book_id}/fantasy-seed")
-def put_fantasy_seed(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
-    try:
-        creative = write_creative_artifact(
-            book_id,
-            "fantasy_seed",
-            payload.content,
-            workspace_path(),
-            origin=payload.origin,
-        )
-    except FileNotFoundError as error:
-        raise not_found(error) from error
-    except ValueError as error:
-        raise HTTPException(status_code=400, detail=str(error)) from error
-    return {"status": "saved", "file": "FANTASY_SEED.md", **creative}
-
-
 @app.put("/api/books/{book_id}/world-vision")
 def put_world_vision(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
     try:
@@ -684,20 +732,46 @@ def put_world_vision(book_id: str, payload: CreativeArtifactRequest) -> dict[str
     return {"status": "saved", "file": "WORLD_VISION.md", **creative}
 
 
-@app.post("/api/books/{book_id}/fantasy-seed/approve")
-def approve_fantasy_seed(book_id: str) -> dict[str, Any]:
+@app.put("/api/books/{book_id}/power-seed")
+def put_power_seed(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
     try:
-        return approve_creative_artifact(book_id, "fantasy_seed", workspace_path())
+        creative = write_creative_artifact(
+            book_id, "power_seed", payload.content, workspace_path(), origin=payload.origin
+        )
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "saved", "file": "POWER_SEED.md", **creative}
+
+
+@app.put("/api/books/{book_id}/human-seed")
+def put_human_seed(book_id: str, payload: CreativeArtifactRequest) -> dict[str, Any]:
+    try:
+        creative = write_creative_artifact(
+            book_id, "human_seed", payload.content, workspace_path(), origin=payload.origin
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+    return {"status": "saved", "file": "HUMAN_SEED.md", **creative}
 
 
 @app.post("/api/books/{book_id}/world-vision/approve")
 def approve_world_vision(book_id: str) -> dict[str, Any]:
     try:
         return approve_creative_artifact(book_id, "world_vision", workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/character/approve")
+def approve_character(book_id: str) -> dict[str, Any]:
+    try:
+        return approve_character_artifact(book_id, workspace_path())
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:

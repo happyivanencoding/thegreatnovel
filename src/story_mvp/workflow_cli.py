@@ -11,14 +11,13 @@ import os
 import sys
 from pathlib import Path
 
-from .run_ledger import load_run, save_node_response
+from .run_ledger import adopt_final_source, load_run, save_node_response
 from .storage import (
     compose_book_content,
     parse_book_sections,
     replace_chapter,
     require_book,
     save_chapter,
-    save_prologue,
     write_book,
     write_creative_artifact,
 )
@@ -78,8 +77,6 @@ def apply_response(
             origin="author_edited",
             workflow_source=source,
         )
-    elif artifact == "book.prologue":
-        save_prologue(book_id, content, workspace_path(), source=source)
     elif artifact in BOOK_SECTIONS:
         _apply_book_section(book_id, artifact, content, source)
     else:
@@ -103,6 +100,9 @@ def apply_response(
                 raise ValueError("chapter.N.state_delta 只能使用 --node state_delta")
             load_run(directory, chapter_number)
             save_node_response(directory, chapter_number, node, content)
+            if node == "authority_reviser":
+                # Production fixed reviser is the default final prose source; optional repair may later replace it with Integrator.
+                adopt_final_source(directory, chapter_number, "authority_reviser")
         else:
             raise ValueError(f"不支持的章节 Artifact：{artifact}")
 
