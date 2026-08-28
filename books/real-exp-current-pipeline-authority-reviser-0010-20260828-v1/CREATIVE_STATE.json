@@ -1,0 +1,22 @@
+{
+  "world_vision": {
+    "origin": "author_edited",
+    "status": "author_approved"
+  },
+  "power_seed": {
+    "origin": "author_edited",
+    "status": "author_approved"
+  },
+  "human_seed": {
+    "origin": "author_edited",
+    "status": "author_approved"
+  },
+  "character_card": {
+    "origin": "deterministic",
+    "status": "author_approved"
+  },
+  "proposal": {
+    "origin": "model_generated",
+    "status": "author_approved"
+  }
+}

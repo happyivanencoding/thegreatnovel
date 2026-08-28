@@ -1,0 +1,426 @@
+[
+  {
+    "label": "full10-outline",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 354.262,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch01-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 24.862,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch01-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 70.46,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch01-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 64.507,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch01-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 203.071,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch01-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 18.126,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch02-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 72.415,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch02-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 109.812,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch02-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 60.825,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch02-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 127.849,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch02-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 20.722,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch03-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 24.082,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch03-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 77.328,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch03-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 64.6,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch03-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 170.174,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch03-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 21.813,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch04-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 40.01,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch04-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 55.688,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch04-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 49.139,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch04-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 129.715,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch04-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 24.072,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch05-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 25.766,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch05-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 76.079,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch05-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 32.885,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch05-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 61.773,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch05-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 39.105,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch05-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 86.985,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch05-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 21.091,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch06-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 24.76,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch06-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 77.118,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch06-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 45.835,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch06-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 100.771,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch06-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 26.318,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch07-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 20.251,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch07-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 77.946,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch07-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 37.801,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch07-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 158.656,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch07-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 26.462,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch08-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 27.439,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch08-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 134.411,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch08-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 59.997,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch08-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 199.02,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch08-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 27.145,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch09-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 41.629,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch09-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 83.83,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch09-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 52.229,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch09-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 147.505,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch09-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 26.092,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch10-director",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 20.813,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch10-curator",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 130.845,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch10-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 57.242,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch10-authority_reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 54.243,
+    "sessionId": null,
+    "ok": true
+  },
+  {
+    "label": "ch10-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 23.583,
+    "sessionId": null,
+    "ok": true
+  }
+]

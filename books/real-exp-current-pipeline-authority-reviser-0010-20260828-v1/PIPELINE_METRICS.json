@@ -1,0 +1,82 @@
+[
+  {
+    "chapter": 1,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 3443,
+    "revised_chars": 2946,
+    "changed": true
+  },
+  {
+    "chapter": 2,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 3629,
+    "revised_chars": 3478,
+    "changed": true
+  },
+  {
+    "chapter": 3,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 3710,
+    "revised_chars": 3464,
+    "changed": true
+  },
+  {
+    "chapter": 4,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 2442,
+    "revised_chars": 2306,
+    "changed": true
+  },
+  {
+    "chapter": 5,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 1824,
+    "revised_chars": 1872,
+    "changed": true
+  },
+  {
+    "chapter": 6,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 2258,
+    "revised_chars": 2205,
+    "changed": true
+  },
+  {
+    "chapter": 7,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 1475,
+    "revised_chars": 1473,
+    "changed": true
+  },
+  {
+    "chapter": 8,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 3254,
+    "revised_chars": 2615,
+    "changed": true
+  },
+  {
+    "chapter": 9,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 3014,
+    "revised_chars": 2731,
+    "changed": true
+  },
+  {
+    "chapter": 10,
+    "final_source": "authority_reviser",
+    "run_status": "completed",
+    "primary_chars": 1469,
+    "revised_chars": 1411,
+    "changed": true
+  }
+]

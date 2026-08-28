@@ -1,0 +1,1058 @@
+{
+  "version": 1,
+  "artifacts": {
+    "creative.world_vision": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "author_edit",
+      "stale_from": []
+    },
+    "creative.power_seed": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "author_edit",
+      "stale_from": []
+    },
+    "creative.human_seed": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "author_edit",
+      "stale_from": []
+    },
+    "creative.character_card": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "character_approval",
+      "stale_from": []
+    },
+    "creative.story_program": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "author_edit",
+      "stale_from": []
+    },
+    "book.design": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "model_generated",
+      "stale_from": []
+    },
+    "book.long_plan": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "model_generated",
+      "stale_from": []
+    },
+    "book.future_10": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "model_generated",
+      "stale_from": []
+    },
+    "book.canon_state": {
+      "revision": 12,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "state_delta",
+      "stale_from": []
+    },
+    "chapter.1.run": {
+      "revision": 12,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 2
+      }
+    },
+    "chapter.1.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.1.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    },
+    "chapter.2.run": {
+      "revision": 12,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 3
+      }
+    },
+    "chapter.2.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.2.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    },
+    "chapter.3.run": {
+      "revision": 12,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 4
+      }
+    },
+    "chapter.3.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.3.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    },
+    "chapter.4.run": {
+      "revision": 14,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 5
+      }
+    },
+    "chapter.4.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.4.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    },
+    "chapter.5.run": {
+      "revision": 17,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 6
+      }
+    },
+    "chapter.5.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.5.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    },
+    "chapter.6.run": {
+      "revision": 12,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 7
+      }
+    },
+    "chapter.6.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.6.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    },
+    "chapter.7.run": {
+      "revision": 12,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 8
+      }
+    },
+    "chapter.7.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.7.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    },
+    "chapter.8.run": {
+      "revision": 12,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 9
+      }
+    },
+    "chapter.8.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.8.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    },
+    "chapter.9.run": {
+      "revision": 12,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 10
+      }
+    },
+    "chapter.9.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.9.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    },
+    "chapter.10.run": {
+      "revision": 12,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "run_ledger",
+      "stale_from": [],
+      "observed": {
+        "run_status": "completed",
+        "writer_mode": "curator_primary",
+        "final_source": "authority_reviser",
+        "nodes": {
+          "action": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "authority_reviser": {
+            "status": "adopted",
+            "attempts": 1,
+            "prompt_file": "authority_reviser_prompt.md",
+            "response_file": "authority_reviser_response.md"
+          },
+          "curator": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "curator_prompt.md",
+            "response_file": "curator_response.md"
+          },
+          "dialogue": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "director": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "director_prompt.md",
+            "response_file": "director_response.md"
+          },
+          "emotion": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "integrator": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "opening": {
+            "status": "skipped",
+            "attempts": 0,
+            "prompt_file": null,
+            "response_file": null
+          },
+          "primary": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "primary_prompt.md",
+            "response_file": "primary_response.md"
+          },
+          "state_delta": {
+            "status": "completed",
+            "attempts": 1,
+            "prompt_file": "state_delta_prompt.md",
+            "response_file": "state_delta_response.md"
+          }
+        }
+      },
+      "source_revisions": {
+        "creative.world_vision": 1,
+        "creative.power_seed": 1,
+        "creative.human_seed": 1,
+        "creative.character_card": 1,
+        "creative.story_program": 1,
+        "book.design": 2,
+        "book.long_plan": 2,
+        "book.future_10": 2,
+        "book.canon_state": 11
+      }
+    },
+    "chapter.10.state_delta": {
+      "revision": 1,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "legacy",
+      "stale_from": []
+    },
+    "chapter.10.body": {
+      "revision": 2,
+      "status": "DONE",
+      "freshness": "fresh",
+      "last_source": "authority_reviser",
+      "stale_from": []
+    }
+  }
+}
