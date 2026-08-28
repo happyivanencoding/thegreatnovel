@@ -321,13 +321,17 @@ Permanent Boundary 用来防万能，不是为每一点爽感配等价代价。�
 
 同理，重大选择的选项与代价已经清楚后，应尽快选择，然后写选择造成的新局面，而不是继续证明“这个人物为什么会这样选”。
 
-### 3.14 Social Proof 的核心是重新定价，不是围观震惊
+### 3.14 High-Value Asymmetry Reveal = Behavioral Repricing + Ruler Calibration
 
-好的公开证明是：
+公开/选择性显露的核心不只是“有人震惊”，也不能因为反群体吹捧而过度克制成一个停顿。高价值非对称优势显露默认同时需要两条 reader-facing 通道：
 
-> 既有尺度 → 超标结果 → 有利害关系的人重新估价 → 待遇、挑战规格、资源、资格、敌策或关系发生改变。
+> **Behavioral Repricing**：至少一个有资格、有利益或有关系位置的观察者，因为新证据真的换了动作——停手、站起、改口、重新试探、退距、加价、换装备/战术、保护、限制或重新安排准入。
+>
+> **Ruler Calibration**：最有资格者在自己的知识边界内，用短而明确的判断告诉读者“正常同层/同类通常能做到什么 → 主角这次具体超出哪里 → 为什么罕见、异常或值得重新判断”。有限猜测可以存在，但不能把“可能是某种变异/异常”升级为 Canon 真相。
 
-惊讶本身可以提供爽感，但若没有后续行为变化，不要强行让所有人态度转变。
+这不是 opening 一次性说明。以下节点应优先重新校准：Core Asymmetry 首次被外界真正看见；同一能力第一次达到新层级/质变；新旧 Asymmetry 第一次形成复合；主角进入更高圈层后第一次被更懂行者重新判断；旧社会估值明显落后于当前能力、战绩或身份。
+
+短期爽点可以止于“一个行为更新 + 一次专业/世界尺校准”，不要求每次都产生长期 Ripple。只有新估值继续改变后续资源、关系、敌意、战术、准入或信息流时，才升级成长期社会因果。
 
 ### 3.15 Audience Knowledge Distribution
 
@@ -558,12 +562,17 @@ Delta 的问题是：
 
 不要把“World 文件里写过”误认为读者已经知道。
 
-### 4.13 Minimum-Sufficient Public Proof
+### 4.13 Public Proof / Social Calibration 的双层职责
 
-公开证明只展示到足以迫使别人改变行动。它不追求所有人完全理解能力，也不要求连续专家认证。
+公开证明不追求所有人完全理解能力，也不要求连续专家认证；但过去“只要有人换动作就够”的版本过于克制。当前更准确的编译目标是：
 
-好的结果：对手换策略、强者提高招揽规格、身份/资格改变。
-坏的结果：五个人轮流说“确实不是运气”，故事状态不变。
+> **场景层：Behavioral Repricing + Ruler Calibration。** 一个关键观察者真的换动作，同时最有资格者用短专业判断重新提醒读者正常值、超标点和稀有/异常意义。
+>
+> **长线层：Disclosure → Repricing → Ripple。** 只有当这个新估值在后续场景继续改变资源、战术、关系、敌意、准入或信息流时，才进入长期 Story/Canon。
+
+好的短期结果可以只是：对手停手并改变试探，教头/长老说明“常规一阶/三阶本来只能怎样，而这次已经越出常规范畴”，然后马上继续比赛。它已经是完整爽点，不必硬接招揽/追杀。
+
+坏的结果有两种：五个人轮流说“确实不是运气”；或者为了反群体吹捧，只写一个“教头站起来/众人沉默”，却不告诉读者为什么这个结果在当前力量尺上真正异常。
 
 ### 4.14 Secondary Fantasy Axis
 
@@ -1467,15 +1476,25 @@ Docs 只描述当前有效状态。更新时优先替换、删除、合并，不
 
 现有 High-Value Acquisition + Compounding 已覆盖一部分原则，因此是否需要任何新 production 规则尚未证明。优先先测“旧资产在 6—10 章无升级窗口里是否仍改变选择和新问题”，避免恢复奖励税。
 
-### 13.9 Immediate Social Repricing 的强度边界
+### 13.9 Asymmetry Reveal / Social Repricing 已从假设升级为稳定方法，但 production wiring 仍在继续
 
-已冻结原则是：Public Proof 的价值在于有利害关系者重新估价并改变行为，而不是群众震惊。尚未确定的是：**一次重要公开证明是否应更稳定地立刻改变某项现实分配**，例如报价、资格、挑战规格、敌策或合作条件。
+2026-08-28 已完成专项 Evidence-first Deep Distillation：6 本经典小说、16 个 bounded canonical windows，覆盖 private / selective / public / accidental / secondhand disclosure，以及普通人、专家、rival、利益方、敌对者、亲近者和 NONE / next-scene / multi-chapter ripple。Terra high 负责 canonical fidelity，Luna high 综合 Scene Craft，Sol high 综合 Story/Ripple。
 
-不能直接升级成“每次显露都必须发奖励”。它需要验证即时 repricing 是否增强爽感而不制造机械奖励、关系免罪或状态税。
+稳定结论已经不再是“要不要多写震惊”，而是两层：
+
+> **Scene：Behavioral Repricing + Ruler Calibration。** 高价值 reveal 既要让关键观察者真的换动作，也要让最有资格者短促说明正常值、超标点和稀有/异常意义；而且在新层级、新复合、新圈层和旧估值过时时重新校准，不是 opening 一次性说明。
+>
+> **Story：Disclosure → Repricing → Ripple。** 只保存“谁实际知道/相信什么”；只有后续独立行动继续被新估值改变时才升级成长期 Ripple / Canon。
+
+两张最小 PILOT 资产已经形成：`mech-disclosure-repricing-ripple-v1` 与 `prose-control-observer-specific-repricing-v1`。顾临川 Ch1/Ch2 Scene-level 与 Story Program production-shaped ON/OFF 为 **DIRECTIONAL PASS**：能更稳定产生报价、挑战规格、Counterplay、知识不完整与专业尺，而没有自动制造“每次显露都追杀/招揽”的新税。
+
+仍未冻结的是具体 production wiring：当前更优候选是 Story Program / Outline 负责长期 Disclosure/Ripple，现有 `showcase_evaluation` / public-proof 类 Scene Craft 通过 conditional short Projection 承担现场双通道校准；**不要新增 Disclosure Ledger、旁人震惊 Agent 或独立 Asymmetry Reveal Primary taxonomy。**
+
+GBrain 两张卡已完成 import + embedding + keyword retrieval regression；当前 runtime 为 **3829 Pages / 15858 Chunks / 15858 Embedded**，embedding debt = 0。研究资产门禁已完整通过，但仍只属于 PILOT / production-A/B ready，不等于默认 production wiring 已冻结。
 
 ### 13.10 Doupo Feel Engine / 正文气质
 
-工作树中存在 `real-exp-doupo-feel-engine-20260827-v1` 与相关 prompts，但尚未形成可确认的最终 RESULTS。不要把它当已验证结论。其当前最有价值的未冻结线索正是上面的 Visible Desire Horizon / Reward Lifecycle / Immediate Social Repricing。
+工作树中存在 `real-exp-doupo-feel-engine-20260827-v1` 与相关 prompts，但尚未形成可确认的最终 RESULTS。不要把它当已验证结论。其仍值得继续研究的是 Visible Desire Horizon / Reward Lifecycle；原先的 Immediate Social Repricing 线索已被 2026-08-28 的跨书 Asymmetry Reveal / Social Calibration 蒸馏部分 supersede，不再当作未研究假设。
 
 ### 13.11 Human Prompt 的人格菜单风险
 
@@ -1487,79 +1506,76 @@ Docs 只描述当前有效状态。更新时优先替换、删除、合并，不
 
 ### 13.13 当前并行未提交工作
 
-Reader Orientation、World Entry、Competence Filler 与正文 Skill 的 production 修复已随 `15a389d` 提交；第一份 Handoff 已随 `1760c9a` 提交。当前仍未提交的是一处 `MVP_PRODUCT_DIRECTION` 文档对齐、若干早期/中间实验与研究脚本、尚未完成的 Doupo Feel Engine，以及作为 provenance 保留的 `DEEP_CONTEXT_HANDOFF_2.md`。接手者应先识别 owner/意图、审阅 diff、运行测试，再决定如何分批处理；不能把它们与下一实验混成一个 commit。
+截至 2026-08-28，Authority Reviser 已通过 `30851f9` 正式进入 production，严格 authority precedence / sentence-level salvage 通过 `b4436c6` 冻结；Scene Skill v2 已通过 `540743c` / `5ec0d3b` 同步；社会校准审计方法已通过 `82e0207` 更新到 `tgn-system-steward 0.2.1` 并安装激活。
+
+当前工作树仍有并行 owner 的 `docs/MVP_PRODUCT_DIRECTION.md`、`src/story_mvp/hybrid_runtime.py`、`tests/test_mvp.py` 修改，以及大量 Scene Skill / Doupo / Orientation 实验 provenance；`DEEP_CONTEXT_HANDOFF_2.md` 继续作为未追踪 provenance 存在。社会涟漪 GBrain operation 位于 GBrain 根目录，不属于 TGN repo；两张 PILOT 卡的 import / embedding / retrieval 门禁已完整通过，但 default production wiring 尚未冻结。接手者必须先看 `git status`，只 stage 自己的文件/hunk，不把这些并行工作混入下一 commit。
 
 ---
 
 ## 14. Immediate Continuation
 
-下一位 Agent 最自然的工作不是继续给 Story Program 加一句“不同人格要不同能力”，而是完成一个可归因的 **Matched Decision Point + Route-specific Opportunity A/B**。
+下一位 Agent 最自然的工作，是把已经跨书蒸馏并通过 production-shaped A/B 的 **Asymmetry Reveal / Social Calibration** 做成可归因的 production wiring A/B；不要直接把新卡常驻、不要新增 Agent/ledger/taxonomy。
 
 ### 14.1 目标
 
 验证：
 
-> 同 World + 同 Core Power + 同一具体冲突/机会池，仅 Human 不同，是否先产生不同选择；这些选择是否真实限制后续机会；在不削弱 Growth Floor 的前提下，是否形成机械上明显不同的新 Asymmetry Tree。
+> 当高价值非对称优势首次显露、达到新层级/复合、或进入更高圈层被重新观察时，现有章节链能否稳定同时给出 **Behavioral Repricing + Ruler Calibration**；当这次重新估价真的会跨场改变行动时，Story Program / Outline / State 能否继续承接为有限 Ripple，而不把每次 reveal 都变成长线义务。
 
 ### 14.2 推荐实验设计
 
-#### Phase A：Matched Decision Point
+#### Phase A：Scene-level 双通道校准
 
 冻结：
 
-- 同一 World；
-- 同一 Core Power；
-- 同一地点、时间、人物和三个并列机会；
-- 同一信息与代价；
-- 3 个动机排序明显不同的 Human。
+- 同一 Chapter Mission / Canon / WORLD AUTHORITY / Director；
+- 同一 Curator 上游输入与模型；
+- 同一 Terra Primary 路由；
+- 唯一主要变量是现有 `showcase_evaluation` / public-proof 类 Scene Craft 是否附加 `observer-specific repricing` 的 compact conditional projection。
 
-让每个 Human 只回答：
+至少选 3 类 reveal：
 
-- 选什么；
-- 为什么是这个具体的人会这样选；
-- 立即错过什么；
-- 实际进入哪条路线。
+- Core Asymmetry 首次被外界真正看见；
+- 新层级或新旧优势首次复合；
+- 进入更高新圈层后第一次被更懂行者重新判断。
 
-不要让 Sol 自行改写触发事件。
+Treatment 只有在以下同时成立时才算增益：关键观察者真的换动作；最懂行者用短专业判断重新建立正常值/超标点/稀有意义；没有统一群众合唱；没有补造 Power/World 事实；高价值之后及时回到故事。
 
-#### Phase B：Route-specific Opportunity Treatment
+#### Phase B：Story-level Disclosure → Ripple
 
-对每个 Human 做 A/B：
+冻结同一 World / Character / Story Program 输入，对比：
 
-- **A baseline：** 当前 Story Program，可从完整 World 规划新优势；
-- **B treatment：** 新 Power Asymmetry 只能来自该人物已选择路线中实际进入的人、物、地点和事件；不能从未进入的 World 机会池挑最适合 Core 的全局答案。
+- **OFF**：当前 baseline；
+- **ON**：只增加 `mech-disclosure-repricing-ripple-v1` 的 Supporting Logic。
 
-B 不是“人格类型→能力映射”。人格只通过选择限制路线，路线再限制机会。
+检查：谁实际知道/误以为什么；普通人/专家/rival/利益方是否拥有不同信息；Counterplay 是否只基于已见事实；短期 reaction 是否允许自然结束；只有后续独立行动继续改变资源、关系、敌意、战术、准入或信息流时才升级 Ripple。
 
-#### Phase C：长期投影
+#### Phase C：State / Authority 闭环
 
-让 Story Program覆盖自然的约 200—300 章，比较：
+对通过样本检查：
 
-- 第二、第三 Asymmetry 是否在机械上真正不同；
-- 是否只是同一机制换载体/用途；
-- 新旧复合是否具体；
-- 所有 Human 是否仍有强 Growth Floor；
-- 是否出现“牺牲成长后宇宙补偿更好外挂”；
-- 是否仍存在反控制、第三方案、救具体人等共同道德最优收敛；
-- Audience knowledge、ruler、ascension 是否自然工作。
+- Authority Reviser 是否保住专业尺和高价值 social repricing，又不把有限猜测改成真相；
+- State 是否只记录会继续影响选择的 knowledge / misread，而不为一次性观众建立 Disclosure Ledger；
+- 新层级/新复合/新圈层是否会再次校准，而不是开篇 one-shot 后消失。
 
 ### 14.3 成功条件
 
-- Matched Decision Point 中选择随 Human 分叉；
-- route/opportunity 因果可追溯；
-- 至少多数 Human 的第二/第三优势不是同一底层机制换皮；
-- 所有人持续成长，不因关系/享乐/审美路线失去男频分量；
-- Treatment 不直接按人格发外挂；
+- Scene ON 在多个 reveal 类型都稳定增加 **Behavior + Ruler**，且不增加群众模板、机制编造或明显 procedural bloat；
+- Story ON 让真正有利害关系的人产生有限、可追溯的后续行为变化，同时允许大量 reveal 只停在短期爽点；
+- 专业者可以误判来源，但不能自动全知；
+- 更高圈层能重新提供更高精度的 ruler，而不是重复第一章原话；
+- State 只记 consequential knowledge；
 - 不新增 Agent、数据库或硬配额；
-- 跨至少两个 World 复验后，才考虑 production 化。
+- 至少跨两个不同 World / Power 复验后，才冻结 production wiring。
 
 ### 14.4 若实验通过，最小 production 修法候选
 
-只在 Story Program 长期成长合同中增加极短的 authority 边界，例如：
+优先只做两处：
 
-> 后续新 Asymmetry 应从主角真实选择后进入的路线与实际机会中获得；不得绕过已发生的路线选择，从完整 World 中直接挑选与 Core 最优复合的全局奖励。
+1. Story Program / Outline 在高价值 reveal 处保留极短的 Disclosure / consequential Ripple 条件，不建新 schema；
+2. 现有 `showcase_evaluation` / public-proof 类 Scene Skill 加一个 conditional compact projection，要求 `Behavioral Repricing + Ruler Calibration`；不新增独立 Asymmetry Reveal Primary。
 
-是否采用、如何措辞，应由实验决定。当前不要提前冻结。
+Authority Reviser 只有在真实 A/B 证明 Primary 经常漏掉已批准的专业尺时，才考虑一行 failure-triggered Watch；不要预先常驻。
 
 ### 14.5 工程收尾顺序
 
@@ -1575,13 +1591,15 @@ B 不是“人格类型→能力映射”。人格只通过选择限制路线，
 
 ### 14.6 第二优先研究队列
 
-如果 Personalized Advantage Tree 已完成或用户明确转回《斗破》式商业可追读性，第二优先不是再加一批 Prompt，而是分别做三个窄 A/B：
+完成社会校准 wiring 后，第二优先回到尚未解决的 **Matched Decision Point + Route-specific Opportunity → Personalized Advantage Tree**：验证不同 Human 在同一诱惑下是否走向不同机会树，而不是人格直接发外挂。
+
+之后若用户转回《斗破》式商业可追读性，再分别做三个窄 A/B：
 
 1. **Visible Desire Horizon / Dominant Commercial Engine**：冻结 Human，比较“阶段有一个真正可追踪的具体欲望”是否提升 20—40 章牵引，同时不覆盖人物；
 2. **Reward Lifecycle / Fantasy Heartbeat**：选无境界升级窗口，验证旧能力/物件/身份是否通过使用、社会兑换和复用继续产生幻想心跳，而不是增加奖励频率；
-3. **Immediate Social Repricing**：比较重要公开证明后是否改变一项现实分配；拒绝机械“显露=发奖”。
+3. **Reward Lifecycle / Fantasy Heartbeat 的社会兑换部分**：观察已获得力量/物件怎样通过新的圈层定价继续产生幻想心跳，而不是恢复奖励税。
 
-三项目前都属于 Experimental Hypothesis。只有单变量、跨 Human、跨样本结果稳定后才可 production 化。
+Visible Desire Horizon 与 Reward Lifecycle 仍属于 Experimental Hypothesis；Social Calibration 的稳定原则已经冻结，但具体 production wiring 仍需上述真实链 A/B 后才算完成。
 
 ---
 
@@ -1638,7 +1656,7 @@ B 不是“人格类型→能力映射”。人格只通过选择限制路线，
 
 ### 15.7 用户说“审计”时有固定协议
 
-自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。Steward 不进入 production。
+自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本为 **0.2.1**；新增 `Asymmetry Reveal / Social Calibration Trace`，会主动区分 `Reaction present / Ruler missing`、`Ruler present / Behavior missing` 与 `One-shot calibration`。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
 
 ### 15.8 Docs 要言简意赅
 
@@ -1693,6 +1711,8 @@ B 不是“人格类型→能力映射”。人格只通过选择限制路线，
 29. 把单本/单候选实验宣称为系统完成；
 30. 覆盖当前 dirty worktree 或混提交无关文件；
 31. 为了正文“完整”替尚未揭晓的旧历史、旧对话、隐藏动机或世界机制补造 retrospective canon。
+32. 因反“群众震惊”而过度克制，把高价值 reveal 压成一个停顿/站起，却不给读者正常值、超标点和稀有意义的专业 ruler 校准。
+33. 把力量尺校准当成 opening 一次性说明；新层级、新复合、新圈层或旧估值过时时不再重新提醒读者主角现在到底特殊到哪里。
 
 ---
 
@@ -1709,7 +1729,7 @@ B 不是“人格类型→能力映射”。人格只通过选择限制路线，
 9. 系统保证 Growth Floor，Human 决定 Route Freedom。
 10. 后续新优势必须通过真实故事获得，与旧优势形成复合；不每阶段强塞。
 11. 尺度要长期出现，完成比较后立即推进 State。
-12. Public Proof 的终点是世界重新定价，不是重复震惊。
+12. 高价值 Asymmetry Reveal 要反复完成 `Behavioral Repricing + Ruler Calibration`；短期爽点可以当场停止，只有后续选择持续被新估值改变时才升级 Ripple。
 13. High-Value Acquisition 可选；一旦发生必须有后续生命。
 14. Supporting Logic 只支撑因果，不自动成为故事发动机。
 15. 高价值 Orientation 可以直接说；低价值重复解释和实施必须压缩。
@@ -1721,7 +1741,7 @@ B 不是“人格类型→能力映射”。人格只通过选择限制路线，
 21. 未揭晓的长期历史保持 unknown boundary；Writer 不为完整感补 retrospective canon。
 22. 节奏服从信息价值，不服从统一章长：低价值更短，高价值可以更长。
 23. 对的就冻结；证据不足就保留 OPEN，不为完成感硬改 production。
-24. 当前最自然下一步：验证 `Choice → Route-specific Opportunity → Different Advantage Tree`，同时保护所有人格的男频 Growth Floor。
+24. 当前最自然下一步：先把 Social Calibration 做真实 production wiring A/B（Story/Outline 的 Disclosure→Ripple + 现有 showcase/public-proof Scene Craft 的双通道短 Projection）；通过后再回到 `Choice → Route-specific Opportunity → Different Advantage Tree`。
 
 ---
 
@@ -1733,6 +1753,8 @@ B 不是“人格类型→能力映射”。人格只通过选择限制路线，
 - 一个力量型主角选择留下也不表示人物薄弱，关键在选择是否来自 Human；
 - 一个炼药系统可以是强幻想轴，也可以只是工作流，区别在于它本身是否值得追到顶；
 - 一段直接世界说明可以是高价值 Orientation，而五次专家确认仍然是水；
+- 一个教头站起来并不自动等于爽点已经完成：如果没人告诉读者“普通一阶/三阶本来能做到什么、主角这次到底越出了哪里”，就是 `Reaction present / Ruler missing`；反过来只有“百年难遇”的解释而没人改变动作，也是失败；
+- 第一章已经解释过金手指很稀有，不代表几十章后的新层级、新复合或更高圈层可以永远不再重新校准；
 - 一个世界很适合主角发挥并不自动失去独立性；
 - 一个能力简单不应被自动削弱；
 - 一项结构机制即使让故事更整齐，只要覆盖人物选择就应失败；

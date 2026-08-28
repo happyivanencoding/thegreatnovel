@@ -38,6 +38,19 @@ TGN 不为治理化、工程化、蓝领职业化和过度验证分别增加 Rev
 
 该原则直接复用现有 World Vision → Power/Human → Character → Story Program → Outline → Director 的职责边界，不新增 Agent、Hard Gate、评分器或 LLM 调用。
 
+## Asymmetry Reveal / Social Repricing Pilot（2026-08-28）
+
+为解决“Power/World 明明定义主角极特殊，但现场人物像理所当然、读者感不到力量尺与社会涟漪”的问题，完成 6 本经典长篇、16 个 bounded canonical windows 的 SOURCE-FIRST 定向蒸馏，覆盖 private / selective / public / accidental / secondhand disclosure，以及普通人、专家、rival、利益方、敌对者、亲近者的差异反应。Terra high 负责原著事实/Fidelity，Luna high 综合 Scene Craft，Sol high 综合 Story/Ripple。
+
+跨书结果只形成两张最小 PILOT 资产，不扩 taxonomy：
+
+- `mech-disclosure-repricing-ripple-v1`：Story Craft。限定谁实际取得什么证据，让不同观察者按自己的正常尺形成不同价格；只有后续独立行动继续受该新估值影响时才升级为 Ripple。它是 Supporting Logic，不是 Story Engine，不新增 Disclosure Ledger。
+- `prose-control-observer-specific-repricing-v1`：Scene Craft，`active_inspiration:false`。高价值 reveal 采用**双通道校准**：`Behavioral Repricing` 让一个关键观察者真的换动作；`Ruler Calibration` 由最有资格者短促说明“正常同层/同类能做到什么 → 主角这次超出哪里 → 为什么罕见/异常或值得重新判断”。首次显露、新层级/质变、新复合、新高圈层重新观察、旧社会估值过时等节点应重新校准，不把它当 opening 一次性说明。
+
+顾临川 Ch1/Ch2 Scene-level 与 Story Program production-shaped ON/OFF 为 **DIRECTIONAL PASS**：ON 更稳定地产生角色专属反应、专业尺、报价/挑战规格变化、部分知识与基于已知事实的 Counterplay，同时没有把每次显露都扩成追杀/招揽税。当前结论是**值得继续 production A/B**，但不直接新增独立 `Asymmetry Reveal` Primary Scene Skill；更优候选是接入现有 `showcase_evaluation` / public-proof 类 Scene Craft 的 conditional short Projection，并在 Story Program / Outline 负责长期 Disclosure/Ripple 因果。
+
+两张卡已 scoped import 到 GBrain。当前 keyword retrieval 回归中，`observer knowledge / social repricing / counterplay` 等查询可稳定 Top-1 命中新卡；当前 runtime 为 **3829 Pages / 15858 Chunks / 15858 Embedded**，embedding debt 已清零。研究资产因此完成 import + embedding + retrieval 门禁，但仍只处于 **PILOT / production-A/B ready**，不等于已经进入默认 production bundle。
+
 ## Reward 职责
 
 高价值获得不是随机掉宝器，也不是固定章数节拍器。

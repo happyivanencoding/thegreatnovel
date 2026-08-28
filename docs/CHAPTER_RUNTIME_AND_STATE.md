@@ -18,17 +18,17 @@ Authority Reviser 是默认 `curator_primary` 的固定正文修订节点；Spec
 
 ### Director
 
-只根据当前剧情块、当前章计划、压缩成长信息、Canon Index、最近摘要、章末衔接和作者意图生成八字段事件合同。它决定 WHAT，不提供正文句式，不重做 World / Story Program / Outline。若本章是新 Power Asymmetry、新层级或意外复合第一次被他人看见，`对手或世界反应` 优先用现场已有懂行者/对手/同伴的短反应完成超标比较与惊讶；只有这次重新估价会改变后续行动或关系时，才把态度变化写入 `状态变化 / 结尾推动力`。长期旧线回流时仍保持八字段，不新增 schema；但 `直接结果 / 状态变化 / 结尾推动力` 必须具体写清本章新成立的事实，或明确过去原因仍未解决，不能把“真相揭露到哪一步”留给 Primary 自行决定。
+只根据当前剧情块、当前章计划、压缩成长信息、Canon Index、最近摘要、章末衔接和作者意图生成八字段事件合同。它决定 WHAT，不提供正文句式，不重做 World / Story Program / Outline。若本章是 Core Asymmetry 首次被外界看见、新层级/质变、新复合用法、进入更高圈层后的首次重新观察，或旧社会估值明显过时，`对手或世界反应` 优先同时规划两件事：`Behavioral Repricing`（一个有资格的观察者因新证据改变动作/试探/报价/战术）与 `Ruler Calibration`（最懂行者在已知边界内短促说明正常值、主角超标点与稀有/异常意义）。短期爽点可以止于当场；只有这次重新估价会继续改变后续行动、关系、资源、敌意、战术或信息流时，才把它写入 `状态变化 / 结尾推动力`。长期旧线回流时仍保持八字段，不新增 schema；但 `直接结果 / 状态变化 / 结尾推动力` 必须具体写清本章新成立的事实，或明确过去原因仍未解决，不能把“真相揭露到哪一步”留给 Primary 自行决定。
 
 ### Context Curator
 
-从确定性 Index-first 预取中筛选 Writer 真正需要的信息，输入包括 `WORLD AUTHORITY`、**从 `CHARACTER.md` 确定性截取的 Frozen Human Core**、BOOK Contract、Canon、计划、Prose Profile、Open Promises，以及 Scene Skill v2 的紧凑 Catalog。Catalog 只暴露 `skill_id + Primary Reading Question + 一行 Projection Guidance`；Curator 选择 1 个 Primary、最多 1 个 Secondary，并只在当前 Mission / Canon 仍有真实 realization 缺口时把 Deep Craft 编译成 2—4 句 `Scene Prose Projection`，已经清楚则写 `NONE`。完整 Scene Skill、原著 evidence 与 source-specific 研究不进入章节 Prompt。Power Core 不在章节期重复注入，可变状态仍由 BOOK/State 提供。World fact 的选择时机由 Outline 决定：Plan 排程了哪条已批准事实，Curator 就保留/压缩哪条；Plan 没排程时不自行从完整世界挑一段补课。冻结 Human Core 高于最近几章行为归纳；近期救人、负责或克制只能改变关系预期，不能静默改写主角稳定人格。场景自然触发已批准私人欲望时，Curator 应保留一个可直接进入 POV 的具体触发，而不只剩职责协作；若 Frozen Human 明确某个具体人会改变选择，而本章正发生近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系性现场，默认属于自然触发，保留一个克制 cue 即可。它不补读全库、不重新规划、不把 Planning Language 改写成正文。
+从确定性 Index-first 预取中筛选 Writer 真正需要的信息，输入包括 `WORLD AUTHORITY`、**从 `CHARACTER.md` 确定性截取的 Frozen Human Core**、BOOK Contract、Canon、计划、Prose Profile、Open Promises，以及 Scene Skill v2 的紧凑 Catalog。Catalog 只暴露 `skill_id + Primary Reading Question + 一行 Projection Guidance`；Curator 选择 1 个 Primary、最多 1 个 Secondary，并只在当前 Mission / Canon 仍有真实 realization 缺口时把 Deep Craft 编译成 2—4 句 `Scene Prose Projection`，已经清楚则写 `NONE`。完整 Scene Skill、原著 evidence 与 source-specific 研究不进入章节 Prompt。Power Core 不在章节期重复注入，可变状态仍由 BOOK/State 提供。World fact 的选择时机由 Outline 决定：Plan 排程了哪条已批准事实，Curator 就保留/压缩哪条；Plan 没排程时不自行从完整世界挑一段补课。冻结 Human Core 高于最近几章行为归纳；近期救人、负责或克制只能改变关系预期，不能静默改写主角稳定人格。场景自然触发已批准私人欲望时，Curator 应保留一个可直接进入 POV 的具体触发，而不只剩职责协作；若 Frozen Human 明确某个具体人会改变选择，而本章正发生近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系性现场，默认属于自然触发，保留一个克制 cue 即可。高价值 Asymmetry Reveal 若已由 Plan/Director 批准，Curator 不应把其社会校准压成单一“震惊 cue”：短 Projection 应同时保留观察者行为变化与专业 ruler 解释；新 `observer-specific repricing` Deep Craft 当前仍是 PILOT，尚未因此新增独立 Primary taxonomy。它不补读全库、不重新规划、不把 Planning Language 改写成正文。
 
 Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact projection**：从 `Curator Audit`、`Relevant Open Promises`、明确未解的 World Rules 与 `Payoff and Promise Window` 中抽取约束，形成紧贴 Chapter Mission 的 `UNRESOLVED FACT BOUNDARY`。这不是新节点、Reviewer、RAG 或 Hard Gate；它只把 Curator 已经识别出的“仍未知 / 未兑现”提高到 Primary 的高显著事实边界，避免长篇时被埋在较长 Curated Context 中。
 
 ### Primary Writer
 
-只写正式正文。输入以 Director Contract + `UNRESOLVED FACT BOUNDARY` + Curated Context + 必要连续性为主；**不直接读取完整 Scene Skill**，只使用 Curator 已编译的短 `Scene Prose Projection`（可为 `NONE`）；不直接读取 raw GBrain，不承担状态记账或长期结构修复。已排程 Reader Release 是本章要兑现的 timing decision：Curator 已投影时，用最短充分的直接旁白或场景表达说明，若同一事实包含地点/势力/传承的价值，也保留一个最短欲望锚点；只有正文同处已经自然说清才不重复。Curated Context 已明确带入私人欲望且当前场景自然触发时，不把它自动净化成职责协作或成熟沟通。Canon / Curator 已标记为未知、未解释、真假未定或原因未明的过去事实继续保持未知；除非 Director Contract 明确规定本章新成立的事实，Primary 只能创造当前场景实现细节，不得把 plausible explanation 写成 retrospective canon。对白同样不能成为补 Canon 的旁路。
+只写正式正文。输入以 Director Contract + `UNRESOLVED FACT BOUNDARY` + Curated Context + 必要连续性为主；**不直接读取完整 Scene Skill**，只使用 Curator 已编译的短 `Scene Prose Projection`（可为 `NONE`）；不直接读取 raw GBrain，不承担状态记账或长期结构修复。已排程 Reader Release 是本章要兑现的 timing decision：Curator 已投影时，用最短充分的直接旁白或场景表达说明，若同一事实包含地点/势力/传承的价值，也保留一个最短欲望锚点；只有正文同处已经自然说清才不重复。Curated Context 已明确带入私人欲望且当前场景自然触发时，不把它自动净化成职责协作或成熟沟通。高价值 Asymmetry Reveal 若 Curated Context 已带入社会校准要求，Primary 要同时实现 `Behavioral Repricing + Ruler Calibration`：既让关键观察者真的换一个动作，也让最懂行者用 1—3 句说明正常值、超标点和稀有/异常意义；不要因为追求“克制”而把专业尺度删成只剩一个停顿，也不要轮流安排多人解释。Canon / Curator 已标记为未知、未解释、真假未定或原因未明的过去事实继续保持未知；除非 Director Contract 明确规定本章新成立的事实，Primary 只能创造当前场景实现细节，不得把 plausible explanation 写成 retrospective canon。对白同样不能成为补 Canon 的旁路。
 
 ### Authority Reviser
 
@@ -54,7 +54,7 @@ Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact 
 
 ### State Extraction
 
-只从最终正式正文提取已经发生的事实，不读取 GBrain，不把计划、推测或参考机制写进 Canon。默认 `curator_primary` 下必须从 Run Ledger 的 `authority_reviser` / `integrator` `final_source` 重新读取正文；Primary Draft 不得直接进入 State。
+只从最终正式正文提取已经发生的事实，不读取 GBrain，不把计划、推测或参考机制写进 Canon。社会反应本身不自动进入长期状态：只有某个观察者/圈层因直接目击、专业推断或二手来源形成了会继续改变后续选择的稳定知识/误解，并已经导致关系、资源、敌意、战术、准入或信息流变化时，才把“谁知道/相信什么、仍不知道什么、因此持续怎么做”写入普通 Canon；一次性惊讶或短期 Ruler Calibration 不建额外 Disclosure Ledger。默认 `curator_primary` 下必须从 Run Ledger 的 `authority_reviser` / `integrator` `final_source` 重新读取正文；Primary Draft 不得直接进入 State。
 
 ## Canon Memory
 
