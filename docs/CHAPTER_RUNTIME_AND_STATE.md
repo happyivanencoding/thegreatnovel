@@ -42,6 +42,8 @@ Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact 
 - 补回 Authority / Reader Release / Curator 已批准但 Primary 漏掉的最短充分世界信息、Core Power 独有体验、Frozen Human 私人 cue 或一个有故事功能的生活细节；
 - 在不改变事实的前提下，把过多 Supporting Implementation 的笔墨还给 World Entry、Rival、Relationship、Core Fantasy、Choice、Payoff 或 Consequence。
 
+同一维度如果 Curator / Primary 与 Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 冲突，以 Frozen Authority 为准，并对最终稿做语义级全章清零。修冲突段落时先逐句 salvage：本身合法、只因错误时点/因果而失效的高价值 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing 句移到最近合法位置；salvage 不保护周围报告、登记、路线或普通实施。
+
 不得改变主要事件顺序、人物决定、胜负、资源得失、伤势、身份结果、Direct Result、State Change、Ending 或未知事实边界；没有明确问题的句段默认逐字保留。删除一段前必须先确认不会同时删掉新的 `State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity`。
 
 在 `curator_primary` 中 Primary 不能直接成为 `final_source`。Authority Reviser 完成后才可采用为正式正文；如果后续显式 repair 运行 Integrator，则 Integrator 可替代它。State Extraction 后端会重新读取 Run Ledger 的最终来源，页面里的 Primary 文本不能旁路进入 State。

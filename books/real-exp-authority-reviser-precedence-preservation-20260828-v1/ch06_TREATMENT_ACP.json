@@ -1,0 +1,453 @@
+{
+  "ok": true,
+  "label": "reviser-precedence-ch06",
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "additionalDirectories": [],
+  "wall_seconds": 127.178,
+  "text": "我将使用章节正文实现规范，严格按已冻结的 Mission、Authority 与 Curator 边界做最小跨度修订；不重规划、不重写整章。本章已预选 combat + chase_escape 场景控制；我也会读取对应的场景落地规范，只用于动作与追逐的局部实现，不引入新事件。环境中没有 `rg`，所以改用 PowerShell 的文件枚举定位场景规范；这只影响读取路径，不影响正文修订范围。# 正式正文\n\n最前方的驮车已经有半个车轮压进碎石坡。\n\n赶车伙计死死拽着缰绳，牲口却被岩壁上晃动的影子惊得扬起前蹄。车后堆着的木箱往右滑，绳索绷得笔直，随时会把整辆车拖翻。\n\n药车右侧的护卫慢了半步。\n\n他本来要去拦住滑车，脚下影子却先一步扑向峡壁。他下意识追着影子转身，刚跨出两步，岩缝里便窜出一头灰黑色的异兽。\n\n那东西四肢贴地，背脊像嶙峋的石头，嘴里拖着一串黏液。它没有直冲护卫，而是借着岩壁上的错影连跳两次，落点竟已逼近药车右轮。\n\n“守住药车！”领队厉声喝道，“右边别散！”\n\n顾临川拔刀迎上去。\n\n异兽扑得很低，前爪擦过碎石，直取药车下方。它盯的不是顾临川，是车轮和车旁正在收紧缰绳的伙计。\n\n顾临川横刀劈下。\n\n刀锋砍在异兽肩背，像砍中一块湿硬的皮革。异兽吃痛翻滚，却没有退远，借着地上散乱的影子又绕到另一边。\n\n药车的右轮也在碎石上滑了半尺。\n\n车里的药箱撞得哐当作响。\n\n“右轮卡住了！”车夫脸色发白，“再滑就要翻！”\n\n顾临川回头看了一眼。\n\n那头异兽已经重新伏低，准备第二次扑击。右侧护卫终于找回位置，却被另一道从岩缝里钻出的黑影缠住，刀刚举起来，肩头就被抓出一道血口。\n\n顾临川没有再等。\n\n他脚下的影子猛地拉长。\n\n强光把影缘照得很薄，影子在碎石间抖了一下，像被人从中间撕开。顾临川胸口一闷，眼前短暂发黑。\n\n下一刻，药车右侧多出了另一个他。\n\n留下的顾临川一步抢到车轮前，肩膀顶住倾斜的车辕，刀尖朝外。\n\n另一具影身则贴着峡壁掠出，沿着一串歪斜的影子追向更深处。\n\n两边的顾临川同时动了。\n\n留在药车旁的顾临川先看见异兽扑来。\n\n他没有松开车辕，只把刀往上挑。异兽张口咬住刀背，腥气扑到脸上，爪子却趁机从侧面抓向他的腿。\n\n顾临川抬膝撞在异兽下颚。\n\n异兽被撞得偏开，爪尖仍在他小腿上划出一道血痕。痛意顺着伤口窜上来，他手臂微沉，却没有松开车辕。\n\n顾临川咬住牙，反手一刀刺进异兽张开的嘴里。\n\n刀尖从上颚穿出。\n\n异兽挣了两下，压倒一片碎石，终于不动了。\n\n“把伤的扶过来！”顾临川朝右侧护卫喝道，“车别停，往左拐！”\n\n那护卫捂着肩头，脸色惨白，还想去追岩缝里的黑影。顾临川一脚踢开车轮旁的碎石，刀锋指向他。\n\n“先走！”\n\n护卫看了他一眼，终究扶起受伤的同伴，往药车内侧退去。\n\n前方领队已经带人稳住驮车。两名伙计合力拉住后拖的木箱，车夫把牲口往左带。药车右轮从碎石边缘碾回来，车身猛地一震，重新落稳。\n\n可峡壁间的错影越来越乱。\n\n一处本该平整的石地，在影子里像是断路；一条看着能走的窄缝，牲口刚靠近就惊得后退。领队只能让车队缩成更紧的一团，火盆和药车都护在中间。\n\n“撤出去！”领队喊道，“别追东西，守住车！”\n\n顾临川守在药车右侧，跟着车队往外退。\n\n他知道另一具影身还在峡谷深处。\n\n可那一边看见什么、走到了哪里，他此刻一无所知。\n\n同一时间，追出去的影身正踩过一片倾斜的石坡。\n\n陆绾留下的痕迹并不多。\n\n碎石上有一道被鞋底拖出的浅沟，坡边挂着半截断掉的药草绳。影身俯身捡起那截绳子，指尖还能闻到药草的清苦味。\n\n他抬头望去。\n\n前方的峡谷已经分出数条岔路，每条路上都有阳光折出的假影。岩壁上的人影时而向左，时而向右，像有许多个陆绾正往不同方向逃。\n\n影身没有追那些人影。\n\n他看着地上真正被踩乱的碎石，沿着那道浅沟往里冲。\n\n一头异兽从高处扑下。\n\n影身侧身避开，刀锋划过它腹下。那东西落地后没有回头缠斗，反而钻进另一片错影里，消失得极快。\n\n影身追过一道狭窄石缝，眼前忽然开阔。\n\n峡谷尽头立着一片残破石墙。\n\n石墙半埋在黄白色的山岩中，墙后露出倾塌的石塔和断裂的门楼。那些石头比峡谷里的岩壁更暗，像在这里放了很久，已经和周围的山色分不开。\n\n陆绾就在石墙外。\n\n她站在一座断门前，左手扶着石柱，右手攥着短刀。她身前明明只有几步空地，影子却被拉进门洞深处，怎么也收不回来。\n\n“陆绾！”影身喊道。\n\n陆绾猛地回头。\n\n她看见顾临川，眼里先是一松，随即又压低声音：“别过来！”\n\n影身停在十几步外。\n\n断门周围的阳光很乱。地面上铺着一层浅灰色的石板，陆绾脚边却有数道影子交错滑动，像有看不见的裂缝把她困在原地。\n\n“能退出来吗？”影身问。\n\n陆绾试着往后挪了一步。\n\n她的人刚动，脚下的影子便猛地往门洞里拽。陆绾脸色一变，立刻收回脚，石板上发出一声细碎的摩擦声。\n\n“不能。”她喘了口气，“我一转身，路就变了。”\n\n影身看向她身后的断门。\n\n门内是更深的石城，残墙之间一片昏暗。陆绾离门口不远，却像被那片错影钉在了石板上。\n\n他想直接过去。\n\n可他已经离开药车右侧，外面的撤离线不能为他停下。\n\n而陆绾脚边的影子也在动。\n\n影身若贸然踏进去，未必能把她拉出来，反而可能一起困住。\n\n陆绾看着他，声音低了一点：“车队呢？”\n\n“在撤。”影身说。\n\n陆绾抿了抿唇。\n\n她没有让他立刻进来，只看了一眼峡谷外的方向：“你不能把药车丢在外面。”\n\n影身握紧刀柄。\n\n他当然知道。\n\n可他也不想转身就走。\n\n就在这时，石城里面传来脚步声。\n\n不是异兽踩过碎石的闷响，而是靴底踏在石板上的声音，人数不止一个。\n\n影身立刻贴到断墙旁，朝门内望去。\n\n几名穿着浅金色衣袍的年轻人已经越过断门另一侧的石阶。他们腰间挂着长剑，衣袍上有一轮日纹，在昏暗石城里格外显眼。\n\n观日宗弟子。\n\n他们已经先一步进了石城。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 55248,
+      "inputTokens": 1887,
+      "cachedReadTokens": 47872,
+      "outputTokens": 5489,
+      "thoughtTokens": 3489
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 55248,
+          "inputTokens": 1887,
+          "cachedInputTokens": 47872,
+          "outputTokens": 5489,
+          "reasoningOutputTokens": 3489
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 55248,
+              "inputTokens": 1887,
+              "cachedInputTokens": 47872,
+              "outputTokens": 5489,
+              "reasoningOutputTokens": 3489
+            }
+          }
+        ]
+      }
+    }
+  },
+  "session": {
+    "sessionId": "01a04713-004b-7ac1-9ad1-ea27c6dc6468",
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "gpt-5.6-sol[low]",
+          "name": "GPT-5.6-Sol (low)",
+          "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-sol[medium]",
+          "name": "GPT-5.6-Sol (medium)",
+          "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-sol[high]",
+          "name": "GPT-5.6-Sol (high)",
+          "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[xhigh]",
+          "name": "GPT-5.6-Sol (xhigh)",
+          "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[max]",
+          "name": "GPT-5.6-Sol (max)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[ultra]",
+          "name": "GPT-5.6-Sol (ultra)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-terra[low]",
+          "name": "GPT-5.6-Terra (low)",
+          "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-terra[medium]",
+          "name": "GPT-5.6-Terra (medium)",
+          "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-terra[high]",
+          "name": "GPT-5.6-Terra (high)",
+          "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[xhigh]",
+          "name": "GPT-5.6-Terra (xhigh)",
+          "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[max]",
+          "name": "GPT-5.6-Terra (max)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[ultra]",
+          "name": "GPT-5.6-Terra (ultra)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-luna[low]",
+          "name": "GPT-5.6-Luna (low)",
+          "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-luna[medium]",
+          "name": "GPT-5.6-Luna (medium)",
+          "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-luna[high]",
+          "name": "GPT-5.6-Luna (high)",
+          "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[xhigh]",
+          "name": "GPT-5.6-Luna (xhigh)",
+          "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[max]",
+          "name": "GPT-5.6-Luna (max)",
+          "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.5[low]",
+          "name": "GPT-5.5 (low)",
+          "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.5[medium]",
+          "name": "GPT-5.5 (medium)",
+          "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.5[high]",
+          "name": "GPT-5.5 (high)",
+          "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.5[xhigh]",
+          "name": "GPT-5.5 (xhigh)",
+          "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[low]",
+          "name": "GPT-5.4 (low)",
+          "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4[medium]",
+          "name": "GPT-5.4 (medium)",
+          "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4[high]",
+          "name": "GPT-5.4 (high)",
+          "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[xhigh]",
+          "name": "GPT-5.4 (xhigh)",
+          "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[low]",
+          "name": "GPT-5.4-Mini (low)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4-mini[medium]",
+          "name": "GPT-5.4-Mini (medium)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4-mini[high]",
+          "name": "GPT-5.4-Mini (high)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[xhigh]",
+          "name": "GPT-5.4-Mini (xhigh)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[low]",
+          "name": "GPT-5.3-Codex-Spark (low)",
+          "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[medium]",
+          "name": "GPT-5.3-Codex-Spark (medium)",
+          "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[high]",
+          "name": "GPT-5.3-Codex-Spark (high)",
+          "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[xhigh]",
+          "name": "GPT-5.3-Codex-Spark (xhigh)",
+          "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+        }
+      ],
+      "currentModelId": "gpt-5.6-luna[max]"
+    },
+    "modes": {
+      "availableModes": [
+        {
+          "id": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "id": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "id": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ],
+      "currentModeId": "read-only"
+    },
+    "configOptions": [
+      {
+        "id": "mode",
+        "name": "Mode",
+        "description": "Approval and sandboxing preset for the session",
+        "category": "mode",
+        "type": "select",
+        "currentValue": "read-only",
+        "options": [
+          {
+            "value": "read-only",
+            "name": "Read-only",
+            "description": "Requires approval to edit files and run commands."
+          },
+          {
+            "value": "agent",
+            "name": "Agent",
+            "description": "Read and edit files, and run commands."
+          },
+          {
+            "value": "agent-full-access",
+            "name": "Agent (full access)",
+            "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+          }
+        ]
+      },
+      {
+        "id": "collaboration_mode",
+        "name": "Collaboration mode",
+        "description": "How Codex collaborates for subsequent turns",
+        "category": "collaboration_mode",
+        "type": "select",
+        "currentValue": "default",
+        "options": [
+          {
+            "value": "default",
+            "name": "Default"
+          },
+          {
+            "value": "plan",
+            "name": "Plan",
+            "description": "Plan before making changes"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "name": "Model",
+        "description": "Model Codex uses for the session",
+        "category": "model",
+        "type": "select",
+        "currentValue": "gpt-5.6-luna",
+        "options": [
+          {
+            "value": "gpt-5.6-sol",
+            "name": "GPT-5.6-Sol",
+            "description": "Latest frontier agentic coding model."
+          },
+          {
+            "value": "gpt-5.6-terra",
+            "name": "GPT-5.6-Terra",
+            "description": "Balanced agentic coding model for everyday work."
+          },
+          {
+            "value": "gpt-5.6-luna",
+            "name": "GPT-5.6-Luna",
+            "description": "Fast and affordable agentic coding model."
+          },
+          {
+            "value": "gpt-5.5",
+            "name": "GPT-5.5",
+            "description": "Frontier model for complex coding, research, and real-world work."
+          },
+          {
+            "value": "gpt-5.4",
+            "name": "GPT-5.4",
+            "description": "Strong model for everyday coding."
+          },
+          {
+            "value": "gpt-5.4-mini",
+            "name": "GPT-5.4-Mini",
+            "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+          },
+          {
+            "value": "gpt-5.3-codex-spark",
+            "name": "GPT-5.3-Codex-Spark",
+            "description": "Ultra-fast coding model."
+          }
+        ]
+      },
+      {
+        "id": "reasoning_effort",
+        "name": "Reasoning effort",
+        "description": "How much reasoning effort the model should use",
+        "category": "thought_level",
+        "type": "select",
+        "currentValue": "max",
+        "options": [
+          {
+            "value": "low",
+            "name": "Low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "value": "medium",
+            "name": "Medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "value": "high",
+            "name": "High",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "value": "xhigh",
+            "name": "Xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "value": "max",
+            "name": "Max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          }
+        ]
+      },
+      {
+        "id": "fast-mode",
+        "name": "Fast mode",
+        "description": "1.5x speed, increased usage",
+        "category": "model_config",
+        "type": "select",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Off",
+            "description": "Default speed, normal usage"
+          },
+          {
+            "value": "on",
+            "name": "On",
+            "description": "1.5x speed, increased usage"
+          }
+        ]
+      }
+    ]
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

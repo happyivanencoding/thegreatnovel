@@ -663,12 +663,24 @@ Curated Context 为空时，使用下方明确提供的 fallback；这不是失�
 ## Preservation First｜默认不动已经正确的正文
 - 先在内部判断哪些局部存在明确问题；没有明确问题的段落和句子默认逐字保留，不做同义改写、润色、换词、重排或“顺手优化”。
 - 只修改能指出具体失败的局部：事实/连续性错误、反复确认或重复证明、工程化/程序化实施、无新选择的 Competence Filler、Curator / Reader Release 明确要求但漏掉的必要信息、Frozen Human 明确触发却被净化掉的私人 cue、或缺少会改变读者理解的必要 World / Power realization。
-- 修改使用最小跨度：一句有问题只改一句，一个短段有问题只改短段；能删除解决就不重写周围正确段落。
+- 修改使用最小跨度：一句有问题只改一句，一个短段有问题只改短段；纯重复/纯错误能删除解决就删除，但若局部同时承载了被 Authority 支持的 Core Fantasy、Relationship、Desire、Payoff、Surprise 或 Social Repricing，删除前先做下方 Value-Preserving Relocation 检查。
 - 新增只填补下方 Authority / Reader Release / Curator 明确支持且第一版确实遗漏的必要内容；不要为了“更丰富”再补第二处、第三处类似细节。
 - 如果整章没有明确问题，完整原样输出 Primary Draft。
 
 ## Authority Fact Discipline
 远端资料只能按其明确陈述的强度进入正文。人物喜欢漂亮兵器，只授权他多看一眼，不授权把当前兵器判成稀有/高阶；某人为了继承资格争传承，不授权总结成普遍世界规则；计划、欲望、猜测、可能性不得升级成客观事实。未知仍保持未知。
+
+## Authority Conflict Sweep｜同一维度冲突必须清零
+- Frozen Chapter Mission 冻结本章事件；CANON 冻结已经发生的事实；WORLD REALITY AUTHORITY 冻结安全世界事实；Frozen Power Core 冻结能力机制与边界；Frozen Human Core 冻结稳定人物牵引。Curator 是注意力/实现建议，Primary 是待修订草稿；**同一维度发生冲突时，Curator / Primary 不能折中或覆盖 Frozen Authority。**
+- 修订前在内部扫描 Primary Draft 中所有与 Frozen Authority 冲突的句子、因果暗示和动作后果，必须处理**全部出现位置**，不能只改第一处。判断看语义，不看关键词：例如 Frozen Power 若规定“重新接触后才回流经验/伤势”，那么分开期间的实时听见、实时感到远端疼痛/疲劳、因远端即时感觉而改变动作，都属于同一个冲突，即使没有写“共享”二字。
+- 修订后再做一次内部 final sweep：最终正文不得残留与 Frozen Authority 语义等价的反例。若错误机制可以在不改变 Mission / 胜负 / 资源 / 伤势结果的前提下局部改写，就保留事件结果、改正机制；不得为修冲突新造另一套能力规则。
+
+## Value-Preserving Relocation｜修事实不顺手磨掉高价值体验
+- 修订对象首先是**错误事实、错误时点或错误因果**，不是它旁边已经成立的阅读满足。若一句/一小段的 Core Fantasy、关系反应、私人欲望、惊讶、Reward 或 Social Repricing 本身被 Authority 支持，只是挂在不合法时点/因果上，把最小的正确体验核迁到**同一事件最近的合法时点**，而不是整段删除。
+- 这不是可选润色：Primary Draft 已经存在一个独特、高价值、且与错误机制可分离的 realization 时，最终稿必须保留一次它的语义价值，或者在内部确认该语义本身并不被 Authority 支持后才删除。**不能只因为要修掉错误机制，就让可合法保留的 Core Fantasy / Relationship / Payoff 记忆点同时消失。**
+- **Sentence-level salvage**：准备删除含 Authority 冲突的段落时，先逐句区分。句子本身若不含冲突，只是因为所在时点/上下文错误而变得不合法，并且直接承载 Core Fantasy、Relationship、Desire、Payoff、Surprise 或 Social Repricing，优先把该句原样或最小改词迁到最近合法位置；不要把整段一起删。只有句子本身就是错误事实时才删除。若原句无法自然迁移，至少保留一次明确语义等价 realization。**Salvage 只保护这类高价值句本身，不保护它周围的报告、登记、路线、重复机制解释或普通实施；救出该句后，周围 process carrier 仍按 Attention Reallocation 正常压缩。**
+- 例如：分开期间不能实时共享经验，但“我像多活了一段时间”这一 Core Fantasy 感受本身成立，则应在重新合并、经历合法回流之后保留一次；不能为了保住好句而继续保留错误机制。
+- 只迁移可与错误机制明确分离、且已有 Authority / 当前事件支持的内容；句子本身若就是未授权事实则删除。迁移不得新增事件、改变顺序/结果、制造第二次 payoff，也不得借机润色周围正确正文。
 
 ## 允许的局部修订
 1. 删除或压缩反复确认、重复能力证明、结构分析、材料诊断、路线计算、验证流程、报告/登记式展开，以及没有新选择、失败、反制、关系变化或不可逆结果的普通实施。支撑性逻辑写到足以支撑因果即可。

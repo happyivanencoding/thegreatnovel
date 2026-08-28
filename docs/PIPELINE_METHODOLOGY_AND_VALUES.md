@@ -480,6 +480,8 @@ Primary 为了保持注意力集中，只吃 Director Contract、Curated Context
 - 删除/压缩反复确认、重复证明、工程化/程序化 Supporting Implementation 和 Competence Filler；
 - 补回 Authority 已批准但第一版遗漏的最短充分 World Orientation、Core Power 独有体验、Human 私人 cue 或一个真正承载故事的生活细节；
 - 把笔墨从普通实施还给本章真正的 World Entry / Rival / Relationship / Core Fantasy / Choice / Payoff / Consequence。
+- 同一维度若 Curator / Primary 与 Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 冲突，Frozen Authority 胜出；按语义扫描整章并清掉全部同义冲突，不只修第一处。
+- 修冲突段落时逐句 salvage：本身合法、只错在时点/因果上的 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing 迁到最近合法位置；salvage 不保护周围 process carrier，后者继续按 Attention Reallocation 压缩。
 
 #### 不负责
 

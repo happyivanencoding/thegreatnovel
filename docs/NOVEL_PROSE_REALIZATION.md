@@ -253,6 +253,8 @@ Primary Writer 先用窄上下文完成一版完整正文；Authority Reviser �
 
 Reviser 输入包括冻结 Chapter Mission、Curator、safe World Authority、逐条 Reader Release、Frozen Power + Human Core、Canon 与 Primary Draft。它首先保护已正确的正文：没有明确问题的句段默认逐字保留；只允许删除/压缩重复确认、重复证明、工程化/程序化实施和 Competence Filler，或补回第一版漏掉且已被 Authority 明确支持的 World / Power / Human realization。生活细节也必须来自 safe World Authority，不为“更生动”临时创造风俗、建筑或制度。
 
+同一维度出现冲突时，Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 高于 Curator / Primary，Reviser 必须按语义扫描最终全文，不能只修第一处。若冲突段落里有一句本身合法、只是挂在错误时点/因果上的 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing，先逐句 salvage 到最近合法位置，再继续压缩周围 process carrier；保护一句高价值文本不等于保护整段实施。
+
 它不是第二次剧情创作：不能改变事件顺序、人物决定、胜负、资源得失、伤势、身份结果、Direct Result、State Change、Ending 或 unknown boundary。删除程序载体时必须保留它之后真正发生的 Consequence；如果一段承载新的 State Change、Social Repricing、Reward、Relationship Change、New Desire 或 Next Opportunity，就不能因为含“报告 / 登记 / 说明”而整段删除。
 
 这个职责来自受控 A/B：同一冻结 Primary Draft 比较 Luna `low / medium / high / xhigh / max`，high 是第一个在 Ch5/6/9/10 四类压力下全部完成关键 authority 检查的档位；xhigh/max 没增加可见净收益且 Preservation 更差。该模型结论是 Current Default，不是 prose 永恒原则。

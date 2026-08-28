@@ -1,0 +1,74 @@
+[
+  {
+    "file": "ch01_TREATMENT_ACP.json",
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 136.532,
+    "tokens": "N/A",
+    "credits": "N/A"
+  },
+  {
+    "file": "ch01_TREATMENT_R2_ACP.json",
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 148.576,
+    "tokens": "N/A",
+    "credits": "N/A"
+  },
+  {
+    "file": "ch01_TREATMENT_R3_ACP.json",
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 71.517,
+    "tokens": "N/A",
+    "credits": "N/A"
+  },
+  {
+    "file": "ch02_TREATMENT_ACP.json",
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 187.717,
+    "tokens": "N/A",
+    "credits": "N/A"
+  },
+  {
+    "file": "ch06_TREATMENT_ACP.json",
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 127.178,
+    "tokens": "N/A",
+    "credits": "N/A"
+  },
+  {
+    "file": "ch09_TREATMENT_ACP.json",
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 162.611,
+    "tokens": "N/A",
+    "credits": "N/A"
+  },
+  {
+    "file": "ch09_TREATMENT_R2_ACP.json",
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 188.531,
+    "tokens": "N/A",
+    "credits": "N/A"
+  },
+  {
+    "file": "ch09_TREATMENT_R3_ACP.json",
+    "ok": true,
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 174.615,
+    "tokens": "N/A",
+    "credits": "N/A"
+  }
+]
