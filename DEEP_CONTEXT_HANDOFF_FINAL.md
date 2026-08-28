@@ -1283,7 +1283,7 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 - `docs/CHAPTER_RUNTIME_AND_STATE.md`：章节、Canon、State；
 - `docs/NOVEL_PROSE_REALIZATION.md`：正文表达；
 - `docs/AUTHOR_WORKSPACE_UI_SPEC.md`：UI；
-- `tgn-system-steward`：AgentDock 审计 Skill；本次已升级并激活 **v0.1.14**，新增 Post-Writer Authority Revision Trace / Preservation-First 审计能力；
+- `tgn-system-steward`：AgentDock 审计 Skill；当前激活 **v0.2.1**。已包含 Post-Writer Authority Revision Trace、Scene Craft Evidence & Runtime Bandwidth Trace，以及 Asymmetry Reveal / Social Calibration Trace；Steward 仍只保存长期审计方法，不保存 production snapshot；
 - `.agents/skills/novel-prose-realization/`：正文实现 Skill；Reader Orientation / Supporting Skill compression 更新已随 `15a389d` 提交。
 
 ### 11.5 当前关键实验
@@ -1297,7 +1297,7 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 
 ### 11.6 测试状态
 
-本次 Authority Reviser production 接线完成后的最新完整回归为 **306 passed**；同时通过 Python compile、`node --check` 与 `git diff --check`。由于工作树仍有并行未提交内容，任何后续开发仍应先 `git status` 并按任务重跑相关专项测试。
+Scene Skill v2 production 冻结后的最新完整回归为 **310 passed**；同时通过 Scene Runtime focused tests、`git diff --check`、Skill lint/package validate/install/activate 与 production coherence audit。当前 Scene Skill v2 冻结提交为 `540743c feat(story): upgrade scene skills v2`。由于工作树仍有并行未提交内容，任何后续开发仍应先 `git status` 并按任务重跑相关专项测试。
 
 ### 11.7 GBrain 当前真实状态
 
@@ -1337,7 +1337,7 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 
 ### 11.9 Scene Skill v2：Deep Research / Narrow Runtime
 
-2026-08-28 的深度 Scene Craft 研究把经典长篇重新按场景问题定向细读：source-specific bounded windows 先由 Terra 做 locator / anchor / observation Fidelity Audit，再由 Luna 做跨书 synthesis，最后由受控 A/B 决定哪些判断可以进入 production。研究层允许很深，但 source 书名、原文、locator、完整 Generation/Revision Lens 不进入章节 Writer。
+2026-08-28 的深度 Scene Craft 研究把经典长篇重新按场景问题定向细读：source-specific bounded windows 先由 Terra 做 locator / anchor / observation Fidelity Audit，再由 Luna 做跨书 synthesis，最后由受控 A/B 决定哪些判断可以进入 production。最终冻结研究覆盖 **64 条 source-first lanes、26 本经典长篇、857 次 bounded-window Fidelity 审核**，其中 21 个不可靠窗口被剔除；这些数字是研究证据，不是 Runtime 配额。研究层允许很深，但 source 书名、原文、locator、完整 Generation/Revision Lens 不进入章节 Writer。
 
 当前 production 保留 **24 个 Scene Primary**，没有因为 Combat 很重要就拆出十几个新 Primary。战斗的势均、弱打强、碾压、适应、保护、团队、大战、规则/远程等都作为 `combat` 内部 posture / conditional：只有新的 Reading Question、持续 scene state、beat engine、Stop/Handoff 都不同，并且 `existing Skill + compact conditional` 的 A/B 仍不足，才允许新增 Primary。
 
@@ -1345,7 +1345,7 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 
 1. `scenes/*.md` 保存 source-blind **Deep Craft**，供研究/维护；
 2. Curator Catalog 只暴露 `skill_id + Primary Reading Question + 一行 Projection Guidance`，有真实 realization 缺口时编译 2—4 句 `Scene Prose Projection`，已经清楚则 `NONE`；
-3. Terra Primary 不再读取完整 Scene Skill；Luna Authority Reviser 也不读完整 Revision Lens，只在该 Skill 有直接 A/B 支持时追加一行 failure-triggered `Revision Watch`，否则不加。
+3. Terra Primary 不再读取完整 Scene Skill；Luna Authority Reviser 也不读完整 Revision Lens，只在该 Skill 有直接 A/B 支持时追加一行 failure-triggered `Revision Watch`，否则不加。当前只有 `social_bargain_decision` 与 `relationship` 两张 Watch 开放，其余 **22/24 = NONE**。
 
 双盲 Primary A/B（Luna + Sol）支持“Deep Research → Curator short Projection → Terra”作为默认方向：删掉完整 Skill 注入没有系统性丢失关键 craft，反而减少了深规则变成流程、教程和 prompt bloat 的风险。Reviser A/B 同样说明完整 Revision Lens 不应常驻；Preservation First 优先。
 

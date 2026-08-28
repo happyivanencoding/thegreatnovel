@@ -23,7 +23,7 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 - `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流、Reward/Opportunity 与历史复用，但不能覆盖已批准 World / Character。GBrain 可以提醒“什么值得想要、旧获得怎样继续生效”，不能重新把这些原则变成每阶段 Acquisition / Compounding 表单。
 - `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。World 的固定 Coordinate Reference 同样不重复进入 Outline creative 候选，坐标语义由已批准 World Vision 继承。
 - `Director`：不负责凭空发明长期大奖励或重新设计 Story Program。
-- `Scene Skill v2`：GBrain/原著只在离线研究层提供 source-first bounded evidence；跨书收敛成 source-blind Deep Craft。Curator 只看 `Reading Question + 一行 Projection Guidance` 并编译 2—4 句 `Scene Prose Projection`（允许 `NONE`）；Primary 不直接读取完整 Skill 或原著 evidence。
+- `Scene Skill v2`：GBrain/原著只在离线研究层提供 source-first bounded evidence；跨书收敛成 source-blind Deep Craft。2026-08-28 冻结研究覆盖 64 条定向 lane、26 本经典长篇、857 次 bounded-window Fidelity 审核；这些数字只是研究证据，不构成 Runtime 配额。Curator 只看 `Reading Question + 一行 Projection Guidance` 并编译 2—4 句 `Scene Prose Projection`（允许 `NONE`）；Primary 不直接读取完整 Skill 或原著 evidence。当前保持 24 个 Primary，另有 3 个 Shared Reference Lens 不进入 Router。
 - `Authority Reviser`：raw GBrain 固定 OFF；只读取已批准 World / Reader Release / Frozen Character Authority 的安全投影与 Curator/Primary；Scene Craft 只允许追加经 A/B 证明安全的一行 `Revision Watch`，完整 Revision Lens 不进入。
 - `State Extraction`：继续用当前 `current_state` 记录重要能力、物品、规则、持有人与状态变化；不新增 Inventory 数据库。
 

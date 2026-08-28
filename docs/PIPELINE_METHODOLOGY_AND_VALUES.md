@@ -438,7 +438,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 
 当前系统使用 deterministic Index-first prefetch，目标是降低 token 和认知负担，而不是给 Curator 再增加工具调用。
 
-**Scene Craft 的研究深度与章节带宽分离。** 原著 bounded evidence、书名、locator 与完整 Deep Craft 可以越来越深，但 production Writer 不直接消费它们。新增 Scene Primary 只有在 Reading Question、持续状态、beat engine、Stop/Handoff 都真正不同，且“现有 Skill + compact conditional”的 A/B 仍不足时才允许 promotion；高频、重要或研究预算高本身都不是扩 taxonomy 的理由。
+**Scene Craft 的研究深度与章节带宽分离。** 原著 bounded evidence、书名、locator 与完整 Deep Craft 可以越来越深，但 production Writer 不直接消费它们。新增 Scene Primary 只有在 Reading Question、持续状态、beat engine、Stop/Handoff 都真正不同，且“现有 Skill + compact conditional”的 A/B 仍不足时才允许 promotion；高频、重要或研究预算高本身都不是扩 taxonomy 的理由。当前 production 冻结为 24 个 Primary；`character_voice_pressure / world_entry_lived_texture / desire_temptation` 只作为 Shared Reference Lens，不进入 Router；只有 `social_bargain_decision / relationship` 的 Revision Watch 已通过直接 Reviser A/B。
 
 在长历史场景中，Curator 已识别的未解事实还会被 runtime 确定性投影成一个很短的 `UNRESOLVED FACT BOUNDARY`，紧贴 Chapter Mission 交给 Primary。它不新增 LLM Call，也不扩大 Canon schema；只是把“仍未知 / 未兑现”的事实边界提高显著性。
 
