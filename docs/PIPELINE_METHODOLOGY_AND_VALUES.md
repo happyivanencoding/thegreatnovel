@@ -152,7 +152,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 - 普通人的生活、上升与失败路径；
 - 当安全、地理或旅行会限制人生时，普通人怎样跨越聚落、谁能独行、哪些现实通道把当前生活连接到更大世界；
-- 力量体系的正常值、稀缺度、境界/能力的可观察差距；先用 1—3 句普通话说清力量来源、直接作用、成长与失败，再给会反复使用的对象/层级短名。**Small Grammar, Large Variation**：已有一到少数互补力量操作轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成元能量/总机制；后续丰富优先让旧规则作用于新招式、身体、兵器、异兽、环境、组合、强度与稀有例外，让读者旧知识持续复利。创新放在力量因果和玩法，不靠多个新词互相解释；默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果。对当前会频繁使用的少数力量/价值/身份档位给 1—2 个可感知、可复用 benchmark，供下游稳定比较，不建战力数据库；
+- 力量体系的正常值、稀缺度、境界/能力的可观察差距；先用 1—3 句普通话说清力量来源、直接作用、成长与失败，再给会反复使用的对象/层级短名。**Small Grammar, Large Variation**：已有一到少数互补力量操作轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成元能量/总机制；Small Grammar 不等于 Small World，主动让旧规则长出新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外，让读者旧知识持续复利。World 同时主动寻找 0—1 条真正成熟的 Optional Secondary Fantasy Road；没有足够好的创意就不造，也不预设未来主角一定会走。创新放在力量因果和玩法，不靠多个新词互相解释；默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果。对当前会频繁使用的少数力量/价值/身份档位给 1—2 个可感知、可复用 benchmark，供下游稳定比较，不建战力数据库；
 - 明确区分 **Public World Knowledge / Mystery**：普通人从小知道的主流力量、粗略强弱尺、当前/下一档现实含义、日常危险、上升入口与价值物，要能被下游直接用普通话说明；环境纹理和专名不能替代基础答案。来源、隐藏原因、幕后关系与未来 reveal 继续进入知识边界；
 - 宗门、王朝、家族、商盟、种族等怎样真实影响人生； named 势力 / 部族若会进入世界大事，同时给一个不剧透的公开类别锚点，让章节期 WORLD AUTHORITY 能回答“它是什么”；
 - 世界里真正值钱、值得人物争夺和羡慕的东西；
@@ -174,13 +174,13 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 ### Power Seed：决定“主角相对世界正常力量，哪里拥有明显非对称优势”
 
-Power Seed 只读 deterministic `POWER_BASELINE`、少量 Power GBrain craft 与非 Canon `Power Novelty Spark`，不读 Human Biography，也不读 named Story Opportunities。Spark 只在 Power 生成时存在：为 3 个候选各采样一个“熟悉能力幻想 × 单一异常”，用于打破模型默认能力先验，生成后不向下游传播。
+Power Seed 只读 deterministic `POWER_BASELINE`、固定 1 条 source-blind Naming Craft Reference、少量 Power GBrain craft，以及非 Canon `Power Novelty Spark + Optional Lexique Primitive Pool`，不读 Human Biography，也不读 named Story Opportunities。Novelty Spark 为 3 个候选各采样一个“熟悉能力幻想 × 单一异常”；Lexique pool 只提供少量对象×变化 primitive，模型每个 Candidate 最多借 0—1 个、也可以全部忽略。两者都只在 Power 生成时存在，不向下游传播。
 
 核心语法：
 
 `World Power Normal → Familiar Fantasy × One Deviation → Power Asymmetry → Core Fantasy → Growth Compatibility`
 
-创新边界：**设定创新 ≠ 术语创新 ≠ 机制复杂化，Novelty ≠ Power Fantasy 强度**。Power Asymmetry 不强制来自世界内合法例外；它可以是稀有天赋/体质、唯一奇物/际遇、外来知识/经验、外挂、正常维度上的极端天赋或少量优势叠加。每个候选最多一个主异常，必须先用一句大白话讲清“别人做不到什么，我具体多能做什么”。默认强度故意偏夸张：宁可初稿偏强一档，也不要让 LLM 把优势平衡成“更方便”；相对同层普通人/天才至少一个维度要明显超标，甚至提前拥有通常更高一大档或数档才有的局部特权。Permanent Boundary 防万能，不做对称成本结算，优先收束成一到少数真正根边界，必须留下明显纯收益；长期默认 **Boundary Stable, Privilege Expands**，不随成长同步追加疲劳、反噬、冷却等平账条款。直接型能力的长期掌握继续扩大控制、对象、战斗复合和危险场景下的稳定使用，不变回结构分析、材料诊断、路线计算或验证流程；Legendary / Future Legend 也不能绕过 Permanent Boundary。为什么“馋”必须落到读者立刻想使用的具体体验；长期还应能与功法、装备、环境、传承等产生新化学反应，而不只增加数量与距离。
+创新边界：**设定创新 ≠ 术语创新 ≠ 机制复杂化，Novelty ≠ Power Fantasy 强度**。Power Asymmetry 不强制来自世界内合法例外；它可以是稀有天赋/体质、唯一奇物/际遇、外来知识/经验、外挂、正常维度上的极端天赋或少量优势叠加。每个候选最多一个主异常，必须先用一句大白话讲清“别人做不到什么，我具体多能做什么”。Lexique primitive 只有在它让同一主异常获得更具体的身体/器物/空间载体或真正新玩法时才采用；只是换皮、增加限制、变玄或降低 Privilege Delta 时直接忽略，不得借它改写 Novelty Spark / POWER BASELINE 已有触发、覆盖、代价或 Boundary。命名同样**语义先于气味**：固定 Naming Craft Reference 只帮助读者理解与词根复利；首读准确高于世界气味，只有不牺牲准确时才复用 World 已有具体词，lexique 次之，也可以完全不用。普通短名已经准确、顺口、低学习成本时，不为“更独特”强行改写；名字多承诺了来源、对象、代价、等级或第二系统时，改名字，不扩机制迁就它。默认强度故意偏夸张：宁可初稿偏强一档，也不要让 LLM 把优势平衡成“更方便”；相对同层普通人/天才至少一个维度要明显超标，甚至提前拥有通常更高一大档或数档才有的局部特权。Permanent Boundary 防万能，不做对称成本结算，优先收束成一到少数真正根边界，必须留下明显纯收益；长期默认 **Boundary Stable, Privilege Expands**，不随成长同步追加疲劳、反噬、冷却等平账条款。直接型能力的长期掌握继续扩大控制、对象、战斗复合和危险场景下的稳定使用，不变回结构分析、材料诊断、路线计算或验证流程；Legendary / Future Legend 也不能绕过 Permanent Boundary。为什么“馋”必须落到读者立刻想使用的具体体验；长期还应能与功法、装备、环境、传承等产生新化学反应，而不只增加数量与距离。
 
 #### 负责
 
@@ -263,7 +263,7 @@ Story Program 是第一次同时看到完整 World 与 Character 的阶段，也
 #### 全书级责任
 
 - 5—7 个自然大型阶段；
-- 清楚的 **全书成长与 Core Fantasy 兑现脊柱**：少数够重的结构质变分布在早期、中期、高阶自然阶段，不固定次数；质变之间持续用既有力量语法长出新招、装备/奇物、身体、环境、越级对象与复合玩法；
+- 清楚的 **全书成长与 Core Fantasy 兑现脊柱**：少数够重的结构质变分布在早期、中期、高阶自然阶段，不固定次数；结构质变少而重，但 Fantasy Surface 可以持续偏丰富，质变之间继续用既有力量语法长出新招/战斗姿态、装备/奇物、身体/物种、异兽/伴生物、环境、越级对象与复合玩法；
 - 优势栈不能只让开局能力变大：全书要有新的 Power Asymmetry 加入，并出现新旧优势组合后单项做不到的复合玩法；这不是每阶段新增能力税；
 - 每次成长写成具体事实：以前打不过谁、去不了哪里、做不到什么，现在具体能怎样战斗、移动、探索，或哪两项优势怎样一起产生新结果；
 - **高价值 Asymmetry Reveal 要反复做社会校准，而不是只在开篇解释一次**：Core Asymmetry 首次被看见、新层级/质变、新旧优势首次复合、进入更高圈层后第一次被更懂行者重新观察、或旧社会估值已明显落后时，优先同时安排 `Behavioral Repricing + Ruler Calibration`。也就是让一个有资格的观察者先因新证据改变动作/试探/报价/战术，再由最懂行者在自己的知识边界内短促说明“正常同层/同类能做到什么 → 主角这次具体超出哪里 → 为什么罕见/异常或值得重新判断”。短期爽点可以止于当场；只有这个新估值继续改变后续资源、关系、敌意、战术或信息流时，才升级成 Ripple / Canon。
@@ -271,7 +271,7 @@ Story Program 是第一次同时看到完整 World 与 Character 的阶段，也
 - **AGGRESSIVE Payoff Bias**：因果已支持的主 payoff 真正落地，不无故降成资格/认可/以后再给；大胜可以自然连带主奖品 + 钱/资源 + 招揽/入口，秘境可以有主目标外惊喜，大型阶段可以同时带来据点、队伍、产业、商路份额或长期收入。奖励数量本身不是失败，只淘汰无因果到账与同窗口近似奖励抹平真实牺牲。
 - **Plot Pace ≠ Tier Pace**：事件、关系、发现、敌人策略、获得和玩法可以快速推进；同一力量层级仍有丰富故事空间时可承载多个完整阶段，不用境界提升证明“剧情有进展”，避免过早耗尽主尺。
 - **主人公连续升格**：力量/身体、身份/关系、世界入口、认知与选择权不是平行 KPI；优先让一次成长造成更高层人物重新估价，继而打开新圈层/地点/真相，再产生新欲望、敌人与过去没有资格作出的选择。新圈层人物只按自己真实知道的旧名声/战绩/已公开底牌先判断，再因最低充分的新事实分别更新待遇、敌意或合作，不默认全知也不靠降智轻视；同一等级可以先真正活出新的社会位置和世界位置，再自然升阶。
-- **成熟第二幻想轴**：职业/专业只有在它本身就是可欲望的强者道路时才升格——有独立强弱、顶层人物、可见胜负/作品、稀有成果与社会价格；普通实施继续压缩，是否投入由 Human 决定，不强制每书有副职。
+- **成熟第二幻想轴**：Story Program 主动检查 Approved World 中已经成立的副轴，不因它不是 Core Power 就忽略；职业/专业只有在它本身就是可欲望的强者道路时才升格——有独立强弱、顶层人物、可见胜负/作品、稀有成果与社会价格。普通实施继续压缩；主角是否投入由 Human 决定，Human 不想走就让它属于世界或配角，不强制每书有副职。
 - **可判定兑现债务**：少量自然出现的强挑战/承诺可以保留“具体对象 + 至少一个可观察结算条件”，给长期读者明确距离感；它不是倒计时 KPI，可以错过、失效、延期、输掉或被人物主动放弃。
 
 #### 大型阶段发动机
@@ -650,7 +650,7 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 | 阶段 | 默认模型 | GBrain | 说明 |
 |---|---|---|---|
 | World Vision | GPT-5.6 Luna high | **ON，固定 1 条 Coordinate Reference + 最多 3 条 creative inspiration** | protagonist-blind World；固定坐标参考不占 creative 名额，不读取未来 Power/Human |
-| Power Seed | GPT-5.6 Luna high | **ON，Power lane，小 bundle** | 只看 POWER_BASELINE；决定 growth grammar，不看 Human/Story Opportunities |
+| Power Seed | GPT-5.6 Luna high | **ON，固定 1 条 Naming Craft Reference + Power lane 小 bundle** | 只看 POWER_BASELINE；决定 growth grammar，不看 Human/Story Opportunities；固定命名参考不占 creative 名额 |
 | Human Seed | GPT-5.6 Luna high | **ON，Human lanes，最多 3 条** | Appetite / Behavior / Relationship 各最多 1 条；不看 Power/named Story Opportunities |
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Collision + long-form causality；最高杠杆长期结构节点 |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |

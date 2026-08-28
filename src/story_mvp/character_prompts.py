@@ -15,7 +15,7 @@ from .prompts import (
     STORY_PROGRAM_TEMPLATE,
     format_references,
 )
-from .power_novelty import build_power_novelty_bundle
+from .power_novelty import build_power_lexique_bundle, build_power_novelty_bundle
 
 
 SPLIT_PROMPT_MODES = frozenset({"world_vision", "power_seed", "human_seed", "idea", "outline"})
@@ -35,6 +35,8 @@ PROTAGONIST_BLIND_WORLD_TEMPLATE = f"""你是透明协作的 World Vision 创作
 - 不把后台主题写成 ontology；不要让整个世界只讨论一个抽象命题。
 - **创新落在事实与玩法，不落在词汇表。** 基础力量规则先用普通读者已有词汇说清“力量从哪来、人具体能做什么、怎样变强、什么情况下会失败”；新造专名只给一个已经看懂、而且会反复出现的对象或层级贴短标签，不能让一个新词必须再靠两三个本书新词才能解释。作者要求“全新 / 不复用旧设定”时，差异优先放在力量因果、玩法、价值物、种族/地点/冲突组合，不要为了证明原创而回避境界、功法、兵器、异兽、血脉、火雷等本来就清楚的题材语言。若去掉专名后仍不能用 1—3 句普通话说明基础力量体系，先简化规则，不要继续命名。
 - **Small Grammar, Large Variation / Reader Knowledge Compounding。** 如果主流力量已经能用 1—3 句普通话讲清，且现有一到少数互补操作轴已经有自己的辨识度，就保护它，不要为了“更统一”上提成泛化元能量、材性或总机制。后续丰富优先让读者已经学会的规则作用于新的招式、身体、兵器、异兽、环境、组合、强度与稀有例外，让旧知识越来越值钱；只有现有语法确实无法承载一种有长期价值的新幻想时，才新增新的底层机制。少规则/少系统不等于少内容，Variation 可以很大胆；世界谜团、历史、种族和社会也不要求全部服从同一个终极解释。
+- **Fantasy Surface 要主动丰富，不要把 Small Grammar 误写成 Small World。** 基础因果已经清楚后，积极让同一 Grammar 长出真正不同的战斗姿态、标志性兵器/奇物、身体或物种差异、异兽/伴生物、会改变用法的天气/光线/地形、稀有高价值例外；不逐项填表，但也不要因为害怕增加设定，让几百章的新鲜感只剩“境界更高、同一招更大”。一个新表层至少应增加新的动作、欲望、比较或组合价值，而不是只增加一个需要解释的新名词。
+- **主动寻找 0—1 条 Optional Secondary Fantasy Road。** 若本世界自然能长出一条即使不增强正面战力，读者仍可能想看某个人一路练到顶的强者道路——有可理解的强弱、真正顶层人物、可见作品/胜负、稀有高价值成果与社会价格——就把它作为世界既有事实分散写进当前结构的合适位置，不新增必填章节；它可以共享主力量的材料/器物/部分 Grammar，也可以是少量互补副轴，不为证明独立再造第二套宇宙能量。没有足够好的创意就不要硬造，也不预设未来主角一定会走。
 - **前台力量先给直接可感知的作用，不用抽象关系替代作用本身。** 默认男频玄幻若核心体验本来是变强、攻击、防御、移动、穿越、身体变化、元素、兵器、异兽或其它直接效果，就先写这些效果；不要为了显得新，把它改写成“先理解/记录/定义/验证某种路径、结构、权限或关系，再间接获得效果”的 ontology。空间或移动规则当然可以创新，但读者应先知道“人具体怎么移动、穿过、交换位置”，而不是先学习一套道路/路径概念。只有作者明确选择认知、推理、概念或规则本身作为核心幻想时，抽象关系才可以成为力量本体。
 - 内部因果可信不等于现代程序真实。玄幻/仙侠优先用力量、血脉、宗门、王朝、种族、地域、修炼资源、怪物、奇观等自身材质制造因果。
 - 普通生活只写到足以让世界真实；**不要额外输出 Life Texture / Human Appetite 字段**。生活纹理以后只在 Writer 层按场景偶尔投影，不参与 Human Seed 生成。
@@ -314,6 +316,7 @@ def generate_split_prompt(
     selected_references: list[Mapping[str, Any]] | None = None,
     gbrain_inspiration: str = "",
     power_novelty: str | None = None,
+    power_lexique: str | None = None,
     prototype_id: str = "",
     **_: Any,
 ) -> str:
@@ -332,9 +335,12 @@ def generate_split_prompt(
             raise ValueError("生成 Power Seed 需要已批准的 World Vision")
         baseline = project_character_power_baseline(world_vision)
         novelty = build_power_novelty_bundle() if power_novelty is None else power_novelty.strip()
+        lexique = build_power_lexique_bundle() if power_lexique is None else power_lexique.strip()
         parts = [POWER_PROMPT.strip(), baseline.strip()]
         if novelty:
             parts.append(_block("Power Novelty Spark（随机扰动；非 Canon）", novelty))
+        if lexique:
+            parts.append(_block("Power Lexique Primitive Spark（可选；非 Canon；可完全忽略）", lexique))
         parts.append(_block("Power GBrain Craft（可选）", gbrain_inspiration))
         return "\n\n".join(parts).strip() + "\n"
 

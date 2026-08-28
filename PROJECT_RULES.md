@@ -54,7 +54,7 @@
 | 阶段 | 默认模型 | Reasoning | GBrain |
 |---|---|---:|---|
 | World Vision | GPT-5.6 Luna | high | ON：固定 1 条 Reader Coordinates Reference + 最多 3 条 creative inspiration |
-| Power Seed | GPT-5.6 Luna | high | ON：Power lane，小 bundle |
+| Power Seed | GPT-5.6 Luna | high | ON：固定 1 条 Naming Craft Reference + Power lane 小 bundle |
 | Human Seed | GPT-5.6 Luna | high | ON：Appetite / Behavior / Relationship 各最多 1 条，总计最多 3 条 |
 | Story Program | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration |
 | Outline | GPT-5.6 Luna | high | ON：通常 4 条、最多 5 条 |
@@ -76,7 +76,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 
 - GBrain 是 Optional Inspiration，不是 Canon、创意权威、Hard Gate 或原作模板。
 - **公共治理、资源分配、维护职责、责任升级不得作为 production GBrain 的通用可迁移创作机制**；来源作品确有此内容时只保留为研究证据，并退出 active inspiration。
-- 主要路径：`GBrain → World / Power / Human / Story Program / Outline → Approved Story`；以及 `GBrain 离线深蒸馏 → source-blind Scene Deep Craft → Curator 短 Projection / Reviser 短 Watch`。
+- 主要路径：`GBrain → World / Power / Human / Story Program / Outline → Approved Story`；以及 `GBrain 离线深蒸馏 → source-blind 固定 Reference / Scene Deep Craft → 对应规划层或 Curator/Reviser 的窄带宽输入`。当前 World 固定读 Reader Coordinates，Power 固定读 1 条由经典跨书蒸馏得到的 Naming Craft Reference；两者都不占普通 creative inspiration 名额。
 - raw GBrain 不直接进入章节 Writer Runtime。
 - 蒸馏分工：Terra 看清事实/Fidelity；Luna 理解吸引力与中层 craft；Sol 理解长篇结构。
 - Windows / Git Bash 使用 `~/.bun/bin/gbrain.exe`；新增、修改或删除页面后执行 `embed --stale`；交付前必须 `Embedded == Chunks`。
@@ -98,8 +98,8 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - **Scene Craft 研究可以很深，章节 Runtime 必须很窄**：原著 bounded evidence、书名、locator、完整 Generation/Revision Lens 不进入 Writer。Curator 只看 `skill_id + Reading Question + 一行 Projection Guidance`，有真实 realization 缺口时编译 2—4 句 `Scene Prose Projection`，已经清楚写 `NONE`；Terra Primary 只消费这份短 Projection。Authority Reviser 只拿经 A/B 证明安全的一行 failure-triggered `Revision Watch`，无对应失败时忽略。新增 Scene Primary 必须同时证明主要阅读问题、scene state、beat engine、Stop/Handoff 都不同，且 compact conditional / existing composition 的 A/B 不足；高预算 evidence 或“这种场景很重要”本身不授权扩 taxonomy。
 - Collision 可补少量非奠基性过去，让关系/选择更自然；不得自动悲情化、不得用过去证明整个人、不得自动变主线或一次性倾倒。
 - Growth 是全书纵向不变量，不是 stage / block / ten-chapter tax。
-- **World 力量优先 Small Grammar, Large Variation**：如果主流力量已经能用 1—3 句普通话讲清，且现有一到少数互补操作轴已经有辨识度，就保护它，不为了“统一”泛化成元能量/总机制。后续丰富优先让旧规则作用于新招式、身体、兵器、异兽、环境、组合、强度与稀有例外；只有旧语法承载不了一个长期值得追的新幻想时才新增底层机制。
-- **Power Seed 生成 Power Asymmetry，不强制世界内合法例外**：World Power Normal 是比较尺，不是来源限制；非对称优势可来自世界内稀有异常、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加。默认故意偏强：Core Power 至少一个维度让同层普通人/天才明显羡慕，必要时提前拥有通常更高层才有的局部特权；Permanent Boundary 防万能但不做对称成本抵消。Novelty Spark 负责不同，不负责削弱强度。**Reader-facing novelty = 熟悉语言 + 新作用**：World 基础力量、开局 Core 与后续新 Asymmetry 都先用普通话说明具体可观察效果，再决定是否需要短名；新词只压缩已经理解的对象，不靠新词互相定义证明原创。“全新”改变力量因果/玩法，不要求回避境界、功法、兵器、异兽等清楚题材词；若核心幻想本来是战斗、身体、移动、穿越、操控等直接能力，成长不能重新退化成结构分析、材料诊断、路线计算或验证流程。Legendary / Future Legend 不得绕过 Permanent Boundary。
+- **World 力量优先 Small Grammar, Large Variation**：如果主流力量已经能用 1—3 句普通话讲清，且现有一到少数互补操作轴已经有辨识度，就保护它，不为了“统一”泛化成元能量/总机制。Small Grammar 不等于 Small World：后续要主动把 Variation 预算花在新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合、强度与稀有例外；只有旧语法承载不了一个长期值得追的新幻想时才新增底层机制。World 同时主动寻找 0—1 条真正成熟的 Optional Secondary Fantasy Road；没有足够好的创意就不造，也不预设主角一定会走。
+- **Power Seed 生成 Power Asymmetry，不强制世界内合法例外**：World Power Normal 是比较尺，不是来源限制；非对称优势可来自世界内稀有异常、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加。默认故意偏强：Core Power 至少一个维度让同层普通人/天才明显羡慕，必要时提前拥有通常更高层才有的局部特权；Permanent Boundary 防万能但不做对称成本抵消。Novelty Spark 负责不同，不负责削弱强度。Power 另接一小池 **Optional Lexique Primitive Spark**：对象×变化只负责偶尔找到更具体的身体/器物/空间载体或新玩法，每个 Candidate 最多借 0—1 个且可以全部忽略，不得改写既有触发、覆盖、代价、Boundary，也不得长成第二系统。**Reader-facing novelty = 熟悉语言 + 新作用**：World 基础力量、开局 Core 与后续新 Asymmetry 都先用普通话说明具体可观察效果，再决定是否需要短名；命名固定参考来自 source-blind Naming Craft；**首读语义准确高于世界气味**，只有不牺牲准确时才优先复用 World 已有具体词根，lexique 只作次级气味，也可以不用；已有普通短名已经准确时不为“更独特”强改，名字不能反向授权新机制。“全新”改变力量因果/玩法，不要求回避境界、功法、兵器、异兽等清楚题材词；若核心幻想本来是战斗、身体、移动、穿越、操控等直接能力，成长不能重新退化成结构分析、材料诊断、路线计算或验证流程。Legendary / Future Legend 不得绕过 Permanent Boundary。
 - **AGGRESSIVE Fantasy / Payoff 是当前默认审美偏置**：LLM 天然过度谨慎，当前因果已经让高价值奖励、胜利、奇遇或占有成立时，不主动少给、晚给或降成资格。大胜可以自然同时带来主奖品 + 钱/资源 + 招揽/入口；秘境可有主目标外的小惊喜；大型阶段可同时结算据点、队伍、产业、商路份额或长期收入。奖励数量本身不是缺陷，只禁止两类硬问题：剧情明确没拿到/拒付却无新因果凭空到账；以及人物刚作出高价值真实牺牲，同一窗口立刻用近似替代物把牺牲抹平。
 - **Power Asymmetry 长期形成优势栈**：开局 Core Asymmetry 持续成长，但全书不能只把同一能力放大；后续应通过真实故事获得新的非对称优势，并让新旧优势产生单项做不到的复合效应。核心幻想兑现优先保留其独有的生活特权，不只复用最容易安排的战术用途。Access / Identity 可以是奖励，但当功法、兵器、身体变化、奇物或传承已成为主要欲望时，不能长期只用资格/名额/记录替代真正的占有、错失与距离。真实错失允许有空窗：刚因关键选择放弃一个已经建立欲望的高价值对象时，不为补爽点在同一结算窗口立刻塞分量/功能近似的替代奖励。它是全书纵向要求，不是每阶段新增能力税；Power Seed 只定义开局核心，Story Program 负责后续获得与复合。
 - **非对称优势显露要反复完成社会校准，不只在开篇做一次**：首次显露新优势、新层级、新复合用法、进入更高圈层后第一次被更懂行者看见，或旧社会估值明显落后于当前能力时，若现场存在合适观察者，默认同时给 **Behavioral Repricing + Ruler Calibration**：至少一个关键观察者用可见动作改变（停手、站起、改口、试探、退距、加价、换战术等），并由最有资格者用短而明确的专业解释告诉读者“正常情况下能做到什么 → 这次具体超出哪里 → 为什么罕见/可能意味着什么”，持续校准力量尺和世界尺。两者都要有，不把专业解释压成只有动作，也不把动作压成只有设定旁白；可以有一个短群体 cue，但不凭空加围观者、不轮流写群众反应。若没有真正懂行者，不凭空造专家，可用最近的知情者或已批准直接旁白做最小 ruler 校准。短期爽点本身可以成立；只有 Repricing 继续改变后续行动、关系、资源、敌意或信息流时才升级为 Ripple / Canon。
@@ -109,7 +109,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - **Approved World Vision 是章节期一等世界事实权威**：BOOK §2 只是故事摘要，不能替代 World。Runtime 将 World Vision 确定性裁成不含 named 大事件 / 未解谜底的 `WORLD AUTHORITY`；Outline 用 `Reader Release Map` 只保存当前规划窗口里 timing-sensitive、且与该章实际事件相交的首次世界事实释放（不是每章 KPI）；未来仍作为 reveal 的答案不得提前进入 Map。**World Entry 在人物真正跨过门槛的当章释放**：正式上路、进入组织/内层、第一次实际使用身份入口时，就说明该入口为什么把第一章位置的人带进过去进不去的世界，不等下一章第一次遇险再补。Chapter Runtime 按章确定性读取并从 WORLD AUTHORITY bounded prefetch；Curator 只筛选/压缩，Writer 只表达、不自行选择或补造世界事实。已排程的 Reader Release 是 timing decision，Writer 必须用最短充分的直接旁白或场景表达兑现，不能把它当可选装饰；若同一事实还说明地点/势力/传承为什么值得争，应保留一个价值锚点。高价值 Orientation 不做百科、Prelude 或 Reader State 数据库；开篇生活定向与 Ruler 分工，单纯“无境界 / 打不过敌人”不能替代安全、生活或社会坐标。named 势力首次进入故事时，若 World 已知其公开类别，该类别应存在于安全 WORLD AUTHORITY，并由当章 Reader Release 一起排程进入正文；动机、隐藏关系和后续 reveal 不进入安全层。**长期历史未知边界**：Canon / Curated Context / Open Promise 已标为未知、未解释、真假未定或原因未明的旧事实，除非 Director 明确批准本章新增确定事实，否则 Writer 不得为完整感补造旧经历、旧对话、隐藏动机或世界机制；公共 Orientation 不授权 retrospective canon。
 - **Plot Pace ≠ Tier Pace**：事件、关系、发现、敌人策略、获得和玩法可以快速推进，但不因此自动升境界/等级；同一层级仍有丰富故事空间时允许承载多个完整剧情块，保持长期力量尺纵深。
 - **主人公连续升格，不是字段变化集合**：长期应让主角不断进入第一章时没有资格进入的力量层、人物圈层、世界层、真相层与选择层，并尽量形成“力量/身体变化 → 被重新估价 → 新关系/身份/入口 → 新世界与新认知 → 新欲望/敌人/选择 → 再成长”的因果螺旋；进入新圈层时，新人物只按自己真实知道的旧名声/战绩/底牌先判断，再因最低充分的新事实分别更新待遇、敌意或合作，不默认全知也不靠降智轻视；不逐阶段填 KPI，同一等级可以充分生活，不用升阶替代升格。
-- **专业/副职只有本身就是强者幻想时才升格为第二幻想轴**：应有独立可比较的强弱、真正顶层人物、可见胜负/作品、稀有成果与社会价格；普通实施仍压缩，是否投入由 Human 决定，不给每本书强塞副职。
+- **专业/副职只有本身就是强者幻想时才升格为第二幻想轴**：World 主动寻找 0—1 条候选；Story Program 主动检查 Approved World 中已经成立的副轴，不因它不是 Core Power 就忽略。它应有独立可比较的强弱、真正顶层人物、可见胜负/作品、稀有成果与社会价格；普通实施仍压缩。主角是否投入、投入多深由 Human 决定；Human 不想走时，让它继续属于世界或配角，不给每本书强塞副职。
 - **少量长期承诺可以成为可判定兑现债务**：具体对象 + 至少一个可观察结算条件，让读者知道离结账还有多远；不把所有 Open Promise 债务化，不机械倒计时，也不保证主角一定赴约、追回或获胜。
 - 长篇应保留**震撼式长期重释**：重要旧事实在后续出现足够意外、回看又成立的新解释，并立刻改变力量、身份、关系或世界格局；不要让所有高价值重释都只发生在世界层，当 Power / Character / 已批准旧人旧物旧关系自然提供锚点时，也保留主角级重释纵深；不为制造 Personal Myth 凭空补隐藏身世或未批准旧史，也不做每阶段配额。
 - 正文：**Story-bearing Texture > Decorative Density**；克制但不干，丰富但不腻。

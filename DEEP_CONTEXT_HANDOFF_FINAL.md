@@ -1506,9 +1506,9 @@ GBrain 两张卡已完成 import + embedding + keyword retrieval regression；�
 
 ### 13.13 当前并行未提交工作
 
-截至 2026-08-28，Authority Reviser 已进入 production；严格 authority precedence / sentence-level salvage 已冻结。当前又完成 **Public World Knowledge Clarity** 根修：陌生世界开篇允许短 Public Common-Knowledge Reader Release，Primary 可直接用普通话说明；Story/Plan 的具名机会价值与 World Release 分链；若 Future 10 把同一 Long Block 已批准的具名机会压成泛化“试场/机会”，Director runtime 会条件式、确定性恢复一条既有 `具体机会名 + 当前已知价值`，不生成新事实。Authority Reviser 同时明确：上游只批准“重新接触 / 合并”时不得擅自扩成远程召回或跨距离回收；本章真实跨过已介绍的公开力量/身份档位时，结果处直接命名新档位一次。最终顾临川 Ch1 R3 与 Steward 0.3.3 smoke 均为 PASS，完整测试 `317 passed`。
+截至 2026-08-28，Authority Reviser、Public World Knowledge Clarity、Social Calibration 与 AGGRESSIVE payoff 均已进入当前 production。最新又完成 **Variation / Secondary Fantasy / Naming Craft** 根修：World 的 Small Grammar 不再被误读为 Small World，而会主动把变化预算花在招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、环境与复合；World 主动寻找 0—1 条成熟 Optional Secondary Fantasy Road，Story Program 主动检查，但 Human 决定主角是否投入。Power Seed 新增可完全忽略的 Optional Lexique Primitive Pool，只在同一主异常上提供 concrete carrier / gameplay 灵感；另固定读取一条由 69 个 source-first 小说来源蒸馏出的 source-blind Naming Craft Reference。当前专项测试 `34/34`、全量 `324/324` PASS。
 
-当前激活审计技能为 **`tgn-system-steward 0.3.3`**：除 `Public/Known World = Clarity`、`Texture Present / Rule Missing`、World/Story opportunity 分链、`Plan Compression Loss`、Authority 条件不得擅自扩写外，还检查 **Ruler State Change Direct Naming**：本章已真实跨过前文已介绍的公开档位时，结果处应直接命名新档位一次，不让读者从“凝影了 / 通过了 / 被记名”等现象自己换算。
+当前激活审计技能为 **`tgn-system-steward 0.3.7`**：在既有 `Public/Known World = Clarity`、Social Calibration、Plan Compression、Authority 等审计上，新增三条稳定判断：**Small Grammar ≠ Small World**；成熟 Secondary Fantasy Axis 不得因反工程化被被动删掉，World 可主动找候选但 Human 决定是否成为主角道路；Naming 语义先于气味，lexique 只能提供可丢弃 semantic primitive / naming fragrance，名字不能反向授权机制。
 
 **Public main 已冻结。** `main` 当前 release commit / freeze tag：`10520df97c3729ef2c970035a9e031ccf15754ce` / `tgn-freeze-2026-08-28-v1`。main 是 public production freeze，不能 fast-forward / merge dev 私有历史；发布必须以现有 main 为父节点构造 clean release commit，只带 production code、必要 runtime skills、构建配置与可公开测试。`docs/`、Handoff、`PROJECT_RULES.md`、Steward、temps、内部实验 provenance 不得进入 main；本次 main 当前树敏感路径检查为 NONE，release 测试 316/316 PASS。注意：旧 main 历史在本次规则建立前已经存在 docs；本次只清理当前树并防止未来再次加入，没有做 destructive history rewrite。
 
@@ -1518,56 +1518,46 @@ GBrain 两张卡已完成 import + embedding + keyword retrieval regression；�
 
 ## 14. Immediate Continuation
 
-### 14.1 Public World Knowledge Clarity 已冻结
+### 14.1 Variation / Secondary Fantasy 已冻结为 current default
 
-本轮已经完成并可视为 current production default：
+当前最重要的新判断不是继续减少力量规则，而是：**Small Grammar ≠ Small World；克制 Grammar，放纵 Fantasy Surface。** World 已经能用少量普通话讲清主力量、且一到少数互补轴有辨识度时，应保护它；不要为统一而改成元能量。丰富度应优先来自新招式/战斗姿态、身体与物种差异、兵器/奇物、异兽/伴生物、会改变用法的环境、组合、越级对象与稀有例外。
 
-- **Known/Public World = Clarity；Unknown World = Mystery**。
-- 陌生/架空世界开篇可以把前几章反复使用的公共常识拆成少量 Reader Release，直接告诉读者力量怎么运行、当前/下一档意味着什么、什么日常危险改变生活；Texture 不能代替基础答案。
-- 具名试场/选拔/契约的价值若来自 Story Program / Plan，不污染 World Vision。若 Long Block 已有 `具名机会 + 当前已知价值`，而 Future 10 单章压成泛化“试场/机会”，Director runtime 只在当章已指向同一机会时确定性恢复一条既有 authority。
-- Authority Reviser 继续 Preservation First；若 Frozen Power 只批准“重新接触 / 合并”，不能为衔接方便发明远程召回、跨距离回收或其它未授权机制。
-- 最终验收样本：`books/real-exp-public-world-clarity-opening-20260828-v1/FINAL_TREATMENT_CH1.md`；完整实验史见同目录 `RESULTS.md`。
+World 会主动寻找 **0—1 条 Optional Secondary Fantasy Road**：只有一条职业/专业/技艺即使完全不反哺主战力，仍有独立强弱、顶层人物、作品/胜负、稀有成果与社会价格，才算成熟副轴。Story Program 主动检查 Approved World 中这样的道路，但是否让主角投入由 Frozen Human 的具体欲望决定；Human 不想走时，副轴继续属于世界或配角。不要因为过去反工程化，就把炼药/炼器/作品竞争等真正可欲望的第二幻想轴一律压回背景。
 
-### 14.2 下一优先级：先蒸馏 Social Reaction / Ripple，再改系统
+本轮 World A/B：影子世界与伤痕世界 Treatment 胜出；兽印世界 TIE，说明不能为了“更 Small Grammar”压掉原本有辨识度的兽印副轴，只吸收高价值 Variation / 兵器师道路。Story Program 用三个不同 Frozen Human 复验均 PASS / DIRECTIONAL PASS，未把人物统一推成成长最优路线。
 
-用户最新明确决定：**不要现在继续做 Social Calibration production wiring。先回数据库专项深蒸馏经典小说，研究非对称优势显露后不同观察者怎样反应、怎样重新定价、怎样把当场 Reaction 变成后续 Ripple。**
+### 14.2 Lexique 现在有两种合法用途
 
-研究主题建议固定为：
+`docs/MALE_WEBNOVEL_STRANGE_SETTING_LEXICON.md` 不再只被理解成“取名词库”，但仍不是 Canon 或完成设定库：
 
-`Power Asymmetry Social Reaction & Ripple Deep Distillation`
+1. **Semantic Primitive Spark**：Power Seed 在原 `World Normal + Power Novelty Spark` 已成立后，拿一个很小的 `对象 × 变化` pool 做可丢弃偏航；每个 Candidate 最多借 0—1 个，也可以全部忽略。只有它为同一个主异常带来新的 concrete carrier / gameplay 才采用；不得改写 trigger、coverage、cost、Permanent Boundary，也不得长成第二系统。
+2. **Naming Fragrance**：能力/对象大白话已经成立后，才用具体词根增加气味。首读准确高于世界气味；World 已建立、读者已学会的词根只有在不牺牲准确时才优先，lexique 次之，也可以不用。普通短名已经准确时不为“更独特”强改；名字比 authority 多承诺机制时改名字，不扩机制迁就名字。
 
-优先研究《斗罗大陆》《斗破苍穹》《将夜》《仙逆》《大圣传》《大奉打更人》《全球高武》《全职高手》等 bounded evidence；不要蒸馏“众人震惊模板”，而要抽：
+强制“一 Candidate 一 primitive”的 A/B 大多失败；Optional Pool 方向更好。代表性成功例是 `影子 × 替代`：把抽象“死亡延迟”启发成“影子暂时顶替被打坏的心脏/脊柱继续行动，最终伤势仍结算”，明显增加身体画面与生存玩法；没有真实新玩法的 primitive 应直接忽略。
 
-- Prior Model：观察者原来怎样理解主角；
-- Observer Knowledge：普通人 / 专业者 / rival / 利益方 / 亲近者各知道什么；
-- Exposure / Mismatch：具体看见了什么，哪里超出正常值；
-- Immediate Behavior Change：停手、站起、改口、试探、换战术、加价、保护、隐瞒等；
-- Ruler Signal：读者怎样知道这真的越过世界正常值；
-- Repricing：价值、威胁、关系、身份怎样变化；
-- Ripple：后续是否产生拉拢、调查、反制、嫉妒、追杀、错误传闻、信息扩散；
-- Disclosure Scope / Information Distortion：谁知道什么，二手消息如何失真；
-- Stop Point：什么时候短期反应已经够，不继续吹。
+### 14.3 Naming Craft v1 已完成全库 source-first 蒸馏并进入 GBrain
 
-先让 evidence 自然形成 Reaction Families / taxonomy，再决定哪些属于 Story Program / Outline 的长期因果、哪些属于 Director 的 observer behavior、哪些只是现有 `showcase_evaluation + combat / relationship / social_bargain_decision` 的 compact conditional。**不要预先新增 Social Ripple Agent、Disclosure Ledger 或一批 Scene Primary。**
+命名研究不只覆盖 Scene Skill 的 26 本，而是当前已登记的 **69 个 source-first 小说来源（rcv0-01—rcv0-69）**。流程：确定性候选抽取（约 4,760）→ 10 批 Terra high Fidelity → Sol high 跨书 source-blind synthesis → Luna high Fidelity / Overgeneralization Audit。Audit 对原 synthesis 判 `REVISE`，主要防止“一个名字只能一个差异”和“世界词根 + 固定后缀”被误读成新模板；最终固定 Runtime Guidance 已按审计版冻结。
 
-### 14.3 社会涟漪的当前决策模型
+最终 Naming 模型：**语义先于命名；首读准确高于世界气味。** 类别可以由名称、句法、持有动作或人物关系承担，不规定四字结构或统一后缀；抽象/陌生名可以存在，但首见附近必须有类别、关系、风险、数量或兑现锚点；只给反复出现、影响决策、可争夺或社会流通的节点命名。词族只在真实来源/制造/持有/继承/制度/升级关系存在时建立，每个派生项还要有独立功能。普通短名已经准确、顺口、低学习成本时，不为了“更独特 / 更世界化”强行改写。
 
-以后要区分：
+最终 9-candidate 冻结语义命名 A/B 在加入这条 accuracy guard 后为：**Treatment 2 胜 / Baseline 1 胜 / 6 平，Naming Gain LOW，Semantic Safety PASS，Directional PASS**。正例是 `影刻 / 影身` 比更泛的名字增加画面和世界贴合；反例是 `双行` 不如 `双成` 准确。因此 fixed Naming Craft 是低带宽定向/筛选参考，不是自动重命名器：语义平局时保留普通名，出现误读立即回退。
 
-- **Reaction**：这一场里人物立刻怎样更新行为；主要是 Scene Craft / Director / Curator realization。
-- **Ripple**：观察者的新估值在之后继续改变行动、资源、关系、敌意、战术或信息流；主要是 Story Program / Outline / State 因果。
+GBrain 固定卡：`syntheses/reader-facing-naming-craft-v1`，`REFERENCE_ONLY + active_inspiration=true`，只迁移 source-blind craft，不迁移原著专名。Power Seed 直接按 slug 固定读取，不占普通 Power creative inspiration 名额；其它阶段不重复消费。
 
-不是每次 Reaction 都必须产生 Ripple。只有真正改变后续剧情的 knowledge / misread / repricing 才进入长期 Canon；不要建立全员 Disclosure Matrix。
+最终 GBrain：**3830 Pages / 15859 Chunks / 15859 Embedded**，`Embedded == Chunks` PASS；`gbrain get`、keyword search、TGN 实际 `retrieve_gbrain(mode=power_seed)` fixed-reference smoke 均 PASS。完整 provenance：`reference-corpus/operations/gbrain-naming-craft-v1-20260828/FINAL_REPORT.md`。
 
-### 14.4 第二优先研究队列
+### 14.4 当前验证与下一自然研究方向
 
-完成 Social Reaction / Ripple 深蒸馏并完成必要 A/B 后，再回到：
+production 已完成 World Fantasy Surface、Secondary Axis 主动发现/检查、Power Optional Lexique Primitive Pool 与 fixed Naming Craft Reference 接线；没有新增常驻 Agent、Reviewer、Scorer 或 Hard Gate。专项 contracts **34/34 PASS**，完整测试 **324/324 PASS**；`tgn-system-steward 0.3.7` 已 lint 0/0、validate、install/activate，并通过 bounded smoke：它不会因 Treatment 内容更多就自动判为过度，而会分别审底层 Grammar 与 Fantasy Surface。
 
-1. **Matched Decision Point + Route-specific Opportunity → Personalized Advantage Tree**；
-2. 《斗破》式 **Visible Desire Horizon / Dominant Commercial Engine**；
-3. **Reward Lifecycle / Fantasy Heartbeat**。
+这轮完成后，不要再继续为了“Variation”增加字段或副轴数量。下一自然研究方向仍可以回到：
 
-这些都保持单变量、冻结上游、真实输出先读、PASS/PARTIAL/FAIL 明确区分。
+1. `Choice → Route-specific Opportunity → Different Advantage Tree`；
+2. 《斗破》式 Visible Desire Horizon / Dominant Commercial Engine；
+3. Reward Lifecycle / Fantasy Heartbeat。
+
+都继续遵守冻结上游、近单变量、真实输出先读、Human Invariance、AGGRESSIVE/保守版本若都 authority-safe 就交作者选择的实验纪律。
 
 ---
 
@@ -1624,7 +1614,7 @@ GBrain 两张卡已完成 import + embedding + keyword retrieval regression；�
 
 ### 15.7 用户说“审计”时有固定协议
 
-自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本为 **0.3.3**；除 Social Calibration Trace 外，还审计 `Public/Known World = Clarity`、`Texture Present / Rule Missing`、World 公共知识与 Story/Plan 具名机会分链、`Plan Compression Loss`、真实跨档后的新档位是否直接命名，以及 Authority 条件是否被擅自扩写。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
+自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本为 **0.3.7**；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
 
 ### 15.8 Docs 要言简意赅
 
@@ -1684,6 +1674,10 @@ GBrain 两张卡已完成 import + embedding + keyword retrieval regression；�
 34. 因“反百科”让公共常识只藏在火盆、服装、建筑、术语或氛围里，逼读者自己推理世界怎么运行。
 35. 把 Long Block 已经明确的具名机会价值在 Future 10 / Director 中压成“公开机会 / 一个资格”，让读者不知道眼前机会为什么值得争。
 36. Frozen Power 只批准“重新接触 / 合并”时，为了场景方便自行发明远程召回、跨距离影子回收或无需重新碰面的合并。
+37. 把 Small Grammar 误读成 Small World，为了少规则把原本鲜明的兽印、装备、身体、异兽、环境与副轴一起压平。
+38. 因过去反工程化就把炼药/炼器/作品竞争等真正具备强者尺度、作品胜负和社会价格的 Secondary Fantasy Axis 一律压成背景；或反过来强迫每个主角都走副轴。
+39. 把 lexique 当完成设定/命名答案，强迫每个 Candidate 使用 primitive；或为了一个“好听名字”反向补机制、边界与第二系统。
+40. 把 Naming Craft 变成固定四字格式、统一后缀、词族配额；名字的第一职责仍是避免读者误解已批准语义。
 
 ---
 
@@ -1712,7 +1706,10 @@ GBrain 两张卡已完成 import + embedding + keyword retrieval regression；�
 21. 未揭晓的长期历史保持 unknown boundary；Writer 不为完整感补 retrospective canon。
 22. 节奏服从信息价值，不服从统一章长：低价值更短，高价值可以更长。
 23. 对的就冻结；证据不足就保留 OPEN，不为完成感硬改 production。
-24. 当前最自然下一步：先做 `Power Asymmetry Social Reaction & Ripple Deep Distillation`，用经典小说 bounded evidence 研究不同观察者的 Reaction / Repricing / Ripple；跨书 synthesis 后再决定是否改 Story/Outline 或现有 Scene Skill composition，不能先做 production wiring。之后再回到 `Choice → Route-specific Opportunity → Different Advantage Tree`。
+24. Small Grammar 不等于 Small World：底层规则少而稳，上层招式、身体、兵器、异兽、环境、奇物、副轴与复合可以持续丰富。
+25. World 可以主动寻找少量成熟 Secondary Fantasy Axis；Story 主动检查，Human 决定主角是否投入，不强塞副职也不被动删掉好副轴。
+26. Lexique 可以提供可丢弃 semantic primitive 和后置 naming fragrance；语义先于命名，World 已有词根优先，名字不能反向授权机制。
+27. 当前下一自然研究方向：`Choice → Route-specific Opportunity → Different Advantage Tree`、Visible Desire Horizon / Dominant Commercial Engine、Reward Lifecycle / Fantasy Heartbeat；继续冻结上游、近单变量、Human Invariance 与 AGGRESSIVE/保守作者选择协议。
 
 ---
 

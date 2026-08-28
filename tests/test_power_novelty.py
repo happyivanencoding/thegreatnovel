@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from story_mvp.character_prompts import generate_split_prompt
-from story_mvp.power_novelty import build_power_novelty_bundle
+from story_mvp.power_novelty import build_power_lexique_bundle, build_power_novelty_bundle
 from story_mvp.gbrain_retrieval import PLANNING_KEYWORD_QUERIES, PLANNING_KEYWORD_QUERY_BATCHES
 
 
@@ -49,6 +49,20 @@ def test_power_novelty_bundle_is_reproducible_and_diverse() -> None:
     assert "只能穿过自己正在亲手触碰的障碍" in regression
 
 
+def test_power_lexique_bundle_is_reproducible_optional_and_authority_safe() -> None:
+    first = build_power_lexique_bundle(seed=20260828)
+    second = build_power_lexique_bundle(seed=20260828)
+
+    assert first == second
+    assert sum(line.startswith("- ") and " × " in line for line in first.splitlines()) == 6
+    assert "全部不适合时必须全部忽略" in first
+    assert "最多为每个 Candidate 借 0—1 个 primitive" in first
+    assert "更具体的身体/器物/空间载体" in first
+    assert "不得借 primitive 改写 POWER BASELINE / Novelty Spark 已有的触发、条件、覆盖对象、代价或 Permanent Boundary" in first
+    assert "不得因此新建第二能源、法则树、概念权限或复杂触发链" in first
+    assert "不要求进入一句话大白话或能力短名" in first
+
+
 def test_power_prompt_auto_injects_noncanon_novelty_sparks() -> None:
     prompt = generate_split_prompt(
         mode="power_seed",
@@ -58,6 +72,8 @@ def test_power_prompt_auto_injects_noncanon_novelty_sparks() -> None:
     )
 
     assert "Power Novelty Spark（随机扰动；非 Canon）" in prompt
+    assert "Power Lexique Primitive Spark（可选；非 Canon；可完全忽略）" in prompt
+    assert "OPTIONAL POWER LEXIQUE PRIMITIVE POOL" in prompt
     assert "熟悉幻想：" in prompt
     assert "单一异常：" in prompt
     assert "设定创新 ≠ 术语创新 ≠ 机制复杂化" in prompt
@@ -120,3 +136,15 @@ def test_power_novelty_can_be_disabled_for_control_experiments() -> None:
 
     assert "Power Novelty Spark（随机扰动；非 Canon）" not in prompt
     assert "## 一句话大白话" in prompt
+
+
+def test_power_lexique_can_be_disabled_for_control_experiments() -> None:
+    prompt = generate_split_prompt(
+        mode="power_seed",
+        world_vision=WORLD,
+        creative_state=STATE,
+        power_lexique="",
+    )
+
+    assert "Power Novelty Spark（随机扰动；非 Canon）" in prompt
+    assert "Power Lexique Primitive Spark（可选；非 Canon；可完全忽略）" not in prompt

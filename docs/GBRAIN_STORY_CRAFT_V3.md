@@ -18,7 +18,7 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 ## TGN 阶段消费
 
 - `World Vision`：protagonist-blind，默认 GBrain ON，固定读取 1 条 Reader Coordinates Reference，再选最多 3 条 focused creative inspiration；固定坐标参考不占 creative 名额。它只帮助世界自身的 desire、entry、奇观、正常力量坐标与独立事件成立，不读取未来 Power/Human。
-- `Power Seed`：默认 GBrain ON，小型 Power lane bundle；只看 `POWER_BASELINE`，借鉴力量幻想、成长兼容与长期玩法 craft，不读取 Human Biography 或 named Story Opportunities。
+- `Power Seed`：默认 GBrain ON，固定读取 1 条 source-blind `Naming Craft Reference`，再读取小型 Power lane bundle；固定命名参考不占 creative inspiration 名额。它只看 `POWER_BASELINE`，借鉴力量幻想、成长兼容、长期玩法与 reader-facing 命名 craft，不读取 Human Biography 或 named Story Opportunities。命名参考来自 69 个已登记 source-first 小说来源的确定性候选抽取 → 10 批 Terra Fidelity → Sol 跨书 synthesis → Luna audit，只迁移规律，不迁移原著专名。
 - `Human Seed`：默认 GBrain ON，最多 3 条 Human craft，Appetite / Behavior / Relationship 各最多 1 条；只看 `LIFE_CONTEXT`，不读取 Power 或 named Story Opportunities。
 - `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流、Reward/Opportunity 与历史复用，但不能覆盖已批准 World / Character。GBrain 可以提醒“什么值得想要、旧获得怎样继续生效”，不能重新把这些原则变成每阶段 Acquisition / Compounding 表单。
 - `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。World 的固定 Coordinate Reference 同样不重复进入 Outline creative 候选，坐标语义由已批准 World Vision 继承。

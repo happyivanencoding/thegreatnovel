@@ -27,6 +27,7 @@ HUMAN_LANE_QUERIES = {
     "relationship": '"relationship gravity" OR "relationship chemistry" OR "character autonomy" OR "reunion relationship"',
 }
 WORLD_COORDINATE_REFERENCE_SLUG = "syntheses/reader-facing-world-coordinates-batch-d-v3"
+POWER_NAMING_REFERENCE_SLUG = "syntheses/reader-facing-naming-craft-v1"
 EMPTY_RESULT = "（本次没有找到与 BOOK 硬约束和当前章节任务兼容的 GBrain 证据；不要用不相关材料补位。）"
 GBRAIN_SCOPE_LABEL = "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选"
 
@@ -748,6 +749,23 @@ def _format_fixed_coordinate_reference(item: Mapping[str, Any] | None) -> str:
     )
 
 
+def _format_fixed_naming_reference(item: Mapping[str, Any] | None) -> str:
+    if not item:
+        return ""
+    boundary = item.get("transfer_boundary") or "只使用 source-blind 命名原则；不迁移任何来源作品专名、人物、势力、招式或世界设定。"
+    return "\n".join(
+        [
+            "### Fixed Naming Craft Reference",
+            f"source: {item['slug']}",
+            "role: Power Seed 固定 reader-facing 命名参考；不占 creative inspiration 名额",
+            "",
+            f"可用抽象：{item['abstract']}",
+            "",
+            f"使用边界：{boundary}",
+        ]
+    )
+
+
 def _load_world_coordinate_reference(
     page_reader: Callable[[str], str], constraints: Iterable[str]
 ) -> tuple[dict[str, Any] | None, str]:
@@ -764,6 +782,29 @@ def _load_world_coordinate_reference(
         return None, "固定 Coordinate Reference 与 BOOK 明确硬约束冲突"
     return {
         "slug": WORLD_COORDINATE_REFERENCE_SLUG,
+        "type": "synthesis",
+        "score": 1.0,
+        "abstract": abstract,
+        "transfer_boundary": transfer_boundary,
+    }, ""
+
+
+def _load_power_naming_reference(
+    page_reader: Callable[[str], str], constraints: Iterable[str]
+) -> tuple[dict[str, Any] | None, str]:
+    try:
+        page = page_reader(POWER_NAMING_REFERENCE_SLUG)
+    except (GBrainQueryError, OSError, ValueError, KeyError) as error:
+        return None, f"固定 Naming Craft Reference 读取失败：{error}"
+    if not active_inspiration_allowed(page):
+        return None, "固定 Naming Craft Reference 当前未启用为 active inspiration"
+    abstract, transfer_boundary = extract_abstract_content(page)
+    if not abstract:
+        return None, "固定 Naming Craft Reference 没有可提取的抽象区块"
+    if _has_surface_conflict(abstract, constraints):
+        return None, "固定 Naming Craft Reference 与 POWER BASELINE 明确硬约束冲突"
+    return {
+        "slug": POWER_NAMING_REFERENCE_SLUG,
         "type": "synthesis",
         "score": 1.0,
         "abstract": abstract,
@@ -881,8 +922,14 @@ def retrieve_gbrain(
     )
     coordinate_reference: dict[str, Any] | None = None
     coordinate_reference_error = ""
+    naming_reference: dict[str, Any] | None = None
+    naming_reference_error = ""
     if mode == "world_vision":
         coordinate_reference, coordinate_reference_error = _load_world_coordinate_reference(
+            page_reader, constraints
+        )
+    elif mode == "power_seed":
+        naming_reference, naming_reference_error = _load_power_naming_reference(
             page_reader, constraints
         )
     if mode == "context_curator" and query_strategy == "prose_control_keyword_aliases":
@@ -902,6 +949,15 @@ def retrieve_gbrain(
                     {
                         "slug": hit["slug"],
                         "reason": "固定 World Coordinate Reference 已由已批准 World Vision 继承，不重复占 downstream creative 名额",
+                    }
+                )
+            continue
+        if hit["slug"] == POWER_NAMING_REFERENCE_SLUG:
+            if mode != "power_seed":
+                rejected.append(
+                    {
+                        "slug": hit["slug"],
+                        "reason": "固定 Power Naming Reference 只在 Power Seed 读取，不占其它阶段 creative 名额",
                     }
                 )
             continue
@@ -1039,8 +1095,10 @@ def retrieve_gbrain(
                 accepted.append(candidate)
 
     coordinate_bundle = _format_fixed_coordinate_reference(coordinate_reference)
-    creative_bundle = _format_bundle(accepted) if accepted else ("" if coordinate_reference else EMPTY_RESULT)
-    result_bundle = "\n\n".join(part for part in (coordinate_bundle, creative_bundle) if part)
+    naming_bundle = _format_fixed_naming_reference(naming_reference)
+    has_fixed_reference = bool(coordinate_reference or naming_reference)
+    creative_bundle = _format_bundle(accepted) if accepted else ("" if has_fixed_reference else EMPTY_RESULT)
+    result_bundle = "\n\n".join(part for part in (coordinate_bundle, naming_bundle, creative_bundle) if part)
     return {
         "status": "available",
         "scope": GBRAIN_SCOPE_LABEL,
@@ -1059,6 +1117,9 @@ def retrieve_gbrain(
         "coordinate_reference_count": 1 if coordinate_reference else 0,
         "coordinate_reference": coordinate_reference,
         "coordinate_reference_error": coordinate_reference_error,
+        "naming_reference_count": 1 if naming_reference else 0,
+        "naming_reference": naming_reference,
+        "naming_reference_error": naming_reference_error,
         "genre_prior_count": genre_prior_count,
         "human_lane_counts": human_lane_counts if mode == "human_seed" else {},
         "human_lane_order": list(HUMAN_LANE_ORDER) if mode == "human_seed" else [],

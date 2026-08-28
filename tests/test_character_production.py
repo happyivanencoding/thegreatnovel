@@ -183,6 +183,9 @@ def test_world_prompt_prefers_small_grammar_large_variation_without_forcing_one_
     assert "现有一到少数互补操作轴" in prompt
     assert "不要为了“更统一”上提成泛化元能量、材性或总机制" in prompt
     assert "Variation 可以很大胆" in prompt
+    assert "Fantasy Surface 要主动丰富" in prompt
+    assert "Optional Secondary Fantasy Road" in prompt
+    assert "不预设未来主角一定会走" in prompt
 
 
 def test_power_prompt_uses_world_normal_but_not_story_opportunities() -> None:
@@ -226,6 +229,9 @@ def test_collision_prompt_first_combines_full_world_and_character() -> None:
     assert "Growth Must Be Felt Before Reset" in prompt
     assert "4—6 次真正改变主角本人能力结构" not in prompt
     assert "New Asymmetry ≠ New Power System" in prompt
+    assert "Fantasy Surface 可以持续偏丰富" in prompt
+    assert "主动检查 Approved World" in prompt
+    assert "若 Human 不想走，就让它继续属于世界或配角" in prompt
 
 
 def test_character_modes_have_stable_keyword_gbrain_queries(monkeypatch: pytest.MonkeyPatch) -> None:
