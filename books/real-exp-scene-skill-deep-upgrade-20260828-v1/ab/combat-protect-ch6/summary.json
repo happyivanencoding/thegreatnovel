@@ -1,0 +1,20 @@
+{
+  "book": "real-exp-current-pipeline-authority-reviser-0010-20260828-v1",
+  "chapter": 6,
+  "tag": "combat-protect-ch6",
+  "primary_override": "combat_protect_hold",
+  "primary_B": {
+    "ok": true,
+    "wall_seconds": 54.118,
+    "error": "",
+    "returncode": 0
+  },
+  "primary_A_source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-current-pipeline-authority-reviser-0010-20260828-v1\\runs\\chapter-0006\\primary_response.md",
+  "reviser_B": {
+    "ok": true,
+    "wall_seconds": 88.477,
+    "error": "",
+    "returncode": 0
+  },
+  "reviser_A_source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-current-pipeline-authority-reviser-0010-20260828-v1\\runs\\chapter-0006\\authority_reviser_response.md"
+}

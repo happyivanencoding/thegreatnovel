@@ -365,7 +365,8 @@ def test_scene_skill_runtime_is_curator_selected_and_primary_only() -> None:
     assert "- combat:" in curator
     for skill_id in ("identity_reveal", "departure_vacancy", "sacrifice_convergence", "reunion_reentry"):
         assert f"- {skill_id}:" in curator
-    assert "在明确外部规则和成功线下" in curator
+    assert "Projection Guidance:" in curator
+    assert "trial_challenge" in curator
 
     curated = """# Curated Chapter Context
 
@@ -391,9 +392,9 @@ Secondary: combat
         current_outline=OUTLINE,
         curated_context=curated,
     )
-    assert primary.count("ACTIVE SCENE SKILLS——只控制场景如何落成正文") == 1
-    assert "## Primary: trial_challenge" in primary
-    assert "## Secondary: combat" in primary
+    assert "ACTIVE SCENE SKILLS——只控制场景如何落成正文" not in primary
+    assert "## Primary: trial_challenge" not in primary
+    assert "## Secondary: combat" not in primary
     assert "# investigation" not in primary
     assert "## Scene Skill Selection" not in primary
 
@@ -417,6 +418,58 @@ Secondary: combat
     )
     assert "ACTIVE SCENE SKILLS——只控制场景如何落成正文" not in specialist
     assert "## Primary: trial_challenge" not in specialist
+
+
+def test_scene_skill_v2_catalog_projects_guidance_and_reviser_only_gets_short_watch() -> None:
+    curator_prompt = generate_prompt(
+        mode="context_curator",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+    )
+    assert "Projection Guidance:" in curator_prompt
+    assert "胜负尺" in curator_prompt
+    assert "## Generation Lens" not in curator_prompt
+    assert "## Revision Lens" not in curator_prompt
+
+    curated = """# Curated Chapter Context
+
+## Scene Prose Projection
+只让这一轮对白改变一个真实条件；条件成立后停。
+
+## Scene Skill Selection
+Primary: social_bargain_decision
+Secondary: relationship
+
+## Reader-Facing Language
+直接写人。
+"""
+    primary = generate_prompt(
+        mode="primary_writer",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curated_context=curated,
+    )
+    assert "只让这一轮对白改变一个真实条件" in primary
+    assert "## Generation Lens" not in primary
+    assert "Revision Watch" not in primary
+
+    reviser = generate_prompt(
+        mode="authority_reviser",
+        template="",
+        book_content="",
+        current_outline=OUTLINE,
+        curator_response=curated,
+        primary_draft="# 正式正文\n\n原稿。",
+    )
+    assert "ACTIVE SCENE REVISION WATCH" in reviser
+    assert "social_bargain_decision" in reviser
+    assert "relationship" in reviser
+    assert "连续对白无结算" in reviser
+    assert "单方付出被写成双向确认" in reviser
+    assert "## Generation Lens" not in reviser
+    assert "## Revision Lens" not in reviser
 
 
 def test_opening_contract_is_scoped_to_planning_and_opening_nodes() -> None:

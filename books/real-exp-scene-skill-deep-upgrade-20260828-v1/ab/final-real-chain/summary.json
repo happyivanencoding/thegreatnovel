@@ -1,0 +1,102 @@
+[
+  {
+    "tag": "training-ch2",
+    "skills": [
+      "training_learning  ",
+      "showcase_evaluation"
+    ],
+    "projection": "先让正式对练中的临时变招打断影身原先记住的步法，读者只需看见它迟一步、退开，以及对手抓住空当，不替影身补出独立判断。合并后把两具身体留下的不同手感落到顾临川下一次出刀的一个具体变化上，让教头从动作稳定和现场反应确认成长。报名资格在这次被看见之后落地，停在顾临川意识到自己仍要带着共同疲劳面对公开试场。",
+    "curator_wall": 79.06,
+    "primary_wall": 67.516
+  },
+  {
+    "tag": "combat-ch4",
+    "skills": [
+      "combat  ",
+      "relationship"
+    ],
+    "projection": "NONE",
+    "curator_wall": 89.169,
+    "primary_wall": 60.659
+  },
+  {
+    "tag": "dialogue-ch3",
+    "skills": [
+      "social_bargain_decision  ",
+      "combat"
+    ],
+    "projection": "NONE",
+    "curator_wall": 108.023,
+    "primary_wall": 47.902
+  },
+  {
+    "tag": "hunt-ch7",
+    "skills": [
+      "hunt_acquisition  ",
+      "survival_endurance"
+    ],
+    "projection": "让读者始终看清两具顾临川各自守着什么、哪一处正在失去时间，并把陆绾的受困、药车的撤退和兵室的坍塌保持在同一选择压力下。顾临川放弃传承不必解释成抽象判断，只通过他转向兵室以及短兵造成的具体破坏来呈现目标变化。短兵价值一旦被看见，就立即交给坍塌逼出的救人与取兵取舍；顾斜阳对他的重新估价停在行动和目光变化，不提前解释传承内容或宗门目的。",
+    "curator_wall": 205.031,
+    "primary_wall": 43.746
+  },
+  {
+    "tag": "relationship-ch9",
+    "skills": [
+      "relationship  ",
+      "showcase_evaluation"
+    ],
+    "projection": "读者此刻先跟住顾临川失去行动力后，陆绾怎样通过具体的处理动作把他拉回可说话、可选择的状态。近距离处理伤口时，保留他不愿陆绾死去的具体牵引，但不要把它说成无私或长期承诺。陆绾的拒绝落在下一次是否还允许影身冒险的边界上，顾临川以不辩解和接受处理回应；顾斜阳的重新估价只由两条路线的证词承重，记录成为下一段压力后停止解释。",
+    "curator_wall": 89.335,
+    "primary_wall": 49.146
+  },
+  {
+    "tag": "sacrifice-ch8",
+    "skills": [
+      "sacrifice_convergence  ",
+      "none"
+    ],
+    "projection": "先让影身同时看见传承路线就在前方、异兽突破时间却已经不够，用一次站位改变让读者明确他放弃了哪条路，以及谁因此获得撤离空隙。错乱光线只追到轮廓与落脚点失稳、异兽撕裂影身及其当场结果，不逐招解释，也不要让影身提前知道本体承受了什么。弟子脱离兽口后立即切回外墙线，把本体动作失稳和陆绾面临的继续撤离或停下处理影伤作为收束，停在她必须作决定处。",
+    "curator_wall": 121.98,
+    "primary_wall": 44.057
+  },
+  {
+    "tag": "showcase-ch2",
+    "skills": [
+      "showcase_evaluation  ",
+      "social_bargain_decision"
+    ],
+    "projection": "NONE",
+    "curator_wall": 68.52,
+    "primary_wall": 38.03
+  },
+  {
+    "tag": "reunion-ch9",
+    "skills": [
+      "reunion_reentry  ",
+      "relationship"
+    ],
+    "projection": "开头落在陆绾扶住几乎站不稳的顾临川、车轮逼近窄坡的即时选择上，让继续赶车和处理伤势同时成为现场问题。合并时把两条路线的记忆、战斗手感和恐惧压进同一个身体，并只保留一个会改变下一步判断的具体后果，不再回放影身引兽的战斗。陆绾的处理和顾斜阳的拒绝要通过动作、对白和责任分歧显出新的边界；外部营地只推进到是否写入记录，不提前结算观日宗判断。",
+    "curator_wall": 184.921,
+    "primary_wall": 61.517
+  },
+  {
+    "tag": "survival-ch1",
+    "skills": [
+      "chase_escape  ",
+      "exploration"
+    ],
+    "projection": "NONE",
+    "curator_wall": 92.276,
+    "primary_wall": 64.09
+  },
+  {
+    "tag": "chase-ch3",
+    "skills": [
+      "chase_escape  ",
+      "exploration"
+    ],
+    "projection": "NONE",
+    "curator_wall": 111.722,
+    "primary_wall": 91.134
+  }
+]

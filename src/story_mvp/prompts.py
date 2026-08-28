@@ -621,7 +621,7 @@ HYBRID_PROMPT_TEMPLATES = {
 `## Scene Skill Selection` 只从下方 `SCENE SKILL CATALOG` 中选择当前章最主要的场景发动机，固定写两行：
 Primary: <skill_id 或 none>
 Secondary: <skill_id 或 none>
-默认选择 1 个 Primary；只有第二种场景发动机确实同时重要时才选 1 个 Secondary。不得新增剧情、改写事件合同或为了匹配 Skill 改变结果；第一版不选择 Utility / Modifier。没有合适项或目录不可用时写 none。
+默认选择 1 个 Primary；只有第二种场景发动机确实同时重要时才选 1 个 Secondary。不得新增剧情、改写事件合同或为了匹配 Skill 改变结果；第一版不选择 Utility / Modifier。没有合适项或目录不可用时写 none。Catalog 中的 `Projection Guidance` 只是帮助你判断当前场景是否存在真实 realization 缺口；它不是 Writer 指令清单。只有 Guidance 能为本章 Mission / Canon 补一个具体的 attention / ruler / stop 判断时才编译进 `## Scene Prose Projection`；当前上下文已经足够时继续写 `NONE`。
 
 其中 `## Relevant Characters and Relationships` 只保留本章真正会用到的信息：除目标、关系、能力和当前条件外，顺带保留角色当前最在意的事、最容易被刺到的自尊/恐惧/欲望、最近关系变化带来的态度，以及正文已经形成的明显行为习惯或说话声音。**Frozen Human Core 高于最近几章的行为归纳**：不要因为主角连续几次救人、负责、诚实或克制，就把这些现场选择升级成新的稳定道德人格，除非 Human Core 本来支持；近期行为可以影响关系和预期，但不能静默覆盖原有 competing motives。若本章自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心、报复或其它私人牵引，保留一个可以直接进入场景的具体触发——他会注意、想要、舍不得、靠近、回避或嫉妒什么——不要只把它投影成职责、协作、尊重边界或成熟沟通。**Specific Relationship Trigger**：如果 Frozen Human Core 已明确说明“这个具体的人”会因吸引、依恋、欲望、偏心或舍不得改变主角选择，而该人物本章正在发生近身照料、重逢、分别、私密靠近、嫉妒、邀请或其它关系性现场，就默认这是自然触发；Curator 至少保留一个克制的具体 cue（注意到什么、身体怎样反应、想靠近/不想离开/不愿承认什么），除非当前 Canon 明确要求压下。它不需要改变本章主事件，也不要求每次见面重复；没有自然触发时不硬塞。只有输入明确支持且本章会用到时才写；不要生成 Character Card、心理档案或新增固定字段。
 
@@ -1932,7 +1932,7 @@ def generate_prompt(
         )
         from .scene_skills import (
             render_scene_skill_catalog,
-            render_selected_scene_skills,
+            render_selected_revision_watches,
             strip_scene_skill_selection,
         )
 
@@ -2000,7 +2000,6 @@ def generate_prompt(
         elif mode == "primary_writer":
             curated = curated_context.strip() or curator_response.strip()
             primary_prose = extract_primary_prose_context(packet.recent_prose)
-            active_scene_skills = render_selected_scene_skills(curated)
             curated_for_writer = strip_legacy_prose_controls(strip_scene_skill_selection(curated))
             unresolved_fact_boundary = extract_unresolved_fact_boundary(curated)
             fallback = not curated_for_writer
@@ -2035,8 +2034,6 @@ def generate_prompt(
                         ),
                     ]
                 )
-            if active_scene_skills:
-                parts.append(_input_block("ACTIVE SCENE SKILLS——只控制场景如何落成正文", active_scene_skills))
             parts.append(
                 _input_block(
                     "Curated Chapter Context" if not fallback else "Curated Chapter Context（缺失时的显式 fallback）",
@@ -2051,6 +2048,7 @@ def generate_prompt(
         elif mode == "authority_reviser":
             curated = curated_context.strip() or curator_response.strip()
             context = build_authority_reviser_context(packet, curated, primary_draft)
+            revision_watch = render_selected_revision_watches(curated)
             parts.extend(
                 [
                     _input_block("AUTHORITY——按维度划分的事实与计划边界", context.authority),
@@ -2062,6 +2060,7 @@ def generate_prompt(
                     _input_block("HUMAN CORE｜Frozen Authority", context.human_core),
                     _input_block("CANON INDEX｜已发生事实压缩索引", context.canon_index),
                     _input_block("CANON TAIL｜上一章必要衔接", context.transition_context),
+                    *([_input_block("ACTIVE SCENE REVISION WATCH｜只在明确失败时局部使用", revision_watch)] if revision_watch else []),
                     _input_block("PRIMARY DRAFT｜唯一待修订正文底稿", context.primary_draft),
                 ]
             )

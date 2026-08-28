@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.1.13
+version: 0.2.0
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -148,6 +148,25 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 
 > **Reader knowledge = fact authority × release timing × runtime delivery × realization.**
 
+
+## Scene Craft Evidence & Runtime Bandwidth Trace
+
+当问题是“战斗/对白/关系/探索等 Scene Skill 不够好”，不要直接给 Writer 增加更长 Skill，也不要因为某种场景很重要就新增 Agent / Primary。按下面顺序审计：
+
+1. **Source Fidelity**：新 craft 是否来自可复核 bounded source windows；章节/行号/anchor/observation 是否经独立复核。Locator 不成立的窗口不得进入 synthesis；单书 observation 不冒充跨书规则。
+2. **Cross-book Promotion**：判断是否在多个不同作品、不同人物和不同场景条件中反复成立；反例/适用边界是否保留。研究预算高、窗口多或作品经典，不等于 production rule。
+3. **Taxonomy Necessity**：新场景姿态只有在 `Primary Reading Question + 持续 scene state + beat engine + Stop/Handoff` 都实质不同，并且 `existing Skill + compact conditional / composition` 的受控 A/B 仍不足时，才升级为新 Primary / Variant。否则深化现有 Skill。
+4. **Generation Bandwidth**：Deep Craft 可以很深，但 Writer 输入应最小。优先验证 `Deep Craft → Curator compact guidance → 2—4 句 Scene Prose Projection / NONE → Primary`，而不是 `Deep Craft 全文 → Primary`。如果全文 Skill 提高“正确性”却同时增加动作步骤、机制解释、流程和无必要篇幅，判为 bandwidth failure，不是 craft 不够深。
+5. **Revision Bandwidth**：Authority Reviser 默认 Preservation First。完整 Revision Lens 不能因“有帮助”就常驻；只有某个具体 failure 在冻结 Primary Draft 上经过 A/B 证明可被**小范围、安全**修复，才允许变成极短 failure-triggered Revision Watch。若正确文本被大面积重写、计划外事实增加或 Consequence 被误删，降级/移除 Watch。
+6. **Real-chain A/B**：手工 projection 有效不足以 productionize。必须至少复验真实 `Curator → Projection → Primary`；Reviser 单独冻结同一 Primary Draft 做 `Authority-only vs Authority + Watch`。Judge 不能只奖励篇幅、技术复杂度或“更完整”；重点看 authority、scene state、agency、story-bearing detail、commercial pull 与 procedural bloat。
+7. **Source Leakage / Prompt Bloat**：原著书名、作者、locator、source-specific DNA、未选择的候选规则不得进入章节模型。研究层越深，Runtime 反而应越窄。
+
+一个有用的 Scene Skill 修复最终应回答：
+
+> **读者此刻真正追踪什么状态变化？哪些 beat 值得笔墨？哪些已经应该停？**
+
+而不是把原著技法变成逐拍执行清单。
+
 还要审计相反方向的 **Long-History Fact Boundary**：如果 Canon、Curated Context 或 Open Promise 已把某段过去标为未知、未解释、真假未定或原因未明，除非 Director Contract 明确让某个新事实在本章成为确定事实，否则 Writer 只能写当前动作、即时证据、对白和人物暂时判断，不得为“场景完整”补造旧经历、旧对话、隐藏动机或世界机制。已批准公共事实可以直接说明；Reader Orientation 不授权 retrospective canon。
 
 实施化也要反向追踪：如果正文出现大量排车、绑绳、诊断、制作、路线步骤，先看 Director / Curator 是否已经把方法写进“主角行动”或 `Relevant Plan`。**前文已经成立、且不是 Core Fantasy 的 Supporting Skill，后续默认只保留它造成的故事结果；只有新边界、失败或质变才重新展开方法。**
@@ -158,6 +177,18 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Competence Filler**：低动作章节真正价值是 World Entry、势力首次登场、关系立场、误判或世界信息，但模型因为“主角这一章总得做点有用的事”，临时制造修车、排车、诊断、路线、搬运、清点等小问题让他解决。主角只观察、站队、拒绝、跟随、守住位置或作出决定也可以是完整行动；不要把“能干”误当成每章必须证明的主角性。
 
 这两类都先向上追到 Outline / Director / Curator；只有上游已经只给简单选择与结果，而 Writer 仍自行制造流程时，才判 prose realization 问题。
+
+## Post-Writer Authority Revision Trace
+
+当 production 存在 post-writer Reviser 时，审计不能只看最终 prose 好不好：
+
+- **Authority refresh**：是否拿到冻结 Mission、safe World/Reader Release、Frozen Power/Human、Canon 与正确底稿；raw inspiration 是否仍被隔离。
+- **Preservation surface**：正确句段是否默认原样保留；修改面是否明显小于被修问题的价值。
+- **Deletion discipline**：可以删 implementation，但不得连同 State Change、Social Repricing、Reward、Relationship Change、New Desire、Next Opportunity 一起删。
+- **Fact discipline**：远端欲望/计划/可能性不能升级成事实；同一 authority 冲突必须在所有出现位置清零。
+- **State closure**：State 是否真的读取 revised `final_source`，而不是 UI/调用方仍能把旧 Primary 旁路进 Canon。
+
+若 Reviser 只是“重新写得更好”，而不是局部恢复 authority / 删除明确 failure，应判为 second-writer drift。
 
 # Audit Operating Modes
 

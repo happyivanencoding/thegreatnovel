@@ -23,8 +23,8 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 - `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流、Reward/Opportunity 与历史复用，但不能覆盖已批准 World / Character。GBrain 可以提醒“什么值得想要、旧获得怎样继续生效”，不能重新把这些原则变成每阶段 Acquisition / Compounding 表单。
 - `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。World 的固定 Coordinate Reference 同样不重复进入 Outline creative 候选，坐标语义由已批准 World Vision 继承。
 - `Director`：不负责凭空发明长期大奖励或重新设计 Story Program。
-- `Curator / Primary`：Scene Skills 只控制 HOW TO REALIZE THE SCENE，不改变 Chapter Mission 或 Canon。
-- `Authority Reviser`：raw GBrain 固定 OFF；只读取已批准 World / Reader Release / Frozen Character Authority 的安全投影与 Curator/Primary，用于 Preservation-First 局部修订，不从 GBrain 追加新灵感。
+- `Scene Skill v2`：GBrain/原著只在离线研究层提供 source-first bounded evidence；跨书收敛成 source-blind Deep Craft。Curator 只看 `Reading Question + 一行 Projection Guidance` 并编译 2—4 句 `Scene Prose Projection`（允许 `NONE`）；Primary 不直接读取完整 Skill 或原著 evidence。
+- `Authority Reviser`：raw GBrain 固定 OFF；只读取已批准 World / Reader Release / Frozen Character Authority 的安全投影与 Curator/Primary；Scene Craft 只允许追加经 A/B 证明安全的一行 `Revision Watch`，完整 Revision Lens 不进入。
 - `State Extraction`：继续用当前 `current_state` 记录重要能力、物品、规则、持有人与状态变化；不新增 Inventory 数据库。
 
 ## 统一的 Supporting Logic 原则
@@ -60,9 +60,9 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 | Story Program | GPT-5.6 Sol high | 负责长期优势栈：开局优势成长、新 Power Asymmetry 获得与复合，同时处理玩法变异、人物自主、敌人策略和关系回流 |
 | Outline | GPT-5.6 Luna high | 能高质量执行正确 Program，把长期结构落实成故事锚点而不过度膨胀 |
 | Director | GPT-5.6 Luna high | Balanced 默认；质量与 Terra high 接近但成本更低，最低延迟模式可切 Terra high |
-| Curator | GPT-5.6 Luna high | Balanced 默认；继续压短输出合同。若优先最短延迟与更克制输出，可切 Terra medium |
-| Primary Writer | GPT-5.6 Terra high | 正文 A/B 中更克制、较少 procedural expansion；先完成第一版正文 |
-| Authority Reviser | GPT-5.6 Luna high | safe Authority Refresh Pack；raw GBrain OFF；Preservation First，恢复漏失信息并压低重复/工程/程序化 realization |
+| Curator | GPT-5.6 Luna high | Scene Skill v2 compact Catalog → short Projection；允许 `NONE`；若优先最短延迟可切 Terra medium |
+| Primary Writer | GPT-5.6 Terra high | 只消费 Curator short Projection，不直接读 Deep Skill；先完成第一版正文 |
+| Authority Reviser | GPT-5.6 Luna high | safe Authority Refresh Pack + optional short Revision Watch；raw GBrain OFF；Preservation First |
 | State Extraction | GPT-5.6 Luna low | 当前成本优先默认，只记录最终正式正文已发生事实 |
 
 模型不是线性排名：
@@ -163,7 +163,7 @@ GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks
 
 ## Prose Craft v1
 
-Story Craft 负责“长期故事为什么好看”；正文表达层另有 `docs/GBRAIN_PROSE_CRAFT_V1.md`。Prose Craft v1 使用六本经典的 85 个 bounded scene windows 建立 source-specific Prose DNA，再跨书收敛为 7 张 production-facing Prose Controls。Prose DNA 不直接进入 Primary Writer；Prose Controls 只影响 HOW TO SAY，不覆盖 BOOK Prose Profile、Chapter Mission 或 Canon。当前完成 GBrain import + embedding（15705/15705），自动 Curator 路由仍待正文 A/B 后冻结。
+Story Craft 负责“长期故事为什么好看”；正文表达层另有 `docs/GBRAIN_PROSE_CRAFT_V1.md`。 Scene Craft 另走 `原著 bounded evidence → Fidelity Audit → cross-book synthesis → source-blind Deep Craft → Curator short Projection / Reviser short Watch`；研究层可深，章节 Runtime 必须窄，书名/locator/source-specific DNA 不进入 Writer。Prose Craft v1 使用六本经典的 85 个 bounded scene windows 建立 source-specific Prose DNA，再跨书收敛为 7 张 production-facing Prose Controls。Prose DNA 不直接进入 Primary Writer；Prose Controls 只影响 HOW TO SAY，不覆盖 BOOK Prose Profile、Chapter Mission 或 Canon。当前完成 GBrain import + embedding（15705/15705），自动 Curator 路由仍待正文 A/B 后冻结。
 ## Pilot Active / HOLD
 
 当前主 `gbrain-story-craft-v3/staging` 已确定性重建 manifest，共 **71 张 staging pages：68 active / 3 HOLD-or-reference-only**。其中真正的 HOLD mechanisms 仍是：
@@ -234,7 +234,7 @@ TGN retrieval regression 通过：SP01 仍以 `plot-engine-variation` 为首，S
 1. Behavior craft 进入 Human Seed：Stable Choice Bias + Variable Realization，与 competing motives、person-specific relationships 一起构成人物权威；
 2. World Vision 继续 protagonist-blind，只要求没有主角仍有具体人物、价值物、事件与奇观成立，不新增正交删除 Hard Rule；
 3. Story Program 使用 native Collision contract：Growth 是全书纵向不变量，不是每阶段 Acquisition / Compounding / Power Growth 税；High-Value Acquisition 与 Compounding 保留为纵向 reader-appetite / continuity 原则；
-4. Outline 继续使用既有 Story Anchor / State Change / Open Promise；Story Craft 与 Prose DNA 继续分离。章节期新增的 Authority Reviser 不是 GBrain 消费节点：它不读取 raw GBrain，只用已批准远端 authority 的安全投影修复 Primary realization。
+4. Outline 继续使用既有 Story Anchor / State Change / Open Promise；Story Craft 与 Prose DNA 继续分离。章节期 Authority Reviser 不是 GBrain 消费节点：它不读取 raw GBrain，只用已批准远端 authority 的安全投影修复 Primary realization；Scene Skill 只可提供一行已验证的 failure-triggered Watch。
 
 正式 GBrain 只新增 **3 张 `REFERENCE_ONLY / active_inspiration:false` source book cards + 1 张 active PILOT mechanism**。曾尝试给 4 张旧 mechanism 增加 alias/evidence，但 retrieval regression 显示会扰动既有排序，因此该修改已撤回；最终不通过“顺手增强旧卡”制造检索噪声。
 

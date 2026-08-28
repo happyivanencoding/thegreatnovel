@@ -362,3 +362,17 @@ Writer 层最常见的 AI 问题不是“句子语法错误”，而是：
 > **已批准的公共事实可以直接说明；未批准的历史答案必须继续未知。**
 
 审计时若正文出现 retrospective canon，先查 Director / Curator 是否错误投放了答案；若上游仍保持 unknown，而 Writer 自行补全，才判 prose authority 越界。
+
+## 27. Deep Craft Research, Narrow Runtime
+
+场景研究可以不断加深，但章节模型看到的信息不应同比增长。
+
+稳定结构是：
+
+`source evidence → fidelity audit → cross-book craft → Curator short projection / NONE → Primary`
+
+以及：
+
+`validated local failure → short Revision Watch → Preservation-First Reviser`。
+
+完整原著 evidence、书名、locator、完整 Generation/Revision Lens 不进入 Writer。新 Scene Primary 只有在主要阅读问题、持续状态、beat engine、Stop/Handoff 都实质不同，且 compact conditional 的 A/B 不足时才成立；“这种场景重要”或“研究很多”不是 taxonomy 权限。

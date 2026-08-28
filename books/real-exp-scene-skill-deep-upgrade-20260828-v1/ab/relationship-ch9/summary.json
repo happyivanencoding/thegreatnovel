@@ -1,0 +1,20 @@
+{
+  "book": "real-exp-current-pipeline-authority-reviser-0010-20260828-v1",
+  "chapter": 9,
+  "tag": "relationship-ch9",
+  "primary_override": "",
+  "primary_B": {
+    "ok": true,
+    "wall_seconds": 50.496,
+    "error": "",
+    "returncode": 0
+  },
+  "primary_A_source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-current-pipeline-authority-reviser-0010-20260828-v1\\runs\\chapter-0009\\primary_response.md",
+  "reviser_B": {
+    "ok": true,
+    "wall_seconds": 121.974,
+    "error": "",
+    "returncode": 0
+  },
+  "reviser_A_source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-current-pipeline-authority-reviser-0010-20260828-v1\\runs\\chapter-0009\\authority_reviser_response.md"
+}

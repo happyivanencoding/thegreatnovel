@@ -1,0 +1,13 @@
+{
+  "book": "real-exp-private-prototype-asymmetry-pace-ruler-20260827-v1",
+  "chapter": 2,
+  "tag": "showcase-ch2",
+  "primary_override": "",
+  "primary_B": {
+    "ok": true,
+    "wall_seconds": 32.739,
+    "error": "",
+    "returncode": 0
+  },
+  "primary_A_source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-private-prototype-asymmetry-pace-ruler-20260827-v1\\runs\\chapter-0002\\primary_response.md"
+}

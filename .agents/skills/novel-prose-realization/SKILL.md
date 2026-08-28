@@ -1,6 +1,6 @@
 ---
 name: novel-prose-realization
-version: 0.1.0
+version: 0.2.0
 description: Story MVP 章节正文实现 Skill；在已批准事件与事实边界内完成 Reader Orientation、scene realization、continuity/prose repair 与 bounded humanization，不重规划故事。
 ---
 
@@ -36,9 +36,10 @@ description: Story MVP 章节正文实现 Skill；在已批准事件与事实边
 - BOOK 的 `## 10. 节奏结构`；
 - 作者在当前任务中明确给出的表达意图；
 - 当前章节期 `WORLD AUTHORITY` 的安全世界事实投影；
-- Outline 为当前章排程的 `Reader Release`（若有）。
+- Outline 为当前章排程的 `Reader Release`（若有）；
+- Curator 已编译的短 `Scene Prose Projection`（可为 `NONE`）。
 
-BOOK §7—§10 共同构成当前书的 `Current Book Prose Profile`。完整 World Vision 不是 Writer 的自由检索库：Writer 只使用 runtime / Curator 已投影到当前章的安全世界事实。
+BOOK §7—§10 共同构成当前书的 `Current Book Prose Profile`。完整 World Vision 不是 Writer 的自由检索库：Writer 只使用 runtime / Curator 已投影到当前章的安全世界事实。Scene Skill v2 也遵循同一注意力边界：Deep Craft、原著 evidence、书名/locator 不直接进入 Primary；Primary 只消费 Curator 从紧凑 Catalog 编译出的 2—4 句 `Scene Prose Projection`，当前场景已经清楚时允许 `NONE`。
 
 # Authority
 
@@ -85,11 +86,13 @@ BOOK §7—§10 共同构成当前书的 `Current Book Prose Profile`。完整 W
 
 `Current Book Prose Profile`
 → `Author Explicit Prose Intent`
-→ `Selected Abstract Scene Profile`
+→ `Curator Scene Prose Projection`
 → `Generic Prose Realization Guidance`
 → `Generic LLM Prior`
 
 GBrain Story Inspiration 和 Reference Programs 默认只影响故事结构、压力、成长和事件选择，不自动成为文风来源。
+
+Authority Reviser 若接入 Scene Craft，只允许读取经过 A/B 证明安全的一行 `Revision Watch`；它不是完整 Revision Lens，也不授权重新写场景。
 
 # Before Writing
 

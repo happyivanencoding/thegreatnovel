@@ -1,0 +1,13 @@
+{
+  "book": "real-exp-system-eval14-v1",
+  "chapter": 2,
+  "tag": "horror-ch2",
+  "primary_override": "",
+  "primary_B": {
+    "ok": true,
+    "wall_seconds": 30.791,
+    "error": "",
+    "returncode": 0
+  },
+  "primary_A_source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-system-eval14-v1\\runs\\chapter-0002\\primary_response.md"
+}

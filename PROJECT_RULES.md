@@ -58,9 +58,9 @@
 | Story Program | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration |
 | Outline | GPT-5.6 Luna | high | ON：通常 4 条、最多 5 条 |
 | Director | GPT-5.6 Luna | high | raw GBrain OFF |
-| Curator | GPT-5.6 Luna | high | raw GBrain OFF；Scene Skills ON |
-| Primary Writer | **GPT-5.6 Terra** | high | raw GBrain OFF；Scene Skills ON |
-| Authority Reviser | GPT-5.6 Luna | **high** | raw GBrain **OFF**；safe World / Reader Release / Frozen Power + Human / Curator / Canon |
+| Curator | GPT-5.6 Luna | high | raw GBrain OFF；Scene Skill v2 Catalog + short Projection compile |
+| Primary Writer | **GPT-5.6 Terra** | high | raw GBrain OFF；只吃 Curator 的短 `Scene Prose Projection`，不吃完整 Scene Skill |
+| Authority Reviser | GPT-5.6 Luna | **high** | raw GBrain **OFF**；safe Authority + Curator + Primary；仅追加已验证的短 `Revision Watch` |
 | State Extraction | GPT-5.6 Luna | low | OFF |
 
 默认章节链：`Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。Primary 在 `curator_primary` 中只是第一版，不可直接成为 `final_source`；State 只读取已采用的 Authority Revision，或显式 repair 后的 Integrator 最终稿。
@@ -75,7 +75,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 
 - GBrain 是 Optional Inspiration，不是 Canon、创意权威、Hard Gate 或原作模板。
 - **公共治理、资源分配、维护职责、责任升级不得作为 production GBrain 的通用可迁移创作机制**；来源作品确有此内容时只保留为研究证据，并退出 active inspiration。
-- 主要路径：`GBrain → World / Power / Human / Story Program / Outline → Approved Story`；以及 `GBrain 离线蒸馏 → Scene Skills → Curator / Primary`。
+- 主要路径：`GBrain → World / Power / Human / Story Program / Outline → Approved Story`；以及 `GBrain 离线深蒸馏 → source-blind Scene Deep Craft → Curator 短 Projection / Reviser 短 Watch`。
 - raw GBrain 不直接进入章节 Writer Runtime。
 - 蒸馏分工：Terra 看清事实/Fidelity；Luna 理解吸引力与中层 craft；Sol 理解长篇结构。
 - Windows / Git Bash 使用 `~/.bun/bin/gbrain.exe`；新增、修改或删除页面后执行 `embed --stale`；交付前必须 `Embedded == Chunks`。
@@ -94,6 +94,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - 修最早发生语义坍缩的节点；少深层规则 > 多 Hard Gate。
 - Human：**经历是背景，不是人格证明**；允许多重动机、稳定选择偏向与现场变化。冻结 Human Core 高于最近几章的“负责/克制/救人”等行为归纳；下游不得把局部正确选择反推成新的道德人格。章节期从 `CHARACTER.md` 确定性投影 Frozen Human Core 给 Curator；Curator 不重复 Power Core。当前场景自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心等私人牵引时，应让它真实影响注意力、靠近/回避或选择，不统一净化成职责协作与成熟沟通。若 Frozen Human 已明确某个具体人会改变选择，而本章正发生近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系现场，默认属于自然触发，保留一个克制 cue 即可，不要求改写主事件。
 - **Primary 后固定 Authority Reviser 做 Preservation-First 的远端权威恢复，不做第二次创作**：Primary 为减负只吃近端压缩上下文，允许先完整实现一版；Reviser 再读取冻结 Mission、Curator、safe `WORLD AUTHORITY`、逐条 `Reader Release`、`CHARACTER.md` 的 Frozen Power + Human Core、Canon 与 Primary Draft。正确段落默认逐字保留，只删/压反复确认、重复证明、工程化/程序化实施和 Competence Filler，只补已批准但第一版遗漏的世界/人物/力量 realization；不得改变主要事件、人物选择、胜负、资源得失、Direct Result、State Change、Ending 或未知事实边界。删除前先确认不会丢失 State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity。**同一维度若 Curator / Primary 与 Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 冲突，Frozen Authority 必须胜出，并在最终稿做语义级全章清零；不能只修第一处。** 修冲突段落时逐句 salvage：本身被 Authority 支持、只因错误时点/因果而失效的 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing 句，迁到最近合法位置；salvage 只保护高价值句，不保护周围报告、登记、路线或普通实施。raw GBrain 固定 OFF。Optional Specialist / Integrator repair 如显式启用，以 Authority Revision 而非 Primary 为底稿。
+- **Scene Craft 研究可以很深，章节 Runtime 必须很窄**：原著 bounded evidence、书名、locator、完整 Generation/Revision Lens 不进入 Writer。Curator 只看 `skill_id + Reading Question + 一行 Projection Guidance`，有真实 realization 缺口时编译 2—4 句 `Scene Prose Projection`，已经清楚写 `NONE`；Terra Primary 只消费这份短 Projection。Authority Reviser 只拿经 A/B 证明安全的一行 failure-triggered `Revision Watch`，无对应失败时忽略。新增 Scene Primary 必须同时证明主要阅读问题、scene state、beat engine、Stop/Handoff 都不同，且 compact conditional / existing composition 的 A/B 不足；高预算 evidence 或“这种场景很重要”本身不授权扩 taxonomy。
 - Collision 可补少量非奠基性过去，让关系/选择更自然；不得自动悲情化、不得用过去证明整个人、不得自动变主线或一次性倾倒。
 - Growth 是全书纵向不变量，不是 stage / block / ten-chapter tax。
 - **Power Seed 生成 Power Asymmetry，不强制世界内合法例外**：World Power Normal 是比较尺，不是来源限制；非对称优势可来自世界内稀有异常、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加。默认故意偏强：Core Power 至少一个维度让同层普通人/天才明显羡慕，必要时提前拥有通常更高层才有的局部特权；Permanent Boundary 防万能但不做对称成本抵消。Novelty Spark 负责不同，不负责削弱强度。**Reader-facing novelty = 熟悉语言 + 新作用**：World 基础力量、开局 Core 与后续新 Asymmetry 都先用普通话说明具体可观察效果，再决定是否需要短名；新词只压缩已经理解的对象，不靠新词互相定义证明原创。“全新”改变力量因果/玩法，不要求回避境界、功法、兵器、异兽等清楚题材词；若核心幻想本来是战斗、身体、移动、穿越、操控等直接能力，成长不能重新退化成结构分析、材料诊断、路线计算或验证流程。Legendary / Future Legend 不得绕过 Permanent Boundary。

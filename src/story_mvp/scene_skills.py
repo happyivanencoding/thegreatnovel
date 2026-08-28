@@ -1,4 +1,4 @@
-"""Scene Skill Runtime v1 的确定性选择解析与按需加载。
+"""Scene Skill Runtime v2 的确定性选择解析、短投影元数据与按需加载。
 
 Scene Skill 只影响场景如何落成正文，不调用模型、不修改 Chapter Mission 或 Canon。
 """
@@ -67,9 +67,30 @@ def _primary_reading_question(content: str) -> str:
     return match.group(1).strip() if match else ""
 
 
+def _inline_runtime_field(content: str, label: str) -> str:
+    match = re.search(
+        rf"(?m)^\*\*{re.escape(label)}:\*\*\s*(.+?)\s*$",
+        content,
+    )
+    if not match:
+        return ""
+    value = match.group(1).strip()
+    return "" if value.casefold() in _NONE_VALUES else value
+
+
+def scene_skill_projection_guidance(skill_id: str) -> str:
+    content = load_scene_skill(skill_id)
+    return _inline_runtime_field(content, "Projection Guidance") if content else ""
+
+
+def scene_skill_revision_watch(skill_id: str) -> str:
+    content = load_scene_skill(skill_id)
+    return _inline_runtime_field(content, "Revision Watch") if content else ""
+
+
 @lru_cache(maxsize=1)
 def render_scene_skill_catalog() -> str:
-    """给 Curator 的紧凑可选目录，只暴露 ID 与 Primary Reading Question。"""
+    """给 Curator 的紧凑可选目录，只暴露 ID、Reading Question 与短 Projection Guidance。"""
 
     lines: list[str] = []
     for skill_id in SCENE_SKILL_IDS:
@@ -77,7 +98,11 @@ def render_scene_skill_catalog() -> str:
         if not content:
             continue
         question = _primary_reading_question(content)
-        lines.append(f"- {skill_id}: {question or '按该 Scene Skill 的主要阅读问题执行'}")
+        guidance = scene_skill_projection_guidance(skill_id)
+        line = f"- {skill_id}: {question or '按该 Scene Skill 的主要阅读问题执行'}"
+        if guidance:
+            line += f" | Projection Guidance: {guidance}"
+        lines.append(line)
     return "\n".join(lines) or "（当前没有可读取的 Scene Skill。）"
 
 
@@ -120,19 +145,42 @@ def parse_scene_skill_selection(curated_context: str) -> tuple[str, str]:
 
 
 def render_selected_scene_skills(curated_context: str) -> str:
-    """只渲染 Curator 选中的 1 个 Primary 与可选 1 个 Secondary。"""
+    """深 Skill 文档的 legacy / research renderer；production Primary v2 不直接消费此输出。"""
 
     primary, secondary = parse_scene_skill_selection(curated_context)
     if not primary:
         return ""
 
     blocks = [
-        "Scene Skill Runtime v1：下列 Skill 只控制 HOW TO REALIZE THE SCENE；不得修改 Chapter Mission、Canon、直接结果、资源状态、人物决定或章末推动，也不要求新增场景。执行 Skill 时只在其关键 beat 上提高细节密度：优先少量承载故事的动作、物件、空间、身体反馈、力量可见后果和人物差异化反应，不把整章都提高修饰密度。",
+        "Scene Skill Deep Craft（legacy / research renderer）：下列 Skill 只控制 HOW TO REALIZE THE SCENE；不得修改 Chapter Mission、Canon、直接结果、资源状态、人物决定或章末推动，也不要求新增场景。执行 Skill 时只在其关键 beat 上提高细节密度：优先少量承载故事的动作、物件、空间、身体反馈、力量可见后果和人物差异化反应，不把整章都提高修饰密度。",
         f"## Primary: {primary}\n\n{load_scene_skill(primary)}",
     ]
     if secondary:
         blocks.append(f"## Secondary: {secondary}\n\n{load_scene_skill(secondary)}")
     return "\n\n".join(blocks)
+
+
+def render_selected_revision_watches(curated_context: str) -> str:
+    """只给 Authority Reviser 渲染已选 Skill 的极短 failure-based watch。"""
+
+    primary, secondary = parse_scene_skill_selection(curated_context)
+    if not primary:
+        return ""
+    blocks: list[str] = []
+    for label, skill_id in (("Primary", primary), ("Secondary", secondary)):
+        if not skill_id:
+            continue
+        watch = scene_skill_revision_watch(skill_id)
+        if watch:
+            blocks.append(f"- {label} / {skill_id}: {watch}")
+    if not blocks:
+        return ""
+    return "\n".join(
+        [
+            "这些只是 failure-triggered 局部观察点，不是补写清单；Primary Draft 没有对应失败时全部忽略，Preservation First。",
+            *blocks,
+        ]
+    )
 
 
 def strip_scene_skill_selection(curated_context: str) -> str:

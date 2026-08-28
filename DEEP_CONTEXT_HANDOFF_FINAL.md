@@ -616,7 +616,7 @@ GBrain 是 Optional Inspiration，不是 Canon、价值裁判、剧情素材库�
 
 ```text
 GBrain → World / Power / Human / Story Program / Outline → Approved Story
-GBrain 离线蒸馏 → Scene Skills → Curator / Primary
+GBrain 离线深蒸馏 → source-blind Scene Deep Craft → Curator short Projection / Reviser short Watch
 ```
 
 raw GBrain 不直接进入 Writer。source-specific DNA 默认 `REFERENCE_ONLY`；只有真正新增跨书判断能力的 craft 才 active。检索可以为空，不为凑数塞弱卡。
@@ -1335,6 +1335,22 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 
 ---
 
+### 11.9 Scene Skill v2：Deep Research / Narrow Runtime
+
+2026-08-28 的深度 Scene Craft 研究把经典长篇重新按场景问题定向细读：source-specific bounded windows 先由 Terra 做 locator / anchor / observation Fidelity Audit，再由 Luna 做跨书 synthesis，最后由受控 A/B 决定哪些判断可以进入 production。研究层允许很深，但 source 书名、原文、locator、完整 Generation/Revision Lens 不进入章节 Writer。
+
+当前 production 保留 **24 个 Scene Primary**，没有因为 Combat 很重要就拆出十几个新 Primary。战斗的势均、弱打强、碾压、适应、保护、团队、大战、规则/远程等都作为 `combat` 内部 posture / conditional：只有新的 Reading Question、持续 scene state、beat engine、Stop/Handoff 都不同，并且 `existing Skill + compact conditional` 的 A/B 仍不足，才允许新增 Primary。
+
+运行时分三层带宽：
+
+1. `scenes/*.md` 保存 source-blind **Deep Craft**，供研究/维护；
+2. Curator Catalog 只暴露 `skill_id + Primary Reading Question + 一行 Projection Guidance`，有真实 realization 缺口时编译 2—4 句 `Scene Prose Projection`，已经清楚则 `NONE`；
+3. Terra Primary 不再读取完整 Scene Skill；Luna Authority Reviser 也不读完整 Revision Lens，只在该 Skill 有直接 A/B 支持时追加一行 failure-triggered `Revision Watch`，否则不加。
+
+双盲 Primary A/B（Luna + Sol）支持“Deep Research → Curator short Projection → Terra”作为默认方向：删掉完整 Skill 注入没有系统性丢失关键 craft，反而减少了深规则变成流程、教程和 prompt bloat 的风险。Reviser A/B 同样说明完整 Revision Lens 不应常驻；Preservation First 优先。
+
+另保留三个**非 Primary 的 Shared Reference Lens**：`character_voice_pressure`、`world_entry_lived_texture`、`desire_temptation`。它们用于升级/校准 Scene Craft 与 Curator 投影，不进入 Primary Router，也不构成每章配额。
+
 ## 12. Current Implementation Choices
 
 这些是当前默认，不是永恒原则。
@@ -1349,9 +1365,9 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 | Story Program | GPT-5.6 Sol | high | 最多 3 focused inspiration |
 | Outline | GPT-5.6 Luna | high | 通常 4，最多 5 |
 | Director | GPT-5.6 Luna | high | raw GBrain OFF |
-| Curator | GPT-5.6 Luna | high | raw GBrain OFF；Scene Skills ON |
-| Primary Writer | GPT-5.6 Terra | high | raw GBrain OFF；Scene Skills ON；第一版草稿 |
-| Authority Reviser | GPT-5.6 Luna | high | raw GBrain OFF；safe Authority Refresh Pack；Preservation First |
+| Curator | GPT-5.6 Luna | high | raw GBrain OFF；Scene Skill v2 compact Catalog → short Projection |
+| Primary Writer | GPT-5.6 Terra | high | raw GBrain OFF；只吃 Curator short Scene Projection；第一版草稿 |
+| Authority Reviser | GPT-5.6 Luna | high | raw GBrain OFF；safe Authority Refresh Pack + optional short Revision Watch；Preservation First |
 | State | GPT-5.6 Luna | low | OFF；只读最终正式来源 |
 
 默认章节链：

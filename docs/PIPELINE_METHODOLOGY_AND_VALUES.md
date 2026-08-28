@@ -420,7 +420,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 
 #### 负责
 
-- 从大量 Canon / Book Contract / Inspiration / Scene Skill 中筛选当前章真正相关信息；
+- 从大量 Canon / Book Contract / Inspiration 与 Scene Skill v2 紧凑 Catalog 中筛选当前章真正相关信息；Catalog 只含 `skill_id + Reading Question + 一行 Projection Guidance`，Curator 只在当前场景有真实 realization 缺口时编译 2—4 句 `Scene Prose Projection`，已经清楚则写 `NONE`；
 - 保留人物欲望、关系、力量、风险、承诺与当前冲突；**Frozen Human Core 高于最近几章行为归纳**，不因连续救人、负责、诚实或克制就把现场选择升级成新的稳定道德人格。若本章自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心等私人牵引，保留一个可直接进入场景的注意/想要/靠近/回避/选择触发，不只剩职责协作与成熟沟通；若 Frozen Human 已明确某个具体人会因吸引/依恋/偏心改变主角选择，而本章出现近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系性现场，默认属于自然触发，保留一个克制 cue，不要求它改写主事件；
 - 压缩不必要的规则和机制说明；
 - `WORLD AUTHORITY` 是已批准 World Vision 的安全事实源；`Reader Release Map` 为当前章排程了哪条 World fact，Curator 就从 deterministic prefetch 中保留/压缩哪条，不自行选择另一套世界介绍； `Relevant Plan` 同样压缩决定后的普通实施，只把决定、真正影响成败的动作和结果交给 Writer；
@@ -438,6 +438,8 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 
 当前系统使用 deterministic Index-first prefetch，目标是降低 token 和认知负担，而不是给 Curator 再增加工具调用。
 
+**Scene Craft 的研究深度与章节带宽分离。** 原著 bounded evidence、书名、locator 与完整 Deep Craft 可以越来越深，但 production Writer 不直接消费它们。新增 Scene Primary 只有在 Reading Question、持续状态、beat engine、Stop/Handoff 都真正不同，且“现有 Skill + compact conditional”的 A/B 仍不足时才允许 promotion；高频、重要或研究预算高本身都不是扩 taxonomy 的理由。
+
 在长历史场景中，Curator 已识别的未解事实还会被 runtime 确定性投影成一个很短的 `UNRESOLVED FACT BOUNDARY`，紧贴 Chapter Mission 交给 Primary。它不新增 LLM Call，也不扩大 Canon schema；只是把“仍未知 / 未兑现”的事实边界提高显著性。
 
 ---
@@ -446,7 +448,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 
 #### 负责
 
-- 把 Director Contract + Curated Context 写成完整、可保存的正式正文；
+- 把 Director Contract + Curated Context 写成完整、可保存的正式正文；Primary 不直接读取完整 Scene Skill / 原著 evidence，只消费 Curator 已编译的短 `Scene Prose Projection`；
 - Reader-First：先让读者理解人、问题和 stakes，再给最低限度规则；
 - 当动作自然提出“这是什么 / 为什么重要”的问题，而 Curator 已投影当前 Plan 排程的 World fact 时，用 1—3 个短直接旁白段或等价场景表达回答到足够后立刻回场景；**已排程 Reader Release 是本章需要兑现的 timing decision**，不是可选装饰。若该事实同时说明地点/势力/传承为什么值得争，保留一个最短价值锚点；Writer 不自行从完整 World 选择说明主题；
 - 决定已经成立后的普通实施优先一句或短段概括，不靠实施流水账填充低动作章节；
@@ -476,7 +478,7 @@ Primary 为了保持注意力集中，只吃 Director Contract、Curated Context
 #### 负责
 
 - 以 Primary Draft 为唯一底稿，**Preservation First**：没有明确问题的句段默认逐字保留；
-- 同时读取冻结 Mission、Curator、safe World Authority、逐条 Reader Release、Frozen Power + Human Core、Canon；
+- 同时读取冻结 Mission、Curator、safe World Authority、逐条 Reader Release、Frozen Power + Human Core、Canon；若当前 Scene Skill 有经过 A/B 证明安全的一行 `Revision Watch`，只追加该 failure-triggered 提醒，不把完整 Generation/Revision Lens 塞回 Reviser；
 - 删除/压缩反复确认、重复证明、工程化/程序化 Supporting Implementation 和 Competence Filler；
 - 补回 Authority 已批准但第一版遗漏的最短充分 World Orientation、Core Power 独有体验、Human 私人 cue 或一个真正承载故事的生活细节；
 - 把笔墨从普通实施还给本章真正的 World Entry / Rival / Relationship / Core Fantasy / Choice / Payoff / Consequence。
@@ -651,9 +653,9 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Collision + long-form causality；最高杠杆长期结构节点 |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |
 | Director | GPT-5.6 Luna high | 章节相关精选上下文 | Balanced 默认；若优先最低延迟可切 Terra high |
-| Curator | GPT-5.6 Luna high | raw GBrain OFF；Index-first / Scene Skills | Balanced 默认；若优先更短、更克制可切 Terra medium |
-| Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；Scene Skills | 先完成完整第一版正文；不是默认 final source |
-| Authority Reviser | GPT-5.6 Luna high | **OFF**；safe Authority Refresh Pack | Preservation First；恢复漏失 Authority、压低重复/工程/程序化笔墨；默认 final source |
+| Curator | GPT-5.6 Luna high | raw GBrain OFF；Index-first + Scene Skill v2 compact Catalog | 编译短 `Scene Prose Projection`，允许 `NONE`；若优先更短可切 Terra medium |
+| Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；只吃短 Scene Projection | 先完成完整第一版正文；不直接读完整 Skill；不是默认 final source |
+| Authority Reviser | GPT-5.6 Luna high | **OFF**；safe Authority + optional short Revision Watch | Preservation First；只在明确失败时局部修；默认 final source |
 | State Extraction | GPT-5.6 Luna low | OFF | 只抽取最终正式正文已发生事实 |
 
 ### 为什么这样分
