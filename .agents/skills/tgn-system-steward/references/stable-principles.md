@@ -42,6 +42,8 @@ Fantasy First 的本质是：男频成长长篇必须持续保护主角本人值
 
 Compiler FAIL 的默认结果是**把精确冲突交还作者并停止**，不是自动触发 LLM repair loop。若研究定点修复，必须把标题、Shelf Promise、literal Ontology、Changed Verbs 与不可磨平项作为代码可验证的受保护核心；Repair 只改因果字段，先过 deterministic validator，再接受 fresh Compiler 复检。Prompt 说“会保留”不算保留，漏掉任何受保护字段都必须 fail closed，不能事后复制旧字段回填成假成功。
 
+Optional 不能被误读成“开始后随时静默绕过”。健康状态机是：从未开始或作者显式跳过可走原 Split Authority；保存候选后，Compiler Input 必须在 Prompt 生成时落盘并保持不可被报告保存重写，只有 strict PASS、该 snapshot 与当前 selected card 完全一致、作者批准，才生成四条 lane contract 并继续。Workflow 只把 frozen contract 当正式 artifact；搜索候选与 Compiler Report 不是 Authority。World 批准后该开书决定冻结，不能回头改卡或跳过；Outline / chapter 永远不读取 raw card。
+
 判断大胆度优先看 **Changed Verbs**：主角是否反复拥有普通角色不会自然做出的身体、移动、战斗、占有、变形、生存或关系动作。换能源名、职业名、组织名，或把分析/维护/优化做得更强，并没有真正扩大 premise space。
 
 ### Authority Isolation ≠ Creative Composition

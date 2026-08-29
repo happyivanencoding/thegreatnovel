@@ -10,15 +10,16 @@ TGN 要生成的是成熟中文男频成长长篇：读者明确想拥有主角�
 
 当前真实生产链路是：
 
-`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
+`作者方向 →（可选）Premise Forge S1/S2/S3 → Independent Compiler → 作者批准 / 显式跳过 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
 
-没有 production Fantasy Seed，也没有 Character Composer LLM。历史实验与 legacy 模板里仍可能出现 Fantasy Seed 字样，但它们不构成当前创意权威。
+没有 production Fantasy Seed，也没有 Character Composer LLM。Premise Aperture 只在 Authority 冻结前搜索完整大胆货架前提：候选 Non-Canon，Compiler 不评分/选择/修稿，批准后由代码拆成四条 lane contract，Story Program 后不再下传 raw card。
 
 当前作者批准点保持紧凑：
 
-1. World Vision；
-2. Character（Power + Human 一次批准）；
-3. Story Program。
+1. 可选 Premise Contract；
+2. World Vision；
+3. Character（Power + Human 一次批准）；
+4. Story Program。
 
 模型生成、模型选择和作者编辑都只是 draft；作者明确批准才形成创意权威。
 

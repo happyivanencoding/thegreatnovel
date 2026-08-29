@@ -8,6 +8,9 @@
 
 ```text
 作者方向
+  →（可选）Non-Canon Premise Forge S1/S2/S3
+  → Independent Premise Authority Compiler
+  → 作者批准 Premise Contract / 显式跳过
   → protagonist-blind World Vision
   → POWER_BASELINE / LIFE_CONTEXT
   → 独立 Power Seed + Human Seed
@@ -28,9 +31,12 @@ Story Program Handoff
   → Outline / chapters
 ```
 
-- **没有 production Fantasy Seed。**
+- **没有 production Fantasy Seed。** Premise Aperture 是可跳过、可丢弃的 Non-Canon 搜索与编译阶段，不是第四 Authority。
+- Forge 一次生成 S1/S2/S3；Compiler fresh context 只审可满足性。作者选择与批准发生在候选与 Authority 之间；`CONDITIONAL PASS / FAIL` 返回作者，没有自动 selector 或 repair loop。
+- 批准后代码确定性投影四条 lane：World 只见 World + public Interface；Power 只见 Ontology/Scale/trigger/coverage/carrier/boundary；Human 只见 Ontology/T0/Scale；Story 在前述 Authority 批准后第一次见完整 Promise。Outline 与章节不见 raw card。
+- Premise 未开始/显式跳过时原链可用；开始未批准时不得绕过。World Vision 批准后 Premise 决定冻结。
 - Power Seed 与 Human Seed 是两份独立创意权威，但**不是两个审批门**；作者只批准一次 Character。
-- 核心去相关机制是 **fresh context + authority isolation**，不是必须使用不同模型。
+- 核心去相关机制是 **fresh context + authority isolation**，不是必须使用不同模型；完整 premise 一次形成负责创意合成，后续 isolation 负责防止后验合理化。
 - Long-form Evolution 也遵守同一原则：创造新世界的上下文看不到当前主角；判断人物长期发展的上下文看不到未来世界；只有 Re-Collision 同时看到二者。
 
 ## 2. World Vision

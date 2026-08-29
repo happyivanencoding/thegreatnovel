@@ -400,6 +400,7 @@ def _compile_planning_with_character_authority(
     character_initial_state: str,
     current_character: str,
     proposal_context: str,
+    premise_story_contract: str,
     selected_references: list[Mapping[str, Any]] | None,
     gbrain_inspiration: str,
 ) -> str:
@@ -409,6 +410,13 @@ def _compile_planning_with_character_authority(
     base = template.strip() or (STORY_PROGRAM_TEMPLATE if mode == "idea" else OUTLINE_TEMPLATE)
     parts = [adapt_split_planning_template(base, mode=mode), "", "# 页面当前输入"]
     parts.append(_block("作者粗方向", creative_direction))
+    if mode == "idea" and premise_story_contract.strip():
+        parts.append(
+            _block(
+                "FROZEN PREMISE STORY CONTRACT｜只在 Story Program 第一次读取",
+                premise_story_contract,
+            )
+        )
     planning_character = (
         current_character.strip()
         if mode == "outline" and current_character.strip()
@@ -479,16 +487,28 @@ def generate_split_prompt(
     evolution_scope: str = "macro",
     effective_from_chapter: int = 0,
     effective_until_chapter: int = 0,
+    premise_world_contract: str = "",
+    premise_power_contract: str = "",
+    premise_human_contract: str = "",
+    premise_story_contract: str = "",
     **_: Any,
 ) -> str:
     if mode == "world_vision":
-        return "\n\n".join(
-            [
-                PROTAGONIST_BLIND_WORLD_TEMPLATE.strip(),
+        parts = [PROTAGONIST_BLIND_WORLD_TEMPLATE.strip()]
+        if premise_world_contract.strip():
+            parts.append(
+                _block(
+                    "FROZEN PREMISE WORLD CONTRACT｜作者已批准；仍须 protagonist-blind",
+                    premise_world_contract,
+                )
+            )
+        parts.extend(
+            (
                 _block("作者粗方向", creative_direction),
                 _block("World GBrain Inspiration（可选）", gbrain_inspiration),
-            ]
-        ).strip() + "\n"
+            )
+        )
+        return "\n\n".join(parts).strip() + "\n"
 
     if mode == "power_seed":
         _require_approved(creative_state, "world_vision")
@@ -497,7 +517,15 @@ def generate_split_prompt(
         baseline = project_character_power_baseline(world_vision)
         novelty = build_power_novelty_bundle() if power_novelty is None else power_novelty.strip()
         lexique = build_power_lexique_bundle() if power_lexique is None else power_lexique.strip()
-        parts = [POWER_PROMPT.strip(), baseline.strip()]
+        parts = [POWER_PROMPT.strip()]
+        if premise_power_contract.strip():
+            parts.append(
+                _block(
+                    "FROZEN PREMISE POWER CONTRACT｜不得扩大、缩窄或恢复标准人形",
+                    premise_power_contract,
+                )
+            )
+        parts.append(baseline.strip())
         if novelty:
             parts.append(_block("Power Novelty Spark（随机扰动；非 Canon）", novelty))
         if lexique:
@@ -523,6 +551,13 @@ def generate_split_prompt(
                 "直接输出单个 `# HUMAN SEED`；不要生成候选列表。",
             )
         parts = [human_prompt]
+        if premise_human_contract.strip():
+            parts.append(
+                _block(
+                    "FROZEN PREMISE HUMAN CONTRACT｜只含 Ontology / T0 / Scale；看不到 Power / Story",
+                    premise_human_contract,
+                )
+            )
         if prototype_id.strip():
             parts.append(EXPLICIT_PROTOTYPE_HUMAN_CONTRACT.strip())
         parts.extend([
@@ -616,6 +651,7 @@ def generate_split_prompt(
             character_initial_state=character_initial_state,
             current_character=current_character,
             proposal_context=proposal_context,
+            premise_story_contract=premise_story_contract,
             selected_references=selected_references,
             gbrain_inspiration=gbrain_inspiration,
         )
@@ -634,6 +670,7 @@ def generate_split_prompt(
             character_initial_state=character_initial_state,
             current_character=current_character,
             proposal_context=proposal_context,
+            premise_story_contract="",
             selected_references=selected_references,
             gbrain_inspiration=gbrain_inspiration,
         )

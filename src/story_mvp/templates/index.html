@@ -215,8 +215,46 @@
           </div>
           <span class="status">模型建议 ≠ 作者批准</span>
         </div>
-        <p class="hint">按 World Vision → Character Authority（Power Seed ∥ Human Seed，一次批准）→ Story Program 的顺序推进。Power 与 Human 是两个独立创意上下文，但不是两个审批门禁。</p>
+        <p class="hint">可选 Premise Aperture → World Vision → Character Authority（Power Seed ∥ Human Seed，一次批准）→ Story Program。Premise 从未开始或作者显式跳过时，旧开书路径保持可用；一旦开始，必须 strict PASS + 作者批准后才能继续。</p>
         <p class="hint">默认是阅读态；点击阶段标题进入编辑。GBrain 与 References 保持折叠，只有作者主动展开。</p>
+
+        <details class="creative-stage" id="premise-stage" open>
+          <summary>Premise Aperture / 大胆前提（可选） <span id="premise-status" class="count">not_started</span></summary>
+          <p id="premise-preview" class="reading-preview">尚未开始；可直接跳过，或先生成三张完整大胆候选。</p>
+          <p class="hint">Forge 只生成 Non-Canon 候选；Compiler 只查 trigger、载体、尺度与远期复合，不评分、不选择、不修稿。只有 strict PASS 的已保存候选才能由作者批准并确定性拆成四条 lane contract。</p>
+          <label class="field"><span>Premise Candidates（必须完整包含 S1 / S2 / S3）</span><textarea id="premise-candidates" rows="18" placeholder="Single-Agent Premise Forge 返回"></textarea></label>
+          <div class="action-row wrap">
+            <button id="generate-premise-forge-prompt" class="primary">生成 Premise Forge Prompt</button>
+            <button id="apply-premise-forge-response">应用模型返回</button>
+            <button id="save-premise-candidates">保存三张候选</button>
+            <button id="generate-premise-batch-compiler">独立编译三张候选</button>
+          </div>
+          <div class="action-row wrap">
+            <span class="hint">作者选择：</span>
+            <button type="button" data-premise-select="S1">选择 S1</button>
+            <button type="button" data-premise-select="S2">选择 S2</button>
+            <button type="button" data-premise-select="S3">选择 S3</button>
+          </div>
+          <label class="field"><span>Selected Premise（作者可编辑；编辑后必须重新编译）</span><textarea id="selected-premise" rows="16" placeholder="只保留一张 ## S#｜... 候选"></textarea></label>
+          <div class="action-row wrap">
+            <button id="save-selected-premise">保存所选候选</button>
+            <button id="generate-selected-premise-compiler" class="primary">独立复编所选候选</button>
+          </div>
+          <label class="field"><span>Independent Compiler Report</span><textarea id="premise-compiler-report" rows="13" placeholder="PASS / CONDITIONAL PASS / FAIL；不允许评分或自动修复"></textarea></label>
+          <div class="action-row wrap">
+            <button id="apply-premise-compiler-response">应用 Compiler 返回</button>
+            <button id="save-premise-compiler">保存 Compiler Report</button>
+            <button id="approve-premise" class="primary">批准 Premise Contract</button>
+            <button id="skip-premise">显式跳过 Premise Aperture</button>
+          </div>
+          <details class="source-details">
+            <summary>Frozen Lane Contracts（批准后只读）</summary>
+            <label class="field"><span>World lane</span><textarea id="premise-world-contract" rows="7" readonly></textarea></label>
+            <label class="field"><span>Power lane</span><textarea id="premise-power-contract" rows="7" readonly></textarea></label>
+            <label class="field"><span>Human lane</span><textarea id="premise-human-contract" rows="7" readonly></textarea></label>
+            <label class="field"><span>Story lane</span><textarea id="premise-story-contract" rows="9" readonly></textarea></label>
+          </details>
+        </details>
 
         <details class="creative-stage" open>
           <summary>World Vision / Protagonist-blind 世界 <span id="creative-meta-world-vision" class="count">empty · empty</span></summary>
@@ -658,7 +696,9 @@
           <label class="field">
             <span>生成节点（高级）</span>
             <select id="prompt-mode" aria-label="Prompt 模式">
-              <option value="world_vision">World Vision / Protagonist-blind 世界</option>
+              <option value="premise_forge">Premise Forge / 大胆前提候选</option>
+              <option value="premise_compiler">Premise Compiler / 可满足性检查</option>
+              <option value="world_vision" selected>World Vision / Protagonist-blind 世界</option>
               <option value="world_expansion">World Expansion / 向前扩世界</option>
               <option value="power_seed">Power Seed / 力量异常</option>
               <option value="human_seed">Human Seed / 独立人物</option>

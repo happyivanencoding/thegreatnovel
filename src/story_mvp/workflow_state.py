@@ -26,6 +26,7 @@ CREATIVE_ARTIFACT_KEYS = (
     "creative.character_card",
     "creative.story_program",
 )
+PREMISE_ARTIFACT_KEYS = ("premise.contract",)
 BOOK_ARTIFACT_KEYS = (
     "book.design",
     "book.long_plan",
@@ -37,7 +38,14 @@ LONG_FORM_ARTIFACT_KEYS = (
     "evolution.human_development",
     "evolution.current_character",
 )
-STATIC_ARTIFACT_KEYS = CREATIVE_ARTIFACT_KEYS + BOOK_ARTIFACT_KEYS + LONG_FORM_ARTIFACT_KEYS
+STATIC_ARTIFACT_KEYS = (
+    PREMISE_ARTIFACT_KEYS
+    + CREATIVE_ARTIFACT_KEYS
+    + BOOK_ARTIFACT_KEYS
+    + LONG_FORM_ARTIFACT_KEYS
+)
+
+PREMISE_FILES = {"premise.contract": "PREMISE_CONTRACT.md"}
 
 CREATIVE_FILES = {
     "creative.world_vision": "WORLD_VISION.md",
@@ -61,6 +69,7 @@ BOOK_SECTIONS = {
 }
 
 ARTIFACT_LABELS = {
+    "premise.contract": "大胆前提合同（可选）",
     "creative.world_vision": "世界幻想",
     "creative.power_seed": "力量种子",
     "creative.human_seed": "人物种子",
@@ -344,6 +353,15 @@ def _initialize_state(book_directory: Path) -> dict[str, Any]:
     from .storage import parse_book_sections, read_long_form_evolution_payload
 
     state = _new_state()
+    for artifact, filename in PREMISE_FILES.items():
+        content = _read_text(book_directory / filename)
+        _ensure_entry(
+            state,
+            artifact,
+            revision=1 if content.strip() else 0,
+            status=_content_status(content),
+            source="legacy" if content.strip() else "empty",
+        )
     for artifact, filename in CREATIVE_FILES.items():
         content = _read_text(book_directory / filename)
         status = _creative_status(book_directory, artifact, content)
@@ -423,6 +441,12 @@ def _refresh_state(state: dict[str, Any], book_directory: Path) -> bool:
             entry["source_revisions"] = {
                 key: value for key, value in source_revisions.items() if key in supported_static
             }
+    for artifact, filename in PREMISE_FILES.items():
+        content = _read_text(book_directory / filename)
+        entry = _ensure_entry(state, artifact)
+        if entry.get("status") != "STALE":
+            entry["status"] = _content_status(content)
+            entry["freshness"] = "fresh"
     for artifact, filename in CREATIVE_FILES.items():
         content = _read_text(book_directory / filename)
         entry = _ensure_entry(state, artifact)
@@ -512,7 +536,22 @@ def _apply_content_change(
     entry["stale_from"] = []
     affected: list[str] = []
 
-    if artifact == "creative.world_vision":
+    if artifact == "premise.contract":
+        for downstream in (
+            "creative.world_vision",
+            "creative.power_seed",
+            "creative.human_seed",
+            "creative.character_card",
+            "creative.story_program",
+            "book.design",
+            "book.long_plan",
+            "book.future_10",
+        ):
+            downstream_entry = state["artifacts"].get(downstream, {})
+            if int(downstream_entry.get("revision", 0)) > 0:
+                _mark_stale(state, downstream, artifact)
+        affected.extend(_mark_future_runs_stale(state, book_directory, artifact))
+    elif artifact == "creative.world_vision":
         for downstream in (
             "creative.power_seed",
             "creative.human_seed",
@@ -783,6 +822,12 @@ def _dependents_for_impact(book_directory: Path, artifact: str) -> list[str]:
             result.insert(0, "evolution.current_character")
         return result
     static = {
+        "premise.contract": [
+            "creative.world_vision",
+            "creative.power_seed",
+            "creative.human_seed",
+            "creative.story_program",
+        ],
         "creative.world_vision": ["creative.power_seed", "creative.human_seed"],
         "creative.power_seed": ["creative.character_card"],
         "creative.human_seed": ["creative.character_card"],

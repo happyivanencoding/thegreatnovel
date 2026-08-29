@@ -381,7 +381,42 @@ def read_creative_payload(book_id: str, workspace: Path) -> dict[str, Any]:
         **read_long_form_evolution_payload(directory),
         "world_horizon_handoff": extract_world_horizon_handoff(contents["proposal"]),
     }
+    from .premise_workflow import read_premise_payload
+
+    payload["premise"] = read_premise_payload(directory)
     return payload
+
+
+def invalidate_creative_authorities_for_premise_change(directory: Path) -> None:
+    """Reopen only materialized creative authorities when the frozen premise changes."""
+
+    state = _read_creative_state(directory)
+    changed = False
+    for artifact in CREATIVE_ARTIFACT_FILES:
+        content = _read_creative_text(directory, artifact)
+        if not content.strip():
+            continue
+        entry = state[artifact]
+        if entry["origin"] == "empty":
+            entry["origin"] = "legacy_unknown"
+            changed = True
+        if entry["status"] != "draft":
+            entry["status"] = "draft"
+            changed = True
+    if changed:
+        _write_creative_state(directory, state)
+
+
+def require_premise_ready_for_authority(directory: Path) -> None:
+    """Allow the legacy path only before Premise starts or after explicit skip/approval."""
+
+    from .premise_workflow import read_premise_payload
+
+    premise = read_premise_payload(directory)
+    if premise["started_unapproved"]:
+        raise ValueError(
+            "Premise Aperture 已开始但尚未批准：请让所选候选获得 strict PASS 并批准，或由作者显式跳过"
+        )
 
 
 def _evolution_files(directory: Path, folder: str, prefix: str) -> list[Path]:
@@ -590,6 +625,7 @@ def write_creative_artifact(
     if artifact == "character_card":
         raise ValueError("CHARACTER.md 只能由 Power Seed + Human Seed 确定性合成，不能直接保存")
     directory = require_book(book_id, workspace)
+    require_premise_ready_for_authority(directory)
     new_content = str(content)
     old_content = _read_creative_text(directory, artifact)
     from .workflow_state import ensure_workflow_state
@@ -650,6 +686,7 @@ def approve_creative_artifact(
     if artifact in {"power_seed", "human_seed", "character_card"}:
         raise ValueError("Power/Human 不单独批准；请使用一次 Character 批准同时冻结两份 Seed")
     directory = require_book(book_id, workspace)
+    require_premise_ready_for_authority(directory)
     content = _read_creative_text(directory, artifact)
     if not content.strip():
         raise ValueError(f"{CREATIVE_ARTIFACT_FILES[artifact]} 不能为空，无法批准")
@@ -676,6 +713,7 @@ def approve_character_artifact(book_id: str, workspace: Path) -> dict[str, Any]:
     """Freeze Power + Human with one author approval and deterministically compose Character."""
 
     directory = require_book(book_id, workspace)
+    require_premise_ready_for_authority(directory)
     power = _read_creative_text(directory, "power_seed")
     human = _read_creative_text(directory, "human_seed")
     world = _read_creative_text(directory, "world_vision")

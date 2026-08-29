@@ -61,6 +61,7 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 9. 如果 direction-only projection 漂移，只做近单变量修复：对同一已选 candidate 使用 lane-specific frozen contract，重跑最早失败链；不要换一个更好 candidate 冒充修复；
 10. Frozen contract 仍不是第四 Authority：World 只见 World + protagonist-blind interface，Power 只见 Ontology + Initial Scale Position + trigger/target/action/carrier/boundary，Human 只见 Ontology + T0 origin + Initial Scale Position，Story 在 Authorities 批准后才见完整 Promise。无法同时成立时必须 fail loud；这证明边界有效，不自动证明候选可上线。Outline 不再读取 raw card。
 11. Compiler FAIL 默认停止并把精确冲突交给作者，不自动启动 repair loop。若单独研究 Selected Premise Repair，只允许预注册候选的一次近单变量修复；代码逐字锁定标题、Shelf Promise、literal Ontology、Changed Verbs 与不可磨平项。先过 deterministic protected-core validation，再允许 fresh Compiler；失败不补字段、不换候选、不进入 downstream。
+12. 冻结为 production 前追加状态机回归：`not_started / skipped` 允许原链；保存候选后所有下游 Authority 必须阻塞；batch / selected Compiler Prompt 生成时立即保存 exact Input snapshot，报告保存不得重新取当前文本；strict PASS + snapshot 与当前 selected card 完全一致 + author approval 才能生成四条 lane contract；编辑后必须 selected recompile；World 批准后不可改 Premise；Workflow 只登记 `premise.contract`；raw card 不进入 Outline / chapter / State。
 
 若完整 premise pool 稳定胜出，而多轴碰撞产生概念竞争，结论应是“搜索需要完整承诺 + 作者门控 + 后置 frozen contract”，不是“取消 Authority separation”。各题材最优强度不同时保留作者选择，不建立自动 conservative selector。
 

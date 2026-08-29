@@ -18,11 +18,13 @@
 
 默认概览只显示当前书、当前章节、下一步、stale 摘要、继续写作主 CTA 和轻量 Story Flow；不放大 textarea。
 
-- 创意：三阶段 Stepper；默认阅读态，编辑/生成/批准按阶段展开；GBrain/References 折叠。
+- 创意：可选 Premise Aperture + World / Character / Story 三个 Authority 阶段；默认阅读态，编辑/生成/批准按阶段展开；GBrain/References 折叠。
 - 故事设计：总体设计 / 中期规划 / 未来十章 Tabs；section cards 默认阅读态，原文编辑显式打开。
 - 章节写作：章节选择、当前小纲/正文主体、一个主生成或保存动作；所有开书叙事形式都从 Chapter 1 进入正常 Director → Curator → Primary → Authority Reviser → State 链，原始上下文和执行节点进入高级详情。
 - 记忆：Canon Memory / Current State 默认阅读态，复用 BOOK status 保存路径。State Delta 应用到浏览器状态编辑区时，`Current Power Position` 不允许因模型漏写而消失：已有 Canon 位置优先继承；第一章尚无 Canon 时从 `CHARACTER.md` 的 T0 `开局精确力量位置` 确定性转成 Current Position。只有 State 返回了新的明确数字位置时才覆盖；越级胜利本身不触发 UI 推断升级。
 - 工具：Prompt Templates、OpenAI Settings、References、Workflow Debug。
+
+Premise 工作区固定提供：Forge Prompt、三卡保存、batch Compiler、作者选择/编辑、selected-card Compiler、Report 保存、批准与显式跳过。UI 不出现自动 selector 或 Repair 按钮。候选和 Compiler Report 只在该工作区可见；批准后显示四条只读 lane contract，Workflow 只登记正式 `premise.contract`。从未开始/已跳过不阻止 World；开始未批准时 World / Power / Human / Story 的生成与保存显示后端 fail-loud 错误；World 批准后 Premise 控件不可再改变事实。
 
 章节主 CTA 由 Workflow snapshot 的 `next_actionable_node` 驱动：继续写作会自动选择当前章节、载入可用的十章计划，并将 Director / 执行小纲 / 正文 / Hybrid 节点映射到作者可读的中文动作；Prompt Mode、完整 Prompt、Response 和 Codex Task 仅在右侧 Drawer 可见。
 

@@ -43,19 +43,24 @@
 
 ## 4. 当前 Production 创意链
 
-`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
+`作者方向 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → 作者选择并批准 / 显式跳过 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
 
 长篇到达真实 `World Horizon` 后使用低频 forward loop：`Story Program Handoff → protagonist-blind World Expansion →（仅长期证据足够时）Human Development → deterministic CURRENT_CHARACTER.md → Sol Story Refresh / Re-Collision → 作者批准刷新后的 Story Program → Outline → 后续章节`。开书 World / Power / Human 是稳定 Origin，不要求一次写完 500 章所有具体世界与能力。
 
-- **没有 production Fantasy Seed。**
+- **没有 production Fantasy Seed。** Premise Aperture 是可丢弃的 Non-Canon 搜索与编译阶段，不是第四 Authority。
+- Premise 从未开始或作者显式跳过时，原 Split Authority 路径保持可用；一旦保存候选，World / Power / Human / Story 的生成、保存与批准必须等待 strict `PASS` + 作者批准，不能静默绕过。Compiler Input 必须在 Prompt 生成当下落盘，报告保存不能重绑到后来编辑的文本；snapshot 与当前 selected card 不一致时必须重新编译。World Vision 一旦批准，Premise 决定冻结。
+- Forge 一次生成 S1/S2/S3，不自动排名或选择；Independent Compiler 只审 trigger、载体、T0 尺位、Interface 因果与远期复合，不评分、不改稿、不偏向保守。`CONDITIONAL PASS / FAIL` 返回作者；没有自动 selector 或 Repair Loop。
+- 作者批准后由代码确定性拆成 World / Power / Human / Story 四条 lane contract；Story Program 第一次读取完整 Promise，Outline 与章节 Runtime 不再读取 raw Premise Card。无法同时成立时必须 fail loud `PREMISE-AUTHORITY CONFLICT`。
 - **没有 Character Composer LLM。** Power/Human 不做后验主题化调和。
-- 批准点保持紧凑：World Vision → Character（Power + Human 一次批准）→ Story Program。
+- 批准点保持紧凑：（可选）Premise → World Vision → Character（Power + Human 一次批准）→ Story Program。
 - Forward Authority 仍需显式采用：World Expansion 候选只有作者批准后生效；Human Development 可返回 `NONE`，只有作者批准的真实 Delta 才进入长期人物权威；Story Refresh 复用 Story Program 的现有保存/批准流程。模型生成不自动成为 Authority。
 
 ## 5. 默认模型与 GBrain 路由
 
 | 阶段 | 默认模型 | Reasoning | GBrain |
 |---|---|---:|---|
+| Premise Forge（可选开书） | GPT-5.6 Luna | high | **OFF**；一次生成 S1/S2/S3，Non-Canon |
+| Premise Authority Compiler | GPT-5.6 Terra | high | **OFF**；fresh context，只审可满足性，不评分/选择/修稿 |
 | World Vision | GPT-5.6 Luna | high | ON：固定 1 条 Reader Coordinates Reference + 最多 3 条 creative inspiration |
 | World Expansion | GPT-5.6 Luna | high | ON：World-only craft + Coordinate Reference；protagonist-blind |
 | Power Seed | GPT-5.6 Luna | high | ON：固定 1 条 Naming Craft Reference + Power lane 小 bundle |
@@ -162,6 +167,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 当前主要权威：
 
 - `docs/PIPELINE_METHODOLOGY_AND_VALUES.md`
+- `docs/PREMISE_APERTURE.md`
 - `docs/MVP_PRODUCT_DIRECTION.md`
 - `docs/SPLIT_CHARACTER_AUTHORITY.md`
 - `docs/GBRAIN_STORY_CRAFT_V3.md`

@@ -1,6 +1,6 @@
 # DEEP CONTEXT HANDOFF
 
-日期：2026-08-29
+日期：2026-08-30
 项目：TheGreatNovel / TGN Story MVP
 主要工作目录：`C:\dev\tgn-story-mvp`
 开发分支：`principal_dev_new_sys`
@@ -17,7 +17,7 @@
 
 1. 这个项目真正想达到的读者体验与产品目标；
 2. 经过长期纠偏形成的判断模型：为什么某种方案对，为什么一个表面相似的方案仍然错；
-3. 截至 2026-08-29 的已验证结论、当前实现、并行工作状态与下一步实验。
+3. 截至 2026-08-30 的已验证结论、当前实现、并行工作状态与下一步实验。
 
 使用方式：
 
@@ -1259,6 +1259,9 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 
 ```text
 作者方向
+→（可选）Non-Canon Premise Forge S1/S2/S3
+→ Independent Premise Authority Compiler
+→ 作者批准 Premise Contract / 显式跳过
 → protagonist-blind World Vision
 → POWER_BASELINE / LIFE_CONTEXT
 → 独立 Power Seed + Human Seed
@@ -1274,25 +1277,27 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 → State Extraction
 ```
 
-没有 production Fantasy Seed，没有 Character Composer LLM。
+没有 production Fantasy Seed，没有 Character Composer LLM。Premise Aperture 是可跳过、可丢弃的开书搜索/编译阶段，不是第四 Authority；保存候选后必须 strict PASS + exact Compiler Input + 作者批准，或显式跳过。
 
 ### 11.3 当前批准点
 
-1. World Vision；
-2. Character（Power + Human 一次批准）；
-3. Story Program。
+1. 可选 Premise Contract；
+2. World Vision；
+3. Character（Power + Human 一次批准）；
+4. Story Program。
 
 ### 11.4 当前重要模块/文档
 
 - `PROJECT_RULES.md`：唯一长期项目执行权威；
 - `docs/MVP_PRODUCT_DIRECTION.md`：产品目标、创意权威、Anti-Goals；
 - `docs/PIPELINE_METHODOLOGY_AND_VALUES.md`：分层方法论；
+- `docs/PREMISE_APERTURE.md`：可选开书 Premise Forge / Compiler / Author Gate / lane contract 真源；
 - `docs/SPLIT_CHARACTER_AUTHORITY.md`：World/Power/Human/Collision 边界；
 - `docs/GBRAIN_STORY_CRAFT_V3.md`：GBrain 接入与蒸馏；
 - `docs/CHAPTER_RUNTIME_AND_STATE.md`：章节、Canon、State；
 - `docs/NOVEL_PROSE_REALIZATION.md`：正文表达；
 - `docs/AUTHOR_WORKSPACE_UI_SPEC.md`：UI；
-- `tgn-system-steward`：AgentDock 审计 Skill；当前激活 **v0.2.1**。已包含 Post-Writer Authority Revision Trace、Scene Craft Evidence & Runtime Bandwidth Trace，以及 Asymmetry Reveal / Social Calibration Trace；Steward 仍只保存长期审计方法，不保存 production snapshot；
+- `tgn-system-steward`：AgentDock 审计 Skill；当前激活 **v0.3.20**。已包含 Premise Search / Compiler / production state audit、Atomic Obligation、Post-Writer Authority Revision、Scene Craft Evidence & Runtime Bandwidth，以及 Asymmetry Reveal / Social Calibration Trace；Steward 仍以 live discovery 读取 production，不把完整系统快照写死在 Skill；
 - `.agents/skills/novel-prose-realization/`：正文实现 Skill；Reader Orientation / Supporting Skill compression 更新已随 `15a389d` 提交。
 
 ### 11.5 当前关键实验
@@ -1903,60 +1908,47 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 
 ---
 
-## 16A. Premise Aperture 实验性候选（2026-08-29）
+## 16A. Premise Aperture 已冻结为可选 Production 开书阶段（2026-08-30）
 
-用户用四本 2026-08-29 新书扫榜素材指出：它们的共同优势不是设定百科更复杂，而是很早押注一个会立刻改变主角形态、玩法或社会位置的高风险核心幻想。对当前 TGN 的 root-cause 审计发现：旧 Fantasy Seed 被正确移除后，`World → Power / Human` 之间没有新的统一语义污染，但在任何 Authority 冻结前也缺少完整 premise-level 搜索。结果是每个 lane 都能生成安全完整答案，却很少主动发现非人存在形态、直接身体特权、强第一章画面与叙事界面的组合。
+用户用四本 2026-08-29 新书扫榜素材指出：它们的共同优势不是设定百科更复杂，而是很早押注一个会立刻改变主角形态、玩法或社会位置的高风险核心幻想。受控实验确认最早坍缩发生在任何 Authority 生成之前：Split Authority 能防泄漏，却不会自动搜索完整货架前提。
 
-新增实验候选 `src/story_mvp/premise_aperture.py`，但**尚未接入 production default**：
+有效 casewise evidence：Single-Agent 完整 Premise pool **85.1**，current baseline **75.8**，四轴正交 collision pool **71.7**；预注册 S2 比 C2 三案平均高 **16.3**。关键判断是：**fresh-context isolation 是 authority leakage control，不是 creative composition optimizer。** 完整 premise 一次形成负责主承诺，后续 lane isolation 负责防止后验合理化。
+
+F1—F5 已由作者明确冻结，当前 production 链为：
 
 ```text
 作者方向
-  → Single-Agent Premise Forge 生成 S1 / S2 / S3 完整候选
+  →（可选）Single-Agent Premise Forge：S1 / S2 / S3
   → Independent Premise Authority Compiler
-       只审 trigger / 目标与载体 / T0 尺位 / Interface 因果 / 远期复合
-       不评分、不排名、不改稿、不替作者选择
-  → 作者明确选择 / 手动处理冲突 / 放弃
-  → lane-specific frozen contract
-       World 只见 World-only + protagonist-blind public interface
-       Power 只见 literal Ontology + Initial Scale Position
-                    + trigger / target / action / carrier / boundary
-       Human 只见 literal Ontology + exact T0 Origin + Initial Scale Position
-       Story 在 Authorities 批准后第一次看完整 Promise + Interface
+  → 作者选择并批准 / 手动处理冲突 / 显式跳过
+  → deterministic lane-specific frozen contracts
+       World：World-only + protagonist-blind public Interface
+       Power：literal Ontology + Initial Scale Position
+              + trigger / target coverage / action / carrier / root boundary
+       Human：literal Ontology + exact T0 Origin + Initial Scale Position
+       Story：Authorities 批准后第一次读取完整 Promise / Interface
   → 现有 Split Authority 链
-  → Outline / chapter 不再读取 raw Premise Card
+  → Outline / chapter 不读取 raw Premise Card
 ```
 
-三种冻结作者方向、统一 Luna-high 的有效 casewise blind evidence：Single-pass pool **85.1**，current baseline **75.8**，四轴正交 collision pool **71.7**；预注册 S2 比 C2 三案平均高 **16.3**。两押注 Voltage Budget 能降低四轴过载，但仍低于 Single-pass。关键新判断是：**fresh-context isolation 是 authority leakage control，不是 creative composition optimizer。** 完整 premise 一次形成更容易保留一个主货架承诺；多个同等高电压组件容易产生 premise competition。
+运行语义：
 
-真实候选的增益主要体现为 Changed Verbs：活脏移植器官、归尸把死亡当移动、活令割下命令钉入实体、走城者并入建筑与巨兽、活门搬走房间。它们不是普通人类修士把分析、维护或探路做得更专业。
+- Premise 从未开始或作者显式跳过时，原 Split Authority 路径保持可用；
+- 一旦保存 S1/S2/S3，World / Power / Human / Story 的生成、保存与批准必须等待 strict `PASS` + 作者批准，不能静默绕过；
+- Compiler 只审 trigger、载体、出口、见证者、T0 尺位、Interface 因果与远期复合，不评分、不排名、不选择、不修稿；
+- batch / selected Compiler Prompt 生成当下就落盘 exact Input snapshot，报告保存不改写它；作者在模型返回前继续编辑卡片时，即使旧报告 PASS，也必须因 snapshot 不一致做 selected-card recompile；
+- 批准后代码生成 `PREMISE_CONTRACT.md` 与四份 lane contract；Workflow 只登记 `premise.contract`，候选/选择/Compiler Report 不成为 Authority 节点；
+- Story Program 第一次、也是最后一次读取完整 Story contract；之后只携带已经由 Authority 实现的事实；
+- World Vision 一旦作者批准，Premise 决定冻结；
+- `CONDITIONAL PASS / FAIL` 返回作者，不自动选择、不自动 Repair。
 
-第一版只把这些字段当 direction，虽然 lane isolation 全部通过，真实 downstream 仍判 `FAIL`：Human 把“从死者喉中诞生”搬到旧训练场破旗并补出履历，Power 把“门 / 兵器 / 野兽 / 人”缩窄成只钉活人，公开重映也从稳定 World Interface 降成终局演出。由此新增稳定判断：**lane-safe 不等于 premise-safe；作者选中后需要按现有 Authority 分拆的 binding generation contract，而不是柔性灵感。**
+作者工作区已提供 Forge、三卡保存、batch Compiler、S1/S2/S3 作者选择、编辑、selected-card Compiler、Report 保存、批准与显式跳过；没有自动 selector 或 Repair 按钮。当前模型路由：Forge Luna high / GBrain OFF；Compiler Terra high / GBrain OFF。
 
-对同一预注册 S2 使用 lane-specific frozen contract 后，World / Human / Power 已精确保留原字段，Story 则正确返回 `PREMISE-AUTHORITY CONFLICT`：开篇群体逆转早于能力 trigger、全城开门依赖未批准复制／共同载体、T0 声位 0 不在 World 1—100 公共尺中、终局“全城醒来”扩写了载体与语义。结论必须分开：frozen contract / fail-loud 有效；该旧候选整合仍失败。
+真实失败边界仍保留：direction-only projection 会静默改写 Ontology、Power coverage 与 Interface；Forge 自带 Trace 会相信自己的假桥梁；一次预注册 Selected Premise Repair 又漏掉整个受保护 Changed Verbs 字段。因此 frozen contract + independent Compiler 成为正式边界，自动 repair loop 仍 `FAIL / RESEARCH_ONLY`。
 
-Forge 随后加入 `Authority-Compilation Trace` 与 `Initial Scale Position-only Direction`，但独立审计证明模型会把自己的隐含桥梁写成“已合法”。因此新增 **Independent Premise Authority Compiler**：只审 trigger、目标／载体、T0 尺位、Interface 因果与远期复合，不评分、不排名、不改稿、不替作者选。V4 三张候选仍很大胆：S1《死式》和 S3《镜外有人》为 `CONDITIONAL PASS`，预注册 S2《一城吞门》因棚屋未真实完整过门、后墙门凭空出现、见证阈值与 9 阶跃迁未闭合而 `FAIL`，并在 World 生成前停止。Compiler 负责暴露假桥梁，不负责把设定改保守。
+明确拒绝：四轴完整高电压碰撞、Two-Bet 进入 production、Judge/模型自动 selector、旧统一 Fantasy Seed、章节期 Premise Reviewer/Scorer/Repair Agent。
 
-随后对同一预注册 S2 做一次 Selected Premise 定点修复，代码锁死标题、货架简介、非人 Ontology、Changed Verbs 与不可磨平项。修复虽然补上了完整过门、同一真实门、五名见证者与逐级壳层，却漏掉整个受保护 `主角反复会做的新动作` 字段；deterministic validator 在 Compiler 复检前停止。因此自动修复循环当前 `FAIL / RESEARCH_ONLY`，正式边界应把精确冲突交给作者。
-
-当前建议等待作者决定：
-
-- F1：Premise search before Authority freeze —— 建议冻结原则；
-- F2：Single-Agent 一次生成 S1 / S2 / S3 完整候选 —— 建议冻结为可选开书阶段；
-- F3：Independent Premise Authority Compiler —— 建议冻结为作者选择前的窄可满足性检查；
-- F4：作者选择 / 手动处理冲突 / 放弃，不自动 selector —— 建议冻结；
-- F5：lane-specific frozen contract + fail-loud + raw card 不进入 Outline / chapter —— 建议冻结；
-- F6：具体 Prompt 字数、字段措辞与模型配置 —— 继续实验，不冻结；
-- F7：Selected Premise 自动定点修复 —— 一次真实测试漏掉受保护字段，`FAIL / RESEARCH_ONLY`；
-- F8：四轴完整正交碰撞 —— 拒绝冻结；
-- F9：Two-Bet Voltage Budget —— research-only；
-- F10：Judge / 模型自动选择最保守或最高分候选 —— 拒绝冻结；
-- F11：旧统一 Fantasy Seed —— 拒绝恢复。
-
-
-
-
-
-完整边界与证据见 `docs/PREMISE_APERTURE_EXPERIMENTAL_CANDIDATE.md` 和 `books/real-exp-premise-aperture-20260829-v1/`。即使 F1—F5 获批，也应先作为可跳过的低频开书阶段；至少再完成两个不同题材的 `Compiler PASS → real downstream PASS`，才决定是否默认启用。它不进入每章链、不成为第四 Authority，也不新增常驻 Reviewer / Scorer / Hard Gate。
+当前真源：`docs/PREMISE_APERTURE.md`、`src/story_mvp/premise_aperture.py`、`src/story_mvp/premise_workflow.py`、`tests/test_premise_production.py`。研究证据保留在 `books/real-exp-premise-aperture-20260829-v1/`。
 
 ---
 
@@ -1995,6 +1987,7 @@ Forge 随后加入 `Authority-Compilation Trace` 与 `Initial Scale Position-onl
 31. 多世界 `instance` Local World 可以高频进入/退场，Human Development 是更慢时钟；不要把不同长期时钟机械绑定。
 32. 当前下一自然研究方向：`Choice → Route-specific Opportunity → Different Advantage Tree`、Visible Desire Horizon / Dominant Commercial Engine、Reward Lifecycle / Fantasy Heartbeat，以及“真实人物长期改变”Case 的 Human Development A/B；继续冻结上游、近单变量、Human Invariance 与 AGGRESSIVE/保守作者选择协议。
 33. Authority Separation 保护真实独立性，Premise Aperture 扩大冻结前搜索，Premise Compiler 只验证大胆候选能否被这些 Authority 精确实现；三者职责不同。大胆度看一个完整货架承诺与 Changed Verbs，不看 Agent 数量、术语数量或机制表长度；可编译性也不能替作者决定商业强度。
+34. Premise Aperture 可跳过但不能半启动：未开始/显式跳过走原链；保存候选后必须 strict PASS + exact input snapshot + 作者批准，或清空并跳过。没有自动 selector、Repair Loop 或章节期 Premise Agent。
 
 ---
 

@@ -12,13 +12,15 @@ TGN separates long-form fiction generation into stages with different responsibi
 
 ```text
 Author Direction
-→ Fantasy Seed
-→ World Vision
+→ Optional non-Canon Premise Forge + Independent Compiler + Author Gate
+→ Protagonist-blind World Vision
+→ Independent Power Seed + Human Seed → deterministic Character
 → Story Program
 → Outline
 → Director
 → Context Curator
 → Primary Writer
+→ Authority Reviser
 → State Extraction
 ```
 
@@ -53,6 +55,7 @@ tests/           Regression and runtime tests
 Start with:
 
 - [`docs/PIPELINE_METHODOLOGY_AND_VALUES.md`](docs/PIPELINE_METHODOLOGY_AND_VALUES.md) — system methodology, stage responsibilities and anti-goals
+- [`docs/PREMISE_APERTURE.md`](docs/PREMISE_APERTURE.md) — optional author-gated premise search, compiler and lane contracts
 - [`docs/MVP_PRODUCT_DIRECTION.md`](docs/MVP_PRODUCT_DIRECTION.md) — product direction and creative-authority boundaries
 - [`docs/GBRAIN_STORY_CRAFT_V3.md`](docs/GBRAIN_STORY_CRAFT_V3.md) — GBrain integration and story-craft knowledge
 - [`docs/NOVEL_PROSE_REALIZATION.md`](docs/NOVEL_PROSE_REALIZATION.md) — prose realization and Reader-First principles

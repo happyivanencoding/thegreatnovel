@@ -12,13 +12,15 @@ TGN 不让一个模型从设定一路包办到正文，而是把不同尺度的�
 
 ```text
 作者方向
-→ Fantasy Seed
-→ World Vision
+→ 可选 Non-Canon Premise Forge + Independent Compiler + 作者门控
+→ protagonist-blind World Vision
+→ 独立 Power Seed + Human Seed → deterministic Character
 → Story Program
 → Outline
 → Director
 → Context Curator
 → Primary Writer
+→ Authority Reviser
 → State Extraction
 ```
 
@@ -53,6 +55,7 @@ tests/           回归与 Runtime 测试
 建议从以下文档开始：
 
 - [`docs/PIPELINE_METHODOLOGY_AND_VALUES.md`](docs/PIPELINE_METHODOLOGY_AND_VALUES.md) — 总方法论、阶段职责与 Anti-Goals
+- [`docs/PREMISE_APERTURE.md`](docs/PREMISE_APERTURE.md) — 可选的作者门控 Premise 搜索、Compiler 与 lane contract
 - [`docs/MVP_PRODUCT_DIRECTION.md`](docs/MVP_PRODUCT_DIRECTION.md) — 产品方向与创意权威边界
 - [`docs/GBRAIN_STORY_CRAFT_V3.md`](docs/GBRAIN_STORY_CRAFT_V3.md) — GBrain 接入与 Story Craft 知识
 - [`docs/NOVEL_PROSE_REALIZATION.md`](docs/NOVEL_PROSE_REALIZATION.md) — 正文实现与 Reader-First 原则

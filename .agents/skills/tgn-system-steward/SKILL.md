@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.18
+version: 0.3.20
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -93,6 +93,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Isolation controls leakage; it does not maximize creativity**：fresh-context 分权能阻止后验合理化，却可能让多个独立高电压组件争夺同一个主承诺；创意实验必须比较完整 premise 一次形成与正交组件碰撞，不能把 Agent 数量或独立性本身当成大胆度
 - **Compiler checks satisfiability, not creative intensity**：同一个 Forge 会把自己的隐含桥梁合理化，因此完整候选需要 fresh-context Compiler 复核；但 Compiler 只能指出 trigger、目标／载体、尺度与远期复合冲突，不能评分、改稿、替作者选择或自动偏向保守
 - **Compiler conflict returns to the author before repair**：Compiler FAIL 默认输出精确冲突并停止；不要自动进入 LLM repair loop。若研究定点修复，必须代码锁死标题、货架句、literal Ontology、Changed Verbs 与不可磨平项，先过 deterministic validator，再允许独立 Compiler 复检；任一缺失立即停止，不事后复制旧字段伪造成功
+- **Optional premise is a state machine, not a silent bypass**：当前 production 的 Premise Aperture 可以从未开始或由作者显式跳过；但一旦保存候选，World / Power / Human / Story 必须等待 strict PASS、Compiler Input 与所选卡完全一致、作者批准。批准后 Workflow 只登记 `premise.contract`；World 批准后 Premise 决定冻结。候选、选择卡与 Compiler Report 不是第四 Authority，也不能进入 Outline / chapter
 - Few deep rules > many hard gates
 - Supporting Logic Must Not Automatically Become Story Engine
 - Backstage Principles Must Not Become Generated Ontology
@@ -153,6 +154,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 7. **Conflict Before Silent Rewrite**：lane isolation 通过仍不等于 premise 保真。无法同时实现已选约束与 Authority 时必须显式返回 `PREMISE-AUTHORITY CONFLICT`；不能静默搬移出生、恢复人形、缩窄/增强 Power coverage，或把稳定 Interface 降成偶发演出。Fail-loud 证明边界有效，不证明该候选已可 productionize。
 8. **Approved Authority Carries Forward**：Outline 与章节只读取已经实现这些约束的 approved World / Character / Story，不重复读取 raw Premise Card；若必须一路塞 raw card 才能保留，说明上游 Authority 没真正承载选择。
 9. **No Automatic Repair Loop**：Compiler FAIL 后先把精确冲突交还作者。定点 Repair 只能作为 research-only 单次实验；标题、Shelf Promise、literal Ontology、Changed Verbs 与不可磨平项必须由代码逐字校验，缺一项就在 fresh Compiler 和 downstream 前停止。Prompt 承诺“会保留”不算证据。
+10. **Production State Audit**：当前默认允许 `not_started` / `skipped` 直接进入原 Split Authority；`candidates_ready / selected / compiled / compiler_blocked` 都必须阻止 World / Power / Human / Story。Compiler Input snapshot 必须在生成 batch / selected Compiler Prompt 的当下落盘，报告保存不得用当时最新文本重写它；只有 strict `PASS`、snapshot 与当前 selected card 完全一致、作者批准后才生成四条 lane contract。Workflow 只能把 `premise.contract` 当正式 artifact；World 批准后不能再修改或跳过 Premise；raw card 不得进入 Outline、章节或 State。
 
 受控实验至少比较：现有 baseline、完整 premise 一次形成、正交组件碰撞；预注册同位候选或审整个 candidate distribution，不事后只挑最好的一张。若各题材最优强度不同，保留作者选择，不建立自动 conservative selector。
 

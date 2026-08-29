@@ -10,9 +10,9 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 对应实际链路：
 
-`作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
+`作者方向 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → 作者批准 / 显式跳过 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
 
-当前另有一个**尚未接入 production default** 的开书候选：`作者方向 → 非 Canon Single-Agent Premise Forge（S1/S2/S3）→ Independent Premise Authority Compiler → 作者选择／修复／放弃 → lane-specific frozen contract → 现有 World / Power / Human 分权链`。Forge 只在任何 Authority 冻结前搜索更大胆、会改变主角基本动词的完整货架前提；Compiler 只审 trigger、目标／载体、T0 尺位、Interface 因果与远期复合是否可满足，不评分、不排名、不改稿、不替作者选择。选中后，代码分别投影 `World + protagonist-blind public interface`、`literal Ontology + exact T0 Origin + Initial Scale Position`、`literal Ontology + Initial Scale Position + Power trigger / target / action / carrier / boundary`；Story 在这些 Authority 批准后才看到完整 Promise，冲突必须显式暴露而不能静默改写，Outline 与章节不再读取 raw Premise Card。三题材实验支持完整 Premise Forge，否决四个独立高电压轴的完整碰撞；真实下游又否决了 direction-only projection，并证明 Forge 自带 Trace 不能替代独立 Compiler。边界、证据与冻结选项见 `docs/PREMISE_APERTURE_EXPERIMENTAL_CANDIDATE.md`。在作者明确批准前，实际 production 链保持不变。
+Premise Aperture 已冻结为可跳过的 production 开书阶段，但不是第四 Authority。Forge 一次形成三张完整货架候选；Compiler 只审 trigger、载体、T0 尺位、Interface 因果与远期复合，不评分、不选择、不修稿。作者批准后，代码确定性拆出 World / Power / Human / Story 四条 lane contract；Story Program 第一次读取完整 Promise，Outline 与章节不再读取 raw card。该阶段从未开始或显式跳过时，原 Split Authority 路径保持可用；一旦开始，必须 strict PASS + 作者批准后才能继续。完整合同见 `docs/PREMISE_APERTURE.md`。
 
 长篇不是把这条开书链一次跑完后消费 500 章。当前 World Horizon 被故事真正活透时，进入低频的向前循环：
 

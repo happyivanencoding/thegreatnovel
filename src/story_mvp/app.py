@@ -28,6 +28,20 @@ from .openai_executor import (
     settings_status,
     state_extraction_model,
 )
+from .premise_aperture import (
+    build_premise_compiler_prompt,
+    build_selected_premise_compiler_prompt,
+    build_single_pass_prompt,
+)
+from .premise_workflow import (
+    approve_premise,
+    read_premise_payload,
+    record_premise_compiler_input,
+    save_premise_candidates,
+    save_premise_compiler_report,
+    save_selected_premise,
+    skip_premise,
+)
 from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
 from .run_ledger import (
@@ -179,6 +193,8 @@ class RunRepairSpecialistsRequest(BaseModel):
 
 class PromptRequest(BaseModel):
     mode: Literal[
+        "premise_forge",
+        "premise_compiler",
         "idea",
         "world_vision",
         "world_expansion",
@@ -208,6 +224,9 @@ class PromptRequest(BaseModel):
     ] = "curator_primary"
     book_content: str = ""
     creative_direction: str = ""
+    premise_candidates: str = ""
+    selected_premise: str = ""
+    premise_compiler_scope: Literal["candidates", "selected"] = "candidates"
     world_vision: str = ""
     world_expansions: str = ""
     power_seed: str = ""
@@ -375,6 +394,66 @@ def get_chapter(book_id: str, chapter_number: int) -> dict[str, str | int]:
 
 def _book_directory(book_id: str) -> Path:
     return require_book(book_id, workspace_path())
+
+
+@app.get("/api/books/{book_id}/premise")
+def get_premise(book_id: str) -> dict[str, Any]:
+    try:
+        return read_premise_payload(_book_directory(book_id))
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/premise/candidates")
+def put_premise_candidates(book_id: str, payload: TextRequest) -> dict[str, Any]:
+    try:
+        return save_premise_candidates(_book_directory(book_id), payload.content)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/premise/selected")
+def put_selected_premise(book_id: str, payload: TextRequest) -> dict[str, Any]:
+    try:
+        return save_selected_premise(_book_directory(book_id), payload.content)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/premise/compiler")
+def put_premise_compiler(book_id: str, payload: TextRequest) -> dict[str, Any]:
+    try:
+        return save_premise_compiler_report(_book_directory(book_id), payload.content)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/premise/approve")
+def post_premise_approve(book_id: str) -> dict[str, Any]:
+    try:
+        return approve_premise(_book_directory(book_id))
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/premise/skip")
+def post_premise_skip(book_id: str) -> dict[str, Any]:
+    try:
+        return skip_premise(_book_directory(book_id))
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.post("/api/books/{book_id}/runs/{chapter_number}")
@@ -586,6 +665,19 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
             values["current_character"] = creative.get("current_character", "")
         if not values.get("proposal_context"):
             values["proposal_context"] = creative["proposal"]
+        premise = creative.get("premise", {})
+        if not values.get("premise_candidates"):
+            values["premise_candidates"] = premise.get("candidates", "")
+        if (
+            payload.premise_compiler_scope == "selected"
+            and not values.get("selected_premise")
+        ):
+            values["selected_premise"] = premise.get("selected", "")
+        contracts = premise.get("contracts", {}) if premise.get("approved") else {}
+        values["premise_world_contract"] = contracts.get("world", "")
+        values["premise_power_contract"] = contracts.get("power", "")
+        values["premise_human_contract"] = contracts.get("human", "")
+        values["premise_story_contract"] = contracts.get("story", "")
 
         if payload.chapter_number > 0:
             directory = require_book(payload.book_id, workspace_path())
@@ -665,6 +757,13 @@ def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
         "evolution_scope",
         "effective_from_chapter",
         "effective_until_chapter",
+        "premise_candidates",
+        "selected_premise",
+        "premise_compiler_scope",
+        "premise_world_contract",
+        "premise_power_contract",
+        "premise_human_contract",
+        "premise_story_contract",
     ):
         filtered.pop(key, None)
     return filtered
@@ -676,6 +775,38 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
         _validate_state_delta_input(payload)
     try:
         values = _prompt_kwargs(payload)
+        if payload.mode in {"premise_forge", "premise_compiler"} and payload.book_id.strip():
+            world_state = values.get("creative_state", {}).get("world_vision", {})
+            if isinstance(world_state, dict) and world_state.get("status") == "author_approved":
+                raise ValueError(
+                    "World Vision 已批准；Premise 决定已冻结，不能再生成新的 Forge / Compiler Prompt"
+                )
+        if payload.mode in {"world_vision", "power_seed", "human_seed", "idea"} and payload.book_id.strip():
+            premise = read_premise_payload(require_book(payload.book_id, workspace_path()))
+            if premise["started_unapproved"]:
+                raise ValueError(
+                    "Premise Aperture 已开始但尚未批准：请完成 strict PASS + 作者批准，或显式跳过"
+                )
+        if payload.mode == "premise_forge":
+            prompt = build_single_pass_prompt(
+                author_direction=str(values.get("creative_direction", ""))
+            )
+            return {"prompt": prompt}
+        if payload.mode == "premise_compiler":
+            directory = require_book(payload.book_id, workspace_path())
+            compiler_input = record_premise_compiler_input(
+                directory,
+                scope=payload.premise_compiler_scope,
+            )
+            if payload.premise_compiler_scope == "selected":
+                prompt = build_selected_premise_compiler_prompt(
+                    candidate=compiler_input
+                )
+            else:
+                prompt = build_premise_compiler_prompt(
+                    candidates=compiler_input
+                )
+            return {"prompt": prompt}
         if payload.mode == "human_seed" and payload.prototype_id.strip():
             prototype_bundle = retrieve_gbrain(
                 mode="human_seed",
