@@ -230,6 +230,9 @@ Persistent ACP process reuse 在6个最小调用上从 26.737s 降到 19.157s。
 - **Speculative Next Director（含 no-old-Canon 复验）：FAIL as default route**
 - **Ten-Chapter Attention Kernel：FAIL as current implementation**
 - **Combined Reviser + State：FAIL on speed**
+- **Full Terra-high Curator：PARTIAL speed signal / FAIL as production default**
+- **State Terra low：FAIL on speed and semantic equivalence**
+- **Paragraph Manifest Reviser：FAIL on fallback-adjusted speed and closure**
 
 ## 7. Evidence Paths
 
@@ -247,3 +250,11 @@ Persistent ACP process reuse 在6个最小调用上从 26.737s 降到 19.157s。
 - State Terra low：`state-terra-low`
 - Paragraph Manifest：`paragraph-manifest-reviser*` + `blind-paragraph-manifest-race`
 - 尾部证据汇总：`TAIL_EVIDENCE_VALIDATION.json`
+
+## 8. Validation
+
+- 全项目回归：`388 passed`。
+- `git diff --check`：通过。
+- `tgn-system-steward` 已升级到 **0.3.11**，package validate 通过，digest：`sha256:e4306ea15aefec69da466130328bd9e7cf583bda702b81bf90faeb7c43c119eb`，已 install + activate。
+- 安装后 bounded read-only smoke 对“Terra-high Curator 快26.92%、双盲2:2、但存在行动者/力量/Ending硬错”的样本判为 `PARTIAL / Experimental Hypothesis`，明确禁止冻结 production 默认。
+- 本轮没有修改 production 章节模型路由、ACP runner、前端或 Direct API executor。
