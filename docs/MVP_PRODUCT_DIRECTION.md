@@ -27,8 +27,8 @@ TGN 要生成的是成熟中文男频成长长篇：读者明确想拥有主角�
 - 主角本人越来越能做什么，是一级成长主轴；
 - Core Power 不只要新，还要形成相对同层普通人/天才清楚可比、值得羡慕的超标优势；允许有条件越级，边界防万能而不抹平爽感；
 - 非对称优势要长期形成**优势栈**：开局核心继续成长，后续加入新的 Power Asymmetry，并让新旧优势产生单项做不到的复合玩法；不要求每阶段新增；
-- 新优势、新层级或意外复合首次被他人看见时，现场已有懂行者/对手/同伴的惊讶比较本身就是爽点；态度转变只在会推进后续行动或关系时发生；
-- 世界至少保留一把长期可复用的力量主尺，并在突破、新强敌、公开验证或世界换挡时重新校准，让读者持续知道主角在哪档、强在哪里；
+- 新优势、新层级或意外复合首次被他人看见时，允许 **Collective Shock / 群体震动、懂行者 Ruler Calibration、关键人物 Behavioral Repricing** 三条 Public Proof 并列成立；三者没有高低之分。主力量已有精确主尺时，三条线共用同一坐标：读者要知道主角/对手到底几级、几星、几重、差多少，以及这个超标怎样改变现场与社会价格；
+- **世界强制保留一把精确、长期可复用的主力量尺**：只能采用连续数字、大境界+数字子级或数字序列等简单 Grammar，使主要修炼者始终有唯一 `Current Power Position`。突破、新强敌、公开验证或世界换挡后重新校准；精确尺是 Reader Ruler，不是战斗公式，越级胜利不自动升级。新圈层只按各自真实知道的旧名声/战绩/已公开能力先判断，再因最低充分的新事实更新待遇、敌意或合作，不默认全知也不靠降智轻视；
 - Core Fantasy 必须反复兑现，但它是长期 **Reader Promise**，不是主角唯一的人生目的；
 - 长篇需要少量**震撼式长期重释**：旧事实在后续出现意外但可回看的新解释，并立刻改变力量、身份、关系或世界格局；不强制隐藏身世或伏笔配额；
 - 财富、装备、身份、关系、势力、领地、入口和资格可以很重要，但不逐渐取代主角自身成长；
@@ -45,7 +45,7 @@ World Vision 不知道未来主角是谁，也不知道未来金手指是什么�
 它负责：
 
 - 普通人怎样生活与上升；
-- 本世界力量正常值、稀缺度与可观察差距；
+- 本世界力量正常值、稀缺度与可观察差距；同时冻结一把可写出唯一精确位置的主力量尺（连续数字 / 大境界+数字子级 / 数字序列三选一），只展开当前 World Horizon 需要的可见范围；
 - 宗门、王朝、家族、商盟、种族等怎样真实改变选择；
 - 世界里什么真正值钱、值得争、值得羡慕；
 - 即使没有主角也会推进的人物行动、战争、迁徙、争夺与灾难；
@@ -134,8 +134,8 @@ Handoff 真正触发后：
 
 `protagonist-blind World Expansion → optional Human Development → deterministic CURRENT_CHARACTER.md → Sol Story Refresh / Re-Collision → 作者批准刷新后的 Story Program → Outline`
 
-- **World Expansion**：Luna high，向前追加世界层；不看 Current Character / Power Stack / Human / Future Story。`instance` 可用章节范围承载独立 Local World；离开后 Local World 退场，跨世界 consequence 留在 Canon。
-- **两层 Power**：Frozen Power Origin Core + `Canon → Power / Capability` 中已经真实获得/证明的 Current Power Portfolio；后期神兵、传承、新 Asymmetry 不回写 Seed。
+- **World Expansion**：Luna high，向前追加世界层；不看 Current Character / Power Stack / Human / Future Story。`macro` 只能延展 World Root 已冻结精确主尺的可见范围，不能改计数 Grammar；真正独立 `instance` 必须有自己的本地精确尺，可用章节范围承载 Local World，离开后 Local World/本地尺退场，跨世界 consequence 留在 Canon。
+- **两层 Power**：Frozen Power Origin Core + `Canon → Power / Capability` 中已经真实获得/证明的 Current Power Portfolio；其中持续维护 `Current Power Position`。后期神兵、传承、新 Asymmetry 不回写 Seed，越级胜利也不能反推精确位置自动升级。
 - **三层 Human**：Frozen Human Origin + Current Human State + 极低频、可为 `NONE` 的 Human Development Delta。Human Development 只看已发生历史，不看未来 World / Story。
 - **Current Character**：纯确定性编译 Frozen Origins + Current Power/Human/关系/身份/知识/资产，不新增 Character Composer。
 - **Story Refresh**：Sol high 首次同时看到独立生成的 Effective World 与 Current Character；惊喜来自 Collision，不允许单 Agent 先把“世界—人物—奖励”调成天生适配。
@@ -207,10 +207,10 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 `Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State Extraction`
 
 - Director：决定本章具体发生什么；
-- Curator：只给 Writer 当前章真正需要的 Canon / Plan / Scene Skill；章节 Runtime 按 Outline 的 `Reader Release Map` 从 Approved World Vision 的 `WORLD AUTHORITY` 取本章世界事实，Curator 只保留/压缩；
+- Curator：只给 Writer 当前章真正需要的 Canon / Plan / Scene Skill；章节 Runtime 按 Outline 的 `Reader Release Map` 从当章 Effective World（World Root + active Expansion）的安全 `WORLD AUTHORITY` 取世界事实，Curator 只保留/压缩；主力量 Public Proof 已有精确位置时，保留给三线共用的最短数字坐标；
 - Primary：只写小说第一版，不做规划汇报，也不是默认 final source；
-- Authority Reviser：Preservation First；重新拿到 safe World / Frozen Power+Human / Reader Release / Canon，只修明确 authority/implementation 失败，默认 final source；
-- State：只记录正式正文已经发生的事实。
+- Authority Reviser：Preservation First；重新拿到 safe Effective World / Frozen Power+Human / Reader Release / Canon，只修明确 authority/implementation 失败，默认 final source；主力量 Public Proof 可最小恢复群体震动 + 精确 Ruler Calibration + Behavioral Repricing；
+- State：只记录正式正文已经发生的事实，并持续维护主角 `Current Power Position`；没有明确突破时沿用原位置，不能由越级表现推断升级。
 
 章节 Runtime 不直接读取 raw GBrain，也不重新决定 World / Power / Human / Story Program。
 
