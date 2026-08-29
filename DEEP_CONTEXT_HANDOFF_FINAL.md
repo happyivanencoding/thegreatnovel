@@ -1705,14 +1705,14 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 
 - Full Reviser Luna medium 约快 52.8%，商业读感仍由 Luna high **3/3** 获胜。
 - Luna-high Patch Reviser 约快 44.3%，商业读感为 full high **5胜 / Patch 1胜 / 1平**；局部 Patch 会制造后文状态矛盾、漏 Ending 或误删有价值 realization。“安全章”路由 4 章中 3 章 fallback，前置 Patch 反成额外税。
-- 完整合同 Luna-medium Curator 约快 61.2%，Authority 由 high control **5:2** 获胜；Slim Luna/Terra Curator 约快 70%，但无稳定模型赢家，并出现低潮时序、反潮记录持有与分身/回潮楔执行路径问题。
-- Conditional Director 约快 41.1%，Authority 在部分章更准确，但商业故事盲评由 full control **4胜 / 1平 / treatment 0胜**；短版会把主动判断压成“跟随查看”，并在 Ch20 滥用 `[PLAN OUTCOME ADJUSTMENT]`、遗漏当前章公开结算与泄漏 pipeline 语言。
+- 完整合同 Luna-medium Curator 约快 61.2%，Authority 由 high control **5:2** 获胜；Slim Luna/Terra medium Curator 可把节点缩短约 70%，但无稳定模型赢家，并出现低潮时序、反潮记录持有与分身/回潮楔执行路径问题。将相同 Slim Envelope 恢复为 **Luna high** 后，Curator 本身约快 50.3%，但完整 `Curator → Primary → Reviser` 只快 **11.4%**；Reader 选 control 3:2，Authority 选 treatment 3:2，Treatment 仍在 3/5 压力章出现力量、结算或 Ending 硬问题，且第2/14章整链反而更慢。
+- Conditional Director 首轮约快 41.1%，商业故事盲评由 full control **4胜 / 1平 / treatment 0胜**，并在 Ch20 越权。修正模块触发只读取当前章事件预算后复验，Director 节点约快 **36.9%**，Reader 为 control 3:2、Authority 为 treatment 3:2：Ch19 双盲胜出、Ch3 双盲失败，其余分裂；典型压力章只省 2—3 秒，因此仍不值得增加 production 路由复杂度。
 
 这些实验也发现 current full route 并非永远正确：Conditional Ch13 更准确去掉“战场战利品”误称，Ch19 也消除了“尚待结算 / 终于到手”的内部矛盾。真正未解决的是**没有可靠自动路由知道哪一章、哪一句可以缩**，所以不能因局部胜例全局上线。
 
 默认章节路由继续冻结：`Luna high Director → Luna high Curator → Terra high Primary → Luna high Authority Reviser → Luna low State`。本轮作者明确排除 ACP runner 与前端，因此二者没有修改，也不是未完成项。唯一最终判定包：`books/real-exp-chapter-latency-optimization-20260829-v1/RESULTS.md`；机器可读表：同目录 `QUALITY_DECISION_TABLE.csv`；Phase 0 production commit：`7c1fc05`。
 
-上述延迟审计方法已进入 **`tgn-system-steward 0.3.10`**：必须分开 adopted node wall、真实批次 elapsed、上游摊销与 execution/queue；高字符相似度不证明节点冗余；模型、effort、Slim/Patch/conditional contract 等语义路线变化必须接回正常下游并审最终正文。AgentDock package validate 通过并已 install/activate；Luna-high bounded read-only smoke 对 Slim Curator 样本正确返回 `PARTIAL / Experimental Hypothesis`：只允许冻结实验设计与速度信号，不允许冻结 production route。当前全项目回归 **373/373 PASS**。
+上述延迟审计方法已进入 **`tgn-system-steward 0.3.10`**：必须分开 adopted node wall、真实批次 elapsed、上游摊销与 execution/queue；高字符相似度不证明节点冗余；模型、effort、Slim/Patch/conditional contract 等语义路线变化必须接回正常下游并审最终正文。AgentDock package validate 通过并已 install/activate；Luna-high bounded read-only smoke 正确判定“全局 Curator medium”与“按相似度跳过 Reviser”均为 `FAIL`，只允许冻结 stale Long Block / raw GBrain fail-closed 等确定性根修。当前全项目回归 **373/373 PASS**。
 
 
 ---

@@ -8,4 +8,6 @@
 2A,Luna medium full Curator,7,117.039,45.454,61.2,control 3 / treatment 2 / mixed 2,control 5 / treatment 2,Action/Public Proof/Payoff drift,REJECTED
 2B,Slim Luna medium Curator,3,85.982,26.188,69.5,1 win,0 win,时序与动作链风险,REJECTED
 2C,Slim Terra medium Curator,3,85.982,26.001,69.8,1 win,1 win,没有稳定模型赢家,REJECTED
+2D,Slim Luna high Curator full downstream,5,313.330,277.487,11.4,control 3 / treatment 2,treatment 3 / control 2,Treatment 3/5 pressure chapters retain hard issues; two chapters slower,REJECTED_GLOBAL
 3,Conditional Director,5,36.664,21.595,41.1,control 4 / mixed 1 / treatment 0,treatment 3 / control 1 / mixed 1,Agency下降；Ch20越权,REJECTED
+3B,Corrected Conditional Director triggers,5,36.664,23.147,36.9,control 3 / treatment 2,treatment 3 / control 2,Ch19 double win but Ch3 double loss; typical savings only 2-3s,HOLD_RESEARCH

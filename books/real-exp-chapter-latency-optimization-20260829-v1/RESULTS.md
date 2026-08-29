@@ -279,7 +279,8 @@ Phase 0 production commit：`7c1fc05 perf(story): bound chapter runtime context`
 - Slim Curator：`phase-2-slim-curator/` + `blind-judges-phase2-slim/`
 - Slim Curator medium 完整下游复验：`phase-2-slim-curator-medium/` + `blind-judges-phase2-slim-curator-medium/`
 - Slim Curator Luna high 完整下游复验：`phase-2b-slim-curator-high/` + `blind-judges-phase2b-slim-curator-high/`
-- Conditional Director：`phase-3-conditional-director/` + `blind-judges-phase3-director/`
+- Conditional Director 节点速度：`phase-3-conditional-director/` + `blind-judges-phase3-conditional-director/`
+- Conditional Director 正常下游与最终正文：`phase-3-conditional-director-downstream/` + `blind-judges-phase3-director-final/`
 - 修正触发范围后的 Conditional Director：`phase-3-conditional-director/` + `blind-judges-phase3-conditional-director/`
 
 ## 9. Final Verdict
