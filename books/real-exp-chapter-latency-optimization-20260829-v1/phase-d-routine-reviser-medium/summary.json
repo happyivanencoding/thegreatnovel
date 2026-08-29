@@ -1,0 +1,38 @@
+[
+  {
+    "chapter": 2,
+    "wall_seconds": 58.746,
+    "usage": {
+      "totalTokens": 49974,
+      "inputTokens": 7045,
+      "cachedReadTokens": 40704,
+      "outputTokens": 2225,
+      "thoughtTokens": 409
+    },
+    "body_chars": 2170
+  },
+  {
+    "chapter": 13,
+    "wall_seconds": 57.245,
+    "usage": {
+      "totalTokens": 46054,
+      "inputTokens": 33140,
+      "cachedReadTokens": 9984,
+      "outputTokens": 2930,
+      "thoughtTokens": 444
+    },
+    "body_chars": 2933
+  },
+  {
+    "chapter": 16,
+    "wall_seconds": 57.713,
+    "usage": {
+      "totalTokens": 46320,
+      "inputTokens": 33447,
+      "cachedReadTokens": 9984,
+      "outputTokens": 2889,
+      "thoughtTokens": 372
+    },
+    "body_chars": 2835
+  }
+]

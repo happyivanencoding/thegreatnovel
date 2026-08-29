@@ -73,7 +73,7 @@
 
 默认章节链：`Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。只有当代码检测到“当前章已批准的显式里程碑结果（如进入新力量/身份档位）在 Authority Revision 中仍只被战绩或氛围暗示”时，才在同一个 Authority Reviser 节点准备**一次**窄 `Outcome Repair` retry；普通章节不增加调用，第二次仍漏则停在 failed，不进入 State。Primary 在 `curator_primary` 中只是第一版，不可直接成为 `final_source`；State 只读取已采用的 Authority Revision，或显式 repair 后的 Integrator 最终稿。
 
-低延迟：Director 可切 Terra high；Curator 可切 Terra medium。只想让 Curator 更短、更克制时优先只切 Curator。
+低延迟优化优先做确定性上下文裁剪与失败恢复。2026-08-29 Phase 1–3 已否决 Curator medium/Slim、Reviser medium/Patch-only/Safe route 与 Conditional Director 作为质量等价 production 默认；任何模型、effort、输出合同或条件模块切换都只能显式 A/B，必须经过正常下游与最终正文 Reader + Authority 双盲后采用。本轮明确不修改 ACP runner 与前端。
 
 模型判断必须分开看：`生成质量 ≠ wall-clock ≠ 实际成本`。Luna 单价最低；Terra 通常最快且更克制；Sol 最贵且通常最慢，但长期结构最强，默认只放 Story Program / Deep Planning。
 
@@ -84,7 +84,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - GBrain 是 Optional Inspiration，不是 Canon、创意权威、Hard Gate 或原作模板。
 - **公共治理、资源分配、维护职责、责任升级不得作为 production GBrain 的通用可迁移创作机制**；来源作品确有此内容时只保留为研究证据，并退出 active inspiration。
 - 主要路径：`GBrain → World / World Expansion / Power / Human / Story Program / Story Refresh / Outline → Approved Story`；以及 `GBrain 离线深蒸馏 → source-blind 固定 Reference / Scene Deep Craft → 对应规划层或 Curator/Reviser 的窄带宽输入`。当前 World/World Expansion 固定读 Reader Coordinates，Power 固定读 1 条由经典跨书蒸馏得到的 Naming Craft Reference；Human Development 固定 GBrain OFF。World Expansion 的 retrieval 同样必须 protagonist-blind，不能通过 BOOK/Character/Story 间接泄漏主角形状。
-- raw GBrain 不直接进入章节 Writer Runtime。
+- raw GBrain / Reference Program 在 Hybrid Chapter Runtime 的 Prompt 真源处 fail closed；即使旧调用方误传，也不得进入 Curator、Primary、Authority Reviser 或 Specialist。章节只消费已批准上游、safe Authority 与 source-blind Scene Skill。
 - 蒸馏分工：Terra 看清事实/Fidelity；Luna 理解吸引力与中层 craft；Sol 理解长篇结构。
 - Windows / Git Bash 使用 `~/.bun/bin/gbrain.exe`；新增、修改或删除页面后执行 `embed --stale`；交付前必须 `Embedded == Chunks`。
 - 排障顺序：executable/path → environment/API key → stats → PGLite lock → process cleanup；不要先杀 `bun.exe`。

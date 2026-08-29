@@ -1,0 +1,11 @@
+﻿phase,treatment,samples,control_wall_s,treatment_wall_s,speedup_pct,reader_blind,authority_blind,hard_risk,production
+0A,stale Long Block deterministic projection,4,130.995,95.31,27.2,不改变创意 authority,范围由文本可证明,无,FROZEN
+0B,chapter raw GBrain fail closed,20,,,,不削 source-blind Scene Skill,19/20 zero-hit; only 1 accepted,偶发低分噪声,FROZEN
+0C,Curator 13-section contract fix,7,117.039,106.6,8.9,7/7 structure complete,contract ambiguity removed,速度非 SLA,FROZEN
+1A,Luna medium full Reviser,3,122.789,57.901,52.8,high 3/3 wins,medium 1 / high 1 / mixed 1,商业读感稳定退化,REJECTED
+1B,Luna high Patch Reviser,7,132.787,73.951,44.3,full 5 / patch 1 / mixed 1,full 3 / patch 3 / mixed 1,局部连续性、Ending、场面价值,REJECTED
+1C,safe Patch router,4,120.423,101.155,16.0,only non-fallback reader preferred patch,same sample authority preferred full,3/4 fallback,REJECTED
+2A,Luna medium full Curator,7,117.039,45.454,61.2,control 3 / treatment 2 / mixed 2,control 5 / treatment 2,Action/Public Proof/Payoff drift,REJECTED
+2B,Slim Luna medium Curator,3,85.982,26.188,69.5,1 win,0 win,时序与动作链风险,REJECTED
+2C,Slim Terra medium Curator,3,85.982,26.001,69.8,1 win,1 win,没有稳定模型赢家,REJECTED
+3,Conditional Director,5,36.664,21.595,41.1,control 4 / mixed 1 / treatment 0,treatment 3 / control 1 / mixed 1,Agency下降；Ch20越权,REJECTED

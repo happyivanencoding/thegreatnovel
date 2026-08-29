@@ -1,0 +1,141 @@
+[
+  {
+    "chapter": 2,
+    "modules": [
+      "opening",
+      "reward",
+      "ruler",
+      "counter"
+    ],
+    "prompt_chars": 7012,
+    "control_prompt_chars": 11600,
+    "prompt_reduction_percent": 39.55,
+    "wall_seconds": 20.446,
+    "control_wall_seconds": 38.058,
+    "speedup_percent": 46.28,
+    "response_chars": 485,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "output_tokens": 860,
+    "thought_tokens": 470
+  },
+  {
+    "chapter": 3,
+    "modules": [
+      "opening",
+      "opportunity",
+      "reward",
+      "ruler",
+      "counter"
+    ],
+    "prompt_chars": 7425,
+    "control_prompt_chars": 11915,
+    "prompt_reduction_percent": 37.68,
+    "wall_seconds": 23.766,
+    "control_wall_seconds": 26.393,
+    "speedup_percent": 9.95,
+    "response_chars": 656,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "output_tokens": 1060,
+    "thought_tokens": 516
+  },
+  {
+    "chapter": 10,
+    "modules": [
+      "reward",
+      "ruler",
+      "counter"
+    ],
+    "prompt_chars": 6604,
+    "control_prompt_chars": 11316,
+    "prompt_reduction_percent": 41.64,
+    "wall_seconds": 26.447,
+    "control_wall_seconds": 69.187,
+    "speedup_percent": 61.77,
+    "response_chars": 727,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "output_tokens": 1137,
+    "thought_tokens": 516
+  },
+  {
+    "chapter": 14,
+    "modules": [
+      "opportunity",
+      "reward",
+      "ruler",
+      "counter"
+    ],
+    "prompt_chars": 8162,
+    "control_prompt_chars": 12776,
+    "prompt_reduction_percent": 36.11,
+    "wall_seconds": 21.593,
+    "control_wall_seconds": 23.977,
+    "speedup_percent": 9.94,
+    "response_chars": 472,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "output_tokens": 924,
+    "thought_tokens": 516
+  },
+  {
+    "chapter": 19,
+    "modules": [
+      "reward",
+      "ruler",
+      "counter"
+    ],
+    "prompt_chars": 8331,
+    "control_prompt_chars": 13043,
+    "prompt_reduction_percent": 36.13,
+    "wall_seconds": 23.483,
+    "control_wall_seconds": 25.705,
+    "speedup_percent": 8.64,
+    "response_chars": 577,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "output_tokens": 1018,
+    "thought_tokens": 516
+  }
+]

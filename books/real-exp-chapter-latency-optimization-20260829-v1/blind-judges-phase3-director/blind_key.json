@@ -1,0 +1,22 @@
+{
+  "2": {
+    "A": "conditional_director",
+    "B": "control_full_director"
+  },
+  "13": {
+    "A": "control_full_director",
+    "B": "conditional_director"
+  },
+  "16": {
+    "A": "conditional_director",
+    "B": "control_full_director"
+  },
+  "19": {
+    "A": "conditional_director",
+    "B": "control_full_director"
+  },
+  "20": {
+    "A": "control_full_director",
+    "B": "conditional_director"
+  }
+}

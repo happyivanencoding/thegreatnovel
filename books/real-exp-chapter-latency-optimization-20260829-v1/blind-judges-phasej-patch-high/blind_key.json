@@ -1,0 +1,30 @@
+{
+  "2": {
+    "A": "control_high",
+    "B": "patch_high"
+  },
+  "3": {
+    "A": "control_high",
+    "B": "patch_high"
+  },
+  "10": {
+    "A": "patch_high",
+    "B": "control_high"
+  },
+  "13": {
+    "A": "control_high",
+    "B": "patch_high"
+  },
+  "14": {
+    "A": "control_high",
+    "B": "patch_high"
+  },
+  "16": {
+    "A": "patch_high",
+    "B": "control_high"
+  },
+  "19": {
+    "A": "control_high",
+    "B": "patch_high"
+  }
+}

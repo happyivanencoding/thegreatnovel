@@ -16,6 +16,21 @@ Authority Reviser 是默认 `curator_primary` 的固定正文修订节点；Spec
 
 Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive、与该章实际事件相交的首次释放；未来仍作为 reveal 的答案不能提前排入 Map。Runtime 按当前章读取该条目，再从 WORLD AUTHORITY 做 bounded prefetch。Director 不读取完整 World，Curator 不重做 release 选择，Primary 也不自行选择世界资料。
 
+## 延迟基线与安全优化边界（2026-08-29）
+
+冻结 20 章真实链的正常采用节点平均为 **6.17 分钟/章**；计入废弃重跑、Ch1 后 Replan、十章 Review 与终检 Repair 后，章节批次实际摊销为 **7.73 分钟/章**。正常链中 Curator 占 31.4%，Authority Reviser 占 37.1%，两者合计 68.5%；Primary Writer 只占 15.0%。因此慢的核心确实在两个高推理辅助节点，但“耗时高”不等于可以直接删除或降档。
+
+当前只冻结不改变 Story Authority 的 Phase 0：
+
+- `current_long_block` 按文本自带章节范围确定性投影：保留覆盖当前章的最窄块；范围明确但已过期时丢弃；无法解析时保留原文，不让 LLM 猜作者意图。该投影同时作用于 rolling plan、chapter plan context 与 growth/payoff projection。
+- Hybrid Chapter Runtime 对 raw GBrain / Reference Programs fail closed；章节只消费批准上游、safe Authority 与 source-blind Scene Skill。
+- Curator 固定输出合同显式统一为 13 个区块，不再出现“列表只写 9 项、后文又要求 4 项”的矛盾。
+- 耗时账分开保存 adopted chain、真实批次 rerun/Review/Repair 与上游摊销；每节点记录 Prompt chars、input/cache/output/thought、wall、fallback/adopted 与 Reviser diff。
+
+Phase 1–3 已完成冻结输入、正常下游与最终正文 Reader + Authority 双盲，但均未达到 production 标准：Luna-medium Curator 虽约快 61%，Authority 由 high control 以 5:2 获胜；Slim Curator 约快 70%，却没有稳定模型赢家并出现时序/动作对象漂移；medium / Patch Reviser 在商业读感或全章状态闭合上失败；Conditional Director 约快 41%，商业读感由 full control 4 胜 1 平，且个别章出现 Agency 降级或 `[PLAN OUTCOME ADJUSTMENT]` 越权。因此默认路由继续保持 `Luna high Director → Luna high Curator → Terra high Primary → Luna high Authority Reviser → Luna low State`。
+
+本轮按作者范围**没有修改 ACP runner，也没有修改前端**；二者不是未完成交付项。完整速度、盲评与正文对照见 `books/real-exp-chapter-latency-optimization-20260829-v1/RESULTS.md`。
+
 ## 节点职责
 
 ### Director

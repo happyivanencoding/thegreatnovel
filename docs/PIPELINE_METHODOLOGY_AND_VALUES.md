@@ -716,6 +716,8 @@ Long-form Evolution 不进入每章成本。World Expansion 只在真实 World H
 
 不要为了省一点本地代码，把简单筛选重新交给 LLM；也不要为了“保险”给每个阶段都上最慢模型。
 
+延迟优化也遵守 root-cause layering：先区分正常采用链与废弃重跑/周期 Review/Repair 的真实摊销，再区分 deterministic context、模型推理与排队波动。不能用“最终稿和 Primary 很像”证明 Reviser 冗余，也不能用“中间包标题完整”证明降 effort 后最终正文等价。冻结上游、单变量运行，并把 treatment 接回正常下游；只有最终正文同时通过商业读感与 Authority/Canon 盲评，才允许改变 production 路由。2026-08-29 的 Phase 1–3 已否决 full/patch medium Reviser、Slim/medium Curator 与 Conditional Director 作为质量等价默认：它们可把相关节点缩短约 41%—78%，却分别出现 Agency、Action Object、Payoff/Ending、状态闭合或 Plan Adjustment 漂移。确定性删除已由文本自身证明 stale 的计划可以冻结；模型降档、Patch-only、Slim contract、条件模块和新增 classifier 都继续属于实验假设。
+
 ---
 
 ## 8. 当前模型与 GBrain 路由（基于实测，不是方法论硬依赖）
@@ -733,8 +735,8 @@ Long-form Evolution 不进入每章成本。World Expansion 只在真实 World H
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Collision + long-form causality；最高杠杆长期结构节点 |
 | Story Refresh | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Effective World × Current Character 的周期性 fresh Re-Collision；只规划当前新 World Horizon |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |
-| Director | GPT-5.6 Luna high | 章节相关精选上下文 | Balanced 默认；若优先最低延迟可切 Terra high |
-| Curator | GPT-5.6 Luna high | raw GBrain OFF；Index-first + Scene Skill v2 compact Catalog | 编译短 `Scene Prose Projection`，允许 `NONE`；若优先更短可切 Terra medium |
+| Director | GPT-5.6 Luna high | 章节相关精选上下文 | 当前 production 默认；模型/effort 切换只做显式下游 A/B |
+| Curator | GPT-5.6 Luna high | raw GBrain OFF；Index-first + Scene Skill v2 compact Catalog | 编译短 `Scene Prose Projection`，允许 `NONE`；medium/Terra 路由尚未证明质量等价 |
 | Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；只吃短 Scene Projection | 先完成完整第一版正文；不直接读完整 Skill；不是默认 final source |
 | Authority Reviser | GPT-5.6 Luna high | **OFF**；safe Authority + optional short Revision Watch | Preservation First；只在明确失败时局部修；默认 final source |
 | State Extraction | GPT-5.6 Luna low | OFF | 只抽取最终正式正文已发生事实 |
@@ -747,7 +749,7 @@ Long-form Evolution 不进入每章成本。World Expansion 只在真实 World H
 - **Luna max**：不作为日常默认；只用于疑难创意救援、关键架构诊断和最高质量基线。
 - **GPT-5.4 high**：当前没有相对 Luna 的补偿性优势，只用于回归或模型对照。
 
-章节模型选择必须分开看 **生成质量 / wall-clock / 实际成本**。当前默认路由是 `Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。Terra Primary 是第一版正文行为选择；Luna high Reviser 是 authority-sensitive 局部修订选择。若优先更短延迟可调整 Director/Curator，但 production Reviser 当前冻结为 Luna high；Sol 不进入常规章节链。
+章节模型选择必须分开看 **生成质量 / wall-clock / 实际成本**。当前默认路由是 `Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。Terra Primary 是第一版正文行为选择；Luna high Reviser 是 authority-sensitive 局部修订选择。2026-08-29 最终正文双盲已否决 Curator medium/Slim、Reviser medium/Patch-only/Safe-Patch route 与 Conditional Director 作为质量等价低延迟默认；模型或合同切换必须重新通过正常下游与 Reader + Authority 双盲。Sol 不进入常规章节链。
 
 ### 已验证的 Theme Emergent A/B 结论（2026-08-25）
 

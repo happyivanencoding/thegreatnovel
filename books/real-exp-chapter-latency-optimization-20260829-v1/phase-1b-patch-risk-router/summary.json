@@ -1,0 +1,40 @@
+{
+  "rows": [
+    {
+      "chapter": 2,
+      "route": "patch_medium",
+      "risk_reasons": [],
+      "effective_seconds": 11.18,
+      "control_high_seconds": 95.14,
+      "speedup_percent": 88.25,
+      "final_source": "patch_medium",
+      "quality_note": "采用 Patch/NO_CHANGE；仍需作者依据盲评判断质量损失"
+    },
+    {
+      "chapter": 13,
+      "route": "full_high",
+      "risk_reasons": [
+        "asset_holder_or_ownership"
+      ],
+      "effective_seconds": 152.855,
+      "control_high_seconds": 152.855,
+      "speedup_percent": 0.0,
+      "final_source": "control_high",
+      "quality_note": "preflight 直接走 full high；不运行 Patch"
+    },
+    {
+      "chapter": 16,
+      "route": "patch_medium",
+      "risk_reasons": [],
+      "effective_seconds": 22.072,
+      "control_high_seconds": 120.371,
+      "speedup_percent": 81.66,
+      "final_source": "patch_medium",
+      "quality_note": "采用 Patch/NO_CHANGE；仍需作者依据盲评判断质量损失"
+    }
+  ],
+  "control_average_seconds": 122.78866666666666,
+  "routed_average_seconds": 62.035666666666664,
+  "average_speedup_percent": 49.477693381039515,
+  "decision": "Risk router catches the Ch13 ownership failure before Patch execution; accepted routine outputs remain judge-mixed, so keep experimental."
+}

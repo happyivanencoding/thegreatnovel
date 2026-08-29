@@ -1,0 +1,14 @@
+{
+  "2": {
+    "A": "patch_medium",
+    "B": "control_high"
+  },
+  "13": {
+    "A": "control_high",
+    "B": "patch_medium"
+  },
+  "16": {
+    "A": "patch_medium",
+    "B": "control_high"
+  }
+}

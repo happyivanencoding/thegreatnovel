@@ -1,0 +1,88 @@
+[
+  {
+    "chapter": 2,
+    "prompt_chars": 11475,
+    "control_prompt_chars": 19040,
+    "prompt_reduction_percent": 39.73,
+    "wall_seconds": 11.18,
+    "control_high_wall_seconds": 95.14,
+    "measured_speedup_percent": 88.25,
+    "output_tokens": 318,
+    "thought_tokens": 310,
+    "response_chars": 9,
+    "disposition": "no_change",
+    "fallback": false,
+    "fallback_reason": "",
+    "patch_count": 0,
+    "patches": [],
+    "primary_chars": 2303,
+    "final_chars": 2303,
+    "similarity_to_primary": 1.0,
+    "similarity_to_high": 0.9212
+  },
+  {
+    "chapter": 13,
+    "prompt_chars": 12693,
+    "control_prompt_chars": 20672,
+    "prompt_reduction_percent": 38.6,
+    "wall_seconds": 46.008,
+    "control_high_wall_seconds": 152.855,
+    "measured_speedup_percent": 69.9,
+    "output_tokens": 1785,
+    "thought_tokens": 1593,
+    "response_chars": 264,
+    "disposition": "patched",
+    "fallback": false,
+    "fallback_reason": "",
+    "patch_count": 2,
+    "patches": [
+      {
+        "old": "唐绾把反潮记录收进自己袖中，又数了数钱袋里的潮铢，推到一旁。",
+        "new": "唐绾把反潮记录重新推回顾停舟面前，又数了数钱袋里的潮铢，推到一旁。",
+        "reason": "修复记录使用权不等于取得原件占有权，需保持原件仍由顾停舟持有。",
+        "old_chars": 30,
+        "new_chars": 33
+      },
+      {
+        "old": "顾停舟看得分明。\n\n回潮楔不是单纯把力量硬挡住。\n\n它先把冲来的潮力锁住，再把方向拧开，最后才把那股力放出去。",
+        "new": "",
+        "reason": "锁潮、改向、释放已通过现场动作完成，随后唐绾还会再次说明，属于重复证明。",
+        "old_chars": 55,
+        "new_chars": 0
+      }
+    ],
+    "primary_chars": 3110,
+    "final_chars": 3058,
+    "similarity_to_primary": 0.98865,
+    "similarity_to_high": 0.93841
+  },
+  {
+    "chapter": 16,
+    "prompt_chars": 12793,
+    "control_prompt_chars": 20657,
+    "prompt_reduction_percent": 38.07,
+    "wall_seconds": 22.072,
+    "control_high_wall_seconds": 120.371,
+    "measured_speedup_percent": 81.66,
+    "output_tokens": 992,
+    "thought_tokens": 840,
+    "response_chars": 198,
+    "disposition": "patched",
+    "fallback": false,
+    "fallback_reason": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "楔子仍是原来的样子，只是握上去时，那股压意乱得厉害，像刚从一场洪流里抽出来的铁。他收回袖中，没有再碰。",
+        "new": "楔子仍是原来的样子，只是握上去时，那股压意乱得厉害，像刚从一场洪流里抽出来的铁。残压还没有散尽，回潮楔暂时不能再次硬压。他收回袖中，没有再碰。",
+        "reason": "明确落实回潮楔完成释放后的状态变化：残压未散，暂不能再次使用。",
+        "old_chars": 51,
+        "new_chars": 71
+      }
+    ],
+    "primary_chars": 2864,
+    "final_chars": 2884,
+    "similarity_to_primary": 0.99652,
+    "similarity_to_high": 0.98675
+  }
+]

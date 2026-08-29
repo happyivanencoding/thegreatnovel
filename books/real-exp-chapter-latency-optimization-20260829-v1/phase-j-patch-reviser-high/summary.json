@@ -1,0 +1,238 @@
+[
+  {
+    "chapter": 2,
+    "prompt_chars": 11482,
+    "control_prompt_chars": 19040,
+    "prompt_reduction_percent": 39.7,
+    "wall_seconds": 9.635,
+    "control_high_wall_seconds": 95.14,
+    "measured_speedup_percent": 89.87,
+    "output_tokens": 192,
+    "thought_tokens": 184,
+    "response_chars": 9,
+    "disposition": "no_change",
+    "fallback": false,
+    "fallback_reason": "",
+    "patch_count": 0,
+    "patches": [],
+    "primary_chars": 2303,
+    "final_chars": 2303,
+    "similarity_to_primary": 1.0,
+    "similarity_to_high": 0.9212
+  },
+  {
+    "chapter": 3,
+    "prompt_chars": 12185,
+    "control_prompt_chars": 20227,
+    "prompt_reduction_percent": 39.76,
+    "wall_seconds": 54.045,
+    "control_high_wall_seconds": 55.457,
+    "measured_speedup_percent": 2.55,
+    "output_tokens": 2472,
+    "thought_tokens": 2322,
+    "response_chars": 204,
+    "disposition": "patched",
+    "fallback": false,
+    "fallback_reason": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "下一次低潮前，新裂槽会短暂露出一段能走的路。\n\n现在，那不再只是他看见的一道裂缝。\n\n那是他已经签下名字、必须亲自去核的一条路。",
+        "new": "下一次低潮前，新裂槽会短暂露出一段能走的路。\n\n现在，那不再只是他看见的一道裂缝。\n\n那是他已经签下名字、必须亲自去核并尝试进入的一条路。",
+        "reason": "结尾遗漏了冻结承诺中“核查并尝试进入新裂槽”的行动推动。",
+        "old_chars": 64,
+        "new_chars": 69
+      }
+    ],
+    "primary_chars": 1982,
+    "final_chars": 1987,
+    "similarity_to_primary": 0.99874,
+    "similarity_to_high": 0.99874
+  },
+  {
+    "chapter": 10,
+    "prompt_chars": 11862,
+    "control_prompt_chars": 19883,
+    "prompt_reduction_percent": 40.34,
+    "wall_seconds": 110.495,
+    "control_high_wall_seconds": 191.335,
+    "measured_speedup_percent": 42.25,
+    "output_tokens": 5861,
+    "thought_tokens": 4932,
+    "response_chars": 1116,
+    "disposition": "patched",
+    "fallback": false,
+    "fallback_reason": "",
+    "patch_count": 4,
+    "patches": [
+      {
+        "old": "峡外的余震一阵接一阵。\n\n撤离车卡在斜坡中段，车身被震得往外滑。车上挤着伤员和湿透的矿样箱，前面的人不敢跳，后面的人也不敢再推。只要车轮再偏半尺，整辆车就会翻进下方裂开的石沟。",
+        "new": "峡外的余震一阵接一阵，撤离车随之失稳。",
+        "reason": "删除合同未授权的撤离车位置、载荷与翻车细节。",
+        "old_chars": 88,
+        "new_chars": 19
+      },
+      {
+        "old": "顾停舟站到车侧，双手按住倾斜的车架。\n\n沉重的车身立刻把力量压下来。\n\n以前的潮炉只能勉强在一处撑住，像拿一根木棍顶着塌墙；可这一刻，顾停舟体内的潮息没有散开。它顺着已经被潮压反复冲过的潮脉往前推，胸腹为炉，四肢为臂，把他整个人连成了一处。\n\n车身往下滑了半寸。\n\n顾停舟肩膀一沉，脚下的石面裂开。\n\n他咬住牙，没有退。\n\n潮息从腹中涌出，沿着双臂压入车架。原本乱颤的木轮慢慢停住，车侧悬起的那一角被他一点点按回地面。车上的伤员抓着边框，连喘气都不敢大声。\n\n余震又落下来。\n\n车架发出一声闷响。\n\n顾停舟喉头一甜，手背青筋暴起。可这一次，体内的力量没有像先前那样被震散，反而在重压里越收越紧。\n\n腹中的潮炉轰然一沉。\n\n那股原本只是被撑大的力量，终于定住了。\n\n成炉。",
+        "new": "顾停舟站到车侧，双手按住倾斜的车架。车身的重量压下来，潮息却沿着被潮压反复冲过的潮脉贯通胸腹、肩背和四肢，把他整个人连成一处。余震再次落下时，他仍独自承住了撤离车，腹中的潮炉也在重压里轰然一沉。\n\n那股原本只是被撑大的力量终于定住了。\n\n成炉。",
+        "reason": "压缩重复的逐步稳车过程，保留成炉后的新承载尺度。",
+        "old_chars": 335,
+        "new_chars": 122
+      },
+      {
+        "old": "顾停舟的呼吸猛地一滞，随即缓缓吐出一口热气。\n\n成炉修士，已经能独自护住一辆商车，短距离穿过荒地。可这不是凭空多了一身力气，而是身体真正扛住潮压后，潮息才能在体内结成稳定的炉。",
+        "new": "顾停舟的呼吸猛地一滞，随即缓缓吐出一口热气。\n\n身体真正扛住潮压后，潮息终于在体内结成稳定的炉。",
+        "reason": "删除已由现场结果证明的后台规则解释与重复证明。",
+        "old_chars": 88,
+        "new_chars": 48
+      },
+      {
+        "old": "矿队的人这时围了过来。\n\n矿队首领没有挤到最前面，声音却从人群里冷冷传出。\n\n“回潮楔是矿队发现的器物。矿权标记毁了，撤路也断了，实测尾款不可能按原条件给你。顾停舟，把楔子交出来，这笔账还有得谈。”",
+        "new": "矿队的人这时围了过来。\n\n其中有人冷冷开口：“回潮楔是矿队发现的器物。矿权标记毁了，撤路也断了，实测尾款不可能按原条件给你。顾停舟，把楔子交出来，这笔账还有得谈。”",
+        "reason": "避免把在场位置未定的矿队首领明确写成现场发言者。",
+        "old_chars": 99,
+        "new_chars": 82
+      }
+    ],
+    "primary_chars": 2282,
+    "final_chars": 1943,
+    "similarity_to_primary": 0.89751,
+    "similarity_to_high": 0.79368
+  },
+  {
+    "chapter": 13,
+    "prompt_chars": 12700,
+    "control_prompt_chars": 20672,
+    "prompt_reduction_percent": 38.56,
+    "wall_seconds": 59.602,
+    "control_high_wall_seconds": 152.855,
+    "measured_speedup_percent": 61.01,
+    "output_tokens": 3044,
+    "thought_tokens": 2726,
+    "response_chars": 470,
+    "disposition": "fallback_high",
+    "fallback": true,
+    "fallback_reason": "patch OLD occurrence count=0",
+    "patch_count": 0,
+    "patches": [],
+    "primary_chars": 3110,
+    "final_chars": 2933,
+    "similarity_to_primary": 0.95019,
+    "similarity_to_high": 1.0
+  },
+  {
+    "chapter": 14,
+    "prompt_chars": 13297,
+    "control_prompt_chars": 21103,
+    "prompt_reduction_percent": 36.99,
+    "wall_seconds": 80.656,
+    "control_high_wall_seconds": 210.84,
+    "measured_speedup_percent": 61.75,
+    "output_tokens": 4143,
+    "thought_tokens": 4046,
+    "response_chars": 136,
+    "disposition": "patched",
+    "fallback": false,
+    "fallback_reason": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "唐绾看了一眼，直接道：“残压在散。今天不能再压第二次。”",
+        "new": "唐绾看了一眼，直接道：“残压还没散尽，不能再压第二次。”",
+        "reason": "将“未散尽前不得连续硬压”误写成了按“今天”固定的时限，超出冻结边界。",
+        "old_chars": 28,
+        "new_chars": 28
+      }
+    ],
+    "primary_chars": 3935,
+    "final_chars": 3935,
+    "similarity_to_primary": 0.99898,
+    "similarity_to_high": 0.94347
+  },
+  {
+    "chapter": 16,
+    "prompt_chars": 12800,
+    "control_prompt_chars": 20657,
+    "prompt_reduction_percent": 38.04,
+    "wall_seconds": 60.7,
+    "control_high_wall_seconds": 120.371,
+    "measured_speedup_percent": 49.57,
+    "output_tokens": 3080,
+    "thought_tokens": 2817,
+    "response_chars": 338,
+    "disposition": "patched",
+    "fallback": false,
+    "fallback_reason": "",
+    "patch_count": 2,
+    "patches": [
+      {
+        "old": "他们没有停，继续沿着石脊往迁徙水路深处引。水路虽然窄，却终于通了。",
+        "new": "他们没有停，继续沿着石脊往迁徙水路深处引。塌方后的高处路虽窄，却已经能让人和牲口分批通过。",
+        "reason": "将已塌方的迁徙水路误写成恢复通行，未落实改走高处的冻结结果。",
+        "old_chars": 33,
+        "new_chars": 45
+      },
+      {
+        "old": "楔子仍是原来的样子，只是握上去时，那股压意乱得厉害，像刚从一场洪流里抽出来的铁。他收回袖中，没有再碰。",
+        "new": "楔子仍是原来的样子，只是握上去时，那股压意乱得厉害，像刚从一场洪流里抽出来的铁。残压还未散尽，回潮楔暂时不能再用。他收回袖中，没有再碰。",
+        "reason": "遗漏回潮楔完整释放后的残压状态及再次使用前必须散压的冻结结果。",
+        "old_chars": 51,
+        "new_chars": 68
+      }
+    ],
+    "primary_chars": 2864,
+    "final_chars": 2893,
+    "similarity_to_primary": 0.99323,
+    "similarity_to_high": 0.9852
+  },
+  {
+    "chapter": 19,
+    "prompt_chars": 13493,
+    "control_prompt_chars": 21208,
+    "prompt_reduction_percent": 36.38,
+    "wall_seconds": 142.521,
+    "control_high_wall_seconds": 103.511,
+    "measured_speedup_percent": -37.69,
+    "output_tokens": 7586,
+    "thought_tokens": 6955,
+    "response_chars": 790,
+    "disposition": "patched",
+    "fallback": false,
+    "fallback_reason": "",
+    "patch_count": 4,
+    "patches": [
+      {
+        "old": "入潮者能借潮力强壮身体，冲进黑水里救人；成炉者能连续运转潮息，护住商车和一小段路；照域者能把潮力推出体外，压住一座院落、一条街巷。\n\n可镇海战局里，决定胜负的是谁能扛住整片潮场的正面冲击。\n\n现在，镇海潮兽把这份压力全压到了顾停舟身上。",
+        "new": "入潮者只能把人带到后方，成炉者只能护住一辆商车和一小段路；照域者能把潮力推出体外，却也只能压住一片街巷。眼前这一撞，已经不是谁能救出几个人、护住一段路的问题，而是谁能替旧关内侧接住镇海潮兽。",
+        "reason": "原文用后台式力量说明替代现场公开校准，且重复解释已建立的力量层级。",
+        "old_chars": 118,
+        "new_chars": 95
+      },
+      {
+        "old": "照域潮谱里最后一层淡光压到兽首前方。\n\n“回去。”",
+        "new": "照域潮谱的淡光又压到兽首前方。\n\n“回去。”",
+        "reason": "“最后一层”擅自确定照域潮谱的结构与承受上限，冲突于当前未知边界。",
+        "old_chars": 25,
+        "new_chars": 22
+      },
+      {
+        "old": "也许能换一艘小些的潮舟。\n\n能带一个人离开旧关，走远一点，不必永远守着潮声和残墙过日子。",
+        "new": "也许能换一艘小些的潮舟。\n\n能带母亲离开旧关，走远一点，不必永远守着潮声和残墙过日子。",
+        "reason": "结尾把合同要求的“带母亲远行”写成了未指明的“一个人”，未明确交给下一章的生活选择。",
+        "old_chars": 44,
+        "new_chars": 43
+      },
+      {
+        "old": "不久后，文吏抱着一只防潮木匣赶来。\n\n木匣里放着结算文书、封好的潮钱票据，还有一枚刻着镇潮军府印记的战功牌。矿利和护粮的账没有再悬着，属于顾停舟的那一份，终于落进了他手里。",
+        "new": "不久后，文吏抱着一只防潮木匣赶来。\n\n木匣里放着结算文书，矿利和护粮的钱也一并封在其中，属于顾停舟的那一份，终于落进了他手里。",
+        "reason": "原文新增未冻结的“潮钱票据”和“战功牌”，且对已由公开入册成立的战绩进行重复程序化证明。",
+        "old_chars": 86,
+        "new_chars": 63
+      }
+    ],
+    "primary_chars": 3052,
+    "final_chars": 3002,
+    "similarity_to_primary": 0.97126,
+    "similarity_to_high": 0.93717
+  }
+]

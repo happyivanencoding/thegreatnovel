@@ -206,7 +206,31 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 如果蒸馏仍在跑，不把 staging / materialized 文件当 live GBrain treatment。
 
-## 16. Stop Conditions
+## 16. Latency / Cost Causal Audit
+
+当用户说系统“慢、贵、调用太多、某节点像累赘”时，先做真实账目，不按 Prompt 长度、最终相似度或主观等待感直接删层。
+
+必须分开记录：
+
+1. **Adopted node wall**：最终采用链每个节点的 wall-clock；
+2. **Actual batch elapsed**：废弃重跑、replan、周期 Review、repair、fallback、失败重试与中断都单列；
+3. **Upstream amortization**：开书 World/Character/Program/Outline 等低频成本，不混成每章常态；
+4. **Execution tax**：backend、cwd、独立 session 数、系统上下文、input/cache/output/thought tokens 与 queue 波动。
+
+每个节点至少保存 model、effort、prompt chars、input/cache/output/thought、wall、adopted/fallback 状态。Cache 降低费用不代表消除串行推理；一次异常快/慢也不能直接归因于 Prompt。
+
+先区分两类 treatment：
+
+- **Deterministic removal**：文本自身已证明 stale、重复或越界的上下文，可以在最早边界删除并做结构测试；
+- **Semantic route change**：降模型/effort、删节点、Patch-only、条件 skip、Slim contract 或新增 classifier，会改变判断能力，必须视为 Experimental Hypothesis。
+
+语义路线 A/B 的最低标准：冻结上游与 Chapter Mission，只改一个变量；Treatment 接回正常 downstream；比较**最终正文**而非 Curator/Audit 中间包；至少同时做商业 Reader 与 Authority/Canon blind。高 Primary↔Reviser 相似度只说明多数句段被保留，不证明少数关键 Authority recovery 没价值。
+
+不要用新增 cheap Reviewer / classifier 为另一个 Reviewer 决定是否运行，除非它能由 deterministic explicit obligation 取代且总成本、漏报、fallback 已完整计入。优先顺序是：删确定性脏上下文 → 修矛盾合同 → 减少废弃重跑/恢复失败节点 → same prompt / same model 的 execution backend 减负 → 最后才考虑语义降档。
+
+结论必须分别标记：质量结论、wall-clock 结论、成本结论。Direct API、ACP、不同 cwd 或不同 transport 的数字不得互相外推。
+
+## 17. Stop Conditions
 
 以下情况应停止继续加实验变量：
 

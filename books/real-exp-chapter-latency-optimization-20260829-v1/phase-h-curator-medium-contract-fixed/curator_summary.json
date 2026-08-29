@@ -1,0 +1,191 @@
+[
+  {
+    "chapter": 2,
+    "wall_seconds": 40.283,
+    "usage": {
+      "totalTokens": 43545,
+      "inputTokens": 31635,
+      "cachedReadTokens": 9984,
+      "outputTokens": 1926,
+      "thoughtTokens": 482
+    },
+    "chars": 2163,
+    "headings": [
+      "Relevant Book Contract",
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Opening Strategy",
+      "Scene Skill Selection",
+      "Relevant Inspiration",
+      "Reader-Facing Language",
+      "Already Established — Do Not Re-explain",
+      "Recent Repetition Risks",
+      "Payoff and Promise Window"
+    ]
+  },
+  {
+    "chapter": 3,
+    "wall_seconds": 39.729,
+    "usage": {
+      "totalTokens": 44120,
+      "inputTokens": 32176,
+      "cachedReadTokens": 9984,
+      "outputTokens": 1960,
+      "thoughtTokens": 352
+    },
+    "chars": 2404,
+    "headings": [
+      "Relevant Book Contract",
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Opening Strategy",
+      "Scene Skill Selection",
+      "Relevant Inspiration",
+      "Reader-Facing Language",
+      "Already Established — Do Not Re-explain",
+      "Recent Repetition Risks",
+      "Payoff and Promise Window"
+    ]
+  },
+  {
+    "chapter": 10,
+    "wall_seconds": 54.153,
+    "usage": {
+      "totalTokens": 45705,
+      "inputTokens": 18655,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2730,
+      "thoughtTokens": 727
+    },
+    "chars": 2724,
+    "headings": [
+      "Relevant Book Contract",
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Opening Strategy",
+      "Scene Skill Selection",
+      "Relevant Inspiration",
+      "Reader-Facing Language",
+      "Already Established — Do Not Re-explain",
+      "Recent Repetition Risks",
+      "Payoff and Promise Window"
+    ]
+  },
+  {
+    "chapter": 13,
+    "wall_seconds": 34.245,
+    "usage": {
+      "totalTokens": 45370,
+      "inputTokens": 19424,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1626,
+      "thoughtTokens": 516
+    },
+    "chars": 1758,
+    "headings": [
+      "Relevant Book Contract",
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Opening Strategy",
+      "Scene Skill Selection",
+      "Relevant Inspiration",
+      "Reader-Facing Language",
+      "Already Established — Do Not Re-explain",
+      "Recent Repetition Risks",
+      "Payoff and Promise Window"
+    ]
+  },
+  {
+    "chapter": 14,
+    "wall_seconds": 43.138,
+    "usage": {
+      "totalTokens": 45982,
+      "inputTokens": 33913,
+      "cachedReadTokens": 9984,
+      "outputTokens": 2085,
+      "thoughtTokens": 516
+    },
+    "chars": 2281,
+    "headings": [
+      "Relevant Book Contract",
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Opening Strategy",
+      "Scene Skill Selection",
+      "Relevant Inspiration",
+      "Reader-Facing Language",
+      "Already Established — Do Not Re-explain",
+      "Recent Repetition Risks",
+      "Payoff and Promise Window"
+    ]
+  },
+  {
+    "chapter": 16,
+    "wall_seconds": 62.496,
+    "usage": {
+      "totalTokens": 48155,
+      "inputTokens": 1713,
+      "cachedReadTokens": 43776,
+      "outputTokens": 2666,
+      "thoughtTokens": 988
+    },
+    "chars": 2382,
+    "headings": [
+      "Relevant Book Contract",
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Opening Strategy",
+      "Scene Skill Selection",
+      "Relevant Inspiration",
+      "Reader-Facing Language",
+      "Already Established — Do Not Re-explain",
+      "Recent Repetition Risks",
+      "Payoff and Promise Window"
+    ]
+  },
+  {
+    "chapter": 19,
+    "wall_seconds": 44.137,
+    "usage": {
+      "totalTokens": 46537,
+      "inputTokens": 20073,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2144,
+      "thoughtTokens": 516
+    },
+    "chars": 2305,
+    "headings": [
+      "Relevant Book Contract",
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Opening Strategy",
+      "Scene Skill Selection",
+      "Relevant Inspiration",
+      "Reader-Facing Language",
+      "Already Established — Do Not Re-explain",
+      "Recent Repetition Risks",
+      "Payoff and Promise Window"
+    ]
+  }
+]

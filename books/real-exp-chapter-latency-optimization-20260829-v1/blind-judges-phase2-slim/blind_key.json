@@ -1,0 +1,17 @@
+{
+  "2": {
+    "A": "control_full_high",
+    "B": "slim_terra_medium",
+    "C": "slim_luna_medium"
+  },
+  "13": {
+    "A": "slim_terra_medium",
+    "B": "control_full_high",
+    "C": "slim_luna_medium"
+  },
+  "16": {
+    "A": "slim_luna_medium",
+    "B": "control_full_high",
+    "C": "slim_terra_medium"
+  }
+}

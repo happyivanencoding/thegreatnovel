@@ -1,0 +1,56 @@
+[
+  {
+    "chapter": 2,
+    "variant": "luna_medium",
+    "primary_seconds": 37.009,
+    "reviser_seconds": 52.675,
+    "primary_chars": 1763,
+    "final_chars": 1765,
+    "similarity_to_control_final": 0.1285
+  },
+  {
+    "chapter": 2,
+    "variant": "terra_medium",
+    "primary_seconds": 41.366,
+    "reviser_seconds": 166.89,
+    "primary_chars": 2018,
+    "final_chars": 1975,
+    "similarity_to_control_final": 0.14338
+  },
+  {
+    "chapter": 13,
+    "variant": "luna_medium",
+    "primary_seconds": 38.002,
+    "reviser_seconds": 120.275,
+    "primary_chars": 2134,
+    "final_chars": 2052,
+    "similarity_to_control_final": 0.08064
+  },
+  {
+    "chapter": 13,
+    "variant": "terra_medium",
+    "primary_seconds": 48.555,
+    "reviser_seconds": 103.171,
+    "primary_chars": 2540,
+    "final_chars": 2056,
+    "similarity_to_control_final": 0.12387
+  },
+  {
+    "chapter": 16,
+    "variant": "luna_medium",
+    "primary_seconds": 60.862,
+    "reviser_seconds": 188.367,
+    "primary_chars": 3324,
+    "final_chars": 3225,
+    "similarity_to_control_final": 0.1172
+  },
+  {
+    "chapter": 16,
+    "variant": "terra_medium",
+    "primary_seconds": 60.059,
+    "reviser_seconds": 134.569,
+    "primary_chars": 2894,
+    "final_chars": 2856,
+    "similarity_to_control_final": 0.09148
+  }
+]

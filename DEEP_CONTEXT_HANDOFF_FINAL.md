@@ -1689,13 +1689,31 @@ Sol high 第一次同时看到：
 专项 + 全项目回归当前 **370/370 PASS**。完整实验说明见 `books/real-exp-precise-power-ruler-20260829-v1/FINAL_REPORT.md`。这次同时把长期审计方法升级为 **`tgn-system-steward 0.3.9`**：新增 Precise Ruler authority-chain 与 Public Proof 三线共尺审计；已通过 `skill-authoring` lint（0 error / 0 warning）、package validate、install/activate，并用“43级击败58级但正文只有群体震动”的已知样本做 Luna-high bounded smoke，正确判 `PARTIAL PASS`、缺 Ruler Calibration + Behavioral Repricing，并明确 State 仍保持43级。尚未解决：还没有真实500章 E2E，因此只冻结精确尺 Authority / State / Expansion / Public Proof 接线，不声称已证明最优等级数量或最佳长期升级频率。
 
 
-### 14.9 Chapter Runtime Latency Phase 0（2026-08-29）
+### 14.9 Chapter Runtime Latency Phase 0–3 Final（2026-08-29）
 
-20章九垂原冻结运行显示，正常采用章节链平均 **6.17分钟/章**，但把废弃重跑、Ch1后 Replan、十章 Review 与终检 Repair 纳入真实批次后为 **7.73分钟/章**；开书上游一并摊销约 **8.84分钟/章**。正常链中 Curator + Authority Reviser 占 **68.5%**，Primary Writer 只占 **15.0%**，因此后续优化对象是重复保险，不是正文 Writer。
+20章九垂原冻结运行确认：正常采用的五节点章节链平均 **6.17分钟/章**；把废弃重跑、Ch1 后 Replan、十章 Review 与终检 Repair 纳入真实批次后为 **7.73分钟/章**，开书上游一并摊销约 **8.84分钟/章**。正常链中 Curator 31.4%、Authority Reviser 37.1%，合计 **68.5%**；Primary Writer 只占 15.0%。慢的核心不是 Terra 正文，而是两个高推理辅助节点与重跑/Review/Repair 批次税。
 
-已进入 production 的零质量风险边界只有两项：① 带明确章节范围的 Long Block 只在覆盖当前章时进入；显式过期或无合法匹配时 fail closed，不得回退整份旧长纲；② Hybrid Chapter Runtime 对 raw GBrain / Reference Program fail closed，章节只消费已批准上游、safe Authority 与 source-blind Scene Skill。历史20章 Curator retrieval 中 **19章零命中、累计只接受1条**。同时建立逐节点 Prompt 字符、input/cache/output/thought tokens、wall-clock、Reviser diff / exact 与真实批次事件账；不修改 ACP runner，也不把前端纳入本轮。
+本轮按作者要求只把 Phase 0 的确定性低风险项冻结：
 
-Curator/Reviser/Director 的降档、瘦身、Patch 或条件模块仍属于实验假设，不是 current default。现有初测已证明“直接把 full Curator 或 full-text Reviser 全局降到 medium”会出现 Mission/Authority 漂移；必须继续用冻结输入、完整下游正文和 blind authority/reader 对照，向作者展示真实正文差异后才能 productionize。
+1. `current_long_block` 只保留覆盖当前章的最窄显式范围；明确过期时 fail closed，不再回退整份旧长纲。后十章真实样本每章删掉 2,545 个 stale 字符。
+2. 章节 raw GBrain / Reference Program fail closed；历史 20 章检索中 19 章零命中、累计只接受 1 条，章节继续通过批准上游与 source-blind Scene Skill 获得 craft。
+3. Curator 固定输出合同由矛盾的“明列 9 项、后文再要求 4 项”统一为显式 13 区块并加回归测试。
+4. 真实耗时账区分 adopted chain、actual batch、upstream amortization；rerun / Review / Repair / fallback 单列。
+5. 每节点保存 Prompt chars、input/cache/output/thought、wall、fallback/adopted 与 Reviser diff / exact 信息。
+
+Phase 1–3 全部完成真实模型实验，但没有冻结：
+
+- Full Reviser Luna medium 约快 52.8%，商业读感仍由 Luna high **3/3** 获胜。
+- Luna-high Patch Reviser 约快 44.3%，商业读感为 full high **5胜 / Patch 1胜 / 1平**；局部 Patch 会制造后文状态矛盾、漏 Ending 或误删有价值 realization。“安全章”路由 4 章中 3 章 fallback，前置 Patch 反成额外税。
+- 完整合同 Luna-medium Curator 约快 61.2%，Authority 由 high control **5:2** 获胜；Slim Luna/Terra Curator 约快 70%，但无稳定模型赢家，并出现低潮时序、反潮记录持有与分身/回潮楔执行路径问题。
+- Conditional Director 约快 41.1%，Authority 在部分章更准确，但商业故事盲评由 full control **4胜 / 1平 / treatment 0胜**；短版会把主动判断压成“跟随查看”，并在 Ch20 滥用 `[PLAN OUTCOME ADJUSTMENT]`、遗漏当前章公开结算与泄漏 pipeline 语言。
+
+这些实验也发现 current full route 并非永远正确：Conditional Ch13 更准确去掉“战场战利品”误称，Ch19 也消除了“尚待结算 / 终于到手”的内部矛盾。真正未解决的是**没有可靠自动路由知道哪一章、哪一句可以缩**，所以不能因局部胜例全局上线。
+
+默认章节路由继续冻结：`Luna high Director → Luna high Curator → Terra high Primary → Luna high Authority Reviser → Luna low State`。本轮作者明确排除 ACP runner 与前端，因此二者没有修改，也不是未完成项。唯一最终判定包：`books/real-exp-chapter-latency-optimization-20260829-v1/RESULTS.md`；机器可读表：同目录 `QUALITY_DECISION_TABLE.csv`；Phase 0 production commit：`7c1fc05`。
+
+上述延迟审计方法已进入 **`tgn-system-steward 0.3.10`**：必须分开 adopted node wall、真实批次 elapsed、上游摊销与 execution/queue；高字符相似度不证明节点冗余；模型、effort、Slim/Patch/conditional contract 等语义路线变化必须接回正常下游并审最终正文。AgentDock package validate 通过并已 install/activate；Luna-high bounded read-only smoke 对 Slim Curator 样本正确返回 `PARTIAL / Experimental Hypothesis`：只允许冻结实验设计与速度信号，不允许冻结 production route。当前全项目回归 **373/373 PASS**。
+
 
 ---
 
