@@ -654,6 +654,10 @@ HYBRID_PROMPT_TEMPLATES = {
 ## Opening Strategy
 ## Scene Skill Selection
 ## Relevant Inspiration
+## Reader-Facing Language
+## Already Established — Do Not Re-explain
+## Recent Repetition Risks
+## Payoff and Promise Window
 
 `## Scene Prose Projection` 不是 Control 清单，而是把 BOOK PROSE PROFILE、当前章 Mission / Canon / 人物状态、当前 Scene 与 OPTIONAL INSPIRATION 中真正相关的 Prose Controls 编译成 Writer 此刻需要的局部表达压力。先在内部判断：读者此刻最该注意什么、什么应压缩、当前 POV 有资格知道到哪里、哪个具体细节最值得承重、句段应跟随哪个 state change、什么已经成立应停止解释。不要把这六项逐项回显。
 
@@ -2096,8 +2100,10 @@ def generate_prompt(
             current_outline=current_outline,
             current_chapter_plan=current_chapter_plan,
             recent_summaries=recent_summaries,
-            gbrain_inspiration=gbrain_inspiration,
-            selected_references=selected_references,
+            # 章节 Runtime 只消费已批准上游与 source-blind Scene Skill；
+            # raw GBrain / Reference Program 不得因调用方仍传值而重新进入任何章节节点。
+            gbrain_inspiration="",
+            selected_references=[],
             chapter_number=chapter_number,
         )
         parts.append(f"# Hybrid Runtime\n\nwriter_mode: {writer_mode}")

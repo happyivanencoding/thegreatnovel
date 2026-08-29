@@ -3233,7 +3233,7 @@ def test_old_book_gets_code_default_hybrid_templates_without_prompt_file_write(t
     assert prompts_path.read_bytes() == before
 
 
-def test_context_curator_prompt_uses_tail_and_opening_strategy_only() -> None:
+def test_context_curator_prompt_uses_tail_and_opening_strategy_without_raw_gbrain() -> None:
     book = """# 小说总体设计画像
 
 ## 0. 本书成长基因图
@@ -3266,7 +3266,7 @@ FULL_BOOK_FUTURE_MARKER
         gbrain_inspiration="INSPIRATION_MARKER",
     )
     assert "CURRENT_BLOCK_MARKER" in prompt
-    assert "INSPIRATION_MARKER" in prompt
+    assert "INSPIRATION_MARKER" not in prompt
     assert "城市远景 → 具体现场 → 主角行动" in prompt
     assert "前文最后动作" in prompt
     assert "前文开头" not in prompt

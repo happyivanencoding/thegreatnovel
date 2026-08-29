@@ -1,0 +1,109 @@
+{
+  "chapters_with_files": 20,
+  "zero_hit_chapters": 19,
+  "total_accepted": 1,
+  "rows": [
+    {
+      "chapter": 1,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 2,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 3,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 4,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 5,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 6,
+      "accepted_count": 1,
+      "accepted": [
+        "prose-controls/evidence-first-limited-reveal-v1"
+      ]
+    },
+    {
+      "chapter": 7,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 8,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 9,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 10,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 11,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 12,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 13,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 14,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 15,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 16,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 17,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 18,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 19,
+      "accepted_count": 0,
+      "accepted": []
+    },
+    {
+      "chapter": 20,
+      "accepted_count": 0,
+      "accepted": []
+    }
+  ]
+}

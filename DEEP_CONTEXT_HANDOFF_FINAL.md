@@ -1688,6 +1688,15 @@ Sol high 第一次同时看到：
 
 专项 + 全项目回归当前 **370/370 PASS**。完整实验说明见 `books/real-exp-precise-power-ruler-20260829-v1/FINAL_REPORT.md`。这次同时把长期审计方法升级为 **`tgn-system-steward 0.3.9`**：新增 Precise Ruler authority-chain 与 Public Proof 三线共尺审计；已通过 `skill-authoring` lint（0 error / 0 warning）、package validate、install/activate，并用“43级击败58级但正文只有群体震动”的已知样本做 Luna-high bounded smoke，正确判 `PARTIAL PASS`、缺 Ruler Calibration + Behavioral Repricing，并明确 State 仍保持43级。尚未解决：还没有真实500章 E2E，因此只冻结精确尺 Authority / State / Expansion / Public Proof 接线，不声称已证明最优等级数量或最佳长期升级频率。
 
+
+### 14.9 Chapter Runtime Latency Phase 0（2026-08-29）
+
+20章九垂原冻结运行显示，正常采用章节链平均 **6.17分钟/章**，但把废弃重跑、Ch1后 Replan、十章 Review 与终检 Repair 纳入真实批次后为 **7.73分钟/章**；开书上游一并摊销约 **8.84分钟/章**。正常链中 Curator + Authority Reviser 占 **68.5%**，Primary Writer 只占 **15.0%**，因此后续优化对象是重复保险，不是正文 Writer。
+
+已进入 production 的零质量风险边界只有两项：① 带明确章节范围的 Long Block 只在覆盖当前章时进入；显式过期或无合法匹配时 fail closed，不得回退整份旧长纲；② Hybrid Chapter Runtime 对 raw GBrain / Reference Program fail closed，章节只消费已批准上游、safe Authority 与 source-blind Scene Skill。历史20章 Curator retrieval 中 **19章零命中、累计只接受1条**。同时建立逐节点 Prompt 字符、input/cache/output/thought tokens、wall-clock、Reviser diff / exact 与真实批次事件账；不修改 ACP runner，也不把前端纳入本轮。
+
+Curator/Reviser/Director 的降档、瘦身、Patch 或条件模块仍属于实验假设，不是 current default。现有初测已证明“直接把 full Curator 或 full-text Reviser 全局降到 medium”会出现 Mission/Authority 漂移；必须继续用冻结输入、完整下游正文和 blind authority/reader 对照，向作者展示真实正文差异后才能 productionize。
+
 ---
 
 ## 15. How to Work With the User

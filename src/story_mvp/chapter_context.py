@@ -127,6 +127,57 @@ _CHAPTER_PLAN_FIELDS = (
 
 PLAN_OUTCOME_ADJUSTMENT_MARKER = "[PLAN OUTCOME ADJUSTMENT]"
 
+_LONG_BLOCK_RANGE_HEADING = re.compile(
+    r"(?m)^#{1,6}\s*第\s*(\d+)\s*[—–－-]\s*(\d+)\s*章(?:\s*[：:].*)?\s*$"
+)
+_LONG_BLOCK_SCOPE = re.compile(
+    r"规划范围\s*[：:]\s*(?:预计)?\s*第\s*(\d+)\s*[—–－-]\s*(\d+)\s*章"
+)
+
+
+def project_current_long_block_for_chapter(current_long_block: str, chapter_number: int) -> str:
+    """只保留明确覆盖当前章的大型剧情块，拒绝把过期块继续注入章节链。
+
+    调用方有时会把整份长纲或上一个窗口的剧情块误传为 ``current_long_block``。
+    这类文本一旦带有明确章节范围，就可以确定性裁剪：
+
+    - 有覆盖当前章的范围时，保留最窄的匹配块；
+    - 文本明确声明了范围、但没有任何范围覆盖当前章时，返回空；
+    - 没有可解析章节范围时保持原文，避免猜测作者意图。
+
+    该函数只删除已经由文本自身证明为 stale 的计划，不生成新计划，也不改变
+    ``current_chapter_plan`` 这一本章唯一事件预算。
+    """
+
+    text = current_long_block.strip()
+    if not text or chapter_number <= 0:
+        return text
+
+    scope = _LONG_BLOCK_SCOPE.search(text)
+    if scope:
+        scope_start, scope_end = sorted((int(scope.group(1)), int(scope.group(2))))
+        if not scope_start <= chapter_number <= scope_end:
+            return ""
+
+    matches = list(_LONG_BLOCK_RANGE_HEADING.finditer(text))
+    if not matches:
+        return text
+
+    candidates: list[tuple[int, int, str]] = []
+    for index, match in enumerate(matches):
+        start, end = sorted((int(match.group(1)), int(match.group(2))))
+        if not start <= chapter_number <= end:
+            continue
+        section_end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        section = text[match.start():section_end].strip()
+        candidates.append((end - start, index, section))
+    if not candidates:
+        return ""
+
+    _, _, selected = min(candidates, key=lambda item: (item[0], item[1]))
+    preamble = text[:matches[0].start()].strip()
+    return "\n\n".join(part for part in (preamble, selected) if part).strip()
+
 
 def parse_chapter_plan_fields(current_chapter_plan: str) -> dict[str, str]:
     """Parse one production Future-10 chapter entry into its supported fields."""
@@ -480,6 +531,9 @@ def build_chapter_context(
     chapter_number: int = 0,
 ) -> ChapterContextPacket:
     """由现有页面输入确定性地构建章节运行期上下文包。"""
+    effective_long_block = project_current_long_block_for_chapter(
+        current_long_block, chapter_number
+    )
     prose_profile = "\n\n".join(
         f"{heading}\n\n{_markdown_block(book_content, heading)}"
         for heading in PROSE_PROFILE_HEADINGS
@@ -522,15 +576,15 @@ def build_chapter_context(
     canon_context = "\n\n".join(canon_parts)
 
     plan_parts: list[str] = []
-    if current_long_block.strip():
-        plan_parts.append(f"当前大型剧情块\n\n{current_long_block.strip()}")
+    if effective_long_block:
+        plan_parts.append(f"当前大型剧情块\n\n{effective_long_block}")
     small_plan = _markdown_block(book_content, "# 未来十章逐章小纲")
     if small_plan:
         plan_parts.append(f"当前十章计划\n\n{small_plan}")
     rolling_plan = "\n\n".join(plan_parts)
     chapter_plan_parts: list[str] = []
-    if current_long_block.strip():
-        chapter_plan_parts.append(f"当前大型剧情块\n\n{current_long_block.strip()}")
+    if effective_long_block:
+        chapter_plan_parts.append(f"当前大型剧情块\n\n{effective_long_block}")
     if current_chapter_plan.strip():
         chapter_plan_parts.append(f"当前章十章计划条目\n\n{current_chapter_plan.strip()}")
     chapter_plan_context = "\n\n".join(chapter_plan_parts)
@@ -545,7 +599,7 @@ def build_chapter_context(
         f"选中的 Reference Programs（可选参考，不与事件合同并列为硬要求）\n\n{references}"
     )
     growth_benefit_projection = render_growth_benefit_projection(
-        current_long_block=current_long_block,
+        current_long_block=effective_long_block,
         current_chapter_plan=current_chapter_plan,
         current_outline=current_outline,
     )
@@ -566,7 +620,7 @@ def build_chapter_context(
         recent_prose=previous_chapter_text.strip(),
         rolling_plan=rolling_plan,
         chapter_plan_context=chapter_plan_context,
-        current_long_block=current_long_block.strip(),
+        current_long_block=effective_long_block,
         current_chapter_plan=current_chapter_plan.strip(),
         prose_profile=prose_profile,
         optional_inspiration=optional_inspiration,

@@ -3,6 +3,7 @@ from story_mvp.chapter_context import (
     build_chapter_context,
     parse_chapter_plan_fields,
     project_chapter_plan_execution_boundary,
+    project_current_long_block_for_chapter,
 )
 from story_mvp.prompts import generate_prompt
 
@@ -114,3 +115,49 @@ def test_director_contract_requires_explicit_adjustment_marker_only_for_real_can
     assert PLAN_OUTCOME_ADJUSTMENT_MARKER in prompt
     assert "该标记只处理事实冲突" in prompt
     assert "不授权因为节奏、审美或方便取消结果" in prompt
+
+
+def test_long_block_projection_keeps_only_the_narrowest_range_covering_current_chapter() -> None:
+    long_plan = """# 第一世界长纲
+规划范围：预计第1—20章
+
+## 第1—20章：总阶段
+只提供全阶段方向。
+
+## 第11—15章：镇海前夜
+当前章真正需要的阶段背景。
+
+## 第16—20章：镇海决战
+未来阶段，不得提前进入。"""
+    projected = project_current_long_block_for_chapter(long_plan, 14)
+    assert "# 第一世界长纲" in projected
+    assert "## 第11—15章：镇海前夜" in projected
+    assert "当前章真正需要的阶段背景" in projected
+    assert "## 第1—20章：总阶段" not in projected
+    assert "## 第16—20章：镇海决战" not in projected
+
+
+def test_explicitly_stale_long_block_is_dropped_instead_of_reaching_runtime() -> None:
+    stale = """规划范围：预计第1—10章
+
+## 第1—3章：起步
+已经完成。
+
+## 第8—10章：第一次结算
+也已经完成。"""
+    assert project_current_long_block_for_chapter(stale, 14) == ""
+
+    packet = build_chapter_context(
+        chapter_number=14,
+        current_long_block=stale,
+        current_chapter_plan="## 第14章：当前计划\n具体剧情：进入镇海关。",
+    )
+    assert packet.current_long_block == ""
+    assert "已经完成" not in packet.rolling_plan
+    assert "第一次结算" not in packet.chapter_plan_context
+    assert "进入镇海关" in packet.chapter_plan_context
+
+
+def test_unnumbered_long_block_is_preserved_without_guessing_author_intent() -> None:
+    unnumbered = "阶段背景：当前关口之后，主角将第一次真正面对镇海级敌人。"
+    assert project_current_long_block_for_chapter(unnumbered, 14) == unnumbered
