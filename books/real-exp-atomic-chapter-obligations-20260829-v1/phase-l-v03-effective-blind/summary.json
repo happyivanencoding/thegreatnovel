@@ -1,0 +1,29 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "scope": "Only v0.3 ADOPT_DELTA rows whose exact final body was already anonymously judged",
+  "counts": {
+    "reader": {
+      "atomic_delta": 1,
+      "control": 1
+    },
+    "authority": {
+      "atomic_delta": 2
+    }
+  },
+  "rows": [
+    {
+      "chapter": 9,
+      "route_status": "ADOPT_DELTA",
+      "body_hash_verified": true,
+      "reader": "atomic_delta",
+      "authority": "atomic_delta"
+    },
+    {
+      "chapter": 14,
+      "route_status": "ADOPT_DELTA",
+      "body_hash_verified": true,
+      "reader": "control",
+      "authority": "atomic_delta"
+    }
+  ]
+}

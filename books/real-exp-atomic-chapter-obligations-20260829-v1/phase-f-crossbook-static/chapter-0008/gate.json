@@ -1,0 +1,292 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 8,
+  "preflight_eligible": false,
+  "decision": "FALLBACK_FULL_REVISER",
+  "touched_source_paragraphs": [
+    27,
+    32,
+    77,
+    89,
+    90,
+    91,
+    92,
+    93,
+    116
+  ],
+  "blocking_checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.167.",
+      "evidence": [
+        "他刚脱离兵室门口，灰黑异兽便撞开碎石，带着半截石梁一起冲出。顾斜阳长剑横斩，影甲包住手臂，硬生生把异兽的冲势带偏。"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.141.",
+      "evidence": [
+        "三名刚从传承石室外退下来的观日宗弟子被逼到残墙边，其中一人脚下石板裂开，整个人往兵室方向滑去。"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.105.",
+      "evidence": [
+        "二阶影甲都能划开，那头异兽的影甲自然也挡不住。"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.114.",
+      "evidence": [
+        "可药车不能停在这里。"
+      ]
+    },
+    {
+      "obligation_id": "STA-04",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.086.",
+      "evidence": [
+        "“那不是替身。”陆绾低声说。"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.076.",
+      "evidence": [
+        "陆绾一把扶住他。"
+      ]
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "fail",
+      "reason": "Human-specific cue trigger was active but no approved cue appeared",
+      "evidence": []
+    }
+  ],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.167.",
+      "evidence": [
+        "他刚脱离兵室门口，灰黑异兽便撞开碎石，带着半截石梁一起冲出。顾斜阳长剑横斩，影甲包住手臂，硬生生把异兽的冲势带偏。"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P104",
+        "P134",
+        "P146"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P098"
+      ]
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P048",
+        "P150",
+        "P240"
+      ]
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P048",
+        "P150",
+        "P240"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.141.",
+      "evidence": [
+        "三名刚从传承石室外退下来的观日宗弟子被逼到残墙边，其中一人脚下石板裂开，整个人往兵室方向滑去。"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.105.",
+      "evidence": [
+        "二阶影甲都能划开，那头异兽的影甲自然也挡不住。"
+      ]
+    },
+    {
+      "obligation_id": "REA-04",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P080",
+        "P140",
+        "P174"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P128",
+        "P166"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P134",
+        "P146",
+        "P158"
+      ]
+    },
+    {
+      "obligation_id": "RES-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P048",
+        "P150",
+        "P240"
+      ]
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P096",
+        "P252",
+        "P272"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.114.",
+      "evidence": [
+        "可药车不能停在这里。"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P006",
+        "P130",
+        "P224"
+      ]
+    },
+    {
+      "obligation_id": "STA-04",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.086.",
+      "evidence": [
+        "“那不是替身。”陆绾低声说。"
+      ]
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P104",
+        "P232",
+        "P240"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.076.",
+      "evidence": [
+        "陆绾一把扶住他。"
+      ]
+    },
+    {
+      "obligation_id": "END-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P174",
+        "P206",
+        "P264"
+      ]
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-023",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "fail",
+      "reason": "Human-specific cue trigger was active but no approved cue appeared",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-025",
+      "status": "pass",
+      "reason": "protected desire retained",
+      "evidence": [
+        "异兽的爪子落空，砸碎半截石柱。它自己也愣了一瞬，低头看向流血的前肢，喉咙里发出沉闷嘶吼。"
+      ]
+    }
+  ],
+  "status_counts": {
+    "pass": 6,
+    "pass_preserved": 12,
+    "not_triggered": 0,
+    "fail": 7,
+    "unknown": 0,
+    "conflict": 0
+  }
+}

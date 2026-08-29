@@ -1,0 +1,18 @@
+{
+  "chapter": 16,
+  "delta_wall_seconds": 97.59,
+  "atomic_full_fallback_wall_seconds": 144.615,
+  "effective_route_seconds": 242.205,
+  "control_full_reviser_seconds": 120.371,
+  "fallback_adjusted_speedup_percent": -101.22,
+  "gate_decision": "ADOPT_DELTA",
+  "blocking_ids": [],
+  "final_chars": 2964,
+  "usage": {
+    "totalTokens": 61959,
+    "inputTokens": 4205,
+    "cachedReadTokens": 54016,
+    "outputTokens": 3738,
+    "thoughtTokens": 1026
+  }
+}

@@ -1,0 +1,927 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapter": 8,
+  "protagonist": "顾临川",
+  "mission_fields": {
+    "触发事件": "兵室承重石被灰黑异兽撞裂，石梁持续下沉；顾临川同时确认陆绾正被断门错影拖向门洞，而一对短兵就在眼前，必须立即决定救人、取兵，或让两边同时冒险。",
+    "主角行动": "顾临川分出两具身体：一具取下短兵，借尚未熟悉的兵器正面挡住异兽并打开撤离路径；另一具沿陆绾留下的石屑痕迹绕至断门侧面，斩断困住她的影藤。随后两具身体在兵室坍塌与错影干扰下分别作出简单临场判断，带出陆绾和三名受困的观日宗弟子，并沿偏折阴影撤退。",
+    "对手或世界反应": "灰黑异兽持续冲撞，迫使兵室加速坍塌；顾斜阳与观日宗弟子必须放弃原有守位，转为协助或跟随撤离。短兵第一次划破二阶影甲，现场明确显示其价值；两具身体各自行动后，也不再完全依赖顾临川事先设定的目标。",
+    "直接结果": "陆绾被救出，三名观日宗弟子脱离兵室；顾临川取得一对能够威胁二阶影甲的短兵。石城兵室彻底坍塌，原路被封死，所有人只能沿偏折阴影撤出。",
+    "状态变化": "顾临川影力突破至二阶；两具身体获得在混乱现场分别作出简单判断的能力，但仍不能无限远分开。分影承受的伤势、撞击与疲劳在合并时共同回流，本体小腿伤势与影身新增损伤同时结算。陆绾确认分影并非无代价的安全替身。",
+    "结尾推动力": "两具身体合并后，全部伤势同时回到顾临川身上；陆绾第一次明确看见并理解这种共同结算的代价。顾临川虽然带人和兵撤出石城，却必须在伤势未明、药队仍待护送的情况下继续面对折日峡的撤离压力。"
+  },
+  "obligations": [
+    {
+      "id": "TRG-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "兵室承重石被灰黑异兽撞裂，石梁持续下沉",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "兵室承重石被灰黑异兽撞裂，石梁持续下沉",
+        "terms": [],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "TRG-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "顾临川同时确认陆绾正被断门错影拖向门洞，而一对短兵就在眼前，必须立即决定救人、取兵，或让两边同时冒险",
+      "subject": "顾临川",
+      "action": "move|confirm|handle",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾临川同时确认陆绾正被断门错影拖向门洞，而一对短兵就在眼前，必须立即决定救人、取兵，或让两边同时冒险",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [
+          "move",
+          "confirm",
+          "handle"
+        ],
+        "anchors": [
+          "顾临川同时",
+          "短兵"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          104,
+          134,
+          146
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        104,
+        134,
+        146
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-01",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "顾临川分出两具身体：一具取下短兵，借尚未熟悉的兵器正面挡住异兽并打开撤离路径",
+      "subject": "顾临川",
+      "action": "move|limit|pending",
+      "object": "",
+      "status": "pending",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        146,
+        158,
+        232
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-02",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "另一具沿陆绾留下的石屑痕迹绕至断门侧面，斩断困住她的影藤",
+      "subject": "顾临川",
+      "action": "possess",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "另一具沿陆绾留下的石屑痕迹绕至断门侧面，斩断困住她的影藤",
+        "terms": [],
+        "actions": [
+          "possess"
+        ],
+        "anchors": [
+          "留下的",
+          "她的"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          98
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        98
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-03",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "两具身体在兵室坍塌与错影干扰下分别作出简单临场判断，带出陆绾和三名受困的观日宗弟子，并沿偏折阴影撤退",
+      "subject": "顾临川",
+      "action": "sacrifice",
+      "object": "",
+      "status": "destroyed",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "两具身体在兵室坍塌与错影干扰下分别作出简单临场判断，带出陆绾和三名受困的观日宗弟子，并沿偏折阴影撤退",
+        "terms": [],
+        "actions": [
+          "sacrifice"
+        ],
+        "anchors": [
+          "在兵室",
+          "坍塌"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          240,
+          150,
+          48
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        240,
+        150,
+        48
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "灰黑异兽持续冲撞，迫使兵室加速坍塌",
+      "subject": "顾临川",
+      "action": "sacrifice",
+      "object": "",
+      "status": "destroyed",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "灰黑异兽持续冲撞，迫使兵室加速坍塌",
+        "terms": [],
+        "actions": [
+          "sacrifice"
+        ],
+        "anchors": [
+          "兵室",
+          "坍塌",
+          "异兽"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          150,
+          240,
+          48
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        150,
+        240,
+        48
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "顾斜阳与观日宗弟子必须放弃原有守位，转为协助或跟随撤离",
+      "subject": "顾临川",
+      "action": "sacrifice|lose|move",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾斜阳与观日宗弟子必须放弃原有守位，转为协助或跟随撤离",
+        "terms": [],
+        "actions": [
+          "sacrifice",
+          "lose",
+          "move"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-03",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "短兵第一次划破二阶影甲，现场明确显示其价值",
+      "subject": "顾临川",
+      "action": "",
+      "object": "第一次划破二阶影甲",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "短兵第一次划破二阶影甲，现场明确显示其价值",
+        "terms": [
+          "第一次划破二阶影甲"
+        ],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-04",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "两具身体各自行动后，也不再完全依赖顾临川事先设定的目标",
+      "subject": "顾临川",
+      "action": "refuse",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "两具身体各自行动后，也不再完全依赖顾临川事先设定的目标",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [
+          "refuse"
+        ],
+        "anchors": [
+          "顾临川"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          80,
+          174,
+          140
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        80,
+        174,
+        140
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-01",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "陆绾被救出，三名观日宗弟子脱离兵室",
+      "subject": "顾临川",
+      "action": "protect|escape",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "陆绾被救出，三名观日宗弟子脱离兵室",
+        "terms": [],
+        "actions": [
+          "protect",
+          "escape"
+        ],
+        "anchors": [
+          "三名观日宗弟子",
+          "陆绾",
+          "兵室"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          166,
+          128
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        166,
+        128
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-02",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "顾临川取得一对能够威胁二阶影甲的短兵",
+      "subject": "顾临川",
+      "action": "acquire",
+      "object": "",
+      "status": "received",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾临川取得一对能够威胁二阶影甲的短兵",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [
+          "acquire"
+        ],
+        "anchors": [
+          "顾临川",
+          "短兵"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          134,
+          146,
+          158
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        134,
+        146,
+        158
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-03",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "石城兵室彻底坍塌，原路被封死，所有人只能沿偏折阴影撤出",
+      "subject": "顾临川",
+      "action": "sacrifice",
+      "object": "",
+      "status": "destroyed",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "石城兵室彻底坍塌，原路被封死，所有人只能沿偏折阴影撤出",
+        "terms": [],
+        "actions": [
+          "sacrifice"
+        ],
+        "anchors": [
+          "兵室",
+          "坍塌"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          150,
+          240,
+          48
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        150,
+        240,
+        48
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-01",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾临川影力突破至二阶",
+      "subject": "顾临川",
+      "action": "power_transition",
+      "object": "",
+      "status": "transitioned",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾临川影力突破至二阶",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [
+          "power_transition"
+        ],
+        "anchors": [
+          "顾临川"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          272,
+          96,
+          252
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        272,
+        96,
+        252
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-02",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "两具身体获得在混乱现场分别作出简单判断的能力，但仍不能无限远分开",
+      "subject": "顾临川",
+      "action": "acquire|limit",
+      "object": "",
+      "status": "received",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "两具身体获得在混乱现场分别作出简单判断的能力，但仍不能无限远分开",
+        "terms": [],
+        "actions": [
+          "acquire",
+          "limit"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-03",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "分影承受的伤势、撞击与疲劳在合并时共同回流，本体小腿伤势与影身新增损伤同时结算",
+      "subject": "顾临川",
+      "action": "pay",
+      "object": "本体",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "分影承受的伤势、撞击与疲劳在合并时共同回流，本体小腿伤势与影身新增损伤同时结算",
+        "terms": [
+          "本体"
+        ],
+        "actions": [
+          "pay"
+        ],
+        "anchors": [
+          "本体",
+          "影身"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          6,
+          224,
+          130
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        6,
+        224,
+        130
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-04",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "陆绾确认分影并非无代价的安全替身",
+      "subject": "顾临川",
+      "action": "confirm",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "陆绾确认分影并非无代价的安全替身",
+        "terms": [],
+        "actions": [
+          "confirm"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "END-01",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "两具身体合并后，全部伤势同时回到顾临川身上",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "两具身体合并后，全部伤势同时回到顾临川身上",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [],
+        "anchors": [
+          "同时回到顾临川身",
+          "身上"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          232,
+          104,
+          240
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        232,
+        104,
+        240
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-02",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "陆绾第一次明确看见并理解这种共同结算的代价",
+      "subject": "顾临川",
+      "action": "pay",
+      "object": "第一次明确看见并理解这种共",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "陆绾第一次明确看见并理解这种共同结算的代价",
+        "terms": [
+          "第一次明确看见并理解这种共"
+        ],
+        "actions": [
+          "pay"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "END-03",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "顾临川虽然带人和兵撤出石城，却必须在伤势未明、药队仍待护送的情况下继续面对折日峡的撤离压力",
+      "subject": "顾临川",
+      "action": "move",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾临川虽然带人和兵撤出石城，却必须在伤势未明、药队仍待护送的情况下继续面对折日峡的撤离压力",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [
+          "顾临川",
+          "出石城"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          206,
+          264,
+          174
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        206,
+        264,
+        174
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-020",
+      "kind": "source_conflict",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "Frozen Authority",
+      "source_text": "Do not invent prior dialogue/history backreferences.",
+      "subject": "顾临川",
+      "action": "no_invented_prior_quote",
+      "object": "previous dialogue",
+      "status": "not_invented",
+      "qualifiers": [],
+      "boundary": "A line framed as previously spoken must already exist in Frozen Authority; current dialogue is unaffected.",
+      "validator": {
+        "type": "prior_quote",
+        "authorized_quotes": [
+          "验证闭环阶段推进价值兑现成长空间建立优势",
+          "再证明一次",
+          "这件事已经发生",
+          "一个人同时承担两处人生",
+          "顾临川主动决定分影",
+          "再次分影",
+          "一具取下短兵",
+          "一对短兵",
+          "取得一对并立即证明其价值",
+          "短兵或陆绾",
+          "影身影甲二阶错影影藤短兵观日宗弟子传承石室折日峡",
+          "共同结算价值兑现阶段推进建立优势",
+          "陆绾等待顾临川赶到",
+          "救人还是取兵",
+          "影性试验",
+          "影阶",
+          "兵室要塌了",
+          "守住传承石室谁都不许离开位置",
+          "陆绾",
+          "看着我别动"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-021",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "入潮",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "入潮",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-022",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "成炉",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "成炉",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-023",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "照域",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "照域",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-024",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "镇海",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "镇海",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-025",
+      "kind": "human_cue",
+      "mode": "conditional",
+      "severity": "hard",
+      "source_field": "HUMAN CORE + Primary contact",
+      "source_text": "# HUMAN SEED｜顾临川／不肯把日子过钝的人\n\n## 世界中的初始位置与生活事实\n\n顾临川出生在大晟中部一座有固定火盆和内街阴影的普通城镇。家里不贫寒，但也没有能直接换来身份的积累。父亲替几支商队做短途账目和货单，母亲经营一家能住六七人的小客舍，偶尔替旅客修补衣物、缝制灯罩。\n\n他在镇学读完基础识字、算术和官契辨认，十五岁通过影性试验，影子能在呼吸变化中保持完整，却没有进入宗门或军府。之后，他在本地武馆断断续续学过一年影术，又回客舍帮忙记账、接待商旅、辨认货物和安排房间。\n\n他过去真正经历过几件事：\n\n- 十三岁时，他把一张商队货单上的数字抄错，导致父亲少收了一笔钱。家里没有责打他，只用了两个月才把账补平。\n- 十六岁那年，一支护商队在客舍停留，他替其中一名受伤的年轻护卫保管兵器。那人离开时没有留下姓名，只把一枚磨损的铜扣送给了他。\n- 他曾花三个月替客舍重新布置内院，把旧帘、残灯和废木箱改成一处能听见水声的阴凉小庭，客人很喜欢，但这件事没有让家里多赚多少钱。\n- 十八岁时，客舍后厨失火，他和母亲先救出了住客与账册，随后花了半年还债、重修屋顶。\n- 他在武馆认识陆绾。陆绾替一家药铺往各处送药，身上常带着药粉、风尘和晒热的布料气味。一次她临时缺人同行，顾临川放弃了报酬更高的商队记账活，陪她走了五天山路。\n\n## 持续牵引与互相竞争的动机\n\n- 他想被真正有分量的人看见，并且赢一次不是靠家世、熟脸或运气。他享受别人记住自己名字时的感觉，也会为了一个公开的机会承担丢脸和失败。\n- 他对具体的色彩、声音、触感、食物和空间有直接兴趣。好看的器物、舒服的房间、陌生地方的声响，即使没有实际用途，也足以让他停下来。\n- 他会被具体的身体吸引牵动。喜欢一个人的外貌、气味、姿态和靠近时的感觉，可能让他改变原本更划算的安排；这种吸引不自动等于长久合适。\n- 他想拥有一笔不必向家人解释的自由钱，也想离开熟悉的人群，去别的城镇生活一段时间。但稳定收入、家里的欠款和他对当下生活的依恋，会反复把他拉回去。\n\n这些动机不能同时满足：他可能在一份稳定但乏味的差事和一次能让人看见自己的冒险之间犹豫；也可能明知某段关系不适合长期维持，却因为身体吸引和共同在场，继续支付时间、风险或机会成本。\n\n## Behavior Signature\n\n顾临川通常先判断一件事是否仍然鲜活：是否有具体的人、好看的东西、值得学的新手艺、可赢的局面，或者能让他感到自己正在真实生活。只要答案是肯定的，他可以忍受麻烦、失败和不体面的过程。\n\n一旦事情只剩机械重复、空洞应酬或别人规定好的正确姿势，他会开始拖延、绕路、换人接手，甚至在已经投入很多之后离开。他知道这样可能损失钱和信用，却不总能让长期收益压过眼前的钝感。\n\n他在被重视时更愿意展示自己，也更敢接近陌生人；如果发现赞美只是礼貌，他会迅速失去兴趣。面对不同现场，他可能直说、隐瞒、硬撑、讨价还价或突然回头，具体做法取决于当时的风险、能力和身边的人。\n\n他不把公平、责任或安全当成永远最高的排序。若只是陌生人的便利，他通常会计算代价；若涉及某个具体的人、强烈吸引或真正想看的东西，他的风险阈值会改变。\n\n## 重要关系原点\n\n陆绾是顾临川在武馆认识的女人，出身于做药材处理和伤药配送的家庭。她不依附他，也不特别擅长讨好人；她走路很快，嫌麻烦，记性好，常常把话说到一半就去做下一件事。\n\n顾临川原本准备接一份报酬更高的商队记账活，因为陆绾临时缺少同行者，他改接了低价的短途差事，陪她送药五天。这个选择不完全出于责任：他确实喜欢她的身体、气味和走路时不回头等人的样子，也喜欢她在陌生地方仍然自顾自做事的鲜活感。\n\n他们后来相处过一段时间，但没有被自动推成稳定关系。陆绾更在意一门能长期养活自己的药材手艺，顾临川则常被新的地方、新的人和被看见的机会吸引。她在场时，他会延后离开、接受自己原本不想去的地方；她缺席时，他可能重新选择更自由、更有趣或更赚钱的路线。",
+      "subject": "顾临川",
+      "action": "notice_specific_cue",
+      "object": "specific current person",
+      "status": "triggered",
+      "qualifiers": [],
+      "boundary": "Trigger requires a Human-Core-specific cue plus direct body contact or near treatment. Co-presence, battle beside each other, moving a third person, or passing an object does not count.",
+      "validator": {
+        "type": "human_cue",
+        "person_terms": [
+          "陆绾"
+        ],
+        "contact_paragraphs": [
+          234
+        ],
+        "cue_terms": [
+          "气味"
+        ],
+        "contact_terms": [
+          "抓住",
+          "扶住",
+          "抱住",
+          "压在",
+          "贴近",
+          "靠近",
+          "包扎",
+          "治疗",
+          "触碰",
+          "握住手",
+          "按住伤口"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        234
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-026",
+      "kind": "commercial_value",
+      "mode": "preserve_if_present",
+      "severity": "hard",
+      "source_field": "Primary + approved Curator support",
+      "source_text": "断门里的力量比他想得更狠。",
+      "subject": "顾临川",
+      "action": "preserve_value",
+      "object": "desire",
+      "status": "present_in_primary",
+      "qualifiers": [],
+      "boundary": "Commercial value is category-level, not sentence-level and not a per-chapter quota. Individual carrier paragraphs may change if the authorized desire, relationship, reward or repricing remains visible.",
+      "validator": {
+        "type": "commercial_preserve",
+        "category": "desire",
+        "markers": [
+          "我想",
+          "他想",
+          "想要",
+          "舍不得",
+          "不愿",
+          "喜欢",
+          "漂亮",
+          "属于自己",
+          "自己定",
+          "真正属于"
+        ],
+        "source_paragraphs": [
+          92
+        ],
+        "key_terms": [
+          "本体",
+          "第一次真正的双线实战"
+        ],
+        "source_text": "断门里的力量比他想得更狠。"
+      },
+      "primary_evidence_paragraphs": [
+        92
+      ],
+      "protected_category": "desire"
+    }
+  ],
+  "source_conflicts": [],
+  "unsupported_clauses": [
+    "触发事件[1] 兵室承重石被灰黑异兽撞裂，石梁持续下沉",
+    "对手或世界反应[2] 顾斜阳与观日宗弟子必须放弃原有守位，转为协助或跟随撤离",
+    "对手或世界反应[3] 短兵第一次划破二阶影甲，现场明确显示其价值",
+    "状态变化[2] 两具身体获得在混乱现场分别作出简单判断的能力，但仍不能无限远分开",
+    "状态变化[4] 陆绾确认分影并非无代价的安全替身"
+  ],
+  "diagnostics": [
+    "当前 Canon 已明确本体仍在药车右侧、影身已进入兵室，且分影最多增加一具影身；事件合同却写“顾临川主动决定分影”。本章不能再次演示分影，只能按既有本体与影身进行分工；若“再次分影”是合同本意，需上游裁定。",
+    "“一具取下短兵”与最终取得“一对短兵”之间未明确具体取用动作。只保留“取得一对并立即证明其价值”，不补充取兵步骤。"
+  ],
+  "primary_paragraph_count": 272,
+  "preflight_eligible": false
+}

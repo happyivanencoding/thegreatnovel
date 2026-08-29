@@ -1,0 +1,9 @@
+﻿route_or_evidence,samples,nominal_speedup_percent,reader,authority_or_gate,decision
+controlled_boundary_tests,33,,,All focused assertions pass,PASS_METHOD
+known_bad_mutation_recall,12,,,12/12 detected,PASS_RECALL_ONLY
+all20_shadow_preflight,20,,,eligible 10; fail-closed 10,PARTIAL_COVERAGE
+all20_historical_full_shadow,20,,,historical Full pass 5; blocked 15; not gold,SHADOW_ONLY
+crossbook_static_compile,5,,,eligible 0/5,FAIL_GENERALIZATION
+atomic_delta_route_run1,4,37.59,Reader atomic1/control1 on adopted bodies,Authority atomic2 on adopted bodies; one residual failure,FAIL_PRODUCTION
+atomic_delta_route_run2,4,40.97,Same judged scope; Delta exact repeat only 1/4 overall,Authority-positive adopted bodies; one residual failure,FAIL_PRODUCTION
+explicit_full_fallback_ch16,1,-27.4,,Fallback output still fails cooldown/closure gate,FAIL_RESIDUAL

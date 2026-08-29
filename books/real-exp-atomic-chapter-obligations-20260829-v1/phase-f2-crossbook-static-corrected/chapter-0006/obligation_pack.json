@@ -1,0 +1,790 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapter": 6,
+  "protagonist": "顾临川",
+  "mission_fields": {
+    "触发事件": "前方驮车被偏折影子引向碎石坡，右侧护卫失位，岩壁错影中同时逼近异兽；铜羽领队命令顾临川守住药车右侧。",
+    "主角行动": "顾临川将分影分向两条现场目标：一具身体留在药车右侧，顶住最近的异兽冲击并护送受伤人员向外撤；另一具沿错乱阴影追入更深处寻找陆绾。两边各自行动，不等待即时共享判断。",
+    "对手或世界反应": "偏折阳光持续让身体、影子与路线错位，异兽借岩壁错影逼近；车队被迫收缩队形，领队只能优先保住药车和撤离线。陆绾被错影带向古代石城方向，无法自行回到队列。",
+    "直接结果": "顾临川的一具身体暂时稳住药车撤离线，另一具追到通往古代石城的错影入口附近，确认陆绾已经被困在那里；他未能在本章救出她，也没有让两边共享即时判断。",
+    "状态变化": "分影第一次在同一场真实危机中分别承担近身防守与深入搜救，并证明当前仍只能各自依据现场作出判断；陆绾的位置从“与药车同行”变为“困在古代石城入口附近”，顾临川的另一具影身已进入石城方向。顾临川仍未升级，疲劳与分影迟滞继续存在。",
+    "结尾推动力": "顾临川的影身刚追入石城，就发现观日宗弟子已经先一步进入。陆绾仍在入口附近受困，药车撤离线也不能长期等待，顾临川下一步必然要在救人、守住队伍与面对先行者之间作出选择。"
+  },
+  "obligations": [
+    {
+      "id": "TRG-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "前方驮车被偏折影子引向碎石坡，右侧护卫失位，岩壁错影中同时逼近异兽",
+      "subject": "顾临川",
+      "action": "search",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "前方驮车被偏折影子引向碎石坡，右侧护卫失位，岩壁错影中同时逼近异兽",
+        "terms": [],
+        "actions": [
+          "search"
+        ],
+        "anchors": [
+          "护卫",
+          "岩壁",
+          "错影",
+          "逼近"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          10,
+          30
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        10,
+        30
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "TRG-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "铜羽领队命令顾临川守住药车右侧",
+      "subject": "顾临川",
+      "action": "protect",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "铜羽领队命令顾临川守住药车右侧",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [
+          "protect"
+        ],
+        "anchors": [
+          "顾临川守",
+          "药车右侧"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          76,
+          60,
+          46
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        76,
+        60,
+        46
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-01",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "顾临川将分影分向两条现场目标：一具身体留在药车右侧，顶住最近的异兽冲击并护送受伤人员向外撤",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾临川将分影分向两条现场目标：一具身体留在药车右侧，顶住最近的异兽冲击并护送受伤人员向外撤",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [],
+        "anchors": [
+          "在药车右侧",
+          "顾临川",
+          "留在药车",
+          "异兽",
+          "顶住"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          76,
+          46,
+          40
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        76,
+        46,
+        40
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-02",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "另一具沿错乱阴影追入更深处寻找陆绾",
+      "subject": "顾临川",
+      "action": "search",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "另一具沿错乱阴影追入更深处寻找陆绾",
+        "terms": [],
+        "actions": [
+          "search"
+        ],
+        "anchors": [
+          "另一具",
+          "更深处"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          42,
+          30
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        42,
+        30
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-03",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "两边各自行动，不等待即时共享判断",
+      "subject": "顾临川",
+      "action": "pending",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "偏折阳光持续让身体、影子与路线错位，异兽借岩壁错影逼近",
+      "subject": "顾临川",
+      "action": "search",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "偏折阳光持续让身体、影子与路线错位，异兽借岩壁错影逼近",
+        "terms": [],
+        "actions": [
+          "search"
+        ],
+        "anchors": [
+          "岩壁",
+          "错影",
+          "逼近",
+          "异兽"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          10,
+          30
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        10,
+        30
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "车队被迫收缩队形，领队只能优先保住药车和撤离线",
+      "subject": "顾临川",
+      "action": "protect|move",
+      "object": "",
+      "status": "preserved",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "车队被迫收缩队形，领队只能优先保住药车和撤离线",
+        "terms": [],
+        "actions": [
+          "protect",
+          "move"
+        ],
+        "anchors": [
+          "领队",
+          "药车"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          68
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        68
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-03",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "陆绾被错影带向古代石城方向，无法自行回到队列",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "陆绾被错影带向古代石城方向，无法自行回到队列",
+        "terms": [],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-01",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "顾临川的一具身体暂时稳住药车撤离线，另一具追到通往古代石城的错影入口附近，确认陆绾已经被困在那里",
+      "subject": "顾临川",
+      "action": "protect|move|confirm|pending",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾临川的一具身体暂时稳住药车撤离线，另一具追到通往古代石城的错影入口附近，确认陆绾已经被困在那里",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [
+          "protect",
+          "move",
+          "confirm",
+          "pending"
+        ],
+        "anchors": [
+          "顾临川",
+          "药车"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          76,
+          54,
+          60
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        76,
+        54,
+        60
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-02",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "他未能在本章救出她，也没有让两边共享即时判断",
+      "subject": "顾临川",
+      "action": "protect",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "他未能在本章救出她，也没有让两边共享即时判断",
+        "terms": [],
+        "actions": [
+          "protect"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-01",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "分影第一次在同一场真实危机中分别承担近身防守与深入搜救，并证明当前仍只能各自依据现场作出判断",
+      "subject": "顾临川",
+      "action": "confirm",
+      "object": "第一次在同一场真实危机中分",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "分影第一次在同一场真实危机中分别承担近身防守与深入搜救，并证明当前仍只能各自依据现场作出判断",
+        "terms": [
+          "第一次在同一场真实危机中分"
+        ],
+        "actions": [
+          "confirm"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-02",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "陆绾的位置从“与药车同行”变为“困在古代石城入口附近”，顾临川的另一具影身已进入石城方向",
+      "subject": "顾临川",
+      "action": "move",
+      "object": "与药车同行",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "陆绾的位置从“与药车同行”变为“困在古代石城入口附近”，顾临川的另一具影身已进入石城方向",
+        "terms": [
+          "顾临川",
+          "与药车同行",
+          "困在古代石城入口附近"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-03",
+      "kind": "terminal_state",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾临川仍未升级，疲劳与分影迟滞继续存在",
+      "subject": "顾临川",
+      "action": "limit|pending",
+      "object": "",
+      "status": "pending",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        50,
+        32,
+        18
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-01",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "顾临川的影身刚追入石城，就发现观日宗弟子已经先一步进入",
+      "subject": "顾临川",
+      "action": "move",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾临川的影身刚追入石城，就发现观日宗弟子已经先一步进入",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [
+          "顾临川",
+          "一步"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          40,
+          28,
+          114
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        40,
+        28,
+        114
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-02",
+      "kind": "ending",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "陆绾仍在入口附近受困，药车撤离线也不能长期等待，顾临川下一步必然要在救人、守住队伍与面对先行者之间作出选择",
+      "subject": "顾临川",
+      "action": "protect|move|limit|pending",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        46,
+        40,
+        16
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-016",
+      "kind": "source_conflict",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "Frozen Authority",
+      "source_text": "Do not invent prior dialogue/history backreferences.",
+      "subject": "顾临川",
+      "action": "no_invented_prior_quote",
+      "object": "previous dialogue",
+      "status": "not_invented",
+      "qualifiers": [],
+      "boundary": "A line framed as previously spoken must already exist in Frozen Authority; current dialogue is unaffected.",
+      "validator": {
+        "type": "prior_quote",
+        "authorized_quotes": [
+          "验证闭环阶段推进价值兑现成长空间建立优势",
+          "再证明一次",
+          "这件事已经发生",
+          "守车听令不离队",
+          "与药车同行",
+          "困在古代石城入口附近",
+          "暂无明确敌人",
+          "异兽逼近前车失控",
+          "折日峡各走一边",
+          "错影",
+          "同时处理两件事",
+          "即时共享判断",
+          "撤离线",
+          "守车听令",
+          "陆绾受困观日宗先入药车不能久等",
+          "影性试验",
+          "影阶",
+          "原路封了",
+          "探路队到现在没回来商盟不等他们也不拿整支队伍去赌",
+          "那这趟怎么办",
+          "退回城里等新的消息",
+          "货先卸药队也一起回",
+          "我的药要送进折日峡",
+          "原路封了折日峡也不是给你一辆药车单独走的地方",
+          "我知道",
+          "所以我没有说要单独走",
+          "药不能退药队若回城再等一次商路不知道要拖到什么时候我现在就要往折日峡去",
+          "我还是铜羽的随队护卫",
+          "我护药守车听领队的安排",
+          "你想清楚退回去这一趟就算暂缓进折日峡前面是什么谁都说不准",
+          "我想清楚了",
+          "契券不是让我只护一段回城路",
+          "药队不能单走商队也不能散",
+          "改线",
+          "走折日峡外口火盆全留着驮车靠拢前后护卫不准离车没我的话谁都不许离开队列半步",
+          "你的车",
+          "车轮陷了缰绳断了有人靠近都先守住这里别乱跑",
+          "明白",
+          "进去了",
+          "看路看车别信自己一时看错的东西",
+          "顾临川守右边"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-017",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "入潮",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "入潮",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-018",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "成炉",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "成炉",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-019",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "照域",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "照域",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-020",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "镇海",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "镇海",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-021",
+      "kind": "commercial_value",
+      "mode": "preserve_if_present",
+      "severity": "hard",
+      "source_field": "Primary + approved Curator support",
+      "source_text": "他想直接过去。",
+      "subject": "顾临川",
+      "action": "preserve_value",
+      "object": "desire",
+      "status": "present_in_primary",
+      "qualifiers": [],
+      "boundary": "Commercial value is category-level, not sentence-level and not a per-chapter quota. Individual carrier paragraphs may change if the authorized desire, relationship, reward or repricing remains visible.",
+      "validator": {
+        "type": "commercial_preserve",
+        "category": "desire",
+        "markers": [
+          "我想",
+          "他想",
+          "想要",
+          "舍不得",
+          "不愿",
+          "喜欢",
+          "漂亮",
+          "属于自己",
+          "自己定",
+          "真正属于"
+        ],
+        "source_paragraphs": [
+          132
+        ],
+        "key_terms": [
+          "预付款",
+          "折日峡各走一边",
+          "第一次在真实危机中承担两条"
+        ],
+        "source_text": "他想直接过去。"
+      },
+      "primary_evidence_paragraphs": [
+        132
+      ],
+      "protected_category": "desire"
+    }
+  ],
+  "source_conflicts": [],
+  "unsupported_clauses": [
+    "主角行动[3] 两边各自行动，不等待即时共享判断",
+    "对手或世界反应[3] 陆绾被错影带向古代石城方向，无法自行回到队列",
+    "直接结果[2] 他未能在本章救出她，也没有让两边共享即时判断"
+  ],
+  "diagnostics": [],
+  "primary_paragraph_count": 164,
+  "preflight_eligible": false
+}

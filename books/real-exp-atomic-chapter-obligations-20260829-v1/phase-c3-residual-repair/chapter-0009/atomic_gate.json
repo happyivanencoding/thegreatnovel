@@ -1,0 +1,265 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 9,
+  "preflight_eligible": true,
+  "decision": "ADOPT_DELTA",
+  "touched_source_paragraphs": [
+    2
+  ],
+  "blocking_checks": [],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P069",
+        "P076",
+        "P084"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P006",
+        "P056"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P020"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "pass_preserved",
+      "reason": "Primary actor-action-object evidence was untouched.",
+      "evidence": [
+        "P013",
+        "P016",
+        "P060"
+      ]
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P012",
+        "P039",
+        "P067"
+      ]
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P003",
+        "P020",
+        "P042"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P006",
+        "P082"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P079",
+        "P083",
+        "P087"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P006",
+        "P053",
+        "P069"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P060",
+        "P079",
+        "P080"
+      ]
+    },
+    {
+      "obligation_id": "RES-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P017",
+        "P019",
+        "P064"
+      ]
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P019",
+        "P028",
+        "P064"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P082",
+        "P083",
+        "P087"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P013",
+        "P060",
+        "P061"
+      ]
+    },
+    {
+      "obligation_id": "STA-04",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P033",
+        "P063",
+        "P074"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P061",
+        "P079",
+        "P082"
+      ]
+    },
+    {
+      "obligation_id": "RR-018",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/1 actions=[]",
+      "evidence": [
+        "低潮"
+      ]
+    },
+    {
+      "obligation_id": "A-019",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-023",
+      "status": "pass_preserved",
+      "reason": "Primary clone-boundary evidence was untouched.",
+      "evidence": [
+        "P006",
+        "P079",
+        "P080"
+      ]
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "pass",
+      "reason": "authorized possession state found",
+      "evidence": [
+        "楔体表面多了几道细裂，余震却还在。它已经不再压着整面峡壁，残留的潮压却仍一下一下撞在掌心，像有什么东西想钻进骨头里。\n\n分身穿出裂缝，把回潮楔递给顾停舟。"
+      ]
+    },
+    {
+      "obligation_id": "A-025",
+      "status": "pass",
+      "reason": "status=lost found",
+      "evidence": [
+        "阮青蜃站在一块尚未塌毁的高石上，衣摆被水雾打湿，目光越过顾停舟，落在碎掉的矿权标记和被冲断的撤路上。\n\n“顾停舟。”他开口，声音不高，却让附近的人都听得见，“矿权标记毁了，实测尾款无法交付，回潮楔的归属也要重算。”"
+      ]
+    },
+    {
+      "obligation_id": "A-026",
+      "status": "fail",
+      "reason": "relationship state abstracted away",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-027",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-028",
+      "status": "pass_preserved",
+      "reason": "protected commercial category evidence was untouched",
+      "evidence": [
+        "P011",
+        "P016",
+        "P020",
+        "P026",
+        "P029",
+        "P033"
+      ]
+    }
+  ],
+  "status_counts": {
+    "pass": 9,
+    "pass_preserved": 18,
+    "not_triggered": 0,
+    "fail": 1,
+    "unknown": 0,
+    "conflict": 0
+  }
+}

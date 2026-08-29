@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.11
+version: 0.3.12
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -294,6 +294,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - 测 authority isolation 时使用 fresh context；
 - 能 deterministic 就不要再加 LLM Composer；
 - 延迟/成本审计先拆开 adopted node wall、真实批次 elapsed（含重跑/Review/Repair）、上游摊销与 execution transport / queue；相似度高不等于节点冗余，模型/effort/输出合同变化必须接回正常下游并审最终正文；条件路由、局部 Delta、提前编译或跨章投机还必须计算完整 critical path、独立 repeat、cross-book、fallback/丢弃成本与 Reader↔Authority 分裂，不能用一次胜出或子节点加速 productionize；
+- Atomic / Delta 审计必须区分 hard closure 与 protected commercial value：actor/action/object、result/state/ending、ownership/money/time、power/Reader Release/unknown 的任一 FAIL/UNKNOWN/CONFLICT 均阻止采用；欲望、关系、Reward、Surprise、Public Proof与Social Repricing只能 preserve-if-present，不能变成 prose quota；unsupported / source conflict 必须 fail closed，并报告 calibration、repeat、cross-book、Reader+Authority 与 fallback-adjusted wall。
 - 先人工/结构化直接读输出，再考虑 Judge；
 - 不用一组自动词频代替文学判断；
 - 不 cherry-pick 最好 candidate 证明系统成功；

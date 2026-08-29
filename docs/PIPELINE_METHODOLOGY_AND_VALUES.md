@@ -718,6 +718,8 @@ Long-form Evolution 不进入每章成本。World Expansion 只在真实 World H
 
 延迟优化也遵守 root-cause layering：先区分正常采用链与废弃重跑/周期 Review/Repair 的真实摊销，再区分 deterministic context、模型推理与排队波动。不能用“最终稿和 Primary 很像”证明 Reviser 冗余，也不能用“中间包标题完整”证明降 effort 后最终正文等价。冻结上游、单变量运行，并把 treatment 接回正常下游；只有最终正文同时通过商业读感与 Authority/Canon 盲评，才允许改变 production 路由。涉及随机稀疏修订、条件路由、提前编译或跨章投机时，还必须报告**完整下游 critical path**、独立重复运行、跨书泛化、fallback/丢弃成本与 Reader↔Authority 分裂；子节点快不等于整章快，一次胜出不等于稳定 route。替换成另一强模型也服从同一标准：Full Curator 攡为 Terra high 虽在四章完整下游中快26.9%，但 Reader 与 Authority均2:2，不能按平均速度改默认。2026-08-29 的两轮实验已否决 full/patch medium Reviser、Slim/medium Curator、Conditional/Speculative Director、Parallel Pre-Curator、Authority Blueprint、Attention Kernel、Reviser+State 合并、State Terra low、Paragraph Manifest 与常驻 Reader Polish 作为质量等价默认。Paragraph-Delta 是唯一保留的高潜研究：它证明全文重输可被局部操作替代，但两次独立运行只有1/5完全一致，跨书 Reader 与 Authority仍分裂；下一步需要 deterministic Atomic Chapter Obligations，不再增加一个 LLM classifier。确定性删除 stale context 可以冻结；模型、effort、输出协议、并行语义或新 Agent 继续属于实验假设。
 
+Atomic obligations 的稳定方法论是“**hard closure 与 commercial preservation 分层**”。Hard 层只验证可枚举的事实义务：主体、动作、对象、结果、状态、Ending、持有/支付/时间、力量位置、Reader Release 与未知边界；任何不确定都 fail closed。Soft 层只验证 Primary 已经存在的欲望、关系、奖励、惊喜与社会重新定价没有被无必要删除或抽象化，不把这些价值变成每章必须出现的句子或场面。局部 Delta 的模型输出本身不被信任；代码应用后必须重新扫描全文状态，且 repeat/cross-book/fallback-adjusted critical path 同时成立才可采用。当前 v0.1 只证明这种审计方向成立，没有证明 compiler 泛化或 route 可 productionize。
+
 ---
 
 ## 8. 当前模型与 GBrain 路由（基于实测，不是方法论硬依赖）

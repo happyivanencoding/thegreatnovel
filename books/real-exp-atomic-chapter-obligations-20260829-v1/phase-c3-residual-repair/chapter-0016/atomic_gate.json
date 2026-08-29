@@ -1,0 +1,260 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 16,
+  "preflight_eligible": true,
+  "decision": "ADOPT_DELTA",
+  "touched_source_paragraphs": [
+    24,
+    26,
+    45,
+    46,
+    48,
+    49,
+    71
+  ],
+  "blocking_checks": [],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P074"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P010",
+        "P034",
+        "P074"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=5/5 actions=[]",
+      "evidence": [
+        "顾停舟",
+        "成炉",
+        "本体",
+        "水路",
+        "粮队"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "pass",
+      "reason": "actor, action class and object co-occur in one paragraph",
+      "evidence": [
+        "分身将回潮楔钉进第二井外侧的潮泥。楔身没入，只留尾端在外，随即猛地一震。"
+      ]
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "黑水已经灌进最外面的几排石屋。那里的挡潮墙早被冲开，残墙和泥坡连成一片，像一只张开的口子。外层本来就是要放弃的地方，只是潮势若这样直冲，三座井和粮道也会一起被撕开。"
+      ]
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P013",
+        "P055",
+        "P073"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P010",
+        "P074",
+        "P092"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "pass",
+      "reason": "pending boundary preserved",
+      "evidence": [
+        "“粮还没到地方。”他对少东家道，“别当契完了。”"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "是粮车下陷的前轮被一股力量硬生生托住，车身不再往西侧软地歪。沿主粮道通向井位的那段水路也被压住，路基没有继续裂开。牲口还在挣，可车辕稳住了。车夫愣了一下，立刻死死拉紧缰绳。"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P012",
+        "P013",
+        "P038"
+      ]
+    },
+    {
+      "obligation_id": "RES-03",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "本体的顾停舟抽出回潮楔，递到分身手里。楔子边缘还残着没有散尽的压意，分身五指扣紧楔身，朝已经被放弃的外层缺口看了一眼。"
+      ]
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=2/4 actions=[]",
+      "evidence": [
+        "回潮楔",
+        "顾停舟"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "是粮车下陷的前轮被一股力量硬生生托住，车身不再往西侧软地歪。沿主粮道通向井位的那段水路也被压住，路基没有继续裂开。牲口还在挣，可车辕稳住了。车夫愣了一下，立刻死死拉紧缰绳。"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P010",
+        "P074",
+        "P092"
+      ]
+    },
+    {
+      "obligation_id": "STA-04",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P085",
+        "P088"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P052",
+        "P063",
+        "P091"
+      ]
+    },
+    {
+      "obligation_id": "END-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P069",
+        "P082",
+        "P101"
+      ]
+    },
+    {
+      "obligation_id": "A-019",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-023",
+      "status": "pass_preserved",
+      "reason": "Primary clone-boundary evidence was untouched.",
+      "evidence": [
+        "P074"
+      ]
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "pass",
+      "reason": "authorized possession state found",
+      "evidence": [
+        "泥坡、石料和那股不断上顶的潮压，像被一只无形的手扣住，短暂停在原地。\n\n本体的顾停舟抽出回潮楔，递到分身手里。楔子边缘还残着没有散尽的压意，分身五指扣紧楔身，朝已经被放弃的外层缺口看了一眼。"
+      ]
+    },
+    {
+      "obligation_id": "A-025",
+      "status": "pass",
+      "reason": "single cycle object=True steps=True repeated=False",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-026",
+      "status": "pass",
+      "reason": "cooldown boundary retained",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-027",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-028",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-029",
+      "status": "pass",
+      "reason": "protected reward retained",
+      "evidence": [
+        "只要把那里定住，再把回潮楔放进去，潮势就能偏开。"
+      ]
+    }
+  ],
+  "status_counts": {
+    "pass": 19,
+    "pass_preserved": 10,
+    "not_triggered": 0,
+    "fail": 0,
+    "unknown": 0,
+    "conflict": 0
+  }
+}

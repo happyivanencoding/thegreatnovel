@@ -1,0 +1,800 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapter": 17,
+  "protagonist": "顾停舟",
+  "mission_fields": {
+    "触发事件": "逼近高处石脊的下一股地潮改变方向，内侧观测点连同照域潮谱石台即将被潮压吞没；顾停舟、顾沉戈与旧关守将进入观测点，必须在撤离队伍被追上的前一刻作出取舍。",
+    "主角行动": "顾停舟不等待额外考核或确认，直接取下即将失守的照域潮谱，承受携谱进入潮场的风险；他以潮谱展开潮域，让一个身体承担潮势正面冲击，另一个身体从侧面稳住撤离通道的关键边界。",
+    "对手或世界反应": "地潮持续冲击观测点与石脊，迫使撤离队伍压缩在更窄的安全范围内。照域展开后，顾沉戈与旧关守将确认这已不是普通成炉者只能稳住自身和近处重物的层次；但照域仍不能替代镇海层面的正面承载，潮压没有因此消失。",
+    "直接结果": "照域潮谱归顾停舟所有，他第一次正式进入照域，并以改变一片潮场边界的方式扩大石脊与粮道的安全范围，使老人、孩子、牲口和居民能够继续通过。",
+    "状态变化": "顾停舟从成炉者进入照域；照域潮谱成为他可实际持有和使用的关键潮路成果。旧关的粮道与新井安全范围暂时扩大，但十二日地潮的原因、照域潮谱指向西北的源头、古器来源和更大的潮兽行动仍未解决。",
+    "结尾推动力": "照域展开后，顾停舟看见镇海潮兽正沿旧关外层被改开的潮路逼近；阮青蜃的矿队仍停在矿脉附近，没有随居民撤离，顾停舟必须在下一章处理潮兽逼近与矿队滞留同时造成的现场危机。"
+  },
+  "obligations": [
+    {
+      "id": "TRG-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "逼近高处石脊的下一股地潮改变方向，内侧观测点连同照域潮谱石台即将被潮压吞没",
+      "subject": "顾停舟",
+      "action": "search",
+      "object": "照域潮谱",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "逼近高处石脊的下一股地潮改变方向，内侧观测点连同照域潮谱石台即将被潮压吞没",
+        "terms": [
+          "照域潮谱",
+          "潮压",
+          "照域"
+        ],
+        "actions": [
+          "search"
+        ],
+        "anchors": [
+          "逼近",
+          "石脊",
+          "潮谱"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          76,
+          14,
+          81
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        76,
+        14,
+        81
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "TRG-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "顾停舟、顾沉戈与旧关守将进入观测点，必须在撤离队伍被追上的前一刻作出取舍",
+      "subject": "顾停舟",
+      "action": "move",
+      "object": "旧关守将",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟、顾沉戈与旧关守将进入观测点，必须在撤离队伍被追上的前一刻作出取舍",
+        "terms": [
+          "旧关守将",
+          "顾停舟",
+          "顾沉戈"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [
+          "顾停舟",
+          "撤离队伍"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          13,
+          66,
+          18
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        13,
+        66,
+        18
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-01",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "顾停舟不等待额外考核或确认，直接取下即将失守的照域潮谱，承受携谱进入潮场的风险",
+      "subject": "顾停舟",
+      "action": "sacrifice|move|confirm|pending",
+      "object": "照域潮谱",
+      "status": "destroyed",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [
+          "照域潮谱",
+          "照域"
+        ],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        81,
+        76,
+        14
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-02",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "他以潮谱展开潮域，让一个身体承担潮势正面冲击，另一个身体从侧面稳住撤离通道的关键边界",
+      "subject": "顾停舟",
+      "action": "protect|move",
+      "object": "潮势",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "他以潮谱展开潮域，让一个身体承担潮势正面冲击，另一个身体从侧面稳住撤离通道的关键边界",
+        "terms": [
+          "潮势"
+        ],
+        "actions": [
+          "protect",
+          "move"
+        ],
+        "anchors": [
+          "潮势",
+          "撤离",
+          "身体从",
+          "另一"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          34,
+          24
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        34,
+        24
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "地潮持续冲击观测点与石脊，迫使撤离队伍压缩在更窄的安全范围内",
+      "subject": "顾停舟",
+      "action": "move",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "地潮持续冲击观测点与石脊，迫使撤离队伍压缩在更窄的安全范围内",
+        "terms": [],
+        "actions": [
+          "move"
+        ],
+        "anchors": [
+          "撤离队伍",
+          "石脊"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          34,
+          18
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        34,
+        18
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "照域展开后，顾沉戈与旧关守将确认这已不是普通成炉者只能稳住自身和近处重物的层次",
+      "subject": "顾停舟",
+      "action": "protect|confirm",
+      "object": "旧关守将",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "照域展开后，顾沉戈与旧关守将确认这已不是普通成炉者只能稳住自身和近处重物的层次",
+        "terms": [
+          "旧关守将",
+          "顾沉戈",
+          "成炉",
+          "照域"
+        ],
+        "actions": [
+          "protect",
+          "confirm"
+        ],
+        "anchors": [
+          "能稳住自身",
+          "成炉者",
+          "近处"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          39
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        39
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-03",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "照域仍不能替代镇海层面的正面承载，潮压没有因此消失",
+      "subject": "顾停舟",
+      "action": "limit",
+      "object": "潮压",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "照域仍不能替代镇海层面的正面承载，潮压没有因此消失",
+        "terms": [
+          "潮压",
+          "照域",
+          "镇海"
+        ],
+        "actions": [
+          "limit"
+        ],
+        "anchors": [
+          "照域",
+          "镇海",
+          "正面",
+          "潮压"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          42
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        42
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-01",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "照域潮谱归顾停舟所有，他第一次正式进入照域，并以改变一片潮场边界的方式扩大石脊与粮道的安全范围，使老人、孩子、牲口和居民能够继续通过",
+      "subject": "顾停舟",
+      "action": "possess|move|power_transition",
+      "object": "照域潮谱",
+      "status": "transitioned",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "照域潮谱归顾停舟所有，他第一次正式进入照域，并以改变一片潮场边界的方式扩大石脊与粮道的安全范围，使老人、孩子、牲口和居民能够继续通过",
+        "terms": [
+          "照域潮谱",
+          "顾停舟",
+          "居民",
+          "照域",
+          "粮道",
+          "第一次正式进入照域"
+        ],
+        "actions": [
+          "possess",
+          "move",
+          "power_transition"
+        ],
+        "anchors": [
+          "照域潮谱",
+          "顾停舟",
+          "片潮场",
+          "石脊",
+          "粮道"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          81,
+          39
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        81,
+        39
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-01",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾停舟从成炉者进入照域",
+      "subject": "顾停舟",
+      "action": "move",
+      "object": "成炉",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟从成炉者进入照域",
+        "terms": [
+          "顾停舟",
+          "成炉",
+          "照域"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [
+          "顾停舟",
+          "照域"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          81,
+          13,
+          39
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        81,
+        13,
+        39
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-02",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "照域潮谱成为他可实际持有和使用的关键潮路成果",
+      "subject": "顾停舟",
+      "action": "possess|power_transition",
+      "object": "照域潮谱",
+      "status": "transitioned",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "照域潮谱成为他可实际持有和使用的关键潮路成果",
+        "terms": [
+          "照域潮谱",
+          "照域"
+        ],
+        "actions": [
+          "possess",
+          "power_transition"
+        ],
+        "anchors": [
+          "照域潮谱"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          14,
+          81,
+          76
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        14,
+        81,
+        76
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-03",
+      "kind": "terminal_state",
+      "mode": "must_remain_unknown",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "旧关的粮道与新井安全范围暂时扩大，但十二日地潮的原因、照域潮谱指向西北的源头、古器来源和更大的潮兽行动仍未解决",
+      "subject": "顾停舟",
+      "action": "limit|pending",
+      "object": "十二日地潮",
+      "status": "pending",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "unresolved",
+        "topic_terms": [
+          "十二日地潮",
+          "照域潮谱",
+          "古器",
+          "新井"
+        ],
+        "revelation_terms": [
+          "真相是",
+          "原来是",
+          "确认是",
+          "证实是",
+          "原因是",
+          "源自",
+          "其实是",
+          "揭开",
+          "查明"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        65,
+        66
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-01",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "照域展开后，顾停舟看见镇海潮兽正沿旧关外层被改开的潮路逼近",
+      "subject": "顾停舟",
+      "action": "search",
+      "object": "旧关外层",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "照域展开后，顾停舟看见镇海潮兽正沿旧关外层被改开的潮路逼近",
+        "terms": [
+          "旧关外层",
+          "镇海潮兽",
+          "顾停舟",
+          "照域",
+          "镇海"
+        ],
+        "actions": [
+          "search"
+        ],
+        "anchors": [
+          "改开的潮路",
+          "照域",
+          "逼近",
+          "旧关外层",
+          "镇海潮兽"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          76,
+          71,
+          75
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        76,
+        71,
+        75
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-02",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "阮青蜃的矿队仍停在矿脉附近，没有随居民撤离，顾停舟必须在下一章处理潮兽逼近与矿队滞留同时造成的现场危机",
+      "subject": "阮青蜃",
+      "action": "move|search",
+      "object": "顾停舟",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "阮青蜃的矿队仍停在矿脉附近，没有随居民撤离，顾停舟必须在下一章处理潮兽逼近与矿队滞留同时造成的现场危机",
+        "terms": [
+          "阮青蜃",
+          "顾停舟",
+          "居民"
+        ],
+        "actions": [
+          "move",
+          "search"
+        ],
+        "anchors": [
+          "阮青蜃的矿队",
+          "在矿脉附近",
+          "顾停舟",
+          "没有"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          80,
+          76,
+          13
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        80,
+        76,
+        13
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-014",
+      "kind": "source_conflict",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "Frozen Authority",
+      "source_text": "Do not invent prior dialogue/history backreferences.",
+      "subject": "顾停舟",
+      "action": "no_invented_prior_quote",
+      "object": "previous dialogue",
+      "status": "not_invented",
+      "qualifiers": [],
+      "boundary": "A line framed as previously spoken must already exist in Frozen Authority; current dialogue is unaffected.",
+      "validator": {
+        "type": "prior_quote",
+        "authorized_quotes": [
+          "顺手优化",
+          "更丰富",
+          "重新接触后才回流经验/伤势",
+          "共享",
+          "重新接触/合并",
+          "我像多活了一段时间",
+          "力量是什么/怎样粗分强弱/危险为什么改变生活/入口为什么重要",
+          "凝影了/通过了/被记名",
+          "生动",
+          "普通读者不用推理就能复述规则",
+          "验证闭环阶段推进价值兑现成长空间建立优势",
+          "再证明一次",
+          "这件事已经发生",
+          "商队与潮灾切入身份独立高阶器物潮关终局",
+          "照域潮谱",
+          "成长兑现",
+          "进入照域",
+          "一个身体定住另一个身体改变局面",
+          "地潮",
+          "听潮石",
+          "成炉",
+          "潮炉",
+          "潮裂",
+          "铸潮",
+          "定住",
+          "牵引",
+          "一个人同时变成两个真实战斗单位",
+          "这也太占便宜了",
+          "多一个人",
+          "分身只能带走一种本事",
+          "意外损耗",
+          "不懂做生意",
+          "有用但可替换",
+          "定住",
+          "往外层",
+          "走",
+          "都给我走",
+          "封裂口",
+          "起车",
+          "跟紧别乱",
+          "粮还没到地方",
+          "别当契完了",
+          "我比你清楚",
+          "这批粮还在路上",
+          "井保住了",
+          "西侧的人过去了",
+          "城门还在收人",
+          "下一股潮要上石脊",
+          "顾沉戈守井和粮车",
+          "你去哪",
+          "进去看看这东西还指向哪里",
+          "给撤离的人抢一点时间"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-015",
+      "kind": "power_position",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "照域潮谱归顾停舟所有，他第一次正式进入照域，并以改变一片潮场边界的方式扩大石脊与粮道的安全范围，使老人、孩子、牲口和居民能够继续通过。",
+      "subject": "顾停舟",
+      "action": "stable_transition",
+      "object": "照域",
+      "status": "transitioned",
+      "qualifiers": [],
+      "boundary": "Only an explicit stable transition authorizes 照域; battle pressure or performance at that scale is not enough.",
+      "validator": {
+        "type": "power_transition",
+        "target": "照域",
+        "subject": "顾停舟"
+      },
+      "primary_evidence_paragraphs": [
+        81,
+        39
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-016",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "Mission only authorizes stable transition through 照域",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "镇海",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "镇海",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": "照域"
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-017",
+      "kind": "unresolved_fact",
+      "mode": "must_remain_unknown",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "旧关的粮道与新井安全范围暂时扩大，但十二日地潮的原因、照域潮谱指向西北的源头、古器来源和更大的潮兽行动仍未解决",
+      "subject": "",
+      "action": "",
+      "object": "十二日地潮|照域潮谱|古器|新井",
+      "status": "unknown",
+      "qualifiers": [],
+      "boundary": "Unknown is a no-invention boundary, not a requirement to repeat 'unknown' in prose.",
+      "validator": {
+        "type": "unresolved",
+        "topic_terms": [
+          "十二日地潮",
+          "照域潮谱",
+          "古器",
+          "新井"
+        ],
+        "revelation_terms": [
+          "真相是",
+          "原来是",
+          "确认是",
+          "证实是",
+          "原因是",
+          "源自",
+          "其实是",
+          "揭开",
+          "查明"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-018",
+      "kind": "unresolved_fact",
+      "mode": "must_remain_unknown",
+      "severity": "hard",
+      "source_field": "Relevant Open Promises",
+      "source_text": "照域潮谱为何指向西北，以及它能否判断下一股潮势。",
+      "subject": "",
+      "action": "",
+      "object": "照域潮谱|潮势|照域",
+      "status": "unknown",
+      "qualifiers": [],
+      "boundary": "Unknown is a no-invention boundary, not a requirement to repeat 'unknown' in prose.",
+      "validator": {
+        "type": "unresolved",
+        "topic_terms": [
+          "照域潮谱",
+          "潮势",
+          "照域"
+        ],
+        "revelation_terms": [
+          "真相是",
+          "原来是",
+          "确认是",
+          "证实是",
+          "原因是",
+          "源自",
+          "其实是",
+          "揭开",
+          "查明"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-019",
+      "kind": "unresolved_fact",
+      "mode": "must_remain_unknown",
+      "severity": "hard",
+      "source_field": "Relevant Open Promises",
+      "source_text": "地潮提前涌入的原因、范围与推进速度。",
+      "subject": "",
+      "action": "",
+      "object": "地潮提前涌入的原因、范围与推进速度。",
+      "status": "unknown",
+      "qualifiers": [],
+      "boundary": "Unknown is a no-invention boundary, not a requirement to repeat 'unknown' in prose.",
+      "validator": {
+        "type": "unresolved",
+        "topic_terms": [],
+        "revelation_terms": [
+          "真相是",
+          "原来是",
+          "确认是",
+          "证实是",
+          "原因是",
+          "源自",
+          "其实是",
+          "揭开",
+          "查明"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    }
+  ],
+  "source_conflicts": [],
+  "unsupported_clauses": [],
+  "diagnostics": [],
+  "primary_paragraph_count": 82,
+  "preflight_eligible": true
+}

@@ -1,0 +1,259 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapter": 11,
+  "preflight_eligible": true,
+  "decision": "FALLBACK_FULL_REVISER",
+  "touched_source_paragraphs": [
+    65,
+    67,
+    68,
+    69,
+    70,
+    71,
+    75,
+    76,
+    77,
+    80,
+    86,
+    87,
+    96,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116
+  ],
+  "blocking_checks": [
+    {
+      "obligation_id": "ACT-03",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    }
+  ],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "他现在伤得不轻，真动手未必占得了多少便宜。但他握着回潮楔，身后是撤离车，旁边是砺骨部的人和刚刚开口作证的矿工。"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/1 actions=['pay']",
+      "evidence": [
+        "乌合"
+      ]
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "“把楔子交出来。”他看着顾停舟，“矿权标记毁了，撤路断了，实测尾款也落空。你救人时动用了矿路上的器物，后面的损失，不能只让矿队担着。”"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P007",
+        "P085",
+        "P098"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "pass",
+      "reason": "semantic anchor score=0.331",
+      "evidence": [
+        "“你们可以追你们的矿权。”乌合说，“也可以追你们丢掉的钱。但别把活着出来的人写成无主损耗，再把救援的账压到一个人头上。”"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass",
+      "reason": "semantic anchor score=0.377",
+      "evidence": [
+        "“对，先谈价。”乌合说道，“砺骨部这次出人引路、守水口、带伤员过断段。我要本次协作的报酬，现钱，先把数说定。”"
+      ]
+    },
+    {
+      "obligation_id": "RES-03",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "“顾停舟，你先前认了尾款无法照原条件给付。”阮青蜃说道，“如今矿队认为，撤路毁损和古器归属都该一并结算。你若不交楔，现场就得把话说清。”"
+      ]
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P025"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=2/2 actions=[]",
+      "evidence": [
+        "回潮楔",
+        "顾停舟"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/1 actions=['possess']",
+      "evidence": [
+        "无主损耗"
+      ]
+    },
+    {
+      "obligation_id": "STA-04",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "顾停舟站在车轮边，左手垂着，掌心攥住回潮楔。楔体上的细裂硌着皮肉，冰凉得像一截刚从水底捞出来的铁。"
+      ]
+    },
+    {
+      "obligation_id": "STA-05",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "他现在伤得不轻，真动手未必占得了多少便宜。但他握着回潮楔，身后是撤离车，旁边是砺骨部的人和刚刚开口作证的矿工。"
+      ]
+    },
+    {
+      "obligation_id": "STA-06",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P002",
+        "P121",
+        "P122"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "顾停舟站在车轮边，左手垂着，掌心攥住回潮楔。楔体上的细裂硌着皮肉，冰凉得像一截刚从水底捞出来的铁。"
+      ]
+    },
+    {
+      "obligation_id": "A-019",
+      "status": "pass",
+      "reason": "no unauthorized prior-dialogue backreference",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-023",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "pass",
+      "reason": "authorized possession state found",
+      "evidence": [
+        "撤离车旁的泥水还在往低处淌。\n\n顾停舟站在车轮边，左手垂着，掌心攥住回潮楔。楔体上的细裂硌着皮肉，冰凉得像一截刚从水底捞出来的铁。"
+      ]
+    },
+    {
+      "obligation_id": "A-025",
+      "status": "pass",
+      "reason": "ongoing dispute preserved",
+      "evidence": [
+        "阮青蜃抬起手，拦住矿队首领。\n\n“现场不能强行结算。”他说，“矿队可以保留撤路、矿权标记和尾款的追索。古器归属也可以继续争。但在新的契据和证据拿出来前，回潮楔暂由顾停舟持有。”"
+      ]
+    },
+    {
+      "obligation_id": "A-026",
+      "status": "fail",
+      "reason": "relationship state missing, unbound, or attached to another counterpart",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-027",
+      "status": "pass",
+      "reason": "protected desire retained",
+      "evidence": [
+        "又指向自己手里的回潮楔。"
+      ]
+    },
+    {
+      "obligation_id": "A-028",
+      "status": "pass",
+      "reason": "protected reward retained",
+      "evidence": [
+        "顾停舟站在车轮边，左手垂着，掌心攥住回潮楔。楔体上的细裂硌着皮肉，冰凉得像一截刚从水底捞出来的铁。"
+      ]
+    }
+  ],
+  "status_counts": {
+    "pass": 23,
+    "pass_preserved": 3,
+    "not_triggered": 0,
+    "fail": 2,
+    "unknown": 0,
+    "conflict": 0
+  }
+}

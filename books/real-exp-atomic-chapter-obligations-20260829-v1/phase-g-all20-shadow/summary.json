@@ -1,0 +1,555 @@
+{
+  "chapters": 20,
+  "compiled": 20,
+  "preflight_eligible": 9,
+  "preflight_fallback": 11,
+  "eligible_full_pass": 5,
+  "eligible_full_residual_failure": 4,
+  "all_full_gate_pass": 5,
+  "rows": [
+    {
+      "chapter": 1,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 29,
+      "unsupported_count": 2,
+      "unsupported": [
+        "主角行动[2] 潮路断裂后，他分出第二个真实身体",
+        "对手或世界反应[2] 无主杂货开始被潮水卷走"
+      ],
+      "conflict_count": 1,
+      "conflicts": [
+        "未提供最近两章正文及前文章末片段，无法判断重复风险；不据此补充。"
+      ],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-02",
+        "ACT-04",
+        "REA-02",
+        "CONFLICT-01"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.106.",
+        "actor-action-object did not close in one local paragraph",
+        "No final paragraph met threshold 0.23; best=0.145.",
+        "未提供最近两章正文及前文章末片段，无法判断重复风险；不据此补充。"
+      ],
+      "status_counts": {
+        "pass": 15,
+        "pass_preserved": 10,
+        "not_triggered": 0,
+        "fail": 3,
+        "unknown": 0,
+        "conflict": 1
+      }
+    },
+    {
+      "chapter": 2,
+      "protagonist": "顾停舟",
+      "preflight": true,
+      "obligations": 22,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "ADOPT_DELTA",
+      "blocking_ids": [],
+      "blocking_reasons": [],
+      "status_counts": {
+        "pass": 17,
+        "pass_preserved": 4,
+        "not_triggered": 0,
+        "fail": 1,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 3,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 25,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 1,
+      "conflicts": [
+        "`Reader Release Map` 将“合法行潮籍”排在第4章，但本章事件合同与第3章计划明确要求本章完成落籍，存在时间归属冲突。"
+      ],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "CONFLICT-01"
+      ],
+      "blocking_reasons": [
+        "`Reader Release Map` 将“合法行潮籍”排在第4章，但本章事件合同与第3章计划明确要求本章完成落籍，存在时间归属冲突。"
+      ],
+      "status_counts": {
+        "pass": 9,
+        "pass_preserved": 15,
+        "not_triggered": 0,
+        "fail": 0,
+        "unknown": 0,
+        "conflict": 1
+      }
+    },
+    {
+      "chapter": 4,
+      "protagonist": "顾停舟",
+      "preflight": true,
+      "obligations": 22,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "ADOPT_DELTA",
+      "blocking_ids": [],
+      "blocking_reasons": [],
+      "status_counts": {
+        "pass": 13,
+        "pass_preserved": 9,
+        "not_triggered": 0,
+        "fail": 0,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 5,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 19,
+      "unsupported_count": 2,
+      "unsupported": [
+        "触发事件[3] 一旦先占，族人将错过这次通行",
+        "对手或世界反应[2] 队员和护卫因此停在界桩外"
+      ],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "TRG-03",
+        "REA-02"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.107.",
+        "No final paragraph met threshold 0.23; best=0.152."
+      ],
+      "status_counts": {
+        "pass": 9,
+        "pass_preserved": 8,
+        "not_triggered": 0,
+        "fail": 2,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 6,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 17,
+      "unsupported_count": 1,
+      "unsupported": [
+        "结尾推动力[2] 两处行动同时开始，下一章必须处理被困者救援、侧室牵引与逆潮现场的继续变化"
+      ],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "TRG-01"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.167."
+      ],
+      "status_counts": {
+        "pass": 14,
+        "pass_preserved": 2,
+        "not_triggered": 0,
+        "fail": 1,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 7,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 28,
+      "unsupported_count": 4,
+      "unsupported": [
+        "主角行动[2] 分身只使用牵引能力，抓住侧室中的古代金属楔，将其从矿队首领控制的牵扯位置拽离",
+        "状态变化[4] 救援保住了人员，实测权限、收益和赔付责任则进入新的冲突",
+        "结尾推动力[1] 回潮楔被逆潮撞中，楔面发出沉响，冲来的潮压仿佛被锁进金属内部",
+        "结尾推动力[3] 回潮楔的完整来历和机制本章不揭晓"
+      ],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "STA-04",
+        "A-026",
+        "A-027"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.117.",
+        "missing or weakened possession state",
+        "missing terminal status=lost for ['尾款']"
+      ],
+      "status_counts": {
+        "pass": 13,
+        "pass_preserved": 12,
+        "not_triggered": 0,
+        "fail": 3,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 8,
+      "protagonist": "顾停舟",
+      "preflight": true,
+      "obligations": 21,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-03"
+      ],
+      "blocking_reasons": [
+        "actor-action-object did not close in one local paragraph"
+      ],
+      "status_counts": {
+        "pass": 12,
+        "pass_preserved": 8,
+        "not_triggered": 0,
+        "fail": 1,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 9,
+      "protagonist": "顾停舟",
+      "preflight": true,
+      "obligations": 28,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "ADOPT_DELTA",
+      "blocking_ids": [],
+      "blocking_reasons": [],
+      "status_counts": {
+        "pass": 12,
+        "pass_preserved": 15,
+        "not_triggered": 0,
+        "fail": 1,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 10,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 32,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 1,
+      "conflicts": [
+        "`CANON INDEX` 内部存在明确冲突：在场人物写明“矿队首领及护卫已绕行”，但当前敌人又写明“仍在现场”。无法判断本章谈判时他们是否仍在顾停舟面前。"
+      ],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "A-019",
+        "A-020",
+        "CONFLICT-01"
+      ],
+      "blocking_reasons": [
+        "battle/result implication is not an explicit stable transition",
+        "battle/result implication is not an explicit stable transition",
+        "`CANON INDEX` 内部存在明确冲突：在场人物写明“矿队首领及护卫已绕行”，但当前敌人又写明“仍在现场”。无法判断本章谈判时他们是否仍在顾停舟面前。"
+      ],
+      "status_counts": {
+        "pass": 25,
+        "pass_preserved": 3,
+        "not_triggered": 0,
+        "fail": 3,
+        "unknown": 0,
+        "conflict": 1
+      }
+    },
+    {
+      "chapter": 11,
+      "protagonist": "顾停舟",
+      "preflight": true,
+      "obligations": 27,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-03"
+      ],
+      "blocking_reasons": [
+        "actor-action-object did not close in one local paragraph"
+      ],
+      "status_counts": {
+        "pass": 22,
+        "pass_preserved": 3,
+        "not_triggered": 0,
+        "fail": 2,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 12,
+      "protagonist": "顾停舟",
+      "preflight": true,
+      "obligations": 19,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "ADOPT_DELTA",
+      "blocking_ids": [],
+      "blocking_reasons": [],
+      "status_counts": {
+        "pass": 9,
+        "pass_preserved": 10,
+        "not_triggered": 0,
+        "fail": 0,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 13,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 17,
+      "unsupported_count": 1,
+      "unsupported": [
+        "状态变化[2] 其使用上限和代价第一次确定"
+      ],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "STA-02"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.083."
+      ],
+      "status_counts": {
+        "pass": 7,
+        "pass_preserved": 9,
+        "not_triggered": 0,
+        "fail": 1,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 14,
+      "protagonist": "顾停舟",
+      "preflight": true,
+      "obligations": 30,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "ADOPT_DELTA",
+      "blocking_ids": [],
+      "blocking_reasons": [],
+      "status_counts": {
+        "pass": 19,
+        "pass_preserved": 11,
+        "not_triggered": 0,
+        "fail": 0,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 15,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 15,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 1,
+      "conflicts": [
+        "无明确权威冲突。确定性预取只确认乌合前哨传达砺骨部迁徙窗口，无法判断乌合本人是否到场；不得补写她本人已出现、发言或行动。"
+      ],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "STA-02",
+        "CONFLICT-01"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.171.",
+        "无明确权威冲突。确定性预取只确认乌合前哨传达砺骨部迁徙窗口，无法判断乌合本人是否到场；不得补写她本人已出现、发言或行动。"
+      ],
+      "status_counts": {
+        "pass": 5,
+        "pass_preserved": 8,
+        "not_triggered": 0,
+        "fail": 1,
+        "unknown": 0,
+        "conflict": 1
+      }
+    },
+    {
+      "chapter": 16,
+      "protagonist": "顾停舟",
+      "preflight": true,
+      "obligations": 29,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-02"
+      ],
+      "blocking_reasons": [
+        "actor-action-object did not close in one local paragraph"
+      ],
+      "status_counts": {
+        "pass": 20,
+        "pass_preserved": 8,
+        "not_triggered": 0,
+        "fail": 1,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 17,
+      "protagonist": "顾停舟",
+      "preflight": true,
+      "obligations": 18,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 0,
+      "conflicts": [],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "A-014"
+      ],
+      "blocking_reasons": [
+        "battle/result implication is not an explicit stable transition"
+      ],
+      "status_counts": {
+        "pass": 10,
+        "pass_preserved": 7,
+        "not_triggered": 0,
+        "fail": 1,
+        "unknown": 0,
+        "conflict": 0
+      }
+    },
+    {
+      "chapter": 18,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 20,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 1,
+      "conflicts": [
+        "当前正文已明确居民、牲口和粮车通过最窄危险段，但本章合同仍把“撤离完成”列为直接结果；无法判断本章还需继续写实体撤离，还是只需完成公开确认与后续边界结算。不得重复重演已完成的撤离。"
+      ],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "A-016",
+        "A-017",
+        "CONFLICT-01"
+      ],
+      "blocking_reasons": [
+        "missing terminal status=entitlement_confirmed for ['个人矿利']",
+        "public proof components=ruler,repricing",
+        "当前正文已明确居民、牲口和粮车通过最窄危险段，但本章合同仍把“撤离完成”列为直接结果；无法判断本章还需继续写实体撤离，还是只需完成公开确认与后续边界结算。不得重复重演已完成的撤离。"
+      ],
+      "status_counts": {
+        "pass": 4,
+        "pass_preserved": 13,
+        "not_triggered": 0,
+        "fail": 2,
+        "unknown": 0,
+        "conflict": 1
+      }
+    },
+    {
+      "chapter": 19,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 27,
+      "unsupported_count": 0,
+      "unsupported": [],
+      "conflict_count": 2,
+      "conflicts": [
+        "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：矿利",
+        "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：结算"
+      ],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-02",
+        "ACT-04",
+        "A-022",
+        "CONFLICT-01",
+        "CONFLICT-02"
+      ],
+      "blocking_reasons": [
+        "actor-action-object did not close in one local paragraph",
+        "actor-action-object did not close in one local paragraph",
+        "clone limitation was upgraded into full-power transfer",
+        "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：矿利",
+        "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：结算"
+      ],
+      "status_counts": {
+        "pass": 8,
+        "pass_preserved": 14,
+        "not_triggered": 0,
+        "fail": 3,
+        "unknown": 0,
+        "conflict": 2
+      }
+    },
+    {
+      "chapter": 20,
+      "protagonist": "顾停舟",
+      "preflight": false,
+      "obligations": 21,
+      "unsupported_count": 1,
+      "unsupported": [
+        "结尾推动力[2] 后续故事必须从他携带的现有力量、资产与未解问题进入新的世界视野"
+      ],
+      "conflict_count": 1,
+      "conflicts": [
+        "无法判断：远方潮市的名称、距离、潮舟具体船型与价格未预取；母亲当前是否已在旧关、以及各方关系结算的具体现场方式也未确定，不应补写。"
+      ],
+      "full_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "END-02",
+        "CONFLICT-01"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.164.",
+        "无法判断：远方潮市的名称、距离、潮舟具体船型与价格未预取；母亲当前是否已在旧关、以及各方关系结算的具体现场方式也未确定，不应补写。"
+      ],
+      "status_counts": {
+        "pass": 12,
+        "pass_preserved": 7,
+        "not_triggered": 0,
+        "fail": 1,
+        "unknown": 0,
+        "conflict": 1
+      }
+    }
+  ]
+}

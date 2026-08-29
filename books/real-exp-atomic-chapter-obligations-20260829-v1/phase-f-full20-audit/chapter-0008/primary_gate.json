@@ -1,0 +1,209 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 8,
+  "preflight_eligible": true,
+  "decision": "FALLBACK_FULL_REVISER",
+  "touched_source_paragraphs": [],
+  "blocking_checks": [
+    {
+      "obligation_id": "ACT-02",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    }
+  ],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P005",
+        "P034",
+        "P056"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P010",
+        "P012"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P001",
+        "P018",
+        "P104"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P017",
+        "P057",
+        "P069"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P023",
+        "P026",
+        "P121"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P005",
+        "P023",
+        "P036"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P005"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P017",
+        "P019",
+        "P058"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P065",
+        "P071",
+        "P120"
+      ]
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P005",
+        "P117",
+        "P118"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P019",
+        "P022",
+        "P060"
+      ]
+    },
+    {
+      "obligation_id": "RR-015",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P013"
+      ]
+    },
+    {
+      "obligation_id": "A-016",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-017",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-018",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-019",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "pass",
+      "reason": "explicit current clone limitation realized",
+      "evidence": [
+        "他是在试顾停舟的分身到底能做什么，又能被逼到什么地步。\n\n分身只能带着牵引。"
+      ]
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass_preserved",
+      "reason": "protected commercial category evidence was untouched",
+      "evidence": [
+        "P001",
+        "P005",
+        "P018",
+        "P023",
+        "P028",
+        "P031"
+      ]
+    }
+  ],
+  "status_counts": {
+    "pass": 6,
+    "pass_preserved": 13,
+    "not_triggered": 0,
+    "fail": 2,
+    "unknown": 0,
+    "conflict": 0
+  }
+}

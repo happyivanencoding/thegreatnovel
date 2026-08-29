@@ -1741,6 +1741,15 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 本轮最终验证：全项目 `388 passed`；`tgn-system-steward 0.3.11` package validate / install / activate 完成，bounded smoke 将 Paragraph-Delta 判为 `PARTIAL`，只允许冻结速度信号与研究方向，不允许冻结 production route。
 
 
+### 14.11 Atomic Chapter Obligations Experiment（2026-08-29）
+
+为解决 Paragraph-Delta “快但修改范围不稳定”的问题，建立实验性 typed compiler + deterministic gate。当前 obligation family：Mission clause、actor-action-object、Direct Result、Terminal State、Ending、ownership/transfer、money/payment、time window、precise power position/boundary、Public Proof、Reader Release、unresolved fact、relationship state、Human cue 与 protected commercial value。Hard obligation 任一 `FAIL / UNKNOWN / CONFLICT` 即禁止采用 Delta；unsupported clause 与 source conflict 直接 preflight fallback，不让另一个 LLM猜安全。
+
+核心边界：entitlement/quote/contracted/paid/received/lost/disputed 分开；possession/custody/title/original/copy/dispute 分开；battle scale/pressure/result 不自动升级 stable tier；deadline/cooldown/terminal state 分开；Reader Release只约束已排程事实的可复述释放；unresolved允许新证据但不允许把旧史升级为确定结论；Human cue要求Human Core点名同一人物且现场有直接接触/近身治疗；Public Proof不是固定三段配额；欲望、关系、Reward、Surprise、Social Repricing只做 `PRESERVE_IF_PRESENT`。
+
+当前证据：边界 calibration 对已知 safe/bad样本达到零已知漏报/误杀；Atomic-aware first run中Authority blind全部偏Atomic，但Reader多数偏现有Full Reviser，说明事实闭合不等于商业读感；独立repeat中Delta选择范围仍不稳定，Gate能阻止坏稿采用但不能让模型稳定；Gate-only能保护原始写法却会漏稀疏义务；Residual-only blocker repair只给模型具体失败项，是更合理的v0.2方向；第二本书5/5 preflight fail closed，证明v0.1安全但领域过拟合。production链、模型与effort均未改变。完整证据：`books/real-exp-atomic-chapter-obligations-20260829-v1/RESULTS.md`。
+
+
 ---
 
 ## 15. How to Work With the User

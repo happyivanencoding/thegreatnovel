@@ -1,0 +1,207 @@
+[
+  {
+    "chapter": 1,
+    "protagonist": "顾临川",
+    "preflight": false,
+    "obligations": 19,
+    "unsupported": 6,
+    "conflicts": 0,
+    "delta_gate": "FALLBACK_FULL_REVISER",
+    "blocking": [
+      [
+        "ACT-02",
+        "No final paragraph met threshold 0.23; best=0.165."
+      ],
+      [
+        "REA-01",
+        "No final paragraph met threshold 0.23; best=0.099."
+      ],
+      [
+        "RES-01",
+        "No final paragraph met threshold 0.23; best=0.149."
+      ],
+      [
+        "STA-02",
+        "No final paragraph met threshold 0.23; best=0.104."
+      ],
+      [
+        "STA-03",
+        "No final paragraph met threshold 0.23; best=0.063."
+      ],
+      [
+        "END-02",
+        "No final paragraph met threshold 0.23; best=0.055."
+      ]
+    ],
+    "kinds": {
+      "mission_clause": 4,
+      "actor_action_object": 2,
+      "direct_result": 2,
+      "terminal_state": 3,
+      "ending": 2,
+      "reader_release": 1,
+      "power_boundary": 4,
+      "unresolved_fact": 1
+    }
+  },
+  {
+    "chapter": 4,
+    "protagonist": "顾临川",
+    "preflight": false,
+    "obligations": 23,
+    "unsupported": 3,
+    "conflicts": 0,
+    "delta_gate": "FALLBACK_FULL_REVISER",
+    "blocking": [
+      [
+        "ACT-02",
+        "No final paragraph met threshold 0.23; best=0.134."
+      ],
+      [
+        "REA-02",
+        "No final paragraph met threshold 0.23; best=0.132."
+      ],
+      [
+        "END-01",
+        "No final paragraph met threshold 0.23; best=0.166."
+      ],
+      [
+        "A-020",
+        "Human-specific cue trigger was active but no approved cue appeared"
+      ]
+    ],
+    "kinds": {
+      "mission_clause": 4,
+      "actor_action_object": 2,
+      "direct_result": 3,
+      "terminal_state": 3,
+      "ending": 2,
+      "reader_release": 1,
+      "power_boundary": 4,
+      "human_cue": 1,
+      "commercial_value": 3
+    }
+  },
+  {
+    "chapter": 6,
+    "protagonist": "顾临川",
+    "preflight": false,
+    "obligations": 20,
+    "unsupported": 3,
+    "conflicts": 0,
+    "delta_gate": "FALLBACK_FULL_REVISER",
+    "blocking": [
+      [
+        "REA-03",
+        "No final paragraph met threshold 0.23; best=0.107."
+      ],
+      [
+        "RES-02",
+        "No final paragraph met threshold 0.23; best=0.166."
+      ],
+      [
+        "STA-01",
+        "No final paragraph met threshold 0.23; best=0.034."
+      ],
+      [
+        "STA-02",
+        "No final paragraph met threshold 0.23; best=0.188."
+      ]
+    ],
+    "kinds": {
+      "mission_clause": 5,
+      "actor_action_object": 3,
+      "direct_result": 2,
+      "terminal_state": 3,
+      "ending": 2,
+      "power_boundary": 4,
+      "commercial_value": 1
+    }
+  },
+  {
+    "chapter": 8,
+    "protagonist": "顾临川",
+    "preflight": false,
+    "obligations": 25,
+    "unsupported": 5,
+    "conflicts": 0,
+    "delta_gate": "FALLBACK_FULL_REVISER",
+    "blocking": [
+      [
+        "TRG-01",
+        "No final paragraph met threshold 0.23; best=0.167."
+      ],
+      [
+        "REA-02",
+        "No final paragraph met threshold 0.23; best=0.141."
+      ],
+      [
+        "REA-03",
+        "No final paragraph met threshold 0.23; best=0.105."
+      ],
+      [
+        "STA-02",
+        "No final paragraph met threshold 0.23; best=0.114."
+      ],
+      [
+        "STA-04",
+        "No final paragraph met threshold 0.23; best=0.086."
+      ],
+      [
+        "END-02",
+        "No final paragraph met threshold 0.23; best=0.076."
+      ],
+      [
+        "A-024",
+        "Human-specific cue trigger was active but no approved cue appeared"
+      ]
+    ],
+    "kinds": {
+      "mission_clause": 6,
+      "actor_action_object": 3,
+      "direct_result": 3,
+      "terminal_state": 4,
+      "ending": 3,
+      "power_boundary": 4,
+      "human_cue": 1,
+      "commercial_value": 1
+    }
+  },
+  {
+    "chapter": 10,
+    "protagonist": "顾临川",
+    "preflight": false,
+    "obligations": 19,
+    "unsupported": 4,
+    "conflicts": 0,
+    "delta_gate": "FALLBACK_FULL_REVISER",
+    "blocking": [
+      [
+        "ACT-02",
+        "No final paragraph met threshold 0.23; best=0.105."
+      ],
+      [
+        "STA-02",
+        "No final paragraph met threshold 0.23; best=0.115."
+      ],
+      [
+        "STA-03",
+        "No final paragraph met threshold 0.23; best=0.059."
+      ],
+      [
+        "END-02",
+        "No final paragraph met threshold 0.23; best=0.078."
+      ]
+    ],
+    "kinds": {
+      "mission_clause": 3,
+      "actor_action_object": 2,
+      "direct_result": 1,
+      "terminal_state": 3,
+      "ending": 2,
+      "power_boundary": 4,
+      "relationship_state": 1,
+      "commercial_value": 3
+    }
+  }
+]

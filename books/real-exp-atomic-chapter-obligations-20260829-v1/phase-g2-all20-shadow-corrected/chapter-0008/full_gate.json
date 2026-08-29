@@ -1,0 +1,220 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapter": 8,
+  "preflight_eligible": true,
+  "decision": "FALLBACK_FULL_REVISER",
+  "touched_source_paragraphs": [
+    56,
+    57,
+    58,
+    59,
+    60,
+    65,
+    81,
+    82,
+    83,
+    89,
+    90,
+    92,
+    93,
+    94,
+    95,
+    106,
+    107,
+    108
+  ],
+  "blocking_checks": [
+    {
+      "obligation_id": "ACT-03",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    }
+  ],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass",
+      "reason": "semantic anchor score=0.351",
+      "evidence": [
+        "回潮楔锁住的，不只是这一记潮压的重量。"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P010",
+        "P012"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P001",
+        "P018",
+        "P104"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "pass",
+      "reason": "actor, action class and object co-occur in one paragraph",
+      "evidence": [
+        "顾停舟顶着潮压，肩背被冲得发麻。分身手上的牵引只够守住楔尾，目标一换，楔体就会偏，眼前每一处退路都在逼他先放掉另一处。"
+      ]
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass",
+      "reason": "semantic anchor score=0.335",
+      "evidence": [
+        "矿队首领站在稍远的石脊后，听见这句话，眼神立刻落到顾停舟和分身身上。"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P023",
+        "P026",
+        "P121"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P005",
+        "P023",
+        "P036"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P005"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass",
+      "reason": "semantic anchor score=0.245",
+      "evidence": [
+        "左侧伤员腰带上的牵引随即松开，那人又往下滑了半尺，两个矿工死死抓住他。分身的牵引刚碰到右侧斜石，楔尾便向外一挣。顾停舟用肩膀压住楔体，那股力只在斜石上擦过，没能把它拉停。"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/1 actions=[]",
+      "evidence": [
+        "顾停舟"
+      ]
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P005",
+        "P117",
+        "P118"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "分身站在另一侧，手臂抬起，牵引正压在楔体上。那股力量能把重物拖开、能把人从乱水里拉回来，可顾停舟此刻已经没有第二份力量能同时替分身挡住潮压。"
+      ]
+    },
+    {
+      "obligation_id": "RR-015",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P013"
+      ]
+    },
+    {
+      "obligation_id": "A-016",
+      "status": "pass",
+      "reason": "no unauthorized prior-dialogue backreference",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-017",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-018",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-019",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass",
+      "reason": "explicit current clone limitation realized",
+      "evidence": [
+        "左侧伤员腰带上的牵引随即松开，那人又往下滑了半尺，两个矿工死死抓住他。分身的牵引刚碰到右侧斜石，楔尾便向外一挣。顾停舟用肩膀压住楔体，那股力只在斜石上擦过，没能把它拉停。\n\n分身只能把牵引重新扣回楔体。"
+      ]
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "pass_preserved",
+      "reason": "protected commercial category evidence was untouched",
+      "evidence": [
+        "P001",
+        "P005",
+        "P018",
+        "P023",
+        "P028",
+        "P031"
+      ]
+    }
+  ],
+  "status_counts": {
+    "pass": 13,
+    "pass_preserved": 8,
+    "not_triggered": 0,
+    "fail": 1,
+    "unknown": 0,
+    "conflict": 0
+  }
+}

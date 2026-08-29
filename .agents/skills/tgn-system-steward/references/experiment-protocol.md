@@ -253,3 +253,19 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 ## Creative Intensity Decision
 
 当多个 treatment 都满足 hard authority / causality，仅在爽感强度、奖励丰富度或主角局部优势上存在 trade-off 时，不由 Steward/Judge 自动向保守版收敛。保留代表性真实输出，并把 AGGRESSIVE / MODERATE / CONSERVATIVE 的关键差异交给作者选择；当前 TGN 默认审美先验偏 AGGRESSIVE。只有事实矛盾、authority 越界、或即时近似补偿抹平真实牺牲可以直接淘汰。
+
+## 17. Atomic Chapter Obligations / Local Delta Protocol
+
+当优化方案以局部 Delta 替代 Full Reviser 时，最低证据链为：
+
+1. 从 Frozen Authority 确定性编译 typed obligations；禁止让同一个 Delta 模型自报“已经安全”。
+2. Hard obligation 至少覆盖 actor-action-object、Direct Result、State Change、Ending、ownership/transfer、money/payment、time、power position/boundary、排程 Reader Release 与 unresolved boundary。
+3. 条件义务（Human cue、Public Proof）必须先证明 trigger；未触发写 `NOT_TRIGGERED`，不能当漏项。
+4. Commercial value 使用 `PRESERVE_IF_PRESENT`：只检查已有欲望、关系、Reward、Surprise、Social Repricing是否被磨平，不能要求新增。
+5. `FAIL / UNKNOWN / CONFLICT / UNSUPPORTED` 任一出现即 full fallback；不得用相似度、修改段落少或模型自信覆盖。
+6. 局部应用后必须扫全文闭合，特别检查原件/副本、持有人、付款状态、时间终态、主体换位与后文相反句。
+7. calibration同时报告 safe false block 与 bad miss；至少做独立repeat、cross-book与完整fallback-adjusted wall。
+8. Reader与Authority任一稳定偏control，都不能productionize。Authority全胜只能证明事实安全，不能证明人物和商业价值没有下降。
+9. 当前 compiler若在新领域大量preflight fallback，只能判安全但domain-specific，不能以零漏报宣称泛化。
+10. 下一步优先扩 typed compiler 与deterministic residual blocker repair，不新增LLM classifier。
+

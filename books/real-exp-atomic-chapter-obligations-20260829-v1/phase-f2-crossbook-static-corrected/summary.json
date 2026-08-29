@@ -1,0 +1,125 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "samples": 5,
+  "preflight_eligible": 0,
+  "preflight_fail_closed": 5,
+  "delta_adoptable": 0,
+  "delta_blocked": 5,
+  "rows": [
+    {
+      "chapter": 1,
+      "protagonist": "顾临川",
+      "preflight_eligible": false,
+      "obligation_count": 20,
+      "unsupported_count": 6,
+      "source_conflict_count": 0,
+      "delta_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-02",
+        "REA-01",
+        "RES-01",
+        "STA-02",
+        "STA-03",
+        "END-02"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.165.",
+        "No final paragraph met threshold 0.23; best=0.099.",
+        "No final paragraph met threshold 0.23; best=0.149.",
+        "No final paragraph met threshold 0.23; best=0.104.",
+        "No final paragraph met threshold 0.23; best=0.063.",
+        "No final paragraph met threshold 0.23; best=0.055."
+      ]
+    },
+    {
+      "chapter": 4,
+      "protagonist": "顾临川",
+      "preflight_eligible": false,
+      "obligation_count": 24,
+      "unsupported_count": 3,
+      "source_conflict_count": 0,
+      "delta_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-02",
+        "REA-02",
+        "END-01",
+        "A-021"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.134.",
+        "No final paragraph met threshold 0.23; best=0.132.",
+        "No final paragraph met threshold 0.23; best=0.166.",
+        "Human-specific cue trigger was active but no approved cue appeared"
+      ]
+    },
+    {
+      "chapter": 6,
+      "protagonist": "顾临川",
+      "preflight_eligible": false,
+      "obligation_count": 21,
+      "unsupported_count": 3,
+      "source_conflict_count": 0,
+      "delta_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "REA-03",
+        "RES-02",
+        "STA-01",
+        "STA-02"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.107.",
+        "No final paragraph met threshold 0.23; best=0.166.",
+        "No final paragraph met threshold 0.23; best=0.034.",
+        "No final paragraph met threshold 0.23; best=0.188."
+      ]
+    },
+    {
+      "chapter": 8,
+      "protagonist": "顾临川",
+      "preflight_eligible": false,
+      "obligation_count": 26,
+      "unsupported_count": 5,
+      "source_conflict_count": 0,
+      "delta_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "TRG-01",
+        "REA-02",
+        "REA-03",
+        "STA-02",
+        "STA-04",
+        "END-02",
+        "A-025"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.167.",
+        "No final paragraph met threshold 0.23; best=0.141.",
+        "No final paragraph met threshold 0.23; best=0.105.",
+        "No final paragraph met threshold 0.23; best=0.114.",
+        "No final paragraph met threshold 0.23; best=0.086.",
+        "No final paragraph met threshold 0.23; best=0.076.",
+        "Human-specific cue trigger was active but no approved cue appeared"
+      ]
+    },
+    {
+      "chapter": 10,
+      "protagonist": "顾临川",
+      "preflight_eligible": false,
+      "obligation_count": 20,
+      "unsupported_count": 4,
+      "source_conflict_count": 0,
+      "delta_gate": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-02",
+        "STA-02",
+        "STA-03",
+        "END-02"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.105.",
+        "No final paragraph met threshold 0.23; best=0.115.",
+        "No final paragraph met threshold 0.23; best=0.059.",
+        "No final paragraph met threshold 0.23; best=0.078."
+      ]
+    }
+  ]
+}

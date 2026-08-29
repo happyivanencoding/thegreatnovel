@@ -1,0 +1,191 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapters": [
+    2,
+    9,
+    14,
+    16
+  ],
+  "samples": 4,
+  "adopted": 4,
+  "fallback_full": 0,
+  "full_reviser_residual_failure": 0,
+  "control_total_seconds": 554.409,
+  "effective_total_seconds": 157.556,
+  "rows": [
+    {
+      "chapter": 2,
+      "preflight_eligible": true,
+      "obligation_count": 22,
+      "compact_obligation_chars": 9275,
+      "delta_wall_seconds": 24.287,
+      "control_full_reviser_seconds": 95.14,
+      "effective_route_seconds": 24.287,
+      "fallback_adjusted_speedup_percent": 74.47,
+      "delta_gate_decision": "ADOPT_DELTA",
+      "route_status": "ADOPT_DELTA",
+      "operation_count": 2,
+      "operations": [
+        {
+          "kind": "DELETE",
+          "start": 27,
+          "end": 28,
+          "payload_chars": 0
+        },
+        {
+          "kind": "DELETE",
+          "start": 54,
+          "end": 54,
+          "payload_chars": 0
+        }
+      ],
+      "apply_error": "",
+      "blocking_ids": [],
+      "blocking_reasons": [],
+      "full_reviser_gate_decision": "ADOPT_DELTA",
+      "full_reviser_blocking_ids": [],
+      "delta_prompt_chars": 26776,
+      "delta_response_chars": 50,
+      "delta_final_chars": 2164,
+      "route_final_chars": 2164,
+      "usage": {
+        "totalTokens": 44780,
+        "inputTokens": 19403,
+        "cachedReadTokens": 24320,
+        "outputTokens": 1057,
+        "thoughtTokens": 1034
+      }
+    },
+    {
+      "chapter": 9,
+      "preflight_eligible": true,
+      "obligation_count": 28,
+      "compact_obligation_chars": 11513,
+      "delta_wall_seconds": 38.146,
+      "control_full_reviser_seconds": 128.058,
+      "effective_route_seconds": 38.146,
+      "fallback_adjusted_speedup_percent": 70.21,
+      "delta_gate_decision": "ADOPT_DELTA",
+      "route_status": "ADOPT_DELTA",
+      "operation_count": 1,
+      "operations": [
+        {
+          "kind": "INSERT_AFTER",
+          "start": 2,
+          "end": 2,
+          "payload_chars": 53
+        }
+      ],
+      "apply_error": "",
+      "blocking_ids": [],
+      "blocking_reasons": [],
+      "full_reviser_gate_decision": "ADOPT_DELTA",
+      "full_reviser_blocking_ids": [],
+      "delta_prompt_chars": 30502,
+      "delta_response_chars": 90,
+      "delta_final_chars": 2348,
+      "route_final_chars": 2348,
+      "usage": {
+        "totalTokens": 48666,
+        "inputTokens": 22487,
+        "cachedReadTokens": 24320,
+        "outputTokens": 1859,
+        "thoughtTokens": 1792
+      }
+    },
+    {
+      "chapter": 14,
+      "preflight_eligible": true,
+      "obligation_count": 30,
+      "compact_obligation_chars": 12277,
+      "delta_wall_seconds": 14.379,
+      "control_full_reviser_seconds": 210.84,
+      "effective_route_seconds": 14.379,
+      "fallback_adjusted_speedup_percent": 93.18,
+      "delta_gate_decision": "ADOPT_DELTA",
+      "route_status": "ADOPT_DELTA",
+      "operation_count": 0,
+      "operations": [],
+      "apply_error": "",
+      "blocking_ids": [],
+      "blocking_reasons": [],
+      "full_reviser_gate_decision": "ADOPT_DELTA",
+      "full_reviser_blocking_ids": [],
+      "delta_prompt_chars": 32651,
+      "delta_response_chars": 8,
+      "delta_final_chars": 3935,
+      "route_final_chars": 3935,
+      "usage": {
+        "totalTokens": 48035,
+        "inputTokens": 23191,
+        "cachedReadTokens": 24320,
+        "outputTokens": 524,
+        "thoughtTokens": 516
+      }
+    },
+    {
+      "chapter": 16,
+      "preflight_eligible": true,
+      "obligation_count": 29,
+      "compact_obligation_chars": 12107,
+      "delta_wall_seconds": 80.744,
+      "control_full_reviser_seconds": 120.371,
+      "effective_route_seconds": 80.744,
+      "fallback_adjusted_speedup_percent": 32.92,
+      "delta_gate_decision": "ADOPT_DELTA",
+      "route_status": "ADOPT_DELTA",
+      "operation_count": 5,
+      "operations": [
+        {
+          "kind": "REPLACE",
+          "start": 42,
+          "end": 44,
+          "payload_chars": 102
+        },
+        {
+          "kind": "REPLACE",
+          "start": 48,
+          "end": 50,
+          "payload_chars": 83
+        },
+        {
+          "kind": "REPLACE",
+          "start": 71,
+          "end": 71,
+          "payload_chars": 67
+        },
+        {
+          "kind": "REPLACE",
+          "start": 86,
+          "end": 86,
+          "payload_chars": 24
+        },
+        {
+          "kind": "REPLACE",
+          "start": 99,
+          "end": 99,
+          "payload_chars": 19
+        }
+      ],
+      "apply_error": "",
+      "blocking_ids": [],
+      "blocking_reasons": [],
+      "full_reviser_gate_decision": "FALLBACK_FULL_REVISER",
+      "full_reviser_blocking_ids": [
+        "ACT-02"
+      ],
+      "delta_prompt_chars": 31369,
+      "delta_response_chars": 409,
+      "delta_final_chars": 2916,
+      "route_final_chars": 2916,
+      "usage": {
+        "totalTokens": 51257,
+        "inputTokens": 22741,
+        "cachedReadTokens": 24320,
+        "outputTokens": 4196,
+        "thoughtTokens": 3878
+      }
+    }
+  ],
+  "fallback_adjusted_speedup_percent": 71.58
+}

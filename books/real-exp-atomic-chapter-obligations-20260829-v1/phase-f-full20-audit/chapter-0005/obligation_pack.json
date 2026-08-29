@@ -1,0 +1,730 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 5,
+  "protagonist": "顾停舟",
+  "mission_fields": {
+    "触发事件": "砺骨部前哨在新裂槽外拦下矿队。乌合指出，矿队准备钉下矿权标记的位置，正压在部族等待多日的迁徙水窗上；一旦先占，族人将错过这次通行。",
+    "主角行动": "顾停舟用潮线与旧桩位置核对乌合所说的水窗，确认这不是阻拦矿队的借口，而是正在发生的路线冲突。他要求矿队暂缓钉标，让砺骨部先通过，并明确“能走这条路”不等于“现在就该由矿队先占”。",
+    "对手或世界反应": "矿队首领拒绝承担延误，提醒顾停舟实测契有期限，尾款也以结果为前提；队员和护卫因此停在界桩外。乌合确认顾停舟没有把族人的迁徙路线当成无主损耗，但仍保留水路控制权，不向他交出迁徙道。",
+    "直接结果": "矿队暂缓钉下矿权标记，乌合族人保住这一次真实水窗，能够先通过受争议的水路。顾停舟没有取得砺骨部的长期通行权，也没有完成新裂槽实测结果。",
+    "状态变化": "顾停舟第一次为独立身份承担可计算的契约延误：实测契的完成条件变得不稳定，阮青蜃后续可以据此追问结果与责任。乌合确认顾停舟会在具体利益冲突中让出矿队先手，但双方仍只是建立了有限信任，水路和迁徙道的控制权没有转移。",
+    "结尾推动力": "水位退下，裂槽尽头显出倒悬峡与一片残破建筑。矿队判断低潮窗口正在打开，决定趁砺骨部尚未重新封住水路前抢先进入，迫使顾停舟下一章面对倒悬峡入口及矿队抢先行动的压力。"
+  },
+  "obligations": [
+    {
+      "id": "TRG-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "砺骨部前哨在新裂槽外拦下矿队",
+      "subject": "砺骨部",
+      "action": "",
+      "object": "新裂槽",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "砺骨部前哨在新裂槽外拦下矿队",
+        "terms": [
+          "新裂槽",
+          "砺骨部",
+          "前哨",
+          "裂槽"
+        ],
+        "actions": [],
+        "anchors": [
+          "新裂槽外",
+          "砺骨部"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          24,
+          88,
+          58
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        24,
+        88,
+        58
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "TRG-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "乌合指出，矿队准备钉下矿权标记的位置，正压在部族等待多日的迁徙水窗上",
+      "subject": "乌合",
+      "action": "pending",
+      "object": "矿权标记",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [
+          "矿权标记",
+          "乌合"
+        ],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        11
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "TRG-03",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "一旦先占，族人将错过这次通行",
+      "subject": "乌合",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "一旦先占，族人将错过这次通行",
+        "terms": [],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-01",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "顾停舟用潮线与旧桩位置核对乌合所说的水窗，确认这不是阻拦矿队的借口，而是正在发生的路线冲突",
+      "subject": "顾停舟",
+      "action": "confirm",
+      "object": "乌合",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟用潮线与旧桩位置核对乌合所说的水窗，确认这不是阻拦矿队的借口，而是正在发生的路线冲突",
+        "terms": [
+          "顾停舟",
+          "乌合"
+        ],
+        "actions": [
+          "confirm"
+        ],
+        "anchors": [
+          "顾停舟",
+          "路线"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          8,
+          17,
+          29
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        8,
+        17,
+        29
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-02",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "他要求矿队暂缓钉标，让砺骨部先通过，并明确“能走这条路”不等于“现在就该由矿队先占”",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "砺骨部",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "他要求矿队暂缓钉标，让砺骨部先通过，并明确“能走这条路”不等于“现在就该由矿队先占”",
+        "terms": [
+          "砺骨部",
+          "能走这条路",
+          "现在就该由矿队先占"
+        ],
+        "actions": [],
+        "anchors": [
+          "不等于现在就该由矿队先占",
+          "这条路",
+          "让砺骨部先"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          39,
+          35
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        39,
+        35
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "矿队首领拒绝承担延误，提醒顾停舟实测契有期限，尾款也以结果为前提",
+      "subject": "矿队首领",
+      "action": "refuse",
+      "object": "实测契",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "矿队首领拒绝承担延误，提醒顾停舟实测契有期限，尾款也以结果为前提",
+        "terms": [
+          "矿队首领",
+          "实测契",
+          "顾停舟",
+          "尾款"
+        ],
+        "actions": [
+          "refuse"
+        ],
+        "anchors": [
+          "实测契有期限",
+          "顾停舟",
+          "尾款"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          28,
+          98,
+          45
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        28,
+        98,
+        45
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "队员和护卫因此停在界桩外",
+      "subject": "矿队首领",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "队员和护卫因此停在界桩外",
+        "terms": [],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-03",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "乌合确认顾停舟没有把族人的迁徙路线当成无主损耗，但仍保留水路控制权，不向他交出迁徙道",
+      "subject": "乌合",
+      "action": "possess|confirm",
+      "object": "顾停舟",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "乌合确认顾停舟没有把族人的迁徙路线当成无主损耗，但仍保留水路控制权，不向他交出迁徙道",
+        "terms": [
+          "顾停舟",
+          "乌合",
+          "水路"
+        ],
+        "actions": [
+          "possess",
+          "confirm"
+        ],
+        "anchors": [
+          "顾停舟",
+          "乌合",
+          "没有"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          17,
+          80,
+          8
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        17,
+        80,
+        8
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-01",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "矿队暂缓钉下矿权标记，乌合族人保住这一次真实水窗，能够先通过受争议的水路",
+      "subject": "顾停舟",
+      "action": "protect",
+      "object": "矿权标记",
+      "status": "preserved",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "矿队暂缓钉下矿权标记，乌合族人保住这一次真实水窗，能够先通过受争议的水路",
+        "terms": [
+          "矿权标记",
+          "乌合",
+          "水路"
+        ],
+        "actions": [
+          "protect"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-02",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "顾停舟没有取得砺骨部的长期通行权，也没有完成新裂槽实测结果",
+      "subject": "顾停舟",
+      "action": "acquire",
+      "object": "新裂槽",
+      "status": "received",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟没有取得砺骨部的长期通行权，也没有完成新裂槽实测结果",
+        "terms": [
+          "新裂槽",
+          "砺骨部",
+          "顾停舟",
+          "裂槽"
+        ],
+        "actions": [
+          "acquire"
+        ],
+        "anchors": [
+          "顾停舟",
+          "新裂槽",
+          "砺骨部"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          24,
+          8,
+          35
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        24,
+        8,
+        35
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-01",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾停舟第一次为独立身份承担可计算的契约延误：实测契的完成条件变得不稳定，阮青蜃后续可以据此追问结果与责任",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "实测契",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟第一次为独立身份承担可计算的契约延误：实测契的完成条件变得不稳定，阮青蜃后续可以据此追问结果与责任",
+        "terms": [
+          "实测契",
+          "阮青蜃",
+          "顾停舟",
+          "第一次为独立身份承担可计算"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾停舟",
+          "实测契",
+          "阮青蜃"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          28,
+          98,
+          45
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        28,
+        98,
+        45
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-02",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "乌合确认顾停舟会在具体利益冲突中让出矿队先手，但双方仍只是建立了有限信任，水路和迁徙道的控制权没有转移",
+      "subject": "乌合",
+      "action": "confirm",
+      "object": "顾停舟",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "乌合确认顾停舟会在具体利益冲突中让出矿队先手，但双方仍只是建立了有限信任，水路和迁徙道的控制权没有转移",
+        "terms": [
+          "顾停舟",
+          "乌合",
+          "水路"
+        ],
+        "actions": [
+          "confirm"
+        ],
+        "anchors": [
+          "顾停舟",
+          "水路",
+          "乌合"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          35,
+          17,
+          8
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        35,
+        17,
+        8
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-01",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "水位退下，裂槽尽头显出倒悬峡与一片残破建筑",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "裂槽",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "水位退下，裂槽尽头显出倒悬峡与一片残破建筑",
+        "terms": [
+          "裂槽"
+        ],
+        "actions": [],
+        "anchors": [
+          "一片残破建筑",
+          "裂槽尽头",
+          "倒悬"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          88,
+          86,
+          24
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        88,
+        86,
+        24
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-02",
+      "kind": "ending",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "矿队判断低潮窗口正在打开，决定趁砺骨部尚未重新封住水路前抢先进入，迫使顾停舟下一章面对倒悬峡入口及矿队抢先行动的压力",
+      "subject": "顾停舟",
+      "action": "move|limit|pending",
+      "object": "砺骨部",
+      "status": "pending",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [
+          "砺骨部",
+          "低潮",
+          "水路"
+        ],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        35,
+        82
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-015",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "入潮",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "入潮",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-016",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "成炉",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "成炉",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-017",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "照域",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "照域",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-018",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "镇海",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "镇海",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-019",
+      "kind": "commercial_value",
+      "mode": "preserve_if_present",
+      "severity": "hard",
+      "source_field": "Primary + approved Curator support",
+      "source_text": "领队冷笑：“你们要过，等我们测完再过。矿队带着实测契来的，今天不钉标，明天水一涨，谁赔这趟工钱？”\n\n“顾停舟，别忘了你是来做什么的。实测契有期限，路线结果交不出来，尾款就没有。队伍停在这里，车、人、护卫，全是钱。”",
+      "subject": "顾停舟",
+      "action": "preserve_value",
+      "object": "reward",
+      "status": "present_in_primary",
+      "qualifiers": [],
+      "boundary": "Commercial value is category-level, not sentence-level and not a per-chapter quota. Individual carrier paragraphs may change if the authorized desire, relationship, reward or repricing remains visible.",
+      "validator": {
+        "type": "commercial_preserve",
+        "category": "reward",
+        "markers": [
+          "钱",
+          "潮铢",
+          "矿利",
+          "份额",
+          "行潮籍",
+          "身份",
+          "回潮楔",
+          "潮髓",
+          "战功",
+          "票据"
+        ],
+        "source_paragraphs": [
+          16,
+          28
+        ],
+        "key_terms": [
+          "兼容潮髓",
+          "回潮楔",
+          "实测契",
+          "新裂槽",
+          "砺骨部",
+          "行潮籍",
+          "阮青蜃",
+          "预付款"
+        ],
+        "source_text": "领队冷笑：“你们要过，等我们测完再过。矿队带着实测契来的，今天不钉标，明天水一涨，谁赔这趟工钱？”\n\n“顾停舟，别忘了你是来做什么的。实测契有期限，路线结果交不出来，尾款就没有。队伍停在这里，车、人、护卫，全是钱。”"
+      },
+      "primary_evidence_paragraphs": [
+        16,
+        28
+      ],
+      "protected_category": "reward"
+    }
+  ],
+  "source_conflicts": [],
+  "unsupported_clauses": [
+    "触发事件[3] 一旦先占，族人将错过这次通行",
+    "对手或世界反应[2] 队员和护卫因此停在界桩外"
+  ],
+  "diagnostics": [
+    "当前场景状态列出的在场人物不包含乌合，但事件合同要求乌合在新裂槽外拦下矿队并推动冲突。需确认乌合是否在本章开场前后进入现场。",
+    "事件合同使用“矿队首领／矿队”，当前场景状态使用“实测队领队／实测队”。无法仅凭预取判断是否为同一队伍，正文称谓需统一。"
+  ],
+  "primary_paragraph_count": 100,
+  "preflight_eligible": false
+}

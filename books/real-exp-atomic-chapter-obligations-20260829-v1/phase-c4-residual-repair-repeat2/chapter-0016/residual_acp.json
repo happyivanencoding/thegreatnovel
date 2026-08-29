@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 22.225,
+  "sessionId": "01a04f27-d0c1-7090-8f08-df83709b7376",
+  "text": "# PARAGRAPH OPS\n## REPLACE P042-P049\n分身踩着被黑水浸透的石料，直奔第二井外侧。潮水撞在他腿上，几乎把人掀倒，本体却将回潮楔递到他手中。他身上只带着“定住”这一种本事，便携着回潮楔进入第二个潮压节点。\n\n他抬手往下一按。\n\n泥坡、石料和那股不断上顶的潮压，像被一只无形的手扣住，短暂停在原地。分身随即将回潮楔钉进节点的潮泥，楔身没入，只留尾端在外。\n\n本体的顾停舟没有试图把它压向整片地潮，只盯着那条已经被放弃的外层缺口。\n\n“去外层。”",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 43486,
+      "inputTokens": 32507,
+      "cachedReadTokens": 9984,
+      "outputTokens": 995,
+      "thoughtTokens": 790
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 43486,
+          "inputTokens": 32507,
+          "cachedInputTokens": 9984,
+          "outputTokens": 995,
+          "reasoningOutputTokens": 790
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 43486,
+              "inputTokens": 32507,
+              "cachedInputTokens": 9984,
+              "outputTokens": 995,
+              "reasoningOutputTokens": 790
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

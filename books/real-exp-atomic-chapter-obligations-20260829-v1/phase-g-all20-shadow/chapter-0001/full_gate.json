@@ -1,0 +1,277 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 1,
+  "preflight_eligible": false,
+  "decision": "FALLBACK_FULL_REVISER",
+  "touched_source_paragraphs": [
+    8,
+    80
+  ],
+  "blocking_checks": [
+    {
+      "obligation_id": "ACT-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.106.",
+      "evidence": [
+        "右侧，第二个顾停舟还按着矿车。"
+      ]
+    },
+    {
+      "obligation_id": "ACT-04",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.145.",
+      "evidence": [
+        "“路是你们要赶的，车是你们要加的。真出了事，货肯定会丢。但哪一笔是潮水卷走的，哪一笔是人硬压上去的，得分开。”"
+      ]
+    },
+    {
+      "obligation_id": "CONFLICT-01",
+      "status": "conflict",
+      "reason": "未提供最近两章正文及前文章末片段，无法判断重复风险；不据此补充。",
+      "evidence": []
+    }
+  ],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/1 actions=[]",
+      "evidence": [
+        "低潮"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P010",
+        "P016",
+        "P076"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P036",
+        "P052",
+        "P098"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.106.",
+      "evidence": [
+        "右侧，第二个顾停舟还按着矿车。"
+      ]
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P062",
+        "P085"
+      ]
+    },
+    {
+      "obligation_id": "ACT-04",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P065",
+        "P078"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.145.",
+      "evidence": [
+        "“路是你们要赶的，车是你们要加的。真出了事，货肯定会丢。但哪一笔是潮水卷走的，哪一笔是人硬压上去的，得分开。”"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "成炉者通常能独自护住一辆商车，也才有资格独自穿过短距离荒地；可那是成炉者。顾停舟只是个基础入潮者，平日里抱着账册、记着路线，连正式行潮籍都没有。"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "成炉者通常能独自护住一辆商车，也才有资格独自穿过短距离荒地；可那是成炉者。顾停舟只是个基础入潮者，平日里抱着账册、记着路线，连正式行潮籍都没有。"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "成炉者通常能独自护住一辆商车，也才有资格独自穿过短距离荒地；可那是成炉者。顾停舟只是个基础入潮者，平日里抱着账册、记着路线，连正式行潮籍都没有。"
+      ]
+    },
+    {
+      "obligation_id": "RES-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P011",
+        "P081",
+        "P130"
+      ]
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P083"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P027",
+        "P097",
+        "P129"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P040",
+        "P124",
+        "P130"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P019",
+        "P027",
+        "P114"
+      ]
+    },
+    {
+      "obligation_id": "RR-018",
+      "status": "pass",
+      "reason": "semantic anchor score=0.248",
+      "evidence": [
+        "九垂原的地潮十二日一过，井水会涨，潮兽会迁，连平日能走的潮路都可能被冲断。普通人赶路，只能跟着商队，在低潮时沿石桩走；家家还要备着固定屋梁、潮灯和避潮粮窖，路上遇潮则依赖潮器保命。"
+      ]
+    },
+    {
+      "obligation_id": "RR-019",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/1 actions=[]",
+      "evidence": [
+        "成炉"
+      ]
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-023",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "pass",
+      "reason": "no unauthorized full-power transfer; explicit re-explanation is not a quota",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-025",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-026",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-027",
+      "status": "pass_preserved",
+      "reason": "protected commercial category evidence was untouched",
+      "evidence": [
+        "P107",
+        "P127"
+      ]
+    },
+    {
+      "obligation_id": "A-028",
+      "status": "pass",
+      "reason": "protected reward retained",
+      "evidence": [
+        "顾停舟报出车号、货签和份额。少东家亲手按了印，又把油纸塞到他手里。"
+      ]
+    },
+    {
+      "obligation_id": "CONFLICT-01",
+      "status": "conflict",
+      "reason": "未提供最近两章正文及前文章末片段，无法判断重复风险；不据此补充。",
+      "evidence": []
+    }
+  ],
+  "status_counts": {
+    "pass": 15,
+    "pass_preserved": 10,
+    "not_triggered": 0,
+    "fail": 3,
+    "unknown": 0,
+    "conflict": 1
+  }
+}

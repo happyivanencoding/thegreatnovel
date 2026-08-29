@@ -1,0 +1,18 @@
+{
+  "installed_exists": false,
+  "files": [
+    {
+      "file": "SKILL.md",
+      "source_sha256": "9642d404b5a40c4e59e40718e34820973e30e07dfa9d16ce9e7cd74969e87f5a",
+      "installed_sha256": "",
+      "exact": false
+    },
+    {
+      "file": "references/experiment-protocol.md",
+      "source_sha256": "3ba77d2620bfd8b3961d0a2c30b13f395c545404d646af1b4822248e4a03c131",
+      "installed_sha256": "",
+      "exact": false
+    }
+  ],
+  "metadata": []
+}

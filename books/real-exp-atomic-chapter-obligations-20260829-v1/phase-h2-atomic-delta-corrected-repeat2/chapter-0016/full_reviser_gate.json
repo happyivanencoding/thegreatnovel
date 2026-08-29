@@ -1,0 +1,266 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 16,
+  "preflight_eligible": true,
+  "decision": "FALLBACK_FULL_REVISER",
+  "touched_source_paragraphs": [
+    23,
+    24,
+    26,
+    47,
+    71,
+    72,
+    73,
+    74
+  ],
+  "blocking_checks": [
+    {
+      "obligation_id": "ACT-02",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    }
+  ],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=4/5 actions=[]",
+      "evidence": [
+        "旧关外层",
+        "迁徙水路",
+        "水路",
+        "粮车"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "泥坡塌下来的地方本就狭窄，撤离的人被黑水逼着往一处挤。砺骨部前哨的人站在坡顶，不断把人往更高的石脊上引。有人回头看见自己的屋子被潮水撞塌，哭着要往回跑，被守军一把拽住。"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=4/5 actions=[]",
+      "evidence": [
+        "顾停舟",
+        "成炉",
+        "本体",
+        "水路"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P013",
+        "P046"
+      ]
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "黑水已经灌进最外面的几排石屋。那里的挡潮墙早被冲开，残墙和泥坡连成一片，像一只张开的口子。外层本来就是要放弃的地方，只是潮势若这样直冲，三座井和粮道也会一起被撕开。"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "泥坡塌下来的地方本就狭窄，撤离的人被黑水逼着往一处挤。砺骨部前哨的人站在坡顶，不断把人往更高的石脊上引。有人回头看见自己的屋子被潮水撞塌，哭着要往回跑，被守军一把拽住。"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "pass",
+      "reason": "pending boundary preserved",
+      "evidence": [
+        "“粮还没到地方。”他对少东家道，“别当契完了。”"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=2/3 actions=['protect']",
+      "evidence": [
+        "砺骨部",
+        "粮道"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P012",
+        "P013",
+        "P038"
+      ]
+    },
+    {
+      "obligation_id": "RES-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P039",
+        "P045",
+        "P096"
+      ]
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P045",
+        "P096"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/1 actions=['lose', 'protect', 'sacrifice']",
+      "evidence": [
+        "水路"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "泥坡塌下来的地方本就狭窄，撤离的人被黑水逼着往一处挤。砺骨部前哨的人站在坡顶，不断把人往更高的石脊上引。有人回头看见自己的屋子被潮水撞塌，哭着要往回跑，被守军一把拽住。"
+      ]
+    },
+    {
+      "obligation_id": "STA-04",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P085",
+        "P088"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P052",
+        "P063",
+        "P091"
+      ]
+    },
+    {
+      "obligation_id": "END-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P069",
+        "P082",
+        "P101"
+      ]
+    },
+    {
+      "obligation_id": "A-019",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-023",
+      "status": "pass",
+      "reason": "no unauthorized full-power transfer; explicit re-explanation is not a quota",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "pass",
+      "reason": "authorized possession state found",
+      "evidence": [
+        "顾停舟胸口一阵发闷，喉间的血腥味压不住。他撑着车辕站稳，望向外层。\n\n回潮楔从潮泥中弹回，落进他掌心。"
+      ]
+    },
+    {
+      "obligation_id": "A-025",
+      "status": "pass",
+      "reason": "single cycle object=True steps=True repeated=False",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-026",
+      "status": "pass",
+      "reason": "cooldown boundary retained",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-027",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-028",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-029",
+      "status": "pass_preserved",
+      "reason": "protected commercial category evidence was untouched",
+      "evidence": [
+        "P037",
+        "P045",
+        "P048",
+        "P070",
+        "P096"
+      ]
+    }
+  ],
+  "status_counts": {
+    "pass": 20,
+    "pass_preserved": 8,
+    "not_triggered": 0,
+    "fail": 1,
+    "unknown": 0,
+    "conflict": 0
+  }
+}

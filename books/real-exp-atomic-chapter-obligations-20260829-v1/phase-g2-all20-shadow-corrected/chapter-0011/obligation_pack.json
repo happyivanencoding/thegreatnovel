@@ -1,0 +1,1231 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapter": 11,
+  "protagonist": "顾停舟",
+  "mission_fields": {
+    "触发事件": "阮青蜃与矿队首领在撤离车旁当场要求顾停舟交出回潮楔，并把矿权标记毁损、撤路被毁和实测尾款落空全部归入顾停舟的救援责任，试图趁人员尚未分散前强行改写现场责任。",
+    "主角行动": "顾停舟不重新争辩整份契约，只让获救矿工、砺骨部前哨和撤离人员分别说清三件事：谁先破坏撤路、谁实际使用回潮楔完成救援、谁承担了救援结果。乌合在关键处作证，但他先按约定谈妥协作价，再支付给乌合；随后把反潮记录的副本交给唐绾，原始材料继续由自己保留。",
+    "对手或世界反应": "三方证言互相补足，证明矿队首领的抢先行动与撤路毁损不能直接归责于顾停舟，也证明回潮楔是在顾停舟手中被实际使用并完成救援。阮青蜃无法再以单方面说法当场夺楔，只能保留契约损失与归属追索。乌合接受明确协作价，但不把救命人情继续留作无边界的人情债。",
+    "直接结果": "回潮楔继续由顾停舟个人持有，矿队的归属异议和尾款争议仍未解决，但现场不能强行结算。乌合收到本次协作的明确报酬。唐绾收到反潮记录副本，顾停舟保留原件与完整证据链。",
+    "状态变化": "本章第一次将三项事实固定为公开可见的现场记录：矿队首领的行动造成撤路毁损；顾停舟实际使用回潮楔完成救援；获救人员并非矿队可以直接归入“无主损耗”的损失。顾停舟因此保住回潮楔，也获得继续处理修复与追索的行动主动权；乌合与他的关系从救命人情转为有价互惠，唐绾则正式进入回潮楔后续处理链条。契约责任、实测权限和古器最终归属仍未解决。",
+    "结尾推动力": "唐绾回信确认回潮楔仍有修复可能，但百炉会的开炉试窗口即将关闭。顾停舟必须立刻带着回潮楔、反潮记录和原始材料前往百炉城，否则修复机会与开炉试入口都会错过。"
+  },
+  "obligations": [
+    {
+      "id": "TRG-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "阮青蜃与矿队首领在撤离车旁当场要求顾停舟交出回潮楔，并把矿权标记毁损、撤路被毁和实测尾款落空全部归入顾停舟的救援责任，试图趁人员尚未分散前强行改写现场责任",
+      "subject": "阮青蜃",
+      "action": "possess|lose|move|limit|pending",
+      "object": "矿权标记",
+      "status": "pending",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [
+          "矿权标记",
+          "矿队首领",
+          "回潮楔",
+          "撤离车"
+        ],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        98,
+        4,
+        7
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-01",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "顾停舟不重新争辩整份契约，只让获救矿工、砺骨部前哨和撤离人员分别说清三件事：谁先破坏撤路、谁实际使用回潮楔完成救援、谁承担了救援结果",
+      "subject": "顾停舟",
+      "action": "move",
+      "object": "回潮楔",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟不重新争辩整份契约，只让获救矿工、砺骨部前哨和撤离人员分别说清三件事：谁先破坏撤路、谁实际使用回潮楔完成救援、谁承担了救援结果",
+        "terms": [
+          "回潮楔",
+          "砺骨部",
+          "顾停舟",
+          "前哨",
+          "矿工"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [
+          "砺骨部",
+          "撤离",
+          "实际使用",
+          "顾停舟"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          95,
+          68,
+          87
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        95,
+        68,
+        87
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-02",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "乌合在关键处作证，但他先按约定谈妥协作价，再支付给乌合",
+      "subject": "乌合",
+      "action": "pay",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "乌合在关键处作证，但他先按约定谈妥协作价，再支付给乌合",
+        "terms": [
+          "乌合"
+        ],
+        "actions": [
+          "pay"
+        ],
+        "anchors": [
+          "乌合",
+          "协作"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          61,
+          65,
+          83
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        61,
+        65,
+        83
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-03",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "把反潮记录的副本交给唐绾，原始材料继续由自己保留",
+      "subject": "乌合",
+      "action": "possess|transfer",
+      "object": "反潮记录",
+      "status": "preserved",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "actor_action_object",
+        "source": "把反潮记录的副本交给唐绾，原始材料继续由自己保留",
+        "subject_terms": [
+          "乌合"
+        ],
+        "object_terms": [
+          "反潮记录"
+        ],
+        "actions": [
+          "possess",
+          "transfer"
+        ],
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "三方证言互相补足，证明矿队首领的抢先行动与撤路毁损不能直接归责于顾停舟，也证明回潮楔是在顾停舟手中被实际使用并完成救援",
+      "subject": "顾停舟",
+      "action": "possess|confirm|limit",
+      "object": "矿队首领",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "三方证言互相补足，证明矿队首领的抢先行动与撤路毁损不能直接归责于顾停舟，也证明回潮楔是在顾停舟手中被实际使用并完成救援",
+        "terms": [
+          "矿队首领",
+          "回潮楔",
+          "顾停舟"
+        ],
+        "actions": [
+          "possess",
+          "confirm",
+          "limit"
+        ],
+        "anchors": [
+          "矿队首领",
+          "实际使用",
+          "顾停舟",
+          "撤路",
+          "回潮楔"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          87,
+          88,
+          98
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        87,
+        88,
+        98
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "阮青蜃无法再以单方面说法当场夺楔，只能保留契约损失与归属追索",
+      "subject": "阮青蜃",
+      "action": "possess|search",
+      "object": "契约损失",
+      "status": "disputed",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "阮青蜃无法再以单方面说法当场夺楔，只能保留契约损失与归属追索",
+        "terms": [
+          "契约损失",
+          "阮青蜃"
+        ],
+        "actions": [
+          "possess",
+          "search"
+        ],
+        "anchors": [
+          "阮青蜃",
+          "归属",
+          "保留"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          7,
+          98,
+          85
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        7,
+        98,
+        85
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-03",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "乌合接受明确协作价，但不把救命人情继续留作无边界的人情债",
+      "subject": "乌合",
+      "action": "accept",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "乌合接受明确协作价，但不把救命人情继续留作无边界的人情债",
+        "terms": [
+          "乌合"
+        ],
+        "actions": [
+          "accept"
+        ],
+        "anchors": [
+          "救命人情",
+          "乌合",
+          "协作",
+          "把救"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          65,
+          59,
+          83
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        65,
+        59,
+        83
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-01",
+      "kind": "direct_result",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "回潮楔继续由顾停舟个人持有，矿队的归属异议和尾款争议仍未解决，但现场不能强行结算",
+      "subject": "顾停舟",
+      "action": "possess|limit|pay|pending",
+      "object": "回潮楔",
+      "status": "pending",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [
+          "回潮楔",
+          "尾款"
+        ],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        98,
+        7,
+        87
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-02",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "乌合收到本次协作的明确报酬",
+      "subject": "乌合",
+      "action": "acquire",
+      "object": "本次协作的明确报酬",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "乌合收到本次协作的明确报酬",
+        "terms": [
+          "乌合",
+          "本次协作的明确报酬"
+        ],
+        "actions": [
+          "acquire"
+        ],
+        "anchors": [
+          "本次协作的",
+          "乌合",
+          "报酬"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          65,
+          72,
+          53
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        65,
+        72,
+        53
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-03",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "唐绾收到反潮记录副本，顾停舟保留原件与完整证据链",
+      "subject": "唐绾",
+      "action": "acquire|possess",
+      "object": "反潮记录",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "唐绾收到反潮记录副本，顾停舟保留原件与完整证据链",
+        "terms": [
+          "反潮记录",
+          "顾停舟",
+          "副本",
+          "唐绾"
+        ],
+        "actions": [
+          "acquire",
+          "possess"
+        ],
+        "anchors": [
+          "顾停舟"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          98,
+          123,
+          87
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        98,
+        123,
+        87
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-01",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "本章第一次将三项事实固定为公开可见的现场记录：矿队首领的行动造成撤路毁损",
+      "subject": "顾停舟",
+      "action": "fix|handle",
+      "object": "现场记录",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "本章第一次将三项事实固定为公开可见的现场记录：矿队首领的行动造成撤路毁损",
+        "terms": [
+          "现场记录",
+          "矿队首领",
+          "第一次将三项事实固定为公开"
+        ],
+        "actions": [
+          "fix",
+          "handle"
+        ],
+        "anchors": [
+          "固定"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          25
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        25
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-02",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾停舟实际使用回潮楔完成救援",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "回潮楔",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟实际使用回潮楔完成救援",
+        "terms": [
+          "回潮楔",
+          "顾停舟"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾停舟实际使用",
+          "回潮楔"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          87,
+          107,
+          88
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        87,
+        107,
+        88
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-03",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "获救人员并非矿队可以直接归入“无主损耗”的损失",
+      "subject": "顾停舟",
+      "action": "possess",
+      "object": "无主损耗",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "获救人员并非矿队可以直接归入“无主损耗”的损失",
+        "terms": [
+          "无主损耗"
+        ],
+        "actions": [
+          "possess"
+        ],
+        "anchors": [
+          "无主损耗的",
+          "获救",
+          "矿队"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          87,
+          59,
+          98
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        87,
+        59,
+        98
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-04",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾停舟因此保住回潮楔，也获得继续处理修复与追索的行动主动权",
+      "subject": "顾停舟",
+      "action": "acquire|protect|repair|search",
+      "object": "回潮楔",
+      "status": "received",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟因此保住回潮楔，也获得继续处理修复与追索的行动主动权",
+        "terms": [
+          "回潮楔",
+          "顾停舟"
+        ],
+        "actions": [
+          "acquire",
+          "protect",
+          "repair",
+          "search"
+        ],
+        "anchors": [
+          "住回潮楔",
+          "顾停舟"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          2,
+          107,
+          98
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        2,
+        107,
+        98
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-05",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "乌合与他的关系从救命人情转为有价互惠，唐绾则正式进入回潮楔后续处理链条",
+      "subject": "乌合",
+      "action": "move|power_transition",
+      "object": "回潮楔",
+      "status": "transitioned",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "乌合与他的关系从救命人情转为有价互惠，唐绾则正式进入回潮楔后续处理链条",
+        "terms": [
+          "回潮楔",
+          "乌合",
+          "唐绾"
+        ],
+        "actions": [
+          "move",
+          "power_transition"
+        ],
+        "anchors": [
+          "回潮楔",
+          "唐绾"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          95,
+          113
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        95,
+        113
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-06",
+      "kind": "terminal_state",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "契约责任、实测权限和古器最终归属仍未解决",
+      "subject": "乌合",
+      "action": "possess|limit|pending",
+      "object": "古器",
+      "status": "pending",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [
+          "古器"
+        ],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        98,
+        7,
+        34
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-01",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "唐绾回信确认回潮楔仍有修复可能，但百炉会的开炉试窗口即将关闭",
+      "subject": "唐绾",
+      "action": "confirm|repair",
+      "object": "回潮楔",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "唐绾回信确认回潮楔仍有修复可能，但百炉会的开炉试窗口即将关闭",
+        "terms": [
+          "回潮楔",
+          "百炉会",
+          "唐绾"
+        ],
+        "actions": [
+          "confirm",
+          "repair"
+        ],
+        "anchors": [
+          "有修复可能",
+          "回潮楔",
+          "百炉会的开炉试窗口"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          121,
+          122,
+          2
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        121,
+        122,
+        2
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-02",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "顾停舟必须立刻带着回潮楔、反潮记录和原始材料前往百炉城，否则修复机会与开炉试入口都会错过",
+      "subject": "顾停舟",
+      "action": "repair",
+      "object": "反潮记录",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟必须立刻带着回潮楔、反潮记录和原始材料前往百炉城，否则修复机会与开炉试入口都会错过",
+        "terms": [
+          "反潮记录",
+          "回潮楔",
+          "顾停舟"
+        ],
+        "actions": [
+          "repair"
+        ],
+        "anchors": [
+          "顾停舟",
+          "回潮楔",
+          "修复"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          2,
+          121,
+          107
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        2,
+        121,
+        107
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-019",
+      "kind": "source_conflict",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "Frozen Authority",
+      "source_text": "Do not invent prior dialogue/history backreferences.",
+      "subject": "顾停舟",
+      "action": "no_invented_prior_quote",
+      "object": "previous dialogue",
+      "status": "not_invented",
+      "qualifiers": [],
+      "boundary": "A line framed as previously spoken must already exist in Frozen Authority; current dialogue is unaffected.",
+      "validator": {
+        "type": "prior_quote",
+        "authorized_quotes": [
+          "顺手优化",
+          "更丰富",
+          "重新接触后才回流经验/伤势",
+          "共享",
+          "重新接触/合并",
+          "我像多活了一段时间",
+          "力量是什么/怎样粗分强弱/危险为什么改变生活/入口为什么重要",
+          "凝影了/通过了/被记名",
+          "生动",
+          "普通读者不用推理就能复述规则",
+          "验证闭环阶段推进价值兑现成长空间建立优势",
+          "再证明一次",
+          "这件事已经发生",
+          "无主损耗",
+          "按价协作",
+          "闭环",
+          "价值兑现",
+          "行动主动权",
+          "你追你的我走我的",
+          "现场不能强行结算但顾停舟必须立刻出发",
+          "地潮",
+          "听潮石",
+          "成炉",
+          "潮炉",
+          "潮裂",
+          "铸潮",
+          "定住",
+          "牵引",
+          "一个人同时变成两个真实战斗单位",
+          "这也太占便宜了",
+          "多一个人",
+          "分身只能带走一种本事",
+          "意外损耗",
+          "不懂做生意",
+          "有用但可替换",
+          "我知道",
+          "成炉了",
+          "你这炉子撑得住多久",
+          "现在撑得住",
+          "后面再说",
+          "契上写的是路线和矿样",
+          "路线我走了矿样也带出来了回潮楔不在契里",
+          "它出在矿路上",
+          "出在矿路上不等于写进矿契里",
+          "本该属于矿队",
+          "尾款给不了我认",
+          "矿权标记毁损的损失我不替你们全担回潮楔归属你们要争拿契据和证据来争",
+          "尾款落空你认",
+          "认",
+          "楔子也不交",
+          "契里没有",
+          "你追你的",
+          "我走我的",
+          "顾停舟",
+          "你守住了水窗",
+          "今天没有那道口子我们的人出不来",
+          "但你没替砺骨部夺路",
+          "你救人也先算自己的账",
+          "我没说过我不算",
+          "行那笔救命的人情还在",
+          "不过以后你要我们帮忙先把价钱说清楚",
+          "正合我意"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-020",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "入潮",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "入潮",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-021",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "成炉",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "成炉",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-022",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "照域",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "照域",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-023",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "镇海",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "镇海",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-024",
+      "kind": "ownership",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "Mission composite",
+      "source_text": "触发事件：阮青蜃与矿队首领在撤离车旁当场要求顾停舟交出回潮楔，并把矿权标记毁损、撤路被毁和实测尾款落空全部归入顾停舟的救援责任，试图趁人员尚未分散前强行改写现场责任。\n主角行动：顾停舟不重新争辩整份契约，只让获救矿工、砺骨部前哨和撤离人员分别说清三件事：谁先破坏撤路、谁实际使用回潮楔完成救援、谁承担了救援结果。乌合在关键处作证，但他先按约定谈妥协作价，再支付给乌合；随后把反潮记录的副本交给唐绾，原始材料继续由自己保留。\n对手或世界反应：三方证言互相补足，证明矿队首领的抢先行动与撤路毁损不能直接归责于顾停舟，也证明回潮楔是在顾停舟手中被实际使用并完成救援。阮青蜃无法再以单方面说法当场夺楔，只能保留契约损失与归属追索。乌合接受明确协作价，但不把救命人情继续留作无边界的人情债。\n直接结果：回潮楔继续由顾停舟个人持有，矿队的归属异议和尾款争议仍未解决，但现场不能强行结算。乌合收到本次协作的明确报酬。唐绾收到反潮记录副本，顾停舟保留原件与完整证据链。\n状态变化：本章第一次将三项事实固定为公开可见的现场记录：矿队首领的行动造成撤路毁损；顾停舟实际使用回潮楔完成救援；获救人员并非矿队可以直接归入“无主损耗”的损失。顾停舟因此保住回潮楔，也获得继续处理修复与追索的行动主动权；乌合与他的关系从救命人情转为有价互惠，唐绾则正式进入回潮楔后续处理链条。契约责任、实测权限和古器最终归属仍未解决。\n结尾推动力：唐绾回信确认回潮楔仍有修复可能，但百炉会的开炉试窗口即将关闭。顾停舟必须立刻带着回潮楔、反潮记录和原始材料前往百炉城，否则修复机会与开炉试入口都会错过。",
+      "subject": "顾停舟",
+      "action": "possess",
+      "object": "回潮楔",
+      "status": "preserved",
+      "qualifiers": [],
+      "boundary": "Physical possession, registered ownership, and uncontested legal title are distinct. Require only the explicitly authorized state.",
+      "validator": {
+        "type": "ownership",
+        "object_terms": [
+          "回潮楔",
+          "回潮楔",
+          "楔子",
+          "古器"
+        ],
+        "owner_terms": [
+          "顾停舟",
+          "他",
+          "自己",
+          "个人"
+        ],
+        "possession_terms": [
+          "持有",
+          "保留",
+          "带走",
+          "收好",
+          "在手",
+          "手里",
+          "掌心",
+          "收回袖中",
+          "收进袖中",
+          "归",
+          "仍由",
+          "留在",
+          "不卖",
+          "不交",
+          "塞回"
+        ],
+        "forbidden_transfer_terms": [
+          "送入",
+          "送到",
+          "送回",
+          "传入",
+          "交给",
+          "交出",
+          "收走",
+          "拿走",
+          "带走",
+          "带着"
+        ],
+        "forbidden_destination_terms": []
+      },
+      "primary_evidence_paragraphs": [
+        121,
+        107,
+        39
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-025",
+      "kind": "ownership",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "Mission composite",
+      "source_text": "触发事件：阮青蜃与矿队首领在撤离车旁当场要求顾停舟交出回潮楔，并把矿权标记毁损、撤路被毁和实测尾款落空全部归入顾停舟的救援责任，试图趁人员尚未分散前强行改写现场责任。\n主角行动：顾停舟不重新争辩整份契约，只让获救矿工、砺骨部前哨和撤离人员分别说清三件事：谁先破坏撤路、谁实际使用回潮楔完成救援、谁承担了救援结果。乌合在关键处作证，但他先按约定谈妥协作价，再支付给乌合；随后把反潮记录的副本交给唐绾，原始材料继续由自己保留。\n对手或世界反应：三方证言互相补足，证明矿队首领的抢先行动与撤路毁损不能直接归责于顾停舟，也证明回潮楔是在顾停舟手中被实际使用并完成救援。阮青蜃无法再以单方面说法当场夺楔，只能保留契约损失与归属追索。乌合接受明确协作价，但不把救命人情继续留作无边界的人情债。\n直接结果：回潮楔继续由顾停舟个人持有，矿队的归属异议和尾款争议仍未解决，但现场不能强行结算。乌合收到本次协作的明确报酬。唐绾收到反潮记录副本，顾停舟保留原件与完整证据链。\n状态变化：本章第一次将三项事实固定为公开可见的现场记录：矿队首领的行动造成撤路毁损；顾停舟实际使用回潮楔完成救援；获救人员并非矿队可以直接归入“无主损耗”的损失。顾停舟因此保住回潮楔，也获得继续处理修复与追索的行动主动权；乌合与他的关系从救命人情转为有价互惠，唐绾则正式进入回潮楔后续处理链条。契约责任、实测权限和古器最终归属仍未解决。\n结尾推动力：唐绾回信确认回潮楔仍有修复可能，但百炉会的开炉试窗口即将关闭。顾停舟必须立刻带着回潮楔、反潮记录和原始材料前往百炉城，否则修复机会与开炉试入口都会错过。",
+      "subject": "矿队/阮青蜃",
+      "action": "dispute",
+      "object": "回潮楔",
+      "status": "disputed",
+      "qualifiers": [],
+      "boundary": "The protagonist may possess the object while title remains disputed. Do not collapse possession into uncontested ownership.",
+      "validator": {
+        "type": "dispute",
+        "object_terms": [
+          "回潮楔",
+          "楔子",
+          "古器"
+        ],
+        "dispute_terms": [
+          "争",
+          "争议",
+          "异议",
+          "追索",
+          "主张",
+          "要重算"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-026",
+      "kind": "relationship_state",
+      "mode": "terminal",
+      "severity": "conditional",
+      "source_field": "状态变化",
+      "source_text": "本章第一次将三项事实固定为公开可见的现场记录：矿队首领的行动造成撤路毁损；顾停舟实际使用回潮楔完成救援；获救人员并非矿队可以直接归入“无主损耗”的损失。顾停舟因此保住回潮楔，也获得继续处理修复与追索的行动主动权；乌合与他的关系从救命人情转为有价互惠，唐绾则正式进入回潮楔后续处理链条。契约责任、实测权限和古器最终归属仍未解决。",
+      "subject": "顾停舟",
+      "action": "relationship_transition",
+      "object": "current named counterpart",
+      "status": "changed",
+      "qualifiers": [],
+      "boundary": "Only the explicit relationship state is required; do not infer romance, loyalty, forgiveness or a stronger bond.",
+      "validator": {
+        "type": "relationship",
+        "subject_terms": [
+          "顾停舟",
+          "他",
+          "我",
+          "你"
+        ],
+        "counterpart_terms": [
+          "乌合",
+          "唐绾",
+          "矿队首领"
+        ],
+        "terms": [
+          "合作",
+          "主从",
+          "欠情",
+          "决裂",
+          "同行",
+          "信任",
+          "关系",
+          "不再替",
+          "一起走",
+          "各走自己的"
+        ],
+        "transition_terms": [
+          "转为"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        87,
+        98,
+        34
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-027",
+      "kind": "commercial_value",
+      "mode": "preserve_if_present",
+      "severity": "hard",
+      "source_field": "Primary + approved Curator support",
+      "source_text": "细裂已经比先前更深。再拖下去，这件漂亮又锋利的东西，或许真的会变成一块废铁。",
+      "subject": "顾停舟",
+      "action": "preserve_value",
+      "object": "desire",
+      "status": "present_in_primary",
+      "qualifiers": [],
+      "boundary": "Commercial value is category-level, not sentence-level and not a per-chapter quota. Individual carrier paragraphs may change if the authorized desire, relationship, reward or repricing remains visible.",
+      "validator": {
+        "type": "commercial_preserve",
+        "category": "desire",
+        "markers": [
+          "我想",
+          "他想",
+          "想要",
+          "舍不得",
+          "不愿",
+          "喜欢",
+          "漂亮",
+          "属于自己",
+          "自己定",
+          "真正属于"
+        ],
+        "source_paragraphs": [
+          108
+        ],
+        "key_terms": [
+          "反潮记录",
+          "契约损失",
+          "矿队首领",
+          "回潮楔",
+          "砺骨部",
+          "阮青蜃",
+          "乌合",
+          "分身"
+        ],
+        "source_text": "细裂已经比先前更深。再拖下去，这件漂亮又锋利的东西，或许真的会变成一块废铁。"
+      },
+      "primary_evidence_paragraphs": [
+        108
+      ],
+      "protected_category": "desire"
+    },
+    {
+      "id": "A-028",
+      "kind": "commercial_value",
+      "mode": "preserve_if_present",
+      "severity": "hard",
+      "source_field": "Primary + approved Curator support",
+      "source_text": "顾停舟站在车轮边，左手垂着，掌心攥住回潮楔。楔体上的细裂硌着皮肉，冰凉得像一截刚从水底捞出来的铁。\n\n又指向自己手里的回潮楔。\n\n顾停舟没有催，只把回潮楔放到掌心，让所有人看见上面的裂纹。\n\n前哨看着回潮楔，声音发哑。\n\n“你们可以追你们的矿权。”乌合说，“也可以追你们丢掉的钱。但别把活着出来的人写成无主损耗，再把救援的账压到一个人头上。”\n\n“药和车位，你现在给不起。”她说，“我要现钱，给伤员换药；再要你手上那批矿样里，按市价折一份给我们。以后若你进百炉城，砺骨部需要问路或换货，你优先替我们搭一次线。”",
+      "subject": "顾停舟",
+      "action": "preserve_value",
+      "object": "reward",
+      "status": "present_in_primary",
+      "qualifiers": [],
+      "boundary": "Commercial value is category-level, not sentence-level and not a per-chapter quota. Individual carrier paragraphs may change if the authorized desire, relationship, reward or repricing remains visible.",
+      "validator": {
+        "type": "commercial_preserve",
+        "category": "reward",
+        "markers": [
+          "钱",
+          "潮铢",
+          "矿利",
+          "份额",
+          "行潮籍",
+          "身份",
+          "回潮楔",
+          "潮髓",
+          "战功",
+          "票据"
+        ],
+        "source_paragraphs": [
+          2,
+          14,
+          23,
+          39,
+          59,
+          69
+        ],
+        "key_terms": [
+          "反潮记录",
+          "契约损失",
+          "矿队首领",
+          "回潮楔",
+          "砺骨部",
+          "阮青蜃",
+          "乌合",
+          "分身"
+        ],
+        "source_text": "顾停舟站在车轮边，左手垂着，掌心攥住回潮楔。楔体上的细裂硌着皮肉，冰凉得像一截刚从水底捞出来的铁。\n\n又指向自己手里的回潮楔。\n\n顾停舟没有催，只把回潮楔放到掌心，让所有人看见上面的裂纹。\n\n前哨看着回潮楔，声音发哑。\n\n“你们可以追你们的矿权。”乌合说，“也可以追你们丢掉的钱。但别把活着出来的人写成无主损耗，再把救援的账压到一个人头上。”\n\n“药和车位，你现在给不起。”她说，“我要现钱，给伤员换药；再要你手上那批矿样里，按市价折一份给我们。以后若你进百炉城，砺骨部需要问路或换货，你优先替我们搭一次线。”"
+      },
+      "primary_evidence_paragraphs": [
+        2,
+        14,
+        23,
+        39,
+        59,
+        69
+      ],
+      "protected_category": "reward"
+    }
+  ],
+  "source_conflicts": [],
+  "unsupported_clauses": [],
+  "diagnostics": [],
+  "primary_paragraph_count": 129,
+  "preflight_eligible": true
+}

@@ -51,6 +51,17 @@ Phase 1–3 已完成冻结输入、正常下游与最终正文 Reader + Authori
 
 下一代高潜方向不是再加一个 classifier，而是把 Frozen Mission / Reader Release / Power / Human / Ending 编译成代码可验证的 `Atomic Chapter Obligations`，再让 Paragraph-Delta 只有在 actor-action-object、result/state/ending、ownership/time/money、power ruler、unknown boundary 与 protected commercial value 全部闭合时才可采用，否则直接保留 full Reviser。
 
+
+### Atomic Chapter Obligations 实验边界（2026-08-29）
+
+实验把 Frozen Mission / Reader Release / Canon / World / Power / Human 编译成 typed obligations，再对 Paragraph-Delta 应用后的完整正文做 deterministic closure。当前硬义务包括 `actor → action → object`、Direct Result、State Change、Ending、ownership / transfer、money / payment、time window、precise power position / boundary、排程 Reader Release、unresolved-fact boundary 与明确关系阶段；任一 hard 项 `FAIL / UNKNOWN / CONFLICT` 都必须走 Full Reviser，compiler 遇到 unsupported clause 或跨源冲突也 fail closed。
+
+边界上必须明确：应收/资格不等于现金到账；临时占有不等于所有权；副本不等于原件；高阶承压/战绩不等于稳定升档；截止前行动不等于已经完成；开始消散不等于章末散尽；Reader Release 是 timing obligation，不是百科配额；Human cue 只有“同一具名人物 + 直接接触/近身治疗”同时满足才触发。
+
+`Public Proof` 与 protected commercial value 不得被硬化成写作配额。群体震动、懂行者校准、社会重新定价只检查本章已触发且上游批准的部分；欲望、关系、Reward、Surprise 与 Social Repricing 使用 `PRESERVE_IF_PRESENT`，只防止修订把已有商业价值磨平，不要求模型每章新增一段。
+
+v0.1 calibration 在当前领域样本上能安全放行已知 safe candidate 并拦截已知 bad mutation；Atomic-aware Delta 的 Authority blind 很强，但商业 Reader 多数仍偏现有 Full Reviser，独立重复运行的修改范围也不稳定。第二本书5/5 preflight fail closed，说明当前 compiler安全但领域过拟合。Residual-only blocker repair比把完整 Atomic Pack塞给模型更合理，但仍未证明 repeat / Reader / cross-book / fallback-adjusted speed同时过线。因此 production五节点链不变，Atomic模块不接入runtime。完整报告：`books/real-exp-atomic-chapter-obligations-20260829-v1/RESULTS.md`。
+
 ## 节点职责
 
 ### Director

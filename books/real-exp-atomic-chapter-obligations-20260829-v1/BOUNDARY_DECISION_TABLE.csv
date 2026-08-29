@@ -1,0 +1,17 @@
+﻿boundary,safe_interpretation,unsafe_interpretation,gate_behavior
+Actor identity,Current Mission actor outranks stale Human/Book name; explicit current Primary is fallback only when Mission is generic.,Remote Human Seed silently replaces current protagonist; nearby pronoun repairs explicit wrong actor.,HARD / fail closed
+Actor → Action → Object,"Same bounded action domain binds actor, verb and object.",Body replaces clone; ally A performs ally B action; chapter-wide keyword stitching.,HARD
+Direct Result / State / Ending,Each terminal result is separately true by chapter end.,Can / prepares / basis / qualification / future pressure used as completion.,HARD
+Ownership / copy / custody,"Original, copy, possession, custody, use right and title remain distinct.",Official receives original when only copy was authorized; possession upgraded to title.,HARD
+Money / payment,received ≠ entitlement ≠ pending ≠ lost ≠ disputed; authorized partial stays partial.,First payment satisfies full settlement; invented amount/unit; entitlement becomes cash.,HARD
+Time window,Deadline remains a boundary unless current Mission requires completion now.,Before next low tide is rewritten as already completed; preparation becomes departure.,HARD
+Power position,"Stable tier, battle output, temporary composite effect and cooldown remain separate.",Higher-scale resistance becomes stable breakthrough; cooldown becomes terminal dissipation or vice versa.,HARD
+Public Proof,Same protagonist/topic has performance → qualified ruler → behavioral repricing.,Three unrelated paragraphs are combined; unrelated commodity repricing counts as protagonist proof.,HARD when triggered
+Reader Release,Only scheduled fact is clearly released once.,Unscheduled encyclopedia becomes quota; terminology without reader-understandable fact counts.,HARD when scheduled
+Unresolved fact,No-invention boundary; silence is allowed.,Unknown old history becomes certain; “do not invent” is misclassified as source conflict.,HARD negative boundary
+Human cue,Same named person + direct contact/treatment + approved Human authority.,"Generic humanity, attraction, scent or body detail becomes chapter quota.",CONDITIONAL
+Relationship state,Explicit transition binds the named counterpart.,Cooperation with one person satisfies a different relationship transition.,CONDITIONAL / terminal when specified
+Commercial value,"Desire, relationship, reward, surprise and repricing are protected only if Primary already has them and Delta touches them.",Every chapter must add payoff/surprise; ordinary object inspection replaces a surprise turn.,PRESERVE_IF_PRESENT
+Prior-dialogue history,A line framed as previously spoken already exists in Frozen Authority.,Primary/Delta invents “he had said …” and fast gate preserves it because Delta did not create it.,HARD whole-draft scan
+Source conflict,Two incompatible authoritative states fail preflight.,Missing detail / keep unknown / missing repetition context is treated as conflict.,DIAGNOSTIC; true conflict only
+Full fallback,Full Reviser output passes the same gate.,"Expensive model ran, therefore output is automatically safe.",HARD post-fallback gate

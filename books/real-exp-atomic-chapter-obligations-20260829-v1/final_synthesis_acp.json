@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 524.561,
+  "sessionId": "01a04f33-28f8-7af2-a002-7e72ad327919",
+  "text": "# Atomic Chapter Obligations 实验最终报告\n\n## Final Verdict\n\n| 判断项 | 结论 |\n|---|---|\n| 边界方法是否成立 | **PARTIAL PASS**。对 actor/action/object、pending/terminal、original/copy、money state、power boundary、unknown boundary 等已测语义有效，已知坏例能被拦截；但尚未证明跨书通用。 |\n| compiler/gate 是否可冻结 | **可冻结为实验期的只读 shadow compiler/gate 合同；不可冻结为生产 adoption gate**。 |\n| Paragraph Delta route 是否可 productionize | **不可**。继续保留 Full Luna-high Authority Reviser 为 production 默认；Paragraph Delta 只能作为受限实验或 residual-only 修复路径。 |\n\n实验没有证明 production 已提速，也没有替换 Full Reviser。\n\n此外，用户指定的 `EVIDENCE_INDEX.json`、`METRICS_SUMMARY.json`、`formal_audit.md`、`story_audit.md` 当前工作树均不存在。实际可用的是各 phase 的 `summary.json`、`story_audit_acp.json` 与 chapter artifacts。因此，缺失文件本应承载的结论均不视为已证明。\n\n## 核心架构\n\n```text\nFrozen Authority\n→ deterministic Atomic Obligation Pack\n→ Primary Draft\n→ Luna-high Paragraph Delta\n→ local patch apply\n→ deterministic Atomic Gate\n   ├─ pass：候选可考虑采用\n   └─ fail / unsupported / conflict：Full Reviser\n```\n\n正确的系统定位是：\n\n- Atomic Gate 负责拦截事实、状态和权威边界错误。\n- Gate 不负责选择更爽、更有画面或更商业的正文。\n- `preserve_if_present` 只保护已有商业价值不被局部修改抹掉。\n- Full Reviser 仍负责全章权威恢复、节奏、价值保留和最终 prose。\n\n## Obligation 边界总表\n\n| 类别 | 正状态 | 负状态 | 模糊状态 | 正确边界 | fallback 规则 | 反例 |\n|---|---|---|---|---|---|---|\n| `mission_clause` | 本章保留已批准事件语义 | 事件被改写、漏掉或换了主体 | 只有术语共现，没有事件关系 | 约束语义，不约束原句 | 不支持或冲突即 Full Reviser | “校路官决定看裂槽”被写成主角主动发起 |\n| `actor_action_object` | 指定主体在局部动作域内完成指定动作和对象绑定 | 本体替分身做事、盟友互换动作、代词指向冲突 | 相邻段落各自出现主体/动作/对象，但未闭合 | 必须能在有界局部文本中绑定 | 绑定不清即阻止采用 | Ch16 分身应固定潮压，却只出现分身出场和后文本体投掷 |\n| `direct_result` | 结果已经发生并可观察 | 只写“准备、获得资格、形成依据” | “有机会”“即将完成” | `can/may/prepares/qualifies` 不算结果 | terminal 结果缺失即 fallback | “尾款可谈”不等于尾款已结算 |\n| `terminal_state` | 章末状态明确成立 | pending 被写成完成，lost 与 received 并存 | 状态存在，但时间点不清 | 状态变化与直接结果分开验证 | 状态冲突即 fallback | “仍未取得行潮籍”被改成“正式取得” |\n| `ending` | 下一步推动力已成立，但仍遵守本章边界 | 把下一章结算提前完成，或只写准备不写已批准结束动作 | “即将出发”与“已经出发”混用 | 结尾事件不是未来计划的自由补写 | 时间不清或跨章偷跑即 fallback | “准备上车”不能满足已批准“随队出发” |\n| `ownership` | 原件、持有、所有权、使用权、custody 分开 | 原件被错误转交，副本被当原件 | “归他”“在他手里”但关系不明 | `original ≠ copy`，持有也不等于法律所有权 | 原件/副本无法区分即 fallback | Ch2 原册由顾停舟保留，事实副本送校路台 |\n| `money` | received、entitlement、pending、lost、disputed 分开 | 资格、报价或契约被升级成现金到账 | 部分预付、矿利待核、赔付争议 | partial payment 不能满足 full settlement，除非 Mission 明确允许 | 金钱状态冲突即 fallback | Ch14 个人矿利“按首批矿料核定”不等于已经收钱 |\n| `time_window` | 截止期或窗口仍保持开放/待兑现 | deadline 被写成已经完成的事件 | “下一次低潮”缺少当前时间锚点 | deadline 是边界，不自动是 departure/arrival | 时间归属不清即 fallback | “十二日地潮前送达”不等于本章粮已到 |\n| `power_position` | 只有明确批准的稳定档位变化才成立 | 战斗表现、抗压或临时复合被写成升阶 | “潮炉撑大”“有照域者本事”可能只是效果比较 | stable tier 与 battle scale 分开 | 无法区分即 fallback | Ch9 明确“那不是成炉” |\n| `power_boundary` | cooldown、使用上限、代价被保留 | 未散尽残压却再次使用，或永久边界被抹掉 | “残压在散”是否要求本章归零 | cooldown 不等于当前章必须清零 | 复用条件不清即 fallback | Ch14 “今天不能再压第二次” |\n| `reader_release` | 已排程事实被清楚表达一次 | 该事实完全遗漏，或用环境纹理代替规则 | 术语出现但读者仍无法复述 | 只验证已批准 release，不要求百科或重复解释 | source 不足或无法实现即 fallback | Ch9 需说明倒悬峡水势和潮兽边界 |\n| `unresolved_fact` | 保持未知，同时允许当前证据和即时判断 | 擅自揭示原因、来源、幕后身份 | 新证据与最终答案混淆 | 禁止答案，不要求反复写“未知” | 发现揭示即 fallback | “地潮提前的原因仍未知”不能改成“其实源自某人” |\n| `human_cue` | 指定人物 + 指定接触/照料触发 + Frozen Human cue 同时出现 | 无触发仍插入暧昧、气味或亲密动作 | 人物在场但没有实际接触 | 条件不满足时不生成 obligation | 触发成立但 cue 缺失时 fallback；无触发则 N/A | 顾临川与陆绾发生靠近/治疗时，才可能要求气味 cue |\n| `public_proof` | 仅在 Mission 要求时，由 performance、ruler、repricing 组成 | 只有群众惊讶、只有解释、只有报价变化 | 观察者不具备资格或行为未改变 | 不是每章三段式 quota | active obligation 缺任一关键结果即 fallback | Ch14 先展示锁潮改向，再由白须老人校准，随后重新谈价 |\n| `relationship_state` | 指定关系对象发生批准的状态变化 | 泛泛写“关系变好”，或把甲的变化写给乙 | 旧关系和当前合作关系重叠 | 必须绑定 named counterpart | 对象不明即 fallback | 顾停舟与阮青蜃公开决裂，不等于与乌合的欠情 |\n| `commercial_value` | 被 Delta 触及的段落保留已有欲望、奖励、关系、惊喜、社会重估 | 局部修补删除这些已有价值 | 原文没有该价值，或该段未被触及 | `preserve_if_present` 不是新增要求 | 只有 touched category 被抹掉时阻止采用 | Ch14 顾停舟坚持“怎么用、卖不卖，归我自己定”应保留 |\n| `source_conflict` / diagnostic | Authority 内部无冲突且 clause 可编译 | Mission、Canon、Reader Release 互相矛盾 | 远端旧人物名、过期计划、缺少前文窗口 | 不能选择“最合理版本” | 直接 fail closed，走 Full Reviser | Ch10 同时写矿队首领已绕行、又写仍在现场 |\n\n核心规则：`pending` 不要求重复措辞；`must_remain_unknown` 不要求重复声明；`preserve_if_present` 不要求新增内容。\n\n## Calibration 与覆盖率\n\n### Calibration confusion matrix\n\n旧版 phase-b 的已标注校准集：\n\n| 实际类别 | Gate adopt | Gate block | 合计 |\n|---|---:|---:|---:|\n| 已知安全，`known_safe` | 5 | 0 | 5 |\n| 已知坏例，`known_bad` | 0 | 22 | 22 |\n\n因此旧版已知坏例 recall 为 `22/22`，安全样本接受为 `5/5`。\n\n修正版 phase-b2 重新验证了 12 个 mutation：\n\n| 实际类别 | Gate adopt | Gate block | 合计 |\n|---|---:|---:|---:|\n| 修正版已知坏例 | 0 | 12 | 12 |\n\n`mutation_detected=12`、`mutation_missed=0`。\n\n但修正版没有提供新的已标注 safe gold set。另有 7 条历史 Full shadow，其中 2 条通过、5 条被阻止；这些明确标为 `SHADOW_CONTROL_NOT_GOLD`，不能用于证明 precision。\n\n### 20 章覆盖率\n\nphase-g2 corrected：\n\n- 编译章节：20\n- preflight eligible：9/20\n- fail closed：11/20\n- eligible historical Full pass：4\n- eligible historical Full blocked：5\n- 全部 20 章 historical Full pass：4\n- 全部 20 章 blocked：16\n\n9 个 eligible 章节中，最终只有 4 个历史 Full 输出通过全部 Gate。覆盖率仍不足以支持通用生产采用。\n\n### Cross-book 覆盖率\n\nphase-f2 corrected 共有 5 个跨书样本：\n\n- preflight eligible：0/5\n- fail closed：5/5\n- Delta adoptable：0/5\n- source conflict：0\n- unsupported clause 均存在，单章分别为 3、3、4、5、6 条\n\n这证明 fail-closed 行为存在，但没有证明跨书 schema coverage。\n\n## Runtime / Repeatability / Blind\n\n### Fallback-adjusted wall\n\n所有 wall 均为实验 route 的 fallback-adjusted wall，不是 production wall。\n\n| 路线 | control 总 wall | fallback-adjusted route wall | 结果 |\n|---|---:|---:|---|\n| first，phase-c v0.1 | 554.409s | 157.556s | 4/4 direct adopt；报告值 71.58% |\n| repeat，phase-c2 v0.1 | 554.409s | 286.160s | 3 direct adopt，1 residual failure；报告值 48.38% |\n| gate-only，phase-c0 | 554.409s | 443.393s | 2 adopt，1 Full fallback，1 residual failure；报告值 20.02% |\n| residual，phase-c3 | 554.409s | 232.749s | 2 direct adopt，2 residual repair 后 adopt；报告值 58.02% |\n| residual repeat，phase-c4 | 554.409s | 232.846s | 同样 2 direct + 2 residual；报告值 58.0% |\n| corrected first，phase-h | 554.409s | 250.892s | 3 adopt，Ch16 residual failure；报告值 54.75% |\n| corrected repeat，phase-h2 | 554.409s | 232.114s | 3 adopt，Ch16 residual failure；报告值 58.13% |\n\nphase-j 对 Ch16 的显式 fallback 中：\n\n- Delta：57.485s\n- Atomic Full fallback：95.865s\n- 有效 route：153.35s\n- control Full Reviser：120.371s\n- fallback-adjusted speedup：`-27.4%`\n\n因此不能把局部实验中的低 wall 宣称为 production 提速。\n\n### Repeat exact consensus\n\nphase-c repeatability：\n\n- samples：4\n- route status consensus：3/4\n- route final exact consensus：1/4\n- Delta candidate exact consensus：1/4\n- operation exact consensus：1/4\n\n这说明 route 状态有一定重复性，但最终正文和操作集合并不稳定。\n\n### Reader / Authority blind\n\n采用最终 corrected phase-i 的 blind key，逐章映射如下：\n\n| 章节 | Reader | Authority | Delta/Control 映射 |\n|---|---|---|---|\n| Ch2 | A = Delta | B = Control | Reader 偏 Delta，Authority 偏 Control |\n| Ch9 | A = Delta | A = Delta | 二者均偏 Delta |\n| Ch14 | A = Control | B = Delta | Reader 偏 Control，Authority 偏 Delta |\n| Ch16 | Mixed | Mixed | 无明确偏好 |\n\n汇总：\n\n- Reader：Delta 2 章，Control 1 章，Mixed 1 章。\n- Authority：Delta 2 章，Control 1 章，Mixed 1 章。\n\n不能因为 Authority 选择了 Delta 就忽略 Reader；也不能因为 Reader 喜欢 Control 就接受事实错误。\n\n另外，早期 phase-d 的 ACP narrative 与 `blind_key.json` 的逐章映射存在口径不一致。最终报告采用 corrected phase-i 的逐章 key，而不是直接采用叙述性汇总。\n\n## 详细正文例子\n\n### Actor：本体与分身\n\nCh9 中：\n\n- 本体顾停舟留在正面承受逆潮。\n- 分身只携带牵引进入裂缝。\n- 分身拖动回潮楔，本体重新承受并释放潮压。\n- 两具身体合一后，痛楚和残压共同回流。\n\n这里“他”不能自动替代“分身”。Ch16 的 `ACT-02` 正是因为“分身固定第二潮压节点”没有在局部 action domain 内闭合，最终仍被 Gate 阻止。\n\n### Money：entitlement 不等于 cash\n\nCh14 明确写：\n\n> “按实测契记顾停舟个人矿利……具体数额随第一批矿料核定。”\n\n这代表 entitlement / pending settlement，不是现金到账。\n\n同章承运短契另写：\n\n> “每趟固定八十潮铢，先付一半。”\n\n这是另一项明确的部分付款。两者不能合并成“顾停舟已经收到个人矿利”。`mut-entitlement-to-cash` 被正确阻止。\n\n### Original 与 copy\n\nCh2：\n\n- 顾停舟说“原册还是你的”；\n- 校路官把“副本”送入校路台；\n- 顾停舟把原路线册重新收进怀里。\n\n这是原件持有与事实副本转移并存。把原册也送走会破坏 ownership obligation，`mut-copy-original-collapse` 被 Gate 拦截。\n\n### Battle scale 与 stable tier\n\nCh9 写潮炉“向外撑开”，随后明确：\n\n> “那不是成炉。”\n\n这是力量效果和身体变化，不是稳定境界跃迁。\n\nCh14 白须老人说回潮楔具备“照域者的本事”，是在做公共判尺比较，不等于顾停舟正式进入照域。phase-g2 Ch10 对“battle/result implication is not an explicit stable transition”的阻止，正是这个边界。\n\n### Deadline 与 terminal\n\nCh14 的短契规定：\n\n> “下一次十二日地潮前，第一批货得送过去。”\n\nCh16 又明确：\n\n> “粮还没到地方……别当契完了。”\n\n因此“已经签约”“已经出发”“正在承运”都不能被升级成“货已送达”“契约已完成”。\n\n### Reader Release\n\nCh9 的批准 release 是倒悬峡低潮时河水向天空流，水中有倒置石林，已知潮兽不进入最深处。正文第 5 段直接说明，读者可以复述规则。\n\n正确要求是“清楚出现一次”。不应变成：\n\n- 每次遇到潮水都重新解释；\n- 为了满足 Gate 把规则扩成百科段；\n- 用火盆、石壁、术语让读者自行猜。\n\n### Human cue\n\n跨书 Ch4 的 obligation 明确绑定：\n\n- named person：陆绾；\n- contact paragraph；\n- cue：气味；\n- contact：抓住、扶住、靠近、治疗等。\n\n只有这些条件同时成立，才要求 cue。跨书 Ch4、Ch8 中出现了 active Human trigger 但没有 approved cue，因此被 fallback；这不能反过来推出每章都必须增加暧昧或身体描写。\n\n### Public Proof\n\nCh14 的完整证明链是：\n\n1. 顾停舟让回潮楔锁住潮压并改向；\n2. 白须老人说明普通成炉者只能在自身附近稳定重压，而回潮楔能改变整段潮势；\n3. 百炉会和阮青蜃随后重新谈个人矿利、器物归属和承运条件。\n\n这就是 performance → ruler → repricing。\n\n但 Public Proof 只有在本章 Mission 要求时才是 hard obligation。不能规定每章都必须出现群众震惊、专家解释和社会改价。\n\n### Protected commercial value\n\nCh14 里已有的价值包括：\n\n- “这是我花钱修回来的”；\n- “怎么用，卖不卖，归我自己定”；\n- 个人矿利写入账；\n- 少东家从旧主从关系转为有报酬、有责任、有退路的承运合作；\n- 顾停舟签下短契并随粮车出发。\n\n这些内容被 `commercial_value` 以 `preserve_if_present` 保护。它的含义是：如果 Delta 触及这些段落，不能删掉它们；不是要求每章凭空补出奖励、关系、公开证明或社会重估。\n\n## Independent Audit Findings\n\n### Story audit\n\n`story_audit_acp.json` 的独立故事审计结论是：\n\n- Atomic 的事实边界层方向正确；\n- 把 Atomic Pack 当作整章改写指令，会把故事价值变成 prose quota；\n- Authority 关注“有没有错”，Reader 关注“值不值得继续读”；\n- residual-only 比 full Atomic prompt 更合理；\n- Full Luna-high Authority Reviser 应继续作为 production 默认。\n\n关键风险是 Pack 在实际样本中常有 22–30 条 obligation、约 9k–12k 字符，模型会倾向逐项闭合，进而增加解释、登记、机制步骤和下一任务说明。\n\n### Formal audit\n\n当前目录只有：\n\n- `formal_audit_prompt.md`\n- 没有 `formal_audit.md`\n- 没有 formal audit ACP response\n\n因此，formal audit 的独立 false-negative、false-positive 和 domain-generalization 结论：**未证明**。\n\n### Hard obligation 失败为什么必须阻止采用\n\nHard obligation 失败不是“文风不够好”，而是最终稿无法证明满足已批准权威。例如：\n\n- 分身和本体动作主体错位；\n- pending 被写成 received；\n- 原件被转交；\n- 未批准升阶；\n- 未知原因被揭示；\n- 章末状态与 Mission 冲突。\n\n这些错误会污染后续 State、Canon 和下一章输入。一个 prose 很爽的错误版本，仍然不能采用；必须 fallback 到 Full Reviser。\n\n### Soft / protected value 为什么不能成为 prose quota\n\n如果“欲望、奖励、关系、惊喜、Public Proof”变成每章必写项目，模型会：\n\n- 为了命中 marker 添加无授权欲望；\n- 重复解释已成立的能力；\n- 把结算写成报告；\n- 把关系写成安全协商；\n- 用任务日志替代场景张力。\n\n因此它们只能保护已有正文价值，不能要求新增。\n\n## Production Decision\n\n当前建议：\n\n1. 保留 Full Luna-high Authority Reviser 为 production 默认。\n2. Atomic typed factual boundaries 可以作为实验版 shadow compiler。\n3. Gate 可以在 shadow 中继续运行，但不得直接替换 Full Reviser。\n4. Paragraph Delta 不进入默认生产链。\n5. residual-only repair 可以继续实验，但只能处理少量、明确、局部的 hard blocker。\n6. 不新增 LLM classifier，不增加常驻 Reviewer 或 Agent。\n7. 不把 20 章同书结果或 5 个跨书 fail-closed 样本包装成通用 production 证明。\n\n## v0.2 最小实验\n\n不新增 LLM classifier，最小下一步是：\n\n- 继续使用 deterministic compiler 和现有 Gate；\n- 把 full Atomic prompt 缩成“仅对已定位 hard blocker 做 residual-only repair”；\n- 只有 preflight eligible、无 unsupported、无 source conflict、修改范围局部时才允许尝试；\n- 修复后重新检查全章状态、非邻接依赖段落和 touched protected value；\n- 把 cross-book 中当前 unsupported 的几类句式补成 deterministic boundary tests，而不是用模型猜；\n- 重新做 independent repeat 和 Reader/Authority blind；\n- 任何失败、歧义、来源冲突继续 fail closed；\n- 继续把 Full Reviser 作为 control 和生产默认。\n\n## Evidence Paths\n\n核心规则：\n\n- [PROJECT_RULES.md](C:/dev/tgn-story-mvp/PROJECT_RULES.md)\n- [BOUNDARY_SPEC.md](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/BOUNDARY_SPEC.md)\n- [PROTOCOL.md](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/PROTOCOL.md)\n\n实际汇总：\n\n- [phase-b-calibration/summary.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-b-calibration/summary.json)\n- [phase-b2-calibration-corrected/summary.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-b2-calibration-corrected/summary.json)\n- [phase-c-repeatability.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-c-repeatability.json)\n- [phase-g2-all20-shadow-corrected/summary.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-g2-all20-shadow-corrected/summary.json)\n- [phase-f2-crossbook-static-corrected/summary.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-f2-crossbook-static-corrected/summary.json)\n- [phase-h-atomic-delta-corrected/summary.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-h-atomic-delta-corrected/summary.json)\n- [phase-h2-atomic-delta-corrected-repeat2/summary.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-h2-atomic-delta-corrected-repeat2/summary.json)\n- [phase-j-atomic-explicit-fallback-corrected/summary.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-j-atomic-explicit-fallback-corrected/summary.json)\n\n盲评与审计：\n\n- [phase-i-blind-atomic-delta-corrected/summary.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-i-blind-atomic-delta-corrected/summary.json)\n- [phase-i-blind-atomic-delta-corrected/blind_key.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-i-blind-atomic-delta-corrected/blind_key.json)\n- [phase-g-independent-audits/story_audit_acp.json](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-g-independent-audits/story_audit_acp.json)\n- [phase-g-independent-audits/formal_audit_prompt.md](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-g-independent-audits/formal_audit_prompt.md)\n\n正文与 Gate：\n\n- [phase-h-atomic-delta-corrected/chapter-0002/route_final_body.md](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-h-atomic-delta-corrected/chapter-0002/route_final_body.md)\n- [phase-h-atomic-delta-corrected/chapter-0009/route_final_body.md](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-h-atomic-delta-corrected/chapter-0009/route_final_body.md)\n- [phase-h-atomic-delta-corrected/chapter-0014/route_final_body.md](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-h-atomic-delta-corrected/chapter-0014/route_final_body.md)\n- [phase-h-atomic-delta-corrected/chapter-0016/route_final_body.md](C:/dev/tgn-story-mvp/books/real-exp-atomic-chapter-obligations-20260829-v1/phase-h-atomic-delta-corrected/chapter-0016/route_final_body.md)\n- [temps/atomic_chapter_obligations.py](C:/dev/tgn-story-mvp/temps/atomic_chapter_obligations.py)\n- [temps/test_atomic_chapter_obligations.py](C:/dev/tgn-story-mvp/temps/test_atomic_chapter_obligations.py)\n\n缺失证据：\n\n- `books/real-exp-atomic-chapter-obligations-20260829-v1/EVIDENCE_INDEX.json`：不存在\n- `books/real-exp-atomic-chapter-obligations-20260829-v1/METRICS_SUMMARY.json`：不存在\n- `phase-g-independent-audits/formal_audit.md`：不存在\n- `phase-g-independent-audits/story_audit.md`：不存在\n\n## Validation Checklist\n\n- 已读取 `PROJECT_RULES.md`、`BOUNDARY_SPEC.md`、`PROTOCOL.md`。\n- 已核对 calibration、20 章 shadow、cross-book、repeat、residual、corrected route、blind 和 chapter prose artifacts。\n- 已确认 source conflict / unsupported 会 fail closed。\n- 已确认 `preserve_if_present` 不应被解释为 prose quota。\n- 已确认 Reader 与 Authority 的盲评存在分裂。\n- 未将实验 wall 宣称为 production 提速。\n- 未将 Paragraph Delta 宣称为 Full Reviser 替代品。\n- 当前工作树原本已有大量修改和未跟踪实验文件；本轮未修改任何项目文件。\n\n<oai-mem-citation>\n<citation_entries>\nMEMORY.md:364-364|note=[用于核对奖励必须从可见价值进入首次使用与持续回报的原则]\n</citation_entries>\n<rollout_ids>\n</rollout_ids>\n</oai-mem-citation>",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 195150,
+      "inputTokens": 3491,
+      "cachedReadTokens": 178944,
+      "outputTokens": 12715,
+      "thoughtTokens": 6432
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 195150,
+          "inputTokens": 3491,
+          "cachedInputTokens": 178944,
+          "outputTokens": 12715,
+          "reasoningOutputTokens": 6432
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 195150,
+              "inputTokens": 3491,
+              "cachedInputTokens": 178944,
+              "outputTokens": 12715,
+              "reasoningOutputTokens": 6432
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

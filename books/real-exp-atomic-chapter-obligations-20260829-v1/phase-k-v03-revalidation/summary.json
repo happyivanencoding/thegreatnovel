@@ -1,0 +1,246 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapters": [
+    2,
+    9,
+    14,
+    16
+  ],
+  "by_run": {
+    "run1": {
+      "samples": 4,
+      "adopted": 2,
+      "fallback_full": 1,
+      "preflight_full": 0,
+      "residual_failure": 1,
+      "control_total_seconds": 554.409,
+      "effective_total_seconds": 346.032,
+      "fallback_adjusted_speedup_percent": 37.59
+    },
+    "run2": {
+      "samples": 4,
+      "adopted": 2,
+      "fallback_full": 1,
+      "preflight_full": 0,
+      "residual_failure": 1,
+      "control_total_seconds": 554.409,
+      "effective_total_seconds": 327.254,
+      "fallback_adjusted_speedup_percent": 40.97
+    }
+  },
+  "repeatability": {
+    "delta_exact_count": 1,
+    "route_exact_count": 3,
+    "samples": 4,
+    "rows": [
+      {
+        "chapter": 2,
+        "delta_exact": false,
+        "route_exact": true,
+        "run1_route_status": "FALLBACK_FULL_REVISER",
+        "run2_route_status": "FALLBACK_FULL_REVISER"
+      },
+      {
+        "chapter": 9,
+        "delta_exact": false,
+        "route_exact": false,
+        "run1_route_status": "ADOPT_DELTA",
+        "run2_route_status": "ADOPT_DELTA"
+      },
+      {
+        "chapter": 14,
+        "delta_exact": true,
+        "route_exact": true,
+        "run1_route_status": "ADOPT_DELTA",
+        "run2_route_status": "ADOPT_DELTA"
+      },
+      {
+        "chapter": 16,
+        "delta_exact": false,
+        "route_exact": true,
+        "run1_route_status": "FULL_REVISER_RESIDUAL_FAILURE",
+        "run2_route_status": "FULL_REVISER_RESIDUAL_FAILURE"
+      }
+    ]
+  },
+  "rows": [
+    {
+      "chapter": 2,
+      "run": "run1",
+      "protagonist": "顾停舟",
+      "preflight_eligible": true,
+      "obligation_count": 23,
+      "delta_gate_decision": "FALLBACK_FULL_REVISER",
+      "delta_blocking_ids": [
+        "A-014"
+      ],
+      "delta_blocking_reasons": [
+        "invented prior dialogue/history backreference"
+      ],
+      "historical_full_gate_decision": "ADOPT_DELTA",
+      "historical_full_blocking_ids": [],
+      "historical_full_blocking_reasons": [],
+      "route_status": "FALLBACK_FULL_REVISER",
+      "delta_seconds": 37.689,
+      "control_full_seconds": 95.14,
+      "effective_seconds": 132.829,
+      "fallback_adjusted_speedup_percent": -39.61,
+      "operation_count": 1
+    },
+    {
+      "chapter": 2,
+      "run": "run2",
+      "protagonist": "顾停舟",
+      "preflight_eligible": true,
+      "obligation_count": 23,
+      "delta_gate_decision": "FALLBACK_FULL_REVISER",
+      "delta_blocking_ids": [
+        "A-014"
+      ],
+      "delta_blocking_reasons": [
+        "invented prior dialogue/history backreference"
+      ],
+      "historical_full_gate_decision": "ADOPT_DELTA",
+      "historical_full_blocking_ids": [],
+      "historical_full_blocking_reasons": [],
+      "route_status": "FALLBACK_FULL_REVISER",
+      "delta_seconds": 14.063,
+      "control_full_seconds": 95.14,
+      "effective_seconds": 109.203,
+      "fallback_adjusted_speedup_percent": -14.78,
+      "operation_count": 0
+    },
+    {
+      "chapter": 9,
+      "run": "run1",
+      "protagonist": "顾停舟",
+      "preflight_eligible": true,
+      "obligation_count": 29,
+      "delta_gate_decision": "ADOPT_DELTA",
+      "delta_blocking_ids": [],
+      "delta_blocking_reasons": [],
+      "historical_full_gate_decision": "ADOPT_DELTA",
+      "historical_full_blocking_ids": [],
+      "historical_full_blocking_reasons": [],
+      "route_status": "ADOPT_DELTA",
+      "delta_seconds": 57.974,
+      "control_full_seconds": 128.058,
+      "effective_seconds": 57.974,
+      "fallback_adjusted_speedup_percent": 54.73,
+      "operation_count": 2
+    },
+    {
+      "chapter": 9,
+      "run": "run2",
+      "protagonist": "顾停舟",
+      "preflight_eligible": true,
+      "obligation_count": 29,
+      "delta_gate_decision": "ADOPT_DELTA",
+      "delta_blocking_ids": [],
+      "delta_blocking_reasons": [],
+      "historical_full_gate_decision": "ADOPT_DELTA",
+      "historical_full_blocking_ids": [],
+      "historical_full_blocking_reasons": [],
+      "route_status": "ADOPT_DELTA",
+      "delta_seconds": 28.998,
+      "control_full_seconds": 128.058,
+      "effective_seconds": 28.998,
+      "fallback_adjusted_speedup_percent": 77.36,
+      "operation_count": 1
+    },
+    {
+      "chapter": 14,
+      "run": "run1",
+      "protagonist": "顾停舟",
+      "preflight_eligible": true,
+      "obligation_count": 31,
+      "delta_gate_decision": "ADOPT_DELTA",
+      "delta_blocking_ids": [],
+      "delta_blocking_reasons": [],
+      "historical_full_gate_decision": "ADOPT_DELTA",
+      "historical_full_blocking_ids": [],
+      "historical_full_blocking_reasons": [],
+      "route_status": "ADOPT_DELTA",
+      "delta_seconds": 20.44,
+      "control_full_seconds": 210.84,
+      "effective_seconds": 20.44,
+      "fallback_adjusted_speedup_percent": 90.31,
+      "operation_count": 0
+    },
+    {
+      "chapter": 14,
+      "run": "run2",
+      "protagonist": "顾停舟",
+      "preflight_eligible": true,
+      "obligation_count": 31,
+      "delta_gate_decision": "ADOPT_DELTA",
+      "delta_blocking_ids": [],
+      "delta_blocking_reasons": [],
+      "historical_full_gate_decision": "ADOPT_DELTA",
+      "historical_full_blocking_ids": [],
+      "historical_full_blocking_reasons": [],
+      "route_status": "ADOPT_DELTA",
+      "delta_seconds": 11.197,
+      "control_full_seconds": 210.84,
+      "effective_seconds": 11.197,
+      "fallback_adjusted_speedup_percent": 94.69,
+      "operation_count": 0
+    },
+    {
+      "chapter": 16,
+      "run": "run1",
+      "protagonist": "顾停舟",
+      "preflight_eligible": true,
+      "obligation_count": 30,
+      "delta_gate_decision": "FALLBACK_FULL_REVISER",
+      "delta_blocking_ids": [
+        "ACT-02",
+        "A-027"
+      ],
+      "delta_blocking_reasons": [
+        "actor-action-object did not close in one local paragraph",
+        "missing cooldown before reuse"
+      ],
+      "historical_full_gate_decision": "FALLBACK_FULL_REVISER",
+      "historical_full_blocking_ids": [
+        "ACT-02"
+      ],
+      "historical_full_blocking_reasons": [
+        "actor-action-object did not close in one local paragraph"
+      ],
+      "route_status": "FULL_REVISER_RESIDUAL_FAILURE",
+      "delta_seconds": 14.418,
+      "control_full_seconds": 120.371,
+      "effective_seconds": 134.789,
+      "fallback_adjusted_speedup_percent": -11.98,
+      "operation_count": 0
+    },
+    {
+      "chapter": 16,
+      "run": "run2",
+      "protagonist": "顾停舟",
+      "preflight_eligible": true,
+      "obligation_count": 30,
+      "delta_gate_decision": "FALLBACK_FULL_REVISER",
+      "delta_blocking_ids": [
+        "ACT-02"
+      ],
+      "delta_blocking_reasons": [
+        "actor-action-object did not close in one local paragraph"
+      ],
+      "historical_full_gate_decision": "FALLBACK_FULL_REVISER",
+      "historical_full_blocking_ids": [
+        "ACT-02"
+      ],
+      "historical_full_blocking_reasons": [
+        "actor-action-object did not close in one local paragraph"
+      ],
+      "route_status": "FULL_REVISER_RESIDUAL_FAILURE",
+      "delta_seconds": 57.485,
+      "control_full_seconds": 120.371,
+      "effective_seconds": 177.856,
+      "fallback_adjusted_speedup_percent": -47.76,
+      "operation_count": 3
+    }
+  ]
+}

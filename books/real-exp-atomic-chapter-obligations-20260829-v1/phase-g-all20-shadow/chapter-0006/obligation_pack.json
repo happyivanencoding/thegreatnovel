@@ -1,0 +1,628 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 6,
+  "protagonist": "顾停舟",
+  "mission_fields": {
+    "触发事件": "低潮窗口开启，矿队抢先进入倒悬峡；顾停舟看见倒流水幕、倒置石林及被潮泥遮住的古代建筑，追查潮兽改道的猎队也从另一侧抵达。",
+    "主角行动": "顾停舟判断撬开外层会改变峡内潮向，明确意识到阻止领队就等于放弃本次实测，因此选择继续留在现场承担实测责任，并在逆潮翻转后判断被困者的位置与可接近路径。",
+    "对手或世界反应": "建筑内部逆潮突然翻转，矿工与砺骨部前哨被分别冲向峡内两侧；刚钉下的矿权标记当场裂开，矿队、砺骨部前哨与猎队都被迫面对同一处危险现场。",
+    "直接结果": "新裂槽的实测无法按原计划正常完成，实测契尾款进入无法正常结算的状态；古代建筑内部确实存在会逼退潮兽、改变峡内潮向的异常压力，但其根源与用途仍未确定。",
+    "状态变化": "倒悬峡不再只是矿路入口，而成为矿队、砺骨部前哨、猎队与未知古器共同卷入的危险现场；顾停舟从测路人转为必须处理现场分隔与救援选择的当事人。",
+    "结尾推动力": "顾停舟判断救援位置后，让本体向被困者靠近，分身只携带一种预先选定的牵引进入侧室；两处行动同时开始，下一章必须处理被困者救援、侧室牵引与逆潮现场的继续变化。"
+  },
+  "obligations": [
+    {
+      "id": "TRG-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "低潮窗口开启，矿队抢先进入倒悬峡",
+      "subject": "顾停舟",
+      "action": "move",
+      "object": "低潮",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "低潮窗口开启，矿队抢先进入倒悬峡",
+        "terms": [
+          "低潮"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "TRG-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "顾停舟看见倒流水幕、倒置石林及被潮泥遮住的古代建筑，追查潮兽改道的猎队也从另一侧抵达",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟看见倒流水幕、倒置石林及被潮泥遮住的古代建筑，追查潮兽改道的猎队也从另一侧抵达",
+        "terms": [
+          "顾停舟"
+        ],
+        "actions": [],
+        "anchors": [
+          "倒流水幕",
+          "顾停舟",
+          "建筑",
+          "另一侧"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          22,
+          10,
+          66
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        22,
+        10,
+        66
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-01",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "顾停舟判断撬开外层会改变峡内潮向，明确意识到阻止领队就等于放弃本次实测，因此选择继续留在现场承担实测责任，并在逆潮翻转后判断被困者的位置与可接近路径",
+      "subject": "顾停舟",
+      "action": "sacrifice|lose",
+      "object": "逆潮",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟判断撬开外层会改变峡内潮向，明确意识到阻止领队就等于放弃本次实测，因此选择继续留在现场承担实测责任，并在逆潮翻转后判断被困者的位置与可接近路径",
+        "terms": [
+          "顾停舟",
+          "逆潮",
+          "本次实测"
+        ],
+        "actions": [
+          "sacrifice",
+          "lose"
+        ],
+        "anchors": [
+          "顾停舟",
+          "逆潮"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          75
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        75
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "建筑内部逆潮突然翻转，矿工与砺骨部前哨被分别冲向峡内两侧",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "砺骨部",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "建筑内部逆潮突然翻转，矿工与砺骨部前哨被分别冲向峡内两侧",
+        "terms": [
+          "砺骨部",
+          "前哨",
+          "矿工",
+          "逆潮"
+        ],
+        "actions": [],
+        "anchors": [
+          "砺骨部前哨",
+          "建筑",
+          "矿工",
+          "逆潮"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          47,
+          52
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        47,
+        52
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "刚钉下的矿权标记当场裂开，矿队、砺骨部前哨与猎队都被迫面对同一处危险现场",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "矿权标记",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "刚钉下的矿权标记当场裂开，矿队、砺骨部前哨与猎队都被迫面对同一处危险现场",
+        "terms": [
+          "矿权标记",
+          "砺骨部",
+          "前哨"
+        ],
+        "actions": [],
+        "anchors": [
+          "砺骨部前哨",
+          "的矿",
+          "刚钉下的",
+          "矿权标记",
+          "裂开"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          47,
+          52,
+          44
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        47,
+        52,
+        44
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-01",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "新裂槽的实测无法按原计划正常完成，实测契尾款进入无法正常结算的状态",
+      "subject": "顾停舟",
+      "action": "move|pay",
+      "object": "实测契",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "新裂槽的实测无法按原计划正常完成，实测契尾款进入无法正常结算的状态",
+        "terms": [
+          "实测契",
+          "新裂槽",
+          "尾款",
+          "裂槽"
+        ],
+        "actions": [
+          "move",
+          "pay"
+        ],
+        "anchors": [
+          "正常结算",
+          "实测契",
+          "尾款"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          30
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        30
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-02",
+      "kind": "direct_result",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "古代建筑内部确实存在会逼退潮兽、改变峡内潮向的异常压力，但其根源与用途仍未确定",
+      "subject": "顾停舟",
+      "action": "limit|pending",
+      "object": "",
+      "status": "pending",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-01",
+      "kind": "terminal_state",
+      "mode": "must_remain_unknown",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "倒悬峡不再只是矿路入口，而成为矿队、砺骨部前哨、猎队与未知古器共同卷入的危险现场",
+      "subject": "顾停舟",
+      "action": "refuse|power_transition",
+      "object": "砺骨部",
+      "status": "transitioned",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "unresolved",
+        "topic_terms": [
+          "砺骨部",
+          "前哨",
+          "古器"
+        ],
+        "revelation_terms": [
+          "真相是",
+          "原来是",
+          "确认是",
+          "证实是",
+          "原因是",
+          "源自",
+          "其实是",
+          "揭开",
+          "查明"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        47,
+        52
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-02",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾停舟从测路人转为必须处理现场分隔与救援选择的当事人",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟从测路人转为必须处理现场分隔与救援选择的当事人",
+        "terms": [
+          "顾停舟"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾停舟",
+          "测路"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          46,
+          50,
+          66
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        46,
+        50,
+        66
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-01",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "顾停舟判断救援位置后，让本体向被困者靠近，分身只携带一种预先选定的牵引进入侧室",
+      "subject": "顾停舟",
+      "action": "move|limit",
+      "object": "分身",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟判断救援位置后，让本体向被困者靠近，分身只携带一种预先选定的牵引进入侧室",
+        "terms": [
+          "顾停舟",
+          "分身",
+          "本体",
+          "牵引"
+        ],
+        "actions": [
+          "move",
+          "limit"
+        ],
+        "anchors": [
+          "一种预先选定的",
+          "分身只",
+          "位置",
+          "顾停舟"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          67,
+          66,
+          72
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        67,
+        66,
+        72
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-02",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "两处行动同时开始，下一章必须处理被困者救援、侧室牵引与逆潮现场的继续变化",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "牵引",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "两处行动同时开始，下一章必须处理被困者救援、侧室牵引与逆潮现场的继续变化",
+        "terms": [
+          "牵引",
+          "逆潮",
+          "两处行动同时开始"
+        ],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-012",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "入潮",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "入潮",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-013",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "成炉",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "成炉",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-014",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "照域",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "照域",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-015",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "镇海",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "镇海",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-016",
+      "kind": "power_boundary",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "Mission composite",
+      "source_text": "触发事件：低潮窗口开启，矿队抢先进入倒悬峡；顾停舟看见倒流水幕、倒置石林及被潮泥遮住的古代建筑，追查潮兽改道的猎队也从另一侧抵达。\n主角行动：顾停舟判断撬开外层会改变峡内潮向，明确意识到阻止领队就等于放弃本次实测，因此选择继续留在现场承担实测责任，并在逆潮翻转后判断被困者的位置与可接近路径。\n对手或世界反应：建筑内部逆潮突然翻转，矿工与砺骨部前哨被分别冲向峡内两侧；刚钉下的矿权标记当场裂开，矿队、砺骨部前哨与猎队都被迫面对同一处危险现场。\n直接结果：新裂槽的实测无法按原计划正常完成，实测契尾款进入无法正常结算的状态；古代建筑内部确实存在会逼退潮兽、改变峡内潮向的异常压力，但其根源与用途仍未确定。\n状态变化：倒悬峡不再只是矿路入口，而成为矿队、砺骨部前哨、猎队与未知古器共同卷入的危险现场；顾停舟从测路人转为必须处理现场分隔与救援选择的当事人。\n结尾推动力：顾停舟判断救援位置后，让本体向被困者靠近，分身只携带一种预先选定的牵引进入侧室；两处行动同时开始，下一章必须处理被困者救援、侧室牵引与逆潮现场的继续变化。",
+      "subject": "分身",
+      "action": "limited_carry",
+      "object": "完整力量",
+      "status": "limited",
+      "qualifiers": [],
+      "boundary": "Require the current limitation without generalizing it into a stronger universal power law.",
+      "validator": {
+        "type": "clone_boundary",
+        "subject_terms": [
+          "分身",
+          "它"
+        ],
+        "limit_terms": [
+          "只能",
+          "不能",
+          "承不住",
+          "不携带",
+          "无法",
+          "只带",
+          "只携"
+        ],
+        "full_terms": [
+          "完整",
+          "潮炉",
+          "成炉",
+          "照域",
+          "力量"
+        ],
+        "ability_terms": [
+          "牵引"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        9,
+        52,
+        47
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-017",
+      "kind": "unresolved_fact",
+      "mode": "must_remain_unknown",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "倒悬峡不再只是矿路入口，而成为矿队、砺骨部前哨、猎队与未知古器共同卷入的危险现场",
+      "subject": "",
+      "action": "",
+      "object": "砺骨部|前哨|古器",
+      "status": "unknown",
+      "qualifiers": [],
+      "boundary": "Unknown is a no-invention boundary, not a requirement to repeat 'unknown' in prose.",
+      "validator": {
+        "type": "unresolved",
+        "topic_terms": [
+          "砺骨部",
+          "前哨",
+          "古器"
+        ],
+        "revelation_terms": [
+          "真相是",
+          "原来是",
+          "确认是",
+          "证实是",
+          "原因是",
+          "源自",
+          "其实是",
+          "揭开",
+          "查明"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    }
+  ],
+  "source_conflicts": [],
+  "unsupported_clauses": [
+    "结尾推动力[2] 两处行动同时开始，下一章必须处理被困者救援、侧室牵引与逆潮现场的继续变化"
+  ],
+  "diagnostics": [
+    "`Reader Release Map` 将倒悬峡相关事实排在第9章，但当前章计划与事件合同要求第6章发生，存在明确时序冲突。本章服从当前事件合同，仍不得提前解释逆潮、潮兽改道或古代建筑根源。",
+    "`OPEN PROMISES` 要求取得并拥有回潮楔，但当前事件合同和第6章计划没有明确其取得时点与方式。回潮楔本章仍应视为未兑现，不得写成已经到账。"
+  ],
+  "primary_paragraph_count": 76,
+  "preflight_eligible": false
+}

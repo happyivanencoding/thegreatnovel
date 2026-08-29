@@ -1,0 +1,280 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapter": 7,
+  "preflight_eligible": false,
+  "decision": "FALLBACK_FULL_REVISER",
+  "touched_source_paragraphs": [
+    61,
+    64,
+    94,
+    105,
+    106
+  ],
+  "blocking_checks": [
+    {
+      "obligation_id": "STA-04",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.117.",
+      "evidence": [
+        "首领身边的人已经抓住另一条拉索，正想把它往建筑侧面的石门拖。那条绳子一旦改向，侧室门口的长绳就会被拉偏。分身要么松开里面的人，要么被拖着去替矿队守住入口。"
+      ]
+    },
+    {
+      "obligation_id": "A-027",
+      "status": "fail",
+      "reason": "missing or weakened possession state",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-028",
+      "status": "fail",
+      "reason": "missing terminal status=lost for ['尾款']",
+      "evidence": []
+    }
+  ],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P010",
+        "P074",
+        "P098"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P065"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P024",
+        "P074",
+        "P096"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=3/3 actions=[]",
+      "evidence": [
+        "矿队首领",
+        "分身",
+        "牵引"
+      ]
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P008",
+        "P010",
+        "P042"
+      ]
+    },
+    {
+      "obligation_id": "ACT-04",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P074",
+        "P091",
+        "P095"
+      ]
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P074",
+        "P075",
+        "P095"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P072",
+        "P075",
+        "P089"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=2/2 actions=[]",
+      "evidence": [
+        "矿权标记",
+        "逆潮"
+      ]
+    },
+    {
+      "obligation_id": "REA-04",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P028",
+        "P074",
+        "P096"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/2 actions=['escape']",
+      "evidence": [
+        "顾停舟"
+      ]
+    },
+    {
+      "obligation_id": "RES-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P013",
+        "P085",
+        "P098"
+      ]
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P098"
+      ]
+    },
+    {
+      "obligation_id": "STA-04",
+      "status": "fail",
+      "reason": "No final paragraph met threshold 0.23; best=0.117.",
+      "evidence": [
+        "首领身边的人已经抓住另一条拉索，正想把它往建筑侧面的石门拖。那条绳子一旦改向，侧室门口的长绳就会被拉偏。分身要么松开里面的人，要么被拖着去替矿队守住入口。"
+      ]
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=3/3 actions=[]",
+      "evidence": [
+        "回潮楔",
+        "潮压",
+        "逆潮"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P021",
+        "P070",
+        "P099"
+      ]
+    },
+    {
+      "obligation_id": "END-03",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/1 actions=[]",
+      "evidence": [
+        "回潮楔"
+      ]
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass",
+      "reason": "no unauthorized prior-dialogue backreference",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-023",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-025",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-026",
+      "status": "pass_preserved",
+      "reason": "Primary clone-boundary evidence was untouched.",
+      "evidence": [
+        "P031",
+        "P074",
+        "P096"
+      ]
+    },
+    {
+      "obligation_id": "A-027",
+      "status": "fail",
+      "reason": "missing or weakened possession state",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-028",
+      "status": "fail",
+      "reason": "missing terminal status=lost for ['尾款']",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-029",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    }
+  ],
+  "status_counts": {
+    "pass": 14,
+    "pass_preserved": 12,
+    "not_triggered": 0,
+    "fail": 3,
+    "unknown": 0,
+    "conflict": 0
+  }
+}

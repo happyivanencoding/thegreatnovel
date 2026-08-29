@@ -1,0 +1,907 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapter": 8,
+  "protagonist": "顾停舟",
+  "mission_fields": {
+    "触发事件": "回潮楔再次锁住正面撞来的潮压，顾停舟确认它锁住的不只是重量，还包括潮水原本冲去的方向；但逆潮持续增强，矿工与砺骨部前哨被困在两侧。",
+    "主角行动": "顾停舟把回潮楔钉入峡壁，让本体站在楔前承受继续冲来的潮水；分身只携带牵引守住楔体。确认按契约完成原路线已不可能后，他放弃尾款条件，主动让逆潮继续灌入回潮楔，等待能把蓄住的力量送往另一侧的窗口。",
+    "对手或世界反应": "矿队首领确认分身当前只能携带单一本事，开始用不断变化的伤员位置和退路制造失配；逆潮持续冲击，峡壁与撤离位置进一步恶化。",
+    "直接结果": "回潮楔第一次在现场锁住连续冲来的潮压，并暂时固定住冲击方向；顾停舟没有释放蓄力，矿工与砺骨部前哨仍未完全脱险，矿路实测契也无法按原条件完成。",
+    "状态变化": "回潮楔从“能锁住一次潮压”确定为“能够蓄住撞来的潮压与去向，但需要重新选择释放位置”；阮青蜃的人确认分身只有单一本事，并开始以变化目标针对顾停舟。顾停舟与矿队的契约利益正式破裂。",
+    "结尾推动力": "回潮楔已经蓄满，若继续留在当前峡壁，潮压会把两侧幸存者一起困死；顾停舟必须把它送到峡壁另一侧，才能尝试改写退路。"
+  },
+  "obligations": [
+    {
+      "id": "TRG-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "回潮楔再次锁住正面撞来的潮压，顾停舟确认它锁住的不只是重量，还包括潮水原本冲去的方向",
+      "subject": "顾停舟",
+      "action": "confirm",
+      "object": "回潮楔",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "回潮楔再次锁住正面撞来的潮压，顾停舟确认它锁住的不只是重量，还包括潮水原本冲去的方向",
+        "terms": [
+          "回潮楔",
+          "顾停舟",
+          "潮压"
+        ],
+        "actions": [
+          "confirm"
+        ],
+        "anchors": [
+          "锁住的不只是",
+          "回潮楔",
+          "重量",
+          "来的潮压",
+          "顾停舟"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          5,
+          34,
+          56
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        5,
+        34,
+        56
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "TRG-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "逆潮持续增强，矿工与砺骨部前哨被困在两侧",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "砺骨部",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "逆潮持续增强，矿工与砺骨部前哨被困在两侧",
+        "terms": [
+          "砺骨部",
+          "前哨",
+          "矿工",
+          "逆潮"
+        ],
+        "actions": [],
+        "anchors": [
+          "砺骨部前哨被",
+          "逆潮",
+          "矿工"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          12,
+          10
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        12,
+        10
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-01",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "顾停舟把回潮楔钉入峡壁，让本体站在楔前承受继续冲来的潮水",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "回潮楔",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟把回潮楔钉入峡壁，让本体站在楔前承受继续冲来的潮水",
+        "terms": [
+          "回潮楔",
+          "顾停舟",
+          "本体"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾停舟",
+          "回潮楔"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          18,
+          104,
+          1
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        18,
+        104,
+        1
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-02",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "分身只携带牵引守住楔体",
+      "subject": "分身",
+      "action": "protect|limit",
+      "object": "牵引",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "actor_action_object",
+        "source": "分身只携带牵引守住楔体",
+        "subject_terms": [
+          "分身",
+          "它"
+        ],
+        "object_terms": [
+          "牵引"
+        ],
+        "actions": [
+          "protect",
+          "limit"
+        ],
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-03",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "确认按契约完成原路线已不可能后，他放弃尾款条件，主动让逆潮继续灌入回潮楔，等待能把蓄住的力量送往另一侧的窗口",
+      "subject": "分身",
+      "action": "sacrifice|lose|confirm|limit|pending",
+      "object": "回潮楔",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "actor_action_object",
+        "source": "确认按契约完成原路线已不可能后，他放弃尾款条件，主动让逆潮继续灌入回潮楔，等待能把蓄住的力量送往另一侧的窗口",
+        "subject_terms": [
+          "分身",
+          "它"
+        ],
+        "object_terms": [
+          "回潮楔",
+          "楔子",
+          "古器",
+          "楔尾",
+          "楔体",
+          "楔尖"
+        ],
+        "actions": [
+          "sacrifice",
+          "lose",
+          "confirm",
+          "limit",
+          "pending"
+        ],
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "矿队首领确认分身当前只能携带单一本事，开始用不断变化的伤员位置和退路制造失配",
+      "subject": "矿队首领",
+      "action": "confirm",
+      "object": "分身",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "矿队首领确认分身当前只能携带单一本事，开始用不断变化的伤员位置和退路制造失配",
+        "terms": [
+          "矿队首领",
+          "分身"
+        ],
+        "actions": [
+          "confirm"
+        ],
+        "anchors": [
+          "矿队首领",
+          "分身"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          17,
+          69,
+          57
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        17,
+        69,
+        57
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "逆潮持续冲击，峡壁与撤离位置进一步恶化",
+      "subject": "矿队首领",
+      "action": "move",
+      "object": "逆潮",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "逆潮持续冲击，峡壁与撤离位置进一步恶化",
+        "terms": [
+          "逆潮"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [
+          "逆潮"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          121,
+          23,
+          26
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        121,
+        23,
+        26
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-01",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "回潮楔第一次在现场锁住连续冲来的潮压，并暂时固定住冲击方向",
+      "subject": "顾停舟",
+      "action": "pending|fix|handle",
+      "object": "回潮楔",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "回潮楔第一次在现场锁住连续冲来的潮压，并暂时固定住冲击方向",
+        "terms": [
+          "回潮楔",
+          "定住",
+          "潮压",
+          "第一次在现场锁住连续冲来的"
+        ],
+        "actions": [
+          "pending",
+          "fix",
+          "handle"
+        ],
+        "anchors": [
+          "回潮楔",
+          "锁住",
+          "潮压",
+          "暂时"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          5,
+          23,
+          36
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        5,
+        23,
+        36
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-02",
+      "kind": "direct_result",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "顾停舟没有释放蓄力，矿工与砺骨部前哨仍未完全脱险，矿路实测契也无法按原条件完成",
+      "subject": "顾停舟",
+      "action": "protect|limit|pending",
+      "object": "矿路实测契",
+      "status": "pending",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [
+          "矿路实测契",
+          "实测契",
+          "砺骨部",
+          "前哨"
+        ],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        67,
+        12
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-01",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "回潮楔从“能锁住一次潮压”确定为“能够蓄住撞来的潮压与去向，但需要重新选择释放位置”",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "回潮楔",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "回潮楔从“能锁住一次潮压”确定为“能够蓄住撞来的潮压与去向，但需要重新选择释放位置”",
+        "terms": [
+          "回潮楔",
+          "潮压",
+          "能锁住一次潮压"
+        ],
+        "actions": [],
+        "anchors": [
+          "回潮楔",
+          "锁住",
+          "潮压"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          5
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        5
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-02",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "阮青蜃的人确认分身只有单一本事，并开始以变化目标针对顾停舟",
+      "subject": "阮青蜃",
+      "action": "confirm",
+      "object": "顾停舟",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "阮青蜃的人确认分身只有单一本事，并开始以变化目标针对顾停舟",
+        "terms": [
+          "阮青蜃",
+          "顾停舟",
+          "分身"
+        ],
+        "actions": [
+          "confirm"
+        ],
+        "anchors": [
+          "顾停舟",
+          "分身"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          19,
+          17,
+          58
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        19,
+        17,
+        58
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-03",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾停舟与矿队的契约利益正式破裂",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟与矿队的契约利益正式破裂",
+        "terms": [
+          "顾停舟"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾停舟"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          65,
+          120,
+          71
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        65,
+        120,
+        71
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-01",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "回潮楔已经蓄满，若继续留在当前峡壁，潮压会把两侧幸存者一起困死",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "回潮楔",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "回潮楔已经蓄满，若继续留在当前峡壁，潮压会把两侧幸存者一起困死",
+        "terms": [
+          "回潮楔",
+          "潮压"
+        ],
+        "actions": [],
+        "anchors": [
+          "会把两侧",
+          "一起困死",
+          "峡壁",
+          "潮压",
+          "回潮楔"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          118,
+          5,
+          117
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        118,
+        5,
+        117
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-02",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "顾停舟必须把它送到峡壁另一侧，才能尝试改写退路",
+      "subject": "顾停舟",
+      "action": "transfer|move",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟必须把它送到峡壁另一侧，才能尝试改写退路",
+        "terms": [
+          "顾停舟"
+        ],
+        "actions": [
+          "transfer",
+          "move"
+        ],
+        "anchors": [
+          "顾停舟",
+          "峡壁",
+          "退路"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          19,
+          22,
+          60
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        19,
+        22,
+        60
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RR-015",
+      "kind": "reader_release",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "READER RELEASE",
+      "source_text": "第8章｜触发：砺骨部是北方盐原的荒原部族联盟，依自己的潮井和迁徙路线生存；当前迁徙会与平原商路、粮仓和水路发生冲突。",
+      "subject": "",
+      "action": "",
+      "object": "",
+      "status": "",
+      "qualifiers": [],
+      "boundary": "Reader Release is a timing obligation: the reader must learn the approved fact once; atmosphere or terminology alone is insufficient, but no extra encyclopedia is required.",
+      "validator": {
+        "type": "reader_release",
+        "source": "第8章｜触发：砺骨部是北方盐原的荒原部族联盟，依自己的潮井和迁徙路线生存；当前迁徙会与平原商路、粮仓和水路发生冲突。",
+        "terms": [
+          "砺骨部",
+          "水路"
+        ],
+        "actions": [],
+        "anchors": [
+          "自己的潮井和迁徙",
+          "北方盐原",
+          "砺骨部",
+          "平原",
+          "水路"
+        ],
+        "minimum_score": 0.19
+      },
+      "primary_evidence_paragraphs": [
+        13
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-016",
+      "kind": "source_conflict",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "Frozen Authority",
+      "source_text": "Do not invent prior dialogue/history backreferences.",
+      "subject": "顾停舟",
+      "action": "no_invented_prior_quote",
+      "object": "previous dialogue",
+      "status": "not_invented",
+      "qualifiers": [],
+      "boundary": "A line framed as previously spoken must already exist in Frozen Authority; current dialogue is unaffected.",
+      "validator": {
+        "type": "prior_quote",
+        "authorized_quotes": [
+          "顺手优化",
+          "更丰富",
+          "重新接触后才回流经验/伤势",
+          "共享",
+          "重新接触/合并",
+          "我像多活了一段时间",
+          "力量是什么/怎样粗分强弱/危险为什么改变生活/入口为什么重要",
+          "凝影了/通过了/被记名",
+          "生动",
+          "普通读者不用推理就能复述规则",
+          "验证闭环阶段推进价值兑现成长空间建立优势",
+          "再证明一次",
+          "这件事已经发生",
+          "能锁住一次潮压",
+          "能够蓄住撞来的潮压与去向但需要重新选择释放位置",
+          "借身＋回潮楔",
+          "锁住潮压",
+          "回潮楔",
+          "失配蓄力窗口契约利益破裂",
+          "逆潮冲击人员受困绳索或牵引救人",
+          "器物突然震动",
+          "地潮",
+          "听潮石",
+          "成炉",
+          "潮炉",
+          "潮裂",
+          "铸潮",
+          "定住",
+          "牵引",
+          "一个人同时变成两个真实战斗单位",
+          "这也太占便宜了",
+          "多一个人",
+          "分身只能带走一种本事",
+          "意外损耗",
+          "不懂做生意",
+          "有用但可替换",
+          "乌合",
+          "右边能接几个人",
+          "两个人再多墙撑不住",
+          "够了",
+          "顾停舟你敢",
+          "你想保标记就自己去保",
+          "别拿我的人手替你守门",
+          "标记",
+          "把标记捞出来",
+          "拉住它",
+          "别让它掉进去",
+          "人出来没有",
+          "出来了",
+          "那就拿它",
+          "松绳别让他抢走",
+          "回来",
+          "矿权标记毁了入口毁了",
+          "这趟实测的尾款你拿什么要",
+          "那是后面的账",
+          "现在先算谁把人从水里救出来谁又把入口弄塌了"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-017",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "入潮",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "入潮",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-018",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "成炉",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "成炉",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-019",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "照域",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "照域",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-020",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "镇海",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "镇海",
+        "subject": "顾停舟",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-021",
+      "kind": "power_boundary",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "Mission composite",
+      "source_text": "触发事件：回潮楔再次锁住正面撞来的潮压，顾停舟确认它锁住的不只是重量，还包括潮水原本冲去的方向；但逆潮持续增强，矿工与砺骨部前哨被困在两侧。\n主角行动：顾停舟把回潮楔钉入峡壁，让本体站在楔前承受继续冲来的潮水；分身只携带牵引守住楔体。确认按契约完成原路线已不可能后，他放弃尾款条件，主动让逆潮继续灌入回潮楔，等待能把蓄住的力量送往另一侧的窗口。\n对手或世界反应：矿队首领确认分身当前只能携带单一本事，开始用不断变化的伤员位置和退路制造失配；逆潮持续冲击，峡壁与撤离位置进一步恶化。\n直接结果：回潮楔第一次在现场锁住连续冲来的潮压，并暂时固定住冲击方向；顾停舟没有释放蓄力，矿工与砺骨部前哨仍未完全脱险，矿路实测契也无法按原条件完成。\n状态变化：回潮楔从“能锁住一次潮压”确定为“能够蓄住撞来的潮压与去向，但需要重新选择释放位置”；阮青蜃的人确认分身只有单一本事，并开始以变化目标针对顾停舟。顾停舟与矿队的契约利益正式破裂。\n结尾推动力：回潮楔已经蓄满，若继续留在当前峡壁，潮压会把两侧幸存者一起困死；顾停舟必须把它送到峡壁另一侧，才能尝试改写退路。",
+      "subject": "分身",
+      "action": "limited_carry",
+      "object": "完整力量",
+      "status": "limited",
+      "qualifiers": [],
+      "boundary": "Require the current limitation without generalizing it into a stronger universal power law.",
+      "validator": {
+        "type": "clone_boundary",
+        "subject_terms": [
+          "分身",
+          "它"
+        ],
+        "limit_terms": [
+          "只能",
+          "不能",
+          "承不住",
+          "不携带",
+          "无法",
+          "只带",
+          "只携"
+        ],
+        "full_terms": [
+          "完整",
+          "潮炉",
+          "成炉",
+          "照域",
+          "力量"
+        ],
+        "ability_terms": [
+          "牵引",
+          "定住"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        19,
+        32,
+        17
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-022",
+      "kind": "commercial_value",
+      "mode": "preserve_if_present",
+      "severity": "hard",
+      "source_field": "Primary + approved Curator support",
+      "source_text": "顾停舟掌中的回潮楔又震了一下。\n\n回潮楔锁住的，不只是这一记潮压的重量。\n\n顾停舟本体握着回潮楔。\n\n峡壁上有一道被潮水冲出来的旧裂缝，正好对着逆潮最凶的来处。他把测路杆横插进裂缝，双手握住回潮楔，借着身体前冲的力道，把楔尖狠狠钉进石里。\n\n他站在楔前，肩膀顶住回潮楔尾部，任由潮水正面压在胸口。那股力量像一堵不断往前推的石墙，第一下便压得他喉间发甜，腿上的虚乏也跟着发作。\n\n它只守住回潮楔。",
+      "subject": "顾停舟",
+      "action": "preserve_value",
+      "object": "reward",
+      "status": "present_in_primary",
+      "qualifiers": [],
+      "boundary": "Commercial value is category-level, not sentence-level and not a per-chapter quota. Individual carrier paragraphs may change if the authorized desire, relationship, reward or repricing remains visible.",
+      "validator": {
+        "type": "commercial_preserve",
+        "category": "reward",
+        "markers": [
+          "钱",
+          "潮铢",
+          "矿利",
+          "份额",
+          "行潮籍",
+          "身份",
+          "回潮楔",
+          "潮髓",
+          "战功",
+          "票据"
+        ],
+        "source_paragraphs": [
+          1,
+          5,
+          18,
+          23,
+          28,
+          31
+        ],
+        "key_terms": [
+          "矿路实测契",
+          "公开确认",
+          "矿权标记",
+          "矿队首领",
+          "回潮楔",
+          "实测契",
+          "砺骨部",
+          "乌合"
+        ],
+        "source_text": "顾停舟掌中的回潮楔又震了一下。\n\n回潮楔锁住的，不只是这一记潮压的重量。\n\n顾停舟本体握着回潮楔。\n\n峡壁上有一道被潮水冲出来的旧裂缝，正好对着逆潮最凶的来处。他把测路杆横插进裂缝，双手握住回潮楔，借着身体前冲的力道，把楔尖狠狠钉进石里。\n\n他站在楔前，肩膀顶住回潮楔尾部，任由潮水正面压在胸口。那股力量像一堵不断往前推的石墙，第一下便压得他喉间发甜，腿上的虚乏也跟着发作。\n\n它只守住回潮楔。"
+      },
+      "primary_evidence_paragraphs": [
+        1,
+        5,
+        18,
+        23,
+        28,
+        31
+      ],
+      "protected_category": "reward"
+    }
+  ],
+  "source_conflicts": [],
+  "unsupported_clauses": [],
+  "diagnostics": [],
+  "primary_paragraph_count": 121,
+  "preflight_eligible": true
+}

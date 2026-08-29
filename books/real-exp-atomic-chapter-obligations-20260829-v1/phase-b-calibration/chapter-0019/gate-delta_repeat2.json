@@ -1,0 +1,291 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 19,
+  "preflight_eligible": false,
+  "decision": "FALLBACK_FULL_REVISER",
+  "touched_source_paragraphs": [
+    113
+  ],
+  "blocking_checks": [
+    {
+      "obligation_id": "ACT-02",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "ACT-04",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "fail",
+      "reason": "clone limitation was upgraded into full-power transfer",
+      "evidence": [
+        "分身身上的衣袍被潮水打得贴在身上，手里没有照域潮谱，也没有完整潮炉"
+      ]
+    },
+    {
+      "obligation_id": "CONFLICT-01",
+      "status": "conflict",
+      "reason": "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：矿利",
+      "evidence": []
+    },
+    {
+      "obligation_id": "CONFLICT-02",
+      "status": "conflict",
+      "reason": "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：结算",
+      "evidence": []
+    }
+  ],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P001",
+        "P013",
+        "P097"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P034",
+        "P065",
+        "P080"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P034",
+        "P065",
+        "P080"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "ACT-03",
+      "status": "pass_preserved",
+      "reason": "Primary actor-action-object evidence was untouched.",
+      "evidence": [
+        "P077"
+      ]
+    },
+    {
+      "obligation_id": "ACT-04",
+      "status": "fail",
+      "reason": "actor-action-object did not close in one local paragraph",
+      "evidence": []
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P001",
+        "P005",
+        "P041"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P015",
+        "P021",
+        "P070"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P006",
+        "P097"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P013",
+        "P041",
+        "P097"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P031",
+        "P056",
+        "P070"
+      ]
+    },
+    {
+      "obligation_id": "RES-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P097",
+        "P102",
+        "P107"
+      ]
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P052",
+        "P080",
+        "P097"
+      ]
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P016",
+        "P076",
+        "P092"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P034",
+        "P065",
+        "P080"
+      ]
+    },
+    {
+      "obligation_id": "STA-04",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P102",
+        "P107",
+        "P109"
+      ]
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P102",
+        "P107",
+        "P109"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/2 actions=['pending']",
+      "evidence": [
+        "母亲"
+      ]
+    },
+    {
+      "obligation_id": "END-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P016",
+        "P076",
+        "P092"
+      ]
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "fail",
+      "reason": "clone limitation was upgraded into full-power transfer",
+      "evidence": [
+        "分身身上的衣袍被潮水打得贴在身上，手里没有照域潮谱，也没有完整潮炉"
+      ]
+    },
+    {
+      "obligation_id": "A-023",
+      "status": "pass",
+      "reason": "public proof components=performance,ruler,repricing",
+      "evidence": [
+        "入潮者能借潮力强壮身体，冲进黑水里救人；成炉者能连续运转潮息，护住商车和一小段路；照域者能把潮力推出体外，压住一座院落、一条街巷。",
+        "镇海潮兽低下头的瞬间，旧关内侧的地面先裂开了。",
+        "潮水先是向后一顿，随后沿着重新钉定的潮路斜斜冲出，直扑旧关外层。残墙、空屋、被留下的潮车和压潮器一齐被黑水吞没，石墙一段段倒下，像被潮兽亲口咬碎。"
+      ]
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "pass",
+      "reason": "no unauthorized revelation; explicit mention was not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-025",
+      "status": "pass_preserved",
+      "reason": "protected commercial category evidence was untouched",
+      "evidence": [
+        "P016",
+        "P049",
+        "P052",
+        "P064",
+        "P075",
+        "P076"
+      ]
+    },
+    {
+      "obligation_id": "CONFLICT-01",
+      "status": "conflict",
+      "reason": "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：矿利",
+      "evidence": []
+    },
+    {
+      "obligation_id": "CONFLICT-02",
+      "status": "conflict",
+      "reason": "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：结算",
+      "evidence": []
+    }
+  ],
+  "status_counts": {
+    "pass": 5,
+    "pass_preserved": 17,
+    "not_triggered": 0,
+    "fail": 3,
+    "unknown": 0,
+    "conflict": 2
+  }
+}

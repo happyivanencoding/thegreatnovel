@@ -1,0 +1,265 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "calibration_policy": {
+    "mutation_rows": "KNOWN_BAD recall only",
+    "historical_full_rows": "SHADOW_CONTROL_NOT_GOLD; not counted as safe precision",
+    "controlled_safe_boundaries": "covered by temps/test_atomic_chapter_obligations.py"
+  },
+  "mutation_total": 12,
+  "mutation_detected": 12,
+  "mutation_missed": 0,
+  "shadow_control_total": 7,
+  "shadow_control_pass": 3,
+  "shadow_control_blocked": 4,
+  "mutation_rows": [
+    {
+      "chapter": 2,
+      "mutation": "mut-copy-original-collapse",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "A-019"
+      ],
+      "blocking_reasons": [
+        "original object was transferred to a destination that should receive only a copy"
+      ]
+    },
+    {
+      "chapter": 2,
+      "mutation": "mut-license-completed-early",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "STA-01"
+      ],
+      "blocking_reasons": [
+        "pending state was upgraded into completed"
+      ]
+    },
+    {
+      "chapter": 9,
+      "mutation": "mut-clone-full-power",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "A-024"
+      ],
+      "blocking_reasons": [
+        "clone limitation was upgraded into full-power transfer"
+      ]
+    },
+    {
+      "chapter": 9,
+      "mutation": "mut-lost-tail-received",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "A-026"
+      ],
+      "blocking_reasons": [
+        "terminal status=lost conflicts with another state"
+      ]
+    },
+    {
+      "chapter": 9,
+      "mutation": "mut-unapproved-chenglu",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "A-020"
+      ],
+      "blocking_reasons": [
+        "unauthorized stable transition"
+      ]
+    },
+    {
+      "chapter": 14,
+      "mutation": "mut-delete-relationship-value",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "RES-03",
+        "A-030"
+      ],
+      "blocking_reasons": [
+        "No final paragraph met threshold 0.23; best=0.054.",
+        "touched category lost protected relationship"
+      ]
+    },
+    {
+      "chapter": 14,
+      "mutation": "mut-entitlement-to-cash",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "A-020",
+        "A-021"
+      ],
+      "blocking_reasons": [
+        "terminal status=entitlement_confirmed conflicts with another state",
+        "terminal status=entitlement_confirmed conflicts with another state"
+      ]
+    },
+    {
+      "chapter": 14,
+      "mutation": "mut-not-departed",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "A-023"
+      ],
+      "blocking_reasons": [
+        "ending stopped at preparation, negated departure, or another person's departure"
+      ]
+    },
+    {
+      "chapter": 14,
+      "mutation": "mut-unapproved-zhaoyu",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "A-017"
+      ],
+      "blocking_reasons": [
+        "unauthorized stable transition"
+      ]
+    },
+    {
+      "chapter": 16,
+      "mutation": "mut-complete-pending-carriage",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "ACT-02"
+      ],
+      "blocking_reasons": [
+        "actor-action-object did not close in one local paragraph"
+      ]
+    },
+    {
+      "chapter": 16,
+      "mutation": "mut-reveal-unknown-cause",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "ACT-02",
+        "STA-04",
+        "A-028",
+        "A-029"
+      ],
+      "blocking_reasons": [
+        "actor-action-object did not close in one local paragraph",
+        "unresolved fact converted into revelation",
+        "unresolved fact converted into revelation",
+        "unresolved fact converted into revelation"
+      ]
+    },
+    {
+      "chapter": 16,
+      "mutation": "mut-unapproved-zhaoyu",
+      "expected": "FALLBACK_FULL_REVISER",
+      "decision": "FALLBACK_FULL_REVISER",
+      "detected": true,
+      "blocking_ids": [
+        "ACT-02",
+        "A-022"
+      ],
+      "blocking_reasons": [
+        "actor-action-object did not close in one local paragraph",
+        "unauthorized stable transition"
+      ]
+    }
+  ],
+  "shadow_rows": [
+    {
+      "chapter": 2,
+      "label": "SHADOW_CONTROL_NOT_GOLD",
+      "decision": "ADOPT_DELTA",
+      "blocking_ids": [],
+      "blocking_reasons": []
+    },
+    {
+      "chapter": 3,
+      "label": "SHADOW_CONTROL_NOT_GOLD",
+      "decision": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "CONFLICT-01"
+      ],
+      "blocking_reasons": [
+        "`Reader Release Map` 将“合法行潮籍”排在第4章，但本章事件合同与第3章计划明确要求本章完成落籍，存在时间归属冲突。"
+      ]
+    },
+    {
+      "chapter": 9,
+      "label": "SHADOW_CONTROL_NOT_GOLD",
+      "decision": "ADOPT_DELTA",
+      "blocking_ids": [],
+      "blocking_reasons": []
+    },
+    {
+      "chapter": 10,
+      "label": "SHADOW_CONTROL_NOT_GOLD",
+      "decision": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "A-020",
+        "A-021",
+        "A-028",
+        "CONFLICT-01"
+      ],
+      "blocking_reasons": [
+        "battle/result implication is not an explicit stable transition",
+        "battle/result implication is not an explicit stable transition",
+        "public proof components=",
+        "`CANON INDEX` 内部存在明确冲突：在场人物写明“矿队首领及护卫已绕行”，但当前敌人又写明“仍在现场”。无法判断本章谈判时他们是否仍在顾停舟面前。"
+      ]
+    },
+    {
+      "chapter": 14,
+      "label": "SHADOW_CONTROL_NOT_GOLD",
+      "decision": "ADOPT_DELTA",
+      "blocking_ids": [],
+      "blocking_reasons": []
+    },
+    {
+      "chapter": 16,
+      "label": "SHADOW_CONTROL_NOT_GOLD",
+      "decision": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-02"
+      ],
+      "blocking_reasons": [
+        "actor-action-object did not close in one local paragraph"
+      ]
+    },
+    {
+      "chapter": 19,
+      "label": "SHADOW_CONTROL_NOT_GOLD",
+      "decision": "FALLBACK_FULL_REVISER",
+      "blocking_ids": [
+        "ACT-02",
+        "ACT-04",
+        "A-023",
+        "CONFLICT-01",
+        "CONFLICT-02"
+      ],
+      "blocking_reasons": [
+        "actor-action-object did not close in one local paragraph",
+        "actor-action-object did not close in one local paragraph",
+        "clone limitation was upgraded into full-power transfer",
+        "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：矿利",
+        "Mission terminal conflict: 状态变化仍标为 pending，但结尾推动力写成已到账：结算"
+      ]
+    }
+  ]
+}

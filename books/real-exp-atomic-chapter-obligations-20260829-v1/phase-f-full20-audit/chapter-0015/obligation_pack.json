@@ -1,0 +1,614 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 15,
+  "protagonist": "顾停舟",
+  "mission_fields": {
+    "触发事件": "顾停舟随少东家粮队抵达旧关外，顾沉戈要求保住三座新潮井和粮道，旧关守将准备先撤居民，乌合前哨则警告砺骨部迁徙窗口只剩这一轮，三方目标无法同时满足。",
+    "主角行动": "顾停舟拒绝接任军府职位，也不替任何一方宣布谁正确；他把三座新井和粮道定为主目标，将旧关外层定为可以牺牲的撤离通道，并要求顾沉戈、守将、乌合分别确认并承担自己同意的部分。",
+    "对手或世界反应": "顾沉戈、守将和乌合都不接受完整方案，但在三方目标无法合并的压力下，各自承认这项取舍；旧关守将开始准备外层居民撤离，顾沉戈和乌合则分别守住粮道、新井及迁徙所需的水路信息。",
+    "直接结果": "三方形成一次以三座新井和粮道为核心、以旧关外层撤离为代价的具体合作。顾停舟不再只是粮队承运人，而成为这次行动中负责定下主目标与取舍的独立决策者。",
+    "状态变化": "顾停舟的身份从少东家的契约承运人进一步变为能让不同势力共同执行其取舍的独立行动者；顾沉戈、旧关守将和乌合之间形成暂时合作，但旧关外层已被明确置于下一次地潮的直接损失范围内。",
+    "结尾推动力": "本应在十二日后到来的地潮提前涌入旧关外层，三座新井与刚抵达危险范围的粮队同时受到冲击，顾停舟刚确立的取舍立即被迫进入实战。"
+  },
+  "obligations": [
+    {
+      "id": "TRG-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "顾停舟随少东家粮队抵达旧关外，顾沉戈要求保住三座新潮井和粮道，旧关守将准备先撤居民，乌合前哨则警告砺骨部迁徙窗口只剩这一轮，三方目标无法同时满足",
+      "subject": "顾停舟",
+      "action": "protect",
+      "object": "旧关守将",
+      "status": "preserved",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟随少东家粮队抵达旧关外，顾沉戈要求保住三座新潮井和粮道，旧关守将准备先撤居民，乌合前哨则警告砺骨部迁徙窗口只剩这一轮，三方目标无法同时满足",
+        "terms": [
+          "旧关守将",
+          "少东家",
+          "砺骨部",
+          "顾停舟",
+          "顾沉戈",
+          "乌合",
+          "前哨",
+          "居民",
+          "粮道",
+          "粮队",
+          "三座新潮井和粮道"
+        ],
+        "actions": [
+          "protect"
+        ],
+        "anchors": [
+          "三座新潮井",
+          "砺骨部",
+          "粮道",
+          "居民",
+          "迁徙",
+          "顾沉戈"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          30,
+          84,
+          7
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        30,
+        84,
+        7
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-01",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "顾停舟拒绝接任军府职位，也不替任何一方宣布谁正确",
+      "subject": "顾停舟",
+      "action": "refuse",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟拒绝接任军府职位，也不替任何一方宣布谁正确",
+        "terms": [
+          "顾停舟"
+        ],
+        "actions": [
+          "refuse"
+        ],
+        "anchors": [
+          "顾停舟",
+          "也不替"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          46,
+          123,
+          91
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        46,
+        123,
+        91
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-02",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "他把三座新井和粮道定为主目标，将旧关外层定为可以牺牲的撤离通道，并要求顾沉戈、守将、乌合分别确认并承担自己同意的部分",
+      "subject": "顾停舟",
+      "action": "accept|sacrifice|move|confirm",
+      "object": "三座新井",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "他把三座新井和粮道定为主目标，将旧关外层定为可以牺牲的撤离通道，并要求顾沉戈、守将、乌合分别确认并承担自己同意的部分",
+        "terms": [
+          "三座新井",
+          "旧关外层",
+          "顾沉戈",
+          "乌合",
+          "新井",
+          "粮道",
+          "三座新井和粮道定为主目标"
+        ],
+        "actions": [
+          "accept",
+          "sacrifice",
+          "move",
+          "confirm"
+        ],
+        "anchors": [
+          "三座新井",
+          "井和粮道"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          65,
+          115,
+          102
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        65,
+        115,
+        102
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "顾沉戈、守将和乌合都不接受完整方案，但在三方目标无法合并的压力下，各自承认这项取舍",
+      "subject": "顾沉戈",
+      "action": "accept",
+      "object": "乌合",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾沉戈、守将和乌合都不接受完整方案，但在三方目标无法合并的压力下，各自承认这项取舍",
+        "terms": [
+          "顾沉戈",
+          "乌合"
+        ],
+        "actions": [
+          "accept"
+        ],
+        "anchors": [
+          "顾沉戈",
+          "守将",
+          "承认"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          84,
+          101,
+          140
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        84,
+        101,
+        140
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "旧关守将开始准备外层居民撤离，顾沉戈和乌合则分别守住粮道、新井及迁徙所需的水路信息",
+      "subject": "旧关守将",
+      "action": "protect|move",
+      "object": "顾沉戈",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "旧关守将开始准备外层居民撤离，顾沉戈和乌合则分别守住粮道、新井及迁徙所需的水路信息",
+        "terms": [
+          "旧关守将",
+          "顾沉戈",
+          "乌合",
+          "居民",
+          "新井",
+          "水路",
+          "粮道"
+        ],
+        "actions": [
+          "protect",
+          "move"
+        ],
+        "anchors": [
+          "外层居民",
+          "迁徙",
+          "水路",
+          "顾沉戈",
+          "粮道"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          30,
+          73,
+          26
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        30,
+        73,
+        26
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-01",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "三方形成一次以三座新井和粮道为核心、以旧关外层撤离为代价的具体合作",
+      "subject": "顾停舟",
+      "action": "move",
+      "object": "三座新井",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "三方形成一次以三座新井和粮道为核心、以旧关外层撤离为代价的具体合作",
+        "terms": [
+          "三座新井",
+          "旧关外层",
+          "新井",
+          "粮道",
+          "三座新井和粮道为核心、以"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [
+          "井和粮",
+          "三座",
+          "撤离",
+          "旧关外层"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          127,
+          23,
+          146
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        127,
+        23,
+        146
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-02",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "顾停舟不再只是粮队承运人，而成为这次行动中负责定下主目标与取舍的独立决策者",
+      "subject": "顾停舟",
+      "action": "refuse|power_transition",
+      "object": "粮队",
+      "status": "transitioned",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟不再只是粮队承运人，而成为这次行动中负责定下主目标与取舍的独立决策者",
+        "terms": [
+          "顾停舟",
+          "粮队"
+        ],
+        "actions": [
+          "refuse",
+          "power_transition"
+        ],
+        "anchors": [
+          "顾停舟"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          64,
+          16,
+          10
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        64,
+        16,
+        10
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-01",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾停舟的身份从少东家的契约承运人进一步变为能让不同势力共同执行其取舍的独立行动者",
+      "subject": "顾停舟",
+      "action": "",
+      "object": "少东家",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾停舟的身份从少东家的契约承运人进一步变为能让不同势力共同执行其取舍的独立行动者",
+        "terms": [
+          "少东家",
+          "顾停舟"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾停舟"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          42,
+          70
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        42,
+        70
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-02",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾沉戈、旧关守将和乌合之间形成暂时合作，但旧关外层已被明确置于下一次地潮的直接损失范围内",
+      "subject": "顾沉戈",
+      "action": "pending",
+      "object": "旧关外层",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾沉戈、旧关守将和乌合之间形成暂时合作，但旧关外层已被明确置于下一次地潮的直接损失范围内",
+        "terms": [
+          "旧关外层",
+          "旧关守将",
+          "顾沉戈",
+          "乌合",
+          "下一次地潮的直接损失范围内"
+        ],
+        "actions": [
+          "pending"
+        ],
+        "anchors": [
+          "暂时"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          127
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        127
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-01",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "本应在十二日后到来的地潮提前涌入旧关外层，三座新井与刚抵达危险范围的粮队同时受到冲击，顾停舟刚确立的取舍立即被迫进入实战",
+      "subject": "顾停舟",
+      "action": "move",
+      "object": "三座新井",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "本应在十二日后到来的地潮提前涌入旧关外层，三座新井与刚抵达危险范围的粮队同时受到冲击，顾停舟刚确立的取舍立即被迫进入实战",
+        "terms": [
+          "三座新井",
+          "旧关外层",
+          "顾停舟",
+          "新井",
+          "粮队",
+          "十二日后到来的地潮提前涌入",
+          "三座新井与刚抵达危险范围"
+        ],
+        "actions": [
+          "move"
+        ],
+        "anchors": [
+          "地潮",
+          "外层",
+          "十二日后"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          146,
+          23,
+          135
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        146,
+        23,
+        135
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-011",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "成炉潮息",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "照域",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "照域",
+        "subject": "顾停舟",
+        "current_tier": "成炉",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-012",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "成炉潮息",
+      "subject": "顾停舟",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "镇海",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "镇海",
+        "subject": "顾停舟",
+        "current_tier": "成炉",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-013",
+      "kind": "time_window",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "本应在十二日后到来的地潮提前涌入旧关外层，三座新井与刚抵达危险范围的粮队同时受到冲击，顾停舟刚确立的取舍立即被迫进入实战",
+      "subject": "",
+      "action": "",
+      "object": "在十二日后到来的地潮提前",
+      "status": "deadline",
+      "qualifiers": [],
+      "boundary": "A deadline constrains a later action; it does not mean the action is already completed in this chapter.",
+      "validator": {
+        "type": "deadline",
+        "terms": [
+          "十二日",
+          "地潮",
+          "前"
+        ],
+        "future_only": true,
+        "topic_terms": [
+          "三座新井",
+          "旧关外层",
+          "新井",
+          "粮队"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-014",
+      "kind": "commercial_value",
+      "mode": "preserve_if_present",
+      "severity": "hard",
+      "source_field": "Primary + approved Curator support",
+      "source_text": "顾停舟坐在第一辆车辕上，胸口仍有些闷。他没有再去碰袖里的回潮楔，只抬眼看向前方。\n\n回潮楔还在那里，冰冷安静。可残压没有散尽，他今天不能再拿它去硬压一场地潮。",
+      "subject": "顾停舟",
+      "action": "preserve_value",
+      "object": "reward",
+      "status": "present_in_primary",
+      "qualifiers": [],
+      "boundary": "Commercial value is category-level, not sentence-level and not a per-chapter quota. Individual carrier paragraphs may change if the authorized desire, relationship, reward or repricing remains visible.",
+      "validator": {
+        "type": "commercial_preserve",
+        "category": "reward",
+        "markers": [
+          "钱",
+          "潮铢",
+          "矿利",
+          "份额",
+          "行潮籍",
+          "身份",
+          "回潮楔",
+          "潮髓",
+          "战功",
+          "票据"
+        ],
+        "source_paragraphs": [
+          3,
+          92
+        ],
+        "key_terms": [
+          "个人矿利",
+          "主从关系",
+          "旧关守将",
+          "回潮楔",
+          "少东家",
+          "砺骨部",
+          "顾沉戈",
+          "乌合"
+        ],
+        "source_text": "顾停舟坐在第一辆车辕上，胸口仍有些闷。他没有再去碰袖里的回潮楔，只抬眼看向前方。\n\n回潮楔还在那里，冰冷安静。可残压没有散尽，他今天不能再拿它去硬压一场地潮。"
+      },
+      "primary_evidence_paragraphs": [
+        3,
+        92
+      ],
+      "protected_category": "reward"
+    },
+    {
+      "id": "CONFLICT-01",
+      "kind": "source_conflict",
+      "mode": "diagnostic_fallback",
+      "severity": "hard",
+      "source_field": "Authority conflict",
+      "source_text": "无明确权威冲突。确定性预取只确认乌合前哨传达砺骨部迁徙窗口，无法判断乌合本人是否到场；不得补写她本人已出现、发言或行动。",
+      "subject": "",
+      "action": "",
+      "object": "",
+      "status": "",
+      "qualifiers": [],
+      "boundary": "The gate must not silently pick a winner between incompatible terminal authorities.",
+      "validator": {
+        "type": "source_conflict"
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    }
+  ],
+  "source_conflicts": [
+    "无明确权威冲突。确定性预取只确认乌合前哨传达砺骨部迁徙窗口，无法判断乌合本人是否到场；不得补写她本人已出现、发言或行动。"
+  ],
+  "unsupported_clauses": [],
+  "diagnostics": [
+    "短契明确约定“先付一半”，但未明确首付款是否已经实际到账；只能写成合同条款，不得当作已到账收益。"
+  ],
+  "primary_paragraph_count": 146,
+  "preflight_eligible": false
+}

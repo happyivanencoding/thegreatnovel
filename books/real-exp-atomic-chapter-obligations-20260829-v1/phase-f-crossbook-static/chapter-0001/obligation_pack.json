@@ -1,0 +1,633 @@
+{
+  "version": "atomic-obligations-v0.1",
+  "chapter": 1,
+  "protagonist": "顾临川",
+  "mission_fields": {
+    "触发事件": "父亲要求顾临川当天交出商队账目，客舍同时要接待住客；而武馆即将进行公开试场前的最后训练，三件事撞在同一天，顾临川必须在客舍责任与武馆机会之间取舍。",
+    "主角行动": "顾临川在客舍内院固定火盆投下的整块阴影中练习影刃，转身取账册时尝试将影子从脚下剥离，第一次分出完整影身。他让一具身体留在客舍记账、接待住客，另一具身体赶去武馆练刀。",
+    "对手或世界反应": "两具身体各自面对真实的客舍事务与武馆训练，分影无法抹掉时间和体力代价；合并时两边的疲惫同时回流，顾临川承受远超单独行动的疲劳。",
+    "直接结果": "客舍账目与一段武馆训练都被完成。两具身体合并后，顾临川保留了两边完整的刀法手感，并用更稳定的影刃劈断训练木靶，第一次让分影带来的双份经历转化为现实战力。",
+    "状态变化": "顾临川从“尚未完成一阶凝影、只能独自安排一天”变为“已经能够短暂分出另一具自己，同时完成两件事，并把两边经验归于本体”；他也确定疲惫会共同回流，分影不是取消取舍的无代价办法。章末他确认分影并非只能发生一次，决定第二天继续使用。",
+    "结尾推动力": "公开试场的机会仍在逼近，而顾临川已经知道分影可以再次使用；为了不放弃这次改变生活的机会，他必然会在第二天把分影带入新的训练与取舍中。"
+  },
+  "obligations": [
+    {
+      "id": "TRG-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "父亲要求顾临川当天交出商队账目，客舍同时要接待住客",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "父亲要求顾临川当天交出商队账目，客舍同时要接待住客",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾临川",
+          "父亲",
+          "客舍"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          72,
+          26,
+          228
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        72,
+        26,
+        228
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "TRG-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "触发事件",
+      "source_text": "武馆即将进行公开试场前的最后训练，三件事撞在同一天，顾临川必须在客舍责任与武馆机会之间取舍",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "武馆即将进行公开试场前的最后训练，三件事撞在同一天，顾临川必须在客舍责任与武馆机会之间取舍",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾临川",
+          "武馆",
+          "客舍"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          110,
+          228,
+          26
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        110,
+        228,
+        26
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-01",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "顾临川在客舍内院固定火盆投下的整块阴影中练习影刃，转身取账册时尝试将影子从脚下剥离，第一次分出完整影身",
+      "subject": "顾临川",
+      "action": "fix|handle",
+      "object": "第一次分出完整影身",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "顾临川在客舍内院固定火盆投下的整块阴影中练习影刃，转身取账册时尝试将影子从脚下剥离，第一次分出完整影身",
+        "terms": [
+          "顾临川",
+          "第一次分出完整影身"
+        ],
+        "actions": [
+          "fix",
+          "handle"
+        ],
+        "anchors": [
+          "固定火盆",
+          "内院",
+          "整块",
+          "阴影",
+          "影子",
+          "完整",
+          "顾临川",
+          "火盆投下的"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          28,
+          42,
+          30
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        28,
+        42,
+        30
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "ACT-02",
+      "kind": "actor_action_object",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "主角行动",
+      "source_text": "他让一具身体留在客舍记账、接待住客，另一具身体赶去武馆练刀",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "他让一具身体留在客舍记账、接待住客，另一具身体赶去武馆练刀",
+        "terms": [],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-01",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "两具身体各自面对真实的客舍事务与武馆训练，分影无法抹掉时间和体力代价",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "两具身体各自面对真实的客舍事务与武馆训练，分影无法抹掉时间和体力代价",
+        "terms": [],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "REA-02",
+      "kind": "mission_clause",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "对手或世界反应",
+      "source_text": "合并时两边的疲惫同时回流，顾临川承受远超单独行动的疲劳",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "合并时两边的疲惫同时回流，顾临川承受远超单独行动的疲劳",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾临川"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          110,
+          72,
+          30
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        110,
+        72,
+        30
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-01",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "客舍账目与一段武馆训练都被完成",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "客舍账目与一段武馆训练都被完成",
+        "terms": [],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "RES-02",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "直接结果",
+      "source_text": "两具身体合并后，顾临川保留了两边完整的刀法手感，并用更稳定的影刃劈断训练木靶，第一次让分影带来的双份经历转化为现实战力",
+      "subject": "顾临川",
+      "action": "possess",
+      "object": "第一次让分影带来的双份经历",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "两具身体合并后，顾临川保留了两边完整的刀法手感，并用更稳定的影刃劈断训练木靶，第一次让分影带来的双份经历转化为现实战力",
+        "terms": [
+          "顾临川",
+          "第一次让分影带来的双份经历"
+        ],
+        "actions": [
+          "possess"
+        ],
+        "anchors": [
+          "顾临川",
+          "的影刃"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          192,
+          214,
+          50
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        192,
+        214,
+        50
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-01",
+      "kind": "terminal_state",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "顾临川从“尚未完成一阶凝影、只能独自安排一天”变为“已经能够短暂分出另一具自己，同时完成两件事，并把两边经验归于本体”",
+      "subject": "顾临川",
+      "action": "possess|limit|pending",
+      "object": "本体",
+      "status": "not_transitioned",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "pending_boundary",
+        "topic_terms": [
+          "本体"
+        ],
+        "completion_terms": [
+          "已经完成",
+          "已经送到",
+          "已经结算",
+          "已经到账",
+          "全部完成",
+          "正式完成",
+          "交付完毕",
+          "已经取得",
+          "正式取得",
+          "已经落籍",
+          "正式落籍",
+          "已经入册",
+          "正式入册",
+          "已经登记",
+          "身份当场完成"
+        ],
+        "pending_terms": [
+          "尚未",
+          "仍未",
+          "没到",
+          "未完成",
+          "未结算",
+          "待",
+          "别当契完了"
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        192,
+        100
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-02",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "他也确定疲惫会共同回流，分影不是取消取舍的无代价办法",
+      "subject": "顾临川",
+      "action": "",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "他也确定疲惫会共同回流，分影不是取消取舍的无代价办法",
+        "terms": [],
+        "actions": [],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "STA-03",
+      "kind": "terminal_state",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "状态变化",
+      "source_text": "章末他确认分影并非只能发生一次，决定第二天继续使用",
+      "subject": "顾临川",
+      "action": "confirm",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "章末他确认分影并非只能发生一次，决定第二天继续使用",
+        "terms": [],
+        "actions": [
+          "confirm"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "END-01",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "公开试场的机会仍在逼近，而顾临川已经知道分影可以再次使用",
+      "subject": "顾临川",
+      "action": "search",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "公开试场的机会仍在逼近，而顾临川已经知道分影可以再次使用",
+        "terms": [
+          "顾临川"
+        ],
+        "actions": [
+          "search"
+        ],
+        "anchors": [
+          "顾临川"
+        ],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": [
+          170,
+          126,
+          140
+        ]
+      },
+      "primary_evidence_paragraphs": [
+        170,
+        126,
+        140
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "END-02",
+      "kind": "ending",
+      "mode": "terminal",
+      "severity": "hard",
+      "source_field": "结尾推动力",
+      "source_text": "为了不放弃这次改变生活的机会，他必然会在第二天把分影带入新的训练与取舍中",
+      "subject": "顾临川",
+      "action": "sacrifice|lose",
+      "object": "",
+      "status": "asserted",
+      "qualifiers": [],
+      "boundary": "Clause semantics are mandatory, but exact wording and unapproved implementation detail are not. Untouched Primary evidence is preserved without re-interpretation.",
+      "validator": {
+        "type": "mission_clause",
+        "source": "为了不放弃这次改变生活的机会，他必然会在第二天把分影带入新的训练与取舍中",
+        "terms": [],
+        "actions": [
+          "sacrifice",
+          "lose"
+        ],
+        "anchors": [],
+        "minimum_score": 0.23,
+        "primary_evidence_paragraphs": []
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "RR-014",
+      "kind": "reader_release",
+      "mode": "must_hold",
+      "severity": "hard",
+      "source_field": "READER RELEASE",
+      "source_text": "第1章｜触发：城镇客舍与街道刻意保留固定火盆和整块阴影，顾临川在客舍内院借这片日常生活空间练习影术，并第一次分影。",
+      "subject": "",
+      "action": "",
+      "object": "",
+      "status": "",
+      "qualifiers": [],
+      "boundary": "Reader Release is a timing obligation: the reader must learn the approved fact once; atmosphere or terminology alone is insufficient, but no extra encyclopedia is required.",
+      "validator": {
+        "type": "reader_release",
+        "source": "第1章｜触发：城镇客舍与街道刻意保留固定火盆和整块阴影，顾临川在客舍内院借这片日常生活空间练习影术，并第一次分影。",
+        "terms": [
+          "顾临川",
+          "第一次分影"
+        ],
+        "actions": [],
+        "anchors": [
+          "顾临川",
+          "客舍内院"
+        ],
+        "minimum_score": 0.19
+      },
+      "primary_evidence_paragraphs": [
+        42,
+        228,
+        192
+      ],
+      "protected_category": ""
+    },
+    {
+      "id": "A-015",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "入潮",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "入潮",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-016",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "成炉",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "成炉",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-017",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "照域",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "照域",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-018",
+      "kind": "power_boundary",
+      "mode": "must_not_hold",
+      "severity": "hard",
+      "source_field": "CANON INDEX / current stable power",
+      "source_text": "No stable power transition is authorized in the current Mission",
+      "subject": "顾临川",
+      "action": "forbid_unapproved_higher_tier",
+      "object": "镇海",
+      "status": "not_authorized",
+      "qualifiers": [],
+      "boundary": "Current stable Canon plus an explicit Mission transition defines the maximum authorized tier. If current tier is absent, the gate does not guess it; it simply forbids any new explicit transition not approved by Mission. Future promises, battle scale, public proof and Power Seed legend text do not raise this ceiling.",
+      "validator": {
+        "type": "forbid_power_transition",
+        "target": "镇海",
+        "subject": "顾临川",
+        "current_tier": "",
+        "authorized_tier": ""
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    },
+    {
+      "id": "A-019",
+      "kind": "unresolved_fact",
+      "mode": "must_remain_unknown",
+      "severity": "hard",
+      "source_field": "Relevant Open Promises",
+      "source_text": "本章开始时，分影尚未发生，顾临川不知道自己能否剥离影子。",
+      "subject": "",
+      "action": "",
+      "object": "本章开始时，分影尚未发生，顾临川不知道自己能否剥离影子。",
+      "status": "unknown",
+      "qualifiers": [],
+      "boundary": "Unknown is a no-invention boundary, not a requirement to repeat 'unknown' in prose.",
+      "validator": {
+        "type": "unresolved",
+        "topic_terms": [],
+        "revelation_terms": [
+          "真相是",
+          "原来是",
+          "确认是",
+          "证实是",
+          "原因是",
+          "源自",
+          "其实是",
+          "揭开",
+          "查明"
+        ]
+      },
+      "primary_evidence_paragraphs": [],
+      "protected_category": ""
+    }
+  ],
+  "source_conflicts": [],
+  "unsupported_clauses": [
+    "主角行动[2] 他让一具身体留在客舍记账、接待住客，另一具身体赶去武馆练刀",
+    "对手或世界反应[1] 两具身体各自面对真实的客舍事务与武馆训练，分影无法抹掉时间和体力代价",
+    "直接结果[1] 客舍账目与一段武馆训练都被完成",
+    "状态变化[2] 他也确定疲惫会共同回流，分影不是取消取舍的无代价办法",
+    "状态变化[3] 章末他确认分影并非只能发生一次，决定第二天继续使用",
+    "结尾推动力[2] 为了不放弃这次改变生活的机会，他必然会在第二天把分影带入新的训练与取舍中"
+  ],
+  "diagnostics": [],
+  "primary_paragraph_count": 266,
+  "preflight_eligible": false
+}

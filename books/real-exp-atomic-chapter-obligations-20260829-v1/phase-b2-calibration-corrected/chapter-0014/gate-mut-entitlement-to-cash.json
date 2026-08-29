@@ -1,0 +1,313 @@
+{
+  "version": "atomic-obligations-v0.3-boundary-calibrated",
+  "chapter": 14,
+  "preflight_eligible": true,
+  "decision": "FALLBACK_FULL_REVISER",
+  "touched_source_paragraphs": [
+    1,
+    19,
+    20,
+    21,
+    22,
+    52,
+    53,
+    67,
+    68,
+    69,
+    70,
+    73,
+    74,
+    75,
+    93,
+    95
+  ],
+  "blocking_checks": [
+    {
+      "obligation_id": "A-020",
+      "status": "fail",
+      "reason": "terminal status=entitlement_confirmed conflicts with another state",
+      "evidence": [
+        "个人矿利八百潮铢已经当场到账。"
+      ]
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "fail",
+      "reason": "terminal status=entitlement_confirmed conflicts with another state",
+      "evidence": [
+        "个人矿利八百潮铢已经当场到账。"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "obligation_id": "TRG-01",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=1/1 actions=[]",
+      "evidence": [
+        "百炉会"
+      ]
+    },
+    {
+      "obligation_id": "TRG-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P024",
+        "P030",
+        "P064"
+      ]
+    },
+    {
+      "obligation_id": "ACT-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P024",
+        "P030",
+        "P088"
+      ]
+    },
+    {
+      "obligation_id": "ACT-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P146"
+      ]
+    },
+    {
+      "obligation_id": "REA-01",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=3/3 actions=['confirm']",
+      "evidence": [
+        "回潮楔",
+        "成炉",
+        "潮势"
+      ]
+    },
+    {
+      "obligation_id": "REA-02",
+      "status": "pass",
+      "reason": "semantic anchor score=0.308",
+      "evidence": [
+        "顾停舟点头。"
+      ]
+    },
+    {
+      "obligation_id": "REA-03",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=2/2 actions=['refuse', 'search']",
+      "evidence": [
+        "百炉会",
+        "阮青蜃"
+      ]
+    },
+    {
+      "obligation_id": "RES-01",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P060",
+        "P079",
+        "P148"
+      ]
+    },
+    {
+      "obligation_id": "RES-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P030",
+        "P100",
+        "P109"
+      ]
+    },
+    {
+      "obligation_id": "RES-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P128"
+      ]
+    },
+    {
+      "obligation_id": "STA-01",
+      "status": "pass",
+      "reason": "no contradictory completion; explicit repetition not required",
+      "evidence": []
+    },
+    {
+      "obligation_id": "STA-02",
+      "status": "pass",
+      "reason": "chapter-wide clause coverage terms=2/2 actions=['possess', 'search']",
+      "evidence": [
+        "少东家",
+        "阮青蜃"
+      ]
+    },
+    {
+      "obligation_id": "STA-03",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P037",
+        "P060",
+        "P101"
+      ]
+    },
+    {
+      "obligation_id": "END-01",
+      "status": "pass",
+      "reason": "strong term + action bundle found",
+      "evidence": [
+        "十二日地潮前，粮得送到旧关。"
+      ]
+    },
+    {
+      "obligation_id": "END-02",
+      "status": "pass_preserved",
+      "reason": "Primary evidence paragraphs were not touched.",
+      "evidence": [
+        "P002",
+        "P114",
+        "P168"
+      ]
+    },
+    {
+      "obligation_id": "A-016",
+      "status": "pass",
+      "reason": "no unauthorized prior-dialogue backreference",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-017",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-018",
+      "status": "pass",
+      "reason": "no unauthorized stable transition",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-019",
+      "status": "pass",
+      "reason": "authorized possession state found",
+      "evidence": [
+        "“楔子。”\n\n顾停舟把回潮楔放到她掌心。"
+      ]
+    },
+    {
+      "obligation_id": "A-020",
+      "status": "fail",
+      "reason": "terminal status=entitlement_confirmed conflicts with another state",
+      "evidence": [
+        "个人矿利八百潮铢已经当场到账。"
+      ]
+    },
+    {
+      "obligation_id": "A-021",
+      "status": "fail",
+      "reason": "terminal status=entitlement_confirmed conflicts with another state",
+      "evidence": [
+        "个人矿利八百潮铢已经当场到账。"
+      ]
+    },
+    {
+      "obligation_id": "A-022",
+      "status": "pass",
+      "reason": "deadline retained",
+      "evidence": [
+        "“旧关缺粮。下一次十二日地潮前，第一批货得送过去。”"
+      ]
+    },
+    {
+      "obligation_id": "A-023",
+      "status": "pass",
+      "reason": "actual protagonist departure shown with bound journey context",
+      "evidence": [
+        "他踩上车辕，坐进第一辆粮车。"
+      ]
+    },
+    {
+      "obligation_id": "A-024",
+      "status": "pass",
+      "reason": "single cycle object=True steps=True repeated=False",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-025",
+      "status": "pass",
+      "reason": "cooldown boundary retained",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-026",
+      "status": "pass",
+      "reason": "public proof components=performance,ruler,repricing",
+      "evidence": [
+        "白须老人往前一步，盯着铜尺：“普通成炉者只能把重压稳在自身附近。刚才这一段，却被它拧到四十丈外，再送回主槽。”",
+        "白须老人往前一步，盯着铜尺：“普通成炉者只能把重压稳在自身附近。刚才这一段，却被它拧到四十丈外，再送回主槽。”",
+        "场边没人再把目光放在他的伤上。"
+      ]
+    },
+    {
+      "obligation_id": "A-027",
+      "status": "fail",
+      "reason": "relationship state missing, unbound, or attached to another counterpart",
+      "evidence": []
+    },
+    {
+      "obligation_id": "A-028",
+      "status": "pass_preserved",
+      "reason": "protected commercial category evidence was untouched",
+      "evidence": [
+        "P072",
+        "P085",
+        "P090",
+        "P153"
+      ]
+    },
+    {
+      "obligation_id": "A-029",
+      "status": "pass_preserved",
+      "reason": "protected commercial category evidence was untouched",
+      "evidence": [
+        "P024",
+        "P030",
+        "P035",
+        "P037",
+        "P050",
+        "P055"
+      ]
+    },
+    {
+      "obligation_id": "A-030",
+      "status": "pass_preserved",
+      "reason": "protected commercial category evidence was untouched",
+      "evidence": [
+        "P143",
+        "P144"
+      ]
+    },
+    {
+      "obligation_id": "A-031",
+      "status": "pass",
+      "reason": "protected social_repricing retained",
+      "evidence": [
+        "唐绾走到试炉前，把袖口重新挽起。"
+      ]
+    }
+  ],
+  "status_counts": {
+    "pass": 17,
+    "pass_preserved": 11,
+    "not_triggered": 0,
+    "fail": 3,
+    "unknown": 0,
+    "conflict": 0
+  }
+}
