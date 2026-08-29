@@ -1705,10 +1705,10 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 
 - Full Reviser Luna medium 约快 52.8%，商业读感仍由 Luna high **3/3** 获胜。
 - Luna-high Patch Reviser 约快 44.3%，商业读感为 full high **5胜 / Patch 1胜 / 1平**；局部 Patch 会制造后文状态矛盾、漏 Ending 或误删有价值 realization。“安全章”路由 4 章中 3 章 fallback，前置 Patch 反成额外税。
-- 完整合同 Luna-medium Curator 约快 61.2%，Authority 由 high control **5:2** 获胜；Slim Luna/Terra medium Curator 可把节点缩短约 70%，但无稳定模型赢家，并出现低潮时序、反潮记录持有与分身/回潮楔执行路径问题。将相同 Slim Envelope 恢复为 **Luna high** 后，Curator 本身约快 50.3%，但完整 `Curator → Primary → Reviser` 只快 **11.4%**；Reader 选 control 3:2，Authority 选 treatment 3:2，Treatment 仍在 3/5 压力章出现力量、结算或 Ending 硬问题，且第2/14章整链反而更慢。
-- Conditional Director 首轮约快 41.1%，商业故事盲评由 full control **4胜 / 1平 / treatment 0胜**，并在 Ch20 越权。修正模块触发只读取当前章事件预算后复验，Director 节点约快 **36.9%**，Reader 为 control 3:2、Authority 为 treatment 3:2：Ch19 双盲胜出、Ch3 双盲失败，其余分裂；典型压力章只省 2—3 秒，因此仍不值得增加 production 路由复杂度。
+- 完整合同 Luna-medium Curator 约快 61.2%，Authority 由 high control **5:2** 获胜；Slim Luna/Terra medium Curator 可把节点缩短约 70%，但无稳定模型赢家，并出现低潮时序、反潮记录持有与分身/回潮楔执行路径问题。将相同 Slim Envelope 恢复为 **Luna high** 后，Curator 131.0s → 65.2s（约 -50.3%），但完整 `Curator → Primary → Reviser` 只快 **11.4%**；Reader 选 control 3:2，Authority 为 control 2 / treatment 2 / mixed 1。Treatment 仍会漏结算或 Ending，且第2/14章整链反而更慢，不能视为质量等价。
+- Conditional Director 首轮约快 41.1%，商业故事盲评由 full control **4胜 / 1平 / treatment 0胜**，并在 Ch20 越权。把短 Director 接回完整下游后，Director 43.3s → 26.8s（约 -38.2%），完整 `Director → Curator → Primary → Reviser` 仅从 331.3s 降到 313.9s（约 -5.3%）；Reader 为 control 3:2，Authority 为 **control 4:1**。只有 Ch19 双盲胜出，第2/13/16章双盲失败，第20章仅 Reader 偏 Treatment，仍不值得增加 production 路由复杂度。
 
-这些实验也发现 current full route 并非永远正确：Conditional Ch13 更准确去掉“战场战利品”误称，Ch19 也消除了“尚待结算 / 终于到手”的内部矛盾。真正未解决的是**没有可靠自动路由知道哪一章、哪一句可以缩**，所以不能因局部胜例全局上线。
+这些实验也发现 current full route 并非永远正确：Ch19 Conditional 最终稿同时消除了“尚待结算 / 终于到手”的内部矛盾并赢得双盲；Slim 在部分章也能收回未授权设定。真正未解决的是**没有可靠自动路由知道哪一章、哪一句可以缩**，所以不能因局部胜例全局上线。
 
 默认章节路由继续冻结：`Luna high Director → Luna high Curator → Terra high Primary → Luna high Authority Reviser → Luna low State`。本轮作者明确排除 ACP runner 与前端，因此二者没有修改，也不是未完成项。唯一最终判定包：`books/real-exp-chapter-latency-optimization-20260829-v1/RESULTS.md`；机器可读表：同目录 `QUALITY_DECISION_TABLE.csv`；Phase 0 production commit：`7c1fc05`。
 
