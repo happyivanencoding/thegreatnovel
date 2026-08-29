@@ -286,4 +286,3 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 8. Reader与Authority任一稳定偏control，都不能productionize。Authority全胜只能证明事实安全，不能证明人物和商业价值没有下降。
 9. 当前 compiler若在新领域大量preflight fallback，只能判安全但domain-specific，不能以零漏报宣称泛化。
 10. 下一步优先扩 typed compiler 与deterministic residual blocker repair，不新增LLM classifier。
-

@@ -1,6 +1,6 @@
 # DEEP CONTEXT HANDOFF
 
-日期：2026-08-28
+日期：2026-08-29
 项目：TheGreatNovel / TGN Story MVP
 主要工作目录：`C:\dev\tgn-story-mvp`
 开发分支：`principal_dev_new_sys`
@@ -17,7 +17,7 @@
 
 1. 这个项目真正想达到的读者体验与产品目标；
 2. 经过长期纠偏形成的判断模型：为什么某种方案对，为什么一个表面相似的方案仍然错；
-3. 截至 2026-08-28 的已验证结论、当前实现、并行工作状态与下一步实验。
+3. 截至 2026-08-29 的已验证结论、当前实现、并行工作状态与下一步实验。
 
 使用方式：
 
@@ -1994,6 +1994,7 @@ Forge 随后加入 `Authority-Compilation Trace` 与 `Initial Scale Position-onl
 30. 新世界必须 protagonist-blind 到 retrieval 层；惊喜留到 `Effective World × Current Character` 的 Story Refresh 才发生。
 31. 多世界 `instance` Local World 可以高频进入/退场，Human Development 是更慢时钟；不要把不同长期时钟机械绑定。
 32. 当前下一自然研究方向：`Choice → Route-specific Opportunity → Different Advantage Tree`、Visible Desire Horizon / Dominant Commercial Engine、Reward Lifecycle / Fantasy Heartbeat，以及“真实人物长期改变”Case 的 Human Development A/B；继续冻结上游、近单变量、Human Invariance 与 AGGRESSIVE/保守作者选择协议。
+33. Authority Separation 保护真实独立性，Premise Aperture 扩大冻结前搜索，Premise Compiler 只验证大胆候选能否被这些 Authority 精确实现；三者职责不同。大胆度看一个完整货架承诺与 Changed Verbs，不看 Agent 数量、术语数量或机制表长度；可编译性也不能替作者决定商业强度。
 
 ---
 
