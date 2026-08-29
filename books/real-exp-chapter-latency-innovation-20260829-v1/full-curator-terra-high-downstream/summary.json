@@ -1,0 +1,90 @@
+[
+  {
+    "chapter": 2,
+    "variant": "luna_high",
+    "curator_wall_seconds": 118.466,
+    "primary_wall_seconds": 44.412,
+    "reviser_wall_seconds": 105.436,
+    "total_seconds": 268.314,
+    "curator_chars": 2323,
+    "primary_chars": 2056,
+    "final_chars": 1914
+  },
+  {
+    "chapter": 2,
+    "variant": "terra_high",
+    "curator_wall_seconds": 54.085,
+    "primary_wall_seconds": 45.535,
+    "reviser_wall_seconds": 107.932,
+    "total_seconds": 207.552,
+    "curator_chars": 998,
+    "primary_chars": 2421,
+    "final_chars": 2321
+  },
+  {
+    "chapter": 10,
+    "variant": "luna_high",
+    "curator_wall_seconds": 165.214,
+    "primary_wall_seconds": 72.991,
+    "reviser_wall_seconds": 134.404,
+    "total_seconds": 372.609,
+    "curator_chars": 2804,
+    "primary_chars": 2890,
+    "final_chars": 2528
+  },
+  {
+    "chapter": 10,
+    "variant": "terra_high",
+    "curator_wall_seconds": 48.099,
+    "primary_wall_seconds": 55.852,
+    "reviser_wall_seconds": 156.861,
+    "total_seconds": 260.812,
+    "curator_chars": 1295,
+    "primary_chars": 3136,
+    "final_chars": 3028
+  },
+  {
+    "chapter": 14,
+    "variant": "luna_high",
+    "curator_wall_seconds": 71.418,
+    "primary_wall_seconds": 73.658,
+    "reviser_wall_seconds": 141.236,
+    "total_seconds": 286.312,
+    "curator_chars": 2278,
+    "primary_chars": 3518,
+    "final_chars": 3459
+  },
+  {
+    "chapter": 14,
+    "variant": "terra_high",
+    "curator_wall_seconds": 32.964,
+    "primary_wall_seconds": 77.203,
+    "reviser_wall_seconds": 154.283,
+    "total_seconds": 264.45,
+    "curator_chars": 1485,
+    "primary_chars": 4318,
+    "final_chars": 3949
+  },
+  {
+    "chapter": 19,
+    "variant": "luna_high",
+    "curator_wall_seconds": 90.809,
+    "primary_wall_seconds": 74.542,
+    "reviser_wall_seconds": 168.218,
+    "total_seconds": 333.569,
+    "curator_chars": 2417,
+    "primary_chars": 4220,
+    "final_chars": 3982
+  },
+  {
+    "chapter": 19,
+    "variant": "terra_high",
+    "curator_wall_seconds": 35.555,
+    "primary_wall_seconds": 62.098,
+    "reviser_wall_seconds": 90.955,
+    "total_seconds": 188.608,
+    "curator_chars": 1492,
+    "primary_chars": 3224,
+    "final_chars": 3136
+  }
+]

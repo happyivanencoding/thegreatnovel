@@ -1,0 +1,197 @@
+# RANGE INVARIANTS
+
+## Book / Fantasy
+
+1. 顾停舟能分出一个真实、可移动、可与环境交互的第二身体；分身只能携带本体会的一种超凡本事，不能成为完整复制体。
+2. 核心快感是两个真实身体同时占据两个值得承担的位置：一个承受正面局势，另一个从侧面改变结果。
+3. 每次成长必须扩大顾停舟真正能做的事，同时保留“分身只能携带一种本事”的永久边界。
+4. Power、财富、身份与生活自由必须形成具体占有或可使用收益，不能只停在资格、解释或他人认可。
+5. 九垂原的十二日地潮持续改变潮路、房屋、贸易、迁徙、粮水与战争窗口。
+6. 普通人的潮灯、固定屋梁、潮车、粮窖与商队规则，必须作为真实生存基础存在。
+7. 入潮、成炉、照域、镇海是不同力量尺度；比较只在改变判断或重新定价时出现。
+8. 商路、账目、契约、矿脉、粮道与水路必须通过责任、利益和选择制造压力，不能退化为流程职业。
+9. 冲突由真实利益差异推动：阮青蜃争矿利与控制权，乌合争水源与迁徙窗口，顾沉戈保粮道，旧关守将保居民撤离。
+10. Public Proof 三路分别落到：现场实际结果、懂行者可复核的尺度比较、契约／身份／收益上的公开重新定价。
+11. 高光结果必须尽快进入生活、身份、关系、所有权或下一次主动行动。
+12. 第一世界的谜团、古器来源与世界根因保持独立悬置，不得用连续升级敌人或幕后真相替代当前物质冲突。
+
+## Human / Relationships
+
+1. 顾停舟想要自己的钱、合法行潮籍、远方见识，以及让母亲过得更自由。
+2. 他不愿永远成为别人商号里“有用但可替换”的人，想亲自判断路线并公开拥有选择结果。
+3. 稳定积累钱和信用、远行获得身份与见识、填补熟人损失、享受生活之间持续竞争。
+4. 面对陌生人先问价格、路线和退路；面对亲近的人可能先答应，再回头计算代价。
+5. 他记录细节不是因为天然追求公平，而是因为讨厌错误影响自己的生活。
+6. 他不轻信口头承诺，却会对熟人的承诺过度负责；关键标准是真实损失是否被说清楚。
+7. 母亲相信他的聪明，却警惕他高估承受损失的能力；她的拒绝必须具体，不替他用“家里需要”取消个人欲望。
+8. 少东家既是旧友也是上级，确实给过机会，也习惯把麻烦交给顾停舟；关系不能压扁成单纯利用或单纯情谊。
+9. 乌合优先保护族人的水与迁徙窗口，不接受廉价善意；信任建立在真实损失、明确边界与按价互惠上。
+10. 唐绾以作品、风险、所有权和实测价值与顾停舟合作，不是师徒收编，也不替他决定古器用途。
+11. 阮青蜃以价格、合同、债契和选择空间诱惑顾停舟；他的威胁必须伴随真实的利益条件。
+12. 顾停舟的关系弧是从替别人承担模糊损失，转向公开定价、主动选择并承受自己选择的后果，而非变成无私强者。
+
+## Prose / Anti-Regression
+
+1. 使用贴近顾停舟的第三人称有限视角，不提前讲完整世界历史。
+2. 每场优先落在“具体问题—失败后果—必要坐标—行动—可见结果—重新估价或新选择”。
+3. 先写谁在什么地方做什么，再写潮压、声响、距离、位置与损坏。
+4. 借身通过位置差和选择差呈现，不写成视觉特效或重复的双面夹击。
+5. 抽象解释必须落到人物当场失去或得到的东西上。
+6. 账目、契约和器物只在改变责任、利益、所有权或选择时出现。
+7. 动作和结果成立后，只保留一次最相关的懂行比较，不重复验证同一结论。
+8. 对话必须改变价格、边界、合作、敌意、发言资格或行动，不承担百科说明任务。
+9. 高光后立即结算具体收益、代价或下一次主动选择，保留顾停舟爱钱、爱漂亮器物、想享受生活的价格感。
+10. 防止三类退化：职业流程挤掉欲望，连续升级挤掉物质冲突，解释和重复证明挤掉现场结果。
+
+## Global Unknown / Do Not Infer
+
+1. Future 10 只是计划，不是已发生的 Canon；不得提前写成已获得、已出场、已胜负或已改变的事实。
+2. 不得补写十二日周期的根因。
+3. 不得补写倒悬峡深处撞击石壁的原因。
+4. 不得补写古代潮器来源。
+5. 不得补写黑潮海异物来源。
+6. 不得把分身推断为完整复制体、无限续航或能同时携带多种本事。
+7. 不得把人物的情绪、好感、敌意、信任或关系换位推断成已经完成的关系事实。
+8. 不得把计划中的所有权、收益、责任结算、战果或生活兑现提前当作当前结果。
+
+# CHAPTER STATIC MAP
+
+## 第1章
+
+Book/Human Focus: 地潮周期与普通人的生存依赖；顾停舟对具体损失、退路和个人收益的敏感；第二身体的真实双位置价值  
+Prose Focus: 从具体危险进入；用身体、位置和可见后果证明借身  
+Scene Skill Shortlist: survival_endurance, horror_anomaly, combat, breakthrough_advancement  
+Do Not Infer: 分身是完整复制体；借身的来源与更高阶上限；未来身份和收益
+
+## 第2章
+
+Book/Human Focus: 第一笔可占有的个人收益；账目如何指出人为选择；他人因实际结果重新估价顾停舟  
+Prose Focus: 让结果进入钱、记录与社会价格；避免重复解释已经成立的证明  
+Scene Skill Shortlist: resource_economy, showcase_evaluation, social_bargain_decision  
+Do Not Infer: 收益会自动持续增长；他人重新估价等于关系彻底改变
+
+## 第3章
+
+Book/Human Focus: 收益如何进入下一次独立选择；稳定积累、远行、熟人请求与生活享受的冲突；分身单一本事边界  
+Prose Focus: 选择必须关闭一条机会并打开另一条实际路径；保留顾停舟先答应亲近之人的倾向  
+Scene Skill Shortlist: resource_economy, social_bargain_decision, relationship, training_learning  
+Do Not Infer: 顾停舟已经摆脱商号；任何未来路线、身份或能力突破已完成
+
+## 第4章
+
+Book/Human Focus: 行潮籍作为合法持有潮器和独立承担潮路的身份入口；资格如何转成行动权；个人资本与自由的关系  
+Prose Focus: 用公开门槛、具体权限和第一项可执行行动呈现身份价值  
+Scene Skill Shortlist: trial_challenge, social_bargain_decision, showcase_evaluation, resource_economy  
+Do Not Infer: 行潮籍的最终取得、全部权限或长期待遇；资格等于实力全面提升
+
+## 第5章
+
+Book/Human Focus: 路线记录与实测价值；顾停舟对损耗、路线和退路的主动判断；商号利益与个人价值的冲突  
+Prose Focus: 让路线或账目改变现实选择；不要把记录写成静态职业操作  
+Scene Skill Shortlist: investigation, exploration, resource_economy, social_bargain_decision  
+Do Not Infer: 实测记录已经成为正式契约；所有商号或权力方都承认其价值
+
+## 第6章
+
+Book/Human Focus: 少东家请求触发的旧情与主从边界；顾停舟对“机会”和“麻烦转嫁”的同时判断；具体报酬与损失边界  
+Prose Focus: 对话必须改变合作条件或责任归属；保留迟疑，不把关系简化成利用  
+Scene Skill Shortlist: relationship, social_bargain_decision, resource_economy  
+Do Not Infer: 少东家已经成为纯粹敌人或平等伙伴；旧关系已经完成终结
+
+## 第7章
+
+Book/Human Focus: 个人资本、合法身份与矿路实测价值之间的连接；顾停舟从替人判断转向争取自己的行动权  
+Prose Focus: 把契约或证明写成能改变下一步行动的工具；收益必须具备可占有性  
+Scene Skill Shortlist: trial_challenge, investigation, social_bargain_decision, resource_economy, showcase_evaluation  
+Do Not Infer: 矿权归属、尾款结算或任何长期合作已确定
+
+## 第8章
+
+Book/Human Focus: 砺骨部的水源与迁徙窗口；平原商路、粮仓和水路的真实冲突；乌合不接受廉价善意  
+Prose Focus: 先呈现谁的路线会压到谁的资源，再写谈判或行动；避免善恶二分  
+Scene Skill Shortlist: social_bargain_decision, relationship, exploration, survival_endurance, resource_economy  
+Do Not Infer: 乌合已经信任顾停舟；三方利益已经合并；迁徙窗口已经兑现
+
+## 第9章
+
+Book/Human Focus: 倒悬峡作为改写行动地图的未知空间；低潮、向天空流动的河水、倒置石林与潮兽边界；顾停舟对风险和退路的判断  
+Prose Focus: 以可观察异常改变路线和行动；维持未知的具体边界  
+Scene Skill Shortlist: exploration, horror_anomaly, survival_endurance, investigation, chase_escape  
+Do Not Infer: 倒悬峡深处撞击石壁的原因；十二日周期根因；古器来源
+
+## 第10章
+
+Book/Human Focus: 回潮楔的可控制占有或使用价值；借身与古器形成的双位置因果；收益、裂痕、尾款或矿权风险之间的价格感  
+Prose Focus: 让第一次复合证明服务于具体结果；保留古器边界与使用成本，不写成万能武器  
+Scene Skill Shortlist: hunt_acquisition, combat, showcase_evaluation, resource_economy, breakthrough_advancement  
+Do Not Infer: 回潮楔的无限重复使用；其完整来源、终局能力或未来修复结果；计划中的损失已经抵消收益
+
+## 第11章
+
+Book/Human Focus: 救援责任与古器持有权的公开争议；获救者、前哨和撤离人员的证言价值；乌合的按价互惠边界  
+Prose Focus: 将战斗结果转为责任、价格与行动权；证言只改变必要的公开范围  
+Scene Skill Shortlist: social_bargain_decision, showcase_evaluation, relationship, resource_economy, identity_reveal  
+Do Not Infer: 契约争议已经彻底解决；任何一方已经永久失去后续行动能力；唐绾的后续判断已兑现
+
+## 第12章
+
+Book/Human Focus: 追索如何针对分身的单一本事与稳定目标；成炉力量的持续承载边界；顾停舟为保住可携带收益承担的身体代价  
+Prose Focus: 通过拦截目标、位置变化和续航压力呈现反制；不把分身写成完整成炉身体  
+Scene Skill Shortlist: chase_escape, combat, survival_endurance, training_learning  
+Do Not Infer: 顾停舟可以无限持续成炉；阮青蜃掌握全部借身机制；护送结果超出当章正式结算
+
+## 第13章
+
+Book/Human Focus: 回潮楔修复的实际使用价值；顾停舟支付费用并保留所有权；唐绾以作品和记录换取独立价值  
+Prose Focus: 用中间态、不可逆选择和成果证明呈现修复；明确能力恢复与裂痕上限  
+Scene Skill Shortlist: crafting_creation, resource_economy, relationship, recovery_restoration  
+Do Not Infer: 修复后可以无限重复使用；唐绾接管古器或替顾停舟决定用途；古器来源已解释
+
+## 第14章
+
+Book/Human Focus: 一次真实改向如何完成公共证明与重新定价；买断诱惑和独立合作条件；顾停舟拒绝把核心收益换成债务减免  
+Prose Focus: 一次展示加一次懂行比较即可；让价格、所有权和合作关系落地  
+Scene Skill Shortlist: showcase_evaluation, social_bargain_decision, relationship, resource_economy  
+Do Not Infer: 顾停舟已经完成全部财富自由；少东家与他的旧情或利益已完全消失；阮青蜃已失去竞争资格
+
+## 第15章
+
+Book/Human Focus: 粮道、新潮井、居民撤离与砺骨部迁徙窗口的不可调和选择；顾停舟作为独立决策者；责任必须分别落到各方  
+Prose Focus: 先明确主目标与可牺牲区域，再写分责；不使用“共同利益”抹平冲突  
+Scene Skill Shortlist: social_bargain_decision, relationship, resource_economy, survival_endurance  
+Do Not Infer: 三方已经形成稳定联盟；顾停舟接受军府职位；外层损失已经发生
+
+## 第16章
+
+Book/Human Focus: 借身与回潮楔首次用于改变公共资源和迁徙路线；保住粮道与新井的具体收益；牺牲区域的价格  
+Prose Focus: 用潮势方向、节点位置和实际损坏呈现力量；不写成救下所有人的万能操作  
+Scene Skill Shortlist: combat, survival_endurance, resource_economy, exploration, showcase_evaluation  
+Do Not Infer: 回潮楔已经恢复无限使用；旧关外层之外的全部区域都已安全；照域潮谱已被取得
+
+## 第17章
+
+Book/Human Focus: 照域潮谱的可控制占有；顾停舟在风险窗口中主动承担取得代价；照域相对成炉的实际行动尺度  
+Prose Focus: 通过展开范围、潮场边界和首次新行动证明突破；只做一次必要比较  
+Scene Skill Shortlist: hunt_acquisition, breakthrough_advancement, exploration, showcase_evaluation  
+Do Not Infer: 照域等于镇海；潮谱解释了十二日周期或古器来源；阮青蜃矿队的最终命运
+
+## 第18章
+
+Book/Human Focus: 居民、粮道、砺骨部与矿队的优先级冲突；顾停舟主动选择收益结构和牺牲边界；公开见证改变矿利与水路归属  
+Prose Focus: 让放弃、交换或保留都对应明确对象与后果；幸存者和各方见证必须改变现实价格  
+Scene Skill Shortlist: social_bargain_decision, relationship, resource_economy, sacrifice_convergence, showcase_evaluation  
+Do Not Infer: 阮青蜃失去全部行动能力；顾停舟已经放弃所有矿利；所有旧账已经结清
+
+## 第19章
+
+Book/Human Focus: 借身、照域与回潮楔在最高局势中的双位置闭环；顾停舟主动选择保住居民、粮道和新井；镇海层面的力量校准  
+Prose Focus: 胜负取决于正面承载与侧面改向的位置差；战果必须具体结算，不用境界名称替代结果  
+Scene Skill Shortlist: combat, breakthrough_advancement, showcase_evaluation, survival_endurance, resource_economy  
+Do Not Infer: 顾停舟能保住所有残墙或所有区域；回潮楔没有后续裂痕与散压边界；战局外的谜团已被解决
+
+## 第20章
+
+Book/Human Focus: 个人矿利、护粮结算、潮舟与生活自由的可见兑现；少东家、乌合、唐绾、顾沉戈与阮青蜃的关系边界；财富最终进入母亲与远行生活  
+Prose Focus: 用购买、出发、抵达和具体生活选择完成 payoff；不要停在战绩、职位或世界说明  
+Scene Skill Shortlist: resource_economy, relationship, showcase_evaluation, social_bargain_decision  
+Do Not Infer: 第二世界内容；十二日周期根因、黑潮海异物或剩余古器的答案；任何未在正式正文中完成的关系和收益兑现

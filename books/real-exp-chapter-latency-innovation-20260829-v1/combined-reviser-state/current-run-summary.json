@@ -1,0 +1,16 @@
+[
+  {
+    "chapter": 2,
+    "control_reviser_plus_state_seconds": 121.345,
+    "combined_seconds": 163.722,
+    "speedup_percent": -34.92,
+    "schema_complete": true
+  },
+  {
+    "chapter": 3,
+    "control_reviser_plus_state_seconds": 80.527,
+    "combined_seconds": 120.425,
+    "speedup_percent": -49.55,
+    "schema_complete": true
+  }
+]

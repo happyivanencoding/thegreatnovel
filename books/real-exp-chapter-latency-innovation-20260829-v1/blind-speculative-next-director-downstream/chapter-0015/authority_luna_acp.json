@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 58.403,
+  "sessionId": "01a04e43-cfcf-7bd3-a538-0fb3f12e7530",
+  "text": "VERDICT: A  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: 未落实 Frozen Ending：三座新井与粮队同时受到地潮冲击  \nMISSION_FIDELITY: A  \nCANON_WORLD_POWER_HUMAN: A  \nRESULT_STATE_ENDING: A  \nPAYOFF_AND_RELATIONSHIP: A  \nSTORY_VALUE: A  \nREASON: A完整落实了顾停舟拒绝军府职位、主动定下主目标与牺牲边界的核心行动。顾沉戈、守将和砺骨部前哨分别确认守井粮道、撤离居民和保留水路，并承担各自部分。A还明确让顾停舟以契约承运人的退路施压，最终促成三方合作。回潮楔残压未散、顾停舟不再强行使用，也保持了力量边界。随后地潮确实提前涌入外层，同时冲击三座新井、粮队和撤离路线，直接把刚形成的取舍推入实战。B的人物分工和口头约定较清楚，也写出了守将对居民房屋与存粮的具体顾虑。可是B停在第一座井受冲击、粮车偏离撤离通道的瞬间，没有完成三座新井与粮队同时受冲击这一结尾事实。A因此在结果、状态变化、Ending和下一章推进力上均更完整，且具体撤离与路线执行使收益和公共证明真正落地。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 39481,
+      "inputTokens": 12220,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2941,
+      "thoughtTokens": 2588
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 39481,
+          "inputTokens": 12220,
+          "cachedInputTokens": 24320,
+          "outputTokens": 2941,
+          "reasoningOutputTokens": 2588
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 39481,
+              "inputTokens": 12220,
+              "cachedInputTokens": 24320,
+              "outputTokens": 2941,
+              "reasoningOutputTokens": 2588
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+[
+  {
+    "chapter": 2,
+    "authority_curator_seconds": 25.053,
+    "story_curator_seconds": 40.181,
+    "curator_parallel_critical_seconds": 40.181,
+    "primary_seconds": 49.633,
+    "reviser_seconds": 103.921,
+    "control_c_p_r_seconds": 230.143,
+    "treatment_c_p_r_seconds": 193.735,
+    "speedup_percent": 15.82,
+    "merged_curator_chars": 3567,
+    "final_chars": 2634
+  },
+  {
+    "chapter": 3,
+    "authority_curator_seconds": 25.633,
+    "story_curator_seconds": 38.763,
+    "curator_parallel_critical_seconds": 38.763,
+    "primary_seconds": 60.462,
+    "reviser_seconds": 145.192,
+    "control_c_p_r_seconds": 232.063,
+    "treatment_c_p_r_seconds": 244.417,
+    "speedup_percent": -5.32,
+    "merged_curator_chars": 4215,
+    "final_chars": 3633
+  },
+  {
+    "chapter": 10,
+    "authority_curator_seconds": 27.934,
+    "story_curator_seconds": 45.76,
+    "curator_parallel_critical_seconds": 45.76,
+    "primary_seconds": 60.643,
+    "reviser_seconds": 193.424,
+    "control_c_p_r_seconds": 379.274,
+    "treatment_c_p_r_seconds": 299.827,
+    "speedup_percent": 20.95,
+    "merged_curator_chars": 4051,
+    "final_chars": 2439
+  },
+  {
+    "chapter": 14,
+    "authority_curator_seconds": 31.188,
+    "story_curator_seconds": 39.766,
+    "curator_parallel_critical_seconds": 39.766,
+    "primary_seconds": 67.573,
+    "reviser_seconds": 92.107,
+    "control_c_p_r_seconds": 364.526,
+    "treatment_c_p_r_seconds": 199.446,
+    "speedup_percent": 45.29,
+    "merged_curator_chars": 4029,
+    "final_chars": 3661
+  },
+  {
+    "chapter": 19,
+    "authority_curator_seconds": 35.201,
+    "story_curator_seconds": 33.307,
+    "curator_parallel_critical_seconds": 35.201,
+    "primary_seconds": 64.264,
+    "reviser_seconds": 216.993,
+    "control_c_p_r_seconds": 360.644,
+    "treatment_c_p_r_seconds": 316.458,
+    "speedup_percent": 12.25,
+    "merged_curator_chars": 4370,
+    "final_chars": 3519
+  }
+]

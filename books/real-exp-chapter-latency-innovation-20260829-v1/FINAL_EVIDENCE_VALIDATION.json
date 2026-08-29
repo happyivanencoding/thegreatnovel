@@ -1,0 +1,71 @@
+{
+  "report": "RESULTS.md",
+  "decision_table": "DECISION_TABLE.csv",
+  "evidence_index": "EVIDENCE_INDEX.json",
+  "full_pytest": "388 passed",
+  "skill_version": "0.3.11",
+  "skill_package_digest": "sha256:e4306ea15aefec69da466130328bd9e7cf583bda702b81bf90faeb7c43c119eb",
+  "canonless_speculative": {
+    "speed": {
+      "samples": 6,
+      "control_avg_seconds": 355.983,
+      "treatment_avg_seconds": 311.79,
+      "aggregate_speedup_percent": 12.41,
+      "average_seconds_saved": 44.192,
+      "per_sample_speedup_percent": [
+        3.37,
+        21.78,
+        3.17,
+        23.57,
+        19.96,
+        1.09
+      ]
+    },
+    "blind": {
+      "counts": {
+        "reader": {
+          "control": 3,
+          "canonless_downstream": 3
+        },
+        "authority": {
+          "MIXED": 1,
+          "control": 3,
+          "canonless_downstream": 2
+        }
+      },
+      "rows": [
+        {
+          "chapter": 3,
+          "reader": "control",
+          "authority": "MIXED"
+        },
+        {
+          "chapter": 4,
+          "reader": "canonless_downstream",
+          "authority": "control"
+        },
+        {
+          "chapter": 6,
+          "reader": "canonless_downstream",
+          "authority": "canonless_downstream"
+        },
+        {
+          "chapter": 13,
+          "reader": "control",
+          "authority": "canonless_downstream"
+        },
+        {
+          "chapter": 15,
+          "reader": "control",
+          "authority": "control"
+        },
+        {
+          "chapter": 19,
+          "reader": "canonless_downstream",
+          "authority": "control"
+        }
+      ]
+    },
+    "production_decision": "FAIL_DEFAULT"
+  }
+}

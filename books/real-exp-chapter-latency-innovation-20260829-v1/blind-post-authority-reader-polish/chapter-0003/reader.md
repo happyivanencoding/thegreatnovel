@@ -1,0 +1,9 @@
+VERDICT: B  
+CONFIDENCE: medium  
+NATURALNESS: B  
+CHARACTER_IMMEDIACY: B  
+ANTI_AI_EXPLANATION: B  
+CONTINUITY: TIE  
+HARD_PROBLEM_A: 无  
+HARD_PROBLEM_B: 无  
+REASON: A新增句直接替读者概括了少东家的情绪成分，略有旁白替人物下判断的痕迹。B让“压低声音”、后文劝说以及两人的旧账自行显出关系，读感更贴现场。删去这句并未损失必要信息，因为顾停舟紧接着的回忆已充分交代两人的旧日纠葛。B也更克制，少一点“恼火、熟悉”这种可被动作和语境承载的抽象标签。两版的事件因果、人物动机与后续决裂都完整成立。仅凭这一处小差异，B是微弱胜出，而非质量断层。

@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 83.346,
+  "sessionId": "01a04e2b-b218-7b42-9c29-230ede0a2821",
+  "text": "# PARAGRAPH OPS\n## REPLACE P021-P026\n顾停舟抬手按住胸口。\n\n成炉后的热意从丹田往外铺开，撞上旧伤时像有钝刀在肋下搅了一下。他没有停，脚下的潮息沿粮道压向主水路，把两处交界先稳住。\n\n地面上的黑水忽然一滞。\n\n不是潮退了。粮车下陷的前轮被一股力量硬生生托住，车身不再往西侧软地歪；主水路边翻涌的黑水也被压回低处。牲口还在挣，可车辕稳住了。车夫愣了一下，立刻死死拉紧缰绳。\n\n顾停舟站在主粮道上，肩背绷紧。\n\n## REPLACE P071\n楔子仍是原来的样子，只是握上去时，那股压意乱得厉害，像刚从一场洪流里抽出来的铁。残压还没有散尽，他把回潮楔收回袖中，在残压散尽前不能再次拿它硬压。\n\n## REPLACE P074\n西侧高处，砺骨部前哨的人已经把第一批居民带过塌方口。他们没有停，继续沿着石脊往迁徙水路深处引。高处的路很窄，却已经有了这一轮实际可走的迁徙取水窗口。\n\n## REPLACE P100\n顾停舟踏过断墙和泥水，走进暴露出来的内侧观测点，目光落在仍亮着微光的照域潮谱上。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 46050,
+      "inputTokens": 17791,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3939,
+      "thoughtTokens": 3550
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 46050,
+          "inputTokens": 17791,
+          "cachedInputTokens": 24320,
+          "outputTokens": 3939,
+          "reasoningOutputTokens": 3550
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 46050,
+              "inputTokens": 17791,
+              "cachedInputTokens": 24320,
+              "outputTokens": 3939,
+              "reasoningOutputTokens": 3550
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

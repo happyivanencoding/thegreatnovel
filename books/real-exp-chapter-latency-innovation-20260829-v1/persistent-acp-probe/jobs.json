@@ -1,0 +1,38 @@
+[
+  {
+    "label": "probe-1",
+    "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-chapter-latency-innovation-20260829-v1\\persistent-acp-probe\\probe-1.md",
+    "model": "gpt-5.6-luna",
+    "effort": "low"
+  },
+  {
+    "label": "probe-2",
+    "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-chapter-latency-innovation-20260829-v1\\persistent-acp-probe\\probe-2.md",
+    "model": "gpt-5.6-luna",
+    "effort": "low"
+  },
+  {
+    "label": "probe-3",
+    "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-chapter-latency-innovation-20260829-v1\\persistent-acp-probe\\probe-3.md",
+    "model": "gpt-5.6-luna",
+    "effort": "low"
+  },
+  {
+    "label": "probe-4",
+    "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-chapter-latency-innovation-20260829-v1\\persistent-acp-probe\\probe-4.md",
+    "model": "gpt-5.6-luna",
+    "effort": "low"
+  },
+  {
+    "label": "probe-5",
+    "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-chapter-latency-innovation-20260829-v1\\persistent-acp-probe\\probe-5.md",
+    "model": "gpt-5.6-luna",
+    "effort": "low"
+  },
+  {
+    "label": "probe-6",
+    "prompt_path": "C:\\dev\\tgn-story-mvp\\books\\real-exp-chapter-latency-innovation-20260829-v1\\persistent-acp-probe\\probe-6.md",
+    "model": "gpt-5.6-luna",
+    "effort": "low"
+  }
+]

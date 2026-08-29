@@ -1,0 +1,30 @@
+[
+  {
+    "start": 1,
+    "end": 10,
+    "wall_seconds": 90.263,
+    "prompt_chars": 11676,
+    "kernel_chars": 4689,
+    "usage": {
+      "totalTokens": 41074,
+      "inputTokens": 1081,
+      "cachedReadTokens": 35584,
+      "outputTokens": 4409,
+      "thoughtTokens": 1552
+    }
+  },
+  {
+    "start": 11,
+    "end": 20,
+    "wall_seconds": 126.611,
+    "prompt_chars": 12174,
+    "kernel_chars": 7329,
+    "usage": {
+      "totalTokens": 43645,
+      "inputTokens": 12565,
+      "cachedReadTokens": 24320,
+      "outputTokens": 6760,
+      "thoughtTokens": 2786
+    }
+  }
+]

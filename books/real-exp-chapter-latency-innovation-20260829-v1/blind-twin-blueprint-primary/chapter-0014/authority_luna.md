@@ -1,0 +1,10 @@
+VERDICT: MIXED
+CONFIDENCE: high
+HARD_VIOLATIONS_A: 阮青蜃为男性，却多次写成“她”，后又写回“他的背影”，造成 Named Entity 连续性错误。
+HARD_VIOLATIONS_B: 未实际落地固定报酬、明确货损边界和契约条件；个人矿利只写成“分开算”，未明确公开结算为顾停舟个人份额。
+MISSION_RESULT_ENDING: A
+CANON_POWER_WORLD: TIE
+OWNERSHIP_TIME_NAMED_ENTITY: B
+READER_RELEASE_HUMAN_REALIZATION: A
+PRESERVATION_AND_STORY_VALUE: A
+REASON: A先用唐绾的“二十丈”“三十丈”试压建立比较，再让顾停舟完成“锁”“改向”“放”的唯一一次完整使用。A中“整段潮势都改了方向”并由白须老人确认“普通成炉者只能把重压稳在自身附近”，Public Proof 清楚成立。A明确写出“怎么用，卖不卖，归我自己定”，保住了回潮楔的自主权与主角主动性。A还把合作条件落到“每趟固定八十潮铢，先付一半”、货损和撤回边界，最后以“十二日地潮前”出发，Mission Ending 完整。A的主要硬伤是把阮青蜃写成“她”，与前文男性身份及后文“他的背影”冲突。B的开炉试同样完成了锁潮、改向、释放，也用“改的是整段潮势的去向”完成了力量价值确认。B对关系变化的表达更有人的余味，例如“不是谁替谁卖命，是一笔要讲报酬、讲责任、讲交货期限的生意”。但B只写“报酬固定……都提前说清”，随后直接“合作我接”，没有真正给出价格、责任边界或契约落地。综合硬事实、Payoff、公开结算和结尾推进，A更完整；但因其 Named Entity 硬错，不能判为无条件通过。

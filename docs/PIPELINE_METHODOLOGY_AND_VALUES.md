@@ -716,7 +716,7 @@ Long-form Evolution 不进入每章成本。World Expansion 只在真实 World H
 
 不要为了省一点本地代码，把简单筛选重新交给 LLM；也不要为了“保险”给每个阶段都上最慢模型。
 
-延迟优化也遵守 root-cause layering：先区分正常采用链与废弃重跑/周期 Review/Repair 的真实摊销，再区分 deterministic context、模型推理与排队波动。不能用“最终稿和 Primary 很像”证明 Reviser 冗余，也不能用“中间包标题完整”证明降 effort 后最终正文等价。冻结上游、单变量运行，并把 treatment 接回正常下游；只有最终正文同时通过商业读感与 Authority/Canon 盲评，才允许改变 production 路由。2026-08-29 的 Phase 1–3 已否决 full/patch medium Reviser、Slim/medium Curator 与 Conditional Director 作为质量等价默认：它们可把相关节点缩短约 41%—78%，却分别出现 Agency、Action Object、Payoff/Ending、状态闭合或 Plan Adjustment 漂移。确定性删除已由文本自身证明 stale 的计划可以冻结；模型降档、Patch-only、Slim contract、条件模块和新增 classifier 都继续属于实验假设。
+延迟优化也遵守 root-cause layering：先区分正常采用链与废弃重跑/周期 Review/Repair 的真实摊销，再区分 deterministic context、模型推理与排队波动。不能用“最终稿和 Primary 很像”证明 Reviser 冗余，也不能用“中间包标题完整”证明降 effort 后最终正文等价。冻结上游、单变量运行，并把 treatment 接回正常下游；只有最终正文同时通过商业读感与 Authority/Canon 盲评，才允许改变 production 路由。涉及随机稀疏修订、条件路由、提前编译或跨章投机时，还必须报告**完整下游 critical path**、独立重复运行、跨书泛化、fallback/丢弃成本与 Reader↔Authority 分裂；子节点快不等于整章快，一次胜出不等于稳定 route。替换成另一强模型也服从同一标准：Full Curator 攡为 Terra high 虽在四章完整下游中快26.9%，但 Reader 与 Authority均2:2，不能按平均速度改默认。2026-08-29 的两轮实验已否决 full/patch medium Reviser、Slim/medium Curator、Conditional/Speculative Director、Parallel Pre-Curator、Authority Blueprint、Attention Kernel、Reviser+State 合并、State Terra low、Paragraph Manifest 与常驻 Reader Polish 作为质量等价默认。Paragraph-Delta 是唯一保留的高潜研究：它证明全文重输可被局部操作替代，但两次独立运行只有1/5完全一致，跨书 Reader 与 Authority仍分裂；下一步需要 deterministic Atomic Chapter Obligations，不再增加一个 LLM classifier。确定性删除 stale context 可以冻结；模型、effort、输出协议、并行语义或新 Agent 继续属于实验假设。
 
 ---
 

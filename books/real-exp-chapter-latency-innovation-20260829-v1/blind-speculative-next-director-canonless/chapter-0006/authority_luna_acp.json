@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 76.144,
+  "sessionId": "01a04e60-1908-7de1-8d7f-da9090a6a27a",
+  "text": "VERDICT: A\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 将“能逼退兽群的异常压力”与“撬动外层会改变潮向”合并为已确认的建筑内部机制，越过未知边界\nFINAL_CANON_FIDELITY: A\nPLAN_BUDGET_FIDELITY: A\nRESULT_STATE_ENDING: A\nHUMAN_POWER_WORLD: A\nSTORY_VALUE: B\nREASON: A的“推动事件的人：实测队领队”与当前计划中“矿队首领……强行撬开建筑外层”完全对应。A的“主角行动”保留了顾停舟“无法在不放弃实测的情况下阻止他”的取舍，没有替他提前解决冲突。A的“状态变化”只把“撬动建筑外层会直接改变峡内潮向”确定为现场事实，并明确“尚未获得倒悬峡中的古器或回潮楔”。B却在“直接结果”中写成建筑内部存在“会逼退潮兽、改变峡内潮向的异常压力”，把猎队的有限确认和顾停舟的判断升级成了未经计划授权的机制事实。B的“主角行动”还提前重复了结尾才应发生的“判断被困者的位置与可接近路径”，压缩了章末动作的递进。两版“结尾推动力”都准确保留了“本体向被困者靠近、分身携带一种牵引进入侧室”，没有提前取得古器或结算救援。单看故事价值，B的“从测路人转为必须处理现场分隔与救援选择的当事人”更直接地概括了冲突换挡。由于B存在对异常机制的硬性越界，综合验收仍判A。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 40958,
+      "inputTokens": 26965,
+      "cachedReadTokens": 9984,
+      "outputTokens": 4009,
+      "thoughtTokens": 3578
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 40958,
+          "inputTokens": 26965,
+          "cachedInputTokens": 9984,
+          "outputTokens": 4009,
+          "reasoningOutputTokens": 3578
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 40958,
+              "inputTokens": 26965,
+              "cachedInputTokens": 9984,
+              "outputTokens": 4009,
+              "reasoningOutputTokens": 3578
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 31.15,
+  "sessionId": "01a04e26-a979-78e2-aa66-f9d50d663203",
+  "text": "VERDICT: A\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: “阮青蜃已带着契约主张进入现场”提前完成了计划结尾推动，且违背当前 Canon 中追索者仍在城外的边界\nFINAL_CANON_FIDELITY: A\nPLAN_BUDGET_FIDELITY: A\nRESULT_STATE_ENDING: A\nHUMAN_POWER_WORLD: A\nSTORY_VALUE: A\nREASON: A 完整承接了当前入口、细裂回潮楔、个人资金和反潮记录等 Canon 条件。A 的“顾停舟用个人资金支付修复费用”准确落实了计划中的支付要求，而“保留回潮楔的持有权和使用决定权”落实了唐绾不接管古器的合作边界。A 的直接结果逐字对应“恢复一次完整的‘锁潮—改向—释放’能力”，并保留“必须先散尽残压、不能连续重复使用”的硬限制。A 没有提前执行下一章的公开开炉试，只把它写成“必须在公开场合第一次展示”，符合结尾推动力。B 虽然大体复述了修复结果，但“回潮楔恢复稳定”比计划规定的单次完整能力更宽，容易抹平结构边界。B 又写“阮青蜃已带着契约主张进入现场”，把计划中“将进入现场”的后续压力提前结算，并与当前 Canon 的城外追索状态冲突。B 的“赶在入口关闭前完成修复”也把入口时限与修复结果绑定得过满，压缩了本章应保留的进入百炉会与修复之间的行动空间。故事价值上，A 更明确呈现了顾停舟付出什么、唐绾得到什么以及双方各自保留什么，人物关系和权力边界更可读。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 40111,
+      "inputTokens": 14307,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1484,
+      "thoughtTokens": 1034
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 40111,
+          "inputTokens": 14307,
+          "cachedInputTokens": 24320,
+          "outputTokens": 1484,
+          "reasoningOutputTokens": 1034
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 40111,
+              "inputTokens": 14307,
+              "cachedInputTokens": 24320,
+              "outputTokens": 1484,
+              "reasoningOutputTokens": 1034
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

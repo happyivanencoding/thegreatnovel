@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "low",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 24.72,
+  "sessionId": "01a04e52-42bb-7af0-bb4d-06c3ca170b9a",
+  "text": "# Proposed Active Scene State\n\n地点：远方潮市泊位。  \n在场人物：顾停舟、母亲；潮市船客与商贩。  \n即时伤势：肩背旧伤仍需包扎休养。  \n手中关键物品：防潮木匣、照域潮谱、暂不可承压的回潮楔、潮钱票据余款、战功牌、行潮凭据、船契。  \n当前敌人或追兵：无明确敌人或追兵。  \n当前倒计时：无明确倒计时。  \n下一步直接目标：在远方潮市靠泊，安置母亲并寻找修复回潮楔的途径。  \n当前主动目标：以自己的潮舟带母亲离开旧关，进入远方潮市，寻找新的潮路与生计。\n\n# Proposed Persistent Canon\n\n### Power / Capability\n\n- 照域与回潮楔曾共同改退镇海潮兽，但回潮楔已严重开裂，暂时无法承压。\n- 分身使用“定住”后手腕受伤，恢复情况未明确。\n\n### Active Relationships\n\n- 顾沉戈｜负责旧关撤防、补粮与安置｜并肩协作关系｜为撤离居民和顾停舟承担旧关外层责任｜未来是否再会未定\n- 少东家｜愿按独立合作谈生意｜独立合作关系｜撕毁旧账房契并取消长期债契｜未来合作待定\n- 唐绾｜继续铸潮器，暂时无法修楔｜保持合作可能｜明确表示当前修不了回潮楔｜待其具备修复能力\n- 阮青蜃｜若有争议自行下场争，合作需另谈｜边界明确的潜在合作/竞争关系｜不再以长期债契相压｜后续动向未定\n- 母亲｜随顾停舟离开旧关前往远方潮市｜亲近家人关系｜接受同行并登上潮舟｜共同适应新生活\n\n### Identity / Access\n\n- 顾停舟拥有自己购置的小型潮舟、船契与行潮凭据，可独立出发，不再受旧账房契约束。\n\n### Knowledge / Enemy State\n\n- 旧关外层已正式废弃，居民迁往北侧与粮道内圈。\n- 粮道与三座新井由军府及各方共护。\n- 镇海潮兽与照域潮谱之间的关系仍未确认。\n\n### World State\n\n- 旧关外层不再复建，旧有部分规矩与账目体系随废墟终止。\n- 顾停舟与母亲已乘潮舟抵达一座此前未知的远方潮市。\n\n### Tracked Assets\n\n- 小型潮舟｜顾停舟｜远方潮市泊位｜已购置，可载人和少量行李｜本章以票据换回船契\n- 行潮凭据、船契｜顾停舟｜防潮木匣内｜有效｜本章购船取得\n- 回潮楔｜顾停舟｜潮舟上防潮布包裹于木匣内｜严重开裂，暂不可承压｜唐绾托人送来防潮布\n- 照域潮谱｜顾停舟｜潮舟上木匣内｜持有，作用边界未明｜随顾停舟离开旧关\n\n# Proposed Chapter Summary\n\n旧关外层被正式宣布废弃，居民、新井与粮道转入新的共护安排，顾停舟与少东家、唐绾、阮青蜃分别划清旧账并确定新的合作边界。他用战后所得购置一条小型潮舟，带母亲离开旧关，数日后抵达陌生的远方潮市。\n\n# Proposed Open Promises\n\n- 镇海潮兽为何循照域改开的潮路而来，以及它与照域潮谱的关系。\n- 回潮楔能否修复，以及继续承压的后果。\n- 顾停舟肩背旧伤与分身手腕伤势的恢复情况。\n- 顾停舟能否在远方潮市找到修复回潮楔的人。\n- 远方潮市的潮路、货物、势力与潜在麻烦。\n- 唐绾何时具备修复回潮楔的能力。\n- 少东家与顾停舟的独立潮路合作是否会真正展开。\n- 阮青蜃后续会以合作还是竞争方式介入。\n- 地潮提前涌入的原因、范围与后续推进速度。\n- 第一批粮能否完成旧关承运。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 34721,
+      "inputTokens": 9251,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1150,
+      "thoughtTokens": 80
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 34721,
+          "inputTokens": 9251,
+          "cachedInputTokens": 24320,
+          "outputTokens": 1150,
+          "reasoningOutputTokens": 80
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 34721,
+              "inputTokens": 9251,
+              "cachedInputTokens": 24320,
+              "outputTokens": 1150,
+              "reasoningOutputTokens": 80
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 11.478,
+  "sessionId": "01a04e48-8b8b-7942-846a-9f1fb612f431",
+  "text": "VERDICT: B  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: 无  \nFACT_EQUIVALENCE: YES  \nHUMAN_SCENE_VALUE: B  \nRESULT_STOP: TIE  \nREASON: A 比 B 多出“ 三件事都堵在矿脉这一处 ”一句。该句只是对前文居民、粮道、新井与迁徙窗口冲突的概括，没有新增事实。删除它不改变人物判断、关系、压力来源、Mission、State、Canon、Payoff 或 Ending。前面的三段对白已经具体呈现三方各自的压力与利益，不需要再用旁白重复归纳。B 因此保留了冲突，同时减少了一次结构性总结，人物场景更直接。两版都完整保留顾停舟以尾款换撤离、矿权失效、迁徙窗口兑现和潮兽冲入内侧的结果链。该删除发生在主要行动前，不影响 Result Stop。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 46735,
+      "inputTokens": 21987,
+      "cachedReadTokens": 24320,
+      "outputTokens": 428,
+      "thoughtTokens": 197
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 46735,
+          "inputTokens": 21987,
+          "cachedInputTokens": 24320,
+          "outputTokens": 428,
+          "reasoningOutputTokens": 197
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 46735,
+              "inputTokens": 21987,
+              "cachedInputTokens": 24320,
+              "outputTokens": 428,
+              "reasoningOutputTokens": 197
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

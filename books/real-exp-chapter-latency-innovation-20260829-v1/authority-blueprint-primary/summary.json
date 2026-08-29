@@ -1,0 +1,92 @@
+[
+  {
+    "chapter": 2,
+    "planner_wall_seconds": 39.829,
+    "writer_wall_seconds": 39.59,
+    "control_primary_plus_reviser_seconds": 136.3,
+    "treatment_planner_plus_writer_seconds": 79.419,
+    "speedup_percent": 41.73,
+    "prompt_chars": 16920,
+    "watchlist_chars": 2017,
+    "final_chars": 2172,
+    "writer_usage": {
+      "totalTokens": 44257,
+      "inputTokens": 15951,
+      "cachedReadTokens": 26368,
+      "outputTokens": 1938,
+      "thoughtTokens": 93
+    }
+  },
+  {
+    "chapter": 3,
+    "planner_wall_seconds": 49.934,
+    "writer_wall_seconds": 58.122,
+    "control_primary_plus_reviser_seconds": 94.643,
+    "treatment_planner_plus_writer_seconds": 108.056,
+    "speedup_percent": -14.17,
+    "prompt_chars": 16784,
+    "watchlist_chars": 2105,
+    "final_chars": 2463,
+    "writer_usage": {
+      "totalTokens": 44957,
+      "inputTokens": 356,
+      "cachedReadTokens": 41728,
+      "outputTokens": 2873,
+      "thoughtTokens": 861
+    }
+  },
+  {
+    "chapter": 10,
+    "planner_wall_seconds": 52.494,
+    "writer_wall_seconds": 52.851,
+    "control_primary_plus_reviser_seconds": 240.616,
+    "treatment_planner_plus_writer_seconds": 105.345,
+    "speedup_percent": 56.22,
+    "prompt_chars": 14408,
+    "watchlist_chars": 1756,
+    "final_chars": 2858,
+    "writer_usage": {
+      "totalTokens": 43386,
+      "inputTokens": 14361,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2657,
+      "thoughtTokens": 238
+    }
+  },
+  {
+    "chapter": 14,
+    "planner_wall_seconds": 42.754,
+    "writer_wall_seconds": 73.832,
+    "control_primary_plus_reviser_seconds": 282.348,
+    "treatment_planner_plus_writer_seconds": 116.586,
+    "speedup_percent": 58.71,
+    "prompt_chars": 15156,
+    "watchlist_chars": 2092,
+    "final_chars": 2494,
+    "writer_usage": {
+      "totalTokens": 44689,
+      "inputTokens": 14772,
+      "cachedReadTokens": 26368,
+      "outputTokens": 3549,
+      "thoughtTokens": 1412
+    }
+  },
+  {
+    "chapter": 19,
+    "planner_wall_seconds": 64.434,
+    "writer_wall_seconds": 69.066,
+    "control_primary_plus_reviser_seconds": 157.575,
+    "treatment_planner_plus_writer_seconds": 133.5,
+    "speedup_percent": 15.28,
+    "prompt_chars": 16162,
+    "watchlist_chars": 2147,
+    "final_chars": 3592,
+    "writer_usage": {
+      "totalTokens": 45457,
+      "inputTokens": 15617,
+      "cachedReadTokens": 26368,
+      "outputTokens": 3472,
+      "thoughtTokens": 379
+    }
+  }
+]

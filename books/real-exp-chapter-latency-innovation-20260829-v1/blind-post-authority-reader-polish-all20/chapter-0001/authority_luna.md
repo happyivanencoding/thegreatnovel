@@ -1,0 +1,10 @@
+VERDICT: A  
+CONFIDENCE: high  
+HARD_VIOLATIONS_A: 无  
+HARD_VIOLATIONS_B: 删除“他不怕货损”，削弱并改变顾停舟已冻结的情绪与价值牵引。  
+MISSION_RESULT_ENDING: TIE  
+CANON_POWER_WORLD: TIE  
+OWNERSHIP_TIME_NAMED_ENTITY: TIE  
+READER_RELEASE_HUMAN_REALIZATION: A  
+PRESERVATION_AND_STORY_VALUE: A  
+REASON: 两版在行动者、对象、顺序和直接结果上完全一致，都是顾停舟先要求写清份额，再分出分身同时救人和保车。两版都保留了“一个不少”、约定份额矿车保住、无主杂货损失以及“记你名下”的第一笔潮钱。两版对借身的精确力量和边界也一致，均写明分身“只会定住”，没有扩展为完整复制。两版都明确潮兽来自“深潮矿脉方向”，并保留“为什么迁，不知道”的未知边界。两版的路线记录、侧路追问、少东家重新估价和结尾推动力没有差异。A中的“他不怕货损”不是重复总结，而是明确区分顾停舟能接受真实损失、不能接受人为选择被伪装成天灾的核心人物牵引。B删除后只剩“他怕的是有人先做了选择”，弱化了这组关键对照，使人物情绪事实和本章的社会结算价值不再完整。A因此更好地保留了冻结的人物实现、Payoff和关系重新定价。

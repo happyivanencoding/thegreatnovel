@@ -1,0 +1,115 @@
+[
+  {
+    "chapter": 3,
+    "curator_wall_seconds": 137.42,
+    "spark_wall_seconds": 29.279,
+    "primary_wall_seconds": 39.186,
+    "delta_wall_seconds": 23.736,
+    "control_c_p_full_reviser_seconds": 232.063,
+    "treatment_parallel_c_spark_p_delta_seconds": 200.342,
+    "critical_path_speedup_percent": 13.67,
+    "operation_count": 0,
+    "operations": [],
+    "response_chars": 8,
+    "final_chars": 1982,
+    "usage": {
+      "totalTokens": 42696,
+      "inputTokens": 17334,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1042,
+      "thoughtTokens": 1034
+    }
+  },
+  {
+    "chapter": 10,
+    "curator_wall_seconds": 138.658,
+    "spark_wall_seconds": 35.195,
+    "primary_wall_seconds": 49.281,
+    "delta_wall_seconds": 59.417,
+    "control_c_p_full_reviser_seconds": 379.274,
+    "treatment_parallel_c_spark_p_delta_seconds": 247.356,
+    "critical_path_speedup_percent": 34.78,
+    "operation_count": 4,
+    "operations": [
+      {
+        "kind": "REPLACE",
+        "start": 2,
+        "end": 2,
+        "payload_chars": 42
+      },
+      {
+        "kind": "DELETE",
+        "start": 29,
+        "end": 29,
+        "payload_chars": 0
+      },
+      {
+        "kind": "REPLACE",
+        "start": 42,
+        "end": 44,
+        "payload_chars": 70
+      },
+      {
+        "kind": "DELETE",
+        "start": 84,
+        "end": 85,
+        "payload_chars": 0
+      }
+    ],
+    "response_chars": 204,
+    "final_chars": 2152,
+    "usage": {
+      "totalTokens": 45031,
+      "inputTokens": 17635,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3076,
+      "thoughtTokens": 2937
+    }
+  },
+  {
+    "chapter": 19,
+    "curator_wall_seconds": 203.069,
+    "spark_wall_seconds": 46.503,
+    "primary_wall_seconds": 54.064,
+    "delta_wall_seconds": 137.594,
+    "control_c_p_full_reviser_seconds": 360.644,
+    "treatment_parallel_c_spark_p_delta_seconds": 394.727,
+    "critical_path_speedup_percent": -9.45,
+    "operation_count": 4,
+    "operations": [
+      {
+        "kind": "REPLACE",
+        "start": 6,
+        "end": 8,
+        "payload_chars": 67
+      },
+      {
+        "kind": "REPLACE",
+        "start": 94,
+        "end": 95,
+        "payload_chars": 25
+      },
+      {
+        "kind": "REPLACE",
+        "start": 97,
+        "end": 97,
+        "payload_chars": 73
+      },
+      {
+        "kind": "REPLACE",
+        "start": 112,
+        "end": 113,
+        "payload_chars": 43
+      }
+    ],
+    "response_chars": 309,
+    "final_chars": 3001,
+    "usage": {
+      "totalTokens": 50742,
+      "inputTokens": 19008,
+      "cachedReadTokens": 24320,
+      "outputTokens": 7414,
+      "thoughtTokens": 7184
+    }
+  }
+]

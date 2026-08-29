@@ -1,0 +1,167 @@
+[
+  {
+    "chapter": 1,
+    "control_wall_seconds": 133.801,
+    "treatment_wall_seconds": 155.24,
+    "latency_change_percent": 16.02,
+    "control_chars": 3511,
+    "treatment_chars": 3509,
+    "usage": {
+      "totalTokens": 57814,
+      "inputTokens": 8326,
+      "cachedReadTokens": 41728,
+      "outputTokens": 7760,
+      "thoughtTokens": 4660
+    }
+  },
+  {
+    "chapter": 3,
+    "control_wall_seconds": 55.457,
+    "treatment_wall_seconds": 108.013,
+    "latency_change_percent": 94.77,
+    "control_chars": 1982,
+    "treatment_chars": 1998,
+    "usage": {
+      "totalTokens": 57323,
+      "inputTokens": 10572,
+      "cachedReadTokens": 41728,
+      "outputTokens": 5023,
+      "thoughtTokens": 3300
+    }
+  },
+  {
+    "chapter": 4,
+    "control_wall_seconds": 157.678,
+    "treatment_wall_seconds": 139.28,
+    "latency_change_percent": -11.67,
+    "control_chars": 2252,
+    "treatment_chars": 2300,
+    "usage": {
+      "totalTokens": 60860,
+      "inputTokens": 4517,
+      "cachedReadTokens": 49920,
+      "outputTokens": 6423,
+      "thoughtTokens": 4395
+    }
+  },
+  {
+    "chapter": 5,
+    "control_wall_seconds": 118.165,
+    "treatment_wall_seconds": 160.788,
+    "latency_change_percent": 36.07,
+    "control_chars": 2446,
+    "treatment_chars": 2476,
+    "usage": {
+      "totalTokens": 72408,
+      "inputTokens": 3685,
+      "cachedReadTokens": 65280,
+      "outputTokens": 3443,
+      "thoughtTokens": 1238
+    }
+  },
+  {
+    "chapter": 6,
+    "control_wall_seconds": 132.267,
+    "treatment_wall_seconds": 61.309,
+    "latency_change_percent": -53.65,
+    "control_chars": 2164,
+    "treatment_chars": 2265,
+    "usage": {
+      "totalTokens": 44269,
+      "inputTokens": 31158,
+      "cachedReadTokens": 9984,
+      "outputTokens": 3127,
+      "thoughtTokens": 1153
+    }
+  },
+  {
+    "chapter": 10,
+    "control_wall_seconds": 191.335,
+    "treatment_wall_seconds": 136.182,
+    "latency_change_percent": -28.83,
+    "control_chars": 1983,
+    "treatment_chars": 2145,
+    "usage": {
+      "totalTokens": 57745,
+      "inputTokens": 4863,
+      "cachedReadTokens": 49920,
+      "outputTokens": 2962,
+      "thoughtTokens": 1013
+    }
+  },
+  {
+    "chapter": 11,
+    "control_wall_seconds": 142.36,
+    "treatment_wall_seconds": 108.204,
+    "latency_change_percent": -23.99,
+    "control_chars": 2665,
+    "treatment_chars": 2992,
+    "usage": {
+      "totalTokens": 49210,
+      "inputTokens": 33464,
+      "cachedReadTokens": 9984,
+      "outputTokens": 5762,
+      "thoughtTokens": 3268
+    }
+  },
+  {
+    "chapter": 12,
+    "control_wall_seconds": 127.172,
+    "treatment_wall_seconds": 160.594,
+    "latency_change_percent": 26.28,
+    "control_chars": 2013,
+    "treatment_chars": 1977,
+    "usage": {
+      "totalTokens": 62294,
+      "inputTokens": 4681,
+      "cachedReadTokens": 49920,
+      "outputTokens": 7693,
+      "thoughtTokens": 5939
+    }
+  },
+  {
+    "chapter": 16,
+    "control_wall_seconds": 120.371,
+    "treatment_wall_seconds": 116.316,
+    "latency_change_percent": -3.37,
+    "control_chars": 2850,
+    "treatment_chars": 2799,
+    "usage": {
+      "totalTokens": 57102,
+      "inputTokens": 8827,
+      "cachedReadTokens": 42752,
+      "outputTokens": 5523,
+      "thoughtTokens": 2954
+    }
+  },
+  {
+    "chapter": 17,
+    "control_wall_seconds": 143.927,
+    "treatment_wall_seconds": 151.935,
+    "latency_change_percent": 5.56,
+    "control_chars": 2443,
+    "treatment_chars": 2526,
+    "usage": {
+      "totalTokens": 58662,
+      "inputTokens": 3950,
+      "cachedReadTokens": 51968,
+      "outputTokens": 2744,
+      "thoughtTokens": 381
+    }
+  },
+  {
+    "chapter": 18,
+    "control_wall_seconds": 85.263,
+    "treatment_wall_seconds": 120.368,
+    "latency_change_percent": 41.17,
+    "control_chars": 2773,
+    "treatment_chars": 2817,
+    "usage": {
+      "totalTokens": 56064,
+      "inputTokens": 6534,
+      "cachedReadTokens": 43776,
+      "outputTokens": 5754,
+      "thoughtTokens": 3307
+    }
+  }
+]

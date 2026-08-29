@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 48.73,
+  "sessionId": "01a04e74-025d-7390-ae9f-9379240c071a",
+  "text": "VERDICT: A\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 新增“前一笔我自己留下的潮钱”，改变 Canon 已确立的预付款资源来源与资产结构\nMISSION_FIDELITY: A\nCANON_WORLD_POWER_HUMAN: A\nRESULT_STATE_ENDING: A\nPAYOFF_AND_RELATIONSHIP: A\nSTORY_VALUE: B\nREASON: A准确落实了顾停舟带预付款、行潮牌与兼容潮髓回家，并由母亲只取屋顶、米药等眼下所需。B把钱拆成“自己留下的潮钱”和“新裂槽实测预付款”，与 Canon 中已交付的一袋矿路实测预付款不一致。两版都保留了母亲不替他决定远行、只收必要资源的 Human Authority。A明确拒绝把个人名义、路线风险和契约重新交回商号，同时承认少东家过去的帮助与两人未断的旧情。B也完成拒绝，但“路线结果先记你名下”及商号全面担险使这份挂名退路比 Frozen Mission 要求的商号支配风险更复杂。A只把队伍推进到砺骨部水路边缘，没有进入裂槽或提前完成入口核查。B已经与砺骨部守岸者展开现场交涉，并展示裂槽入口，虽未越界，却提前消耗了下一章的边界处理空间。A的 Direct Result、State Change、Ending 与 Handoff 均逐项对齐。B的水路守则和“先讲清楚再过”的现场张力更强，因此单论即时故事价值略胜，但不能抵消其资源事实偏移与推进过量。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 37660,
+      "inputTokens": 10862,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2478,
+      "thoughtTokens": 2070
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 37660,
+          "inputTokens": 10862,
+          "cachedInputTokens": 24320,
+          "outputTokens": 2478,
+          "reasoningOutputTokens": 2070
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 37660,
+              "inputTokens": 10862,
+              "cachedInputTokens": 24320,
+              "outputTokens": 2478,
+              "reasoningOutputTokens": 2070
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

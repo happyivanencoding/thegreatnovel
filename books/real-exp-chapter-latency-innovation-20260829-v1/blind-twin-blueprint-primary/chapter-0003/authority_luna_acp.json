@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 110.73,
+  "sessionId": "01a04e00-ccb1-7c41-820c-50274de7651e",
+  "text": "VERDICT: A  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: “也曾在商队断粮的时候分过半张干饼”是 Frozen Human / Canon 未授权的具体往事  \nMISSION_RESULT_ENDING: A  \nCANON_POWER_WORLD: A  \nOWNERSHIP_TIME_NAMED_ENTITY: TIE  \nREADER_RELEASE_HUMAN_REALIZATION: A  \nPRESERVATION_AND_STORY_VALUE: A  \nREASON: A、B都落实了事实副本落档、旧路线废止、新裂槽另列，以及加车和杂货损失不能被抹平。A用“想改校路台的记录，不行”直接完成了官方权力变化，B虽有“印泥落稳”，但公共证明感略弱。A中顾停舟明确说“以后接什么活，挂谁的名字，谁赔付，都得写清楚”，主角主动性清楚。B也通过“案子写谁的名字”“预付款记谁”完成了个人所有权确认，因而该项与时间、实体登记表现相当。两版都正确区分行潮籍与力量，A说“不是说你已经成炉”，B说“不是保你穿荒地无事”，没有把资格写成力量突破。B新增“曾在商队断粮的时候分过半张干饼”，超出了已批准的人物事实边界。A通过“撞上商号的车队，别指望我让路”明确落出少东家从雇主转为利益冲突同行者，B主要停留在提醒和担忧。B的“越是想要，越不能糊里糊涂把名字交出去”有人物欲望，但其契约解释和末尾“收拾该带的东西，养一养还发虚的腿”略显任务清单化。A以“已经签下名字、必须亲自去核的一条路”收束，既兑现钱、身份、潮髓和委托，也保留下一次低潮前的压力而未提前进入裂槽。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 51261,
+      "inputTokens": 21128,
+      "cachedReadTokens": 24320,
+      "outputTokens": 5813,
+      "thoughtTokens": 5333
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 51261,
+          "inputTokens": 21128,
+          "cachedInputTokens": 24320,
+          "outputTokens": 5813,
+          "reasoningOutputTokens": 5333
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 51261,
+              "inputTokens": 21128,
+              "cachedInputTokens": 24320,
+              "outputTokens": 5813,
+              "reasoningOutputTokens": 5333
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

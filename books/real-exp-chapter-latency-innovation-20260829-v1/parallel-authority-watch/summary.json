@@ -1,0 +1,142 @@
+[
+  {
+    "chapter": 2,
+    "primary_wall_seconds": 41.16,
+    "control_reviser_wall_seconds": 95.14,
+    "planner_wall_seconds": 39.829,
+    "finalizer_wall_seconds": 57.746,
+    "control_primary_plus_reviser_seconds": 136.3,
+    "treatment_parallel_critical_seconds": 98.906,
+    "critical_path_speedup_percent": 27.44,
+    "planner_prompt_chars": 4775,
+    "watchlist_chars": 2017,
+    "finalizer_prompt_chars": 8380,
+    "final_chars": 2198,
+    "planner_usage": {
+      "totalTokens": 33446,
+      "inputTokens": 7167,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1959,
+      "thoughtTokens": 516
+    },
+    "finalizer_usage": {
+      "totalTokens": 39643,
+      "inputTokens": 10290,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2985,
+      "thoughtTokens": 1132
+    }
+  },
+  {
+    "chapter": 3,
+    "primary_wall_seconds": 39.186,
+    "control_reviser_wall_seconds": 55.457,
+    "planner_wall_seconds": 49.934,
+    "finalizer_wall_seconds": 40.45,
+    "control_primary_plus_reviser_seconds": 94.643,
+    "treatment_parallel_critical_seconds": 90.384,
+    "critical_path_speedup_percent": 4.5,
+    "planner_prompt_chars": 5494,
+    "watchlist_chars": 2105,
+    "finalizer_prompt_chars": 8364,
+    "final_chars": 1878,
+    "planner_usage": {
+      "totalTokens": 34433,
+      "inputTokens": 7627,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2486,
+      "thoughtTokens": 922
+    },
+    "finalizer_usage": {
+      "totalTokens": 38631,
+      "inputTokens": 10251,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2012,
+      "thoughtTokens": 471
+    }
+  },
+  {
+    "chapter": 10,
+    "primary_wall_seconds": 49.281,
+    "control_reviser_wall_seconds": 191.335,
+    "planner_wall_seconds": 52.494,
+    "finalizer_wall_seconds": 41.09,
+    "control_primary_plus_reviser_seconds": 240.616,
+    "treatment_parallel_critical_seconds": 93.584,
+    "critical_path_speedup_percent": 61.11,
+    "planner_prompt_chars": 5363,
+    "watchlist_chars": 1756,
+    "finalizer_prompt_chars": 8259,
+    "final_chars": 1798,
+    "planner_usage": {
+      "totalTokens": 34659,
+      "inputTokens": 7686,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2653,
+      "thoughtTokens": 1322
+    },
+    "finalizer_usage": {
+      "totalTokens": 38890,
+      "inputTokens": 10465,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2057,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 14,
+    "primary_wall_seconds": 71.508,
+    "control_reviser_wall_seconds": 210.84,
+    "planner_wall_seconds": 42.754,
+    "finalizer_wall_seconds": 57.168,
+    "control_primary_plus_reviser_seconds": 282.348,
+    "treatment_parallel_critical_seconds": 128.676,
+    "critical_path_speedup_percent": 54.43,
+    "planner_prompt_chars": 5087,
+    "watchlist_chars": 2092,
+    "finalizer_prompt_chars": 10199,
+    "final_chars": 2911,
+    "planner_usage": {
+      "totalTokens": 33819,
+      "inputTokens": 7395,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2104,
+      "thoughtTokens": 516
+    },
+    "finalizer_usage": {
+      "totalTokens": 41372,
+      "inputTokens": 12063,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2941,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 19,
+    "primary_wall_seconds": 54.064,
+    "control_reviser_wall_seconds": 103.511,
+    "planner_wall_seconds": 64.434,
+    "finalizer_wall_seconds": 98.083,
+    "control_primary_plus_reviser_seconds": 157.575,
+    "treatment_parallel_critical_seconds": 162.517,
+    "critical_path_speedup_percent": -3.14,
+    "planner_prompt_chars": 5169,
+    "watchlist_chars": 2147,
+    "finalizer_prompt_chars": 9466,
+    "final_chars": 2959,
+    "planner_usage": {
+      "totalTokens": 35175,
+      "inputTokens": 7537,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3318,
+      "thoughtTokens": 1673
+    },
+    "finalizer_usage": {
+      "totalTokens": 53691,
+      "inputTokens": 11413,
+      "cachedReadTokens": 37632,
+      "outputTokens": 4646,
+      "thoughtTokens": 2043
+    }
+  }
+]

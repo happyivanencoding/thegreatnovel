@@ -1715,6 +1715,32 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 上述延迟审计方法已进入 **`tgn-system-steward 0.3.10`**：必须分开 adopted node wall、真实批次 elapsed、上游摊销与 execution/queue；高字符相似度不证明节点冗余；模型、effort、Slim/Patch/conditional contract 等语义路线变化必须接回正常下游并审最终正文。AgentDock package validate 通过并已 install/activate；Luna-high bounded read-only smoke 正确判定“全局 Curator medium”与“按相似度跳过 Reviser”均为 `FAIL`，只允许冻结 stale Long Block / raw GBrain fail-closed 等确定性根修。当前全项目回归 **373/373 PASS**。
 
 
+### 14.10 Chapter Runtime Latency Innovation Round（2026-08-29）
+
+在 Phase 0–3 之后，进一步测试了不直接全局降档的创新路线：Parallel Pre-Curator、Authority Blueprint、并行 Authority Watch + medium Reviser、Paragraph-Delta Reviser、Commercial Spark、Speculative Next Director、Ten-Chapter Attention Kernel、Reviser+State 合并、严格删除式 Reader Polish 与持久 ACP process。所有有语义影响的 Treatment 都接回正式 downstream，并同时做 Reader + Authority blind；Paragraph-Delta 另做独立 repeat 与跨书复验。
+
+最终 production 路由仍不变。关键结论：
+
+- `Parallel Pre-Curator` 关键路径约快21.7%，Reader Treatment 3:2，但 Authority control 4:1；Mission 前冻结注意力会产生无法完全 rebind 的偏差。
+- `Authority Blueprint → Primary` 约快40.4%，Authority Treatment 4/5，Reader 仅1/5；“事实更稳、人物/爽感更薄”不是可接受交换。
+- `Parallel Watch + Luna-medium Reviser` 约快38.0%，同样 Authority 4/5、Reader 1/5，不能上线。
+- `Paragraph-Delta Reviser` 在同书约快51.9%，首次 Authority 4/5偏 Delta；但 repeat 只1/5最终正文完全一致，repeat blind 回到 Reader 2:2:1、Authority 2:2:1。跨书仍约快47.7%，Reader 4:1偏 Delta，Authority却是 control 2 / mixed 3。它是唯一高潜语义研究方向，但当前不 productionize。
+- `Spark + Delta` 只约快13.3%，并会把商业强度越权写成稳定境界、无损胜利或额外事实。
+- `Speculative Next Director` 的 State+Director 子路径约快45.4%，完整 `State→Director→Curator→Primary→Reviser` 只快12.1%，Reader 3:3、Authority control 4 / treatment 1 / mixed 1；不能默认投机。
+- 去掉旧 Canon、只依赖上一章正文尾部的复验，完整关键路径快12.41%，Reader 3:3、Authority control 3 / treatment 2 / mixed 1；第6章双赢但第15章双输，第19章 Reader赢而Authority输，仍不能默认投机。
+- `Ten-Chapter Attention Kernel` 摊销只快4.75%，Reader control 3:2，Authority control 2 / treatment 1 / mixed 2；稳定 Book/Human/Prose 可以预编译，但实时 attention 仍必须绑定当前 Mission/Canon。
+- `Reviser+State` 同调用两章反而慢34.9%与49.6%，停止实验。
+- 严格删除式 Reader Polish 可以隐藏在 State 并行窗口，第二次被改4章的 Reader 4/4、Authority 3/4偏 Polish；但两次20章触发集合只重合第16/18章，跨书10章全部 `NO_CHANGE`，不值得新增常驻 Agent。
+- 持久 ACP process 在6个最小 fresh-session 调用上相对快28.35%，绝对只省1.263秒/调用；它不改语义，但前端不用该 runner，本轮未修改 ACP。
+- 完整 Curator 改为 Terra high 并接回相同 Primary/Reviser 后，四章总链平均快26.92%，但 Reader 与 Authority都正好 Terra 2 / Luna 2。Terra在第2/14章更具体，却在第10/14章出现行动者漂移、共同推车替代独自稳车、未授权分身规则与残压 Ending 错误；没有稳定模型赢家，不改变默认。
+- 去掉当前 Canon 的 Speculative Director 完整下游仍只快12.41%，Reader 3:3、Authority control 3 / treatment 2 / mixed 1；第4章补出第二袋钱，第15章漏水路确认和同步危机，证明实时 State 不能从当前注意力绑定中删除。
+- State 改 Terra low 在8章中总体慢3.32%，0/8四字段 exact；Paragraph Manifest v1 5/5 fallback、有效路径平均慢105.93%，v2仅2/5采用且平均仍慢5.93%，停止。
+
+新的稳定方法论：延迟语义路线必须同时报告完整 critical path、Reader + Authority、repeat、cross-book、fallback/丢弃成本；不能用单次 wall、单个 Judge 或中间节点输出生产化。下一代最有希望的是代码级 `Atomic Chapter Obligations`：actor-action-object、Direct Result / State / Ending、ownership / transfer / money / time、precise ruler、Reader Release、unresolved facts、Human-specific cue 与 protected commercial value。Paragraph-Delta 只有在这些 obligations 全部闭合且全文状态一致时才可采用，否则继续走 full Luna-high Reviser。完整报告：`books/real-exp-chapter-latency-innovation-20260829-v1/RESULTS.md`。
+
+本轮最终验证：全项目 `388 passed`；`tgn-system-steward 0.3.11` package validate / install / activate 完成，bounded smoke 将 Paragraph-Delta 判为 `PARTIAL`，只允许冻结速度信号与研究方向，不允许冻结 production route。
+
+
 ---
 
 ## 15. How to Work With the User

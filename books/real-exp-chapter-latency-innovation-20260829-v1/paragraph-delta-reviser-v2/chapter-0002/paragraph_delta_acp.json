@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 111.638,
+  "sessionId": "01a04e2b-b200-7582-8b16-d05f21e4e829",
+  "text": "# PARAGRAPH OPS\n## REPLACE P023\n这条路现在能走，是因为潮水暂时退下去了。下一次低潮前，槽底会重新积水，边缘也可能继续塌。\n## DELETE P027-P028\n## DELETE P054\n## DELETE P061\n\n<oai-mem-citation>\n<citation_entries>\nMEMORY.md:223-224|note=[Preservation First与最小跨度修订约束]\n</citation_entries>\n<rollout_ids>\n</rollout_ids>\n</oai-mem-citation>",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 52982,
+      "inputTokens": 8306,
+      "cachedReadTokens": 39680,
+      "outputTokens": 4996,
+      "thoughtTokens": 4868
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 52982,
+          "inputTokens": 8306,
+          "cachedInputTokens": 39680,
+          "outputTokens": 4996,
+          "reasoningOutputTokens": 4868
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 52982,
+              "inputTokens": 8306,
+              "cachedInputTokens": 39680,
+              "outputTokens": 4996,
+              "reasoningOutputTokens": 4868
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

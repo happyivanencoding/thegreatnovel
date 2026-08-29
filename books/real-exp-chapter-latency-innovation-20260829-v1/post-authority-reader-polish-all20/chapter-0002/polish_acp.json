@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 15.065,
+  "sessionId": "01a04e1a-9c10-7552-9707-1dd7efe6b448",
+  "text": "# PATCH SET\n## PATCH 1\nOLD:\n商号账上那条路还可以写着，车队也可以拿旧货签说事，可现实里的石桩、塌坡和裂槽已经把它撕开了。谁再说这只是旧线的一段偏移，谁就是睁着眼睛往死路上赶车。\nNEW:\n谁再说这只是旧线的一段偏移，谁就是睁着眼睛往死路上赶车。\nREASON:\n删去已由现场对照证明的抽象总结，让判断更直接落在顾停舟的选择上。\n\n## PATCH 2\nOLD:\n那册子并没有忽然变成通行凭证，也没替他拿到行潮籍。可它不再只是商号账房手里一摞会被改写的旧纸。\n\n它记着旧路死在哪里，也记着新路从哪里出来。\nNEW:\n那册子并没有忽然变成通行凭证，也没替他拿到行潮籍。\n\n它记着旧路死在哪里，也记着新路从哪里出来。\nREASON:\n删去已由持册、见证和现场记录呈现的身份入口式概括，保留读者可直接抓住的路线价值。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 33183,
+      "inputTokens": 6259,
+      "cachedReadTokens": 26368,
+      "outputTokens": 556,
+      "thoughtTokens": 269
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 33183,
+          "inputTokens": 6259,
+          "cachedInputTokens": 26368,
+          "outputTokens": 556,
+          "reasoningOutputTokens": 269
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 33183,
+              "inputTokens": 6259,
+              "cachedInputTokens": 26368,
+              "outputTokens": 556,
+              "reasoningOutputTokens": 269
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

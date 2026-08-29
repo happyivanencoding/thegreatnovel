@@ -1,0 +1,26 @@
+{
+  "3": {
+    "A": "control",
+    "B": "speculative"
+  },
+  "4": {
+    "A": "speculative",
+    "B": "control"
+  },
+  "6": {
+    "A": "speculative",
+    "B": "control"
+  },
+  "13": {
+    "A": "speculative",
+    "B": "control"
+  },
+  "15": {
+    "A": "speculative",
+    "B": "control"
+  },
+  "19": {
+    "A": "speculative",
+    "B": "control"
+  }
+}

@@ -1,0 +1,182 @@
+[
+  {
+    "book": "fast20",
+    "chapter": 2,
+    "decision": "ACCEPT_DELTA",
+    "delta_wall_seconds": 40.563,
+    "gate_wall_seconds": 17.159,
+    "control_wall_seconds": 95.14,
+    "effective_route_seconds": 57.722,
+    "effective_speedup_percent": 39.33,
+    "response": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 无\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: YES\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Delta 保留了校路官带顾停舟沿断路外缘查看裂槽、对照原路线册、石桩与新鲜矿层的完整行动链。它准确落实了“旧路彻底失效、裂槽是独立新通道、深潮矿样为独立事件”的直接结果。顾停舟仍保留原路线册，并通过“现场见证”手印获得脱离商号账目的现实依据。Delta 删除了“这句话落下来，比少东家那句……”等重复性抽象判断，没有损失核心幻想、人物欲望、关系变化或社会重新定价。校路官提出实测活、顾停舟坚持“价钱也得先谈”，保留了人物的现实欲望与关系推进。正文明确写出他尚无行潮籍、正式委托和风险承担者，没有把独立工作或合法身份提前兑现。结尾仍完成校路台记录传入沉灯商盟，并落到阮青蜃寻找个人实测者的具体动作。未发现新增数字、制度、价格、能力规则、人物到场或未来事件，因此可以跳过 Full Luna-high Reviser。",
+    "usage": {
+      "totalTokens": 44790,
+      "inputTokens": 19775,
+      "cachedReadTokens": 24320,
+      "outputTokens": 695,
+      "thoughtTokens": 373
+    }
+  },
+  {
+    "book": "fast20",
+    "chapter": 3,
+    "decision": "ACCEPT_DELTA",
+    "delta_wall_seconds": 26.288,
+    "gate_wall_seconds": 23.114,
+    "control_wall_seconds": 55.457,
+    "effective_route_seconds": 49.402,
+    "effective_speedup_percent": 10.92,
+    "response": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 无\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: NOT_NEEDED\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Delta 与 Primary 实质完全一致，且 Primary 已完整落实本章事件合同。正文明确钉死“旧路线废止、新裂槽另列”以及“加车决定和杂货损失”不可被官方记录抹平。顾停舟保留原路线册，并拒绝让实测案挂回商号名下。校路官明确授予“独立行潮籍”，同时说明这不等于成炉或可以独自横穿荒地，保留了身份资格与实际力量的边界。阮青蜃一方通过具名委托、预付款、赔付条件和兼容潮髓完成正式接触，收益均登记在顾停舟个人名下。少东家失去收回路线册和改写官方记录的权力，关系变化通过“以后你接你的案，我走我的货”落地。结尾以签契后的个人责任和下一次低潮前必须核查新裂槽收束，没有提前进入裂槽或揭示未知真相。",
+    "usage": {
+      "totalTokens": 45737,
+      "inputTokens": 34709,
+      "cachedReadTokens": 9984,
+      "outputTokens": 1044,
+      "thoughtTokens": 752
+    }
+  },
+  {
+    "book": "fast20",
+    "chapter": 10,
+    "decision": "ACCEPT_DELTA",
+    "delta_wall_seconds": 71.861,
+    "gate_wall_seconds": 29.291,
+    "control_wall_seconds": 191.335,
+    "effective_route_seconds": 101.152,
+    "effective_speedup_percent": 47.13,
+    "response": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 矿队首领及护卫是否仍在现场存在权威冲突，原稿具体化为“首领从人群中传声”不够安全\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: YES\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Delta 将矿队索楔改为“矿队那边传来声音”，保留了索楔、尾款落空与归属争议，同时避免断言矿队首领仍在顾停舟面前。成炉通过顾停舟独自稳住撤离车完成，力量跨阶、身体承压和现场结果均清楚成立。Delta 保留了成炉后力量不能完整传给分身的边界，没有新增能力规则。回潮楔细裂、残压、个人持有和修复压力均被保留。顾停舟拒绝将回潮楔并入矿契、接受尾款落空，阮青蜃正式追索与乌合带戒备的欠情协作也没有遗漏。Primary 的突破后反应、个人欲望、社会重新定价和唐绾查看反潮记录的下一阶段入口均仍在。结尾以顾停舟收起消息、继续持有回潮楔并扶稳身体收束，未提前解决修复、实测或追索。",
+    "usage": {
+      "totalTokens": 46418,
+      "inputTokens": 20829,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1269,
+      "thoughtTokens": 935
+    }
+  },
+  {
+    "book": "fast20",
+    "chapter": 14,
+    "decision": "ACCEPT_DELTA",
+    "delta_wall_seconds": 106.642,
+    "gate_wall_seconds": 16.199,
+    "control_wall_seconds": 210.84,
+    "effective_route_seconds": 122.841,
+    "effective_speedup_percent": 41.74,
+    "response": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 无\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: YES\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Delta 保留了回潮楔一次完整的“锁潮、改向、释放”，并明确写出整段潮势被改入岔道。它保留了残压未散、不能再次硬压的能力边界，没有新增能力规则或改变结果。白须老人和验器人的反应完成了成炉者与照域者的比较，也完成了回潮楔的公开重新定价。顾停舟拒绝买断，同时保留回潮楔自主使用权、个人矿利与砺骨部水路不并入阮家矿权。少东家的固定报酬、预付、货损边界、撤回条件和自主使用权构成了明确的独立承运合作。结尾仍以首批粮车出发、赶在下一次十二日地潮前送达旧关收束。Delta 压缩了部分重复解释，但没有遗漏核心幻想、利益结算、关系变化或章末真实动作。",
+    "usage": {
+      "totalTokens": 47988,
+      "inputTokens": 37352,
+      "cachedReadTokens": 9984,
+      "outputTokens": 652,
+      "thoughtTokens": 372
+    }
+  },
+  {
+    "book": "fast20",
+    "chapter": 19,
+    "decision": "ACCEPT_DELTA",
+    "delta_wall_seconds": 70.314,
+    "gate_wall_seconds": 20.218,
+    "control_wall_seconds": 103.511,
+    "effective_route_seconds": 90.532,
+    "effective_speedup_percent": 12.54,
+    "response": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 章末生活牵引中的“一个人”未明确指向母亲，削弱了已冻结的具体选择\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: YES\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Delta 将“能带一个人离开旧关”明确修为“能带母亲离开旧关”，兑现了顾停舟当前最具体的生活牵引，没有新增事件。正面承压、分身侧面定住、回潮楔改向、旧关外层牺牲、居民粮道和三座新井保住等核心事实均被完整保留。Delta 保留了“顾停舟本体承住兽首，分身钉住侧面潮眼”的双位置幻想。回潮楔新裂痕、旧伤加重、公开战绩、个人矿利与护粮结算均有明确落点。人物、称谓、资源、数字和力量层级没有发现硬性冲突。结尾仍停在“再看看，够不够买一条船”，没有把远行或后续修复提前写成既成事实。",
+    "usage": {
+      "totalTokens": 48019,
+      "inputTokens": 22893,
+      "cachedReadTokens": 24320,
+      "outputTokens": 806,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "book": "shadow10",
+    "chapter": 1,
+    "decision": "FULL_REVISER",
+    "delta_wall_seconds": 57.134,
+    "gate_wall_seconds": 19.505,
+    "control_wall_seconds": 203.071,
+    "effective_route_seconds": 279.71,
+    "effective_speedup_percent": -37.74,
+    "response": "DECISION: FULL_REVISER\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 无\nDELTA_HARD_PROBLEMS: 武馆进入动作被重复写出，造成事件时序与段落衔接的明确重复\nDELTA_FIXED_PRIMARY: YES\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: NO\nREASON: Delta 删除了 Primary 中不符合分影边界的实时感官互通，正确保留了疲惫与手感在合并后回流。它也保留了账目、收房、接待住客、武馆训练、木靶断裂、分影代价和第二天继续使用等核心价值。可是 Delta 先写“到了门口，他脚步不停，直接冲进练场”，随后又写“与此同时，顾临川冲进武馆”，接着再次展开“顾临川冲进武馆”后的入场场景。这个重复使顾临川进入武馆这一关键动作出现两次，破坏了现场时序和读者定位。该问题不是文风偏好，而是可直接指出的 Reader Release 与段落连续性硬问题。Primary 没有这个重复，因此 Delta 未达到可直接替代 Primary 的安全标准。需要 Full Reviser 删除或合并重复动作，同时保持其余已修复的分影边界。",
+    "usage": {
+      "totalTokens": 44521,
+      "inputTokens": 19532,
+      "cachedReadTokens": 24320,
+      "outputTokens": 669,
+      "thoughtTokens": 365
+    }
+  },
+  {
+    "book": "shadow10",
+    "chapter": 4,
+    "decision": "ACCEPT_DELTA",
+    "delta_wall_seconds": 112.329,
+    "gate_wall_seconds": 19.766,
+    "control_wall_seconds": 129.715,
+    "effective_route_seconds": 132.095,
+    "effective_speedup_percent": -1.83,
+    "response": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 无\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: NOT_NEEDED\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Delta 保留了杜衡以陌生步点持续逼近、顾临川在严重疲劳中不再直线后退并抓住真实空隙克制取胜的完整战斗因果。顾临川仍被明确确认“仍是一阶”，并获得公开第二轮胜利、铜羽随队契券和第一笔预付钱。Delta 保留了铜羽旗、契券、护送与跨城机会带来的现实价值，没有新增能力规则、数字或制度。陆绾仍亲眼同时看见内院与后门的两具顾临川，分影的行动与疲劳回流也被具体呈现。陆绾据此决定与商队和药队同行，关系重新估价与同行选择均未遗漏。结尾仍明确探路队失联、原路线关闭、商队改走折日峡，顾临川被契约推向次日出城。Delta 只删除了“不是镜子，不是障眼法”之后对“两个人都站在那里”的重复确认，不损失事实、反应、幻想或章末推动。",
+    "usage": {
+      "totalTokens": 44761,
+      "inputTokens": 19615,
+      "cachedReadTokens": 24320,
+      "outputTokens": 826,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "book": "shadow10",
+    "chapter": 6,
+    "decision": "ACCEPT_DELTA",
+    "delta_wall_seconds": 72.578,
+    "gate_wall_seconds": 19.455,
+    "control_wall_seconds": 100.771,
+    "effective_route_seconds": 92.033,
+    "effective_speedup_percent": 8.67,
+    "response": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 章末未落实“影身刚追入石城”的必要动作\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: YES\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Primary 在观日宗弟子出现前仍写“影身停在十几步外”，因此没有完成影身进入石城的章末动作。Delta 将其改为“影身贴着断墙跨过断门，刚追进石城”，直接补足了事件合同要求。随后观日宗弟子已经越过断门，仍准确保留“先一步进入”的先后关系。Delta 没有改变药车防守、伤势、陆绾受困、分影无即时共享判断或撤离压力。两条行动线的事实、人物称谓、能力边界和资源状态均保持正确。Delta 没有新增数字、制度、价格、能力规则或未来事件。Primary 中的异兽压迫、药车稳定、陆绾具体受困和下一步三重选择也全部保留。 Delta 因而可以跳过 Full Luna-high Reviser，直接作为最终正文。",
+    "usage": {
+      "totalTokens": 44624,
+      "inputTokens": 33841,
+      "cachedReadTokens": 9984,
+      "outputTokens": 799,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "book": "shadow10",
+    "chapter": 8,
+    "decision": "ACCEPT_DELTA",
+    "delta_wall_seconds": 80.51,
+    "gate_wall_seconds": 30.628,
+    "control_wall_seconds": 199.02,
+    "effective_route_seconds": 111.138,
+    "effective_speedup_percent": 44.16,
+    "response": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: Primary 新造“短兵划开暗影、显露撤离路”的未授权能力规则\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: YES\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Delta 删除了 Primary 中“短兵划开暗影并显露窄路”的新造能力规则。短兵仍通过“灰黑甲片裂开一道长口，黑血一下涌了出来”立即证明破甲价值。陆绾、三名观日宗弟子、短兵与坍塌封路均得到完整兑现。影身在看不见本体所见的前提下，根据落石自行收回左脚并改向右侧，保留了首次简单临场判断。Delta 没有遗漏陆绾“你真来了”、扶持反应与关系价值。合并段明确结算本体旧伤及影身肩背伤痛、握兵和挥砍疲劳，随后以“二阶”完成力量突破。顾斜阳重新判断、药队仍在峡中以及“走”的章末动作均被保留。未见新增数字、制度、价格、能力边界、人物到场或未来事件。",
+    "usage": {
+      "totalTokens": 47624,
+      "inputTokens": 21942,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1362,
+      "thoughtTokens": 996
+    }
+  },
+  {
+    "book": "shadow10",
+    "chapter": 10,
+    "decision": "ACCEPT_DELTA",
+    "delta_wall_seconds": 36.561,
+    "gate_wall_seconds": 13.096,
+    "control_wall_seconds": 54.243,
+    "effective_route_seconds": 49.657,
+    "effective_speedup_percent": 8.45,
+    "response": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 无\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: YES\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Delta 补出了阮青缨基于记录对双线能力的直接确认，并让顾临川明确回答“能”，落实了主角承认能力这一章约束。新增的“两具身体同时动”只确认已建立的能力事实，没有扩展能力边界或制造新规则。普通二阶“守住一条危险线”的公开比较仍然承担重新定价依据。四倍报酬、伤药与路上用度、沉昼城入口和无影正午风险均与既定契约一致。顾临川仍明确选择暂不签约，并保留今晚答复的主动权。Delta 完整保留了高价改善外城生活、稀缺性被看见、合作关系转变与章末催促。结尾没有误写成已经接受契约或已经进入沉昼城。",
+    "usage": {
+      "totalTokens": 42828,
+      "inputTokens": 32393,
+      "cachedReadTokens": 9984,
+      "outputTokens": 451,
+      "thoughtTokens": 200
+    }
+  }
+]

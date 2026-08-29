@@ -1,0 +1,446 @@
+[
+  {
+    "chapter": 1,
+    "state_wall_seconds": 25.081,
+    "polish_wall_seconds": 8.926,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3511,
+    "final_chars": 3511,
+    "usage": {
+      "totalTokens": 34186,
+      "inputTokens": 7645,
+      "cachedReadTokens": 26368,
+      "outputTokens": 173,
+      "thoughtTokens": 165
+    }
+  },
+  {
+    "chapter": 2,
+    "state_wall_seconds": 26.205,
+    "polish_wall_seconds": 10.005,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2126,
+    "final_chars": 2126,
+    "usage": {
+      "totalTokens": 32979,
+      "inputTokens": 6356,
+      "cachedReadTokens": 26368,
+      "outputTokens": 255,
+      "thoughtTokens": 247
+    }
+  },
+  {
+    "chapter": 3,
+    "state_wall_seconds": 25.07,
+    "polish_wall_seconds": 8.826,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1982,
+    "final_chars": 1982,
+    "usage": {
+      "totalTokens": 32770,
+      "inputTokens": 6191,
+      "cachedReadTokens": 26368,
+      "outputTokens": 211,
+      "thoughtTokens": 203
+    }
+  },
+  {
+    "chapter": 4,
+    "state_wall_seconds": 28.709,
+    "polish_wall_seconds": 11.315,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2252,
+    "final_chars": 2252,
+    "usage": {
+      "totalTokens": 33127,
+      "inputTokens": 6459,
+      "cachedReadTokens": 26368,
+      "outputTokens": 300,
+      "thoughtTokens": 292
+    }
+  },
+  {
+    "chapter": 5,
+    "state_wall_seconds": 23.24,
+    "polish_wall_seconds": 12.043,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2446,
+    "final_chars": 2446,
+    "usage": {
+      "totalTokens": 33489,
+      "inputTokens": 6713,
+      "cachedReadTokens": 26368,
+      "outputTokens": 408,
+      "thoughtTokens": 400
+    }
+  },
+  {
+    "chapter": 6,
+    "state_wall_seconds": 23.899,
+    "polish_wall_seconds": 7.618,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2164,
+    "final_chars": 2164,
+    "usage": {
+      "totalTokens": 32982,
+      "inputTokens": 6455,
+      "cachedReadTokens": 26368,
+      "outputTokens": 159,
+      "thoughtTokens": 151
+    }
+  },
+  {
+    "chapter": 7,
+    "state_wall_seconds": 26.582,
+    "polish_wall_seconds": 9.676,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2931,
+    "final_chars": 2931,
+    "usage": {
+      "totalTokens": 33763,
+      "inputTokens": 7202,
+      "cachedReadTokens": 26368,
+      "outputTokens": 193,
+      "thoughtTokens": 185
+    }
+  },
+  {
+    "chapter": 8,
+    "state_wall_seconds": 27.834,
+    "polish_wall_seconds": 13.837,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "他看得很清楚。",
+        "new": "",
+        "reason": "紧邻的具体水势、碎石与断木结果已充分呈现所见内容，删除不改变人物价值或事实。"
+      }
+    ],
+    "original_chars": 2691,
+    "final_chars": 2684,
+    "usage": {
+      "totalTokens": 33823,
+      "inputTokens": 6962,
+      "cachedReadTokens": 26368,
+      "outputTokens": 493,
+      "thoughtTokens": 435
+    }
+  },
+  {
+    "chapter": 9,
+    "state_wall_seconds": 30.119,
+    "polish_wall_seconds": 12.019,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2308,
+    "final_chars": 2308,
+    "usage": {
+      "totalTokens": 33382,
+      "inputTokens": 6667,
+      "cachedReadTokens": 26368,
+      "outputTokens": 347,
+      "thoughtTokens": 339
+    }
+  },
+  {
+    "chapter": 10,
+    "state_wall_seconds": 24.98,
+    "polish_wall_seconds": 5.5,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1983,
+    "final_chars": 1983,
+    "usage": {
+      "totalTokens": 32691,
+      "inputTokens": 6272,
+      "cachedReadTokens": 26368,
+      "outputTokens": 51,
+      "thoughtTokens": 43
+    }
+  },
+  {
+    "chapter": 11,
+    "state_wall_seconds": 27.07,
+    "polish_wall_seconds": 9.871,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2665,
+    "final_chars": 2665,
+    "usage": {
+      "totalTokens": 33502,
+      "inputTokens": 6845,
+      "cachedReadTokens": 26368,
+      "outputTokens": 289,
+      "thoughtTokens": 281
+    }
+  },
+  {
+    "chapter": 12,
+    "state_wall_seconds": 27.464,
+    "polish_wall_seconds": 12.937,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2013,
+    "final_chars": 2013,
+    "usage": {
+      "totalTokens": 33132,
+      "inputTokens": 6291,
+      "cachedReadTokens": 26368,
+      "outputTokens": 473,
+      "thoughtTokens": 465
+    }
+  },
+  {
+    "chapter": 13,
+    "state_wall_seconds": 25.379,
+    "polish_wall_seconds": 13.995,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "顾停舟看得分明。",
+        "new": "",
+        "reason": "紧邻下文已具体呈现他所看清的锁潮、改向与释放机制，删除不改变事实或人物价值。"
+      }
+    ],
+    "original_chars": 2933,
+    "final_chars": 2925,
+    "usage": {
+      "totalTokens": 33962,
+      "inputTokens": 7107,
+      "cachedReadTokens": 26368,
+      "outputTokens": 487,
+      "thoughtTokens": 427
+    }
+  },
+  {
+    "chapter": 14,
+    "state_wall_seconds": 29.496,
+    "polish_wall_seconds": 10.27,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3654,
+    "final_chars": 3654,
+    "usage": {
+      "totalTokens": 34413,
+      "inputTokens": 7765,
+      "cachedReadTokens": 26368,
+      "outputTokens": 280,
+      "thoughtTokens": 272
+    }
+  },
+  {
+    "chapter": 15,
+    "state_wall_seconds": 32.466,
+    "polish_wall_seconds": 8.817,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3864,
+    "final_chars": 3864,
+    "usage": {
+      "totalTokens": 34545,
+      "inputTokens": 7932,
+      "cachedReadTokens": 26368,
+      "outputTokens": 245,
+      "thoughtTokens": 237
+    }
+  },
+  {
+    "chapter": 16,
+    "state_wall_seconds": 29.093,
+    "polish_wall_seconds": 13.922,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "粮车、井口、水路，全在往坏处走。",
+        "new": "",
+        "reason": "紧邻段落已分别具体呈现三处危机；此句仅作作者重复总结，未删人物价值。"
+      }
+    ],
+    "original_chars": 2850,
+    "final_chars": 2834,
+    "usage": {
+      "totalTokens": 34025,
+      "inputTokens": 7125,
+      "cachedReadTokens": 26368,
+      "outputTokens": 532,
+      "thoughtTokens": 469
+    }
+  },
+  {
+    "chapter": 17,
+    "state_wall_seconds": 30.877,
+    "polish_wall_seconds": 4.861,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2443,
+    "final_chars": 2443,
+    "usage": {
+      "totalTokens": 33145,
+      "inputTokens": 6738,
+      "cachedReadTokens": 26368,
+      "outputTokens": 39,
+      "thoughtTokens": 31
+    }
+  },
+  {
+    "chapter": 18,
+    "state_wall_seconds": 30.752,
+    "polish_wall_seconds": 10.417,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "三件事都堵在矿脉这一处。",
+        "new": "",
+        "reason": "前文已具体列明居民撤离、粮道新井与砺骨部迁徙水路，删除不改变任何人物价值或事实。"
+      }
+    ],
+    "original_chars": 2773,
+    "final_chars": 2761,
+    "usage": {
+      "totalTokens": 33677,
+      "inputTokens": 7009,
+      "cachedReadTokens": 26368,
+      "outputTokens": 300,
+      "thoughtTokens": 232
+    }
+  },
+  {
+    "chapter": 19,
+    "state_wall_seconds": 26.452,
+    "polish_wall_seconds": 7.52,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3093,
+    "final_chars": 3093,
+    "usage": {
+      "totalTokens": 33829,
+      "inputTokens": 7324,
+      "cachedReadTokens": 26368,
+      "outputTokens": 137,
+      "thoughtTokens": 129
+    }
+  },
+  {
+    "chapter": 20,
+    "state_wall_seconds": 28.012,
+    "polish_wall_seconds": 8.251,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2791,
+    "final_chars": 2791,
+    "usage": {
+      "totalTokens": 33496,
+      "inputTokens": 6956,
+      "cachedReadTokens": 26368,
+      "outputTokens": 172,
+      "thoughtTokens": 164
+    }
+  }
+]

@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 57.134,
+  "sessionId": "01a04e30-6c17-7fc1-9bfe-183d043d372f",
+  "text": "# PARAGRAPH OPS\n## REPLACE P050\n武馆离客舍不远，顾临川一路跑过去。到了门口，他脚步不停，直接冲进练场。\n\n## REPLACE P069-P072\n客舍那边，影身刚收拾好西厢第一间房，正蹲在床边把一只歪倒的木脚垫平。前厅有人催热水，父亲喊了一声，影身又提着水桶出去。肩膀被桶梁压得发酸，手指也被热水烫得发红。\n\n武馆里，教习的木棍已经再次抬起。顾临川看不见客舍那边发生了什么，只把木刀横在身前，等着下一声喝令。\n\n## REPLACE P097-P098\n客舍那边，影身也已经累得直起腰都慢了半拍。提水的酸胀、弯腰收房时压住的腰背，都留在那具身体上。\n\n顾临川这边的腿沉得发麻。他不知道另一具身体还剩多少力气，只能把木刀重新抬起来。\n\n## REPLACE P112-P113\n他没有去猜客舍那边的账是否已经交清，只等另一具身体回来。\n\n另一边的疲惫和手感还隔在影身上，尚未回到他的身体里。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 42790,
+      "inputTokens": 29898,
+      "cachedReadTokens": 9984,
+      "outputTokens": 2908,
+      "thoughtTokens": 2588
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 42790,
+          "inputTokens": 29898,
+          "cachedInputTokens": 9984,
+          "outputTokens": 2908,
+          "reasoningOutputTokens": 2588
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 42790,
+              "inputTokens": 29898,
+              "cachedInputTokens": 9984,
+              "outputTokens": 2908,
+              "reasoningOutputTokens": 2588
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

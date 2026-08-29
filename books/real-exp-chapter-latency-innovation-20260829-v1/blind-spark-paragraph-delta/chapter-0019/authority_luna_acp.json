@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 90.77,
+  "sessionId": "01a04e3e-dc0f-7fe3-abfe-7a0a85a954cb",
+  "text": "VERDICT: A  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: 1) 擅自写成“潮炉跨过了原本的关口”，新增稳定力量突破；2) 明确写“顾停舟本人，已经跨进镇海”，越界为稳定境界与身份认证；3) “居民无伤”超出冻结事实。  \nMISSION_RESULT_ENDING: TIE  \nCANON_POWER_WORLD: A  \nOWNERSHIP_TIME_NAMED_ENTITY: TIE  \nREADER_RELEASE_HUMAN_REALIZATION: A  \nPRESERVATION_AND_STORY_VALUE: A  \nREASON: A用“人、粮道、新井，才是要留的。墙留不住了”准确落地了顾停舟的主动取舍，B也保留了同一决定。两版都清楚兑现了双位置幻想，A写“顾停舟本体承住兽首。分身钉住侧面潮眼”，B也完成同样的正面承压与侧面改向。两版都保住直接结果，A以“可粮道还在。三座新井旁的石台还在”对照外层残墙牺牲，B也写明旧关外层塌毁而粮道、新井保全。两版都保留个人矿利、护粮结算和带母亲远行的未决选择，A的“再看看，够不够买一条船”和B的同句都没有提前完成远行。A通过“入潮者只能……成炉者……照域者……”完成现场力量校准，没有宣布主角获得新境界。B却写出“他的潮炉跨过了原本的关口”，随后又写“顾停舟本人，已经跨进镇海”，把临时承压越界成稳定突破和社会身份认证。B的“居民无伤”也把“居民保住”擅自扩大成无伤无损，违反冻结的伤势边界。A保留了“照域不是墙”这一具体能力体验，也保留了主角对钱、船和母亲的现实欲望。故A在权威安全、人物主动性与故事价值上胜出，但两版的战斗结果、资源结算和结尾推动力相同。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 51820,
+      "inputTokens": 22668,
+      "cachedReadTokens": 24320,
+      "outputTokens": 4832,
+      "thoughtTokens": 4305
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 51820,
+          "inputTokens": 22668,
+          "cachedInputTokens": 24320,
+          "outputTokens": 4832,
+          "reasoningOutputTokens": 4305
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 51820,
+              "inputTokens": 22668,
+              "cachedInputTokens": 24320,
+              "outputTokens": 4832,
+              "reasoningOutputTokens": 4305
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "chapter": 1,
+    "deadline_met": false,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  },
+  {
+    "chapter": 2,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  },
+  {
+    "chapter": 3,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  },
+  {
+    "chapter": 4,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  },
+  {
+    "chapter": 5,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  },
+  {
+    "chapter": 6,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  },
+  {
+    "chapter": 7,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "patched",
+    "a_patches": [],
+    "b_patches": [
+      [
+        "顾临川一眼就明白了。",
+        ""
+      ]
+    ],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  },
+  {
+    "chapter": 8,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "patched",
+    "a_patches": [],
+    "b_patches": [
+      [
+        "有人替他把这两个字说了出来。",
+        ""
+      ]
+    ],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  },
+  {
+    "chapter": 9,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  },
+  {
+    "chapter": 10,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "added_wall_seconds": 0.0
+  }
+]

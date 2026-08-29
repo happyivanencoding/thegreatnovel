@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 32.358,
+  "sessionId": "01a04e21-3264-7653-abcb-619f8c1805ec",
+  "text": "VERDICT: A\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 新增“峡谷里的人都在等他做选择”的全员等待事实，未经 Frozen Mission 或 Curator 支持\nMISSION_RESULT_ENDING: TIE\nCANON_POWER_WORLD: TIE\nOWNERSHIP_TIME_NAMED_ENTITY: TIE\nREADER_RELEASE_HUMAN_REALIZATION: A\nPRESERVATION_AND_STORY_VALUE: A\nREASON: 两版在“矿队进入倒悬峡、钉下矿权标记、撬开建筑外层、逆潮翻转、人员分隔、顾停舟分身携牵引进入侧室”的行动顺序上事实一致。两版的 Direct Result、State Change、Ending、资源归属、时间窗口、力量边界、未知边界和 Reader Release 均一致。A 中“领队被冲到更远处……‘先救矿工！’”已经明确施加了选择压力。紧接着“乌合没有再说话，只是看着顾停舟”，也已经完成关系与现场反应的停顿。B 新增的“峡谷里的人都在等他做选择”只是把领队的命令、乌合的注视和现场困局概括成全员等待。该句没有新增行动、失败、关系变化或不可逆后果，属于重复总结。并且“都在等”扩大了现场人物的心理与注意力状态，超出正文已明确支持的范围。A 保留了“顾停舟吐出一口气，抬手按住胸口”，使选择通过身体反应自然落地。随后“他把牵引留给了分身”直接兑现核心幻想，A 没有损失 Power、Payoff 或人物价值。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 45378,
+      "inputTokens": 19611,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1447,
+      "thoughtTokens": 1034
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 45378,
+          "inputTokens": 19611,
+          "cachedInputTokens": 24320,
+          "outputTokens": 1447,
+          "reasoningOutputTokens": 1034
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 45378,
+              "inputTokens": 19611,
+              "cachedInputTokens": 24320,
+              "outputTokens": 1447,
+              "reasoningOutputTokens": 1034
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

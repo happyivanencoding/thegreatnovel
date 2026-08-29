@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 71.861,
+  "sessionId": "01a04e17-52a6-7140-9bfa-98176aa35057",
+  "text": "# PARAGRAPH OPS\n## REPLACE P002\n撤离车在余震中失稳。\n\n## REPLACE P018\n潮息从腹中涌出，沿着双臂压入车架。原本乱颤的木轮慢慢停住，车侧悬起的那一角被他一点点按回地面。\n\n## DELETE P029\n\n## REPLACE P042-P044\n矿队那边传来声音。\n\n“回潮楔是矿队发现的器物。矿权标记毁了，撤路也断了，实测尾款不可能按原条件给你。顾停舟，把楔子交出来，这笔账还有得谈。”\n\n## REPLACE P068\n乌合身后的砺骨部正在照看伤员。她站在湿石里，腿伤前哨被同伴扶着，仍朝顾停舟这边看。\n\n## REPLACE P080-P085\n与此同时，一道消息送到了他手里。\n\n上面只有一句话。\n\n唐绾要看反潮记录。\n\n顾停舟把消息折起，收进衣襟。回潮楔仍在另一只手里，细裂下的潮压一下一下撞着掌心。\n\n他没有把楔子交出去，扶着撤离车站直了身体。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 45092,
+      "inputTokens": 17030,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3742,
+      "thoughtTokens": 3445
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 45092,
+          "inputTokens": 17030,
+          "cachedInputTokens": 24320,
+          "outputTokens": 3742,
+          "reasoningOutputTokens": 3445
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 45092,
+              "inputTokens": 17030,
+              "cachedInputTokens": 24320,
+              "outputTokens": 3742,
+              "reasoningOutputTokens": 3445
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

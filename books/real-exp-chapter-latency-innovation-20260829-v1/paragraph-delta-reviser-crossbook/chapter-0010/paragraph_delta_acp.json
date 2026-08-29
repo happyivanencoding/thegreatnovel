@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 36.561,
+  "sessionId": "01a04e30-6bc4-7b80-bdf7-763463d0a81e",
+  "text": "# PARAGRAPH OPS\n## REPLACE P012-P016\n阮青缨的目光停在记录上的两条路线。\n\n“普通二阶，守住一条危险线已经够用了。”她说，“你在断门外救人，又让另一边的人从塌墙下撤出来。你能让两具身体同时处理两条危险线？”\n\n“能。”顾临川说，“两具身体同时动。”\n\n“怎么做到的，不必告诉我。”",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 41688,
+      "inputTokens": 29946,
+      "cachedReadTokens": 9984,
+      "outputTokens": 1758,
+      "thoughtTokens": 1648
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 41688,
+          "inputTokens": 29946,
+          "cachedInputTokens": 9984,
+          "outputTokens": 1758,
+          "reasoningOutputTokens": 1648
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 41688,
+              "inputTokens": 29946,
+              "cachedInputTokens": 9984,
+              "outputTokens": 1758,
+              "reasoningOutputTokens": 1648
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

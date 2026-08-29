@@ -1,0 +1,502 @@
+[
+  {
+    "chapter": 1,
+    "state_wall_seconds": 25.081,
+    "polish_wall_seconds": 12.66,
+    "parallel_critical_seconds": 25.081,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "他不怕货损。他怕的是有人先做了选择，最后把账册一合，全写成谁也没法追的天灾。",
+        "new": "他怕的是有人先做了选择，最后把账册一合，全写成谁也没法追的天灾。",
+        "reason": "删除已被前文谈判动作证明的总结句，使顾停舟的顾虑更直接。"
+      }
+    ],
+    "original_chars": 3511,
+    "final_chars": 3505,
+    "usage": {
+      "totalTokens": 34300,
+      "inputTokens": 27004,
+      "cachedReadTokens": 6912,
+      "outputTokens": 384,
+      "thoughtTokens": 281
+    }
+  },
+  {
+    "chapter": 2,
+    "state_wall_seconds": 26.205,
+    "polish_wall_seconds": 15.065,
+    "parallel_critical_seconds": 26.205,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "numeric or fact-strength tokens changed",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2126,
+    "final_chars": 2126,
+    "usage": {
+      "totalTokens": 33183,
+      "inputTokens": 6259,
+      "cachedReadTokens": 26368,
+      "outputTokens": 556,
+      "thoughtTokens": 269
+    }
+  },
+  {
+    "chapter": 3,
+    "state_wall_seconds": 25.07,
+    "polish_wall_seconds": 10.049,
+    "parallel_critical_seconds": 25.07,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "这句话里有恼火，也有一点旧日的熟悉。",
+        "new": "",
+        "reason": "前后对白和少东家的挽留已让读者直接感到两人的旧关系与情绪，无需后台总结。"
+      }
+    ],
+    "original_chars": 1982,
+    "final_chars": 1964,
+    "usage": {
+      "totalTokens": 32759,
+      "inputTokens": 974,
+      "cachedReadTokens": 31488,
+      "outputTokens": 297,
+      "thoughtTokens": 230
+    }
+  },
+  {
+    "chapter": 4,
+    "state_wall_seconds": 28.709,
+    "polish_wall_seconds": 15.854,
+    "parallel_critical_seconds": 28.709,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "那些事不是假的。",
+        "new": "",
+        "reason": "前文动作已证明旧交情真实，删去总结句可让情感停在具体回忆上。"
+      }
+    ],
+    "original_chars": 2252,
+    "final_chars": 2244,
+    "usage": {
+      "totalTokens": 33298,
+      "inputTokens": 6362,
+      "cachedReadTokens": 26368,
+      "outputTokens": 568,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 5,
+    "state_wall_seconds": 23.24,
+    "polish_wall_seconds": 13.316,
+    "parallel_critical_seconds": 23.24,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "她说得很平，没有求人的意思。",
+        "new": "",
+        "reason": "对白本身已呈现她的态度，删除后台说明可让读者直接接住人物姿态。"
+      }
+    ],
+    "original_chars": 2446,
+    "final_chars": 2432,
+    "usage": {
+      "totalTokens": 33399,
+      "inputTokens": 6616,
+      "cachedReadTokens": 26368,
+      "outputTokens": 415,
+      "thoughtTokens": 358
+    }
+  },
+  {
+    "chapter": 6,
+    "state_wall_seconds": 23.899,
+    "polish_wall_seconds": 14.759,
+    "parallel_critical_seconds": 23.899,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "峡谷里的人都在等他做选择。",
+        "new": "",
+        "reason": "前后的呼救、命令与注视已直接呈现压力，删除总结句可让选择更快落到行动上。"
+      }
+    ],
+    "original_chars": 2164,
+    "final_chars": 2151,
+    "usage": {
+      "totalTokens": 33283,
+      "inputTokens": 6358,
+      "cachedReadTokens": 26368,
+      "outputTokens": 557,
+      "thoughtTokens": 495
+    }
+  },
+  {
+    "chapter": 7,
+    "state_wall_seconds": 26.582,
+    "polish_wall_seconds": 16.959,
+    "parallel_critical_seconds": 26.582,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "patch spans too many paragraphs",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2931,
+    "final_chars": 2931,
+    "usage": {
+      "totalTokens": 34134,
+      "inputTokens": 7105,
+      "cachedReadTokens": 26368,
+      "outputTokens": 661,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 8,
+    "state_wall_seconds": 27.834,
+    "polish_wall_seconds": 31.637,
+    "parallel_critical_seconds": 31.637,
+    "added_wall_over_state_seconds": 3.803,
+    "hidden_by_state": false,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2691,
+    "final_chars": 2691,
+    "usage": {
+      "totalTokens": 40194,
+      "inputTokens": 6645,
+      "cachedReadTokens": 32512,
+      "outputTokens": 1037,
+      "thoughtTokens": 1029
+    }
+  },
+  {
+    "chapter": 9,
+    "state_wall_seconds": 30.119,
+    "polish_wall_seconds": 6.874,
+    "parallel_critical_seconds": 30.119,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2308,
+    "final_chars": 2308,
+    "usage": {
+      "totalTokens": 33053,
+      "inputTokens": 6570,
+      "cachedReadTokens": 26368,
+      "outputTokens": 115,
+      "thoughtTokens": 107
+    }
+  },
+  {
+    "chapter": 10,
+    "state_wall_seconds": 24.98,
+    "polish_wall_seconds": 18.035,
+    "parallel_critical_seconds": 24.98,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "他确实想留下它。\n\n不是因为它古老，也不是因为谁说它值钱，而是因为这东西在他最难的时候替他顶住了潮压，也因为它漂亮、锋利、有用。",
+        "new": "他想留下它，不是因为它古老，也不是因为谁说它值钱，而是因为这东西在他最难的时候替他顶住了潮压，也因为它漂亮、锋利、有用。",
+        "reason": "合并重复的欲望总结，让顾停舟对回潮楔的执念更直接落到具体理由上。"
+      }
+    ],
+    "original_chars": 1983,
+    "final_chars": 1979,
+    "usage": {
+      "totalTokens": 33200,
+      "inputTokens": 25631,
+      "cachedReadTokens": 6912,
+      "outputTokens": 657,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 11,
+    "state_wall_seconds": 27.07,
+    "polish_wall_seconds": 16.299,
+    "parallel_critical_seconds": 27.07,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "这一次，乌合没再说什么救命之恩。\n\n她转身去安排砺骨部的人上车，动作比刚才利落了不少。",
+        "new": "她转身去安排砺骨部的人上车，动作比刚才利落了不少。",
+        "reason": "删去已由她收钱、定价和转身做事自然证明的总结句，让关系落点更直接。"
+      }
+    ],
+    "original_chars": 2665,
+    "final_chars": 2647,
+    "usage": {
+      "totalTokens": 33739,
+      "inputTokens": 6748,
+      "cachedReadTokens": 26368,
+      "outputTokens": 623,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 12,
+    "state_wall_seconds": 27.464,
+    "polish_wall_seconds": 16.608,
+    "parallel_critical_seconds": 27.464,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "后方的追索者没有再跟上来。\n\n他们停在更远的黑暗里，没有继续逼近城门。",
+        "new": "后方的追索者停在更远的黑暗里，没有继续逼近城门。",
+        "reason": "合并同一结果的重复证明，让城前对峙更利落。"
+      }
+    ],
+    "original_chars": 2013,
+    "final_chars": 2002,
+    "usage": {
+      "totalTokens": 33167,
+      "inputTokens": 6194,
+      "cachedReadTokens": 26368,
+      "outputTokens": 605,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 13,
+    "state_wall_seconds": 25.379,
+    "polish_wall_seconds": 21.03,
+    "parallel_critical_seconds": 25.379,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "numeric or fact-strength tokens changed",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2933,
+    "final_chars": 2933,
+    "usage": {
+      "totalTokens": 34300,
+      "inputTokens": 7010,
+      "cachedReadTokens": 26368,
+      "outputTokens": 922,
+      "thoughtTokens": 833
+    }
+  },
+  {
+    "chapter": 14,
+    "state_wall_seconds": 29.496,
+    "polish_wall_seconds": 19.775,
+    "parallel_critical_seconds": 29.496,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "patch spans too many paragraphs",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3654,
+    "final_chars": 3654,
+    "usage": {
+      "totalTokens": 34804,
+      "inputTokens": 7668,
+      "cachedReadTokens": 26368,
+      "outputTokens": 768,
+      "thoughtTokens": 457
+    }
+  },
+  {
+    "chapter": 15,
+    "state_wall_seconds": 32.466,
+    "polish_wall_seconds": 16.552,
+    "parallel_critical_seconds": 32.466,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "patch expands too much",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3864,
+    "final_chars": 3864,
+    "usage": {
+      "totalTokens": 34828,
+      "inputTokens": 27291,
+      "cachedReadTokens": 6912,
+      "outputTokens": 625,
+      "thoughtTokens": 515
+    }
+  },
+  {
+    "chapter": 16,
+    "state_wall_seconds": 29.093,
+    "polish_wall_seconds": 14.898,
+    "parallel_critical_seconds": 29.093,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "patch expands too much",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2850,
+    "final_chars": 2850,
+    "usage": {
+      "totalTokens": 33913,
+      "inputTokens": 26484,
+      "cachedReadTokens": 6912,
+      "outputTokens": 517,
+      "thoughtTokens": 356
+    }
+  },
+  {
+    "chapter": 17,
+    "state_wall_seconds": 30.877,
+    "polish_wall_seconds": 14.66,
+    "parallel_critical_seconds": 30.877,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "他不想把这些人的死活，算成一句潮灾无情。",
+        "new": "他不想看着这些人死在潮里。",
+        "reason": "把已有的主角选择落到眼前的人与危险上，读者更直接感到他的欲望与承担。"
+      }
+    ],
+    "original_chars": 2443,
+    "final_chars": 2436,
+    "usage": {
+      "totalTokens": 33603,
+      "inputTokens": 6641,
+      "cachedReadTokens": 26368,
+      "outputTokens": 594,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 18,
+    "state_wall_seconds": 30.752,
+    "polish_wall_seconds": 19.74,
+    "parallel_critical_seconds": 30.752,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "三件事都堵在矿脉这一处。",
+        "new": "",
+        "reason": "前文三方对白和潮势已直接呈现困局，删除这句总结可让紧迫感不断流。"
+      }
+    ],
+    "original_chars": 2773,
+    "final_chars": 2761,
+    "usage": {
+      "totalTokens": 33857,
+      "inputTokens": 6912,
+      "cachedReadTokens": 26368,
+      "outputTokens": 577,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 19,
+    "state_wall_seconds": 26.452,
+    "polish_wall_seconds": 33.303,
+    "parallel_critical_seconds": 33.303,
+    "added_wall_over_state_seconds": 6.851,
+    "hidden_by_state": false,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "patch expands too much",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3093,
+    "final_chars": 3093,
+    "usage": {
+      "totalTokens": 40690,
+      "inputTokens": 7089,
+      "cachedReadTokens": 32512,
+      "outputTokens": 1089,
+      "thoughtTokens": 922
+    }
+  },
+  {
+    "chapter": 20,
+    "state_wall_seconds": 28.012,
+    "polish_wall_seconds": 15.835,
+    "parallel_critical_seconds": 28.012,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "patch expands too much",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2791,
+    "final_chars": 2791,
+    "usage": {
+      "totalTokens": 33853,
+      "inputTokens": 6859,
+      "cachedReadTokens": 26368,
+      "outputTokens": 626,
+      "thoughtTokens": 516
+    }
+  }
+]

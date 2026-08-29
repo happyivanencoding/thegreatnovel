@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 61.56,
+  "sessionId": "01a04e59-2722-72f3-bfd5-df15011b1349",
+  "text": "# PARAGRAPH MANIFEST\n## P001 KEEP\n## P002 REPLACE\n撤离车被余震震得往外滑。车上的人不敢跳，车轮再偏，整辆车就会翻下石脊。\n## P003 KEEP\n## P004 KEEP\n## P005 KEEP\n## P006 KEEP\n## P007 KEEP\n## P008 KEEP\n## P009 KEEP\n## P010 KEEP\n## P011 KEEP\n## P012 KEEP\n## P013 KEEP\n## P014 KEEP\n## P015 KEEP\n## P016 KEEP\n## P017 KEEP\n## P018 KEEP\n## P019 KEEP\n## P020 KEEP\n## P021 KEEP\n## P022 KEEP\n## P023 KEEP\n## P024 KEEP\n## P025 KEEP\n## P026 KEEP\n## P027 KEEP\n## P028 KEEP\n## P029 KEEP\n## P030 KEEP\n## P031 KEEP\n## P032 KEEP\n## P033 KEEP\n## P034 KEEP\n## P035 KEEP\n## P036 KEEP\n## P037 KEEP\n## P038 KEEP\n## P039 KEEP\n## P040 KEEP\n## P041 DELETE\n## P042 REPLACE\n矿队首领开了口。\n## P043 DELETE\n## P044 KEEP\n## P045 KEEP\n## P046 KEEP\n## P047 REPLACE\n“契上写的是路线和矿样。”顾停舟把契纸展开，“我替你们走完了实测，矿样也已取到。回潮楔不在契里。”\n## P048 KEEP\n## P049 KEEP\n## P050 KEEP\n## P051 KEEP\n## P052 KEEP\n## P053 KEEP\n## P054 KEEP\n## P055 KEEP\n## P056 KEEP\n## P057 KEEP\n## P058 KEEP\n## P059 KEEP\n## P060 KEEP\n## P061 KEEP\n## P062 KEEP\n## P063 KEEP\n## P064 KEEP\n## P065 KEEP\n## P066 KEEP\n## P067 KEEP\n## P068 KEEP\n## P069 KEEP\n## P070 KEEP\n## P071 KEEP\n## P072 KEEP\n## P073 KEEP\n## P074 KEEP\n## P075 KEEP\n## P076 KEEP\n## P077 KEEP\n## P078 KEEP\n## P079 REPLACE\n楔体的细裂清楚可见，残留潮压仍未稳定。\n## P080 KEEP\n## P081 KEEP\n## P082 KEEP\n## P083 KEEP\n## P084 KEEP\n## P085 KEEP\n\n# CLOSURE CERTIFICATE\nMUST_LAND: PASS\nGLOBAL_FACT_CLOSURE: PASS\nENDING_PRESERVED: PASS",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 46605,
+      "inputTokens": 19121,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3164,
+      "thoughtTokens": 2588
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 46605,
+          "inputTokens": 19121,
+          "cachedInputTokens": 24320,
+          "outputTokens": 3164,
+          "reasoningOutputTokens": 2588
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 46605,
+              "inputTokens": 19121,
+              "cachedInputTokens": 24320,
+              "outputTokens": 3164,
+              "reasoningOutputTokens": 2588
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

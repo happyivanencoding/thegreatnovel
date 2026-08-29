@@ -1,0 +1,1020 @@
+{
+  "parallel_precurator": {
+    "samples": 5,
+    "control_avg_seconds": 349.994,
+    "treatment_avg_seconds": 273.987,
+    "aggregate_speedup_percent": 21.72,
+    "average_seconds_saved": 76.007,
+    "per_sample_speedup_percent": [
+      22.02,
+      1.18,
+      36.95,
+      19.62,
+      19.67
+    ]
+  },
+  "authority_blueprint_primary": {
+    "samples": 5,
+    "control_avg_seconds": 182.296,
+    "treatment_avg_seconds": 108.581,
+    "aggregate_speedup_percent": 40.44,
+    "average_seconds_saved": 73.715,
+    "per_sample_speedup_percent": [
+      41.73,
+      -14.17,
+      56.22,
+      58.71,
+      15.28
+    ]
+  },
+  "parallel_watch_medium_reviser": {
+    "samples": 5,
+    "control_avg_seconds": 182.296,
+    "treatment_avg_seconds": 113.12,
+    "aggregate_speedup_percent": 37.95,
+    "average_seconds_saved": 69.176,
+    "per_sample_speedup_percent": [
+      34.37,
+      2.51,
+      57.83,
+      49.41,
+      11.42
+    ]
+  },
+  "paragraph_delta": {
+    "samples": 5,
+    "control_avg_seconds": 131.257,
+    "treatment_avg_seconds": 63.134,
+    "aggregate_speedup_percent": 51.9,
+    "average_seconds_saved": 68.123,
+    "per_sample_speedup_percent": [
+      57.36,
+      52.6,
+      62.44,
+      49.42,
+      32.07
+    ]
+  },
+  "paragraph_delta_repeat2": {
+    "samples": 5,
+    "control_avg_seconds": 131.257,
+    "treatment_avg_seconds": 56.994,
+    "aggregate_speedup_percent": 56.58,
+    "average_seconds_saved": 74.263,
+    "per_sample_speedup_percent": [
+      75.02,
+      56.51,
+      64.13,
+      40.71,
+      58.03
+    ]
+  },
+  "paragraph_delta_crossbook": {
+    "samples": 5,
+    "control_avg_seconds": 137.364,
+    "treatment_avg_seconds": 71.822,
+    "aggregate_speedup_percent": 47.71,
+    "average_seconds_saved": 65.542,
+    "per_sample_speedup_percent": [
+      71.87,
+      13.4,
+      27.98,
+      59.55,
+      32.6
+    ]
+  },
+  "spark_paragraph_delta": {
+    "samples": 3,
+    "control_avg_seconds": 323.994,
+    "treatment_avg_seconds": 280.808,
+    "aggregate_speedup_percent": 13.33,
+    "average_seconds_saved": 43.185,
+    "per_sample_speedup_percent": [
+      13.67,
+      34.78,
+      -9.45
+    ]
+  },
+  "speculative_director_subpath": {
+    "samples": 6,
+    "control_avg_seconds": 51.158,
+    "treatment_avg_seconds": 27.952,
+    "aggregate_speedup_percent": 45.36,
+    "average_seconds_saved": 23.206,
+    "per_sample_speedup_percent": [
+      50.18,
+      41.78,
+      46.21,
+      43.35,
+      44.9,
+      45.53
+    ]
+  },
+  "speculative_director_full_downstream": {
+    "samples": 6,
+    "control_avg_seconds": 355.983,
+    "treatment_avg_seconds": 312.929,
+    "aggregate_speedup_percent": 12.09,
+    "average_seconds_saved": 43.053,
+    "per_sample_speedup_percent": [
+      10.51,
+      41.35,
+      -8.28,
+      -13.31,
+      29.77,
+      3.92
+    ]
+  },
+  "attention_kernel": {
+    "samples": 5,
+    "control_avg_seconds": 313.33,
+    "treatment_avg_seconds": 298.437,
+    "aggregate_speedup_percent": 4.75,
+    "average_seconds_saved": 14.893,
+    "per_sample_speedup_percent": [
+      -1.05,
+      -36.69,
+      16.62,
+      14.66,
+      12.63
+    ]
+  },
+  "persistent_acp": {
+    "samples": 6,
+    "control_total_seconds": 26.737,
+    "treatment_total_seconds": 19.157,
+    "speedup_percent": 28.35,
+    "seconds_saved_per_call": 1.263
+  },
+  "combined_reviser_state": {
+    "samples": 2,
+    "control_avg_seconds": 100.936,
+    "treatment_avg_seconds": 142.073,
+    "aggregate_speedup_percent": -40.76,
+    "rows": [
+      {
+        "chapter": 2,
+        "control_reviser_plus_state_seconds": 121.345,
+        "combined_seconds": 163.722,
+        "speedup_percent": -34.92,
+        "schema_complete": true
+      },
+      {
+        "chapter": 3,
+        "control_reviser_plus_state_seconds": 80.527,
+        "combined_seconds": 120.425,
+        "speedup_percent": -49.55,
+        "schema_complete": true
+      }
+    ]
+  },
+  "blind-parallel-precurator": {
+    "counts": {
+      "reader": {
+        "parallel_precurator": 3,
+        "control": 2
+      },
+      "authority": {
+        "control": 4,
+        "parallel_precurator": 1
+      }
+    },
+    "rows": [
+      {
+        "chapter": 2,
+        "judge": "reader",
+        "verdict": "parallel_precurator"
+      },
+      {
+        "chapter": 2,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 3,
+        "judge": "reader",
+        "verdict": "parallel_precurator"
+      },
+      {
+        "chapter": 3,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 10,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 10,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 14,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 14,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 19,
+        "judge": "reader",
+        "verdict": "parallel_precurator"
+      },
+      {
+        "chapter": 19,
+        "judge": "authority",
+        "verdict": "parallel_precurator"
+      }
+    ]
+  },
+  "blind-authority-blueprint-primary": {
+    "counts": {
+      "reader": {
+        "authority_blueprint_primary": 1,
+        "control": 3,
+        "MIXED": 1
+      },
+      "authority": {
+        "authority_blueprint_primary": 4,
+        "MIXED": 1
+      }
+    },
+    "rows": [
+      {
+        "chapter": 2,
+        "judge": "reader",
+        "verdict": "authority_blueprint_primary"
+      },
+      {
+        "chapter": 2,
+        "judge": "authority",
+        "verdict": "authority_blueprint_primary"
+      },
+      {
+        "chapter": 3,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 3,
+        "judge": "authority",
+        "verdict": "authority_blueprint_primary"
+      },
+      {
+        "chapter": 10,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 10,
+        "judge": "authority",
+        "verdict": "authority_blueprint_primary"
+      },
+      {
+        "chapter": 14,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 14,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 19,
+        "judge": "reader",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 19,
+        "judge": "authority",
+        "verdict": "authority_blueprint_primary"
+      }
+    ]
+  },
+  "blind-parallel-watch-medium-reviser": {
+    "counts": {
+      "reader": {
+        "control": 3,
+        "MIXED": 1,
+        "parallel_watch_medium": 1
+      },
+      "authority": {
+        "parallel_watch_medium": 4,
+        "MIXED": 1
+      }
+    },
+    "rows": [
+      {
+        "chapter": 2,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 2,
+        "judge": "authority",
+        "verdict": "parallel_watch_medium"
+      },
+      {
+        "chapter": 3,
+        "judge": "reader",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 3,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 10,
+        "judge": "reader",
+        "verdict": "parallel_watch_medium"
+      },
+      {
+        "chapter": 10,
+        "judge": "authority",
+        "verdict": "parallel_watch_medium"
+      },
+      {
+        "chapter": 14,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 14,
+        "judge": "authority",
+        "verdict": "parallel_watch_medium"
+      },
+      {
+        "chapter": 19,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 19,
+        "judge": "authority",
+        "verdict": "parallel_watch_medium"
+      }
+    ]
+  },
+  "blind-paragraph-delta-reviser": {
+    "counts": {
+      "reader": {
+        "paragraph_delta": 2,
+        "MIXED": 1,
+        "control": 2
+      },
+      "authority": {
+        "paragraph_delta": 4,
+        "MIXED": 1
+      }
+    },
+    "rows": [
+      {
+        "chapter": 2,
+        "judge": "reader",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 2,
+        "judge": "authority",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 3,
+        "judge": "reader",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 3,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 10,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 10,
+        "judge": "authority",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 14,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 14,
+        "judge": "authority",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 19,
+        "judge": "reader",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 19,
+        "judge": "authority",
+        "verdict": "paragraph_delta"
+      }
+    ]
+  },
+  "blind-paragraph-delta-reviser-repeat2": {
+    "counts": {
+      "reader": {
+        "paragraph_delta": 2,
+        "MIXED": 1,
+        "control": 2
+      },
+      "authority": {
+        "control": 2,
+        "MIXED": 1,
+        "paragraph_delta": 2
+      }
+    },
+    "rows": [
+      {
+        "chapter": 2,
+        "judge": "reader",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 2,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 3,
+        "judge": "reader",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 3,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 10,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 10,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 14,
+        "judge": "reader",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 14,
+        "judge": "authority",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 19,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 19,
+        "judge": "authority",
+        "verdict": "paragraph_delta"
+      }
+    ]
+  },
+  "blind-paragraph-delta-reviser-crossbook": {
+    "counts": {
+      "reader": {
+        "paragraph_delta": 4,
+        "control": 1
+      },
+      "authority": {
+        "control": 2,
+        "MIXED": 3
+      }
+    },
+    "rows": [
+      {
+        "chapter": 1,
+        "judge": "reader",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 1,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 4,
+        "judge": "reader",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 4,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 6,
+        "judge": "reader",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 6,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 8,
+        "judge": "reader",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 8,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 10,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 10,
+        "judge": "authority",
+        "verdict": "MIXED"
+      }
+    ]
+  },
+  "blind-spark-paragraph-delta": {
+    "counts": {
+      "reader": {
+        "MIXED": 1,
+        "control": 1,
+        "paragraph_delta": 1
+      },
+      "authority": {
+        "MIXED": 1,
+        "control": 1,
+        "paragraph_delta": 1
+      }
+    },
+    "rows": [
+      {
+        "chapter": 3,
+        "judge": "reader",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 3,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 10,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 10,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 19,
+        "judge": "reader",
+        "verdict": "paragraph_delta"
+      },
+      {
+        "chapter": 19,
+        "judge": "authority",
+        "verdict": "paragraph_delta"
+      }
+    ]
+  },
+  "blind-speculative-next-director-downstream": {
+    "counts": {
+      "reader": {
+        "control": 3,
+        "speculative_downstream": 3
+      },
+      "authority": {
+        "control": 4,
+        "speculative_downstream": 1,
+        "MIXED": 1
+      }
+    },
+    "rows": [
+      {
+        "chapter": 3,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 3,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 4,
+        "judge": "reader",
+        "verdict": "speculative_downstream"
+      },
+      {
+        "chapter": 4,
+        "judge": "authority",
+        "verdict": "speculative_downstream"
+      },
+      {
+        "chapter": 6,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 6,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 13,
+        "judge": "reader",
+        "verdict": "speculative_downstream"
+      },
+      {
+        "chapter": 13,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 15,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 15,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 19,
+        "judge": "reader",
+        "verdict": "speculative_downstream"
+      },
+      {
+        "chapter": 19,
+        "judge": "authority",
+        "verdict": "control"
+      }
+    ]
+  },
+  "blind-ten-chapter-attention-kernel": {
+    "counts": {
+      "reader": {
+        "attention_kernel": 2,
+        "control": 3
+      },
+      "authority": {
+        "control": 2,
+        "MIXED": 2,
+        "attention_kernel": 1
+      }
+    },
+    "rows": [
+      {
+        "chapter": 2,
+        "judge": "reader",
+        "verdict": "attention_kernel"
+      },
+      {
+        "chapter": 2,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 3,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 3,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 10,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 10,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 14,
+        "judge": "reader",
+        "verdict": "control"
+      },
+      {
+        "chapter": 14,
+        "judge": "authority",
+        "verdict": "MIXED"
+      },
+      {
+        "chapter": 19,
+        "judge": "reader",
+        "verdict": "attention_kernel"
+      },
+      {
+        "chapter": 19,
+        "judge": "authority",
+        "verdict": "attention_kernel"
+      }
+    ]
+  },
+  "blind-strict-reader-polish-fast20-repeat2": {
+    "counts": {
+      "reader": {
+        "polish": 4
+      },
+      "authority": {
+        "polish": 3,
+        "control": 1
+      }
+    },
+    "rows": [
+      {
+        "chapter": 8,
+        "judge": "reader",
+        "verdict": "polish"
+      },
+      {
+        "chapter": 8,
+        "judge": "authority",
+        "verdict": "polish"
+      },
+      {
+        "chapter": 13,
+        "judge": "reader",
+        "verdict": "polish"
+      },
+      {
+        "chapter": 13,
+        "judge": "authority",
+        "verdict": "control"
+      },
+      {
+        "chapter": 16,
+        "judge": "reader",
+        "verdict": "polish"
+      },
+      {
+        "chapter": 16,
+        "judge": "authority",
+        "verdict": "polish"
+      },
+      {
+        "chapter": 18,
+        "judge": "reader",
+        "verdict": "polish"
+      },
+      {
+        "chapter": 18,
+        "judge": "authority",
+        "verdict": "polish"
+      }
+    ]
+  },
+  "strict_reader_polish": {
+    "strict-reader-polish-fast20-replicate": {
+      "samples": 20,
+      "average_wall_seconds": 10.022,
+      "patched_chapters": [
+        5,
+        16,
+        18
+      ],
+      "all_hidden_by_state": true
+    },
+    "strict-reader-polish-fast20-repeat2": {
+      "samples": 20,
+      "average_wall_seconds": 10.031,
+      "patched_chapters": [
+        8,
+        13,
+        16,
+        18
+      ],
+      "all_hidden_by_state": true
+    },
+    "strict-reader-polish-crossbook": {
+      "samples": 10,
+      "average_wall_seconds": 8.031,
+      "patched_chapters": [],
+      "all_hidden_by_state": true
+    }
+  },
+  "paragraph_delta_repeatability": {
+    "exact_consensus_count": 1,
+    "samples": 5,
+    "rows": [
+      {
+        "chapter": 2,
+        "exact_consensus": false,
+        "first_operation_count": 1,
+        "second_operation_count": 0
+      },
+      {
+        "chapter": 3,
+        "exact_consensus": true,
+        "first_operation_count": 0,
+        "second_operation_count": 0
+      },
+      {
+        "chapter": 10,
+        "exact_consensus": false,
+        "first_operation_count": 6,
+        "second_operation_count": 2
+      },
+      {
+        "chapter": 14,
+        "exact_consensus": false,
+        "first_operation_count": 5,
+        "second_operation_count": 3
+      },
+      {
+        "chapter": 19,
+        "exact_consensus": false,
+        "first_operation_count": 2,
+        "second_operation_count": 1
+      }
+    ]
+  },
+  "speculative_director_canonless_full_downstream": {
+    "samples": 6,
+    "control_avg_seconds": 355.983,
+    "treatment_avg_seconds": 311.79,
+    "aggregate_speedup_percent": 12.41,
+    "average_seconds_saved": 44.193,
+    "per_sample_speedup_percent": [
+      3.37,
+      21.78,
+      3.17,
+      23.57,
+      19.96,
+      1.09
+    ]
+  },
+  "blind-speculative-next-director-canonless-downstream": {
+    "counts": {
+      "reader": {
+        "control": 3,
+        "canonless_downstream": 3
+      },
+      "authority": {
+        "MIXED": 1,
+        "control": 3,
+        "canonless_downstream": 2
+      }
+    },
+    "rows": [
+      {
+        "chapter": 3,
+        "reader": "control",
+        "authority": "MIXED"
+      },
+      {
+        "chapter": 4,
+        "reader": "canonless_downstream",
+        "authority": "control"
+      },
+      {
+        "chapter": 6,
+        "reader": "canonless_downstream",
+        "authority": "canonless_downstream"
+      },
+      {
+        "chapter": 13,
+        "reader": "control",
+        "authority": "canonless_downstream"
+      },
+      {
+        "chapter": 15,
+        "reader": "control",
+        "authority": "control"
+      },
+      {
+        "chapter": 19,
+        "reader": "canonless_downstream",
+        "authority": "control"
+      }
+    ]
+  },
+  "full_curator_terra_high_downstream": {
+    "samples": 4,
+    "control_variant": "luna_high",
+    "treatment_variant": "terra_high",
+    "control_avg_seconds": 315.201,
+    "treatment_avg_seconds": 230.356,
+    "aggregate_speedup_percent": 26.92,
+    "average_seconds_saved": 84.845,
+    "per_chapter": [
+      {
+        "chapter": 2,
+        "control_seconds": 268.314,
+        "treatment_seconds": 207.552,
+        "speedup_percent": 22.65
+      },
+      {
+        "chapter": 10,
+        "control_seconds": 372.609,
+        "treatment_seconds": 260.812,
+        "speedup_percent": 30.0
+      },
+      {
+        "chapter": 14,
+        "control_seconds": 286.312,
+        "treatment_seconds": 264.45,
+        "speedup_percent": 7.64
+      },
+      {
+        "chapter": 19,
+        "control_seconds": 333.569,
+        "treatment_seconds": 188.608,
+        "speedup_percent": 43.46
+      }
+    ]
+  },
+  "blind-full-curator-terra-high-downstream": {
+    "counts": {
+      "reader": {
+        "terra_high_curator": 2,
+        "luna_high_curator": 2
+      },
+      "authority": {
+        "terra_high_curator": 2,
+        "luna_high_curator": 2
+      }
+    },
+    "rows": [
+      {
+        "chapter": 2,
+        "reader": "terra_high_curator",
+        "authority": "terra_high_curator"
+      },
+      {
+        "chapter": 10,
+        "reader": "luna_high_curator",
+        "authority": "terra_high_curator"
+      },
+      {
+        "chapter": 14,
+        "reader": "terra_high_curator",
+        "authority": "luna_high_curator"
+      },
+      {
+        "chapter": 19,
+        "reader": "luna_high_curator",
+        "authority": "luna_high_curator"
+      }
+    ]
+  },
+  "state_terra_low": {
+    "samples": 8,
+    "luna_avg_seconds": 26.149,
+    "terra_avg_seconds": 27.017,
+    "aggregate_speedup_percent": -3.32,
+    "terra_faster_chapters": 2,
+    "all_fields_exact_chapters": 0,
+    "per_sample_speedup_percent": [
+      17.85,
+      -2.02,
+      -3.69,
+      -20.42,
+      -19.87,
+      10.37,
+      -10.74,
+      -1.21
+    ]
+  },
+  "paragraph_manifest_reviser": {
+    "v1_samples": 5,
+    "v1_fallbacks": 5,
+    "v1_avg_effective_speedup_percent": -105.93,
+    "v2_samples": 5,
+    "v2_adopted": 2,
+    "v2_fallbacks": 3,
+    "v2_avg_manifest_speedup_percent": -5.93
+  }
+}

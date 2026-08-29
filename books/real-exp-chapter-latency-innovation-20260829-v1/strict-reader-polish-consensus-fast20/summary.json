@@ -1,0 +1,337 @@
+[
+  {
+    "chapter": 1,
+    "state_wall_seconds": 25.081,
+    "polish_a_wall_seconds": 8.749,
+    "polish_b_wall_seconds": 8.926,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 3511
+  },
+  {
+    "chapter": 2,
+    "state_wall_seconds": 26.205,
+    "polish_a_wall_seconds": 11.153,
+    "polish_b_wall_seconds": 10.005,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2126
+  },
+  {
+    "chapter": 3,
+    "state_wall_seconds": 25.07,
+    "polish_a_wall_seconds": 9.623,
+    "polish_b_wall_seconds": 8.826,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 1982
+  },
+  {
+    "chapter": 4,
+    "state_wall_seconds": 28.709,
+    "polish_a_wall_seconds": 9.101,
+    "polish_b_wall_seconds": 11.315,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2252
+  },
+  {
+    "chapter": 5,
+    "state_wall_seconds": 23.24,
+    "polish_a_wall_seconds": 15.017,
+    "polish_b_wall_seconds": 12.043,
+    "deadline_met": true,
+    "a_mode": "patched",
+    "b_mode": "no_change",
+    "a_patches": [
+      [
+        "乌合说得没错。",
+        ""
+      ]
+    ],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2446
+  },
+  {
+    "chapter": 6,
+    "state_wall_seconds": 23.899,
+    "polish_a_wall_seconds": 9.963,
+    "polish_b_wall_seconds": 7.618,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2164
+  },
+  {
+    "chapter": 7,
+    "state_wall_seconds": 26.582,
+    "polish_a_wall_seconds": 14.303,
+    "polish_b_wall_seconds": 9.676,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2931
+  },
+  {
+    "chapter": 8,
+    "state_wall_seconds": 27.834,
+    "polish_a_wall_seconds": 8.168,
+    "polish_b_wall_seconds": 13.837,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "patched",
+    "a_patches": [],
+    "b_patches": [
+      [
+        "他看得很清楚。",
+        ""
+      ]
+    ],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2691
+  },
+  {
+    "chapter": 9,
+    "state_wall_seconds": 30.119,
+    "polish_a_wall_seconds": 8.873,
+    "polish_b_wall_seconds": 12.019,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2308
+  },
+  {
+    "chapter": 10,
+    "state_wall_seconds": 24.98,
+    "polish_a_wall_seconds": 7.936,
+    "polish_b_wall_seconds": 5.5,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 1983
+  },
+  {
+    "chapter": 11,
+    "state_wall_seconds": 27.07,
+    "polish_a_wall_seconds": 8.325,
+    "polish_b_wall_seconds": 9.871,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2665
+  },
+  {
+    "chapter": 12,
+    "state_wall_seconds": 27.464,
+    "polish_a_wall_seconds": 7.118,
+    "polish_b_wall_seconds": 12.937,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2013
+  },
+  {
+    "chapter": 13,
+    "state_wall_seconds": 25.379,
+    "polish_a_wall_seconds": 8.478,
+    "polish_b_wall_seconds": 13.995,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "patched",
+    "a_patches": [],
+    "b_patches": [
+      [
+        "顾停舟看得分明。",
+        ""
+      ]
+    ],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2933
+  },
+  {
+    "chapter": 14,
+    "state_wall_seconds": 29.496,
+    "polish_a_wall_seconds": 11.175,
+    "polish_b_wall_seconds": 10.27,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 3654
+  },
+  {
+    "chapter": 15,
+    "state_wall_seconds": 32.466,
+    "polish_a_wall_seconds": 12.854,
+    "polish_b_wall_seconds": 8.817,
+    "deadline_met": true,
+    "a_mode": "invalid_fallback",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 3864
+  },
+  {
+    "chapter": 16,
+    "state_wall_seconds": 29.093,
+    "polish_a_wall_seconds": 13.636,
+    "polish_b_wall_seconds": 13.922,
+    "deadline_met": true,
+    "a_mode": "patched",
+    "b_mode": "patched",
+    "a_patches": [
+      [
+        "粮车、井口、水路，全在往坏处走。",
+        ""
+      ]
+    ],
+    "b_patches": [
+      [
+        "粮车、井口、水路，全在往坏处走。",
+        ""
+      ]
+    ],
+    "consensus_applied": true,
+    "patch_count": 1,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2834
+  },
+  {
+    "chapter": 17,
+    "state_wall_seconds": 30.877,
+    "polish_a_wall_seconds": 10.407,
+    "polish_b_wall_seconds": 4.861,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2443
+  },
+  {
+    "chapter": 18,
+    "state_wall_seconds": 30.752,
+    "polish_a_wall_seconds": 10.228,
+    "polish_b_wall_seconds": 10.417,
+    "deadline_met": true,
+    "a_mode": "patched",
+    "b_mode": "patched",
+    "a_patches": [
+      [
+        "三件事都堵在矿脉这一处。",
+        ""
+      ]
+    ],
+    "b_patches": [
+      [
+        "三件事都堵在矿脉这一处。",
+        ""
+      ]
+    ],
+    "consensus_applied": true,
+    "patch_count": 1,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2761
+  },
+  {
+    "chapter": 19,
+    "state_wall_seconds": 26.452,
+    "polish_a_wall_seconds": 7.095,
+    "polish_b_wall_seconds": 7.52,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 3093
+  },
+  {
+    "chapter": 20,
+    "state_wall_seconds": 28.012,
+    "polish_a_wall_seconds": 8.241,
+    "polish_b_wall_seconds": 8.251,
+    "deadline_met": true,
+    "a_mode": "no_change",
+    "b_mode": "no_change",
+    "a_patches": [],
+    "b_patches": [],
+    "consensus_applied": false,
+    "patch_count": 0,
+    "added_wall_seconds": 0.0,
+    "final_chars": 2791
+  }
+]

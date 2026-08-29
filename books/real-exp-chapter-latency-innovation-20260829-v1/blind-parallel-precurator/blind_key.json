@@ -1,0 +1,22 @@
+{
+  "2": {
+    "A": "control",
+    "B": "parallel_precurator"
+  },
+  "3": {
+    "A": "control",
+    "B": "parallel_precurator"
+  },
+  "10": {
+    "A": "parallel_precurator",
+    "B": "control"
+  },
+  "14": {
+    "A": "control",
+    "B": "parallel_precurator"
+  },
+  "19": {
+    "A": "control",
+    "B": "parallel_precurator"
+  }
+}

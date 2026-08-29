@@ -1,0 +1,22 @@
+{
+  "2": {
+    "A": "control",
+    "B": "parallel_watch_luna"
+  },
+  "3": {
+    "A": "parallel_watch_luna",
+    "B": "control"
+  },
+  "10": {
+    "A": "control",
+    "B": "parallel_watch_luna"
+  },
+  "14": {
+    "A": "parallel_watch_luna",
+    "B": "control"
+  },
+  "19": {
+    "A": "control",
+    "B": "parallel_watch_luna"
+  }
+}

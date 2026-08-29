@@ -1,0 +1,1163 @@
+[
+  {
+    "chapter": 1,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span1:sensitive=低潮/只能/地潮",
+      "span2:sensitive=入潮/成炉/没有/行潮籍/资格"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 133.801,
+    "control_state_wall_seconds": 25.081,
+    "speculative_state_wall_seconds": 27.904,
+    "control_reviser_plus_state_seconds": 158.882,
+    "route_critical_seconds": 158.882,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.99271,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "九垂原的地潮十二日一过，井水会涨，潮兽会迁，连平日能走的潮路都可能被冲断。普通人赶路，只能跟着商队，在低潮时沿石桩走；真遇上潮水，就靠潮器、屋梁和运气保命。",
+        "new": "九垂原的地潮十二日一过，井水会涨，潮兽会迁，连平日能走的潮路都可能被冲断。普通人赶路，只能跟着商队，在低潮时沿石桩走；家家还要备着固定屋梁、潮灯和避潮粮窖，路上遇潮则依赖潮器保命。"
+      },
+      {
+        "tag": "replace",
+        "old": "成炉者通常能独自护住一辆商车，可那是成炉者。顾停舟只是个基础入潮者，平日里抱着账册、记着路线，连正式行潮籍都没有。",
+        "new": "成炉者通常能独自护住一辆商车，也才有资格独自穿过短距离荒地；可那是成炉者。顾停舟只是个基础入潮者，平日里抱着账册、记着路线，连正式行潮籍都没有。"
+      }
+    ],
+    "speculative_response_chars": 1370
+  },
+  {
+    "chapter": 2,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span2:sensitive=他/没有",
+      "span3:sensitive=他/已经/没有",
+      "span4:sensitive=他/已经",
+      "span5:entities",
+      "span5:sensitive=不能/他/没有",
+      "span6:entities"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 95.14,
+    "control_state_wall_seconds": 26.205,
+    "speculative_state_wall_seconds": 28.309,
+    "control_reviser_plus_state_seconds": 121.345,
+    "route_critical_seconds": 121.345,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.93972,
+    "changed_spans": [
+      {
+        "tag": "delete",
+        "old": "这句话落下来，比少东家那句“回去再算”更干脆。",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "他没有把路线册交出去，只翻开册页，照着上面的旧桩位、旧转折和损坏时间，一条条说下去。校路官写得很快，写到裂槽方向和矿层位置时，抬头确认了两次。\n\n“裂槽起于旧路塌陷处，避开旧桩线，向深潮矿脉外缘延伸。”\n\n“对。”\n\n“露出新鲜深潮矿层，与旧路浅层碎矿不属同一段。”\n\n“对。”\n\n“旧路线废止，新裂槽另列现场记录。”",
+        "new": "他没有把路线册交出去，只照着册页说清旧桩位、旧转折、裂槽方向和矿层位置。校路官写下几行，抬头确认了两次。\n\n“旧路线废止，新裂槽另列现场记录。”校路官说。"
+      },
+      {
+        "tag": "replace",
+        "old": "校路官手里的炭笔停了一下。\n\n顾停舟看着他，没有回避。",
+        "new": "校路官看了看他掌下那本已经被潮气浸软的路线册。\n\n顾停舟没有回避。"
+      },
+      {
+        "tag": "replace",
+        "old": "校路官看了看他掌下那本已经被潮气浸软的路线册，随后在纸上补完了最后一行。",
+        "new": "校路官在纸上补完最后一行。"
+      },
+      {
+        "tag": "replace",
+        "old": "不远处，商队的人还缩在石坡后。少东家站在高处，隔着雾看见他们，却没有走过来。\n\n他显然也明白，校路台一旦另立记录，商号就不能再拿旧路线把这件事糊弄过去。",
+        "new": "不远处，商队的人还缩在石坡后。少东家站在高处，隔着雾看见他们，没有走过来。"
+      },
+      {
+        "tag": "replace",
+        "old": "与此同时，校路台的传递筒穿过夜里的潮灯，一路送进沉灯商盟。",
+        "new": "这份事实记录随后传入沉灯商盟。"
+      }
+    ],
+    "speculative_response_chars": 1546
+  },
+  {
+    "chapter": 3,
+    "gate_accept": true,
+    "gate_reasons": [
+      "exact"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 55.457,
+    "control_state_wall_seconds": 25.07,
+    "speculative_state_wall_seconds": 25.48,
+    "control_reviser_plus_state_seconds": 80.527,
+    "route_critical_seconds": 55.457,
+    "route_speedup_percent": 31.13,
+    "primary_final_similarity": 1.0,
+    "changed_spans": [],
+    "speculative_response_chars": 1490
+  },
+  {
+    "chapter": 4,
+    "gate_accept": false,
+    "gate_reasons": [
+      "changed_ratio=0.231",
+      "ending_tail_changed",
+      "span1:sensitive=付款/入口/持有/登记/离开/身份/预付款",
+      "span2:sensitive=不能/他/拿走",
+      "span3:entities",
+      "span3:sensitive=不是/交给/他/低潮/已经/没有/离开/行潮籍",
+      "span4:sensitive=没有",
+      "span5:sensitive=他",
+      "span6:entities",
+      "span6:sensitive=下一次/不是/他/低潮/已经"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 157.678,
+    "control_state_wall_seconds": 28.709,
+    "speculative_state_wall_seconds": 27.284,
+    "control_reviser_plus_state_seconds": 186.387,
+    "route_critical_seconds": 186.387,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.96334,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "“登记在我名下。”顾停舟说，“矿路实测的预付款也在里面。这个是行潮牌，以后我能自己接案、合法带潮器，也能用自己的名字登记潮路结果。”",
+        "new": "“登记在我名下。”顾停舟说，“矿路实测的预付款也在里面。这是行潮牌。凭它，我能合法持有潮器，用自己的名字接案、登记路线结果，也能独立承担潮路。对普通人来说，这是离开聚落的身份入口。”"
+      },
+      {
+        "tag": "replace",
+        "old": "它还没用过，不能替他多走一步路。但至少从今以后，这东西不会再被谁一句“商号急用”拿走。",
+        "new": "它还没用过。但至少从今以后，这东西不会再被谁一句“商号急用”拿走。"
+      },
+      {
+        "tag": "replace",
+        "old": "聚落外，一支不大的队伍已经等着。两辆轻车装着测路杆、绳索和干粮，车旁还有几名护卫。领队核过顾停舟的行潮牌和实测契，没有多问，只让他跟上。\n\n顾停舟没有把潮钱交给任何人，也没有把潮髓和契纸放进队伍公箱。\n\n那些东西都在他身上。\n\n低潮期的荒地比平日安静，地面干裂，远处偶尔能看见退去的潮痕。普通人想离开聚落，往往得跟着商队、猎队或军队走；荒地里的潮兽、乱潮和无潮区，足够让一支没有向导和护卫的队伍消失。\n\n顾停舟如今有了行潮籍，却也只是有资格承担潮路，不是一个人就能横穿荒地。",
+        "new": "聚落外，一支不大的队伍已经等着。两辆轻车装着测路杆、绳索和干粮，车旁还有几名护卫。领队朝顾停舟点了点头，让他跟上。\n\n顾停舟没有把潮钱、潮髓和契纸交进队伍公箱，仍贴身收着。\n\n低潮期的荒地比平日安静，地面干裂，远处偶尔能看见退去的潮痕。普通人想离开聚落，往往得跟着商队、猎队或军队走。荒地里的潮兽、乱潮和无潮区，足够让一支没有向导和护卫的队伍消失。"
+      },
+      {
+        "tag": "replace",
+        "old": "一片宽阔水面出现在荒地尽头。水色发暗，岸边立着数根粗大的骨白色界桩，桩上刻着陌生而锋利的纹路。几艘窄船停在浅水处，船头都朝向同一个方向，没有一艘越过界桩。",
+        "new": "一片宽阔水面出现在荒地尽头。水色发暗，岸边立着数根粗大的界桩，桩上刻着陌生而锋利的纹路。几艘窄船停在浅水处，船头都朝向同一个方向，没有一艘越过界桩。"
+      },
+      {
+        "tag": "replace",
+        "old": "“前面是砺骨部控制的水路边缘。”他说，“商号的契到这里不算数，先别乱动。”",
+        "new": "“前面是砺骨部控制的水路边缘。”他说，“外面的契到这里说不上话，先别乱动。”"
+      },
+      {
+        "tag": "replace",
+        "old": "实测契要求他在下一次低潮前拿到路线结果，可眼前这段水路，已经不是靠一纸商盟契约就能过去的地方。",
+        "new": "实测契要求他在下一次低潮前拿到路线结果，可眼前这段水路，已经不是靠一纸实测契就能过去的地方。"
+      }
+    ],
+    "speculative_response_chars": 1535
+  },
+  {
+    "chapter": 5,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span1:entities",
+      "span1:sensitive=不是/他/付款/尾款/预付款",
+      "span2:entities",
+      "span2:sensitive=不是/入口/没有"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 118.165,
+    "control_state_wall_seconds": 23.24,
+    "speculative_state_wall_seconds": 27.91,
+    "control_reviser_plus_state_seconds": 141.405,
+    "route_critical_seconds": 141.405,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.97189,
+    "changed_spans": [
+      {
+        "tag": "delete",
+        "old": "顾停舟知道他在算账。\n\n实测契是他自己签的。阮青蜃给了预付款，剩下的尾款要看结果。矿队不是慈善人，领队更不会替一个刚脱离商号的人白白扛下停工的损失。",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "几名族人拖起早先埋在水边的粗索，横着拉过石脊入口。那不是封死道路，只是告诉后来的人，这段水路仍由砺骨部看守。",
+        "new": "几名族人站到石脊入口两侧，守住刚让开的水路。水路没有被封死，控制权却还在砺骨部手里。"
+      }
+    ],
+    "speculative_response_chars": 1424
+  },
+  {
+    "chapter": 6,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span3:entities",
+      "span3:sensitive=他",
+      "span4:entities",
+      "span4:sensitive=他/入口",
+      "span5:entities",
+      "span6:sensitive=他/分身/只能"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 132.267,
+    "control_state_wall_seconds": 23.899,
+    "speculative_state_wall_seconds": 26.873,
+    "control_reviser_plus_state_seconds": 156.166,
+    "route_critical_seconds": 156.166,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.97305,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "两名矿工把新带进来的矿权标记抬上石台。那是一块刻着矿队印记的黑铁牌，底下带着短桩，钉进石缝就能证明矿队先一步占住这片新裂槽。",
+        "new": "两名矿工把新带进来的矿权标记抬上石台。那是一块刻着矿队印记的黑铁牌，底下带着短桩。"
+      },
+      {
+        "tag": "replace",
+        "old": "顾停舟望着建筑外墙。墙上的潮泥并不只是堆着，泥层下有细小的水线在缓慢游动。倒流水幕冲向半空，峡底的积水却贴着建筑两侧向内回卷，像有什么东西把水压在这片地方。",
+        "new": "顾停舟望着墙上的潮泥。泥层下有细小的水线在缓慢游动。倒流水幕冲向半空，峡底的积水却贴着建筑两侧向内回卷，像有什么东西把水压在这片地方。"
+      },
+      {
+        "tag": "replace",
+        "old": "他看向领队：“这里的潮向靠这层外壳压着。撬开以后，里面的水会翻出来。”",
+        "new": "他看向领队：“这层外壳一动，峡内的潮向就会变，里面的水会翻出来。”"
+      },
+      {
+        "tag": "replace",
+        "old": "眼下唯一能继续往下测的，就是这座建筑附近。若他现在拦住领队，矿队会立刻撤出倒悬峡，本次实测到这里就算断了。入口、走向、承载路线，一样都交不出完整结果。",
+        "new": "眼下唯一能继续往下测的，就是这座建筑附近。若他现在拦住领队，本次实测到这里就会断掉。入口、走向、承载路线，一样都交不出完整结果。"
+      },
+      {
+        "tag": "replace",
+        "old": "水浪从建筑两侧分开，像两只巨手，分别朝峡谷两边扫过去。靠近石台的矿工和护卫被卷向左侧石林，另一边刚从峡口赶来的砺骨部前哨则被逆潮推向右侧断墙。",
+        "new": "水浪从建筑两侧分开，像两只巨手，分别朝峡谷两边扫过去。靠近石台的矿工和护卫被卷向左侧石林，另一边从对侧赶来的砺骨部前哨则被逆潮推向右侧断墙。"
+      },
+      {
+        "tag": "delete",
+        "old": "顾停舟看向分身。\n\n借身能替他多占一个位置，但分身只能带走一种预先选定的本事。",
+        "new": ""
+      }
+    ],
+    "speculative_response_chars": 1310
+  },
+  {
+    "chapter": 7,
+    "gate_accept": false,
+    "gate_reasons": [
+      "ending_tail_changed",
+      "span1:sensitive=不能/已经",
+      "span2:sensitive=分身/已经",
+      "span4:entities",
+      "span4:sensitive=回潮楔/没有"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 182.452,
+    "control_state_wall_seconds": 26.582,
+    "speculative_state_wall_seconds": 25.551,
+    "control_reviser_plus_state_seconds": 209.034,
+    "route_critical_seconds": 209.034,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.99165,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "那块黑铁牌已经裂成两半，半截插在泥里，半截被水推着撞向侧室外墙。它还能不能算矿队的矿权标记，谁都说不清。",
+        "new": "那块黑铁牌的牌面已经裂开，短桩翻在泥里，牌身被水推着撞向侧室外墙。它还能不能算矿队的矿权标记，谁都说不清。"
+      },
+      {
+        "tag": "replace",
+        "old": "侧室里，最后一名被困的前哨已经攀上门边残石。分身本该撤退，可那股牵扯忽然把门内的潮水向两侧扯开了一线。",
+        "new": "侧室外，刚被拖出的两名前哨已经攀上门边残石。分身本该撤退，可那股牵扯忽然把门内的潮水向两侧扯开了一线。"
+      },
+      {
+        "tag": "replace",
+        "old": "裂开的黑铁牌也被水浪卷起，撞进塌毁的石堆里，再没露出来。",
+        "new": "黑铁牌也被水浪卷起，撞进塌毁的石堆里，再没露出来。"
+      },
+      {
+        "tag": "replace",
+        "old": "顾停舟掌中的金属楔忽然一震。\n\n一道潮压正面撞上楔面，没有炸开，也没有把它掀飞。那股本该冲散碎石的力量像被什么东西一口锁住，尽数压进暗沉的金属里。",
+        "new": "顾停舟掌中的回潮楔忽然一震。\n\n一道潮压正面撞上楔面，没有炸开，也没有把它掀飞。那股本该冲散碎石的力量，仿佛被什么东西锁进暗沉的金属里。"
+      }
+    ],
+    "speculative_response_chars": 1373
+  },
+  {
+    "chapter": 8,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span1:entities",
+      "span1:sensitive=不是/他/分身/只能/回潮楔/已经/必须",
+      "span3:entities",
+      "span3:sensitive=他/分身/受伤/回潮楔/没有/离开",
+      "span4:sensitive=已经/开始",
+      "span5:entities",
+      "span5:sensitive=不是/他/分身/受伤/只能/回潮楔/已经",
+      "span6:entities"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 160.087,
+    "control_state_wall_seconds": 27.834,
+    "speculative_state_wall_seconds": 28.546,
+    "control_reviser_plus_state_seconds": 187.921,
+    "route_critical_seconds": 187.921,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.9209,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "顾停舟顶着潮压，肩背被冲得发麻，心里却已经明白过来。\n\n矿队首领不是要救谁。\n\n他是在试顾停舟的分身到底能做什么，又能被逼到什么地步。\n\n分身只能带着牵引。\n\n那便意味着，只要目标不停换，顾停舟就必须在守住回潮楔、拉回伤员、维持退路之间不断失手。",
+        "new": "顾停舟顶着潮压，肩背被冲得发麻。分身手上的牵引只够守住楔尾，目标一换，楔体就会偏，眼前每一处退路都在逼他先放掉另一处。"
+      },
+      {
+        "tag": "replace",
+        "old": "顾停舟吐出一口带血的气。",
+        "new": "顾停舟吐出一口闷气。"
+      },
+      {
+        "tag": "replace",
+        "old": "牵引没有离开回潮楔。\n\n它只是往旁边一拧。\n\n楔体仍被死死压在峡壁上，可分身把原本全部压在楔尾的力量，分出一道细长的牵引，勾住左侧石坡下那个受伤矿工的腰带。",
+        "new": "他松开楔尾的一线，整股牵引转向左侧石坡下的伤员。楔体向外一挣，顾停舟用肩膀顶住楔尾，没让它脱出。"
+      },
+      {
+        "tag": "replace",
+        "old": "堵住窄缝的石板被水顶得裂开。\n\n乌合回头一看，腿伤前哨脚下的斜石已经开始往下滑。",
+        "new": "堵住窄缝的石板被水顶得裂开。乌合回头一看，腿伤前哨脚下的斜石已经开始往下滑。"
+      },
+      {
+        "tag": "replace",
+        "old": "分身的手指猛地一紧。\n\n左侧的受伤矿工刚被拖到石坡边缘，右侧的牵引已经弱了下去。\n\n不是分身不肯拉。\n\n是他只能带着这一样本事，而这本事此刻已经被回潮楔、左侧伤员和右侧残墙撕成了三股。",
+        "new": "分身的手指猛地转向右边。\n\n左侧伤员腰带上的牵引随即松开，那人又往下滑了半尺，两个矿工死死抓住他。分身的牵引刚碰到右侧斜石，楔尾便向外一挣。顾停舟用肩膀压住楔体，那股力只在斜石上擦过，没能把它拉停。\n\n分身只能把牵引重新扣回楔体。"
+      },
+      {
+        "tag": "delete",
+        "old": "它快满了。\n\n再继续留在这里，正面的潮压会先把峡壁压裂。\n\n峡壁一裂，左侧石坡和右侧残墙都会一起陷进水里。",
+        "new": ""
+      }
+    ],
+    "speculative_response_chars": 1395
+  },
+  {
+    "chapter": 9,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span1:entities",
+      "span1:sensitive=不是/低潮/进入",
+      "span2:sensitive=他/分身/回潮楔/没有",
+      "span3:sensitive=交付/他/回潮楔/她/尾款/归"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 128.058,
+    "control_state_wall_seconds": 30.119,
+    "speculative_state_wall_seconds": 32.199,
+    "control_reviser_plus_state_seconds": 158.177,
+    "route_critical_seconds": 158.177,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.9837,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "原来逆潮不是只有正面这一股。",
+        "new": "倒悬峡低潮时，河水会向天空流，水中悬着倒置的石林和残破建筑。已知潮兽不会进入峡谷最深处。"
+      },
+      {
+        "tag": "replace",
+        "old": "他没有带别的本事，手上只有牵引。\n\n裂缝里的石面湿滑，分身侧着身挤进去，肩膀被凸起的石棱刮开一道口子。他伸出手，牵引越过石缝，扣住回潮楔中段。",
+        "new": "裂缝里的石面湿滑，分身侧着身挤进去，肩膀被凸起的石棱刮开一道口子。他伸出手，手上的牵引越过石缝，扣住回潮楔中段。"
+      },
+      {
+        "tag": "replace",
+        "old": "“顾停舟。”他开口，声音不高，却让附近的人都听得见，“矿权标记毁了，实测尾款无法交付，回潮楔的归属也要重算。”",
+        "new": "“顾停舟。”她开口，声音不高，却让附近的人都听得见，“矿权标记毁了，实测尾款无法交付，回潮楔的归属也要重算。”"
+      }
+    ],
+    "speculative_response_chars": 1703
+  },
+  {
+    "chapter": 10,
+    "gate_accept": false,
+    "gate_reasons": [
+      "changed_ratio=0.415",
+      "span1:entities",
+      "span1:sensitive=撤离",
+      "span2:sensitive=他/回潮楔",
+      "span3:entities",
+      "span3:sensitive=他/回潮楔/已经",
+      "span4:sensitive=他",
+      "span5:sensitive=不是/已经/成炉/资格",
+      "span6:sensitive=不是/他",
+      "span7:sensitive=他/分身/只能/成炉",
+      "span8:sensitive=不是/他/分身/成炉/没有",
+      "span10:sensitive=回潮楔",
+      "span11:sensitive=不是/他/回潮楔",
+      "span12:entities",
+      "span12:sensitive=不是/交付/他/回潮楔/她/尾款/归/持有",
+      "span13:sensitive=她/已经",
+      "span14:sensitive=他"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 191.335,
+    "control_state_wall_seconds": 24.98,
+    "speculative_state_wall_seconds": 29.624,
+    "control_reviser_plus_state_seconds": 216.315,
+    "route_critical_seconds": 216.315,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.87268,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "撤离车卡在斜坡中段，车身被震得往外滑。车上挤着伤员和湿透的矿样箱，前面的人不敢跳，后面的人也不敢再推。只要车轮再偏半尺，整辆车就会翻进下方裂开的石沟。",
+        "new": "撤离车在震动中向外滑，车上的人不敢动。"
+      },
+      {
+        "tag": "replace",
+        "old": "顾停舟迈步走下湿石。腿上一软，他险些跪下去，手里的回潮楔却先一步发烫。楔体上的细裂里透出暗青色的潮光，像有一股不肯散去的水压，仍在沿着他的掌心往骨头里钻。",
+        "new": "顾停舟迈步走下湿石。腿上一软，他险些跪下去，手里的回潮楔却先一步发烫。"
+      },
+      {
+        "tag": "replace",
+        "old": "现在这东西一动，谁也不知道会先稳住车，还是先把自己体内的残压再掀起来。",
+        "new": "回潮楔已经细裂，他不敢让它再接住车身。"
+      },
+      {
+        "tag": "replace",
+        "old": "潮息从腹中涌出，沿着双臂压入车架。原本乱颤的木轮慢慢停住，车侧悬起的那一角被他一点点按回地面。车上的伤员抓着边框，连喘气都不敢大声。",
+        "new": "潮息从腹中涌出，沿着双臂压入车架。原本乱颤的木轮慢慢停住，车侧悬起的那一角被他一点点按回地面。车上的人抓着边框，连喘气都不敢大声。"
+      },
+      {
+        "tag": "replace",
+        "old": "成炉修士，已经能独自护住一辆商车，短距离穿过荒地。可这不是凭空多了一身力气，而是身体真正扛住潮压后，潮息才能在体内结成稳定的炉。",
+        "new": "按通常的尺度，成炉者已经能独自护住一辆商车，也有资格短距离穿过荒地。"
+      },
+      {
+        "tag": "delete",
+        "old": "他终于不是靠着一时爆发、靠着古器硬顶的人了。",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "分身从他身侧走出半步，刚接住那股潮息，身体便猛地一晃。成炉后的力量太沉，分身只能携带一种超凡本事，撑不起完整的潮炉。",
+        "new": "分身从他身侧走出半步，刚接住那股潮息，身体便猛地一晃。它只能带走一种超凡本事，承不住完整的潮炉。"
+      },
+      {
+        "tag": "replace",
+        "old": "分身站稳，手臂上却浮出一层细密的潮纹。\n\n“别试了。”顾停舟低声道。\n\n成炉是他自己的门槛，不是分身也能一并跨过去的门槛。\n\n矿队的人这时围了过来。\n\n矿队首领没有挤到最前面，声音却从人群里冷冷传出。",
+        "new": "分身站稳，他也没有再试。\n\n另一侧石脊后，传来矿队首领的声音。"
+      },
+      {
+        "tag": "replace",
+        "old": "顾停舟回头。",
+        "new": "顾停舟朝声音传来的方向回头。"
+      },
+      {
+        "tag": "replace",
+        "old": "“契上写的是路线和矿样。”顾停舟把契纸展开，“我替你们走完实测，矿样也在车上。回潮楔不在契里。”",
+        "new": "“契上写的是路线和矿样。”顾停舟把契纸展开，“路线我走了，矿样也带出来了。回潮楔不在契里。”"
+      },
+      {
+        "tag": "replace",
+        "old": "矿队的人脸色难看。\n\n顾停舟握住回潮楔。器身冰凉，细裂却清清楚楚地贴在掌心。他确实想留下它。不是因为它古老，也不是因为谁说它值钱，而是因为这东西在他最难的时候替他顶住了潮压，也因为它漂亮、锋利、有用。",
+        "new": "那头静了一瞬。\n\n顾停舟握住回潮楔。器身冰凉，细裂清清楚楚地贴在掌心。\n\n他确实想留下它。\n\n不是因为它古老，也不是因为谁说它值钱，而是因为这东西在他最难的时候替他顶住了潮压，也因为它漂亮、锋利、有用。"
+      },
+      {
+        "tag": "replace",
+        "old": "人群里安静了一瞬。\n\n阮青蜃从高处走下来，靴底踩过碎石，停在顾停舟对面。\n\n“你承认尾款落空？”他问。\n\n“承认。”\n\n“你也拒绝把回潮楔并入矿契附属物？”\n\n“契里没有，它就不是。”\n\n阮青蜃看着那张湿透的契纸，神情没有变化。\n\n“好。”他说，“那我今日当众记下。”\n\n他抬起手，声音平稳，却足够让附近的人听清。\n\n“矿权标记毁损，实测尾款无法按原条件交付；回潮楔由顾停舟个人持有，但矿队提出归属异议。自此刻起，契约损失与古器归属，一并正式追索。”",
+        "new": "阮青蜃从高处走下来，停在顾停舟对面。她看了一眼湿透的契纸，又看向楔体上的细裂。\n\n“尾款落空，你认？”\n\n“认。”\n\n“楔子也不交？”\n\n“契里没有。”\n\n阮青蜃点了点头，转身朝附近的人开口，声音平稳，却足够让人听清。\n\n“矿权标记毁损，实测尾款无法按原条件交付；回潮楔由顾停舟个人持有，但矿队提出归属异议。契约损失与古器归属，自此正式追索。”"
+      },
+      {
+        "tag": "replace",
+        "old": "乌合身后的砺骨部已经把伤员安置到车上。她站在湿石里，腿伤前哨被同伴扶着，仍朝顾停舟这边看。",
+        "new": "乌合身后的砺骨部已经把伤员安置好。她站在湿石里，腿伤前哨被同伴扶着，仍朝顾停舟这边看。"
+      },
+      {
+        "tag": "replace",
+        "old": "与此同时，一道消息送到了他手里。",
+        "new": "这时，一道消息传到他手里。"
+      }
+    ],
+    "speculative_response_chars": 1659
+  },
+  {
+    "chapter": 11,
+    "gate_accept": false,
+    "gate_reasons": [
+      "changed_ratio=0.260",
+      "span1:sensitive=他/她",
+      "span3:entities",
+      "span3:sensitive=她/撤离/没有",
+      "span4:sensitive=她/没有",
+      "span6:entities",
+      "span6:sensitive=不是/他/回潮楔/完成/已经/归/没有",
+      "span7:sensitive=不是",
+      "span8:sensitive=不能/他/回潮楔/她/尾款/归/持有",
+      "span9:sensitive=他/她",
+      "span10:entities",
+      "span10:sensitive=交给/他/副本/原件/回潮楔/已经/撤离/没有"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 142.36,
+    "control_state_wall_seconds": 27.07,
+    "speculative_state_wall_seconds": 31.021,
+    "control_reviser_plus_state_seconds": 169.43,
+    "route_critical_seconds": 169.43,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.90937,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "他只是把湿透的契纸展开，指着上面模糊的印记。",
+        "new": "她只是把湿透的契纸展开，指着上面模糊的印记。"
+      },
+      {
+        "tag": "replace",
+        "old": "“对，先谈价。”乌合说道，“砺骨部这次出人引路、守水口、带伤员过断段。我要本次协作的报酬，不要一笔说不清的救命人情。”",
+        "new": "“对，先谈价。”乌合说道，“砺骨部这次出人引路、守水口、带伤员过断段。我要本次协作的报酬，现钱，先把数说定。”"
+      },
+      {
+        "tag": "delete",
+        "old": "乌合没有立刻答。\n\n她先看了一眼砺骨部的伤员，又看向撤离车上空出来的角落。\n\n“药和车位，你现在给不起。”她说，“我要现钱，给伤员换药；再要你手上那批矿样里，按市价折一份给我们。以后若你进百炉城，砺骨部需要问路或换货，你优先替我们搭一次线。”\n\n顾停舟听完，点头。\n\n“现钱多少？”",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "矿样则由乌合亲自挑了封袋。她挑得不贪，都是能换药和干粮的常见样料，没有碰那几块颜色最深的。\n\n顾停舟把封袋递给她。\n\n乌合接过，掂了一下。",
+        "new": "乌合收起钱，掂了掂钱袋。"
+      },
+      {
+        "tag": "replace",
+        "old": "乌合把钱袋收好，脸上终于有了点笑意。",
+        "new": "乌合脸上终于有了点笑意。"
+      },
+      {
+        "tag": "delete",
+        "old": "现场的人证没有谁替谁说全话，可三件事已经足够清楚。\n\n矿队首领先动手毁了撤路；回潮楔由顾停舟实际使用，救援也由他完成；车上这些获救者不是矿队一句话就能归成无主损耗的东西。",
+        "new": ""
+      },
+      {
+        "tag": "delete",
+        "old": "谁都看得见，眼下不是夺器的时候。",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "“现场不能强行结算。”他说，“矿队可以保留撤路、矿权标记和尾款的追索。古器归属也可以继续争。但在新的契据和证据拿出来前，回潮楔暂由顾停舟持有。”",
+        "new": "“现场不能强行结算。”她说，“矿队可以保留撤路、矿权标记和尾款的追索。古器归属也可以继续争。但在新的契据和证据拿出来前，回潮楔暂由顾停舟持有。”"
+      },
+      {
+        "tag": "replace",
+        "old": "“你保住的只是今天。”他说。",
+        "new": "“你保住的只是今天。”她说。"
+      },
+      {
+        "tag": "replace",
+        "old": "“百炉会的人，不会只看你手里拿着什么。”\n\n顾停舟低头看了看回潮楔。\n\n细裂已经比先前更深。再拖下去，这件漂亮又锋利的东西，或许真的会变成一块废铁。\n\n“我知道。”\n\n他从怀里取出反潮记录。\n\n那几页纸被潮水浸过，又被他压在贴身处烘得半干。上面是他在峡里留下的实测痕迹，乱，却完整。它们和矿路实测契原件、矿样、回潮楔放在一起，才是一条能往后说话的证据链。\n\n顾停舟没有把原件交给任何人。\n\n他借来干纸，坐在车辕旁，一笔一笔誊出副本。手臂伤口一动就疼，字迹却没有乱。写完后，他将副本封好，托撤离队中即刻出发的传信人送往唐绾处。\n\n原始记录仍被他收回怀里。\n\n等车队重新上路时，天色已经压得很低。\n\n顾停舟靠在车侧，闭眼缓了一会儿。",
+        "new": "顾停舟从怀里取出反潮记录。\n\n那几页纸被潮水浸过，又被他压在贴身处烘得半干。上面是他在峡里留下的实测痕迹，乱，却完整。\n\n他借来干纸，坐在车辕旁，抄出一份副本。手臂伤口一动就疼，字迹却没有乱。写完后，他把副本交给撤离队的传信人，送往唐绾处；原始记录、矿路实测契原件和矿样仍收在怀里。\n\n等车队重新上路时，天色已经压得很低。顾停舟靠在车侧，闭眼缓了一会儿。"
+      }
+    ],
+    "speculative_response_chars": 1670
+  },
+  {
+    "chapter": 12,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span2:sensitive=不能/他/分身/开始",
+      "span3:sensitive=他/她"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 127.172,
+    "control_state_wall_seconds": 27.464,
+    "speculative_state_wall_seconds": 25.894,
+    "control_reviser_plus_state_seconds": 154.636,
+    "route_critical_seconds": 154.636,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.99258,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "车队立刻调头。",
+        "new": "车队立刻往左转。"
+      },
+      {
+        "tag": "replace",
+        "old": "那是他一开始定下的稳定任务，不能乱，不能断。分身站在更远处，始终只做同一件事。顾停舟能感觉到那边的拉扯仍在，却不像本体这里这样能随时换力、换方向、换位置。",
+        "new": "那是他一开始定下的稳定任务，不能乱，不能断。分身站在更远处，始终只做同一件事，无法像本体这样随时换力、换方向、换位置。"
+      },
+      {
+        "tag": "replace",
+        "old": "顾停舟也看着他。",
+        "new": "顾停舟也看着她。"
+      }
+    ],
+    "speculative_response_chars": 1398
+  },
+  {
+    "chapter": 13,
+    "gate_accept": false,
+    "gate_reasons": [
+      "ending_tail_changed",
+      "span1:sensitive=没有",
+      "span2:entities",
+      "span2:sensitive=不能/他/回潮楔/她/没有",
+      "span3:sensitive=原件",
+      "span4:entities",
+      "span4:sensitive=不是/之后/他/回潮楔/她/必须/没有",
+      "span5:sensitive=他/她",
+      "span6:sensitive=他/她",
+      "span7:sensitive=开始"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 152.855,
+    "control_state_wall_seconds": 25.379,
+    "speculative_state_wall_seconds": 25.847,
+    "control_reviser_plus_state_seconds": 178.234,
+    "route_critical_seconds": 178.234,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.94887,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "两边都是黑沉沉的高墙，墙上嵌着一排旧炉口，炉火早熄了，只剩砖缝里积下的热气。巷门前挂着一块铜牌，牌上没有多余花纹，只有三个字。",
+        "new": "巷门前挂着一块铜牌，牌上没有多余花纹，只有三个字。"
+      },
+      {
+        "tag": "replace",
+        "old": "院子不大，中央立着一座半人高的试炉。炉膛里没有明火，只压着一团暗红色的热。炉前站着个年轻姑娘，袖口挽到手肘，手指上沾着黑灰。她听见脚步声，抬头看了顾停舟一眼，目光没有在他脸上停太久，直接落到他掌中的回潮楔上。",
+        "new": "院子不大，中央立着一座半人高的试炉。炉膛里没有明火，只压着一团暗红色的热。百炉会掌着高阶潮器的器谱和认证，器物还能不能用、值不值得修，这里的人最清楚。\n\n炉前站着个年长女人，袖口挽到手肘，手指上沾着黑灰。她听见脚步声，抬头看了顾停舟一眼，目光没有在他脸上停太久，直接落到他掌中的回潮楔上。"
+      },
+      {
+        "tag": "replace",
+        "old": "“我要看原件。”唐绾道，“要不要把它写进作品、写多少，是我的事。记录还给不给别人看，也是我的事。”",
+        "new": "“我要看原件。”唐绾道，“用它做作品，怎么用、写多少，是我的事。”"
+      },
+      {
+        "tag": "replace",
+        "old": "顾停舟低头看着回潮楔。\n\n它恢复了。\n\n可不是没有代价地恢复。\n\n这东西能在最需要的时候替他挡住、拧开、再还回去一次；可那一次之后，他必须等它把残留的潮压散干净。\n\n唐绾把试炉旁一块布揭开，露出下面一只浅铜盘。\n\n铜盘里放着几块刚被热浪震裂的试石碎片。\n\n“你刚才看见了。”她说，“锁住一股力，改掉它的方向，再把它放出去。它不是给你连续硬扛用的。”\n\n顾停舟把回潮楔收进掌心。",
+        "new": "顾停舟低头看着回潮楔，指腹在那道浅痕上停了一下，才把它收回掌心。"
+      },
+      {
+        "tag": "replace",
+        "old": "他身后跟着两名穿契行短袍的人，各自抱着卷册。",
+        "new": "她身后跟着两名抱着卷册的人。"
+      },
+      {
+        "tag": "replace",
+        "old": "“赶上了。”他说。",
+        "new": "“赶上了。”她说。"
+      },
+      {
+        "tag": "replace",
+        "old": "开炉试开始了。",
+        "new": "开炉试要开始了。"
+      }
+    ],
+    "speculative_response_chars": 1344
+  },
+  {
+    "chapter": 14,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span2:sensitive=他/她",
+      "span3:entities",
+      "span3:sensitive=他/已经/成炉/没有/照域",
+      "span4:sensitive=只能/成炉",
+      "span5:entities",
+      "span5:sensitive=不是/不能/他/只能/已经/成炉",
+      "span6:entities",
+      "span6:sensitive=不是/之前/他/只能",
+      "span7:sensitive=他/她",
+      "span8:entities",
+      "span8:sensitive=不能",
+      "span9:sensitive=他",
+      "span10:sensitive=他/她/已经",
+      "span11:sensitive=不是/他/她"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 210.84,
+    "control_state_wall_seconds": 29.496,
+    "speculative_state_wall_seconds": 29.472,
+    "control_reviser_plus_state_seconds": 240.336,
+    "route_critical_seconds": 240.336,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.94452,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "炉钟第二声落下时，百炉会内侧的铁门彻底合拢。",
+        "new": "炉钟第二声落下时，百炉会的铁门在身后彻底合拢。"
+      },
+      {
+        "tag": "replace",
+        "old": "他身后的两名随从抱着卷册，站得离试潮道不远不近，像是早已准备好在这里把账一笔笔翻出来。",
+        "new": "她身后的两名随从抱着卷册，站得离试潮道不远不近，像是早已准备好在这里把账一笔笔翻出来。"
+      },
+      {
+        "tag": "replace",
+        "old": "场边一名白须老人看着铜尺，开口道：“成炉者能把重压稳在身边，已经不差。想把一段潮势压住、送远，还不散，得有照域者的本事。”\n\n这是百炉会里人人都知道的判尺。\n\n普通成炉者守得住自己身边几步地，却很难把一股乱潮送到几十丈外，再让它按自己的意思转弯。\n\n唐绾没有看那老人，只朝顾停舟伸出手。",
+        "new": "场边一名白须老人记下铜尺上的数。唐绾没有看他，只朝顾停舟伸出手。"
+      },
+      {
+        "tag": "replace",
+        "old": "白须老人往前一步，盯着铜尺：“四十丈外还能稳住……”\n\n阮青蜃脸上的笑意淡了一点。",
+        "new": "白须老人往前一步，盯着铜尺：“普通成炉者只能把重压稳在自身附近。刚才这一段，却被它拧到四十丈外，再送回主槽。”"
+      },
+      {
+        "tag": "replace",
+        "old": "刚才那一下，已经够了。\n\n白须老人走到试潮道旁，蹲下摸了摸岔道里留下的压痕。\n\n“成炉者稳住重压，只能稳在自己附近。”他抬起头，看向顾停舟，“这枚楔子能锁住一段潮势，再把它改到别处去。它不是寻常助器。”\n\n另一名穿灰袍的验器人接话：“一次用完，残压要散，不能连压。代价看得见，效用也看得见。”",
+        "new": "白须老人蹲下摸了摸岔道里留下的压痕。\n\n“这不是寻常助器。”"
+      },
+      {
+        "tag": "replace",
+        "old": "这句话落下，场里看顾停舟的目光变了。\n\n之前他只是拿着古器、等着别人来算账的人。\n\n现在，谁都看见了那枚楔子能做什么，也看见了顾停舟不是只能把它攥在手里逃命。",
+        "new": "场里的目光从那枚楔子移到了顾停舟身上。"
+      },
+      {
+        "tag": "replace",
+        "old": "“价钱可以再谈。”他说。",
+        "new": "“价钱可以再谈。”她说。"
+      },
+      {
+        "tag": "replace",
+        "old": "“但你想拿一笔钱，把楔子、矿路和砺骨部的水路全装进自己的账里，不行。”",
+        "new": "“但矿脉上的标记，不能把砺骨部水路也算进你的矿权里。”"
+      },
+      {
+        "tag": "replace",
+        "old": "阮青蜃的卷册里，首批矿脉标记确实是他的。",
+        "new": "阮青蜃的卷册里，确实夹着首批矿脉标记。"
+      },
+      {
+        "tag": "replace",
+        "old": "他身后的随从握着卷册，脸色已经不太好看。",
+        "new": "她身后的随从握着卷册，脸色已经不太好看。"
+      },
+      {
+        "tag": "replace",
+        "old": "“顾停舟。”他停了一下，“你今天拒绝的是一笔买卖，不是一场风浪。”",
+        "new": "“顾停舟。”她停了一下，“你今天拒绝的是一笔买卖，不是一场风浪。”"
+      }
+    ],
+    "speculative_response_chars": 1548
+  },
+  {
+    "chapter": 15,
+    "gate_accept": false,
+    "gate_reasons": [
+      "ending_tail_changed",
+      "span1:sensitive=不能",
+      "span2:entities",
+      "span2:sensitive=他",
+      "span3:entities",
+      "span3:sensitive=他",
+      "span4:entities",
+      "span4:sensitive=不是/他",
+      "span5:entities",
+      "span5:sensitive=撤离",
+      "span6:sensitive=地潮/已经/撤离"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 141.213,
+    "control_state_wall_seconds": 32.466,
+    "speculative_state_wall_seconds": 30.856,
+    "control_reviser_plus_state_seconds": 173.679,
+    "route_critical_seconds": 173.679,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.98351,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "“粮到了就好。”顾沉戈说，“三座井不能丢，粮道也不能断。井一毁，旧关外这几千口人撑不到下一轮补给。”",
+        "new": "“粮到了就好。”顾沉戈说，“三座井不能丢，粮道也不能断。井一毁，旧关外的人撑不到下一轮补给。”"
+      },
+      {
+        "tag": "delete",
+        "old": "这是他同意承担的部分。",
+        "new": ""
+      },
+      {
+        "tag": "delete",
+        "old": "这是他同意承担的部分。",
+        "new": ""
+      },
+      {
+        "tag": "delete",
+        "old": "这不是把砺骨部当成一条可有可无的退路，而是把一段真正的去路交到了他们手里。",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "只要车队全部压进井后那段粮道，三座井和粮就能暂时连成一线。守井的人能借粮车挡住一部分潮压，撤离的人也能从西侧水路和城门分开。",
+        "new": "车队只要先过井位，守井的人还能守住井口，撤离的人也能从西侧水路和城门分开。"
+      },
+      {
+        "tag": "replace",
+        "old": "地潮就先把三座井、粮队和外层撤离的人一起拖进了潮里。",
+        "new": "地潮已经同时撞上三座井、粮队和外层撤离的人。"
+      }
+    ],
+    "speculative_response_chars": 1564
+  },
+  {
+    "chapter": 16,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span1:sensitive=不再/不是",
+      "span2:entities",
+      "span2:sensitive=他",
+      "span4:sensitive=不能/之前/他/已经/没有"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 120.371,
+    "control_state_wall_seconds": 29.093,
+    "speculative_state_wall_seconds": 43.979,
+    "control_reviser_plus_state_seconds": 149.464,
+    "route_critical_seconds": 149.464,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.98705,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "不是潮退了。\n\n是粮车下陷的前轮被一股力量硬生生托住，车身不再往西侧软地歪。牲口还在挣，可车辕稳住了。车夫愣了一下，立刻死死拉紧缰绳。",
+        "new": "不是潮退了。粮车下陷的前轮被一股力量硬生生托住，车身不再往西侧软地歪。牲口还在挣，可车辕稳住了。车夫愣了一下，立刻死死拉紧缰绳。"
+      },
+      {
+        "tag": "delete",
+        "old": "他要先把粮队和主水路钉在原处。",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "“去外层。”",
+        "new": "“往外层。”"
+      },
+      {
+        "tag": "replace",
+        "old": "楔子仍是原来的样子，只是握上去时，那股压意乱得厉害，像刚从一场洪流里抽出来的铁。他收回袖中，没有再碰。\n\n外层已经没了。\n\n黑水淹过倒塌的石屋，泥坡和残墙混在一起，原先通往外层的路彻底断开。可三座新潮井还在，粮道也被保了下来。\n\n西侧高处，砺骨部前哨的人已经把第一批居民带过塌方口。他们没有停，继续沿着石脊往迁徙水路深处引。水路虽然窄，却终于通了。",
+        "new": "楔子仍是原来的样子，只是握上去时，那股压意乱得厉害，像刚从一场洪流里抽出来的铁。残压还在，散尽之前不能再用。他收回袖中，没有再碰。\n\n黑水淹过倒塌的石屋，泥坡和残墙混在一起，原先通往外层的路彻底断开。三座新潮井还在，粮道也没有断。\n\n西侧高处，砺骨部前哨的人已经把第一批居民带过塌方口。他们没有停，继续沿着石脊往迁徙水路深处引。这条窄路在这一轮潮势里暂时通了。"
+      }
+    ],
+    "speculative_response_chars": 1746
+  },
+  {
+    "chapter": 17,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span1:sensitive=他/只能/已经/成炉/照域/镇海",
+      "span2:sensitive=他",
+      "span3:sensitive=照域"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 143.927,
+    "control_state_wall_seconds": 30.877,
+    "speculative_state_wall_seconds": 28.668,
+    "control_reviser_plus_state_seconds": 174.804,
+    "route_critical_seconds": 174.804,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.976,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "成炉者能稳住自身，能压住近处的石料和商车。可顾停舟现在撑开的这片潮场，已经护住了整段石脊，还连着粮道外侧最危险的边缘。\n\n旧关守将也看明白了。\n\n他握刀的手微微发紧，低声道：“这就是照域……”\n\n顾沉戈砸开脚边的碎石，沉声接了一句：“照域能改一片潮场，镇海才能正面扛住大潮。别看着，潮压还在。”",
+        "new": "“成炉只能稳住自身和近处重物。”旧关守将握刀的手微微发紧，低声道，“这就是照域。”\n\n顾沉戈砸开脚边的碎石，沉声接道：“照域能改一片潮场，镇海才能正面扛住大潮。别看着，潮压还在。”"
+      },
+      {
+        "tag": "replace",
+        "old": "黑水卷着石块扑来，顾停舟胸口如遭重击，眼前一阵发黑。他的本体晃了一下，掌中的潮谱差点滑落。",
+        "new": "黑水卷着石块扑来，迎面的水压逼得顾停舟退了半步，掌中的潮谱险些脱手。"
+      },
+      {
+        "tag": "delete",
+        "old": "照域。",
+        "new": ""
+      }
+    ],
+    "speculative_response_chars": 1609
+  },
+  {
+    "chapter": 18,
+    "gate_accept": false,
+    "gate_reasons": [
+      "span1:entities",
+      "span3:sensitive=照域"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 85.263,
+    "control_state_wall_seconds": 30.752,
+    "speculative_state_wall_seconds": 28.977,
+    "control_reviser_plus_state_seconds": 116.015,
+    "route_critical_seconds": 116.015,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.98928,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "三个人说的是三件事，其实都指向同一个地方。\n\n矿脉还卡在潮路和旧关之间。",
+        "new": "三件事都堵在矿脉这一处。"
+      },
+      {
+        "tag": "delete",
+        "old": "这话比任何安抚都实在。",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "砺骨部后方等候的人立刻沿水路接进来。骨舟压着浅水穿过照域边缘，带着包裹、工具和老人，迅速转入北侧较高的石岸。",
+        "new": "砺骨部后方等候的人立刻沿水路接进来，带着包裹、工具和老人，迅速转入北侧较高的石岸。"
+      }
+    ],
+    "speculative_response_chars": 1645
+  },
+  {
+    "chapter": 19,
+    "gate_accept": false,
+    "gate_reasons": [
+      "changed_ratio=0.252",
+      "span1:entities",
+      "span1:sensitive=入潮/只能/地潮/已经/成炉/没有/照域/镇海",
+      "span2:sensitive=开始/没有",
+      "span3:entities",
+      "span3:sensitive=不是/他/照域",
+      "span4:entities",
+      "span4:sensitive=不是/他/照域/镇海",
+      "span5:sensitive=不能/他",
+      "span6:entities",
+      "span6:sensitive=不是/他",
+      "span7:entities",
+      "span7:sensitive=照域",
+      "span8:entities",
+      "span8:sensitive=他/战绩/镇海",
+      "span9:entities",
+      "span9:sensitive=他/已经/照域/镇海",
+      "span10:entities",
+      "span10:sensitive=离开"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 103.511,
+    "control_state_wall_seconds": 26.452,
+    "speculative_state_wall_seconds": 30.43,
+    "control_reviser_plus_state_seconds": 129.963,
+    "route_critical_seconds": 129.963,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.92368,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "镇潮军府的人立刻收线。\n\n原本守在旧关外层的潮灯、潮车和压潮器被一件件放下。那些东西本来能帮人挡住地潮，可在镇海潮兽面前，连多撑一会儿都做不到。\n\n入潮者能借潮力强壮身体，冲进黑水里救人；成炉者能连续运转潮息，护住商车和一小段路；照域者能把潮力推出体外，压住一座院落、一条街巷。\n\n可镇海战局里，决定胜负的是谁能扛住整片潮场的正面冲击。\n\n现在，镇海潮兽把这份压力全压到了顾停舟身上。",
+        "new": "镇潮军府的人立刻收线。原本守在旧关外层的潮灯、潮车和压潮器被一件件撤下，外层残墙再没有人去保。\n\n入潮者能冲进黑水里救人，成炉者能护住商车和一小段路，照域者能把潮力推出体外，压住一座院落或一段街巷。可在镇海战局里，连照域都只能替人争一处落脚，承住兽首正撞的，已经是另一层压力。\n\n现在，这股压力正压在顾停舟展开的照域上。"
+      },
+      {
+        "tag": "replace",
+        "old": "命令落下，镇潮军府的人没有犹豫。\n\n一盏盏潮灯被扛向外侧，压潮器的铜臂调转方向，原本护住残墙的潮力开始往外泄。旧关外层的淡光迅速暗下去，黑水立刻灌进空屋，撞塌木门，卷走散在地上的器具。",
+        "new": "命令落下，镇潮军府的人没有犹豫。压潮器的铜臂调转方向，原本护住残墙的潮力开始往外泄。旧关外层的淡光迅速暗下去，黑水灌进空屋，撞塌木门，卷走散在地上的器具。"
+      },
+      {
+        "tag": "delete",
+        "old": "照域不是墙。\n\n它是顾停舟把潮力推到外面，硬生生划出的一个范围。在这个范围里，潮水会先经过他的判断，先撞上他的承受，再决定往哪里去。",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "“现在！”顾停舟喝道。",
+        "new": "“现在！”\n\n就在这一息，持续压在他身上的镇海级潮压终于逼过了照域的极限。顾停舟体内的潮炉猛地一震，原本被压缩到将碎的潮域向内收拢，又从他脚下重新撑开。那不是照域多撑了一刻，而是他的潮炉跨过了原本的关口。"
+      },
+      {
+        "tag": "replace",
+        "old": "他知道自己不能再硬撑第二次。",
+        "new": "他知道自己不能再硬撑。"
+      },
+      {
+        "tag": "replace",
+        "old": "顾沉戈早等着这句话。\n\n他带着十几名镇潮军府的人从内侧斜插出去，把所有还能运转的潮器一起推向旧关外层。那些潮器不是去挡，而是去引。",
+        "new": "顾沉戈早等着这句话。他带着十几名镇潮军府的人从内侧斜插出去，把还能运转的潮器转向旧关外层。\n\n那些潮器不是去挡，而是去引。"
+      },
+      {
+        "tag": "replace",
+        "old": "顾停舟抓住这一瞬，抬起右手。\n\n照域潮谱里最后一层淡光压到兽首前方。",
+        "new": "顾停舟抓住这一瞬，抬起右手，把照域压到兽首前方。"
+      },
+      {
+        "tag": "replace",
+        "old": "“居民无伤，粮车都在，三座新井也保住了。”他停了停，抱拳行礼，“镇海军府记下这一战。顾停舟，正面承兽冲、改退潮、护粮道，战绩公开入册。”",
+        "new": "“居民无伤，粮车都在，三座新井也保住了。”他停了停，抱拳行礼，“镇潮军府记下这一战。顾停舟，正面承兽冲、改退潮、护粮道，战绩公开入册。”"
+      },
+      {
+        "tag": "replace",
+        "old": "没人再把他当成只会借潮路护住一小片地方的照域者。",
+        "new": "所有人都看见了，照域者与镇海战局之间隔着怎样一股压力，而顾停舟在这一撞里站住了。\n\n顾停舟本人，已经跨进镇海。九垂原真正踏进这一层的不超过数十人。到了这一步，一个人的胜负，已经足以改掉一场大战，甚至一座潮关的结局。"
+      },
+      {
+        "tag": "replace",
+        "old": "能带一个人离开旧关，走远一点，不必永远守着潮声和残墙过日子。",
+        "new": "能带母亲离开旧关，走远一点，不必永远守着潮声和残墙过日子。"
+      }
+    ],
+    "speculative_response_chars": 1720
+  },
+  {
+    "chapter": 20,
+    "gate_accept": false,
+    "gate_reasons": [
+      "changed_ratio=0.340",
+      "span1:entities",
+      "span1:sensitive=不再/不得/不是/不能/他/受伤/回潮楔/她",
+      "span2:sensitive=他/回潮楔/她",
+      "span3:sensitive=他/她/没有",
+      "span5:entities",
+      "span5:sensitive=他/没有/行潮籍"
+    ],
+    "state_all_fields_exact": false,
+    "state_field_exact": {
+      "Proposed Active Scene State": false,
+      "Proposed Persistent Canon": false,
+      "Proposed Chapter Summary": false,
+      "Proposed Open Promises": false
+    },
+    "reviser_wall_seconds": 164.206,
+    "control_state_wall_seconds": 28.012,
+    "speculative_state_wall_seconds": 24.72,
+    "control_reviser_plus_state_seconds": 192.218,
+    "route_critical_seconds": 192.218,
+    "route_speedup_percent": 0.0,
+    "primary_final_similarity": 0.85427,
+    "changed_spans": [
+      {
+        "tag": "replace",
+        "old": "顾停舟站在粮道口，肩背的伤一跳一跳地疼。\n\n他没去看外层废墟，只看见文吏在长案前铺开了文书。\n\n旧关守将、顾沉戈、镇潮军府的几名校官，还有砺骨部的人都在。风从潮场吹过来，纸角被吹得卷起，文吏用镇纸压住，声音尽量传得清楚。\n\n“旧关外层，自今日起不再复建。”\n\n这句话一落，四周安静了一下。\n\n旧关守将接着开口：“居民撤往北侧与粮道内圈，粮道归军府与各方共护。三座新井由留守人手接管，不得以旧关外层名义截留井水、粮车和迁徙队伍。”\n\n一名军府校官低头记下，印泥在他指间染开一层暗红。\n\n“砺骨部迁徙窗口，按先前约定放行。首批矿脉归属，也照已经定下的份额结算。”\n\n乌合站在人群另一侧，肩上还披着沾了潮泥的兽皮。她没说客套话，只抬手按住胸口，对顾停舟点了一下头。\n\n“路会让出来。”她说，“你的人不挡我们的车，我们的人也不碰你的粮。”\n\n顾停舟点头。\n\n这就够了。\n\n旧关没了外层，很多旧规矩也跟着埋进黑水里。谁还想拿过去那套账，去压住别人，只会被人当成笑话。\n\n顾沉戈站在长案旁，脸色不比受伤的顾停舟好多少。\n\n旧关外层毁弃，军府要撤防、安置、补粮，还要向上面交代为何一座关城守成了半座废墟。这些都不是顾停舟的账。\n\n但顾沉戈要背。\n\n守将把一枚军府印按在文书上，抬头看向众人。\n\n“今日在场者，皆可作证。旧关守住的是人、粮道和新井，外层失守，责任由镇潮军府承担，不牵连撤离居民，不重置已结清的个人账目。”\n\n顾沉戈的手按在刀柄上，半晌才松开。\n\n“记清楚。”他说，“以后谁拿旧关外层的事找人补债，先来找我。”\n\n顾停舟看了他一眼。\n\n顾沉戈没有回头，只低声道：“别以为我是在替你出头。我只是懒得看一群人把打完的仗再打一遍。”\n\n“我也懒得。”顾停舟说。\n\n文吏把属于他的那份结算文书、潮钱票据和战功牌重新装回防潮木匣，双手递来。\n\n顾停舟接过木匣，顺手将照域潮谱和回潮楔收了进去。\n\n回潮楔一碰到木匣底部，裂口里就渗出一点细碎潮压。那东西像一截没熄透的炭，隔着布也烫手。\n\n它已经不能再承压了。\n\n可它还在。\n\n顾停舟合上匣盖，心里那点一直悬着的东西终于落下来一半。\n\n就在这时，一辆罩着青布篷的潮车从粮道尽头驶来。\n\n车还没停稳，少东家已经从车辕上跳下，靴底溅起一片泥水。他的衣服比平日皱得多，显然也是一路赶来的。",
+        "new": "战后结算已经落在纸上：旧关外层不再复建，居民撤往北侧，粮道与三座新井由各方共护；砺骨部的迁徙窗口和首批矿脉归属也已定下。旧关外层毁弃的责任落在镇潮军府，不再往撤离居民和已结清的个人账目上摊。\n\n顾停舟手里的防潮木匣已经封好，里面是结算文书、潮钱票据、战功牌、照域潮谱和那枚新添裂痕的回潮楔。楔子暂时不能再承压，却还没有碎掉。\n\n一辆罩着青布篷的潮车从粮道尽头驶来。车还没停稳，少东家已经从车辕上跳下，靴底溅起一片泥水。他的衣服比平日皱得多，显然也是一路赶来的。"
+      },
+      {
+        "tag": "replace",
+        "old": "阮青蜃仍是一身干净的深青衣袍，和满地泥水格格不入。他的目光落在顾停舟手中的木匣上，又扫过那枚裂开的回潮楔。",
+        "new": "阮青蜃仍是一身干净的深青衣袍，和满地泥水格格不入。她的目光落在顾停舟手中的木匣上，又扫过那枚裂开的回潮楔。"
+      },
+      {
+        "tag": "replace",
+        "old": "只是伸手把他拉到近前，翻开他被血浸透的衣领，看见伤口后，手指僵了一下。",
+        "new": "只是伸手把他拉到近前。她身上熟悉的皂角气味靠近过来，顾停舟没有躲开她的手。\n\n她翻开他被血浸透的衣领，看见伤口后，手指僵了一下。"
+      },
+      {
+        "tag": "delete",
+        "old": "顾停舟坐着没动。",
+        "new": ""
+      },
+      {
+        "tag": "replace",
+        "old": "船不大，只够载人和少量行李。船身被潮水磨得发暗，船尾挂着一盏新的潮灯。顾停舟没有问它原来属于谁，也没有打听船价之外的东西。他把票据交出去，拿回自己的行潮凭据和船契。",
+        "new": "船不大，只够载人和少量行李。船身被潮水磨得发暗，船尾挂着一盏新的潮灯。顾停舟没有问它原来属于谁，也没有打听船价之外的东西。他把票据交出去，船契直接落到自己名下。有了行潮籍，他可以用自己的名义买下这条船。"
+      }
+    ],
+    "speculative_response_chars": 1414
+  }
+]

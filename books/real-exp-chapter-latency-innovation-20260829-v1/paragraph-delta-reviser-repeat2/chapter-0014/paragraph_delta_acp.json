@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 125.013,
+  "sessionId": "01a04e2e-a770-7ba1-a034-cd64372dcd73",
+  "text": "# PARAGRAPH OPS\n## DELETE P049-P050\n## REPLACE P063\n唐绾看了一眼，直接道：“残压没散尽之前，不能再压第二次。”\n## REPLACE P109\n那人翻开新册，提笔道：“首批矿料的个人矿利，按实测契记在顾停舟名下，今日列档确认；实际矿量待开采后核定。砺骨部水路另列，不入阮家矿权。”",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 49004,
+      "inputTokens": 32312,
+      "cachedReadTokens": 9984,
+      "outputTokens": 6708,
+      "thoughtTokens": 6591
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 49004,
+          "inputTokens": 32312,
+          "cachedInputTokens": 9984,
+          "outputTokens": 6708,
+          "reasoningOutputTokens": 6591
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 49004,
+              "inputTokens": 32312,
+              "cachedInputTokens": 9984,
+              "outputTokens": 6708,
+              "reasoningOutputTokens": 6591
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

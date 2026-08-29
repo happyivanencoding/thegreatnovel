@@ -1,0 +1,118 @@
+[
+  {
+    "chapter": 2,
+    "state_wall_seconds": 26.205,
+    "polish_wall_seconds": 13.598,
+    "parallel_critical_seconds": 26.205,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2126,
+    "final_chars": 2126,
+    "usage": {
+      "totalTokens": 33115,
+      "inputTokens": 25715,
+      "cachedReadTokens": 6912,
+      "outputTokens": 488,
+      "thoughtTokens": 480
+    }
+  },
+  {
+    "chapter": 3,
+    "state_wall_seconds": 25.07,
+    "polish_wall_seconds": 10.07,
+    "parallel_critical_seconds": 25.07,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "这句话里有恼火，也有一点旧日的熟悉。",
+        "new": "",
+        "reason": "前后对白与顾停舟的回忆已自然呈现这层关系，删去总结句可让读者直接进入人物判断。"
+      }
+    ],
+    "original_chars": 1982,
+    "final_chars": 1964,
+    "usage": {
+      "totalTokens": 32771,
+      "inputTokens": 25550,
+      "cachedReadTokens": 6912,
+      "outputTokens": 309,
+      "thoughtTokens": 240
+    }
+  },
+  {
+    "chapter": 10,
+    "state_wall_seconds": 24.98,
+    "polish_wall_seconds": 10.039,
+    "parallel_critical_seconds": 24.98,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1983,
+    "final_chars": 1983,
+    "usage": {
+      "totalTokens": 32841,
+      "inputTokens": 25631,
+      "cachedReadTokens": 6912,
+      "outputTokens": 298,
+      "thoughtTokens": 290
+    }
+  },
+  {
+    "chapter": 14,
+    "state_wall_seconds": 29.496,
+    "polish_wall_seconds": 15.954,
+    "parallel_critical_seconds": 29.496,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "numeric or fact-strength tokens changed",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3654,
+    "final_chars": 3654,
+    "usage": {
+      "totalTokens": 34606,
+      "inputTokens": 7668,
+      "cachedReadTokens": 26368,
+      "outputTokens": 570,
+      "thoughtTokens": 401
+    }
+  },
+  {
+    "chapter": 19,
+    "state_wall_seconds": 26.452,
+    "polish_wall_seconds": 15.476,
+    "parallel_critical_seconds": 26.452,
+    "added_wall_over_state_seconds": 0.0,
+    "hidden_by_state": true,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3093,
+    "final_chars": 3093,
+    "usage": {
+      "totalTokens": 33988,
+      "inputTokens": 26683,
+      "cachedReadTokens": 6912,
+      "outputTokens": 393,
+      "thoughtTokens": 385
+    }
+  }
+]

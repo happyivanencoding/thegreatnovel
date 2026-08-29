@@ -1,0 +1,156 @@
+[
+  {
+    "chapter": 1,
+    "fact_delta_none": false,
+    "fact_delta": "- DIMENSION: actor  \n  BEFORE: 后来赶来的角色只被称为“成炉护卫”。  \n  AFTER: 后来赶来的是“一名懂行的成炉护卫”。\n\n- DIMENSION: power  \n  BEFORE: 分身在矿车旁被护卫接手后无声散开，直接重新落回顾停舟脚下。  \n  AFTER: 分身先退到本体身边，接触本体手臂后才散开并融回脚下。\n\n- DIMENSION: state  \n  BEFORE: 分身回返后顾停舟出现胸口发闷、腿发软。  \n  AFTER: 删除该身体症状；正文只保留顾停舟扶石坡站稳并清点脚夫。",
+    "reviser_wall_seconds": 175.681,
+    "control_reviser_wall_seconds": 133.801,
+    "control_state_wall_seconds": 25.081,
+    "primary_state_wall_seconds": 27.904,
+    "current_reviser_plus_state_seconds": 158.882,
+    "fact_delta_route_seconds": 200.762,
+    "route_speedup_percent": -26.36,
+    "primary_treatment_similarity": 0.9914,
+    "control_treatment_similarity": 0.98386,
+    "final_chars": 3492,
+    "usage": {
+      "totalTokens": 60266,
+      "inputTokens": 2853,
+      "cachedReadTokens": 48896,
+      "outputTokens": 8517,
+      "thoughtTokens": 5266
+    }
+  },
+  {
+    "chapter": 2,
+    "fact_delta_none": false,
+    "fact_delta": "- DIMENSION: time  \n  BEFORE: Primary 写明“等下一次低潮过去，槽底会重新积水”，并随后写明“下一次低潮前”可短暂通行，前后时点冲突。  \n  AFTER: 明确通行窗口只到下一次低潮前，槽底与边缘仍可能继续变化；不再断定下一次低潮过去后才重新积水。\n\n- DIMENSION: knowledge  \n  BEFORE: Primary 将新鲜深潮矿层写成与旧路附近“常见的浅层碎矿”不属同一段。  \n  AFTER: 仅确认裂槽露出新鲜深潮矿层并作为独立现场记录，不再添加未经权威支持的旧路浅层碎矿与地质分段判断。",
+    "reviser_wall_seconds": 185.931,
+    "control_reviser_wall_seconds": 95.14,
+    "control_state_wall_seconds": 26.205,
+    "primary_state_wall_seconds": 28.309,
+    "current_reviser_plus_state_seconds": 121.345,
+    "fact_delta_route_seconds": 212.136,
+    "route_speedup_percent": -74.82,
+    "primary_treatment_similarity": 0.96766,
+    "control_treatment_similarity": 0.92308,
+    "final_chars": 2242,
+    "usage": {
+      "totalTokens": 61837,
+      "inputTokens": 3970,
+      "cachedReadTokens": 48896,
+      "outputTokens": 8971,
+      "thoughtTokens": 6833
+    }
+  },
+  {
+    "chapter": 3,
+    "fact_delta_none": false,
+    "fact_delta": "- DIMENSION: actor\n  BEFORE: 少东家将预付款与兼容潮髓归因于“阮家”急于给出。\n  AFTER: 少东家将预付款与兼容潮髓归因于“阮青蜃一方”急于给出。",
+    "reviser_wall_seconds": 136.582,
+    "control_reviser_wall_seconds": 55.457,
+    "control_state_wall_seconds": 25.07,
+    "primary_state_wall_seconds": 25.48,
+    "current_reviser_plus_state_seconds": 80.527,
+    "fact_delta_route_seconds": 161.652,
+    "route_speedup_percent": -100.74,
+    "primary_treatment_similarity": 0.99448,
+    "control_treatment_similarity": 0.99448,
+    "final_chars": 2002,
+    "usage": {
+      "totalTokens": 60705,
+      "inputTokens": 4333,
+      "cachedReadTokens": 49920,
+      "outputTokens": 6452,
+      "thoughtTokens": 4648
+    }
+  },
+  {
+    "chapter": 6,
+    "fact_delta_none": false,
+    "fact_delta": "- DIMENSION: result\n  BEFORE: Primary 仅在“阻止领队”这一条件下写明实测会中断，未在逆潮翻转后明确确认本次实测已无法按原计划完成。\n  AFTER: 逆潮翻转、人员被分隔且矿权标记裂开后，本次实测已不可能按原计划完成。\n\n- DIMENSION: resource\n  BEFORE: Primary 仅在顾停舟若拦住领队时写明实测契尾款不会正常结算。\n  AFTER: 逆潮翻转后，实测契尾款明确不能再按原约结算。",
+    "reviser_wall_seconds": 112.652,
+    "control_reviser_wall_seconds": 132.267,
+    "control_state_wall_seconds": 23.899,
+    "primary_state_wall_seconds": 26.873,
+    "current_reviser_plus_state_seconds": 156.166,
+    "fact_delta_route_seconds": 136.551,
+    "route_speedup_percent": 12.56,
+    "primary_treatment_similarity": 0.98557,
+    "control_treatment_similarity": 0.97239,
+    "final_chars": 2254,
+    "usage": {
+      "totalTokens": 53582,
+      "inputTokens": 6508,
+      "cachedReadTokens": 41728,
+      "outputTokens": 5346,
+      "thoughtTokens": 3236
+    }
+  },
+  {
+    "chapter": 10,
+    "fact_delta_none": false,
+    "fact_delta": "- DIMENSION: object  \n  BEFORE: 撤离车卡在斜坡中段，车上有伤员和湿透的矿样箱  \n  AFTER: 保留撤离车正在余震中向外滑，删除其具体位置、载荷与车上人员构成；矿样仍明确在车上\n\n- DIMENSION: state  \n  BEFORE: 车轮将因偏移翻入下方裂开的石沟，车上伤员抓住边框  \n  AFTER: 撤离车在余震中向外滑并有翻落危险，删除车轮、石沟及伤员抓边框等未获权威支持的现场细节\n\n- DIMENSION: actor  \n  BEFORE: 矿队首领从现场矿队人群中出声，矿队人员围到顾停舟附近  \n  AFTER: 矿队首领仍提出交楔与尾款条件，但仅从远处传声；删除矿队人员围拢到现场的具体动作\n\n- DIMENSION: power  \n  BEFORE: 成炉修士“已经能”独自护住商车并短距离穿过荒地  \n  AFTER: 改为符合 WORLD AUTHORITY 强度的“通常能”独自护车，并取得短距离独自穿越荒地的资格",
+    "reviser_wall_seconds": 148.901,
+    "control_reviser_wall_seconds": 191.335,
+    "control_state_wall_seconds": 24.98,
+    "primary_state_wall_seconds": 29.624,
+    "current_reviser_plus_state_seconds": 216.315,
+    "fact_delta_route_seconds": 173.881,
+    "route_speedup_percent": 19.62,
+    "primary_treatment_similarity": 0.93609,
+    "control_treatment_similarity": 0.87485,
+    "final_chars": 2068,
+    "usage": {
+      "totalTokens": 56450,
+      "inputTokens": 9325,
+      "cachedReadTokens": 42752,
+      "outputTokens": 4373,
+      "thoughtTokens": 2316
+    }
+  },
+  {
+    "chapter": 14,
+    "fact_delta_none": true,
+    "fact_delta": "NONE",
+    "reviser_wall_seconds": 144.996,
+    "control_reviser_wall_seconds": 210.84,
+    "control_state_wall_seconds": 29.496,
+    "primary_state_wall_seconds": 29.472,
+    "current_reviser_plus_state_seconds": 240.336,
+    "fact_delta_route_seconds": 144.996,
+    "route_speedup_percent": 39.67,
+    "primary_treatment_similarity": 0.9744,
+    "control_treatment_similarity": 0.95225,
+    "final_chars": 3760,
+    "usage": {
+      "totalTokens": 57247,
+      "inputTokens": 6358,
+      "cachedReadTokens": 43776,
+      "outputTokens": 7113,
+      "thoughtTokens": 3914
+    }
+  },
+  {
+    "chapter": 19,
+    "fact_delta_none": false,
+    "fact_delta": "- DIMENSION: result\n  BEFORE: 旧关守将确认“居民无伤”、粮车都在、三座新井保住。\n  AFTER: 确认已撤出的居民仍在，粮道和三座新井保住；不额外断言居民无伤。\n\n- DIMENSION: ending\n  BEFORE: 顾停舟考虑用所得换船并带“一个人”离开旧关，未明确对象。\n  AFTER: 顾停舟明确考虑带母亲离开旧关；是否购船、是否远行仍留待下一章选择。",
+    "reviser_wall_seconds": 128.885,
+    "control_reviser_wall_seconds": 103.511,
+    "control_state_wall_seconds": 26.452,
+    "primary_state_wall_seconds": 30.43,
+    "current_reviser_plus_state_seconds": 129.963,
+    "fact_delta_route_seconds": 155.337,
+    "route_speedup_percent": -19.52,
+    "primary_treatment_similarity": 0.96596,
+    "control_treatment_similarity": 0.92303,
+    "final_chars": 3000,
+    "usage": {
+      "totalTokens": 51162,
+      "inputTokens": 19931,
+      "cachedReadTokens": 24320,
+      "outputTokens": 6911,
+      "thoughtTokens": 4142
+    }
+  }
+]

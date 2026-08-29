@@ -1,0 +1,41 @@
+{
+  "applied": [
+    {
+      "paragraph": 44,
+      "kind": "REPLACE",
+      "old": "他看着顾停舟，眼里的火气慢慢沉了下去，剩下的东西更复杂。两人从前一起跑过不少线，少东家给过他机会，也确实习惯了在关键时候替他做决定。",
+      "new": "他看着顾停舟，眼里的火气慢慢沉了下去。"
+    },
+    {
+      "paragraph": 45,
+      "kind": "DELETE",
+      "old": "可现在，顾停舟不肯再让了。",
+      "new": ""
+    },
+    {
+      "paragraph": 52,
+      "kind": "REPLACE",
+      "old": "顾停舟重新看了一遍契纸，只盯着三处：登记名义、路线结果、赔付条件。",
+      "new": "顾停舟重新看了一遍契纸，确认登记名义、路线结果和赔付条件都写清了。"
+    }
+  ],
+  "downgraded": [
+    {
+      "paragraph": 53,
+      "kind": "DELETE_TO_KEEP",
+      "old": "没有商号的名字。"
+    },
+    {
+      "paragraph": 54,
+      "kind": "DELETE_TO_KEEP",
+      "old": "没有要他交出原路线册的条目。"
+    },
+    {
+      "paragraph": 55,
+      "kind": "DELETE_TO_KEEP",
+      "old": "也没有逼他把不知道的裂槽深处写成保证。"
+    }
+  ],
+  "fallback": false,
+  "error": ""
+}

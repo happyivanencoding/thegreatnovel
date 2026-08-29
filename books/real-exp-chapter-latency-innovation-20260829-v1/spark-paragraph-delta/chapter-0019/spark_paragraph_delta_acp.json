@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 137.594,
+  "sessionId": "01a04e3b-5675-7e60-b529-1ea28e008f02",
+  "text": "# PARAGRAPH OPS\n## REPLACE P006-P008\n入潮者只能用潮息强化自身，成炉者能连续护住一辆商车，照域者能把潮力推出院落和街巷；眼前这一撞，却是镇海潮兽把整片潮场的重量压向一个人。\n\n## REPLACE P094-P095\n回潮楔接下来还会继续散压，修好之前不能再用力承压。\n\n## REPLACE P097\n“居民都已过线，粮道和粮车都在，三座新井也保住了。”他停了停，抱拳行礼，“镇海军府记下这一战。顾停舟，正面承兽冲、改退潮、护粮道，战绩公开入册。”\n\n## REPLACE P112-P113\n也许能换一艘小些的潮舟。\n\n能带母亲离开旧关，走远一点，不必永远守着潮声和残墙过日子。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 50742,
+      "inputTokens": 19008,
+      "cachedReadTokens": 24320,
+      "outputTokens": 7414,
+      "thoughtTokens": 7184
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 50742,
+          "inputTokens": 19008,
+          "cachedInputTokens": 24320,
+          "outputTokens": 7414,
+          "reasoningOutputTokens": 7184
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 50742,
+              "inputTokens": 19008,
+              "cachedInputTokens": 24320,
+              "outputTokens": 7414,
+              "reasoningOutputTokens": 7184
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

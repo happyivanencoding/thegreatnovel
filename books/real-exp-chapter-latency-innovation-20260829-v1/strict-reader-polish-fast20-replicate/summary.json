@@ -1,0 +1,440 @@
+[
+  {
+    "chapter": 1,
+    "state_wall_seconds": 25.081,
+    "polish_wall_seconds": 8.749,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3511,
+    "final_chars": 3511,
+    "usage": {
+      "totalTokens": 34175,
+      "inputTokens": 7645,
+      "cachedReadTokens": 26368,
+      "outputTokens": 162,
+      "thoughtTokens": 154
+    }
+  },
+  {
+    "chapter": 2,
+    "state_wall_seconds": 26.205,
+    "polish_wall_seconds": 11.153,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2126,
+    "final_chars": 2126,
+    "usage": {
+      "totalTokens": 32940,
+      "inputTokens": 6356,
+      "cachedReadTokens": 26368,
+      "outputTokens": 216,
+      "thoughtTokens": 208
+    }
+  },
+  {
+    "chapter": 3,
+    "state_wall_seconds": 25.07,
+    "polish_wall_seconds": 9.623,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1982,
+    "final_chars": 1982,
+    "usage": {
+      "totalTokens": 32695,
+      "inputTokens": 6191,
+      "cachedReadTokens": 26368,
+      "outputTokens": 136,
+      "thoughtTokens": 128
+    }
+  },
+  {
+    "chapter": 4,
+    "state_wall_seconds": 28.709,
+    "polish_wall_seconds": 9.101,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2252,
+    "final_chars": 2252,
+    "usage": {
+      "totalTokens": 33037,
+      "inputTokens": 6459,
+      "cachedReadTokens": 26368,
+      "outputTokens": 210,
+      "thoughtTokens": 202
+    }
+  },
+  {
+    "chapter": 5,
+    "state_wall_seconds": 23.24,
+    "polish_wall_seconds": 15.017,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "乌合说得没错。",
+        "new": "",
+        "reason": "紧邻的潮线、旧桩和路线册比对已具体证明这一判断，删除不改变人物价值。"
+      }
+    ],
+    "original_chars": 2446,
+    "final_chars": 2439,
+    "usage": {
+      "totalTokens": 33571,
+      "inputTokens": 6713,
+      "cachedReadTokens": 26368,
+      "outputTokens": 490,
+      "thoughtTokens": 435
+    }
+  },
+  {
+    "chapter": 6,
+    "state_wall_seconds": 23.899,
+    "polish_wall_seconds": 9.963,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2164,
+    "final_chars": 2164,
+    "usage": {
+      "totalTokens": 33039,
+      "inputTokens": 6455,
+      "cachedReadTokens": 26368,
+      "outputTokens": 216,
+      "thoughtTokens": 208
+    }
+  },
+  {
+    "chapter": 7,
+    "state_wall_seconds": 26.582,
+    "polish_wall_seconds": 14.303,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2931,
+    "final_chars": 2931,
+    "usage": {
+      "totalTokens": 34094,
+      "inputTokens": 7202,
+      "cachedReadTokens": 26368,
+      "outputTokens": 524,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "chapter": 8,
+    "state_wall_seconds": 27.834,
+    "polish_wall_seconds": 8.168,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2691,
+    "final_chars": 2691,
+    "usage": {
+      "totalTokens": 33504,
+      "inputTokens": 6962,
+      "cachedReadTokens": 26368,
+      "outputTokens": 174,
+      "thoughtTokens": 166
+    }
+  },
+  {
+    "chapter": 9,
+    "state_wall_seconds": 30.119,
+    "polish_wall_seconds": 8.873,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2308,
+    "final_chars": 2308,
+    "usage": {
+      "totalTokens": 33280,
+      "inputTokens": 6667,
+      "cachedReadTokens": 26368,
+      "outputTokens": 245,
+      "thoughtTokens": 237
+    }
+  },
+  {
+    "chapter": 10,
+    "state_wall_seconds": 24.98,
+    "polish_wall_seconds": 7.936,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1983,
+    "final_chars": 1983,
+    "usage": {
+      "totalTokens": 32755,
+      "inputTokens": 6272,
+      "cachedReadTokens": 26368,
+      "outputTokens": 115,
+      "thoughtTokens": 107
+    }
+  },
+  {
+    "chapter": 11,
+    "state_wall_seconds": 27.07,
+    "polish_wall_seconds": 8.325,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2665,
+    "final_chars": 2665,
+    "usage": {
+      "totalTokens": 33412,
+      "inputTokens": 6845,
+      "cachedReadTokens": 26368,
+      "outputTokens": 199,
+      "thoughtTokens": 191
+    }
+  },
+  {
+    "chapter": 12,
+    "state_wall_seconds": 27.464,
+    "polish_wall_seconds": 7.118,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2013,
+    "final_chars": 2013,
+    "usage": {
+      "totalTokens": 32741,
+      "inputTokens": 6291,
+      "cachedReadTokens": 26368,
+      "outputTokens": 82,
+      "thoughtTokens": 74
+    }
+  },
+  {
+    "chapter": 13,
+    "state_wall_seconds": 25.379,
+    "polish_wall_seconds": 8.478,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2933,
+    "final_chars": 2933,
+    "usage": {
+      "totalTokens": 33673,
+      "inputTokens": 7107,
+      "cachedReadTokens": 26368,
+      "outputTokens": 198,
+      "thoughtTokens": 190
+    }
+  },
+  {
+    "chapter": 14,
+    "state_wall_seconds": 29.496,
+    "polish_wall_seconds": 11.175,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3654,
+    "final_chars": 3654,
+    "usage": {
+      "totalTokens": 34383,
+      "inputTokens": 7765,
+      "cachedReadTokens": 26368,
+      "outputTokens": 250,
+      "thoughtTokens": 242
+    }
+  },
+  {
+    "chapter": 15,
+    "state_wall_seconds": 32.466,
+    "polish_wall_seconds": 12.854,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "invalid_fallback",
+    "fallback": true,
+    "error": "protected human/relationship/social value",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3864,
+    "final_chars": 3864,
+    "usage": {
+      "totalTokens": 34758,
+      "inputTokens": 7932,
+      "cachedReadTokens": 26368,
+      "outputTokens": 458,
+      "thoughtTokens": 405
+    }
+  },
+  {
+    "chapter": 16,
+    "state_wall_seconds": 29.093,
+    "polish_wall_seconds": 13.636,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "粮车、井口、水路，全在往坏处走。",
+        "new": "",
+        "reason": "前文已分别用车、井与撤离水路的具体险情充分证明，删除不改变人物价值或事实。"
+      }
+    ],
+    "original_chars": 2850,
+    "final_chars": 2834,
+    "usage": {
+      "totalTokens": 33995,
+      "inputTokens": 7125,
+      "cachedReadTokens": 26368,
+      "outputTokens": 502,
+      "thoughtTokens": 438
+    }
+  },
+  {
+    "chapter": 17,
+    "state_wall_seconds": 30.877,
+    "polish_wall_seconds": 10.407,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2443,
+    "final_chars": 2443,
+    "usage": {
+      "totalTokens": 33365,
+      "inputTokens": 6738,
+      "cachedReadTokens": 26368,
+      "outputTokens": 259,
+      "thoughtTokens": 251
+    }
+  },
+  {
+    "chapter": 18,
+    "state_wall_seconds": 30.752,
+    "polish_wall_seconds": 10.228,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "三件事都堵在矿脉这一处。",
+        "new": "",
+        "reason": "前文已具体列出矿队、粮道与迁徙水路的同时受阻，此句仅作重复盖章，未删除人物价值。"
+      }
+    ],
+    "original_chars": 2773,
+    "final_chars": 2761,
+    "usage": {
+      "totalTokens": 33701,
+      "inputTokens": 7009,
+      "cachedReadTokens": 26368,
+      "outputTokens": 324,
+      "thoughtTokens": 256
+    }
+  },
+  {
+    "chapter": 19,
+    "state_wall_seconds": 26.452,
+    "polish_wall_seconds": 7.095,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3093,
+    "final_chars": 3093,
+    "usage": {
+      "totalTokens": 33826,
+      "inputTokens": 7324,
+      "cachedReadTokens": 26368,
+      "outputTokens": 134,
+      "thoughtTokens": 126
+    }
+  },
+  {
+    "chapter": 20,
+    "state_wall_seconds": 28.012,
+    "polish_wall_seconds": 8.241,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2791,
+    "final_chars": 2791,
+    "usage": {
+      "totalTokens": 33511,
+      "inputTokens": 6956,
+      "cachedReadTokens": 26368,
+      "outputTokens": 187,
+      "thoughtTokens": 179
+    }
+  }
+]

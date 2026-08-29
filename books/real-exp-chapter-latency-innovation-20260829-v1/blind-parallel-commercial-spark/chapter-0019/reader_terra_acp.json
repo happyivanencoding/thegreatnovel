@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 21.474,
+  "sessionId": "01a04e13-9ec0-7880-912d-acd86dc4bfd5",
+  "text": "VERDICT: A  \nCONFIDENCE: high  \nPROTAGONIST_AGENCY: A  \nCOMMERCIAL_PULL: A  \nHUMAN_DESIRE: A  \nFANTASY_PAYOFF: A  \nRELATIONSHIP_SOCIAL_REPRICING: A  \nSCENE_CLARITY: B  \nANTI_AI_PROCEDURE: B  \nHARD_PROBLEM_A: “母亲”与小潮舟的既定愿望此前未被本窗口建立，属于新增事实。  \nHARD_PROBLEM_B: 顾停舟“跨进镇海”、九垂原人数与完整等级解释均是战后直接新增的重大事实。  \nREASON: A里顾停舟先明确选择“外层全放”，再逼守将回答“你要守哪边”，主动性比B更有决断和代价。B的“顶到另一边钉住”同样有效，但随后用“潮炉跨过了原本的关口”把极限承压直接升级，削弱了此前靠分身、回潮楔和军府配合赢下局面的因果。A把胜利落在“我的个人份额还在”“现在能给的呢”与当场木匣、潮钱、文契上，奖励可摸、可算，也符合顾停舟不肯白吃亏的具体欲望。B也给了木匣和战功牌，但“顾停舟本人，已经跨进镇海”把本该由战局证明的爽点变成了作者宣告。A中守将的“随战报一并送入镇海档”是社会重新定价，且顾停舟立刻追问能换什么，人物与利益咬得很紧。B的“九垂原真正踏进这一层的不超过数十人”则像设定报告插入现场，既拖慢余震，也没有来自前文的合法支撑。B在正面撞击、潮眼钉定、潮水改向这条动作线上更短更清楚，例如“本体承住兽首。分身钉住侧面潮眼”，阅读阻力低于A。A反复解释“入潮者只能守住散潮”“成炉者才能……”以及多轮导潮细节，工程流程味更重。A的“先把它留住。等我回去问问我娘”让钱、船、伤势与亲缘愿望收在同一章尾，商业续读钩子更扎实。只是这段此前没有建立母亲或购船愿望，仍属于为了人味而补入的事实；B的升级与地域统计则更严重，足以压低其整体可信度。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 40319,
+      "inputTokens": 12996,
+      "cachedReadTokens": 26368,
+      "outputTokens": 955,
+      "thoughtTokens": 352
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 40319,
+          "inputTokens": 12996,
+          "cachedInputTokens": 26368,
+          "outputTokens": 955,
+          "reasoningOutputTokens": 352
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 40319,
+              "inputTokens": 12996,
+              "cachedInputTokens": 26368,
+              "outputTokens": 955,
+              "reasoningOutputTokens": 352
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

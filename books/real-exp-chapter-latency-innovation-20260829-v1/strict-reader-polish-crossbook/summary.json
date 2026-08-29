@@ -1,0 +1,212 @@
+[
+  {
+    "chapter": 1,
+    "state_wall_seconds": 18.126,
+    "polish_wall_seconds": 8.017,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2946,
+    "final_chars": 2946,
+    "usage": {
+      "totalTokens": 33661,
+      "inputTokens": 7166,
+      "cachedReadTokens": 26368,
+      "outputTokens": 127,
+      "thoughtTokens": 119
+    }
+  },
+  {
+    "chapter": 2,
+    "state_wall_seconds": 20.722,
+    "polish_wall_seconds": 6.924,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3478,
+    "final_chars": 3478,
+    "usage": {
+      "totalTokens": 34108,
+      "inputTokens": 7649,
+      "cachedReadTokens": 26368,
+      "outputTokens": 91,
+      "thoughtTokens": 83
+    }
+  },
+  {
+    "chapter": 3,
+    "state_wall_seconds": 21.813,
+    "polish_wall_seconds": 9.984,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3464,
+    "final_chars": 3464,
+    "usage": {
+      "totalTokens": 34163,
+      "inputTokens": 7535,
+      "cachedReadTokens": 26368,
+      "outputTokens": 260,
+      "thoughtTokens": 252
+    }
+  },
+  {
+    "chapter": 4,
+    "state_wall_seconds": 24.072,
+    "polish_wall_seconds": 6.391,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2306,
+    "final_chars": 2306,
+    "usage": {
+      "totalTokens": 32992,
+      "inputTokens": 6554,
+      "cachedReadTokens": 26368,
+      "outputTokens": 70,
+      "thoughtTokens": 62
+    }
+  },
+  {
+    "chapter": 5,
+    "state_wall_seconds": 21.091,
+    "polish_wall_seconds": 7.867,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1872,
+    "final_chars": 1872,
+    "usage": {
+      "totalTokens": 32716,
+      "inputTokens": 6181,
+      "cachedReadTokens": 26368,
+      "outputTokens": 167,
+      "thoughtTokens": 159
+    }
+  },
+  {
+    "chapter": 6,
+    "state_wall_seconds": 26.318,
+    "polish_wall_seconds": 5.92,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2205,
+    "final_chars": 2205,
+    "usage": {
+      "totalTokens": 32985,
+      "inputTokens": 6576,
+      "cachedReadTokens": 26368,
+      "outputTokens": 41,
+      "thoughtTokens": 33
+    }
+  },
+  {
+    "chapter": 7,
+    "state_wall_seconds": 26.462,
+    "polish_wall_seconds": 10.767,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1473,
+    "final_chars": 1473,
+    "usage": {
+      "totalTokens": 32513,
+      "inputTokens": 5893,
+      "cachedReadTokens": 26368,
+      "outputTokens": 252,
+      "thoughtTokens": 244
+    }
+  },
+  {
+    "chapter": 8,
+    "state_wall_seconds": 27.145,
+    "polish_wall_seconds": 11.17,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2615,
+    "final_chars": 2615,
+    "usage": {
+      "totalTokens": 33604,
+      "inputTokens": 6939,
+      "cachedReadTokens": 26368,
+      "outputTokens": 297,
+      "thoughtTokens": 289
+    }
+  },
+  {
+    "chapter": 9,
+    "state_wall_seconds": 26.092,
+    "polish_wall_seconds": 6.821,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2731,
+    "final_chars": 2731,
+    "usage": {
+      "totalTokens": 33399,
+      "inputTokens": 6904,
+      "cachedReadTokens": 26368,
+      "outputTokens": 127,
+      "thoughtTokens": 119
+    }
+  },
+  {
+    "chapter": 10,
+    "state_wall_seconds": 23.583,
+    "polish_wall_seconds": 6.45,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1411,
+    "final_chars": 1411,
+    "usage": {
+      "totalTokens": 32173,
+      "inputTokens": 5721,
+      "cachedReadTokens": 26368,
+      "outputTokens": 84,
+      "thoughtTokens": 76
+    }
+  }
+]

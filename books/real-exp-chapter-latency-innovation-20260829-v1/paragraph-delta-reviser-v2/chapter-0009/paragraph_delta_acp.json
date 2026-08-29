@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 148.69,
+  "sessionId": "01a04e2b-b201-7c22-b467-603cbb8ea0a9",
+  "text": "# PARAGRAPH OPS\n## REPLACE P002\n峡壁上的裂缝不宽，只容一人侧身挤过去。裂缝后面，一条黑水正向天空流，水中悬着倒置石林和残破建筑；峡谷最深处没有潮兽，只有一处被塌石压住的潮口，黑水正从那里往上顶，撞得石缝里不断冒出白沫。\n\n## REPLACE P006\n乌合听不懂他要怎么开墙，却没有再问。她转身压住腿伤前哨的肩，把人往斜石里侧拖了半步，自己用肩背顶住摇晃的残墙。\n\n## REPLACE P043\n侧壁潮口像被巨锤砸中，堵在前面的石墙从中间裂开。碎石、断木和黑水一同冲出去，正正撞上矿队首领先前留下的撤路。\n\n## REPLACE P045\n碎石堆里的矿权标记被水柱掀起，铜片在半空翻了一圈，撞上岩壁，碎成数片。\n\n## REPLACE P053\n乌合扛着腿伤前哨立刻跟上。残墙还在往下掉石块，可原先堵死的窄缝已经被潮水撕开，她带着那名前哨踩着湿石冲出去，和左侧矿工在新开的石道上撞到一起。\n\n## DELETE P087",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 57175,
+      "inputTokens": 8430,
+      "cachedReadTokens": 41728,
+      "outputTokens": 7017,
+      "thoughtTokens": 6671
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 57175,
+          "inputTokens": 8430,
+          "cachedInputTokens": 41728,
+          "outputTokens": 7017,
+          "reasoningOutputTokens": 6671
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 57175,
+              "inputTokens": 8430,
+              "cachedInputTokens": 41728,
+              "outputTokens": 7017,
+              "reasoningOutputTokens": 6671
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

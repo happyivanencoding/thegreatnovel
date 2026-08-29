@@ -1,0 +1,18 @@
+﻿route,samples,aggregate_speedup_percent,reader_blind,authority_blind,decision
+parallel_precurator,5,21.72,reader treatment3/control2,authority treatment1/control4,FAIL_PRODUCTION
+authority_blueprint_primary,5,40.44,reader treatment1/control3/mixed1,authority treatment4/mixed1,FAIL_PRODUCTION
+parallel_watch_medium_reviser,5,37.95,reader treatment1/control3/mixed1,authority treatment4/mixed1,FAIL_PRODUCTION
+paragraph_delta_run1,5,51.9,reader treatment2/control2/mixed1,authority treatment4/mixed1,PARTIAL_RESEARCH
+paragraph_delta_repeat2,5,56.58,reader treatment2/control2/mixed1,authority treatment2/control2/mixed1,PARTIAL_UNSTABLE
+paragraph_delta_crossbook,5,47.71,reader treatment4/control1,authority control2/mixed3,PARTIAL_RESEARCH
+spark_paragraph_delta,3,13.33,reader treatment1/control1/mixed1,authority treatment1/control1/mixed1,FAIL_PRODUCTION
+speculative_director_full,6,12.09,reader treatment3/control3,authority treatment1/control4/mixed1,FAIL_DEFAULT
+speculative_director_canonless_full,6,12.41,reader treatment3/control3,authority treatment2/control3/mixed1,FAIL_DEFAULT
+attention_kernel,5,4.75,reader treatment2/control3,authority treatment1/control2/mixed2,FAIL_CURRENT_IMPL
+combined_reviser_state,2,-40.76,not judged,schema complete,FAIL_SPEED
+persistent_acp_process,6,28.35,same prompts,same prompts,DIRECTIONAL_INFRA_ONLY
+strict_reader_polish_repeat2,20,0,reader treatment4/control0 on 4 changed,authority treatment3/control1 on 4 changed,PARTIAL_SPARSE
+full_curator_terra_high_downstream,4,26.92,reader terra2/luna2,authority terra2/luna2,FAIL_UNSTABLE_SPLIT
+state_terra_low,8,-3.32,not judged,0/8 fields exact; overall slower,FAIL_SPEED_AUTHORITY
+paragraph_manifest_reviser,5,-105.93,not judged,v1 fallback5/5,FAIL_SPEED
+paragraph_manifest_reviser_v2,5,-5.93,single race unstable,v2 adopt2/fallback3 with hard violations,FAIL_PRODUCTION

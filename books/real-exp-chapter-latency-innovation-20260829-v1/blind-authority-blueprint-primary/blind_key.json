@@ -1,0 +1,22 @@
+{
+  "2": {
+    "A": "control",
+    "B": "authority_blueprint_primary"
+  },
+  "3": {
+    "A": "authority_blueprint_primary",
+    "B": "control"
+  },
+  "10": {
+    "A": "authority_blueprint_primary",
+    "B": "control"
+  },
+  "14": {
+    "A": "authority_blueprint_primary",
+    "B": "control"
+  },
+  "19": {
+    "A": "control",
+    "B": "authority_blueprint_primary"
+  }
+}

@@ -31,6 +31,26 @@ Phase 1–3 已完成冻结输入、正常下游与最终正文 Reader + Authori
 
 本轮按作者范围**没有修改 ACP runner，也没有修改前端**；二者不是未完成交付项。完整速度、盲评与正文对照见 `books/real-exp-chapter-latency-optimization-20260829-v1/RESULTS.md`。
 
+### Latency Innovation Round｜不删质量保险的路线（2026-08-29）
+
+后续又系统测试了：Parallel Pre-Curator、Authority Blueprint、并行 Authority Watch + medium Reviser、Paragraph-Delta Reviser、Commercial Spark、跨章 Speculative Director、Ten-Chapter Attention Kernel、Reviser+State 合并、严格删除式 Reader Polish 与持久 ACP process。所有语义路线均继续接回正式下游，并同时做商业 Reader 与 Authority/Canon blind；Paragraph-Delta 还做了独立重复运行和跨书复验。
+
+最终没有新的章节语义路线达到 production 标准：
+
+- Paragraph-Delta 可把 Reviser wall 缩短约 48%—57%，跨书 Reader 4:1 偏 Treatment，但 Authority 为 control 2 / mixed 3，且同书两次独立运行只有 1/5 最终正文完全一致；
+- Speculative Director 的 `State + Director` 子路径约快 45%，接回完整 Curator/Primary/Reviser 后只快约 12%，Reader 3:3、Authority control 4 / treatment 1 / mixed 1；
+- no-old-Canon Speculative Director 完整下游约快12.4%，Reader 3:3、Authority control 3 / treatment 2 / mixed 1；它比旧投机稍稳，但仍在第15章丢三方合作、同步危机并新增世界事实；
+- Ten-Chapter Attention Kernel 摊销后只快约 4.8%，Reader control 3:2，Authority control 2 / treatment 1 / mixed 2；
+- Reviser 与 State 同调用在两章中反而慢约 35%—50%；
+- 严格删除式 Polish 可并行隐藏在 State 后，但两次20章触发集合只重合2章，跨书10章全 `NO_CHANGE`，不值得新增常驻 Agent。
+- 完整 Curator 改为 Terra high 并接回相同 Primary/Reviser 后，四章总链平均快约26.9%，但 Reader 与 Authority 都是 Terra 2 / Luna 2；第10、14章仍出现行动者、独自稳车、分身硬规则与残压 Ending 漂移，不能改默认模型。
+- 去掉当前 Canon 的 Speculative Director 完整下游平均快约12.4%，Reader 3:3、Authority control 3 / treatment 2 / mixed 1；第4章仍会补出第二袋钱，第15章仍漏水路确认和同步危机，说明实时 State 不能从注意力绑定中拿掉。
+- State 改 Terra low 在8章中总体慢约3.3%，且0/8四字段 exact；Paragraph Manifest 第一版5/5 fallback，第二版仅2/5采用且平均仍更慢，均停止。
+
+唯一零语义风险的正信号是：保留 fresh session、只复用 ACP adapter process / initialize，6次最小调用相对快约28%，但绝对只省约1.26秒/调用；前端不使用这条 runner，本轮也不修改 ACP runner。默认章节链与模型路由继续不变。完整证据见 `books/real-exp-chapter-latency-innovation-20260829-v1/RESULTS.md`。
+
+下一代高潜方向不是再加一个 classifier，而是把 Frozen Mission / Reader Release / Power / Human / Ending 编译成代码可验证的 `Atomic Chapter Obligations`，再让 Paragraph-Delta 只有在 actor-action-object、result/state/ending、ownership/time/money、power ruler、unknown boundary 与 protected commercial value 全部闭合时才可采用，否则直接保留 full Reviser。
+
 ## 节点职责
 
 ### Director

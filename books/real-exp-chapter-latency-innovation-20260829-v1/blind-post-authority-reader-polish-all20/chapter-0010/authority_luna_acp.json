@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 18.747,
+  "sessionId": "01a04e21-303d-7c31-a4de-dc72994c9aa6",
+  "text": "VERDICT: A\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 无\nMISSION_RESULT_ENDING: TIE\nCANON_POWER_WORLD: TIE\nOWNERSHIP_TIME_NAMED_ENTITY: TIE\nREADER_RELEASE_HUMAN_REALIZATION: TIE\nPRESERVATION_AND_STORY_VALUE: A\nREASON: 两版事实等价，行动者、对象、顺序、结果、状态、资源归属、时间窗口、力量边界、未知信息与结尾推动力均未改变。两版都写出顾停舟在余震中独自稳住撤离车，并明确“成炉”。两版都保留了成炉不能完整传给分身的失败验证。两版都保留回潮楔由顾停舟个人持有、细裂加深、尾款落空以及阮青蜃正式追索。两版也都保留乌合对“守住水窗却没替砺骨部夺路”的重新定价。差异只在 A 单独保留了“他确实想留下它”，B 将其压进“他想留下它，不是因为……”之中。该句不是纯粹的重复总结，而是顾停舟面对古器归属争议时明确落地的一拍私人欲望。A 先让“想留下”成为人物选择，再展开“漂亮、锋利、有用”等具体理由，节奏和人物牵引更清楚。B 的信息没有丢失，但压缩后削弱了这一次欲望确认的停顿与记忆点。依照 Preservation First，A 没有明确失败，故应保留 A 的原有句法与故事价值。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 45297,
+      "inputTokens": 20200,
+      "cachedReadTokens": 24320,
+      "outputTokens": 777,
+      "thoughtTokens": 385
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 45297,
+          "inputTokens": 20200,
+          "cachedInputTokens": 24320,
+          "outputTokens": 777,
+          "reasoningOutputTokens": 385
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 45297,
+              "inputTokens": 20200,
+              "cachedInputTokens": 24320,
+              "outputTokens": 777,
+              "reasoningOutputTokens": 385
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

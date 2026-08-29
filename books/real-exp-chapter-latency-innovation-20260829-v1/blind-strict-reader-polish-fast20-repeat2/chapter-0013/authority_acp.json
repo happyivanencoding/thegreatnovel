@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 14.05,
+  "sessionId": "01a04e4a-c96d-76f0-88f3-7e3dc9692804",
+  "text": "VERDICT: B  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: 无  \nFACT_EQUIVALENCE: YES  \nHUMAN_SCENE_VALUE: B  \nRESULT_STOP: B  \nREASON: B 仅删除“顾停舟看得分明”，未改变任何事件事实、人物判断、关系边界、压力、Mission、State、Canon、Payoff或Ending。回潮楔完成锁潮、改向、释放的过程仍由动作、器物变化和后续说明完整呈现。顾停舟对能力结果的理解也没有丢失，下一段仍直接解释其作用。A中的删除句只是重复确认读者已经看见的结果，没有新增人物反应或选择。B因此减少了一次旁白式复述，保留了现场动作的连续性。按 Result Stop 原则，结果成立后不再追加同义证明，B更合适。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 46252,
+      "inputTokens": 21395,
+      "cachedReadTokens": 24320,
+      "outputTokens": 537,
+      "thoughtTokens": 322
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 46252,
+          "inputTokens": 21395,
+          "cachedInputTokens": 24320,
+          "outputTokens": 537,
+          "reasoningOutputTokens": 322
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 46252,
+              "inputTokens": 21395,
+              "cachedInputTokens": 24320,
+              "outputTokens": 537,
+              "reasoningOutputTokens": 322
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

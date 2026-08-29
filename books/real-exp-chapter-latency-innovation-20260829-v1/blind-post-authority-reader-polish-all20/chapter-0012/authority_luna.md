@@ -1,0 +1,10 @@
+VERDICT: A  
+CONFIDENCE: high  
+HARD_VIOLATIONS_A: 无  
+HARD_VIOLATIONS_B: 无  
+MISSION_RESULT_ENDING: TIE  
+CANON_POWER_WORLD: TIE  
+OWNERSHIP_TIME_NAMED_ENTITY: TIE  
+READER_RELEASE_HUMAN_REALIZATION: TIE  
+PRESERVATION_AND_STORY_VALUE: A  
+REASON: A与B的行动者、对象、顺序和追索结果完全一致，车队都由乌合带路、由顾停舟本体稳定车队、由分身维持固定牵引。两版都明确写出“回潮楔”细裂未修、反潮记录原件仍在，且最终抵达百炉城。两版都保留了成炉力量持续承载、胸闷咳血，以及分身无法应对变化目标的精确边界。两版都让阮青蜃通过“分身仍维持着最初那一道牵引”看清其限制，并把反制方向推到下一阶段。两版的乌合关系、付款结清、唐绾留下入口和开炉试窗口将闭都没有变化。A中的“后方的追索者停在更远的黑暗里，没有继续逼近城门”已经完成追索停止与抵达安全边界的表达。B新增的“后方的追索者没有再跟上来”与前文“没有立刻追进旧沟”及后文“没有继续逼近城门”重复确认同一结果。该句没有新增选择、关系变化、Payoff或必要时间信息，删除后不损失读者理解。A因此在事实等价的前提下节奏更紧，保留了抵达城门、入口出现和回潮楔未修之间的有效收束。

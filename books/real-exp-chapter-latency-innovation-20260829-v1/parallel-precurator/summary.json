@@ -1,0 +1,172 @@
+[
+  {
+    "chapter": 2,
+    "director_recorded_wall_seconds": 38.058,
+    "precurator_wall_seconds": 109.801,
+    "primary_wall_seconds": 43.884,
+    "reviser_wall_seconds": 55.461,
+    "control_d_c_p_r_seconds": 268.201,
+    "treatment_parallel_critical_seconds": 209.146,
+    "critical_path_speedup_percent": 22.02,
+    "precurator_prompt_chars": 15450,
+    "bound_curator_chars": 2541,
+    "final_chars": 2073,
+    "precurator_usage": {
+      "totalTokens": 56294,
+      "inputTokens": 41205,
+      "cachedReadTokens": 9984,
+      "outputTokens": 5105,
+      "thoughtTokens": 3879
+    },
+    "primary_usage": {
+      "totalTokens": 42932,
+      "inputTokens": 14403,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2161,
+      "thoughtTokens": 194
+    },
+    "reviser_usage": {
+      "totalTokens": 44794,
+      "inputTokens": 17724,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2750,
+      "thoughtTokens": 1034
+    }
+  },
+  {
+    "chapter": 3,
+    "director_recorded_wall_seconds": 26.393,
+    "precurator_wall_seconds": 93.202,
+    "primary_wall_seconds": 49.273,
+    "reviser_wall_seconds": 112.934,
+    "control_d_c_p_r_seconds": 258.456,
+    "treatment_parallel_critical_seconds": 255.409,
+    "critical_path_speedup_percent": 1.18,
+    "precurator_prompt_chars": 15928,
+    "bound_curator_chars": 2898,
+    "final_chars": 2824,
+    "precurator_usage": {
+      "totalTokens": 48535,
+      "inputTokens": 4481,
+      "cachedReadTokens": 40704,
+      "outputTokens": 3350,
+      "thoughtTokens": 2070
+    },
+    "primary_usage": {
+      "totalTokens": 42416,
+      "inputTokens": 13568,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2480,
+      "thoughtTokens": 70
+    },
+    "reviser_usage": {
+      "totalTokens": 55877,
+      "inputTokens": 7731,
+      "cachedReadTokens": 42752,
+      "outputTokens": 5394,
+      "thoughtTokens": 3009
+    }
+  },
+  {
+    "chapter": 10,
+    "director_recorded_wall_seconds": 69.187,
+    "precurator_wall_seconds": 85.25,
+    "primary_wall_seconds": 76.943,
+    "reviser_wall_seconds": 120.575,
+    "control_d_c_p_r_seconds": 448.461,
+    "treatment_parallel_critical_seconds": 282.768,
+    "critical_path_speedup_percent": 36.95,
+    "precurator_prompt_chars": 16598,
+    "bound_curator_chars": 2962,
+    "final_chars": 3439,
+    "precurator_usage": {
+      "totalTokens": 44437,
+      "inputTokens": 15636,
+      "cachedReadTokens": 24320,
+      "outputTokens": 4481,
+      "thoughtTokens": 3106
+    },
+    "primary_usage": {
+      "totalTokens": 49338,
+      "inputTokens": 7054,
+      "cachedReadTokens": 38656,
+      "outputTokens": 3628,
+      "thoughtTokens": 516
+    },
+    "reviser_usage": {
+      "totalTokens": 56540,
+      "inputTokens": 6847,
+      "cachedReadTokens": 43776,
+      "outputTokens": 5917,
+      "thoughtTokens": 2928
+    }
+  },
+  {
+    "chapter": 14,
+    "director_recorded_wall_seconds": 23.977,
+    "precurator_wall_seconds": 67.092,
+    "primary_wall_seconds": 73.375,
+    "reviser_wall_seconds": 171.798,
+    "control_d_c_p_r_seconds": 388.503,
+    "treatment_parallel_critical_seconds": 312.265,
+    "critical_path_speedup_percent": 19.62,
+    "precurator_prompt_chars": 18067,
+    "bound_curator_chars": 3344,
+    "final_chars": 4325,
+    "precurator_usage": {
+      "totalTokens": 44420,
+      "inputTokens": 16619,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3481,
+      "thoughtTokens": 1763
+    },
+    "primary_usage": {
+      "totalTokens": 44158,
+      "inputTokens": 13956,
+      "cachedReadTokens": 26368,
+      "outputTokens": 3834,
+      "thoughtTokens": 207
+    },
+    "reviser_usage": {
+      "totalTokens": 62685,
+      "inputTokens": 2131,
+      "cachedReadTokens": 51968,
+      "outputTokens": 8586,
+      "thoughtTokens": 4910
+    }
+  },
+  {
+    "chapter": 19,
+    "director_recorded_wall_seconds": 25.705,
+    "precurator_wall_seconds": 53.721,
+    "primary_wall_seconds": 62.284,
+    "reviser_wall_seconds": 194.341,
+    "control_d_c_p_r_seconds": 386.349,
+    "treatment_parallel_critical_seconds": 310.346,
+    "critical_path_speedup_percent": 19.67,
+    "precurator_prompt_chars": 18518,
+    "bound_curator_chars": 3226,
+    "final_chars": 3495,
+    "precurator_usage": {
+      "totalTokens": 44110,
+      "inputTokens": 17076,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2714,
+      "thoughtTokens": 1143
+    },
+    "primary_usage": {
+      "totalTokens": 43464,
+      "inputTokens": 13863,
+      "cachedReadTokens": 26368,
+      "outputTokens": 3233,
+      "thoughtTokens": 100
+    },
+    "reviser_usage": {
+      "totalTokens": 65997,
+      "inputTokens": 5088,
+      "cachedReadTokens": 56064,
+      "outputTokens": 4845,
+      "thoughtTokens": 1666
+    }
+  }
+]

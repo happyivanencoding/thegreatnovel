@@ -226,6 +226,15 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 语义路线 A/B 的最低标准：冻结上游与 Chapter Mission，只改一个变量；Treatment 接回正常 downstream；比较**最终正文**而非 Curator/Audit 中间包；至少同时做商业 Reader 与 Authority/Canon blind。高 Primary↔Reviser 相似度只说明多数句段被保留，不证明少数关键 Authority recovery 没价值。
 
+对以下 treatment 追加更高证据要求：
+
+- **随机稀疏修订 / Paragraph Delta**：同一冻结输入至少独立运行两次，报告修改段落与最终正文的 exact consensus；一次好结果不能替代 repeatability。
+- **提前编译 / Attention Kernel / Pre-Curator**：既审编译包，也必须接回实时 Mission binder 与正常 Primary/Reviser；报告摊销后完整 critical path，而不是只报预编译节点。
+- **跨章投机 / Speculative Scheduling**：以最终 State 后的 Canon 做 Authority Judge；完整计算 `previous State → current final draft` 的关键路径，并单列 treatment 反而变慢的章节。
+- **高潜语义快路**：至少增加一套不同书/世界/人物结构的 cross-book frozen sample；Reader 赢而 Authority 输、或反之，均只能判 PARTIAL。
+- **条件 fallback / adoption gate**：必须把前置失败调用、discard、full fallback 与双路并行的总 wall / cost 全部算入；不能只报命中时速度。
+- **并行隐藏 polish**：即使不增加 wall，也要报告多次运行触发集合、跨书 NO_CHANGE 率与新增调用成本；低重复性的“偶尔有用”不自动成为常驻 Agent。
+
 不要用新增 cheap Reviewer / classifier 为另一个 Reviewer 决定是否运行，除非它能由 deterministic explicit obligation 取代且总成本、漏报、fallback 已完整计入。优先顺序是：删确定性脏上下文 → 修矛盾合同 → 减少废弃重跑/恢复失败节点 → same prompt / same model 的 execution backend 减负 → 最后才考虑语义降档。
 
 结论必须分别标记：质量结论、wall-clock 结论、成本结论。Direct API、ACP、不同 cwd 或不同 transport 的数字不得互相外推。

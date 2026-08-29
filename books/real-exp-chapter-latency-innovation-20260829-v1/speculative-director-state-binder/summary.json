@@ -1,0 +1,176 @@
+[
+  {
+    "previous_chapter": 2,
+    "chapter": 3,
+    "state_wall_seconds": 26.205,
+    "control_director_wall_seconds": 26.393,
+    "speculative_director_wall_seconds": 23.516,
+    "binder_wall_seconds": 17.33,
+    "control_state_plus_director_seconds": 52.598,
+    "treatment_parallel_plus_binder_seconds": 43.535,
+    "critical_path_speedup_percent": 17.23,
+    "response_chars": 637,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "usage": {
+      "totalTokens": 31678,
+      "inputTokens": 20974,
+      "cachedReadTokens": 9984,
+      "outputTokens": 720,
+      "thoughtTokens": 203
+    }
+  },
+  {
+    "previous_chapter": 3,
+    "chapter": 4,
+    "state_wall_seconds": 25.07,
+    "control_director_wall_seconds": 24.93,
+    "speculative_director_wall_seconds": 29.112,
+    "binder_wall_seconds": 16.317,
+    "control_state_plus_director_seconds": 50.0,
+    "treatment_parallel_plus_binder_seconds": 45.429,
+    "critical_path_speedup_percent": 9.14,
+    "response_chars": 511,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "usage": {
+      "totalTokens": 31851,
+      "inputTokens": 21209,
+      "cachedReadTokens": 9984,
+      "outputTokens": 658,
+      "thoughtTokens": 250
+    }
+  },
+  {
+    "previous_chapter": 5,
+    "chapter": 6,
+    "state_wall_seconds": 23.24,
+    "control_director_wall_seconds": 22.645,
+    "speculative_director_wall_seconds": 24.683,
+    "binder_wall_seconds": 20.069,
+    "control_state_plus_director_seconds": 45.885,
+    "treatment_parallel_plus_binder_seconds": 44.752,
+    "critical_path_speedup_percent": 2.47,
+    "response_chars": 667,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "usage": {
+      "totalTokens": 32055,
+      "inputTokens": 21252,
+      "cachedReadTokens": 9984,
+      "outputTokens": 819,
+      "thoughtTokens": 270
+    }
+  },
+  {
+    "previous_chapter": 12,
+    "chapter": 13,
+    "state_wall_seconds": 27.464,
+    "control_director_wall_seconds": 21.015,
+    "speculative_director_wall_seconds": 25.159,
+    "binder_wall_seconds": 16.275,
+    "control_state_plus_director_seconds": 48.479,
+    "treatment_parallel_plus_binder_seconds": 43.739,
+    "critical_path_speedup_percent": 9.78,
+    "response_chars": 592,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "usage": {
+      "totalTokens": 32007,
+      "inputTokens": 21400,
+      "cachedReadTokens": 9984,
+      "outputTokens": 623,
+      "thoughtTokens": 140
+    }
+  },
+  {
+    "previous_chapter": 14,
+    "chapter": 15,
+    "state_wall_seconds": 29.496,
+    "control_director_wall_seconds": 24.031,
+    "speculative_director_wall_seconds": 26.664,
+    "binder_wall_seconds": 16.744,
+    "control_state_plus_director_seconds": 53.527,
+    "treatment_parallel_plus_binder_seconds": 46.24,
+    "critical_path_speedup_percent": 13.61,
+    "response_chars": 574,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "usage": {
+      "totalTokens": 31871,
+      "inputTokens": 21266,
+      "cachedReadTokens": 9984,
+      "outputTokens": 621,
+      "thoughtTokens": 145
+    }
+  },
+  {
+    "previous_chapter": 18,
+    "chapter": 19,
+    "state_wall_seconds": 30.752,
+    "control_director_wall_seconds": 25.705,
+    "speculative_director_wall_seconds": 30.264,
+    "binder_wall_seconds": 16.286,
+    "control_state_plus_director_seconds": 56.457,
+    "treatment_parallel_plus_binder_seconds": 47.038,
+    "critical_path_speedup_percent": 16.68,
+    "response_chars": 582,
+    "fields": [
+      "触发事件",
+      "推动事件的人",
+      "主角行动",
+      "对手或世界反应",
+      "直接结果",
+      "状态变化",
+      "叙事功能",
+      "结尾推动力"
+    ],
+    "usage": {
+      "totalTokens": 32289,
+      "inputTokens": 21652,
+      "cachedReadTokens": 9984,
+      "outputTokens": 653,
+      "thoughtTokens": 141
+    }
+  }
+]

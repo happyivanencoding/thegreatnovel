@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 172.347,
+  "sessionId": "01a04e2b-b1db-7363-bf97-54b0e3a7cbfa",
+  "text": "# PARAGRAPH OPS\n## REPLACE P027-P034\n右侧断墙后，乌合半身浸在水里，一手攥着绳索，一手扶着受伤的前哨。另两名前哨被水幕隔着，其中一人已经被卷到侧室门边。分身站在侧室内侧，长绳缠在肩上，右手朝外伸着。\n\n那名前哨抓住一块残石。分身的牵引扣住他的腰带，将他从黑暗里往外拖；碎石和断矛被水流撞开。\n\n“接住！”\n\n分身一甩手。\n\n那名前哨被牵引拉出水流最凶的位置，乌合立刻踏上残墙，伸手抓住他的后领。她脚下的石块被水压推得滑了一寸，顾停舟心里一紧。\n\n乌合却没有退。\n\n她肩背绷紧，湿透的衣袖贴在手臂上，硬把人往后拖。受伤的前哨仍贴在残墙边喘息，另一名砺骨部前哨则被水幕隔在更远处。\n\n“还有两个！”乌合喊道。\n\n## REPLACE P054-P056\n侧室门边，受伤的前哨刚被水流卷离残墙。分身的牵引扣住他的腰带，把他拖向门外。\n\n乌合带着刚救出的前哨迎上去，伸手抓住伤员的手臂，将他拽回残墙。\n\n她没有说谢，只是在接住伤员后抬眼看了顾停舟一下。那眼神很短，像是在重新掂量这个人究竟肯把命押到什么地步。\n\n## REPLACE P064-P078\n侧室里，最后一名砺骨部前哨已经攀上门边残石。分身的牵引扣住他的腰带，正把他往门外拖。\n\n黑暗深处露出一截暗沉的金属。\n\n那是一枚半臂长的楔子，尖端钉在碎裂石座里，尾部被几根细链和拉索缠死。它周围的水流全在朝它压去，连碎石都被吸得贴在金属表面。\n\n矿队首领也看见了。\n\n他的眼睛一下亮了。\n\n“拉住它！”他朝侧室方向吼，“别让它掉进去！”\n\n顾停舟这才明白，首领刚才为什么拼命改索。\n\n不是只为了入口。\n\n他想让分身一边救人，一边替他把这件东西钉在原处，还要顺手守住门口。\n\n可如今侧室外墙正在塌。\n\n分身若回头去稳住水势，刚救出的砺骨部前哨还来不及撤远；若去替矿队保住那枚金属楔，顾停舟便会把最后的退路交给一个已经裂掉的石门。\n\n顾停舟朝分身喊道：“人出来没有？”\n\n分身把最后一名前哨拖出门槛，才应道：“出来了。”\n\n“那就拿它。”\n\n分身没有问为什么。\n\n## REPLACE P085-P085\n金属楔从石座里被一点点拽起，发出刺耳的摩擦声。紧接着，侧室里的水流猛地朝外炸开。分身被冲得撞上门框，肩头一沉，仍死死盯着那枚金属楔。\n\n## REPLACE P096-P096\n乌合已经把砺骨部前哨送上高石，两名矿工也被护卫拖到更远处。被救出来的人喘着气，看向塌毁的侧室，又看向顾停舟手里的金属楔。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 56843,
+      "inputTokens": 6739,
+      "cachedReadTokens": 41728,
+      "outputTokens": 8376,
+      "thoughtTokens": 7487
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 56843,
+          "inputTokens": 6739,
+          "cachedInputTokens": 41728,
+          "outputTokens": 8376,
+          "reasoningOutputTokens": 7487
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 56843,
+              "inputTokens": 6739,
+              "cachedInputTokens": 41728,
+              "outputTokens": 8376,
+              "reasoningOutputTokens": 7487
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

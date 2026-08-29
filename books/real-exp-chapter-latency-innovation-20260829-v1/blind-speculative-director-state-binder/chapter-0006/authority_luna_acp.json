@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 76.888,
+  "sessionId": "01a04e26-ab60-7fa3-b574-6227fded604c",
+  "text": "VERDICT: A  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 将“逼退潮兽”与“改变潮向”合并为异常压力的已确定因果；计划只批准猎队确认前者，并规定撬开外层导致后者。  \nHARD_VIOLATIONS_B: 将猎队确认异常压力置于领队撬开建筑之后，违反计划规定的行动顺序；把“未知古器”改写成“未知目标”，并新增“继续追踪未知目标”的主角选择。  \nFINAL_CANON_FIDELITY: A  \nPLAN_BUDGET_FIDELITY: A  \nRESULT_STATE_ENDING: A  \nHUMAN_POWER_WORLD: A  \nSTORY_VALUE: A  \nREASON: 两版都保留了“低潮入口转为逆潮危险现场”的核心换挡，也都把结尾落到本体与分身分赴两处。A 更完整执行了“倒流水幕、倒置石林、古代建筑、猎队抵达”后再由领队撬开外层的计划顺序。B 却先写“领队强行撬开古代建筑外层”，直到反应字段才写猎队确认异常压力，改变了合同规定的因果先后。A 的“阻止领队就等于放弃本次实测，因此选择继续留在现场”准确兑现了计划中的两难选择。B 的“观察冲击后的人员位置与水势变化”偏向流程描述，主角的关键决定不如 A 清楚。两版都正确保留了“实测尾款进入无法正常完成状态”、矿权标记裂开、矿队与砺骨部前哨被分隔，以及逆潮根源仍未知。A 的“本体向被困者靠近，分身只携带一种牵引进入侧室”直接落实了计划结尾；B 的“一侧/另一侧室内”使救援对象和行动位置变得模糊。A 还更清楚地把顾停舟的留场责任与分身双点占位连接起来，体现核心幻想和现实代价。B 将“未知古器”降格为“未知目标”，并额外加入“继续追踪未知目标”的选择，削弱了本章明确的救援 Handoff。整体上 A 的故事价值、人物主动性和世界换挡都更强，但正式采用前必须修正异常压力因果的越权合并。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 40987,
+      "inputTokens": 26963,
+      "cachedReadTokens": 9984,
+      "outputTokens": 4040,
+      "thoughtTokens": 3481
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 40987,
+          "inputTokens": 26963,
+          "cachedInputTokens": 9984,
+          "outputTokens": 4040,
+          "reasoningOutputTokens": 3481
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 40987,
+              "inputTokens": 26963,
+              "cachedInputTokens": 9984,
+              "outputTokens": 4040,
+              "reasoningOutputTokens": 3481
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

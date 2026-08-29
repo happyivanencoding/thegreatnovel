@@ -1,0 +1,202 @@
+[
+  {
+    "chapter": 1,
+    "patch_index": 1,
+    "decision": "REJECT",
+    "polish_wall_seconds": 12.66,
+    "gate_wall_seconds": 9.435,
+    "state_wall_seconds": 25.081,
+    "polish_gate_seconds": 22.095,
+    "added_wall_over_state_seconds": 0.0,
+    "old": "他不怕货损。他怕的是有人先做了选择，最后把账册一合，全写成谁也没法追的天灾。",
+    "new": "他怕的是有人先做了选择，最后把账册一合，全写成谁也没法追的天灾。",
+    "response": "DECISION: REJECT\nFACT_EQUIVALENT: NO\nUNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT\nUNIQUE_FANTASY_PAYOFF_VALUE: NONE\nPURE_REDUNDANCY: NO\nREASON: OLD 中“他不怕货损”明确保留了顾停舟愿意承受真实损失的立场，NEW 删除后只剩下他厌恶把人为选择伪装成天灾。邻近上下文“顾停舟没有退”与少东家随后“拿纸”只证明他坚持要求落到账面，不能完整承担这句对真实损失的态度。该对照还支撑他要求写清份额、拒绝事后改账的人物牵引，不是重复总结。应用 NEW 会削弱人物对“真实损失”和“伪造天灾”的明确情绪对照，因此不能安全应用。",
+    "usage": {
+      "totalTokens": 35213,
+      "inputTokens": 24959,
+      "cachedReadTokens": 9984,
+      "outputTokens": 270,
+      "thoughtTokens": 69
+    }
+  },
+  {
+    "chapter": 3,
+    "patch_index": 1,
+    "decision": "REJECT",
+    "polish_wall_seconds": 10.049,
+    "gate_wall_seconds": 10.873,
+    "state_wall_seconds": 25.07,
+    "polish_gate_seconds": 20.922,
+    "added_wall_over_state_seconds": 0.0,
+    "old": "这句话里有恼火，也有一点旧日的熟悉。",
+    "new": "",
+    "response": "DECISION: REJECT\nFACT_EQUIVALENT: NO\nUNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT\nUNIQUE_FANTASY_PAYOFF_VALUE: NONE\nPURE_REDUNDANCY: NO\nREASON: OLD 明确写出少东家的“恼火”与“旧日的熟悉”并存，承担少东家既有利益冲突、又保留旧友情的情绪对照。邻近上下文虽写顾停舟“认识他太久”，也说明少东家“不是忽然想把他逼死”，但没有完整保留这两个并置的情绪和关系阶段。删除后，少东家可能被读成单纯施压者，旧情未消的牵引会变弱。它不是重复总结，而是关系变化中的一拍，因此不能安全删除。",
+    "usage": {
+      "totalTokens": 35645,
+      "inputTokens": 11067,
+      "cachedReadTokens": 24320,
+      "outputTokens": 258,
+      "thoughtTokens": 69
+    }
+  },
+  {
+    "chapter": 4,
+    "patch_index": 1,
+    "decision": "REJECT",
+    "polish_wall_seconds": 15.854,
+    "gate_wall_seconds": 10.603,
+    "state_wall_seconds": 28.709,
+    "polish_gate_seconds": 26.457,
+    "added_wall_over_state_seconds": 0.0,
+    "old": "那些事不是假的。",
+    "new": "",
+    "response": "DECISION: REJECT\nFACT_EQUIVALENT: NO\nUNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT\nUNIQUE_FANTASY_PAYOFF_VALUE: NONE\nPURE_REDUNDANCY: NO\nREASON: OLD“那些事不是假的”承接“少东家会把最差的干粮丢给他”与“两个人一起把车抬出来”，把具体共同经历确认成仍然有效的关系事实。它还为下一句“我信你给过我机会”提供情绪落点，明确顾停舟没有把少东家的旧情和帮助改写成纯粹利用。虽然邻近上下文已经列举了两件往事，但没有替这句完成“这些经历真实、关系未被否定”的一拍。删除后，人物对少东家的旧情与恼火并存会变得更隐含，因此不是纯重复。",
+    "usage": {
+      "totalTokens": 35621,
+      "inputTokens": 25345,
+      "cachedReadTokens": 9984,
+      "outputTokens": 292,
+      "thoughtTokens": 89
+    }
+  },
+  {
+    "chapter": 5,
+    "patch_index": 1,
+    "decision": "REJECT",
+    "polish_wall_seconds": 13.316,
+    "gate_wall_seconds": 9.461,
+    "state_wall_seconds": 23.24,
+    "polish_gate_seconds": 22.777,
+    "added_wall_over_state_seconds": 0.0,
+    "old": "她说得很平，没有求人的意思。",
+    "new": "",
+    "response": "DECISION: REJECT  \nFACT_EQUIVALENT: NO  \nUNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT  \nUNIQUE_FANTASY_PAYOFF_VALUE: NONE  \nPURE_REDUNDANCY: NO  \nREASON: OLD 中“她说得很平，没有求人的意思”明确保留了乌合不求人、不示弱、拒绝廉价善意的立场。邻近上下文“你自己看，这里到底是不是你们该先占的地方”虽然提出了判断要求，但没有完整承担她克制而不求人的语气与关系姿态。删除后，乌合可能被读成单纯陈述事实，第一次具体立场碰撞中的对等压力和有限信任边界会减弱。该句不是对后文动作或事实的重复总结，因此不能安全删除。",
+    "usage": {
+      "totalTokens": 34014,
+      "inputTokens": 23776,
+      "cachedReadTokens": 9984,
+      "outputTokens": 254,
+      "thoughtTokens": 70
+    }
+  },
+  {
+    "chapter": 6,
+    "patch_index": 1,
+    "decision": "REJECT",
+    "polish_wall_seconds": 14.759,
+    "gate_wall_seconds": 12.337,
+    "state_wall_seconds": 23.899,
+    "polish_gate_seconds": 27.096,
+    "added_wall_over_state_seconds": 3.197,
+    "old": "峡谷里的人都在等他做选择。",
+    "new": "",
+    "response": "DECISION: REJECT  \nFACT_EQUIVALENT: NO  \nUNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT  \nUNIQUE_FANTASY_PAYOFF_VALUE: NONE  \nPURE_REDUNDANCY: NO  \nREASON: OLD“峡谷里的人都在等他做选择”明确承担当下所有势力把救援责任压到顾停舟身上的公共压力。领队隔着乱水喊“先救矿工”，乌合“只是看着顾停舟”，共同构成这句对人物选择的紧邻牵引。下一句虽写他吐气、分出另一具身体并把牵引留给分身，但只表现了已经作出的行动，没有完整替代“众人等待他裁决”的关系与停顿价值。删除后会削弱顾停舟从实测当事人转为现场决策者的临界一拍，因此不是纯重复。",
+    "usage": {
+      "totalTokens": 34832,
+      "inputTokens": 24512,
+      "cachedReadTokens": 9984,
+      "outputTokens": 336,
+      "thoughtTokens": 132
+    }
+  },
+  {
+    "chapter": 10,
+    "patch_index": 1,
+    "decision": "REJECT",
+    "polish_wall_seconds": 18.035,
+    "gate_wall_seconds": 12.485,
+    "state_wall_seconds": 24.98,
+    "polish_gate_seconds": 30.52,
+    "added_wall_over_state_seconds": 5.54,
+    "old": "他确实想留下它。\n\n不是因为它古老，也不是因为谁说它值钱，而是因为这东西在他最难的时候替他顶住了潮压，也因为它漂亮、锋利、有用。",
+    "new": "他想留下它，不是因为它古老，也不是因为谁说它值钱，而是因为这东西在他最难的时候替他顶住了潮压，也因为它漂亮、锋利、有用。",
+    "response": "DECISION: REJECT\nFACT_EQUIVALENT: NO\nUNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT\nUNIQUE_FANTASY_PAYOFF_VALUE: PRESENT\nPURE_REDUNDANCY: NO\nREASON: OLD 中“他确实想留下它”明确确认了顾停舟在损失压力下仍然成立的占有欲，NEW 改为“他想留下它”削弱了确定性。OLD 将“漂亮、锋利、有用”单独承接，并在“更重要的是”前留下节拍停顿，使审美、实用与个人持有的欲望逐层加重；NEW 把这些内容压成一句，损失了人物牵引和力量兑现后的欲望确认。邻近上下文写明“器身冰凉，细裂清清楚楚地贴在掌心”，以及“已经落进他手里的东西，不能因为别人一句‘本该属于矿队’，就又变成一笔糊涂账”，因此这不是单纯重复，而是古器实际体验、占有立场与拒绝糊涂归账之间的承接。存在确定性和节拍价值变化，不能安全应用。",
+    "usage": {
+      "totalTokens": 35265,
+      "inputTokens": 24904,
+      "cachedReadTokens": 9984,
+      "outputTokens": 377,
+      "thoughtTokens": 108
+    }
+  },
+  {
+    "chapter": 11,
+    "patch_index": 1,
+    "decision": "REJECT",
+    "polish_wall_seconds": 16.299,
+    "gate_wall_seconds": 11.562,
+    "state_wall_seconds": 27.07,
+    "polish_gate_seconds": 27.861,
+    "added_wall_over_state_seconds": 0.791,
+    "old": "这一次，乌合没再说什么救命之恩。\n\n她转身去安排砺骨部的人上车，动作比刚才利落了不少。",
+    "new": "她转身去安排砺骨部的人上车，动作比刚才利落了不少。",
+    "response": "DECISION: REJECT  \nFACT_EQUIVALENT: NO  \nUNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT  \nUNIQUE_FANTASY_PAYOFF_VALUE: NONE  \nPURE_REDUNDANCY: NO  \nREASON: 邻近上下文“下次若还要我们帮忙，先把价写在前面”与“我也省心”只提出了明码标价，但 OLD“这一次，乌合没再说什么救命之恩”明确确认她放弃了把救命人情继续作为无边界债务。紧接着“她转身去安排砺骨部的人上车，动作比刚才利落了不少”只承担行动结果，没有完整承担这次关系从救命人情转为有价协作的心理与立场变化。删除 OLD 会削弱乌合的关系边界，也使“按价协作”缺少当场的明确兑现。该句不是重复总结，因此不能安全应用。",
+    "usage": {
+      "totalTokens": 35094,
+      "inputTokens": 10493,
+      "cachedReadTokens": 24320,
+      "outputTokens": 281,
+      "thoughtTokens": 63
+    }
+  },
+  {
+    "chapter": 12,
+    "patch_index": 1,
+    "decision": "ACCEPT",
+    "polish_wall_seconds": 16.608,
+    "gate_wall_seconds": 12.561,
+    "state_wall_seconds": 27.464,
+    "polish_gate_seconds": 29.169,
+    "added_wall_over_state_seconds": 1.705,
+    "old": "后方的追索者没有再跟上来。\n\n他们停在更远的黑暗里，没有继续逼近城门。",
+    "new": "后方的追索者停在更远的黑暗里，没有继续逼近城门。",
+    "response": "DECISION: ACCEPT\nFACT_EQUIVALENT: YES\nUNIQUE_HUMAN_RELATIONSHIP_VALUE: NONE\nUNIQUE_FANTASY_PAYOFF_VALUE: NONE\nPURE_REDUNDANCY: YES\nREASON: OLD 中“后方的追索者没有再跟上来”与“他们停在更远的黑暗里，没有继续逼近城门”表达的是同一追索停止事实。邻近上下文“只是一路绷着的那口气，终于散了”与“静静看着顾停舟”仍完整承担撤离后的停顿和压力解除。NEW 保留了追索者、位置、停止逼近城门及当前时态，没有改变行动者、对象、结果或未知强度。删除的仅是明确重复确认，不损失独特人物、关系或力量兑现价值。",
+    "usage": {
+      "totalTokens": 34419,
+      "inputTokens": 9698,
+      "cachedReadTokens": 24320,
+      "outputTokens": 401,
+      "thoughtTokens": 213
+    }
+  },
+  {
+    "chapter": 17,
+    "patch_index": 1,
+    "decision": "REJECT",
+    "polish_wall_seconds": 14.66,
+    "gate_wall_seconds": 11.602,
+    "state_wall_seconds": 30.877,
+    "polish_gate_seconds": 26.262,
+    "added_wall_over_state_seconds": 0.0,
+    "old": "他不想把这些人的死活，算成一句潮灾无情。",
+    "new": "他不想看着这些人死在潮里。",
+    "response": "DECISION: REJECT  \nFACT_EQUIVALENT: NO  \nUNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT  \nUNIQUE_FANTASY_PAYOFF_VALUE: NONE  \nPURE_REDUNDANCY: NO  \nREASON: 邻近上下文写着“心里那点被潮力撞出来的烦躁”，OLD“他不想把这些人的死活，算成一句潮灾无情”具体保留了顾停舟厌恶把真实损失伪装成天意的立场。NEW“他不想看着这些人死在潮里”只表达救人的直接愿望，删除了对责任与损失归因的独特判断。该变化削弱人物行为牵引，不能视为同义确认。下一句“他也不想让刚拿到手的东西……变成一块没用的废铜”仍保留器物损失与占有价值，但不能补回 OLD 被删除的人物价值。",
+    "usage": {
+      "totalTokens": 35142,
+      "inputTokens": 24818,
+      "cachedReadTokens": 9984,
+      "outputTokens": 340,
+      "thoughtTokens": 122
+    }
+  },
+  {
+    "chapter": 18,
+    "patch_index": 1,
+    "decision": "REJECT",
+    "polish_wall_seconds": 19.74,
+    "gate_wall_seconds": 10.645,
+    "state_wall_seconds": 30.752,
+    "polish_gate_seconds": 30.385,
+    "added_wall_over_state_seconds": 0.0,
+    "old": "三件事都堵在矿脉这一处。",
+    "new": "",
+    "response": "DECISION: REJECT\nFACT_EQUIVALENT: NO\nUNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT\nUNIQUE_FANTASY_PAYOFF_VALUE: PRESENT\nPURE_REDUNDANCY: NO\nREASON: OLD“三件事都堵在矿脉这一处”把乌合所说的迁徙窗口、远处逼近的镇海潮兽与矿脉上的人员/矿利冲突压成同一处决策节点，邻近上下文并未逐项明确承担“三件事”的汇合关系。删除后，读者仍能看见水路和潮兽，却失去顾停舟此刻必须在救人、保粮道与追讨矿利之间取舍的节拍确认。该句还保留了顾停舟以账目式视角判断多重现实损失如何集中到一个位置的人物牵引。它不是单纯重复，因此不能安全删除。",
+    "usage": {
+      "totalTokens": 35570,
+      "inputTokens": 10935,
+      "cachedReadTokens": 24320,
+      "outputTokens": 315,
+      "thoughtTokens": 105
+    }
+  }
+]

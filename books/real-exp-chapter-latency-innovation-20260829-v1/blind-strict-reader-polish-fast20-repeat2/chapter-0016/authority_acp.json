@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 18.094,
+  "sessionId": "01a04e4a-bbf9-71f3-9cfd-6fda15f92bc6",
+  "text": "VERDICT: A  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: B 新增了 A 中不存在的句子，不符合只允许纯删除差异。  \nFACT_EQUIVALENCE: YES  \nHUMAN_SCENE_VALUE: A  \nRESULT_STOP: TIE  \nREASON: A 与 B 的事件、因果、人物判断、关系变化、压力、Mission、State、Canon、Payoff 和 Ending 均未发生事实差异。B 多出的“粮车、井口、水路，全在往坏处走”只是对前文危局的概括，没有新增事实。由于该句不是删除而是新增，B 违反了版本差异的硬约束。该句也没有提供新的动作、选择、反应或关系变化，反而重复总结现场压力。A 因此保留了更紧的现场推进和更高的人物动作密度。两版在回潮楔释放、三井与粮道保住、外层毁弃及观测点暴露后的收束位置完全一致。 RESULT_STOP 故判为平手。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 46946,
+      "inputTokens": 21855,
+      "cachedReadTokens": 24320,
+      "outputTokens": 771,
+      "thoughtTokens": 516
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 46946,
+          "inputTokens": 21855,
+          "cachedInputTokens": 24320,
+          "outputTokens": 771,
+          "reasoningOutputTokens": 516
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 46946,
+              "inputTokens": 21855,
+              "cachedInputTokens": 24320,
+              "outputTokens": 771,
+              "reasoningOutputTokens": 516
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

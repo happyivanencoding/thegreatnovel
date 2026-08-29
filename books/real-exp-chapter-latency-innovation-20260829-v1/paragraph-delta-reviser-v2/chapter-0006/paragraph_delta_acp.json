@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 121.2,
+  "sessionId": "01a04e2b-b2f9-7773-82c7-6b69a2ae2e0e",
+  "text": "# PARAGRAPH OPS\n## REPLACE P051-P056\n他看清了。\n\n测路杆还在手里，眼前的入口、走向和承载路线却都不可能按原计划测完。实测契的尾款，也没有了正常结算的可能。\n\n左侧石林里，两名矿工被困在一块倾斜的石台上，下面的逆潮正一阵阵拍向石台边缘。右侧断墙后，砺骨部前哨有三个人被水流隔住，其中一个人腿上见了血，暂时无法穿过水幕。\n\n更危险的是建筑侧面。\n\n那里裂出一道半开的石门，门内有间低矮侧室。逆潮每次翻卷，侧室里都会传来一股更重的牵扯，把附近的水和碎石往里拖。\n\n顾停舟不能确定里面有什么。\n\n但他能确定，那股牵扯正在把右侧的人困在水幕后。\n\n## REPLACE P057-P064\n右侧断墙后传来砺骨部前哨的喊声。\n\n“这里的人过不去！”\n\n有人攥着绳索，隔着水幕朝他看过来。\n\n顾停舟抬头，又看了一眼左侧石台。\n\n矿工已经有人开始往下滑。\n\n领队被冲到更远处，隔着乱水大喊：“先救矿工！他们是矿队的人！”\n\n右侧的喊声被水声吞没。\n\n峡谷里的人都在等他做选择。\n\n## REPLACE P066-P068\n顾停舟看向分身。\n\n这一次，他只让分身带走牵引。\n\n## REPLACE P072-P074\n“右边的人，抓紧绳！”顾停舟朝断墙后喊，“我先把左边的人带到能接绳的位置。”\n\n右侧的人收紧绳索。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 46372,
+      "inputTokens": 16058,
+      "cachedReadTokens": 24320,
+      "outputTokens": 5994,
+      "thoughtTokens": 5559
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 46372,
+          "inputTokens": 16058,
+          "cachedInputTokens": 24320,
+          "outputTokens": 5994,
+          "reasoningOutputTokens": 5559
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 46372,
+              "inputTokens": 16058,
+              "cachedInputTokens": 24320,
+              "outputTokens": 5994,
+              "reasoningOutputTokens": 5559
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "2": {
+    "A": "control",
+    "B": "attention_kernel"
+  },
+  "3": {
+    "A": "control",
+    "B": "attention_kernel"
+  },
+  "10": {
+    "A": "attention_kernel",
+    "B": "control"
+  },
+  "14": {
+    "A": "attention_kernel",
+    "B": "control"
+  },
+  "19": {
+    "A": "attention_kernel",
+    "B": "control"
+  }
+}

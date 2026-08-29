@@ -1,0 +1,97 @@
+# PARAGRAPH MANIFEST
+## P001 KEEP
+## P002 KEEP
+## P003 KEEP
+## P004 KEEP
+## P005 KEEP
+## P006 KEEP
+## P007 KEEP
+## P008 KEEP
+## P009 KEEP
+## P010 KEEP
+## P011 DELETE
+## P012 KEEP
+## P013 KEEP
+## P014 KEEP
+## P015 KEEP
+## P016 KEEP
+## P017 KEEP
+## P018 KEEP
+## P019 KEEP
+## P020 KEEP
+## P021 KEEP
+## P022 KEEP
+## P023 REPLACE
+裂槽现在能走，靠的是潮水暂时退下去露出的槽底；边缘仍有塌落的痕迹。
+## P024 KEEP
+## P025 KEEP
+## P026 KEEP
+## P027 DELETE
+## P028 DELETE
+## P029 KEEP
+## P030 KEEP
+## P031 KEEP
+## P032 KEEP
+## P033 KEEP
+## P034 KEEP
+## P035 REPLACE
+他没有把路线册交出去，只翻开册页，指着旧桩位、旧转折和裂槽方向说给校路官听。校路官把起点、走向和露出的新鲜深潮矿层记在纸上，落笔写道：
+## P036 REPLACE
+旧路线废止，新裂槽与露出的深潮矿样另列现场记录。
+## P037 DELETE
+## P038 DELETE
+## P039 DELETE
+## P040 DELETE
+## P041 KEEP
+## P042 KEEP
+## P043 KEEP
+## P044 KEEP
+## P045 KEEP
+## P046 KEEP
+## P047 KEEP
+## P048 KEEP
+## P049 REPLACE
+“按个手印。”顾停舟伸出拇指，在随身墨盒里按了一下，稳稳压在纸角。校路官也按下自己的印，两枚印并排落在纸上。
+## P050 DELETE
+## P051 DELETE
+## P052 DELETE
+## P053 KEEP
+## P054 DELETE
+## P055 KEEP
+## P056 KEEP
+## P057 KEEP
+## P058 KEEP
+## P059 KEEP
+## P060 REPLACE
+那册子并没有忽然变成通行凭证，也没替他拿到行潮籍。它仍是原路线记录，却不再只属于商号的账目。
+## P061 KEEP
+## P062 KEEP
+## P063 KEEP
+## P064 KEEP
+## P065 REPLACE
+“那就把腿养好。”校路官说，“这条裂槽留不了几天。要接矿路实测，得拿着原册，自己看得懂石桩和矿层。”
+## P066 KEEP
+## P067 KEEP
+## P068 KEEP
+## P069 KEEP
+## P070 KEEP
+## P071 KEEP
+## P072 KEEP
+## P073 KEEP
+## P074 KEEP
+## P075 KEEP
+## P076 KEEP
+## P077 KEEP
+## P078 KEEP
+## P079 KEEP
+## P080 KEEP
+## P081 KEEP
+## P082 KEEP
+## P083 KEEP
+## P084 KEEP
+## P085 KEEP
+
+# CLOSURE CERTIFICATE
+MUST_LAND: PASS
+GLOBAL_FACT_CLOSURE: PASS
+ENDING_PRESERVED: PASS

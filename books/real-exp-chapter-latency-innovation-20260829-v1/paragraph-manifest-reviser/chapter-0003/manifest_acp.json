@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 68.148,
+  "sessionId": "01a04e59-2696-7ca0-a908-274c77732bc4",
+  "text": "# PARAGRAPH MANIFEST\n## P001 KEEP\n## P002 KEEP\n## P003 KEEP\n## P004 KEEP\n## P005 KEEP\n## P006 KEEP\n## P007 KEEP\n## P008 KEEP\n## P009 KEEP\n## P010 KEEP\n## P011 KEEP\n## P012 KEEP\n## P013 KEEP\n## P014 KEEP\n## P015 KEEP\n## P016 KEEP\n## P017 KEEP\n## P018 KEEP\n## P019 KEEP\n## P020 KEEP\n## P021 KEEP\n## P022 KEEP\n## P023 KEEP\n## P024 KEEP\n## P025 KEEP\n## P026 KEEP\n## P027 KEEP\n## P028 KEEP\n## P029 KEEP\n## P030 KEEP\n## P031 KEEP\n## P032 KEEP\n## P033 KEEP\n## P034 KEEP\n## P035 KEEP\n## P036 KEEP\n## P037 KEEP\n## P038 KEEP\n## P039 KEEP\n## P040 KEEP\n## P041 KEEP\n## P042 KEEP\n## P043 KEEP\n## P044 REPLACE\n他看着顾停舟，眼里的火气慢慢沉了下去。\n## P045 DELETE\n## P046 KEEP\n## P047 KEEP\n## P048 KEEP\n## P049 KEEP\n## P050 KEEP\n## P051 KEEP\n## P052 REPLACE\n顾停舟重新看了一遍契纸，确认登记名义、路线结果和赔付条件都写清了。\n## P053 DELETE\n## P054 DELETE\n## P055 DELETE\n## P056 KEEP\n## P057 KEEP\n## P058 KEEP\n## P059 KEEP\n## P060 KEEP\n## P061 KEEP\n## P062 KEEP\n## P063 KEEP\n\n# CLOSURE CERTIFICATE\nMUST_LAND: PASS\nGLOBAL_FACT_CLOSURE: PASS\nENDING_PRESERVED: PASS",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 46362,
+      "inputTokens": 18823,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3219,
+      "thoughtTokens": 2817
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 46362,
+          "inputTokens": 18823,
+          "cachedInputTokens": 24320,
+          "outputTokens": 3219,
+          "reasoningOutputTokens": 2817
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 46362,
+              "inputTokens": 18823,
+              "cachedInputTokens": 24320,
+              "outputTokens": 3219,
+              "reasoningOutputTokens": 2817
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

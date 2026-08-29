@@ -1,0 +1,42 @@
+{
+  "1": {
+    "A": "control",
+    "B": "reader_polish"
+  },
+  "3": {
+    "A": "control",
+    "B": "reader_polish"
+  },
+  "4": {
+    "A": "control",
+    "B": "reader_polish"
+  },
+  "5": {
+    "A": "reader_polish",
+    "B": "control"
+  },
+  "6": {
+    "A": "reader_polish",
+    "B": "control"
+  },
+  "10": {
+    "A": "control",
+    "B": "reader_polish"
+  },
+  "11": {
+    "A": "control",
+    "B": "reader_polish"
+  },
+  "12": {
+    "A": "reader_polish",
+    "B": "control"
+  },
+  "17": {
+    "A": "reader_polish",
+    "B": "control"
+  },
+  "18": {
+    "A": "control",
+    "B": "reader_polish"
+  }
+}

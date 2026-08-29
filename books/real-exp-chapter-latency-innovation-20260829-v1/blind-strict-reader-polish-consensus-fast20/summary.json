@@ -1,0 +1,16 @@
+[
+  {
+    "chapter": 16,
+    "reader": "VERDICT: B  \nCONFIDENCE: high  \nNATURALNESS: B  \nCHARACTER_VALUE: TIE  \nSCENE_PRESSURE: B  \nANTI_AI_EXPLANATION: B  \nHARD_PROBLEM_A: “粮车、井口、水路，全在往坏处走”重复概括了前文已呈现的危机。  \nHARD_PROBLEM_B: 无  \nREASON: B删去后，撤离人群的失控与顾停舟抬眼判断之间衔接更直接。前文已经用粮车受困、井口将炸、群众挤向塌方口完成了压力展示，不需要再替读者归纳。A这句并非人物独有的判断，也没有带来新的决策信息。删去后，顾停舟抹血、看向旧关外层的动作更像他在混乱中迅速选定代价，而不是作者暂停镜头作战况总结。B没有削弱场景风险，反而让压迫感持续向他的选择汇拢。人物的“不能再守每一处”也因此落得更干脆。",
+    "authority": "VERDICT: B\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 无\nFACT_EQUIVALENCE: YES\nHUMAN_SCENE_VALUE: B\nRESULT_STOP: TIE\nREASON: 两版唯一差异是删除“粮车、井口、水路，全在往坏处走。”这一句。该句只是对前文可见危机的抽象重复，没有新增事实、人物判断、关系变化、压力、Mission、State、Canon、Payoff或Ending。删除后，粮车、井口和撤离水路的危机仍由现场动作与具体后果完整承载。A的句子带有旁白总结和程序化归纳，削弱了现场连续性。B保留了顾停舟随后作出分配与改道选择所需的全部压力。两版在能力兑现、代价、资源结果、人物关系和结尾推动力上完全等价。结果发生后的停止点没有变化，因此 RESULT_STOP 判为平局。",
+    "reader_wall": 11.549,
+    "authority_wall": 14.023
+  },
+  {
+    "chapter": 18,
+    "reader": "VERDICT: A  \nCONFIDENCE: medium  \nNATURALNESS: A  \nCHARACTER_VALUE: TIE  \nSCENE_PRESSURE: A  \nANTI_AI_EXPLANATION: B  \nHARD_PROBLEM_A: 无  \nHARD_PROBLEM_B: 无  \nREASON: A句虽是总结，但准确把粮道、新井与迁徙窗口收束为同一处战场，读者不必自行回捞三条信息。它放在顾停舟望向远处之前，形成“局势合拢—主角判断”的清晰鼓点。删掉后并不突兀，且更信任读者自行理解三方压力。只是B从乌合的迁徙窗口直接跳到顾停舟观察潮兽，空间焦点略松。A并没有重复解释人物已经作出的选择，而是在标明选择为何必须立刻落到矿脉。人物价值基本不受影响，因为顾停舟的取舍仍由后文旧伤、照域极限和行动命令完成。B在反AI解释感上稍好，少了一句作者替读者归纳。综合男频推进节奏，A的战场聚焦和临战重音更有用。",
+    "authority": "VERDICT: B  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: 无  \nFACT_EQUIVALENCE: YES  \nHUMAN_SCENE_VALUE: B  \nRESULT_STOP: TIE  \nREASON: B仅删除“三件事都堵在矿脉这一处”，没有改变任何事实、人物判断、关系、压力、Mission、State、Canon、Payoff或Ending。该句只是对前面守将、顾沉戈与乌合三段对白的抽象归纳，未提供新的信息。删除后，顾停舟直接观察潮兽并作出行动，现场压力衔接更紧。A中的这句会轻微重复已经被对白呈现出的冲突结构。两版后续谈判、矿权失效、尾款放弃、迁徙兑现和潮兽冲入内侧完全一致。两版结尾都在正面冲击前停止，没有继续解释结果或追加任务总结。就Trust Reader而言，B更充分信任读者已经理解三方压力。",
+    "reader_wall": 13.827,
+    "authority_wall": 17.116
+  }
+]

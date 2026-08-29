@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 107.719,
+  "sessionId": "01a04e60-2310-7cf1-8622-36ff090a09a9",
+  "text": "VERDICT: MIXED  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 计划要求本章结算个人矿利与护粮收益，A却明确写成“仍未兑现”，并将其推迟到下一章。  \nHARD_VIOLATIONS_B: 直接结果、状态变化与结尾对结算时点矛盾：前两者写“尚待战后结算”，结尾却写“终于落到顾停舟手里”。  \nFINAL_CANON_FIDELITY: B  \nPLAN_BUDGET_FIDELITY: B  \nRESULT_STATE_ENDING: TIE  \nHUMAN_POWER_WORLD: B  \nSTORY_VALUE: B  \nREASON: A 的战斗骨架符合第19章合同，保留了“本体进入镇海正面”“分身只携带‘定住’”和“回潮楔改变潮兽退潮方向”。但 A 写“个人矿利和护粮结算仍未兑现”，又把“个人矿利、护粮收益如何兑现”推给下一章，违背了计划规定的“战局结束后得到个人矿利、护粮结算”。这不是节奏差异，而是删掉了本章指定的结果。B 更完整地执行了“本体正面承压—分身送楔—回潮楔改向”的行动顺序，也保留了旧关外层牺牲、居民粮道和三座新井获保的代价。B 的结尾“真正未解决的问题转为他的生活选择”正确承接了计划中的母亲远行选择。可是 B 的直接结果只写获得“后续个人矿利与护粮结算的现实依据”，状态又写“具体兑现尚待战后结算”，结尾却断言结算“终于落到顾停舟手里”。两版都保留了回潮楔归属、裂痕代价、照域负荷和旧伤限制，没有把终局偷换成单纯升级。B 的“现场力量尺公开校准”和明确牺牲区，比 A 更能呈现人类取舍、力量位置与世界代价。因此 B 在多数维度和故事价值上更优，但其奖励状态必须先统一，综合判定只能是 MIXED。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 44775,
+      "inputTokens": 14764,
+      "cachedReadTokens": 24320,
+      "outputTokens": 5691,
+      "thoughtTokens": 5178
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 44775,
+          "inputTokens": 14764,
+          "cachedInputTokens": 24320,
+          "outputTokens": 5691,
+          "reasoningOutputTokens": 5178
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 44775,
+              "inputTokens": 14764,
+              "cachedInputTokens": 24320,
+              "outputTokens": 5691,
+              "reasoningOutputTokens": 5178
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

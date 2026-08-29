@@ -1,0 +1,132 @@
+[
+  {
+    "chapter": 2,
+    "authority_planner_wall_seconds": 39.829,
+    "story_planner_wall_seconds": 38.173,
+    "writer_wall_seconds": 52.004,
+    "control_primary_plus_reviser_seconds": 136.3,
+    "treatment_parallel_blueprints_plus_writer_seconds": 91.833,
+    "critical_path_speedup_percent": 32.62,
+    "story_blueprint_chars": 1824,
+    "final_prompt_chars": 18714,
+    "final_chars": 3007,
+    "story_usage": {
+      "totalTokens": 52224,
+      "inputTokens": 26107,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1797,
+      "thoughtTokens": 415
+    },
+    "writer_usage": {
+      "totalTokens": 46371,
+      "inputTokens": 17356,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2647,
+      "thoughtTokens": 121
+    }
+  },
+  {
+    "chapter": 3,
+    "authority_planner_wall_seconds": 49.934,
+    "story_planner_wall_seconds": 43.531,
+    "writer_wall_seconds": 56.794,
+    "control_primary_plus_reviser_seconds": 94.643,
+    "treatment_parallel_blueprints_plus_writer_seconds": 106.728,
+    "critical_path_speedup_percent": -12.77,
+    "story_blueprint_chars": 1878,
+    "final_prompt_chars": 18632,
+    "final_chars": 3110,
+    "story_usage": {
+      "totalTokens": 53201,
+      "inputTokens": 26907,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1974,
+      "thoughtTokens": 516
+    },
+    "writer_usage": {
+      "totalTokens": 46439,
+      "inputTokens": 17197,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2874,
+      "thoughtTokens": 323
+    }
+  },
+  {
+    "chapter": 10,
+    "authority_planner_wall_seconds": 52.494,
+    "story_planner_wall_seconds": 45.218,
+    "writer_wall_seconds": 48.216,
+    "control_primary_plus_reviser_seconds": 240.616,
+    "treatment_parallel_blueprints_plus_writer_seconds": 100.71,
+    "critical_path_speedup_percent": 58.14,
+    "story_blueprint_chars": 2084,
+    "final_prompt_chars": 16462,
+    "final_chars": 2728,
+    "story_usage": {
+      "totalTokens": 52185,
+      "inputTokens": 39998,
+      "cachedReadTokens": 9984,
+      "outputTokens": 2203,
+      "thoughtTokens": 516
+    },
+    "writer_usage": {
+      "totalTokens": 44878,
+      "inputTokens": 16072,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2438,
+      "thoughtTokens": 96
+    }
+  },
+  {
+    "chapter": 14,
+    "authority_planner_wall_seconds": 42.754,
+    "story_planner_wall_seconds": 44.207,
+    "writer_wall_seconds": 49.293,
+    "control_primary_plus_reviser_seconds": 282.348,
+    "treatment_parallel_blueprints_plus_writer_seconds": 93.5,
+    "critical_path_speedup_percent": 66.88,
+    "story_blueprint_chars": 1895,
+    "final_prompt_chars": 17021,
+    "final_chars": 2582,
+    "story_usage": {
+      "totalTokens": 50861,
+      "inputTokens": 38648,
+      "cachedReadTokens": 9984,
+      "outputTokens": 2229,
+      "thoughtTokens": 741
+    },
+    "writer_usage": {
+      "totalTokens": 45123,
+      "inputTokens": 16269,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2486,
+      "thoughtTokens": 301
+    }
+  },
+  {
+    "chapter": 19,
+    "authority_planner_wall_seconds": 64.434,
+    "story_planner_wall_seconds": 60.672,
+    "writer_wall_seconds": 92.356,
+    "control_primary_plus_reviser_seconds": 157.575,
+    "treatment_parallel_blueprints_plus_writer_seconds": 156.79,
+    "critical_path_speedup_percent": 0.5,
+    "story_blueprint_chars": 2017,
+    "final_prompt_chars": 18149,
+    "final_chars": 4096,
+    "story_usage": {
+      "totalTokens": 54507,
+      "inputTokens": 27068,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3119,
+      "thoughtTokens": 1552
+    },
+    "writer_usage": {
+      "totalTokens": 53874,
+      "inputTokens": 6857,
+      "cachedReadTokens": 42752,
+      "outputTokens": 4265,
+      "thoughtTokens": 714
+    }
+  }
+]

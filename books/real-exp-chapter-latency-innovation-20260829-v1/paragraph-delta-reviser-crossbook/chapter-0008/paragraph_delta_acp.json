@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 80.51,
+  "sessionId": "01a04e30-6bdc-7cd1-8bb7-ceea2e8a2029",
+  "text": "# PARAGRAPH OPS\n## REPLACE P027\n影身脚下的影子忽然贴住地面，整个人斜斜滑出兵室门口。一块崩落的石片擦过它的肩背，异兽的头则撞进来，撞断一根已经裂开的石柱。\n\n## REPLACE P032\n传承石室的门口已经被异兽和坍塌逼得不再安全，再守下去，他们自己也会被一起埋住。\n\n## REPLACE P077\n“跟着我，别散开。”\n\n## REPLACE P089-P093\n影身踏进偏折阴影，左侧残墙忽然落下一串碎石。\n\n它抬眼看了一下，立即收回迈向左边的脚。\n\n短兵横在身前，影身带着三名弟子向右侧一拐。\n\n“右边！”\n\n三名弟子立刻改向。\n\n## REPLACE P116\n紧接着，影身肩背被石片擦过的疼痛、握兵和挥砍积下的酸麻，一起回到顾临川身体里。屈膝一软，差点直接跪下去，手里的短兵也险些脱手。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 46555,
+      "inputTokens": 32428,
+      "cachedReadTokens": 9984,
+      "outputTokens": 4143,
+      "thoughtTokens": 3858
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 46555,
+          "inputTokens": 32428,
+          "cachedInputTokens": 9984,
+          "outputTokens": 4143,
+          "reasoningOutputTokens": 3858
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 46555,
+              "inputTokens": 32428,
+              "cachedInputTokens": 9984,
+              "outputTokens": 4143,
+              "reasoningOutputTokens": 3858
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

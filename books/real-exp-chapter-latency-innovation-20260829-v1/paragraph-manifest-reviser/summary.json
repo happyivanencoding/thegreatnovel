@@ -1,0 +1,107 @@
+[
+  {
+    "chapter": 2,
+    "paragraphs": 85,
+    "fallback": true,
+    "error": "unsafe delete P011",
+    "changed_actions": 0,
+    "manifest_wall_seconds": 138.392,
+    "control_wall_seconds": 95.14,
+    "effective_route_seconds": 233.532,
+    "effective_speedup_percent": -145.46,
+    "response_chars": 1533,
+    "final_chars": 2126,
+    "control_similarity": 1.0,
+    "usage": {
+      "totalTokens": 55335,
+      "inputTokens": 6785,
+      "cachedReadTokens": 41728,
+      "outputTokens": 6822,
+      "thoughtTokens": 6102
+    }
+  },
+  {
+    "chapter": 3,
+    "paragraphs": 63,
+    "fallback": true,
+    "error": "unsafe delete P053",
+    "changed_actions": 0,
+    "manifest_wall_seconds": 68.148,
+    "control_wall_seconds": 55.457,
+    "effective_route_seconds": 123.605,
+    "effective_speedup_percent": -122.88,
+    "response_chars": 995,
+    "final_chars": 1982,
+    "control_similarity": 1.0,
+    "usage": {
+      "totalTokens": 46362,
+      "inputTokens": 18823,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3219,
+      "thoughtTokens": 2817
+    }
+  },
+  {
+    "chapter": 10,
+    "paragraphs": 85,
+    "fallback": true,
+    "error": "unsafe delete P043",
+    "changed_actions": 0,
+    "manifest_wall_seconds": 61.56,
+    "control_wall_seconds": 191.335,
+    "effective_route_seconds": 252.895,
+    "effective_speedup_percent": -32.17,
+    "response_chars": 1344,
+    "final_chars": 1983,
+    "control_similarity": 1.0,
+    "usage": {
+      "totalTokens": 46605,
+      "inputTokens": 19121,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3164,
+      "thoughtTokens": 2588
+    }
+  },
+  {
+    "chapter": 14,
+    "paragraphs": 175,
+    "fallback": true,
+    "error": "unsafe delete P020",
+    "changed_actions": 0,
+    "manifest_wall_seconds": 102.321,
+    "control_wall_seconds": 210.84,
+    "effective_route_seconds": 313.161,
+    "effective_speedup_percent": -48.53,
+    "response_chars": 2493,
+    "final_chars": 3654,
+    "control_similarity": 1.0,
+    "usage": {
+      "totalTokens": 55521,
+      "inputTokens": 6922,
+      "cachedReadTokens": 43776,
+      "outputTokens": 4823,
+      "thoughtTokens": 3832
+    }
+  },
+  {
+    "chapter": 19,
+    "paragraphs": 118,
+    "fallback": true,
+    "error": "unsafe delete P040",
+    "changed_actions": 0,
+    "manifest_wall_seconds": 186.961,
+    "control_wall_seconds": 103.511,
+    "effective_route_seconds": 290.472,
+    "effective_speedup_percent": -180.62,
+    "response_chars": 1942,
+    "final_chars": 3093,
+    "control_similarity": 1.0,
+    "usage": {
+      "totalTokens": 63175,
+      "inputTokens": 2034,
+      "cachedReadTokens": 51968,
+      "outputTokens": 9173,
+      "thoughtTokens": 8188
+    }
+  }
+]

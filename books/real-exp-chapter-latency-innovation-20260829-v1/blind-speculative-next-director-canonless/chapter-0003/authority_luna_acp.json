@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 81.153,
+  "sessionId": "01a04e60-1994-7350-b122-2df9a04ae1fd",
+  "text": "VERDICT: A\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 无\nFINAL_CANON_FIDELITY: TIE\nPLAN_BUDGET_FIDELITY: TIE\nRESULT_STATE_ENDING: B\nHUMAN_POWER_WORLD: A\nSTORY_VALUE: A\nREASON: A与B都将校路台接收事实副本、少东家改账失败和承事提出“侧路实测案”放在本章，未提前结算下一章进入新裂槽。A的“拒绝把实测案重新挂回商号名下”准确落实了个人承接，B的“改以个人名义谈定路线结果、赔付、预付款与兼容潮髓”也符合计划。A明确兑现了“取得合法行潮身份、矿路实测预付款与兼容潮髓”，B则额外明确写出“路线册记载的现场事实进入官方副本、旧路线废止、新裂槽另列”。因此两版均无 Canon 硬错。B的“具名侧路实测资格”以及个人名下资产和官方副本，使结果状态比A更完整可核验。B保留“能同时占据两处，却仍不知道分身只能携带一种本事”的未知边界，没有提前泄露能力限制。A用“公开说明旧路线失效”与“拒绝把实测案重新挂回商号名下”把顾停舟的欲望、立场和脱离主从关系的选择放在前景，B相对偏向状态清单。A的结尾准确保留“契约只约束路线结果与赔付，不约束侧路之后会撞向谁”，B则更清楚写出下一章必须按约核查和尝试进入。依据当前Canon将核查新裂槽列为OPEN PROMISE，两版都没有把下一章的实测结果提前完成。故B在结果、状态、结尾的清晰度上胜出，A在人物主动性、核心幻想兑现和故事价值上胜出，综合判定A。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 42211,
+      "inputTokens": 27967,
+      "cachedReadTokens": 9984,
+      "outputTokens": 4260,
+      "thoughtTokens": 3776
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 42211,
+          "inputTokens": 27967,
+          "cachedInputTokens": 9984,
+          "outputTokens": 4260,
+          "reasoningOutputTokens": 3776
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 42211,
+              "inputTokens": 27967,
+              "cachedInputTokens": 9984,
+              "outputTokens": 4260,
+              "reasoningOutputTokens": 3776
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

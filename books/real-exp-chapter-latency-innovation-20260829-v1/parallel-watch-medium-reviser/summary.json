@@ -1,0 +1,102 @@
+[
+  {
+    "chapter": 2,
+    "primary_wall_seconds": 41.16,
+    "planner_wall_seconds": 39.829,
+    "control_high_reviser_wall_seconds": 95.14,
+    "watch_medium_reviser_wall_seconds": 48.287,
+    "control_primary_plus_reviser_seconds": 136.3,
+    "treatment_parallel_critical_seconds": 89.447,
+    "critical_path_speedup_percent": 34.37,
+    "prompt_chars": 21710,
+    "watchlist_chars": 2017,
+    "final_chars": 2230,
+    "usage": {
+      "totalTokens": 45840,
+      "inputTokens": 19076,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2444,
+      "thoughtTokens": 571
+    }
+  },
+  {
+    "chapter": 3,
+    "primary_wall_seconds": 39.186,
+    "planner_wall_seconds": 49.934,
+    "control_high_reviser_wall_seconds": 55.457,
+    "watch_medium_reviser_wall_seconds": 42.332,
+    "control_primary_plus_reviser_seconds": 94.643,
+    "treatment_parallel_critical_seconds": 92.266,
+    "critical_path_speedup_percent": 2.51,
+    "prompt_chars": 22985,
+    "watchlist_chars": 2105,
+    "final_chars": 1982,
+    "usage": {
+      "totalTokens": 46457,
+      "inputTokens": 34354,
+      "cachedReadTokens": 9984,
+      "outputTokens": 2119,
+      "thoughtTokens": 487
+    }
+  },
+  {
+    "chapter": 10,
+    "primary_wall_seconds": 49.281,
+    "planner_wall_seconds": 52.494,
+    "control_high_reviser_wall_seconds": 191.335,
+    "watch_medium_reviser_wall_seconds": 48.976,
+    "control_primary_plus_reviser_seconds": 240.616,
+    "treatment_parallel_critical_seconds": 101.47,
+    "critical_path_speedup_percent": 57.83,
+    "prompt_chars": 22292,
+    "watchlist_chars": 1756,
+    "final_chars": 2279,
+    "usage": {
+      "totalTokens": 46763,
+      "inputTokens": 20017,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2426,
+      "thoughtTokens": 467
+    }
+  },
+  {
+    "chapter": 14,
+    "primary_wall_seconds": 71.508,
+    "planner_wall_seconds": 42.754,
+    "control_high_reviser_wall_seconds": 210.84,
+    "watch_medium_reviser_wall_seconds": 71.335,
+    "control_primary_plus_reviser_seconds": 282.348,
+    "treatment_parallel_critical_seconds": 142.843,
+    "critical_path_speedup_percent": 49.41,
+    "prompt_chars": 23848,
+    "watchlist_chars": 2092,
+    "final_chars": 3857,
+    "usage": {
+      "totalTokens": 49184,
+      "inputTokens": 21139,
+      "cachedReadTokens": 24320,
+      "outputTokens": 3725,
+      "thoughtTokens": 452
+    }
+  },
+  {
+    "chapter": 19,
+    "primary_wall_seconds": 54.064,
+    "planner_wall_seconds": 64.434,
+    "control_high_reviser_wall_seconds": 103.511,
+    "watch_medium_reviser_wall_seconds": 75.14,
+    "control_primary_plus_reviser_seconds": 157.575,
+    "treatment_parallel_critical_seconds": 139.574,
+    "critical_path_speedup_percent": 11.42,
+    "prompt_chars": 24008,
+    "watchlist_chars": 2147,
+    "final_chars": 2861,
+    "usage": {
+      "totalTokens": 56745,
+      "inputTokens": 9193,
+      "cachedReadTokens": 44800,
+      "outputTokens": 2752,
+      "thoughtTokens": 239
+    }
+  }
+]

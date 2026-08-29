@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 33.303,
+  "sessionId": "01a04e1b-17b5-75c1-98a4-64519a9099ca",
+  "text": "# PATCH SET\n## PATCH 1\nOLD:\n所有人都看见了，照域者与镇海战局之间隔着怎样一股压力，而顾停舟在这一撞里站住了。\nNEW:\n\nREASON:\n前面的兽首正撞、照域濒碎与最终退潮已经完成证明，删去总结让公开战绩更直接落在现场反应上。\n\n## PATCH 2\nOLD:\n矿利和护粮的账没有再悬着，属于顾停舟的那一份，终于落进了他手里。\nNEW:\n\nREASON:\n文书、票据和战功牌已具体呈现交付结果，删除重复确认可让木匣自然承接后续欲望。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 40690,
+      "inputTokens": 7089,
+      "cachedReadTokens": 32512,
+      "outputTokens": 1089,
+      "thoughtTokens": 922
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 40690,
+          "inputTokens": 7089,
+          "cachedInputTokens": 32512,
+          "outputTokens": 1089,
+          "reasoningOutputTokens": 922
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 40690,
+              "inputTokens": 7089,
+              "cachedInputTokens": 32512,
+              "outputTokens": 1089,
+              "reasoningOutputTokens": 922
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

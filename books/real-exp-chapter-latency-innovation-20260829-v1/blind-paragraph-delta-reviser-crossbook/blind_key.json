@@ -1,0 +1,22 @@
+{
+  "1": {
+    "A": "paragraph_delta",
+    "B": "control"
+  },
+  "4": {
+    "A": "paragraph_delta",
+    "B": "control"
+  },
+  "6": {
+    "A": "paragraph_delta",
+    "B": "control"
+  },
+  "8": {
+    "A": "paragraph_delta",
+    "B": "control"
+  },
+  "10": {
+    "A": "control",
+    "B": "paragraph_delta"
+  }
+}

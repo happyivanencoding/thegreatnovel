@@ -1,0 +1,23 @@
+[
+  {
+    "chapter": 5,
+    "reader": "VERDICT: A\nCONFIDENCE: medium\nNATURALNESS: A\nCHARACTER_VALUE: A\nSCENE_PRESSURE: TIE\nANTI_AI_EXPLANATION: B\nHARD_PROBLEM_A: 无\nHARD_PROBLEM_B: 顾停舟完成勘验后的判断落点变弱，转入行动略显跳。\nREASON: A中的“乌合说得没错”不是重复交代事实，而是顾停舟核对潮线、旧桩和路线册后作出的明确判断。它让他随后承担延期的选择有一个干净的心理与职业依据。B虽然更快进入石脊的后果，但读者需要自行补出“他已确认乌合所言”的关键一步。这里的删句确实更克制，也少一点替读者下结论的味道。可前文的观察信息较多，这一句短促裁断反而起到节奏重音作用。它没有解释乌合为什么对，后面的石脊和水位变化仍在用场景兑现判断。场景压力主要来自水窗、迁徙队伍和契约期限，两版基本一致。综合看，A更自然地完成“查验—判断—担责”的人物动作链。",
+    "authority": "VERDICT: B\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 无\nFACT_EQUIVALENCE: YES\nHUMAN_SCENE_VALUE: B\nRESULT_STOP: TIE\nREASON: B 仅删除“乌合说得没错”这一句，前后关于潮线、旧桩、石脊和迁徙窗口的事实与因果均保留。顾停舟仍通过现场核对得出同一判断，并立即据此承担延误责任、要求矿队让路。A 的删除前句属于旁白式重复确认，没有新增事实、人物判断或关系变化。B 让读者直接从顾停舟的观察和后续选择理解结果，更符合 Trust Reader。两版均保留矿队暂缓钉标、部族通过、控制权未转移、契约压力上升及倒悬峡抢先进入等全部 State、Payoff 与 Ending。不存在 Canon、Mission、资源、伤势或人物关系的差异。两版结尾都在矿队抢到倒悬峡先手后停止，因此 Result Stop 为平局。",
+    "reader_wall": 14.242,
+    "authority_wall": 16.794
+  },
+  {
+    "chapter": 16,
+    "reader": "VERDICT: A  \nCONFIDENCE: medium  \nNATURALNESS: A  \nCHARACTER_VALUE: A  \nSCENE_PRESSURE: A  \nANTI_AI_EXPLANATION: TIE  \nHARD_PROBLEM_A: 无  \nHARD_PROBLEM_B: 无  \nREASON: A中这句不是空泛复述，而是把此前并行展开的三条危机线收束到顾停舟的判断上。它给紧接着的“他不能再守每一处”补足了压力来源，使人物的取舍更有重量。B直接转入顾停舟动作，速度略快，但前面的井、粮车、撤离线仍处于分散呈现，判断落点稍显突兀。该句短促、并列，形成一次有效的节奏重音，没有拖慢场面。它也没有替读者解释策略结果，只明确了眼前局势全面恶化，信任读者仍能成立。A因此在场景调度上更清楚，也更能托住后续放弃外层的决断。两版都不存在明显的AI式重复讲解。",
+    "authority": "VERDICT: B\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 无\nFACT_EQUIVALENCE: YES\nHUMAN_SCENE_VALUE: B\nRESULT_STOP: B\nREASON: B仅删除了“粮车、井口、水路，全在往坏处走”这一句概括。该句没有新增事实、人物判断、关系变化、压力、Mission、State、Canon、Payoff或Ending。前文已经通过粮车受阻、井口喷涌和居民撤离受压充分呈现三重危局。删除后顾停舟仍立即进入选择与行动，因果链没有缺口。A的概括有轻微复述性质，把读者刚看到的现场再总结一次。B保留了守军拽住居民、撤离受阻等具体人类反应，场景价值更集中。结果停止判断上，B更符合已成立信息不再追加抽象确认的要求。",
+    "reader_wall": 11.763,
+    "authority_wall": 18.377
+  },
+  {
+    "chapter": 18,
+    "reader": "VERDICT: A  \nCONFIDENCE: high  \nNATURALNESS: A  \nCHARACTER_VALUE: TIE  \nSCENE_PRESSURE: A  \nANTI_AI_EXPLANATION: A  \nHARD_PROBLEM_A: 无  \nHARD_PROBLEM_B: “三件事都堵在矿脉这一处”复述了刚交代完的冲突结构。  \nREASON: A在乌合说完后直接切到顾停舟望向远处，人物判断和行动起势更利落。B新增句子并非错误，它能给读者一个短促的结构重音。可是前文已经连续落下居民、粮道新井、砺骨部迁徙窗口与潮兽逼近，读者足以自行汇总。此处再替读者归纳，会让叙述者从现场稍微探出头来解释局面。删除后，三方压力会自然压进顾停舟的“不能再把照域往外推太远”与后续选择中。人物价值没有损失，因为顾停舟的取舍仍由具体利益和人命压力完整支撑。A也更快把镜头从信息陈列推进到潮兽、旧伤和决断，临战段落的张力更连贯。",
+    "authority": "VERDICT: B  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: 无  \nFACT_EQUIVALENCE: YES  \nHUMAN_SCENE_VALUE: B  \nRESULT_STOP: TIE  \nREASON: A 比 B 多出“ 三件事都堵在矿脉这一处 ”一句。该句只是对前文居民、粮道、新井与迁徙窗口冲突的概括，没有新增事实。删除它不改变人物判断、关系、压力来源、Mission、State、Canon、Payoff 或 Ending。前面的三段对白已经具体呈现三方各自的压力与利益，不需要再用旁白重复归纳。B 因此保留了冲突，同时减少了一次结构性总结，人物场景更直接。两版都完整保留顾停舟以尾款换撤离、矿权失效、迁徙窗口兑现和潮兽冲入内侧的结果链。该删除发生在主要行动前，不影响 Result Stop。",
+    "reader_wall": 11.88,
+    "authority_wall": 11.478
+  }
+]

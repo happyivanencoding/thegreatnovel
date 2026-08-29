@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 40.879,
+  "sessionId": "01a04e32-dee9-7082-bc31-d2de0cc1f51a",
+  "text": "VERDICT: A  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: 将“分别承担自己同意的部分”改写为三方“共同执行其取舍”；结尾把计划限定的“进入危险范围”提前写成“同时受到冲击”  \nFINAL_CANON_FIDELITY: A  \nPLAN_BUDGET_FIDELITY: A  \nRESULT_STATE_ENDING: A  \nHUMAN_POWER_WORLD: A  \nSTORY_VALUE: A  \nREASON: A准确保留了计划中的三方冲突，并写明“旧关外层”只是“撤离通道”，没有把三方目标强行合并。A的主角行动“要求顾沉戈、守将、乌合分别确认并承担各自同意的部分”，与当前章合同完全一致。A的对手反应保留“带抵触的具体合作”，没有抹掉守将、顾沉戈和乌合各自的利益边界。B却写成三方“各自承认这项取舍”并“共同执行其取舍”，超出了计划规定的有限合作，也弱化了“无法靠一句共同利益自动合并”的硬约束。A的直接结果只完成“明确优先顺序”和“形成有边界的合作”，没有偷结算下一章。B的结尾把计划中的“同时进入危险范围”推进为“同时受到冲击”，提前执行了下一章的地潮实战压力。两版都没有改写回潮楔残压、承运短契、个人矿利、力量位置或阮青蜃追索等既有 Canon，但A更准确保持了未知边界。A也更符合本章的人物价值：顾停舟获得的是独立决策身份，而不是突然拥有让各方服从的政治权力。A在不重复回潮楔战斗证明的前提下，把阅读价值集中到不可调和的现实取舍，因此综合胜出。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 40809,
+      "inputTokens": 14445,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2044,
+      "thoughtTokens": 1590
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 40809,
+          "inputTokens": 14445,
+          "cachedInputTokens": 24320,
+          "outputTokens": 2044,
+          "reasoningOutputTokens": 1590
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 40809,
+              "inputTokens": 14445,
+              "cachedInputTokens": 24320,
+              "outputTokens": 2044,
+              "reasoningOutputTokens": 1590
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

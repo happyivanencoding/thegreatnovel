@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 10.228,
+  "sessionId": "01a04e23-45ac-7bd1-bd3d-d2b06b2e1308",
+  "text": "# PATCH SET\n## PATCH 1\nOLD:\n三件事都堵在矿脉这一处。\nNEW:\n\nREASON:\n前文已具体列出矿队、粮道与迁徙水路的同时受阻，此句仅作重复盖章，未删除人物价值。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 33701,
+      "inputTokens": 7009,
+      "cachedReadTokens": 26368,
+      "outputTokens": 324,
+      "thoughtTokens": 256
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 33701,
+          "inputTokens": 7009,
+          "cachedInputTokens": 26368,
+          "outputTokens": 324,
+          "reasoningOutputTokens": 256
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 33701,
+              "inputTokens": 7009,
+              "cachedInputTokens": 26368,
+              "outputTokens": 324,
+              "reasoningOutputTokens": 256
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

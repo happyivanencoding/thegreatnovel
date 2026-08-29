@@ -1,0 +1,22 @@
+{
+  "2": {
+    "A": "dual_medium_curator",
+    "B": "control"
+  },
+  "3": {
+    "A": "dual_medium_curator",
+    "B": "control"
+  },
+  "10": {
+    "A": "dual_medium_curator",
+    "B": "control"
+  },
+  "14": {
+    "A": "control",
+    "B": "dual_medium_curator"
+  },
+  "19": {
+    "A": "control",
+    "B": "dual_medium_curator"
+  }
+}

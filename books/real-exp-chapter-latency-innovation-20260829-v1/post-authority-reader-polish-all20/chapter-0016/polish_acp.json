@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 14.898,
+  "sessionId": "01a04e1a-dfc3-7b91-a7d9-ee2b6f7b4943",
+  "text": "# PATCH SET\n## PATCH 1\nOLD:\n粮车、井口、水路，全在往坏处走。\n\nNEW:\n\nREASON:\n前文动作已清楚呈现三处同时失控，删除总结句可让紧迫感直接落在现场。\n\n## PATCH 2\nOLD:\n那不是平缓的转向。\n\nNEW:\n\nREASON:\n后面的比喻已具体呈现潮势变化，删除重复提示可使冲击更直接。\n\n## PATCH 3\nOLD:\n这条窄路在这一轮潮势里暂时通了。\n\nNEW:\n\nREASON:\n前文已通过第一批居民通过塌方口及继续引路证明结果，删除报告式总结不改变状态。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 33913,
+      "inputTokens": 26484,
+      "cachedReadTokens": 6912,
+      "outputTokens": 517,
+      "thoughtTokens": 356
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 33913,
+          "inputTokens": 26484,
+          "cachedInputTokens": 6912,
+          "outputTokens": 517,
+          "reasoningOutputTokens": 356
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 33913,
+              "inputTokens": 26484,
+              "cachedInputTokens": 6912,
+              "outputTokens": 517,
+              "reasoningOutputTokens": 356
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

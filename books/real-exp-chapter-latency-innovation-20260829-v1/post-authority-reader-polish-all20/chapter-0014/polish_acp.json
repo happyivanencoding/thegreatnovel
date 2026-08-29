@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 19.775,
+  "sessionId": "01a04e1a-da1f-70c1-abdd-5ab78ec9fd01",
+  "text": "# PATCH SET\n## PATCH 1\nOLD:\n这不是召回。\n\n也不是一句旧情，要他再替人把麻烦扛过去。\n\n是一张写着报酬、责任和退路的合作短契。\nNEW:\n这是一张写着报酬、责任和退路的合作短契。\nREASON:\n删去已由短契条款证明的解释性排除，让合作关系更直接落在读者眼前。\n\n## PATCH 2\nOLD:\n顾停舟却觉得胸口那团闷气松开了一点。\n\n不是因为阮青蜃会就此罢手。\n\n而是从今天起，对方再想把这些东西都说成自己的，得当着百炉会的见证者重新算价。\nNEW:\n从今天起，对方再想把这些东西都说成自己的，得当着百炉会的见证者重新算价。\nREASON:\n保留既有结果，删去重复引导情绪的后台说明，使公开定价的Payoff更直接。\n\n## PATCH 3\nOLD:\n现在不一样。\n\n他可以把话写在前面。\n\n也可以在签下去之前，告诉对方自己要什么。\nNEW:\n现在，他能把自己要什么写进契里。\nREASON:\n压缩已由议价与短契证明的总结，让主角获得选择权的感受更落地。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 34804,
+      "inputTokens": 7668,
+      "cachedReadTokens": 26368,
+      "outputTokens": 768,
+      "thoughtTokens": 457
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 34804,
+          "inputTokens": 7668,
+          "cachedInputTokens": 26368,
+          "outputTokens": 768,
+          "reasoningOutputTokens": 457
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 34804,
+              "inputTokens": 7668,
+              "cachedInputTokens": 26368,
+              "outputTokens": 768,
+              "reasoningOutputTokens": 457
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

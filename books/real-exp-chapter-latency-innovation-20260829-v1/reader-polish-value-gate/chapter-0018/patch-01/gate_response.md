@@ -1,0 +1,6 @@
+DECISION: REJECT
+FACT_EQUIVALENT: NO
+UNIQUE_HUMAN_RELATIONSHIP_VALUE: PRESENT
+UNIQUE_FANTASY_PAYOFF_VALUE: PRESENT
+PURE_REDUNDANCY: NO
+REASON: OLD“三件事都堵在矿脉这一处”把乌合所说的迁徙窗口、远处逼近的镇海潮兽与矿脉上的人员/矿利冲突压成同一处决策节点，邻近上下文并未逐项明确承担“三件事”的汇合关系。删除后，读者仍能看见水路和潮兽，却失去顾停舟此刻必须在救人、保粮道与追讨矿利之间取舍的节拍确认。该句还保留了顾停舟以账目式视角判断多重现实损失如何集中到一个位置的人物牵引。它不是单纯重复，因此不能安全删除。

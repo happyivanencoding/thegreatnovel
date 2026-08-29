@@ -1,0 +1,22 @@
+{
+  "2": {
+    "A": "parallel_watch_medium",
+    "B": "control"
+  },
+  "3": {
+    "A": "parallel_watch_medium",
+    "B": "control"
+  },
+  "10": {
+    "A": "parallel_watch_medium",
+    "B": "control"
+  },
+  "14": {
+    "A": "control",
+    "B": "parallel_watch_medium"
+  },
+  "19": {
+    "A": "control",
+    "B": "parallel_watch_medium"
+  }
+}

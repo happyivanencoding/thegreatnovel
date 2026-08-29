@@ -1,0 +1,62 @@
+[
+  {
+    "chapter": 2,
+    "fallback": true,
+    "error": "unauthorized entity 不再只属于商号,于商号,仍是原,再只属于商号,只属于商号,它仍是原,属于商号,是原",
+    "applied_count": 0,
+    "downgraded_delete_count": 0,
+    "manifest_wall_seconds": 138.392,
+    "control_wall_seconds": 95.14,
+    "speedup_percent": -45.46,
+    "control_similarity": 1.0,
+    "final_chars": 2126
+  },
+  {
+    "chapter": 3,
+    "fallback": false,
+    "error": "",
+    "applied_count": 3,
+    "downgraded_delete_count": 3,
+    "manifest_wall_seconds": 68.148,
+    "control_wall_seconds": 55.457,
+    "speedup_percent": -22.88,
+    "control_similarity": 0.98052,
+    "final_chars": 1920
+  },
+  {
+    "chapter": 10,
+    "fallback": false,
+    "error": "",
+    "applied_count": 5,
+    "downgraded_delete_count": 1,
+    "manifest_wall_seconds": 61.56,
+    "control_wall_seconds": 191.335,
+    "speedup_percent": 67.83,
+    "control_similarity": 0.87789,
+    "final_chars": 2218
+  },
+  {
+    "chapter": 14,
+    "fallback": true,
+    "error": "unauthorized entity 当着百炉会,得当着百炉会,着百炉会",
+    "applied_count": 0,
+    "downgraded_delete_count": 0,
+    "manifest_wall_seconds": 102.321,
+    "control_wall_seconds": 210.84,
+    "speedup_percent": 51.47,
+    "control_similarity": 1.0,
+    "final_chars": 3654
+  },
+  {
+    "chapter": 19,
+    "fallback": true,
+    "error": "unauthorized entity 向的第二个关,的第二个关",
+    "applied_count": 0,
+    "downgraded_delete_count": 0,
+    "manifest_wall_seconds": 186.961,
+    "control_wall_seconds": 103.511,
+    "speedup_percent": -80.62,
+    "control_similarity": 1.0,
+    "final_chars": 3093
+  }
+]

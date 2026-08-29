@@ -1,0 +1,224 @@
+[
+  {
+    "chapter": 1,
+    "state_wall_seconds": 18.126,
+    "polish_wall_seconds": 20.059,
+    "hidden_by_state": false,
+    "added_wall_over_state_seconds": 1.933,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2946,
+    "final_chars": 2946,
+    "usage": {
+      "totalTokens": 39834,
+      "inputTokens": 7009,
+      "cachedReadTokens": 32512,
+      "outputTokens": 313,
+      "thoughtTokens": 305
+    }
+  },
+  {
+    "chapter": 2,
+    "state_wall_seconds": 20.722,
+    "polish_wall_seconds": 8.802,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3478,
+    "final_chars": 3478,
+    "usage": {
+      "totalTokens": 34159,
+      "inputTokens": 7649,
+      "cachedReadTokens": 26368,
+      "outputTokens": 142,
+      "thoughtTokens": 134
+    }
+  },
+  {
+    "chapter": 3,
+    "state_wall_seconds": 21.813,
+    "polish_wall_seconds": 10.331,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 3464,
+    "final_chars": 3464,
+    "usage": {
+      "totalTokens": 34155,
+      "inputTokens": 7535,
+      "cachedReadTokens": 26368,
+      "outputTokens": 252,
+      "thoughtTokens": 244
+    }
+  },
+  {
+    "chapter": 4,
+    "state_wall_seconds": 24.072,
+    "polish_wall_seconds": 7.294,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2306,
+    "final_chars": 2306,
+    "usage": {
+      "totalTokens": 33017,
+      "inputTokens": 6554,
+      "cachedReadTokens": 26368,
+      "outputTokens": 95,
+      "thoughtTokens": 87
+    }
+  },
+  {
+    "chapter": 5,
+    "state_wall_seconds": 21.091,
+    "polish_wall_seconds": 7.637,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1872,
+    "final_chars": 1872,
+    "usage": {
+      "totalTokens": 32620,
+      "inputTokens": 6181,
+      "cachedReadTokens": 26368,
+      "outputTokens": 71,
+      "thoughtTokens": 63
+    }
+  },
+  {
+    "chapter": 6,
+    "state_wall_seconds": 26.318,
+    "polish_wall_seconds": 6.693,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2205,
+    "final_chars": 2205,
+    "usage": {
+      "totalTokens": 33005,
+      "inputTokens": 6576,
+      "cachedReadTokens": 26368,
+      "outputTokens": 61,
+      "thoughtTokens": 53
+    }
+  },
+  {
+    "chapter": 7,
+    "state_wall_seconds": 26.462,
+    "polish_wall_seconds": 11.356,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "顾临川一眼就明白了。",
+        "new": "",
+        "reason": "后文紧邻两句已具体说明他看见并判断的内容，删除不改变人物价值或事实。"
+      }
+    ],
+    "original_chars": 1473,
+    "final_chars": 1463,
+    "usage": {
+      "totalTokens": 32618,
+      "inputTokens": 5893,
+      "cachedReadTokens": 26368,
+      "outputTokens": 357,
+      "thoughtTokens": 300
+    }
+  },
+  {
+    "chapter": 8,
+    "state_wall_seconds": 27.145,
+    "polish_wall_seconds": 7.685,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "patched",
+    "fallback": false,
+    "error": "",
+    "patch_count": 1,
+    "patches": [
+      {
+        "old": "有人替他把这两个字说了出来。",
+        "new": "",
+        "reason": "“二阶”已由顾斜阳紧邻的直接对白完整说出，此句仅重复盖章，未承载人物价值。"
+      }
+    ],
+    "original_chars": 2615,
+    "final_chars": 2601,
+    "usage": {
+      "totalTokens": 33466,
+      "inputTokens": 6939,
+      "cachedReadTokens": 26368,
+      "outputTokens": 159,
+      "thoughtTokens": 95
+    }
+  },
+  {
+    "chapter": 9,
+    "state_wall_seconds": 26.092,
+    "polish_wall_seconds": 8.447,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 2731,
+    "final_chars": 2731,
+    "usage": {
+      "totalTokens": 33427,
+      "inputTokens": 6904,
+      "cachedReadTokens": 26368,
+      "outputTokens": 155,
+      "thoughtTokens": 147
+    }
+  },
+  {
+    "chapter": 10,
+    "state_wall_seconds": 23.583,
+    "polish_wall_seconds": 6.452,
+    "hidden_by_state": true,
+    "added_wall_over_state_seconds": 0.0,
+    "mode": "no_change",
+    "fallback": false,
+    "error": "",
+    "patch_count": 0,
+    "patches": [],
+    "original_chars": 1411,
+    "final_chars": 1411,
+    "usage": {
+      "totalTokens": 32184,
+      "inputTokens": 5721,
+      "cachedReadTokens": 26368,
+      "outputTokens": 95,
+      "thoughtTokens": 87
+    }
+  }
+]

@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 10.07,
+  "sessionId": "01a04e16-c3d3-7193-8fb1-0e818b0f2003",
+  "text": "# PATCH SET\n## PATCH 1\nOLD:\n这句话里有恼火，也有一点旧日的熟悉。\n\nNEW:\n\nREASON:\n前后对白与顾停舟的回忆已自然呈现这层关系，删去总结句可让读者直接进入人物判断。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 32771,
+      "inputTokens": 25550,
+      "cachedReadTokens": 6912,
+      "outputTokens": 309,
+      "thoughtTokens": 240
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 32771,
+          "inputTokens": 25550,
+          "cachedInputTokens": 6912,
+          "outputTokens": 309,
+          "reasoningOutputTokens": 240
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 32771,
+              "inputTokens": 25550,
+              "cachedInputTokens": 6912,
+              "outputTokens": 309,
+              "reasoningOutputTokens": 240
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

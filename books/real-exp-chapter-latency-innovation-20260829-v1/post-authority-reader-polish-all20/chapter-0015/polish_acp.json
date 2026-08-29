@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 16.552,
+  "sessionId": "01a04e1a-df51-7472-9181-3bfee9425e2f",
+  "text": "# PATCH SET\n## PATCH 1\nOLD:\n他们要保的东西都是真的。\n\nNEW:\n\nREASON:\n删去已由三方对白和后文具体列举证明的总结句，让冲突直接落在各自要保的东西上。\n\n## PATCH 2\nOLD:\n粮车真的可以掉头。\n\nNEW:\n\nREASON:\n前后车夫的动作已足够证明这一点，删去报告式确认可让顾沉戈的让步更紧。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 34828,
+      "inputTokens": 27291,
+      "cachedReadTokens": 6912,
+      "outputTokens": 625,
+      "thoughtTokens": 515
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 34828,
+          "inputTokens": 27291,
+          "cachedInputTokens": 6912,
+          "outputTokens": 625,
+          "reasoningOutputTokens": 515
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 34828,
+              "inputTokens": 27291,
+              "cachedInputTokens": 6912,
+              "outputTokens": 625,
+              "reasoningOutputTokens": 515
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

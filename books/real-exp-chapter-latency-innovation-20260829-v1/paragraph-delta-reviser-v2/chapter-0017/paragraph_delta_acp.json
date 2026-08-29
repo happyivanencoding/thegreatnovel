@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 188.673,
+  "sessionId": "01a04e2b-b1db-77d1-8534-445e3b3891b6",
+  "text": "# PARAGRAPH OPS\n## REPLACE P039\n成炉者能稳住自身，能压住近处的石料和商车。可顾停舟现在撑开的这片潮场，已经把石脊上的窄路和粮道外侧最危险的边缘一起推开了一点。\n\n## DELETE P063-P064\n\n## REPLACE P076\n它没有直接扑来，只沿着被照域改开的潮路缓缓逼近。\n\n## REPLACE P078\n这时，远处又有人狂奔而来。\n\n<oai-mem-citation>\n<citation_entries>\nMEMORY.md:223-224|note=[沿用 Preservation First 与最小跨度修订原则]\nMEMORY.md:183-192|note=[沿用既有 Authority Reviser 与 novel-prose-realization 边界]\n</citation_entries>\n<rollout_ids>\n01a04535-834e-7370-95de-22859afab896\n01a04534-b76c-7671-881e-91e30049294d\n</rollout_ids>\n</oai-mem-citation>",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 59576,
+      "inputTokens": 8384,
+      "cachedReadTokens": 50944,
+      "outputTokens": 248,
+      "thoughtTokens": 0
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 59576,
+          "inputTokens": 8384,
+          "cachedInputTokens": 50944,
+          "outputTokens": 248,
+          "reasoningOutputTokens": 0
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 59576,
+              "inputTokens": 8384,
+              "cachedInputTokens": 50944,
+              "outputTokens": 248,
+              "reasoningOutputTokens": 0
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

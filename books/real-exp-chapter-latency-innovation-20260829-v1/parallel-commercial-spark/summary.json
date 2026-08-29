@@ -1,0 +1,107 @@
+[
+  {
+    "chapter": 3,
+    "control_curator_seconds": 137.42,
+    "spark_seconds": 29.279,
+    "primary_seconds": 53.072,
+    "reviser_seconds": 108.258,
+    "control_c_p_r_seconds": 232.063,
+    "treatment_parallel_c_spark_p_r_seconds": 298.75,
+    "speedup_percent": -28.74,
+    "spark_hidden_by_curator": true,
+    "spark_chars": 472,
+    "primary_chars": 2840,
+    "final_chars": 2830,
+    "spark_usage": {
+      "totalTokens": 32499,
+      "inputTokens": 6818,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1361,
+      "thoughtTokens": 1034
+    },
+    "primary_usage": {
+      "totalTokens": 43262,
+      "inputTokens": 14252,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2642,
+      "thoughtTokens": 308
+    },
+    "reviser_usage": {
+      "totalTokens": 55052,
+      "inputTokens": 7035,
+      "cachedReadTokens": 42752,
+      "outputTokens": 5265,
+      "thoughtTokens": 2940
+    }
+  },
+  {
+    "chapter": 10,
+    "control_curator_seconds": 138.658,
+    "spark_seconds": 35.195,
+    "primary_seconds": 45.246,
+    "reviser_seconds": 231.178,
+    "control_c_p_r_seconds": 379.274,
+    "treatment_parallel_c_spark_p_r_seconds": 415.082,
+    "speedup_percent": -9.44,
+    "spark_hidden_by_curator": true,
+    "spark_chars": 428,
+    "primary_chars": 2560,
+    "final_chars": 2159,
+    "spark_usage": {
+      "totalTokens": 32940,
+      "inputTokens": 6910,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1710,
+      "thoughtTokens": 1402
+    },
+    "primary_usage": {
+      "totalTokens": 41726,
+      "inputTokens": 13111,
+      "cachedReadTokens": 26368,
+      "outputTokens": 2247,
+      "thoughtTokens": 62
+    },
+    "reviser_usage": {
+      "totalTokens": 66881,
+      "inputTokens": 9422,
+      "cachedReadTokens": 50944,
+      "outputTokens": 6515,
+      "thoughtTokens": 4606
+    }
+  },
+  {
+    "chapter": 19,
+    "control_curator_seconds": 203.069,
+    "spark_seconds": 46.503,
+    "primary_seconds": 84.715,
+    "reviser_seconds": 206.264,
+    "control_c_p_r_seconds": 360.644,
+    "treatment_parallel_c_spark_p_r_seconds": 494.048,
+    "speedup_percent": -36.99,
+    "spark_hidden_by_curator": true,
+    "spark_chars": 486,
+    "primary_chars": 4920,
+    "final_chars": 4305,
+    "spark_usage": {
+      "totalTokens": 33684,
+      "inputTokens": 7008,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2356,
+      "thoughtTokens": 1936
+    },
+    "primary_usage": {
+      "totalTokens": 44946,
+      "inputTokens": 14136,
+      "cachedReadTokens": 26368,
+      "outputTokens": 4442,
+      "thoughtTokens": 195
+    },
+    "reviser_usage": {
+      "totalTokens": 64755,
+      "inputTokens": 1836,
+      "cachedReadTokens": 52992,
+      "outputTokens": 9927,
+      "thoughtTokens": 6100
+    }
+  }
+]

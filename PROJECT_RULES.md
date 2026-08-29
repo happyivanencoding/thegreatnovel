@@ -73,7 +73,7 @@
 
 默认章节链：`Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。只有当代码检测到“当前章已批准的显式里程碑结果（如进入新力量/身份档位）在 Authority Revision 中仍只被战绩或氛围暗示”时，才在同一个 Authority Reviser 节点准备**一次**窄 `Outcome Repair` retry；普通章节不增加调用，第二次仍漏则停在 failed，不进入 State。Primary 在 `curator_primary` 中只是第一版，不可直接成为 `final_source`；State 只读取已采用的 Authority Revision，或显式 repair 后的 Integrator 最终稿。
 
-低延迟优化优先做确定性上下文裁剪与失败恢复。2026-08-29 Phase 1–3 已否决 Curator medium/Slim、Reviser medium/Patch-only/Safe route 与 Conditional Director 作为质量等价 production 默认；任何模型、effort、输出合同或条件模块切换都只能显式 A/B，必须经过正常下游与最终正文 Reader + Authority 双盲后采用。本轮明确不修改 ACP runner 与前端。
+低延迟优化优先做确定性上下文裁剪与失败恢复。2026-08-29 两轮实验已否决 Curator medium/Slim、Reviser medium/Patch-only/Safe route、Conditional/Speculative Director、Parallel Pre-Curator、Authority Blueprint、Attention Kernel 与 Reviser+State 合并作为质量等价 production 默认；任何模型、effort、输出合同、局部 Delta、提前编译或跨章投机只能显式 A/B，必须接回完整 downstream，同时报告 Reader + Authority、完整 critical path、独立 repeat、cross-book 与 fallback/丢弃成本后才可采用。本轮明确不修改 ACP runner 与前端。
 
 模型判断必须分开看：`生成质量 ≠ wall-clock ≠ 实际成本`。Luna 单价最低；Terra 通常最快且更克制；Sol 最贵且通常最慢，但长期结构最强，默认只放 Story Program / Deep Planning。
 

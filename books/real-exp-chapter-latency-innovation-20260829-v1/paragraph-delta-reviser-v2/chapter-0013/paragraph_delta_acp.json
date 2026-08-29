@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 90.716,
+  "sessionId": "01a04e2b-b1df-7130-a495-0ede9d03601d",
+  "text": "# PARAGRAPH OPS\n## REPLACE P023\n顾停舟从内袋取出那几页反潮记录，摊在炉边。纸上密密麻麻写着测出的潮流变化，还有几处被水晕开的墨痕。\n## REPLACE P042\n“我要看原件。”唐绾道，“拿它做作品、写进去多少，是我的事。”\n## REPLACE P060\n唐绾把反潮记录合拢，递回顾停舟，又数了数钱袋里的潮铢，把钱袋推到一旁。\n## DELETE P102-P108\n## REPLACE P120\n“反潮记录我会用在自己的作品上。等作品出来，你可以看，但别指望我替你把路都铺好。”\n## REPLACE P129\n“赶上了。”他说，“回潮楔的契约主张，我带进来了。”",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 46279,
+      "inputTokens": 17613,
+      "cachedReadTokens": 24320,
+      "outputTokens": 4346,
+      "thoughtTokens": 4142
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 46279,
+          "inputTokens": 17613,
+          "cachedInputTokens": 24320,
+          "outputTokens": 4346,
+          "reasoningOutputTokens": 4142
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 46279,
+              "inputTokens": 17613,
+              "cachedInputTokens": 24320,
+              "outputTokens": 4346,
+              "reasoningOutputTokens": 4142
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

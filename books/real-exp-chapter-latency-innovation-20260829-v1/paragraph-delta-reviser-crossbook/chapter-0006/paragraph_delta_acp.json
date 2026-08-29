@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 72.578,
+  "sessionId": "01a04e30-6bc7-7f53-99c6-dcc9da252b68",
+  "text": "# PARAGRAPH OPS\n## REPLACE P079\n影身贴着断墙跨过断门，刚追进石城，便朝门内望去。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 44191,
+      "inputTokens": 30650,
+      "cachedReadTokens": 9984,
+      "outputTokens": 3557,
+      "thoughtTokens": 3515
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 44191,
+          "inputTokens": 30650,
+          "cachedInputTokens": 9984,
+          "outputTokens": 3557,
+          "reasoningOutputTokens": 3515
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 44191,
+              "inputTokens": 30650,
+              "cachedInputTokens": 9984,
+              "outputTokens": 3557,
+              "reasoningOutputTokens": 3515
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

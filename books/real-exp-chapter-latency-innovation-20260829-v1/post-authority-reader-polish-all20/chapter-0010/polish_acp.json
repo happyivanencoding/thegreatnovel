@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "medium",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 18.035,
+  "sessionId": "01a04e1a-cd3b-7f63-a86e-3da411166dd2",
+  "text": "# PATCH SET\n## PATCH 1\nOLD:\n他确实想留下它。\n\n不是因为它古老，也不是因为谁说它值钱，而是因为这东西在他最难的时候替他顶住了潮压，也因为它漂亮、锋利、有用。\nNEW:\n他想留下它，不是因为它古老，也不是因为谁说它值钱，而是因为这东西在他最难的时候替他顶住了潮压，也因为它漂亮、锋利、有用。\nREASON:\n合并重复的欲望总结，让顾停舟对回潮楔的执念更直接落到具体理由上。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 33200,
+      "inputTokens": 25631,
+      "cachedReadTokens": 6912,
+      "outputTokens": 657,
+      "thoughtTokens": 516
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 33200,
+          "inputTokens": 25631,
+          "cachedInputTokens": 6912,
+          "outputTokens": 657,
+          "reasoningOutputTokens": 516
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 33200,
+              "inputTokens": 25631,
+              "cachedInputTokens": 6912,
+              "outputTokens": 657,
+              "reasoningOutputTokens": 516
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

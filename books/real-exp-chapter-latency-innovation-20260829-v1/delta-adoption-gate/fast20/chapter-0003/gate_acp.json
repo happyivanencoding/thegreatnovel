@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "medium",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 23.114,
+  "sessionId": "01a04e3b-c504-7c52-8152-a8a5c2ebb5b0",
+  "text": "DECISION: ACCEPT_DELTA\nCONFIDENCE: high\nPRIMARY_HARD_PROBLEMS: 无\nDELTA_HARD_PROBLEMS: 无\nDELTA_FIXED_PRIMARY: NOT_NEEDED\nVALUE_PRESERVED: YES\nGLOBAL_CLOSURE_SAFE: YES\nREASON: Delta 与 Primary 实质完全一致，且 Primary 已完整落实本章事件合同。正文明确钉死“旧路线废止、新裂槽另列”以及“加车决定和杂货损失”不可被官方记录抹平。顾停舟保留原路线册，并拒绝让实测案挂回商号名下。校路官明确授予“独立行潮籍”，同时说明这不等于成炉或可以独自横穿荒地，保留了身份资格与实际力量的边界。阮青蜃一方通过具名委托、预付款、赔付条件和兼容潮髓完成正式接触，收益均登记在顾停舟个人名下。少东家失去收回路线册和改写官方记录的权力，关系变化通过“以后你接你的案，我走我的货”落地。结尾以签契后的个人责任和下一次低潮前必须核查新裂槽收束，没有提前进入裂槽或揭示未知真相。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 45737,
+      "inputTokens": 34709,
+      "cachedReadTokens": 9984,
+      "outputTokens": 1044,
+      "thoughtTokens": 752
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 45737,
+          "inputTokens": 34709,
+          "cachedInputTokens": 9984,
+          "outputTokens": 1044,
+          "reasoningOutputTokens": 752
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 45737,
+              "inputTokens": 34709,
+              "cachedInputTokens": 9984,
+              "outputTokens": 1044,
+              "reasoningOutputTokens": 752
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "3": {
+    "A": "control",
+    "B": "canonless_downstream"
+  },
+  "4": {
+    "A": "control",
+    "B": "canonless_downstream"
+  },
+  "6": {
+    "A": "canonless_downstream",
+    "B": "control"
+  },
+  "13": {
+    "A": "control",
+    "B": "canonless_downstream"
+  },
+  "15": {
+    "A": "control",
+    "B": "canonless_downstream"
+  },
+  "19": {
+    "A": "canonless_downstream",
+    "B": "control"
+  }
+}
