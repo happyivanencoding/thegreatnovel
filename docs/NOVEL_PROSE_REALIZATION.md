@@ -229,7 +229,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ### Director — Event Contract
 
-只决定本章发生什么：八字段事件合同、直接结果、状态变化和结尾推动。它可以使用精确的抽象策划语言；八字段合同是事实约束，不是正文句式来源。若单章计划提到试场/选拔/招募/契约，却把同一剧情块已批准的具名机会价值压掉，runtime 会确定性投影一条匹配的 `当前具名机会权威`；Director 保留具体机会名与“成功参与通常打开什么”，不新增回报、不提前写主角成功。
+只决定本章发生什么：八字段事件合同、直接结果、状态变化和结尾推动。Future 10 当前条目在进入 Director 前先被确定性拆成 `本章唯一可执行事件预算` 与 `章末 Handoff Reservation`；Long Block 只作阶段背景，不能把下一章付款、正式身份、获得、升级或其它结算提前搬进本章。当前条目的 `结果 / 状态变化` 还会确定性并入后续 Frozen Mission 的 `状态变化`，所以 Director 静默漏写不构成取消；若已发生 Canon 真使原结果不可能，必须在 `状态变化` 中写 `[PLAN OUTCOME ADJUSTMENT]` + 最小原因/替代结果，不能因节奏或方便使用该标记。它可以使用精确的抽象策划语言；八字段合同是事实约束，不是正文句式来源。若单章计划提到试场/选拔/招募/契约，却把同一剧情块已批准的具名机会价值压掉，runtime 会确定性投影一条匹配的 `当前具名机会权威`；Director 保留具体机会名与“成功参与通常打开什么”，不新增回报、不提前写主角成功。
 
 ### Context Curator — Context Projection
 
@@ -237,7 +237,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ### Primary Writer — Reader Experience
 
-以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。Primary **不再直接读取完整 selected Scene Skill**；Scene Craft 只通过 Curator 已编译的短 `Scene Prose Projection` 进入，允许 `NONE`。若 Curator 已投影当前 Plan 排程的 World fact，**该 Reader Release 必须在本章兑现**。普通 World Entry 仍可“动作提出问题 → 1—3 个短直接旁白段回答 → 回现场”；开篇 Public Common Knowledge 则允许在自然落点直接说明，不要求先制造问题。公共常识的完成标准是普通读者读完可以直接复述规则，而不是从火盆、服装、站位、专名或氛围自己归纳；本章真实跨过已说明的公开力量/身份档位时，结果处直接命名新档位一次，不让读者自己换算。若同一事实还说明地点/势力/传承为什么值得争，保留一个最短价值锚点。Writer 不从完整 World 自选说明主题，也不要求把世界说明伪装成对白；隐藏原因与未来 reveal 继续未知。Curated Context 已明确带入私人欲望且当前场景自然触发时，让一次注意力、身体反应、靠近/回避、想要或短期选择保留它，不统一净化成职责协作与成熟沟通。决定完成后的普通实施默认一句或短段概括。 非核心 Supporting Skill 即使承担一个关键动作，也写到“做了什么 / 为什么有效 / 结果”就停；Reader Release 已给 named 对象公开类别时，首次识别可直接说清一次。高价值非对称优势显露时，不把“克制”理解成只写一个停顿：若 Projection / Authority 已提供足够尺，正文同时需要一个观察者的可见行为更新，以及一个懂行者对正常值—超标点—稀有意义的短专业校准；这种校准在新层级、新复合、新圈层或旧估值过时时可以重新出现。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补群众情绪；Planning 的抽象标签不直接变成旁白总结。
+以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。Future 10 已批准的 `结果 / 状态变化` 已确定性并入 Frozen Mission；其中力量/身份跨档、持有关系或其它显式里程碑必须明确成为正文事实，不能只用“打出该级战绩 / 接近 / 获得资格”暗示。Primary **不再直接读取完整 selected Scene Skill**；Scene Craft 只通过 Curator 已编译的短 `Scene Prose Projection` 进入，允许 `NONE`。若 Curator 已投影当前 Plan 排程的 World fact，**该 Reader Release 必须在本章兑现**。普通 World Entry 仍可“动作提出问题 → 1—3 个短直接旁白段回答 → 回现场”；开篇 Public Common Knowledge 则允许在自然落点直接说明，不要求先制造问题。公共常识的完成标准是普通读者读完可以直接复述规则，而不是从火盆、服装、站位、专名或氛围自己归纳；本章真实跨过已说明的公开力量/身份档位时，结果处直接命名新档位一次，不让读者自己换算。若同一事实还说明地点/势力/传承为什么值得争，保留一个最短价值锚点。Writer 不从完整 World 自选说明主题，也不要求把世界说明伪装成对白；隐藏原因与未来 reveal 继续未知。Curated Context 已明确带入私人欲望且当前场景自然触发时，让一次注意力、身体反应、靠近/回避、想要或短期选择保留它，不统一净化成职责协作与成熟沟通。决定完成后的普通实施默认一句或短段概括。 非核心 Supporting Skill 即使承担一个关键动作，也写到“做了什么 / 为什么有效 / 结果”就停；Reader Release 已给 named 对象公开类别时，首次识别可直接说清一次。高价值非对称优势显露时，不把“克制”理解成只写一个停顿：若 Projection / Authority 已提供足够尺，正文同时需要一个观察者的可见行为更新，以及一个懂行者对正常值—超标点—稀有意义的短专业校准；这种校准在新层级、新复合、新圈层或旧估值过时时可以重新出现。关键事件的人物反应应改变动作、注意力、语气或选择，但不按模板补群众情绪；Planning 的抽象标签不直接变成旁白总结。
 
 **Story-bearing Texture > Decorative Density**：正文不以“多写”或“多修饰”制造丰富感。每个主要 beat 选择少量真正改变画面的具体动作、物件/空间、身体反馈、力量后果和人物差异化反应；感官细节选择最有辨识度的少数锚点，不机械覆盖五感。细节如果不承载人物、冲突、因果或幻想体验，就继续压缩。
 
@@ -255,7 +255,7 @@ Reviser 输入包括冻结 Chapter Mission、Curator、safe World Authority、�
 
 同一维度出现冲突时，Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 高于 Curator / Primary，Reviser 必须按语义扫描最终全文，不能只修第一处。若冲突段落里有一句本身合法、只是挂在错误时点/因果上的 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing，先逐句 salvage 到最近合法位置，再继续压缩周围 process carrier；保护一句高价值文本不等于保护整段实施。
 
-开篇公共常识还要做 clarity recovery：如果 Primary 只留下了生活细节/意象，却没有让普通读者直接知道已排程的力量、强弱、危险或社会入口规则，Reviser 补最小直接说明。Texture 可以保留，但不能替代 Orientation。
+开篇公共常识还要做 clarity recovery：如果 Primary 只留下了生活细节/意象，却没有让普通读者直接知道已排程的力量、强弱、危险或社会入口规则，Reviser 补最小直接说明。Texture 可以保留，但不能替代 Orientation。Frozen Mission 中的上游计划结果同样是 realization authority：若计划明确批准“进入 / 踏入 / 晋升 / 突破 / 成为”某个里程碑，而第一次 Authority Revision 仍只给战绩/氛围暗示，Run Ledger 不直接采用该稿，而是把同一个 Reviser 收窄成一次 `Outcome Repair` retry。这个 retry 只补最小合法因果与一次直接命名，最多一次；仍漏则保持 failed，不能进入 State。
 
 它不是第二次剧情创作：不能改变事件顺序、人物决定、胜负、资源得失、伤势、身份结果、Direct Result、State Change、Ending 或 unknown boundary。删除程序载体时必须保留它之后真正发生的 Consequence；如果一段承载新的 State Change、Social Repricing、Reward、Relationship Change、New Desire 或 Next Opportunity，就不能因为含“报告 / 登记 / 说明”而整段删除。
 

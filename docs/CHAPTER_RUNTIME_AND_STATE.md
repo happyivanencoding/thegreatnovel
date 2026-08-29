@@ -20,7 +20,7 @@ Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive、与该�
 
 ### Director
 
-只根据当前剧情块、当前章计划、压缩成长信息、Canon Index、最近摘要、章末衔接和作者意图生成八字段事件合同。它决定 WHAT，不提供正文句式，不重做 World / Story Program / Outline。**单章计划只是当前剧情块的压缩投影**：当它已经提到试场/选拔/招募/契约，但把同一剧情块中已批准的具名机会价值压掉时，runtime 确定性恢复一条匹配的 `当前具名机会权威` 给 Director；Director 保留具体机会名与“成功参与通常打开什么”，不能再降成“公开机会 / 资格 / 更大机会”。该投影不生成新回报、不提前宣布结果、也不从未来章偷事实。若本章是 Core Asymmetry 首次被外界看见、新层级/质变、新复合用法、进入更高圈层后的首次重新观察，或旧社会估值明显过时，`对手或世界反应` 优先同时规划 `Behavioral Repricing + Ruler Calibration`；长期后果只有会继续改变行动/关系/资源/敌意/信息流时才进入状态与结尾。
+只根据当前剧情块、当前章计划、压缩成长信息、Canon Index、最近摘要、章末衔接和作者意图生成八字段事件合同。runtime 先把 Future 10 当前条目确定性拆成 `本章唯一可执行事件预算` 与 `章末 Handoff Reservation`：前者是本章 WHAT HAPPENS 的唯一预算；后者只能制造下一章压力/入口/来人/线索，不能提前结算。当前剧情块只作阶段背景，不授权把未来付款、身份、获得或升级搬进本章。它决定 WHAT，不提供正文句式，不重做 World / Story Program / Outline。**单章计划只是当前剧情块的压缩投影**：当它已经提到试场/选拔/招募/契约，但把同一剧情块中已批准的具名机会价值压掉时，runtime 确定性恢复一条匹配的 `当前具名机会权威` 给 Director；Director 保留具体机会名与“成功参与通常打开什么”，不能再降成“公开机会 / 资格 / 更大机会”。该投影不生成新回报、不提前宣布结果、也不从未来章偷事实。若本章是 Core Asymmetry 首次被外界看见、新层级/质变、新复合用法、进入更高圈层后的首次重新观察，或旧社会估值明显过时，`对手或世界反应` 优先同时规划 `Behavioral Repricing + Ruler Calibration`；长期后果只有会继续改变行动/关系/资源/敌意/信息流时才进入状态与结尾。
 
 ### Context Curator
 
@@ -30,7 +30,7 @@ Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact 
 
 ### Primary Writer
 
-只写正式正文。输入以 Director Contract + `UNRESOLVED FACT BOUNDARY` + Curated Context + 必要连续性为主；**不直接读取完整 Scene Skill**，只使用 Curator 已编译的短 `Scene Prose Projection`（可为 `NONE`）；不直接读取 raw GBrain，不承担状态记账或长期结构修复。已排程 Reader Release 是本章要兑现的 timing decision：Curator 已投影时，用最短充分的直接旁白或场景表达说明。**开篇公共常识以“普通读者不用推理就能复述规则”为兑现标准**：可以用 1—3 个短说明段直接讲清，不要求先制造问题，也不能用火盆、服装、站位、专名或氛围暗示替代基础答案。若同一事实包含地点/势力/传承的价值，也保留一个最短欲望锚点；隐藏原因与未来 reveal 继续未知。Curated Context 已明确带入私人欲望且当前场景自然触发时，不把它自动净化成职责协作或成熟沟通。高价值 Asymmetry Reveal 若 Curated Context 已带入社会校准要求，Primary 要同时实现 `Behavioral Repricing + Ruler Calibration`：既让关键观察者真的换一个动作，也让最懂行者用 1—3 句说明正常值、超标点和稀有/异常意义；不要因为追求“克制”而把专业尺度删成只剩一个停顿，也不要轮流安排多人解释。Canon / Curator 已标记为未知、未解释、真假未定或原因未明的过去事实继续保持未知；除非 Director Contract 明确规定本章新成立的事实，Primary 只能创造当前场景实现细节，不得把 plausible explanation 写成 retrospective canon。对白同样不能成为补 Canon 的旁路。
+只写正式正文。输入以 Director Contract + `UNRESOLVED FACT BOUNDARY` + Curated Context + 必要连续性为主；当前章已批准的 `结果 / 状态变化` 会确定性并入 Frozen Mission 的 `状态变化`，避免 Director 静默压掉力量/身份跨档、持有关系或其它不可逆结果；若已发生 Canon 真使原结果不可能，Director 必须用 `[PLAN OUTCOME ADJUSTMENT]` 显式记录最小调整。**不直接读取完整 Scene Skill**，只使用 Curator 已编译的短 `Scene Prose Projection`（可为 `NONE`）；不直接读取 raw GBrain，不承担状态记账或长期结构修复。已排程 Reader Release 是本章要兑现的 timing decision：Curator 已投影时，用最短充分的直接旁白或场景表达说明。**开篇公共常识以“普通读者不用推理就能复述规则”为兑现标准**：可以用 1—3 个短说明段直接讲清，不要求先制造问题，也不能用火盆、服装、站位、专名或氛围暗示替代基础答案。若同一事实包含地点/势力/传承的价值，也保留一个最短欲望锚点；隐藏原因与未来 reveal 继续未知。Curated Context 已明确带入私人欲望且当前场景自然触发时，不把它自动净化成职责协作或成熟沟通。高价值 Asymmetry Reveal 若 Curated Context 已带入社会校准要求，Primary 要同时实现 `Behavioral Repricing + Ruler Calibration`：既让关键观察者真的换一个动作，也让最懂行者用 1—3 句说明正常值、超标点和稀有/异常意义；不要因为追求“克制”而把专业尺度删成只剩一个停顿，也不要轮流安排多人解释。Canon / Curator 已标记为未知、未解释、真假未定或原因未明的过去事实继续保持未知；除非 Director Contract 明确规定本章新成立的事实，Primary 只能创造当前场景实现细节，不得把 plausible explanation 写成 retrospective canon。对白同样不能成为补 Canon 的旁路。
 
 ### Authority Reviser
 
@@ -46,11 +46,11 @@ Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact 
 
 同一维度如果 Curator / Primary 与 Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 冲突，以 Frozen Authority 为准，并对最终稿做语义级全章清零。修冲突段落时先逐句 salvage：本身合法、只因错误时点/因果而失效的高价值 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing 句移到最近合法位置；salvage 不保护周围报告、登记、路线或普通实施。
 
-Reader Release 的“存在”与“清楚兑现”分开判断：开篇公共常识若只通过道具/环境暗示存在，普通读者仍需自己推理出规则，Reviser 应在不改变剧情的前提下补最小直接说明；生活细节可以保留，但不能冒充 Orientation 已完成。本章若 Direct Result / State Change 已明确跨过前文介绍过的公开力量/身份档位，而 Primary 只留下“凝影了 / 通过了 / 被记名”等现象或本地术语，Reviser 在结果处补一次最短的新档位直称。
+Reader Release 的“存在”与“清楚兑现”分开判断：开篇公共常识若只通过道具/环境暗示存在，普通读者仍需自己推理出规则，Reviser 应在不改变剧情的前提下补最小直接说明；生活细节可以保留，但不能冒充 Orientation 已完成。本章若 Frozen Mission 已明确跨过公开力量/身份档位，而 Primary 只留下“打出该级战绩 / 凝影了 / 通过了 / 被记名”等暗示，Reviser 在结果处补一次最短的新档位直称。若第一次 Authority Revision 仍漏掉计划中以“进入 / 踏入 / 晋升 / 突破 / 成为”明确批准的里程碑状态，Run Ledger 不允许直接采用：它自动把同一 Reviser 的 Prompt 收窄为一次 Preservation-First `Outcome Repair` retry；只补最小因果与一次直称，不重做剧情。该 retry 最多一次，仍失败则节点保持 failed，State 不运行。
 
 不得改变主要事件顺序、人物决定、胜负、资源得失、伤势、身份结果、Direct Result、State Change、Ending 或未知事实边界；没有明确问题的句段默认逐字保留。删除一段前必须先确认不会同时删掉新的 `State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity`。
 
-在 `curator_primary` 中 Primary 不能直接成为 `final_source`。Authority Reviser 完成后才可采用为正式正文；如果后续显式 repair 运行 Integrator，则 Integrator 可替代它。State Extraction 后端会重新读取 Run Ledger 的最终来源，页面里的 Primary 文本不能旁路进入 State。
+在 `curator_primary` 中 Primary 不能直接成为 `final_source`。Authority Reviser 只有在显式里程碑 Outcome 检查通过后才可采用；若触发一次性 Outcome Repair，则 retry 通过后仍由同一个 Authority Reviser 节点成为 final source。后续作者显式 repair 若运行 Integrator，则 Integrator 可替代它。State Extraction 后端会重新读取 Run Ledger 的最终来源，页面里的 Primary 文本不能旁路进入 State。
 
 ### Optional Repair
 

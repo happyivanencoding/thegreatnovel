@@ -35,6 +35,7 @@ from .run_ledger import (
     adopt_final_source,
     create_or_load_run,
     load_run,
+    load_node_prompt,
     load_node_response,
     mark_node_failed,
     mark_node_skipped,
@@ -420,6 +421,16 @@ def get_run(book_id: str, chapter_number: int) -> dict[str, Any]:
 def get_next_run_node(book_id: str, chapter_number: int) -> dict[str, str | None]:
     try:
         return {"node": next_actionable_node(_book_directory(book_id), chapter_number)}
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/prompt")
+def get_run_node_prompt(book_id: str, chapter_number: int, node: str) -> dict[str, str]:
+    try:
+        return {"content": load_node_prompt(_book_directory(book_id), chapter_number, node)}
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:

@@ -11,7 +11,12 @@ import os
 import sys
 from pathlib import Path
 
-from .run_ledger import adopt_final_source, load_run, save_node_response
+from .run_ledger import (
+    adopt_final_source,
+    load_run,
+    retry_node,
+    save_node_response,
+)
 from .storage import (
     compose_book_content,
     parse_book_sections,
@@ -99,10 +104,16 @@ def apply_response(
             if kind == "state_delta" and node != "state_delta":
                 raise ValueError("chapter.N.state_delta 只能使用 --node state_delta")
             load_run(directory, chapter_number)
-            save_node_response(directory, chapter_number, node, content)
+            run_manifest = save_node_response(directory, chapter_number, node, content)
             if node == "authority_reviser":
-                # Production fixed reviser is the default final prose source; optional repair may later replace it with Integrator.
-                adopt_final_source(directory, chapter_number, "authority_reviser")
+                reviser = run_manifest["nodes"]["authority_reviser"]
+                if reviser.get("status") in {"completed", "adopted"}:
+                    # Production fixed reviser is the default final prose source; optional repair may later replace it with Integrator.
+                    adopt_final_source(directory, chapter_number, "authority_reviser")
+                elif reviser.get("repair_reason") == "missing_explicit_milestone_outcome":
+                    # External Codex has no UI button to prepare the bounded retry, so advance the same
+                    # node to attempt 2 and expose the already-saved narrow repair prompt in the result.
+                    retry_node(directory, chapter_number, "authority_reviser")
         else:
             raise ValueError(f"不支持的章节 Artifact：{artifact}")
 
@@ -113,13 +124,24 @@ def apply_response(
         and directory.resolve() in input_path.resolve().parents
     ):
         input_path.unlink()
-    return {
+    output: dict[str, object] = {
         "status": "applied",
         "artifact": artifact,
         "source": source,
         "workflow": result,
         "stale_dependents": impact["existing_nodes_affected"],
     }
+    if artifact.startswith("chapter.") and node == "authority_reviser":
+        manifest = load_run(directory, chapter_number)
+        reviser = manifest["nodes"]["authority_reviser"]
+        if reviser.get("repair_reason") == "missing_explicit_milestone_outcome":
+            output["status"] = "repair_required"
+            output["repair_prompt_file"] = reviser.get("prompt_file")
+            output["repair_reason"] = reviser.get("repair_reason")
+        elif reviser.get("repair_reason") == "explicit_milestone_repair_failed":
+            output["status"] = "repair_failed"
+            output["repair_reason"] = reviser.get("repair_reason")
+    return output
 
 
 def _parser() -> argparse.ArgumentParser:

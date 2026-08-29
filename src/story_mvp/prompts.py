@@ -167,7 +167,7 @@ OPENING_THREE_CHAPTER_CONTRACT = """开书前三章专用合同（只适用于�
 关键选择除了“正确”，还应暴露本书主角自己的欲望、偏执、野心、护短、贪欲、傲气、好奇、狠劲或独特习惯；不要机械添加缺点，也不要把所有主角统一写成狂傲或冷静正确的执行者。"""
 
 
-DIRECTOR_CHAPTER_BUDGET_RULE = """章节事件预算边界：场景可以跨章，但本章事件预算不得跨章。本章只完成当前章计划明确分配的直接结果与状态变化。下一章事件可以以压力、线索、未完成动作、新入口或外界反应出现，但不得在本章提前完成或结算。结尾推动力回答“为什么下一章必然发生”，不是授权本章额外完成下一章结果。第一章尤其不能为了写得完整，提前结算第二章的能力拥有、第二次使用或正式升级；展示要强，但仍服从本章计划。"""
+DIRECTOR_CHAPTER_BUDGET_RULE = """章节事件预算边界：场景可以跨章，但本章事件预算不得跨章。`本章唯一可执行事件预算` 是当前章 WHAT HAPPENS 的唯一授权；当前大型剧情块只提供阶段背景，不能授权本章追加其中尚未分配的事件、获得、升级或结算。`必须兑现的计划结果 / 状态变化` 是本章必须保真的语义目标：除非已发生 Canon 已使它不可执行，否则不得静默省略、弱化成“资格 / 准备 / 接近”或改到后章；若 Canon 真使它不可执行，必须在八字段 `状态变化` 中写 `[PLAN OUTCOME ADJUSTMENT]` + 最小原因与替代结果。该标记只处理事实冲突，不授权因为节奏、审美或方便取消结果。`章末 Handoff Reservation` 只允许让压力、线索、来人、新入口、未完成动作或外界反应出现，以回答“为什么下一章必然发生”；不得在本章提前完成或结算它指向的下一步事件。第一章尤其不能为了写得完整，提前结算第二章的能力拥有、第二次使用、付款/正式身份结算或正式升级；展示要强，但仍服从本章预算。"""
 
 
 DIRECTOR_REPETITION_RULE = """轻量反重复判断（软提醒，不是新增字段、评分或 Hard Gate）：先看最近 1—3 章摘要，判断当前章的主要压力、主要解法和主要结算方式是否正在重复最近章节。如果重复，而且 BOOK / 当前计划没有明确要求这种重复产生新的阶段效果，就在当前计划允许的事件范围内优先选择能改变身份、关系、具体获得物、主动目标、行动舞台、力量理解或敌人策略的执行方式。Director 只负责当前章执行层去重，不重新规划长期宿敌、能力玩法或世界层级；这些应由 Story Program / Outline 决定。不要因此篡改 BOOK、抢先完成下一章，也不要为了形式变化强行换戏；重复确有新的阶段意义时正常执行。"""
@@ -288,7 +288,7 @@ SINGLE_WRITER_RUNTIME_NOTE = "运行期声明：本次为单 Writer 直接写作
 CURRENT_STATE_HEADING = "# 当前状态、未兑现承诺与作者备注"
 
 
-DEFAULT_DIRECTOR_TEMPLATE = f"""你是透明协作的当前章 Director。只根据当前大型剧情块的压缩摘要、当前章十章计划条目、压缩成长基因、当前 Canon Index、最近 1—3 章摘要、前文章末衔接和作者当前章意图，生成本章可执行的八字段事件合同。你不读取完整 BOOK、完整百章计划、完整十章计划、GBrain 原始结果、Genre Prior 或前两章完整正文，不重新规划整本书，不创造已发生事实。力量等级、身份层级的基础待遇、世界价值物、核心能力与高层力量的兼容边界都属于上游 World Vision / Story Program / Outline 已批准事实；当前输入没有明确提供时，Director 不得为了让本章更具体而临时发明境界名、数值、货币、奖励、制度、能力限制或新世界规则。
+DEFAULT_DIRECTOR_TEMPLATE = f"""你是透明协作的当前章 Director。只根据当前大型剧情块的阶段背景、确定性拆分后的当前章执行边界、压缩成长基因、当前 Canon Index、最近 1—3 章摘要、前文章末衔接和作者当前章意图，生成本章可执行的八字段事件合同。当前章执行边界是唯一事件预算；大型剧情块只帮助理解阶段位置，不能把其中未来事件提前搬进本章。你不读取完整 BOOK、完整百章计划、完整十章计划、GBrain 原始结果、Genre Prior 或前两章完整正文，不重新规划整本书，不创造已发生事实。力量等级、身份层级的基础待遇、世界价值物、核心能力与高层力量的兼容边界都属于上游 World Vision / Story Program / Outline 已批准事实；当前输入没有明确提供时，Director 不得为了让本章更具体而临时发明境界名、数值、货币、奖励、制度、能力限制或新世界规则。
 
 必须输出以下八个字段，全部具体填写：
 触发事件：
@@ -695,6 +695,12 @@ Curated Context 为空时，使用下方明确提供的 fallback；这不是失�
 ## Authority Fact Discipline
 远端资料只能按其明确陈述的强度进入正文。人物喜欢漂亮兵器，只授权他多看一眼，不授权把当前兵器判成稀有/高阶；某人为了继承资格争传承，不授权总结成普遍世界规则；计划、欲望、猜测、可能性不得升级成客观事实。未知仍保持未知。
 
+## Frozen Plan Outcome Fidelity｜防止当前章结果静默丢失
+- Future 10 当前章已批准的 `结果 / 状态变化` 会确定性并入 Frozen Mission 的 `状态变化`，不依赖 Director 复述。
+- 只有已发生 Canon 真使原结果不可执行时，Director 才能在 `状态变化` 中显式写 `[PLAN OUTCOME ADJUSTMENT]` 与最小替代结果；没有这个标记的静默省略不构成取消。
+- 若 Primary 的既有事件已经提供足够因果去成立 Frozen Mission 中的上游计划结果，却漏掉能力层级、身份、持有关系或其它关键状态的明确落点，Reviser 在最近合法结果处做最小恢复。尤其是已批准的力量/身份跨档，动作已经成立时直接命名新档位一次。
+- 若 Primary 根本没有发生足以造成该结果的事件，不得为了补字段新造事件或改胜负；保持 Mission 边界，不越权伪造结果。
+
 ## Authority Conflict Sweep｜同一维度冲突必须清零
 - Frozen Chapter Mission 冻结本章事件；CANON 冻结已经发生的事实；WORLD REALITY AUTHORITY 冻结安全世界事实；Frozen Power Core 冻结能力机制与边界；Frozen Human Core 冻结稳定人物牵引。Curator 是注意力/实现建议，Primary 是待修订草稿；**同一维度发生冲突时，Curator / Primary 不能折中或覆盖 Frozen Authority。**
 - 修订前在内部扫描 Primary Draft 中所有与 Frozen Authority 冲突的句子、因果暗示和动作后果，必须处理**全部出现位置**，不能只改第一处。判断看语义，不看关键词：例如 Frozen Power 若规定“重新接触后才回流经验/伤势”，那么分开期间的实时听见、实时感到远端疼痛/疲劳、因远端即时感觉而改变动作，都属于同一个冲突，即使没有写“共享”二字；**如果 Authority 只批准“重新接触 / 合并”，也不能为了场景衔接自行扩成远程召回、跨距离沿影子回收或无需重新碰面的合并机制。**
@@ -711,7 +717,7 @@ Curated Context 为空时，使用下方明确提供的 fallback；这不是失�
 1. 删除或压缩反复确认、重复能力证明、结构分析、材料诊断、路线计算、验证流程、报告/登记式展开，以及没有新选择、失败、反制、关系变化或不可逆结果的普通实施。支撑性逻辑写到足以支撑因果即可。
 2. Core Power 只在本章真的触发时恢复其独有体验；已经证明过的边界不重新解释。直接能力不得被重新写成工程分析或流程。
 3. Frozen Human Core 高于最近几章行为归纳。一次救人、负责、克制不能反推成新人格。若 Frozen Human 明确写明当前具体人物会通过外貌、气味、姿态或身体靠近牵动主角，并且 Primary Draft 本身已经存在两人的直接身体接触或近身治疗，而第一版完全漏掉这层私人注意，则在该接触点补恰好一个已批准 cue；单纯同场、并肩战斗、共同搬第三人或隔物递东西不算。不得为了触发而新造接触，不把 cue 升级成表白、关系突破或新的剧情选择。
-4. Reader Release 是已批准 timing decision：逐条检查每一条；任何明确事实若第一版尚未让读者知道，都必须用最短充分方式补一次。没有排程不自行开百科。普通 World Entry 通常遵循 Action creates the question → 1—3 个最短充分事实 → Action continues；但开篇 `公共常识` Release 以**普通读者不用推理就能复述规则**为兑现标准，可以在自然落点直接陈述，不要求先制造问题。火盆、服装、动作、专名或氛围即使暗示了规则，只要没有明确告诉读者“力量是什么/怎样粗分强弱/危险为什么改变生活/入口为什么重要”，就不算已经兑现；在不改变剧情的前提下补最小直接说明。**若 Frozen Mission / Direct Result / State Change 已明确本章真实跨过前文已建立的公开力量或身份档位，而 Primary 只写了“凝影了 / 通过了 / 被记名”等现象或本地术语，Reviser 在结果处补一次最短的新档位直称；不新增第二次证明，也不把未批准的升级写成事实。** 若当前场景已经进入一个具体地方，而第一版因为过度任务化显得像无背景空间，可以从 WORLD REALITY AUTHORITY 中补**一个最能承载故事的生活细节**（例如已批准的房屋形制、衣着仪态、街道/器物/当地生活习惯），但该细节不能替代已排程的公共常识说明；没有权威支持的地方风俗、建筑样式或制度不得为了“生动”擅自编造。
+4. Reader Release 是已批准 timing decision：逐条检查每一条；任何明确事实若第一版尚未让读者知道，都必须用最短充分方式补一次。没有排程不自行开百科。普通 World Entry 通常遵循 Action creates the question → 1—3 个最短充分事实 → Action continues；但开篇 `公共常识` Release 以**普通读者不用推理就能复述规则**为兑现标准，可以在自然落点直接陈述，不要求先制造问题。火盆、服装、动作、专名或氛围即使暗示了规则，只要没有明确告诉读者“力量是什么/怎样粗分强弱/危险为什么改变生活/入口为什么重要”，就不算已经兑现；在不改变剧情的前提下补最小直接说明。**若 Frozen Mission / Direct Result / State Change 已明确本章真实跨过前文已建立的公开力量或身份档位，且 Mission 没有 `[PLAN OUTCOME ADJUSTMENT]`，而 Primary 只写了“凝影了 / 通过了 / 被记名”等现象或本地术语，或只写“打出该级战绩 / 承受该级压力”等暗示，Reviser 在结果处补一次最短的新档位直称；不新增第二次证明，也不把未批准的升级写成事实。** 若当前场景已经进入一个具体地方，而第一版因为过度任务化显得像无背景空间，可以从 WORLD REALITY AUTHORITY 中补**一个最能承载故事的生活细节**（例如已批准的房屋形制、衣着仪态、街道/器物/当地生活习惯），但该细节不能替代已排程的公共常识说明；没有权威支持的地方风俗、建筑样式或制度不得为了“生动”擅自编造。
 5. Attention Reallocation：Supporting implementation 连续占据多个段落、却没有产生新的选择/失败/关系变化/不可逆结果时，可以压缩，把笔墨还给本章真正高价值的 World Entry、Rival、Relationship、Core Fantasy、Choice、Payoff 或 Consequence。
 6. 阶段结算优先保留重新估价、实际得失、Rival 换位、Reward、新机会和新欲望。报告、登记、责任说明只是载体；可以压缩载体，但删除任何段落前都要确认：删掉后是否会丢失新的 State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity。若会，绝不能删。
 
@@ -1916,8 +1922,14 @@ def generate_prompt(
             parts.extend(["# Opening Three Chapter Contract", opening_contract])
         parts.append("# Director Context")
         director_inputs = [
-            _input_block("当前大型剧情块（压缩摘要）", context.current_long_block),
-            _input_block("当前章十章计划条目", context.current_chapter_plan),
+            _input_block(
+                "当前章执行边界（确定性拆分；唯一事件预算）",
+                context.current_chapter_plan,
+            ),
+            _input_block(
+                "当前大型剧情块（仅阶段背景；不能授权本章追加事件/结果）",
+                context.current_long_block,
+            ),
         ]
         if context.opportunity_authority:
             director_inputs.append(
@@ -1997,7 +2009,10 @@ def generate_prompt(
             packet.optional_inspiration,
         ))
     elif mode in HYBRID_PROMPT_MODES:
-        from .chapter_context import build_chapter_context, project_event_contract_for_prose
+        from .chapter_context import (
+            build_chapter_context,
+            project_event_contract_for_prose,
+        )
         from .hybrid_runtime import (
             build_authority_reviser_context,
             build_curator_context,

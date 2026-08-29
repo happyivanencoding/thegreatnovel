@@ -1330,6 +1330,8 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 
 **State closure 是硬接线**：`curator_primary` 不允许 Primary 直接成为 `final_source`；State 后端从 Run Ledger 重新读取 `authority_reviser` 或显式 repair 后的 `integrator`，页面粘贴的 Primary 不能旁路进入长期 Canon。Optional Specialist/Integrator 也必须以 Authority Revision 为底稿。
 
+2026-08-29 又冻结了两个由真实 20 章快节奏 E2E 暴露的章节 Authority 问题。第一，Future 10 条目现在在进入 Director 前确定性拆成 `本章唯一可执行事件预算` 与 `章末 Handoff Reservation`；Long Block 只是阶段背景，不能授权 Director 提前执行下一章付款、正式身份、获得、升级或其它结算。第二，当前章 `结果 / 状态变化` 不再依赖 Director 重述：runtime 将其确定性并入 Frozen Mission 的 `状态变化`，；不再额外重复投影给 Primary/Reviser。真实 Ch19 证明仅靠 Prompt/可见性仍不足：Luna Director、Terra Primary、Luna Reviser 都曾把批准的“顾停舟本人进入镇海”合理化成“镇海级战绩”。因此 Run Ledger 新增**同一 Authority Reviser 的一次性条件 Outcome Repair retry**：只检测计划中以“进入 / 踏入 / 晋升 / 突破 / 成为”明确批准、而最终稿仍未直接落成的显式里程碑；普通章节零额外调用。第一次漏掉就不能 adopt / 不能进 State，自动准备窄 Preservation-First Repair Prompt；最多一次，第二次仍漏则保持 failed。真实旧 Ch19 自动 Repair 用 Luna high 85.4s 通过，明确恢复“本人进入镇海”，与原 Revision 正文相似度约 96.75%，没有重写战斗。网页 UI 与 Codex External apply 都服从同一 Run Ledger gate。
+
 ---
 
 ### 11.9 当前最重要的问题
@@ -1641,6 +1643,12 @@ Sol high 第一次同时看到：
 跨 Case synthesis 选择 production topology Z；但两个 Human Development 输出均为 `NONE`，因此**独立 Human Agent 对真实稳定人格变化的净质量增益尚未单独证明**。它保留为低频 correctness mechanism，不宣传为已验证质量增益。
 
 专项 `tests/test_long_form_evolution.py` 当前 **12/12 PASS**；全量 **336/336 PASS**。完整实验报告：`books/real-exp-progressive-authority-20260828-v1/FINAL_REPORT.md`。明确未解决：没有做真实 500 章 E2E；没有证明最佳 World Expansion 频率；没有证明连续 10—20 个副本 Macro Variation 已稳定；没有证明 Human Development 在“人物真的改变”Case 的独立增益。
+
+### 14.6 Chapter Plan Execution Boundary + Explicit Milestone Outcome Fidelity（2026-08-29）
+
+20 章 / 世界的第一世界压力实验暴露两个不同根因。**Cross-chapter spill**：第1章 Director 在已经完成“救人 + 保车”后，又提前做完原第2章的付款、核账和校路判断，导致下一章重复；修复不是再加一句“别提前”，而是 deterministic visibility separation：Future 10 的 `具体剧情 + 结果/状态变化` 是唯一当前章事件预算，`结尾推动` 变成只可制造压力/入口的 Handoff Reservation，Long Block context-only。用原第1章 fresh-context Luna high 回归后，Treatment 正确停在事故结果，把付款/正式结算留到下一章。
+
+**Explicit milestone loss**：第19章计划明确批准“顾停舟本人进入镇海”，但最终 Director/Primary/Reviser/State 只兑现“顶住镇海战局”。连续受控验证表明：仅把 outcome 加进 Director Prompt、并入 Frozen Mission、或单独前置给 Primary/Reviser，模型仍可能用战绩暗示替代状态事实，因此 prompt-only 修法判 FAIL。最终冻结为：Plan Outcome 确定性并入 Frozen Mission + Run Ledger 条件检测；若已发生 Canon 真使原结果不可能，只接受 Director 在 `状态变化` 中显式写 `[PLAN OUTCOME ADJUSTMENT]`，不把静默省略当取消。只有显式 transition milestone 漏落时，同一 Reviser 允许一次窄 Outcome Repair retry。自动 Repair 在真实失败稿上 PASS，正文相似度约 96.75%；第二次仍漏则 fail closed，不形成循环，不让错误 State 进入长期 Canon。该机制不试图语义审计所有任意计划结果，只保护这类已经证明可达、读者必须明确知道的里程碑状态。
 
 ---
 

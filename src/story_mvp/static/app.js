@@ -1044,23 +1044,40 @@ async function saveRunPromptForMode(mode, prompt) {
 
 async function saveRunResponseForMode(mode, response) {
   const node = runNodeByMode[mode];
-  if (!node || !state.currentRun || !response.trim()) return;
+  if (!node || !state.currentRun || !response.trim()) return null;
   try {
-    renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/response`, {
+    const manifest = await requestJson(`${runBaseUrl()}/nodes/${node}/response`, {
       method: "PUT",
       body: JSON.stringify({ content: response }),
-    }));
+    });
+    renderRunLedger(manifest);
     await refreshWorkflow();
+    return manifest;
   } catch (error) {
     showStatus(`保存 ${node} Response 到 Run 失败：${error.message}`, true);
+    return null;
   }
 }
 
 async function retryRunNode(node) {
   try {
-    renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/retry`, { method: "POST" }));
+    const manifest = await requestJson(`${runBaseUrl()}/nodes/${node}/retry`, { method: "POST" });
+    renderRunLedger(manifest);
     await refreshWorkflow();
-    showStatus(`${node} 已按原 Prompt 准备重试`);
+    const info = manifest.nodes?.[node] || {};
+    if (node === "authority_reviser" && info.repair_reason) {
+      const saved = await requestJson(`${runBaseUrl()}/nodes/${node}/prompt`);
+      $("prompt-text").value = saved.content || "";
+      renderCodexTaskWrapper("authority_reviser");
+      if (currentExecutorMode() === "openai_api" && saved.content?.trim()) {
+        await executeOpenAI(saved.content, "authority_reviser");
+        showStatus("显式里程碑 Outcome Repair 已执行；请检查并 Apply 返回。最多只允许这一次条件性重试。");
+      } else {
+        showStatus("已加载显式里程碑 Outcome Repair Prompt；这是一次性窄修复，不会重跑普通 Reviser。 ");
+      }
+      return;
+    }
+    showStatus(`${node} 已按当前保存 Prompt 准备重试`);
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -1649,8 +1666,11 @@ function renderCodexTaskWrapper(mode) {
   const node = runNodeByMode[mode] || "";
   const chapter = currentChapterNumber();
   const workspace = $("workspace-path")?.textContent.trim() || "<workspace>";
+  const runPromptFile = node && state.currentRun?.nodes?.[node]?.prompt_file
+    ? state.currentRun.nodes[node].prompt_file
+    : node ? `${node}_prompt.md` : "";
   const promptPath = node && state.currentRun
-    ? `${workspace}\\${state.bookId}\\runs\\chapter-${String(chapter).padStart(4, "0")}\\${node}_prompt.md`
+    ? `${workspace}\\${state.bookId}\\runs\\chapter-${String(chapter).padStart(4, "0")}\\${runPromptFile}`
     : "当前页面的完整 Prompt 文本框（请先保存/复制）";
   const tempPath = `${workspace}\\${state.bookId}\\.workflow_tmp\\${artifact.replaceAll(".", "-")}-response.md`;
   const nodeArgs = node ? ` --chapter ${chapter} --node ${node}` : "";
@@ -2087,7 +2107,18 @@ async function adoptAuthorityRevision() {
   $("chapter-body-for-save").value = body;
   $("chapter-fact-summary").value = "";
   markEditorDirty("chapter-body-for-save");
-  await saveRunResponseForMode("authority_reviser", $("authority-reviser-response").value);
+  const manifest = await saveRunResponseForMode("authority_reviser", $("authority-reviser-response").value);
+  const reviser = manifest?.nodes?.authority_reviser || {};
+  if (reviser.status === "failed" && reviser.repair_reason === "missing_explicit_milestone_outcome") {
+    $("chapter-body-for-save").value = "";
+    showStatus("Authority Revision 漏掉已批准的显式里程碑结果；系统已准备一次窄 Outcome Repair。请在 Run Ledger 点击“重试节点”。", true);
+    return false;
+  }
+  if (reviser.status === "failed") {
+    $("chapter-body-for-save").value = "";
+    showStatus("Authority Reviser 仍未满足显式里程碑 Outcome Authority；不会采用，也不会进入 State。", true);
+    return false;
+  }
   await adoptRunSource("authority_reviser");
   showStatus("已采用 Authority Revision 作为正式正文；State Extraction 将只读取修订稿。尚未保存章节");
   return true;

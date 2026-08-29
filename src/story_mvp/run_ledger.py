@@ -12,6 +12,11 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from .hybrid_runtime import count_specialist_patches
+from .outcome_fidelity import (
+    build_explicit_milestone_repair_prompt,
+    detect_explicit_milestone_outcome,
+    explicit_milestone_realized,
+)
 
 
 RUN_NODES = (
@@ -188,6 +193,80 @@ def load_node_response(book_directory: Path, chapter_number: int, node: str) -> 
     return path.read_text(encoding="utf-8") if path.is_file() else ""
 
 
+def load_node_prompt(book_directory: Path, chapter_number: int, node: str) -> str:
+    """读取 Ledger 当前生效的节点 Prompt；Outcome Repair retry 会复用这个入口。"""
+
+    manifest = load_run(book_directory, chapter_number)
+    info = _require_node(manifest, node)
+    filename = info.get("prompt_file")
+    if not filename:
+        return ""
+    path = run_directory(book_directory, chapter_number) / str(filename)
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
+
+
+def _prepare_authority_outcome_retry(
+    book_directory: Path,
+    chapter_number: int,
+    manifest: dict[str, Any],
+    node_manifest: dict[str, Any],
+    response: str,
+) -> None:
+    """Prepare at most one narrow Authority Reviser retry for a missed explicit milestone."""
+
+    prompt_file = node_manifest.get("prompt_file")
+    if not prompt_file:
+        return
+    prompt_path = run_directory(book_directory, chapter_number) / str(prompt_file)
+    if not prompt_path.is_file():
+        return
+    authority_prompt = prompt_path.read_text(encoding="utf-8")
+    attempts = max(1, int(node_manifest.get("attempts", 0)))
+    if attempts >= 2 and node_manifest.get("required_outcome") and node_manifest.get("required_target"):
+        from .outcome_fidelity import ExplicitMilestoneOutcome
+
+        requirement = ExplicitMilestoneOutcome(
+            outcome=str(node_manifest["required_outcome"]),
+            target=str(node_manifest["required_target"]),
+        )
+    else:
+        requirement = detect_explicit_milestone_outcome(authority_prompt)
+    if requirement is None:
+        node_manifest.pop("repair_reason", None)
+        node_manifest.pop("required_outcome", None)
+        node_manifest.pop("required_target", None)
+        return
+    if explicit_milestone_realized(response, requirement):
+        node_manifest.pop("repair_reason", None)
+        node_manifest.pop("required_outcome", None)
+        node_manifest.pop("required_target", None)
+        return
+
+    node_manifest["required_outcome"] = requirement.outcome
+    node_manifest["required_target"] = requirement.target
+    if attempts >= 2:
+        # One bounded repair attempt is enough. Do not build a self-retry loop.
+        node_manifest["status"] = "failed"
+        node_manifest["repair_reason"] = "explicit_milestone_repair_failed"
+        _mark_dependents_stale(manifest, "authority_reviser")
+        return
+
+    repair_prompt = build_explicit_milestone_repair_prompt(
+        authority_prompt, response, requirement
+    )
+    archive = prompt_path.with_name("authority_reviser_prompt_attempt-1.md")
+    if not archive.exists():
+        archive.write_text(authority_prompt, encoding="utf-8")
+    # Keep the canonical prompt filename so manual/OpenAI/Codex retry paths all read it.
+    canonical_prompt = run_directory(book_directory, chapter_number) / "authority_reviser_prompt.md"
+    canonical_prompt.write_text(repair_prompt, encoding="utf-8")
+    node_manifest["prompt_file"] = canonical_prompt.name
+    node_manifest["prompt_chars"] = len(repair_prompt)
+    node_manifest["status"] = "failed"
+    node_manifest["repair_reason"] = "missing_explicit_milestone_outcome"
+    _mark_dependents_stale(manifest, "authority_reviser")
+
+
 def _require_node(manifest: dict[str, Any], node: str) -> dict[str, Any]:
     if node not in RUN_NODES:
         raise ValueError(f"未知固定节点：{node}")
@@ -280,6 +359,10 @@ def save_node_response(
             "response_chars": len(response),
         }
     )
+    if node == "authority_reviser" and status == "completed":
+        _prepare_authority_outcome_retry(
+            book_directory, chapter_number, manifest, node_manifest, response
+        )
     if (
         previous_response != response
         and (previous_status in {"completed", "adopted", "failed", "stale"} or attempts > 1)

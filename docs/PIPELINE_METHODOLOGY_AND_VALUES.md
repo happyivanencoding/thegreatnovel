@@ -446,7 +446,8 @@ Story Anchor 的作用是提前确定“真正的故事发生了什么”，降�
 
 #### 负责
 
-- 根据已批准长期方向、当前剧情块、Future 10 和 Canon，生成当前章事件合同；
+- 根据已批准长期方向、当前剧情块、Future 10 和 Canon，生成当前章事件合同；Future 10 当前条目在进入 Director 前先被确定性拆成 `本章唯一可执行事件预算` 与 `章末 Handoff Reservation`，Long Block 只作阶段背景；后者只能制造下一章为什么必须发生，不能提前付款、正式身份、获得、升级或其它下一章结算；
+- 当前条目已批准的 `结果 / 状态变化` 不依赖 Director 重新复述：runtime 确定性并入 Frozen Mission 的 `状态变化`；Director 静默省略不构成取消，只有已发生 Canon 真冲突时才允许结果失效；
 - 抓本章最值得读、最值得复述的人物冲突、关键选择、力量使用、反转和结果；
 - **Discriminative Detail Only**：调查、手艺、医学、制作、检测、推理等 Supporting Skill 只保留足以改变判断的少量关键细节；一旦能推出发现或决定，立即进入发现的选择、冲突与后果，不继续展开实施过程；
 - 决定已经做完后的停车、搬运、排布、绑缚、登记、普通赶路等实施默认压缩；只有重新出现选择、冲突、不确定性或失败风险才恢复成场景； `主角行动` 对此只保留关键决定 + 至多一个决定性动作 + 结果，不把并列实施步骤继续传下游； 若该决定性动作仍只是非核心 Supporting Skill，就只保留“做什么 / 为什么有效 / 结果”，不把技能实施本身变成第二个场景发动机； 前文已成立的 Supporting Skill 默认只写其结果，不再把“利用某判断/技巧”方法重新放进事件合同；只有新边界、失败或质变例外；
@@ -505,6 +506,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 #### 负责
 
 - 把 Director Contract + Curated Context 写成完整、可保存的正式正文；Primary 不直接读取完整 Scene Skill / 原著 evidence，只消费 Curator 已编译的短 `Scene Prose Projection`；
+- Future 10 当前章明确批准的 `结果 / 状态变化` 已确定性并入 Frozen Mission；力量/身份跨档、持有关系和其它不可逆里程碑必须成为正文事实，不能只用“打出该级战绩 / 接近 / 获得资格 / 被重新估价”等暗示替代；若 Canon 真使结果不可能，只接受 Director 的 `[PLAN OUTCOME ADJUSTMENT]` 显式调整；
 - Reader-First：先让读者理解人、问题和 stakes，再给最低限度规则；
 - 当动作自然提出“这是什么 / 为什么重要”的问题，而 Curator 已投影当前 Plan 排程的 World fact 时，用 1—3 个短直接旁白段或等价场景表达回答到足够后立刻回场景；**已排程 Reader Release 是本章需要兑现的 timing decision**，不是可选装饰。若该事实同时说明地点/势力/传承为什么值得争，保留一个最短价值锚点；Writer 不自行从完整 World 选择说明主题；
 - 决定已经成立后的普通实施优先一句或短段概括，不靠实施流水账填充低动作章节；
@@ -536,7 +538,7 @@ Primary 为了保持注意力集中，只吃 Director Contract、Curated Context
 - 以 Primary Draft 为唯一底稿，**Preservation First**：没有明确问题的句段默认逐字保留；
 - 同时读取冻结 Mission、Curator、safe World Authority、逐条 Reader Release、Frozen Power + Human Core、Canon；若当前 Scene Skill 有经过 A/B 证明安全的一行 `Revision Watch`，只追加该 failure-triggered 提醒，不把完整 Generation/Revision Lens 塞回 Reviser；
 - 删除/压缩反复确认、重复证明、工程化/程序化 Supporting Implementation 和 Competence Filler；
-- 补回 Authority 已批准但第一版遗漏的最短充分 World Orientation、Core Power 独有体验、Human 私人 cue 或一个真正承载故事的生活细节；
+- 补回 Authority 已批准但第一版遗漏的最短充分 World Orientation、Core Power 独有体验、Human 私人 cue 或一个真正承载故事的生活细节；Frozen Mission 中的上游计划结果若明确批准“进入 / 踏入 / 晋升 / 突破 / 成为”某个里程碑，不能以战绩或氛围暗示代替一次直接落点；
 - 把笔墨从普通实施还给本章真正的 World Entry / Rival / Relationship / Core Fantasy / Choice / Payoff / Consequence。
 - 同一维度若 Curator / Primary 与 Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 冲突，Frozen Authority 胜出；按语义扫描整章并清掉全部同义冲突，不只修第一处。
 - 修冲突段落时逐句 salvage：本身合法、只错在时点/因果上的 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing 迁到最近合法位置；salvage 不保护周围 process carrier，后者继续按 Attention Reallocation 压缩。
@@ -549,6 +551,8 @@ Primary 为了保持注意力集中，只吃 Director Contract、Curated Context
 - 把全章重新润色一遍。
 
 删除程序载体时，先判断是否同时承载新的 `State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity`；若会，就只能压缩实施，不能删除 Consequence。
+
+**显式里程碑 Outcome Fidelity 是低频条件机制，不是新常驻 Agent。** Run Ledger 只在计划以“进入 / 踏入 / 晋升 / 突破 / 成为”明确批准当前章里程碑、第一次 Authority Revision 却仍未直接落成时，才把同一个 Reviser 收窄为一次 Preservation-First `Outcome Repair` retry。普通章节零额外调用；repair 只补最小合法因果与一次直称，不改事件、胜负、资源、伤势、关系、Ending 或未知边界；最多一次，第二次仍漏则节点保持 failed，`final_source` 不成立，State 不运行。网页 UI 与 Codex External apply 都服从同一 Run Ledger 状态。
 
 当前默认使用 GPT-5.6 Luna high。五档同输入对照中，medium Preservation 更高但存在 Reader Release coverage 漏项；high 首次在四类压力样本上全部通过关键 authority 检查；xhigh/max 没有补偿性收益。模型选择是 Current Default，不是 Stable Principle。
 

@@ -30,7 +30,7 @@ Future 10 和记忆保留显式编辑入口；保存仍统一走 BOOK 保存路�
 
 ## 高级透明性
 
-右侧 Drawer 按需打开，复用现有 DOM 编辑器和输出区，不创建第二份内容来源；可查看完整 Prompt、Codex Response、Run Ledger、Dependency Impact、revision/source/file path、Primary / Authority Reviser / optional repair 节点和 State Delta。Authority Reviser 卡固定标示 `GPT-5.6 Luna · high`；`curator_primary` 下 Primary 只作为第一版草稿，必须采用 Authority Revision 后才能进入 State。
+右侧 Drawer 按需打开，复用现有 DOM 编辑器和输出区，不创建第二份内容来源；可查看完整 Prompt、Codex Response、Run Ledger、Dependency Impact、revision/source/file path、Primary / Authority Reviser / optional repair 节点和 State Delta。Authority Reviser 卡固定标示 `GPT-5.6 Luna · high`；`curator_primary` 下 Primary 只作为第一版草稿，必须采用 Authority Revision 后才能进入 State。若 Run Ledger 检测到当前章已批准的显式力量/身份里程碑仍未在 Authority Revision 中直接落成，该 Reviser 节点显示 failed 并准备一次窄 `Outcome Repair`；用户点击同一节点“重试节点”时 UI 直接加载后端保存的 repair Prompt，OpenAI executor 可立即执行，Codex External 使用同一保存 Prompt。repair 通过前不能采用正文或进入 State。
 
 ## 不变约束
 
