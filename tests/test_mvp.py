@@ -3405,7 +3405,7 @@ def test_story_program_growth_is_longitudinal_not_a_stage_tax() -> None:
     assert "旧与新还应出现真正的复合玩法" in template
 
 
-def test_asymmetry_reveal_uses_surprise_as_payoff_and_attitude_change_only_when_useful() -> None:
+def test_asymmetry_reveal_allows_crowd_shock_ruler_and_repricing_together() -> None:
     story = DEFAULT_PROMPT_TEMPLATES["idea"]
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
     review = DEFAULT_PROMPT_TEMPLATES["review"]
@@ -3413,11 +3413,13 @@ def test_asymmetry_reveal_uses_surprise_as_payoff_and_attitude_change_only_when_
 
     for prompt in (story, outline, review, director):
         assert "Power Asymmetry Reveal / Social Proof" in prompt
-        assert "让惊讶本身成为爽点" in prompt
-        assert "不凭空加围观者" in prompt
-        assert "只有重新估价会改变后续行动" in prompt
-        assert "否则惊讶/确认后即可停止" in prompt
-        assert "已公开优势的普通重复使用不反复演震惊" in prompt
+        assert "全场鸦雀无声" in prompt
+        assert "所有人震惊" in prompt
+        assert "Ruler Calibration" in prompt
+        assert "Behavioral Repricing" in prompt
+        assert "三者没有高低之分" in prompt
+        assert "没有真实围观者时不凭空造群众" in prompt
+        assert "普通重复使用也不反复演同一套震惊" in prompt
 
 
 def test_outline_theme_is_derived_and_may_remain_unset() -> None:

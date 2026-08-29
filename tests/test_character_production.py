@@ -168,7 +168,8 @@ def test_human_prompt_is_power_blind_and_has_no_life_texture_input() -> None:
     assert "经历是背景，不是人格证明" in prompt
     assert "多重动机并存" in prompt
     assert "持续牵引与互相竞争的动机" in prompt
-    assert "不要求被一个单一核心执念统一" in prompt
+    assert "职业化责任倾向必须大幅降权" in prompt
+    assert "主角永远不是协调员" in prompt
     assert "character hook craft" in prompt
 
 

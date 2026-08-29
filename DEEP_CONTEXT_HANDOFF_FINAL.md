@@ -321,17 +321,17 @@ Permanent Boundary 用来防万能，不是为每一点爽感配等价代价。�
 
 同理，重大选择的选项与代价已经清楚后，应尽快选择，然后写选择造成的新局面，而不是继续证明“这个人物为什么会这样选”。
 
-### 3.14 High-Value Asymmetry Reveal = Behavioral Repricing + Ruler Calibration
+### 3.14 High-Value Asymmetry Reveal = Crowd Shock + Ruler Calibration + Behavioral Repricing
 
-公开/选择性显露的核心不只是“有人震惊”，也不能因为反群体吹捧而过度克制成一个停顿。高价值非对称优势显露默认同时需要两条 reader-facing 通道：
+公开/选择性显露不能因为反群体吹捧而过度克制成一个停顿。高价值非对称优势显露按现场条件可以同时承载三条**并列、没有高低之分**的 reader-facing 通道：
 
-> **Behavioral Repricing**：至少一个有资格、有利益或有关系位置的观察者，因为新证据真的换了动作——停手、站起、改口、重新试探、退距、加价、换装备/战术、保护、限制或重新安排准入。
+> **Collective Shock / Field Reaction**：现场本来有足够见证者时，全场鸦雀无声、喧哗骤停、所有人明显震惊、集体退开/围拢本身就是有效爽点，负责让读者感到“整个场子真的被撼动”。
 >
-> **Ruler Calibration**：最有资格者在自己的知识边界内，用短而明确的判断告诉读者“正常同层/同类通常能做到什么 → 主角这次具体超出哪里 → 为什么罕见、异常或值得重新判断”。有限猜测可以存在，但不能把“可能是某种变异/异常”升级为 Canon 真相。
+> **Ruler Calibration**：最有资格者在自己的知识边界内，用短而明确的判断告诉读者“正常同层/同类通常能做到什么 → 主角这次具体超出哪里 → 为什么罕见、异常或值得重新判断”。
+>
+> **Behavioral Repricing**：至少一个有资格、有利益或有关系位置的观察者，因为新证据真的换了动作——停手、改口、加价、退距、换战术、招揽、敌视、保护或重新安排准入。
 
-这不是 opening 一次性说明。以下节点应优先重新校准：Core Asymmetry 首次被外界真正看见；同一能力第一次达到新层级/质变；新旧 Asymmetry 第一次形成复合；主角进入更高圈层后第一次被更懂行者重新判断；旧社会估值明显落后于当前能力、战绩或身份。
-
-短期爽点可以止于“一个行为更新 + 一次专业/世界尺校准”，不要求每次都产生长期 Ripple。只有新估值继续改变后续资源、关系、敌意、战术、准入或信息流时，才升级成长期社会因果。
+大型 Public Proof 可以三路一起吃满；不要以“克制/避免吹捧”为由自动删群众震动。只避免凭空造观众、让所有人轮流说同一套专业解释。以下节点应重新校准：Core Asymmetry 首次被外界看见、新层级/质变、新旧 Asymmetry 第一次复合、进入更高圈层后的首次重新观察、旧社会估值明显落后时。短期群体震动可以当场成立；只有 Repricing 继续改变后续资源、关系、敌意、战术、准入或信息流时，才升级长期 Ripple。
 
 ### 3.15 Audience Knowledge Distribution
 
@@ -566,7 +566,7 @@ Delta 的问题是：
 
 公开证明不追求所有人完全理解能力，也不要求连续专家认证；但过去“只要有人换动作就够”的版本过于克制。当前更准确的编译目标是：
 
-> **场景层：Behavioral Repricing + Ruler Calibration。** 一个关键观察者真的换动作，同时最有资格者用短专业判断重新提醒读者正常值、超标点和稀有/异常意义。
+> **场景层：Collective Shock + Ruler Calibration + Behavioral Repricing。** 有真实观众时群体震动本身成立；最有资格者用短专业判断校准正常值/超标点/稀有意义；关键人物再用行动证明社会价格改变。
 >
 > **长线层：Disclosure → Repricing → Ripple。** 只有当这个新估值在后续场景继续改变资源、战术、关系、敌意、准入或信息流时，才进入长期 Story/Canon。
 
@@ -1484,7 +1484,7 @@ Docs 只描述当前有效状态。更新时优先替换、删除、合并，不
 
 稳定结论已经不再是“要不要多写震惊”，而是两层：
 
-> **Scene：Behavioral Repricing + Ruler Calibration。** 高价值 reveal 既要让关键观察者真的换动作，也要让最有资格者短促说明正常值、超标点和稀有/异常意义；而且在新层级、新复合、新圈层和旧估值过时时重新校准，不是 opening 一次性说明。
+> **Scene：Collective Shock + Ruler Calibration + Behavioral Repricing。** 三条是并列 reader-facing payoff：真实群众可以完整震动，最有资格者说清正常值/超标点/意义，关键人物用行动完成重新定价；大型 Public Proof 可以一起吃满，并在新层级、新复合、新圈层和旧估值过时时重新校准。
 >
 > **Story：Disclosure → Repricing → Ripple。** 只保存“谁实际知道/相信什么”；只有后续独立行动继续被新估值改变时才升级成长期 Ripple / Canon。
 
@@ -1510,7 +1510,7 @@ GBrain 两张卡已完成 import + embedding + keyword retrieval regression；�
 
 截至 2026-08-28，Authority Reviser、Public World Knowledge Clarity、Social Calibration 与 AGGRESSIVE payoff 均已进入当前 production。最新又完成 **Variation / Secondary Fantasy / Naming Craft** 根修：World 的 Small Grammar 不再被误读为 Small World，而会主动把变化预算花在招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、环境与复合；World 主动寻找 0—1 条成熟 Optional Secondary Fantasy Road，Story Program 主动检查，但 Human 决定主角是否投入。Power Seed 新增可完全忽略的 Optional Lexique Primitive Pool，只在同一主异常上提供 concrete carrier / gameplay 灵感；另固定读取一条由 69 个 source-first 小说来源蒸馏出的 source-blind Naming Craft Reference。当前专项测试 `34/34`、全量 `324/324` PASS。
 
-当前激活审计技能为 **`tgn-system-steward 0.3.7`**：在既有 `Public/Known World = Clarity`、Social Calibration、Plan Compression、Authority 等审计上，新增三条稳定判断：**Small Grammar ≠ Small World**；成熟 Secondary Fantasy Axis 不得因反工程化被被动删掉，World 可主动找候选但 Human 决定是否成为主角道路；Naming 语义先于气味，lexique 只能提供可丢弃 semantic primitive / naming fragrance，名字不能反向授权机制。
+当前激活审计技能为 **`tgn-system-steward 0.3.8`**：在既有 `Public/Known World = Clarity`、Social Calibration、Plan Compression、Authority 等审计上，新增三条稳定判断：**Small Grammar ≠ Small World**；成熟 Secondary Fantasy Axis 不得因反工程化被被动删掉，World 可主动找候选但 Human 决定是否成为主角道路；Naming 语义先于气味，lexique 只能提供可丢弃 semantic primitive / naming fragrance，名字不能反向授权机制。
 
 **Public main 已冻结。** `main` 当前 release commit / freeze tag：`10520df97c3729ef2c970035a9e031ccf15754ce` / `tgn-freeze-2026-08-28-v1`。main 是 public production freeze，不能 fast-forward / merge dev 私有历史；发布必须以现有 main 为父节点构造 clean release commit，只带 production code、必要 runtime skills、构建配置与可公开测试。`docs/`、Handoff、`PROJECT_RULES.md`、Steward、temps、内部实验 provenance 不得进入 main；本次 main 当前树敏感路径检查为 NONE，release 测试 316/316 PASS。注意：旧 main 历史在本次规则建立前已经存在 docs；本次只清理当前树并防止未来再次加入，没有做 destructive history rewrite。
 
@@ -1650,6 +1650,26 @@ Sol high 第一次同时看到：
 
 **Explicit milestone loss**：第19章计划明确批准“顾停舟本人进入镇海”，但最终 Director/Primary/Reviser/State 只兑现“顶住镇海战局”。连续受控验证表明：仅把 outcome 加进 Director Prompt、并入 Frozen Mission、或单独前置给 Primary/Reviser，模型仍可能用战绩暗示替代状态事实，因此 prompt-only 修法判 FAIL。最终冻结为：Plan Outcome 确定性并入 Frozen Mission + Run Ledger 条件检测；若已发生 Canon 真使原结果不可能，只接受 Director 在 `状态变化` 中显式写 `[PLAN OUTCOME ADJUSTMENT]`，不把静默省略当取消。只有显式 transition milestone 漏落时，同一 Reviser 允许一次窄 Outcome Repair retry。自动 Repair 在真实失败稿上 PASS，正文相似度约 96.75%；第二次仍漏则 fail closed，不形成循环，不让错误 State 进入长期 Canon。该机制不试图语义审计所有任意计划结果，只保护这类已经证明可达、读者必须明确知道的里程碑状态。
 
+### 14.7 Supporting Logic Bypass / Aggressive Payoff / Public Proof 根修（2026-08-29）
+
+20 章九垂原实验的两份审计共同暴露：旧规则“Supporting Logic 不得升格 Story Engine”没有消失，但出现了更深旁路——`Human 的责任/边界/路线型职业倾向 × World 的粮道/水源/矿权/迁徙素材 → Sol Collision 认为高度匹配 → 正式批准为长期 Story Grammar`。因此这次根修不再只打 Writer negative prompt。
+
+当前 production 已冻结：
+
+- **Human Occupational Trait Ceiling**：除非作者明确选择职业/制度/经营题材，责任、精确、审计、边界、路线、损失归因、职业伦理只作低权重局部习惯；钱、胜负、审美、身体欲望、享受、面子、自由、野心、报复、偏心与具体关系优先前景。**Character relevance ≠ Story Engine authorization**；主角不是多方协调员。
+- **Major Reward Anchor / Big Direction First**：公共资源型 World 先锁阶段真正值得馋的少数对象/结果与价值，再让 Supporting Logic 只承担大方向选择 + 直接后果；奖励方向提前锁，兑现强度不预先克制。
+- **Plot Pace ≠ Tier Pace**；若作者明确要求异常高速升级，则 **Rapid Growth Needs Protagonist-Specific Causality**，由 Core Asymmetry / Advantage Stack 解释学习、资源、实战反馈、风险收益或机会获取优势，不靠逐章送材料。
+- **Mystery Before Settlement + Effective Opponent Adaptation**：奇观/古器来源/未知生物不因出现价格与归属就立刻资源化；长期 Rival 学到能力边界后至少一次反制要真的改变主角选择/局面。
+- **Authority Reviser**：可以激进压缩谁守/谁撤/谁赔/谁承担/谁见证等 process carrier，但不能越权把已经冻结成公共协调题的 Chapter Mission 改成另一种故事。真实 Ch15 A/B 中 MAX 从约 4160 字压到 3165 字（约 -24%）且保持 Mission，但仍无法消除上游已冻结的井/粮道/迁徙分工，证明根修必须在 Human/Story/Outline。
+- **Backstage Abstraction Translation**：真实追源确认“对普通人来说，这是离开聚落的身份入口”是旧 Authority Reviser 自己加入，Primary 原句反而更自然。新 Reviser 用同一 Ch4 Primary/Authority 复验后改为具体待遇/行动语言，不再输出“身份入口”后台标签。
+- **Public Proof 三路并列**：`Collective Shock / 全场鸦雀无声或所有人震惊`、懂行者 `Ruler Calibration`、关键人物 `Behavioral Repricing` 没有高低之分。真实 Ch14 MAX 在同一 Authority 下同时形成全场止声 → 专家说明正常成炉者与四十丈改潮差距 → 阮青蜃立刻改报价，方向 PASS。系统不得因“克制/避免吹捧”自动删群众震动。
+- **World Horizon Reader-Facing Edge**：若 Approved World/Canon 已有真实外缘信号，在 Handoff 前最后 1—2 章让读者看见一次“刚登顶才发现山外有天”；只复用已批准旧事实/旧未知，不提前替 protagonist-blind World Expansion 发明答案。
+- continuity 三项已直接修正：阮青蜃性别、唐绾年龄/资历称谓、`镇潮军府` 正式名。
+
+真实 A/B 保留在 `books/real-exp-fast-world-20ch-20260828-v1/system-fix-validation-v2/`。同一九垂原/Character 下，current production Story Program 已从责任协调改成 `潮路生两身 → 百炉夺槊 → 深矿猎王 → 生活/关系兑现 → 裂潮关断矿 → 两身镇海`；MAX 进一步提高夺取、越阶、复合奖励和公开震动。Human A/B 也保留 production 强降权与更激进 MAX 两档；**MAX 不自动 productionize，强度继续由作者读真实输出决定。** 当前结构专项与全量回归 **358/358 PASS**。
+
+审计方法同步升级为 **`tgn-system-steward 0.3.8`**：保留 0.3.7 的 Small Grammar / Secondary Axis / Naming 审计，并把 Public Proof 改为三条并列通道；不再把真实群体震动默认判为低级。0.3.8 已通过 AgentDock package validate、install/activate 与 bounded Luna-high smoke；smoke 对“全场止声 + 专家尺度 + 立即改价”判 PASS，没有要求压低群体反应。
+
 ---
 
 ## 15. How to Work With the User
@@ -1705,7 +1725,7 @@ Sol high 第一次同时看到：
 
 ### 15.7 用户说“审计”时有固定协议
 
-自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本为 **0.3.7**；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
+自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本为 **0.3.8**；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
 
 ### 15.8 Docs 要言简意赅
 
@@ -1793,7 +1813,7 @@ Sol high 第一次同时看到：
 9. 系统保证 Growth Floor，Human 决定 Route Freedom。
 10. 后续新优势必须通过真实故事获得，与旧优势形成复合；不每阶段强塞。
 11. 尺度要长期出现，完成比较后立即推进 State。
-12. 高价值 Asymmetry Reveal 要反复完成 `Behavioral Repricing + Ruler Calibration`；短期爽点可以当场停止，只有后续选择持续被新估值改变时才升级 Ripple。
+12. 高价值 Asymmetry Reveal 的群体震动、`Ruler Calibration`、`Behavioral Repricing` 是三条并列爽点；大型 Public Proof 可以一起吃满，只有持续改变后续行动的重新估价才升级 Ripple。
 13. High-Value Acquisition 可选；一旦发生必须有后续生命。
 14. Supporting Logic 只支撑因果，不自动成为故事发动机。
 15. 高价值 Orientation 可以直接说；低价值重复解释和实施必须压缩。

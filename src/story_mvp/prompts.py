@@ -55,13 +55,17 @@ INTERNAL_REALISM_DIRECTION = """内部因果必须可信，但可信不等于现
 
 STORY_VALUE_OVER_PROCEDURE_DIRECTION = """支撑性逻辑不得自动成为故事发动机：世界中的合理解释、风险、技术机制和组织逻辑可以真实存在，但它们的存在只说明因果成立，不自动成为叙事前景、主角职业、长期职责或作品认可的公共答案。对手和势力可以有真实理由；这些理由首先制造选择与冲突，作品是否认同、主角是否承担职责，要从已批准核心欲望、具体关系和人物选择中生长，不从力量规模自动推出。能力可信性优先在有真实目标和利害关系的行动中证明；只展开会改变人物选择、风险、胜负或结果的关键因果。观察、分析、测试、验证、调整和实施若不含新的关键选择、冲突或反转，就压缩到足以支撑因果的最小程度。可重复能力的长期成长优先扩大主角能做什么、敌人如何回应，以及关系、身份、机缘和世界入口怎样改变，不因能力可重复使用就自然职业化成维护、检测、生产、搬运或运营流程。具体仍优先落在谁想要什么、谁阻止、主角决定什么、核心优势怎样改变局势，以及结果让谁得到或失去什么。"""
 
+PROTAGONIST_NEVER_COORDINATOR_DIRECTION = """**主角永远不是协调员。** 这是 TGN 的强叙事边界，不得被“聪明、成熟、负责、顾全大局、懂专业”绕开。主角可以命令、拒绝、交易、抢夺、保护、结盟、背叛、选择牺牲什么，也可以在自己真正拥有 authority 的队伍里作决定；但主要戏剧职责不得变成替多个独立利益方协调诉求、分配责任、优化公共资源、安排谁守哪里/谁撤哪里、主持见证归属、替世界收拾残局。公共资源、撤离、粮道、水源、路线、治理等确实是世界大事时，只保留会改变大局的 **1 个高分量方向选择 + 直接后果**：主角决定自己要保什么/毁什么/拿什么/拒绝什么，并用力量、资源、身份或风险承担把关键状态改掉；其他人继续按自己的欲望处理剩余实施。**职业经验只能影响局部观察和手段，不能成为跨阶段重复的解题语法；即使 Human 与这种职业逻辑高度匹配，也不构成把它升级为长期 Story Engine 的授权。** 除非作者明确选择职业/制度/经营题材，责任感、精确、审计、边界、路线、损失归因等倾向默认只在少数局部选择中露头，不得连续占据多个大型阶段的核心问题。"""
+
+MAJOR_REWARD_ANCHOR_DIRECTION = """Major Reward Anchor（Story Program / Outline / Review 软权威，不新增奖励表）：如果当前 World Horizon 的某个大型阶段本来就有标志性获得、力量质变、兵器/奇物、财富、关系、身份或世界入口作为主要欲望，Story Program 必须在该阶段第一次规划时把**具体主要奖励/获得对象、为什么值得馋、谁也想要或谁因此会重新估价主角**写清；Outline / Review 继承这一对象，不得在下游把它悄悄降成资格、记录、归属确认、责任结算或一串小收益。世界若天然充满粮道、水源、矿权、迁徙、公共资源等 supporting conflict，更要先抓住阶段的大方向：主角真正想拿什么、赢谁、去哪里、变成什么；资源协调只作因果背景，不拆成连续小戏。**奖励方向提前锁，兑现强度不预先克制。** 预先锁定主奖励不限制 Bonus Surprise：只要新奖励有独立因果，大胜仍可激进地同时结算钱、资源、招揽、入口、关系推进或额外发现；不得为了“成熟”“平衡”“长期可写”主动少给。"""
+
 CORE_FANTASY_INVARIANT = """核心幻想不变量：Character 中已批准的 Power Core 一旦确定，后续 Story Program、Outline、Review 和单章规划不能静默替换这本书最值得幻想的东西。**核心幻想是长期读者承诺，不是主角的人生使命，也不天然拥有每个大型阶段的最高叙事权重。** 它必须持续活着、反复得到有分量的兑现，但某个阶段的主要阅读满足也可以来自人物人生、不可替代的关系或世界自身正在发生的大事。兑现优先抓住这项幻想最独有的**生活特权**，而不是只复用最容易安排的战术用途：如果它真正让人馋的是多一份时间/经历、拥有别人不能占有的东西、改变身体状态、跨越位置或其它特殊生活方式，就在自然适合的修炼、探索、关系、日常或选择中让读者亲自看到这种特权怎样改变人生；不要求逐类覆盖，也不要把独有幻想降格成同一种战斗解法反复放大。能力、装备、资源、关系、身份、领地等可以承载幻想，但不要为了证明核心幻想存在，就把每个阶段都改造成一次能力升级、能力反制或更大版本的同一玩法。"""
 
 FANTASY_COMPOUNDING_DIRECTION = """幻想复利优先于操作流程复利：长篇中的 Power Asymmetry 应形成**持续积累的优势栈**，而不是每轮结束重新归零，也不能只让开局那一个能力无限放大。纵向成长可以同时发生三种变化：已有非对称优势继续深化；通过真实故事获得新的非对称优势；旧优势与新优势发生复合，产生任一单项都做不到的新玩法。新的非对称优势可以来自功法、技艺、身体/血脉、奇物/装备、知识经验、伴生体或本书自己的力量来源，只要它真正形成新的 Privilege Delta，而不是小便利、换皮技能或库存加一。全书层面必须让新优势加入并发生可复述的复合效应，但**不要求每个大型阶段新增一项**；人物/关系/世界阶段仍可以没有 Power Delta。开局 Core Asymmetry 继续作为辨识度锚点，新获得不应把它淘汰，而应与旧积累共同改变后续战斗、探索、选择、敌人判断或核心幻想兑现。不要把优势栈写成数据库、组件清单或“收集能力”本身的职业流程。"""
 
 RELATIONSHIP_RECONFIGURATION_DIRECTION = """Relationship Reconfiguration（Story Program 创作方向，不新增字段或 Hard Gate）：值得长期展开的核心优势可以改变原本默认成立的人际与博弈关系，但 **Character Autonomy ≠ Symmetric Stakeholder Power，Relationship Reconfiguration ≠ Permanent Renegotiation**。配角自治只要求人物有自己的欲望并据此行动，不要求每个人都维持制度意义上的独立、平等议价或拒绝靠近主角。关系可以因欲望变得更近、更远、更依赖、更敌对、更不对等或彻底换位；这些都可以是自主选择。关系重构的价值在于让上一轮故事改变以后“谁会怎样对待谁”，而不是把所有关系都改写成安全、理性、条件谈判。探索、战斗、谜团、生存与世界奇观仍可成为主发动机。"""
 
-ASYMMETRY_REVEAL_PAYOFF_DIRECTION = """Power Asymmetry Reveal / Social Proof（软原则，不新增字段或 Hard Gate）：主角在他人面前第一次显露新非对称优势、新层级或意外复合时，先让超标结果发生，再用现场已有的懂行者/对手/同伴的短反应完成“这不该是同层能做到的”比较，让惊讶本身成为爽点；不凭空加围观者，也不做群体吹捧。只有重新估价会改变后续行动（如招揽、畏惧、敌意、竞争、信任或关系位置）时才让态度转变进入剧情，否则惊讶/确认后即可停止。已公开优势的普通重复使用不反复演震惊。"""
+ASYMMETRY_REVEAL_PAYOFF_DIRECTION = """Power Asymmetry Reveal / Social Proof（软原则，不新增字段或 Hard Gate）：主角在他人面前第一次显露新非对称优势、新层级或意外复合时，先让超标结果发生。公开场合如果本来就有足够见证者，**群体震动 / 全场鸦雀无声 / 喧哗骤停 / 所有人震惊 / 目光集中等场面反应本身就是正当爽点；懂行者的 Ruler Calibration 与关键人物的 Behavioral Repricing 同样是正当爽点，三者没有高低之分，也不要求相互替代。大型 Public Proof 节点默认允许三者一起吃满。** 群体反应负责让读者感到“整个场子真的被撼动”，最有资格者再用短而明确的判断说明正常值、主角具体超出哪里、为什么罕见；随后让至少一个真正有利益/关系位置的人通过改口、加价、退距、换战术、招揽、敌视、保护或重新安排准入等行为证明社会价格已经改变。没有真实围观者时不凭空造群众；普通重复使用也不反复演同一套震惊，但第一次公开、第一次新层级、第一次新复合、进入更高圈层后第一次被看见、或旧估值明显落后时，允许把这一轮 Public Proof 吃满。**社会震荡强度要跟突破层级一起升级**：地方级异常可以局部改价；一城核心、王朝高位、世界顶层这类跨档，必须先让身份、待遇、机会、敌人策略和传奇重量至少有一项明显落地，再进入普通结算。不要刚完成世界级突破就用“钱什么时候到账”立刻关闭高潮；先让这个世界知道主角现在是什么分量，再允许人物用自己的性格接下一句。"""
 
 WORLD_INDEPENDENCE_NARRATIVE_WEIGHT_DIRECTION = """World Independence ≠ Narrative Equal Weight：独立世界只要求没有主角时，仍有具体的人在追求东西、具体事件即将发生、值得进入的地点/奇观/危险继续存在；不要求为所有利益方建立完整政治经济模型，也不要求每一种真实利益获得同等叙事权重。**世界可以明显偏向核心幻想，甚至大量提供与主角能力高度契合的强敌、宝物、遗迹、职业生态或奇观；这在商业男频中常常是优点。** 真正要避免的是世界被核心能力完全解释：所有重要人物只为提供下一次能力用法，所有冲突都只是下一关，所有世界规则都由金手指语义派生。真实存在也不等于值得成为主发动机；核心幻想、主角人生牵引和当前最馋人的故事对象决定叙事权重。"""
 
@@ -104,6 +108,12 @@ OUTLINE_CORE_GAMEPLAY_VARIATION = """Outline Core Gameplay Variation（前期玩
 OUTLINE_STORY_ANCHOR_DENSITY_RULE = """Outline Story Anchor Density（软规划原则，不新增字段、评分或 Hard Gate）：中期大型剧情块不能只给一个覆盖十几二十章的阶段摘要，再把“中间具体发生什么”留给 Director 自己发明。每个剧情块在现有“具体发生”字段内，先用一句写清本块真正的故事主问题，再按因果顺序给出若干连续故事锚点；通常 3—5 个，只有很短的块可以 2 个，这只是内容密度参考，不是计数门禁。每个锚点是一次会改变局势的故事事件：写清谁为了什么采取行动、谁阻止或回应、主角做了什么关键选择或怎样使用核心优势、最后哪项关系/身份/力量/利益/行动空间发生不可逆变化，以及这个结果为什么触发下一锚点。**World Entry = Threat + Desire + Ruler**：重要新地点、势力、长期 Rival、传承或高价值机会第一次真正进入故事时，锚点先保留“为什么值得靠近/争、它相对主角当前位置有多重、谁已经为它付代价或冒险”，再安排必要危险与移动；不要让撤退路线、车队操作、登记或其它 supporting implementation 抢走入口本身。若后续要让主角放弃或失去某个高价值机会，必须先让读者知道它具体能带来什么、谁为它争、主角为什么会馋，否则机会成本只存在于计划里。长期 Rival 第一次进入时，如果 Approved World / Story 已有可用尺度，就用其层级、战绩、稀有能力、排名或真实位置中最相关的一项把他变成 Reader Ruler，不把 Rival 只写成态度合理的人。锚点粒度停在“故事转折”，不要继续拆成路线选择、受力判断、搬运、制作、检测、计算、逐步验证等实施步骤；如果去掉操作过程后一个锚点就没有人物利益、力量差、关系变化、身份变化、资源得失、世界入口或不可逆结果，它就过于操作化。目标是提高故事确定性，不是提高施工步骤确定性。"""
 
 PLOT_PACE_TIER_PACE_DIRECTION = """Plot Pace ≠ Tier Pace（Story Program 长篇节奏原则，不新增阶段字段或升级配额）：故事事件、关系、发现、敌人策略、世界入口、高价值获得和玩法可以快速推进，但不因此同步快速消耗境界/等级主尺。一个仍有丰富对手、武技、装备、关系、探索、越级战与优势复合空间的层级，可以承载多个完整故事块；不要用“进入新阶段”自动触发升一阶或数阶，也不要把境界提升当作证明剧情有进展的默认手段。只有已批准成长因果真正成熟、当前层级的能力与风险边界已被故事充分使用时才自然升档；不规定固定章数。目标是**微观故事快、宏观力量尺有纵深**。"""
+
+RAPID_GROWTH_CAUSALITY_DIRECTION = """Rapid Growth Needs Protagonist-Specific Causality：如果当前计划真的要让主角在很短篇幅内连续跨越力量主尺，必须让读者看懂**为什么偏偏是这个主角能这么快**。优先由已批准 Core Asymmetry / Advantage Stack 真实改变学习效率、实战反馈、资源利用、风险收益、同时修炼/行动能力、越级获取机会或本书自己的成长因果；世界奖励可以帮助，但不能连续恰好递送每次升级所需材料来替代主角差异。如果当前 Power 并没有提供足够的快速成长因果，就保持 Plot Pace 很快、Tier Pace 慢下来，让同一层级继续承载强敌、装备、关系、探索、越级战和新玩法。"""
+
+MYSTERY_BEFORE_SETTLEMENT_DIRECTION = """Mystery Before Settlement：当新地点、遗迹、怪物、异象或古物已经自然制造强烈的“这到底是什么 / 为什么会这样 / 深处还有什么”阅读问题时，不要因为它同时涉及矿权、归属、合同、记录或资源价值，就立刻把注意力全部转成结算。允许未知本身持续推动后续探索、危险、人物选择或 Rival 行动；资源与所有权只写到足以改变当前选择。Mystery 不要求故弄玄虚，也不要求延迟公共规则；它只保护已经成立的高价值未知不被行政/合同语言抢走前景。"""
+
+EFFECTIVE_COUNTER_DIRECTION = """Effective Opponent Adaptation：长期 Rival / Enemy 观察到主角真实能力边界后，下一次策略更新必须至少一次**真正改变主角的选择、路线、资源、暴露、关系或战局**，而不是只证明“对手学会了”随后仍被主角用原解法轻松化解。反制来自见证、调查或可靠情报，不预制天敌；也不设失败配额。重点是让聪明对手的学习产生现实代价或迫使新玩法，然后主角再靠新的选择/复合优势赢回来。"""
 
 PROTAGONIST_ASCENSION_TRAJECTORY = """主人公连续升格（长篇软原则，不新增字段、KPI 或 Hard Gate）：长篇成长的目标不只是让主角数值越来越强，而是让他不断进入第一章的自己原本没有资格进入的**力量层、人物圈层、世界层、真相层与选择层**，使读者持续感到“他已经不是原来那个位置的人了”。这些不是平行清单，而应尽量互相咬合成因果螺旋：力量/身体或新优势让更高层人物重新估价 → 新身份/关系/入口让他接触更大的世界与更深事实 → 新事实与关系产生新的欲望、敌人和代价 → 他获得过去没有资格作出的选择 → 再推动下一轮成长。进入新圈层时，不默认新受众全知主角全部旧战绩/底牌，也不为了重演打脸而让所有人无脑轻视；不同人物只按自己真实可知的旧名声、公开战绩、身份与已暴露能力先做判断，最低充分的新事实出现后，再分别更新待遇、敌意、合作、招揽或挑战规格。不要逐阶段填满这些维度；同一境界/等级若仍有丰富的被看见、被轻视、被邀请、被研究、关系变化、世界入口、装备/技法与认知重释，就让主角在这个位置真正生活一段故事，而不是用升阶替代升格。认知升格尤其允许旧人物、旧物、旧事件与世界解释在后续获得更大分量，但不强制隐藏身世或把所有未知并成一个幕后真相。"""
 
@@ -319,11 +329,17 @@ Emotion：启用 / 不启用；理由
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
+{PROTAGONIST_NEVER_COORDINATOR_DIRECTION}
+
+{MAJOR_REWARD_ANCHOR_DIRECTION}
+
 {CORE_FANTASY_INVARIANT}
 
 {PERSISTENT_READER_RULER_DIRECTION}
 
 {ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
+
+{EFFECTIVE_COUNTER_DIRECTION}
 
 {NAMED_OPPORTUNITY_VALUE_ORIENTATION}
 
@@ -648,6 +664,8 @@ Primary: <skill_id 或 none>
 Secondary: <skill_id 或 none>
 默认选择 1 个 Primary；只有第二种场景发动机确实同时重要时才选 1 个 Secondary。不得新增剧情、改写事件合同或为了匹配 Skill 改变结果；第一版不选择 Utility / Modifier。没有合适项或目录不可用时写 none。Catalog 中的 `Projection Guidance` 只是帮助你判断当前场景是否存在真实 realization 缺口；它不是 Writer 指令清单。只有 Guidance 能为本章 Mission / Canon 补一个具体的 attention / ruler / stop 判断时才编译进 `## Scene Prose Projection`；当前上下文已经足够时继续写 `NONE`。
 
+**主角永远不是协调员。** Curator 尤其不能把一个大方向冲突进一步“优化”为更完整的公共协调方案：不要补谁守哪里、谁撤哪里、谁承担哪段损失、谁见证哪项归属、怎样把多方利益同时安排妥当。若 Mission 确实涉及公共资源或多人冲突，只保留主角那个决定性选择、力量/欲望如何改变关键状态，以及其他人各自的直接反应；普通分工、登记、见证、路线与责任实施压到背景。Curator 的清晰度不能靠增加操作步骤获得。
+
 其中 `## Relevant Characters and Relationships` 只保留本章真正会用到的信息：除目标、关系、能力和当前条件外，顺带保留角色当前最在意的事、最容易被刺到的自尊/恐惧/欲望、最近关系变化带来的态度，以及正文已经形成的明显行为习惯或说话声音。**Frozen Human Core 高于最近几章的行为归纳**：不要因为主角连续几次救人、负责、诚实或克制，就把这些现场选择升级成新的稳定道德人格，除非 Human Core 本来支持；近期行为可以影响关系和预期，但不能静默覆盖原有 competing motives。若本章自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心、报复或其它私人牵引，保留一个可以直接进入场景的具体触发——他会注意、想要、舍不得、靠近、回避或嫉妒什么——不要只把它投影成职责、协作、尊重边界或成熟沟通。**Specific Relationship Trigger**：如果 Frozen Human Core 已明确说明“这个具体的人”会因吸引、依恋、欲望、偏心或舍不得改变主角选择，而该人物本章正在发生近身照料、重逢、分别、私密靠近、嫉妒、邀请或其它关系性现场，就默认这是自然触发；Curator 至少保留一个克制的具体 cue（注意到什么、身体怎样反应、想靠近/不想离开/不愿承认什么），除非当前 Canon 明确要求压下。它不需要改变本章主事件，也不要求每次见面重复；没有自然触发时不硬塞。只有输入明确支持且本章会用到时才写；不要生成 Character Card、心理档案或新增固定字段。
 
 `## Relevant World Rules` 的世界事实来源只有 `READER RELEASE——Outline 排程的本章世界事实`、`WORLD AUTHORITY——本章确定性预取` 与已批准 Plan / Canon。**Reader Release 是 timing authority**：有条目时，Curator 必须保留其对应的已批准 World fact 并确认没有越过未知边界；没有条目时，不要仅因为 WORLD AUTHORITY 里存在某段资料而自行安排新的世界介绍。若条目标记或内容明显属于开篇 `公共常识`，Curator 要把它编译成 Writer 可以直接说明的事实句义：主流力量/粗略尺度/生活危险/社会入口分别是什么，不要把它压成一个意象、一件道具或“让读者感受到这个世界不同”的模糊提示。Curator 只筛选和压缩，不重做 release 决策。
@@ -705,6 +723,7 @@ Curated Context 为空时，使用下方明确提供的 fallback；这不是失�
 - Frozen Chapter Mission 冻结本章事件；CANON 冻结已经发生的事实；WORLD REALITY AUTHORITY 冻结安全世界事实；Frozen Power Core 冻结能力机制与边界；Frozen Human Core 冻结稳定人物牵引。Curator 是注意力/实现建议，Primary 是待修订草稿；**同一维度发生冲突时，Curator / Primary 不能折中或覆盖 Frozen Authority。**
 - 修订前在内部扫描 Primary Draft 中所有与 Frozen Authority 冲突的句子、因果暗示和动作后果，必须处理**全部出现位置**，不能只改第一处。判断看语义，不看关键词：例如 Frozen Power 若规定“重新接触后才回流经验/伤势”，那么分开期间的实时听见、实时感到远端疼痛/疲劳、因远端即时感觉而改变动作，都属于同一个冲突，即使没有写“共享”二字；**如果 Authority 只批准“重新接触 / 合并”，也不能为了场景衔接自行扩成远程召回、跨距离沿影子回收或无需重新碰面的合并机制。**
 - 修订后再做一次内部 final sweep：最终正文不得残留与 Frozen Authority 语义等价的反例。若错误机制可以在不改变 Mission / 胜负 / 资源 / 伤势结果的前提下局部改写，就保留事件结果、改正机制；不得为修冲突新造另一套能力规则。
+- **Named Entity Continuity Sweep**：对本章出现的重复人物、势力、地点、器物，若 safe World / Canon / Frozen Mission 已明确姓名、性别称谓、年龄/身份描述或正式组织名，全文必须统一；例如前文已建立“她”不能无新事实漂成“他”，`镇潮军府` 不能顺手改成近义名称。若 authority 从未定义某项身份特征，不擅自补；只修已有事实的漂移。
 
 ## Value-Preserving Relocation｜修事实不顺手磨掉高价值体验
 - 修订对象首先是**错误事实、错误时点或错误因果**，不是它旁边已经成立的阅读满足。若一句/一小段的 Core Fantasy、关系反应、私人欲望、惊讶、Reward 或 Social Repricing 本身被 Authority 支持，只是挂在不合法时点/因果上，把最小的正确体验核迁到**同一事件最近的合法时点**，而不是整段删除。
@@ -719,7 +738,12 @@ Curated Context 为空时，使用下方明确提供的 fallback；这不是失�
 3. Frozen Human Core 高于最近几章行为归纳。一次救人、负责、克制不能反推成新人格。若 Frozen Human 明确写明当前具体人物会通过外貌、气味、姿态或身体靠近牵动主角，并且 Primary Draft 本身已经存在两人的直接身体接触或近身治疗，而第一版完全漏掉这层私人注意，则在该接触点补恰好一个已批准 cue；单纯同场、并肩战斗、共同搬第三人或隔物递东西不算。不得为了触发而新造接触，不把 cue 升级成表白、关系突破或新的剧情选择。
 4. Reader Release 是已批准 timing decision：逐条检查每一条；任何明确事实若第一版尚未让读者知道，都必须用最短充分方式补一次。没有排程不自行开百科。普通 World Entry 通常遵循 Action creates the question → 1—3 个最短充分事实 → Action continues；但开篇 `公共常识` Release 以**普通读者不用推理就能复述规则**为兑现标准，可以在自然落点直接陈述，不要求先制造问题。火盆、服装、动作、专名或氛围即使暗示了规则，只要没有明确告诉读者“力量是什么/怎样粗分强弱/危险为什么改变生活/入口为什么重要”，就不算已经兑现；在不改变剧情的前提下补最小直接说明。**若 Frozen Mission / Direct Result / State Change 已明确本章真实跨过前文已建立的公开力量或身份档位，且 Mission 没有 `[PLAN OUTCOME ADJUSTMENT]`，而 Primary 只写了“凝影了 / 通过了 / 被记名”等现象或本地术语，或只写“打出该级战绩 / 承受该级压力”等暗示，Reviser 在结果处补一次最短的新档位直称；不新增第二次证明，也不把未批准的升级写成事实。** 若当前场景已经进入一个具体地方，而第一版因为过度任务化显得像无背景空间，可以从 WORLD REALITY AUTHORITY 中补**一个最能承载故事的生活细节**（例如已批准的房屋形制、衣着仪态、街道/器物/当地生活习惯），但该细节不能替代已排程的公共常识说明；没有权威支持的地方风俗、建筑样式或制度不得为了“生动”擅自编造。
 5. Attention Reallocation：Supporting implementation 连续占据多个段落、却没有产生新的选择/失败/关系变化/不可逆结果时，可以压缩，把笔墨还给本章真正高价值的 World Entry、Rival、Relationship、Core Fantasy、Choice、Payoff 或 Consequence。
-6. 阶段结算优先保留重新估价、实际得失、Rival 换位、Reward、新机会和新欲望。报告、登记、责任说明只是载体；可以压缩载体，但删除任何段落前都要确认：删掉后是否会丢失新的 State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity。若会，绝不能删。
+6. **主角永远不是协调员。** 如果 Primary 把已冻结的大方向事件实现成多段“谁守哪里、谁撤哪里、谁赔什么、谁承担哪部分、谁见证归属、怎样把多方需求同时安排妥当”，而这些实施本身没有新增选择/失败/反制/关系变化/不可逆结果，Reviser 应激进压缩成最短因果，把前景还给主角真正的决定、力量动作、私人欲望、Rival 反应与结果。可以保留 Mission 已批准的“大方向选择和世界后果”，但不保护为它服务的协调流程。Preservation First 保护正确故事，不保护 process carrier。
+7. 阶段结算优先保留重新估价、实际得失、Rival 换位、Reward、新机会和新欲望。报告、登记、责任说明只是载体；可以压缩载体，但删除任何段落前都要确认：删掉后是否会丢失新的 State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity。若会，绝不能删。
+8. **Backstage Abstraction Translation**：Planning/Authority 中的“身份入口、行动空间、社会重新定价、世界入口、责任边界、持有状态”等分析意义可以保留在后台，但人物对白和贴身叙述若直接像系统说明书，Reviser 应在不改事实的前提下翻译成人物会说的话、具体待遇或具体动作。不要做禁词替换；判断标准是当前人物是否真的会这样说，以及读者是否能从具体后果理解同一意义。
+9. **Public Proof 三路并列，不替作者克制**：若 Primary 已经发生重大公开超标、新层级或新复合，且现场本来存在足够见证者与懂行者，群体震动（包括全场鸦雀无声、所有人明显震惊、喧哗骤停等）、懂行者短 Ruler Calibration、关键人物 Behavioral Repricing 三者都是独立有效的爽点，没有高低之分。Primary 已经写对的任何一路默认保留；若某一路明显缺失，而 Frozen World / Mission / Curator 已经提供观察者与尺度，Reviser 可以做最小补足。不得因为担心“吹捧”“过火”主动压掉合法的群体高光；也不凭空造围观者或重复演同一层级的震惊。**Creative Intensity 不由 Reviser 擅自保守化**：如果“克制一圈反应”和“把公开震动吃满”都 authority-safe，默认保留更强的现场版本，最终强度由作者在实验中判断。
+
+10. **大节点先让爽点落地，再回归人物口吻**：若本章是世界高位突破、稀有能力首次公开或重大复合胜利，第一版已经有足够因果但社会重量落得过轻，优先把已批准的群体反应 / 专业判断 / 关键人物待遇变化补在普通结算之前。人物随后用自己一贯的贪钱、好胜、嘴硬、享受或其它口吻接回日常完全可以，但不能让这个私人收尾抢在世界重新估价之前把高潮关掉。**这个节点允许明显过量的爽感**：同一突破自然同时带来震动、名声、报价、招揽、敌意、入口或生活待遇变化时，不因为“一次变化太多”主动削减；只要每项都有当前因果即可。若多个 authority-safe 强度都成立，Reviser 不替作者选最克制版；受控实验必须保留至少一个明显更激进的真实输出给作者直接判断，不能先让任何自动 Judge 代替作者淘汰。
 
 ## 冻结边界
 不得改变主要事件顺序、人物决定、胜负、资源得失、伤势、身份结果、已建立/未建立的知识边界、Direct Result、State Change 或 Ending。若只有改剧情才能解决问题，保留原稿对应事实，不越权。
@@ -927,6 +951,10 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 {AGGRESSIVE_PAYOFF_BIAS}
 
+{PROTAGONIST_NEVER_COORDINATOR_DIRECTION}
+
+{MAJOR_REWARD_ANCHOR_DIRECTION}
+
 {CORE_FANTASY_INVARIANT}
 
 {LONG_TERM_RECONTEXTUALIZATION_SHOCK}
@@ -934,6 +962,12 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 {PERSISTENT_READER_RULER_DIRECTION}
 
 {PLOT_PACE_TIER_PACE_DIRECTION}
+
+{RAPID_GROWTH_CAUSALITY_DIRECTION}
+
+{MYSTERY_BEFORE_SETTLEMENT_DIRECTION}
+
+{EFFECTIVE_COUNTER_DIRECTION}
 
 {PROTAGONIST_ASCENSION_TRAJECTORY}
 
@@ -967,7 +1001,7 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 # STORY PROGRAM
 
 ## 核心碰撞
-写 3—5 个长期张力：哪些欲望即使没有特殊力量也会继续；力量怎样帮助、诱惑或误导这个人；哪些世界人物/事件不会因主角而改变自己的目标；哪些具体关系能真实改变主角选择。不要统一成一句终极主题。
+写 3—5 个长期张力：哪些欲望即使没有特殊力量也会继续；力量怎样帮助、诱惑或误导这个人；哪些世界人物/事件不会因主角而改变自己的目标；哪些具体关系能真实改变主角选择。**Character relevance 不等于 Story Engine authorization**：Human 中与职业经历相关的责任、精确、审计、边界、路线、损失归因等即使与 World 高度匹配，也默认只作为低权重局部选择偏置，不得因此升格成多阶段共同主题、解题语法或“这个人的独特使命”。优先保留会让人物主动追逐、占有、竞争、享受、嫉妒、冒险、记仇、靠近或拒绝的私人牵引。不要统一成一句终极主题。
 
 ## 全书成长与核心幻想兑现脊柱
 只写真正改变主角本人能力结构与行动方式的**少数、够重的可观察质变**，分布在早期、中期与高阶的自然故事里，不规定固定次数。大结构质变之间不等于“力量没有新鲜感”：应持续让已有力量语法长出新的招式/战斗姿态、身体表现、兵器/奇物、异兽/伴生物、敌人能力、环境玩法、越级对象与复合战法。**结构质变少而重，Fantasy Surface 可以持续偏丰富**：不要因“少系统/少质变”把装备、身体、奇物、环境和稀有例外都压成背景；一次探索或大胜也可以留下多个各有独立因果、之后仍能继续玩的具体对象。全书不能只有开局 Core Asymmetry 一路放大：长期应让**新的 Power Asymmetry 加入**，并让旧优势与新优势产生可复述的**复合效应**——不是两个能力分别使用，而是组合后出现任一单项都做不到的新玩法。每次都用具体事实写清“以前做不到什么 → 现在能做什么 / 能打谁 / 能去哪里 / 哪两个优势怎样一起产生新结果”；拒绝用“行动空间扩大”“能力复利”“层级提升”等后台词替代故事事实。这里是全书纵向要求，不是每阶段新增能力税；某些大型阶段仍可以完全没有 Power Delta。
@@ -975,7 +1009,7 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 这里不重写**开局 Core Asymmetry**：它的正常修炼轴、异常掌握轴、高阶质变、永久边界与传奇力量状态全部继承已批准 Power Seed。后续新的 Power Asymmetry 属于故事中的真实获得，可以由 Story Program 规划，但必须来自具体事件/获得并形成清楚的新 Privilege Delta，不能偷偷改写开局能力的定义来假装“新增”。**后续新 Asymmetry 继承 Power Seed 的“先白话、后命名”边界**：先用普通读者已有词汇写清“以前做不到什么、现在具体多能做什么”，再决定是否需要世界内短名；新名只压缩已理解的能力，不得靠两三个新造概念互相解释来制造高级感。**New Asymmetry ≠ New Power System**：自然可行时优先让新优势成为既有世界力量语法上的新特权、新组合、稀有例外或高价值载体；只有现有语法确实无法承载一个长期值得追的新幻想时，才新增另一套底层机制。
 
 ## 不可替代的人与关系
-写少量具体人物。每个人先有自己的欲望；说明为什么“同等有用的另一个人”不能替代，以及关系怎样改变主角的风险、去留、时间、暴露或机会牺牲。允许爱情、身体吸引、友情、竞争、依赖、嫉妒、效忠、背叛和敌意，不统一成安全合作。
+写少量具体人物。每个人先有自己的欲望；说明为什么“同等有用的另一个人”不能替代，以及关系怎样改变主角的风险、去留、时间、暴露或机会牺牲。允许爱情、身体吸引、友情、竞争、依赖、嫉妒、效忠、背叛和敌意，不统一成安全合作。若 Approved World 已经给某个具名人物明确的公开描述（例如老器师、年轻少主、军府统领等），这里必须原样继承其身份/年龄资历含义，不为角色化方便静默改年轻、改性别或换职位。
 
 ## 长期故事主线
 通常生成 5—7 个自然大型阶段，但这只是当前已批准 World Horizon 的常见展开量，不是凑数要求：如果这个世界层自然只能支撑 3—4 个阶段，就停在真实边界；若仍有大量不同玩法，也不要因为接近某个固定章数强行扩世界。阶段长度不平均，也不为凑数拆分。最后 1—2 个阶段若已接近 World Horizon，应让“旧世界主要压力已被主角活透 / 更高入口真正可达 / 旧层已难继续产生新欲望与新尺度”等条件从故事因果中自然成立，但**不要开始替下一世界写具体内容**。
@@ -1001,6 +1035,7 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 - **Expansion Scope：** `macro` 或 `instance`。普通长篇进入更大大陆/圈层/文明通常是 `macro`；真正独立的多世界副本是 `instance`。
 - **为什么此时必须扩：** 当前层已经缺少哪一种新的欲望、尺度、世界入口或不同 Story Engine；禁止只写“主角需要更强敌人”。
 - **Carry Forward：** 只列已经批准/已经发生且跨边界仍必须有效的 World 事实、未完世界事件、长期人物/关系、Power/Asset/Identity/Knowledge consequence；不要把它们解释成新世界应提供的钥匙孔。
+- **Reader-Facing Edge：** 如果当前 Approved World / Canon 已经存在一个具体、可见、且确实指向“当前世界并非全部”的外缘信号——远方异物、外来强者、黑潮/天外来源、无法由本地体系解释的旧谜、通向外部的真实地点或事件——在 Handoff 前最后 1—2 章让读者真正看见它一次，制造“刚登顶才发现山外有天”的继续阅读欲望。**只能使用已经批准的当前世界事实或既有未知，不得为钩子提前发明下一世界答案、力量体系、宝物或针对主角的敌人。** 当前 Authority 没有合适外缘信号时不要硬造；等 World Expansion 批准后，由下一次 World Entry 直接承担新尺度冲击。
 - **World Expansion Task：** 只写一句 orchestration 指令：`在触发条件成立后，运行 protagonist-blind World Expansion；World Agent 不读取 Current Character / Power Stack / Human / Future Story。扩展批准后再编译 Current Character，并运行 Story Refresh。` 不得在这里预写新世界答案。
 
 如果当前批准 World Horizon 在本 Story Program 结束时仍明显没有耗尽，Handoff 可以写 `NOT YET`，并说明还缺哪一个真实边界事件；不要为了形式强行安排扩世界。
@@ -1020,6 +1055,10 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
+{PROTAGONIST_NEVER_COORDINATOR_DIRECTION}
+
+{MAJOR_REWARD_ANCHOR_DIRECTION}
+
 {CORE_FANTASY_INVARIANT}
 
 {FANTASY_COMPOUNDING_DIRECTION}
@@ -1031,6 +1070,14 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {NAMED_OPPORTUNITY_VALUE_ORIENTATION}
 
 {PERSISTENT_READER_RULER_DIRECTION}
+
+{PLOT_PACE_TIER_PACE_DIRECTION}
+
+{RAPID_GROWTH_CAUSALITY_DIRECTION}
+
+{MYSTERY_BEFORE_SETTLEMENT_DIRECTION}
+
+{EFFECTIVE_COUNTER_DIRECTION}
 
 {OUTLINE_STATE_ADVANCE_DIRECTION}
 
@@ -1164,6 +1211,10 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 
 {STORY_VALUE_OVER_PROCEDURE_DIRECTION}
 
+{PROTAGONIST_NEVER_COORDINATOR_DIRECTION}
+
+{MAJOR_REWARD_ANCHOR_DIRECTION}
+
 {CORE_FANTASY_INVARIANT}
 
 {FANTASY_COMPOUNDING_DIRECTION}
@@ -1173,6 +1224,12 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {PERSISTENT_READER_RULER_DIRECTION}
 
 {PLOT_PACE_TIER_PACE_DIRECTION}
+
+{RAPID_GROWTH_CAUSALITY_DIRECTION}
+
+{MYSTERY_BEFORE_SETTLEMENT_DIRECTION}
+
+{EFFECTIVE_COUNTER_DIRECTION}
 
 {PROTAGONIST_ASCENSION_TRAJECTORY}
 
@@ -1259,7 +1316,7 @@ BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、Ref
 ### Power / Capability
 只写已经真实获得、证明或改变的能力/身体/武器权限与关键边界。开局 Frozen Power Core 不在这里重写；这里承载后续 Power Delta 与当前 Advantage Stack 的已发生事实。
 ### Active Relationships
-人物｜当前目标或立场｜与主角当前关系｜最近一次重要变化｜未决动作/承诺
+人物｜当前目标或立场｜与主角当前关系｜最近一次重要变化｜未决动作/承诺。重复登场的重要人物如果正文已经明确并会影响后续连续性的公开身份事实（如固定性别称谓、年龄/资历描述、正式职位），用最短括注保留一次；不要为不重要人物建档，也不要从名字猜性别/年龄。
 ### Identity / Access
 只写仍会改变后续待遇、入口或选择的当前身份与长期准入。
 ### Knowledge / Enemy State

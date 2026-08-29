@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.5
+version: 0.3.8
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -96,7 +96,10 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Character is a person, not a psychological proof
 - Growth is longitudinal, not a per-stage / per-block tax
 - Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
-- High-value Asymmetry Reveal needs **both** behavioral repricing and ruler calibration; first reveal, new tier/compound, new higher circle, or stale social valuation should trigger renewed reader-facing calibration rather than one-time opening exposition
+- **Small Grammar ≠ Small World**：审计底层学习成本与 Fantasy Surface 丰富度时必须分开判断；少系统不能成为压掉装备、身体、异兽、环境、奇物、副轴与复合玩法的理由
+- **Secondary Fantasy Axis is optional but should not be passively erased**：World 可以主动寻找少量成熟候选，Story 主动检查，Human 决定是否成为主角道路；不要因过去反工程化就把真正可欲望的专业强者路一律压成 Supporting Logic
+- **Naming semantics before fragrance**：首读语义准确高于世界气味；名字不能反向授权机制；普通短名已经准确时不为“更独特”强改。lexique 可以提供可丢弃 semantic primitive / naming fragrance，但没有真实 gameplay 或语义增益时应忽略
+- High-value Asymmetry Reveal can carry **three coequal reader-facing payoffs** when the scene supports them: crowd shock / field-wide silence or eruption, expert ruler calibration, and behavioral repricing. Do not downgrade collective shock as inherently cruder; first reveal, new tier/compound, new higher circle, or stale social valuation should trigger renewed calibration rather than one-time opening exposition
 - High-value Reader Orientation must be distinguished from low-value repeated explanation / implementation detail
 - **Public / Known World = Clarity; Unknown World = Mystery**：普通人从小知道的主流力量、粗略尺度、生活危险与上升入口可以直接讲；环境纹理、道具、专名或氛围不算已经说明
 - Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose
@@ -196,12 +199,13 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 
 ## Asymmetry Reveal / Social Calibration Trace
 
-当用户指出“主角明明很特殊但不爽”“旁人像没看见”“金手指在社会里没有分量”“世界尺忘了提醒”时，不要只检查有没有人震惊。对**高价值非对称优势显露**审计两条必须同时成立的通道：
+当用户指出“主角明明很特殊但不爽”“旁人像没看见”“金手指在社会里没有分量”“世界尺忘了提醒”时，对**高价值非对称优势显露**分别审计三条并列、可同时成立的 reader-facing 通道；不要把其中任何一条默认判成更高级或更低级：
 
-1. **Behavioral Repricing**：至少一个有资格、有利益或有关系位置的关键观察者，因为新证据改变了一个可见动作——停手、站起、改口、重新试探、退距、换装备/战术、加价、保护、限制、追问、重新安排准入等。只有表情、沉默或“很震惊”不足以证明现场真正重新估价。
-2. **Ruler Calibration**：最有资格的观察者应在当前知识边界内，用短而明确的专业判断帮助读者重新定位：**正常情况下同层/同类能做到什么 → 主角这次具体超出哪里 → 为什么罕见、异常或值得重新判断**。可以提出“可能是某种变异/异常”的有限假设，但推断不能冒充 Canon 真相。若现场没有真正懂行者，不凭空添加专家；检查是否可由最近知情者或已批准的短直接旁白承担最小校准。
+1. **Collective Shock / Field Reaction**：若现场本来就有足够见证者，`全场鸦雀无声 / 喧哗骤停 / 所有人明显震惊 / 群体下意识退开或围拢` 本身就是有效爽点，负责让读者感到“整个场子被撼动”。不要因为它是群众反应就自动判成低级、夸张或应删；没有真实观众时才不凭空制造。
+2. **Behavioral Repricing**：至少一个有资格、有利益或有关系位置的关键观察者，因为新证据改变了一个可见动作——停手、站起、改口、重新试探、退距、换装备/战术、加价、保护、限制、追问、重新安排准入等。只有表情、沉默或“很震惊”不足以证明**重新定价已经改变行动**，但它们仍可作为上面的 Collective Shock 独立成立。
+3. **Ruler Calibration**：最有资格的观察者应在当前知识边界内，用短而明确的专业判断帮助读者重新定位：**正常情况下同层/同类能做到什么 → 主角这次具体超出哪里 → 为什么罕见、异常或值得重新判断**。可以提出“可能是某种变异/异常”的有限假设，但推断不能冒充 Canon 真相。若现场没有真正懂行者，不凭空添加专家；检查是否可由最近知情者或已批准的短直接旁白承担最小校准。
 
-这两条不是二选一。只写动作而没有尺度，可能让场面活却仍让读者不知道“到底有多特殊”；只写专业解释而人物行为不变，则会退化成设定旁白。
+三条没有高低之分，也不是二选一。大型 Public Proof 完全可以同时出现：全场先静下来/炸开 → 懂行者说清尺度 → 关键人物立刻改价、改口、换战术或改变待遇。审计不得为了“克制”自动削成只剩一种。
 
 **频率也要审计，不把 Ruler Calibration 当开篇一次性说明。** 以下节点应优先重新出现一次行为反应 + 专业/世界尺校准：
 
@@ -218,7 +222,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Reaction present / Ruler missing**：教头站起来了，但没人告诉读者为什么这在一阶、二阶、三阶体系里都不正常。
 - **Ruler present / Behavior missing**：解释了“百年难遇”，但所有人仍按原报价、原战术、原关系行动。
 - **One-shot calibration**：第一章讲过一次稀有度，此后新层级、新复合、新圈层都不再重新校准，读者逐渐失去比较感。
-- **Uniform chorus**：所有观众获得同一专业解释、轮流震惊；应保留知识差，通常由一个最有资格者校准，其余人只承担必要的现场动作/群体 cue。
+- **Uniform expert chorus**：所有观众轮流说同一套专业解释仍然是问题；应保留知识差，通常由一个最有资格者校准。**但真实的群体震动不是这个问题**：多人同时安静、惊呼、退开或把目光压过来可以保留，不要求把群众反应压成一个 cue。
 
 ## Post-Writer Authority Revision Trace
 
