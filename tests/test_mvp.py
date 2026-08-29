@@ -3264,9 +3264,17 @@ FULL_BOOK_FUTURE_MARKER
         current_outline=outline,
         previous_chapter_text=previous,
         gbrain_inspiration="INSPIRATION_MARKER",
+        selected_references=[
+            {
+                "program_id": "REFERENCE_PROGRAM_MUST_NOT_REACH_HYBRID_RUNTIME",
+                "reusable_program": "REFERENCE_BODY_MUST_NOT_REACH_HYBRID_RUNTIME",
+            }
+        ],
     )
     assert "CURRENT_BLOCK_MARKER" in prompt
     assert "INSPIRATION_MARKER" not in prompt
+    assert "REFERENCE_PROGRAM_MUST_NOT_REACH_HYBRID_RUNTIME" not in prompt
+    assert "REFERENCE_BODY_MUST_NOT_REACH_HYBRID_RUNTIME" not in prompt
     assert "城市远景 → 具体现场 → 主角行动" in prompt
     assert "前文最后动作" in prompt
     assert "前文开头" not in prompt
