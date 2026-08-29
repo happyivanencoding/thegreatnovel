@@ -18,6 +18,7 @@ from .prompts import (
     format_references,
 )
 from .power_novelty import build_power_lexique_bundle, build_power_novelty_bundle
+from .power_ruler import project_root_precise_power_ruler
 
 
 SPLIT_PROMPT_MODES = frozenset(
@@ -54,7 +55,8 @@ PROTAGONIST_BLIND_WORLD_TEMPLATE = f"""你是透明协作的 World Vision 创作
 - 内部因果可信不等于现代程序真实。玄幻/仙侠优先用力量、血脉、宗门、王朝、种族、地域、修炼资源、怪物、奇观等自身材质制造因果。
 - 普通生活只写到足以让世界真实；**不要额外输出 Life Texture / Human Appetite 字段**。生活纹理以后只在 Writer 层按场景偶尔投影，不参与 Human Seed 生成。
 - 力量体系必须给出可比较的正常值与稀缺度：普通人、普通修士、天才、地方强者、高层强者大致怎样不同；哪些现象常见、稀少、几乎未被可靠证实。不要为完整而堆十几层百科。
-- **力量尺必须能长期反复拿来比较，而不是只在设定表里出现一次。** 至少建立一把世界内真实使用的当前主尺（境界/等级/段位/能量/战绩等），题材自然时再加入潜力、技法熟练度、装备、亲和度/适配度、排名等校准尺；它们必须会改变别人怎样评价、挑战、招揽、畏惧或给资源。对当前故事会频繁碰到的少数层级、价值物或身份档位，顺手给 1—2 个**肉眼可感、可复用的 benchmark**：例如正常这一档能击败/承受/进入/买到/影响什么，使后续能稳定写“正常 X 能做到 A，而这次竟然 Y”。不要逐级建表，不要求公斤/米等工程数值，不建立战力数据库，不要合成单一总战力分，也不要为了完整给所有尺度都配 benchmark。
+- **精确力量主尺是强制 World Root Authority。** 每个 production World 必须建立一把能给任何主要修炼者写出**唯一精确当前位置**的公开主尺，不能只有“低阶/中阶/高阶”或四五个粗境界。主尺只允许三种简单语法：`连续数字`（如 1—100 级）、`大境界+数字子级`（如每境 1—9 星/重/层）、`数字序列`（如序列 9—0）；具体名称由世界决定。严格在 `## 力量体系与正常值` 下输出 `### 精确力量主尺｜Frozen Grammar`，逐行填写：`主尺类型`、`主尺名称`、`精确位置格式`（必须含 `{{N}}`）、`数字精度规则`（必须给阿拉伯数字范围）、`当前可见范围`、`当前大档位`。这套 Grammar 一旦批准就是 World Root：普通 macro World Expansion 只能向上延展可见范围，不能改成另一套计数法；真正独立 instance 可以拥有自己的本地精确尺，但不得改写全局主尺。**精确尺是 Reader Ruler，不是战斗公式**：技能、装备、经验、环境、克制和 Power Asymmetry 仍可造成越级；不要因此建立总战力分、属性面板或逐项数值数据库。
+- **力量尺必须能长期反复拿来比较，而不是只在设定表里出现一次。** 除精确主尺外，题材自然时再加入潜力、技法熟练度、装备、亲和度/适配度、排名等校准尺；它们必须会改变别人怎样评价、挑战、招揽、畏惧或给资源。对当前故事会频繁碰到的少数层级、价值物或身份档位，顺手给 1—2 个**肉眼可感、可复用的 benchmark**：例如正常这一档能击败/承受/进入/买到/影响什么，使后续能稳定写“正常 X 能做到 A，而这次竟然 Y”。不要逐级写战斗参数，不要求公斤/米等工程数值，不建立战力数据库，不要合成单一总战力分，也不要为了完整给所有尺度都配 benchmark。
 - 当地理、安全边界或旅行会真实限制普通生活时，顺手写清**普通人怎样在聚落之间移动、谁能独行、商队/猎队/驿路/传送等为什么是进入外部世界的现实方式**。只给理解生活与 World Entry 所需的最小事实，不建立交通制度百科。
 - 至少让一些世界人物、欲望、冲突与未来未知主角无关；世界不是测试金手指的主题乐园。
 
@@ -66,7 +68,15 @@ PROTAGONIST_BLIND_WORLD_TEMPLATE = f"""你是透明协作的 World Vision 创作
 普通人怎样活；年轻人如何进入修炼/职业/身份上升；失败后通常怎样；若安全与地理会限制人生，再说明普通人通常怎样离开一个聚落、谁有能力跨越危险区域；不写主角。
 
 ## 力量体系与正常值
-力量从哪里来、怎样获得与承载；当前故事世界真正需要的最小境界/能力坐标；普通、罕见、顶层差距以及可观察后果。
+力量从哪里来、怎样获得与承载；当前故事世界真正需要的境界/能力坐标；普通、罕见、顶层差距以及可观察后果。必须包含下面这个固定子区块，并给出真实数字而不是占位说明：
+
+### 精确力量主尺｜Frozen Grammar
+主尺类型：连续数字 / 大境界+数字子级 / 数字序列（三选一，输出时只保留实际选择）
+主尺名称：世界内长期公开使用的主尺名
+精确位置格式：必须含 `{{N}}`，例如 `魂力{{N}}级` / `{{大境界}}{{N}}星` / `序列{{N}}`
+数字精度规则：给出明确阿拉伯数字范围，例如 `1—100，每1级都是可记录位置` / `每个大境界1—9星` / `9—0，数字越小越高`
+当前可见范围：只展开当前 World Horizon 真正需要的上下限，但必须写成精确数字端点
+当前大档位：列出当前可见范围内读者会反复使用的少量大境界/社会称谓；连续数字型没有必要时可写 `NONE`
 
 ## 社会现实与身份
 宗门、家族、王朝、商盟、军府、种族或本书自己的组织怎样实际影响人生；只写会改变选择的现实，不做治理百科。若后文大事会出现 named 势力 / 部族，这里顺手给它一个不剧透的公开类别锚点。
@@ -147,7 +157,7 @@ HUMAN_PROMPT = """你是成熟中文男频成长长篇的 Human Seed 设计者�
 
 # HUMAN CANDIDATE N｜姓名／短标签
 ## 世界中的初始位置与生活事实
-写具体出身、家庭、教育、工作/修炼接触，以及 3—5 件真实发生过、足以让这个人有过去的事情。不要逐条写 Adaptation；允许有些事实与后面人格弱相关或留下矛盾。
+第一行固定写：`开局精确力量位置｜主尺：<World Root 主尺名称>｜精确位置：<符合 Frozen Grammar 的明确数字位置>`。即使尚未正式修炼，也使用 World 定义的 `0级/0段` 等精确零位，不写“普通人/未入门”这种无法长期比较的模糊位置。随后写具体出身、家庭、教育、工作/修炼接触，以及 3—5 件真实发生过、足以让这个人有过去的事情。不要逐条写 Adaptation；允许有些事实与后面人格弱相关或留下矛盾。
 ## 持续牵引与互相竞争的动机
 写 2—4 股私人牵引，以及至少一个不能同时都满足的真实冲突。人物可以在某些欲望上明显过量，但不要把全部人生总结成唯一哲学。
 ## Behavior Signature
@@ -200,8 +210,8 @@ WORLD_EXPANSION_PROMPT = """你是 TGN 的周期性 World Expansion 设计者。
 - 已批准 World Root 与此前 World Expansions 都是事实；不得改写旧力量规则、旧历史、旧公共常识或已存在地点。
 - 只向 effective_from 之后增加过去尚未详细展开的世界层。`macro` 用于普通长篇进入更大大陆/圈层/文明/力量层；`instance` 用于多世界副本流的一次独立 Local World。
 - Expansion 不是固定百章税；调用它意味着当前故事已经真正来到新 World Horizon。
-- `macro` 优先做到“旧 Grammar 仍有效，但世界尺度、人物、价值物、危险、奇观或新幻想表面明显扩大”，不要为了扩世界就换一套宇宙底层物理。
-- `instance` 必须像一个原本就在运行的小世界：有普通生活、当地力量/危险、社会关系、价值物、人物欲望、正在发生的冲突与自己的未知；不是任务房、Boss 房或为某能力准备的谜题。
+- `macro` 优先做到“旧 Grammar 仍有效，但世界尺度、人物、价值物、危险、奇观或新幻想表面明显扩大”，不要为了扩世界就换一套宇宙底层物理。**Root 的精确力量主尺 Grammar 永远冻结**：必须在 `## 新力量 / 威胁 / 身份 / 价值尺度` 内输出 `### 精确力量主尺延展｜Macro`，写 `沿用主尺`、`主尺语法改动：NONE`、`新增可见范围`。如果本轮只扩地理/社会而不抬高力量上限，`新增可见范围：NONE`；绝不能借 Expansion 把 1—9 星改成初/中/后期，或另造第二套全局等级。
+- `instance` 必须像一个原本就在运行的小世界：有普通生活、当地力量/危险、社会关系、价值物、人物欲望、正在发生的冲突与自己的未知；不是任务房、Boss 房或为某能力准备的谜题。独立副本可以有不同的本地力量语言，但也**强制拥有自己的精确本地主尺**：在 `## 新力量 / 威胁 / 身份 / 价值尺度` 内输出 `### 本地精确力量主尺｜Instance Grammar`，至少写三选一的 `主尺类型`、`主尺名称`、含 `{N}` 的 `精确位置格式`、明确数字范围的 `数字精度规则`、`当前可见范围`、`与全局主尺关系`；本地尺只帮助读者理解该世界，不回写全局主尺。
 - 可以出现令人眼馋的兵器、传承、资源、伙伴、身份、地点和机会，但它们属于世界，不知道未来主角会不会得到；不得写“特别适合主角现有能力”“正好补足当前 Build”。
 - 世界扩张应制造新的可追欲望与 Story Engine 可能性，而不是只把同一比赛/遗迹/争夺换地图放大。
 - 只保留当前世界层真正需要的 reader-facing ruler；不要一次设计到全书终局。
@@ -213,6 +223,9 @@ WORLD_EXPANSION_PROMPT = """你是 TGN 的周期性 World Expansion 设计者。
 
 ## 新增公共现实与普通生活
 ## 新力量 / 威胁 / 身份 / 价值尺度
+按 Expansion Metadata 的 scope 严格包含一个精确尺子区块：
+- `macro`：`### 精确力量主尺延展｜Macro`，逐行写 `沿用主尺` / `主尺语法改动：NONE` / `新增可见范围`。
+- `instance`：`### 本地精确力量主尺｜Instance Grammar`，逐行写 `主尺类型` / `主尺名称` / `精确位置格式` / `数字精度规则` / `当前可见范围` / `与全局主尺关系`。
 ## 新地点、势力与公共识别
 ## 世界人物欲望与正在发生的事
 ## 真正值得想要或进入的东西
@@ -512,7 +525,11 @@ def generate_split_prompt(
         parts = [human_prompt]
         if prototype_id.strip():
             parts.append(EXPLICIT_PROTOTYPE_HUMAN_CONTRACT.strip())
-        parts.extend([life.strip(), _block("Human GBrain Craft（可选）", gbrain_inspiration)])
+        parts.extend([
+            life.strip(),
+            _block("FROZEN PRECISE POWER RULER GRAMMAR｜只用于人物 T0 精确位置", project_root_precise_power_ruler(world_vision)),
+            _block("Human GBrain Craft（可选）", gbrain_inspiration),
+        ])
         return "\n\n".join(parts).strip() + "\n"
 
     if mode == "world_expansion":
@@ -529,6 +546,7 @@ def generate_split_prompt(
                 WORLD_EXPANSION_PROMPT.strip(),
                 _block("作者粗方向", creative_direction),
                 _block("WORLD ROOT｜Frozen Opening Authority", world_vision),
+                _block("FROZEN PRECISE POWER RULER GRAMMAR｜不得改写", project_root_precise_power_ruler(world_vision)),
                 _block("PREVIOUS APPROVED WORLD EXPANSIONS｜World-only", world_expansions),
                 _block("CURRENT WORLD STATE｜Only explicit Canon World State", world_state),
                 _block(

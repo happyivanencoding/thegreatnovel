@@ -17,7 +17,9 @@ STATE = {"world_vision": {"status": "author_approved"}}
 def test_world_prompt_requires_reusable_social_power_rulers() -> None:
     prompt = generate_split_prompt(mode="world_vision", creative_direction="男频修仙")
     assert "力量尺必须能长期反复拿来比较" in prompt
-    assert "至少建立一把世界内真实使用的当前主尺" in prompt
+    assert "精确力量主尺是强制 World Root Authority" in prompt
+    assert "唯一精确当前位置" in prompt
+    assert "主尺类型" in prompt
     assert "不要合成单一总战力分" in prompt
     assert "普通人怎样在聚落之间移动" in prompt
     assert "谁有能力跨越危险区域" in prompt

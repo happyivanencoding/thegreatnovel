@@ -102,6 +102,22 @@ def test_second_failed_repair_does_not_create_an_infinite_retry_loop(tmp_path: P
     assert "条件性 Outcome Repair" in load_node_prompt(book_dir, 19, "authority_reviser")
 
 
+def test_numeric_precise_ruler_milestone_is_detected_and_must_be_directly_realized() -> None:
+    prompt = """FROZEN CHAPTER MISSION
+状态变化：上游计划已批准结果（本章必须同时成立；若与已发生 Canon 冲突则 Canon 优先）：顾野修为提升到43级，并完成公开测试。
+叙事功能：完成一次力量换挡。
+"""
+    requirement = detect_explicit_milestone_outcome(prompt)
+    assert requirement is not None
+    assert requirement.target == "43级"
+    assert not explicit_milestone_realized(
+        "# 正式正文\n顾野以42级身份击败了58级对手，全场鸦雀无声。", requirement
+    )
+    assert explicit_milestone_realized(
+        "# 正式正文\n灵力冲开最后一道关口，顾野的修为正式提升到43级。", requirement
+    )
+
+
 def test_run_api_exposes_prepared_outcome_repair_prompt(tmp_path: Path, monkeypatch) -> None:
     monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
     client = TestClient(app)

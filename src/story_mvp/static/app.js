@@ -2262,6 +2262,31 @@ function compactRecentSummaryWindow(text, keep = 3) {
   return clean.split(/\n\s*\n/).filter(Boolean).slice(-keep).join("\n\n");
 }
 
+function exactPowerPositionLine(text, prefix) {
+  return text.split(/\r?\n/)
+    .map((line) => line.trim().replace(/^[-*]\s*/, ""))
+    .find((line) => line.startsWith(prefix) && /精确位置[：:].*\d/.test(line)) || "";
+}
+
+function preserveExactPowerPosition(proposedPersistent, oldStatus) {
+  if (exactPowerPositionLine(proposedPersistent, "Current Power Position｜")) return proposedPersistent;
+
+  const oldPersistent = existingCanonSection(oldStatus, "## PERSISTENT CANON", "长期事实");
+  let position = exactPowerPositionLine(oldPersistent, "Current Power Position｜");
+  if (!position) {
+    const characterCard = $("creative-character-card")?.value || "";
+    const initial = exactPowerPositionLine(characterCard, "开局精确力量位置｜");
+    if (initial) position = initial.replace(/^开局精确力量位置｜/, "Current Power Position｜");
+  }
+  if (!position) return proposedPersistent;
+
+  const heading = "### Power / Capability";
+  if (proposedPersistent.includes(heading)) {
+    return proposedPersistent.replace(heading, `${heading}\n${position}`);
+  }
+  return `${heading}\n${position}\n${proposedPersistent}`.trim();
+}
+
 function buildCanonMemoryStatus(proposed) {
   const chapterNumber = currentChapterNumber();
   const oldStatus = $("section-status").value;
@@ -2271,12 +2296,13 @@ function buildCanonMemoryStatus(proposed) {
     `第${chapterNumber}章：${proposed.chapter_summary}`,
   ].filter(Boolean).join("\n"));
   const authorNotes = existingAuthorNotes(oldStatus);
+  const persistentCanon = preserveExactPowerPosition(proposed.persistent_canon, oldStatus);
   return [
     `当前已完成第${chapterNumber}章。`,
     "## ACTIVE SCENE STATE",
     proposed.active_scene_state,
     "## PERSISTENT CANON",
-    proposed.persistent_canon,
+    persistentCanon,
     "## RECENT SUMMARIES",
     summaries,
     "## OPEN PROMISES",

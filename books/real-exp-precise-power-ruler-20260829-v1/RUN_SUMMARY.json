@@ -1,0 +1,22 @@
+{
+  "world": {
+    "wall_seconds": 170.715,
+    "ruler_type": "连续数字",
+    "name": "锚力阶",
+    "position_format": "锚力{N}阶",
+    "numeric_rule": "1—100，每1阶都是可记录位置；0阶为未入门普通人，不计入主尺",
+    "visible_range": "锚力1阶—锚力60阶",
+    "has_major_tiers": true,
+    "chars": 4067
+  },
+  "public_proof": {
+    "wall_seconds": 21.082,
+    "has_43": true,
+    "has_58": true,
+    "has_group_shock": true,
+    "has_calibration": true,
+    "has_repricing": true,
+    "keeps_43": true,
+    "chars": 494
+  }
+}

@@ -644,6 +644,8 @@ def test_canon_memory_v2_and_state_delta_parser() -> None:
 旧场景
 
 ## PERSISTENT CANON
+### Power / Capability
+Current Power Position｜主尺：测试阶｜精确位置：3级
 旧长期事实
 
 ## RECENT SUMMARIES
@@ -696,6 +698,8 @@ FUTURE
 # Proposed Active Scene State
 新
 # Proposed Persistent Canon
+### Power / Capability
+Current Power Position｜主尺：测试阶｜精确位置：1级
 长期
 # Proposed Chapter Summary
 事实
@@ -712,6 +716,8 @@ FUTURE
 ## ACTIVE SCENE STATE
 旧
 ## PERSISTENT CANON
+### Power / Capability
+Current Power Position｜主尺：测试阶｜精确位置：2级
 旧
 ## RECENT SUMMARIES
 旧

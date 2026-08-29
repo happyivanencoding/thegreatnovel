@@ -187,6 +187,22 @@ Power / growth grammar 负责“怎样能变强”；Story 负责“什么时候
 
 命名在机制成立之后。先保证读者不会误判能力/器物/境界的实际作用，再追求世界气味。**首读准确高于世界贴合**：World 已有具体词根只有在不牺牲准确时才优先，lexique 只作次级 fragrance，也可以完全不用；一个普通短名已经准确、顺口、低学习成本时，不为了“更独特 / 更世界化”强行改写。类别可以由名称、句法、持有动作或人物关系承担，不要把“统一后缀/四字格式/词族”审成质量标准。**名字若比 authority 多承诺了机制，改名字，不扩机制迁就名字。**
 
+### Precise Power Ruler = Reader Coordinate, Not Combat Formula
+
+长篇主力量如果只剩四五个粗档位，读者很快会失去“主角现在到底在哪、差多少、下一步多远”的连续坐标。Production 长篇应有一把能写出唯一精确位置的公开主尺，可以是连续数字、大境界 + 数字子级或数字序列；不要求统一成 1—100，但不能长期只写“低阶 / 中阶 / 高阶”。
+
+审计时追完整 authority chain：
+
+`World Root Precise Grammar → Human T0 exact position → State Current Power Position → Current Character → macro Expansion extends range → Public Proof reuses same coordinate`
+
+关键边界：
+
+- 精确位置是 Reader Ruler，不是攻击力 / 防御力 / 总战力分；
+- 技能、装备、经验、环境、克制与 Power Asymmetry 仍可越级；
+- 越级胜利不能反推主角等级自动提升；
+- macro World Expansion 只能延展同一主尺范围，不能换计数语法；真正独立 instance 可以有自己的本地精确尺，但不能重写全局尺；
+- Public Proof 与主力量相关时，Collective Shock、Ruler Calibration、Behavioral Repricing 应尽量共享同一精确坐标，而不是后台知道43 vs 58、正文仍只写“好强 / 全场震惊”。
+
 ## 12. Narrative Compounding > Asset Compounding
 
 真正的复利是故事不回原点：

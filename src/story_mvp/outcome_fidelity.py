@@ -34,7 +34,7 @@ _OUTCOME_PATTERNS = (
 )
 _TRANSITION = re.compile(
     r"(?:本人)?(?:真正)?(?:正式)?"
-    r"(?:进入|踏入|晋入|突破(?:到|至)?|晋升(?:到|至|为)?|成为)"
+    r"(?:进入|踏入|晋入|突破(?:到|至)?|晋升(?:到|至|为)?|提升(?:到|至)?|升(?:到|至)|达到|成为)"
     r"(?P<target>[\u4e00-\u9fffA-Za-z0-9·_-]{1,12})"
 )
 
@@ -64,8 +64,8 @@ def explicit_milestone_realized(final_response: str, requirement: ExplicitMilest
 
     target = re.escape(requirement.target)
     patterns = (
-        rf"(?:进入|踏入|晋入|突破(?:到|至)?|晋升(?:到|至|为)?|成为)\s*{target}(?:者|境|阶|级)?",
-        rf"(?:已是|已经是|正式是)\s*{target}(?:者|境|阶|级)?",
+        rf"(?:进入|踏入|晋入|突破(?:到|至)?|晋升(?:到|至|为)?|提升(?:到|至)?|升(?:到|至)|达到|成为)\s*{target}(?:者|境|阶|级)?",
+        rf"(?:已是|已经是|正式是|当前是|修为是)\s*{target}(?:者|境|阶|级)?",
         rf"{target}(?:者|境|阶|级)\s*(?:已经|正式)?(?:成立|达成|突破|晋升)",
     )
     return any(re.search(pattern, final_response) for pattern in patterns)

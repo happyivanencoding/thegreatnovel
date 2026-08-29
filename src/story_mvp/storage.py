@@ -20,6 +20,12 @@ from .prompts import (
     parse_canon_memory,
     parse_state_delta_v2,
 )
+from .power_ruler import (
+    parse_root_precise_power_ruler,
+    preserve_or_require_current_power_position,
+    validate_human_seed_start,
+    validate_world_expansion_ruler,
+)
 
 
 SECTION_TITLES = {
@@ -447,6 +453,8 @@ def approve_world_expansion(
     body = _strip_model_heading(content, "# WORLD EXPANSION")
     if not body:
         raise ValueError("World Expansion 内容不能为空")
+    world_root = _read_creative_text(directory, "world_vision")
+    validate_world_expansion_ruler(body, world_root, scope=scope)
     folder = directory / WORLD_EXPANSION_DIR
     folder.mkdir(exist_ok=True)
     existing = _evolution_files(directory, WORLD_EXPANSION_DIR, "expansion")
@@ -645,6 +653,8 @@ def approve_creative_artifact(
     content = _read_creative_text(directory, artifact)
     if not content.strip():
         raise ValueError(f"{CREATIVE_ARTIFACT_FILES[artifact]} 不能为空，无法批准")
+    if artifact == "world_vision":
+        parse_root_precise_power_ruler(content)
     state = _read_creative_state(directory)
     if state[artifact]["origin"] == "empty":
         state[artifact] = {"origin": "author_edited", "status": "draft"}
@@ -668,8 +678,10 @@ def approve_character_artifact(book_id: str, workspace: Path) -> dict[str, Any]:
     directory = require_book(book_id, workspace)
     power = _read_creative_text(directory, "power_seed")
     human = _read_creative_text(directory, "human_seed")
+    world = _read_creative_text(directory, "world_vision")
     _validate_selected_seed(power, "# POWER SEED", label="POWER_SEED.md")
     _validate_selected_seed(human, "# HUMAN SEED", label="HUMAN_SEED.md")
+    validate_human_seed_start(human, world)
 
     human_parts = split_human_seed_authorities(human)
     character = compose_character_card(power_seed=power, human_seed=human)
@@ -777,6 +789,10 @@ def apply_state_delta_to_book(
     proposal = parse_state_delta_v2(state_delta_response)
     sections = parse_book_sections(book_content)
     current = parse_canon_memory(sections["status"])
+    proposal["persistent_canon"] = preserve_or_require_current_power_position(
+        proposal["persistent_canon"],
+        current.get("persistent_canon", ""),
+    )
     previous = current.get("recent_summaries", "").strip()
     if previous == "当前尚无已完成正文或已批准章节摘要。":
         previous = ""

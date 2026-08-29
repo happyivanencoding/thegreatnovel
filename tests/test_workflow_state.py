@@ -21,6 +21,26 @@ from story_mvp.workflow_state import workflow_impact, workflow_status
 from story_mvp.workflow_cli import apply_response
 
 
+PRECISE_WORLD_1 = """# PROTAGONIST-BLIND WORLD VISION
+
+## 力量体系与正常值
+### 精确力量主尺｜Frozen Grammar
+主尺类型：连续数字
+主尺名称：测试等级
+精确位置格式：测试{N}级
+数字精度规则：0—100，每1级可记录
+当前可见范围：0级—60级
+当前大档位：NONE
+"""
+
+PRECISE_HUMAN = """# HUMAN SEED｜人物／欲望
+## 世界中的初始位置与生活事实
+开局精确力量位置｜主尺：测试等级｜精确位置：3级
+## Core Obsession
+想赢。
+"""
+
+
 def _book_content(
     *,
     design: str = "DESIGN",
@@ -49,10 +69,10 @@ def _artifacts(workspace: Path, book_id: str) -> dict[str, dict[str, object]]:
 
 def test_world_vision_stales_split_future_chain_but_protects_completed_body(tmp_path: Path) -> None:
     book_dir = create_book("demo", tmp_path)
-    write_creative_artifact("demo", "world_vision", "WORLD-1", tmp_path)
+    write_creative_artifact("demo", "world_vision", PRECISE_WORLD_1, tmp_path)
     approve_creative_artifact("demo", "world_vision", tmp_path)
     write_creative_artifact("demo", "power_seed", "# POWER SEED｜能力\n\n## Core Fantasy\n能力。", tmp_path)
-    write_creative_artifact("demo", "human_seed", "# HUMAN SEED｜人物／欲望\n\n## Core Obsession\n想赢。", tmp_path)
+    write_creative_artifact("demo", "human_seed", PRECISE_HUMAN, tmp_path)
     approve_character_artifact("demo", tmp_path)
     write_creative_artifact("demo", "proposal", "PROGRAM-1", tmp_path)
     write_book("demo", _book_content(), tmp_path)
@@ -79,10 +99,10 @@ def test_world_vision_stales_split_future_chain_but_protects_completed_body(tmp_
 
 def test_power_seed_change_does_not_stale_world_but_reopens_character(tmp_path: Path) -> None:
     create_book("demo", tmp_path)
-    write_creative_artifact("demo", "world_vision", "WORLD-1", tmp_path)
+    write_creative_artifact("demo", "world_vision", PRECISE_WORLD_1, tmp_path)
     approve_creative_artifact("demo", "world_vision", tmp_path)
     write_creative_artifact("demo", "power_seed", "# POWER SEED｜A\n\n## Core Fantasy\nA", tmp_path)
-    write_creative_artifact("demo", "human_seed", "# HUMAN SEED｜人／X\n\n## Core Obsession\nX", tmp_path)
+    write_creative_artifact("demo", "human_seed", PRECISE_HUMAN, tmp_path)
     approve_character_artifact("demo", tmp_path)
     before = _artifacts(tmp_path, "demo")
 

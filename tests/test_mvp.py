@@ -94,6 +94,38 @@ APPROVED_CREATIVE_STATE = {
 }
 
 
+MINIMAL_PRECISE_WORLD = """# PROTAGONIST-BLIND WORLD VISION
+
+## 普通人的生活与上升
+普通人在城镇生活。
+
+## 力量体系与正常值
+修行者按公开主尺比较。
+
+### 精确力量主尺｜Frozen Grammar
+主尺类型：连续数字
+主尺名称：灵力等级
+精确位置格式：灵力{N}级
+数字精度规则：0—100，每1级都是可记录位置
+当前可见范围：0级—60级
+当前大档位：NONE
+
+## 社会现实与身份
+等级会影响挑战与待遇。
+
+## 世界里真正值钱、值得想要的东西
+功法与兵器。
+
+## 世界正在发生的大事
+城内正在举行公开比试。
+
+## 值得进入的地点、奇观与未知
+城外仍有未知区域。
+
+## 世界知识边界
+普通人知道公开等级，远期上限未知。
+"""
+
 OUTLINE = "\n".join(f"{field}：内容" for field in REQUIRED_OUTLINE_FIELDS)
 
 
@@ -101,7 +133,7 @@ def approved_creative_inputs() -> dict[str, object]:
     return {
         "creative_state": APPROVED_CREATIVE_STATE,
         "fantasy_seed": "APPROVED_FANTASY_SEED",
-        "world_vision": "APPROVED_WORLD_VISION",
+        "world_vision": MINIMAL_PRECISE_WORLD,
         "proposal_context": "APPROVED_STORY_PROGRAM",
     }
 
@@ -236,7 +268,7 @@ def test_creative_state_sources_and_single_character_approval_api(tmp_path: Path
 
     world = local_client.put(
         "/api/books/creative/world-vision",
-        json={"content": "# PROTAGONIST-BLIND WORLD VISION\n\nWORLD", "origin": "model_generated"},
+        json={"content": MINIMAL_PRECISE_WORLD, "origin": "model_generated"},
     )
     assert world.status_code == 200
     assert world.json()["creative_state"]["world_vision"] == {
@@ -252,7 +284,7 @@ def test_creative_state_sources_and_single_character_approval_api(tmp_path: Path
     )
     human = local_client.put(
         "/api/books/creative/human-seed",
-        json={"content": "# HUMAN SEED｜季衡／想赢\n\n## Core Obsession\n一直想赢。\n\n## Initial State Seed\n### 当前私人欲望\n赢下眼前这一场。", "origin": "author_edited"},
+        json={"content": "# HUMAN SEED｜季衡／想赢\n\n## 世界中的初始位置与生活事实\n开局精确力量位置｜主尺：灵力等级｜精确位置：12级\n\n## Core Obsession\n一直想赢。\n\n## Initial State Seed\n### 当前私人欲望\n赢下眼前这一场。", "origin": "author_edited"},
     )
     assert power.status_code == human.status_code == 200
     assert power.json()["creative_state"]["power_seed"]["status"] == "draft"
@@ -310,7 +342,7 @@ def test_creative_prompt_approval_boundaries_and_outline_authority(tmp_path: Pat
 
     local_client.put(
         "/api/books/gates/world-vision",
-        json={"content": "# PROTAGONIST-BLIND WORLD VISION\n\n## 力量体系与正常值\n一人一主承载。", "origin": "model_generated"},
+        json={"content": MINIMAL_PRECISE_WORLD, "origin": "model_generated"},
     )
     assert local_client.post("/api/books/gates/world-vision/approve").status_code == 200
     assert local_client.post("/api/prompt", json={"book_id": "gates", "mode": "power_seed"}).status_code == 200
@@ -326,7 +358,7 @@ def test_creative_prompt_approval_boundaries_and_outline_authority(tmp_path: Pat
     )
     local_client.put(
         "/api/books/gates/human-seed",
-        json={"content": "# HUMAN SEED｜石砚／找声音\n\n## Core Obsession\n找回一个声音。", "origin": "model_selected"},
+        json={"content": "# HUMAN SEED｜石砚／找声音\n\n## 世界中的初始位置与生活事实\n开局精确力量位置｜主尺：灵力等级｜精确位置：8级\n\n## Core Obsession\n找回一个声音。", "origin": "model_selected"},
     )
     assert local_client.post("/api/books/gates/character/approve").status_code == 200
     program = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "idea"})
@@ -2690,7 +2722,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "震撼式长期重释" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
     assert "震撼式长期重释" not in generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
     assert "Persistent Reader Ruler" in story_program
-    assert "主角现在大致在哪一档" in story_program
+    assert "主角**精确在哪一位**" in story_program
+    assert "43级对58级" in story_program
     assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["review"]
     director_ruler = generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
@@ -3492,6 +3525,14 @@ def test_context_curator_compiles_scene_prose_projection_instead_of_forwarding_c
 
 def test_extract_primary_draft_drops_inline_model_preamble_before_body_heading() -> None:
     response = "我会按规范直接写作。# 正式正文\n\n顾长川拿起身份牌。"
+    assert extract_primary_draft(response) == "顾长川拿起身份牌。"
+
+
+def test_extract_primary_draft_ignores_quoted_body_heading_in_model_preamble() -> None:
+    response = (
+        "我会先核对边界，只输出规定的 `# 正式正文`，不附审计。"
+        "检查完成。# 正式正文\n\n顾长川拿起身份牌。"
+    )
     assert extract_primary_draft(response) == "顾长川拿起身份牌。"
 
 
@@ -4710,7 +4751,7 @@ def test_chapter_prep_injects_recent_summaries_only_once() -> None:
 def test_state_delta_template_exclusion_lists_ten_chapter_plan_and_references() -> None:
     # 追加修复 B-1：排除声明补全十章计划与 Reference Programs。
     assert (
-        "BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、"
+        "BOOK CONTRACT、完整 World、完整百章计划、十章计划、prose profile、GBrain、"
         "Reference Programs 与前两章正文都不在本次输入中"
     ) in DEFAULT_STATE_DELTA_TEMPLATE
 

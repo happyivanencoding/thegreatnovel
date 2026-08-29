@@ -158,7 +158,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 - 普通人的生活、上升与失败路径；
 - 当安全、地理或旅行会限制人生时，普通人怎样跨越聚落、谁能独行、哪些现实通道把当前生活连接到更大世界；
-- 力量体系的正常值、稀缺度、境界/能力的可观察差距；先用 1—3 句普通话说清力量来源、直接作用、成长与失败，再给会反复使用的对象/层级短名。**Small Grammar, Large Variation**：已有一到少数互补力量操作轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成元能量/总机制；Small Grammar 不等于 Small World，主动让旧规则长出新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外，让读者旧知识持续复利。World 同时主动寻找 0—1 条真正成熟的 Optional Secondary Fantasy Road；没有足够好的创意就不造，也不预设未来主角一定会走。创新放在力量因果和玩法，不靠多个新词互相解释；默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果。对当前会频繁使用的少数力量/价值/身份档位给 1—2 个可感知、可复用 benchmark，供下游稳定比较，不建战力数据库；
+- 力量体系的正常值、稀缺度、境界/能力的可观察差距；先用 1—3 句普通话说清力量来源、直接作用、成长与失败，再给会反复使用的对象/层级短名。**精确力量主尺是强制 Root Grammar**：World 必须选择 `连续数字 / 大境界+数字子级 / 数字序列` 之一，并给出主尺名称、含 `{N}` 的精确位置格式、明确数字精度规则、当前可见数字范围和少量大档位；任何主要修炼者都应能被写成一个唯一精确位置。它只负责 Reader Ruler，不变成总战力分或战斗公式。**Small Grammar, Large Variation**：已有一到少数互补力量操作轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成元能量/总机制；Small Grammar 不等于 Small World，主动让旧规则长出新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外，让读者旧知识持续复利。World 同时主动寻找 0—1 条真正成熟的 Optional Secondary Fantasy Road；没有足够好的创意就不造，也不预设未来主角一定会走。创新放在力量因果和玩法，不靠多个新词互相解释；默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果。对当前会频繁使用的少数力量/价值/身份档位给 1—2 个可感知、可复用 benchmark，供下游稳定比较，不建战力数据库；
 - 明确区分 **Public World Knowledge / Mystery**：普通人从小知道的主流力量、粗略强弱尺、当前/下一档现实含义、日常危险、上升入口与价值物，要能被下游直接用普通话说明；环境纹理和专名不能替代基础答案。来源、隐藏原因、幕后关系与未来 reveal 继续进入知识边界；
 - 宗门、王朝、家族、商盟、种族等怎样真实影响人生； named 势力 / 部族若会进入世界大事，同时给一个不剧透的公开类别锚点，让章节期 WORLD AUTHORITY 能回答“它是什么”；
 - 世界里真正值钱、值得人物争夺和羡慕的东西；
@@ -189,7 +189,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 World Expansion 使用 **GPT-5.6 Luna high 的 protagonist-blind fresh context**：只看 World Root、此前已批准 Expansion、明确的 `Canon → World State` 与小型 World craft；不看 Current Character、Power Stack、Human、关系、Story Handoff 的人物化答案或未来计划。它只创造世界现实，不替 Story 设计“最适合主角的下一件宝物”。
 
-多世界副本流使用同一机制，但有双层时钟：跨世界稳定规则留在 Global / Meta World；每个真正独立新世界用 `scope=instance` 追加 Local World Authority，并可设置结束章节。离开副本后 Local World 从章节 `WORLD AUTHORITY` 退场；真正带走的 Power、物品、关系、身份、知识和 Meta consequence 继续留在 Canon。
+力量尺也服从 Forward Expansion：`scope=macro` 只能延展 World Root 已冻结精确主尺的**可见数字范围**，不得把“每境1—9星”改成初/中/后期或另造第二套全局计数；如果本轮只扩地理/社会，精确尺范围可以 `NONE`。多世界副本流使用同一机制但有双层时钟：跨世界稳定规则留在 Global / Meta World；每个真正独立新世界用 `scope=instance` 追加 Local World Authority，并强制建立自己的**本地精确力量尺**。本地尺帮助读者理解该世界内部位置，但不会反向改写主角全局主尺。离开副本后 Local World 与本地尺从章节 `WORLD AUTHORITY` 退场；真正带走的 Power、物品、关系、身份、知识和 Meta consequence 继续留在 Canon。
 
 ---
 
@@ -224,9 +224,9 @@ Power Seed 只读 deterministic `POWER_BASELINE`、固定 1 条 source-blind Nam
 长篇运行时因此采用**两层 Power**：
 
 - `Power Origin Core`：开书已批准、长期冻结的核心异常与根边界；
-- `Current Power Portfolio`：正文已经真实获得/证明的后续能力、身体变化、兵器权限与 Advantage Stack，由 `PERSISTENT CANON → Power / Capability` 持续更新。
+- `Current Power Portfolio`：正文已经真实获得/证明的后续能力、身体变化、兵器权限与 Advantage Stack，由 `PERSISTENT CANON → Power / Capability` 持续更新；该小节第一行固定保存 `Current Power Position｜主尺：…｜精确位置：…`。Human Seed 冻结 T0 精确位置；State 只有在最终正文明确突破时才更新，越级胜利/社会重新估价不能反推升级。后续 State 若漏写该行，代码继承上一 Canon 位置，避免几百章里因一次抽取遗漏丢失主坐标。
 
-例如后期拿到神兵、魂骨、传承或第二种非对称优势，是 forward Power Delta，不回头改写 Power Seed。周期性 Story Refresh 读取 Current Power，而不是拿 Chapter 1 的能力状态重新规划几百章后的主角。
+例如后期拿到神兵、魂骨、传承或第二种非对称优势，是 forward Power Delta，不回头改写 Power Seed。周期性 `CURRENT_CHARACTER.md` 把 Frozen Origin、Current Power Portfolio 与**当前精确力量位置**一起编译给 Story Refresh，而不是拿 Chapter 1 的能力状态重新规划几百章后的主角。
 
 ---
 
@@ -304,7 +304,7 @@ Story Program 是第一次同时看到完整 World 与 Character 的阶段，也
 - 清楚的 **全书成长与 Core Fantasy 兑现脊柱**：少数够重的结构质变分布在早期、中期、高阶自然阶段，不固定次数；结构质变少而重，但 Fantasy Surface 可以持续偏丰富，质变之间继续用既有力量语法长出新招/战斗姿态、装备/奇物、身体/物种、异兽/伴生物、环境、越级对象与复合玩法；
 - 优势栈不能只让开局能力变大：全书要有新的 Power Asymmetry 加入，并出现新旧优势组合后单项做不到的复合玩法；这不是每阶段新增能力税；
 - 每次成长写成具体事实：以前打不过谁、去不了哪里、做不到什么，现在具体能怎样战斗、移动、探索，或哪两项优势怎样一起产生新结果；
-- **高价值 Asymmetry Reveal 要反复做 Public Proof，而不是只在开篇解释一次**：Core Asymmetry 首次被看见、新层级/质变、新旧优势首次复合、进入更高圈层后第一次被重新观察、或旧社会估值已明显落后时，按现场条件允许三条并列爽点同时成立：真实观众的 Collective Shock（全场安静、喧哗骤停、所有人明显震惊等）、懂行者的 `Ruler Calibration`、关键人物的 `Behavioral Repricing`。三者没有高低之分，大型公开节点可以一起吃满；只避免凭空造群众或让所有人轮流说同一套专业解释。短期群体震动本身可以成立；只有重新估价继续改变后续资源、关系、敌意、战术或信息流时，才升级成 Ripple / Canon。
+- **高价值 Asymmetry Reveal 要反复做 Public Proof，而且三条线共享精确力量主尺**：Core Asymmetry 首次被看见、新层级/质变、新旧优势首次复合、进入更高圈层后第一次被重新观察、或旧社会估值已明显落后时，按现场条件允许三条并列爽点同时成立：真实观众的 Collective Shock、懂行者的 `Ruler Calibration`、关键人物的 `Behavioral Repricing`。若事件与主力量有关，三条线用同一个精确坐标工作：群体震动承受“43级击败58级 / 三星打五星 / 开脉4重越凝罡1重”这种明确差距带来的现场重量；懂行者直接说明双方精确位置、正常差距与这次超标在哪里；关键人物再因为“精确位置 + 超标表现”改变报价、待遇、敌意、战术、招揽或准入。三者没有高低之分，大型公开节点可以一起吃满。**精确尺是 Reader Ruler，不是胜负公式**：低位者可以靠技能、装备、经验、环境与 Power Asymmetry 越级，越级胜利本身不能反推 `Current Power Position` 自动提升。只避免凭空造群众或让所有人轮流说同一套专业解释；短期群体震动本身可以成立，只有重新估价继续改变后续资源、关系、敌意、战术或信息流时才进入长期 Canon。
 - Core Fantasy 必须周期性重新证明“为什么这项力量仍值得追”，但不要求每阶段升级；兑现优先保留这项幻想最独有的**生活特权**，不只复用最容易安排的战术用途。长期重释也不能永远只落在世界层：Power / Character / 已批准旧人旧物旧关系自然存在可回收锚点时，保留主角级重释纵深，但不为 Personal Myth 凭空补隐藏身世或未批准旧史。
 - **AGGRESSIVE Payoff Bias**：因果已支持的主 payoff 真正落地，不无故降成资格/认可/以后再给；大胜可以自然连带主奖品 + 钱/资源 + 招揽/入口，秘境可以有主目标外惊喜，大型阶段可以同时带来据点、队伍、产业、商路份额或长期收入。奖励数量本身不是失败，只淘汰无因果到账与同窗口近似奖励抹平真实牺牲。
 - **Character relevance ≠ Story Engine authorization**：除非作者明确选择职业/制度/经营题材，责任、精确、审计、边界、路线、损失归因等职业性倾向只作为低权重局部偏好；即使它们与 World 的公共资源/路线/治理素材高度匹配，也不能因此连续成为大型阶段的共同解题语法。主角不是多方协调员。大型阶段优先先锁定少数具体 Desire / Major Reward Anchor，再把公共资源实施压到大方向选择与直接后果。

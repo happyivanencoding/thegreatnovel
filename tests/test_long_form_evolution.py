@@ -35,6 +35,14 @@ WORLD = """# PROTAGONIST-BLIND WORLD VISION
 ## 力量体系与正常值
 武者以真气淬体；开脉、凝罡、化域是当前公开大档。
 
+### 精确力量主尺｜Frozen Grammar
+主尺类型：大境界+数字子级
+主尺名称：真气阶
+精确位置格式：{大境界}{N}重
+数字精度规则：每个大境界1—9重
+当前可见范围：开脉1重—化域9重
+当前大档位：开脉、凝罡、化域
+
 ## 社会现实与身份
 青州有宗门、商盟和军府；中域只被确认更强、更大，尚未展开。
 
@@ -73,6 +81,7 @@ POWER = """# POWER SEED｜借一式
 
 HUMAN = """# HUMAN SEED｜顾野／想赢得漂亮
 ## 世界中的初始位置与成长环境
+开局精确力量位置｜主尺：真气阶｜精确位置：开脉3重
 山城普通家庭。
 ## Core Obsession
 喜欢赢，也喜欢真正懂行的人看见自己赢得漂亮。
@@ -125,6 +134,7 @@ def apply_chapter_one_state(tmp_path: Path, book_id: str = "evo") -> None:
 
 # Proposed Persistent Canon
 ### Power / Capability
+Current Power Position｜主尺：真气阶｜精确位置：开脉6重
 顾野仍保有借一式；现已能保存三式。黑曜长刀可临时改变重量。
 
 ### Active Relationships
@@ -166,7 +176,7 @@ def test_world_expansion_is_forward_only_and_does_not_stale_origins(tmp_path: Pa
     directory = setup_book(tmp_path)
     result = approve_world_expansion(
         "evo",
-        "# WORLD EXPANSION\n\n## 新增公共现实与普通生活\n中域有沿大河建立的武城群。",
+        "# WORLD EXPANSION\n\n## 新增公共现实与普通生活\n中域有沿大河建立的武城群。\n\n## 新力量 / 威胁 / 身份 / 价值尺度\n### 精确力量主尺延展｜Macro\n沿用主尺：真气阶\n主尺语法改动：NONE\n新增可见范围：化域9重—天门9重",
         tmp_path,
         scope="macro",
         effective_from=1,
@@ -367,6 +377,11 @@ def test_refreshed_outline_reads_effective_world_and_current_character(tmp_path:
 ## 新增公共现实与普通生活
 中域沿大河分布着十二座武城。
 ## 新力量 / 威胁 / 身份 / 价值尺度
+### 精确力量主尺延展｜Macro
+沿用主尺：真气阶
+主尺语法改动：NONE
+新增可见范围：化域9重—天门9重
+
 化域在青州近乎传说，在中域只是能独领一支商队的门槛。
 ## 新地点、势力与公共识别
 百铸台是公开出售高阶兵器的中立重镇。
@@ -437,6 +452,11 @@ def test_api_periodic_refresh_flow_requires_fresh_current_character(
 ## 新增公共现实与普通生活
 中域武城群沿大河存在。
 ## 新力量 / 威胁 / 身份 / 价值尺度
+### 精确力量主尺延展｜Macro
+沿用主尺：真气阶
+主尺语法改动：NONE
+新增可见范围：化域9重—天门9重
+
 化域在这里不再是顶点。
 ## 新地点、势力与公共识别
 百铸台是公开兵器重镇。

@@ -10,6 +10,8 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from .power_ruler import current_power_position_from_sources
+
 
 WORLD_EXPANSION_DIR = "world_expansions"
 HUMAN_DEVELOPMENT_DIR = "human_development"
@@ -242,6 +244,7 @@ def compile_current_character(
     )
     active, persistent = _canon_memory_sections(status_text)
     power = _canon_subsection(persistent, "### Power / Capability")
+    current_power_position = current_power_position_from_sources(persistent, human_origin)
     relationships = _canon_subsection(persistent, "### Active Relationships")
     identity = _canon_subsection(persistent, "### Identity / Access")
     knowledge = _canon_subsection(persistent, "### Knowledge / Enemy State")
@@ -264,6 +267,9 @@ def compile_current_character(
         "",
         "## Power Origin Core｜Frozen",
         power_origin or "（未提供 Frozen Power Core。）",
+        "",
+        "## Current Power Position｜Exact Public Ruler",
+        current_power_position or "（当前精确力量位置尚未进入 Canon；不得用战绩或模糊强弱替代。）",
         "",
         "## Current Power Portfolio｜Canonical Additions",
         power or "（Canon 尚未单独维护 Power / Capability；以下 Current Canon Facts 仍为权威。）",

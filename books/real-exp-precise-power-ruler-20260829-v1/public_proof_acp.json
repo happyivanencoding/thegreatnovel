@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 21.082,
+  "sessionId": "01a04cff-cdff-7921-8bc3-7858fd7b01f6",
+  "text": "# 正式正文\n\n秦锋的最后一击压着擂台砸下。\n\n顾野正面迎上，灵力43级的力量没有突然拔高。就在两人接触的刹那，他把已经看清的动作复制到秦锋身侧的另一处真实位置。\n\n同一记重击，从正面与侧后同时落下。\n\n秦锋没有预判到那一击，身体被两股力量夹住，踉跄着退了七步，膝盖撞在擂台边沿。\n\n顾野站在原地，胸口起伏得很厉害。\n\n擂台下，数百名学员、导师和三名招生负责人同时安静下来。看台上的议论像被人一把掐断，过了好几息，才轰地炸开。\n\n老导师眯了眯眼，声音不高，却让附近的人都听清了：“秦锋，灵力58级，大宗师。顾野，灵力43级，宗师。通常差五级都难正面赢，这已经跨了一个十级大档。”\n\n有人倒吸了一口凉气。\n\n顾野抹掉嘴角的血，仍站在原地。他没有升级，灵力等级依旧是43级。\n\n招生席上，三名负责人迅速交换了眼神。最先起身的那人取回顾野刚领到的普通登记牌，当着众人的面换成了另一块黑色牌子。\n\n“顾野，”他看着擂台上的少年，“普通招揽规格作废。今晚单独谈，顶级学院的正式邀请，由我们负责人亲自送到你手里。”\n\n秦锋撑着擂台边沿抬头，脸色难看。\n\n顾野看向他，抹了抹嘴角，笑了笑：“还打吗？”",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 34729,
+      "inputTokens": 23810,
+      "cachedReadTokens": 9984,
+      "outputTokens": 935,
+      "thoughtTokens": 516
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 34729,
+          "inputTokens": 23810,
+          "cachedInputTokens": 9984,
+          "outputTokens": 935,
+          "reasoningOutputTokens": 516
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 34729,
+              "inputTokens": 23810,
+              "cachedInputTokens": 9984,
+              "outputTokens": 935,
+              "reasoningOutputTokens": 516
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

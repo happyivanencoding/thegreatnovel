@@ -65,7 +65,7 @@ FANTASY_COMPOUNDING_DIRECTION = """幻想复利优先于操作流程复利：长
 
 RELATIONSHIP_RECONFIGURATION_DIRECTION = """Relationship Reconfiguration（Story Program 创作方向，不新增字段或 Hard Gate）：值得长期展开的核心优势可以改变原本默认成立的人际与博弈关系，但 **Character Autonomy ≠ Symmetric Stakeholder Power，Relationship Reconfiguration ≠ Permanent Renegotiation**。配角自治只要求人物有自己的欲望并据此行动，不要求每个人都维持制度意义上的独立、平等议价或拒绝靠近主角。关系可以因欲望变得更近、更远、更依赖、更敌对、更不对等或彻底换位；这些都可以是自主选择。关系重构的价值在于让上一轮故事改变以后“谁会怎样对待谁”，而不是把所有关系都改写成安全、理性、条件谈判。探索、战斗、谜团、生存与世界奇观仍可成为主发动机。"""
 
-ASYMMETRY_REVEAL_PAYOFF_DIRECTION = """Power Asymmetry Reveal / Social Proof（软原则，不新增字段或 Hard Gate）：主角在他人面前第一次显露新非对称优势、新层级或意外复合时，先让超标结果发生。公开场合如果本来就有足够见证者，**群体震动 / 全场鸦雀无声 / 喧哗骤停 / 所有人震惊 / 目光集中等场面反应本身就是正当爽点；懂行者的 Ruler Calibration 与关键人物的 Behavioral Repricing 同样是正当爽点，三者没有高低之分，也不要求相互替代。大型 Public Proof 节点默认允许三者一起吃满。** 群体反应负责让读者感到“整个场子真的被撼动”，最有资格者再用短而明确的判断说明正常值、主角具体超出哪里、为什么罕见；随后让至少一个真正有利益/关系位置的人通过改口、加价、退距、换战术、招揽、敌视、保护或重新安排准入等行为证明社会价格已经改变。没有真实围观者时不凭空造群众；普通重复使用也不反复演同一套震惊，但第一次公开、第一次新层级、第一次新复合、进入更高圈层后第一次被看见、或旧估值明显落后时，允许把这一轮 Public Proof 吃满。**社会震荡强度要跟突破层级一起升级**：地方级异常可以局部改价；一城核心、王朝高位、世界顶层这类跨档，必须先让身份、待遇、机会、敌人策略和传奇重量至少有一项明显落地，再进入普通结算。不要刚完成世界级突破就用“钱什么时候到账”立刻关闭高潮；先让这个世界知道主角现在是什么分量，再允许人物用自己的性格接下一句。"""
+ASYMMETRY_REVEAL_PAYOFF_DIRECTION = """Power Asymmetry Reveal / Social Proof（软原则，不新增字段或 Hard Gate）：主角在他人面前第一次显露新非对称优势、新层级或意外复合时，先让超标结果发生。公开场合如果本来就有足够见证者，**群体震动 / 全场鸦雀无声 / 喧哗骤停 / 所有人震惊 / 目光集中等场面反应本身就是正当爽点；懂行者的 Ruler Calibration 与关键人物的 Behavioral Repricing 同样是正当爽点，三者没有高低之分，也不要求相互替代。大型 Public Proof 节点默认允许三者一起吃满。** 精确力量主尺现在是这三条线的共同坐标：①群体震动不是空喊“好强”，而是让现场知道一个明确的数字差/跨档事实真的发生了；②最有资格者的 Ruler Calibration 在当前 Public Proof 与主力量相关时，优先直接说出主角**当前精确位置**、正常同位置/对手精确位置，以及这次到底越了几级/几星/几重或跨了哪一档；③ Behavioral Repricing 必须让至少一个真正有利益/关系位置的人因为这个**精确位置 + 超标表现**改口、加价、退距、换战术、招揽、敌视、保护或改变准入。**精确尺只校准位置，不决定战斗结果**：越级胜负仍由技能、装备、环境、经验与 Power Asymmetry 共同造成，不能把“赢了高等级”反推成主角等级自动提升。没有真实围观者时不凭空造群众；普通重复使用也不反复演同一套震惊，但第一次公开、第一次新层级、第一次新复合、进入更高圈层后第一次被看见、或旧估值明显落后时，允许把这一轮 Public Proof 吃满。**社会震荡强度要跟精确跨档幅度一起升级**：地方级小越级可以局部改价；大数字差、跨大境界、一城核心、王朝高位、世界顶层这类跃迁，必须先让身份、待遇、机会、敌人策略和传奇重量至少有一项明显落地，再进入普通结算。不要刚完成世界级突破就用“钱什么时候到账”立刻关闭高潮；先让这个世界知道主角现在到底是几级/几星/几重、这意味着什么，再允许人物用自己的性格接下一句。"""
 
 WORLD_INDEPENDENCE_NARRATIVE_WEIGHT_DIRECTION = """World Independence ≠ Narrative Equal Weight：独立世界只要求没有主角时，仍有具体的人在追求东西、具体事件即将发生、值得进入的地点/奇观/危险继续存在；不要求为所有利益方建立完整政治经济模型，也不要求每一种真实利益获得同等叙事权重。**世界可以明显偏向核心幻想，甚至大量提供与主角能力高度契合的强敌、宝物、遗迹、职业生态或奇观；这在商业男频中常常是优点。** 真正要避免的是世界被核心能力完全解释：所有重要人物只为提供下一次能力用法，所有冲突都只是下一关，所有世界规则都由金手指语义派生。真实存在也不等于值得成为主发动机；核心幻想、主角人生牵引和当前最馋人的故事对象决定叙事权重。"""
 
@@ -99,7 +99,7 @@ Outline 在 Future 10 的该章 `具体剧情` 中保留“**具名机会 + 当�
 
 DIRECTOR_PLAN_COMPRESSION_RECOVERY = """Director Plan Compression Recovery（不新增 authority）：Future 10 的单章条目只是当前剧情块的压缩投影，不能反过来擦掉同一 Outline 剧情块里已经批准的具体因果。若当前章条目写“某试场前训练 / 为某招募准备 / 争取某资格”等泛化措辞，而 `当前剧情块` 已明确这是哪个**具名机会**、为什么值得争、成功参与通常打开什么，Director 必须恢复“具体机会名 + 当前已知价值”到本章八字段最相关位置。**Long Block 补足 Chapter Plan 的压缩损失，但不能改变章事件、提前宣布结果或从未来章偷新事实。** 只有两层计划明显指向同一当前行动理由时才恢复；无法确认同一对象时保持章计划原样。"""
 
-PERSISTENT_READER_RULER_DIRECTION = """Persistent Reader Ruler（长期读者坐标软原则，不新增字段、战力数据库或 Hard Gate）：世界前台的力量、战绩、价值、天赋/适配、技法熟练度、装备品阶、排名、身份与世界层级，都是读者判断优越感、风险和欲望距离的 ruler；当前事件碰到哪把尺，就优先校准哪把，不要求力量尺独占，也不合成单一总战力分。每当发生显著突破、新能力/新装备/血脉或传承变化、公开测试/比赛、新强敌、越级胜负、高价值获得或世界换挡时，通过当前事件自然刷新：主角现在大致在哪一档 / 对象值在哪一档、正常同档能做到或值到什么程度、这次哪里超标、下一档还有什么可见距离。**Ruler = Compression, not Exposition**：当动作与结果已经让一个事实成立时，优先用一次最相关的、已由 World / approved Story 提供的 benchmark 或懂行者比较替代多轮验证，然后立即推进到新的选择、机会、敌意、获得、关系或行动。Benchmark authority 在上游：Outline / Director 只选择和投影已有基准，Writer 不临时发明互相冲突的公斤、米数、价格或新等级。不要每章报表；目标是让读者在关键换挡后持续知道“现在在哪档、哪里不讲理、眼前东西到底有多值”。"""
+PERSISTENT_READER_RULER_DIRECTION = """Persistent Reader Ruler（长期读者坐标软原则，不新增战力数据库）：World Root 的**精确力量主尺**是主角力量成长的固定主坐标；主角在任何时点都应存在一个唯一 `Current Power Position`（几级 / 几星 / 几重 / 哪个数字序列），World Expansion 只延展范围，不重造主尺 Grammar。战绩、价值、天赋/适配、技法熟练度、装备品阶、排名、身份与世界层级仍可作为其它 ruler，但不能把精确主尺重新压成“大致低/中/高档”，也不合成单一总战力分。每当发生显著突破、新能力/新装备/血脉或传承变化、公开测试/比赛、新强敌、越级胜负、高价值获得或世界换挡时，通过当前事件自然刷新：主角**精确在哪一位**、对象精确/大致在哪一位、正常同位置能做到什么、这次超出了多少、下一精确位置/下一大档还有多远。**Ruler = Compression, not Exposition**：一句“43级对58级”“三星斗王打赢五星斗王”往往比三段模糊解释更有效；动作与结果已经成立后，用一次最相关的精确位置 + benchmark / 懂行者比较完成校准，然后立即推进新的选择、机会、敌意、获得、关系或行动。精确位置是公开坐标，不是胜负公式：越级、装备、技能、环境与 Power Asymmetry 继续允许打破同级默认。不要每章报表；重点在突破、越级、新圈层与重大 Public Proof 时让读者持续知道“到底几级、差几级、为什么这次不讲理”。"""
 
 OUTLINE_STATE_ADVANCE_DIRECTION = """State Advance After Proof / Choice → Consequence（Outline 软规划原则，不新增字段、状态配额或 Hard Gate）：一个读者问题已经被动作/结果与一次足够的世界内 ruler 校准回答后，不再把“换一批证据继续证明同一结论”规划成独立 story beat；社会证明只有当它会改变身份、机会、敌意、关系、资源、行动入口或重要人物下一步时才继续占用故事时间，否则一次短反应即可。重大选择也不是天然的一整章：当选项、私人欲望与主要代价已经清楚，尽快让人物真正选择，后续篇幅优先进入这个选择造成的新局面。**Stage Settlement = Consequence, not Process Carrier**：大事件已经通过正文结果、现场见证或既有 Canon 让“谁做了什么”足够清楚时，报告、登记、责任说明、复盘、资格发放、赔付或其它程序只压到一句或背景；阶段结算的前景应是有分量的人怎样重新估价、主角实际得到/失去什么、Rival 怎样换位、谁主动找上门，以及下一件更值得想要的机会怎样出现。纸、牌、契约可以确认结果，但除非它们本身就是争夺对象，不要让它们成为升格的主要戏剧载体。**十章批次不是把当前剧情块拉长到十章的配额**：某个锚点或剧情块已经自然完成，就立即进入下一个锚点/相邻剧情块，即使十章还剩很多位置；不要把一次认可拆成确认章、赔付章、专业展示章、资格发放章、再考虑章来填满批次。允许一章只有一条主线，不要求每章塞多个事件；要求的是旧状态一旦成立，就不要原地提高置信度，而要让故事继续产生新的不可逆事实。"""
 
@@ -741,7 +741,7 @@ Curated Context 为空时，使用下方明确提供的 fallback；这不是失�
 6. **主角永远不是协调员。** 如果 Primary 把已冻结的大方向事件实现成多段“谁守哪里、谁撤哪里、谁赔什么、谁承担哪部分、谁见证归属、怎样把多方需求同时安排妥当”，而这些实施本身没有新增选择/失败/反制/关系变化/不可逆结果，Reviser 应激进压缩成最短因果，把前景还给主角真正的决定、力量动作、私人欲望、Rival 反应与结果。可以保留 Mission 已批准的“大方向选择和世界后果”，但不保护为它服务的协调流程。Preservation First 保护正确故事，不保护 process carrier。
 7. 阶段结算优先保留重新估价、实际得失、Rival 换位、Reward、新机会和新欲望。报告、登记、责任说明只是载体；可以压缩载体，但删除任何段落前都要确认：删掉后是否会丢失新的 State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity。若会，绝不能删。
 8. **Backstage Abstraction Translation**：Planning/Authority 中的“身份入口、行动空间、社会重新定价、世界入口、责任边界、持有状态”等分析意义可以保留在后台，但人物对白和贴身叙述若直接像系统说明书，Reviser 应在不改事实的前提下翻译成人物会说的话、具体待遇或具体动作。不要做禁词替换；判断标准是当前人物是否真的会这样说，以及读者是否能从具体后果理解同一意义。
-9. **Public Proof 三路并列，不替作者克制**：若 Primary 已经发生重大公开超标、新层级或新复合，且现场本来存在足够见证者与懂行者，群体震动（包括全场鸦雀无声、所有人明显震惊、喧哗骤停等）、懂行者短 Ruler Calibration、关键人物 Behavioral Repricing 三者都是独立有效的爽点，没有高低之分。Primary 已经写对的任何一路默认保留；若某一路明显缺失，而 Frozen World / Mission / Curator 已经提供观察者与尺度，Reviser 可以做最小补足。不得因为担心“吹捧”“过火”主动压掉合法的群体高光；也不凭空造围观者或重复演同一层级的震惊。**Creative Intensity 不由 Reviser 擅自保守化**：如果“克制一圈反应”和“把公开震动吃满”都 authority-safe，默认保留更强的现场版本，最终强度由作者在实验中判断。
+9. **Public Proof 三路并列，并共享精确力量尺**：若 Primary 已经发生重大公开超标、新层级或新复合，且现场本来存在足够见证者与懂行者，群体震动（包括全场鸦雀无声、所有人明显震惊、喧哗骤停等）、懂行者短 Ruler Calibration、关键人物 Behavioral Repricing 三者都是独立有效的爽点，没有高低之分。若这次 Public Proof 与主力量有关，Ruler Calibration 优先使用 Frozen World / Canon 已有的**精确位置**：例如“43级对58级”“三星对五星”“开脉4重却赢凝罡1重”，明确告诉读者差多少；群体震动承担这个差距落到现场后的重量，Behavioral Repricing 则让待遇/敌意/报价/战术因为这个精确位置与超标表现真正改变。**不要把胜负反推成升级**：主角43级越级打赢58级，除非 Mission/正文另有明确突破因果，State 仍是43级。Primary 已经写对的任何一路默认保留；若某一路明显缺失，而 Frozen World / Mission / Curator 已经提供观察者与尺度，Reviser 可以做最小补足。不得因为担心“吹捧”“过火”主动压掉合法的群体高光；也不凭空造围观者或重复演同一精确位置的震惊。**Creative Intensity 不由 Reviser 擅自保守化**：如果“克制一圈反应”和“把公开震动吃满”都 authority-safe，默认保留更强的现场版本，最终强度由作者在实验中判断。
 
 10. **大节点先让爽点落地，再回归人物口吻**：若本章是世界高位突破、稀有能力首次公开或重大复合胜利，第一版已经有足够因果但社会重量落得过轻，优先把已批准的群体反应 / 专业判断 / 关键人物待遇变化补在普通结算之前。人物随后用自己一贯的贪钱、好胜、嘴硬、享受或其它口吻接回日常完全可以，但不能让这个私人收尾抢在世界重新估价之前把高潮关掉。**这个节点允许明显过量的爽感**：同一突破自然同时带来震动、名声、报价、招揽、敌意、入口或生活待遇变化时，不因为“一次变化太多”主动削减；只要每项都有当前因果即可。若多个 authority-safe 强度都成立，Reviser 不替作者选最克制版；受控实验必须保留至少一个明显更激进的真实输出给作者直接判断，不能先让任何自动 Judge 代替作者淘汰。
 
@@ -1299,11 +1299,11 @@ SPECIALIST_PROMPT_MODES = frozenset(
 
 #: state_delta 模式的内置模板（页面不提供可编辑模板；为空时由 generate_prompt 自动使用）。
 #: 职责限定为书记员：只根据正式正文更新状态区提案；不检查 BOOK CONTRACT，不是章节门禁。
-DEFAULT_STATE_DELTA_TEMPLATE = """你是透明协作的轻量 State Extraction 书记员。只根据下方当前章节编号、当前规范化 CANON INDEX 和本次正式章节正文，提取下一章真正需要的状态变化。不检查 BOOK CONTRACT，不复盘写作质量，不输出审计，不调用任何外部服务。
+DEFAULT_STATE_DELTA_TEMPLATE = """你是透明协作的轻量 State Extraction 书记员。只根据下方当前章节编号、精确力量主尺/当前位置 Authority、当前规范化 CANON INDEX 和本次正式章节正文，提取下一章真正需要的状态变化。不检查 BOOK CONTRACT，不复盘写作质量，不输出审计，不调用任何外部服务。
 
 本次正式正文是 State Delta 的最高事实来源，也是本次唯一的新事实来源；旧 CANON INDEX 只提供此前状态。AUTHOR NOTES 是作者元控制，不属于 Canon 事实，必须由代码原样保留。
 
-BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、Reference Programs 与前两章正文都不在本次输入中，不要猜测它们。
+BOOK CONTRACT、完整 World、完整百章计划、十章计划、prose profile、GBrain、Reference Programs 与前两章正文都不在本次输入中；只额外提供精确力量主尺的窄 Authority 投影与当前/开局精确位置，不要从其它维度猜设定。
 
 最终只输出以下四个一级标题；内容保持短、可直接替换：
 
@@ -1314,7 +1314,7 @@ BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、Ref
 输出更新后的简短长期 Canon：已证明能力、能力限制、关系阶段、持久资源、长期身份、确认知识、长期伤势和重要敌我状态。只保留以后仍会改变选择的信息。
 只有真实需要时才维护以下轻量小节；已有仍有效事实要保留，发生质变才更新，不为完整强行填满：
 ### Power / Capability
-只写已经真实获得、证明或改变的能力/身体/武器权限与关键边界。开局 Frozen Power Core 不在这里重写；这里承载后续 Power Delta 与当前 Advantage Stack 的已发生事实。
+**第一行固定维护且不得省略：** `Current Power Position｜主尺：<精确主尺名>｜精确位置：<唯一数字位置>`。它是当前公开力量主尺坐标，不是总战力分。若本章没有明确改变精确位置，逐字保留输入中的 Current/Initial Position；只有正式正文明确让主角从一个精确位置进入另一个精确位置时才更新。**打赢更高等级对手、承受更高等级攻击、被人重新估价，都不能推断成等级本身变化。** 随后只写已经真实获得、证明或改变的能力/身体/武器权限与关键边界。开局 Frozen Power Core 不在这里重写；这里承载后续 Power Delta 与当前 Advantage Stack 的已发生事实。
 ### Active Relationships
 人物｜当前目标或立场｜与主角当前关系｜最近一次重要变化｜未决动作/承诺。重复登场的重要人物如果正文已经明确并会影响后续连续性的公开身份事实（如固定性别称谓、年龄/资历描述、正式职位），用最短括注保留一次；不要为不重要人物建档，也不要从名字猜性别/年龄。
 ### Identity / Access
@@ -2300,8 +2300,8 @@ def generate_prompt(
             parts.append(_input_block("最近 1—3 章摘要", recent_summaries))
         parts.append(_input_block("当前状态", status_display))
     elif mode == "state_delta":
-        # State Delta 只注入四组输入；默认不注入完整 BOOK CONTRACT、完整百章计划、
-        # GBrain、Reference Programs、prose profile 或前两章完整正文。
+        # State Delta 保持窄输入：章节号 + 精确力量尺/当前位置 + Canon + 最终正文；
+        # 默认不注入完整 World / BOOK CONTRACT / 百章计划 / GBrain / prose profile / 前两章正文。
         status_block = _extract_markdown_block(book_content, CURRENT_STATE_HEADING)
         if canon_memory_has_labels(status_block):
             fields = parse_canon_memory(status_block)
@@ -2340,8 +2340,37 @@ def generate_prompt(
                 f"{canon_index}\n\n旧格式历史标题（仅用于识别旧状态区，不得输出或应用）："
                 "# Proposed Canon Index"
             )
+        from .long_form_evolution import effective_world_expansions
+        from .power_ruler import (
+            extract_current_power_position,
+            extract_initial_power_position,
+            project_expansion_precise_ruler,
+            project_root_precise_power_ruler,
+        )
+
+        ruler_parts: list[str] = []
+        if world_vision.strip():
+            ruler_parts.append(project_root_precise_power_ruler(world_vision))
+            for entry in effective_world_expansions(world_expansions, chapter_number):
+                local = project_expansion_precise_ruler(entry.body, scope=entry.scope)
+                if local:
+                    ruler_parts.append(local)
+        current_power_position = (
+            extract_current_power_position(canon_index)
+            or extract_initial_power_position(character_card)
+        )
         parts.append("# 页面当前输入（State Delta 上下文）")
         parts.append(_input_block("当前章节编号", str(chapter_number) if chapter_number else ""))
+        if ruler_parts:
+            parts.append(_input_block(
+                "PRECISE POWER RULER AUTHORITY｜精确主尺 Grammar + 当章有效范围",
+                "\n\n".join(part for part in ruler_parts if part),
+            ))
+        if current_power_position:
+            parts.append(_input_block(
+                "CURRENT / INITIAL POWER POSITION AUTHORITY｜无明确突破时原样保留",
+                current_power_position,
+            ))
         parts.append(_input_block(
             "CANON INDEX——当前规范化 Canon Index（已发生事实的压缩状态）",
             canon_index,

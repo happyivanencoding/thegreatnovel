@@ -1670,6 +1670,24 @@ Sol high 第一次同时看到：
 
 审计方法同步升级为 **`tgn-system-steward 0.3.8`**：保留 0.3.7 的 Small Grammar / Secondary Axis / Naming 审计，并把 Public Proof 改为三条并列通道；不再把真实群体震动默认判为低级。0.3.8 已通过 AgentDock package validate、install/activate 与 bounded Luna-high smoke；smoke 对“全场止声 + 专家尺度 + 立即改价”判 PASS，没有要求压低群体反应。
 
+### 14.8 Precise Power Ruler 强制 Authority + Public Proof 三线共尺（2026-08-29）
+
+用户明确要求几百章长篇不能只有“入潮→成炉→照域→镇海”这种粗档位，而应像成熟长篇一样始终知道主角**精确在几级 / 几星 / 几重 / 哪个数字序列**。这次把精确尺从软建议升级为 production Authority，不新增战力数据库或总战力分。
+
+冻结结构：
+
+- **World Root 必须有 `### 精确力量主尺｜Frozen Grammar`**，只允许三种简单形态：`连续数字`、`大境界+数字子级`、`数字序列`。固定写主尺名称、含 `{N}` 的精确位置格式、明确数字精度规则、当前可见数字范围与少量大档位；World 缺该结构不能批准。
+- **Human T0 精确位置**：Human Seed 仍然对 Power Seed 盲，但会额外看到只读的 Frozen Precise Ruler；在生活事实第一行冻结 `开局精确力量位置｜主尺：…｜精确位置：…`。Character Approval 会校验主尺名与数字位置，不允许只写“普通人 / 未入门 / 大概低阶”。
+- **Current Power Position**：`PERSISTENT CANON → Power / Capability` 第一行持续保存 `Current Power Position｜主尺：…｜精确位置：…`。只有最终正文明确突破才更新；越级胜利、承受高阶攻击、装备增强或社会重新估价都不能反推升级。后续 State 若漏写该行，runtime 确定性保留上一 Canon 位置；`CURRENT_CHARACTER.md` 单独投影当前精确位置，若尚未有 Canon 更新则回退 Human T0。
+- **World Expansion 延展 Range，不重写 Grammar**：`scope=macro` 必须明确 `沿用主尺`、`主尺语法改动：NONE`、`新增可见范围`，可以把 1—60 扩到 61—100，但不能把“每境1—9星”改成初/中/后期。真正独立 `scope=instance` 必须有自己的 `### 本地精确力量主尺｜Instance Grammar`，但明确不改写全局主尺；离开 instance 后本地尺随 Local World 退出章节 Authority。
+- **精确尺是 Reader Ruler，不是 Combat Formula**：技能、装备、经验、环境、克制与 Power Asymmetry 仍可造成越级；不建攻击力/防御力/总战力数据库，也不要求每章报数字。
+- **与 Public Proof 三条线强连接**：主力量相关大型 Public Proof 中，Collective Shock、懂行者 `Ruler Calibration`、关键人物 `Behavioral Repricing` 共同使用同一精确坐标。群体震动承受“43级击败58级”这种差距的现场重量；懂行者直接说双方精确位置、正常差距和超标点；关键人物再因为“精确位置 + 超标表现”改变报价、待遇、敌意、战术、招揽或准入。三条线没有高低之分。越级胜利后若没有另行批准的突破，State 仍保持原精确位置。
+- **Outcome Fidelity 支持数字里程碑**：现有条件 Repair 现在也识别“提升到 / 升到 / 达到 43级”等明确数字里程碑；“42级打赢58级”不能替代批准的“提升到43级”。
+
+真实 Luna-high smoke：`books/real-exp-precise-power-ruler-20260829-v1/`。World 样本生成 `锚力阶`：连续数字 1—100、每1阶可记录，当前 Horizon 只展开1—60并给四个读者大档，61—100只作为远方上限；同一输出明确说明等级不是胜负公式。首次自动验收只因 parser 不接受 `当前大档位：` 后的自然多行列表而失败，修 parser 后**同一原输出直接 PASS**，没有放松 validator。Public Proof 样本冻结主角43级、对手58级、胜利不升级；弱 Primary 只有“有点东西 / 互相看一眼”，Treatment Reviser 最终同时恢复：数百人先止声后炸开 → 导师直称58 vs 43、正常差5级已难赢且跨一个十级大档 → 招生负责人当场废除普通招揽规格、换牌并升级正式邀请，同时明确主角仍是43级。三线联动 PASS。
+
+专项 + 全项目回归当前 **370/370 PASS**。完整实验说明见 `books/real-exp-precise-power-ruler-20260829-v1/FINAL_REPORT.md`。这次同时把长期审计方法升级为 **`tgn-system-steward 0.3.9`**：新增 Precise Ruler authority-chain 与 Public Proof 三线共尺审计；已通过 `skill-authoring` lint（0 error / 0 warning）、package validate、install/activate，并用“43级击败58级但正文只有群体震动”的已知样本做 Luna-high bounded smoke，正确判 `PARTIAL PASS`、缺 Ruler Calibration + Behavioral Repricing，并明确 State 仍保持43级。尚未解决：还没有真实500章 E2E，因此只冻结精确尺 Authority / State / Expansion / Public Proof 接线，不声称已证明最优等级数量或最佳长期升级频率。
+
 ---
 
 ## 15. How to Work With the User

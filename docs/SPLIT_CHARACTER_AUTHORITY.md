@@ -43,10 +43,10 @@ Reader-facing 世界规则先写具体作用，再命名：基础力量应能用
 
 ### 2.1 World Root 与 Forward World Expansion
 
-`WORLD_VISION.md` 不再被理解为“开书时必须把 500 章所有具体世界写完”。它冻结世界根语法、当前可见世界、公共正常值和足够的上升余量。故事真正走到边界时，使用 append-only `world_expansions/expansion-NNNN.md` 向未来增加新世界层；旧 World Root 不被改写。
+`WORLD_VISION.md` 不再被理解为“开书时必须把 500 章所有具体世界写完”。它冻结世界根语法、当前可见世界、公共正常值和足够的上升余量。**其中精确力量主尺 Grammar 必须在开书时冻结**：主尺只能采用连续数字、大境界+数字子级、数字序列三种简单形式，并明确数字范围与精确位置格式；这把尺是长期 Reader Ruler，不是战斗公式。故事真正走到边界时，使用 append-only `world_expansions/expansion-NNNN.md` 向未来增加新世界层；旧 World Root 不被改写。
 
-- `scope=macro`：普通长篇进入新大陆、新文明、新力量圈层或更高社会/世界层；
-- `scope=instance`：多世界副本流的一次独立 Local World，可设置 `Effective Until Chapter`，离开后不再进入章节 World Authority；
+- `scope=macro`：普通长篇进入新大陆、新文明、新力量圈层或更高社会/世界层；若力量上限扩大，只能延展 Root 精确主尺的可见范围，`主尺语法改动=NONE`；
+- `scope=instance`：多世界副本流的一次独立 Local World，可设置 `Effective Until Chapter`，离开后不再进入章节 World Authority；每个独立 instance 也必须有自己的本地精确力量尺，但本地尺不回写全局主尺；
 - Expansion 触发来自 Story Program 的 `World Horizon Handoff` / 实际 World Entry，不是固定百章税；
 - World Expansion 用 Luna high fresh context，只读 World Root、旧 Expansion、明确 `Canon → World State` 与 World-only craft；不读 Current Character、Power Stack、Human、关系、未来 Story；
 - Story Program 的 Handoff 只负责 orchestration，**不注入 World Agent**。这样当前主角的需求不会偷偷变成下一世界的设计要求。
@@ -70,9 +70,9 @@ Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个
 因此长篇 Power Authority 是两层而不是重抽 Seed：
 
 - `Power Origin Core`：`CHARACTER.md` 中 Frozen Power，保存开局核心异常与根边界；
-- `Current Power Portfolio`：State Extraction 在 `PERSISTENT CANON → Power / Capability` 维护已经真实获得/证明的后续 Power、身体变化、兵器权限与 Advantage Stack。
+- `Current Power Portfolio`：State Extraction 在 `PERSISTENT CANON → Power / Capability` 维护已经真实获得/证明的后续 Power、身体变化、兵器权限与 Advantage Stack；第一行固定承载 `Current Power Position｜主尺：…｜精确位置：…`。Human Seed 冻结 T0 精确位置，后续 State 只在正文明确突破时更新；若某次 State 漏写，代码保留上一位置，不允许精确坐标因抽取遗漏消失。
 
-后期拿到神兵、传承或第二种非对称优势，只更新 Current Power；不把它回填成“主角从一开始就是这个能力”。
+后期拿到神兵、传承或第二种非对称优势，只更新 Current Power；不把它回填成“主角从一开始就是这个能力”。精确位置只说明公开主尺坐标：越级胜利、装备或 Power Asymmetry 可以让低位者打赢高位者，但不能因此自动改写 `Current Power Position`。
 
 ## 4. Human Seed
 
@@ -138,7 +138,7 @@ Collision 可以补少量**非奠基性的过去经历、共同往事或旧事�
 
 大型阶段保持轻量：为什么现在发生、谁想要什么、主角关键选择/行动、主要阅读满足、`Stage Delta`、下一阶段为何自然发生。`Stage Delta` 只写实际变化的维度；Power、获得、关系、身份、知识、敌人或世界变化都不是必填项。
 
-高价值获得与纵向复利是全书原则，不是阶段字段税。默认采用 **AGGRESSIVE payoff** 偏置：因果已支持的主奖励真正落地；Story Program / Outline 应尽早锁定当前大型阶段主要欲望对象与为什么值得馋，避免公共资源/责任小问题取代主奖励；大胜可以自然连带奖金/招揽/入口，秘境可以有主目标外惊喜，大阶段可以同时带来据点、队伍、产业或长期收入。奖励数量本身不构成失败，只禁止无因果到账与同窗口近似奖励抹平真实牺牲。Power Asymmetry 要长期形成优势栈：旧优势保留，新优势通过故事加入，并出现单项做不到的复合玩法；不要求每阶段新增。结构质变少而重，但 Fantasy Surface 可以持续偏丰富。Story Program 还会主动检查 World 已经成立的成熟 Secondary Fantasy Axis；Human 真被它的作品、胜负、钱、身份、审美、人物或生活方式牵引时才投入，Human 不想走就留给世界/配角。重大 Public Proof 有真实观众时，**群体震动、懂行者 Ruler Calibration、关键人物 Behavioral Repricing 三者并列、没有高低之分**，可以一起吃满；不以“克制”自动删群体震惊。反制只能从碰撞后的学习产生，并且长期 Rival 更新策略后至少一次要真实改变主角选择或局面；敌人不能只为机械克制主角而出生。
+高价值获得与纵向复利是全书原则，不是阶段字段税。默认采用 **AGGRESSIVE payoff** 偏置：因果已支持的主奖励真正落地；Story Program / Outline 应尽早锁定当前大型阶段主要欲望对象与为什么值得馋，避免公共资源/责任小问题取代主奖励；大胜可以自然连带奖金/招揽/入口，秘境可以有主目标外惊喜，大阶段可以同时带来据点、队伍、产业或长期收入。奖励数量本身不构成失败，只禁止无因果到账与同窗口近似奖励抹平真实牺牲。Power Asymmetry 要长期形成优势栈：旧优势保留，新优势通过故事加入，并出现单项做不到的复合玩法；不要求每阶段新增。结构质变少而重，但 Fantasy Surface 可以持续偏丰富。Story Program 还会主动检查 World 已经成立的成熟 Secondary Fantasy Axis；Human 真被它的作品、胜负、钱、身份、审美、人物或生活方式牵引时才投入，Human 不想走就留给世界/配角。重大 Public Proof 有真实观众时，**群体震动、懂行者 Ruler Calibration、关键人物 Behavioral Repricing 三者并列、没有高低之分**，可以一起吃满；主力量相关节点让三路共享同一精确力量主尺：群体震动承受明确等级/星级/重数差，懂行者直接说清双方精确位置与差距，关键人物再因“精确位置 + 超标表现”改变待遇/报价/敌意/战术。不以“克制”自动删群体震惊，也不把越级胜利误记成等级提升。反制只能从碰撞后的学习产生，并且长期 Rival 更新策略后至少一次要真实改变主角选择或局面；敌人不能只为机械克制主角而出生。
 
 ### 6.1 Story Refresh / Periodic Re-Collision
 
