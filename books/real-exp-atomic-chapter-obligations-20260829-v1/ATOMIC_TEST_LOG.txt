@@ -1,2 +1,2 @@
-.................................                                        [100%]
-33 passed in 1.31s
+python -m pytest -q temps/test_atomic_chapter_obligations.py
+33 passed in 1.32s

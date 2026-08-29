@@ -194,3 +194,13 @@ Frozen Authority 并没有这句已发生旧话。Delta 只改低潮窗口，因
 **Atomic Chapter Obligations：PARTIAL / Methodology and boundary spec pass.**  
 **Atomic fast route：FAIL AS PRODUCTION DEFAULT.**  
 **Production five-node chain：unchanged.**
+
+## 9. Validation
+
+- Focused Atomic boundary tests: **33 passed**.
+- Full project suite: **403 passed**.
+- Atomic experiment scripts compiled: **22**.
+- `git diff --check`: PASS.
+- `tgn-system-steward 0.3.14`: package validate / install / activate PASS; digest `sha256:d776d129c428a1eb1553f741190e8effa0487b545c35690fff10d4cfb1aa7c37`.
+- Bounded post-install smoke: `PARTIAL`，正确区分可冻结的 Stable Boundary Method 与不能冻结的 Experimental compiler / fast route。
+- Production chain、模型、ACP runner、前端、Direct API executor 均未修改。

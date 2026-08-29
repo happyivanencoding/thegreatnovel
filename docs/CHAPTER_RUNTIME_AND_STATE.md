@@ -54,13 +54,26 @@ Phase 1–3 已完成冻结输入、正常下游与最终正文 Reader + Authori
 
 ### Atomic Chapter Obligations 实验边界（2026-08-29）
 
-实验把 Frozen Mission / Reader Release / Canon / World / Power / Human 编译成 typed obligations，再对 Paragraph-Delta 应用后的完整正文做 deterministic closure。当前硬义务包括 `actor → action → object`、Direct Result、State Change、Ending、ownership / transfer、money / payment、time window、precise power position / boundary、排程 Reader Release、unresolved-fact boundary 与明确关系阶段；任一 hard 项 `FAIL / UNKNOWN / CONFLICT` 都必须走 Full Reviser，compiler 遇到 unsupported clause 或跨源冲突也 fail closed。
+Atomic v0.3 将 Frozen Mission / Reader Release / Canon / World / Power / Human 与 Primary evidence 编译成 typed obligations，并对 Paragraph-Delta 应用后的**完整最终正文**做 deterministic closure。它不是 Writer Prompt、章节配额、第二个 Director 或 LLM classifier；任一 hard obligation `FAIL / UNKNOWN / CONFLICT`，或 compiler 遇到 unsupported grammar / 真正 source conflict，都 fail closed。
 
-边界上必须明确：应收/资格不等于现金到账；临时占有不等于所有权；副本不等于原件；高阶承压/战绩不等于稳定升档；截止前行动不等于已经完成；开始消散不等于章末散尽；Reader Release 是 timing obligation，不是百科配额；Human cue 只有“同一具名人物 + 直接接触/近身治疗”同时满足才触发。
+当前稳定边界：
 
-`Public Proof` 与 protected commercial value 不得被硬化成写作配额。群体震动、懂行者校准、社会重新定价只检查本章已触发且上游批准的部分；欲望、关系、Reward、Surprise 与 Social Repricing 使用 `PRESERVE_IF_PRESENT`，只防止修订把已有商业价值磨平，不要求模型每章新增一段。
+- 当前 Mission 明确 actor > 当前 Primary 的显式人物 fallback > 远端 Human / Book 人名；旧原型不能覆盖当前主角。
+- `actor → action → object` 必须在同一局部动作域闭合；本体不能替代分身，甲角色不能完成乙角色动作。
+- Direct Result / State Change / Ending 分开；“能、准备、获得资格、形成依据、即将”都不是 terminal completion。
+- original / copy / custody / possession / use right / title 分开。
+- `received ≠ entitlement ≠ pending ≠ lost ≠ disputed`；首笔不能满足全额结清，未授权金额/单位不能进入正文。
+- stable tier / battle-scale output / temporary composite effect / cooldown / Public Proof ruler 分开；越级承压不自动升档。
+- Public Proof 只在上游触发时要求同一主角、同一器物/力量主题的 `performance → qualified ruler → behavioral repricing`；不能从无关段落拼装。
+- Reader Release 只约束明确排程事实的一次清楚释放；unresolved fact 是 no-invention boundary，不是反复写“仍未知”的配额。
+- Relationship 必须绑定同一 named counterpart；Human cue 只在同一人物 + 直接接触/近身治疗 + Frozen Human authority 同时成立时触发。
+- 欲望、关系、Reward、Surprise、Social Repricing 使用 `PRESERVE_IF_PRESENT`：只保护 Primary 已有商业价值，不要求每章新增。
+- Gate 扫描完整正文，不只看 Delta 修改处；Primary 已有的未授权历史回指也会阻止采用。
+- Full Reviser 不是安全金标；fallback 后仍需过同一 Gate，失败则是 `FULL_REVISER_RESIDUAL_FAILURE`，不能静默保存。
 
-v0.1 calibration 在当前领域样本上能安全放行已知 safe candidate 并拦截已知 bad mutation；Atomic-aware Delta 的 Authority blind 很强，但商业 Reader 多数仍偏现有 Full Reviser，独立重复运行的修改范围也不稳定。第二本书5/5 preflight fail closed，说明当前 compiler安全但领域过拟合。Residual-only blocker repair比把完整 Atomic Pack塞给模型更合理，但仍未证明 repeat / Reader / cross-book / fallback-adjusted speed同时过线。因此 production五节点链不变，Atomic模块不接入runtime。完整报告：`books/real-exp-atomic-chapter-obligations-20260829-v1/RESULTS.md`。
+最终证据：33项受控边界测试全部通过；12/12 known-bad mutations 被拦截；20章 shadow 中10/20可进入可判定区；第二本书5/5 preflight fail closed，说明当前 compiler 安全但领域覆盖不足。两次四章真实路线均为2章采用、1章 Full fallback、1章 Full 后仍 residual failure；observed cost through detection 名义快37.59% / 40.97%，但不是完整可交付速度，因为 residual repair 尚未完成。两次原始 Delta 只有1/4完全一致；v0.3真正采用且已有匿名 Blind 的第9、14章中，Reader为Atomic 1 / Control 1，Authority为Atomic 2。
+
+因此只冻结 Boundary Specification、校准协议、fail-closed 和 fallback 后再验证的方法论；Atomic compiler 与快路不接入 production。下一步必须先把 Named Entity、Power Scale、Resource Type、Relationship Counterpart 从结构化 Authority metadata 注入通用 Schema Compiler，在跨书有可解释覆盖后再生成新 Delta。完整报告：`books/real-exp-atomic-chapter-obligations-20260829-v1/RESULTS.md`。
 
 ## 节点职责
 

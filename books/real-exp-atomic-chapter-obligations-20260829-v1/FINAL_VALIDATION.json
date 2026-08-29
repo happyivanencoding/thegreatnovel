@@ -116,5 +116,26 @@
     "experimental_compiler": "PARTIAL_RESEARCH_ONLY",
     "fast_route": "FAIL_PRODUCTION_DEFAULT",
     "current_default": "Luna high Director -> Luna high Curator -> Terra high Primary -> Luna high Authority Reviser -> Luna low State"
-  }
+  },
+  "full_test_suite": {
+    "passed": 403,
+    "command": "python -m pytest -q"
+  },
+  "git_diff_check": true,
+  "atomic_scripts_compiled": 22,
+  "skill": {
+    "name": "tgn-system-steward",
+    "version": "0.3.14",
+    "package_digest": "sha256:d776d129c428a1eb1553f741190e8effa0487b545c35690fff10d4cfb1aa7c37",
+    "validated": true,
+    "installed": true,
+    "activated": true,
+    "smoke_verdict": "PARTIAL",
+    "smoke_knowledge_class": "Stable Principle (boundary protocol) + Experimental Hypothesis (compiler / fast route)",
+    "smoke_expected_behavior": true
+  },
+  "final_report": "RESULTS.md",
+  "boundary_spec": "BOUNDARY_SPEC.md",
+  "decision_table": "DECISION_TABLE.csv",
+  "evidence_index": "EVIDENCE_INDEX.json"
 }

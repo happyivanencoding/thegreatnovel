@@ -1741,14 +1741,26 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 本轮最终验证：全项目 `388 passed`；`tgn-system-steward 0.3.11` package validate / install / activate 完成，bounded smoke 将 Paragraph-Delta 判为 `PARTIAL`，只允许冻结速度信号与研究方向，不允许冻结 production route。
 
 
-### 14.11 Atomic Chapter Obligations Experiment（2026-08-29）
+### 14.11 Atomic Chapter Obligations v0.3（2026-08-29）
 
-为解决 Paragraph-Delta “快但修改范围不稳定”的问题，建立实验性 typed compiler + deterministic gate。当前 obligation family：Mission clause、actor-action-object、Direct Result、Terminal State、Ending、ownership/transfer、money/payment、time window、precise power position/boundary、Public Proof、Reader Release、unresolved fact、relationship state、Human cue 与 protected commercial value。Hard obligation 任一 `FAIL / UNKNOWN / CONFLICT` 即禁止采用 Delta；unsupported clause 与 source conflict 直接 preflight fallback，不让另一个 LLM猜安全。
+为解决 Paragraph-Delta “快但修改范围不稳定”的问题，建立实验性 deterministic typed compiler + Gate。当前 family：Mission clause、actor-action-object、Direct Result、Terminal State、Ending、ownership/copy/custody、money/payment、time window、stable power position / battle boundary / cooldown、Public Proof、Reader Release、unresolved fact、relationship state、Human cue、Primary已有的 desire / relationship / reward / surprise / social repricing，以及全文未授权历史回指。
 
-核心边界：entitlement/quote/contracted/paid/received/lost/disputed 分开；possession/custody/title/original/copy/dispute 分开；battle scale/pressure/result 不自动升级 stable tier；deadline/cooldown/terminal state 分开；Reader Release只约束已排程事实的可复述释放；unresolved允许新证据但不允许把旧史升级为确定结论；Human cue要求Human Core点名同一人物且现场有直接接触/近身治疗；Public Proof不是固定三段配额；欲望、关系、Reward、Surprise、Social Repricing只做 `PRESERVE_IF_PRESENT`。
+最重要的 decision model：
 
-当前证据：边界 calibration 对已知 safe/bad样本达到零已知漏报/误杀；Atomic-aware first run中Authority blind全部偏Atomic，但Reader多数偏现有Full Reviser，说明事实闭合不等于商业读感；独立repeat中Delta选择范围仍不稳定，Gate能阻止坏稿采用但不能让模型稳定；Gate-only能保护原始写法却会漏稀疏义务；Residual-only blocker repair只给模型具体失败项，是更合理的v0.2方向；第二本书5/5 preflight fail closed，证明v0.1安全但领域过拟合。production链、模型与effort均未改变。完整证据：`books/real-exp-atomic-chapter-obligations-20260829-v1/RESULTS.md`。
+1. `Current Mission explicit actor > explicit current Primary fallback > remote Human/Book name`；远端旧原型不能覆盖当前主角。
+2. terminal / pending / conditional / must-remain-unknown / preserve-if-present 必须分型；“能、准备、资格、依据、即将”不是完成。
+3. received / entitlement / pending / lost / disputed、original / copy / custody / title、stable tier / battle output / temporary effect / cooldown 分开。
+4. 首笔不能冒充全部结清，未授权金额/单位失败。
+5. Public Proof 必须是同一人同一题的 `performance → ruler → repricing`，不能跨无关段落拼装；不授权稳定升档。
+6. Unknown boundary 与 source conflict 分开；“不得补写 / 保持未知 / 缺少重复上下文”通常不是 Authority 冲突。
+7. Relationship 绑定同一 named counterpart；Human cue要求同一人物、具体接触/治疗 trigger和Frozen Human同时成立。
+8. 欲望、关系、Reward、Surprise、Social Repricing不是每章配额，只在Delta触碰Primary已有价值时保护。
+9. Gate必须扫描完整最终正文；第2章暴露出Primary已有未授权“少东家那句‘回去再算’”，即使Delta只改低潮窗口也必须fallback。
+10. Historical Full Reviser是shadow control，不是gold。第16章Delta与历史Full都未闭合分身/回潮楔 actor-object；一次显式Full fallback仍漏cooldown，累计比原Full慢27.4%且仍不可保存。
 
+最终校准：33项受控边界测试PASS；12/12 known-bad mutation recall；20章shadow仅10/20 preflight eligible；跨书5/5 fail closed。两次四章真实route均为2 ADOPT、1 FULL FALLBACK、1 FULL RESIDUAL FAILURE；observed cost through detection名义快37.59% / 40.97%，但不是完整production speed。原始Delta repeat只有1/4 exact；实际采用且hash与既有blind一致的第9/14章，Reader为Atomic 1 / Control 1，Authority为Atomic 2。
+
+最终分类：**Boundary methodology PASS；current compiler PARTIAL / research-only；Atomic fast route FAIL AS PRODUCTION DEFAULT。** Production五节点、模型与effort不变。下一步不是再加LLM classifier，而是做结构化通用Schema Compiler，并在跨书有可解释coverage后再测试Residual-only Full repair。完整证据：`books/real-exp-atomic-chapter-obligations-20260829-v1/RESULTS.md`。
 
 ---
 
