@@ -1892,6 +1892,74 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 
 ---
 
+49. 因 Split Authority 已经正确，就误以为设定搜索空间也自动足够；分权能防泄漏，但不替代 Authority 冻结前的大胆 Premise 搜索。
+50. 看到多个 fresh-context Agent 各自产出新奇组件，就把“独立性”当作整体创意质量；四个高电压好点子可能只会争夺第一章注意力。
+51. 把非 Canon Premise Card 直接升级成第四 Authority、自动 selector 或所有 lane 的共同输入；候选应先经独立 Premise Compiler 只审可满足性，再由作者选择，并按现有 Authority 确定性拆为 `World + protagonist-blind Interface`、`Ontology + Initial Scale Position + exact Power trigger/target/action/carrier/boundary`、`Ontology + T0 Origin + Initial Scale Position` 与后置 Story Promise。这些字段是 binding contract，不是柔性 direction。
+52. 用换名词、换能源、换职业证明创新，却没有改变主角反复会做的基本动词；大胆度优先看身体、战斗、移动、生存、占有、变形和社会关系动作是否真实不同。
+53. Primary 把“事实 / 动作已经成立 → 另起漂亮短句裁断或否定翻转 → 再升华意义”反复写成整章稳定节拍。单独一次可以是好句；问题是 LLM 把它复现成章法。当前 Primary Prompt 已加窄硬禁令：本章自然出现一处明显的这种收束后，后文不再主动制造第二处同构；按语义结构判断，不做禁词扫描，也不新增 Reviewer / style score。
+54. 把 Forge 自己写的 `Authority-Compilation Trace` 当作客观证明；单个 Agent 会把“棚屋开始缩小”误写成“棚屋已完整穿门”，也会为不存在的出口、共同载体或等级跃迁补出合理感。必须由独立 Compiler 重查具体 trigger、目标、载体与尺度。
+55. 把 Premise Compiler 做成评分器、自动修稿器或保守 selector；它只判断约束能否同时成立，不能因为设定激进、主角占便宜大或风险高就否决，也不能替作者选择 S1 / S2 / S3。
+56. Compiler FAIL 后自动进入 LLM repair loop；一次预注册 V5 定点修复即使 Prompt 明令保护，仍漏掉整个 `主角反复会做的新动作` 字段并扩大成机制重构。正式边界应先把精确冲突交给作者；任何 repair 研究都必须代码锁定标题、货架句、Ontology、Changed Verbs 与不可磨平项，并在独立 Compiler 前 fail closed。
+
+---
+
+## 16A. Premise Aperture 实验性候选（2026-08-29）
+
+用户用四本 2026-08-29 新书扫榜素材指出：它们的共同优势不是设定百科更复杂，而是很早押注一个会立刻改变主角形态、玩法或社会位置的高风险核心幻想。对当前 TGN 的 root-cause 审计发现：旧 Fantasy Seed 被正确移除后，`World → Power / Human` 之间没有新的统一语义污染，但在任何 Authority 冻结前也缺少完整 premise-level 搜索。结果是每个 lane 都能生成安全完整答案，却很少主动发现非人存在形态、直接身体特权、强第一章画面与叙事界面的组合。
+
+新增实验候选 `src/story_mvp/premise_aperture.py`，但**尚未接入 production default**：
+
+```text
+作者方向
+  → Single-Agent Premise Forge 生成 S1 / S2 / S3 完整候选
+  → Independent Premise Authority Compiler
+       只审 trigger / 目标与载体 / T0 尺位 / Interface 因果 / 远期复合
+       不评分、不排名、不改稿、不替作者选择
+  → 作者明确选择 / 手动处理冲突 / 放弃
+  → lane-specific frozen contract
+       World 只见 World-only + protagonist-blind public interface
+       Power 只见 literal Ontology + Initial Scale Position
+                    + trigger / target / action / carrier / boundary
+       Human 只见 literal Ontology + exact T0 Origin + Initial Scale Position
+       Story 在 Authorities 批准后第一次看完整 Promise + Interface
+  → 现有 Split Authority 链
+  → Outline / chapter 不再读取 raw Premise Card
+```
+
+三种冻结作者方向、统一 Luna-high 的有效 casewise blind evidence：Single-pass pool **85.1**，current baseline **75.8**，四轴正交 collision pool **71.7**；预注册 S2 比 C2 三案平均高 **16.3**。两押注 Voltage Budget 能降低四轴过载，但仍低于 Single-pass。关键新判断是：**fresh-context isolation 是 authority leakage control，不是 creative composition optimizer。** 完整 premise 一次形成更容易保留一个主货架承诺；多个同等高电压组件容易产生 premise competition。
+
+真实候选的增益主要体现为 Changed Verbs：活脏移植器官、归尸把死亡当移动、活令割下命令钉入实体、走城者并入建筑与巨兽、活门搬走房间。它们不是普通人类修士把分析、维护或探路做得更专业。
+
+第一版只把这些字段当 direction，虽然 lane isolation 全部通过，真实 downstream 仍判 `FAIL`：Human 把“从死者喉中诞生”搬到旧训练场破旗并补出履历，Power 把“门 / 兵器 / 野兽 / 人”缩窄成只钉活人，公开重映也从稳定 World Interface 降成终局演出。由此新增稳定判断：**lane-safe 不等于 premise-safe；作者选中后需要按现有 Authority 分拆的 binding generation contract，而不是柔性灵感。**
+
+对同一预注册 S2 使用 lane-specific frozen contract 后，World / Human / Power 已精确保留原字段，Story 则正确返回 `PREMISE-AUTHORITY CONFLICT`：开篇群体逆转早于能力 trigger、全城开门依赖未批准复制／共同载体、T0 声位 0 不在 World 1—100 公共尺中、终局“全城醒来”扩写了载体与语义。结论必须分开：frozen contract / fail-loud 有效；该旧候选整合仍失败。
+
+Forge 随后加入 `Authority-Compilation Trace` 与 `Initial Scale Position-only Direction`，但独立审计证明模型会把自己的隐含桥梁写成“已合法”。因此新增 **Independent Premise Authority Compiler**：只审 trigger、目标／载体、T0 尺位、Interface 因果与远期复合，不评分、不排名、不改稿、不替作者选。V4 三张候选仍很大胆：S1《死式》和 S3《镜外有人》为 `CONDITIONAL PASS`，预注册 S2《一城吞门》因棚屋未真实完整过门、后墙门凭空出现、见证阈值与 9 阶跃迁未闭合而 `FAIL`，并在 World 生成前停止。Compiler 负责暴露假桥梁，不负责把设定改保守。
+
+随后对同一预注册 S2 做一次 Selected Premise 定点修复，代码锁死标题、货架简介、非人 Ontology、Changed Verbs 与不可磨平项。修复虽然补上了完整过门、同一真实门、五名见证者与逐级壳层，却漏掉整个受保护 `主角反复会做的新动作` 字段；deterministic validator 在 Compiler 复检前停止。因此自动修复循环当前 `FAIL / RESEARCH_ONLY`，正式边界应把精确冲突交给作者。
+
+当前建议等待作者决定：
+
+- F1：Premise search before Authority freeze —— 建议冻结原则；
+- F2：Single-Agent 一次生成 S1 / S2 / S3 完整候选 —— 建议冻结为可选开书阶段；
+- F3：Independent Premise Authority Compiler —— 建议冻结为作者选择前的窄可满足性检查；
+- F4：作者选择 / 手动处理冲突 / 放弃，不自动 selector —— 建议冻结；
+- F5：lane-specific frozen contract + fail-loud + raw card 不进入 Outline / chapter —— 建议冻结；
+- F6：具体 Prompt 字数、字段措辞与模型配置 —— 继续实验，不冻结；
+- F7：Selected Premise 自动定点修复 —— 一次真实测试漏掉受保护字段，`FAIL / RESEARCH_ONLY`；
+- F8：四轴完整正交碰撞 —— 拒绝冻结；
+- F9：Two-Bet Voltage Budget —— research-only；
+- F10：Judge / 模型自动选择最保守或最高分候选 —— 拒绝冻结；
+- F11：旧统一 Fantasy Seed —— 拒绝恢复。
+
+
+
+
+
+完整边界与证据见 `docs/PREMISE_APERTURE_EXPERIMENTAL_CANDIDATE.md` 和 `books/real-exp-premise-aperture-20260829-v1/`。即使 F1—F5 获批，也应先作为可跳过的低频开书阶段；至少再完成两个不同题材的 `Compiler PASS → real downstream PASS`，才决定是否默认启用。它不进入每章链、不成为第四 Authority，也不新增常驻 Reviewer / Scorer / Hard Gate。
+
+---
+
 ## 17. Compact Operating Constitution
 
 1. TGN 写的是成熟中文男频成长长篇：力量要馋，成长要真，人要活，世界要大。

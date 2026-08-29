@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "checks": {
+    "world_has_world": true,
+    "world_has_world_interface": true,
+    "world_hides_ontology": true,
+    "world_hides_origin": true,
+    "world_hides_power": true,
+    "world_hides_story_interface": true,
+    "power_has_ontology": true,
+    "power_has_power": true,
+    "power_hides_origin": true,
+    "power_hides_world_interface": true,
+    "power_hides_story_interface": true,
+    "human_has_ontology": true,
+    "human_has_origin": true,
+    "human_hides_power": true,
+    "human_hides_world_interface": true,
+    "human_hides_story_interface": true,
+    "story_has_full_candidate": true,
+    "story_requires_fail_loud": true
+  }
+}

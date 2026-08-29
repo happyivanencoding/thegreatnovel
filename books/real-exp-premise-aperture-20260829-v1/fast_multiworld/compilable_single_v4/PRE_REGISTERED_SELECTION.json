@@ -1,0 +1,6 @@
+{
+  "selected_candidate": "S2",
+  "registered_before_generation": true,
+  "schema_addition": "Initial Scale Position-only Direction",
+  "purpose": "repair V3 exact T0 ruler-position conflict without post-hoc selection"
+}

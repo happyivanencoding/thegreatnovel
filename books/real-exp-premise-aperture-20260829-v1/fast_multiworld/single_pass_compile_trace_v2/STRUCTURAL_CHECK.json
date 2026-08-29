@@ -1,0 +1,29 @@
+{
+  "S1": {
+    "parse_passed": true,
+    "world_chars": 420,
+    "world_interface_chars": 208,
+    "ontology_chars": 185,
+    "origin_chars": 183,
+    "power_chars": 387,
+    "story_interface_chars": 263
+  },
+  "S2": {
+    "parse_passed": true,
+    "world_chars": 331,
+    "world_interface_chars": 198,
+    "ontology_chars": 199,
+    "origin_chars": 169,
+    "power_chars": 355,
+    "story_interface_chars": 249
+  },
+  "S3": {
+    "parse_passed": true,
+    "world_chars": 368,
+    "world_interface_chars": 199,
+    "ontology_chars": 225,
+    "origin_chars": 203,
+    "power_chars": 438,
+    "story_interface_chars": 300
+  }
+}

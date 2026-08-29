@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "checks": {
+    "world_has_selected_world": true,
+    "world_hides_ontology": true,
+    "world_hides_privilege": true,
+    "world_hides_story_interface": true,
+    "power_has_ontology": true,
+    "power_has_privilege": true,
+    "power_hides_story_interface": true,
+    "human_has_ontology": true,
+    "human_hides_privilege": true,
+    "human_hides_story_interface": true,
+    "story_has_full_premise": true
+  }
+}

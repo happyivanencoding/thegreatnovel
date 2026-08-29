@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.14
+version: 0.3.15
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -89,6 +89,10 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Do not auto-select conservative creative intensity when aggressive and conservative variants are both authority-safe; show the real tradeoff to the author, with AGGRESSIVE as the current TGN preference
 - Fantasy / Agency / Concrete Desire before process elegance
 - Fix the earliest semantic collapse
+- **Premise search before Authority freeze**：当系统能生成完整、合理、可持续却普遍不敢押注的设定时，先检查 World / Power / Human 开始前是否存在非 Canon 完整货架前提搜索；不要把这个缺口误判成 Writer、GBrain 或下游玩法问题
+- **Isolation controls leakage; it does not maximize creativity**：fresh-context 分权能阻止后验合理化，却可能让多个独立高电压组件争夺同一个主承诺；创意实验必须比较完整 premise 一次形成与正交组件碰撞，不能把 Agent 数量或独立性本身当成大胆度
+- **Compiler checks satisfiability, not creative intensity**：同一个 Forge 会把自己的隐含桥梁合理化，因此完整候选需要 fresh-context Compiler 复核；但 Compiler 只能指出 trigger、目标／载体、尺度与远期复合冲突，不能评分、改稿、替作者选择或自动偏向保守
+- **Compiler conflict returns to the author before repair**：Compiler FAIL 默认输出精确冲突并停止；不要自动进入 LLM repair loop。若研究定点修复，必须代码锁死标题、货架句、literal Ontology、Changed Verbs 与不可磨平项，先过 deterministic validator，再允许独立 Compiler 复检；任一缺失立即停止，不事后复制旧字段伪造成功
 - Few deep rules > many hard gates
 - Supporting Logic Must Not Automatically Become Story Engine
 - Backstage Principles Must Not Become Generated Ontology
@@ -120,6 +124,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 
 典型层：
 
+- Premise Search（非 Canon）：任何 Authority 冻结前，是否真正搜索过一句可懂、会改变主角基本动词与第一章画面的完整高风险货架前提；
 - World：力量正常值、世界价值物、独立事件、奇观、社会现实；
 - Power：Legal Exception、Core Fantasy、长期成长语法；
 - Human：生活事实、competing motives、choice bias、person-specific relationship；
@@ -134,6 +139,22 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Workflow / UI：审批、stale graph、artifact authority 是否正确。
 
 如果换一本完全不同的新书同样会复现，优先修上游系统层；如果只在一个 scene 的表达中出现，才修 Writer / Scene Skill。
+
+## Premise Search / Creative Voltage Audit
+
+当用户指出“设定不够大胆 / 新书都是安全职业玄幻 / 素材很多却想不到让人点开的前提”时，先审搜索分布，不要直接给 World 或 Power 堆更多创新字段：
+
+1. **Shelf Promise**：是否存在一句普通话可复述的完整前提，还是只有多个分别合理的世界、能力与人物组件？
+2. **Changed Verbs**：前提是否让主角反复拥有普通人类修士不会自然做出的身体、移动、战斗、占有、变形、生存或关系动作；分析更准、维护更快、资格更多仍是旧动词换名。
+3. **One Dominant Bet**：第一章是否有一个主承诺，其余异常放大它；多个 fresh-context Agent 各自大胆不等于整体更大胆。
+4. **Non-Canon Author Gate**：前置搜索只生成作者候选，不自动成为 World / Power / Human Canon，不由 Judge 自动选择，也不进入章节 Runtime。
+5. **Trace + Independent Compiler**：Forge 候选先输出 `Authority-Compilation Trace`，逐项声明“具体动作/结果 → 精确来源字段 → trigger → 目标/载体 → 为什么合法”；但不能相信同一 Agent 的自我证明。作者选择前再由 fresh-context Premise Compiler 独立检查 trigger 是否已满足、目标/载体/出口/见证者是否真实存在、Interface 是否偷做 Power 因果、T0 是否被 protagonist-blind World 尺容纳、20/100章是否假设共同载体、无限复制或新能力。Compiler 只审可满足性，不评分、不排名、不改稿、不替作者选；激进、怪异、主角占便宜大本身不是错误。
+6. **Lane-specific Frozen Contract**：作者选定后，Premise 仍不是第四 Authority，却也不是可随意改写的灵感。World 只看 World + protagonist-blind public interface；Power 只看 literal Ontology + Initial Scale Position + trigger / target coverage / action / carrier / root boundary；Human 只看 literal Ontology + exact T0 origin + Initial Scale Position；Story 在 Authorities 批准后才第一次看完整 Promise。
+7. **Conflict Before Silent Rewrite**：lane isolation 通过仍不等于 premise 保真。无法同时实现已选约束与 Authority 时必须显式返回 `PREMISE-AUTHORITY CONFLICT`；不能静默搬移出生、恢复人形、缩窄/增强 Power coverage，或把稳定 Interface 降成偶发演出。Fail-loud 证明边界有效，不证明该候选已可 productionize。
+8. **Approved Authority Carries Forward**：Outline 与章节只读取已经实现这些约束的 approved World / Character / Story，不重复读取 raw Premise Card；若必须一路塞 raw card 才能保留，说明上游 Authority 没真正承载选择。
+9. **No Automatic Repair Loop**：Compiler FAIL 后先把精确冲突交还作者。定点 Repair 只能作为 research-only 单次实验；标题、Shelf Promise、literal Ontology、Changed Verbs 与不可磨平项必须由代码逐字校验，缺一项就在 fresh Compiler 和 downstream 前停止。Prompt 承诺“会保留”不算证据。
+
+受控实验至少比较：现有 baseline、完整 premise 一次形成、正交组件碰撞；预注册同位候选或审整个 candidate distribution，不事后只挑最好的一张。若各题材最优强度不同，保留作者选择，不建立自动 conservative selector。
 
 当问题表现为“解释太多 / 太少 / 世界看不懂”时，不要只按 exposition 数量审计。先区分：
 

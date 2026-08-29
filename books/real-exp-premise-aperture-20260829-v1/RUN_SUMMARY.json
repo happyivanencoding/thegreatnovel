@@ -1,0 +1,183 @@
+{
+  "calls": [
+    {
+      "label": "premise-aperture-generic_fantasy-interface",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 63.189,
+      "chars": 1582
+    },
+    {
+      "label": "premise-aperture-fast_multiworld-ontology",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 71.702,
+      "chars": 1561
+    },
+    {
+      "label": "premise-aperture-generic_fantasy-privilege",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 93.308,
+      "chars": 1008
+    },
+    {
+      "label": "premise-aperture-fast_multiworld-world",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 94.865,
+      "chars": 1718
+    },
+    {
+      "label": "premise-aperture-generic_fantasy-ontology",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 116.18,
+      "chars": 1869
+    },
+    {
+      "label": "premise-aperture-fast_multiworld-interface",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 42.806,
+      "chars": 1595
+    },
+    {
+      "label": "premise-aperture-generic_fantasy-world",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 130.629,
+      "chars": 1833
+    },
+    {
+      "label": "premise-aperture-fast_multiworld-privilege",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 77.729,
+      "chars": 1234
+    },
+    {
+      "label": "premise-aperture-game_instance-privilege",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 53.695,
+      "chars": 1084
+    },
+    {
+      "label": "premise-aperture-game_instance-ontology",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 69.999,
+      "chars": 1995
+    },
+    {
+      "label": "premise-aperture-generic_fantasy-single",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 198.655,
+      "chars": 5297
+    },
+    {
+      "label": "premise-aperture-game_instance-interface",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 83.915,
+      "chars": 1765
+    },
+    {
+      "label": "premise-aperture-game_instance-world",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 145.129,
+      "chars": 1779
+    },
+    {
+      "label": "premise-aperture-fast_multiworld-single",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 318.625,
+      "chars": 8475
+    },
+    {
+      "label": "premise-aperture-game_instance-single",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 268.419,
+      "chars": 5646
+    },
+    {
+      "label": "premise-aperture-game_instance-collision",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 105.479,
+      "chars": 4754
+    },
+    {
+      "label": "premise-aperture-generic_fantasy-collision",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 141.779,
+      "chars": 5180
+    },
+    {
+      "label": "premise-aperture-fast_multiworld-collision",
+      "model": "gpt-5.6-luna",
+      "effort": "high",
+      "wall_seconds": 223.716,
+      "chars": 5889
+    }
+  ],
+  "cases": [
+    {
+      "case": "generic_fantasy",
+      "single_candidate_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "collision_candidate_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "missing_locked_cores": {},
+      "pre_registered_downstream_selection": "C2",
+      "single_chars": 5297,
+      "collision_chars": 5180
+    },
+    {
+      "case": "fast_multiworld",
+      "single_candidate_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "collision_candidate_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "missing_locked_cores": {},
+      "pre_registered_downstream_selection": "C2",
+      "single_chars": 8475,
+      "collision_chars": 5889
+    },
+    {
+      "case": "game_instance",
+      "single_candidate_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "collision_candidate_ids": [
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "missing_locked_cores": {},
+      "pre_registered_downstream_selection": "C2",
+      "single_chars": 5646,
+      "collision_chars": 4754
+    }
+  ]
+}

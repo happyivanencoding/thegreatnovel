@@ -1,0 +1,72 @@
+[
+  {
+    "label": "premise-casewise-game_instance-cold_reader",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 19.209,
+    "chars": 1009
+  },
+  {
+    "label": "premise-casewise-generic_fantasy-cold_reader",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 21.638,
+    "chars": 1026
+  },
+  {
+    "label": "premise-casewise-fast_multiworld-cold_reader",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 23.789,
+    "chars": 1032
+  },
+  {
+    "label": "premise-casewise-fast_multiworld-commercial",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 35.443,
+    "chars": 980
+  },
+  {
+    "label": "premise-casewise-fast_multiworld-longform",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 44.57,
+    "chars": 1062
+  },
+  {
+    "label": "premise-casewise-generic_fantasy-commercial",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 49.145,
+    "chars": 990
+  },
+  {
+    "label": "premise-casewise-generic_fantasy-longform",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 50.582,
+    "chars": 1110
+  },
+  {
+    "label": "premise-casewise-game_instance-commercial",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 63.61,
+    "chars": 951
+  },
+  {
+    "label": "premise-casewise-game_instance-longform",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 69.34,
+    "chars": 1245
+  },
+  {
+    "label": "premise-casewise-synthesis",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 188.817,
+    "chars": 4108
+  }
+]

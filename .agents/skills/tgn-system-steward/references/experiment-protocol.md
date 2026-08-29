@@ -46,6 +46,24 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 - deterministic projection 优先；
 - 不让后续 Composer 回头重新合理化。
 
+### Premise Search / Creative Voltage Test
+
+测试“系统为什么想不出大胆设定”时，不要只把 World Prompt 写得更激进，也不要默认多 Agent 发散更好。最低证据链：
+
+1. 冻结同一批 2—3 个作者方向与既有 production baseline；
+2. A：一个 fresh-context 模型一次生成 3 个完整 premise candidates；
+3. B：多个隔离轴分别生成组件，再由代码预注册配对；
+4. 模型、effort、作者方向和评价问题一致；不把 benchmark 作品的角色、专名或具体能力喂给模型；
+5. 预注册一个同位候选做真实 downstream preservation，同时报告整个 pool，不在看完结果后只挑最好的一张；
+6. 先人工读 `Shelf Promise / Changed Verbs / First-Chapter Image / Immediate Payoff / Long-Form Runway / Cognitive Load`，需要汇总再做独立 casewise blind review；不要把多个 case 放进同一 Judge 上下文造成串扰；
+7. treatment 通过上游后，必须接回真实 `World → Power / Human → Character → Story → Outline`，分别审 lane isolation 与 semantic fidelity；出生、Power coverage、root boundary 或 stable interface 被静默增强/削弱，不能 PASS；
+8. 候选在作者选择前必须提供 `Authority-Compilation Trace`，但同一 Forge 的自我证明不能视为证据；再用 fresh-context Premise Compiler 逐项重查开篇动作的来源、trigger、目标／载体／出口／见证者、Interface 因果、T0 公共尺与远期复合。Compiler 只审可满足性，不评分、不排名、不改稿、不自动 selector；激进或主角占便宜大本身不是错误。预注册候选若 FAIL，应在 World 前停止并如实报告，不能换更好样本冒充 downstream PASS；
+9. 如果 direction-only projection 漂移，只做近单变量修复：对同一已选 candidate 使用 lane-specific frozen contract，重跑最早失败链；不要换一个更好 candidate 冒充修复；
+10. Frozen contract 仍不是第四 Authority：World 只见 World + protagonist-blind interface，Power 只见 Ontology + Initial Scale Position + trigger/target/action/carrier/boundary，Human 只见 Ontology + T0 origin + Initial Scale Position，Story 在 Authorities 批准后才见完整 Promise。无法同时成立时必须 fail loud；这证明边界有效，不自动证明候选可上线。Outline 不再读取 raw card。
+11. Compiler FAIL 默认停止并把精确冲突交给作者，不自动启动 repair loop。若单独研究 Selected Premise Repair，只允许预注册候选的一次近单变量修复；代码逐字锁定标题、Shelf Promise、literal Ontology、Changed Verbs 与不可磨平项。先过 deterministic protected-core validation，再允许 fresh Compiler；失败不补字段、不换候选、不进入 downstream。
+
+若完整 premise pool 稳定胜出，而多轴碰撞产生概念竞争，结论应是“搜索需要完整承诺 + 作者门控 + 后置 frozen contract”，不是“取消 Authority separation”。各题材最优强度不同时保留作者选择，不建立自动 conservative selector。
+
 ## 5. Cheapest Adequate Model
 
 模型不是越强越好。

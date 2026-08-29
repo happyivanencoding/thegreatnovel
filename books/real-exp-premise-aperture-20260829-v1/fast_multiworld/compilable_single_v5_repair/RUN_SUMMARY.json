@@ -1,0 +1,11 @@
+{
+  "case": "fast_multiworld/preregistered-S2-repair-v5",
+  "source_verdict": "FAIL",
+  "repair_calls": 1,
+  "compiler_calls": 0,
+  "protected_core_passed": false,
+  "protected_core_error": "Premise candidate 缺少字段：主角反复会做的新动作",
+  "compiler_verdict": "SKIPPED",
+  "downstream_authorized": false,
+  "production_default_changed": false
+}

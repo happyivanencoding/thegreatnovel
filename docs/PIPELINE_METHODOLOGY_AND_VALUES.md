@@ -12,6 +12,8 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 `作者方向 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
 
+当前另有一个**尚未冻结、不会自动进入 production** 的开书候选：`作者方向 → 非 Canon Premise Forge → Independent Premise Authority Compiler → 作者选择 → deterministic lane-specific frozen contract → 现有 World / Power / Human 分权链`。它只用于在任何 Authority 冻结前搜索更大胆、会改变主角基本动词的完整货架前提；Compiler 只审 trigger、载体、T0 尺位、Interface 因果与远期复合，不评分、不自动选择、不自动修稿。Compiler FAIL 默认把精确冲突交还作者，Selected Premise 自动修复仍是 `RESEARCH_ONLY`。完整证据与冻结选项见 `docs/PREMISE_APERTURE_EXPERIMENTAL_CANDIDATE.md`。在作者明确批准前，实际 production 链保持不变。
+
 长篇不是把这条开书链一次跑完后消费 500 章。当前 World Horizon 被故事真正活透时，进入低频的向前循环：
 
 `Story Program 的 World Horizon Handoff → protagonist-blind World Expansion →（只有长期证据足够时）Human Development → deterministic Current Character → Sol Story Refresh / Re-Collision → 作者批准 Story Program → Outline → 后续章节`

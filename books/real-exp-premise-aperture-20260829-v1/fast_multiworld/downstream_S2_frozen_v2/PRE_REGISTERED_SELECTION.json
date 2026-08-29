@@ -1,0 +1,12 @@
+{
+  "selected_candidate": "S2",
+  "source": "C:\\dev\\tgn-story-mvp\\books\\real-exp-premise-aperture-20260829-v1\\fast_multiworld\\downstream_S2\\SELECTED_PREMISE.md",
+  "contract_version": 2,
+  "selected_sha256": "857815ed0ffdb73789d0192a308e6b53ec0f690f75eddda2f2afa4d01010c990",
+  "world_sha256": "ba48476f1da0d6d5d4875def2ce773cffc115c2068f3c8031a8474a2e99ed554",
+  "power_sha256": "19d1165e55074480b1336f2dbc38c74c8a76732671388ef45f98618613b16c3a",
+  "human_sha256": "111c58f7e904a7594a6a6ba191bed4fdd936198fc893693bbffabc5ab6260c92",
+  "story_sha256": "cfc7339263c65d8cc842aff159dd286fd9a432f8314b93d4314c1aed7695e319",
+  "power_candidate": 2,
+  "human_candidate": 2
+}

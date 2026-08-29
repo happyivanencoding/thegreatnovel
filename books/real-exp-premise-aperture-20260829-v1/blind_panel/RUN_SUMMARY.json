@@ -1,0 +1,51 @@
+[
+  {
+    "label": "premise-panel-standardize-generic_fantasy",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 87.111,
+    "chars": 4847
+  },
+  {
+    "label": "premise-panel-standardize-fast_multiworld",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 99.981,
+    "chars": 5837
+  },
+  {
+    "label": "premise-panel-standardize-game_instance",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 99.991,
+    "chars": 5914
+  },
+  {
+    "label": "premise-panel-cold_reader",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 76.157,
+    "chars": 3404
+  },
+  {
+    "label": "premise-panel-commercial",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 89.854,
+    "chars": 2801
+  },
+  {
+    "label": "premise-panel-longform",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 155.945,
+    "chars": 3636
+  },
+  {
+    "label": "premise-panel-synthesis",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 317.903,
+    "chars": 5748
+  }
+]

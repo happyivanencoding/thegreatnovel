@@ -1,0 +1,16 @@
+{
+  "case": "fast_multiworld/S2_compilable_v4",
+  "status": "PRE_AUTHORITY_COMPILER_FAIL",
+  "selected_candidate": "S2",
+  "registered_before_generation": true,
+  "compiler_result": "FAIL",
+  "production_default_changed": false,
+  "downstream_started": false,
+  "reason": [
+    "The shed never actually crosses the only real threshold",
+    "The claimed rear-wall door does not exist at T0",
+    "The witness threshold for Door Shadow is not established",
+    "Annexing a core alone does not imply rank 9 boundary capacity"
+  ],
+  "decision": "Stop before World/Power/Human/Story. The independent compiler is intended to prevent expensive downstream runs for false traces."
+}

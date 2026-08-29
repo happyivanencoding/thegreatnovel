@@ -1,0 +1,35 @@
+[
+  {
+    "case": "generic_fantasy",
+    "wall_seconds": 163.842,
+    "chars": 4091,
+    "candidate_ids": [
+      "V1",
+      "V2",
+      "V3"
+    ],
+    "missing_locked_cores": {}
+  },
+  {
+    "case": "game_instance",
+    "wall_seconds": 212.287,
+    "chars": 4853,
+    "candidate_ids": [
+      "V1",
+      "V2",
+      "V3"
+    ],
+    "missing_locked_cores": {}
+  },
+  {
+    "case": "fast_multiworld",
+    "wall_seconds": 271.216,
+    "chars": 5906,
+    "candidate_ids": [
+      "V1",
+      "V2",
+      "V3"
+    ],
+    "missing_locked_cores": {}
+  }
+]

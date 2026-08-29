@@ -30,6 +30,32 @@ Fantasy First 的本质是：男频成长长篇必须持续保护主角本人值
 
 如果当前架构用 World / Power / Human 分离更好地保护 fantasy，就使用当前架构；未来有更好的结构，也可以替换。
 
+### Premise Search Before Authority Freeze
+
+分权能保护 Authority，却不会自动扩大搜索空间。若 World / Power / Human 各自产出都完整、合理、可持续，而跨新书仍普遍缺少一句就想点开的高风险前提，最早坍缩点可能发生在任何 Authority 生成之前。
+
+健康的前置搜索可以存在，但必须是 **non-Canon / author-gated / disposable**：它先生成少量完整货架候选，作者明确选择后，再由确定性代码投影成各 lane 的窄方向。它不能成为第四 Authority，不能自动选择，也不能让完整 Premise 同时进入 World、Power 与 Human。
+
+但“非 Canon”不等于“选中后仍是可随意改写的灵感”。作者选择建立的是 **binding generation contract**：World 只承载 World 与 protagonist-blind public interface；Power 只承载 literal Ontology、Initial Scale Position 与 trigger / target coverage / action / carrier / root boundary；Human 只承载 literal Ontology、T0 origin 与 Initial Scale Position；Story 在这些 Authority 批准后第一次承载完整 opening promise。某 lane 若无法同时满足 contract 与已批准 Authority，应显式暴露冲突让作者决定，而不是静默搬移出生、恢复人形、缩窄/增强能力覆盖或把稳定界面降成一次演出。Outline 与章节只继承已批准 Authority，不反复读取 raw Premise Card。
+
+完整候选本身也必须 **Authority-compilable**。Forge 先用窄 `Authority-Compilation Trace` 对每个开篇超常动作声明“动作/结果 → 来源字段 → trigger → 目标/载体 → 合法结果”，但同一个 Agent 会把自己的隐含桥梁合理化，因此 Trace 不能自证。作者选择前需要 fresh-context Premise Compiler 独立复核 trigger、目标／载体／出口／见证者、Interface 因果、T0 公共尺度与远期复合。Compiler 只判断约束能否同时成立，不评分、不排名、不改稿、不替作者选择，也不能因为设定激进、怪异或主角占便宜大而偏向保守。若 Story 后来 fail loud，说明边界工作了；它不等于候选已经可上线。
+
+Compiler FAIL 的默认结果是**把精确冲突交还作者并停止**，不是自动触发 LLM repair loop。若研究定点修复，必须把标题、Shelf Promise、literal Ontology、Changed Verbs 与不可磨平项作为代码可验证的受保护核心；Repair 只改因果字段，先过 deterministic validator，再接受 fresh Compiler 复检。Prompt 说“会保留”不算保留，漏掉任何受保护字段都必须 fail closed，不能事后复制旧字段回填成假成功。
+
+判断大胆度优先看 **Changed Verbs**：主角是否反复拥有普通角色不会自然做出的身体、移动、战斗、占有、变形、生存或关系动作。换能源名、职业名、组织名，或把分析/维护/优化做得更强，并没有真正扩大 premise space。
+
+### Authority Isolation ≠ Creative Composition
+
+fresh-context isolation 解决的是泄漏与后验合理化，不保证多个独立产物组合后更好。四个分别精彩的 World / Ontology / Privilege / Interface 可能产生 premise competition：每个都要求解释、兑现和长期成长，最终没有一个主承诺获得足够注意力。
+
+因此创意架构实验不能用“Agent 更多 / 轴更正交 / 组件都很新”证明增益。至少比较：
+
+- 现有 baseline；
+- 一个模型一次形成的完整 premise distribution；
+- 独立组件的固定碰撞。
+
+先审一句话货架承诺、第一章标志性画面、核心新动词、立即兑现与百章 runway，再审独立性。**One dominant bet with supporting amplification** 往往比多个同等高电压押注更可读，但这不是要求所有书保守；核心押注本身可以非常激进。
+
 ## 3. Agency > Efficiency
 
 好的非对称优势首先扩大“别人做不到，而我能主动介入什么”，而不是把同一工作做得更快、更稳、更精确。

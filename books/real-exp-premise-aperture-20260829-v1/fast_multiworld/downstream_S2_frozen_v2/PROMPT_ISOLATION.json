@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "checks": {
+    "world_has_world": true,
+    "world_has_public_interface": true,
+    "world_hides_ontology": true,
+    "world_hides_origin": true,
+    "world_hides_power": true,
+    "power_has_ontology": true,
+    "power_has_all_carrier_scope": true,
+    "power_hides_origin": true,
+    "power_hides_world_interface": true,
+    "human_has_ontology": true,
+    "human_has_exact_origin": true,
+    "human_hides_power": true,
+    "human_hides_world_interface": true,
+    "story_has_full_contract": true,
+    "story_requires_explicit_conflict": true
+  }
+}

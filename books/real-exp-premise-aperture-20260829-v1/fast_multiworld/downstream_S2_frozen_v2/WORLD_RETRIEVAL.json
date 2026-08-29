@@ -1,0 +1,24 @@
+{
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"world fantasy\" OR \"world entry\" OR \"narrative compounding\"",
+    "\"reader coordinates\" OR \"progression scale\" OR \"action space scale\" OR \"expectation ladder\" OR \"core advantage\" OR \"world compatibility\" OR \"power scale\" OR \"threat scale\""
+  ],
+  "accepted_count": 3,
+  "accepted": [
+    {
+      "slug": "mechanisms/story-state-compounding-v3",
+      "score": 0.1878
+    },
+    {
+      "slug": "mechanisms/world-entry-v3",
+      "score": 0.1404
+    },
+    {
+      "slug": "mechanisms/world-desire-ladder-v3",
+      "score": 0.1374
+    }
+  ],
+  "rejected_count": 9,
+  "final_limit": 3
+}

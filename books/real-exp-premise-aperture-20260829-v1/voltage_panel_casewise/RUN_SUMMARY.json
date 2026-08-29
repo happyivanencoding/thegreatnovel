@@ -1,0 +1,93 @@
+[
+  {
+    "label": "voltage-standardize-game_instance",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 39.113,
+    "chars": 2012
+  },
+  {
+    "label": "voltage-standardize-generic_fantasy",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 45.386,
+    "chars": 2160
+  },
+  {
+    "label": "voltage-standardize-fast_multiworld",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 49.128,
+    "chars": 2464
+  },
+  {
+    "label": "voltage-panel-generic_fantasy-cold_reader",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 22.517,
+    "chars": 1158
+  },
+  {
+    "label": "voltage-panel-fast_multiworld-commercial",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 27.026,
+    "chars": 1069
+  },
+  {
+    "label": "voltage-panel-fast_multiworld-cold_reader",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 29.267,
+    "chars": 1150
+  },
+  {
+    "label": "voltage-panel-game_instance-cold_reader",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 30.09,
+    "chars": 1087
+  },
+  {
+    "label": "voltage-panel-generic_fantasy-commercial",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 47.319,
+    "chars": 1064
+  },
+  {
+    "label": "voltage-panel-game_instance-commercial",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 49.091,
+    "chars": 1099
+  },
+  {
+    "label": "voltage-panel-generic_fantasy-longform",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 77.928,
+    "chars": 1284
+  },
+  {
+    "label": "voltage-panel-game_instance-longform",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 82.475,
+    "chars": 1300
+  },
+  {
+    "label": "voltage-panel-fast_multiworld-longform",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 97.94,
+    "chars": 1409
+  },
+  {
+    "label": "voltage-panel-synthesis",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "wall_seconds": 299.849,
+    "chars": 2985
+  }
+]

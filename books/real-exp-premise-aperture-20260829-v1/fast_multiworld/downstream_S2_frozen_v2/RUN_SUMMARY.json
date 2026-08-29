@@ -1,0 +1,22 @@
+{
+  "case": "fast_multiworld/S2_frozen_v2",
+  "status": "PREMISE_AUTHORITY_CONFLICT",
+  "production_modified": false,
+  "pre_registered_power_candidate": 2,
+  "pre_registered_human_candidate": 2,
+  "prompt_isolation_passed": true,
+  "authority_preservation": {
+    "world_public_interface": "PRESERVED",
+    "human_t0_origin": "PRESERVED",
+    "power_trigger_targets_boundaries": "PRESERVED"
+  },
+  "failed_stage": "Story Program",
+  "outline_generated": false,
+  "conflicts": [
+    "Opening group reversal exceeds frozen T0 power before acquisition trigger",
+    "Whole-city door opening requires unapproved replication or common carrier",
+    "Human T0 sound-rank 0 conflicts with World rank grammar 1-100",
+    "Terminal citywide awakening assumes an unapproved common carrier and semantic expansion"
+  ],
+  "runner_diagnostic": "The first resume runner used a conflict-token detector that missed a token appended to an ACP reasoning preamble. The detector now accepts explicit refusal text after the token while still ignoring negative mentions; regression tested."
+}

@@ -1,0 +1,13 @@
+{
+  "case": "fast_multiworld/S2",
+  "prompt_isolation_passed": true,
+  "pre_registered_power_candidate": 2,
+  "pre_registered_human_candidate": 2,
+  "outline_valid": true,
+  "world_chars": 4202,
+  "power_chars": 1492,
+  "human_chars": 924,
+  "story_chars": 8876,
+  "outline_chars": 10052,
+  "audit_chars": 2992
+}

@@ -1,0 +1,21 @@
+{
+  "case": "fast_multiworld/C2",
+  "prompt_isolation_passed": true,
+  "pre_registered_power_candidate": 2,
+  "pre_registered_human_candidate": 2,
+  "outline_valid": true,
+  "world_chars": 4113,
+  "power_chars": 1384,
+  "human_chars": 1133,
+  "story_chars": 8697,
+  "outline_chars": 10590,
+  "audit_chars": 4861,
+  "calls": {
+    "audit": {
+      "ok": true,
+      "wall_seconds": 274.437,
+      "chars": 4863,
+      "error": null
+    }
+  }
+}
