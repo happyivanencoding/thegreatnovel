@@ -124,6 +124,28 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "## Payoff and Promise Window",
     ):
         assert heading in curator
+
+    # The explicit fixed-output list must contain every required section.  A prior
+    # contract listed only the first nine headings while defining four more later,
+    # which made otherwise valid Curators stop early after Relevant Inspiration.
+    fixed_output_contract = curator.split("`## Scene Prose Projection`", 1)[0]
+    for heading in (
+        "## Relevant Book Contract",
+        "## Relevant Characters and Relationships",
+        "## Relevant World Rules",
+        "## Relevant Open Promises",
+        "## Relevant Plan",
+        "## Scene Prose Projection",
+        "## Opening Strategy",
+        "## Scene Skill Selection",
+        "## Relevant Inspiration",
+        "## Reader-Facing Language",
+        "## Already Established — Do Not Re-explain",
+        "## Recent Repetition Risks",
+        "## Payoff and Promise Window",
+    ):
+        assert heading in fixed_output_contract
+
     assert "Reader-First Prose Contract" not in curator
     for marker in (
         "当前最在意的事",

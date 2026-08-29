@@ -1,0 +1,32 @@
+{
+  "2": {
+    "A": "conditional",
+    "B": "control",
+    "control_sha256": "7914f69fb8d4156556f66b35d760e7457b97856170ce7c7c3f9ab85acf345b91",
+    "conditional_sha256": "7e499821676d0ed495fc1830a60b3b3be54083a1b52451dc4ee0b6e8b4ef1bd8"
+  },
+  "13": {
+    "A": "control",
+    "B": "conditional",
+    "control_sha256": "d5b959c6eb3a41df848cf626f278821dc9ae0f7aaaa9085502c1b7d918465452",
+    "conditional_sha256": "8b066f289e3af15b890fb280d2eb0b22122c714c0f3fc9a3d245cb86bb15a894"
+  },
+  "16": {
+    "A": "conditional",
+    "B": "control",
+    "control_sha256": "4e6a97cf0f577d909151c89d19656936785ba69520d622baebedfd48bbfd212a",
+    "conditional_sha256": "63e5c77bab937fe1014976a54ef6c3be1ce097dad6c76b01a4f9e45b3bebe6ce"
+  },
+  "19": {
+    "A": "conditional",
+    "B": "control",
+    "control_sha256": "5822a089f909fe98e37686aa91319871f5dc24c3162e42673b7b3ff669a01f9e",
+    "conditional_sha256": "52627a1aaf40a8f3ddb4016a90f80a5c6f8e9b9a0e76c9cd77242ca5bb478646"
+  },
+  "20": {
+    "A": "control",
+    "B": "conditional",
+    "control_sha256": "986b411ecb4b88d0d2d396a71a9a8a5f3b174acaa1cd8c7ae94f77b36aa7ecab",
+    "conditional_sha256": "b32273d8b0b99cd18ea3c9c09d8da38870b6100e627349e656fb7c100206e4c4"
+  }
+}

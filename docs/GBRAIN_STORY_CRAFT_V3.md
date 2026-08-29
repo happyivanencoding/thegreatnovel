@@ -72,8 +72,8 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 | Human Seed | GPT-5.6 Luna high | world-conditioned / power-blind 生成人本身；保留 competing motives 与具体关系变量 |
 | Story Program | GPT-5.6 Sol high | 负责长期优势栈：开局优势成长、新 Power Asymmetry 获得与复合，同时处理玩法变异、人物自主、敌人策略和关系回流 |
 | Outline | GPT-5.6 Luna high | 能高质量执行正确 Program，把长期结构落实成故事锚点而不过度膨胀 |
-| Director | GPT-5.6 Luna high | Balanced 默认；质量与 Terra high 接近但成本更低，最低延迟模式可切 Terra high |
-| Curator | GPT-5.6 Luna high | Scene Skill v2 compact Catalog → short Projection；允许 `NONE`；若优先最短延迟可切 Terra medium |
+| Director | GPT-5.6 Luna high | 当前 production；Terra/条件模块路由只作显式 A/B，尚未证明最终故事质量等价 |
+| Curator | GPT-5.6 Luna high | Scene Skill v2 compact Catalog → short Projection；允许 `NONE`；medium/Terra/Slim 路由均未证明最终正文质量等价 |
 | Primary Writer | GPT-5.6 Terra high | 只消费 Curator short Projection，不直接读 Deep Skill；先完成第一版正文 |
 | Authority Reviser | GPT-5.6 Luna high | safe Authority Refresh Pack + optional short Revision Watch；raw GBrain OFF；Preservation First |
 | State Extraction | GPT-5.6 Luna low | 当前成本优先默认，只记录最终正式正文已发生事实 |
@@ -86,7 +86,7 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 - **Luna max**：仅用于疑难创意救援、最高质量基线和关键重构，不日常使用；
 - **GPT-5.4 high**：当前没有相对 Luna 的补偿性优势，不作为默认创作模型。
 
-章节路由要分开看 **质量 / wall-clock / 实际成本**。当前默认是 `Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。Reviser reasoning 五档对照中 high 首次稳定完成全部关键 authority 检查；xhigh/max 没有补偿性收益。若优先最低延迟，可调整 Director/Curator；Sol 不进入常规章节链。
+章节路由要分开看 **质量 / wall-clock / 实际成本**。当前默认是 `Luna high Director → Luna high Curator → Terra high Primary Draft → Luna high Authority Reviser → Luna low State`。Reviser reasoning 五档对照中 high 首次稳定完成全部关键 authority 检查；xhigh/max 没有补偿性收益。2026-08-29 最终正文双盲又否决了把 Curator medium/Terra/Slim、Reviser medium/Patch-only 或 Conditional Director 当作质量等价的低延迟默认；模型、effort 或合同缩减只能作为显式实验，必须接回正常下游并通过 Reader + Authority 双盲。Sol 不进入常规章节链。
 
 ### GBrain 蒸馏模型
 

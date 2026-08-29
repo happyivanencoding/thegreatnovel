@@ -1,0 +1,202 @@
+{
+  "schema": "tgn.chapter_latency_final_evidence_validation.v1",
+  "status": "PASS",
+  "phase2b_slim_luna_high": {
+    "chapters": [
+      2,
+      3,
+      10,
+      14,
+      19
+    ],
+    "curator_control_avg_s": 131.034,
+    "curator_treatment_avg_s": 65.184,
+    "chain_control_avg_s": 313.33,
+    "chain_treatment_avg_s": 277.487,
+    "reader_counts": {
+      "control": 3,
+      "treatment": 2,
+      "mixed": 0
+    },
+    "authority_counts": {
+      "control": 2,
+      "treatment": 2,
+      "mixed": 1
+    },
+    "curator_speedup_pct": 50.3,
+    "chain_speedup_pct": 11.4
+  },
+  "phase3_conditional_director_final": {
+    "chapters": [
+      2,
+      13,
+      16,
+      19,
+      20
+    ],
+    "director_control_avg_s": 43.316,
+    "director_treatment_avg_s": 26.757,
+    "director_speedup_pct": 38.2,
+    "chain_control_avg_s": 331.343,
+    "chain_treatment_avg_s": 313.924,
+    "chain_speedup_pct": 5.3,
+    "reader_counts": {
+      "control": 3,
+      "conditional": 2,
+      "mixed": 0
+    },
+    "authority_counts": {
+      "control": 4,
+      "conditional": 1,
+      "mixed": 0
+    }
+  },
+  "checks": [
+    {
+      "name": "phase2b chapters",
+      "pass": true,
+      "actual": [
+        2,
+        3,
+        10,
+        14,
+        19
+      ],
+      "expected": [
+        2,
+        3,
+        10,
+        14,
+        19
+      ]
+    },
+    {
+      "name": "phase2b reader decode",
+      "pass": true,
+      "actual": {
+        "control": 3,
+        "treatment": 2,
+        "mixed": 0
+      },
+      "expected": {
+        "control": 3,
+        "treatment": 2,
+        "mixed": 0
+      }
+    },
+    {
+      "name": "phase2b authority decode",
+      "pass": true,
+      "actual": {
+        "control": 2,
+        "treatment": 2,
+        "mixed": 1
+      },
+      "expected": {
+        "control": 2,
+        "treatment": 2,
+        "mixed": 1
+      }
+    },
+    {
+      "name": "phase2b chain speedup",
+      "pass": true,
+      "actual": 11.4,
+      "expected": 11.4
+    },
+    {
+      "name": "phase3 chapters",
+      "pass": true,
+      "actual": [
+        2,
+        13,
+        16,
+        19,
+        20
+      ],
+      "expected": [
+        2,
+        13,
+        16,
+        19,
+        20
+      ]
+    },
+    {
+      "name": "phase3 reader decode",
+      "pass": true,
+      "actual": {
+        "control": 3,
+        "conditional": 2,
+        "mixed": 0
+      },
+      "expected": {
+        "control": 3,
+        "conditional": 2,
+        "mixed": 0
+      }
+    },
+    {
+      "name": "phase3 authority decode",
+      "pass": true,
+      "actual": {
+        "control": 4,
+        "conditional": 1,
+        "mixed": 0
+      },
+      "expected": {
+        "control": 4,
+        "conditional": 1,
+        "mixed": 0
+      }
+    },
+    {
+      "name": "phase3 chain speedup",
+      "pass": true,
+      "actual": 5.3,
+      "expected": 5.3
+    },
+    {
+      "name": "report synchronized",
+      "pass": true,
+      "actual": [
+        "control 2 / treatment 2 / mixed 1",
+        "**control 4:1**",
+        "331.3s → 313.9s"
+      ],
+      "expected": [
+        "control 2 / treatment 2 / mixed 1",
+        "**control 4:1**",
+        "331.3s → 313.9s"
+      ]
+    },
+    {
+      "name": "decision table synchronized",
+      "pass": true,
+      "actual": [
+        "control 2 / treatment 2 / mixed 1",
+        "control 4 / conditional 1",
+        "331.343,313.924,5.3"
+      ],
+      "expected": [
+        "control 2 / treatment 2 / mixed 1",
+        "control 4 / conditional 1",
+        "331.343,313.924,5.3"
+      ]
+    },
+    {
+      "name": "handoff synchronized",
+      "pass": true,
+      "actual": [
+        "Authority 为 control 2 / treatment 2 / mixed 1",
+        "Authority 为 **control 4:1**",
+        "331.3s 降到 313.9s"
+      ],
+      "expected": [
+        "Authority 为 control 2 / treatment 2 / mixed 1",
+        "Authority 为 **control 4:1**",
+        "331.3s 降到 313.9s"
+      ]
+    }
+  ]
+}

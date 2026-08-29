@@ -344,10 +344,11 @@ def extract_primary_draft(response: str) -> str:
     if body:
         return body
     # ACP/外部执行器偶尔会把一句模型前言和标题粘在同一行。
-    # 标题本身仍是明确正文边界时，确定性丢弃标题前模型自述。
+    # 模型前言还可能先“引用”一次 `# 正式正文`，再真正输出标题；因此 fallback
+    # 必须取最后一次 marker，不能把引用后的自述误当成正式章节内容。
     marker = "# 正式正文"
     if marker in response:
-        normalized = marker + "\n" + response.split(marker, 1)[1].lstrip()
+        normalized = marker + "\n" + response.rsplit(marker, 1)[1].lstrip()
         body = _extract_level_one_section(normalized, marker)
         if body:
             return body

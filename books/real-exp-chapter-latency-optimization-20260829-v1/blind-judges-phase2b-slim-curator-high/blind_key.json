@@ -1,0 +1,32 @@
+{
+  "2": {
+    "A": "control",
+    "B": "treatment",
+    "control_sha256": "7914f69fb8d4156556f66b35d760e7457b97856170ce7c7c3f9ab85acf345b91",
+    "slim_treatment_sha256": "842c00c714f806732624da573d69b614135fa9c2517b5b3837da01250bd6252e"
+  },
+  "3": {
+    "A": "treatment",
+    "B": "control",
+    "control_sha256": "08ec43223f9d859abfacac4b5e512b21070cdcdb3098e47aa313dec2d61ec0b8",
+    "slim_treatment_sha256": "d97fc60ae960c1b36caeb86389f7c86f6036305551f04a8de9def308aaef4c52"
+  },
+  "10": {
+    "A": "treatment",
+    "B": "control",
+    "control_sha256": "73698aae051598f53c79ccc238a9b19541c5ad083d34779574d820c901ed2ad8",
+    "slim_treatment_sha256": "64a91bfdf6f4bb2a5aa0fad49cf6fbc18e997b0ea31352b485dbe8c17e4e9680"
+  },
+  "14": {
+    "A": "control",
+    "B": "treatment",
+    "control_sha256": "159e9ae9a47e0c4aacb992df54653ae7ad8848e44c3e2ad1c5f5378251874488",
+    "slim_treatment_sha256": "b05a0d1c44d323bf54f7c16603ad5b0827b163c49e3885b803cf45814e2492dd"
+  },
+  "19": {
+    "A": "control",
+    "B": "treatment",
+    "control_sha256": "5822a089f909fe98e37686aa91319871f5dc24c3162e42673b7b3ff669a01f9e",
+    "slim_treatment_sha256": "8c837701b88dfe7c73556935c92419d6f696efa66df023e214e43e761b229088"
+  }
+}

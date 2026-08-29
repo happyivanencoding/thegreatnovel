@@ -1,0 +1,107 @@
+[
+  {
+    "chapter": 2,
+    "prompt_chars": 9485,
+    "control_prompt_chars": 20257,
+    "prompt_reduction_percent": 53.18,
+    "wall_seconds": 97.779,
+    "control_high_wall_seconds": 93.843,
+    "speedup_percent": -4.19,
+    "response_chars": 1380,
+    "output_tokens": 4674,
+    "thought_tokens": 3689,
+    "headings": [
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Scene Skill Selection",
+      "Already Established — Do Not Re-explain"
+    ]
+  },
+  {
+    "chapter": 3,
+    "prompt_chars": 10105,
+    "control_prompt_chars": 20928,
+    "prompt_reduction_percent": 51.72,
+    "wall_seconds": 38.265,
+    "control_high_wall_seconds": 137.42,
+    "speedup_percent": 72.15,
+    "response_chars": 1402,
+    "output_tokens": 1839,
+    "thought_tokens": 888,
+    "headings": [
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Scene Skill Selection",
+      "Already Established — Do Not Re-explain"
+    ]
+  },
+  {
+    "chapter": 10,
+    "prompt_chars": 10438,
+    "control_prompt_chars": 21519,
+    "prompt_reduction_percent": 51.49,
+    "wall_seconds": 71.116,
+    "control_high_wall_seconds": 138.658,
+    "speedup_percent": 48.71,
+    "response_chars": 1576,
+    "output_tokens": 3713,
+    "thought_tokens": 2543,
+    "headings": [
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Scene Skill Selection",
+      "Already Established — Do Not Re-explain"
+    ]
+  },
+  {
+    "chapter": 14,
+    "prompt_chars": 10334,
+    "control_prompt_chars": 22922,
+    "prompt_reduction_percent": 54.92,
+    "wall_seconds": 74.752,
+    "control_high_wall_seconds": 82.178,
+    "speedup_percent": 9.04,
+    "response_chars": 1487,
+    "output_tokens": 3877,
+    "thought_tokens": 2820,
+    "headings": [
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Scene Skill Selection",
+      "Already Established — Do Not Re-explain"
+    ]
+  },
+  {
+    "chapter": 19,
+    "prompt_chars": 10773,
+    "control_prompt_chars": 23413,
+    "prompt_reduction_percent": 53.99,
+    "wall_seconds": 44.006,
+    "control_high_wall_seconds": 203.069,
+    "speedup_percent": 78.33,
+    "response_chars": 1574,
+    "output_tokens": 2207,
+    "thought_tokens": 1034,
+    "headings": [
+      "Relevant Characters and Relationships",
+      "Relevant World Rules",
+      "Relevant Open Promises",
+      "Relevant Plan",
+      "Scene Prose Projection",
+      "Scene Skill Selection",
+      "Already Established — Do Not Re-explain"
+    ]
+  }
+]
