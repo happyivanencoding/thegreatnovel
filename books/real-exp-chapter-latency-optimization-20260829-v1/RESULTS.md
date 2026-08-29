@@ -58,9 +58,9 @@ Curator + Reviser 合计 **68.5% wall-clock**，也是主要 reasoning 消耗来
 | 2A | 完整 13 区块 Curator：Luna high → medium | 7 章 | 117.0s → 45.5s，约 **-61.2%** | control 3 胜 / treatment 2 胜 / 2 平 | **control 5:2 胜** | 动作对象、Public Proof、战功/收益落袋会漂移 | **拒绝** |
 | 2B | Slim Curator + Luna medium | 3 章 | 86.0s → 26.2s，约 **-69.5%**；Prompt 约 -53% | 1 章胜 | 0 章胜 | 某章时序冲突；另需 high Reviser 补动作链 | **拒绝** |
 | 2C | Slim Curator + Terra medium | 3 章 | 86.0s → 26.0s，约 **-69.8%**；Prompt 约 -53% | 1 章胜 | 1 章胜 | 无稳定模型赢家；动作执行路径仍可丢失 | **拒绝** |
-| 2D | Slim Curator + Luna high，完整接回 Primary/Reviser | 5 章 | Curator 约 **-50.3%**；完整 C+P+R 313.3s → 277.5s，约 **-11.4%** | control **3:2** | treatment **3:2** | Treatment 仍在 3/5 压力章出现力量/结算/Ending 硬问题；第2、14章整链反而更慢 | **拒绝全局上线** |
+| 2D | Slim Curator + Luna high，完整接回 Primary/Reviser | 5 章 | Curator 131.0s → 65.2s，约 **-50.3%**；完整 C+P+R 313.3s → 277.5s，约 **-11.4%** | control **3:2** | control 2 / treatment 2 / mixed 1 | Authority 无稳定赢家，Treatment 仍有结算/Ending 硬问题；第2、14章整链反而更慢 | **拒绝全局上线** |
 | 3 | Conditional Director Core + Modules | 5 章 | 36.7s → 21.6s，约 **-41.1%**；Prompt 约 -35.7% | **full control 4 胜 / 1 平 / treatment 0 胜** | treatment 3 胜 / control 1 胜 / 1 平 | 短版有时更守边界，但稳定削弱人物主动性和故事具体性；Ch20 又越权 | **拒绝** |
-| 3B | 修正触发范围后的 Conditional Director 复验 | 5 章 | 36.7s → 23.1s，约 **-36.9%**（只占整章约 9.1% 的 Director 节点） | control **3:2** | treatment **3:2** | 第19章双盲胜出，第3章双盲失败，其余分裂；典型压力章只省 2—3 秒 | **保留研究，不上线** |
+| 3B | Conditional Director 接回完整下游 | 5 章 | Director 43.3s → 26.8s，约 **-38.2%**；完整 D+C+P+R 331.3s → 313.9s，仅 **-5.3%** | control **3:2** | **control 4:1** | 只有 Ch19 双盲胜出；其余章出现动作对象、能力组合、收益或公开结算损失 | **拒绝全局上线** |
 
 ## 3. 为什么“快很多”仍不能上线
 
@@ -137,7 +137,7 @@ Conditional 版本：
 
 > 阮青蜃带着契约主张进入现场，准备将古器争议推向买断或封锁。
 
-这一章 Conditional 更准确、更干净，Authority 盲评胜出。问题在于，同一套 Conditional 机制到了第 2 章削弱 Agency，到了第 20 章又越权。因此它可以继续作为研究材料，却不能成为全局 production route。
+这个短合同在 Director 中间产物层面更准确、更干净，但完整接回 Curator、Primary 与 Reviser 后，第13章最终 Reader 与 Authority 都选择 control：Treatment 把修复交易与能力 payoff 压得过轻。它证明“中间合同局部更准”不等于“最终正文等价”。最终五章 E2E 中只有第19章双盲选择 Conditional，第2、13、16章双盲选择 control，第20章 Reader 选 Conditional、Authority 仍选 control；因此不能成为全局 production route。
 
 ### 例 5｜Phase 3 第 20 章：为了压缩，滥用 Plan Adjustment
 
@@ -278,10 +278,9 @@ Phase 0 production commit：`7c1fc05 perf(story): bound chapter runtime context`
 - Safe Patch route：`phase-1b-safe-patch-reviser/` + `blind-judges-phase1b-safe-patch/`
 - Slim Curator：`phase-2-slim-curator/` + `blind-judges-phase2-slim/`
 - Slim Curator medium 完整下游复验：`phase-2-slim-curator-medium/` + `blind-judges-phase2-slim-curator-medium/`
-- Slim Curator Luna high 完整下游复验：`phase-2b-slim-curator-high/` + `blind-judges-phase2b-slim-curator-high/`
+- Slim Curator Luna high 完整下游复验：`phase-2b-slim-curator-high/{curator_summary.json,downstream_summary.json}` + `blind-judges-phase2b-slim-curator-high/{blind_key.json,summary.json,DECODED_RESULTS.json}`
 - Conditional Director 节点速度：`phase-3-conditional-director/` + `blind-judges-phase3-conditional-director/`
-- Conditional Director 正常下游与最终正文：`phase-3-conditional-director-downstream/` + `blind-judges-phase3-director-final/`
-- 修正触发范围后的 Conditional Director：`phase-3-conditional-director/` + `blind-judges-phase3-conditional-director/`
+- Conditional Director 正常下游与最终正文：`phase-3-conditional-director-downstream/summary.json` + `blind-judges-phase3-director-final/{blind_key.json,summary.json,DECODED_RESULTS.json}`
 
 ## 9. Final Verdict
 

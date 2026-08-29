@@ -1,0 +1,82 @@
+{
+  "schema": "tgn.blind_verdict_decode.v1",
+  "source": {
+    "blind_key": "blind_key.json",
+    "blind_key_sha256": "e575fbee9606f99f7df8aba4ff5c90a933edac179c21e7f2e4477a7688f3f143",
+    "summary": "summary.json",
+    "summary_sha256": "bb289af4e7a40c9fa82c7e0f8ba2e84bd2ed04e56db1942c4e480c56b5a272ff"
+  },
+  "variants": [
+    "control",
+    "treatment"
+  ],
+  "counts": {
+    "reader": {
+      "control": 3,
+      "treatment": 2,
+      "mixed": 0
+    },
+    "authority": {
+      "control": 2,
+      "treatment": 2,
+      "mixed": 1
+    }
+  },
+  "chapters": [
+    {
+      "chapter": 2,
+      "reader": {
+        "raw_verdict": "B",
+        "decoded_winner": "treatment"
+      },
+      "authority": {
+        "raw_verdict": "A",
+        "decoded_winner": "control"
+      }
+    },
+    {
+      "chapter": 3,
+      "reader": {
+        "raw_verdict": "B",
+        "decoded_winner": "control"
+      },
+      "authority": {
+        "raw_verdict": "A",
+        "decoded_winner": "treatment"
+      }
+    },
+    {
+      "chapter": 10,
+      "reader": {
+        "raw_verdict": "B",
+        "decoded_winner": "control"
+      },
+      "authority": {
+        "raw_verdict": "A",
+        "decoded_winner": "treatment"
+      }
+    },
+    {
+      "chapter": 14,
+      "reader": {
+        "raw_verdict": "A",
+        "decoded_winner": "control"
+      },
+      "authority": {
+        "raw_verdict": "MIXED",
+        "decoded_winner": "mixed"
+      }
+    },
+    {
+      "chapter": 19,
+      "reader": {
+        "raw_verdict": "B",
+        "decoded_winner": "treatment"
+      },
+      "authority": {
+        "raw_verdict": "A",
+        "decoded_winner": "control"
+      }
+    }
+  ]
+}

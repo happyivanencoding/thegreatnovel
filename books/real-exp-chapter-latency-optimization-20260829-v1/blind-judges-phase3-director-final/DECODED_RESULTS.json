@@ -1,0 +1,82 @@
+{
+  "schema": "tgn.blind_verdict_decode.v1",
+  "source": {
+    "blind_key": "blind_key.json",
+    "blind_key_sha256": "c9038ccd52906960a82a92f3527885f77d09c44321cbdafe32244f68c26b5e77",
+    "summary": "summary.json",
+    "summary_sha256": "f612b0d9e687df576545c3e2ab790c61404ec102776897f33f75767f39ff9ba6"
+  },
+  "variants": [
+    "control",
+    "conditional"
+  ],
+  "counts": {
+    "reader": {
+      "control": 3,
+      "conditional": 2,
+      "mixed": 0
+    },
+    "authority": {
+      "control": 4,
+      "conditional": 1,
+      "mixed": 0
+    }
+  },
+  "chapters": [
+    {
+      "chapter": 2,
+      "reader": {
+        "raw_verdict": "B",
+        "decoded_winner": "control"
+      },
+      "authority": {
+        "raw_verdict": "B",
+        "decoded_winner": "control"
+      }
+    },
+    {
+      "chapter": 13,
+      "reader": {
+        "raw_verdict": "A",
+        "decoded_winner": "control"
+      },
+      "authority": {
+        "raw_verdict": "A",
+        "decoded_winner": "control"
+      }
+    },
+    {
+      "chapter": 16,
+      "reader": {
+        "raw_verdict": "B",
+        "decoded_winner": "control"
+      },
+      "authority": {
+        "raw_verdict": "B",
+        "decoded_winner": "control"
+      }
+    },
+    {
+      "chapter": 19,
+      "reader": {
+        "raw_verdict": "A",
+        "decoded_winner": "conditional"
+      },
+      "authority": {
+        "raw_verdict": "A",
+        "decoded_winner": "conditional"
+      }
+    },
+    {
+      "chapter": 20,
+      "reader": {
+        "raw_verdict": "B",
+        "decoded_winner": "conditional"
+      },
+      "authority": {
+        "raw_verdict": "A",
+        "decoded_winner": "control"
+      }
+    }
+  ]
+}
