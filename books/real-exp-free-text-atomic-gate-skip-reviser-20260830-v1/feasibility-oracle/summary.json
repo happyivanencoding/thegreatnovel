@@ -1,0 +1,98 @@
+{
+  "schema_version": "free-text-primary-feasibility-oracle-v1",
+  "runs": [
+    "fresh-control-3",
+    "fresh-control-4"
+  ],
+  "samples": [
+    "jiuchui_ch14",
+    "jiuchui_ch16",
+    "shadow_ch4",
+    "shadow_ch9"
+  ],
+  "attempts": 8,
+  "pass_direct_final": 5,
+  "fallback_full": 3,
+  "rows": [
+    {
+      "run": "fresh-control-3",
+      "sample": "jiuchui_ch14",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文落实了开炉试中的一次锁潮、改向、释放，并明确证明回潮楔改变整段潮势而非只稳住自身附近。顾停舟拒绝阮青蜃买断，保留回潮楔自主权与个人矿利，接受少东家的固定报酬独立粮路合作。公开见证确认了器物价值、使用后的残压限制、首批矿脉个人矿利及砺骨部水路不构成阮青蜃完整矿权。结尾明确写出报酬尚未到账、货物今晚出发并须在下一次十二日地潮前送达旧关。未发现会污染Canon或下一章状态的事实越界，也没有遗漏计划要求的当前章结果。",
+      "wall_seconds": 36.389
+    },
+    {
+      "run": "fresh-control-3",
+      "sample": "jiuchui_ch16",
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [],
+      "missing_required": [
+        "砺骨部取得本轮可实际通过的迁徙取水窗口"
+      ],
+      "reason": "正文已落实粮道、三座新井暂保、外层毁弃、回潮楔释放后残压散尽及下一轮潮势逼近撤离队伍。砺骨部段落只明确写出改走高处并引导居民撤离，没有具体证明其取得了本轮实际可用的迁徙取水窗口。“水路口给你们留出来”仍可能仅指撤离通道，无法等价确认取水窗口已成立。其余事实边界未见需要因此fallback的硬冲突。",
+      "wall_seconds": 58.211
+    },
+    {
+      "run": "fresh-control-3",
+      "sample": "shadow_ch4",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文落实了杜衡以陌生步点持续逼近，顾临川在严重疲劳中放弃直线后撤、不抢先凝刃，观察落脚并以一次真实空隙完成克制反击取胜。公开连胜、正式一阶记录、铜羽随队契约与第一笔预付钱均已明确落地，所有权和离乡机会清楚。顾临川主动与分影前往后门，使陆绾同时确认两具身体；她据此决定同行，关系与同行安排发生了明确变化。结尾落实北方安全路线因探路队失联关闭、商队与药队次日绕行折日峡，未越过未知边界。",
+      "wall_seconds": 54.842
+    },
+    {
+      "run": "fresh-control-3",
+      "sample": "shadow_ch9",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文落实了归体伤势结算、陆绾处理伤口与划定影身边界、顾临川承认同时追求乌沉短兵和陆绾生还，以及顾斜阳依据见证重新判断。影身受伤回传、短暂失力、二阶状态、短兵持有和药队仍需撤离等事实均未越界。铜羽领队只将记录带回沉昼城重新计算护卫待遇，没有提前兑现更高层级入口或待遇。气味、近身照料、接受靠近等Human cue已被当前关系触发，未知异兽与路线风险也保持为未知或未解决状态。",
+      "wall_seconds": 20.759
+    },
+    {
+      "run": "fresh-control-4",
+      "sample": "jiuchui_ch14",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文完整落实了回潮楔一次锁潮、改向、释放，并明确其改变整段潮势而非单纯增压，同时写明残压未散、不能连续硬压。公开见证确认了回潮楔价值、个人矿利及砺骨部水路不归入阮青蜃完整矿权，且买断与追索未被误写成消失。顾停舟拒绝出售回潮楔，保留自主使用权和个人矿利，并与少东家以固定报酬、损失边界建立独立承运合作，结束旧主从关系。结尾已随粮队出发，明确第一批货须在下一次十二日地潮前送达旧关；未越过未知边界，也未把临时实测误写成稳定力量。",
+      "wall_seconds": 15.877
+    },
+    {
+      "run": "fresh-control-4",
+      "sample": "jiuchui_ch16",
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [
+        "分身没有将回潮楔固定在第二潮压节点，而是由本体将回潮楔掷至外层残墙下，改变了能力动作链与器物落点。"
+      ],
+      "missing_required": [
+        "结尾未落实顾停舟必须进入观测点、弄清下一轮潮势指向并争取撤离时间。"
+      ],
+      "reason": "正文正确落实了粮道、三座新井、砺骨部取水窗口获保、外层毁弃、承运未完成及回潮楔残压未散等主要结果。但关键能力动作不等价：合同要求分身携带“定住”把回潮楔固定在第二潮压节点，正文却由分身定住石台、由本体把回潮楔掷到外层残墙下，改变了回潮楔的实际落点与作用链。此外，结尾虽暴露观测点和潮谱并提示潮势指向撤离队伍，却没有落实进入观测点及争取撤离时间的明确推动，因此不能直接成为Final。",
+      "wall_seconds": 53.546
+    },
+    {
+      "run": "fresh-control-4",
+      "sample": "shadow_ch4",
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [],
+      "missing_required": [
+        "公开名次未明确落地"
+      ],
+      "reason": "正文落实了杜衡以陌生步点逼近、顾临川在严重疲劳下停止直线后退并观察落脚、抓住一次真实空隙以影刃克制取胜。正文也落实了仍为一阶、连续实战稳定、铜羽随队契约、第一笔预付钱、陆绾确认分影并决定同行，以及次日绕行折日峡。分影能力仍被写成暂时能力，未越过未知边界，相关Human cue和Reader Release均已出现。但事件合同要求顾临川赢得公开名次，正文只明确写了连续胜利和签约，没有明确给出名次或等价的公开排名结果，因此需进入Full Authority Reviser。",
+      "wall_seconds": 31.188
+    },
+    {
+      "run": "fresh-control-4",
+      "sample": "shadow_ch9",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文落实了顾临川同时追求乌沉短兵与陆绾生还，并明确承认影身伤势会真实回传、接受陆绾划定的使用边界。顾斜阳通过弟子复述确认两条路线中的临场选择，顾临川仍受伤脱力，关系也转为带边界的合作。铜羽领队记录两条行动线无法按普通二阶护卫解释，并将记录带回上层重新评估护卫价值，等价落实结尾推动力。未发现money、payment、ownership、time、稳定力量等级、unknown boundary或其他会污染Canon的硬冲突。",
+      "wall_seconds": 49.54
+    }
+  ]
+}
