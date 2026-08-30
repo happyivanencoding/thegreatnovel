@@ -1,0 +1,4 @@
+﻿candidate,route_wall_s,full_high_wall_s,saved_s,editable_ratio,mean_patch_count,story_candidate,story_high,authority_candidate,authority_high,hard_candidate,hard_high,verdict
+L1 medium local,20.447,133.275,112.828,0.0409,1.875,52.875,55.0,79.75,88.75,13,6,FAIL
+L2 high local,29.696,133.275,103.579,0.0409,1.5,66.75,73.125,80.875,92.375,14,5,FAIL
+T1 high full-context transactional diff,134.23,133.275,-0.955,full-context,3.625,not run,not run,not run,not run,not run,not run,FAIL_TIMING

@@ -1,0 +1,23 @@
+{
+  "schema_version": "local-authority-repair-final-validation-v1",
+  "status": "ENGINEERING_VALIDATED_PENDING_GIT_PUSH",
+  "production_changed": false,
+  "heldout3_generated": false,
+  "protocol_hashes": {
+    "l1": "FA7381FC82824E5C221E81203145787E74487A9ABC0EE1B915D885C07C40A32E",
+    "l2": "1F54FA24D1AAFAEBD31FA2BFEA8B942B093A53B866684D2101A84FC21A1A5870",
+    "t1": "DEBC7FAD6B5E9E778B846B38523AD9761A7CD1F7947E269368060F1D84061688"
+  },
+  "verdict": "STOP_POSTHOC_LOCAL_DIFF_FAMILY_KEEP_FULL_LUNA_HIGH",
+  "pending": [
+    "git_commit",
+    "git_push"
+  ],
+  "tests": {
+    "scripts_compiled": 5,
+    "full_pytest_passed": 440,
+    "full_pytest_command": "python -m pytest -q",
+    "git_diff_check": true,
+    "production_src_tests_changed": false
+  }
+}

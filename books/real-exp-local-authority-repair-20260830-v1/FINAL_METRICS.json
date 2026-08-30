@@ -1,0 +1,116 @@
+{
+  "schema_version": "local-authority-repair-final-v1",
+  "production_changed": false,
+  "heldout3_generated": false,
+  "l1_medium_local": {
+    "protocol_sha256": "FA7381FC82824E5C221E81203145787E74487A9ABC0EE1B915D885C07C40A32E",
+    "mean_editable_ratio": 0.0409,
+    "mean_patch_count": 1.875,
+    "mean_wall": 20.447,
+    "high_wall": 133.275,
+    "seconds_saved_vs_high": 112.828,
+    "story": {
+      "primary": {
+        "mean_score": 57.25,
+        "first_place": 4,
+        "mean_rank": 1.5,
+        "hard_problems": 0
+      },
+      "local": {
+        "mean_score": 52.875,
+        "first_place": 2,
+        "mean_rank": 2.25,
+        "hard_problems": 0
+      },
+      "high": {
+        "mean_score": 55.0,
+        "first_place": 2,
+        "mean_rank": 2.25,
+        "hard_problems": 0
+      }
+    },
+    "authority": {
+      "primary": {
+        "mean_score": 79.5,
+        "first_place": 1,
+        "mean_rank": 2.25,
+        "hard_problems": 11
+      },
+      "local": {
+        "mean_score": 79.75,
+        "first_place": 2,
+        "mean_rank": 2.375,
+        "hard_problems": 13
+      },
+      "high": {
+        "mean_score": 88.75,
+        "first_place": 5,
+        "mean_rank": 1.375,
+        "hard_problems": 6
+      }
+    },
+    "verdict": "FAIL"
+  },
+  "l2_high_local": {
+    "protocol_sha256": "1F54FA24D1AAFAEBD31FA2BFEA8B942B093A53B866684D2101A84FC21A1A5870",
+    "mean_editable_ratio": 0.0409,
+    "mean_patch_count": 1.5,
+    "mean_wall": 29.696,
+    "high_wall": 133.275,
+    "seconds_saved_vs_high": 103.579,
+    "story": {
+      "primary": {
+        "mean_score": 77.125,
+        "first_place": 5,
+        "mean_rank": 1.375,
+        "hard_problems": 0
+      },
+      "local": {
+        "mean_score": 66.75,
+        "first_place": 2,
+        "mean_rank": 2.375,
+        "hard_problems": 0
+      },
+      "high": {
+        "mean_score": 73.125,
+        "first_place": 1,
+        "mean_rank": 2.25,
+        "hard_problems": 0
+      }
+    },
+    "authority": {
+      "primary": {
+        "mean_score": 81.75,
+        "first_place": 0,
+        "mean_rank": 2.5,
+        "hard_problems": 15
+      },
+      "local": {
+        "mean_score": 80.875,
+        "first_place": 2,
+        "mean_rank": 2.125,
+        "hard_problems": 14
+      },
+      "high": {
+        "mean_score": 92.375,
+        "first_place": 6,
+        "mean_rank": 1.375,
+        "hard_problems": 5
+      }
+    },
+    "verdict": "FAIL"
+  },
+  "t1_transactional_high_diff": {
+    "protocol_sha256": "DEBC7FAD6B5E9E778B846B38523AD9761A7CD1F7947E269368060F1D84061688",
+    "fallback_count": 2,
+    "mean_patch_count": 3.625,
+    "mean_t1_wall": 110.624,
+    "mean_route_wall": 134.23,
+    "mean_high_wall": 133.275,
+    "seconds_saved_vs_high": -0.955,
+    "quality_blind_run": false,
+    "quality_blind_reason": "Pre-frozen acceptance gate already failed fallback-adjusted timing; no further judge calls were needed.",
+    "verdict": "FAIL_TIMING"
+  },
+  "final_verdict": "STOP_POSTHOC_LOCAL_DIFF_FAMILY_KEEP_FULL_LUNA_HIGH"
+}

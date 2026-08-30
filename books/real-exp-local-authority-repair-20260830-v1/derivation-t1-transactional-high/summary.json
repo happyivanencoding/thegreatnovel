@@ -1,0 +1,100 @@
+{
+  "schema_version": "transactional-high-diff-t1-derivation-v1",
+  "protocol_sha256": "DEBC7FAD6B5E9E778B846B38523AD9761A7CD1F7947E269368060F1D84061688",
+  "rows": [
+    {
+      "run": "repeat1",
+      "chapter": 1,
+      "disposition": "PATCH",
+      "fallback": false,
+      "patch_count": 5,
+      "t1_wall": 122.529,
+      "high_wall": 129.541,
+      "route_wall": 122.529,
+      "saved_vs_high": 7.012
+    },
+    {
+      "run": "repeat1",
+      "chapter": 2,
+      "disposition": "PATCH",
+      "fallback": false,
+      "patch_count": 3,
+      "t1_wall": 100.521,
+      "high_wall": 153.094,
+      "route_wall": 100.521,
+      "saved_vs_high": 52.573
+    },
+    {
+      "run": "repeat1",
+      "chapter": 3,
+      "disposition": "PARSE_FALLBACK",
+      "fallback": true,
+      "patch_count": 0,
+      "t1_wall": 108.76,
+      "high_wall": 104.494,
+      "route_wall": 213.254,
+      "saved_vs_high": -108.76
+    },
+    {
+      "run": "repeat1",
+      "chapter": 4,
+      "disposition": "PATCH",
+      "fallback": false,
+      "patch_count": 6,
+      "t1_wall": 91.895,
+      "high_wall": 180.624,
+      "route_wall": 91.895,
+      "saved_vs_high": 88.729
+    },
+    {
+      "run": "repeat2",
+      "chapter": 1,
+      "disposition": "PATCH",
+      "fallback": false,
+      "patch_count": 6,
+      "t1_wall": 141.823,
+      "high_wall": 111.145,
+      "route_wall": 141.823,
+      "saved_vs_high": -30.678
+    },
+    {
+      "run": "repeat2",
+      "chapter": 2,
+      "disposition": "PATCH",
+      "fallback": false,
+      "patch_count": 8,
+      "t1_wall": 175.256,
+      "high_wall": 167.395,
+      "route_wall": 175.256,
+      "saved_vs_high": -7.861
+    },
+    {
+      "run": "repeat2",
+      "chapter": 3,
+      "disposition": "PATCH",
+      "fallback": false,
+      "patch_count": 1,
+      "t1_wall": 35.166,
+      "high_wall": 135.551,
+      "route_wall": 35.166,
+      "saved_vs_high": 100.385
+    },
+    {
+      "run": "repeat2",
+      "chapter": 4,
+      "disposition": "PARSE_FALLBACK",
+      "fallback": true,
+      "patch_count": 0,
+      "t1_wall": 109.04,
+      "high_wall": 84.359,
+      "route_wall": 193.399,
+      "saved_vs_high": -109.04
+    }
+  ],
+  "fallback_count": 2,
+  "mean_patch_count": 3.625,
+  "mean_t1_wall": 110.624,
+  "mean_route_wall": 134.23,
+  "mean_high_wall": 133.275,
+  "mean_saved_vs_high": -0.955
+}
