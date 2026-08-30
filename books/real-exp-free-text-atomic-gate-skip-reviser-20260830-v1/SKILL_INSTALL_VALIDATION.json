@@ -1,0 +1,10 @@
+{
+  "skill": "tgn-system-steward",
+  "version": "0.3.26",
+  "digest": "sha256:b82f9d0b742a384f1fcd09c1ec778ae820077bfb14a48a0f417cda25abbfb6a4",
+  "validate": "PASS",
+  "install": "PASS",
+  "activate": "PASS",
+  "bounded_smoke": "PASS",
+  "smoke_wall_seconds": 11.134
+}

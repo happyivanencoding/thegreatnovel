@@ -1,0 +1,347 @@
+{
+  "schema_version": "free-text-atomic-gate-skip-reviser-final-v1",
+  "status": "COMPLETE",
+  "production_changed": false,
+  "scope": "rich free-text Director -> Curator -> Primary -> deterministic Atomic bypass Gate; PASS would use Primary as Final, FAIL/UNSUPPORTED uses current Full Authority Reviser; State excluded",
+  "samples": {
+    "books": 2,
+    "chapters": 4,
+    "fresh_repeats": 2,
+    "attempts": 8
+  },
+  "gate": {
+    "supported_attempts": 4,
+    "pass_attempts": 0,
+    "fallback_attempts": 8,
+    "supported_pass_rate": 0.0,
+    "overall_bypass_rate": 0.0,
+    "total_gate_wall_seconds": 0.019835,
+    "mean_gate_wall_ms_per_chapter": 2.479,
+    "pre_freeze_calibration": {
+      "historical_rich_primary_attempts": 8,
+      "strict_oracle_direct_final": 5,
+      "deterministic_gate_pass": 4,
+      "false_safe": 0,
+      "safe_false_fallback": 1,
+      "targeted_hard_fact_mutation_categories_blocked": "10/10"
+    }
+  },
+  "timing": {
+    "control_total_8chap_seconds": 2457.403,
+    "treatment_total_8chap_seconds": 2457.424,
+    "actual_seconds_saved": -0.021,
+    "actual_percent_saved": -0.000855,
+    "actual_seconds_saved_per_chapter": -0.002625,
+    "control_mean_per_chapter_seconds": 307.175,
+    "treatment_mean_per_chapter_seconds": 307.178,
+    "reviser_total_seconds": 1050.407,
+    "reviser_mean_per_chapter_seconds": 131.301,
+    "reviser_share_of_control_percent": 42.74,
+    "run_summaries": [
+      {
+        "schema_version": "free-text-atomic-bypass-e2e-v1",
+        "run": "fresh-gate-1",
+        "samples": 4,
+        "gate_supported": 2,
+        "gate_pass": 0,
+        "gate_fallback": 4,
+        "control_total_seconds": 1261.3,
+        "treatment_total_seconds": 1261.31,
+        "seconds_saved": -0.01,
+        "percent_saved": -0.0,
+        "seconds_saved_per_chapter": -0.002,
+        "batch_elapsed_seconds": 380.812
+      },
+      {
+        "schema_version": "free-text-atomic-bypass-e2e-v1",
+        "run": "fresh-gate-2",
+        "samples": 4,
+        "gate_supported": 2,
+        "gate_pass": 0,
+        "gate_fallback": 4,
+        "control_total_seconds": 1196.103,
+        "treatment_total_seconds": 1196.114,
+        "seconds_saved": -0.011,
+        "percent_saved": -0.0,
+        "seconds_saved_per_chapter": -0.003,
+        "batch_elapsed_seconds": 345.9
+      }
+    ]
+  },
+  "supported_authority_oracle": {
+    "fresh-gate-1": {
+      "jiuchui_ch14": {
+        "decisions": [
+          "FALLBACK_FULL",
+          "FALLBACK_FULL"
+        ],
+        "unanimous_pass": false,
+        "unanimous_fallback": true
+      },
+      "shadow_ch9": {
+        "decisions": [
+          "PASS_DIRECT_FINAL",
+          "PASS_DIRECT_FINAL"
+        ],
+        "unanimous_pass": true,
+        "unanimous_fallback": false
+      }
+    },
+    "fresh-gate-2": {
+      "jiuchui_ch14": {
+        "decisions": [
+          "PASS_DIRECT_FINAL",
+          "PASS_DIRECT_FINAL"
+        ],
+        "unanimous_pass": true,
+        "unanimous_fallback": false
+      },
+      "shadow_ch9": {
+        "decisions": [
+          "PASS_DIRECT_FINAL",
+          "PASS_DIRECT_FINAL"
+        ],
+        "unanimous_pass": true,
+        "unanimous_fallback": false
+      }
+    }
+  },
+  "unsupported_single_oracle": [
+    {
+      "run": "fresh-gate-1",
+      "sample": "jiuchui_ch16",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文实现了顾停舟本体稳住粮车、分身携带“定住”固定第二潮压节点，并以回潮楔完成改道释放。粮道继续通行，三座新井保住可用部分，砺骨部与居民获得高处迁徙取水窗口，外层明确毁弃。回潮楔所有权未变、浅裂未扩但残压释放，顾停舟胸闷咳血，独立承运人与契约关系均未被改写。结尾落在外层毁弃后观测点暴露及顾停舟进入确认潮势的选择，未发现具体硬事实冲突或当前章必需结果缺失。",
+      "wall_seconds": 25.622
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch4",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文完整实现了杜衡主动压迫、顾临川在严重疲劳下改变退法并以影刃反击取胜。顾临川仍处于一阶，未新增境界或能力升级，分影、疲劳回流与不公开参战边界均未被违反。公开名次、铜羽随队契约、第一笔预付款、陆绾确认分影并决定同行等 required result 均已落地。结尾明确商队与药队次日离镇并前往折日峡，未提前展开未知危险，因此可直接成为 Final。",
+      "wall_seconds": 26.03
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch16",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文完整实现了顾停舟本体与分身的分位行动，分身仅携带“定住”并固定回潮楔。本体稳定主水路，粮道与三座新潮井保住，砺骨部取得暂时可用的高处迁徙取水入口。旧关外层被明确牺牲并彻底毁弃，回潮楔归顾停舟所有但残压未散，承运责任仍在继续。结尾暴露内侧观测点与照域潮谱，并把下一轮潮势对撤离队伍的威胁及顾停舟的进入决定落地。",
+      "wall_seconds": 16.367
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch4",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文完成了杜衡战、连续胜利、随队契约与预付钱到账。顾临川仍为一阶，疲劳、手臂发颤与分影回流限制均保持不变。陆绾亲眼确认分影后决定同行，关系结果已兑现。结尾保留次日离城、路线关闭并改道折日峡的跨章推动力。",
+      "wall_seconds": 27.485
+    }
+  ],
+  "pair_blind_repeat1": {
+    "story": {
+      "primary_wins": 1,
+      "reviser_wins": 6,
+      "ties": 0,
+      "primary_mean": 84.143,
+      "reviser_mean": 86.857
+    },
+    "authority": {
+      "primary_wins": 1,
+      "reviser_wins": 3,
+      "ties": 3,
+      "primary_mean": 0.143,
+      "reviser_mean": 0.429
+    }
+  },
+  "pair_blind_repeat2": {
+    "story": {
+      "primary_wins": 3,
+      "reviser_wins": 4,
+      "ties": 0,
+      "primary_mean": 79.0,
+      "reviser_mean": 79.571
+    },
+    "authority": {
+      "primary_wins": 0,
+      "reviser_wins": 5,
+      "ties": 2,
+      "primary_mean": 0.143,
+      "reviser_mean": 0.571
+    }
+  },
+  "pair_blind_combined": {
+    "story": {
+      "judgments": 14,
+      "primary_wins": 4,
+      "reviser_wins": 10,
+      "ties": 0,
+      "primary_mean_score": 81.572,
+      "reviser_mean_score": 83.214
+    },
+    "authority": {
+      "judgments": 14,
+      "primary_wins": 1,
+      "reviser_wins": 8,
+      "ties": 5,
+      "primary_mean_score": 0.143,
+      "reviser_mean_score": 0.5
+    }
+  },
+  "stable_pair_analysis": [
+    {
+      "run": "fresh-gate-1",
+      "sample": "jiuchui_ch16",
+      "story_repeat_winners": [
+        "reviser",
+        "primary"
+      ],
+      "authority_repeat_winners": [
+        "tie",
+        "tie"
+      ],
+      "authority_primary_hard_problems": [
+        [],
+        []
+      ],
+      "stable_quality_equivalent_bypass": false
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch4",
+      "story_repeat_winners": [
+        "reviser",
+        "primary"
+      ],
+      "authority_repeat_winners": [
+        "reviser",
+        "reviser"
+      ],
+      "authority_primary_hard_problems": [
+        [
+          "将权威要求的铜羽随队契约写成薄木牌，且后文在木牌与契券之间摇摆，关键所有权与契约对象不够确定",
+          "未明确释放铜羽契券提供跨城住宿、交易和护送入口这一Reader Release"
+        ],
+        [
+          "将铜羽随队契券写成“薄木牌”，后文又称“随队契券”，造成契约凭证对象不一致"
+        ]
+      ],
+      "stable_quality_equivalent_bypass": false
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch9",
+      "story_repeat_winners": [
+        "reviser",
+        "reviser"
+      ],
+      "authority_repeat_winners": [
+        "reviser",
+        "reviser"
+      ],
+      "authority_primary_hard_problems": [
+        [
+          "顾斜阳概括两条路线时写成“一边是陆绾和药队的人”，把实际由影身带出的三名观日宗弟子混入药队，造成路线与人员归属的事实偏差。"
+        ],
+        [
+          "顾斜阳回顾双线结果时写成“短兵”和“陆绾和药队的人”两边，混入药队已被顾临川带出的暗示；本章实际对应的是陆绾与三名观日宗弟子两条行动线，药队仍待撤离。"
+        ]
+      ],
+      "stable_quality_equivalent_bypass": false
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch14",
+      "story_repeat_winners": [
+        "reviser",
+        "reviser"
+      ],
+      "authority_repeat_winners": [
+        "reviser",
+        "reviser"
+      ],
+      "authority_primary_hard_problems": [
+        [
+          "将阮青蜃报价写成“买断之价照旧”，引入权威未提供的既有价格信息，违反具体价格不补写边界。"
+        ],
+        [
+          "“买断之价照旧”把权威明确未给出的具体价格写成已有固定价格，越过unknown边界。"
+        ]
+      ],
+      "stable_quality_equivalent_bypass": false
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch16",
+      "story_repeat_winners": [
+        "reviser",
+        "reviser"
+      ],
+      "authority_repeat_winners": [
+        "tie",
+        "reviser"
+      ],
+      "authority_primary_hard_problems": [
+        [],
+        [
+          "required missing：分身先被写成只携带“一点力量”，随后未交代如何取得回潮楔就直接将其钉入地缝，分身→回潮楔→固定动作的对象链不闭合。"
+        ]
+      ],
+      "stable_quality_equivalent_bypass": false
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch4",
+      "story_repeat_winners": [
+        "primary",
+        "primary"
+      ],
+      "authority_repeat_winners": [
+        "tie",
+        "reviser"
+      ],
+      "authority_primary_hard_problems": [
+        [],
+        [
+          "未明确兑现铜羽契券所代表的跨城交易入口，Reader Release中的“住宿、交易和护送”只写出住宿与护卫职责"
+        ]
+      ],
+      "stable_quality_equivalent_bypass": false
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch9",
+      "story_repeat_winners": [
+        "reviser",
+        "reviser"
+      ],
+      "authority_repeat_winners": [
+        "primary",
+        "tie"
+      ],
+      "authority_primary_hard_problems": [
+        [],
+        []
+      ],
+      "stable_quality_equivalent_bypass": false
+    }
+  ],
+  "stable_quality_equivalent_bypass_candidates": 0,
+  "actual_final_identity": {
+    "all_8_treatment_finals_equal_control_finals": true
+  },
+  "verdict": {
+    "architecture_hypothesis": "FAIL_AS_CURRENT_BYPASS_ROUTE",
+    "rich_free_text_primary_readiness": "BETTER_THAN_NATIVE_BUT_NOT_FINAL_EQUIVALENT",
+    "deterministic_authority_gate": "HIGH_PRECISION_LOW_RECALL_RESEARCH_ONLY",
+    "authority_pass_is_sufficient_to_skip_reviser": false,
+    "full_reviser_is_pure_fixed_tax": false,
+    "keep_current_production": true
+  }
+}

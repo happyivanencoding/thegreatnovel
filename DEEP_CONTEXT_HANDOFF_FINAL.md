@@ -1297,7 +1297,7 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 - `docs/CHAPTER_RUNTIME_AND_STATE.md`：章节、Canon、State；
 - `docs/NOVEL_PROSE_REALIZATION.md`：正文表达；
 - `docs/AUTHOR_WORKSPACE_UI_SPEC.md`：UI；
-- `tgn-system-steward`：AgentDock 审计 Skill；当前激活 **v0.3.20**。已包含 Premise Search / Compiler / production state audit、Atomic Obligation、Post-Writer Authority Revision、Scene Craft Evidence & Runtime Bandwidth，以及 Asymmetry Reveal / Social Calibration Trace；Steward 仍以 live discovery 读取 production，不把完整系统快照写死在 Skill；
+- `tgn-system-steward`：AgentDock 审计 Skill；当前激活版本以 AgentDock live discovery 为准（本轮更新后为 **v0.3.26**）。已包含 Premise Search / Compiler / production state audit、Atomic Obligation、Post-Writer Authority Revision、Scene Craft Evidence & Runtime Bandwidth，以及 Asymmetry Reveal / Social Calibration Trace；Steward 仍以 live discovery 读取 production，不把完整系统快照写死在 Skill；
 - `.agents/skills/novel-prose-realization/`：正文实现 Skill；Reader Orientation / Supporting Skill compression 更新已随 `15a389d` 提交。
 
 ### 11.5 当前关键实验
@@ -1764,6 +1764,8 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 
 静态证据：57项focused tests；两书四章4/4 source-pure/preflight eligible，平均editable 3.11%，窗口外4/4阻止；22/22 Schema/runtime checks；Sidecar wall分别+205.83%/+147.41%/+146.45%，全部否决。2026-08-30继续完成真实Native E2E：两书四章、2次正确串联Control + 2次冻结v2 Treatment、纯正文Story/Authority双盲。v2为8/8 Native accepted、fixture结构覆盖100%，但semantic Hard Contract repeat仅3/4；Mission Story 6.99 vs 8.60、Mission Authority 6.55 vs 8.41、Final Story 8.41 vs 7.88、Final Authority 6.79 vs 8.04。完整Final Draft为351.566s/章 vs Control 325.954s/章，慢25.612s/章（7.86%）；Primary Oracle仅2/8可跳Full，即使零成本完美Gate理论也只快1.68%。关键新判断：`typed fixture coverage ≠ Story Mission completeness ≠ Final Authority`；Hard Contract适合后台验证，不适合单独承载一章为何好看。当前Native human projection FAIL，Atomic fast route / Full-Reviser removal仍NOT PRODUCTION。下一候选是把Hard IR前移到Story/Outline/Runtime已决定的结构化事实，同时保留rich human Director Mission。完整报告：`books/real-exp-native-structured-e2e-20260830-v1/RESULTS.md`。
 
+随后按这个方向测试“保留rich free-text Mission，只把Atomic放到Primary后做bypass Gate”。冻结前历史rich Primary提示5/8可能直出；但冻结后2次fresh共8章，Gate 4次supported、0次PASS，实际速度2457.403s→2457.424s，完全没有节省。独立Oracle说明部分fallback确实过保守，但更重要的二次盲评推翻了“Authority安全=可跳Reviser”：对7组Oracle-safe Primary/Reviser pair做两轮Story+Authority blind，Story 14票Reviser 10胜/Primary 4胜；Authority 14票Reviser 8胜/Primary 1胜/5平；0/7稳定同时满足Story不降与Primary无hard problem。Oracle本身还漏掉“买断之价照旧”偷建旧价格、路线人员归属、契券对象/Reader Release、分身→回潮楔object chain等真实错误。稳定新判断：`Atomic Authority closure ≠ Reviser necessity`；当前Full Reviser虽然平均占约42.74%章节wall，却同时承担真实Story realization与Authority recovery，不是可凭Contract PASS删除的固定税。不要扩中文regex/parser，也不要新增LLM Gate；下一次只有先证明Primary已经把Reviser变成稳定no-op，才重新测试skip。完整报告：`books/real-exp-free-text-atomic-gate-skip-reviser-20260830-v1/RESULTS.md`。
+
 ---
 
 ## 15. How to Work With the User
@@ -1819,7 +1821,7 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 
 ### 15.7 用户说“审计”时有固定协议
 
-自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本为 **0.3.8**；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
+自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本见本地/AgentDock live discovery（本轮更新后为 **0.3.26**）；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
 
 ### 15.8 Docs 要言简意赅
 

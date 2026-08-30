@@ -287,5 +287,5 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 8. Native / fallback route必须计入废弃typed调用 + free-text fallback + 全部downstream；0次fallback只能说明当前手工样本，没有证明自动Registry下的production fallback率。
 9. independent repeat至少区分raw decision、normalized decision、artifact hash、semantic Hard Fact set、human Mission与Final Draft；逐字不一致不是自动失败，但Hard semantic set不稳不能成为Gate Authority。
 10. 速度结论用fresh adjacent Control、完整critical path和多轮均值；Runtime毫秒级投影不等于模型Director更快，单轮快而另一轮慢不能宣布节约。
-11. 当前E2E已否决用Native human projection替换rich free-text Director；后续更有价值的方向是保留rich Mission，把typed Contract只用于后台Gate / blocker repair，并测试supported chapter能否安全跳过Full Reviser。
-12. 不新增中文Parser、LLM safety classifier或常驻Reviewer来修另一个Reviewer。
+11. 后续 rich-Mission bypass E2E 进一步否决“Authority Gate PASS即可跳Full”：冻结fresh route为0/8 bypass；对7组Oracle-safe Primary/Reviser pair做两轮匿名复核后，Story为Primary 4胜/Reviser 10胜，Authority为Primary 1胜/Reviser 8胜/5平，0/7稳定质量等价。**Contract closure ≠ Reviser necessity**；如果Full Reviser已在真实pair中证明同时增加Story与Authority，就必须先让Primary稳定达到其输出水平、使Reviser趋近no-op，再谈skip。
+12. LLM Oracle只能做研究归因，不能成为production bypass classifier；本轮Oracle PASS仍漏掉旧价格、路线人员归属、Reader Release和actor-object chain等具体错误。不要新增中文Parser、LLM safety classifier或常驻Reviewer来修另一个Reviewer。

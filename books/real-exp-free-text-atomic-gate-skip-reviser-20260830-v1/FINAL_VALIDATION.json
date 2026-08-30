@@ -1,0 +1,32 @@
+{
+  "schema_version": "free-text-atomic-gate-skip-reviser-validation-v1",
+  "status": "COMPLETE",
+  "production_changed": false,
+  "protocol_frozen_before_fresh_runs": true,
+  "fresh_runs": [
+    "fresh-gate-1",
+    "fresh-gate-2"
+  ],
+  "attempts": 8,
+  "gate_pass": 0,
+  "fallback": 8,
+  "all_treatment_finals_equal_control": true,
+  "actual_seconds_saved": -0.021,
+  "stable_quality_equivalent_bypass_candidates": 0,
+  "verdict": {
+    "architecture_hypothesis": "FAIL_AS_CURRENT_BYPASS_ROUTE",
+    "rich_free_text_primary_readiness": "BETTER_THAN_NATIVE_BUT_NOT_FINAL_EQUIVALENT",
+    "deterministic_authority_gate": "HIGH_PRECISION_LOW_RECALL_RESEARCH_ONLY",
+    "authority_pass_is_sufficient_to_skip_reviser": false,
+    "full_reviser_is_pure_fixed_tax": false,
+    "keep_current_production": true
+  },
+  "pending": [],
+  "focused_tests": "65/65",
+  "full_repository_tests": "425/425",
+  "git_diff_check": "PASS",
+  "steward_skill": "tgn-system-steward 0.3.26",
+  "steward_validate_install_activate": "PASS",
+  "steward_bounded_smoke": "PASS",
+  "skill_digest": "sha256:b82f9d0b742a384f1fcd09c1ec778ae820077bfb14a48a0f417cda25abbfb6a4"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "free-text-bypass-unsupported-oracle-v1",
+  "rows": [
+    {
+      "run": "fresh-gate-1",
+      "sample": "jiuchui_ch16",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文实现了顾停舟本体稳住粮车、分身携带“定住”固定第二潮压节点，并以回潮楔完成改道释放。粮道继续通行，三座新井保住可用部分，砺骨部与居民获得高处迁徙取水窗口，外层明确毁弃。回潮楔所有权未变、浅裂未扩但残压释放，顾停舟胸闷咳血，独立承运人与契约关系均未被改写。结尾落在外层毁弃后观测点暴露及顾停舟进入确认潮势的选择，未发现具体硬事实冲突或当前章必需结果缺失。",
+      "wall_seconds": 25.622
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch4",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文完整实现了杜衡主动压迫、顾临川在严重疲劳下改变退法并以影刃反击取胜。顾临川仍处于一阶，未新增境界或能力升级，分影、疲劳回流与不公开参战边界均未被违反。公开名次、铜羽随队契约、第一笔预付款、陆绾确认分影并决定同行等 required result 均已落地。结尾明确商队与药队次日离镇并前往折日峡，未提前展开未知危险，因此可直接成为 Final。",
+      "wall_seconds": 26.03
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch16",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文完整实现了顾停舟本体与分身的分位行动，分身仅携带“定住”并固定回潮楔。本体稳定主水路，粮道与三座新潮井保住，砺骨部取得暂时可用的高处迁徙取水入口。旧关外层被明确牺牲并彻底毁弃，回潮楔归顾停舟所有但残压未散，承运责任仍在继续。结尾暴露内侧观测点与照域潮谱，并把下一轮潮势对撤离队伍的威胁及顾停舟的进入决定落地。",
+      "wall_seconds": 16.367
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch4",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文完成了杜衡战、连续胜利、随队契约与预付钱到账。顾临川仍为一阶，疲劳、手臂发颤与分影回流限制均保持不变。陆绾亲眼确认分影后决定同行，关系结果已兑现。结尾保留次日离城、路线关闭并改道折日峡的跨章推动力。",
+      "wall_seconds": 27.485
+    }
+  ]
+}

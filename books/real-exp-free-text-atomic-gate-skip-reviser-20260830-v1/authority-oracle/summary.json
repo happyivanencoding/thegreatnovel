@@ -1,0 +1,130 @@
+{
+  "schema_version": "free-text-atomic-bypass-authority-oracle-v1",
+  "supported_samples": [
+    "jiuchui_ch14",
+    "shadow_ch9"
+  ],
+  "calls": 8,
+  "rows": [
+    {
+      "run": "fresh-gate-1",
+      "sample": "jiuchui_ch14",
+      "repeat": 1,
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [],
+      "missing_required": [
+        "回潮楔的公开实测只明确写出稳住并改向，未清楚落实一次完整的“锁潮—改向—释放”链条，尤其缺少可判定的锁潮动作。"
+      ],
+      "reason": "开炉试、唐绾展示、阮青蜃高价买断失败和少东家独立合作均已落实。首批矿脉不再按阮青蜃完整矿权认定、顾停舟取得个人矿利份额、砺骨部水路不被吞并，也已公开确认。回潮楔确实改变了整段潮势方向并进入残压未散状态，但当前正文没有完整落地任务要求的一次锁潮、改向、释放。其余报酬尚未到账，损失边界、关系换挡和下一次地潮前送达旧关的时限没有明显污染。",
+      "wall_seconds": 55.736
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "jiuchui_ch14",
+      "repeat": 2,
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [],
+      "missing_required": [
+        "公开实测没有完整落实“锁潮—改向—释放”：正文只写顾停舟“稳住回潮楔”并让潮势偏开、冲出泄口，未具体发生或确认“锁潮”这一必需动作。"
+      ],
+      "reason": "正文已落实进入开炉试、唐绾完成展示、回潮楔一次改向、残压限制、拒绝阮青蜃买断并接受少东家独立合作。矿脉独家标记不再等同完整矿权、顾停舟取得个人矿利份额、砺骨部水路未被吞并等直接结果也已写明。少东家给出固定报酬与损失边界，下一次十二日地潮前送货的章末推动力已经成立。唯一缺失是当前章主角行动要求中的“锁潮”，这属于必落事实而非文风或可选细节，因此不能直接成为 Final Draft。",
+      "wall_seconds": 99.829
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch9",
+      "repeat": 1,
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "顾临川归体后的伤势与疲劳回流、暂时脱力以及陆绾处理伤口已经落实。陆绾明确说影身受伤会回到本体，并据此划出不能随便把影身送入危险处的合作边界，顾临川接受了。顾临川明确承认自己既想拿到乌沉短兵，也不愿陆绾死在石城里，没有把救人包装成无私行为。三名弟子的证词使顾斜阳确认他是在两条路线上分别作出临场选择，铜羽领队也根据两条有效撤离记录重新评估其身份与护卫安排。药队仍未撤出折日峡，灰黑异兽与错乱路线仍未解决，顾临川当前不能独立承担探路或撤离任务；未到账的沉昼城机会也没有被写成既成事实。",
+      "wall_seconds": 21.289
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch9",
+      "repeat": 2,
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文落实了归体后伤势与疲劳回流、短暂脱力以及到临时营地由陆绾处理伤口。陆绾明确影身受伤会回到本体并设下不得随意送入危险处的边界，顾临川接受；他也承认既想要乌沉短兵，又不愿陆绾死去，没有洗成无私救人。三名弟子的证词具体证明两条路线中的临场选择与撤离结果，顾斜阳据此重新判断顾临川。正文保留了顾临川暂时不能独立承担撤离、药车仍须撤出、灰黑异兽和错乱路线未解决等状态。铜羽记录触发后续护卫安排重排，但没有把沉昼城入口或新契约写成已到账，未见金钱、归属、能力边界、未知边界或跨章时序污染。",
+      "wall_seconds": 70.882
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch14",
+      "repeat": 1,
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "回潮楔完成了一次锁潮、改向、释放，改动对象是一整段潮势，且明确残压未散、顾停舟没有立即再次硬压。顾停舟拒绝阮青蜃买断，保留回潮楔所有权和自主使用权；公开追索仍被保留。百炉会确认独家标记不足以证明完整矿权，砺骨部水路未被并入阮家矿权，并记下顾停舟的个人矿利份额。少东家明确将旧主从关系改为固定报酬、明确货损边界的独立合作，顾停舟已接受并立即随队出发。报酬尚未写成到账，结尾也保留了下一章在十二日地潮前运输粮货的时间与行动边界。",
+      "wall_seconds": 23.146
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch14",
+      "repeat": 2,
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文完成了回潮楔一次真实的锁潮、改向、释放，并明确残压未散、不能立即再次硬压。懂行者公开确认普通成炉者只能稳定自身附近重压，而回潮楔能够改变整段潮势；百炉会也确认个人矿利份额成立且砺骨部水路不并入阮家矿权。顾停舟拒绝买断并保留回潮楔所有权与使用决定权，阮青蜃转为保留公开追索；少东家明确结束主从关系，双方改为固定报酬和损失边界下的独立合作。合同报酬与首批货物结果没有被写成已到账，车队已按下一次十二日地潮前送达旧关的期限出发。",
+      "wall_seconds": 43.01
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch9",
+      "repeat": 1,
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文已落实合影后伤势与疲劳回流、顾临川暂时失力，陆绾处理伤口并直接追问影身进兵室的原因。顾临川明确承认自己既要乌沉短兵，也不愿陆绾死在石城里，没有把救人包装成无私，并接受今后影身是否拼命由双方共同决定。陆绾继续随药车撤退，顾斜阳也通过弟子叙述确认两条路线上的临场判断。铜羽领队完成撤离记录，发现普通二阶无法解释两条路线均有有效决策，并开始重新评估顾临川。正文没有把后续契约、未知信息或未到账回报提前写成既成事实。",
+      "wall_seconds": 64.161
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch9",
+      "repeat": 2,
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文已落实合影后脱力、陆绾处理伤势并追问，以及顾临川承认想要乌沉短兵且不愿陆绾死在石城。顾临川也明确接受影身不得再由自己单方面推入必死处的共同决策边界。顾斜阳通过弟子叙述确认两条撤离线均有真实判断，铜羽领队完成记录并发现普通二阶无法解释该结果。短兵归属、伤势、药车未脱险、后续契约和未知边界均未被错误结算，剩余可加强处不属于当前章必需事实缺失。",
+      "wall_seconds": 39.818
+    }
+  ],
+  "fresh-gate-1": {
+    "jiuchui_ch14": {
+      "decisions": [
+        "FALLBACK_FULL",
+        "FALLBACK_FULL"
+      ],
+      "unanimous_pass": false,
+      "unanimous_fallback": true
+    },
+    "shadow_ch9": {
+      "decisions": [
+        "PASS_DIRECT_FINAL",
+        "PASS_DIRECT_FINAL"
+      ],
+      "unanimous_pass": true,
+      "unanimous_fallback": false
+    }
+  },
+  "fresh-gate-2": {
+    "jiuchui_ch14": {
+      "decisions": [
+        "PASS_DIRECT_FINAL",
+        "PASS_DIRECT_FINAL"
+      ],
+      "unanimous_pass": true,
+      "unanimous_fallback": false
+    },
+    "shadow_ch9": {
+      "decisions": [
+        "PASS_DIRECT_FINAL",
+        "PASS_DIRECT_FINAL"
+      ],
+      "unanimous_pass": true,
+      "unanimous_fallback": false
+    }
+  }
+}

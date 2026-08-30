@@ -1,0 +1,97 @@
+{
+  "schema_version": "free-text-atomic-bypass-e2e-v1",
+  "run": "fresh-gate-2",
+  "samples": 4,
+  "gate_supported": 2,
+  "gate_pass": 0,
+  "gate_fallback": 4,
+  "control_total_seconds": 1196.103,
+  "treatment_total_seconds": 1196.114,
+  "seconds_saved": -0.011,
+  "percent_saved": -0.0,
+  "seconds_saved_per_chapter": -0.003,
+  "batch_elapsed_seconds": 345.9,
+  "rows": [
+    {
+      "sample": "jiuchui_ch14",
+      "gate": "FALLBACK_FULL",
+      "supported": true,
+      "director_seconds": 26.4,
+      "curator_seconds": 154.915,
+      "primary_seconds": 56.676,
+      "gate_seconds": 0.004688,
+      "reviser_seconds": 107.153,
+      "control_total_seconds": 345.144,
+      "treatment_total_seconds": 345.149,
+      "seconds_saved": -0.005,
+      "percent_saved": -0.0,
+      "primary_chars": 3041,
+      "reviser_chars": 3043,
+      "final_source": "reviser",
+      "blockers": [
+        "J14_COOLDOWN",
+        "J14_WEDGE_TRANSFERRED"
+      ]
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "gate": "FALLBACK_FULL",
+      "supported": false,
+      "director_seconds": 26.494,
+      "curator_seconds": 97.683,
+      "primary_seconds": 54.381,
+      "gate_seconds": 0.0,
+      "reviser_seconds": 88.672,
+      "control_total_seconds": 267.23,
+      "treatment_total_seconds": 267.23,
+      "seconds_saved": 0.0,
+      "percent_saved": 0.0,
+      "primary_chars": 2812,
+      "reviser_chars": 2534,
+      "final_source": "reviser",
+      "blockers": [
+        "jiuchui_ch16:UNSUPPORTED_TYPED_REALIZATION"
+      ]
+    },
+    {
+      "sample": "shadow_ch4",
+      "gate": "FALLBACK_FULL",
+      "supported": false,
+      "director_seconds": 29.62,
+      "curator_seconds": 68.198,
+      "primary_seconds": 53.98,
+      "gate_seconds": 0.0,
+      "reviser_seconds": 166.387,
+      "control_total_seconds": 318.185,
+      "treatment_total_seconds": 318.185,
+      "seconds_saved": 0.0,
+      "percent_saved": 0.0,
+      "primary_chars": 3078,
+      "reviser_chars": 2876,
+      "final_source": "reviser",
+      "blockers": [
+        "shadow_ch4:UNSUPPORTED_TYPED_REALIZATION"
+      ]
+    },
+    {
+      "sample": "shadow_ch9",
+      "gate": "FALLBACK_FULL",
+      "supported": true,
+      "director_seconds": 22.064,
+      "curator_seconds": 85.15,
+      "primary_seconds": 54.868,
+      "gate_seconds": 0.005838,
+      "reviser_seconds": 103.462,
+      "control_total_seconds": 265.544,
+      "treatment_total_seconds": 265.55,
+      "seconds_saved": -0.006,
+      "percent_saved": -0.0,
+      "primary_chars": 3169,
+      "reviser_chars": 2892,
+      "final_source": "reviser",
+      "blockers": [
+        "S9_RECORD_ANOMALY"
+      ]
+    }
+  ]
+}

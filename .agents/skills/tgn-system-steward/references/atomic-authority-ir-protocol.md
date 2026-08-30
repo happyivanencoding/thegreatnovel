@@ -54,6 +54,12 @@ preflight supported → Delta → Gate
 
 Atomic is an acceleration layer, not a global hard gate.
 
+### 6.1 Primary-bypass boundary
+
+The routing above does **not** imply that an Authority-clean Primary may automatically bypass a value-bearing Full Reviser. `Atomic Authority closure` and `Reviser necessity` are different questions. A Contract Gate can only prove the Hard Authority facts it actually binds; it cannot prove that the Reviser would add no Reader/Story value, nor can an LLM Oracle be trusted as that proof.
+
+The 2026-08-30 rich-free-text bypass experiment froze two fresh repeats and got 0/8 deterministic bypasses. More importantly, among 7 Primary/Reviser pairs that a strict Oracle initially considered direct-final candidates, two independent anonymous pair-blind rounds produced Story **Primary 4 vs Reviser 10** and Authority **Primary 1 vs Reviser 8, with 5 ties**; 0/7 pairs were stably both Story-nondegrading and Authority-clean. Several Oracle PASSes still contained concrete Canon errors. Therefore bypassing Full Reviser requires repeated pair evidence that the stage is actually becoming a no-op for both Story and Authority; Contract PASS alone is insufficient. Do not add an LLM "Reviser necessity" classifier to bridge this gap.
+
 ## 7. Evidence standard
 
 Report separately:
@@ -65,7 +71,8 @@ Report separately:
 - Final Draft Story blind and Authority blind;
 - real native structured Director wall;
 - cross-book registry coverage, explicitly manual versus automatic;
-- complete fallback-adjusted route wall, including discarded structured calls.
+- complete fallback-adjusted route wall, including discarded structured calls;
+- when skipping Full Reviser, repeated frozen Primary-vs-Reviser Story + Authority pair evidence, not only Contract/Oracle PASS.
 
 Never collapse these into one “coverage” number. Static fixtures/schema validity do not prove model quality; known-fact recall does not prove human projection fidelity; Final Story winning while Final Authority loses is a production failure. Runtime projection wall alone is irrelevant if the model takes longer to create the typed decision.
 
@@ -73,4 +80,4 @@ Never collapse these into one “coverage” number. Static fixtures/schema vali
 
 Freeze architecture, trust boundary, Entity/slot model, Edit Locality, unsupported bypass and the requirement to audit typed core, human projection and final prose separately.
 
-Do not freeze hand-authored fixtures, Runtime surface registries, automatic paragraph locator, current Native human Mission replacement, Full Reviser removal or any speed claim. The 2026-08-30 properly chained repeat found the current Native route slower both at Director and across the complete Final-Draft critical path; its Final Story gain came with substantial Final Authority loss. Treat the dated numbers as experiment evidence, not a permanent threshold.
+Do not freeze hand-authored fixtures, Runtime surface registries, automatic paragraph locator, current Native human Mission replacement, Primary-direct-final routing, Full Reviser removal or any speed claim. The 2026-08-30 properly chained repeat found the current Native route slower both at Director and across the complete Final-Draft critical path; its Final Story gain came with substantial Final Authority loss. Treat the dated numbers as experiment evidence, not a permanent threshold.

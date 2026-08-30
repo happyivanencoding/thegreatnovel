@@ -72,6 +72,8 @@ Preservation 默认依靠 Edit Locality，而不是 Desire / Surprise / Relation
 
 2026-08-30 已完成 native `DirectorStructuredDecision → Runtime双投影 → Curator → Primary → Authority Reviser → Final Draft` 的真实两书四章E2E。冻结v2协议后2次Treatment均8/8 Native accepted、手工fixture结构覆盖100%，但这不是Contract completeness：Mission Story为6.99 vs Control 8.60，Mission Authority 6.55 vs 8.41，Final Authority 6.79 vs 8.04；只有Final Story方向性更好（8.41 vs 7.88）。正确串联Control平均325.954s/章，Native平均351.566s/章，实际慢25.612s/章（7.86%）；Primary Oracle仅2/8可直出Final，即使假设完美零成本Gate也只理论快1.68%。因此当前Native human-Mission replacement与Full-Reviser免税均不进入Production；Hard IR下一候选应前移到Story/Outline/Runtime已决定的结构化事实，保留Director的高故事密度Mission。Unsupported chapter仍绕过Atomic走现有Full。完整报告：`books/real-exp-native-structured-e2e-20260830-v1/RESULTS.md`。
 
+同日继续完成 `rich free-text Director → Curator → Primary → deterministic Atomic bypass Gate` 的冻结E2E：两次fresh、8章中Gate仅声明4次shape supported，但0/8实际PASS，最终Control 2457.403s、Treatment 2457.424s，等价零加速；Gate本身仅约2.5ms/章，瓶颈不是代码wall，而是free prose→typed evidence无法低成本可靠证明。更重要的是，7组strict Oracle看似可直出的Primary/Reviser pair经两轮匿名复核后，Story 14票为Reviser 10胜/Primary 4胜，Authority为Reviser 8胜/Primary 1胜/5平，0/7稳定质量等价。由此冻结：**Contract Gate只能证明其已覆盖的Authority，不证明Full Reviser无Reader/Story价值；Authority PASS不是skip-Reviser充分条件。** 当前Full Reviser平均131.3s/章、占Control wall约42.74%，但仍是value-bearing stage。不要扩大中文surface parser或新增LLM classifier；未来只有先使Primary稳定达到Reviser后的Story+Authority、让Reviser趋近no-op，才重新测试skip。完整报告：`books/real-exp-free-text-atomic-gate-skip-reviser-20260830-v1/RESULTS.md`。
+
 ## 节点职责
 
 ### Director

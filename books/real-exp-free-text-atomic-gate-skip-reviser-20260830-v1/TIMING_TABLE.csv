@@ -1,0 +1,9 @@
+﻿run,sample,supported,gate,director_s,curator_s,primary_s,gate_s,reviser_s,control_total_s,treatment_total_s,saved_s
+fresh-gate-1,jiuchui_ch14,True,FALLBACK_FULL,32.669,102.518,72.64,0.003744,171.986,379.813,379.817,-0.004
+fresh-gate-1,jiuchui_ch16,False,FALLBACK_FULL,26.448,76.617,57.769,0.0,127.72,288.554,288.554,0.0
+fresh-gate-1,shadow_ch4,False,FALLBACK_FULL,25.421,70.507,65.83,0.0,102.564,264.322,264.322,0.0
+fresh-gate-1,shadow_ch9,True,FALLBACK_FULL,25.701,63.085,57.362,0.005565,182.463,328.611,328.617,-0.006
+fresh-gate-2,jiuchui_ch14,True,FALLBACK_FULL,26.4,154.915,56.676,0.004688,107.153,345.144,345.149,-0.005
+fresh-gate-2,jiuchui_ch16,False,FALLBACK_FULL,26.494,97.683,54.381,0.0,88.672,267.23,267.23,0.0
+fresh-gate-2,shadow_ch4,False,FALLBACK_FULL,29.62,68.198,53.98,0.0,166.387,318.185,318.185,0.0
+fresh-gate-2,shadow_ch9,True,FALLBACK_FULL,22.064,85.15,54.868,0.005838,103.462,265.544,265.55,-0.006

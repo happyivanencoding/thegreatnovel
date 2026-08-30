@@ -667,6 +667,22 @@ DirectorStructuredDecision
 
 完整证据：`books/real-exp-native-structured-e2e-20260830-v1/RESULTS.md`。
 
+### 15.1 Rich Mission + Atomic bypass Gate follow-up（2026-08-30）
+
+第5点已经继续实测，而且结果是否定的。保留 rich free-text Director 后，Primary 确实比 Native Structured 路线更接近Final；但冻结后的 deterministic Gate 在2次fresh、8章中4次supported、**0次PASS**，实际速度2457.403s→2457.424s，节省0%。Gate计算本身只有约2.5ms/章，失败原因是free prose→typed evidence bridge无法在不扩中文parser的前提下获得足够recall。
+
+更关键的是，`Authority closure` 本身不是 skip Full Reviser 的充分条件。对7组strict Oracle初判可直出的Primary/Reviser pair做两轮匿名复核：Story共14票，Reviser 10胜、Primary 4胜；Authority共14票，Reviser 8胜、Primary 1胜、5平；**0/7**稳定同时满足Story不降且Primary无hard problem。LLM Oracle还漏掉了具体Canon错误，因此也不能转成新的safety classifier。
+
+新的稳定decision model：
+
+1. `Atomic Authority Contract ≠ Story Mission ≠ Reviser Necessity`；
+2. Contract Gate最多回答“已登记Hard Authority是否被证明闭合”，不能回答“Reviser是否仍会增加Reader/Story价值”；
+3. 当前Full Reviser平均约131.3s/章、占Control wall 42.74%，但仍是value-bearing stage，不是纯fixed tax；
+4. 不继续扩surface regex/parser，不新增LLM classifier；
+5. 只有先通过真实pair实验让Primary稳定达到Reviser后的Story+Authority、使Reviser趋近no-op，才重新测试bypass。
+
+完整证据：`books/real-exp-free-text-atomic-gate-skip-reviser-20260830-v1/RESULTS.md`。
+
 ---
 
 ## 16. Production Decision

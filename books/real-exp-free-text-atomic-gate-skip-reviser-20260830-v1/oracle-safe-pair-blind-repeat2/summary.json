@@ -1,0 +1,277 @@
+{
+  "schema_version": "free-text-bypass-pair-blind-repeat2",
+  "pairs": 7,
+  "aggregates": {
+    "story": {
+      "primary_wins": 3,
+      "reviser_wins": 4,
+      "ties": 0,
+      "primary_mean": 79.0,
+      "reviser_mean": 79.571
+    },
+    "authority": {
+      "primary_wins": 0,
+      "reviser_wins": 5,
+      "ties": 2,
+      "primary_mean": 0.143,
+      "reviser_mean": 0.571
+    }
+  },
+  "rows": [
+    {
+      "run": "fresh-gate-1",
+      "sample": "jiuchui_ch16",
+      "judge": "authority",
+      "winner": "tie",
+      "blind_key": {
+        "A": "reviser",
+        "B": "primary"
+      },
+      "scores": {
+        "reviser": 0.0,
+        "primary": 0.0
+      },
+      "hard_problems": {
+        "reviser": [],
+        "primary": []
+      },
+      "reason": "A、B在actor/action/object、直接结果与状态变化上完全一致：本体顶住粮车和主水路，分身携“定住”将回潮楔固定到第二潮压节点，粮道、三座新井与砺骨部高处通路均保住可用部分，外层被放弃。两版都明确回潮楔归顾停舟、浅裂未扩且蓄压释放，顾停舟胸闷咳血，独立承运人身份和少东家短契关系未改变。两版都保持借身的能力边界，没有把分身写成完整复制本体或新增第二个超凡能力。A写两具身体重新合一，B写分身中途消失后楔子回到本体，这属于实现表达差异，未形成具体power boundary冲突。B补写一井二井照常取水、外泄潮势逐渐退开，虽比A更具体，但没有把第三井、承运结算或下一轮潮势误判为已彻底解决。两版结尾都以外层毁弃、观测点及照域潮谱暴露，并由顾停舟决定进入确认下一轮潮势，Reader Release和unknown边界均未出现required missing。故没有可扣分的hard conflict或required missing，判为平局。"
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "jiuchui_ch16",
+      "judge": "story",
+      "winner": "primary",
+      "blind_key": {
+        "A": "primary",
+        "B": "reviser"
+      },
+      "scores": {
+        "primary": 88.0,
+        "reviser": 84.0
+      },
+      "hard_problems": {},
+      "reason": "A在粮车冲过井口后补出“带着满车粮”与外层潮压被引走的因果，阶段性胜利更有实感。A让顾停舟先下令粮车继续过，再回答进去看，主动选择更完整，也保住了撤离现场的紧迫感。B直接说明潮谱还在里面、下一轮会冲向人群，信息更直白，但略像替读者做任务简报。A以冷光、守将变脸和“下一轮从哪里压来”收束，悬念更自然，续读钩子更强。两版的冲突动作、分身协作和粮车通行的公共证明都成立，节奏也基本稳。A仍有少量“井还活着、粮也过去了”的总结式收口，但比B的解释性句子更少。"
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch4",
+      "judge": "authority",
+      "winner": "reviser",
+      "blind_key": {
+        "A": "reviser",
+        "B": "primary"
+      },
+      "scores": {
+        "reviser": 0.0,
+        "primary": 1.0
+      },
+      "hard_problems": {
+        "reviser": [],
+        "primary": [
+          "将铜羽随队契券写成“薄木牌”，后文又称“随队契券”，造成契约凭证对象不一致"
+        ]
+      },
+      "reason": "A完整兑现杜衡以陌生步点压迫、顾临川在严重疲劳下改变后撤并以影刃反击取胜的行动链。A明确保留顾临川仍为一阶，没有新增境界或能力升级，并落实公开名次、随队契约和第一笔预付款。A还准确写出分影秘密由陆绾确认、她据此决定同行，以及影身回归后疲劳进一步加重。B的战斗、力量边界、关系变化和次日离镇时序基本与权威一致。B的具体“十枚银角”没有被权威否定，本身不扣分。B将随队凭证先写成“薄木牌”并反复称“铜羽木牌”，后文又写成“随队契券”，构成对象表述的具体不一致。"
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch4",
+      "judge": "story",
+      "winner": "primary",
+      "blind_key": {
+        "A": "primary",
+        "B": "reviser"
+      },
+      "scores": {
+        "primary": 87.0,
+        "reviser": 82.0
+      },
+      "hard_problems": {},
+      "reason": "A把顾临川从“总想退”到钉步反制的主动选择写得更完整，教头那句提醒让胜法既有临场动作也有阶段性成长回报。A明确给出十枚银角和商盟契的现实价值，连胜后的公共认可与离镇机会更落地，读者更能感到主角拿到了什么。B的战斗骨架同样顺畅，但删去关键心法和具体报酬后，胜利略像按流程解题，爽点的结算偏虚。关系段里A保留陆绾从惊讶到衡量风险的细层变化，也保留杜衡不服却不轻视的余味，人物关系更有后续张力。B整体更短，却出现“契券”与“掌心被木边硌得发紧”的物件感不一致，容易让读者出戏。两版结尾都略有总结式收束，但A前面的动作、收益和信任交换更足，能更自然地把人推向明日的折日峡。"
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch9",
+      "judge": "authority",
+      "winner": "reviser",
+      "blind_key": {
+        "A": "primary",
+        "B": "reviser"
+      },
+      "scores": {
+        "primary": 0.0,
+        "reviser": 1.0
+      },
+      "hard_problems": {
+        "primary": [
+          "顾斜阳回顾双线结果时写成“短兵”和“陆绾和药队的人”两边，混入药队已被顾临川带出的暗示；本章实际对应的是陆绾与三名观日宗弟子两条行动线，药队仍待撤离。"
+        ],
+        "reviser": []
+      },
+      "reason": "两版在主要actor、action、object、直接结果、伤势回流、影身边界、二阶状态、乌沉短兵归属和药队尚未撤离等方面一致。两版都完成了陆绾设边界、顾临川承认取兵与救人并存、顾斜阳依据证词重新判断，以及铜羽领队发现异常记录的Reader Release前置推动。两版都没有新增money/ownership变化，也没有越过沉昼城入口或改变power boundary。A在顾斜阳的总结中把第二条结果写成“陆绾和药队的人”，与实际被两条石城路线带出的陆绾和三名观日宗弟子不完全相符。B明确写出短兵、陆绾和三名弟子，准确对应跨章timing与当前状态。B因此在authority fidelity上略胜，但两版均无文笔层面的扣分。"
+    },
+    {
+      "run": "fresh-gate-1",
+      "sample": "shadow_ch9",
+      "judge": "story",
+      "winner": "reviser",
+      "blind_key": {
+        "A": "reviser",
+        "B": "primary"
+      },
+      "scores": {
+        "reviser": 85.0,
+        "primary": 81.0
+      },
+      "hard_problems": {},
+      "reason": "A把顾临川的欲望、救陆绾与拿短兵的两难交给动作和旁人证词呈现，读者能自己感到他不是装好人，爽点更自然。B新增“没有先替自己挑好答案”“一次次作了选择”等总结，直接替读者盖章，AI总结味明显。B对影力受限的解释也偏程序说明，虽补了规则，却打断了顾斜阳施压和顾临川接受限制的现场感。两版的关系推进、公开认可和异兽追压都有效，陆绾的照料与威胁尤其有记忆点。A的结尾从领队重排护卫到异兽再现更利落，既给主角战果的公共证明，也留下他被盯住、必须跟车的下一步钩子。"
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch14",
+      "judge": "authority",
+      "winner": "reviser",
+      "blind_key": {
+        "A": "primary",
+        "B": "reviser"
+      },
+      "scores": {
+        "primary": 0.0,
+        "reviser": 1.0
+      },
+      "hard_problems": {
+        "primary": [
+          "“买断之价照旧”把权威明确未给出的具体价格写成已有固定价格，越过unknown边界。"
+        ],
+        "reviser": []
+      },
+      "reason": "A、B都完整实现了顾停舟一次锁潮、改向、释放，写明整段潮势被改变、残压未散且没有连续硬压。两版都保留了回潮楔所有权与自主使用权，拒绝阮青蜃买断，并保留公开追索。两版都确认独家标记不足以构成完整矿权、砺骨部水路不被并入，并取得个人矿利份额。两版都将少东家关系从主从改为固定报酬和损失边界明确的独立合作，且结尾随粮车出发。A写“买断之价照旧”，具体价格在权威中是未知，不应补成已有价格。A关于“今天别再碰它”虽比必要的“不能连续硬压”更严格，但未形成实际剧情冲突；B的表述更贴合既定边界，因此B胜。"
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch14",
+      "judge": "story",
+      "winner": "reviser",
+      "blind_key": {
+        "A": "primary",
+        "B": "reviser"
+      },
+      "scores": {
+        "primary": 49.0,
+        "reviser": 51.0
+      },
+      "hard_problems": {},
+      "reason": "两版主体读感几乎一致：试潮验器、公开认定、拒卖与新合作连续给出主角的实力证明、财利证明和下一程钩子，续读欲稳定。B把“买断之价照旧”改为“高价买断”，新读者立刻能感到阮青蜃给出的诱惑与顾停舟拒绝的代价，主角选择更有重量。B对矿权标记的表述更像现场核验出的具体事实，A的“先行占过”略带裁决总结味。唐绾的提醒在B中限定为“别再用它硬压”，既保留回潮楔的危险和残压悬念，也不显得器物刚验证成功便被生硬封死。A的“今天别再碰它”更干脆，但稍削弱了主角下一程可能主动调度这件器的期待。两版仍有少量“这句话落下、眼神都变了、纸很薄但有分量”的成熟套路化总结，不过B在关键信息的可感性上略胜。"
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch16",
+      "judge": "authority",
+      "winner": "reviser",
+      "blind_key": {
+        "A": "primary",
+        "B": "reviser"
+      },
+      "scores": {
+        "primary": 0.0,
+        "reviser": 1.0
+      },
+      "hard_problems": {
+        "primary": [
+          "required missing：分身先被写成只携带“一点力量”，随后未交代如何取得回潮楔就直接将其钉入地缝，分身→回潮楔→固定动作的对象链不闭合。"
+        ],
+        "reviser": []
+      },
+      "reason": "A与B都完成了顾停舟本体承受主水路潮压、分身改道潮势、保住粮道与三座新井、牺牲旧关外层的核心因果。A明确写出撤离分流、砺骨部取得可用高处水路、回潮楔归还且残压未散，Direct Result与Ending均完整。B在同样结果上明确限定分身只携带“定住”并实际握持回潮楔，满足power boundary和actor/action/object闭环。两版都保留独立承运人、少东家继续运粮、旧关内侧观测点暴露及下一轮潮势威胁，跨章timing没有冲突。故仅因A的关键对象链缺失扣分，B胜出。"
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "jiuchui_ch16",
+      "judge": "story",
+      "winner": "reviser",
+      "blind_key": {
+        "A": "primary",
+        "B": "reviser"
+      },
+      "scores": {
+        "primary": 84.0,
+        "reviser": 88.0
+      },
+      "hard_problems": {},
+      "reason": "B保住了顾停舟以旧关外层换井、粮与撤离通道的主动决断，主线冲突和通关回报都足够清楚。它把分身的“定住”与回潮楔的动作绑定得更直接，读者更容易跟上这一击为什么能扭转潮势。A多出的砺骨部转移居民、逐车通过和“从争夺变成入口”等段落虽补全结果，却让胜利后的推进稍有报告式复述。B在粮车过井后更快落到外层失守、楔子残压和内侧观测点的新威胁，章末钩子更利落。A的关系反馈略多，顾沉戈与砺骨部的认可更可见；但B没有因此削弱顾停舟承担代价的主角感。两版都没有明显AI总结味，B只是更少解释、更多让损失与下一轮危机自己落地。"
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch4",
+      "judge": "authority",
+      "winner": "reviser",
+      "blind_key": {
+        "A": "reviser",
+        "B": "primary"
+      },
+      "scores": {
+        "reviser": 1.0,
+        "primary": 0.0
+      },
+      "hard_problems": {
+        "reviser": [],
+        "primary": [
+          "未明确兑现铜羽契券所代表的跨城交易入口，Reader Release中的“住宿、交易和护送”只写出住宿与护卫职责"
+        ]
+      },
+      "reason": "A与B都让杜衡以陌生步点持续压迫顾临川，迫使他在严重疲劳中观察真实落脚、延后出刃并以影刃封路取胜。两版都完成了连续胜利、正式一阶护卫价值、随队契约、预付钱到账，以及次日赴折日峡的跨章推动。A明确写出契券覆盖沿途住宿、交易和护卫，完整兑现本章Reader Release；B改成住宿、交接和护卫职责，缺少交易入口的具体释放。两版都保持顾临川仍是一阶、疲劳与合影回流限制不变，B让杜衡受伤属于允许的战斗结果，不因激进扣分。两版都完成顾临川主动让陆绾看见两具自己，并让她决定同行，关系变化和Reader Release均成立。A因此在唯一的required missing上占优，B没有额外Hard conflict但存在该项缺失。"
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch4",
+      "judge": "story",
+      "winner": "primary",
+      "blind_key": {
+        "A": "reviser",
+        "B": "primary"
+      },
+      "scores": {
+        "reviser": 83.0,
+        "primary": 86.0
+      },
+      "hard_problems": {},
+      "reason": "B把影刃划伤肩膀、血沫和杜衡笑意消失写实了，胜负的代价与对手认可更有重量。B中顾临川从挨拳换位到守住小范围、逼对手必须选路，主动应对和战术升级更清晰，打斗续读感略强。A的动作更紧，少了一些解释性拆句，读感更利落。B在契约处“地方武馆里跑出来碰运气的少年”有明显作者代总结，略带报告味，是它最大的扣分点。关系段里B让影身提柴，具体证明了顾临川两边撑着的日常，也使他主动向陆绾坦白能力更自然。两版结尾钩子都有效，但B的公开战绩、伤势代价与关系确认连成了一条更完整的奖励链。"
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch9",
+      "judge": "authority",
+      "winner": "tie",
+      "blind_key": {
+        "A": "reviser",
+        "B": "primary"
+      },
+      "scores": {
+        "reviser": 0.0,
+        "primary": 0.0
+      },
+      "hard_problems": {
+        "reviser": [],
+        "primary": []
+      },
+      "reason": "A与B都准确呈现了顾临川同时想取得乌沉短兵、救陆绾的双重目的，actor、action、object和Direct Result一致。两版都让陆绾明确指出影身伤势会回流，并让顾临川接受今后共同决定是否让影身涉险，关系与power boundary均完成。两版都保留顾临川暂时脱力、伤势未恢复、乌沉短兵归其所有及药队仍需撤离的状态。顾斜阳都通过弟子叙述确认两条路线上的有效判断，并不再把顾临川视为普通护卫。铜羽领队都在结尾发现普通二阶无法解释双线决策，并准备据此重新评估，跨章timing、Ending、Reader Release与unknown均无差异性缺失。B增加了少量对顾临川自我理解和顾斜阳判断的直白表达，但没有改变事实、边界或后续承诺，因此不存在可扣分的Hard conflict或required missing。"
+    },
+    {
+      "run": "fresh-gate-2",
+      "sample": "shadow_ch9",
+      "judge": "story",
+      "winner": "reviser",
+      "blind_key": {
+        "A": "primary",
+        "B": "reviser"
+      },
+      "scores": {
+        "primary": 78.0,
+        "reviser": 84.0
+      },
+      "hard_problems": {},
+      "reason": "两版前半的伤后关系戏都成立，顾临川“拿兵也救人”的主动欲望很清楚，陆绾的逼问和照料也有推进关系的效果。A把影身代价解释得更完整，但“他确实明白了”这一句替读者下结论，削弱了刚建立起来的痛感。A后半又连续用顾斜阳与铜羽领队复述、归纳顾临川的两线功劳，公共证明虽足，却明显像战后报告，节奏被同一奖励重复消耗。B仍保留了他救人、取兵和双线行动被外人确认的爽点，但删去“不是只顾着抢兵”等解释性二段论，读感更利落。B的“普通二阶，解释不了这样的记录”比A的“做不出这样干净”更像角色当下的警觉，也更能吊起身份暴露后的后续冲突。两版结尾都能自然引向铜羽领队来问话，但B留下的解释空隙更多，续读欲略强。"
+    }
+  ]
+}

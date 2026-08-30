@@ -1,0 +1,10 @@
+{
+  "supported": false,
+  "pass": false,
+  "decision": "FALLBACK_FULL",
+  "blockers": [
+    "shadow_ch4:UNSUPPORTED_TYPED_REALIZATION"
+  ],
+  "evidence": [],
+  "wall_ms": 0.0
+}

@@ -1,0 +1,17 @@
+{
+  "supported": true,
+  "pass": false,
+  "decision": "FALLBACK_FULL",
+  "blockers": [
+    "S9_RECORD_ANOMALY"
+  ],
+  "evidence": [
+    "S9_TREATMENT",
+    "S9_MIXED_MOTIVE",
+    "S9_DAMAGE_RETURN_BOUNDARY",
+    "S9_COOP_BOUNDARY",
+    "S9_RIVAL_REPRICE",
+    "S9_INJURY_PENDING"
+  ],
+  "wall_ms": 5.838399985805154
+}

@@ -1,0 +1,18 @@
+{
+  "supported": true,
+  "pass": false,
+  "decision": "FALLBACK_FULL",
+  "blockers": [
+    "J14_WEDGE_CYCLE",
+    "J14_WATER_RIGHT"
+  ],
+  "evidence": [
+    "J14_PUBLIC_RULER",
+    "J14_WEDGE_AUTONOMY",
+    "J14_MINING_SHARE",
+    "J14_PAID_INDEPENDENT_COOP",
+    "J14_COOLDOWN",
+    "J14_DEADLINE"
+  ],
+  "wall_ms": 3.7438999861478806
+}
