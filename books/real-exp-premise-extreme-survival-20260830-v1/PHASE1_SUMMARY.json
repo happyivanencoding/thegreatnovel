@@ -1,0 +1,7 @@
+{
+  "selected": "S3",
+  "compiler_verdict": "CONDITIONAL PASS",
+  "downstream_authorized": false,
+  "mutation_ladder_generated": true,
+  "production_modified": false
+}

@@ -1,0 +1,453 @@
+{
+  "ok": true,
+  "label": "premise-extreme-e7-forge",
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "additionalDirectories": [],
+  "wall_seconds": 389.588,
+  "text": "我会先做一次轻量的项目记忆检索，确认沿用既有的 Authority 边界与“正式正文才新增事实”的约定；然后直接生成三个可编译候选，不替作者做选择。# SINGLE-PASS PREMISE CANDIDATES\n\n## S1｜《百杀活刀》\n\n### 一句话货架简介\n\n一柄刚在刑场醒来的黑铁刀，被最强刽子手亲手握过一次后，永久夺走对方的杀招；它随后主动寻找更强的人来使用自己，直到所有人都发现——最危险的不是握刀的人，而是刀开始挑选主人。\n\n### World-only Direction\n\n这是一个以武力和兵器决定身份的世界。\n\n- 生灵通用武力尺：凡身、开脉、铸炉、照海、天门、王域。\n- 兵器材质尺：木石、黑铁、灵钢、镇城、王器、天命。\n- 任何兵器完成一次蓄意伤害，都会留下使用者最后一段发力轨迹；轨迹不能被普通人读取，但会永久留在兵器内部。\n- 一件兵器累积一百种不同使用者的杀痕后，会自然诞生兵魂，获得最低限度的感知与行动资格。\n- 兵魂兵器仍可被强者当作财产争夺、封印、拍卖或供奉。\n- 兵器无法凭空获得使用者的境界、灵力总量或知识，只能保存并复现曾经通过自身完成过的具体动作。\n\n真正值钱的不是低阶兵器本身，而是它是否被强者用过、是否保存稀有杀招、是否能自行行动。\n\n### World Interface-only Direction\n\n- 每座城上空都有“天镜”，自动观看并记录城内公开区域发生的斗战、处刑与兵器争夺。\n- 天镜只记录声音、动作、结果和现场见证者，不改变任何动作的力量、方向或结果。\n- 公开事件可即时观看，记录保留三十日；涉及城主、王域强者或兵魂兵器的事件会永久进入城史。\n- 天镜不能复制力量，不能替任何人发动攻击，也不能阻止或放大因果。\n- 记录一旦形成，所有登记城镇都能观看，因此一次公开胜负会立刻改变兵器价格、主人地位与追捕规模。\n\n### Protagonist Ontology-only Direction\n\n主角是一柄一丈长的黑铁长刀，不是人类，也没有人类四肢。\n\n- 刀身是身体，刀柄是听觉与触觉中心，刀锋是主要行动边界。\n- 他能依靠刀锋弹跳、旋转、插入地面来移动。\n- 他能感知握住自己的人、碰撞、温度、血液和发力方向。\n- 他不能说人话，但能通过刀身震动制造简单声音。\n- 他的“人性”来自兵魂，不来自某个死者夺舍。\n- 他可以被使用，也可以在无人握持时行动；无人握持时的力量只相当于普通黑铁刀的物理强度。\n\n### Initial Origin-only Direction\n\nT0 时，主角诞生在一座公开刑台的兵器架上。\n\n- 他由一柄完成过一百次不同处刑动作的旧黑铁刀重新熔铸而成。\n- 熔铸完成时，一百道旧杀痕聚合，兵魂诞生。\n- 他第一次获得感知的位置，是刑台兵器架最下层。\n- T0 零点经历：能听见周围脚步与金属碰撞，能感知自身重量，但没有被握过，没有主动移动过，也没有任何属于自己的“借手杀招”。\n- 旧杀痕只是诞生材料，不等于他已经拥有那些动作的使用权。\n\n### Initial Scale Position-only Direction\n\n- 生灵武力尺：不适用。原因：主角没有生灵肉身、经脉、灵府或人类境界，世界将有兵魂的兵器归入独立器物类别。\n- 兵器材质尺：黑铁，第二档；具体材质为重新熔铸的旧黑铁。\n- 兵魂资格：已醒。原因：世界通用规则规定，一百种不同杀痕可催生兵魂；主角 T0 已满足这一条件。\n- 自主移动能力：未形成个人杀招；只能依靠黑铁刀本身的重量、弹性与地面碰撞移动。\n\n### Power-only Direction\n\n能力名：借手刻杀。\n\n- 触发：一个有意识的生灵握住主角，并通过主角完整完成一次实际的攻击、破坏、格挡或切割动作。\n- 目标类别：只能针对这一次实际握刀者；不能针对旁观者，不能从受害者身上复制能力。\n- 可做动作：\n  - 永久记录该使用者通过刀身完成的一个具体动作。\n  - 主角之后可以无人握持地复现该动作一次。\n  - 动作包括步法、转身、发力轨迹、出刀角度与身体配合，但不包括使用者的境界、灵力总量、记忆或其他法术。\n  - 复现出的动作只能以主角当前刀身能承受的物理尺度完成。\n- 一次握持只能留下一个动作；同一使用者再次握持，可以留下新的动作。\n- 永久边界：主角必须先被目标使用者真实握持并完成动作，不能凭观看、听说、天镜记录或触碰尸体获得能力。\n- 已记录的动作不会因换世界、换主人或刀身损坏而自然消失。\n\n### Story Interface / Opening Promise\n\n开篇画面：刑场上，城中最强的刽子手准备用这柄黑铁刀斩下一头失控妖兽的头。天镜正在直播，所有人都把主角当作一次性刑具。\n\n刽子手完成第一刀后，主角满足触发条件。他复现刽子手的“落首步”，刀身自行从刽子手手中弹起，沿同一条杀人轨迹反切回去，斩断刽子手握刀的手。\n\n天镜完整记录这一幕。\n\n第二层后果立即发生：\n\n- 刑台上的所有兵器价格暴涨。\n- 城主当场下令封锁刑场。\n- 围观的兵器商、宗门和军府同时改口：他们不再争抢“谁能使用这柄刀”，而是争抢“谁能让这柄刀主动选择自己”。\n- 主角从刑具变成全城最高价值的战利品。\n\n前十章推进：\n\n1. 刑台觉醒，反杀刽子手，公开身份暴露。\n2. 主角借第二个持刀者的动作冲出封锁。\n3. 一名落魄少女把他藏进废弃铁铺，成为第一个不把他当财产的人。\n4. 城中三家势力用不同方式争夺他，主角第一次主动选择拒绝强者。\n5. 他故意让一名低阶刀客使用自己，获得一招看似普通但极适合无人持刀状态的突进。\n6. 城主府公开设擂，宣布胜者可以合法拥有主角。\n7. 主角在擂台上连续更换握刀者，第一次让“使用者之间的竞争”成为自己的战术。\n8. 少女为保住铁铺被抓，主角必须在逃亡和救人之间选择。\n9. 他借一名王域强者之手完成一次格挡，第一次证明自己可以保存远超自身材质的动作结构。\n10. 天镜直播下，主角拒绝所有主人，宣布自己只接受“合作”，全城进入围猎状态。\n\n### Authority-Compilation Trace\n\n- 主角睁开感知 → `Protagonist Ontology-only Direction` 的兵魂感知 → T0 已满足兵魂诞生条件 → 目标为刑台周围声音与震动 → 合法，因为这只是兵魂已有感知，不是新能力。\n- 刽子手握刀完成斩击 → `Power-only Direction` 的触发条件 → 触发已满足 → 目标为刽子手，载体为主角刀身 → 合法，因为动作真实通过主角完成。\n- 主角无人握持复现“落首步” → `Power-only Direction` 的永久记录与复现 → 触发已满足 → 目标动作属于刽子手，载体为刀身 → 合法，因为没有复制境界，只复现具体发力轨迹。\n- 主角反切刽子手 → `Power-only Direction` 的复现动作 + `Ontology-only Direction` 的刀身弹跳移动 → 触发已满足 → 目标为刽子手，载体为主角刀身 → 合法。\n- 天镜记录并引发围捕 → `World Interface-only Direction` 的公开记录规则 → 观看与传播条件已满足 → 载体为天镜记录 → 合法；天镜没有改变主角的攻击结果。\n- 主角保存王域强者格挡 → `Power-only Direction` 的一次握持一次记录 → 触发已满足 → 目标为王域强者的具体格挡动作 → 合法；不等于获得王域灵力。\n\n### 第一章标志性画面\n\n刽子手一刀斩下，整座刑场都在等妖兽倒地；下一瞬，黑铁刀在他手中自己翻转，刀锋沿着刚才那条轨迹倒着回来，斩断握刀的手。天镜里的所有观众，第一次看见一件兵器拒绝完成主人交给它的命令。\n\n### 主角反复会做的新动作\n\n- 主动跳进强者手里，逼对方替自己完成“借手”。\n- 借不同人的手连续换招。\n- 无人握持时沿敌人的发力轨迹弹射。\n- 把自己插入地面，借刀身震动传递警告或命令。\n- 故意让弱者完成特殊动作，再把该动作交给更强敌人。\n- 让敌人争抢握刀资格，反过来制造战场秩序。\n\n### 第一次不公平兑现\n\n主角刚醒就夺走城中最强刽子手的成名杀招，并用这柄黑铁刀本来不可能拥有的身体配合，直接斩断对方握刀的手。\n\n### 20章玩法扩张\n\n主角不靠传统修炼升级，而是通过不同身份的人使用自己，收集：\n\n- 逃生动作；\n- 破甲动作；\n- 王域格挡；\n- 城门级斩击；\n- 适合无人握持的跳跃与转向；\n- 能与少女配合的护身动作。\n\n第 20 章前，他将控制一场决定全城归属的兵器战争。最后他不是成为某个强者的佩刀，而是成为全城唯一能让多名王域强者轮流借力的“兵魂之主”，实际拥有第一 Local World 的最高武力话语权。\n\n### 100章以上仍能长出的不同故事\n\n每个 Local World 都可以保留同一条 Meta Grammar：\n\n- 主角必须找到愿意真实使用他的行动者。\n- 新世界的最高价值不在“升级材料”，而在什么样的人、什么样的动作值得被永久保存。\n- 关系会直接改变主角愿意借谁的手。\n- 他可以成为武器、盟友、禁忌遗物或某种社会身份，但不能退回普通人形成长循环。\n- 长期冲突来自：谁能使用他、谁有资格被他使用、保存别人的动作是否等于接受那个人的欲望与债。\n\n### 最小可信桥梁\n\n只需要世界承认两件事：兵器会保存通过自身完成的杀痕；一百道不同杀痕可以催生兵魂。主角的特殊性只是他在 T0 已经完成了这两个条件，Power 再从第一次真实握持开始兑现。\n\n### 不可磨平的三点\n\n1. 主角首先是一件兵器，不是拿刀的人。\n2. 他的成长来自让别人使用自己，而非自己闭门修炼。\n3. 每一次变强都意味着接受某个具体人的动作、欲望与关系代价。\n\n---\n\n## S2｜《把整条路踩在脚下》\n\n### 一句话货架简介\n\n主角不是走在路上的人，而是一条刚刚醒来的活路；谁从他身上走过，他就能把那段路折起来，连人带货物一起甩到自己走过的任何地方。\n\n### World-only Direction\n\n这是一个道路具有生命记忆、城市依赖道路生存的世界。\n\n- 生灵通用武力尺：凡身、炼骨、燃炉、照域、天门、王域。\n- 道路体量尺：小径三里、驿路三十里、州道三百里、天路三千里以上。\n- 一条道路被一千名不同身份的活人完整走过后，会产生路魂。\n- 路魂能感知脚步、车马重量和沿途发生的暴力，但通常不能离开自身路基。\n- 道路可以被毁、截断、改道，也可以因路魂意志拒绝某些通行者。\n- 城市的粮食、军队、贸易与逃亡都依赖道路；一条重要道路改变位置，就足以改变一场战争。\n- 道路不会凭空生成目的地，所有路线都必须有实际路基和可承载的长度。\n\n### World Interface-only Direction\n\n- 每条正式道路的路碑会自动记录经过者的轮廓、人数、载重与出发时间。\n- 路碑记录可供道路两端和沿线城镇观看，保留七日。\n- 路碑只记录通行，不引导、传送、加速或改变任何人。\n- 发生劫掠、军队调动或大规模逃亡时，路碑会向道路两端自动传播警报。\n- 路碑不能复制道路，不能制造新的路段，也不能决定路魂的意志。\n\n### Protagonist Ontology-only Direction\n\n主角是一条三里长的活路。\n\n- 身体由碎石、黑土、旧桥木和路边杂草组成。\n- 西端是“头”，东端是“尾”；两端都能感知，但主意识位于中段一块旧界碑下。\n- 他没有手脚和人类面孔，移动方式是让自己的路基弯曲、抬升、折叠或把石土重新铺开。\n- 他能承载人、车、牲口和普通攻城器械。\n- 他能听见踩踏与车轮，却不能读取人的思想。\n- 他初醒时只能控制自身三里路基，不能直接控制其他道路。\n\n### Initial Origin-only Direction\n\nT0 时，主角诞生在一座废弃边城外。\n\n- 原本的州道在山洪中断裂，残存三里路段承接了一千名逃难者留下的脚印。\n- 最后一块路碑倒下时，路魂在残存路基中聚合。\n- T0 零点经历：主角第一次感到“自己是一整条路”，知道西端和东端相距三里，但没有移动过，也没有主动承载过任何人。\n- 他没有主人、盟友、敌人或既定目的地。\n- 他不能离开三里路基，只能感知覆盖在自己身体上的重量与脚步。\n\n### Initial Scale Position-only Direction\n\n- 生灵武力尺：不适用。原因：主角不是有经脉的战斗生灵，路魂属于世界通用的道路生命类别。\n- 道路体量尺：小径，第一档；长度精确为三里。\n- 路魂成熟位置：初醒；已满足一千名不同活人留下完整通行记忆的通用条件。\n- 当前承载能力：可承载三十名普通人、五辆轻车或一台小型攻城器械；这是三里小径的固定物理承载上限，不是 Power 临时发明的等级。\n\n### Power-only Direction\n\n能力名：折路收脚。\n\n- 触发：一个活人从主角路基上完整走完一段连续路面，起点和终点都被其脚步实际经过。\n- 目标类别：该名行走者，以及触发开始时与其保持物理接触的非生命货物、武器、车辆或牲畜车具。\n- 可做动作：\n  - 把被完整走过的连续路段从原地掀起、折叠成一条窄带。\n  - 将这条窄带在主角已经拥有的其他路面上重新铺开。\n  - 折叠时，路段上的目标会随路段一起移动。\n  - 主角可以把一段路竖起、卷成环、铺到墙上或暂时垫到水面上。\n- Power 不传送没有触发条件的人；未走完的路段不能被折起。\n- 永久边界：所有移动都必须使用主角当前身体上已经存在、且真实被目标走过的连续路面；他不能凭空造路，也不能把人送到自己从未拥有过的土地。\n- 触发一旦满足，主角永久保留对该路段的折叠记忆，但路段仍然只能存在于自身三里身体范围内，除非他后来通过正常成长获得更大的道路体量。\n\n### Story Interface / Opening Promise\n\n开篇时，边城正在押送三十名罪犯过桥。所有人都把主角当成一段断桥前临时铺好的旧路。\n\n第一名押送官走完三里路段时，主角满足触发条件。他把自己脚下的路面骤然折起，整段路像一条黑色巨鞭，从地面卷到半空，把押送官、囚车和守卫一起甩到城墙上。\n\n路碑将全过程记录并传播到城内。\n\n第二层后果立即发生：\n\n- 城中所有人发现道路不是固定地面，而是可以主动改变战场的生命。\n- 军队不再把道路当后勤设施，而开始争夺“谁能让这条路承载自己”。\n- 城主想封锁主角，商队想买下主角，逃难者则把他当作唯一能越过封锁的活出口。\n- 主角第一次意识到，自己移动的不是石头，而是所有人的生存位置。\n\n前十章推进：\n\n1. 折路甩飞押送队，主角公开觉醒。\n2. 城军铺火油封路，主角第一次主动弯曲路基躲过焚烧。\n3. 少年车夫带着妹妹走上主角，成为第一个主动与他合作的人。\n4. 城门关闭，主角把一段路折到城墙内侧，送粮车入城。\n5. 城中三方争夺路碑，路碑记录让主角的价值公开暴涨。\n6. 一支王域军队强行占路，主角拒绝承载他们，导致军阵断裂。\n7. 少年车夫被当作“路魂叛徒”追捕，主角第一次为人改变路线。\n8. 主角把追兵脚下的路卷走，救出车夫，却损失一段旧桥木身体。\n9. 城外洪水冲断其他道路，难民开始向主角聚集。\n10. 主角将整条三里路折成横跨城墙的巨大坡道，公开夺取边城唯一运输权。\n\n### Authority-Compilation Trace\n\n- 主角感知两端距离 → `Protagonist Ontology-only Direction` 的路基感知 → T0 已满足初醒条件 → 目标为自身三里路基 → 合法。\n- 押送官走完整段路 → `Power-only Direction` 的完整通行触发 → 触发已满足 → 目标为押送官及其接触的囚车 → 合法。\n- 路段带着押送队卷起 → `Power-only Direction` 的折叠与携带动作 → 触发已满足 → 载体为被走过的连续路段 → 合法。\n- 主角把路面铺到城墙上 → `Protagonist Ontology-only Direction` 的路基重铺 + `Power-only Direction` 的重新铺设位置 → 触发已满足 → 载体仍是自身三里路面 → 合法。\n- 路碑传播现场 → `World Interface-only Direction` 的记录与警报规则 → 事件发生在正式道路上 → 载体为路碑 → 合法；路碑没有移动道路。\n- 主角承载粮车 → `Ontology-only Direction` 的道路承载能力 → 无需额外触发 → 目标为普通车队 → 合法。\n- 主角暂时失去旧桥木身体 → `World-only Direction` 的道路可毁坏规则 → 目标为自身路基 → 合法；不是凭空制造代价。\n\n### 第一章标志性画面\n\n三十名押送官刚走过桥面，断桥忽然从河谷里站了起来。三里黑路像一条被抽出的鞭子，把囚车卷到城墙上；城内所有人同时发现，自己脚下的地面正在看着他们。\n\n### 主角反复会做的新动作\n\n- 把地面从敌人脚下掀走。\n- 将道路卷成墙、桥、鞭或牢笼。\n- 把一支军队连同车马一起折到另一处。\n- 把道路铺到水面、城墙和山腹。\n- 拒绝承载某个人，让他被迫停在原地。\n- 让一段路带着正在行走的人整体转向。\n\n### 第一次不公平兑现\n\n主角只是一条三里小径，却能在第一章把走过自己的整支押送队连同囚车一起折起来甩飞；“地形必须服从人”的默认规则当场失效。\n\n### 20章玩法扩张\n\n主角通过承载难民、商队、军队和强者，获得越来越多的有效路段记忆，并在战斗中把有限的三里身体拆成：\n\n- 移动桥；\n- 城墙坡道；\n- 卷路巨鞭；\n- 临时陷阱；\n- 载军平台；\n- 切断敌方退路的路环。\n\n第 20 章前，他不需要成为传统意义上的王域修士，而是控制第一 Local World 的三条生死运输线。当前世界的最高战争因他能否让谁通过、让谁无路可走而结算。最后的 World Horizon Handoff 由“第一世界已经没有任何军队能绕开主角的道路身体”触发，而不是提前规定下一世界是什么。\n\n### 100章以上仍能长出的不同故事\n\n长期可保留“主角是空间基础设施生命”的 Meta Grammar，但每个 Local World 的具体社会和力量规则另行建立：\n\n- 他可以成为道路、桥、峡谷或某种可承载空间，但不能重新变回普通人。\n- 关系不只是陪伴，而是决定谁能踩上他的身体、谁被送到安全处、谁会被他永远拒绝。\n- 冲突天然包含战争、迁徙、商路、围城、逃亡、领土和空间占有。\n- 他每一次扩大都改变局势，而不是只提高面板数值。\n\n### 最小可信桥梁\n\n只需让世界承认：道路能积累不同人的完整脚印并产生路魂；路魂能把自身真实路基折叠。主角只是第一条在断裂道路中提前醒来的三里活路。\n\n### 不可磨平的三点\n\n1. 主角的身体就是地图的一部分，不是进入地图的人。\n2. 他的攻击和成长都通过道路位置完成。\n3. 谁能走在他身上，直接决定谁能生存、交易、逃亡或发动战争。\n\n---\n\n## S3｜《天下第一道伤口》\n\n### 一句话货架简介\n\n主角不是受伤的人，而是一道刚刚长出意识的伤口；谁制造了这道伤，他就能沿着伤口留下的因果线钻进对方身体，从内部把伤口还回去。\n\n### World-only Direction\n\n这是一个伤口永远不会自然愈合的世界。\n\n- 生灵通用武力尺：凡身、开脉、铸炉、照海、天门、王域。\n- 伤口开度尺：细痕、指隙、肢隙、门隙。\n  - 细痕：不超过三分；\n  - 指隙：三分至一寸；\n  - 肢隙：一寸至三尺；\n  - 门隙：超过三尺。\n- 任何真实伤口都会保留一道可见的“创线”，指向造成该伤口的确切生物、武器或自然力量。\n- 伤口不会自行闭合；只有取回伤口中央的“伤芯”，或由造成伤口的力量主动终止，伤口才会消失。\n- 创线只记录伤害来源，不会自动攻击、传送或改变双方位置。\n- 伤口越大，创线越粗，越容易被其他人发现；因此杀人、行刑、决斗和医疗都受到公开追溯。\n\n### World Interface-only Direction\n\n- 每座城的“疤石”会自动记录公共区域内出现的伤口、创线方向、武器动作和现场证词。\n- 记录可即时观看，保留七日。\n- 疤石只能观看、记录和传播，不能制造伤口、拉动创线、替人取伤芯或改变攻击结果。\n- 重大伤口记录会同步到城门、医馆和军府，形成公开的责任链。\n- 疤石无法判断动机，只能记录谁造成了什么伤口、伤口何时出现、创线指向哪里。\n\n### Protagonist Ontology-only Direction\n\n主角是一道长九寸、宽一尺的竖直伤口，没有肉身、骨骼和固定脸孔。\n\n- 身体由两道不断张合的伤口边缘组成。\n- 伤口内部不是黑暗空间，而是一段极薄、极长、可以穿行的“创腔”。\n- 他不能像人一样走路，只能沿伤口边缘爬行、张开、闭合和撕裂周围的附着物。\n- 他能感知接触自己的刀、手、血液、皮肤和创线。\n- 他不能独立产生普通拳脚力量；他的动作必须依托伤口、创线或被他并入身体的伤口边缘。\n- 他没有人类形状，但能用创腔吞入和拖出小型物体。\n\n### Initial Origin-only Direction\n\nT0 时，主角诞生在一头已经死亡的石甲狮胸口。\n\n- 石甲狮死于一场公开处刑，胸口留下了一道长九寸、宽一尺的竖伤。\n- 行刑者离开后，伤口中央的伤芯没有被取回，创线仍然指向那名行刑者。\n- 伤口边缘在 T0 聚合出意识，主角第一次知道自己不是石甲狮，而是这道伤。\n- T0 零点经历：只能贴着石甲狮胸腔内壁张合，能够感知外界触碰，不能离开原伤，不能反向沿创线移动。\n- 他没有见过行刑者，也没有主动攻击过任何人。\n\n### Initial Scale Position-only Direction\n\n- 生灵武力尺：不适用。原因：主角是世界通用分类中的“有意识伤口现象”，没有独立肉身，不能直接占据凡身至王域的位置。\n- 伤口开度尺：肢隙档下限；宽一尺、长九寸。\n- 创线长度：已连接一名明确行刑者；这是 T0 既有伤害来源，不是主角新获得的 Power。\n- 独立施力：不适用。原因：主角 T0 只能张合和感知，尚未满足 Power 的触发条件。\n\n### Power-only Direction\n\n能力名：夺伤回创。\n\n- 触发：主角的伤口边缘接触一处仍然开放的真实伤口，并触碰该伤口的创线。\n- 目标类别：该伤口的确切制造者，以及这道伤口本身。\n- 可做动作：\n  - 沿创线钻入制造者身体，在对方身上打开一个与原伤口同等开度的出口。\n  - 从出口进入对方体内，再从原伤口或对方身上的其他开放伤口折返。\n  - 将原伤口的一部分边缘并入自身，永久扩大自己的开度。\n  - 拖出或塞入不超过自身开度的物体。\n- 他不复制敌人的境界、力量或技能；他只是把真实存在的伤口和创线变成可穿行的身体通道。\n- 永久边界：主角必须始终依托至少一道现实中仍然开放的伤口；没有开放伤口作为锚点时，他会失去行动能力，不能凭空制造第一道伤口。\n- 除这一条根边界外，Power 不主动设置对称代价。\n\n### Story Interface / Opening Promise\n\n开篇是石甲狮的公开处刑。\n\n行刑者为了取出石甲狮胸口的伤芯，再次把手伸进主角所在的伤口。触发成立，创线从伤口内部亮起，主角沿线钻入行刑者的手臂，在他的手腕上直接裂开一道同样宽度的出口。\n\n行刑者的手臂从内部被自己的处刑伤口撕开。\n\n天上的疤石立即记录这一幕。\n\n第二层后果立即发生：\n\n- 围观者看见伤口第一次主动反咬制造者。\n- 医馆、军府和各大宗门立刻重新估价所有旧伤：伤口不再只是弱点，也可能是一扇通往敌人体内的门。\n- 现场强者开始互相检查身上的旧伤。\n- 没有受伤的人争抢火、药和铠甲，生怕给主角留下入口；已经受伤的人则变成各方势力最想争夺的战场节点。\n\n前十章推进：\n\n1. 主角沿石甲狮创线反创行刑者，公开暴露。\n2. 行刑者试图取回伤芯，反而被主角拖入石甲狮胸腔。\n3. 主角第一次并入行刑者手腕伤口，开度扩大。\n4. 一名少女医者发现主角不是妖物，而是会选择目标的伤口。\n5. 城中势力封锁所有伤者，主角被迫借一名重伤囚徒逃城。\n6. 主角穿过囚徒胸口创线，第一次反杀追兵首领。\n7. 疤石回放使主角的存在传遍附近城镇，围猎与供奉同时开始。\n8. 少女医者故意保留一道浅伤，成为主角唯一稳定的移动锚点。\n9. 主角进入一名天门强者的旧伤，发现伤口能够绕过对方正面防御。\n10. 城主发动公开无伤处刑，试图消灭所有可供主角使用的入口；主角转而利用城墙、刑台和旧战争伤痕制造反攻网络。\n\n### Authority-Compilation Trace\n\n- 主角感知外界触碰 → `Protagonist Ontology-only Direction` 的伤口触觉 → T0 已成立 → 目标为石甲狮胸口与外部行刑器具 → 合法。\n- 行刑者再次触碰胸口伤口 → `Power-only Direction` 的开放伤口接触触发 → 触发已满足 → 目标为原伤口及其明确制造者 → 合法。\n- 主角沿创线进入行刑者手臂 → `World-only Direction` 的创线指向规则 + `Power-only Direction` 的穿行动作 → 触发已满足 → 载体为真实创线 → 合法。\n- 行刑者手腕出现同等开度出口 → `Power-only Direction` 的出口动作 → 目标为创线制造者 → 合法；没有复制行刑者武力。\n- 主角并入手腕伤口并扩大自身 → `Power-only Direction` 的伤口边缘并入动作 → 原伤口仍开放，触发已满足 → 载体为真实手腕伤口 → 合法。\n- 疤石记录反创过程 → `World Interface-only Direction` 的公共伤口记录 → 事件发生在公共刑场 → 载体为疤石 → 合法；疤石没有参与反创。\n- 主角无法在无伤环境中凭空出现 → `Power-only Direction` 的永久根边界 → 没有开放伤口时触发不满足 → 结果为暂时失去行动能力 → 合法。\n\n### 第一章标志性画面\n\n行刑者把手伸进石甲狮胸口的伤口，下一刻，他自己的手腕从里面裂开；那道伤口像一扇门，从死去妖兽的胸腔里通向制造它的人。\n\n### 主角反复会做的新动作\n\n- 沿创线钻进制造者体内。\n- 把旧伤撕成新的出口。\n- 把敌人的伤口边缘并入自身。\n- 借一名伤者的身体穿过封锁。\n- 从刀口、箭孔和裂甲中突然出现。\n- 拖动物体穿过人体或墙体上的开放伤口。\n\n### 第一次不公平兑现\n\n主角刚出生就把一名负责公开处刑的天门级行刑者的手臂从内部撕开；对方的强大境界无法防御一个从自己伤口因果线里钻出来的敌人。\n\n### 20章玩法扩张\n\n主角通过并入不同大小的伤口，把自身从一尺级扩大到门隙级，逐渐获得：\n\n- 个人伤口通道；\n- 兵器伤口通道；\n- 城墙战争伤痕；\n- 妖兽撕裂伤；\n- 天门强者旧伤；\n- 战场上成千上万条可追溯创线。\n\n第 20 章前，第一世界的最高战争围绕一座拥有古老战争伤痕的城池展开。主角利用所有仍开放的创线，把最强的几名敌人拖进彼此的伤口网络，最终决定城池归属。当前世界最高局势结算后，输出的 Handoff 只说明：主角已拥有足以跨越当前世界最大身体与战场结构的创腔，下一次扩展由新的 Local World 规则决定。\n\n### 100章以上仍能长出的不同故事\n\n- 主角永远不是连续的人形生命，而是由伤口、边缘和创线组成。\n- 不同 Local World 可以让伤口连接个人、武器、建筑、巨兽或其他可受伤实体，但具体答案必须到对应世界重新定义。\n- 人物关系会直接改变主角是否保留某人的伤口、是否救治锚点、是否把伤口还给真正的制造者。\n- 他的成长不是单纯变硬，而是从一道小伤口变成能让一个世界的暴力彼此相连的身体。\n- 每个世界最终都能围绕同一个直接问题展开：谁有资格决定伤口归谁？\n\n### 最小可信桥梁\n\n只需世界承认：伤口不会自然愈合，并且每道伤口都保留指向制造者的真实创线。主角只是第一道获得意识、能够沿创线行动的伤口。\n\n### 不可磨平的三点\n\n1. 主角不是受伤的人，而是伤口本身。\n2. 每次攻击都可能成为敌人进入自己的门。\n3. 死亡、身体边界和“伤害只能单向发生”的默认认知都不能恢复原状。\n\n",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 58632,
+      "inputTokens": 8717,
+      "cachedReadTokens": 29440,
+      "outputTokens": 20475,
+      "thoughtTokens": 12083
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 58632,
+          "inputTokens": 8717,
+          "cachedInputTokens": 29440,
+          "outputTokens": 20475,
+          "reasoningOutputTokens": 12083
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 58632,
+              "inputTokens": 8717,
+              "cachedInputTokens": 29440,
+              "outputTokens": 20475,
+              "reasoningOutputTokens": 12083
+            }
+          }
+        ]
+      }
+    }
+  },
+  "session": {
+    "sessionId": "01a0518b-a8e6-7303-9d32-084980bfb112",
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "gpt-5.6-sol[low]",
+          "name": "GPT-5.6-Sol (low)",
+          "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-sol[medium]",
+          "name": "GPT-5.6-Sol (medium)",
+          "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-sol[high]",
+          "name": "GPT-5.6-Sol (high)",
+          "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[xhigh]",
+          "name": "GPT-5.6-Sol (xhigh)",
+          "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[max]",
+          "name": "GPT-5.6-Sol (max)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[ultra]",
+          "name": "GPT-5.6-Sol (ultra)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-terra[low]",
+          "name": "GPT-5.6-Terra (low)",
+          "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-terra[medium]",
+          "name": "GPT-5.6-Terra (medium)",
+          "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-terra[high]",
+          "name": "GPT-5.6-Terra (high)",
+          "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[xhigh]",
+          "name": "GPT-5.6-Terra (xhigh)",
+          "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[max]",
+          "name": "GPT-5.6-Terra (max)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[ultra]",
+          "name": "GPT-5.6-Terra (ultra)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-luna[low]",
+          "name": "GPT-5.6-Luna (low)",
+          "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-luna[medium]",
+          "name": "GPT-5.6-Luna (medium)",
+          "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-luna[high]",
+          "name": "GPT-5.6-Luna (high)",
+          "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[xhigh]",
+          "name": "GPT-5.6-Luna (xhigh)",
+          "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[max]",
+          "name": "GPT-5.6-Luna (max)",
+          "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.5[low]",
+          "name": "GPT-5.5 (low)",
+          "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.5[medium]",
+          "name": "GPT-5.5 (medium)",
+          "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.5[high]",
+          "name": "GPT-5.5 (high)",
+          "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.5[xhigh]",
+          "name": "GPT-5.5 (xhigh)",
+          "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[low]",
+          "name": "GPT-5.4 (low)",
+          "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4[medium]",
+          "name": "GPT-5.4 (medium)",
+          "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4[high]",
+          "name": "GPT-5.4 (high)",
+          "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[xhigh]",
+          "name": "GPT-5.4 (xhigh)",
+          "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[low]",
+          "name": "GPT-5.4-Mini (low)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4-mini[medium]",
+          "name": "GPT-5.4-Mini (medium)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4-mini[high]",
+          "name": "GPT-5.4-Mini (high)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[xhigh]",
+          "name": "GPT-5.4-Mini (xhigh)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[low]",
+          "name": "GPT-5.3-Codex-Spark (low)",
+          "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[medium]",
+          "name": "GPT-5.3-Codex-Spark (medium)",
+          "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[high]",
+          "name": "GPT-5.3-Codex-Spark (high)",
+          "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[xhigh]",
+          "name": "GPT-5.3-Codex-Spark (xhigh)",
+          "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+        }
+      ],
+      "currentModelId": "gpt-5.6-luna[max]"
+    },
+    "modes": {
+      "availableModes": [
+        {
+          "id": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "id": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "id": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ],
+      "currentModeId": "read-only"
+    },
+    "configOptions": [
+      {
+        "id": "mode",
+        "name": "Mode",
+        "description": "Approval and sandboxing preset for the session",
+        "category": "mode",
+        "type": "select",
+        "currentValue": "read-only",
+        "options": [
+          {
+            "value": "read-only",
+            "name": "Read-only",
+            "description": "Requires approval to edit files and run commands."
+          },
+          {
+            "value": "agent",
+            "name": "Agent",
+            "description": "Read and edit files, and run commands."
+          },
+          {
+            "value": "agent-full-access",
+            "name": "Agent (full access)",
+            "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+          }
+        ]
+      },
+      {
+        "id": "collaboration_mode",
+        "name": "Collaboration mode",
+        "description": "How Codex collaborates for subsequent turns",
+        "category": "collaboration_mode",
+        "type": "select",
+        "currentValue": "default",
+        "options": [
+          {
+            "value": "default",
+            "name": "Default"
+          },
+          {
+            "value": "plan",
+            "name": "Plan",
+            "description": "Plan before making changes"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "name": "Model",
+        "description": "Model Codex uses for the session",
+        "category": "model",
+        "type": "select",
+        "currentValue": "gpt-5.6-luna",
+        "options": [
+          {
+            "value": "gpt-5.6-sol",
+            "name": "GPT-5.6-Sol",
+            "description": "Latest frontier agentic coding model."
+          },
+          {
+            "value": "gpt-5.6-terra",
+            "name": "GPT-5.6-Terra",
+            "description": "Balanced agentic coding model for everyday work."
+          },
+          {
+            "value": "gpt-5.6-luna",
+            "name": "GPT-5.6-Luna",
+            "description": "Fast and affordable agentic coding model."
+          },
+          {
+            "value": "gpt-5.5",
+            "name": "GPT-5.5",
+            "description": "Frontier model for complex coding, research, and real-world work."
+          },
+          {
+            "value": "gpt-5.4",
+            "name": "GPT-5.4",
+            "description": "Strong model for everyday coding."
+          },
+          {
+            "value": "gpt-5.4-mini",
+            "name": "GPT-5.4-Mini",
+            "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+          },
+          {
+            "value": "gpt-5.3-codex-spark",
+            "name": "GPT-5.3-Codex-Spark",
+            "description": "Ultra-fast coding model."
+          }
+        ]
+      },
+      {
+        "id": "reasoning_effort",
+        "name": "Reasoning effort",
+        "description": "How much reasoning effort the model should use",
+        "category": "thought_level",
+        "type": "select",
+        "currentValue": "max",
+        "options": [
+          {
+            "value": "low",
+            "name": "Low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "value": "medium",
+            "name": "Medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "value": "high",
+            "name": "High",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "value": "xhigh",
+            "name": "Xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "value": "max",
+            "name": "Max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          }
+        ]
+      },
+      {
+        "id": "fast-mode",
+        "name": "Fast mode",
+        "description": "1.5x speed, increased usage",
+        "category": "model_config",
+        "type": "select",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Off",
+            "description": "Default speed, normal usage"
+          },
+          {
+            "value": "on",
+            "name": "On",
+            "description": "1.5x speed, increased usage"
+          }
+        ]
+      }
+    ]
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

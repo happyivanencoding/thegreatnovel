@@ -1,0 +1,9 @@
+{
+  "e7_selected_candidate": "S3",
+  "selection_registered_before_forge": true,
+  "e7_continue_only_on": "PASS",
+  "power_candidate_if_downstream": 2,
+  "human_candidate_if_downstream": 2,
+  "mutation_source": "same generated S3",
+  "no_candidate_substitution": true
+}

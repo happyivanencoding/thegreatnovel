@@ -1,0 +1,10 @@
+{
+  "experiment": "extreme-premise-survival-20260830-v1",
+  "production_modified": false,
+  "e7": {"selected": "S3", "concept": "天下第一道伤口", "compiler": "CONDITIONAL PASS", "downstream_authorized": false},
+  "e1": {"generated": true, "verdict": "DIRECTIONAL PASS", "main_failure": "aggression drifts into reach/network scale and carrier expansion"},
+  "e7b": {"selected": "S3", "concept": "门胚：把敌人的攻击翻回去", "compiler": "CONDITIONAL PASS", "downstream_authorized": false, "directional_gain": "primitive closure reduced long-form mechanism creep"},
+  "chapter_downstream_calls": 0,
+  "automatic_repair_calls": 0,
+  "candidate_substitutions": 0
+}
