@@ -1,6 +1,6 @@
 {
   "schema_version": "local-authority-repair-final-validation-v1",
-  "status": "ENGINEERING_VALIDATED_PENDING_GIT_PUSH",
+  "status": "COMPLETE",
   "production_changed": false,
   "heldout3_generated": false,
   "protocol_hashes": {
@@ -9,15 +9,22 @@
     "t1": "DEBC7FAD6B5E9E778B846B38523AD9761A7CD1F7947E269368060F1D84061688"
   },
   "verdict": "STOP_POSTHOC_LOCAL_DIFF_FAMILY_KEEP_FULL_LUNA_HIGH",
-  "pending": [
-    "git_commit",
-    "git_push"
-  ],
+  "pending": [],
   "tests": {
     "scripts_compiled": 5,
     "full_pytest_passed": 440,
     "full_pytest_command": "python -m pytest -q",
     "git_diff_check": true,
     "production_src_tests_changed": false
+  },
+  "git": {
+    "experiment_commit": "62ac8c144fd449e4143a9a6f334f1ac6440efe7f",
+    "experiment_commit_subject": "test(story): evaluate post-hoc authority repair alternatives",
+    "experiment_commit_pushed": true,
+    "remote_branch": "origin/principal_dev_new_sys",
+    "remote_sync_after_experiment_commit": "0/0",
+    "author": "happyivanencoding <jingxuan.ivan@gmail.com>",
+    "raw_untracked_evidence_preserved_locally": true,
+    "production_source_changed": false
   }
 }
