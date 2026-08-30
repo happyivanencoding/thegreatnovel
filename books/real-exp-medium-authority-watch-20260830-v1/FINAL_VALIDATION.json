@@ -1,6 +1,6 @@
 {
   "schema_version": "medium-authority-watch-final-validation-v1",
-  "status": "ENGINEERING_VALIDATED_PENDING_GIT_PUSH",
+  "status": "COMPLETE",
   "production_changed": false,
   "heldout3_generated": false,
   "derivation_source": {
@@ -22,8 +22,15 @@
     "git_diff_check": true
   },
   "verdict": "STOP_WATCH_FAMILY_KEEP_LUNA_HIGH",
-  "pending": [
-    "git_commit",
-    "git_push"
-  ]
+  "pending": [],
+  "git": {
+    "experiment_commit": "175aae0ccfe7888d0d13a294dba13d141a60755d",
+    "experiment_commit_subject": "test(story): evaluate medium authority watch",
+    "experiment_commit_pushed": true,
+    "remote_branch": "origin/principal_dev_new_sys",
+    "remote_sync_after_experiment_commit": "0/0",
+    "author": "happyivanencoding <jingxuan.ivan@gmail.com>",
+    "raw_untracked_evidence_preserved_locally": true,
+    "production_source_changed": false
+  }
 }
