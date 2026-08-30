@@ -104,3 +104,13 @@ def test_premise_workspace_is_author_gated_without_selector_or_repair_loop() -> 
     assert "skipPremiseAperture" in APP_JS
     assert 'id="repair-premise"' not in TEMPLATE
     assert "autoSelectPremise" not in APP_JS
+
+def test_exact_input_receipt_reuse_skips_executor_and_hydrates_saved_response() -> None:
+    assert "runResponseEditorByMode" in APP_JS
+    assert "hydrateReceiptReusedResponse" in APP_JS
+    assert "manifest?.nodes?.[node]?.receipt_reused" in APP_JS
+    block = APP_JS.split("if (node && manifest?.nodes?.[node]?.receipt_reused)", 1)[1].split("renderCodexTaskWrapper(mode);", 1)[0]
+    assert "hydrateReceiptReusedResponse(mode, node)" in block
+    assert "return;" in block
+    assert "executeOpenAI" not in block
+    assert "/response`" in APP_JS

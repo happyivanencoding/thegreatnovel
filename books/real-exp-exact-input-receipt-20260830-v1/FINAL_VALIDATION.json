@@ -1,0 +1,29 @@
+{
+  "schema_version": "exact-input-receipt-final-validation-v1",
+  "status": "ENGINEERING_VALIDATED_PENDING_GIT_PUSH",
+  "production_changed": true,
+  "first_pass_chain_changed": false,
+  "verdict": "PASS_PRODUCTION_INCREMENTAL_RECOVERY",
+  "tests": {
+    "full_pytest_passed": 448,
+    "full_pytest_command": "python -m pytest -q",
+    "node_check": true,
+    "git_diff_check": true,
+    "receipt_unit_tests": 7
+  },
+  "integration": {
+    "file": "INTEGRATION_RESULT.json",
+    "model_calls_during_revalidation": 0,
+    "responses_exact_preserved": true,
+    "total_revalidation_ms": 8.794,
+    "historical_avoidable_wall_seconds": 174.796,
+    "net_saved_seconds_example": 174.787,
+    "scope": "author-edit / stale recovery, not first-pass generation"
+  },
+  "projection_coverage": "PROJECTION_COVERAGE.json",
+  "skill": "SKILL_INSTALL_VALIDATION.json",
+  "pending": [
+    "git_commit",
+    "git_push"
+  ]
+}

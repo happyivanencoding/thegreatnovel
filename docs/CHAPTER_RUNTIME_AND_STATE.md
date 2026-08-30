@@ -175,6 +175,8 @@ Ledger 记录固定节点的 Prompt、Response、状态与最终采用来源，�
 
 在默认 `curator_primary` 中，`authority_reviser` 必跑，Specialist 与 Integrator 默认 `skipped`；需要 repair 时只能在 Reviser 完成后显式激活。历史已完成 Run 不被新节点追溯改写；新/未完成 production Run 必须经过 Reviser。失败节点重试复用已保存 Prompt，不重跑无关上游；上游变化只让真实依赖的下游变为 `stale`。
 
+`stale` 不是“必须重新调用模型”的同义词。Run Ledger 为新节点 Response 保存 exact-input receipt：当前 Prompt SHA-256、生成该 Response 时的 Prompt SHA-256、Response SHA-256 与 receipt status。上游变更后仍先保守 stale；当同一节点的新 Prompt **逐字相同**且旧 Response 文件未变时，保存 Prompt 会直接把节点恢复为 `completed / adopted`，UI 同时回填旧 Response 并跳过 OpenAI/Codex 调用。显式 retry 永远绕过 receipt；旧 manifest 没 receipt 时 fail closed 正常重跑。Digest 只用于决定是否跳过昂贵 LLM 调用，不用于语义等价判断。
+
 Forward Evolution 继续遵守这条原则：World Root Rewrite 会按原依赖链使未来全面 stale；World Expansion 只影响 `effective_from` 之后已经存在的未来 Run，不杀死 Expansion 之前已经准备好的 Run；Human Development / Current Character / Refresh Story 只影响未来。已完成章节正文与历史 State 永远受保护。
 
 ## 实现边界

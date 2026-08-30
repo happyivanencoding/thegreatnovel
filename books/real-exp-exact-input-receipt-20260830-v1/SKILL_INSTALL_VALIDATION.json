@@ -1,0 +1,14 @@
+{
+  "skill": "tgn-system-steward",
+  "version": "0.3.29",
+  "package_digest": "sha256:18e99cfc376023d7981f5748c691a0d3f5ff61fc71f7eb78ebd571cd13a34550",
+  "validated": true,
+  "installed": true,
+  "activated": true,
+  "narrow_smoke": {
+    "file": "STEWARD_SMOKE_NARROW.md",
+    "verdict": "PASS",
+    "knowledge_class": "CURRENT DEFAULT — exact-input stale-recovery correctness only"
+  },
+  "note": "A broader preliminary smoke was kept local; canonical package acceptance is the narrow PASS on byte-exact stale recovery correctness."
+}

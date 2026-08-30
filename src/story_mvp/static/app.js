@@ -1082,6 +1082,19 @@ const runNodeByMode = {
   state_delta: "state_delta",
 };
 
+const runResponseEditorByMode = {
+  chapter: "primary-writer-response",
+  context_curator: "curator-response",
+  primary_writer: "primary-writer-response",
+  authority_reviser: "authority-reviser-response",
+  specialist_opening: "opening-specialist-response",
+  specialist_dialogue: "dialogue-specialist-response",
+  specialist_action: "action-specialist-response",
+  specialist_emotion: "emotion-specialist-response",
+  chapter_integrator: "integrator-response",
+  state_delta: "state-delta-response",
+};
+
 function currentChapterNumber() {
   return Number($("chapter-number").value);
 }
@@ -1204,16 +1217,62 @@ async function activateSelectedRepair() {
 
 async function saveRunPromptForMode(mode, prompt) {
   const node = runNodeByMode[mode];
-  if (!node || !state.currentRun || !prompt.trim()) return;
+  if (!node || !state.currentRun || !prompt.trim()) return null;
   try {
-    renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/prompt`, {
+    const manifest = await requestJson(`${runBaseUrl()}/nodes/${node}/prompt`, {
       method: "PUT",
       body: JSON.stringify({ content: prompt }),
-    }));
+    });
+    renderRunLedger(manifest);
     await refreshWorkflow();
+    return manifest;
   } catch (error) {
     showStatus(`保存 ${node} Prompt 到 Run 失败：${error.message}`, true);
+    return null;
   }
+}
+
+function hydrateDirectorResponseEditors(response) {
+  if (!response.trim()) return false;
+  $("director-response").value = response;
+  const lines = [];
+  const fieldLabels = new Set();
+  let afterField = false;
+  for (const line of response.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (/^#{1,6}\s/.test(trimmed)) {
+      if (afterField) break;
+      continue;
+    }
+    const fieldMatch = /^(触发事件|推动事件的人|主角行动|对手或世界反应|直接结果|状态变化|叙事功能|结尾推动力)\s*[：:]/.exec(trimmed);
+    if (fieldMatch) {
+      fieldLabels.add(fieldMatch[1]);
+      afterField = true;
+      lines.push(trimmed);
+    } else if (afterField && trimmed) {
+      lines.push(trimmed);
+    }
+  }
+  if (fieldLabels.size !== 8) return false;
+  $("current-outline").value = lines.join("\n");
+  return true;
+}
+
+async function hydrateReceiptReusedResponse(mode, node) {
+  const payload = await requestJson(`${runBaseUrl()}/nodes/${node}/response`);
+  const response = payload.content || "";
+  if (!response.trim()) throw new Error(`${node} receipt 指向的 Response 为空`);
+  $("codex-response").value = response;
+  if (mode === "director") {
+    if (!hydrateDirectorResponseEditors(response)) {
+      throw new Error("复用的 Director Response 不含完整八字段");
+    }
+  } else {
+    const editorId = runResponseEditorByMode[mode];
+    if (editorId && $(editorId)) $(editorId).value = response;
+  }
+  $("codex-task-wrapper-panel").hidden = true;
+  $("codex-task-wrapper").value = "";
 }
 
 async function saveRunResponseForMode(mode, response) {
@@ -1797,7 +1856,14 @@ async function generatePrompt() {
       body: JSON.stringify(promptPayload()),
     });
     $("prompt-text").value = payload.prompt;
-    await saveRunPromptForMode(mode, payload.prompt);
+    const manifest = await saveRunPromptForMode(mode, payload.prompt);
+    const node = runNodeByMode[mode];
+    if (node && manifest?.nodes?.[node]?.receipt_reused) {
+      await hydrateReceiptReusedResponse(mode, node);
+      await refreshWorkflow();
+      showStatus(`${node} 的最终 Prompt 未变化；已复用 Run Receipt，跳过模型调用。`);
+      return;
+    }
     renderCodexTaskWrapper(mode);
     if (currentExecutorMode() === "openai_api") await executeOpenAI(payload.prompt, mode);
     showStatus("Prompt 已生成，可继续编辑后复制");
@@ -2216,30 +2282,10 @@ async function applyDirectorResponse() {
     showStatus("Director 返回为空，未改变当前章小纲", true);
     return;
   }
-  $("director-response").value = response;
-  const lines = [];
-  const fieldLabels = new Set();
-  let afterField = false;
-  for (const line of response.split(/\r?\n/)) {
-    const trimmed = line.trim();
-    if (/^#{1,6}\s/.test(trimmed)) {
-      if (afterField) break;
-      continue;
-    }
-    const fieldMatch = /^(触发事件|推动事件的人|主角行动|对手或世界反应|直接结果|状态变化|叙事功能|结尾推动力)\s*[：:]/.exec(trimmed);
-    if (fieldMatch) {
-      fieldLabels.add(fieldMatch[1]);
-      afterField = true;
-      lines.push(trimmed);
-    } else if (afterField && trimmed) {
-      lines.push(trimmed);
-    }
-  }
-  if (fieldLabels.size !== 8) {
+  if (!hydrateDirectorResponseEditors(response)) {
     showStatus("Director 返回没有完整八字段，未改变当前章小纲", true);
     return;
   }
-  $("current-outline").value = lines.join("\n");
   markEditorDirty("current-outline");
   await saveRunResponseForMode("director", response);
   showStatus("Director 八字段已采用到当前章小纲；尚未写盘");

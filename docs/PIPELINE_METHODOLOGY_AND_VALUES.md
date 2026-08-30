@@ -581,6 +581,8 @@ Primary 为了保持注意力集中，只吃 Director Contract、Curated Context
 
 **显式里程碑 Outcome Fidelity 是低频条件机制，不是新常驻 Agent。** Run Ledger 只在计划以“进入 / 踏入 / 晋升 / 突破 / 成为”明确批准当前章里程碑、第一次 Authority Revision 却仍未直接落成时，才把同一个 Reviser 收窄为一次 Preservation-First `Outcome Repair` retry。普通章节零额外调用；repair 只补最小合法因果与一次直称，不改事件、胜负、资源、伤势、关系、Ending 或未知边界；最多一次，第二次仍漏则节点保持 failed，`final_source` 不成立，State 不运行。网页 UI 与 Codex External apply 都服从同一 Run Ledger 状态。
 
+**增量恢复优先复用 exact-input receipt，而不是重新调用同一个模型。** Workflow 仍按 Authority 依赖把 future run 标 stale；随后各节点重新构建自己的 bounded Prompt。若 exact Prompt digest 与该节点已保存 Response 的输入 receipt 完全一致，且 Response body digest 未变，则该 Response 仍是当前节点的有效产物，Run Ledger 直接恢复节点，不再调用 LLM；任一字符变化或显式 retry 都正常重跑。这优化 author edit / stale recovery 的 critical path，不改变第一次生成链，也不把“近似相同”当成“相同”。
+
 当前默认使用 GPT-5.6 Luna high。五档同输入对照中，medium Preservation 更高但存在 Reader Release coverage 漏项；high 首次在四类压力样本上全部通过关键 authority 检查；xhigh/max 没有补偿性收益。模型选择是 Current Default，不是 Stable Principle。
 
 ---

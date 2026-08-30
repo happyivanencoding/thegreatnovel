@@ -896,6 +896,11 @@ def test_run_ledger_api_persists_prompt_response_and_retry(tmp_path: Path, monke
         json={"content": "director response"},
     )
     assert response.status_code == 200
+    loaded_response = client.get(
+        "/api/books/ledger-api/runs/1/nodes/director/response"
+    )
+    assert loaded_response.status_code == 200
+    assert loaded_response.json() == {"content": "director response"}
     failed = client.post("/api/books/ledger-api/runs/1/nodes/director/failed")
     assert failed.status_code == 200
     retried = client.post("/api/books/ledger-api/runs/1/nodes/director/retry")

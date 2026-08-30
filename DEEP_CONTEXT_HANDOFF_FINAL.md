@@ -1375,6 +1375,8 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 
 **State closure 是硬接线**：`curator_primary` 不允许 Primary 直接成为 `final_source`；State 后端从 Run Ledger 重新读取 `authority_reviser` 或显式 repair 后的 `integrator`，页面粘贴的 Primary 不能旁路进入长期 Canon。Optional Specialist/Integrator 也必须以 Authority Revision 为底稿。
 
+**2026-08-30 Exact-Input Receipt 已进入 Run Ledger。** 灵感来自 novel-studio 的 sealed input/body identity 与 ainovel-cli 的 step checkpoint，但实现保持 TGN 最小化：上游 Authority 改动仍先 conservative stale；节点重新生成 bounded Prompt 后，只在 `prompt_sha256 == response_prompt_sha256` 且 Response 文件 SHA-256 与 receipt 相等时恢复旧 `completed/adopted`，否则正常重跑；显式 retry 永不复用。真实 held-out Ch5 证明 World 的 substantive edit 可使 Workflow 将 D/C/P 全 stale，而三节点最终 Prompt 仍 exact-identical；receipt 重验证总计 8.794ms、0模型调用、Response 逐字不变，对照同书历史 D+C+P 平均 174.796s，单个受影响章节的增量恢复净省约174.787s。该收益只属于 stale/author-edit recovery，不等于首次章节 wall 降低。
+
 2026-08-29 又冻结了两个由真实 20 章快节奏 E2E 暴露的章节 Authority 问题。第一，Future 10 条目现在在进入 Director 前确定性拆成 `本章唯一可执行事件预算` 与 `章末 Handoff Reservation`；Long Block 只是阶段背景，不能授权 Director 提前执行下一章付款、正式身份、获得、升级或其它结算。第二，当前章 `结果 / 状态变化` 不再依赖 Director 重述：runtime 将其确定性并入 Frozen Mission 的 `状态变化`，；不再额外重复投影给 Primary/Reviser。真实 Ch19 证明仅靠 Prompt/可见性仍不足：Luna Director、Terra Primary、Luna Reviser 都曾把批准的“顾停舟本人进入镇海”合理化成“镇海级战绩”。因此 Run Ledger 新增**同一 Authority Reviser 的一次性条件 Outcome Repair retry**：只检测计划中以“进入 / 踏入 / 晋升 / 突破 / 成为”明确批准、而最终稿仍未直接落成的显式里程碑；普通章节零额外调用。第一次漏掉就不能 adopt / 不能进 State，自动准备窄 Preservation-First Repair Prompt；最多一次，第二次仍漏则保持 failed。真实旧 Ch19 自动 Repair 用 Luna high 85.4s 通过，明确恢复“本人进入镇海”，与原 Revision 正文相似度约 96.75%，没有重写战斗。网页 UI 与 Codex External apply 都服从同一 Run Ledger gate。
 
 ---

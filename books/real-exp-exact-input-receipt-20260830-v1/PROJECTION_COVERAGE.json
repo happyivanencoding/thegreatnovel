@@ -1,0 +1,45 @@
+{
+  "schema_version": "exact-input-receipt-projection-coverage-v1",
+  "rows": [
+    {
+      "artifact": "creative.world_vision",
+      "substantive_candidates": 42,
+      "exact_equal_counts": {
+        "director": 42,
+        "curator": 38,
+        "primary": 42,
+        "authority_reviser": 17
+      },
+      "first_director_invisible": {
+        "line_index": 5,
+        "line": "烬星洲的人生活在会落下“星火”的天空下。星火能烧穿屋瓦、让野兽狂化，也会留下可供修炼和铸兵的星铁。聚落屋顶多铺黑陶和盐石，街口设有避星亭；遇到星风，普通人必须进亭躲避，不能在旷野停留。",
+        "equal": {
+          "director": true,
+          "curator": true,
+          "primary": true,
+          "authority_reviser": false
+        }
+      }
+    },
+    {
+      "artifact": "creative.character_card",
+      "substantive_candidates": 26,
+      "exact_equal_counts": {
+        "director": 26,
+        "curator": 12,
+        "primary": 26,
+        "authority_reviser": 1
+      },
+      "first_director_invisible": {
+        "line_index": 9,
+        "line": "别人把星力灌进兵器后，兵器脱手就只剩一次攻击；持有者能让一件兵器脱手后仍像自己的手脚一样行动，近处精细操控，远处执行简单动作。",
+        "equal": {
+          "director": true,
+          "curator": true,
+          "primary": true,
+          "authority_reviser": false
+        }
+      }
+    }
+  ]
+}

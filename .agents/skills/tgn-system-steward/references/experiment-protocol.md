@@ -276,6 +276,8 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 不要用新增 cheap Reviewer / classifier 为另一个 Reviewer 决定是否运行，除非它能由 deterministic explicit obligation 取代且总成本、漏报、fallback 已完整计入。优先顺序是：删确定性脏上下文 → 修矛盾合同 → 减少废弃重跑/恢复失败节点 → same prompt / same model 的 execution backend 减负 → 最后才考虑语义降档。
 
+- **Exact-input receipt / checkpoint reuse**：只有当 digest 的结果直接决定是否跳过昂贵调用时才值得使用。必须绑定 exact Prompt identity 与已保存 Response body identity；dependency stale 仍先发生，重新投影后逐字相同才可恢复。任一输入字符变化、Response body 漂移、旧节点无 receipt、显式 retry/重新采样都 fail closed 重跑。报告时必须把它标成**增量恢复收益**，不得把 stale-recovery 节省冒充首次生成每章加速。
+
 结论必须分别标记：质量结论、wall-clock 结论、成本结论。Direct API、ACP、不同 cwd 或不同 transport 的数字不得互相外推。
 
 ## 17. Stop Conditions

@@ -712,6 +712,16 @@ def get_run_node_prompt(book_id: str, chapter_number: int, node: str) -> dict[st
         raise HTTPException(status_code=400, detail=str(error)) from error
 
 
+@app.get("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/response")
+def get_run_node_response(book_id: str, chapter_number: int, node: str) -> dict[str, str]:
+    try:
+        return {"content": load_node_response(_book_directory(book_id), chapter_number, node)}
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
 @app.put("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/prompt")
 def put_run_node_prompt(
     book_id: str, chapter_number: int, node: str, payload: RunNodeContentRequest

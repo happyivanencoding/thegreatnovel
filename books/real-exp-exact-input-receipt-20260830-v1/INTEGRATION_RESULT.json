@@ -1,0 +1,49 @@
+{
+  "schema_version": "exact-input-receipt-integration-v1",
+  "chapter": 5,
+  "changed_artifact": "creative.world_vision",
+  "changed_line_index": 5,
+  "changed_line": "烬星洲的人生活在会落下“星火”的天空下。星火能烧穿屋瓦、让野兽狂化，也会留下可供修炼和铸兵的星铁。聚落屋顶多铺黑陶和盐石，街口设有避星亭；遇到星风，普通人必须进亭躲避，不能在旷野停留。",
+  "prompt_identity_after_edit": {
+    "director": true,
+    "curator": true,
+    "primary": true,
+    "authority_reviser": false
+  },
+  "statuses_after_workflow_stale": {
+    "director": "stale",
+    "curator": "stale",
+    "primary": "stale"
+  },
+  "revalidation": {
+    "director": {
+      "elapsed_ms": 2.96,
+      "status": "completed",
+      "receipt_reuses": 1,
+      "response_exact": true
+    },
+    "curator": {
+      "elapsed_ms": 2.889,
+      "status": "completed",
+      "receipt_reuses": 1,
+      "response_exact": true
+    },
+    "primary": {
+      "elapsed_ms": 2.265,
+      "status": "completed",
+      "receipt_reuses": 1,
+      "response_exact": true
+    }
+  },
+  "total_revalidation_ms": 8.794,
+  "model_calls_during_revalidation": 0,
+  "responses_exact_preserved": true,
+  "historical_mean_wall_seconds": {
+    "director": 26.848,
+    "curator": 112.512,
+    "control_primary": 35.436,
+    "control_reviser": 83.869
+  },
+  "avoidable_wall_seconds_for_dcp": 174.796,
+  "net_saved_seconds_estimate": 174.787
+}
