@@ -300,13 +300,18 @@ Story Program 是第一次同时看到完整 World 与 Character 的阶段，也
 
 因此：**Power Seed 决定开局核心；Story Program 决定长期优势栈怎样通过故事长出来。**
 
+#### 不可降格 Reader-Facing Story Event
+
+Story Program 只在极少数高价值现场需要时登记 0—4 个 `RSE-xx`：如果被压成 State / 摘要会明显改变本书的 Premise、Meta Grammar、关键 Surprise 或 Long-Horizon Promise，才值得进入。每个 RSE 分开保存 `Event Atom / State Residue / Timing Boundary / Reader Anchors`；Event Atom 是读者必须经历的事实与因果，State Residue 只是事后 Canon，不能互相替代。会直接显示给人物/读者的任务、UI、退出或携带规则优先写成“还剩多久 / 去哪里 / 能带走什么 / 失败会怎样”等具体事实；Reader Anchors 只锁 reader-safe 的专名、数字、地点/物件或确实必须照字出现的世界内短名，不锁后台策划词。普通转折、情绪、Reward、关系 cue 不升级成 RSE 配额。
+
 #### 当前 World Horizon 的长期责任
 
 - 通常 5—7 个自然大型阶段，但只具体规划当前已批准 World Horizon；若当前世界层 3—4 个阶段就自然走到边界，就停在那里，不为凑数提前发明未知下一世界；
 - 清楚的 **全书成长与 Core Fantasy 兑现脊柱**：少数够重的结构质变分布在早期、中期、高阶自然阶段，不固定次数；结构质变少而重，但 Fantasy Surface 可以持续偏丰富，质变之间继续用既有力量语法长出新招/战斗姿态、装备/奇物、身体/物种、异兽/伴生物、环境、越级对象与复合玩法；
 - 优势栈不能只让开局能力变大：全书要有新的 Power Asymmetry 加入，并出现新旧优势组合后单项做不到的复合玩法；这不是每阶段新增能力税；
 - 每次成长写成具体事实：以前打不过谁、去不了哪里、做不到什么，现在具体能怎样战斗、移动、探索，或哪两项优势怎样一起产生新结果；
-- **高价值 Asymmetry Reveal 要反复做 Public Proof，而且三条线共享精确力量主尺**：Core Asymmetry 首次被看见、新层级/质变、新旧优势首次复合、进入更高圈层后第一次被重新观察、或旧社会估值已明显落后时，按现场条件允许三条并列爽点同时成立：真实观众的 Collective Shock、懂行者的 `Ruler Calibration`、关键人物的 `Behavioral Repricing`。若事件与主力量有关，三条线用同一个精确坐标工作：群体震动承受“43级击败58级 / 三星打五星 / 开脉4重越凝罡1重”这种明确差距带来的现场重量；懂行者直接说明双方精确位置、正常差距与这次超标在哪里；关键人物再因为“精确位置 + 超标表现”改变报价、待遇、敌意、战术、招揽或准入。三者没有高低之分，大型公开节点可以一起吃满。**精确尺是 Reader Ruler，不是胜负公式**：低位者可以靠技能、装备、经验、环境与 Power Asymmetry 越级，越级胜利本身不能反推 `Current Power Position` 自动提升。只避免凭空造群众或让所有人轮流说同一套专业解释；短期群体震动本身可以成立，只有重新估价继续改变后续资源、关系、敌意、战术或信息流时才进入长期 Canon。
+- **Persistent Power Reader Proof 必须寄生于 Story**：永久/累积/储存/复用型私有优势第一次成为 State 后，优先在本来就因宝物、敌人、逃生、关系或世界目标必须发生的后续事件里，让读者亲眼看见“上次拼命才做到的峰值，现在已经能直接用”；当前没有自然事件就延后，不新造训练、复测、搬运/护火、工作任务或路边小危险。主角确认复利后，只有现成高价值目标自然要求新的更高极限、且 Frozen Human 的好胜/贪欲/好奇/野心会被额外收益诱惑时，才让“成功后这个新极限也会成为自己的”进入既有选择，形成目标奖励 + 新永久极限的双重诱惑；不为刷能力制造更危险路线。
+- **高价值 Asymmetry Reveal 要反复做 Public Proof，而且三条线共享精确力量主尺；Public Proof ≠ Hidden Mechanism Knowledge**：Core Asymmetry 首次被看见、新层级/质变、新旧优势首次复合、进入更高圈层后第一次被重新观察、或旧社会估值已明显落后时，按现场条件允许三条并列爽点同时成立：真实观众的 Collective Shock、懂行者的 `Ruler Calibration`、关键人物的 `Behavioral Repricing`。若事件与主力量有关，三条线用同一个精确坐标工作：群体震动承受“43级击败58级 / 三星打五星 / 开脉4重越凝罡1重”这种明确差距带来的现场重量；懂行者直接说明双方精确位置、正常差距与这次超标在哪里；关键人物再因为“精确位置 + 超标表现”改变报价、待遇、敌意、战术、招揽或准入。三者没有高低之分，大型公开节点可以一起吃满。**精确尺是 Reader Ruler，不是胜负公式**：低位者可以靠技能、装备、经验、环境与 Power Asymmetry 越级，越级胜利本身不能反推 `Current Power Position` 自动提升。观察者只能解释现场可观察表现、公开主尺、伤势/器物效果和 World/Canon 已知事实；不能因为是高手或亲眼见证就自动知道私有能力的永久性、隐藏触发、内部计数或因果，这些真相由 POV、后续自然复用或已授权 Meta Authority 确认。只避免凭空造群众或让所有人轮流说同一套专业解释；短期群体震动本身可以成立，只有重新估价继续改变后续资源、关系、敌意、战术或信息流时才进入长期 Canon。
 - Core Fantasy 必须周期性重新证明“为什么这项力量仍值得追”，但不要求每阶段升级；兑现优先保留这项幻想最独有的**生活特权**，不只复用最容易安排的战术用途。长期重释也不能永远只落在世界层：Power / Character / 已批准旧人旧物旧关系自然存在可回收锚点时，保留主角级重释纵深，但不为 Personal Myth 凭空补隐藏身世或未批准旧史。
 - **AGGRESSIVE Payoff Bias**：因果已支持的主 payoff 真正落地，不无故降成资格/认可/以后再给；大胜可以自然连带主奖品 + 钱/资源 + 招揽/入口，秘境可以有主目标外惊喜，大型阶段可以同时带来据点、队伍、产业、商路份额或长期收入。奖励数量本身不是失败，只淘汰无因果到账与同窗口近似奖励抹平真实牺牲。
 - **Character relevance ≠ Story Engine authorization**：除非作者明确选择职业/制度/经营题材，责任、精确、审计、边界、路线、损失归因等职业性倾向只作为低权重局部偏好；即使它们与 World 的公共资源/路线/治理素材高度匹配，也不能因此连续成为大型阶段的共同解题语法。主角不是多方协调员。大型阶段优先先锁定少数具体 Desire / Major Reward Anchor，再把公共资源实施压到大方向选择与直接后果。
@@ -446,6 +451,7 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - **World Horizon Handoff 是前向边界**：如果批准 Story Program 的 Handoff 会在当前中期窗口 / Future 10 内触发，Outline 只排到触发章就停止。剩余章数不补占位，不自行发明下一大陆、下一副本或新规则；先完成 World Expansion / Current Character / Story Refresh，再生成新的 Outline；
 - **Block Delta**：每块只记录相对本块开始真实改变的 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State，没变化的维度省略，上一块已经发生的变化不能重复包装成新 Delta；
 - **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实；Outline 在 `## 2. 世界观结构` 内用一个很短的 `Reader Release Map` 保存当前窗口里值得显式调度的首次释放，格式 `第N章｜触发：具体 World fact`，不是每章 KPI。未来仍作为 discovery / reveal 的答案不得提前排入 Map；只能先释放不回答谜底的公共背景。明显陌生/架空世界的第1章若 World 与前3章确实提供多类相关公共事实，默认把力量/当前与下一档 ruler、生活危险/共同常识、其它确属 World 的社会位置/价值物拆成 2—3 条 Public Common-Knowledge Release；下一档若有现实 benchmark，同时写能力效果与社会含义。**具名机会价值不混进 World Release**：若 Story Program / 当前剧情块已批准机会名与公开价值，但 Future 10 单章条目只剩泛化“试场前训练 / 争取机会”，Director runtime 只在当章已指向同一机会时，从当前剧情块确定性恢复一条“具体机会名 + 当前已知价值”；不新增回报、不提前宣布结果。**World Entry 在人物真正跨过门槛的当章释放**；重要 named 势力、地点、Rival、传承或高价值机会第一次进入时保留最短欲望与尺度锚点。Chapter Runtime 按章读取，再从 WORLD AUTHORITY 取对应事实；开篇同时建立最低生活世界位置与必要 ruler。不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
+- **RSE Registry / Schedule**：若 Story Program 有不可降格 RSE，Outline 必须把 Event Atom / State Residue / Timing Boundary / Reader Anchors 原样注册，只负责把 ID 排进承载章的 Future 10；明确 `第N章` 的事件在当前窗口包含 N 时必须排到该章。不能改写、缩写、补充 Event Atom，也不能把 State Residue 当成已完成 Event。完整 Registry 不作为章节上下文下传；未来 RSE 不提前泄漏。
 - **Ruler = Compression**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落。若本章真实跨过已经介绍过的公开档位，结果处直接命名新档位一次，不让读者从本地术语或现象自己换算；
 - **State Advance After Proof / Choice → Consequence**：一个问题经动作结果与一次足够校准成立后，不再把换证据证明同一结论规划成独立 beat；社会确认只有改变机会、敌意、关系、身份、资源或行动入口时才继续。重大选择的选项与主要代价清楚后尽快做出，让后续篇幅进入选择造成的新局面。**Stage Settlement = Consequence, not Process Carrier**：事实已清楚时，报告、登记、责任说明、复盘、资格发放等只作一句/背景，前景放在重新估价、实际得失、Rival 换位与下一件值得想要的机会；十章批次不是拉长当前剧情块的配额，块完成就进入相邻块；不做每章状态变化配额；
 - **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价；
@@ -475,6 +481,7 @@ Story Anchor 的作用是提前确定“真正的故事发生了什么”，降�
 
 - 根据已批准长期方向、当前剧情块、Future 10 和 Canon，生成当前章事件合同；Future 10 当前条目在进入 Director 前先被确定性拆成 `本章唯一可执行事件预算` 与 `章末 Handoff Reservation`，Long Block 只作阶段背景；带明确章节范围的 Long Block 只有覆盖当前章才进入，显式过期或无合法匹配时 fail closed，不回退整份旧长纲；后者只能制造下一章为什么必须发生，不能提前付款、正式身份、获得、升级或其它下一章结算；
 - 当前条目已批准的 `结果 / 状态变化` 不依赖 Director 重新复述：runtime 确定性并入 Frozen Mission 的 `状态变化`；Director 静默省略不构成取消，只有已发生 Canon 真冲突时才允许结果失效；
+- Future 10 当前章若引用 `RSE-xx`，runtime 只把该 RSE 的 Event Atom 同时并入**本章唯一可执行事件预算**与 Frozen Mission；Director 不能把它降成 State、后台说明或下一章钩子，也不能读取未来 RSE Registry；
 - 抓本章最值得读、最值得复述的人物冲突、关键选择、力量使用、反转和结果；
 - **Discriminative Detail Only**：调查、手艺、医学、制作、检测、推理等 Supporting Skill 只保留足以改变判断的少量关键细节；一旦能推出发现或决定，立即进入发现的选择、冲突与后果，不继续展开实施过程；
 - 决定已经做完后的停车、搬运、排布、绑缚、登记、普通赶路等实施默认压缩；只有重新出现选择、冲突、不确定性或失败风险才恢复成场景； `主角行动` 对此只保留关键决定 + 至多一个决定性动作 + 结果，不把并列实施步骤继续传下游； 若该决定性动作仍只是非核心 Supporting Skill，就只保留“做什么 / 为什么有效 / 结果”，不把技能实施本身变成第二个场景发动机； 前文已成立的 Supporting Skill 默认只写其结果，不再把“利用某判断/技巧”方法重新放进事件合同；只有新边界、失败或质变例外；
@@ -536,6 +543,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 - Future 10 当前章明确批准的 `结果 / 状态变化` 已确定性并入 Frozen Mission；力量/身份跨档、持有关系和其它不可逆里程碑必须成为正文事实，不能只用“打出该级战绩 / 接近 / 获得资格 / 被重新估价”等暗示替代；若 Canon 真使结果不可能，只接受 Director 的 `[PLAN OUTCOME ADJUSTMENT]` 显式调整；
 - Reader-First：先让读者理解人、问题和 stakes，再给最低限度规则；
 - 当动作自然提出“这是什么 / 为什么重要”的问题，而 Curator 已投影当前 Plan 排程的 World fact 时，用 1—3 个短直接旁白段或等价场景表达回答到足够后立刻回场景；**已排程 Reader Release 是本章需要兑现的 timing decision**，不是可选装饰。若该事实同时说明地点/势力/传承为什么值得争，保留一个最短价值锚点；Writer 不自行从完整 World 选择说明主题；
+- Frozen Mission 若携带不可降格 RSE，Primary 必须让读者经历 Event Atom 的现场因果，不能只写 State Residue 或结果摘要；Event Atom 锁事实与因果，不要求逐字复刻后台系统句。Meta/UI/任务规则优先翻成一眼懂的具体事实。**模型看得到 Frozen Power 不等于场内 NPC 知道私有机制**：NPC 只能说自己有来源知道的公开位置、可观察表现和 World/Canon 事实，不能从一次目击推断永久性、私有触发、内部计数或隐藏因果；
 - 决定已经成立后的普通实施优先一句或短段概括，不靠实施流水账填充低动作章节；
 - 让人物反应、力量结果和现场变化承担信息；Curated Context 已明确带入身体吸引、审美、虚荣、钱、享受、偏心、好奇等私人欲望且场景自然触发时，至少让一次注意力、身体反应、靠近/回避、想要或短期选择把它留在 POV 中，不自动净化成职责合作或“正确但克制”；
 - 用少量 story-bearing detail 增加画面与人物存在感，而不是用修饰词堆积制造“丰富”；
@@ -566,6 +574,7 @@ Primary 为了保持注意力集中，只吃 Director Contract、Curated Context
 - 同时读取冻结 Mission、Curator、safe World Authority、逐条 Reader Release、Frozen Power + Human Core、Canon；若当前 Scene Skill 有经过 A/B 证明安全的一行 `Revision Watch`，只追加该 failure-triggered 提醒，不把完整 Generation/Revision Lens 塞回 Reviser；
 - 删除/压缩反复确认、重复证明、工程化/程序化 Supporting Implementation 和 Competence Filler；
 - 补回 Authority 已批准但第一版遗漏的最短充分 World Orientation、Core Power 独有体验、Human 私人 cue 或一个真正承载故事的生活细节；Frozen Mission 中的上游计划结果若明确批准“进入 / 踏入 / 晋升 / 突破 / 成为”某个里程碑，不能以战绩或氛围暗示代替一次直接落点；
+- 本章若有不可降格 RSE，保留/恢复它作为现场 Event，而不是只保留 State Residue；RSE 的后台精确措辞不锁正文，只锁 reader-safe anchors 与语义因果。Public Proof 时保留群体震动 / Ruler / Repricing 的同时，严守 NPC knowledge boundary，不因 Reviser 看得到 Frozen Power 就泄漏私有机制；自然故事里合法的一次“上次极限现在直接可用”不是重复证明，不应被误删；
 - 把笔墨从普通实施还给本章真正的 World Entry / Rival / Relationship / Core Fantasy / Choice / Payoff / Consequence。
 - 同一维度若 Curator / Primary 与 Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 冲突，Frozen Authority 胜出；按语义扫描整章并清掉全部同义冲突，不只修第一处。
 - 修冲突段落时逐句 salvage：本身合法、只错在时点/因果上的 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing 迁到最近合法位置；salvage 不保护周围 process carrier，后者继续按 Attention Reallocation 压缩。
@@ -579,7 +588,7 @@ Primary 为了保持注意力集中，只吃 Director Contract、Curated Context
 
 删除程序载体时，先判断是否同时承载新的 `State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity`；若会，就只能压缩实施，不能删除 Consequence。
 
-**显式里程碑 Outcome Fidelity 是低频条件机制，不是新常驻 Agent。** Run Ledger 只在计划以“进入 / 踏入 / 晋升 / 突破 / 成为”明确批准当前章里程碑、第一次 Authority Revision 却仍未直接落成时，才把同一个 Reviser 收窄为一次 Preservation-First `Outcome Repair` retry。普通章节零额外调用；repair 只补最小合法因果与一次直称，不改事件、胜负、资源、伤势、关系、Ending 或未知边界；最多一次，第二次仍漏则节点保持 failed，`final_source` 不成立，State 不运行。网页 UI 与 Codex External apply 都服从同一 Run Ledger 状态。
+**Hard-loss bounded repair 是低频条件机制，不是新常驻 Agent。** Run Ledger 只在两类已批准事实第一次 Authority Revision 仍丢失时触发：① 显式力量/身份里程碑只剩战绩或氛围；② 本章已排程的不可降格 RSE 被压成 State / 摘要而整件消失。两类共用**同一个 Reviser 的一次** Preservation-First retry，同时缺失也不增加第二次机会。repair 只补最小合法因果/直称/缺失 Event，不改主要事件、胜负、资源、伤势、关系、Ending 或未知边界；Frozen Authority 可以完整保留，但正文只允许**一份当前 Authority Revision**作为唯一底稿，旧 Primary 全文不得作为第二份 prose 同时出现。第二次仍漏则节点保持 failed，`final_source` 不成立，State 不运行。网页 UI 与 Codex External apply 都服从同一 Run Ledger 状态。
 
 **增量恢复优先复用 exact-input receipt，而不是重新调用同一个模型。** Workflow 仍按 Authority 依赖把 future run 标 stale；随后各节点重新构建自己的 bounded Prompt。若 exact Prompt digest 与该节点已保存 Response 的输入 receipt 完全一致，且 Response body digest 未变，则该 Response 仍是当前节点的有效产物，Run Ledger 直接恢复节点，不再调用 LLM；任一字符变化或显式 retry 都正常重跑。这优化 author edit / stale recovery 的 critical path，不改变第一次生成链，也不把“近似相同”当成“相同”。
 

@@ -16,6 +16,8 @@ Authority Reviser 是默认 `curator_primary` 的固定正文修订节点；Spec
 
 Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive、与该章实际事件相交的首次释放；未来仍作为 reveal 的答案不能提前排入 Map。Runtime 按当前章读取该条目，再从 WORLD AUTHORITY 做 bounded prefetch。Director 不读取完整 World，Curator 不重做 release 选择，Primary 也不自行选择世界资料。
 
+Story Program 另可稀疏保存 0—4 个不可降格 `RSE-xx`：只保护若压成 State / 摘要会改变本书身份的 Reader-Facing Event。Outline 原样登记 Event Atom / State Residue / Timing Boundary / Reader Anchors，并只在 Future 10 承载章引用 ID；BOOK 保存会校验 Registry 与明确排程。Runtime 只把**当前章引用的 Event Atom**送入 Director 的唯一事件预算与 Frozen Mission，完整未来 Registry 不进入章节模型。State Residue 不能代替现场 Event；Meta/UI/任务规则的 Authority 是事实与因果，不是后台原句，正文优先说清“还剩多久 / 去哪里 / 能带走什么 / 失败会怎样”。
+
 Progressive Canonization 的作者隐藏真相使用独立 `MYSTERY_CONTROL.json`，**不属于 Canon、BOOK、AUTHOR NOTES 或普通章节上下文**。`AUTHOR OPEN` 里作者自己也没有答案；`AUTHOR FIXED HIDDEN` 只允许 Story Refresh / World Expansion 对应 planning route 读取。Story Program 保存时，`MYSTERY REVEAL CONTRACT` 被代码从 Proposal 正文确定性剥离并单独保存；Outline 只得到 `第N章 + [MYSTERY-REVEAL:ID]`，看不到 Event Atom、State Residue 或 raw Fixed Point。
 
 `MYSTERY_CONTROL.json / compiler_inputs` 只保存低频作者定真流程的**精确 Compiler 输入快照**：当前 Thread、selected candidate、Decision Surface、author planning need 与当时 BOOK/Canon 原文。它不进入 Story / Outline / chapter Runtime；用途只有一个——采用候选前发现候选、Thread 或 Canon 是否已经变化。变化即 stale，重新编译；不使用 hash/checksum 代替直接文本比较。
@@ -112,7 +114,9 @@ Curator 返回后，runtime 还会做一次**不调用模型的 unresolved fact 
 
 同一维度如果 Curator / Primary 与 Frozen Mission / Canon / safe World / Frozen Power / Frozen Human 冲突，以 Frozen Authority 为准，并对最终稿做语义级全章清零。修冲突段落时先逐句 salvage：本身合法、只因错误时点/因果而失效的高价值 Core Fantasy / Relationship / Desire / Payoff / Surprise / Social Repricing 句移到最近合法位置；salvage 不保护周围报告、登记、路线或普通实施。
 
-Reader Release 的“存在”与“清楚兑现”分开判断：开篇公共常识若只通过道具/环境暗示存在，普通读者仍需自己推理出规则，Reviser 应在不改变剧情的前提下补最小直接说明；生活细节可以保留，但不能冒充 Orientation 已完成。本章若 Frozen Mission 已明确跨过公开力量/身份档位，而 Primary 只留下“打出该级战绩 / 凝影了 / 通过了 / 被记名”等暗示，Reviser 在结果处补一次最短的新档位直称；数字主尺同样如此，“42级打赢58级”不能替代批准的“提升到43级”。若第一次 Authority Revision 仍漏掉计划中以“进入 / 踏入 / 晋升 / 突破 / 提升到 / 达到 / 成为”等形式明确批准的里程碑状态，Run Ledger 不允许直接采用：它自动把同一 Reviser 的 Prompt 收窄为一次 Preservation-First `Outcome Repair` retry；只补最小因果与一次直称，不重做剧情。该 retry 最多一次，仍失败则节点保持 failed，State 不运行。
+Reader Release 的“存在”与“清楚兑现”分开判断：开篇公共常识若只通过道具/环境暗示存在，普通读者仍需自己推理出规则，Reviser 应在不改变剧情的前提下补最小直接说明；生活细节可以保留，但不能冒充 Orientation 已完成。本章若 Frozen Mission 已明确跨过公开力量/身份档位，而 Primary 只留下“打出该级战绩 / 凝影了 / 通过了 / 被记名”等暗示，Reviser 在结果处补一次最短的新档位直称；数字主尺同样如此，“42级打赢58级”不能替代批准的“提升到43级”。本章若含不可降格 RSE，Reviser 还必须保证 Event Atom 真正成为读者经历，而不是只留下 State Residue；同时 **Public Proof ≠ Hidden Mechanism Knowledge**，即使 Reviser 看得到 Frozen Power，也不能把私有永久性、隐藏触发、内部计数或因果泄漏成 NPC 知识。
+
+Run Ledger 对“显式里程碑仍未直称”或“本章已排程 RSE 仍整件消失”共用**同一个 Reviser 的一次** Preservation-First retry；两类同时发生也不增加第二次机会。repair 保留 Frozen Authority，但只暴露一份当前 Authority Revision 作为正文底稿，不再同时塞旧 Primary 全文。第二次仍漏则节点保持 failed，State 不运行。
 
 不得改变主要事件顺序、人物决定、胜负、资源得失、伤势、身份结果、Direct Result、State Change、Ending 或未知事实边界；没有明确问题的句段默认逐字保留。删除一段前必须先确认不会同时删掉新的 `State Change / Social Repricing / Reward / Relationship Change / New Desire / Next Opportunity`。
 

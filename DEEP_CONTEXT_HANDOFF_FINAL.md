@@ -1828,6 +1828,27 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 
 随后专门按用户要求加入**新小说held-out防过拟合**。旧两书只归因，不判胜负；Candidate 1冻结后才生成烬星洲/顾沉舟/远身的新书1，Candidate 2冻结并记录SHA-256后才生成骨鸣世界/陆野渡/借境成身的新书2，各连续取前4章并做independent repeat。Candidate 1的5行Primary self-check只把Primary Hard问题16→11，却让Reviser Authority gap从+8.125扩大为+12.375，0/8 exact no-op；Candidate 2的deterministic Final Facts Projection（Direct Result / State Change / Ending / Reader Release / Core Power / Permanent Boundary）使Story Primary +2.812，却使Authority -2.125、Hard问题32→41，edit blocks 2.75→4.875，0/8 exact no-op，组合wall还慢4.47s/章。它证明**attention placement能提高Story，却不等于Authority realization closure**。derivation-only的Luna-medium屏幕把Reviser wall从133.275s降到59.608s、Story 84.625≈high 83.5，但Authority 57.5 < high 61.875，Hard问题9 > 3，按预设规则不进入第三本held-out。稳定decision model新增：no-op/降档实验必须在Treatment冻结后用全新小说held-out，直接看Primary→Reviser Story/Authority gap、Hard问题、edit blocks/exact no-op和完整wall；单看Primary更好、Final更好、similarity或速度都不能productionize。完整报告：`books/real-exp-reviser-noop-upstream-heldout-20260830-v1/RESULTS.md`。
 
+
+### 14.12 Reader-Facing Story Event ≠ State（2026-08-30）
+
+副本流五章实验暴露了一个独立于 prose 的 Authority transport failure：Story Program 已经设计出会重定义本书 Premise / Meta Grammar 的现场事件，但 Outline 把它压成单一 State，导致 Director / Curator / Primary 都再也拿不到整件事。根因因此固定在 `Story Program → Outline` 的 Plan Compression，而不是 Writer。
+
+Production 新增极窄 `RSE-xx` transport：Story Program 只允许 0—4 个“被压成 State / 摘要会明显改变本书身份”的 Reader-Facing Event；每个分开保存 Event Atom、State Residue、Timing Boundary 与 reader-safe Anchors。Outline 必须原样注册并只负责排章；BOOK 保存时对缺失、改写、重复字段、未知 ID 与明确章次漏排 fail loud。Runtime 只把**当前章引用的 RSE**送进 Director 的唯一事件预算与 Frozen Mission，完整未来 Registry 不 raw 进入章节 Agent，避免 Surprise 泄漏。State Residue 不能替代 Event。
+
+第一次 Authority Revision 若仍把本章 RSE 整件压没，与显式力量/身份里程碑共用**同一个 Reviser 的一次** bounded Preservation-First retry；两者同时缺失也不增加第二次机会。Repair 保留 Frozen Authority，但正文只暴露当前 Authority Revision 一份，旧 Primary 不作为第二份全文参与。普通章节零额外调用，第二次仍漏就 failed，不进入 State。
+
+这不是把所有转折升级成 Hard Gate：普通情绪、Reward、关系 cue、商业价值继续由原 Story / Outline / Reviser 机制保护。RSE 只用于少数 Premise / Meta Grammar / Surprise / Long-Horizon Promise 现场。代码真源：`src/story_mvp/story_event_obligations.py`、`chapter_context.py`、`run_ledger.py`、`storage.py`。
+
+### 14.13 Reader-Facing Translation / Private Power Knowledge / Persistent Proof（2026-08-30）
+
+RSE transport 修好以后又分离出三条稳定边界，并已前向合并到 2026-08-30 更先进的 Premise Aperture、Progressive Canonization、Exact-Input Receipt 与 Living Actor / Action Audition production 基座：
+
+1. **Authority Fact ≠ Backstage Wording**：Event Atom 冻结事实与因果，不锁 `合法归门 / 确认归属 / 资格 / 状态` 这类后台措辞。任务、Meta/UI、退出、携带规则优先让读者一眼知道“还剩多久 / 去哪里 / 能带走什么 / 失败会怎样”；Reader Anchors 只锁 reader-safe literal。
+2. **Public Proof ≠ Hidden Mechanism Knowledge**：群体震动、Ruler Calibration、Behavioral Repricing 仍可一起吃满，但懂行者只能说自己能观察或已有来源知道的公开位置、表现、伤势、器物效果与 World/Canon 事实；不能因为 Reviser Prompt 看得到 Frozen Power，就知道私有能力的永久性、隐藏触发、内部计数或因果。私有真相回到 POV、后续自然复用或已授权 Meta Authority。
+3. **Persistent Power Reader Proof Must Ride Story**：永久/累积/复用型私有优势最强的读者确认，是“上次拼命才做到的峰值，后来在本来就必须发生的故事里直接可用”。Reviser 不应把合法自然复用当重复证明删掉；Outline 也不能为了证明能力新增训练、复测、搬运/护火、工作任务或路边小危险。主角确认复利后，只有现成高价值目标自然要求更高极限、且 Frozen Human 真会被额外收益诱惑时，才让“成功后新极限也会成为自己的”进入既有选择。
+
+同步时没有恢复已经被后续实验否决的常驻 Reader Polish，也没有把旧 Atomic local-delta 路线重新生产化。远端新冻结能力作为基座，本地较新的 RSE / private-power 边界只做语义 forward-port；相关 Premise / Progressive Canon / Receipt / RSE / workflow 联合回归首轮 **118/118 PASS**，最终全仓 **482/482 PASS**。`tgn-system-steward 0.3.31` 已通过 `skill-authoring` lint（0 error / 0 warning）、AgentDock package validate（digest `sha256:8917dc6946d5705c672abd0508cfdb4c5e6eebca92d1ca480b1b549aa1245b05`）并 install/activate；bounded Luna-high read-only smoke 对已知坏例正确判 `FAIL`，最早定位 `Story Program → Outline`，明确 `WRITER_BLAME: NO`，并拒绝新增 Reviewer / classifier / 全局 prose polish。
+
 ---
 
 ## 15. How to Work With the User
@@ -1883,7 +1904,7 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 
 ### 15.7 用户说“审计”时有固定协议
 
-自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本见本地/AgentDock live discovery（本轮更新后为 **0.3.26**）；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
+自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本见本地/AgentDock live discovery（本轮同步目标为 **0.3.31**）；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
 
 ### 15.8 Docs 要言简意赅
 

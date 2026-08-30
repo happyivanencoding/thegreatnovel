@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.30
+version: 0.3.31
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -111,6 +111,11 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - High-value Reader Orientation must be distinguished from low-value repeated explanation / implementation detail
 - **Public / Known World = Clarity; Unknown World = Mystery**：普通人从小知道的主流力量、粗略尺度、生活危险与上升入口可以直接讲；环境纹理、道具、专名或氛围不算已经说明
 - Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose
+- **Reader-Facing Event ≠ State**：当 Story Program 已设计出决定 Premise、Meta Grammar、关键 Surprise 或 Long-Horizon Promise 的高价值现场，而正文只剩某个 State 成立，沿 `Story Program → Outline Registry → Future-10 schedule → Director budget → Frozen Mission → final prose` 追最早运输坍缩；State Residue 不能替代 Event realization。
+- **Authority Fact ≠ Backstage Wording**：Event Atom 锁事实与因果，不锁后台系统句。审计任务/UI/退出/携带信息时先问读者是否知道“还剩多久 / 去哪里 / 能带走什么 / 失败会怎样”；Reader Anchors 只锁 reader-safe literal，不用禁词表强迫 planning wording 进入 prose。
+- **Public Proof ≠ Hidden Mechanism Knowledge**：高手可以校准现场可观察表现、公开主尺、伤势/器物与 World/Canon 已知现象，但不能因为模型看得到 Frozen Power 就自动知道私有永久性、隐藏触发、内部计数或因果；保留群体震动、Ruler Calibration 与 Behavioral Repricing，只切断 Authority→NPC Knowledge leakage。
+- **Persistent Power Reader Proof Must Ride Story**：永久/累积/复用型私有优势应在本来就必须发生的高价值事件里让读者亲眼看到“上次极限现在直接可用”；没有自然事件就延后，不新增训练、复测、工作任务或路边小危险。若复利会诱惑 Frozen Human，也只把它叠到现成高价值目标的选择因果上。
+- **Bounded Repair Has One Current Prose Draft**：Outcome / RSE 等同一 Reviser 的窄 retry 可以完整保留 Frozen Authority，但正文只能暴露当前 Authority Revision 一份；旧 Primary 不得作为第二份全文与之竞争注意力。
 - Unresolved long-history facts must remain unresolved; Reader Orientation cannot authorize retrospective canon
 - **Author Unknown Is a Valid Authority State**：长期 Mystery 必须区分 `AUTHOR OPEN`（作者自己尚未决定）与 `AUTHOR FIXED HIDDEN`（作者已决定、读者/人物未知）。`AUTHOR OPEN` 不是 worldbuilding 缺失；只要作者下一段批准的具体故事仍能在不回答该问题时成立，审计结论应允许 `DEFER`，不能因为伏笔存在很久、Outline 想更完整或终局迟早要解释就要求现在定真
 - **Progressive Canonization Answers Only What the Next Story Earned**：只有作者下一步真正想写的事件已经无法执行时，Decision Surface 才指出一个 `Smallest Decision`。旧 AUTHOR OPEN 的 unknown list 是决策前未知池；当次可回答且只能回答 Smallest Decision，候选自己的 `What Remains Unknown` 才成为新保护边界。Reframe 不自动选，Compiler 不评分/修稿，FAIL 返回作者

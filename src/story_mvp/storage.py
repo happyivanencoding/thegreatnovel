@@ -1037,6 +1037,10 @@ def approve_creative_artifact(
         raise ValueError(f"{CREATIVE_ARTIFACT_FILES[artifact]} 不能为空，无法批准")
     if artifact == "world_vision":
         parse_root_precise_power_ruler(content)
+    if artifact == "proposal":
+        from .story_event_obligations import parse_story_program_protected_events
+
+        parse_story_program_protected_events(content)
     state = _read_creative_state(directory)
     if state[artifact]["origin"] == "empty":
         state[artifact] = {"origin": "author_edited", "status": "draft"}
@@ -1139,6 +1143,13 @@ def write_book(
     path = directory / "BOOK.md"
     old_content = path.read_text(encoding="utf-8")
     validate_book_content_for_save(content)
+    creative_state = _read_creative_state(directory)
+    if creative_state.get("proposal", {}).get("status") == "author_approved":
+        from .story_event_obligations import validate_book_registry_against_story_program
+
+        validate_book_registry_against_story_program(
+            _read_creative_text(directory, "proposal"), content
+        )
     from .workflow_state import ensure_workflow_state
 
     ensure_workflow_state(directory)

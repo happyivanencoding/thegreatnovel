@@ -18,6 +18,10 @@ from .outcome_fidelity import (
     detect_explicit_milestone_outcome,
     explicit_milestone_realized,
 )
+from .story_event_obligations import (
+    build_protected_story_event_repair_prompt,
+    missing_story_events,
+)
 
 
 RUN_NODES = (
@@ -252,7 +256,7 @@ def _prepare_authority_outcome_retry(
     node_manifest: dict[str, Any],
     response: str,
 ) -> None:
-    """Prepare at most one narrow Authority Reviser retry for a missed explicit milestone."""
+    """Prepare one bounded Reviser retry for a dropped hard chapter obligation."""
 
     prompt_file = node_manifest.get("prompt_file")
     if not prompt_file:
@@ -262,51 +266,79 @@ def _prepare_authority_outcome_retry(
         return
     authority_prompt = prompt_path.read_text(encoding="utf-8")
     attempts = max(1, int(node_manifest.get("attempts", 0)))
+
     if attempts >= 2 and node_manifest.get("required_outcome") and node_manifest.get("required_target"):
         from .outcome_fidelity import ExplicitMilestoneOutcome
 
-        requirement = ExplicitMilestoneOutcome(
+        milestone = ExplicitMilestoneOutcome(
             outcome=str(node_manifest["required_outcome"]),
             target=str(node_manifest["required_target"]),
         )
     else:
-        requirement = detect_explicit_milestone_outcome(authority_prompt)
-    if requirement is None:
-        node_manifest.pop("repair_reason", None)
-        node_manifest.pop("required_outcome", None)
-        node_manifest.pop("required_target", None)
-        return
-    if explicit_milestone_realized(response, requirement):
-        node_manifest.pop("repair_reason", None)
-        node_manifest.pop("required_outcome", None)
-        node_manifest.pop("required_target", None)
+        milestone = detect_explicit_milestone_outcome(authority_prompt)
+    milestone_missing = bool(
+        milestone is not None and not explicit_milestone_realized(response, milestone)
+    )
+    story_missing = missing_story_events(authority_prompt, response)
+
+    if not milestone_missing and not story_missing:
+        for key in (
+            "repair_reason",
+            "required_outcome",
+            "required_target",
+            "required_story_event_ids",
+        ):
+            node_manifest.pop(key, None)
         return
 
-    node_manifest["required_outcome"] = requirement.outcome
-    node_manifest["required_target"] = requirement.target
+    if milestone_missing and milestone is not None:
+        node_manifest["required_outcome"] = milestone.outcome
+        node_manifest["required_target"] = milestone.target
+    else:
+        node_manifest.pop("required_outcome", None)
+        node_manifest.pop("required_target", None)
+    if story_missing:
+        node_manifest["required_story_event_ids"] = [event.event_id for event in story_missing]
+    else:
+        node_manifest.pop("required_story_event_ids", None)
+
     if attempts >= 2:
-        # One bounded repair attempt is enough. Do not build a self-retry loop.
         node_manifest["status"] = "failed"
-        node_manifest["repair_reason"] = "explicit_milestone_repair_failed"
+        if milestone_missing and not story_missing:
+            node_manifest["repair_reason"] = "explicit_milestone_repair_failed"
+        elif story_missing and not milestone_missing:
+            node_manifest["repair_reason"] = "protected_story_event_repair_failed"
+        else:
+            node_manifest["repair_reason"] = "chapter_obligation_repair_failed"
         _mark_dependents_stale(manifest, "authority_reviser")
         return
 
-    repair_prompt = build_explicit_milestone_repair_prompt(
-        authority_prompt, response, requirement
-    )
+    repair_prompt = authority_prompt
+    if milestone_missing and milestone is not None:
+        repair_prompt = build_explicit_milestone_repair_prompt(
+            authority_prompt, response, milestone
+        )
+    if story_missing:
+        repair_prompt = build_protected_story_event_repair_prompt(
+            repair_prompt, response, story_missing
+        )
+
     archive = prompt_path.with_name("authority_reviser_prompt_attempt-1.md")
     if not archive.exists():
         archive.write_text(authority_prompt, encoding="utf-8")
-    # Keep the canonical prompt filename so manual/OpenAI/Codex retry paths all read it.
     canonical_prompt = run_directory(book_directory, chapter_number) / "authority_reviser_prompt.md"
     canonical_prompt.write_text(repair_prompt, encoding="utf-8")
     node_manifest["prompt_file"] = canonical_prompt.name
     node_manifest["prompt_chars"] = len(repair_prompt)
     node_manifest["prompt_sha256"] = _sha256_text(repair_prompt)
     node_manifest["status"] = "failed"
-    node_manifest["repair_reason"] = "missing_explicit_milestone_outcome"
+    if milestone_missing and not story_missing:
+        node_manifest["repair_reason"] = "missing_explicit_milestone_outcome"
+    elif story_missing and not milestone_missing:
+        node_manifest["repair_reason"] = "missing_protected_story_event"
+    else:
+        node_manifest["repair_reason"] = "missing_required_chapter_obligations"
     _mark_dependents_stale(manifest, "authority_reviser")
-
 
 def _require_node(manifest: dict[str, Any], node: str) -> dict[str, Any]:
     if node not in RUN_NODES:

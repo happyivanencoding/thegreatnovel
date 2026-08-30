@@ -415,6 +415,54 @@ Writer 层最常见的 AI 问题不是“句子语法错误”，而是：
 
 高价值解释应**替换**低价值重复验证或实施，而不是叠加在上面。
 
+### 22A. Reader-Facing Event ≠ State
+
+某些 Story Program 事实不是“读者最终知道一个结果”就够了。若 Premise、类型 Meta Grammar、关键 Surprise 或 Long-Horizon Promise 的价值来自**它怎样在人物眼前第一次发生**，就必须区分：
+
+- **Event Atom**：读者需要亲历的现场因果；
+- **State Residue**：事件结束后 Canon 里留下的结果。
+
+`State Residue 成立` 不能反向证明 `Event Atom 已实现`。审计时沿 `Story Program → Outline Registry → Future-10 schedule → Director executable budget → Frozen Mission → final prose` 找最早坍缩点：若 Story Program 已经有完整事件，而 Outline 只剩结果状态，修 Story Program→Outline transport；若 Frozen Mission 已有事件但正文仍消失，再看 Curator / Primary / Reviser。不要先给 Writer 加“更有戏剧性”之类软提示。
+
+这种保护必须稀少。只有删掉后会明显改变本书身份的事件才值得成为 hard transport；普通转折、情绪、关系 cue、商业价值不能因此全部升级成 RSE 配额。完整未来 Registry 也不能 raw 进入当前章节，否则会把保护机制变成 Surprise 泄漏。
+
+### 22B. Authority Fact ≠ Backstage Wording
+
+“RSE 被送到正文”仍不等于 Reader-Facing Translation 正确。Event Atom 的权威对象是**事实与因果**，不是后台系统文案本身。
+
+审计 Meta/UI、任务、退出、携带等信息时分开问：
+
+- 读者是否知道**还剩多久 / 要去哪里 / 离开能带走什么 / 失败会怎样**；
+- `合法归门 / 确认归属 / 资格 / 状态` 一类词是否只是 planning / data-model 精确词，却被误当成必须照抄的前台语言；
+- Reader Anchors 是否只锁了真正 reader-safe 的专名、数字、地点/物件名或必须照字出现的世界内短名，而不是把后台抽象词锁进 prose。
+
+正确修法不是建立禁词表，而是保留 semantic authority，同时允许 Curator / Writer / Reviser 用当前人物与读者一眼能懂的语言实现。同一事实翻译得更自然，不是 Authority 漂移。
+
+### 22C. Public Proof ≠ Hidden Mechanism Knowledge
+
+**模型能看见 Frozen Power，不等于场内 NPC 能看见。** Public Proof 的懂行者可以校准自己真正有证据知道的东西：公开主尺位置、动作速度/威力、伤势、器物可见效果、World/Canon 已知现象。它不能仅因为“高手亲眼看见一次”就直接知道私有 Power Asymmetry 的永久性、隐藏触发、内部计数或因果机制。
+
+审计类似台词时先问：这个知识来自哪里？若答案只是“Reviser Prompt 里有 Power Core”，就是 **Authority → Character Knowledge leakage**。正确修复是保留群体震动、Ruler Calibration 与 Behavioral Repricing，仍让异常表现被社会重新定价；只把私有真相的确认源移回 POV、后续自然复用或明确授权的 Meta Authority。不要为了防泄漏把 Public Proof 一起削弱。
+
+### 22D. Persistent Power Reader Proof Must Ride Story
+
+对于“永久留下 / 累积 / 储存 / 可复用”这类私有持续性优势，State 写“已经永久成立”通常还不够让读者真正吃到幻想。最强确认往往是：**上一次拼命才做到的峰值，后来在一个本来就必须发生的故事事件里直接再次可用。**
+
+但这条原则非常容易被错误实现成 Proof Tax。审计时必须同时防两边：
+
+- Reviser 不得把 Primary 已经写出的、合法且直接改变当前结果的一次自然复用，当成“重复证明”删掉；
+- Outline 也不得为了证明能力而新增训练、复测、搬运/护火、工作任务、路边小危险或其它 Competence Filler。**Proof 必须寄生于 Story，不反过来制造 Story。**
+
+如果当前没有已有高价值事件自然需要同类能力，就可以晚一点证明；不要为了早两章确认 State 牺牲 Story Value。
+
+能力被主角亲自确认可复利之后，还要区分 **Power State** 与 **Power→Appetite**。若一个本来就值得追的目标自然要求新的更高极限，而且 Frozen Human 的好胜、贪欲、好奇、野心等确实会被“成功后这个新极限也会永久成为自己的”诱惑，那么这层额外收益应真实进入**现成故事锚点的选择因果**。只在人物总结、主题句、主要阅读兑现或 Block Delta 写“他越来越馋极限”不算人物选择被 Power 改变；Future 10 若再压成中性的“他选择继续冒险”也算 Plan Compression Loss。反过来，没有原本值得追的目标/路线时，不能为了让 Power 影响人物而凭空制造更危险路线或刷极限循环。
+
+### 22E. Bounded Repair Has One Current Prose Draft
+
+Preservation-First bounded repair 的“唯一底稿”必须是真的唯一。若 repair Prompt 同时携带旧 Primary 全文和当前 Authority Revision 全文，模型会被迫在两份正文之间重新决定基底，轻则扩大改写，重则返回截断/省略稿。
+
+审计 retry 时确认：Frozen Authority 可以完整保留，但 prose 只暴露**当前要修的那一份 Revision**。旧 Primary 不能作为第二份完整正文继续留在 repair Prompt。这个原则适用于 RSE / Outcome 等同一 Reviser 的窄 retry，不授权增加新 Reviewer。
+
 ## 23. Established Supporting Skill Should Collapse to Story Result
 
 手艺、诊断、维修、制作、路线、车具、医学、调查等 Supporting Skill 可以让人物真实，但一旦其方法已在前文成立、且它不是当前 Core Fantasy：
