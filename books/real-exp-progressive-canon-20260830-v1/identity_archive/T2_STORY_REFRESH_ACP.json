@@ -1,0 +1,453 @@
+{
+  "ok": true,
+  "label": "progressive-canon-v2-identity_archive-refresh",
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "additionalDirectories": [],
+  "wall_seconds": 334.106,
+  "text": "我会用 `tgn-system-steward` 的 authority/阶段边界方法来编译这次 Refresh，并先核对项目里现行 Story Program 的约束与相关记忆。重点是让“可转移凭证”通过可观察事件成为本阶段确定事实，同时把其余身世答案严格留白。当前约束已经明确：这不是把旧任务链换皮，而是让档案馆自身的多方争夺逼沈砚作出带有人性偏好的选择。接下来我只核对两件会改变成稿的事实：现行模板的精确字段要求，以及本阶段是否应在档案馆内闭合并触发下一次 World Horizon 交接。结构已经收束为一个自然大型阶段：档案馆不是新任务地图，而是一场“凭证、证据、兵谱彼此重新定价”的封闭争夺。沈砚会拿到实物收益与现钱，但不会因此被升级成第七席继承人；印阶也不会为了配合阶段结算而凭空提升。# STORY PROGRAM\n\n## 当前 Re-Collision\n\n旧都缺席档案馆并不关心沈砚想不想追查身世。现王庭、兵器商会和三名旧臣后人早已围着第七席兵谱互相试探；沈砚出现，只是让一枚他们无法绕开的空白王印来到门前。\n\n第一道档案门读取空白王印的既有类别，却不会把沈砚生成成第七席、旧王族或任何继承人。沈砚印阶仍是7：凭证能让门响应，印阶只决定他实际能承受多少王印压力，二者不能互相替代。\n\n这次碰撞的真正矛盾是：别人想用“你是谁”占有他能打开的东西，沈砚却只想把门后的兵谱、兵器价值和现钱抓到自己手里。档案馆没有为他准备答案；它只把他的贪心、胜负欲、养母软肋和对身份义务的反感，同时推上同一张交易桌。\n\n## 当前 Power / Human / World 的长期张力\n\n- 沈砚的近战能力与旧兵器拆解本事，能帮助他判断兵谱价值、守住到手之物，却不能替他消除印阶7的承压上限。空白王印也不是无条件通行证。\n\n- 他既想拿兵谱变强，也真想拿它赚钱。若“保密最优”“成长最优”要求他暂时什么都不卖，他未必肯等；只要价格足够高，他会主动把一部分优势兑现成现钱。\n\n- 他极度厌恶王庭或旧臣后人以第七席之名规定他的责任，但这种反感不是无代价的姿态。拒绝被收编，会让他失去保护、合法解释和较安全的退路。\n\n- 养母是唯一能压过兵谱与胜负的人。任何势力若把她纳入监视、保护交换或身份控制，沈砚都会改变原本更有利可图的选择。\n\n- 三方争的是兵谱，不是替沈砚找家。即使证明空白王印具有历史意义，他们也会先重新计算如何买他、扣住他、借他开门或从他手里夺谱。\n\n- 身份谜团越被证实一层，沈砚越不会自动获得归属，反而会从“疑似旧身份后裔”被重新定价为“握有可争夺凭证的人”。\n\n## 本阶段核心情节发动机与变化后的主要 Reading Question\n\n本阶段的发动机是：**封闭档案馆中的证据竞价与兵谱夺取。**\n\n三方各掌握部分事实，却没有任何一方愿意先把自己的底牌交全。每当一道真实档案、一条门禁反馈或一段兵谱内容出现，联盟、报价与敌意都会立即变化。沈砚不是接受任务后一路闯关，而是在别人互相扣价、诱骗、临时结盟和准备翻脸时，决定哪条事实可以卖、谁可以暂时借力、哪件东西必须握在自己手里。\n\n变化后的主要 Reading Question 是：\n\n**第一道门承认空白王印，却不承认沈砚就是第七席之后，他还能不能在所有人重新给他定价之前，把第七席兵谱真正带走，并让“凭证属于谁”不再等于“谁有权替他决定人生”？**\n\n阶段中的关键 Reveal Event 必须由两件可观察事实共同完成：\n\n1. 第一档案门因空白王印的类别产生有效响应，同时明确区分当前持印者与原始登记对象，不能把沈砚登记成第七席本人。\n2. 馆内正式文书存在针对这一类档案凭证的交接规则，足以证明它原则上可以转移；但不记载沈砚这一次转移发生于何时、由谁实施、从谁手中转出。\n\n两证相合后，“空白王印具有可转移凭证属性”成为可验证事实；其余身世答案继续未知。\n\n## 全书成长与核心幻想兑现脊柱（只写从当前点向前仍成立的部分）\n\n- 沈砚继续以印阶7、近战和旧兵器拆解为当前能力基础。本阶段不为结算强行升级印阶，也不把空白王印改造成战斗外挂。\n\n- 第七席兵谱将成为他从当前点向前最重要的一次真实获得：它不只提供历史答案，更让他能更准确地识别哪些旧王兵器值得抢、值得拆、值得留，以及哪些内容可以卖出高价。\n\n- 本阶段结束时，沈砚应实际控制兵谱，而不是只得到阅览资格、抄录名额或未来承诺。他可以出售一次有限阅谱机会换取现钱，但不卖掉整部兵谱。\n\n- 空白王印的作用从“可疑身份象征”变成“有历史依据、能改变门禁与各方行动的凭证”。这首先改变社会价格、敌人策略和可进入地点，不直接增加修为。\n\n- 兵谱以后必须继续影响沈砚选择兵器、拆解旧兵、判断交易和应对敌人；不能在档案馆阶段结束后变成只用于解谜的收藏品。\n\n- 后续可以由独立世界事件产生新的 Power Asymmetry，并与沈砚已有兵器能力复合；本轮不预写这种新力量，也不为当前能力组合量身制造下一件宝物。\n\n## 不可替代的人与关系\n\n- **养母：** 她不是沈砚身世谜团的证人，也不负责解释空白王印。她的不可替代性来自沈砚真实会为她改变选择：他可以为钱冒险、为兵谱树敌，却不会接受任何把她纳入长期控制的“保护”。\n\n- **三名旧臣后人中掌握门禁旧规者：** 此人同样想先拿兵谱，不会成为无条件导师。其掌握的部分事实能帮助沈砚理解门禁反馈，而沈砚的空白王印又是其无法替代的现实入口。双方形成随时可能因兵谱归属破裂的临时同盟；关系价值来自互相需要且互不认主。\n\n- **王庭此次执档者：** 此人代表的不是抽象王庭，而是一条具体敌对关系：他愿意给沈砚保护和正式位置，但前提是把空白王印解释为一项应由王庭接管的责任。第一道门证明“凭证不等于身份”后，他不会退场，而会从招揽沈砚转为限制凭证持有人。\n\n- **兵器商会实际出价者：** 此人是第一个愿意把沈砚当成兵谱持有人而非身世证物的人，也最可能用足够直接的现钱打动他。双方可以长期交易，但商会真正忠于价格和兵器利益；一旦买不下，便会寻找别的取得方式。\n\n## 未来大型阶段\n\n### 阶段一｜谁把第七席兵谱带出门\n\n**具体世界问题：**  \n第一道档案门尚未开启，三方都想先得到第七席兵谱，却各自只掌握部分事实。空白王印能让门禁产生响应，但沈砚印阶只有7，不能靠一枚印记无视馆内王印压力。各方因此既需要他，又都想在门开后立即剥夺他的议价权。\n\n**主要推动者：**  \n王庭执档者试图先把沈砚纳入王庭控制，再以官方身份独占兵谱；兵器商会出价购买最先阅谱的机会；三名旧臣后人互不完全信任，各自用手中事实换取更靠近兵谱的位置。沈砚则明确要兵谱、现钱和最终处置权，不接受任何“先承认身份责任再谈收益”的条件。\n\n**主角关键选择：**\n\n1. 第一档案门响应空白王印后，王庭试图将这一结果公开解释为第七席身份延续。沈砚抓住门禁同时显示的登记不对应，主动拒绝继承人名义，只承认自己是当前持印者。\n2. 他与掌握门禁旧规的旧臣后人临时交换事实，共同逼出足以验证凭证可转移属性的正式文书；但双方事先说清，证据可以共享，兵谱归属仍各凭本事。\n3. 兵谱真正出现后，他不接受王庭接管，也不接受商会一次性买断。沈砚用近战守住实物控制，以自己对旧兵器的判断确认兵谱的现实价值，最终将兵谱带出档案馆。\n4. 他向商会出售一次范围有限的阅谱机会，拿到真正现钱；代价不是失去兵谱，而是让更多人确认他既持有凭证，也控制兵谱。若交易条件牵连养母，他宁可推翻更安全、更高价的方案。\n\n**最主要阅读满足：**\n\n- 第一档案门终于开启，空白王印第一次得到机构级、可重复核验的历史回应。\n- 身份谜团没有被拖成纯猜测：读者明确知道它是可转移凭证，却仍会追问谁转、何时转、为何进入沈砚身体。\n- 沈砚拒绝被封成“第七席之后”，却把第七席兵谱与一笔现钱实际抓到手里；他不是逃离身份谜团，而是反过来利用它获利。\n- 三方在同一场争夺中从招揽、竞价转向真实翻脸，近战、夺物、交易和社会重新定价共同兑现。\n\n**真实 Delta：**\n\n- **Power：** 沈砚仍为印阶7；本阶段不新增 Power Asymmetry。空白王印被确认具有门禁凭证作用，但不因此提供额外战力。\n- **Asset：** 沈砚实际持有第七席兵谱，并通过一次有限阅谱交易获得现钱；兵谱原件不归王庭或商会。\n- **Relationship：** 掌握门禁旧规的旧臣后人成为既共享关键证据、又继续争夺兵谱利益的长期竞合者；王庭执档者转为明确限制者；商会出价者成为可交易但会持续试探底价的利益关系。\n- **Identity：** 沈砚的社会身份从“可能与第七席或旧王族有关的人”，被重新定价为“无现王族血缘、却持有第七席同类可转移档案凭证的人”。这仍不是职位、血统或本人身份。\n- **Knowledge：** 确认空白王印具有可转移凭证属性。仍不知道转移时间、实施者、原持有人、第七席下落、最终权限范围，也不知道凭证能否再次转移。\n- **World：** 第一档案门已开启；第七席兵谱离开原本的封闭控制，王庭、商会与旧臣后人无法再假定自己能单独垄断它。此后各方必须围绕沈砚的实际持有权重新行动。\n\n**旧积累怎样继续生效：**  \n空白王印使门禁回应，但不替代印阶承压；近战能力决定沈砚能否在翻脸后守住兵谱；拆解旧兵器的经验使他能辨认兵谱的真实用途，不会把它当成纯历史文书廉价卖掉；无现王族血缘的既有确认支撑他拒绝继承叙事；养母软肋则真实限制他愿意接受哪一种保护和交易。\n\n**下一阶段为何自然发生：**  \n兵谱与凭证属性一旦同时公开，旧都各方追逐沈砚的理由已经改变：他们不再只想确认他是谁，而会围绕凭证、兵谱及其可兑现价值重新出价、限制或夺取。但档案馆能够提供的本阶段核心答案已经结算，剩余谜团不能靠重复开门继续消费；未来必须等待独立 World Expansion，再让新的世界现实与这个已经被重新定价的沈砚发生碰撞。\n\n## World Horizon Handoff\n\n- **触发条件：** 第一档案门已经开启；沈砚实际带出并控制第七席兵谱；“空白王印具有可转移凭证属性”已由门禁反馈与正式文书共同证实；三方均已据此改变行动；档案馆争夺完成一次明确归属结算。\n\n- **Expansion Scope：** `macro`\n\n- **为什么当前层已需要扩：** 当前 World Horizon 的主要欲望对象、竞争者、入口和 Reading Question已经被真正活透。继续留在档案馆，只能重复争夺文书或被迫越过 Reveal Boundary解释身世；它无法在不新增世界事实的情况下提供不同的 Story Engine、新尺度或新的生活可能。\n\n- **Carry Forward：**\n  - 沈砚印阶7，近战与旧兵器拆解能力继续有效。\n  - 沈砚实际持有第七席兵谱，并已从中兑现过一笔现钱。\n  - 空白王印与第七席旧记录同形，无现王族血缘。\n  - 空白王印已被证实是一种可转移档案凭证，不等于血统、职位或原始登记对象本人。\n  - 谁转移、何时转移、原持有人是谁、第七席去了哪里、最终权限范围及能否再次转移，继续未知。\n  - 王庭、兵器商会和旧臣后人已经依据新证据重新定价沈砚，形成持续的招揽、交易、限制与夺取关系。\n  - 养母仍是沈砚最明确的关系软肋。\n\n- **Reader-Facing Edge：** 不新造外来势力、地点或宝物。阶段收束前最后1—2章，只使用已经存在的第七席失踪席位记录：在馆内本阶段可取得的证据完成核对后，记录仍只能证明“第七席缺席”，无法给出去向。读者由此具体知道答案不在当前已经结算的档案里，却不知道它通向哪里。\n\n- **固定 orchestration：** `protagonist-blind World Expansion → deterministic Current Character → Story Refresh`\n\n## 仍值得追的旧承诺与新欲望\n\n- 沈砚要把第七席兵谱真正变成更好的兵器选择、更强的近战手段和持续能卖钱的本事，而不是只把它留作身世证据。\n- 他已经赚到第一笔钱，但兵器商会越想买断，他越想知道兵谱里还有什么值得自己留下。\n- 王庭会继续试图把“凭证持有人”解释成一项责任；沈砚则要证明自己可以使用这份凭证带来的利益，却不接受由此附加的人生归属。\n- 掌握门禁旧规的旧臣后人仍想得到兵谱，双方的临时同盟不会因共同验证一条事实就变成忠诚关系。\n- 谁把凭证转入沈砚身体、何时转入、从谁手中转出，仍是身份谜团的下一层，但不能覆盖他对钱、兵器、胜负与自主选择的直接欲望。\n- 第七席本人下落继续未知；缺席档案只能证明缺席，不能替未来世界给出答案。\n- 沈砚五岁前的历史继续保持空白，不用本阶段新证据倒推出未获批准的童年经历。\n\n",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 86895,
+      "inputTokens": 8423,
+      "cachedReadTokens": 73472,
+      "outputTokens": 5000,
+      "thoughtTokens": 1251
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 86895,
+          "inputTokens": 8423,
+          "cachedInputTokens": 73472,
+          "outputTokens": 5000,
+          "reasoningOutputTokens": 1251
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-sol",
+            "token_count": {
+              "totalTokens": 86895,
+              "inputTokens": 8423,
+              "cachedInputTokens": 73472,
+              "outputTokens": 5000,
+              "reasoningOutputTokens": 1251
+            }
+          }
+        ]
+      }
+    }
+  },
+  "session": {
+    "sessionId": "01a051f3-e63a-7fc2-a79c-4657683e2bac",
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "gpt-5.6-sol[low]",
+          "name": "GPT-5.6-Sol (low)",
+          "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-sol[medium]",
+          "name": "GPT-5.6-Sol (medium)",
+          "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-sol[high]",
+          "name": "GPT-5.6-Sol (high)",
+          "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[xhigh]",
+          "name": "GPT-5.6-Sol (xhigh)",
+          "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[max]",
+          "name": "GPT-5.6-Sol (max)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[ultra]",
+          "name": "GPT-5.6-Sol (ultra)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-terra[low]",
+          "name": "GPT-5.6-Terra (low)",
+          "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-terra[medium]",
+          "name": "GPT-5.6-Terra (medium)",
+          "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-terra[high]",
+          "name": "GPT-5.6-Terra (high)",
+          "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[xhigh]",
+          "name": "GPT-5.6-Terra (xhigh)",
+          "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[max]",
+          "name": "GPT-5.6-Terra (max)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[ultra]",
+          "name": "GPT-5.6-Terra (ultra)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-luna[low]",
+          "name": "GPT-5.6-Luna (low)",
+          "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-luna[medium]",
+          "name": "GPT-5.6-Luna (medium)",
+          "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-luna[high]",
+          "name": "GPT-5.6-Luna (high)",
+          "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[xhigh]",
+          "name": "GPT-5.6-Luna (xhigh)",
+          "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[max]",
+          "name": "GPT-5.6-Luna (max)",
+          "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.5[low]",
+          "name": "GPT-5.5 (low)",
+          "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.5[medium]",
+          "name": "GPT-5.5 (medium)",
+          "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.5[high]",
+          "name": "GPT-5.5 (high)",
+          "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.5[xhigh]",
+          "name": "GPT-5.5 (xhigh)",
+          "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[low]",
+          "name": "GPT-5.4 (low)",
+          "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4[medium]",
+          "name": "GPT-5.4 (medium)",
+          "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4[high]",
+          "name": "GPT-5.4 (high)",
+          "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[xhigh]",
+          "name": "GPT-5.4 (xhigh)",
+          "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[low]",
+          "name": "GPT-5.4-Mini (low)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4-mini[medium]",
+          "name": "GPT-5.4-Mini (medium)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4-mini[high]",
+          "name": "GPT-5.4-Mini (high)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[xhigh]",
+          "name": "GPT-5.4-Mini (xhigh)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[low]",
+          "name": "GPT-5.3-Codex-Spark (low)",
+          "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[medium]",
+          "name": "GPT-5.3-Codex-Spark (medium)",
+          "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[high]",
+          "name": "GPT-5.3-Codex-Spark (high)",
+          "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[xhigh]",
+          "name": "GPT-5.3-Codex-Spark (xhigh)",
+          "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+        }
+      ],
+      "currentModelId": "gpt-5.6-luna[max]"
+    },
+    "modes": {
+      "availableModes": [
+        {
+          "id": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "id": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "id": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ],
+      "currentModeId": "read-only"
+    },
+    "configOptions": [
+      {
+        "id": "mode",
+        "name": "Mode",
+        "description": "Approval and sandboxing preset for the session",
+        "category": "mode",
+        "type": "select",
+        "currentValue": "read-only",
+        "options": [
+          {
+            "value": "read-only",
+            "name": "Read-only",
+            "description": "Requires approval to edit files and run commands."
+          },
+          {
+            "value": "agent",
+            "name": "Agent",
+            "description": "Read and edit files, and run commands."
+          },
+          {
+            "value": "agent-full-access",
+            "name": "Agent (full access)",
+            "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+          }
+        ]
+      },
+      {
+        "id": "collaboration_mode",
+        "name": "Collaboration mode",
+        "description": "How Codex collaborates for subsequent turns",
+        "category": "collaboration_mode",
+        "type": "select",
+        "currentValue": "default",
+        "options": [
+          {
+            "value": "default",
+            "name": "Default"
+          },
+          {
+            "value": "plan",
+            "name": "Plan",
+            "description": "Plan before making changes"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "name": "Model",
+        "description": "Model Codex uses for the session",
+        "category": "model",
+        "type": "select",
+        "currentValue": "gpt-5.6-luna",
+        "options": [
+          {
+            "value": "gpt-5.6-sol",
+            "name": "GPT-5.6-Sol",
+            "description": "Latest frontier agentic coding model."
+          },
+          {
+            "value": "gpt-5.6-terra",
+            "name": "GPT-5.6-Terra",
+            "description": "Balanced agentic coding model for everyday work."
+          },
+          {
+            "value": "gpt-5.6-luna",
+            "name": "GPT-5.6-Luna",
+            "description": "Fast and affordable agentic coding model."
+          },
+          {
+            "value": "gpt-5.5",
+            "name": "GPT-5.5",
+            "description": "Frontier model for complex coding, research, and real-world work."
+          },
+          {
+            "value": "gpt-5.4",
+            "name": "GPT-5.4",
+            "description": "Strong model for everyday coding."
+          },
+          {
+            "value": "gpt-5.4-mini",
+            "name": "GPT-5.4-Mini",
+            "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+          },
+          {
+            "value": "gpt-5.3-codex-spark",
+            "name": "GPT-5.3-Codex-Spark",
+            "description": "Ultra-fast coding model."
+          }
+        ]
+      },
+      {
+        "id": "reasoning_effort",
+        "name": "Reasoning effort",
+        "description": "How much reasoning effort the model should use",
+        "category": "thought_level",
+        "type": "select",
+        "currentValue": "max",
+        "options": [
+          {
+            "value": "low",
+            "name": "Low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "value": "medium",
+            "name": "Medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "value": "high",
+            "name": "High",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "value": "xhigh",
+            "name": "Xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "value": "max",
+            "name": "Max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          }
+        ]
+      },
+      {
+        "id": "fast-mode",
+        "name": "Fast mode",
+        "description": "1.5x speed, increased usage",
+        "category": "model_config",
+        "type": "select",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Off",
+            "description": "Default speed, normal usage"
+          },
+          {
+            "value": "on",
+            "name": "On",
+            "description": "1.5x speed, increased usage"
+          }
+        ]
+      }
+    ]
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

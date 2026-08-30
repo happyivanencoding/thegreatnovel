@@ -1,0 +1,453 @@
+{
+  "ok": true,
+  "label": "progressive-canon-v2-relationship_betrayal-refresh",
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "additionalDirectories": [],
+  "wall_seconds": 412.696,
+  "text": "我会先按 `tgn-system-steward` 的权限链检查这次 Refresh 的规划边界，并快速检索既有 TGN 记忆中与 Re-Collision、Story Program、Mystery Reveal Boundary 直接相关的规则。随后只输出 production 兼容的单一 `# STORY PROGRAM`，不改写 World、Current Character 或旧 Canon。该 Skill 会约束我先找最早可能的语义越界点，再做最小、可持续的阶段规划。边界已经收紧：这次最危险的不是“谜底不够完整”，而是把燕迟的隐藏 Fixed Point 偷写成洗白答案，或把矿与军械库重新组织成旧式任务链。我会把公开物证设计成只能确认“她当时自主止损并主动承责”，同时让物证仍然可以被双方拿来争权、定罪和逼迫选择；阶段发动机转为“争夺谁有权定义鹤鸣夜、并据此重建哪一支边军”。# STORY PROGRAM\n\n## 当前 Re-Collision\n\n赤髓矿的出现把鹤鸣边州三股旧势力重新推向同一场争夺：占城军想用矿续养兵力，旧守军想先夺回军械库再复军，逃民势力则不愿再次成为任何一方的兵源与代价。矿与军械库必须同时落入一方手中，才能真正重建边军；因此鹤鸣夜的责任归属不再只是旧仇，也会直接决定谁有资格召集人、占资源、替三年前定性。\n\n江野进入这场争夺时只有剑阶11。他想拿回军械库，却会因妹妹被卷入矿争而放弃一次更有利的抢库窗口；他想逼问燕迟，却在真正见到她后发现，最难接受的答案不是“她被迫背叛”，而是她确实自己作出了那个选择。\n\nFresh Collision 不把这种不协调消解掉：\n\n- 世界不给江野准备一条同时得到矿、军械库、真相和燕迟的最优路线。\n- 燕迟救过妹妹，不抵消她开门、杀统领的事实。\n- 确认她没有投敌，也不等于确认她当时判断正确。\n- 江野可以保护她不被别人拿去交换利益，同时继续恨她、怀疑她，并拒绝原谅。\n- 本阶段不揭示所谓“更大损失”具体是什么，不确认情报真伪，不确定承诺对象，也不把妹妹自动接入同一因果链。\n\n## 当前 Power / Human / World 的长期张力\n\n- **Power：**江野剑阶11，足以在局部冲突中成为强手，却不足以仅凭个人战力压服占城军、旧守军和逃民三方。胜利必须改变别人对剑阶11的估价，但越级表现不自动等于升阶。\n- **Human：**他同时想赢、想变强、想护住妹妹、想亲口逼问燕迟，也不愿承认自己仍会偏向她。这些欲望无法全部无代价兑现。\n- **World：**矿与军械库的价值独立成立。即使江野不来，三方也会争夺；江野只能改变归属，不能让它们天然变成自己的成长礼包。\n- **Relationship：**燕迟越能证明自己不是敌方内应，江野越难用一个简单的“叛徒”结论结束关系；但她拒绝交出完整原因，又会让吸引、偏心和怨恨一起加重。\n- **Long-term tension：**江野可能拿到重建边军的物质条件，却仍不知道这支边军该继承谁的旧账；燕迟可能重新站到他附近，却不能回到三年前以前的位置。\n\n## 本阶段核心情节发动机与变化后的主要 Reading Question\n\n本阶段发动机不是“接任务—进危险地—胜利领奖”，而是：\n\n> **矿与军械库争夺不断迫使活人公开选择自己承认哪一种鹤鸣夜，并用兵力、资源、站队和私人关系为这个选择付价。**\n\n阶段中的胜负不只决定谁占一处地点，也决定：\n\n- 谁能用鹤鸣夜召回旧部；\n- 谁能把燕迟定义为内应、罪人、证人或可利用的战力；\n- 谁能把剑阶11的江野重新定价为个人强手、旧军继承者，或足以重建一支边军的新主人。\n\n变化后的主要 Reading Question：\n\n> **当江野确认燕迟不是奉敌命开门、却也确认她确实主动选择了开门，他会怎样处置这个仍让他偏心、又确实欠着血债的人；而这份处置会让矿、军械库和鹤鸣边州最终落到谁手里？**\n\n## 全书成长与核心幻想兑现脊柱（只写从当前点向前仍成立的部分）\n\n1. **剑阶11重新被看见：**江野先以剑阶11完成一次公开的超额战果。现场反应、懂行者校准和关键势力改价共享同一精确主尺；若正文没有明确突破，他仍是剑阶11。\n2. **从个人持剑到真正占有军械：**夺回旧军械库不是获得进入资格，而是实际控制库中兵械，并由江野挑出、持有和持续使用一柄完好的旧军战剑。\n3. **从夺回旧物到改变边州力量分布：**当军械库与赤髓矿都落入江野控制，他获得的不只是资源清单，而是把个人胜负放大为一支新边军的现实可能。\n4. **旧积累持续复利：**妹妹的安全继续改变他的风险选择；燕迟救走妹妹的事实继续阻止他把她简单处死；本阶段取得的军械、矿权、公开身份和关系状态进入后续世界，不因换阶段重置。\n5. **不强征新 Power：**当前 World Horizon 没有独立提供新的 Power Asymmetry，便不为补 Build 从赤髓矿或军械库中硬造能力。后续剑阶提升或新优势，只能由真实世界事件另行取得并留下。\n\n## 不可替代的人与关系\n\n- **燕迟：**她同时是开门者、杀统领者、妹妹的救命人，也是江野最想问、最不肯宽恕、又最容易偏心的人。任何替代人物都不能承载这四重冲突。她不能被洗成纯牺牲者，也不能被压回单纯反派。\n- **妹妹：**她不是替燕迟兑换原谅的功德凭证。她的安全直接改变江野是否冒险、是否抢先夺库、是否接受交易；她被救的事实只能增加关系复杂度，不能替江野完成判断。\n- **江野与燕迟：**关系从“失踪的背叛者与未能对质的人”，重新定价为“已经确认部分事实、仍有私人血债、暂时可能并肩、但没有恢复信任的两个人”。并肩作战不等于和解，保护对方也不等于原谅。\n- **江野与鹤鸣旧人：**旧守军、占城军和逃民都会要求他用燕迟换取人数、矿权或名分。他是否允许别人替自己结算这笔债，将直接决定谁愿意跟随他。\n\n## 未来大型阶段\n\n### 阶段一｜赤髓先开，江野错过抢库\n\n- **具体世界问题：**赤髓矿开始形成可持续出产，占城军抢先封锁矿区，旧守军则趁其兵力转移扑向旧军械库。冲突把妹妹所在的安全线卷入战圈。\n- **主要推动者：**占城军矿将、急于复军的旧守军、试图保住家人与矿工的逃民势力。\n- **主角关键选择：**江野本可趁军械库守备空虚直扑旧库，却因妹妹面临现实危险而转向矿区。他因此失去最好的抢库先手，不获得等价补偿。\n- **最主要阅读满足：**江野以剑阶11在公开矿战中打退一名剑阶12矿将。现场人群真实震动，懂行者说清11与12的正常差距，占城军随后改变围杀规格，旧守军和逃民也开始争相拉拢他。\n- **真实 Delta：**\n  - **Power：**仍为剑阶11；获得一次明确的越阶战绩，不自动升阶。\n  - **Relationship：**妹妹确认暂时脱离当下战圈，但江野的风险阈值已被所有人看见。\n  - **Identity：**从旧城幸存者重新成为三方都不能忽略的公开强手。\n  - **Enemy State：**占城军不再把他当普通夺库者，开始以更高规格限制他。\n  - **World：**矿争与军械库争夺正式合流。\n- **旧积累怎样继续生效：**妹妹的存在真实改变了江野的最优路线；好胜与记仇让他救人后不退出，反而决定把失去的抢库先手夺回来。\n- **下一阶段为何自然发生：**三方都需要用鹤鸣夜争取名分与人手，燕迟在矿战结束前公开现身，并没有逃避江野。旧城门随即成为所有人争夺解释权的地方。\n\n### 阶段二｜旧门作证，第一次正面对质\n\n- **具体世界问题：**旧守军想用城门证明燕迟是叛徒，占城军想把她包装成曾经为己方立功的内应，逃民则要求知道三年前究竟是谁替他们决定了代价。谁控制证据，谁就能争取更多人去夺矿或军械库。\n- **主要推动者：**争夺旧军名分的守军残部、试图收编燕迟之名的占城军、要求公开证据的逃民，以及主动来到旧门下的燕迟。\n- **主角关键选择：**江野没有把燕迟拖去私下逼供，也没有先杀她，而是夺下并公开旧城门本体的内侧启闭构件，让三方都看见证据边界：它足以证明城门当年确由城内主动开启，却不能证明动机、情报来源或承诺对象。\n- **Reveal Event：**在可见、可承担后果的现场，燕迟亲口确认：开门和杀统领都是她自己的选择，不是奉占城军之命；她当时判断继续守门会造成更大、更不可控的损失；由此产生的私人后果由她承担。她不请求理解，也不交出“更大损失”是什么、判断是否正确、承诺对象是谁或妹妹是否相关。\n- **最主要阅读满足：**公开物证与第一次正面对质同时兑现。江野得到了一层确定答案，却发现这层答案既不能替燕迟洗罪，也无法让自己继续把她当成一个简单内应。\n- **真实 Delta：**\n  - **Knowledge：**确定“主动止损并承责、非向敌方效忠”；其余谜底继续未知。\n  - **Relationship：**江野不原谅；燕迟不求原谅。两人从隔空旧债进入能够直接伤害、质问和选择彼此的现实关系。\n  - **Identity：**燕迟失去被任何一方包装成纯内应或纯受害者的空间，成为公开承认自己选择的人。\n  - **World：**旧守军和占城军原有的两套宣传都被削弱，人员开始重新站队。\n- **旧积累怎样继续生效：**燕迟救过妹妹，使江野无法把“立即杀她”当成干净结算；她开门、杀统领的事实又使他不能因为偏心替她宣布无罪。\n- **下一阶段为何自然发生：**名分动摇后，三方都必须抢在人员彻底重新站队前夺下旧军械库。对燕迟的处置条件随之成为换取兵力的公开筹码。\n\n### 阶段三｜不拿她的人头换军械库\n\n- **具体世界问题：**旧守军残部愿意帮助江野夺库，但要求他先承诺在夺库后处死或交出燕迟；占城军则试图趁双方内斗搬空军械库。江野若接受交易，夺库最容易，关系也最容易被别人替他结算。\n- **主要推动者：**控制军械库入口的占城军、拿燕迟作投名状的旧守军、拒绝替自己辩白却仍要阻止军械落入占城军的燕迟。\n- **主角关键选择：**江野拒绝宣布燕迟无罪，也拒绝用她的人头换旧军人手。他明确把两件事分开：军械库必须夺回；燕迟欠他的债，轮不到别人拿去换名分。这个选择让他失去一批最便宜的助力。\n- **最主要阅读满足：**江野与燕迟在没有和解、没有互相托付的情况下，被同一场夺库战逼到并肩。他们会救对方脱离必死位置，也会在下一刻继续争夺决定权；配合越有效，旧亲近留下的重量越刺人。\n- **真实 Delta：**\n  - **Asset：**江野实际夺回旧军械库，控制其中仍可使用的兵械，并取用一柄完好的旧军战剑。\n  - **Identity：**从争夺者变成军械库的现实主人，拥有召集武装力量的第一半条件。\n  - **Relationship：**江野与燕迟形成敌意未解的临时共战关系；保护发生了，原谅没有发生。\n  - **Enemy State：**占城军失去军械库后，只剩控制赤髓矿作为翻盘筹码。\n  - **World：**旧守军不再能垄断“复军”的资格，逃民第一次拥有选择跟谁拿武器的空间。\n- **旧积累怎样继续生效：**阶段一形成的公开战绩帮助江野吸引不依附旧守军的人；阶段二的证据阻止任何一方再用“燕迟奉敌命开门”作为无争议事实。\n- **下一阶段为何自然发生：**军械库已经到手，却没有赤髓矿便无法长期形成边军。占城军以矿为核心重新集结，三方最后一次围绕“谁有资格重建边军”正面碰撞。\n\n### 阶段四｜两份边军的价钱\n\n- **具体世界问题：**占城军以赤髓矿换军械库，旧守军以承认江野为首换取燕迟，逃民则只愿跟随能阻止他们再次被当作军资的人。任何现成选择都要求江野交出一部分私人判断权。\n- **主要推动者：**握有矿区的占城军、仍想恢复旧秩序的守军残部、决定矿区人手归属的逃民，以及拒绝替江野选择的燕迟。\n- **主角关键选择：**江野不以燕迟交换矿权，也不替她洗白。他带着已经夺得的军械主动争矿，把公开物证、自己的剑阶11战绩和三方重新站队造成的裂口一起压进决战。他要的不是别人赐予的旧军名分，而是让所有人以后必须按他的胜负重新谈价。\n- **最主要阅读满足：**江野以剑阶11、旧军战剑和真实夺得的军械完成一次更大的公开胜利，最终把赤髓矿与旧军械库同时握在手里。从想拿回一件旧物的人，变成拥有重建边军现实条件的人。\n- **真实 Delta：**\n  - **Power：**若正文没有明确突破，精确位置仍为剑阶11；战绩与装备提高实战威胁，但不偷升阶。\n  - **Asset：**实际控制旧军械库、可用兵械、个人旧军战剑与赤髓矿。\n  - **Relationship：**燕迟没有被交给任何一方，也没有恢复旧身份；她留在江野可以直接追问、直接拒绝、也可能再次并肩的位置。两人的关系定格为“偏心仍在、信任未复、血债未清”。\n  - **Identity：**江野成为能够重建新边军的现实力量中心，而非旧守军自动指定的继承人。\n  - **Knowledge：**不再新增燕迟旧谜底；已确认层保持，开放问题保持。\n  - **World：**占城军失去对两项核心利益的控制；旧守军无法原样复活；逃民第一次成为新力量是否成立的实际参与者。\n- **旧积累怎样继续生效：**妹妹带来的风险边界、燕迟救人的旧事实、公开物证、江野的剑阶11战绩、夺得的军械和三方对他的重新估价共同决定最终胜负；没有任何一项在阶段结算后消失。\n- **下一阶段为何自然发生：**矿与军械库归属落定后，鹤鸣边州内部“谁能重建边军”的最大问题已经得到答案。继续只写三方夺矿、夺库会开始重复旧发动机；下一步需要独立回答这支新力量将面对怎样的边州外部世界。\n\n## World Horizon Handoff\n\n- **触发条件：**旧军械库与赤髓矿的实际控制归属均已通过正文确定；公开物证、第一次正面对质和关系重新定价已经发生；新的边军力量已经出现为可观察现实，而不只是江野的计划。\n- **Scope：**`macro`\n- **为什么当前层已需要扩：**鹤鸣边州内部最重要的两项公开利益和三年前的第一层责任争夺已经被真正活透。再继续规划，只能重复占城军、旧守军与逃民围绕同两项资源的争夺；而“新边军将面对什么、边州之外如何评价和压迫它”不在当前 Effective World 的批准范围内。\n- **必须 carry forward 的已发生事实：**\n  - 触发时最终正文确认的江野精确剑阶；若无明确突破，仍为剑阶11。\n  - 江野已经实际取得并持续使用的旧军战剑。\n  - 旧军械库、赤髓矿及其最终控制状态。\n  - 江野由个人强手变为可重建边军的现实力量中心。\n  - 燕迟主动开门、杀统领、救走妹妹均为不可回滚 Canon。\n  - 已公开确认的仅是“她自主选择止损、并主动承担后果、并非向敌方效忠”。\n  - 江野没有原谅燕迟；两人可以共战，但信任、吸引、怨恨和私人债务同时存在。\n  - 所谓更大损失、情报完整性、实际避免了什么、承诺对象、承担的具体后果及妹妹是否属于同一因果链继续保持未知。\n- **外缘信号：**当前 Effective World 与 Canon 没有提供足够具体的既有外缘信号，因此不在最后一至两章硬造下一世界人物、宝物、能力、势力或敌人。Handoff 只由当前边州问题真正完成来触发。\n- **固定 orchestration：**`protagonist-blind World Expansion → deterministic Current Character → Story Refresh`\n\n## 仍值得追的旧承诺与新欲望\n\n- **已经在本 Horizon 必须兑现：**公开物证、第一次正面对质、旧军械库争夺、燕迟与江野的关系重新定价。\n- **继续保留的旧谜：**燕迟判断中的更大损失究竟是什么；她掌握的情报是否完整；她实际避免了什么；承诺对象是谁；她主动承担的私人后果具体是什么；妹妹获救是否属于同一因果链。\n- **不在本阶段强解：**更大的敌方幕后、鹤鸣城破的完整真相、燕迟是否“最终正确”。\n- **江野的新欲望：**从“拿回旧军械库”升级为“让所有曾替他、替燕迟、替鹤鸣夜定价的人，以后必须到他面前重新谈价”。\n- **关系新欲望：**他仍想逼燕迟把余下的话说完，却不愿她先被别人处死或解释完；他想知道她会不会在没有赎罪承诺、没有原谅保证的情况下，仍然选择留在他能看见的地方。\n- **力量新欲望：**剑阶11的公开胜利、旧军战剑、军械库和赤髓矿让江野第一次拥有把个人强大扩大为边州力量的可能；下一次真正的 Power 增长必须从后续独立世界的真实事件中获得，而非由本 Program预支。\n\n",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 88521,
+      "inputTokens": 70629,
+      "cachedReadTokens": 12032,
+      "outputTokens": 5860,
+      "thoughtTokens": 1034
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 88521,
+          "inputTokens": 70629,
+          "cachedInputTokens": 12032,
+          "outputTokens": 5860,
+          "reasoningOutputTokens": 1034
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-sol",
+            "token_count": {
+              "totalTokens": 88521,
+              "inputTokens": 70629,
+              "cachedInputTokens": 12032,
+              "outputTokens": 5860,
+              "reasoningOutputTokens": 1034
+            }
+          }
+        ]
+      }
+    }
+  },
+  "session": {
+    "sessionId": "01a051f3-e57c-7632-af5f-79eb5c97be24",
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "gpt-5.6-sol[low]",
+          "name": "GPT-5.6-Sol (low)",
+          "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-sol[medium]",
+          "name": "GPT-5.6-Sol (medium)",
+          "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-sol[high]",
+          "name": "GPT-5.6-Sol (high)",
+          "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[xhigh]",
+          "name": "GPT-5.6-Sol (xhigh)",
+          "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[max]",
+          "name": "GPT-5.6-Sol (max)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[ultra]",
+          "name": "GPT-5.6-Sol (ultra)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-terra[low]",
+          "name": "GPT-5.6-Terra (low)",
+          "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-terra[medium]",
+          "name": "GPT-5.6-Terra (medium)",
+          "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-terra[high]",
+          "name": "GPT-5.6-Terra (high)",
+          "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[xhigh]",
+          "name": "GPT-5.6-Terra (xhigh)",
+          "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[max]",
+          "name": "GPT-5.6-Terra (max)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[ultra]",
+          "name": "GPT-5.6-Terra (ultra)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-luna[low]",
+          "name": "GPT-5.6-Luna (low)",
+          "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-luna[medium]",
+          "name": "GPT-5.6-Luna (medium)",
+          "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-luna[high]",
+          "name": "GPT-5.6-Luna (high)",
+          "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[xhigh]",
+          "name": "GPT-5.6-Luna (xhigh)",
+          "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[max]",
+          "name": "GPT-5.6-Luna (max)",
+          "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.5[low]",
+          "name": "GPT-5.5 (low)",
+          "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.5[medium]",
+          "name": "GPT-5.5 (medium)",
+          "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.5[high]",
+          "name": "GPT-5.5 (high)",
+          "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.5[xhigh]",
+          "name": "GPT-5.5 (xhigh)",
+          "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[low]",
+          "name": "GPT-5.4 (low)",
+          "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4[medium]",
+          "name": "GPT-5.4 (medium)",
+          "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4[high]",
+          "name": "GPT-5.4 (high)",
+          "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[xhigh]",
+          "name": "GPT-5.4 (xhigh)",
+          "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[low]",
+          "name": "GPT-5.4-Mini (low)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4-mini[medium]",
+          "name": "GPT-5.4-Mini (medium)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4-mini[high]",
+          "name": "GPT-5.4-Mini (high)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[xhigh]",
+          "name": "GPT-5.4-Mini (xhigh)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[low]",
+          "name": "GPT-5.3-Codex-Spark (low)",
+          "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[medium]",
+          "name": "GPT-5.3-Codex-Spark (medium)",
+          "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[high]",
+          "name": "GPT-5.3-Codex-Spark (high)",
+          "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[xhigh]",
+          "name": "GPT-5.3-Codex-Spark (xhigh)",
+          "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+        }
+      ],
+      "currentModelId": "gpt-5.6-luna[max]"
+    },
+    "modes": {
+      "availableModes": [
+        {
+          "id": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "id": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "id": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ],
+      "currentModeId": "read-only"
+    },
+    "configOptions": [
+      {
+        "id": "mode",
+        "name": "Mode",
+        "description": "Approval and sandboxing preset for the session",
+        "category": "mode",
+        "type": "select",
+        "currentValue": "read-only",
+        "options": [
+          {
+            "value": "read-only",
+            "name": "Read-only",
+            "description": "Requires approval to edit files and run commands."
+          },
+          {
+            "value": "agent",
+            "name": "Agent",
+            "description": "Read and edit files, and run commands."
+          },
+          {
+            "value": "agent-full-access",
+            "name": "Agent (full access)",
+            "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+          }
+        ]
+      },
+      {
+        "id": "collaboration_mode",
+        "name": "Collaboration mode",
+        "description": "How Codex collaborates for subsequent turns",
+        "category": "collaboration_mode",
+        "type": "select",
+        "currentValue": "default",
+        "options": [
+          {
+            "value": "default",
+            "name": "Default"
+          },
+          {
+            "value": "plan",
+            "name": "Plan",
+            "description": "Plan before making changes"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "name": "Model",
+        "description": "Model Codex uses for the session",
+        "category": "model",
+        "type": "select",
+        "currentValue": "gpt-5.6-luna",
+        "options": [
+          {
+            "value": "gpt-5.6-sol",
+            "name": "GPT-5.6-Sol",
+            "description": "Latest frontier agentic coding model."
+          },
+          {
+            "value": "gpt-5.6-terra",
+            "name": "GPT-5.6-Terra",
+            "description": "Balanced agentic coding model for everyday work."
+          },
+          {
+            "value": "gpt-5.6-luna",
+            "name": "GPT-5.6-Luna",
+            "description": "Fast and affordable agentic coding model."
+          },
+          {
+            "value": "gpt-5.5",
+            "name": "GPT-5.5",
+            "description": "Frontier model for complex coding, research, and real-world work."
+          },
+          {
+            "value": "gpt-5.4",
+            "name": "GPT-5.4",
+            "description": "Strong model for everyday coding."
+          },
+          {
+            "value": "gpt-5.4-mini",
+            "name": "GPT-5.4-Mini",
+            "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+          },
+          {
+            "value": "gpt-5.3-codex-spark",
+            "name": "GPT-5.3-Codex-Spark",
+            "description": "Ultra-fast coding model."
+          }
+        ]
+      },
+      {
+        "id": "reasoning_effort",
+        "name": "Reasoning effort",
+        "description": "How much reasoning effort the model should use",
+        "category": "thought_level",
+        "type": "select",
+        "currentValue": "max",
+        "options": [
+          {
+            "value": "low",
+            "name": "Low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "value": "medium",
+            "name": "Medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "value": "high",
+            "name": "High",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "value": "xhigh",
+            "name": "Xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "value": "max",
+            "name": "Max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          }
+        ]
+      },
+      {
+        "id": "fast-mode",
+        "name": "Fast mode",
+        "description": "1.5x speed, increased usage",
+        "category": "model_config",
+        "type": "select",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Off",
+            "description": "Default speed, normal usage"
+          },
+          {
+            "value": "on",
+            "name": "On",
+            "description": "1.5x speed, increased usage"
+          }
+        ]
+      }
+    ]
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

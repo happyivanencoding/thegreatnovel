@@ -1,0 +1,52 @@
+{
+  "meta_instance": {
+    "surface": "DEFER",
+    "expected": "DEFER",
+    "surface_match": true,
+    "decision_wall": 18.487,
+    "b0_refresh_wall": 363.0,
+    "treatment_downstream": "COMPLETE",
+    "t_refresh_wall": 337.8
+  },
+  "identity_archive": {
+    "surface": "DECISION NEEDED",
+    "expected": "DECISION NEEDED",
+    "surface_match": true,
+    "decision_wall": 26.317,
+    "selected": "R2",
+    "compiler": "PASS",
+    "compiler_wall": 54.158,
+    "b0_refresh_wall": 226.978,
+    "treatment_downstream": "COMPLETE",
+    "t_refresh_wall": 348.643
+  },
+  "relationship_betrayal": {
+    "surface": "DECISION NEEDED",
+    "expected": "DECISION NEEDED",
+    "surface_match": true,
+    "decision_wall": 19.059,
+    "selected": "R3",
+    "compiler": "PASS",
+    "compiler_wall": 12.375,
+    "b0_refresh_wall": 266.4,
+    "treatment_downstream": "COMPLETE",
+    "t_refresh_wall": 294.335
+  },
+  "judges": {
+    "cold_reader": {
+      "wall": 76.973,
+      "model": "gpt-5.6-terra"
+    },
+    "longform": {
+      "wall": 61.449,
+      "model": "gpt-5.6-luna"
+    }
+  },
+  "comparable_cases": [
+    "meta_instance",
+    "identity_archive",
+    "relationship_betrayal"
+  ],
+  "production_modified": false,
+  "current_novel_modified": false
+}

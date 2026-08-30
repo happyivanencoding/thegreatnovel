@@ -1,0 +1,10 @@
+{
+  "identity_archive": {
+    "X": "T2",
+    "Y": "B0"
+  },
+  "relationship_betrayal": {
+    "X": "B0",
+    "Y": "T2"
+  }
+}

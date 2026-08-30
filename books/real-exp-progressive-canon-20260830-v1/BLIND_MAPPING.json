@@ -1,0 +1,14 @@
+{
+  "meta_instance": {
+    "X": "T",
+    "Y": "B0"
+  },
+  "identity_archive": {
+    "X": "T",
+    "Y": "B0"
+  },
+  "relationship_betrayal": {
+    "X": "B0",
+    "Y": "T"
+  }
+}

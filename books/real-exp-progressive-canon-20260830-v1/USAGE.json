@@ -1,0 +1,370 @@
+{
+  "calls": 21,
+  "aggregate_call_wall_seconds": 3167.348,
+  "parallel_phase_critical_path_estimate_seconds": 1138.876,
+  "tokens": {
+    "total": 1207871,
+    "input": 388645,
+    "cached_read": 722688,
+    "output": 96538,
+    "thought": 46881
+  },
+  "by_model": {
+    "gpt-5.6-luna": {
+      "calls": 7.0,
+      "wall_seconds_sum": 269.026,
+      "total_tokens": 261185.0,
+      "input_tokens": 166377.0,
+      "cached_read_tokens": 83200.0,
+      "output_tokens": 11608.0,
+      "thought_tokens": 6502.0
+    },
+    "gpt-5.6-sol": {
+      "calls": 8.0,
+      "wall_seconds_sum": 2560.093,
+      "total_tokens": 599603.0,
+      "input_tokens": 121707.0,
+      "cached_read_tokens": 400384.0,
+      "output_tokens": 77512.0,
+      "thought_tokens": 35822.0
+    },
+    "gpt-5.6-terra": {
+      "calls": 6.0,
+      "wall_seconds_sum": 338.229,
+      "total_tokens": 347083.0,
+      "input_tokens": 100561.0,
+      "cached_read_tokens": 239104.0,
+      "output_tokens": 7418.0,
+      "thought_tokens": 4557.0
+    }
+  },
+  "by_phase": {
+    "canonization_compiler": {
+      "calls": 2.0,
+      "wall_seconds_sum": 62.124,
+      "total_tokens": 91439.0,
+      "input_tokens": 20251.0,
+      "cached_read_tokens": 70144.0,
+      "output_tokens": 1044.0,
+      "thought_tokens": 913.0
+    },
+    "decision_surface": {
+      "calls": 3.0,
+      "wall_seconds_sum": 56.575,
+      "total_tokens": 85138.0,
+      "input_tokens": 53636.0,
+      "cached_read_tokens": 29952.0,
+      "output_tokens": 1550.0,
+      "thought_tokens": 294.0
+    },
+    "reframe_forge": {
+      "calls": 2.0,
+      "wall_seconds_sum": 116.485,
+      "total_tokens": 62379.0,
+      "input_tokens": 23239.0,
+      "cached_read_tokens": 33280.0,
+      "output_tokens": 5860.0,
+      "thought_tokens": 3622.0
+    },
+    "v1_blind": {
+      "calls": 2.0,
+      "wall_seconds_sum": 133.991,
+      "total_tokens": 130939.0,
+      "input_tokens": 103517.0,
+      "cached_read_tokens": 22016.0,
+      "output_tokens": 5406.0,
+      "thought_tokens": 3454.0
+    },
+    "v1_story_refresh": {
+      "calls": 6.0,
+      "wall_seconds_sum": 1813.2910000000002,
+      "total_tokens": 424187.0,
+      "input_tokens": 42655.0,
+      "cached_read_tokens": 314880.0,
+      "output_tokens": 66652.0,
+      "thought_tokens": 33537.0
+    },
+    "v2_authority_audit": {
+      "calls": 2.0,
+      "wall_seconds_sum": 174.588,
+      "total_tokens": 137919.0,
+      "input_tokens": 4091.0,
+      "cached_read_tokens": 131584.0,
+      "output_tokens": 2244.0,
+      "thought_tokens": 1443.0
+    },
+    "v2_blind": {
+      "calls": 2.0,
+      "wall_seconds_sum": 63.492,
+      "total_tokens": 100454.0,
+      "input_tokens": 62204.0,
+      "cached_read_tokens": 35328.0,
+      "output_tokens": 2922.0,
+      "thought_tokens": 1333.0
+    },
+    "v2_story_refresh": {
+      "calls": 2.0,
+      "wall_seconds_sum": 746.802,
+      "total_tokens": 175416.0,
+      "input_tokens": 79052.0,
+      "cached_read_tokens": 85504.0,
+      "output_tokens": 10860.0,
+      "thought_tokens": 2285.0
+    }
+  },
+  "credits_or_billed_cost": "N/A — ACP payload exposes token usage and wall-clock but not billed credits/cost; no estimate is fabricated.",
+  "rows": [
+    {
+      "path": "BLIND_COLD_READER_ACP.json",
+      "label": "progressive-canon-blind-cold_reader",
+      "phase": "v1_blind",
+      "model": "gpt-5.6-terra",
+      "wall_seconds": 74.742,
+      "total_tokens": 66721,
+      "input_tokens": 51766,
+      "cached_read_tokens": 12032,
+      "output_tokens": 2923,
+      "thought_tokens": 1902
+    },
+    {
+      "path": "BLIND_LONGFORM_ACP.json",
+      "label": "progressive-canon-blind-longform",
+      "phase": "v1_blind",
+      "model": "gpt-5.6-luna",
+      "wall_seconds": 59.249,
+      "total_tokens": 64218,
+      "input_tokens": 51751,
+      "cached_read_tokens": 9984,
+      "output_tokens": 2483,
+      "thought_tokens": 1552
+    },
+    {
+      "path": "identity_archive\\B0_STORY_REFRESH_ACP.json",
+      "label": "progressive-canon-identity_archive-b0-refresh",
+      "phase": "v1_story_refresh",
+      "model": "gpt-5.6-sol",
+      "wall_seconds": 224.726,
+      "total_tokens": 52262,
+      "input_tokens": 2761,
+      "cached_read_tokens": 38656,
+      "output_tokens": 10845,
+      "thought_tokens": 5060
+    },
+    {
+      "path": "identity_archive\\COMPILER_ACP.json",
+      "label": "progressive-canon-identity_archive-compiler",
+      "phase": "canonization_compiler",
+      "model": "gpt-5.6-terra",
+      "wall_seconds": 51.959,
+      "total_tokens": 61135,
+      "input_tokens": 2280,
+      "cached_read_tokens": 58112,
+      "output_tokens": 743,
+      "thought_tokens": 669
+    },
+    {
+      "path": "identity_archive\\DECISION_SURFACE_ACP.json",
+      "label": "progressive-canon-identity_archive-decision",
+      "phase": "decision_surface",
+      "model": "gpt-5.6-luna",
+      "wall_seconds": 23.885,
+      "total_tokens": 28659,
+      "input_tokens": 17878,
+      "cached_read_tokens": 9984,
+      "output_tokens": 797,
+      "thought_tokens": 81
+    },
+    {
+      "path": "identity_archive\\REFRAME_ACP.json",
+      "label": "progressive-canon-identity_archive-reframe",
+      "phase": "reframe_forge",
+      "model": "gpt-5.6-luna",
+      "wall_seconds": 45.899,
+      "total_tokens": 30766,
+      "input_tokens": 18485,
+      "cached_read_tokens": 9984,
+      "output_tokens": 2297,
+      "thought_tokens": 1034
+    },
+    {
+      "path": "identity_archive\\T_STORY_REFRESH_ACP.json",
+      "label": "progressive-canon-identity_archive-t-refresh",
+      "phase": "v1_story_refresh",
+      "model": "gpt-5.6-sol",
+      "wall_seconds": 341.486,
+      "total_tokens": 82707,
+      "input_tokens": 8720,
+      "cached_read_tokens": 62208,
+      "output_tokens": 11779,
+      "thought_tokens": 6732
+    },
+    {
+      "path": "meta_instance\\B0_STORY_REFRESH_ACP.json",
+      "label": "progressive-canon-meta_instance-b0-refresh",
+      "phase": "v1_story_refresh",
+      "model": "gpt-5.6-sol",
+      "wall_seconds": 360.788,
+      "total_tokens": 74786,
+      "input_tokens": 14335,
+      "cached_read_tokens": 50944,
+      "output_tokens": 9507,
+      "thought_tokens": 3434
+    },
+    {
+      "path": "meta_instance\\DECISION_SURFACE_ACP.json",
+      "label": "progressive-canon-meta_instance-decision",
+      "phase": "decision_surface",
+      "model": "gpt-5.6-luna",
+      "wall_seconds": 16.033,
+      "total_tokens": 28206,
+      "input_tokens": 17883,
+      "cached_read_tokens": 9984,
+      "output_tokens": 339,
+      "thought_tokens": 82
+    },
+    {
+      "path": "meta_instance\\T_STORY_REFRESH_ACP.json",
+      "label": "progressive-canon-meta_instance-t-refresh",
+      "phase": "v1_story_refresh",
+      "model": "gpt-5.6-sol",
+      "wall_seconds": 330.016,
+      "total_tokens": 68103,
+      "input_tokens": 1797,
+      "cached_read_tokens": 51968,
+      "output_tokens": 14338,
+      "thought_tokens": 8563
+    },
+    {
+      "path": "relationship_betrayal\\B0_STORY_REFRESH_ACP.json",
+      "label": "progressive-canon-relationship_betrayal-b0-refresh",
+      "phase": "v1_story_refresh",
+      "model": "gpt-5.6-sol",
+      "wall_seconds": 264.162,
+      "total_tokens": 69772,
+      "input_tokens": 5302,
+      "cached_read_tokens": 51968,
+      "output_tokens": 12502,
+      "thought_tokens": 7539
+    },
+    {
+      "path": "relationship_betrayal\\COMPILER_ACP.json",
+      "label": "progressive-canon-relationship_betrayal-compiler",
+      "phase": "canonization_compiler",
+      "model": "gpt-5.6-terra",
+      "wall_seconds": 10.165,
+      "total_tokens": 30304,
+      "input_tokens": 17971,
+      "cached_read_tokens": 12032,
+      "output_tokens": 301,
+      "thought_tokens": 244
+    },
+    {
+      "path": "relationship_betrayal\\DECISION_SURFACE_ACP.json",
+      "label": "progressive-canon-relationship_betrayal-decision",
+      "phase": "decision_surface",
+      "model": "gpt-5.6-luna",
+      "wall_seconds": 16.657,
+      "total_tokens": 28273,
+      "input_tokens": 17875,
+      "cached_read_tokens": 9984,
+      "output_tokens": 414,
+      "thought_tokens": 131
+    },
+    {
+      "path": "relationship_betrayal\\REFRAME_ACP.json",
+      "label": "progressive-canon-relationship_betrayal-reframe",
+      "phase": "reframe_forge",
+      "model": "gpt-5.6-luna",
+      "wall_seconds": 70.586,
+      "total_tokens": 31613,
+      "input_tokens": 4754,
+      "cached_read_tokens": 23296,
+      "output_tokens": 3563,
+      "thought_tokens": 2588
+    },
+    {
+      "path": "relationship_betrayal\\T_STORY_REFRESH_ACP.json",
+      "label": "progressive-canon-relationship_betrayal-t-refresh",
+      "phase": "v1_story_refresh",
+      "model": "gpt-5.6-sol",
+      "wall_seconds": 292.113,
+      "total_tokens": 76557,
+      "input_tokens": 9740,
+      "cached_read_tokens": 59136,
+      "output_tokens": 7681,
+      "thought_tokens": 2209
+    },
+    {
+      "path": "V2_BLIND_COLD_READER_ACP.json",
+      "label": "progressive-canon-v2-blind-cold_reader",
+      "phase": "v2_blind",
+      "model": "gpt-5.6-terra",
+      "wall_seconds": 26.775,
+      "total_tokens": 51004,
+      "input_tokens": 24453,
+      "cached_read_tokens": 25344,
+      "output_tokens": 1207,
+      "thought_tokens": 299
+    },
+    {
+      "path": "V2_BLIND_LONGFORM_ACP.json",
+      "label": "progressive-canon-v2-blind-longform",
+      "phase": "v2_blind",
+      "model": "gpt-5.6-luna",
+      "wall_seconds": 36.717,
+      "total_tokens": 49450,
+      "input_tokens": 37751,
+      "cached_read_tokens": 9984,
+      "output_tokens": 1715,
+      "thought_tokens": 1034
+    },
+    {
+      "path": "identity_archive\\V2_AUTHORITY_AUDIT_ACP.json",
+      "label": "progressive-canon-v2-identity_archive-authority-audit",
+      "phase": "v2_authority_audit",
+      "model": "gpt-5.6-terra",
+      "wall_seconds": 107.503,
+      "total_tokens": 74879,
+      "input_tokens": 3641,
+      "cached_read_tokens": 70400,
+      "output_tokens": 838,
+      "thought_tokens": 409
+    },
+    {
+      "path": "identity_archive\\T2_STORY_REFRESH_ACP.json",
+      "label": "progressive-canon-v2-identity_archive-refresh",
+      "phase": "v2_story_refresh",
+      "model": "gpt-5.6-sol",
+      "wall_seconds": 334.106,
+      "total_tokens": 86895,
+      "input_tokens": 8423,
+      "cached_read_tokens": 73472,
+      "output_tokens": 5000,
+      "thought_tokens": 1251
+    },
+    {
+      "path": "relationship_betrayal\\V2_AUTHORITY_AUDIT_ACP.json",
+      "label": "progressive-canon-v2-relationship_betrayal-authority-audit",
+      "phase": "v2_authority_audit",
+      "model": "gpt-5.6-terra",
+      "wall_seconds": 67.085,
+      "total_tokens": 63040,
+      "input_tokens": 450,
+      "cached_read_tokens": 61184,
+      "output_tokens": 1406,
+      "thought_tokens": 1034
+    },
+    {
+      "path": "relationship_betrayal\\T2_STORY_REFRESH_ACP.json",
+      "label": "progressive-canon-v2-relationship_betrayal-refresh",
+      "phase": "v2_story_refresh",
+      "model": "gpt-5.6-sol",
+      "wall_seconds": 412.696,
+      "total_tokens": 88521,
+      "input_tokens": 70629,
+      "cached_read_tokens": 12032,
+      "output_tokens": 5860,
+      "thought_tokens": 1034
+    }
+  ]
+}

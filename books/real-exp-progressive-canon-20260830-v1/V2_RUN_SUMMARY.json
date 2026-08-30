@@ -1,0 +1,23 @@
+{
+  "identity_archive": {
+    "wall": 336.625,
+    "model": "gpt-5.6-sol",
+    "authority_audit_wall": 109.826
+  },
+  "relationship_betrayal": {
+    "wall": 415.257,
+    "model": "gpt-5.6-sol",
+    "authority_audit_wall": 69.414
+  },
+  "judges": {
+    "cold_reader": {
+      "wall": 29.102,
+      "model": "gpt-5.6-terra"
+    },
+    "longform": {
+      "wall": 39.197,
+      "model": "gpt-5.6-luna"
+    }
+  },
+  "only_variable_after_selected_candidate": "Reveal Boundary retention + planning-use instruction"
+}
