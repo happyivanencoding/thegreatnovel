@@ -1,6 +1,6 @@
 {
   "schema_version": "exact-input-receipt-final-validation-v1",
-  "status": "ENGINEERING_VALIDATED_PENDING_GIT_PUSH",
+  "status": "COMPLETE",
   "production_changed": true,
   "first_pass_chain_changed": false,
   "verdict": "PASS_PRODUCTION_INCREMENTAL_RECOVERY",
@@ -22,8 +22,13 @@
   },
   "projection_coverage": "PROJECTION_COVERAGE.json",
   "skill": "SKILL_INSTALL_VALIDATION.json",
-  "pending": [
-    "git_commit",
-    "git_push"
-  ]
+  "pending": [],
+  "git": {
+    "production_commit": "5cdbcb4c62fc74fdccc087300ef7aa92cb796993",
+    "production_commit_subject": "perf(runtime): reuse exact node receipts",
+    "production_commit_pushed": true,
+    "remote_branch": "origin/principal_dev_new_sys",
+    "remote_sync_after_push": "0/0",
+    "author": "happyivanencoding <jingxuan.ivan@gmail.com>"
+  }
 }
