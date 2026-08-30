@@ -37,5 +37,10 @@
     "verdict": "REJECT_AUTHORITY_REGRESSION"
   },
   "production_changed": false,
-  "final_report": "RESULTS.md"
+  "final_report": "RESULTS.md",
+  "git": {
+    "experiment_commit": "4423410cf080a5f0fb58260dc7aee3d6b9164ea1",
+    "pushed_to": "origin/principal_dev_new_sys",
+    "remote_sync": "0/0"
+  }
 }

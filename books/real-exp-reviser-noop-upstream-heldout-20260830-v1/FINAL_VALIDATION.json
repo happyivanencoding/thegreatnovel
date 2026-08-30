@@ -1,11 +1,8 @@
 {
   "schema_version": "reviser-noop-upstream-heldout-final-validation-v1",
-  "status": "ENGINEERING_VALIDATED_PENDING_GIT_PUSH",
+  "status": "COMPLETE",
   "production_changed": false,
-  "pending": [
-    "git_commit",
-    "git_push"
-  ],
+  "pending": [],
   "experiment": {
     "candidate1": "FAIL_REVISER_NOOP",
     "candidate2": "FAIL_REVISER_NOOP_STORY_DIRECTIONAL_POSITIVE",
@@ -57,5 +54,15 @@
       "model": "gpt-5.6-terra",
       "effort": "high"
     }
+  },
+  "git": {
+    "experiment_commit": "4423410cf080a5f0fb58260dc7aee3d6b9164ea1",
+    "experiment_commit_subject": "test(story): evaluate reviser noop upstream heldouts",
+    "experiment_commit_pushed": true,
+    "remote_branch": "origin/principal_dev_new_sys",
+    "remote_sync_after_experiment_commit": "0/0",
+    "author": "happyivanencoding <jingxuan.ivan@gmail.com>",
+    "raw_untracked_evidence_preserved_locally": true,
+    "production_source_changed": false
   }
 }
