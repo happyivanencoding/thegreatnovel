@@ -1,0 +1,20 @@
+{
+  "schema_version": "github-speed-inspiration-round2-v1",
+  "production_changed": false,
+  "first_generation_new_default": null,
+  "directional_interactive_latency": {
+    "method": "foreground_final_prose_background_state",
+    "samples": 20,
+    "mean_full_seconds": 370.299,
+    "mean_time_to_readable_seconds": 342.860,
+    "mean_hidden_state_seconds": 27.439,
+    "visible_wait_reduction_percent": 7.59,
+    "headless_total_wall_reduction": 0
+  },
+  "combined_planning": {"speedup_percent": 18.71, "saved_seconds": 26.074, "gate_pass": false},
+  "hedged_curator": {"speedup_percent": 12.9, "request_factor": 2, "gate_pass": false},
+  "hedged_reviser": {"speedup_percent": 9.65, "saved_seconds": 14.44, "request_factor": 2, "gate_pass": false},
+  "parallel_state": {"speedup_percent": 21.96, "saved_seconds": 5.766, "request_factor": 2, "gate_pass": false},
+  "state_change_log": {"speedup_percent": -18.50, "gate_pass": false},
+  "arc_seal": {"projector_wall_seconds": 166.003, "seal_gate_pass": false, "failure": "prose-realization state such as injuries/fatigue was not projected reliably"}
+}
