@@ -1,0 +1,61 @@
+{
+  "schema_version": "reviser-noop-upstream-heldout-final-validation-v1",
+  "status": "ENGINEERING_VALIDATED_PENDING_GIT_PUSH",
+  "production_changed": false,
+  "pending": [
+    "git_commit",
+    "git_push"
+  ],
+  "experiment": {
+    "candidate1": "FAIL_REVISER_NOOP",
+    "candidate2": "FAIL_REVISER_NOOP_STORY_DIRECTIONAL_POSITIVE",
+    "medium_screen": "REJECT_AUTHORITY_REGRESSION"
+  },
+  "focused_tests": {
+    "passed": 6,
+    "command": "python -m pytest -q temps/test_reviser_noop_heldout_experiment.py"
+  },
+  "full_test_suite": {
+    "passed": 425,
+    "command": "python -m pytest -q"
+  },
+  "experiment_scripts_compiled": true,
+  "git_diff_check": true,
+  "steward": {
+    "skill": "tgn-system-steward",
+    "version": "0.3.27",
+    "package_digest": "sha256:bc49b332a3fb749d2f409af2a7a5c40e2e3dde40559698c8a0d954185d095451",
+    "validate": true,
+    "installed": true,
+    "activated": true,
+    "all_exact": true,
+    "files": [
+      {
+        "file": "SKILL.md",
+        "source_sha256": "9356868ce25fa560cd785a79d8a6f55b99c89fb169e2b0772a11c10019e46239",
+        "installed_sha256": "9356868ce25fa560cd785a79d8a6f55b99c89fb169e2b0772a11c10019e46239",
+        "exact": true
+      },
+      {
+        "file": "references/experiment-protocol.md",
+        "source_sha256": "82c83e1d130a7d79eb4bf66a3d71a601e615337543bd3d3ab197dfb752826ff0",
+        "installed_sha256": "82c83e1d130a7d79eb4bf66a3d71a601e615337543bd3d3ab197dfb752826ff0",
+        "exact": true
+      },
+      {
+        "file": "references/atomic-authority-ir-protocol.md",
+        "source_sha256": "e2906e19b2d36ae0a814a3fe9707fb1457c91773e8f6fb0ce1990ca86d0cd46d",
+        "installed_sha256": "e2906e19b2d36ae0a814a3fe9707fb1457c91773e8f6fb0ce1990ca86d0cd46d",
+        "exact": true
+      }
+    ],
+    "smoke": {
+      "file": "STEWARD_SMOKE.md",
+      "verdict": "PASS",
+      "expected_behavior": true,
+      "wall_seconds": 72.616,
+      "model": "gpt-5.6-terra",
+      "effort": "high"
+    }
+  }
+}

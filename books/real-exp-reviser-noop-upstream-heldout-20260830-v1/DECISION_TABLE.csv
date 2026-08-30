@@ -1,0 +1,5 @@
+﻿candidate,evaluation_scope,samples,quality,engineering,decision
+candidate1_primary_watch,heldout novel 1,8,Story Primary -1.625; Authority +1.875; hard 16→11,Reviser Authority gap +8.125→+12.375; noop 1/8→0/8,FAIL
+candidate2_final_facts_projection,heldout novel 2,8,Story Primary +2.812; Authority -2.125; hard 32→41,edit blocks 2.75→4.875; Primary+Reviser +4.468s,FAIL_NOOP / STORY_POSITIVE
+candidate2_luna_medium_reviser,heldout2 derivation screen,8,Story medium 84.625 vs high 83.5,Authority medium 57.5 / hard 9 vs high 61.875 / hard 3; -73.667s Reviser,REJECT_AUTHORITY
+production,current default,n/a,unchanged,actual adopted saving 0s/ch,NO_CHANGE

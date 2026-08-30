@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.26
+version: 0.3.27
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -317,7 +317,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - 测 authority isolation 时使用 fresh context；
 - 能 deterministic 就不要再加 LLM Composer；
 - 延迟/成本审计先拆开 adopted node wall、真实批次 elapsed（含重跑/Review/Repair）、上游摊销与 execution transport / queue；相似度高不等于节点冗余，模型/effort/输出合同变化必须接回正常下游并审最终正文；条件路由、局部 Delta、提前编译或跨章投机还必须计算完整 critical path、独立 repeat、cross-book、fallback/丢弃成本与 Reader↔Authority 分裂，不能用一次胜出或子节点加速 productionize；
-- Atomic 审计按 `references/atomic-authority-ir-protocol.md`：严格拆开 `Atomic Authority Contract` 与 `Primary Preservation Map`。Hard Contract只接收可信Frozen Authority artifacts与Entity Registry；Curator/Primary不得创建Fact、Conflict或Identity。Evidence binding必须由Runtime签发并绑定Primary hash，默认用Edit Locality锁住窗口外正文；unsupported章节绕过Atomic走当前Full；free-text Sidecar、中文关键词parser与LLM safety classifier均不得productionize。特别分开审 `typed known-fact coverage / semantic Contract repeat / human Mission Story+Authority / Final Story+Authority / full fallback-adjusted wall`：fixture recall不能替代human projection或最终Authority；**Contract closure也不能替代Reviser-necessity判断**。若想让Primary直接跳过一个已证明value-bearing的Full Reviser，必须在冻结pair上重复证明Primary同时不丢Story且无Authority hard problem；单个Gate/Oracle PASS不够，不能用另一个LLM classifier补这个缺口；
+- Atomic 审计按 `references/atomic-authority-ir-protocol.md`：严格拆开 `Atomic Authority Contract` 与 `Primary Preservation Map`。Hard Contract只接收可信Frozen Authority artifacts与Entity Registry；Curator/Primary不得创建Fact、Conflict或Identity。Evidence binding必须由Runtime签发并绑定Primary hash，默认用Edit Locality锁住窗口外正文；unsupported章节绕过Atomic走当前Full；free-text Sidecar、中文关键词parser与LLM safety classifier均不得productionize。特别分开审 `typed known-fact coverage / semantic Contract repeat / human Mission Story+Authority / Final Story+Authority / full fallback-adjusted wall`：fixture recall不能替代human projection或最终Authority；**Contract closure也不能替代Reviser-necessity判断**。若想让Primary直接跳过、降档或实质削弱一个已证明value-bearing的Full Reviser，必须先在derivation pair上证明Primary→Reviser的Story/Authority gap、Hard problems、edit blocks/exact no-op确实收敛，再**冻结Treatment后用全新小说held-out**复验；单个Gate/Oracle PASS、Primary单独更好、Final单独更好或similarity更高都不够，不能用另一个LLM classifier补这个缺口。尤其分开审attention placement与Authority closure：短Final-Facts投影可能提高Story却增加Hard错误；速度screen若medium/high Authority仍有稳定差距，不得为追速度进入Production；
 - 先人工/结构化直接读输出，再考虑 Judge；
 - 不用一组自动词频代替文学判断；
 - 不 cherry-pick 最好 candidate 证明系统成功；

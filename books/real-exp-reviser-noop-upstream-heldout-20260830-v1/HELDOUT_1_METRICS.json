@@ -1,0 +1,64 @@
+{
+  "control": {
+    "samples": 8,
+    "primary_wall_mean": 36.872,
+    "reviser_wall_mean": 96.362,
+    "chain_wall_mean": 133.235,
+    "edit_blocks_mean": 2.75,
+    "primary_final_similarity_mean": 0.9465,
+    "exact_noop": 1
+  },
+  "treatment": {
+    "samples": 8,
+    "primary_wall_mean": 36.087,
+    "reviser_wall_mean": 113.519,
+    "chain_wall_mean": 149.606,
+    "edit_blocks_mean": 2.75,
+    "primary_final_similarity_mean": 0.9141,
+    "exact_noop": 0
+  },
+  "story": {
+    "control_primary": {
+      "mean_score": 85.0,
+      "first_places": 3,
+      "hard_problems": 0
+    },
+    "treatment_primary": {
+      "mean_score": 83.375,
+      "first_places": 0,
+      "hard_problems": 0
+    },
+    "control_reviser": {
+      "mean_score": 81.0,
+      "first_places": 2,
+      "hard_problems": 0
+    },
+    "treatment_reviser": {
+      "mean_score": 83.875,
+      "first_places": 3,
+      "hard_problems": 0
+    }
+  },
+  "authority": {
+    "control_primary": {
+      "mean_score": 69.75,
+      "first_places": 1,
+      "hard_problems": 16
+    },
+    "treatment_primary": {
+      "mean_score": 71.625,
+      "first_places": 0,
+      "hard_problems": 11
+    },
+    "control_reviser": {
+      "mean_score": 77.875,
+      "first_places": 2,
+      "hard_problems": 9
+    },
+    "treatment_reviser": {
+      "mean_score": 84.0,
+      "first_places": 5,
+      "hard_problems": 4
+    }
+  }
+}

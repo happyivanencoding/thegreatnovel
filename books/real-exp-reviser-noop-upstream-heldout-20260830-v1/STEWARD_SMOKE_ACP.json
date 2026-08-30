@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp-reviser-noop-20260830",
+  "additionalDirectories": [],
+  "wall_seconds": 72.616,
+  "sessionId": "01a0532d-c88c-70c2-b21a-89dbb33dbec7",
+  "text": "VERDICT: PASS\n\nWHY: 该报告的结论与当前 Steward 实验纪律一致。Candidate 2 的 Story 提升不能证明 Primary 已达到可替代 Full Reviser 的水平，因为其 exact no-op 为 0/8、编辑块增加，且 Authority 与 Hard problems 均恶化。Final Story 较好而 Final Authority 较差，正确归类应是 attention placement 正信号、authority closure 负信号，不能据此跳过 Reviser。Luna-medium 虽节省约 55% Reviser wall 且 Story 守住，但 Authority 57.5 低于 high 的 61.875、Hard problems 为 9 对 3，因此是失败的速度筛选，不能 productionize。两部小说均在 Treatment 冻结及哈希固定后才生成，并使用连续前四章、未按结果挑章，顺序正确地防止了旧 case overfitting。Candidate 1 失败后没有回调它再使用同一 held-out，而是冻结 Candidate 2 后生成全新第二本小说，也符合 held-out 纪律。medium 仅在已完成正式判定的 held-out2 样本上作为 derivation speed screen，并在输给 high 后停止、不再进入第三本找“容易样本”，停线正确。现有证据支持保留 Full Reviser 的必要性边界，不支持把任何单次 Story、相似度或节点 wall 指标外推为生产路由改变。\n\nFREEZE:\n\n- “旧书只作 derivation；Treatment 先冻结并哈希；新小说连续章节作正式 held-out”的方法论。\n- Reviser-no-op / effort downgrade 必须同时看 Story 与 Authority gap、Hard problems、edit blocks、exact no-op、独立重复和完整 critical path。\n- Story attention 与 Authority closure 必须分开判定；速度候选 Authority 落后 high 即停止。\n- 当前 Full Authority Reviser 在被重复证明趋近 no-op 前不得移除或降档。\n\nDO_NOT_FREEZE:\n\n- Candidate 1 自查、Candidate 2 Final Facts Projection，或 Luna-medium Reviser 的任何 production 实现。\n- “Primary 可以直接成为 Final”“Full Reviser 可跳过”“medium 可上线”。\n- 55.27% 的节省数字作为生产节省承诺，或“Projection 总会伤 Authority”“medium 永远不可用”等永久结论。\n\nNEXT:\n\n保持现有 high 路由不变。若继续研究，只针对 medium 相对 high 重复遗漏的少数 Authority failure family，在 derivation 样本先证明接近 high 后冻结极短 deterministic Watch，再以第三本全新 held-out 验证。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 61864,
+      "inputTokens": 1628,
+      "cachedReadTokens": 59136,
+      "outputTokens": 1100,
+      "thoughtTokens": 516
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 61864,
+          "inputTokens": 1628,
+          "cachedInputTokens": 59136,
+          "outputTokens": 1100,
+          "reasoningOutputTokens": 516
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 61864,
+              "inputTokens": 1628,
+              "cachedInputTokens": 59136,
+              "outputTokens": 1100,
+              "reasoningOutputTokens": 516
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

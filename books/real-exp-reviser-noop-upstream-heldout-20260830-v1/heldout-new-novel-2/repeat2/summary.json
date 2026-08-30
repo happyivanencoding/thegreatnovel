@@ -1,0 +1,61 @@
+{
+  "schema_version": "final-facts-projection-heldout2-repeat2",
+  "rows": [
+    {
+      "chapter": 1,
+      "arm": "control",
+      "primary_wall": 62.908,
+      "reviser_wall": 148.671,
+      "chain_wall": 211.579
+    },
+    {
+      "chapter": 1,
+      "arm": "treatment",
+      "primary_wall": 54.073,
+      "reviser_wall": 111.145,
+      "chain_wall": 165.218
+    },
+    {
+      "chapter": 2,
+      "arm": "control",
+      "primary_wall": 73.678,
+      "reviser_wall": 98.503,
+      "chain_wall": 172.18099999999998
+    },
+    {
+      "chapter": 2,
+      "arm": "treatment",
+      "primary_wall": 59.753,
+      "reviser_wall": 167.395,
+      "chain_wall": 227.14800000000002
+    },
+    {
+      "chapter": 3,
+      "arm": "control",
+      "primary_wall": 73.401,
+      "reviser_wall": 122.066,
+      "chain_wall": 195.46699999999998
+    },
+    {
+      "chapter": 3,
+      "arm": "treatment",
+      "primary_wall": 82.712,
+      "reviser_wall": 135.551,
+      "chain_wall": 218.26299999999998
+    },
+    {
+      "chapter": 4,
+      "arm": "control",
+      "primary_wall": 68.665,
+      "reviser_wall": 185.232,
+      "chain_wall": 253.897
+    },
+    {
+      "chapter": 4,
+      "arm": "treatment",
+      "primary_wall": 69.307,
+      "reviser_wall": 84.359,
+      "chain_wall": 153.666
+    }
+  ]
+}

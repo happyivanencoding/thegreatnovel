@@ -60,6 +60,8 @@ The routing above does **not** imply that an Authority-clean Primary may automat
 
 The 2026-08-30 rich-free-text bypass experiment froze two fresh repeats and got 0/8 deterministic bypasses. More importantly, among 7 Primary/Reviser pairs that a strict Oracle initially considered direct-final candidates, two independent anonymous pair-blind rounds produced Story **Primary 4 vs Reviser 10** and Authority **Primary 1 vs Reviser 8, with 5 ties**; 0/7 pairs were stably both Story-nondegrading and Authority-clean. Several Oracle PASSes still contained concrete Canon errors. Therefore bypassing Full Reviser requires repeated pair evidence that the stage is actually becoming a no-op for both Story and Authority; Contract PASS alone is insufficient. Do not add an LLM "Reviser necessity" classifier to bridge this gap.
 
+Subsequent new-novel held-out experiments strengthen the method boundary. A frozen five-line Primary self-check reduced some hard errors but did not reduce Reviser necessity; a source-pure Final Facts attention projection improved Story while increasing Authority hard errors. Therefore deterministic fact proximity is not equivalent to typed prose closure. Any no-op or effort-downgrade claim must freeze the candidate before a genuinely new novel is generated, evaluate consecutive chapters, and compare Story/Authority Reviser gaps plus hard-problem/edit/no-op evidence. A faster medium Reviser that still leaves materially more hard problems than high is a failed speed screen, not a production candidate.
+
 ## 7. Evidence standard
 
 Report separately:

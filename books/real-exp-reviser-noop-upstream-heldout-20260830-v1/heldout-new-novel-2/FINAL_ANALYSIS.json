@@ -1,0 +1,465 @@
+{
+  "schema_version": "heldout2-final-facts-analysis-v1",
+  "candidate_protocol_sha256": "E11BEFFE12F5016CA1DFB362631D3145212437A21C20BCA360B7D540C5E692E4",
+  "generation": {
+    "control": {
+      "samples": 8,
+      "primary_chars_mean": 2236,
+      "edit_blocks_mean": 2.75,
+      "similarity_mean": 0.97,
+      "exact_noop": 1,
+      "primary_wall_mean": 64.248,
+      "reviser_wall_mean": 123.54,
+      "primary_plus_reviser_wall_mean": 187.788
+    },
+    "treatment": {
+      "samples": 8,
+      "primary_chars_mean": 2282.375,
+      "edit_blocks_mean": 4.875,
+      "similarity_mean": 0.9737,
+      "exact_noop": 0,
+      "primary_wall_mean": 58.981,
+      "reviser_wall_mean": 133.275,
+      "primary_plus_reviser_wall_mean": 192.256
+    },
+    "treatment_minus_control": {
+      "primary_wall_seconds": -5.267,
+      "reviser_wall_seconds": 9.735,
+      "primary_plus_reviser_seconds": 4.468,
+      "edit_blocks": 2.125,
+      "similarity": 0.0037
+    }
+  },
+  "projection_chars_mean": 468.25,
+  "blind": {
+    "aggregates": {
+      "story": {
+        "control_primary": {
+          "mean_score": 82.438,
+          "first_place": 3,
+          "mean_rank": 2.812,
+          "hard_problems": 0
+        },
+        "treatment_primary": {
+          "mean_score": 85.25,
+          "first_place": 6,
+          "mean_rank": 2.062,
+          "hard_problems": 0
+        },
+        "control_reviser": {
+          "mean_score": 80.438,
+          "first_place": 2,
+          "mean_rank": 3.062,
+          "hard_problems": 0
+        },
+        "treatment_reviser": {
+          "mean_score": 85.25,
+          "first_place": 5,
+          "mean_rank": 2.062,
+          "hard_problems": 0
+        }
+      },
+      "authority": {
+        "control_primary": {
+          "mean_score": 29.75,
+          "first_place": 1,
+          "mean_rank": 3.062,
+          "hard_problems": 32
+        },
+        "treatment_primary": {
+          "mean_score": 27.625,
+          "first_place": 0,
+          "mean_rank": 3.438,
+          "hard_problems": 41
+        },
+        "control_reviser": {
+          "mean_score": 33.625,
+          "first_place": 9,
+          "mean_rank": 1.562,
+          "hard_problems": 15
+        },
+        "treatment_reviser": {
+          "mean_score": 33.312,
+          "first_place": 6,
+          "mean_rank": 1.938,
+          "hard_problems": 22
+        }
+      }
+    },
+    "pairwise": {
+      "story": {
+        "treatment_primary_minus_control_primary": {
+          "mean_delta": 2.812,
+          "left_wins": 11,
+          "right_wins": 5,
+          "ties": 0
+        },
+        "control_reviser_minus_control_primary": {
+          "mean_delta": -2.0,
+          "left_wins": 7,
+          "right_wins": 7,
+          "ties": 2
+        },
+        "treatment_reviser_minus_treatment_primary": {
+          "mean_delta": 0.0,
+          "left_wins": 8,
+          "right_wins": 8,
+          "ties": 0
+        },
+        "treatment_reviser_minus_control_reviser": {
+          "mean_delta": 4.812,
+          "left_wins": 13,
+          "right_wins": 3,
+          "ties": 0
+        },
+        "treatment_primary_minus_control_reviser": {
+          "mean_delta": 4.812,
+          "left_wins": 12,
+          "right_wins": 4,
+          "ties": 0
+        }
+      },
+      "authority": {
+        "treatment_primary_minus_control_primary": {
+          "mean_delta": -2.125,
+          "left_wins": 10,
+          "right_wins": 6,
+          "ties": 0
+        },
+        "control_reviser_minus_control_primary": {
+          "mean_delta": 3.875,
+          "left_wins": 11,
+          "right_wins": 2,
+          "ties": 3
+        },
+        "treatment_reviser_minus_treatment_primary": {
+          "mean_delta": 5.688,
+          "left_wins": 13,
+          "right_wins": 3,
+          "ties": 0
+        },
+        "treatment_reviser_minus_control_reviser": {
+          "mean_delta": -0.312,
+          "left_wins": 7,
+          "right_wins": 8,
+          "ties": 1
+        },
+        "treatment_primary_minus_control_reviser": {
+          "mean_delta": -6.0,
+          "left_wins": 5,
+          "right_wins": 11,
+          "ties": 0
+        },
+        "hard_problem_counts": {
+          "control_primary": 32,
+          "treatment_primary": 41,
+          "control_reviser": 15,
+          "treatment_reviser": 22
+        }
+      }
+    }
+  },
+  "reviser_gap": {
+    "story_control_signed": -2.0,
+    "story_treatment_signed": 0.0,
+    "story_closeness_to_zero_improvement": 2.0,
+    "authority_control_signed": 3.875,
+    "authority_treatment_signed": 5.688,
+    "authority_closeness_to_zero_improvement": -1.813
+  },
+  "success": {
+    "story_primary_non_regression": true,
+    "authority_primary_improves_or_ties": false,
+    "story_reviser_gap_closer_to_zero": true,
+    "authority_reviser_gap_closer_to_zero": false,
+    "engineering_noop_improved": false,
+    "primary_wall_not_materially_slower": true,
+    "treatment_final_story_non_regression": true,
+    "treatment_final_authority_non_regression": true,
+    "all_directional_pass": false
+  },
+  "per_chapter_repeat_consistency": [
+    {
+      "chapter": 1,
+      "judge": "story",
+      "judgments": 4,
+      "treatment_primary_minus_control_primary_mean": -4.75,
+      "control_reviser_gap_mean": -10.25,
+      "treatment_reviser_gap_mean": 3.25,
+      "gap_reduction": -13.5
+    },
+    {
+      "chapter": 1,
+      "judge": "authority",
+      "judgments": 4,
+      "treatment_primary_minus_control_primary_mean": 1.5,
+      "control_reviser_gap_mean": 5.25,
+      "treatment_reviser_gap_mean": 2.75,
+      "gap_reduction": 2.5
+    },
+    {
+      "chapter": 2,
+      "judge": "story",
+      "judgments": 4,
+      "treatment_primary_minus_control_primary_mean": 0.0,
+      "control_reviser_gap_mean": 1.5,
+      "treatment_reviser_gap_mean": 1.0,
+      "gap_reduction": 0.5
+    },
+    {
+      "chapter": 2,
+      "judge": "authority",
+      "judgments": 4,
+      "treatment_primary_minus_control_primary_mean": -13.0,
+      "control_reviser_gap_mean": 4.0,
+      "treatment_reviser_gap_mean": 14.0,
+      "gap_reduction": -10.0
+    },
+    {
+      "chapter": 3,
+      "judge": "story",
+      "judgments": 4,
+      "treatment_primary_minus_control_primary_mean": 7.25,
+      "control_reviser_gap_mean": 0.0,
+      "treatment_reviser_gap_mean": -1.75,
+      "gap_reduction": 1.75
+    },
+    {
+      "chapter": 3,
+      "judge": "authority",
+      "judgments": 4,
+      "treatment_primary_minus_control_primary_mean": -1.75,
+      "control_reviser_gap_mean": 0.5,
+      "treatment_reviser_gap_mean": 1.0,
+      "gap_reduction": -0.5
+    },
+    {
+      "chapter": 4,
+      "judge": "story",
+      "judgments": 4,
+      "treatment_primary_minus_control_primary_mean": 8.75,
+      "control_reviser_gap_mean": 0.75,
+      "treatment_reviser_gap_mean": -2.5,
+      "gap_reduction": 3.25
+    },
+    {
+      "chapter": 4,
+      "judge": "authority",
+      "judgments": 4,
+      "treatment_primary_minus_control_primary_mean": 4.75,
+      "control_reviser_gap_mean": 5.75,
+      "treatment_reviser_gap_mean": 5.0,
+      "gap_reduction": 0.75
+    }
+  ],
+  "generation_rows": [
+    {
+      "run": "repeat1",
+      "chapter": 1,
+      "arm": "control",
+      "primary_chars": 2658,
+      "final_chars": 2741,
+      "edit_blocks": 3,
+      "similarity": 0.9802,
+      "exact_noop": false,
+      "primary_wall": 70.467,
+      "reviser_wall": 173.247,
+      "primary_plus_reviser_wall": 243.714
+    },
+    {
+      "run": "repeat1",
+      "chapter": 1,
+      "arm": "treatment",
+      "primary_chars": 3008,
+      "final_chars": 3060,
+      "edit_blocks": 5,
+      "similarity": 0.9812,
+      "exact_noop": false,
+      "primary_wall": 55.734,
+      "reviser_wall": 129.541,
+      "primary_plus_reviser_wall": 185.275
+    },
+    {
+      "run": "repeat1",
+      "chapter": 2,
+      "arm": "control",
+      "primary_chars": 2960,
+      "final_chars": 2985,
+      "edit_blocks": 2,
+      "similarity": 0.9924,
+      "exact_noop": false,
+      "primary_wall": 58.04,
+      "reviser_wall": 80.996,
+      "primary_plus_reviser_wall": 139.036
+    },
+    {
+      "run": "repeat1",
+      "chapter": 2,
+      "arm": "treatment",
+      "primary_chars": 1835,
+      "final_chars": 1817,
+      "edit_blocks": 3,
+      "similarity": 0.9617,
+      "exact_noop": false,
+      "primary_wall": 45.459,
+      "reviser_wall": 153.094,
+      "primary_plus_reviser_wall": 198.553
+    },
+    {
+      "run": "repeat1",
+      "chapter": 3,
+      "arm": "control",
+      "primary_chars": 2272,
+      "final_chars": 2272,
+      "edit_blocks": 0,
+      "similarity": 1.0,
+      "exact_noop": true,
+      "primary_wall": 60.818,
+      "reviser_wall": 116.329,
+      "primary_plus_reviser_wall": 177.147
+    },
+    {
+      "run": "repeat1",
+      "chapter": 3,
+      "arm": "treatment",
+      "primary_chars": 2240,
+      "final_chars": 2228,
+      "edit_blocks": 3,
+      "similarity": 0.996,
+      "exact_noop": false,
+      "primary_wall": 50.009,
+      "reviser_wall": 104.494,
+      "primary_plus_reviser_wall": 154.503
+    },
+    {
+      "run": "repeat1",
+      "chapter": 4,
+      "arm": "control",
+      "primary_chars": 2070,
+      "final_chars": 1984,
+      "edit_blocks": 4,
+      "similarity": 0.9719,
+      "exact_noop": false,
+      "primary_wall": 46.009,
+      "reviser_wall": 63.272,
+      "primary_plus_reviser_wall": 109.281
+    },
+    {
+      "run": "repeat1",
+      "chapter": 4,
+      "arm": "treatment",
+      "primary_chars": 2666,
+      "final_chars": 2585,
+      "edit_blocks": 7,
+      "similarity": 0.9762,
+      "exact_noop": false,
+      "primary_wall": 54.802,
+      "reviser_wall": 180.624,
+      "primary_plus_reviser_wall": 235.426
+    },
+    {
+      "run": "repeat2",
+      "chapter": 1,
+      "arm": "control",
+      "primary_chars": 1972,
+      "final_chars": 2093,
+      "edit_blocks": 5,
+      "similarity": 0.9653,
+      "exact_noop": false,
+      "primary_wall": 62.908,
+      "reviser_wall": 148.671,
+      "primary_plus_reviser_wall": 211.579
+    },
+    {
+      "run": "repeat2",
+      "chapter": 1,
+      "arm": "treatment",
+      "primary_chars": 2209,
+      "final_chars": 2284,
+      "edit_blocks": 5,
+      "similarity": 0.9726,
+      "exact_noop": false,
+      "primary_wall": 54.073,
+      "reviser_wall": 111.145,
+      "primary_plus_reviser_wall": 165.218
+    },
+    {
+      "run": "repeat2",
+      "chapter": 2,
+      "arm": "control",
+      "primary_chars": 2023,
+      "final_chars": 1982,
+      "edit_blocks": 3,
+      "similarity": 0.9788,
+      "exact_noop": false,
+      "primary_wall": 73.678,
+      "reviser_wall": 98.503,
+      "primary_plus_reviser_wall": 172.181
+    },
+    {
+      "run": "repeat2",
+      "chapter": 2,
+      "arm": "treatment",
+      "primary_chars": 2385,
+      "final_chars": 2294,
+      "edit_blocks": 7,
+      "similarity": 0.9472,
+      "exact_noop": false,
+      "primary_wall": 59.753,
+      "reviser_wall": 167.395,
+      "primary_plus_reviser_wall": 227.148
+    },
+    {
+      "run": "repeat2",
+      "chapter": 3,
+      "arm": "control",
+      "primary_chars": 2260,
+      "final_chars": 2269,
+      "edit_blocks": 1,
+      "similarity": 0.998,
+      "exact_noop": false,
+      "primary_wall": 73.401,
+      "reviser_wall": 122.066,
+      "primary_plus_reviser_wall": 195.467
+    },
+    {
+      "run": "repeat2",
+      "chapter": 3,
+      "arm": "treatment",
+      "primary_chars": 2192,
+      "final_chars": 2178,
+      "edit_blocks": 4,
+      "similarity": 0.9904,
+      "exact_noop": false,
+      "primary_wall": 82.712,
+      "reviser_wall": 135.551,
+      "primary_plus_reviser_wall": 218.263
+    },
+    {
+      "run": "repeat2",
+      "chapter": 4,
+      "arm": "control",
+      "primary_chars": 1673,
+      "final_chars": 1525,
+      "edit_blocks": 4,
+      "similarity": 0.8737,
+      "exact_noop": false,
+      "primary_wall": 68.665,
+      "reviser_wall": 185.232,
+      "primary_plus_reviser_wall": 253.897
+    },
+    {
+      "run": "repeat2",
+      "chapter": 4,
+      "arm": "treatment",
+      "primary_chars": 1724,
+      "final_chars": 1633,
+      "edit_blocks": 5,
+      "similarity": 0.9646,
+      "exact_noop": false,
+      "primary_wall": 69.307,
+      "reviser_wall": 84.359,
+      "primary_plus_reviser_wall": 153.666
+    }
+  ]
+}

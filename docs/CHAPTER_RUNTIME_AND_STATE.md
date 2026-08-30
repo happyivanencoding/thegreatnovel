@@ -74,6 +74,8 @@ Preservation 默认依靠 Edit Locality，而不是 Desire / Surprise / Relation
 
 同日继续完成 `rich free-text Director → Curator → Primary → deterministic Atomic bypass Gate` 的冻结E2E：两次fresh、8章中Gate仅声明4次shape supported，但0/8实际PASS，最终Control 2457.403s、Treatment 2457.424s，等价零加速；Gate本身仅约2.5ms/章，瓶颈不是代码wall，而是free prose→typed evidence无法低成本可靠证明。更重要的是，7组strict Oracle看似可直出的Primary/Reviser pair经两轮匿名复核后，Story 14票为Reviser 10胜/Primary 4胜，Authority为Reviser 8胜/Primary 1胜/5平，0/7稳定质量等价。由此冻结：**Contract Gate只能证明其已覆盖的Authority，不证明Full Reviser无Reader/Story价值；Authority PASS不是skip-Reviser充分条件。** 当前Full Reviser平均131.3s/章、占Control wall约42.74%，但仍是value-bearing stage。不要扩大中文surface parser或新增LLM classifier；未来只有先使Primary稳定达到Reviser后的Story+Authority、让Reviser趋近no-op，才重新测试skip。完整报告：`books/real-exp-free-text-atomic-gate-skip-reviser-20260830-v1/RESULTS.md`。
 
+为避免旧case过拟合，又把“先让Primary接近Final”在两部**生成于Treatment冻结之后的新小说**上复验。Candidate 1 的5行self-check在新书1中把Primary Authority略提高，却让Reviser Authority增益从+8.125扩大到+12.375，0/8 exact no-op；Candidate 2 只确定性重投影Direct Result / State Change / Ending / Reader Release / Core Power / Permanent Boundary，在新书2中使Primary Story +2.812，却让Authority -2.125、Hard问题32→41，Reviser gap仍扩大，且Primary+Reviser反而慢4.47s/章。Luna-medium屏幕是唯一强速度信号：Reviser 133.3s→59.6s（约-55%），Story不降，但Authority 57.5 vs high 61.875、Hard问题9 vs3，按冻结规则停止。**因此当前不再用通用Primary自查或简单事实重复追求no-op；任何降档/skip候选先在derivation证明Primary→Reviser Story+Authority gap收敛，再冻结Treatment并用全新held-out小说验证。**完整报告：`books/real-exp-reviser-noop-upstream-heldout-20260830-v1/RESULTS.md`。
+
 ## 节点职责
 
 ### Director

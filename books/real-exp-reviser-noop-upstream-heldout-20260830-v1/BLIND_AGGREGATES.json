@@ -1,0 +1,54 @@
+{
+  "story": {
+    "control_primary": {
+      "mean": 85.0,
+      "first": 3,
+      "avg_rank": 2.375,
+      "hard_problem_count": 0
+    },
+    "treatment_primary": {
+      "mean": 83.375,
+      "first": 0,
+      "avg_rank": 2.625,
+      "hard_problem_count": 0
+    },
+    "control_reviser": {
+      "mean": 81.0,
+      "first": 2,
+      "avg_rank": 2.625,
+      "hard_problem_count": 0
+    },
+    "treatment_reviser": {
+      "mean": 83.875,
+      "first": 3,
+      "avg_rank": 2.375,
+      "hard_problem_count": 0
+    }
+  },
+  "authority": {
+    "control_primary": {
+      "mean": 69.75,
+      "first": 1,
+      "avg_rank": 3,
+      "hard_problem_count": 16
+    },
+    "treatment_primary": {
+      "mean": 71.625,
+      "first": 0,
+      "avg_rank": 3.125,
+      "hard_problem_count": 11
+    },
+    "control_reviser": {
+      "mean": 77.875,
+      "first": 2,
+      "avg_rank": 2.25,
+      "hard_problem_count": 9
+    },
+    "treatment_reviser": {
+      "mean": 84.0,
+      "first": 5,
+      "avg_rank": 1.625,
+      "hard_problem_count": 4
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "reviser-noop-upstream-heldout-final-v1",
+  "date": "2026-08-30",
+  "status": "COMPLETE_NO_PRODUCTION_CHANGE",
+  "candidate1": {
+    "protocol": "PROTOCOL.md",
+    "heldout": "heldout-new-novel",
+    "result": "HELDOUT_1_RESULTS.md",
+    "metrics": "HELDOUT_1_METRICS.json",
+    "verdict": "FAIL_REVISER_NOOP"
+  },
+  "candidate2": {
+    "protocol": "PROTOCOL_CANDIDATE_2.md",
+    "protocol_sha256": "E11BEFFE12F5016CA1DFB362631D3145212437A21C20BCA360B7D540C5E692E4",
+    "heldout": "heldout-new-novel-2",
+    "analysis": "heldout-new-novel-2/FINAL_ANALYSIS.json",
+    "blind": "heldout-new-novel-2/BLIND_SUMMARY.json",
+    "verdict": "FAIL_REVISER_NOOP_STORY_DIRECTIONAL_POSITIVE"
+  },
+  "medium_screen": {
+    "summary": "heldout-new-novel-2/medium-reviser-screen/summary.json",
+    "blind": "heldout-new-novel-2/medium-reviser-screen/BLIND_SUMMARY.json",
+    "high_wall_mean": 133.275,
+    "medium_wall_mean": 59.608,
+    "seconds_saved_per_reviser": 73.667,
+    "percent_reviser_wall_saved": 55.27,
+    "authority_high": {
+      "mean_score": 61.875,
+      "first_place": 6,
+      "hard_problems": 3
+    },
+    "authority_medium": {
+      "mean_score": 57.5,
+      "first_place": 2,
+      "hard_problems": 9
+    },
+    "verdict": "REJECT_AUTHORITY_REGRESSION"
+  },
+  "production_changed": false,
+  "final_report": "RESULTS.md"
+}

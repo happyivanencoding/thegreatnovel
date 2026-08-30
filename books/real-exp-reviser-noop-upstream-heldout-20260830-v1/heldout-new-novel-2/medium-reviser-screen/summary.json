@@ -1,0 +1,63 @@
+{
+  "schema_version": "candidate2-medium-reviser-screen-v1",
+  "rows": [
+    {
+      "run": "repeat1",
+      "chapter": 1,
+      "primary_wall": 55.734,
+      "high_reviser_wall": 129.541,
+      "medium_reviser_wall": 65.635
+    },
+    {
+      "run": "repeat1",
+      "chapter": 2,
+      "primary_wall": 45.459,
+      "high_reviser_wall": 153.094,
+      "medium_reviser_wall": 45.255
+    },
+    {
+      "run": "repeat1",
+      "chapter": 3,
+      "primary_wall": 50.009,
+      "high_reviser_wall": 104.494,
+      "medium_reviser_wall": 67.813
+    },
+    {
+      "run": "repeat1",
+      "chapter": 4,
+      "primary_wall": 54.802,
+      "high_reviser_wall": 180.624,
+      "medium_reviser_wall": 92.105
+    },
+    {
+      "run": "repeat2",
+      "chapter": 1,
+      "primary_wall": 54.073,
+      "high_reviser_wall": 111.145,
+      "medium_reviser_wall": 50.456
+    },
+    {
+      "run": "repeat2",
+      "chapter": 2,
+      "primary_wall": 59.753,
+      "high_reviser_wall": 167.395,
+      "medium_reviser_wall": 57.297
+    },
+    {
+      "run": "repeat2",
+      "chapter": 3,
+      "primary_wall": 82.712,
+      "high_reviser_wall": 135.551,
+      "medium_reviser_wall": 47.875
+    },
+    {
+      "run": "repeat2",
+      "chapter": 4,
+      "primary_wall": 69.307,
+      "high_reviser_wall": 84.359,
+      "medium_reviser_wall": 50.43
+    }
+  ],
+  "mean_high_reviser_wall": 133.275,
+  "mean_medium_reviser_wall": 59.608
+}

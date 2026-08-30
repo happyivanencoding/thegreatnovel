@@ -1,0 +1,1166 @@
+{
+  "schema_version": "heldout2-final-facts-fourway-blind-v1",
+  "judge_rows": 32,
+  "aggregates": {
+    "story": {
+      "control_primary": {
+        "mean_score": 82.438,
+        "first_place": 3,
+        "mean_rank": 2.812,
+        "hard_problems": 0
+      },
+      "treatment_primary": {
+        "mean_score": 85.25,
+        "first_place": 6,
+        "mean_rank": 2.062,
+        "hard_problems": 0
+      },
+      "control_reviser": {
+        "mean_score": 80.438,
+        "first_place": 2,
+        "mean_rank": 3.062,
+        "hard_problems": 0
+      },
+      "treatment_reviser": {
+        "mean_score": 85.25,
+        "first_place": 5,
+        "mean_rank": 2.062,
+        "hard_problems": 0
+      }
+    },
+    "authority": {
+      "control_primary": {
+        "mean_score": 29.75,
+        "first_place": 1,
+        "mean_rank": 3.062,
+        "hard_problems": 32
+      },
+      "treatment_primary": {
+        "mean_score": 27.625,
+        "first_place": 0,
+        "mean_rank": 3.438,
+        "hard_problems": 41
+      },
+      "control_reviser": {
+        "mean_score": 33.625,
+        "first_place": 9,
+        "mean_rank": 1.562,
+        "hard_problems": 15
+      },
+      "treatment_reviser": {
+        "mean_score": 33.312,
+        "first_place": 6,
+        "mean_rank": 1.938,
+        "hard_problems": 22
+      }
+    }
+  },
+  "rows": [
+    {
+      "blind_repeat": 1,
+      "run": "repeat1",
+      "chapter": 1,
+      "judge": "authority",
+      "ranking": [
+        "control_reviser",
+        "treatment_reviser",
+        "control_primary",
+        "treatment_primary"
+      ],
+      "scores": {
+        "control_primary": 7.0,
+        "control_reviser": 10.0,
+        "treatment_reviser": 8.0,
+        "treatment_primary": 5.0
+      },
+      "hard_problems": {
+        "control_primary": [
+          "力量尺把已排程的鸣阶6—9与10—18压成“再往上的人”，缺少明确公共坐标。",
+          "未直接说明夜间不能点火、敲击或奔跑，也未明确说明骨灯反闪代表危险正在靠近。"
+        ],
+        "control_reviser": [],
+        "treatment_reviser": [
+          "将幼兽写成骨角旁全是血，新增了 Authority 未明确授权的伤势结果。",
+          "力量释放写成“鸣阶6左右”，未完整复现已批准的鸣阶6—9精确区间。"
+        ],
+        "treatment_primary": [
+          "将幼兽写成骨角旁全是血，新增了 Authority 未明确授权的伤势结果。",
+          "遗漏鸣阶6—9与10—18的明确公共坐标。",
+          "把骨灯反闪解释为“附近的震动已经乱了”，偏离已批准的“危险正在靠近”。"
+        ]
+      },
+      "reason": "B完整落实了鸣阶0、1—3、6—9、10—18的公共力量尺，并明确释放夜间禁火、敲击、奔跑和骨灯反闪意味着危险靠近。C保留了鸣阶0、三名鸣阶3护卫失去站立、随车坠落、笼索下滑以及下一章是否下坑的未决状态，但新增了幼兽受伤结果。C的“鸣阶6左右”比冻结的6—9精度略弱。A的行动、直接结果、稳定差事代价、兽牙指向北方且来处未知都正确，但遗漏了完整的6—9和10—18坐标，也没有充分兑现城外危险常识。D同样保留鸣阶0和笼索下滑，却同时遗漏力量坐标，并错误替换了骨灯反闪的读者含义。四者都没有提前让陆野渡跳入坑底、获得骨痕或改变鸣阶。故主要差异是必需 Reader Release 是否完整，以及是否新增未经授权的伤势结果。",
+      "blind_key": {
+        "A": "control_primary",
+        "B": "control_reviser",
+        "C": "treatment_reviser",
+        "D": "treatment_primary"
+      },
+      "wall_seconds": 133.938
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat1",
+      "chapter": 1,
+      "judge": "story",
+      "ranking": [
+        "control_primary",
+        "treatment_reviser",
+        "control_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "control_primary": 88.0,
+        "treatment_reviser": 84.0,
+        "treatment_primary": 75.0,
+        "control_reviser": 78.0
+      },
+      "hard_problems": {},
+      "reason": "A把陆野渡拒绝登记房、带包追车、以杂活身份上车写成连续动作，私人欲望和主动选择最落地。它对乱响地的规则只在冲突真正需要时交代，随后护卫失足、车队失控、主角坠坑的因果清楚，节奏一路加压。B的“留在这儿记一辈子货，也还是鸣阶0”有男频上升欲，但也更像替读者总结主旨，等级说明略多，削弱了现场感。D比A重复补充夜行禁令、等级段位和主角无把握，信息虽完整，却让坠坑前的推进多了报告式解释。C主体接近B，但“俺也去外头一趟”与此前叙述语体突兀，像未清理的口吻残留，直接破坏沉浸。四篇结尾都成功留下幼兽、笼索和坑底的下一步钩子，但A的危机和选择最像读者愿意立刻翻页去看的局面。",
+      "blind_key": {
+        "A": "control_primary",
+        "B": "treatment_reviser",
+        "C": "treatment_primary",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 12.863
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat1",
+      "chapter": 2,
+      "judge": "authority",
+      "ranking": [
+        "control_reviser",
+        "treatment_reviser",
+        "control_primary",
+        "treatment_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 92.0,
+        "treatment_primary": 86.0,
+        "control_primary": 88.0,
+        "control_reviser": 94.0
+      },
+      "hard_problems": {
+        "treatment_reviser": [
+          "结尾幼兽停在另一石台且明确没有靠近，陆野渡先行上爬，未形成“带着脱笼幼兽离开坑底”的明确行动落点。"
+        ],
+        "treatment_primary": [
+          "永久震形骨痕未被明确命名或落定，只写痕迹逐渐沉入身体，状态变化不够确定。",
+          "结尾同样没有明确落实陆野渡带着幼兽离开坑底。"
+        ],
+        "control_primary": [
+          "未明确写出陆野渡仍为鸣阶0，遗漏冻结状态。",
+          "新增右臂暂时失去使用能力，属于 Authority 未授权的新伤势结果。",
+          "幼兽“跟着离开”较确定地推进了带离结果，压过了是否接受陆野渡带离仍未知的边界。"
+        ],
+        "control_reviser": [
+          "新增右臂暂时失去使用能力，属于 Authority 未授权的新伤势结果。"
+        ]
+      },
+      "reason": "四稿都正确落实了陆野渡追上兽笼、借强震站稳发力、割断笼索、利用坑壁反震杀死鸣兽和幼兽脱笼。D明确保留鸣阶0，并让幼兽隔着距离沿上行路线移动，既推进离坑压力又没有直接写成接受关系，因此整体最好。D唯一硬问题是新增右臂暂时失用，冻结 Authority 只批准原有伤势与永久震形骨痕。A准确写出第一道永久震形骨痕，且没有新增伤势或正式升级，但结尾把幼兽留在另一石台，带离行动落点弱于D。C的动作结果完整，也保留了幼兽戒备，却遗漏陆野渡仍为鸣阶0，并新增右臂失用。C末尾“跟着离开”还把尚未结算的接受带离推进得过实。B没有明确落定永久震形骨痕，且同样未明确落实带着幼兽离开坑底，因此排在最后。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "treatment_primary",
+        "C": "control_primary",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 96.076
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat1",
+      "chapter": 2,
+      "judge": "story",
+      "ranking": [
+        "control_reviser",
+        "control_primary",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "treatment_primary": 78.0,
+        "control_reviser": 89.0,
+        "treatment_reviser": 83.0,
+        "control_primary": 87.0
+      },
+      "hard_problems": {},
+      "reason": "B把陆野渡“先断索、再反震杀兽、最后亲手撬门放兽”的主动选择完整落地，救兽不是偶然脱笼，私人欲望和关系回报更扎实。D保留了这条更完整的救援链，且结尾直接写幼兽跟着离开，追读钩子和同行关系更明确；但这也略早替幼兽做了决定，少了B里“隔着距离同路”的戒备张力。C的反杀更合理：他贴低避开正面，鸣兽自己撞壁吃反震，动作因果清楚；但幼兽脱困主要靠翻笼撞断门轴，主角的救援兑现弱一层。A的问题最大是主角把震劲“压进坑壁”后直接反杀，能力从刚学会站稳跳到主动蓄反震，爽点有了却显得升级过快。A和C的结尾都保留幼兽不靠近的克制关系，但没有B/D那种主角明确撬门、给出自由的奖励感。B的“震形”“仍是鸣阶0”有一点总结式说明，不过它同时交代了所得、代价和未跨阶限制，仍服务于刚完成的战斗。四篇的共同重复问题是多次强调震动、腿骨和脊柱，但B/D靠连续目标变化抵消得最好。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_reviser",
+        "C": "treatment_reviser",
+        "D": "control_primary"
+      },
+      "wall_seconds": 15.17
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat1",
+      "chapter": 3,
+      "judge": "authority",
+      "ranking": [
+        "control_primary",
+        "control_reviser",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "control_primary": -1.0,
+        "treatment_reviser": -2.0,
+        "control_reviser": -1.0,
+        "treatment_primary": -3.0
+      },
+      "hard_problems": {
+        "control_primary": [
+          "将残索具体写在沉角前爪边，超出冻结的未知边界。"
+        ],
+        "treatment_reviser": [
+          "将残索具体写成后腿附近，超出冻结的未知边界。",
+          "将兽牙磨损具体写成牙口边缘的磨痕，超出已批准信息。"
+        ],
+        "control_reviser": [
+          "将残索具体写在沉角前爪边，超出冻结的未知边界。"
+        ],
+        "treatment_primary": [
+          "将残索具体写成后腿附近，超出冻结的未知边界。",
+          "将兽牙磨损具体写成牙口边缘的磨痕，超出已批准信息。",
+          "把沉角直接称为已经成立的伴鸣兽，提前确定尚未完成的关系状态。"
+        ]
+      },
+      "reason": "A与C正文完全相同，均落实了裴氏追索、陆野渡以猎获和旧骨刀拒交、赫连青见解开残索以及沉角自行跟随的核心链条。两者也都保留鸣阶0、震形仍依赖乱响地和沉角未真正信任等边界，结尾没有提前揭示兽牙来处，只把北路截断作为下一章压力。但A、C都把残索写在沉角前爪边，冻结Curator明确未授权残索的具体位置，因此各扣一分。B在筹码对白和父亲兽牙的直接确认上更完整，且核心结果、所有权边界、Power Permanent Boundary与跨章时点均未被改写。不过B把残索具体写成后腿附近，并把磨损具体写成牙口边缘的磨痕，因此低于A、C。D除了承袭B的两处未经授权具体位置，还把沉角直接称为已经成立的伴鸣兽，提前把尚未确定的关系状态写成事实。四稿都没有把沉角真正信任陆野渡写实，也没有虚构价格、登记、正式所有权或震形脱离乱响地后的稳定能力。因此按硬事实边界排序为A、C、B、D，A与C是并列同稿，先后仅用于满足固定数组格式。",
+      "blind_key": {
+        "A": "control_primary",
+        "B": "treatment_reviser",
+        "C": "control_reviser",
+        "D": "treatment_primary"
+      },
+      "wall_seconds": 107.524
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat1",
+      "chapter": 3,
+      "judge": "story",
+      "ranking": [
+        "treatment_primary",
+        "treatment_reviser",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "control_reviser": 84.0,
+        "control_primary": 84.0,
+        "treatment_primary": 90.0,
+        "treatment_reviser": 88.0
+      },
+      "hard_problems": {},
+      "reason": "C最强，陆野渡先明确拿猎获和骨刀交换、再亲手放下骨刀解索，私人选择、代价和主动性都更完整。沉角选择带路而非黏到主角脚边，也让收服感更有野性和说服力。C保留了震形与沉角同步的动作反馈，Power Fantasy不是口头宣告，而是战斗中的可见异象。D与C主干相同，但删去这处同步感，并把残索位置写得更泛，伴鸣关系的落点稍弱。A、B里赫连青见代为解索，主角的关键行动被分走，且从对峙、解索到沉角选择的停顿较多，高潮略显拖沓。A与B文本完全相同，因此阅读体验与分数相同；两者仍有“它自己选的”的公开证明和北路断绝钩子，但不如C把选择落实在主角手上。",
+      "blind_key": {
+        "A": "control_reviser",
+        "B": "control_primary",
+        "C": "treatment_primary",
+        "D": "treatment_reviser"
+      },
+      "wall_seconds": 17.86
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat1",
+      "chapter": 4,
+      "judge": "authority",
+      "ranking": [
+        "treatment_reviser",
+        "control_reviser",
+        "treatment_primary",
+        "control_primary"
+      ],
+      "scores": {
+        "control_primary": 4.0,
+        "treatment_primary": 5.0,
+        "control_reviser": 6.0,
+        "treatment_reviser": 8.0
+      },
+      "hard_problems": {
+        "control_primary": [
+          "将低阶兽核与纯鸣砂明确写成陆野渡原本已持有，越过了权威保留的来源、归属与持有状态未知。",
+          "补写黑脊猎人带人进湖、路标由其留下并被兽齿反复磨过等未授权旧史。"
+        ],
+        "treatment_primary": [
+          "先断言眼下只有回驿站这一条路，后文又走无声湖外旧猎道，造成可行路线事实矛盾。",
+          "补写沉角伤势未愈、后腿发紧等冻结资料未确认的状态。",
+          "补写黑脊猎人在进湖前传过消息这一具体旧史，超出已授权的失联事实。"
+        ],
+        "control_reviser": [
+          "将低阶兽核与纯鸣砂明确写成陆野渡原本已持有，越过了权威保留的来源、归属与持有状态未知。",
+          "补写黑脊猎人带人进湖、路标由其留下并被兽齿反复磨过等未授权旧史。"
+        ],
+        "treatment_reviser": [
+          "先断言眼下只有回驿站这一条路，后文又走无声湖方向，造成可行路线事实矛盾。",
+          "补写沉角伤势未愈、后腿发紧等冻结资料未确认的状态。",
+          "补写黑脊猎人在进湖前传过消息这一具体旧史，超出已授权的失联事实。"
+        ]
+      },
+      "reason": "D保留了鸣阶0到鸣阶2、永久骨痕、沉角主动同行、放弃稳定差事和远处无声波纹等核心结果，且没有明确指定资源归属。C的结算与结尾准确，但把资源写成陆野渡既有物，并补写了黑脊猎人和路标的具体旧史。B同样完成主要状态变化，却新增沉角伤势、失联消息细节，并把回驿站写成唯一可行道路。A与C的问题相同，同时还加入赫连青见早已预判选择的未授权心理判断。四版都没有进入湖区、交战、获得兽核或揭示兽牙真相。白鱼王兽核始终只是高价值机会，没有被错误结算为所得。关系边界总体正确，沉角仍是独立生命而非已归属资产。",
+      "blind_key": {
+        "A": "control_primary",
+        "B": "treatment_primary",
+        "C": "control_reviser",
+        "D": "treatment_reviser"
+      },
+      "wall_seconds": 127.413
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat1",
+      "chapter": 4,
+      "judge": "story",
+      "ranking": [
+        "control_reviser",
+        "control_primary",
+        "treatment_primary",
+        "treatment_reviser"
+      ],
+      "scores": {
+        "treatment_reviser": 81.0,
+        "treatment_primary": 83.0,
+        "control_primary": 88.0,
+        "control_reviser": 92.0
+      },
+      "hard_problems": {},
+      "reason": "D开场就用兽群踩翻驿车、伙计喊话和固定职位，把安稳退路与北上风险摆到主角面前，陆野渡拒绝差事的主动性最有落点。它给兽牙线索、白鱼王高价值和鸣阶突破三重即时回报，升级后的踩石裂缝也让力量展示不只是口头报数。C与D的主线张力相同，但C多出一段解释震形此前如何使用、如何反噬的总结，节奏稍滞，且“黑脊猎人就是为那片湖去的”不如D直接说去找人清楚。B比A多了旧猎道、天黑前赶路等具体行进目标，突破后“鸣阶二”的停顿也比A直接报“鸣阶2”少一点程序感。A的选择和关系互动并不差，但前段主要靠赫连青见转述断路与报酬，现场压力、公共见证和主角当场拒绝安稳生活的爽点都弱于C、D。四篇结尾的无声湖波纹都能吊住下一章，但D在去湖之前完成了选择、获利、升级和展示，读者续读欲最完整。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "treatment_primary",
+        "C": "control_primary",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 18.34
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat2",
+      "chapter": 1,
+      "judge": "authority",
+      "ranking": [
+        "treatment_reviser",
+        "control_reviser",
+        "treatment_primary",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_primary": 6.0,
+        "control_primary": 5.0,
+        "treatment_reviser": 9.0,
+        "control_reviser": 7.0
+      },
+      "hard_problems": {
+        "treatment_primary": [
+          "未明确写出押运对象是幼年震鬣兽，仅写“那头兽”。",
+          "公共力量坐标漏掉鸣阶6—9与鸣阶10—18，未完整兑现已排程的力量常识释放。",
+          "新增“每月领的钱也比帮工多”的未授权金钱事实。"
+        ],
+        "control_primary": [
+          "未明确写出押运对象是幼年震鬣兽，仅写“幼兽”。",
+          "公共力量坐标漏掉鸣阶10—18。",
+          "骨灯反闪后没有直接说明这是危险正在靠近的信号。",
+          "“普通人遇上了，跑得再快也没用”把危险结果绝对化，超出已批准事实强度。"
+        ],
+        "treatment_reviser": [
+          "新增“每月领的钱也比帮工多”的未授权金钱事实。"
+        ],
+        "control_reviser": [
+          "未明确写出押运对象是幼年震鬣兽，仅写“幼兽”。",
+          "“能拿到这种位置的人不多”是未获授权的职位稀缺判断。"
+        ]
+      },
+      "reason": "C最完整地落实了幼年震鬣兽、北方兽牙线索、拒绝登记差事、随队坠入乱响地和笼索继续下滑。C还明确释放鸣阶0、1—3、6—9、10—18的公共坐标，并保留鸣阶0、无骨痕、尚未跳坑的永久边界。D次之，完整写出危险信号、力量坐标和回驿站道路断裂，结尾也没有提前跳入坑底。D的问题是对象名称不完整，并擅自判断长期登记位置稀缺。A的事件因果和结尾基本正确，但漏掉6—9与10—18力量坐标，也没有明确写出震鬣兽，并新增了登记差事薪酬高于帮工的事实。B同样保持了坠落和笼索下滑，却同时缺少正式兽种名、鸣阶10—18坐标和骨灯反闪的直接危险说明。B还把普通人面对鸣兽写成“跑得再快也没用”，强度超过权威。四稿都没有提前获得新力量、留下骨痕或真正跳入坑底，也没有擅自释放裴氏与黑脊部背景。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_primary",
+        "C": "treatment_reviser",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 92.43
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat2",
+      "chapter": 1,
+      "judge": "story",
+      "ranking": [
+        "control_primary",
+        "treatment_reviser",
+        "treatment_primary",
+        "control_reviser"
+      ],
+      "scores": {
+        "treatment_reviser": 82.0,
+        "control_primary": 88.0,
+        "treatment_primary": 76.0,
+        "control_reviser": 68.0
+      },
+      "hard_problems": {},
+      "reason": "B的推进最利落，登记房与北路兽牙之间的选择很清楚，进入乱响地后每一次事故也都直接推着主角往坑底去。它没有在危险正起时停下来做大段等级说明，所以鸣兽、地裂、笼车下滑形成的是连续压迫，而不是世界观讲解。A让主角在坠落前主动扑向兽笼、抓住笼索，私人牵引和行动欲更强，这是它紧跟B的关键；但“鸣阶1到18”的完整分层明显打断了现场。C几乎保留了A的优点，但“俺也去外头看看”在此前的语体中突兀，像生成或校改残留，会直接破坏读者代入。D的动作骨架本来接近B，却额外加入“危险正在靠近的信号”“没有凭普通身体进入坑底的把握”“回驿站的路，也已经断在坑顶”等解释性句子，把读者已看懂的风险重复翻译成报告。四篇的悬念都成立，但B最少程序味，A的主角主动性最能弥补其说明负担，C和D则分别输在语体失真与重复证明。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "control_primary",
+        "C": "treatment_primary",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 15.349
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat2",
+      "chapter": 2,
+      "judge": "authority",
+      "ranking": [
+        "treatment_reviser",
+        "control_reviser",
+        "control_primary",
+        "treatment_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 0.0,
+        "treatment_primary": 3.0,
+        "control_primary": 1.0,
+        "control_reviser": 0.0
+      },
+      "hard_problems": {
+        "treatment_reviser": [],
+        "treatment_primary": [
+          "擅自新增幼兽左后腿受伤这一结果",
+          "提前将幼兽确定为“沉角”，越过当前仅确认“幼兽”的关系与命名边界",
+          "用“震动停不下来、留在身体里”替代并模糊了必须落地的永久震形骨痕"
+        ],
+        "control_primary": [
+          "将震动被身体压回脚下、坑壁积震被借出写成额外能力机制，超出已冻结的身体适配与借坑壁反震边界"
+        ],
+        "control_reviser": []
+      },
+      "reason": "A完整落实了追笼、强震立足、割断笼索、鸣兽被坑壁反震撞死、幼兽脱笼、坑底继续塌陷及裴氏追索压力。A没有把幼兽是否接受陆野渡带离提前结算，幼兽的移动仍由塌陷危险推动。D的事件顺序、鸣阶0边界和永久震形骨痕均成立，末尾幼兽隔距跟随仍可解释为共同逃离，未构成明确关系确定。C整体也成立，但“身体把震动压回脚下”与“借出坑壁积着的震动”增加了冻结 Authority 未明确授权的能力机制。B新增幼兽后腿受伤，属于未授权结果。B又提前使用“沉角”并写成必须收回的既成身份关系，违反当前未知与跨章 timing。B最后没有明确落地永久震形骨痕，且“震动停不下来”模糊了环境结束后只留下永久骨痕的边界。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "treatment_primary",
+        "C": "control_primary",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 82.94
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat2",
+      "chapter": 2,
+      "judge": "story",
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 91.0,
+        "treatment_primary": 88.0,
+        "control_reviser": 85.0,
+        "control_primary": 81.0
+      },
+      "hard_problems": {},
+      "reason": "A的动作链最有劲：陆野渡先适应震动、再断索、最后借铁笼和坑壁反震反杀，主角是在绝境里主动把环境变成武器。它救幼兽后又回头砸开生路，私人选择和关系推进都落在具体动作上，而不是口头宣言。B补上了幼兽伤腿与“沉角必须收回来”的后续钩子，利益和追捕更明确，但“眼前最直接的死路……”这类总结句削弱了现场感，且中段解释身体变化略多。C整体清楚，但铁笼脱困到鸣兽入场之间的因果更平，反杀只是“一掌推偏半尺”便连续震死，爽点不如A的笼架撞兽来得扎实。D在C的基础上多出“它脱出来了”“坑壁积着的震动被他借了出来”等重复确认，像在替读者复述已经看懂的画面。四篇里A最少程序化解释，危机升级、收获骨痕、救兽选择和坑口追兵能连续推着人往下读。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "treatment_primary",
+        "C": "control_reviser",
+        "D": "control_primary"
+      },
+      "wall_seconds": 20.767
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat2",
+      "chapter": 3,
+      "judge": "authority",
+      "ranking": [
+        "control_reviser",
+        "control_primary",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "treatment_primary": 5.0,
+        "control_reviser": 10.0,
+        "treatment_reviser": 7.0,
+        "control_primary": 9.0
+      },
+      "hard_problems": {
+        "treatment_primary": [
+          "将解开残索具体写成“切开”，超出权威只允许保留“解开残索”的操作边界",
+          "写沉角能听见乱响地里别人听不见的东西，新增未授权能力与知识"
+        ],
+        "control_reviser": [],
+        "treatment_reviser": [
+          "将解开残索具体写成“切开”，超出权威只允许保留“解开残索”的操作边界"
+        ],
+        "control_primary": [
+          "结尾未明确写赫连青见认出兽牙磨损痕迹，削弱了冻结结尾要求的识别事实与北路信息之间的落点"
+        ]
+      },
+      "reason": "B最完整落实了裴氏追索、陆野渡拒交、沉角攻击与靠近、赫连青见要求解开残索以及沉角自行选择跟随。B没有新增价格、赔偿、登记或正式所有权手续，也明确保留沉角尚未真正信任陆野渡。B还直接写出赫连青见认得兽牙磨损，并将其连接到北路被兽群截断，跨章推动最清楚。D的主事件和状态变化都正确，但结尾没有明确说明赫连青见认出了磨损痕迹，因此信息落点弱于B。C保留了主要关系与结尾事实，但把解开残索写成“切开”，越过了冻结的操作未知边界。A除同样写成“切开”外，还新增沉角能听见别人听不见的东西，属于未授权能力。A与C都正确保留了沉角主动跟随而非被主角单方面占有，也没有改变鸣阶0或震形永久边界。四稿均未实质篡改钱财、归属、胜负或跨章未解问题，差异主要来自具体操作和结尾事实的授权精度。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_reviser",
+        "C": "treatment_reviser",
+        "D": "control_primary"
+      },
+      "wall_seconds": 61.983
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat2",
+      "chapter": 3,
+      "judge": "story",
+      "ranking": [
+        "treatment_primary",
+        "treatment_reviser",
+        "control_primary",
+        "control_reviser"
+      ],
+      "scores": {
+        "treatment_reviser": 90.0,
+        "treatment_primary": 93.0,
+        "control_primary": 84.0,
+        "control_reviser": 82.0
+      },
+      "hard_problems": {},
+      "reason": "B把沉角“能听见乱响地里别人听不见的东西”和“伴鸣兽”落进场景，主角争来的不只是宠兽，更是能继续兑现的能力与战力，爽点更实。B结尾用兽牙磨痕接北路异状，悬念有具体钩子，不像A那样先说北路被截断、下一句又重复“兽群把路截断了”。A的主角欲望表达最直接，“我想带它走”与“不替你回笼”让主动选择和人与兽的关系都很清楚，只是尾钩处理稍钝。C的打斗和震形共鸣更有画面，但“解开”残索削弱了陆野渡当众拔刀断索、正式得罪裴氏的动作爆点，整体也多了几段解释性停顿。D与C基本同体，却多出“那圈磨损，她认得”这种替读者代为归纳的句子，报告感更重，收束也更拖。四篇里真正有效的胜负点不是篇幅，而是主角是否亲手把选择变成公开代价，以及沉角跟随能否立刻承诺下一段更大的力量和危机。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "treatment_primary",
+        "C": "control_primary",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 15.955
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat2",
+      "chapter": 4,
+      "judge": "authority",
+      "ranking": [
+        "treatment_reviser",
+        "control_reviser",
+        "treatment_primary",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 100.0,
+        "treatment_primary": 86.0,
+        "control_primary": 74.0,
+        "control_reviser": 93.0
+      },
+      "hard_problems": {
+        "treatment_reviser": [],
+        "treatment_primary": [
+          "将低阶兽核和纯鸣砂明确写成已经放在腰侧，越过了权威未说明其来源、归属及此前是否在手中的边界。",
+          "新增“之前每次催动都先撞伤自己再撞向别人”的未授权旧史与机制结果。",
+          "将兽核写成失去光泽并放下，额外确定了资源消耗结果。"
+        ],
+        "control_primary": [
+          "新增“再走两日”的跨章时间数字，冻结 Authority 未授权该时长。",
+          "把父亲写成“什么都没说”，强于 Canon 仅确认他没有讲清途中发生了什么。",
+          "用“那就走无声湖”由赫连青见替陆野渡落定路线，弱化了主角正式作出选择的边界。"
+        ],
+        "control_reviser": [
+          "赫连青见用“那就走无声湖”替陆野渡说出路线结论，未完全保持她只提供信息、不替主角决定的关系边界。"
+        ]
+      },
+      "reason": "A完整落实了兽群截路、稳定差事取舍、震形固定、鸣阶2、沉角同行、兽牙关联和无声湖结尾，且保留了未知事项。D对永久骨痕和鸣阶精确位置的落点最清楚，但“那就走无声湖”让赫连青见承担了本应由陆野渡完成的路线决定。B虽然补足了鸣阶二的现场校准，却擅自确定资源已经在陆野渡腰侧，并追加了未授权的旧有催动结果。B还把兽核写成失去光泽，额外改变了资源状态。C除同样让赫连青见替主角落定路线外，又加入“再走两日”的未授权跨章时间。C把父亲过去写成“什么都没说”，超出了 Canon 仅确认父亲没有讲清经历的范围。四稿都没有提前获得白鱼王兽核、进入湖区或揭开兽牙真相，Power Permanent Boundary总体没有被改写。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "treatment_primary",
+        "C": "control_primary",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 115.649
+    },
+    {
+      "blind_repeat": 1,
+      "run": "repeat2",
+      "chapter": 4,
+      "judge": "story",
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_primary",
+        "control_reviser"
+      ],
+      "scores": {
+        "treatment_reviser": 88.0,
+        "control_primary": 78.0,
+        "control_reviser": 69.0,
+        "treatment_primary": 83.0
+      },
+      "hard_problems": {},
+      "reason": "A最像读者会顺着翻下去的终章：陆野渡先稳住新力量，再在父亲兽牙、驿站安稳生活和无声湖线索之间主动选路，沉角自己先走又回头，关系与选择都落到了动作上。D保留了同样有效的私人欲望和沉角互动，但“鸣阶精确位置，停在了二”以及对震形旧机制的解释，明显把战力升级写成了程序汇报。B的局面、危险和奖励交代清楚，白鱼王兽核与父亲线索也能拉动续读，但“鸣阶精确位置二”直接出戏，且主角最后的选择更像用一句道理总结出来。C删得更利落，却把“永久骨痕”这种结论硬塞进场景，像作者在替读者登记设定；它还失去了A、D里沉角自主选择带来的关系回报。A里“我不替你做主”不是漂亮二段论，而是主角对沉角的实际尊重，随后沉角回头便形成了可信的小奖励。四篇的湖面收尾都有效，但A前面已把力量、谜团、同伴和去路压到同一个决定里，因此悬念最厚。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "control_primary",
+        "C": "control_reviser",
+        "D": "treatment_primary"
+      },
+      "wall_seconds": 12.259
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat1",
+      "chapter": 1,
+      "judge": "authority",
+      "ranking": [
+        "control_reviser",
+        "treatment_reviser",
+        "control_primary",
+        "treatment_primary"
+      ],
+      "scores": {
+        "control_reviser": 0.0,
+        "control_primary": 4.0,
+        "treatment_primary": 7.0,
+        "treatment_reviser": 3.0
+      },
+      "hard_problems": {
+        "control_reviser": [],
+        "control_primary": [
+          "将鸣阶6—9可独自应对小型鸣兽或短途出城、鸣阶10—18为普通职业修士的公共坐标压成“再往上的人”，既遗漏必需 Reader Release，也把3级以上一概处理成同一门槛",
+          "遗漏城外夜间不得随意点火、敲击或奔跑，以及骨灯异常反闪代表危险靠近的直接说明"
+        ],
+        "treatment_primary": [
+          "遗漏鸣阶6—9与鸣阶10—18的精确公共力量坐标，不能充分兑现本章要求的力量尺释放",
+          "“七辆”“十几道”等未授权数字扩展现场事实",
+          "“赵掌柜前几日提过”、帮工眼神变化、每月钱与冬季炭火等补写了冻结边界未授权的旧史、社会反应和收益细节",
+          "写一名鸣阶3护卫直接摔进裂缝，并称有“好几头”鸣兽靠近，增加未批准的个体结果与数量"
+        ],
+        "treatment_reviser": [
+          "“七辆”“十几道”等未授权数字扩展现场事实",
+          "“赵掌柜前几日提过”、帮工眼神变化、每月钱与冬季炭火等补写了冻结边界未授权的旧史、社会反应和收益细节",
+          "写一名鸣阶3护卫直接摔进裂缝，增加未批准的个体结果"
+        ]
+      },
+      "reason": "A完整落实了驿队抵达、兽牙指向北方、拒绝长期差事、跟队出城、乱响地塌陷、随车坠落和笼索继续下滑，且明确保留陆野渡鸣阶0、无新力量和未知来处。A还直接释放了鸣阶0、鸣阶1—3、鸣阶6—9、鸣阶10—18及城外危险常识，没有新增钱财归属或跨章结果。D保留了主要事件和正确结尾，并且比B、C更完整地释放了精确力量尺与夜间危险规则。D的扣分来自七辆、十几道等未授权数字，以及“前几日提过”、炭火和护卫坠入裂缝等未授权旧史、收益和个体结果。B的主线事实基本正确，也没有提前让陆野渡跳入坑底或获得能力。B把关键力量门槛写成“再往上的人”，遗漏6—9和10—18的公共坐标，并未直接兑现完整的城外危险常识。C除同样缺少精确力量坐标外，还加入七辆车、十几道笼索、具体差事旧史与收益、帮工反应及护卫坠裂缝等额外事实。C因此在所需 Release、未授权数字和未授权结果三方面的问题最多。",
+      "blind_key": {
+        "A": "control_reviser",
+        "B": "control_primary",
+        "C": "treatment_primary",
+        "D": "treatment_reviser"
+      },
+      "wall_seconds": 118.969
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat1",
+      "chapter": 1,
+      "judge": "story",
+      "ranking": [
+        "treatment_primary",
+        "control_primary",
+        "treatment_reviser",
+        "control_reviser"
+      ],
+      "scores": {
+        "treatment_primary": 88.0,
+        "control_reviser": 79.0,
+        "treatment_reviser": 83.0,
+        "control_primary": 86.0
+      },
+      "hard_problems": {},
+      "reason": "A的开场把兽撞笼、骨灯异常、牲口躁动连成一条危险升级线，读者很快就被拖进场面。它以拒绝登记房的稳定人生作为主角主动选择，且结尾铁笼再坠一次，比D的“笼索又滑”更有立即续读欲。D胜在父亲遗物明确把出城行为变成陆野渡的私人欲望，且删掉了不必要的高阶位说明，阅读更顺。D的主要短板是终局停在观察和握刀，险境很足，但主角尚未给出下一步动作。C几乎具备A的场面张力，却插入“鸣阶6、10到18”的等级说明，像设定报告，削弱了塌陷现场的紧迫感。B的父亲线和出城准备也有效，但“这世上大多数人”“鸣阶0到18”的整段解释最重，既重复证明弱者处境，也有明显AI总结味。四篇都还没有真正兑现Power Fantasy或公开证明，当前最有效的奖励只是主角放弃安稳、主动踏入未知。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_reviser",
+        "C": "treatment_reviser",
+        "D": "control_primary"
+      },
+      "wall_seconds": 15.685
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat1",
+      "chapter": 2,
+      "judge": "authority",
+      "ranking": [
+        "control_reviser",
+        "treatment_reviser",
+        "treatment_primary",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_primary": 92.0,
+        "control_primary": 89.0,
+        "treatment_reviser": 96.0,
+        "control_reviser": 100.0
+      },
+      "hard_problems": {
+        "treatment_primary": [
+          "未明确命名已发生的永久震形骨痕",
+          "结尾未展示幼兽离开塌陷区，带离压力落点较弱"
+        ],
+        "control_primary": [
+          "“跟着离开”把幼兽是否接受陆野渡带离的未知提前收窄为跟随"
+        ],
+        "treatment_reviser": [
+          "结尾未展示幼兽离开塌陷区，带离压力落点较弱"
+        ],
+        "control_reviser": []
+      },
+      "reason": "D最完整地落实了追上铁笼、割断笼索、借坑壁反震撞死鸣兽、幼兽脱笼和坑底继续塌陷等事实。D明确保留陆野渡仍为鸣阶0，同时写出震形痕迹未消失，并让幼兽隔着距离向上移动，没有把关系接受提前结算。C的力量动作、鸣阶0和永久震形骨痕命名都准确，且幼兽仍未靠近陆野渡。C的问题是结尾停在幼兽留在另一侧石台，尚未形成离开塌陷区的动作落点。A与C基本相同，但没有直接命名永久震形骨痕，状态变化的事实强度较弱。B补足了开笼和带离动作，但“跟着离开”把幼兽是否接受陆野渡带离的未知提前收窄。四稿都没有改变鸣兽死亡、幼兽脱笼、裴氏追索或鸣阶位置，主要差异在永久骨痕的明确度和跨章带离时点。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_primary",
+        "C": "treatment_reviser",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 85.852
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat1",
+      "chapter": 2,
+      "judge": "story",
+      "ranking": [
+        "control_primary",
+        "control_reviser",
+        "treatment_primary",
+        "treatment_reviser"
+      ],
+      "scores": {
+        "control_reviser": 88.0,
+        "treatment_primary": 82.0,
+        "control_primary": 90.0,
+        "treatment_reviser": 75.0
+      },
+      "hard_problems": {},
+      "reason": "C与A的主体动作、危机和救兽选择同样扎实，但C删去“仍是鸣阶0”的重复证明，并明确写出幼兽“跟着离开”，关系推进和章末续读钩子更落地。A的“我不把你塞回去”很有人味，陆野渡先救再让路的私人选择也成立，只是中段刚展示震形后立刻报阶位，略有系统结算感。B的节奏更利落，断索、放兽、反震杀敌一线推进清楚，但“连鸣阶3护卫都站不住”像临时补设定，“幼兽当然听不懂”也替读者下了判断。D把陆野渡原本主动把震劲压入坑壁、正面打出的反杀，改成贴低让开后让鸣兽撞墙，Power Fantasy和主角主动性明显变弱。D又把骨痕命名为“第一道永久的震形骨痕”，比画面本身更像程序说明。四篇共同优点是铁笼、断层、鸣兽、塌方连续施压，动作因果基本清楚；真正拉开差距的是主角是否亲手完成反杀，以及幼兽关系是否在结尾兑现。",
+      "blind_key": {
+        "A": "control_reviser",
+        "B": "treatment_primary",
+        "C": "control_primary",
+        "D": "treatment_reviser"
+      },
+      "wall_seconds": 15.505
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat1",
+      "chapter": 3,
+      "judge": "authority",
+      "ranking": [
+        "control_reviser",
+        "control_primary",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "treatment_primary": 2.0,
+        "control_reviser": 0.0,
+        "control_primary": 0.0,
+        "treatment_reviser": 1.0
+      },
+      "hard_problems": {
+        "treatment_primary": [
+          "将最后残索具体写成在沉角“后腿附近”并蹭过碎石，超出仅授权“解开残索结果”的位置与操作边界。"
+        ],
+        "control_reviser": [],
+        "control_primary": [],
+        "treatment_reviser": [
+          "将最后残索写成“沉角身上还拖着”，补出了未预取的位置与状态。"
+        ]
+      },
+      "reason": "按扣分计，0为无扣分，B与C并列最佳。两稿都写明裴氏重新锁控、陆野渡用猎获和旧骨刀拒绝交还，且没有虚构价格、登记或正式所有权手续。两稿都让赫连青见先要求解开残索，再由沉角自行选择暂时跟随陆野渡，并落实裴峥对陆野渡的私人敌意。两稿没有把陆野渡写成鸣阶突破，也没有把震形写成脱离乱响地后的稳定能力或把沉角写成已建立信任。D完成同样结果，但把残索写成“沉角身上还拖着”，补出了Authority未预取的位置与状态。A进一步写成“后腿附近”并让残索蹭过碎石，使未授权位置和操作过程更具体。B、C结尾的“不能再往北走”与冻结的“北路已被兽群截断”一致，不构成Ending冲突。B与C正文完全相同，排名中B置前仅表示并列次序。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_reviser",
+        "C": "control_primary",
+        "D": "treatment_reviser"
+      },
+      "wall_seconds": 126.64
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat1",
+      "chapter": 3,
+      "judge": "story",
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_primary",
+        "control_reviser"
+      ],
+      "scores": {
+        "control_primary": 82.0,
+        "control_reviser": 82.0,
+        "treatment_reviser": 89.0,
+        "treatment_primary": 88.0
+      },
+      "hard_problems": {},
+      "reason": "C最强在于陆野渡先明确衡量“猎获和骨刀”这两份实际收益，再主动拿它们换沉角，私人选择和代价都落得很实。沉角随后自己走到前路、陆野渡跟上，既完成伴兽奖励，也把“它自己选的”做成可见动作，爽点和关系成立得更利落。D几乎同样有效，但“活着站在这里的伴鸣兽”比C的“还活着站在这里”更像设定说明，且“后腿附近”并未带来新的戏剧信息。A、B的开场冲突清楚，陆野渡挡在沉角前也有担当，但他没有像C、D那样用到手的战利品作出可感知的交换，主动欲望显得较虚。A、B又把解索、观察、选择拆得很长，赫连青见承担了关键动作，读者会更早看懂结果而等待较久。A与B文本完全一致，因此最终阅读体验无差别。",
+      "blind_key": {
+        "A": "control_primary",
+        "B": "control_reviser",
+        "C": "treatment_reviser",
+        "D": "treatment_primary"
+      },
+      "wall_seconds": 14.115
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat1",
+      "chapter": 4,
+      "judge": "authority",
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_primary": 7.0,
+        "treatment_reviser": 9.0,
+        "control_reviser": 5.0,
+        "control_primary": 4.0
+      },
+      "hard_problems": {
+        "treatment_primary": [
+          "低阶兽核与纯鸣砂被写成赫连青见从袖中取出并摆放，擅自补写了来源与归属。",
+          "突破前称陆野渡为‘刚踏进鸣阶的人’，与当时鸣阶0的跨章 timing 不一致。",
+          "震形只被写成清晰痕迹和暗线，未明确兑现不可消除的永久骨痕。"
+        ],
+        "treatment_reviser": [
+          "低阶兽核与纯鸣砂被直接预置在平石上并被陆野渡取用，仍补写了其进入现场及归属状态。"
+        ],
+        "control_reviser": [
+          "低阶兽核与纯鸣砂被写成陆野渡已从衣襟取出，擅自确定了此前未定的持有状态。",
+          "新增黑脊猎人带人进湖找路、多人未归以及湖外兽齿路标等未授权旧史和具体事实。",
+          "驿站伙计现场承诺固定位置与每月鸣钱，补写了冻结 Authority 未规定的具体待遇。"
+        ],
+        "control_primary": [
+          "低阶兽核与纯鸣砂被写成陆野渡已从衣襟取出，擅自确定了此前未定的持有状态。",
+          "新增黑脊猎人带人进湖找路、湖外兽齿路标等未授权旧史和具体事实。",
+          "把黑脊猎人明确写成‘就是为那片湖去的’，越过了其动机仍未知的边界。"
+        ]
+      },
+      "reason": "B整体最接近冻结 Authority，明确完成鸣阶0到鸣阶2、永久骨痕、沉角主动同行、放弃稳定差事和湖面无声波纹结尾。A的主要结构也正确，但资源被明确写成赫连青见携带，且突破前把陆野渡称为刚踏进鸣阶，另外永久性表达不足。C和D都把资源直接写成陆野渡原本持有，违反来源与归属未知边界。C进一步虚构黑脊猎人带人找路、多人未归和兽齿路标，属于未授权旧史。D在此基础上又确定黑脊猎人的湖区动机，进一步压缩了未知空间。四稿都没有提前进入湖区、获得白鱼王兽核或揭开父亲真相。C仍比D少一个明确的未授权动机判断，因此排名高于D。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "treatment_reviser",
+        "C": "control_reviser",
+        "D": "control_primary"
+      },
+      "wall_seconds": 79.625
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat1",
+      "chapter": 4,
+      "judge": "story",
+      "ranking": [
+        "treatment_primary",
+        "treatment_reviser",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_primary": 88.0,
+        "control_reviser": 72.0,
+        "control_primary": 69.0,
+        "treatment_reviser": 80.0
+      },
+      "hard_problems": {},
+      "reason": "A的升级过程最像人物在伤痛中把力量夺回自己手里，随后主动为父亲线索和白鱼王兽核选择北上，欲望、收益与行动连得最顺。它让赫连青见不替主角作决定、沉角以贴裤脚和先迈半步回应，关系推进自然，也没有把信息硬喊成设定结论。D保留了A的大部分优点，但“永久骨痕”“鸣阶2”和更概括的赶路段落，让正文多出一点报告式标注感。B的“鸣阶精确位置2”是决定性出戏点，像系统记录而不是角色所处的小说瞬间；丢兽核壳、抹砂痕也削弱了升级后停顿与关系余味。C在B的程序味之外，又补写“此前他能借那股力量站稳、出刀、撞死鸣兽”等回顾，属于读者刚看过的重复证明。C里赫连青见“像是早知道他会这么选”还轻微偷走了主角选择的未知性，因此续读欲最低。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_reviser",
+        "C": "control_primary",
+        "D": "treatment_reviser"
+      },
+      "wall_seconds": 14.787
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat2",
+      "chapter": 1,
+      "judge": "authority",
+      "ranking": [
+        "control_reviser",
+        "treatment_reviser",
+        "treatment_primary",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 93.0,
+        "control_primary": 80.0,
+        "control_reviser": 100.0,
+        "treatment_primary": 84.0
+      },
+      "hard_problems": {
+        "treatment_reviser": [
+          "未直接落地返回驿站与继续稳定差事的现实条件已经失去，只能由坑壁和天光推断",
+          "无权威依据写出登记差事每月收入高于帮工"
+        ],
+        "control_primary": [
+          "漏掉Reader Release要求的鸣阶6—9与10—18公共坐标",
+          "未明确落地返回驿站与稳定差事条件已经失去",
+          "将普通人遇到鸣兽写成跑得再快也没用，超出已批准危险强度"
+        ],
+        "control_reviser": [],
+        "treatment_primary": [
+          "漏掉Reader Release要求的鸣阶6—9与10—18公共坐标",
+          "未直接落地返回驿站与继续稳定差事的现实条件已经失去",
+          "无权威依据写出登记差事每月收入高于帮工"
+        ]
+      },
+      "reason": "C完整落实了主角跟队、坠入乱响地、笼索下滑和鸣阶0未获新力量等边界。它还明确写出回驿站的路断在坑顶，并把鸣阶0、1—3、6—9、10—18的公共坐标一次释放清楚，结尾没有提前跳坑。A的事件顺序、力量状态、兽牙线索和结束时点都正确，且公共力量坐标完整。A的主要缺口是没有直接说返回条件已经丧失，并额外断言登记差事月薪高于帮工。D保留了主要动作和Ending，但漏掉6—9与10—18坐标，也没有直接落地返回条件，且同样加入未经授权的工资比较。B同样漏掉高阶公共坐标，坠落后的不可返回状态表达较弱。B还把普通人面对鸣兽写成跑得再快也没用，扩大了权威允许的危险结果。四稿都没有提前跳入坑底、获得骨痕或改变兽牙来处，差异主要在Reader Release完整度和State Change是否明确落地。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "control_primary",
+        "C": "control_reviser",
+        "D": "treatment_primary"
+      },
+      "wall_seconds": 110.391
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat2",
+      "chapter": 1,
+      "judge": "story",
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_primary",
+        "control_reviser"
+      ],
+      "scores": {
+        "treatment_primary": 86.0,
+        "control_reviser": 78.0,
+        "treatment_reviser": 89.0,
+        "control_primary": 82.0
+      },
+      "hard_problems": {},
+      "reason": "C把陆野渡放弃登记房、被兽牙牵引、坠坑时死抓笼索这一条私人选择写得最完整，幼兽也因此不只是灾难道具，而是他主动押上的目标。C补上“撞上坡地时，笼索才从他手里滑脱”，让前面死抓笼索与后面笼子悬空的因果闭合，动作阅读最顺。A的场面压迫感同样强，但“俺也去外头看看”明显出戏，且笼索何时脱手没有交代，削弱了关键动作的可信度。D删掉了多余的等级履历和回驿站说明，坍塌段更利落，车辕断裂、插刀、滚入石台的求生动作也很清楚。只是D里主角先抓的是逃命的车辕，和幼兽、兽牙及北路欲望的连接被推迟，结尾的关系钩子不如C、A直接。B的等级从鸣阶1一直讲到18，又重复说明普通人和护卫的差距，像作者在交系统设定，拖慢了危险抵达。B末尾“回驿站的路断了”“木牌不在这里”属于已被坠坑事实证明过的总结式强调，既没有新增奖励，也不如直接盯住滑落兽笼有续读力。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_reviser",
+        "C": "treatment_reviser",
+        "D": "control_primary"
+      },
+      "wall_seconds": 18.886
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat2",
+      "chapter": 2,
+      "judge": "authority",
+      "ranking": [
+        "control_reviser",
+        "control_primary",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "control_reviser": 100.0,
+        "treatment_reviser": 94.0,
+        "control_primary": 100.0,
+        "treatment_primary": 45.0
+      },
+      "hard_problems": {
+        "control_reviser": [],
+        "treatment_reviser": [
+          "未明确写出陆野渡仍为鸣阶0，站稳与发力可能被读成正式升级，遗漏了冻结状态边界。"
+        ],
+        "control_primary": [],
+        "treatment_primary": [
+          "无授权地写明幼兽左后腿受伤并持续跛行，新增了冻结结果之外的伤势状态。",
+          "将计划中的“沉角”提前写成当前已确认名称，并直接写成必须收回的既成对象，越过了幼兽身份与关系的未知边界。"
+        ]
+      },
+      "reason": "A和C都完整落实了陆野渡在强震中获得立足、割断笼索、借坑壁反震撞死鸣兽，并让铁笼塌陷而幼兽脱笼。A和C都保留了鸣阶0未正式升级、永久震形骨痕、幼兽尚未接受带离以及裴氏后续追索压力。A与C在事实边界上等价，因此并列最高。B的战斗因果仍成立，笼索断裂、幼兽脱笼、鸣兽被反震撞死，且没有把幼兽接受陆野渡写成既成事实。B的问题是没有明确落出陆野渡仍为鸣阶0，容易让站稳和发力被误读为正式升级。D额外制造了幼兽左后腿受伤这一未批准状态，改变了幼兽的伤势结果。D末尾又把“沉角”提前确认为当前对象名称，违反幼兽身份和关系仍未知的边界。",
+      "blind_key": {
+        "A": "control_reviser",
+        "B": "treatment_reviser",
+        "C": "control_primary",
+        "D": "treatment_primary"
+      },
+      "wall_seconds": 85.794
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat2",
+      "chapter": 2,
+      "judge": "story",
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "control_reviser": 80.0,
+        "control_primary": 78.0,
+        "treatment_reviser": 91.0,
+        "treatment_primary": 88.0
+      },
+      "hard_problems": {},
+      "reason": "C把救兽、断索、借铁笼反杀和二次开路串成连续主动选择，陆野渡不是站着获得力量，而是在鸣兽逼近时拿新能力赌命解题。它的战斗空间关系最清楚：鸣兽落爪、震动折返、铁笼横撞、逼兽撞墙，读者能跟上也能爽到。C里幼兽不肯跟时，他砸开窄缝再救一次，私人欲望和关系推进都落在动作上。D补了幼兽左后腿伤与“沉角”追索，救援动机更直观，外部追捕钩子也更强，但“震动停不下来”“死路被撕开一道口子”偏总结式宣告，削弱了C的现场感。A的救援与反杀同样顺，但鸣兽突然出现后很快被一掌推偏反震击杀，主角的谋划和险中取胜不如C具体；结尾幼兽跟随仍有关系回报。B相比A多出“它脱出来了”和几处能力解释，既重复已完成的画面，也稍显报告味，因此垫底。",
+      "blind_key": {
+        "A": "control_reviser",
+        "B": "control_primary",
+        "C": "treatment_reviser",
+        "D": "treatment_primary"
+      },
+      "wall_seconds": 18.026
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat2",
+      "chapter": 3,
+      "judge": "authority",
+      "ranking": [
+        "control_reviser",
+        "control_primary",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "treatment_primary": 4.0,
+        "treatment_reviser": 6.0,
+        "control_primary": 7.0,
+        "control_reviser": 8.0
+      },
+      "hard_problems": {
+        "treatment_primary": [
+          "把沉角的鸣声写成令押运者脸色发白、脚下失序，新增冻结 Authority 未批准的鸣声直接效果。",
+          "称沉角能听见乱响地里别人听不见的东西，新增未授权感知能力。",
+          "将最后残索具体写成两名押运者分别拽住索端，补写了 Authority 未提供的结构细节。"
+        ],
+        "treatment_reviser": [
+          "把沉角的鸣声写成令押运者脸色发白、脚下失序，新增冻结 Authority 未批准的鸣声直接效果。",
+          "将最后残索具体写成两名押运者分别拽住索端，补写了 Authority 未提供的结构细节。"
+        ],
+        "control_primary": [
+          "将最后残索写成重新拢好的粗索并可甩成索圈，补写了未授权的结构与操作细节。",
+          "写裴氏的人没有立刻追来，新增了冻结 Mission 未明确的当前追击时序结果。"
+        ],
+        "control_reviser": [
+          "将最后残索写成重新拢好的粗索并可甩成索圈，补写了未授权的结构与操作细节。",
+          "写裴氏的人没有立刻追来，新增了冻结 Mission 未明确的当前追击时序结果。"
+        ]
+      },
+      "reason": "D排名第一，因为它完整保留了沉角脱索后自行跟随陆野渡、裴峥敌意私人化，以及赫连青见认出兽牙磨损并指出北路被截断。C的主要事件和关系结果也成立，但它额外写出裴氏暂未追来，并把残索结构具体化。B没有改变沉角的主动选择和所有权边界，但加入了未经授权的鸣声直接效果，且结尾重复说明北路被截断。A除同样的残索结构和鸣声效果外，还新增沉角能听见别人听不见之物的感知能力。四稿都没有错误地把陆野渡升级出鸣阶0，也没有宣称震形已经能脱离乱响地稳定使用。四稿也都保留了沉角尚未真正信任陆野渡、兽牙来处未知的开放边界。D相较C的关键优势是把赫连青见“认出磨损痕迹”这一结尾事实明确落地。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "treatment_reviser",
+        "C": "control_primary",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 107.493
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat2",
+      "chapter": 3,
+      "judge": "story",
+      "ranking": [
+        "treatment_primary",
+        "treatment_reviser",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 86.0,
+        "treatment_primary": 89.0,
+        "control_primary": 81.0,
+        "control_reviser": 83.0
+      },
+      "hard_problems": {},
+      "reason": "B把沉角“能听见乱响地里别人听不见的东西”和“伴鸣兽”点出来，主角这次主动放兽反而获得可用同伴的奖励更清楚。它末尾由兽牙磨痕接到北路异变，信息递进自然，能把读者直接推往下一段路。A主体冲突同样扎实，但“北路正在被兽群截断”后又问“北路怎么了”，再重复答案，结尾明显有AI式复述感。D的动作、主角选择和裴氏记账都清楚，且补上“那圈磨损，她认得”，让北路警报有了可感知的依据。C少了这一层具体关联，赫连青见突然宣布北路不能走，像章节收束时塞进来的任务提示。C、D两版还把沉角跟随写得较顺，少了B里“想带走它”与能力收益同时落袋的爽点。四篇都没有严重程序报告味，真正拉开差距的是奖励兑现和尾钩信息是否通过前文物件自然引爆。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "treatment_primary",
+        "C": "control_primary",
+        "D": "control_reviser"
+      },
+      "wall_seconds": 15.665
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat2",
+      "chapter": 4,
+      "judge": "authority",
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 9.0,
+        "control_primary": 5.0,
+        "control_reviser": 6.0,
+        "treatment_primary": 8.0
+      },
+      "hard_problems": {
+        "treatment_reviser": [
+          "低阶兽核与纯鸣砂突然可用，但 Authority 未说明其来源或归属。"
+        ],
+        "control_primary": [
+          "低阶兽核与纯鸣砂被写成已摆在平石上，来源与归属未授权。",
+          "加入“半枚铜角”等未授权旧史数字。",
+          "加入“再走两日”等未授权跨章 timing 数字。",
+          "未明确写出震形留下不可消除的永久骨痕。"
+        ],
+        "control_reviser": [
+          "低阶兽核与纯鸣砂突然可用，但来源与归属未授权。",
+          "把兽牙具体落实为无声湖外猎路上的同类磨痕，超出当前仅确认关联、来处与机制未知的边界。",
+          "加入“再走两日”等未授权跨章 timing 数字。"
+        ],
+        "treatment_primary": [
+          "低阶兽核与纯鸣砂被写成已存放在腰侧，来源与归属未授权。"
+        ]
+      },
+      "reason": "A最完整地落实了鸣阶0到鸣阶2、永久骨痕、沉角主动同行、稳定差事被放弃和兽牙与无声湖关联，同时保持兽牙来处与机制未知。A唯一明确问题是低阶兽核和纯鸣砂突然进入陆野渡手中，Authority没有交代来源或归属。D与A的事实落点基本一致，也保留了永久骨痕和正确结尾，但擅自确定资源存放在腰侧，因此次于A。C明确写出永久骨痕，然而把兽牙具体落实为无声湖外猎路上的同类磨痕，并加入“再走两日”，超出冻结边界。B同样加入无声湖外磨痕和“再走两日”，还写入“半枚铜角”这一未授权旧史数字。B没有明确兑现不可消除的永久骨痕，且把资源具体写成摆在平石上，缺失最多。四稿都正确保留了白鱼王兽核只是尚未获得的机会，没有提前进入湖区、交战、获得兽核或揭开父亲真相。",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "control_primary",
+        "C": "control_reviser",
+        "D": "treatment_primary"
+      },
+      "wall_seconds": 79.108
+    },
+    {
+      "blind_repeat": 2,
+      "run": "repeat2",
+      "chapter": 4,
+      "judge": "story",
+      "ranking": [
+        "treatment_primary",
+        "treatment_reviser",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_primary": 89.0,
+        "control_reviser": 78.0,
+        "control_primary": 73.0,
+        "treatment_reviser": 84.0
+      },
+      "hard_problems": {},
+      "reason": "A最能让人继续读，因为陆野渡先问“白鱼王有兽核？”再决定跟去，赚钱、查父亲兽牙、摆脱驿站的人生三股私人欲望拧在同一个主动选择里。它还让沉角自己选择跟谁走，“我不替你做主”既补了关系，也让三人同行不是程序性组队。A的升阶过程有踩松石验证，赫连青见随即报出鸣阶二，力量获得、动作展示和旁人见证连得最完整。D保留了A的大部分人物互动与结尾气氛，但“鸣阶2”像面板提示，赫连青见只露出意外却不说破，升级的公共证明和爽点落点明显弱一截。B的主线清楚，主角拒绝驿站的理由也直接，但“永久骨痕”“鸣阶精确位置二”连续把读者拉进设定说明，沉角的关系推进也较普通。C比B多了“这句没有把危险变轻”和材料摆放等解释性句子，升级段更像在补完流程，读感最有AI总结和报告味。四篇的无声湖收尾都有钩子，但真正拉开差距的是主角选择是否带着鲜明私欲、升级是否有可见回报，以及伙伴关系是否自然参与选择。",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_reviser",
+        "C": "control_primary",
+        "D": "treatment_reviser"
+      },
+      "wall_seconds": 16.657
+    }
+  ]
+}

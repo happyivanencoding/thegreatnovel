@@ -1,0 +1,520 @@
+{
+  "schema_version": "reviser-noop-heldout-fourway-blind-v1",
+  "rows": [
+    {
+      "run": "repeat1",
+      "chapter": 1,
+      "judge": "authority",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_primary",
+        "C": "treatment_reviser",
+        "D": "control_reviser"
+      },
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_primary",
+        "control_reviser"
+      ],
+      "scores": {
+        "treatment_primary": 100.0,
+        "control_primary": 94.0,
+        "treatment_reviser": 100.0,
+        "control_reviser": 94.0
+      },
+      "hard_problems": {
+        "treatment_primary": [],
+        "control_primary": [
+          "结尾只说“会有人盯着”，没有明确落实下一轮专门盯住顾沉舟与旧弩之间的联系，结尾推动力不完整。"
+        ],
+        "treatment_reviser": [],
+        "control_reviser": [
+          "结尾只说“会有人盯着”，没有明确落实下一轮专门盯住顾沉舟与旧弩之间的联系，结尾推动力不完整。"
+        ]
+      },
+      "reason": "C和A都完整落实了盾面压制、旧弩脱手改位、挡下攻击、击落兵器、首轮胜利与晋入下一轮。C中旁观者说出“一个人占了两个位置”，属于已批准的Reader Release，不是未授权新增能力。A虽然更少直接命名双位置，但连续动作已经清楚证明同一事实，且结尾明确说要同时盯住顾沉舟和旧弩。两者都没有提前兑现青隼弩、奖金、《九息锻骨篇》或周谨胜负，也没有改变money、ownership或relationship状态。B和D的战斗结果、力量边界和现场认知基本成立，且都表现出旧弩造成不可替代的胜果。B和D的问题都在跨章结尾：只说有人会盯着，却没有明确说明盯的是顾沉舟与旧弩之间的联系。B与D在冻结事实覆盖上等价，D少了部分受击反应，但该差异不构成Hard problem。四个选项都没有把下一轮针对过程提前展开或结算。",
+      "wall_seconds": 77.443
+    },
+    {
+      "run": "repeat1",
+      "chapter": 1,
+      "judge": "story",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "treatment_reviser",
+        "C": "control_reviser",
+        "D": "control_primary"
+      },
+      "ranking": [
+        "control_primary",
+        "control_reviser",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "treatment_primary": 72.0,
+        "treatment_reviser": 77.0,
+        "control_reviser": 88.0,
+        "control_primary": 90.0
+      },
+      "hard_problems": {},
+      "reason": "D把盾压、脱弩、截击、近身顶盾到旧弩指肋的因果链完整铺开，读者能始终看清顾沉舟为什么这样选、又如何赢。D补出的手臂震荡和胸口闷锤，让能力首秀既爽又有真实代价，险感更足。C与D的主角不是单纯等奇招生效，而是在硬顶必败后主动用旧弩抢出第二位置，这比A、B的动作跳切更有主角性。C几乎同样扎实，但D这一点受击反馈让胜利更有重量。B比A好在“一个人占了两个位置”把旧弩的惊喜明确翻译成围观者能懂的战术优势，公共证明更爽。A的对手缴械虽然利落，但顾沉舟绕盾、旧弩绕后和胜负定局之间的空间过程略快，像结果先到了。四篇的等级与星风说明都稍有设定报告味，不过C、D将其嵌回受压困境，阅读阻滞较小。A、B结尾“盯住顾沉舟和旧弩”有效留钩，但不足以弥补中段动作呈现的压缩。",
+      "wall_seconds": 15.39
+    },
+    {
+      "run": "repeat1",
+      "chapter": 2,
+      "judge": "authority",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "control_reviser",
+        "C": "control_primary",
+        "D": "treatment_primary"
+      },
+      "ranking": [
+        "treatment_reviser",
+        "control_reviser",
+        "control_primary",
+        "treatment_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 100.0,
+        "control_reviser": 72.0,
+        "control_primary": 55.0,
+        "treatment_primary": 40.0
+      },
+      "hard_problems": {
+        "treatment_reviser": [],
+        "control_reviser": [
+          "结尾停在周谨等待答复，未落实顾沉舟是否主动迎战最终校验。",
+          "未明确由选拔负责者和周围人确认上一场旧弩异常并非偶然。"
+        ],
+        "control_primary": [
+          "结尾未落实顾沉舟是否主动迎战最终校验。",
+          "未明确由选拔负责者和周围人确认上一场旧弩异常并非偶然。",
+          "新增“三百星币”这一未经授权的具体奖金金额与货币设定。",
+          "“晋入最终校验前列”未明确落实合同要求的“高位”。"
+        ],
+        "treatment_primary": [
+          "结尾只询问校验开始时间，未明确决定主动迎战。",
+          "未明确由选拔负责者和周围人确认上一场旧弩异常并非偶然。",
+          "“晋入最终校验前列”未明确落实合同要求的“高位”。",
+          "“三层等级差”与星力3级对星力7级的实际四级差距冲突。"
+        ]
+      },
+      "reason": "A完整落实了贴身压迫、旧弩侧后方封位、本体主动压近、取胜及旧弩回手。A也明确落地了远身可重复调用、距离与注意力限制、星力3级晋入高位，以及周谨第一次认真观察。A在结尾明确揭示全部奖励和周谨的星力7级，并由顾沉舟主动答应迎战。B完成了战斗机制、限制、奖励和周谨态度变化，但结尾仍停留在等待答复。B、C、D都没有明确写出选拔负责者与围观者确认上一场异常并非偶然。C另行擅自补出“三百星币”，并把高位改写成不够明确的“前列”。D除同样缺少主动迎战决定和高位表达外，还把3级对7级写成“三层等级差”，形成明确数值冲突。",
+      "wall_seconds": 61.916
+    },
+    {
+      "run": "repeat1",
+      "chapter": 2,
+      "judge": "story",
+      "blind_key": {
+        "A": "control_primary",
+        "B": "treatment_reviser",
+        "C": "control_reviser",
+        "D": "treatment_primary"
+      },
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_primary",
+        "control_reviser"
+      ],
+      "scores": {
+        "control_primary": 80.0,
+        "treatment_reviser": 91.0,
+        "control_reviser": 76.0,
+        "treatment_primary": 85.0
+      },
+      "hard_problems": {},
+      "reason": "B的胜点最完整：近战博弈、旧弩横移造成腰胯失衡、压倒对手，动作因果一路清楚。更关键的是顾沉舟主动追问对手并直接说“这场，我上”，把奖励、越级挑战和主角选择在章尾扣成了明确钩子。D的战斗同样顺，但“想赢得漂亮，想让这些人记住”有替读者总结主角欲望的AI腔，而且三层等级差与前文三级对七级的数字容易让人顿一下。A的后半段奖励更具体，三百星币让收益更有实物感，周谨点头也有一定公共认可。可A停在周谨等答复，主角还没把选择说出口，续读推进力弱于B和D。C基本继承A的优点，却把三百星币改成泛泛的“奖金”，同时“晋入最终校验前的高位”较像流程报告，奖励和晋级爽点都变虚。四篇都没有明显漂亮二段论，真正拉开差距的是结尾有没有让顾沉舟以行动抢下高风险高回报的下一场。",
+      "wall_seconds": 16.461
+    },
+    {
+      "run": "repeat1",
+      "chapter": 3,
+      "judge": "authority",
+      "blind_key": {
+        "A": "control_primary",
+        "B": "treatment_reviser",
+        "C": "treatment_primary",
+        "D": "control_reviser"
+      },
+      "ranking": [
+        "control_primary",
+        "control_reviser",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "control_primary": 100.0,
+        "treatment_reviser": 90.0,
+        "treatment_primary": 90.0,
+        "control_reviser": 100.0
+      },
+      "hard_problems": {
+        "control_primary": [],
+        "treatment_reviser": [
+          "沈秋娘新增“输了，自己走回来”的具体后果，冻结上游只授权铺子不兜底、代价由顾沉舟承担，未授权这项明确安排。"
+        ],
+        "treatment_primary": [
+          "沈秋娘新增“输了，自己走回来”的具体后果，冻结上游只授权铺子不兜底、代价由顾沉舟承担，未授权这项明确安排。"
+        ]
+      },
+      "reason": "A与D并列最完整落实了奖励对象、星力3级对7级的差距、父亲要求稳住名次、母亲拒绝兜底和顾沉舟主动挑战。两者都把青隼弩、奖金、完整功法与落星峡资格保留为待最终校验决定的争夺对象，没有提前结算。两者都明确写出周谨接受对阵、最终校验开始，并保留掌心胀痛与近身压迫风险。B与C的主线事实、关系变化、能力暴露和结尾 timing 也基本符合冻结合同。B与C共同新增沈秋娘“输了，自己走回来”的具体惩罚性安排，超出“不替他兜底”和“自行承担代价”的授权边界。C中的“先前顾沉舟能胜”对应已批准的第二章胜利，不构成冲突。四个候选都没有改写星力主尺、奖励归属、远身边界或未解历史。A与D文本事实等价，因此同分并列。",
+      "wall_seconds": 43.038
+    },
+    {
+      "run": "repeat1",
+      "chapter": 3,
+      "judge": "story",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_reviser",
+        "C": "treatment_reviser",
+        "D": "control_primary"
+      },
+      "ranking": [
+        "control_reviser",
+        "control_primary",
+        "treatment_primary",
+        "treatment_reviser"
+      ],
+      "scores": {
+        "treatment_primary": 85.0,
+        "control_reviser": 88.0,
+        "treatment_reviser": 84.0,
+        "control_primary": 88.0
+      },
+      "hard_problems": {},
+      "reason": "B、D把顾沉舟的主动选择压在“名次我已经拿了，现在我要拿别的”上，欲望、底气和争夺感更集中，读者会更想立刻看他怎么越四级打周谨。父亲一句“为了赢得好看”也把保名次与搏更大奖励的冲突顶得更硬，周谨接“我只会当你想赢”形成了有效的对手认可。A、C的“我不想等着别人决定”补足了军府调派带来的自主性代价，人物动机更完整，但奖励清单和军府利弊各解释一遍，开打前稍有程序说明味。A优于C，是因为“旧弩从侧后方绕行、卡住对手退路”比C的“众人都知道他这把旧弩能从侧后卡住退路”更像刚发生过的动作，战术记忆更清楚。C还把“这点依仗摆到所有人眼前”说得偏总结，削弱了临场紧张。B与D文本实质相同，因此阅读分数并列。",
+      "wall_seconds": 14.288
+    },
+    {
+      "run": "repeat1",
+      "chapter": 4,
+      "judge": "authority",
+      "blind_key": {
+        "A": "control_reviser",
+        "B": "treatment_reviser",
+        "C": "control_primary",
+        "D": "treatment_primary"
+      },
+      "ranking": [
+        "control_reviser",
+        "control_primary",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "control_reviser": 100.0,
+        "treatment_reviser": 96.0,
+        "control_primary": 98.0,
+        "treatment_primary": 95.0
+      },
+      "hard_problems": {
+        "control_reviser": [],
+        "treatment_reviser": [],
+        "control_primary": [
+          "加入“本可以用星力直接压垮顾沉舟”的未授权反事实判断，扩大了周谨的力量结论。"
+        ],
+        "treatment_primary": []
+      },
+      "reason": "A完整落实了周谨以星力7级正面压迫、顾沉舟以星力3级承受冲击并用旧弩侧后逼位的战斗因果。A明确写出周谨转身、顾沉舟贴身击倒、周谨认输，以及胜者取得青隼弩、奖金和完整《九息锻骨篇》。A还落实了顾沉舟接受落星峡临时外派，并以北方星风提前南移、落星口开启和队伍即将出发收束，没有提前展开外派。C与A的事实链基本相同，但额外断言周谨本可以凭星力直接压垮顾沉舟，这不是冻结上游明确授权的力量结论。B和D都完成了战斗、认输、奖励归属、外派接受和章末消息，且没有改变星力3级的精确位置。B明确写出“星力三对七”，事实边界比D更显式。D缺少这句直接的等级结果确认，但既有动作、人物身份和裁定仍足以成立必需结果。四个候选都没有提前兑现甲王背壳、落星晶或后续铸器，也没有新增Reader Release或落星峡内部机制。",
+      "wall_seconds": 40.399
+    },
+    {
+      "run": "repeat1",
+      "chapter": 4,
+      "judge": "story",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "control_primary",
+        "C": "treatment_primary",
+        "D": "control_reviser"
+      },
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_primary",
+        "control_reviser"
+      ],
+      "scores": {
+        "treatment_reviser": 92.0,
+        "control_primary": 81.0,
+        "treatment_primary": 87.0,
+        "control_reviser": 77.0
+      },
+      "hard_problems": {},
+      "reason": "A的胜负链最扎实：旧弩钉石缝封转步、逼回身、绊后脚，顾沉舟每一步主动贴身都能看清因果。A还用“星力三对七，差四级”完成公开证明，拿弩、功法、钱袋再接外派，奖励与下一关钩得最利落。C战斗主体同样清楚，但删掉了四级差距的现场宣告，爽点的公共认证略弱；新增“一个人面对两处攻击”又有一点替读者总结。B的动作可读性尚可，但“这一拳落下来”“他本可以用星力”等解释性句子偏程序复盘，旧弩如何具体限制对手也不如A、C落地。B结尾“没有把木牌收起来”是刻意制造姿态，不能替代真正的危险钩子。D删去了B里部分重复解释，却保留“旧弩一直从侧后逼着他”的赛后总结，且压倒周谨的关键卡位仍较虚，导致胜利可信度与爆点都最弱。",
+      "wall_seconds": 14.434
+    },
+    {
+      "run": "repeat2",
+      "chapter": 1,
+      "judge": "authority",
+      "blind_key": {
+        "A": "treatment_primary",
+        "B": "control_primary",
+        "C": "control_reviser",
+        "D": "treatment_reviser"
+      },
+      "ranking": [
+        "control_reviser",
+        "treatment_reviser",
+        "treatment_primary",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_primary": 96.0,
+        "control_primary": 72.0,
+        "control_reviser": 100.0,
+        "treatment_reviser": 99.0
+      },
+      "hard_problems": {
+        "treatment_primary": [],
+        "control_primary": [
+          "把普通引星者写成兵器“总得在自己手里”，与已批准的普通修士可以投出兵器、但脱手后只剩一次攻击的边界冲突。",
+          "结尾只说“你和这把弩，得一起算”，未明确下一轮有人专门盯住二者之间的联系，结尾推动力落实不完整。"
+        ],
+        "control_reviser": [],
+        "treatment_reviser": []
+      },
+      "reason": "C完整落实了旧弩脱手、挡击、从侧后击落兵器，以及本体与旧弩形成第二战斗位置的全部事实。C还明确写出顾沉舟晋入下一轮，并把专门盯住他与旧弩联系的压力留到结尾，没有提前结算。D同样落实了胜果、晋级、异常重判和下一轮盯防，事实边界完整。A的战斗链和结尾压力成立，但没有直说晋入下一轮及选拔方将其视为异常对手，主要依靠场景结果推断。B的核心战斗结果成立，也没有提前写出对手身份、奖励或未来胜负。B将普通引星者写成兵器“总得在自己手里”，明确偏离普通修士可以投出兵器的已批准边界。B结尾的“一起算”能暗示重新安排，却不足以明确落实专门盯住二者联系。四个选项都没有越界确定奖金、青隼弩、《九息锻骨篇》、周谨出场或其它未知历史。",
+      "wall_seconds": 86.96
+    },
+    {
+      "run": "repeat2",
+      "chapter": 1,
+      "judge": "story",
+      "blind_key": {
+        "A": "control_primary",
+        "B": "control_reviser",
+        "C": "treatment_primary",
+        "D": "treatment_reviser"
+      },
+      "ranking": [
+        "control_primary",
+        "treatment_primary",
+        "treatment_reviser",
+        "control_reviser"
+      ],
+      "scores": {
+        "control_primary": 91.0,
+        "control_reviser": 58.0,
+        "treatment_primary": 80.0,
+        "treatment_reviser": 70.0
+      },
+      "hard_problems": {},
+      "reason": "A把等级、星风和能力规则都压进眼前危机，读者刚进入打斗就能跟住顾沉舟的选择：不硬闯、放弩诱敌、双位夹击。它的旧弩先挡刀再打腕，最后拳停面门，胜负链条最完整，爽点和主角的主动性都落到了实处。A结尾“你和这把弩，得一起算”既给出旁观者认可，也把下一轮针对性危机钩得最狠。C的动作同样利落，盾挡视线导致对手收手不及这一笔尤其好，但“连人带弩一起往后撤”和旧弩落回身侧的空间感略模糊，结尾威胁也比A弱半拍。D基本沿用C的有效战斗，却额外解释修士、社会位置、星火星风，并直说“他们不再把他当作普通参选者”，把本可由场面读出的奖励变成报告式结论。B的核心战斗并不差，但开头连续罗列等级、立炉者和灾害说明，战后又命名“远身”，明显打断追读节奏并有AI设定总结味。真正拉开名次的不是篇幅，而是谁让能力展示、围观震动和后续麻烦从动作里自然长出来。",
+      "wall_seconds": 12.699
+    },
+    {
+      "run": "repeat2",
+      "chapter": 2,
+      "judge": "authority",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "control_reviser",
+        "C": "treatment_primary",
+        "D": "control_primary"
+      },
+      "ranking": [
+        "treatment_reviser",
+        "control_reviser",
+        "control_primary",
+        "treatment_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 78.0,
+        "control_reviser": 66.0,
+        "treatment_primary": 50.0,
+        "control_primary": 54.0
+      },
+      "hard_problems": {
+        "treatment_reviser": [
+          "结尾未明确决定主动迎战或拒绝，缺少冻结结尾要求的选择落点",
+          "擅自新增最终校验开始时间为“明日清晨”，上游只要求揭示奖励、对手与迎战选择，未授权具体跨章时间"
+        ],
+        "control_reviser": [
+          "以“打”写成顾沉舟已经接受最终校验，违背不得提前写成已经接受的冻结计划备注",
+          "将未定数额的奖金具体化为“三百星币”，属于未授权的 money 新增"
+        ],
+        "treatment_primary": [
+          "未让负责选拔者明确确认上一场异常并非偶然，仅写议论消退，未完整落实 required reaction",
+          "结尾未明确决定主动迎战或拒绝，缺少冻结结尾要求的选择落点",
+          "擅自新增最终校验开始时间为“明日清晨”，未授权具体跨章时间"
+        ],
+        "control_primary": [
+          "将未定数额的奖金具体化为“三百星币”，属于未授权的 money 新增",
+          "结尾停在顾沉舟尚未回答，缺少必须落实的主动迎战选择",
+          "负责选拔者只宣布胜利，未明确确认上一场异常并非偶然"
+        ]
+      },
+      "reason": "A完整落实了贴身压迫、旧弩侧后方封位、顾沉舟主动压近、对手迟疑与取胜。A还明确写出选拔者确认上一场并非偶然，并落实星力3级、周谨认真观察、奖励和最终对手揭示。A的主要缺陷是没有明确回答是否主动迎战，并擅自给出“明日清晨”的具体时间。B的战斗限制和迎战选择最完整，但“打”直接把顾沉舟写成已经接受校验，且把奖金擅自具体化为三百星币。C基本复现A的战斗结果，但缺少选拔者对异常并非偶然的明确确认，同时也有迎战选择缺失和未授权时间。D没有新增具体开始时间，但仍有三百星币这一 money 越界，并在结尾留下未回答的必需选择。综合硬边界数量与严重度，A保留最多核心事实，B虽有明确选择但违反冻结 timing，D次之，C缺失的 required reaction 最多。",
+      "wall_seconds": 103.863
+    },
+    {
+      "run": "repeat2",
+      "chapter": 2,
+      "judge": "story",
+      "blind_key": {
+        "A": "control_primary",
+        "B": "control_reviser",
+        "C": "treatment_primary",
+        "D": "treatment_reviser"
+      },
+      "ranking": [
+        "control_reviser",
+        "treatment_primary",
+        "treatment_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "control_primary": 80.0,
+        "control_reviser": 88.0,
+        "treatment_primary": 86.0,
+        "treatment_reviser": 83.0
+      },
+      "hard_problems": {},
+      "reason": "B在同样清晰的贴身反制后，直接用“打”完成主角选择，把四级差距、旧败关系和眼前奖励一起推成下一段欲望，续读钩子最硬。C的打斗落点更具象，旧弩横移卡脚、扫支撑腿的连招比A/B的“带出界”更有冲击，也让对手一句追问自然完成了能力的公共证明。C结尾主动问开打时间，主角性更强，但“明日清晨”比B当场应战稍微泄了一点临场热度。D基本保留C的优点，却加上“上一场不是偶然”“星力3级，进入最终校验前列”的裁判式宣告，和此前围观反应、册子记录形成重复证明，明显多出程序报告味。A的战术过程不差，旧弩作为位置威胁的限制也交代得清楚，但最后停在“没有立刻回答”，把已经摆好的奖励、旧仇和强敌都悬而不决，爽点收束不如B。A/B中裁判、旁观者和周谨的反应较完整，但也有几处“这一转很慢”“这份本事能再用”的解释性总结，读者会比C更容易感觉作者在复盘战术。四篇都没有严重的AI漂亮二段论问题，真正拉开差距的是结尾是否兑现主动选择，以及公共证明是否自然融入动作。",
+      "wall_seconds": 14.54
+    },
+    {
+      "run": "repeat2",
+      "chapter": 3,
+      "judge": "authority",
+      "blind_key": {
+        "A": "control_reviser",
+        "B": "treatment_primary",
+        "C": "treatment_reviser",
+        "D": "control_primary"
+      },
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "control_reviser": 5.0,
+        "treatment_primary": 8.0,
+        "treatment_reviser": 9.0,
+        "control_primary": 3.0
+      },
+      "hard_problems": {
+        "control_reviser": [
+          "新增“小时候砸了邻家窗户、躲后院三天、母亲赔偿”的未授权历史事实。",
+          "新增退出最终校验后“军府后续自会安排”的具体制度结果，上游只要求保住合格名次，未授权该安排。",
+          "新增“青隼弩是真东西……落星峡入口不是军府随手会再给第二次机会”的稀缺性判断，后半句未被冻结事实明确支持。"
+        ],
+        "treatment_primary": [
+          "新增“旧弩射出去一箭要算着用”的弹药资源限制，冻结上游只确认旧弩可用及操控边界，未确认箭矢稀缺。",
+          "父亲“像是第一次把这个儿子的心思看得更清楚”新增了此前从未看清的历史判断。"
+        ],
+        "treatment_reviser": [
+          "新增“射出去一箭要算着用”的弹药资源限制，冻结上游只确认旧弩可用及操控边界，未确认箭矢稀缺。"
+        ],
+        "control_primary": [
+          "新增“小时候砸了邻家窗户、躲后院三天、母亲赔偿”的未授权历史事实。",
+          "新增退出最终校验后“军府后续自会安排”的具体制度结果，上游只要求保住合格名次，未授权该安排。",
+          "“他不是为了证明给谁看”明确削弱并冲突于顾沉舟想赢得漂亮、让轻视者承认错误的既定动机。"
+        ]
+      },
+      "reason": "C最完整落实了具体奖励、星力3级对7级、父母责任边界、主动挑战、周谨接受和最终校验开始，且没有提前结算奖励或胜负。B与C事实主线相同，但“像是第一次看清”额外制造了父亲认知历史，故略低。B、C共同新增旧弩箭矢必须节省的资源限制，冻结上游没有这一事实。A完整实现事件，但加入了未授权的童年赔偿往事，并把退出后的军府安排写成确定结果。D除上述两类新增外，还否定了顾沉舟为证明自己而冒险的既定动机。四个版本都正确保留了最终校验尚未分出胜负、四项回报仍待决定这一跨章时序。",
+      "wall_seconds": 46.19
+    },
+    {
+      "run": "repeat2",
+      "chapter": 3,
+      "judge": "story",
+      "blind_key": {
+        "A": "control_reviser",
+        "B": "control_primary",
+        "C": "treatment_reviser",
+        "D": "treatment_primary"
+      },
+      "ranking": [
+        "control_primary",
+        "control_reviser",
+        "treatment_reviser",
+        "treatment_primary"
+      ],
+      "scores": {
+        "control_reviser": 87.0,
+        "control_primary": 88.0,
+        "treatment_reviser": 84.0,
+        "treatment_primary": 83.0
+      },
+      "hard_problems": {},
+      "reason": "B把顾沉舟的挑战动机落在兵器、钱、功法和入口上，直接而不显得只是赌气逞强。A的“不只是为了证明给谁看”反而让“证明”占了不必要的分量，削弱了他主动抢资源的利落感。A、B里母亲拿砸窗旧事压他“这次别躲”，人物关系更活，也让公开挑战多了一层成长回报。C、D的主角欲望同样清楚，但从奖励说明到“不想只拿合格”再到“让所有人看见”，解释链更整齐，略有程序化总结味。C的“这小子不肯只赢够”虽然直白，却还算贴合父亲当场看见儿子野心的情绪。D额外写成“像是第一次把这个儿子的心思看得更清楚了一点”，把原本可由动作和目光自行成立的关系判断说透，因此更显修辞和报告感。四篇都在开战前收束，续读钩子合格；真正拉开差距的是挑战理由是否像主角当场要抢到手的东西，以及亲子压力是否自然地推高了这一战。",
+      "wall_seconds": 13.719
+    },
+    {
+      "run": "repeat2",
+      "chapter": 4,
+      "judge": "authority",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "treatment_primary",
+        "C": "control_primary",
+        "D": "control_reviser"
+      },
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 100.0,
+        "treatment_primary": 94.0,
+        "control_primary": 82.0,
+        "control_reviser": 86.0
+      },
+      "hard_problems": {
+        "treatment_reviser": [],
+        "treatment_primary": [
+          "胜负结算后新增“选拔者记下他的名字”，属于冻结计划明确要求避免的普通执行流程扩写。"
+        ],
+        "control_primary": [
+          "新增“临时外派木牌”这一未授权资格证明物。",
+          "同样新增选拔者记下名字的普通执行流程。"
+        ],
+        "control_reviser": [
+          "新增“临时外派木牌”这一未授权资格证明物。"
+        ]
+      },
+      "reason": "A完整落实星力3级战胜星力7级、旧弩侧后逼位、周谨转身、顾沉舟承受冲击并贴身击倒。A同时完成周谨认输、青隼弩、奖金、完整功法的实际归属，以及顾沉舟接受落星峡外派，未改变星力3级边界。B的核心事实同样闭合，但额外加入记录姓名的行政流程。C和D都把未排程的临时外派木牌新增为资格证明并转入顾沉舟持有，改变了资源与所有权呈现。C还额外加入记录姓名，因此低于D；D重复已知四级差距虽非事实冲突，但不增加有效兑现。四个选项都没有提前展开落星峡、改写未知历史或改变章末“落星口已开、队伍即将出发”的时序。",
+      "wall_seconds": 104.697
+    },
+    {
+      "run": "repeat2",
+      "chapter": 4,
+      "judge": "story",
+      "blind_key": {
+        "A": "treatment_reviser",
+        "B": "treatment_primary",
+        "C": "control_reviser",
+        "D": "control_primary"
+      },
+      "ranking": [
+        "treatment_reviser",
+        "treatment_primary",
+        "control_reviser",
+        "control_primary"
+      ],
+      "scores": {
+        "treatment_reviser": 90.0,
+        "treatment_primary": 89.0,
+        "control_reviser": 86.0,
+        "control_primary": 82.0
+      },
+      "hard_problems": {},
+      "reason": "A的胜负链最清楚：先被等级压制，再用旧弩制造双线威胁，最后借周谨回头完成近身摔投，爽点有递进而非突然翻盘。A把围观者炸场、周谨认输、青隼弩、钱袋和功法依次落地，公开证明与实质奖励都很完整，接落星峡也成为主角主动选择。B与A主体几乎一致，但“选拔者记下他的名字”夹在接任务与急讯之间，只增加手续感，削弱了结尾突发出发的顶推力。C动作更紧凑，周谨与顾沉舟的对话也自然，但关键胜法的铺垫和反复施压略少，星力三级逆胜七级的压迫感与反杀释放不如A饱满。C结尾“落星峡已经在等人了”有续读钩子，但奖励展示和现场认可的爆点较收，读者获得感稍弱。D最明显的问题是胜后插入“四级星力差距……必须回头的位置”的解释性总结，把读者刚看懂的战术再报告一遍，AI总结味和漂亮二段论都更重。四稿都没有严重的关系戏或动作失焦问题，真正拉开差距的是A的战术兑现、公开打脸、奖励兑现和下一地图急讯连成了一次完整高潮。",
+      "wall_seconds": 13.569
+    }
+  ]
+}

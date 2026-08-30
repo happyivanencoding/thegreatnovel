@@ -1,0 +1,13 @@
+{
+  "world": 162.213,
+  "power_candidates": 241.159,
+  "human_candidates": 89.055,
+  "power_select": 11.406,
+  "human_select": 10.427,
+  "story_program": 380.618,
+  "outline": 325.14,
+  "selection": {
+    "power": 3,
+    "human": 3
+  }
+}
