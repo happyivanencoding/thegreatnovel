@@ -1,0 +1,15 @@
+A|P|enter|O1|CP1
+A|P|redirect_once|I1|CP2
+A|P|refuse_buyout|I1,C2|CP3
+R|proof|P|demonstrate|I1|CP2|local_pressure|segment_direction_change|-
+R|ownership|P|gain|M1|CP3|unrecognized|public_personal_share|-
+R|resource|P|accept|R1|CP3|none|independent_cooperation|-
+R|direct|P|reject|I1|CP3|buyout_offer|retained_control|-
+S|ability|P|use_once|I1|CP2|repaired_ready|single_use_then_dissipate|-
+S|relationship|P|cooperate|C1|CP3|employer_control|priced_independent_cooperation|-
+S|relationship|P|oppose|C2|CP3|purchase_pressure|formal_claim_pressure|-
+S|state|P|retain|I1|CP3|repair_complete|personal_control|-
+E|ending|P|set_out|R1|CP4|-|next_chapter_start|-
+E|deadline|P|deliver|R1|CP4|before|E1|-
+B|ability|P|repeat_use|I1|CP2|must_not_hold|unlimited_continuous_use|-
+B|unknown|-|settle|I1|CP3|must_remain_unknown|final_ownership_settlement|-

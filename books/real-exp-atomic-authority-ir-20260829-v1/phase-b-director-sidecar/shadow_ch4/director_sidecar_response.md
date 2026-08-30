@@ -1,0 +1,223 @@
+触发事件：顾临川在公开试场首轮取胜后，立即迎战下一轮对手杜衡；杜衡指出他退步过于习惯，以不同于武馆的步法主动施压。
+
+推动事件的人：杜衡以陌生步法逼迫顾临川改变应对；铜羽商盟试场规则与连续比试安排使他没有喘息时间。
+
+主角行动：顾临川不公开分影，凭两份训练回流后的刀感观察杜衡的步法，放弃预判式抢攻，在疲劳与影形迟滞中临场变步、收住出刃，并抓住杜衡的破绽完成反击。
+
+对手或世界反应：杜衡的步法迫使顾临川承认熟悉的武馆节奏无法直接套用；试场执事与铜羽商盟据连续击败正式一阶的表现，重新评估顾临川的实战稳定性。
+
+直接结果：顾临川赢下杜衡，公开试场连续击败两名正式一阶；铜羽商盟记下他的公开名次，授予铜羽随队契约，并支付第一笔预付钱，但报酬尚未全额结清。试场结束后，陆绾到客舍确认折日峡送药安排，顾临川主动让她看见内院与后门同时出现的两个自己；陆绾确认分影真实存在，并决定与同路药队同行。
+
+状态变化：顾临川从被记为正式一阶的试场胜者，变成获得铜羽随队契约、第一笔预付钱和离乡入口的一阶护卫候选；分影仍未向公开试场和铜羽商盟公开。陆绾成为第一个确认分影真实存在并选择同行的人。顾临川仍处于严重疲劳状态，客舍事务已交回父母。
+
+叙事功能：完成“一镇两份日子”的阶段结算，让分影带来的双重训练收益转化为公开战绩、身份、金钱、契约与关键关系；同时明确能力的优势不能消除疲劳和临场应变迟滞。
+
+结尾推动力：铜羽商队与药队次日出发，原定安全路线因探路队失联关闭，队伍必须绕行折日峡。顾临川刚获得离乡契约，就必须带着未恢复的疲劳进入真正的荒野入口。
+
+## 专项建议
+
+Dialogue：启用；保留杜衡对“习惯性退步”的判断，以及陆绾确认两具顾临川同时出现后的关键对话，让战斗误判与关系立场落地。
+
+Action：启用；本章主要兑现是疲劳状态下对杜衡的临场较量，动作应围绕观察、变步、收刃和反击展开。
+
+## ATOMIC AUTHORITY IR
+
+```json
+{
+  "schema_version": "atomic-mission-ir-v1",
+  "chapter_id": "SHADOW:CH004",
+  "protagonist_id": "PROTAGONIST_001",
+  "facts": [
+    {
+      "fact_id": "CH004_DUHENG_NEXT_ROUND",
+      "slot_id": "trial_next_opponent",
+      "source_ref": "director.trigger_event.0",
+      "kind": "event",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "CHAR_OPPONENT_001",
+      "action_id": "enter_next_round",
+      "object_ids": ["TIER_FIRST_001"],
+      "counterparty_ids": ["PROTAGONIST_001"],
+      "from_state": "下一轮比试即将开始",
+      "to_state": "杜衡与顾临川进入下一轮公开比试",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_ADAPTIVE_DUEL_WIN",
+      "slot_id": "duheng_match_result",
+      "source_ref": "director.protagonist_action.0",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "adapt_and_win_match",
+      "object_ids": ["CHAR_OPPONENT_001"],
+      "counterparty_ids": ["CHAR_OPPONENT_001"],
+      "from_state": "严重疲劳，面对陌生步法",
+      "to_state": "赢下杜衡，完成公开试场连续胜利",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": ["CH004_DUHENG_NEXT_ROUND"],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_PUBLIC_FIRST_TIER_PROOF",
+      "slot_id": "public_combat_proof",
+      "source_ref": "director.opponent_world_reaction.0",
+      "kind": "public_proof",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "prove_consecutive_combat_stability",
+      "object_ids": ["TIER_FIRST_001"],
+      "counterparty_ids": ["ORG_COPPER_FEATHER_001"],
+      "from_state": "已被记为正式一阶但尚未完成连续公开比较",
+      "to_state": "公开表现被铜羽商盟重新评估为具有正式护卫级连续实战稳定",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": ["CH004_ADAPTIVE_DUEL_WIN"],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_SHADOW_NOT_PUBLIC",
+      "slot_id": "public_shadow_disclosure",
+      "source_ref": "director.protagonist_action.1",
+      "kind": "unknown_boundary",
+      "mode": "must_remain_unknown",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "keep_shadow_unrevealed",
+      "object_ids": ["ABILITY_SHADOW_CLONE_001"],
+      "counterparty_ids": ["ORG_COPPER_FEATHER_001"],
+      "from_state": "分影未向试场与铜羽商盟公开",
+      "to_state": "分影仍未向试场与铜羽商盟公开",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_ESCORT_CONTRACT_GRANTED",
+      "slot_id": "escort_contract_ownership",
+      "source_ref": "director.direct_result.0",
+      "kind": "ownership_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "grant_escort_contract",
+      "object_ids": ["CONTRACT_ESCORT_001"],
+      "counterparty_ids": ["PROTAGONIST_001"],
+      "from_state": "尚未取得铜羽随队契约",
+      "to_state": "顾临川取得铜羽随队契约",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": ["CH004_PUBLIC_FIRST_TIER_PROOF"],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_PREPAYMENT_RECEIVED",
+      "slot_id": "first_prepayment",
+      "source_ref": "director.direct_result.1",
+      "kind": "resource_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "receive_prepayment",
+      "object_ids": ["RESOURCE_PREPAYMENT_001"],
+      "counterparty_ids": ["ORG_COPPER_FEATHER_001"],
+      "from_state": "未持有第一笔预付款",
+      "to_state": "持有第一笔预付款，报酬尚未全额结清",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": ["CH004_ESCORT_CONTRACT_GRANTED"],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_LUWAN_CONFIRMS_SHADOW",
+      "slot_id": "luwan_shadow_knowledge",
+      "source_ref": "director.direct_result.2",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "reveal_shadow_to_partner",
+      "object_ids": ["ABILITY_SHADOW_CLONE_001"],
+      "counterparty_ids": ["CHAR_PARTNER_001"],
+      "from_state": "陆绾尚未确认分影真实存在",
+      "to_state": "陆绾确认分影真实存在",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": ["CH004_ADAPTIVE_DUEL_WIN"],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_MEDICINE_CONVOY_JOINED",
+      "slot_id": "medicine_convoy_companionship",
+      "source_ref": "director.direct_result.3",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "CHAR_PARTNER_001",
+      "action_id": "decide_to_travel_together",
+      "object_ids": ["GROUP_MEDICINE_CONVOY_001"],
+      "counterparty_ids": ["PROTAGONIST_001"],
+      "from_state": "陆绾尚未决定是否同行",
+      "to_state": "陆绾决定与同路药队同行",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": ["CH004_LUWAN_CONFIRMS_SHADOW"],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_NEXT_DAY_DEPARTURE",
+      "slot_id": "departure_deadline",
+      "source_ref": "director.ending_drive.0",
+      "kind": "deadline",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "depart_next_day",
+      "object_ids": ["GROUP_MEDICINE_CONVOY_001"],
+      "counterparty_ids": ["PROTAGONIST_001"],
+      "from_state": "仍在熟悉城镇内",
+      "to_state": "次日出发，进入离乡行程",
+      "value": "next_day",
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": ["CH004_ESCORT_CONTRACT_GRANTED", "CH004_MEDICINE_CONVOY_JOINED"],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_CANYON_DETOUR_PRESSURE",
+      "slot_id": "wilderness_route_entry",
+      "source_ref": "director.ending_drive.1",
+      "kind": "ending",
+      "mode": "must_hold",
+      "phase": "post_chapter",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "take_canyon_detour",
+      "object_ids": ["ROUTE_CANYON_001"],
+      "counterparty_ids": ["GROUP_MEDICINE_CONVOY_001"],
+      "from_state": "原定安全路线可用",
+      "to_state": "原定安全路线关闭，队伍必须绕行折日峡",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": ["CH004_NEXT_DAY_DEPARTURE"],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    }
+  ]
+}
+```

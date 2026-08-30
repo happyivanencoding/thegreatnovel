@@ -1,0 +1,26 @@
+{
+  "skill": "tgn-system-steward",
+  "version": "0.3.21",
+  "package_digest": "sha256:b95296af5b5142e578a6385e2d44c655a924aac960118090439e9a90ba375bdd",
+  "validated": true,
+  "installed": true,
+  "activated": true,
+  "files": [
+    {
+      "file": "SKILL.md",
+      "repository_sha256": "d638670527a4793e88491b90a0a273a66fc995203fa9b4da4d8c1f2cca30926d",
+      "installed_sha256": "d638670527a4793e88491b90a0a273a66fc995203fa9b4da4d8c1f2cca30926d",
+      "exact": true
+    },
+    {
+      "file": "references/atomic-authority-ir-protocol.md",
+      "repository_sha256": "5f9ea1b1b7b1948bca4b7c968bddff50d9aec366f885009aec7113f80326aac7",
+      "installed_sha256": "5f9ea1b1b7b1948bca4b7c968bddff50d9aec366f885009aec7113f80326aac7",
+      "exact": true
+    }
+  ],
+  "all_exact": true,
+  "smoke_file": "STEWARD_SMOKE.md",
+  "smoke_verdict": "PARTIAL",
+  "smoke_expected_behavior": true
+}

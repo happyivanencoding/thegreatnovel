@@ -1,0 +1,95 @@
+{
+  "date": "2026-08-29",
+  "experiment": "Atomic Authority IR v1",
+  "focused_tests": {
+    "passed": 57,
+    "command": "python -m pytest -q temps/test_atomic_authority_ir_v1.py"
+  },
+  "full_repository_tests": {
+    "passed": 421,
+    "command": "python -m pytest -q"
+  },
+  "compiled_experiment_scripts": 10,
+  "git_diff_check": true,
+  "static_source_pure_ir": {
+    "samples": 4,
+    "preflight_eligible": 4,
+    "source_pure": 4,
+    "locality_allowed_pass": 4,
+    "outside_locality_blocked": 4,
+    "average_editable_ratio": 0.0311
+  },
+  "schema_runtime_validation": {
+    "checks": 22,
+    "valid_checks": 22,
+    "negative_probes": 5,
+    "negative_probes_rejected": 5,
+    "external_dependencies_added": false
+  },
+  "free_text_sidecar_negative_evidence": {
+    "verbose_wall_change_percent": 205.83,
+    "compact_wall_change_percent": 147.41,
+    "micro_wall_change_percent": 146.45,
+    "compact_story_blind": {
+      "control": 3,
+      "compact_sidecar": 1
+    },
+    "compact_authority_blind": {
+      "compact_sidecar": 3,
+      "control": 1
+    }
+  },
+  "skill": {
+    "skill": "tgn-system-steward",
+    "version": "0.3.21",
+    "package_digest": "sha256:b95296af5b5142e578a6385e2d44c655a924aac960118090439e9a90ba375bdd",
+    "validated": true,
+    "installed": true,
+    "activated": true,
+    "files": [
+      {
+        "file": "SKILL.md",
+        "source_sha256": "d638670527a4793e88491b90a0a273a66fc995203fa9b4da4d8c1f2cca30926d",
+        "installed_sha256": "d638670527a4793e88491b90a0a273a66fc995203fa9b4da4d8c1f2cca30926d",
+        "exact": true
+      },
+      {
+        "file": "references/atomic-authority-ir-protocol.md",
+        "source_sha256": "5f9ea1b1b7b1948bca4b7c968bddff50d9aec366f885009aec7113f80326aac7",
+        "installed_sha256": "5f9ea1b1b7b1948bca4b7c968bddff50d9aec366f885009aec7113f80326aac7",
+        "exact": true
+      }
+    ],
+    "all_exact": true,
+    "smoke_file": "STEWARD_SMOKE.md",
+    "smoke_verdict": "PARTIAL",
+    "smoke_expected_behavior": true
+  },
+  "production_change": {
+    "atomic_ir_wired": false,
+    "chapter_model_route_changed": false,
+    "acp_runner_changed": false,
+    "frontend_changed": false,
+    "direct_api_executor_changed": false
+  },
+  "decision": {
+    "source_boundary_cleanup": "PASS_TO_FREEZE",
+    "atomic_authority_contract": "PASS_ARCHITECTURE_AND_STATIC_IMPLEMENTATION",
+    "primary_preservation_map": "PASS_ARCHITECTURE_AND_STATIC_IMPLEMENTATION",
+    "free_text_sidecars": "FAIL",
+    "native_structured_director": "SCHEMA_UNIT_READY_MODEL_UNMEASURED",
+    "automatic_entity_registry": "UNPROVEN",
+    "automatic_primary_binding": "UNPROVEN",
+    "atomic_fast_route": "DO_NOT_PRODUCTIONIZE",
+    "current_default": "Luna high Director -> Luna high Curator -> Terra high Primary -> Luna high Authority Reviser -> Luna low State"
+  },
+  "key_paths": {
+    "report": "RESULTS.md",
+    "architecture": "ARCHITECTURE.md",
+    "protocol": "PROTOCOL.md",
+    "evidence_index": "EVIDENCE_INDEX.json",
+    "decision_table": "DECISION_TABLE.csv",
+    "source_separation_matrix": "SOURCE_SEPARATION_MATRIX.csv",
+    "formal_audit_resolution": "phase-g2-postfix-audits/FORMAL_AUDIT_RESOLUTION.md"
+  }
+}

@@ -1,0 +1,10 @@
+﻿source,may_create_hard_contract,allowed_contribution,forbidden_contribution
+Frozen Mission,YES,Hard facts / current chapter transitions,No prose preservation
+Canon,YES,Occurred states / current holders / preconditions,No realization preference
+World Authority,YES,World rules / resource semantics,No chapter creativity
+Power Authority,YES,Stable scale / ability conditions,No automatic chapter upgrade
+Human Authority,YES,Approved human constraints / named conditional trigger,No prose quota
+Reader Release,YES,Scheduled reader-knowledge fact,No unscheduled encyclopedia
+Curator,NO,Location/protection hints and non-binding diagnostics,Cannot create fact/conflict/entity/edit window
+Primary Draft,NO,Evidence location / protected fragment inside allowed window,"Cannot define identity, fact, conflict or Authority"
+Delta / Reviser / Judge,NO,Candidate text or experiment evaluation only,Cannot self-certify Hard Contract

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "director-structured-decision-v1.schema.json",
+  "title": "Director Structured Decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "chapter_id",
+    "protagonist_id",
+    "clauses",
+    "narrative_function_id"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "director-structured-decision-v1"
+    },
+    "chapter_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "protagonist_id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+    },
+    "clauses": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field",
+          "kind",
+          "action_id"
+        ],
+        "properties": {
+          "field": {
+            "enum": [
+              "trigger_event",
+              "event_driver",
+              "protagonist_action",
+              "world_reaction",
+              "direct_result",
+              "state_change",
+              "ending_drive"
+            ]
+          },
+          "kind": {
+            "enum": [
+              "event",
+              "action",
+              "direct_result",
+              "state_transition",
+              "ending",
+              "power_transition",
+              "resource_transition",
+              "ownership_transition",
+              "relationship_transition",
+              "deadline",
+              "public_proof",
+              "reader_release",
+              "unknown_boundary",
+              "ability_boundary",
+              "historical_claim_boundary"
+            ]
+          },
+          "actor_id": {
+            "type": "string"
+          },
+          "action_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "object_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+            },
+            "uniqueItems": true
+          },
+          "counterparty_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+            },
+            "uniqueItems": true
+          },
+          "from_state": {
+            "type": "string"
+          },
+          "to_state": {
+            "type": "string"
+          },
+          "value": {},
+          "terminal": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "enum": [
+                  "must_hold",
+                  "terminal",
+                  "must_not_hold",
+                  "must_remain_unknown",
+                  "conditional"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "surface_note": {
+            "type": "string"
+          }
+        }
+      },
+      "maxItems": 23
+    },
+    "narrative_function_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.:-]{2,127}$"
+    }
+  }
+}

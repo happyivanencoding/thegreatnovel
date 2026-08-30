@@ -1,0 +1,357 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atomic-authority-contract-v1.schema.json",
+  "title": "Atomic Authority Contract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "chapter_id",
+    "protagonist_id",
+    "contract_hash",
+    "preflight_eligible",
+    "hard_sources",
+    "artifact_provenance",
+    "registry",
+    "facts",
+    "conflicts",
+    "unsupported",
+    "diagnostics"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "atomic-authority-contract-v1"
+    },
+    "chapter_id": {
+      "type": "string"
+    },
+    "protagonist_id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+    },
+    "contract_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "preflight_eligible": {
+      "type": "boolean"
+    },
+    "hard_sources": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "frozen_mission",
+          "canon",
+          "world_authority",
+          "power_authority",
+          "human_authority",
+          "reader_release"
+        ]
+      }
+    },
+    "registry": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "entity-registry-v1.schema.json",
+      "title": "Entity Registry v1",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "chapter_id",
+        "protagonist_id",
+        "entities"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "entity-registry-v1"
+        },
+        "chapter_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "protagonist_id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+        },
+        "entities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "entity_id",
+              "kind",
+              "display_name",
+              "aliases",
+              "authority_refs",
+              "parent_entity_id"
+            ],
+            "properties": {
+              "entity_id": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+              },
+              "kind": {
+                "enum": [
+                  "character",
+                  "manifestation",
+                  "faction",
+                  "organization",
+                  "location",
+                  "item",
+                  "resource",
+                  "contract",
+                  "route",
+                  "power_tier",
+                  "ability",
+                  "group",
+                  "mystery",
+                  "event"
+                ]
+              },
+              "display_name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "aliases": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "authority_refs": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "parent_entity_id": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "fact_id",
+          "slot_id",
+          "source",
+          "source_ref",
+          "kind",
+          "mode",
+          "phase",
+          "actor_id",
+          "action_id",
+          "object_ids",
+          "counterparty_ids",
+          "from_state",
+          "to_state",
+          "value",
+          "terminal",
+          "condition_fact_ids",
+          "depends_on_fact_ids",
+          "condition_slots",
+          "depends_on_slots",
+          "metadata"
+        ],
+        "properties": {
+          "fact_id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+          },
+          "slot_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*(?::[A-Za-z0-9_.-]+)+$"
+          },
+          "source": {
+            "enum": [
+              "frozen_mission",
+              "canon",
+              "world_authority",
+              "power_authority",
+              "human_authority",
+              "reader_release"
+            ]
+          },
+          "source_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "event",
+              "action",
+              "direct_result",
+              "state_transition",
+              "ending",
+              "power_transition",
+              "resource_transition",
+              "ownership_transition",
+              "relationship_transition",
+              "deadline",
+              "public_proof",
+              "reader_release",
+              "unknown_boundary",
+              "ability_boundary",
+              "historical_claim_boundary"
+            ]
+          },
+          "mode": {
+            "enum": [
+              "must_hold",
+              "terminal",
+              "must_not_hold",
+              "must_remain_unknown",
+              "conditional"
+            ]
+          },
+          "phase": {
+            "enum": [
+              "pre_chapter",
+              "during_chapter",
+              "chapter_end",
+              "post_chapter",
+              "reader_knowledge"
+            ]
+          },
+          "actor_id": {
+            "type": "string"
+          },
+          "action_id": {
+            "type": "string"
+          },
+          "object_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+            },
+            "uniqueItems": true
+          },
+          "counterparty_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+            },
+            "uniqueItems": true
+          },
+          "from_state": {
+            "type": "string"
+          },
+          "to_state": {
+            "type": "string"
+          },
+          "value": {},
+          "terminal": {
+            "type": "boolean"
+          },
+          "condition_fact_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "depends_on_fact_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "condition_slots": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(?::[A-Za-z0-9_.-]+)+$"
+            },
+            "uniqueItems": true
+          },
+          "depends_on_slots": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_]*(?::[A-Za-z0-9_.-]+)+$"
+            },
+            "uniqueItems": true
+          },
+          "metadata": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "unsupported": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "artifact_provenance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source",
+          "artifact_id",
+          "revision_sha256",
+          "fact_ids"
+        ],
+        "properties": {
+          "source": {
+            "enum": [
+              "frozen_mission",
+              "canon",
+              "world_authority",
+              "power_authority",
+              "human_authority",
+              "reader_release"
+            ]
+          },
+          "artifact_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "fact_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+            }
+          }
+        }
+      },
+      "minItems": 1
+    }
+  }
+}

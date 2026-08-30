@@ -1746,26 +1746,23 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 本轮最终验证：全项目 `388 passed`；`tgn-system-steward 0.3.11` package validate / install / activate 完成，bounded smoke 将 Paragraph-Delta 判为 `PARTIAL`，只允许冻结速度信号与研究方向，不允许冻结 production route。
 
 
-### 14.11 Atomic Chapter Obligations v0.3（2026-08-29）
+### 14.11 Atomic Authority IR v1（2026-08-29）
 
-为解决 Paragraph-Delta “快但修改范围不稳定”的问题，建立实验性 deterministic typed compiler + Gate。当前 family：Mission clause、actor-action-object、Direct Result、Terminal State、Ending、ownership/copy/custody、money/payment、time window、stable power position / battle boundary / cooldown、Public Proof、Reader Release、unresolved fact、relationship state、Human cue、Primary已有的 desire / relationship / reward / surprise / social repricing，以及全文未授权历史回指。
+用户对旧Atomic v0.3的关键修正被实验确认：`Atomic Authority Contract` 与 `Primary Preservation Map` 必须彻底拆开。Hard Contract只来自Entity Registry与Frozen Mission / Canon / World / Power / Human / Reader Release的可信typed artifacts；Curator/Primary只能提供realization位置与Edit Locality，不能定义Fact、Conflict或Identity。
 
-最重要的 decision model：
+稳定decision model：
 
-1. `Current Mission explicit actor > explicit current Primary fallback > remote Human/Book name`；远端旧原型不能覆盖当前主角。
-2. terminal / pending / conditional / must-remain-unknown / preserve-if-present 必须分型；“能、准备、资格、依据、即将”不是完成。
-3. received / entitlement / pending / lost / disputed、original / copy / custody / title、stable tier / battle output / temporary effect / cooldown 分开。
-4. 首笔不能冒充全部结清，未授权金额/单位失败。
-5. Public Proof 必须是同一人同一题的 `performance → ruler → repricing`，不能跨无关段落拼装；不授权稳定升档。
-6. Unknown boundary 与 source conflict 分开；“不得补写 / 保持未知 / 缺少重复上下文”通常不是 Authority 冲突。
-7. Relationship 绑定同一 named counterpart；Human cue要求同一人物、具体接触/治疗 trigger和Frozen Human同时成立。
-8. 欲望、关系、Reward、Surprise、Social Repricing不是每章配额，只在Delta触碰Primary已有价值时保护。
-9. Gate必须扫描完整最终正文；第2章暴露出Primary已有未授权“少东家那句‘回去再算’”，即使Delta只改低潮窗口也必须fallback。
-10. Historical Full Reviser是shadow control，不是gold。第16章Delta与历史Full都未闭合分身/回潮楔 actor-object；一次显式Full fallback仍漏cooldown，累计比原Full慢27.4%且仍不可保存。
+1. Entity ID替代“Mission名字优先还是Primary名字优先”；正文名字/代词只作evidence mapping。
+2. Runtime拥有fact ID、stable slot、source/mode/phase和cross-source dependency；terminal state-bearing transition必须有可验证from-state。
+3. Artifact使用source-specific freezer、私有issuer与fact digest；空合同不eligible；Registry/Contract/Map不可变，Contract snapshot重载会复核provenance、membership、digest与hash。
+4. Primary evidence由Runtime签发并绑定Primary SHA-256；Curator hint不能扩窗。Preservation校验同一Contract hash、paragraph topology和locked paragraph hashes。
+5. Edit Locality是默认商业价值保护：blocker在P42–P43，只开放P42–P43；窗口外欲望、关系、Reward、Surprise不需要语义分类器。
+6. 只有money/relationship promise/mystery/current action basis/ownership/active threat等被Authority明确标记的state-bearing history才是Hard，不登记所有旧对白。
+7. Unsupported chapter直接走当前Full且不post-gate；supported Delta失败才Full fallback并supported re-gate。
+8. Primary不看Atomic Pack；Normal Delta只在失败后看到具体blocker与窄locality。
+9. verbose/compact/micro自由文本Sidecar全部失败；目标改为单一canonical `DirectorStructuredDecision`，Runtime双投影human Mission与Frozen Mission artifact，不保留第二份自由human clause。
 
-最终校准：33项受控边界测试PASS；12/12 known-bad mutation recall；20章shadow仅10/20 preflight eligible；跨书5/5 fail closed。两次四章真实route均为2 ADOPT、1 FULL FALLBACK、1 FULL RESIDUAL FAILURE；observed cost through detection名义快37.59% / 40.97%，但不是完整production speed。原始Delta repeat只有1/4 exact；实际采用且hash与既有blind一致的第9/14章，Reader为Atomic 1 / Control 1，Authority为Atomic 2。
-
-最终分类：**Boundary methodology PASS；current compiler PARTIAL / research-only；Atomic fast route FAIL AS PRODUCTION DEFAULT。** Production五节点、模型与effort不变。下一步不是再加LLM classifier，而是做结构化通用Schema Compiler，并在跨书有可解释coverage后再测试Residual-only Full repair。完整证据：`books/real-exp-atomic-chapter-obligations-20260829-v1/RESULTS.md`。
+证据：57项focused tests；两书四章4/4 source-pure/preflight eligible，平均editable 3.11%，窗口外4/4阻止；22/22 Schema/runtime checks；Sidecar wall分别+205.83%/+147.41%/+146.45%，compact blind Story 3:1偏Control、Authority 3:1偏Treatment。Native structured Director仅schema/unit-ready，真实模型Story/latency/最终正文未测；Full Reviser固定税尚未减少。最终分类：Architecture/static implementation PASS；free-text Sidecar FAIL；native model route与Atomic fast route NOT PRODUCTION。完整报告：`books/real-exp-atomic-authority-ir-20260829-v1/RESULTS.md`。
 
 ---
 

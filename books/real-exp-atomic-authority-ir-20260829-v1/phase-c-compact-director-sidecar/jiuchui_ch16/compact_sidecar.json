@@ -1,0 +1,206 @@
+{
+  "v": "AAIR1",
+  "chapter": "JIUCHUI:CH016",
+  "protagonist": "PROTAGONIST_001",
+  "actions": [
+    {
+      "slot": "event:JIUCHUI:CH016:stabilize_public_routes",
+      "actor": "PROTAGONIST_001",
+      "verb": "stabilize",
+      "objects": [
+        "ROUTE_GRAIN_001",
+        "ROUTE_WATER_001",
+        "RESOURCE_WELLS_001"
+      ],
+      "counterparties": []
+    },
+    {
+      "slot": "event:JIUCHUI:CH016:fix_second_pressure_node",
+      "actor": "CLONE_001",
+      "verb": "fix",
+      "objects": [
+        "ITEM_RETURN_TIDE_WEDGE_001",
+        "LOCATION_SECOND_PRESSURE_NODE_001"
+      ],
+      "counterparties": []
+    },
+    {
+      "slot": "event:JIUCHI:CH016:redirect_tide_to_outer_pass",
+      "actor": "PROTAGONIST_001",
+      "verb": "redirect",
+      "objects": [
+        "ITEM_RETURN_TIDE_WEDGE_001",
+        "LOCATION_OUTER_PASS_001"
+      ],
+      "counterparties": []
+    }
+  ],
+  "results": [
+    {
+      "slot": "resource:ROUTE_GRAIN_001",
+      "kind": "resource_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "preserve",
+      "objects": [
+        "ROUTE_GRAIN_001"
+      ],
+      "counterparties": [],
+      "from": "blocked",
+      "to": "usable",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:JIUCHI:CH016:stabilize_public_routes"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "resource:RESOURCE_WELLS_001",
+      "kind": "resource_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "preserve",
+      "objects": [
+        "RESOURCE_WELLS_001"
+      ],
+      "counterparties": [],
+      "from": "under_tide_impact",
+      "to": "not_destroyed",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:JIUCHI:CH016:redirect_tide_to_outer_pass"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "resource:ROUTE_WATER_001",
+      "kind": "resource_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "open",
+      "objects": [
+        "ROUTE_WATER_001"
+      ],
+      "counterparties": [],
+      "from": "threatened",
+      "to": "usable_migration_window",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:JIUCHI:CH016:redirect_tide_to_outer_pass"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "result:JIUCHI:CH016:outer_pass_destroyed",
+      "kind": "direct_result",
+      "actor": "PROTAGONIST_001",
+      "verb": "sacrifice",
+      "objects": [
+        "LOCATION_OUTER_PASS_001"
+      ],
+      "counterparties": [],
+      "from": "standing",
+      "to": "destroyed",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:JIUCHI:CH016:redirect_tide_to_outer_pass"
+      ],
+      "meta": {}
+    }
+  ],
+  "states": [
+    {
+      "slot": "ability:ITEM_RETURN_TIDE_WEDGE_001:reuse_requires_dissipation",
+      "kind": "ability_boundary",
+      "actor": "PROTAGONIST_001",
+      "verb": "require_dissipation",
+      "objects": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparties": [],
+      "from": "released_once",
+      "to": "reuse_blocked_until_dissipation",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:JIUCHI:CH016:redirect_tide_to_outer_pass"
+      ],
+      "meta": {}
+    }
+  ],
+  "ending": [
+    {
+      "slot": "ending:JIUCHI:CH016:observation_point_exposed",
+      "kind": "ending",
+      "actor": "PROTAGONIST_001",
+      "verb": "expose",
+      "objects": [
+        "LOCATION_OBSERVATION_POINT_001"
+      ],
+      "counterparties": [],
+      "from": "concealed",
+      "to": "exposed",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "result:JIUCHI:CH016:outer_pass_destroyed"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "ending:JIUCHI:CH016:next_tide_threatens_evacuees",
+      "kind": "deadline",
+      "actor": "PROTAGONIST_001",
+      "verb": "require_entry",
+      "objects": [
+        "LOCATION_OBSERVATION_POINT_001"
+      ],
+      "counterparties": [],
+      "from": "not_entered",
+      "to": "required_before_next_tide",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "ending:JIUCHI:CH016:observation_point_exposed"
+      ],
+      "meta": {}
+    }
+  ],
+  "boundaries": [
+    {
+      "slot": "ability:ITEM_RETURN_TIDE_WEDGE_001:reuse_boundary",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "actor": "PROTAGONIST_001",
+      "verb": "remain_blocked_until_dissipation",
+      "objects": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparties": [],
+      "from": "released_once",
+      "to": "not_ready_for_immediate_reuse",
+      "value": null,
+      "depends": [
+        "ability:ITEM_RETURN_TIDE_WEDGE_001:reuse_requires_dissipation"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "mystery:MYSTERY_EARLY_TIDE_001",
+      "kind": "unknown_boundary",
+      "mode": "must_remain_unknown",
+      "actor": "",
+      "verb": "remain_unresolved",
+      "objects": [
+        "MYSTERY_EARLY_TIDE_001"
+      ],
+      "counterparties": [],
+      "from": "unresolved",
+      "to": "unresolved",
+      "value": null,
+      "depends": [],
+      "meta": {}
+    }
+  ]
+}

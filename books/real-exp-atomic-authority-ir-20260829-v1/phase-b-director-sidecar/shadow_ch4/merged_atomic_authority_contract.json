@@ -1,0 +1,501 @@
+{
+  "schema_version": "atomic-authority-contract-v1",
+  "chapter_id": "SHADOW:CH004",
+  "protagonist_id": "PROTAGONIST_001",
+  "contract_hash": "f6ab336da0526c2c030e6f1fef68ccd55069bdf43b065af2d451f3bc67aa098c",
+  "preflight_eligible": false,
+  "hard_sources": [
+    "canon",
+    "frozen_mission",
+    "power_authority",
+    "reader_release",
+    "world_authority"
+  ],
+  "registry": {
+    "schema_version": "entity-registry-v1",
+    "chapter_id": "SHADOW:CH004",
+    "protagonist_id": "PROTAGONIST_001",
+    "entities": [
+      {
+        "entity_id": "ABILITY_SHADOW_CLONE_001",
+        "kind": "ability",
+        "display_name": "分影",
+        "aliases": [
+          "影身"
+        ],
+        "authority_refs": [
+          "authority.entity.ABILITY_SHADOW_CLONE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CHAR_OPPONENT_001",
+        "kind": "character",
+        "display_name": "杜衡",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_OPPONENT_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CHAR_PARTNER_001",
+        "kind": "character",
+        "display_name": "陆绾",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_PARTNER_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CONTRACT_ESCORT_001",
+        "kind": "contract",
+        "display_name": "铜羽随队契约",
+        "aliases": [
+          "随队契约",
+          "契券"
+        ],
+        "authority_refs": [
+          "authority.entity.CONTRACT_ESCORT_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "GROUP_MEDICINE_CONVOY_001",
+        "kind": "group",
+        "display_name": "药队",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.GROUP_MEDICINE_CONVOY_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ORG_COPPER_FEATHER_001",
+        "kind": "organization",
+        "display_name": "铜羽商盟",
+        "aliases": [
+          "铜羽"
+        ],
+        "authority_refs": [
+          "authority.entity.ORG_COPPER_FEATHER_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "PROTAGONIST_001",
+        "kind": "character",
+        "display_name": "顾临川",
+        "aliases": [
+          "他",
+          "本体",
+          "主角"
+        ],
+        "authority_refs": [
+          "canon.protagonist"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "RESOURCE_PREPAYMENT_001",
+        "kind": "resource",
+        "display_name": "第一笔预付钱",
+        "aliases": [
+          "预付款"
+        ],
+        "authority_refs": [
+          "authority.entity.RESOURCE_PREPAYMENT_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ROUTE_CANYON_001",
+        "kind": "route",
+        "display_name": "折日峡路线",
+        "aliases": [
+          "折日峡"
+        ],
+        "authority_refs": [
+          "authority.entity.ROUTE_CANYON_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "TIER_FIRST_001",
+        "kind": "power_tier",
+        "display_name": "正式一阶",
+        "aliases": [
+          "一阶"
+        ],
+        "authority_refs": [
+          "authority.entity.TIER_FIRST_001"
+        ],
+        "parent_entity_id": ""
+      }
+    ]
+  },
+  "facts": [
+    {
+      "fact_id": "CH004_ADAPTIVE_DUEL_WIN",
+      "slot_id": "duheng_match_result",
+      "source": "frozen_mission",
+      "source_ref": "director.protagonist_action.0",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "adapt_and_win_match",
+      "object_ids": [
+        "CHAR_OPPONENT_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_OPPONENT_001"
+      ],
+      "from_state": "严重疲劳，面对陌生步法",
+      "to_state": "赢下杜衡，完成公开试场连续胜利",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH004_DUHENG_NEXT_ROUND"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_CANYON_DETOUR_PRESSURE",
+      "slot_id": "wilderness_route_entry",
+      "source": "frozen_mission",
+      "source_ref": "director.ending_drive.1",
+      "kind": "ending",
+      "mode": "must_hold",
+      "phase": "post_chapter",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "take_canyon_detour",
+      "object_ids": [
+        "ROUTE_CANYON_001"
+      ],
+      "counterparty_ids": [
+        "GROUP_MEDICINE_CONVOY_001"
+      ],
+      "from_state": "原定安全路线可用",
+      "to_state": "原定安全路线关闭，队伍必须绕行折日峡",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [
+        "CH004_NEXT_DAY_DEPARTURE"
+      ],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_DUHENG_NEXT_ROUND",
+      "slot_id": "trial_next_opponent",
+      "source": "frozen_mission",
+      "source_ref": "director.trigger_event.0",
+      "kind": "event",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "CHAR_OPPONENT_001",
+      "action_id": "enter_next_round",
+      "object_ids": [
+        "TIER_FIRST_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "下一轮比试即将开始",
+      "to_state": "杜衡与顾临川进入下一轮公开比试",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_ESCORT_CONTRACT_GRANTED",
+      "slot_id": "escort_contract_ownership",
+      "source": "frozen_mission",
+      "source_ref": "director.direct_result.0",
+      "kind": "ownership_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "grant_escort_contract",
+      "object_ids": [
+        "CONTRACT_ESCORT_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "尚未取得铜羽随队契约",
+      "to_state": "顾临川取得铜羽随队契约",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH004_PUBLIC_FIRST_TIER_PROOF"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_LUWAN_CONFIRMS_SHADOW",
+      "slot_id": "luwan_shadow_knowledge",
+      "source": "frozen_mission",
+      "source_ref": "director.direct_result.2",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "reveal_shadow_to_partner",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "陆绾尚未确认分影真实存在",
+      "to_state": "陆绾确认分影真实存在",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH004_ADAPTIVE_DUEL_WIN"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_MEDICINE_CONVOY_JOINED",
+      "slot_id": "medicine_convoy_companionship",
+      "source": "frozen_mission",
+      "source_ref": "director.direct_result.3",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "CHAR_PARTNER_001",
+      "action_id": "decide_to_travel_together",
+      "object_ids": [
+        "GROUP_MEDICINE_CONVOY_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "陆绾尚未决定是否同行",
+      "to_state": "陆绾决定与同路药队同行",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH004_LUWAN_CONFIRMS_SHADOW"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_NEXT_DAY_DEPARTURE",
+      "slot_id": "departure_deadline",
+      "source": "frozen_mission",
+      "source_ref": "director.ending_drive.0",
+      "kind": "deadline",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "depart_next_day",
+      "object_ids": [
+        "GROUP_MEDICINE_CONVOY_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "仍在熟悉城镇内",
+      "to_state": "次日出发，进入离乡行程",
+      "value": "next_day",
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH004_ESCORT_CONTRACT_GRANTED",
+        "CH004_MEDICINE_CONVOY_JOINED"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_PREPAYMENT_RECEIVED",
+      "slot_id": "first_prepayment",
+      "source": "frozen_mission",
+      "source_ref": "director.direct_result.1",
+      "kind": "resource_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "receive_prepayment",
+      "object_ids": [
+        "RESOURCE_PREPAYMENT_001"
+      ],
+      "counterparty_ids": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "from_state": "未持有第一笔预付款",
+      "to_state": "持有第一笔预付款，报酬尚未全额结清",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH004_ESCORT_CONTRACT_GRANTED"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_PUBLIC_FIRST_TIER_PROOF",
+      "slot_id": "public_combat_proof",
+      "source": "frozen_mission",
+      "source_ref": "director.opponent_world_reaction.0",
+      "kind": "public_proof",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "prove_consecutive_combat_stability",
+      "object_ids": [
+        "TIER_FIRST_001"
+      ],
+      "counterparty_ids": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "from_state": "已被记为正式一阶但尚未完成连续公开比较",
+      "to_state": "公开表现被铜羽商盟重新评估为具有正式护卫级连续实战稳定",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH004_ADAPTIVE_DUEL_WIN"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH004_SHADOW_NOT_PUBLIC",
+      "slot_id": "public_shadow_disclosure",
+      "source": "frozen_mission",
+      "source_ref": "director.protagonist_action.1",
+      "kind": "unknown_boundary",
+      "mode": "must_remain_unknown",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "keep_shadow_unrevealed",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparty_ids": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "from_state": "分影未向试场与铜羽商盟公开",
+      "to_state": "分影仍未向试场与铜羽商盟公开",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_CANON_POWER_TIER",
+      "slot_id": "power:PROTAGONIST_001",
+      "source": "canon",
+      "source_ref": "canon.power.current",
+      "kind": "state_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_at_tier",
+      "object_ids": [
+        "TIER_FIRST_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "TIER_FIRST_001",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_POWER_REMAIN_TIER_ONE",
+      "slot_id": "power:PROTAGONIST_001",
+      "source": "power_authority",
+      "source_ref": "power.current.no_transition",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_at_stable_tier",
+      "object_ids": [
+        "TIER_FIRST_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "TIER_FIRST_001",
+      "to_state": "TIER_FIRST_001",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_READER_RELEASE_CONTRACT_VALUE",
+      "slot_id": "reader_release:S4:contract_entry",
+      "source": "reader_release",
+      "source_ref": "reader_release.chapter4.1",
+      "kind": "reader_release",
+      "mode": "must_hold",
+      "phase": "reader_knowledge",
+      "actor_id": "",
+      "action_id": "reader_learns_contract_entry_value",
+      "object_ids": [
+        "CONTRACT_ESCORT_001",
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "S4_RESULT_CONTRACT_RECEIVED",
+        "S4_WORLD_CONTRACT_ENTRY"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_WORLD_CONTRACT_ENTRY",
+      "slot_id": "world:CONTRACT_ESCORT_001:entry_value",
+      "source": "world_authority",
+      "source_ref": "world.contract.cross_city_entry",
+      "kind": "state_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "contract_enables_cross_city_entry",
+      "object_ids": [
+        "CONTRACT_ESCORT_001",
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": {
+        "enables": [
+          "lodging",
+          "trade",
+          "escort_entry"
+        ]
+      },
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    }
+  ],
+  "conflicts": [],
+  "unsupported": [
+    "fact S4_READER_RELEASE_CONTRACT_VALUE references unknown dependency=S4_RESULT_CONTRACT_RECEIVED"
+  ],
+  "diagnostics": []
+}

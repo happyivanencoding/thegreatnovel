@@ -1,0 +1,127 @@
+{
+  "schema_version": "director-structured-decision-v1",
+  "chapter_id": "BOOK_A:CH001",
+  "protagonist_id": "PROTAGONIST_001",
+  "clauses": [
+    {
+      "field": "trigger_event",
+      "kind": "event",
+      "actor_id": "",
+      "action_id": "route_breaks",
+      "object_ids": [
+        "ROUTE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": null,
+      "mode": null,
+      "metadata": {},
+      "surface_note": "non-authoritative note"
+    },
+    {
+      "field": "event_driver",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "choose_to_protect",
+      "object_ids": [
+        "ROUTE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": null,
+      "mode": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "repair_under_pressure",
+      "object_ids": [
+        "ROUTE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": null,
+      "mode": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "world_reaction",
+      "kind": "event",
+      "actor_id": "",
+      "action_id": "world_reprices_route",
+      "object_ids": [
+        "ROUTE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": null,
+      "mode": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "direct_result",
+      "kind": "direct_result",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "preserve_route",
+      "object_ids": [
+        "ROUTE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "preserved",
+      "value": null,
+      "terminal": true,
+      "mode": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "state_change",
+      "kind": "relationship_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "relationship_reprice",
+      "object_ids": [],
+      "counterparty_ids": [
+        "RIVAL_001"
+      ],
+      "from_state": "unknown_competitor",
+      "to_state": "independent_judgment_holder",
+      "value": null,
+      "terminal": true,
+      "mode": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "ending_drive",
+      "kind": "deadline",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "depart_before_low_tide",
+      "object_ids": [
+        "ROUTE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "mode": null,
+      "metadata": {},
+      "surface_note": ""
+    }
+  ],
+  "narrative_function_id": "function.public_judgment"
+}

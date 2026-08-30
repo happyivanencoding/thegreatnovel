@@ -1,0 +1,232 @@
+{
+  "v": "AAIR1",
+  "chapter": "SHADOW:CH004",
+  "protagonist": "PROTAGONIST_001",
+  "actions": [
+    {
+      "slot": "event:SHADOW:CH004:win_du_heng",
+      "actor": "PROTAGONIST_001",
+      "verb": "win_public_match",
+      "objects": [
+        "CHAR_OPPONENT_001"
+      ],
+      "counterparties": [
+        "ORG_COPPER_FEATHER_001"
+      ]
+    },
+    {
+      "slot": "event:SHADOW:CH004:disclose_shadow",
+      "actor": "PROTAGONIST_001",
+      "verb": "disclose_ability",
+      "objects": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparties": [
+        "CHAR_PARTNER_001"
+      ]
+    },
+    {
+      "slot": "event:SHADOW:CH004:accept_escort_contract",
+      "actor": "PROTAGONIST_001",
+      "verb": "accept_contract",
+      "objects": [
+        "CONTRACT_ESCORT_001"
+      ],
+      "counterparties": [
+        "ORG_COPPER_FEATHER_001"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "slot": "result:SHADOW:CH004:public_match",
+      "kind": "public_proof",
+      "actor": "PROTAGONIST_001",
+      "verb": "establish_public_first_tier_stability",
+      "objects": [
+        "TIER_FIRST_001"
+      ],
+      "counterparties": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "from": "unconfirmed",
+      "to": "publicly_confirmed",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:SHADOW:CH004:win_du_heng"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "ownership:CONTRACT_ESCORT_001",
+      "kind": "ownership_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "hold_contract",
+      "objects": [
+        "CONTRACT_ESCORT_001"
+      ],
+      "counterparties": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "from": "not_held",
+      "to": "held",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:SHADOW:CH004:accept_escort_contract"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "resource:RESOURCE_PREPAYMENT_001",
+      "kind": "resource_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "receive_prepayment",
+      "objects": [
+        "RESOURCE_PREPAYMENT_001"
+      ],
+      "counterparties": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "from": "not_received",
+      "to": "first_prepayment_received",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "ownership:CONTRACT_ESCORT_001"
+      ],
+      "meta": {
+        "scope": "first_payment_only"
+      }
+    },
+    {
+      "slot": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+      "kind": "relationship_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "establish_travel_partnership",
+      "objects": [
+        "ABILITY_SHADOW_CLONE_001",
+        "GROUP_MEDICINE_CONVOY_001"
+      ],
+      "counterparties": [
+        "CHAR_PARTNER_001"
+      ],
+      "from": "partner_unaware_of_shadow",
+      "to": "partner_knows_shadow_and_chooses_joint_travel",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:SHADOW:CH004:disclose_shadow"
+      ],
+      "meta": {}
+    }
+  ],
+  "states": [
+    {
+      "slot": "state:PROTAGONIST_001",
+      "kind": "state_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "enter_escort_candidate_status",
+      "objects": [
+        "TIER_FIRST_001",
+        "CONTRACT_ESCORT_001"
+      ],
+      "counterparties": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "from": "local_apprentice",
+      "to": "public_formal_first_tier_escort_candidate",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "result:SHADOW:CH004:public_match",
+        "ownership:CONTRACT_ESCORT_001"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "ability:ABILITY_SHADOW_CLONE_001:fatigue_return",
+      "kind": "ability_boundary",
+      "actor": "PROTAGONIST_001",
+      "verb": "retain_shared_fatigue",
+      "objects": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparties": [],
+      "from": "fatigue_can_be_separated",
+      "to": "fatigue_returns_on_reunion",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:SHADOW:CH004:win_du_heng"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "ability:ABILITY_SHADOW_CLONE_001:improvisation_delay",
+      "kind": "ability_boundary",
+      "actor": "PROTAGONIST_001",
+      "verb": "retain_delayed_response",
+      "objects": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparties": [
+        "CHAR_OPPONENT_001"
+      ],
+      "from": "shadow_handles_unfamiliar_change_normally",
+      "to": "shadow_response_remains_delayed",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:SHADOW:CH004:win_du_heng"
+      ],
+      "meta": {}
+    }
+  ],
+  "ending": [
+    {
+      "slot": "ending:SHADOW:CH004:next_day_departure",
+      "kind": "deadline",
+      "actor": "PROTAGONIST_001",
+      "verb": "depart_next_day",
+      "objects": [
+        "CONTRACT_ESCORT_001",
+        "GROUP_MEDICINE_CONVOY_001",
+        "ROUTE_CANYON_001"
+      ],
+      "counterparties": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "from": "not_departed",
+      "to": "departure_due",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "ownership:CONTRACT_ESCORT_001",
+        "relationship:PROTAGONIST_001:CHAR_PARTNER_001"
+      ],
+      "meta": {}
+    }
+  ],
+  "boundaries": [
+    {
+      "slot": "ability:ABILITY_SHADOW_CLONE_001:no_fatigue_cancellation",
+      "kind": "ability_boundary",
+      "mode": "must_not_hold",
+      "actor": "PROTAGONIST_001",
+      "verb": "cancel_shared_fatigue",
+      "objects": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparties": [],
+      "from": "",
+      "to": "",
+      "value": null,
+      "depends": [
+        "event:SHADOW:CH004:win_du_heng"
+      ],
+      "meta": {}
+    }
+  ]
+}

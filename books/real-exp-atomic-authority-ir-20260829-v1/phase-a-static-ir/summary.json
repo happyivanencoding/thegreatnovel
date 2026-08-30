@@ -1,0 +1,110 @@
+{
+  "schema_version": "atomic-authority-ir-v1-static-experiment",
+  "samples": 4,
+  "contracts_preflight_eligible": 4,
+  "source_pure_contracts": 4,
+  "locality_allowed_pass": 4,
+  "outside_locality_blocked": 4,
+  "average_editable_ratio": 0.0311,
+  "rows": [
+    {
+      "sample": "jiuchui_ch14",
+      "chapter_id": "JIUCHUI:CH014",
+      "protagonist_id": "PROTAGONIST_001",
+      "protagonist_display_name": "顾停舟",
+      "hard_contract_preflight_eligible": true,
+      "hard_fact_count": 12,
+      "hard_sources": [
+        "canon",
+        "frozen_mission",
+        "power_authority"
+      ],
+      "contract_hash": "0ec5aa4101103dfe08b6bda295d1712b2ac91447093a6333b93471e23f486957",
+      "paragraph_count": 175,
+      "editable_paragraph_count": 3,
+      "locked_paragraph_count": 172,
+      "editable_ratio": 0.0171,
+      "curator_or_primary_hard_source": false,
+      "allowed_local_edit_pass": true,
+      "forbidden_outside_edit_blocked": true,
+      "historical_delta_locality_pass": true,
+      "historical_delta_violations": []
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "chapter_id": "JIUCHUI:CH016",
+      "protagonist_id": "PROTAGONIST_001",
+      "protagonist_display_name": "顾停舟",
+      "hard_contract_preflight_eligible": true,
+      "hard_fact_count": 11,
+      "hard_sources": [
+        "canon",
+        "frozen_mission",
+        "power_authority"
+      ],
+      "contract_hash": "d8ca1018e15ec99517252e8c982c0b948101cba36bd62b2846c40358996af245",
+      "paragraph_count": 101,
+      "editable_paragraph_count": 4,
+      "locked_paragraph_count": 97,
+      "editable_ratio": 0.0396,
+      "curator_or_primary_hard_source": false,
+      "allowed_local_edit_pass": true,
+      "forbidden_outside_edit_blocked": true,
+      "historical_delta_locality_pass": false,
+      "historical_delta_violations": [
+        "replace touches locked paragraphs=[71]",
+        "replace touches locked paragraphs=[86]",
+        "replace touches locked paragraphs=[96]"
+      ]
+    },
+    {
+      "sample": "shadow_ch4",
+      "chapter_id": "SHADOW:CH004",
+      "protagonist_id": "PROTAGONIST_001",
+      "protagonist_display_name": "顾临川",
+      "hard_contract_preflight_eligible": true,
+      "hard_fact_count": 14,
+      "hard_sources": [
+        "canon",
+        "frozen_mission",
+        "power_authority",
+        "reader_release",
+        "world_authority"
+      ],
+      "contract_hash": "8a731519d83edbb3b6568177a9639c850859171f3f720998c7c56abf89549c7a",
+      "paragraph_count": 107,
+      "editable_paragraph_count": 2,
+      "locked_paragraph_count": 105,
+      "editable_ratio": 0.0187,
+      "curator_or_primary_hard_source": false,
+      "allowed_local_edit_pass": true,
+      "forbidden_outside_edit_blocked": true,
+      "historical_delta_locality_pass": true,
+      "historical_delta_violations": []
+    },
+    {
+      "sample": "shadow_ch9",
+      "chapter_id": "SHADOW:CH009",
+      "protagonist_id": "PROTAGONIST_001",
+      "protagonist_display_name": "顾临川",
+      "hard_contract_preflight_eligible": true,
+      "hard_fact_count": 11,
+      "hard_sources": [
+        "canon",
+        "frozen_mission",
+        "human_authority",
+        "power_authority"
+      ],
+      "contract_hash": "530a3e02bc85f383241dfe3d7713d9abbc236822e0d174e1bd9687fc19567a76",
+      "paragraph_count": 123,
+      "editable_paragraph_count": 6,
+      "locked_paragraph_count": 117,
+      "editable_ratio": 0.0488,
+      "curator_or_primary_hard_source": false,
+      "allowed_local_edit_pass": true,
+      "forbidden_outside_edit_blocked": true,
+      "historical_delta_locality_pass": true,
+      "historical_delta_violations": []
+    }
+  ]
+}

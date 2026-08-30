@@ -1,0 +1,410 @@
+{
+  "schema_version": "atomic-authority-ir-v1",
+  "registry": {
+    "schema_version": "entity-registry-v1",
+    "chapter_id": "JIUCHUI:CH014",
+    "protagonist_id": "PROTAGONIST_001",
+    "entities": [
+      {
+        "entity_id": "PROTAGONIST_001",
+        "kind": "character",
+        "display_name": "顾停舟",
+        "aliases": [
+          "他",
+          "本体",
+          "主角"
+        ],
+        "authority_refs": [
+          "canon.protagonist"
+        ]
+      },
+      {
+        "entity_id": "ITEM_RETURN_TIDE_WEDGE_001",
+        "kind": "item",
+        "display_name": "回潮楔",
+        "aliases": [
+          "楔子",
+          "古器"
+        ],
+        "authority_refs": [
+          "authority.entity.ITEM_RETURN_TIDE_WEDGE_001"
+        ]
+      },
+      {
+        "entity_id": "CHAR_RIVAL_001",
+        "kind": "character",
+        "display_name": "阮青蜃",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_RIVAL_001"
+        ]
+      },
+      {
+        "entity_id": "CHAR_PARTNER_001",
+        "kind": "character",
+        "display_name": "少东家",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_PARTNER_001"
+        ]
+      },
+      {
+        "entity_id": "ORG_HUNDRED_FURNACE_001",
+        "kind": "organization",
+        "display_name": "百炉会",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.ORG_HUNDRED_FURNACE_001"
+        ]
+      },
+      {
+        "entity_id": "RESOURCE_PERSONAL_MINING_SHARE_001",
+        "kind": "resource",
+        "display_name": "个人矿利",
+        "aliases": [
+          "矿利份额"
+        ],
+        "authority_refs": [
+          "authority.entity.RESOURCE_PERSONAL_MINING_SHARE_001"
+        ]
+      },
+      {
+        "entity_id": "ROUTE_GRAIN_001",
+        "kind": "route",
+        "display_name": "粮路",
+        "aliases": [
+          "粮道"
+        ],
+        "authority_refs": [
+          "authority.entity.ROUTE_GRAIN_001"
+        ]
+      },
+      {
+        "entity_id": "LOCATION_OLD_PASS_001",
+        "kind": "location",
+        "display_name": "旧关",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.LOCATION_OLD_PASS_001"
+        ]
+      },
+      {
+        "entity_id": "EVENT_NEXT_TIDE_001",
+        "kind": "event",
+        "display_name": "下一次十二日地潮",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.EVENT_NEXT_TIDE_001"
+        ]
+      }
+    ]
+  },
+  "fragments": [
+    {
+      "source": "canon",
+      "facts": [
+        {
+          "fact_id": "J14_CANON_WEDGE_POSSESSION",
+          "slot_id": "ownership:ITEM_RETURN_TIDE_WEDGE_001",
+          "source_ref": "canon.item.current_holder",
+          "kind": "ownership_transition",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "possess",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "possessed_by_protagonist_disputed",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J14_CANON_MINING_SHARE_NONE",
+          "slot_id": "resource:RESOURCE_PERSONAL_MINING_SHARE_001",
+          "source_ref": "canon.resource.personal_mining_share",
+          "kind": "resource_transition",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "remain_without_entitlement",
+          "object_ids": [
+            "RESOURCE_PERSONAL_MINING_SHARE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "none",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J14_CANON_PARTNERSHIP_STATE",
+          "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+          "source_ref": "canon.relationship.young_master",
+          "kind": "relationship_transition",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "remain_former_master_subordinate",
+          "object_ids": [],
+          "counterparty_ids": [
+            "CHAR_PARTNER_001"
+          ],
+          "from_state": "",
+          "to_state": "former_master_subordinate",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "source": "power_authority",
+      "facts": [
+        {
+          "fact_id": "J14_POWER_SINGLE_USE_BOUNDARY",
+          "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001:use_cycle",
+          "source_ref": "power.return_tide_wedge.single_use",
+          "kind": "ability_boundary",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "use_single_lock_redirect_release_cycle",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": {
+            "max_cycles_this_chapter": 1,
+            "requires_cooldown_after": true
+          },
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "source": "frozen_mission",
+      "facts": [
+        {
+          "fact_id": "J14_MISSION_USE_WEDGE_ONCE",
+          "slot_id": "event:J14:wedge_use",
+          "source_ref": "mission.action.1",
+          "kind": "action",
+          "mode": "must_hold",
+          "phase": "during_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "lock_redirect_release_tide_once",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J14_RESULT_PUBLIC_PROOF",
+          "slot_id": "public_proof:J14:wedge",
+          "source_ref": "mission.world_reaction.1",
+          "kind": "public_proof",
+          "mode": "must_hold",
+          "phase": "during_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "publicly_prove_direction_change_value",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [
+            "J14_MISSION_USE_WEDGE_ONCE"
+          ],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {
+            "performance_fact_id": "J14_MISSION_USE_WEDGE_ONCE",
+            "ruler": "qualified_furnace_expert",
+            "required_consequence": "behavioral_repricing"
+          }
+        },
+        {
+          "fact_id": "J14_RESULT_WEDGE_AUTONOMY",
+          "slot_id": "ownership:ITEM_RETURN_TIDE_WEDGE_001",
+          "source_ref": "mission.direct_result.1",
+          "kind": "ownership_transition",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "retain_autonomous_use",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "possessed_by_protagonist_disputed",
+          "to_state": "autonomous_use_retained_publicly",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J14_RESULT_MINING_SHARE",
+          "slot_id": "resource:RESOURCE_PERSONAL_MINING_SHARE_001",
+          "source_ref": "mission.direct_result.2",
+          "kind": "resource_transition",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "confirm_entitlement",
+          "object_ids": [
+            "RESOURCE_PERSONAL_MINING_SHARE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "none",
+          "to_state": "entitlement_confirmed_not_cash_received",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {
+            "payment_state": "entitlement_confirmed"
+          }
+        },
+        {
+          "fact_id": "J14_STATE_PARTNERSHIP",
+          "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+          "source_ref": "mission.state_change.1",
+          "kind": "relationship_transition",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "transition_relationship",
+          "object_ids": [],
+          "counterparty_ids": [
+            "CHAR_PARTNER_001"
+          ],
+          "from_state": "former_master_subordinate",
+          "to_state": "paid_independent_cooperation",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J14_STATE_WEDGE_COOLDOWN",
+          "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001:cooldown",
+          "source_ref": "mission.state_change.2",
+          "kind": "ability_boundary",
+          "mode": "must_hold",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "require_residual_pressure_dissipation_before_reuse",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "cooldown_pending",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J14_ENDING_DEPART",
+          "slot_id": "ending:J14:departure",
+          "source_ref": "mission.ending.1",
+          "kind": "ending",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "depart_with_grain_convoy",
+          "object_ids": [
+            "ROUTE_GRAIN_001",
+            "LOCATION_OLD_PASS_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J14_DEADLINE_NEXT_TIDE",
+          "slot_id": "deadline:J14:grain_delivery",
+          "source_ref": "mission.ending.2",
+          "kind": "deadline",
+          "mode": "must_hold",
+          "phase": "post_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "deliver_before_event",
+          "object_ids": [
+            "ROUTE_GRAIN_001",
+            "EVENT_NEXT_TIDE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {
+            "relation": "before"
+          }
+        }
+      ]
+    }
+  ]
+}

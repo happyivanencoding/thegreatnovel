@@ -1,0 +1,509 @@
+{
+  "schema_version": "atomic-authority-contract-v1",
+  "chapter_id": "JIUCHUI:CH014",
+  "protagonist_id": "PROTAGONIST_001",
+  "contract_hash": "6e5100fb58f86c71155b92b618c0bb258f544e56fd14e97d9c736f63f38534b4",
+  "preflight_eligible": false,
+  "hard_sources": [
+    "canon",
+    "frozen_mission",
+    "power_authority"
+  ],
+  "registry": {
+    "schema_version": "entity-registry-v1",
+    "chapter_id": "JIUCHUI:CH014",
+    "protagonist_id": "PROTAGONIST_001",
+    "entities": [
+      {
+        "entity_id": "CHAR_PARTNER_001",
+        "kind": "character",
+        "display_name": "少东家",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_PARTNER_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CHAR_RIVAL_001",
+        "kind": "character",
+        "display_name": "阮青蜃",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_RIVAL_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "EVENT_NEXT_TIDE_001",
+        "kind": "event",
+        "display_name": "下一次十二日地潮",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.EVENT_NEXT_TIDE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ITEM_RETURN_TIDE_WEDGE_001",
+        "kind": "item",
+        "display_name": "回潮楔",
+        "aliases": [
+          "楔子",
+          "古器"
+        ],
+        "authority_refs": [
+          "authority.entity.ITEM_RETURN_TIDE_WEDGE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "LOCATION_OLD_PASS_001",
+        "kind": "location",
+        "display_name": "旧关",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.LOCATION_OLD_PASS_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ORG_HUNDRED_FURNACE_001",
+        "kind": "organization",
+        "display_name": "百炉会",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.ORG_HUNDRED_FURNACE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "PROTAGONIST_001",
+        "kind": "character",
+        "display_name": "顾停舟",
+        "aliases": [
+          "他",
+          "本体",
+          "主角"
+        ],
+        "authority_refs": [
+          "canon.protagonist"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "RESOURCE_PERSONAL_MINING_SHARE_001",
+        "kind": "resource",
+        "display_name": "个人矿利",
+        "aliases": [
+          "矿利份额"
+        ],
+        "authority_refs": [
+          "authority.entity.RESOURCE_PERSONAL_MINING_SHARE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ROUTE_GRAIN_001",
+        "kind": "route",
+        "display_name": "粮路",
+        "aliases": [
+          "粮道"
+        ],
+        "authority_refs": [
+          "authority.entity.ROUTE_GRAIN_001"
+        ],
+        "parent_entity_id": ""
+      }
+    ]
+  },
+  "facts": [
+    {
+      "fact_id": "J14_CANON_WEDGE_POSSESSION",
+      "slot_id": "ownership:ITEM_RETURN_TIDE_WEDGE_001",
+      "source": "canon",
+      "source_ref": "canon.item.current_holder",
+      "kind": "ownership_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "possess",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "possessed_by_protagonist_disputed",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "J14_POWER_SINGLE_USE_BOUNDARY",
+      "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001:use_cycle",
+      "source": "power_authority",
+      "source_ref": "power.return_tide_wedge.single_use",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "use_single_lock_redirect_release_cycle",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": {
+        "max_cycles_this_chapter": 1,
+        "requires_cooldown_after": true
+      },
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_ACTIONS_01",
+      "slot_id": "event:JIUCHUI:CH014:single_redirect",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.actions.1",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "use_once",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "ORG_HUNDRED_FURNACE_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_ACTIONS_02",
+      "slot_id": "event:JIUCHUI:CH014:refuse_buyout",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.actions.2",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "refuse_buyout",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_ACTIONS_03",
+      "slot_id": "event:JIUCHUI:CH014:choose_grain_cooperation",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.actions.3",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "accept_cooperation",
+      "object_ids": [
+        "ROUTE_GRAIN_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_BOUNDARIES_01",
+      "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001:single_redirect",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.boundaries.1",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "respect_limit",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "完成一次锁潮、改向、释放",
+      "to_state": "使用后须散尽残压，不得立即连续硬压",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHUI:CH014:single_redirect"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_BOUNDARIES_02",
+      "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001:autonomous_use",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.boundaries.2",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "retain_autonomy",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "阮青蜃提出买断",
+      "to_state": "顾停舟拒绝出售并自行决定用途",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHUI:CH014:refuse_buyout"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_ENDING_01",
+      "slot_id": "ending:JIUCHUI:CH014:grain_departure",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.ending.1",
+      "kind": "deadline",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "depart_with",
+      "object_ids": [
+        "ROUTE_GRAIN_001",
+        "LOCATION_OLD_PASS",
+        "EVENT_NEXT_TIDE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "随队出发，须在下一次十二日地潮前送到旧关",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "result:JIUCHUI:CH014:independent_grain_cooperation"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_RESULTS_01",
+      "slot_id": "result:JIUCHUI:CH014:public_repricing",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.1",
+      "kind": "public_proof",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "secure_public_repricing",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "ORG_HUNDRED_FURNACE_001",
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "回潮楔价值未完成公共确认",
+      "to_state": "回潮楔能改变一整段潮势方向并使顾停舟被重新定价",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHUI:CH014:single_redirect"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_RESULTS_02",
+      "slot_id": "ownership:RESOURCE_PERSONAL_MINING_SHARE_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.2",
+      "kind": "ownership_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "acquire",
+      "object_ids": [
+        "RESOURCE_PERSONAL_MINING_SHARE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "",
+      "to_state": "公开确认的个人矿利份额",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "result:JIUCHUI:CH014:public_repricing"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_RESULTS_03",
+      "slot_id": "result:JIUCHUI:CH014:mine_rights_repriced",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.3",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "secure",
+      "object_ids": [
+        "RESOURCE_PERSONAL_MINING_SHARE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "阮青蜃主张完整矿权",
+      "to_state": "独家标记不再被承认为阮青蜃的完整矿权，砺骨部水路不被吞并",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "ownership:RESOURCE_PERSONAL_MINING_SHARE_001"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_RESULTS_04",
+      "slot_id": "result:JIUCHUI:CH014:independent_grain_cooperation",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.4",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "accept",
+      "object_ids": [
+        "ROUTE_GRAIN_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "主从关系",
+      "to_state": "有价独立合作关系",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHUI:CH014:choose_grain_cooperation"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_STATES_01",
+      "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.states.1",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "establish",
+      "object_ids": [
+        "ROUTE_GRAIN_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "雇主与被雇者",
+      "to_state": "有价独立合作",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "result:JIUCHUI:CH014:independent_grain_cooperation"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_STATES_02",
+      "slot_id": "relationship:PROTAGONIST_001:CHAR_RIVAL_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.states.2",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "oppose",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "公开追索",
+      "to_state": "买断被拒后的公开利益竞争",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHUI:CH014:refuse_buyout"
+      ],
+      "metadata": {}
+    }
+  ],
+  "conflicts": [],
+  "unsupported": [
+    "fact MISSION_JIUCHUI_CH014_ENDING_01 references unknown entity_id=LOCATION_OLD_PASS"
+  ],
+  "diagnostics": []
+}

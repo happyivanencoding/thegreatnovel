@@ -1,0 +1,232 @@
+{
+  "schema_version": "atomic-authority-ir-v1-schema-validation",
+  "external_dependencies_added": false,
+  "validator_runtime": "internal bounded Draft 2020-12 subset; no added dependency",
+  "schema_definitions": 4,
+  "artifact_checks": 22,
+  "valid_checks": 22,
+  "invalid_checks": 0,
+  "negative_probes": 5,
+  "negative_probes_rejected": 5,
+  "rows": [
+    {
+      "sample": "schema_definition",
+      "artifact": "atomic-authority-contract-v1.schema.json",
+      "validator": "bounded Draft 2020-12 schema sanity",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "schema_definition",
+      "artifact": "director-structured-decision-v1.schema.json",
+      "validator": "bounded Draft 2020-12 schema sanity",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "schema_definition",
+      "artifact": "entity-registry-v1.schema.json",
+      "validator": "bounded Draft 2020-12 schema sanity",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "schema_definition",
+      "artifact": "primary-preservation-map-v1.schema.json",
+      "validator": "bounded Draft 2020-12 schema sanity",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "jiuchui_ch14",
+      "artifact": "entity_registry.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "jiuchui_ch14",
+      "artifact": "atomic_authority_contract.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "jiuchui_ch14",
+      "artifact": "primary_preservation_map.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "artifact": "entity_registry.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "artifact": "atomic_authority_contract.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "artifact": "primary_preservation_map.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "shadow_ch4",
+      "artifact": "entity_registry.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "shadow_ch4",
+      "artifact": "atomic_authority_contract.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "shadow_ch4",
+      "artifact": "primary_preservation_map.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "shadow_ch9",
+      "artifact": "entity_registry.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "shadow_ch9",
+      "artifact": "atomic_authority_contract.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "shadow_ch9",
+      "artifact": "primary_preservation_map.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "unit_structured_decision",
+      "artifact": "director_structured_decision.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": true,
+      "observed_valid": true,
+      "valid": true,
+      "errors": []
+    },
+    {
+      "sample": "negative_probe",
+      "artifact": "director_human_clause_rejected.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": false,
+      "observed_valid": false,
+      "valid": true,
+      "errors": [
+        {
+          "path": "clauses/0/human_clause",
+          "message": "additional property 'human_clause' is not allowed"
+        }
+      ]
+    },
+    {
+      "sample": "negative_probe",
+      "artifact": "director_free_narrative_rejected.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": false,
+      "observed_valid": false,
+      "valid": true,
+      "errors": [
+        {
+          "path": "narrative_function",
+          "message": "additional property 'narrative_function' is not allowed"
+        }
+      ]
+    },
+    {
+      "sample": "negative_probe",
+      "artifact": "contract_missing_provenance_rejected.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": false,
+      "observed_valid": false,
+      "valid": true,
+      "errors": [
+        {
+          "path": "artifact_provenance",
+          "message": "missing required property 'artifact_provenance'"
+        }
+      ]
+    },
+    {
+      "sample": "negative_probe",
+      "artifact": "contract_tampered_digest_runtime_rejected.json",
+      "validator": "AtomicAuthorityContract.from_dict",
+      "expected_valid": false,
+      "observed_valid": false,
+      "valid": true,
+      "errors": [],
+      "runtime_error": "SourcePurityError: artifact canon:fixture:jiuchui_ch14:1 snapshot digest mismatch"
+    },
+    {
+      "sample": "negative_probe",
+      "artifact": "preservation_missing_hashes_rejected.json",
+      "validator": "bounded Draft 2020-12 subset",
+      "expected_valid": false,
+      "observed_valid": false,
+      "valid": true,
+      "errors": [
+        {
+          "path": "paragraph_hashes",
+          "message": "missing required property 'paragraph_hashes'"
+        }
+      ]
+    }
+  ]
+}

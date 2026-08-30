@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 364.624,
+  "sessionId": "01a04fc9-936f-7843-be1d-8611334aa02c",
+  "text": "# Verdict\n\n旧版“Curator/Primary 直接形成 Hard Conflict / Identity”的风险已在静态实现层切断；但“可信 FrozenArtifact”与“Director 唯一语义源”仍未形式闭合。结论是：架构原则可部分冻结，当前实现与 Native Structured Director 均不得冻结为 production。\n\n# Fixed Risks Confirmed\n\n- Builder 拒绝 raw fact 与自标 source fragment，只接收 `FrozenAuthorityArtifact`；Curator diagnostic 不进 Hard Contract 的 facts、conflicts 或 hash。`atomic_authority_ir_v1.py:698-726`\n\n- Entity ID 不再由正文名字反推；未知实体、未知依赖、循环依赖、同 slot/phase 不兼容、已声明的 power `from_state` 均 deterministic fail。`:748-861`\n\n- Primary Preservation Map 不写回 Contract；Curator evidence binding 只记诊断，不能扩 editable window。paragraph hash 的序列化/反序列化基本 round-trip 已有测试。`:923-1095`、测试 `:735-803`\n\n- unsupported contract → 当前 Full ungated；supported Delta 失败 → Full → supported re-gate 的枚举路由正确。`:1201-1240`\n\n- clause 内的 `human_clause` 被拒，`surface_note` 不影响 Mission 或 Contract hash。`:1813-1818`、测试 `:1087-1127`\n\n# Remaining Formal Risks\n\n- **FrozenArtifact 不是可信发行物。** 构造器只验 ID prefix 与“64 位 hex”，不重算 digest；Builder 也不验证 digest 与 facts 的一致性。`atomic_authority_ir_v1.py:525-546,706-711`  \n  最小反例已确认：直接构造 `FrozenAuthorityArtifact(source=CANON, revision_sha256='0'*64, facts=(伪 Canon fact,))` 后加入 Builder，结果 `preflight_eligible=True`。\n\n- `freeze_*_artifact()` 与 `load_contract_payload()` 都是公开入口；任意 JSON 放进 `canon_artifacts` 等字段就会被重新贴上对应 Authority source。Entity Registry 同样是裸输入，`authority_refs` 只要求非空字符串。`:2066-2099,237-277`  \n  这不是对抗安全问题，而是当前模块无法从形式上区分“真实 Runtime 发行”与“手工 fixture/下游包装”。\n\n- stable slot 并未全由 Runtime 强制派生：裸 `AuthorityFact.slot_id` 可自填；同一实体的同一语义若被写成不同 slot，就不触发冲突。`:343-349,765-830`\n\n- `from_state` 只强制用于 `POWER_TRANSITION`；resource / ownership / relationship transition 可无 from-state。且 pre-state 汇总接受所有 source，包括 Mission 自己给出的 `PRE_CHAPTER` fact，而非仅 Canon。`:400-409,832-861`\n\n- Primary evidence 是未验证自报：只要标为 `PRIMARY_REALIZATION`，即可把任意段落加入 editable；Map 恢复后也不校验其 `contract_hash` 是否等于当前 Contract。`:1024-1065,956-997,1138-1190`\n\n- `DirectorStructuredDecision` 仍有双语义源：`narrative_function`、`specialty_suggestions` 和 `ActionSurfaceRegistry` 都会改变人类 Mission，却不改变 Frozen Mission Contract/hash。`:1704-1784,1924-1930,2010-2054`  \n  最小 probe：只把 `narrative_function` 改为“主角接受买断并离开粮道”，Contract hash 仍相同，但渲染 Mission 已不同。\n\n- Schema 与代码不一致。Schema 把 `narrative_function` / `specialty_suggestions` 设为必填，并允许所有 `kind` 与所有 field 任意组合；代码另行施加 field-kind、字段覆盖与 actor 规则。Schema-valid payload 可被运行时代码拒绝，代码也会静默忽略顶层未知字段。`director-structured-decision-v1.schema.json:6-148`、代码 `:1950-1967`\n\n# False-Safe Counterexamples\n\n- **伪 Canon artifact。** prefix、64 位 digest、schema 都可通过，Hard Contract 仍把伪事实当 Canon；当前 40 tests 未覆盖“直接构造且 digest 错配”。\n\n- **fragment 保护可被重叠 replace 绕过。** 两个都改 P2：第一个 payload 含保护 fragment，第二个不含。检查拼接所有 payload，因此 PASS；实际按顺序应用后 P2 可丢 fragment。已确认 probe 输出为“pass=True，candidate 不含 fragment”。`:1116-1181`\n\n- **Map 与 Contract 重绑定。** 把 Chapter A 的序列化 Map 配给同段落文本的 Chapter B；`from_dict()` 与 `validate_primary_preservation()` 不接当前 Contract，不能发现 hash 属于旧 Contract。\n\n- **Locality 不证明 Hard Fact closure。** 真正实现付款的句子若在 P44，但手工 binding 写 P42，Delta 合法改 P42 并通过 locality；P44 的事实仍可能缺失。四章证据只证明“标出的窗内允许、窗外拦住”，不证明 mapping 完整。\n\n# False-Fallback Counterexamples\n\n- 代码中的 unsupported bypass / supported Full re-gate 分支本身没有发现反向路由错误；旧的“unsupported 仍被 Atomic post-gate 阻断”已修。\n\n- 但 Schema-valid、代码-invalid 的 structured decision 会造成无意义的 runtime rejection / Full fallback。例如 7 个 clause 都是 `trigger_event`，或 `protagonist_action + reader_release`：Schema 可通过，代码按 field limits 或 kind 规则拒绝。`director-structured-decision-v1.schema.json:27-137`、`:1931-2008`\n\n- 同一 Artifact 被调用方重复加入会产生 duplicate artifact conflict，哪怕内容相同，进而失去 Atomic fast route。`:733-746` 这是低优先级但真实的 false fallback。\n\n- Routing 仍只是纯枚举策略，`ContractGateResult` 由调用方手填；没有真实 Full Reviser 调用链证明 unsupported 不会被误接 post-gate，或 supported Full 必经 re-gate。`:1193-1240`\n\n# Evidence Limitations\n\n- 静态四章证明：两书、四个手工转写样本可装入这套 ID/Fact 形状；4/4 preflight eligible，平均 editable ratio 3.11%，窗外 edit 被阻止。它不证明手工转写忠实于真实上游 Authority，也不证明长篇 Registry、跨章 state portfolio 或最终正文闭合。\n\n- 40 tests 当前通过，但均用手造 Registry、fact、freezer、sidecar 与编号正文 fixture；未覆盖伪 artifact、真实 loader、Registry provenance、slot canonicalization、Map/Contract rebinding、重叠 patch、真实 Full→Gate 编排。\n\n- 20 schema checks 是 4 份 schema、12 个静态 artifact、1 个 structured fixture、3 个 expected-invalid probe；且使用 internal bounded Draft 2020-12 subset。它证明形状，不证明 source trust、代码/Schema 等价或 prose semantics。\n\n- verbose / compact / micro Sidecar 的四样本结果足以否决“同次额外自由文本机器语义”路线：parse/eligible 差且 Director wall 增加约 146%–206%。不足以外推为“任何原生 structured output 都会失败”。\n\n# Freeze / Do Not Freeze\n\n可冻结：\n\n- `Atomic Authority Contract ≠ Primary Preservation Map`\n- Entity ID 取代正文名字优先级\n- Curator diagnostic / hint 不得形成 hard source、conflict 或扩窗\n- Edit Locality 作为默认权限保护\n- unsupported → 当前 Full ungated；supported Full 才 re-gate\n- 禁止 verbose / compact / micro Sidecar 作为 production 路线\n\n不得冻结：\n\n- “当前 FrozenArtifact 已可信”\n- “stable slot / from-state 已完全 Runtime-owned”\n- “Map 恢复后仍绑定正确 Contract”\n- “Native Director 只有一份语义”\n- Schema 与代码一致\n- Atomic fast route、Full Reviser 删除、速度收益或最终正文质量\n\n# Next Smallest Experiment\n\n先不做模型 E2E。做一个单章、真实 Runtime Authority 输入的 deterministic closure harness，并将以下作为必须失败的负例：伪 FrozenArtifact、伪 Registry、Mission 自供 pre-state、Map/Contract 重绑定、重叠 replace、只改 `narrative_function` 而 Contract 不变。\n\n这些边界未过前，不进入 Native Structured Director 的 Story/Authority blind，也不重新测试 Atomic fast route。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 154325,
+      "inputTokens": 1701,
+      "cachedReadTokens": 148224,
+      "outputTokens": 4400,
+      "thoughtTokens": 2448
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 154325,
+          "inputTokens": 1701,
+          "cachedInputTokens": 148224,
+          "outputTokens": 4400,
+          "reasoningOutputTokens": 2448
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 154325,
+              "inputTokens": 1701,
+              "cachedInputTokens": 148224,
+              "outputTokens": 4400,
+              "reasoningOutputTokens": 2448
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

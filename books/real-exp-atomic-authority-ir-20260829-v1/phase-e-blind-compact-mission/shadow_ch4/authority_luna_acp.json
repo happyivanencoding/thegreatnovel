@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 47.683,
+  "sessionId": "01a04f94-adfc-75e1-a31e-403825b1e0c8",
+  "text": "VERDICT: B\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 无\nPLAN_FIDELITY: B\nCANON_WORLD_POWER: TIE\nACTOR_ACTION_OBJECT: B\nRESULT_STATE_ENDING: B\nSTORY_VALUE_PRESERVATION: B\nREASON: A、B都准确承接杜衡上场、陌生步法、顾临川严重疲劳和不公开分影的核心冲突。A正确保留了顾临川凭训练回流后的刀感取胜，并完成陆绾知情与同行决定。B对当前即时状态的落点更具体，明确写出顾临川不再直线后退、观察落脚并以影刃克制反击。两者都没有改变顾临川仍处于一阶、疲劳回流和影身临场迟滞的力量边界。B明确写出公开名次、随队契约与第一笔预付款，付款状态和获得物更完整。A虽写到契约与预付钱，但“接受契约”放在主角行动字段中，结果落地略弱。两者都保留客舍责任已交回父母，以及顾临川获得离乡机会后不能继续默认两头兼顾。B补足了探路队失联、原定安全路线关闭和绕行折日峡这一已冻结的下一块推动条件。B的“尚未解决的荒野入口”仍作为结尾推动，不等于提前完成进入峡中的事件。综合看，B对结果、付款、所有权式获得、时间终态和下一章入口的冻结更完整。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 36583,
+      "inputTokens": 9860,
+      "cachedReadTokens": 24320,
+      "outputTokens": 2403,
+      "thoughtTokens": 2026
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 36583,
+          "inputTokens": 9860,
+          "cachedInputTokens": 24320,
+          "outputTokens": 2403,
+          "reasoningOutputTokens": 2026
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 36583,
+              "inputTokens": 9860,
+              "cachedInputTokens": 24320,
+              "outputTokens": 2403,
+              "reasoningOutputTokens": 2026
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

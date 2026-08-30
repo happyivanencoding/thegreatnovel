@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp",
+  "additionalDirectories": [],
+  "wall_seconds": 33.058,
+  "sessionId": "01a04f94-b61b-7702-af68-a34e3f6bc5eb",
+  "text": "VERDICT: A  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: 将“百炉会及相关见证者”具体写成否定阮青蜃完整矿权的裁定主体，新增未冻结的机构性确认。  \nPLAN_FIDELITY: A  \nCANON_WORLD_POWER: A  \nACTOR_ACTION_OBJECT: A  \nRESULT_STATE_ENDING: A  \nSTORY_VALUE_PRESERVATION: TIE  \nREASON: A从炉试正式开始切入，准确承接当前章计划的首个事件。A保留唐绾展示、回潮楔一次锁潮改向释放、阮青蜃买断与少东家合作两组条件。A没有把“公开重估”偷换成某个未授权机构已经完成正式裁决。B则把百炉会及相关见证者写成明确的矿权否定主体，超出了计划只冻结结果、不冻结具体裁判机构的范围。两案都正确保留回潮楔不出售、个人矿利、水路不被吞并和少东家独立合作。两案都保留一次使用后的散压限制，没有把回潮楔升级成可连续施压的力量。两案都让顾停舟从保住既有物品转向主动选择财富与自由路径。两案结尾都只提出十二日地潮前送粮的期限，没有提前结算送达结果。A对触发、推动者和世界反应的新增较少，因此整体冻结忠实度更高。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 37068,
+      "inputTokens": 11145,
+      "cachedReadTokens": 24320,
+      "outputTokens": 1603,
+      "thoughtTokens": 1247
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 37068,
+          "inputTokens": 11145,
+          "cachedInputTokens": 24320,
+          "outputTokens": 1603,
+          "reasoningOutputTokens": 1247
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 37068,
+              "inputTokens": 11145,
+              "cachedInputTokens": 24320,
+              "outputTokens": 1603,
+              "reasoningOutputTokens": 1247
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

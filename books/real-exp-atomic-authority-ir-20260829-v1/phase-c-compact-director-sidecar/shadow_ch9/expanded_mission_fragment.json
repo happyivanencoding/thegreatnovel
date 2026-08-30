@@ -1,0 +1,330 @@
+{
+  "source": "frozen_mission",
+  "facts": [
+    {
+      "fact_id": "MISSION_SHADOW_CH009_ACTIONS_01",
+      "slot_id": "event:SHADOW:CH009:accept_injury_treatment",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.actions.1",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "接受伤势处理",
+      "object_ids": [
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_ACTIONS_02",
+      "slot_id": "event:SHADOW:CH009:admit_dual_choice",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.actions.2",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "承认救人与取兵并存",
+      "object_ids": [
+        "ITEM_UMBRA_WEAPON_001",
+        "CHAR_PARTNER_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_ACTIONS_03",
+      "slot_id": "event:SHADOW:CH009:confirm_two_routes",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.actions.3",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "CHAR_RIVAL_001",
+      "action_id": "确认双线真实选择",
+      "object_ids": [
+        "PROTAGONIST_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_RESULTS_01",
+      "slot_id": "resource:STATE_INJURY_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.1",
+      "kind": "resource_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "接受处理",
+      "object_ids": [
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "合影回流伤势未处理",
+      "to_state": "伤势已处理但仍暂时失去行动力",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:SHADOW:CH009:accept_injury_treatment"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_RESULTS_02",
+      "slot_id": "result:SHADOW:CH009:dual_choice_admitted",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.2",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "确认双重选择依据",
+      "object_ids": [
+        "ITEM_UMBRA_WEAPON_001",
+        "CHAR_PARTNER_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "救人与取兵同时成立",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:SHADOW:CH009:admit_dual_choice"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_RESULTS_03",
+      "slot_id": "result:SHADOW:CH009:two_route_confirmation",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.3",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "CHAR_RIVAL_001",
+      "action_id": "确认双线选择",
+      "object_ids": [
+        "PROTAGONIST_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "双线经过未被确认",
+      "to_state": "两条撤离线均确认存在真实选择",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:SHADOW:CH009:confirm_two_routes"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_STATES_01",
+      "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.states.1",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "建立风险边界",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001",
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "对分影保持好奇",
+      "to_state": "带边界的理解并拒绝将影身视为可随意替代品",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "result:SHADOW:CH009:dual_choice_admitted"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_STATES_02",
+      "slot_id": "relationship:PROTAGONIST_001:CHAR_RIVAL_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.states.2",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "重新定位竞争关系",
+      "object_ids": [
+        "PROTAGONIST_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "警惕的陌生竞争者",
+      "to_state": "有具体取舍且不能简单归类的竞争者",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "result:SHADOW:CH009:two_route_confirmation"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_ENDING_01",
+      "slot_id": "ending:SHADOW:CH009:route_record_anomaly",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.ending.1",
+      "kind": "ending",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "发现双线记录异常",
+      "object_ids": [
+        "RECORD_ESCORT_001",
+        "PROTAGONIST_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "普通一名二阶可解释",
+      "to_state": "无法按普通一名二阶解释",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "result:SHADOW:CH009:two_route_confirmation"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_BOUNDARIES_01",
+      "slot_id": "ability:ABILITY_SHADOW_CLONE_001:shared_injury",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.boundaries.1",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "共享伤势回流",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001",
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "影身可独立行动",
+      "to_state": "归体后伤势与疲劳共同回流并造成短暂失能",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "resource:STATE_INJURY_001"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_BOUNDARIES_02",
+      "slot_id": "ability:ABILITY_SHADOW_CLONE_001:not_disposable",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.boundaries.2",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "承担分影代价",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "可被视为危险替代品",
+      "to_state": "不可无代价替代本体",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "relationship:PROTAGONIST_001:CHAR_PARTNER_001"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH009_BOUNDARIES_03",
+      "slot_id": "mystery:RECORD_ESCORT_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.boundaries.3",
+      "kind": "unknown_boundary",
+      "mode": "must_remain_unknown",
+      "phase": "chapter_end",
+      "actor_id": "",
+      "action_id": "保持异常原因未解",
+      "object_ids": [
+        "RECORD_ESCORT_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "双线记录异常",
+      "to_state": "异常原因尚未揭晓",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "ending:SHADOW:CH009:route_record_anomaly"
+      ],
+      "metadata": {}
+    }
+  ]
+}

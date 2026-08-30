@@ -1,0 +1,9 @@
+﻿route_or_layer,samples,wall_change_percent,story_or_locality,authority_or_schema,decision
+source_pure_static_ir,4,n/a,4/4 source-pure; 4/4 preflight eligible,editable ratio avg 3.11%,PASS_ARCHITECTURE
+verbose_json_sidecar,4,205.83,parse 3/4,merged eligible 2/4; coverage 41.52%,FAIL_OUTPUT_PROTOCOL
+compact_json_sidecar,4,147.41,Story control3/treatment1,Authority treatment3/control1; parse 3/4; merged eligible 1/4,FAIL_OUTPUT_PROTOCOL
+micro_dsl_sidecar,4,146.45,8 fields 2/4,parse 0/4; merged eligible 0/4,FAIL_OUTPUT_PROTOCOL
+native_structured_decision_schema,57,not measured,single typed source dual projection unit pass,schema/runtime checks 22/22; no free human clause,PASS_SCHEMA_ONLY
+primary_preservation_map,4,0 LLM calls,outside locality blocked 4/4,avg editable 3.11%,PASS_EXPERIMENTAL
+cross_book_same_schema,2,0 LLM calls,two books / four chapters,4/4 static source-pure contracts eligible,PASS_STATIC_ONLY
+production_route,0,0,unchanged,unsupported chapters bypass Atomic,NO_CHANGE

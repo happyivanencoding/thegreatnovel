@@ -1,0 +1,398 @@
+{
+  "schema_version": "atomic-authority-ir-v1",
+  "registry": {
+    "schema_version": "entity-registry-v1",
+    "chapter_id": "JIUCHUI:CH016",
+    "protagonist_id": "PROTAGONIST_001",
+    "entities": [
+      {
+        "entity_id": "PROTAGONIST_001",
+        "kind": "character",
+        "display_name": "顾停舟",
+        "aliases": [
+          "他",
+          "本体",
+          "主角"
+        ],
+        "authority_refs": [
+          "canon.protagonist"
+        ]
+      },
+      {
+        "entity_id": "CLONE_001",
+        "kind": "manifestation",
+        "display_name": "分身",
+        "aliases": [
+          "借身"
+        ],
+        "authority_refs": [
+          "authority.entity.CLONE_001"
+        ],
+        "parent_entity_id": "PROTAGONIST_001"
+      },
+      {
+        "entity_id": "ITEM_RETURN_TIDE_WEDGE_001",
+        "kind": "item",
+        "display_name": "回潮楔",
+        "aliases": [
+          "楔子"
+        ],
+        "authority_refs": [
+          "authority.entity.ITEM_RETURN_TIDE_WEDGE_001"
+        ]
+      },
+      {
+        "entity_id": "ROUTE_GRAIN_001",
+        "kind": "route",
+        "display_name": "粮道",
+        "aliases": [
+          "粮路"
+        ],
+        "authority_refs": [
+          "authority.entity.ROUTE_GRAIN_001"
+        ]
+      },
+      {
+        "entity_id": "RESOURCE_WELLS_001",
+        "kind": "resource",
+        "display_name": "三座新潮井",
+        "aliases": [
+          "三座井"
+        ],
+        "authority_refs": [
+          "authority.entity.RESOURCE_WELLS_001"
+        ]
+      },
+      {
+        "entity_id": "ROUTE_WATER_001",
+        "kind": "route",
+        "display_name": "砺骨部迁徙水路",
+        "aliases": [
+          "水路"
+        ],
+        "authority_refs": [
+          "authority.entity.ROUTE_WATER_001"
+        ]
+      },
+      {
+        "entity_id": "LOCATION_SECOND_PRESSURE_NODE_001",
+        "kind": "location",
+        "display_name": "第二个潮压节点",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.LOCATION_SECOND_PRESSURE_NODE_001"
+        ]
+      },
+      {
+        "entity_id": "LOCATION_OUTER_PASS_001",
+        "kind": "location",
+        "display_name": "旧关外层",
+        "aliases": [
+          "外层"
+        ],
+        "authority_refs": [
+          "authority.entity.LOCATION_OUTER_PASS_001"
+        ]
+      },
+      {
+        "entity_id": "LOCATION_OBSERVATION_POINT_001",
+        "kind": "location",
+        "display_name": "旧关内侧观测点",
+        "aliases": [
+          "观测点"
+        ],
+        "authority_refs": [
+          "authority.entity.LOCATION_OBSERVATION_POINT_001"
+        ]
+      },
+      {
+        "entity_id": "MYSTERY_EARLY_TIDE_001",
+        "kind": "mystery",
+        "display_name": "地潮提前原因",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.MYSTERY_EARLY_TIDE_001"
+        ]
+      }
+    ]
+  },
+  "fragments": [
+    {
+      "source": "canon",
+      "facts": [
+        {
+          "fact_id": "J16_CANON_WEDGE_POSSESSION",
+          "slot_id": "ownership:ITEM_RETURN_TIDE_WEDGE_001",
+          "source_ref": "canon.item.current_holder",
+          "kind": "ownership_transition",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "possess",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "possessed_by_protagonist",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J16_CANON_OUTER_PASS_USABLE",
+          "slot_id": "state:LOCATION_OUTER_PASS_001",
+          "source_ref": "canon.location.outer_pass",
+          "kind": "state_transition",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "outer_pass_remains_usable",
+          "object_ids": [
+            "LOCATION_OUTER_PASS_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "usable",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "source": "power_authority",
+      "facts": [
+        {
+          "fact_id": "J16_POWER_CLONE_LIMIT",
+          "slot_id": "ability:CLONE_001:carried_power",
+          "source_ref": "power.clone.current_limit",
+          "kind": "ability_boundary",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "CLONE_001",
+          "action_id": "carry_stabilize_only",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": {
+            "allowed": [
+              "stabilize"
+            ],
+            "full_body_power": false
+          },
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "source": "frozen_mission",
+      "facts": [
+        {
+          "fact_id": "J16_ACTION_BODY_STABILIZE",
+          "slot_id": "event:J16:body_stabilize",
+          "source_ref": "mission.action.1",
+          "kind": "action",
+          "mode": "must_hold",
+          "phase": "during_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "stabilize_routes",
+          "object_ids": [
+            "ROUTE_GRAIN_001",
+            "ROUTE_WATER_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J16_ACTION_CLONE_FIX_WEDGE",
+          "slot_id": "event:J16:clone_fix_wedge",
+          "source_ref": "mission.action.2",
+          "kind": "action",
+          "mode": "must_hold",
+          "phase": "during_chapter",
+          "actor_id": "CLONE_001",
+          "action_id": "carry_and_fix_item_at_node",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001",
+            "LOCATION_SECOND_PRESSURE_NODE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J16_RESULT_RESOURCES_SAVED",
+          "slot_id": "result:J16:resources",
+          "source_ref": "mission.direct_result.1",
+          "kind": "direct_result",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "preserve_resources",
+          "object_ids": [
+            "ROUTE_GRAIN_001",
+            "RESOURCE_WELLS_001",
+            "ROUTE_WATER_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "preserved",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J16_RESULT_OUTER_PASS_SACRIFICED",
+          "slot_id": "state:LOCATION_OUTER_PASS_001",
+          "source_ref": "mission.direct_result.2",
+          "kind": "state_transition",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "redirect_tide_and_sacrifice",
+          "object_ids": [
+            "LOCATION_OUTER_PASS_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "usable",
+          "to_state": "destroyed",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J16_RESULT_WEDGE_RETAINED",
+          "slot_id": "ownership:ITEM_RETURN_TIDE_WEDGE_001",
+          "source_ref": "mission.direct_result.3",
+          "kind": "ownership_transition",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "retain_possession",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "possessed_by_protagonist",
+          "to_state": "possessed_by_protagonist",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J16_STATE_WEDGE_COOLDOWN",
+          "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001:cooldown",
+          "source_ref": "mission.direct_result.4",
+          "kind": "ability_boundary",
+          "mode": "must_hold",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "require_residual_pressure_dissipation_before_reuse",
+          "object_ids": [
+            "ITEM_RETURN_TIDE_WEDGE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "cooldown_pending",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J16_UNKNOWN_EARLY_TIDE_CAUSE",
+          "slot_id": "mystery:MYSTERY_EARLY_TIDE_001",
+          "source_ref": "mission.state_change.unknown.1",
+          "kind": "unknown_boundary",
+          "mode": "must_remain_unknown",
+          "phase": "chapter_end",
+          "actor_id": "",
+          "action_id": "",
+          "object_ids": [
+            "MYSTERY_EARLY_TIDE_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "unknown",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "J16_ENDING_ENTER_OBSERVATION",
+          "slot_id": "ending:J16:observation",
+          "source_ref": "mission.ending.1",
+          "kind": "ending",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "enter_observation_point",
+          "object_ids": [
+            "LOCATION_OBSERVATION_POINT_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        }
+      ]
+    }
+  ]
+}

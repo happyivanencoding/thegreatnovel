@@ -1,0 +1,30 @@
+[
+  {
+    "sample": "jiuchui_ch14",
+    "story": "VERDICT: B  \nCONFIDENCE: medium  \nPROTAGONIST_AGENCY: TIE  \nCONFLICT_AND_CHOICE: B  \nPAYOFF_REWARD_RELATIONSHIP: B  \nACTION_OBJECT_CLARITY: B  \nANTI_PROCEDURE_AI_FLAVOR: A  \nCONTINUATION_PULL: A  \nHARD_PROBLEM_A: 无  \nHARD_PROBLEM_B: 无  \nREASON: B把炉钟、入口封闭与阮青蜃当众追索放在触发位，和上章巷口的即时压力衔接得更硬，顾停舟不是抽象地进入“公开重估”。A与B都给了主角明确主动动作：只用一次回潮楔、拒卖、选合作，主体性并无实质差距。B更清楚地把“锁潮、改向、释放”列为本章证明动作，使古器的对象、功能和公开比较形成一条可写的现场因果。B也把“实际价值与使用代价获得公开确认”放进直接结果，收益不是只听人报价，而是先被试场证明再改变归属谈判。阮青蜃的追索在B中从入口压力延伸到公开场合，因此他的买断失效有了更明确的戏剧对抗，而不只是被拒绝。A的结果句更利落，尤其“独家标记不再被承认为完整矿权”与“水路不被吞并”落点直接，较少出现制度说明腔。B的“正式取代旧主从关系”“进入必须兑现的现实期限”略像合同摘要，会要求后续正文用少东家的具体报价、顾停舟的实际所得和代价把它写成人际选择。A对下一章的牵引稍好，因为它明确下一章要面对粮运的现实风险，同时守住本章不结算送达。综合而言，B的当前场景冲突和古器兑现更能支撑一章高压正文，A的简洁表述可作为B写作时的去程序化约束。",
+    "story_wall_seconds": 18.557,
+    "authority": "VERDICT: A  \nCONFIDENCE: high  \nHARD_VIOLATIONS_A: 无  \nHARD_VIOLATIONS_B: 将“百炉会及相关见证者”具体写成否定阮青蜃完整矿权的裁定主体，新增未冻结的机构性确认。  \nPLAN_FIDELITY: A  \nCANON_WORLD_POWER: A  \nACTOR_ACTION_OBJECT: A  \nRESULT_STATE_ENDING: A  \nSTORY_VALUE_PRESERVATION: TIE  \nREASON: A从炉试正式开始切入，准确承接当前章计划的首个事件。A保留唐绾展示、回潮楔一次锁潮改向释放、阮青蜃买断与少东家合作两组条件。A没有把“公开重估”偷换成某个未授权机构已经完成正式裁决。B则把百炉会及相关见证者写成明确的矿权否定主体，超出了计划只冻结结果、不冻结具体裁判机构的范围。两案都正确保留回潮楔不出售、个人矿利、水路不被吞并和少东家独立合作。两案都保留一次使用后的散压限制，没有把回潮楔升级成可连续施压的力量。两案都让顾停舟从保住既有物品转向主动选择财富与自由路径。两案结尾都只提出十二日地潮前送粮的期限，没有提前结算送达结果。A对触发、推动者和世界反应的新增较少，因此整体冻结忠实度更高。",
+    "authority_wall_seconds": 33.058
+  },
+  {
+    "sample": "jiuchui_ch16",
+    "story": "VERDICT: B  \nCONFIDENCE: high  \nPROTAGONIST_AGENCY: B  \nCONFLICT_AND_CHOICE: B  \nPAYOFF_REWARD_RELATIONSHIP: B  \nACTION_OBJECT_CLARITY: B  \nANTI_PROCEDURE_AI_FLAVOR: A  \nCONTINUATION_PULL: B  \nHARD_PROBLEM_A: “保住粮道、新井与水路的组合”没有明确写出他放弃外层这一刀的当场选择。  \nHARD_PROBLEM_B: 对协作方的执行状态交代略多，正文必须避免逐项汇报。  \nREASON: B把顾停舟的核心选择钉成“拒绝平均救援、放弃旧关外层”，代价、欲望和承担都比A更有戏。A虽写到改向外层，但主角像在完成最优组合，牺牲谁、为何此刻必须舍，冲突感较弱。B明确粮队、新井和迁徙水路被同一股潮势吞没，行动对象更集中。B也让本体稳住粮队与主水路、分身携“定住”进入第二节点的双身快感更容易被正文直接兑现。两版的回潮楔结果都落地：完整释放、器物仍归主角、残压限制重新生成，因此没有把力量写成一次性说明。B补足少东家粮运尚未完成，使顾停舟保住粮道不等于白拿契约收益，得失更真实。B把顾沉戈、守将和砺骨部前哨从“在场人物”推进为执行顾停舟分配的人，关系收益具备后续故事价值。A在表达上更紧，较少出现“完成条件”“阶段结算”式的策划语言，所以反程序感略胜。B的观测点结尾明确下一章的必要行动，却没有提前进入、取得潮谱或结算下一轮潮势，续章拉力更稳。",
+    "story_wall_seconds": 14.923,
+    "authority": "VERDICT: A\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 1. 将公共资源结果偷换为“改变资源归属”，新增未批准的所有权变化；2. 将“撤离范围和可用水路被重新确定”写成已完成状态，超出计划批准的迁徙取水窗口结果\nPLAN_FIDELITY: A\nCANON_WORLD_POWER: A\nACTOR_ACTION_OBJECT: A\nRESULT_STATE_ENDING: A\nSTORY_VALUE_PRESERVATION: A\nREASON: A完整保留了地潮提前、第三井喷涌、粮车受阻和撤离受威胁这组触发条件。A明确由顾停舟作出取舍，并让本体与只携带“定住”的分身分别承担两个关键位置。A的回潮楔使用方式符合当前计划，即固定第二潮压节点并将冲击改向旧关外层。A没有把回潮楔写成能够压住全部地潮，也保留了再次使用前必须散压的边界。A准确保留粮道、三座新潮井和砺骨部迁徙取水窗口获保，以及旧关外层彻底毁弃的直接结果。A没有结算尚未批准的承运报酬、照域潮谱内容或地潮提前原因。A的结尾只暴露观测点并制造下一章进入的必要性，没有提前执行观测点行动。B整体行动骨架接近计划，但“改变资源归属”引入了计划未批准的所有权变化。B还把可用水路和撤离范围写成已经重新确定，超出了本章仅完成一轮迁徙取水窗口的状态。A因此在事实边界、结果状态和未来悬念保存上更忠实。",
+    "authority_wall_seconds": 39.776
+  },
+  {
+    "sample": "shadow_ch4",
+    "story": "VERDICT: B  \nCONFIDENCE: medium  \nPROTAGONIST_AGENCY: B  \nCONFLICT_AND_CHOICE: B  \nPAYOFF_REWARD_RELATIONSHIP: TIE  \nACTION_OBJECT_CLARITY: B  \nANTI_PROCEDURE_AI_FLAVOR: B  \nCONTINUATION_PULL: B  \nHARD_PROBLEM_A: “改变退步与出刃时机”仍偏概括，缺少能支撑战斗转折的明确选择。  \nHARD_PROBLEM_B: 无  \nREASON: B把杜衡指出的“退得太习惯”落实为顾临川放弃直线后退、近身守位再反击，冲突与主角选择形成直接因果。A同样写到改变退步与出刃时机，但更像对战斗结果的概述，Curator较难据此抓住一记决定胜负的动作。B的“观察落脚与变向—守住位置—抓空隙影刃反击”给了清楚的动作链，却没有替正文规定过细招式。两版对疲劳、影形迟滞和不公开分影的边界都保留得合格。两版的契约、预付钱、公开身份和陆绾知情同行都能完成阶段性兑现，因此奖励与关系维度基本持平。B将分影明确为“陆绾知情、但尚未公开”的能力，关系变化的秘密边界更清楚。A的“重新估价为正式一阶护卫候选”略有报告口吻，B更多让评价落在连续实战稳定这一可见结果上。B补足探路队失联、路线关闭与绕行折日峡，使离乡不是抽象下一站，而是契约立刻带来的风险入口。两版都没有提前结算峡中事件，但B的结尾更能自然逼出下一章行动。",
+    "story_wall_seconds": 16.367,
+    "authority": "VERDICT: B\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 无\nPLAN_FIDELITY: B\nCANON_WORLD_POWER: TIE\nACTOR_ACTION_OBJECT: B\nRESULT_STATE_ENDING: B\nSTORY_VALUE_PRESERVATION: B\nREASON: A、B都准确承接杜衡上场、陌生步法、顾临川严重疲劳和不公开分影的核心冲突。A正确保留了顾临川凭训练回流后的刀感取胜，并完成陆绾知情与同行决定。B对当前即时状态的落点更具体，明确写出顾临川不再直线后退、观察落脚并以影刃克制反击。两者都没有改变顾临川仍处于一阶、疲劳回流和影身临场迟滞的力量边界。B明确写出公开名次、随队契约与第一笔预付款，付款状态和获得物更完整。A虽写到契约与预付钱，但“接受契约”放在主角行动字段中，结果落地略弱。两者都保留客舍责任已交回父母，以及顾临川获得离乡机会后不能继续默认两头兼顾。B补足了探路队失联、原定安全路线关闭和绕行折日峡这一已冻结的下一块推动条件。B的“尚未解决的荒野入口”仍作为结尾推动，不等于提前完成进入峡中的事件。综合看，B对结果、付款、所有权式获得、时间终态和下一章入口的冻结更完整。",
+    "authority_wall_seconds": 47.683
+  },
+  {
+    "sample": "shadow_ch9",
+    "story": "VERDICT: B  \nCONFIDENCE: high  \nPROTAGONIST_AGENCY: A  \nCONFLICT_AND_CHOICE: TIE  \nPAYOFF_REWARD_RELATIONSHIP: B  \nACTION_OBJECT_CLARITY: B  \nANTI_PROCEDURE_AI_FLAVOR: B  \nCONTINUATION_PULL: B  \nHARD_PROBLEM_A: 结尾已把“更高层级直接考量”预设为结果，提前结算了本应留给后续章节的身份重定价。  \nHARD_PROBLEM_B: 无  \nREASON: 两版的核心人物冲突都成立：顾临川承认自己既要短兵也要陆绾活着，使救援不是无私姿态而是有代价的主动选择。A更强的一点是明确写出他面对陆绾边界后“不把影身继续当作安全替代品”，这比B更像主角在本章作出的可持续行动选择。B则把药队仍未撤离、顾临川暂时不能行动、陆绾必须处理伤口三件事锁在同一现场，当前危机的对象和压力更清楚。两版都让陆绾从“好奇”转为“带边界的理解”，并让顾斜阳依据两条撤离线重新估价顾临川，关系变化并不只是口头惊叹。B的“伤口得到处理但仍无法行动”让本章有具体落点，也保留了能力代价，不会把二阶突破写成无损升级。A把“同时追求兵器与陆绾生还”直接定为事实，略像替正文下人物结论；B保留在他的承认与旁人的重新判断中，更适合由场景兑现。A最明显的问题在结尾：撤离记录不仅被发现，还被规定必须导向更高层级的直接考量，像导演替后章指定了待遇结果。B只把记录上报、评估与“重新定价的局面”留作下一章压力，既有钩子，又没有把新契约或身份升级提前兑现。B虽也出现“核对、整理、上报、评估”等程序性词汇，但它们服务于公开战绩如何改变人物价格，没有压过伤势、短兵和关系本身。整体上，B更能让Curator把重点写成一场伤后余震中的关系定价，同时让药队、异兽和撤离任务继续逼着主角往下行动。",
+    "story_wall_seconds": 19.105,
+    "authority": "VERDICT: B\nCONFIDENCE: high\nHARD_VIOLATIONS_A: 无\nHARD_VIOLATIONS_B: 无\nPLAN_FIDELITY: B\nCANON_WORLD_POWER: TIE\nACTOR_ACTION_OBJECT: TIE\nRESULT_STATE_ENDING: B\nSTORY_VALUE_PRESERVATION: B\nREASON: A、B都准确冻结了伤势回流、陆绾处理伤口和顾斜阳核对双线行动。两者都保留了乌沉短兵归顾临川所有、预付钱袋与护卫契券不变、顾临川已进入二阶的既定状态。两者都没有改变药队仍在折日峡、灰黑异兽未被消灭和顾临川暂时受伤的时间终态。两者都准确保留顾临川同时想取兵并救陆绾的双重动机。B更完整地写出伤口已处理但撞击与疲劳仍使他暂时不能行动，贴合本章“能力代价转化为关系变化”的计划。B明确把顾斜阳的确认限定为两条路线上的真实临场选择，没有新增力量或人物事实。A的结尾虽未直接完成契约，但“入口转向更高层级”比计划要求的重新评估更接近未来待遇变化。B保留记录上报和下一章重新定价作为推动，不偷跑沉昼城契约或新的身份结果。两者都保留了陆绾划定分影风险边界这一核心 Reader Release，B对“不能把影身当安全替代品”的代价表达更清楚。基于结果边界和未来兑现控制，B整体忠实度更高。",
+    "authority_wall_seconds": 29.65
+  }
+]

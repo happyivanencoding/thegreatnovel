@@ -1,0 +1,14 @@
+A|P|adjust_and_win|C1|fatigue_unfamiliar_steps
+A|P|win_consecutive|T1|public_trial
+A|P|disclose|A1,C2|trust_choice
+R|proof|P|earn|T1|public_record|unproven|recorded|-
+R|resource|P|receive|K1|escort_access|none|active|-
+R|resource|P|receive|M1|prepayment|none|partial|-
+S|state|P|gain|K1|identity|local_candidate|escort_candidate|-
+S|relationship|P|disclose|C2|clone_secret|unknown|known|-
+S|relationship|P|join|G1|travel_bond|separate|same_convoy|-
+E|ending|P|join|G1|leave_town|must_hold|next_day|-
+E|deadline|P|depart|R1|route_entry|must_hold|next_chapter|-
+B|ability|A1|adapt|C1|real_time_response|must_hold|delayed|-
+B|ability|P|advance|T1|combat_rank|must_not_hold|stable_upgrade|-
+B|unknown|P|reveal|A1|father_awareness|must_remain_unknown|unresolved|-

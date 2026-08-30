@@ -52,28 +52,25 @@ Phase 1–3 已完成冻结输入、正常下游与最终正文 Reader + Authori
 下一代高潜方向不是再加一个 classifier，而是把 Frozen Mission / Reader Release / Power / Human / Ending 编译成代码可验证的 `Atomic Chapter Obligations`，再让 Paragraph-Delta 只有在 actor-action-object、result/state/ending、ownership/time/money、power ruler、unknown boundary 与 protected commercial value 全部闭合时才可采用，否则直接保留 full Reviser。
 
 
-### Atomic Chapter Obligations 实验边界（2026-08-29）
+### Atomic Authority IR v1 实验边界（2026-08-29）
 
-Atomic v0.3 将 Frozen Mission / Reader Release / Canon / World / Power / Human 与 Primary evidence 编译成 typed obligations，并对 Paragraph-Delta 应用后的**完整最终正文**做 deterministic closure。它不是 Writer Prompt、章节配额、第二个 Director 或 LLM classifier；任一 hard obligation `FAIL / UNKNOWN / CONFLICT`，或 compiler 遇到 unsupported grammar / 真正 source conflict，都 fail closed。
+旧 Atomic v0.3 只保留为 Boundary Discovery Experiment。正式架构是两个互不越权的产物：
 
-当前稳定边界：
+```text
+Atomic Authority Contract
+  = Entity Registry + Frozen Mission / Canon / World / Power / Human / Reader Release IR
 
-- 当前 Mission 明确 actor > 当前 Primary 的显式人物 fallback > 远端 Human / Book 人名；旧原型不能覆盖当前主角。
-- `actor → action → object` 必须在同一局部动作域闭合；本体不能替代分身，甲角色不能完成乙角色动作。
-- Direct Result / State Change / Ending 分开；“能、准备、获得资格、形成依据、即将”都不是 terminal completion。
-- original / copy / custody / possession / use right / title 分开。
-- `received ≠ entitlement ≠ pending ≠ lost ≠ disputed`；首笔不能满足全额结清，未授权金额/单位不能进入正文。
-- stable tier / battle-scale output / temporary composite effect / cooldown / Public Proof ruler 分开；越级承压不自动升档。
-- Public Proof 只在上游触发时要求同一主角、同一器物/力量主题的 `performance → qualified ruler → behavioral repricing`；不能从无关段落拼装。
-- Reader Release 只约束明确排程事实的一次清楚释放；unresolved fact 是 no-invention boundary，不是反复写“仍未知”的配额。
-- Relationship 必须绑定同一 named counterpart；Human cue 只在同一人物 + 直接接触/近身治疗 + Frozen Human authority 同时成立时触发。
-- 欲望、关系、Reward、Surprise、Social Repricing 使用 `PRESERVE_IF_PRESENT`：只保护 Primary 已有商业价值，不要求每章新增。
-- Gate 扫描完整正文，不只看 Delta 修改处；Primary 已有的未授权历史回指也会阻止采用。
-- Full Reviser 不是安全金标；fallback 后仍需过同一 Gate，失败则是 `FULL_REVISER_RESIDUAL_FAILURE`，不能静默保存。
+Primary Preservation Map
+  = Runtime签发的 Primary fact evidence + blocker edit window + optional Curator fragment hint
+```
 
-最终证据：33项受控边界测试全部通过；12/12 known-bad mutations 被拦截；20章 shadow 中10/20可进入可判定区；第二本书5/5 preflight fail closed，说明当前 compiler 安全但领域覆盖不足。两次四章真实路线均为2章采用、1章 Full fallback、1章 Full 后仍 residual failure；observed cost through detection 名义快37.59% / 40.97%，但不是完整可交付速度，因为 residual repair 尚未完成。两次原始 Delta 只有1/4完全一致；v0.3真正采用且已有匿名 Blind 的第9、14章中，Reader为Atomic 1 / Control 1，Authority为Atomic 2。
+Hard Contract 只接收 source-specific trusted artifacts：私有 issuer、normalized-fact SHA-256、稳定 Entity ID / slot、显式 from-state、dependency cycle 与 source conflict 校验。Curator / Primary / Reviser / Judge 不能创建 Hard Fact、Conflict 或 Identity；空 Contract 不 eligible；Registry / Fact / Contract / Preservation 均为不可变快照，序列化重载会重建 artifacts 并复核 digest、fact membership 与 Contract hash。
 
-因此只冻结 Boundary Specification、校准协议、fail-closed 和 fallback 后再验证的方法论；Atomic compiler 与快路不接入 production。下一步必须先把 Named Entity、Power Scale、Resource Type、Relationship Counterpart 从结构化 Authority metadata 注入通用 Schema Compiler，在跨书有可解释覆盖后再生成新 Delta。完整报告：`books/real-exp-atomic-chapter-obligations-20260829-v1/RESULTS.md`。
+Preservation 默认依靠 Edit Locality，而不是 Desire / Surprise / Relationship detector。Evidence binding 由 Runtime 签发并绑定 Primary SHA-256；Curator只能给 editable window 内的窄 protection hint，不能伪装成 evidence、扩窗或改变 Contract。Gate 还会拒绝 paragraph-count shift 与 locked-paragraph drift。
+
+两本书四章静态实验：4/4 source-pure、4/4 preflight eligible、4/4窗口外修改被阻止，平均只开放3.11%段落。57项 focused tests、22/22 Schema/runtime checks通过。自由文本 Director Sidecar 三版全部失败：verbose JSON wall +205.83%，compact JSON +147.41%，micro DSL +146.45%；compact blind 中Story 3:1偏原Director，Authority 3:1偏Sidecar。
+
+正确下一步是 native `DirectorStructuredDecision`：模型只返回一份 canonical typed decision，Runtime用 Action/Narrative Registry渲染八字段Mission，并确定性生成Frozen Mission artifact；不存在第二份自由 `human_clause`。当前只有schema/unit evidence，没有真实模型Story/latency/E2E证据。Unsupported chapter绕过Atomic走现有Full；只有supported chapter才允许Delta → Gate → Full fallback → supported Gate。Production五节点不变。完整报告：`books/real-exp-atomic-authority-ir-20260829-v1/RESULTS.md`。
 
 ## 节点职责
 

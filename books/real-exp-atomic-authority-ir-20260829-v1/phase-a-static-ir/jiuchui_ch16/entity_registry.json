@@ -1,0 +1,125 @@
+{
+  "schema_version": "entity-registry-v1",
+  "chapter_id": "JIUCHUI:CH016",
+  "protagonist_id": "PROTAGONIST_001",
+  "entities": [
+    {
+      "entity_id": "CLONE_001",
+      "kind": "manifestation",
+      "display_name": "分身",
+      "aliases": [
+        "借身"
+      ],
+      "authority_refs": [
+        "authority.entity.CLONE_001"
+      ],
+      "parent_entity_id": "PROTAGONIST_001"
+    },
+    {
+      "entity_id": "ITEM_RETURN_TIDE_WEDGE_001",
+      "kind": "item",
+      "display_name": "回潮楔",
+      "aliases": [
+        "楔子"
+      ],
+      "authority_refs": [
+        "authority.entity.ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "LOCATION_OBSERVATION_POINT_001",
+      "kind": "location",
+      "display_name": "旧关内侧观测点",
+      "aliases": [
+        "观测点"
+      ],
+      "authority_refs": [
+        "authority.entity.LOCATION_OBSERVATION_POINT_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "LOCATION_OUTER_PASS_001",
+      "kind": "location",
+      "display_name": "旧关外层",
+      "aliases": [
+        "外层"
+      ],
+      "authority_refs": [
+        "authority.entity.LOCATION_OUTER_PASS_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "LOCATION_SECOND_PRESSURE_NODE_001",
+      "kind": "location",
+      "display_name": "第二个潮压节点",
+      "aliases": [],
+      "authority_refs": [
+        "authority.entity.LOCATION_SECOND_PRESSURE_NODE_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "MYSTERY_EARLY_TIDE_001",
+      "kind": "mystery",
+      "display_name": "地潮提前原因",
+      "aliases": [],
+      "authority_refs": [
+        "authority.entity.MYSTERY_EARLY_TIDE_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "PROTAGONIST_001",
+      "kind": "character",
+      "display_name": "顾停舟",
+      "aliases": [
+        "他",
+        "本体",
+        "主角"
+      ],
+      "authority_refs": [
+        "canon.protagonist"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "RESOURCE_WELLS_001",
+      "kind": "resource",
+      "display_name": "三座新潮井",
+      "aliases": [
+        "三座井"
+      ],
+      "authority_refs": [
+        "authority.entity.RESOURCE_WELLS_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "ROUTE_GRAIN_001",
+      "kind": "route",
+      "display_name": "粮道",
+      "aliases": [
+        "粮路"
+      ],
+      "authority_refs": [
+        "authority.entity.ROUTE_GRAIN_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "ROUTE_WATER_001",
+      "kind": "route",
+      "display_name": "砺骨部迁徙水路",
+      "aliases": [
+        "水路"
+      ],
+      "authority_refs": [
+        "authority.entity.ROUTE_WATER_001"
+      ],
+      "parent_entity_id": ""
+    }
+  ]
+}

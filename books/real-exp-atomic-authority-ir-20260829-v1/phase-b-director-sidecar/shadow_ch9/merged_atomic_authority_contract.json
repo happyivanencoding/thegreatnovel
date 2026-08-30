@@ -1,0 +1,349 @@
+{
+  "schema_version": "atomic-authority-contract-v1",
+  "chapter_id": "SHADOW:CH009",
+  "protagonist_id": "PROTAGONIST_001",
+  "contract_hash": "b780fd97d5830470a6c8f5fc6716b7ebdd12a27814ad1dc65622a8ed1533e62a",
+  "preflight_eligible": true,
+  "hard_sources": [
+    "frozen_mission",
+    "human_authority",
+    "power_authority"
+  ],
+  "registry": {
+    "schema_version": "entity-registry-v1",
+    "chapter_id": "SHADOW:CH009",
+    "protagonist_id": "PROTAGONIST_001",
+    "entities": [
+      {
+        "entity_id": "ABILITY_SHADOW_CLONE_001",
+        "kind": "ability",
+        "display_name": "分影",
+        "aliases": [
+          "影身"
+        ],
+        "authority_refs": [
+          "authority.entity.ABILITY_SHADOW_CLONE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CHAR_PARTNER_001",
+        "kind": "character",
+        "display_name": "陆绾",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_PARTNER_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CHAR_RIVAL_001",
+        "kind": "character",
+        "display_name": "顾斜阳",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_RIVAL_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ITEM_UMBRA_WEAPON_001",
+        "kind": "item",
+        "display_name": "乌沉短兵",
+        "aliases": [
+          "短兵"
+        ],
+        "authority_refs": [
+          "authority.entity.ITEM_UMBRA_WEAPON_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ORG_COPPER_FEATHER_001",
+        "kind": "organization",
+        "display_name": "铜羽商盟",
+        "aliases": [
+          "铜羽"
+        ],
+        "authority_refs": [
+          "authority.entity.ORG_COPPER_FEATHER_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "PROTAGONIST_001",
+        "kind": "character",
+        "display_name": "顾临川",
+        "aliases": [
+          "他",
+          "本体",
+          "主角"
+        ],
+        "authority_refs": [
+          "canon.protagonist"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "RECORD_ESCORT_001",
+        "kind": "item",
+        "display_name": "撤离记录",
+        "aliases": [
+          "记录"
+        ],
+        "authority_refs": [
+          "authority.entity.RECORD_ESCORT_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "STATE_INJURY_001",
+        "kind": "resource",
+        "display_name": "伤势",
+        "aliases": [
+          "伤口",
+          "疲劳"
+        ],
+        "authority_refs": [
+          "authority.entity.STATE_INJURY_001"
+        ],
+        "parent_entity_id": ""
+      }
+    ]
+  },
+  "facts": [
+    {
+      "fact_id": "CH9_ESCORT_RECORD_DUAL_ROUTE_ANOMALY",
+      "slot_id": "ending_escort_record_anomaly",
+      "source": "frozen_mission",
+      "source_ref": "director.结尾推动力.0",
+      "kind": "ending",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "detect_dual_route_anomaly",
+      "object_ids": [
+        "RECORD_ESCORT_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "普通单线护卫撤离记录",
+      "to_state": "记录显示两条有效行动路线，无法用普通一名二阶护卫解释",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH9_TWO_ROUTE_CHOICE_CONFIRMED"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH9_INJURY_TREATED_WITH_LIMIT",
+      "slot_id": "chapter9_injury_treatment",
+      "source": "frozen_mission",
+      "source_ref": "director.直接结果.0",
+      "kind": "direct_result",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "CHAR_PARTNER_001",
+      "action_id": "treat_returned_injury",
+      "object_ids": [
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "伤势未处理并影响行动",
+      "to_state": "伤口得到处理，但回传伤势仍影响顾临川行动",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH9_MERGE_INJURY_COLLAPSE"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH9_MERGE_INJURY_COLLAPSE",
+      "slot_id": "chapter9_injury_return",
+      "source": "frozen_mission",
+      "source_ref": "director.触发事件.0",
+      "kind": "event",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "suffer_merged_injury_return",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001",
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "影身已归体",
+      "to_state": "两边伤势与疲劳同时回流，顾临川短暂失去行动力",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH9_MOTIVE_DUALITY_ADMITTED",
+      "slot_id": "protagonist_dual_motive",
+      "source": "frozen_mission",
+      "source_ref": "director.主角行动.0",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "admit_dual_motive",
+      "object_ids": [
+        "ITEM_UMBRA_WEAPON_001",
+        "CHAR_PARTNER_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001",
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "",
+      "to_state": "顾临川承认自己既想取得乌沉短兵，也不想让陆绾死在石城里",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH9_PARTNER_SUBSTITUTE_BOUNDARY",
+      "slot_id": "relationship_partner_shadow_cost",
+      "source": "frozen_mission",
+      "source_ref": "director.状态变化.0",
+      "kind": "relationship_transition",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "CHAR_PARTNER_001",
+      "action_id": "set_shadow_cost_boundary",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "对分影保持好奇",
+      "to_state": "理解分影代价，并拒绝将影身视为可随意投入危险的替代品",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH9_MERGE_INJURY_COLLAPSE"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH9_RIVAL_RECLASSIFIED",
+      "slot_id": "relationship_rival_reclassification",
+      "source": "frozen_mission",
+      "source_ref": "director.状态变化.1",
+      "kind": "relationship_transition",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "CHAR_RIVAL_001",
+      "action_id": "reclassify_protagonist",
+      "object_ids": [
+        "PROTAGONIST_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "保持警惕但尚未完成判断",
+      "to_state": "将顾临川视为有具体欲望、却不能简单归类的竞争者",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [
+        "CH9_TWO_ROUTE_CHOICE_CONFIRMED",
+        "CH9_MOTIVE_DUALITY_ADMITTED"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "CH9_TWO_ROUTE_CHOICE_CONFIRMED",
+      "slot_id": "public_two_route_choice",
+      "source": "frozen_mission",
+      "source_ref": "director.对手或世界反应.1",
+      "kind": "public_proof",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "CHAR_RIVAL_001",
+      "action_id": "confirm_two_real_choices",
+      "object_ids": [
+        "PROTAGONIST_001",
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "两条撤离线的真实选择尚未被确认",
+      "to_state": "顾斜阳确认两条撤离线都包含顾临川的真实临场选择",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S9_HUMAN_MIXED_DESIRE_ALLOWED",
+      "slot_id": "human:PROTAGONIST_001:motive",
+      "source": "human_authority",
+      "source_ref": "human.mixed_motive",
+      "kind": "state_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "may_want_gain_and_person_survival_together",
+      "object_ids": [
+        "ITEM_UMBRA_WEAPON_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": {
+        "not_purified_into_selfless_rescue": true
+      },
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S9_POWER_CLONE_DAMAGE_RETURNS",
+      "slot_id": "ability:ABILITY_SHADOW_CLONE_001:damage_return",
+      "source": "power_authority",
+      "source_ref": "power.clone.damage_return",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "clone_damage_returns_to_body",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001",
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": {
+        "damage_is_real": true
+      },
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "metadata": {}
+    }
+  ],
+  "conflicts": [],
+  "unsupported": [],
+  "diagnostics": []
+}

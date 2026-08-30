@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "primary-preservation-map-v1.schema.json",
+  "title": "Primary Preservation Map v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "chapter_id",
+    "contract_hash",
+    "paragraph_count",
+    "paragraph_hashes",
+    "fact_evidence",
+    "editable_paragraph_ids",
+    "locked_paragraph_ids",
+    "protection_hints",
+    "diagnostics"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "primary-preservation-map-v1"
+    },
+    "chapter_id": {
+      "type": "string"
+    },
+    "contract_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "paragraph_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "fact_evidence": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "editable_paragraph_ids": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "uniqueItems": true
+    },
+    "locked_paragraph_ids": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "uniqueItems": true
+    },
+    "protection_hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "paragraph_id",
+          "exact_fragment",
+          "provenance",
+          "note"
+        ],
+        "properties": {
+          "paragraph_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "exact_fragment": {
+            "type": "string"
+          },
+          "provenance": {
+            "enum": [
+              "primary_realization",
+              "curator_location_hint",
+              "manual_experiment"
+            ]
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "paragraph_hashes": {
+      "type": "object",
+      "patternProperties": {
+        "^[1-9][0-9]*$": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

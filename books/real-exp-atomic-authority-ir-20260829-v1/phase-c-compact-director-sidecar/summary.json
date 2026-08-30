@@ -1,0 +1,122 @@
+{
+  "schema_version": "atomic-authority-ir-v1-compact-sidecar-experiment",
+  "samples": 4,
+  "parse_ok": 3,
+  "all_eight_fields_present": 4,
+  "merged_contracts_preflight_eligible": 1,
+  "average_expected_structural_coverage": 0.4792,
+  "average_compact_sidecar_chars": 3735.8,
+  "control_total_seconds": 162.162,
+  "treatment_total_seconds": 401.201,
+  "sidecar_wall_change_percent": 147.41,
+  "rows": [
+    {
+      "sample": "jiuchui_ch14",
+      "chapter_id": "JIUCHUI:CH014",
+      "parse_ok": true,
+      "parse_error": "",
+      "mission_fields_present": 8,
+      "sidecar_version": "AAIR1",
+      "chapter_id_matches": true,
+      "protagonist_id_matches": true,
+      "generated_fact_count": 12,
+      "expected_fact_count": 8,
+      "expected_structural_matches": 5,
+      "expected_structural_coverage": 0.625,
+      "merged_contract_preflight_eligible": false,
+      "merged_contract_conflicts": [],
+      "merged_contract_unsupported": [
+        "fact MISSION_JIUCHUI_CH014_ENDING_01 references unknown entity_id=LOCATION_OLD_PASS"
+      ],
+      "hard_sources": [
+        "canon",
+        "frozen_mission",
+        "power_authority"
+      ],
+      "control_director_wall_seconds": 23.977,
+      "treatment_director_wall_seconds": 105.165,
+      "control_response_chars": 669,
+      "treatment_mission_chars": 776,
+      "compact_sidecar_chars": 3757
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "chapter_id": "JIUCHUI:CH016",
+      "parse_ok": true,
+      "parse_error": "",
+      "mission_fields_present": 8,
+      "sidecar_version": "AAIR1",
+      "chapter_id_matches": true,
+      "protagonist_id_matches": true,
+      "generated_fact_count": 12,
+      "expected_fact_count": 8,
+      "expected_structural_matches": 5,
+      "expected_structural_coverage": 0.625,
+      "merged_contract_preflight_eligible": false,
+      "merged_contract_conflicts": [],
+      "merged_contract_unsupported": [
+        "fact MISSION_JIUCHUI_CH016_RESULTS_01 references unknown stable slot=event:JIUCHI:CH016:stabilize_public_routes"
+      ],
+      "hard_sources": [
+        "canon",
+        "frozen_mission",
+        "power_authority"
+      ],
+      "control_director_wall_seconds": 56.546,
+      "treatment_director_wall_seconds": 94.448,
+      "control_response_chars": 915,
+      "treatment_mission_chars": 713,
+      "compact_sidecar_chars": 3604
+    },
+    {
+      "sample": "shadow_ch4",
+      "chapter_id": "SHADOW:CH004",
+      "parse_ok": false,
+      "parse_error": "IRValidationError: kind=relationship_transition is not allowed in compact category=results",
+      "mission_fields_present": 8,
+      "sidecar_version": "AAIR1",
+      "chapter_id_matches": true,
+      "protagonist_id_matches": true,
+      "generated_fact_count": 0,
+      "expected_fact_count": 7,
+      "expected_structural_matches": 0,
+      "expected_structural_coverage": 0.0,
+      "merged_contract_preflight_eligible": false,
+      "merged_contract_conflicts": [],
+      "merged_contract_unsupported": [],
+      "hard_sources": [],
+      "control_director_wall_seconds": 40.01,
+      "treatment_director_wall_seconds": 84.366,
+      "control_response_chars": 821,
+      "treatment_mission_chars": 732,
+      "compact_sidecar_chars": 4037
+    },
+    {
+      "sample": "shadow_ch9",
+      "chapter_id": "SHADOW:CH009",
+      "parse_ok": true,
+      "parse_error": "",
+      "mission_fields_present": 8,
+      "sidecar_version": "AAIR1",
+      "chapter_id_matches": true,
+      "protagonist_id_matches": true,
+      "generated_fact_count": 12,
+      "expected_fact_count": 6,
+      "expected_structural_matches": 4,
+      "expected_structural_coverage": 0.6667,
+      "merged_contract_preflight_eligible": true,
+      "merged_contract_conflicts": [],
+      "merged_contract_unsupported": [],
+      "hard_sources": [
+        "frozen_mission",
+        "human_authority",
+        "power_authority"
+      ],
+      "control_director_wall_seconds": 41.629,
+      "treatment_director_wall_seconds": 117.222,
+      "control_response_chars": 643,
+      "treatment_mission_chars": 696,
+      "compact_sidecar_chars": 3545
+    }
+  ]
+}

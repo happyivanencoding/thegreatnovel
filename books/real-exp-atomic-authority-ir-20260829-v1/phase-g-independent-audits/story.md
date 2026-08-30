@@ -1,0 +1,122 @@
+# Overall Verdict
+
+Atomic Authority IR v1 的架构边界是对的，但仍是实验架构，不能冻结为 production 路由。
+
+- Story quality：Compact Mission 双盲仅 4 章，Control 以 3:1 胜出；这只是 Director Mission 层的故事质量信号，尚非完整正文质量。
+- Authority fidelity：同一盲评 Compact 以 3:1 胜出，说明压缩合同更少越权，但不是全胜。
+- Schema validity：静态 Phase A 为 4/4 source-pure、4/4 preflight eligible；三种 Director Sidecar 均不合格。
+- Runtime speed：verbose / compact / micro Sidecar 分别使 Director 增加 205.83% / 147.41% / 146.45% wall time。
+- Production readiness：否。原生 structured Director 尚未实测；ACP 不支持 native schema，Direct API 也未配置。
+
+# Creative Ownership Boundary
+
+`Atomic Authority Contract` 与 `Primary Preservation Map` 的拆分真正守住了“创作层决定故事，Atomic 只验收”的原则：
+
+- Contract 只由 Frozen Mission、Canon、World、Power、Human、Reader Release 和 Entity Registry 确定性合并。它只验收“已批准的行动、结果、状态、未知边界、所有权/关系变化有没有被写没”。
+- 它明确不决定升级、奖励、亲吻、Surprise、全场震惊或关系转折；这些仍属于 Story Program → Outline → Director。
+- Preservation Map 只记录 Primary 对既有事实的段落实现、可编辑窗口、锁定段落及局部已成功 fragment；不能增 Hard Fact、身份、冲突或扩大窗口。
+
+Phase A 的四章静态证据支持这条边界：九垂原 Ch14/16、分影 Ch4/9 均无 Curator/Primary Hard source。可证明架构来源纯度，尚不能证明真实模型运行时也稳定守住它。
+
+# Why Sidecar Hurt Story Quality
+
+三种 Sidecar 都不是“文本多一点所以慢”，而是让 Director 同时承担两项互相争夺注意力的工作：做章节取舍，以及把取舍翻译成机器合同。
+
+- Verbose JSON：3/4 parse，2/4 preflight eligible，平均 structural coverage 41.52%，总时长 162.162s → 495.933s。
+- Compact JSON：3/4 parse，仅 1/4 eligible，coverage 47.92%，162.162s → 401.201s；即使平均 Sidecar 已缩至 3,735.8 chars，仍慢 147.41%。
+- Micro DSL：仅 399.5 chars、7.25 行，却 0/4 parse、0 eligible，仍慢 146.45%。错误包括未知 `CP1`、未知 `fatigue_unfamiliar_steps`、缺 fenced block。
+
+这说明瓶颈是结构化自校验、ID/slot/category 对齐和双重输出，而非单纯字符数。
+
+Compact 的双盲分裂也很有信息量：
+
+- Story blind：Control 3:1 胜。九垂原 Ch14、Ch16 与分影 Ch4 均偏 Control。
+- Authority blind：Compact 3:1 胜。Ch14、Ch16、分影 Ch9 偏 Compact。
+
+Control 更容易写出可感的冲突与主动取舍，但会顺手补足未冻结的“合理结果”：例如 Ch14 把百炉会写成矿权裁定主体；Ch16 将一轮迁徙水路保障扩成资源归属与已重新确定的撤离范围。Compact 更能守住授权，但会挤压 Director 用自然语言安排行动压力、关系重量与兑现方式的注意力。不是“Compact 较差”，而是同一推理预算中，机器可验证性和故事取舍正在竞争。
+
+# Edit Locality and Commercial Value
+
+Edit Locality 比 Desire / Surprise / Relationship detector 更适合保护男频商业价值。它不假装理解“这一段很爽”，而是保护已经写好的具体正文表面。
+
+四个静态样本平均只开放 3.11% 的段落：
+
+- 九垂原 Ch14：175 段，仅开放 3 段（1.71%）。
+- Ch16：101 段，开放 4 段（3.96%）。
+- 分影 Ch4：107 段，开放 2 段（1.87%）。
+- 分影 Ch9：123 段，开放 6 段（4.88%）。
+
+因此，若付款 blocker 在 P42–P43，P39 的关系戏不必被识别为“Relationship”，也天然不允许 Delta 改动。Public Proof、Reward、欲望、Surprise 和不均匀注意力，首先都是具体段落，而不是可安全量化的常驻配额。
+
+Curator location hint 与 exact fragment 的正确边界是：
+
+- hint 只能定位 Hard Fact 的实现位置；
+- exact fragment 只能保护既有 editable window 内一小段已成功表达；
+- 二者不能扩大窗口、定义商业目标、改变 Contract hash，更不能把 Curator 变成第二个故事权威。
+
+它会在“同一段既承载 blocker 又承载完整情绪转折”时显得过紧；此时不应扩张 hint 权限，而应让 Delta 失败后回到 Full Reviser。Ch16 的历史 Delta 对 P71、P86、P96 的越窗修改被拒，恰好说明静态机制在执行其职责，不足以证明正文被错误冻结。
+
+# What Primary / Delta Should See
+
+Primary 应看到当前章可写的近端信息：Frozen Mission 的人类可读事件、Curator 的压缩上下文和短 Scene Prose Projection。它不应看到 raw GBrain、完整 Scene Skill、未批准未来计划，亦不应把自身正文反写为事实权威。
+
+Delta 应只看到：
+
+- 已合并的 Atomic Contract；
+- Primary Draft；
+- blocker fact IDs；
+- fact → paragraph evidence location；
+- 该 blocker 的窄 editable window；
+- 窗口内可选的 exact fragment。
+
+Delta 不应看到用以重新导演章节的完整 Story Program，不应自行解释人物欲望，也不应从 Curator/Primary 文本推导新身份、所有权、关系或世界事实。
+
+Residual repair 只给 blocker 是合理的：它把修复限定为“已验证的遗漏事实”，防止 Reviser 从补一个结果滑向二次创作。它不是万能路径：若局部补写不能同时保住因果、关系、Reward 或结尾，就应走 Full Reviser；Full 后仍不通过 supported Gate，才是 Residual Failure，而不是放宽 Atomic。
+
+# Structured Director Risks
+
+原生 `DirectorStructuredDecision` + Runtime dual projection 是正确的下一实验形态：同一决策对象同时投影八字段人类 Mission 与 typed IR，Runtime 生成 IDs、slot 和默认值；仅改 `human_clause` 不应改变 Contract hash。它能消除“先写八字段、再附一份 Sidecar”的第二项生成任务。
+
+但它尚不能证明 Director 不会变成填表器。风险仍在于模型为了填满结果、状态、行动者和对象字段，把未必值得显影的东西都升级成任务结果，或者为了 schema 完整性牺牲自然的冲突、欲望和惊喜节奏。三种 Sidecar 的失败只能说明附加自由文本不行，不能外推 native structured response 必然成功。
+
+因此，native schema 需要同时证明：
+
+- Mission-level Story blind 不低于当前 Control；
+- Authority fidelity 不低于 Compact；
+- schema/Entity/slot 合法；
+- 接回 Curator → Primary → Reviser 后的最终正文仍成立；
+- 真实 critical path、fallback 成本与跨书复验不恶化。
+
+# Evidence Still Missing
+
+“困难章才支付 Full Reviser 税”目前没有足够证据。当前五节点正常链平均 6.17 分钟/章，真实批次为 7.73 分钟/章；Curator 31.4%、Authority Reviser 37.1%，二者合计 68.5%。这解释了为什么值得研究，但不等于已证明哪些章可安全免税。
+
+仍缺：
+
+- 原生 structured Director 的真实模型输出与端到端正文；
+- Delta → Gate → Full fallback 的真实章节通过率、fallback 率、Residual Failure 率；
+- Delta 通过的章节是否仍保住 Reward、关系变化、Public Proof、Surprise 与非均匀篇幅；
+- 独立 repeat 与更多书/更多关系、资源、未知边界类型的 cross-book 证据；
+- 一个预先定义、能真实识别“局部 blocker 足够”而非事后挑中的路由条件；
+- Full Reviser 相对 Delta 的完整 critical path，而非仅静态 locality 或节点 wall；
+- 所有不支持章节确实绕过 Atomic、且不会被 unsupported preflight 反向阻断的运行证据。
+
+# Freeze / Do Not Freeze
+
+可冻结为实验边界：
+
+- Contract 与 Preservation Map 的严格分离；
+- Frozen Authority-only Hard source、稳定 Entity ID / slot、Runtime 生成事实 ID；
+- Edit Locality 默认保护正文；
+- unsupported chapter 直接走现有 Full Reviser；
+- 停止 verbose、compact、micro 三种自由文本 Sidecar；
+- 不新增商业价值 detector 或常驻 Agent。
+
+不要冻结：
+
+- Atomic 进入 production；
+- 原生 structured Director 的行为结论；
+- “困难章才走 Full Reviser”的路由；
+- 用静态 4/4 成绩替代端到端质量证明；
+- 以 location hint / exact fragment 作为全章商业价值判定；
+- 删除当前 Full Reviser。

@@ -1,0 +1,102 @@
+{
+  "schema_version": "entity-registry-v1",
+  "chapter_id": "SHADOW:CH009",
+  "protagonist_id": "PROTAGONIST_001",
+  "entities": [
+    {
+      "entity_id": "ABILITY_SHADOW_CLONE_001",
+      "kind": "ability",
+      "display_name": "分影",
+      "aliases": [
+        "影身"
+      ],
+      "authority_refs": [
+        "authority.entity.ABILITY_SHADOW_CLONE_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "CHAR_PARTNER_001",
+      "kind": "character",
+      "display_name": "陆绾",
+      "aliases": [],
+      "authority_refs": [
+        "authority.entity.CHAR_PARTNER_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "CHAR_RIVAL_001",
+      "kind": "character",
+      "display_name": "顾斜阳",
+      "aliases": [],
+      "authority_refs": [
+        "authority.entity.CHAR_RIVAL_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "ITEM_UMBRA_WEAPON_001",
+      "kind": "item",
+      "display_name": "乌沉短兵",
+      "aliases": [
+        "短兵"
+      ],
+      "authority_refs": [
+        "authority.entity.ITEM_UMBRA_WEAPON_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "ORG_COPPER_FEATHER_001",
+      "kind": "organization",
+      "display_name": "铜羽商盟",
+      "aliases": [
+        "铜羽"
+      ],
+      "authority_refs": [
+        "authority.entity.ORG_COPPER_FEATHER_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "PROTAGONIST_001",
+      "kind": "character",
+      "display_name": "顾临川",
+      "aliases": [
+        "他",
+        "本体",
+        "主角"
+      ],
+      "authority_refs": [
+        "canon.protagonist"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "RECORD_ESCORT_001",
+      "kind": "item",
+      "display_name": "撤离记录",
+      "aliases": [
+        "记录"
+      ],
+      "authority_refs": [
+        "authority.entity.RECORD_ESCORT_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "STATE_INJURY_001",
+      "kind": "resource",
+      "display_name": "伤势",
+      "aliases": [
+        "伤口",
+        "疲劳"
+      ],
+      "authority_refs": [
+        "authority.entity.STATE_INJURY_001"
+      ],
+      "parent_entity_id": ""
+    }
+  ]
+}

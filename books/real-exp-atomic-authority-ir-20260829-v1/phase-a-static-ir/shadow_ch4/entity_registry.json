@@ -1,0 +1,124 @@
+{
+  "schema_version": "entity-registry-v1",
+  "chapter_id": "SHADOW:CH004",
+  "protagonist_id": "PROTAGONIST_001",
+  "entities": [
+    {
+      "entity_id": "ABILITY_SHADOW_CLONE_001",
+      "kind": "ability",
+      "display_name": "分影",
+      "aliases": [
+        "影身"
+      ],
+      "authority_refs": [
+        "authority.entity.ABILITY_SHADOW_CLONE_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "CHAR_OPPONENT_001",
+      "kind": "character",
+      "display_name": "杜衡",
+      "aliases": [],
+      "authority_refs": [
+        "authority.entity.CHAR_OPPONENT_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "CHAR_PARTNER_001",
+      "kind": "character",
+      "display_name": "陆绾",
+      "aliases": [],
+      "authority_refs": [
+        "authority.entity.CHAR_PARTNER_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "CONTRACT_ESCORT_001",
+      "kind": "contract",
+      "display_name": "铜羽随队契约",
+      "aliases": [
+        "随队契约",
+        "契券"
+      ],
+      "authority_refs": [
+        "authority.entity.CONTRACT_ESCORT_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "GROUP_MEDICINE_CONVOY_001",
+      "kind": "group",
+      "display_name": "药队",
+      "aliases": [],
+      "authority_refs": [
+        "authority.entity.GROUP_MEDICINE_CONVOY_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "ORG_COPPER_FEATHER_001",
+      "kind": "organization",
+      "display_name": "铜羽商盟",
+      "aliases": [
+        "铜羽"
+      ],
+      "authority_refs": [
+        "authority.entity.ORG_COPPER_FEATHER_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "PROTAGONIST_001",
+      "kind": "character",
+      "display_name": "顾临川",
+      "aliases": [
+        "他",
+        "本体",
+        "主角"
+      ],
+      "authority_refs": [
+        "canon.protagonist"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "RESOURCE_PREPAYMENT_001",
+      "kind": "resource",
+      "display_name": "第一笔预付钱",
+      "aliases": [
+        "预付款"
+      ],
+      "authority_refs": [
+        "authority.entity.RESOURCE_PREPAYMENT_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "ROUTE_CANYON_001",
+      "kind": "route",
+      "display_name": "折日峡路线",
+      "aliases": [
+        "折日峡"
+      ],
+      "authority_refs": [
+        "authority.entity.ROUTE_CANYON_001"
+      ],
+      "parent_entity_id": ""
+    },
+    {
+      "entity_id": "TIER_FIRST_001",
+      "kind": "power_tier",
+      "display_name": "正式一阶",
+      "aliases": [
+        "一阶"
+      ],
+      "authority_refs": [
+        "authority.entity.TIER_FIRST_001"
+      ],
+      "parent_entity_id": ""
+    }
+  ]
+}

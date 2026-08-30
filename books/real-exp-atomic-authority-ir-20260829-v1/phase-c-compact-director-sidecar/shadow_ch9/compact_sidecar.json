@@ -1,0 +1,223 @@
+{
+  "v": "AAIR1",
+  "chapter": "SHADOW:CH009",
+  "protagonist": "PROTAGONIST_001",
+  "actions": [
+    {
+      "slot": "event:SHADOW:CH009:accept_injury_treatment",
+      "actor": "PROTAGONIST_001",
+      "verb": "接受伤势处理",
+      "objects": [
+        "STATE_INJURY_001"
+      ],
+      "counterparties": [
+        "CHAR_PARTNER_001"
+      ]
+    },
+    {
+      "slot": "event:SHADOW:CH009:admit_dual_choice",
+      "actor": "PROTAGONIST_001",
+      "verb": "承认救人与取兵并存",
+      "objects": [
+        "ITEM_UMBRA_WEAPON_001",
+        "CHAR_PARTNER_001"
+      ],
+      "counterparties": [
+        "CHAR_PARTNER_001"
+      ]
+    },
+    {
+      "slot": "event:SHADOW:CH009:confirm_two_routes",
+      "actor": "CHAR_RIVAL_001",
+      "verb": "确认双线真实选择",
+      "objects": [
+        "PROTAGONIST_001"
+      ],
+      "counterparties": []
+    }
+  ],
+  "results": [
+    {
+      "slot": "resource:STATE_INJURY_001",
+      "kind": "resource_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "接受处理",
+      "objects": [
+        "STATE_INJURY_001"
+      ],
+      "counterparties": [
+        "CHAR_PARTNER_001"
+      ],
+      "from": "合影回流伤势未处理",
+      "to": "伤势已处理但仍暂时失去行动力",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:SHADOW:CH009:accept_injury_treatment"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "result:SHADOW:CH009:dual_choice_admitted",
+      "kind": "direct_result",
+      "actor": "PROTAGONIST_001",
+      "verb": "确认双重选择依据",
+      "objects": [
+        "ITEM_UMBRA_WEAPON_001",
+        "CHAR_PARTNER_001"
+      ],
+      "counterparties": [
+        "CHAR_PARTNER_001"
+      ],
+      "from": "",
+      "to": "救人与取兵同时成立",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:SHADOW:CH009:admit_dual_choice"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "result:SHADOW:CH009:two_route_confirmation",
+      "kind": "direct_result",
+      "actor": "CHAR_RIVAL_001",
+      "verb": "确认双线选择",
+      "objects": [
+        "PROTAGONIST_001"
+      ],
+      "counterparties": [],
+      "from": "双线经过未被确认",
+      "to": "两条撤离线均确认存在真实选择",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "event:SHADOW:CH009:confirm_two_routes"
+      ],
+      "meta": {}
+    }
+  ],
+  "states": [
+    {
+      "slot": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+      "kind": "relationship_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "建立风险边界",
+      "objects": [
+        "ABILITY_SHADOW_CLONE_001",
+        "STATE_INJURY_001"
+      ],
+      "counterparties": [
+        "CHAR_PARTNER_001"
+      ],
+      "from": "对分影保持好奇",
+      "to": "带边界的理解并拒绝将影身视为可随意替代品",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "result:SHADOW:CH009:dual_choice_admitted"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "relationship:PROTAGONIST_001:CHAR_RIVAL_001",
+      "kind": "relationship_transition",
+      "actor": "PROTAGONIST_001",
+      "verb": "重新定位竞争关系",
+      "objects": [
+        "PROTAGONIST_001"
+      ],
+      "counterparties": [
+        "CHAR_RIVAL_001"
+      ],
+      "from": "警惕的陌生竞争者",
+      "to": "有具体取舍且不能简单归类的竞争者",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "result:SHADOW:CH009:two_route_confirmation"
+      ],
+      "meta": {}
+    }
+  ],
+  "ending": [
+    {
+      "slot": "ending:SHADOW:CH009:route_record_anomaly",
+      "kind": "ending",
+      "actor": "ORG_COPPER_FEATHER_001",
+      "verb": "发现双线记录异常",
+      "objects": [
+        "RECORD_ESCORT_001",
+        "PROTAGONIST_001"
+      ],
+      "counterparties": [],
+      "from": "普通一名二阶可解释",
+      "to": "无法按普通一名二阶解释",
+      "value": null,
+      "terminal": true,
+      "depends": [
+        "result:SHADOW:CH009:two_route_confirmation"
+      ],
+      "meta": {}
+    }
+  ],
+  "boundaries": [
+    {
+      "slot": "ability:ABILITY_SHADOW_CLONE_001:shared_injury",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "actor": "PROTAGONIST_001",
+      "verb": "共享伤势回流",
+      "objects": [
+        "ABILITY_SHADOW_CLONE_001",
+        "STATE_INJURY_001"
+      ],
+      "counterparties": [],
+      "from": "影身可独立行动",
+      "to": "归体后伤势与疲劳共同回流并造成短暂失能",
+      "value": null,
+      "depends": [
+        "resource:STATE_INJURY_001"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "ability:ABILITY_SHADOW_CLONE_001:not_disposable",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "actor": "PROTAGONIST_001",
+      "verb": "承担分影代价",
+      "objects": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparties": [
+        "CHAR_PARTNER_001"
+      ],
+      "from": "可被视为危险替代品",
+      "to": "不可无代价替代本体",
+      "value": null,
+      "depends": [
+        "relationship:PROTAGONIST_001:CHAR_PARTNER_001"
+      ],
+      "meta": {}
+    },
+    {
+      "slot": "mystery:RECORD_ESCORT_001",
+      "kind": "unknown_boundary",
+      "mode": "must_remain_unknown",
+      "actor": "",
+      "verb": "保持异常原因未解",
+      "objects": [
+        "RECORD_ESCORT_001"
+      ],
+      "counterparties": [],
+      "from": "双线记录异常",
+      "to": "异常原因尚未揭晓",
+      "value": null,
+      "depends": [
+        "ending:SHADOW:CH009:route_record_anomaly"
+      ],
+      "meta": {}
+    }
+  ]
+}

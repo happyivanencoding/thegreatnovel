@@ -1,0 +1,384 @@
+{
+  "schema_version": "atomic-authority-ir-v1",
+  "registry": {
+    "schema_version": "entity-registry-v1",
+    "chapter_id": "SHADOW:CH009",
+    "protagonist_id": "PROTAGONIST_001",
+    "entities": [
+      {
+        "entity_id": "PROTAGONIST_001",
+        "kind": "character",
+        "display_name": "顾临川",
+        "aliases": [
+          "他",
+          "本体",
+          "主角"
+        ],
+        "authority_refs": [
+          "canon.protagonist"
+        ]
+      },
+      {
+        "entity_id": "CHAR_PARTNER_001",
+        "kind": "character",
+        "display_name": "陆绾",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_PARTNER_001"
+        ]
+      },
+      {
+        "entity_id": "CHAR_RIVAL_001",
+        "kind": "character",
+        "display_name": "顾斜阳",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_RIVAL_001"
+        ]
+      },
+      {
+        "entity_id": "ITEM_UMBRA_WEAPON_001",
+        "kind": "item",
+        "display_name": "乌沉短兵",
+        "aliases": [
+          "短兵"
+        ],
+        "authority_refs": [
+          "authority.entity.ITEM_UMBRA_WEAPON_001"
+        ]
+      },
+      {
+        "entity_id": "ABILITY_SHADOW_CLONE_001",
+        "kind": "ability",
+        "display_name": "分影",
+        "aliases": [
+          "影身"
+        ],
+        "authority_refs": [
+          "authority.entity.ABILITY_SHADOW_CLONE_001"
+        ]
+      },
+      {
+        "entity_id": "STATE_INJURY_001",
+        "kind": "resource",
+        "display_name": "伤势",
+        "aliases": [
+          "伤口",
+          "疲劳"
+        ],
+        "authority_refs": [
+          "authority.entity.STATE_INJURY_001"
+        ]
+      },
+      {
+        "entity_id": "RECORD_ESCORT_001",
+        "kind": "item",
+        "display_name": "撤离记录",
+        "aliases": [
+          "记录"
+        ],
+        "authority_refs": [
+          "authority.entity.RECORD_ESCORT_001"
+        ]
+      },
+      {
+        "entity_id": "ORG_COPPER_FEATHER_001",
+        "kind": "organization",
+        "display_name": "铜羽商盟",
+        "aliases": [
+          "铜羽"
+        ],
+        "authority_refs": [
+          "authority.entity.ORG_COPPER_FEATHER_001"
+        ]
+      }
+    ]
+  },
+  "fragments": [
+    {
+      "source": "canon",
+      "facts": [
+        {
+          "fact_id": "S9_CANON_INJURY_ACUTE",
+          "slot_id": "state:STATE_INJURY_001",
+          "source_ref": "canon.state.injury",
+          "kind": "state_transition",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "remain_acutely_injured",
+          "object_ids": [
+            "STATE_INJURY_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "acute",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "S9_CANON_PARTNER_IMPLICIT_TRUST",
+          "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+          "source_ref": "canon.relationship.partner",
+          "kind": "relationship_transition",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "remain_implicit_trust",
+          "object_ids": [],
+          "counterparty_ids": [
+            "CHAR_PARTNER_001"
+          ],
+          "from_state": "",
+          "to_state": "implicit_trust",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "S9_CANON_RIVAL_UNKNOWN_COMPETITOR",
+          "slot_id": "relationship:PROTAGONIST_001:CHAR_RIVAL_001",
+          "source_ref": "canon.relationship.rival",
+          "kind": "relationship_transition",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "remain_unknown_competitor",
+          "object_ids": [],
+          "counterparty_ids": [
+            "CHAR_RIVAL_001"
+          ],
+          "from_state": "",
+          "to_state": "unknown_competitor",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "source": "power_authority",
+      "facts": [
+        {
+          "fact_id": "S9_POWER_CLONE_DAMAGE_RETURNS",
+          "slot_id": "ability:ABILITY_SHADOW_CLONE_001:damage_return",
+          "source_ref": "power.clone.damage_return",
+          "kind": "ability_boundary",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "clone_damage_returns_to_body",
+          "object_ids": [
+            "ABILITY_SHADOW_CLONE_001",
+            "STATE_INJURY_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": {
+            "damage_is_real": true
+          },
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "source": "frozen_mission",
+      "facts": [
+        {
+          "fact_id": "S9_ACTION_ACCEPT_TREATMENT",
+          "slot_id": "event:S9:treatment",
+          "source_ref": "mission.action.1",
+          "kind": "action",
+          "mode": "must_hold",
+          "phase": "during_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "accept_treatment",
+          "object_ids": [
+            "STATE_INJURY_001"
+          ],
+          "counterparty_ids": [
+            "CHAR_PARTNER_001"
+          ],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "S9_RESULT_ADMIT_MIXED_MOTIVE",
+          "slot_id": "result:S9:motive_admission",
+          "source_ref": "mission.direct_result.1",
+          "kind": "direct_result",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "admit_wants_weapon_and_partner_survival",
+          "object_ids": [
+            "ITEM_UMBRA_WEAPON_001"
+          ],
+          "counterparty_ids": [
+            "CHAR_PARTNER_001"
+          ],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "S9_STATE_PARTNER_BOUNDARY",
+          "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+          "source_ref": "mission.state_change.1",
+          "kind": "relationship_transition",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "establish_bounded_cooperation",
+          "object_ids": [],
+          "counterparty_ids": [
+            "CHAR_PARTNER_001"
+          ],
+          "from_state": "implicit_trust",
+          "to_state": "cooperation_with_explicit_risk_boundary",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "S9_STATE_RIVAL_REPRICES",
+          "slot_id": "relationship:PROTAGONIST_001:CHAR_RIVAL_001",
+          "source_ref": "mission.state_change.2",
+          "kind": "relationship_transition",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "rival_reprices_competitor",
+          "object_ids": [],
+          "counterparty_ids": [
+            "CHAR_RIVAL_001"
+          ],
+          "from_state": "unknown_competitor",
+          "to_state": "specific_high_value_competitor",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "S9_STATE_INJURY_PENDING",
+          "slot_id": "state:STATE_INJURY_001",
+          "source_ref": "mission.state_change.3",
+          "kind": "state_transition",
+          "mode": "must_hold",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "remain_injured",
+          "object_ids": [
+            "STATE_INJURY_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "acute",
+          "to_state": "not_fully_recovered",
+          "value": null,
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        },
+        {
+          "fact_id": "S9_ENDING_RECORD_REEVALUATION",
+          "slot_id": "ending:S9:record_reevaluation",
+          "source_ref": "mission.ending.1",
+          "kind": "ending",
+          "mode": "terminal",
+          "phase": "chapter_end",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "record_triggers_escort_value_reevaluation",
+          "object_ids": [
+            "RECORD_ESCORT_001",
+            "ORG_COPPER_FEATHER_001"
+          ],
+          "counterparty_ids": [],
+          "from_state": "",
+          "to_state": "",
+          "value": null,
+          "terminal": true,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        }
+      ]
+    },
+    {
+      "source": "human_authority",
+      "facts": [
+        {
+          "fact_id": "S9_HUMAN_MIXED_DESIRE_ALLOWED",
+          "slot_id": "human:PROTAGONIST_001:motive",
+          "source_ref": "human.mixed_motive",
+          "kind": "state_transition",
+          "mode": "must_hold",
+          "phase": "pre_chapter",
+          "actor_id": "PROTAGONIST_001",
+          "action_id": "may_want_gain_and_person_survival_together",
+          "object_ids": [
+            "ITEM_UMBRA_WEAPON_001"
+          ],
+          "counterparty_ids": [
+            "CHAR_PARTNER_001"
+          ],
+          "from_state": "",
+          "to_state": "",
+          "value": {
+            "not_purified_into_selfless_rescue": true
+          },
+          "terminal": false,
+          "condition_fact_ids": [],
+          "depends_on_fact_ids": [],
+          "condition_slots": [],
+          "depends_on_slots": [],
+          "metadata": {}
+        }
+      ]
+    }
+  ]
+}

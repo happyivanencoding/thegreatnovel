@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "entity-registry-v1.schema.json",
+  "title": "Entity Registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "chapter_id",
+    "protagonist_id",
+    "entities"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "entity-registry-v1"
+    },
+    "chapter_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "protagonist_id": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+    },
+    "entities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entity_id",
+          "kind",
+          "display_name",
+          "aliases",
+          "authority_refs",
+          "parent_entity_id"
+        ],
+        "properties": {
+          "entity_id": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_:-]{2,127}$"
+          },
+          "kind": {
+            "enum": [
+              "character",
+              "manifestation",
+              "faction",
+              "organization",
+              "location",
+              "item",
+              "resource",
+              "contract",
+              "route",
+              "power_tier",
+              "ability",
+              "group",
+              "mystery",
+              "event"
+            ]
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "authority_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "parent_entity_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

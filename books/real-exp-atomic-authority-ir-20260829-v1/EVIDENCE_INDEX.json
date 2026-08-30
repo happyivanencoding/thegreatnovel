@@ -1,0 +1,858 @@
+{
+  "schema_version": "atomic-authority-ir-v1-evidence-index",
+  "final_question": "Can source-pure typed Authority IR + separate Primary Preservation Map replace post-hoc Chinese obligation parsing?",
+  "static_source_pure_ir": {
+    "schema_version": "atomic-authority-ir-v1-static-experiment",
+    "samples": 4,
+    "contracts_preflight_eligible": 4,
+    "source_pure_contracts": 4,
+    "locality_allowed_pass": 4,
+    "outside_locality_blocked": 4,
+    "average_editable_ratio": 0.0311,
+    "rows": [
+      {
+        "sample": "jiuchui_ch14",
+        "chapter_id": "JIUCHUI:CH014",
+        "protagonist_id": "PROTAGONIST_001",
+        "protagonist_display_name": "顾停舟",
+        "hard_contract_preflight_eligible": true,
+        "hard_fact_count": 12,
+        "hard_sources": [
+          "canon",
+          "frozen_mission",
+          "power_authority"
+        ],
+        "contract_hash": "0ec5aa4101103dfe08b6bda295d1712b2ac91447093a6333b93471e23f486957",
+        "paragraph_count": 175,
+        "editable_paragraph_count": 3,
+        "locked_paragraph_count": 172,
+        "editable_ratio": 0.0171,
+        "curator_or_primary_hard_source": false,
+        "allowed_local_edit_pass": true,
+        "forbidden_outside_edit_blocked": true,
+        "historical_delta_locality_pass": true,
+        "historical_delta_violations": []
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "chapter_id": "JIUCHUI:CH016",
+        "protagonist_id": "PROTAGONIST_001",
+        "protagonist_display_name": "顾停舟",
+        "hard_contract_preflight_eligible": true,
+        "hard_fact_count": 11,
+        "hard_sources": [
+          "canon",
+          "frozen_mission",
+          "power_authority"
+        ],
+        "contract_hash": "d8ca1018e15ec99517252e8c982c0b948101cba36bd62b2846c40358996af245",
+        "paragraph_count": 101,
+        "editable_paragraph_count": 4,
+        "locked_paragraph_count": 97,
+        "editable_ratio": 0.0396,
+        "curator_or_primary_hard_source": false,
+        "allowed_local_edit_pass": true,
+        "forbidden_outside_edit_blocked": true,
+        "historical_delta_locality_pass": false,
+        "historical_delta_violations": [
+          "replace touches locked paragraphs=[71]",
+          "replace touches locked paragraphs=[86]",
+          "replace touches locked paragraphs=[96]"
+        ]
+      },
+      {
+        "sample": "shadow_ch4",
+        "chapter_id": "SHADOW:CH004",
+        "protagonist_id": "PROTAGONIST_001",
+        "protagonist_display_name": "顾临川",
+        "hard_contract_preflight_eligible": true,
+        "hard_fact_count": 14,
+        "hard_sources": [
+          "canon",
+          "frozen_mission",
+          "power_authority",
+          "reader_release",
+          "world_authority"
+        ],
+        "contract_hash": "8a731519d83edbb3b6568177a9639c850859171f3f720998c7c56abf89549c7a",
+        "paragraph_count": 107,
+        "editable_paragraph_count": 2,
+        "locked_paragraph_count": 105,
+        "editable_ratio": 0.0187,
+        "curator_or_primary_hard_source": false,
+        "allowed_local_edit_pass": true,
+        "forbidden_outside_edit_blocked": true,
+        "historical_delta_locality_pass": true,
+        "historical_delta_violations": []
+      },
+      {
+        "sample": "shadow_ch9",
+        "chapter_id": "SHADOW:CH009",
+        "protagonist_id": "PROTAGONIST_001",
+        "protagonist_display_name": "顾临川",
+        "hard_contract_preflight_eligible": true,
+        "hard_fact_count": 11,
+        "hard_sources": [
+          "canon",
+          "frozen_mission",
+          "human_authority",
+          "power_authority"
+        ],
+        "contract_hash": "530a3e02bc85f383241dfe3d7713d9abbc236822e0d174e1bd9687fc19567a76",
+        "paragraph_count": 123,
+        "editable_paragraph_count": 6,
+        "locked_paragraph_count": 117,
+        "editable_ratio": 0.0488,
+        "curator_or_primary_hard_source": false,
+        "allowed_local_edit_pass": true,
+        "forbidden_outside_edit_blocked": true,
+        "historical_delta_locality_pass": true,
+        "historical_delta_violations": []
+      }
+    ]
+  },
+  "verbose_json_sidecar": {
+    "schema_version": "atomic-authority-ir-v1-director-sidecar-experiment",
+    "samples": 4,
+    "parse_ok": 3,
+    "all_eight_fields_present": 4,
+    "entity_ids_valid": 4,
+    "merged_contracts_preflight_eligible": 2,
+    "source_pure_contracts": 4,
+    "average_expected_structural_coverage": 0.4152,
+    "control_total_seconds": 162.162,
+    "treatment_total_seconds": 495.933,
+    "sidecar_wall_change_percent": 205.83,
+    "rows": [
+      {
+        "sample": "jiuchui_ch14",
+        "chapter_id": "JIUCHUI:CH014",
+        "parse_ok": true,
+        "parse_error": "",
+        "mission_fields_present": 8,
+        "mission_fields_required": 8,
+        "sidecar_schema_version": "atomic-mission-ir-v1",
+        "sidecar_chapter_id_matches": true,
+        "sidecar_protagonist_id_matches": true,
+        "generated_fact_count": 11,
+        "generated_fact_kinds": [
+          "ability_boundary",
+          "action",
+          "deadline",
+          "ending",
+          "event",
+          "ownership_transition",
+          "public_proof",
+          "relationship_transition",
+          "resource_transition"
+        ],
+        "expected_fact_count": 8,
+        "expected_fact_kinds": [
+          "ability_boundary",
+          "action",
+          "deadline",
+          "ending",
+          "ownership_transition",
+          "public_proof",
+          "relationship_transition",
+          "resource_transition"
+        ],
+        "expected_structural_matches": 7,
+        "expected_structural_coverage": 0.875,
+        "unknown_entity_ids": [],
+        "merged_contract_preflight_eligible": true,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [],
+        "hard_sources": [
+          "canon",
+          "frozen_mission",
+          "power_authority"
+        ],
+        "curator_or_primary_hard_source": false,
+        "control_director_wall_seconds": 23.977,
+        "treatment_director_wall_seconds": 114.579,
+        "control_response_chars": 669,
+        "treatment_mission_chars": 662,
+        "sidecar_chars": 6238
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "chapter_id": "JIUCHUI:CH016",
+        "parse_ok": false,
+        "parse_error": "IRValidationError: fact CH016_OBSERVATION_POINT_EXPOSED requires actor_id",
+        "mission_fields_present": 8,
+        "mission_fields_required": 8,
+        "sidecar_schema_version": "atomic-mission-ir-v1",
+        "sidecar_chapter_id_matches": true,
+        "sidecar_protagonist_id_matches": true,
+        "generated_fact_count": 14,
+        "generated_fact_kinds": [
+          "ability_boundary",
+          "action",
+          "deadline",
+          "direct_result",
+          "ending",
+          "event",
+          "state_transition",
+          "unknown_boundary"
+        ],
+        "expected_fact_count": 8,
+        "expected_fact_kinds": [
+          "ability_boundary",
+          "action",
+          "direct_result",
+          "ending",
+          "ownership_transition",
+          "state_transition",
+          "unknown_boundary"
+        ],
+        "expected_structural_matches": 4,
+        "expected_structural_coverage": 0.5,
+        "unknown_entity_ids": [],
+        "merged_contract_preflight_eligible": false,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [],
+        "hard_sources": [],
+        "curator_or_primary_hard_source": false,
+        "control_director_wall_seconds": 56.546,
+        "treatment_director_wall_seconds": 164.439,
+        "control_response_chars": 915,
+        "treatment_mission_chars": 711,
+        "sidecar_chars": 7818
+      },
+      {
+        "sample": "shadow_ch4",
+        "chapter_id": "SHADOW:CH004",
+        "parse_ok": true,
+        "parse_error": "",
+        "mission_fields_present": 8,
+        "mission_fields_required": 8,
+        "sidecar_schema_version": "atomic-mission-ir-v1",
+        "sidecar_chapter_id_matches": true,
+        "sidecar_protagonist_id_matches": true,
+        "generated_fact_count": 10,
+        "generated_fact_kinds": [
+          "deadline",
+          "direct_result",
+          "ending",
+          "event",
+          "ownership_transition",
+          "public_proof",
+          "relationship_transition",
+          "resource_transition",
+          "unknown_boundary"
+        ],
+        "expected_fact_count": 7,
+        "expected_fact_kinds": [
+          "action",
+          "deadline",
+          "direct_result",
+          "relationship_transition",
+          "resource_transition"
+        ],
+        "expected_structural_matches": 2,
+        "expected_structural_coverage": 0.2857,
+        "unknown_entity_ids": [],
+        "merged_contract_preflight_eligible": false,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [
+          "fact S4_READER_RELEASE_CONTRACT_VALUE references unknown dependency=S4_RESULT_CONTRACT_RECEIVED"
+        ],
+        "hard_sources": [
+          "canon",
+          "frozen_mission",
+          "power_authority",
+          "reader_release",
+          "world_authority"
+        ],
+        "curator_or_primary_hard_source": false,
+        "control_director_wall_seconds": 40.01,
+        "treatment_director_wall_seconds": 100.608,
+        "control_response_chars": 821,
+        "treatment_mission_chars": 793,
+        "sidecar_chars": 5516
+      },
+      {
+        "sample": "shadow_ch9",
+        "chapter_id": "SHADOW:CH009",
+        "parse_ok": true,
+        "parse_error": "",
+        "mission_fields_present": 8,
+        "mission_fields_required": 8,
+        "sidecar_schema_version": "atomic-mission-ir-v1",
+        "sidecar_chapter_id_matches": true,
+        "sidecar_protagonist_id_matches": true,
+        "generated_fact_count": 7,
+        "generated_fact_kinds": [
+          "action",
+          "direct_result",
+          "ending",
+          "event",
+          "public_proof",
+          "relationship_transition"
+        ],
+        "expected_fact_count": 6,
+        "expected_fact_kinds": [
+          "action",
+          "direct_result",
+          "ending",
+          "relationship_transition",
+          "state_transition"
+        ],
+        "expected_structural_matches": 0,
+        "expected_structural_coverage": 0.0,
+        "unknown_entity_ids": [],
+        "merged_contract_preflight_eligible": true,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [],
+        "hard_sources": [
+          "frozen_mission",
+          "human_authority",
+          "power_authority"
+        ],
+        "curator_or_primary_hard_source": false,
+        "control_director_wall_seconds": 41.629,
+        "treatment_director_wall_seconds": 116.307,
+        "control_response_chars": 643,
+        "treatment_mission_chars": 570,
+        "sidecar_chars": 3918
+      }
+    ]
+  },
+  "compact_json_sidecar": {
+    "schema_version": "atomic-authority-ir-v1-compact-sidecar-experiment",
+    "samples": 4,
+    "parse_ok": 3,
+    "all_eight_fields_present": 4,
+    "merged_contracts_preflight_eligible": 1,
+    "average_expected_structural_coverage": 0.4792,
+    "average_compact_sidecar_chars": 3735.8,
+    "control_total_seconds": 162.162,
+    "treatment_total_seconds": 401.201,
+    "sidecar_wall_change_percent": 147.41,
+    "rows": [
+      {
+        "sample": "jiuchui_ch14",
+        "chapter_id": "JIUCHUI:CH014",
+        "parse_ok": true,
+        "parse_error": "",
+        "mission_fields_present": 8,
+        "sidecar_version": "AAIR1",
+        "chapter_id_matches": true,
+        "protagonist_id_matches": true,
+        "generated_fact_count": 12,
+        "expected_fact_count": 8,
+        "expected_structural_matches": 5,
+        "expected_structural_coverage": 0.625,
+        "merged_contract_preflight_eligible": false,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [
+          "fact MISSION_JIUCHUI_CH014_ENDING_01 references unknown entity_id=LOCATION_OLD_PASS"
+        ],
+        "hard_sources": [
+          "canon",
+          "frozen_mission",
+          "power_authority"
+        ],
+        "control_director_wall_seconds": 23.977,
+        "treatment_director_wall_seconds": 105.165,
+        "control_response_chars": 669,
+        "treatment_mission_chars": 776,
+        "compact_sidecar_chars": 3757
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "chapter_id": "JIUCHUI:CH016",
+        "parse_ok": true,
+        "parse_error": "",
+        "mission_fields_present": 8,
+        "sidecar_version": "AAIR1",
+        "chapter_id_matches": true,
+        "protagonist_id_matches": true,
+        "generated_fact_count": 12,
+        "expected_fact_count": 8,
+        "expected_structural_matches": 5,
+        "expected_structural_coverage": 0.625,
+        "merged_contract_preflight_eligible": false,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [
+          "fact MISSION_JIUCHUI_CH016_RESULTS_01 references unknown stable slot=event:JIUCHI:CH016:stabilize_public_routes"
+        ],
+        "hard_sources": [
+          "canon",
+          "frozen_mission",
+          "power_authority"
+        ],
+        "control_director_wall_seconds": 56.546,
+        "treatment_director_wall_seconds": 94.448,
+        "control_response_chars": 915,
+        "treatment_mission_chars": 713,
+        "compact_sidecar_chars": 3604
+      },
+      {
+        "sample": "shadow_ch4",
+        "chapter_id": "SHADOW:CH004",
+        "parse_ok": false,
+        "parse_error": "IRValidationError: kind=relationship_transition is not allowed in compact category=results",
+        "mission_fields_present": 8,
+        "sidecar_version": "AAIR1",
+        "chapter_id_matches": true,
+        "protagonist_id_matches": true,
+        "generated_fact_count": 0,
+        "expected_fact_count": 7,
+        "expected_structural_matches": 0,
+        "expected_structural_coverage": 0.0,
+        "merged_contract_preflight_eligible": false,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [],
+        "hard_sources": [],
+        "control_director_wall_seconds": 40.01,
+        "treatment_director_wall_seconds": 84.366,
+        "control_response_chars": 821,
+        "treatment_mission_chars": 732,
+        "compact_sidecar_chars": 4037
+      },
+      {
+        "sample": "shadow_ch9",
+        "chapter_id": "SHADOW:CH009",
+        "parse_ok": true,
+        "parse_error": "",
+        "mission_fields_present": 8,
+        "sidecar_version": "AAIR1",
+        "chapter_id_matches": true,
+        "protagonist_id_matches": true,
+        "generated_fact_count": 12,
+        "expected_fact_count": 6,
+        "expected_structural_matches": 4,
+        "expected_structural_coverage": 0.6667,
+        "merged_contract_preflight_eligible": true,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [],
+        "hard_sources": [
+          "frozen_mission",
+          "human_authority",
+          "power_authority"
+        ],
+        "control_director_wall_seconds": 41.629,
+        "treatment_director_wall_seconds": 117.222,
+        "control_response_chars": 643,
+        "treatment_mission_chars": 696,
+        "compact_sidecar_chars": 3545
+      }
+    ]
+  },
+  "micro_dsl_sidecar": {
+    "schema_version": "atomic-authority-ir-v1-micro-sidecar-experiment",
+    "samples": 4,
+    "parse_ok": 0,
+    "all_eight_fields_present": 2,
+    "merged_contracts_preflight_eligible": 0,
+    "average_expected_structural_coverage": 0.0,
+    "average_micro_sidecar_chars": 399.5,
+    "average_micro_line_count": 7.25,
+    "control_total_seconds": 162.162,
+    "treatment_total_seconds": 399.646,
+    "sidecar_wall_change_percent": 146.45,
+    "rows": [
+      {
+        "sample": "jiuchui_ch14",
+        "chapter_id": "JIUCHUI:CH014",
+        "parse_ok": false,
+        "parse_error": "IRValidationError: unknown micro entity handle=CP1",
+        "mission_fields_present": 8,
+        "generated_fact_count": 0,
+        "expected_fact_count": 8,
+        "expected_structural_matches": 0,
+        "expected_structural_coverage": 0.0,
+        "merged_contract_preflight_eligible": false,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [],
+        "hard_sources": [],
+        "control_director_wall_seconds": 23.977,
+        "treatment_director_wall_seconds": 95.282,
+        "control_response_chars": 669,
+        "treatment_mission_chars": 789,
+        "micro_sidecar_chars": 840,
+        "micro_line_count": 15
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "chapter_id": "JIUCHUI:CH016",
+        "parse_ok": false,
+        "parse_error": "IRValidationError: missing micro fenced block",
+        "mission_fields_present": 0,
+        "generated_fact_count": 0,
+        "expected_fact_count": 8,
+        "expected_structural_matches": 0,
+        "expected_structural_coverage": 0.0,
+        "merged_contract_preflight_eligible": false,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [],
+        "hard_sources": [],
+        "control_director_wall_seconds": 56.546,
+        "treatment_director_wall_seconds": 97.802,
+        "control_response_chars": 915,
+        "treatment_mission_chars": 0,
+        "micro_sidecar_chars": 0,
+        "micro_line_count": 0
+      },
+      {
+        "sample": "shadow_ch4",
+        "chapter_id": "SHADOW:CH004",
+        "parse_ok": false,
+        "parse_error": "IRValidationError: unknown micro entity handle=fatigue_unfamiliar_steps",
+        "mission_fields_present": 8,
+        "generated_fact_count": 0,
+        "expected_fact_count": 7,
+        "expected_structural_matches": 0,
+        "expected_structural_coverage": 0.0,
+        "merged_contract_preflight_eligible": false,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [],
+        "hard_sources": [],
+        "control_director_wall_seconds": 40.01,
+        "treatment_director_wall_seconds": 104.899,
+        "control_response_chars": 821,
+        "treatment_mission_chars": 811,
+        "micro_sidecar_chars": 758,
+        "micro_line_count": 14
+      },
+      {
+        "sample": "shadow_ch9",
+        "chapter_id": "SHADOW:CH009",
+        "parse_ok": false,
+        "parse_error": "IRValidationError: missing micro fenced block",
+        "mission_fields_present": 0,
+        "generated_fact_count": 0,
+        "expected_fact_count": 6,
+        "expected_structural_matches": 0,
+        "expected_structural_coverage": 0.0,
+        "merged_contract_preflight_eligible": false,
+        "merged_contract_conflicts": [],
+        "merged_contract_unsupported": [],
+        "hard_sources": [],
+        "control_director_wall_seconds": 41.629,
+        "treatment_director_wall_seconds": 101.663,
+        "control_response_chars": 643,
+        "treatment_mission_chars": 0,
+        "micro_sidecar_chars": 0,
+        "micro_line_count": 0
+      }
+    ]
+  },
+  "mission_blind": {
+    "counts": {
+      "story": {
+        "control": 3,
+        "compact_sidecar": 1
+      },
+      "authority": {
+        "compact_sidecar": 3,
+        "control": 1
+      }
+    },
+    "rows": [
+      {
+        "sample": "jiuchui_ch14",
+        "story": "control",
+        "story_hard": [
+          "HARD_PROBLEM_A: 无",
+          "HARD_PROBLEM_B: 无"
+        ],
+        "authority": "compact_sidecar",
+        "authority_hard": [
+          "HARD_VIOLATIONS_A: 无",
+          "HARD_VIOLATIONS_B: 将“百炉会及相关见证者”具体写成否定阮青蜃完整矿权的裁定主体，新增未冻结的机构性确认。"
+        ]
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "story": "control",
+        "story_hard": [
+          "HARD_PROBLEM_A: “保住粮道、新井与水路的组合”没有明确写出他放弃外层这一刀的当场选择。",
+          "HARD_PROBLEM_B: 对协作方的执行状态交代略多，正文必须避免逐项汇报。"
+        ],
+        "authority": "compact_sidecar",
+        "authority_hard": [
+          "HARD_VIOLATIONS_A: 无",
+          "HARD_VIOLATIONS_B: 1. 将公共资源结果偷换为“改变资源归属”，新增未批准的所有权变化；2. 将“撤离范围和可用水路被重新确定”写成已完成状态，超出计划批准的迁徙取水窗口结果"
+        ]
+      },
+      {
+        "sample": "shadow_ch4",
+        "story": "control",
+        "story_hard": [
+          "HARD_PROBLEM_A: “改变退步与出刃时机”仍偏概括，缺少能支撑战斗转折的明确选择。",
+          "HARD_PROBLEM_B: 无"
+        ],
+        "authority": "control",
+        "authority_hard": [
+          "HARD_VIOLATIONS_A: 无",
+          "HARD_VIOLATIONS_B: 无"
+        ]
+      },
+      {
+        "sample": "shadow_ch9",
+        "story": "compact_sidecar",
+        "story_hard": [
+          "HARD_PROBLEM_A: 结尾已把“更高层级直接考量”预设为结果，提前结算了本应留给后续章节的身份重定价。",
+          "HARD_PROBLEM_B: 无"
+        ],
+        "authority": "compact_sidecar",
+        "authority_hard": [
+          "HARD_VIOLATIONS_A: 无",
+          "HARD_VIOLATIONS_B: 无"
+        ]
+      }
+    ]
+  },
+  "schema_validation": {
+    "schema_version": "atomic-authority-ir-v1-schema-validation",
+    "external_dependencies_added": false,
+    "validator_runtime": "internal bounded Draft 2020-12 subset; no added dependency",
+    "schema_definitions": 4,
+    "artifact_checks": 22,
+    "valid_checks": 22,
+    "invalid_checks": 0,
+    "negative_probes": 5,
+    "negative_probes_rejected": 5,
+    "rows": [
+      {
+        "sample": "schema_definition",
+        "artifact": "atomic-authority-contract-v1.schema.json",
+        "validator": "bounded Draft 2020-12 schema sanity",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "schema_definition",
+        "artifact": "director-structured-decision-v1.schema.json",
+        "validator": "bounded Draft 2020-12 schema sanity",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "schema_definition",
+        "artifact": "entity-registry-v1.schema.json",
+        "validator": "bounded Draft 2020-12 schema sanity",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "schema_definition",
+        "artifact": "primary-preservation-map-v1.schema.json",
+        "validator": "bounded Draft 2020-12 schema sanity",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "jiuchui_ch14",
+        "artifact": "entity_registry.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "jiuchui_ch14",
+        "artifact": "atomic_authority_contract.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "jiuchui_ch14",
+        "artifact": "primary_preservation_map.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "artifact": "entity_registry.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "artifact": "atomic_authority_contract.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "artifact": "primary_preservation_map.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "shadow_ch4",
+        "artifact": "entity_registry.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "shadow_ch4",
+        "artifact": "atomic_authority_contract.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "shadow_ch4",
+        "artifact": "primary_preservation_map.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "shadow_ch9",
+        "artifact": "entity_registry.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "shadow_ch9",
+        "artifact": "atomic_authority_contract.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "shadow_ch9",
+        "artifact": "primary_preservation_map.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "unit_structured_decision",
+        "artifact": "director_structured_decision.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": true,
+        "observed_valid": true,
+        "valid": true,
+        "errors": []
+      },
+      {
+        "sample": "negative_probe",
+        "artifact": "director_human_clause_rejected.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": false,
+        "observed_valid": false,
+        "valid": true,
+        "errors": [
+          {
+            "path": "clauses/0/human_clause",
+            "message": "additional property 'human_clause' is not allowed"
+          }
+        ]
+      },
+      {
+        "sample": "negative_probe",
+        "artifact": "director_free_narrative_rejected.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": false,
+        "observed_valid": false,
+        "valid": true,
+        "errors": [
+          {
+            "path": "narrative_function",
+            "message": "additional property 'narrative_function' is not allowed"
+          }
+        ]
+      },
+      {
+        "sample": "negative_probe",
+        "artifact": "contract_missing_provenance_rejected.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": false,
+        "observed_valid": false,
+        "valid": true,
+        "errors": [
+          {
+            "path": "artifact_provenance",
+            "message": "missing required property 'artifact_provenance'"
+          }
+        ]
+      },
+      {
+        "sample": "negative_probe",
+        "artifact": "contract_tampered_digest_runtime_rejected.json",
+        "validator": "AtomicAuthorityContract.from_dict",
+        "expected_valid": false,
+        "observed_valid": false,
+        "valid": true,
+        "errors": [],
+        "runtime_error": "SourcePurityError: artifact canon:fixture:jiuchui_ch14:1 snapshot digest mismatch"
+      },
+      {
+        "sample": "negative_probe",
+        "artifact": "preservation_missing_hashes_rejected.json",
+        "validator": "bounded Draft 2020-12 subset",
+        "expected_valid": false,
+        "observed_valid": false,
+        "valid": true,
+        "errors": [
+          {
+            "path": "paragraph_hashes",
+            "message": "missing required property 'paragraph_hashes'"
+          }
+        ]
+      }
+    ]
+  },
+  "focused_tests": {
+    "passed": 57,
+    "command": "python -m pytest -q temps/test_atomic_authority_ir_v1.py"
+  },
+  "architecture": "ARCHITECTURE.md",
+  "protocol": "PROTOCOL.md",
+  "schemas": [
+    "schemas\\atomic-authority-contract-v1.schema.json",
+    "schemas\\director-structured-decision-v1.schema.json",
+    "schemas\\entity-registry-v1.schema.json",
+    "schemas\\primary-preservation-map-v1.schema.json"
+  ],
+  "independent_audits": {
+    "formal_pre_fix": "phase-g2-postfix-audits/formal.md",
+    "story_post_fix": "phase-g2-postfix-audits/story.md",
+    "formal_resolution": "phase-g2-postfix-audits/FORMAL_AUDIT_RESOLUTION.md"
+  }
+}

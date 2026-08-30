@@ -1,0 +1,11 @@
+VERDICT: B  
+CONFIDENCE: medium  
+PROTAGONIST_AGENCY: B  
+CONFLICT_AND_CHOICE: B  
+PAYOFF_REWARD_RELATIONSHIP: TIE  
+ACTION_OBJECT_CLARITY: B  
+ANTI_PROCEDURE_AI_FLAVOR: B  
+CONTINUATION_PULL: B  
+HARD_PROBLEM_A: “改变退步与出刃时机”仍偏概括，缺少能支撑战斗转折的明确选择。  
+HARD_PROBLEM_B: 无  
+REASON: B把杜衡指出的“退得太习惯”落实为顾临川放弃直线后退、近身守位再反击，冲突与主角选择形成直接因果。A同样写到改变退步与出刃时机，但更像对战斗结果的概述，Curator较难据此抓住一记决定胜负的动作。B的“观察落脚与变向—守住位置—抓空隙影刃反击”给了清楚的动作链，却没有替正文规定过细招式。两版对疲劳、影形迟滞和不公开分影的边界都保留得合格。两版的契约、预付钱、公开身份和陆绾知情同行都能完成阶段性兑现，因此奖励与关系维度基本持平。B将分影明确为“陆绾知情、但尚未公开”的能力，关系变化的秘密边界更清楚。A的“重新估价为正式一阶护卫候选”略有报告口吻，B更多让评价落在连续实战稳定这一可见结果上。B补足探路队失联、路线关闭与绕行折日峡，使离乡不是抽象下一站，而是契约立刻带来的风险入口。两版都没有提前结算峡中事件，但B的结尾更能自然逼出下一章行动。

@@ -1,0 +1,18 @@
+{
+  "jiuchui_ch14": {
+    "A": "compact_sidecar",
+    "B": "control"
+  },
+  "jiuchui_ch16": {
+    "A": "compact_sidecar",
+    "B": "control"
+  },
+  "shadow_ch4": {
+    "A": "compact_sidecar",
+    "B": "control"
+  },
+  "shadow_ch9": {
+    "A": "control",
+    "B": "compact_sidecar"
+  }
+}

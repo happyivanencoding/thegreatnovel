@@ -1,0 +1,313 @@
+{
+  "source": "frozen_mission",
+  "facts": [
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_ACTIONS_01",
+      "slot_id": "event:JIUCHUI:CH016:stabilize_public_routes",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.actions.1",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "stabilize",
+      "object_ids": [
+        "ROUTE_GRAIN_001",
+        "ROUTE_WATER_001",
+        "RESOURCE_WELLS_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_ACTIONS_02",
+      "slot_id": "event:JIUCHUI:CH016:fix_second_pressure_node",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.actions.2",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "CLONE_001",
+      "action_id": "fix",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001",
+        "LOCATION_SECOND_PRESSURE_NODE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_ACTIONS_03",
+      "slot_id": "event:JIUCHI:CH016:redirect_tide_to_outer_pass",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.actions.3",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "redirect",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001",
+        "LOCATION_OUTER_PASS_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_RESULTS_01",
+      "slot_id": "resource:ROUTE_GRAIN_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.1",
+      "kind": "resource_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "preserve",
+      "object_ids": [
+        "ROUTE_GRAIN_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "blocked",
+      "to_state": "usable",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHI:CH016:stabilize_public_routes"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_RESULTS_02",
+      "slot_id": "resource:RESOURCE_WELLS_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.2",
+      "kind": "resource_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "preserve",
+      "object_ids": [
+        "RESOURCE_WELLS_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "under_tide_impact",
+      "to_state": "not_destroyed",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHI:CH016:redirect_tide_to_outer_pass"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_RESULTS_03",
+      "slot_id": "resource:ROUTE_WATER_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.3",
+      "kind": "resource_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "open",
+      "object_ids": [
+        "ROUTE_WATER_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "threatened",
+      "to_state": "usable_migration_window",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHI:CH016:redirect_tide_to_outer_pass"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_RESULTS_04",
+      "slot_id": "result:JIUCHI:CH016:outer_pass_destroyed",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.results.4",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "sacrifice",
+      "object_ids": [
+        "LOCATION_OUTER_PASS_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "standing",
+      "to_state": "destroyed",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHI:CH016:redirect_tide_to_outer_pass"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_STATES_01",
+      "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001:reuse_requires_dissipation",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.states.1",
+      "kind": "ability_boundary",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "require_dissipation",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "released_once",
+      "to_state": "reuse_blocked_until_dissipation",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "event:JIUCHI:CH016:redirect_tide_to_outer_pass"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_ENDING_01",
+      "slot_id": "ending:JIUCHI:CH016:observation_point_exposed",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.ending.1",
+      "kind": "ending",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "expose",
+      "object_ids": [
+        "LOCATION_OBSERVATION_POINT_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "concealed",
+      "to_state": "exposed",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "result:JIUCHI:CH016:outer_pass_destroyed"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_ENDING_02",
+      "slot_id": "ending:JIUCHI:CH016:next_tide_threatens_evacuees",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.ending.2",
+      "kind": "deadline",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "require_entry",
+      "object_ids": [
+        "LOCATION_OBSERVATION_POINT_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "not_entered",
+      "to_state": "required_before_next_tide",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "ending:JIUCHI:CH016:observation_point_exposed"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_BOUNDARIES_01",
+      "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001:reuse_boundary",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.boundaries.1",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_blocked_until_dissipation",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "released_once",
+      "to_state": "not_ready_for_immediate_reuse",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "ability:ITEM_RETURN_TIDE_WEDGE_001:reuse_requires_dissipation"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH016_BOUNDARIES_02",
+      "slot_id": "mystery:MYSTERY_EARLY_TIDE_001",
+      "source": "frozen_mission",
+      "source_ref": "director_ir.boundaries.2",
+      "kind": "unknown_boundary",
+      "mode": "must_remain_unknown",
+      "phase": "chapter_end",
+      "actor_id": "",
+      "action_id": "remain_unresolved",
+      "object_ids": [
+        "MYSTERY_EARLY_TIDE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "unresolved",
+      "to_state": "unresolved",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    }
+  ]
+}
