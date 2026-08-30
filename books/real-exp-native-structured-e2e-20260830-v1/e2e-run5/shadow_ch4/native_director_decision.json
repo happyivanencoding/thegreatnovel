@@ -1,0 +1,127 @@
+{
+  "schema_version": "director-structured-decision-v1",
+  "chapter_id": "SHADOW:CH004",
+  "protagonist_id": "PROTAGONIST_001",
+  "clauses": [
+    {
+      "field": "trigger_event",
+      "kind": "event",
+      "actor_id": "CHAR_OPPONENT_001",
+      "action_id": "du_heng_enters_with_unfamiliar_footwork",
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "surface_note": ""
+    },
+    {
+      "field": "event_driver",
+      "kind": "action",
+      "actor_id": "CHAR_OPPONENT_001",
+      "action_id": "press_with_unfamiliar_footwork",
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "surface_note": ""
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "defeat_under_fatigue",
+      "object_ids": [
+        "CHAR_OPPONENT_001"
+      ],
+      "surface_note": "",
+      "counterparty_ids": []
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "reveal_ability",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "surface_note": ""
+    },
+    {
+      "field": "world_reaction",
+      "kind": "direct_result",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "confirm_public_rank",
+      "object_ids": [
+        "TIER_FIRST_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "surface_note": ""
+    },
+    {
+      "field": "direct_result",
+      "kind": "direct_result",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "win_public_rank",
+      "object_ids": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "surface_note": "",
+      "counterparty_ids": []
+    },
+    {
+      "field": "direct_result",
+      "kind": "ownership_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "receive_contract",
+      "object_ids": [
+        "CONTRACT_ESCORT_001"
+      ],
+      "from_state": "none",
+      "to_state": "received",
+      "surface_note": "",
+      "counterparty_ids": []
+    },
+    {
+      "field": "direct_result",
+      "kind": "resource_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "receive_partial_prepayment",
+      "object_ids": [
+        "RESOURCE_PREPAYMENT_001"
+      ],
+      "from_state": "not_paid",
+      "to_state": "first_payment_received",
+      "surface_note": "",
+      "counterparty_ids": []
+    },
+    {
+      "field": "state_change",
+      "kind": "relationship_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "partner_decides同行",
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "ordinary_guard_relation",
+      "to_state": "同行药队",
+      "surface_note": "",
+      "object_ids": []
+    },
+    {
+      "field": "ending_drive",
+      "kind": "deadline",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "depart_next_day_via_changed_route",
+      "object_ids": [
+        "ROUTE_CANYON_001",
+        "GROUP_MEDICINE_CONVOY_001"
+      ],
+      "surface_note": "",
+      "counterparty_ids": []
+    }
+  ],
+  "narrative_function_id": "function.stage_payoff_departure"
+}

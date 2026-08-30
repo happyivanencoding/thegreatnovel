@@ -1,0 +1,341 @@
+{
+  "schema_version": "native-director-structured-e2e-v1",
+  "run": "e2e-run5",
+  "director_only": false,
+  "samples": 4,
+  "native_director_accepted": 4,
+  "director_fallbacks": 0,
+  "average_structural_coverage": 1.0,
+  "control_director_total_seconds": 162.162,
+  "treatment_director_total_seconds": 126.555,
+  "director_seconds_saved": 35.607,
+  "director_percent_saved": 21.96,
+  "control_e2e_total_seconds": 1314.86,
+  "rows": [
+    {
+      "sample": "jiuchui_ch14",
+      "run": "e2e-run5",
+      "director_source": "native_structured",
+      "native_parse_or_build_error": "",
+      "native_contract_preflight_eligible": true,
+      "native_contract_conflicts": [],
+      "native_contract_unsupported": [],
+      "native_structural_coverage": {
+        "expected": 8,
+        "matched": 8,
+        "coverage": 1.0,
+        "rows": [
+          {
+            "expected_fact_id": "J14_MISSION_USE_WEDGE_ONCE",
+            "expected_action_id": "lock_redirect_release_tide_once",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH014_PROTAGONIST_ACTION_01"
+          },
+          {
+            "expected_fact_id": "J14_RESULT_PUBLIC_PROOF",
+            "expected_action_id": "publicly_prove_direction_change_value",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH014_WORLD_REACTION_01"
+          },
+          {
+            "expected_fact_id": "J14_RESULT_WEDGE_AUTONOMY",
+            "expected_action_id": "retain_autonomous_use",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH014_DIRECT_RESULT_01"
+          },
+          {
+            "expected_fact_id": "J14_RESULT_MINING_SHARE",
+            "expected_action_id": "confirm_entitlement",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH014_DIRECT_RESULT_02"
+          },
+          {
+            "expected_fact_id": "J14_STATE_PARTNERSHIP",
+            "expected_action_id": "transition_relationship",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH014_STATE_CHANGE_01"
+          },
+          {
+            "expected_fact_id": "J14_STATE_WEDGE_COOLDOWN",
+            "expected_action_id": "require_residual_pressure_dissipation_before_reuse",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH014_STATE_CHANGE_02"
+          },
+          {
+            "expected_fact_id": "J14_ENDING_DEPART",
+            "expected_action_id": "depart_with_grain_convoy",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH014_ENDING_DRIVE_01"
+          },
+          {
+            "expected_fact_id": "J14_DEADLINE_NEXT_TIDE",
+            "expected_action_id": "deliver_before_event",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH014_ENDING_DRIVE_02"
+          }
+        ]
+      },
+      "runtime_normalization_count": 0,
+      "runtime_normalizations": [],
+      "native_director_seconds": 35.369,
+      "fallback_director_seconds": 0.0,
+      "effective_director_seconds": 35.369,
+      "control_director_seconds": 23.977,
+      "control_curator_seconds": 82.178,
+      "control_primary_seconds": 71.508,
+      "control_reviser_seconds": 210.84,
+      "control_total_seconds": 388.503,
+      "native_mission_chars": 459,
+      "control_mission_chars": 668,
+      "curator_seconds": 89.433,
+      "primary_seconds": 74.759,
+      "reviser_seconds": 170.807,
+      "treatment_full_total_seconds": 370.368,
+      "treatment_vs_control_seconds_saved": 18.135,
+      "treatment_vs_control_percent_saved": 4.67,
+      "primary_chars": 3390,
+      "final_chars": 3196,
+      "control_final_chars": 3654
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "run": "e2e-run5",
+      "director_source": "native_structured",
+      "native_parse_or_build_error": "",
+      "native_contract_preflight_eligible": true,
+      "native_contract_conflicts": [],
+      "native_contract_unsupported": [],
+      "native_structural_coverage": {
+        "expected": 8,
+        "matched": 8,
+        "coverage": 1.0,
+        "rows": [
+          {
+            "expected_fact_id": "J16_ACTION_BODY_STABILIZE",
+            "expected_action_id": "stabilize_routes",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH016_PROTAGONIST_ACTION_01"
+          },
+          {
+            "expected_fact_id": "J16_ACTION_CLONE_FIX_WEDGE",
+            "expected_action_id": "carry_and_fix_item_at_node",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH016_PROTAGONIST_ACTION_02"
+          },
+          {
+            "expected_fact_id": "J16_RESULT_RESOURCES_SAVED",
+            "expected_action_id": "preserve_resources",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH016_DIRECT_RESULT_01"
+          },
+          {
+            "expected_fact_id": "J16_RESULT_OUTER_PASS_SACRIFICED",
+            "expected_action_id": "redirect_tide_and_sacrifice",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH016_STATE_CHANGE_01"
+          },
+          {
+            "expected_fact_id": "J16_RESULT_WEDGE_RETAINED",
+            "expected_action_id": "retain_possession",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH016_DIRECT_RESULT_02"
+          },
+          {
+            "expected_fact_id": "J16_STATE_WEDGE_COOLDOWN",
+            "expected_action_id": "require_residual_pressure_dissipation_before_reuse",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH016_STATE_CHANGE_02"
+          },
+          {
+            "expected_fact_id": "J16_UNKNOWN_EARLY_TIDE_CAUSE",
+            "expected_action_id": "",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH016_STATE_CHANGE_03"
+          },
+          {
+            "expected_fact_id": "J16_ENDING_ENTER_OBSERVATION",
+            "expected_action_id": "enter_observation_point",
+            "matched": true,
+            "matched_fact_id": "MISSION_JIUCHUI_CH016_ENDING_DRIVE_01"
+          }
+        ]
+      },
+      "runtime_normalization_count": 0,
+      "runtime_normalizations": [],
+      "native_director_seconds": 35.947,
+      "fallback_director_seconds": 0.0,
+      "effective_director_seconds": 35.947,
+      "control_director_seconds": 56.546,
+      "control_curator_seconds": 97.95,
+      "control_primary_seconds": 51.745,
+      "control_reviser_seconds": 120.371,
+      "control_total_seconds": 326.61199999999997,
+      "native_mission_chars": 416,
+      "control_mission_chars": 914,
+      "curator_seconds": 114.769,
+      "primary_seconds": 65.787,
+      "reviser_seconds": 148.591,
+      "treatment_full_total_seconds": 365.094,
+      "treatment_vs_control_seconds_saved": -38.482,
+      "treatment_vs_control_percent_saved": -11.78,
+      "primary_chars": 3737,
+      "final_chars": 3719,
+      "control_final_chars": 2850
+    },
+    {
+      "sample": "shadow_ch4",
+      "run": "e2e-run5",
+      "director_source": "native_structured",
+      "native_parse_or_build_error": "",
+      "native_contract_preflight_eligible": true,
+      "native_contract_conflicts": [],
+      "native_contract_unsupported": [],
+      "native_structural_coverage": {
+        "expected": 7,
+        "matched": 7,
+        "coverage": 1.0,
+        "rows": [
+          {
+            "expected_fact_id": "S4_ACTION_DEFEAT_DUHENG",
+            "expected_action_id": "defeat_under_fatigue",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH004_PROTAGONIST_ACTION_01"
+          },
+          {
+            "expected_fact_id": "S4_RESULT_PUBLIC_RANK",
+            "expected_action_id": "win_public_rank",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH004_DIRECT_RESULT_01"
+          },
+          {
+            "expected_fact_id": "S4_RESULT_CONTRACT_RECEIVED",
+            "expected_action_id": "receive_contract",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH004_DIRECT_RESULT_02"
+          },
+          {
+            "expected_fact_id": "S4_RESULT_FIRST_PREPAYMENT_RECEIVED",
+            "expected_action_id": "receive_partial_prepayment",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH004_DIRECT_RESULT_03"
+          },
+          {
+            "expected_fact_id": "S4_ACTION_REVEAL_CLONE_TO_PARTNER",
+            "expected_action_id": "reveal_ability",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH004_PROTAGONIST_ACTION_02"
+          },
+          {
+            "expected_fact_id": "S4_STATE_PARTNER_DECIDES_TRAVEL",
+            "expected_action_id": "partner_decides同行",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH004_STATE_CHANGE_01"
+          },
+          {
+            "expected_fact_id": "S4_ENDING_DEPART_NEXT_DAY",
+            "expected_action_id": "depart_next_day_via_changed_route",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH004_ENDING_DRIVE_01"
+          }
+        ]
+      },
+      "runtime_normalization_count": 0,
+      "runtime_normalizations": [],
+      "native_director_seconds": 28.808,
+      "fallback_director_seconds": 0.0,
+      "effective_director_seconds": 28.808,
+      "control_director_seconds": 40.01,
+      "control_curator_seconds": 55.688,
+      "control_primary_seconds": 49.139,
+      "control_reviser_seconds": 129.715,
+      "control_total_seconds": 274.552,
+      "native_mission_chars": 371,
+      "control_mission_chars": 821,
+      "curator_seconds": 89.878,
+      "primary_seconds": 54.309,
+      "reviser_seconds": 159.36,
+      "treatment_full_total_seconds": 332.355,
+      "treatment_vs_control_seconds_saved": -57.803,
+      "treatment_vs_control_percent_saved": -21.05,
+      "primary_chars": 2574,
+      "final_chars": 2512,
+      "control_final_chars": 2306
+    },
+    {
+      "sample": "shadow_ch9",
+      "run": "e2e-run5",
+      "director_source": "native_structured",
+      "native_parse_or_build_error": "",
+      "native_contract_preflight_eligible": true,
+      "native_contract_conflicts": [],
+      "native_contract_unsupported": [],
+      "native_structural_coverage": {
+        "expected": 6,
+        "matched": 6,
+        "coverage": 1.0,
+        "rows": [
+          {
+            "expected_fact_id": "S9_ACTION_ACCEPT_TREATMENT",
+            "expected_action_id": "accept_treatment",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH009_PROTAGONIST_ACTION_01"
+          },
+          {
+            "expected_fact_id": "S9_RESULT_ADMIT_MIXED_MOTIVE",
+            "expected_action_id": "admit_wants_weapon_and_partner_survival",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH009_DIRECT_RESULT_01"
+          },
+          {
+            "expected_fact_id": "S9_STATE_PARTNER_BOUNDARY",
+            "expected_action_id": "establish_bounded_cooperation",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH009_STATE_CHANGE_01"
+          },
+          {
+            "expected_fact_id": "S9_STATE_RIVAL_REPRICES",
+            "expected_action_id": "rival_reprices_competitor",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH009_STATE_CHANGE_02"
+          },
+          {
+            "expected_fact_id": "S9_STATE_INJURY_PENDING",
+            "expected_action_id": "remain_injured",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH009_STATE_CHANGE_03"
+          },
+          {
+            "expected_fact_id": "S9_ENDING_RECORD_REEVALUATION",
+            "expected_action_id": "record_triggers_escort_value_reevaluation",
+            "matched": true,
+            "matched_fact_id": "MISSION_SHADOW_CH009_ENDING_DRIVE_01"
+          }
+        ]
+      },
+      "runtime_normalization_count": 0,
+      "runtime_normalizations": [],
+      "native_director_seconds": 26.431,
+      "fallback_director_seconds": 0.0,
+      "effective_director_seconds": 26.431,
+      "control_director_seconds": 41.629,
+      "control_curator_seconds": 83.83,
+      "control_primary_seconds": 52.229,
+      "control_reviser_seconds": 147.505,
+      "control_total_seconds": 325.193,
+      "native_mission_chars": 402,
+      "control_mission_chars": 643,
+      "curator_seconds": 99.869,
+      "primary_seconds": 37.714,
+      "reviser_seconds": 57.568,
+      "treatment_full_total_seconds": 221.582,
+      "treatment_vs_control_seconds_saved": 103.611,
+      "treatment_vs_control_percent_saved": 31.86,
+      "primary_chars": 1960,
+      "final_chars": 1937,
+      "control_final_chars": 2731
+    }
+  ],
+  "treatment_full_e2e_total_seconds": 1289.399,
+  "full_e2e_seconds_saved": 25.461,
+  "full_e2e_percent_saved": 1.94
+}

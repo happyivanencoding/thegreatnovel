@@ -1,0 +1,621 @@
+{
+  "schema_version": "atomic-authority-contract-v1",
+  "chapter_id": "SHADOW:CH004",
+  "protagonist_id": "PROTAGONIST_001",
+  "contract_hash": "52aada28cf08ba34ca6add7d0d8c1b325f13553e7517148ae3f94416d625575c",
+  "preflight_eligible": true,
+  "hard_sources": [
+    "canon",
+    "frozen_mission",
+    "power_authority",
+    "reader_release",
+    "world_authority"
+  ],
+  "artifact_provenance": [
+    {
+      "source": "canon",
+      "artifact_id": "canon:native-e2e:shadow_ch4:1",
+      "revision_sha256": "21bf2ad21dbf5cba819c09a8820a82fee100168a4e83206b0f725cb08b688aeb",
+      "fact_ids": [
+        "S4_CANON_POWER_TIER",
+        "S4_CANON_CONTRACT_NONE",
+        "S4_CANON_PREPAYMENT_NOT_PAID",
+        "S4_CANON_PARTNER_RELATION"
+      ]
+    },
+    {
+      "source": "world_authority",
+      "artifact_id": "world:native-e2e:shadow_ch4:1",
+      "revision_sha256": "cb56761ee680661526dc795dc91062ea3dbb1d551d4173d7bb26c714945d62c8",
+      "fact_ids": [
+        "S4_WORLD_CONTRACT_ENTRY"
+      ]
+    },
+    {
+      "source": "power_authority",
+      "artifact_id": "power:native-e2e:shadow_ch4:1",
+      "revision_sha256": "249d8d46b4959cbba583974cf11a138d37893d7c734e9b65b62d354bddc1fbcc",
+      "fact_ids": [
+        "S4_POWER_REMAIN_TIER_ONE"
+      ]
+    },
+    {
+      "source": "reader_release",
+      "artifact_id": "reader_release:native-e2e:shadow_ch4:1",
+      "revision_sha256": "5b74a7ba27b57568c00957ff8b49e156fa989a9f863a0cee8f1fb6a8f61b56ff",
+      "fact_ids": [
+        "S4_READER_RELEASE_CONTRACT_VALUE"
+      ]
+    },
+    {
+      "source": "frozen_mission",
+      "artifact_id": "mission:SHADOW:CH004:director_structured_v1",
+      "revision_sha256": "c4c10bec734c637a4b07c3ecfd4b86532b75af39ed2a1223010ef9357eeee06c",
+      "fact_ids": [
+        "MISSION_SHADOW_CH004_TRIGGER_EVENT_01",
+        "MISSION_SHADOW_CH004_EVENT_DRIVER_01",
+        "MISSION_SHADOW_CH004_PROTAGONIST_ACTION_01",
+        "MISSION_SHADOW_CH004_WORLD_REACTION_01",
+        "MISSION_SHADOW_CH004_DIRECT_RESULT_01",
+        "MISSION_SHADOW_CH004_DIRECT_RESULT_02",
+        "MISSION_SHADOW_CH004_DIRECT_RESULT_03",
+        "MISSION_SHADOW_CH004_PROTAGONIST_ACTION_02",
+        "MISSION_SHADOW_CH004_STATE_CHANGE_01",
+        "MISSION_SHADOW_CH004_ENDING_DRIVE_01"
+      ]
+    }
+  ],
+  "registry": {
+    "schema_version": "entity-registry-v1",
+    "chapter_id": "SHADOW:CH004",
+    "protagonist_id": "PROTAGONIST_001",
+    "entities": [
+      {
+        "entity_id": "ABILITY_SHADOW_CLONE_001",
+        "kind": "ability",
+        "display_name": "分影",
+        "aliases": [
+          "影身"
+        ],
+        "authority_refs": [
+          "authority.entity.ABILITY_SHADOW_CLONE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CHAR_OPPONENT_001",
+        "kind": "character",
+        "display_name": "杜衡",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_OPPONENT_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CHAR_PARTNER_001",
+        "kind": "character",
+        "display_name": "陆绾",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_PARTNER_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CONTRACT_ESCORT_001",
+        "kind": "contract",
+        "display_name": "铜羽随队契约",
+        "aliases": [
+          "随队契约",
+          "契券"
+        ],
+        "authority_refs": [
+          "authority.entity.CONTRACT_ESCORT_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "GROUP_MEDICINE_CONVOY_001",
+        "kind": "group",
+        "display_name": "药队",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.GROUP_MEDICINE_CONVOY_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ORG_COPPER_FEATHER_001",
+        "kind": "organization",
+        "display_name": "铜羽商盟",
+        "aliases": [
+          "铜羽"
+        ],
+        "authority_refs": [
+          "authority.entity.ORG_COPPER_FEATHER_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "PROTAGONIST_001",
+        "kind": "character",
+        "display_name": "顾临川",
+        "aliases": [
+          "他",
+          "本体",
+          "主角"
+        ],
+        "authority_refs": [
+          "canon.protagonist"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "RESOURCE_PREPAYMENT_001",
+        "kind": "resource",
+        "display_name": "第一笔预付钱",
+        "aliases": [
+          "预付款"
+        ],
+        "authority_refs": [
+          "authority.entity.RESOURCE_PREPAYMENT_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ROUTE_CANYON_001",
+        "kind": "route",
+        "display_name": "折日峡路线",
+        "aliases": [
+          "折日峡"
+        ],
+        "authority_refs": [
+          "authority.entity.ROUTE_CANYON_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "TIER_FIRST_001",
+        "kind": "power_tier",
+        "display_name": "正式一阶",
+        "aliases": [
+          "一阶"
+        ],
+        "authority_refs": [
+          "authority.entity.TIER_FIRST_001"
+        ],
+        "parent_entity_id": ""
+      }
+    ]
+  },
+  "facts": [
+    {
+      "fact_id": "MISSION_SHADOW_CH004_DIRECT_RESULT_01",
+      "slot_id": "result:SHADOW:CH004:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:5",
+      "kind": "direct_result",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "win_public_rank",
+      "object_ids": [
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH004_DIRECT_RESULT_02",
+      "slot_id": "ownership:CONTRACT_ESCORT_001",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:6",
+      "kind": "ownership_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "receive_contract",
+      "object_ids": [
+        "CONTRACT_ESCORT_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "none",
+      "to_state": "received",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH004_DIRECT_RESULT_03",
+      "slot_id": "resource:RESOURCE_PREPAYMENT_001",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:7",
+      "kind": "resource_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "receive_partial_prepayment",
+      "object_ids": [
+        "RESOURCE_PREPAYMENT_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "not_paid",
+      "to_state": "first_payment_received",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH004_ENDING_DRIVE_01",
+      "slot_id": "deadline:SHADOW:CH004:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:10",
+      "kind": "deadline",
+      "mode": "must_hold",
+      "phase": "post_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "depart_next_day_via_changed_route",
+      "object_ids": [
+        "ROUTE_CANYON_001",
+        "GROUP_MEDICINE_CONVOY_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH004_EVENT_DRIVER_01",
+      "slot_id": "event:SHADOW:CH004:event_driver:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:2",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "CHAR_OPPONENT_001",
+      "action_id": "press_with_unfamiliar_footwork",
+      "object_ids": [],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH004_PROTAGONIST_ACTION_01",
+      "slot_id": "event:SHADOW:CH004:protagonist_action:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:3",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "defeat_under_fatigue",
+      "object_ids": [
+        "CHAR_OPPONENT_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH004_PROTAGONIST_ACTION_02",
+      "slot_id": "event:SHADOW:CH004:protagonist_action:02",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:8",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "reveal_ability",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH004_STATE_CHANGE_01",
+      "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:9",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "partner_decides同行",
+      "object_ids": [],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "ordinary_guard_relation",
+      "to_state": "同行药队",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH004_TRIGGER_EVENT_01",
+      "slot_id": "event:SHADOW:CH004:trigger_event:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:1",
+      "kind": "event",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "CHAR_OPPONENT_001",
+      "action_id": "du_heng_enters_with_unfamiliar_footwork",
+      "object_ids": [],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_SHADOW_CH004_WORLD_REACTION_01",
+      "slot_id": "result:SHADOW:CH004:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:SHADOW:CH004:director_structured_v1#fact:4",
+      "kind": "direct_result",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "confirm_public_rank",
+      "object_ids": [
+        "TIER_FIRST_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_CANON_CONTRACT_NONE",
+      "slot_id": "ownership:CONTRACT_ESCORT_001",
+      "source": "canon",
+      "source_ref": "canon:native-e2e:shadow_ch4:1#fact:2",
+      "kind": "ownership_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_without_contract",
+      "object_ids": [
+        "CONTRACT_ESCORT_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "none",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_CANON_PARTNER_RELATION",
+      "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+      "source": "canon",
+      "source_ref": "canon:native-e2e:shadow_ch4:1#fact:4",
+      "kind": "relationship_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_ordinary_guard_relation",
+      "object_ids": [],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "ordinary_guard_relation",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_CANON_POWER_TIER",
+      "slot_id": "power:PROTAGONIST_001",
+      "source": "canon",
+      "source_ref": "canon:native-e2e:shadow_ch4:1#fact:1",
+      "kind": "state_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_at_tier",
+      "object_ids": [
+        "TIER_FIRST_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "TIER_FIRST_001",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_CANON_PREPAYMENT_NOT_PAID",
+      "slot_id": "resource:RESOURCE_PREPAYMENT_001",
+      "source": "canon",
+      "source_ref": "canon:native-e2e:shadow_ch4:1#fact:3",
+      "kind": "resource_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_unpaid",
+      "object_ids": [
+        "RESOURCE_PREPAYMENT_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "not_paid",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_POWER_REMAIN_TIER_ONE",
+      "slot_id": "power:PROTAGONIST_001",
+      "source": "power_authority",
+      "source_ref": "power:native-e2e:shadow_ch4:1#fact:1",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_at_stable_tier",
+      "object_ids": [
+        "TIER_FIRST_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "TIER_FIRST_001",
+      "to_state": "TIER_FIRST_001",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_READER_RELEASE_CONTRACT_VALUE",
+      "slot_id": "reader_release:S4:contract_entry",
+      "source": "reader_release",
+      "source_ref": "reader_release:native-e2e:shadow_ch4:1#fact:1",
+      "kind": "reader_release",
+      "mode": "must_hold",
+      "phase": "reader_knowledge",
+      "actor_id": "",
+      "action_id": "reader_learns_contract_entry_value",
+      "object_ids": [
+        "CONTRACT_ESCORT_001",
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [
+        "ownership:CONTRACT_ESCORT_001",
+        "world:CONTRACT_ESCORT_001:entry_value"
+      ],
+      "metadata": {}
+    },
+    {
+      "fact_id": "S4_WORLD_CONTRACT_ENTRY",
+      "slot_id": "world:CONTRACT_ESCORT_001:entry_value",
+      "source": "world_authority",
+      "source_ref": "world:native-e2e:shadow_ch4:1#fact:1",
+      "kind": "state_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "contract_enables_cross_city_entry",
+      "object_ids": [
+        "CONTRACT_ESCORT_001",
+        "ORG_COPPER_FEATHER_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": {
+        "enables": [
+          "lodging",
+          "trade",
+          "escort_entry"
+        ]
+      },
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    }
+  ],
+  "conflicts": [],
+  "unsupported": [],
+  "diagnostics": []
+}

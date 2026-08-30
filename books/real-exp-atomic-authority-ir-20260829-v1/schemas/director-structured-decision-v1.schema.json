@@ -95,28 +95,6 @@
             "type": "string"
           },
           "value": {},
-          "terminal": {
-            "type": [
-              "boolean",
-              "null"
-            ]
-          },
-          "mode": {
-            "anyOf": [
-              {
-                "enum": [
-                  "must_hold",
-                  "terminal",
-                  "must_not_hold",
-                  "must_remain_unknown",
-                  "conditional"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "metadata": {
             "type": "object"
           },

@@ -1,0 +1,17 @@
+﻿route,run,sample,director_s,curator_s,primary_s,reviser_s,total_s,native_fallback
+control,control-chain-1,jiuchui_ch14,35.049,172.719,58.032,93.486,359.286,False
+control,control-chain-1,jiuchui_ch16,24.369,88.324,46.363,152.971,312.027,False
+control,control-chain-1,shadow_ch4,25.017,92.854,80.157,159.144,357.172,False
+control,control-chain-1,shadow_ch9,25.977,47.79,59.61,99.588,232.965,False
+control,control-chain-2,jiuchui_ch14,24.439,108.755,54.871,140.76,328.825,False
+control,control-chain-2,jiuchui_ch16,24.849,90.175,71.856,95.863,282.743,False
+control,control-chain-2,shadow_ch4,38.149,123.798,68.529,115.169,345.645,False
+control,control-chain-2,shadow_ch9,58.715,118.603,48.995,162.655,388.968,False
+native_v2,e2e-run4,jiuchui_ch14,30.033,146.455,55.273,154.762,386.523,False
+native_v2,e2e-run4,jiuchui_ch16,62.839,149.229,56.242,233.985,502.295,False
+native_v2,e2e-run4,shadow_ch4,24.598,161.557,51.944,93.861,331.96,False
+native_v2,e2e-run4,shadow_ch9,52.519,90.359,49.906,109.567,302.351,False
+native_v2,e2e-run5,jiuchui_ch14,35.369,89.433,74.759,170.807,370.368,False
+native_v2,e2e-run5,jiuchui_ch16,35.947,114.769,65.787,148.591,365.094,False
+native_v2,e2e-run5,shadow_ch4,28.808,89.878,54.309,159.36,332.355,False
+native_v2,e2e-run5,shadow_ch9,26.431,99.869,37.714,57.568,221.582,False

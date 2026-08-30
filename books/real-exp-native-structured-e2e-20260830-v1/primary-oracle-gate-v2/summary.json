@@ -1,0 +1,92 @@
+{
+  "schema_version": "primary-oracle-gate-v2",
+  "warning": "research oracle only; not production classifier",
+  "pass_direct_final": 2,
+  "fallback_full": 6,
+  "rows": [
+    {
+      "run": "e2e-run4",
+      "sample": "jiuchui_ch14",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "正文完整落实了回潮楔一次锁潮、改向、释放，并公开证明其能改变整段潮势，同时明确残压未散、不能连续硬压。顾停舟拒绝阮青蜃买断，保留回潮楔自主权，取得个人矿利份额，且砺骨部水路未被并入阮家完整矿权。少东家提出固定报酬、货损边界和独立合作条件，顾停舟接受并明确结束主从关系。结尾写明首批粮食须在下一次十二日地潮前送达旧关，且报酬与交付结果尚未提前到账。"
+    },
+    {
+      "run": "e2e-run4",
+      "sample": "jiuchui_ch16",
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [
+        "将未被 FROZEN AUTHORITY 确定性别的少东家写成“她”，越过 unknown boundary 并污染 Canon。"
+      ],
+      "missing_required": [
+        "观测点内仍有“照域潮谱”这一明确结果未落实。"
+      ],
+      "reason": "主体与分身分工、回潮楔改道、粮道与三座新井保全、迁徙取水窗口及外层毁弃均已成立。承运尚未结算、残压仍在、下一步进入观测点的推动力也基本保留。可是“照域潮谱仍在其中”没有被明确呈现，刻纹不能稳定等价为该已批准事实。少东家性别在权威中未知，使用“她”会新增未经授权的 Canon 事实。因此不能直接跳过 Full Authority Reviser。"
+    },
+    {
+      "run": "e2e-run4",
+      "sample": "shadow_ch4",
+      "decision": "PASS_DIRECT_FINAL",
+      "hard_violations": [],
+      "missing_required": [],
+      "reason": "Primary Draft落实了杜衡陌生步点逼近、顾临川疲劳中观察并以一次影刃反击取胜。公开名次、正式一阶记录、铜羽随队契约、第一笔预付钱及其归属均明确。陆绾同时确认分影真实存在并决定随药队同行，关系与分影知情状态完成变化。结尾明确次日出发、安全路线关闭、绕行折日峡，未知边界未被越界扩写。未发现会污染Canon或下一章的具体Hard violation，也没有遗漏计划要求的当前章结果。"
+    },
+    {
+      "run": "e2e-run4",
+      "sample": "shadow_ch9",
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [],
+      "missing_required": [
+        "铜羽领队未明确发现两条行动线无法由普通一名二阶解释",
+        "未明确将记录带回并推动沉昼城入口从临时护卫待遇转向更高层级的直接考量"
+      ],
+      "reason": "伤势结算、伤口处理、双重欲望承认、影身边界、顾斜阳重新估价及关系合作均已落实，未发现事实反转、权属或能力稳定性冲突。结尾虽写了记录、护卫价重算和带回商盟，但没有明确记录所揭示的“普通二阶无法解释”这一计划要求。也没有明确落到沉昼城入口待遇的后续升级考量。该结果属于required result missing，因此必须进入Full Authority Reviser。"
+    },
+    {
+      "run": "e2e-run5",
+      "sample": "jiuchui_ch14",
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [
+        "合作报酬写成按实际出手次数和结果结价，与固定报酬要求冲突"
+      ],
+      "missing_required": [
+        "未明确公开确认砺骨部水路不属于阮青蜃的完整矿权"
+      ],
+      "reason": "开炉试的一次锁潮、改向、释放、残压限制、公开估值、拒绝买断、独立粮路合作及十二日地潮前出发均已落实。合作报酬却被写成按次数和结果结价，未满足固定报酬条件。矿利结算单虽公开列出顾停舟姓名，但未让百炉会或见证者明确确认砺骨部水路不属于阮青蜃的完整矿权。该结算单仍可能只是内部分享，不能等价于合同要求的公共归属重估。"
+    },
+    {
+      "run": "e2e-run5",
+      "sample": "jiuchui_ch16",
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [],
+      "missing_required": [
+        "结尾未明确落地“照域潮谱仍在暴露的内侧观测点中”这一计划要求"
+      ],
+      "reason": "主体动作、改道结果、粮道与三座新井保全、外层毁弃、回潮楔归属及残压限制均与冻结权威等价。承运未完成、报酬未结算、撤离窗口和未知边界也处理正确。结尾写出了观测点暴露及下一轮潮势判断，但遗漏了其中仍有照域潮谱这一明确后续入口。该结果属于required result missing，因此不能直接成为Final。"
+    },
+    {
+      "run": "e2e-run5",
+      "sample": "shadow_ch4",
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [
+        "分影确认场景发生在试场外，而非回到客舍后；且陆绾只同时看见顾临川与一具影身，没有按合同在内院与后门同时看见两具自己的顾临川。"
+      ],
+      "missing_required": [
+        "回到客舍后主动完成内院与后门两具顾临川的同时展示，并以此触发陆绾确认分影真实存在。"
+      ],
+      "reason": "杜衡战、公开名次、正式一阶记录、随队契约、第一笔预付钱及折日峡绕行均已落实。影身能力、疲劳边界和陆绾同行决定也基本成立。硬失败在于分影揭示的指定地点、同时呈现方式和当前章要求的因果触发均被改写。该事实会污染陆绾的知情边界与后续关系状态，因此不能直接成为Final。"
+    },
+    {
+      "run": "e2e-run5",
+      "sample": "shadow_ch9",
+      "decision": "FALLBACK_FULL",
+      "hard_violations": [],
+      "missing_required": [
+        "陆绾未明确指出影身受伤会真实回到本体",
+        "铜羽领队未明确确认两线行动无法按普通二阶解释，也未落实带回记录重新评估护卫价值并推动沉昼城入口转向更高层级直接考量"
+      ],
+      "reason": "正文已落实归体脱力、伤口处理、顾临川同时想取兵并让陆绾生还、陆绾建立合作边界，以及顾斜阳重新估价。未出现钱款、所有权、时间、力量层级或未知边界方面的事实污染。硬性缺口在于陆绾的伤势回传说明没有在本章明确落地。结尾只写记录会送回去和顾临川护住的不只是药车，没有完成普通二阶无法解释、重新评估护卫价值及沉昼城入口升级考量这一必需结果。"
+    }
+  ]
+}

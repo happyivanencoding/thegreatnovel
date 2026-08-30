@@ -1,0 +1,600 @@
+{
+  "schema_version": "atomic-authority-contract-v1",
+  "chapter_id": "JIUCHUI:CH014",
+  "protagonist_id": "PROTAGONIST_001",
+  "contract_hash": "63260e4170150e851df2d84b3792460b31c6c25d1c85df8c08db98dcab076921",
+  "preflight_eligible": true,
+  "hard_sources": [
+    "canon",
+    "frozen_mission",
+    "power_authority"
+  ],
+  "artifact_provenance": [
+    {
+      "source": "canon",
+      "artifact_id": "canon:native-e2e:jiuchui_ch14:1",
+      "revision_sha256": "930ed1932576e694dee71c053a1a72ed2800a978591b0acfdd1fed77ef8fc61e",
+      "fact_ids": [
+        "J14_CANON_WEDGE_POSSESSION",
+        "J14_CANON_MINING_SHARE_NONE",
+        "J14_CANON_PARTNERSHIP_STATE"
+      ]
+    },
+    {
+      "source": "power_authority",
+      "artifact_id": "power:native-e2e:jiuchui_ch14:1",
+      "revision_sha256": "64313923a7761ee28ff78801756a7ee21dd9714d8d5aea7698327ed0570cdc3c",
+      "fact_ids": [
+        "J14_POWER_SINGLE_USE_BOUNDARY"
+      ]
+    },
+    {
+      "source": "frozen_mission",
+      "artifact_id": "mission:JIUCHUI:CH014:director_structured_v1",
+      "revision_sha256": "c9a6eb772bf09e25dcbec1e1ff55ff8e595f6d8e94514d34f1b4c588f425cbcc",
+      "fact_ids": [
+        "MISSION_JIUCHUI_CH014_TRIGGER_EVENT_01",
+        "MISSION_JIUCHUI_CH014_EVENT_DRIVER_01",
+        "MISSION_JIUCHUI_CH014_EVENT_DRIVER_02",
+        "MISSION_JIUCHUI_CH014_PROTAGONIST_ACTION_01",
+        "MISSION_JIUCHUI_CH014_PROTAGONIST_ACTION_02",
+        "MISSION_JIUCHUI_CH014_PROTAGONIST_ACTION_03",
+        "MISSION_JIUCHUI_CH014_WORLD_REACTION_01",
+        "MISSION_JIUCHUI_CH014_DIRECT_RESULT_01",
+        "MISSION_JIUCHUI_CH014_DIRECT_RESULT_02",
+        "MISSION_JIUCHUI_CH014_STATE_CHANGE_01",
+        "MISSION_JIUCHUI_CH014_STATE_CHANGE_02",
+        "MISSION_JIUCHUI_CH014_ENDING_DRIVE_01",
+        "MISSION_JIUCHUI_CH014_ENDING_DRIVE_02"
+      ]
+    }
+  ],
+  "registry": {
+    "schema_version": "entity-registry-v1",
+    "chapter_id": "JIUCHUI:CH014",
+    "protagonist_id": "PROTAGONIST_001",
+    "entities": [
+      {
+        "entity_id": "CHAR_PARTNER_001",
+        "kind": "character",
+        "display_name": "少东家",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_PARTNER_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "CHAR_RIVAL_001",
+        "kind": "character",
+        "display_name": "阮青蜃",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.CHAR_RIVAL_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "EVENT_NEXT_TIDE_001",
+        "kind": "event",
+        "display_name": "下一次十二日地潮",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.EVENT_NEXT_TIDE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ITEM_RETURN_TIDE_WEDGE_001",
+        "kind": "item",
+        "display_name": "回潮楔",
+        "aliases": [
+          "楔子",
+          "古器"
+        ],
+        "authority_refs": [
+          "authority.entity.ITEM_RETURN_TIDE_WEDGE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "LOCATION_OLD_PASS_001",
+        "kind": "location",
+        "display_name": "旧关",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.LOCATION_OLD_PASS_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ORG_HUNDRED_FURNACE_001",
+        "kind": "organization",
+        "display_name": "百炉会",
+        "aliases": [],
+        "authority_refs": [
+          "authority.entity.ORG_HUNDRED_FURNACE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "PROTAGONIST_001",
+        "kind": "character",
+        "display_name": "顾停舟",
+        "aliases": [
+          "他",
+          "本体",
+          "主角"
+        ],
+        "authority_refs": [
+          "canon.protagonist"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "RESOURCE_PERSONAL_MINING_SHARE_001",
+        "kind": "resource",
+        "display_name": "个人矿利",
+        "aliases": [
+          "矿利份额"
+        ],
+        "authority_refs": [
+          "authority.entity.RESOURCE_PERSONAL_MINING_SHARE_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ROUTE_GRAIN_001",
+        "kind": "route",
+        "display_name": "粮路",
+        "aliases": [
+          "粮道"
+        ],
+        "authority_refs": [
+          "authority.entity.ROUTE_GRAIN_001"
+        ],
+        "parent_entity_id": ""
+      },
+      {
+        "entity_id": "ROUTE_WATER_001",
+        "kind": "route",
+        "display_name": "砺骨部水路",
+        "aliases": [
+          "水路"
+        ],
+        "authority_refs": [
+          "world.route.water_right"
+        ],
+        "parent_entity_id": ""
+      }
+    ]
+  },
+  "facts": [
+    {
+      "fact_id": "J14_CANON_MINING_SHARE_NONE",
+      "slot_id": "resource:RESOURCE_PERSONAL_MINING_SHARE_001",
+      "source": "canon",
+      "source_ref": "canon:native-e2e:jiuchui_ch14:1#fact:2",
+      "kind": "resource_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_without_entitlement",
+      "object_ids": [
+        "RESOURCE_PERSONAL_MINING_SHARE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "none",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "J14_CANON_PARTNERSHIP_STATE",
+      "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+      "source": "canon",
+      "source_ref": "canon:native-e2e:jiuchui_ch14:1#fact:3",
+      "kind": "relationship_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_former_master_subordinate",
+      "object_ids": [],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "former_master_subordinate",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "J14_CANON_WEDGE_POSSESSION",
+      "slot_id": "ownership:ITEM_RETURN_TIDE_WEDGE_001",
+      "source": "canon",
+      "source_ref": "canon:native-e2e:jiuchui_ch14:1#fact:1",
+      "kind": "ownership_transition",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "possess",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "possessed_by_protagonist_disputed",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "J14_POWER_SINGLE_USE_BOUNDARY",
+      "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001:use_cycle",
+      "source": "power_authority",
+      "source_ref": "power:native-e2e:jiuchui_ch14:1#fact:1",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "pre_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "use_single_lock_redirect_release_cycle",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": {
+        "max_cycles_this_chapter": 1,
+        "requires_cooldown_after": true
+      },
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_DIRECT_RESULT_01",
+      "slot_id": "ownership:ITEM_RETURN_TIDE_WEDGE_001",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:8",
+      "kind": "ownership_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "retain_autonomous_use",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "possessed_by_protagonist_disputed",
+      "to_state": "autonomous_use_retained_publicly",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_DIRECT_RESULT_02",
+      "slot_id": "resource:RESOURCE_PERSONAL_MINING_SHARE_001",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:9",
+      "kind": "resource_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "confirm_entitlement",
+      "object_ids": [
+        "RESOURCE_PERSONAL_MINING_SHARE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "none",
+      "to_state": "entitlement_confirmed_not_cash_received",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_ENDING_DRIVE_01",
+      "slot_id": "ending:JIUCHUI:CH014:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:12",
+      "kind": "ending",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "depart_with_grain_convoy",
+      "object_ids": [
+        "ROUTE_GRAIN_001",
+        "LOCATION_OLD_PASS_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_ENDING_DRIVE_02",
+      "slot_id": "deadline:JIUCHUI:CH014:02",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:13",
+      "kind": "deadline",
+      "mode": "must_hold",
+      "phase": "post_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "deliver_before_event",
+      "object_ids": [
+        "ROUTE_GRAIN_001",
+        "EVENT_NEXT_TIDE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_EVENT_DRIVER_01",
+      "slot_id": "event:JIUCHUI:CH014:event_driver:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:2",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "CHAR_RIVAL_001",
+      "action_id": "offer_buyout",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_EVENT_DRIVER_02",
+      "slot_id": "event:JIUCHUI:CH014:event_driver:02",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:3",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "CHAR_PARTNER_001",
+      "action_id": "offer_independent_grain_contract",
+      "object_ids": [
+        "ROUTE_GRAIN_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_PROTAGONIST_ACTION_01",
+      "slot_id": "event:JIUCHUI:CH014:protagonist_action:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:4",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "lock_redirect_release_tide_once",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_PROTAGONIST_ACTION_02",
+      "slot_id": "event:JIUCHUI:CH014:protagonist_action:02",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:5",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "refuse_wedge_sale",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_PROTAGONIST_ACTION_03",
+      "slot_id": "event:JIUCHUI:CH014:protagonist_action:03",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:6",
+      "kind": "action",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "accept_independent_cooperation",
+      "object_ids": [
+        "ROUTE_GRAIN_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_STATE_CHANGE_01",
+      "slot_id": "relationship:PROTAGONIST_001:CHAR_PARTNER_001",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:10",
+      "kind": "relationship_transition",
+      "mode": "terminal",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "transition_relationship",
+      "object_ids": [],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "former_master_subordinate",
+      "to_state": "paid_independent_cooperation",
+      "value": null,
+      "terminal": true,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_STATE_CHANGE_02",
+      "slot_id": "ability:ITEM_RETURN_TIDE_WEDGE_001",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:11",
+      "kind": "ability_boundary",
+      "mode": "must_hold",
+      "phase": "chapter_end",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "require_residual_pressure_dissipation_before_reuse",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "cooldown_pending",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_TRIGGER_EVENT_01",
+      "slot_id": "event:JIUCHUI:CH014:trigger_event:01",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:1",
+      "kind": "event",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "ORG_HUNDRED_FURNACE_001",
+      "action_id": "trial_entry_closes_under_claim",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    },
+    {
+      "fact_id": "MISSION_JIUCHUI_CH014_WORLD_REACTION_01",
+      "slot_id": "public_proof:JIUCHUI:CH014:ITEM_RETURN_TIDE_WEDGE_001",
+      "source": "frozen_mission",
+      "source_ref": "mission:JIUCHUI:CH014:director_structured_v1#fact:7",
+      "kind": "public_proof",
+      "mode": "must_hold",
+      "phase": "during_chapter",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "publicly_prove_direction_change_value",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "terminal": false,
+      "condition_fact_ids": [],
+      "depends_on_fact_ids": [],
+      "condition_slots": [],
+      "depends_on_slots": [],
+      "metadata": {}
+    }
+  ],
+  "conflicts": [],
+  "unsupported": [],
+  "diagnostics": []
+}

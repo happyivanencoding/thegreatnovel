@@ -2157,7 +2157,7 @@ class DirectorStructuredClause:
         allowed_keys = {
             "field", "kind", "actor_id", "action_id", "object_ids",
             "counterparty_ids", "from_state", "to_state", "value",
-            "terminal", "mode", "metadata", "surface_note",
+            "metadata", "surface_note",
         }
         unknown_keys = set(payload) - allowed_keys
         if unknown_keys:
@@ -2169,7 +2169,6 @@ class DirectorStructuredClause:
             raise IRValidationError(
                 "human_clause is a second semantic write; use typed clause + Runtime surface registry"
             )
-        raw_mode = payload.get("mode")
         return cls(
             field=DirectorField(str(payload["field"])),
             kind=FactKind(str(payload["kind"])),
@@ -2182,10 +2181,8 @@ class DirectorStructuredClause:
             from_state=str(payload.get("from_state", "")),
             to_state=str(payload.get("to_state", "")),
             value=payload.get("value"),
-            terminal=(
-                bool(payload["terminal"]) if "terminal" in payload else None
-            ),
-            mode=FactMode(str(raw_mode)) if raw_mode is not None else None,
+            terminal=None,
+            mode=None,
             metadata=dict(payload.get("metadata", {})),
             surface_note=str(payload.get("surface_note", "")),
         )
@@ -2355,9 +2352,11 @@ class DirectorStructuredDecision:
             if (
                 clause.field == DirectorField.PROTAGONIST_ACTION
                 and clause.actor_id != registry.protagonist_id
+                and registry.require(clause.actor_id).parent_entity_id
+                != registry.protagonist_id
             ):
                 raise IRValidationError(
-                    "protagonist_action actor_id must equal Registry protagonist_id"
+                    "protagonist_action actor_id must be the protagonist or a registered protagonist manifestation"
                 )
             counters[clause.field] = counters.get(clause.field, 0) + 1
             fact = clause.to_fact(
@@ -2416,9 +2415,13 @@ class DirectorStructuredDecision:
             )
         lines = []
         for field in DirectorField:
+            clean_clauses = [
+                clause.rstrip("。；; ") for clause in grouped[field]
+            ]
             lines.append(
                 f"{DIRECTOR_FIELD_LABELS[field]}："
-                + "；".join(grouped[field])
+                + "；".join(clean_clauses)
+                + "。"
             )
             if field == DirectorField.STATE_CHANGE:
                 lines.append(

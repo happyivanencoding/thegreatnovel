@@ -1,0 +1,54 @@
+{
+  "schema_version": "fresh-control-chain-e2e-v1",
+  "run": "control-chain-1",
+  "samples": 4,
+  "by_node_seconds": {
+    "director": 110.412,
+    "curator": 401.687,
+    "primary": 244.162,
+    "reviser": 505.189
+  },
+  "total_seconds": 1261.45,
+  "rows": [
+    {
+      "sample": "jiuchui_ch14",
+      "director_seconds": 35.049,
+      "curator_seconds": 172.719,
+      "primary_seconds": 58.032,
+      "reviser_seconds": 93.486,
+      "total_seconds": 359.286,
+      "mission_chars": 724,
+      "final_chars": 3448
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "director_seconds": 24.369,
+      "curator_seconds": 88.324,
+      "primary_seconds": 46.363,
+      "reviser_seconds": 152.971,
+      "total_seconds": 312.027,
+      "mission_chars": 684,
+      "final_chars": 2484
+    },
+    {
+      "sample": "shadow_ch4",
+      "director_seconds": 25.017,
+      "curator_seconds": 92.854,
+      "primary_seconds": 80.157,
+      "reviser_seconds": 159.144,
+      "total_seconds": 357.172,
+      "mission_chars": 789,
+      "final_chars": 4396
+    },
+    {
+      "sample": "shadow_ch9",
+      "director_seconds": 25.977,
+      "curator_seconds": 47.79,
+      "primary_seconds": 59.61,
+      "reviser_seconds": 99.588,
+      "total_seconds": 232.965,
+      "mission_chars": 906,
+      "final_chars": 2298
+    }
+  ]
+}

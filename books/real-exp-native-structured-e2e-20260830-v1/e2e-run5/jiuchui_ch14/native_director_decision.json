@@ -1,0 +1,215 @@
+{
+  "schema_version": "director-structured-decision-v1",
+  "chapter_id": "JIUCHUI:CH014",
+  "protagonist_id": "PROTAGONIST_001",
+  "clauses": [
+    {
+      "field": "trigger_event",
+      "kind": "event",
+      "actor_id": "ORG_HUNDRED_FURNACE_001",
+      "action_id": "trial_entry_closes_under_claim",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "event_driver",
+      "kind": "action",
+      "actor_id": "CHAR_RIVAL_001",
+      "action_id": "offer_buyout",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "event_driver",
+      "kind": "action",
+      "actor_id": "CHAR_PARTNER_001",
+      "action_id": "offer_independent_grain_contract",
+      "object_ids": [
+        "ROUTE_GRAIN_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "lock_redirect_release_tide_once",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "refuse_wedge_sale",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "accept_independent_cooperation",
+      "object_ids": [
+        "ROUTE_GRAIN_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "world_reaction",
+      "kind": "public_proof",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "publicly_prove_direction_change_value",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "direct_result",
+      "kind": "ownership_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "retain_autonomous_use",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "possessed_by_protagonist_disputed",
+      "to_state": "autonomous_use_retained_publicly",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "direct_result",
+      "kind": "resource_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "confirm_entitlement",
+      "object_ids": [
+        "RESOURCE_PERSONAL_MINING_SHARE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "none",
+      "to_state": "entitlement_confirmed_not_cash_received",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "state_change",
+      "kind": "relationship_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "transition_relationship",
+      "object_ids": [],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "former_master_subordinate",
+      "to_state": "paid_independent_cooperation",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "state_change",
+      "kind": "ability_boundary",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "require_residual_pressure_dissipation_before_reuse",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "cooldown_pending",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "ending_drive",
+      "kind": "ending",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "depart_with_grain_convoy",
+      "object_ids": [
+        "ROUTE_GRAIN_001",
+        "LOCATION_OLD_PASS_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "ending_drive",
+      "kind": "deadline",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "deliver_before_event",
+      "object_ids": [
+        "ROUTE_GRAIN_001",
+        "EVENT_NEXT_TIDE_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    }
+  ],
+  "narrative_function_id": "function.public_repricing"
+}

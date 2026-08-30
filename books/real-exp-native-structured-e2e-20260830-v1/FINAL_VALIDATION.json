@@ -1,0 +1,28 @@
+{
+  "schema_version": "native-structured-e2e-v2-final-validation",
+  "focused_atomic_ir_tests": 57,
+  "blind_judge_calls": 16,
+  "treatment_runs": 2,
+  "fresh_control_runs": 2,
+  "books": 2,
+  "chapters": 4,
+  "native_attempts": 8,
+  "native_accepted": 8,
+  "fallbacks": 0,
+  "known_fact_coverage": "58/58",
+  "semantic_contract_repeat": "3/4",
+  "final_story_delta": 0.5625,
+  "final_authority_delta": -1.85,
+  "full_e2e_mean_seconds_saved": -35.659,
+  "full_e2e_mean_percent_saved": -2.6,
+  "per_chapter_seconds_saved": -8.915,
+  "production_adoption": false,
+  "production_changed": false,
+  "pending": [
+    "full repository pytest",
+    "git diff --check",
+    "docs/handoff/skill synchronization",
+    "skill package validation if skill changes",
+    "commit/push"
+  ]
+}

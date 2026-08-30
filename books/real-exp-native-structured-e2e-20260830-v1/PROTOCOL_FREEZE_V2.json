@@ -1,0 +1,24 @@
+{
+  "protocol_version": "native-structured-e2e-v2-surface-fixed",
+  "frozen_before_runs": [
+    "e2e-run4",
+    "e2e-run5"
+  ],
+  "allowed_post_freeze_changes": [
+    "judge scripts",
+    "analysis/report/docs only"
+  ],
+  "bugfix_scope": [
+    "remove cross-book ActionSurface contamination in JIUCHUI CH14 relationship projection",
+    "normalize multi-clause punctuation",
+    "render multi-object actions as natural approved phrases instead of joined entity lists",
+    "fix outer-pass world-reaction actor signature",
+    "fail closed on foreign registered display-name leakage or internal-ID leakage"
+  ],
+  "no_further_prompt_or_surface_tuning_before_blind": true,
+  "files": {
+    "temps/run_native_structured_e2e.py": "d9a858f5d129c546b0e1f793ed1985be0eb26a79ce23f2ad84b5a93441195b0f",
+    "temps/atomic_authority_ir_v1.py": "57fa98a941fa6a88fb629e7b04ea528e1bfa021ef1b63e92ebc52bcc2242dfc2",
+    "books/real-exp-atomic-authority-ir-20260829-v1/schemas/director-structured-decision-v1.schema.json": "e259617f07628396391362033be1de9289c48d4717d094000c77fed7e68c108f"
+  }
+}

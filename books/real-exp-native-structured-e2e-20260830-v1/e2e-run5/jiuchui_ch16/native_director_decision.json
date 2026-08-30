@@ -1,0 +1,129 @@
+{
+  "schema_version": "director-structured-decision-v1",
+  "chapter_id": "JIUCHUI:CH016",
+  "protagonist_id": "PROTAGONIST_001",
+  "clauses": [
+    {
+      "field": "trigger_event",
+      "kind": "event",
+      "actor_id": "MYSTERY_EARLY_TIDE_001",
+      "action_id": "early_tide_hits_resources",
+      "object_ids": [
+        "RESOURCE_WELLS_001",
+        "ROUTE_GRAIN_001",
+        "ROUTE_WATER_001"
+      ]
+    },
+    {
+      "field": "event_driver",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "choose_resource_tradeoff",
+      "object_ids": [
+        "RESOURCE_WELLS_001",
+        "ROUTE_GRAIN_001",
+        "ROUTE_WATER_001"
+      ]
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "stabilize_routes",
+      "object_ids": [
+        "ROUTE_GRAIN_001",
+        "ROUTE_WATER_001"
+      ],
+      "counterparty_ids": []
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "CLONE_001",
+      "action_id": "carry_and_fix_item_at_node",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001",
+        "LOCATION_SECOND_PRESSURE_NODE_001"
+      ],
+      "counterparty_ids": []
+    },
+    {
+      "field": "world_reaction",
+      "kind": "direct_result",
+      "actor_id": "MYSTERY_EARLY_TIDE_001",
+      "action_id": "outer_pass_collapse_reaction",
+      "object_ids": [
+        "LOCATION_OUTER_PASS_001"
+      ]
+    },
+    {
+      "field": "direct_result",
+      "kind": "direct_result",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "preserve_resources",
+      "object_ids": [
+        "ROUTE_GRAIN_001",
+        "RESOURCE_WELLS_001",
+        "ROUTE_WATER_001"
+      ],
+      "to_state": "preserved",
+      "counterparty_ids": []
+    },
+    {
+      "field": "direct_result",
+      "kind": "ownership_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "retain_possession",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "from_state": "possessed_by_protagonist",
+      "to_state": "possessed_by_protagonist",
+      "counterparty_ids": []
+    },
+    {
+      "field": "state_change",
+      "kind": "state_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "redirect_tide_and_sacrifice",
+      "object_ids": [
+        "LOCATION_OUTER_PASS_001"
+      ],
+      "from_state": "usable",
+      "to_state": "destroyed",
+      "counterparty_ids": []
+    },
+    {
+      "field": "state_change",
+      "kind": "ability_boundary",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "require_residual_pressure_dissipation_before_reuse",
+      "object_ids": [
+        "ITEM_RETURN_TIDE_WEDGE_001"
+      ],
+      "to_state": "cooldown_pending",
+      "counterparty_ids": []
+    },
+    {
+      "field": "state_change",
+      "kind": "unknown_boundary",
+      "action_id": "keep_early_tide_cause_unknown",
+      "object_ids": [
+        "MYSTERY_EARLY_TIDE_001"
+      ],
+      "to_state": "unknown",
+      "actor_id": ""
+    },
+    {
+      "field": "ending_drive",
+      "kind": "ending",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "enter_observation_point",
+      "object_ids": [
+        "LOCATION_OBSERVATION_POINT_001"
+      ],
+      "counterparty_ids": []
+    }
+  ],
+  "narrative_function_id": "function.composite_power_payoff"
+}

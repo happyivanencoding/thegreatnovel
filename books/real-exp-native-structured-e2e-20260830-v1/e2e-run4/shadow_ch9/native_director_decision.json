@@ -1,0 +1,178 @@
+{
+  "schema_version": "director-structured-decision-v1",
+  "chapter_id": "SHADOW:CH009",
+  "protagonist_id": "PROTAGONIST_001",
+  "clauses": [
+    {
+      "field": "trigger_event",
+      "kind": "event",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "clone_injury_returns_and_disables",
+      "object_ids": [
+        "ABILITY_SHADOW_CLONE_001",
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [],
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "event_driver",
+      "kind": "action",
+      "actor_id": "CHAR_PARTNER_001",
+      "action_id": "treat_and_question_motive",
+      "object_ids": [
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "event_driver",
+      "kind": "action",
+      "actor_id": "CHAR_RIVAL_001",
+      "action_id": "rival_checks_double_line_choice",
+      "object_ids": [
+        "RECORD_ESCORT_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "accept_treatment",
+      "object_ids": [
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "protagonist_action",
+      "kind": "action",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "admit_mixed_motive",
+      "object_ids": [
+        "ITEM_UMBRA_WEAPON_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "world_reaction",
+      "kind": "direct_result",
+      "actor_id": "CHAR_RIVAL_001",
+      "action_id": "rival_confirms_double_line_choice",
+      "object_ids": [
+        "RECORD_ESCORT_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "direct_result",
+      "kind": "direct_result",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "admit_wants_weapon_and_partner_survival",
+      "object_ids": [
+        "ITEM_UMBRA_WEAPON_001"
+      ],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "state_change",
+      "kind": "relationship_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "establish_bounded_cooperation",
+      "object_ids": [],
+      "counterparty_ids": [
+        "CHAR_PARTNER_001"
+      ],
+      "from_state": "implicit_trust",
+      "to_state": "cooperation_with_explicit_risk_boundary",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "state_change",
+      "kind": "relationship_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "rival_reprices_competitor",
+      "object_ids": [],
+      "counterparty_ids": [
+        "CHAR_RIVAL_001"
+      ],
+      "from_state": "unknown_competitor",
+      "to_state": "specific_high_value_competitor",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "state_change",
+      "kind": "state_transition",
+      "actor_id": "PROTAGONIST_001",
+      "action_id": "remain_injured",
+      "object_ids": [
+        "STATE_INJURY_001"
+      ],
+      "counterparty_ids": [],
+      "from_state": "acute",
+      "to_state": "not_fully_recovered",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    },
+    {
+      "field": "ending_drive",
+      "kind": "ending",
+      "actor_id": "ORG_COPPER_FEATHER_001",
+      "action_id": "record_triggers_escort_value_reevaluation",
+      "object_ids": [
+        "RECORD_ESCORT_001"
+      ],
+      "counterparty_ids": [
+        "PROTAGONIST_001"
+      ],
+      "from_state": "",
+      "to_state": "",
+      "value": null,
+      "metadata": {},
+      "surface_note": ""
+    }
+  ],
+  "narrative_function_id": "function.relationship_cost_aftershock"
+}

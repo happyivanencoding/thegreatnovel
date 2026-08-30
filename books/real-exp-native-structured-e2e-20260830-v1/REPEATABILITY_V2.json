@@ -1,0 +1,42 @@
+{
+  "raw_decision_exact": 0,
+  "serialized_contract_hash_exact": 2,
+  "semantic_hard_contract_exact": 3,
+  "rendered_mission_exact": 3,
+  "final_exact": 0,
+  "samples": 4,
+  "rows": [
+    {
+      "sample": "jiuchui_ch14",
+      "raw_decision_exact": false,
+      "serialized_contract_hash_exact": true,
+      "semantic_hard_contract_exact_ignoring_fact_id_source_ref": true,
+      "rendered_mission_exact": true,
+      "final_exact": false
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "raw_decision_exact": false,
+      "serialized_contract_hash_exact": false,
+      "semantic_hard_contract_exact_ignoring_fact_id_source_ref": false,
+      "rendered_mission_exact": false,
+      "final_exact": false
+    },
+    {
+      "sample": "shadow_ch4",
+      "raw_decision_exact": false,
+      "serialized_contract_hash_exact": false,
+      "semantic_hard_contract_exact_ignoring_fact_id_source_ref": true,
+      "rendered_mission_exact": true,
+      "final_exact": false
+    },
+    {
+      "sample": "shadow_ch9",
+      "raw_decision_exact": false,
+      "serialized_contract_hash_exact": true,
+      "semantic_hard_contract_exact_ignoring_fact_id_source_ref": true,
+      "rendered_mission_exact": true,
+      "final_exact": false
+    }
+  ]
+}

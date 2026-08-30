@@ -1,0 +1,8 @@
+{
+  "native_accepted_attempts": 8,
+  "attempts": 8,
+  "director_fallbacks": 0,
+  "fixture_structural_coverage": 1.0,
+  "automatic_long_novel_registry_proven": false,
+  "warning": "100% fixture coverage is not Contract completeness; Authority blind found missing/overreaching story facts."
+}
