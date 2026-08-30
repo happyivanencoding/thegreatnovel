@@ -42,6 +42,12 @@ from .premise_workflow import (
     save_selected_premise,
     skip_premise,
 )
+from .progressive_canon import (
+    MysteryThread,
+    build_canonization_compiler_prompt,
+    build_decision_surface_prompt,
+    build_reframe_prompt,
+)
 from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
 from .run_ledger import (
@@ -60,18 +66,27 @@ from .run_ledger import (
     skip_integrator_if_no_patches,
 )
 from .storage import (
+    adopt_mystery_candidate,
+    advance_mystery_after_reveal,
     approve_human_development,
     approve_character_artifact,
     approve_creative_artifact,
     approve_world_expansion,
     create_book,
+    get_mystery_thread,
+    inject_mystery_reveals_into_chapter_plan,
     list_books,
     read_chapter,
     read_book_payload,
     read_creative_payload,
+    read_mystery_control,
     refresh_current_character,
     replace_chapter,
     require_book,
+    render_mystery_outline_schedule,
+    render_mystery_planning_context,
+    save_mystery_compiler_input,
+    save_mystery_thread,
     save_chapter,
     write_book,
     write_creative_artifact,
@@ -95,6 +110,44 @@ class BookCreateRequest(BaseModel):
 
 class TextRequest(BaseModel):
     content: str = ""
+
+
+class MysteryThreadRequest(BaseModel):
+    question: str
+    state: Literal["OPEN", "FIXED_HIDDEN"] = "OPEN"
+    known_anchors: str = ""
+    decision_trigger: str = ""
+    fixed_point: str = ""
+    remains_unknown: str = ""
+    reveal_boundary: str = ""
+    route: Literal["world", "story"] = "story"
+
+
+class MysteryDecisionRequest(BaseModel):
+    mystery_id: str
+    planning_need: str
+
+
+class MysteryReframeRequest(BaseModel):
+    mystery_id: str
+    decision_surface: str
+
+
+class MysteryCompilerRequest(BaseModel):
+    mystery_id: str
+    selected_candidate: str
+    decision_surface: str
+    planning_need: str
+
+
+class MysteryAdoptRequest(BaseModel):
+    mystery_id: str
+    selected_candidate: str
+    compiler_report: str
+
+
+class MysteryAdvanceRequest(BaseModel):
+    next_decision_trigger: str = ""
 
 
 class WorldExpansionApproveRequest(BaseModel):
@@ -355,6 +408,149 @@ def post_book(payload: BookCreateRequest) -> dict[str, Any]:
 def get_book(book_id: str) -> dict[str, Any]:
     try:
         return read_book_payload(book_id, workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/mysteries")
+def get_mysteries(book_id: str) -> dict[str, Any]:
+    try:
+        return read_mystery_control(book_id, workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/mysteries/{mystery_id}")
+def put_mystery(book_id: str, mystery_id: str, payload: MysteryThreadRequest) -> dict[str, Any]:
+    try:
+        if payload.state != "OPEN" or payload.fixed_point.strip() or payload.reveal_boundary.strip():
+            raise ValueError("FIXED_HIDDEN 只能通过 strict-PASS Mystery Compiler + adopt 进入；PUT 只维护 AUTHOR OPEN")
+        try:
+            existing = get_mystery_thread(book_id, mystery_id, workspace_path())
+        except ValueError as error:
+            if not str(error).startswith("找不到 Mystery："):
+                raise
+            existing = None
+        if existing is not None and existing.state == "FIXED_HIDDEN":
+            raise ValueError("FIXED_HIDDEN Mystery 不能由普通 PUT 覆盖；Reveal 经 State 完成后使用 advance 重新进入 AUTHOR OPEN")
+        return save_mystery_thread(
+            book_id,
+            MysteryThread(
+                mystery_id=mystery_id,
+                question=payload.question,
+                state=payload.state,
+                known_anchors=payload.known_anchors,
+                decision_trigger=payload.decision_trigger,
+                fixed_point=payload.fixed_point,
+                remains_unknown=payload.remains_unknown,
+                reveal_boundary=payload.reveal_boundary,
+                route=payload.route,
+            ),
+            workspace_path(),
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/decision-prompt")
+def post_mystery_decision_prompt(book_id: str, payload: MysteryDecisionRequest) -> dict[str, str]:
+    try:
+        thread = get_mystery_thread(book_id, payload.mystery_id, workspace_path())
+        context = read_book_payload(book_id, workspace_path())["book_content"]
+        return {
+            "prompt": build_decision_surface_prompt(
+                thread=thread,
+                planning_need=payload.planning_need,
+                current_context=context,
+            )
+        }
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/reframe-prompt")
+def post_mystery_reframe_prompt(book_id: str, payload: MysteryReframeRequest) -> dict[str, str]:
+    try:
+        thread = get_mystery_thread(book_id, payload.mystery_id, workspace_path())
+        context = read_book_payload(book_id, workspace_path())["book_content"]
+        return {
+            "prompt": build_reframe_prompt(
+                thread=thread,
+                decision_surface=payload.decision_surface,
+                current_context=context,
+            )
+        }
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/compiler-prompt")
+def post_mystery_compiler_prompt(book_id: str, payload: MysteryCompilerRequest) -> dict[str, str]:
+    try:
+        thread = get_mystery_thread(book_id, payload.mystery_id, workspace_path())
+        context = read_book_payload(book_id, workspace_path())["book_content"]
+        prompt = build_canonization_compiler_prompt(
+            thread=thread,
+            selected_candidate=payload.selected_candidate,
+            current_context=context,
+            decision_surface=payload.decision_surface,
+            planning_need=payload.planning_need,
+        )
+        save_mystery_compiler_input(
+            book_id,
+            payload.mystery_id,
+            selected_candidate=payload.selected_candidate,
+            decision_surface=payload.decision_surface,
+            planning_need=payload.planning_need,
+            current_context=context,
+            workspace=workspace_path(),
+        )
+        return {"prompt": prompt}
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/adopt")
+def post_mystery_adopt(book_id: str, payload: MysteryAdoptRequest) -> dict[str, Any]:
+    try:
+        context = read_book_payload(book_id, workspace_path())["book_content"]
+        return adopt_mystery_candidate(
+            book_id,
+            payload.mystery_id,
+            selected_candidate=payload.selected_candidate,
+            compiler_report=payload.compiler_report,
+            current_context=context,
+            workspace=workspace_path(),
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/{mystery_id}/advance")
+def post_mystery_advance(
+    book_id: str, mystery_id: str, payload: MysteryAdvanceRequest
+) -> dict[str, Any]:
+    try:
+        return advance_mystery_after_reveal(
+            book_id,
+            mystery_id,
+            next_decision_trigger=payload.next_decision_trigger,
+            workspace=workspace_path(),
+        )
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:
@@ -679,7 +875,27 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
         values["premise_human_contract"] = contracts.get("human", "")
         values["premise_story_contract"] = contracts.get("story", "")
 
+        if payload.mode == "story_refresh":
+            values["mystery_planning_context"] = render_mystery_planning_context(
+                payload.book_id, workspace_path(), route="story"
+            )
+        elif payload.mode == "world_expansion":
+            values["mystery_planning_context"] = render_mystery_planning_context(
+                payload.book_id, workspace_path(), route="world"
+            )
+        elif payload.mode == "outline":
+            values["mystery_outline_schedule"] = render_mystery_outline_schedule(
+                payload.book_id, workspace_path()
+            )
+
         if payload.chapter_number > 0:
+            if values.get("current_chapter_plan"):
+                values["current_chapter_plan"] = inject_mystery_reveals_into_chapter_plan(
+                    payload.book_id,
+                    payload.chapter_number,
+                    str(values["current_chapter_plan"]),
+                    workspace_path(),
+                )
             directory = require_book(payload.book_id, workspace_path())
             try:
                 manifest = load_run(directory, payload.chapter_number)
@@ -764,6 +980,8 @@ def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
         "premise_power_contract",
         "premise_human_contract",
         "premise_story_contract",
+        "mystery_planning_context",
+        "mystery_outline_schedule",
     ):
         filtered.pop(key, None)
     return filtered

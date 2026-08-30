@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.27
+version: 0.3.28
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -110,6 +110,9 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Public / Known World = Clarity; Unknown World = Mystery**：普通人从小知道的主流力量、粗略尺度、生活危险与上升入口可以直接讲；环境纹理、道具、专名或氛围不算已经说明
 - Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose
 - Unresolved long-history facts must remain unresolved; Reader Orientation cannot authorize retrospective canon
+- **Author Unknown Is a Valid Authority State**：长期 Mystery 必须区分 `AUTHOR OPEN`（作者自己尚未决定）与 `AUTHOR FIXED HIDDEN`（作者已决定、读者/人物未知）。`AUTHOR OPEN` 不是 worldbuilding 缺失；只要作者下一段批准的具体故事仍能在不回答该问题时成立，审计结论应允许 `DEFER`，不能因为伏笔存在很久、Outline 想更完整或终局迟早要解释就要求现在定真
+- **Progressive Canonization Answers Only What the Next Story Earned**：只有作者下一步真正想写的事件已经无法执行时，Decision Surface 才指出一个 `Smallest Decision`。旧 AUTHOR OPEN 的 unknown list 是决策前未知池；当次可回答且只能回答 Smallest Decision，候选自己的 `What Remains Unknown` 才成为新保护边界。Reframe 不自动选，Compiler 不评分/修稿，FAIL 返回作者
+- **Hidden Truth Must Cross a Reader Event Before Canon**：planning-only Fixed Point 必须 runtime-blind；Outline 只能拿无答案 Reveal marker，Reveal 前 Writer 看不到 raw Hidden Truth。Reveal 章只能通过动作/物证/可验证观察把 `Reveal Boundary` 允许的一层变成 Reader Fact，State 才能把该 Residue 记为 Canon；随后更深问题重新 OPEN。允许 backward-compatible reinterpretation 给旧事实新意义，但不能把过去明确为真的事实改成假的 Retcon
 - Established non-core Supporting Skill should collapse to story result, not be re-methodized on every reuse
 - Access / Reward must not be taxed by an invented qualification process when Plan already grants the opportunity
 - Low-action chapters must not invent Competence Filler just to make the protagonist look useful
@@ -136,6 +139,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Curator：是否只给当前场景真正需要的上下文；
 - Writer：scene realization / prose；
 - State：是否只记录已经发生的事实；
+- Progressive Canonization：作者当前到底是 OPEN 还是 FIXED_HIDDEN；下一事件是否真的需要定真；Hidden Truth 是否只在 planning lane；Reveal 前是否泄漏；Reveal 后 State 是否只 canonize 已经历的一层并重新保留更深 unknown；
 - GBrain Retrieval：是否召回错 lane、弱卡补位、source DNA 误进 generation；
 - Workflow / UI：审批、stale graph、artifact authority 是否正确。
 

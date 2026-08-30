@@ -377,6 +377,29 @@ Story Refresh 自己也只规划当前新 World Horizon，并继续输出下一�
 
 ---
 
+### Progressive Canonization：允许作者自己暂时不知道答案
+
+长篇 Mystery 不要求开书时存在完整终极答案。TGN 正式区分：
+
+- `AUTHOR OPEN`：问题已经成立，但作者自己当前也没有决定答案；这是合法状态，不是待补设定；
+- `AUTHOR FIXED HIDDEN`：作者已经决定一小层事实，但人物与读者尚未知道。
+
+低频工作流是：`AUTHOR OPEN → Decision Surface → DEFER / DECISION NEEDED → Reframe R1/R2/R3/D0 → 作者选择 → Independent Compiler → AUTHOR FIXED HIDDEN → Planning → reader-facing Reveal Event → State/Canon → 更深 AUTHOR OPEN`。
+
+**触发由下一段故事真正需要什么决定，不由章节数决定。** 如果作者下一步仍可以写出具体的争夺、关系、探索、获得和后果，Decision Surface 必须允许 `DEFER`；只有作者已经批准的下一事件无法在缺少某一最小事实时成立，才指出 `Smallest Decision`。因此作者可以先有一个好小点子一路写，等某个真正想看的新场面把世界逼到墙角时，再只补足那一层大框架。
+
+Reframe 只给局部方向，不替作者选。Compiler V2 只检查：该 Fixed Point 是否回答且只回答 `Smallest Decision`、是否兼容已发生 Canon、是否把 Future Direction 错当过去事实、候选自己的 `What Remains Unknown` 是否继续开放。旧 `AUTHOR OPEN` 的 Unknown 列表是**决策前未知池**，不是永远不可回答的禁区；采用后新的 `What Remains Unknown` 才是保护边界。
+
+Compiler 也遵守和 Premise Compiler 相同的 stale discipline，但不增加 hash：生成 Compiler Prompt 时，代码把当前 Mystery Thread、selected candidate、Decision Surface、author planning need 与当前 BOOK/Canon **原文 snapshot** 保存在 `MYSTERY_CONTROL.json`。采用 Hidden Fixed Point 时直接比较这些文本；候选、Thread 或 BOOK/Canon 任一变化都要求重新编译。作者可以自己改候选，但不能把旧 PASS 误绑到新候选；`FIXED_HIDDEN` 不能通过普通 PUT 绕过 Compiler + adopt。
+
+Hidden Truth 存在独立的 runtime-blind `MYSTERY_CONTROL.json`，不放进 BOOK / AUTHOR NOTES。`story` route 只给 Story Refresh，`world` route 只给 World Expansion；Outline 只得到 Reveal 章号与 `[MYSTERY-REVEAL:ID]`，看不到答案。Story Refresh 若决定当前 Horizon 应揭这一层，只输出 reader-facing `MYSTERY REVEAL CONTRACT`；保存 Story Program 时代码把 Contract 剥离并单独保存。Reveal 章 Runtime 只得到具体 Event Atom、State Residue 与 Still Open，不得到 raw Fixed Point。
+
+**Reveal 是事件，不是百科答案。** 后台可以知道“两个现实共享同一实体”，正文却应该让读者看到“另一侧敲了一刀，主角手里同一把刀当场崩出缺口”。只有正文实际发生以后，State 才把 reader-facing Residue 写成 Canon；随后更深问题重新成为 AUTHOR OPEN。Backward-compatible reinterpretation 可以让旧事实获得新意义，但不能把过去明确为真的事实改成假的。
+
+这套机制不进入每章链，不新增 Mystery Reviewer / 每章 Gate / 自动 Repair，也不要求所有 Open Promise 使用 Progressive Canonization。普通悬念仍走现有 Story / State；只有真正需要作者分层决定长期真相的 Mystery 使用它。
+
+---
+
 ### Growth Genome：整理，不创造
 
 Growth Genome 是投影和记忆工具，不是创意权威。
@@ -736,8 +759,11 @@ Atomic 的稳定方法论进一步收敛为“**Authority Contract 与 Primary P
 | Human Seed | GPT-5.6 Luna high | **ON，Human lanes，最多 3 条** | Appetite / Behavior / Relationship 各最多 1 条；不看 Power/named Story Opportunities |
 | Human Development | GPT-5.6 Luna high | **OFF** | 可选慢时钟；只看 Frozen Human + 已发生 Canon；允许 `NONE`，不看未来 World / Story |
 | Current Character | deterministic | OFF | 合并 Frozen Origins + 已发生 Power/Human/关系/身份/资产/知识，不调用 LLM |
+| Mystery Decision Surface | GPT-5.6 Luna high | **OFF** | 低频；只判断 DEFER / Smallest Decision，不给答案 |
+| Mystery Reframe Forge | GPT-5.6 Luna high | **OFF** | 低频；R1/R2/R3/D0，Non-Canon，作者选择 |
+| Mystery Canonization Compiler | GPT-5.6 Terra high | **OFF** | 低频；只审 Canon 兼容、Smallest Decision 与新 Still-Open，不评分/修稿 |
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Collision + long-form causality；最高杠杆长期结构节点 |
-| Story Refresh | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Effective World × Current Character 的周期性 fresh Re-Collision；只规划当前新 World Horizon |
+| Story Refresh | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Effective World × Current Character 的周期性 fresh Re-Collision；如有 Fixed Hidden Mystery，可 planning-only 编译 reader-facing Reveal Contract |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |
 | Director | GPT-5.6 Luna high | 章节相关精选上下文 | 当前 production 默认；模型/effort 切换只做显式下游 A/B |
 | Curator | GPT-5.6 Luna high | raw GBrain OFF；Index-first + Scene Skill v2 compact Catalog | 编译短 `Scene Prose Projection`，允许 `NONE`；medium/Terra 路由尚未证明质量等价 |

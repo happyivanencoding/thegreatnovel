@@ -1,0 +1,23 @@
+{
+  "verdict": "PASS",
+  "production_frozen": true,
+  "focused_tests": {
+    "count": 31,
+    "result": "PASS"
+  },
+  "full_tests": {
+    "count": 440,
+    "result": "PASS",
+    "log": "FULL_TEST_LOG.txt"
+  },
+  "python_compile": "PASS",
+  "steward_version": "0.3.28",
+  "steward_smoke": "PASS",
+  "two_cycle_e2e": "PASS",
+  "final_defer": "PASS",
+  "notes": [
+    "First full run: 439 passed, 1 stale exact-file-set test failed because production legitimately adds MYSTERY_CONTROL.json; test migrated, no production rollback.",
+    "No per-chapter Mystery LLM node added.",
+    "Compiler adopt uses exact text snapshot, no hash/checksum."
+  ]
+}

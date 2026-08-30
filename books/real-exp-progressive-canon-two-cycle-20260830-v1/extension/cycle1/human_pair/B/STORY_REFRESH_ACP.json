@@ -1,0 +1,453 @@
+{
+  "ok": true,
+  "label": "STORY_REFRESH",
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "additionalDirectories": [],
+  "wall_seconds": 605.217,
+  "text": "我会使用 `tgn-system-steward`：先核对 Authority 边界与上一版 Program 中仍成立的义务，再把隐藏 Mystery 约束转译成第 3 章可观察事件；并行只做只读边界审计，最终结构与取舍由主线程统一完成。已确认当前 production 合同与用户给出的结构一致。上一版需要重排的关键点已经出现：第 3 章必须发生一次现场确认，因此“可通行异常空间”不能再拖到最终阶段；同时妹妹陆葵已在 Current Character 中冻结，不能继续把她排除在路线因果之外。接下来我会保留仍成立的钥牌、哥哥、收货者与所有权冲突，但重做阶段因果。新发动机会从“真假鉴定”改成“门槛控制与归属战争”：第 3 章现场揭示一发生，钥牌的价值就从一件古物变成谁能保有进入、带回物与解释权的问题。陆昭不会把妹妹置于二选一赌桌上——他会先失去先手、先安置陆葵，再回来争钥牌、哥哥证据和自己的选择权。Reveal Event 已收敛为一个最小现场原子：只调用现有的黑柄短刀与第 1 章手臂伤口，让陆昭实际跨过门槛、走出数步再返回，并让伤口与刀身在井外继续呈现同向异常。这样同时确认“可行动”与“现实残留”，不新增宝物、能力或深层解释。# STORY PROGRAM\n\n## 当前 Re-Collision\n\n异常长雨、旧井坍塌、三大兵坊争夺出土兵器和城主府封井，不会等待陆昭查明任何真相。\n\n陆昭当前只有纹阶4，却持有第二枚黑铁钥牌。他本想去旧物市估价，身份未知的收货者却已经知道陆家旧院和钥牌的存在。钥牌越值钱，陆葵留在旧井区就越危险。\n\n陆昭不会拿妹妹换先手。他先接受一笔较低、但不要求交出钥牌所有权的验证定金，把陆葵安置到旧井区外的安全住处，因此错过第一轮最高报价；确认她脱离即时风险后，他才回来争价、争门、争哥哥的线索。\n\n旧物市估客柳棠愿意用自己的鉴定声誉换一次公开验证。她给的钱少于兵坊买断价，却允许陆昭继续持有钥牌和决定下一次是否开门。陆昭选择她，首先因为选择权高于钱；当众赢一次只是附带满足。\n\n第3章按文末 `M-WELL-01` Contract 完成现场揭示。Reveal 不解释来源，却立刻使钥牌从“昂贵古物”变成各方争夺持有人、现场控制权和后续进入权的钥物。城主府提前封锁，兵坊改变报价和夺取方式，柳棠的声誉与陆昭的所有权第一次真正绑在一起。\n\n## 当前 Power / Human / World 的长期张力\n\n陆昭纹阶4，正面对上纹阶7—10的护街、雨猎骨干都处于明显弱势。钉影每日最多三次；第1章当日已经使用一次，后续不能隐式重置。它能替他抢到一个决定性瞬间，不能替他守住一整座井口。\n\n陆昭的稳定排序是：\n\n**陆葵安全 > 保住选择权 > 钱 > 赢 > 好奇。**\n\n因此他不会单纯为了公开出风头拒绝安全高价；只有买断条件会夺走钥牌、哥哥线索或未来决定权时，他才接受较低现金、承担更高冲突。陆峥线可以提高他的冒险阈值，却不能越过陆葵安全。\n\n三大兵坊要兵器和来源证明，城主府要控制坍塌与未知风险，旧物市要保住鉴定信用。身份未知的收货者仍是独立追索者，不能在没有新证据时直接等同于某家兵坊。\n\n第3章 Reveal 留下的确定事实必须持续改变物品价值、封井行动和进入条件，但其残留不能自动升级成陆昭的新能力。\n\n## 本阶段核心情节发动机与变化后的主要 Reading Question\n\n本阶段发动机是：\n\n**一扇城主府想封、兵坊想占、陆昭不肯卖断的门。**\n\n各方不会给陆昭连续派发探索任务，而会主动买断、征用、封锁、偷夺、毁证和临时结盟。陆昭通过保留钥牌、选择公开哪条证据、把一次验证权与所有权拆开出售，以及在协议被撕毁时亲自夺回东西，不断改变局面。\n\nReading Question 依次变化：\n\n- 第3章前：这枚钥牌到底值多少钱，陆昭能不能活着把价问出来？\n- 第3章后：一个纹阶4的持有人，怎样让城主府和兵坊都无法越过他决定门怎么开、带回物归谁？\n- 陆峥线出现新证据后：陆昭一直说东西都有价，那么哪件东西出现时，他会拒绝整包出售？\n- 阶段终局：钱、钥牌、哥哥证据、昂贵兵器和柳棠不可能全部保住时，他真正占住什么，又真实失去什么？\n\n## 全书成长与核心幻想兑现脊柱（只写从当前点向前仍成立的部分）\n\n- 纹阶仍是唯一精确主尺。本轮从纹阶4开始，陆昭用验证收益购买正规纹师教习，并在持续冲突中达到纹阶7；不为阶段结算硬推到纹阶12。纹阶12仍是未来“可独自猎杀大型雨兽”的清晰标尺。\n- 钉影始终保持每日三次、强者快速挣脱的边界。成长兑现来自陆昭越来越会把短暂停顿用在易手、拔兵、闭门和坍塌的决定点，而不是不断延长控制时间。\n- 陆昭会从独立出土的兵器中取得旧朝锁镰。它因能承载多重纹路而昂贵，本身笨重、难练，并非世界替钉影准备的配装；陆昭最初选择它是因为值钱和难被替代。\n- 锁镰飞出后，陆昭可以钉住其移动影子造成一次短暂停顿，再用锁链控制改变回收时机。转向来自他的兵器控制，不是钉影凭空新增“换向”能力，并继续消耗原有次数。\n- 黑柄短刀不会被锁镰淘汰。它仍承担近身、藏锋和狭窄井道中的可靠用途；第3章留下的状态按 Contract 进入连续性，但不自动产生战斗收益。\n- 钱首先兑现为陆葵离开旧井区的安全住处，其次才转化为教习、装备和上升机会。\n- 钥牌、锁镰、刻名铁片、公开战绩、柳棠的利益与损失都会继续存在，不在 Handoff 后重置。\n\n## 不可替代的人与关系\n\n**陆葵**\n\n陆葵不是用于逼陆昭交钥牌的人质。她的安全直接决定行动顺序：陆昭会失去报价先手、花掉本可用于修炼的钱，先把她移出风险，再回来追钥牌与哥哥线。\n\n本轮形成的是暂时安全住处，不是假装所有生活问题已经解决。陆昭的新欲望之一，是获得足以让她永久离开旧井区、又不必卖断自己选择权的钱。\n\n**陆峥**\n\n本轮不补造陆峥过去使用过的专属物件。中后段只允许出现一块从新一批带回物中发现、刻有“陆峥”二字的薄铁片；谁刻、何时刻、是否与本人有关全部保持 `UNKNOWN`。\n\n铁片不足以证明陆峥进入过井后，也不足以证明他活着，却足以让陆昭拒绝把钥牌、铁片和验证记录整包卖断。\n\n**柳棠**\n\n柳棠不是既有 Canon 旧识，而是在本轮正文中新登场并逐步建立关系的旧物市估客。她想借这次异常建立自己的鉴定席位，不因陆昭而存在。\n\n她以声誉替陆昭争到保留所有权的公开验证；陆昭后来为留下刻名铁片改变既定结算，使她失去一笔真实收入。她不会因理解他的哥哥线就立即原谅。\n\n终局中，陆昭会为保住她放弃已经明确属于自己的最高价兵器优先挑选权。这个选择证明她已经能改变他的路线，但不抹掉双方尚未结清的钱与信任债。\n\n## 未来大型阶段\n\n### 大型阶段：雨停前，谁能把门留在自己手里\n\n**具体世界问题：**\n\n第3章 Reveal 后，城主府把封井提前，三大兵坊则要求在封锁前完成最后一轮兵器搬取。陆昭持有第二枚钥牌，另一枚钥牌仍在别的利益方手中；两者关系未知。\n\n随后第一枚钥牌也被单独带到同一道石锁前，并能独立打开石锁。这个结果只确认两枚钥牌都有效，不回答它们为何存在、是否同源或经历过什么。\n\n各方争夺由“哪枚是真货”转为“谁控制现场、谁可以进入、谁拥有带回物”。回影井继续不规律地产生旧物，城主府又不可能无限容忍风险，冲突自然收紧到最后一次公开开启。\n\n**主要推动者：**\n\n- 准备提前封锁最深井口的城主府；\n- 争抢旧朝兵器与解释权的三大兵坊；\n- 用鉴定声誉押住公开事实的柳棠；\n- 持有第二枚钥牌、不肯卖断选择权的陆昭；\n- 再次追索钥牌、但第1章真实雇主仍未知的收货者。\n\n**主角关键选择：**\n\n陆昭先用验证定金安置陆葵，再拒绝兵坊的整包买断，只出售一次验证和一次有限进入权。\n\n当刻有“陆峥”二字的薄铁片出现后，他改变与柳棠约定的结算方式，留下铁片并要求参与封井前最后一次开启，为此失去更安全的现金和柳棠原本可得的收益。\n\n长期冲突中，他以正规教习和实战达到纹阶7。一次公开强夺里，纹阶10的护街骨干仍能正面压制他；陆昭用钉影短暂卡住对方兵器，借锁镰夺回钥牌并脱身。现场明确看见纹阶7与纹阶10的差距，也看见他能在这个差距下保住东西。越级脱身不等于升级。\n\n最终坍塌中，陆昭当日只剩最后一次钉影。他可以卡住最高价兵器箱，为自己保住已经谈定的优先挑选权；也可以卡住正在闭合的石门，让柳棠退出来。他选择后者。兵器箱被另一家兵坊夺走或重新埋入坍塌区，没有同窗口的等价替代奖励。\n\n他仍保住第二枚钥牌、黑柄短刀、旧朝锁镰和刻名铁片。这不是无私结算：他舍弃最贵的一件，留下自己认定更不能丢的东西与人。\n\n**最主要阅读满足：**\n\n一个纹阶4起步的底层旧物贩子，没有被高阶势力收编成带路人，而是把一件人人想征用的钥物变成自己的议价权、修炼本钱和公开身份。\n\n读者能连续得到三次重新定价：\n\n- 第3章现场揭示后，钥牌价值和封井行动同时改变；\n- 纹阶7的陆昭在纹阶10强夺下保住钥牌，全场震动、懂行者明确校准差距、兵坊随即改价和改夺取方式；\n- 终局中，他用自己挣来的选择权决定什么不卖、谁不能丢，并承担真正昂贵的损失。\n\n**真实 Delta：**\n\n- **Power：**陆昭达到纹阶7；钉影边界不变。\n- **Asset：**继续持有黑柄短刀、第二枚钥牌；取得并保有旧朝锁镰与刻名铁片；失去最高价兵器优先挑选权。\n- **Relationship：**陆葵获得旧井区外的现实安全住处；陆昭与柳棠形成利益、亏欠、吸引和信任同时存在的关系。\n- **Identity：**陆昭从旧物贩子变成公开钥牌持有人和最后开启的必要谈判者，但不获得城主府或兵坊正式身份。\n- **Knowledge：**文末 Contract 的 State Residue 进入 Canon；两枚钥牌分别能够打开同一道石锁。两枚钥牌关系、刻名铁片来源、陆峥去向和更深机制仍为 `UNKNOWN`。\n- **Enemy：**至少一家兵坊因失去买断和兵器分配利益公开敌对；身份未知的收货者仍保留独立追索线。\n- **World：**多数危险旧井被封，回影井相关最深通路未能被现有封井行动彻底结算。\n\n**旧积累怎样继续生效：**\n\n- 第1章夺得的钥牌决定陆昭能否留在牌桌上。\n- 黑柄短刀和既有伤口直接承担第3章 Reveal，不由新道具代替。\n- 钉影继续只创造短暂决定点，并与后来取得的锁镰形成合法复合。\n- 陆葵安全优先使陆昭真实失去第一轮报价先手。\n- 陆峥未解线通过刻名铁片改变交易，但不获得未经支持的答案。\n- 收货者的第1章追夺不会被新兵坊敌人覆盖或静默解释。\n\n**下一阶段为何自然发生：**\n\n听雨城内部的封井、兵器分配和钥牌定价已经完成一轮现实结算。最后开启后的末尾1—2章里，众人只走到城主府现有旧井图能够覆盖的最深处；图上路线已经结束，实际石道却仍向外延伸。\n\n这里只让读者确认当前地图之外仍有可通行边界，不展示下一层势力、资源、能力、居民或答案。故事在此停止具体规划，等待新的独立 World Expansion。\n\n## World Horizon Handoff\n\n**触发条件：**\n\n- 第3章 `M-WELL-01` Reveal 已发生，其 State Residue 已进入 Canon；\n- 两枚钥牌已分别被证实能够打开同一道石锁；\n- 城主府封井、兵坊争兵与旧物市估价危机完成本轮结算；\n- 陆昭达到纹阶7，并真实取得锁镰、形成与钉影共享次数的短暂停顿复合；\n- 陆葵已获得旧井区外的安全住处；\n- 刻名铁片已经改变陆昭路线，但未回答陆峥去向；\n- 最后1—2章已经看见旧井图终点之外仍有延伸石道。\n\n**Scope：**`macro`\n\n**为什么当前层已需要扩：**\n\n当前 Effective World 只批准听雨城、旧井石层、回影井及城内力量与社会尺度，没有定义现有旧井图之外的空间尺度、主体、资源、力量正常值或历史。继续具体规划会越过当前 World Authority。\n\n**必须 carry forward 的已发生事实：**\n\n- 陆昭精确位置为纹阶7；\n- 钉影每日最多三次，明显高阶目标仍会快速挣脱；\n- 钉影可短暂钉住飞出锁镰的影子，后续轨迹仍由陆昭的锁链控制完成；\n- 黑柄短刀、第二枚钥牌、旧朝锁镰、刻名铁片的归属、状态与损耗；\n- 陆葵的安全住处及为此花掉的钱；\n- 柳棠与陆昭之间已经发生的共同收益、现实损失、救援选择与未结清关系；\n- 城主府、兵坊和收货者对陆昭的公开估值与敌意；\n- 两枚钥牌分别有效，以及 `M-WELL-01` 已进入 Canon 的 State Residue；\n- 回影井来源、两枚钥牌关系、刻名铁片来源、陆峥生死与去向、影响是否可逆及更深机制继续开放。\n\n**固定 orchestration：**\n\n`protagonist-blind World Expansion → deterministic Current Character → Story Refresh`\n\n## 仍值得追的旧承诺与新欲望\n\n- 回影井为何吐出异常旧物。\n- 两枚都能打开同一道石锁的钥牌究竟是什么关系。\n- 身份未知的收货者为何在第1章抢牌、之后为谁行动。\n- 刻名铁片是谁留下、何时留下，是否真的与陆峥有关。\n- 陆峥是死是活、是否曾进入井后，继续保持未知。\n- 第3章残留的触发边界、持续时间、完整规律与可逆性。\n- 陆昭想把陆葵目前的临时安全住处变成永久离开旧井区的生活。\n- 陆昭想真正练熟锁镰，在不改变纹阶事实的前提下，赢过按纹阶7正常尺度给他定价的人。\n- 陆昭想让第二枚钥牌与下一次进入决定权继续归自己，而不是成为兵坊或城主府的临时带路人。\n- 柳棠想建立自己的鉴定席位，并追回陆昭改变交易造成的损失；陆昭开始在意，当更高报价出现时，她是否仍会站在自己这边。\n- 终局失去的最高价兵器已经落入对手或坍塌区，不以等价新奖品立即补回。\n- 旧井图之外具体有什么，等待下一轮独立 World Expansion，不在当前 Program 中预写。\n\n# MYSTERY REVEAL CONTRACT\nMystery ID: M-WELL-01\nReveal Chapter: 3\nEvent Atom: 石锁开出一条仅容侧身通过的缝，陆昭携黑柄短刀踏入门后，在能承住脚步的湿石面上走出三步再退回；回到井外一炷香内，刀身上带出的水仍朝门缝缓慢汇聚，左臂伤口的血珠也持续向同一侧偏移。\nState Residue: 石锁另一侧存在至少三步深、可承重且能自主进退的实体空间；陆昭的伤口与携入的黑柄短刀在退出后仍保留持续可见的异常水流方向。\nReader Anchors: 回影井石锁；黑柄短刀；左臂伤口；三步湿石\nStill Open After Reveal: 夹层的来源与成因；环境影响的触发条件、边界、完整规律与可逆性；两枚钥牌的关系；陆峥是否曾进入；回影井为何吐出异常旧物。\n\n",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 118032,
+      "inputTokens": 1553,
+      "cachedReadTokens": 110336,
+      "outputTokens": 6143,
+      "thoughtTokens": 1903
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 118032,
+          "inputTokens": 1553,
+          "cachedInputTokens": 110336,
+          "outputTokens": 6143,
+          "reasoningOutputTokens": 1903
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-sol",
+            "token_count": {
+              "totalTokens": 118032,
+              "inputTokens": 1553,
+              "cachedInputTokens": 110336,
+              "outputTokens": 6143,
+              "reasoningOutputTokens": 1903
+            }
+          }
+        ]
+      }
+    }
+  },
+  "session": {
+    "sessionId": "01a052c6-5648-7600-b5c6-e0f83552bf22",
+    "models": {
+      "availableModels": [
+        {
+          "modelId": "gpt-5.6-sol[low]",
+          "name": "GPT-5.6-Sol (low)",
+          "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-sol[medium]",
+          "name": "GPT-5.6-Sol (medium)",
+          "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-sol[high]",
+          "name": "GPT-5.6-Sol (high)",
+          "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[xhigh]",
+          "name": "GPT-5.6-Sol (xhigh)",
+          "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[max]",
+          "name": "GPT-5.6-Sol (max)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-sol[ultra]",
+          "name": "GPT-5.6-Sol (ultra)",
+          "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-terra[low]",
+          "name": "GPT-5.6-Terra (low)",
+          "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-terra[medium]",
+          "name": "GPT-5.6-Terra (medium)",
+          "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-terra[high]",
+          "name": "GPT-5.6-Terra (high)",
+          "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[xhigh]",
+          "name": "GPT-5.6-Terra (xhigh)",
+          "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[max]",
+          "name": "GPT-5.6-Terra (max)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.6-terra[ultra]",
+          "name": "GPT-5.6-Terra (ultra)",
+          "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+        },
+        {
+          "modelId": "gpt-5.6-luna[low]",
+          "name": "GPT-5.6-Luna (low)",
+          "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.6-luna[medium]",
+          "name": "GPT-5.6-Luna (medium)",
+          "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.6-luna[high]",
+          "name": "GPT-5.6-Luna (high)",
+          "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[xhigh]",
+          "name": "GPT-5.6-Luna (xhigh)",
+          "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.6-luna[max]",
+          "name": "GPT-5.6-Luna (max)",
+          "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "modelId": "gpt-5.5[low]",
+          "name": "GPT-5.5 (low)",
+          "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.5[medium]",
+          "name": "GPT-5.5 (medium)",
+          "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.5[high]",
+          "name": "GPT-5.5 (high)",
+          "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.5[xhigh]",
+          "name": "GPT-5.5 (xhigh)",
+          "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[low]",
+          "name": "GPT-5.4 (low)",
+          "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4[medium]",
+          "name": "GPT-5.4 (medium)",
+          "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4[high]",
+          "name": "GPT-5.4 (high)",
+          "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4[xhigh]",
+          "name": "GPT-5.4 (xhigh)",
+          "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[low]",
+          "name": "GPT-5.4-Mini (low)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.4-mini[medium]",
+          "name": "GPT-5.4-Mini (medium)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.4-mini[high]",
+          "name": "GPT-5.4-Mini (high)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.4-mini[xhigh]",
+          "name": "GPT-5.4-Mini (xhigh)",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[low]",
+          "name": "GPT-5.3-Codex-Spark (low)",
+          "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[medium]",
+          "name": "GPT-5.3-Codex-Spark (medium)",
+          "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[high]",
+          "name": "GPT-5.3-Codex-Spark (high)",
+          "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+        },
+        {
+          "modelId": "gpt-5.3-codex-spark[xhigh]",
+          "name": "GPT-5.3-Codex-Spark (xhigh)",
+          "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+        }
+      ],
+      "currentModelId": "gpt-5.6-luna[max]"
+    },
+    "modes": {
+      "availableModes": [
+        {
+          "id": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "id": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "id": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ],
+      "currentModeId": "read-only"
+    },
+    "configOptions": [
+      {
+        "id": "mode",
+        "name": "Mode",
+        "description": "Approval and sandboxing preset for the session",
+        "category": "mode",
+        "type": "select",
+        "currentValue": "read-only",
+        "options": [
+          {
+            "value": "read-only",
+            "name": "Read-only",
+            "description": "Requires approval to edit files and run commands."
+          },
+          {
+            "value": "agent",
+            "name": "Agent",
+            "description": "Read and edit files, and run commands."
+          },
+          {
+            "value": "agent-full-access",
+            "name": "Agent (full access)",
+            "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+          }
+        ]
+      },
+      {
+        "id": "collaboration_mode",
+        "name": "Collaboration mode",
+        "description": "How Codex collaborates for subsequent turns",
+        "category": "collaboration_mode",
+        "type": "select",
+        "currentValue": "default",
+        "options": [
+          {
+            "value": "default",
+            "name": "Default"
+          },
+          {
+            "value": "plan",
+            "name": "Plan",
+            "description": "Plan before making changes"
+          }
+        ]
+      },
+      {
+        "id": "model",
+        "name": "Model",
+        "description": "Model Codex uses for the session",
+        "category": "model",
+        "type": "select",
+        "currentValue": "gpt-5.6-luna",
+        "options": [
+          {
+            "value": "gpt-5.6-sol",
+            "name": "GPT-5.6-Sol",
+            "description": "Latest frontier agentic coding model."
+          },
+          {
+            "value": "gpt-5.6-terra",
+            "name": "GPT-5.6-Terra",
+            "description": "Balanced agentic coding model for everyday work."
+          },
+          {
+            "value": "gpt-5.6-luna",
+            "name": "GPT-5.6-Luna",
+            "description": "Fast and affordable agentic coding model."
+          },
+          {
+            "value": "gpt-5.5",
+            "name": "GPT-5.5",
+            "description": "Frontier model for complex coding, research, and real-world work."
+          },
+          {
+            "value": "gpt-5.4",
+            "name": "GPT-5.4",
+            "description": "Strong model for everyday coding."
+          },
+          {
+            "value": "gpt-5.4-mini",
+            "name": "GPT-5.4-Mini",
+            "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+          },
+          {
+            "value": "gpt-5.3-codex-spark",
+            "name": "GPT-5.3-Codex-Spark",
+            "description": "Ultra-fast coding model."
+          }
+        ]
+      },
+      {
+        "id": "reasoning_effort",
+        "name": "Reasoning effort",
+        "description": "How much reasoning effort the model should use",
+        "category": "thought_level",
+        "type": "select",
+        "currentValue": "max",
+        "options": [
+          {
+            "value": "low",
+            "name": "Low",
+            "description": "Fast responses with lighter reasoning"
+          },
+          {
+            "value": "medium",
+            "name": "Medium",
+            "description": "Balances speed and reasoning depth for everyday tasks"
+          },
+          {
+            "value": "high",
+            "name": "High",
+            "description": "Greater reasoning depth for complex problems"
+          },
+          {
+            "value": "xhigh",
+            "name": "Xhigh",
+            "description": "Extra high reasoning depth for complex problems"
+          },
+          {
+            "value": "max",
+            "name": "Max",
+            "description": "Maximum reasoning depth for the hardest problems"
+          }
+        ]
+      },
+      {
+        "id": "fast-mode",
+        "name": "Fast mode",
+        "description": "1.5x speed, increased usage",
+        "category": "model_config",
+        "type": "select",
+        "currentValue": "off",
+        "options": [
+          {
+            "value": "off",
+            "name": "Off",
+            "description": "Default speed, normal usage"
+          },
+          {
+            "value": "on",
+            "name": "On",
+            "description": "1.5x speed, increased usage"
+          }
+        ]
+      }
+    ]
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

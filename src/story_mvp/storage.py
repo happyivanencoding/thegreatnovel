@@ -26,6 +26,16 @@ from .power_ruler import (
     validate_human_seed_start,
     validate_world_expansion_ruler,
 )
+from .progressive_canon import (
+    MysteryRevealContract,
+    MysteryThread,
+    adopt_hidden_fixed_point,
+    advance_after_reveal,
+    compile_runtime_mystery_projection,
+    extract_reveal_contracts,
+    render_planning_projection,
+    strip_reveal_contracts,
+)
 
 
 SECTION_TITLES = {
@@ -83,6 +93,7 @@ CREATIVE_ORIGINS = frozenset(
     {"empty", "model_generated", "model_selected", "author_edited", "legacy_unknown", "deterministic"}
 )
 CREATIVE_STATUSES = frozenset({"empty", "draft", "author_approved"})
+MYSTERY_CONTROL_FILENAME = "MYSTERY_CONTROL.json"
 
 BOOK_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
 
@@ -280,6 +291,7 @@ def create_book(book_id: str, workspace: Path) -> Path:
     for filename in CHARACTER_AUX_FILES.values():
         (directory / filename).write_text("", encoding="utf-8")
     _write_creative_state(directory, _empty_creative_state())
+    _write_mystery_control(directory, {"threads": {}, "reveals": {}, "compiler_inputs": {}})
     return directory
 
 
@@ -298,6 +310,332 @@ def require_book(book_id: str, workspace: Path) -> Path:
     if not (directory / "BOOK.md").is_file():
         raise FileNotFoundError(f"找不到小说：{book_id}")
     return directory
+
+
+def _mystery_thread_from_dict(value: dict[str, Any]) -> MysteryThread:
+    return MysteryThread(
+        mystery_id=str(value.get("mystery_id", "")).strip(),
+        question=str(value.get("question", "")).strip(),
+        state=str(value.get("state", "OPEN")).strip().upper(),  # type: ignore[arg-type]
+        known_anchors=str(value.get("known_anchors", "")).strip(),
+        decision_trigger=str(value.get("decision_trigger", "")).strip(),
+        fixed_point=str(value.get("fixed_point", "")).strip(),
+        remains_unknown=str(value.get("remains_unknown", "")).strip(),
+        reveal_boundary=str(value.get("reveal_boundary", "")).strip(),
+        route=str(value.get("route", "story")).strip().casefold(),  # type: ignore[arg-type]
+    )
+
+
+def _reveal_contract_from_dict(value: dict[str, Any]) -> MysteryRevealContract:
+    anchors = value.get("reader_anchors", [])
+    if not isinstance(anchors, list):
+        raise ValueError("Mystery Reveal reader_anchors 必须是数组")
+    return MysteryRevealContract(
+        mystery_id=str(value.get("mystery_id", "")).strip(),
+        reveal_chapter=int(value.get("reveal_chapter", 0)),
+        event_atom=str(value.get("event_atom", "")).strip(),
+        state_residue=str(value.get("state_residue", "")).strip(),
+        reader_anchors=tuple(str(item).strip() for item in anchors if str(item).strip()),
+        still_open_after_reveal=str(value.get("still_open_after_reveal", "")).strip(),
+    )
+
+
+def _mystery_thread_to_dict(thread: MysteryThread) -> dict[str, Any]:
+    return {
+        "mystery_id": thread.mystery_id,
+        "question": thread.question,
+        "state": thread.state,
+        "known_anchors": thread.known_anchors,
+        "decision_trigger": thread.decision_trigger,
+        "fixed_point": thread.fixed_point,
+        "remains_unknown": thread.remains_unknown,
+        "reveal_boundary": thread.reveal_boundary,
+        "route": thread.route,
+    }
+
+
+def _reveal_contract_to_dict(contract: MysteryRevealContract) -> dict[str, Any]:
+    return {
+        "mystery_id": contract.mystery_id,
+        "reveal_chapter": contract.reveal_chapter,
+        "event_atom": contract.event_atom,
+        "state_residue": contract.state_residue,
+        "reader_anchors": list(contract.reader_anchors),
+        "still_open_after_reveal": contract.still_open_after_reveal,
+    }
+
+
+def _read_mystery_control(directory: Path) -> dict[str, Any]:
+    path = directory / MYSTERY_CONTROL_FILENAME
+    if not path.is_file():
+        return {"threads": {}, "reveals": {}, "compiler_inputs": {}}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("MYSTERY_CONTROL.json 不是有效 JSON") from error
+    if (
+        not isinstance(raw, dict)
+        or not isinstance(raw.get("threads", {}), dict)
+        or not isinstance(raw.get("reveals", {}), dict)
+        or not isinstance(raw.get("compiler_inputs", {}), dict)
+    ):
+        raise ValueError("MYSTERY_CONTROL.json 结构无效")
+    threads: dict[str, Any] = {}
+    for mystery_id, value in raw.get("threads", {}).items():
+        if not isinstance(value, dict):
+            raise ValueError(f"Mystery {mystery_id} 状态必须是对象")
+        thread = _mystery_thread_from_dict(value)
+        if not thread.mystery_id or thread.mystery_id != mystery_id:
+            raise ValueError(f"Mystery {mystery_id} ID 不一致")
+        render_planning_projection(thread)
+        threads[mystery_id] = _mystery_thread_to_dict(thread)
+    reveals: dict[str, Any] = {}
+    for mystery_id, value in raw.get("reveals", {}).items():
+        if not isinstance(value, dict):
+            raise ValueError(f"Mystery Reveal {mystery_id} 必须是对象")
+        contract = _reveal_contract_from_dict(value)
+        if (
+            contract.mystery_id != mystery_id
+            or contract.reveal_chapter < 1
+            or not contract.event_atom
+            or not contract.state_residue
+            or not contract.reader_anchors
+        ):
+            raise ValueError(f"Mystery Reveal {mystery_id} 无效")
+        reveals[mystery_id] = _reveal_contract_to_dict(contract)
+    compiler_inputs: dict[str, Any] = {}
+    for mystery_id, value in raw.get("compiler_inputs", {}).items():
+        if not isinstance(value, dict):
+            raise ValueError(f"Mystery Compiler Input {mystery_id} 必须是对象")
+        required = ("thread", "selected_candidate", "decision_surface", "planning_need", "current_context")
+        if any(key not in value for key in required) or not isinstance(value.get("thread"), dict):
+            raise ValueError(f"Mystery Compiler Input {mystery_id} 结构无效")
+        compiler_inputs[mystery_id] = {
+            "thread": value["thread"],
+            "selected_candidate": str(value["selected_candidate"]),
+            "decision_surface": str(value["decision_surface"]),
+            "planning_need": str(value["planning_need"]),
+            "current_context": str(value["current_context"]),
+        }
+    return {"threads": threads, "reveals": reveals, "compiler_inputs": compiler_inputs}
+
+
+def _write_mystery_control(directory: Path, value: dict[str, Any]) -> None:
+    (directory / MYSTERY_CONTROL_FILENAME).write_text(
+        json.dumps(value, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def read_mystery_control(book_id: str, workspace: Path) -> dict[str, Any]:
+    return _read_mystery_control(require_book(book_id, workspace))
+
+
+def get_mystery_thread(book_id: str, mystery_id: str, workspace: Path) -> MysteryThread:
+    control = read_mystery_control(book_id, workspace)
+    value = control["threads"].get(mystery_id)
+    if not isinstance(value, dict):
+        raise ValueError(f"找不到 Mystery：{mystery_id}")
+    return _mystery_thread_from_dict(value)
+
+
+def save_mystery_thread(book_id: str, thread: MysteryThread, workspace: Path) -> dict[str, Any]:
+    directory = require_book(book_id, workspace)
+    if not thread.mystery_id.strip() or not thread.question.strip():
+        raise ValueError("Mystery 需要 mystery_id 与 question")
+    render_planning_projection(thread)
+    control = _read_mystery_control(directory)
+    control["threads"][thread.mystery_id] = _mystery_thread_to_dict(thread)
+    _write_mystery_control(directory, control)
+    return control
+
+
+def save_mystery_compiler_input(
+    book_id: str,
+    mystery_id: str,
+    *,
+    selected_candidate: str,
+    decision_surface: str,
+    planning_need: str,
+    current_context: str,
+    workspace: Path,
+) -> dict[str, Any]:
+    directory = require_book(book_id, workspace)
+    control = _read_mystery_control(directory)
+    thread_value = control["threads"].get(mystery_id)
+    if not isinstance(thread_value, dict):
+        raise ValueError(f"找不到 Mystery：{mystery_id}")
+    control["compiler_inputs"][mystery_id] = {
+        "thread": thread_value,
+        "selected_candidate": selected_candidate,
+        "decision_surface": decision_surface,
+        "planning_need": planning_need,
+        "current_context": current_context,
+    }
+    _write_mystery_control(directory, control)
+    return control
+
+
+def adopt_mystery_candidate(
+    book_id: str,
+    mystery_id: str,
+    *,
+    selected_candidate: str,
+    compiler_report: str,
+    current_context: str,
+    workspace: Path,
+) -> dict[str, Any]:
+    directory = require_book(book_id, workspace)
+    control = _read_mystery_control(directory)
+    thread_value = control["threads"].get(mystery_id)
+    compiler_input = control["compiler_inputs"].get(mystery_id)
+    if not isinstance(thread_value, dict):
+        raise ValueError(f"找不到 Mystery：{mystery_id}")
+    if not isinstance(compiler_input, dict):
+        raise ValueError("Mystery 尚无当前 Compiler Input；请先重新生成 Compiler Prompt")
+    if compiler_input.get("thread") != thread_value:
+        raise ValueError("Mystery 状态已变化；旧 Compiler Report 已 stale，请重新编译")
+    if compiler_input.get("selected_candidate") != selected_candidate:
+        raise ValueError("Selected Mystery Candidate 与 Compiler Input 不一致；请重新编译")
+    if compiler_input.get("current_context") != current_context:
+        raise ValueError("BOOK / Canon 已变化；旧 Compiler Report 已 stale，请重新编译")
+    adopted = adopt_hidden_fixed_point(
+        thread=_mystery_thread_from_dict(thread_value),
+        selected_candidate=selected_candidate,
+        compiler_report=compiler_report,
+    )
+    control["threads"][mystery_id] = _mystery_thread_to_dict(adopted)
+    del control["compiler_inputs"][mystery_id]
+    _write_mystery_control(directory, control)
+    return control
+
+
+def save_mystery_reveal(
+    book_id: str,
+    contract: MysteryRevealContract,
+    workspace: Path,
+) -> dict[str, Any]:
+    return save_mystery_reveals(book_id, (contract,), workspace)
+
+
+def save_mystery_reveals(
+    book_id: str,
+    contracts: tuple[MysteryRevealContract, ...],
+    workspace: Path,
+) -> dict[str, Any]:
+    directory = require_book(book_id, workspace)
+    control = _read_mystery_control(directory)
+    pending: dict[str, dict[str, Any]] = {}
+    for contract in contracts:
+        thread_value = control["threads"].get(contract.mystery_id)
+        if not isinstance(thread_value, dict):
+            raise ValueError(f"找不到 Mystery：{contract.mystery_id}")
+        thread = _mystery_thread_from_dict(thread_value)
+        if thread.state != "FIXED_HIDDEN":
+            raise ValueError("只有 FIXED_HIDDEN Mystery 才能保存 Reveal Contract")
+        compile_runtime_mystery_projection(
+            thread, contract, chapter_number=contract.reveal_chapter
+        )
+        pending[contract.mystery_id] = _reveal_contract_to_dict(contract)
+    control["reveals"].update(pending)
+    _write_mystery_control(directory, control)
+    return control
+
+
+def render_mystery_planning_context(book_id: str, workspace: Path, *, route: str) -> str:
+    control = read_mystery_control(book_id, workspace)
+    projections: list[str] = []
+    for value in control["threads"].values():
+        thread = _mystery_thread_from_dict(value)
+        if thread.route == route:
+            projections.append(render_planning_projection(thread))
+    return "\n\n".join(projections).strip()
+
+
+def render_mystery_outline_schedule(book_id: str, workspace: Path) -> str:
+    control = read_mystery_control(book_id, workspace)
+    lines: list[str] = []
+    for value in control["reveals"].values():
+        contract = _reveal_contract_from_dict(value)
+        lines.append(
+            f"- 第{contract.reveal_chapter}章｜[MYSTERY-REVEAL:{contract.mystery_id}]｜只排 Reveal 时机；答案与 Event Atom 不进入 Outline。"
+        )
+    return "\n".join(lines)
+
+
+def _append_chapter_plan_field(plan: str, label: str, addition: str) -> str:
+    field_labels = ("具体剧情", "结果 / 状态变化", "叙事功能", "结尾推动")
+    alternation = "|".join(re.escape(item) for item in field_labels)
+    pattern = re.compile(
+        rf"(?ms)^({re.escape(label)}\s*[：:]\s*)(.*?)(?=^(?:{alternation})\s*[：:]|^##\s|\Z)"
+    )
+    match = pattern.search(plan)
+    if not match:
+        raise ValueError(f"Reveal 章计划缺少字段：{label}")
+    original = match.group(2).rstrip()
+    replacement = match.group(1) + original + ("\n" if original else "") + addition.strip() + "\n"
+    return plan[: match.start()] + replacement + plan[match.end():]
+
+
+def inject_mystery_reveals_into_chapter_plan(
+    book_id: str,
+    chapter_number: int,
+    current_chapter_plan: str,
+    workspace: Path,
+) -> str:
+    """Inject only reader-facing reveal events into the scheduled chapter."""
+
+    control = read_mystery_control(book_id, workspace)
+    result = current_chapter_plan
+    for value in control["reveals"].values():
+        contract = _reveal_contract_from_dict(value)
+        if contract.reveal_chapter != chapter_number:
+            continue
+        result = _append_chapter_plan_field(result, "具体剧情", contract.event_atom)
+        result = _append_chapter_plan_field(
+            result,
+            "结果 / 状态变化",
+            contract.state_residue + " 更深未知继续保留：" + contract.still_open_after_reveal,
+        )
+        result = _append_chapter_plan_field(
+            result,
+            "叙事功能",
+            f"[MYSTERY-REVEAL:{contract.mystery_id}] 只兑现本次 Reveal Boundary，不解释更深来源。",
+        )
+    return result
+
+
+def advance_mystery_after_reveal(
+    book_id: str,
+    mystery_id: str,
+    *,
+    next_decision_trigger: str,
+    workspace: Path,
+) -> dict[str, Any]:
+    directory = require_book(book_id, workspace)
+    control = _read_mystery_control(directory)
+    thread_value = control["threads"].get(mystery_id)
+    reveal_value = control["reveals"].get(mystery_id)
+    if not isinstance(thread_value, dict) or not isinstance(reveal_value, dict):
+        raise ValueError("Mystery Reveal 尚未准备完成")
+    contract = _reveal_contract_from_dict(reveal_value)
+    book_text = (directory / "BOOK.md").read_text(encoding="utf-8")
+    sections = parse_book_sections(book_text)
+    completed_match = re.search(r"当前已完成第\s*(\d+)\s*章", sections["status"])
+    completed = int(completed_match.group(1)) if completed_match else 0
+    if completed < contract.reveal_chapter:
+        raise ValueError(
+            f"Mystery Reveal 第{contract.reveal_chapter}章尚未完成并进入 State；当前只完成到第{completed}章"
+        )
+    next_thread = advance_after_reveal(
+        _mystery_thread_from_dict(thread_value),
+        contract,
+        next_decision_trigger=next_decision_trigger,
+    )
+    control["threads"][mystery_id] = _mystery_thread_to_dict(next_thread)
+    del control["reveals"][mystery_id]
+    _write_mystery_control(directory, control)
+    return control
 
 
 def _empty_creative_state() -> dict[str, dict[str, str]]:
@@ -369,6 +707,7 @@ def read_creative_payload(book_id: str, workspace: Path) -> dict[str, Any]:
     }
     payload: dict[str, Any] = {
         "creative_state": state,
+        "mystery_control": _read_mystery_control(directory),
         "creative_artifacts": {
             artifact: {
                 "content": contents[artifact],
@@ -627,6 +966,12 @@ def write_creative_artifact(
     directory = require_book(book_id, workspace)
     require_premise_ready_for_authority(directory)
     new_content = str(content)
+    reveal_contracts: tuple[MysteryRevealContract, ...] = ()
+    if artifact == "proposal":
+        reveal_contracts = extract_reveal_contracts(new_content)
+        new_content = strip_reveal_contracts(new_content)
+        if reveal_contracts:
+            save_mystery_reveals(book_id, reveal_contracts, workspace)
     old_content = _read_creative_text(directory, artifact)
     from .workflow_state import ensure_workflow_state
 

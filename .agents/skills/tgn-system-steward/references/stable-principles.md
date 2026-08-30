@@ -454,7 +454,23 @@ Writer 层最常见的 AI 问题不是“句子语法错误”，而是：
 
 审计时若正文出现 retrospective canon，先查 Director / Curator 是否错误投放了答案；若上游仍保持 unknown，而 Writer 自行补全，才判 prose authority 越界。
 
-## 27. Deep Craft Research, Narrow Runtime
+## 27. Progressive Canonization: Author Unknown Is Legal
+
+长期 Mystery 存在三种不同知识状态，不能混为“都还没揭晓”：
+
+- Reader / Character Unknown：答案可能已经由作者决定，只是故事里尚未知；
+- `AUTHOR OPEN`：作者自己当前也没有答案；
+- `AUTHOR FIXED HIDDEN`：作者已经决定一小层事实，但尚未经过 reader-facing Reveal。
+
+`AUTHOR OPEN` 是合法 Authority 状态，不是设定缺失。审计是否“现在必须决定”时，只看**作者已经批准的下一具体故事需求**：如果争夺、关系、获得、移动、战斗或世界事件仍可在不回答 Mystery 时成立，应允许 `DEFER`；不能因为伏笔存在很久、作者迟早要解释、Outline 想更完整就把终极答案提前写死。
+
+当下一事件真的依赖某一层答案时，只允许 canonize 当前 `Smallest Decision`。旧 AUTHOR OPEN 的 unknown list 是决策前未知池；它可以被逐层回答，但每次采用后，候选自己的 `What Remains Unknown` 必须成为新的保护边界。Reframe 候选不自动排名/选择；Compiler 只审局部兼容、旧 Canon、Future Direction 与新 Still-Open，不评价大胆度，也不自动修 FAIL。
+
+Hidden Fixed Point 只属于 planning authority。它必须 runtime-blind：不进入 BOOK / AUTHOR NOTES / 普通 Outline / Reveal 前章节。Outline 只排 Reveal 时机；Reveal 章 Writer 只接 reader-facing Event Atom / State Residue / Still Open。**Reader 必须先经历事实，State 才能把那一层写成 Canon。** planning 里已经知道不等于故事已经发生。
+
+允许 **backward-compatible reinterpretation**：后来的局部真相可以让第一章旧物、旧行为、旧异常获得新意义；禁止 Retcon：不能把过去已经明确发生/为真的事实改成没发生/为假。Reveal 后如果更深问题仍不影响下一段故事，Mystery 应重新 OPEN，而不是沿着解释惯性把整个宇宙一次性补完。
+
+## 28. Deep Craft Research, Narrow Runtime
 
 场景研究可以不断加深，但章节模型看到的信息不应同比增长。
 

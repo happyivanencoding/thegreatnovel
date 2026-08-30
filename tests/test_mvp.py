@@ -155,6 +155,7 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
         "CHARACTER_INITIAL_STATE.md",
         "CHARACTER_AUDITION.md",
         "CREATIVE_STATE.json",
+        "MYSTERY_CONTROL.json",
         "chapters",
     }
     assert (book_dir / "chapters").is_dir()

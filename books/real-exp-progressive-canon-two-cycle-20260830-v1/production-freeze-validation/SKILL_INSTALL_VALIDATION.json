@@ -1,0 +1,20 @@
+{
+  "skill": "tgn-system-steward",
+  "version": "0.3.28",
+  "lint": {
+    "portable": true,
+    "errors": 0,
+    "warnings": 0,
+    "checked_files": 6
+  },
+  "package": {
+    "valid": true,
+    "digest": "sha256:b86d593fe6ac2cf444a3b6cf403e4db0d07108920d98e9e9a4058f4dc55245a6"
+  },
+  "installed": true,
+  "activated": true,
+  "installed_path": "C:\\Users\\jingx\\.agentdock\\skill-store\\installed\\tgn-system-steward\\0.3.28",
+  "smoke": "PASS",
+  "smoke_artifact": "STEWARD_SMOKE.md",
+  "note": "python3 alias unavailable under Windows Python Manager; same skill-authoring run.py lint passed with project Python interpreter."
+}

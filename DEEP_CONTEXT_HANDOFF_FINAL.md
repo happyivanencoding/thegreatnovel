@@ -31,6 +31,41 @@
 
 ---
 
+### 0.1 2026-08-30 最新冻结：Progressive Canonization / 渐进定真
+
+TGN 现在正式允许一种此前没有被建模的长篇创作方式：**长期 Mystery 可以先只是一个真正的问题，连作者自己都暂时不知道答案；只有故事下一步真正需要哪一层答案时，才局部定真。**
+
+当前 production 状态机：
+
+`AUTHOR OPEN → Mystery Decision Surface → DEFER / DECISION NEEDED → Non-Canon Reframe R1/R2/R3/D0 → 作者选择 → Independent Mystery Compiler → AUTHOR FIXED HIDDEN → Story/World Planning → reader-facing Reveal Event → State/Canon → 更深 AUTHOR OPEN`
+
+这里最重要的 decision model：
+
+- **Author Unknown Is Legal**：`AUTHOR OPEN` 不是设定缺失。作者当前不知道玩家是谁、Meta 世界谁造、某身份终极真相是什么，都可以继续写；只要下一段具体故事不依赖答案，就应该 `DEFER`。
+- **Trigger by Story Need, Not Time**：不能因为伏笔存在了 80 章、Outline 想完整、终局迟早要解释，就要求作者现在定真。真正触发器是：作者已经明确想写一个下一事件，而这个事件在不决定某一小层事实时无法定义环境、动作、结果或后果。
+- **Smallest Earned Answer Only**：Decision Surface 只指出 `Smallest Decision`。旧 AUTHOR OPEN 的 unknown list 是决策前未知池；当次可回答且只能回答这一层。候选自己的 `What Remains Unknown` 才成为采用后的新保护边界。
+- **Author Is the Gate**：Reframe 只给 R1/R2/R3/D0；模型不自动选择。Compiler 不评分、不偏向安全、不修稿；FAIL 把精确冲突交还作者。
+- **Future Direction ≠ Past Canon**：作者说“第3章我想让他真的穿过去”可以授权未来入口事件，但不表示过去已经存在一个已确认通道。Compiler V2 必须区分 author-approved Future Direction 与 Already-Happened Canon。
+- **Compiler PASS 不能脱离输入快照复用**：生成 Mystery Compiler Prompt 时，production 把当前 Thread、selected candidate、Decision Surface、author planning need 与当前 BOOK/Canon 原文直接保存在 `MYSTERY_CONTROL.json / compiler_inputs`。`adopt` 必须逐项精确一致；候选、Thread 或 BOOK/Canon 任一变化，旧 PASS 立即 stale，要求重新编译。这里直接比较文本，不为它增加 hash/checksum。普通 PUT 也不能直接把 Mystery 改成 `FIXED_HIDDEN` 绕过 Compiler + adopt。
+- **Hidden Truth Is Planning-Only**：`AUTHOR FIXED HIDDEN` 保存在 runtime-blind `MYSTERY_CONTROL.json`，不进入 BOOK、AUTHOR NOTES、普通 Outline 或 Reveal 前章节。`story` route 只给 Story Refresh；`world` route 只给 World Expansion。
+- **Reveal Is an Event, Not an Explanation**：Story Refresh 若本轮要揭，只编译 reader-facing `MYSTERY REVEAL CONTRACT`。保存 Story Program 时代码将 Contract 剥离单独保存；Outline 只拿 `第N章 + [MYSTERY-REVEAL:ID]`；Reveal 章才确定性获得 Event Atom / State Residue / Still Open，raw Fixed Point 永不进入 Writer。
+- **Reader Event Before Canon**：后台知道不等于正文发生。必须先让读者通过动作、物证、环境变化或人物可验证观察经历那一层；State 才能把 Residue 写成普通 Canon。Reveal 后更深问题重新 OPEN。
+- **Backward-Compatible Reinterpretation ≠ Retcon**：后来决定可以让旧物、旧异常、旧人物行为获得新的意义，但不能把过去明确发生/为真的事实改成没发生/为假。
+
+两循环真实 E2E 已通过：正确 Chapter 1 后仍 `DEFER`；作者明确想让第3章真实跨过异常入口后才 `DECISION NEEDED`；固定 R2 strict PASS；Chapter2 full runtime 无 Hidden 泄漏；Chapter3 reader Reveal + State Canon PASS；同一 Mystery 重开后，作者明确想第4章做双向同物争夺，再次 `DECISION NEEDED`；固定 R3 strict PASS；Chapter4 第二次 Reveal PASS；两次后最终再次 `DEFER`。同一 Fixed Point 下 Human A（钱/占有/好胜）与 Human B（妹妹安全优先）产生真实机会成本分叉，Character Authority invariance PASS。
+
+本轮三个重要失败也要继承，而不是只记最终成功：
+
+1. 实验 helper 曾串章，导致“Chapter 1”实际吞入 Future-10 后续事件；依赖 artifact 全部 INVALID，保留 provenance 后从最近有效 checkpoint 重跑。
+2. Compiler V1 把 AUTHOR OPEN 的 Unknown 当成永远不可回答，产生“Decision 说必须回答 X、Compiler 又因 X 原来未知而拒绝”的悖论；V2 才冻结为“旧 unknown pool / current Smallest Decision / new What Remains Unknown”三层语义。
+3. Outline 曾把 deterministic `CURRENT_CHARACTER` 误认成新待审批 Character，模型 self-gate；修复是明确已有 Character Authority 已批准，Current Character 只是 forward snapshot，不产生第二批准点。
+
+完整实验：`books/real-exp-progressive-canon-two-cycle-20260830-v1/RESULTS.md`。有效验证路径 32 次真实 ACP，约 177.9 万 total tokens；这是研究成本。Production 不增加每章 LLM 调用：Decision/Reframe/Compiler 只在作者关键定真点低频运行，章节侧只是 deterministic Reveal transport。
+
+Production freeze 已完成 backend / authority / runtime 接线，并额外冻结 stale-Compiler input snapshot：候选、Thread 或 BOOK/Canon 变化后旧 PASS 不可复用。最终 Progressive Canon 专项 31/31 PASS、全仓 440/440 PASS。`tgn-system-steward` 已合并并行 Atomic held-out 方法后升级到 **0.3.28**，skill-authoring lint、package validate、install/activate 与 bounded Mystery smoke 全部 PASS。
+
+---
+
 ## 1. North Star
 
 TGN 的目标不是“自动生成一个逻辑完整的故事”，而是生成一部具有顶级商业潜力的**成熟中文男频成长长篇**：
@@ -87,6 +122,9 @@ Canon / State Continuity
 
 ```text
 作者方向
+→（可选）Non-Canon Premise Forge S1/S2/S3
+→ Independent Premise Authority Compiler
+→ 作者批准 / 显式跳过
 → protagonist-blind World Vision
 → POWER_BASELINE / LIFE_CONTEXT
 → 独立 Power Seed + Human Seed
@@ -101,6 +139,8 @@ Canon / State Continuity
 → Authority Reviser
 → State Extraction
 ```
+
+长篇在这条开书/章节主链之外还有两个**低频 forward control**：`World Horizon Handoff → World Expansion / optional Human Development / deterministic Current Character / Story Refresh`，以及 2026-08-30 新冻结的 Progressive Canonization。两者都不进入每章成本，也不能变成新的常驻 Reviewer / Coordinator。
 
 越靠上游，越决定“这本书是什么”；越靠下游，越只负责忠实执行。下游不能为了救当前样本，临时发明本应由上游决定的世界规则、人物核心、长期能力或主线。
 

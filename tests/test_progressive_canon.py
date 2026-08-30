@@ -3,14 +3,18 @@ from __future__ import annotations
 import pytest
 
 from story_mvp.progressive_canon import (
+    MysteryRevealContract,
     MysteryThread,
+    advance_after_reveal,
     adopt_hidden_fixed_point,
     build_canonization_compiler_prompt,
     build_decision_surface_prompt,
     build_reframe_prompt,
+    compile_runtime_mystery_projection,
     extract_reframe_candidates,
     parse_compiler_verdict,
     parse_decision_surface,
+    parse_reveal_contract,
     render_planning_projection,
     render_thread,
 )
@@ -210,3 +214,103 @@ def test_open_thread_rejects_reveal_boundary() -> None:
     )
     with pytest.raises(ValueError, match="OPEN Mystery"):
         render_thread(thread)
+
+
+def fixed_thread_for_runtime() -> MysteryThread:
+    return MysteryThread(
+        mystery_id="M-RUNTIME-01",
+        question="井中遗物到底来自哪里？",
+        state="FIXED_HIDDEN",
+        known_anchors="井里确实出现过活人的旧物。",
+        decision_trigger="进入源头前必须决定最小来源类别。",
+        fixed_point="秘密答案原句：遗物来自第二座实体城市。",
+        remains_unknown="第二座城市为什么存在；两座城谁是原本。",
+        reveal_boundary="本阶段只允许确认存在第二座实体城市。",
+        route="story",
+    )
+
+
+def reveal_contract_for_runtime() -> MysteryRevealContract:
+    return MysteryRevealContract(
+        mystery_id="M-RUNTIME-01",
+        reveal_chapter=3,
+        event_atom="井壁打开一道短暂视野，众人亲眼看见一座与本城街形一致、却有不同毁损的真实城市。",
+        state_residue="已确认井中遗物来自另一座真实存在的城市层；不是幻象或纯预言。",
+        reader_anchors=("井壁", "另一座城"),
+        still_open_after_reveal="另一座城为何存在；两座城是什么关系；是否还有更多城市层。",
+    )
+
+
+def test_parse_reveal_contract_is_strict() -> None:
+    parsed = parse_reveal_contract(
+        """# MYSTERY REVEAL CONTRACT
+Mystery ID: M-RUNTIME-01
+Reveal Chapter: 3
+Event Atom: 井壁短暂打开，能看到另一座城。
+State Residue: 已确认另一座真实城市层存在。
+Reader Anchors: 井壁；另一座城
+Still Open After Reveal: 两座城为什么存在。
+"""
+    )
+    assert parsed.reveal_chapter == 3
+    assert parsed.reader_anchors == ("井壁", "另一座城")
+    with pytest.raises(ValueError, match="缺少字段"):
+        parse_reveal_contract("Mystery ID: M-RUNTIME-01\nReveal Chapter: 3")
+
+
+def test_pre_reveal_runtime_projection_cannot_see_hidden_fixed_point() -> None:
+    thread = fixed_thread_for_runtime()
+    projection = compile_runtime_mystery_projection(
+        thread, reveal_contract_for_runtime(), chapter_number=2
+    )
+    assert "秘密答案原句" not in projection
+    assert thread.fixed_point not in projection
+    assert "MYSTERY UNRESOLVED FACT BOUNDARY" in projection
+    assert "不得补答案" in projection
+
+
+def test_reveal_chapter_gets_event_not_raw_hidden_truth() -> None:
+    thread = fixed_thread_for_runtime()
+    reveal = reveal_contract_for_runtime()
+    projection = compile_runtime_mystery_projection(thread, reveal, chapter_number=3)
+    assert "MYSTERY REVEAL EVENT" in projection
+    assert reveal.event_atom in projection
+    assert thread.fixed_point not in projection
+    assert "秘密答案原句" not in projection
+    assert reveal.still_open_after_reveal in projection
+
+
+def test_post_reveal_runtime_projection_is_empty() -> None:
+    projection = compile_runtime_mystery_projection(
+        fixed_thread_for_runtime(), reveal_contract_for_runtime(), chapter_number=4
+    )
+    assert projection == ""
+
+
+def test_advance_after_reveal_reopens_deeper_question_without_hidden_payload() -> None:
+    reveal = reveal_contract_for_runtime()
+    next_thread = advance_after_reveal(
+        fixed_thread_for_runtime(),
+        reveal,
+        next_decision_trigger="要决定两座城关系才能安全跨城行动。",
+    )
+    assert next_thread.state == "OPEN"
+    assert next_thread.fixed_point == ""
+    assert next_thread.reveal_boundary == ""
+    assert reveal.state_residue in next_thread.known_anchors
+    assert next_thread.question == reveal.still_open_after_reveal
+    assert "秘密答案原句" not in render_thread(next_thread)
+
+
+def test_compiler_v2_distinguishes_old_open_pool_from_new_protected_unknowns() -> None:
+    prompt = build_canonization_compiler_prompt(
+        thread=open_thread(),
+        selected_candidate=candidate(),
+        current_context="第一章只确认异常物存在。",
+        decision_surface="Status: DECISION NEEDED\nSmallest Decision: 另一侧最低属于什么现实类别？",
+        planning_need="第3章作者明确要让主角穿过未来才打开的通道。",
+    )
+    assert "决策前的未决定池" in prompt
+    assert "AUTHOR-APPROVED FUTURE DIRECTION" in prompt
+    assert "第3章作者明确要让主角穿过未来才打开的通道" in prompt
+    assert "Smallest Decision" in prompt

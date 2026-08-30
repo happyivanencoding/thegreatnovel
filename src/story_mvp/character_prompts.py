@@ -491,6 +491,8 @@ def generate_split_prompt(
     premise_power_contract: str = "",
     premise_human_contract: str = "",
     premise_story_contract: str = "",
+    mystery_planning_context: str = "",
+    mystery_outline_schedule: str = "",
     **_: Any,
 ) -> str:
     if mode == "world_vision":
@@ -576,8 +578,7 @@ def generate_split_prompt(
         if effective_until_chapter and effective_until_chapter < effective_from_chapter:
             raise ValueError("effective_until_chapter 不能早于 effective_from_chapter")
         world_state = project_world_state_from_status(_book_status(book_content))
-        return "\n\n".join(
-            [
+        parts = [
                 WORLD_EXPANSION_PROMPT.strip(),
                 _block("作者粗方向", creative_direction),
                 _block("WORLD ROOT｜Frozen Opening Authority", world_vision),
@@ -596,7 +597,14 @@ def generate_split_prompt(
                 ),
                 _block("World GBrain Inspiration（可选；不能借主角反向塑形）", gbrain_inspiration),
             ]
-        ).strip() + "\n"
+        if mystery_planning_context.strip():
+            parts.append(
+                _block(
+                    "AUTHOR MYSTERY CONTROL｜Planning Only；不得写入公共 World Authority",
+                    mystery_planning_context,
+                )
+            )
+        return "\n\n".join(parts).strip() + "\n"
 
     if mode == "human_development":
         _require_approved(creative_state, "character_card")
@@ -623,8 +631,7 @@ def generate_split_prompt(
         effective_world = compose_effective_world(world_vision, world_expansions, boundary)
         if len(selected_references or []) > 3:
             raise ValueError("Story Refresh 最多只能选择 3 个 Reference Program")
-        return "\n\n".join(
-            [
+        parts = [
                 STORY_REFRESH_PROMPT.strip(),
                 _block("作者粗方向", creative_direction),
                 _block("EFFECTIVE WORLD｜Independent Authority", effective_world),
@@ -634,7 +641,27 @@ def generate_split_prompt(
                 _block("Reference Programs（可选）", format_references(selected_references or [])),
                 _block("GBrain Inspiration（可选；不能覆盖 World / Current Character）", gbrain_inspiration),
             ]
-        ).strip() + "\n"
+        if mystery_planning_context.strip():
+            parts.append(
+                _block(
+                    "AUTHOR MYSTERY CONTROL｜Planning Only；章节 Runtime 不可见",
+                    mystery_planning_context,
+                )
+            )
+            parts.append(
+                """# Progressive Canonization Reveal Transport
+
+若上方含 `AUTHOR FIXED HIDDEN`，只有当前 Story Horizon 确实安排一次局部 Reveal 时，才在 Story Program 全文最后附加一个 `# MYSTERY REVEAL CONTRACT`：
+Mystery ID: 与对应 Mystery 完全一致
+Reveal Chapter: 当前 Outline 可实际排到的正整数章节
+Event Atom: 一句具体现场事件，让读者靠动作/物证确认 Reveal Boundary 允许的一层；不用后台解释宣布答案
+State Residue: 事件后可进入 Canon 的 1—2 个 reader-facing 确定事实
+Reader Anchors: 1—6 个现场短锚点，用 `；` 分隔
+Still Open After Reveal: 本次后仍未知的更深问题
+
+Contract 不得越过 Still Open，也不得把 raw Fixed Point 的后台术语直接当正文答案。没有本轮 Reveal 就不要输出 Contract。"""
+            )
+        return "\n\n".join(parts).strip() + "\n"
 
     if mode == "idea":
         _require_approved(creative_state, "world_vision", "character_card")
@@ -674,6 +701,19 @@ def generate_split_prompt(
             selected_references=selected_references,
             gbrain_inspiration=gbrain_inspiration,
         )
-        return planning
+        parts = [
+            planning.strip(),
+            """# Approval Status｜already satisfied by production code
+World Vision、Character Authority、Story Program 均已由作者批准。CURRENT CHARACTER 是由已批准 Character Authority + 已发生 Canon 确定性编译出的 forward snapshot，不是新的 Character proposal，不产生第二次批准点。直接执行 Outline 编译，不再次请求作者批准。""",
+        ]
+        if mystery_outline_schedule.strip():
+            parts.append(
+                _block(
+                    "MYSTERY REVEAL SCHEDULE｜只排时机，不含答案",
+                    mystery_outline_schedule
+                    + "\nFuture 10 在对应章的叙事功能中保留 `[MYSTERY-REVEAL:<ID>]` 标记；Reveal 前不得猜 State Residue / Event Atom。",
+                )
+            )
+        return "\n\n".join(parts).strip() + "\n"
 
     raise ValueError(f"未知 Split Character Prompt 模式：{mode}")

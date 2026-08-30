@@ -142,6 +142,10 @@ Handoff 真正触发后：
 - **Story Refresh**：Sol high 首次同时看到独立生成的 Effective World 与 Current Character；惊喜来自 Collision，不允许单 Agent 先把“世界—人物—奖励”调成天生适配。
 - **Outline / Review**：不得越过未执行的 World Horizon Handoff 补满十章/百章；到触发章即停止，先完成下一轮 Expansion / Refresh。
 
+长期 Mystery 采用 **Progressive Canonization**，而不是强迫作者在开书时先写终极真相。作者可以把一个真实问题保持为 `AUTHOR OPEN`，继续写已经足够具体的故事；只有作者下一步明确想写的事件已经依赖某一层答案时，系统才询问最小 `Smallest Decision`。作者可选 R1/R2/R3、继续 D0、自己改写，或继续换路线；模型不能自动替作者决定。选中的局部真相只进入 runtime-blind Mystery Control 与 Story/World planning；读者只在批准的 Reveal 章通过具体事件逐层知道，State 发生后该层才成为 Canon，更深问题重新开放。
+
+产品因此支持一种重要作者体验：**先有一个很好看的小主意，边写边发现自己真正需要怎样的大世界；后来的决定可以重新解释旧事实，但不能否定已经明确发生的事实。** 这不是“没有大纲”，而是把确定性推迟到故事真正赚到它的时候。
+
 World Root 被作者回头改写仍是 **Rewrite**，会按原依赖链 stale Power/Human/Character；Forward World Expansion 则不重做 Origins，只刷新受影响的未来 Story / Outline / Run。已完成章节永不因后期扩世界被回写。
 
 ## Creative Constitution → Stage-specific Compilation
@@ -225,8 +229,10 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 - Human Seed：GPT-5.6 Luna high，Human lane GBrain，Appetite / Behavior / Relationship 各最多 1 条，总计最多 3 条；
 - Human Development：GPT-5.6 Luna high，GBrain OFF，可选慢时钟；
 - Current Character：deterministic，GBrain OFF；
+- Mystery Decision / Reframe：GPT-5.6 Luna high，GBrain OFF，低频且 author-gated；
+- Mystery Compiler：GPT-5.6 Terra high，GBrain OFF，只审局部兼容与 Still-Open；
 - Story Program：GPT-5.6 Sol high，GBrain ON，最多 3 条 focused inspiration；
-- Story Refresh：GPT-5.6 Sol high，GBrain ON，最多 3 条 focused inspiration；
+- Story Refresh：GPT-5.6 Sol high，GBrain ON，最多 3 条 focused inspiration；必要时 planning-only 编译 reader-facing Mystery Reveal Contract；
 - Outline：GPT-5.6 Luna high，GBrain ON，通常 4 条、最多 5 条；
 - Director：Luna high；
 - Curator：Luna high；

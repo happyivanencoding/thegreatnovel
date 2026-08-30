@@ -162,6 +162,26 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 对 reveal 单独做泄漏检查：**World 已知但 Future Plan 仍安排后续发现的答案，在揭晓前不得因为 Reader Orientation 被提前投放。**
 
+## 11A. Progressive Canonization Experiment Protocol
+
+当实验目标是验证“作者自己暂时不知道答案、到关键节点再逐层定真”，不要只测 Reframe Prompt 是否会想出漂亮答案。至少走一轮真实 `OPEN → decision → fixed-hidden → pre-reveal chapter → reveal chapter → State → deeper OPEN`；准备冻结 production 时优先做**同一 Mystery 两轮循环**。
+
+最低实验纪律：
+
+1. 使用一个没有参与规则形成的 holdout Mystery；discovery case 只用来提出 hypothesis，不再承担最终验证。
+2. 预注册至少一个应 `DEFER` 的 checkpoint：当前具体故事即使作者不知道答案也能继续。若模型因为规划完整度、章数或“迟早要解释”要求定真，判方向错误。
+3. 再预注册一个**作者批准的具体未来事件**，该事件如果没有某一最小答案就无法定义动作结果；这时 Decision Surface 才应 `DECISION NEEDED`，并只指出 `Smallest Decision`。
+4. Reframe 候选 R1/R2/R3/D0 中提前固定一个 selected ID 做 preservation；Compiler FAIL 不换更容易通过的候选。若 Compiler 合同本身暴露语义悖论，可做近单变量修正，但必须对**同一候选**复验并保留旧失败 provenance。
+5. Compiler 必须区分：旧 AUTHOR OPEN unknown pool、当前 Smallest Decision、候选的新 `What Remains Unknown`、已发生 Canon、Author-Approved Future Direction。Future Direction 授权未来事件，不等于过去已经发生。
+6. Hidden Fixed Point 必须通过 runtime-blind transport。至少完整跑一个 pre-reveal `Director → Curator → Primary → Reviser → State`，独立审计 Prompt 与最终正文都没有 raw Hidden Truth / 等价答案泄漏。
+7. Reveal 章也跑完整章节链；Writer 只能得到 reader-facing Event Atom / Residue / Still Open。独立审计同时要求：Allowed Reveal 真正发生、raw Hidden 未出现、更深 Still-Open 未被顺手回答。
+8. State 必须只把 reader 已经历的一层写成 Canon；随后 deeper Mystery 重新 OPEN。第二轮局部定真不能推翻第一轮已揭事实，只能 backward-compatible reinterpretation / expansion。
+9. 两轮之后再安排一个不依赖终极解释的现实后果阶段；如果仍能继续写，Decision Surface 应重新允许 `DEFER`。这证明机制不会沿解释惯性把整个宇宙一次补完。
+10. 如果 Mystery treatment 可能改变人物路线，至少用两个 motive ordering 明显不同的 Frozen Human 做 matched Story Refresh；共同 Reveal 可以相同，但关键选择/机会成本必须随 Human 分叉。
+11. 任何章节提取、时序、cache、审批 self-gate 等实验 helper 错误都会使其依赖产物 `INVALID`；保留原始 artifact 并从最近有效 checkpoint 恢复，不能把修正后的结果覆盖旧失败伪装成一次成功。
+
+冻结时分别报告：Decision 命中、固定候选、Compiler、Human invariance、pre-reveal leak、Reveal realization、State Canon、第二轮兼容、final DEFER，以及研究调用总成本。Production 成本必须另算；低频 author-gated calls 不能被误报为每章税。
+
 ## 12. Verdict Vocabulary
 
 ### PASS

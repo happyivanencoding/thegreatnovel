@@ -16,6 +16,12 @@ Authority Reviser 是默认 `curator_primary` 的固定正文修订节点；Spec
 
 Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive、与该章实际事件相交的首次释放；未来仍作为 reveal 的答案不能提前排入 Map。Runtime 按当前章读取该条目，再从 WORLD AUTHORITY 做 bounded prefetch。Director 不读取完整 World，Curator 不重做 release 选择，Primary 也不自行选择世界资料。
 
+Progressive Canonization 的作者隐藏真相使用独立 `MYSTERY_CONTROL.json`，**不属于 Canon、BOOK、AUTHOR NOTES 或普通章节上下文**。`AUTHOR OPEN` 里作者自己也没有答案；`AUTHOR FIXED HIDDEN` 只允许 Story Refresh / World Expansion 对应 planning route 读取。Story Program 保存时，`MYSTERY REVEAL CONTRACT` 被代码从 Proposal 正文确定性剥离并单独保存；Outline 只得到 `第N章 + [MYSTERY-REVEAL:ID]`，看不到 Event Atom、State Residue 或 raw Fixed Point。
+
+`MYSTERY_CONTROL.json / compiler_inputs` 只保存低频作者定真流程的**精确 Compiler 输入快照**：当前 Thread、selected candidate、Decision Surface、author planning need 与当时 BOOK/Canon 原文。它不进入 Story / Outline / chapter Runtime；用途只有一个——采用候选前发现候选、Thread 或 Canon 是否已经变化。变化即 stale，重新编译；不使用 hash/checksum 代替直接文本比较。
+
+章节侧不新增 Mystery 节点。Reveal 前章的 current plan 保持原样；只有 `Reveal Chapter == 当前章` 时，runtime 才把 reader-facing `Event Atom + State Residue + Still Open` 确定性并入当前章计划，再沿原来的 `Director → Curator → Primary → Authority Reviser → State` 执行。**raw Hidden Fixed Point 永远不进入 Writer。** Reveal 必须由正文动作/物证真实发生；State 只能从最终正文提取已经发生的 Residue。随后作者显式 advance 才把该层从 `FIXED_HIDDEN` 转回更深 `OPEN`，并将已揭 Residue 作为后续 Known Anchor；不能因为 planning 已经知道答案就提前改 Canon。
+
 ## 延迟基线与安全优化边界（2026-08-29）
 
 冻结 20 章真实链的正常采用节点平均为 **6.17 分钟/章**；计入废弃重跑、Ch1 后 Replan、十章 Review 与终检 Repair 后，章节批次实际摊销为 **7.73 分钟/章**。正常链中 Curator 占 31.4%，Authority Reviser 占 37.1%，两者合计 68.5%；Primary Writer 只占 15.0%。因此慢的核心确实在两个高推理辅助节点，但“耗时高”不等于可以直接删除或降档。

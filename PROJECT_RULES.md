@@ -47,6 +47,8 @@
 
 长篇到达真实 `World Horizon` 后使用低频 forward loop：`Story Program Handoff → protagonist-blind World Expansion →（仅长期证据足够时）Human Development → deterministic CURRENT_CHARACTER.md → Sol Story Refresh / Re-Collision → 作者批准刷新后的 Story Program → Outline → 后续章节`。开书 World / Power / Human 是稳定 Origin，不要求一次写完 500 章所有具体世界与能力。
 
+长期 Mystery 允许使用低频 **Progressive Canonization / 渐进定真**：`AUTHOR OPEN → Mystery Decision Surface → DEFER / DECISION NEEDED → Non-Canon Reframe R1/R2/R3/D0 → 作者选择 → Independent Mystery Compiler → AUTHOR FIXED HIDDEN → Story/World Planning → reader-facing Reveal Event → State/Canon → 更深 AUTHOR OPEN`。触发条件不是章节数、伏笔年龄或“大纲应该完整”，而是**作者已批准的下一段具体故事需求已经无法在不决定某一小层答案的情况下成立**；还能继续写好故事就必须允许 `DEFER`。
+
 - **没有 production Fantasy Seed。** Premise Aperture 是可丢弃的 Non-Canon 搜索与编译阶段，不是第四 Authority。
 - Premise 从未开始或作者显式跳过时，原 Split Authority 路径保持可用；一旦保存候选，World / Power / Human / Story 的生成、保存与批准必须等待 strict `PASS` + 作者批准，不能静默绕过。Compiler Input 必须在 Prompt 生成当下落盘，报告保存不能重绑到后来编辑的文本；snapshot 与当前 selected card 不一致时必须重新编译。World Vision 一旦批准，Premise 决定冻结。
 - Forge 一次生成 S1/S2/S3，不自动排名或选择；Independent Compiler 只审 trigger、载体、T0 尺位、Interface 因果与远期复合，不评分、不改稿、不偏向保守。`CONDITIONAL PASS / FAIL` 返回作者；没有自动 selector 或 Repair Loop。
@@ -54,6 +56,10 @@
 - **没有 Character Composer LLM。** Power/Human 不做后验主题化调和。
 - 批准点保持紧凑：（可选）Premise → World Vision → Character（Power + Human 一次批准）→ Story Program。
 - Forward Authority 仍需显式采用：World Expansion 候选只有作者批准后生效；Human Development 可返回 `NONE`，只有作者批准的真实 Delta 才进入长期人物权威；Story Refresh 复用 Story Program 的现有保存/批准流程。模型生成不自动成为 Authority。
+- **作者未知本身是合法状态**：`AUTHOR OPEN` 表示作者当前也没有答案，不是待模型补齐的缺陷；`AUTHOR FIXED HIDDEN` 才表示作者已决定、但读者/人物尚未知。Decision Surface 不给答案；Reframe 不自动选择；Compiler 只允许回答当次 `Smallest Decision`，候选自己的 `What Remains Unknown` 成为新的保护边界。Compiler FAIL 返回作者，没有自动 Repair Loop。
+- Mystery Compiler Prompt 生成时必须把**当前 Thread + selected candidate + Decision Surface + author planning need + 当前 BOOK/Canon 原文**作为 exact input snapshot 落进 `MYSTERY_CONTROL.json`；`adopt` 只接受与 snapshot 完全一致且 strict `PASS` 的候选。候选、Thread 或 BOOK/Canon 任一变化，旧 Compiler Report 立即 stale，必须重新编译；不使用 hash 代替直接文本比较。API 不能直接 PUT `FIXED_HIDDEN` 绕过 Compiler + adopt。
+- Hidden Fixed Point 固定保存在 runtime-blind `MYSTERY_CONTROL.json`，不得进入 BOOK / AUTHOR NOTES / 普通 Outline / Reveal 前章节。对应 `story` / `world` route 只在 Story Refresh / World Expansion planning 层可见；Story Refresh 若安排本轮 Reveal，只把 `Reveal Boundary` 编译成 reader-facing `MYSTERY REVEAL CONTRACT`。保存 Story Program 时 Contract 被确定性剥离并单独保存；Outline 只得到 `第N章 + [MYSTERY-REVEAL:ID]` 的无答案调度标记；只有 Reveal 章才确定性注入 Event Atom / State Residue / Still Open，raw Fixed Point 永不进入 Writer。
+- Reveal 必须通过动作、物证、环境变化或人物可验证观察成为 Reader Fact；State 才把这一层写成 Canon。Reveal 后显式 advance 将该 Mystery 重新打开为更深 `AUTHOR OPEN`，允许以后再次局部定真或长期继续 `DEFER`。不新增每章 Mystery Agent / Reviewer / Gate，也不要求所有 Open Promise 使用这套机制。
 
 ## 5. 默认模型与 GBrain 路由
 
@@ -67,8 +73,11 @@
 | Human Seed | GPT-5.6 Luna | high | ON：Appetite / Behavior / Relationship 各最多 1 条，总计最多 3 条 |
 | Human Development | GPT-5.6 Luna | high | **OFF**；低频，只看 Frozen Human + 已发生 Canon，可 `NONE` |
 | Current Character | deterministic | — | OFF；不调用 LLM |
+| Mystery Decision Surface（低频） | GPT-5.6 Luna | high | **OFF**；只判断 DEFER / 最小必须定真层，不给答案 |
+| Mystery Reframe Forge（低频） | GPT-5.6 Luna | high | **OFF**；R1/R2/R3/D0，Non-Canon，不自动选择 |
+| Mystery Canonization Compiler（低频） | GPT-5.6 Terra | high | **OFF**；只审局部兼容性/Still-Open，不评分、不修稿 |
 | Story Program | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration |
-| Story Refresh | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration；Effective World × Current Character |
+| Story Refresh | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration；Effective World × Current Character；如有 AUTHOR FIXED HIDDEN 可 planning-only 编译 Reveal Contract |
 | Outline | GPT-5.6 Luna | high | ON：通常 4 条、最多 5 条 |
 | Director | GPT-5.6 Luna | high | raw GBrain OFF |
 | Curator | GPT-5.6 Luna | high | raw GBrain OFF；Scene Skill v2 Catalog + short Projection compile |

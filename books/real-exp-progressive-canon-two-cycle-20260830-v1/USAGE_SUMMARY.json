@@ -1,0 +1,60 @@
+{
+  "scope": "Two-Cycle Progressive Canonization Extension ACP calls only",
+  "all_extension_calls": {
+    "calls": 34,
+    "wall_seconds": 3747.307,
+    "total_tokens": 1908629,
+    "input_tokens": 435317,
+    "cached_read_tokens": 1357312,
+    "output_tokens": 116000,
+    "thought_tokens": 57231,
+    "by_model": {
+      "gpt-5.6-luna": {
+        "calls": 21,
+        "wall_seconds": 2139.701,
+        "total_tokens": 1074062
+      },
+      "gpt-5.6-terra": {
+        "calls": 10,
+        "wall_seconds": 373.291,
+        "total_tokens": 558835
+      },
+      "gpt-5.6-sol": {
+        "calls": 3,
+        "wall_seconds": 1234.315,
+        "total_tokens": 275732
+      }
+    }
+  },
+  "effective_valid_path_excluding_invalid_outline1_and_compiler_v1": {
+    "calls": 32,
+    "wall_seconds": 3635.855,
+    "total_tokens": 1778806,
+    "input_tokens": 413641,
+    "cached_read_tokens": 1250304,
+    "output_tokens": 114861,
+    "thought_tokens": 56463,
+    "by_model": {
+      "gpt-5.6-luna": {
+        "calls": 20,
+        "wall_seconds": 2042.731,
+        "total_tokens": 975842
+      },
+      "gpt-5.6-terra": {
+        "calls": 9,
+        "wall_seconds": 358.809,
+        "total_tokens": 527232
+      },
+      "gpt-5.6-sol": {
+        "calls": 3,
+        "wall_seconds": 1234.315,
+        "total_tokens": 275732
+      }
+    }
+  },
+  "excluded_from_effective": [
+    "cycle1\\CYCLE1_COMPILER_ACP.json",
+    "cycle1\\OUTLINE1_ACP.json"
+  ],
+  "note": "Original invalid chapter1/cycle1 artifacts live outside extension/ and are not counted here."
+}

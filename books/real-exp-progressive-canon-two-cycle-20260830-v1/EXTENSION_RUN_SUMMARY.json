@@ -1,0 +1,22 @@
+{
+  "extension_preregistered": true,
+  "decision_after_correct_ch1": "DEFER",
+  "critical1_expected": "DECISION NEEDED",
+  "cycle1_selected": "R2",
+  "reveal1_chapter": 3,
+  "critical2_expected": "DECISION NEEDED",
+  "cycle2_selected": "R3",
+  "reveal2_chapter": 4,
+  "final_expected": "DEFER",
+  "decision_after_correct_ch1_actual": "DEFER",
+  "critical1_actual": "DECISION NEEDED",
+  "human_invariance": "PASS",
+  "pre_reveal1": "PASS",
+  "reveal1": "PASS",
+  "critical2_actual": "DECISION NEEDED",
+  "reveal2": "PASS",
+  "final_actual": "DEFER",
+  "final_defer": "PASS",
+  "production_modified": false,
+  "current_user_novel_modified": false
+}

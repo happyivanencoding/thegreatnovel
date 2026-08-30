@@ -22,6 +22,16 @@ class MysteryThread:
     route: MysteryRoute = "story"
 
 
+@dataclass(frozen=True)
+class MysteryRevealContract:
+    mystery_id: str
+    reveal_chapter: int
+    event_atom: str
+    state_residue: str
+    reader_anchors: tuple[str, ...]
+    still_open_after_reveal: str
+
+
 DECISION_SURFACE_PROMPT = """你是 TGN 的 Mystery Decision Surface。你不是解谜 Agent，也不负责替作者补世界观。
 
 任务只有一个：判断**接下来这个具体 Story Horizon 是否已经真的需要作者决定某个长期谜团的一小层答案**。
@@ -88,10 +98,11 @@ CANONIZATION_COMPILER_PROMPT = """你是 TGN 的 Mystery Canonization Compiler�
 检查：
 1. 是否与已发生 Canon / Known Anchors 明确冲突；
 2. 是否把过去明确为真的事实改成假的；允许重新解释旧事实，但不能重写旧事实；
-3. 是否偷偷回答了 `What Remains Unknown` 中本应继续开放的问题；
-4. 是否把“作者知道”误写成“人物/读者已经知道”；
-5. 是否真的只增加 1—2 个局部 Fixed Point，而不是一口气生成终极世界观；
-6. Authority Route 是否只有 `world` 或 `story`，并且后续只应进入规划层，不直接注入章节 Writer。
+3. `AUTHOR OPEN` 阶段旧的 Still Open 是**决策前的未决定池**，不是永远禁止回答的冻结列表。若 Decision Surface 已明确一个 `Smallest Decision`，作者选中的 `New Fixed Point` 可以且只可以回答这一小层；采用后真正必须继续开放的是候选自己的 `What Remains Unknown`。
+4. Author-Approved Future Direction 可以授权**未来将发生**的入口、对质、穿越或其它事件；这不等于它已经发生。候选可以使未来事件可执行，但不能把未来方向倒写成过去 Canon。
+5. 是否把“作者知道”误写成“人物/读者已经知道”；
+6. 是否真的只增加 1—2 个局部 Fixed Point，而不是一口气生成终极世界观；
+7. Authority Route 是否只有 `world` 或 `story`，并且后续只应进入规划层，不直接注入章节 Writer。
 
 严格输出：
 # MYSTERY CANONIZATION COMPILER
@@ -204,7 +215,14 @@ def build_reframe_prompt(*, thread: MysteryThread, decision_surface: str, curren
     ) + "\n"
 
 
-def build_canonization_compiler_prompt(*, thread: MysteryThread, selected_candidate: str, current_context: str) -> str:
+def build_canonization_compiler_prompt(
+    *,
+    thread: MysteryThread,
+    selected_candidate: str,
+    current_context: str,
+    decision_surface: str = "",
+    planning_need: str = "",
+) -> str:
     # Parsing the selected candidate first prevents malformed outputs from reaching the compiler.
     for heading in (
         "New Fixed Point",
@@ -219,6 +237,10 @@ def build_canonization_compiler_prompt(*, thread: MysteryThread, selected_candid
         (
             CANONIZATION_COMPILER_PROMPT.strip(),
             "# CURRENT AUTHOR MYSTERY STATE\n" + render_thread(thread).strip(),
+            "# DECISION SURFACE｜What is authorized to become fixed now\n"
+            + (decision_surface.strip() or "（未提供；不得自行扩大可回答范围。）"),
+            "# AUTHOR-APPROVED FUTURE DIRECTION｜Future only, not past Canon\n"
+            + (planning_need.strip() or "（未提供额外未来方向。）"),
             "# AUTHOR-SELECTED CANDIDATE\n" + selected_candidate.strip(),
             "# EXISTING CANON / KNOWN ANCHORS\n" + current_context.strip(),
         )
@@ -270,4 +292,147 @@ def render_planning_projection(thread: MysteryThread) -> str:
         f"Reveal Boundary: {thread.reveal_boundary.strip() or 'NONE'}\n"
         f"Still Open: {thread.remains_unknown.strip() or 'NONE'}\n"
         "这是作者层隐藏事实，只供 World/Story 规划层约束未来兼容性。规划必须真实使用 Fixed Point：当前阶段的门、证据、人物行动与后果不得依赖其它答案；如果 Reveal Boundary 允许本阶段确认一层，就必须安排足以让这一层在未来正文成为确定事实的可观察事件。不得把 Fixed Point 本身当旁白泄露，也不得越过 Reveal Boundary；人物、读者与章节 Writer 在实际 Reveal Event 发生前不能直接得到答案。"
+    )
+
+
+_REVEAL_FIELD_RE = re.compile(
+    r"^(Mystery ID|Reveal Chapter|Event Atom|State Residue|Reader Anchors|Still Open After Reveal)\s*:\s*(.*?)\s*$"
+)
+
+
+def parse_reveal_contract(text: str) -> MysteryRevealContract:
+    """Parse one research-only reader-facing reveal transport contract.
+
+    The contract is deliberately tiny. It contains only what the reveal chapter may
+    receive; raw Author Hidden Truth is never a runtime field.
+    """
+
+    values: dict[str, str] = {}
+    for raw in text.splitlines():
+        match = _REVEAL_FIELD_RE.match(raw.strip())
+        if not match:
+            continue
+        key, value = match.group(1), match.group(2).strip()
+        if key in values:
+            raise ValueError(f"Mystery Reveal Contract 重复字段：{key}")
+        values[key] = value
+    required = (
+        "Mystery ID",
+        "Reveal Chapter",
+        "Event Atom",
+        "State Residue",
+        "Reader Anchors",
+        "Still Open After Reveal",
+    )
+    missing = [key for key in required if not values.get(key)]
+    if missing:
+        raise ValueError("Mystery Reveal Contract 缺少字段：" + "、".join(missing))
+    try:
+        reveal_chapter = int(values["Reveal Chapter"])
+    except ValueError as error:
+        raise ValueError("Reveal Chapter 必须是正整数") from error
+    if reveal_chapter < 1:
+        raise ValueError("Reveal Chapter 必须是正整数")
+    anchors = tuple(
+        part.strip()
+        for part in re.split(r"[；;]", values["Reader Anchors"])
+        if part.strip()
+    )
+    if not anchors:
+        raise ValueError("Mystery Reveal Contract 至少需要一个 Reader Anchor")
+    if len(anchors) > 6:
+        raise ValueError("Mystery Reveal Contract Reader Anchors 最多 6 个")
+    return MysteryRevealContract(
+        mystery_id=values["Mystery ID"],
+        reveal_chapter=reveal_chapter,
+        event_atom=values["Event Atom"],
+        state_residue=values["State Residue"],
+        reader_anchors=anchors,
+        still_open_after_reveal=values["Still Open After Reveal"],
+    )
+
+
+def extract_reveal_contracts(text: str) -> tuple[MysteryRevealContract, ...]:
+    """Extract zero or more reveal contracts from a Story Program response."""
+
+    matches = list(re.finditer(r"(?m)^# MYSTERY REVEAL CONTRACT\s*$", text))
+    contracts: list[MysteryRevealContract] = []
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        block = text[match.start():end].strip()
+        contracts.append(parse_reveal_contract(block))
+    ids = [contract.mystery_id for contract in contracts]
+    if len(ids) != len(set(ids)):
+        raise ValueError("同一 Story Program 不得为同一个 Mystery 输出多个 Reveal Contract")
+    return tuple(contracts)
+
+
+def strip_reveal_contracts(text: str) -> str:
+    """Remove reader-facing reveal transport before Story Program reaches Outline."""
+
+    match = re.search(r"(?m)^# MYSTERY REVEAL CONTRACT\s*$", text)
+    return text[: match.start()].rstrip() if match else text.strip()
+
+
+def compile_runtime_mystery_projection(
+    thread: MysteryThread,
+    reveal: MysteryRevealContract,
+    *,
+    chapter_number: int,
+) -> str:
+    """Project a fixed hidden mystery to chapter runtime without leaking the answer.
+
+    Before the scheduled reveal, chapter agents only see the unresolved boundary.
+    On the reveal chapter they receive only the reader-facing event contract. After
+    that chapter, the State/Canon path is expected to carry the revealed residue.
+    """
+
+    if thread.state != "FIXED_HIDDEN":
+        raise ValueError("Runtime reveal projection 需要 FIXED_HIDDEN Mystery")
+    if reveal.mystery_id != thread.mystery_id:
+        raise ValueError("Reveal Contract 与 Mystery ID 不一致")
+    if chapter_number < 1:
+        raise ValueError("chapter_number 必须是正整数")
+    if chapter_number < reveal.reveal_chapter:
+        return (
+            f"# MYSTERY UNRESOLVED FACT BOUNDARY｜{thread.mystery_id}\n"
+            f"Question: {thread.question.strip()}\n"
+            f"Still Unknown: {thread.remains_unknown.strip() or thread.question.strip()}\n"
+            "作者层可能已有隐藏决定，但本章没有 Reveal Authority。不得补答案、暗示唯一答案或让角色凭空知道。"
+        )
+    if chapter_number == reveal.reveal_chapter:
+        return (
+            f"# MYSTERY REVEAL EVENT｜{thread.mystery_id}\n"
+            f"Event Atom: {reveal.event_atom}\n"
+            f"State Residue: {reveal.state_residue}\n"
+            f"Still Open After Reveal: {reveal.still_open_after_reveal}\n"
+            f"Reader Anchors: {'；'.join(reveal.reader_anchors)}\n"
+            "只让读者经历这一层 Reveal；State Residue 不能替代现场事件，更深未知不得顺手解释。"
+        )
+    return ""
+
+
+def advance_after_reveal(
+    thread: MysteryThread,
+    reveal: MysteryRevealContract,
+    *,
+    next_decision_trigger: str,
+) -> MysteryThread:
+    """Turn one revealed hidden layer into a new Author-Open deeper question."""
+
+    if thread.state != "FIXED_HIDDEN":
+        raise ValueError("只有 FIXED_HIDDEN Mystery 完成 Reveal 后才能进入下一轮")
+    if reveal.mystery_id != thread.mystery_id:
+        raise ValueError("Reveal Contract 与 Mystery ID 不一致")
+    anchors = thread.known_anchors.strip()
+    revealed = f"- 已揭晓并进入 Canon：{reveal.state_residue.strip()}"
+    known = "\n".join(part for part in (anchors, revealed) if part).strip()
+    return MysteryThread(
+        mystery_id=thread.mystery_id,
+        question=reveal.still_open_after_reveal.strip(),
+        state="OPEN",
+        known_anchors=known,
+        decision_trigger=next_decision_trigger.strip(),
+        remains_unknown=reveal.still_open_after_reveal.strip(),
+        route=thread.route,
     )

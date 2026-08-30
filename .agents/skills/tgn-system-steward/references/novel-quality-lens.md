@@ -250,9 +250,14 @@ Humanization 优先修信息与节奏功能，不做禁词表。
 检查：
 
 - 已批准公共事实是否在需要时足够清楚；
+- 当前 Mystery 是 `AUTHOR OPEN` 还是 `AUTHOR FIXED HIDDEN`；作者自己没决定时，不把“缺完整答案”判成设定缺失；
+- 若系统要求作者现在定真，是否真由下一段作者批准的具体事件依赖该答案，而不是章节数、伏笔年龄或规划完整度；
 - Future Plan 仍安排为 reveal 的答案是否被提前投放；
+- Fixed Hidden Truth 是否只存在 planning lane；Reveal 前的 Outline / Director / Curator / Writer 是否完全看不到 raw Fixed Point；
+- Reveal 当章是否通过动作、物证或可验证观察真正兑现 `Reveal Boundary`，而不是用后台术语或旁白直接公布答案；
 - 未解释的旧历史、旧对话、隐藏动机或世界机制是否被 Writer 为完整感补造；
 - 本章新增确定事实是否由 Director Contract 授权，并真正发生在正文；
-- State 是否只记录已经确定的事实，而不是人物猜测。
+- State 是否只记录已经确定的事实，而不是人物猜测；Reveal 后是否只 canonize 已经历的 Residue，并继续保留更深 `What Remains Unknown`；
+- 后来的解释是否只是让旧事实获得新意义，还是把过去明确为真的事实改成假的 Retcon。
 
 不要把“解释不足”和“保持未知”混为一谈：该知道的公共事实不说是 delivery 失败；尚未批准的历史答案被补出来是 authority 越界。
