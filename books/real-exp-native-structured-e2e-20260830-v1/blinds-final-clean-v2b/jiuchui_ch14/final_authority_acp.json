@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp-native-e2e",
+  "additionalDirectories": [],
+  "wall_seconds": 122.705,
+  "sessionId": "01a0521f-0895-79c0-9e5e-1fddd192e89a",
+  "text": "{\"ranking\":[\"C\",\"D\",\"B\",\"A\"],\"scores\":{\"A\":4.3,\"B\":6.2,\"C\":7.2,\"D\":6.8},\"best\":\"C\",\"worst\":\"A\",\"reason\":\"C最完整地兑现了一次锁潮、改向、释放，并让百炉会公开确认矿利份额与砺骨部水路不被矿权吞并。它也保留了回潮楔残压未散、顾停舟拒绝买断并接受独立粮运合作的关键边界。D的主线同样成立，但用大量未获授权的距离、价格比例和报酬数字具体化了力量尺与交易条件。B比D更差，因为额外引入了“照域者”等未经上游批准的境界，并同样擅自确定多组数值。A把计划要求的固定报酬改成按出手次数和结果结价，直接破坏合作关系的明确损失边界。A还把阮青蜃的部分追索豁免扩大成旧账一笔勾销，并新增安身契和百炉会行潮籍等未经授权结果。C、D、B、A都存在阮青蜃在入口关闭后无解释进入内场的问题，但该问题在A中较轻，因为他始终留在门外。综合看，C的未授权细节最少且主要状态变化没有越界，因此最佳，A的合同与结算越界最严重。\",\"hard_problems\":{\"A\":\"固定报酬被改成按实际出手次数和结果结价；擅自加入五百、八百潮铢、安身契和追索一笔勾销；“百炉会行潮籍”疑似重新发明已完成的身份或资格。\",\"B\":\"无授权引入“照域者”境界及二十、三十、四十丈力量基准；擅自确定八十潮铢、追索销去一半和市价加三成；阮青蜃从已封闭入口进入内场缺乏因果。\",\"C\":\"阮青蜃在铁门落下后无解释进入内场；“成炉者一车一刻钟”、引潮炉的具体功能限制和二十加二十潮铢报酬均未获上游授权；“明早出发”与天亮前已排队出发存在轻微时序不稳。\",\"D\":\"无授权具体化二十、三十、四十丈、八十潮铢、追索减半和市价加三成等力量及交易数字；阮青蜃进入已封闭内场缺乏说明；血印签约也新增了未批准的契约形式。\"} }",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 54881,
+      "inputTokens": 25345,
+      "cachedReadTokens": 23296,
+      "outputTokens": 6240,
+      "thoughtTokens": 5611
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 54881,
+          "inputTokens": 25345,
+          "cachedInputTokens": 23296,
+          "outputTokens": 6240,
+          "reasoningOutputTokens": 5611
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 54881,
+              "inputTokens": 25345,
+              "cachedInputTokens": 23296,
+              "outputTokens": 6240,
+              "reasoningOutputTokens": 5611
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

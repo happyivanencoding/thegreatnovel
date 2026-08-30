@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp-native-e2e",
+  "additionalDirectories": [],
+  "wall_seconds": 23.909,
+  "sessionId": "01a0521f-082e-7242-bfa9-23b339ec3f5f",
+  "text": "{\"ranking\":[\"A\",\"B\",\"C\",\"D\"],\"scores\":{\"A\":8.7,\"B\":8.2,\"C\":7.6,\"D\":7.1},\"best\":\"A\",\"worst\":\"D\",\"reason\":\"A的开炉试真正造成了现场失控风险，顾停舟“锁—改向—泄出”的选择直接救人，能力展示、代价与围观者的重新估价连得最紧。它把矿利留档、拒卖楔子、谈粮路契约都落到顾停舟主动开价和划责任边界上，主角终于像在为自己的路做生意，而非被剧情发奖励。B的试潮动作同样清楚，阮青蜃与少东家的对话也更利落，但矿权裁断和后续承运仍有较强的程序宣告感。C最顺畅，铜牌与粮队形成了明确的阶段收获和下一章目标，不过阮青蜃被铁门挡在外面又突然进入，冲突压迫感弱于前两篇。D把B已有的信息再次解释成规则、权属和感悟，动作后的余韵被报告式说明不断打断，读者会更明显感觉作者在替能力和主题作注。A的缺点是后半段连续落账、报价、发契，高潮后稍显臃肿；但其公共见证和实际风险最有男频兑现感。\",\"hard_problems\":{\"A\":\"开炉高潮后连续追加行潮籍、报价、粮路契、矿利单，信息收益虽高但收束偏长；阮青蜃隔门喊价略削弱当面冲突。\",\"B\":\"验器裁断矿权、水路、器物归属的台词偏像规则公示；少东家关系的“现在该怎么叫”有情绪入口，但很快被契约条款覆盖。\",\"C\":\"阮青蜃先被铁门隔绝、后又从侧门入场，空间调度显得方便；试炼的即时伤害对象较弱，能力展示更像标准考核。\",\"D\":\"大量重复解释成炉尺度、器物机制、矿权边界和主角感悟，明显有AI总结味与报告味；整体比B更长，却没有增加等量的新冲突或新后果。\"}}",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 42193,
+      "inputTokens": 16170,
+      "cachedReadTokens": 25344,
+      "outputTokens": 679,
+      "thoughtTokens": 141
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 42193,
+          "inputTokens": 16170,
+          "cachedInputTokens": 25344,
+          "outputTokens": 679,
+          "reasoningOutputTokens": 141
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 42193,
+              "inputTokens": 16170,
+              "cachedInputTokens": 25344,
+              "outputTokens": 679,
+              "reasoningOutputTokens": 141
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

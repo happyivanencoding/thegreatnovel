@@ -387,3 +387,18 @@ Atomic Gate FAIL → Full Reviser fallback
 - Production adoption：**FAIL**。
 
 > **研究价值很高，Production价值当前为负。**
+
+---
+
+## 12. Validation / Delivery
+
+- Atomic IR focused tests：57 passed。
+- Native E2E focused tests：6 passed。
+- Focused total：63 passed。
+- Full repository suite：425 passed。
+- Native / Atomic experiment scripts compiled：18。
+- Final anonymous Judge calls：16/16 completed。
+- `git diff --check`：PASS。
+- `tgn-system-steward 0.3.24`：validate / install / activate PASS；source与installed核心文件逐项SHA-256一致。
+- Bounded read-only Steward smoke：`FAIL`，正确拒绝Native production replacement并复述每章慢8.915秒、Final Story小升但Final Authority下降。
+- Production code、模型路由、ACP runner、前端与State路径均未修改。

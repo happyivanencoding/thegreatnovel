@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp-native-e2e",
+  "additionalDirectories": [],
+  "wall_seconds": 34.415,
+  "sessionId": "01a0521f-4b7d-7493-8657-4bef0c5436f4",
+  "text": "{\"ranking\":[\"B\",\"C\",\"A\",\"D\"],\"scores\":{\"A\":6.4,\"B\":9.2,\"C\":8.8,\"D\":6.4},\"best\":\"B\",\"worst\":\"D\",\"reason\":\"B最完整地承接了杜衡逼战、疲劳限制、顾临川的关键战术选择、第二轮胜利、铜羽契约、第一笔预付钱以及陆绾确认分影后同行等硬结果。B还明确保留了疲劳回流、影身应变迟滞和客舍责任冲突，没有把本章胜利误写成能力限制已经解决。C整体同样忠实，且直接结果和陆绾首次确认分影的事实写得清楚，但“杜衡败后承认”属于当前权威未明确授权的新增反应。A和D内容完全相同，均抓住了主要结算，但把战斗与向陆绾展示分影压在同一个主角行动字段中，缺少疲劳限制、能力代价和父子责任余波的保留。A/D也没有明确写出本章结束时陆绾以知情为前提决定同行这一首次确定事实，Canon写入边界较弱。四者都没有明显提前完成折日峡事件，结尾基本守住了跨章timing。若必须区分完全相同的A与D，D作为并列最弱仅是排序占位，实质问题相同。\",\"hard_problems\":{\"A\":\"未明确杜衡第二轮胜负过程中的关键变化，也未保留影身迟滞、疲劳回流和客舍责任等仍有效限制；将战斗与陆绾展示分影合并，可能造成场景时序和直接结果边界模糊。\",\"B\":\"整体无硬性Canon污染；“杜衡转为正面压制”是未被上游明确规定的细节，属于可删减的推断性反应，但不改变主要结果。\",\"C\":\"“杜衡败后承认顾临川的临场判断”未在共享权威中确定，可能把对手态度提前写死；“共同出发的行动关系”略抽象，但核心同行事实正确。\",\"D\":\"与A完全相同：未明确杜衡第二轮具体胜负与能力限制的持续性，把两个时序不同的事件压缩在主角行动中，并弱化了陆绾知情后同行这一不可逆事实。\"}}",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 38162,
+      "inputTokens": 13272,
+      "cachedReadTokens": 23296,
+      "outputTokens": 1594,
+      "thoughtTokens": 1034
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 38162,
+          "inputTokens": 13272,
+          "cachedInputTokens": 23296,
+          "outputTokens": 1594,
+          "reasoningOutputTokens": 1034
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 38162,
+              "inputTokens": 13272,
+              "cachedInputTokens": 23296,
+              "outputTokens": 1594,
+              "reasoningOutputTokens": 1034
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "native-structured-e2e-skill-install-validation-v1",
+  "skill": "tgn-system-steward",
+  "version": "0.3.24",
+  "package_digest": "sha256:03ba9d2a338db2ff7095deecf8fb3242eb8e5438f100c842916d451a194d0687",
+  "validated": true,
+  "installed": true,
+  "activated": true,
+  "files": [
+    {
+      "file": "SKILL.md",
+      "source_sha256": "47a2419dce0709e1fc64fc9b03737a7462fd74527f09271b3cbf83e505947d25",
+      "installed_sha256": "47a2419dce0709e1fc64fc9b03737a7462fd74527f09271b3cbf83e505947d25",
+      "exact": true
+    },
+    {
+      "file": "references/atomic-authority-ir-protocol.md",
+      "source_sha256": "86c31472dbd4382d31c7981a4c19eac9582ac3270a445845b3483b12598ebedb",
+      "installed_sha256": "86c31472dbd4382d31c7981a4c19eac9582ac3270a445845b3483b12598ebedb",
+      "exact": true
+    },
+    {
+      "file": "references/experiment-protocol.md",
+      "source_sha256": "aaf0fc1e1cbf40f166181dfd10988523a30d385118db9865d69f1424d041243e",
+      "installed_sha256": "aaf0fc1e1cbf40f166181dfd10988523a30d385118db9865d69f1424d041243e",
+      "exact": true
+    },
+    {
+      "file": "references/live-system-discovery.md",
+      "source_sha256": "c45e02d01271f8abdf6be346630d3c69fe026e1ee26cd189d65df192b9f62877",
+      "installed_sha256": "c45e02d01271f8abdf6be346630d3c69fe026e1ee26cd189d65df192b9f62877",
+      "exact": true
+    },
+    {
+      "file": "references/novel-quality-lens.md",
+      "source_sha256": "79534e0b4efc6c72df077c5259a68885f787b9de14b27a4c924a6800543711ef",
+      "installed_sha256": "79534e0b4efc6c72df077c5259a68885f787b9de14b27a4c924a6800543711ef",
+      "exact": true
+    },
+    {
+      "file": "references/stable-principles.md",
+      "source_sha256": "6037c9bbe2e0636b539369e1b97fb14a099077563101639d6364607267300d9f",
+      "installed_sha256": "6037c9bbe2e0636b539369e1b97fb14a099077563101639d6364607267300d9f",
+      "exact": true
+    }
+  ],
+  "all_exact": true,
+  "smoke_file": "STEWARD_SMOKE.md",
+  "smoke_verdict": "FAIL_AS_EXPECTED_FOR_NATIVE_REPLACEMENT",
+  "smoke_expected_behavior": true,
+  "smoke_model": "gpt-5.6-terra",
+  "smoke_effort": "high"
+}

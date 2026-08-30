@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp-native-e2e",
+  "additionalDirectories": [],
+  "wall_seconds": 41.485,
+  "sessionId": "01a0521f-8e43-7503-af63-689c5c707958",
+  "text": "{\"ranking\":[\"A\",\"B\",\"C\",\"D\"],\"scores\":{\"A\":8.8,\"B\":7.4,\"C\":4.6,\"D\":4.6},\"best\":\"A\",\"worst\":\"C\",\"reason\":\"A最完整地覆盖了伤势回流、陆绾边界、顾临川欲望暴露和顾斜阳重新定位，且没有新增金钱、所有权或力量事实。A的直接结果与状态变化都具体，结尾把“两条有效路线无法由普通二阶解释”作为下一章可行动的异常，Reader Release最清楚。B整体忠实，但把顾临川表述成在短兵与救人之间分别选择，容易误读为二选一，也略有把沉昼城短契提前推近的跨章倾向。C只把顾临川的自我承认写成直接结果，漏掉陆绾确认伤势回流和顾斜阳确认双线临场选择这两个应落地事实。C的“高价值竞争者”缺少当前计划明确授权，结尾“更高入口尚未到账”既抽象又没有给出具体异常或下一步压力。D与C内容完全相同，因此同样存在直接结果不完整、结尾释放不足和跨章信息模糊的问题。C与D都没有污染已持有短兵或二阶状态，但它们把本章最重要的关系与能力代价压缩成泛化判断。综合看A最适合进入下一章Canon，B可修后使用，C与D并列最弱。\",\"hard_problems\":{\"A\":\"\",\"B\":\"将“短兵与救人之间分别作出选择”改为“同时承认两种欲望并分别承担选择”，避免制造二选一误读；结尾不要把沉昼城短契写成当前章已推进的事实。\",\"C\":\"直接结果遗漏陆绾首次确定伤势完整回流、顾斜阳确认双线临场选择；“高价值竞争者”缺少授权依据，结尾异常不具体。\",\"D\":\"与C完全相同，存在同样的直接结果遗漏、未经明确授权的“高价值”判断和模糊结尾。\"}}",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 39064,
+      "inputTokens": 13717,
+      "cachedReadTokens": 23296,
+      "outputTokens": 2051,
+      "thoughtTokens": 1552
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 39064,
+          "inputTokens": 13717,
+          "cachedInputTokens": 23296,
+          "outputTokens": 2051,
+          "reasoningOutputTokens": 1552
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 39064,
+              "inputTokens": 13717,
+              "cachedInputTokens": 23296,
+              "outputTokens": 2051,
+              "reasoningOutputTokens": 1552
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

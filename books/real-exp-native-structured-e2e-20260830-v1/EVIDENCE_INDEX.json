@@ -1,0 +1,64 @@
+{
+  "schema_version": "native-structured-e2e-v2-evidence-index",
+  "final_verdict": "FAIL_AS_PRODUCTION_REPLACEMENT",
+  "time_saved_seconds_per_chapter": 0,
+  "measured_delta_seconds_per_chapter": -8.915,
+  "measured_delta_percent": -2.6,
+  "report": "RESULTS.md",
+  "protocol": "PROTOCOL.md",
+  "invalid_evidence": "INVALID_EVIDENCE.md",
+  "examples": "FINAL_BODY_EXAMPLES.md",
+  "analysis": "FINAL_ANALYSIS_V2.json",
+  "timing_table": "TIMING_TABLE_V2.csv",
+  "repeatability": "REPEATABILITY_V2.json",
+  "registry_coverage": "REGISTRY_COVERAGE_V2.json",
+  "blind": "blinds-final-clean-v2b/summary.json",
+  "treatment_runs": [
+    "e2e-run4",
+    "e2e-run5"
+  ],
+  "fresh_controls": [
+    "fresh-control-3",
+    "fresh-control-4"
+  ],
+  "pre_registered_freeze": "PROTOCOL_FREEZE_V2.json",
+  "quality": {
+    "mission:story": {
+      "native_mean": 7.5375,
+      "control_mean": 8.825,
+      "delta": -1.2875,
+      "native_best_count": 0,
+      "control_best_count": 4,
+      "native_mean_rank": 3.5,
+      "control_mean_rank": 1.5
+    },
+    "mission:authority": {
+      "native_mean": 5.6875,
+      "control_mean": 8.4,
+      "delta": -2.7125,
+      "native_best_count": 0,
+      "control_best_count": 4,
+      "native_mean_rank": 3.5,
+      "control_mean_rank": 1.5
+    },
+    "final:story": {
+      "native_mean": 8.3875,
+      "control_mean": 7.825,
+      "delta": 0.5625,
+      "native_best_count": 3,
+      "control_best_count": 1,
+      "native_mean_rank": 1.875,
+      "control_mean_rank": 3.125
+    },
+    "final:authority": {
+      "native_mean": 6.25,
+      "control_mean": 8.1,
+      "delta": -1.85,
+      "native_best_count": 1,
+      "control_best_count": 3,
+      "native_mean_rank": 3.25,
+      "control_mean_rank": 1.75
+    }
+  },
+  "production_changed": false
+}

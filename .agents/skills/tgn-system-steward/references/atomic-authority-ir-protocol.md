@@ -35,11 +35,11 @@ May contain only Runtime-issued fact→paragraph evidence, blocker edit locality
 - Reject paragraph-count shifts and any locked-paragraph hash drift.
 - Protect desire/relationship/reward/surprise mainly by permission, not semantic detectors.
 
-## 5. Director boundary
+## 5. Director / human projection boundary
 
-Target a native single-source `DirectorStructuredDecision`. Runtime uses Action/Narrative registries to render the human eight-field Mission and deterministic Frozen Mission artifact. Do not keep a second free semantic `human_clause`, free narrative paragraph or machine Sidecar.
+A single-source `DirectorStructuredDecision` may generate a deterministic Frozen Mission artifact, but the human Mission projection is a separate realization surface that must be audited independently. Do not keep a second free semantic `human_clause`, free narrative paragraph or machine Sidecar.
 
-Free-text verbose/compact/micro Sidecars are negative evidence and must not be revived.
+Free-text verbose/compact/micro Sidecars are negative evidence and must not be revived. The current Action/Narrative-registry human projection is also negative production evidence: in the 2026-08-30 two-book/four-chapter E2E it covered 58/58 registered facts yet lost both Mission Story and Mission Authority, then produced higher Final Story but materially lower Final Authority. A correct typed core does not prove a sufficiently rich human Mission.
 
 ## 6. Routing
 
@@ -59,15 +59,18 @@ Atomic is an acceleration layer, not a global hard gate.
 Report separately:
 
 - source-purity and controlled negative tests;
-- static fixture coverage;
-- real native structured Director model behavior;
-- Story + Authority blind;
-- independent repeat;
-- cross-book registry coverage;
-- fallback-adjusted complete-route wall.
+- registered known-fact recall;
+- complete semantic Contract repeat, including extra facts;
+- human Mission Story blind and Authority blind;
+- Final Draft Story blind and Authority blind;
+- real native structured Director wall;
+- cross-book registry coverage, explicitly manual versus automatic;
+- complete fallback-adjusted route wall, including discarded structured calls.
 
-Static fixtures and schema validity do not prove model quality or production speed. A gate that refuses unsupported chapters is safe but not generalized.
+Never collapse these into one “coverage” number. Static fixtures/schema validity do not prove model quality; known-fact recall does not prove human projection fidelity; Final Story winning while Final Authority loses is a production failure. Runtime projection wall alone is irrelevant if the model takes longer to create the typed decision.
 
 ## 8. Freeze / do not freeze
 
-Freeze architecture, trust boundary, Entity/slot model, Edit Locality and unsupported bypass. Do not freeze hand-authored fixtures, Runtime surface registries, automatic paragraph locator, native Director quality, Full Reviser removal or any speed claim until real E2E evidence exists.
+Freeze architecture, trust boundary, Entity/slot model, Edit Locality, unsupported bypass and the requirement to audit typed core, human projection and final prose separately.
+
+Do not freeze hand-authored fixtures, Runtime surface registries, automatic paragraph locator, current Native human Mission replacement, Full Reviser removal or any speed claim. The 2026-08-30 properly chained repeat found the current Native route slower both at Director and across the complete Final-Draft critical path; its Final Story gain came with substantial Final Authority loss. Treat the dated numbers as experiment evidence, not a permanent threshold.

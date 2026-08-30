@@ -1,0 +1,230 @@
+{
+  "schema_version": "fresh-control-timing-v1",
+  "run": "fresh-control-4",
+  "samples": 4,
+  "by_node_seconds": {
+    "director": 153.791,
+    "curator": 448.942,
+    "primary": 204.881,
+    "reviser": 590.581
+  },
+  "total_seconds": 1398.195,
+  "rows": [
+    {
+      "sample": "jiuchui_ch14",
+      "nodes": [
+        {
+          "node": "director",
+          "wall_seconds": 23.632,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 37530,
+            "inputTokens": 13157,
+            "cachedReadTokens": 23296,
+            "outputTokens": 1077,
+            "thoughtTokens": 516
+          }
+        },
+        {
+          "node": "curator",
+          "wall_seconds": 105.966,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 48530,
+            "inputTokens": 19562,
+            "cachedReadTokens": 23296,
+            "outputTokens": 5672,
+            "thoughtTokens": 4160
+          }
+        },
+        {
+          "node": "primary",
+          "wall_seconds": 50.884,
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "totalTokens": 40785,
+            "inputTokens": 12827,
+            "cachedReadTokens": 25344,
+            "outputTokens": 2614,
+            "thoughtTokens": 304
+          }
+        },
+        {
+          "node": "reviser",
+          "wall_seconds": 172.161,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 59931,
+            "inputTokens": 2001,
+            "cachedReadTokens": 49920,
+            "outputTokens": 8010,
+            "thoughtTokens": 5111
+          }
+        }
+      ],
+      "total_seconds": 352.643
+    },
+    {
+      "sample": "jiuchui_ch16",
+      "nodes": [
+        {
+          "node": "director",
+          "wall_seconds": 25.251,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 37829,
+            "inputTokens": 1089,
+            "cachedReadTokens": 35584,
+            "outputTokens": 1156,
+            "thoughtTokens": 516
+          }
+        },
+        {
+          "node": "curator",
+          "wall_seconds": 172.152,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 58814,
+            "inputTokens": 4779,
+            "cachedReadTokens": 45824,
+            "outputTokens": 8211,
+            "thoughtTokens": 6732
+          }
+        },
+        {
+          "node": "primary",
+          "wall_seconds": 56.08,
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "totalTokens": 42205,
+            "inputTokens": 14059,
+            "cachedReadTokens": 25344,
+            "outputTokens": 2802,
+            "thoughtTokens": 124
+          }
+        },
+        {
+          "node": "reviser",
+          "wall_seconds": 170.008,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 69116,
+            "inputTokens": 12920,
+            "cachedReadTokens": 47872,
+            "outputTokens": 8324,
+            "thoughtTokens": 5685
+          }
+        }
+      ],
+      "total_seconds": 423.491
+    },
+    {
+      "sample": "shadow_ch4",
+      "nodes": [
+        {
+          "node": "director",
+          "wall_seconds": 70.689,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 39431,
+            "inputTokens": 1540,
+            "cachedReadTokens": 35584,
+            "outputTokens": 2307,
+            "thoughtTokens": 1552
+          }
+        },
+        {
+          "node": "curator",
+          "wall_seconds": 82.125,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 43964,
+            "inputTokens": 16592,
+            "cachedReadTokens": 23296,
+            "outputTokens": 4076,
+            "thoughtTokens": 2450
+          }
+        },
+        {
+          "node": "primary",
+          "wall_seconds": 47.439,
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "totalTokens": 41790,
+            "inputTokens": 14034,
+            "cachedReadTokens": 25344,
+            "outputTokens": 2412,
+            "thoughtTokens": 500
+          }
+        },
+        {
+          "node": "reviser",
+          "wall_seconds": 107.813,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 55886,
+            "inputTokens": 5450,
+            "cachedReadTokens": 45824,
+            "outputTokens": 4612,
+            "thoughtTokens": 2463
+          }
+        }
+      ],
+      "total_seconds": 308.066
+    },
+    {
+      "sample": "shadow_ch9",
+      "nodes": [
+        {
+          "node": "director",
+          "wall_seconds": 34.219,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 36706,
+            "inputTokens": 524,
+            "cachedReadTokens": 34560,
+            "outputTokens": 1622,
+            "thoughtTokens": 1034
+          }
+        },
+        {
+          "node": "curator",
+          "wall_seconds": 88.699,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 44983,
+            "inputTokens": 639,
+            "cachedReadTokens": 39680,
+            "outputTokens": 4664,
+            "thoughtTokens": 3093
+          }
+        },
+        {
+          "node": "primary",
+          "wall_seconds": 50.478,
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "totalTokens": 41764,
+            "inputTokens": 13872,
+            "cachedReadTokens": 25344,
+            "outputTokens": 2548,
+            "thoughtTokens": 120
+          }
+        },
+        {
+          "node": "reviser",
+          "wall_seconds": 140.599,
+          "model": "gpt-5.6-luna",
+          "usage": {
+            "totalTokens": 58472,
+            "inputTokens": 1943,
+            "cachedReadTokens": 49920,
+            "outputTokens": 6609,
+            "thoughtTokens": 4142
+          }
+        }
+      ],
+      "total_seconds": 313.995
+    }
+  ]
+}

@@ -1,6 +1,10 @@
 {
   "schema_version": "native-structured-e2e-v2-final-validation",
   "focused_atomic_ir_tests": 57,
+  "focused_native_e2e_tests": 6,
+  "focused_total_tests": 63,
+  "full_repository_tests": 425,
+  "compiled_experiment_scripts": 18,
   "blind_judge_calls": 16,
   "treatment_runs": 2,
   "fresh_control_runs": 2,
@@ -18,11 +22,16 @@
   "per_chapter_seconds_saved": -8.915,
   "production_adoption": false,
   "production_changed": false,
-  "pending": [
-    "full repository pytest",
-    "git diff --check",
-    "docs/handoff/skill synchronization",
-    "skill package validation if skill changes",
-    "commit/push"
-  ]
+  "git_diff_check": true,
+  "skill": {
+    "version": "0.3.24",
+    "digest": "sha256:03ba9d2a338db2ff7095deecf8fb3242eb8e5438f100c842916d451a194d0687",
+    "validated": true,
+    "installed": true,
+    "activated": true,
+    "files_exact": true,
+    "smoke_expected_behavior": true
+  },
+  "status": "COMPLETE",
+  "pending": []
 }

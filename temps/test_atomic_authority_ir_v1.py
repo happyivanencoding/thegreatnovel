@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-ROOT = Path(r"C:\dev\tgn-story-mvp")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "temps"))
 
 from atomic_authority_ir_v1 import (  # noqa: E402
@@ -1093,7 +1093,6 @@ def structured_decision_payload() -> dict:
                 "action_id": "preserve_route",
                 "object_ids": ["ROUTE_001"],
                 "to_state": "preserved",
-                "terminal": True,
             },
             {
                 "field": "state_change",
@@ -1103,7 +1102,6 @@ def structured_decision_payload() -> dict:
                 "counterparty_ids": ["RIVAL_001"],
                 "from_state": "unknown_competitor",
                 "to_state": "independent_judgment_holder",
-                "terminal": True,
             },
             {
                 "field": "ending_drive",
@@ -1111,7 +1109,6 @@ def structured_decision_payload() -> dict:
                 "actor_id": "PROTAGONIST_001",
                 "action_id": "depart_before_low_tide",
                 "object_ids": ["ROUTE_001"],
-                "terminal": False,
             },
         ],
         "narrative_function_id": "function.public_judgment",

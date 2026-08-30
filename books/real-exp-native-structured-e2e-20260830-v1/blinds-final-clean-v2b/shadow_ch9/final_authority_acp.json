@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp-native-e2e",
+  "additionalDirectories": [],
+  "wall_seconds": 74.025,
+  "sessionId": "01a0521f-d323-7731-b069-575c0d9715fa",
+  "text": "{\"ranking\":[\"B\",\"C\",\"A\",\"D\"],\"scores\":{\"A\":6.5,\"B\":9.1,\"C\":8.8,\"D\":5.8},\"best\":\"B\",\"worst\":\"D\",\"reason\":\"B最完整地兑现了本章的伤势回流、陆绾设定边界、顾临川承认具体欲望，以及铜羽领队通过多人证词确认两条路线同时发生。它还明确让药队重新启程、顾临川登车，保留了沉昼城门路尚未获得这一未决事实。C与B的事实链基本一致，但加入“怎么看都不像还能再分出一个完好的人”的能力状态推断，略超出已批准边界。C的结尾仍是未来重新估量，时间顺序比A更稳。A完成了关系边界和欲望承认，却没有明确写出领队发现两条路线无法由普通二阶解释这一关键结尾发现。A还把顾临川描述成“护住的不只是几辆药车”，对本章实际保护对象有轻微泛化。D明确提前提出重新计算护卫价，触及计划未结算的金钱与待遇变化。更严重的是D让弟子说顾临川“两边都看见了”，违反影身远离本体时不能直接获知另一处所见的既定限制。\",\"hard_problems\":{\"A\":\"未明确完成“普通一名二阶无法解释两条行动路线”的结尾发现，且对本章保护对象有轻微泛化。\",\"B\":\"\",\"C\":\"\",\"D\":\"“他两边都看见了”违反影身无法直接获知另一处所见的能力限制；“护卫价得重新算”提前引入计划未结算的金钱与待遇变化。\"}}",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 47932,
+      "inputTokens": 20747,
+      "cachedReadTokens": 23296,
+      "outputTokens": 3889,
+      "thoughtTokens": 3482
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 47932,
+          "inputTokens": 20747,
+          "cachedInputTokens": 23296,
+          "outputTokens": 3889,
+          "reasoningOutputTokens": 3482
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 47932,
+              "inputTokens": 20747,
+              "cachedInputTokens": 23296,
+              "outputTokens": 3889,
+              "reasoningOutputTokens": 3482
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

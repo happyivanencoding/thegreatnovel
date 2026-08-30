@@ -1,0 +1,10 @@
+﻿dimension,native,control,delta,decision
+mission_story,7.5375,8.825,-1.2875,FAIL
+mission_authority,5.6875,8.4,-2.7125,FAIL
+final_story,8.3875,7.825,0.5625,DIRECTIONAL_PASS
+final_authority,6.25,8.1,-1.85,FAIL
+director_wall_seconds_4chapters,148.272,128.795,-19.477,FAIL_SLOWER
+full_e2e_seconds_4chapters,1406.264,1370.605,-35.659,FAIL_SLOWER
+known_fact_coverage,58/58,n/a,100%,PASS_MANUAL_REGISTRY_ONLY
+semantic_contract_repeat,3/4,n/a,75%,PARTIAL
+production_adoption,no,current route,n/a,FAIL

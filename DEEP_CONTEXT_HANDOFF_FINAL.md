@@ -1762,7 +1762,7 @@ Phase 1–3 全部完成真实模型实验，但没有冻结：
 8. Primary不看Atomic Pack；Normal Delta只在失败后看到具体blocker与窄locality。
 9. verbose/compact/micro自由文本Sidecar全部失败；目标改为单一canonical `DirectorStructuredDecision`，Runtime双投影human Mission与Frozen Mission artifact，不保留第二份自由human clause。
 
-证据：57项focused tests；两书四章4/4 source-pure/preflight eligible，平均editable 3.11%，窗口外4/4阻止；22/22 Schema/runtime checks；Sidecar wall分别+205.83%/+147.41%/+146.45%，compact blind Story 3:1偏Control、Authority 3:1偏Treatment。Native structured Director仅schema/unit-ready，真实模型Story/latency/最终正文未测；Full Reviser固定税尚未减少。最终分类：Architecture/static implementation PASS；free-text Sidecar FAIL；native model route与Atomic fast route NOT PRODUCTION。完整报告：`books/real-exp-atomic-authority-ir-20260829-v1/RESULTS.md`。
+静态证据：57项focused tests；两书四章4/4 source-pure/preflight eligible，平均editable 3.11%，窗口外4/4阻止；22/22 Schema/runtime checks；Sidecar wall分别+205.83%/+147.41%/+146.45%，全部否决。2026-08-30继续完成真实Native E2E：两书四章、2次正确串联Control + 2次冻结v2 Treatment、纯正文Story/Authority双盲。v2为8/8 Native accepted、fixture结构覆盖100%，但semantic Hard Contract repeat仅3/4；Mission Story 6.99 vs 8.60、Mission Authority 6.55 vs 8.41、Final Story 8.41 vs 7.88、Final Authority 6.79 vs 8.04。完整Final Draft为351.566s/章 vs Control 325.954s/章，慢25.612s/章（7.86%）；Primary Oracle仅2/8可跳Full，即使零成本完美Gate理论也只快1.68%。关键新判断：`typed fixture coverage ≠ Story Mission completeness ≠ Final Authority`；Hard Contract适合后台验证，不适合单独承载一章为何好看。当前Native human projection FAIL，Atomic fast route / Full-Reviser removal仍NOT PRODUCTION。下一候选是把Hard IR前移到Story/Outline/Runtime已决定的结构化事实，同时保留rich human Director Mission。完整报告：`books/real-exp-native-structured-e2e-20260830-v1/RESULTS.md`。
 
 ---
 

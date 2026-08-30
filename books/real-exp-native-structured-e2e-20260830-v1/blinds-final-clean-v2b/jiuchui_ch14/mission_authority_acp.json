@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp-native-e2e",
+  "additionalDirectories": [],
+  "wall_seconds": 57.72,
+  "sessionId": "01a0521f-08eb-7101-84f4-e2500ef0483e",
+  "text": "{\"ranking\":[\"D\",\"B\",\"A\",\"C\"],\"scores\":{\"A\":5.5,\"B\":7.5,\"C\":5.5,\"D\":9.0},\"best\":\"D\",\"worst\":\"A\",\"reason\":\"D最完整地保留了公开开炉试、唐绾展示、回潮楔一次改向、拒绝买断、接受独立合作及矿利与水路状态变化，未明显改写上游事件。D还明确保留回潮楔使用后的残压限制，避免把一次性兑现写成可无限复制的武器。B整体接近，但直接结果把已经接受的合作降格为少东家获得谈合作的机会，可能污染下一章的关系、报酬与责任边界。B虽写出阮青蜃减免部分追索，却没有在状态变化中明确固定报酬和损失边界，也弱化了残压散尽这一硬限制。A与C内容完全相同，实质上应视为并列。A和C遗漏了唐绾完成铸潮展示这一计划事件，也没有把独家标记失去完整矿权、砺骨部水路不被吞并写入状态变化。A和C新增“保留独立定价”，上游只批准固定报酬与明确损失边界，可能擅自改变金钱条件。A和C把合作“立即进入执行”写得偏早，容易把下一章的运送行动提前结算；因此A与C并列最弱，A仅因排序需要列为worst。\",\"hard_problems\":{\"A\":\"遗漏唐绾展示及矿权标记、水路归属的明确状态变化；“保留独立定价”缺乏上游授权；“立即进入执行”有跨章提前风险。\",\"B\":\"直接结果将已接受的独立合作降格为谈合作机会；未明确固定报酬、损失边界和残压散尽后的连续使用限制。\",\"C\":\"与A完全相同，存在同样的计划遗漏、未经授权的独立定价和跨章执行措辞问题。\",\"D\":\"整体无硬性污染；结尾的随队出发应只作为下一章入口，不得在本章完成运送结果或风险结算。\"}}",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 40998,
+      "inputTokens": 15113,
+      "cachedReadTokens": 23296,
+      "outputTokens": 2589,
+      "thoughtTokens": 2070
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 40998,
+          "inputTokens": 15113,
+          "cachedInputTokens": 23296,
+          "outputTokens": 2589,
+          "reasoningOutputTokens": 2070
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 40998,
+              "inputTokens": 15113,
+              "cachedInputTokens": 23296,
+              "outputTokens": 2589,
+              "reasoningOutputTokens": 2070
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,393 +1,314 @@
 {
-  "schema_version": "native-structured-e2e-v2-final-metrics",
+  "schema_version": "native-structured-e2e-v2-canonical-final-metrics",
+  "evidence_status": "AUTHORITATIVE_FINAL",
   "production_changed": false,
   "scope": "Director -> Runtime dual projection -> Curator -> Primary -> Authority Reviser Final Draft; State excluded and unchanged",
   "samples": {
     "books": 2,
     "chapters": 4,
-    "control_repeats": 2,
-    "treatment_repeats": 2
+    "treatment_repeats": 2,
+    "fresh_control_repeats": 2,
+    "blind_judge_calls": 16
   },
-  "control": {
-    "runs": [
-      "control-chain-1",
-      "control-chain-2"
-    ],
-    "run_seconds": [
-      1261.45,
-      1346.181
-    ],
-    "mean_four_chapters_seconds": 1303.816,
-    "mean_per_chapter_seconds": 325.954,
-    "mean_per_chapter_minutes": 5.433
-  },
-  "native_v2": {
-    "runs": [
+  "runs": {
+    "treatment": [
       "e2e-run4",
       "e2e-run5"
     ],
-    "run_seconds": [
+    "fresh_control": [
+      "fresh-control-3",
+      "fresh-control-4"
+    ],
+    "primary_blind": "blinds-final-clean-v2b/summary.json"
+  },
+  "timing": {
+    "treatment_run_totals_seconds": [
       1523.129,
       1289.399
     ],
-    "mean_four_chapters_seconds": 1406.264,
-    "mean_per_chapter_seconds": 351.566,
-    "mean_per_chapter_minutes": 5.859,
-    "actual_seconds_saved_per_chapter": -25.612,
-    "actual_percent_saved": -7.86,
-    "actual_classification": "SLOWER"
-  },
-  "nodes": {
-    "director": {
-      "control_run_seconds": [
-        110.412,
-        146.152
-      ],
-      "treatment_run_seconds": [
-        169.989,
-        126.555
-      ],
-      "control_mean_seconds": 128.282,
-      "treatment_mean_seconds": 148.272,
-      "delta_seconds_per_four_chapters": 19.99,
-      "delta_seconds_per_chapter": 4.998,
-      "percent_change": 15.58
+    "control_run_totals_seconds": [
+      1343.015,
+      1398.195
+    ],
+    "treatment_mean_seconds": 1406.264,
+    "control_mean_seconds": 1370.605,
+    "mean_seconds_saved": -35.659,
+    "mean_percent_saved": -2.6,
+    "mean_seconds_per_chapter_saved": -8.915,
+    "treatment_range_seconds": [
+      1289.399,
+      1523.129
+    ],
+    "control_range_seconds": [
+      1343.015,
+      1398.195
+    ],
+    "paired_adjacent_runs": [
+      {
+        "treatment": "e2e-run4",
+        "control": "fresh-control-3",
+        "treatment_seconds": 1523.129,
+        "control_seconds": 1343.015,
+        "seconds_saved": -180.114,
+        "percent_saved": -13.41
+      },
+      {
+        "treatment": "e2e-run5",
+        "control": "fresh-control-4",
+        "treatment_seconds": 1289.399,
+        "control_seconds": 1398.195,
+        "seconds_saved": 108.796,
+        "percent_saved": 7.78
+      }
+    ],
+    "nodes": {
+      "director": {
+        "treatment_run_seconds": [
+          169.989,
+          126.555
+        ],
+        "control_run_seconds": [
+          103.799,
+          153.791
+        ],
+        "treatment_mean_seconds": 148.272,
+        "control_mean_seconds": 128.795,
+        "seconds_saved_mean": -19.477,
+        "percent_saved_mean": -15.12,
+        "per_chapter_seconds_saved_mean": -4.869
+      },
+      "curator": {
+        "treatment_run_seconds": [
+          547.6,
+          393.949
+        ],
+        "control_run_seconds": [
+          552.076,
+          448.942
+        ],
+        "treatment_mean_seconds": 470.774,
+        "control_mean_seconds": 500.509,
+        "seconds_saved_mean": 29.735,
+        "percent_saved_mean": 5.94,
+        "per_chapter_seconds_saved_mean": 7.434
+      },
+      "primary": {
+        "treatment_run_seconds": [
+          213.365,
+          232.56900000000002
+        ],
+        "control_run_seconds": [
+          221.714,
+          204.881
+        ],
+        "treatment_mean_seconds": 222.967,
+        "control_mean_seconds": 213.298,
+        "seconds_saved_mean": -9.669,
+        "percent_saved_mean": -4.53,
+        "per_chapter_seconds_saved_mean": -2.417
+      },
+      "reviser": {
+        "treatment_run_seconds": [
+          592.175,
+          536.326
+        ],
+        "control_run_seconds": [
+          465.426,
+          590.581
+        ],
+        "treatment_mean_seconds": 564.25,
+        "control_mean_seconds": 528.004,
+        "seconds_saved_mean": -36.247,
+        "percent_saved_mean": -6.86,
+        "per_chapter_seconds_saved_mean": -9.062
+      }
     },
-    "curator": {
-      "control_run_seconds": [
-        401.687,
-        441.331
-      ],
-      "treatment_run_seconds": [
-        547.6,
-        393.949
-      ],
-      "control_mean_seconds": 421.509,
-      "treatment_mean_seconds": 470.774,
-      "delta_seconds_per_four_chapters": 49.265,
-      "delta_seconds_per_chapter": 12.316,
-      "percent_change": 11.69
-    },
-    "primary": {
-      "control_run_seconds": [
-        244.162,
-        244.251
-      ],
-      "treatment_run_seconds": [
-        213.365,
-        232.56900000000002
-      ],
-      "control_mean_seconds": 244.207,
-      "treatment_mean_seconds": 222.967,
-      "delta_seconds_per_four_chapters": -21.239,
-      "delta_seconds_per_chapter": -5.31,
-      "percent_change": -8.7
-    },
-    "reviser": {
-      "control_run_seconds": [
-        505.189,
-        514.447
-      ],
-      "treatment_run_seconds": [
-        592.175,
-        536.326
-      ],
-      "control_mean_seconds": 509.818,
-      "treatment_mean_seconds": 564.25,
-      "delta_seconds_per_four_chapters": 54.433,
-      "delta_seconds_per_chapter": 13.608,
-      "percent_change": 10.68
-    }
-  },
-  "per_sample": [
-    {
-      "sample": "jiuchui_ch14",
-      "control_seconds": [
-        359.286,
-        328.825
-      ],
-      "treatment_seconds": [
-        386.523,
-        370.368
-      ],
-      "control_mean_seconds": 344.055,
-      "treatment_mean_seconds": 378.446,
-      "percent_change": 10.0
-    },
-    {
-      "sample": "jiuchui_ch16",
-      "control_seconds": [
-        312.027,
-        282.743
-      ],
-      "treatment_seconds": [
-        502.295,
-        365.094
-      ],
-      "control_mean_seconds": 297.385,
-      "treatment_mean_seconds": 433.695,
-      "percent_change": 45.84
-    },
-    {
-      "sample": "shadow_ch4",
-      "control_seconds": [
-        357.172,
-        345.645
-      ],
-      "treatment_seconds": [
-        331.96,
-        332.355
-      ],
-      "control_mean_seconds": 351.409,
-      "treatment_mean_seconds": 332.158,
-      "percent_change": -5.48
-    },
-    {
-      "sample": "shadow_ch9",
-      "control_seconds": [
-        232.965,
-        388.968
-      ],
-      "treatment_seconds": [
-        302.351,
-        221.582
-      ],
-      "control_mean_seconds": 310.966,
-      "treatment_mean_seconds": 261.966,
-      "percent_change": -15.76
-    }
-  ],
-  "cross_book_registry": {
-    "native_accepted_attempts": 8,
-    "attempts": 8,
-    "director_fallbacks": 0,
-    "fixture_structural_coverage": 1.0,
-    "automatic_long_novel_registry_proven": false,
-    "warning": "100% fixture coverage is not Contract completeness; Authority blind found missing/overreaching story facts."
-  },
-  "repeatability": {
-    "raw_decision_exact": 0,
-    "serialized_contract_hash_exact": 2,
-    "semantic_hard_contract_exact": 3,
-    "rendered_mission_exact": 3,
-    "final_exact": 0,
-    "samples": 4,
-    "rows": [
+    "per_sample": [
       {
         "sample": "jiuchui_ch14",
-        "raw_decision_exact": false,
-        "serialized_contract_hash_exact": true,
-        "semantic_hard_contract_exact_ignoring_fact_id_source_ref": true,
-        "rendered_mission_exact": true,
-        "final_exact": false
+        "treatment_seconds": [
+          386.523,
+          370.368
+        ],
+        "control_seconds": [
+          311.03,
+          352.643
+        ],
+        "treatment_mean_seconds": 378.446,
+        "control_mean_seconds": 331.837,
+        "seconds_saved_mean": -46.609,
+        "percent_saved_mean": -14.05
       },
       {
         "sample": "jiuchui_ch16",
-        "raw_decision_exact": false,
-        "serialized_contract_hash_exact": false,
-        "semantic_hard_contract_exact_ignoring_fact_id_source_ref": false,
-        "rendered_mission_exact": false,
-        "final_exact": false
+        "treatment_seconds": [
+          502.295,
+          365.094
+        ],
+        "control_seconds": [
+          353.675,
+          423.491
+        ],
+        "treatment_mean_seconds": 433.695,
+        "control_mean_seconds": 388.583,
+        "seconds_saved_mean": -45.112,
+        "percent_saved_mean": -11.61
       },
       {
         "sample": "shadow_ch4",
-        "raw_decision_exact": false,
-        "serialized_contract_hash_exact": false,
-        "semantic_hard_contract_exact_ignoring_fact_id_source_ref": true,
-        "rendered_mission_exact": true,
-        "final_exact": false
+        "treatment_seconds": [
+          331.96,
+          332.355
+        ],
+        "control_seconds": [
+          360.716,
+          308.066
+        ],
+        "treatment_mean_seconds": 332.158,
+        "control_mean_seconds": 334.391,
+        "seconds_saved_mean": 2.233,
+        "percent_saved_mean": 0.67
       },
       {
         "sample": "shadow_ch9",
-        "raw_decision_exact": false,
-        "serialized_contract_hash_exact": true,
-        "semantic_hard_contract_exact_ignoring_fact_id_source_ref": true,
-        "rendered_mission_exact": true,
-        "final_exact": false
-      }
-    ]
-  },
-  "blind_pure_body": {
-    "mission:story": {
-      "score_sums": {
-        "e2e-run4": 28.0,
-        "e2e-run5": 27.9,
-        "control-chain-1": 33.9,
-        "control-chain-2": 34.9
-      },
-      "score_means": {
-        "e2e-run4": 7.0,
-        "e2e-run5": 6.975,
-        "control-chain-1": 8.475,
-        "control-chain-2": 8.725
-      },
-      "best_counts": {
-        "e2e-run4": 0,
-        "e2e-run5": 0,
-        "control-chain-1": 1,
-        "control-chain-2": 3
-      },
-      "mean_rank": {
-        "e2e-run4": 3.25,
-        "e2e-run5": 3.75,
-        "control-chain-1": 1.75,
-        "control-chain-2": 1.25
-      }
-    },
-    "mission:authority": {
-      "score_sums": {
-        "e2e-run4": 26.4,
-        "e2e-run5": 26.0,
-        "control-chain-1": 35.6,
-        "control-chain-2": 31.7
-      },
-      "score_means": {
-        "e2e-run4": 6.6,
-        "e2e-run5": 6.5,
-        "control-chain-1": 8.9,
-        "control-chain-2": 7.925
-      },
-      "best_counts": {
-        "e2e-run4": 0,
-        "e2e-run5": 0,
-        "control-chain-1": 3,
-        "control-chain-2": 1
-      },
-      "mean_rank": {
-        "e2e-run4": 3.0,
-        "e2e-run5": 3.5,
-        "control-chain-1": 1.25,
-        "control-chain-2": 2.25
-      }
-    },
-    "final:story": {
-      "score_sums": {
-        "e2e-run4": 32.8,
-        "e2e-run5": 34.5,
-        "control-chain-1": 31.3,
-        "control-chain-2": 31.7
-      },
-      "score_means": {
-        "e2e-run4": 8.2,
-        "e2e-run5": 8.625,
-        "control-chain-1": 7.825,
-        "control-chain-2": 7.925
-      },
-      "best_counts": {
-        "e2e-run4": 1,
-        "e2e-run5": 3,
-        "control-chain-1": 0,
-        "control-chain-2": 0
-      },
-      "mean_rank": {
-        "e2e-run4": 2.25,
-        "e2e-run5": 1.75,
-        "control-chain-1": 3.25,
-        "control-chain-2": 2.75
-      }
-    },
-    "final:authority": {
-      "score_sums": {
-        "e2e-run4": 28.2,
-        "e2e-run5": 26.1,
-        "control-chain-1": 30.6,
-        "control-chain-2": 33.7
-      },
-      "score_means": {
-        "e2e-run4": 7.05,
-        "e2e-run5": 6.525,
-        "control-chain-1": 7.65,
-        "control-chain-2": 8.425
-      },
-      "best_counts": {
-        "e2e-run4": 1,
-        "e2e-run5": 0,
-        "control-chain-1": 1,
-        "control-chain-2": 2
-      },
-      "mean_rank": {
-        "e2e-run4": 2.5,
-        "e2e-run5": 3.5,
-        "control-chain-1": 2.5,
-        "control-chain-2": 1.5
-      }
-    }
-  },
-  "blind_group_means": {
-    "mission_story": {
-      "native": 6.9875,
-      "control": 8.6
-    },
-    "mission_authority": {
-      "native": 6.55,
-      "control": 8.4125
-    },
-    "final_story": {
-      "native": 8.4125,
-      "control": 7.875
-    },
-    "final_authority": {
-      "native": 6.7875,
-      "control": 8.0375
-    }
-  },
-  "primary_fallback_oracle": {
-    "warning": "research-only LLM oracle; not a production classifier",
-    "pass_direct_final": 2,
-    "fallback_full": 6,
-    "pass_rate": 0.25,
-    "runs": [
-      {
-        "run": "e2e-run4",
-        "full_seconds": 1523.129,
-        "skipped_reviser_seconds": 248.623,
-        "perfect_zero_cost_gate_seconds": 1274.506
-      },
-      {
-        "run": "e2e-run5",
-        "full_seconds": 1289.399,
-        "skipped_reviser_seconds": 0,
-        "perfect_zero_cost_gate_seconds": 1289.399
+        "treatment_seconds": [
+          302.351,
+          221.582
+        ],
+        "control_seconds": [
+          317.594,
+          313.995
+        ],
+        "treatment_mean_seconds": 261.966,
+        "control_mean_seconds": 315.794,
+        "seconds_saved_mean": 53.828,
+        "percent_saved_mean": 17.05
       }
     ],
-    "perfect_zero_cost_gate_mean_four_chapters_seconds": 1281.952,
-    "perfect_zero_cost_gate_mean_per_chapter_seconds": 320.488,
-    "perfect_zero_cost_gate_seconds_saved_per_chapter_vs_control": 5.466,
-    "perfect_zero_cost_gate_percent_saved_vs_control": 1.68
+    "deterministic_projection_median_ms_previous_benchmark": 1.7005
   },
-  "usage": {
-    "thoughtTokens": {
-      "control_mean": 25968.5,
-      "treatment_mean": 31493,
-      "percent_change": 21.27
+  "quality": {
+    "mission:story": {
+      "native_mean": 7.5375,
+      "control_mean": 8.825,
+      "delta": -1.2875,
+      "native_best_count": 0,
+      "control_best_count": 4,
+      "native_mean_rank": 3.5,
+      "control_mean_rank": 1.5
     },
-    "totalTokens": {
-      "control_mean": 746991.5,
-      "treatment_mean": 775847,
-      "percent_change": 3.86
+    "mission:authority": {
+      "native_mean": 5.6875,
+      "control_mean": 8.4,
+      "delta": -2.7125,
+      "native_best_count": 0,
+      "control_best_count": 4,
+      "native_mean_rank": 3.5,
+      "control_mean_rank": 1.5
     },
-    "cachedReadTokens": {
-      "control_mean": 518656,
-      "treatment_mean": 491520,
-      "percent_change": -5.23
+    "final:story": {
+      "native_mean": 8.3875,
+      "control_mean": 7.825,
+      "delta": 0.5625,
+      "native_best_count": 3,
+      "control_best_count": 1,
+      "native_mean_rank": 1.875,
+      "control_mean_rank": 3.125
     },
-    "inputTokens": {
-      "control_mean": 170565.5,
-      "treatment_mean": 224097,
-      "percent_change": 31.38
-    },
-    "outputTokens": {
-      "control_mean": 57770,
-      "treatment_mean": 60230,
-      "percent_change": 4.26
+    "final:authority": {
+      "native_mean": 6.25,
+      "control_mean": 8.1,
+      "delta": -1.85,
+      "native_best_count": 1,
+      "control_best_count": 3,
+      "native_mean_rank": 3.25,
+      "control_mean_rank": 1.75
     }
+  },
+  "fallback_adjusted": {
+    "final_attempts": 8,
+    "native_accepted": 8,
+    "fallbacks": 0,
+    "final_timing_includes_discarded_native_plus_fallback_when_present": true,
+    "v1_empirical_fallback_reference": {
+      "run": "e2e-run3",
+      "fallbacks": 1,
+      "note": "v1 is failure evidence only; excluded from v2 quality/time means"
+    }
+  },
+  "repeatability": {
+    "samples": 4,
+    "raw_decision_exact": 0,
+    "normalized_decision_exact": 0,
+    "hard_contract_exact": 2,
+    "semantic_hard_fact_set_exact": 3,
+    "rendered_mission_exact": 3,
+    "curator_exact": 0,
+    "primary_exact": 0,
+    "final_exact": 0
+  },
+  "cross_book_registry": {
+    "books": 2,
+    "chapters": 4,
+    "attempts": 8,
+    "native_accepted": 8,
+    "expected_hard_facts": 58,
+    "matched_hard_facts": 58,
+    "structural_coverage": 1.0,
+    "runtime_normalization_count": 0,
+    "registry_entity_instances": 38,
+    "entity_kind_counts": {
+      "ability": 2,
+      "character": 10,
+      "contract": 1,
+      "event": 1,
+      "group": 1,
+      "item": 4,
+      "location": 4,
+      "manifestation": 1,
+      "mystery": 1,
+      "organization": 3,
+      "power_tier": 1,
+      "resource": 4,
+      "route": 5
+    },
+    "contract_fact_instances": 64,
+    "fact_kind_counts": {
+      "ability_boundary": 6,
+      "action": 15,
+      "deadline": 2,
+      "direct_result": 6,
+      "ending": 3,
+      "event": 4,
+      "ownership_transition": 6,
+      "public_proof": 1,
+      "reader_release": 1,
+      "relationship_transition": 8,
+      "resource_transition": 4,
+      "state_transition": 7,
+      "unknown_boundary": 1
+    },
+    "authority_source_counts": {
+      "canon": 12,
+      "frozen_mission": 45,
+      "human_authority": 1,
+      "power_authority": 4,
+      "reader_release": 1,
+      "world_authority": 1
+    },
+    "unique_action_ids": 44,
+    "manual_registry_and_catalog": true,
+    "automatic_long_novel_registry_proven": false
   },
   "verdict": {
     "native_structured_director": "FAIL_AS_PRODUCTION_REPLACEMENT",
+    "time_saved_seconds_per_chapter": 0,
+    "measured_delta_seconds_per_chapter": -8.915,
+    "measured_delta_percent": -2.6,
     "final_story": "DIRECTIONAL_PASS",
     "final_authority": "FAIL",
     "latency": "FAIL",
-    "full_reviser_as_fallback": "NOT_PROVEN",
     "keep_current_production": true
-  }
+  },
+  "note": "Older control-chain-1/2 metrics and blinds-v2-pure-body remain supplementary replication evidence; they are not the primary final timing/blind because the final protocol uses adjacent Fresh Control 3/4 and symmetrically cleaned candidates."
 }

@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp-native-e2e",
+  "additionalDirectories": [],
+  "wall_seconds": 22.226,
+  "sessionId": "01a0521f-0804-72f2-ad38-6b5b4b7a2177",
+  "text": "{\"ranking\":[\"D\",\"A\",\"C\",\"B\"],\"scores\":{\"A\":8.7,\"B\":7.3,\"C\":7.6,\"D\":9.3},\"best\":\"D\",\"worst\":\"B\",\"reason\":\"D最抓住本章真正值钱的选择：不是泛泛救灾，而是顾停舟主动放弃旧关外层，换粮道、新井与迁徙窗口，代价足够公开且不可逆。它把本体顶正面、分身带“定住”钉楔的双位置玩法落在现场危机中，也给了顾沉戈、守将和砺骨部必须服从这一选择的即时反应。D还保留旧伤、楔子散压和短契未结，使胜利不是无成本清场，结尾在力量受限下逼入观测点，续读压力最强。A的能力兑现和公共资源升级同样完整，且清楚说明旧关外层毁弃后的新入口，但主角“舍弃什么”的主动决断不如D锋利，现场人物反应也略概括。C与B的核心选择正确，能避免把本章写成平均救援流程，但主角行动过于像合同摘要，读者难以直接感到双身能力如何在险局中翻盘。C比B稍好，因为它明确了能力玩法从单点救急升级为公共资源取舍；B的叙事功能更像验收结论，商业画面和人物关系余波不足。四案都没有把下一章的观测点处理提前结算，这是正确的边界控制。\",\"hard_problems\":{\"A\":\"主动舍弃旧关外层的抉择写得偏隐，人物压力与公开反应不足。\",\"B\":\"过度压缩为结果清单，双身复合玩法、关系反应与现场爽点不够可感。\",\"C\":\"核心戏成立但仍偏抽象总结，缺少令读者看见能力翻盘的决定性现场动作。\",\"D\":\"\"}}",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 41571,
+      "inputTokens": 15621,
+      "cachedReadTokens": 25344,
+      "outputTokens": 606,
+      "thoughtTokens": 141
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 41571,
+          "inputTokens": 15621,
+          "cachedInputTokens": 25344,
+          "outputTokens": 606,
+          "reasoningOutputTokens": 141
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 41571,
+              "inputTokens": 15621,
+              "cachedInputTokens": 25344,
+              "outputTokens": 606,
+              "reasoningOutputTokens": 141
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

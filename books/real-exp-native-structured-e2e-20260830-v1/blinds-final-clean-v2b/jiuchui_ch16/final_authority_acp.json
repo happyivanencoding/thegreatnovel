@@ -1,0 +1,115 @@
+{
+  "ok": true,
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "cwd": "C:\\dev\\tgn-story-mvp-native-e2e",
+  "additionalDirectories": [],
+  "wall_seconds": 144.134,
+  "sessionId": "01a0521f-081b-7341-b234-2df4bd148dcb",
+  "text": "{\"ranking\":[\"B\",\"D\",\"A\",\"C\"],\"scores\":{\"A\":6.8,\"B\":8.7,\"C\":5.4,\"D\":7.4},\"best\":\"B\",\"worst\":\"C\",\"reason\":\"B最完整落实本章合同：本体稳定粮队与主粮道，分身明确使用“定住”，回潮楔在第二节点改道并把潮势导入外层。B保住三座新井、粮道和迁徙窗口，明确外层毁弃，回潮楔仍归顾停舟且残压未散，短契也未提前结算。B的问题是末段已展示照域潮谱指向撤离队伍，并让顾停舟开始接近观测点，略微提前执行下一章观察。D的主体动作、复合能力边界、结果和资产状态与B基本一致，但明确“走进”观测点，Ending 越过了本章只暴露入口并制造压力的边界。A保住主要结果、代价、所有权和结尾入口，且没有提前读出观测点信息。A却没有明确分身携带并使用本章规定的“定住”，使回潮楔为何能在第二节点完成固定和改向的因果不完整。C同样缺少“定住”，还让本体徒手抬起装粮车，新增未获上游批准的力量表现。C最后实际进入观测点并读出潮纹指向北段，提前结算下一章信息，因此最差。\",\"hard_problems\":{\"A\":\"关键改潮动作没有明确落实分身仅携带并使用“定住”，复合能力的因果与 power boundary 不完整；其余主要结果、所有权、代价和结尾推动基本正确。\",\"B\":\"主体事件和状态变化最完整，但末段展示了照域潮谱的具体指向，并开始接近观测点，略有提前执行下一章观察。\",\"C\":\"缺少分身“定住”这一关键动作；本体徒手抬装粮车引入未获批准的力量表现；末段进入观测点并读出潮纹指向北段，提前结算下一章信息。\",\"D\":\"主动作和复合能力边界最完整，但末段明确走进观测点，越过本章仅暴露入口并制造下一轮威胁的 Ending 边界。\"}}",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 55677,
+      "inputTokens": 24940,
+      "cachedReadTokens": 23296,
+      "outputTokens": 7441,
+      "thoughtTokens": 6895
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 55677,
+          "inputTokens": 24940,
+          "cachedInputTokens": 23296,
+          "outputTokens": 7441,
+          "reasoningOutputTokens": 6895
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-luna",
+            "token_count": {
+              "totalTokens": 55677,
+              "inputTokens": 24940,
+              "cachedInputTokens": 23296,
+              "outputTokens": 7441,
+              "reasoningOutputTokens": 6895
+            }
+          }
+        ]
+      }
+    }
+  },
+  "init": {
+    "protocolVersion": 1,
+    "agentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.6.2"
+    },
+    "agentCapabilities": {
+      "auth": {
+        "logout": {}
+      },
+      "providers": {},
+      "loadSession": true,
+      "promptCapabilities": {
+        "embeddedContext": true,
+        "image": true
+      },
+      "sessionCapabilities": {
+        "resume": {},
+        "list": {},
+        "close": {},
+        "delete": {},
+        "additionalDirectories": {}
+      },
+      "mcpCapabilities": {
+        "acp": false,
+        "http": true,
+        "sse": false
+      }
+    },
+    "authMethods": [
+      {
+        "id": "api-key",
+        "name": "API Key",
+        "description": "Use an API key to authenticate",
+        "_meta": {
+          "api-key": {
+            "provider": "openai"
+          }
+        }
+      },
+      {
+        "id": "chat-gpt",
+        "name": "ChatGPT",
+        "description": "Use ChatGPT to authenticate"
+      }
+    ],
+    "_meta": {
+      "steering": {
+        "supported": true
+      },
+      "goal": {
+        "version": 1,
+        "controlMethod": "_session/goal",
+        "actions": [
+          "set",
+          "pause",
+          "resume",
+          "clear"
+        ]
+      },
+      "jetbrains": {
+        "air": {
+          "version": 1,
+          "capabilities": [
+            "sessionFailure",
+            "agentFileChangeReport"
+          ]
+        }
+      }
+    }
+  }
+}

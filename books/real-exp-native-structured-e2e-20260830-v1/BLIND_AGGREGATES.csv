@@ -1,0 +1,5 @@
+﻿blind,native_mean,control_mean,delta,native_best_count,control_best_count,native_mean_rank,control_mean_rank
+mission:story,7.5375,8.825,-1.2875,0,4,3.5,1.5
+mission:authority,5.6875,8.4,-2.7125,0,4,3.5,1.5
+final:story,8.3875,7.825,0.5625,3,1,1.875,3.125
+final:authority,6.25,8.1,-1.85,1,3,3.25,1.75

@@ -70,7 +70,7 @@ Preservation 默认依靠 Edit Locality，而不是 Desire / Surprise / Relation
 
 两本书四章静态实验：4/4 source-pure、4/4 preflight eligible、4/4窗口外修改被阻止，平均只开放3.11%段落。57项 focused tests、22/22 Schema/runtime checks通过。自由文本 Director Sidecar 三版全部失败：verbose JSON wall +205.83%，compact JSON +147.41%，micro DSL +146.45%；compact blind 中Story 3:1偏原Director，Authority 3:1偏Sidecar。
 
-正确下一步是 native `DirectorStructuredDecision`：模型只返回一份 canonical typed decision，Runtime用 Action/Narrative Registry渲染八字段Mission，并确定性生成Frozen Mission artifact；不存在第二份自由 `human_clause`。当前只有schema/unit evidence，没有真实模型Story/latency/E2E证据。Unsupported chapter绕过Atomic走现有Full；只有supported chapter才允许Delta → Gate → Full fallback → supported Gate。Production五节点不变。完整报告：`books/real-exp-atomic-authority-ir-20260829-v1/RESULTS.md`。
+2026-08-30 已完成 native `DirectorStructuredDecision → Runtime双投影 → Curator → Primary → Authority Reviser → Final Draft` 的真实两书四章E2E。冻结v2协议后2次Treatment均8/8 Native accepted、手工fixture结构覆盖100%，但这不是Contract completeness：Mission Story为6.99 vs Control 8.60，Mission Authority 6.55 vs 8.41，Final Authority 6.79 vs 8.04；只有Final Story方向性更好（8.41 vs 7.88）。正确串联Control平均325.954s/章，Native平均351.566s/章，实际慢25.612s/章（7.86%）；Primary Oracle仅2/8可直出Final，即使假设完美零成本Gate也只理论快1.68%。因此当前Native human-Mission replacement与Full-Reviser免税均不进入Production；Hard IR下一候选应前移到Story/Outline/Runtime已决定的结构化事实，保留Director的高故事密度Mission。Unsupported chapter仍绕过Atomic走现有Full。完整报告：`books/real-exp-native-structured-e2e-20260830-v1/RESULTS.md`。
 
 ## 节点职责
 

@@ -1,0 +1,1330 @@
+{
+  "schema_version": "native-structured-e2e-v2-final-analysis",
+  "protocol_freeze": {
+    "protocol_version": "native-structured-e2e-v2-surface-fixed",
+    "frozen_before_runs": [
+      "e2e-run4",
+      "e2e-run5"
+    ],
+    "allowed_post_freeze_changes": [
+      "judge scripts",
+      "analysis/report/docs only"
+    ],
+    "bugfix_scope": [
+      "remove cross-book ActionSurface contamination in JIUCHUI CH14 relationship projection",
+      "normalize multi-clause punctuation",
+      "render multi-object actions as natural approved phrases instead of joined entity lists",
+      "fix outer-pass world-reaction actor signature",
+      "fail closed on foreign registered display-name leakage or internal-ID leakage"
+    ],
+    "no_further_prompt_or_surface_tuning_before_blind": true,
+    "files": {
+      "temps/run_native_structured_e2e.py": "d9a858f5d129c546b0e1f793ed1985be0eb26a79ce23f2ad84b5a93441195b0f",
+      "temps/atomic_authority_ir_v1.py": "57fa98a941fa6a88fb629e7b04ea528e1bfa021ef1b63e92ebc52bcc2242dfc2",
+      "books/real-exp-atomic-authority-ir-20260829-v1/schemas/director-structured-decision-v1.schema.json": "e259617f07628396391362033be1de9289c48d4717d094000c77fed7e68c108f"
+    }
+  },
+  "timing": {
+    "treatment_run_totals_seconds": [
+      1523.129,
+      1289.399
+    ],
+    "control_run_totals_seconds": [
+      1343.015,
+      1398.195
+    ],
+    "treatment_mean_seconds": 1406.264,
+    "control_mean_seconds": 1370.605,
+    "mean_seconds_saved": -35.659,
+    "mean_percent_saved": -2.6,
+    "mean_seconds_per_chapter_saved": -8.915,
+    "treatment_range_seconds": [
+      1289.399,
+      1523.129
+    ],
+    "control_range_seconds": [
+      1343.015,
+      1398.195
+    ],
+    "paired_adjacent_runs": [
+      {
+        "treatment": "e2e-run4",
+        "control": "fresh-control-3",
+        "treatment_seconds": 1523.129,
+        "control_seconds": 1343.015,
+        "seconds_saved": -180.114,
+        "percent_saved": -13.41
+      },
+      {
+        "treatment": "e2e-run5",
+        "control": "fresh-control-4",
+        "treatment_seconds": 1289.399,
+        "control_seconds": 1398.195,
+        "seconds_saved": 108.796,
+        "percent_saved": 7.78
+      }
+    ],
+    "nodes": {
+      "director": {
+        "treatment_run_seconds": [
+          169.989,
+          126.555
+        ],
+        "control_run_seconds": [
+          103.799,
+          153.791
+        ],
+        "treatment_mean_seconds": 148.272,
+        "control_mean_seconds": 128.795,
+        "seconds_saved_mean": -19.477,
+        "percent_saved_mean": -15.12,
+        "per_chapter_seconds_saved_mean": -4.869
+      },
+      "curator": {
+        "treatment_run_seconds": [
+          547.6,
+          393.949
+        ],
+        "control_run_seconds": [
+          552.076,
+          448.942
+        ],
+        "treatment_mean_seconds": 470.774,
+        "control_mean_seconds": 500.509,
+        "seconds_saved_mean": 29.735,
+        "percent_saved_mean": 5.94,
+        "per_chapter_seconds_saved_mean": 7.434
+      },
+      "primary": {
+        "treatment_run_seconds": [
+          213.365,
+          232.56900000000002
+        ],
+        "control_run_seconds": [
+          221.714,
+          204.881
+        ],
+        "treatment_mean_seconds": 222.967,
+        "control_mean_seconds": 213.298,
+        "seconds_saved_mean": -9.669,
+        "percent_saved_mean": -4.53,
+        "per_chapter_seconds_saved_mean": -2.417
+      },
+      "reviser": {
+        "treatment_run_seconds": [
+          592.175,
+          536.326
+        ],
+        "control_run_seconds": [
+          465.426,
+          590.581
+        ],
+        "treatment_mean_seconds": 564.25,
+        "control_mean_seconds": 528.004,
+        "seconds_saved_mean": -36.247,
+        "percent_saved_mean": -6.86,
+        "per_chapter_seconds_saved_mean": -9.062
+      }
+    },
+    "per_sample": [
+      {
+        "sample": "jiuchui_ch14",
+        "treatment_seconds": [
+          386.523,
+          370.368
+        ],
+        "control_seconds": [
+          311.03,
+          352.643
+        ],
+        "treatment_mean_seconds": 378.446,
+        "control_mean_seconds": 331.837,
+        "seconds_saved_mean": -46.609,
+        "percent_saved_mean": -14.05
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "treatment_seconds": [
+          502.295,
+          365.094
+        ],
+        "control_seconds": [
+          353.675,
+          423.491
+        ],
+        "treatment_mean_seconds": 433.695,
+        "control_mean_seconds": 388.583,
+        "seconds_saved_mean": -45.112,
+        "percent_saved_mean": -11.61
+      },
+      {
+        "sample": "shadow_ch4",
+        "treatment_seconds": [
+          331.96,
+          332.355
+        ],
+        "control_seconds": [
+          360.716,
+          308.066
+        ],
+        "treatment_mean_seconds": 332.158,
+        "control_mean_seconds": 334.391,
+        "seconds_saved_mean": 2.233,
+        "percent_saved_mean": 0.67
+      },
+      {
+        "sample": "shadow_ch9",
+        "treatment_seconds": [
+          302.351,
+          221.582
+        ],
+        "control_seconds": [
+          317.594,
+          313.995
+        ],
+        "treatment_mean_seconds": 261.966,
+        "control_mean_seconds": 315.794,
+        "seconds_saved_mean": 53.828,
+        "percent_saved_mean": 17.05
+      }
+    ],
+    "deterministic_projection_median_ms_previous_benchmark": 1.7005
+  },
+  "fallback_adjusted": {
+    "final_attempts": 8,
+    "native_accepted": 8,
+    "fallbacks": 0,
+    "final_timing_includes_discarded_native_plus_fallback_when_present": true,
+    "v1_empirical_fallback_reference": {
+      "run": "e2e-run3",
+      "fallbacks": 1,
+      "note": "v1 is failure evidence only; excluded from v2 quality/time means"
+    }
+  },
+  "repeatability": {
+    "samples": 4,
+    "raw_decision_exact": 0,
+    "normalized_decision_exact": 0,
+    "hard_contract_exact": 2,
+    "semantic_hard_fact_set_exact": 3,
+    "rendered_mission_exact": 3,
+    "curator_exact": 0,
+    "primary_exact": 0,
+    "final_exact": 0,
+    "rows": [
+      {
+        "sample": "jiuchui_ch14",
+        "raw_decision_exact": false,
+        "normalized_decision_exact": false,
+        "hard_contract_exact": true,
+        "semantic_hard_fact_set_exact": true,
+        "rendered_mission_exact": true,
+        "curator_exact": false,
+        "primary_exact": false,
+        "final_exact": false,
+        "run4_route": "native_structured",
+        "run5_route": "native_structured",
+        "run4_coverage": 1.0,
+        "run5_coverage": 1.0
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "raw_decision_exact": false,
+        "normalized_decision_exact": false,
+        "hard_contract_exact": false,
+        "semantic_hard_fact_set_exact": false,
+        "rendered_mission_exact": false,
+        "curator_exact": false,
+        "primary_exact": false,
+        "final_exact": false,
+        "run4_route": "native_structured",
+        "run5_route": "native_structured",
+        "run4_coverage": 1.0,
+        "run5_coverage": 1.0
+      },
+      {
+        "sample": "shadow_ch4",
+        "raw_decision_exact": false,
+        "normalized_decision_exact": false,
+        "hard_contract_exact": false,
+        "semantic_hard_fact_set_exact": true,
+        "rendered_mission_exact": true,
+        "curator_exact": false,
+        "primary_exact": false,
+        "final_exact": false,
+        "run4_route": "native_structured",
+        "run5_route": "native_structured",
+        "run4_coverage": 1.0,
+        "run5_coverage": 1.0
+      },
+      {
+        "sample": "shadow_ch9",
+        "raw_decision_exact": false,
+        "normalized_decision_exact": false,
+        "hard_contract_exact": true,
+        "semantic_hard_fact_set_exact": true,
+        "rendered_mission_exact": true,
+        "curator_exact": false,
+        "primary_exact": false,
+        "final_exact": false,
+        "run4_route": "native_structured",
+        "run5_route": "native_structured",
+        "run4_coverage": 1.0,
+        "run5_coverage": 1.0
+      }
+    ]
+  },
+  "cross_book_registry_coverage": {
+    "books": 2,
+    "chapters": 4,
+    "attempts": 8,
+    "native_accepted": 8,
+    "expected_hard_facts": 58,
+    "matched_hard_facts": 58,
+    "structural_coverage": 1.0,
+    "runtime_normalization_count": 0,
+    "registry_entity_instances": 38,
+    "entity_kind_counts": {
+      "ability": 2,
+      "character": 10,
+      "contract": 1,
+      "event": 1,
+      "group": 1,
+      "item": 4,
+      "location": 4,
+      "manifestation": 1,
+      "mystery": 1,
+      "organization": 3,
+      "power_tier": 1,
+      "resource": 4,
+      "route": 5
+    },
+    "contract_fact_instances": 64,
+    "fact_kind_counts": {
+      "ability_boundary": 6,
+      "action": 15,
+      "deadline": 2,
+      "direct_result": 6,
+      "ending": 3,
+      "event": 4,
+      "ownership_transition": 6,
+      "public_proof": 1,
+      "reader_release": 1,
+      "relationship_transition": 8,
+      "resource_transition": 4,
+      "state_transition": 7,
+      "unknown_boundary": 1
+    },
+    "authority_source_counts": {
+      "canon": 12,
+      "frozen_mission": 45,
+      "human_authority": 1,
+      "power_authority": 4,
+      "reader_release": 1,
+      "world_authority": 1
+    },
+    "unique_action_ids": 44,
+    "manual_registry_and_catalog": true,
+    "automatic_long_novel_registry_proven": false
+  },
+  "blind": {
+    "schema_version": "native-structured-final-clean-blind-v1",
+    "runs": [
+      "e2e-run4",
+      "e2e-run5",
+      "fresh-control-3",
+      "fresh-control-4"
+    ],
+    "samples": 4,
+    "judge_calls": 16,
+    "candidate_metadata_clean": true,
+    "aggregates": {
+      "mission:story": {
+        "score_sums": {
+          "e2e-run4": 30.3,
+          "e2e-run5": 30.0,
+          "fresh-control-3": 35.9,
+          "fresh-control-4": 34.7
+        },
+        "score_means": {
+          "e2e-run4": 7.575,
+          "e2e-run5": 7.5,
+          "fresh-control-3": 8.975,
+          "fresh-control-4": 8.675
+        },
+        "best_counts": {
+          "e2e-run4": 0,
+          "e2e-run5": 0,
+          "fresh-control-3": 3,
+          "fresh-control-4": 1
+        },
+        "mean_rank": {
+          "e2e-run4": 3.5,
+          "e2e-run5": 3.5,
+          "fresh-control-3": 1.25,
+          "fresh-control-4": 1.75
+        }
+      },
+      "mission:authority": {
+        "score_sums": {
+          "e2e-run4": 23.0,
+          "e2e-run5": 22.5,
+          "fresh-control-3": 33.6,
+          "fresh-control-4": 33.6
+        },
+        "score_means": {
+          "e2e-run4": 5.75,
+          "e2e-run5": 5.625,
+          "fresh-control-3": 8.4,
+          "fresh-control-4": 8.4
+        },
+        "best_counts": {
+          "e2e-run4": 0,
+          "e2e-run5": 0,
+          "fresh-control-3": 2,
+          "fresh-control-4": 2
+        },
+        "mean_rank": {
+          "e2e-run4": 3.5,
+          "e2e-run5": 3.5,
+          "fresh-control-3": 1.5,
+          "fresh-control-4": 1.5
+        }
+      },
+      "final:story": {
+        "score_sums": {
+          "e2e-run4": 33.3,
+          "e2e-run5": 33.8,
+          "fresh-control-3": 29.6,
+          "fresh-control-4": 33.0
+        },
+        "score_means": {
+          "e2e-run4": 8.325,
+          "e2e-run5": 8.45,
+          "fresh-control-3": 7.4,
+          "fresh-control-4": 8.25
+        },
+        "best_counts": {
+          "e2e-run4": 2,
+          "e2e-run5": 1,
+          "fresh-control-3": 0,
+          "fresh-control-4": 1
+        },
+        "mean_rank": {
+          "e2e-run4": 2.0,
+          "e2e-run5": 1.75,
+          "fresh-control-3": 4.0,
+          "fresh-control-4": 2.25
+        }
+      },
+      "final:authority": {
+        "score_sums": {
+          "e2e-run4": 25.2,
+          "e2e-run5": 24.8,
+          "fresh-control-3": 32.7,
+          "fresh-control-4": 32.1
+        },
+        "score_means": {
+          "e2e-run4": 6.3,
+          "e2e-run5": 6.2,
+          "fresh-control-3": 8.175,
+          "fresh-control-4": 8.025
+        },
+        "best_counts": {
+          "e2e-run4": 1,
+          "e2e-run5": 0,
+          "fresh-control-3": 2,
+          "fresh-control-4": 1
+        },
+        "mean_rank": {
+          "e2e-run4": 3.25,
+          "e2e-run5": 3.25,
+          "fresh-control-3": 1.75,
+          "fresh-control-4": 1.75
+        }
+      }
+    },
+    "rows": [
+      {
+        "sample": "jiuchui_ch14",
+        "kind": "final",
+        "judge": "authority",
+        "blind_key": {
+          "A": "e2e-run5",
+          "B": "fresh-control-3",
+          "C": "e2e-run4",
+          "D": "fresh-control-4"
+        },
+        "raw": {
+          "ranking": [
+            "C",
+            "D",
+            "B",
+            "A"
+          ],
+          "scores": {
+            "A": 4.3,
+            "B": 6.2,
+            "C": 7.2,
+            "D": 6.8
+          },
+          "best": "C",
+          "worst": "A",
+          "reason": "C最完整地兑现了一次锁潮、改向、释放，并让百炉会公开确认矿利份额与砺骨部水路不被矿权吞并。它也保留了回潮楔残压未散、顾停舟拒绝买断并接受独立粮运合作的关键边界。D的主线同样成立，但用大量未获授权的距离、价格比例和报酬数字具体化了力量尺与交易条件。B比D更差，因为额外引入了“照域者”等未经上游批准的境界，并同样擅自确定多组数值。A把计划要求的固定报酬改成按出手次数和结果结价，直接破坏合作关系的明确损失边界。A还把阮青蜃的部分追索豁免扩大成旧账一笔勾销，并新增安身契和百炉会行潮籍等未经授权结果。C、D、B、A都存在阮青蜃在入口关闭后无解释进入内场的问题，但该问题在A中较轻，因为他始终留在门外。综合看，C的未授权细节最少且主要状态变化没有越界，因此最佳，A的合同与结算越界最严重。",
+          "hard_problems": {
+            "A": "固定报酬被改成按实际出手次数和结果结价；擅自加入五百、八百潮铢、安身契和追索一笔勾销；“百炉会行潮籍”疑似重新发明已完成的身份或资格。",
+            "B": "无授权引入“照域者”境界及二十、三十、四十丈力量基准；擅自确定八十潮铢、追索销去一半和市价加三成；阮青蜃从已封闭入口进入内场缺乏因果。",
+            "C": "阮青蜃在铁门落下后无解释进入内场；“成炉者一车一刻钟”、引潮炉的具体功能限制和二十加二十潮铢报酬均未获上游授权；“明早出发”与天亮前已排队出发存在轻微时序不稳。",
+            "D": "无授权具体化二十、三十、四十丈、八十潮铢、追索减半和市价加三成等力量及交易数字；阮青蜃进入已封闭内场缺乏说明；血印签约也新增了未批准的契约形式。"
+          }
+        },
+        "decoded_ranking": [
+          "e2e-run4",
+          "fresh-control-4",
+          "fresh-control-3",
+          "e2e-run5"
+        ],
+        "decoded_scores": {
+          "e2e-run5": 4.3,
+          "fresh-control-3": 6.2,
+          "e2e-run4": 7.2,
+          "fresh-control-4": 6.8
+        },
+        "decoded_best": "e2e-run4",
+        "decoded_worst": "e2e-run5",
+        "decoded_hard_problems": {
+          "e2e-run5": "固定报酬被改成按实际出手次数和结果结价；擅自加入五百、八百潮铢、安身契和追索一笔勾销；“百炉会行潮籍”疑似重新发明已完成的身份或资格。",
+          "fresh-control-3": "无授权引入“照域者”境界及二十、三十、四十丈力量基准；擅自确定八十潮铢、追索销去一半和市价加三成；阮青蜃从已封闭入口进入内场缺乏因果。",
+          "e2e-run4": "阮青蜃在铁门落下后无解释进入内场；“成炉者一车一刻钟”、引潮炉的具体功能限制和二十加二十潮铢报酬均未获上游授权；“明早出发”与天亮前已排队出发存在轻微时序不稳。",
+          "fresh-control-4": "无授权具体化二十、三十、四十丈、八十潮铢、追索减半和市价加三成等力量及交易数字；阮青蜃进入已封闭内场缺乏说明；血印签约也新增了未批准的契约形式。"
+        },
+        "wall_seconds": 122.705
+      },
+      {
+        "sample": "jiuchui_ch14",
+        "kind": "final",
+        "judge": "story",
+        "blind_key": {
+          "A": "e2e-run5",
+          "B": "fresh-control-4",
+          "C": "e2e-run4",
+          "D": "fresh-control-3"
+        },
+        "raw": {
+          "ranking": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "scores": {
+            "A": 8.7,
+            "B": 8.2,
+            "C": 7.6,
+            "D": 7.1
+          },
+          "best": "A",
+          "worst": "D",
+          "reason": "A的开炉试真正造成了现场失控风险，顾停舟“锁—改向—泄出”的选择直接救人，能力展示、代价与围观者的重新估价连得最紧。它把矿利留档、拒卖楔子、谈粮路契约都落到顾停舟主动开价和划责任边界上，主角终于像在为自己的路做生意，而非被剧情发奖励。B的试潮动作同样清楚，阮青蜃与少东家的对话也更利落，但矿权裁断和后续承运仍有较强的程序宣告感。C最顺畅，铜牌与粮队形成了明确的阶段收获和下一章目标，不过阮青蜃被铁门挡在外面又突然进入，冲突压迫感弱于前两篇。D把B已有的信息再次解释成规则、权属和感悟，动作后的余韵被报告式说明不断打断，读者会更明显感觉作者在替能力和主题作注。A的缺点是后半段连续落账、报价、发契，高潮后稍显臃肿；但其公共见证和实际风险最有男频兑现感。",
+          "hard_problems": {
+            "A": "开炉高潮后连续追加行潮籍、报价、粮路契、矿利单，信息收益虽高但收束偏长；阮青蜃隔门喊价略削弱当面冲突。",
+            "B": "验器裁断矿权、水路、器物归属的台词偏像规则公示；少东家关系的“现在该怎么叫”有情绪入口，但很快被契约条款覆盖。",
+            "C": "阮青蜃先被铁门隔绝、后又从侧门入场，空间调度显得方便；试炼的即时伤害对象较弱，能力展示更像标准考核。",
+            "D": "大量重复解释成炉尺度、器物机制、矿权边界和主角感悟，明显有AI总结味与报告味；整体比B更长，却没有增加等量的新冲突或新后果。"
+          }
+        },
+        "decoded_ranking": [
+          "e2e-run5",
+          "fresh-control-4",
+          "e2e-run4",
+          "fresh-control-3"
+        ],
+        "decoded_scores": {
+          "e2e-run5": 8.7,
+          "fresh-control-4": 8.2,
+          "e2e-run4": 7.6,
+          "fresh-control-3": 7.1
+        },
+        "decoded_best": "e2e-run5",
+        "decoded_worst": "fresh-control-3",
+        "decoded_hard_problems": {
+          "e2e-run5": "开炉高潮后连续追加行潮籍、报价、粮路契、矿利单，信息收益虽高但收束偏长；阮青蜃隔门喊价略削弱当面冲突。",
+          "fresh-control-4": "验器裁断矿权、水路、器物归属的台词偏像规则公示；少东家关系的“现在该怎么叫”有情绪入口，但很快被契约条款覆盖。",
+          "e2e-run4": "阮青蜃先被铁门隔绝、后又从侧门入场，空间调度显得方便；试炼的即时伤害对象较弱，能力展示更像标准考核。",
+          "fresh-control-3": "大量重复解释成炉尺度、器物机制、矿权边界和主角感悟，明显有AI总结味与报告味；整体比B更长，却没有增加等量的新冲突或新后果。"
+        },
+        "wall_seconds": 23.909
+      },
+      {
+        "sample": "jiuchui_ch14",
+        "kind": "mission",
+        "judge": "authority",
+        "blind_key": {
+          "A": "e2e-run5",
+          "B": "fresh-control-3",
+          "C": "e2e-run4",
+          "D": "fresh-control-4"
+        },
+        "raw": {
+          "ranking": [
+            "D",
+            "B",
+            "A",
+            "C"
+          ],
+          "scores": {
+            "A": 5.5,
+            "B": 7.5,
+            "C": 5.5,
+            "D": 9.0
+          },
+          "best": "D",
+          "worst": "A",
+          "reason": "D最完整地保留了公开开炉试、唐绾展示、回潮楔一次改向、拒绝买断、接受独立合作及矿利与水路状态变化，未明显改写上游事件。D还明确保留回潮楔使用后的残压限制，避免把一次性兑现写成可无限复制的武器。B整体接近，但直接结果把已经接受的合作降格为少东家获得谈合作的机会，可能污染下一章的关系、报酬与责任边界。B虽写出阮青蜃减免部分追索，却没有在状态变化中明确固定报酬和损失边界，也弱化了残压散尽这一硬限制。A与C内容完全相同，实质上应视为并列。A和C遗漏了唐绾完成铸潮展示这一计划事件，也没有把独家标记失去完整矿权、砺骨部水路不被吞并写入状态变化。A和C新增“保留独立定价”，上游只批准固定报酬与明确损失边界，可能擅自改变金钱条件。A和C把合作“立即进入执行”写得偏早，容易把下一章的运送行动提前结算；因此A与C并列最弱，A仅因排序需要列为worst。",
+          "hard_problems": {
+            "A": "遗漏唐绾展示及矿权标记、水路归属的明确状态变化；“保留独立定价”缺乏上游授权；“立即进入执行”有跨章提前风险。",
+            "B": "直接结果将已接受的独立合作降格为谈合作机会；未明确固定报酬、损失边界和残压散尽后的连续使用限制。",
+            "C": "与A完全相同，存在同样的计划遗漏、未经授权的独立定价和跨章执行措辞问题。",
+            "D": "整体无硬性污染；结尾的随队出发应只作为下一章入口，不得在本章完成运送结果或风险结算。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-4",
+          "fresh-control-3",
+          "e2e-run5",
+          "e2e-run4"
+        ],
+        "decoded_scores": {
+          "e2e-run5": 5.5,
+          "fresh-control-3": 7.5,
+          "e2e-run4": 5.5,
+          "fresh-control-4": 9.0
+        },
+        "decoded_best": "fresh-control-4",
+        "decoded_worst": "e2e-run5",
+        "decoded_hard_problems": {
+          "e2e-run5": "遗漏唐绾展示及矿权标记、水路归属的明确状态变化；“保留独立定价”缺乏上游授权；“立即进入执行”有跨章提前风险。",
+          "fresh-control-3": "直接结果将已接受的独立合作降格为谈合作机会；未明确固定报酬、损失边界和残压散尽后的连续使用限制。",
+          "e2e-run4": "与A完全相同，存在同样的计划遗漏、未经授权的独立定价和跨章执行措辞问题。",
+          "fresh-control-4": "整体无硬性污染；结尾的随队出发应只作为下一章入口，不得在本章完成运送结果或风险结算。"
+        },
+        "wall_seconds": 57.72
+      },
+      {
+        "sample": "jiuchui_ch14",
+        "kind": "mission",
+        "judge": "story",
+        "blind_key": {
+          "A": "fresh-control-4",
+          "B": "e2e-run4",
+          "C": "e2e-run5",
+          "D": "fresh-control-3"
+        },
+        "raw": {
+          "ranking": [
+            "A",
+            "D",
+            "B",
+            "C"
+          ],
+          "scores": {
+            "A": 9.4,
+            "B": 8.2,
+            "C": 8.2,
+            "D": 9.1
+          },
+          "best": "A",
+          "worst": "C",
+          "reason": "A最抓住本章真正的爽点：开炉试上的一次公开改向，立刻接三种买价与主角的自主选择。它把唐绾的展示、懂行者的越档比较、阮青蜃的敌意和少东家的关系翻面连成同一场公共重估，戏剧密度最高。A明确保留回潮楔只能完整用一次、仍有残压代价，因此能力展示不是无上限武器宣言。D同样完整，且结尾把期限与责任边界写得更利落，但“少东家获得谈合作的机会”弱化了已达成合作这一份实际奖励。B、C的主线结果没有错，却把唐绾的铸潮展示和阮青蜃、少东家分别代表的三种价钱压成概述，公开冲突感明显变薄。B、C还只写“现场重新定价”，没有把敌人买断失败、旧雇主关系翻面和矿权公共裁定的连锁反应充分落到戏里。四案都没有把本章写成技术流程，且都让主角拒卖、选合作，主动欲望成立。B与C文本实质相同，商业张力也完全并列。",
+          "hard_problems": {
+            "A": "",
+            "B": "公共戏场被压缩过度：唐绾展示、阮青蜃买断失败与少东家关系翻面没有形成连续冲突，公开重估更像结果摘要。",
+            "C": "与B实质重复；公共戏场被压缩过度，三种买价和公开反应没有形成连续冲突。",
+            "D": "直接结果把少东家已经获得的合作答复降成“谈合作的机会”，削弱了本章应有的关系奖励与不可逆变化。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-4",
+          "fresh-control-3",
+          "e2e-run4",
+          "e2e-run5"
+        ],
+        "decoded_scores": {
+          "fresh-control-4": 9.4,
+          "e2e-run4": 8.2,
+          "e2e-run5": 8.2,
+          "fresh-control-3": 9.1
+        },
+        "decoded_best": "fresh-control-4",
+        "decoded_worst": "e2e-run5",
+        "decoded_hard_problems": {
+          "fresh-control-4": "",
+          "e2e-run4": "公共戏场被压缩过度：唐绾展示、阮青蜃买断失败与少东家关系翻面没有形成连续冲突，公开重估更像结果摘要。",
+          "e2e-run5": "与B实质重复；公共戏场被压缩过度，三种买价和公开反应没有形成连续冲突。",
+          "fresh-control-3": "直接结果把少东家已经获得的合作答复降成“谈合作的机会”，削弱了本章应有的关系奖励与不可逆变化。"
+        },
+        "wall_seconds": 22.422
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "kind": "final",
+        "judge": "authority",
+        "blind_key": {
+          "A": "e2e-run5",
+          "B": "fresh-control-3",
+          "C": "e2e-run4",
+          "D": "fresh-control-4"
+        },
+        "raw": {
+          "ranking": [
+            "B",
+            "D",
+            "A",
+            "C"
+          ],
+          "scores": {
+            "A": 6.8,
+            "B": 8.7,
+            "C": 5.4,
+            "D": 7.4
+          },
+          "best": "B",
+          "worst": "C",
+          "reason": "B最完整落实本章合同：本体稳定粮队与主粮道，分身明确使用“定住”，回潮楔在第二节点改道并把潮势导入外层。B保住三座新井、粮道和迁徙窗口，明确外层毁弃，回潮楔仍归顾停舟且残压未散，短契也未提前结算。B的问题是末段已展示照域潮谱指向撤离队伍，并让顾停舟开始接近观测点，略微提前执行下一章观察。D的主体动作、复合能力边界、结果和资产状态与B基本一致，但明确“走进”观测点，Ending 越过了本章只暴露入口并制造压力的边界。A保住主要结果、代价、所有权和结尾入口，且没有提前读出观测点信息。A却没有明确分身携带并使用本章规定的“定住”，使回潮楔为何能在第二节点完成固定和改向的因果不完整。C同样缺少“定住”，还让本体徒手抬起装粮车，新增未获上游批准的力量表现。C最后实际进入观测点并读出潮纹指向北段，提前结算下一章信息，因此最差。",
+          "hard_problems": {
+            "A": "关键改潮动作没有明确落实分身仅携带并使用“定住”，复合能力的因果与 power boundary 不完整；其余主要结果、所有权、代价和结尾推动基本正确。",
+            "B": "主体事件和状态变化最完整，但末段展示了照域潮谱的具体指向，并开始接近观测点，略有提前执行下一章观察。",
+            "C": "缺少分身“定住”这一关键动作；本体徒手抬装粮车引入未获批准的力量表现；末段进入观测点并读出潮纹指向北段，提前结算下一章信息。",
+            "D": "主动作和复合能力边界最完整，但末段明确走进观测点，越过本章仅暴露入口并制造下一轮威胁的 Ending 边界。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-3",
+          "fresh-control-4",
+          "e2e-run5",
+          "e2e-run4"
+        ],
+        "decoded_scores": {
+          "e2e-run5": 6.8,
+          "fresh-control-3": 8.7,
+          "e2e-run4": 5.4,
+          "fresh-control-4": 7.4
+        },
+        "decoded_best": "fresh-control-3",
+        "decoded_worst": "e2e-run4",
+        "decoded_hard_problems": {
+          "e2e-run5": "关键改潮动作没有明确落实分身仅携带并使用“定住”，复合能力的因果与 power boundary 不完整；其余主要结果、所有权、代价和结尾推动基本正确。",
+          "fresh-control-3": "主体事件和状态变化最完整，但末段展示了照域潮谱的具体指向，并开始接近观测点，略有提前执行下一章观察。",
+          "e2e-run4": "缺少分身“定住”这一关键动作；本体徒手抬装粮车引入未获批准的力量表现；末段进入观测点并读出潮纹指向北段，提前结算下一章信息。",
+          "fresh-control-4": "主动作和复合能力边界最完整，但末段明确走进观测点，越过本章仅暴露入口并制造下一轮威胁的 Ending 边界。"
+        },
+        "wall_seconds": 144.134
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "kind": "final",
+        "judge": "story",
+        "blind_key": {
+          "A": "e2e-run5",
+          "B": "fresh-control-4",
+          "C": "fresh-control-3",
+          "D": "e2e-run4"
+        },
+        "raw": {
+          "ranking": [
+            "D",
+            "A",
+            "B",
+            "C"
+          ],
+          "scores": {
+            "A": 8.2,
+            "B": 7.8,
+            "C": 7.5,
+            "D": 8.6
+          },
+          "best": "D",
+          "worst": "C",
+          "reason": "D的主角选择最直接：以外层彻底毁弃换粮道、井位和撤离窗口，动作链紧，代价也落到了具体居民身上。D把分身、回潮楔、守井、粮车和石脊撤离交叉推进，能力展示既有场面，也让旁人立刻看见结果。A的三线调度与后果最完整，少东家续契、守将放行和观测点的出现都形成了不错的人物关系与下一章钩子，但篇幅明显拖长，数次重复确认“粮道保住、外层毁弃”。B整体节奏比A利落，照域潮谱作为新Reward和下一轮威胁也有效，不过顾停舟稳车、分身定潮、掷楔改向的能力衔接略像按步骤展示。C与B几乎同构，却把回潮楔的投放和分身位置写得更含混，“去外层”像口令解释，冲击力反而下降。四篇都存在少量战后汇报式收束，但D最后直接落到潮纹指向关内通道，比“进去看看”更有逼迫读者续读的力量。",
+          "hard_problems": {
+            "A": "中后段反复复述潮势改道、粮车通行、外层毁弃，紧张场景被总结性确认稀释；分身出现前的能力铺垫也偏弱。",
+            "B": "能力操作的因果较程序化，本体托车、分身定住、掷楔改道像依次执行方案；少东家与顾停舟的关系戏偏少。",
+            "C": "与B高度重复却缺少增益，回潮楔如何跨过现场并精准钉入节点写得更模糊，结尾“进去看看”也弱于已露出的明确危险。",
+            "D": "观测点最后只给出潮纹方向，照域潮谱的功能和新信息的Reward感不如B明确；中段对三座井同时稳定的过程略快。"
+          }
+        },
+        "decoded_ranking": [
+          "e2e-run4",
+          "e2e-run5",
+          "fresh-control-4",
+          "fresh-control-3"
+        ],
+        "decoded_scores": {
+          "e2e-run5": 8.2,
+          "fresh-control-4": 7.8,
+          "fresh-control-3": 7.5,
+          "e2e-run4": 8.6
+        },
+        "decoded_best": "e2e-run4",
+        "decoded_worst": "fresh-control-3",
+        "decoded_hard_problems": {
+          "e2e-run5": "中后段反复复述潮势改道、粮车通行、外层毁弃，紧张场景被总结性确认稀释；分身出现前的能力铺垫也偏弱。",
+          "fresh-control-4": "能力操作的因果较程序化，本体托车、分身定住、掷楔改道像依次执行方案；少东家与顾停舟的关系戏偏少。",
+          "fresh-control-3": "与B高度重复却缺少增益，回潮楔如何跨过现场并精准钉入节点写得更模糊，结尾“进去看看”也弱于已露出的明确危险。",
+          "e2e-run4": "观测点最后只给出潮纹方向，照域潮谱的功能和新信息的Reward感不如B明确；中段对三座井同时稳定的过程略快。"
+        },
+        "wall_seconds": 30.42
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "kind": "mission",
+        "judge": "authority",
+        "blind_key": {
+          "A": "fresh-control-4",
+          "B": "fresh-control-3",
+          "C": "e2e-run4",
+          "D": "e2e-run5"
+        },
+        "raw": {
+          "ranking": [
+            "B",
+            "A",
+            "C",
+            "D"
+          ],
+          "scores": {
+            "A": 8.0,
+            "B": 8.5,
+            "C": 6.5,
+            "D": 6.0
+          },
+          "best": "B",
+          "worst": "D",
+          "reason": "B最完整地保留了本体、分身、回潮楔、粮队、三座新井和迁徙窗口之间的因果分工，也明确保留外层毁弃、楔子归属和残压代价。B的额外旧伤咳血基本能由持续承压推出，但“撤离范围扩大”和“水路暂时保住”略有超出计划精度。A的核心事件和直接结果准确，Reader Release也清楚，但把照域潮谱写成“唯一现场入口”属于上游未授权的新事实。A对承运短契、协作关系和具体代价的落点不如B完整。C保留了地潮提前原因未知这一重要边界，也写出了公共资源选择和外层牺牲，但把本体任务错写成稳定迁徙水路，并省略了楔子释放与改道的决定性动作。C因此无法充分证明“借身＋回潮楔”如何改变结果，且关系和契约状态较空。D比C更抽象，既没有明确复合能力的关键机制，也没有充分呈现资源得失、角色关系和承运状态。四者都没有提前结算观测点或下一轮潮势，但D的信息缺口最大，最容易让Writer自行补造关键因果。",
+          "hard_problems": {
+            "A": "将照域潮谱写成“唯一现场入口”是未授权的新事实；对承运短契、协作关系和具体代价交代不足。",
+            "B": "加入旧伤复发咳血、撤离范围扩大等非计划结果；“砺骨部水路暂时保住”可能超出仅保住迁徙取水窗口的计划表述。",
+            "C": "错置本体稳定对象，省略回潮楔释放和潮势改道的决定性动作，且关系与契约状态未具体落地。",
+            "D": "与C同样缺少复合能力的关键因果，叙事功能过泛，未明确公共资源兑现、关系状态和承运后果。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-3",
+          "fresh-control-4",
+          "e2e-run4",
+          "e2e-run5"
+        ],
+        "decoded_scores": {
+          "fresh-control-4": 8.0,
+          "fresh-control-3": 8.5,
+          "e2e-run4": 6.5,
+          "e2e-run5": 6.0
+        },
+        "decoded_best": "fresh-control-3",
+        "decoded_worst": "e2e-run5",
+        "decoded_hard_problems": {
+          "fresh-control-4": "将照域潮谱写成“唯一现场入口”是未授权的新事实；对承运短契、协作关系和具体代价交代不足。",
+          "fresh-control-3": "加入旧伤复发咳血、撤离范围扩大等非计划结果；“砺骨部水路暂时保住”可能超出仅保住迁徙取水窗口的计划表述。",
+          "e2e-run4": "错置本体稳定对象，省略回潮楔释放和潮势改道的决定性动作，且关系与契约状态未具体落地。",
+          "e2e-run5": "与C同样缺少复合能力的关键因果，叙事功能过泛，未明确公共资源兑现、关系状态和承运后果。"
+        },
+        "wall_seconds": 69.725
+      },
+      {
+        "sample": "jiuchui_ch16",
+        "kind": "mission",
+        "judge": "story",
+        "blind_key": {
+          "A": "fresh-control-4",
+          "B": "e2e-run5",
+          "C": "e2e-run4",
+          "D": "fresh-control-3"
+        },
+        "raw": {
+          "ranking": [
+            "D",
+            "A",
+            "C",
+            "B"
+          ],
+          "scores": {
+            "A": 8.7,
+            "B": 7.3,
+            "C": 7.6,
+            "D": 9.3
+          },
+          "best": "D",
+          "worst": "B",
+          "reason": "D最抓住本章真正值钱的选择：不是泛泛救灾，而是顾停舟主动放弃旧关外层，换粮道、新井与迁徙窗口，代价足够公开且不可逆。它把本体顶正面、分身带“定住”钉楔的双位置玩法落在现场危机中，也给了顾沉戈、守将和砺骨部必须服从这一选择的即时反应。D还保留旧伤、楔子散压和短契未结，使胜利不是无成本清场，结尾在力量受限下逼入观测点，续读压力最强。A的能力兑现和公共资源升级同样完整，且清楚说明旧关外层毁弃后的新入口，但主角“舍弃什么”的主动决断不如D锋利，现场人物反应也略概括。C与B的核心选择正确，能避免把本章写成平均救援流程，但主角行动过于像合同摘要，读者难以直接感到双身能力如何在险局中翻盘。C比B稍好，因为它明确了能力玩法从单点救急升级为公共资源取舍；B的叙事功能更像验收结论，商业画面和人物关系余波不足。四案都没有把下一章的观测点处理提前结算，这是正确的边界控制。",
+          "hard_problems": {
+            "A": "主动舍弃旧关外层的抉择写得偏隐，人物压力与公开反应不足。",
+            "B": "过度压缩为结果清单，双身复合玩法、关系反应与现场爽点不够可感。",
+            "C": "核心戏成立但仍偏抽象总结，缺少令读者看见能力翻盘的决定性现场动作。",
+            "D": ""
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-3",
+          "fresh-control-4",
+          "e2e-run4",
+          "e2e-run5"
+        ],
+        "decoded_scores": {
+          "fresh-control-4": 8.7,
+          "e2e-run5": 7.3,
+          "e2e-run4": 7.6,
+          "fresh-control-3": 9.3
+        },
+        "decoded_best": "fresh-control-3",
+        "decoded_worst": "e2e-run5",
+        "decoded_hard_problems": {
+          "fresh-control-4": "主动舍弃旧关外层的抉择写得偏隐，人物压力与公开反应不足。",
+          "e2e-run5": "过度压缩为结果清单，双身复合玩法、关系反应与现场爽点不够可感。",
+          "e2e-run4": "核心戏成立但仍偏抽象总结，缺少令读者看见能力翻盘的决定性现场动作。",
+          "fresh-control-3": ""
+        },
+        "wall_seconds": 22.226
+      },
+      {
+        "sample": "shadow_ch4",
+        "kind": "final",
+        "judge": "authority",
+        "blind_key": {
+          "A": "e2e-run5",
+          "B": "fresh-control-4",
+          "C": "fresh-control-3",
+          "D": "e2e-run4"
+        },
+        "raw": {
+          "ranking": [
+            "B",
+            "C",
+            "A",
+            "D"
+          ],
+          "scores": {
+            "A": 7.2,
+            "B": 9.1,
+            "C": 8.7,
+            "D": 6.8
+          },
+          "best": "B",
+          "worst": "D",
+          "reason": "B最完整地兑现了杜衡战、连续击败两名正式一阶、获得随队契券与预付钱、陆绾知晓分影并同行，以及折日峡改线的全部状态变化。B还明确保留顾临川仍是一阶、影身反应较慢且疲劳回流的能力边界，公开证明发生在正式胜负之后。C与B的主线结果基本一致，但“和我一样做事”的表述比已批准的“能执行简单目标”更宽，存在轻微能力越界。A也完成主要结果，但把合同对象写成“铜羽药队”而非商队与送药队同行，且新增了较具体的契券待遇和结算条件，容易污染组织、金钱与所有权事实。D的战斗结果成立，也保留了正式一阶记录和随队机会，但额外把铜羽小旗写成顾临川持有物，未获授权的资产归属更明显。D还把路线改动提前由顾临川告知，并让陆绾在分影揭示前已围绕出发作出部分判断，削弱了“主动展示分影后决定同行”的既定因果。四个候选都没有提前解决父亲是否识破分影等未决事实，且都把结尾压力保留为次日出发与折日峡入口。",
+          "hard_problems": {
+            "A": "将铜羽随队契约具体化为“铜羽药队”契约，并新增沿途待遇、护送结束结算等未由上游确认的组织与金钱事实。",
+            "B": "",
+            "C": "“影身和我一样做事”可能把已批准的简单目标能力扩大为无条件等同本体，虽以后文“反应较慢”有所收束。",
+            "D": "新增铜羽小旗并将其作为顾临川持有物，造成未经授权的资产或身份凭证归属；同时路线告知与陆绾决定同行的因果顺序偏离合同。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-4",
+          "fresh-control-3",
+          "e2e-run5",
+          "e2e-run4"
+        ],
+        "decoded_scores": {
+          "e2e-run5": 7.2,
+          "fresh-control-4": 9.1,
+          "fresh-control-3": 8.7,
+          "e2e-run4": 6.8
+        },
+        "decoded_best": "fresh-control-4",
+        "decoded_worst": "e2e-run4",
+        "decoded_hard_problems": {
+          "e2e-run5": "将铜羽随队契约具体化为“铜羽药队”契约，并新增沿途待遇、护送结束结算等未由上游确认的组织与金钱事实。",
+          "fresh-control-4": "",
+          "fresh-control-3": "“影身和我一样做事”可能把已批准的简单目标能力扩大为无条件等同本体，虽以后文“反应较慢”有所收束。",
+          "e2e-run4": "新增铜羽小旗并将其作为顾临川持有物，造成未经授权的资产或身份凭证归属；同时路线告知与陆绾决定同行的因果顺序偏离合同。"
+        },
+        "wall_seconds": 116.119
+      },
+      {
+        "sample": "shadow_ch4",
+        "kind": "final",
+        "judge": "story",
+        "blind_key": {
+          "A": "e2e-run4",
+          "B": "e2e-run5",
+          "C": "fresh-control-4",
+          "D": "fresh-control-3"
+        },
+        "raw": {
+          "ranking": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "scores": {
+            "A": 9.0,
+            "B": 8.5,
+            "C": 8.1,
+            "D": 7.6
+          },
+          "best": "A",
+          "worst": "D",
+          "reason": "A的对战拆招最扎实，顾临川从被逼退到主动踩进死角，选择、代价和胜法都清楚。A把公开胜利、铜羽契约、预付钱、陆绾同行和折日峡串成连续收益，读者会明确感觉主角刚赢到一条路。A的分影展示既有能力惊喜，也让陆绾的加入成为看见真实筹码后的选择，人物关系更活。B节奏最利落，陆绾嘴硬和影身递契纸也有画面，但试官解释和收束略像标准任务发放。C的战斗完成度不差，路线突变也有悬念，不过陆绾决定同行偏快，分影能力说明较直白。D几乎具备C的优点，却多了“代表跨城住宿、交易和护送的入口”这类报告式概括，且“和我一样做事”削弱了能力限制的具体感。四篇都存在一定的“这是路、这是钱、这是选择”的总结性收束，但A靠具体物件和后院互动消化得最好。",
+          "hard_problems": {
+            "A": "后半段略长，契约权益、钱袋意义与出发信息有重复强调。",
+            "B": "商盟契约和陆绾入队的功能性交代偏明显，人物决定的意外感不足。",
+            "C": "陆绾从确认分影到决定同行过于顺滑，关系推进缺少一记更私人的触发。",
+            "D": "商盟权益被抽象成“入口”，有明显程序/报告味；分影限制的表达也比C更泛。"
+          }
+        },
+        "decoded_ranking": [
+          "e2e-run4",
+          "e2e-run5",
+          "fresh-control-4",
+          "fresh-control-3"
+        ],
+        "decoded_scores": {
+          "e2e-run4": 9.0,
+          "e2e-run5": 8.5,
+          "fresh-control-4": 8.1,
+          "fresh-control-3": 7.6
+        },
+        "decoded_best": "e2e-run4",
+        "decoded_worst": "fresh-control-3",
+        "decoded_hard_problems": {
+          "e2e-run4": "后半段略长，契约权益、钱袋意义与出发信息有重复强调。",
+          "e2e-run5": "商盟契约和陆绾入队的功能性交代偏明显，人物决定的意外感不足。",
+          "fresh-control-4": "陆绾从确认分影到决定同行过于顺滑，关系推进缺少一记更私人的触发。",
+          "fresh-control-3": "商盟权益被抽象成“入口”，有明显程序/报告味；分影限制的表达也比C更泛。"
+        },
+        "wall_seconds": 15.19
+      },
+      {
+        "sample": "shadow_ch4",
+        "kind": "mission",
+        "judge": "authority",
+        "blind_key": {
+          "A": "e2e-run4",
+          "B": "fresh-control-4",
+          "C": "fresh-control-3",
+          "D": "e2e-run5"
+        },
+        "raw": {
+          "ranking": [
+            "B",
+            "C",
+            "A",
+            "D"
+          ],
+          "scores": {
+            "A": 6.4,
+            "B": 9.2,
+            "C": 8.8,
+            "D": 6.4
+          },
+          "best": "B",
+          "worst": "D",
+          "reason": "B最完整地承接了杜衡逼战、疲劳限制、顾临川的关键战术选择、第二轮胜利、铜羽契约、第一笔预付钱以及陆绾确认分影后同行等硬结果。B还明确保留了疲劳回流、影身应变迟滞和客舍责任冲突，没有把本章胜利误写成能力限制已经解决。C整体同样忠实，且直接结果和陆绾首次确认分影的事实写得清楚，但“杜衡败后承认”属于当前权威未明确授权的新增反应。A和D内容完全相同，均抓住了主要结算，但把战斗与向陆绾展示分影压在同一个主角行动字段中，缺少疲劳限制、能力代价和父子责任余波的保留。A/D也没有明确写出本章结束时陆绾以知情为前提决定同行这一首次确定事实，Canon写入边界较弱。四者都没有明显提前完成折日峡事件，结尾基本守住了跨章timing。若必须区分完全相同的A与D，D作为并列最弱仅是排序占位，实质问题相同。",
+          "hard_problems": {
+            "A": "未明确杜衡第二轮胜负过程中的关键变化，也未保留影身迟滞、疲劳回流和客舍责任等仍有效限制；将战斗与陆绾展示分影合并，可能造成场景时序和直接结果边界模糊。",
+            "B": "整体无硬性Canon污染；“杜衡转为正面压制”是未被上游明确规定的细节，属于可删减的推断性反应，但不改变主要结果。",
+            "C": "“杜衡败后承认顾临川的临场判断”未在共享权威中确定，可能把对手态度提前写死；“共同出发的行动关系”略抽象，但核心同行事实正确。",
+            "D": "与A完全相同：未明确杜衡第二轮具体胜负与能力限制的持续性，把两个时序不同的事件压缩在主角行动中，并弱化了陆绾知情后同行这一不可逆事实。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-4",
+          "fresh-control-3",
+          "e2e-run4",
+          "e2e-run5"
+        ],
+        "decoded_scores": {
+          "e2e-run4": 6.4,
+          "fresh-control-4": 9.2,
+          "fresh-control-3": 8.8,
+          "e2e-run5": 6.4
+        },
+        "decoded_best": "fresh-control-4",
+        "decoded_worst": "e2e-run5",
+        "decoded_hard_problems": {
+          "e2e-run4": "未明确杜衡第二轮胜负过程中的关键变化，也未保留影身迟滞、疲劳回流和客舍责任等仍有效限制；将战斗与陆绾展示分影合并，可能造成场景时序和直接结果边界模糊。",
+          "fresh-control-4": "整体无硬性Canon污染；“杜衡转为正面压制”是未被上游明确规定的细节，属于可删减的推断性反应，但不改变主要结果。",
+          "fresh-control-3": "“杜衡败后承认顾临川的临场判断”未在共享权威中确定，可能把对手态度提前写死；“共同出发的行动关系”略抽象，但核心同行事实正确。",
+          "e2e-run5": "与A完全相同：未明确杜衡第二轮具体胜负与能力限制的持续性，把两个时序不同的事件压缩在主角行动中，并弱化了陆绾知情后同行这一不可逆事实。"
+        },
+        "wall_seconds": 34.415
+      },
+      {
+        "sample": "shadow_ch4",
+        "kind": "mission",
+        "judge": "story",
+        "blind_key": {
+          "A": "e2e-run5",
+          "B": "e2e-run4",
+          "C": "fresh-control-4",
+          "D": "fresh-control-3"
+        },
+        "raw": {
+          "ranking": [
+            "D",
+            "C",
+            "A",
+            "B"
+          ],
+          "scores": {
+            "A": 7.1,
+            "B": 7.1,
+            "C": 8.2,
+            "D": 8.5
+          },
+          "best": "D",
+          "worst": "B",
+          "reason": "D抓住了杜衡逼出后撤惯性这一场真正值得看的冲突，主角“放弃后退、主动切入”的选择比单纯观察后反击更有进攻性。它把疲劳限制、临场判断、连续战胜正式一阶的公开证明连成一条爽点因果，能力并未沦为效率工具。陆绾看见双影后仍选择同行，既是秘密揭露也是关系奖励，落点具体。契约、预付钱和离乡机会都作为战后所得出现，商业回报足够清楚而没有抢走比试本身的戏。C的事实覆盖最完整，尤其明确陆绾知情是本章新确定事实，但“状态变化”和“叙事功能”解释偏多，稍有合同总结感。A与B几乎只保留结果清单，杜衡这一战的独特压迫、主角如何反制以及陆绾关系选择的戏剧重量都被压薄。A、B完全相同，无法形成路线差异；两者都可执行，但更像把上游结论平铺出来。D的结尾把荒野入口与未解限制并置，能自然带出下一章风险与续读。",
+          "hard_problems": {
+            "A": "主角行动过于概括，杜衡逼迫后撤的核心冲突没有形成明确的主动反转；与陆绾的秘密揭露也只剩结果。",
+            "B": "与A完全相同，且同样缺少杜衡战中具体的选择、反转与关系戏的因果重量。",
+            "C": "信息完整但解释密度偏高，部分状态与功能重复总结，容易让正文被合同的“结算说明”牵着走。",
+            "D": "杜衡败后“承认”可保留为短反应，但不宜展开成礼貌认可；重点仍应放在他的败势与铜羽的重新估价。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-3",
+          "fresh-control-4",
+          "e2e-run5",
+          "e2e-run4"
+        ],
+        "decoded_scores": {
+          "e2e-run5": 7.1,
+          "e2e-run4": 7.1,
+          "fresh-control-4": 8.2,
+          "fresh-control-3": 8.5
+        },
+        "decoded_best": "fresh-control-3",
+        "decoded_worst": "e2e-run4",
+        "decoded_hard_problems": {
+          "e2e-run5": "主角行动过于概括，杜衡逼迫后撤的核心冲突没有形成明确的主动反转；与陆绾的秘密揭露也只剩结果。",
+          "e2e-run4": "与A完全相同，且同样缺少杜衡战中具体的选择、反转与关系戏的因果重量。",
+          "fresh-control-4": "信息完整但解释密度偏高，部分状态与功能重复总结，容易让正文被合同的“结算说明”牵着走。",
+          "fresh-control-3": "杜衡败后“承认”可保留为短反应，但不宜展开成礼貌认可；重点仍应放在他的败势与铜羽的重新估价。"
+        },
+        "wall_seconds": 17.061
+      },
+      {
+        "sample": "shadow_ch9",
+        "kind": "final",
+        "judge": "authority",
+        "blind_key": {
+          "A": "e2e-run5",
+          "B": "fresh-control-3",
+          "C": "fresh-control-4",
+          "D": "e2e-run4"
+        },
+        "raw": {
+          "ranking": [
+            "B",
+            "C",
+            "A",
+            "D"
+          ],
+          "scores": {
+            "A": 6.5,
+            "B": 9.1,
+            "C": 8.8,
+            "D": 5.8
+          },
+          "best": "B",
+          "worst": "D",
+          "reason": "B最完整地兑现了本章的伤势回流、陆绾设定边界、顾临川承认具体欲望，以及铜羽领队通过多人证词确认两条路线同时发生。它还明确让药队重新启程、顾临川登车，保留了沉昼城门路尚未获得这一未决事实。C与B的事实链基本一致，但加入“怎么看都不像还能再分出一个完好的人”的能力状态推断，略超出已批准边界。C的结尾仍是未来重新估量，时间顺序比A更稳。A完成了关系边界和欲望承认，却没有明确写出领队发现两条路线无法由普通二阶解释这一关键结尾发现。A还把顾临川描述成“护住的不只是几辆药车”，对本章实际保护对象有轻微泛化。D明确提前提出重新计算护卫价，触及计划未结算的金钱与待遇变化。更严重的是D让弟子说顾临川“两边都看见了”，违反影身远离本体时不能直接获知另一处所见的既定限制。",
+          "hard_problems": {
+            "A": "未明确完成“普通一名二阶无法解释两条行动路线”的结尾发现，且对本章保护对象有轻微泛化。",
+            "B": "",
+            "C": "",
+            "D": "“他两边都看见了”违反影身无法直接获知另一处所见的能力限制；“护卫价得重新算”提前引入计划未结算的金钱与待遇变化。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-3",
+          "fresh-control-4",
+          "e2e-run5",
+          "e2e-run4"
+        ],
+        "decoded_scores": {
+          "e2e-run5": 6.5,
+          "fresh-control-3": 9.1,
+          "fresh-control-4": 8.8,
+          "e2e-run4": 5.8
+        },
+        "decoded_best": "fresh-control-3",
+        "decoded_worst": "e2e-run4",
+        "decoded_hard_problems": {
+          "e2e-run5": "未明确完成“普通一名二阶无法解释两条行动路线”的结尾发现，且对本章保护对象有轻微泛化。",
+          "fresh-control-3": "",
+          "fresh-control-4": "",
+          "e2e-run4": "“他两边都看见了”违反影身无法直接获知另一处所见的能力限制；“护卫价得重新算”提前引入计划未结算的金钱与待遇变化。"
+        },
+        "wall_seconds": 74.025
+      },
+      {
+        "sample": "shadow_ch9",
+        "kind": "final",
+        "judge": "story",
+        "blind_key": {
+          "A": "e2e-run5",
+          "B": "fresh-control-4",
+          "C": "e2e-run4",
+          "D": "fresh-control-3"
+        },
+        "raw": {
+          "ranking": [
+            "B",
+            "A",
+            "C",
+            "D"
+          ],
+          "scores": {
+            "A": 8.4,
+            "B": 8.9,
+            "C": 8.1,
+            "D": 7.4
+          },
+          "best": "B",
+          "worst": "D",
+          "reason": "B把主角“想拿兵，也不想看陆绾死”的欲望说得最直，既不装大义，也没有把感情写成突兀表白。陆绾的边界、顾斜阳的重新估量、商盟记录的价值变化都分别落在具体动作和对话里，主角的能力收益、救人后果与公众见证形成了完整闭环。它篇幅较长但仍有车队起行和峡道未明的持续压力，收尾能把读者带向下一段路。A的人物对峙很利，尤其“我自己选”和“继续跟你走”有关系推进，但商盟领队的说明略像替作者总结功劳，顾斜阳段也稍显整齐。C最利落，陆绾“不会再追着你的影子往死地里冲”很有关系后果，但顾斜阳与商盟的认可推进偏直线，少了一点现场摩擦和余味。D基本继承B的有效场面，却删掉了几处能支撑人物与奖励落点的细节，留下“可他现在避不开”这种不够自然的句子；结尾又把认可压缩成概念性总结，读者爽点反而变弱。四篇都存在战后复盘占比偏高的问题，但B最能让复盘转化为下一程的选择、关系和现实筹码。",
+          "hard_problems": {
+            "A": "商盟领队直接解释“护住的是什么”，Public Proof略像报告式盖章；顾斜阳的态度转变缺少一个更尖的现场触发。",
+            "B": "中后段三方见证依次陈述，略有重复证明主角功劳的痕迹；“普通护卫估量他”的收尾偏作者替读者下结论。",
+            "C": "顾斜阳“按对手规矩看你”和商盟“重新算价”都较直给，公共认可与关系变化的层次不如B；冲突余波略快结束。",
+            "D": "“可他现在避不开”削弱人物动作逻辑且显得刻意；删减后商盟记录的奖励含义不够具体，结尾“已不再当普通护卫”程序总结味最重。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-4",
+          "e2e-run5",
+          "e2e-run4",
+          "fresh-control-3"
+        ],
+        "decoded_scores": {
+          "e2e-run5": 8.4,
+          "fresh-control-4": 8.9,
+          "e2e-run4": 8.1,
+          "fresh-control-3": 7.4
+        },
+        "decoded_best": "fresh-control-4",
+        "decoded_worst": "fresh-control-3",
+        "decoded_hard_problems": {
+          "e2e-run5": "商盟领队直接解释“护住的是什么”，Public Proof略像报告式盖章；顾斜阳的态度转变缺少一个更尖的现场触发。",
+          "fresh-control-4": "中后段三方见证依次陈述，略有重复证明主角功劳的痕迹；“普通护卫估量他”的收尾偏作者替读者下结论。",
+          "e2e-run4": "顾斜阳“按对手规矩看你”和商盟“重新算价”都较直给，公共认可与关系变化的层次不如B；冲突余波略快结束。",
+          "fresh-control-3": "“可他现在避不开”削弱人物动作逻辑且显得刻意；删减后商盟记录的奖励含义不够具体，结尾“已不再当普通护卫”程序总结味最重。"
+        },
+        "wall_seconds": 16.567
+      },
+      {
+        "sample": "shadow_ch9",
+        "kind": "mission",
+        "judge": "authority",
+        "blind_key": {
+          "A": "fresh-control-3",
+          "B": "fresh-control-4",
+          "C": "e2e-run5",
+          "D": "e2e-run4"
+        },
+        "raw": {
+          "ranking": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "scores": {
+            "A": 8.8,
+            "B": 7.4,
+            "C": 4.6,
+            "D": 4.6
+          },
+          "best": "A",
+          "worst": "C",
+          "reason": "A最完整地覆盖了伤势回流、陆绾边界、顾临川欲望暴露和顾斜阳重新定位，且没有新增金钱、所有权或力量事实。A的直接结果与状态变化都具体，结尾把“两条有效路线无法由普通二阶解释”作为下一章可行动的异常，Reader Release最清楚。B整体忠实，但把顾临川表述成在短兵与救人之间分别选择，容易误读为二选一，也略有把沉昼城短契提前推近的跨章倾向。C只把顾临川的自我承认写成直接结果，漏掉陆绾确认伤势回流和顾斜阳确认双线临场选择这两个应落地事实。C的“高价值竞争者”缺少当前计划明确授权，结尾“更高入口尚未到账”既抽象又没有给出具体异常或下一步压力。D与C内容完全相同，因此同样存在直接结果不完整、结尾释放不足和跨章信息模糊的问题。C与D都没有污染已持有短兵或二阶状态，但它们把本章最重要的关系与能力代价压缩成泛化判断。综合看A最适合进入下一章Canon，B可修后使用，C与D并列最弱。",
+          "hard_problems": {
+            "A": "",
+            "B": "将“短兵与救人之间分别作出选择”改为“同时承认两种欲望并分别承担选择”，避免制造二选一误读；结尾不要把沉昼城短契写成当前章已推进的事实。",
+            "C": "直接结果遗漏陆绾首次确定伤势完整回流、顾斜阳确认双线临场选择；“高价值竞争者”缺少授权依据，结尾异常不具体。",
+            "D": "与C完全相同，存在同样的直接结果遗漏、未经明确授权的“高价值”判断和模糊结尾。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-3",
+          "fresh-control-4",
+          "e2e-run5",
+          "e2e-run4"
+        ],
+        "decoded_scores": {
+          "fresh-control-3": 8.8,
+          "fresh-control-4": 7.4,
+          "e2e-run5": 4.6,
+          "e2e-run4": 4.6
+        },
+        "decoded_best": "fresh-control-3",
+        "decoded_worst": "e2e-run5",
+        "decoded_hard_problems": {
+          "fresh-control-3": "",
+          "fresh-control-4": "将“短兵与救人之间分别作出选择”改为“同时承认两种欲望并分别承担选择”，避免制造二选一误读；结尾不要把沉昼城短契写成当前章已推进的事实。",
+          "e2e-run5": "直接结果遗漏陆绾首次确定伤势完整回流、顾斜阳确认双线临场选择；“高价值竞争者”缺少授权依据，结尾异常不具体。",
+          "e2e-run4": "与C完全相同，存在同样的直接结果遗漏、未经明确授权的“高价值”判断和模糊结尾。"
+        },
+        "wall_seconds": 41.485
+      },
+      {
+        "sample": "shadow_ch9",
+        "kind": "mission",
+        "judge": "story",
+        "blind_key": {
+          "A": "fresh-control-3",
+          "B": "e2e-run5",
+          "C": "e2e-run4",
+          "D": "fresh-control-4"
+        },
+        "raw": {
+          "ranking": [
+            "A",
+            "D",
+            "B",
+            "C"
+          ],
+          "scores": {
+            "A": 9.0,
+            "B": 7.4,
+            "C": 7.4,
+            "D": 8.4
+          },
+          "best": "A",
+          "worst": "C",
+          "reason": "A最抓住本章真正值得读的东西：顾临川不是被动受伤，而是在伤势代价落地后公开承认自己同时要兵器也要救人，人物欲望与双线能力形成了同一个爽点。它把陆绾的边界、顾斜阳的重新估价和两条撤离线的公开证明连成因果，余波不只是休息结算。D也完整且有关系张力，但结尾已较明确地把沉昼城短契推到面前，略微替下一章提前落了结果。B和C保留了正确骨架，却把顾斜阳的反应和撤离记录写得过于概括，双线行动的惊异与商业价值没有真正放大。四案都没有把本章误写成技术流程，且都保住了分影伤势共同结算这一关键代价。A的结尾最好，因为异常记录既是公共证明，也自然制造更高圈层对主角的重新定价。",
+          "hard_problems": {
+            "A": "",
+            "B": "顾斜阳的确认和商盟重新评估都过于抽象，缺少“两条线同时有效”为何足以改变他人判断的具体冲击。",
+            "C": "与B完全同构且同样抽象，未把双线选择、竞争者反应和异常记录转化为足够鲜明的商业钩子。",
+            "D": "结尾把沉昼城短契入口几乎作为既定下一步推出，略有提前替下一章结算入口的风险。"
+          }
+        },
+        "decoded_ranking": [
+          "fresh-control-3",
+          "fresh-control-4",
+          "e2e-run5",
+          "e2e-run4"
+        ],
+        "decoded_scores": {
+          "fresh-control-3": 9.0,
+          "e2e-run5": 7.4,
+          "e2e-run4": 7.4,
+          "fresh-control-4": 8.4
+        },
+        "decoded_best": "fresh-control-3",
+        "decoded_worst": "e2e-run4",
+        "decoded_hard_problems": {
+          "fresh-control-3": "",
+          "e2e-run5": "顾斜阳的确认和商盟重新评估都过于抽象，缺少“两条线同时有效”为何足以改变他人判断的具体冲击。",
+          "e2e-run4": "与B完全同构且同样抽象，未把双线选择、竞争者反应和异常记录转化为足够鲜明的商业钩子。",
+          "fresh-control-4": "结尾把沉昼城短契入口几乎作为既定下一步推出，略有提前替下一章结算入口的风险。"
+        },
+        "wall_seconds": 14.313
+      }
+    ]
+  }
+}

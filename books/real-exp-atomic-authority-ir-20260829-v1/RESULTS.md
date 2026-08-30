@@ -647,38 +647,38 @@ DirectorStructuredDecision
 
 ---
 
-## 15. Next Smallest Experiment
+## 15. Native E2E Follow-up（2026-08-30）
 
-下一轮只做：
+原定下一实验已经完成：`DirectorStructuredDecision → Runtime双投影 → Curator → Primary → Authority Reviser → Final Draft`。
 
-> **Native Atomic Authority Decision v1**
+最终有效比较使用两本书四章、2次真正串联的Fresh Control与2次bugfix-freeze后的Native v2 Treatment；早期Sidecar、v1污染轮次与独立节点Control不进入最终速度结论。v2 8/8 Native accepted、手工expected fixture结构覆盖100%，但semantic Hard Contract repeat只有3/4，说明route可运行不等于语义完全稳定。
 
-不再做任何自由文本 Sidecar。
+匿名纯正文Blind：Mission Story **6.99 vs 8.60**、Mission Authority **6.55 vs 8.41**，均明显输Control；下游将其重新小说化后Final Story **8.41 vs 7.88**方向性更好，但Final Authority **6.79 vs 8.04**仍明显退化。根因不是Runtime projection慢，而是typed core把Story Mission压得过薄：下游为了补回冲突、选择、Public Proof和具体利益关系重新获得了发明空间。
 
-最低实验：
+真实Final Draft wall：Control **325.954s/章**，Native **351.566s/章**，Native慢 **25.612s/章（7.86%）**。Primary research Oracle只有2/8足够安全可直接Final；即使假设一个完美且零成本的deterministic Gate，也只有理论 **1.68% / 5.466s每章**的节省。
 
-1. 使用真正支持 structured output / tool schema 的 Director调用；
-2. 模型只返回 `DirectorStructuredDecision`；
-3. Runtime从同一对象投影人类Mission与Frozen Mission artifact；
-4. Control Director vs Structured Director做Story Blind + Authority Blind；
-5. 接回Curator → Primary → Full Reviser看最终正文；
-6. 两本以上、不同Power/Resource/Relationship类型；
-7. independent repeat；
-8. unsupported typed family明确bypass；
-9. 只有这一层通过，才重新测试 Normal Delta → Gate → blocker-only repair；
-10. 不新增LLM safety classifier。
+因此新的decision model是：
+
+1. `Atomic Authority Contract ≠ Story Mission`，就像它也不等于Primary Preservation Map；
+2. Hard IR继续保持窄、typed、source-pure，但不负责承载“这一章为什么值得看”的全部Story realization；
+3. 下一候选把money/ownership/power/relationship/Reader Release/unknown/Ending等Hard IR前移到Story/Outline/Runtime原本就作出这些决定的地方，不要求Director重新编码；
+4. Director继续保留高故事密度human Mission；
+5. 只有后台Gate在跨书真实正文上证明足够可靠后，才重新测试跳过Full Reviser；不新增LLM safety classifier。
+
+完整证据：`books/real-exp-native-structured-e2e-20260830-v1/RESULTS.md`。
 
 ---
 
 ## 16. Production Decision
 
-- **Source boundary cleanup：PASS。**
-- **Atomic Authority Contract：PASS as architecture/static implementation。**
-- **Primary Preservation Map + Edit Locality：PASS as architecture/static implementation。**
+- **Source boundary cleanup / Atomic Authority Contract / Primary Preservation Map：PASS as architecture/backend research。**
 - **Free-text Director Sidecar：FAIL。**
-- **Native Structured Director：schema/unit ready，model behavior unmeasured。**
-- **Atomic fast route：NOT PRODUCTION。**
+- **Current Native Structured Director as human Mission replacement：FAIL。**
+- **Final Story signal：DIRECTIONAL PASS，但不能覆盖Final Authority退化。**
+- **Latency：FAIL，完整Final Draft慢7.86%。**
+- **Full Authority Reviser removal / Atomic fast route：NOT PRODUCTION。**
 - **Current five-node production：unchanged。**
+
 
 ## 17. Validation
 

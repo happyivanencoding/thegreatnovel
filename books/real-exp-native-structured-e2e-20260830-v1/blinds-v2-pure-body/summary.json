@@ -996,5 +996,8 @@
       },
       "wall_seconds": 14.21
     }
-  ]
+  ],
+  "evidence_status": "SUPPLEMENTARY_REPLICATION_NOT_PRIMARY_FINAL",
+  "primary_final_blind": "../../blinds-final-clean-v2b/summary.json",
+  "reason": "Uses control-chain-1/2. Final protocol uses adjacent fresh-control-3/4 and symmetric body extraction. Direction is supplementary, not the canonical final mean."
 }
