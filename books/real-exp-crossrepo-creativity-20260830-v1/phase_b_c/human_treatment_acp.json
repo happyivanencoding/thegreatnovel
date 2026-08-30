@@ -1,0 +1,354 @@
+{
+  "ok": true,
+  "label": "human-treatment",
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "mode": "read-only",
+  "wall_seconds": 127.776,
+  "text": "# HUMAN CANDIDATE 1｜陆炽／先吃到嘴里\n\n## 世界中的初始位置与生活事实\n\n开局精确力量位置｜主尺：身火阶｜精确位置：身火1阶\n\n陆炽出生在一座有三幅稳定门的集市聚落，母亲经营一间卖汤面和腌肉的小摊，父亲替车队修车。陆炽读过门内私塾，识字不多，但会算价钱、认常见门骨，也在火院试过两次，最后只停在身火1阶。十二岁时，他因偷拿熟客桌上的甜果，被母亲罚在摊前站了一整天；十五岁时，他用攒下的钱买了一把外地带回的短刀，第二天便拿去和同龄人比试，刀刃崩口；去年一次夜前赶集，他为了多看半场杂耍，错过最后一辆回聚落的车，只能跟着收摊商贩挤在车底回去。\n\n## 持续牵引与互相竞争的动机\n\n- 想吃到真正昂贵、讲究、平时舍不得买的东西。\n- 想在当众较量里赢一次，尤其不愿输给那些看不起集市小摊的人。\n- 想离开熟悉的门，去看看别处的路和更大的集市。\n- 舍不得母亲一个人守摊，也不愿把自己挣来的钱全部交回家。\n\n他想把钱花在一顿好饭、一次远行和一件能让人服气的东西上，但这些钱无法同时满足三件事。母亲需要他接摊时，他的自由会变成她的负担；他真要远走，又会失去家里最稳定的收入来源。\n\n## Behavior Signature\n\n他会优先抓住眼前能让自己痛快、露脸或开眼界的机会，再回头处理留下的麻烦。面对不同现场，他可能靠赌、靠讨价、靠临时帮工或厚着脸皮换取机会；但当具体的人和具体的享受冲突时，他不会稳定地选择同一种答案。\n\n## 重要关系原点\n\n母亲不是抽象的“家人”，而是每天把最好的肉末留给他、又会当着客人的面骂他败家的那个人。陆炽可以为了早点离摊拒绝她，也可能为了让她吃上一顿不必计算成本的饭，放弃自己攒了很久的路费。两人的关系不是单向照顾，而是钱、面子和亲近不断互相拉扯。\n\n## Initial State Seed\n\n### 当前私人欲望\n\n想吃一顿真正不用看价牌的好饭；想赢下一次让所有人记住的较量；想攒够一笔钱，独自跟着商队走到更远的门外。\n\n## Audition Metadata（非 Canon）\n\n### 人物钩子\n\n集市收摊时，陆炽刚赢了一场掰腕赌局，手里的钱正好够买一份外地带来的烤肉。他看见母亲正弯腰搬最后一筐腌菜，便把钱塞给摊主，却没有买肉，而是换成一小坛她念叨了半年的酸酒。母亲骂他乱花钱，他笑着承认，自己攒下的路费又少了一截；当晚他饿着肚子，偷偷把酒喝了两口。\n\n---\n\n# HUMAN CANDIDATE 2｜沈砚／想把路看明白\n\n## 世界中的初始位置与生活事实\n\n开局精确力量位置｜主尺：身火阶｜精确位置：身火2阶\n\n沈砚出生在一座拥有五幅稳定门的城镇，父亲在门卫处抄录出入门籍，母亲替商队整理货单。他从小接受完整的门籍识字和算术教育，熟悉公开门录的格式，却没有真正走过几条长门路。十三岁时，他从废纸堆里捡回一张被裁掉半边的旧路图，花了三个月把缺失部分凭白昼道路补全；十六岁时，他因擅自改写家中一张路线草图的标记，被父亲罚去抄了一整夜门籍；成年后，他曾跟随一支短途商队出门，却在一个看似熟悉的岔路口停下来，只为观察一块被雨水冲出的陌生门根。\n\n## 持续牵引与互相竞争的动机\n\n- 对没看过、没解释清楚的东西有持续好奇，尤其是路、门和人的选择。\n- 喜欢漂亮、精确、少见的器物，不愿让粗糙的东西占据自己的生活。\n- 想摆脱家里安排好的门籍工作，拥有自己决定去哪里的自由。\n- 在争论中希望成为看得最清楚、最后被证明没有错的人。\n\n他想买下旧路图、离开城镇、保住家里的稳定位置，却没有足够的钱和时间同时做到。父亲能给他一份可靠差事，也能让他永远只看到别人允许他看到的路线。\n\n## Behavior Signature\n\n他会追逐能改变自己视野的细节，愿意为一个新发现放弃眼前的方便。遇到冲突时，他可能拿观察到的事实讨价还价，也可能故意留下一个问题转身离开；他不习惯替所有人安排答案，只在意自己是否还能继续看下去。\n\n## 重要关系原点\n\n父亲是他最早接触“道路可以被记录，也可以被删掉”的人。父亲从不阻止他读门录，却认为看懂格式就已经够了。沈砚若要离开，就必须放弃父亲能够提供的门籍资格；若留下，他能继续接触珍贵资料，却要接受别人替他划定的范围。\n\n## Initial State Seed\n\n### 当前私人欲望\n\n想弄到一张完整而罕见的路图；想亲自走过一条不属于家里工作范围的门路；想在一次争论里让父亲承认，他看到的并不只是纸上的东西。\n\n## Audition Metadata（非 Canon）\n\n### 人物钩子\n\n父亲让沈砚替一名商人抄一晚门录，报酬足够买下他看中的旧路图。抄到一半，沈砚发现商人把钱压在另一名抄员身上，要求他删掉一段不利记录。他没有揭穿，只把自己原本准备买图的钱拿出来，当场买下旧图，合上册页离开。第二天父亲扣了他的工钱，他也没把那张图卖掉。\n\n---\n\n# HUMAN CANDIDATE 3｜顾野／先追上再决定\n\n## 世界中的初始位置与生活事实\n\n开局精确力量位置｜主尺：身火阶｜精确位置：身火3阶\n\n顾野出生在北部一处靠近荒原的聚落，母亲腌制兽肉，舅舅跟着猎队和牧队认路。他很早接触短途猎行，十三岁时偷偷跟在猎队后面出门，因贪看一处新折出的白昼岔路，错过了回程集合；十五岁时，他在一次围猎中先于大人翻过门外的碎坡，抢到了第一件猎获，却把手臂划出一道长口子；后来他进入地方火院，身火升到3阶，便不再愿意做只在门内巡查的差事。他现在替猎队和商队做短途护送，收入时多时少。\n\n## 持续牵引与互相竞争的动机\n\n- 喜欢追逐速度、猎物和临时出现的机会。\n- 想让熟悉自己的人承认，他不是只能跟在别人后面的人。\n- 想靠自己的钱换一匹真正听话的坐骑，拥有说走就走的自由。\n- 对一个从小一起长大的人保持近乎固执的亲近，不愿每次都把她排在机会之后。\n\n他想赚快钱、赢下名声、买坐骑，也想守住那段不必解释的关系。最赚钱的护送往往需要离开数周，而最想去的地方未必值得那个人等他回来。\n\n## Behavior Signature\n\n他会先判断哪一个机会正在变快，然后把身体和时间押上去。实现方式可以是追猎、抢先、冒险换路，也可以是把报酬让给别人来换取更短的行程；但一旦某个具体的人变得不可替代，他会重新计算自己愿意失去什么。\n\n## 重要关系原点\n\n与他一起长大的那个人见过他最得意、最狼狈的时刻，也知道他会为了赢一场小比赛把自己弄伤。对方从不崇拜他的身火，只会直接说他什么时候在逞强。顾野可以为了钱错过约定，也可能因为不想让对方等到天黑，放弃一次难得的追猎。\n\n## Initial State Seed\n\n### 当前私人欲望\n\n想买一匹属于自己的好坐骑；想在下一次猎行中第一个追上目标；想让那个熟悉他缺点的人，仍然愿意把重要的时间留给他。\n\n## Audition Metadata（非 Canon）\n\n### 人物钩子\n\n猎队临时加钱，要顾野带他们穿过一段必须在日落前返回的近路；同一晚，那位从小一起长大的人托他去门外取回一只被商队遗落的箱子。顾野盯着猎队递来的钱看了很久，最后把自己的坐骑借给他们，独自跑去取箱子。回来时钱没了，鞋底裂开一道口子，他却先问箱子有没有磕坏。\n\n---\n\n# HUMAN CANDIDATE 4｜许闻／做出一件自己的东西\n\n## 世界中的初始位置与生活事实\n\n开局精确力量位置｜主尺：身火阶｜精确位置：身火2阶\n\n许闻出生在鹿回门院外围的门匠家庭，父亲负责门膜清理，母亲替作坊烧制门腹填料。他从小在热、灰尘和堆满碎门骨的院子里长大，接受过基础识字和门匠学徒教育，目前是作坊里的低阶学徒，身火停在2阶。十四岁时，他第一次独自磨制门扣，外形漂亮却因受力不均当场裂开；十六岁时，他把一块废门骨雕成挂饰，偷偷卖给路过的商贩，赚到的钱只够买一顿饭；去年师父让他负责一批普通门钉，他嫌样式难看，私自改了两枚，结果整批返工。\n\n## 持续牵引与互相竞争的动机\n\n- 喜欢亲手把粗糙材料变成自己看得顺眼的东西。\n- 想尽快攒钱，离开永远被师父和家里安排的位置。\n- 不愿把最好的材料和时间全部交给别人，想保留一件真正属于自己的作品。\n- 对弟弟的亲近很具体：愿意把自己舍不得用的东西给他，却不愿因此被全家默认成永远会让步的人。\n\n他想要钱、漂亮作品和离开的机会，但好材料只有一份，家里临时需要钱时，他必须在自己的作品和亲近的人之间做选择。\n\n## Behavior Signature\n\n他会为一个看得见的结果投入过多时间，哪怕那件东西并不最赚钱。遇到现实压力时，他不一定服从最有效率的安排，可能卖掉一部分材料、保留一部分，也可能用手艺把损失改造成自己还能接受的样子；他在乎的不是所有人满意，而是最后留下的东西不能完全不像自己。\n\n## 重要关系原点\n\n师父是第一个承认他手上有感觉、又最常把他按回粗活里的人。弟弟则会认真保存他做坏的第一枚门扣。许闻离开作坊意味着失去师父的材料和资格，也可能让弟弟再拿不到那些小东西；留下则意味着自己的手艺一直服务于别人规定的标准。\n\n## Initial State Seed\n\n### 当前私人欲望\n\n想做出一件不必返工、也不必听别人解释用途的作品；想攒够离开作坊的钱；想继续给弟弟留下只有他们两个人知道来历的小物件。\n\n## Audition Metadata（非 Canon）\n\n### 人物钩子\n\n工坊收到一块纹理漂亮的门骨，许闻想留下来做自己的第一件完整作品；师父却说卖给商队的钱，正好够弟弟交下一季学费。许闻没有争辩，拿刀把门骨剖成两半，一半磨成标准件卖掉，一半做成歪斜的挂饰送给弟弟。师父骂他浪费材料，他只把挂饰上的裂纹磨得更明显。",
+  "stopReason": "end_turn",
+  "sessionId": "01a053a3-d9e6-73a0-b2ab-faf66f2ce84c",
+  "models": {
+    "availableModels": [
+      {
+        "modelId": "gpt-5.6-sol[low]",
+        "name": "GPT-5.6-Sol (low)",
+        "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.6-sol[medium]",
+        "name": "GPT-5.6-Sol (medium)",
+        "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.6-sol[high]",
+        "name": "GPT-5.6-Sol (high)",
+        "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-sol[xhigh]",
+        "name": "GPT-5.6-Sol (xhigh)",
+        "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-sol[max]",
+        "name": "GPT-5.6-Sol (max)",
+        "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+      },
+      {
+        "modelId": "gpt-5.6-sol[ultra]",
+        "name": "GPT-5.6-Sol (ultra)",
+        "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+      },
+      {
+        "modelId": "gpt-5.6-terra[low]",
+        "name": "GPT-5.6-Terra (low)",
+        "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.6-terra[medium]",
+        "name": "GPT-5.6-Terra (medium)",
+        "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.6-terra[high]",
+        "name": "GPT-5.6-Terra (high)",
+        "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-terra[xhigh]",
+        "name": "GPT-5.6-Terra (xhigh)",
+        "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-terra[max]",
+        "name": "GPT-5.6-Terra (max)",
+        "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+      },
+      {
+        "modelId": "gpt-5.6-terra[ultra]",
+        "name": "GPT-5.6-Terra (ultra)",
+        "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+      },
+      {
+        "modelId": "gpt-5.6-luna[low]",
+        "name": "GPT-5.6-Luna (low)",
+        "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.6-luna[medium]",
+        "name": "GPT-5.6-Luna (medium)",
+        "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.6-luna[high]",
+        "name": "GPT-5.6-Luna (high)",
+        "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-luna[xhigh]",
+        "name": "GPT-5.6-Luna (xhigh)",
+        "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-luna[max]",
+        "name": "GPT-5.6-Luna (max)",
+        "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+      },
+      {
+        "modelId": "gpt-5.5[low]",
+        "name": "GPT-5.5 (low)",
+        "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.5[medium]",
+        "name": "GPT-5.5 (medium)",
+        "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.5[high]",
+        "name": "GPT-5.5 (high)",
+        "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.5[xhigh]",
+        "name": "GPT-5.5 (xhigh)",
+        "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4[low]",
+        "name": "GPT-5.4 (low)",
+        "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.4[medium]",
+        "name": "GPT-5.4 (medium)",
+        "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.4[high]",
+        "name": "GPT-5.4 (high)",
+        "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4[xhigh]",
+        "name": "GPT-5.4 (xhigh)",
+        "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4-mini[low]",
+        "name": "GPT-5.4-Mini (low)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.4-mini[medium]",
+        "name": "GPT-5.4-Mini (medium)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.4-mini[high]",
+        "name": "GPT-5.4-Mini (high)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4-mini[xhigh]",
+        "name": "GPT-5.4-Mini (xhigh)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[low]",
+        "name": "GPT-5.3-Codex-Spark (low)",
+        "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[medium]",
+        "name": "GPT-5.3-Codex-Spark (medium)",
+        "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[high]",
+        "name": "GPT-5.3-Codex-Spark (high)",
+        "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[xhigh]",
+        "name": "GPT-5.3-Codex-Spark (xhigh)",
+        "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+      }
+    ],
+    "currentModelId": "gpt-5.6-luna[max]"
+  },
+  "modes": {
+    "availableModes": [
+      {
+        "id": "read-only",
+        "name": "Read-only",
+        "description": "Requires approval to edit files and run commands."
+      },
+      {
+        "id": "agent",
+        "name": "Agent",
+        "description": "Read and edit files, and run commands."
+      },
+      {
+        "id": "agent-full-access",
+        "name": "Agent (full access)",
+        "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+      }
+    ],
+    "currentModeId": "read-only"
+  },
+  "configOptions": [
+    {
+      "id": "mode",
+      "name": "Mode",
+      "description": "Approval and sandboxing preset for the session",
+      "category": "mode",
+      "type": "select",
+      "currentValue": "read-only",
+      "options": [
+        {
+          "value": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "value": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "value": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ]
+    },
+    {
+      "id": "collaboration_mode",
+      "name": "Collaboration mode",
+      "description": "How Codex collaborates for subsequent turns",
+      "category": "collaboration_mode",
+      "type": "select",
+      "currentValue": "default",
+      "options": [
+        {
+          "value": "default",
+          "name": "Default"
+        },
+        {
+          "value": "plan",
+          "name": "Plan",
+          "description": "Plan before making changes"
+        }
+      ]
+    },
+    {
+      "id": "model",
+      "name": "Model",
+      "description": "Model Codex uses for the session",
+      "category": "model",
+      "type": "select",
+      "currentValue": "gpt-5.6-luna",
+      "options": [
+        {
+          "value": "gpt-5.6-sol",
+          "name": "GPT-5.6-Sol",
+          "description": "Latest frontier agentic coding model."
+        },
+        {
+          "value": "gpt-5.6-terra",
+          "name": "GPT-5.6-Terra",
+          "description": "Balanced agentic coding model for everyday work."
+        },
+        {
+          "value": "gpt-5.6-luna",
+          "name": "GPT-5.6-Luna",
+          "description": "Fast and affordable agentic coding model."
+        },
+        {
+          "value": "gpt-5.5",
+          "name": "GPT-5.5",
+          "description": "Frontier model for complex coding, research, and real-world work."
+        },
+        {
+          "value": "gpt-5.4",
+          "name": "GPT-5.4",
+          "description": "Strong model for everyday coding."
+        },
+        {
+          "value": "gpt-5.4-mini",
+          "name": "GPT-5.4-Mini",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+        },
+        {
+          "value": "gpt-5.3-codex-spark",
+          "name": "GPT-5.3-Codex-Spark",
+          "description": "Ultra-fast coding model."
+        }
+      ]
+    },
+    {
+      "id": "reasoning_effort",
+      "name": "Reasoning effort",
+      "description": "How much reasoning effort the model should use",
+      "category": "thought_level",
+      "type": "select",
+      "currentValue": "max",
+      "options": [
+        {
+          "value": "low",
+          "name": "Low",
+          "description": "Fast responses with lighter reasoning"
+        },
+        {
+          "value": "medium",
+          "name": "Medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "value": "high",
+          "name": "High",
+          "description": "Greater reasoning depth for complex problems"
+        },
+        {
+          "value": "xhigh",
+          "name": "Xhigh",
+          "description": "Extra high reasoning depth for complex problems"
+        },
+        {
+          "value": "max",
+          "name": "Max",
+          "description": "Maximum reasoning depth for the hardest problems"
+        }
+      ]
+    },
+    {
+      "id": "fast-mode",
+      "name": "Fast mode",
+      "description": "1.5x speed, increased usage",
+      "category": "model_config",
+      "type": "select",
+      "currentValue": "off",
+      "options": [
+        {
+          "value": "off",
+          "name": "Off",
+          "description": "Default speed, normal usage"
+        },
+        {
+          "value": "on",
+          "name": "On",
+          "description": "1.5x speed, increased usage"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "used": 38647,
+      "size": 828400,
+      "sessionUpdate": "usage_update"
+    }
+  ]
+}

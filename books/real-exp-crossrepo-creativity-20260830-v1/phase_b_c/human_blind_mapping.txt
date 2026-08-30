@@ -1,0 +1,2 @@
+A=treatment
+B=baseline

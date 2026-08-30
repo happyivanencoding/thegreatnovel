@@ -8,6 +8,7 @@ from story_mvp.character_seeds import (
     split_character_candidates,
     split_human_seed_authorities,
 )
+from story_mvp.character_prompts import HUMAN_PROMPT, PROTAGONIST_BLIND_WORLD_TEMPLATE
 
 
 SAMPLE = """# CHARACTER CANDIDATE 1｜甲／能力A
@@ -72,8 +73,19 @@ def test_new_seed_schemas_restore_ambition_without_story_hooks() -> None:
     assert "默认只作为低权重局部习惯" in HUMAN_SEED_SCHEMA
     assert "主角永远不是协调员" in HUMAN_SEED_SCHEMA
     assert "Audition Metadata（非 Canon）" in HUMAN_SEED_SCHEMA
+    assert "Action Audition" in HUMAN_SEED_SCHEMA
+    assert "机会成本" in HUMAN_SEED_SCHEMA
     assert "Initial State Seed" in HUMAN_SEED_SCHEMA
     assert "named NPC" not in HUMAN_SEED_SCHEMA
+
+
+def test_world_and_human_prompts_generate_living_story_material_without_new_authority() -> None:
+    assert "World Independence 要通过 Living Actors 成立" in PROTAGONIST_BLIND_WORLD_TEMPLATE
+    assert "谁现在私人地想要什么" in PROTAGONIST_BLIND_WORLD_TEMPLATE
+    assert "不要为此新增角色表、倒计时表或事件 schema" in PROTAGONIST_BLIND_WORLD_TEMPLATE
+    assert "Action Audition" in HUMAN_PROMPT
+    assert "不新增童年、能力、命运、使命、未来剧情" in HUMAN_PROMPT
+    assert "AUDIT_ONLY / Non-Canon" in HUMAN_PROMPT
 
 
 def test_split_human_seed_moves_current_desire_and_hook_out_of_core() -> None:

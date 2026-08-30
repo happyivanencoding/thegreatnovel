@@ -103,7 +103,7 @@ Reader Coordinates 因此分成两类：
 
 正确方向是“抽象价值观 → 阶段专属的具体创作问题”，而不是“抽象价值观 → 世界 ontology”：
 
-- World Independence 编译成：**没有主角时，谁正在追什么，哪里正在发生什么值得看的事？** 它证明世界还有别的故事，不要求建立完整利益社会；
+- World Independence 编译成：**没有主角时，谁现在私人地想要什么、下一步已经准备做什么、这会实际改变谁/哪件东西/哪个地方？** 它证明世界还有别的故事，不等于“几个机构会继续运转”，也不要求建立完整利益社会。机构、战争、市场与资源格局可以放大后果，但真正的大事优先由 Living Actors 发动；
 - Concrete Value / Reward Opportunity 编译成：**这里什么东西真的值钱、值得人物去争？**
 - Net New / Irreversible State / Action Space 编译成 Stage Delta：**这一阶段到底有哪些维度真实改变，哪些东西从此不能回到原状？** Power / Capability、Possession、Relationship、Identity / Access、Knowledge、Enemy State、World State 只写实际变化的部分；不为后台坐标制造剧情。
 - Fantasy Compounding 编译成纵向持续性：**过去已经得到的力量、物件、关系、身份、知识或入口，是否继续改变今天的行动、选择、敌人应对与世界局面？** 它不是每阶段必填字段。
@@ -247,7 +247,7 @@ Human Seed 只读 deterministic `LIFE_CONTEXT` 与 Human GBrain craft，不看 P
 - 稳定选择偏向 + 具体实现随现场变化；
 - 能真实改变去留、风险、时间、暴露和机会牺牲的具体关系；
 - T0 当前私人欲望（只进入可变状态）；
-- 候选人物钩子（非正式故事事实）。
+- 候选人物钩子使用一次短 **Action Audition**：只用已成立的动机/关系，让至少两项不能同时完整满足的私人价值在一个与未来 Power/主线无关的小现场里碰撞；人物必须做出可见选择并留下真实小代价。Audition 只帮助作者判断“这个人活起来有没有戏”，不解释人格、不新增事实、不进入 Human Core / Initial State / Story，也不能被当成以后固定重复的行为招式。
 
 #### 不负责
 

@@ -66,6 +66,24 @@ Production freeze 已完成 backend / authority / runtime 接线，并额外冻�
 
 ---
 
+### 0.2 2026-08-30 Cross-Repo Creativity Lift：Living Actor World + Human Action Audition
+
+用户要求不要只从经典小说蒸馏，也从其它开源小说系统学习“怎样更容易想出超棒世界、人物和故事”。本轮深入抽象 novel-studio 的 research-before-architecture、MARP 的 autonomous character/player、oh-story 的 scan→deconstruct→recombine 等方法，但没有复制它们的 Agent 数量、RAG 直灌或 trope 模板。
+
+三个受控实验结论：
+
+1. **Creative Quarry → Premise Forge：PARTIAL，不进入默认 production。** 三个冻结 Author Direction 中，Quarry 刺激后的货架创意 2 胜 1 负：generic_fantasy 与 game_instance 变得更远、更改动作；fast_multiworld 却把三张卡收敛成“活影/活声音/活伤口沿介质穿行”的同一家族。Compiler 同样没有稳定改善：generic 略好、fast 更差、game 两边全 FAIL。结论是外部素材刺激可以当 author-facing optional inspiration，但不应成为所有 Premise 的常驻前置层；raw GBrain/benchmark 也不直灌 Forge。
+2. **Living Actor World：PASS → production。** 同一 Author Direction / World GBrain 下，Control 的世界大事主要是“军府开发矿井、商盟竞矿、部族谈迁徙、修院探遗址”；Treatment 不改 World schema，只问“谁现在私人地想要什么 → 下一步马上做什么 → 没有主角也会改变什么”，结果出现少东家抢日骨证明自己、女校尉违令救弟弟、猎首夜袭救三个孩子、铸师拿危险短刃挑战逐师、兽群自行南迁。Terra-high 与 Luna-high fresh blind 都选 Treatment。冻结原则：**World Independence = Living Actors, not institutional activity.** 机构/战争/市场可放大后果，但“组织在运转”不能冒充“世界有故事”。不新增 Actor schema、Event table、Agent 或调用。
+3. **Human Action Audition：PASS → production。** 现有 Non-Canon `Audition Metadata / 人物钩子` 以前常复述“他可能为了 X 做 Y”；Treatment 让候选在 100—180 字小现场中，由已成立的 competing motives / 具体关系真正拉扯，必须作出一个可见选择并留下小代价。真实输出包括：赢赌局的钱本来买烤肉，却给母亲买念叨半年的酸酒、自己饿着还偷喝两口；快钱猎队与童年朋友的箱子冲突时把马借出去自己跑去取箱；一块漂亮门骨一半卖学费、一半做成带裂纹的歪挂饰送弟弟。Terra-high blind 选 Treatment / Method Gain PARTIAL，Luna-high 选 Treatment / YES；两者都确认未偷塞 Power/命运/主线 Canon。Audition 继续由现有 parser 与 Human Core / Initial State 剥离，不新增 Authority，也不能被当成固定人格算法。
+
+冻结前又做了第二组 cross-sample validation，Treatment 在生成前锁定，没有看完再改：**Living Actor World 两个样本共 4/4 blind votes 选 Treatment；Human Action Audition 两个样本共 4/4 blind votes 选 Treatment。** 第二个 World 的 Treatment 仍保留王朝/军府/宗门/商盟/族群/生态等宏观结构，但把大事发动改成夺传承、救女儿抢药、幼崽迁徙、复仇烧巢、母兽护崽等已经启动的动作；Terra 判 Overcorrection NO，Luna 提醒私人动机略密但仍判 Method Gain YES。第二个 Human Treatment 故意没有统一成关系牺牲：有人为了掌声错过妹妹的鞋、有人为亲密停留后惹对方生气、有人因父亲一句话放弃最划算交易、有人让好奇压过关系而真正伤到对方；Terra 判 Gain YES / Overcorrection NO，Luna 判 Gain PARTIAL，并提醒“眼前刺激压过承诺”不能变成新固定算法。这个 warning 已由现有边界覆盖，不新增第二层 guard。
+
+真正继承的 decision model：**外部项目的方法要放在它真正有效的创作层。** Research stimulus 不等于应该新增一个 Brainstorm Agent；角色自治不等于角色 Agent 开会；trope extraction 不等于让模板决定 Canon。TGN 只吸收能嵌进现有 Split Authority、提高故事欲望与人物行动、又不增加自洽闭环的最小生成动作。
+
+完整实验：`books/real-exp-crossrepo-creativity-20260830-v1/RESULTS.md`。
+
+---
+
 ## 1. North Star
 
 TGN 的目标不是“自动生成一个逻辑完整的故事”，而是生成一部具有顶级商业潜力的**成熟中文男频成长长篇**：

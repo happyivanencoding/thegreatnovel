@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.29
+version: 0.3.30
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -97,8 +97,10 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Few deep rules > many hard gates
 - Supporting Logic Must Not Automatically Become Story Engine
 - Backstage Principles Must Not Become Generated Ontology
+- **Institutional Activity ≠ Living World**：World Independence 不能仅靠“军府在开发、商盟在竞争、学院在调查、部族在迁徙”证明。优先追到一个具体人物、生物或小群体：他现在私人地想要什么、下一步马上做什么、没有主角也会改变什么。机构/制度/生态可以放大后果，但不能默认替代 Living Actor 成为故事发动机；反过来也不要把所有世界冲突过度纠正成私人恩怨
 - Authority separation beats negative-prompt restraint when causal leakage is the problem
 - Character is a person, not a psychological proof
+- **Human candidate needs Action Evidence, not another personality sentence**：候选期 Non-Canon Audition 应用一个小而真实的取舍现场检验 competing motives / relationship 是否会落成行动与机会成本；Audition 不是 Canon，不新增人物历史，也不能把一次表现固化成“以后每次都这样”的人格算法
 - Growth is longitudinal, not a per-stage / per-block tax
 - Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
 - **Small Grammar ≠ Small World**：审计底层学习成本与 Fantasy Surface 丰富度时必须分开判断；少系统不能成为压掉装备、身体、异兽、环境、奇物、副轴与复合玩法的理由

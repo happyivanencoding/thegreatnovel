@@ -1,0 +1,354 @@
+{
+  "ok": true,
+  "label": "treatment-instance",
+  "model": "gpt-5.6-luna",
+  "effort": "high",
+  "mode": "read-only",
+  "wall_seconds": 340.712,
+  "text": "我会把三张卡都当作严格的非 Canon 候选：先把 World、T0 Origin、各自尺度和 Power 闭合，再让第一副本与前五章承诺从这些字段推出；不自动替作者选方向，也不把后续副本答案提前写死。# SINGLE-PASS PREMISE CANDIDATES\n\n## S1｜死者最后一步\n\n### 一句话货架简介\n\n主角是一具从尸体最后动作里孵出的行动残骸，能偷走死者最后一个动作，让自己完成普通活人绝不可能完成的逃生、杀人和夺宝。\n\n### World-only Direction\n\n所有副本都是独立、完整、会自行运转的封闭世界；进入者只能通过入口进入，并在满足主任务与返程边界后带走有限奖励。\n\n跨副本主尺为「余动阶」：\n\n- R0：只能完成自身自然动作。\n- R1：能强制完成一次身体级动作。\n- R2：能影响手持物或小型生物。\n- R3：能影响房间范围。\n- R4：能影响街区范围。\n- R5：能影响城市局部。\n- R6：能影响世界级事件。\n\n第一副本为「白潮城」：一座建在潮间泥滩上的城，每日会经历三次涨潮。退潮时只露出一条会不断变窄的硬泥脊，涨潮后街道、船屋和墓地都会被水流重新切断。\n\n本地力量尺为「潮相」：\n\n- C0：无法承受潮水冲击。\n- C1：能在浅水中站立。\n- C2：能沿硬泥脊移动。\n- C3：能在一次涨潮中存活。\n- C4：能改变一条潮沟。\n- C5：能改变城内局部潮汐。\n\n主任务：带出一枚「潮肺」。\n\n返程边界：第三次涨潮封死入口后，副本关闭。\n\n可选目标：替退役摆渡人卢婆找回一只铁盒。\n\n### World Interface-only Direction\n\n任何生物或物体死亡、停止运转后，都会在原地留下三十息的「最后动作重影」。附近的人能够观看、记录和传播这段重影。\n\n重影只能显示动作，不能再次产生力量；记录可以作为证词、交易凭据或罪责依据，但不能改写已经发生的结果。\n\n### Protagonist Ontology-only Direction\n\n主角是「行动残骸」：\n\n- 没有完整器官，身体由灰白色肌肉、断裂骨节和不断重复的微小动作组成。\n- 可以被实体攻击，也能抓握、奔跑和攀爬。\n- 没有稳定的脸，面部会短暂呈现最近接触过的死者最后表情。\n- 不属于活人，也不属于普通尸体。\n- 身体不会自然成长，只能通过 Power 改变行动能力。\n\n### Initial Origin-only Direction\n\nT0 时，主角诞生于白潮城外的潮泥尸坑。\n\n三具溺亡者的最后动作同时重叠：一人抓住木桩，一人试图爬起，一人伸手求救。重叠后的动作凝成一具半人高的灰白残骸。\n\n出生时没有记忆、名字、装备或同伴，只能缓慢爬行。\n\n### Initial Scale Position-only Direction\n\n- 跨副本主尺「余动阶」：R1。初始仅具备一次身体级强制动作的潜能。\n- 白潮城本地尺「潮相」：C0。T0 尚未接触潮水，身体也不具备承受潮冲的本地适应性。\n- 副本内登记身份尺：不适用。白潮城的身份登记只适用于具有本地户籍和生理生命迹象的居民，行动残骸不满足条件。\n\n### Power-only Direction\n\nPower 名称：「偷终动作」。\n\n触发条件：\n\n- 主角必须直接触碰一个刚死亡的生物，或一个刚停止运转的物体。\n- 目标必须仍保留三十息内的最后动作重影。\n- 只能选择目标最后一次主动完成或试图完成的动作。\n\n目标类别：\n\n- 死亡生物。\n- 停止运转的机械、门锁、船、陷阱等物体。\n\n可执行动作：\n\n- 偷走该动作，储存在自身。\n- 让自己或一个接触中的目标完整执行一次该动作。\n- 动作的方向、力度和范围不能超过原动作。\n\n永久边界：\n\n- 同时只能储存一个动作。\n- 使用后动作消失。\n- 不能复活死者，不能获得死者记忆，不能制造目标没有做过的动作。\n- 若自身结构无法完成该动作，只能完成可承受部分。\n- 不能使用超过三十息的死亡重影。\n- T0 例外：诞生时自动储存三具尸体重叠后的一个动作，仅此一次，之后仍必须按正常触发条件使用。\n\n### Story Interface / Opening Promise\n\n副本界面只显示四项：\n\n- 主任务：带出潮肺。\n- 可选目标：找回铁盒。\n- 失败边界：第三潮封门。\n- 可携带奖励：潮肺、铁盒及被明确允许带出的物品。\n\n潮肺能让持有者在一次完整涨潮中保持呼吸，离开副本后仍能改变后续副本的潜水、窒息和水下移动选择。\n\n#### 1—10章 Outline\n\n1. 主角从尸坑诞生，偷走守尸人的最后抓握动作，第一次逃生。\n2. 遇见卢婆，得知铁盒与潮肺都在城内，接受互相利用的交易。\n3. 硬泥脊断裂，主角利用死船夫的抛绳动作渡过潮沟。\n4. 夺得潮肺，死去城主的最后动作重影却显示它并非城主所有。\n5. 卢婆从同伴变成竞争者，承认铁盒里有她儿子死前留下的记录。\n6. 收尸 guild 依据重影追捕主角。\n7. 主角发现潮肺会主动吸取附近死者的最后一口气。\n8. 卢婆为夺铁盒出卖主角，却在关键处剪断追捕者的退路。\n9. 第三次涨潮提前到来，潮肺、铁盒和出口只能保全两项。\n10. 主角带着一项主奖励和一项私人承诺离开，白潮城留下未解释完的死者记录。\n\n#### 本次前五章实现界面\n\n前五章必须完成：\n\n- 出生规则被兑现。\n- Power 首次显露并改变生存判断。\n- 第一件高价值物被获得。\n- 卢婆从向导变成利益相关者。\n- 主任务与可选目标发生冲突。\n\n### Authority-Compilation Trace\n\n1. **尸坑残骸爬出** → `Initial Origin-only Direction` → T0 诞生已成立 → 尸坑与残骸身体 → 合法，因为身体由三具尸体最后动作重叠形成。\n2. **主角抓住守尸人的铁钩并逃出** → `Power-only Direction` + 守尸人死亡重影 → 触发已满足 → 守尸人遗留的抓握动作 → 合法，因为目标刚死亡且动作在三十息内。\n3. **沿硬泥脊渡潮沟** → `World-only Direction` 的白潮城地形 + `偷终动作` → 触发已满足 → 死船夫的抛绳动作 → 合法，因为主角只复现一个已有动作。\n4. **夺取潮肺** → `World-only Direction` 的副本目标 + 城主遗体重影 → Power 触发已满足 → 潮肺与城主最后的藏匿动作 → 合法，因为动作只能帮助打开或移动已有目标，不能凭空生成潮肺。\n5. **旁观者传播城主最后动作** → `World Interface-only Direction` → 观看与记录规则已满足 → 重影和记录 → 合法，因为界面只传播证据，不改变潮肺归属。\n6. **潮肺带出后继续生效** → `Story Interface / Opening Promise` 的可携带奖励规则 → 返程条件满足后生效 → 潮肺 → 合法，因为奖励是实体物件，不是临时结算 Buff。\n\n### 第一章标志性画面\n\n涨潮前的尸坑里，三具尸体同时重复最后一个动作：抓、爬、求救。灰白色残骸从三道动作中站起来，第一件事不是呼吸，而是伸手抓住一只正在收紧的铁钩。\n\n### 主角反复会做的新动作\n\n- 从尸体身上偷走最后一次挥刀、攀爬、开锁或投掷。\n- 让死去的船、门锁和机关替自己完成最后一次动作。\n- 把不同死者的动作接成一条新的逃生路径。\n- 在公开重影中判断谁在撒谎。\n- 为了保留一个动作，故意不立即使用另一个动作。\n\n### 第一次不公平兑现\n\n主角被十几名活人堵在断桥边，正常人只能跳进涨潮水里。他触碰刚刚溺死的船夫，偷走对方最后一次「把绳索抛上桩顶」的动作，身体瞬间完成一次不可能的精准投掷，直接把自己拉到对岸。\n\n### 20章玩法扩张\n\n- 从单纯偷动作，发展为利用死亡现场重组完整行动链。\n- 活人会故意制造“最后动作”，诱导主角获得错误能力。\n- 公开重影成为证据、勒索和舆论武器。\n- 带出的潮肺改变跨副本生存路线，但不会取代 Power。\n- 副本可以围绕战争遗址、失控机械、尸体密集区和即将毁灭的城市展开。\n\n### 100章以上仍能长出的不同故事\n\n可以写成战争世界、灾难世界、刑案世界、古墓世界、机械文明和死后社会。\n\n长期核心不是“不断升级法术”，而是：\n\n- 谁控制死者最后的叙述。\n- 主角是否有资格使用死者留下的动作。\n- 活人会不会为了制造强力遗产而主动设计自己的死亡。\n- 一个没有正常生命史的主角，如何建立属于自己的动作与名字。\n\n### 最小可信桥梁\n\n只需固定三件事：\n\n1. 副本是独立封闭世界。\n2. 死亡会留下最后动作重影。\n3. 主角能偷走并复现其中一个动作。\n\n不需要预设后续世界、中央控制者或无限复制机制。\n\n### 不可磨平的三点\n\n- 主角不是“会用尸术的人”，而是由动作残骸组成的非人生命。\n- 能力的资源是死者最后一刻，而不是灵力、装备或等级经验。\n- 每次获得力量，都同时接触一个死者未完成的欲望。\n\n---\n\n## S2｜看见我，给我一条路\n\n### 一句话货架简介\n\n主角是一道只有被人看见才能落地的影子，任何活人看清他一瞬间，他就能从对方的视野里跳到另一个位置。\n\n### World-only Direction\n\n所有副本都是独立世界，进入者通过副本入口抵达本地，系统只提供主任务、可选目标、返程边界和可携带奖励。\n\n跨副本主尺为「显身阶」：\n\n- S0：完全依赖直接注视。\n- S1：脱离注视一拍仍能保持形体。\n- S2：脱离注视三息仍能保持形体。\n- S3：脱离注视一分钟。\n- S4：脱离注视十分钟。\n- S5：脱离注视一小时。\n- S6：完全独立存在。\n\n第一副本为「盲灯城」：一座建在地下的城市。城中唯一安全的光来自蓝色灯火，黑色灯光会吸引无脸生物；居民长期蒙眼或佩戴遮光面罩生活。\n\n本地力量尺为「灯阶」：\n\n- L0：无法点燃或维持灯火。\n- L1：维持手灯。\n- L2：照亮房间。\n- L3：照亮街道。\n- L4：控制城区光源。\n- L5：重燃整座城市的主灯。\n\n主任务：带出塔顶的第一枚蓝灯芯。\n\n返程边界：黑日经过城市时，所有副本出口关闭。\n\n可选目标：帮助盲信使芽娘救出被困在灯井里的弟弟。\n\n### World Interface-only Direction\n\n任何事件只要被两名以上独立的活人同时看见，就会在附近反光表面留下一个小时的「公共回像」。\n\n公共回像只能重复展示原事件，不能触碰物体、推动人物或替任何人行动。它可以被观看、复制和传播，并会影响当地的审判、声誉、交易和追捕。\n\n### Protagonist Ontology-only Direction\n\n主角是「视影体」：\n\n- 没有固定肉身，初始形态是一道黑色人形影子。\n- 被一名活人直视时，可以暂时获得实体轮廓。\n- 没有独立体温、心跳和正常重量。\n- 可以说话，但声音只能从被看见的实体部位传出。\n- 不依赖镜子、摄像机或死者的观看。\n\n### Initial Origin-only Direction\n\nT0 时，主角诞生于盲灯城废弃审判厅的一面碎裂镜子中。\n\n镜面里原本只有一盏熄灭的灯和一道没有主人的影子。影子在镜面破裂后保持人形，拥有声音与连续意识，但没有任何记忆、名字或外部实体。\n\n### Initial Scale Position-only Direction\n\n- 跨副本主尺「显身阶」：S0。离开活人直接注视后，形体立即失去稳定。\n- 盲灯城本地尺「灯阶」：L0。主角没有灯火器官，也没有控制本地灯源的能力。\n- 盲灯城居民身份尺：不适用。该尺只适用于能够被城市登记为居民的实体生命，视影体不具备本地生理身份。\n\n### Power-only Direction\n\nPower 名称：「视线借路」。\n\n触发条件：\n\n- 至少一名活着且有意识的生物，直接看清主角完整形体。\n- 连续注视必须达到一拍。\n- 摄像机、画像、镜中倒影和公共回像都不算直接观看。\n\n目标类别：\n\n- 正在直接观看主角的活人。\n\n可执行动作：\n\n- 主角可以瞬间移动到该观察者当前视野内的任意空置位置。\n- 移动后主角完整落地，不需要中间路径。\n- 可以带走贴身小物，但不能携带其他生物。\n- 同一个观察者十息内只能被借路一次。\n\n永久边界：\n\n- 目标必须仍在直接观看范围内。\n- 不能进入被其他物体占据的位置。\n- 不能通过记录、镜面或死人视线触发。\n- 若没有任何活人注视，主角不会死亡，但会退回最近一次被直接看见的位置。\n- Power 不增加显身阶；长期脱离注视仍然受 S0 限制。\n\n### Story Interface / Opening Promise\n\n副本界面只显示：\n\n- 主任务：带出第一枚蓝灯芯。\n- 可选目标：救出芽娘的弟弟。\n- 失败边界：黑日经过时出口关闭。\n- 可携带奖励：蓝灯芯、当地物件和被明确承认的契约。\n\n第一枚蓝灯芯离开盲灯城后仍能让主角在短时间内保持可见实体，改变他今后在无人观看环境中的行动选择。\n\n#### 1—10章 Outline\n\n1. 主角从碎镜中成形，被守卫看见后第一次借路逃出审判厅。\n2. 芽娘通过脚步和声音找到他，提出救弟弟的交易。\n3. 主角借多个路人的视线进入灯塔，夺得第一枚蓝灯芯。\n4. 两名守卫同时看见全过程，公共回像开始在全城反复播放。\n5. 芽娘承认弟弟并不是被困，而是被灯井选择为下一任主灯人。\n6. 灯猎队利用公共回像锁定主角的移动模式。\n7. 主角在无人街区短暂失去形体，只能依靠蓝灯芯撑住轮廓。\n8. 芽娘将主角卖给灯猎队，换取弟弟的生存资格。\n9. 黑日提前经过，城市所有注视关系被打乱。\n10. 主角必须在救弟弟、带走灯芯和保住自己的实体之间选择两项。\n\n#### 本次前五章实现界面\n\n前五章必须完成：\n\n- 影子存在形态被直接展示。\n- 视线借路至少成功两次。\n- 蓝灯芯被获得。\n- 公共回像让全城重新定价主角。\n- 芽娘的真实利益改变双方关系。\n\n### Authority-Compilation Trace\n\n1. **影子从碎镜中成形** → `Initial Origin-only Direction` → T0 形体已成立 → 碎镜内的无主影子 → 合法，因为起点只规定出生位置与零点状态。\n2. **主角被守卫看见后跳到门后** → `Power-only Direction` → 一名活人连续看清完整形体，触发已满足 → 守卫当前视野内的空位 → 合法，因为目标是直接观看者。\n3. **借路进入灯塔** → `Power-only Direction` → 多个观看者分别满足触发 → 视野内不同空位 → 合法，因为每次移动都依赖当前直接视线。\n4. **全城播放主角夺灯芯的过程** → `World Interface-only Direction` → 两名活人同时见证，触发已满足 → 公共回像 → 合法，因为回像只记录与传播，不帮助主角移动。\n5. **主角在黑暗中失去实体** → `Protagonist Ontology-only Direction` + `Initial Scale Position-only Direction` → S0 边界始终有效 → 无直接观察环境 → 合法，因为 Power 不提高显身阶。\n6. **蓝灯芯离开副本后仍能维持短暂实体** → `Story Interface / Opening Promise` → 可携带奖励规则已满足 → 蓝灯芯 → 合法，因为这是实体奖励，不是未声明的新 Power。\n\n### 第一章标志性画面\n\n碎裂审判镜里，一道没有主人的黑影睁开眼。守卫低头看见它的一瞬间，影子从镜面里消失，下一刻已经站在守卫身后的灯火里。\n\n### 主角反复会做的新动作\n\n- 借不同人的视线连续跳跃。\n- 把敌人的注视变成自己的移动路线。\n- 故意制造公开场面，以获得更多“落点”。\n- 在盲区里变成无法触碰的影子。\n- 让两个敌人互相争夺“谁在看他”。\n\n### 第一次不公平兑现\n\n主角被封在没有门的黑屋里。守卫从观察孔看进来，主角等对方完整看清自己，瞬间跳到守卫背后的空位，夺走钥匙后再次借另一名守卫的视线离开整条走廊。\n\n### 20章玩法扩张\n\n- 副本中的观看关系成为潜入、追逐和战斗地形。\n- 主角需要判断什么时候制造观众，什么时候消灭所有视线。\n- 公共回像制造声誉、悬赏、崇拜和伪证。\n- 蓝灯芯让他短时间摆脱 S0，但无法取代借路。\n- 不同副本可以拥有不同的观看习俗、隐私制度和公开审判传统。\n\n### 100章以上仍能长出的不同故事\n\n可以写成竞技场、宫廷、宗教城、隐秘战争、城市监控、公众审判和反观看社会。\n\n长期冲突来自：\n\n- 被看见究竟是力量还是暴露。\n- 主角是否需要公众才能成为“真实的人”。\n- 失去注视时，他是否仍拥有连续的自我。\n- 一个能把观众变成道路的人，最终会如何面对没有观众的世界。\n\n### 最小可信桥梁\n\n只需固定三件事：\n\n1. 视影体依赖直接观看。\n2. 直接观看可以成为移动入口。\n3. 两人以上的见证会生成不可干涉的公共记录。\n\n### 不可磨平的三点\n\n- 主角的移动依赖人类目光，而不是地图、法阵或传送术。\n- 公开观看既是战斗资源，也是社会枷锁。\n- 他的最大弱点不是力量不足，而是无人看见。\n\n---\n\n## S3｜一张会走路的嘴\n\n### 一句话货架简介\n\n主角是一张没有身体的活嘴，能把墙、门、牢笼和任何真实边界吞掉，在两侧之间咬出一条路。\n\n### World-only Direction\n\n所有副本都是具有真实历史、人物关系和本地秩序的封闭世界。每个副本至少存在一种可被感知的物理边界：墙、门、壳、牢笼、城界或空间隔层。\n\n跨副本主尺为「破界阶」：\n\n- B0：不能破坏边界。\n- B1：可打开指宽缝隙。\n- B2：可打开手掌宽度。\n- B3：可打开一人通过的缺口。\n- B4：可打开车辆通过的缺口。\n- B5：可打开房屋级缺口。\n- B6：可打开街区级缺口。\n\n第一副本为「封顶矿城」：一座建在地下矿脉中的城市，上方覆盖着一层厚重透明穹顶。穹顶每天向下压缩，逼迫居民不断迁往更深处。\n\n本地力量尺为「开界阶」：\n\n- M0：只能使用现成门缝。\n- M1：可打开手指宽的石缝。\n- M2：可打开人头宽的缝隙。\n- M3：可打开单人通道。\n- M4：可打开房间级通道。\n- M5：可打开城市壳层。\n\n主任务：带出封顶矿城中央的「定缝钉」。\n\n返程边界：穹顶压到第三层矿道后，入口永久闭合。\n\n可选目标：帮助锁匠罗婶救出被封在旧矿区的女儿。\n\n### World Interface-only Direction\n\n任何人或物穿越、破坏、封闭真实边界时，边界表面都会留下六十息的红色「界痕」。\n\n界痕可以被观看、记录和传播，能够作为通行证、犯罪证据、领地争议和追踪依据，但界痕本身不能扩大缺口、改变边界或替任何人穿越。\n\n### Protagonist Ontology-only Direction\n\n主角是一张会移动的黑色活嘴：\n\n- 没有头、躯干、四肢和固定位置。\n- 可以说话、听见声音、感知边界两侧的压力。\n- 嘴唇能贴附在墙、门、笼、地面裂缝等物理边界上。\n- 不能抓握普通物品，也不能直接承受没有边界交叉的攻击。\n- 只有在边界处，主角才拥有稳定存在。\n\n### Initial Origin-only Direction\n\nT0 时，主角诞生于封顶矿城最底层的一只封闭救生棺内部。\n\n棺盖和棺身之间原本只有一条头发丝宽的缝。缝隙中长出一张拇指宽的黑嘴，拥有一把成年人的声音，但没有记忆、姓名、身体或移动能力。\n\n### Initial Scale Position-only Direction\n\n- 跨副本主尺「破界阶」：B1。最大稳定缺口为指宽。\n- 封顶矿城本地尺「开界阶」：M1。T0 只能处理手指宽的石缝。\n- 穹顶「壳压阶」：不适用。该尺只衡量矿城结构承受的下压强度，适用于建筑边界，不适用于主角这一非结构实体。\n\n### Power-only Direction\n\nPower 名称：「吞界」。\n\n触发条件：\n\n- 嘴唇必须直接贴住一条真实、物理存在的边界。\n- 边界必须分隔两个不同空间、容器或封闭区域。\n- 目标边界必须能被主角感知到两侧压力。\n\n目标类别：\n\n- 门、墙、牢笼、铠甲、箱体、城墙、矿道隔层等实体边界。\n- 不包括人体皮肤、抽象规则、社会身份、记忆和纯能量屏障。\n\n可执行动作：\n\n- 吞掉一段边界，在两侧制造一个临时连通口。\n- 主角可以自己通过，也可以让一名生物或一件物品通过。\n- 缺口持续六十息，随后自动闭合。\n- 每成功带一名活着的生物完整通过一次，稳定缺口提升一阶，最高 B6。\n\n永久边界：\n\n- 不能凭空制造第二侧空间。\n- 不能吞掉抽象概念或人的身体边界。\n- 同一条边界在同一副本内只能吞一次。\n- 缺口闭合后，已经通过的东西不会被拉回。\n- 主角不能在没有边界的开放空间中自由移动。\n- T0 例外：出生时可吞掉救生棺盖与棺身之间的原始缝隙一次，此后必须重新触碰边界。\n\n### Story Interface / Opening Promise\n\n副本界面只显示：\n\n- 主任务：带出定缝钉。\n- 可选目标：救出罗婶的女儿。\n- 失败边界：穹顶压到第三层矿道。\n- 可携带奖励：定缝钉及被明确带出的物件。\n\n定缝钉能让一次吞界缺口保持稳定更久，离开副本后仍能改变主角的跨墙、救援和临时据点玩法，但不能取消 Power 的目标限制。\n\n#### 1—10章 Outline\n\n1. 黑嘴在救生棺缝中诞生，吞掉一指宽边界，第一次离开棺材。\n2. 遇见锁匠罗婶，得知穹顶正在下压，接受寻找定缝钉的交易。\n3. 吞掉矿门与铁笼，进入旧矿区并第一次带出一名活人。\n4. 罗婶为救女儿把主角封进一段死矿道，双方关系反转。\n5. 主角在压缩前吞开一面禁墙，发现旧矿区里仍有一个被城市遗忘的生活区。\n6. 定缝钉被矿主和救援队同时争夺。\n7. 主角必须选择扩大通道救人，还是保留缺口尺寸通过定缝钉。\n8. 穹顶下压导致整座矿城的边界重新排列。\n9. 罗婶女儿拒绝离开旧矿区，要求主角带出一批无法搬走的居民。\n10. 主角带出定缝钉，并决定是否让封顶矿城保留一条永远打开的裂口。\n\n#### 本次前五章实现界面\n\n前五章必须完成：\n\n- 非人形态和移动限制被直接展示。\n- 吞界能力连续改变地形。\n- 第一名被救出的活人带来 Power 成长。\n- 罗婶从委托人变成控制主角行动的人。\n- 禁墙后的新事实重新定义“救人”和“带出奖励”。\n\n### Authority-Compilation Trace\n\n1. **黑嘴从救生棺缝中诞生** → `Initial Origin-only Direction` → T0 已成立 → 救生棺内的头发丝缝隙 → 合法，因为出生位置与形态已明确。\n2. **吞掉棺盖边界** → `Power-only Direction` → 嘴唇接触实体边界，触发已满足 → 棺盖与棺身之间的缝 → 合法，因为目标分隔两个真实空间。\n3. **打开矿门进入旧矿区** → `Power-only Direction` + `World-only Direction` → 目标是实体门，触发已满足 → 矿城两个封闭区域 → 合法，因为 Power 只移除边界，不制造新空间。\n4. **救出第一名活人并提升破界阶** → `Power-only Direction` → 生物完整通过，成长条件已满足 → 一名活人 → 合法，因为成长规则已写入 Power。\n5. **界痕被矿主用于追踪** → `World Interface-only Direction` → 边界被穿越，触发已满足 → 红色界痕 → 合法，因为界痕只记录和传播，不替任何人打开道路。\n6. **定缝钉延长缺口时间** → `Story Interface / Opening Promise` → 可携带奖励已获得 → 定缝钉 → 合法，因为延长效果来自明确写出的物件，不是临时增加 Power。\n7. **主角不能在露天矿场奔跑** → `Protagonist Ontology-only Direction` + `Initial Scale Position-only Direction` → 无真实边界，触发不满足 → 开放空间 → 合法，因为行动限制始终有效。\n\n### 第一章标志性画面\n\n地下救生棺里没有人，只有一张黑嘴贴着棺盖缝隙说：“外面有人吗？”\n\n下一秒，嘴把缝隙咬宽，整口棺材像被撕开的门一样向两侧张开。\n\n### 主角反复会做的新动作\n\n- 咬开墙、门、箱和牢笼，改变战场结构。\n- 把敌人的防具变成自己的入口。\n- 在即将坍塌的建筑中连续制造临时通道。\n- 带着一个人穿过原本不可能通过的边界。\n- 选择保留哪一条界线，迫使本地人物重新争夺空间。\n\n### 第一次不公平兑现\n\n矿主把主角锁在三层铁笼和石墙之后，十几名守卫堵住唯一出口。主角没有攻击任何人，只咬住铁笼的一条边，把矿主的私人金库、囚室和外部矿道连成一条短暂通路，直接从所有防守中穿出。\n\n### 20章玩法扩张\n\n- Power 从逃生工具变成攻城、救援、截货和临时基地能力。\n- 敌人会开始设计没有接缝、没有内外的封闭结构。\n- 界痕成为追踪、领地争夺和身份审判依据。\n- 定缝钉让主角获得更长的临时据点窗口。\n- 副本可以围绕城墙、监狱、巨兽体内、封闭船舱和战争堡垒展开。\n\n### 100章以上仍能长出的不同故事\n\n可以写成监狱世界、城邦世界、战争世界、地下文明、巨型生物体内、封闭宫殿和空间灾难。\n\n长期核心是：\n\n- 边界究竟是在保护谁，还是在囚禁谁。\n- 主角每次开路，是否也在摧毁一个本地世界赖以维持的秩序。\n- 一个只能在“内外之间”存在的生命，能否拥有真正属于自己的家。\n- 当主角足以打开城市级缺口时，打开道路是否等于发动战争。\n\n### 最小可信桥梁\n\n只需固定三件事：\n\n1. 副本世界由真实边界组成。\n2. 界痕负责记录边界变化。\n3. 主角能吞掉实体边界并短暂连通两侧。\n\n### 不可磨平的三点\n\n- 主角不是会开门的人，而是门本身的捕食者。\n- Power 改变的是空间关系和救援可能，不是攻击数值。\n- 每一次开路都会同时改变本地人的逃生、财产和领地关系。",
+  "stopReason": "end_turn",
+  "sessionId": "01a053a0-21b3-74a3-99f5-56ed01f9fbad",
+  "models": {
+    "availableModels": [
+      {
+        "modelId": "gpt-5.6-sol[low]",
+        "name": "GPT-5.6-Sol (low)",
+        "description": "Latest frontier agentic coding model. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.6-sol[medium]",
+        "name": "GPT-5.6-Sol (medium)",
+        "description": "Latest frontier agentic coding model. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.6-sol[high]",
+        "name": "GPT-5.6-Sol (high)",
+        "description": "Latest frontier agentic coding model. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-sol[xhigh]",
+        "name": "GPT-5.6-Sol (xhigh)",
+        "description": "Latest frontier agentic coding model. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-sol[max]",
+        "name": "GPT-5.6-Sol (max)",
+        "description": "Latest frontier agentic coding model. Maximum reasoning depth for the hardest problems"
+      },
+      {
+        "modelId": "gpt-5.6-sol[ultra]",
+        "name": "GPT-5.6-Sol (ultra)",
+        "description": "Latest frontier agentic coding model. Maximum reasoning with automatic task delegation"
+      },
+      {
+        "modelId": "gpt-5.6-terra[low]",
+        "name": "GPT-5.6-Terra (low)",
+        "description": "Balanced agentic coding model for everyday work. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.6-terra[medium]",
+        "name": "GPT-5.6-Terra (medium)",
+        "description": "Balanced agentic coding model for everyday work. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.6-terra[high]",
+        "name": "GPT-5.6-Terra (high)",
+        "description": "Balanced agentic coding model for everyday work. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-terra[xhigh]",
+        "name": "GPT-5.6-Terra (xhigh)",
+        "description": "Balanced agentic coding model for everyday work. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-terra[max]",
+        "name": "GPT-5.6-Terra (max)",
+        "description": "Balanced agentic coding model for everyday work. Maximum reasoning depth for the hardest problems"
+      },
+      {
+        "modelId": "gpt-5.6-terra[ultra]",
+        "name": "GPT-5.6-Terra (ultra)",
+        "description": "Balanced agentic coding model for everyday work. Maximum reasoning with automatic task delegation"
+      },
+      {
+        "modelId": "gpt-5.6-luna[low]",
+        "name": "GPT-5.6-Luna (low)",
+        "description": "Fast and affordable agentic coding model. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.6-luna[medium]",
+        "name": "GPT-5.6-Luna (medium)",
+        "description": "Fast and affordable agentic coding model. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.6-luna[high]",
+        "name": "GPT-5.6-Luna (high)",
+        "description": "Fast and affordable agentic coding model. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-luna[xhigh]",
+        "name": "GPT-5.6-Luna (xhigh)",
+        "description": "Fast and affordable agentic coding model. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.6-luna[max]",
+        "name": "GPT-5.6-Luna (max)",
+        "description": "Fast and affordable agentic coding model. Maximum reasoning depth for the hardest problems"
+      },
+      {
+        "modelId": "gpt-5.5[low]",
+        "name": "GPT-5.5 (low)",
+        "description": "Frontier model for complex coding, research, and real-world work. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.5[medium]",
+        "name": "GPT-5.5 (medium)",
+        "description": "Frontier model for complex coding, research, and real-world work. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.5[high]",
+        "name": "GPT-5.5 (high)",
+        "description": "Frontier model for complex coding, research, and real-world work. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.5[xhigh]",
+        "name": "GPT-5.5 (xhigh)",
+        "description": "Frontier model for complex coding, research, and real-world work. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4[low]",
+        "name": "GPT-5.4 (low)",
+        "description": "Strong model for everyday coding. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.4[medium]",
+        "name": "GPT-5.4 (medium)",
+        "description": "Strong model for everyday coding. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.4[high]",
+        "name": "GPT-5.4 (high)",
+        "description": "Strong model for everyday coding. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4[xhigh]",
+        "name": "GPT-5.4 (xhigh)",
+        "description": "Strong model for everyday coding. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4-mini[low]",
+        "name": "GPT-5.4-Mini (low)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.4-mini[medium]",
+        "name": "GPT-5.4-Mini (medium)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.4-mini[high]",
+        "name": "GPT-5.4-Mini (high)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.4-mini[xhigh]",
+        "name": "GPT-5.4-Mini (xhigh)",
+        "description": "Small, fast, and cost-efficient model for simpler coding tasks. Extra high reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[low]",
+        "name": "GPT-5.3-Codex-Spark (low)",
+        "description": "Ultra-fast coding model. Fast responses with lighter reasoning"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[medium]",
+        "name": "GPT-5.3-Codex-Spark (medium)",
+        "description": "Ultra-fast coding model. Balances speed and reasoning depth for everyday tasks"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[high]",
+        "name": "GPT-5.3-Codex-Spark (high)",
+        "description": "Ultra-fast coding model. Greater reasoning depth for complex problems"
+      },
+      {
+        "modelId": "gpt-5.3-codex-spark[xhigh]",
+        "name": "GPT-5.3-Codex-Spark (xhigh)",
+        "description": "Ultra-fast coding model. Extra high reasoning depth for complex problems"
+      }
+    ],
+    "currentModelId": "gpt-5.6-luna[max]"
+  },
+  "modes": {
+    "availableModes": [
+      {
+        "id": "read-only",
+        "name": "Read-only",
+        "description": "Requires approval to edit files and run commands."
+      },
+      {
+        "id": "agent",
+        "name": "Agent",
+        "description": "Read and edit files, and run commands."
+      },
+      {
+        "id": "agent-full-access",
+        "name": "Agent (full access)",
+        "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+      }
+    ],
+    "currentModeId": "read-only"
+  },
+  "configOptions": [
+    {
+      "id": "mode",
+      "name": "Mode",
+      "description": "Approval and sandboxing preset for the session",
+      "category": "mode",
+      "type": "select",
+      "currentValue": "read-only",
+      "options": [
+        {
+          "value": "read-only",
+          "name": "Read-only",
+          "description": "Requires approval to edit files and run commands."
+        },
+        {
+          "value": "agent",
+          "name": "Agent",
+          "description": "Read and edit files, and run commands."
+        },
+        {
+          "value": "agent-full-access",
+          "name": "Agent (full access)",
+          "description": "Codex can edit files outside this workspace and run commands with network access. Exercise caution when using."
+        }
+      ]
+    },
+    {
+      "id": "collaboration_mode",
+      "name": "Collaboration mode",
+      "description": "How Codex collaborates for subsequent turns",
+      "category": "collaboration_mode",
+      "type": "select",
+      "currentValue": "default",
+      "options": [
+        {
+          "value": "default",
+          "name": "Default"
+        },
+        {
+          "value": "plan",
+          "name": "Plan",
+          "description": "Plan before making changes"
+        }
+      ]
+    },
+    {
+      "id": "model",
+      "name": "Model",
+      "description": "Model Codex uses for the session",
+      "category": "model",
+      "type": "select",
+      "currentValue": "gpt-5.6-luna",
+      "options": [
+        {
+          "value": "gpt-5.6-sol",
+          "name": "GPT-5.6-Sol",
+          "description": "Latest frontier agentic coding model."
+        },
+        {
+          "value": "gpt-5.6-terra",
+          "name": "GPT-5.6-Terra",
+          "description": "Balanced agentic coding model for everyday work."
+        },
+        {
+          "value": "gpt-5.6-luna",
+          "name": "GPT-5.6-Luna",
+          "description": "Fast and affordable agentic coding model."
+        },
+        {
+          "value": "gpt-5.5",
+          "name": "GPT-5.5",
+          "description": "Frontier model for complex coding, research, and real-world work."
+        },
+        {
+          "value": "gpt-5.4",
+          "name": "GPT-5.4",
+          "description": "Strong model for everyday coding."
+        },
+        {
+          "value": "gpt-5.4-mini",
+          "name": "GPT-5.4-Mini",
+          "description": "Small, fast, and cost-efficient model for simpler coding tasks."
+        },
+        {
+          "value": "gpt-5.3-codex-spark",
+          "name": "GPT-5.3-Codex-Spark",
+          "description": "Ultra-fast coding model."
+        }
+      ]
+    },
+    {
+      "id": "reasoning_effort",
+      "name": "Reasoning effort",
+      "description": "How much reasoning effort the model should use",
+      "category": "thought_level",
+      "type": "select",
+      "currentValue": "max",
+      "options": [
+        {
+          "value": "low",
+          "name": "Low",
+          "description": "Fast responses with lighter reasoning"
+        },
+        {
+          "value": "medium",
+          "name": "Medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "value": "high",
+          "name": "High",
+          "description": "Greater reasoning depth for complex problems"
+        },
+        {
+          "value": "xhigh",
+          "name": "Xhigh",
+          "description": "Extra high reasoning depth for complex problems"
+        },
+        {
+          "value": "max",
+          "name": "Max",
+          "description": "Maximum reasoning depth for the hardest problems"
+        }
+      ]
+    },
+    {
+      "id": "fast-mode",
+      "name": "Fast mode",
+      "description": "1.5x speed, increased usage",
+      "category": "model_config",
+      "type": "select",
+      "currentValue": "off",
+      "options": [
+        {
+          "value": "off",
+          "name": "Off",
+          "description": "Default speed, normal usage"
+        },
+        {
+          "value": "on",
+          "name": "On",
+          "description": "1.5x speed, increased usage"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "used": 50453,
+      "size": 828400,
+      "sessionUpdate": "usage_update"
+    }
+  ]
+}

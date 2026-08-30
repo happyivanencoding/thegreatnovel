@@ -126,6 +126,20 @@ Action Space、Net New、Expectation、Mystery Depth、Impact、Compounding 等�
 
 `后台价值观 -> 固定 schema -> 为填字段发明剧情`
 
+### World Independence Needs Living Actors
+
+“没有主角世界也会运转”如果只落成“军府开发、商盟竞矿、学院调查、部族迁徙”，仍可能只是机构活动，不一定有值得读的世界故事。
+
+审计 World Independence 时继续追一层：**哪个具体人物、生物或小群体现在私人地想得到/保住/夺回/证明/报复/找到什么；下一步已经准备做什么可见动作；没有主角时，这个动作会让谁、哪件东西或哪个地方真实改变？** 钱、赢、爱、嫉妒、占有、好奇、舍不得、报复、证明自己都可以成为发动机；机构、战争、市场、生态与资源格局可以放大后果，但不能自动代替 Living Actor。
+
+这不是“所有冲突必须私人恩怨”，也不新增 Actor 表或事件配额。自然灾难、兽群迁徙、制度变化依然可以独立发动；判断的是世界是否真的有主体在做事，而不是只有系统在运行。
+
+### Human Action Audition Is Evidence, Not Authority
+
+Human 候选如果 `人物钩子` 只是“他可能为了 X 放弃 Y”，往往只是重复 competing motives。更有判断力的候选审计是一个 **Non-Canon Action Audition**：使用已经成立的动机和具体关系，让至少两项私人价值在小现场中不能同时完整满足，人物必须做出可见动作并留下一个小而真实的机会成本、得罪或暴露欲望。
+
+Audition 的价值是检验“动机标签是否真的会落成有个性的选择”，不是新增 Biography，更不是预测未来固定招式。审计必须确认它不进入 Human Core / Initial State / Story Canon，也不要因为某次 audition 漂亮就把人物固化成永远关系优先、永远自我牺牲或永远反规则。
+
 ## 8. Authority Separation Beats Self-Restraint When Leakage Is the Cause
 
 如果 LLM 因为同时看到 A 与 B 而自动把二者合理化成一个主题，优先信息隔离，而不是不断追加“不要合理化”的 negative constraints。
