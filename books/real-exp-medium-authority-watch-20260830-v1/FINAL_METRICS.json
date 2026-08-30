@@ -1,0 +1,107 @@
+{
+  "schema_version": "medium-authority-watch-final-v1",
+  "date": "2026-08-30",
+  "production_changed": false,
+  "heldout3_generated": false,
+  "stop_reason": "D2/D3 sparse Watch improved Authority attention but materially regressed Story; D3 also produced one 23-character early-stop chapter accepted by current body validator.",
+  "d1": {
+    "watch_chars_mean": 1078.0,
+    "wall": 110.13,
+    "high_wall": 133.275,
+    "seconds_saved_vs_high": 23.145,
+    "story_watch": {
+      "mean_score": 74.125,
+      "first_place": 3,
+      "mean_rank": 2.0,
+      "hard_problems": 0
+    },
+    "story_high": {
+      "mean_score": 81.625,
+      "first_place": 3,
+      "mean_rank": 2.125,
+      "hard_problems": 0
+    },
+    "authority_watch": {
+      "mean_score": 68.875,
+      "first_place": 1,
+      "mean_rank": 2.25,
+      "hard_problems": 11
+    },
+    "authority_high": {
+      "mean_score": 85.625,
+      "first_place": 7,
+      "mean_rank": 1.25,
+      "hard_problems": 4
+    },
+    "verdict": "FAIL"
+  },
+  "d2": {
+    "watch_chars_mean": 559.25,
+    "wall": 49.242,
+    "high_wall": 133.275,
+    "seconds_saved_vs_high": 84.033,
+    "story_watch": {
+      "mean_score": 73.625,
+      "first_place": 0,
+      "mean_rank": 2.375,
+      "hard_problems": 0
+    },
+    "story_high": {
+      "mean_score": 83.0,
+      "first_place": 3,
+      "mean_rank": 2.125,
+      "hard_problems": 0
+    },
+    "authority_watch": {
+      "mean_score": 84.375,
+      "first_place": 3,
+      "mean_rank": 2.0,
+      "hard_problems": 6
+    },
+    "authority_high": {
+      "mean_score": 83.0,
+      "first_place": 4,
+      "mean_rank": 1.75,
+      "hard_problems": 6
+    },
+    "verdict": "FAIL_STORY"
+  },
+  "d3": {
+    "watch_chars_mean": 559.25,
+    "wall": 52.897,
+    "high_wall": 133.275,
+    "seconds_saved_vs_high": 80.378,
+    "story_watch": {
+      "mean_score": 74.375,
+      "first_place": 3,
+      "mean_rank": 2.0,
+      "hard_problems": 0
+    },
+    "story_high": {
+      "mean_score": 83.125,
+      "first_place": 2,
+      "mean_rank": 2.25,
+      "hard_problems": 0
+    },
+    "authority_watch": {
+      "mean_score": 66.25,
+      "first_place": 2,
+      "mean_rank": 2.125,
+      "hard_problems": 8
+    },
+    "authority_high": {
+      "mean_score": 79.125,
+      "first_place": 5,
+      "mean_rank": 1.5,
+      "hard_problems": 7
+    },
+    "early_stop": {
+      "run": "repeat1",
+      "chapter": 1,
+      "chars": 23,
+      "current_validator_accepts": true
+    },
+    "verdict": "FAIL_STORY_AND_STABILITY"
+  },
+  "production_verdict": "KEEP_LUNA_HIGH_AUTHORITY_REVISER"
+}

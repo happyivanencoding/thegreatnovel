@@ -1,0 +1,29 @@
+{
+  "schema_version": "medium-authority-watch-final-validation-v1",
+  "status": "ENGINEERING_VALIDATED_PENDING_GIT_PUSH",
+  "production_changed": false,
+  "heldout3_generated": false,
+  "derivation_source": {
+    "experiment": "real-exp-reviser-noop-upstream-heldout-20260830-v1/heldout-new-novel-2",
+    "commits": [
+      "4423410c",
+      "1caf5e5c"
+    ]
+  },
+  "protocol_hashes": {
+    "d1": "B468C950DBD9B667F011DFBD18D8A6B4BE9350F029776A57DEDE7F16A982A69E",
+    "d2": "EEE2F39B13B48D0388CC29289C0E309BB731DEFECB7C15E69C6F0CD77045778D",
+    "d3": "ABC539204A122A32AFEB64052E66021E34C795F6305C3A0FC44546EEB01E219C"
+  },
+  "tests": {
+    "scripts_compiled": true,
+    "full_pytest_passed": 440,
+    "full_pytest_command": "python -m pytest -q",
+    "git_diff_check": true
+  },
+  "verdict": "STOP_WATCH_FAMILY_KEEP_LUNA_HIGH",
+  "pending": [
+    "git_commit",
+    "git_push"
+  ]
+}
