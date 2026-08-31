@@ -4,11 +4,13 @@
 
 ## 定位
 
-章节 Runtime 只负责执行已经批准的故事，不重新设计长期主线。当前默认模式是 `curator_primary`：
+章节 Runtime 只负责执行已经批准的故事，不重新设计长期主线。当前默认正文窗口改为 **4—6 章 Batch，默认 5 章**：
 
-`Director → Context Curator → Primary Writer → Authority Reviser → State Extraction`
+`Approved Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra-high Batch Primary → Sol-high Batch Authority Delta Reviser → 整批采用 → Luna-low State 逐章落盘`
 
-Authority Reviser 是默认 `curator_primary` 的固定正文修订节点；Specialist / Integrator 不在默认链，只有作者明确启动局部 repair 时才临时进入。`single`、`hybrid_selective`、`hybrid_full` 仅保留兼容与专项实验用途。
+Batch 的目的首先是小说连续感，不只是加速。默认路径**不再增加一个 LLM 重新规划已批准五章**：代码直接抽取 Future-10 对应章条目，并复用现有 Chapter Context compiler，按章叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。Writer 在同一上下文中看到整段短中程故事，前章摆出的地形、人物势能、物件与 Promise 可以自然进入后章。State **不在 Batch 中途更新**：先让 Authority Reviser 看完整批次并一次收口，再按最终章 1→N 顺序抽取 State，因此不存在“Reviser 改完前章，后章预写稿立即 stale”的循环。
+
+Batch Authority Reviser 不重输五章全文，只返回 exact local Delta；未触碰正文逐字保留。同一 Authority 冲突必须跨章扫描所有依赖位置。若修复必须发明新传送、追踪、身份、奖励、胜负或世界机制，Reviser 返回 `upstream_conflicts`，整批不得采用，回 Story / Outline 修最早根因。LLM `Batch Director` 的失败实现只保留在实验目录作证据，**不进入 production API / 模型路由**。旧 `curator_primary` 单章链继续作为兼容/专项 fallback；Specialist / Integrator 仍只在作者显式 repair 时使用。
 
 章节 Runtime 默认不直接读取 raw GBrain。GBrain 对章节层的影响只通过已批准的 Story Program / Outline，以及离线深蒸馏后的 source-blind Scene Deep Craft 间接进入；原著 evidence 不进入章节模型。当前 Scene Skill v2 冻结为 **24 个 Primary + 3 个不进 Router 的 Shared Reference Lens**；Authority Reviser 目前只有 `social_bargain_decision` 与 `relationship` 两张 Skill 开放短 `Revision Watch`，其余 22 张为 `NONE`。
 
@@ -22,7 +24,7 @@ Progressive Canonization 的作者隐藏真相使用独立 `MYSTERY_CONTROL.json
 
 `MYSTERY_CONTROL.json / compiler_inputs` 只保存低频作者定真流程的**精确 Compiler 输入快照**：当前 Thread、selected candidate、Decision Surface、author planning need 与当时 BOOK/Canon 原文。它不进入 Story / Outline / chapter Runtime；用途只有一个——采用候选前发现候选、Thread 或 Canon 是否已经变化。变化即 stale，重新编译；不使用 hash/checksum 代替直接文本比较。
 
-章节侧不新增 Mystery 节点。Reveal 前章的 current plan 保持原样；只有 `Reveal Chapter == 当前章` 时，runtime 才把 reader-facing `Event Atom + State Residue + Still Open` 确定性并入当前章计划，再沿原来的 `Director → Curator → Primary → Authority Reviser → State` 执行。**raw Hidden Fixed Point 永远不进入 Writer。** Reveal 必须由正文动作/物证真实发生；State 只能从最终正文提取已经发生的 Residue。随后作者显式 advance 才把该层从 `FIXED_HIDDEN` 转回更深 `OPEN`，并将已揭 Residue 作为后续 Known Anchor；不能因为 planning 已经知道答案就提前改 Canon。
+章节侧不新增 Mystery 节点。Reveal 前章的 current plan 保持原样；只有 `Reveal Chapter == 当前章` 时，runtime 才把 reader-facing `Event Atom + State Residue + Still Open` 确定性并入当前章计划，再进入当前默认 Batch Packet；单章 fallback 继续沿旧链执行。**raw Hidden Fixed Point 永远不进入 Writer。** Reveal 必须由正文动作/物证真实发生；State 只能从最终正文提取已经发生的 Residue。随后作者显式 advance 才把该层从 `FIXED_HIDDEN` 转回更深 `OPEN`，并将已揭 Residue 作为后续 Known Anchor；不能因为 planning 已经知道答案就提前改 Canon。
 
 ## 延迟基线与安全优化边界（2026-08-29）
 
@@ -35,7 +37,7 @@ Progressive Canonization 的作者隐藏真相使用独立 `MYSTERY_CONTROL.json
 - Curator 固定输出合同显式统一为 13 个区块，不再出现“列表只写 9 项、后文又要求 4 项”的矛盾。
 - 耗时账分开保存 adopted chain、真实批次 rerun/Review/Repair 与上游摊销；每节点记录 Prompt chars、input/cache/output/thought、wall、fallback/adopted 与 Reviser diff。
 
-Phase 1–3 已完成冻结输入、正常下游与最终正文 Reader + Authority 双盲，但均未达到 production 标准：Luna-medium Curator 虽约快 61%，Authority 由 high control 以 5:2 获胜；Slim Curator 约快 70%，却没有稳定模型赢家并出现时序/动作对象漂移；medium / Patch Reviser 在商业读感或全章状态闭合上失败；Conditional Director 约快 41%，商业读感由 full control 4 胜 1 平，且个别章出现 Agency 降级或 `[PLAN OUTCOME ADJUSTMENT]` 越权。因此默认路由继续保持 `Luna high Director → Luna high Curator → Terra high Primary → Luna high Authority Reviser → Luna low State`。
+Phase 1–3 已完成冻结输入、正常下游与最终正文 Reader + Authority 双盲，但均未达到当时的 production 标准：Luna-medium Curator 虽约快 61%，Authority 由 high control 以 5:2 获胜；Slim Curator 约快 70%，却没有稳定模型赢家并出现时序/动作对象漂移；medium / Patch Reviser 在商业读感或全章状态闭合上失败；Conditional Director 约快 41%，商业读感由 full control 4 胜 1 平，且个别章出现 Agency 降级或 `[PLAN OUTCOME ADJUSTMENT]` 越权。因此**在 2026-08-29 当时**仍保留单章 `Luna high Director → Luna high Curator → Terra high Primary → Luna high Authority Reviser → Luna low State`；该阶段结论已被下方 2026-08-31 Batch Finalization 冻结结果取代。
 
 本轮按作者范围**没有修改 ACP runner，也没有修改前端**；二者不是未完成交付项。完整速度、盲评与正文对照见 `books/real-exp-chapter-latency-optimization-20260829-v1/RESULTS.md`。
 
@@ -55,9 +57,19 @@ Phase 1–3 已完成冻结输入、正常下游与最终正文 Reader + Authori
 - 去掉当前 Canon 的 Speculative Director 完整下游平均快约12.4%，Reader 3:3、Authority control 3 / treatment 2 / mixed 1；第4章仍会补出第二袋钱，第15章仍漏水路确认和同步危机，说明实时 State 不能从注意力绑定中拿掉。
 - State 改 Terra low 在8章中总体慢约3.3%，且0/8四字段 exact；Paragraph Manifest 第一版5/5 fallback，第二版仅2/5采用且平均仍更慢，均停止。
 
-唯一零语义风险的正信号是：保留 fresh session、只复用 ACP adapter process / initialize，6次最小调用相对快约28%，但绝对只省约1.26秒/调用；前端不使用这条 runner，本轮也不修改 ACP runner。默认章节链与模型路由继续不变。完整证据见 `books/real-exp-chapter-latency-innovation-20260829-v1/RESULTS.md`。
+唯一零语义风险的正信号是：保留 fresh session、只复用 ACP adapter process / initialize，6次最小调用相对快约28%，但绝对只省约1.26秒/调用；前端不使用这条 runner，本轮也不修改 ACP runner。**该 2026-08-29 实验当时没有改变单章链**；当前默认已由下方 Batch Finalization 取代。完整证据见 `books/real-exp-chapter-latency-innovation-20260829-v1/RESULTS.md`。
 
 下一代高潜方向不是再加一个 classifier，而是把 Frozen Mission / Reader Release / Power / Human / Ending 编译成代码可验证的 `Atomic Chapter Obligations`，再让 Paragraph-Delta 只有在 actor-action-object、result/state/ending、ownership/time/money、power ruler、unknown boundary 与 protected commercial value 全部闭合时才可采用，否则直接保留 full Reviser。
+
+### Batch Narrative Finalization（2026-08-31）
+
+后续实验证明真正的问题不是 Delta 本身，而是**单章 Finalization 与多章预写的时间结构冲突**。同一五章镜海样本中，`Batch Primary → 5×逐章 Full Reviser` 的 Primary 虽快 29.5%，但 Reviser 反而慢 13.7%，等价 full-chain 35:04 → 35:24；第5章 Primary→Final 相似度降到 76.8%，典型 stale 是前章资产被 Reviser 改定后后章仍沿用旧实现。
+
+改成“完整 Batch 同时进入 Authority finalization”后，结果逆转：全文 Batch Reviser 能把等价链降到约 27 分钟，但会重新增加说明腔；最终冻结的是 **Batch Authority Delta**——Reviser 一次看完整 5 章，只输出 exact local patch。镜海样本 Luna-high Delta 只动 4 处 / 296 chars，等价 full-chain 约 23:51，Story blind 第一；第二本《沉昼界》held-out 中 Batch+Delta 又同时赢 Story，并达到 Authority **0 hard problem**，而逐章 full-chain 对照被盲审抓到 4 个硬问题。
+
+同一镜海 Primary 的模型矩阵进一步否决“档位越高越好”：Terra-high 过轻；Luna-max 改动过宽；Terra-max/ultra 能抓更多问题但 wall 大幅上升；独立 Sol-max patch adjudication 判 **Sol-high 的合法 patch 子集最优**。因此 Batch Authority Delta 当前固定 **Sol-high**；Max/Ultra 保留为诊断/实验，不成为默认税。
+
+最终 `Full Deterministic Packet` held-out 进一步验证当前默认拓扑：不增加 Batch Director，而是复用现有 Chapter Context compiler，在 Terra 写之前把 Future-10 + Frozen Power/Human + safe World + Reader Release + Protected RSE + Book Contract + starting Canon 编入五章。真实 wall：Terra Primary **202.753s** + Sol-high Delta **1103.588s** + 5×Luna-low State **136.114s** = **1442.455s（24分02秒）**，比旧逐章 full-chain **2104.231s（35分04秒）快31.45%**。四路盲评中 Authority 判该版 **0 P0 / 0 P1 且第一**，Story 同样第一。完整证据见 `books/real-exp-batch5-full-chain-20260831-v1/`、`books/real-exp-batch-delta-heldout-game-instance-20260831-v1/` 与 `books/real-exp-direct-outline-batch-heldout-game-instance-20260831-v1/v3_full_packet/`。
 
 
 ### Atomic Authority IR v1 实验边界（2026-08-29）
@@ -85,6 +97,15 @@ Preservation 默认依靠 Edit Locality，而不是 Desire / Surprise / Relation
 为避免旧case过拟合，又把“先让Primary接近Final”在两部**生成于Treatment冻结之后的新小说**上复验。Candidate 1 的5行self-check在新书1中把Primary Authority略提高，却让Reviser Authority增益从+8.125扩大到+12.375，0/8 exact no-op；Candidate 2 只确定性重投影Direct Result / State Change / Ending / Reader Release / Core Power / Permanent Boundary，在新书2中使Primary Story +2.812，却让Authority -2.125、Hard问题32→41，Reviser gap仍扩大，且Primary+Reviser反而慢4.47s/章。Luna-medium屏幕是唯一强速度信号：Reviser 133.3s→59.6s（约-55%），Story不降，但Authority 57.5 vs high 61.875、Hard问题9 vs3，按冻结规则停止。**因此当前不再用通用Primary自查或简单事实重复追求no-op；任何降档/skip候选先在derivation证明Primary→Reviser Story+Authority gap收敛，再冻结Treatment并用全新held-out小说验证。**完整报告：`books/real-exp-reviser-noop-upstream-heldout-20260830-v1/RESULTS.md`。
 
 ## 节点职责
+
+### Outline Batch Packet / Primary / Authority Delta（默认）
+
+- **Outline Batch Packet｜deterministic**：直接从已批准 Future-10 抽取当前 4—6 章、默认 5 章的原始逐章条目；不由另一个 LLM 改写 Event / Result / Ending。复用现有 Chapter Context compiler，按章叠加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。跨章节 access provenance 若上游本身没决定，保留为上游冲突，不在这里补机制。
+- **Batch Primary｜Terra high**：一次连续写完整窗口。它的价值是让章节共享小说认知，而不是减少字数；前章摆出的空间、物件、关系与 Promise 可后章自然复用。已成立人物标签不靠固定口癖每章重证，世界独有规则也应在人物关系/命运中产生故事，而不只当解题机制。
+- **Batch Authority Delta｜Sol high**：一次读取完整 Batch + Frozen Power/Human + safe World + Reader Release + Story/Outline/Canon；只返回 exact `OLD → NEW` 局部 patch，不输出全文。发现一处事实冲突后要扫描该事实域的跨章依赖；修复需要新世界机制或新重大事件时返回 `upstream_conflicts`。存在 conflict 时整批 `adoptable=false`；无 conflict 才一次保存全部最终章。
+- **State｜Luna low**：等整批 prose finalization 完成后，再按章号顺序从最终正文抽取。Batch 中途不以 Primary 临时稿更新 Canon。
+
+失败的 Batch Director 仅保留在 `books/real-exp-*` 实验产物中用于复核，不进入 production runtime。当前 Batch 默认链也**不调用 Curator / Scene Skill Router**：`Scene Prose Projection`、selected Scene Skill 与 Revision Watch 继续属于单章 fallback / 专项修订能力，直到有独立 Batch-compatible A/B 证明可加入而不损失本轮小说感与 Authority；本轮不为保持表面功能齐全临时新增 Batch Curator。下面的单章 Director / Curator / Primary / Full Authority Reviser 职责继续定义兼容 fallback 与专项实验；它们也不代表默认长篇正文拓扑。
 
 ### Director
 

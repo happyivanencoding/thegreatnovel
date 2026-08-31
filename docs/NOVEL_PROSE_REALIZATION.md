@@ -219,23 +219,35 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 当前默认章节链：
 
-`BOOK / Plan / Saved Chapters → Director → Context Curator → Primary Writer → Authority Reviser → State Extraction → Author Approval → chapter-NNNN.md`
+`Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘 → chapter-NNNN.md`
 
-`curator_primary` 默认固定运行 Authority Reviser，但不运行 Specialist / Integrator。只有作者明确启动局部 repair 时，才在 Authority Revision 之后临时加入少量 Specialist Patch，并在确有有效 Patch 时调用 Integrator；没有有效 Patch 就保留 Authority Revision。旧兼容 Prompt 不构成新的 production 写作层。
+默认路径不让另一个 LLM 再解释已批准 Future-10：代码直接抽取本批逐章事件/结果/结尾，并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。Sol Reviser 一次看到完整 Batch，但只返回 exact local Delta；未触碰句子逐字保留。若修复必须发明新传送/追踪、奖励、胜负、身份或世界机制，返回 `upstream_conflicts`，整批不得采用。旧 `curator_primary` 的 `Director → Curator → Primary → Full Reviser` 继续作为兼容 fallback / 专项实验；Specialist / Integrator 仍只在作者明确 repair 时使用。
 
 ---
 
 ## 7. Runtime Responsibilities
 
-### Director — Event Contract
+### Deterministic Batch Packet — Preserve Approved Events
+
+从 Future-10 直接抽取本批 4—6 章、默认 5 章的原始条目，不由 LLM 重写。它保留每章 `具体剧情 / 结果状态 / 结尾推动 / RSE`，再通过现有 Chapter Context compiler 附加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。held-out 已验证额外 Batch Director 虽可提高小说味，却会重新解释界阶时序、奖励来源与器物首次使用，因此不作为默认规划层。
+
+### Batch Primary — Continuous Novel Window
+
+Terra high 一次写完整 Batch。它不把五章当五个独立任务：上一章摆出的空间、物件、关系势能与未完动作自然成为下一章可用的小说素材。人物标签成立后不靠同一种口癖重复证明；强世界规则既可以制造战斗玩法，也应在已批准的人物关系/命运里产生后果。默认 Batch 直接使用 BOOK Prose Profile，不调用 Curator / Scene Skill Router；现有 `Scene Prose Projection` 继续属于单章 fallback / 专项修订，未经过 Batch-compatible A/B 前不回接。Batch 中途不写 State，不让临时 Primary 成为 Canon。
+
+### Batch Authority Delta — Cross-Chapter Recovery
+
+Sol high 一次读取完整 Batch 与远端 Authority，只输出 exact `OLD → NEW` patch，不输出五章全文。一个事实域出现冲突时必须扫描所有跨章依赖；例如旧物返还与新奖励要同时闭合，空间上下轴不能只修第一处。需要发明新跨界机制、追踪、奖励、身份或胜负才能圆上时，返回 `upstream_conflicts`，不由 Reviser 聪明补洞。无 conflict 才整批采用；随后 Luna low State 按章顺序从最终正文提取。
+
+### Director — Event Contract（单章 fallback）
 
 只决定本章发生什么：八字段事件合同、直接结果、状态变化和结尾推动。Future 10 当前条目在进入 Director 前先被确定性拆成 `本章唯一可执行事件预算` 与 `章末 Handoff Reservation`；Long Block 只作阶段背景，不能把下一章付款、正式身份、获得、升级或其它结算提前搬进本章。上一章正式正文如果停在即时未解的拦截、追杀、攻击、坠落/被困、关闭中的门或必须当场回答的交易/选择，该场面自动成为下一章 continuity debt：Director 先用最低充分动作接续/转化它，才进入本章 Plan；桥接至少写出一个可直接落正文的具体动作因果，不能只写“趁乱脱身 / 成功进入 / 摆脱追兵”；不能把章节边界当成“冲突已经自动解决”。Outline / Review 同样不得规划出这种无桥接跳转。当前条目的 `结果 / 状态变化` 还会确定性并入后续 Frozen Mission 的 `状态变化`，所以 Director 静默漏写不构成取消；若已发生 Canon 真使原结果不可能，必须在 `状态变化` 中写 `[PLAN OUTCOME ADJUSTMENT]` + 最小原因/替代结果，不能因节奏或方便使用该标记。它可以使用精确的抽象策划语言；八字段合同是事实约束，不是正文句式来源。若单章计划提到试场/选拔/招募/契约，却把同一剧情块已批准的具名机会价值压掉，runtime 会确定性投影一条匹配的 `当前具名机会权威`；Director 保留具体机会名与“成功参与通常打开什么”，不新增回报、不提前写主角成功。
 
-### Context Curator — Context Projection
+### Context Curator — Context Projection（单章 fallback / 专项）
 
 从 `WORLD AUTHORITY`、deterministic `CHARACTER.md` 中**只截取的 Frozen Human Core**、BOOK、Canon、当前计划、Prose Profile、可选 Inspiration 与前文章末中选择 Writer 真正需要的信息；Power Core 不在章节期重复注入，可变状态仍由 BOOK/State 提供。Scene Skill v2 只向 Curator 暴露 `skill_id + Primary Reading Question + 一行 Projection Guidance`；Curator 选择 1 个 Primary、最多 1 个 Secondary，并只在当前场景确有 realization 缺口时把 Deep Craft 编译成 2—4 句 `Scene Prose Projection`，已经清楚则写 `NONE`。完整 Skill、原著 evidence、书名/locator 不进入 Writer。`WORLD AUTHORITY` 是 Approved World Vision 的安全事实投影；Outline 的 `Reader Release Map` 为当前章排程哪条世界事实，Curator 就保留/压缩哪条，不自行改选说明主题。开篇 `公共常识` Release 必须保留成可以直接陈述的事实句义，不压成单个道具、环境意象或“有这个感觉”的模糊提示。冻结 Human Core 高于最近几章行为归纳；场景自然触发已批准的身体吸引、审美、虚荣、钱、享受、好奇、偏心等私人牵引时，保留一个可直接进入 POV 的具体触发，不因连续负责/克制而把人物收束成新的道德人格。若本章已批准为高价值 Asymmetry Reveal，Curator 的短 Projection 应优先同时保留两个 reader-facing 任务：`Behavioral Repricing`（一个关键观察者真的换动作）与 `Ruler Calibration`（最有资格者短促说明正常值、超标点与稀有/异常意义）；不把它们压成只有“有人震惊”或只有设定旁白。当前新 `observer-specific repricing` 卡仍是 PILOT，不因此新增 Scene Primary 或强制每章调用。它输出 `Reader-Facing Language`，但不重规划、不新增事实、不自行写正文。
 
-### Primary Writer — Reader Experience
+### Primary Writer — Reader Experience（单章 fallback）
 
 以 Primary Draft 为正式正文底稿，按当前 POV 让事件先发生、人物感知和反应跟上，再补当前决定所需的最少解释。Future 10 已批准的 `结果 / 状态变化` 已确定性并入 Frozen Mission；其中力量/身份跨档、持有关系或其它显式里程碑必须明确成为正文事实，不能只用“打出该级战绩 / 接近 / 获得资格”暗示。Primary **不再直接读取完整 selected Scene Skill**；Scene Craft 只通过 Curator 已编译的短 `Scene Prose Projection` 进入，允许 `NONE`。若 Curator 已投影当前 Plan 排程的 World fact，**该 Reader Release 必须在本章兑现**。普通 World Entry 仍可“动作提出问题 → 1—3 个短直接旁白段回答 → 回现场”；开篇 Public Common Knowledge 则允许在自然落点直接说明，不要求先制造问题。公共常识的完成标准是普通读者读完可以直接复述规则，而不是从火盆、服装、站位、专名或氛围自己归纳；本章真实跨过已说明的公开力量/身份档位时，结果处直接命名新档位一次，不让读者自己换算。若同一事实还说明地点/势力/传承为什么值得争，保留一个最短价值锚点。Writer 不从完整 World 自选说明主题，也不要求把世界说明伪装成对白；隐藏原因与未来 reveal 继续未知。Curated Context 已明确带入私人欲望且当前场景自然触发时，让一次注意力、身体反应、靠近/回避、想要或短期选择保留它，不统一净化成职责协作与成熟沟通。决定完成后的普通实施默认一句或短段概括。 非核心 Supporting Skill 即使承担一个关键动作，也写到“做了什么 / 为什么有效 / 结果”就停；Reader Release 已给 named 对象公开类别时，首次识别可直接说清一次。高价值非对称优势显露时，不把“克制”理解成只写一个停顿：若现场本来有真实观众且 Projection / Authority 已提供足够尺，**群体震动、懂行者 Ruler Calibration、关键人物 Behavioral Repricing 三者没有高低之分，可以在大型 Public Proof 同时吃满**。主力量已有精确主尺时，三路使用同一数字坐标：全场鸦雀无声、喧哗骤停或所有人明显震惊承受“43级打赢58级”这种差距的现场重量；懂行者直接说清双方精确位置、正常差距和异常点；关键人物再用报价、称呼、站位、战术或待遇变化证明这个“精确位置 + 超标表现”的社会价格。**Public Proof 不授权隐藏机制知识**：NPC 只说现场可观察表现、公开 ruler 与 World/Canon 已知现象；Writer 看见 Frozen Power 不等于角色知道其永久性、私有触发或内部状态，后者由 POV、后续自然复用或合法 Meta Authority 确认。精确位置不是胜负公式，越级获胜不自动升级。RSE / Meta/UI 也只锁事实与 reader-safe anchors，任务、退出、携带等其余措辞优先翻成“还剩多久 / 出口在哪 / 能带走什么 / 失败怎样”的直接语言。只避免凭空造观众和让所有人轮流说同一套专业解释。Planning 的抽象标签不直接变成旁白总结。
 
@@ -249,7 +261,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 该边界已经通过 Chapter 120 / 600 压力 A/B 验证并冻结为 `Long-History Fact Boundary v1`。最终版本除 Prompt 顶层事实规则外，还把 Curator 已识别的 Open Promises / 未解机制 / 未兑现事项确定性投影为约 300 多字的 `UNRESOLVED FACT BOUNDARY`，放在 Chapter Mission 之后、正文连续性之前；不增加模型调用。冻结样本中两章的核心 unknown discipline 均达到盲评 5/5。已知残余是极少数后台章节编号可能被 Writer 自我纠正式带入正文，这属于 prose hygiene，不改变 Canon，也不应通过新增 continuity agent 解决。
 
-### Authority Reviser — Preservation-First Authority Recovery
+### Authority Reviser — Preservation-First Authority Recovery（单章 fallback）
 
 Primary Writer 先用窄上下文完成一版完整正文；Authority Reviser 再以该稿为唯一底稿，用更接近上游原始权威但仍安全的投影做**局部恢复与笔墨校正**。默认模型是 GPT-5.6 Luna high，raw GBrain OFF。
 

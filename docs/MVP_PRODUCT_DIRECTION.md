@@ -10,7 +10,7 @@ TGN 要生成的是成熟中文男频成长长篇：读者明确想拥有主角�
 
 当前真实生产链路是：
 
-`作者方向 →（可选）Premise Forge S1/S2/S3 → Independent Compiler → 作者批准 / 显式跳过 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
+`作者方向 →（可选）Premise Forge S1/S2/S3 → Independent Compiler → 作者批准 / 显式跳过 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘`
 
 没有 production Fantasy Seed，也没有 Character Composer LLM。Premise Aperture 只在 Authority 冻结前搜索完整大胆货架前提：候选 Non-Canon，Compiler 不评分/选择/修稿，批准后由代码拆成四条 lane contract，Story Program 后不再下传 raw card。
 
@@ -208,15 +208,16 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 ## Chapter Runtime
 
-章节链保持：
+章节默认链：
 
-`Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State Extraction`
+`Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra high Batch Primary → Sol high Batch Authority Delta → 整批采用 → Luna low State逐章落盘`
 
-- Director：决定本章具体发生什么；
-- Curator：只给 Writer 当前章真正需要的 Canon / Plan / Scene Skill；章节 Runtime 按 Outline 的 `Reader Release Map` 从当章 Effective World（World Root + active Expansion）的安全 `WORLD AUTHORITY` 取世界事实，Curator 只保留/压缩；主力量 Public Proof 已有精确位置时，保留给三线共用的最短数字坐标；
-- Primary：只写小说第一版，不做规划汇报，也不是默认 final source；
-- Authority Reviser：Preservation First；重新拿到 safe Effective World / Frozen Power+Human / Reader Release / Canon，只修明确 authority/implementation 失败，默认 final source；主力量 Public Proof 可最小恢复群体震动 + 精确 Ruler Calibration + Behavioral Repricing；
-- State：只记录正式正文已经发生的事实，并持续维护主角 `Current Power Position`；没有明确突破时沿用原位置，不能由越级表现推断升级。
+- Batch Packet：代码原样抽取当前 Future-10 逐章条目，不让第二个规划 LLM 改写已批准 Event / Result / Ending；同时复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block；
+- Batch Primary：一次连续写完整窗口，保留章间 Handoff、人物声音、物件/地形复用和短中程铺垫回收；
+- Batch Authority Delta：一次看完整 Batch 与 safe Effective World / Frozen Power+Human / Reader Release / Story/Outline/Canon，只做 exact local patch；同一事实域跨章扫清，无法不新增机制地修复时返回 `upstream_conflicts`，整批不采用；
+- State：等整批正文 final 后按章顺序记录已经发生的事实，并持续维护 `Current Power Position`；没有明确突破时沿用原位置，不能由越级表现推断升级。
+
+旧 `Luna Director → Luna Curator → Terra Primary → Luna Full Reviser → State` 保留为单章 fallback / 专项实验，不再是默认正文拓扑。Scene Skill v2 的 Curator `Scene Prose Projection` 与短 Revision Watch 也暂时只在这条 fallback / 专项修订中使用；默认 Batch 未经单独 A/B 不增加 Batch Curator。
 
 章节 Runtime 不直接读取 raw GBrain，也不重新决定 World / Power / Human / Story Program。
 
@@ -235,13 +236,13 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 - Story Program：GPT-5.6 Sol high，GBrain ON，最多 3 条 focused inspiration；
 - Story Refresh：GPT-5.6 Sol high，GBrain ON，最多 3 条 focused inspiration；必要时 planning-only 编译 reader-facing Mystery Reveal Contract；
 - Outline：GPT-5.6 Luna high，GBrain ON，通常 4 条、最多 5 条；
-- Director：Luna high；
-- Curator：Luna high；
-- Primary Writer：Terra high；
-- Authority Reviser：Luna high；
-- State Extraction：Luna low。
+- Batch Packet：deterministic，直接抽取 Approved Future-10，默认5章、支持4—6章，并复用现有 Chapter Context compiler 前置完整安全 Authority；
+- Batch Primary Writer：Terra high；
+- Batch Authority Delta：Sol high；
+- State Extraction：Luna low；
+- 单章 Director / Curator / Full Reviser：Luna high，仅 fallback / 专项实验。
 
-模型选择看三个坐标：**生成质量 ≠ wall-clock ≠ 实际成本**。Sol 只集中在长期结构高杠杆节点，不因为它最强就整链使用。
+模型选择看三个坐标：**生成质量 ≠ wall-clock ≠ 实际成本**。Sol 仍只放高杠杆节点：Story Program / Refresh 与跨章 Authority Delta；Max / Ultra 只有真实 closure 优于 high 时才采用，不按档位名称自动升级。
 
 GBrain 详细边界见 `docs/GBRAIN_STORY_CRAFT_V3.md`。
 

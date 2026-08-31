@@ -63,6 +63,9 @@ CORE_FANTASY_INVARIANT = """核心幻想不变量：Character 中已批准的 Po
 
 FANTASY_COMPOUNDING_DIRECTION = """幻想复利优先于操作流程复利：长篇中的 Power Asymmetry 应形成**持续积累的优势栈**，而不是每轮结束重新归零，也不能只让开局那一个能力无限放大。纵向成长可以同时发生三种变化：已有非对称优势继续深化；通过真实故事获得新的非对称优势；旧优势与新优势发生复合，产生任一单项都做不到的新玩法。新的非对称优势可以来自功法、技艺、身体/血脉、奇物/装备、知识经验、伴生体或本书自己的力量来源，只要它真正形成新的 Privilege Delta，而不是小便利、换皮技能或库存加一。全书层面必须让新优势加入并发生可复述的复合效应，但**不要求每个大型阶段新增一项**；人物/关系/世界阶段仍可以没有 Power Delta。开局 Core Asymmetry 继续作为辨识度锚点，新获得不应把它淘汰，而应与旧积累共同改变后续战斗、探索、选择、敌人判断或核心幻想兑现。不要把优势栈写成数据库、组件清单或“收集能力”本身的职业流程。"""
 
+PREMISE_IDENTITY_PAYOFF_DIRECTION = """Premise Identity Payoff（早期类型身份，不新增固定章数税）：如果作者批准的核心卖点不是普通“升级/掉宝”，而是一个更独特的长期动作——例如跨世界**带走并复合世界可能性**、永久保存极限、吞并不同规则、让关系/身份以异常方式持续——那么第一个自然故事 Horizon 在结束前必须让读者**亲眼看到这项区别本身至少完整成立一次**。普通宝物、钱、地图、资格、入口可以一起很爽，但不能连续替代这项核心操作，让读者读完整个第一世界仍误以为本书只是传送门寻宝/普通副本流。第一次兑现不要求讲完全部上限，也不要求旁观者知道隐藏机制；只要通过主角实际得到的新 Privilege、离开世界后的保留/复用，或其它作者已批准的直接后果，让普通读者能一句话说出“这本书和普通同类到底哪里不一样”。若上游明确把首次成立排在更晚 Horizon，保留作者决定，不由章节 Agent偷跑。"""
+
+
 PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION = """Protagonist Asymmetry Dominance（长篇默认叙事特权，不新增能力配额）：**持续获得新的高价值非对称优势，并让它们彼此复合成越来越难复制的 Advantage Stack，默认属于被作者选中的主角，而不是所有重要角色的共同待遇。** Living World / Character Autonomy 仍然成立：NPC / Rival 可以正常修炼、阶段性比主角更强、拥有主角没有的神兵/异兽/体质/绝技、拿走主角错失的 signature reward，甚至在某个专业或单项上长期第一；不要为了突出主角把他们冻成静态陪衬。真正要避免的是规划器为了让每个长期 Rival“始终同档”，在主角每次新增 Asymmetry 后也自动给对方再补一个新异常、再补一个新奇物、再做一次复合，最后把普通重要配角写成第二套同级 Advantage Stack。**主角可以在很多具体机会中输、错失或暂时落后，但全书默认让其长期复利斜率、复合深度和最终行动自由持续超过普通同代强者。** 只有当本书确实需要一个极少数的镜像宿敌、共同成长极或最终 Boss 时，Story Program 才可以明确让该角色也长期复利；这是具体 Story Design 的少数例外，必须来自这个角色自己的因果路线，不能成为每个重要 Rival 的默认补强策略。"""
 
 FINAL_APEX_DIRECTION = """Local Apex ≠ Final Apex（终局成长承诺，不新增总战力分）：普通非终局 World Horizon 可以在主角已经进入、扰动或活透当前最高竞争圈层后交给下一次 World Expansion；不要求他在每张地图离开前把所有强者、专业、副职和细分榜单都刷成第一。**但如果作者上游明确说明当前就是小说最终 World Horizon、不会再 World Expansion、正在规划真正结局，那么默认成熟男频成长承诺必须在这里完成 Final Apex，而不是再制造“山外有山”逃走。** Final Apex 至少意味着：主角进入最终公开力量主尺的最高可见圈层；面对本书最后的决定性战斗/生存/世界级选择时，读者能明确判断主角是最终最难被同层复制、最有能力决定自己去留与核心胜负的人。允许最终 Rival 与主角同级、某个古兽肉身更硬、某位大师在炼器/速度/某专业上仍第一；**同一最高公开档位下，主角的 Advantage Stack 应给出决定性的 Asymmetry Dominance。** 不要求杀光或击败所有强者，也不把每个副轴都收成第一。终局是否成立看核心成长承诺是否结账，而不是全榜单清零。若上游明确是终局，`## World Horizon Handoff` 第一行写 `FINAL NOVEL END`，随后只写终局 Apex 如何被故事证明与哪些世界/关系仍可在结局后继续存在；不得再输出 World Expansion orchestration。**终局可以保留没有被彻底解释的世界余白，但不能再把它们写成未来主线、下一轮调查或新的 Expansion 入口；`## 远期仍值得追的东西` 必须写 `NONE｜小说已完结；未解释余白不再构成 future story obligation`。**"""
@@ -140,6 +143,9 @@ CORE_ADVANTAGE_WORLD_COMPATIBILITY = """Core Advantage ↔ World Compatibility�
 
 WORLD_VALUE_CONCRETENESS = """World Value Concreteness（World Vision 世界价值原则）：当财富、修炼条件、身份待遇、装备、知识、通行、名额、服务或其它“资源”会影响剧情时，World Vision 先定义本世界真正流通和被争夺的具体对象与相对价值感，让下游能写“人物得到/失去什么”，而不是只能写“资源增加”“获得机会”。不要求提前写死每次数量或价格；只需要建立普通、重要、稀缺之间的世界内区别，并保证基础生活/培养逻辑与稀缺奖励逻辑不混淆。"""
 
+WORLD_RULE_LIVED_CONSEQUENCE_DIRECTION = """World Rule Must Create People, Not Only Gameplay（世界规则生活化软原则）：一个世界最有辨识度的规则如果只用于战斗解题、赌局漏洞、追逐机关或副本机制，长期会退化成换皮关卡。World Vision / Story Program 应让至少一条具体人物欲望、关系、身份处境或生活选择**只有在这条世界规则存在时才会成立**：它可以改变一个人算不算死、谁有权替谁决定、两段关系是否能同时存在、继承/背叛/分离怎样发生，或其它本世界独有的人生命运。不要为了“深刻”强行哲学化、制度化或写百科；仍然用具体人物想要什么、害怕失去什么、会为此做什么来承载。战斗与玩法继续大胆使用同一规则，但不能成为它唯一的故事用途。"""
+
+
 HIGH_VALUE_ACQUISITION_DIRECTION = """High-Value Acquisition / Reward Opportunity（Story Program / Outline 软规划原则，不新增字段、评分或 Hard Gate）：成熟男频长篇可以持续让主角得到真正值得想要的东西，但“奖励”是广义获得，不只指宝物，也可以是力量、功法、身体/血脉变化、标志性武器、稀有知识、伙伴、身份、称号、进入资格、世界入口、传承或规则层能力。高价值获得优先经过故事机会与主角行动真正变成主角可用的东西；重要奖励最好尽快通过一个具体场面证明“它真值”，并让主角从此能做过去做不到的事、让别人改变判断或打开新的世界入口。**Access / Identity 是真实奖励，但不能长期替代 Fantasy Possession。** 当当前故事已经把某门功法、兵器、身体变化、奇物、传承或其它具体对象变成主要欲望时，先让读者知道它为什么值、谁愿意为它冒险、拿到后具体能做什么；再让争取、到手、错失或被迫放弃发生。若一时拿不到，也要让这个未兑现对象和距离继续成为清楚的近期欲望，而不是不断用新资格、牌证、正式记录或更多入口替代“真正拥有”。**真实错失允许有空窗**：人物刚因关键选择放弃一个已经建立欲望的高价值对象时，不要仅为保持 payoff 在同一场景或同一结算窗口立刻塞入分量/功能近似的替代奖励来抵消机会成本；除非那个替代物在此前因果中本就独立成立，并且取得它本身仍有新的选择与代价。旧奖励可以在几十章后换场景复用，或从工具重新解释成身份、秘密、关系承诺、世界入口乃至更高层条件；这种复用属于叙事复利。奖励只在当前故事存在真实欲望、机会与后续用途时出现；阶段可以没有新的标志性获得，奖励类型与出现顺序由本书因果决定。**一场大胜允许复合结算，一次探索也允许目标之外出现意外好东西**：主奖品、奖金/资源、招揽/入口，以及大型阶段后的据点、队伍、产业或长期收入，只要分别有当前因果，就不因“同时得到多项”而主动删减。Story Program 只需要规划阶段之间获得体验怎样自然变化；Outline 再把真正重要的机会、争夺/选择、到手、第一次证明和后续回收落进具体故事锚点，Director 不负责凭空发明计划之外的大奖励。"""
 
 
@@ -187,6 +193,9 @@ DIRECTOR_CHAPTER_BUDGET_RULE = """章节事件预算边界：场景可以跨章�
 CHAPTER_HANDOFF_CONTINUITY_RULE = """Chapter Handoff Continuity（章间即时连续性，不新增字段或 Agent）：上一章正式正文末尾若仍处于**未解决的即时局面**——例如对手已经正面堵路/拔刀、追杀仍在进行、攻击已经落下、人物正坠落/被困、门或桥正在关闭、一个必须当场回应的交易/选择刚被提出——它不是可以在章间省略的气氛钩子，而是当前章已经存在的 Canon continuity debt。当前章必须先从这个局面继续，用最小必要动作写清它怎样结束、被打断或转化，再进入 Future 10 为本章安排的后续事件；不得直接跳成“次日 / 另一地点 / 已经进城 / 冲突结束后”而不交代因果。
 
 这条连续性债只授权**最低充分的桥接动作**，不授权新增奖励、隐藏事实、重大胜负、关系翻转、资源得失或本章计划之外的新主事件。Director 必须把桥接写成至少一个可直接落正文的具体动作因果（谁利用哪个已存在的人/物/地形/能力做了什么，怎样让堵截/追杀/坠落/选择真正转化）；`趁乱脱身 / 成功进入 / 摆脱追兵 / 冲突结束` 这类结果摘要不能代替 bridge。若抵达当前计划预设开场状态必须额外发生一个会改变这些已批准结果的重大事件，Director 不得静默编造；应在现有 `状态变化` 中使用 `[PLAN OUTCOME ADJUSTMENT]` 说明 Canon 与 Plan 的冲突，并停在最近合法结果。Outline / Review 在规划 Future 10 时也要反向检查：第 N 章 `结尾推动` 一旦制造上述即时未解局面，第 N+1 章 `具体剧情` 的第一个动作必须继续/解决它；若想让第 N+1 章从新地点、新时间或另一场景开始，就必须在第 N 章先结清即时局面，或明确把桥接写进第 N+1 章。章节边界可以切场景，但不能删除因果。"""
+
+
+ACCESS_PROVENANCE_RULE = """Access Provenance（跨地点 / 跨边界到达因果，不新增交通系统或 Gate）：若正文或 Canon 已明确某条门、桥、世界裂口、封锁、阵线或其它关键边界**关闭 / 拒绝 / 把某人物挡在另一侧**，而后续计划又要求该人物出现在边界另一侧，Outline 必须在人物再次出现之前给出已有 Authority 支持的到达因果，或把它明确保留为当场可见的 Mystery；不能让人物因为“剧情需要”无说明瞬移。这里尤其检查非相邻章节：第 N 章把人留在门外，第 N+2 / N+3 章让他在异界堵路，仍然必须回答他怎么跨过来。Director / Reviser **不得为了补洞自行发明第二扇门、一次性传送物、远程召回、剑意追踪、秘密接引等新机制**；若上游没有授权足够的到达路径，就使用现有 `[PLAN OUTCOME ADJUSTMENT]` / Plan Conflict 返回最早规划层处理。普通步行、同一开放道路或前文已建立的常规移动不需要额外解释。"""
 
 
 DIRECTOR_REPETITION_RULE = """轻量反重复判断（软提醒，不是新增字段、评分或 Hard Gate）：先看最近 1—3 章摘要，判断当前章的主要压力、主要解法和主要结算方式是否正在重复最近章节。如果重复，而且 BOOK / 当前计划没有明确要求这种重复产生新的阶段效果，就在当前计划允许的事件范围内优先选择能改变身份、关系、具体获得物、主动目标、行动舞台、力量理解或敌人策略的执行方式。Director 只负责当前章执行层去重，不重新规划长期宿敌、能力玩法或世界层级；这些应由 Story Program / Outline 决定。不要因此篡改 BOOK、抢先完成下一章，也不要为了形式变化强行换戏；重复确有新的阶段意义时正常执行。"""
@@ -253,6 +262,9 @@ READER_FIRST_PROSE_CONTRACT = f"""Reader-First Prose Contract：这是表达层�
 **禁止把已经展示清楚的事实、动作或结果，再另起一个漂亮短句做裁断、对照、否定翻转或意义升华，并在同一章反复复现成稳定节拍。** 典型同构包括：`他不怕 A。他怕的是 B。`、`他只会 A。可这一件事，已经够了。`、`一个 X 做 A。另一个 X 做 B。`、连续 `不是 A，不是 B，而是 C`，以及任何“事实已经成立 → 短句总结 → 再解释这意味着什么”的变体。判断看语义结构，不看具体词；不要把“怕的是”换成“真正要紧的是”之类同义词继续制造同一章法。
 
 禁的是**重复成章法**，不是一切短句、对照或金句。某个真正关键位置自然出现一次可以保留；**一章一旦已经自然出现一处明显的这种收束，后文绝对不要再主动制造第二处同构收束。** 优先让动作、人物反应、直接后果、对白后的沉默或下一个事件自己完成意义；已经 show 出来的东西，不再为了“漂亮”补一个 tell 的尾巴。
+
+## Trait Saturation｜性格成立后不要继续刷同一口癖
+稳定人格是**选择偏向**，不是每章重复同一种证明。某个“爱钱 / 好胜 / 嘴硬 / 谨慎 / 好奇”等牵引已经通过一两次有记忆点的选择和台词清楚成立后，后续只有它真的改变新选择时才再次前景化；不要继续靠同义的“值多少钱 / 这才叫买卖 / 我不喜欢亏”或其它固定口癖反复提醒读者。让 Frozen Human 中其它真实牵引、具体关系、面子、冲动、审美、身体反应或不够理性的偏爱自然轮流进入现场；不是为了多样性硬轮班，而是避免把一个活人压成单一标签播放器。
 
 - 能直接说清楚就直接说：明确写人物、对象、动作、原因和结果。少用需要读者自行补全的代词、空泛指代、隐喻和省略；当前指代不绝对清楚时，重复名词也可以。
 - 重要能力、物品和规则第一次出现时，先用普通话让读者知道“它是什么、跟主角有什么关系、现在为什么重要”，再使用世界内部术语。不要先连续写几句意象，让读者自己猜机制。
@@ -339,6 +351,8 @@ Emotion：启用 / 不启用；理由
 {DIRECTOR_CHAPTER_BUDGET_RULE}
 
 {CHAPTER_HANDOFF_CONTINUITY_RULE}
+
+{ACCESS_PROVENANCE_RULE}
 
 {DIRECTOR_REPETITION_RULE}
 
@@ -895,6 +909,8 @@ World Vision 的顺序是 **Story-Bearing World → Desire Economy → Reader Co
 
 {WORLD_VALUE_CONCRETENESS}
 
+{WORLD_RULE_LIVED_CONSEQUENCE_DIRECTION}
+
 {BUSINESS_DECISION_OVER_IMPLEMENTATION}
 
 最终严格输出：
@@ -982,6 +998,8 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 {FANTASY_COMPOUNDING_DIRECTION}
 
+{PREMISE_IDENTITY_PAYOFF_DIRECTION}
+
 {PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION}
 
 {FINAL_APEX_DIRECTION}
@@ -1005,6 +1023,8 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 {ADJUDICABLE_PAYOFF_DEBT_DIRECTION}
 
 {ASYMMETRY_REVEAL_PAYOFF_DIRECTION}
+
+{WORLD_RULE_LIVED_CONSEQUENCE_DIRECTION}
 
 主角必须长期真正变强，核心幻想也必须在多个自然阶段反复得到有分量、可观察的兑现；但持续成长属于**全书纵向不变量**，不等于每个大型阶段都必须同时出现新能力、新装备、新资源、新地图和一次能力演示。Power Seed 决定开局 Core Asymmetry 及其成长语法；Story Program 既负责这些已批准潜力怎样在故事中实现，也可以通过真实获得让主角后来加入新的 Power Asymmetry，并安排它们与旧优势发生复合。新增优势不是重写 Power Core：不得篡改开局 Core Asymmetry、凭空改写其 High-Tier Mutation 或绕过 Permanent Boundary。
 
@@ -1110,6 +1130,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 
 {FANTASY_COMPOUNDING_DIRECTION}
 
+{PREMISE_IDENTITY_PAYOFF_DIRECTION}
+
 {PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION}
 
 {FINAL_APEX_DIRECTION}
@@ -1133,6 +1155,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {OUTLINE_STATE_ADVANCE_DIRECTION}
 
 {CHAPTER_HANDOFF_CONTINUITY_RULE}
+
+{ACCESS_PROVENANCE_RULE}
 
 {PROTAGONIST_ASCENSION_TRAJECTORY}
 
@@ -1275,6 +1299,8 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 
 {FANTASY_COMPOUNDING_DIRECTION}
 
+{PREMISE_IDENTITY_PAYOFF_DIRECTION}
+
 {PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION}
 
 {FINAL_APEX_DIRECTION}
@@ -1292,6 +1318,8 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {EFFECTIVE_COUNTER_DIRECTION}
 
 {CHAPTER_HANDOFF_CONTINUITY_RULE}
+
+{ACCESS_PROVENANCE_RULE}
 
 {PROTAGONIST_ASCENSION_TRAJECTORY}
 

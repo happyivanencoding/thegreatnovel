@@ -20,7 +20,7 @@
 
 - 创意：可选 Premise Aperture + World / Character / Story 三个 Authority 阶段；默认阅读态，编辑/生成/批准按阶段展开；GBrain/References 折叠。
 - 故事设计：总体设计 / 中期规划 / 未来十章 Tabs；section cards 默认阅读态，原文编辑显式打开。
-- 章节写作：章节选择、当前小纲/正文主体、一个主生成或保存动作；所有开书叙事形式都从 Chapter 1 进入正常 Director → Curator → Primary → Authority Reviser → State 链，原始上下文和执行节点进入高级详情。
+- 章节写作：生产正文改为 4—6 章 Batch（默认5）：已批准 Future-10 直接形成 deterministic Batch Packet → Terra Batch Primary → Sol Authority Delta → 整批采用 → State 逐章落盘。当前旧单章 Director → Curator → Primary → Full Reviser 界面保留为 fallback / 高级详情；本轮没有新增 Batch 专用视觉工作区，产品层若后续暴露 Batch 操作，应复用同一章节阅读态与高级详情，不把 Authority patch 变成作者必须逐条管理的主界面。
 - 记忆：Canon Memory / Current State 默认阅读态，复用 BOOK status 保存路径。State Delta 应用到浏览器状态编辑区时，`Current Power Position` 不允许因模型漏写而消失：已有 Canon 位置优先继承；第一章尚无 Canon 时从 `CHARACTER.md` 的 T0 `开局精确力量位置` 确定性转成 Current Position。只有 State 返回了新的明确数字位置时才覆盖；越级胜利本身不触发 UI 推断升级。
 - 工具：Prompt Templates、OpenAI Settings、References、Workflow Debug。
 

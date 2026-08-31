@@ -126,9 +126,13 @@ v1 的共享默认优先级：
 
 ## Runtime Soft Routing
 
-当前生产结构已经从“Curator 选择一张 Control”升级为 **Scene Projection Compiler**：
+2026-08-31 Batch Production 冻结后，**BOOK Prose Profile 仍是默认正文表达权威，但 Scene Projection Compiler 不再处于默认 Batch critical path**。默认 Batch 由 Full Deterministic Authority Packet 直接把 BOOK §§7–10 Prose Profile 交给 Terra；Curator / Scene Projection Compiler 暂时只服务单章 fallback / 专项修订：
 
-`BOOK Prose Profile + Chapter Mission / Canon / 当前人物状态 + current Scene + optional Prose Control evidence → Curator → NONE 或 2—4 句 Scene Prose Projection → Terra Primary`
+`默认 Batch：BOOK Prose Profile + Full Deterministic Authority Packet → Terra Batch Primary`
+
+`单章 fallback：BOOK Prose Profile + Chapter Mission / Canon / 当前人物状态 + current Scene + optional Prose Control evidence → Curator → NONE 或 2—4 句 Scene Prose Projection → Terra Primary`
+
+没有经过独立 Batch-compatible A/B 前，不为了“功能齐全”把 Curator 或 Scene Router重新塞回默认 Batch。
 
 关键边界：
 
@@ -212,7 +216,7 @@ Curator 得到候选以后仍需判断当前场景是否真的缺少某种读法
 
 GBrain 当前存在一个已观测的搜索行为：纯中文 query 在全库 hybrid search 可以返回相关结果，但 `query --scope prose-controls` 对中文 semantic 分支返回空；同 scope 下英文 alias/keyword 查询正常精准命中。doctor 同时确认 embedding coverage 为 100%，因此这不是缺 embedding。
 
-当前生产路径应使用 Scene Family → approved English alias 的确定性 fallback 检索 Prose Controls，不依赖纯中文 scoped semantic search。
+当前单章 fallback / 专项修订路径如调用 Curator，应使用 Scene Family → approved English alias 的确定性 fallback 检索 Prose Controls，不依赖纯中文 scoped semantic search；默认 Batch 不执行这次检索。
 
 ## Prose Control Multi-Scene A/B（2026-08-24）
 

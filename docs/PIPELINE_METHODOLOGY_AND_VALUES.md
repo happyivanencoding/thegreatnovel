@@ -10,7 +10,7 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 对应实际链路：
 
-`作者方向 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → 作者批准 / 显式跳过 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline → Director → Curator → Primary Writer → Authority Reviser → State Extraction`
+`作者方向 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → 作者批准 / 显式跳过 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5；复用 Chapter Context compiler）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘`
 
 Premise Aperture 已冻结为可跳过的 production 开书阶段，但不是第四 Authority。Forge 一次形成三张完整货架候选；Compiler 只审 trigger、载体、T0 尺位、Interface 因果与远期复合，不评分、不选择、不修稿。作者批准后，代码确定性拆出 World / Power / Human / Story 四条 lane contract；Story Program 第一次读取完整 Promise，Outline 与章节不再读取 raw card。该阶段从未开始或显式跳过时，原 Split Authority 路径保持可用；一旦开始，必须 strict PASS + 作者批准后才能继续。完整合同见 `docs/PREMISE_APERTURE.md`。
 
@@ -509,7 +509,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 
 ---
 
-### Curator：决定 Writer 真正需要看到什么
+### Curator（单章 fallback / 专项）：决定 Writer 真正需要看到什么
 
 #### 负责
 
@@ -537,7 +537,7 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 
 ---
 
-### Primary Writer：只写小说
+### Primary Writer（单章 fallback）：只写小说
 
 #### 负责
 
@@ -566,7 +566,7 @@ Writer 的目标是“写小说”，不是维护 pipeline bookkeeping。 正文
 
 ---
 
-### Authority Reviser：恢复远端权威，但只做局部手术
+### Authority Reviser（单章 fallback）：恢复远端权威，但只做局部手术
 
 Primary 为了保持注意力集中，只吃 Director Contract、Curated Context 与必要连续性；这会降低写作负担，也会让一些**远端但更准确**的 World / Power / Human 信息在第一次 realization 中被压缩掉。Authority Reviser 专门解决这类“压缩损失”，不重新决定剧情。
 
@@ -778,21 +778,21 @@ Atomic 的稳定方法论进一步收敛为“**Authority Contract 与 Primary P
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Collision + long-form causality；最高杠杆长期结构节点 |
 | Story Refresh | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Effective World × Current Character 的周期性 fresh Re-Collision；如有 Fixed Hidden Mystery，可 planning-only 编译 reader-facing Reveal Contract |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |
-| Director | GPT-5.6 Luna high | 章节相关精选上下文 | 当前 production 默认；模型/effort 切换只做显式下游 A/B |
-| Curator | GPT-5.6 Luna high | raw GBrain OFF；Index-first + Scene Skill v2 compact Catalog | 编译短 `Scene Prose Projection`，允许 `NONE`；medium/Terra 路由尚未证明质量等价 |
-| Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；只吃短 Scene Projection | 先完成完整第一版正文；不直接读完整 Skill；不是默认 final source |
-| Authority Reviser | GPT-5.6 Luna high | **OFF**；safe Authority + optional short Revision Watch | Preservation First；只在明确失败时局部修；默认 final source |
-| State Extraction | GPT-5.6 Luna low | OFF | 只抽取最终正式正文已发生事实 |
+| Batch Packet | deterministic | OFF | 直接抽取 Approved Future-10 当前4—6章（默认5），并复用 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block；不由 LLM 重规划 |
+| Batch Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；Frozen Power/Human + safe World/Reader Release + Approved Future-10 | 一次连续写完整 Batch；保留短中程小说认知；不是 final source |
+| Batch Authority Delta | **GPT-5.6 Sol high** | **OFF**；完整 Batch + safe Authority | 跨章 Authority sweep，只输出 exact local patch；修复需要新机制时返回 `upstream_conflicts`，不改正文 |
+| State Extraction | GPT-5.6 Luna low | OFF | 整批 prose final 后按章顺序抽取已发生事实 |
+| Director / Curator / Full Reviser | Luna high / Luna high / Luna high | raw GBrain OFF | 旧单章 `curator_primary` fallback / 专项实验；Scene Skill v2 的 Curator Projection / Revision Watch 当前也只在这里使用，不是默认 Batch 路径 |
 
 ### 为什么这样分
 
-- **Terra**：这轮章节 A/B 中 wall-clock 通常最快、输出更克制；Primary 的优势尤其明显。但 Terra 单价显著高于 Luna，因此“更快”不等于“更便宜”。
-- **Luna**：当前单价最低，也是规划链的默认综合主力；Director/Curator 质量足够且成本优势很大，但正文与 Curator 更容易输出偏长。
-- **Sol high**：最强优势集中在几十/几百章的长期变异；单价最高且通常最慢，因此默认只放 Story Program / Deep Planning，不进入常规章节链。
-- **Luna max**：不作为日常默认；只用于疑难创意救援、关键架构诊断和最高质量基线。
-- **GPT-5.4 high**：当前没有相对 Luna 的补偿性优势，只用于回归或模型对照。
+- **Terra**：正文 Batch 仍然是最稳定的速度/克制选择；一次连续 5 章能保留短中程小说认知。Terra 单价显著高于 Luna，因此“更快”不等于“更便宜”。
+- **Luna**：仍是 World / Outline 等规划链的默认综合主力，也负责低成本 State；但本轮不再增加一个 Luna Batch Director 去重新解释已经批准的 Future-10。
+- **Sol high**：除 Story Program / Deep Planning 外，现在固定承担 **Batch Authority Delta**。理由不是“模型最强所以全用 Sol”，而是同一冻结 Primary 的 Reviser 矩阵与独立 Sol-max adjudication 中，Sol-high 的合法 hard-fix 子集最完整且较克制。
+- **Max / Ultra**：不按档位名字自动进入 production。Terra-max/ultra 能抓更多问题，但 Ultra wall 约为 Max 的 2.8 倍且没有全面增益；Luna-max 有 overrepair 倾向。它们只保留诊断/最高质量对照。
+- **GPT-5.4 high**：当前没有补偿性优势，只用于回归或模型对照。
 
-章节模型选择必须分开看 **生成质量 / wall-clock / 实际成本**。当前默认路由是 `Luna Director → Luna Curator → Terra Primary Draft → Luna high Authority Reviser → Luna State`。Terra Primary 是第一版正文行为选择；Luna high Reviser 是 authority-sensitive 局部修订选择。2026-08-29 最终正文双盲已否决 Curator medium/Slim、Reviser medium/Patch-only/Safe-Patch route 与 Conditional Director 作为质量等价低延迟默认；模型或合同切换必须重新通过正常下游与 Reader + Authority 双盲。Sol 不进入常规章节链。
+章节模型选择继续分开看 **生成质量 / wall-clock / 实际成本**。当前默认路由是 `Approved Future-10 → Full Deterministic Authority Packet → Terra-high Batch Primary → Sol-high Authority Delta → Luna-low State`，窗口默认 5 章、支持 4—6 章。旧 `Luna Director → Luna Curator → Terra Primary → Luna Full Reviser → State` 保留为兼容 fallback；2026-08-29 的 medium/Slim/Patch-only 等失败结论仍有效，但不再定义当前默认拓扑。
 
 ### 已验证的 Theme Emergent A/B 结论（2026-08-25）
 

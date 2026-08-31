@@ -22,9 +22,9 @@ GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。�
 - `Human Seed`：默认 GBrain ON，最多 3 条 Human craft，Appetite / Behavior / Relationship 各最多 1 条；只看 `LIFE_CONTEXT`，不读取 Power 或 named Story Opportunities。
 - `Story Program`（UI mode=`idea`）：默认 GBrain ON，最多 3 条 focused inspiration；优先借鉴 Plot Engine 变异、thread ecology、人物回流、Reward/Opportunity 与历史复用，但不能覆盖已批准 World / Character。GBrain 可以提醒“什么值得想要、旧获得怎样继续生效”，不能重新把这些原则变成每阶段 Acquisition / Compounding 表单。
 - `Outline`：默认 GBrain ON，通常 4 条、最多 5 条 focused inspiration；把 Thread Collision、身份揭露、离队归来、牺牲/二次兑现、高价值获得与旧奖励重释落实为具体故事锚点。World 的固定 Coordinate Reference 同样不重复进入 Outline creative 候选，坐标语义由已批准 World Vision 继承。
-- `Director`：不负责凭空发明长期大奖励或重新设计 Story Program。
-- `Scene Skill v2`：GBrain/原著只在离线研究层提供 source-first bounded evidence；跨书收敛成 source-blind Deep Craft。2026-08-28 冻结研究覆盖 64 条定向 lane、26 本经典长篇、857 次 bounded-window Fidelity 审核；这些数字只是研究证据，不构成 Runtime 配额。Curator 只看 `Reading Question + 一行 Projection Guidance` 并编译 2—4 句 `Scene Prose Projection`（允许 `NONE`）；Primary 不直接读取完整 Skill 或原著 evidence。当前保持 24 个 Primary，另有 3 个 Shared Reference Lens 不进入 Router。
-- `Authority Reviser`：raw GBrain 固定 OFF；只读取已批准 World / Reader Release / Frozen Character Authority 的安全投影与 Curator/Primary；Scene Craft 只允许追加经 A/B 证明安全的一行 `Revision Watch`，完整 Revision Lens 不进入。
+- `Director`：仅单章 fallback / 专项实验使用；不负责凭空发明长期大奖励或重新设计 Story Program。
+- `Scene Skill v2`：GBrain/原著只在离线研究层提供 source-first bounded evidence；跨书收敛成 source-blind Deep Craft。2026-08-28 冻结研究覆盖 64 条定向 lane、26 本经典长篇、857 次 bounded-window Fidelity 审核；这些数字只是研究证据，不构成 Runtime 配额。当前默认 Batch 不调用 Curator / Scene Skill Router；24 个 Primary + 3 个 Shared Reference Lens 继续服务单章 fallback、专项修订与离线 craft 维护。fallback 中 Curator 仍只看 `Reading Question + 一行 Projection Guidance` 并编译 2—4 句 `Scene Prose Projection`（允许 `NONE`），Primary 不直接读取完整 Skill 或原著 evidence。
+- `Authority Reviser`：默认 Batch 使用 Sol-high exact Delta，raw GBrain 固定 OFF；Scene Craft Revision Watch 当前只保留在单章 fallback / 专项修订，完整 Revision Lens 不进入。
 - `State Extraction`：继续用当前 `current_state` 记录重要能力、物品、规则、持有人与状态变化；不新增 Inventory 数据库。
 
 ## 统一的 Supporting Logic 原则
@@ -80,13 +80,13 @@ Director/Writer 不应为了“这一章需要爽点”自行添加计划外的�
 
 模型不是线性排名：
 
-- **Terra**：章节实测 wall-clock 通常最快、输出更克制，但单价显著高于 Luna；Primary 的优势是正文行为，不是便宜。
-- **Luna**：当前单价最低，也是规划与章节理解层的默认主力；Director/Curator 性价比高，但输出更容易偏长。
-- **Sol high**：长期故事结构最强，同时单价最高且通常最慢；默认只集中在 Story Program / Deep Planning。
-- **Luna max**：仅用于疑难创意救援、最高质量基线和关键重构，不日常使用；
-- **GPT-5.4 high**：当前没有相对 Luna 的补偿性优势，不作为默认创作模型。
+- **Terra**：章节实测 wall-clock 通常最快、输出更克制，但单价显著高于 Luna；当前用于一次连续 4—6 章的 Batch Primary。
+- **Luna**：当前单价最低，也是 World / Outline 等规划层与 State 的默认主力；不再增加 LLM Batch Director 去重写已批准 Future-10。
+- **Sol high**：长期故事结构强，同时单价最高且通常最慢；当前除 Story Program / Story Refresh 外，固定承担整批可见的 **Batch Authority Delta**。
+- **Max / Ultra**：只作疑难诊断与质量对照；2026-08-31 同稿矩阵没有证明 Ultra 相对 high/max 的补偿性收益，Luna-max 还出现 overrepair。
+- **GPT-5.4 high**：当前没有补偿性优势，不作为默认创作模型。
 
-章节路由要分开看 **质量 / wall-clock / 实际成本**。当前默认是 `Luna high Director → Luna high Curator → Terra high Primary Draft → Luna high Authority Reviser → Luna low State`。Reviser reasoning 五档对照中 high 首次稳定完成全部关键 authority 检查；xhigh/max 没有补偿性收益。2026-08-29 最终正文双盲又否决了把 Curator medium/Terra/Slim、Reviser medium/Patch-only 或 Conditional Director 当作质量等价的低延迟默认；模型、effort 或合同缩减只能作为显式实验，必须接回正常下游并通过 Reader + Authority 双盲。Sol 不进入常规章节链。
+章节路由要分开看 **质量 / wall-clock / 实际成本**。当前默认是 `Approved Future-10 → Full Deterministic Batch Packet → Terra high Batch Primary → Sol high Batch Authority Delta → Luna low State逐章落盘`，默认5章、支持4—6章；Packet 复用 Chapter Context compiler 前置完整安全 Authority 与 BOOK Prose Profile。2026-08-29 的 Curator medium/Terra/Slim、单章 Reviser medium/Patch-only、Conditional Director 失败结论继续约束 fallback；任何进一步模型/effort缩减仍需正常下游 Reader + Authority 双盲。
 
 ### GBrain 蒸馏模型
 
@@ -176,7 +176,7 @@ GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks
 
 ## Prose Craft v1
 
-Story Craft 负责“长期故事为什么好看”；正文表达层另有 `docs/GBRAIN_PROSE_CRAFT_V1.md`。 Scene Craft 另走 `原著 bounded evidence → Fidelity Audit → cross-book synthesis → source-blind Deep Craft → Curator short Projection / Reviser short Watch`；研究层可深，章节 Runtime 必须窄，书名/locator/source-specific DNA 不进入 Writer。Prose Craft v1 使用六本经典的 85 个 bounded scene windows 建立 source-specific Prose DNA，再跨书收敛为 7 张 production-facing Prose Controls。Prose DNA 不直接进入 Primary Writer；Prose Controls 只影响 HOW TO SAY，不覆盖 BOOK Prose Profile、Chapter Mission 或 Canon。当前完成 GBrain import + embedding（15705/15705），自动 Curator 路由仍待正文 A/B 后冻结。
+Story Craft 负责“长期故事为什么好看”；正文表达层另有 `docs/GBRAIN_PROSE_CRAFT_V1.md`。Scene Craft 的研究链仍是 `原著 bounded evidence → Fidelity Audit → cross-book synthesis → source-blind Deep Craft`；其 `Curator short Projection / Reviser short Watch` 目前只服务单章 fallback / 专项修订，默认 Batch 不调用该 Router。研究层可深，章节 Runtime 必须窄，书名/locator/source-specific DNA 不进入 Writer。Prose Craft v1 使用六本经典的 85 个 bounded scene windows 建立 source-specific Prose DNA，再跨书收敛为 7 张 production-facing Prose Controls；BOOK Prose Profile 由 Full Deterministic Batch Packet 直接带给 Terra。Prose DNA 不直接进入 Primary Writer；Prose Controls 只影响 HOW TO SAY，不覆盖 BOOK Prose Profile、Chapter Mission 或 Canon。当前完成 GBrain import + embedding（15705/15705）。
 ## Pilot Active / HOLD
 
 当前主 `gbrain-story-craft-v3/staging` 已确定性重建 manifest，共 **71 张 staging pages：68 active / 3 HOLD-or-reference-only**。其中真正的 HOLD mechanisms 仍是：

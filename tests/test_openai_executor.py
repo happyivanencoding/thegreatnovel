@@ -48,6 +48,10 @@ def test_openai_status_does_not_expose_api_key(monkeypatch) -> None:
         "state_model": "cheap-state-model",
         "authority_reviser_model": "gpt-5.6-luna",
         "authority_reviser_reasoning": "high",
+        "batch_primary_model": "gpt-5.6-terra",
+        "batch_primary_reasoning": "high",
+        "batch_authority_reviser_model": "gpt-5.6-sol",
+        "batch_authority_reviser_reasoning": "high",
         "name": "",
     }
     assert "secret-value" not in response.text
@@ -109,6 +113,31 @@ def test_authority_reviser_uses_fixed_luna_high_profile(monkeypatch) -> None:
     assert client.responses.calls == [{
         "model": "gpt-5.6-luna",
         "input": "REVISER PROMPT",
+        "reasoning": {"effort": "high"},
+    }]
+
+
+def test_batch_authority_reviser_uses_fixed_sol_high_profile(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("STORY_MVP_BATCH_AUTHORITY_REVISER_MODEL", raising=False)
+    client = FakeClient()
+
+    result = generate_text(
+        "BATCH REVISER PROMPT",
+        model="SHOULD_BE_IGNORED",
+        purpose="batch_authority_reviser",
+        reasoning_effort="low",
+        client=client,
+    )
+
+    assert result == {
+        "output_text": "FAKE OUTPUT",
+        "model": "gpt-5.6-sol",
+        "reasoning_effort": "high",
+    }
+    assert client.responses.calls == [{
+        "model": "gpt-5.6-sol",
+        "input": "BATCH REVISER PROMPT",
         "reasoning": {"effort": "high"},
     }]
 

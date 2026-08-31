@@ -1,0 +1,12 @@
+{
+  "patch_count": 18,
+  "upstream_conflicts": 0,
+  "primary_wall": 202.753,
+  "delta_wall": 1103.588,
+  "primary_chars": 8632,
+  "final_chars": 8685,
+  "state_wall": 136.114,
+  "production_wall_primary_delta_state": 1442.455,
+  "sequential_full_chain_baseline": 2104.231,
+  "wall_reduction_vs_sequential_pct": 31.45
+}

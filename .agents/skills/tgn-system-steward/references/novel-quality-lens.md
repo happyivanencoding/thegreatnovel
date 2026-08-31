@@ -271,3 +271,16 @@ Humanization 优先修信息与节奏功能，不做禁词表。
 如果上一章停在对手堵路/拔刀、追杀未脱身、攻击已落下、人物正在坠落/被困、门正在关闭，或一个必须当场回应的交易/选择刚提出，下一章不能无解释地从次日、另一地点、已经进城或冲突结束后重新起场。这样的 Handoff 是 **continuity debt**：要么上一章在结束前已经结清，要么下一章先用最低充分动作让它结束、被打断或转化。
 
 同时不要把“接上了”本身当成功。如果下一章为了弥合坏 Plan，临时发明一条正好保护主角的世界规则、突然让强敌改变目的、补一个未经 Authority 支持的停战/禁杀机制，根因仍可能在 Outline / Director，而不是 Writer 文笔。正确审计顺序是：先定位最早哪一层制造了不可无损跳过的局面；再判断桥接是否只使用既有地点、人物、能力、追兵、物件和已批准规则。普通路程可以压缩，重大 encounter 不能被“随后 / 一番激战后”吞掉。
+
+## 19. Batch Narrative Window / Authority Finalization
+
+当 4—6 章连续生成明显比逐章生成更像一本小说时，不要把这项增益当成纯速度优化。Batch 的价值可能来自短中程叙事预见：前章摆出的地形、物件、关系势能和 Promise，模型在同一上下文里能自然回收。
+
+审计时分开看四个问题：
+
+1. **Narrative Window**：Batch Primary 是否真的提高连续阅读欲、人物声音、局部脑洞、铺垫回收与 Chapter Handoff；不要因为少量 Authority 漂移就先否定这层价值。
+2. **Planning Authority Preservation**：Approved Future-10 已经具体到逐章 Event / Result / Ending 时，默认直接确定性抽取。不要为了“Batch planning”再增加一个 LLM 重规划层；它可能写得更像小说，却同时把已经批准的时序、奖励来源或器物首次使用重解释偏。**但 Batch Packet 不能因此变成薄 Future-10：应复用现有 deterministic Chapter Context compiler，在 Primary 前把 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract 与 starting Canon 一起前置。** 这类 Authority 前置属于原信息的确定性编译，不是再规划。
+3. **Authority Finalization**：如果 Primary 一次预写多章，而 Reviser 逐章把前文改成新的 Final Canon，后续预写章会自然 stale。此时问题在 finalization topology，不是 Batch Writer 本身。优先测试“Reviser 同时看完整 Batch → exact local Delta → 代码应用”，让未触碰的小说句子物理保留。
+4. **Upstream Conflict**：Delta Reviser 只能恢复已有 Authority。若人物跨越关闭世界门、奖品来源、关键时序等根因在 Story / Outline 本身未决定，Reviser 不能发明一个看起来合理的新机制替上游补洞；应明确返回最小 upstream conflict。
+
+一个 Batch Delta 候选要看：真实 Hard Authority 是否闭合；同一事实域的所有跨章依赖是否一起修；修改字符/段落是否足够局部；Story blind 是否保住原 Batch 小说味；完整 critical path 是否真的改善；新书 held-out 是否复现。模型 `Max / Ultra` 不是自动加分项，只有比 high 多抓到真实问题且不增加 overrepair 才值得冻结。

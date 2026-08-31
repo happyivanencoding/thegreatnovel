@@ -10,6 +10,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
+from .batch_runtime import (
+    DEFAULT_BATCH_SIZE,
+    BatchWindow,
+    apply_batch_delta,
+    build_batch_delta_reviser_prompt,
+    build_batch_primary_prompt,
+    extract_batch_outline_plans,
+    parse_batch_delta_response,
+    parse_batch_primary_response,
+)
 from .character_prompts import generate_split_prompt
 from .gbrain import GBrainQueryError
 from .gbrain_retrieval import (
@@ -20,6 +30,8 @@ from .gbrain_retrieval import (
 )
 from .openai_executor import (
     OpenAIExecutorError,
+    batch_authority_reviser_model,
+    batch_primary_model,
     configure_settings,
     configured as openai_configured,
     authority_reviser_model,
@@ -160,8 +172,33 @@ class WorldExpansionApproveRequest(BaseModel):
 class OpenAIExecutorRequest(BaseModel):
     prompt: str = ""
     model: str = ""
-    purpose: Literal["default", "state_extraction", "authority_reviser"] = "default"
+    purpose: Literal[
+        "default",
+        "state_extraction",
+        "authority_reviser",
+        "batch_primary",
+        "batch_authority_reviser",
+    ] = "default"
     reasoning_effort: str = ""
+
+
+class BatchPromptRequest(BaseModel):
+    start_chapter: int = Field(ge=1, le=9999)
+    batch_size: int = Field(default=DEFAULT_BATCH_SIZE, ge=4, le=6)
+    book_content: str = ""
+    world_vision: str = ""
+    world_expansions: str = ""
+    character_card: str = ""
+    story_program: str = ""
+    previous_chapter_text: str = ""
+    batch_primary_response: str = ""
+
+
+class BatchDeltaApplyRequest(BaseModel):
+    start_chapter: int = Field(ge=1, le=9999)
+    batch_size: int = Field(default=DEFAULT_BATCH_SIZE, ge=4, le=6)
+    batch_primary_response: str
+    batch_delta_response: str
 
 
 class OpenAISettingsRequest(BaseModel):
@@ -364,6 +401,10 @@ def get_executors() -> dict[str, Any]:
             "state_model": state_extraction_model(),
             "authority_reviser_model": authority_reviser_model(),
             "authority_reviser_reasoning": "high",
+            "batch_primary_model": batch_primary_model(),
+            "batch_primary_reasoning": "high",
+            "batch_authority_reviser_model": batch_authority_reviser_model(),
+            "batch_authority_reviser_reasoning": "high",
             "name": openai_settings["name"],
         },
     }
@@ -391,6 +432,122 @@ def post_openai_executor(payload: OpenAIExecutorRequest) -> dict[str, str]:
     except OpenAIExecutorError as error:
         status_code = 503 if not error.configured else 502
         raise HTTPException(status_code=status_code, detail=str(error)) from error
+
+
+@app.post("/api/batch/primary-prompt")
+def post_batch_primary_prompt(payload: BatchPromptRequest) -> dict[str, str | int]:
+    try:
+        window = BatchWindow(payload.start_chapter, payload.batch_size)
+        plans = extract_batch_outline_plans(payload.book_content, window)
+        prompt = build_batch_primary_prompt(
+            window=window,
+            batch_plans=plans,
+            book_content=payload.book_content,
+            world_vision=payload.world_vision,
+            world_expansions=payload.world_expansions,
+            character_card=payload.character_card,
+            previous_chapter_text=payload.previous_chapter_text,
+        )
+        return {
+            "content": prompt,
+            "start_chapter": window.start_chapter,
+            "end_chapter": window.end_chapter,
+        }
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/batch/authority-reviser-prompt")
+def post_batch_authority_reviser_prompt(payload: BatchPromptRequest) -> dict[str, str | int]:
+    try:
+        window = BatchWindow(payload.start_chapter, payload.batch_size)
+        plans = extract_batch_outline_plans(payload.book_content, window)
+        chapters = parse_batch_primary_response(payload.batch_primary_response, window)
+        prompt = build_batch_delta_reviser_prompt(
+            window=window,
+            batch_plans=plans,
+            primary_chapters=chapters,
+            book_content=payload.book_content,
+            world_vision=payload.world_vision,
+            world_expansions=payload.world_expansions,
+            character_card=payload.character_card,
+            story_program=payload.story_program,
+        )
+        return {
+            "content": prompt,
+            "start_chapter": window.start_chapter,
+            "end_chapter": window.end_chapter,
+        }
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/batch/apply-authority-delta")
+def post_batch_apply_authority_delta(payload: BatchDeltaApplyRequest) -> dict[str, Any]:
+    try:
+        window = BatchWindow(payload.start_chapter, payload.batch_size)
+        chapters = parse_batch_primary_response(payload.batch_primary_response, window)
+        delta = parse_batch_delta_response(payload.batch_delta_response, window)
+        revised = apply_batch_delta(chapters, delta, window)
+        return {
+            "start_chapter": window.start_chapter,
+            "end_chapter": window.end_chapter,
+            "chapters": {str(number): revised[number] for number in window.chapter_numbers},
+            "patch_count": len(delta.patches),
+            "upstream_conflicts": list(delta.upstream_conflicts),
+            "adoptable": not delta.upstream_conflicts,
+        }
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/batch/adopt-authority-delta")
+def post_batch_adopt_authority_delta(
+    book_id: str, payload: BatchDeltaApplyRequest
+) -> dict[str, Any]:
+    """Preflight the whole batch, then save every finalized chapter before State runs."""
+
+    try:
+        window = BatchWindow(payload.start_chapter, payload.batch_size)
+        directory = _book_directory(book_id)
+        chapters = parse_batch_primary_response(payload.batch_primary_response, window)
+        delta = parse_batch_delta_response(payload.batch_delta_response, window)
+        if delta.upstream_conflicts:
+            raise ValueError(
+                "Batch Authority Delta 仍有上游冲突，必须先修 Story / Outline，不能采用正文"
+            )
+        revised = apply_batch_delta(chapters, delta, window)
+        existing = [
+            number
+            for number in window.chapter_numbers
+            if (directory / "chapters" / f"chapter-{number:04d}.md").is_file()
+        ]
+        if existing:
+            rendered = "、".join(str(number) for number in existing)
+            raise ValueError(f"Batch 中已有章节存在：{rendered}；请先明确处理已有正文")
+
+        saved: list[str] = []
+        for number in window.chapter_numbers:
+            target = save_chapter(
+                book_id,
+                number,
+                revised[number],
+                workspace_path(),
+                source="batch_authority_delta",
+            )
+            saved.append(str(target))
+        return {
+            "status": "saved",
+            "start_chapter": window.start_chapter,
+            "end_chapter": window.end_chapter,
+            "patch_count": len(delta.patches),
+            "saved": saved,
+            "state_next": window.start_chapter,
+        }
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.post("/api/books", status_code=201)

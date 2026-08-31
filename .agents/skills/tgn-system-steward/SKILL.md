@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.35
+version: 0.3.38
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -116,6 +116,11 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Public / Known World = Clarity; Unknown World = Mystery**：普通人从小知道的主流力量、粗略尺度、生活危险与上升入口可以直接讲；环境纹理、道具、专名或氛围不算已经说明
 - Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose
 - **Reader-Facing Event ≠ State**：当 Story Program 已设计出决定 Premise、Meta Grammar、关键 Surprise 或 Long-Horizon Promise 的高价值现场，而正文只剩某个 State 成立，沿 `Story Program → Outline Registry → Future-10 schedule → Director budget → Frozen Mission → final prose` 追最早运输坍缩；State Residue 不能替代 Event realization。
+- **Batch Narrative Window ≠ Permission to Finalize Chapters Independently**：若 4—6 章连续 Primary 明显比逐章 Writer 更像一本小说，先保护这项 reader-facing 增益，不要因少量跨章 drift 直接退回单章生成。审计 Batch 时把“写作窗口”和“Authority finalization 窗口”分开：`Batch Primary → 逐章全文 Reviser` 会让前章修订把后章预写稿变 stale；更合理的是让 Reviser 同时看完整 Batch，只返回 exact local Authority Delta，未触碰正文物理保留。**Approved Future-10 已经足够具体时，优先确定性原样抽取，不再增加一个 LLM Batch Director 重解释 Event / Result / Ending；但“直接抽 Future-10”不等于把其它已存在 Authority 丢掉，Primary 前仍应通过现有 deterministic Chapter Context compiler 把 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract 与 starting Canon 编入每章 Batch packet。** held-out 中 LLM 再规划虽提高小说味，却把界阶时序、奖励来源和器物首次使用改偏；反过来只给薄 Future-10 又让 Reviser承担过多事后补救。Delta 必须同时扫同一事实域的跨章依赖；若修复需要新增传送、追踪、奖励、身份、胜负或世界机制，必须上报 upstream conflict，不能由 Reviser 聪明补洞。评估时同时看小说味、Hard Authority、修改字符量、完整 wall 与 cross-book held-out；“模型更强 / effort 更高”本身不是证据，Max / Ultra 只有在真实 closure 提升时才值得采用。
+- **Access Provenance survives chapter distance**：上一章明确关门、断桥、拒绝入境、把某人留在另一侧，后两三章让他在边界另一侧出现仍然必须解释合法到达因果；非相邻章节不能绕过 Chapter Handoff 审计。若上游没授权路径，最早坍缩在 Story / Outline，而不是 Writer。
+- **Premise Identity must pay off before the first natural horizon ends**：当作品真正卖点是“跨世界带走并复合可能性 / 永久保存极限 / 吞并规则”这类独特操作时，普通掉宝、资格和地图不能连续替代它。审计第一世界/第一自然阶段结束前，读者是否至少亲眼看到一次“这本书与普通同类哪里不同”的完整兑现；不要求提前解释终极机制。
+- **World rule must create lived consequences, not only gameplay**：强世界规则若只制造战斗解法、赌局漏洞和机关，会逐渐变成换皮关卡。审计至少一条人物欲望、关系、身份或命运是否只有在该规则存在时才成立；不要因此强行哲学化或制度化。
+- **Trait saturation is a prose failure, not proof of characterization**：人物“爱钱 / 好胜 / 嘴硬”等已通过少数选择和好句成立后，反复用同义口癖提醒读者不会继续增加人物。审计后续场景是否让 Frozen Human 的其它真实牵引、具体关系、面子、冲动、审美或不理性偏爱自然进入选择；不要为了变化硬轮班，也不要把稳定人格误解成稳定台词模板。
 - **Authority Fact ≠ Backstage Wording**：Event Atom 锁事实与因果，不锁后台系统句。审计任务/UI/退出/携带信息时先问读者是否知道“还剩多久 / 去哪里 / 能带走什么 / 失败会怎样”；Reader Anchors 只锁 reader-safe literal，不用禁词表强迫 planning wording 进入 prose。
 - **Public Proof ≠ Hidden Mechanism Knowledge**：高手可以校准现场可观察表现、公开主尺、伤势/器物与 World/Canon 已知现象，但不能因为模型看得到 Frozen Power 就自动知道私有永久性、隐藏触发、内部计数或因果；保留群体震动、Ruler Calibration 与 Behavioral Repricing，只切断 Authority→NPC Knowledge leakage。
 - **Persistent Power Reader Proof Must Ride Story**：永久/累积/复用型私有优势应在本来就必须发生的高价值事件里让读者亲眼看到“上次极限现在直接可用”；没有自然事件就延后，不新增训练、复测、工作任务或路边小危险。若复利会诱惑 Frozen Human，也只把它叠到现成高价值目标的选择因果上。
