@@ -1866,9 +1866,19 @@ Production 根修不新增 Agent / classifier / 新字段：现有 Outline 已�
 
 匿名 Luna-high 对比先确认：Sequential 明显胜过**未修 Handoff 的原 Batch**，主要因为4→5连续性；但 Sequential 第5章为了接坏上游局面临时创造“城内禁杀/宴后再取骨”等保护规则。随后用**修复 Handoff 的 Batch-5** 对 Sequential 再匿名比较，总冠军转为 Batch-5：第4章已建立倒悬城/城门，裴照临堵桥后，第5章直接让宁烬借倒悬石檐荡入城门缝隙，镜离/澜生上下同时挡剑，既完成桥接又没有新增保护规则；动作因果、爽点和整体连读更稳。Sequential 仍在“单身者”铜镜验证、岸身/海身死亡边界等规则场景化上更清楚，值得移植 craft，而不是因此保留逐章调用。
 
-当前结论必须分层：**Chapter Handoff Continuity 是 production 修复；Batch-5 Primary 只是高价值 Experimental Hypothesis。** 这一本书的结果足以证明它值得继续做正式 full-chain A/B，但不足以直接替换 `Director → Curator → Primary → Authority Reviser → State`。下一步若继续，应固定上游 Authority，用至少一部新 held-out 小说比较当前逐章 full chain vs 一个真正定义清楚的 batched Primary topology，并测完整 critical path、Authority hard problems、Reviser gap、跨章 Canon/State 更新与失败恢复；不能把本轮单 Writer 的约3分钟/5章误报成 production 速度。
+当前结论必须分层：**Chapter Handoff Continuity 是 production 修复；Batch-5 是高价值叙事窗口假设，但“只 Batch Primary”已完成正式 Full-Chain A/B，当前不进入 Production。**
 
-验证状态：Chapter Plan focused **11/11 PASS**，全仓 **487/487 PASS**，`git diff --check` PASS。`tgn-system-steward 0.3.35` 已加入 Chapter Boundary Continuity 审计能力，skill-authoring lint `portable=true / 0 error / 0 warning`，package validate digest `sha256:3a24bb496ad9680f40a2737bd916c090acb9f1aa9a0d6545850c0519306a0c0b`，已 install/activate；bounded Luna-high smoke 对已知坏例正确判 `FAIL`，最早 root cause 定位到 Outline/Plan，并明确临时新增“城内禁杀”不能算正确修复。
+正式 Full-Chain 实验固定同一 World / Character / 五章 Plan。Control 真实运行 `Luna-high Director → Luna-high Curator → Terra-high Primary → Luna-high Authority Reviser → Luna-low State` ×5；节点 wall 总和：Director 319.020s、Curator 660.808s、Primary 261.804s、Reviser 735.571s、State 127.028s，总 **2104.231s / 35m04.2s**。第一版 Formal Batch 把五份完整 Primary Runtime 机械拼成约151KB Prompt，Terra 105.556s 写完但正文被压成约5896 chars，匿名 Story Judge 判 Control 明显胜，故判 `INVALID`；这证明重复 Runtime 会造成输出带宽坍缩，不能拿其约17%表面提速支持 Production。
+
+随后有效 Treatment 使用 **Compact Batch-5**：共享 World / Character / 五章 Block 只出现一次，每章只重复 Approved Plan + 已冻结 Luna Director + Luna Curator，Prompt 约57.9KB。Terra 一次五章 184.704s，恢复约9810 response chars；匿名 Story Judge 反而判 Compact Batch **小胜**，认为其连续阅读欲、宁烬人物声音、二照妖兽动作因果、裴照临持续压迫、Reward 与4→5桥接更强，Control 只在首次规则解释上略清楚。由此确认“约5章的短中程小说认知窗口”仍是强 positive Narrative Hypothesis，不只是提速技巧。
+
+但当前 Production topology 下速度与 Authority 不成立：Compact Batch 后仍逐章跑 Reviser + State，Reviser wall **836.197s**、State 123.527s；加回同一 Control Director+Curator 成本后的等价总和 **2124.256s / 35m24.3s**，反而比 Control 慢 **20.025s / +0.95%**。虽然 Primary 从261.804s降到184.704s（-29.5%），Reviser却从735.571s升到836.197s（+13.7%），把节省全部吃掉。Primary→Final edit burden 也随预写深度增长：Ch1 similarity .9571 / 10 blocks，Ch4 .9110 / 27 blocks，Ch5仅 **.7678 / 112 blocks**。第5章真实出现“提前拿已有白昼火屑下注并输掉、再赢回来”等未批准资产变化，Reviser必须大幅 rebase；说明后四章在前面 Reviser/State 尚未定真时预写，会逐渐 stale。
+
+Authority 盲审还抓到 Compact Batch 最终残留一处真实越界：镜离说“**门骨暂时不能离开你手**”，把“当前由宁烬持有/有特殊适配”偷扩成未批准的物理绑定规则；正确只能是人物选择“门先留你手里”。Control 该次 Authority Judge 判0 Hard Problem，但人工复核仍记录一个资产连续性歧义：第3章先说“骨舟在我们手里”，第5章又把未明确区分的“骨舟”作为宁烬新 Reward；另有裴照临第1章竞价两百万、第2章按 Plan 只报价十万+洞府但无降价解释的读感问题。不要把任何一版伪装成完美稿。
+
+因此当前判定：**Narrative Hypothesis = DIRECTIONAL PASS / strong positive；Current Production Replacement = FAIL。** 默认章节链保持逐章 production。下一步若继续，不应删 Reviser，也不应只“更用力 Batch Primary”；应测试真正的**短中程 Production Packet**：让五章共享非重复的局部 Authority / Director / Curator 认知，同时重新设计 Authority Finalization 如何避免后四章成为 stale draft。Control 的 Director+Curator 本轮已占全链约46.6%，理论提速空间可能主要在那里，但 D/C batching 与 Batch Reviser 都尚未测试，不能直接采用。完整证据：`books/real-exp-batch5-full-chain-20260831-v1/FULL_CHAIN_BATCH5_REPORT.md`。
+
+验证状态：Chapter Handoff production 修复此前已通过 focused **11/11 PASS**、全仓 **487/487 PASS**、`git diff --check` PASS；`tgn-system-steward 0.3.35` 已加入 Chapter Boundary Continuity 审计能力并通过 lint / package validate / bounded smoke。本次 Full-Chain Batch 实验**没有修改 production code / docs / Steward**，只新增实验 harness、真实输出、Judge 与 Handoff 结论；Steward 不因单次架构实验升级。
 
 ---
 

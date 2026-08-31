@@ -1,0 +1,81 @@
+{
+  "stage_sums_seconds": {
+    "control_director": 319.02,
+    "control_curator": 660.808,
+    "control_primary": 261.804,
+    "control_reviser": 735.571,
+    "control_state": 127.028,
+    "treatment_batch_primary": 105.556,
+    "treatment_reviser": 533.987,
+    "treatment_state": 119.426,
+    "control_stage_sum": 2104.231,
+    "treatment_observed_after_frozen_packets": 758.969,
+    "treatment_stage_cost_equivalent_with_same_DC": 1738.797
+  },
+  "reviser_edit_metrics": {
+    "control": {
+      "1": {
+        "similarity": 0.9724,
+        "edit_blocks": 13,
+        "changed_chars_primary": 110,
+        "changed_chars_final": 42
+      },
+      "2": {
+        "similarity": 0.9943,
+        "edit_blocks": 3,
+        "changed_chars_primary": 3,
+        "changed_chars_final": 14
+      },
+      "3": {
+        "similarity": 0.9576,
+        "edit_blocks": 14,
+        "changed_chars_primary": 193,
+        "changed_chars_final": 19
+      },
+      "4": {
+        "similarity": 0.9686,
+        "edit_blocks": 16,
+        "changed_chars_primary": 99,
+        "changed_chars_final": 85
+      },
+      "5": {
+        "similarity": 0.9819,
+        "edit_blocks": 15,
+        "changed_chars_primary": 36,
+        "changed_chars_final": 84
+      }
+    },
+    "treatment": {
+      "1": {
+        "similarity": 0.9716,
+        "edit_blocks": 1,
+        "changed_chars_primary": 0,
+        "changed_chars_final": 64
+      },
+      "2": {
+        "similarity": 0.9544,
+        "edit_blocks": 11,
+        "changed_chars_primary": 59,
+        "changed_chars_final": 16
+      },
+      "3": {
+        "similarity": 0.9304,
+        "edit_blocks": 16,
+        "changed_chars_primary": 58,
+        "changed_chars_final": 85
+      },
+      "4": {
+        "similarity": 0.878,
+        "edit_blocks": 24,
+        "changed_chars_primary": 107,
+        "changed_chars_final": 136
+      },
+      "5": {
+        "similarity": 0.8861,
+        "edit_blocks": 36,
+        "changed_chars_primary": 152,
+        "changed_chars_final": 129
+      }
+    }
+  }
+}

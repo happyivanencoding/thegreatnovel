@@ -1,0 +1,132 @@
+[
+  {
+    "label": "batch5-compact-primary",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "reused": false,
+    "outer_wall_seconds": 187.12,
+    "wall_seconds": 184.704,
+    "usage": null,
+    "chars": 9810
+  },
+  {
+    "label": "batch5-compact-ch01-reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": false,
+    "outer_wall_seconds": 117.412,
+    "wall_seconds": 115.193,
+    "usage": null,
+    "chars": 2023
+  },
+  {
+    "label": "batch5-compact-ch01-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "outer_wall_seconds": 27.207,
+    "wall_seconds": 24.781,
+    "usage": null,
+    "chars": 1140
+  },
+  {
+    "label": "batch5-compact-ch02-reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": false,
+    "outer_wall_seconds": 132.24,
+    "wall_seconds": 129.819,
+    "usage": null,
+    "chars": 1489
+  },
+  {
+    "label": "batch5-compact-ch02-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "outer_wall_seconds": 25.208,
+    "wall_seconds": 23.014,
+    "usage": null,
+    "chars": 1242
+  },
+  {
+    "label": "batch5-compact-ch03-reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": false,
+    "outer_wall_seconds": 207.764,
+    "wall_seconds": 205.573,
+    "usage": null,
+    "chars": 1998
+  },
+  {
+    "label": "batch5-compact-ch03-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "outer_wall_seconds": 30.387,
+    "wall_seconds": 27.924,
+    "usage": null,
+    "chars": 1413
+  },
+  {
+    "label": "batch5-compact-ch04-reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": false,
+    "outer_wall_seconds": 157.361,
+    "wall_seconds": 155.148,
+    "usage": null,
+    "chars": 1649
+  },
+  {
+    "label": "batch5-compact-ch04-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "outer_wall_seconds": 24.477,
+    "wall_seconds": 22.281,
+    "usage": null,
+    "chars": 1158
+  },
+  {
+    "label": "batch5-compact-ch05-reviser",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": false,
+    "outer_wall_seconds": 232.682,
+    "wall_seconds": 230.464,
+    "usage": null,
+    "chars": 2523
+  },
+  {
+    "label": "batch5-compact-ch05-state",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "outer_wall_seconds": 27.93,
+    "wall_seconds": 25.527,
+    "usage": null,
+    "chars": 1309
+  },
+  {
+    "label": "batch5-compact-judge-story",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": false,
+    "outer_wall_seconds": 92.493,
+    "wall_seconds": 90.271,
+    "usage": null,
+    "chars": 1025
+  },
+  {
+    "label": "batch5-compact-judge-authority",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "reused": false,
+    "outer_wall_seconds": 93.584,
+    "wall_seconds": 91.385,
+    "usage": null,
+    "chars": 496
+  }
+]
