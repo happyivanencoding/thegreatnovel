@@ -124,13 +124,13 @@ Stage Delta 只写真实变化，不逐项填满。可包含 Power / Capability�
 
 这并不削弱男频成长。**Power Seed 决定开局 Core Asymmetry；Story Program 决定长期优势栈怎样通过故事长出来。** 开局能力的正常修炼轴、异常掌握轴、高阶质变、永久边界与传奇力量状态不能被改写；但 Story Program 可以通过真实获得加入新的 Power Asymmetry，并安排新旧优势复合。
 
-全书成长脊柱不能只写一句“以后会变强”，也不能始终只把同一个外挂放大。长期要同时看到：开局优势深化、新的非对称优势加入、以及旧优势与新优势组合后出现单项做不到的新玩法。每次都写成具体事实：以前打不过谁、进不了哪里、做不到什么；现在具体能怎样战斗、移动、探索，或哪两项优势怎样一起产生新结果。它是全书纵向要求，不是每阶段新增能力税。
+全书成长脊柱不能只写一句“以后会变强”，也不能始终只把同一个外挂放大。长期要同时看到：开局优势深化、新的非对称优势加入、以及旧优势与新优势组合后出现单项做不到的新玩法。每次都写成具体事实：以前打不过谁、进不了哪里、做不到什么；现在具体能怎样战斗、移动、探索，或哪两项优势怎样一起产生新结果。它是全书纵向要求，不是每阶段新增能力税。**这种递归 Advantage Stack 默认是主角的长期叙事特权**；NPC / Rival 可以更高等级、拿走主角错失的东西、拥有自己的 signature asset 和专业第一，但普通重要配角不为“永远追平”而自动获得第二套同级递归 Stack，除非 Story Program 明确把极少数镜像宿敌/最终 Boss 设计成例外。
 
 **High-Value Acquisition 不消失，只从阶段字段降级为 reader-appetite principle。** 世界自然出现真正让人想要的剑、功法、体质变化、奇物、知识、身份、同伴、洞府、飞舟、名额或其它高价值对象时，可以成为强阶段燃料；其中真正形成新 Privilege Delta 的获得可以进入 Power Asymmetry Stack，没有自然机会就不制造。**Compounding 也不消失：旧优势必须继续生效，并与新优势产生真实化学反应，而不是写完即消失。**
 
 ## Long-form Evolution：Stable Origins, Evolving Authorities
 
-开书 World / Power / Human 是稳定 Origins，不要求一次写完 500 章所有具体世界与能力。Story Program 只具体规划当前已批准 `World Horizon`；接近本轮世界层自然终点时输出 `World Horizon Handoff`，只定义可观察触发条件、`macro / instance` scope、需要继续携带的已发生事实和 orchestration，不预写下一世界给主角什么。
+开书 World / Power / Human 是稳定 Origins，不要求一次写完 500 章所有具体世界与能力。Story Program 只具体规划当前已批准 `World Horizon`；**非终局**接近本轮世界层自然终点时输出普通 `World Horizon Handoff`，只定义可观察触发条件、`macro / instance` scope、需要继续携带的已发生事实和 orchestration，不预写下一世界给主角什么。**作者明确当前就是小说最终 Horizon 时，Handoff 第一行改为 `FINAL NOVEL END`：不再 Expansion，主角进入最终公开力量最高可见圈层，并以长期 Advantage Stack 在最后决定性事件中完成 Final Apex；Rival 可同级/活着/专业更强。未解释世界余白可以保留，但不再是 future story obligation。**
 
 Handoff 真正触发后：
 
@@ -141,7 +141,7 @@ Handoff 真正触发后：
 - **三层 Human**：Frozen Human Origin + Current Human State + 极低频、可为 `NONE` 的 Human Development Delta。Human Development 只看已发生历史，不看未来 World / Story。
 - **Current Character**：纯确定性编译 Frozen Origins + Current Power/Human/关系/身份/知识/资产，不新增 Character Composer。
 - **Story Refresh**：Sol high 首次同时看到独立生成的 Effective World 与 Current Character；惊喜来自 Collision，不允许单 Agent 先把“世界—人物—奖励”调成天生适配。
-- **Outline / Review**：不得越过未执行的 World Horizon Handoff 补满十章/百章；到触发章即停止，先完成下一轮 Expansion / Refresh。
+- **Outline / Review**：不得越过未执行的普通 Handoff 补满十章/百章；到触发章即停止，先完成下一轮 Expansion / Refresh。遇到 `FINAL NOVEL END` 则只编译到真正结局，不再等待下一轮 Expansion，也不制造“更强者仍在远方”的续图钩子。
 
 长期 Mystery 采用 **Progressive Canonization**，而不是强迫作者在开书时先写终极真相。作者可以把一个真实问题保持为 `AUTHOR OPEN`，继续写已经足够具体的故事；只有作者下一步明确想写的事件已经依赖某一层答案时，系统才询问最小 `Smallest Decision`。作者可选 R1/R2/R3、继续 D0、自己改写，或继续换路线；模型不能自动替作者决定。选中的局部真相只进入 runtime-blind Mystery Control 与 Story/World planning；读者只在批准的 Reveal 章通过具体事件逐层知道，State 发生后该层才成为 Canon，更深问题重新开放。
 

@@ -132,7 +132,7 @@ Story Program 是第一次同时看到完整 World、完整 Character、T0 State
 
 权威与调度分开：Power Seed 决定开局 Core Asymmetry 的成长语法；Story Program 决定它怎样实现，并可通过真实获得加入新的 Power Asymmetry、让新旧优势发生复合。后续新 Asymmetry 继承同一 Reader-facing 边界：先写“以前做不到什么、现在具体多能做什么”，再决定是否需要短名；新名只压缩已经理解的能力。**成长是全书纵向不变量，不是每阶段升级税。**
 
-Story Program 只具体规划**当前已批准 World Horizon**，而不是开书时一次写死剩余 500 章。最后 1—2 个自然阶段若已经把当前世界层主要压力活透，就输出 `World Horizon Handoff`：可观察触发条件、`macro / instance` scope、为什么此时应该扩、以及哪些已发生事实必须 carry forward。它不能预写下一世界的宝物、能力、势力或针对当前主角 Build 的答案；Handoff 也不会注入 World Expansion Agent。
+Story Program 只具体规划**当前已批准 World Horizon**，而不是开书时一次写死剩余 500 章。非终局 Horizon 的最后 1—2 个自然阶段若已经把当前世界层主要压力活透，就输出普通 `World Horizon Handoff`：可观察触发条件、`macro / instance` scope、为什么此时应该扩、以及哪些已发生事实必须 carry forward。它不能预写下一世界的宝物、能力、势力或针对当前主角 Build 的答案；Handoff 也不会注入 World Expansion Agent。若作者明确当前就是小说最终 Horizon，则 Handoff 第一行改为 `FINAL NOVEL END`，不再触发 Expansion：主角进入最终公开力量最高可见圈层，并在最后决定性事件中用长期 Advantage Stack 完成同档的 Asymmetry Dominance；允许 Rival 同级、活着或在某一专业更强，未解释世界余白也不再登记成 future story obligation。
 
 Collision 可以补少量**非奠基性的过去经历、共同往事或旧事件**，让当前关系、局部性格反应或选择更自然，但：
 
@@ -144,13 +144,13 @@ Collision 可以补少量**非奠基性的过去经历、共同往事或旧事�
 
 大型阶段保持轻量：为什么现在发生、谁想要什么、主角关键选择/行动、主要阅读满足、`Stage Delta`、下一阶段为何自然发生。`Stage Delta` 只写实际变化的维度；Power、获得、关系、身份、知识、敌人或世界变化都不是必填项。
 
-高价值获得与纵向复利是全书原则，不是阶段字段税。默认采用 **AGGRESSIVE payoff** 偏置：因果已支持的主奖励真正落地；Story Program / Outline 应尽早锁定当前大型阶段主要欲望对象与为什么值得馋，避免公共资源/责任小问题取代主奖励；大胜可以自然连带奖金/招揽/入口，秘境可以有主目标外惊喜，大阶段可以同时带来据点、队伍、产业或长期收入。奖励数量本身不构成失败，只禁止无因果到账与同窗口近似奖励抹平真实牺牲。Power Asymmetry 要长期形成优势栈：旧优势保留，新优势通过故事加入，并出现单项做不到的复合玩法；不要求每阶段新增。**Route-Bound Acquisition** 要先保留人物真实选择造成的路线可达性；当某次选择让另一条高价值窗口关闭时，允许 NPC 继续获得那条路线的 signature reward。**No Universal World Tour**：世界大事仍独立发生，但主角不必为了“把 World 都用上”依次经历全部大会、矿塔、战争、秘境并收走其代表性成长；只有新的独立因果让路线重合时才回流。同一真实路线当然可以让不同 Human 得到相同能力，这不是人格配额。结构质变少而重，但 Fantasy Surface 可以持续偏丰富。Story Program 还会主动检查 World 已经成立的成熟 Secondary Fantasy Axis；Human 真被它的作品、胜负、钱、身份、审美、人物或生活方式牵引时才投入，Human 不想走就留给世界/配角。重大 Public Proof 有真实观众时，**群体震动、懂行者 Ruler Calibration、关键人物 Behavioral Repricing 三者并列、没有高低之分**，可以一起吃满；主力量相关节点让三路共享同一精确力量主尺：群体震动承受明确等级/星级/重数差，懂行者直接说清双方精确位置与差距，关键人物再因“精确位置 + 超标表现”改变待遇/报价/敌意/战术。不以“克制”自动删群体震惊，也不把越级胜利误记成等级提升。反制只能从碰撞后的学习产生，并且长期 Rival 更新策略后至少一次要真实改变主角选择或局面；敌人不能只为机械克制主角而出生。
+高价值获得与纵向复利是全书原则，不是阶段字段税。默认采用 **AGGRESSIVE payoff** 偏置：因果已支持的主奖励真正落地；Story Program / Outline 应尽早锁定当前大型阶段主要欲望对象与为什么值得馋，避免公共资源/责任小问题取代主奖励；大胜可以自然连带奖金/招揽/入口，秘境可以有主目标外惊喜，大阶段可以同时带来据点、队伍、产业或长期收入。奖励数量本身不构成失败，只禁止无因果到账与同窗口近似奖励抹平真实牺牲。Power Asymmetry 要长期形成优势栈：旧优势保留，新优势通过故事加入，并出现单项做不到的复合玩法；不要求每阶段新增。**Protagonist Asymmetry Dominance**：这种连续获得新高价值 Asymmetry、再递归复合的长期权利默认属于主角。NPC / Rival 可以正常成长、阶段性更强、拿走主角错失的 signature reward、拥有自己的神兵/异兽/绝技或长期专业第一，但普通重要配角不因为要“永远追平主角”就自动获得第二套同级 Advantage Stack；只有极少数明确设计的镜像宿敌/共同成长极/最终 Boss 可例外。**Route-Bound Acquisition** 要先保留人物真实选择造成的路线可达性；当某次选择让另一条高价值窗口关闭时，允许 NPC 继续获得那条路线的 signature reward。**No Universal World Tour**：世界大事仍独立发生，但主角不必为了“把 World 都用上”依次经历全部大会、矿塔、战争、秘境并收走其代表性成长；只有新的独立因果让路线重合时才回流。同一真实路线当然可以让不同 Human 得到相同能力，这不是人格配额。结构质变少而重，但 Fantasy Surface 可以持续偏丰富。Story Program 还会主动检查 World 已经成立的成熟 Secondary Fantasy Axis；Human 真被它的作品、胜负、钱、身份、审美、人物或生活方式牵引时才投入，Human 不想走就留给世界/配角。重大 Public Proof 有真实观众时，**群体震动、懂行者 Ruler Calibration、关键人物 Behavioral Repricing 三者并列、没有高低之分**，可以一起吃满；主力量相关节点让三路共享同一精确力量主尺：群体震动承受明确等级/星级/重数差，懂行者直接说清双方精确位置与差距，关键人物再因“精确位置 + 超标表现”改变待遇/报价/敌意/战术。不以“克制”自动删群体震惊，也不把越级胜利误记成等级提升。反制只能从碰撞后的学习产生，并且长期 Rival 更新策略后至少一次要真实改变主角选择或局面；敌人不能只为机械克制主角而出生。
 
 ### 6.1 Story Refresh / Periodic Re-Collision
 
 World Expansion 被批准后，先 deterministic refresh `CURRENT_CHARACTER.md`，再由 Sol high 第一次看到 `Effective World × Current Character`。这是新的 Collision，不是旧 Story Program 自动向后延长：World 不为主角改写，人物也不为新世界重新优化。旧 Story Program 只保留仍未兑现且仍成立的长期因果；新 Power 只能从新世界已经独立成立、且 Current Human 真实走入的机会里获得。`Route-Bound Acquisition + No Universal World Tour` 继续生效：Effective World 的所有高价值路线不是主角必须逐项消费的内容清单，未选路线可由 NPC 独立推进，直到新因果真正让双方再相交。
 
-普通玄幻与多世界副本共用这一层：前者通常一次 Refresh 覆盖一个新的长篇世界层，后者可覆盖一个大型 instance / 一组相连副本。每次 Refresh 仍只规划当前新 World Horizon，并继续留下下一次 Handoff。
+普通玄幻与多世界副本共用这一层：前者通常一次 Refresh 覆盖一个新的长篇世界层，后者可覆盖一个大型 instance / 一组相连副本。每次 Refresh 仍只规划当前新 World Horizon；非终局继续留下下一次 Handoff，作者明确终局时改为 `FINAL NOVEL END` 并在本层完成 Final Apex。
 
 ## 7. Outline：执行编译，不重新调度
 

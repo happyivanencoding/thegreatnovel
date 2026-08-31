@@ -142,6 +142,29 @@ Action Space、Net New、Expectation、Mystery Depth、Impact、Compounding 等�
 
 审计 Story Program 时另查 **Universal World Tour** 偏置：模型为了让长纲“完整利用 World”，会把不同 Human 依次送去同一组大会、矿塔、战争、秘境，即使他们最初选择理由不同，最后还是把所有 signature reward 收进主角优势栈。**因果定位不要过早停在 `Opportunity → Privilege Delta`。** 如果你已经要求“奖励只能来自实际路线”，但不同 Human 仍在后续被送入同一批高价值节点，那么奖励来源局部上已经合法，最早剩余坍缩其实在 `Choice → Route`：World Tour 把先前分叉重新合流了。此时继续给奖励加“必须更不同”的规则会治标不治本；应该允许未选路线在没有主角时继续发生。PASS 不要求三个人必须三个不同外挂；同一真实路线可以有相同获得。PASS 要求的是 `Human → Choice → Route → 可达/错过 Opportunity → Advantage Tree` 的不可逆性成立，且“主角没去”以后世界仍继续发生。
 
+### Living World Does Not Mean Symmetric Protagonist Privilege
+
+让 NPC / Rival 自主成长、拿走主角错过的宝物、阶段性压过主角，是 Living World 的必要组成；但这不等于所有长期角色都应该获得同一种**递归复利权**。
+
+审计时区分：
+
+- **Strong autonomous Rival**：正常修炼持续前进；有自己的 signature weapon / beast / technique / body / professional peak；可以拿走主角错失的高价值对象；至少一次反制真的让主角失败、改路或失去东西。
+- **Shadow protagonist**：为了让普通 Rival 永远与主角同档，规划器在主角每次新增高价值 Asymmetry 后，也自动给 Rival 再补一个新异常、奇物或传承，再让这些东西互相复合，形成第二套同级 Advantage Stack。
+
+前者应保护，后者才是问题。发现 shadow protagonist 时，最早根因通常在 Story Program 的长期 **privilege allocation**，不是 Rival 太强；修复不应把对手削成静态陪衬。极少数镜像宿敌、共同成长极或最终 Boss 可以明确成为例外，但要有自身因果路线，不是机械跟随主角升级。
+
+### Local Apex Is Not Final Apex
+
+非终局 World Horizon 与小说终局的判断不同。普通 Horizon 只要当前世界层已经被主角进入、扰动或活透，就可以 Handoff 到更大世界；不要求每一张地图离开前都击败所有强者或所有专业第一。
+
+作者明确“这是最后一个 World Horizon / 不再 Expansion / 正在规划真正结局”时，审计要检查三件事同时成立：
+
+1. 主角进入最终公开力量主尺的**最高可见圈层**，而不是只用一次越级胜利掩盖自己仍停在中层；
+2. 最后的决定性胜负 / 生存 / 世界选择中，长期 Advantage Stack 给出同档最难复制的 Asymmetry Dominance；Rival 可以同级、活着、甚至在某一细分能力或专业上更强；
+3. 小说真的结束：可以保留未解释的世界余白，但这些余白不能继续登记成 future story / investigation / Expansion obligation。否则只是“力量结账，小说未结账”。
+
+不要把 Final Apex 误读成“主角全属性第一、所有副职第一、杀光所有强者”。核心是最终成长承诺和决定性行动自由结账。
+
 ### World Independence Does Not Mean World Amnesia
 
 protagonist-blind World Expansion 的盲区是为了防止下一世界被当前 Build 做成钥匙孔，不是为了清空已经发生的历史。

@@ -11,8 +11,10 @@ from .character_context import (
 from .character_seeds import HUMAN_SEED_SCHEMA, POWER_SEED_SCHEMA
 from .long_form_evolution import compose_effective_world, project_world_state_from_status
 from .prompts import (
+    FINAL_APEX_DIRECTION,
     HardGateError,
     OUTLINE_TEMPLATE,
+    PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION,
     PUBLIC_WORLD_KNOWLEDGE_CLARITY,
     STORY_PROGRAM_TEMPLATE,
     format_references,
@@ -278,7 +280,7 @@ Authority：
 - 世界扩张后重新校准 Reader Ruler、Social Repricing 与新 World Entry，但不把说明写成百科。
 - 普通长篇规划一个自然大型阶段；多世界 instance 则规划当前副本 + 回归后真正留下的 consequence。都不要逐章。
 - 只刷新未来，不重写已完成章节，不发明旧历史。
-- **本次 Refresh 仍然只具体规划当前新 World Horizon。** 如果这一轮世界层会在未来被真正活透，最后 1—2 个自然阶段就开始形成下一次交接条件；到边界后停止替未知未来世界规划具体内容，再次等待独立 World Expansion。不要因为已经进入第二/第三轮 Refresh，就把后面所有世界重新一次性写死。
+- **本次 Refresh 仍然只具体规划当前新 World Horizon。** 非终局 Horizon 如果会在未来被真正活透，最后 1—2 个自然阶段就开始形成下一次交接条件；到边界后停止替未知未来世界规划具体内容，再次等待独立 World Expansion。**若上游明确这是小说最终 Horizon，则 Final Apex 优先：在本层完成终局并写 `FINAL NOVEL END`，不再等待 Expansion。** 不要因为已经进入第二/第三轮 Refresh 就一次性写死未知世界，也不要在明确终局时凭空再造更高地图。
 
 严格输出与 production Story Program 兼容的单一结构：
 
@@ -294,8 +296,9 @@ Authority：
 ## 未来大型阶段
 只规划当前已批准 World Horizon 内真正需要的阶段。每个阶段写：具体世界问题、主要推动者、主角关键选择、最主要阅读满足、真实 Power/Asset/Relationship/Identity/Knowledge/World Delta、旧积累怎样继续生效、下一阶段为何自然发生。
 ## World Horizon Handoff
-若本轮 World Horizon 会在这些阶段后自然结束，写清：触发条件、`macro`/`instance` scope、为什么当前层已需要扩、必须 carry forward 的已发生事实，以及固定 orchestration：`protagonist-blind World Expansion → deterministic Current Character → Story Refresh`。若 Effective World / Canon 已经存在能让读者具体感到“当前层之外还有东西”的外缘信号，安排它在 Handoff 前最后 1—2 章露面一次；只允许使用已批准旧事实/旧未知，不得为钩子预写下一世界宝物、能力、势力或针对当前 Build 的答案。若尚未到边界，写 `NOT YET` + 仍缺的真实边界事件。
+若作者上游已明确当前就是最终 World Horizon / 不再扩世界 / 正在规划真正结局，本节第一行固定写 `FINAL NOVEL END`，随后只写 Final Apex 怎样由最后的决定性故事结果证明，以及哪些 Rival / 关系 / 世界在结局后仍可继续存在；不得输出 World Expansion orchestration，也不得制造更强者仍在远方的续图钩子。否则，若本轮 World Horizon 会在这些阶段后自然结束，写清：触发条件、`macro`/`instance` scope、为什么当前层已需要扩、必须 carry forward 的已发生事实，以及固定 orchestration：`protagonist-blind World Expansion → deterministic Current Character → Story Refresh`。若 Effective World / Canon 已经存在能让读者具体感到“当前层之外还有东西”的外缘信号，安排它在 Handoff 前最后 1—2 章露面一次；只允许使用已批准旧事实/旧未知，不得为钩子预写下一世界宝物、能力、势力或针对当前 Build 的答案。若尚未到边界，写 `NOT YET` + 仍缺的真实边界事件。
 ## 仍值得追的旧承诺与新欲望
+若 `World Horizon Handoff` 第一行是 `FINAL NOVEL END`，固定写 `NONE｜小说已完结；未解释余白不再构成 future story obligation`；否则正常保留跨 Horizon 仍会继续驱动故事的旧承诺与新欲望。
 """
 
 
@@ -642,6 +645,8 @@ def generate_split_prompt(
             raise ValueError("Story Refresh 最多只能选择 3 个 Reference Program")
         parts = [
                 STORY_REFRESH_PROMPT.strip(),
+                PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION.strip(),
+                FINAL_APEX_DIRECTION.strip(),
                 _block("作者粗方向", creative_direction),
                 _block("EFFECTIVE WORLD｜Independent Authority", effective_world),
                 _block("CURRENT CHARACTER｜Deterministic Forward Snapshot", current_character),

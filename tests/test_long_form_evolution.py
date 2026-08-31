@@ -10,7 +10,7 @@ from story_mvp.character_context import project_effective_world_reality
 from story_mvp.character_prompts import generate_split_prompt
 from story_mvp.gbrain_retrieval import build_retrieval_brief
 from story_mvp.long_form_evolution import compose_effective_world, extract_world_horizon_handoff
-from story_mvp.prompts import DEFAULT_STATE_DELTA_TEMPLATE, OUTLINE_TEMPLATE
+from story_mvp.prompts import DEFAULT_STATE_DELTA_TEMPLATE, OUTLINE_TEMPLATE, REVIEW_TEMPLATE
 from story_mvp.storage import (
     apply_state_delta_to_book,
     approve_character_artifact,
@@ -329,6 +329,11 @@ def test_prompt_boundaries_keep_surprise_until_recollision(tmp_path: Path) -> No
     assert "Independent World × Current Character" in refresh
     assert "Route-Bound Acquisition 继续成立" in refresh
     assert "No Universal World Tour 继续成立" in refresh
+    assert "Protagonist Asymmetry Dominance" in refresh
+    assert "普通重要配角写成第二套同级 Advantage Stack" in refresh
+    assert "Local Apex ≠ Final Apex" in refresh
+    assert "FINAL NOVEL END" in refresh
+    assert "未解释余白不再构成 future story obligation" in refresh
 
 
 def test_world_expansion_keeps_public_world_impact_but_not_private_character_state() -> None:
@@ -387,6 +392,13 @@ def test_story_program_prepares_handoff_but_does_not_prewrite_next_world() -> No
     assert "先有人物选择与路线，再有新优势" in prompt
     assert "No Universal World Tour" in prompt
     assert "世界大事不是主角必须逐一打卡的升级路线" in prompt
+    assert "Protagonist Asymmetry Dominance" in prompt
+    assert "主角可以在很多具体机会中输、错失或暂时落后" in prompt
+    assert "普通重要配角写成第二套同级 Advantage Stack" in prompt
+    assert "Local Apex ≠ Final Apex" in prompt
+    assert "FINAL NOVEL END" in prompt
+    assert "不得再输出 World Expansion orchestration" in prompt
+    assert "未解释余白不再构成 future story obligation" in prompt
 
 
 def test_handoff_is_extracted_for_orchestration_and_outline_stops_at_it(tmp_path: Path) -> None:
@@ -416,6 +428,27 @@ def test_handoff_is_extracted_for_orchestration_and_outline_stops_at_it(tmp_path
     assert "## 远期仍值得追的东西" not in handoff
     assert "`World Horizon Handoff` 是 Outline 的前向边界" in OUTLINE_TEMPLATE
     assert "只列到触发章就停止" in OUTLINE_TEMPLATE
+    assert "FINAL NOVEL END" in OUTLINE_TEMPLATE
+    assert "不再等待或暗示下一次 World Expansion" in OUTLINE_TEMPLATE
+    assert "FINAL NOVEL END" in REVIEW_TEMPLATE
+    assert "不得再生成 World Expansion" in REVIEW_TEMPLATE
+    assert "小说在此完成，不再 World Expansion" in REVIEW_TEMPLATE
+
+
+def test_terminal_handoff_is_extracted_without_requiring_expansion_fields() -> None:
+    proposal = """# STORY PROGRAM
+## World Horizon Handoff
+FINAL NOVEL END
+Final Apex：星阶35进入最高公开圈层，以 Advantage Stack 赢下最后核心胜负。
+世界余白：古城纹路仍未解释，但不再构成 future story obligation。
+
+## 远期仍值得追的东西
+NONE｜小说已完结；未解释余白不再构成 future story obligation
+"""
+    handoff = extract_world_horizon_handoff(proposal)
+    assert handoff.startswith("## World Horizon Handoff\nFINAL NOVEL END")
+    assert "Expansion Scope" not in handoff
+    assert "future story obligation" in handoff
 
 
 def test_refreshed_outline_reads_effective_world_and_current_character(tmp_path: Path) -> None:

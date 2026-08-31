@@ -63,6 +63,10 @@ CORE_FANTASY_INVARIANT = """核心幻想不变量：Character 中已批准的 Po
 
 FANTASY_COMPOUNDING_DIRECTION = """幻想复利优先于操作流程复利：长篇中的 Power Asymmetry 应形成**持续积累的优势栈**，而不是每轮结束重新归零，也不能只让开局那一个能力无限放大。纵向成长可以同时发生三种变化：已有非对称优势继续深化；通过真实故事获得新的非对称优势；旧优势与新优势发生复合，产生任一单项都做不到的新玩法。新的非对称优势可以来自功法、技艺、身体/血脉、奇物/装备、知识经验、伴生体或本书自己的力量来源，只要它真正形成新的 Privilege Delta，而不是小便利、换皮技能或库存加一。全书层面必须让新优势加入并发生可复述的复合效应，但**不要求每个大型阶段新增一项**；人物/关系/世界阶段仍可以没有 Power Delta。开局 Core Asymmetry 继续作为辨识度锚点，新获得不应把它淘汰，而应与旧积累共同改变后续战斗、探索、选择、敌人判断或核心幻想兑现。不要把优势栈写成数据库、组件清单或“收集能力”本身的职业流程。"""
 
+PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION = """Protagonist Asymmetry Dominance（长篇默认叙事特权，不新增能力配额）：**持续获得新的高价值非对称优势，并让它们彼此复合成越来越难复制的 Advantage Stack，默认属于被作者选中的主角，而不是所有重要角色的共同待遇。** Living World / Character Autonomy 仍然成立：NPC / Rival 可以正常修炼、阶段性比主角更强、拥有主角没有的神兵/异兽/体质/绝技、拿走主角错失的 signature reward，甚至在某个专业或单项上长期第一；不要为了突出主角把他们冻成静态陪衬。真正要避免的是规划器为了让每个长期 Rival“始终同档”，在主角每次新增 Asymmetry 后也自动给对方再补一个新异常、再补一个新奇物、再做一次复合，最后把普通重要配角写成第二套同级 Advantage Stack。**主角可以在很多具体机会中输、错失或暂时落后，但全书默认让其长期复利斜率、复合深度和最终行动自由持续超过普通同代强者。** 只有当本书确实需要一个极少数的镜像宿敌、共同成长极或最终 Boss 时，Story Program 才可以明确让该角色也长期复利；这是具体 Story Design 的少数例外，必须来自这个角色自己的因果路线，不能成为每个重要 Rival 的默认补强策略。"""
+
+FINAL_APEX_DIRECTION = """Local Apex ≠ Final Apex（终局成长承诺，不新增总战力分）：普通非终局 World Horizon 可以在主角已经进入、扰动或活透当前最高竞争圈层后交给下一次 World Expansion；不要求他在每张地图离开前把所有强者、专业、副职和细分榜单都刷成第一。**但如果作者上游明确说明当前就是小说最终 World Horizon、不会再 World Expansion、正在规划真正结局，那么默认成熟男频成长承诺必须在这里完成 Final Apex，而不是再制造“山外有山”逃走。** Final Apex 至少意味着：主角进入最终公开力量主尺的最高可见圈层；面对本书最后的决定性战斗/生存/世界级选择时，读者能明确判断主角是最终最难被同层复制、最有能力决定自己去留与核心胜负的人。允许最终 Rival 与主角同级、某个古兽肉身更硬、某位大师在炼器/速度/某专业上仍第一；**同一最高公开档位下，主角的 Advantage Stack 应给出决定性的 Asymmetry Dominance。** 不要求杀光或击败所有强者，也不把每个副轴都收成第一。终局是否成立看核心成长承诺是否结账，而不是全榜单清零。若上游明确是终局，`## World Horizon Handoff` 第一行写 `FINAL NOVEL END`，随后只写终局 Apex 如何被故事证明与哪些世界/关系仍可在结局后继续存在；不得再输出 World Expansion orchestration。**终局可以保留没有被彻底解释的世界余白，但不能再把它们写成未来主线、下一轮调查或新的 Expansion 入口；`## 远期仍值得追的东西` 必须写 `NONE｜小说已完结；未解释余白不再构成 future story obligation`。**"""
+
 RELATIONSHIP_RECONFIGURATION_DIRECTION = """Relationship Reconfiguration（Story Program 创作方向，不新增字段或 Hard Gate）：值得长期展开的核心优势可以改变原本默认成立的人际与博弈关系，但 **Character Autonomy ≠ Symmetric Stakeholder Power，Relationship Reconfiguration ≠ Permanent Renegotiation**。配角自治只要求人物有自己的欲望并据此行动，不要求每个人都维持制度意义上的独立、平等议价或拒绝靠近主角。关系可以因欲望变得更近、更远、更依赖、更敌对、更不对等或彻底换位；这些都可以是自主选择。关系重构的价值在于让上一轮故事改变以后“谁会怎样对待谁”，而不是把所有关系都改写成安全、理性、条件谈判。探索、战斗、谜团、生存与世界奇观仍可成为主发动机。"""
 
 ASYMMETRY_REVEAL_PAYOFF_DIRECTION = """Power Asymmetry Reveal / Social Proof（软原则，不新增字段或 Hard Gate）：主角在他人面前第一次显露新非对称优势、新层级或意外复合时，先让超标结果发生。公开场合如果本来就有足够见证者，**群体震动 / 全场鸦雀无声 / 喧哗骤停 / 所有人震惊 / 目光集中等场面反应本身就是正当爽点；懂行者的 Ruler Calibration 与关键人物的 Behavioral Repricing 同样是正当爽点，三者没有高低之分，也不要求相互替代。大型 Public Proof 节点默认允许三者一起吃满。** 精确力量主尺现在是这三条线的共同坐标：①群体震动不是空喊“好强”，而是让现场知道一个明确的数字差/跨档事实真的发生了；②最有资格者的 Ruler Calibration 在当前 Public Proof 与主力量相关时，优先直接说出主角**当前精确位置**、正常同位置/对手精确位置，以及这次到底越了几级/几星/几重或跨了哪一档；③ Behavioral Repricing 必须让至少一个真正有利益/关系位置的人因为这个**精确位置 + 超标表现**改口、加价、退距、换战术、招揽、敌视、保护或改变准入。**Public Proof ≠ Hidden Mechanism Knowledge。** 观察者可以判断自己实际看见的表现、公开主尺位置、伤势、器物效果与 World/Canon 已知现象；但 Power Asymmetry 的隐藏因果、永久性、私有触发条件、内部计数或只有持有者/Meta Authority 才知道的状态，不会因为“他是高手 / 他亲眼看见了”就自动变成 NPC 知识。除非 World / Canon / Story 已明确给这个观察者可靠来源，否则专家只说到可观察边界；私有真相由 POV 体验、后续自然复用或已授权的 Meta Authority 让读者确认。**精确尺只校准位置，不决定战斗结果**：越级胜负仍由技能、装备、环境、经验与 Power Asymmetry 共同造成，不能把“赢了高等级”反推成主角等级自动提升。没有真实围观者时不凭空造群众；普通重复使用也不反复演同一套震惊，但第一次公开、第一次新层级、第一次新复合、进入更高圈层后第一次被看见、或旧估值明显落后时，允许把这一轮 Public Proof 吃满。**社会震荡强度要跟精确跨档幅度一起升级**：地方级小越级可以局部改价；大数字差、跨大境界、一城核心、王朝高位、世界顶层这类跃迁，必须先让身份、待遇、机会、敌人策略和传奇重量至少有一项明显落地，再进入普通结算。不要刚完成世界级突破就用“钱什么时候到账”立刻关闭高潮；先让这个世界知道主角现在到底是几级/几星/几重、这意味着什么，再允许人物用自己的性格接下一句。"""
@@ -957,7 +961,7 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 
 第一性原则：**Story Program 是“长期因果如何继续”的编译，不是每个大型阶段都缴一次升级税的表单。成长是全书纵向不变量，不是每个阶段的必填项。**
 
-**当前 Story Program 只具体规划到当前已批准 World Horizon。** 开书 World Vision 不需要一次性承载 500 章全部具体世界；如果当前世界层在一个自然大型阶段末尾将被主角真正活透，Story Program 应提前在最后 1—2 个阶段制造自然交接条件，并在文末输出 `World Horizon Handoff`。Handoff 只说明“什么时候应该停止继续消费旧世界、为什么要触发一次独立 World Expansion、哪些已经发生/已批准的旧世界事实与长期线必须继续有效”；**不得替尚未生成的下一世界设计宝物、能力、势力、人物或为当前主角量身指定世界内容。** 到达 Handoff 后，停止具体规划更远世界，等待 protagonist-blind World Expansion → Current Character → Story Refresh 重新碰撞；不要为了凑 5—7 个阶段提前把未知大陆、异世界或终局写死。
+**当前 Story Program 只具体规划到当前已批准 World Horizon。** 开书 World Vision 不需要一次性承载 500 章全部具体世界。**非终局 Horizon** 若在一个自然大型阶段末尾将被主角真正活透，Story Program 应提前在最后 1—2 个阶段制造自然交接条件，并在文末输出普通 `World Horizon Handoff`：只说明“什么时候应该停止继续消费旧世界、为什么要触发一次独立 World Expansion、哪些已经发生/已批准的旧世界事实与长期线必须继续有效”；**不得替尚未生成的下一世界设计宝物、能力、势力、人物或为当前主角量身指定世界内容。** 到达普通 Handoff 后，停止具体规划更远世界，等待 protagonist-blind World Expansion → Current Character → Story Refresh 重新碰撞。**若上游明确当前就是小说真正终局，则 Final Apex 规则优先：仍使用 `World Horizon Handoff` 作为前向边界，但第一行写 `FINAL NOVEL END`，不再触发 Expansion。** 不要为了凑 5—7 个阶段提前写死未知未来，也不要在明确终局时凭空再造一个更高世界逃避结账。
 
 {PAYOFF_FIRST_COST_RHYTHM}
 
@@ -968,6 +972,12 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 {MAJOR_REWARD_ANCHOR_DIRECTION}
 
 {CORE_FANTASY_INVARIANT}
+
+{FANTASY_COMPOUNDING_DIRECTION}
+
+{PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION}
+
+{FINAL_APEX_DIRECTION}
 
 {LONG_TERM_RECONTEXTUALIZATION_SHOCK}
 
@@ -1056,7 +1066,11 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 **下一阶段为何自然发生：** 只能从已经发生的选择、关系、世界行动、未完成欲望、得失或旧谜团长出。下一阶段不要求更大，只要求因果继续成立且更值得追。
 
 ## World Horizon Handoff
-这是当前 Story Program 给下一次长篇刷新留下的**交接任务**，不是下一世界设计稿。必须写：
+这是当前 Story Program 给“下一次长篇刷新”或“真正终局”留下的边界，不是下一世界设计稿。
+
+若作者上游已明确当前就是**最终 World Horizon / 不再扩世界 / 正在规划小说真正结局**，本节第一行固定写 `FINAL NOVEL END`；不要再制造更高未知世界，也不要输出 World Expansion orchestration。随后只写：主角怎样进入最终公开力量最高圈层；最后一个决定性胜负/生存/世界选择怎样证明同档之中 Advantage Stack 的最终非对称统治；哪些 Rival / 关系 / 世界仍可以在结局后继续存在而不否定主角 Final Apex。主角不需要每个副职和单项都第一，也不需要杀光所有强者。
+
+否则，这是下一次 World Expansion 的**交接任务**。必须写：
 - **触发条件：** 用可观察故事事实说明什么时候当前 World Horizon 真正结束；优先写事件条件，可附大致章节窗口，但不设固定百章税。
 - **Expansion Scope：** `macro` 或 `instance`。普通长篇进入更大大陆/圈层/文明通常是 `macro`；真正独立的多世界副本是 `instance`。
 - **为什么此时必须扩：** 当前层已经缺少哪一种新的欲望、尺度、世界入口或不同 Story Engine；禁止只写“主角需要更强敌人”。
@@ -1067,7 +1081,7 @@ STORY_PROGRAM_TEMPLATE = f"""你是透明协作的 Story Program / 故事主线�
 如果当前批准 World Horizon 在本 Story Program 结束时仍明显没有耗尽，Handoff 可以写 `NOT YET`，并说明还缺哪一个真实边界事件；不要为了形式强行安排扩世界。
 
 ## 远期仍值得追的东西
-只列**跨当前 World Horizon 也可能继续成立**的人、欲望、世界事件、地点、谜团或力量场面。不要把所有未知并成一个幕后真相，也不要新增隐藏力量层来维持长篇；这里是 carry-forward horizon，不是对未知下一世界的详细预告。
+若 `World Horizon Handoff` 第一行是 `FINAL NOVEL END`，固定写 `NONE｜小说已完结；未解释余白不再构成 future story obligation`，不要把仍存在的世界谜团、人物余生或未完全解释的历史重新登记成续篇任务。否则，只列**跨当前 World Horizon 也可能继续成立**的人、欲望、世界事件、地点、谜团或力量场面。不要把所有未知并成一个幕后真相，也不要新增隐藏力量层来维持长篇；这里是 carry-forward horizon，不是对未知下一世界的详细预告。
 """
 
 
@@ -1088,6 +1102,10 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 {CORE_FANTASY_INVARIANT}
 
 {FANTASY_COMPOUNDING_DIRECTION}
+
+{PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION}
+
+{FINAL_APEX_DIRECTION}
 
 {OUTLINE_FANTASY_PROOF_RULE}
 
@@ -1135,7 +1153,7 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 
 Outline 是 **Story Program 的执行编译层，不是第二个 Story Program**。Authority ≠ Scheduling：Power Seed 决定开局 Core Asymmetry 怎样成长；Story Program 决定开局优势怎样实现、后续新 Power Asymmetry 怎样获得并与旧优势复合；Outline 只决定已批准变化在当前窗口里通过哪些具体事件发生。不得为了让剧情块“完整”而自行新增 Power Asymmetry、重新安排力量成长、补小奖励、造新权限、开新地图或把人物成熟冒充 Power / Capability。
 
-**`World Horizon Handoff` 是 Outline 的前向边界。** 如果已批准 Story Program 已明确一个尚未执行的 Handoff，Outline 只能把当前已批准 World Horizon 内的事件具体化到该触发条件成立；不得为了填满“中期窗口 / 未来十章 / 约100章”越过 Handoff 自行发明下一大陆、下一异世界、下一套公共规则、下一份新 Power 或下一阶段 Story。若 Handoff 落在当前十章批次内，Future 10 只列到 Handoff 触发章即可，剩余章数不补占位、不写“待定章节”；先执行 `World Expansion → Current Character → Story Refresh`，再由刷新后的 Story Program / Outline 继续。若 Handoff=`NOT YET`，正常规划当前世界层，不因固定章数强行扩张。
+**`World Horizon Handoff` 是 Outline 的前向边界。** 如果已批准 Story Program 的 Handoff 第一行是 `FINAL NOVEL END`，Outline 只负责把已批准 Final Apex 的最后因果编译到结局：不得再安排 World Expansion、下一大陆、下一套公共规则或“更强者在远方”等续图钩子，也不得自行把主角要求扩大成所有副职/细分榜单第一。如果是普通尚未执行的 Handoff，Outline 只能把当前已批准 World Horizon 内的事件具体化到该触发条件成立；不得为了填满“中期窗口 / 未来十章 / 约100章”越过 Handoff 自行发明下一大陆、下一异世界、下一套公共规则、下一份新 Power 或下一阶段 Story。若普通 Handoff 落在当前十章批次内，Future 10 只列到 Handoff 触发章即可，剩余章数不补占位、不写“待定章节”；先执行 `World Expansion → Current Character → Story Refresh`，再由刷新后的 Story Program / Outline 继续。若 Handoff=`NOT YET`，正常规划当前世界层，不因固定章数强行扩张。
 
 核心幻想、力量占有欲、主角欲望、人物关系和世界事件都可以成为某段故事的主要阅读满足；不要求每块平均覆盖。Supporting Logic 只在改变选择、胜负或结果时展开。Action Space / Expectation Ladder / Mystery Depth / Impact 仍可作为后台读者体验坐标，但只通过具体锚点与实际 Delta 自然显现，不生成对应必填字段。
 
@@ -1215,7 +1233,7 @@ Block Delta：只写**相对本块开始**真正改变的维度，并只使用�
 
 先用 2—4 句写“批次定位”：这十章处在当前哪个剧情块、主要故事问题是什么、预计完成哪些已经批准的故事转折。只有当 Story Program / 当前剧情块确实把 Power、重要获得或世界入口安排在这十章时才说明；否则不补。
 
-随后原则上连续列出十章；**唯一例外是已批准 `World Horizon Handoff` 会在十章内触发**，此时只列到触发章就停止，等待 World Expansion / Story Refresh，不为凑足十章跨越 Authority 边界。
+随后原则上连续列出十章；**唯一例外是已批准 `World Horizon Handoff` 会在十章内触发**。普通 Handoff 只列到触发章就停止，等待 World Expansion / Story Refresh；若 Handoff 第一行是 `FINAL NOVEL END`，则只列到最终结局章并停止，不再等待或暗示下一次 World Expansion。两者都不为凑足十章跨越 Authority 边界。
 ## 第N章：具体标题
 具体剧情：用 2—4 句写具体人物、事件和主角行动；本章明确推进、转折或结算当前剧情块中的某个故事锚点，或完成必要且有故事价值的桥接。**若本章出现“为某个具名试场/选拔/招募/契约训练、准备、报名、取舍”等因果，而上游已批准其公开价值，这 2—4 句里必须有一句同时保留“具名机会 + 为什么值得争 / 成功参与通常能打开什么”；只写“某试场前训练 / 争取公开机会”仍算信息丢失。若对应剧情块的现成高价值锚点已经明确包含“新极限本身也会永久留下”这一 Power→Appetite 选择动机，本章小纲必须保留这层动机，不能压成中性的“他选择跃过去 / 继续冒险”；它必须仍然是人物为什么选这条已有路线的一部分。** 不要提前写主角一定成功，也不要为了填章数，把一个锚点拆成连续几章同类操作步骤。
 结果 / 状态变化：写直接结果和已经发生后的状态变化。
@@ -1232,7 +1250,7 @@ Block Delta：只写**相对本块开始**真正改变的维度，并只使用�
 
 REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作者提供的已发生正文摘要、当前状态、未兑现承诺、远期方向和当前设计，调整未来计划；Review 只用于调整未来，不自动重写或否定已完成正文。
 
-**Review 不得越过已批准 Story Program 的 `World Horizon Handoff`。** 若已发生摘要表明 Handoff 触发条件尚未成立，正常调整当前世界内未来计划；若触发条件已成立或下一批十章中必然成立，则下一批只规划到触发章并停止，明确下一动作是 `protagonist-blind World Expansion → deterministic Current Character → Story Refresh → Outline`。不要为了凑下一批十章由 Review 自己发明新大陆、独立副本、公共世界规则或下一阶段 Power。
+**Review 不得越过已批准 Story Program 的 `World Horizon Handoff`。** 若 Handoff 第一行是 `FINAL NOVEL END`，Review 只能调整通向已批准 Final Apex 的剩余未来，并在结局章停止；不得再生成 World Expansion、下一大陆或“更强者仍在远方”的续图钩子。普通 Handoff 若触发条件尚未成立，正常调整当前世界内未来计划；若条件已成立或下一批十章中必然成立，则下一批只规划到触发章并停止，明确下一动作是 `protagonist-blind World Expansion → deterministic Current Character → Story Refresh → Outline`。不要为了凑下一批十章由 Review 自己发明新大陆、独立副本、公共世界规则或下一阶段 Power。
 
 {PAYOFF_FIRST_COST_RHYTHM}
 
@@ -1247,6 +1265,10 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {CORE_FANTASY_INVARIANT}
 
 {FANTASY_COMPOUNDING_DIRECTION}
+
+{PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION}
+
+{FINAL_APEX_DIRECTION}
 
 {OUTLINE_FANTASY_PROOF_RULE}
 
@@ -1300,7 +1322,7 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 ## 下一批十章总体事件链
 用 3—6 句话说明这十章承接当前哪个已批准 Story Program / 剧情块因果、主要问题、主角行动、关键转折与批末状态。Growth is longitudinal, not a ten-chapter tax：只有当前计划确实安排 Power / Capability、重要获得或新世界入口时才写；没有时不要为了批次完整补一个。
 
-若 World Horizon Handoff 会在本批触发，总体事件链必须以该触发事件为终点，并明确“后续待 World Expansion / Story Refresh 后再规划”；不能提前给出新世界答案。
+若 World Horizon Handoff 会在本批触发，总体事件链必须以该触发事件为终点。普通 Handoff 才明确“后续待 World Expansion / Story Refresh 后再规划”；若第一行是 `FINAL NOVEL END`，则明确“小说在此完成，不再 World Expansion”，并以已批准 Final Apex 作为结局边界。两者都不能提前给出未批准的新世界答案。
 
 逐章使用：
 ## 第N章：具体标题

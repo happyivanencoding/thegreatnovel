@@ -1059,7 +1059,15 @@ TGN 曾从“AI 爱解释”过度纠偏到“什么都压缩”，导致正文�
 
 最终同 World/同 Core/同 GBrain 的三个 Human 实验判 **PASS**：共同后天节点从旧版的“回冲 + 转裂”缩到只剩真实共享路线产生的“回冲”；三叠刻器、母碑、旧壳、转裂楔等多项代表性成果会明确由 NPC 持有或错过。PASS 不要求“每个人必须拿不同外挂”；同一真实路线仍允许相同获得，要求的是人格选择可以稳定改变可达路线与 Advantage Tree，而不是只改变同一能力的用途。
 
-### 8.14 《斗破》研究不意味着所有漂亮机制都进 production
+### 8.14 Living World 不等于把主角复利权平均分给所有人；Local Apex 也不等于小说终局
+
+2026-08-31 继续补上两条此前只隐含、未明确 productionize 的长期原则。
+
+第一，**Protagonist Asymmetry Dominance**：NPC / Rival 拿走主角错失的 signature reward、阶段性更强、拥有主角没有的神兵/异兽/体质/绝技，都是 Living World 的正常结果；但“持续获得新的高价值 Asymmetry → 再彼此复合 → 下一 Horizon 继续叠”的递归 Advantage Stack 默认属于作者选中的主角，不是每个长期 Rival 的自动待遇。普通重要配角不应因为“必须永远跟主角同档”而每次被补一个新异常；极少数镜像宿敌/共同成长极/最终 Boss 可由 Story Program 明确设为例外，而且必须有自己的因果路线。两个独立 Terra-high blind A/B 中 Treatment 都获胜，主角 Stack 保持 PASS，Rival Threat 反而由 Baseline 的 PARTIAL 提升到 PASS，且 `OVER_NERF_RIVALS=NO`；这些自然样本 Baseline 的 shadow-protagonist risk 本来就是 LOW，所以本轮证据证明的是**新规则安全且改善 Rival 实质威胁**，不是伪称旧系统每次都会制造第二主角。
+
+第二，**Local Apex ≠ Final Apex**：普通 World Horizon 活透后仍可以“刚登顶又见山外有天”并触发 protagonist-blind Expansion；但作者明确当前就是最后一个 Horizon 时，不能再靠新地图逃避成长结账。production 现在用 `FINAL NOVEL END` 区分真正终局：主角进入最终公开力量最高可见圈层，并在最后决定性胜负/生存/世界选择中依靠长期 Advantage Stack 证明同档的 Asymmetry Dominance；Rival 可以同级、活着或保留某项专业第一。第一轮 Sea Baseline 的具体失败是主角只到星阶18、最终对手星阶23，虽然越级赢了却明确“不靠升到世界最高位取胜”；Treatment 则进入最高圈层。随后 v1 Treatment 又暴露“力量结账但把黑潮/古城等继续登记成未来主线”的尾巴，因此 v2 冻结：终局允许世界仍有未解释余白，但这些余白不再是 future story obligation。最终 Sea 与 Sky 两个独立 blind A/B v2 均 Treatment `PRODUCTION: PASS`：Sea 到星阶35进入最高天坠圈层、以 Stack 对抗星阶36主将；Sky 到风阶70进入55—72最高公开圈层，`FINAL NOVEL END` 且远期义务为 NONE。另用 production 默认 **Sol-high** 做绝对验证：完整终局 Story Program 将 Sky 主角推到风阶72、对手风阶70仍为顶级强者，并以 Core + 古灯 + 长槊 + 无翼舟复合完成终局，`远期仍值得追` 明确为 NONE；四阶段 bounded Rival Sol 验证则让苏湄两次真赢、拿走白脊与活鳞、等级可长期更高，同时 `SHADOW_PROTAGONIST: NO / OVER_NERF_RIVAL: NO`。独立 Luna-high 复核两案 `OVERALL: PASS`；Rival 案因是 bounded 验证，不冒充完整 Story Program E2E。
+
+### 8.15 《斗破》研究不意味着所有漂亮机制都进 production
 
 后来 A/B 否定或降级了：
 
