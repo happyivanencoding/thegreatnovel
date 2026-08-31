@@ -1,0 +1,8 @@
+{
+  "mode": "Batch-5 Terra high fast + Chapter Handoff Continuity",
+  "wall_seconds": 189.516,
+  "output_chars_runner": 10449,
+  "clean_file_chars": 10415,
+  "baseline_batch5_seconds": 173.491,
+  "sequential5_seconds": 278.987
+}

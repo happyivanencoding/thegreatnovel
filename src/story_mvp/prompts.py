@@ -184,6 +184,11 @@ OPENING_THREE_CHAPTER_CONTRACT = """开书前三章专用合同（只适用于�
 DIRECTOR_CHAPTER_BUDGET_RULE = """章节事件预算边界：场景可以跨章，但本章事件预算不得跨章。`本章唯一可执行事件预算` 是当前章 WHAT HAPPENS 的唯一授权；当前大型剧情块只提供阶段背景，不能授权本章追加其中尚未分配的事件、获得、升级或结算。`必须兑现的计划结果 / 状态变化` 是本章必须保真的语义目标：除非已发生 Canon 已使它不可执行，否则不得静默省略、弱化成“资格 / 准备 / 接近”或改到后章；若 Canon 真使它不可执行，必须在八字段 `状态变化` 中写 `[PLAN OUTCOME ADJUSTMENT]` + 最小原因与替代结果。该标记只处理事实冲突，不授权因为节奏、审美或方便取消结果。`章末 Handoff Reservation` 只允许让压力、线索、来人、新入口、未完成动作或外界反应出现，以回答“为什么下一章必然发生”；不得在本章提前完成或结算它指向的下一步事件。第一章尤其不能为了写得完整，提前结算第二章的能力拥有、第二次使用、付款/正式身份结算或正式升级；展示要强，但仍服从本章预算。"""
 
 
+CHAPTER_HANDOFF_CONTINUITY_RULE = """Chapter Handoff Continuity（章间即时连续性，不新增字段或 Agent）：上一章正式正文末尾若仍处于**未解决的即时局面**——例如对手已经正面堵路/拔刀、追杀仍在进行、攻击已经落下、人物正坠落/被困、门或桥正在关闭、一个必须当场回应的交易/选择刚被提出——它不是可以在章间省略的气氛钩子，而是当前章已经存在的 Canon continuity debt。当前章必须先从这个局面继续，用最小必要动作写清它怎样结束、被打断或转化，再进入 Future 10 为本章安排的后续事件；不得直接跳成“次日 / 另一地点 / 已经进城 / 冲突结束后”而不交代因果。
+
+这条连续性债只授权**最低充分的桥接动作**，不授权新增奖励、隐藏事实、重大胜负、关系翻转、资源得失或本章计划之外的新主事件。Director 必须把桥接写成至少一个可直接落正文的具体动作因果（谁利用哪个已存在的人/物/地形/能力做了什么，怎样让堵截/追杀/坠落/选择真正转化）；`趁乱脱身 / 成功进入 / 摆脱追兵 / 冲突结束` 这类结果摘要不能代替 bridge。若抵达当前计划预设开场状态必须额外发生一个会改变这些已批准结果的重大事件，Director 不得静默编造；应在现有 `状态变化` 中使用 `[PLAN OUTCOME ADJUSTMENT]` 说明 Canon 与 Plan 的冲突，并停在最近合法结果。Outline / Review 在规划 Future 10 时也要反向检查：第 N 章 `结尾推动` 一旦制造上述即时未解局面，第 N+1 章 `具体剧情` 的第一个动作必须继续/解决它；若想让第 N+1 章从新地点、新时间或另一场景开始，就必须在第 N 章先结清即时局面，或明确把桥接写进第 N+1 章。章节边界可以切场景，但不能删除因果。"""
+
+
 DIRECTOR_REPETITION_RULE = """轻量反重复判断（软提醒，不是新增字段、评分或 Hard Gate）：先看最近 1—3 章摘要，判断当前章的主要压力、主要解法和主要结算方式是否正在重复最近章节。如果重复，而且 BOOK / 当前计划没有明确要求这种重复产生新的阶段效果，就在当前计划允许的事件范围内优先选择能改变身份、关系、具体获得物、主动目标、行动舞台、力量理解或敌人策略的执行方式。Director 只负责当前章执行层去重，不重新规划长期宿敌、能力玩法或世界层级；这些应由 Story Program / Outline 决定。不要因此篡改 BOOK、抢先完成下一章，也不要为了形式变化强行换戏；重复确有新的阶段意义时正常执行。"""
 
 
@@ -332,6 +337,8 @@ Emotion：启用 / 不启用；理由
 八个字段仍是唯一事件合同字段。在填写“对手或世界反应”“直接结果”“状态变化”“叙事功能”等已有字段时，只有当事件真实碰到人物的欲望、自尊、恐惧或关系，才自然考虑相关人物的短暂反应、余波或因此改变的下一步行为；不要新增情绪字段，不要求每章覆盖情绪，也不要把所有人的反应统一成同一个标签。
 
 {DIRECTOR_CHAPTER_BUDGET_RULE}
+
+{CHAPTER_HANDOFF_CONTINUITY_RULE}
 
 {DIRECTOR_REPETITION_RULE}
 
@@ -1125,6 +1132,8 @@ OUTLINE_TEMPLATE = f"""你是透明协作的故事 Outline 助手。生成前必
 
 {OUTLINE_STATE_ADVANCE_DIRECTION}
 
+{CHAPTER_HANDOFF_CONTINUITY_RULE}
+
 {PROTAGONIST_ASCENSION_TRAJECTORY}
 
 {SECONDARY_FANTASY_AXIS_DIRECTION}
@@ -1281,6 +1290,8 @@ REVIEW_TEMPLATE = f"""你是透明协作的十章 Review 助手。只根据作�
 {MYSTERY_BEFORE_SETTLEMENT_DIRECTION}
 
 {EFFECTIVE_COUNTER_DIRECTION}
+
+{CHAPTER_HANDOFF_CONTINUITY_RULE}
 
 {PROTAGONIST_ASCENSION_TRAJECTORY}
 

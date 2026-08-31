@@ -1,0 +1,21 @@
+{
+  "mode": "Sequential-1 Terra high fast",
+  "timings_seconds": [
+    52.447,
+    37.774,
+    67.697,
+    46.574,
+    74.495
+  ],
+  "total_seconds": 278.987,
+  "chars_by_chapter": [
+    2278,
+    2132,
+    2147,
+    1905,
+    2621
+  ],
+  "total_chars": 11083,
+  "batch5_baseline_seconds": 173.491,
+  "batch5_baseline_chars": 9084
+}

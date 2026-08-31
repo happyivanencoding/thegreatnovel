@@ -5,7 +5,7 @@ from story_mvp.chapter_context import (
     project_chapter_plan_execution_boundary,
     project_current_long_block_for_chapter,
 )
-from story_mvp.prompts import generate_prompt
+from story_mvp.prompts import OUTLINE_TEMPLATE, REVIEW_TEMPLATE, generate_prompt
 
 
 PLAN = """## 第19章：镇海关上
@@ -51,6 +51,40 @@ def test_director_receives_current_plan_as_unique_event_budget_and_long_block_as
     assert "必须兑现的计划结果 / 状态变化：顾停舟本人进入镇海" in prompt
     assert "章末 Handoff Reservation" in prompt
     assert "当前大型剧情块只提供阶段背景" in prompt
+
+
+def test_director_cannot_silently_skip_an_unresolved_previous_scene() -> None:
+    prompt = generate_prompt(
+        mode="director",
+        template="",
+        book_content="BOOK",
+        chapter_number=5,
+        previous_chapter_text=(
+            "裴照临落在断桥边，青锋出鞘。\n\n"
+            "“宁烬，把门骨给我。”\n\n"
+            "他横剑拦住唯一去路。"
+        ),
+        current_chapter_plan=(
+            "## 第5章：倒悬城\n"
+            "具体剧情：宁烬进入倒悬城参加赌命宴。\n"
+            "结果 / 状态变化：赢得航线和骨舟。\n"
+            "叙事功能：推进白昼心争夺。\n"
+            "结尾推动：白昼心提前出世。"
+        ),
+    )
+    assert "Canon continuity debt" in prompt
+    assert "不得直接跳成“次日 / 另一地点 / 已经进城 / 冲突结束后”" in prompt
+    assert "裴照临落在断桥边" in prompt
+    assert "先从这个局面继续" in prompt
+    assert "趁乱脱身 / 成功进入 / 摆脱追兵 / 冲突结束" in prompt
+    assert "不能代替 bridge" in prompt
+
+
+def test_outline_and_review_preserve_immediate_handoff_continuity() -> None:
+    for prompt in (OUTLINE_TEMPLATE, REVIEW_TEMPLATE):
+        assert "第 N 章 `结尾推动` 一旦制造上述即时未解局面" in prompt
+        assert "第 N+1 章 `具体剧情` 的第一个动作必须继续/解决它" in prompt
+        assert "章节边界可以切场景，但不能删除因果" in prompt
 
 
 def test_chapter_mission_deterministically_freezes_plan_outcome_even_when_director_drops_it() -> None:

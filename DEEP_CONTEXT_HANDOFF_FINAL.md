@@ -1856,6 +1856,20 @@ RSE transport 修好以后又分离出三条稳定边界，并已前向合并到
 
 同步时没有恢复已经被后续实验否决的常驻 Reader Polish，也没有把旧 Atomic local-delta 路线重新生产化。远端新冻结能力作为基座，本地较新的 RSE / private-power 边界只做语义 forward-port；相关 Premise / Progressive Canon / Receipt / RSE / workflow 联合回归首轮 **118/118 PASS**，最终全仓 **482/482 PASS**。`tgn-system-steward 0.3.31` 已通过 `skill-authoring` lint（0 error / 0 warning）、AgentDock package validate（digest `sha256:8917dc6946d5705c672abd0508cfdb4c5e6eebca92d1ca480b1b549aa1245b05`）并 install/activate；bounded Luna-high read-only smoke 对已知坏例正确判 `FAIL`，最早定位 `Story Program → Outline`，明确 `WRITER_BLAME: NO`，并拒绝新增 Reviewer / classifier / 全局 prose polish。
 
+### 14.14 Chapter Handoff Continuity + Batch-5 Primary Candidate（2026-08-31）
+
+《我身藏诸界》前五章实验暴露了与“跨章偷跑”相反的另一种真实失败：第4章结尾已经让裴照临拔剑堵住宁烬、浮桥被斩断，原 Batch-5 第5章却直接从“已经抵达倒悬城入口”重新起场，导致即时冲突在章节边界被删除。这里不是留白，而是 **Canon continuity debt 被 Plan 跳过**。
+
+Production 根修不新增 Agent / classifier / 新字段：现有 Outline 已有“第N章结尾推动必须成为第N+1章直接因果起点”的原则，本轮把它强化成明确的即时 Handoff 语义，并在 Director 加最后保险。上一章正式正文若结束在对手堵路/拔刀、追杀未脱身、攻击已落下、坠落/被困、关闭中的门或必须当场回答的交易/选择，下一章必须先用**最低充分桥接动作**让该局面结束、被打断或转化，再进入 Future 10 当前章事件；不得直接跳成次日、另一地点或“已经进城”。Director 的 bridge 至少包含一个可直接落正文的具体动作因果，`趁乱脱身 / 成功进入 / 摆脱追兵 / 冲突结束` 这类摘要不算完成。真实 Luna-high 行为回归首轮只写“抓住追兵压力完成脱身”，因此继续收紧；第二轮明确写出“宁烬借追兵逼近迫使裴照临回剑应对，从唯一城门进入”，行为 PASS。这条 continuity debt 只授权桥接，不授权新增重大胜负、奖励、关系翻转、资源得失或隐藏事实；若 Current Plan 与 Canon 真冲突，继续使用现有 `[PLAN OUTCOME ADJUSTMENT]`。
+
+同一素材还产生一个重要但**尚未 productionize** 的 Primary batching 假设。为了隔离 batch size，本轮所有速度/质量实验都只调用 Terra high Writer，不运行 Director / Curator / Authority Reviser / State，因此这些时间**不能代表完整 production wall**。Control 原 Batch-5 一次写1—5章：173.491s、9084 chars；Sequential-1 五次逐章：52.447/37.774/67.697/46.574/74.495s，总278.987s、11083 chars；Batch-5 + 明确 Handoff Continuity：189.516s、10449 chars。Sequential 比修复 Batch 慢约47.2%；修复 Batch 只比原 Batch 多约9.2%。
+
+匿名 Luna-high 对比先确认：Sequential 明显胜过**未修 Handoff 的原 Batch**，主要因为4→5连续性；但 Sequential 第5章为了接坏上游局面临时创造“城内禁杀/宴后再取骨”等保护规则。随后用**修复 Handoff 的 Batch-5** 对 Sequential 再匿名比较，总冠军转为 Batch-5：第4章已建立倒悬城/城门，裴照临堵桥后，第5章直接让宁烬借倒悬石檐荡入城门缝隙，镜离/澜生上下同时挡剑，既完成桥接又没有新增保护规则；动作因果、爽点和整体连读更稳。Sequential 仍在“单身者”铜镜验证、岸身/海身死亡边界等规则场景化上更清楚，值得移植 craft，而不是因此保留逐章调用。
+
+当前结论必须分层：**Chapter Handoff Continuity 是 production 修复；Batch-5 Primary 只是高价值 Experimental Hypothesis。** 这一本书的结果足以证明它值得继续做正式 full-chain A/B，但不足以直接替换 `Director → Curator → Primary → Authority Reviser → State`。下一步若继续，应固定上游 Authority，用至少一部新 held-out 小说比较当前逐章 full chain vs 一个真正定义清楚的 batched Primary topology，并测完整 critical path、Authority hard problems、Reviser gap、跨章 Canon/State 更新与失败恢复；不能把本轮单 Writer 的约3分钟/5章误报成 production 速度。
+
+验证状态：Chapter Plan focused **11/11 PASS**，全仓 **487/487 PASS**，`git diff --check` PASS。`tgn-system-steward 0.3.35` 已加入 Chapter Boundary Continuity 审计能力，skill-authoring lint `portable=true / 0 error / 0 warning`，package validate digest `sha256:3a24bb496ad9680f40a2737bd916c090acb9f1aa9a0d6545850c0519306a0c0b`，已 install/activate；bounded Luna-high smoke 对已知坏例正确判 `FAIL`，最早 root cause 定位到 Outline/Plan，并明确临时新增“城内禁杀”不能算正确修复。
+
 ---
 
 ## 15. How to Work With the User
