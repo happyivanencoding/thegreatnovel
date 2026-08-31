@@ -136,7 +136,7 @@ State Extraction 还为长篇 Forward Evolution 提供**已经发生的原料**�
 - `Active Relationships`：仍会改变选择的关系状态；
 - `Identity / Access`：仍会改变待遇/入口的长期身份；
 - `Knowledge / Enemy State`：确认知识、重要误解与持续敌我状态；
-- `World State`：已经发生、且未来 protagonist-blind World Expansion 需要知道的世界级变化；不得写主角私人欲望或“下一世界应该给什么”；
+- `World State`：已经发生、且未来 protagonist-blind World Expansion 需要知道的世界级变化；若主角或其他行动者已经公开造成会跨地区继续传播的战力估值、势力行动、商路/价格、迁徙、警戒、联盟、传闻或公共入口变化，保留最小的“谁做了什么 → 世界因此怎样变了”作为 **World Impact Residue**。不得写隐藏 Power 原理、私人欲望/关系、Build 或“下一世界应该给什么”；
 - `Tracked Assets`：仍有长期选择价值的持有/位置/状态。
 
 **State Extraction 不判断 Human Development。** 当前欲望、关系变近、连续几章救人/负责都先留在 State；只有周期性的 Human Development 阶段基于更长历史才能判断 Stable Choice Bias 是否真的向前变化。

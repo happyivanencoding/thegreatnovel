@@ -1053,11 +1053,11 @@ TGN 曾从“AI 爱解释”过度纠偏到“什么都压缩”，导致正文�
 **旧实验局限：** 四个 Human 的 Story Program 连开局事故都不同，路线差异混有采样创意。
 **最终理解：** 先给同一冲突和机会池，看选择是否分叉；再观察长期路线。否则不能纯归因人格。
 
-### 8.13 “不同人格 → 不同优势树”目前只做到一半
+### 8.13 “不同人格 → 不同优势树”已关闭旧 PARTIAL
 
-人格已经改变：为何去、跟谁走、错过什么、能力用给谁。
-但同 World/同 Core 的四线实验中，所有人仍拿到某种剥纹，最终只是两类机械分支、四种用途。
-因此不能宣称个性化优势树已经完成。
+旧实验已经证明人格会改变“为何去、跟谁走、错过什么、能力用给谁”，但同 World/同 Core 四线仍都拿到某种剥纹。2026-08-31 的分层实验继续向上游追根因：只加 Route-Bound Acquisition 时三个冻结 Human 仍分别出现 7 / 11 / 12 次“剥纹”；扩大 World 的能力条目只能部分改善；真正有效的是把 **World Possibility Ecology** 做成不同人物/地点/承诺/时间窗口上的因果分布，并在 Story Program 增加 **No Universal World Tour**——未选路线继续由 NPC 推进、signature reward 真正归别人、窗口关闭或改变形态，主角不为“把 World 都用上”稍后逐一补打卡。
+
+最终同 World/同 Core/同 GBrain 的三个 Human 实验判 **PASS**：共同后天节点从旧版的“回冲 + 转裂”缩到只剩真实共享路线产生的“回冲”；三叠刻器、母碑、旧壳、转裂楔等多项代表性成果会明确由 NPC 持有或错过。PASS 不要求“每个人必须拿不同外挂”；同一真实路线仍允许相同获得，要求的是人格选择可以稳定改变可达路线与 Advantage Tree，而不是只改变同一能力的用途。
 
 ### 8.14 《斗破》研究不意味着所有漂亮机制都进 production
 
@@ -1187,18 +1187,17 @@ Skill lint、package validate、安装、激活及双案例 smoke 均通过：�
 
 TGN 应保留这套反馈机器，同时比《斗破》更好地保护人物选择、关系、世界独立和非程序化正文。
 
-### 9.17 Personality Advantage Tree 实验：Overall PARTIAL
+### 9.17 Personality Advantage Tree 实验：PASS（2026-08-31 更新）
 
-固定同一 World、同一盲选 Core Power「穿隙」、同一 Human GBrain、同一 Story GBrain，只换四个 Human，生成四套 Sol Story Program。
+旧四线实验固定同一 World、同一盲选 Core Power「穿隙」、同一 Human/Story GBrain，只换 Human；当时 `Personality → Choice` 与 `Choice → Route → Opportunity` 已 PASS，但所有人仍回到剥纹，`Opportunity → Different Advantage Tree` 只有 PARTIAL。
 
-结果：
+2026-08-31 继续使用冻结 Human 1 / 3 / 4 做真实 Sol high 分层实验：
 
-- Personality → Choice：PASS；
-- Choice → Route → Opportunity：PASS；
-- 四线 Growth Floor：PASS；
-- Opportunity → Different Advantage Tree：PARTIAL。
+- **Route-only**：旧 World 不变，只加“先路线后获得”；三个 Human 仍出现 7 / 11 / 12 次剥纹，证明单靠 Story Prompt 约束不够；
+- **World Possibility Ecology**：把高价值成长来源从一个机制盆地分散到不同人物、地点、承诺、季节/窗口与路线，剥纹全员干线消失，但 Story Program 仍把多人重新拉去百炉 / 矿塔 / 七城，只有 DIRECTIONAL PASS；
+- **No Universal World Tour**：未选 World 路线继续由 NPC 推进，signature reward 归别人、窗口关闭/变形；只有新的独立因果才允许未来回流。最终 Judge 判 **PASS**。
 
-四人路线和用途明显不同，但全部获得某种剥纹，最终更像两种机械分支 × 四种人格化使用方式，而非四棵独立优势树。
+最终标准不是“三个人必须三个外挂”，而是：`Human → Choice → Route → 可达/错过的 Opportunity → Advantage Tree` 的因果能稳定保留。不同 Human 真走到同一来源时获得同类能力完全合法；失败形态是他们理由不同、路线表面不同，最后却为了“把 World 都用上”依次打卡同一高价值节点并拿走同一套 signature Power。
 
 ### 9.18 Long-History Fact Boundary：已冻结并经长篇压力验证
 
@@ -1399,15 +1398,15 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 
 ---
 
-### 11.9 当前最重要的问题
+### 11.9 2026-08-31：Advantage Tree 与 World Impact Residue 已冻结
 
-不是“人格能不能改变剧情”——这一点已经 PASS。
+本轮关闭了两个长期 forward-loop 问题。
 
-当前核心未决是：
+第一，**不同 Human 的长期优势树不再只靠“路线文案不同”判断**。production 现在同时保护 `World Possibility Ecology + Route-Bound Acquisition + No Universal World Tour`：World 的高价值成长来源分散在不同人物、地点、承诺与时间窗口；Story Program 先让 Human 的选择决定真正可达路线；未选路线由 NPC 继续推进，代表性奖励可以归别人、窗口可以永久关闭或改变形态。真实 Sol high 三 Human 实验最终 PASS，且没有把系统改成“人格类型 → 指定外挂”的配额机。
 
-> **人格能否通过真实选择与路线，稳定改变第二、第三项非对称优势的种类，而不只是改变同一优势的用途。**
+第二，**World Independence ≠ World Amnesia**。World Expansion 仍保持 protagonist-blind，不读取 Current Character、私有 Power、Human 或私人关系；但 `PERSISTENT CANON → World State` 中已经成为公共世界事实的后果必须 forward-carry。两个独立 Luna high A/B（黑角王商路 Case、赤鲸王/斩索 Case）都显示：旧 Prompt 会看见 World State 却常把它压成无记忆新地图；Treatment 会把公开战绩、商路变化、势力行动、价格、迁徙、警戒与传闻继续变成新区域自己的 actor 行动，同时没有泄漏隐藏能力或私人关系。精确公开位置/越级差只在传播成立且会改变新区域估值时保留最少必要分量，不要求所有人物都知道，也不把新世界做成旧主角的专属回应。
 
-现有四线实验中，所有人都拿到剥纹，说明 Story Program 会从整个 World 选择与 Core 最容易复合的全局最佳机制，route-specific opportunity 对新优势的约束还不够强。
+这两个机制都是低成本 Prompt / Authority 边界调整；没有新增 Agent、Reviewer、能力分类器或长期数据库。
 
 ---
 
@@ -1904,7 +1903,7 @@ RSE transport 修好以后又分离出三条稳定边界，并已前向合并到
 
 ### 15.7 用户说“审计”时有固定协议
 
-自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本见本地/AgentDock live discovery（本轮同步目标为 **0.3.31**）；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
+自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本见本地/AgentDock live discovery（本轮已升级为 **0.3.33**）；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、World Possibility Ecology 是否形成单一机制盆地、Story Program 是否用 Universal World Tour 把不同 Human 重新拉回同一高价值节点、World Expansion 是否“protagonist-blind 但失忆”、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
 
 ### 15.8 Docs 要言简意赅
 

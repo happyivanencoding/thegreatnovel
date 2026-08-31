@@ -45,7 +45,7 @@ World Vision 负责一个即使换掉未来主角也仍值得写的世界，包�
 
 它不负责主角欲望、Biography、特殊能力、命运、第一次爽点或终局使命。完整 World Canon 可以同时包含 World Reality 与 Story Opportunities，但下游可见性不同。
 
-Reader-facing 世界规则先写具体作用，再命名：基础力量应能用 1—3 句普通话说明来源、能做什么、怎样变强和怎样失败；已有一到少数互补力量轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成总机制。**Small Grammar 不等于 Small World**：World 主动让旧语法长新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外，并主动寻找 0—1 条成熟 Optional Secondary Fantasy Road；没有足够好的副轴就不造，也不预设未来主角一定会走。新词只给已经理解、会反复出现的对象贴短标签，不靠多个新词互相定义。“全新”优先改变力量因果与玩法，不要求回避境界、功法、兵器、异兽等清楚题材词。默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果；除非作者明确选择认知/概念系幻想，不把路径、定义、权限等抽象关系本身当作创新证明。
+Reader-facing 世界规则先写具体作用，再命名：基础力量应能用 1—3 句普通话说明来源、能做什么、怎样变强和怎样失败；已有一到少数互补力量轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成总机制。**Small Grammar 不等于 Small World**：World 主动让旧语法长新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外。这里还要保护 **World Possibility Ecology**：高价值成长来源的差异主要来自它们分布在哪些具体人物、地点、承诺、季节/窗口和长期路线，而不是堆更多能力类别；不同选择应真实可能错过不同来源，避免一个最显眼机制成为所有路线都会经过的 universal upgrade trunk。它不是人格→能力映射或配额。World 同时主动寻找 0—1 条成熟 Optional Secondary Fantasy Road；没有足够好的副轴就不造，也不预设未来主角一定会走。新词只给已经理解、会反复出现的对象贴短标签，不靠多个新词互相定义。“全新”优先改变力量因果与玩法，不要求回避境界、功法、兵器、异兽等清楚题材词。默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果；除非作者明确选择认知/概念系幻想，不把路径、定义、权限等抽象关系本身当作创新证明。
 
 ### 2.1 World Root 与 Forward World Expansion
 
@@ -54,7 +54,7 @@ Reader-facing 世界规则先写具体作用，再命名：基础力量应能用
 - `scope=macro`：普通长篇进入新大陆、新文明、新力量圈层或更高社会/世界层；若力量上限扩大，只能延展 Root 精确主尺的可见范围，`主尺语法改动=NONE`；
 - `scope=instance`：多世界副本流的一次独立 Local World，可设置 `Effective Until Chapter`，离开后不再进入章节 World Authority；每个独立 instance 也必须有自己的本地精确力量尺，但本地尺不回写全局主尺；
 - Expansion 触发来自 Story Program 的 `World Horizon Handoff` / 实际 World Entry，不是固定百章税；
-- World Expansion 用 Luna high fresh context，只读 World Root、旧 Expansion、明确 `Canon → World State` 与 World-only craft；不读 Current Character、Power Stack、Human、关系、未来 Story；
+- World Expansion 用 Luna high fresh context，只读 World Root、旧 Expansion、明确 `Canon → World State` 与 World-only craft；不读 Current Character、Power Stack、Human、关系、未来 Story。这里的 `World State` 是 **World Impact Residue**：若主角或其他行动者已经公开改变跨地区战力估值、势力行动、商路/价格、迁徙、警戒、联盟、传闻或公共入口，新 Horizon 在传播成立时继承这些后果；可保留会改变 actor 行动的少量公开姓名/力量位置/越级战绩，但不能反推隐藏能力原理、私人关系、欲望或 Build，也不能把新世界改造成旧主角的专属回应；
 - Story Program 的 Handoff 只负责 orchestration，**不注入 World Agent**。这样当前主角的需求不会偷偷变成下一世界的设计要求。
 
 章节期不会把 Expansion 全文直接喂给 Writer；只投影已经批准的公共现实、力量/身份/价值尺度、公开地点/势力和具体价值物。世界人物的未公开欲望、正在发生的隐藏行动与未知边界仍留给 Story / Reader Release 决定何时进入正文。
@@ -144,11 +144,11 @@ Collision 可以补少量**非奠基性的过去经历、共同往事或旧事�
 
 大型阶段保持轻量：为什么现在发生、谁想要什么、主角关键选择/行动、主要阅读满足、`Stage Delta`、下一阶段为何自然发生。`Stage Delta` 只写实际变化的维度；Power、获得、关系、身份、知识、敌人或世界变化都不是必填项。
 
-高价值获得与纵向复利是全书原则，不是阶段字段税。默认采用 **AGGRESSIVE payoff** 偏置：因果已支持的主奖励真正落地；Story Program / Outline 应尽早锁定当前大型阶段主要欲望对象与为什么值得馋，避免公共资源/责任小问题取代主奖励；大胜可以自然连带奖金/招揽/入口，秘境可以有主目标外惊喜，大阶段可以同时带来据点、队伍、产业或长期收入。奖励数量本身不构成失败，只禁止无因果到账与同窗口近似奖励抹平真实牺牲。Power Asymmetry 要长期形成优势栈：旧优势保留，新优势通过故事加入，并出现单项做不到的复合玩法；不要求每阶段新增。结构质变少而重，但 Fantasy Surface 可以持续偏丰富。Story Program 还会主动检查 World 已经成立的成熟 Secondary Fantasy Axis；Human 真被它的作品、胜负、钱、身份、审美、人物或生活方式牵引时才投入，Human 不想走就留给世界/配角。重大 Public Proof 有真实观众时，**群体震动、懂行者 Ruler Calibration、关键人物 Behavioral Repricing 三者并列、没有高低之分**，可以一起吃满；主力量相关节点让三路共享同一精确力量主尺：群体震动承受明确等级/星级/重数差，懂行者直接说清双方精确位置与差距，关键人物再因“精确位置 + 超标表现”改变待遇/报价/敌意/战术。不以“克制”自动删群体震惊，也不把越级胜利误记成等级提升。反制只能从碰撞后的学习产生，并且长期 Rival 更新策略后至少一次要真实改变主角选择或局面；敌人不能只为机械克制主角而出生。
+高价值获得与纵向复利是全书原则，不是阶段字段税。默认采用 **AGGRESSIVE payoff** 偏置：因果已支持的主奖励真正落地；Story Program / Outline 应尽早锁定当前大型阶段主要欲望对象与为什么值得馋，避免公共资源/责任小问题取代主奖励；大胜可以自然连带奖金/招揽/入口，秘境可以有主目标外惊喜，大阶段可以同时带来据点、队伍、产业或长期收入。奖励数量本身不构成失败，只禁止无因果到账与同窗口近似奖励抹平真实牺牲。Power Asymmetry 要长期形成优势栈：旧优势保留，新优势通过故事加入，并出现单项做不到的复合玩法；不要求每阶段新增。**Route-Bound Acquisition** 要先保留人物真实选择造成的路线可达性；当某次选择让另一条高价值窗口关闭时，允许 NPC 继续获得那条路线的 signature reward。**No Universal World Tour**：世界大事仍独立发生，但主角不必为了“把 World 都用上”依次经历全部大会、矿塔、战争、秘境并收走其代表性成长；只有新的独立因果让路线重合时才回流。同一真实路线当然可以让不同 Human 得到相同能力，这不是人格配额。结构质变少而重，但 Fantasy Surface 可以持续偏丰富。Story Program 还会主动检查 World 已经成立的成熟 Secondary Fantasy Axis；Human 真被它的作品、胜负、钱、身份、审美、人物或生活方式牵引时才投入，Human 不想走就留给世界/配角。重大 Public Proof 有真实观众时，**群体震动、懂行者 Ruler Calibration、关键人物 Behavioral Repricing 三者并列、没有高低之分**，可以一起吃满；主力量相关节点让三路共享同一精确力量主尺：群体震动承受明确等级/星级/重数差，懂行者直接说清双方精确位置与差距，关键人物再因“精确位置 + 超标表现”改变待遇/报价/敌意/战术。不以“克制”自动删群体震惊，也不把越级胜利误记成等级提升。反制只能从碰撞后的学习产生，并且长期 Rival 更新策略后至少一次要真实改变主角选择或局面；敌人不能只为机械克制主角而出生。
 
 ### 6.1 Story Refresh / Periodic Re-Collision
 
-World Expansion 被批准后，先 deterministic refresh `CURRENT_CHARACTER.md`，再由 Sol high 第一次看到 `Effective World × Current Character`。这是新的 Collision，不是旧 Story Program 自动向后延长：World 不为主角改写，人物也不为新世界重新优化。旧 Story Program 只保留仍未兑现且仍成立的长期因果；新 Power 只能从新世界已经独立成立的机会里真实获得。
+World Expansion 被批准后，先 deterministic refresh `CURRENT_CHARACTER.md`，再由 Sol high 第一次看到 `Effective World × Current Character`。这是新的 Collision，不是旧 Story Program 自动向后延长：World 不为主角改写，人物也不为新世界重新优化。旧 Story Program 只保留仍未兑现且仍成立的长期因果；新 Power 只能从新世界已经独立成立、且 Current Human 真实走入的机会里获得。`Route-Bound Acquisition + No Universal World Tour` 继续生效：Effective World 的所有高价值路线不是主角必须逐项消费的内容清单，未选路线可由 NPC 独立推进，直到新因果真正让双方再相交。
 
 普通玄幻与多世界副本共用这一层：前者通常一次 Refresh 覆盖一个新的长篇世界层，后者可覆盖一个大型 instance / 一组相连副本。每次 Refresh 仍只规划当前新 World Horizon，并继续留下下一次 Handoff。
 

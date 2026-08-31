@@ -134,6 +134,25 @@ Action Space、Net New、Expectation、Mystery Depth、Impact、Compounding 等�
 
 这不是“所有冲突必须私人恩怨”，也不新增 Actor 表或事件配额。自然灾难、兽群迁徙、制度变化依然可以独立发动；判断的是世界是否真的有主体在做事，而不是只有系统在运行。
 
+### World Possibility Ecology Is Route-Bearing
+
+当同一个 World、同一个 Core Power 下，不同 Human 已经做出不同选择、走不同关系和路线，却仍稳定拿到同一种第二/第三优势时，不要直接要求 Story Program“每个人发不同外挂”。先追更早的供给结构：**世界真正可获得的高价值变化是否都集中在同一个机制盆地，或所有重要地点最终都指向同一 signature technique / item。**
+
+健康的 Possibility Ecology 不靠能力类别配额，而靠因果分布：不同 Living Actors、地点、承诺、季节/时间窗口与长期路线自然暴露不同的身体变化、器物/兵器、传承、伙伴/异兽、环境特权、知识或本世界异常。人物选择 A 后，B/C 的窗口可以真的被 NPC 继续推进、由别人取得代表性成果、关闭或改变形态；只有新的独立因果让路线重新相交时才回流。
+
+审计 Story Program 时另查 **Universal World Tour** 偏置：模型为了让长纲“完整利用 World”，会把不同 Human 依次送去同一组大会、矿塔、战争、秘境，即使他们最初选择理由不同，最后还是把所有 signature reward 收进主角优势栈。**因果定位不要过早停在 `Opportunity → Privilege Delta`。** 如果你已经要求“奖励只能来自实际路线”，但不同 Human 仍在后续被送入同一批高价值节点，那么奖励来源局部上已经合法，最早剩余坍缩其实在 `Choice → Route`：World Tour 把先前分叉重新合流了。此时继续给奖励加“必须更不同”的规则会治标不治本；应该允许未选路线在没有主角时继续发生。PASS 不要求三个人必须三个不同外挂；同一真实路线可以有相同获得。PASS 要求的是 `Human → Choice → Route → 可达/错过 Opportunity → Advantage Tree` 的不可逆性成立，且“主角没去”以后世界仍继续发生。
+
+### World Independence Does Not Mean World Amnesia
+
+protagonist-blind World Expansion 的盲区是为了防止下一世界被当前 Build 做成钥匙孔，不是为了清空已经发生的历史。
+
+审计时分开看两件事：
+
+- **Private Character Shape**：Current Character、隐藏 Power 机制、私人欲望、关系、未来奖励需求必须继续不可见；
+- **World Impact Residue**：`Canon → World State` 中已经成为公共世界事实的后果必须 forward-carry。若某个行动者已经公开改变跨地区战力估值、势力行动、商路/价格、迁徙、警戒、联盟、传闻或公共入口，新区域在传播成立时应表现出这些“世界上的凹痕”。
+
+正确继承不是在新地图反复讲旧主角传奇，而是让当地自己的 actor 因已知事实改价、招揽、敌视、警戒、争路、抢资源或改变计划。少量已传播的姓名、公开主尺位置、越级差或具名战绩只有在会改变新区域行动时保留其分量；不是所有人必须知道，更不能从结果反推出隐藏能力或私人关系。
+
 ### Human Action Audition Is Evidence, Not Authority
 
 Human 候选如果 `人物钩子` 只是“他可能为了 X 放弃 Y”，往往只是重复 competing motives。更有判断力的候选审计是一个 **Non-Canon Action Audition**：使用已经成立的动机和具体关系，让至少两项私人价值在小现场中不能同时完整满足，人物必须做出可见动作并留下一个小而真实的机会成本、得罪或暴露欲望。

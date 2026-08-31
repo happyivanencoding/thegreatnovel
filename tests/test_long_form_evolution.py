@@ -10,7 +10,7 @@ from story_mvp.character_context import project_effective_world_reality
 from story_mvp.character_prompts import generate_split_prompt
 from story_mvp.gbrain_retrieval import build_retrieval_brief
 from story_mvp.long_form_evolution import compose_effective_world, extract_world_horizon_handoff
-from story_mvp.prompts import OUTLINE_TEMPLATE
+from story_mvp.prompts import DEFAULT_STATE_DELTA_TEMPLATE, OUTLINE_TEMPLATE
 from story_mvp.storage import (
     apply_state_delta_to_book,
     approve_character_artifact,
@@ -294,6 +294,11 @@ def test_prompt_boundaries_keep_surprise_until_recollision(tmp_path: Path) -> No
     assert "SECRET CHARACTER SHOULD NOT LEAK" not in world_prompt
     assert "SECRET STORY-PREPARED KEYHOLE" not in world_prompt
     assert "CURRENT WORLD STATE" in world_prompt
+    assert "青州跨州商路已经恢复" in world_prompt
+    assert "保存三式" not in world_prompt
+    assert "沈照" not in world_prompt
+    assert "World Independence ≠ World Amnesia" in world_prompt
+    assert "世界上的凹痕" in world_prompt
     assert "主角私人欲望" not in world_prompt
 
     human_prompt = generate_split_prompt(
@@ -322,6 +327,47 @@ def test_prompt_boundaries_keep_surprise_until_recollision(tmp_path: Path) -> No
     assert "中域武城群" in refresh
     assert "CURRENT CHARACTER｜Deterministic Forward Snapshot" in refresh
     assert "Independent World × Current Character" in refresh
+    assert "Route-Bound Acquisition 继续成立" in refresh
+    assert "No Universal World Tour 继续成立" in refresh
+
+
+def test_world_expansion_keeps_public_world_impact_but_not_private_character_state() -> None:
+    book = """# 当前状态、未兑现承诺与作者备注
+
+## PERSISTENT CANON
+### Power / Capability
+顾野现在是天门2重；SECRET_PRIVATE_POWER：只有他知道移动异常怎样触发。
+### Active Relationships
+SECRET_PRIVATE_RELATIONSHIP：顾野与沈照关系亲密。
+### Identity / Access
+顾野已能独立跨州。
+### Knowledge / Enemy State
+顾野知道中域河城群存在。
+### World State
+顾野在三万人的青州会武中以天门2重公开击败天门5重镇州使，并斩杀封锁跨州商路十年的黑角王。第一批商队已经把顾野姓名、2重越级胜5重战绩与商路重开的消息带向中域；青州三宗与边境军府都已因此改变行动。
+### Tracked Assets
+黑曜刀｜顾野｜随身｜完好｜已归属
+"""
+    prompt = generate_split_prompt(
+        mode="world_expansion",
+        book_content=book,
+        creative_direction="传统玄幻",
+        world_vision=WORLD,
+        world_expansions="",
+        creative_state={"world_vision": {"status": "author_approved"}},
+        evolution_scope="macro",
+        effective_from_chapter=101,
+    )
+    assert "顾野在三万人的青州会武" in prompt
+    assert "天门2重" in prompt
+    assert "天门5重" in prompt
+    assert "黑角王" in prompt
+    assert "SECRET_PRIVATE_POWER" not in prompt
+    assert "SECRET_PRIVATE_RELATIONSHIP" not in prompt
+    assert "公开主尺位置" in prompt
+    assert "报价、招揽、敌意、警戒、路线或资源行动" in prompt
+    assert "谁做了什么 → 世界因此怎样变了" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "只保存世界事实，不保存其隐藏能力原理、私人动机、关系或 Build" in DEFAULT_STATE_DELTA_TEMPLATE
 
 
 def test_story_program_prepares_handoff_but_does_not_prewrite_next_world() -> None:
@@ -337,6 +383,10 @@ def test_story_program_prepares_handoff_but_does_not_prewrite_next_world() -> No
     assert "## World Horizon Handoff" in prompt
     assert "不得替尚未生成的下一世界设计宝物、能力、势力、人物" in prompt
     assert "protagonist-blind World Expansion" in prompt
+    assert "Route-Bound Acquisition" in prompt
+    assert "先有人物选择与路线，再有新优势" in prompt
+    assert "No Universal World Tour" in prompt
+    assert "世界大事不是主角必须逐一打卡的升级路线" in prompt
 
 
 def test_handoff_is_extracted_for_orchestration_and_outline_stops_at_it(tmp_path: Path) -> None:
@@ -492,6 +542,16 @@ def test_api_periodic_refresh_flow_requires_fresh_current_character(
     text = story_refresh.json()["prompt"]
     assert "中域武城群沿大河存在" in text
     assert "CURRENT CHARACTER｜Deterministic Forward Snapshot" in text
+
+
+def test_world_vision_prompt_requires_multiple_route_bearing_possibilities() -> None:
+    prompt = generate_split_prompt(
+        mode="world_vision",
+        creative_direction="成熟中文男频玄幻成长长篇",
+    )
+    assert "World Possibility Ecology" in prompt
+    assert "不同的人真的走不同路线时" in prompt
+    assert "不设类别配额" in prompt
 
 
 def test_world_expansion_gbrain_brief_is_protagonist_blind() -> None:

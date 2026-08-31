@@ -160,7 +160,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 - 普通人的生活、上升与失败路径；
 - 当安全、地理或旅行会限制人生时，普通人怎样跨越聚落、谁能独行、哪些现实通道把当前生活连接到更大世界；
-- 力量体系的正常值、稀缺度、境界/能力的可观察差距；先用 1—3 句普通话说清力量来源、直接作用、成长与失败，再给会反复使用的对象/层级短名。**精确力量主尺是强制 Root Grammar**：World 必须选择 `连续数字 / 大境界+数字子级 / 数字序列` 之一，并给出主尺名称、含 `{N}` 的精确位置格式、明确数字精度规则、当前可见数字范围和少量大档位；任何主要修炼者都应能被写成一个唯一精确位置。它只负责 Reader Ruler，不变成总战力分或战斗公式。**Small Grammar, Large Variation**：已有一到少数互补力量操作轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成元能量/总机制；Small Grammar 不等于 Small World，主动让旧规则长出新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外，让读者旧知识持续复利。World 同时主动寻找 0—1 条真正成熟的 Optional Secondary Fantasy Road；没有足够好的创意就不造，也不预设未来主角一定会走。创新放在力量因果和玩法，不靠多个新词互相解释；默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果。对当前会频繁使用的少数力量/价值/身份档位给 1—2 个可感知、可复用 benchmark，供下游稳定比较，不建战力数据库；
+- 力量体系的正常值、稀缺度、境界/能力的可观察差距；先用 1—3 句普通话说清力量来源、直接作用、成长与失败，再给会反复使用的对象/层级短名。**精确力量主尺是强制 Root Grammar**：World 必须选择 `连续数字 / 大境界+数字子级 / 数字序列` 之一，并给出主尺名称、含 `{N}` 的精确位置格式、明确数字精度规则、当前可见数字范围和少量大档位；任何主要修炼者都应能被写成一个唯一精确位置。它只负责 Reader Ruler，不变成总战力分或战斗公式。**Small Grammar, Large Variation**：已有一到少数互补力量操作轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成元能量/总机制；Small Grammar 不等于 Small World，主动让旧规则长出新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外，让读者旧知识持续复利。**World Possibility Ecology 关注的是因果分布，不是能力条目数量**：高价值成长来源要自然挂在不同人物、地点、承诺、季节/时间窗口与长期路线，允许真实选择一条以后错过另一条；不要让一个最显眼机制成为所有人生都会回到的 universal upgrade trunk，也不做能力类别配额。World 同时主动寻找 0—1 条真正成熟的 Optional Secondary Fantasy Road；没有足够好的创意就不造，也不预设未来主角一定会走。创新放在力量因果和玩法，不靠多个新词互相解释；默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果。对当前会频繁使用的少数力量/价值/身份档位给 1—2 个可感知、可复用 benchmark，供下游稳定比较，不建战力数据库；
 - 明确区分 **Public World Knowledge / Mystery**：普通人从小知道的主流力量、粗略强弱尺、当前/下一档现实含义、日常危险、上升入口与价值物，要能被下游直接用普通话说明；环境纹理和专名不能替代基础答案。来源、隐藏原因、幕后关系与未来 reveal 继续进入知识边界；
 - 宗门、王朝、家族、商盟、种族等怎样真实影响人生； named 势力 / 部族若会进入世界大事，同时给一个不剧透的公开类别锚点，让章节期 WORLD AUTHORITY 能回答“它是什么”；
 - 世界里真正值钱、值得人物争夺和羡慕的东西；
@@ -189,7 +189,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 触发由故事边界决定，不按“每 100 章必须扩一次”缴税。100 章可以是普通长篇的观察尺度；真正条件是当前世界层已经难以继续制造新的欲望、尺度、入口或不同 Story Engine，且人物通过具体事件真正来到更高边界。
 
-World Expansion 使用 **GPT-5.6 Luna high 的 protagonist-blind fresh context**：只看 World Root、此前已批准 Expansion、明确的 `Canon → World State` 与小型 World craft；不看 Current Character、Power Stack、Human、关系、Story Handoff 的人物化答案或未来计划。它只创造世界现实，不替 Story 设计“最适合主角的下一件宝物”。
+World Expansion 使用 **GPT-5.6 Luna high 的 protagonist-blind fresh context**：只看 World Root、此前已批准 Expansion、明确的 `Canon → World State` 与小型 World craft；不看 Current Character、Power Stack、Human、关系、Story Handoff 的人物化答案或未来计划。它只创造世界现实，不替 Story 设计“最适合主角的下一件宝物”。但 protagonist-blind 不等于失忆：`World State` 是**世界影响残留（World Impact Residue）**，谁造成并不重要；只要某个行动者已经公开改变跨地区力量估值、势力行为、商路/价格、迁徙、警戒、联盟、传闻或公共入口，而且传播在世界内成立，新 Horizon 就应继承这些后果。若少量公开姓名、精确力量位置/越级战绩已经传播并会改变新区域 actor 的行动，可以保留其分量；不得从这些结果反推隐藏 Power 机制、私人欲望、关系或 Build，也不要求所有新人物围着旧主角反应。
 
 力量尺也服从 Forward Expansion：`scope=macro` 只能延展 World Root 已冻结精确主尺的**可见数字范围**，不得把“每境1—9星”改成初/中/后期或另造第二套全局计数；如果本轮只扩地理/社会，精确尺范围可以 `NONE`。多世界副本流使用同一机制但有双层时钟：跨世界稳定规则留在 Global / Meta World；每个真正独立新世界用 `scope=instance` 追加 Local World Authority，并强制建立自己的**本地精确力量尺**。本地尺帮助读者理解该世界内部位置，但不会反向改写主角全局主尺。离开副本后 Local World 与本地尺从章节 `WORLD AUTHORITY` 退场；真正带走的 Power、物品、关系、身份、知识和 Meta consequence 继续留在 Canon。
 
@@ -356,6 +356,7 @@ Story Program 可以为了让当前关系、局部性格反应或某次选择更
 二者保留，但从固定 stage schema 降级为纵向 reader-appetite / continuity 原则：
 
 - **High-Value Acquisition**：世界自然出现真正让人想要的剑、功法、身份、同伴、洞府、飞舟、名额或其它高价值对象时，让人物真实争取、占有、使用和可能失去；Access / Identity 可以是爽点，但不能长期替代具体 Fantasy Possession。某件功法、兵器、身体变化、奇物或传承已经成为主要欲望时，先让读者知道它为什么值、谁愿意为它冒险、拿到后具体能做什么，再让到手、错失或放弃发生；**真实错失允许有空窗**，刚因关键选择放弃一个已建立欲望的高价值对象时，不为补爽点在同一结算窗口立刻塞分量/功能近似的替代奖励；没有自然机会就不制造；
+- **Route-Bound Acquisition + No Universal World Tour**：后续新 Asymmetry 先来自人物已经因为欲望、关系、风险偏好与既有得失真实走入的路线，而不是先从全 World 搜索最适合 Core 的升级再倒推路线。若 A 路线的选择与 B/C 的高价值窗口真实冲突，允许未选路线由 NPC 继续推进、signature reward 归别人、窗口关闭或改变形态；世界大事不因为“长纲应该完整利用 World”就自动变成主角逐一打卡的升级站。新的独立因果以后仍可让路线重合，同一路线也可以让不同 Human 获得相同能力；目标是保留选择的不可逆后果，不是强制人格→外挂映射；
 - **Compounding**：过去得到的力量、物件、关系、身份、知识与入口一旦成立，就必须继续改变后续行动、选择、敌人应对或世界局面；不要每阶段填 `Compounding Growth`，也不要让旧获得写完即消失。
 
 #### 不负责
@@ -374,7 +375,7 @@ Story Program 可以为了让当前关系、局部性格反应或某次选择更
 
 World Expansion 被作者批准后，先确定性刷新 `CURRENT_CHARACTER.md`；只有这个阶段，Sol high 才第一次同时看到 **Effective World × Current Character**，重新规划当前新的 World Horizon。
 
-Story Refresh 不是把旧 Program 续写几十行，而是 fresh collision：新世界不能为了主角重新改；Current Character 也不能为了适配新世界被重写。旧 Story Program 只保留仍未兑现且仍成立的因果。允许主角错过机会、NPC 拒绝、旧能力在新世界出现意外用途、Human 因私人偏好走非最优路线；新的 Power Asymmetry 只能从新世界已经独立成立的真实机会中获得。
+Story Refresh 不是把旧 Program 续写几十行，而是 fresh collision：新世界不能为了主角重新改；Current Character 也不能为了适配新世界被重写。旧 Story Program 只保留仍未兑现且仍成立的因果。允许主角错过机会、NPC 拒绝、旧能力在新世界出现意外用途、Human 因私人偏好走非最优路线；新的 Power Asymmetry 只能从新世界已经独立成立、且人物真实走入的机会中获得。**No Universal World Tour 同样延续到 Refresh**：Effective World 里的所有大会、遗迹、战争和高价值对象不是主角待办清单；未选路线继续由当地 actor 推进，直到新的独立因果让它再次与人物相交。
 
 真实模型 A/B（普通玄幻 Ch120 + 多世界 Ch80）比较了“单 Sol 全包”与分权路线：单 Agent 两个 Case 都没有获胜，最典型失败是把世界材料、岗位、奖励和人物课程做成当前主角的钥匙孔。最终 production 采用：**独立 World Expansion + 可选独立 Human Development + deterministic Current Character + Sol Re-Collision**。这类 Agent 只在长篇边界运行，不进入每章链。
 

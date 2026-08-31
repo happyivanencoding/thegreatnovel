@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.31
+version: 0.3.33
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -104,6 +104,8 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Growth is longitudinal, not a per-stage / per-block tax
 - Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
 - **Small Grammar ≠ Small World**：审计底层学习成本与 Fantasy Surface 丰富度时必须分开判断；少系统不能成为压掉装备、身体、异兽、环境、奇物、副轴与复合玩法的理由
+- **World Possibility Ecology is route-bearing, not a catalog**：当不同 Human 最后仍拿到同一第二/第三优势时，不要先强迫 Story Program“发不同能力”。先审 World 的高价值成长来源是否实际分布在不同 Living Actors、地点、承诺与时间窗口，还是一个最显眼机制构成所有路线都会回去的 universal upgrade trunk；再追 Story 是否因“把 World 都用上”让主角逐一打卡所有大会/矿塔/战争/秘境。**不要过早停在 `Opportunity → Privilege Delta`：如果给奖励加 route-local 约束后，不同 Human 仍实际访问同一批高价值节点，最早剩余根因是 `Choice → Route` 被 Universal World Tour 重新合流。** PASS 不要求人格→外挂一一映射，而要求真实选择可以改变可达/错过的机会，未选路线由 NPC 继续推进并留下不可逆结果
+- **World Independence ≠ World Amnesia**：protagonist-blind World Expansion 必须隔离 Current Character / 私有 Power / Human / 关系，但不能因此丢掉 `Canon → World State` 已成立的公共后果。若主角或其他行动者已公开改变跨地区力量估值、势力行动、市场/迁徙、警戒、联盟、传闻或公共入口，审计新 Horizon 是否把这些“世界上的凹痕”转化为当地 actor 的报价、招揽、敌意、路线或资源行动；只传播公共事实，不从结果反推隐藏机制或私人关系
 - **Secondary Fantasy Axis is optional but should not be passively erased**：World 可以主动寻找少量成熟候选，Story 主动检查，Human 决定是否成为主角道路；不要因过去反工程化就把真正可欲望的专业强者路一律压成 Supporting Logic
 - **Naming semantics before fragrance**：首读语义准确高于世界气味；名字不能反向授权机制；普通短名已经准确时不为“更独特”强改。lexique 可以提供可丢弃 semantic primitive / naming fragrance，但没有真实 gameplay 或语义增益时应忽略
 - High-value Asymmetry Reveal can carry **three coequal reader-facing payoffs** when the scene supports them: crowd shock / field-wide silence or eruption, expert ruler calibration, and behavioral repricing. Do not downgrade collective shock as inherently cruder; first reveal, new tier/compound, new higher circle, or stale social valuation should trigger renewed calibration rather than one-time opening exposition
