@@ -1917,7 +1917,7 @@ Batch 中途不更新 State/Canon；否则会再次制造 stale。旧 `Director 
 
 Production 因此冻结七条互相配合、但不新增常驻 Agent / Reviewer / Scorer / thread database / 总战力分的长篇原则：
 
-1. **Canon Retained ≠ Plot Advancing**：旧 Rival、人物、资产、家族/故乡线、Mystery 只被记在 Canon / Handoff 不算推进；每个新 Horizon 从最有牵引力的 1—3 条里至少让一条发生新的 reader-visible fact。
+1. **Canon Retained ≠ Plot Advancing**：旧 Rival、人物、资产、家族/故乡线、Mystery 只被记在 Canon / Handoff 不算推进。**本条当时的“每个新 Horizon 从 1—3 条里至少推进一条”已被 14.17 的跨 Human A/B supersede：长期线允许完整休眠；Horizon 需要的是 Local Closure + Book State Mutation，而不是固定旧线回访配额。**
 2. **Book-Level Longitudinal Spine**：`全书成长与核心幻想兑现脊柱` 维护约 2—4 条 60—120章尺度长线，只固定 `当前仍在问什么 → 下一次可见变化类型 → 当前仍必须未知什么`。不预写未来 World、人物、奖励、能力、章号或 Mystery 真相；后续仍由 protagonist-blind World Expansion → fresh Re-Collision 决定当前具体 Horizon。
 3. **Main-World Return Consequence**：多世界回归是 Story Beat。旧获得应周期性改变主世界的 Rival 战术、社会估价、价格、关系、入口、资产或 Mystery，不能长期 `确认能力还在 → 看下一门`。
 4. **Opportunity Collision ≠ Task Board**：多个机会优先作为 Living Actors 已经在做的事围绕同一人/物/地点/时间窗互相破坏；不是三名 NPC 依次报路线+奖励，再让主角做菜单选择。
@@ -1936,6 +1936,34 @@ Chapter 39—40 的 frozen-story **Mechanism Explanation Decay A/B = DIRECTIONAL
 `tgn-system-steward 0.3.39` bounded Luna-high smoke 对原 `STORY_PROGRAM_21_30.md` 正确判为：local Horizon 可工作，但跨 Horizon 是 **Canon retained / Plot dormant**；最早根因在 **Story Program / Story Refresh longitudinal allocation**，不是 State、不是 Writer；Chapter 20 后的问题属于 Return Consequence Collapse。Skill 明确拒绝新增 State 字段、Reviewer/Scorer/Agent、thread database、线程配额和 500章预写大纲。package validate / install / activate 均 PASS。
 
 这轮系统修改保护以下已有 production 不动：protagonist-blind World Expansion、Power/Human 分权、Living Actors、真实错失、Local Ruler 与玄曜主尺分离、Advantage Stack 递归复合、NPC/Rival 不自动复制主角异常栈、AGGRESSIVE payoff、Public Proof 三线、Batch-5 Terra Primary、Sol-high Batch Authority Delta、当前 World Horizon only。新长篇 Spine 负责“这些世界为什么属于同一本书”，不负责把未来世界预先做成主角的任务关卡。
+
+### 14.17 Book Engine / 六书 Spine-Tension 根修（2026-09-01）
+
+14.16 解决了“Canon retained 但 Plot dormant”，但新的六书 source-first 蒸馏与跨 Human A/B 进一步证明：**TGN 的真正缺口不是继续给每个 Horizon 分配旧线程，而是 World Engine 已经强于 Book Engine。** 一个新世界可以独立好看、主角也可以得到新的 Asymmetry；如果 Local Story 结束后整本书没有不可逆的新行动条件，读者仍会感觉是在读多个优秀中篇，而不是同一本越来越厚的长篇。
+
+新蒸馏专项：`reference-corpus/operations/gbrain-longform-spine-tension-v1-20260901`。样本为《一世之尊》《诡秘之主》《大奉打更人》《全球高武》《修真聊天群》《无限恐怖》。Terra 最终 raw-source fidelity 对 21 个 canonical TXT windows 判 `PASS_WITH_EDITS`；若早期 per-book Evidence / Synthesis 与 `FINAL_RAW_SOURCE_FIDELITY_AUDIT.md` 冲突，以 Final Audit 的 locator 与角色判断/旁白事实边界为准。Sol 跨书 synthesis 最重要结论是 **NEW = 0**：主角张力、Book-Level Spine、Character Asset Afterlife 与 Payoff Pressure 都能通过现有机制 refinement 覆盖，不需要新增 Book Engine 大卡、Character Tension Score、Thread DB、Relationship Portfolio 或 Payoff Scorer。
+
+这批研究给出四条更精确的长期判断：
+
+1. **Behavior Signature = Decision Vector；Signature ≠ Tension**：Signature 只回答“这个人通常怎样去要”；真正人物张力来自两样 Frozen Human 已经认可、都真有价值却不能同时完整取得的东西。选择应改变对象、顺序、路线、暴露、谁承担代价或哪项机会被放弃；第三条路可以存在，但不能无损全拿。不同 Horizon 改变冲突形态，不把“钱 vs 人 / 安全 vs 自主”固化成统一模板，也不为证明人物深度反向制造创伤。
+2. **Local Closure + Book State Mutation**：自然 Horizon 用双结算。Local Closure 让当前世界主要争夺、选择、敌人或关系现场真正结束；Book State Mutation 让至少一个以后仍与整本书相关的人、关系、身份、资产、敌人策略、价格、知识或世界事实从此不能再完全按旧状态运作，并产生新的行动条件。这个主体可以来自成熟旧线，也可以是当前 Horizon 新建立、以后会继续生效的长期因果；**没有“每个 Horizon 必须推进 1—3 条旧线”的回访税。**
+3. **Historical Recontextualization**：纵向复利不只是“旧能力/资产还在”。Power / Asset / Relationship / Identity / Knowledge 进入新的敌人、关系或世界条件时，应有机会改变用途、风险、选择价值或社会价格；可概括为 `Carry → Recontextualize → Combine → Consequence / Reprice`。同一能力只是换地图原样再用一次属于 continuity，不是新的 compounding。
+4. **Character / Relationship Afterlife 不要求肉身回归**：重要人物可以离屏、死亡、沉睡甚至永久不回场；遗产、能力缺口、权限、债务、可靠消息、关系换位或敌方策略只要仍改变当前选择、代价、时间窗口或可用行动，就说明历史还活着。反过来，固定召回旧 NPC、给所有人物独立支线或让所有 Spine 同时亮灯，是新的 Book Engine 过度治理。
+
+source-blind A/B 没有支持整包 Treatment 直接上线，而是形成 **SELECTIVE DIRECTIONAL PASS**。宁烬 21—30 的 current production Control 胜：它已经有很强的 Main-World Return Consequence——旧 Rival 真换战术、高位势力真换报价；Treatment 虽让“不能全拿”的人物选择更尖，却削弱了这层 Book-level mutation。因此原有 Return Consequence 必须保护。普通单世界闻野舟样本则 Treatment 胜：主角会为顾晚禾真实错过已经打开的上升机会，未选路线继续由 Living Actors 推进；后来又会为了兵器/王种心核反向不追顾晚禾；旧失败、旧兵器和旧关系在新语境中改变后续，而不是库存式复用。跨 Human 结果说明可以升级 Decision Vector / Book Mutation / Historical Recontextualization，但不能把完整 pressure bundle 机械写进所有书。
+
+修改后的正式 production Prompt 随后做了**不再附加 Treatment Bundle**的双样本 Sol-high post-change 复验，两案均直接读 **PASS**：
+
+- 《我身藏诸界》21—30：宁烬在折粮刀所有权 vs 亲眼追到不存在的北门/赢下结果之间形成真实选择；第三条路仍留下河湾家园损失、骨口再裂与最终折粮刀留给岑非灯。归锋夜 Local Closure 后，乔小满不能再站在只安排别人搬走的旧位置、陆停山失去旧残盾追索路线、宁烬取得会限制退出自由的兵印；回玄曜后天外商会从拦路争静态遗物改为收起兵器、停舟邀请宁烬本人并上报真实异界往返。**裴照临本轮明确休眠，没有为了“长篇感”机械召回；Return Consequence 仍由天外商会真实承担。**
+- 闻野舟单世界：人物仍完全不同于宁烬。稳定偏向是“仍有鲜活回应的一边”，具体选择会在人、被真正懂行者看见、器物、胜负与未知之间变化；他会为百猎榜留下不追顾晚禾，也会为顾晚禾/幼兽错过桑照训练，后来争王种心核时又反过来不追她。无声台失败、桑照旧兵器、梁烬锻刀、走劲甲与新脱身兽性持续 recontextualize。蜕壳城阶段完成 `Local Closure + Book State Mutation`，但 `World Horizon Handoff = NOT YET`，因为当前世界仍有反生林、空腔原、王种墓场等不同 Story Engine 的真实纵深；系统没有把“一个大阶段讲完”误判成“必须换世界”。
+
+Production 实现没有新增字段/Agent：`PROTAGONIST_BEHAVIOR_SIGNATURE_DIRECTION` 正式升级为 Decision Vector；`FANTASY_COMPOUNDING_DIRECTION` 增加 Historical Recontextualization；`LONGITUDINAL_THREAD_ADVANCE_DIRECTION` 改为 Local Closure + Book State Mutation 并删除旧线配额；Story Program 仍在原 `Stage Delta` 中写 Mutation，不新增 `BookMutation` schema；Story Refresh 同步取消回访税，同时保留更具体、更强的 Main-World Return Consequence。
+
+GBrain 同样遵循 **NEW = 0**：没有新卡，只对现有 10 张 active mechanism 原位 refinement：`thread-ecology`、`longitudinal-thread-dormancy-collision-afterlife`、`thread-collision`、`character-autonomy`、`narrative-compounding`、`story-state-compounding`、`plot-engine-variation`、`reward-action-space`、`reward-afterlife`、`minimum-sufficient-public-proof`。`PILOT_MANIFEST.json` 记录本次 `last_refinement_operation`；每张卡增加六书专项 provenance。最终 GBrain 为 **3834 Pages / 15863 Chunks / 15863 Embedded**，起始已有的 4 个 stale embedding debt 已全部补齐，`Embedded == Chunks`。TGN scoped retrieval regression 通过；真实 `story_refresh` 默认 bundle 仍稳定返回 `thread-collision / plot-engine-variation / longitudinal-thread-dormancy-collision-afterlife` 三条互补 craft，research operation raw 页面没有绕过 active-card 边界进入 production。
+
+审计方法同步升级为 **`tgn-system-steward 0.3.40`**：新增 World Engine can outrun Book Engine、Local Closure vs Book State Mutation、Signature ≠ Tension、Historical Recontextualization ≠ Inventory Reuse、Character Afterlife ≠ Recall Quota。Skill package `validate / install / activate` PASS，digest `sha256:db0b537dad6f9b718c40ea9fb81e03e94944f1a4b5be6d6937094e5877d2987a`。bounded Luna-high smoke 对旧 `STORY_PROGRAM_21_30.md` 正确给出：`World Engine PASS / Local Closure PASS / 一般 Book State Mutation PASS / Main-World Return Consequence FAIL / 整体 DIRECTIONAL PASS`；它明确允许旧线休眠、拒绝每 Horizon 1—3 条回访税，并把最早缺口定位在 Story Program / Handoff，而不是 State 或 Writer。
+
+本轮依然保护 Batch-5、Terra-high Primary、Sol-high Batch Authority Delta、protagonist-blind World Expansion、Power/Human 分权、Living Actors、真实错失、精确力量尺、AGGRESSIVE payoff、Public Proof 三线和当前 World Horizon only。专项 Prompt/Character tests **12/12 PASS**；全仓回归迁移 1 条已被新 Decision Vector 语义 supersede 的旧字面断言后，最终 **504/504 PASS**。GBrain 最终再次执行 `embed --stale` 为 **Embedded 0**，确认无新增 debt，仍是 **15863/15863**。下一步真正还未证明的是 100/200/300 章**正文级**长期稳定性；不能因为 planning 双样本 PASS 就声称几百章问题已经彻底解决。
 
 ---
 
@@ -1992,7 +2020,7 @@ Chapter 39—40 的 frozen-story **Mechanism Explanation Decay A/B = DIRECTIONAL
 
 ### 15.7 用户说“审计”时有固定协议
 
-自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本见本地/AgentDock live discovery（当前已验证为 **0.3.39**）；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、World Possibility Ecology 是否形成单一机制盆地、Story Program 是否用 Universal World Tour 把不同 Human 重新拉回同一高价值节点、World Expansion 是否“protagonist-blind 但失忆”、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
+自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本见本地/AgentDock live discovery（当前已验证为 **0.3.40**）；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **World Engine 是否强于 Book Engine、Local Closure 是否留下 Book State Mutation、Signature 是否被误当 Tension、Historical Recontextualization 是否退化成库存复用、Character Afterlife 是否被误写成旧人回访税**，以及 Small Grammar / World Possibility Ecology / Universal World Tour / protagonist-blind World State / Secondary Fantasy Axis / Naming 等既有能力。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
 
 ### 15.8 Docs 要言简意赅
 

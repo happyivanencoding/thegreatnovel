@@ -3328,7 +3328,8 @@ def test_protagonist_behavior_signature_is_fixed_upstream_and_drives_choices() -
     program = DEFAULT_PROMPT_TEMPLATES["idea"]
     assert "主角行为签名" in seed
     assert "### 主角欲望人格与行为签名" in seed
-    assert "不要从预设的优秀男主标签库拼人格" in seed
+    assert "Signature ≠ Tension" in seed
+    assert "第三条路不能无损全拿" in seed
     assert "不自动修正成“靠谱有底线的优秀男主”" in seed
     assert "主角欲望人格与行为签名属于创意权威" in world
     assert "不能为了让主角更成熟、更合理或更容易协调多方利益" in world

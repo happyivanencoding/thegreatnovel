@@ -347,6 +347,8 @@ Story Program 可以为了让当前关系、局部性格反应或某次选择更
 - 这类为人物/关系新补的过去**不得自动成为小说主线或大型阶段发动机**；
 - **历史事实与历史揭示分开**：Story Program 可以知道某件过去存在，但 Outline 只在当前故事真正需要时安排读者逐步看到其中一小部分，不一次性倾倒完整往事。
 
+人物统一性优先来自 **Decision Vector**，不是重复标签：Behavior Signature 只说明“这个人通常怎样去要”，不直接提供剧情。真正 Tension 要等 Frozen Human 中两样都真实有价值的东西在现场不能同时完整取得时才成立；选择应改变路线、对象、暴露、谁付代价或哪项机会真实错过。第三条路可以存在，但不能让人物聪明地无损全拿。不同 Horizon 应改变冲突形态，不把“钱 vs 人”“安全 vs 自主”等一组对立写成重复模板。
+
 #### 当前轻量阶段合同
 
 每个阶段只回答：
@@ -365,6 +367,7 @@ Story Program 可以为了让当前关系、局部性格反应或某次选择更
 - **High-Value Acquisition**：世界自然出现真正让人想要的剑、功法、身份、同伴、洞府、飞舟、名额或其它高价值对象时，让人物真实争取、占有、使用和可能失去；Access / Identity 可以是爽点，但不能长期替代具体 Fantasy Possession。某件功法、兵器、身体变化、奇物或传承已经成为主要欲望时，先让读者知道它为什么值、谁愿意为它冒险、拿到后具体能做什么，再让到手、错失或放弃发生；**真实错失允许有空窗**，刚因关键选择放弃一个已建立欲望的高价值对象时，不为补爽点在同一结算窗口立刻塞分量/功能近似的替代奖励；没有自然机会就不制造；
 - **Route-Bound Acquisition + No Universal World Tour**：后续新 Asymmetry 先来自人物已经因为欲望、关系、风险偏好与既有得失真实走入的路线，而不是先从全 World 搜索最适合 Core 的升级再倒推路线。若 A 路线的选择与 B/C 的高价值窗口真实冲突，允许未选路线由 NPC 继续推进、signature reward 归别人、窗口关闭或改变形态；世界大事不因为“长纲应该完整利用 World”就自动变成主角逐一打卡的升级站。新的独立因果以后仍可让路线重合，同一路线也可以让不同 Human 获得相同能力；目标是保留选择的不可逆后果，不是强制人格→外挂映射；
 - **Compounding**：过去得到的力量、物件、关系、身份、知识与入口一旦成立，就必须继续改变后续行动、选择、敌人应对或世界局面；不要每阶段填 `Compounding Growth`，也不要让旧获得写完即消失。
+- **Historical Recontextualization**：Compounding 不只是“旧东西还能用”。旧 Power / Asset / Relationship / Identity / Knowledge 进入新的敌人、关系或世界条件时，优先寻找它是否改变了用途、风险、选择价值或社会价格；可概括为 `Carry → Recontextualize → Combine → Consequence / Reprice`。同一能力换地图原样再用一次不算新的复利；也不要求每个 Horizon 强行给每件旧资产换功能。
 
 #### 不负责
 
@@ -384,9 +387,9 @@ World Expansion 被作者批准后，先确定性刷新 `CURRENT_CHARACTER.md`�
 
 Story Refresh 不是把旧 Program 续写几十行，而是 fresh collision：新世界不能为了主角重新改；Current Character 也不能为了适配新世界被重写。旧 Story Program 只保留仍未兑现且仍成立的因果。允许主角错过机会、NPC 拒绝、旧能力在新世界出现意外用途、Human 因私人偏好走非最优路线；新的 Power Asymmetry 只能从新世界已经独立成立、且人物真实走入的机会中获得。**No Universal World Tour 同样延续到 Refresh**：Effective World 里的所有大会、遗迹、战争和高价值对象不是主角待办清单；未选路线继续由当地 actor 推进，直到新的独立因果让它再次与人物相交。
 
-Refresh 现在还承担一项此前容易被“保存 Canon”掩盖的职责：**让少数跨 Horizon 长线真的继续发生。** 它从 Existing Canon / 旧 Program / Current Character 中选择当前最有牵引力的 1—3 条 Rival、关系、主世界身份、旧收益、家族/故乡线或 Mystery，本轮至少安排其中一条产生新事实；只把它继续列在 `仍值得追` 不算推进。多世界 instance 若最终返回主世界，优先检查这次回归能否自然触发已有 Rival 的新反制、旧估值重定价、旧资产兑现、旧关系再进入或 Mystery 新证据。没有传播/接触因果时可以延后，但要让别的长期线程继续滚动，不能把“下一个世界很酷”当作唯一长篇引擎。
+Refresh 现在还承担一项此前容易被“保存 Canon”掩盖的职责：**让当前 Horizon 结束时真正改变整本书，而不是给旧线点名。** 长期 Rival、关系、主世界身份、旧收益、家族线或 Mystery 可以完整休眠一个甚至多个 Horizon；只有新物证、新策略、新关系位置、新价格、新限制或新行动窗口改变后续选择，才算 Plot advancing。自然 Horizon 使用 `Local Closure + Book State Mutation` 双结算：前者把当前世界主要故事真正讲完；后者让至少一个以后仍相关的人、关系、身份、资产、敌人策略、价格、知识或世界事实不能再按旧状态运作，并产生下一段真实行动条件。这个 Mutation 可以来自成熟旧线，也可以来自本轮新建立的长期因果；**不再要求每个 Horizon 必须推进 1—3 条旧线**。多世界 instance 若最终返回主世界，原有更强的 Return Consequence 仍优先：已有 Rival 的新反制、旧估值重定价、旧资产兑现、关系再进入或 Mystery 新证据只要因果自然就应真正落地；没有传播/接触因果时不强插消息或召回。
 
-这并不等于恢复“提前写死500章总纲”。Story Program 已有的 `全书成长与核心幻想兑现脊柱` 现在同时维护 **2—4 条约60—120章尺度的 Book-Level Longitudinal Spine**：例如长期 Rival、主角人生/家族线、Meta Mystery、主世界社会位置或反复可回访的重要关系/资产。每条只固定 `当前核心问题 → 下一次可见升级应是什么类型 → 当前仍不能回答什么`，不预写未知世界、未来章号或 Mystery 真相。这样 TGN 同时保留“只具体规划当前 World Horizon”的 fresh-context 优势，又不让整本书退化成一串各自优秀的十章中篇。
+这并不等于恢复“提前写死500章总纲”。Story Program 已有的 `全书成长与核心幻想兑现脊柱` 继续维护 **2—4 条约60—120章尺度的 Book-Level Longitudinal Spine**：例如长期 Rival、主角人生/家族线、Meta Mystery、主世界社会位置或反复可回访的重要关系/资产。每条只固定 `当前核心问题 → 下一次什么类型的新事实会改变它 → 当前仍不能回答什么`，不预写未知世界、未来章号或 Mystery 真相；Spine 本身允许休眠，不是回访配额。这样 TGN 同时保留“只具体规划当前 World Horizon”的 fresh-context 优势，又让每次 Local Closure 通过 Book State Mutation 真正成为同一本书的历史。
 
 同时，**多机会碰撞不应写成任务面板。** 世界可以有明确交易和报酬，但高价值路线优先通过 Living Actors 正在做的事，在同一个人、物、地点或时间窗口上互相冲突；避免稳定生成“三个人依次报任务/奖励 → 主角比较菜单 → 选择一项”。主角是在正在发生的故事里选择，不是在世界设定的奖励列表里选 Build。
 

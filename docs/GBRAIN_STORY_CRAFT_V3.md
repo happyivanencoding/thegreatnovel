@@ -252,3 +252,19 @@ TGN retrieval regression 通过：SP01 仍以 `plot-engine-variation` 为首，S
 正式 GBrain 只新增 **3 张 `REFERENCE_ONLY / active_inspiration:false` source book cards + 1 张 active PILOT mechanism**。曾尝试给 4 张旧 mechanism 增加 alias/evidence，但 retrieval regression 显示会扰动既有排序，因此该修改已撤回；最终不通过“顺手增强旧卡”制造检索噪声。
 
 Runtime 从 `3786 Pages / 15783 Chunks / 15783 Embedded` 更新为 **`3790 Pages / 15790 Chunks / 15790 Embedded`**，embedding debt = 0。明确 Mystery query 中 `actionable-hypothesis-reconstruction-loop-v3` 为 rank 1；单元关系残留 query 仍由既有 `story-state-compounding` 等机制主导；三张原著 book cards 在 production retrieval 中因 `active_inspiration:false` 被正确拒绝；Reward 等无关查询未被新 Mystery mechanism 抢占。
+
+## Long-form Spine / Protagonist Tension 六书 refinement（2026-09-01）
+
+新专项 `reference-corpus/operations/gbrain-longform-spine-tension-v1-20260901` source-first 复核《一世之尊》《诡秘之主》《大奉打更人》《全球高武》《修真聊天群》《无限恐怖》。最终 Terra raw-source fidelity 对 21 个 canonical TXT windows 判 **PASS_WITH_EDITS**；跨书 Sol 结论为 **NEW = 0**：主角张力、Book-Level Spine、Character Asset Afterlife 与 Payoff Pressure 都能由现有机制小修覆盖，不新增“主角张力卡”、Book Engine 大卡或 Payoff Scorer。
+
+source-blind A/B 没有支持整包 Treatment 直接上线，而是得到 **SELECTIVE DIRECTIONAL PASS**：
+
+- 《我身藏诸界》21—30 的当前 production Control 胜，原因是它已经有更强的 Main-World Return Consequence——旧 Rival 真换战术、高位势力真换报价；Treatment 虽让局部“不能全拿”更尖，却削弱了这层 Book Mutation；
+- 普通单世界闻野舟样本则 Treatment 胜，主要增益来自 `Choice → Route`、未选路线继续由 NPC 推进、旧资产/关系在新语境重新进入因果；
+- 因此 production 只吸收 **Decision Vector / Signature ≠ Tension、Local Closure + Book State Mutation、Historical Recontextualization、Character Afterlife without recall tax**，并保护现有更强的 Return Consequence。
+
+GBrain 仍保持 10 张旧 active mechanism 分离，只做原位 refinement：`thread-ecology`、`longitudinal-thread-dormancy-collision-afterlife`、`thread-collision`、`character-autonomy`、`narrative-compounding`、`story-state-compounding`、`plot-engine-variation`、`reward-action-space`、`reward-afterlife`、`minimum-sufficient-public-proof`。每张都补了本专项 provenance；`PILOT_MANIFEST.json` 记录 `last_refinement_operation`，没有新增 active card 或 retrieval slot。
+
+Embedding 最终状态为 **3834 Pages / 15863 Chunks / 15863 Embedded**，debt = 0。最初 4 个 stale chunk 来自既有 `my-dear-diary/*` 页面，不是本轮小说卡；使用当前机器合法环境配置后补齐 4/4。TGN scoped retrieval regression 通过：`thread-ecology`、`story-state-compounding / narrative-compounding`、`plot-engine-variation` 仍可直接命中；真实 `story_refresh` 默认 bundle 仍稳定返回 `thread-collision / plot-engine-variation / longitudinal-thread-dormancy-collision-afterlife` 三条，研究 operation raw 页面没有越过 active-card 边界进入 production。
+
+完整 promotion 边界与 A/B 记录见该专项 `FINAL_REPORT.md`；若早期 per-book Evidence / Synthesis 与 `FINAL_RAW_SOURCE_FIDELITY_AUDIT.md` 冲突，以 Final Audit 的 locator 与事实/角色判断边界为准。

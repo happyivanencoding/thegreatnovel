@@ -19,6 +19,7 @@ from .prompts import (
     OUTLINE_TEMPLATE,
     PERSISTENT_GLOBAL_PROGRESS_RULER_DIRECTION,
     PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION,
+    PROTAGONIST_BEHAVIOR_SIGNATURE_DIRECTION,
     PUBLIC_WORLD_KNOWLEDGE_CLARITY,
     STORY_PROGRAM_TEMPLATE,
     format_references,
@@ -274,6 +275,8 @@ Authority：
 
 核心方法：**Independent World × Current Character → Fresh Collision。**
 
+{PROTAGONIST_BEHAVIOR_SIGNATURE_DIRECTION}
+
 {LONGITUDINAL_THREAD_ADVANCE_DIRECTION}
 
 {MAIN_WORLD_RETURN_CONSEQUENCE_DIRECTION}
@@ -289,7 +292,7 @@ Authority：
 - Human 决定选择，不用“长期成长最优解”覆盖人物。新世界出现多个高价值机会时，允许人物因钱、赢、好奇、爱情、兄弟、虚荣、报复、享受、自由等走不同路线。
 - 新阶段应真正换 Story Engine / Reading Question；不要只把旧阶段的“接任务→危险地点→胜利→奖励”换皮。
 - 旧获得要继续改变新阶段；新获得以后也必须留下，而不是阶段结束 reset。
-- **旧线不能只被保存。** 从 Existing Canon / 旧 Story Program / Current Character 里挑当前最有牵引力的 1—3 条跨 Horizon 线，在本轮安排至少一条真正发生新事实；如果本轮是 instance 且最终回主世界，优先让回归本身改变一个已有 Rival、旧社会估值、旧家族/关系、旧资产或长期 Mystery 的可见状态。没有自然传播或接触因果时可以延后，但要写清为什么延后，不能把“还在 OPEN PROMISES”当作已经推进。
+- **旧线不能只被保存，但也没有每 Horizon 回访税。** 成熟旧线只有在新的世界/关系/利益条件会真实改变它的意义、可行性或人物选择时才重新进入前景；没有自然接触时允许完整休眠。当前 Horizon 真正结束时，必须形成 `Local Closure + Book State Mutation`：局部故事结账，同时至少一个以后仍相关的人、关系、身份、资产、敌人策略、价格、知识或世界事实不能再按旧状态运作。若本轮是 instance 且最终回主世界，`Main-World Return Consequence` 继续优先保护已有 Rival / 社会估值 / 资产 / 关系 / Mystery 的真实后果；不要为了满足旧线数量强行插消息或召回。
 - 世界扩张后重新校准 Reader Ruler、Social Repricing 与新 World Entry，但不把说明写成百科。
 - 普通长篇规划一个自然大型阶段；多世界 instance 则规划当前副本 + 回归后真正留下的 consequence。都不要逐章。
 - 只刷新未来，不重写已完成章节，不发明旧历史。

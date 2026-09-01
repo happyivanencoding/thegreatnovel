@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.39
+version: 0.3.40
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -102,7 +102,11 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Character is a person, not a psychological proof
 - **Human candidate needs Action Evidence, not another personality sentence**：候选期 Non-Canon Audition 应用一个小而真实的取舍现场检验 competing motives / relationship 是否会落成行动与机会成本；Audition 不是 Canon，不新增人物历史，也不能把一次表现固化成“以后每次都这样”的人格算法
 - Growth is longitudinal, not a per-stage / per-block tax
-- **Canon retained ≠ Plot advancing**：Open Promise / Canon / Handoff 完整保留只证明系统没失忆；多世界长篇仍要审计当前最有牵引力的 Rival、旧人物、旧资产、家族线或 Mystery 是否跨 Horizon 轮流产生新事实。反复“进世界→得能力→回来→下一世界”而主世界/Rival/旧关系30章不动，最早坍缩通常在 Story Program / Story Refresh 的 longitudinal thread allocation，不先怪 Writer
+- **Canon retained ≠ Plot advancing**：Open Promise / Canon / Handoff 完整保留只证明系统没失忆；成熟旧线可以休眠，只有新物证、新策略、新关系位置、新价格、新限制或新行动窗口真实改变后续选择时才算推进。多世界若长期只剩“进世界→得能力→回来→下一世界”，而每个 Horizon 的结账都没有留下 Book State Mutation，最早坍缩通常在 Story Program / Story Refresh，不先怪 Writer；但不要把修法反转成固定旧线回访配额
+- **World Engine can outrun Book Engine**：每个 Horizon 都独立成立、世界规则新鲜、主角每次也拿到新 Asymmetry，仍可能只是“多个优秀中篇串联”。审计自然 Horizon 结尾时分开问 `Local Closure` 与 `Book State Mutation`：当前局部故事是否真正结账；结账后又有哪个以后仍相关的人、关系、身份、资产、敌人策略、价格、知识或世界事实不能再按旧状态运作，并因此产生新行动条件。字段增加、等级上涨、Open Promise 保留或“世界更大”本身不算 Book Mutation。这个 Mutation 可以来自成熟旧线，也可以来自本轮新形成的长期因果，**不要求每 Horizon 召回旧线程**
+- **Signature ≠ Tension; audit Decision Vector through incompatible values**：Behavior Signature 只证明“这个人通常怎样要”；真正人物张力要看 Frozen Human 已成立的两样私人价值是否在具体现场不能同时完整取得，并迫使人物改变路线、对象、暴露、谁承担代价或真实放弃一项机会。第三条路如果让人物聪明地无损全拿，不算 tension。不要为了补张力反向造创伤，也不要把同一“安全 vs 自主 / 钱 vs 人”选择题复制到每卷
+- **Historical Recontextualization ≠ Inventory Reuse**：旧 Power / Asset / Relationship / Identity / Knowledge 被记住、换地图后原样再用，只说明 continuity。真正 longitudinal compounding 要看新敌人、关系或世界条件是否让旧积累改变用途、风险、选择价值或社会价格；可用 `Carry → Recontextualize → Combine → Consequence / Reprice` 作为诊断链，但不要求每件旧资产每卷换功能
+- **Character Afterlife does not imply recall quota**：重要人物可以离屏、死亡、沉睡或永久不回场；遗产、能力缺口、权限、债务、可靠消息、关系换位或敌方策略只要仍改变主角当前选择、代价、时间窗口或可用行动，就说明关系/人物历史仍在产生因果。反过来，为了证明“关系有长期性”而固定每卷召回旧人、给所有 NPC 独立支线或让所有 Spine 同时亮灯，是新的 Book Engine 过度治理
 - **Return consequence matters in multiworld fiction**：Hub / 主世界回归不必每次打脸，但旧获得应周期性改变社会估价、敌人策略、关系、资产、入口或 Mystery；若回归只确认能力存在并开启下一门，属于 long-form compounding failure
 - **Opportunity Collision ≠ Task Board**：多个高价值路线可以交易、有报酬，但优先由 Living Actors 正在做的事在同一个人/物/地点/时间窗口相撞；“多个 NPC 依次报任务奖励→主角菜单选择”要追到 Story / Outline，而不是靠正文说“这不是任务”掩盖
 - **Persistent Global Progress Ruler**：Local instance ruler 可以换，但长期至少有一条不重置 reader coordinate；默认先看 Root 主力量尺，Plot pace 长期快于 Tier pace 时再看 Meta 能力/器物是否从已发生故事自然形成简单进度。不得凭空设计未来阶段或合成总战力分

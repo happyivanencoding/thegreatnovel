@@ -150,7 +150,20 @@
 
 如果每个 arc 结束后像重新开局，复利失败。
 
-这里必须再追一层：**Canon retained ≠ Plot advancing。** 如果旧 Rival、旧人物、旧收益、家族/故乡线、Mystery 只是被完整保存在 `OPEN PROMISES / Canon / Handoff`，几十章没有产生任何新事实，系统只是没有失忆，长篇并没有真正复利。多世界小说尤其检查：是否持续出现“进世界 → 得能力 → 回来 → 下一世界”，而读者继续看的主要理由只剩“下一地图也许很酷”；若是，最早问题通常在 Story Program / Story Refresh 的 longitudinal thread allocation，不应先怪 Writer。
+这里必须再追一层：**World Engine 强，不等于 Book Engine 强。** 每个 arc / World Horizon 都可能独立好看、能力也持续增加，但如果它们结束后整本小说没有不可逆地多出新的行动条件，读者仍会感觉是多个中篇串联。
+
+先分开审计两件事：
+
+- **Local Closure**：当前世界的主要争夺、选择、敌人或关系现场是否真的结账；
+- **Book State Mutation**：结账以后，哪个以后仍相关的人、关系、身份、资产、敌人策略、价格、知识或世界事实不能再完全按旧状态运作？下一次行动因此多了什么真实条件？
+
+Book Mutation 可以来自成熟旧线，也可以来自本轮新建立、以后会继续有因果的主体。**不要反过来设置每 Horizon 旧人回访税。** 长期 Rival、旧关系、旧资产或 Mystery 可以完整休眠；提醒名字、保存 Open Promise、再展示一次旧物只算 retained / reminder。只有新物证、新策略、新关系位置、新价格、新限制或新行动窗口真正改变后续选择，才算 Plot advancing。
+
+人物层同时检查 **Signature ≠ Tension**：Behavior Signature 只回答“这个人通常怎样要”；真正的 Decision Vector 要在 Frozen Human 已认可的两样私人价值不能同时完整取得时，通过路线、对象、暴露、谁付代价或真实错失表现出来。若人物靠“聪明”找到了无损第三解，Tension 实际没有发生；也不要为了补 Tension 反向造创伤或每卷复制同一道选择题。
+
+历史复利也不能只看“旧能力还在”：用 `Carry → Recontextualize → Combine → Consequence / Reprice` 追踪旧 Power / Asset / Relationship / Identity / Knowledge 是否在新敌人、关系和世界条件中改变用途、风险、选择价值或社会价格。换地图原样再用一次属于 continuity，不是新的 compounding。
+
+人物/关系的 afterlife 不要求肉身回归。遗产、能力缺口、权限、债务、可靠消息、关系换位或敌方新策略，只要仍改变当前选择、代价、时间窗口或可用行动，就说明历史还活着；反之固定召回旧 NPC 只是“关系维护流程”。
 
 主世界/Hub 回归也应按同一标准审计：不要求每次打脸，但过去带回的 Power / Asset / Identity / Relationship / Knowledge 是否周期性让旧社会重新定价、Rival 改策略、旧人物重新行动、旧资产到账/引祸、或长期 Mystery 多出一个可行动的新事实？如果回归长期只负责确认能力还在和打开下一扇门，属于 **Return Consequence Collapse**。
 
