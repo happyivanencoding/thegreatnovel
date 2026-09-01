@@ -1,0 +1,163 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "story_refresh",
+  "effective_query": "\"plot engine variation\" OR \"thread ecology\" OR \"reward recontextualization\" OR \"world entry\"",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"plot engine variation\" OR \"gameplay counterplay\" OR \"world entry\"",
+    "\"thread ecology\" OR \"thread collision\" OR \"reward recontextualization\"",
+    "\"advantage compounding\" OR \"high value acquisition\" OR \"relationship gravity\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：story_refresh\n作者当前方向：《我身藏诸界》继续写第11—20章。作者已经决定进入本轮刚批准的 instance 世界，不改成留在天都。世界先独立成立，Story Refresh 再让宁烬按自己的贪、好胜、好奇与关系选择路线。\n本轮必须在自然高潮前后让宁烬**亲自赢下一条该世界独有的永久可能性**，并让它至少一次与已有“双真”产生单项做不到的复合；不要只给宝物/资格。取得必须 route-bound、有真实冲突和不可回头选择，不从全世界挑最适合 Build 的礼包。\n主尺成长不要过度克制：30章总跨度足以正常升若干小重，只要资源/战斗/修炼因果成立就可以真升级；但世界可能性本身不免费送境界。裴照临可正常成长并继续做 raw-ruler 压力，却不自动获得平行递归异常栈。\n每个 instance 的 Story Engine、人物关系与核心高价值场景都要明显不同；世界规则要改变人物命运/关系，不只当战斗机关。结尾返回玄曜或形成清楚的下一世界因果，并保留已发生资产、伤势与关系。\n已批准 World Vision：\n# PROTAGONIST-BLIND WORLD VISION\n\n玄曜大界由九重天、三十六天洲、数百王朝、宗门与古族构成。天洲间有跨洲天舟与天外商路；王境以上可横渡远空，圣境与帝境能把战斗影响扩到山河、天域。天外遗物与真实世界裂口极少见，但已经进入顶层强者和天外商会的争夺视野。\n\n## 普通人的生活与上升\n普通修士从锻体、通脉进入灵海后才真正具备独立远行与争夺天洲级机缘的资格。大多数人依靠宗门、古族、王朝、商会、武馆或天舟商路往上走；天外遗物、古代遗迹、跨洲宝会会把原本接触不到的强者与资源拉到同一场合。\n\n## 力量体系与正常值\n玄曜大界主流公开力量为九境九重：锻体、通脉、灵海、神台、天门、王、圣、帝、天外；每境一至九重。境界是公开位置尺，不是胜负公式，器物、技法、经验、环境与异常能力都能制造越级结果。\n\n### 精确力量主尺｜Frozen Grammar\n主尺类型：大境界+数字子级\n主尺名称：玄曜九境九重\n精确位置格式：{大境界}{N}重\n数字精度规则：每境1—9\n当前可见范围：灵海1—9；神台1—9；天门1—9；王境1—9；圣境1—9；帝境1—9；天外境1—9\n当前大档位：锻体境、通脉境、灵海境、神台境、天门境、王境、圣境、帝境、天外境\n\n## 社会现实与身份\n天洲大城公开尊重力量、资产、出身与已经被见证的战绩，但高位人物不会因为一次奇观自动知道他人的隐藏机制。天外商会以宝物、路线和跨洲交易闻名；古族与王朝更看重长期力量、血统与可控制资源。公开重新估价可以直接改变报价、招揽、敌意与待遇。\n\n## 世界里真正值钱、值得想要的东西\n高阶功法、神兵、异兽、天外火种、跨洲坐骑、王境以上传承、天外遗物与能打开新世界/新空间的真实媒介都足以引发争夺。最稀有的天外遗物未必提供单纯力量，也可能改变一个人原本被天地限制的行动方式。\n\n## 世界知识边界\n玄曜修士知道天外存在不能完全用本界解释的遗物和裂口，但普通人不知道诸界数量、来源与完整规则。一个人通常只有一个真实身体、一个魂与一个真实坐标；幻术、傀儡和分身都被视为替代物，而不是第二个同等真身。\n\n## 世界正在发生的大事\n九环天都的天外珍宝拍卖刚因黑门骨与异界裂口引发大乱；天外商会、裴氏与其它高位势力都开始重新估价这件遗物与相关见证者。更远天洲仍有自己的战争、宝会、宗门竞争和古族冲突，不围绕某个单一人物运转。\n\n## 值得进入的地点、奇观与未知\n九环天都、跨洲天舟、天外遗迹与真实异界裂口仍是当前最直接的世界外缘。黑门骨曾映出三个完全不同的世界影子，但这些世界自身是什么、为何如此、里面的人怎么生活仍未被玄曜大界解释。\n已批准 Character Authority：\n# CHARACTER AUTHORITY\n\n## POWER CORE｜Frozen Authority\n\n后台短名：余门。宁烬亲自进入一个独立真实世界、卷入真实冲突并在不可回头的选择中承担后果后，可以永久带走一条该世界原本允许、而玄曜大界原本不允许的核心可能性。它不是简单复制功法或拿到宝物：带回的是宁烬本人以后可以成立的一种新现实权限。\n\n触发边界：必须亲身进入；必须有真实冲突与选择；不能靠旁观、偷听或单纯抢一件物品获得；每个独立世界最多带回一条核心可能性；它本身不直接免费提升玄曜主境界；观察者不能直接看见“余门”或知道永久性/内部触发。\n\n开局精确力量位置｜主尺：玄曜九境九重｜精确位置：灵海3重\n\n长期成长方向：新的世界可能性可以继续加入，并与旧可能性产生单项做不到的复合。连续获得并递归复合高价值 Asymmetry 是主角的长期叙事特权；普通 Rival 可以更强、拿走主角错失的宝物、拥有自己的绝技/神兵，但不自动复制一套并行的递归异常栈。\n\n## HUMAN CORE｜Frozen Authority\n\n宁烬，十七岁。稳定牵引是钱、赢、面子、稀奇罕见之物、危险又漂亮的人或东西，以及“既然有机会碰到，为什么只拿一半”的贪心。他敢押、反应快、讨厌被别人替自己决定价值，也不喜欢明明能争却先替自己找退路。\n\n他不是责任/治理型主角。聪明不等于替所有人协调利益；他可以救人、结盟、讲条件或暂时退让，但这些必须来自具体欲望、关系、胜负和眼前代价。爱钱已经成立后，不靠“值多少钱 / 这才叫买卖 / 我不喜欢亏”反复刷同一口癖；让好胜、好奇、面子、身体危险感、具体关系与偶尔不理性的偏爱自然进入选择。\n\n## Composition Boundary\n\nFrozen Power 与 Frozen Human 不互相后验合理化。后续 Power/Asset/Relationship/Identity/Knowledge 只从已发生 Canon 向前追加；人物可以发展，但不能因为新世界最适合某种性格就反向重写宁烬。\n已批准 Story Program：\n# STORY PROGRAM\n\n## 当前 Re-Collision\n前十章已经完成第一轮：宁烬从玄曜大界进入镜海界，并把“一人可以同时拥有两个同等真实位置”的世界可能性永久带回；返回天都后完成公开证明。后续不再证明“能不能带回”，而要证明不同世界的可能性会怎样真正复合。\n\n## 当前 Power / Human / World 的长期张力\n宁烬仍只有灵海境三重的公开主尺位置，却已经拥有两处真身、白昼火、黑门骨和再次找到镜海界的海眼碎片。裴照临仍在主尺上明显更强，并持有完整白昼心。宁烬想要更多世界、更多不可复制的东西，也会因为贪、好胜与不肯只拿一半进入更危险路线。\n\n## 全书成长与核心幻想兑现脊柱（只写从当前点向前仍成立的部分）\n每个真正独立世界先作为自己的世界成立；宁烬进入后只能从自己真实走到的路线取得一条世界可能性。新的可能性必须留下，并与“双真”以及后续旧积累发生可复述的复合，而不是换地图清零。玄曜境界继续正常修炼与提升，但不能用免费升境替代世界可能性的核心幻想。\n\n## 不可替代的人与关系\n裴照临：灵海九重的 Origin Rival，持完整白昼心，raw ruler 与资源仍高于宁烬；他可以正常成长并赢得真正奖励，但没有自动递归 Advantage Stack。\n镜离 / 澜生：同一个人的两个真实位置，留在镜海界处理赫连枢与本界余波；海眼碎片使关系和世界都具备真实回访可能，但不是每个新世界都必须回去打卡。\n赫连枢：坠入镜海错位深处，生死未确认。\n天外商王：公开重新估价宁烬并给出三十万灵玉、赤曜灯芯、赤鳞云驹与下一次天洲级宝物会入口；他的兴趣是生意，不是无条件保护。\n\n## World Horizon Handoff\n前十章 Horizon 已结束。黑门骨已经向读者明确显示三个下一世界影子；后续每个独立 instance 必须先经过 protagonist-blind World Expansion，再做 fresh Story Refresh。\n\n## 远期仍值得追的东西\n裴照临与白昼心会怎样发展；镜离/澜生与赫连枢的后续；黑门骨为什么会选择/适配宁烬仍未知；三个已经看见的异世界；宁烬最终能把多少互不相容的世界可能性压进同一个人身上。\nBOOK 关键事实与成长上下文：\n## 0. 本书成长基因图\n### 作者明确保留\n《我身藏诸界》的核心卖点是：进入不同真实世界，永久带走那个世界独有的一种可能性，并让不同可能性继续复合成只有宁烬能走出的成长路线。\n### 一级成长收益\n玄曜公开境界正常成长 + 诸界可能性 Advantage Stack。当前已成立第一条：两处都是真身；后续新世界必须带来新的现实权限并产生复合，不写成库存技能列表。\n### 二级成长收益\n钱、稀有器物、坐骑、跨界媒介、关系与世界入口可以同时成为爽点，但不能长期替代“主角本人变得更不可能”。\n### 核心不变量\n独立世界先成立；Route-Bound Acquisition；Rival 可更强但不复制主角递归优势栈。\n\n## 1. 核心类型与读者承诺\n东方玄幻大世界 + 多世界探索 + 复合非对称能力成长。世界奇观、强欲望对象、快速因果和高频兑现优先；每个世界结束后至少留下一个会真正改变后文的东西。\n\n## 2. 世界观结构\n玄曜大界是长期 Origin；黑门骨连接独立 instance 世界。镜海界已完成第一轮，海眼碎片允许未来回访。下一步只使用正文第10章已经出现的三个世界影子，不凭空替换成别的地图。\n\n## 3. 世界如何持续制造剧情压力\n外界强者争黑门骨与天外遗物；各 instance 有自己的活人、利益、关系与危机。世界压力不默认变成治理/维护任务。\n\n## 4. 主角模型、人物弧与核心矛盾\n宁烬贪、敢押、好胜、爱面子、爱稀奇，不愿被别人替自己决定价值；但不把爱钱写成每章固定口癖。选择优先暴露他这个人，而不是长期成长最优算法。\n\n## 5. 配角与关系系统\n裴照临是 raw-ruler 长期压力；镜离/澜生是可回访的真实关系；天外商王是利益型高位观察者。新世界人物必须有自己的欲望，不围绕宁烬排队。\n\n## 6. 核心情节发动机\n进入独立世界 → 被该世界真正的人/欲望/冲突卷入 → 宁烬按自己性格选择路线并可能错失其它机会 → 赢下/承担一个只有该世界才能成立的结果 → 带回一条世界可能性 → 返回玄曜或进入下一世界后发生复合与社会重新估价。每轮 Story Engine 仍需变体，不机械重复。\n最近章节摘要：\n当前已完成第10章。\n\n## ACTIVE SCENE STATE\n地点：玄曜大界九环天都，天外拍卖场大乱刚结束。\n宁烬：灵海境三重；经历镜海界重伤后仍在恢复，当前公开站在赤鳞云驹旁/其上，天外商王已终止现场继续围杀。\n即时目标：消化刚得到的资源与双真公开后果；黑门骨正在显示三个新的世界影子。\n\n## PERSISTENT CANON\n\n### Power / Capability\nCurrent Power Position｜主尺：玄曜九境九重｜精确位置：灵海3重\n- 已永久带回镜海界可能性：同一个宁烬可同时占据两个同等真实的位置；两处都是真身，都能受伤、持物、施展当前境界力量并共享感知；总元力仍来自同一片灵海，不会凭空翻倍。\n- 两处真身任一处遭到致命结果都对宁烬本人构成真实死亡风险；它不是安全替身。\n- 白昼火已经进入宁烬掌中并淬过玄曜元力，可造成远高于普通火焰的灼烧；正文已出现白昼火在两处真实位置间被转移/汇聚的可见用法，但没有公开解释其完整机制。\n- 黑门骨可打开/识别真实异界裂口；海眼碎片使其未来能够重新识别镜海界。更深来源与全部边界仍未知。\n\n### Active Re…\n明确硬约束：未检测到明确题材硬约束\nStory Refresh 用途：优先寻找跨阶段 Plot Engine 变异、旧获得重释/复利、thread collision 与新 World Entry；只提供 craft，不允许覆盖已经冻结的新 World Horizon 或 Current Character。",
+  "query_scope": "arcs,contrasts,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 16,
+  "unique_raw_count": 8,
+  "novel_candidate_count": 7,
+  "accepted_count": 3,
+  "coordinate_reference_count": 0,
+  "coordinate_reference": null,
+  "coordinate_reference_error": "",
+  "naming_reference_count": 0,
+  "naming_reference": null,
+  "naming_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {},
+  "human_lane_order": [],
+  "human_lane_candidate_limit": 0,
+  "prototype_id": "",
+  "prototype_selected": false,
+  "rejected_count": 5,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 3,
+  "raw_stdout": "[0.2436] syntheses/reader-facing-world-coordinates-batch-d-v3 -- MERGE\n- supporting books/evidence\n  - 新专项：吞噬的传承／羽翼层级、完美的十万斤与仙古路径、星辰的未完成功法和遗迹资格。\n  - 经典 raw-gap：斗破\n[0.2436] syntheses/reader-facing-world-coordinates-batch-d-v3 -- - 其余坐标保持后台，不为完整性强行前台化。\n最小充分不意味着信息最少，而意味着没有一把尺只是重复另一把尺的结论。\n## Coordinate Cross-Calibration\n| 常见错位 \n[0.2416] mechanisms/plot-engine-variation-v3 -- Retrieval aliases: plot engine variation same power new engine adaptive opposition functional repurp\n[0.1710] arcs/rcv0-03-dushi-xiuzhen-chatianqun-longitudinal-story-craft-v3 -- Retrieval aliases: thread braid long thread supporting cast return character autonomy old ability ne\n[0.1710] arcs/rcv0-03-dushi-xiuzhen-chatianqun-longitudinal-story-craft-v3 -- 铜卦给阿七、阿十六算出“大吉”，群友因其黑卦名声反向理解。北河嘲讽后，两人约定月圆之夜紫禁之巅决战；黄山判断北河想借战斗突破。\n- **Dormancy**  \n  约战长期退居背景。两人各自探险\n[0.1560] arcs/rcv0-28-xuanhuan-jiangye-longitudinal-story-craft-v3 -- Retrieval aliases: thread braid long thread relationship return world secret historical scale old th\n[0.1560] arcs/rcv0-28-xuanhuan-jiangye-longitudinal-story-craft-v3 -- 匿名笔友到自主行动者（陈皮皮）\n- **Length class：long**\n- **Setup：**陈皮皮先是旧书楼里匿名帮助宁缺的笔友和喜剧型天才，不以父亲、道门继承人身份登场。\n- **\n[0.1560] arcs/rcv0-30-xuanhuan-douluo-dalu-longitudinal-story-craft-v3 -- 从公共背景机构变成主线战争中心（武魂殿）\n- **Length class：** long\n- **Setup：** 武魂殿最初是遍布村镇的武魂觉醒、证明和魂师准入机构；主角第一次接触它时，它是世\n[0.2810] mechanisms/thread-collision-v3 -- Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl\n[0.2273] mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3 -- Retrieval aliases: longitudinal thread dormancy reminder collision second payoff afterlife thread br\n[0.1665] syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3 -- # Cross-Book Evidence Matrix\n> 证据边界：以下剧情事实和原文 locator 只转录自指定的 10 份 Sol 蒸馏；本轮未读取原著。结构结论属于跨书推断，不提升为 T\n[0.1665] syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3 -- - **Mechanism**：以具体欲望、关系、身份、物件或世界问题建立线程；允许其自然休眠或离屏推进；用行为、选择或新处境重新提醒；在当前事件中与其他独立因果线碰撞；产生不可回滚状态；第一次兑现后\n[0.1387] syntheses/reader-facing-world-coordinates-batch-d-v3 -- MERGE\n- supporting books/evidence\n  - 新专项：吞噬的传承／羽翼层级、完美的十万斤与仙古路径、星辰的未完成功法和遗迹资格。\n  - 经典 raw-gap：斗破\n[0.1387] syntheses/reader-facing-world-coordinates-batch-d-v3 -- # Retrieval Aliases\n读者坐标；世界可读坐标；力量尺；战力尺；境界尺；武技尺；技法尺；装备尺；法宝尺；神兵尺；潜力尺；资质尺；血脉上限；威胁尺；身份地位尺；价值尺；行动空间尺；世界\n[0.2018] syntheses/reader-facing-world-coordinates-batch-d-v3 -- # Retrieval Aliases\n读者坐标；世界可读坐标；力量尺；战力尺；境界尺；武技尺；技法尺；装备尺；法宝尺；神兵尺；潜力尺；资质尺；血脉上限；威胁尺；身份地位尺；价值尺；行动空间尺；世界\n[0.2018] syntheses/reader-facing-world-coordinates-batch-d-v3 -- - 其余坐标保持后台，不为完整性强行前台化。\n最小充分不意味着信息最少，而意味着没有一把尺只是重复另一把尺的结论。\n## Coordinate Cross-Calibration\n| 常见错位",
+  "novel_candidates": [
+    {
+      "score": 0.281,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl"
+    },
+    {
+      "score": 0.2416,
+      "slug": "mechanisms/plot-engine-variation-v3",
+      "snippet": "Retrieval aliases: plot engine variation same power new engine adaptive opposition functional repurp"
+    },
+    {
+      "score": 0.2273,
+      "slug": "mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3",
+      "snippet": "Retrieval aliases: longitudinal thread dormancy reminder collision second payoff afterlife thread br"
+    },
+    {
+      "score": 0.171,
+      "slug": "arcs/rcv0-03-dushi-xiuzhen-chatianqun-longitudinal-story-craft-v3",
+      "snippet": "Retrieval aliases: thread braid long thread supporting cast return character autonomy old ability ne"
+    },
+    {
+      "score": 0.1665,
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "snippet": "# Cross-Book Evidence Matrix"
+    },
+    {
+      "score": 0.156,
+      "slug": "arcs/rcv0-28-xuanhuan-jiangye-longitudinal-story-craft-v3",
+      "snippet": "Retrieval aliases: thread braid long thread relationship return world secret historical scale old th"
+    },
+    {
+      "score": 0.156,
+      "slug": "arcs/rcv0-30-xuanhuan-douluo-dalu-longitudinal-story-craft-v3",
+      "snippet": "从公共背景机构变成主线战争中心（武魂殿）"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.281,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl"
+    },
+    {
+      "score": 0.2416,
+      "slug": "mechanisms/plot-engine-variation-v3",
+      "snippet": "Retrieval aliases: plot engine variation same power new engine adaptive opposition functional repurp"
+    },
+    {
+      "score": 0.2273,
+      "slug": "mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3",
+      "snippet": "Retrieval aliases: longitudinal thread dormancy reminder collision second payoff afterlife thread br"
+    },
+    {
+      "score": 0.171,
+      "slug": "arcs/rcv0-03-dushi-xiuzhen-chatianqun-longitudinal-story-craft-v3",
+      "snippet": "Retrieval aliases: thread braid long thread supporting cast return character autonomy old ability ne"
+    },
+    {
+      "score": 0.1665,
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "snippet": "# Cross-Book Evidence Matrix"
+    },
+    {
+      "score": 0.156,
+      "slug": "arcs/rcv0-28-xuanhuan-jiangye-longitudinal-story-craft-v3",
+      "snippet": "Retrieval aliases: thread braid long thread relationship return world secret historical scale old th"
+    },
+    {
+      "score": 0.156,
+      "slug": "arcs/rcv0-30-xuanhuan-douluo-dalu-longitudinal-story-craft-v3",
+      "snippet": "从公共背景机构变成主线战争中心（武魂殿）"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.281,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：怎样让一个大事件真正合流 main plot / relationship / mystery / power / world 中的若干条线，而不是只是把很多角色叫到同一场？\nMechanism：成熟的碰撞点需要一个共享因果铰链和一个不可回避的选择。这个选择同时改写若干线程的未来可行性：某条安全路径关闭、某段关系换位、某个谜团获得新解释、能力意义变化、阵营或世界事实改变。强 payoff 往往还有 narrative afterlife：旧目标完成后，其结果自然成为新承诺、新敌人、新生活问题或第二层解释。\nVariants：- 身份暴露：安全表层生活关闭，关系和敌我同时重写。\n- 牺牲/死亡：结算追捕或冲突，同时生成复活、继承、独立行动或新敌人。\n- 旧物终局用途：同时结算谜团、身份与能力来源。\n- 生活性仪式被大冲突劫持：婚礼、约战、重聚同时结算关系和旧敌。\nGuidance：不要求每次凑齐五栏。判断一个 thread 是否真的参与碰撞：移除它后，这个事件的选择、结果或后续可行性是否会改变？\nFailure Modes：- 角色都到场但因果互不相干。\n- 为了“大高潮”塞入尚未成熟的线。\n- payoff 只关旧问题，不留下任何后续状态。\n- 强制每个高潮都要求多线合流。",
+      "transfer_boundary": "迁移共享因果铰链与 narrative afterlife；碰撞强度由共同选择实际改写了多少线程的未来来决定。"
+    },
+    {
+      "score": 0.2416,
+      "slug": "mechanisms/plot-engine-variation-v3",
+      "snippet": "Retrieval aliases: plot engine variation same power new engine adaptive opposition functional repurp",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：同一个核心能力怎样写几十/几百章而不变成“更高难度的同一任务”？\nMechanism：Plot Engine 不是地图名，而是当前阶段反复制造选择的核心问题。同一能力可以通过以下轴换挡：敌人研究主角旧成功后换攻击面；关系变化让能力的意义从“我能用”变成“我能保护谁/谁能进入”；身份公开使能力变成社会位置；世界后果让私人技巧进入战争/公开仪式/历史；人物目标从生存转复仇、保护、自由或拒绝旧解法。\nVariants：- 对手策略换挡。\n- 关系功能换挡。\n- 身份意义换挡。\n- 世界后果换挡。\n- 人物目标换挡。\n- 使用场景换挡。\n- 境界/生命状态换挡：当突破改变主角能看见什么、能进入哪里、谁还能按旧方式对待他时，境界升格可以成为换 Plot Engine 的触发器。\nReader Payoff：读者反复看到的是“同一个核心幻想还能这样玩”，而不是“又来一次同任务，只是敌人更强”。\nGuidance：规划大型阶段时，可以先用一句“当前反复制造选择的问题”帮助定义 Plot Engine。换地图不等于换发动机；留在同地图，只要问题真正改变，也可以进入新发动机。\n当大境界确实改变主角的存在位置时，优先问新的力量让哪些旧问题失效、又让什么此前不存在的问题出现；只有强度数字变化时，不必因此换发动机。\nFailure Modes：- 新阶段只换地点与敌人数值。\n- 能力不断增加组件但问题不变。\n- 对手永远使用同一种封锁/挑战。\n- 为了变异强行改变核心幻想本身。",
+      "transfer_boundary": "迁移换挡轴，不要求每种能力遍历全部轴，也不为“多样性”强行换题材。"
+    },
+    {
+      "score": 0.2273,
+      "slug": "mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3",
+      "snippet": "Retrieval aliases: longitudinal thread dormancy reminder collision second payoff afterlife thread br",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：长线容易退化成角色名单或伏笔台账：为了不忘而频繁提醒，高潮只结算输赢，第一次兑现后人物或关系立即冻结。\nMechanism：以具体欲望、关系、身份、物件或世界问题建立线程；允许它自然休眠或离屏推进。只有当新处境会改变这条线的含义、可行性或人物选择时，用行为、选择、新证据或新位置召回。成熟时让它与当前力量、关系、身份或世界线发生真实因果碰撞，产生不可回滚状态。第一次 payoff 后，继续保留人物新的生活、关系、权限、敌人或自主目标，形成 second payoff / afterlife。\nVariants：- 关系线长期离屏后以新生活状态回归。\n- 旧身份在新地图被重新定价。\n- 旧物/旧能力从工具变成关系或世界入口。\n- 私人欲望在世界级事件中改变最终选择。\n- 大战同时结束旧仇并开启新的生活或权力位置。\nGuidance：Reminder 必须改变当前行动或解释，不以“提到一次”保活。碰撞不追求固定线数；只要异质线程真正互相改写即可。兑现后优先问“人物现在能做什么、还想做什么、谁会因此改变策略”。\nFailure Modes：- 只回忆，不改变行动。\n- 为了多线汇合强行巧合。\n- 所有配角都等待主角召回。\n- 大战只结算输赢。\n- Afterlife 只是同类考核重开。\n- 把开放或未知结局补成完整战后秩序。",
+      "transfer_boundary": "迁移线程生命周期与 afterlife，不要求每条长线都有二次兑现，不要求所有线程在终局汇合。"
+    }
+  ],
+  "rejected": [
+    {
+      "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+      "reason": "固定 World Coordinate Reference 已由已批准 World Vision 继承，不重复占 downstream creative 名额"
+    },
+    {
+      "slug": "arcs/rcv0-03-dushi-xiuzhen-chatianqun-longitudinal-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-28-xuanhuan-jiangye-longitudinal-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-30-xuanhuan-douluo-dalu-longitudinal-story-craft-v3",
+      "reason": "超过最终数量上限"
+    }
+  ],
+  "result": "### Inspiration 1\nsource: mechanisms/thread-collision-v3\ntype: mechanism\nscore: 0.281\n\n可用抽象：Creative Problem：怎样让一个大事件真正合流 main plot / relationship / mystery / power / world 中的若干条线，而不是只是把很多角色叫到同一场？\nMechanism：成熟的碰撞点需要一个共享因果铰链和一个不可回避的选择。这个选择同时改写若干线程的未来可行性：某条安全路径关闭、某段关系换位、某个谜团获得新解释、能力意义变化、阵营或世界事实改变。强 payoff 往往还有 narrative afterlife：旧目标完成后，其结果自然成为新承诺、新敌人、新生活问题或第二层解释。\nVariants：- 身份暴露：安全表层生活关闭，关系和敌我同时重写。\n- 牺牲/死亡：结算追捕或冲突，同时生成复活、继承、独立行动或新敌人。\n- 旧物终局用途：同时结算谜团、身份与能力来源。\n- 生活性仪式被大冲突劫持：婚礼、约战、重聚同时结算关系和旧敌。\nGuidance：不要求每次凑齐五栏。判断一个 thread 是否真的参与碰撞：移除它后，这个事件的选择、结果或后续可行性是否会改变？\nFailure Modes：- 角色都到场但因果互不相干。\n- 为了“大高潮”塞入尚未成熟的线。\n- payoff 只关旧问题，不留下任何后续状态。\n- 强制每个高潮都要求多线合流。\n\n使用边界：迁移共享因果铰链与 narrative afterlife；碰撞强度由共同选择实际改写了多少线程的未来来决定。\n\n### Inspiration 2\nsource: mechanisms/plot-engine-variation-v3\ntype: mechanism\nscore: 0.2416\n\n可用抽象：Creative Problem：同一个核心能力怎样写几十/几百章而不变成“更高难度的同一任务”？\nMechanism：Plot Engine 不是地图名，而是当前阶段反复制造选择的核心问题。同一能力可以通过以下轴换挡：敌人研究主角旧成功后换攻击面；关系变化让能力的意义从“我能用”变成“我能保护谁/谁能进入”；身份公开使能力变成社会位置；世界后果让私人技巧进入战争/公开仪式/历史；人物目标从生存转复仇、保护、自由或拒绝旧解法。\nVariants：- 对手策略换挡。\n- 关系功能换挡。\n- 身份意义换挡。\n- 世界后果换挡。\n- 人物目标换挡。\n- 使用场景换挡。\n- 境界/生命状态换挡：当突破改变主角能看见什么、能进入哪里、谁还能按旧方式对待他时，境界升格可以成为换 Plot Engine 的触发器。\nReader Payoff：读者反复看到的是“同一个核心幻想还能这样玩”，而不是“又来一次同任务，只是敌人更强”。\nGuidance：规划大型阶段时，可以先用一句“当前反复制造选择的问题”帮助定义 Plot Engine。换地图不等于换发动机；留在同地图，只要问题真正改变，也可以进入新发动机。\n当大境界确实改变主角的存在位置时，优先问新的力量让哪些旧问题失效、又让什么此前不存在的问题出现；只有强度数字变化时，不必因此换发动机。\nFailure Modes：- 新阶段只换地点与敌人数值。\n- 能力不断增加组件但问题不变。\n- 对手永远使用同一种封锁/挑战。\n- 为了变异强行改变核心幻想本身。\n\n使用边界：迁移换挡轴，不要求每种能力遍历全部轴，也不为“多样性”强行换题材。\n\n### Inspiration 3\nsource: mechanisms/longitudinal-thread-dormancy-collision-afterlife-v3\ntype: mechanism\nscore: 0.2273\n\n可用抽象：Creative Problem：长线容易退化成角色名单或伏笔台账：为了不忘而频繁提醒，高潮只结算输赢，第一次兑现后人物或关系立即冻结。\nMechanism：以具体欲望、关系、身份、物件或世界问题建立线程；允许它自然休眠或离屏推进。只有当新处境会改变这条线的含义、可行性或人物选择时，用行为、选择、新证据或新位置召回。成熟时让它与当前力量、关系、身份或世界线发生真实因果碰撞，产生不可回滚状态。第一次 payoff 后，继续保留人物新的生活、关系、权限、敌人或自主目标，形成 second payoff / afterlife。\nVariants：- 关系线长期离屏后以新生活状态回归。\n- 旧身份在新地图被重新定价。\n- 旧物/旧能力从工具变成关系或世界入口。\n- 私人欲望在世界级事件中改变最终选择。\n- 大战同时结束旧仇并开启新的生活或权力位置。\nGuidance：Reminder 必须改变当前行动或解释，不以“提到一次”保活。碰撞不追求固定线数；只要异质线程真正互相改写即可。兑现后优先问“人物现在能做什么、还想做什么、谁会因此改变策略”。\nFailure Modes：- 只回忆，不改变行动。\n- 为了多线汇合强行巧合。\n- 所有配角都等待主角召回。\n- 大战只结算输赢。\n- Afterlife 只是同类考核重开。\n- 把开放或未知结局补成完整战后秩序。\n\n使用边界：迁移线程生命周期与 afterlife，不要求每条长线都有二次兑现，不要求所有线程在终局汇合。"
+}

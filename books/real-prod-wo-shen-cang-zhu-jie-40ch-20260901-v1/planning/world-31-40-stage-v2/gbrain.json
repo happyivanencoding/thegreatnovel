@@ -1,0 +1,252 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "world_expansion",
+  "effective_query": "\"world expansion\" OR \"world entry\" OR \"stage transition\" OR \"narrative compounding\"",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"world expansion\" OR \"world entry\" OR \"stage transition\"",
+    "\"reader coordinates\" OR \"expectation ladder\" OR \"world scale\" OR \"narrative compounding\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：world_expansion\n作者当前方向：作者已决定第31—40章进入黑门骨一直映出的无墙万门宫殿，但这只是长篇中的一个大型新 Horizon，不是小说终局；第40章只完成本轮核心因果并留下自然的下一阶段 Handoff，不把全书长期承诺全部结清。\n把无墙万门宫殿做成独立运行、即使没有主角也足够让人想读十章以上的东方玄幻文明：没有外墙的无边宫殿，每一扇门后悬着另一轮太阳。门、距离、内外、太阳或归属之间必须有一条普通话一两句能讲懂、但能产生极大生活与战争变化的核心因果。\n这是 protagonist-blind 世界设计，不知道宁烬是谁，也不要为任何特定主角预制奖励。脑洞强度要高：让“门”真正改变居住、恋爱、逃亡、战争、继承、身体或物种生活，而不是迷宫关卡、传送门列表或解谜机关。至少几名具体活人/异族有互相冲突的私人目标，即使没有外来者也会在近期把世界推向巨大事件。支撑制度只作背景，不把钥匙登记、门税、路线规划、资源分配写成发动机。\n世界要有值得争夺的具体人、物、地点、身体变化或现实特权，而且不同路线不能最终都汇到同一个升级树。阶段规模可以很大、奇观可以很夸张，但必须保留继续扩张空间，不把裴照临、黑门骨来源、诸界数量或总机制强…\n已批准 World Vision：\n# PROTAGONIST-BLIND WORLD VISION\n\n玄曜大界由九重天、三十六天洲、数百王朝、宗门与古族构成。天洲间有跨洲天舟与天外商路；王境以上可横渡远空，圣境与帝境能把战斗影响扩到山河、天域。天外遗物与真实世界裂口极少见，但已经进入顶层强者和天外商会的争夺视野。\n\n## 普通人的生活与上升\n普通修士从锻体、通脉进入灵海后才真正具备独立远行与争夺天洲级机缘的资格。大多数人依靠宗门、古族、王朝、商会、武馆或天舟商路往上走；天外遗物、古代遗迹、跨洲宝会会把原本接触不到的强者与资源拉到同一场合。\n\n## 力量体系与正常值\n玄曜大界主流公开力量为九境九重：锻体、通脉、灵海、神台、天门、王、圣、帝、天外；每境一至九重。境界是公开位置尺，不是胜负公式，器物、技法、经验、环境与异常能力都能制造越级结果。\n\n### 精确力量主尺｜Frozen Grammar\n主尺类型：大境界+数字子级\n主尺名称：玄曜九境九重\n精确位置格式：{大境界}{N}重\n数字精度规则：每境1—9\n当前可见范围：灵海1—9；神台1—9；天门1—9；王境1—9；圣境1—9；帝境1—9；天外境1—9\n当前大档位：锻体境、通脉境、灵海境、神台境、天门境、王境、圣境、帝境、天外境\n\n## 社会现实与身份\n天洲大城公开尊重力量、资产、出身与已经被见证的战绩，但高位人物不会因为一次奇观自动知道他人的隐藏机制。天外商会以宝物、路线和跨洲交易闻名；古族与王朝更看重长期力量、血统与可控制资源。公开重新估价可以直接改变报价、招揽、敌意与待遇。\n\n## 世界里真正值钱、值得想要的东西\n高阶功法、神兵、异兽、天外火种、跨洲坐骑、王境以上传承、天外遗物与能打开新世界/新空间的真实媒介都足以引发争夺。最稀有的天外遗物未必提供单纯力量，也可能改变一个人原本被天地限制的行动方式。\n\n## 世界知识边界\n玄曜修士知道天外存在不能完全用本界解释的遗物和裂口，但普通人不知道诸界数量、来源与完整规则。一个人通常只有一个真实身体、一个魂与一个真实坐标；幻术、傀儡和分身都被视为替代物，而不是第二个同等真身。\n\n## 世界正在发生的大事\n九环天都的天外珍宝拍卖刚因黑门骨与异界裂口引发大乱；天外商会、裴氏与其它高位势力都开始重新估价这件遗物与相关见证者。更远天洲仍有自己的战争、宝会、宗门竞争和古族冲突，不围绕某个单一人物运转。\n\n## 值得进入的地点、奇观与未知\n九环天都、跨洲天舟、天外遗迹与真实异界裂口仍是当前最直接的世界外缘。黑门骨曾映出三个完全不同的世界影子，但这些世界自身是什么、为何如此、里面的人怎么生活仍未被玄曜大界解释。\n明确硬约束：未检测到明确题材硬约束\nWorld Expansion 用途：只寻找独立世界扩张、world entry、stage transition 与 reader coordinates craft；检索层同样看不到 Character / Story / BOOK 当前人物状态，不为主角量身制造世界。",
+  "query_scope": "arcs,book-dna,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 32,
+  "unique_raw_count": 15,
+  "novel_candidate_count": 14,
+  "accepted_count": 3,
+  "coordinate_reference_count": 1,
+  "coordinate_reference": {
+    "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+    "type": "synthesis",
+    "score": 1.0,
+    "abstract": "Guidance：World Vision 使用两类坐标。第一类是**世界前台尺**：至少建立一把当前主尺，生产注入优先从 `POWER / TECHNIQUE / THREAT / STATUS / VALUE / WORLD` 中选择；题材明显依赖装备/法宝或天赋上限时，可条件性加入 `GEAR_ARTIFACT / POTENTIAL_CEILING` 校准。它们回答“现在谁能做到什么、差距造成什么结果、什么东西真值、下一层世界有什么”。第二类是**读者体验 / 故事校准尺**：`ACTION_SPACE / MYSTERY_DEPTH / EXPECTATION_LADDER / IMPACT`（必要时 `REACH`）仍然必须真实参与生产设计，但只作为作者侧坐标——分别投影成“成长后多能做哪件以前做不到的事”“哪个旧锚点仍有可回收的更深解释”“下一层已经看得见但尚未取得的具体人/物/地点/能力/身份”“一次行动实际改变多少人物、关系、地点、阵营或世界状态”。它们不得变成世界内部正式术语、资源名、势力理念或主题命题。`TEMPORAL_SCALE` 继续 HOLD。不要逐项填满，也不要建立战力数据库。",
+    "transfer_boundary": ""
+  },
+  "coordinate_reference_error": "",
+  "naming_reference_count": 0,
+  "naming_reference": null,
+  "naming_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {},
+  "human_lane_order": [],
+  "human_lane_candidate_limit": 0,
+  "prototype_id": "",
+  "prototype_selected": false,
+  "rejected_count": 11,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 3,
+  "raw_stdout": "[0.2904] syntheses/reader-facing-world-coordinates-batch-d-v3 -- MERGE\n- supporting books/evidence\n  - 新专项：吞噬的传承／羽翼层级、完美的十万斤与仙古路径、星辰的未完成功法和遗迹资格。\n  - 经典 raw-gap：斗破\n[0.2904] syntheses/reader-facing-world-coordinates-batch-d-v3 -- # Retrieval Aliases\n读者坐标；世界可读坐标；力量尺；战力尺；境界尺；武技尺；技法尺；装备尺；法宝尺；神兵尺；潜力尺；资质尺；血脉上限；威胁尺；身份地位尺；价值尺；行动空间尺；世界\n[0.2698] book-dna/rcv0-35-xuanhuan-panlong-story-craft-v3 -- Retrieval aliases: panlong stage transition world scale family carryover map transition\n# 《盘龙》World \n[0.2698] book-dna/rcv0-35-xuanhuan-panlong-story-craft-v3 -- **牺牲不被轻易抹平。** 终局林雷知道可以复制一个拥有德林记忆的生命，但仍明确那不是原来的德林；力量达到宇宙外仍保留不可逆损失（`第四十三章 新的名字（大结局）（下）` L76464-L76469）\n[0.2370] arcs/rcv0-31-xuanhuan-zhetian-longitudinal-story-craft-v3 -- **古史必须拥有尚未停止的行动者。**不死天皇、帝尊、女帝、无始不是仅供讲解的名人；他们的选择仍能进入当代战场。\n2. **遗物首先改变行动，之后才解释来历。**无始钟先镇压万族，《无始经》后来才完整\n[0.2370] arcs/rcv0-31-xuanhuan-zhetian-longitudinal-story-craft-v3 -- Retrieval aliases: zhetian world desire ancient history old wonder star road world expansion long th\n[0.2012] mechanisms/world-entry-v3 -- Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo\n[0.1962] arcs/rcv0-35-xuanhuan-panlong-longitudinal-story-craft-v3 -- Retrieval aliases: panlong stage transition world scale family carryover map transition long thread \n[0.1962] arcs/rcv0-35-xuanhuan-panlong-longitudinal-story-craft-v3 -- **核心欲望不变，核心动词持续变化。**复兴/保护依次表现为学习、查凶、刺杀、独行、公开撑腰、建国、探墓、守家、远行、认祖、寻魂、参战、解密、谈判、破界。\n2. **每次扩世界都由一个旧关系提出入场理\n[0.1878] arcs/rcv0-34-xuanhuan-doupo-cangqiong-longitudinal-story-craft-v3 -- 磐门、炼药、陨落心炎线 | 异火质量、韩枫、导师旧史 | 资源争夺何时重释为师徒债务？ |\n| S6→S7 | 学院无法解决药老、萧厉与小医仙的高阶问题 | 焚诀、多火、药老、组织能力 | 中州势力\n[0.1878] arcs/rcv0-34-xuanhuan-doupo-cangqiong-longitudinal-story-craft-v3 -- ## Retrieval aliases\ndoupo longitudinal stage transition ruler shift 三年之约 药老 异火 焚诀 炼药 中州 古族 social \n[0.1702] book-dna/rcv0-36-xianxia-fanren-xiuxianzhuan-story-craft-v3 -- 新地图至少带来一种以前没有的世界入口、敌人尺度或关系位置。\n\n否则只是“更大地图重复同一任务”，不算真正的 World Expansion。\n\n## Long-form Sustainability\n\n[0.1702] book-dna/rcv0-36-xianxia-fanren-xiuxianzhuan-story-craft-v3 -- Retrieval aliases: fanren longform progression opportunity map transition old object relationship re\n[0.1478] book-dna/rcv0-31-xuanhuan-zhetian-story-craft-v3 -- 兑现旧问题，但不关闭世界\n\n九龙拉棺最终打开并显现出一个世界，但这不是所有谜团的终点，反而把问题推进到仙域、荒天帝和女帝的历史。[ZT 第1820章 L164989-L165031]\n\n### 2. \n[0.1478] book-dna/rcv0-31-xuanhuan-zhetian-story-craft-v3 -- Retrieval aliases: zhetian world desire ancient history old wonder star road world expansion\n# Core \n[0.1459] arcs/rcv0-47-dushi-mingkejie-13hao-longitudinal-story-craft-v3 -- # Longitudinal Threads\n## 1. Thread name：家不是后方，而是所有大线的最终落点\n- **Length class：long**\n- **Setup：** `\n[0.1459] arcs/rcv0-47-dushi-mingkejie-13hao-longitudinal-story-craft-v3 -- Thread name：葬礼——给死者位置，也重写活人的关系\n- **Length class：long**\n- **Setup：** `[F]` 开篇用福利单、殓妆、棺木、神父祷告、医院关系和利\n[0.1459] arcs/rcv0-20-gaowu-quanqiu-gaowu-longitudinal-story-craft-v3 -- **Escalation**：大战中她看到人族越战越强、王庭联军开始溃散，个人王位欲望与地窟整体失败发生冲突。`《第1118章 人王方平！》L249920–249938`\n- **Collision\n[0.1459] arcs/rcv0-20-gaowu-quanqiu-gaowu-longitudinal-story-craft-v3 -- # 《全球高武》Longitudinal Threads + Thread Braid + Story Program Patterns\n> `REFERENCE_ONLY / PILOT`  \n\n[0.1459] arcs/rcv0-46-youxi-chaoshen-jixieshi-longitudinal-story-craft-v3 -- |\n# 系统语言何时承载故事，何时退化\n## 承载故事\n- 【最后的阵地】“冻结→开启”把1.0留下的承诺与2.0灾难直接相连：《第509章》L33503-L33517。\n- 集体任务进度对应\n[0.1459] arcs/rcv0-46-youxi-chaoshen-jixieshi-longitudinal-story-craft-v3 -- # 《超神机械师》纵向故事线与 Story Program 蒸馏\n> `REFERENCE_ONLY / PILOT`  \n> Source ID：`CSJXS-01`  \n> 原文：`超神机械\n[0.1459] arcs/rcv0-45-xuanhuan-luanshishu-longitudinal-story-craft-v3 -- 韩无病：约战者 → 第一个男性朋友 → 白虎棋子 → 只做韩无病\n- **Thread name**：把既定之剑还给一个人\n- **Length class**：long，低频回流型\n- **S\n[0.1459] arcs/rcv0-45-xuanhuan-luanshishu-longitudinal-story-craft-v3 -- # 《乱世书》SOURCE-FIRST 纵向故事线蒸馏\n> `REFERENCE_ONLY / PILOT`  \n> 原文：`乱世书.txt`，UTF-8，75,556 行。以下情节事实均已回到原\n[0.1459] arcs/rcv0-43-xuanhuan-bukexue-yushou-longitudinal-story-craft-v3 -- / Afterlife**：冠军挑战取得永久传送阵，使赛事结果反哺蓝星与界王星的长期连接；胜利不止留下称号。\n- **Why Reader Cares**：比赛通常在几章内提供清晰期待和早兑现，同时\n[0.4563] syntheses/reader-facing-world-coordinates-batch-d-v3 -- MERGE\n- supporting books/evidence\n  - 新专项：吞噬的传承／羽翼层级、完美的十万斤与仙古路径、星辰的未完成功法和遗迹资格。\n  - 经典 raw-gap：斗破\n[0.4563] syntheses/reader-facing-world-coordinates-batch-d-v3 -- - 其余坐标保持后台，不为完整性强行前台化。\n最小充分不意味着信息最少，而意味着没有一把尺只是重复另一把尺的结论。\n## Coordinate Cross-Calibration\n| 常见错位 \n[0.1478] mechanisms/story-state-compounding-v3 -- Retrieval aliases: story state compounding irreversible story state asset to state conversion capabi\n[0.1053] book-dna/rcv0-35-xuanhuan-panlong-story-craft-v3 -- Retrieval aliases: panlong stage transition world scale family carryover map transition\n# 《盘龙》World \n[0.1053] book-dna/rcv0-35-xuanhuan-panlong-story-craft-v3 -- **牺牲不被轻易抹平。** 终局林雷知道可以复制一个拥有德林记忆的生命，但仍明确那不是原来的德林；力量达到宇宙外仍保留不可逆损失（`第四十三章 新的名字（大结局）（下）` L76464-L76469）\n[0.0988] mechanisms/narrative-compounding-v3 -- Retrieval aliases: narrative compounding recontextualization old thread return old ability new use s\n[0.0760] arcs/rcv0-35-xuanhuan-panlong-longitudinal-story-craft-v3 -- - 林雷进入众神墓地十年，儿子泰勒已成家并有孩子；世界按自己的时间推进（L32494-L32590）。\n- 林雷去地狱前把家乡交给沃顿，旧地图获得自治承接者，而非主角的远程管理职责（L40610-L4\n[0.0760] arcs/rcv0-35-xuanhuan-panlong-longitudinal-story-craft-v3 -- **核心欲望不变，核心动词持续变化。**复兴/保护依次表现为学习、查凶、刺杀、独行、公开撑腰、建国、探墓、守家、远行、认祖、寻魂、参战、解密、谈判、破界。\n2. **每次扩世界都由一个旧关系提出入场理",
+  "novel_candidates": [
+    {
+      "score": 0.1478,
+      "slug": "mechanisms/story-state-compounding-v3",
+      "snippet": "Retrieval aliases: story state compounding irreversible story state asset to state conversion capabi"
+    },
+    {
+      "score": 0.2698,
+      "slug": "book-dna/rcv0-35-xuanhuan-panlong-story-craft-v3",
+      "snippet": "Retrieval aliases: panlong stage transition world scale family carryover map transition"
+    },
+    {
+      "score": 0.0988,
+      "slug": "mechanisms/narrative-compounding-v3",
+      "snippet": "Retrieval aliases: narrative compounding recontextualization old thread return old ability new use s"
+    },
+    {
+      "score": 0.237,
+      "slug": "arcs/rcv0-31-xuanhuan-zhetian-longitudinal-story-craft-v3",
+      "snippet": "**古史必须拥有尚未停止的行动者。**不死天皇、帝尊、女帝、无始不是仅供讲解的名人；他们的选择仍能进入当代战场。"
+    },
+    {
+      "score": 0.076,
+      "slug": "arcs/rcv0-35-xuanhuan-panlong-longitudinal-story-craft-v3",
+      "snippet": "- 林雷进入众神墓地十年，儿子泰勒已成家并有孩子；世界按自己的时间推进（L32494-L32590）。"
+    },
+    {
+      "score": 0.2012,
+      "slug": "mechanisms/world-entry-v3",
+      "snippet": "Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo"
+    },
+    {
+      "score": 0.1878,
+      "slug": "arcs/rcv0-34-xuanhuan-doupo-cangqiong-longitudinal-story-craft-v3",
+      "snippet": "磐门、炼药、陨落心炎线 | 异火质量、韩枫、导师旧史 | 资源争夺何时重释为师徒债务？ |"
+    },
+    {
+      "score": 0.1702,
+      "slug": "book-dna/rcv0-36-xianxia-fanren-xiuxianzhuan-story-craft-v3",
+      "snippet": "新地图至少带来一种以前没有的世界入口、敌人尺度或关系位置。"
+    },
+    {
+      "score": 0.1478,
+      "slug": "book-dna/rcv0-31-xuanhuan-zhetian-story-craft-v3",
+      "snippet": "兑现旧问题，但不关闭世界"
+    },
+    {
+      "score": 0.1459,
+      "slug": "arcs/rcv0-47-dushi-mingkejie-13hao-longitudinal-story-craft-v3",
+      "snippet": "# Longitudinal Threads"
+    },
+    {
+      "score": 0.1459,
+      "slug": "arcs/rcv0-20-gaowu-quanqiu-gaowu-longitudinal-story-craft-v3",
+      "snippet": "**Escalation**：大战中她看到人族越战越强、王庭联军开始溃散，个人王位欲望与地窟整体失败发生冲突。`《第1118章 人王方平！》L249920–249938`"
+    },
+    {
+      "score": 0.1459,
+      "slug": "arcs/rcv0-46-youxi-chaoshen-jixieshi-longitudinal-story-craft-v3",
+      "snippet": "|"
+    },
+    {
+      "score": 0.1459,
+      "slug": "arcs/rcv0-45-xuanhuan-luanshishu-longitudinal-story-craft-v3",
+      "snippet": "韩无病：约战者 → 第一个男性朋友 → 白虎棋子 → 只做韩无病"
+    },
+    {
+      "score": 0.1459,
+      "slug": "arcs/rcv0-43-xuanhuan-bukexue-yushou-longitudinal-story-craft-v3",
+      "snippet": "/ Afterlife**：冠军挑战取得永久传送阵，使赛事结果反哺蓝星与界王星的长期连接；胜利不止留下称号。"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.1478,
+      "slug": "mechanisms/story-state-compounding-v3",
+      "snippet": "Retrieval aliases: story state compounding irreversible story state asset to state conversion capabi"
+    },
+    {
+      "score": 0.2698,
+      "slug": "book-dna/rcv0-35-xuanhuan-panlong-story-craft-v3",
+      "snippet": "Retrieval aliases: panlong stage transition world scale family carryover map transition"
+    },
+    {
+      "score": 0.0988,
+      "slug": "mechanisms/narrative-compounding-v3",
+      "snippet": "Retrieval aliases: narrative compounding recontextualization old thread return old ability new use s"
+    },
+    {
+      "score": 0.237,
+      "slug": "arcs/rcv0-31-xuanhuan-zhetian-longitudinal-story-craft-v3",
+      "snippet": "**古史必须拥有尚未停止的行动者。**不死天皇、帝尊、女帝、无始不是仅供讲解的名人；他们的选择仍能进入当代战场。"
+    },
+    {
+      "score": 0.076,
+      "slug": "arcs/rcv0-35-xuanhuan-panlong-longitudinal-story-craft-v3",
+      "snippet": "- 林雷进入众神墓地十年，儿子泰勒已成家并有孩子；世界按自己的时间推进（L32494-L32590）。"
+    },
+    {
+      "score": 0.2012,
+      "slug": "mechanisms/world-entry-v3",
+      "snippet": "Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo"
+    },
+    {
+      "score": 0.1878,
+      "slug": "arcs/rcv0-34-xuanhuan-doupo-cangqiong-longitudinal-story-craft-v3",
+      "snippet": "磐门、炼药、陨落心炎线 | 异火质量、韩枫、导师旧史 | 资源争夺何时重释为师徒债务？ |"
+    },
+    {
+      "score": 0.1702,
+      "slug": "book-dna/rcv0-36-xianxia-fanren-xiuxianzhuan-story-craft-v3",
+      "snippet": "新地图至少带来一种以前没有的世界入口、敌人尺度或关系位置。"
+    },
+    {
+      "score": 0.1478,
+      "slug": "book-dna/rcv0-31-xuanhuan-zhetian-story-craft-v3",
+      "snippet": "兑现旧问题，但不关闭世界"
+    },
+    {
+      "score": 0.1459,
+      "slug": "arcs/rcv0-47-dushi-mingkejie-13hao-longitudinal-story-craft-v3",
+      "snippet": "# Longitudinal Threads"
+    },
+    {
+      "score": 0.1459,
+      "slug": "arcs/rcv0-20-gaowu-quanqiu-gaowu-longitudinal-story-craft-v3",
+      "snippet": "**Escalation**：大战中她看到人族越战越强、王庭联军开始溃散，个人王位欲望与地窟整体失败发生冲突。`《第1118章 人王方平！》L249920–249938`"
+    },
+    {
+      "score": 0.1459,
+      "slug": "arcs/rcv0-46-youxi-chaoshen-jixieshi-longitudinal-story-craft-v3",
+      "snippet": "|"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.1478,
+      "slug": "mechanisms/story-state-compounding-v3",
+      "snippet": "Retrieval aliases: story state compounding irreversible story state asset to state conversion capabi",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：上一阶段结束后，怎样让故事从此多出一些无法简单回到原状的事实？\nMechanism：一种高价值的长篇复利，是让死亡与损失、公开身份、关系换位、人物已经知道的真相、敌我变化、成员资格、家园或世界现实等状态继续影响未来。能力、器物、资源、组织与身份增长同样可以长期保留；当它们改变承诺、他人判断、敌人策略或世界事实时，会进一步形成可持续的故事状态。\nVariants：- 新能力让一段承诺终于获得承认。\n- 器物从工具变成身份/继承条件。\n- 公开使用能力形成无法撤销的社会认知。\n- 关系改变后，原有行动选择永久关闭或新增。\nReader Payoff：读者感觉过去发生的事一直在“压着未来走”，角色无法简单回到第一章重新开始。\nGuidance：阶段结算时优先写清“从此以后哪些选择变了、谁会换策略、哪些关系或知识已不同”。再保留真正会进入下一阶段行动的能力、资源、身份或组织成果。\nFailure Modes：- 阶段结算只写抽象提升，看不出未来选择有什么变化。\n- 重要死亡、身份揭露或关系变化在换地图后失效。\n- 新获得很多，但没有任何一项进入后续冲突。",
+      "transfer_boundary": "迁移“不可回滚故事状态优先”的判断，不禁止资源流、组织建设或系统型题材本身。"
+    },
+    {
+      "score": 0.2698,
+      "slug": "book-dna/rcv0-35-xuanhuan-panlong-story-craft-v3",
+      "snippet": "Retrieval aliases: panlong stage transition world scale family carryover map transition",
+      "type": "book-dna",
+      "is_genre_prior": false,
+      "abstract": "Reader Promise：《盘龙》的核心读者幻想不是“拥有一套完整等级表”，而是：\n> 一个从普通小镇和衰败家族出发的人，先获得别人没有的力量与伙伴，再不断被更大的世界看见、允许进入、迫使选择；每次跨入新世界，都能在原有身份、关系和未兑现承诺上继续变强，最终获得超越既有天地边界的行动自由，同时仍然回到“家人、兄弟、爱人、故乡”这些最初关系里。\n它把“想成为强者”不断具体化为不同的可见欲望：被尊重、洗刷家族耻辱、找回传承、进入更广阔舞台、复仇、守护关系、建立自己的世界位置、成为地狱精英、挑战更高强者、打破宇宙边界。力量升级的吸引力来自下一步能进入什么、能保护谁、能对谁说“不”、能向谁发起挑战，而不是来自机制数量本身（证据：`第一章 小镇的早晨` L18-L27；`第三章 龙血战士家族（下）` L259-L309；`第四章 恩斯特学院` L1651-L1662；`第四十三章 新的名字（大结局）（下）` L76371-L76426）。\nProtagonist Action：### 1. 欲望先从外部尊严和家族关系发生\n少年阶段的林雷先想成为“伟大的战士”，因为实力与金钱决定地位、父母是否骄傲以及是否被人看得起；这不是抽象修炼愿景，而是小镇训练场里人人都理解的社会欲望（`第一章 小镇的早晨` L18-L27）。当他得知家族拥有龙血战士血脉、却已经衰败千年，欲望马上转为“让家族恢复荣耀、找回被卖掉的传承之宝”；即使血脉检测失败，他仍把有限的肉身优势转成八级、九级战士的可能性（`第三章 龙血战士家族（下）` L259-L309；`第四章 成长（上）` L325-L331）。\n### 2. 核心能力让他获得额外行动可能，而非只提高效率\n盘龙戒指、德林的教导、双系魔法天赋、贝贝的陪伴，使林雷从“被困在小镇的家族后代”变成能进入学院、魔兽山脉、王国冲突和更大舞台的人。德林明确告诉他乌山…",
+      "transfer_boundary": ""
+    },
+    {
+      "score": 0.0988,
+      "slug": "mechanisms/narrative-compounding-v3",
+      "snippet": "Retrieval aliases: narrative compounding recontextualization old thread return old ability new use s",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：怎样让几十章前的人、物件、关系和选择在新阶段重新获得意义，让长篇越写越厚？\nMechanism：保留那些已经发生过、后来仍会改变人物选择的元素。当人物进入新地图、身份变化或对手策略升级时，让旧物、旧人、旧承诺、旧误解承担新的故事功能。复利来自“过去使今天变得不同”：同一对象因为历史积累而引发新的情感、因果、身份或行动后果。\nVariants：- 旧能力换人物/场景后产生新用途。\n- 旧物从奖励变成身份/世界线索。\n- 旧关系在新身份下重新定义。\n- 旧选择在更大世界里出现迟到后果。\n- 早期看似结算的东西在远期显示第二层意义。\n- 先局部成立、后换功能：旧锚点先完成当时的真实用途；人物进入新的身份、关系或世界层后，同一锚点再承担新的行动功能。\nReader Payoff：读者获得“原来前面的东西还活着”的厚度；新内容不是替换旧内容，而是让旧内容更值钱。\nGuidance：优先寻找能够被新语境重新解释的旧元素，并让再次出现直接改变当前行动。资源增长、身份增长、组织扩张等都可以成立；本卡只强调其中一种特别适合长篇的做法——让历史积累持续参与新的选择。\n旧锚点第一次出现时先让它在当时的故事里成立；只有新处境能赋予不同功能时再召回，后来的解释扩大意义而不取消早期用途。\nFailure Modes：- 旧元素回归后只做彩蛋，没有改变当前选择。\n- 每次出现都重复同一用途，没有新语境。\n- 为了回收伏笔强行召回尚未成熟的旧线。",
+      "transfer_boundary": "迁移“旧元素在新场景增值”的结构，不要求每个旧物都伏笔回收，也不把复利变成硬性系统设计。"
+    }
+  ],
+  "rejected": [
+    {
+      "slug": "arcs/rcv0-45-xuanhuan-luanshishu-longitudinal-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-43-xuanhuan-bukexue-yushou-longitudinal-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-31-xuanhuan-zhetian-longitudinal-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-35-xuanhuan-panlong-longitudinal-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "mechanisms/world-entry-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-34-xuanhuan-doupo-cangqiong-longitudinal-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-36-xianxia-fanren-xiuxianzhuan-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-31-xuanhuan-zhetian-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-47-dushi-mingkejie-13hao-longitudinal-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-20-gaowu-quanqiu-gaowu-longitudinal-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-46-youxi-chaoshen-jixieshi-longitudinal-story-craft-v3",
+      "reason": "超过最终数量上限"
+    }
+  ],
+  "result": "### Fixed Coordinate Reference\nsource: syntheses/reader-facing-world-coordinates-batch-d-v3\nrole: World Vision 固定读者坐标参考；不占 creative inspiration 名额\n\n可用抽象：Guidance：World Vision 使用两类坐标。第一类是**世界前台尺**：至少建立一把当前主尺，生产注入优先从 `POWER / TECHNIQUE / THREAT / STATUS / VALUE / WORLD` 中选择；题材明显依赖装备/法宝或天赋上限时，可条件性加入 `GEAR_ARTIFACT / POTENTIAL_CEILING` 校准。它们回答“现在谁能做到什么、差距造成什么结果、什么东西真值、下一层世界有什么”。第二类是**读者体验 / 故事校准尺**：`ACTION_SPACE / MYSTERY_DEPTH / EXPECTATION_LADDER / IMPACT`（必要时 `REACH`）仍然必须真实参与生产设计，但只作为作者侧坐标——分别投影成“成长后多能做哪件以前做不到的事”“哪个旧锚点仍有可回收的更深解释”“下一层已经看得见但尚未取得的具体人/物/地点/能力/身份”“一次行动实际改变多少人物、关系、地点、阵营或世界状态”。它们不得变成世界内部正式术语、资源名、势力理念或主题命题。`TEMPORAL_SCALE` 继续 HOLD。不要逐项填满，也不要建立战力数据库。\n\n使用边界：只使用这张跨书 synthesis 的读者坐标原则，不迁移来源作品表层设定、人物、事件或数值。\n\n### Inspiration 1\nsource: mechanisms/story-state-compounding-v3\ntype: mechanism\nscore: 0.1478\n\n可用抽象：Creative Problem：上一阶段结束后，怎样让故事从此多出一些无法简单回到原状的事实？\nMechanism：一种高价值的长篇复利，是让死亡与损失、公开身份、关系换位、人物已经知道的真相、敌我变化、成员资格、家园或世界现实等状态继续影响未来。能力、器物、资源、组织与身份增长同样可以长期保留；当它们改变承诺、他人判断、敌人策略或世界事实时，会进一步形成可持续的故事状态。\nVariants：- 新能力让一段承诺终于获得承认。\n- 器物从工具变成身份/继承条件。\n- 公开使用能力形成无法撤销的社会认知。\n- 关系改变后，原有行动选择永久关闭或新增。\nReader Payoff：读者感觉过去发生的事一直在“压着未来走”，角色无法简单回到第一章重新开始。\nGuidance：阶段结算时优先写清“从此以后哪些选择变了、谁会换策略、哪些关系或知识已不同”。再保留真正会进入下一阶段行动的能力、资源、身份或组织成果。\nFailure Modes：- 阶段结算只写抽象提升，看不出未来选择有什么变化。\n- 重要死亡、身份揭露或关系变化在换地图后失效。\n- 新获得很多，但没有任何一项进入后续冲突。\n\n使用边界：迁移“不可回滚故事状态优先”的判断，不禁止资源流、组织建设或系统型题材本身。\n\n### Inspiration 2\nsource: book-dna/rcv0-35-xuanhuan-panlong-story-craft-v3\ntype: book-dna\nscore: 0.2698\n\n可用抽象：Reader Promise：《盘龙》的核心读者幻想不是“拥有一套完整等级表”，而是：\n> 一个从普通小镇和衰败家族出发的人，先获得别人没有的力量与伙伴，再不断被更大的世界看见、允许进入、迫使选择；每次跨入新世界，都能在原有身份、关系和未兑现承诺上继续变强，最终获得超越既有天地边界的行动自由，同时仍然回到“家人、兄弟、爱人、故乡”这些最初关系里。\n它把“想成为强者”不断具体化为不同的可见欲望：被尊重、洗刷家族耻辱、找回传承、进入更广阔舞台、复仇、守护关系、建立自己的世界位置、成为地狱精英、挑战更高强者、打破宇宙边界。力量升级的吸引力来自下一步能进入什么、能保护谁、能对谁说“不”、能向谁发起挑战，而不是来自机制数量本身（证据：`第一章 小镇的早晨` L18-L27；`第三章 龙血战士家族（下）` L259-L309；`第四章 恩斯特学院` L1651-L1662；`第四十三章 新的名字（大结局）（下）` L76371-L76426）。\nProtagonist Action：### 1. 欲望先从外部尊严和家族关系发生\n少年阶段的林雷先想成为“伟大的战士”，因为实力与金钱决定地位、父母是否骄傲以及是否被人看得起；这不是抽象修炼愿景，而是小镇训练场里人人都理解的社会欲望（`第一章 小镇的早晨` L18-L27）。当他得知家族拥有龙血战士血脉、却已经衰败千年，欲望马上转为“让家族恢复荣耀、找回被卖掉的传承之宝”；即使血脉检测失败，他仍把有限的肉身优势转成八级、九级战士的可能性（`第三章 龙血战士家族（下）` L259-L309；`第四章 成长（上）` L325-L331）。\n### 2. 核心能力让他获得额外行动可能，而非只提高效率\n盘龙戒指、德林的教导、双系魔法天赋、贝贝的陪伴，使林雷从“被困在小镇的家族后代”变成能进入学院、魔兽山脉、王国冲突和更大舞台的人。德林明确告诉他乌山…\n\n使用边界：只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。\n\n### Inspiration 3\nsource: mechanisms/narrative-compounding-v3\ntype: mechanism\nscore: 0.0988\n\n可用抽象：Creative Problem：怎样让几十章前的人、物件、关系和选择在新阶段重新获得意义，让长篇越写越厚？\nMechanism：保留那些已经发生过、后来仍会改变人物选择的元素。当人物进入新地图、身份变化或对手策略升级时，让旧物、旧人、旧承诺、旧误解承担新的故事功能。复利来自“过去使今天变得不同”：同一对象因为历史积累而引发新的情感、因果、身份或行动后果。\nVariants：- 旧能力换人物/场景后产生新用途。\n- 旧物从奖励变成身份/世界线索。\n- 旧关系在新身份下重新定义。\n- 旧选择在更大世界里出现迟到后果。\n- 早期看似结算的东西在远期显示第二层意义。\n- 先局部成立、后换功能：旧锚点先完成当时的真实用途；人物进入新的身份、关系或世界层后，同一锚点再承担新的行动功能。\nReader Payoff：读者获得“原来前面的东西还活着”的厚度；新内容不是替换旧内容，而是让旧内容更值钱。\nGuidance：优先寻找能够被新语境重新解释的旧元素，并让再次出现直接改变当前行动。资源增长、身份增长、组织扩张等都可以成立；本卡只强调其中一种特别适合长篇的做法——让历史积累持续参与新的选择。\n旧锚点第一次出现时先让它在当时的故事里成立；只有新处境能赋予不同功能时再召回，后来的解释扩大意义而不取消早期用途。\nFailure Modes：- 旧元素回归后只做彩蛋，没有改变当前选择。\n- 每次出现都重复同一用途，没有新语境。\n- 为了回收伏笔强行召回尚未成熟的旧线。\n\n使用边界：迁移“旧元素在新场景增值”的结构，不要求每个旧物都伏笔回收，也不把复利变成硬性系统设计。"
+}

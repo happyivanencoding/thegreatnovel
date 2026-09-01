@@ -1,0 +1,351 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "outline",
+  "effective_query": "\"thread collision\" OR \"hidden identity reveal\" OR \"departure vacancy\" OR \"reunion reentry\" OR \"sacrifice convergence\" OR \"reward recontextualization\"",
+  "query_strategy": "planning_keyword_aliases",
+  "query_texts": [
+    "\"thread collision\" OR \"hidden identity reveal\"",
+    "\"departure vacancy\" OR \"reunion reentry\" OR \"sacrifice convergence\"",
+    "\"reward recontextualization\" OR \"action space\" OR \"public proof\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：outline\n作者当前方向：当前已完成第20章，作者明确批准第21—30章 Story Program B：未尽续行。本轮 Outline 只编译已批准 Story Program 的第21—30章，Future-10 章号必须连续写第21章到第30章，不重写旧正文。\n必须保护 RSE-04/05/06 的事件原子、状态残留与排程边界：宁烬先因贪、好胜、好奇选择折粮刀—贺乌衣—分事炉路线；在分事炉亲手取得未尽续行；归锋夜高潮完成双真+风髓双口+未尽续行三重复合。其它高价值路线必须保持真实错失，不安排后续打卡补拿。\n正文节奏可以激进，但不要把兵籍、登记、水权协调写成主要剧情。宁烬不是协调员。岑非灯、贺乌衣、乔小满、陆停山的私人欲望和真实代价必须进入具体事件。\n正确 Canon：宁烬玄曜主尺灵海4重；双真共享元力、伤势与死亡；风髓双口在双真同时存在、两端未堵死时，可在两个真实位置之间导引风、热、液压等流动力量，不能传送人或固体，不增加元力总量。未尽续行保留宁烬已经真正开始的具体动作在换载体后的方向、进度与现实作用，不复制力量、不自动保证结果。\n避免流程 filler、固定爱钱口癖、漂亮二段论和后台策划词进入正文。第…\n已批准 World Vision：\n# PROTAGONIST-BLIND WORLD VISION\n\n玄曜大界由九重天、三十六天洲、数百王朝、宗门与古族构成。天洲间有跨洲天舟与天外商路；王境以上可横渡远空，圣境与帝境能把战斗影响扩到山河、天域。天外遗物与真实世界裂口极少见，但已经进入顶层强者和天外商会的争夺视野。\n\n## 普通人的生活与上升\n普通修士从锻体、通脉进入灵海后才真正具备独立远行与争夺天洲级机缘的资格。大多数人依靠宗门、古族、王朝、商会、武馆或天舟商路往上走；天外遗物、古代遗迹、跨洲宝会会把原本接触不到的强者与资源拉到同一场合。\n\n## 力量体系与正常值\n玄曜大界主流公开力量为九境九重：锻体、通脉、灵海、神台、天门、王、圣、帝、天外；每境一至九重。境界是公开位置尺，不是胜负公式，器物、技法、经验、环境与异常能力都能制造越级结果。\n\n### 精确力量主尺｜Frozen Grammar\n主尺类型：大境界+数字子级\n主尺名称：玄曜九境九重\n精确位置格式：{大境界}{N}重\n数字精度规则：每境1—9\n当前可见范围：灵海1—9；神台1—9；天门1—9；王境1—9；圣境1—9；帝境1—9；天外境1—9\n当前大档位：锻体境、通脉境、灵海境、神台境、天门境、王境、圣境、帝境、天外境\n\n## 社会现实与身份\n天洲大城公开尊重力量、资产、出身与已经被见证的战绩，但高位人物不会因为一次奇观自动知道他人的隐藏机制。天外商会以宝物、路线和跨洲交易闻名；古族与王朝更看重长期力量、血统与可控制资源。公开重新估价可以直接改变报价、招揽、敌意与待遇。\n\n## 世界里真正值钱、值得想要的东西\n高阶功法、神兵、异兽、天外火种、跨洲坐骑、王境以上传承、天外遗物与能打开新世界/新空间的真实媒介都足以引发争夺。最稀有的天外遗物未必提供单纯力量，也可能改变一个人原本被天地限制的行动方式。\n\n## 世界知识边界\n玄曜修士知道天外存在不能完全用本界解释的遗物和裂口，但普通人不知道诸界数量、来源与完整规则。一个人通常只有一个真实身体、一个魂与一个真实坐标；幻术、傀儡和分身都被视为替代物，而不是第二个同等真身。\n\n## 世界正在发生的大事\n九环天都的天外珍宝拍卖刚因黑门骨与异界裂口引发大乱；天外商会、裴氏与其它高位势力都开始重新估价这件遗物与相关见证者。更远天洲仍有自己的战争、宝会、宗门竞争和古族冲突，不围绕某个单一人物运转。\n\n## 值得进入的地点、奇观与未知\n九环天都、跨洲天舟、天外遗迹与真实异界裂口仍是当前最直接的世界外缘。黑门骨曾映出三个完全不同的世界影子，但这些世界自身是什么、为何如此、里面的人怎么生活仍未被玄曜大界解释。\n已批准 Character Authority：\n# CHARACTER AUTHORITY\n\n## POWER CORE｜Frozen Authority\n\n后台短名：余门。宁烬亲自进入一个独立真实世界、卷入真实冲突并在不可回头的选择中承担后果后，可以永久带走一条该世界原本允许、而玄曜大界原本不允许的核心可能性。它不是简单复制功法或拿到宝物：带回的是宁烬本人以后可以成立的一种新现实权限。\n\n触发边界：必须亲身进入；必须有真实冲突与选择；不能靠旁观、偷听或单纯抢一件物品获得；每个独立世界最多带回一条核心可能性；它本身不直接免费提升玄曜主境界；观察者不能直接看见“余门”或知道永久性/内部触发。\n\n开局精确力量位置｜主尺：玄曜九境九重｜精确位置：灵海3重\n\n长期成长方向：新的世界可能性可以继续加入，并与旧可能性产生单项做不到的复合。连续获得并递归复合高价值 Asymmetry 是主角的长期叙事特权；普通 Rival 可以更强、拿走主角错失的宝物、拥有自己的绝技/神兵，但不自动复制一套并行的递归异常栈。\n\n## HUMAN CORE｜Frozen Authority\n\n宁烬，十七岁。稳定牵引是钱、赢、面子、稀奇罕见之物、危险又漂亮的人或东西，以及“既然有机会碰到，为什么只拿一半”的贪心。他敢押、反应快、讨厌被别人替自己决定价值，也不喜欢明明能争却先替自己找退路。\n\n他不是责任/治理型主角。聪明不等于替所有人协调利益；他可以救人、结盟、讲条件或暂时退让，但这些必须来自具体欲望、关系、胜负和眼前代价。爱钱已经成立后，不靠“值多少钱 / 这才叫买卖 / 我不喜欢亏”反复刷同一口癖；让好胜、好奇、面子、身体危险感、具体关系与偶尔不理性的偏爱自然进入选择。\n\n## Composition Boundary\n\nFrozen Power 与 Frozen Human 不互相后验合理化。后续 Power/Asset/Relationship/Identity/Knowledge 只从已发生 Canon 向前追加；人物可以发展，但不能因为新世界最适合某种性格就反向重写宁烬。\n已批准 Story Program：\n# STORY PROGRAM\n\n## 当前 Re-Collision\n\n宁烬以黑门骨进入无主兵荒原时，归锋夜还剩三夜。无主关外，折粮刀撞开粮车锁架，拖着岑非灯和最后一袋旧粮奔向没有城门的荒地。贺乌衣带人截刀，答应只要宁烬帮他把刀送进黑砧城分事炉，拆出的三柄名兵由宁烬先挑。\n\n宁烬没有跟坟线守户撤孩子，没有替乔小满守寂军河，也没有随陆停山追杀旧敌。他看中一柄能够逼现实寻找不存在地点的刀，不信岑非灯一句“这是我父亲的东西”就能替奇物定价，更不甘心只隔着人群看热闹，于是帮贺乌衣夺刀，选择分事炉路线。\n\n分事炉、贺家债务与折粮刀的旧事都不是为宁烬准备的。宁烬最初只想拿最值钱的一柄刀，进入炉前冲突后才看见：荒原真正稀有的不是名兵，而是一个已经开始的动作，竟能在原主人、原兵器乃至原载体失效后继续向前。\n\nFresh Collision 因此落在宁烬最稳定的贪心上。别人争谁来完成旧事，宁烬却想夺走“事情为何不会因为载体断掉而归零”这一层现实本身；他必须亲手开始一个动作，亲眼看着原载体被打断，再用另一个真实的自己把它续完。\n\n## 当前 Power / Human / World 的长期张力\n\n宁烬仍处于玄曜九境九重的灵海4重。双真使同一个宁烬拥有两个同等真实的位置，但共享元力、伤势与死亡风险。风髓双口只有在双真同时存在、两端均未堵死时，才能在两个真实位置之间导引风、热、液压等流动力量；不能传送人或固体，也不增加元力总量。两处骨质伤口仍在恢复，强用会令双端同步恶化。\n\n无主兵荒原却允许一个已经开始、尚未完成的具体事情在原载体失效后继续存在，并持续改变重量、方向、落点与归属。双真原本只能让宁烬分别开始两个动作；荒原则让他看见，更强的不是“两边各做一次”，而是同一个动作能够换一具真身、换一处身体结构，仍不必从零开始。\n\n宁烬经由折粮刀、贺乌衣与分事炉的实际路线，永久取得本世界唯一一条核心可能性：**未尽续行**。\n\n宁烬以后可以让一个由自己真正开始、尚未完成的具体动作，在原本的身体载体被迫中断、离位或换形后，由另一真身或已有身体结构接住，继续保留已经形成的方向、进度与真实作用。接续的是同一个动作，不是复制出第二份力量。\n\n它不依赖死人、兵器或替别人完成遗愿。挥到一半的一刀、正在推开的门、已经发力的拖拽、正从骨口导出的压力都可以续；“杀死某人”“赢下这一战”这类结果愿望不是动作。新的载体仍须真实接触同一对象或处于其连续现实路径上，缺少的力量、距离与破障能力不会由世界补足，动作也可能在续上以后依旧失败。\n\n宁烬最危险的长期优势由此出现：双真提供第二个真实载体，风髓双口提供能够跨越两个真实位置的流动力量，未尽续行则让一次已经开始的动作在身体与流压之间换载体而不归零。三者能够形成普通分身、普通控风与普通兵事都无法复现的连续行动。\n\n## 本阶段核心情节发动机与变化后的主要 Reading Question\n\n本阶段由“谁想截断折粮刀的旧事，谁就会发现自己的私人欲望也正在寻找新的载体”持续发动。\n\n岑非灯要让妹妹相信父亲不是逃兵，却愿意让北门重现的代价落到别人家；贺乌衣要用三柄名兵换回妹妹婚书、家中炉火与自己的自由，因此必须把送粮后果压给岑非灯；乔小满想保住祖传渡口，也想把女儿一家从将被淹没的河湾接回来；陆停山想杀死旧敌给妻子一个答案，却最怕折粮刀与残盾共同证明错误命令出自自己。\n\n宁烬先替贺乌衣夺刀，继而因贺乌衣想独吞三柄名兵而翻脸；他不是为了替荒原主持公道，而是不肯自己只拿刀壳，让别人拿走刀中真正稀有的现实可能。等他亲手夺得未尽续行，贺乌衣、岑非灯与折粮刀的后果也已经没有安全退出的方法。\n\n变化后的主要 Reading Question：\n\n当宁烬已经发出的动作被敌人、断路与换位强行打断，他能不能让这一击从一具真身续入风髓双口，再从另一具真身接着完成；而这一次不断…\nBOOK 关键事实与成长上下文：\n## 0. 本书成长基因图\n### 已批准幻想不变量\n\n宁烬必须亲自进入独立真实世界，卷入真实冲突并承担不可回头的选择，才能带回该世界原本允许、玄曜大界原本不允许的一条核心可能性。每个世界最多带回一条；它不是普通功法、宝物或境界提升，而是宁烬本人以后可以成立的新现实权限。\n\n### 已批准长期成长兑现\n\n- 镜海界：带回“双真”，同一个宁烬可同时占据两个同等真实的位置。\n- 葬身骨陆：带回“真实旧伤在一次不可逆再裂中长成新身体结构”的可能性。\n- 本轮之后，双真与痕生形成“风髓双口”复合；玄曜主尺正常从灵海三重推进至灵海四重。\n- 后续世界继续独立成立后，才允许产生新的可能性与复合，不从未知世界预选答案。\n\n### 已批准长期后果\n\n- 双真持续保留共享元力与双端死亡风险。\n- 风髓双口持续保留双端限制、骨质伤口与恢复需求。\n- 商妩留在骨陆经营独立盐路，宁烬保有三成利润关系，但不拥有她的人生决定权。\n- 贺沉骨保留本地封路与自主路线，不转化为追随者。\n- 黑门骨、海眼碎片、白昼火、赤曜灯芯、赤鳞云驹与剩余灵玉继续影响后续选择。\n- 裴照临仍是灵海九重的现实压力，且下一次不会默认有天外商王隔在中间。\n\n### 核心不变量\n\n- 每个独立世界必须有自己的活人、欲望、冲突与不可替代结果。\n- 新可能性必须扩大宁烬…\n\n## 1. 核心类型与读者承诺\n东方玄幻大世界、多真实世界探索、带回世界可能性并进行复合的成长长篇。当前阶段的主要阅读承诺是：宁烬不接受骨渡司替他定价，主动走上商妩的低价盐路；在真实损失中选择救商妩，最终用自己的双真与旧伤让一条新路从身体里长出来。\n\n### 不可降格 Reader-Facing Story Event Registry\n\n#### RSE-01\n\n事件原子：返伤相还剩三夜时，断脊渡当众念出“灵海境三重、两个真实位置”的天都战例，把宁烬的押运价抬到普通外来者的三倍，并要求两方见证人共同验看他的黑门骨相关物件。宁烬不留下黑门骨，接受商妩的条件：护送低价逆月盐进入十二肋廊，换取新路首批货物的三成利润；月下骨芽一旦合拢，原路不保证还能返回。\n\n状态残留：宁烬以自己的贪心和好胜选定商妩盐路；商妩获得一个危险但无法完全控制的外来同行者；骨渡司继续把宁烬视为高价、高风险外来者；外来货仓、旧痕谱库和失踪商队均未进入宁烬当前路线。\n\n排程边界：必须发生在宁烬离开断脊渡之前；后续不得先让他取得返月院谱库知识或外来货仓奖励，再回头选择盐路。\n\n读者证明锚点：三夜；三倍押运价；断脊渡；商妩；十二肋廊；三成利润\n\n#### RSE-02\n\n事件原子：十二肋廊北岔开始闭合时，贺沉骨先一步封住宁烬准备通过的骨缝。宁烬的两处真…\n\n## 2. 世界观结构\n玄曜大界维持九境九重主尺；葬身骨陆使用独立的骨载六阶，只描述本地修士对巨尸骨骼与共鸣的承受、引导和改变范围，不与玄曜境界换算。\n\n骨陆的主要现实压力来自返伤相、骨芽道路、裂骨风、髓潮、痕生失控与围绕登记权、药盐、迁徙路线和通行收益展开的势力竞争。宁烬进入的是一个已经自行运转的生活世界，不是等待他解锁的副本。\n\n### Reader Release Map\n\n- 第11章｜触发：断脊渡是葬身骨陆的外来者入口；外来修士仍按玄曜九境九重登记，骨渡司依据已公开的“灵海境三重双位战例”提高押运费，并要求两名不同势力的见证人共同验货。\n- 第11章｜触发：返伤相每二十一夜出现一次，月轮缺口对准骨陆时，人的旧伤、兽的旧伤和巨尸骨骼旧创都会重新发热，次日可能长出新的身体结构；因此衣物、床铺、车门和护具都预留变形位置。\n- 第12章｜触发：裂骨风会把新生骨结构吹成锋刃，沿肋骨移动的白色风暴是十二肋廊行旅必须共同面对的危险。\n- 第16章｜触发：封锁多年的巨尸旧创正在长出骨芽廊道；它可能缩短白颅城与十二肋廊之间的路程，也可能让沉髓海髓潮进入城下。\n- 第17章｜触发：留痕者、封痕者与失籍者是骨陆公开的社会分类；逆月盐只能延缓一次痕生，不能决定新结构的形状。\n\n## 3. 世界如何持续制造剧情压力\n- 骨渡司利用天都战例抬高外来者价格，并试图控制断脊渡的通行与验货。\n- 商妩私运低价逆月盐，既要摆脱家族垄断，又必须在返伤相前把盐送入十二肋廊。\n- 贺沉骨处于府阶五段，能直接封闭巨尸旧创，是本地能够切断宁烬路线的自主 Rival。\n- 白颅城想把登记、通道和痕生控制权收归城主府；白髓商团想取得收费权；无痕盟准备封死旧创；新生院需要药盐和稳定通路。\n- 骨芽廊道、裂骨风与沉髓海的髓潮构成不等人的世界压力，不会因为各方没有共同答案而暂停。\n\n## 4. 主角模型、人物弧与核心矛盾\n宁烬想要钱、利润、稀奇的身体可能性与不受别人定价的行动自由。他选择商妩路线，首先因为三成利润、新路本身和对骨陆痕生的好奇，而不是因为承担公共责任。\n\n他的核心冲突是：双真允许他同时站在两处，却不允许共享灵海同时承担所有结果；骨陆则要求每道旧伤最终只长成一种不可重选的新身体。宁烬必须决定保全原样、保住盐货，还是拿自己的身体和关系去赌更大的可能性。\n\n本轮 Human Development 仍为 NONE；人物变化通过商妩事件中的偏爱与损失、以及拒绝安全退出的选择显现。\n\n## 5. 配角与关系系统\n- 商妩：从利用宁烬降…\n最近章节摘要：\n当前已完成第20章。\n\n## ACTIVE SCENE STATE\n\n地点：玄曜大界赤褐色山地  \n在场人物：宁烬双真  \n即时伤势：两处骨质伤口仍在恢复，双端同步收缩，可轻微导引近处风流  \n手中关键物品：黑门骨、储物戒  \n当前敌人或追兵：暂无已确认敌人；黑门骨映出两座未知世界  \n当前倒计时：暂无明确倒计时  \n下一步直接目标：沿赤褐色山地前进，确认玄曜大界现状与黑门骨指向  \n当前主动目标：查明黑门骨映出的两座未知世界\n\n## PERSISTENT CANON\n\n### Power / Capability\n\nCurrent Power Position｜主尺：玄曜九境九重｜精确位置：灵海4重\n- 两处骨唇活口已随宁烬返回玄曜大界，未被天地环境抹除。\n- 活口可在玄曜近距离导引风流；仍不能传送人或物。\n- 双真共享元力、同步受伤，双端死亡风险仍在。\n- 骨质伤口与风髓双口结构需缓慢恢复，不能用元力强催。\n\n### Active Relationships\n\n商妩（白髓商团验货人）｜独立经营新盐路并履行三成利润约定｜与宁烬为共同经营、共同承担风险的合伙关系｜宁烬离开，商妩确认将…\n明确硬约束：未检测到明确题材硬约束\nOutline 用途：优先寻找长中短线编织、身份揭露、离队归来、牺牲/二次兑现、多线合流与高价值获得/旧奖励重释；必须服从已批准 Character Authority / World Vision / Story Program。",
+  "query_scope": "arcs,book-dna,contrasts,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 30,
+  "unique_raw_count": 25,
+  "novel_candidate_count": 24,
+  "accepted_count": 5,
+  "coordinate_reference_count": 0,
+  "coordinate_reference": null,
+  "coordinate_reference_error": "",
+  "naming_reference_count": 0,
+  "naming_reference": null,
+  "naming_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {},
+  "human_lane_order": [],
+  "human_lane_candidate_limit": 0,
+  "prototype_id": "",
+  "prototype_selected": false,
+  "rejected_count": 20,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 5,
+  "raw_stdout": "[0.2810] mechanisms/thread-collision-v3 -- Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl\n[0.1787] syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3 -- # Cross-Book Evidence Matrix\n> 证据边界：以下剧情事实和原文 locator 只转录自指定的 10 份 Sol 蒸馏；本轮未读取原著。结构结论属于跨书推断，不提升为 T\n[0.1787] syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3 -- - **Mechanism**：以具体欲望、关系、身份、物件或世界问题建立线程；允许其自然休眠或离屏推进；用行为、选择或新处境重新提醒；在当前事件中与其他独立因果线碰撞；产生不可回滚状态；第一次兑现后\n[0.1702] mechanisms/hidden-identity-long-v3 -- Retrieval aliases: hidden identity reveal surface identity retrospective reinterpretation reveal cha\n[0.0912] mechanisms/reunion-reentry-v3 -- Retrieval aliases: reunion reentry character return growth return delayed payoff recognition team re\n[0.0912] mechanisms/departure-vacancy-v3 -- Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac\n[0.3659] syntheses/reader-facing-world-coordinates-batch-d-v3 -- MERGE\n- supporting books/evidence\n  - 新专项：吞噬的传承／羽翼层级、完美的十万斤与仙古路径、星辰的未完成功法和遗迹资格。\n  - 经典 raw-gap：斗破\n[0.3659] syntheses/reader-facing-world-coordinates-batch-d-v3 -- # Retrieval Aliases\n读者坐标；世界可读坐标；力量尺；战力尺；境界尺；武技尺；技法尺；装备尺；法宝尺；神兵尺；潜力尺；资质尺；血脉上限；威胁尺；身份地位尺；价值尺；行动空间尺；世界\n[0.2026] mechanisms/mech-action-space-expansion -- ## Creative Problem\n\n进阶如何真正改变玩法，而不只是提高数值\n\n## Mechanism\n\n把新阶段写成新的选择类型、进入权限、探索范围或组合方式；数值增长只有在它打开此前不可行的\n[0.1590] mechanisms/reward-action-space-v3 -- Retrieval aliases: reward action space action grammar change reward expands action space new action \n[0.1418] syntheses/priority-selection-synthesis-20260824 -- # Evidence Matrix\n| 书 | 人物声音的区分机制 | 强弱 / 价值 / 身份的可读承载 | Knowledge / Causal stop | Reaction / Rhythm\n[0.1418] syntheses/priority-selection-synthesis-20260824 -- Implications\n- 先定位一个真实阅读风险：声音合流、状态不可见、未知被解释完、动作因果丢失，或节奏没有换挡。\n- 若是声音合流，只编译人物各自正在保护、回避、交换或误判的内容，以及不同\n[0.1186] syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3 -- # Cross-Book Evidence Matrix\n> 证据边界：以下剧情事实和原文 locator 只转录自指定的 10 份 Sol 蒸馏；本轮未读取原著。结构结论属于跨书推断，不提升为 T\n[0.1186] syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3 -- - **Mechanism**：以具体欲望、关系、身份、物件或世界问题建立线程；允许其自然休眠或离屏推进；用行为、选择或新处境重新提醒；在当前事件中与其他独立因果线碰撞；产生不可回滚状态；第一次兑现后\n[0.1103] mechanisms/minimum-sufficient-public-proof-v3 -- Retrieval aliases: minimum sufficient public proof recognition forced update public status proof\n## \n[0.1058] mechanisms/reward-recontextualization-v3 -- Retrieval aliases: reward recontextualization delayed recontextualization reward reuse late reinterp\n[0.0811] arcs/rcv0-14-wuxia-langzi-jianghu-defense-to-strategy -- ## Local Creative Problem\n\n如何让成名后的私人选择自然升级为共同体防卫，而不是突然给主角贴上责任标签。\n\n## Setup\n\n主角已经因能力和名声收到访客、邀约与关系请求，同\n[0.0811] arcs/rcv0-06-xianxia-xiaoxingji-protection-and-contribution -- ## Local Creative Problem\n\n如何让庇护关系具有互惠和行动后果，而不是单向救助。\n\n## Setup\n\n主角获得部分资格或保护，但仍需面对登记、贡献和组织位置。\n\n## Pro\n[0.0811] arcs/rcv0-14-wuxia-langzi-jianghu-fame-to-defense -- ## Local Creative Problem\n\n共同体已经需要保护时，怎样证明勇气和个人战力不足以单独解决问题。\n\n## Setup\n\n外部力量、内部裂痕、地缘与补给开始共同决定冲突窗口。\n\n#\n[0.0811] arcs/rcv0-13-wuxia-jinyong-shijie-daoshi-reputation-to-belonging -- ## Local Creative Problem\n\n拥有压倒性能力且只想安静生活的人，为什么进入江湖并接受局部关系责任。\n\n## Setup\n\n主角以日常保持距离，随后因好奇接触江湖。\n\n## Pr\n[0.0811] arcs/rcv0-12-lishi-ming-land-to-maritime-boundary -- ## Local Creative Problem\n\n工程知识抵达受怪患和资源限制的地方后，怎样变成当地社会可使用的能力。\n\n## Setup\n\n工程型穿越者进入受虎患、水患和贫困困扰的村庄。\n\n##\n[0.0811] arcs/rcv0-05-xuanhuan-feisheng-zhihou-threshold-inversion -- ## Local Creative Problem\n\n如何把阵势、几何和特殊工具变成可重复验证的行动空间，而非单次设定展示。\n\n## Setup\n\n局部样本中出现阵势/几何观察、行动窗口和隐藏工具。\n\n[0.0811] book-dna/rcv0-03-dushi-xiuzhen-chatianqun -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n普通都市生活被一个可交流、可求助、可行动的修真社群接口打穿；读者持续获\n[0.0811] arcs/rcv0-26-qihuan-tianqi-yubao-misread-inheritance -- ## Local Creative Problem\n\n如何让失败和死亡既有痛苦，又能形成读者期待的能力成长。\n\n## Setup\n\n主角不得不不断死亡来活命，抱怨和麻木说明训练并不轻松。\n\n## Pr\n[0.0811] arcs/rcv0-11-lishi-daizhecangku-daming-resource-to-local-order -- ## Local Creative Problem\n\n局部资源和训练如何在补给紧张与真实伤亡中仍产生集体胜利。\n\n## Setup\n\n训练和公共操作进入国家战争，战场出现兵力、供给和火力压力。\n\n##\n[0.0811] arcs/rcv0-24-dushi-shoushu-zhibojian-care-calculus -- ## Local Creative Problem\n\n如何让专业能力的社会回报不是空泛崇拜，而是解决一个具体误会。\n\n## Setup\n\n患者把可解释的药物现象当作异常，并试图用质疑获得控制。\n\n##\n[0.0811] book-dna/rcv0-05-xuanhuan-feisheng-zhihou -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n飞升或跨过旧门槛后，既有成就不会自动终结问题，而会被放入新的规则、几何\n[0.0811] book-dna/rcv0-06-xianxia-xiaoxingji -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n局部证据支持一条从被提取、被审问到获得资格、保护和归属的社会性上行；更\n[0.0811] book-dna/rcv0-07-dushi-huakaizhe -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n日常生活、延迟信息和关系动作会产生具体的情感与社会后果；局部样本支持照\n[0.0811] book-dna/rcv0-18-lingyi-daogui-yixian -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n读者追逐一个被身体和制度压迫的人如何在疼痛、暴力、交易与现实错位中保住",
+  "novel_candidates": [
+    {
+      "score": 0.281,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl"
+    },
+    {
+      "score": 0.0912,
+      "slug": "mechanisms/reunion-reentry-v3",
+      "snippet": "Retrieval aliases: reunion reentry character return growth return delayed payoff recognition team re"
+    },
+    {
+      "score": 0.1787,
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "snippet": "# Cross-Book Evidence Matrix"
+    },
+    {
+      "score": 0.0912,
+      "slug": "mechanisms/departure-vacancy-v3",
+      "snippet": "Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac"
+    },
+    {
+      "score": 0.2026,
+      "slug": "mechanisms/mech-action-space-expansion",
+      "snippet": "## Creative Problem"
+    },
+    {
+      "score": 0.1702,
+      "slug": "mechanisms/hidden-identity-long-v3",
+      "snippet": "Retrieval aliases: hidden identity reveal surface identity retrospective reinterpretation reveal cha"
+    },
+    {
+      "score": 0.159,
+      "slug": "mechanisms/reward-action-space-v3",
+      "snippet": "Retrieval aliases: reward action space action grammar change reward expands action space new action"
+    },
+    {
+      "score": 0.1418,
+      "slug": "syntheses/priority-selection-synthesis-20260824",
+      "snippet": "# Evidence Matrix"
+    },
+    {
+      "score": 0.1103,
+      "slug": "mechanisms/minimum-sufficient-public-proof-v3",
+      "snippet": "Retrieval aliases: minimum sufficient public proof recognition forced update public status proof"
+    },
+    {
+      "score": 0.1058,
+      "slug": "mechanisms/reward-recontextualization-v3",
+      "snippet": "Retrieval aliases: reward recontextualization delayed recontextualization reward reuse late reinterp"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-14-wuxia-langzi-jianghu-defense-to-strategy",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-06-xianxia-xiaoxingji-protection-and-contribution",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-14-wuxia-langzi-jianghu-fame-to-defense",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-13-wuxia-jinyong-shijie-daoshi-reputation-to-belonging",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-12-lishi-ming-land-to-maritime-boundary",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-05-xuanhuan-feisheng-zhihou-threshold-inversion",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-26-qihuan-tianqi-yubao-misread-inheritance",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-11-lishi-daizhecangku-daming-resource-to-local-order",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-24-dushi-shoushu-zhibojian-care-calculus",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "book-dna/rcv0-05-xuanhuan-feisheng-zhihou",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.0811,
+      "slug": "book-dna/rcv0-06-xianxia-xiaoxingji",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.0811,
+      "slug": "book-dna/rcv0-07-dushi-huakaizhe",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.0811,
+      "slug": "book-dna/rcv0-18-lingyi-daogui-yixian",
+      "snippet": "## Evidence Coverage"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.281,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl"
+    },
+    {
+      "score": 0.0912,
+      "slug": "mechanisms/reunion-reentry-v3",
+      "snippet": "Retrieval aliases: reunion reentry character return growth return delayed payoff recognition team re"
+    },
+    {
+      "score": 0.1787,
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "snippet": "# Cross-Book Evidence Matrix"
+    },
+    {
+      "score": 0.0912,
+      "slug": "mechanisms/departure-vacancy-v3",
+      "snippet": "Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac"
+    },
+    {
+      "score": 0.2026,
+      "slug": "mechanisms/mech-action-space-expansion",
+      "snippet": "## Creative Problem"
+    },
+    {
+      "score": 0.1702,
+      "slug": "mechanisms/hidden-identity-long-v3",
+      "snippet": "Retrieval aliases: hidden identity reveal surface identity retrospective reinterpretation reveal cha"
+    },
+    {
+      "score": 0.159,
+      "slug": "mechanisms/reward-action-space-v3",
+      "snippet": "Retrieval aliases: reward action space action grammar change reward expands action space new action"
+    },
+    {
+      "score": 0.1418,
+      "slug": "syntheses/priority-selection-synthesis-20260824",
+      "snippet": "# Evidence Matrix"
+    },
+    {
+      "score": 0.1103,
+      "slug": "mechanisms/minimum-sufficient-public-proof-v3",
+      "snippet": "Retrieval aliases: minimum sufficient public proof recognition forced update public status proof"
+    },
+    {
+      "score": 0.1058,
+      "slug": "mechanisms/reward-recontextualization-v3",
+      "snippet": "Retrieval aliases: reward recontextualization delayed recontextualization reward reuse late reinterp"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-14-wuxia-langzi-jianghu-defense-to-strategy",
+      "snippet": "## Local Creative Problem"
+    },
+    {
+      "score": 0.0811,
+      "slug": "arcs/rcv0-06-xianxia-xiaoxingji-protection-and-contribution",
+      "snippet": "## Local Creative Problem"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.281,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：怎样让一个大事件真正合流 main plot / relationship / mystery / power / world 中的若干条线，而不是只是把很多角色叫到同一场？\nMechanism：成熟的碰撞点需要一个共享因果铰链和一个不可回避的选择。这个选择同时改写若干线程的未来可行性：某条安全路径关闭、某段关系换位、某个谜团获得新解释、能力意义变化、阵营或世界事实改变。强 payoff 往往还有 narrative afterlife：旧目标完成后，其结果自然成为新承诺、新敌人、新生活问题或第二层解释。\nVariants：- 身份暴露：安全表层生活关闭，关系和敌我同时重写。\n- 牺牲/死亡：结算追捕或冲突，同时生成复活、继承、独立行动或新敌人。\n- 旧物终局用途：同时结算谜团、身份与能力来源。\n- 生活性仪式被大冲突劫持：婚礼、约战、重聚同时结算关系和旧敌。\nGuidance：不要求每次凑齐五栏。判断一个 thread 是否真的参与碰撞：移除它后，这个事件的选择、结果或后续可行性是否会改变？\nFailure Modes：- 角色都到场但因果互不相干。\n- 为了“大高潮”塞入尚未成熟的线。\n- payoff 只关旧问题，不留下任何后续状态。\n- 强制每个高潮都要求多线合流。",
+      "transfer_boundary": "迁移共享因果铰链与 narrative afterlife；碰撞强度由共同选择实际改写了多少线程的未来来决定。"
+    },
+    {
+      "score": 0.0912,
+      "slug": "mechanisms/reunion-reentry-v3",
+      "snippet": "Retrieval aliases: reunion reentry character return growth return delayed payoff recognition team re",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：角色离开很久、被误认、身份变化甚至曾被认为失去后，怎样让归来本身成为 delayed payoff，而不是一见面就恢复原状？\nMechanism：第一次接触先暴露时间造成的不匹配：外貌、能力、气质、身份、价值判断、伤痕或团队中的新空位。通过旧物、旧动作、共同记忆、能力习惯、称呼或只有双方理解的反应逐步确认。认出彼此后仍保留至少一个当前现实障碍，并用一个新的共同动作、合作方式、边界或承诺证明“这个人重新进入了关系，但不是回到过去”。\nVariants：- 互相认不出：成长本身成为重新确认的障碍。\n- 公共死亡后的秘密归来：活着并不等于能恢复旧社会身份。\n- 团队重聚：先看见缺席与变化，再通过当前压力重新磨合。\n- 复活/恢复：真正 payoff 落在重新回应、照护和重新参与行动，而不是状态栏恢复。\nReader Payoff：长期缺席积累的期待，通过肉眼可见的变化和关系重新选择一次性兑现；读者既得到“终于回来”，又得到“回来以后已经不一样”。\nGuidance：不要用等级汇报替代重逢；不要让所有人瞬间无缝认出。把回归者的新状态放进当前冲突中验证。\nFailure Modes：- 出场即拥抱，时间没有留下痕迹。\n- 只报新能力/等级，没有关系重新确认。\n- 重逢抹掉离队、死亡或身份变化造成的后果。\n- 场景结束后没有新的合作入口或关系边界。",
+      "transfer_boundary": "只迁移“变化后重新辨认→仍有障碍→重新进入关系/行动”的结构，不迁移源角色或具体回归方式。"
+    },
+    {
+      "score": 0.0912,
+      "slug": "mechanisms/departure-vacancy-v3",
+      "snippet": "Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：角色离队、失联、沉眠或暂时不可用后，怎样让这次缺席真正改变后续故事，同时允许长线自然沉睡而不是频繁提醒？\nMechanism：离开前先让人物完成一个符合自身欲望的决定、期限、拒绝、交接或目标；离开后尽快用一个新的选择、失败、机会或敌人反应证明“旧状态已经结束”。有人会第一次自己行动，有人失去过去可依赖的选择，有人会利用空位，也可能有人因此获得新的自由。若 Canon 已有期限、物件、缺席位置或未完成承诺，可以把它作为召回器，然后允许人物长时间退出主镜头。\nVariants：- 主动离队证明自己：离开源于人物自己的目标，回归时以行动证明变化。\n- 保护者/核心人物离场：留下者开始重新决定怎么活、怎么行动。\n- 沉眠/失联：共同目标拆成其他人物自己的长期行动。\n- 群像换挡：旧中心离开后，配角不是接班工具，而是各自沿自己的欲望继续。\nReader Payoff：读者真正感到“这个人不在了”，同时拥有一个可记住但不需要每章提醒的长期期待。\nGuidance：Dormancy 不是遗忘。保留一个高辨识召回器即可；下一次提醒最好来自当前事件重新碰到旧期限、旧物、缺席位置或人物留下的实际后果。\nFailure Modes：- 告别很长，但离开后什么都没变。\n- 每隔几章机械提醒“他还在外面成长”。\n- 留下者自动无摩擦接替全部功能。\n- 还没形成缺席感就立即回归。",
+      "transfer_boundary": "只迁移“离开→空位/新选择→长线沉睡/召回”的因果，不迁移具体离队理由或回归奖励。"
+    },
+    {
+      "score": 0.2026,
+      "slug": "mechanisms/mech-action-space-expansion",
+      "snippet": "## Creative Problem",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：进阶如何真正改变玩法，而不只是提高数值\nMechanism：把新阶段写成新的选择类型、进入权限、探索范围或组合方式；数值增长只有在它打开此前不可行的动作时才承担核心回报。\nReader Payoff：可能性扩张；未知区域或新关系可进入；旧能力得到更宽的使用半径\nWhen Not To Use：作品的核心快感本来就是纯数值碾压；新增动作没有读者可见后果",
+      "transfer_boundary": "这是 possible variant，不是普遍规律；不得迁移来源身份、事件、专名或句式。"
+    },
+    {
+      "score": 0.1702,
+      "slug": "mechanisms/hidden-identity-long-v3",
+      "snippet": "Retrieval aliases: hidden identity reveal surface identity retrospective reinterpretation reveal cha",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：隐藏身份怎样跨长篇维持而不靠强行藏答案？揭露后怎样真正改变当前故事？\nMechanism：先让表层身份独立成立并积累真实后果：朋友、爱情、债务、名声、信任与社会位置都是真实的。线索应尽量同时兼容旧解释与新解释；揭露落在人物正在行动的碰撞点，并立刻关闭或改写一条现实路径，例如安全身份失效、继位失败、归乡目标改变、某人开始被追杀。揭露重解释过去，但不删除过去。\nVariants：- 长期潜伏者。\n- 异类/血脉身份。\n- 多个真实社会自我。\n- 错误预言/公共误读逐渐追上现实。\nReader Payoff：“原来如此”与“接下来怎么办”同时出现；过去的普通场景获得第二层意义，而当前关系不能再按旧方式继续。\nGuidance：设计隐藏身份时先写清：表层生活为什么能长期工作；哪些线索在旧解释下也合理；揭露会关闭什么现实选择。\nFailure Modes：- 线索从一开始就只支持真相解释，角色长期看不见显得失智。\n- 揭露只补背景，不改变当前选择。\n- 宣布是假身份后把此前关系全部清零。\n- 为反转而多层套娃。",
+      "transfer_boundary": "《斗罗大陆》《诡秘之主》《将夜》直接支持长期隐藏身份/身份重释；《修真聊天群》只提供“公共误认逐渐追上现实”的邻近证据。迁移揭露后的关系与行动变化，不把公共误认等同于长期潜伏身份。"
+    }
+  ],
+  "rejected": [
+    {
+      "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+      "reason": "固定 World Coordinate Reference 已由已批准 World Vision 继承，不重复占 downstream creative 名额"
+    },
+    {
+      "slug": "arcs/rcv0-14-wuxia-langzi-jianghu-fame-to-defense",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-13-wuxia-jinyong-shijie-daoshi-reputation-to-belonging",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-12-lishi-ming-land-to-maritime-boundary",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-05-xuanhuan-feisheng-zhihou-threshold-inversion",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-26-qihuan-tianqi-yubao-misread-inheritance",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-11-lishi-daizhecangku-daming-resource-to-local-order",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-24-dushi-shoushu-zhibojian-care-calculus",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-05-xuanhuan-feisheng-zhihou",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-06-xianxia-xiaoxingji",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-07-dushi-huakaizhe",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-18-lingyi-daogui-yixian",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "syntheses/gameplay-counterplay-thread-afterlife-batch-d-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "mechanisms/reward-action-space-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "syntheses/priority-selection-synthesis-20260824",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "mechanisms/minimum-sufficient-public-proof-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "mechanisms/reward-recontextualization-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-14-wuxia-langzi-jianghu-defense-to-strategy",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-06-xianxia-xiaoxingji-protection-and-contribution",
+      "reason": "超过最终数量上限"
+    }
+  ],
+  "result": "### Inspiration 1\nsource: mechanisms/thread-collision-v3\ntype: mechanism\nscore: 0.281\n\n可用抽象：Creative Problem：怎样让一个大事件真正合流 main plot / relationship / mystery / power / world 中的若干条线，而不是只是把很多角色叫到同一场？\nMechanism：成熟的碰撞点需要一个共享因果铰链和一个不可回避的选择。这个选择同时改写若干线程的未来可行性：某条安全路径关闭、某段关系换位、某个谜团获得新解释、能力意义变化、阵营或世界事实改变。强 payoff 往往还有 narrative afterlife：旧目标完成后，其结果自然成为新承诺、新敌人、新生活问题或第二层解释。\nVariants：- 身份暴露：安全表层生活关闭，关系和敌我同时重写。\n- 牺牲/死亡：结算追捕或冲突，同时生成复活、继承、独立行动或新敌人。\n- 旧物终局用途：同时结算谜团、身份与能力来源。\n- 生活性仪式被大冲突劫持：婚礼、约战、重聚同时结算关系和旧敌。\nGuidance：不要求每次凑齐五栏。判断一个 thread 是否真的参与碰撞：移除它后，这个事件的选择、结果或后续可行性是否会改变？\nFailure Modes：- 角色都到场但因果互不相干。\n- 为了“大高潮”塞入尚未成熟的线。\n- payoff 只关旧问题，不留下任何后续状态。\n- 强制每个高潮都要求多线合流。\n\n使用边界：迁移共享因果铰链与 narrative afterlife；碰撞强度由共同选择实际改写了多少线程的未来来决定。\n\n### Inspiration 2\nsource: mechanisms/reunion-reentry-v3\ntype: mechanism\nscore: 0.0912\n\n可用抽象：Creative Problem：角色离开很久、被误认、身份变化甚至曾被认为失去后，怎样让归来本身成为 delayed payoff，而不是一见面就恢复原状？\nMechanism：第一次接触先暴露时间造成的不匹配：外貌、能力、气质、身份、价值判断、伤痕或团队中的新空位。通过旧物、旧动作、共同记忆、能力习惯、称呼或只有双方理解的反应逐步确认。认出彼此后仍保留至少一个当前现实障碍，并用一个新的共同动作、合作方式、边界或承诺证明“这个人重新进入了关系，但不是回到过去”。\nVariants：- 互相认不出：成长本身成为重新确认的障碍。\n- 公共死亡后的秘密归来：活着并不等于能恢复旧社会身份。\n- 团队重聚：先看见缺席与变化，再通过当前压力重新磨合。\n- 复活/恢复：真正 payoff 落在重新回应、照护和重新参与行动，而不是状态栏恢复。\nReader Payoff：长期缺席积累的期待，通过肉眼可见的变化和关系重新选择一次性兑现；读者既得到“终于回来”，又得到“回来以后已经不一样”。\nGuidance：不要用等级汇报替代重逢；不要让所有人瞬间无缝认出。把回归者的新状态放进当前冲突中验证。\nFailure Modes：- 出场即拥抱，时间没有留下痕迹。\n- 只报新能力/等级，没有关系重新确认。\n- 重逢抹掉离队、死亡或身份变化造成的后果。\n- 场景结束后没有新的合作入口或关系边界。\n\n使用边界：只迁移“变化后重新辨认→仍有障碍→重新进入关系/行动”的结构，不迁移源角色或具体回归方式。\n\n### Inspiration 3\nsource: mechanisms/departure-vacancy-v3\ntype: mechanism\nscore: 0.0912\n\n可用抽象：Creative Problem：角色离队、失联、沉眠或暂时不可用后，怎样让这次缺席真正改变后续故事，同时允许长线自然沉睡而不是频繁提醒？\nMechanism：离开前先让人物完成一个符合自身欲望的决定、期限、拒绝、交接或目标；离开后尽快用一个新的选择、失败、机会或敌人反应证明“旧状态已经结束”。有人会第一次自己行动，有人失去过去可依赖的选择，有人会利用空位，也可能有人因此获得新的自由。若 Canon 已有期限、物件、缺席位置或未完成承诺，可以把它作为召回器，然后允许人物长时间退出主镜头。\nVariants：- 主动离队证明自己：离开源于人物自己的目标，回归时以行动证明变化。\n- 保护者/核心人物离场：留下者开始重新决定怎么活、怎么行动。\n- 沉眠/失联：共同目标拆成其他人物自己的长期行动。\n- 群像换挡：旧中心离开后，配角不是接班工具，而是各自沿自己的欲望继续。\nReader Payoff：读者真正感到“这个人不在了”，同时拥有一个可记住但不需要每章提醒的长期期待。\nGuidance：Dormancy 不是遗忘。保留一个高辨识召回器即可；下一次提醒最好来自当前事件重新碰到旧期限、旧物、缺席位置或人物留下的实际后果。\nFailure Modes：- 告别很长，但离开后什么都没变。\n- 每隔几章机械提醒“他还在外面成长”。\n- 留下者自动无摩擦接替全部功能。\n- 还没形成缺席感就立即回归。\n\n使用边界：只迁移“离开→空位/新选择→长线沉睡/召回”的因果，不迁移具体离队理由或回归奖励。\n\n### Inspiration 4\nsource: mechanisms/mech-action-space-expansion\ntype: mechanism\nscore: 0.2026\n\n可用抽象：Creative Problem：进阶如何真正改变玩法，而不只是提高数值\nMechanism：把新阶段写成新的选择类型、进入权限、探索范围或组合方式；数值增长只有在它打开此前不可行的动作时才承担核心回报。\nReader Payoff：可能性扩张；未知区域或新关系可进入；旧能力得到更宽的使用半径\nWhen Not To Use：作品的核心快感本来就是纯数值碾压；新增动作没有读者可见后果\n\n使用边界：这是 possible variant，不是普遍规律；不得迁移来源身份、事件、专名或句式。\n\n### Inspiration 5\nsource: mechanisms/hidden-identity-long-v3\ntype: mechanism\nscore: 0.1702\n\n可用抽象：Creative Problem：隐藏身份怎样跨长篇维持而不靠强行藏答案？揭露后怎样真正改变当前故事？\nMechanism：先让表层身份独立成立并积累真实后果：朋友、爱情、债务、名声、信任与社会位置都是真实的。线索应尽量同时兼容旧解释与新解释；揭露落在人物正在行动的碰撞点，并立刻关闭或改写一条现实路径，例如安全身份失效、继位失败、归乡目标改变、某人开始被追杀。揭露重解释过去，但不删除过去。\nVariants：- 长期潜伏者。\n- 异类/血脉身份。\n- 多个真实社会自我。\n- 错误预言/公共误读逐渐追上现实。\nReader Payoff：“原来如此”与“接下来怎么办”同时出现；过去的普通场景获得第二层意义，而当前关系不能再按旧方式继续。\nGuidance：设计隐藏身份时先写清：表层生活为什么能长期工作；哪些线索在旧解释下也合理；揭露会关闭什么现实选择。\nFailure Modes：- 线索从一开始就只支持真相解释，角色长期看不见显得失智。\n- 揭露只补背景，不改变当前选择。\n- 宣布是假身份后把此前关系全部清零。\n- 为反转而多层套娃。\n\n使用边界：《斗罗大陆》《诡秘之主》《将夜》直接支持长期隐藏身份/身份重释；《修真聊天群》只提供“公共误认逐渐追上现实”的邻近证据。迁移揭露后的关系与行动变化，不把公共误认等同于长期潜伏身份。"
+}

@@ -1,0 +1,1 @@
+{"output": "C:\\dev\\tgn-story-mvp\\books\\real-prod-wo-shen-cang-zhu-jie-40ch-20260901-v1\\batches\\batch-0031-0035\\state\\chapter-0031\\response.md", "chars": 1569, "stopReason": "end_turn", "usage": {"totalTokens": 33679, "inputTokens": 9132, "cachedReadTokens": 23296, "outputTokens": 1251, "thoughtTokens": 95}}
