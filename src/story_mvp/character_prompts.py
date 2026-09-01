@@ -11,9 +11,13 @@ from .character_context import (
 from .character_seeds import HUMAN_SEED_SCHEMA, POWER_SEED_SCHEMA
 from .long_form_evolution import compose_effective_world, project_world_state_from_status
 from .prompts import (
+    ANTI_TASK_BOARD_COLLISION_DIRECTION,
     FINAL_APEX_DIRECTION,
     HardGateError,
+    LONGITUDINAL_THREAD_ADVANCE_DIRECTION,
+    MAIN_WORLD_RETURN_CONSEQUENCE_DIRECTION,
     OUTLINE_TEMPLATE,
+    PERSISTENT_GLOBAL_PROGRESS_RULER_DIRECTION,
     PROTAGONIST_ASYMMETRY_DOMINANCE_DIRECTION,
     PUBLIC_WORLD_KNOWLEDGE_CLARITY,
     STORY_PROGRAM_TEMPLATE,
@@ -261,7 +265,7 @@ HUMAN_DEVELOPMENT_PROMPT = """你是 TGN 的周期性 Human Development 审阅�
 """
 
 
-STORY_REFRESH_PROMPT = """你是 TGN 的 Periodic Re-Collision / Story Refresh。当前不是开书第一次 Collision，而是一个已经活过很多章的人第一次面对**独立生成并已冻结的新 World Horizon**。
+STORY_REFRESH_PROMPT = f"""你是 TGN 的 Periodic Re-Collision / Story Refresh。当前不是开书第一次 Collision，而是一个已经活过很多章的人第一次面对**独立生成并已冻结的新 World Horizon**。
 
 Authority：
 - Effective World = World Root + 已生效 Forward World Expansions；你只能使用，不能重写。
@@ -270,6 +274,14 @@ Authority：
 
 核心方法：**Independent World × Current Character → Fresh Collision。**
 
+{LONGITUDINAL_THREAD_ADVANCE_DIRECTION}
+
+{MAIN_WORLD_RETURN_CONSEQUENCE_DIRECTION}
+
+{ANTI_TASK_BOARD_COLLISION_DIRECTION}
+
+{PERSISTENT_GLOBAL_PROGRESS_RULER_DIRECTION}
+
 - 不要把新世界重新解释成“原来一直为主角准备”。真正好的结果允许不协调、绕路、错失和意外偏好。
 - Current Power Portfolio 是两层 Power 的当前态：开局 Core 继续存在，已获得 Power / 武器 / 身体变化继续有用。可以通过新世界真实事件再获得新的 Power Asymmetry，并与旧优势复合，但不能反向给 World 新造一件刚好补 Build 的东西。
 - **Route-Bound Acquisition 继续成立。** 先让 Current Human 在独立新世界里因为自己的欲望、关系与风险偏好真的走进某条路线，再从这条路线实际接触到的人、地点、物件、传承、事件中产生后续新优势；不要从整个新 World 全局挑一件最适合旧 Build 的升级，再把人物路线改写过去。没选的机会可以真的错过，直到新的独立因果让路线重合。
@@ -277,6 +289,7 @@ Authority：
 - Human 决定选择，不用“长期成长最优解”覆盖人物。新世界出现多个高价值机会时，允许人物因钱、赢、好奇、爱情、兄弟、虚荣、报复、享受、自由等走不同路线。
 - 新阶段应真正换 Story Engine / Reading Question；不要只把旧阶段的“接任务→危险地点→胜利→奖励”换皮。
 - 旧获得要继续改变新阶段；新获得以后也必须留下，而不是阶段结束 reset。
+- **旧线不能只被保存。** 从 Existing Canon / 旧 Story Program / Current Character 里挑当前最有牵引力的 1—3 条跨 Horizon 线，在本轮安排至少一条真正发生新事实；如果本轮是 instance 且最终回主世界，优先让回归本身改变一个已有 Rival、旧社会估值、旧家族/关系、旧资产或长期 Mystery 的可见状态。没有自然传播或接触因果时可以延后，但要写清为什么延后，不能把“还在 OPEN PROMISES”当作已经推进。
 - 世界扩张后重新校准 Reader Ruler、Social Repricing 与新 World Entry，但不把说明写成百科。
 - 普通长篇规划一个自然大型阶段；多世界 instance 则规划当前副本 + 回归后真正留下的 consequence。都不要逐章。
 - 只刷新未来，不重写已完成章节，不发明旧历史。

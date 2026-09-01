@@ -92,6 +92,10 @@ Fantasy First 是读者价值优先级，不再是 production 阶段。系统仍
 
 能力、装备、资源、关系、身份、领地等可以承载复利，但不要为了证明成长主动堆成路线网、权限树、库存、节点网络或组合系统。
 
+这里再区分一个长篇里非常重要的概念：**Canon retained ≠ Plot advancing。** 一条 Rival、旧关系、家族线、资产、Mystery 或旧债被完整保存在 `PERSISTENT CANON / OPEN PROMISES / Handoff`，只证明系统没有失忆；只有它后来产生了新的可见事实——对手真的换了策略、旧人物重新行动、旧收益到账或引来争夺、旧谜团出现新物证、主世界因上一轮表现重新估价——才算**叙事复利**。多世界长篇尤其要防止“世界一直换，整本书的因果却原地保存”：每个新 Horizon 不必召回全部旧线，但当前最有牵引力的少数长期线程应持续轮流发生新事。
+
+因此，instance 结束后的“回主世界”本身也是高价值 Story Beat。它不要求每次都安排一轮打脸，但不能长期只承担“确认能力还在 → 看下一扇门”的转场功能。过去带回的力量、资产、关系、身份或知识，应该周期性改变主世界已有 Rival、价格、身份、关系、入口或 Mystery，让读者看到副本结果正在**反过来改变整本书**。
+
 ### 2.5 Backstage Principles Must Not Become Generated Ontology
 
 TGN 会保留一组区别于模板化小说生成器的后台创作原则与读者体验坐标：World Independence、Concrete Value、High-Value Acquisition、Net New、Irreversible State、Action Space、World Entry、Reward Opportunity、Fantasy Compounding、资源反哺，以及 Expectation Ladder、Mystery Depth、Impact 等。它们非常重要，负责判断长篇是否真的在积累、换挡、制造期待、保留纵深并扩大未来故事可能性；**但它们属于 Author Model / Creative Constitution，不是小说世界里的自然名词、资源、势力理念或终极主题。**
@@ -135,7 +139,7 @@ Reader Coordinates 因此分成两类：
 
 因此，“具体”优先具体在：谁想得到什么、谁阻止、主角决定什么、核心优势怎样改变局势、谁因此得到或失去什么、什么从此不可回滚。观察、分析、测试、验证、调整、实施如果没有新的关键选择、冲突或反转，就压缩到足以支撑因果的最小程度。
 
-这条准则不是禁词表，也不禁止工程、经营、治理、研究等题材；如果作者明确选择这些题材，它们可以成为主发动机。关键是 **supporting logic 只有在本书真的把它选为主要阅读体验时，才升级为 story engine。**
+这条准则不是禁词表，也不禁止工程、经营、治理、研究等题材；如果作者明确选择这些题材，它们可以成为主发动机。关键是 **supporting logic 只有在本书真的把它选为主要阅读体验时，才升级为 story engine。** 2026-09-01《我身藏诸界》骨陆手术进一步确认：压掉登记、押运、路权和结算可以保住世界特色与核心身体幻想，但一次把 11—20 从 23,328 压到 12,154 个非空白字符（-47.9%）又明显过头；因此 production 冻结的是 **Supporting Logic Compression + Story-Bearing Reallocation**，不是“越短越好”，也不新增章节字数 KPI / density gate。
 
 ### 2.7 Few Deep Rules > Many Hard Gates
 
@@ -258,6 +262,8 @@ Human Seed 只读 deterministic `LIFE_CONTEXT` 与 Human GBrain craft，不看 P
 
 **经历是背景，不是人格证明。** 同样的生活事实本来就可能长出不同的人。人物辨识度来自多股动机冲突时反复暴露的选择偏向，而不是漂亮的人生哲学。
 
+但“经历不是证明”也不等于人物必须永远没有来处。若 Human Seed 已经**先独立建立**了某个具体旧物、家庭位置、反复生活经验、长期失去/占有经验、羞辱或关系习惯，而它自然会给某条 Behavior Signature 增加重量，可以把它作为低频 `生活根`：读者以后知道“为什么这件事对他格外刺”。这条连接只能引用已经先成立的生活事实；**不得为了证明性格反向制造父母惨死、家产被夺、背叛等创伤。** 没有自然根就保持未知，人物不需要在开书时拥有一套完整心理病因学。
+
 长篇运行时采用**三层 Human**，但三层时钟不同：
 
 - `Human Origin Core`：开书稳定选择偏向与 competing motives，长期冻结为人物起源；
@@ -377,6 +383,14 @@ Story Program 可以为了让当前关系、局部性格反应或某次选择更
 World Expansion 被作者批准后，先确定性刷新 `CURRENT_CHARACTER.md`；只有这个阶段，Sol high 才第一次同时看到 **Effective World × Current Character**，重新规划当前新的 World Horizon。
 
 Story Refresh 不是把旧 Program 续写几十行，而是 fresh collision：新世界不能为了主角重新改；Current Character 也不能为了适配新世界被重写。旧 Story Program 只保留仍未兑现且仍成立的因果。允许主角错过机会、NPC 拒绝、旧能力在新世界出现意外用途、Human 因私人偏好走非最优路线；新的 Power Asymmetry 只能从新世界已经独立成立、且人物真实走入的机会中获得。**No Universal World Tour 同样延续到 Refresh**：Effective World 里的所有大会、遗迹、战争和高价值对象不是主角待办清单；未选路线继续由当地 actor 推进，直到新的独立因果让它再次与人物相交。
+
+Refresh 现在还承担一项此前容易被“保存 Canon”掩盖的职责：**让少数跨 Horizon 长线真的继续发生。** 它从 Existing Canon / 旧 Program / Current Character 中选择当前最有牵引力的 1—3 条 Rival、关系、主世界身份、旧收益、家族/故乡线或 Mystery，本轮至少安排其中一条产生新事实；只把它继续列在 `仍值得追` 不算推进。多世界 instance 若最终返回主世界，优先检查这次回归能否自然触发已有 Rival 的新反制、旧估值重定价、旧资产兑现、旧关系再进入或 Mystery 新证据。没有传播/接触因果时可以延后，但要让别的长期线程继续滚动，不能把“下一个世界很酷”当作唯一长篇引擎。
+
+这并不等于恢复“提前写死500章总纲”。Story Program 已有的 `全书成长与核心幻想兑现脊柱` 现在同时维护 **2—4 条约60—120章尺度的 Book-Level Longitudinal Spine**：例如长期 Rival、主角人生/家族线、Meta Mystery、主世界社会位置或反复可回访的重要关系/资产。每条只固定 `当前核心问题 → 下一次可见升级应是什么类型 → 当前仍不能回答什么`，不预写未知世界、未来章号或 Mystery 真相。这样 TGN 同时保留“只具体规划当前 World Horizon”的 fresh-context 优势，又不让整本书退化成一串各自优秀的十章中篇。
+
+同时，**多机会碰撞不应写成任务面板。** 世界可以有明确交易和报酬，但高价值路线优先通过 Living Actors 正在做的事，在同一个人、物、地点或时间窗口上互相冲突；避免稳定生成“三个人依次报任务/奖励 → 主角比较菜单 → 选择一项”。主角是在正在发生的故事里选择，不是在世界设定的奖励列表里选 Build。
+
+Local instance ruler 仍然保留，但长篇还需要至少一条**不随副本重置的 Reader Progress Ruler**。默认优先用 World Root 的公开主力量尺；若 Plot Pace 长期快于 Tier Pace，可再由已发生故事建立一条很简单的 Meta 进度尺（例如核心跨界器物已经稳定能做到哪一种操作），让读者知道几十章累计走了多远。它不是总战力分，不预授权未来阶段，也不要求每本书都额外发明第二套数字系统。
 
 真实模型 A/B（普通玄幻 Ch120 + 多世界 Ch80）比较了“单 Sol 全包”与分权路线：单 Agent 两个 Case 都没有获胜，最典型失败是把世界材料、岗位、奖励和人物课程做成当前主角的钥匙孔。最终 production 采用：**独立 World Expansion + 可选独立 Human Development + deterministic Current Character + Sol Re-Collision**。这类 Agent 只在长篇边界运行，不进入每章链。
 

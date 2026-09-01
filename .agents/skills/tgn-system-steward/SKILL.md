@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.38
+version: 0.3.39
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -102,6 +102,12 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Character is a person, not a psychological proof
 - **Human candidate needs Action Evidence, not another personality sentence**：候选期 Non-Canon Audition 应用一个小而真实的取舍现场检验 competing motives / relationship 是否会落成行动与机会成本；Audition 不是 Canon，不新增人物历史，也不能把一次表现固化成“以后每次都这样”的人格算法
 - Growth is longitudinal, not a per-stage / per-block tax
+- **Canon retained ≠ Plot advancing**：Open Promise / Canon / Handoff 完整保留只证明系统没失忆；多世界长篇仍要审计当前最有牵引力的 Rival、旧人物、旧资产、家族线或 Mystery 是否跨 Horizon 轮流产生新事实。反复“进世界→得能力→回来→下一世界”而主世界/Rival/旧关系30章不动，最早坍缩通常在 Story Program / Story Refresh 的 longitudinal thread allocation，不先怪 Writer
+- **Return consequence matters in multiworld fiction**：Hub / 主世界回归不必每次打脸，但旧获得应周期性改变社会估价、敌人策略、关系、资产、入口或 Mystery；若回归只确认能力存在并开启下一门，属于 long-form compounding failure
+- **Opportunity Collision ≠ Task Board**：多个高价值路线可以交易、有报酬，但优先由 Living Actors 正在做的事在同一个人/物/地点/时间窗口相撞；“多个 NPC 依次报任务奖励→主角菜单选择”要追到 Story / Outline，而不是靠正文说“这不是任务”掩盖
+- **Persistent Global Progress Ruler**：Local instance ruler 可以换，但长期至少有一条不重置 reader coordinate；默认先看 Root 主力量尺，Plot pace 长期快于 Tier pace 时再看 Meta 能力/器物是否从已发生故事自然形成简单进度。不得凭空设计未来阶段或合成总战力分
+- **Mechanism explanation must decay**：Authority 可以重复完整边界，正文不能每次重念；第一次清楚、第二次补新变化、第三次以后优先动作/反应/结果。新复合高光若先把公式解释完再发生，会损失 reader inference 的“原来还能这样”爽点
+- **Behavior Signature may have a life root, never reverse-engineered trauma**：先看 Human 已成立的旧物、家庭位置、长期失去/占有经验或关系习惯能否自然给选择偏向加重量；没有就保持未知，禁止为了“人物深度”临时发明悲惨童年证明人格
 - Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
 - **Small Grammar ≠ Small World**：审计底层学习成本与 Fantasy Surface 丰富度时必须分开判断；少系统不能成为压掉装备、身体、异兽、环境、奇物、副轴与复合玩法的理由
 - **World Possibility Ecology is route-bearing, not a catalog**：当不同 Human 最后仍拿到同一第二/第三优势时，不要先强迫 Story Program“发不同能力”。先审 World 的高价值成长来源是否实际分布在不同 Living Actors、地点、承诺与时间窗口，还是一个最显眼机制构成所有路线都会回去的 universal upgrade trunk；再追 Story 是否因“把 World 都用上”让主角逐一打卡所有大会/矿塔/战争/秘境。**不要过早停在 `Opportunity → Privilege Delta`：如果给奖励加 route-local 约束后，不同 Human 仍实际访问同一批高价值节点，最早剩余根因是 `Choice → Route` 被 Universal World Tour 重新合流。** PASS 不要求人格→外挂一一映射，而要求真实选择可以改变可达/错过的机会，未选路线由 NPC 继续推进并留下不可逆结果

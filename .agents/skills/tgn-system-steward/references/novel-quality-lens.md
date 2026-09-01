@@ -150,6 +150,10 @@
 
 如果每个 arc 结束后像重新开局，复利失败。
 
+这里必须再追一层：**Canon retained ≠ Plot advancing。** 如果旧 Rival、旧人物、旧收益、家族/故乡线、Mystery 只是被完整保存在 `OPEN PROMISES / Canon / Handoff`，几十章没有产生任何新事实，系统只是没有失忆，长篇并没有真正复利。多世界小说尤其检查：是否持续出现“进世界 → 得能力 → 回来 → 下一世界”，而读者继续看的主要理由只剩“下一地图也许很酷”；若是，最早问题通常在 Story Program / Story Refresh 的 longitudinal thread allocation，不应先怪 Writer。
+
+主世界/Hub 回归也应按同一标准审计：不要求每次打脸，但过去带回的 Power / Asset / Identity / Relationship / Knowledge 是否周期性让旧社会重新定价、Rival 改策略、旧人物重新行动、旧资产到账/引祸、或长期 Mystery 多出一个可行动的新事实？如果回归长期只负责确认能力还在和打开下一扇门，属于 **Return Consequence Collapse**。
+
 ## 11. Outline Executability
 
 Outline 应该让 Director 知道“这几十章具体发生什么”，但不提前写成 scene workflow。
@@ -168,6 +172,7 @@ Outline 应该让 Director 知道“这几十章具体发生什么”，但不�
 - 观察 -> 分析 -> 验证 -> 调整 -> 实施；
 - 每个 block 固定升级/奖励/新地图；
 - 抽象说“扩大影响力”“获得更多选择权”。
+- 三个或更多 NPC 依次上门说明各自问题与奖励，主角比较 A/B/C 后像菜单一样选一项；真正的多路线应优先由 Living Actors 正在进行的行动，在同一个人/物/地点/时间窗口互相碰撞。交易本身不是问题，**Opportunity Collision 退化成 Task Board** 才是问题。
 
 ## 12. Scene Realization
 
@@ -213,8 +218,20 @@ AI 味常来自结构习惯，而不仅是词汇：
 - **漂亮二段论 / aphoristic closure monoculture**：事实或动作已经成立后，另起短句做裁断、对照、否定翻转或意义升华，并在一章里反复复现成 `事实 → 金句总结 → 意义解释`；单独一次可能很好，稳定重复才是 AI 结构习惯。审计看语义同构，不看是否复用了“不是 / 怕的是 / 已经够了”等具体词；
 - payoff 预告一次、发生一次、总结一次；
 - planning language 直接进入正文。
+- **Mechanism explanation does not decay**：某能力第一次已经讲清，第二次仍完整复述边界，第三次高潮前又把 `A + B + C = D` 公式先解释一遍，导致读者没有自己意识到“原来还能这样”的瞬间。审计时区分 Authority 需要完整边界与正文需要的信息量：第一次清楚，第二次只补新变化，后续优先动作/反应/结果。
+- 章节标题直接使用“动作没有归零 / 被打断的转门 / 某机制成立”这类后台公式，提前替读者总结本章答案；如果同样事件能用人物、争夺物、地点变化或画面结果命名，后者通常更小说化。
 
 Humanization 优先修信息与节奏功能，不做禁词表。
+
+## 14.1 Persistent Global Progress Ruler
+
+多世界作品可以拥有很多 Local Ruler，但审计时还要问：**读者有没有一把不随副本重置的尺，能在第40/80/120章快速说出主角比第一卷走了多远？**
+
+默认先看 World Root 主力量尺是否持续移动；若 Plot Pace 明显快于 Tier Pace，再看核心 Meta 能力/器物是否已经从故事里自然形成一条简单、可观察的长期进度（例如以前只能偶发，现在能定点返程/标记/携带等）。这不是要求固定阶段，也不允许审计员凭空设计未来能力；若当前故事没有授权 Meta ruler，就报告“global progress coordinate 仍弱”，不要用本地尺或总战力评分冒充解决。
+
+## 14.2 Character Life Root Without Trauma Engineering
+
+Behavior Signature 有辨识度后，检查它是否与人物已经成立的具体生活事实发生过低频回扣：旧物、家庭位置、失去/占有经验、关系习惯等可以让一句“我都要 / 我不让别人替我选”从参数变成人生命题。但**不要把没有根自动判成缺陷，更不能为了修人物深度反向发明惨痛童年**。最早检查 Human Seed 是否已有可用事实；有则 Story Program 可以回收，没有则保持未知，等真实经历以后再长。
 
 ## 15. Shock Recontextualization
 

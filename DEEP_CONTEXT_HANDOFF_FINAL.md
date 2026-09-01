@@ -1909,7 +1909,33 @@ Batch 中途不更新 State/Canon；否则会再次制造 stale。旧 `Director 
 
 用户成品评价还前向冻结四条创作/审计原则：**Access Provenance**；真正卖点如“带走并复合世界可能性”要在第一自然 Horizon 结束前至少完整兑现一次；强世界规则至少改变一条只有该规则存在才成立的人物欲望/关系/身份/命运，不只当玩法；人物“爱钱/好胜”等已成立后停止用固定同义口癖重复证明（Trait Saturation）。原“漂亮二段论不得重复成章法”继续有效。
 
-当前审计技能升级为 **`tgn-system-steward 0.3.38`**：新增 Batch Narrative Window vs Authority Finalization、Planning Authority Preservation、Full Deterministic Packet、Access Provenance、Premise Identity Payoff、World Rule Lived Consequence、Trait Saturation，以及 Max/Ultra 必须凭真实 closure 增益而非档位名采用的审计方法；package validate / install / bounded smoke 均 PASS。
+当前审计技能已继续升级并验证为 **`tgn-system-steward 0.3.39`**。0.3.38 的 Batch Narrative Window vs Authority Finalization、Planning Authority Preservation、Full Deterministic Packet、Access Provenance、Premise Identity Payoff、World Rule Lived Consequence、Trait Saturation 等能力继续保留；0.3.39 进一步能区分 `Canon retained ≠ Plot advancing`、Return Consequence Collapse、Opportunity Collision vs Task Board、Persistent Global Progress Ruler、Mechanism Explanation Decay 与 Character Life Root Without Trauma Engineering。package validate / install / bounded smoke 均 PASS。
+
+### 14.16 《我身藏诸界》40章：Longitudinal Story Engine 根修（2026-09-01）
+
+用户完整读完 production `real-prod-wo-shen-cang-zhu-jie-40ch-20260901-v1` 后给出新的瓶颈排序：**创意已经不是当前最大问题；世界比故事强、能力比人物强、单卷比整本强。** 镜海界 / 骨陆 / 兵荒原 / 万门宫各自都能形成独立十章强幻想，尤其 Chapter 31—40 的 `双真 + 风髓双口 + 未尽续行 + 双影为邻` 已证明 TGN 的多世界 Advantage Stack 可以形成很强的独有复合高潮；本轮禁止削弱这些既有 World / Power 优势。真正缺口是长篇主线牵引、主角人生不可替代性与每次副本结果对整本书的持续反作用。
+
+Production 因此冻结七条互相配合、但不新增常驻 Agent / Reviewer / Scorer / thread database / 总战力分的长篇原则：
+
+1. **Canon Retained ≠ Plot Advancing**：旧 Rival、人物、资产、家族/故乡线、Mystery 只被记在 Canon / Handoff 不算推进；每个新 Horizon 从最有牵引力的 1—3 条里至少让一条发生新的 reader-visible fact。
+2. **Book-Level Longitudinal Spine**：`全书成长与核心幻想兑现脊柱` 维护约 2—4 条 60—120章尺度长线，只固定 `当前仍在问什么 → 下一次可见变化类型 → 当前仍必须未知什么`。不预写未来 World、人物、奖励、能力、章号或 Mystery 真相；后续仍由 protagonist-blind World Expansion → fresh Re-Collision 决定当前具体 Horizon。
+3. **Main-World Return Consequence**：多世界回归是 Story Beat。旧获得应周期性改变主世界的 Rival 战术、社会估价、价格、关系、入口、资产或 Mystery，不能长期 `确认能力还在 → 看下一门`。
+4. **Opportunity Collision ≠ Task Board**：多个机会优先作为 Living Actors 已经在做的事围绕同一人/物/地点/时间窗互相破坏；不是三名 NPC 依次报路线+奖励，再让主角做菜单选择。
+5. **Persistent Global Progress Ruler**：Local ruler 可随世界切换，但几十章至少有一条不重置的 reader coordinate。默认先用玄曜主力量尺；若 Plot Pace 明显快于 Tier Pace，只从已发生故事总结 `Current Meta Capability + Next Observable Question`，不做阶段技能树、不预授权带人/定点返程/两界融合等未来能力。
+6. **Character Life Root Without Trauma Engineering**：Behavior Signature 可由已成立生活事实获得重量；没有自然根就未知。宁烬当前合法根只有“宁家旁支 / 旧宅契 / 它曾是身上最后值钱的东西 / 面对只能拿一半时明确问过凭什么”等既有事实；不得反向发明父母惨死、家产被夺、背叛或宅契秘密来证明“我都要”。
+7. **Mechanism Explanation Decay**：第一次把效果讲清；第二次只补新边界/失败/组合；第三次以后优先让动作、外界反应和结果自己说明。新复合高潮优先先发生，再最短确认；不能在高潮前把 `A+B+C=D` 当公式念完。
+
+真实 Sol-high Story Refresh Treatment 已验证两类原根因，但只作为**结构证据**，不直接覆盖原40章：21—30 baseline 中裴照临等长期线大量停在“继续存在 / 继续压力 / 本轮不强制回访”，Treatment 让 Rival 战术、骨陆旧资产与主世界估价发生新事实，判 **DIRECTIONAL PASS**；31—40 baseline 确有 `A路线+reward → B路线+reward → C路线+reward → 主角比较` 的 Task Board 感，Treatment 改成阮七娘已见恋人、叶回纱已带三影孩子逃归日军、陆移烛已拆迁悬胎院，在同一影路 / 时间窗碰撞后主角才被卷入选择，亦判 **DIRECTIONAL PASS**。两次随机 Refresh 都顺手改掉了已验证的本地核心获得（分别偏离 `未尽续行` / `双影为邻`），所以只冻结其 longitudinal / collision 方法，不采用 Treatment 内容。
+
+Chapter-40 frozen-state 的独立 **100章 Spine Test = PASS**。Sol-high 在不生成任何未来世界、未来人物、未来奖励、未来能力、具体章号或 Mystery 真相的前提下，自然抽出四条可持续脊柱：玄曜公开力量位置 / 裴照临 / 天外重新估价；黑门骨 Meta Mystery；旧世界关系/资产反向追上主角；宁家旁支 / 旧宅契 / “凭什么只拿一半”的人生重量。前两条足以承担 60—120章主牵引，后两条提供关系/经济/人物复利；Meta coordinate 只输出 current capability + next observable question，没有长成六阶段技能树。
+
+骨陆 11—20 做了真实内容手术而非只改 Prompt：Sol-high 先规划 **8章骨陆本体 + 2章玄曜回归后果**，再用两个 Terra-high Batch-5 写正文。Treatment 成功保留裂骨风的生活感、新生院、贺沉骨真实赢下北肋岔和四车盐、商妩失去继承退路、宁烬正常突破灵海4重、拒绝安全封伤以及 `风髓双口` 身体高潮；登记、验货、商籍/担保、车辆/路线实施、路权/收费讨论被大幅压掉，19—20 改为天外/商王重新估价与裴照临改变战术。raw 规划/正文曾分别偷改“回归点直接到天都”、假设可修旧宅、给宅契临时买家等，均被人工识别并在 clean Treatment 恢复为赤褐山地回归 + 正常旅行、宅契历史继续未知。**但成品从 23,328 压到 12,154 个非空白字符（-47.9%），超过目标 -25%～30%，因此只判 DIRECTIONAL PASS，不允许直接替换 production 旧书。** 冻结教训是 `Supporting Logic Compression + Story-Bearing Reallocation`，不是“越短越好”，不新增字数 KPI / density gate。
+
+Chapter 39—40 的 frozen-story **Mechanism Explanation Decay A/B = DIRECTIONAL PASS**：Treatment 仍能读懂双影接续转门、风髓导流与最终落门，但不再在落门前列 `风髓双口 + 未尽续行 + 双影为邻` 公式，结果先发生。preservation-fixed 版只比 baseline 少约5.8% UTF-8 bytes，说明增益来自解释位置而非摘要化。raw Terra 曾擅自补“天舟本就在寻找异界裂口”等未授权目的，已记录并去除；这反过来证明 Sol-high Batch Authority Delta 的 Preservation-First 仍必须保留。
+
+`tgn-system-steward 0.3.39` bounded Luna-high smoke 对原 `STORY_PROGRAM_21_30.md` 正确判为：local Horizon 可工作，但跨 Horizon 是 **Canon retained / Plot dormant**；最早根因在 **Story Program / Story Refresh longitudinal allocation**，不是 State、不是 Writer；Chapter 20 后的问题属于 Return Consequence Collapse。Skill 明确拒绝新增 State 字段、Reviewer/Scorer/Agent、thread database、线程配额和 500章预写大纲。package validate / install / activate 均 PASS。
+
+这轮系统修改保护以下已有 production 不动：protagonist-blind World Expansion、Power/Human 分权、Living Actors、真实错失、Local Ruler 与玄曜主尺分离、Advantage Stack 递归复合、NPC/Rival 不自动复制主角异常栈、AGGRESSIVE payoff、Public Proof 三线、Batch-5 Terra Primary、Sol-high Batch Authority Delta、当前 World Horizon only。新长篇 Spine 负责“这些世界为什么属于同一本书”，不负责把未来世界预先做成主角的任务关卡。
 
 ---
 
@@ -1966,7 +1992,7 @@ Batch 中途不更新 State/Canon；否则会再次制造 stale。旧 `Director 
 
 ### 15.7 用户说“审计”时有固定协议
 
-自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本见本地/AgentDock live discovery（本轮已升级为 **0.3.33**）；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、World Possibility Ecology 是否形成单一机制盆地、Story Program 是否用 Universal World Tour 把不同 Human 重新拉回同一高价值节点、World Expansion 是否“protagonist-blind 但失忆”、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
+自动调用当前激活 `tgn-system-steward` 独立审计，同时自己复核，最后给统一结论。当前激活版本见本地/AgentDock live discovery（当前已验证为 **0.3.39**）；除 Social Calibration、`Public/Known World = Clarity`、Plan Compression 与 Authority 边界外，还长期审计 **Small Grammar ≠ Small World**、World Possibility Ecology 是否形成单一机制盆地、Story Program 是否用 Universal World Tour 把不同 Human 重新拉回同一高价值节点、World Expansion 是否“protagonist-blind 但失忆”、Secondary Fantasy Axis 是否被反工程化误删、Naming 是否出现“词先于机制 / 名字反向授权机制”、以及 lexique 是否只有真实 semantic/gameplay gain 才被采用。Steward 不进入 production，也不替 Story/Director 创造招揽、嫉妒、暗杀或长期 Ripple。
 
 ### 15.8 Docs 要言简意赅
 
