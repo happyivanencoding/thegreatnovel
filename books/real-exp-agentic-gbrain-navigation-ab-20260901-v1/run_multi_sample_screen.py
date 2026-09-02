@@ -315,6 +315,7 @@ def judge_prompt(case: str) -> str:
 
 # CURRENT STORY AUTHORITY RULE
 Story Program / Story Refresh 可以在 World / Human / Canon 尚未定义的过去空白中补重要配角旧史、隐藏关系、亲缘/师徒/竞争/共同失败/债/失约/上一代选择，并把 Human 已成立的家庭关系与 World Living Actors 接成过去因果。只要不改写已发生/公开 Canon、不偷答 AUTHOR OPEN、不把未来伪造成过去，这类 Relationship-History Backfill 是合法创作权；不得仅因它不在 Frozen Human 原文里就判 Authority 越界。
+**本实验没有预先冻结 Story Program、RSE、阶段顺序或候选奖励。X/Y 都是在同一 Frozen World / Power / Human 之上独立提出候选 Story Program。不得把 X 自己新写的 RSE、旧史、阶段、奖励或 Handoff 当成 Authority 去判 Y“改写冻结内容”，反之亦然。只能对照 Frozen World / Character 判断 Authority。**
 
 # JUDGMENT
 判断哪个更值得继续写，重点：

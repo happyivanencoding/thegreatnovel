@@ -2285,6 +2285,18 @@ Batch Production 的既有 production 链保持不变：任意起始章先读取
 
 验证：`node --check`、Python `compileall`、`git diff --check` PASS；全仓 **527 passed**。浏览器 smoke 覆盖 1440×900 Light / Dark、GBrain compare、390×844 mini anchor、无横向溢出、GBrain 默认 NONE / 显式组装 / stale fail-closed、异步返回错位不载入、网络 timeout、短暂状态失败保留 pending，以及 Agent exact Prompt / upstream snapshot 回填保护。`tgn-system-steward` 已升级至 **0.3.46**，新增 `Telemetry truth before reassurance` 与 `GBrain Curator is selection state, not a textarea`；skill-authoring lint `0 error / 0 warning`，package validate / install / activate PASS，digest `sha256:308ad308e7647cab1db9979edebbef3f08fe127d5733e90a9760ad09ea0cf772`。基于安装后 Skill 的 bounded read-only smoke 最终 **PASS**，Residual P0/P1：`none`。
 
+## 2026-09-02｜Post-Fix GBrain Navigator Retest：默认保留 deterministic semantic，Full Navigator 不升 production
+
+此前 Agentic Retrieval A/B 的旧质量票已作废并重做，原因是旧 Control 受 Windows `gbrain.cmd` 多行 query 截断与过宽/空 semantic retrieval 污染；修复后，production fixed retrieval 已能按 World / Human 分叉卡组。重测使用同一 Frozen World / Power / Human、同一 Terra-high Story 模型，对比 A=`repaired personalized deterministic semantic retrieval` 与 B=`Full Navigator → fresh Story Program`。Judge 额外明确：X/Y 各自新写的 Story Program / RSE / reward / 合法 backfill 都不是彼此的 Authority，只能对照 Frozen World / Character 审核，避免把候选 X 的创作误当成冻结事实判 Y 越界。
+
+有效质量归因样本共 10 组：原 6 个 post-fix case + 4 个完全新生成、protagonist-blind World 后再单独冻结 Human/Power 的 held-out。最终 corrected blind-Judge：**A 6 : B 4**；四个全新 held-out 单独为 **A 3 : B 1**。新世界包括悬弦群岛（气压/坠航）、巨树内部生物世界、回潮古战场、坠星夜海。B 最干净的胜例是回潮古战场：Navigator 找到 `opponent-learning-success-condition-rewrite`，让对手已经学会旧解后真正改写成功条件，并补完 A 尚未闭合的 Plot Engine；这说明 Navigator 有条件价值，但不是普遍升级。
+
+修复后的 A 已经能保住 Human-specific route：同一兽脊世界中顾野、阮青禾、商砚不再收到同一卡组，也不再统一成同一种关系/成长选择。Navigator 仍反复出现的负面模式是：更容易把当前 Horizon 的等级、奖励、关系、Handoff 一次做满，导致过早耗尽 World、Authority seam、力量尺消耗过快或 complexity tax。Full Navigator 还额外增加搜索调用和上下文成本。
+
+宁烬 21—30 的 Sol-high real-Horizon retest 不计 retrieval 胜负：修复后的 fixed retrieval `accepted_count=0`，Navigator 四次主动 query 也全部 `accepted_count=0` 并合法选择 0 卡；因此两边 Story 都没有差异化 GBrain inspiration，这一 pair 只能说明 Story Refresh retrieval 仍存在 coverage gap，不能用模型随机差异证明检索架构优劣。
+
+**Production decision：Full Retrieval Navigator 不升默认 production。继续使用修复后的 personalized deterministic semantic retrieval。** Integrated JIT 也继续排除。仍值得未来单独实验的是低频、窄范围的 `Conditional Plot-Engine Gap Querying`：只有 deterministic Story planning 已明确一个具体结构缺口（例如“对手已经学会旧解，成功条件现在缺什么”）时，发一次短 semantic query；这只是 Open Hypothesis，当前没有 production wiring 授权。完整报告：`books/real-exp-agentic-gbrain-navigation-ab-20260901-v1/POST_FIX_NAVIGATOR_RETEST_FINAL.md`。
+
 ## Cognitive Integrity Check
 
 阅读本文后，一个新 Agent 不应只知道“项目采用了哪些 Prompt”，还应能够面对新案例作出以下判断：
