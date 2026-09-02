@@ -150,6 +150,8 @@ Collision 可以补少量**非奠基性的过去经历、共同往事或旧事�
 
 World Expansion 被批准后，先 deterministic refresh `CURRENT_CHARACTER.md`，再由 Sol high 第一次看到 `Effective World × Current Character`。这是新的 Collision，不是旧 Story Program 自动向后延长：World 不为主角改写，人物也不为新世界重新优化。旧 Story Program 只保留仍未兑现且仍成立的长期因果；新 Power 只能从新世界已经独立成立、且 Current Human 真实走入的机会里获得。`Route-Bound Acquisition + No Universal World Tour` 继续生效：Effective World 的所有高价值路线不是主角必须逐项消费的内容清单，未选路线可由 NPC 独立推进，直到新因果真正让双方再相交。
 
+Refresh 对少数真正长期重要的 Supporting Cast 也采用 forward-only：人物要有自己的未完人生与离场前已经启动的行动，主角只是其中一条关系边；人物—人物之间只有已成立且会改变行动的关系才继续保留。离屏期间可以沿已有目标/承诺/损失/限制产生新处境，但不能在回流时反向补造关键人生。成熟多线只有共享因果铰链时才 **Converge**，不能为了“大高潮”把旧人统一 Recall；讲完的人可以不再回来。这个机制仍由现有 Story Program / State 承载，不增加每个 NPC 的 Human Seed 或独立 Character Authority。
+
 普通玄幻与多世界副本共用这一层：前者通常一次 Refresh 覆盖一个新的长篇世界层，后者可覆盖一个大型 instance / 一组相连副本。每次 Refresh 仍只规划当前新 World Horizon；非终局继续留下下一次 Handoff，作者明确终局时改为 `FINAL NOVEL END` 并在本层完成 Final Apex。
 
 ## 7. Outline：执行编译，不重新调度

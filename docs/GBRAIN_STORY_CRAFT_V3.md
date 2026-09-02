@@ -161,7 +161,9 @@ GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks
 
 ## 检索退化兼容
 
-当前 GBrain 的 hybrid query 只有在进程可用 `OPENAI_API_KEY` 时才生成 query embedding；没有 key 时会退化成 keyword-only。TGN 因此：
+当前 GBrain 的 hybrid query 需要可用 `OPENAI_API_KEY` 才生成 query embedding；没有有效 key 时会退化成 keyword-only。Windows 上 TGN 不再只看启动时继承到的进程环境：统一 resolver 按 `当前进程 → User Environment → Machine Environment` 查找持久 Key，并显式传给 GBrain 子进程，因此 AgentDock / ChatGPT 宿主在 Key 配置前已经启动也不需要靠重启才能恢复 semantic query。Key 本身不写入 repo / `.env`。
+
+TGN 因此：
 
 1. 始终生成并展示中文 BOOK-aware Retrieval Brief；
 2. 如果 semantic query 可用，后端直接使用完整 brief；
@@ -264,6 +266,8 @@ source-blind A/B 没有支持整包 Treatment 直接上线，而是得到 **SELE
 - 因此 production 只吸收 **Decision Vector / Signature ≠ Tension、Local Closure + Book State Mutation、Historical Recontextualization、Character Afterlife without recall tax**，并保护现有更强的 Return Consequence。
 
 GBrain 仍保持 10 张旧 active mechanism 分离，只做原位 refinement：`thread-ecology`、`longitudinal-thread-dormancy-collision-afterlife`、`thread-collision`、`character-autonomy`、`narrative-compounding`、`story-state-compounding`、`plot-engine-variation`、`reward-action-space`、`reward-afterlife`、`minimum-sufficient-public-proof`。每张都补了本专项 provenance；`PILOT_MANIFEST.json` 记录 `last_refinement_operation`，没有新增 active card 或 retrieval slot。
+
+后续人物群 integration **仍是 NEW = 0**：没有新增/修改 GBrain 卡，而是把现有 `character-autonomy` 的“自己的欲望 + 离屏因果 + 回流 delta”、`thread-collision` 的“共享因果铰链而非角色集合”、以及 longitudinal afterlife 的休眠/余生，直接编译进 Story Program / Story Refresh / State。production 因此只让少量 Longitudinal Cast 保存自己的未完人生、已启动行动与必要的人物—人物关系，并明确 `Convergence ≠ Recall`；不新增人物图谱、全员 Human Seed 或回访配额。一次 fresh quality A/B 因同机其它 ACP 实验把全局并发抬到已知不稳定区而判 `INVALID`，不作为 promotion 证据；当前上线依据是既有 source-first cross-book evidence + deterministic prompt/state integration regression。
 
 Embedding 最终状态为 **3834 Pages / 15863 Chunks / 15863 Embedded**，debt = 0。最初 4 个 stale chunk 来自既有 `my-dear-diary/*` 页面，不是本轮小说卡；使用当前机器合法环境配置后补齐 4/4。TGN scoped retrieval regression 通过：`thread-ecology`、`story-state-compounding / narrative-compounding`、`plot-engine-variation` 仍可直接命中；真实 `story_refresh` 默认 bundle 仍稳定返回 `thread-collision / plot-engine-variation / longitudinal-thread-dormancy-collision-afterlife` 三条，研究 operation raw 页面没有越过 active-card 边界进入 production。
 

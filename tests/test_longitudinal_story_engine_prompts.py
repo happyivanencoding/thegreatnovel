@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from story_mvp.character_prompts import STORY_REFRESH_PROMPT
 from story_mvp.prompts import (
+    DEFAULT_STATE_DELTA_TEMPLATE,
     FANTASY_COMPOUNDING_DIRECTION,
     LONGITUDINAL_THREAD_ADVANCE_DIRECTION,
     OUTLINE_TEMPLATE,
@@ -58,3 +59,20 @@ def test_book_engine_uses_decision_vector_without_old_thread_quota() -> None:
 def test_history_is_recontextualized_before_compounding() -> None:
     assert "Carry → Recontextualize → Combine → Consequence / Reprice" in FANTASY_COMPOUNDING_DIRECTION
     assert "若只是换地图后原样再用一次，不算新的 compounding" in FANTASY_COMPOUNDING_DIRECTION
+
+
+def test_longitudinal_cast_is_not_protagonist_star_topology() -> None:
+    assert "Longitudinal Cast ≠ Important NPC List" in LONGITUDINAL_THREAD_ADVANCE_DIRECTION
+    assert "如果主角此刻消失" in LONGITUDINAL_THREAD_ADVANCE_DIRECTION
+    assert "Convergence ≠ Recall" in LONGITUDINAL_THREAD_ADVANCE_DIRECTION
+    assert "主角只是关系网中的一条边" in STORY_PROGRAM_TEMPLATE
+    assert "自己的未完人生与已启动行动" in STORY_PROGRAM_TEMPLATE
+    assert "Convergence，不是召回旧 NPC 站队" in STORY_REFRESH_PROMPT
+
+
+def test_state_keeps_cast_motion_without_building_relationship_graph() -> None:
+    assert "自己的当前目标/已启动动作" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "其它会改变行动的关键人物关系" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "与主角关系只是其中一项" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "不画全员关系网" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "补造离屏恋爱、联盟、背叛、升级" in DEFAULT_STATE_DELTA_TEMPLATE

@@ -1965,6 +1965,31 @@ GBrain 同样遵循 **NEW = 0**：没有新卡，只对现有 10 张 active mech
 
 本轮依然保护 Batch-5、Terra-high Primary、Sol-high Batch Authority Delta、protagonist-blind World Expansion、Power/Human 分权、Living Actors、真实错失、精确力量尺、AGGRESSIVE payoff、Public Proof 三线和当前 World Horizon only。专项 Prompt/Character tests **12/12 PASS**；全仓回归迁移 1 条已被新 Decision Vector 语义 supersede 的旧字面断言后，最终 **504/504 PASS**。GBrain 最终再次执行 `embed --stale` 为 **Embedded 0**，确认无新增 debt，仍是 **15863/15863**。下一步真正还未证明的是 100/200/300 章**正文级**长期稳定性；不能因为 planning 双样本 PASS 就声称几百章问题已经彻底解决。
 
+### 14.18 Longitudinal Cast / Character Constellation 接线修复（2026-09-02）
+
+用户用《斗罗大陆一》的多代人物线、史莱克七怪、武魂殿家族、唐晨/波塞西/千道流等互相交叉的人物历史追问：TGN 是否仍缺这种“人物自己也在活、人物之间也有历史、最后因果自然汇流”的丰富度。复核 current production 后结论是：**已有 GBrain / methodology 早就支持 Character Autonomy、offscreen re-entry、thread collision 与 afterlife，但它们没有完整进入 Story Program + State 的最早表示；尤其 `Active Relationships` 仍稳定压成 `人物 → 与主角关系`，会天然生成 protagonist-star topology。** 这是 integration gap，不需要另建 Character Engine。
+
+本轮只做最小接线：
+
+- `LONGITUDINAL_THREAD_ADVANCE_DIRECTION` 增加 **Longitudinal Cast ≠ Important NPC List**：只有少数已经拥有自主欲望、未完人生与已启动因果的人物跨 Horizon 继续；如果主角暂时消失，他们仍会沿已有目标、承诺、损失、限制或关系行动。离屏推进只能 forward from established facts，禁止在回流时 retrospective backfill 一整段关键奇遇、重大获得或联盟。
+- Story Program 的 `不可替代的人与关系` 不再只写“他怎样影响主角”，而要求真正长期人物保留 `自己的未完人生 + 已启动行动`；主角只是关系网中的一条边。人物—人物之间已经成立、且会改变行动的亲缘、爱情、师徒、竞争、利益、债、背叛、效忠或共同历史可以继续生效；没有真实因果就不补，不画全员关系图。
+- 新增 **Convergence ≠ Recall**：大型人物汇流必须由共享的人、物、地点、身份、时间窗口或决定形成因果铰链；“旧人物统一收到召集令回来站队 / 围观终局”不算 thread collision。成熟人物可以休眠、缺席、死亡或讲完后永久结束。
+- `DEFAULT_STATE_DELTA_TEMPLATE → Active Relationships` 改为优先保存 `人物自己的当前目标/已启动动作｜与主角关系（若相关）｜其它会改变行动的关键人物关系（若存在）｜最近不可逆变化/未决承诺`。State 不建关系数据库、不补离屏事实，也不负责调度旧线回访。
+- **不新增** NPC Human Seed、Character Agent、Relationship Graph、Thread DB、每 Horizon 回访配额；普通配角仍不会因为“需要丰富”而复制主角递归增长的 Advantage Stack。主角继续保持全书核心 Fantasy / Ascension / Asymmetry Dominance。
+
+该修改不是《斗罗》单书过拟合：现有 active `character-autonomy-v3` 本来就以《斗罗》《诡秘》《将夜》《修真聊天群》《幽冥仙途》《死人经》《大圣传》等跨书证据支持“自主欲望 + 离屏因果 + re-entry delta”；`thread-collision-v3` 则明确以《斗罗》《诡秘》《将夜》《修真聊天群》支持“共享因果铰链，而不是角色都到场”。因此 GBrain **NEW = 0**，只把已有 source-first craft 编译进 production 真源。
+
+验证分三层：
+
+1. focused Prompt/State regression：**8/8 PASS**；确认 Story Program / Refresh 已拿到 Longitudinal Cast + Convergence 语义，State 已去掉强制 protagonist-star 表示，并保留“不建全员关系图 / 不补造离屏历史”边界。
+2. deterministic production-prompt wiring：在不附加实验 Treatment 的 Ning 21—30 与闻野舟两个正式 prompt 中，`Longitudinal Cast` 与 `Convergence` 均存在，且不再依赖 `Additional source-blind Longitudinal Cast craft` bundle；6/6 wiring assertions PASS。
+3. 仓库验证：本轮 focused test **8/8 PASS**；排除正在被另一个并行任务修改的 `tests/test_mvp.py` 后，其余仓库 **305/305 PASS**；本轮文件 `git diff --check` PASS。完整全仓当时为 **490 passed / 17 failed**，17 个失败全部集中在 `tests/test_mvp.py` 的 GBrain retrieval / semantic-brief 断言，对应本轮开始前已经存在的并行 `src/story_mvp/gbrain.py`、`src/story_mvp/gbrain_retrieval.py`、`tests/test_mvp.py` 修改；本轮未修改、未回滚这些文件，也不把该并行失败伪装成本轮回归失败。
+4. 新的 fresh Sol A/B 原计划覆盖亚特兰蒂斯开书、宁烬 21—30、闻野舟单世界；但同机另一 TGN 对话持续开启 2 条以上 ACP，反复把全局并发推到已知不稳定的 3 路，多个 session 初始化后不产出。该轮明确判 **INVALID（external concurrency contamination）**，没有把它伪装成质量 PASS。冻结依据是既有 source-first cross-book evidence + integration regression，而不是这批无效 fresh A/B。
+
+Steward 同步升级到干净版 **`tgn-system-steward 0.3.42`**，新增两个长期审计判断：`Supporting Cast Agency ≠ Protagonist-Star Topology` 与 `Convergence ≠ Recall`，并强化 offscreen-forward / no retrospective backfill。因工作树里另一个并行任务留有未跟踪 `references/atomic-obligation-protocol.md`，第一次 0.3.41 安装被该文件污染；不可变版本保护正确拒绝用不同内容覆盖同版本。最终从 Git 已跟踪 references + 本轮 `SKILL.md` 构造干净包升到 0.3.42，`skill-authoring lint = 0 error / 0 warning`，package validate / install / activate PASS，digest `sha256:e2da11ff265cd465510c7f3c0ca97af2e3dd22145cbb672490073d8efa1d6759`。bounded read-only smoke 对“岑舟追剑、薄雪抵债、程息筹钱，但 Story/State 全压成与主角关系，终局用召集令全员回场”的已知反例正确判 **PARTIAL PASS**：World/Human 素材成立；最早坍缩在 Story Program，State 同步丢失人物自己的行动；明确拒绝新增 Human Seed / Character Agent / Relationship DB / 回访配额，并指出真正 convergence 必须由共同因果铰链成立。
+
+这刀仍**没有证明** TGN 已达到《斗罗》成品几十/上百章的人物密度与三代历史重量；它解决的是最早表示层不再把已成立人物生态压回“NPC 都围着主角”的系统性损失。真正更强的人物历史仍必须靠后续 100/200/300 章正文让少数人物真实选择、离场、成长、恋爱、失败、改阵营、死亡、留下 afterlife，并在成熟时自然汇流。
+
 ---
 
 ## 15. How to Work With the User

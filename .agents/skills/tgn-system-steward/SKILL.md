@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.40
+version: 0.3.42
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -106,7 +106,9 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **World Engine can outrun Book Engine**：每个 Horizon 都独立成立、世界规则新鲜、主角每次也拿到新 Asymmetry，仍可能只是“多个优秀中篇串联”。审计自然 Horizon 结尾时分开问 `Local Closure` 与 `Book State Mutation`：当前局部故事是否真正结账；结账后又有哪个以后仍相关的人、关系、身份、资产、敌人策略、价格、知识或世界事实不能再按旧状态运作，并因此产生新行动条件。字段增加、等级上涨、Open Promise 保留或“世界更大”本身不算 Book Mutation。这个 Mutation 可以来自成熟旧线，也可以来自本轮新形成的长期因果，**不要求每 Horizon 召回旧线程**
 - **Signature ≠ Tension; audit Decision Vector through incompatible values**：Behavior Signature 只证明“这个人通常怎样要”；真正人物张力要看 Frozen Human 已成立的两样私人价值是否在具体现场不能同时完整取得，并迫使人物改变路线、对象、暴露、谁承担代价或真实放弃一项机会。第三条路如果让人物聪明地无损全拿，不算 tension。不要为了补张力反向造创伤，也不要把同一“安全 vs 自主 / 钱 vs 人”选择题复制到每卷
 - **Historical Recontextualization ≠ Inventory Reuse**：旧 Power / Asset / Relationship / Identity / Knowledge 被记住、换地图后原样再用，只说明 continuity。真正 longitudinal compounding 要看新敌人、关系或世界条件是否让旧积累改变用途、风险、选择价值或社会价格；可用 `Carry → Recontextualize → Combine → Consequence / Reprice` 作为诊断链，但不要求每件旧资产每卷换功能
-- **Character Afterlife does not imply recall quota**：重要人物可以离屏、死亡、沉睡或永久不回场；遗产、能力缺口、权限、债务、可靠消息、关系换位或敌方策略只要仍改变主角当前选择、代价、时间窗口或可用行动，就说明关系/人物历史仍在产生因果。反过来，为了证明“关系有长期性”而固定每卷召回旧人、给所有 NPC 独立支线或让所有 Spine 同时亮灯，是新的 Book Engine 过度治理
+- **Supporting Cast Agency ≠ Protagonist-Star Topology**：世界有 Living Actors 还不等于长篇人物生态已经成立。审计少数真正重要人物时，除了“他怎样影响主角”，还要问：他自己现在想得到/避免什么、哪件人生问题没结、主角暂时消失后他是否仍会沿已成立目标/承诺/损失/限制继续行动。人物—人物之间已经存在且会改变行动的亲缘、爱情、师徒、竞争、利益、债、背叛、效忠或共同历史可以继续生效；没有就不补，不要求关系图密度。若 State / Story 只保存 `NPC → 与主角关系` 而吞掉人物自己的行动，最早坍缩在 Story Program / State representation；修法不是给所有 NPC 建 Human Seed、Character Agent 或关系数据库
+- **Character Afterlife does not imply recall quota**：重要人物可以离屏、死亡、沉睡或永久不回场；遗产、能力缺口、权限、债务、可靠消息、关系换位或敌方策略只要仍改变当前选择、代价、时间窗口或可用行动，就说明关系/人物历史仍在产生因果。离屏变化只能从离场前已经成立的目标、承诺、损失、限制或行动方向 forward，不能在回流时 retrospective backfill 一整段关键奇遇、重大获得或联盟。反过来，为了证明“关系有长期性”而固定每卷召回旧人、给所有 NPC 独立支线或让所有 Spine 同时亮灯，是新的 Book Engine 过度治理
+- **Convergence ≠ Recall**：多线大高潮的审计对象是共享因果铰链，不是到场人数。每条参与线都应能从人物自己正在追逐的人/物/地点/身份/时间窗口/决定推出为什么此刻必然撞到一起，并且移除该线会改变选择、结果或后续可行性；“旧人物都回来站队 / 同时围观终局”不算 thread collision。成熟线可以不合流，重要人物也可以缺席；不要为了群像把尚未成熟的线硬塞进高潮
 - **Return consequence matters in multiworld fiction**：Hub / 主世界回归不必每次打脸，但旧获得应周期性改变社会估价、敌人策略、关系、资产、入口或 Mystery；若回归只确认能力存在并开启下一门，属于 long-form compounding failure
 - **Opportunity Collision ≠ Task Board**：多个高价值路线可以交易、有报酬，但优先由 Living Actors 正在做的事在同一个人/物/地点/时间窗口相撞；“多个 NPC 依次报任务奖励→主角菜单选择”要追到 Story / Outline，而不是靠正文说“这不是任务”掩盖
 - **Persistent Global Progress Ruler**：Local instance ruler 可以换，但长期至少有一条不重置 reader coordinate；默认先看 Root 主力量尺，Plot pace 长期快于 Tier pace 时再看 Meta 能力/器物是否从已发生故事自然形成简单进度。不得凭空设计未来阶段或合成总战力分
