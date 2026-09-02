@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import shutil
 import subprocess
+import os
 from pathlib import Path
 
 
@@ -13,6 +14,44 @@ NOVEL_GBRAIN_SCOPE = ",".join(
 
 class GBrainQueryError(RuntimeError):
     """The public GBrain query command could not return usable text."""
+
+
+def resolve_openai_api_key() -> str:
+    """Resolve the persisted OpenAI key even when the host process is stale.
+
+    AgentDock / desktop clients can stay alive across Windows environment changes,
+    so their process environment may not contain a key that is already persisted in
+    the user's or machine's Environment registry key. Keep one deterministic lookup
+    here instead of requiring every caller to restart the host application.
+    """
+
+    inherited = os.environ.get("OPENAI_API_KEY", "").strip()
+    if inherited:
+        return inherited
+    if os.name != "nt":
+        return ""
+    try:
+        import winreg
+    except ImportError:
+        return ""
+
+    locations = (
+        (winreg.HKEY_CURRENT_USER, r"Environment"),
+        (
+            winreg.HKEY_LOCAL_MACHINE,
+            r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment",
+        ),
+    )
+    for hive, subkey in locations:
+        try:
+            with winreg.OpenKey(hive, subkey) as key:
+                value, _ = winreg.QueryValueEx(key, "OPENAI_API_KEY")
+        except OSError:
+            continue
+        resolved = str(value).strip()
+        if resolved:
+            return resolved
+    return ""
 
 
 def resolve_command_prefix() -> list[str]:
@@ -27,6 +66,11 @@ def resolve_command_prefix() -> list[str]:
 
 def _run_cli(arguments: list[str]) -> str:
     command = resolve_command_prefix()
+    child_env = os.environ.copy()
+    if not child_env.get("OPENAI_API_KEY", "").strip():
+        persisted_key = resolve_openai_api_key()
+        if persisted_key:
+            child_env["OPENAI_API_KEY"] = persisted_key
     try:
         completed = subprocess.run(
             command + arguments,
@@ -34,6 +78,7 @@ def _run_cli(arguments: list[str]) -> str:
             text=True,
             encoding="utf-8",
             errors="replace",
+            env=child_env,
             timeout=90,
             check=False,
         )

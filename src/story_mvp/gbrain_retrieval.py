@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import os
 import re
 from collections.abc import Callable, Iterable, Mapping
 from typing import Any
 
 from .character_context import project_character_life_context, project_character_power_baseline
-from .gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, get_gbrain, query_gbrain
+from .gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, get_gbrain, query_gbrain, resolve_openai_api_key
 from .human_prototypes import human_prototype_spec
 
 
@@ -373,7 +372,7 @@ def build_retrieval_brief(
 
 
 def _semantic_query_available() -> bool:
-    return bool(os.environ.get("OPENAI_API_KEY", "").strip())
+    return bool(resolve_openai_api_key())
 
 
 def _chapter_task_from_retrieval_brief(retrieval_brief: str) -> str:

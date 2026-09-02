@@ -1037,6 +1037,22 @@ def test_gbrain_query_calls_public_cli_and_preserves_stdout(monkeypatch) -> None
     assert calls["kwargs"]["capture_output"] is True
 
 
+def test_gbrain_query_injects_persisted_openai_key_when_process_env_is_stale(monkeypatch) -> None:
+    calls: dict[str, object] = {}
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr(gbrain_module.shutil, "which", lambda name: "gbrain.CMD")
+    monkeypatch.setattr(gbrain_module, "resolve_openai_api_key", lambda: "persisted-test-key")
+
+    def fake_run(command, **kwargs):
+        calls["command"] = command
+        calls["kwargs"] = kwargs
+        return SimpleNamespace(returncode=0, stdout="[0.9] slug -- raw result", stderr="")
+
+    monkeypatch.setattr(gbrain_module.subprocess, "run", fake_run)
+    assert query_gbrain("方向查询") == "[0.9] slug -- raw result"
+    assert calls["kwargs"]["env"]["OPENAI_API_KEY"] == "persisted-test-key"
+
+
 def test_gbrain_get_calls_public_cli(monkeypatch) -> None:
     calls: dict[str, object] = {}
     monkeypatch.setattr(gbrain_module.shutil, "which", lambda name: "gbrain.CMD")

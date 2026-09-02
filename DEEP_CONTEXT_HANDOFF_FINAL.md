@@ -2255,6 +2255,18 @@ Steward 审计方法因旧 `no retrospective backfill` 会系统性误判当前 
 
 ---
 
+## 2026-09-02｜GBrain Key Resolver 与 Retrieval Ownership 多样本实验
+
+Windows 持久 `OPENAI_API_KEY` 现由 production 统一解析：`当前进程 → User Environment → Machine Environment`。`gbrain.py` 会在宿主进程未继承 Key 时把解析到的持久 Key 显式传给 GBrain 子进程，`gbrain_retrieval._semantic_query_available()` 也使用同一 resolver；Key 不写 repo / `.env`。对应 CLI 继承、持久 Key 注入与 semantic route 定向测试 **3/3 PASS**。
+
+Retrieval ownership 专项已扩大到 7 组有效质量样本：宁烬真实 Horizon 的 Sol-high A/B，以及游戏副本、亚特兰蒂斯、兽脊三种 Frozen Human、坠星海共 6 组 Terra-high screening。Integrated JIT Story Agent 出现 >15 分钟无 final，记运行 FAIL，不进入质量票。六个新增样本的当前 `idea` 超长 BOOK-aware semantic one-shot **6/6 accepted=0**；强制旧 keyword batches 则 **6/6 均返回同一组三张** `thread-ecology / earned-high-value-acquisition / plot-engine-variation`。这确认了一个真实 retrieval 缺口：semantic 大 query 会把召回带错区域，而 generic keyword fallback 虽稳却缺少 World/Human specificity。
+
+独立 Sol Retrieval Navigator 能做真实 multi-hop，并在同一兽脊 World 的顾野／阮青禾／商砚上选出不同 craft bundle，证明“模型决定下一跳问题”确实扩大 GBrain 可探索空间且保留 Human-specific discovery。但 fresh Story 的 corrected blind judge 在 6 个新增样本上最终 **A 3 : B 3**；宁烬 Sol-high 另为 fixed A 胜。Navigator 的典型增益是把私人欲望变成真实路线关闭、关系代价与 Book State Mutation；典型失败则是 Planner 为把 `compounding / acquisition / afterlife` 全部落地而过度消耗力量尺、补出未批准 World 对象或留下 continuity/Authority 缝。Full Navigator 平均总 wall 比 A 约 **+39%**；对三组 keyword C 代表样本约 **+27%**。
+
+因此当前结论固定为：**不提升 Integrated JIT，也不把 Full Navigator-before-every-Story 升为 production 默认。** embedding 保留；Primary / Batch execution 完全不动。下一候选只测试更窄的 `deterministic authority boundary + lightweight query decomposition/recovery + <=3 narrow inspiration + fresh Story`：把一个超长 semantic brief 拆成 2—3 个短、World/Human-specific query，semantic 仍为空时再 deterministic fallback 到 keyword batches。完整证据与 corrected judge 见 `books/real-exp-agentic-gbrain-navigation-ab-20260901-v1/MULTI_SAMPLE_CONCLUSION.md`。
+
+---
+
 ## Cognitive Integrity Check
 
 阅读本文后，一个新 Agent 不应只知道“项目采用了哪些 Prompt”，还应能够面对新案例作出以下判断：
