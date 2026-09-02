@@ -97,7 +97,7 @@
 
 GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库`
 
-- **OpenAI embedding credential 不写入 repo / `.env`。** Windows 上以持久 `OPENAI_API_KEY` 环境变量为唯一凭据来源；TGN 先读当前进程，宿主进程较旧未继承时再读 Windows User Environment，最后 fallback 到 Machine Environment，并显式传给 GBrain 子进程。排查“明明配置过 Key 却退回 keyword-only”时，先检查这条 resolver 与 Key 本身是否有效，不要只看当前 AgentDock/终端的 `Env:`。
+- **OpenAI embedding credential 不写入 repo / `.env`。** Windows 上以持久 `OPENAI_API_KEY` 环境变量为唯一凭据来源；TGN 先读当前进程，宿主进程较旧未继承时再读 Windows User Environment，最后 fallback 到 Machine Environment，并显式传给 GBrain 子进程。**凡当前阶段配置为 GBrain ON，embedding Key 是生成硬前置条件：resolver 找不到 Key 时立即停止该阶段并明确报错，不允许降级为 keyword-only，也不允许用固定通用卡补位。** GBrain OFF 的 Primary / Batch Authority Delta / State 等阶段不受此限制。排查时先检查 resolver 与 Key 本身是否有效，不要只看当前 AgentDock/终端的 `Env:`。
 
 - GBrain 是 Optional Inspiration，不是 Canon、创意权威、Hard Gate 或原作模板。
 - **公共治理、资源分配、维护职责、责任升级不得作为 production GBrain 的通用可迁移创作机制**；来源作品确有此内容时只保留为研究证据，并退出 active inspiration。

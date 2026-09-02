@@ -4,7 +4,11 @@ import re
 from collections.abc import Callable, Iterable, Mapping
 from typing import Any
 
-from .character_context import project_character_life_context, project_character_power_baseline
+from .character_context import (
+    project_character_life_context,
+    project_character_power_baseline,
+    project_story_opportunity_layer,
+)
 from .gbrain import GBrainQueryError, NOVEL_GBRAIN_SCOPE, get_gbrain, query_gbrain, resolve_openai_api_key
 from .human_prototypes import human_prototype_spec
 
@@ -281,6 +285,82 @@ def _book_signal(book_content: str) -> str:
     return _compact(book_content, 1800)
 
 
+def _frozen_human_signal(character_card: str) -> str:
+    priority_headings = (
+        "## 持续牵引与互相竞争的动机",
+        "## Behavior Signature",
+        "## 重要关系原点",
+    )
+    blocks = [
+        f"{heading}\n{_compact(_markdown_block(character_card, heading), 420)}"
+        for heading in priority_headings
+        if _markdown_block(character_card, heading)
+    ]
+    if blocks:
+        return _compact("\n\n".join(blocks), 1050)
+
+    start_heading = "## HUMAN CORE｜Frozen Authority"
+    end_heading = "## Composition Boundary"
+    start = character_card.find(start_heading)
+    if start < 0:
+        return _compact(character_card, 1050)
+    start += len(start_heading)
+    end = character_card.find(end_heading, start)
+    if end < 0:
+        end = len(character_card)
+    return _compact(character_card[start:end].strip(), 1050)
+
+
+def _idea_semantic_query_batches(
+    *,
+    creative_direction: str,
+    world_vision: str,
+    character_card: str,
+    book_content: str,
+) -> tuple[str, ...]:
+    """Build three deterministic, content-first semantic queries for Story Program."""
+
+    world_signal = project_story_opportunity_layer(world_vision).strip() if world_vision.strip() else ""
+    if not world_signal:
+        world_signal = world_vision.strip()
+    human_signal = _frozen_human_signal(character_card)
+    book_signal = _book_signal(book_content) if book_content.strip() else ""
+    direction = _compact(creative_direction, 260)
+
+    queries = (
+        "\n".join(
+            part
+            for part in (
+                "当前世界里真正正在动的人、事、地点与机会：",
+                _compact(world_signal, 1450),
+                f"作者方向：{direction}" if direction else "",
+                "哪种叙事结构最适合让这些已经存在的行动自然互相撞上，而不是排队给主角发任务？",
+            )
+            if part
+        ),
+        "\n".join(
+            part
+            for part in (
+                "这个人物真正想要、舍不得、会为之改路的东西：",
+                human_signal,
+                "哪种人物叙事结构最适合让这些私人价值不能同时完整拿到，并因此改变对象、路线或错过的机会？",
+            )
+            if part
+        ),
+        "\n".join(
+            part
+            for part in (
+                "把这个世界里的具体机会与这个人的选择放在一起：",
+                _compact(book_signal, 950) if book_signal else _compact(world_signal, 620),
+                _compact(human_signal, 520),
+                "怎样让本轮真正得到、失去、拒绝或错过的东西，在后面继续改变别人和主角的选择，而不是一次性结账？",
+            )
+            if part
+        ),
+    )
+    return tuple(query for query in queries if query.strip())
+
+
 def build_retrieval_brief(
     *,
     mode: str,
@@ -444,16 +524,13 @@ def _chapter_prose_control_alias_query(retrieval_brief: str) -> str | None:
 
 
 def default_effective_query(mode: str, retrieval_brief: str) -> tuple[str, str]:
-    """选择实际查询文本；不增加 LLM/reranker 调用。"""
+    """选择实际查询文本；production GBrain 不允许 keyword-only 降级。"""
 
     if not _semantic_query_available():
-        if mode in PLANNING_KEYWORD_QUERIES:
-            return PLANNING_KEYWORD_QUERIES[mode], "planning_keyword_aliases"
-        if mode in CURATOR_PROSE_CONTROL_FALLBACK_MODES:
-            alias_query = _chapter_prose_control_alias_query(retrieval_brief)
-            if alias_query is None:
-                return "", "prose_control_none"
-            return alias_query, "prose_control_keyword_aliases"
+        raise GBrainQueryError(
+            "TGN 的 GBrain 生成阶段必须启用 embedding：未找到 OPENAI_API_KEY。"
+            "请先配置 Windows 持久环境变量 OPENAI_API_KEY，再重新生成；不会降级为 keyword-only。"
+        )
     return retrieval_brief, "semantic_brief"
 
 
@@ -856,6 +933,12 @@ def retrieve_gbrain(
 ) -> dict[str, Any]:
     if mode not in MODE_ALLOWED_CATEGORIES:
         raise ValueError(f"未知 GBrain 检索模式：{mode}")
+    semantic_available = _semantic_query_available()
+    if query_func is None and not semantic_available:
+        raise GBrainQueryError(
+            "TGN 的 GBrain 生成阶段必须启用 embedding：未找到 OPENAI_API_KEY。"
+            "请先配置 Windows 持久环境变量 OPENAI_API_KEY，再重新生成；不会降级为 keyword-only。"
+        )
     if mode == "world_expansion":
         # Match the World Expansion prompt boundary: retrieval itself must remain
         # protagonist-blind or it can leak a tailored keyhole indirectly.
@@ -885,6 +968,12 @@ def retrieve_gbrain(
     elif query_override.strip():
         effective_query = query_override.strip()
         query_strategy = "manual_override"
+    elif query_func is not None and not semantic_available:
+        # Explicit injected query runners are a unit-test / bounded experiment seam;
+        # they do not exist on the production API path. Keep those deterministic
+        # tests independent from the operator's local credential state.
+        effective_query = retrieval_brief
+        query_strategy = "semantic_brief"
     else:
         effective_query, query_strategy = default_effective_query(mode, retrieval_brief)
     query_runner = query_func or query_gbrain
@@ -893,15 +982,19 @@ def retrieve_gbrain(
     query_scope = ",".join(sorted(allowed_categories))
     if selected_prototype is not None:
         query_texts = ()
-    elif query_strategy == "prose_control_none":
-        query_texts = ()
     elif mode == "human_seed" and not query_override.strip():
         # Human retrieval is lane-first even when semantic retrieval is available.
         # This prevents one dense Human topic from crowding the other two lanes.
         query_texts = tuple(HUMAN_LANE_QUERIES[lane] for lane in HUMAN_LANE_ORDER)
         query_strategy = "human_lane_queries"
-    elif query_strategy == "planning_keyword_aliases":
-        query_texts = PLANNING_KEYWORD_QUERY_BATCHES.get(mode, (effective_query,))
+    elif mode == "idea" and query_strategy == "semantic_brief" and not query_override.strip():
+        query_texts = _idea_semantic_query_batches(
+            creative_direction=creative_direction,
+            world_vision=world_vision,
+            character_card=character_card,
+            book_content=book_content,
+        )
+        query_strategy = "planning_semantic_batches"
     else:
         query_texts = (effective_query,)
     stdout_parts: list[str] = []

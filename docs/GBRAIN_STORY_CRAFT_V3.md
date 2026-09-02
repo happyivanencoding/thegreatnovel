@@ -6,7 +6,7 @@
 
 GBrain 是 TGN 的可选创作灵感库，不是价值观裁判或硬门禁。生产知识优先保存原作如何制造：读者欲望、世界进入感、长篇玩法变异、长中短线编织、高价值获得、人物回流与关键场景兑现。公共治理、资源分配、维护职责和责任升级只保留为 source-specific 研究证据，不进入 production active inspiration。
 
-蒸馏正文以中文为主。当前 GBrain 在没有 query embedding API Key 时会退化为 English FTS keyword-only，因此英文 alias 不属于创作知识正文。当前 Pilot 将它们集中记录在 `routing/retrieval-aliases-v3.yaml`，并在可搜索页面标题区保留低层 `Retrieval aliases` 行；TGN 只抽取 `##` 下的中文 Creative Problem / Mechanism / Guidance 等区块，因此 alias 不进入模型的 Inspiration Bundle，也不显示成作者默认查询。
+蒸馏正文以中文为主。GBrain 底层具备 keyword 搜索能力，但 **TGN production 不允许在缺少 query embedding Key 时降级生成**；英文 alias 只服务检索底层，不属于创作知识正文。当前 Pilot 将它们集中记录在 `routing/retrieval-aliases-v3.yaml`，并在可搜索页面标题区保留低层 `Retrieval aliases` 行；TGN 只抽取 `##` 下的中文 Creative Problem / Mechanism / Guidance 等区块，因此 alias 不进入模型的 Inspiration Bundle，也不显示成作者默认查询。
 
 ## 四个知识支柱
 
@@ -159,22 +159,25 @@ GBrain runtime 从 `3716 pages / 15649 chunks` 增至 `3734 pages / 15686 chunks
 
 所有 active staging card 的 canonical evidence refs 已统一到稳定 `source_id / distill_id / segment_id`；最终检查为 **33 refs / 0 evidence error / 0 temporary ref / 0 Prompt-risk hit**。完整报告见 GBrain 工作区 `FINAL_CLASSIC_EXPANSION_REPORT_20260824.md`。
 
-## 检索退化兼容
+## Semantic 检索前置与个性化
 
-当前 GBrain 的 hybrid query 需要可用 `OPENAI_API_KEY` 才生成 query embedding；没有有效 key 时会退化成 keyword-only。Windows 上 TGN 不再只看启动时继承到的进程环境：统一 resolver 按 `当前进程 → User Environment → Machine Environment` 查找持久 Key，并显式传给 GBrain 子进程，因此 AgentDock / ChatGPT 宿主在 Key 配置前已经启动也不需要靠重启才能恢复 semantic query。Key 本身不写入 repo / `.env`。
+TGN production 的 GBrain 路由现在**强制需要 query embedding**。Windows 上统一 resolver 按 `当前进程 → User Environment → Machine Environment` 查找持久 `OPENAI_API_KEY`，并显式传给 GBrain 子进程；Key 本身不写入 repo / `.env`。凡当前阶段配置为 GBrain ON，resolver 找不到 Key 时 `/api/gbrain/brief` 与 `/api/gbrain/query` 直接 fail loud，生成停止；不允许退化成 keyword-only，也不使用固定通用卡补位。GBrain OFF 的章节执行阶段不受影响。
 
-TGN 因此：
+2026-09-02 多样本回归同时修复了两个真实检索根因：
 
-1. 始终生成并展示中文 BOOK-aware Retrieval Brief；
-2. 如果 semantic query 可用，后端直接使用完整 brief；
-3. 如果不可用，World Vision / Story Program / Outline 使用 2–3 组互补的内部 retrieval intents，而不是把越来越大的 GBrain 压成一个关键词 query；每组仍只做 bounded recall；
-4. 多 intent 结果按 round-robin 合并再去重，防止第一组 query 独占候选窗口；普通 creative 规划阶段最多检查 12 个候选，并保持 World creative 最多 3、Program 最多 3、Outline 最多 5；World 的 Reader Coordinates 由固定 slug 单独读取，不参加 creative 排名；单个可选 intent 查询失败时保留其它结果，只有全部查询失败才向上报告 GBrain 错误；
-5. 用户手工编辑查询时，手工 query 永远优先；
-6. 返回给 LLM 的 `可用抽象` 仍来自卡片中文 Mechanism/Guidance 等正文，不把英文 aliases 注入 Prompt。
+1. Windows `.cmd` 包装器不能安全承载多行位置参数；旧 `query_gbrain()` 把多行 BOOK-aware query 直接传入时，实际查询可能在首行被截断，连后面的 `--scope` 一并丢失。现在 CLI 边界先把换行/连续空白确定性压成单行，再调用 GBrain。
+2. Story Program 不再把完整长 brief 作为唯一 semantic query。`idea` 模式确定性拆成三条短、内容优先的 semantic query：当前 World 的具体 Living Actors / 机会；Frozen Human 的私人欲望与机会成本；本轮获得/失去如何继续改变后续选择。三路结果 round-robin 合并、去重、按原有 category / active-inspiration / BOOK 约束过滤，最终仍最多 3 张 inspiration；没有新增 Navigator、reranker 或 Story Agent。
 
-这是一层确定性 fallback，不新增 LLM、reranker、Agent 或 Hard Gate。
+同一冻结样本回归中，修复前六个不同 Story Program 会收敛到同一组三张或同一对高中心度卡；修复后结果按题材与 Human 分叉，例如游戏副本偏 `world-entry`，亚特兰蒂斯加入 `departure-vacancy`，兽脊三个 Human 分别出现不同的 `departure-vacancy / reward-afterlife / earned-high-value-acquisition` 组合，且不再出现投资、日记、非小说 scope 污染。
 
-原则是 **wide recall, narrow context**：GBrain 变大以后优先提高候选覆盖与意图多样性，不同步扩大最终 Prompt 中的 inspiration 数量。
+其它边界保持不变：
+
+- 中文 BOOK-aware Retrieval Brief 继续完整保留给作者/调试查看；
+- 用户手工 query 仍可覆盖默认 query，但 production 仍要求 embedding Key；
+- 普通 creative 规划最多检查 12 个候选，World creative 最多 3、Program 最多 3、Outline 最多 5；固定 Reader Coordinates / Naming Craft Reference 不占 creative 名额；
+- 返回给 LLM 的 `可用抽象` 仍来自中文 Mechanism / Guidance 等 source-blind 正文，英文 aliases 不进入 Prompt。
+
+原则仍是 **wide recall, narrow context**，但 recall 必须首先对当前 World / Human 有辨识度；宁可停止生成，也不以通用 fallback 悄悄同质化不同小说。
 
 ## Prose Craft v1
 

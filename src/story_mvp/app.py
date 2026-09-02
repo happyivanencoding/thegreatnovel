@@ -970,11 +970,17 @@ def get_references() -> dict[str, Any]:
 @app.post("/api/gbrain/brief")
 def post_gbrain_brief(payload: GBrainContextRequest) -> dict[str, Any]:
     brief = build_retrieval_brief(**payload.model_dump(exclude={"query_override", "prototype_id"}))
-    if payload.mode == "human_seed" and payload.prototype_id.strip():
-        effective_query, query_strategy = "", "explicit_human_prototype"
-        brief = brief.rstrip() + f"\n显式匿名 Human Prototype：{payload.prototype_id.strip()}"
-    else:
-        effective_query, query_strategy = default_effective_query(payload.mode, brief)
+    try:
+        # All production GBrain planning requires semantic retrieval. Even an explicit
+        # Human Prototype must stop here when the embedding credential is missing.
+        default_effective_query(payload.mode, brief)
+        if payload.mode == "human_seed" and payload.prototype_id.strip():
+            effective_query, query_strategy = "", "explicit_human_prototype"
+            brief = brief.rstrip() + f"\n显式匿名 Human Prototype：{payload.prototype_id.strip()}"
+        else:
+            effective_query, query_strategy = default_effective_query(payload.mode, brief)
+    except GBrainQueryError as error:
+        raise HTTPException(status_code=502, detail=str(error)) from error
     return {
         "mode": payload.mode,
         "effective_query": effective_query,

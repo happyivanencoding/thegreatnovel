@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 
 import story_mvp.app as app_module
 import story_mvp.gbrain as gbrain_module
+import story_mvp.gbrain_retrieval as gbrain_retrieval_module
 from story_mvp.app import app
 from story_mvp.chapter_context import (
     MINIMAL_AUTHORITY_RULE,
@@ -1037,6 +1038,22 @@ def test_gbrain_query_calls_public_cli_and_preserves_stdout(monkeypatch) -> None
     assert calls["kwargs"]["capture_output"] is True
 
 
+def test_gbrain_query_flattens_multiline_text_before_windows_cli(monkeypatch) -> None:
+    calls: dict[str, object] = {}
+    monkeypatch.setattr(gbrain_module.shutil, "which", lambda name: "gbrain.CMD")
+
+    def fake_run(command, **kwargs):
+        calls["command"] = command
+        return SimpleNamespace(returncode=0, stdout="[0.9] slug -- raw result", stderr="")
+
+    monkeypatch.setattr(gbrain_module.subprocess, "run", fake_run)
+    query_gbrain("第一行\n第二行\t第三段", scope="mechanisms,contrasts,syntheses")
+
+    assert calls["command"][2] == "第一行 第二行 第三段"
+    assert "\n" not in calls["command"][2]
+    assert calls["command"][-2:] == ["--scope", "mechanisms,contrasts,syntheses"]
+
+
 def test_gbrain_query_injects_persisted_openai_key_when_process_env_is_stale(monkeypatch) -> None:
     calls: dict[str, object] = {}
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
@@ -1923,123 +1940,21 @@ def test_real_urban_no_cultivation_does_not_ban_other_world() -> None:
     assert result["rejected"][0]["reason"] == "与 BOOK 的现实模式冲突"
 
 
-def test_planning_retrieval_uses_hidden_keyword_aliases_without_query_embedding(monkeypatch) -> None:
+def test_default_effective_query_requires_embedding_key(monkeypatch) -> None:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    seen: list[str] = []
+    monkeypatch.setattr(gbrain_retrieval_module, "resolve_openai_api_key", lambda: "")
+    brief = build_retrieval_brief(mode="world_vision", creative_direction="玄幻成长")
 
-    def fake_query(query: str, **kwargs) -> str:
-        seen.append(query)
-        assert kwargs["limit"] == QUERY_RECALL_LIMIT
-        assert kwargs["detail"] == "medium"
-        assert "mechanisms" in kwargs["scope"]
-        return "[0.99] mechanisms/world-desire-ladder-v3 -- world fantasy reader desire ladder"
-
-    result = retrieve_gbrain(
-        mode="world_vision",
-        creative_direction="玄幻成长",
-        query_func=fake_query,
-        page_func=lambda _slug: _page("Mechanism", "世界扩张每一层都新增读者想进入、想获得或想知道的具体欲望。"),
-    )
-    assert seen == [
-        '"world fantasy" OR "world entry" OR "narrative compounding"',
-        '"reader coordinates" OR "progression scale" OR "action space scale" OR "expectation ladder" OR "core advantage" OR "world compatibility" OR "power scale" OR "threat scale"',
-    ]
-    assert result["query_strategy"] == "planning_keyword_aliases"
-    assert result["query_texts"] == seen
-    assert "玄幻成长" in result["retrieval_brief"]
-    assert "Fantasy Seed" not in result["retrieval_brief"]
-    assert result["accepted_count"] == 1
-    assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
+    with pytest.raises(GBrainQueryError, match="必须启用 embedding"):
+        default_effective_query("world_vision", brief)
 
 
-@pytest.mark.parametrize(
-    ("outline", "expected", "unexpected"),
-    [
-        ("本章是三方高压谈判，通过称呼、拒答和报价改变筹码。", "dialogue negotiation", "action combat"),
-        ("本章是狭窄石桥上的追逐战，必须写清站位、受力和落点。", "action combat", "dialogue negotiation"),
-        ("本章第一次看见远超既有尺度的奇观，天穹与距离发生变化。", "scale anchored wonder", "dialogue negotiation"),
-        ("多年后重逢，人物都很克制，用微反应表现想念。", "emotion relationship", "limited reveal"),
-        ("主角发现旧物的真相，只能从线索和规则推断一部分。", "evidence first limited reveal", "dialogue negotiation"),
-        ("主角第一次进入陌生空间，从入口和边界建立现场。", "action anchored grounding", "payoff power proof"),
-        ("本章是低压日常，吃饭休息时让关系通过生活动作显出来。", "ordinary life prose", "action combat"),
-    ],
-)
-def test_chapter_prose_control_keyword_fallback_tracks_scene_family(monkeypatch, outline, expected, unexpected) -> None:
+def test_production_retrieve_gbrain_requires_embedding_key(monkeypatch) -> None:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    brief = build_retrieval_brief(mode="context_curator", current_outline=outline)
-    effective, strategy = default_effective_query("context_curator", brief)
-    assert strategy == "prose_control_keyword_aliases"
-    assert expected in effective
-    assert unexpected not in effective
+    monkeypatch.setattr(gbrain_retrieval_module, "resolve_openai_api_key", lambda: "")
 
-
-def test_payoff_scene_no_key_fallback_adds_no_regular_prose_control(monkeypatch) -> None:
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    brief = build_retrieval_brief(
-        mode="context_curator",
-        current_outline="本章在众人面前完成公开能力证明，结果已经清楚，只需要让现场承认变化。",
-    )
-    effective, strategy = default_effective_query("context_curator", brief)
-    assert effective == ""
-    assert strategy == "prose_control_none"
-
-    seen: list[str] = []
-    result = retrieve_gbrain(
-        mode="context_curator",
-        current_outline="本章在众人面前完成公开能力证明，结果已经清楚，只需要让现场承认变化。",
-        query_func=lambda query, **_kwargs: seen.append(query) or "",
-        page_func=lambda _slug: "",
-    )
-    assert seen == []
-    assert result["query_strategy"] == "prose_control_none"
-    assert result["accepted_count"] == 0
-
-
-def test_no_key_prose_fallback_prefers_reveal_over_incidental_action_terms(monkeypatch) -> None:
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    brief = build_retrieval_brief(
-        mode="context_curator",
-        current_outline="主角用灰粉、滴水和试压复现裂纹，再据此推断局部规律；只能确认这一部分，来源仍未知。",
-    )
-    effective, strategy = default_effective_query("context_curator", brief)
-    assert strategy == "prose_control_keyword_aliases"
-    assert "evidence first limited reveal" in effective
-
-
-def test_no_key_prose_fallback_does_not_treat_repeated_stance_as_complex_action(monkeypatch) -> None:
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    brief = build_retrieval_brief(
-        mode="context_curator",
-        current_outline="两人围绕信任边界交换条件，人物几次改变站位观察对方；没有追逐、搜捕、围堵或路线变化。",
-    )
-    effective, strategy = default_effective_query("context_curator", brief)
-    assert effective == ""
-    assert strategy == "prose_control_none"
-
-
-def test_chapter_prose_control_fallback_returns_one_primary_control(monkeypatch) -> None:
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    seen: list[str] = []
-    raw = "\n".join([
-        "[0.99] prose-controls/action-a -- action combat spatial clarity",
-        "[0.98] prose-controls/action-b -- action combat spatial clarity",
-        "[0.97] prose-controls/action-c -- action combat spatial clarity",
-    ])
-
-    def fake_query(query: str, **_kwargs) -> str:
-        seen.append(query)
-        return raw
-
-    result = retrieve_gbrain(
-        mode="context_curator",
-        current_outline="追逐战，写清站位、距离、受力与落点。",
-        query_func=fake_query,
-        page_func=lambda slug: _page("Mechanism", f"{slug} 的动作写作控制。"),
-    )
-    assert seen == ['"action combat" OR "spatial clarity"']
-    assert result["query_strategy"] == "prose_control_keyword_aliases"
-    assert result["final_limit"] == 1
-    assert result["accepted_count"] == 1
+    with pytest.raises(GBrainQueryError, match="不会降级为 keyword-only"):
+        retrieve_gbrain(mode="world_vision", creative_direction="玄幻成长")
 
 
 def test_chapter_prose_control_keeps_semantic_brief_when_embedding_query_is_available(monkeypatch) -> None:
@@ -2053,8 +1968,8 @@ def test_chapter_prose_control_keeps_semantic_brief_when_embedding_query_is_avai
     assert strategy == "semantic_brief"
 
 
-def test_manual_chapter_gbrain_query_still_overrides_prose_fallback(monkeypatch) -> None:
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+def test_manual_chapter_gbrain_query_still_overrides_default_semantic_query(monkeypatch) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     seen: list[str] = []
 
     def fake_query(query: str, **_kwargs) -> str:
@@ -2088,38 +2003,78 @@ def test_planning_retrieval_keeps_full_chinese_brief_when_semantic_query_is_avai
     assert "WORLD_BETA" in effective
 
 
-def test_story_program_keyword_fallback_merges_craft_and_reward_queries(monkeypatch) -> None:
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+def test_story_program_semantic_retrieval_splits_world_human_and_longform_queries(monkeypatch) -> None:
+    monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     seen: list[str] = []
+    world = """# PROTAGONIST-BLIND WORLD VISION
+
+## 世界正在发生的大事
+白脊母鲸逆迁，沉没外环正在上浮。
+
+## 已经活过的人与关系史
+沉捞船长正在出售外环坐标。
+
+## 值得进入的地点、奇观与未知
+静默海沟正在改变附近航线。
+"""
+    character = """# CHARACTER
+
+## HUMAN CORE｜Frozen Authority
+她想赢得被看见的胜利，也喜欢漂亮、能署自己名字的东西；母亲开口时会真实改变她原定路线。
+
+## Composition Boundary
+NONE
+"""
     pages = {
-        "mechanisms/plot": _page("Mechanism", "同一核心能力通过对手与目标变化切换故事发动机。"),
-        "mechanisms/thread": _page("Mechanism", "长中短线允许沉睡并在新条件成熟时回流。"),
-        "mechanisms/reward": _page("Mechanism", "高价值获得来自当前欲望与故事机会，并改变下一步行动。"),
+        "mechanisms/world-specific": _page("Mechanism", "让既有 Living Actors 在同一对象上发生路线碰撞。"),
+        "mechanisms/human-specific": _page("Mechanism", "让私人欲望关闭一条同样有价值的机会。"),
+        "mechanisms/book-specific": _page("Mechanism", "让获得改变后续行动空间与人物价格。"),
     }
+
     def fake_query(query: str, **_kwargs) -> str:
         seen.append(query)
-        if "plot engine variation" in query:
-            return "[0.99] mechanisms/plot -- plot"
-        return "[0.98] mechanisms/thread -- thread\n[0.97] mechanisms/reward -- reward"
+        if "当前世界里真正正在动" in query:
+            return "[0.99] mechanisms/world-specific -- world"
+        if "这个人物真正想要" in query:
+            return "[0.98] mechanisms/human-specific -- human"
+        return "[0.97] mechanisms/book-specific -- book"
+
     result = retrieve_gbrain(
         mode="idea",
-        creative_direction="玄幻成长",
-        world_vision="已批准世界幻想",
+        creative_direction="海洋探索成长长篇",
+        world_vision=world,
+        character_card=character,
         query_func=fake_query,
         page_func=pages.__getitem__,
     )
+
+    assert result["query_strategy"] == "planning_semantic_batches"
     assert len(seen) == 3
-    assert any("plot engine variation" in q for q in seen)
-    assert any("reward opportunity" in q for q in seen)
-    assert any("longitudinal thread" in q for q in seen)
+    assert "白脊母鲸" in seen[0]
+    assert "漂亮" in seen[1]
+    assert "真正得到、失去、拒绝或错过" in seen[2]
     assert [item["slug"] for item in result["accepted"]] == [
-        "mechanisms/plot", "mechanisms/thread", "mechanisms/reward"
+        "mechanisms/world-specific",
+        "mechanisms/human-specific",
+        "mechanisms/book-specific",
     ]
-    assert result["final_limit"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
 
 
-def test_world_vision_gbrain_brief_api_keeps_chinese_visible_and_alias_internal(monkeypatch) -> None:
+def test_story_program_without_semantic_key_stops_before_retrieval(monkeypatch) -> None:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr(gbrain_retrieval_module, "resolve_openai_api_key", lambda: "")
+
+    with pytest.raises(GBrainQueryError, match="必须启用 embedding"):
+        retrieve_gbrain(
+            mode="idea",
+            creative_direction="玄幻成长",
+            world_vision="已批准世界幻想",
+        )
+
+
+def test_world_vision_gbrain_brief_api_requires_embedding_key(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr(gbrain_retrieval_module, "resolve_openai_api_key", lambda: "")
     response = client.post(
         "/api/gbrain/brief",
         json={
@@ -2127,12 +2082,19 @@ def test_world_vision_gbrain_brief_api_keeps_chinese_visible_and_alias_internal(
             "creative_direction": "玄幻成长",
         },
     )
-    assert response.status_code == 200
-    payload = response.json()
-    assert "玄幻成长" in payload["retrieval_brief"]
-    assert "Fantasy Seed" not in payload["retrieval_brief"]
-    assert payload["effective_query"] == '"world fantasy" OR "world entry" OR "narrative compounding"'
-    assert payload["query_strategy"] == "planning_keyword_aliases"
+    assert response.status_code == 502
+    assert "必须启用 embedding" in response.json()["detail"]
+
+
+def test_gbrain_query_api_requires_embedding_key(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr(gbrain_retrieval_module, "resolve_openai_api_key", lambda: "")
+    response = client.post(
+        "/api/gbrain/query",
+        json={"mode": "idea", "creative_direction": "玄幻成长"},
+    )
+    assert response.status_code == 502
+    assert "不会降级为 keyword-only" in response.json()["detail"]
 
 
 def test_gbrain_duplicate_chunks_do_not_consume_multiple_inspiration_slots() -> None:
@@ -2395,40 +2357,6 @@ def test_application_and_final_limits_bound_overlong_cli_output() -> None:
     assert sum(item["reason"] == "超过小说候选数量上限" for item in result["rejected"]) == 8
 
 
-def test_planning_query_batches_round_robin_preserve_multiple_retrieval_intents(monkeypatch) -> None:
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-
-    def fake_query(query: str, **_kwargs) -> str:
-        if "world fantasy" in query:
-            return "\n".join(
-                f"[{0.99 - index / 100:.2f}] mechanisms/general-{index} -- general"
-                for index in range(8)
-            )
-        if "reader coordinates" in query:
-            return (
-                "[0.80] syntheses/reader-coordinates -- reader coordinates\n"
-                "[0.70] mechanisms/world-compatibility -- compatibility"
-            )
-        return ""
-
-    result = retrieve_gbrain(
-        mode="world_vision",
-        query_func=fake_query,
-        page_func=lambda slug: _page("Mechanism", f"{slug} 的可迁移抽象。"),
-    )
-
-    visible = [item["slug"] for item in result["raw_results"]]
-    assert visible[:4] == [
-        "mechanisms/general-0",
-        "syntheses/reader-coordinates",
-        "mechanisms/general-1",
-        "mechanisms/world-compatibility",
-    ]
-    assert result["accepted_count"] == CREATIVE_PLANNING_FINAL_RESULT_LIMIT
-    assert [item["slug"] for item in result["accepted"]] == visible[:3]
-    assert result["requested_limit"] == PLANNING_CANDIDATE_INSPECTION_LIMIT
-
-
 def test_world_vision_fixed_coordinate_reference_does_not_consume_three_creative_slots(monkeypatch) -> None:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     raw = "\n".join(
@@ -2503,25 +2431,7 @@ def test_world_coordinate_reference_does_not_reenter_downstream_creative_slots(m
     )
 
 
-def test_planning_multi_intent_query_tolerates_one_optional_query_failure(monkeypatch) -> None:
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-
-    def fake_query(query: str, **_kwargs) -> str:
-        if "reader coordinates" in query:
-            raise GBrainQueryError("secondary intent unavailable")
-        return "[0.99] mechanisms/world-entry -- world entry"
-
-    result = retrieve_gbrain(
-        mode="world_vision",
-        query_func=fake_query,
-        page_func=lambda _slug: _page("Mechanism", "世界入口改变下一步行动空间。"),
-    )
-    assert result["accepted_count"] == 1
-    assert len(result["query_failures"]) == 1
-    assert "reader coordinates" in result["query_failures"][0]["query"]
-
-
-def test_planning_multi_intent_query_still_surfaces_total_gbrain_failure(monkeypatch) -> None:
+def test_gbrain_query_failure_still_surfaces(monkeypatch) -> None:
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
 
     def fail_query(_query: str, **_kwargs) -> str:

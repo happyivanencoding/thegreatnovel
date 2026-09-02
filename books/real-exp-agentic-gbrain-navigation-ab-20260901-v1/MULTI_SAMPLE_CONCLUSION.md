@@ -126,34 +126,29 @@ Navigator 相对 deterministic keyword C 约 **+27% wall**。
 - Integrated JIT Story Agent：FAIL（运行形状过重，出现 >15 分钟无 final）。
 - Full Navigator before every Story Program / Refresh：PARTIAL PASS / NOT PROMOTED。检索能力真实提升，但 Story 净质量 3:3、Authority closure 不稳定、wall 更高。
 
-### Real production problem found
+### Root-cause correction after the A/B
 
-当前“有 semantic key 时只使用一个超长 BOOK-aware semantic query”的 `idea` 检索形状有真实 cross-sample 缺陷：本轮 6/6 新样本合法结果为空。
+后续沿着“为什么六本书会拿同一组三张”继续追查，确认最早根因不是 embedding 本身，也不是必须引入 Agent，而是 **Windows `gbrain.cmd` 的多行位置参数边界**：旧 TGN 把多行 BOOK-aware query 直接作为 positional argument 传入 `.cmd`，实际命令会在换行处被截断，导致不同样本只把相同的第一行送进 GBrain，并可能连后面的 `--scope` 一起丢失。这解释了此前出现的“不同书分数完全一致”“合法结果为空”“非小说 scope 污染”和“fallback 三卡同质化”。
 
-### Best next candidate
+修复后：
 
-不是删除 embedding，也不是让 Story Agent 自由逛库，而是：
+1. `query_gbrain()` 在进入 Windows CLI 前把 query 的换行与连续空白压成单行，保证完整 query 与 `--scope` 都到达 GBrain。
+2. Story Program `idea` 不再用一个超长 semantic brief 做唯一检索，而是确定性拆成三条短、内容优先的 semantic query：当前 World 的 Living Actors / 机会；Frozen Human 私人欲望 / 机会成本；本轮得到/失去如何继续改变后续选择。
+3. 三路结果仍按 round-robin 合并、原有 category / active-inspiration / BOOK 约束过滤，最终最多 3 张；没有新增 Navigator、reranker 或 Story Agent。
+4. **GBrain ON 阶段强制要求 embedding Key。** resolver 找不到 `OPENAI_API_KEY` 时立即停止生成并明确报错；不再 keyword-only fallback，也不再用固定通用卡补位。
+5. Primary / Batch execution 完全不变。
 
-`deterministic authority boundary + lightweight query decomposition / recovery + narrow final bundle + fresh Story`
+同一六样本真实回归已不再同质：游戏副本偏 `world-entry`；亚特兰蒂斯加入 `departure-vacancy`；顾野、阮青禾、商砚在同一兽脊 World 下分别得到不同的 `departure-vacancy / reward-afterlife / earned-high-value-acquisition` 组合；坠星海也得到不同第三卡。修复后没有再出现投资、日记、book-dna 等非法 scope 污染。
 
-建议下一轮只测试一个更小变量：
+### Current production conclusion
 
-1. 仍由代码拥有 category / active / BOOK / protagonist-blind / source-blind 边界。
-2. 不用完整 Navigator，不让 Agent 写 Story。
-3. 把一个超长 semantic brief 拆成 2–3 个短 query：
-   - 当前 Plot/World 缺口
-   - Human-specific 私人牵引/机会成本
-   - Book-level consequence / reward action-space（仅需要时）
-4. query 可以由一次很短的 planner 生成，也可先尝试确定性抽取；每条仍走现有 semantic retrieval。
-5. round-robin merge → deterministic filter → 最终最多 3 张。
-6. 如果 semantic 分解仍为空，才 fallback 到现有 keyword batches。
-7. fresh Story 只看到最终窄 bundle；Primary / Batch execution 完全不变。
-
-这能保留 Navigator 已证明的“会提出新问题 / Human-specific”价值，同时避免 full multi-hop 的 +27%～39% wall 和更大的 Authority 联想空间。
+- Integrated JIT Story Agent：仍 FAIL，不升 production。
+- Full Navigator before every Story Program / Refresh：仍 NOT PROMOTED；此前 3:3 质量结果与 +27%～39% wall 结论继续成立。
+- **当前 production 采用 deterministic semantic decomposition，而不是 Agentic Navigation。**
+- embedding 必须可用；没有 Key 就停止生成。
 
 ## What This Did Not Prove
 
-- 没有证明轻量 query decomposition 一定优于当前 keyword fallback；它还需要独立 A/B。
-- Terra-high 大样本只用于 screening，不替代 Sol-high production route；若轻量结构在 Terra screening 稳定胜，仍需 Sol-high Story Program + real Horizon Refresh 复验。
-- 没有证明 embedding 应删除；相反，Navigator 的自然语言多跳命中恰好依赖 semantic retrieval。
-- 没有理由修改 Primary / Batch Writer / Authority Delta；本轮问题完全位于 planning retrieval ownership。
+- 这次修复证明的是检索输入与 routing 根因，不等于已经证明新的三路 semantic decomposition 在所有 Story Program 上都比其它可能结构更优；后续仍可用 Sol-high real Horizon 做质量复验。
+- 没有证明 embedding 应删除；相反，本轮根因修复后 embedding 才真正表现出 World / Human specificity。
+- 没有理由修改 Primary / Batch Writer / Authority Delta；本轮问题仍位于 planning retrieval 层。

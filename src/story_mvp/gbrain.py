@@ -101,7 +101,11 @@ def query_gbrain(
     detail: str = "medium",
     scope: str | None = NOVEL_GBRAIN_SCOPE,
 ) -> str:
-    query = text.strip()
+    # GBrain is normally reached through a Windows .cmd wrapper. Newlines inside a
+    # positional argument can terminate the command and silently drop trailing flags
+    # such as --scope. Preserve the query semantics but cross the CLI boundary on one
+    # physical line.
+    query = " ".join(text.split())
     if not query:
         raise ValueError("GBrain 查询不能为空")
     if limit < 1:
