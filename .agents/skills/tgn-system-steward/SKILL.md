@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.43
+version: 0.3.44
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -99,6 +99,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Backstage Principles Must Not Become Generated Ontology
 - **Institutional Activity ≠ Living World**：World Independence 不能仅靠“军府在开发、商盟在竞争、学院在调查、部族在迁徙”证明。优先追到一个具体人物、生物或小群体：他现在私人地想要什么、下一步马上做什么、没有主角也会改变什么。机构/制度/生态可以放大后果，但不能默认替代 Living Actor 成为故事发动机；反过来也不要把所有世界冲突过度纠正成私人恩怨
 - Authority separation beats negative-prompt restraint when causal leakage is the problem
+- **Execution transport ≠ Authority adoption**：ACP、OpenAI API、外部 CLI 或浏览器 job 只负责产生候选 Response；job `completed` 不能冒充 Workflow artifact `completed / adopted`。审计任何新 executor 时，必须追到既有显式 Save / Apply / Adopt / Approve 边界，确认模型完成、页面回填、Run Ledger 与 Canon mutation 四件事没有被合并。
 - Character is a person, not a psychological proof
 - **Human candidate needs Action Evidence, not another personality sentence**：候选期 Non-Canon Audition 应用一个小而真实的取舍现场检验 competing motives / relationship 是否会落成行动与机会成本；Audition 不是 Canon，不新增人物历史，也不能把一次表现固化成“以后每次都这样”的人格算法
 - Growth is longitudinal, not a per-stage / per-block tax
@@ -296,6 +297,19 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **State closure**：State 是否真的读取 revised `final_source`，而不是 UI/调用方仍能把旧 Primary 旁路进 Canon。
 
 若 Reviser 只是“重新写得更好”，而不是局部恢复 authority / 删除明确 failure，应判为 second-writer drift。
+
+## Execution Transport / Author Workspace Safety Trace
+
+当网页、桌面 App、AgentDock、OpenAI API 或其它本机 executor 被接到 production 工作流时，不能只审“模型能不能跑通”。按以下链条审计：
+
+1. **Trusted transport boundary**：executable、cwd、mode、MCP、认证方式和模型白名单必须由可信后端决定，不能由浏览器任意提交；状态接口不得泄露用户名、绝对路径、凭据或完整命令。若 production 声称 read-only，必须验证真实模式与 callback policy，而不是只看 UI 文案。
+2. **Response-only completion**：transport 完成最多把文本放入一个明确 Response target；不得自动 Save / Apply / Adopt / Approve，不得通过 CLI 旁路现有 Authority API。Workflow / Run Ledger artifact 状态与 executor job 状态必须分开显示。
+3. **Identity-safe return**：任何异步结果自动回填都至少绑定 book、chapter、workflow node、必要的 Batch window 与 launch identity；共享编辑区还要保护作者在运行期间的手工修改。错书、错章、错节点、旧 launch、刷新恢复、服务重启丢失或作者已编辑时，结果只能只读预览或 fail loud，不能“最后完成者覆盖当前页”。
+4. **Bounded process lifecycle**：短控制 RPC 与长生成任务分别有 deadline；stdout / stderr 持续 drain；cancel / timeout / shutdown 执行 terminate → wait → kill；permission、terminal、file-write 等服务端 callback 默认拒绝。pending queue、output、error 与 history 都必须有界，活跃 job 不得被错误 prune。
+5. **Exact downstream snapshot**：Batch / Delta / preflight 一类多阶段 UI 必须把窗口和实际输入文本一起绑定。起始章、窗口大小、Primary 或 Delta 任一变化，都使后续 Prompt、预检或 adopt capability stale；不能只因为旧预检曾 PASS 就继续采用。
+6. **Reload is not consent**：页面刷新可以恢复轮询和只读运行记录，但不能自动重放作者已失去上下文的写入意图，也不能把恢复后的结果自动塞回可编辑 Authority surface。
+
+最小验证至少包括：错误/取消/超时/服务关闭、非法 transport 参数、路径隐私、队列上界、异步乱序、跨书/跨章/跨节点、作者运行中编辑、刷新恢复、stale Batch 预检，以及“job 完成但没有任何 Authority 写入”的证据。浏览器视觉 smoke 还要覆盖真实亮暗主题和窄屏无横向溢出，但视觉通过不能替代 Authority / process audit。
 
 # Audit Operating Modes
 

@@ -3718,14 +3718,20 @@ def test_generate_prompt_does_not_clear_proposal_editor() -> None:
 
 def test_previous_chapter_fetch_failure_is_visible_and_does_not_clear_context() -> None:
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
-    start = js.index("async function refreshPreviousChapterText()")
-    end = js.index("async function loadBook", start)
-    function_body = js[start:end]
-    assert "const chapters = [];" in function_body
-    assert "target.value = chapters.join" in function_body
-    assert "读取第${number}章连续性上下文失败：${error.message}" in function_body
-    assert "catch {" not in function_body
-    assert 'target.value = "";' not in function_body.split("const first", 1)[1]
+    helper_start = js.index("async function loadContinuityContextBefore")
+    helper_end = js.index("function batchPayload", helper_start)
+    helper_body = js[helper_start:helper_end]
+    refresh_start = js.index("async function refreshPreviousChapterText()")
+    refresh_end = js.index("async function loadBook", refresh_start)
+    refresh_body = js[refresh_start:refresh_end]
+    assert "const chapters = [];" in helper_body
+    assert "return chapters.join" in helper_body
+    assert "target.value = await loadContinuityContextBefore(chapterNumber);" in refresh_body
+    assert "读取第${chapterNumber}章连续性上下文失败：${error.message}" in refresh_body
+    assert "catch {" not in refresh_body
+    # Assignment happens only after the helper resolves, so a failed fetch preserves existing context.
+    assert refresh_body.index("target.value = await") < refresh_body.index("catch (error)")
+    assert 'target.value = "";' not in refresh_body.split("try {", 1)[1]
 
 
 def test_chapter_response_contract_saves_only_extracted_body() -> None:

@@ -4,14 +4,30 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Transparent GBrain Story Studio</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=4">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=5">
   </head>
   <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">LOCAL · SINGLE AUTHOR · CLEANROOM MVP</p>
-        <h1>Transparent GBrain Story Studio</h1>
-        <p class="subtle">作者保留判断权：页面只生成、展示、复制和保存你主动确认的文本。</p>
+    <header class="topbar app-topbar">
+      <div class="brand-block">
+        <p class="eyebrow">TGN · PRIVATE WRITING CABIN</p>
+        <h1>沉浸式小说工作台</h1>
+        <p class="subtle">模型只返回候选；保存、采用与批准永远由作者确认。</p>
+      </div>
+      <div class="topbar-project" aria-label="当前项目">
+        <span id="topbar-book">未加载项目</span>
+        <span id="topbar-save-status">等待作者操作</span>
+      </div>
+      <nav class="top-mode-nav" aria-label="创作模式">
+        <button type="button" data-top-view="chapter">Manuscript</button>
+        <button type="button" data-top-view="design">Structure</button>
+        <button type="button" data-top-view="memory">Memory</button>
+        <button type="button" data-drawer-section="workflow-audit-section">Audit</button>
+        <button type="button" data-drawer-section="agentdock-run-log">Versions</button>
+      </nav>
+      <div class="topbar-actions">
+        <input id="workspace-search" type="search" placeholder="搜索当前工作台" aria-label="搜索当前工作台">
+        <button id="theme-toggle" type="button" aria-pressed="false">深色</button>
+        <button id="topbar-settings" type="button" aria-label="设置">设置</button>
       </div>
     </header>
 
@@ -67,18 +83,23 @@
           <span id="sidebar-book-chapter" class="subtle">等待加载</span>
         </div>
         <nav class="author-nav" aria-label="工作区">
-          <a class="nav-link active" href="#overview" data-view-target="overview">概览</a>
-          <a class="nav-link" href="#creative" data-view-target="creative">创意</a>
-          <a class="nav-link" href="#design" data-view-target="design">故事设计</a>
-          <a class="nav-link" href="#chapter" data-view-target="chapter">章节写作</a>
-          <a class="nav-link" href="#memory" data-view-target="memory">记忆</a>
-          <a class="nav-link" href="#tools" data-view-target="tools">工具</a>
+          <a class="nav-link active" href="#overview" data-view-target="overview">◎<span>工作台</span></a>
+          <a class="nav-link" href="#creative" data-view-target="creative">✦<span>创意</span></a>
+          <a class="nav-link" href="#design" data-view-target="design">◇<span>结构</span></a>
+          <a class="nav-link" href="#chapter" data-view-target="chapter">✎<span>正文</span></a>
+          <a class="nav-link" href="#memory" data-view-target="memory">◌<span>记忆</span></a>
+          <a class="nav-link" href="#tools" data-view-target="tools">⋯<span>工具</span></a>
         </nav>
         <div class="sidebar-footer">
           <button id="open-workflow-drawer" type="button">执行透明度</button>
           <button id="settings-button" type="button">设置</button>
           <span class="sidebar-caption">所有保存、批准与重跑仍由作者明确触发</span>
         </div>
+      </aside>
+
+      <aside id="story-structure" class="story-structure" aria-label="故事结构">
+        <div class="story-structure-heading"><span class="eyebrow">STORY STRUCTURE</span><strong>当前故事</strong></div>
+        <div id="story-structure-tree" class="story-structure-tree"><p class="hint">加载小说后显示真实 artifact 与 Future-10。</p></div>
       </aside>
 
       <div class="author-content">
@@ -175,6 +196,7 @@
           <label>生成方式
             <select id="executor-mode">
               <option value="manual" selected>复制 Prompt</option>
+              <option value="agentdock_acp">AgentDock ACP（本机只读）</option>
               <option value="codex_external">Codex</option>
               <option value="openai_api">OpenAI API</option>
             </select>
@@ -182,11 +204,12 @@
           <input id="openai-model" aria-label="OpenAI Model ID" placeholder="默认模型" autocomplete="off">
           <input id="state-model" aria-label="State Extraction Model ID" placeholder="State 模型（空=环境配置/主模型）" autocomplete="off">
           <span id="openai-executor-status" class="status">OpenAI API：未查询</span>
+          <span id="agentdock-executor-status" class="status">AgentDock ACP：未查询</span>
           <button id="refresh-workflow">刷新状态</button>
         </div>
       </div>
       <div id="workflow-stages" class="workflow-stages"></div>
-      <div class="workflow-detail-grid">
+      <div id="workflow-audit-section" class="workflow-detail-grid">
         <div>
           <strong>节点详情</strong>
           <p id="workflow-detail" class="workflow-detail">点击节点查看状态和实际影响。</p>
@@ -204,6 +227,57 @@
         </div>
         <textarea id="codex-task-wrapper" rows="7" readonly></textarea>
       </div>
+      <section id="agentdock-panel" class="agentdock-panel" aria-labelledby="agentdock-title">
+        <div class="workflow-inline-heading">
+          <div>
+            <p class="eyebrow">AGENTDOCK ACP · READ ONLY</p>
+            <strong id="agentdock-title">创作中枢</strong>
+          </div>
+          <span id="agentdock-active-status" class="status">无运行作业</span>
+        </div>
+        <p class="hint">AgentDock 可读取固定项目上下文以回答 Prompt，但不会写入小说或工作流；保存、采用和批准始终由作者显式触发。</p>
+        <div class="pipeline-cards" aria-label="生产链状态">
+          <article><span>Batch Draft</span><strong id="batch-primary-status">等待 Batch Primary</strong></article>
+          <article><span>Authority Delta</span><strong id="batch-delta-status">等待 Authority Delta</strong></article>
+          <article><span>State</span><strong id="batch-state-status">未采用；不会自动更新 State</strong></article>
+        </div>
+        <div class="agentdock-controls">
+          <label>模型 <select id="agentdock-model" aria-label="AgentDock 模型"></select></label>
+          <label>推理 <select id="agentdock-effort" aria-label="AgentDock 推理强度"></select></label>
+          <button id="agentdock-run-current" class="primary" type="button">运行当前 Prompt</button>
+          <button id="agentdock-refresh-jobs" type="button">刷新作业</button>
+        </div>
+        <div id="agentdock-job-list" class="agentdock-job-list" aria-live="polite"></div>
+        <details class="batch-production" open>
+          <summary>Batch Production <span id="batch-window">第1—5章 · 生产默认</span></summary>
+          <p class="hint">固定生产配置：Primary 使用 Terra high；Authority Delta 使用 Sol high。此处只复用现有 Batch API，不会自动采用或写 Canon。</p>
+          <div class="batch-window-controls">
+            <label>起始章 <input id="batch-start-chapter" type="number" min="1" max="9999" value="1"></label>
+            <label>批量 <select id="batch-size"><option value="4">4章</option><option value="5" selected>5章</option><option value="6">6章</option></select></label>
+          </div>
+          <div class="action-row wrap"><button id="batch-compile-primary" type="button">编译 Batch Packet / Primary Prompt</button><button id="batch-run-primary" class="primary" type="button">运行 Batch Primary</button></div>
+          <label class="field"><span>Batch Primary Prompt（只读）</span><textarea id="batch-primary-prompt" rows="7" readonly></textarea></label>
+          <label class="field"><span>Batch Primary Response（专属编辑区）</span><textarea id="batch-primary-response" rows="10" placeholder="Terra high 的整批正文返回只进入这里"></textarea></label>
+          <div class="action-row wrap"><button id="batch-compile-delta" type="button">编译 Authority Delta Prompt</button><button id="batch-run-delta" class="primary" type="button">运行 Authority Delta</button></div>
+          <label class="field"><span>Authority Delta Prompt（只读）</span><textarea id="batch-delta-prompt" rows="7" readonly></textarea></label>
+          <label class="field"><span>Authority Delta Response（专属编辑区）</span><textarea id="batch-delta-response" rows="10" placeholder="Sol high 的 exact local patch / upstream conflicts 返回只进入这里"></textarea></label>
+          <div class="action-row wrap"><button id="batch-preflight" type="button">预检 Delta</button><button id="batch-adopt" class="danger" type="button" disabled>整批采用</button><button id="batch-load-state" type="button">载入下一章 State 工作区</button></div>
+          <textarea id="batch-preflight-result" class="batch-preflight" rows="4" readonly>尚未预检。</textarea>
+        </details>
+        <details class="agentdock-consult">
+          <summary>启动临时只读咨询</summary>
+          <p class="hint">咨询结果不会写入 Canon、BOOK、Run Ledger 或当前 Response；需要时请手动复制。</p>
+          <textarea id="agentdock-consult-prompt" rows="5" placeholder="输入只读咨询问题"></textarea>
+          <div class="action-row"><button id="agentdock-run-consult" type="button">启动 Agent</button></div>
+          <textarea id="agentdock-consult-response" rows="7" readonly placeholder="临时咨询结果会显示在这里"></textarea>
+        </details>
+        <details id="agentdock-run-log" class="agentdock-preview">
+          <summary>运行结果预览</summary>
+          <p id="agentdock-preview-status" class="hint">点击作业卡的“查看”后按身份检查。</p>
+          <textarea id="agentdock-result-preview" rows="10" readonly placeholder="结果仅在此只读预览"></textarea>
+          <div class="action-row"><button id="agentdock-load-current" type="button" disabled>载入当前 Response</button></div>
+        </details>
+      </section>
     </section>
 
     <main class="studio-grid">
@@ -539,8 +613,8 @@
         </div>
 
         <details id="chapter-execution-details" class="hybrid-run execution-details">
-          <summary>Chapter Run · Curator Primary Default</summary>
-          <p class="hint">默认主链是 Director → Curator → Primary Draft → Authority Reviser → 轻量 State Extraction。专项 Agent 只在 Authority Reviser 后人工启用 repair，不进入默认每章调用。</p>
+          <summary>Single-chapter Run · Fallback / 高级详情</summary>
+          <p class="hint">Production 默认章节链是 Batch Packet → Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State。这里保留旧 Director → Curator → Primary → Authority Reviser 单章链作为 fallback / 专项高级详情；专项 Agent 只可在 Authority Reviser 后人工启用 repair。</p>
           <div class="hybrid-controls">
             <label>Writer Mode
               <select id="writer-mode">
@@ -755,6 +829,6 @@
       </div>
     </aside>
 
-    <script src="{{ url_for('static', path='app.js') }}?v=4"></script>
+    <script src="{{ url_for('static', path='app.js') }}?v=5"></script>
   </body>
 </html>

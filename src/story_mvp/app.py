@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any, Literal
 
@@ -20,6 +21,7 @@ from .batch_runtime import (
     parse_batch_delta_response,
     parse_batch_primary_response,
 )
+from .agentdock_executor import AgentDockExecutorError, AgentDockJobManager
 from .character_prompts import generate_split_prompt
 from .gbrain import GBrainQueryError
 from .gbrain_retrieval import (
@@ -111,7 +113,18 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES_DIR = PROJECT_ROOT / "src" / "story_mvp" / "templates"
 STATIC_DIR = PROJECT_ROOT / "src" / "story_mvp" / "static"
 
-app = FastAPI(title="Transparent GBrain Story Studio")
+agentdock_job_manager = AgentDockJobManager(PROJECT_ROOT)
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    try:
+        yield
+    finally:
+        agentdock_job_manager.close()
+
+
+app = FastAPI(title="Transparent GBrain Story Studio", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
@@ -180,6 +193,23 @@ class OpenAIExecutorRequest(BaseModel):
         "batch_authority_reviser",
     ] = "default"
     reasoning_effort: str = ""
+
+
+class AgentDockJobRequest(BaseModel):
+    prompt: str = Field(default="", max_length=120_000)
+    model: str = Field(default="", max_length=64)
+    reasoning_effort: str = Field(default="", max_length=16)
+    purpose: Literal[
+        "consultation",
+        "workflow_response",
+        "batch_primary",
+        "batch_authority_reviser",
+    ] = "consultation"
+    context_label: str = Field(default="", max_length=160)
+    book_id: str = Field(default="", max_length=160)
+    workflow_mode: str = Field(default="", max_length=80)
+    chapter_number: int = Field(default=0, ge=0, le=9999)
+    launch_token: str = Field(default="", max_length=120)
 
 
 class BatchPromptRequest(BaseModel):
@@ -394,6 +424,7 @@ def get_executors() -> dict[str, Any]:
     return {
         "manual": {"available": True},
         "codex_external": {"available": True},
+        "agentdock_acp": agentdock_job_manager.status(),
         "openai_api": {
             "available": True,
             "configured": openai_configured(),
@@ -408,6 +439,50 @@ def get_executors() -> dict[str, Any]:
             "name": openai_settings["name"],
         },
     }
+
+
+@app.get("/api/executors/agentdock")
+def get_agentdock_executor() -> dict[str, Any]:
+    return agentdock_job_manager.status()
+
+
+@app.get("/api/executors/agentdock/jobs")
+def list_agentdock_jobs(book_id: str = "") -> dict[str, Any]:
+    return {"jobs": agentdock_job_manager.list(book_id=book_id)}
+
+
+@app.post("/api/executors/agentdock/jobs")
+def post_agentdock_job(payload: AgentDockJobRequest) -> dict[str, Any]:
+    try:
+        return agentdock_job_manager.create(
+            prompt=payload.prompt,
+            model=payload.model,
+            reasoning_effort=payload.reasoning_effort,
+            purpose=payload.purpose,
+            context_label=payload.context_label,
+            book_id=payload.book_id,
+            workflow_mode=payload.workflow_mode,
+            chapter_number=payload.chapter_number,
+            launch_token=payload.launch_token,
+        )
+    except AgentDockExecutorError as error:
+        raise HTTPException(status_code=error.status_code, detail={"code": error.code, "message": str(error)}) from error
+
+
+@app.get("/api/executors/agentdock/jobs/{job_id}")
+def get_agentdock_job(job_id: str) -> dict[str, Any]:
+    try:
+        return agentdock_job_manager.get(job_id)
+    except AgentDockExecutorError as error:
+        raise HTTPException(status_code=error.status_code, detail={"code": error.code, "message": str(error)}) from error
+
+
+@app.delete("/api/executors/agentdock/jobs/{job_id}")
+def delete_agentdock_job(job_id: str) -> dict[str, Any]:
+    try:
+        return agentdock_job_manager.cancel(job_id)
+    except AgentDockExecutorError as error:
+        raise HTTPException(status_code=error.status_code, detail={"code": error.code, "message": str(error)}) from error
 
 
 @app.get("/api/settings/openai")

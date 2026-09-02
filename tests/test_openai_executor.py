@@ -54,6 +54,8 @@ def test_openai_status_does_not_expose_api_key(monkeypatch) -> None:
         "batch_authority_reviser_reasoning": "high",
         "name": "",
     }
+    assert response.json()["agentdock_acp"]["auth"] == "chatgpt"
+    assert "acp_path" not in response.json()["agentdock_acp"]
     assert "secret-value" not in response.text
 
 

@@ -14,6 +14,23 @@ const state = {
   designEditing: false,
   dirtyEditors: new Set(),
   gbrainDefaultBrief: "",
+  agentdockJobs: [],
+  agentdockAvailable: false,
+  agentdockPollers: new Set(),
+  agentdockLatestLaunch: new Map(),
+  agentdockPendingJobs: new Map(),
+  agentdockLaunchSnapshots: new Map(),
+  agentdockEditorVersions: new Map(),
+  agentdockPreviewJob: null,
+  batch: {
+    preflight: null,
+    adopted: null,
+    continuityText: "",
+    primaryPromptWindow: "",
+    deltaPromptWindow: "",
+    deltaPromptPrimary: "",
+    window: { startChapter: 1, batchSize: 5 },
+  },
 };
 
 const creativeUi = {
@@ -115,6 +132,8 @@ function renderDirtyState() {
   const overview = $("overview-dirty");
   if (overview) overview.textContent = count ? `未保存编辑 ${count} 项` : "";
   document.body.classList.toggle("has-unsaved-edits", count > 0);
+  const saveState = $("topbar-save-status");
+  if (saveState) saveState.textContent = count ? `未保存编辑 ${count} 项` : "所有写入均需作者确认";
 }
 
 function setView(view, updateHash = true) {
@@ -124,7 +143,14 @@ function setView(view, updateHash = true) {
     element.hidden = element.dataset.view !== view;
   });
   document.querySelectorAll(".nav-link").forEach((link) => {
-    link.classList.toggle("active", link.dataset.viewTarget === view);
+    const active = link.dataset.viewTarget === view;
+    link.classList.toggle("active", active);
+    if (active) link.setAttribute("aria-current", "page"); else link.removeAttribute("aria-current");
+  });
+  document.querySelectorAll("[data-top-view]").forEach((button) => {
+    const active = button.dataset.topView === view;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
   });
   document.body.dataset.view = view;
   if (view !== "memory") document.body.classList.remove("memory-editor-open");
@@ -192,6 +218,13 @@ function setChapterTab(tab) {
 
 function updateChapterWorkspace() {
   const chapter = currentChapterNumber();
+  if ($("batch-start-chapter") && !batchProductionHasContent()) {
+    $("batch-start-chapter").value = chapter;
+    state.batch.window = {
+      startChapter: chapter,
+      batchSize: Number($("batch-size")?.value || 5),
+    };
+  }
   const action = chapterActionForNode(state.workflow?.next_actionable_node);
   const title = $("chapter-workspace-title");
   if (title) title.textContent = `第 ${chapter} 章`;
@@ -464,6 +497,7 @@ function renderWorkflow(snapshot) {
   renderMemoryWorkspace();
   renderDesignPreviews();
   renderFuture10Cards();
+  renderStoryStructure(snapshot);
   updateChapterWorkspace();
   if (!snapshot) {
     $("workflow-current").textContent = "Workflow：未加载";
@@ -595,6 +629,8 @@ async function refreshWorkflow() {
     $("openai-executor-status").textContent = openai.configured
       ? `OpenAI API：已配置 · main=${openai.model} · state=${openai.state_model || openai.model}`
       : "OpenAI API：未配置";
+    renderAgentDockStatus(executors.agentdock_acp || {});
+    await refreshAgentDockJobs();
   } catch (error) {
     renderWorkflow(null);
     showStatus(`Workflow 刷新失败：${error.message}`, true);
@@ -608,9 +644,400 @@ async function refreshExecutorStatus() {
     $("openai-executor-status").textContent = openai.configured
       ? `OpenAI API：已配置 · ${openai.name || openai.model} · state=${openai.state_model || openai.model}`
       : "OpenAI API：未配置";
+    renderAgentDockStatus(executors.agentdock_acp || {});
   } catch (error) {
     $("openai-executor-status").textContent = "OpenAI API：读取失败";
   }
+}
+
+function renderStoryStructure(snapshot) {
+  const tree = $("story-structure-tree");
+  if (!tree) return;
+  tree.replaceChildren();
+  const artifacts = snapshot?.artifacts || {};
+  const appendArtifact = (label, artifact, view, tab = "") => {
+    const button = document.createElement("button");
+    button.type = "button";
+    const entry = artifacts[artifact] || {};
+    button.className = "story-tree-item";
+    button.textContent = `${label} · ${entry.status || "EMPTY"}`;
+    button.addEventListener("click", () => {
+      if (artifact in artifacts) showWorkflowArtifact(artifact);
+      navigateToView(view, `定位${label}`);
+      if (tab === "future10") setDesignTab("future10");
+      if (tab === "midterm") setDesignTab("midterm");
+      openRightDrawer();
+    });
+    tree.appendChild(button);
+  };
+  appendArtifact("World Vision", "creative.world_vision", "creative");
+  appendArtifact("Power / Human / Character", "creative.character_card", "creative");
+  appendArtifact("Story Program", "creative.story_program", "creative");
+  appendArtifact("当前 Long Plan", "book.long_plan", "design", "midterm");
+  const future = parseFuture10Entries($("section-small_plan")?.value || "");
+  const futureGroup = document.createElement("div");
+  futureGroup.className = "story-tree-group";
+  futureGroup.textContent = `Future-10 · ${future.length} 章`;
+  tree.appendChild(futureGroup);
+  for (const entry of future.slice(0, 10)) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "story-tree-item story-tree-child";
+    button.textContent = `第${entry.number}章 · ${entry.title}`;
+    button.addEventListener("click", () => {
+      $("chapter-number").value = entry.number;
+      navigateToView("chapter", "进入 Future-10 章节");
+      setChapterTab("outline");
+      loadCurrentChapterPlan();
+    });
+    tree.appendChild(button);
+  }
+  appendArtifact(`当前章 · ${snapshot?.current_chapter || currentChapterNumber()}`, `chapter.${snapshot?.current_chapter || currentChapterNumber()}.body`, "chapter");
+  appendArtifact("Canon Memory", "book.canon_state", "memory");
+  appendArtifact("Run / Archive", `chapter.${snapshot?.current_chapter || currentChapterNumber()}.run`, "chapter");
+}
+
+function renderAgentDockStatus(executor) {
+  const status = $("agentdock-executor-status");
+  if (!status) return;
+  const available = Boolean(executor.available);
+  state.agentdockAvailable = available;
+  status.textContent = available
+    ? `AgentDock ACP：可用 · ChatGPT 登录 · ${executor.mode || "read-only"} · 活跃 ${executor.active_count || 0}`
+    : "AgentDock ACP：本机不可用";
+  const models = $("agentdock-model");
+  const efforts = $("agentdock-effort");
+  if (models && executor.models?.length && !models.options.length) {
+    for (const model of executor.models) {
+      const option = document.createElement("option");
+      option.value = model;
+      option.textContent = model;
+      option.selected = model === executor.default_model;
+      models.appendChild(option);
+    }
+  }
+  if (efforts && executor.reasoning_efforts?.length && !efforts.options.length) {
+    for (const effort of executor.reasoning_efforts) {
+      const option = document.createElement("option");
+      option.value = effort;
+      option.textContent = effort;
+      option.selected = effort === executor.default_reasoning_effort;
+      efforts.appendChild(option);
+    }
+  }
+  syncAgentDockPendingButtons();
+}
+
+function renderAgentDockJobs(jobs) {
+  state.agentdockJobs = jobs;
+  const container = $("agentdock-job-list");
+  const active = $("agentdock-active-status");
+  if (!container) return;
+  container.replaceChildren();
+  const activeCount = jobs.filter((job) => ["queued", "running"].includes(job.status)).length;
+  if (active) active.textContent = activeCount ? `${activeCount} 个作业运行中` : "无运行作业";
+  if (!jobs.length) {
+    const empty = document.createElement("p");
+    empty.className = "hint";
+    empty.textContent = "本次服务会话还没有 AgentDock 作业。";
+    container.appendChild(empty);
+    return;
+  }
+  for (const job of jobs.slice(0, 12)) {
+    const card = document.createElement("article");
+    card.className = `agentdock-job agentdock-job-${job.status}`;
+    const title = document.createElement("strong");
+    title.textContent = `${job.context_label || job.purpose} · ${job.status}`;
+    const detail = document.createElement("span");
+    detail.textContent = `${job.model || "—"} · ${job.reasoning_effort || "—"} · ${job.elapsed_seconds ?? 0}s`;
+    const actions = document.createElement("div");
+    actions.className = "agentdock-job-actions";
+    if (["queued", "running"].includes(job.status)) {
+      const cancel = document.createElement("button");
+      cancel.type = "button";
+      cancel.textContent = "取消";
+      cancel.addEventListener("click", () => cancelAgentDockJob(job.job_id));
+      actions.appendChild(cancel);
+    }
+    if (job.has_output) {
+      const view = document.createElement("button");
+      view.type = "button";
+      view.textContent = "查看";
+      view.addEventListener("click", () => viewAgentDockJob(job.job_id));
+      actions.appendChild(view);
+    }
+    if (job.error) detail.textContent += ` · 失败：${job.error}`;
+    card.append(title, detail, actions);
+    container.appendChild(card);
+  }
+}
+
+function agentDockButtonsForTarget(target) {
+  return {
+    workflow_response: ["agentdock-run-current"],
+    state_delta: ["agentdock-run-current", "generate-state-delta-prompt"],
+    consultation: ["agentdock-run-consult"],
+    batch_primary: ["batch-run-primary"],
+    batch_delta: ["batch-run-delta"],
+  }[target] || [];
+}
+
+function syncAgentDockPendingButtons() {
+  const activeTargets = new Set(
+    [...state.agentdockPendingJobs.values()]
+      .filter((entry) => entry.bookId === state.bookId)
+      .map((entry) => entry.target),
+  );
+  for (const target of ["workflow_response", "state_delta", "consultation", "batch_primary", "batch_delta"]) {
+    const pending = activeTargets.has(target);
+    for (const id of agentDockButtonsForTarget(target)) {
+      if ($(id)) $(id).disabled = !state.agentdockAvailable || pending;
+    }
+  }
+}
+
+function trackAgentDockPending(jobKey, job, pending) {
+  const previous = state.agentdockPendingJobs.get(jobKey) || null;
+  if (pending) {
+    state.agentdockPendingJobs.set(jobKey, {
+      target: responseTargetForJob(job),
+      bookId: job.book_id || state.bookId,
+      launchToken: job.launch_token || "",
+    });
+  } else {
+    state.agentdockPendingJobs.delete(jobKey);
+  }
+  syncAgentDockPendingButtons();
+  return previous;
+}
+
+async function refreshAgentDockJobs() {
+  if (!state.bookId) {
+    syncAgentDockPendingButtons();
+    return renderAgentDockJobs([]);
+  }
+  try {
+    const payload = await requestJson(`/api/executors/agentdock/jobs?book_id=${encodeURIComponent(state.bookId)}`);
+    const jobs = payload.jobs || [];
+    const activeJobs = jobs.filter((job) => ["queued", "running"].includes(job.status));
+    const activeIds = new Set(activeJobs.map((job) => job.job_id));
+    for (const [jobKey, entry] of state.agentdockPendingJobs.entries()) {
+      if (entry.bookId === state.bookId && !jobKey.startsWith("launch:") && !activeIds.has(jobKey)) {
+        state.agentdockPendingJobs.delete(jobKey);
+      }
+    }
+    for (const job of activeJobs) {
+      const target = responseTargetForJob(job);
+      if (!state.agentdockLatestLaunch.has(target)) state.agentdockLatestLaunch.set(target, job.launch_token);
+      trackAgentDockPending(job.job_id, job, true);
+      pollAgentDockJob(job.job_id);
+    }
+    syncAgentDockPendingButtons();
+    renderAgentDockJobs(jobs);
+  } catch (error) {
+    for (const [jobKey, entry] of state.agentdockPendingJobs.entries()) {
+      if (entry.bookId === state.bookId && !jobKey.startsWith("launch:")) state.agentdockPendingJobs.delete(jobKey);
+    }
+    syncAgentDockPendingButtons();
+    renderAgentDockJobs([]);
+  }
+}
+
+function responseTargetForJob(job) {
+  if (job.purpose === "consultation") return "consultation";
+  if (job.purpose === "batch_primary") return "batch_primary";
+  if (job.purpose === "batch_authority_reviser") return "batch_delta";
+  if (job.workflow_mode === "state_delta") return "state_delta";
+  return "workflow_response";
+}
+
+function currentIdentity() {
+  return { book_id: state.bookId, chapter_number: currentChapterNumber(), workflow_mode: $("prompt-mode")?.value || "" };
+}
+
+function currentBatchWorkflowMode(purpose) {
+  return `${purpose}:${Number($("batch-size")?.value || 5)}`;
+}
+
+function jobMatchesCurrentIdentity(job) {
+  if (job.purpose === "consultation") return job.book_id === state.bookId;
+  if (job.purpose === "batch_primary" || job.purpose === "batch_authority_reviser") {
+    return job.book_id === state.bookId
+      && job.chapter_number === Number($("batch-start-chapter")?.value || 0)
+      && job.workflow_mode === currentBatchWorkflowMode(job.purpose);
+  }
+  if (job.workflow_mode === "state_delta") {
+    return job.book_id === state.bookId && job.chapter_number === currentChapterNumber();
+  }
+  const current = currentIdentity();
+  return job.book_id === current.book_id && job.chapter_number === current.chapter_number && job.workflow_mode === current.workflow_mode;
+}
+
+function responseEditorForJob(job) {
+  const target = responseTargetForJob(job);
+  if (target === "consultation") return $("agentdock-consult-response");
+  if (target === "batch_primary") return $("batch-primary-response");
+  if (target === "batch_delta") return $("batch-delta-response");
+  if (target === "state_delta") return $("state-delta-response");
+  return $("codex-response");
+}
+
+function agentDockEditorVersion(editor) {
+  return Number(state.agentdockEditorVersions.get(editor?.id || "") || 0);
+}
+
+function markAgentDockEditorEdited(editor) {
+  if (!editor?.id) return;
+  state.agentdockEditorVersions.set(editor.id, agentDockEditorVersion(editor) + 1);
+}
+
+function canAutoFillAgentDockJob(job) {
+  const target = responseTargetForJob(job);
+  const snapshot = state.agentdockLaunchSnapshots.get(job.launch_token);
+  const editor = responseEditorForJob(job);
+  return Boolean(
+    snapshot
+    && editor
+    && state.agentdockLatestLaunch.get(target) === job.launch_token
+    && jobMatchesCurrentIdentity(job)
+    && snapshot.target === target
+    && snapshot.bookId === job.book_id
+    && snapshot.chapterNumber === job.chapter_number
+    && snapshot.workflowMode === job.workflow_mode
+    && editor.value === snapshot.initialValue
+    && agentDockEditorVersion(editor) === snapshot.editorVersion
+  );
+}
+
+async function startAgentDockJob(prompt, { mode = "", purpose = "consultation", contextLabel = "", model = "", reasoningEffort = "" } = {}) {
+  const identity = { book_id: state.bookId, chapter_number: purpose === "consultation" ? 0 : currentChapterNumber(), workflow_mode: mode };
+  if (purpose === "batch_primary" || purpose === "batch_authority_reviser") {
+    identity.chapter_number = Number($("batch-start-chapter").value);
+    identity.workflow_mode = currentBatchWorkflowMode(purpose);
+  }
+  const jobIdentity = { purpose, ...identity };
+  const target = responseTargetForJob(jobIdentity);
+  const launchToken = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  const temporaryKey = `launch:${launchToken}`;
+  const editor = responseEditorForJob(jobIdentity);
+  state.agentdockLatestLaunch.set(target, launchToken);
+  state.agentdockLaunchSnapshots.set(launchToken, {
+    target,
+    bookId: identity.book_id,
+    chapterNumber: identity.chapter_number,
+    workflowMode: identity.workflow_mode,
+    initialValue: editor?.value || "",
+    editorVersion: agentDockEditorVersion(editor),
+  });
+  trackAgentDockPending(temporaryKey, { ...jobIdentity, launch_token: launchToken }, true);
+  try {
+    const payload = await requestJson("/api/executors/agentdock/jobs", {
+      method: "POST",
+      body: JSON.stringify({
+        prompt,
+        model: model || $("agentdock-model")?.value || "",
+        reasoning_effort: reasoningEffort || $("agentdock-effort")?.value || "",
+        purpose,
+        context_label: contextLabel || mode || "临时咨询",
+        ...identity,
+        launch_token: launchToken,
+      }),
+    });
+    trackAgentDockPending(temporaryKey, jobIdentity, false);
+    trackAgentDockPending(payload.job_id, { ...jobIdentity, launch_token: launchToken }, true);
+    await refreshAgentDockJobs();
+    pollAgentDockJob(payload.job_id);
+    return payload;
+  } catch (error) {
+    trackAgentDockPending(temporaryKey, jobIdentity, false);
+    state.agentdockLaunchSnapshots.delete(launchToken);
+    if (state.agentdockLatestLaunch.get(target) === launchToken) state.agentdockLatestLaunch.delete(target);
+    throw error;
+  }
+}
+
+async function pollAgentDockJob(jobId) {
+  if (state.agentdockPollers.has(jobId)) return;
+  state.agentdockPollers.add(jobId);
+  try {
+    while (true) {
+      let job;
+      try {
+        job = await requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(jobId)}`);
+      } catch (error) {
+        const pending = trackAgentDockPending(jobId, {}, false);
+        if (pending?.launchToken) state.agentdockLaunchSnapshots.delete(pending.launchToken);
+        const lost = error.status === 404 || error.payload?.detail?.code === "not_found";
+        showStatus(lost ? "AgentDock 作业状态已丢失（服务可能已重启）；未写入任何 Response。" : `AgentDock 作业状态不可用：${error.message}`, true);
+        break;
+      }
+      if (["queued", "running"].includes(job.status)) {
+        await new Promise((resolve) => window.setTimeout(resolve, 1400));
+        continue;
+      }
+      const target = responseTargetForJob(job);
+      trackAgentDockPending(jobId, job, false);
+      if (job.status === "completed") {
+        if (canAutoFillAgentDockJob(job)) {
+          responseEditorForJob(job).value = job.output_text || "";
+          if (target === "batch_primary") invalidateBatchPrimaryDependents();
+          if (target === "batch_delta") invalidateBatchPreflight();
+          showStatus(job.purpose === "consultation" ? "AgentDock 临时咨询已完成；结果没有写入小说或工作流。" : "AgentDock 已返回匹配的 Response；仍需作者明确 Apply / Save / Approve。 ");
+        } else {
+          showStatus("AgentDock 结果待查看：页面已刷新、作者已编辑目标区域，或当前小说/章节/节点不匹配，因此未覆盖编辑区。 ");
+        }
+      } else if (job.status === "failed") {
+        showStatus(`AgentDock 失败：${job.error || "未返回详情"}`, true);
+      } else if (job.status === "cancelled") {
+        showStatus("AgentDock 作业已取消；没有写入 Response。 ");
+      }
+      state.agentdockLaunchSnapshots.delete(job.launch_token);
+      await refreshAgentDockJobs();
+      break;
+    }
+  } finally {
+    state.agentdockPollers.delete(jobId);
+  }
+}
+
+async function cancelAgentDockJob(jobId) {
+  try {
+    await requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(jobId)}`, { method: "DELETE" });
+    await refreshAgentDockJobs();
+    showStatus("已请求取消 AgentDock 作业");
+  } catch (error) {
+    showStatus(`取消 AgentDock 作业失败：${error.message}`, true);
+  }
+}
+
+async function viewAgentDockJob(jobId) {
+  try {
+    const job = await requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(jobId)}`);
+    state.agentdockPreviewJob = job;
+    $("agentdock-result-preview").value = job.output_text || "";
+    const matches = jobMatchesCurrentIdentity(job);
+    $("agentdock-preview-status").textContent = matches
+      ? "身份匹配：作者可显式载入当前 Response；旧版本也不会自动覆盖。" : "身份不匹配：只读预览，不能覆盖当前 Response。";
+    $("agentdock-load-current").disabled = !matches;
+  } catch (error) {
+    return showStatus(`读取 AgentDock 结果失败：${error.message}`, true);
+  }
+  openRightDrawer();
+}
+
+function loadAgentDockPreview() {
+  const job = state.agentdockPreviewJob;
+  if (!job || !jobMatchesCurrentIdentity(job)) {
+    return showStatus("该结果不匹配当前小说、章节、节点或 Batch 窗口，不能载入。", true);
+  }
+  if (!window.confirm("确认将这份 AgentDock 结果载入当前 Response？这不会保存、采用或批准。")) return;
+  const target = responseTargetForJob(job);
+  const editor = responseEditorForJob(job);
+  markAgentDockEditorEdited(editor);
+  editor.value = job.output_text || "";
+  if (target === "batch_primary") invalidateBatchPrimaryDependents();
+  if (target === "batch_delta") invalidateBatchPreflight();
+  showStatus("结果已载入当前 Response；尚未保存、采用或批准。 ");
 }
 
 async function loadOpenAISettings() {
@@ -1305,6 +1732,16 @@ async function retryRunNode(node) {
       if (currentExecutorMode() === "openai_api" && saved.content?.trim()) {
         await executeOpenAI(saved.content, "authority_reviser");
         showStatus("显式里程碑 Outcome Repair 已执行；请检查并 Apply 返回。最多只允许这一次条件性重试。");
+      } else if (currentExecutorMode() === "agentdock_acp" && saved.content?.trim()) {
+        const profile = agentDockExecutionProfile("authority_reviser");
+        await startAgentDockJob(saved.content, {
+          mode: "authority_reviser",
+          purpose: "workflow_response",
+          contextLabel: "Authority Delta 重试",
+          model: profile.model,
+          reasoningEffort: profile.reasoningEffort,
+        });
+        showStatus("Authority Delta 重试已交给 AgentDock；完成后仍需作者检查与 Apply。 ");
       } else {
         showStatus("已加载显式里程碑 Outcome Repair Prompt；这是一次性窄修复，不会重跑普通 Reviser。 ");
       }
@@ -1468,9 +1905,16 @@ function populateBook(book) {
   document.querySelectorAll(".creative-stage").forEach((stage) => stage.classList.remove("stage-editing"));
   state.bookId = book.book_id;
   state.workflow = null;
+  state.agentdockLaunchSnapshots.clear();
+  state.agentdockLatestLaunch.clear();
+  state.agentdockPreviewJob = null;
+  if ($("agentdock-result-preview")) $("agentdock-result-preview").value = "";
+  if ($("agentdock-consult-response")) $("agentdock-consult-response").value = "";
+  clearBatchProductionBuffers();
   selectedWorkflowArtifact = "";
   $("book-id").value = book.book_id;
   $("sidebar-book-name").textContent = book.book_id;
+  $("topbar-book").textContent = book.book_id;
   setCreativePayload(book);
   for (const key of Object.keys(designTitles)) {
     $(`design-${key}`).value = book.design_sections?.[key] || "";
@@ -1540,18 +1984,11 @@ async function refreshPreviousChapterText() {
     target.value = "";
     return;
   }
-  const first = Math.max(1, chapterNumber - 2);
-  const chapters = [];
-  for (let number = first; number < chapterNumber; number += 1) {
-    try {
-      const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/chapters/${number}`);
-      if (payload.content) chapters.push(`# ${number}章正文\n\n${payload.content}`);
-    } catch (error) {
-      showStatus(`读取第${number}章连续性上下文失败：${error.message}`, true);
-      return;
-    }
+  try {
+    target.value = await loadContinuityContextBefore(chapterNumber);
+  } catch (error) {
+    showStatus(`读取第${chapterNumber}章连续性上下文失败：${error.message}`, true);
   }
-  target.value = chapters.join("\n\n");
 }
 
 async function loadBook(bookId) {
@@ -1865,7 +2302,22 @@ async function generatePrompt() {
       return;
     }
     renderCodexTaskWrapper(mode);
-    if (currentExecutorMode() === "openai_api") await executeOpenAI(payload.prompt, mode);
+    if (currentExecutorMode() === "openai_api") {
+      await executeOpenAI(payload.prompt, mode);
+      return;
+    }
+    if (currentExecutorMode() === "agentdock_acp") {
+      const profile = agentDockExecutionProfile(mode);
+      await startAgentDockJob(payload.prompt, {
+        mode,
+        purpose: "workflow_response",
+        contextLabel: chapterActionForNode(state.workflow?.next_actionable_node).title,
+        model: profile.model,
+        reasoningEffort: profile.reasoningEffort,
+      });
+      showStatus("AgentDock 作业已启动；完成后只会回填 Response，仍需作者明确 Apply / Save。 ");
+      return;
+    }
     showStatus("Prompt 已生成，可继续编辑后复制");
   } catch (error) {
     const missing = error.payload?.detail?.missing_fields;
@@ -1886,6 +2338,15 @@ async function generateIdeaPrompt() {
 
 function currentExecutorMode() {
   return $("executor-mode").value;
+}
+
+function agentDockExecutionProfile(mode) {
+  if (["premise_forge", "world_expansion", "human_development", "authority_reviser"].includes(mode)) {
+    return { model: "gpt-5.6-luna", reasoningEffort: "high" };
+  }
+  if (mode === "premise_compiler") return { model: "gpt-5.6-terra", reasoningEffort: "high" };
+  if (mode === "story_refresh") return { model: "gpt-5.6-sol", reasoningEffort: "high" };
+  return { model: "", reasoningEffort: "" };
 }
 
 function externalArtifactForMode(mode) {
@@ -1994,8 +2455,261 @@ async function executeOpenAI(prompt, mode = "") {
       reasoning_effort: isAuthorityReviser || premiseModel || periodicModel ? "high" : "",
     }),
   });
-  $("codex-response").value = payload.output_text;
+  const target = isStateExtraction ? $("state-delta-response") : $("codex-response");
+  target.value = payload.output_text;
   showStatus(`OpenAI API 已返回 ${payload.model}；结果仍需作者 Apply / Save`);
+}
+
+async function runCurrentAgentDockPrompt() {
+  const prompt = $("prompt-text").value.trim();
+  if (!prompt) return showStatus("当前 Prompt 为空，请先生成或编辑 Prompt", true);
+  try {
+    await startAgentDockJob(prompt, {
+      mode: $("prompt-mode").value,
+      purpose: "workflow_response",
+      contextLabel: $("prompt-mode").selectedOptions[0]?.textContent || "当前节点",
+    });
+    showStatus("AgentDock 作业已启动；不会自动保存、采用或批准。 ");
+  } catch (error) {
+    showStatus(`启动 AgentDock 失败：${error.message}`, true);
+  }
+}
+
+async function runAgentDockConsult() {
+  const prompt = $("agentdock-consult-prompt").value.trim();
+  if (!prompt) return showStatus("请输入临时咨询内容", true);
+  try {
+    $("agentdock-consult-response").value = "";
+    await startAgentDockJob(prompt, { purpose: "consultation", contextLabel: "临时只读咨询" });
+    showStatus("临时只读咨询已启动；Agent 可读取项目上下文，但不会写入小说或工作流。 ");
+  } catch (error) {
+    showStatus(`启动临时咨询失败：${error.message}`, true);
+  }
+}
+
+function currentBatchWindow() {
+  return {
+    startChapter: Number($("batch-start-chapter")?.value || 1),
+    batchSize: Number($("batch-size")?.value || 5),
+  };
+}
+
+function batchWindowKey() {
+  const window = currentBatchWindow();
+  return `${state.bookId}:${window.startChapter}:${window.batchSize}`;
+}
+
+function batchProductionHasContent() {
+  const ids = ["batch-primary-prompt", "batch-primary-response", "batch-delta-prompt", "batch-delta-response"];
+  return Boolean(
+    state.batch.preflight
+    || state.batch.adopted
+    || ids.some((id) => $(id)?.value.trim()),
+  );
+}
+
+function invalidateBatchPreflight() {
+  state.batch.preflight = null;
+  state.batch.adopted = null;
+  renderBatchStatus();
+}
+
+function invalidateBatchPrimaryDependents() {
+  state.batch.deltaPromptWindow = "";
+  state.batch.deltaPromptPrimary = "";
+  invalidateBatchPreflight();
+}
+
+function clearBatchProductionBuffers() {
+  for (const id of ["batch-primary-prompt", "batch-primary-response", "batch-delta-prompt", "batch-delta-response"]) {
+    if ($(id)) $(id).value = "";
+  }
+  state.batch.preflight = null;
+  state.batch.adopted = null;
+  state.batch.continuityText = "";
+  state.batch.primaryPromptWindow = "";
+  state.batch.deltaPromptWindow = "";
+  state.batch.deltaPromptPrimary = "";
+  renderBatchStatus();
+}
+
+function handleBatchWindowChange() {
+  const next = currentBatchWindow();
+  const previous = state.batch.window || next;
+  if (next.startChapter === previous.startChapter && next.batchSize === previous.batchSize) return;
+  if (batchProductionHasContent() && !window.confirm("切换 Batch 窗口会清空当前 Batch Prompt、Response 与预检结果。继续吗？")) {
+    $("batch-start-chapter").value = previous.startChapter;
+    $("batch-size").value = previous.batchSize;
+    return;
+  }
+  state.batch.window = next;
+  clearBatchProductionBuffers();
+  $("batch-window").textContent = `第${next.startChapter}—${next.startChapter + next.batchSize - 1}章 · 生产默认`;
+}
+
+async function loadContinuityContextBefore(chapterNumber) {
+  if (!state.bookId || chapterNumber <= 1) return "";
+  const first = Math.max(1, chapterNumber - 2);
+  const chapters = [];
+  for (let number = first; number < chapterNumber; number += 1) {
+    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/chapters/${number}`);
+    if (payload.content) chapters.push(`# ${number}章正文\n\n${payload.content}`);
+  }
+  return chapters.join("\n\n");
+}
+
+function batchPayload() {
+  return {
+    start_chapter: Number($("batch-start-chapter").value),
+    batch_size: Number($("batch-size").value),
+    book_content: composeBookContent(),
+    world_vision: $("creative-world-vision").value,
+    world_expansions: $("evolution-world-history")?.value || "",
+    character_card: $("creative-character-card").value,
+    story_program: $("proposal-editor").value,
+    previous_chapter_text: state.batch.continuityText,
+    batch_primary_response: $("batch-primary-response").value,
+  };
+}
+
+function batchPreflightMatchesCurrent() {
+  const preflight = state.batch.preflight;
+  return Boolean(
+    preflight
+    && preflight.windowKey === batchWindowKey()
+    && preflight.primaryResponse === $("batch-primary-response").value
+    && preflight.deltaResponse === $("batch-delta-response").value,
+  );
+}
+
+function renderBatchStatus() {
+  const preflight = state.batch.preflight;
+  const currentPreflight = batchPreflightMatchesCurrent();
+  const primaryResponse = $("batch-primary-response").value;
+  const deltaResponse = $("batch-delta-response").value;
+  const deltaCurrent = state.batch.deltaPromptWindow === batchWindowKey()
+    && state.batch.deltaPromptPrimary === primaryResponse;
+  $("batch-primary-status").textContent = primaryResponse.trim() ? "Primary Response 已就绪" : "等待 Batch Primary";
+  $("batch-delta-status").textContent = deltaResponse.trim()
+    ? (deltaCurrent ? "Authority Delta 已就绪" : "Authority Delta 已失效；请重新编译")
+    : "等待 Authority Delta";
+  $("batch-state-status").textContent = state.batch.adopted ? `已采用；下一步 State：第${state.batch.adopted.state_next}章` : "未采用；不会自动更新 State";
+  $("batch-preflight-result").textContent = !preflight ? "尚未预检。" : [
+    `Patch：${preflight.patch_count}`,
+    `章节：${(preflight.revised_chapters || []).join("、") || "—"}`,
+    `上游冲突：${(preflight.upstream_conflicts || []).join("；") || "无"}`,
+    currentPreflight ? (preflight.adoptable ? "可由作者显式采用" : "不可采用") : "预检已失效：Batch 窗口或 Response 已变化",
+  ].join("\n");
+  $("batch-adopt").disabled = !(preflight?.adoptable && currentPreflight);
+}
+
+async function compileBatchPrimaryPrompt() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  if (("batch-primary-response batch-delta-prompt batch-delta-response").split(" ").some((id) => $(id).value.trim())
+      && !window.confirm("重新编译 Batch Primary 会清空当前 Primary/Delta Response 与预检结果。继续吗？")) return;
+  try {
+    const window = currentBatchWindow();
+    const continuityText = await loadContinuityContextBefore(window.startChapter);
+    const payload = { ...batchPayload(), previous_chapter_text: continuityText };
+    const result = await requestJson("/api/batch/primary-prompt", { method: "POST", body: JSON.stringify(payload) });
+    clearBatchProductionBuffers();
+    state.batch.window = window;
+    state.batch.continuityText = continuityText;
+    state.batch.primaryPromptWindow = batchWindowKey();
+    $("batch-primary-prompt").value = result.content || "";
+    $("prompt-text").value = result.content || "";
+    $("batch-window").textContent = `第${result.start_chapter}—${result.end_chapter}章 · Terra high`;
+    renderBatchStatus();
+    showStatus("Batch Packet / Primary Prompt 已编译；尚未运行或写入任何小说文件。 ");
+  } catch (error) { showStatus(`编译 Batch Primary 失败：${error.message}`, true); }
+}
+
+async function runBatchPrimary() {
+  const prompt = $("batch-primary-prompt").value.trim();
+  if (!prompt) return showStatus("请先编译 Batch Primary Prompt", true);
+  if (state.batch.primaryPromptWindow !== batchWindowKey()) return showStatus("Batch 窗口已变化，请重新编译 Primary Prompt。", true);
+  try {
+    await startAgentDockJob(prompt, { purpose: "batch_primary", mode: "batch_primary", contextLabel: "Batch Primary", model: "gpt-5.6-terra", reasoningEffort: "high" });
+    showStatus("Batch Primary 已启动（Terra high）；结果只进入 Batch Primary Response。 ");
+  } catch (error) { showStatus(`启动 Batch Primary 失败：${error.message}`, true); }
+}
+
+async function compileBatchDeltaPrompt() {
+  const primaryResponse = $("batch-primary-response").value;
+  if (!primaryResponse.trim()) return showStatus("请先获得完整 Batch Primary Response", true);
+  try {
+    const result = await requestJson("/api/batch/authority-reviser-prompt", { method: "POST", body: JSON.stringify(batchPayload()) });
+    $("batch-delta-response").value = "";
+    state.batch.preflight = null;
+    state.batch.adopted = null;
+    state.batch.deltaPromptWindow = batchWindowKey();
+    state.batch.deltaPromptPrimary = primaryResponse;
+    $("batch-delta-prompt").value = result.content || "";
+    $("prompt-text").value = result.content || "";
+    $("batch-window").textContent = `第${result.start_chapter}—${result.end_chapter}章 · Sol high`;
+    renderBatchStatus();
+    showStatus("Authority Delta Prompt 已编译；尚未运行或采用。 ");
+  } catch (error) { showStatus(`编译 Authority Delta 失败：${error.message}`, true); }
+}
+
+async function runBatchDelta() {
+  const prompt = $("batch-delta-prompt").value.trim();
+  if (!prompt) return showStatus("请先编译 Authority Delta Prompt", true);
+  if (state.batch.deltaPromptWindow !== batchWindowKey() || state.batch.deltaPromptPrimary !== $("batch-primary-response").value) {
+    return showStatus("Batch 窗口或 Primary Response 已变化，请重新编译 Authority Delta Prompt。", true);
+  }
+  try {
+    await startAgentDockJob(prompt, { purpose: "batch_authority_reviser", mode: "batch_authority_reviser", contextLabel: "Batch Authority Delta", model: "gpt-5.6-sol", reasoningEffort: "high" });
+    showStatus("Batch Authority Delta 已启动（Sol high）；结果只进入 Delta Response。 ");
+  } catch (error) { showStatus(`启动 Authority Delta 失败：${error.message}`, true); }
+}
+
+async function preflightBatchDelta() {
+  const primaryResponse = $("batch-primary-response").value;
+  const deltaResponse = $("batch-delta-response").value;
+  if (!primaryResponse.trim() || !deltaResponse.trim()) return showStatus("需要完整 Primary Response 与 Authority Delta Response", true);
+  if (state.batch.deltaPromptWindow !== batchWindowKey() || state.batch.deltaPromptPrimary !== primaryResponse) {
+    return showStatus("Primary Response 或 Batch 窗口已变化，请重新编译并运行 Authority Delta。", true);
+  }
+  try {
+    const payload = { ...batchPayload(), batch_delta_response: deltaResponse };
+    const result = await requestJson("/api/batch/apply-authority-delta", { method: "POST", body: JSON.stringify(payload) });
+    state.batch.preflight = {
+      patch_count: result.patch_count,
+      upstream_conflicts: result.upstream_conflicts || [],
+      adoptable: Boolean(result.adoptable),
+      revised_chapters: Object.keys(result.chapters || {}),
+      windowKey: batchWindowKey(),
+      primaryResponse,
+      deltaResponse,
+    };
+    state.batch.adopted = null;
+    renderBatchStatus();
+    showStatus(result.adoptable ? "Batch Delta 预检通过；仍需作者显式采用。" : "Batch Delta 有上游冲突，不能采用。", !result.adoptable);
+  } catch (error) { state.batch.preflight = null; renderBatchStatus(); showStatus(`Batch Delta 预检失败：${error.message}`, true); }
+}
+
+async function adoptBatchDelta() {
+  if (!state.batch.preflight?.adoptable || !batchPreflightMatchesCurrent()) return showStatus("预检已失败或失效，不能采用 Batch。", true);
+  if (!window.confirm("确认整批采用？此操作会保存这批正式正文；不会自动写 Canon 或 State。")) return;
+  try {
+    const result = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/batch/adopt-authority-delta`, { method: "POST", body: JSON.stringify({ ...batchPayload(), batch_delta_response: $("batch-delta-response").value }) });
+    state.batch.adopted = result;
+    renderBatchStatus();
+    await refreshWorkflow();
+    showStatus(`整批已保存。下一步请逐章进入 State Extraction（从第${result.state_next}章开始）；不会自动写 Canon。`);
+  } catch (error) { showStatus(`整批采用失败：${error.message}`, true); }
+}
+
+async function loadBatchStateChapter() {
+  const next = state.batch.adopted?.state_next;
+  if (!next) return showStatus("请先成功采用 Batch，才能载入 State 工作区。", true);
+  $("chapter-number").value = next;
+  $("chapter-number").dispatchEvent(new Event("change"));
+  if (!navigateToView("chapter", "进入 State 工作区")) return;
+  setChapterTab("execution");
+  await loadCurrentChapterBody();
+  showStatus(`已载入第${next}章正文与 State 工作区；State 仍须逐章由作者触发。`);
 }
 
 function parseChapterPlanEntry(text, chapterNumber) {
@@ -2135,8 +2849,16 @@ async function generateStateDeltaPrompt() {
     });
     $("prompt-text").value = payload.prompt;
     await saveRunPromptForMode("state_delta", payload.prompt);
-    if (currentExecutorMode() === "openai_api") await executeOpenAI(payload.prompt, "state_delta");
-    showStatus("轻量 State Extraction Prompt 已生成；OpenAI 模式可使用独立 State 模型。它不会写盘，也不是章节门禁。");
+    if (currentExecutorMode() === "openai_api") {
+      await executeOpenAI(payload.prompt, "state_delta");
+      return;
+    }
+    if (currentExecutorMode() === "agentdock_acp") {
+      await startAgentDockJob(payload.prompt, { mode: "state_delta", purpose: "workflow_response", contextLabel: "State 提取" });
+      showStatus("State Extraction 已交给 AgentDock；结果只进入 State Delta Response，不会写盘。 ");
+      return;
+    }
+    showStatus("轻量 State Extraction Prompt 已生成；OpenAI 模式使用独立 State 模型。它不会写盘，也不是章节门禁。");
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -2688,7 +3410,14 @@ async function createBook() {
 
 async function initialize() {
   try {
+    const savedTheme = window.localStorage.getItem("tgn-theme");
+    if (savedTheme === "dark") {
+      document.body.classList.add("theme-dark");
+      $("theme-toggle").textContent = "浅色";
+      $("theme-toggle").setAttribute("aria-pressed", "true");
+    }
     renderLongPlanPanorama();
+    renderBatchStatus();
     await refreshExecutorStatus();
     await loadOpenAISettings();
     const defaultTemplates = await requestJson("/api/prompt-templates");
@@ -2715,6 +3444,31 @@ $("load-book").addEventListener("click", () => loadBook($("book-select").value))
 $("settings-button").addEventListener("click", async () => {
   await loadOpenAISettings();
   $("settings-dialog").showModal();
+});
+$("topbar-settings").addEventListener("click", () => $("settings-button").click());
+$("theme-toggle").addEventListener("click", () => {
+  const dark = document.body.classList.toggle("theme-dark");
+  $("theme-toggle").textContent = dark ? "浅色" : "深色";
+  $("theme-toggle").setAttribute("aria-pressed", String(dark));
+  window.localStorage.setItem("tgn-theme", dark ? "dark" : "light");
+});
+document.querySelectorAll("[data-top-view]").forEach((button) => {
+  button.addEventListener("click", () => navigateToView(button.dataset.topView, "切换创作模式"));
+});
+document.querySelectorAll("[data-drawer-section]").forEach((button) => {
+  button.addEventListener("click", () => {
+    openRightDrawer();
+    $(button.dataset.drawerSection)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
+$("workspace-search").addEventListener("change", () => {
+  const query = $("workspace-search").value.trim();
+  if (!query) return;
+  const match = [...document.querySelectorAll(".workspace-view")].find((element) => element.textContent.includes(query));
+  if (!match) return showStatus(`当前工作台未找到“${query}”`, true);
+  navigateToView(match.dataset.view, "定位搜索结果");
+  match.scrollIntoView({ behavior: "smooth", block: "start" });
+  showStatus(`已定位包含“${query}”的工作区`);
 });
 $("close-settings").addEventListener("click", () => $("settings-dialog").close());
 $("save-settings").addEventListener("click", saveOpenAISettings);
@@ -2786,6 +3540,24 @@ $("load-current-chapter-plan").addEventListener("click", loadCurrentChapterPlan)
 $("generate-chapter-prep").addEventListener("click", generateChapterPrepPrompt);
 $("copy-prompt").addEventListener("click", copyPrompt);
 $("refresh-workflow").addEventListener("click", refreshWorkflow);
+$("agentdock-run-current").addEventListener("click", runCurrentAgentDockPrompt);
+$("agentdock-refresh-jobs").addEventListener("click", refreshAgentDockJobs);
+$("agentdock-run-consult").addEventListener("click", runAgentDockConsult);
+$("agentdock-load-current").addEventListener("click", loadAgentDockPreview);
+$("batch-compile-primary").addEventListener("click", compileBatchPrimaryPrompt);
+$("batch-run-primary").addEventListener("click", runBatchPrimary);
+$("batch-compile-delta").addEventListener("click", compileBatchDeltaPrompt);
+$("batch-run-delta").addEventListener("click", runBatchDelta);
+$("batch-preflight").addEventListener("click", preflightBatchDelta);
+$("batch-adopt").addEventListener("click", adoptBatchDelta);
+$("batch-load-state").addEventListener("click", loadBatchStateChapter);
+$("batch-start-chapter").addEventListener("change", handleBatchWindowChange);
+$("batch-size").addEventListener("change", handleBatchWindowChange);
+for (const id of ["codex-response", "state-delta-response", "agentdock-consult-response", "batch-primary-response", "batch-delta-response"]) {
+  if ($(id)) $(id).addEventListener("input", (event) => markAgentDockEditorEdited(event.currentTarget));
+}
+$("batch-primary-response").addEventListener("input", invalidateBatchPrimaryDependents);
+$("batch-delta-response").addEventListener("input", invalidateBatchPreflight);
 $("locate-workflow-artifact").addEventListener("click", locateWorkflowArtifact);
 $("copy-codex-task").addEventListener("click", async () => {
   try {

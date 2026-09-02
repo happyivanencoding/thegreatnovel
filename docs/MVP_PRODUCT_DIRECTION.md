@@ -221,6 +221,14 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 章节 Runtime 不直接读取 raw GBrain，也不重新决定 World / Power / Human / Story Program。
 
+## Author Workspace / AgentDock
+
+网页是阅读优先的本地创作舱：浮动项目栏、hash 工作区、窄导航 rail，以及桌面常驻/小屏覆盖的 AgentDock 面板。Workflow State 与 Run Ledger 仍是正式 artifact 状态的唯一来源；AgentDock / Batch 执行状态独立显示，不伪装成已保存节点，也不另造内容真源。
+
+`agentdock_acp` 是本机、内存作业型 Response executor：后端可信解析 ACP，固定 TGN 项目 cwd、空 MCP 与 `read-only` mode；短控制 RPC 与长生成 job 使用不同 deadline，stdout/stderr 持续 drain，pending queue、output、error 与 completed history 全部有界。它可以读取项目上下文，但不能保存、采用、批准或写 Authority artifact；status 不泄露 ACP 路径。自动回填必须同时匹配 book / chapter / workflow mode / Batch window / latest launch，并确认作者未改动目标编辑区；刷新恢复、错位、旧 launch 或丢失作业只允许只读查看。
+
+Author Workspace 桌面布局为窄 nav rail → 真实 Story Structure tree → 中央 manuscript surface → 固定 AgentDock。Structure tree 的 World/Character/Story/Long Plan/Future-10/当前章/Canon/Run 均从 Workflow artifacts 和已解析 Future-10 生成，点击定位真实工作区。顶部 Manuscript、Structure、Memory 切换真实 view；Audit 与 Versions 打开右侧真实区域。Batch Production 复用既有 Batch API，并确定性补齐任意起始章的连续性上下文，完成 Packet → Terra high Primary → Sol high Delta → exact-window/exact-response 预检 → 作者显式 Adopt → 作者逐章 State；窗口或 Response 变化会使下游 Prompt / 预检失效，不复制 Authority 算法。
+
 ## GBrain 与模型默认路由
 
 当前默认：

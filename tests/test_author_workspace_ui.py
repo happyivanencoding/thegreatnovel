@@ -51,6 +51,62 @@ def test_author_workspace_keeps_existing_prompt_and_save_paths() -> None:
         assert f"function {function_name}" in APP_JS or f"async function {function_name}" in APP_JS
 
 
+def test_agentdock_uses_identity_guarded_responses_and_never_auto_applies_authority() -> None:
+    for element_id in (
+        "agentdock-panel", "agentdock-run-current", "agentdock-job-list",
+        "agentdock-consult-prompt", "agentdock-consult-response",
+    ):
+        assert TEMPLATE.count(f'id="{element_id}"') == 1
+    assert '<option value="agentdock_acp">' in TEMPLATE
+    assert "function startAgentDockJob" in APP_JS
+    assert "function pollAgentDockJob" in APP_JS
+    completion = APP_JS.split('if (job.status === "completed")', 1)[1].split('} else if (job.status === "failed")', 1)[0]
+    auto_fill_guard = APP_JS.split("function canAutoFillAgentDockJob(job)", 1)[1].split("async function startAgentDockJob", 1)[0]
+    assert "canAutoFillAgentDockJob(job)" in completion
+    assert "state.agentdockLatestLaunch" in auto_fill_guard
+    assert "jobMatchesCurrentIdentity(job)" in auto_fill_guard
+    assert "state.agentdockLaunchSnapshots" in auto_fill_guard
+    assert "editor.value === snapshot.initialValue" in auto_fill_guard
+    assert "agentDockEditorVersion(editor) === snapshot.editorVersion" in auto_fill_guard
+    assert "editorVersion: agentDockEditorVersion(editor)" in APP_JS
+    assert "markAgentDockEditorEdited" in APP_JS
+    assert "responseEditorForJob(job).value = job.output_text" in completion
+    assert "saveRunResponseForMode" not in completion
+    assert "adoptRunSource" not in completion
+
+
+def test_navigation_is_unique_and_batch_controls_use_existing_endpoints() -> None:
+    targets = re.findall(r'data-view-target="([^"]+)"', TEMPLATE)
+    assert len(targets) == len(set(targets)) == 6
+    assert 'data-drawer-section="workflow-audit-section"' in TEMPLATE
+    assert 'data-drawer-section="agentdock-run-log"' in TEMPLATE
+    for element_id in (
+        "story-structure-tree", "batch-compile-primary", "batch-run-primary", "batch-compile-delta",
+        "batch-run-delta", "batch-preflight", "batch-adopt", "batch-load-state", "batch-primary-response",
+        "batch-delta-response", "agentdock-result-preview", "agentdock-load-current",
+    ):
+        assert TEMPLATE.count(f'id="{element_id}"') == 1
+    for endpoint in (
+        "/api/batch/primary-prompt", "/api/batch/authority-reviser-prompt", "/api/batch/apply-authority-delta",
+        "/batch/adopt-authority-delta",
+    ):
+        assert endpoint in APP_JS
+    assert "gpt-5.6-terra" in APP_JS and "gpt-5.6-sol" in APP_JS
+    assert "pollAgentDockJob(job.job_id)" in APP_JS
+    assert "window.setTimeout(resolve, 1400)" in APP_JS
+    assert 'if (job.workflow_mode === "state_delta") return "state_delta"' in APP_JS
+    assert 'if (target === "state_delta") return $("state-delta-response")' in APP_JS
+    assert "trackAgentDockPending(job.job_id, job, true)" in APP_JS
+    assert "loadContinuityContextBefore(window.startChapter)" in APP_JS
+    assert "batchPreflightMatchesCurrent" in APP_JS
+    assert "handleBatchWindowChange" in APP_JS
+    assert '$("batch-primary-response").addEventListener("input", invalidateBatchPrimaryDependents)' in APP_JS
+    assert '$("batch-delta-response").addEventListener("input", invalidateBatchPreflight)' in APP_JS
+    assert '"codex-response", "state-delta-response", "agentdock-consult-response"' in APP_JS
+    assert 'markAgentDockEditorEdited(event.currentTarget)' in APP_JS
+    assert "await loadCurrentChapterBody()" in APP_JS
+
+
 def test_chapter_primary_action_is_workflow_driven_and_advanced_controls_are_scoped() -> None:
     assert 'id="generate-prompt"' in TEMPLATE
     assert 'id="chapter-generation-target"' in TEMPLATE

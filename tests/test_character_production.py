@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 
 import story_mvp.app as app_module
 from story_mvp.character_prompts import generate_split_prompt
+from story_mvp.gbrain import GBrainQueryError
 from story_mvp.gbrain_retrieval import (
     build_retrieval_brief,
     default_effective_query,
@@ -244,13 +245,11 @@ def test_collision_prompt_first_combines_full_world_and_character() -> None:
     assert "若 Human 不想走，就让它继续属于世界或配角" in prompt
 
 
-def test_character_modes_have_stable_keyword_gbrain_queries(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_character_modes_fail_loud_without_embedding(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("story_mvp.gbrain_retrieval._semantic_query_available", lambda: False)
-    q1, strategy1 = default_effective_query("power_seed", "semantic brief")
-    q2, strategy2 = default_effective_query("human_seed", "semantic brief")
-    assert strategy1 == strategy2 == "planning_keyword_aliases"
-    assert "core fantasy" in q1
-    assert "character hook" in q2
+    for mode in ("power_seed", "human_seed"):
+        with pytest.raises(GBrainQueryError, match="必须启用 embedding"):
+            default_effective_query(mode, "semantic brief")
 
 
 def test_gbrain_briefs_preserve_split_authority_visibility() -> None:

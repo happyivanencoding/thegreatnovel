@@ -1481,7 +1481,7 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 
 普通代码、Prompt、文件、Git 由当前 Agent 直接完成；只有真实 LLM 生成、模型 A/B、正文实验、原著蒸馏、跨书 synthesis 才用 ACP。
 
-ACP：`C:\Users\jingx\AppData\Roaming\npm\codex-acp.ps1`，ChatGPT 登录，不切 API Key。
+ACP：`C:\Users\jingx\AppData\Roaming\npm\codex-acp.ps1`，ChatGPT 登录，不切 API Key。Author Workspace 的 `agentdock_acp` 由后端可信解析入口，固定项目 cwd、空 MCP、`read-only`、模型/effort 白名单与有界单并发队列；只返回文本 Response。短控制 RPC 与长生成 job 分开计时，作业完成后仅在 book / chapter / workflow / Batch window / latest launch 全匹配且作者未改目标编辑区时自动回填；否则只读查看。Apply / Save / Adopt / Approve 仍由作者显式触发，服务重启丢失会 fail loud。
 
 ### 12.6 Docs 维护
 
@@ -2266,6 +2266,16 @@ Retrieval ownership 专项已扩大到 7 组有效质量样本：宁烬真实 Ho
 因此当前 production 结论固定为：**不提升 Integrated JIT，也不把 Full Navigator-before-every-Story 升为默认。** Story Program 采用更小的 deterministic semantic decomposition：三条短、内容优先 query 分别覆盖当前 World 的 Living Actors / 机会、Frozen Human 私人欲望 / 机会成本、以及本轮得到/失去如何继续改变后续选择；结果 round-robin 后仍最多 3 张。修复 CLI 边界后，同一六样本真实回归已经从“同一组三张”分叉为不同 bundle：游戏副本偏 `world-entry`，亚特兰蒂斯加入 `departure-vacancy`，顾野／阮青禾／商砚分别出现不同的 `departure-vacancy / reward-afterlife / earned-high-value-acquisition` 组合，坠星海另有不同第三卡；同时不再出现投资、日记、book-dna 等 scope 污染。**semantic 不可用时不 fallback：直接停止生成。** Primary / Batch execution 完全不动。完整实验历史见 `books/real-exp-agentic-gbrain-navigation-ab-20260901-v1/MULTI_SAMPLE_CONCLUSION.md`。
 
 ---
+
+## 2026-09-02｜Author Workspace 第二轮当前状态
+
+工作台现为四层真实信息架构：桌面窄 nav rail、由 Workflow artifacts 与 Future-10 原文渲染的 Story Structure tree、中央 manuscript surface，以及常驻 AgentDock；中屏将结构树收起，小屏使用覆盖 drawer。顶部 Manuscript / Structure / Memory 是真实 view，Audit / Versions 定位右侧真实 section。
+
+AgentDock ACP 只接受后端可信解析的本机入口，固定项目 cwd、`mcpServers=[]`、`read-only`；read-only 可读取项目上下文但不能写文件。执行器使用短控制 RPC + 长生成 job deadline、后台双管 drain、terminate→wait→kill cleanup、路径/凭据脱敏以及有界 pending/output/history。每个 job 固定 `book_id/chapter_number/workflow_mode/launch_token`；自动回填还要求页面保有 launch snapshot、当前 target 仍是最新启动且作者未在运行期间编辑它。刷新只恢复轮询，不自动回填恢复作业；错位或重启丢失明确报错。
+
+Batch Production 已接既有 API：任意起始章先从既有章节读取最多两章连续性上下文，再执行 Packet/Primary Prompt → Terra high `batch_primary` → Delta Prompt → Sol high `batch_authority_reviser` → exact-window/exact-response 预检 → 作者显式整批采用。Primary、Delta 与 State 使用独立 Response；窗口或 Response 变化立即使下游 Prompt / 预检 stale，upstream conflict、解析失败或已有章节继续 fail loud。采用后仅显示 `state_next` 并载入真实正文，作者仍需逐章 State Extraction，绝不自动写 Canon。
+
+`tgn-system-steward` 已升至 `0.3.44`，新增 `Execution Transport / Author Workspace Safety Trace`。`skill-authoring` lint（0 error / 0 warning）、package validate、安装激活和 bounded read-only smoke 均 PASS；最终 production 回归为 `518 passed`，真实 ACP 冒烟返回 `ACP_SMOKE_OK`。
 
 ## Cognitive Integrity Check
 

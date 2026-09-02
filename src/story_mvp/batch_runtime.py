@@ -248,6 +248,7 @@ def build_batch_primary_prompt(
         f"# BATCH PLAN {chapter}\n{batch_plans[chapter].strip()}"
         for chapter in window.chapter_numbers
     )
+    authority_text = "\n\n".join(authority_packets)
     return f"""你是 TGN 的 Terra Primary Writer。一次连续写完第{window.start_chapter}—{window.end_chapter}章；只输出小说正文，不输出 Audit、状态、摘要或写作说明。
 
 这次 Batch 的价值是短中程叙事预见：前章摆出的地形、物件、人物态度、Promise 和局部脑洞，可以在后章自然回收。不要把它写成 {window.size} 个分别启动的任务，也不要为了完成多章压缩成梗概。
@@ -278,7 +279,7 @@ def build_batch_primary_prompt(
 {shared_canon or "（本窗口没有已发生 Canon 摘要；不要因此补造过去。）"}
 
 # PER-CHAPTER AUTHORITY
-{"\n\n".join(authority_packets)}
+{authority_text}
 
 # PREVIOUS FINAL PROSE
 {previous_chapter_text.strip() or "（无前章正文。）"}
@@ -333,6 +334,7 @@ def build_batch_delta_reviser_prompt(
         f"# CHAPTER {chapter} PRIMARY\n{primary_chapters[chapter].strip()}"
         for chapter in window.chapter_numbers
     )
+    authority_text = "\n\n".join(authority_parts)
 
     return f"""你是 TGN 的 Batch Authority Delta Reviser。你一次看到第{window.start_chapter}—{window.end_chapter}章完整 Primary，因此能处理跨章 stale；但你**禁止重写整章**。你的唯一正文修改形式是 exact local patch，代码应用后其余字符逐字保留。
 
@@ -383,7 +385,7 @@ def build_batch_delta_reviser_prompt(
 {book_content.strip()}
 
 # PER-CHAPTER AUTHORITY
-{"\n\n".join(authority_parts)}
+{authority_text}
 
 # BATCH PRIMARY DRAFTS
 {drafts}
