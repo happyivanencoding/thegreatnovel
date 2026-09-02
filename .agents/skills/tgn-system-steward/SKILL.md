@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.44
+version: 0.3.46
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -305,11 +305,16 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 1. **Trusted transport boundary**：executable、cwd、mode、MCP、认证方式和模型白名单必须由可信后端决定，不能由浏览器任意提交；状态接口不得泄露用户名、绝对路径、凭据或完整命令。若 production 声称 read-only，必须验证真实模式与 callback policy，而不是只看 UI 文案。
 2. **Response-only completion**：transport 完成最多把文本放入一个明确 Response target；不得自动 Save / Apply / Adopt / Approve，不得通过 CLI 旁路现有 Authority API。Workflow / Run Ledger artifact 状态与 executor job 状态必须分开显示。
 3. **Identity-safe return**：任何异步结果自动回填都至少绑定 book、chapter、workflow node、必要的 Batch window 与 launch identity；共享编辑区还要保护作者在运行期间的手工修改。错书、错章、错节点、旧 launch、刷新恢复、服务重启丢失或作者已编辑时，结果只能只读预览或 fail loud，不能“最后完成者覆盖当前页”。
-4. **Bounded process lifecycle**：短控制 RPC 与长生成任务分别有 deadline；stdout / stderr 持续 drain；cancel / timeout / shutdown 执行 terminate → wait → kill；permission、terminal、file-write 等服务端 callback 默认拒绝。pending queue、output、error 与 history 都必须有界，活跃 job 不得被错误 prune。
+4. **Bounded process lifecycle**：短控制 RPC 与长生成任务分别有 deadline；stdout / stderr 持续 drain；cancel / timeout / shutdown 执行 terminate → wait → kill；permission、terminal、file-write 等服务端 callback 默认拒绝。pending job queue、ACP stdout event queue、output、error 与 history 都必须有界；高频 update 应通过反压或安全合并处理，但不得丢 RPC response / callback，活跃 job 不得被错误 prune。
 5. **Exact downstream snapshot**：Batch / Delta / preflight 一类多阶段 UI 必须把窗口和实际输入文本一起绑定。起始章、窗口大小、Primary 或 Delta 任一变化，都使后续 Prompt、预检或 adopt capability stale；不能只因为旧预检曾 PASS 就继续采用。
 6. **Reload is not consent**：页面刷新可以恢复轮询和只读运行记录，但不能自动重放作者已失去上下文的写入意图，也不能把恢复后的结果自动塞回可编辑 Authority surface。
 
-最小验证至少包括：错误/取消/超时/服务关闭、非法 transport 参数、路径隐私、队列上界、异步乱序、跨书/跨章/跨节点、作者运行中编辑、刷新恢复、stale Batch 预检，以及“job 完成但没有任何 Authority 写入”的证据。浏览器视觉 smoke 还要覆盖真实亮暗主题和窄屏无横向溢出，但视觉通过不能替代 Authority / process audit。
+长任务与检索式创作 UI 还要追加两条 transport-specific trace：
+
+- **Telemetry truth before reassurance**：真实心理锚点可以来自排队、握手、配置、plan、tool call、验证、final channel、累计耗时和距最近信号时长，但不能由 UI 猜百分比、ETA 或不存在的“仍在工作”事件。公开 activity 必须先映射到有限的安全类别；private reasoning、模型 commentary 原文、原始命令、文件路径、用户名、凭据和任意未知 message phase 都不能进入活动流或最终 Response。入口存在不等于认证已通过；认证状态只能在真实启动时确认。短暂 list / poll 超时必须保留 pending lock 并重试，只有明确 job 丢失才解锁。
+- **GBrain Curator is selection state, not a textarea**：Optional Inspiration 的 UI 必须区分 retrieval brief、fixed reference、candidate、selection、assembled bundle 与 author-edited assembled bundle。每轮默认 NONE；检索返回仍须匹配发起时的 BOOK / mode / query / 规划上下文；新检索、输入变化或选择变化使旧结果 stale，而不是静默沿用。未绑定手工文本、selection-stale bundle、缺失 required fixed reference 和 GBrain-OFF 阶段内容都不得进入 Prompt；前端过滤之外，Prompt API 还要有同一 OFF 边界。比较与相关性分数只帮助作者判断，不能自动排名、选择、写 Canon 或升级为 Hard Gate。
+
+最小验证至少包括：错误/取消/超时/服务关闭、非法 transport 参数、路径隐私、队列上界、未知/非 final message phase、异步乱序、跨书/跨章/跨节点、Prompt / 上游输入变化、作者运行中编辑、刷新恢复、短暂 poll 失败、stale Batch 预检、GBrain 默认 NONE / request snapshot / stale / OFF 双边界，以及“job 完成但没有任何 Authority 写入”的证据。浏览器视觉 smoke 还要覆盖真实亮暗主题和窄屏无横向溢出，但视觉通过不能替代 Authority / process audit。
 
 # Audit Operating Modes
 

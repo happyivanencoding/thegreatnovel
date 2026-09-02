@@ -1097,6 +1097,37 @@ def test_gbrain_query_uses_bun_cli_when_path_command_is_missing(tmp_path: Path, 
     assert resolve_command_prefix() == ["bun.exe", "run", str(cli_file)]
 
 
+def test_gbrain_status_reports_readiness_without_path_or_credential(monkeypatch) -> None:
+    monkeypatch.setattr(app_module, "resolve_command_prefix", lambda: [r"C:\Users\private\gbrain.cmd"])
+    monkeypatch.setattr(app_module, "resolve_openai_api_key", lambda: "secret-key-must-not-leak")
+
+    response = client.get("/api/gbrain/status")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["available"] is True
+    assert payload["cli_available"] is True
+    assert payload["embedding_ready"] is True
+    assert payload["authority_role"] == "optional_inspiration"
+    assert payload["active_modes"] == [
+        "world_vision", "world_expansion", "power_seed", "human_seed", "idea", "story_refresh", "outline",
+    ]
+    serialized = response.text
+    assert "secret-key-must-not-leak" not in serialized
+    assert "C:\\Users" not in serialized
+
+
+def test_gbrain_status_is_unavailable_when_embedding_is_missing(monkeypatch) -> None:
+    monkeypatch.setattr(app_module, "resolve_command_prefix", lambda: ["gbrain"])
+    monkeypatch.setattr(app_module, "resolve_openai_api_key", lambda: "")
+
+    payload = client.get("/api/gbrain/status").json()
+
+    assert payload["cli_available"] is True
+    assert payload["embedding_ready"] is False
+    assert payload["available"] is False
+
+
 def test_failed_gbrain_query_is_returned_as_error_without_fake_result(monkeypatch) -> None:
     def fail_query(**_kwargs):
         raise GBrainQueryError("真实 CLI 失败")
@@ -1319,7 +1350,7 @@ def test_chapter_prompt_does_not_start_a_gbrain_query(monkeypatch) -> None:
         },
     )
     assert response.status_code == 200
-    assert "本十章已选灵感" in response.json()["prompt"]
+    assert "本十章已选灵感" not in response.json()["prompt"]
     assert "上一章最后一句：门外有人敲门" in response.json()["prompt"]
 
 
@@ -1403,9 +1434,13 @@ def test_page_shows_editable_gbrain_query_and_results() -> None:
     assert 'id="design-growth_genome"' in page.text
     assert "当前中期规划窗口（完整 Markdown）" in page.text
     assert 'id="creative-direction" value=""' in page.text
-    assert "例如：传统仙侠；资源→战斗→身份" in page.text
+    assert "例如：海底探索；稀有获得→公开证明→身份重估" in page.text
     assert "GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选" in page.text
-    assert "从 GBrain 取灵感" in page.text
+    assert "检索并抽取" in page.text
+    assert "比较抽象机制，决定带走什么" in page.text
+    assert "组装所选 Inspiration" in page.text
+    assert 'id="gbrain-candidate-list"' in page.text
+    assert 'id="gbrain-fixed-list"' in page.text
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
     assert "function gbrainContextPayload" in js
     assert "query_override" in js
@@ -1433,7 +1468,9 @@ def test_default_retrieval_query_uses_context_instead_of_generic_prefix() -> Non
     assert 'proposal_context' in context_body
     assert 'current_outline' in context_body
     assert 'recent_summaries' in context_body
-    assert 'state.gbrainDefaultBrief = payload.retrieval_brief || ""' in js
+    assert 'const nextBrief = payload.retrieval_brief || ""' in js
+    assert "requestSnapshot" in js[js.index("async function setDefaultGbrainQuery"):js.index("async function handlePromptModeChange")]
+    assert "作者现有查询已保留" in js
     assert 'const manualOverride = query === state.gbrainDefaultBrief ? "" : query;' in js
     assert "主角成长型虚构世界小说" not in js[start:]
 
@@ -1489,28 +1526,29 @@ def test_workflow_ui_and_executor_controls_are_visible() -> None:
         assert marker in js
 
 
-def test_gbrain_results_and_reference_selection_are_invalidated_on_context_changes() -> None:
+def test_gbrain_results_are_preserved_but_blocked_when_context_changes() -> None:
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
     start = js.index("function invalidateGbrainResults")
     end = js.index("async function requestJson", start)
     invalidation = js[start:end]
-    for marker in (
-        '$("gbrain-results").value = ""',
-        '$("gbrain-raw-results").value = ""',
-        '$("gbrain-rejections").value = ""',
-        '$("gbrain-count").textContent = "raw 0 / accepted 0 / rejected 0"',
-        'GBrain：上下文已变化，请重新查询',
-    ):
-        assert marker in invalidation
+    assert "state.gbrainStale = true" in invalidation
+    assert "旧材料已保留，但不会进入 Prompt" in invalidation
+    assert '$("gbrain-results").value = ""' not in invalidation
+    assert "function gbrainInspirationForPrompt" in invalidation
+    inspiration = invalidation.split("function gbrainInspirationForPrompt", 1)[1]
+    assert "if (!GBRAIN_ACTIVE_MODES.has(mode)) return \"\"" in inspiration
+    assert "if (state.gbrainStale || !gbrainContextSnapshotMatches()) return \"\"" in inspiration
     assert "function clearReferenceSelection" in js
     populate_start = js.index("function populateBook")
     populate_end = js.index("async function refreshBookList", populate_start)
-    assert "invalidateGbrainResults(\"切换小说\")" in js[populate_start:populate_end]
+    assert 'clearGbrainWorkspace("已切换小说", { quiet: true })' in js[populate_start:populate_end]
     assert "clearReferenceSelection()" in js[populate_start:populate_end]
     mode_start = js.index("async function handlePromptModeChange")
     mode_end = js.index("async function activatePromptMode", mode_start)
     assert "invalidateGbrainResults(\"切换 Prompt 模式\")" in js[mode_start:mode_end]
-    assert '"creative-direction", "current-long-block", "current-outline", "recent-summaries"' in js
+    assert '"creative-direction", "creative-world-vision", "creative-character-card", "proposal-editor"' in js
+    assert '"current-long-block", "current-outline", "recent-summaries", "section-status"' in js
+    assert '$("human-prototype-selector").addEventListener("change"' in js
 
 
 REAL_COLD_CHAIN_BOOK = """# 小说总体设计画像
@@ -3706,7 +3744,7 @@ def test_proposal_source_is_explicit_and_editor_only() -> None:
 def test_generate_prompt_does_not_clear_proposal_editor() -> None:
     js = Path("src/story_mvp/static/app.js").read_text(encoding="utf-8")
     start = js.index("async function generatePrompt()")
-    end = js.index("async function generateIdeaPrompt", start)
+    end = js.index("async function generateCurrentGbrainPrompt", start)
     function_body = js[start:end]
     assert 'const payload = await requestJson("/api/prompt"' in function_body
     assert '$("prompt-text").value = payload.prompt;' in function_body

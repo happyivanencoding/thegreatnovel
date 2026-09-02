@@ -58,6 +58,18 @@ def test_power_seed_fixed_naming_reference_does_not_consume_creative_slots() -> 
     ][:CREATIVE_PLANNING_FINAL_RESULT_LIMIT]
     assert "### Fixed Naming Craft Reference" in result["result"]
     assert "先把能力写成白话，再命名" in result["result"]
+    assert result["fixed_references"] == [
+        {
+            "id": "naming_reference",
+            "label": "固定命名工艺参考",
+            "required": True,
+            "slug": POWER_NAMING_REFERENCE_SLUG,
+            "formatted_block": result["fixed_references"][0]["formatted_block"],
+        }
+    ]
+    assert "### Fixed Naming Craft Reference" in result["fixed_references"][0]["formatted_block"]
+    assert all("formatted_block" in item for item in result["accepted"])
+    assert "source: mechanisms/power-a" in result["accepted"][0]["formatted_block"]
 
 
 @pytest.mark.parametrize("mode", ["world_vision", "idea", "outline"])

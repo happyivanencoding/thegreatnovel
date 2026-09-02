@@ -20,9 +20,11 @@
 - 只有真实 LLM / Coding Agent 执行才调用 ACP，例如小说生成、模型 A/B、正文质量实验、GBrain 原著蒸馏或跨书 synthesis。
 - ACP：`C:\Users\jingx\AppData\Roaming\npm\codex-acp.ps1`；ChatGPT 登录，不使用 API Key；默认 read-only。
 - Author Workspace 的 `agentdock_acp` 是浏览器内唯一 production ACP 执行面：后端只从可信配置解析入口，固定 TGN project root、`mcpServers=[]` 与 `read-only`；浏览器不得提交 executable、cwd、mode 或 MCP，status 不得泄露本机路径/用户名。
-- ACP 完成只产生候选 Response，绝不自动 Save / Apply / Adopt / Approve，也不得调用外部 CLI 改写 Authority。自动回填必须同时匹配当前 book、chapter、workflow mode、Batch 窗口、该 response target 的最新 launch，并确认作者自启动后未改动目标编辑区；刷新恢复、身份错位、旧 launch、服务重启丢失或作者已编辑时只能只读查看 / fail loud。
+- ACP 完成只产生候选 Response，绝不自动 Save / Apply / Adopt / Approve，也不得调用外部 CLI 改写 Authority。自动回填必须同时匹配当前 book、chapter、workflow mode、Batch 窗口、精确 Prompt / 上游输入快照、该 response target 的最新 launch，并确认作者自启动后未改动目标编辑区；刷新恢复、身份错位、旧 launch、服务重启丢失或作者已编辑时只能只读查看 / fail loud。
+- ACP 长任务反馈只投影真实、非敏感信号：排队 / 会话 / 配置 / 理解计划 / 读取执行 / 组织输出 / 收尾、累计耗时、距最近信号时长、通用 plan/tool/activity 摘要和取消入口。禁止伪造百分比、ETA 或“仍在工作”的不存在事件；禁止显示 private reasoning、原始命令、文件路径、凭据或模型 commentary 原文。ACP 路径存在只表示入口可用，ChatGPT 登录状态只能在真实任务启动时确认。短暂状态查询失败必须保留 pending lock 并自动重试，不能因此允许重复启动；pending job、ACP stdout event、activity、output 与 history 都必须有界，高频 update 通过反压处理但不得丢 RPC response / callback。
 - 网页 Batch Production 只能复用既有 deterministic API 链：Primary Prompt → Terra-high Primary → Delta Prompt → Sol-high Authority Delta → exact-window/exact-response 预检 → 作者显式整批采用 → State 逐章处理。窗口、Primary 或 Delta 任一变化都使后续 Prompt / 预检失效，不得沿用旧结果。
 - ACP 访问 GBrain：TGN 为主工作目录 + `additionalDirectories(GBrain root)`；不复制原著，不默认 full access。
+- Author Workspace 的 GBrain Curator 默认 `NONE`：检索成功只展示 fixed references 与经过 BOOK 兼容筛选的候选；作者必须显式选择 / 比较 / 组装后，才形成可编辑 Inspiration Bundle。请求返回必须仍匹配发起时的 BOOK / mode / query / 规划上下文；任一相关输入变化后旧候选与 Bundle 可只读保留但必须标 stale，且前后端都不得把 stale、未绑定手工文本或 GBrain-OFF 阶段内容送入 Prompt。GBrain 仍是 Optional Inspiration，不自动成为 Canon、Hard Gate 或 Authority source。
 - ACP 失败不切换认证方式；无法继续时给出可直接交给 Codex 的完整 Prompt。
 
 ## 3. 系统审计协议

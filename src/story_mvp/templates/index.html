@@ -3,8 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Transparent GBrain Story Studio</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=5">
+    <meta id="theme-color-meta" name="theme-color" content="#f2f0eb">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2318273c'/%3E%3Cpath d='M43 13C29 16 19 27 17 47c8-2 15-6 19-12-5 3-9 4-13 5 7-4 14-9 20-17 3-4 4-8 4-10h-4Z' fill='%23d8c39a'/%3E%3Cpath d='M17 50c8-9 16-17 28-29' stroke='%239aa6df' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+    <title>TGN · 沉浸式小说工作台</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}?v=7">
   </head>
   <body>
     <header class="topbar app-topbar">
@@ -247,6 +249,40 @@
           <button id="agentdock-run-current" class="primary" type="button">运行当前 Prompt</button>
           <button id="agentdock-refresh-jobs" type="button">刷新作业</button>
         </div>
+        <div id="agentdock-notice" class="agentdock-notice" hidden role="status"></div>
+        <section id="agentdock-progress-anchor" class="agentdock-progress-anchor" hidden aria-label="Agent 实时执行进度">
+          <header class="agent-progress-heading">
+            <div class="agent-progress-orb" aria-hidden="true"><span></span></div>
+            <div class="agent-progress-title">
+              <span id="agentdock-progress-context">当前任务</span>
+              <strong id="agentdock-progress-phase">等待执行</strong>
+            </div>
+            <time id="agentdock-progress-elapsed">00:00</time>
+          </header>
+          <div id="agentdock-phase-track" class="agent-phase-track" aria-label="Agent 执行阶段"></div>
+          <div class="agent-current-activity">
+            <span class="agent-live-mark" aria-hidden="true"></span>
+            <div>
+              <strong id="agentdock-current-activity">等待可用执行位</strong>
+              <span id="agentdock-heartbeat">尚未收到运行信号</span>
+            </div>
+          </div>
+          <div class="agent-progress-metrics" aria-label="Agent 真实进度摘要">
+            <span><b id="agentdock-plan-metric">—</b> 计划</span>
+            <span><b id="agentdock-tool-metric">0</b> 工具步骤</span>
+            <span><b id="agentdock-signal-metric">0s</b> 最近信号</span>
+          </div>
+          <ol id="agentdock-plan-list" class="agent-plan-list"></ol>
+          <details class="agent-activity-details" open>
+            <summary>最近活动 <span id="agentdock-activity-count">0</span></summary>
+            <ol id="agentdock-activity-list" class="agent-activity-list"></ol>
+          </details>
+          <div class="agent-progress-actions">
+            <button id="agentdock-active-cancel" type="button">取消当前任务</button>
+            <button id="agentdock-collapse-activity" type="button">收起活动</button>
+          </div>
+        </section>
+        <div class="agentdock-run-log-heading"><span>运行记录</span><small>点击活动中的作业可持续查看</small></div>
         <div id="agentdock-job-list" class="agentdock-job-list" aria-live="polite"></div>
         <details class="batch-production" open>
           <summary>Batch Production <span id="batch-window">第1—5章 · 生产默认</span></summary>
@@ -534,40 +570,89 @@
           </div>
           <span id="gbrain-status" class="status">GBrain：未查询</span>
         </div>
-        <details id="gbrain-details" class="source-details">
-          <summary>GBrain 灵感与检索</summary>
-        <div id="gbrain-scope" class="path-note">GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选</div>
-        <div class="gbrain-workspace">
-          <label class="field">
-            <span>创作方向 / 想保留的成长链或元素</span>
-            <input id="creative-direction" value="" placeholder="例如：传统仙侠；资源→战斗→身份。也可以只写一个想保留的元素。" autocomplete="off">
-          </label>
-          <div class="action-row wrap">
-            <button id="default-gbrain-query">生成默认查询</button>
-            <button id="query-gbrain" class="primary">从 GBrain 取灵感</button>
+        <details id="gbrain-details" class="source-details gbrain-studio" open>
+          <summary>GBrain 灵感实验室 <span id="gbrain-mode-badge" class="gbrain-mode-badge">等待模式</span></summary>
+          <div class="gbrain-status-strip">
+            <span id="gbrain-readiness" class="gbrain-readiness">正在检查检索环境…</span>
+            <span id="gbrain-count" class="count">raw 0 / accepted 0 / rejected 0</span>
           </div>
-          <label class="field">
-            <span>BOOK-aware Retrieval Brief / GBrain 查询（完整可见、可编辑）</span>
-            <textarea id="gbrain-query" rows="8"></textarea>
-          </label>
-          <label class="field">
-            <span>最终 Inspiration Bundle（可编辑；只有这里进入 Prompt）</span>
-            <textarea id="gbrain-results" rows="16" placeholder="查询成功后，BOOK 兼容的抽象 Inspiration Bundle 会出现在这里。"></textarea>
-          </label>
+          <div id="gbrain-stale-banner" class="gbrain-stale-banner" hidden role="status">
+            <div><strong>这批灵感基于旧上下文</strong><span id="gbrain-stale-reason">当前 BOOK 或规划输入已经变化。</span></div>
+            <button id="gbrain-requery" type="button">按当前上下文重新检索</button>
+          </div>
+          <div id="gbrain-scope" class="path-note">GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选</div>
+          <div class="gbrain-studio-grid">
+            <section class="gbrain-stage-card gbrain-query-stage" aria-labelledby="gbrain-query-heading">
+              <div class="gbrain-stage-heading">
+                <span class="gbrain-stage-number">01</span>
+                <div><strong id="gbrain-query-heading">描述现在真正缺什么</strong><small>查询会读取当前 BOOK、当前规划窗口和已批准 Authority</small></div>
+              </div>
+              <label class="field">
+                <span>创作方向 / 想保留的成长链或元素</span>
+                <input id="creative-direction" value="" placeholder="例如：海底探索；稀有获得→公开证明→身份重估" autocomplete="off">
+              </label>
+              <label class="field">
+                <span>BOOK-aware Retrieval Brief</span>
+                <textarea id="gbrain-query" rows="7" placeholder="先生成默认查询，再按当前创作问题微调"></textarea>
+              </label>
+              <div class="action-row wrap">
+                <button id="default-gbrain-query" type="button">生成默认查询</button>
+                <button id="query-gbrain" class="primary" type="button">检索并抽取</button>
+              </div>
+            </section>
+            <section id="gbrain-selection-stage" class="gbrain-stage-card gbrain-selection-stage" aria-labelledby="gbrain-selection-heading">
+              <div class="gbrain-stage-heading">
+                <span class="gbrain-stage-number">02</span>
+                <div><strong id="gbrain-selection-heading">比较抽象机制，决定带走什么</strong><small>固定 Reference 不占名额；候选必须由作者显式选择</small></div>
+              </div>
+              <div id="gbrain-fixed-list" class="gbrain-fixed-list"></div>
+              <div class="gbrain-selection-toolbar">
+                <span id="gbrain-selection-count">尚未检索</span>
+                <div>
+                  <button id="gbrain-compare" type="button" disabled>比较所选</button>
+                  <button id="gbrain-select-all" type="button">全选候选</button>
+                  <button id="gbrain-clear-selection" type="button">清空</button>
+                </div>
+              </div>
+              <div id="gbrain-selection-tray" class="gbrain-selection-tray" aria-live="polite"></div>
+              <div id="gbrain-candidate-list" class="gbrain-candidate-list">
+                <p class="gbrain-empty">检索后，这里会显示经过 BOOK 兼容性筛选的可迁移抽象。</p>
+              </div>
+            </section>
+          </div>
+          <section id="gbrain-bundle-stage" class="gbrain-stage-card gbrain-bundle-stage" aria-labelledby="gbrain-bundle-heading">
+            <div class="gbrain-stage-heading">
+              <span class="gbrain-stage-number">03</span>
+              <div><strong id="gbrain-bundle-heading">组装本轮 Inspiration Bundle</strong><small>只有这个可编辑文本会进入当前允许 GBrain 的规划 Prompt</small></div>
+            </div>
+            <div class="gbrain-bundle-actions">
+              <button id="gbrain-assemble" class="primary" type="button" disabled>组装所选 Inspiration</button>
+              <button id="gbrain-discard" type="button">本轮不注入 GBrain</button>
+              <span id="gbrain-bundle-state">尚未组装</span>
+            </div>
+            <label class="field">
+              <span>最终 Inspiration Bundle（可编辑）</span>
+              <textarea id="gbrain-results" rows="14" placeholder="选中候选并组装后出现在这里；不会自动保存或批准。"></textarea>
+            </label>
+          </section>
           <details class="gbrain-diagnostics">
-            <summary>原始检索结果与排除原因 <span id="gbrain-count" class="count">raw 0 / accepted 0 / rejected 0</span></summary>
-            <label class="field">
-              <span>原始 GBrain stdout（只读；不进入 Prompt）</span>
-              <textarea id="gbrain-raw-results" rows="10" readonly></textarea>
-            </label>
-            <label class="field">
-              <span>排除摘要（只读）</span>
-              <textarea id="gbrain-rejections" rows="8" readonly></textarea>
-            </label>
+            <summary>检索诊断与排除原因</summary>
+            <label class="field"><span>原始 GBrain stdout（只读；不进入 Prompt）</span><textarea id="gbrain-raw-results" rows="10" readonly></textarea></label>
+            <label class="field"><span>排除摘要（只读）</span><textarea id="gbrain-rejections" rows="8" readonly></textarea></label>
           </details>
-          <button id="generate-idea-prompt" class="primary">生成 Story Program Prompt</button>
-        </div>
+          <button id="generate-idea-prompt" class="primary gbrain-next-action">使用当前 Bundle 生成 Story Program Prompt</button>
         </details>
+
+        <dialog id="gbrain-compare-dialog" class="gbrain-compare-dialog" aria-labelledby="gbrain-compare-title">
+          <div class="gbrain-compare-shell">
+            <header>
+              <div><p class="eyebrow">CURATOR COMPARE</p><h3 id="gbrain-compare-title">比较所选抽象</h3></div>
+              <button id="gbrain-compare-close" type="button" aria-label="关闭比较">关闭</button>
+            </header>
+            <p class="hint">只比较来源类型、可迁移抽象与使用边界；相关性分数不是质量评分。</p>
+            <div id="gbrain-compare-list" class="gbrain-compare-list"></div>
+          </div>
+        </dialog>
 
         <details class="references-section">
           <summary>手动选择 Reference Programs <span id="reference-count" class="count">0 / 3</span></summary>
@@ -829,6 +914,12 @@
       </div>
     </aside>
 
-    <script src="{{ url_for('static', path='app.js') }}?v=5"></script>
+    <button id="agentdock-mini-anchor" class="agentdock-mini-anchor" type="button" hidden aria-label="打开 Agent 实时进度">
+      <span class="agent-mini-dot" aria-hidden="true"></span>
+      <span><strong id="agentdock-mini-phase">Agent 运行中</strong><small id="agentdock-mini-activity">查看实时活动</small></span>
+      <time id="agentdock-mini-elapsed">00:00</time>
+    </button>
+
+    <script src="{{ url_for('static', path='app.js') }}?v=7"></script>
   </body>
 </html>

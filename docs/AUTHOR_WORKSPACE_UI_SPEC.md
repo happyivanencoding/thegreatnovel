@@ -1,52 +1,142 @@
-# Author Workspace UI V2
+# Author Workspace UI V3
 
-> 项目执行规则以根目录 `PROJECT_RULES.md` 为唯一长期权威。本文只定义 Author Workspace 的 UI 信息架构与交互语义。
+> 项目执行规则以根目录 `PROJECT_RULES.md` 为唯一长期权威。本文只记录当前 Author Workspace 的真实信息架构、视觉系统与交互语义。
 
-## 现有真实入口
+## 产品定位
 
-- `index.html` 使用沉浸式私人创作舱：浮动项目栏、窄导航 rail、阅读优先的正文工作区，以及桌面常驻/小屏覆盖的 AgentDock 创作中枢。旧编辑器仍只有一份，按 hash view 与高级区呈现。
-- `app.js` 的保存真源保持不变：`saveCreativeArtifact`、`saveBook`、`approveChapter`、`saveRunPromptForMode`、`saveRunResponseForMode`、`applyCanonIndexProposal`。
-- 后端真源保持不变：`/api/books/{book_id}`、`/api/prompt`、章节与 Run Ledger API、`/api/books/{book_id}/workflow`、Impact、Executors、OpenAI Settings；AgentDock 仅增加独立的内存作业 API，不写任何 Authority artifact。
+Author Workspace 是阅读优先的本地小说创作舱，不是后台管理系统，也不是普通 Markdown 编辑器。界面继续复用唯一的 BOOK / Workflow / Run Ledger / Response 真源，不为视觉便利复制第二份 Authority。
 
-## 新信息架构
+视觉采用两套独立主题：
 
-左侧导航仍使用 hash view：
+- Light：暖灰纸白、雾蓝灰、深海军蓝文字，低饱和靛青、暗金与冷紫作为强调；
+- Dark：深蓝黑、石墨灰与柔和象牙白，保持相同的层级关系和品牌强调色，不做简单反色；
+- 主要卡片使用 22—28px 圆角、细边框、半透明渐变和轻 blur；阴影只用于浮层关系；
+- 正文使用中文 Serif 系统栈和舒适行高；导航、工具栏、状态与数据区域使用 Sans Serif；
+- 动效只做轻微 scale / fade / progress pulse，并遵守 `prefers-reduced-motion`。
+
+## 信息架构
+
+桌面端为四层结构：
 
 ```text
-概览 · 创意 · 故事设计 · 章节写作 · 记忆 · 工具
+浮动项目栏
+  ↓
+窄导航 Rail → Story Structure Tree → 中央 Manuscript / Planning Surface → AgentDock 创作中枢
 ```
 
-默认概览只显示当前书、当前章节、下一步、stale 摘要、继续写作主 CTA 和轻量 Story Flow；不放大 textarea。
+- 导航 Rail：概览、创意、故事设计、章节写作、记忆、工具；每个实际 view 只有一个 active item。
+- Story Structure Tree：World、Power / Human / Character、Story Program、Long Plan、Future-10、当前章、Canon 与 Run，全部来自真实 Workflow artifacts 与已解析内容。
+- 中央区：正文与长时间阅读优先；复杂 Prompt、Response、调试与采用动作进入右侧中枢或显式高级区。
+- AgentDock：桌面常驻；中屏 / 小屏作为覆盖 Drawer。关闭 Drawer 后，运行中的任务仍通过轻量 mini anchor 保持可见。
+- 顶部 Manuscript / Structure / Memory 切换真实 view；Audit / Versions 定位真实右侧区域，不伪装成概览页。
 
-- 创意：可选 Premise Aperture + World / Character / Story 三个 Authority 阶段；默认阅读态，编辑/生成/批准按阶段展开；GBrain/References 折叠。
-- 故事设计：总体设计 / 中期规划 / 未来十章 Tabs；section cards 默认阅读态，原文编辑显式打开。
-- 章节写作：production 默认是 4—6 章 Batch（默认 5）：已批准 Future-10 → deterministic Batch Packet → Terra Batch Primary → Sol Authority Delta → 作者显式整批采用 → State 逐章落盘。正文阅读/编辑区优先；Workflow / Run Ledger 继续显示正式 artifact 状态，AgentDock 作业与 Batch 本地状态独立显示，绝不伪装成已保存节点。旧单章 Director → Curator → Primary → Full Reviser 只保留为 fallback / 高级详情。
-- 记忆：Canon Memory / Current State 默认阅读态，复用 BOOK status 保存路径。State Delta 应用到浏览器状态编辑区时，`Current Power Position` 不允许因模型漏写而消失：已有 Canon 位置优先继承；第一章尚无 Canon 时从 `CHARACTER.md` 的 T0 `开局精确力量位置` 确定性转成 Current Position。只有 State 返回了新的明确数字位置时才覆盖；越级胜利本身不触发 UI 推断升级。
-- 工具：Prompt Templates、OpenAI Settings、References、Workflow Debug。
+小屏使用单列内容、横向紧凑导航和覆盖式 AgentDock；390×844 下页面不得出现水平溢出。
 
-Premise 工作区固定提供：Forge Prompt、三卡保存、batch Compiler、作者选择/编辑、selected-card Compiler、Report 保存、批准与显式跳过。UI 不出现自动 selector 或 Repair 按钮。候选和 Compiler Report 只在该工作区可见；批准后显示四条只读 lane contract，Workflow 只登记正式 `premise.contract`。从未开始/已跳过不阻止 World；开始未批准时 World / Power / Human / Story 的生成与保存显示后端 fail-loud 错误；World 批准后 Premise 控件不可再改变事实。
+## 长任务进度与心理锚点
 
-章节主 CTA 由 Workflow snapshot 的 `next_actionable_node` 驱动：继续写作会自动选择当前章节、载入可用的十章计划，并将 Director / 执行小纲 / 正文 / Hybrid 节点映射到作者可读的中文动作；Prompt Mode、完整 Prompt、Response 和 Codex Task 仅在右侧 Drawer 可见。
+AgentDock ACP 可能持续数分钟甚至更久。V3 不显示虚假百分比或 ETA，而投影下列真实信号：
 
-Future 10 和记忆保留显式编辑入口；保存仍统一走 BOOK 保存路径，stale / Impact 由现有 Workflow State 计算。小于 800px 时左侧导航转为顶部横向导航，右侧 Drawer 覆盖打开且页面不产生横向溢出。
+1. 等待执行；
+2. 建立会话；
+3. 锁定模型、推理强度与只读配置；
+4. 理解与计划；
+5. 读取上下文、调用工具与验证；
+6. 组织最终输出；
+7. 完整性收尾；
+8. 完成 / 失败 / 取消。
 
-## 高级透明性
+运行面板同时显示：累计耗时、距最近可见信号的时间、通用化的计划步骤、工具完成数、最近十条安全活动、取消入口，以及“可以继续写别处”的低打扰提示。1、3、5、10、15、20、30、45 分钟会产生一次新的长任务提醒；提醒只说明已用时、最近信号和仍可取消，不推断剩余时间。
 
-右侧 AgentDock 创作中枢在桌面常驻、小屏作为覆盖 Drawer，复用现有 DOM 编辑器和输出区，不创建第二份内容来源；可查看完整 Prompt、Response、Run Ledger、Dependency Impact、revision/source/file path、Primary / Authority Delta / optional repair 节点和 State。节点状态只来自真实 Workflow / Run Ledger；ACP 作业状态（queued/running/completed/failed/cancelled、模型、耗时、结果）独立显示，不伪装成 artifact。
+真实 ACP `plan`、`tool_call`、`tool_call_update`、`agent_thought_chunk` 和 message phase 只映射到有限的作者可读活动词汇。UI 不展示 private reasoning、模型 commentary 原文、原始命令、文件路径、凭据或本机用户名。最终 Response 只接收明确的 `final` / `final_answer` channel。
 
-`agentdock_acp` 由后端可信配置解析本机 ACP，优先运维环境变量、再 PATH、最后固定 npm fallback；浏览器不能提交 executable、cwd、mode 或 MCP。后端固定项目 cwd、空 MCP、read-only mode、模型/推理白名单、短控制 RPC deadline + 长生成 job deadline、后台 stdout/stderr drain、有界 pending queue / output / completed history，以及 terminate → wait → kill 清理。`read-only` 表示 Agent 可读取项目上下文但不能写入小说或 Workflow；status 不返回本机路径。
+页面标题、右侧 notice 和 mini anchor 会同步运行状态；mini anchor 不使用每秒 `aria-live`，阶段变化与完成通知通过稳定的 `role=status` 区域播报。ACP 路径存在只显示“入口可用”，ChatGPT 登录在真实任务启动时才确认。
 
-每次启动均冻结 `book_id + chapter_number + workflow_mode + launch_token`。自动回填还必须满足：当前 identity 完全一致、仍是该 response target 的最新启动、页面仍保有本次 launch snapshot、且目标 Response 的单调编辑版本自启动后没有变化；因此作者即使改过后又撤回到原文本，旧 Agent 结果也不会自动覆盖。页面刷新只恢复 queued/running 轮询，不自动回填旧作业；错位、过期、作者已编辑或服务重启丢失的结果只能标记“待查看”。列表只返回 summary/`has_output`，点击后才 GET 全文；身份匹配时仍需作者显式确认载入，随后继续显式 Apply / Save / Approve。咨询遵守同样的最新启动与编辑保护，且不会写入小说或工作流。
+浏览器对作业 list / get / cancel / create 使用明确 deadline。短暂状态查询失败时保留 pending lock 与已有活动，自动退避重试，不能因一次网络失败解锁重复启动；只有明确 404 / 服务重启丢失才终止轮询并 fail loud。
 
-右侧 Batch Production 是 production 默认的真实控制面：作者选择任意起始章和 4—6 章窗口（默认 5），前两章连续性上下文由既有章节 API 确定性读取，再依次调用现有 `primary-prompt`、AgentDock Terra high `batch_primary`、`authority-reviser-prompt`、AgentDock Sol high `batch_authority_reviser`、`apply-authority-delta` 预检，最后才可显式调用 `adopt-authority-delta`。Primary / Delta 都有专属 Response，不混入单章或 State Response。窗口、Primary 或 Delta 变化会清空 / 标记其下游 Prompt 与 exact-response 预检 stale；upstream conflict、已有章节、解析失败或 stale 预检都禁止采用。采用后只显示 `state_next`，载入真实章节正文并引导作者逐章 State Extraction，绝不自动写 Canon。
+## AgentDock Response 边界
 
-## 不变约束
+`agentdock_acp` 仍是本机、有界内存的 Response executor：
 
-- UI 不另造生成/保存语义；Workflow dependency、Run Ledger 与 Executor 的真实语义由 production runtime 决定。当前 `curator_primary` 已包含固定 Authority Reviser；其它 writer mode 保持兼容行为。
-- 不自动保存、不自动批准、不自动重跑 stale；真实保存仍走现有 API。
-- Manual、Codex External、OpenAI API、AgentDock ACP 只改变 Response 产生方式，共享同一 Prompt、Apply、Save 和 Workflow State；AgentDock 不允许执行外部 CLI apply。
-- 本轮不生成新章节、不运行小说质量实验。
+- 后端可信解析 ACP，固定 TGN project root、`mcpServers=[]`、`read-only`、模型 / effort 白名单；
+- 短控制 RPC 与最长 60 分钟生成 job 分开计时；stdout / stderr 持续 drain；cancel / timeout / shutdown 使用 terminate → wait → kill；
+- pending job queue、ACP stdout event queue、activity、plan、output、error 与 completed history 都有界；stdout burst 通过有界 FIFO 反压处理，RPC response / callback 不丢弃；status 不返回 ACP 绝对路径；
+- job completed 不等于 Workflow artifact completed，不自动 Save / Apply / Adopt / Approve。
+
+每次启动冻结：
+
+```text
+book_id + chapter_number + workflow_mode + Batch window
++ launch_token + exact Prompt + exact upstream input snapshot
++ target editor value + monotonic editor version
+```
+
+只有全部仍匹配且该 target 仍是最新启动，结果才自动回填。切书 / 切章 / 切节点、修改 Prompt、修改上游规划、改变 Batch 窗口、作者编辑 Response、刷新恢复、旧 launch 或服务重启丢失时，只允许只读查看；作者仍可在身份匹配后显式确认载入。
+
+## GBrain Curator
+
+GBrain 在 Workspace 中是三段式 Optional Inspiration 工作流：
+
+```text
+BOOK-aware Retrieval Brief
+→ semantic retrieval + full-page extraction + compatibility filtering
+→ author compare / select / assemble
+```
+
+### 检索与抽取
+
+- `GET /api/gbrain/status` 只报告 CLI、embedding、active modes 与 optional-inspiration 角色，不暴露 Key；
+- GBrain ON 阶段必须同时有 CLI 与 embedding；不可用时 fail loud，不降级为 keyword-only；
+- 后端返回 raw / unique / accepted / rejected、partial query failures、fixed references，以及每个 accepted candidate 的独立 `formatted_block`；
+- Human Seed 按 Appetite / Behavior / Relationship 三条 lane 分组，某 lane 没有可靠结果时宁可为空，不补弱卡。
+
+### 比较、选择与组装
+
+- 每次新检索默认 `NONE`，不会自动勾选候选；
+- fixed reference 与 creative candidate 分开呈现；fixed 不占候选名额；
+- 作者可以逐项选择、通过 selection tray 快速移除、并排比较来源类型 / 抽象 / transfer boundary；相关性分数明确不是质量评分；
+- 只有作者点击“组装所选 Inspiration”后，才生成可编辑 Bundle；也可以明确点击“本轮不注入 GBrain”；
+- 作者可以在当前明确组装结果上继续编辑，但不能用未绑定的手工文本绕过检索与选择。
+
+### Stale 与 Prompt 边界
+
+GBrain 请求冻结发起时的 book、chapter、mode、query、BOOK、World、Character、Story、Long Block、Outline 与 recent summaries。请求返回前任一项变化，返回结果不载入。
+
+检索后相关输入、模式、Human Prototype 或 BOOK 变化时，旧候选与 Bundle 可保留供阅读，但显示 stale banner、禁用选择 / 组装，并从 Prompt payload 中剔除。新检索保留旧 Bundle但标为 previous，作者必须重新选择和组装。
+
+只有同时满足以下条件的 Bundle 才进入 GBrain ON Prompt：
+
+- 当前 retrieval 存在且上下文快照匹配；
+- Bundle 来源是本轮 assembled，或在本轮 assembled 基础上的作者编辑；
+- 当前选择 signature 未变化；
+- required fixed references 仍存在。
+
+GBrain OFF 阶段由前端返回空字符串，后端 `/api/prompt` 与 `/api/prompt/state-delta` 再次清空，保证 Chapter / Primary / Authority Delta / State 等阶段不接收 raw GBrain。GBrain 不自动写 Canon，不成为 Hard Gate 或 Authority source。
+
+## Batch 与其它不变边界
+
+Production 默认章节链仍是：
+
+```text
+Approved Future-10
+→ deterministic Batch Packet
+→ Terra-high Batch Primary
+→ Sol-high Authority Delta
+→ exact-window / exact-response preflight
+→ 作者显式整批采用
+→ State 逐章处理
+```
+
+Primary、Delta 与 State 使用独立 Response；窗口或 Response 变化使后续 Prompt / preflight stale。旧单章 Director → Curator → Primary → Full Reviser 仅保留为 fallback / 专项实验。
+
+所有正式保存继续走 `saveCreativeArtifact`、`saveBook`、`approveChapter`、`saveRunPromptForMode`、`saveRunResponseForMode`、`applyCanonIndexProposal` 与现有后端 API。V3 不自动保存、不自动批准、不自动重跑 stale。
 
 ## 浏览器证据
 
-冻结基线保留为 `before.png`；当前 V2 证据为 `workspace-v2-light.png`、`workspace-v2-dark.png` 与 `workspace-v2-mobile.png`。浏览器 smoke 同时验证 1440×900 亮/暗模式，以及 390×844 下 `document.scrollWidth == clientWidth`、单一 active nav 和 390px 覆盖式 AgentDock drawer。
+当前 V3 冻结截图：
+
+- `docs/ui-audit/workspace-v3-agent-progress-light.png`
+- `docs/ui-audit/workspace-v3-gbrain-dark.png`
+- `docs/ui-audit/workspace-v3-gbrain-compare.png`
+- `docs/ui-audit/workspace-v3-mobile-anchor.png`
+
+验证覆盖 1440×900 Light / Dark、GBrain 比较浮层、390×844 mini anchor、单一 active nav、无水平溢出、真实 ACP final channel、GBrain 默认 NONE / 显式组装 / stale fail-closed，以及短暂作业状态失败仍保留 pending lock。

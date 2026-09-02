@@ -223,11 +223,15 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 ## Author Workspace / AgentDock
 
-网页是阅读优先的本地创作舱：浮动项目栏、hash 工作区、窄导航 rail，以及桌面常驻/小屏覆盖的 AgentDock 面板。Workflow State 与 Run Ledger 仍是正式 artifact 状态的唯一来源；AgentDock / Batch 执行状态独立显示，不伪装成已保存节点，也不另造内容真源。
+网页是阅读优先的本地创作舱：浮动项目栏、hash 工作区、窄导航 rail，以及桌面常驻/小屏覆盖的 AgentDock 面板。Light / Dark 是独立设计层级，正文优先 Serif 阅读，卡片使用 22—28px 圆角、细边框、低饱和玻璃层和极轻阴影。Workflow State 与 Run Ledger 仍是正式 artifact 状态的唯一来源；AgentDock / Batch 执行状态独立显示，不伪装成已保存节点，也不另造内容真源。
 
-`agentdock_acp` 是本机、内存作业型 Response executor：后端可信解析 ACP，固定 TGN 项目 cwd、空 MCP 与 `read-only` mode；短控制 RPC 与长生成 job 使用不同 deadline，stdout/stderr 持续 drain，pending queue、output、error 与 completed history 全部有界。它可以读取项目上下文，但不能保存、采用、批准或写 Authority artifact；status 不泄露 ACP 路径。自动回填必须同时匹配 book / chapter / workflow mode / Batch window / latest launch，并确认作者未改动目标编辑区；刷新恢复、错位、旧 launch 或丢失作业只允许只读查看。
+`agentdock_acp` 是本机、内存作业型 Response executor：后端可信解析 ACP，固定 TGN 项目 cwd、空 MCP 与 `read-only` mode；短控制 RPC 与长生成 job 使用不同 deadline，stdout/stderr 持续 drain，pending job queue、ACP stdout event queue、activity、output、error 与 completed history 全部有界；高频 update 通过有界 FIFO 反压，不丢 RPC response / callback。它可以读取项目上下文，但不能保存、采用、批准或写 Authority artifact；status 只说明 ACP 入口是否存在，ChatGPT 登录在真实启动时确认。自动回填必须同时匹配 book / chapter / workflow mode / Batch window / latest launch、精确 Prompt / 上游输入快照，并确认作者未改动目标编辑区；刷新恢复、错位、旧 launch 或丢失作业只允许只读查看。
+
+长任务 UI 不显示虚假百分比或 ETA，而持续显示真实阶段、累计耗时、距最近信号时长、通用 plan / tool / activity 摘要、取消入口和低打扰定时提醒。ACP commentary、private reasoning、原始命令、路径与凭据都不进入作者可见 activity；最终 Response 只接收明确 final channel。短暂列表 / 状态查询失败保留 pending lock 并退避重试，不能因此允许重复启动。
 
 Author Workspace 桌面布局为窄 nav rail → 真实 Story Structure tree → 中央 manuscript surface → 固定 AgentDock。Structure tree 的 World/Character/Story/Long Plan/Future-10/当前章/Canon/Run 均从 Workflow artifacts 和已解析 Future-10 生成，点击定位真实工作区。顶部 Manuscript、Structure、Memory 切换真实 view；Audit 与 Versions 打开右侧真实区域。Batch Production 复用既有 Batch API，并确定性补齐任意起始章的连续性上下文，完成 Packet → Terra high Primary → Sol high Delta → exact-window/exact-response 预检 → 作者显式 Adopt → 作者逐章 State；窗口或 Response 变化会使下游 Prompt / 预检失效，不复制 Authority 算法。
+
+GBrain 在 Workspace 中使用 Curator 交互：semantic retrieval / full-page extraction 后分别展示 fixed references 与 BOOK-compatible candidates；每轮默认不选，作者可按 Human 三 lane 浏览、显式勾选、并排比较、组装可编辑 Bundle，或明确本轮不注入。请求返回、Bundle 与 Prompt 都绑定发起时上下文；上下文变化后旧材料只读保留并标 stale，selection stale / 未绑定手工文本 / GBrain-OFF 阶段由前后端共同 fail-closed。GBrain 仍只提供 Optional Inspiration，不写 Canon，也不成为 Hard Gate。
 
 ## GBrain 与模型默认路由
 

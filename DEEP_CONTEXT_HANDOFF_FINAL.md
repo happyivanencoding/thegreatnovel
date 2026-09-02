@@ -2267,15 +2267,23 @@ Retrieval ownership 专项已扩大到 7 组有效质量样本：宁烬真实 Ho
 
 ---
 
-## 2026-09-02｜Author Workspace 第二轮当前状态
+## 2026-09-02｜Author Workspace V3：长任务心理锚点与 GBrain Curator
 
-工作台现为四层真实信息架构：桌面窄 nav rail、由 Workflow artifacts 与 Future-10 原文渲染的 Story Structure tree、中央 manuscript surface，以及常驻 AgentDock；中屏将结构树收起，小屏使用覆盖 drawer。顶部 Manuscript / Structure / Memory 是真实 view，Audit / Versions 定位右侧真实 section。
+工作台继续沿用四层真实信息架构：桌面窄 nav rail、由 Workflow artifacts 与 Future-10 原文渲染的 Story Structure tree、中央 manuscript surface，以及常驻 AgentDock；中屏收起结构树，小屏使用覆盖 drawer。V3 在此基础上完成一轮视觉细化：Light / Dark 分别维护层级与材质，正文继续使用中文 Serif 阅读面，卡片统一为 22—28px 圆角、细边框、低饱和玻璃层和极轻阴影；GBrain 比较浮层、小屏 mini anchor、disabled / focus / reduced-motion 状态均已补齐。冻结截图见 `docs/ui-audit/workspace-v3-*.png`。
 
-AgentDock ACP 只接受后端可信解析的本机入口，固定项目 cwd、`mcpServers=[]`、`read-only`；read-only 可读取项目上下文但不能写文件。执行器使用短控制 RPC + 长生成 job deadline、后台双管 drain、terminate→wait→kill cleanup、路径/凭据脱敏以及有界 pending/output/history。每个 job 固定 `book_id/chapter_number/workflow_mode/launch_token`；自动回填还要求页面保有 launch snapshot、当前 target 仍是最新启动且作者未在运行期间编辑它。刷新只恢复轮询，不自动回填恢复作业；错位或重启丢失明确报错。
+AgentDock 长任务不再只有一个模糊的“运行中”。后端从真实 ACP `plan / tool_call / tool_call_update / agent_thought_chunk / message phase` 投影八个可见阶段：等待执行、建立会话、锁定配置、理解计划、读取执行、组织输出、完整性收尾、完成；前端显示累计耗时、距最近信号时长、通用化计划与工具活动、取消入口、页面标题 / notice / mini anchor，并在 1 / 3 / 5 / 10 / 15 / 20 / 30 / 45 分钟给一次低打扰提醒。它不伪造百分比或 ETA，也不把私有推理、模型 commentary 原文、原始命令、路径、用户名或凭据暴露给作者；最终 Response 只接收明确 `final / final_answer` channel。真实 ACP smoke 已返回 `ACP_V3_FINAL_OK`，并经过 connecting → configuring → planning → composing → finalizing → completed。
 
-Batch Production 已接既有 API：任意起始章先从既有章节读取最多两章连续性上下文，再执行 Packet/Primary Prompt → Terra high `batch_primary` → Delta Prompt → Sol high `batch_authority_reviser` → exact-window/exact-response 预检 → 作者显式整批采用。Primary、Delta 与 State 使用独立 Response；窗口或 Response 变化立即使下游 Prompt / 预检 stale，upstream conflict、解析失败或已有章节继续 fail loud。采用后仅显示 `state_next` 并载入真实正文，作者仍需逐章 State Extraction，绝不自动写 Canon。
+执行器继续固定可信 project cwd、`mcpServers=[]`、`read-only` 与模型 / effort 白名单；短控制 RPC 与最长 60 分钟生成 deadline 分开，stdout / stderr 持续 drain，cancel / timeout / shutdown 使用 terminate → wait → kill。pending job、ACP stdout event、activity、plan、output、error 与 completed history 全部有界；stdout event queue 为 maxsize 256 的 FIFO 反压，1024 个非最终 update 后仍能完整读到 RPC final。Status 只说明 ACP 入口可用，ChatGPT 登录在真实任务启动时确认。浏览器 list / get / cancel / create 都有 deadline；短暂 poll / list 失败保留 pending lock 并退避重试，只有明确 404 / 服务重启丢失才解锁。
 
-`tgn-system-steward` 已升至 `0.3.44`，新增 `Execution Transport / Author Workspace Safety Trace`。`skill-authoring` lint（0 error / 0 warning）、package validate、安装激活和 bounded read-only smoke 均 PASS；最终 production 回归为 `518 passed`，真实 ACP 冒烟返回 `ACP_SMOKE_OK`。
+自动回填现在冻结 `book / chapter / workflow / Batch window / launch token / exact Prompt / exact upstream input snapshot / target editor value / monotonic editor version`。任一上游规划、Prompt、章节、Batch 窗口或 Response 在 Agent 运行期间变化，旧结果都不会自动覆盖；刷新恢复、错位、旧 launch 或作者改过再撤回同一文本时，只能只读查看并由作者显式载入。`job completed` 仍不等于 Save / Apply / Adopt / Approve。
+
+GBrain 从一个大文本框升级为 Curator 工作流：BOOK-aware Retrieval Brief → semantic retrieval / full-page extraction / compatibility filtering → fixed references 与 candidates 分开展示 → 作者显式选择、selection tray、并排比较、组装可编辑 Inspiration Bundle，或明确“本轮不注入”。每次新检索默认 `NONE`，Human Seed 按 Appetite / Behavior / Relationship 三 lane 分组，某 lane 没有可靠卡时宁可为空。真实 semantic query 已返回 `raw 4 / unique 4 / accepted 4 / fixed 1 / rejected 0`，每个 candidate / fixed reference 都带独立 structured block。
+
+GBrain 请求绑定发起时的 BOOK、章节、mode、query、World、Character、Story、Long Block、Outline 与 recent summaries；返回前上下文变化时不载入。检索后相关输入、Human Prototype、模式或 BOOK 变化时，旧候选和 Bundle 只读保留并标 stale；selection-stale、未绑定手工文本、缺 required fixed reference 与 GBrain-OFF 阶段内容都不能进入 Prompt。前端 `gbrainInspirationForPrompt()` 与后端 `/api/prompt`、`/api/prompt/state-delta` 共同执行 OFF 边界。GBrain 仍是 Optional Inspiration，不自动写 Canon，不成为 Hard Gate 或 Authority source。
+
+Batch Production 的既有 production 链保持不变：任意起始章先读取最多两章连续性上下文，再执行 Packet / Primary Prompt → Terra-high `batch_primary` → Delta Prompt → Sol-high `batch_authority_reviser` → exact-window / exact-response 预检 → 作者显式整批采用 → State 逐章处理。V3 只增加 Agent 进度与输入快照保护，不复制或改写 Batch Authority 算法。
+
+验证：`node --check`、Python `compileall`、`git diff --check` PASS；全仓 **527 passed**。浏览器 smoke 覆盖 1440×900 Light / Dark、GBrain compare、390×844 mini anchor、无横向溢出、GBrain 默认 NONE / 显式组装 / stale fail-closed、异步返回错位不载入、网络 timeout、短暂状态失败保留 pending，以及 Agent exact Prompt / upstream snapshot 回填保护。`tgn-system-steward` 已升级至 **0.3.46**，新增 `Telemetry truth before reassurance` 与 `GBrain Curator is selection state, not a textarea`；skill-authoring lint `0 error / 0 warning`，package validate / install / activate PASS，digest `sha256:308ad308e7647cab1db9979edebbef3f08fe127d5733e90a9760ad09ea0cf772`。基于安装后 Skill 的 bounded read-only smoke 最终 **PASS**，Residual P0/P1：`none`。
 
 ## Cognitive Integrity Check
 

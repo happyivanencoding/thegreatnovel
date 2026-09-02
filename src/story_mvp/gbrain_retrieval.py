@@ -811,28 +811,28 @@ def _type_for_category(category: str) -> str:
     }.get(category, category)
 
 
+def _format_inspiration(item: Mapping[str, Any], index: int | None = None) -> str:
+    boundary = item.get("transfer_boundary") or "只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。"
+    heading = f"### Inspiration {index}" if index is not None else "### Inspiration"
+    return "\n".join(
+        [
+            heading,
+            f"source: {item['slug']}",
+            f"type: {item['type']}",
+            *([f"human_lane: {item['human_lane']}"] if item.get("human_lane") else []),
+            f"score: {item['score']:g}",
+            "",
+            f"可用抽象：{item['abstract']}",
+            "",
+            f"使用边界：{boundary}",
+        ]
+    )
+
+
 def _format_bundle(items: list[Mapping[str, Any]]) -> str:
     if not items:
         return EMPTY_RESULT
-    blocks = []
-    for index, item in enumerate(items, start=1):
-        boundary = item.get("transfer_boundary") or "只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。"
-        blocks.append(
-            "\n".join(
-                [
-                    f"### Inspiration {index}",
-                    f"source: {item['slug']}",
-                    f"type: {item['type']}",
-                    *([f"human_lane: {item['human_lane']}"] if item.get("human_lane") else []),
-                    f"score: {item['score']:g}",
-                    "",
-                    f"可用抽象：{item['abstract']}",
-                    "",
-                    f"使用边界：{boundary}",
-                ]
-            )
-        )
-    return "\n\n".join(blocks)
+    return "\n\n".join(_format_inspiration(item, index) for index, item in enumerate(items, start=1))
 
 
 def _format_fixed_coordinate_reference(item: Mapping[str, Any] | None) -> str:
@@ -1224,6 +1224,19 @@ def retrieve_gbrain(
 
     coordinate_bundle = _format_fixed_coordinate_reference(coordinate_reference)
     naming_bundle = _format_fixed_naming_reference(naming_reference)
+    for candidate in accepted:
+        candidate["formatted_block"] = _format_inspiration(candidate)
+    fixed_references = []
+    if coordinate_reference:
+        fixed_references.append({
+            "id": "coordinate_reference", "label": "固定读者坐标参考", "required": True,
+            "slug": coordinate_reference["slug"], "formatted_block": coordinate_bundle,
+        })
+    if naming_reference:
+        fixed_references.append({
+            "id": "naming_reference", "label": "固定命名工艺参考", "required": True,
+            "slug": naming_reference["slug"], "formatted_block": naming_bundle,
+        })
     has_fixed_reference = bool(coordinate_reference or naming_reference)
     creative_bundle = _format_bundle(accepted) if accepted else ("" if has_fixed_reference else EMPTY_RESULT)
     result_bundle = "\n\n".join(part for part in (coordinate_bundle, naming_bundle, creative_bundle) if part)
@@ -1262,6 +1275,7 @@ def retrieve_gbrain(
         "novel_candidates": novel_candidates,
         "raw_results": visible,
         "accepted": accepted,
+        "fixed_references": fixed_references,
         "rejected": rejected,
         "result": result_bundle,
     }

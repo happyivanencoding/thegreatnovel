@@ -14,8 +14,22 @@ const state = {
   designEditing: false,
   dirtyEditors: new Set(),
   gbrainDefaultBrief: "",
+  gbrainStatus: null,
+  gbrainRetrieval: null,
+  gbrainSelected: new Set(),
+  gbrainBundleSignature: "",
+  gbrainBundleOrigin: "empty",
+  gbrainBundleProgrammatic: false,
+  gbrainContextSnapshot: null,
+  gbrainStale: false,
+  gbrainStaleReason: "",
+  gbrainQuerying: false,
   agentdockJobs: [],
   agentdockAvailable: false,
+  agentdockFocusedJob: null,
+  agentdockNotifiedJobs: new Set(),
+  agentdockPhaseSeen: new Map(),
+  agentdockReminderSeen: new Map(),
   agentdockPollers: new Set(),
   agentdockLatestLaunch: new Map(),
   agentdockPendingJobs: new Map(),
@@ -95,6 +109,16 @@ const designTitles = {
 const $ = (id) => document.getElementById(id);
 
 const viewNames = new Set(["overview", "creative", "design", "chapter", "memory", "tools"]);
+const GBRAIN_ACTIVE_MODES = new Set(["world_vision", "world_expansion", "power_seed", "human_seed", "idea", "story_refresh", "outline"]);
+const GBRAIN_MODE_LABELS = {
+  world_vision: "World Vision",
+  world_expansion: "World Expansion",
+  power_seed: "Power Seed",
+  human_seed: "Human Seed",
+  idea: "Story Program",
+  story_refresh: "Story Refresh",
+  outline: "Outline",
+};
 
 function currentViewFromHash() {
   const value = window.location.hash.replace(/^#/, "");
@@ -673,6 +697,19 @@ function renderStoryStructure(snapshot) {
   appendArtifact("World Vision", "creative.world_vision", "creative");
   appendArtifact("Power / Human / Character", "creative.character_card", "creative");
   appendArtifact("Story Program", "creative.story_program", "creative");
+  const gbrainButton = document.createElement("button");
+  gbrainButton.type = "button";
+  gbrainButton.className = "story-tree-item story-tree-utility";
+  gbrainButton.textContent = `GBrain 灵感实验室 · ${state.gbrainStatus?.available ? "READY" : "CHECK"}`;
+  gbrainButton.addEventListener("click", () => {
+    if (!navigateToView("creative", "打开 GBrain 灵感实验室")) return;
+    const studio = $("gbrain-details");
+    if (studio) {
+      studio.open = true;
+      studio.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+  tree.appendChild(gbrainButton);
   appendArtifact("当前 Long Plan", "book.long_plan", "design", "midterm");
   const future = parseFuture10Entries($("section-small_plan")?.value || "");
   const futureGroup = document.createElement("div");
@@ -703,7 +740,7 @@ function renderAgentDockStatus(executor) {
   const available = Boolean(executor.available);
   state.agentdockAvailable = available;
   status.textContent = available
-    ? `AgentDock ACP：可用 · ChatGPT 登录 · ${executor.mode || "read-only"} · 活跃 ${executor.active_count || 0}`
+    ? `AgentDock ACP：入口可用 · ChatGPT 登录将在启动时确认 · ${executor.mode || "read-only"} · 活跃 ${executor.active_count || 0}`
     : "AgentDock ACP：本机不可用";
   const models = $("agentdock-model");
   const efforts = $("agentdock-effort");
@@ -728,6 +765,209 @@ function renderAgentDockStatus(executor) {
   syncAgentDockPendingButtons();
 }
 
+const AGENT_PHASES = [
+  ["queued", "排队"],
+  ["connecting", "连接"],
+  ["configuring", "配置"],
+  ["planning", "理解"],
+  ["working", "工作"],
+  ["composing", "输出"],
+  ["finalizing", "收尾"],
+  ["completed", "完成"],
+];
+const BASE_DOCUMENT_TITLE = document.title;
+let agentDockTitleResetTimer = null;
+let agentDockMiniResetTimer = null;
+
+function formatAgentDuration(seconds) {
+  const value = Math.max(0, Math.floor(Number(seconds) || 0));
+  const hours = Math.floor(value / 3600);
+  const minutes = Math.floor((value % 3600) / 60);
+  const remainder = value % 60;
+  return hours
+    ? `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`
+    : `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
+}
+
+function agentHeartbeatText(job) {
+  const quiet = Math.max(0, Math.round(Number(job.activity_quiet_seconds) || 0));
+  if (!["queued", "running"].includes(job.status)) {
+    return job.status === "completed" ? "输出已安全返回，等待作者确认" : "本任务已经停止";
+  }
+  if (job.status === "queued") return "正在等待可用的 Agent 执行位";
+  if (quiet < 6) return "刚刚收到新的运行信号";
+  if (quiet < 30) return `最近活动 ${quiet} 秒前 · Agent 仍在运行`;
+  if (quiet < 90) return `正在处理较长步骤 · 最近可见活动 ${quiet} 秒前`;
+  return `仍保持运行连接 · 长推理可能暂时没有工具事件 · 最近信号 ${quiet} 秒前`;
+}
+
+const AGENT_LONG_RUN_REMINDERS = [60, 180, 300, 600, 900, 1200, 1800, 2700];
+
+function maybeShowAgentLongRunReminder(job) {
+  if (!job || !["queued", "running"].includes(job.status)) return;
+  const elapsed = Math.max(0, Math.floor(Number(job.elapsed_seconds) || 0));
+  const reached = AGENT_LONG_RUN_REMINDERS.filter((threshold) => elapsed >= threshold).at(-1) || 0;
+  const previous = Number(state.agentdockReminderSeen.get(job.job_id) || 0);
+  if (!reached || reached <= previous) return;
+  state.agentdockReminderSeen.set(job.job_id, reached);
+  showAgentDockNotice(
+    `仍在运行 · 已用时 ${formatAgentDuration(elapsed)}。${agentHeartbeatText(job)}；可以继续写别处，也可随时取消。`,
+    "progress",
+  );
+}
+
+function showAgentDockNotice(message, tone = "info") {
+  const notice = $("agentdock-notice");
+  if (!notice) return;
+  notice.hidden = !message;
+  notice.className = `agentdock-notice agentdock-notice-${tone}`;
+  notice.textContent = message;
+}
+
+function updateDocumentRunState(job) {
+  window.clearTimeout(agentDockTitleResetTimer);
+  if (job && ["queued", "running"].includes(job.status)) {
+    document.title = `● ${job.phase_label || "Agent 运行中"} · ${BASE_DOCUMENT_TITLE}`;
+    return;
+  }
+  if (job?.status === "completed") {
+    document.title = `✓ ${job.context_label || "Agent 完成"} · ${BASE_DOCUMENT_TITLE}`;
+    agentDockTitleResetTimer = window.setTimeout(() => { document.title = BASE_DOCUMENT_TITLE; }, 8000);
+    return;
+  }
+  document.title = BASE_DOCUMENT_TITLE;
+}
+
+function renderAgentDockFocus(job) {
+  const panel = $("agentdock-progress-anchor");
+  if (!panel) return;
+  if (!job) {
+    panel.hidden = true;
+    if ($("agentdock-mini-anchor")) $("agentdock-mini-anchor").hidden = true;
+    updateDocumentRunState(null);
+    return;
+  }
+  const previousPhase = state.agentdockPhaseSeen.get(job.job_id);
+  state.agentdockFocusedJob = { ...job, _receivedAt: Date.now() };
+  state.agentdockPhaseSeen.set(job.job_id, job.phase);
+  if (previousPhase && previousPhase !== job.phase && ["queued", "running"].includes(job.status)) {
+    showAgentDockNotice(`进度更新 · ${job.phase_label || job.phase}：${job.current_activity || "Agent 正在工作"}`, "progress");
+  }
+  panel.hidden = false;
+  panel.dataset.status = job.status;
+  $("agentdock-progress-context").textContent = job.context_label || job.purpose || "Agent 任务";
+  $("agentdock-progress-phase").textContent = job.phase_label || job.phase || job.status;
+  $("agentdock-progress-elapsed").textContent = formatAgentDuration(job.elapsed_seconds);
+  $("agentdock-current-activity").textContent = job.current_activity || "Agent 正在工作";
+  $("agentdock-heartbeat").textContent = agentHeartbeatText(job);
+  $("agentdock-signal-metric").textContent = `${Math.max(0, Math.round(Number(job.activity_quiet_seconds) || 0))}s`;
+  $("agentdock-plan-metric").textContent = job.plan_total ? `${job.plan_completed || 0}/${job.plan_total}` : "—";
+  const tools = job.tool_counts || {};
+  $("agentdock-tool-metric").textContent = tools.total || 0;
+  $("agentdock-activity-count").textContent = job.activity_count || job.activities?.length || 0;
+
+  const track = $("agentdock-phase-track");
+  track.replaceChildren();
+  const phaseIndex = Number.isInteger(job.phase_index) ? job.phase_index : 0;
+  AGENT_PHASES.forEach(([key, label], index) => {
+    const step = document.createElement("span");
+    step.className = index < phaseIndex ? "is-complete" : index === phaseIndex ? "is-current" : "";
+    if (["failed", "cancelled"].includes(job.status) && index === phaseIndex) step.classList.add("is-stopped");
+    step.dataset.phase = key;
+    step.textContent = label;
+    track.appendChild(step);
+  });
+
+  const plan = $("agentdock-plan-list");
+  plan.replaceChildren();
+  for (const entry of job.plan_entries || []) {
+    const item = document.createElement("li");
+    item.dataset.status = entry.status || "pending";
+    const mark = document.createElement("span");
+    mark.setAttribute("aria-hidden", "true");
+    mark.textContent = entry.status === "completed" ? "✓" : entry.status === "in_progress" ? "●" : entry.status === "failed" ? "!" : "○";
+    const content = document.createElement("span");
+    content.textContent = entry.content;
+    item.append(mark, content);
+    plan.appendChild(item);
+  }
+  plan.hidden = !(job.plan_entries || []).length;
+
+  const activities = $("agentdock-activity-list");
+  activities.replaceChildren();
+  for (const activity of (job.activities || []).slice(-10).reverse()) {
+    const item = document.createElement("li");
+    const time = document.createElement("time");
+    time.textContent = `+${formatAgentDuration(activity.elapsed_seconds)}`;
+    const content = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = activity.label;
+    content.appendChild(title);
+    if (activity.detail) {
+      const detail = document.createElement("span");
+      detail.textContent = activity.detail;
+      content.appendChild(detail);
+    }
+    item.append(time, content);
+    activities.appendChild(item);
+  }
+  if (!activities.children.length) {
+    const empty = document.createElement("li");
+    empty.className = "is-empty";
+    empty.textContent = "等待第一条可见活动";
+    activities.appendChild(empty);
+  }
+  $("agentdock-active-cancel").disabled = !["queued", "running"].includes(job.status);
+  const mini = $("agentdock-mini-anchor");
+  if (mini) {
+    window.clearTimeout(agentDockMiniResetTimer);
+    mini.hidden = false;
+    mini.dataset.status = job.status;
+    $("agentdock-mini-phase").textContent = job.status === "completed" ? "Agent 已完成" : job.phase_label || "Agent 运行中";
+    $("agentdock-mini-activity").textContent = job.current_activity || "查看实时活动";
+    $("agentdock-mini-elapsed").textContent = formatAgentDuration(job.elapsed_seconds);
+    if (!["queued", "running"].includes(job.status)) {
+      agentDockMiniResetTimer = window.setTimeout(() => { mini.hidden = true; }, 12000);
+    }
+  }
+  updateDocumentRunState(job);
+}
+
+function refreshAgentDockFocusClock() {
+  const job = state.agentdockFocusedJob;
+  if (!job || !["queued", "running"].includes(job.status)) return;
+  const delta = Math.max(0, (Date.now() - Number(job._receivedAt || Date.now())) / 1000);
+  const liveJob = {
+    ...job,
+    elapsed_seconds: Number(job.elapsed_seconds || 0) + delta,
+    activity_quiet_seconds: Number(job.activity_quiet_seconds || 0) + delta,
+  };
+  if ($("agentdock-progress-elapsed")) $("agentdock-progress-elapsed").textContent = formatAgentDuration(liveJob.elapsed_seconds);
+  if ($("agentdock-heartbeat")) $("agentdock-heartbeat").textContent = agentHeartbeatText(liveJob);
+  if ($("agentdock-signal-metric")) $("agentdock-signal-metric").textContent = `${Math.max(0, Math.round(liveJob.activity_quiet_seconds))}s`;
+  if ($("agentdock-mini-elapsed")) $("agentdock-mini-elapsed").textContent = formatAgentDuration(liveJob.elapsed_seconds);
+  if ($("agentdock-mini-activity")) {
+    $("agentdock-mini-activity").textContent = liveJob.activity_quiet_seconds >= 20
+      ? agentHeartbeatText(liveJob)
+      : liveJob.current_activity || agentHeartbeatText(liveJob);
+  }
+  maybeShowAgentLongRunReminder(liveJob);
+}
+
+function selectAgentDockFocus(jobs) {
+  const focusedId = state.agentdockFocusedJob?.job_id;
+  const focused = jobs.find((job) => job.job_id === focusedId && ["queued", "running"].includes(job.status));
+  const active = focused || jobs.find((job) => job.status === "running") || jobs.find((job) => job.status === "queued");
+  if (active) {
+    const existing = state.agentdockFocusedJob?.job_id === active.job_id ? state.agentdockFocusedJob : null;
+    renderAgentDockFocus(existing?.activities?.length && !active.activities
+      ? { ...existing, ...active, activities: existing.activities }
+      : active);
+    return;
+  }
+  if (!state.agentdockFocusedJob) renderAgentDockFocus(null);
+}
+
 function renderAgentDockJobs(jobs) {
   state.agentdockJobs = jobs;
   const container = $("agentdock-job-list");
@@ -736,38 +976,64 @@ function renderAgentDockJobs(jobs) {
   container.replaceChildren();
   const activeCount = jobs.filter((job) => ["queued", "running"].includes(job.status)).length;
   if (active) active.textContent = activeCount ? `${activeCount} 个作业运行中` : "无运行作业";
+  selectAgentDockFocus(jobs);
   if (!jobs.length) {
     const empty = document.createElement("p");
-    empty.className = "hint";
-    empty.textContent = "本次服务会话还没有 AgentDock 作业。";
+    empty.className = "hint agentdock-empty-state";
+    empty.textContent = "还没有运行记录。启动后，这里会保留本次服务会话中的真实作业。";
     container.appendChild(empty);
     return;
   }
   for (const job of jobs.slice(0, 12)) {
     const card = document.createElement("article");
     card.className = `agentdock-job agentdock-job-${job.status}`;
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `查看 ${job.context_label || job.purpose} 的运行详情`);
+    const heading = document.createElement("div");
+    heading.className = "agentdock-job-heading";
     const title = document.createElement("strong");
-    title.textContent = `${job.context_label || job.purpose} · ${job.status}`;
+    title.textContent = job.context_label || job.purpose;
+    const badge = document.createElement("span");
+    badge.className = "agentdock-job-badge";
+    badge.textContent = job.phase_label || job.status;
+    heading.append(title, badge);
     const detail = document.createElement("span");
-    detail.textContent = `${job.model || "—"} · ${job.reasoning_effort || "—"} · ${job.elapsed_seconds ?? 0}s`;
+    detail.className = "agentdock-job-detail";
+    detail.textContent = job.current_activity || `${job.model || "—"} · ${job.reasoning_effort || "—"}`;
+    const meta = document.createElement("small");
+    meta.textContent = `${job.model || "—"} · ${job.reasoning_effort || "—"} · ${formatAgentDuration(job.elapsed_seconds)}`;
     const actions = document.createElement("div");
     actions.className = "agentdock-job-actions";
     if (["queued", "running"].includes(job.status)) {
       const cancel = document.createElement("button");
       cancel.type = "button";
       cancel.textContent = "取消";
-      cancel.addEventListener("click", () => cancelAgentDockJob(job.job_id));
+      cancel.addEventListener("click", (event) => { event.stopPropagation(); cancelAgentDockJob(job.job_id); });
       actions.appendChild(cancel);
     }
     if (job.has_output) {
       const view = document.createElement("button");
       view.type = "button";
-      view.textContent = "查看";
-      view.addEventListener("click", () => viewAgentDockJob(job.job_id));
+      view.textContent = "查看结果";
+      view.addEventListener("click", (event) => { event.stopPropagation(); viewAgentDockJob(job.job_id); });
       actions.appendChild(view);
     }
-    if (job.error) detail.textContent += ` · 失败：${job.error}`;
-    card.append(title, detail, actions);
+    const openProgress = () => {
+      if (["queued", "running"].includes(job.status)) {
+        requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(job.job_id)}`, { timeoutMs: 20_000 })
+          .then((full) => renderAgentDockFocus(full))
+          .catch((error) => showStatus(`读取 Agent 活动失败：${error.message}`, true));
+      } else if (job.has_output) {
+        viewAgentDockJob(job.job_id);
+      }
+    };
+    card.addEventListener("click", openProgress);
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openProgress(); }
+    });
+    if (job.error) detail.textContent = `失败：${job.error}`;
+    card.append(heading, detail, meta, actions);
     container.appendChild(card);
   }
 }
@@ -817,7 +1083,7 @@ async function refreshAgentDockJobs() {
     return renderAgentDockJobs([]);
   }
   try {
-    const payload = await requestJson(`/api/executors/agentdock/jobs?book_id=${encodeURIComponent(state.bookId)}`);
+    const payload = await requestJson(`/api/executors/agentdock/jobs?book_id=${encodeURIComponent(state.bookId)}`, { timeoutMs: 20_000 });
     const jobs = payload.jobs || [];
     const activeJobs = jobs.filter((job) => ["queued", "running"].includes(job.status));
     const activeIds = new Set(activeJobs.map((job) => job.job_id));
@@ -835,11 +1101,9 @@ async function refreshAgentDockJobs() {
     syncAgentDockPendingButtons();
     renderAgentDockJobs(jobs);
   } catch (error) {
-    for (const [jobKey, entry] of state.agentdockPendingJobs.entries()) {
-      if (entry.bookId === state.bookId && !jobKey.startsWith("launch:")) state.agentdockPendingJobs.delete(jobKey);
-    }
     syncAgentDockPendingButtons();
-    renderAgentDockJobs([]);
+    renderAgentDockJobs(state.agentdockJobs || []);
+    showAgentDockNotice("暂时无法刷新作业列表；已有运行任务仍保持锁定，系统会继续等待状态恢复。", "progress");
   }
 }
 
@@ -857,6 +1121,23 @@ function currentIdentity() {
 
 function currentBatchWorkflowMode(purpose) {
   return `${purpose}:${Number($("batch-size")?.value || 5)}`;
+}
+
+function currentAgentDockPromptForJob(job) {
+  const target = responseTargetForJob(job);
+  if (target === "consultation") return $("agentdock-consult-prompt")?.value || "";
+  if (target === "batch_primary") return $("batch-primary-prompt")?.value || "";
+  if (target === "batch_delta") return $("batch-delta-prompt")?.value || "";
+  return $("prompt-text")?.value || "";
+}
+
+function agentDockSourceSnapshot(job, prompt = currentAgentDockPromptForJob(job)) {
+  const target = responseTargetForJob(job);
+  if (target === "consultation") return JSON.stringify({ prompt });
+  if (["batch_primary", "batch_delta"].includes(target)) {
+    return JSON.stringify({ prompt, window: batchWindowKey(), inputs: batchPayload() });
+  }
+  return JSON.stringify({ prompt, inputs: promptPayload() });
 }
 
 function jobMatchesCurrentIdentity(job) {
@@ -904,6 +1185,8 @@ function canAutoFillAgentDockJob(job) {
     && snapshot.bookId === job.book_id
     && snapshot.chapterNumber === job.chapter_number
     && snapshot.workflowMode === job.workflow_mode
+    && snapshot.prompt === currentAgentDockPromptForJob(job)
+    && snapshot.sourceSnapshot === agentDockSourceSnapshot(job)
     && editor.value === snapshot.initialValue
     && agentDockEditorVersion(editor) === snapshot.editorVersion
   );
@@ -920,12 +1203,15 @@ async function startAgentDockJob(prompt, { mode = "", purpose = "consultation", 
   const launchToken = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
   const temporaryKey = `launch:${launchToken}`;
   const editor = responseEditorForJob(jobIdentity);
+  const sourceSnapshot = agentDockSourceSnapshot(jobIdentity, prompt);
   state.agentdockLatestLaunch.set(target, launchToken);
   state.agentdockLaunchSnapshots.set(launchToken, {
     target,
     bookId: identity.book_id,
     chapterNumber: identity.chapter_number,
     workflowMode: identity.workflow_mode,
+    prompt,
+    sourceSnapshot,
     initialValue: editor?.value || "",
     editorVersion: agentDockEditorVersion(editor),
   });
@@ -933,6 +1219,7 @@ async function startAgentDockJob(prompt, { mode = "", purpose = "consultation", 
   try {
     const payload = await requestJson("/api/executors/agentdock/jobs", {
       method: "POST",
+      timeoutMs: 30_000,
       body: JSON.stringify({
         prompt,
         model: model || $("agentdock-model")?.value || "",
@@ -945,6 +1232,10 @@ async function startAgentDockJob(prompt, { mode = "", purpose = "consultation", 
     });
     trackAgentDockPending(temporaryKey, jobIdentity, false);
     trackAgentDockPending(payload.job_id, { ...jobIdentity, launch_token: launchToken }, true);
+    renderAgentDockFocus(payload);
+    showAgentDockNotice(`已启动 · ${contextLabel || mode || "Agent 任务"}。右侧会持续显示真实活动。`, "progress");
+    openRightDrawer();
+    $("agentdock-progress-anchor")?.scrollIntoView({ behavior: "smooth", block: "start" });
     await refreshAgentDockJobs();
     pollAgentDockJob(payload.job_id);
     return payload;
@@ -959,18 +1250,30 @@ async function startAgentDockJob(prompt, { mode = "", purpose = "consultation", 
 async function pollAgentDockJob(jobId) {
   if (state.agentdockPollers.has(jobId)) return;
   state.agentdockPollers.add(jobId);
+  let consecutiveStatusErrors = 0;
   try {
     while (true) {
       let job;
       try {
-        job = await requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(jobId)}`);
+        job = await requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(jobId)}`, { timeoutMs: 20_000 });
+        consecutiveStatusErrors = 0;
       } catch (error) {
-        const pending = trackAgentDockPending(jobId, {}, false);
-        if (pending?.launchToken) state.agentdockLaunchSnapshots.delete(pending.launchToken);
         const lost = error.status === 404 || error.payload?.detail?.code === "not_found";
-        showStatus(lost ? "AgentDock 作业状态已丢失（服务可能已重启）；未写入任何 Response。" : `AgentDock 作业状态不可用：${error.message}`, true);
-        break;
+        if (lost) {
+          const pending = trackAgentDockPending(jobId, {}, false);
+          if (pending?.launchToken) state.agentdockLaunchSnapshots.delete(pending.launchToken);
+          showStatus("AgentDock 作业状态已丢失（服务可能已重启）；未写入任何 Response。", true);
+          break;
+        }
+        consecutiveStatusErrors += 1;
+        showAgentDockNotice(
+          `暂时无法读取 Agent 状态（第 ${consecutiveStatusErrors} 次）；任务仍保持锁定，将自动重试。`,
+          "progress",
+        );
+        await new Promise((resolve) => window.setTimeout(resolve, Math.min(10_000, 1500 * consecutiveStatusErrors)));
+        continue;
       }
+      renderAgentDockFocus(job);
       if (["queued", "running"].includes(job.status)) {
         await new Promise((resolve) => window.setTimeout(resolve, 1400));
         continue;
@@ -986,10 +1289,16 @@ async function pollAgentDockJob(jobId) {
         } else {
           showStatus("AgentDock 结果待查看：页面已刷新、作者已编辑目标区域，或当前小说/章节/节点不匹配，因此未覆盖编辑区。 ");
         }
+        if (!state.agentdockNotifiedJobs.has(job.job_id)) {
+          state.agentdockNotifiedJobs.add(job.job_id);
+          showAgentDockNotice(`任务完成 · ${job.context_label || job.purpose}。结果仍需作者确认。`, "success");
+        }
       } else if (job.status === "failed") {
         showStatus(`AgentDock 失败：${job.error || "未返回详情"}`, true);
+        showAgentDockNotice(`任务失败 · ${job.error || "未返回详情"}。没有写入任何内容。`, "error");
       } else if (job.status === "cancelled") {
         showStatus("AgentDock 作业已取消；没有写入 Response。 ");
+        showAgentDockNotice("任务已取消，没有写入任何内容。", "quiet");
       }
       state.agentdockLaunchSnapshots.delete(job.launch_token);
       await refreshAgentDockJobs();
@@ -1002,7 +1311,7 @@ async function pollAgentDockJob(jobId) {
 
 async function cancelAgentDockJob(jobId) {
   try {
-    await requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(jobId)}`, { method: "DELETE" });
+    await requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(jobId)}`, { method: "DELETE", timeoutMs: 20_000 });
     await refreshAgentDockJobs();
     showStatus("已请求取消 AgentDock 作业");
   } catch (error) {
@@ -1012,7 +1321,7 @@ async function cancelAgentDockJob(jobId) {
 
 async function viewAgentDockJob(jobId) {
   try {
-    const job = await requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(jobId)}`);
+    const job = await requestJson(`/api/executors/agentdock/jobs/${encodeURIComponent(jobId)}`, { timeoutMs: 20_000 });
     state.agentdockPreviewJob = job;
     $("agentdock-result-preview").value = job.output_text || "";
     const matches = jobMatchesCurrentIdentity(job);
@@ -1766,29 +2075,555 @@ async function adoptRunSource(source) {
   }
 }
 
-function invalidateGbrainResults(reason = "") {
-  $("gbrain-results").value = "";
-  $("gbrain-raw-results").value = "";
-  $("gbrain-rejections").value = "";
-  $("gbrain-count").textContent = "raw 0 / accepted 0 / rejected 0";
-  $("gbrain-status").textContent = "GBrain：上下文已变化，请重新查询";
+function gbrainModeAllowsRetrieval(mode = $("prompt-mode")?.value || "") {
+  return GBRAIN_ACTIVE_MODES.has(mode);
+}
+
+function currentGbrainContextSnapshot() {
+  const payload = gbrainContextPayload();
+  return {
+    book_id: state.bookId,
+    chapter_number: currentChapterNumber(),
+    mode: payload.mode,
+    query: $("gbrain-query")?.value || "",
+    book_content: payload.book_content,
+    creative_direction: payload.creative_direction,
+    world_vision: payload.world_vision,
+    prototype_id: payload.prototype_id,
+    character_card: payload.character_card,
+    proposal_context: payload.proposal_context,
+    current_long_block: payload.current_long_block,
+    current_outline: payload.current_outline,
+    recent_summaries: payload.recent_summaries,
+  };
+}
+
+function gbrainContextSnapshotMatches() {
+  if (!state.gbrainContextSnapshot) return true;
+  return JSON.stringify(state.gbrainContextSnapshot) === JSON.stringify(currentGbrainContextSnapshot());
+}
+
+function gbrainHasMaterial() {
+  return Boolean(state.gbrainRetrieval || $("gbrain-results")?.value.trim());
+}
+
+function resetGbrainCandidateView({ clearBundle = false } = {}) {
+  if ($("gbrain-compare-dialog")?.open) $("gbrain-compare-dialog").close();
+  state.gbrainRetrieval = null;
+  state.gbrainSelected = new Set();
+  state.gbrainBundleSignature = "";
+  state.gbrainContextSnapshot = null;
+  state.gbrainStale = false;
+  state.gbrainStaleReason = "";
+  if (clearBundle) {
+    state.gbrainBundleProgrammatic = true;
+    $("gbrain-results").value = "";
+    state.gbrainBundleProgrammatic = false;
+    state.gbrainBundleOrigin = "empty";
+    $("gbrain-raw-results").value = "";
+    $("gbrain-rejections").value = "";
+    $("gbrain-count").textContent = "raw 0 / accepted 0 / rejected 0";
+  } else if (!$("gbrain-results")?.value.trim()) {
+    state.gbrainBundleOrigin = "empty";
+  }
+  const fixed = $("gbrain-fixed-list");
+  const candidates = $("gbrain-candidate-list");
+  const tray = $("gbrain-selection-tray");
+  if (fixed) fixed.replaceChildren();
+  if (tray) tray.replaceChildren();
+  if (candidates) {
+    candidates.replaceChildren();
+    const empty = document.createElement("p");
+    empty.className = "gbrain-empty";
+    empty.textContent = "检索后，这里会显示经过 BOOK 兼容性筛选的可迁移抽象。";
+    candidates.appendChild(empty);
+  }
+  if ($("gbrain-selection-count")) $("gbrain-selection-count").textContent = "尚未检索";
+  renderGbrainBundleState();
+  renderGbrainStaleState();
+}
+
+function clearGbrainWorkspace(reason = "", { quiet = false } = {}) {
+  resetGbrainCandidateView({ clearBundle: true });
+  $("gbrain-status").textContent = reason ? `GBrain：${reason}` : "GBrain：本轮不注入";
   $("gbrain-status").classList.remove("error");
-  if (reason) showStatus(`GBrain 结果已失效：${reason}`);
+  renderGbrainModeState();
+  if (reason && !quiet) showStatus(`GBrain 已清空：${reason}`);
+}
+
+function renderGbrainStaleState() {
+  const studio = $("gbrain-details");
+  const banner = $("gbrain-stale-banner");
+  const active = gbrainModeAllowsRetrieval();
+  const stale = Boolean(state.gbrainStale && gbrainHasMaterial());
+  if (studio) {
+    studio.classList.toggle("is-stale", stale);
+    studio.classList.toggle("is-off", !active);
+    studio.classList.toggle("is-querying", state.gbrainQuerying);
+  }
+  if (banner) banner.hidden = !stale;
+  if ($("gbrain-stale-reason")) {
+    $("gbrain-stale-reason").textContent = state.gbrainStaleReason || "当前 BOOK、章节或规划输入已经变化。";
+  }
+  if ($("gbrain-requery")) $("gbrain-requery").disabled = !active || state.gbrainQuerying;
+  document.querySelectorAll(".gbrain-candidate-card input[type='checkbox']").forEach((checkbox) => {
+    checkbox.disabled = !active || stale || state.gbrainQuerying;
+  });
+}
+
+function invalidateGbrainResults(reason = "上下文已变化") {
+  if (!gbrainHasMaterial()) return;
+  if ($("gbrain-compare-dialog")?.open) $("gbrain-compare-dialog").close();
+  const firstTransition = !state.gbrainStale;
+  state.gbrainStale = true;
+  state.gbrainStaleReason = reason;
+  $("gbrain-status").textContent = "GBrain：旧材料已保留，但不会进入 Prompt";
+  $("gbrain-status").classList.remove("error");
+  renderGbrainBundleState();
+  renderGbrainModeState();
+  if (firstTransition) showStatus(`GBrain 材料已标记为旧上下文：${reason}。请重新检索后再使用。`);
+}
+
+function setGbrainQueryPending(pending) {
+  state.gbrainQuerying = pending;
+  for (const id of ["default-gbrain-query", "query-gbrain"]) {
+    if ($(id)) $(id).disabled = pending || !gbrainModeAllowsRetrieval();
+  }
+  if ($("gbrain-query")) $("gbrain-query").disabled = pending || !gbrainModeAllowsRetrieval();
+  if ($("query-gbrain")) $("query-gbrain").textContent = pending ? "正在检索与抽取…" : "检索并抽取";
+  if (state.gbrainRetrieval) updateGbrainSelectionState(false);
+  renderGbrainStaleState();
+}
+
+function renderGbrainModeState() {
+  const mode = $("prompt-mode")?.value || "";
+  const active = gbrainModeAllowsRetrieval(mode);
+  const badge = $("gbrain-mode-badge");
+  const readiness = $("gbrain-readiness");
+  if (badge) {
+    badge.textContent = active ? `${GBRAIN_MODE_LABELS[mode] || mode} · ON` : `${mode || "当前阶段"} · OFF`;
+    badge.classList.toggle("is-off", !active);
+  }
+  if (readiness) {
+    if (!active) {
+      readiness.textContent = gbrainHasMaterial()
+        ? "本阶段 GBrain 固定 OFF · 旧材料只读保留，不会注入"
+        : "本阶段按 production 规则不接收 raw GBrain";
+      readiness.dataset.state = "off";
+    } else if (!state.gbrainStatus) {
+      readiness.textContent = "正在检查 GBrain CLI 与 embedding…";
+      readiness.dataset.state = "checking";
+    } else if (state.gbrainStatus.available) {
+      readiness.textContent = "检索环境就绪 · embedding ON · Optional Inspiration";
+      readiness.dataset.state = "ready";
+    } else {
+      const missing = [
+        !state.gbrainStatus.cli_available ? "GBrain CLI" : "",
+        !state.gbrainStatus.embedding_ready ? "embedding 凭据" : "",
+      ].filter(Boolean).join(" + ");
+      readiness.textContent = `${missing || "检索环境"}未就绪；GBrain ON 阶段将 fail loud`;
+      readiness.dataset.state = "error";
+    }
+  }
+  if ($("generate-idea-prompt")) {
+    $("generate-idea-prompt").disabled = !active;
+    $("generate-idea-prompt").textContent = active
+      ? `使用当前 Bundle 生成 ${GBRAIN_MODE_LABELS[mode] || mode} Prompt`
+      : "当前阶段不注入 GBrain";
+  }
+  setGbrainQueryPending(state.gbrainQuerying);
+  updateGbrainSelectionState(false);
+  renderGbrainStaleState();
+}
+
+async function refreshGbrainStatus() {
+  try {
+    state.gbrainStatus = await requestJson("/api/gbrain/status");
+  } catch (error) {
+    state.gbrainStatus = { available: false, cli_available: false, embedding_ready: false };
+  }
+  renderGbrainModeState();
+}
+
+function gbrainSelectionSignature() {
+  const payload = state.gbrainRetrieval || {};
+  return JSON.stringify({
+    mode: payload.mode || $("prompt-mode")?.value || "",
+    effective_query: payload.effective_query || "",
+    fixed: (payload.fixed_references || []).map((item) => item.id || item.slug),
+    selected: [...state.gbrainSelected].sort(),
+  });
+}
+
+function selectedGbrainCandidates() {
+  return (state.gbrainRetrieval?.accepted || []).filter((item) => state.gbrainSelected.has(item.slug));
+}
+
+function renderGbrainSelectionTray(selected) {
+  const tray = $("gbrain-selection-tray");
+  if (!tray) return;
+  tray.replaceChildren();
+  if (!state.gbrainRetrieval) return;
+  if (!selected.length) {
+    const empty = document.createElement("span");
+    empty.className = "gbrain-selection-empty";
+    empty.textContent = "尚未选择候选；可以只使用固定参考，也可以完全不注入。";
+    tray.appendChild(empty);
+    return;
+  }
+  for (const candidate of selected) {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "gbrain-selection-chip";
+    chip.dataset.slug = candidate.slug;
+    chip.title = `移除 ${candidate.slug}`;
+    chip.textContent = `${candidate.human_lane ? `${candidate.human_lane} · ` : ""}${candidate.abstract.split(/[。；\n]/)[0].slice(0, 26)}`;
+    chip.addEventListener("click", () => {
+      state.gbrainSelected.delete(candidate.slug);
+      const checkbox = document.querySelector(`.gbrain-candidate-card[data-slug="${CSS.escape(candidate.slug)}"] input[type="checkbox"]`);
+      if (checkbox) checkbox.checked = false;
+      updateGbrainSelectionState(true);
+    });
+    tray.appendChild(chip);
+  }
+}
+
+function renderGbrainBundleState() {
+  const target = $("gbrain-bundle-state");
+  if (!target) return;
+  target.className = "";
+  if (state.gbrainStale && gbrainHasMaterial()) {
+    target.textContent = "旧上下文 · 当前 Bundle 不会进入 Prompt";
+    target.className = "is-stale";
+    return;
+  }
+  const selectedCount = selectedGbrainCandidates().length;
+  const fixedCount = state.gbrainRetrieval?.fixed_references?.length || 0;
+  if (state.gbrainBundleOrigin === "assembled") {
+    target.textContent = `已组装 · ${selectedCount} 条候选 + ${fixedCount} 条固定参考`;
+    target.className = "is-ready";
+  } else if (state.gbrainBundleOrigin === "manual") {
+    target.textContent = "作者已编辑当前组装 Bundle";
+    target.className = "is-manual";
+  } else if (state.gbrainBundleOrigin === "unbound_manual") {
+    target.textContent = "未绑定当前检索 · 不会进入 Prompt";
+    target.className = "is-stale";
+  } else if (state.gbrainBundleOrigin === "selection_stale") {
+    target.textContent = "选择已变化 · 旧 Bundle 已保留，请重新组装";
+    target.className = "is-stale";
+  } else if (state.gbrainBundleOrigin === "previous") {
+    target.textContent = "上一轮 Bundle 已保留 · 当前候选尚未组装";
+    target.className = "is-stale";
+  } else {
+    target.textContent = state.gbrainRetrieval ? "候选已抽取 · 请显式选择后组装" : "尚未组装";
+  }
+}
+
+function updateGbrainSelectionState(markBundleStale = true) {
+  const retrieval = state.gbrainRetrieval;
+  const selected = selectedGbrainCandidates();
+  const fixedCount = retrieval?.fixed_references?.length || 0;
+  if ($("gbrain-selection-count")) {
+    $("gbrain-selection-count").textContent = retrieval
+      ? `已选 ${selected.length}/${retrieval.accepted?.length || 0} · 固定参考 ${fixedCount}`
+      : "尚未检索";
+  }
+  document.querySelectorAll(".gbrain-candidate-card").forEach((card) => {
+    const checked = state.gbrainSelected.has(card.dataset.slug);
+    card.classList.toggle("is-selected", checked);
+    const checkbox = card.querySelector('input[type="checkbox"]');
+    if (checkbox) checkbox.checked = checked;
+  });
+  renderGbrainSelectionTray(selected);
+  const active = gbrainModeAllowsRetrieval();
+  const usable = active && retrieval && !state.gbrainStale && !state.gbrainQuerying;
+  const hasBundleParts = selected.length > 0 || fixedCount > 0;
+  if ($("gbrain-assemble")) $("gbrain-assemble").disabled = !usable || !hasBundleParts;
+  if ($("gbrain-select-all")) $("gbrain-select-all").disabled = !usable || !(retrieval.accepted || []).length;
+  if ($("gbrain-clear-selection")) $("gbrain-clear-selection").disabled = !usable || !selected.length;
+  if ($("gbrain-compare")) $("gbrain-compare").disabled = !usable || selected.length < 2;
+  if ($("gbrain-discard")) $("gbrain-discard").disabled = !gbrainHasMaterial();
+  if (markBundleStale) {
+    if (["assembled", "manual"].includes(state.gbrainBundleOrigin)
+        && state.gbrainBundleSignature !== gbrainSelectionSignature()) {
+      state.gbrainBundleOrigin = "selection_stale";
+    }
+  }
+  renderGbrainBundleState();
+  renderGbrainStaleState();
+}
+
+function renderGbrainFixedReferences(references) {
+  const container = $("gbrain-fixed-list");
+  if (!container) return;
+  container.replaceChildren();
+  for (const reference of references || []) {
+    const card = document.createElement("article");
+    card.className = "gbrain-fixed-card";
+    const mark = document.createElement("span");
+    mark.textContent = "◆";
+    mark.setAttribute("aria-hidden", "true");
+    const body = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = reference.label || "固定 Reference";
+    const meta = document.createElement("small");
+    meta.textContent = `${reference.slug} · 不占候选名额 · 使用 Bundle 时必须保留`;
+    body.append(title, meta);
+    card.append(mark, body);
+    container.appendChild(card);
+  }
+}
+
+function createGbrainCandidateCard(candidate, index) {
+  const card = document.createElement("article");
+  card.className = "gbrain-candidate-card";
+  card.dataset.slug = candidate.slug;
+  const selector = document.createElement("label");
+  selector.className = "gbrain-candidate-selector";
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = false;
+  checkbox.setAttribute("aria-label", `选择 ${candidate.slug}`);
+  checkbox.addEventListener("change", () => {
+    if (checkbox.checked) state.gbrainSelected.add(candidate.slug); else state.gbrainSelected.delete(candidate.slug);
+    updateGbrainSelectionState(true);
+  });
+  const indexMark = document.createElement("span");
+  indexMark.className = "gbrain-candidate-index";
+  indexMark.textContent = String(index + 1).padStart(2, "0");
+  selector.append(checkbox, indexMark);
+  const body = document.createElement("div");
+  body.className = "gbrain-candidate-body";
+  const header = document.createElement("div");
+  header.className = "gbrain-candidate-header";
+  const title = document.createElement("strong");
+  title.textContent = candidate.abstract.split(/[。；\n]/)[0].slice(0, 44) || candidate.slug;
+  const chips = document.createElement("div");
+  for (const label of [candidate.type, candidate.human_lane, candidate.is_genre_prior ? "genre prior" : ""].filter(Boolean)) {
+    const chip = document.createElement("span");
+    chip.textContent = label;
+    chips.appendChild(chip);
+  }
+  header.append(title, chips);
+  const abstract = document.createElement("p");
+  abstract.textContent = candidate.abstract;
+  const details = document.createElement("details");
+  details.className = "gbrain-candidate-details";
+  const summary = document.createElement("summary");
+  summary.textContent = `来源与迁移边界 · 相关性 ${Number(candidate.score || 0).toFixed(2)}`;
+  const source = document.createElement("code");
+  source.textContent = candidate.slug;
+  const boundary = document.createElement("p");
+  boundary.textContent = candidate.transfer_boundary || "只迁移抽象机制，不迁移来源表层。";
+  details.append(summary, source, boundary);
+  body.append(header, abstract, details);
+  card.append(selector, body);
+  return card;
+}
+
+function renderGbrainCandidates(payload) {
+  const existingBundle = $("gbrain-results").value.trim();
+  state.gbrainRetrieval = payload;
+  state.gbrainSelected = new Set();
+  state.gbrainBundleSignature = "";
+  state.gbrainBundleOrigin = existingBundle ? "previous" : "empty";
+  renderGbrainFixedReferences(payload.fixed_references || []);
+  const container = $("gbrain-candidate-list");
+  container.replaceChildren();
+  const candidates = payload.accepted || [];
+  if (!candidates.length) {
+    const empty = document.createElement("p");
+    empty.className = "gbrain-empty";
+    empty.textContent = "没有通过 BOOK 兼容性筛选的 creative candidate；可以修改 Retrieval Brief 后重试。";
+    container.appendChild(empty);
+  } else if (payload.mode === "human_seed" && (payload.human_lane_order || []).length) {
+    const labels = { appetite: "欲望 Appetite", behavior: "行为 Behavior", relationship: "关系 Relationship" };
+    for (const lane of payload.human_lane_order) {
+      const section = document.createElement("section");
+      section.className = "gbrain-lane-section";
+      section.dataset.lane = lane;
+      const heading = document.createElement("div");
+      heading.className = "gbrain-lane-heading";
+      const title = document.createElement("strong");
+      title.textContent = labels[lane] || lane;
+      const laneCandidates = candidates.filter((candidate) => candidate.human_lane === lane);
+      const count = document.createElement("span");
+      count.textContent = `${laneCandidates.length} 条`;
+      heading.append(title, count);
+      section.appendChild(heading);
+      if (!laneCandidates.length) {
+        const empty = document.createElement("p");
+        empty.className = "gbrain-lane-empty";
+        empty.textContent = "本轮没有足够可靠的候选；不会为了凑齐而补弱卡。";
+        section.appendChild(empty);
+      } else {
+        laneCandidates.forEach((candidate) => section.appendChild(createGbrainCandidateCard(candidate, candidates.indexOf(candidate))));
+      }
+      container.appendChild(section);
+    }
+  } else {
+    candidates.forEach((candidate, index) => container.appendChild(createGbrainCandidateCard(candidate, index)));
+  }
+  updateGbrainSelectionState(false);
+}
+
+function renderGbrainCompare() {
+  const container = $("gbrain-compare-list");
+  if (!container) return;
+  container.replaceChildren();
+  for (const candidate of selectedGbrainCandidates()) {
+    const card = document.createElement("article");
+    card.className = "gbrain-compare-card";
+    const heading = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = candidate.abstract.split(/[。；\n]/)[0].slice(0, 52) || candidate.slug;
+    const score = document.createElement("span");
+    score.textContent = `相关性 ${Number(candidate.score || 0).toFixed(2)}`;
+    heading.append(title, score);
+    const metadata = document.createElement("dl");
+    const rows = [
+      ["来源类型", candidate.type || "—"],
+      ["Human lane", candidate.human_lane || "—"],
+      ["来源", candidate.slug || "—"],
+      ["可迁移抽象", candidate.abstract || "—"],
+      ["使用边界", candidate.transfer_boundary || "只迁移抽象机制，不迁移来源表层。"],
+    ];
+    for (const [label, value] of rows) {
+      const dt = document.createElement("dt");
+      dt.textContent = label;
+      const dd = document.createElement("dd");
+      dd.textContent = value;
+      metadata.append(dt, dd);
+    }
+    card.append(heading, metadata);
+    container.appendChild(card);
+  }
+}
+
+function openGbrainCompare() {
+  if (state.gbrainStale) return showStatus("当前候选基于旧上下文，请先重新检索。", true);
+  if (selectedGbrainCandidates().length < 2) return showStatus("至少选择两条候选才能比较。", true);
+  renderGbrainCompare();
+  $("gbrain-compare-dialog").showModal();
+}
+
+function assembleGbrainSelection() {
+  const payload = state.gbrainRetrieval;
+  if (!payload) return showStatus("请先检索 GBrain", true);
+  if (state.gbrainStale || !gbrainContextSnapshotMatches()) {
+    invalidateGbrainResults(state.gbrainStaleReason || "当前上下文与检索快照不一致");
+    return showStatus("当前候选基于旧上下文，请重新检索。", true);
+  }
+  const blocks = (payload.fixed_references || []).map((item) => item.formatted_block).filter(Boolean);
+  selectedGbrainCandidates().forEach((candidate, index) => {
+    const block = String(candidate.formatted_block || "").replace(/^### Inspiration(?:\s+\d+)?/m, `### Inspiration ${index + 1}`);
+    if (block) blocks.push(block);
+  });
+  if (!blocks.length) return showStatus("没有选择任何可组装的 Inspiration", true);
+  if ($("gbrain-results").value.trim() && state.gbrainBundleOrigin !== "assembled"
+      && !window.confirm("当前 Bundle 已有作者内容。按当前选择重建会覆盖它，继续吗？")) return;
+  state.gbrainBundleProgrammatic = true;
+  $("gbrain-results").value = blocks.join("\n\n");
+  state.gbrainBundleProgrammatic = false;
+  state.gbrainBundleOrigin = "assembled";
+  state.gbrainBundleSignature = gbrainSelectionSignature();
+  renderGbrainBundleState();
+  showStatus("所选 GBrain 抽象已组装到可编辑 Bundle；仍不会自动保存或批准。 ");
+}
+
+function discardGbrainForCurrentRun() {
+  if (gbrainHasMaterial() && !window.confirm("确认本轮不注入 GBrain？候选、诊断和 Bundle 会从当前页面清空。")) return;
+  clearGbrainWorkspace("本轮不注入", { quiet: true });
+  showStatus("本轮已明确不注入 GBrain；其它规划流程仍可继续。 ");
+}
+
+function handleGbrainBundleInput() {
+  if (state.gbrainBundleProgrammatic) return;
+  const hasText = $("gbrain-results").value.trim();
+  if (!hasText) {
+    state.gbrainBundleOrigin = "empty";
+    state.gbrainBundleSignature = "";
+  } else if (!state.gbrainRetrieval) {
+    state.gbrainBundleOrigin = "unbound_manual";
+    state.gbrainBundleSignature = "";
+  } else if (["assembled", "manual"].includes(state.gbrainBundleOrigin)
+      && state.gbrainBundleSignature === gbrainSelectionSignature()) {
+    state.gbrainBundleOrigin = "manual";
+  } else {
+    state.gbrainBundleOrigin = "selection_stale";
+  }
+  renderGbrainBundleState();
+}
+
+function validateGbrainBundleForPrompt(mode) {
+  if (!GBRAIN_ACTIVE_MODES.has(mode)) return true;
+  const bundle = $("gbrain-results").value.trim();
+  if (!bundle) return true;
+  if (state.gbrainStale || !gbrainContextSnapshotMatches()) {
+    invalidateGbrainResults(state.gbrainStaleReason || "当前上下文与检索快照不一致");
+    $("gbrain-stale-banner")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return false;
+  }
+  if (!state.gbrainRetrieval) {
+    showStatus("手工文本尚未绑定本轮 GBrain 检索。请先检索并组装，再编辑 Bundle；或明确选择“本轮不注入”。", true);
+    $("gbrain-bundle-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return false;
+  }
+  const requiredReferences = (state.gbrainRetrieval.fixed_references || []).filter((item) => item.required);
+  const missingFixed = requiredReferences.filter((item) => !bundle.includes(`source: ${item.slug}`));
+  if (missingFixed.length) {
+    showStatus(`当前 Bundle 使用了 GBrain，但缺少固定 Reference：${missingFixed.map((item) => item.label || item.slug).join("、")}。请重新组装或明确不注入。`, true);
+    $("gbrain-bundle-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return false;
+  }
+  if (!["assembled", "manual"].includes(state.gbrainBundleOrigin)
+      || state.gbrainBundleSignature !== gbrainSelectionSignature()) {
+    showStatus("当前 Bundle 与卡片选择不一致。请按当前选择重新组装，或明确选择“本轮不注入”。", true);
+    $("gbrain-bundle-stage")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return false;
+  }
+  return true;
+}
+
+function gbrainInspirationForPrompt(mode) {
+  if (!GBRAIN_ACTIVE_MODES.has(mode)) return "";
+  if (state.gbrainStale || !gbrainContextSnapshotMatches()) return "";
+  if (!state.gbrainRetrieval) return "";
+  if (!["assembled", "manual"].includes(state.gbrainBundleOrigin)) return "";
+  if (state.gbrainBundleSignature !== gbrainSelectionSignature()) return "";
+  return $("gbrain-results").value;
 }
 
 async function requestJson(url, options = {}) {
-  const response = await fetch(url, {
-    headers: { "Content-Type": "application/json" },
-    ...options,
-  });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const detail = payload.detail;
-    const error = new Error(typeof detail === "string" ? detail : detail?.message || "请求失败");
-    error.payload = payload;
+  const { timeoutMs = 60_000, ...fetchOptions } = options;
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), Math.max(1, Number(timeoutMs) || 60_000));
+  try {
+    const response = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+      ...fetchOptions,
+      signal: controller.signal,
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const detail = payload.detail;
+      const error = new Error(typeof detail === "string" ? detail : detail?.message || "请求失败");
+      error.payload = payload;
+      error.status = response.status;
+      throw error;
+    }
+    return payload;
+  } catch (error) {
+    if (error.name === "AbortError") {
+      const timeoutError = new Error(`请求超时（${Math.round((Number(timeoutMs) || 60_000) / 1000)} 秒）`);
+      timeoutError.code = "request_timeout";
+      timeoutError.status = 0;
+      throw timeoutError;
+    }
     throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
   }
-  return payload;
 }
 
 function composeBookContent() {
@@ -1898,7 +2733,7 @@ function setDesignEditing(open) {
 }
 
 function populateBook(book) {
-  invalidateGbrainResults("切换小说");
+  clearGbrainWorkspace("已切换小说", { quiet: true });
   clearReferenceSelection();
   clearEditorDirty();
   setDesignEditing(false);
@@ -2137,34 +2972,63 @@ function gbrainContextPayload(queryOverride = "") {
   };
 }
 
+function gbrainOffScopeText(mode) {
+  return {
+    premise_forge: "GBrain：Premise Forge 固定 OFF；先测模型自身完整前提搜索，不复制来源作品。",
+    premise_compiler: "GBrain：Premise Compiler 固定 OFF；只做所见候选的因果可满足性检查。",
+    human_development: "GBrain：Human Development 固定 OFF；只根据 Frozen Human + 已发生 Canon 判断稳定变化。",
+    authority_reviser: "GBrain：Authority Reviser 固定 OFF；只读取 safe Authority Refresh Pack。",
+    state_delta: "GBrain：State Extraction 固定 OFF；只提取最终正文已经发生的事实。",
+    batch_primary: "GBrain：Batch Primary 固定 OFF；只消费已批准的上游 Authority。",
+    batch_authority_reviser: "GBrain：Batch Authority Delta 固定 OFF；只修复 Frozen Authority 闭合。",
+  }[mode] || "GBrain：当前 production 阶段固定 OFF；raw inspiration 不进入正文与 Authority recovery。";
+}
+
 async function setDefaultGbrainQuery() {
+  const mode = $("prompt-mode").value;
+  renderGbrainModeState();
+  if (!gbrainModeAllowsRetrieval(mode)) {
+    $("gbrain-scope").textContent = gbrainOffScopeText(mode);
+    return;
+  }
+  const requestSnapshot = currentGbrainContextSnapshot();
+  const button = $("default-gbrain-query");
+  if (button) {
+    button.disabled = true;
+    button.textContent = "正在生成…";
+  }
   try {
     const payload = await requestJson("/api/gbrain/brief", {
       method: "POST",
+      timeoutMs: 90_000,
       body: JSON.stringify(gbrainContextPayload()),
     });
-    state.gbrainDefaultBrief = payload.retrieval_brief || "";
+    if (JSON.stringify(requestSnapshot) !== JSON.stringify(currentGbrainContextSnapshot())) {
+      return showStatus("默认 Retrieval Brief 已返回，但当前上下文或作者查询已变化，因此没有覆盖现有内容。", true);
+    }
+    const nextBrief = payload.retrieval_brief || "";
+    if ($("gbrain-query").value !== nextBrief) {
+      invalidateGbrainResults("Retrieval Brief 已按当前上下文重新生成");
+    }
+    state.gbrainDefaultBrief = nextBrief;
     $("gbrain-query").value = state.gbrainDefaultBrief;
-    $("gbrain-scope").textContent = "GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选";
+    $("gbrain-scope").textContent = payload.scope || "GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选";
+    showStatus(`已根据 ${GBRAIN_MODE_LABELS[mode] || mode} 与当前 BOOK 生成 Retrieval Brief。`);
   } catch (error) {
-    showStatus(`生成 BOOK-aware Retrieval Brief 失败：${error.message}`, true);
+    showStatus(`生成 BOOK-aware Retrieval Brief 失败：${error.message}；作者现有查询已保留。`, true);
+  } finally {
+    if (button) button.textContent = "生成默认查询";
+    renderGbrainModeState();
   }
 }
 
 async function handlePromptModeChange() {
   clearReferenceSelection();
   invalidateGbrainResults("切换 Prompt 模式");
-  if (["premise_forge", "premise_compiler", "authority_reviser", "human_development"].includes($("prompt-mode").value)) {
-    state.gbrainDefaultBrief = "";
-    $("gbrain-query").value = "";
-    const mode = $("prompt-mode").value;
-    $("gbrain-scope").textContent = mode === "human_development"
-      ? "GBrain：Human Development 固定 OFF；只根据 Frozen Human + 已发生 Canon 判断稳定变化。"
-      : mode === "premise_forge"
-        ? "GBrain：Premise Forge 固定 OFF；先测模型自身完整前提搜索，不复制来源作品。"
-        : mode === "premise_compiler"
-          ? "GBrain：Premise Compiler 固定 OFF；只做所见候选的因果可满足性检查。"
-          : "GBrain：Authority Reviser 固定 OFF；只读取 safe Authority Refresh Pack。";
+  const mode = $("prompt-mode").value;
+  renderGbrainModeState();
+  if (!gbrainModeAllowsRetrieval(mode)) {
+    $("gbrain-scope").textContent = gbrainOffScopeText(mode);
     return;
   }
   await setDefaultGbrainQuery();
@@ -2226,7 +3090,7 @@ function promptPayload() {
     current_chapter_plan: $("current-chapter-plan").value,
     recent_summaries: $("recent-summaries").value,
     selected_references: selectedReferences(),
-    gbrain_inspiration: $("gbrain-results").value,
+    gbrain_inspiration: gbrainInspirationForPrompt($("prompt-mode").value),
     proposal_context: $("proposal-editor").value,
     actual_summaries: $("actual-summaries").value,
     current_state: $("review-state").value || $("section-status").value,
@@ -2251,42 +3115,77 @@ function promptPayload() {
 }
 
 async function queryGbrain() {
+  const mode = $("prompt-mode").value;
+  if (!gbrainModeAllowsRetrieval(mode)) {
+    $("gbrain-status").textContent = "GBrain：当前阶段固定 OFF";
+    $("gbrain-status").classList.add("error");
+    return showStatus(gbrainOffScopeText(mode), true);
+  }
+  if (!state.gbrainStatus?.available) {
+    await refreshGbrainStatus();
+    if (!state.gbrainStatus?.available) {
+      $("gbrain-status").textContent = "GBrain：检索环境未就绪";
+      $("gbrain-status").classList.add("error");
+      return showStatus("GBrain ON 阶段需要可用 CLI 与 embedding 凭据；当前不会降级为 keyword-only。", true);
+    }
+  }
   const query = $("gbrain-query").value.trim();
   if (!query) {
     $("gbrain-status").textContent = "GBrain：查询失败 — 查询不能为空";
     $("gbrain-status").classList.add("error");
     return showStatus("GBrain 查询不能为空", true);
   }
+  const requestSnapshot = currentGbrainContextSnapshot();
+  setGbrainQueryPending(true);
+  $("gbrain-status").textContent = "GBrain：正在检索、读取完整页面并抽取抽象机制…";
+  $("gbrain-status").classList.remove("error");
   try {
     const manualOverride = query === state.gbrainDefaultBrief ? "" : query;
     const payload = await requestJson("/api/gbrain/query", {
       method: "POST",
+      timeoutMs: 240_000,
       body: JSON.stringify(gbrainContextPayload(manualOverride)),
     });
-    $("gbrain-results").value = payload.result;
+    if (JSON.stringify(requestSnapshot) !== JSON.stringify(currentGbrainContextSnapshot())) {
+      if (gbrainHasMaterial()) invalidateGbrainResults("检索期间当前上下文已变化");
+      $("gbrain-status").textContent = "GBrain：检索已返回，但结果属于旧上下文，未载入";
+      return showStatus("GBrain 检索完成前上下文发生了变化；旧材料已保留，本次返回未覆盖当前工作区。", true);
+    }
     $("gbrain-raw-results").value = payload.raw_stdout || "（没有可解析的原始检索结果）";
-    $("gbrain-rejections").value = (payload.rejected || [])
-      .map((item) => `${item.slug}：${item.reason}`)
-      .join("\n") || "（没有排除项）";
-    const coordinateCount = payload.coordinate_reference_count || 0;
-    $("gbrain-count").textContent = `raw ${payload.raw_count} / coordinate ${coordinateCount} + creative ${payload.accepted_count} / rejected ${payload.rejected_count} / limit ${payload.requested_limit} / final ${payload.final_limit}`;
+    const diagnostics = [
+      ...(payload.rejected || []).map((item) => `${item.slug}：${item.reason}`),
+      ...(payload.query_failures || []).map((item) => `检索分支失败：${item.query} → ${item.error}`),
+    ];
+    $("gbrain-rejections").value = diagnostics.join("\n") || "（没有排除项或检索失败）";
+    const fixedCount = payload.fixed_references?.length || 0;
+    const failureCount = payload.query_failures?.length || 0;
+    $("gbrain-count").textContent = `raw ${payload.raw_count} / unique ${payload.unique_raw_count ?? payload.raw_count} / accepted ${payload.accepted_count} + fixed ${fixedCount} / rejected ${payload.rejected_count}${failureCount ? ` / partial failures ${failureCount}` : ""}`;
     $("gbrain-scope").textContent = payload.scope || "GBrain 范围：修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选";
-    $("gbrain-status").textContent = "GBrain：可用，已完成 BOOK 筛选";
-    $("gbrain-status").classList.remove("error");
-    showStatus("已生成可编辑 Inspiration Bundle；原始结果和排除原因留在折叠面板");
+    state.gbrainContextSnapshot = requestSnapshot;
+    state.gbrainStale = false;
+    state.gbrainStaleReason = "";
+    renderGbrainCandidates(payload);
+    renderGbrainModeState();
+    $("gbrain-status").textContent = failureCount
+      ? `GBrain：已抽取 ${payload.accepted_count || 0} 条候选；${failureCount} 路检索失败，请查看诊断后再选择`
+      : `GBrain：已抽取 ${payload.accepted_count || 0} 条候选，等待作者比较与组装`;
+    $("gbrain-status").classList.toggle("error", failureCount > 0);
+    showStatus(failureCount
+      ? `GBrain 返回了可用候选，但有 ${failureCount} 路检索失败；默认仍未选择任何候选。`
+      : "GBrain 已完成 BOOK 兼容性筛选与抽象抽取；默认未选择任何候选，请比较后显式组装。 ",
+      failureCount > 0);
   } catch (error) {
-    $("gbrain-results").value = "";
-    $("gbrain-raw-results").value = "";
-    $("gbrain-rejections").value = "";
-    $("gbrain-count").textContent = "raw 0 / accepted 0 / rejected 0";
     $("gbrain-status").textContent = `GBrain：查询失败 — ${error.message}`;
     $("gbrain-status").classList.add("error");
-    showStatus(error.message, true);
+    showStatus(`${error.message}；已有候选和作者 Bundle 均未被覆盖。`, true);
+  } finally {
+    setGbrainQueryPending(false);
   }
 }
 
 async function generatePrompt() {
   const mode = $("prompt-mode").value;
+  if (!validateGbrainBundleForPrompt(mode)) return;
   try {
     const payload = await requestJson("/api/prompt", {
       method: "POST",
@@ -2331,8 +3230,9 @@ async function generatePrompt() {
   }
 }
 
-async function generateIdeaPrompt() {
-  await activatePromptMode("idea");
+async function generateCurrentGbrainPrompt() {
+  const mode = $("prompt-mode").value;
+  if (!gbrainModeAllowsRetrieval(mode)) return showStatus(gbrainOffScopeText(mode), true);
   await generatePrompt();
 }
 
@@ -2341,11 +3241,19 @@ function currentExecutorMode() {
 }
 
 function agentDockExecutionProfile(mode) {
-  if (["premise_forge", "world_expansion", "human_development", "authority_reviser"].includes(mode)) {
+  if ([
+    "premise_forge", "world_vision", "world_expansion", "power_seed", "human_seed",
+    "human_development", "outline", "director", "context_curator", "authority_reviser",
+    "specialist_opening", "specialist_dialogue", "specialist_action", "specialist_emotion", "chapter_integrator",
+  ].includes(mode)) {
     return { model: "gpt-5.6-luna", reasoningEffort: "high" };
   }
-  if (mode === "premise_compiler") return { model: "gpt-5.6-terra", reasoningEffort: "high" };
-  if (mode === "story_refresh") return { model: "gpt-5.6-sol", reasoningEffort: "high" };
+  if (["premise_compiler", "primary_writer"].includes(mode)) {
+    return { model: "gpt-5.6-terra", reasoningEffort: "high" };
+  }
+  if (["idea", "story_refresh"].includes(mode)) {
+    return { model: "gpt-5.6-sol", reasoningEffort: "high" };
+  }
   return { model: "", reasoningEffort: "" };
 }
 
@@ -2448,6 +3356,7 @@ async function executeOpenAI(prompt, mode = "") {
     : isAuthorityReviser ? "" : $("openai-model").value.trim());
   const payload = await requestJson("/api/executors/openai", {
     method: "POST",
+    timeoutMs: 3_600_000,
     body: JSON.stringify({
       prompt,
       model: explicitModel,
@@ -3415,10 +4324,12 @@ async function initialize() {
       document.body.classList.add("theme-dark");
       $("theme-toggle").textContent = "浅色";
       $("theme-toggle").setAttribute("aria-pressed", "true");
+      $("theme-color-meta").setAttribute("content", "#0e1720");
     }
     renderLongPlanPanorama();
     renderBatchStatus();
-    await refreshExecutorStatus();
+    renderGbrainModeState();
+    await Promise.all([refreshExecutorStatus(), refreshGbrainStatus()]);
     await loadOpenAISettings();
     const defaultTemplates = await requestJson("/api/prompt-templates");
     populatePromptTemplates(defaultTemplates.templates);
@@ -3450,6 +4361,7 @@ $("theme-toggle").addEventListener("click", () => {
   const dark = document.body.classList.toggle("theme-dark");
   $("theme-toggle").textContent = dark ? "浅色" : "深色";
   $("theme-toggle").setAttribute("aria-pressed", String(dark));
+  $("theme-color-meta").setAttribute("content", dark ? "#0e1720" : "#f2f0eb");
   window.localStorage.setItem("tgn-theme", dark ? "dark" : "light");
 });
 document.querySelectorAll("[data-top-view]").forEach((button) => {
@@ -3474,6 +4386,23 @@ $("close-settings").addEventListener("click", () => $("settings-dialog").close()
 $("save-settings").addEventListener("click", saveOpenAISettings);
 $("default-gbrain-query").addEventListener("click", setDefaultGbrainQuery);
 $("query-gbrain").addEventListener("click", queryGbrain);
+$("gbrain-requery").addEventListener("click", queryGbrain);
+$("gbrain-compare").addEventListener("click", openGbrainCompare);
+$("gbrain-compare-close").addEventListener("click", () => $("gbrain-compare-dialog").close());
+$("gbrain-discard").addEventListener("click", discardGbrainForCurrentRun);
+$("gbrain-query").addEventListener("input", () => invalidateGbrainResults("Retrieval Brief 已变化"));
+$("gbrain-select-all").addEventListener("click", () => {
+  state.gbrainSelected = new Set((state.gbrainRetrieval?.accepted || []).map((item) => item.slug));
+  document.querySelectorAll(".gbrain-candidate-card input[type='checkbox']").forEach((checkbox) => { checkbox.checked = true; });
+  updateGbrainSelectionState(true);
+});
+$("gbrain-clear-selection").addEventListener("click", () => {
+  state.gbrainSelected.clear();
+  document.querySelectorAll(".gbrain-candidate-card input[type='checkbox']").forEach((checkbox) => { checkbox.checked = false; });
+  updateGbrainSelectionState(true);
+});
+$("gbrain-assemble").addEventListener("click", assembleGbrainSelection);
+$("gbrain-results").addEventListener("input", handleGbrainBundleInput);
 $("generate-premise-forge-prompt").addEventListener("click", generatePremiseForgePrompt);
 $("apply-premise-forge-response").addEventListener("click", () => applyPremiseResponse("premise-candidates", "Premise Forge 返回"));
 $("save-premise-candidates").addEventListener("click", savePremiseCandidates);
@@ -3487,7 +4416,7 @@ $("apply-premise-compiler-response").addEventListener("click", () => applyPremis
 $("save-premise-compiler").addEventListener("click", savePremiseCompilerReport);
 $("approve-premise").addEventListener("click", approvePremiseContract);
 $("skip-premise").addEventListener("click", skipPremiseAperture);
-$("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
+$("generate-idea-prompt").addEventListener("click", generateCurrentGbrainPrompt);
 $("generate-world-vision-prompt").addEventListener("click", () => generateCreativePrompt("world_vision"));
 $("generate-power-seed-prompt").addEventListener("click", () => generateCreativePrompt("power_seed"));
 $("generate-human-seed-prompt").addEventListener("click", () => generateCreativePrompt("human_seed"));
@@ -3542,6 +4471,20 @@ $("copy-prompt").addEventListener("click", copyPrompt);
 $("refresh-workflow").addEventListener("click", refreshWorkflow);
 $("agentdock-run-current").addEventListener("click", runCurrentAgentDockPrompt);
 $("agentdock-refresh-jobs").addEventListener("click", refreshAgentDockJobs);
+$("agentdock-mini-anchor").addEventListener("click", () => {
+  openRightDrawer();
+  $("agentdock-progress-anchor")?.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("agentdock-active-cancel").addEventListener("click", () => {
+  const job = state.agentdockFocusedJob;
+  if (job && ["queued", "running"].includes(job.status)) cancelAgentDockJob(job.job_id);
+});
+$("agentdock-collapse-activity").addEventListener("click", () => {
+  const details = document.querySelector(".agent-activity-details");
+  if (!details) return;
+  details.open = !details.open;
+  $("agentdock-collapse-activity").textContent = details.open ? "收起活动" : "展开活动";
+});
 $("agentdock-run-consult").addEventListener("click", runAgentDockConsult);
 $("agentdock-load-current").addEventListener("click", loadAgentDockPreview);
 $("batch-compile-primary").addEventListener("click", compileBatchPrimaryPrompt);
@@ -3607,10 +4550,12 @@ $("section-small_plan").addEventListener("input", () => {
   invalidateGbrainResults("未来十章计划已变化");
 });
 for (const id of [
-  "creative-direction", "current-long-block", "current-outline", "recent-summaries",
+  "creative-direction", "creative-world-vision", "creative-character-card", "proposal-editor",
+  "current-long-block", "current-outline", "recent-summaries", "section-status",
 ]) {
   $(id).addEventListener("input", () => invalidateGbrainResults(`${id} 已变化`));
 }
+$("human-prototype-selector").addEventListener("change", () => invalidateGbrainResults("Human Prototype 已变化"));
 for (const key of Object.keys(designTitles)) {
   $(`design-${key}`).addEventListener("input", () => invalidateGbrainResults("BOOK 核心设计已变化"));
 }
@@ -3713,6 +4658,8 @@ $("open-references").addEventListener("click", () => {
     section.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 });
+
+window.setInterval(refreshAgentDockFocusClock, 1000);
 
 mountRightDrawer();
 initializeReadingState();

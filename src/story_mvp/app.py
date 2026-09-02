@@ -23,7 +23,7 @@ from .batch_runtime import (
 )
 from .agentdock_executor import AgentDockExecutorError, AgentDockJobManager
 from .character_prompts import generate_split_prompt
-from .gbrain import GBrainQueryError
+from .gbrain import GBrainQueryError, resolve_command_prefix, resolve_openai_api_key
 from .gbrain_retrieval import (
     build_retrieval_brief,
     default_effective_query,
@@ -1042,6 +1042,34 @@ def get_references() -> dict[str, Any]:
     }
 
 
+GBRAIN_ACTIVE_UI_MODES = (
+    "world_vision", "world_expansion", "power_seed", "human_seed", "idea", "story_refresh", "outline",
+)
+
+
+def _enforce_gbrain_prompt_boundary(payload: PromptRequest) -> None:
+    if payload.mode not in GBRAIN_ACTIVE_UI_MODES and payload.gbrain_inspiration.strip():
+        payload.gbrain_inspiration = ""
+
+
+@app.get("/api/gbrain/status")
+def get_gbrain_status() -> dict[str, Any]:
+    try:
+        resolve_command_prefix()
+        cli_available = True
+    except GBrainQueryError:
+        cli_available = False
+    embedding_ready = bool(resolve_openai_api_key())
+    return {
+        "available": cli_available and embedding_ready,
+        "cli_available": cli_available,
+        "embedding_ready": embedding_ready,
+        "scope": "小说蒸馏域 / source-blind craft",
+        "active_modes": list(GBRAIN_ACTIVE_UI_MODES),
+        "authority_role": "optional_inspiration",
+    }
+
+
 @app.post("/api/gbrain/brief")
 def post_gbrain_brief(payload: GBrainContextRequest) -> dict[str, Any]:
     brief = build_retrieval_brief(**payload.model_dump(exclude={"query_override", "prototype_id"}))
@@ -1086,6 +1114,8 @@ def post_gbrain_query(payload: GBrainQueryRequest) -> dict[str, Any]:
 
 def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
     values = payload.model_dump(exclude={"book_id", "creative_state"})
+    if payload.mode not in GBRAIN_ACTIVE_UI_MODES:
+        values["gbrain_inspiration"] = ""
     if payload.book_id.strip():
         creative = read_creative_payload(payload.book_id, workspace_path())
         if not values.get("book_content"):
@@ -1237,6 +1267,7 @@ def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
 
 @app.post("/api/prompt")
 def post_prompt(payload: PromptRequest) -> dict[str, str]:
+    _enforce_gbrain_prompt_boundary(payload)
     if payload.mode == "state_delta":
         _validate_state_delta_input(payload)
     try:
@@ -1335,6 +1366,7 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
 @app.post("/api/prompt/state-delta")
 def post_state_delta_prompt(payload: PromptRequest) -> dict[str, str]:
     """State Delta Prompt 专用入口：只生成页面可见、可复制的 Prompt，不写任何文件。"""
+    _enforce_gbrain_prompt_boundary(payload)
     _validate_state_delta_input(payload)
     try:
         prompt = generate_prompt(**{**_planning_only_fields_removed(_prompt_kwargs(payload)), "mode": "state_delta"})

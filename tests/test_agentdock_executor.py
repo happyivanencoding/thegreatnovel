@@ -10,7 +10,12 @@ import pytest
 from fastapi.testclient import TestClient
 
 import story_mvp.app as app_module
-from story_mvp.agentdock_executor import AgentDockExecutorError, AgentDockJobManager
+from story_mvp.agentdock_executor import (
+    MAX_STDOUT_QUEUE_EVENTS,
+    AgentDockExecutorError,
+    AgentDockJobManager,
+    _JsonRpcTransport,
+)
 from story_mvp.app import app
 
 
@@ -35,7 +40,11 @@ def successful_lines() -> list[dict]:
         {"id": 3, "result": {}},
         {"id": 4, "result": {}},
         {"id": 5, "result": {}},
-        {"method": "session/update", "params": {"update": {"sessionUpdate": "agent_message_chunk", "content": {"type": "text", "text": "模型输出"}}}},
+        {"method": "session/update", "params": {"update": {
+            "sessionUpdate": "agent_message_chunk",
+            "content": {"type": "text", "text": "模型输出"},
+            "_meta": {"codex": {"phase": "final_answer"}},
+        }}},
         {"id": 6, "result": {"stopReason": "end_turn", "usage": {"inputTokens": 12}}},
     ]
 
@@ -132,7 +141,13 @@ class FakeManager:
         self.created: dict[str, str] = {}
 
     def status(self):
-        return {"available": True, "auth": "chatgpt_login", "models": ["gpt-5.6-terra"], "active_count": 0}
+        return {
+            "available": True,
+            "auth_provider": "chatgpt",
+            "auth_state": "checked_when_job_starts",
+            "models": ["gpt-5.6-terra"],
+            "active_count": 0,
+        }
 
     def create(self, **payload):
         self.created["job-1"] = payload["prompt"]
@@ -157,7 +172,9 @@ def test_agentdock_api_status_create_poll_cancel_without_artifact_write(monkeypa
     monkeypatch.setattr(app_module, "agentdock_job_manager", fake)
     client = TestClient(app)
 
-    assert client.get("/api/executors/agentdock").json()["auth"] == "chatgpt_login"
+    status = client.get("/api/executors/agentdock").json()
+    assert status["auth_provider"] == "chatgpt"
+    assert status["auth_state"] == "checked_when_job_starts"
     created = client.post("/api/executors/agentdock/jobs", json={
         "prompt": "FULL PROMPT", "model": "gpt-5.6-terra", "book_id": "demo-story",
     })
@@ -341,3 +358,170 @@ def test_agentdock_rejects_unbounded_pending_queue() -> None:
     release_factory.set()
     assert wait_for(manager, first["job_id"])["status"] == "completed"
     assert wait_for(manager, second["job_id"])["status"] == "completed"
+
+
+def test_agentdock_stdout_queue_is_bounded_and_preserves_rpc_after_update_burst() -> None:
+    probe = _JsonRpcTransport(
+        FakeProcess([]),
+        is_cancelled=lambda: False,
+        clock=time.monotonic,
+        rpc_timeout_seconds=1,
+        deadline=time.monotonic() + 1,
+    )
+    assert probe._stdout.maxsize == MAX_STDOUT_QUEUE_EVENTS
+
+    lines = successful_lines()
+    lines[5:5] = [
+        {
+            "method": "session/update",
+            "params": {"update": {"sessionUpdate": "usage_update", "sequence": index}},
+        }
+        for index in range(MAX_STDOUT_QUEUE_EVENTS * 4)
+    ]
+    manager = manager_with(lines)
+    job_id = manager.create(prompt="notification burst")["job_id"]
+
+    for _ in range(500):
+        result = manager.get(job_id)
+        if result["status"] not in {"queued", "running"}:
+            break
+        time.sleep(0.01)
+    else:
+        raise AssertionError("bounded stdout queue did not drain to the final RPC response")
+
+    assert result["status"] == "completed"
+    assert result["output_text"] == "模型输出"
+
+
+def test_agentdock_exposes_sanitized_real_activity_without_thought_or_command_content() -> None:
+    lines = successful_lines()
+    updates = [
+        {
+            "method": "session/update",
+            "params": {"update": {
+                "sessionUpdate": "plan",
+                "entries": [
+                    {"status": "completed", "content": r"Read C:\Users\private\project\rules.md"},
+                    {"status": "in_progress", "content": "Run focused validation"},
+                ],
+            }},
+        },
+        {
+            "method": "session/update",
+            "params": {"update": {
+                "sessionUpdate": "agent_thought_chunk",
+                "content": {"type": "text", "text": "PRIVATE_REASONING_MUST_NOT_LEAK"},
+            }},
+        },
+        {
+            "method": "session/update",
+            "params": {"update": {
+                "sessionUpdate": "tool_call",
+                "toolCallId": "tool-1",
+                "kind": "execute",
+                "title": r"pytest C:\Users\private\secret_test.py -q",
+                "status": "in_progress",
+            }},
+        },
+        {
+            "method": "session/update",
+            "params": {"update": {
+                "sessionUpdate": "tool_call_update",
+                "toolCallId": "tool-1",
+                "status": "completed",
+            }},
+        },
+        {
+            "method": "session/update",
+            "params": {"update": {
+                "sessionUpdate": "agent_message_chunk",
+                "content": {"type": "text", "text": "最终答案"},
+                "_meta": {"codex": {"phase": "final"}},
+            }},
+        },
+    ]
+    lines[5:5] = updates
+    manager = manager_with(lines)
+
+    result = wait_for(manager, manager.create(prompt="Prompt", context_label="活动流测试")["job_id"])
+    serialized = json.dumps(result, ensure_ascii=False)
+
+    assert result["status"] == "completed"
+    assert result["phase"] == "completed"
+    assert result["phase_label"] == "已完成"
+    assert result["plan_total"] == 2
+    assert result["plan_completed"] == 1
+    assert result["tool_counts"] == {"total": 1, "running": 0, "completed": 1, "failed": 0}
+    assert result["activity_count"] >= 6
+    assert any(item["kind"] == "tool" and "验证" in item["label"] for item in result["activities"])
+    assert any(item["phase"] == "composing" for item in result["activities"])
+    assert any(item["phase"] == "finalizing" for item in result["activities"])
+    assert any(item["kind"] == "tool" and item["label"].endswith("已完成") for item in result["activities"])
+    assert "PRIVATE_REASONING_MUST_NOT_LEAK" not in serialized
+    assert "secret_test.py" not in serialized
+    assert r"C:\Users\private" not in serialized
+    assert "rules.md" not in serialized
+    assert result["plan_entries"] == [
+        {"status": "completed", "content": "正在读取并整理项目上下文"},
+        {"status": "in_progress", "content": "正在运行验证并核对结果"},
+    ]
+
+
+def test_agentdock_summary_contains_progress_anchor_but_not_full_activity_or_output() -> None:
+    manager = manager_with(successful_lines())
+    created = manager.create(prompt="Prompt", book_id="book", context_label="章节规划")
+    wait_for(manager, created["job_id"])
+
+    summary = manager.list(book_id="book")[0]
+
+    assert summary["phase"] == "completed"
+    assert summary["current_activity"] == "任务完成，结果等待作者确认"
+    assert summary["activity_count"] > 0
+    assert "activities" not in summary
+    assert "output_text" not in summary
+
+
+def test_agentdock_commentary_drives_activity_but_only_final_text_enters_response() -> None:
+    lines = [
+        {"id": 1, "result": {}},
+        {"id": 2, "result": {"sessionId": "s1"}},
+        {"id": 3, "result": {}},
+        {"id": 4, "result": {}},
+        {"id": 5, "result": {}},
+        {
+            "method": "session/update",
+            "params": {"update": {
+                "sessionUpdate": "agent_message_chunk",
+                "content": {"type": "text", "text": r"正在运行 Get-Content C:\Users\private\PROJECT_RULES.md；Authorization: Bearer private-token"},
+                "_meta": {"codex": {"phase": "commentary"}},
+            }},
+        },
+        {
+            "method": "session/update",
+            "params": {"update": {
+                "sessionUpdate": "agent_message_chunk",
+                "content": {"type": "text", "text": "UNKNOWN_PHASE_MUST_NOT_ENTER_OUTPUT"},
+            }},
+        },
+        {
+            "method": "session/update",
+            "params": {"update": {
+                "sessionUpdate": "agent_message_chunk",
+                "content": {"type": "text", "text": "FINAL_ONLY"},
+                "_meta": {"codex": {"phase": "final"}},
+            }},
+        },
+        {"id": 6, "result": {"stopReason": "end_turn"}},
+    ]
+    manager = manager_with(lines)
+
+    result = wait_for(manager, manager.create(prompt="Prompt")["job_id"])
+
+    assert result["output_text"] == "FINAL_ONLY"
+    commentary = [item for item in result["activities"] if item["kind"] == "commentary"]
+    assert commentary
+    assert commentary[0]["label"] == "正在读取并整理项目上下文"
+    assert "PROJECT_RULES.md" not in commentary[0]["label"]
+    assert "private-token" not in json.dumps(result, ensure_ascii=False)
+    assert "UNKNOWN_PHASE_MUST_NOT_ENTER_OUTPUT" not in result["output_text"]
+    assert "C:\\Users\\private" not in json.dumps(result, ensure_ascii=False)
