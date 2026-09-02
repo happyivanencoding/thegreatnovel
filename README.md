@@ -2,63 +2,85 @@
 
 [简体中文](README.zh-CN.md) | English
 
-TGN is an experimental long-form AI novel authoring system focused on structured planning, controllable chapter execution, continuity, and reusable story-craft knowledge.
+**An open-source long-horizon fiction engine for AI-native novels.**
 
-> Status: active development. The architecture and prompts are still evolving through real generation experiments.
+Most AI writing tools optimize the next paragraph. **TGN is built to optimize the book.**
 
-## What TGN Does
+TGN turns an author's intent into persistent story authority, then lets models plan, write, revise, and expand inside that authority. The goal is long-form fiction where characters keep their identity, worlds stay larger than the protagonist, rewards and relationships compound, mysteries can remain genuinely unresolved, and decisions made dozens of chapters earlier still change what can happen next.
 
-TGN separates long-form fiction generation into stages with different responsibilities instead of asking one model to plan and write everything at once:
+> TGN is in active research and development. It is built through end-to-end novel generation, failure analysis, and repeated production experiments — not as a collection of prompts.
 
-```text
-Author Direction
-→ Optional non-Canon Premise Forge + Independent Compiler + Author Gate
-→ Protagonist-blind World Vision
-→ Independent Power Seed + Human Seed → deterministic Character
-→ Story Program
-→ Outline
-→ Director
-→ Context Curator
-→ Primary Writer
-→ Authority Reviser
-→ State Extraction
-```
+## The Problem
 
-The goal is to keep upstream story decisions explicit while letting downstream chapter generation focus on execution rather than silently redesigning the book.
+LLMs can write impressive scenes while still failing at novels.
 
-## Core Design Principles
+Over long horizons, the common failure is not grammar. It is **structural drift**: the model quietly changes the rules, flattens a character into recent behavior, forgets why an old relationship matters, turns worldbuilding into scenery, or optimizes every new arc around the protagonist until the world stops feeling alive.
 
-- **Fantasy First** — preserve the reader-facing fantasy and protagonist agency before optimizing systems or procedures.
-- **Few Deep Rules > Many Hard Gates** — prefer clear semantic responsibilities over reviewer and validator proliferation.
-- **Supporting Logic Must Not Automatically Become Story Engine** — plausibility, mechanisms, governance, verification, and operations should support the story unless the book explicitly chooses them as its main experience.
-- **Story-bearing Texture > Decorative Density** — prose should be concrete and vivid without relying on adjective, metaphor, or sensory-list inflation.
-- **Planning and prose are separate responsibilities** — Director decides what happens; Writer realizes it as fiction.
-- **Memory stays thin and factual** — State Extraction records what actually happened instead of inventing future implications.
+TGN starts from a different thesis:
 
-## GBrain
+> **Long-form AI fiction needs an authority architecture, not a longer prompt.**
 
-TGN can optionally use a local GBrain knowledge base as curated inspiration for world design, long-form story programs, outlines, and distilled Scene Skills.
-
-GBrain is treated as **optional inspiration**, not Canon or creative authority. Raw reference material is not intended to flow directly into the Primary Writer.
-
-The repository does not require or include private/local source corpora.
-
-## Project Structure
+## How TGN Thinks About a Novel
 
 ```text
-src/story_mvp/   Application, prompts, runtime and storage logic
-books/           Book workspaces and generation experiments
-docs/            Architecture, methodology and subsystem documentation
-tests/           Regression and runtime tests
+Author Intent
+    ↓
+Optional Premise Search
+    ↓
+World Authority + Character Authority
+    ↓
+Story Program
+    ↓
+Horizon Plan
+    ↓
+4–6 Chapter Batch Runtime
+    ↓
+Authority-Preserving Revision
+    ↓
+Canon + Story State
+    ↺
+World Expansion / Story Refresh
 ```
 
-Start with:
+The important boundary is simple: upstream stages are allowed to decide the book; downstream stages are expected to realize those decisions without silently redesigning them.
 
-- [`docs/PIPELINE_METHODOLOGY_AND_VALUES.md`](docs/PIPELINE_METHODOLOGY_AND_VALUES.md) — system methodology, stage responsibilities and anti-goals
-- [`docs/PREMISE_APERTURE.md`](docs/PREMISE_APERTURE.md) — optional author-gated premise search, compiler and lane contracts
-- [`docs/MVP_PRODUCT_DIRECTION.md`](docs/MVP_PRODUCT_DIRECTION.md) — product direction and creative-authority boundaries
-- [`docs/GBRAIN_STORY_CRAFT_V3.md`](docs/GBRAIN_STORY_CRAFT_V3.md) — GBrain integration and story-craft knowledge
-- [`docs/NOVEL_PROSE_REALIZATION.md`](docs/NOVEL_PROSE_REALIZATION.md) — prose realization and Reader-First principles
+## What Is Different
+
+### Authority before prose
+
+World rules, character identity, long-term promises, current canon, and approved story decisions are represented separately from prose. A chapter writer receives bounded authority instead of being asked to remember the entire project and improvise safely.
+
+### A world that does not exist only for the protagonist
+
+TGN separates world construction from protagonist optimization before they collide in the Story Program. The world can contain actors, opportunities, conflicts, and futures that continue to exist even when the protagonist chooses another route.
+
+### Longitudinal compounding
+
+A long novel should not reset every time the map changes. TGN carries forward consequences across horizons: power, relationships, identity, enemies, assets, knowledge, social position, and unresolved questions can all be recontextualized by later events.
+
+### Progressive canon instead of premature answers
+
+Not every mystery needs to be solved by the planner. TGN can preserve an explicit unknown, canonize only the smallest layer required for the next story, and reveal it later through reader-facing events.
+
+### Batch prose with authority recovery
+
+Chapters are generated in short batches so the writer can sustain narrative continuity across several chapters. A separate authority pass repairs local factual drift without treating revision as permission to rewrite the story.
+
+### Retrieval as inspiration, not truth
+
+TGN can connect to an external story-craft knowledge base, but retrieved material is kept outside Canon. References can expand the search space; they do not get to become facts merely because retrieval found them.
+
+## What Ships in This Repository
+
+- A local FastAPI author workspace
+- Structured premise, world, character, story-program, and outline workflows
+- Persistent Canon and story-state handling
+- Long-form world expansion and story refresh
+- Batch chapter generation and authority-preserving revision
+- Optional external story-craft retrieval integration
+- Regression tests for runtime and authority behavior
+
+The public `main` branch is intentionally a clean production surface. Internal research notes, private corpora, experiment provenance, and project handoff material are not part of the release.
 
 ## Quick Start
 
@@ -68,29 +90,43 @@ Requires Python 3.11+.
 python -m venv .venv
 ```
 
-Activate the virtual environment, then install the project:
+Activate the environment, then install TGN:
 
 ```bash
 pip install -e ".[test]"
 ```
 
-Run the local application:
+Run the local author workspace:
 
 ```bash
 story-mvp
 ```
 
-Then open:
+Open:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-Run tests with:
+Run the test suite:
 
 ```bash
 pytest
 ```
+
+## Repository Layout
+
+```text
+src/story_mvp/   Engine, runtime, prompts, storage, and author workspace
+books/           Public sample/workspace artifacts already included in releases
+tests/           Runtime and regression tests
+```
+
+## Direction
+
+TGN is ultimately an attempt to make **book-scale generative systems**: systems that can preserve creative identity and causal memory while still allowing surprise, expansion, and genuine author choice over hundreds of chapters.
+
+The target is not a perfectly controlled text generator. It is a system in which **freedom at the sentence level can coexist with continuity at the scale of a novel**.
 
 ## Third-party Material
 

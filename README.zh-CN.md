@@ -2,65 +2,87 @@
 
 简体中文 | [English](README.md)
 
-TGN 是一个实验性的长篇 AI 小说创作系统，重点解决长期规划、章节可控执行、连续性记忆，以及可复用的故事创作知识。
+**一个面向 AI 原生长篇小说的开源长时程叙事引擎。**
 
-> 当前状态：持续开发中。系统架构与 Prompt 仍会根据真实生成实验继续迭代。
+大多数 AI 写作工具优化的是下一段文字。**TGN 想优化的是整本书。**
 
-## TGN 做什么
+TGN 把作者意图转化为可持续存在的故事权威，再让模型在这个边界内规划、写作、修订和扩展。目标不是让模型偶尔写出一章漂亮正文，而是让人物在几十章后仍然像同一个人，让世界始终比主角更大，让能力、关系、身份与旧选择能够长期复利，让真正未知的谜团可以继续未知，也让很久以前发生的事持续改变未来还能发生什么。
 
-TGN 不让一个模型从设定一路包办到正文，而是把不同尺度的问题拆成职责明确的阶段：
+> TGN 仍处于活跃研发阶段。它不是一组 Prompt 的集合，而是在完整小说生成、失败分析和反复 production 实验中逐步建立起来的系统。
 
-```text
-作者方向
-→ 可选 Non-Canon Premise Forge + Independent Compiler + 作者门控
-→ protagonist-blind World Vision
-→ 独立 Power Seed + Human Seed → deterministic Character
-→ Story Program
-→ Outline
-→ Director
-→ Context Curator
-→ Primary Writer
-→ Authority Reviser
-→ State Extraction
-```
+## 我们在解决什么
 
-核心目标是：让上游明确决定“这本书是什么、接下来发生什么”，让下游专注执行，而不是在写章时偷偷重做整本书。
+LLM 可以写出很漂亮的场景，却仍然很容易写坏一本小说。
 
-## 核心设计原则
+长篇里真正难的通常不是语法，而是**结构漂移**：模型会悄悄改掉规则，把人物压缩成最近几章的行为，忘记旧关系为什么重要，把世界观写成布景，或者让每个新世界都围着主角量身定制，最后整个世界失去独立生命。
 
-- **Fantasy First**：先保证读者真正想拥有、进入或成为的幻想，以及主角主动性，再考虑系统与程序完整性。
-- **Few Deep Rules > Many Hard Gates**：优先少量深规则和清晰职责，不堆 Reviewer、评分器与门禁。
-- **Supporting Logic Must Not Automatically Become Story Engine**：合理性、机制、治理、验证、运营等可以支撑故事，但除非题材明确需要，否则不能反客为主。
-- **Story-bearing Texture > Decorative Density**：正文的丰富感来自承载故事的具体细节，而不是形容词、比喻和五感堆积。
-- **Planning 与 Prose 分责**：Director 决定发生什么，Writer 负责把已经批准的事件写成小说。
-- **记忆保持轻量且事实化**：State Extraction 只记录正文真正发生的事，不替未来剧情做推测。
+TGN 的核心判断是：
 
-## GBrain
+> **长篇 AI 小说需要的不是更长的 Prompt，而是一套 Story Authority Architecture。**
 
-TGN 可以选择性接入本地 GBrain 知识库，用于 World Vision、Story Program、Outline，以及离线蒸馏后的 Scene Skills。
-
-GBrain 是 **Optional Inspiration**，不是 Canon，也不是创意权威。原始参考材料不应直接进入 Primary Writer。
-
-本仓库不要求、也不包含私人或本地原著语料库。
-
-## 项目结构
+## TGN 如何理解一本小说
 
 ```text
-src/story_mvp/   应用、Prompt、Runtime 与存储逻辑
-books/           小说工作区与生成实验
-docs/            架构、方法论与子系统文档
-tests/           回归与 Runtime 测试
+作者意图
+    ↓
+可选 Premise Search
+    ↓
+World Authority + Character Authority
+    ↓
+Story Program
+    ↓
+Horizon Plan
+    ↓
+4–6 章 Batch Runtime
+    ↓
+Authority-Preserving Revision
+    ↓
+Canon + Story State
+    ↺
+World Expansion / Story Refresh
 ```
 
-建议从以下文档开始：
+最重要的边界很简单：上游阶段可以决定故事，下游阶段负责把已经批准的故事真正写出来，而不是在写正文时悄悄重新设计整本书。
 
-- [`docs/PIPELINE_METHODOLOGY_AND_VALUES.md`](docs/PIPELINE_METHODOLOGY_AND_VALUES.md) — 总方法论、阶段职责与 Anti-Goals
-- [`docs/PREMISE_APERTURE.md`](docs/PREMISE_APERTURE.md) — 可选的作者门控 Premise 搜索、Compiler 与 lane contract
-- [`docs/MVP_PRODUCT_DIRECTION.md`](docs/MVP_PRODUCT_DIRECTION.md) — 产品方向与创意权威边界
-- [`docs/GBRAIN_STORY_CRAFT_V3.md`](docs/GBRAIN_STORY_CRAFT_V3.md) — GBrain 接入与 Story Craft 知识
-- [`docs/NOVEL_PROSE_REALIZATION.md`](docs/NOVEL_PROSE_REALIZATION.md) — 正文实现与 Reader-First 原则
+## TGN 的不同之处
 
-## 快速开始
+### 先建立 Authority，再写正文
+
+世界规则、人物身份、长期承诺、已发生 Canon 和已经批准的剧情决定，与正文分开保存。Writer 得到的是经过裁剪的当前 Authority，而不是被要求把整本小说全部塞进上下文里再“尽量别写错”。
+
+### 世界不是为了主角才存在
+
+TGN 在 Story Program 第一次碰撞之前，刻意把世界构建与主角优化分开。世界可以拥有自己的角色、机会、冲突和未来；即使主角选择另一条路线，这些东西仍然能够继续发生。
+
+### 长篇需要纵向复利
+
+换地图不应该等于重开游戏。TGN 会让能力、关系、身份、敌人、资产、知识、社会位置和未解问题跨越不同 Horizon 留下来，并在新的条件下重新获得意义和价格。
+
+### 允许真正的未知存在
+
+并不是所有 Mystery 都应该在大纲阶段被提前解释。TGN 可以明确保存“作者目前也不知道”的状态，只在下一段故事真的需要时决定最小的一层答案，再通过正文里的事件把它变成读者事实。
+
+### Batch 写作，而不是逐章失忆
+
+正文以短 Batch 连续生成，让 Writer 能够真正看到数章之间的叙事惯性。随后由独立 Authority pass 只修复局部事实漂移，而不是把 Revision 变成第二个可以重写故事的作者。
+
+### Retrieval 负责扩大可能性，不负责制造事实
+
+TGN 可以连接外部 Story Craft 知识库，但检索结果始终位于 Canon 之外。它可以帮助系统看到更多创作可能性，却不会因为“被检索到了”就自动成为小说世界里的事实。
+
+## 当前公开仓库包含什么
+
+- 本地 FastAPI 作者工作台
+- Premise、World、Character、Story Program、Outline 等结构化工作流
+- 持久 Canon 与 Story State
+- 长篇 World Expansion 与 Story Refresh
+- Batch 章节生成与 Authority-preserving Revision
+- 可选外部 Story Craft Retrieval 接口
+- 针对 Runtime 与 Authority 行为的回归测试
+
+公开的 `main` 分支刻意保持为干净的 production surface。内部研究文档、私有语料、实验 provenance 和项目交接材料不会随 release 一起公开。
+
+## Quick Start
 
 需要 Python 3.11+。
 
@@ -68,19 +90,19 @@ tests/           回归与 Runtime 测试
 python -m venv .venv
 ```
 
-激活虚拟环境后安装项目：
+激活环境后安装：
 
 ```bash
 pip install -e ".[test]"
 ```
 
-启动本地应用：
+启动本地作者工作台：
 
 ```bash
 story-mvp
 ```
 
-然后访问：
+打开：
 
 ```text
 http://127.0.0.1:8000
@@ -92,12 +114,28 @@ http://127.0.0.1:8000
 pytest
 ```
 
+## 仓库结构
+
+```text
+src/story_mvp/   Engine、Runtime、Prompt、Storage 与作者工作台
+books/           已随公开 release 保留的示例 / workspace artifact
+tests/           Runtime 与回归测试
+```
+
+## Direction
+
+TGN 最终想做的是一种 **book-scale generative system**：它既能保留一本小说长期的创作身份和因果记忆，又不会为了控制一致性而牺牲惊喜、扩张与作者真正的选择权。
+
+目标不是做一个“完全可控的文本生成器”，而是让：
+
+> **句子层面的自由，与整本小说尺度上的连续性，可以同时成立。**
+
 ## 第三方材料
 
-TGN 的许可证只覆盖项目有权授权的内容。第三方依赖、参考作品、数据集、模型服务和受版权保护的原始文本，仍分别受其自身许可证、版权和服务条款约束。本仓库的开源许可证不授予任何第三方小说原文或私人语料库的权利。
+TGN 的许可证只适用于本项目有权许可的材料。第三方库、参考作品、数据集、模型服务和受版权保护的源文本仍受各自许可证与条款约束。本仓库不会授予任何第三方版权小说或私有语料的权利。
 
 ## License
 
-TGN Engine 采用 **GNU Affero General Public License v3.0 only**（`AGPL-3.0-only`）授权。
+TGN Engine 使用 **GNU Affero General Public License v3.0 only**（`AGPL-3.0-only`）。
 
 完整许可证见 [`LICENSE`](LICENSE)。
