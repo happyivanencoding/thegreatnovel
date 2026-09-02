@@ -41,9 +41,9 @@ Story Program Handoff
 
 ## 2. World Vision
 
-World Vision 负责一个即使换掉未来主角也仍值得写的世界，包括：普通生活与上升路径、力量正常值/稀缺度、社会现实与身份后果、具体价值物、独立人物与事件、地点/奇观/危险/未知、知识边界。
+World Vision 负责一个即使换掉未来主角也仍值得写的世界，包括：普通生活与上升路径、力量正常值/稀缺度、社会现实与身份后果、具体价值物、独立人物与事件、地点/奇观/危险/未知、知识边界，以及少量**未来主角出现以前就已经发生的人物关系史**。Living Actors 可以彼此相爱、结怨、拜师、救命、背叛、欠债、共同失败或承受上一代选择；当前世界事件可以正是这些旧选择延迟到今天的后果。高价值关系史优先形成 `Past Choice → Present Residue → 多个当前行动`，自然时让一个过去选择穿过第三个人或下一代，而不是把所有历史都压成 A↔B 双人旧债。
 
-它不负责主角欲望、Biography、特殊能力、命运、第一次爽点或终局使命。完整 World Canon 可以同时包含 World Reality 与 Story Opportunities，但下游可见性不同。
+它不负责主角欲望、Biography、特殊能力、命运、第一次爽点或终局使命，也不提前决定未来主角会与这些旧人形成什么关系。完整 World Canon 可以同时包含 World Reality 与 Story Opportunities，但下游可见性不同：`已经活过的人与关系史` 属于 Story Opportunity，Power/Human 与章节安全 World Reality 不读取具名旧史；它第一次与完整 Character 相撞发生在 Story Program。
 
 Reader-facing 世界规则先写具体作用，再命名：基础力量应能用 1—3 句普通话说明来源、能做什么、怎样变强和怎样失败；已有一到少数互补力量轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成总机制。**Small Grammar 不等于 Small World**：World 主动让旧语法长新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外。这里还要保护 **World Possibility Ecology**：高价值成长来源的差异主要来自它们分布在哪些具体人物、地点、承诺、季节/窗口和长期路线，而不是堆更多能力类别；不同选择应真实可能错过不同来源，避免一个最显眼机制成为所有路线都会经过的 universal upgrade trunk。它不是人格→能力映射或配额。World 同时主动寻找 0—1 条成熟 Optional Secondary Fantasy Road；没有足够好的副轴就不造，也不预设未来主角一定会走。新词只给已经理解、会反复出现的对象贴短标签，不靠多个新词互相定义。“全新”优先改变力量因果与玩法，不要求回避境界、功法、兵器、异兽等清楚题材词。默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果；除非作者明确选择认知/概念系幻想，不把路径、定义、权限等抽象关系本身当作创新证明。
 
@@ -134,13 +134,17 @@ Story Program 是第一次同时看到完整 World、完整 Character、T0 State
 
 Story Program 只具体规划**当前已批准 World Horizon**，而不是开书时一次写死剩余 500 章。非终局 Horizon 的最后 1—2 个自然阶段若已经把当前世界层主要压力活透，就输出普通 `World Horizon Handoff`：可观察触发条件、`macro / instance` scope、为什么此时应该扩、以及哪些已发生事实必须 carry forward。它不能预写下一世界的宝物、能力、势力或针对当前主角 Build 的答案；Handoff 也不会注入 World Expansion Agent。若作者明确当前就是小说最终 Horizon，则 Handoff 第一行改为 `FINAL NOVEL END`，不再触发 Expansion：主角进入最终公开力量最高可见圈层，并在最后决定性事件中用长期 Advantage Stack 完成同档的 Asymmetry Dominance；允许 Rival 同级、活着或在某一专业更强，未解释世界余白也不再登记成 future story obligation。
 
-Collision 可以补少量**非奠基性的过去经历、共同往事或旧事件**，让当前关系、局部性格反应或选择更自然，但：
+Story Program 现在拥有明确的 **Relationship-History Backfill** 权限，不再限于“少量非奠基性过去”。如果 World / Human 只冻结了今天的形状，而人物关系史仍有未定义空白，它可以补入重要配角的旧爱、亲缘、师徒、竞争、共同失败、救命、背叛、债、失约、失去的人或上一代选择，也可以把 Human 已成立的父母/兄妹/旧关系与 World Living Actors 接成共享旧史。优先能自然穿过多个既有人物、甚至跨代留下后果的共享历史，而不是给多个配角各写互不相干的“深刻往事”。
 
-- 不得重写 Human Core；
-- 不得用过去证明整个人；
-- 不得为了人格合理化自动制造悲惨童年、背叛、虐待或重大失去；
-- 不得自动成为小说主线或大型阶段发动机；
-- **过去存在，不等于现在就告诉读者**；Outline 只在故事需要时逐步揭示。
+边界是：
+
+- 不得重写 Frozen Human Core 或主角已明确发生的过去；
+- 不得否定已经发生/公开的 Canon、已公开人物关系或既成事件；
+- 不得偷答 `AUTHOR OPEN` / 受保护 Mystery；
+- 不得为了人格合理化自动制造悲惨童年；
+- **过去空白可以补，未来不能伪造**：从当前时点往后的离屏成长、联盟、神器、重大转折仍必须 forward from approved facts，不能回流时事后补成已发生；
+- 新旧史只有作者批准 Story Program 后才成为 Authority；
+- **过去存在，不等于现在就告诉读者**。如果完整旧史适合后期重释，当前保留可信表层关系、可见残留与隐藏层，Outline 只在因果到达时揭最小一层，并让揭露真实改变关系、身份、敌我、去留或行动路径。
 
 大型阶段保持轻量：为什么现在发生、谁想要什么、主角关键选择/行动、主要阅读满足、`Stage Delta`、下一阶段为何自然发生。`Stage Delta` 只写实际变化的维度；Power、获得、关系、身份、知识、敌人或世界变化都不是必填项。
 
@@ -150,7 +154,7 @@ Collision 可以补少量**非奠基性的过去经历、共同往事或旧事�
 
 World Expansion 被批准后，先 deterministic refresh `CURRENT_CHARACTER.md`，再由 Sol high 第一次看到 `Effective World × Current Character`。这是新的 Collision，不是旧 Story Program 自动向后延长：World 不为主角改写，人物也不为新世界重新优化。旧 Story Program 只保留仍未兑现且仍成立的长期因果；新 Power 只能从新世界已经独立成立、且 Current Human 真实走入的机会里获得。`Route-Bound Acquisition + No Universal World Tour` 继续生效：Effective World 的所有高价值路线不是主角必须逐项消费的内容清单，未选路线可由 NPC 独立推进，直到新因果真正让双方再相交。
 
-Refresh 对少数真正长期重要的 Supporting Cast 也采用 forward-only：人物要有自己的未完人生与离场前已经启动的行动，主角只是其中一条关系边；人物—人物之间只有已成立且会改变行动的关系才继续保留。离屏期间可以沿已有目标/承诺/损失/限制产生新处境，但不能在回流时反向补造关键人生。成熟多线只有共享因果铰链时才 **Converge**，不能为了“大高潮”把旧人统一 Recall；讲完的人可以不再回来。这个机制仍由现有 Story Program / State 承载，不增加每个 NPC 的 Human Seed 或独立 Character Authority。
+Refresh 对少数真正长期重要的 Supporting Cast 保留两种不同方向：**过去空白可兼容 backfill，当前以后仍 forward-only**。如果 Canon 从未定义某段配角关系史，且新的 Effective World × Current Character 碰撞需要它，Refresh 可以补旧爱、亲缘、师徒、共同失败、债或上一代遗留；但不能改写任何已发生/公开事实。人物离场之后真正发生的新成长仍只能沿离场前已有目标/承诺/损失/限制向前产生，不能回流时反向补造神器、联盟或重大转折。主角只是其中一条关系边；成熟多线只有共享因果铰链时才 **Converge**，不能为了“大高潮”把旧人统一 Recall；讲完的人可以不再回来。这个机制仍由现有 Story Program / State 承载，不增加每个 NPC 的 Human Seed、独立 Character Authority 或关系数据库。
 
 普通玄幻与多世界副本共用这一层：前者通常一次 Refresh 覆盖一个新的长篇世界层，后者可覆盖一个大型 instance / 一组相连副本。每次 Refresh 仍只规划当前新 World Horizon；非终局继续留下下一次 Handoff，作者明确终局时改为 `FINAL NOVEL END` 并在本层完成 Final Apex。
 
@@ -162,7 +166,7 @@ Outline 把已批准 Story Program 编译成当前窗口的具体 Story Anchors�
 
 开书 Outline 使用 `WORLD_VISION.md + CHARACTER.md + T0`；Story Refresh 后使用 `Effective World + CURRENT_CHARACTER.md`。如果 `World Horizon Handoff` 在当前窗口 / Future 10 内触发，Outline 只排到触发章即停止，不为凑十章或百章跨过 Authority 边界发明未知下一世界。
 
-不得为了填表制造微升级、填充奖励、新权限或新地图。
+不得为了填表制造微升级、填充奖励、新权限或新地图。已批准 Story Program 中尚未 reader-facing 的人物旧史/隐藏关系属于 backstage Authority；Outline 可以利用它决定人物行动与未来 reveal，但 `BOOK §5 配角与关系系统` 只保存当前 reader-safe 的表层关系、压力与未解问题，不能把完整隐藏答案复制进章节 Runtime。
 
 ## 8. GBrain 可见性
 

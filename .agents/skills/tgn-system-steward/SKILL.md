@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.42
+version: 0.3.43
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -106,8 +106,11 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **World Engine can outrun Book Engine**：每个 Horizon 都独立成立、世界规则新鲜、主角每次也拿到新 Asymmetry，仍可能只是“多个优秀中篇串联”。审计自然 Horizon 结尾时分开问 `Local Closure` 与 `Book State Mutation`：当前局部故事是否真正结账；结账后又有哪个以后仍相关的人、关系、身份、资产、敌人策略、价格、知识或世界事实不能再按旧状态运作，并因此产生新行动条件。字段增加、等级上涨、Open Promise 保留或“世界更大”本身不算 Book Mutation。这个 Mutation 可以来自成熟旧线，也可以来自本轮新形成的长期因果，**不要求每 Horizon 召回旧线程**
 - **Signature ≠ Tension; audit Decision Vector through incompatible values**：Behavior Signature 只证明“这个人通常怎样要”；真正人物张力要看 Frozen Human 已成立的两样私人价值是否在具体现场不能同时完整取得，并迫使人物改变路线、对象、暴露、谁承担代价或真实放弃一项机会。第三条路如果让人物聪明地无损全拿，不算 tension。不要为了补张力反向造创伤，也不要把同一“安全 vs 自主 / 钱 vs 人”选择题复制到每卷
 - **Historical Recontextualization ≠ Inventory Reuse**：旧 Power / Asset / Relationship / Identity / Knowledge 被记住、换地图后原样再用，只说明 continuity。真正 longitudinal compounding 要看新敌人、关系或世界条件是否让旧积累改变用途、风险、选择价值或社会价格；可用 `Carry → Recontextualize → Combine → Consequence / Reprice` 作为诊断链，但不要求每件旧资产每卷换功能
-- **Supporting Cast Agency ≠ Protagonist-Star Topology**：世界有 Living Actors 还不等于长篇人物生态已经成立。审计少数真正重要人物时，除了“他怎样影响主角”，还要问：他自己现在想得到/避免什么、哪件人生问题没结、主角暂时消失后他是否仍会沿已成立目标/承诺/损失/限制继续行动。人物—人物之间已经存在且会改变行动的亲缘、爱情、师徒、竞争、利益、债、背叛、效忠或共同历史可以继续生效；没有就不补，不要求关系图密度。若 State / Story 只保存 `NPC → 与主角关系` 而吞掉人物自己的行动，最早坍缩在 Story Program / State representation；修法不是给所有 NPC 建 Human Seed、Character Agent 或关系数据库
-- **Character Afterlife does not imply recall quota**：重要人物可以离屏、死亡、沉睡或永久不回场；遗产、能力缺口、权限、债务、可靠消息、关系换位或敌方策略只要仍改变当前选择、代价、时间窗口或可用行动，就说明关系/人物历史仍在产生因果。离屏变化只能从离场前已经成立的目标、承诺、损失、限制或行动方向 forward，不能在回流时 retrospective backfill 一整段关键奇遇、重大获得或联盟。反过来，为了证明“关系有长期性”而固定每卷召回旧人、给所有 NPC 独立支线或让所有 Spine 同时亮灯，是新的 Book Engine 过度治理
+- **Supporting Cast Agency ≠ Protagonist-Star Topology**：世界有 Living Actors 还不等于长篇人物生态已经成立。审计少数真正重要人物时，除了“他怎样影响主角”，还要问：他自己现在想得到/避免什么、哪件人生问题没结、主角暂时消失后他是否仍会沿已成立目标/承诺/损失/限制继续行动。人物—人物之间会改变行动的亲缘、爱情、师徒、竞争、利益、债、背叛、效忠或共同历史可以继续生效；若上游尚未定义这些历史，Story Program / Refresh 现在也可以在批准点合法 backfill。若 State / Story 只保存 `NPC → 与主角关系` 而吞掉人物自己的行动，最早坍缩在 Story Program / State representation；修法不是给所有 NPC 建 Human Seed、Character Agent 或关系数据库
+- **Character Ecology ≠ Character History**：配角各自有目标只证明“现在活着”；《斗罗》式长篇厚度还要求少量人物**过去也彼此活过**。审计 World 时问：是否存在 protagonist-blind 的 `Past Choice → Present Residue → 多个 Current Actions`，自然时旧选择是否穿过第三人/孩子/弟子/继承者而不是全被压成 A↔B 双人旧债；是否留下可信表层解释、遗物/空位/误解或互相冲突的记忆，供以后重释。审计 Story Program 时问：backfill 是否优先形成共享历史结、是否改变今天至少两个人、是否可能经 `Dormancy / Delayed Reveal → Relationship Reinterpretation → Convergence / Second Payoff` 继续复利。不要把“人物更深”替换成给每个 NPC 各补一段悲惨往事，也不要为此建全员关系图或代际配额
+- **Past-gap Backfill ≠ Retcon ≠ Fake Offscreen Future**：用户现在明确允许 Story Program / Story Refresh 对**此前从未被 Frozen Authority / Canon 定义的 supporting-character 过去**补历史，包括旧爱、亲缘、师徒、共同失败、救命、背叛、债、失约、上一代选择，并可把 Human 已成立家人与 World Living Actors 接成共享旧史。合法 backfill 不能否定已发生/公开 Canon、不能重写 Frozen Human 明确过去、不能偷答 `AUTHOR OPEN`；只有作者批准后的 Story Program/Refresh 才使它成为 Authority。最重要的时间方向区别是：**过去空白可以补；从当前时点往后的离屏未来不能事后伪造。** 人物离场后的神器、联盟、重大成长仍必须 forward from approved facts
+- **Hidden Relationship History Is Backstage Authority Until Scheduled Reveal**：Approved Story Program 可以知道完整旧史，但“后台知道”不等于“正文已经知道”。审计 transport 时追 `Story Program hidden history → Outline minimal reveal scheduling → reader-safe BOOK §5 → Batch Primary → Sol Delta → State`：未排程的旧史不能因为 Outline/Reviser 看得到就提前写进正文；若 Primary 全知断言写反后台事实，Reviser只应恢复兼容当前表层认知的中性表达，不顺手揭底。State 只有正文真正 reveal 后才能把该层写成 Canon
+- **Character Afterlife does not imply recall quota**：重要人物可以离屏、死亡、沉睡或永久不回场；遗产、能力缺口、权限、债务、可靠消息、关系换位或敌方策略只要仍改变当前选择、代价、时间窗口或可用行动，就说明关系/人物历史仍在产生因果。**过去未定义的关系史可以在 Story approval 点 backfill；人物从当前时点离场后的未来变化仍只能从已成立目标、承诺、损失、限制或行动方向 forward。** 反过来，为了证明“关系有长期性”而固定每卷召回旧人、给所有 NPC 独立支线或让所有 Spine 同时亮灯，是新的 Book Engine 过度治理
 - **Convergence ≠ Recall**：多线大高潮的审计对象是共享因果铰链，不是到场人数。每条参与线都应能从人物自己正在追逐的人/物/地点/身份/时间窗口/决定推出为什么此刻必然撞到一起，并且移除该线会改变选择、结果或后续可行性；“旧人物都回来站队 / 同时围观终局”不算 thread collision。成熟线可以不合流，重要人物也可以缺席；不要为了群像把尚未成熟的线硬塞进高潮
 - **Return consequence matters in multiworld fiction**：Hub / 主世界回归不必每次打脸，但旧获得应周期性改变社会估价、敌人策略、关系、资产、入口或 Mystery；若回归只确认能力存在并开启下一门，属于 long-form compounding failure
 - **Opportunity Collision ≠ Task Board**：多个高价值路线可以交易、有报酬，但优先由 Living Actors 正在做的事在同一个人/物/地点/时间窗口相撞；“多个 NPC 依次报任务奖励→主角菜单选择”要追到 Story / Outline，而不是靠正文说“这不是任务”掩盖
@@ -157,7 +160,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 典型层：
 
 - Premise Search（非 Canon）：任何 Authority 冻结前，是否真正搜索过一句可懂、会改变主角基本动词与第一章画面的完整高风险货架前提；
-- World：力量正常值、世界价值物、独立事件、奇观、社会现实；
+- World：力量正常值、世界价值物、独立事件、奇观、社会现实，以及未来主角出现前已经存在、会改变今天行动的少量 Existing Human History；
 - Power：Legal Exception、Core Fantasy、长期成长语法；
 - Human：生活事实、competing motives、choice bias、person-specific relationship；
 - Character Composition：是否发生跨 authority 后验合理化；

@@ -26,6 +26,7 @@ _CHARACTER_LIFE_SECTIONS = (
 
 _STORY_OPPORTUNITY_SECTIONS = (
     "## 世界正在发生的大事",
+    "## 已经活过的人与关系史",
     "## 值得进入的地点、奇观与未知",
 )
 

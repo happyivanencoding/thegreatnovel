@@ -272,3 +272,29 @@ GBrain 仍保持 10 张旧 active mechanism 分离，只做原位 refinement：`
 Embedding 最终状态为 **3834 Pages / 15863 Chunks / 15863 Embedded**，debt = 0。最初 4 个 stale chunk 来自既有 `my-dear-diary/*` 页面，不是本轮小说卡；使用当前机器合法环境配置后补齐 4/4。TGN scoped retrieval regression 通过：`thread-ecology`、`story-state-compounding / narrative-compounding`、`plot-engine-variation` 仍可直接命中；真实 `story_refresh` 默认 bundle 仍稳定返回 `thread-collision / plot-engine-variation / longitudinal-thread-dormancy-collision-afterlife` 三条，研究 operation raw 页面没有越过 active-card 边界进入 production。
 
 完整 promotion 边界与 A/B 记录见该专项 `FINAL_REPORT.md`；若早期 per-book Evidence / Synthesis 与 `FINAL_RAW_SOURCE_FIDELITY_AUDIT.md` 冲突，以 Final Audit 的 locator 与事实/角色判断边界为准。
+
+## Relationship History / Retrospective Backfill 专项（2026-09-02）
+
+用户明确改变旧边界：**Story Program / Story Refresh 现在可以对此前未被 Frozen Authority / Canon 定义的 supporting-character 过去做 retrospective backfill**；protagonist-blind World Vision / World Expansion 也允许少数 Living Actors 在主角出现前已经彼此活过一段人生，当前事件可以是这些旧选择正在产生的新后果。这个变化不授权 Retcon：已发生/已公开 Canon、Frozen Human 明确过去、`AUTHOR OPEN` 仍不能被覆盖；从当前时点往后的离屏未来仍必须 forward from approved facts，不能回流时凭空补神器、联盟或重大成长。
+
+Source-first 对照使用《斗罗大陆》《诡秘之主》《将夜》已有 canonical longitudinal distillation。新增的独立判断能力不是普通 `character-autonomy`：后者回答“配角离屏后还会不会继续行动”，本专项回答“**这些人物在主角出现以前是否已经互相留下会改变今天行动的历史**”。因此本轮新增 1 张 active PILOT mechanism：
+
+- `relationship-history-inheritance-v3`：`Past Choice → Present Residue → Multiple Current Actions → Dormancy / Delayed Reveal → Relationship Reinterpretation → Convergence / Second Payoff`。优先形成共享历史结；一个过去选择自然影响第三人、孩子、弟子、继承者时，不把它压成 A↔B 双人旧债。允许旧爱、亲缘、师徒、共同失败、救命、背叛、债、失约和上一代选择，但不为所有 NPC 填悲惨过去，也不建全员关系图。
+
+受控实验目录：`books/real-exp-character-history-douluo-benchmark-20260902-v1`。
+
+关键结果：
+
+1. **World Baseline**：只有现在时 Living Actors，没有“已经活过的人与关系史”。
+2. **World V1**：出现闻潮—陆沉钟、钟无潮—池晚、阿沧—施岚等有效旧史，但仍偏双人旧案；独立 Judge = `APPROACHING`。
+3. **World V2**：只增加“高价值旧史不要压扁成双人纠纷；自然时允许第三人/下一代承受旧选择；保留互相冲突的表层解释”。实际生成塞恩—阿岚—娜娅、塔尔—白鳍母兽—兰克等传导链；独立 Judge = **`ROUGHLY COMPARABLE AT WORLD-HISTORY SUBSTRATE LEVEL`**。
+4. **旧 World + 新 Story Backfill V1**：Story Program 自主补出沈骁—维娅十二年前共同困于死潮的共享失败，并改变今天双方策略，但整份只形成一条强历史结；Judge = `APPROACHING`。
+5. **完整 fresh chain**：`World V2 → 新 Power Candidate 1 → 新 Human Candidate 1 → deterministic Character → Sol-high Story Program`，Human/Power 在生成期都看不到 World 的具名历史。最终 Story 自主补出 `林父—塞恩—阿岚—娜娅` 的共享旧史：旧闸楔先在回乡激活，骨陆维修痕迹再证明塞恩被指为叛逃后仍在行动，从而重释父亲、阿岚、娜娅与林屿的当前选择；同时保留兰克—塔尔—白鳍母兽、摩罗—娅珂等非主角关系。独立《斗罗》Judge = **`ROUGHLY COMPARABLE AT STORY-PROGRAM STRUCTURAL LEVEL`，Earliest Remaining Gap = `NONE`**。
+
+这里的“可比”严格限定为**人物历史/关系长篇的结构程序**，不声称当前几十章成品已经达到《斗罗》整体文学或商业完成度。小舞式第二结算、奥斯卡式真实离队回归、千仞雪式长期表层身份揭露仍需要未来几十/几百章实际执行才能证明；它们现在被判断为 execution depth，而不是 Story Program 结构缺失。
+
+Runtime 边界同步收紧：完整 backfilled history 可以作为 Story/Outline 后台 Authority，但未排程真相不能自动进入 BOOK §5 / Batch Primary；Outline 只保存当前可用表层关系和未来 reveal 方向，Batch Sol Delta 看到完整 Story Program 时也明确禁止把“后台真相”当成漏写内容提前补入正文。State 仍只记录正文已经发生/揭露的事实。
+
+GBrain promotion 采用单文件隔离 import，没有把 staging 其它并行内容一起写入 runtime。第一次 `embed --stale` 因当前子进程未继承 Windows User Environment 的 `OPENAI_API_KEY` 留下 1 个 embedding debt；随后从 User Environment 只向该子进程注入现有 Key，补齐 **1/1**。最终 runtime：**3835 Pages / 15864 Chunks / 15864 Embedded**，debt = 0；keyword retrieval `relationship history generational consequence` 将 `mechanisms/relationship-history-inheritance-v3` 排名第 1。
+
+注意：一次旧 World 的 Story Backfill V2 Sol 运行在全机 3-way ACP 并发下创建后停止写 rollout，已明确标记 **INVALID / ACP stall** 并终止，不作为质量证据；最终 fresh chain 在并发恢复到稳定区后正常 `end_turn`，wall `854.412s`。

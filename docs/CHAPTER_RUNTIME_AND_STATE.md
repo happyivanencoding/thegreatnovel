@@ -20,6 +20,8 @@ Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive、与该�
 
 Story Program 另可稀疏保存 0—4 个不可降格 `RSE-xx`：只保护若压成 State / 摘要会改变本书身份的 Reader-Facing Event。Outline 原样登记 Event Atom / State Residue / Timing Boundary / Reader Anchors，并只在 Future 10 承载章引用 ID；BOOK 保存会校验 Registry 与明确排程。Runtime 只把**当前章引用的 Event Atom**送入 Director 的唯一事件预算与 Frozen Mission，完整未来 Registry 不进入章节模型。State Residue 不能代替现场 Event；Meta/UI/任务规则的 Authority 是事实与因果，不是后台原句，正文优先说清“还剩多久 / 去哪里 / 能带走什么 / 失败会怎样”。
 
+**Relationship-History Backfill 与 Progressive Canonization 的存储形态不同，但 reader-facing 边界相同。** Story Program / Story Refresh 可以在作者批准点补此前未定义的配角关系史；这些旧史可以留在完整 Approved Story Program 中作为 backstage consistency Authority。Outline 只在真正到达揭露因果点时排当前最小 reveal，并且 `BOOK §5 配角与关系系统` 只写 reader-safe 表层关系/压力；默认 Batch Primary 因而不会读取 raw Story Program 的隐藏答案。Sol Batch Authority Delta 虽能看到完整 Story Program，但未被当前 Plan / RSE / Reader Release / Canon 排程的旧史只能用于一致性校正，不能提前揭底。State Extraction 仍只记录最终正文已经发生/公开的事实，不把后台旧史提前写进 Canon。
+
 Progressive Canonization 的作者隐藏真相使用独立 `MYSTERY_CONTROL.json`，**不属于 Canon、BOOK、AUTHOR NOTES 或普通章节上下文**。`AUTHOR OPEN` 里作者自己也没有答案；`AUTHOR FIXED HIDDEN` 只允许 Story Refresh / World Expansion 对应 planning route 读取。Story Program 保存时，`MYSTERY REVEAL CONTRACT` 被代码从 Proposal 正文确定性剥离并单独保存；Outline 只得到 `第N章 + [MYSTERY-REVEAL:ID]`，看不到 Event Atom、State Residue 或 raw Fixed Point。
 
 `MYSTERY_CONTROL.json / compiler_inputs` 只保存低频作者定真流程的**精确 Compiler 输入快照**：当前 Thread、selected candidate、Decision Surface、author planning need 与当时 BOOK/Canon 原文。它不进入 Story / Outline / chapter Runtime；用途只有一个——采用候选前发现候选、Thread 或 Canon 是否已经变化。变化即 stale，重新编译；不使用 hash/checksum 代替直接文本比较。

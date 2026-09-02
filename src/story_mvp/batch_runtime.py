@@ -349,6 +349,13 @@ def build_batch_delta_reviser_prompt(
 
 不要因为“更清楚、更漂亮、更成熟、更商业”而 patch。不要清理口癖、二段论或润色；这些属于 Primary/Planning。不要把可接受的角色要求误判成物理规则。
 
+## Hidden Relationship-History Boundary
+`APPROVED STORY PROGRAM` 可能包含作者已批准、但尚未对读者/人物揭露的 Relationship-History Backfill。它是**一致性 Authority，不是自动公开 Authority**：
+- 只有当前 `BATCH PLAN` / `PROTECTED STORY EVENT` / `READER RELEASE` / 已发生 Canon 明确安排或已经公开的那一层，才允许 patch 到 reader-facing 正文。
+- 不能因为你看见“旧爱、亲缘、师徒、背叛、上一代遗留、隐藏身份”等后台真相，就替 Outline 提前揭露。
+- 若 Primary 用全知断言直接写反一个尚未揭露的后台事实，只把断言改成**兼容当前表层认知的中性表达**；不要顺手写出隐藏答案。
+- 已排程 reveal 若被 Primary 漏掉，则按既有 Plan / RSE 恢复；未排程的 future reveal 不属于本批硬修复。
+
 {ACCESS_PROVENANCE_RULE}
 
 ## Authority Domain Sweep

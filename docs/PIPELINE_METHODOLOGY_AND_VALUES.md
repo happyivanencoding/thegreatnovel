@@ -107,7 +107,7 @@ Reader Coordinates 因此分成两类：
 
 正确方向是“抽象价值观 → 阶段专属的具体创作问题”，而不是“抽象价值观 → 世界 ontology”：
 
-- World Independence 编译成：**没有主角时，谁现在私人地想要什么、下一步已经准备做什么、这会实际改变谁/哪件东西/哪个地方？** 它证明世界还有别的故事，不等于“几个机构会继续运转”，也不要求建立完整利益社会。机构、战争、市场与资源格局可以放大后果，但真正的大事优先由 Living Actors 发动；
+- World Independence 编译成：**没有主角时，谁现在私人地想要什么、下一步已经准备做什么、这会实际改变谁/哪件东西/哪个地方？** 同时问：**这些 Living Actors 在未来主角出现以前是否已经彼此活过真正会留下后果的一段历史？** 高价值 World History 用 `Past Choice → Present Residue → 多个当前行动` 表达；如果一个过去选择自然穿过第三个人或下一代，就保留这条传导，不把所有旧史压成 A↔B 双人债。它证明世界还有别的故事，不等于“几个机构会继续运转”，也不要求建立完整利益社会或全员关系网。机构、战争、市场与资源格局可以放大后果，但真正的大事优先由 Living Actors 发动；
 - Concrete Value / Reward Opportunity 编译成：**这里什么东西真的值钱、值得人物去争？**
 - Net New / Irreversible State / Action Space 编译成 Stage Delta：**这一阶段到底有哪些维度真实改变，哪些东西从此不能回到原状？** Power / Capability、Possession、Relationship、Identity / Access、Knowledge、Enemy State、World State 只写实际变化的部分；不为后台坐标制造剧情。
 - Fantasy Compounding 编译成纵向持续性：**过去已经得到的力量、物件、关系、身份、知识或入口，是否继续改变今天的行动、选择、敌人应对与世界局面？** 它不是每阶段必填字段。
@@ -122,6 +122,21 @@ Reader Coordinates 因此分成两类：
 同时必须区分：**核心幻想是长期读者承诺，不是主角的人生使命。** TGN 的长期故事不再默认由单一幻想发动机驱动，而是允许**人生发动机 / 幻想发动机 / 世界发动机**编织：人物人生欲望与未完成关系、核心幻想与力量获得、世界本来就在发生的大事都可以成为大型阶段的主要发动来源。三者不要求平均配额，也不新增打标签的字段；重要的是能力持续活着，但不自动决定整个人生。
 
 同时遵守 **Narrative Appetite Before Defensive Balance**：先保护最让人眼馋、兴奋、好奇、痛快、恼火或非看不可的东西，再补维持长篇所需的最小边界。World 负责世界事实，Power 负责力量幻想，Human 负责人本身；Story Program 再处理它们碰撞后的长期变异、后果与复利。允许局部明显过量、偏心、不均衡，只要这种“放纵”真正增加本书的独占性阅读欲望，而不是把合理性检查做完以后才看还剩多少爽点。
+
+### 2.5.1 Character Ecology → Character History
+
+人物自主只解决“这个配角没有主角也会继续做事”；成熟长篇还需要更深一层：**人物彼此不是在主角登场那天才第一次拥有历史。** World Vision / Expansion 可以 protagonist-blind 地建立少量既有关系史；Story Program / Refresh 再拥有对未定义空白做 Relationship-History Backfill 的合法创作权。
+
+推荐的纵向链是：
+
+`Past Choice → Present Residue → Independent Current Actions → Dormancy / Delayed Reveal → Relationship Reinterpretation → Convergence / Second Payoff`
+
+这里明确区分两种“过去”：
+
+- **允许 backfill 的过去空白**：World / Human / Canon 从未定义的 supporting-character shared past，可由 Story Program/Refresh 补入，并在作者批准后成为 Authority；优先一条穿过多个人/两代人的共享历史，而不是多人各自一段孤立悲惨往事。
+- **不能 retcon 的既成过去 / 不能伪造的未来**：已经发生/公开的 Canon、Frozen Human 明确经历、AUTHOR OPEN 不能被改写；人物离开镜头后的未来成长也不能以后随手补成已经拿到神器、联盟或重大转折，仍须 forward from approved facts。
+
+完整历史真相可以留在 backstage Story Authority。Outline 只在当前因果真正到达 reveal 时排最小必要层；`BOOK §5` 保持 reader-safe；Batch Primary 不读 raw Story Program，Sol Delta 只能拿未排程旧史做一致性检查，不能提前揭露。这样系统可以拥有《斗罗》式“揭露后重读过去”的能力，而不会把后台关系史一次性剧透。
 
 ### 2.6 支撑性逻辑不得自动成为故事发动机
 
@@ -169,6 +184,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 - 宗门、王朝、家族、商盟、种族等怎样真实影响人生； named 势力 / 部族若会进入世界大事，同时给一个不剧透的公开类别锚点，让章节期 WORLD AUTHORITY 能回答“它是什么”；
 - 世界里真正值钱、值得人物争夺和羡慕的东西；
 - 3—6 件即使主角从未出生也会推进的人物行动、战争、迁徙、竞争或灾难；
+- 少量真正改变今天行动的 **Existing Human History** 关系结：旧爱、亲缘、师徒、救命、背叛、共同失败、欠债、失踪者空位或上一代选择均可；自然时保留第三人/下一代传导，以及当前可信表层解释与尚未 reader-facing 的更深因果；
 - 真正值得进入的地点、奇观、危险与未知；
 - 普通人 / 专业人士 / 顶层势力各自知道什么。
 

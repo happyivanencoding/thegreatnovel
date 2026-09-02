@@ -2212,6 +2212,47 @@ F1—F5 已由作者明确冻结，当前 production 链为：
 33. Authority Separation 保护真实独立性，Premise Aperture 扩大冻结前搜索，Premise Compiler 只验证大胆候选能否被这些 Authority 精确实现；三者职责不同。大胆度看一个完整货架承诺与 Changed Verbs，不看 Agent 数量、术语数量或机制表长度；可编译性也不能替作者决定商业强度。
 34. Premise Aperture 可跳过但不能半启动：未开始/显式跳过走原链；保存候选后必须 strict PASS + exact input snapshot + 作者批准，或清空并跳过。没有自动 selector、Repair Loop 或章节期 Premise Agent。
 
+### 14.19 Relationship History / Retrospective Backfill（2026-09-02）
+
+用户本轮明确推翻上一版的 `no retrospective backfill` 边界：
+
+- protagonist-blind World Vision / World Expansion 可以让少数 Living Actors 在主角出现前已经彼此活过一段人生；当前世界事件可以是旧选择正在产生的新后果；
+- Story Program / Story Refresh 可以对**此前没有被 Frozen Authority / Canon 定义的 supporting-character 过去**补共享旧史，并决定谁值得成为 Longitudinal Cast；
+- 仍然禁止 Retcon 已发生/公开 Canon、改写 Frozen Human 明确过去、偷答 `AUTHOR OPEN`；**过去空白可以补，从当前时点往后的离屏未来不能事后伪造**。
+
+本轮先 source-first 对照 GBrain 已有《斗罗大陆》《诡秘之主》《将夜》纵向蒸馏，再做分层实验。最终抽象不是“多写人物背景”，而是：
+
+`Past Choice → Present Residue → Multiple Current Actions → Dormancy / Delayed Reveal → Relationship Reinterpretation → Convergence / Second Payoff`
+
+World 层新增 `## 已经活过的人与关系史`：只写少量高价值 shared past；过去选择要留下今天仍可见的遗物、空位、债、误解、身份价格、共同记忆或敌我残留，并让至少两名 Living Actors 因此采取不同当前行动。一个旧选择自然跨到第三人/下一代/弟子/继承者时，不压扁成双人旧债；保留互相冲突的表层解释，具体 reveal 由 Story/Outline 后续调度。该 section 不进入 Power/Human 的安全投影，保持 protagonist-blind / power-blind / story-opportunity-blind 分权。
+
+Story Program / Story Refresh 的 Longitudinal Cast 规则改为：可以在 approval 点补此前空白的共同往事、亲缘、旧爱、师徒、共同失败、救命、背叛、债、失约、上一代选择，并可把 Human 已成立家人与 World Living Actors 接成共享历史；优先补会同时改变多个当代人物的“历史结”，不为每个 NPC 各补一段悲惨过去。真正长期线继续要求人物自己的未完人生、独立行动、offscreen-forward 与 `Convergence ≠ Recall`。
+
+隐藏历史 transport 也同步修正：完整旧史可以存在于 Approved Story Program，但 Outline 的 `BOOK §5 配角与关系系统` 只保存当前 reader-safe surface、已发生关系位置和未来 reveal 方向，不复制尚未排程的后台真相；Batch Primary 原本就不直接读取 Story Program，safe World projection 也排除该 World history section；Sol Batch Delta 虽读取完整 Story Program，但新增明确规则：未排程隐藏旧史不是“Authority 漏失”，不得为了恢复 Authority 提前 reveal。State 只有正文真正揭露后才能 canonize 对应历史层。
+
+一次 fresh Outline transport 实跑也被启动，用来验证完整 Story Program 是否会把后台旧史提前复制进 BOOK；但运行后另一 TGN 对话同时启动两条 ACP，使全机重新进入已知不稳定的 3-way 并发。为避免污染证据，本任务主动停止自己的 Outline run，记为 **INVALID / external concurrency contamination**，不计作 PASS。当前 transport promotion 证据只包括 deterministic safe projection regression + installed Steward 0.3.43 smoke；不得把该被污染 Outline run 写成通过。
+
+受控实验：`books/real-exp-character-history-douluo-benchmark-20260902-v1`。
+
+- World baseline：有现在时 Living Actors，但无 shared past。
+- World V1：三个有效双人旧史，Judge `APPROACHING`。
+- World V2：塞恩—阿岚—娜娅、塔尔—白鳍母兽—兰克等旧选择开始穿过下一代/第三人，并保留冲突表层解释；Judge **`ROUGHLY COMPARABLE AT WORLD-HISTORY SUBSTRATE LEVEL`**。
+- 旧 World + Story Backfill V1：沈骁—维娅十二年前死潮共同失败有效改变今天双方判断，但只有一条强历史结；Judge `APPROACHING`。
+- 完整 fresh chain：固定选择 Power Candidate 1 + Human Candidate 1，不 cherry-pick；Human/Power 都没有看到 World V2 具名旧史。fresh Story Program 补出 `林父—塞恩—阿岚—娜娅`：塞恩早年让船脱离既定泊位救林家附近断台，林父封闸受伤并留下带船号旧闸楔；回乡时闸楔第一次重启塞恩线，骨陆近期维修痕迹证明塞恩被指为叛逃后仍在那里行动，再次重释阿岚、娜娅、林父、林屿的选择。最终独立《斗罗》Judge：**`ROUGHLY COMPARABLE AT STORY-PROGRAM STRUCTURAL LEVEL`；Earliest Remaining Gap = `NONE`**。
+
+这不表示正文成品已与《斗罗》整体同级；正确结论是：**TGN 现在已经具备大致同级的“人物历史/关系长篇结构程序”，剩余差距转移到长篇执行证据。** 小舞式 second payoff、奥斯卡式离队→改变→归来、千仞雪式表层身份长期成立后揭面，需要后续真实 100–200+ 章观察是否自然发生；不要为证明它们而加回访配额或关系图。
+
+GBrain 因此不再是上一节人物自治 integration 的 `NEW=0`：本次特定的 Character History 缺口新增一张 active PILOT `relationship-history-inheritance-v3`，来源为《斗罗》《诡秘》《将夜》跨书结构证据。用单文件隔离 import 写入 runtime；最终 **3835 Pages / 15864 Chunks / 15864 Embedded**，keyword regression 将该卡排第 1。第一次 embedding 因子进程没继承 User Environment Key 留 1 debt，随后只向该子进程注入现有 User Environment `OPENAI_API_KEY` 补齐；Key 未写 repo、未输出。
+
+代码/测试当前状态：
+
+- focused `tests/test_longitudinal_story_engine_prompts.py`：**13/13 PASS**；
+- 排除正在被并行 GBrain 任务修改的 `tests/test_mvp.py` 后：**310/310 PASS**；
+- full suite：**495 passed / 17 failed**；17 个全部仍位于 `tests/test_mvp.py` 的 parallel GBrain semantic-brief/retrieval 变更路径，本任务没有修改 `src/story_mvp/gbrain.py`、`src/story_mvp/gbrain_retrieval.py`、`tests/test_mvp.py`；
+- `git diff --check` PASS。
+
+Steward 审计方法因旧 `no retrospective backfill` 会系统性误判当前 production，升级到 **0.3.43**：新增 `Character Ecology ≠ Character History`、`Past-gap Backfill ≠ Retcon ≠ Fake Offscreen Future`、`Hidden Relationship History Is Backstage Authority Until Scheduled Reveal`。clean package 仅包含 Git-tracked references，不包含并行未跟踪 `atomic-obligation-protocol.md`；skill-authoring lint `0 error / 0 warning`，package validate / install / activate 已 PASS，digest `sha256:5f3558f91be214e678c88e5799bf0f9ce7f2c72b13c510a5755e971ccce0c2db`。bounded read-only smoke **PASS**：案例 A 的林父—塞恩过去空白被正确判为合法 Backfill / 非 Retcon；案例 B 的岑舟离屏后凭空获得神剑+三盟共主被判 `Fake Offscreen Future / FAIL`；并明确第1—29章 Writer 不得提前读取第30章才排程揭露的完整旧史。
+
 ---
 
 ## Cognitive Integrity Check
@@ -2230,5 +2271,8 @@ F1—F5 已由作者明确冻结，当前 production 链为：
 - 四个 Story Program 看起来不同，如果触发事件也不同，就不能纯证明人格因果；
 - 人格改变路线已经成立，不等于人格化优势树已经完成；
 - 新实验若只解决一个子问题，应明确 PARTIAL，而不是宣布上游完全收敛。
+- 配角都拥有当前目标还不等于人物历史已经成立；少数人物过去彼此做过什么、留下什么残留、为什么今天会分别行动，是另一层 Book Engine 能力；
+- Relationship-History Backfill 可以补此前未定义的过去空白，但不能把人物离场后的未来事后补成神器、联盟或重大成长；前者是合法创作，后者是 Fake Offscreen Future；
+- Approved Story Program 知道完整隐藏旧史，不等于 Reader / Writer 现在应该知道；未排程 reveal 必须继续留在 backstage Authority。
 
 只要下一位 Agent能稳定作出这些区分，本文迁移的就不只是 conclusions，而是当前对话长期形成的 decision model。
