@@ -79,3 +79,38 @@ def test_explicit_anonymous_human_prototype_selector_is_visible_but_default_off(
     assert '<option value="prism-wanderer-alpha">匿名私人原型实验</option>' in TEMPLATE
     assert 'prototype_id: $("human-prototype-selector")?.value || ""' in APP_JS
     assert 'invalidateGbrainResults("切换 Human Prototype")' in APP_JS
+
+
+def test_premise_workspace_is_author_gated_without_selector_or_repair_loop() -> None:
+    for element_id in (
+        "premise-stage",
+        "premise-candidates",
+        "selected-premise",
+        "premise-compiler-report",
+        "generate-premise-forge-prompt",
+        "generate-premise-batch-compiler",
+        "generate-selected-premise-compiler",
+        "approve-premise",
+        "skip-premise",
+        "premise-world-contract",
+        "premise-power-contract",
+        "premise-human-contract",
+        "premise-story-contract",
+    ):
+        assert TEMPLATE.count(f'id="{element_id}"') == 1
+    assert all(f'data-premise-select="S{number}"' in TEMPLATE for number in (1, 2, 3))
+    assert "choosePremiseCandidate" in APP_JS
+    assert "approvePremiseContract" in APP_JS
+    assert "skipPremiseAperture" in APP_JS
+    assert 'id="repair-premise"' not in TEMPLATE
+    assert "autoSelectPremise" not in APP_JS
+
+def test_exact_input_receipt_reuse_skips_executor_and_hydrates_saved_response() -> None:
+    assert "runResponseEditorByMode" in APP_JS
+    assert "hydrateReceiptReusedResponse" in APP_JS
+    assert "manifest?.nodes?.[node]?.receipt_reused" in APP_JS
+    block = APP_JS.split("if (node && manifest?.nodes?.[node]?.receipt_reused)", 1)[1].split("renderCodexTaskWrapper(mode);", 1)[0]
+    assert "hydrateReceiptReusedResponse(mode, node)" in block
+    assert "return;" in block
+    assert "executeOpenAI" not in block
+    assert "/response`" in APP_JS

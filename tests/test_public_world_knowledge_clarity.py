@@ -119,3 +119,5 @@ def test_reader_release_map_keeps_multiple_public_common_knowledge_lines_for_cha
     assert "二阶可以正式担任商队护卫" in chapter_one
     assert "夺影兽" in chapter_one
     assert "第2章" not in chapter_one
+
+

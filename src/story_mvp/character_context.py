@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import re
 
+from .long_form_evolution import effective_world_expansions
+
 
 _ALLOWED_CHARACTER_SECTIONS = (
     "## 普通人的生活与上升",
@@ -25,6 +27,13 @@ _CHARACTER_LIFE_SECTIONS = (
 _STORY_OPPORTUNITY_SECTIONS = (
     "## 世界正在发生的大事",
     "## 值得进入的地点、奇观与未知",
+)
+
+_SAFE_EXPANSION_SECTIONS = (
+    "## 新增公共现实与普通生活",
+    "## 新力量 / 威胁 / 身份 / 价值尺度",
+    "## 新地点、势力与公共识别",
+    "## 真正值得想要或进入的东西",
 )
 
 
@@ -79,6 +88,36 @@ def project_world_reality(world_vision: str) -> str:
             block, _ = _strip_named_mysteries(block)
         if block:
             parts += ["", block]
+    return "\n".join(parts).strip() + "\n"
+
+
+def project_effective_world_reality(
+    world_vision: str, world_expansions: str, chapter_number: int
+) -> str:
+    """Project root World plus only forward expansions active for this chapter."""
+
+    root = project_world_reality(world_vision).rstrip()
+    parts = [root]
+    for entry in effective_world_expansions(world_expansions, chapter_number):
+        if not entry.body.strip():
+            continue
+        safe_parts = [
+            _section(entry.body, heading)
+            for heading in _SAFE_EXPANSION_SECTIONS
+        ]
+        safe_body = "\n\n".join(part for part in safe_parts if part).strip()
+        if not safe_body:
+            continue
+        window = (
+            f"第{entry.effective_from}章起"
+            if not entry.effective_until
+            else f"第{entry.effective_from}—{entry.effective_until}章"
+        )
+        parts += [
+            "",
+            f"## FORWARD WORLD EXPANSION {entry.index}｜{entry.scope}｜{window}",
+            safe_body,
+        ]
     return "\n".join(parts).strip() + "\n"
 
 

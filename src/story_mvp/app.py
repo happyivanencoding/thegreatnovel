@@ -10,6 +10,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
+from .batch_runtime import (
+    DEFAULT_BATCH_SIZE,
+    BatchWindow,
+    apply_batch_delta,
+    build_batch_delta_reviser_prompt,
+    build_batch_primary_prompt,
+    extract_batch_outline_plans,
+    parse_batch_delta_response,
+    parse_batch_primary_response,
+)
 from .character_prompts import generate_split_prompt
 from .gbrain import GBrainQueryError
 from .gbrain_retrieval import (
@@ -20,6 +30,8 @@ from .gbrain_retrieval import (
 )
 from .openai_executor import (
     OpenAIExecutorError,
+    batch_authority_reviser_model,
+    batch_primary_model,
     configure_settings,
     configured as openai_configured,
     authority_reviser_model,
@@ -28,6 +40,26 @@ from .openai_executor import (
     settings_status,
     state_extraction_model,
 )
+from .premise_aperture import (
+    build_premise_compiler_prompt,
+    build_selected_premise_compiler_prompt,
+    build_single_pass_prompt,
+)
+from .premise_workflow import (
+    approve_premise,
+    read_premise_payload,
+    record_premise_compiler_input,
+    save_premise_candidates,
+    save_premise_compiler_report,
+    save_selected_premise,
+    skip_premise,
+)
+from .progressive_canon import (
+    MysteryThread,
+    build_canonization_compiler_prompt,
+    build_decision_surface_prompt,
+    build_reframe_prompt,
+)
 from .prompts import DEFAULT_PROMPT_TEMPLATES, HardGateError, generate_prompt
 from .references import REFERENCE_ROOT, load_validated_references
 from .run_ledger import (
@@ -35,6 +67,7 @@ from .run_ledger import (
     adopt_final_source,
     create_or_load_run,
     load_run,
+    load_node_prompt,
     load_node_response,
     mark_node_failed,
     mark_node_skipped,
@@ -45,15 +78,27 @@ from .run_ledger import (
     skip_integrator_if_no_patches,
 )
 from .storage import (
+    adopt_mystery_candidate,
+    advance_mystery_after_reveal,
+    approve_human_development,
     approve_character_artifact,
     approve_creative_artifact,
+    approve_world_expansion,
     create_book,
+    get_mystery_thread,
+    inject_mystery_reveals_into_chapter_plan,
     list_books,
     read_chapter,
     read_book_payload,
     read_creative_payload,
+    read_mystery_control,
+    refresh_current_character,
     replace_chapter,
     require_book,
+    render_mystery_outline_schedule,
+    render_mystery_planning_context,
+    save_mystery_compiler_input,
+    save_mystery_thread,
     save_chapter,
     write_book,
     write_creative_artifact,
@@ -79,11 +124,81 @@ class TextRequest(BaseModel):
     content: str = ""
 
 
+class MysteryThreadRequest(BaseModel):
+    question: str
+    state: Literal["OPEN", "FIXED_HIDDEN"] = "OPEN"
+    known_anchors: str = ""
+    decision_trigger: str = ""
+    fixed_point: str = ""
+    remains_unknown: str = ""
+    reveal_boundary: str = ""
+    route: Literal["world", "story"] = "story"
+
+
+class MysteryDecisionRequest(BaseModel):
+    mystery_id: str
+    planning_need: str
+
+
+class MysteryReframeRequest(BaseModel):
+    mystery_id: str
+    decision_surface: str
+
+
+class MysteryCompilerRequest(BaseModel):
+    mystery_id: str
+    selected_candidate: str
+    decision_surface: str
+    planning_need: str
+
+
+class MysteryAdoptRequest(BaseModel):
+    mystery_id: str
+    selected_candidate: str
+    compiler_report: str
+
+
+class MysteryAdvanceRequest(BaseModel):
+    next_decision_trigger: str = ""
+
+
+class WorldExpansionApproveRequest(BaseModel):
+    content: str
+    scope: Literal["macro", "instance"] = "macro"
+    effective_from: int = Field(ge=1)
+    effective_until: int = Field(default=0, ge=0)
+
+
 class OpenAIExecutorRequest(BaseModel):
     prompt: str = ""
     model: str = ""
-    purpose: Literal["default", "state_extraction", "authority_reviser"] = "default"
+    purpose: Literal[
+        "default",
+        "state_extraction",
+        "authority_reviser",
+        "batch_primary",
+        "batch_authority_reviser",
+    ] = "default"
     reasoning_effort: str = ""
+
+
+class BatchPromptRequest(BaseModel):
+    start_chapter: int = Field(ge=1, le=9999)
+    batch_size: int = Field(default=DEFAULT_BATCH_SIZE, ge=4, le=6)
+    book_content: str = ""
+    world_vision: str = ""
+    world_expansions: str = ""
+    character_card: str = ""
+    story_program: str = ""
+    previous_chapter_text: str = ""
+    batch_primary_response: str = ""
+
+
+class BatchDeltaApplyRequest(BaseModel):
+    start_chapter: int = Field(ge=1, le=9999)
+    batch_size: int = Field(default=DEFAULT_BATCH_SIZE, ge=4, le=6)
+    batch_primary_response: str
+    batch_delta_response: str
 
 
 class OpenAISettingsRequest(BaseModel):
@@ -104,9 +219,11 @@ class PromptTemplatesRequest(BaseModel):
 class GBrainContextRequest(BaseModel):
     mode: Literal[
         "world_vision",
+        "world_expansion",
         "power_seed",
         "human_seed",
         "idea",
+        "story_refresh",
         "outline",
         "director",
         "chapter_prep",
@@ -166,10 +283,15 @@ class RunRepairSpecialistsRequest(BaseModel):
 
 class PromptRequest(BaseModel):
     mode: Literal[
+        "premise_forge",
+        "premise_compiler",
         "idea",
         "world_vision",
+        "world_expansion",
         "power_seed",
         "human_seed",
+        "human_development",
+        "story_refresh",
         "outline",
         "director",
         "chapter_prep",
@@ -192,12 +314,21 @@ class PromptRequest(BaseModel):
     ] = "curator_primary"
     book_content: str = ""
     creative_direction: str = ""
+    premise_candidates: str = ""
+    selected_premise: str = ""
+    premise_compiler_scope: Literal["candidates", "selected"] = "candidates"
     world_vision: str = ""
+    world_expansions: str = ""
     power_seed: str = ""
     human_seed: str = ""
     prototype_id: str = ""
     character_card: str = ""
     character_initial_state: str = ""
+    human_development: str = ""
+    current_character: str = ""
+    evolution_scope: Literal["macro", "instance"] = "macro"
+    effective_from_chapter: int = Field(default=0, ge=0)
+    effective_until_chapter: int = Field(default=0, ge=0)
     creative_state: dict[str, Any] = Field(default_factory=dict)
     proposal_context: str = ""
     current_long_block: str = ""
@@ -270,6 +401,10 @@ def get_executors() -> dict[str, Any]:
             "state_model": state_extraction_model(),
             "authority_reviser_model": authority_reviser_model(),
             "authority_reviser_reasoning": "high",
+            "batch_primary_model": batch_primary_model(),
+            "batch_primary_reasoning": "high",
+            "batch_authority_reviser_model": batch_authority_reviser_model(),
+            "batch_authority_reviser_reasoning": "high",
             "name": openai_settings["name"],
         },
     }
@@ -299,6 +434,122 @@ def post_openai_executor(payload: OpenAIExecutorRequest) -> dict[str, str]:
         raise HTTPException(status_code=status_code, detail=str(error)) from error
 
 
+@app.post("/api/batch/primary-prompt")
+def post_batch_primary_prompt(payload: BatchPromptRequest) -> dict[str, str | int]:
+    try:
+        window = BatchWindow(payload.start_chapter, payload.batch_size)
+        plans = extract_batch_outline_plans(payload.book_content, window)
+        prompt = build_batch_primary_prompt(
+            window=window,
+            batch_plans=plans,
+            book_content=payload.book_content,
+            world_vision=payload.world_vision,
+            world_expansions=payload.world_expansions,
+            character_card=payload.character_card,
+            previous_chapter_text=payload.previous_chapter_text,
+        )
+        return {
+            "content": prompt,
+            "start_chapter": window.start_chapter,
+            "end_chapter": window.end_chapter,
+        }
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/batch/authority-reviser-prompt")
+def post_batch_authority_reviser_prompt(payload: BatchPromptRequest) -> dict[str, str | int]:
+    try:
+        window = BatchWindow(payload.start_chapter, payload.batch_size)
+        plans = extract_batch_outline_plans(payload.book_content, window)
+        chapters = parse_batch_primary_response(payload.batch_primary_response, window)
+        prompt = build_batch_delta_reviser_prompt(
+            window=window,
+            batch_plans=plans,
+            primary_chapters=chapters,
+            book_content=payload.book_content,
+            world_vision=payload.world_vision,
+            world_expansions=payload.world_expansions,
+            character_card=payload.character_card,
+            story_program=payload.story_program,
+        )
+        return {
+            "content": prompt,
+            "start_chapter": window.start_chapter,
+            "end_chapter": window.end_chapter,
+        }
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/batch/apply-authority-delta")
+def post_batch_apply_authority_delta(payload: BatchDeltaApplyRequest) -> dict[str, Any]:
+    try:
+        window = BatchWindow(payload.start_chapter, payload.batch_size)
+        chapters = parse_batch_primary_response(payload.batch_primary_response, window)
+        delta = parse_batch_delta_response(payload.batch_delta_response, window)
+        revised = apply_batch_delta(chapters, delta, window)
+        return {
+            "start_chapter": window.start_chapter,
+            "end_chapter": window.end_chapter,
+            "chapters": {str(number): revised[number] for number in window.chapter_numbers},
+            "patch_count": len(delta.patches),
+            "upstream_conflicts": list(delta.upstream_conflicts),
+            "adoptable": not delta.upstream_conflicts,
+        }
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/batch/adopt-authority-delta")
+def post_batch_adopt_authority_delta(
+    book_id: str, payload: BatchDeltaApplyRequest
+) -> dict[str, Any]:
+    """Preflight the whole batch, then save every finalized chapter before State runs."""
+
+    try:
+        window = BatchWindow(payload.start_chapter, payload.batch_size)
+        directory = _book_directory(book_id)
+        chapters = parse_batch_primary_response(payload.batch_primary_response, window)
+        delta = parse_batch_delta_response(payload.batch_delta_response, window)
+        if delta.upstream_conflicts:
+            raise ValueError(
+                "Batch Authority Delta 仍有上游冲突，必须先修 Story / Outline，不能采用正文"
+            )
+        revised = apply_batch_delta(chapters, delta, window)
+        existing = [
+            number
+            for number in window.chapter_numbers
+            if (directory / "chapters" / f"chapter-{number:04d}.md").is_file()
+        ]
+        if existing:
+            rendered = "、".join(str(number) for number in existing)
+            raise ValueError(f"Batch 中已有章节存在：{rendered}；请先明确处理已有正文")
+
+        saved: list[str] = []
+        for number in window.chapter_numbers:
+            target = save_chapter(
+                book_id,
+                number,
+                revised[number],
+                workspace_path(),
+                source="batch_authority_delta",
+            )
+            saved.append(str(target))
+        return {
+            "status": "saved",
+            "start_chapter": window.start_chapter,
+            "end_chapter": window.end_chapter,
+            "patch_count": len(delta.patches),
+            "saved": saved,
+            "state_next": window.start_chapter,
+        }
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
 @app.post("/api/books", status_code=201)
 def post_book(payload: BookCreateRequest) -> dict[str, Any]:
     try:
@@ -314,6 +565,149 @@ def post_book(payload: BookCreateRequest) -> dict[str, Any]:
 def get_book(book_id: str) -> dict[str, Any]:
     try:
         return read_book_payload(book_id, workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/mysteries")
+def get_mysteries(book_id: str) -> dict[str, Any]:
+    try:
+        return read_mystery_control(book_id, workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/mysteries/{mystery_id}")
+def put_mystery(book_id: str, mystery_id: str, payload: MysteryThreadRequest) -> dict[str, Any]:
+    try:
+        if payload.state != "OPEN" or payload.fixed_point.strip() or payload.reveal_boundary.strip():
+            raise ValueError("FIXED_HIDDEN 只能通过 strict-PASS Mystery Compiler + adopt 进入；PUT 只维护 AUTHOR OPEN")
+        try:
+            existing = get_mystery_thread(book_id, mystery_id, workspace_path())
+        except ValueError as error:
+            if not str(error).startswith("找不到 Mystery："):
+                raise
+            existing = None
+        if existing is not None and existing.state == "FIXED_HIDDEN":
+            raise ValueError("FIXED_HIDDEN Mystery 不能由普通 PUT 覆盖；Reveal 经 State 完成后使用 advance 重新进入 AUTHOR OPEN")
+        return save_mystery_thread(
+            book_id,
+            MysteryThread(
+                mystery_id=mystery_id,
+                question=payload.question,
+                state=payload.state,
+                known_anchors=payload.known_anchors,
+                decision_trigger=payload.decision_trigger,
+                fixed_point=payload.fixed_point,
+                remains_unknown=payload.remains_unknown,
+                reveal_boundary=payload.reveal_boundary,
+                route=payload.route,
+            ),
+            workspace_path(),
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/decision-prompt")
+def post_mystery_decision_prompt(book_id: str, payload: MysteryDecisionRequest) -> dict[str, str]:
+    try:
+        thread = get_mystery_thread(book_id, payload.mystery_id, workspace_path())
+        context = read_book_payload(book_id, workspace_path())["book_content"]
+        return {
+            "prompt": build_decision_surface_prompt(
+                thread=thread,
+                planning_need=payload.planning_need,
+                current_context=context,
+            )
+        }
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/reframe-prompt")
+def post_mystery_reframe_prompt(book_id: str, payload: MysteryReframeRequest) -> dict[str, str]:
+    try:
+        thread = get_mystery_thread(book_id, payload.mystery_id, workspace_path())
+        context = read_book_payload(book_id, workspace_path())["book_content"]
+        return {
+            "prompt": build_reframe_prompt(
+                thread=thread,
+                decision_surface=payload.decision_surface,
+                current_context=context,
+            )
+        }
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/compiler-prompt")
+def post_mystery_compiler_prompt(book_id: str, payload: MysteryCompilerRequest) -> dict[str, str]:
+    try:
+        thread = get_mystery_thread(book_id, payload.mystery_id, workspace_path())
+        context = read_book_payload(book_id, workspace_path())["book_content"]
+        prompt = build_canonization_compiler_prompt(
+            thread=thread,
+            selected_candidate=payload.selected_candidate,
+            current_context=context,
+            decision_surface=payload.decision_surface,
+            planning_need=payload.planning_need,
+        )
+        save_mystery_compiler_input(
+            book_id,
+            payload.mystery_id,
+            selected_candidate=payload.selected_candidate,
+            decision_surface=payload.decision_surface,
+            planning_need=payload.planning_need,
+            current_context=context,
+            workspace=workspace_path(),
+        )
+        return {"prompt": prompt}
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/adopt")
+def post_mystery_adopt(book_id: str, payload: MysteryAdoptRequest) -> dict[str, Any]:
+    try:
+        context = read_book_payload(book_id, workspace_path())["book_content"]
+        return adopt_mystery_candidate(
+            book_id,
+            payload.mystery_id,
+            selected_candidate=payload.selected_candidate,
+            compiler_report=payload.compiler_report,
+            current_context=context,
+            workspace=workspace_path(),
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/mysteries/{mystery_id}/advance")
+def post_mystery_advance(
+    book_id: str, mystery_id: str, payload: MysteryAdvanceRequest
+) -> dict[str, Any]:
+    try:
+        return advance_mystery_after_reveal(
+            book_id,
+            mystery_id,
+            next_decision_trigger=payload.next_decision_trigger,
+            workspace=workspace_path(),
+        )
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:
@@ -353,6 +747,66 @@ def get_chapter(book_id: str, chapter_number: int) -> dict[str, str | int]:
 
 def _book_directory(book_id: str) -> Path:
     return require_book(book_id, workspace_path())
+
+
+@app.get("/api/books/{book_id}/premise")
+def get_premise(book_id: str) -> dict[str, Any]:
+    try:
+        return read_premise_payload(_book_directory(book_id))
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/premise/candidates")
+def put_premise_candidates(book_id: str, payload: TextRequest) -> dict[str, Any]:
+    try:
+        return save_premise_candidates(_book_directory(book_id), payload.content)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/premise/selected")
+def put_selected_premise(book_id: str, payload: TextRequest) -> dict[str, Any]:
+    try:
+        return save_selected_premise(_book_directory(book_id), payload.content)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.put("/api/books/{book_id}/premise/compiler")
+def put_premise_compiler(book_id: str, payload: TextRequest) -> dict[str, Any]:
+    try:
+        return save_premise_compiler_report(_book_directory(book_id), payload.content)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/premise/approve")
+def post_premise_approve(book_id: str) -> dict[str, Any]:
+    try:
+        return approve_premise(_book_directory(book_id))
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/premise/skip")
+def post_premise_skip(book_id: str) -> dict[str, Any]:
+    try:
+        return skip_premise(_book_directory(book_id))
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
 
 
 @app.post("/api/books/{book_id}/runs/{chapter_number}")
@@ -399,6 +853,26 @@ def get_run(book_id: str, chapter_number: int) -> dict[str, Any]:
 def get_next_run_node(book_id: str, chapter_number: int) -> dict[str, str | None]:
     try:
         return {"node": next_actionable_node(_book_directory(book_id), chapter_number)}
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/prompt")
+def get_run_node_prompt(book_id: str, chapter_number: int, node: str) -> dict[str, str]:
+    try:
+        return {"content": load_node_prompt(_book_directory(book_id), chapter_number, node)}
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/runs/{chapter_number}/nodes/{node}/response")
+def get_run_node_response(book_id: str, chapter_number: int, node: str) -> dict[str, str]:
+    try:
+        return {"content": load_node_response(_book_directory(book_id), chapter_number, node)}
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:
@@ -533,9 +1007,13 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
     values = payload.model_dump(exclude={"book_id", "creative_state"})
     if payload.book_id.strip():
         creative = read_creative_payload(payload.book_id, workspace_path())
+        if not values.get("book_content"):
+            values["book_content"] = read_book_payload(payload.book_id, workspace_path())["book_content"]
         values["creative_state"] = creative["creative_state"]
         if not values.get("world_vision"):
             values["world_vision"] = creative["world_vision"]
+        if not values.get("world_expansions"):
+            values["world_expansions"] = creative.get("world_expansions", "")
         if not values.get("power_seed"):
             values["power_seed"] = creative["power_seed"]
         if not values.get("human_seed"):
@@ -544,10 +1022,47 @@ def _prompt_kwargs(payload: PromptRequest) -> dict[str, Any]:
             values["character_card"] = creative["character_card"]
         if not values.get("character_initial_state"):
             values["character_initial_state"] = creative["character_initial_state"]
+        if not values.get("human_development"):
+            values["human_development"] = creative.get("human_development", "")
+        if not values.get("current_character"):
+            values["current_character"] = creative.get("current_character", "")
         if not values.get("proposal_context"):
             values["proposal_context"] = creative["proposal"]
+        premise = creative.get("premise", {})
+        if not values.get("premise_candidates"):
+            values["premise_candidates"] = premise.get("candidates", "")
+        if (
+            payload.premise_compiler_scope == "selected"
+            and not values.get("selected_premise")
+        ):
+            values["selected_premise"] = premise.get("selected", "")
+        contracts = premise.get("contracts", {}) if premise.get("approved") else {}
+        values["premise_world_contract"] = contracts.get("world", "")
+        values["premise_power_contract"] = contracts.get("power", "")
+        values["premise_human_contract"] = contracts.get("human", "")
+        values["premise_story_contract"] = contracts.get("story", "")
+
+        if payload.mode == "story_refresh":
+            values["mystery_planning_context"] = render_mystery_planning_context(
+                payload.book_id, workspace_path(), route="story"
+            )
+        elif payload.mode == "world_expansion":
+            values["mystery_planning_context"] = render_mystery_planning_context(
+                payload.book_id, workspace_path(), route="world"
+            )
+        elif payload.mode == "outline":
+            values["mystery_outline_schedule"] = render_mystery_outline_schedule(
+                payload.book_id, workspace_path()
+            )
 
         if payload.chapter_number > 0:
+            if values.get("current_chapter_plan"):
+                values["current_chapter_plan"] = inject_mystery_reveals_into_chapter_plan(
+                    payload.book_id,
+                    payload.chapter_number,
+                    str(values["current_chapter_plan"]),
+                    workspace_path(),
+                )
             directory = require_book(payload.book_id, workspace_path())
             try:
                 manifest = load_run(directory, payload.chapter_number)
@@ -615,7 +1130,26 @@ def _validate_state_delta_input(payload: PromptRequest) -> None:
 
 def _planning_only_fields_removed(values: dict[str, Any]) -> dict[str, Any]:
     filtered = dict(values)
-    for key in ("power_seed", "human_seed", "prototype_id", "character_initial_state"):
+    for key in (
+        "power_seed",
+        "human_seed",
+        "prototype_id",
+        "character_initial_state",
+        "human_development",
+        "current_character",
+        "evolution_scope",
+        "effective_from_chapter",
+        "effective_until_chapter",
+        "premise_candidates",
+        "selected_premise",
+        "premise_compiler_scope",
+        "premise_world_contract",
+        "premise_power_contract",
+        "premise_human_contract",
+        "premise_story_contract",
+        "mystery_planning_context",
+        "mystery_outline_schedule",
+    ):
         filtered.pop(key, None)
     return filtered
 
@@ -626,6 +1160,38 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
         _validate_state_delta_input(payload)
     try:
         values = _prompt_kwargs(payload)
+        if payload.mode in {"premise_forge", "premise_compiler"} and payload.book_id.strip():
+            world_state = values.get("creative_state", {}).get("world_vision", {})
+            if isinstance(world_state, dict) and world_state.get("status") == "author_approved":
+                raise ValueError(
+                    "World Vision 已批准；Premise 决定已冻结，不能再生成新的 Forge / Compiler Prompt"
+                )
+        if payload.mode in {"world_vision", "power_seed", "human_seed", "idea"} and payload.book_id.strip():
+            premise = read_premise_payload(require_book(payload.book_id, workspace_path()))
+            if premise["started_unapproved"]:
+                raise ValueError(
+                    "Premise Aperture 已开始但尚未批准：请完成 strict PASS + 作者批准，或显式跳过"
+                )
+        if payload.mode == "premise_forge":
+            prompt = build_single_pass_prompt(
+                author_direction=str(values.get("creative_direction", ""))
+            )
+            return {"prompt": prompt}
+        if payload.mode == "premise_compiler":
+            directory = require_book(payload.book_id, workspace_path())
+            compiler_input = record_premise_compiler_input(
+                directory,
+                scope=payload.premise_compiler_scope,
+            )
+            if payload.premise_compiler_scope == "selected":
+                prompt = build_selected_premise_compiler_prompt(
+                    candidate=compiler_input
+                )
+            else:
+                prompt = build_premise_compiler_prompt(
+                    candidates=compiler_input
+                )
+            return {"prompt": prompt}
         if payload.mode == "human_seed" and payload.prototype_id.strip():
             prototype_bundle = retrieve_gbrain(
                 mode="human_seed",
@@ -634,7 +1200,37 @@ def post_prompt(payload: PromptRequest) -> dict[str, str]:
                 prototype_id=payload.prototype_id.strip(),
             )
             values["gbrain_inspiration"] = prototype_bundle["result"]
-        split_mode = payload.mode in {"world_vision", "power_seed", "human_seed", "idea", "outline"}
+        if payload.mode == "story_refresh" and payload.book_id.strip():
+            snapshot = workflow_status(require_book(payload.book_id, workspace_path()))
+            current_entry = snapshot.get("artifacts", {}).get("evolution.current_character", {})
+            if current_entry.get("status") != "DONE" or current_entry.get("freshness") != "fresh":
+                raise ValueError("Story Refresh 前必须刷新 fresh CURRENT_CHARACTER.md")
+        proposal_state = values.get("creative_state", {}).get("proposal", {})
+        if (
+            payload.mode == "outline"
+            and payload.book_id.strip()
+            and isinstance(proposal_state, dict)
+            and proposal_state.get("status") == "author_approved"
+        ):
+            snapshot = workflow_status(require_book(payload.book_id, workspace_path()))
+            story_entry = snapshot.get("artifacts", {}).get("creative.story_program", {})
+            if story_entry.get("status") != "DONE" or story_entry.get("freshness") != "fresh":
+                raise ValueError("Outline 前必须先批准 fresh Story Program；当前 Story Program 已 stale 或未完成")
+            current_entry = snapshot.get("artifacts", {}).get("evolution.current_character", {})
+            if int(current_entry.get("revision", 0)) > 0 and (
+                current_entry.get("status") != "DONE" or current_entry.get("freshness") != "fresh"
+            ):
+                raise ValueError("Refreshed Outline 前必须先刷新 fresh CURRENT_CHARACTER.md")
+        split_mode = payload.mode in {
+            "world_vision",
+            "power_seed",
+            "human_seed",
+            "idea",
+            "outline",
+            "world_expansion",
+            "human_development",
+            "story_refresh",
+        }
         prompt = generate_split_prompt(**values) if split_mode else generate_prompt(**_planning_only_fields_removed(values))
 
     except FileNotFoundError as error:
@@ -782,6 +1378,64 @@ def approve_character(book_id: str) -> dict[str, Any]:
 def approve_proposal(book_id: str) -> dict[str, Any]:
     try:
         return approve_creative_artifact(book_id, "proposal", workspace_path())
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.get("/api/books/{book_id}/evolution")
+def get_long_form_evolution(book_id: str) -> dict[str, Any]:
+    try:
+        creative = read_creative_payload(book_id, workspace_path())
+        return {
+            "world_expansions": creative.get("world_expansions", ""),
+            "human_development": creative.get("human_development", ""),
+            "current_character": creative.get("current_character", ""),
+            "world_horizon_handoff": creative.get("world_horizon_handoff", ""),
+            "workflow": workflow_status(require_book(book_id, workspace_path())),
+        }
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/world-expansions/approve")
+def post_world_expansion_approve(
+    book_id: str, payload: WorldExpansionApproveRequest
+) -> dict[str, Any]:
+    try:
+        return approve_world_expansion(
+            book_id,
+            payload.content,
+            workspace_path(),
+            scope=payload.scope,
+            effective_from=payload.effective_from,
+            effective_until=payload.effective_until,
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/human-development/approve")
+def post_human_development_approve(book_id: str, payload: TextRequest) -> dict[str, Any]:
+    try:
+        return approve_human_development(
+            book_id, payload.content, workspace_path()
+        )
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
+@app.post("/api/books/{book_id}/current-character/refresh")
+def post_current_character_refresh(book_id: str) -> dict[str, Any]:
+    try:
+        return refresh_current_character(book_id, workspace_path())
     except FileNotFoundError as error:
         raise not_found(error) from error
     except ValueError as error:

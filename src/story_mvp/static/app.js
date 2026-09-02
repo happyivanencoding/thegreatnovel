@@ -5,6 +5,8 @@ const state = {
   creativeState: {},
   creativeArtifacts: {},
   creativeSources: {},
+  premise: {},
+  premiseCompilerScope: "candidates",
   workflow: null,
   view: "overview",
   designTab: "overall",
@@ -128,7 +130,7 @@ function setView(view, updateHash = true) {
   if (view !== "memory") document.body.classList.remove("memory-editor-open");
   if (updateHash && window.location.hash !== `#${view}`) window.location.hash = view;
   if (view === "chapter") {
-    if (["world_vision", "power_seed", "human_seed", "idea", "outline", "review"].includes($("prompt-mode")?.value)) {
+    if (["premise_forge", "premise_compiler", "world_vision", "power_seed", "human_seed", "idea", "outline", "review"].includes($("prompt-mode")?.value)) {
       $("prompt-mode").value = "chapter";
     }
     setChapterTab(state.chapterTab);
@@ -361,7 +363,9 @@ function initializeReadingState() {
 }
 
 const workflowStages = [
+  { title: "大胆前提（可选）", keys: ["premise.contract"] },
   { title: "创意", keys: ["creative.world_vision", "creative.power_seed", "creative.human_seed", "creative.character_card", "creative.story_program"] },
+  { title: "长篇演化", keys: ["evolution.world", "evolution.human_development", "evolution.current_character"] },
   { title: "设计", keys: ["book.design"] },
   { title: "规划", keys: ["book.long_plan", "book.future_10"] },
   { title: "当前章节", keys: [] },
@@ -369,11 +373,15 @@ const workflowStages = [
 ];
 
 const workflowLabels = {
+  "premise.contract": "大胆前提合同",
   "creative.world_vision": "世界幻想",
   "creative.power_seed": "力量种子",
   "creative.human_seed": "人物种子",
   "creative.character_card": "人物权威",
   "creative.story_program": "故事方案",
+  "evolution.world": "向前世界拓展",
+  "evolution.human_development": "人物长期发展",
+  "evolution.current_character": "当前人物权威",
   "book.design": "总体设计",
   "book.long_plan": "中期规划",
   "book.future_10": "未来十章",
@@ -422,11 +430,15 @@ function workflowArtifactLabel(artifact) {
 
 function workflowLocation(artifact) {
   const staticPaths = {
+    "premise.contract": "PREMISE_CONTRACT.md",
     "creative.world_vision": "WORLD_VISION.md",
     "creative.power_seed": "POWER_SEED.md",
     "creative.human_seed": "HUMAN_SEED.md",
     "creative.character_card": "CHARACTER.md",
     "creative.story_program": "PROPOSAL.md",
+    "evolution.world": "world_expansions/expansion-NNNN.md",
+    "evolution.human_development": "human_development/delta-NNNN.md",
+    "evolution.current_character": "CURRENT_CHARACTER.md",
     "book.design": "BOOK.md · design",
     "book.long_plan": "BOOK.md · long_plan",
     "book.future_10": "BOOK.md · small_plan",
@@ -551,13 +563,16 @@ function locateWorkflowArtifact() {
     "creative.human_seed": "creative-human-seed",
     "creative.character_card": "creative-character-card",
     "creative.story_program": "proposal-editor",
+    "evolution.world": "evolution-world-history",
+    "evolution.human_development": "evolution-human-history",
+    "evolution.current_character": "evolution-current-character",
     "book.design": "design-sections",
     "book.long_plan": "section-long_plan",
     "book.future_10": "section-small_plan",
     "book.canon_state": "section-status",
   };
   const target = $(targets[selectedWorkflowArtifact] || "prompt-panel");
-  if (selectedWorkflowArtifact.startsWith("creative.")) navigateToView("creative", "定位创意节点");
+  if (selectedWorkflowArtifact.startsWith("creative.") || selectedWorkflowArtifact.startsWith("evolution.")) navigateToView("creative", "定位创意节点");
   if (selectedWorkflowArtifact === "book.design") navigateToView("design", "定位设计节点");
   if (selectedWorkflowArtifact === "book.long_plan") { navigateToView("design", "定位中期规划"); setDesignTab("midterm"); }
   if (selectedWorkflowArtifact === "book.future_10") { navigateToView("design", "定位未来十章"); setDesignTab("future10"); }
@@ -683,6 +698,190 @@ function setCreativePayload(payload) {
   $("creative-character-initial-state").value = payload?.character_initial_state || "";
   $("creative-character-audition").value = payload?.character_audition || "";
   $("creative-meta-character-card").textContent = `${character.origin || "empty"} · ${character.status || "empty"}`;
+  setPremisePayload(payload?.premise || {});
+  setEvolutionPayload(payload || {});
+}
+
+function setPremisePayload(premise) {
+  state.premise = premise || {};
+  const frozenByWorld = state.creativeState?.world_vision?.status === "author_approved";
+  $("premise-candidates").value = premise?.candidates || "";
+  $("selected-premise").value = premise?.selected || "";
+  $("premise-compiler-report").value = premise?.compiler_report || "";
+  $("premise-candidates").readOnly = frozenByWorld;
+  $("selected-premise").readOnly = frozenByWorld;
+  $("premise-compiler-report").readOnly = frozenByWorld;
+  const contracts = premise?.contracts || {};
+  $("premise-world-contract").value = contracts.world || "";
+  $("premise-power-contract").value = contracts.power || "";
+  $("premise-human-contract").value = contracts.human || "";
+  $("premise-story-contract").value = contracts.story || "";
+  const status = premise?.status || "not_started";
+  const selected = premise?.selected_id ? ` · ${premise.selected_id}` : "";
+  const verdict = premise?.selected_verdict ? ` · ${premise.selected_verdict}` : "";
+  $("premise-status").textContent = `${status}${selected}${verdict}`;
+  const previewSource = premise?.selected || premise?.candidates || "";
+  const compact = previewSource.trim().replace(/\s+/g, " ");
+  $("premise-preview").textContent = compact
+    ? (compact.length > 280 ? `${compact.slice(0, 280)}…` : compact)
+    : status === "skipped"
+      ? "作者已显式跳过；当前书使用原 Split Authority 开书路径。"
+      : "尚未开始；可直接跳过，或先生成三张完整大胆候选。";
+  for (const id of (
+    [
+      "generate-premise-forge-prompt",
+      "apply-premise-forge-response",
+      "save-premise-candidates",
+      "generate-premise-batch-compiler",
+      "save-selected-premise",
+      "generate-selected-premise-compiler",
+      "apply-premise-compiler-response",
+      "save-premise-compiler",
+    ]
+  )) {
+    $(id).disabled = frozenByWorld;
+  }
+  document.querySelectorAll("[data-premise-select]").forEach((button) => {
+    button.disabled = frozenByWorld;
+  });
+  $("approve-premise").disabled = frozenByWorld || !premise?.can_approve || Boolean(premise?.approved);
+  $("skip-premise").disabled = frozenByWorld || Boolean(premise?.approved);
+}
+
+function extractPremiseCandidate(candidateId) {
+  const text = $("premise-candidates").value;
+  const headings = [...text.matchAll(/^## (S[1-9])(?:｜[^\n]*)?\s*$/gm)];
+  const index = headings.findIndex((match) => match[1] === candidateId);
+  if (index < 0) return "";
+  const start = headings[index].index;
+  const end = index + 1 < headings.length ? headings[index + 1].index : text.length;
+  return text.slice(start, end).trim();
+}
+
+async function savePremiseCandidates() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  try {
+    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/premise/candidates`, {
+      method: "PUT",
+      body: JSON.stringify({ content: $("premise-candidates").value }),
+    });
+    setPremisePayload(payload);
+    clearEditorDirty(["premise-candidates", "selected-premise", "premise-compiler-report"]);
+    await refreshWorkflow();
+    showStatus("三张 Premise 候选已保存；仍为 Non-Canon");
+    return true;
+  } catch (error) {
+    showStatus(error.message, true);
+    return false;
+  }
+}
+
+function choosePremiseCandidate(candidateId) {
+  const candidate = extractPremiseCandidate(candidateId);
+  if (!candidate) return showStatus(`候选中没有找到 ${candidateId}`, true);
+  $("selected-premise").value = candidate;
+  markEditorDirty("selected-premise");
+  showStatus(`${candidateId} 已放入作者选择区；可编辑，但编辑后必须单卡复编`);
+}
+
+async function saveSelectedPremise() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  try {
+    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/premise/selected`, {
+      method: "PUT",
+      body: JSON.stringify({ content: $("selected-premise").value }),
+    });
+    setPremisePayload(payload);
+    clearEditorDirty(["selected-premise"]);
+    await refreshWorkflow();
+    showStatus("Selected Premise 已保存；模型没有替作者选择");
+    return true;
+  } catch (error) {
+    showStatus(error.message, true);
+    return false;
+  }
+}
+
+async function savePremiseCompilerReport() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  try {
+    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/premise/compiler`, {
+      method: "PUT",
+      body: JSON.stringify({ content: $("premise-compiler-report").value }),
+    });
+    setPremisePayload(payload);
+    clearEditorDirty(["premise-compiler-report"]);
+    await refreshWorkflow();
+    showStatus(payload.can_approve
+      ? "Compiler Report 已保存：所选卡 strict PASS，可由作者批准"
+      : "Compiler Report 已保存；CONDITIONAL PASS / FAIL 不会自动选择或修复");
+    return true;
+  } catch (error) {
+    showStatus(error.message, true);
+    return false;
+  }
+}
+
+async function generatePremiseForgePrompt() {
+  state.premiseCompilerScope = "candidates";
+  await generateCreativePrompt("premise_forge");
+}
+
+async function generatePremiseCompilerPrompt(scope) {
+  const saved = scope === "selected" ? await saveSelectedPremise() : await savePremiseCandidates();
+  if (!saved) return;
+  state.premiseCompilerScope = scope;
+  await generateCreativePrompt("premise_compiler");
+}
+
+function applyPremiseResponse(targetId, label) {
+  applyResponseToEditor($("codex-response"), $(targetId));
+  markEditorDirty(targetId);
+  showStatus(`${label} 已放入编辑区；模型返回尚未保存或批准`);
+}
+
+async function approvePremiseContract() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  try {
+    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/premise/approve`, {
+      method: "POST",
+    });
+    setPremisePayload(payload);
+    await refreshWorkflow();
+    showStatus("Premise 已批准并确定性拆为 World / Power / Human / Story 四条冻结合同");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function skipPremiseAperture() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  if (!window.confirm("显式跳过会清除未批准 Premise 候选与 Compiler 结果，并继续原 Split Authority 路径。继续吗？")) return;
+  try {
+    const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/premise/skip`, {
+      method: "POST",
+    });
+    setPremisePayload(payload);
+    clearEditorDirty(["premise-candidates", "selected-premise", "premise-compiler-report"]);
+    await refreshWorkflow();
+    showStatus("作者已显式跳过 Premise Aperture");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+function setEvolutionPayload(payload) {
+  if ($("evolution-world-handoff")) $("evolution-world-handoff").value = payload?.world_horizon_handoff || "";
+  if ($("evolution-world-history")) $("evolution-world-history").value = payload?.world_expansions || "";
+  if ($("evolution-human-history")) $("evolution-human-history").value = payload?.human_development || "";
+  if ($("evolution-current-character")) $("evolution-current-character").value = payload?.current_character || "";
+}
+
+async function refreshEvolutionPayload() {
+  if (!state.bookId) return;
+  const payload = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/evolution`);
+  setEvolutionPayload(payload);
+  if (payload.workflow) renderWorkflow(payload.workflow);
 }
 
 function markCreativeEdited(artifact) {
@@ -802,6 +1001,73 @@ async function generateCreativePrompt(mode) {
   await generatePrompt();
 }
 
+function applyEvolutionResponse(kind) {
+  const target = kind === "world" ? $("evolution-world-candidate") : $("evolution-human-candidate");
+  applyResponseToEditor($("codex-response"), target);
+  showStatus(`${kind === "world" ? "World Expansion" : "Human Development"} 模型返回已放入候选区；尚未成为 Authority`);
+}
+
+async function approveWorldExpansion() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  const content = $("evolution-world-candidate").value.trim();
+  if (!content) return showStatus("World Expansion 候选为空", true);
+  try {
+    await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/world-expansions/approve`, {
+      method: "POST",
+      body: JSON.stringify({
+        content,
+        scope: $("evolution-world-scope").value,
+        effective_from: Number($("evolution-world-from").value),
+        effective_until: Number($("evolution-world-until").value || 0),
+      }),
+    });
+    $("evolution-world-candidate").value = "";
+    await refreshEvolutionPayload();
+    showStatus("World Expansion 已批准为 forward-only Authority；Origin Power/Human 未被重写，未来 Story/Outline 已 stale");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function approveHumanDevelopment() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  const content = $("evolution-human-candidate").value.trim();
+  if (!content) return showStatus("Human Development 候选为空；没有稳定变化时模型应明确返回 NONE", true);
+  try {
+    const result = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/human-development/approve`, {
+      method: "POST",
+      body: JSON.stringify({ content }),
+    });
+    $("evolution-human-candidate").value = "";
+    await refreshEvolutionPayload();
+    showStatus(result.status === "no_change"
+      ? "Human Development = NONE：没有制造人格变化"
+      : "Human Development 已批准；请刷新 Current Character 后再做 Story Refresh");
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+async function refreshCurrentCharacter() {
+  if (!state.bookId) return showStatus("请先加载小说", true);
+  try {
+    const result = await requestJson(`/api/books/${encodeURIComponent(state.bookId)}/current-character/refresh`, {
+      method: "POST",
+    });
+    $("evolution-current-character").value = result.content || "";
+    await refreshWorkflow();
+    showStatus(`Current Character 已确定性刷新到第${result.compiled_through}章；未调用 LLM`);
+  } catch (error) {
+    showStatus(error.message, true);
+  }
+}
+
+function applyStoryRefreshResponse() {
+  applyCreativeResponse("proposal");
+  $("proposal-editor")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  showStatus("Story Refresh 已放入 Story Program 编辑器；请阅读/编辑后走现有保存与批准流程");
+}
+
 const runNodeByMode = {
   chapter: "primary",
   director: "director",
@@ -814,6 +1080,19 @@ const runNodeByMode = {
   specialist_emotion: "emotion",
   chapter_integrator: "integrator",
   state_delta: "state_delta",
+};
+
+const runResponseEditorByMode = {
+  chapter: "primary-writer-response",
+  context_curator: "curator-response",
+  primary_writer: "primary-writer-response",
+  authority_reviser: "authority-reviser-response",
+  specialist_opening: "opening-specialist-response",
+  specialist_dialogue: "dialogue-specialist-response",
+  specialist_action: "action-specialist-response",
+  specialist_emotion: "emotion-specialist-response",
+  chapter_integrator: "integrator-response",
+  state_delta: "state-delta-response",
 };
 
 function currentChapterNumber() {
@@ -938,37 +1217,100 @@ async function activateSelectedRepair() {
 
 async function saveRunPromptForMode(mode, prompt) {
   const node = runNodeByMode[mode];
-  if (!node || !state.currentRun || !prompt.trim()) return;
+  if (!node || !state.currentRun || !prompt.trim()) return null;
   try {
-    renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/prompt`, {
+    const manifest = await requestJson(`${runBaseUrl()}/nodes/${node}/prompt`, {
       method: "PUT",
       body: JSON.stringify({ content: prompt }),
-    }));
+    });
+    renderRunLedger(manifest);
     await refreshWorkflow();
+    return manifest;
   } catch (error) {
     showStatus(`保存 ${node} Prompt 到 Run 失败：${error.message}`, true);
+    return null;
   }
+}
+
+function hydrateDirectorResponseEditors(response) {
+  if (!response.trim()) return false;
+  $("director-response").value = response;
+  const lines = [];
+  const fieldLabels = new Set();
+  let afterField = false;
+  for (const line of response.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (/^#{1,6}\s/.test(trimmed)) {
+      if (afterField) break;
+      continue;
+    }
+    const fieldMatch = /^(触发事件|推动事件的人|主角行动|对手或世界反应|直接结果|状态变化|叙事功能|结尾推动力)\s*[：:]/.exec(trimmed);
+    if (fieldMatch) {
+      fieldLabels.add(fieldMatch[1]);
+      afterField = true;
+      lines.push(trimmed);
+    } else if (afterField && trimmed) {
+      lines.push(trimmed);
+    }
+  }
+  if (fieldLabels.size !== 8) return false;
+  $("current-outline").value = lines.join("\n");
+  return true;
+}
+
+async function hydrateReceiptReusedResponse(mode, node) {
+  const payload = await requestJson(`${runBaseUrl()}/nodes/${node}/response`);
+  const response = payload.content || "";
+  if (!response.trim()) throw new Error(`${node} receipt 指向的 Response 为空`);
+  $("codex-response").value = response;
+  if (mode === "director") {
+    if (!hydrateDirectorResponseEditors(response)) {
+      throw new Error("复用的 Director Response 不含完整八字段");
+    }
+  } else {
+    const editorId = runResponseEditorByMode[mode];
+    if (editorId && $(editorId)) $(editorId).value = response;
+  }
+  $("codex-task-wrapper-panel").hidden = true;
+  $("codex-task-wrapper").value = "";
 }
 
 async function saveRunResponseForMode(mode, response) {
   const node = runNodeByMode[mode];
-  if (!node || !state.currentRun || !response.trim()) return;
+  if (!node || !state.currentRun || !response.trim()) return null;
   try {
-    renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/response`, {
+    const manifest = await requestJson(`${runBaseUrl()}/nodes/${node}/response`, {
       method: "PUT",
       body: JSON.stringify({ content: response }),
-    }));
+    });
+    renderRunLedger(manifest);
     await refreshWorkflow();
+    return manifest;
   } catch (error) {
     showStatus(`保存 ${node} Response 到 Run 失败：${error.message}`, true);
+    return null;
   }
 }
 
 async function retryRunNode(node) {
   try {
-    renderRunLedger(await requestJson(`${runBaseUrl()}/nodes/${node}/retry`, { method: "POST" }));
+    const manifest = await requestJson(`${runBaseUrl()}/nodes/${node}/retry`, { method: "POST" });
+    renderRunLedger(manifest);
     await refreshWorkflow();
-    showStatus(`${node} 已按原 Prompt 准备重试`);
+    const info = manifest.nodes?.[node] || {};
+    if (node === "authority_reviser" && info.repair_reason) {
+      const saved = await requestJson(`${runBaseUrl()}/nodes/${node}/prompt`);
+      $("prompt-text").value = saved.content || "";
+      renderCodexTaskWrapper("authority_reviser");
+      if (currentExecutorMode() === "openai_api" && saved.content?.trim()) {
+        await executeOpenAI(saved.content, "authority_reviser");
+        showStatus("显式里程碑 Outcome Repair 已执行；请检查并 Apply 返回。最多只允许这一次条件性重试。");
+      } else {
+        showStatus("已加载显式里程碑 Outcome Repair Prompt；这是一次性窄修复，不会重跑普通 Reviser。 ");
+      }
+      return;
+    }
+    showStatus(`${node} 已按当前保存 Prompt 准备重试`);
   } catch (error) {
     showStatus(error.message, true);
   }
@@ -1136,6 +1478,11 @@ function populateBook(book) {
   for (const key of ["long_plan", "small_plan", "status"]) {
     $(`section-${key}`).value = book.sections?.[key] || "";
   }
+  const completed = (book.sections?.status || "").match(/当前已完成第\s*(\d+)\s*章/);
+  if ($("evolution-world-from")) $("evolution-world-from").value = String((completed ? Number(completed[1]) : 0) + 1);
+  if ($("evolution-world-until")) $("evolution-world-until").value = "0";
+  if ($("evolution-world-candidate")) $("evolution-world-candidate").value = "";
+  if ($("evolution-human-candidate")) $("evolution-human-candidate").value = "";
   const templates = book.prompt_templates || {};
   $("template-idea").value = templates.idea || $("template-idea").value;
   $("template-outline").value = templates.outline || $("template-outline").value;
@@ -1313,10 +1660,15 @@ function selectedReferences() {
 
 function currentTemplate() {
   return {
+    premise_forge: "",
+    premise_compiler: "",
     world_vision: "",
+    world_expansion: "",
     power_seed: "",
     human_seed: "",
+    human_development: "",
     idea: $("template-idea").value,
+    story_refresh: "",
     outline: $("template-outline").value,
     chapter_prep: $("template-chapter_prep").value,
     chapter: $("template-chapter").value,
@@ -1365,10 +1717,17 @@ async function setDefaultGbrainQuery() {
 async function handlePromptModeChange() {
   clearReferenceSelection();
   invalidateGbrainResults("切换 Prompt 模式");
-  if ($("prompt-mode").value === "authority_reviser") {
+  if (["premise_forge", "premise_compiler", "authority_reviser", "human_development"].includes($("prompt-mode").value)) {
     state.gbrainDefaultBrief = "";
     $("gbrain-query").value = "";
-    $("gbrain-scope").textContent = "GBrain：Authority Reviser 固定 OFF；只读取 safe Authority Refresh Pack。";
+    const mode = $("prompt-mode").value;
+    $("gbrain-scope").textContent = mode === "human_development"
+      ? "GBrain：Human Development 固定 OFF；只根据 Frozen Human + 已发生 Canon 判断稳定变化。"
+      : mode === "premise_forge"
+        ? "GBrain：Premise Forge 固定 OFF；先测模型自身完整前提搜索，不复制来源作品。"
+        : mode === "premise_compiler"
+          ? "GBrain：Premise Compiler 固定 OFF；只做所见候选的因果可满足性检查。"
+          : "GBrain：Authority Reviser 固定 OFF；只读取 safe Authority Refresh Pack。";
     return;
   }
   await setDefaultGbrainQuery();
@@ -1408,12 +1767,21 @@ function promptPayload() {
     chapter_number: Number($("chapter-number").value),
     book_content: composeBookContent(),
     creative_direction: $("creative-direction").value,
+    premise_candidates: $("premise-candidates").value,
+    selected_premise: state.premiseCompilerScope === "selected" ? $("selected-premise").value : "",
+    premise_compiler_scope: state.premiseCompilerScope,
     world_vision: $("creative-world-vision").value,
+    world_expansions: $("evolution-world-history")?.value || "",
     power_seed: $("creative-power-seed").value,
     human_seed: $("creative-human-seed").value,
     prototype_id: $("human-prototype-selector")?.value || "",
     character_card: $("creative-character-card").value,
     character_initial_state: $("creative-character-initial-state").value,
+    human_development: $("evolution-human-history")?.value || "",
+    current_character: $("evolution-current-character")?.value || "",
+    evolution_scope: $("evolution-world-scope")?.value || "macro",
+    effective_from_chapter: Number($("evolution-world-from")?.value || 0),
+    effective_until_chapter: Number($("evolution-world-until")?.value || 0),
     creative_state: state.creativeState,
     current_long_block: $("current-long-block").value,
     previous_chapter_text: $("previous-chapter-text").value,
@@ -1488,7 +1856,14 @@ async function generatePrompt() {
       body: JSON.stringify(promptPayload()),
     });
     $("prompt-text").value = payload.prompt;
-    await saveRunPromptForMode(mode, payload.prompt);
+    const manifest = await saveRunPromptForMode(mode, payload.prompt);
+    const node = runNodeByMode[mode];
+    if (node && manifest?.nodes?.[node]?.receipt_reused) {
+      await hydrateReceiptReusedResponse(mode, node);
+      await refreshWorkflow();
+      showStatus(`${node} 的最终 Prompt 未变化；已复用 Run Receipt，跳过模型调用。`);
+      return;
+    }
     renderCodexTaskWrapper(mode);
     if (currentExecutorMode() === "openai_api") await executeOpenAI(payload.prompt, mode);
     showStatus("Prompt 已生成，可继续编辑后复制");
@@ -1515,10 +1890,15 @@ function currentExecutorMode() {
 
 function externalArtifactForMode(mode) {
   const creative = {
+    premise_forge: "premise.candidates",
+    premise_compiler: "premise.compiler",
     world_vision: "creative.world_vision",
     power_seed: "creative.power_seed",
     human_seed: "creative.human_seed",
     idea: "creative.story_program",
+    story_refresh: "creative.story_program",
+    world_expansion: "evolution.world-candidate",
+    human_development: "evolution.human-development-candidate",
   };
   if (creative[mode]) return creative[mode];
   const node = runNodeByMode[mode];
@@ -1538,12 +1918,43 @@ function renderCodexTaskWrapper(mode) {
   const node = runNodeByMode[mode] || "";
   const chapter = currentChapterNumber();
   const workspace = $("workspace-path")?.textContent.trim() || "<workspace>";
+  const runPromptFile = node && state.currentRun?.nodes?.[node]?.prompt_file
+    ? state.currentRun.nodes[node].prompt_file
+    : node ? `${node}_prompt.md` : "";
   const promptPath = node && state.currentRun
-    ? `${workspace}\\${state.bookId}\\runs\\chapter-${String(chapter).padStart(4, "0")}\\${node}_prompt.md`
+    ? `${workspace}\\${state.bookId}\\runs\\chapter-${String(chapter).padStart(4, "0")}\\${runPromptFile}`
     : "当前页面的完整 Prompt 文本框（请先保存/复制）";
   const tempPath = `${workspace}\\${state.bookId}\\.workflow_tmp\\${artifact.replaceAll(".", "-")}-response.md`;
   const nodeArgs = node ? ` --chapter ${chapter} --node ${node}` : "";
-  const executionProfile = mode === "authority_reviser" ? "执行配置：GPT-5.6 Luna，reasoning=high。" : "";
+  const executionProfile = mode === "authority_reviser"
+    ? "执行配置：GPT-5.6 Luna，reasoning=high。"
+    : mode === "premise_compiler"
+      ? "执行配置：GPT-5.6 Terra，reasoning=high；fresh context，不评分、不选择、不修稿。"
+      : mode === "premise_forge"
+        ? "执行配置：GPT-5.6 Luna，reasoning=high；GBrain OFF。"
+    : mode === "story_refresh"
+      ? "执行配置：GPT-5.6 Sol，reasoning=high。"
+      : ["world_expansion", "human_development"].includes(mode)
+        ? "执行配置：GPT-5.6 Luna，reasoning=high。"
+        : "";
+  if (["premise_forge", "premise_compiler", "world_expansion", "human_development"].includes(mode)) {
+    output.value = [
+      ["premise_forge", "premise_compiler"].includes(mode)
+        ? "在当前 thegreatnovel 工作区执行开书期 Non-Canon Premise 节点。"
+        : "在当前 thegreatnovel 工作区执行周期性 Long-form Evolution 候选。",
+      "",
+      `Book: ${state.bookId}`,
+      `Mode: ${mode}`,
+      `读取已经保存的 Prompt：${promptPath}`,
+      executionProfile,
+      "严格按该 Prompt 生成最终输出。",
+      `把模型返回暂存到：${tempPath}`,
+      "不要运行 story-mvp-workflow apply，也不要修改任何 Authority：模型返回 ≠ 作者批准。",
+      "完成后只报告 output path；作者会在 UI 中审阅后显式批准。",
+    ].join("\n");
+    panel.hidden = false;
+    return;
+  }
   output.value = [
     "在当前 thegreatnovel 工作区执行 Story MVP 节点。",
     "",
@@ -1565,16 +1976,22 @@ function renderCodexTaskWrapper(mode) {
 async function executeOpenAI(prompt, mode = "") {
   const isStateExtraction = mode === "state_delta";
   const isAuthorityReviser = mode === "authority_reviser";
-  const explicitModel = isStateExtraction
+  const premiseModel = mode === "premise_forge"
+    ? "gpt-5.6-luna"
+    : mode === "premise_compiler" ? "gpt-5.6-terra" : "";
+  const periodicModel = mode === "story_refresh"
+    ? "gpt-5.6-sol"
+    : ["world_expansion", "human_development"].includes(mode) ? "gpt-5.6-luna" : "";
+  const explicitModel = premiseModel || periodicModel || (isStateExtraction
     ? $("state-model").value.trim()
-    : isAuthorityReviser ? "" : $("openai-model").value.trim();
+    : isAuthorityReviser ? "" : $("openai-model").value.trim());
   const payload = await requestJson("/api/executors/openai", {
     method: "POST",
     body: JSON.stringify({
       prompt,
       model: explicitModel,
       purpose: isStateExtraction ? "state_extraction" : isAuthorityReviser ? "authority_reviser" : "default",
-      reasoning_effort: isAuthorityReviser ? "high" : "",
+      reasoning_effort: isAuthorityReviser || premiseModel || periodicModel ? "high" : "",
     }),
   });
   $("codex-response").value = payload.output_text;
@@ -1865,30 +2282,10 @@ async function applyDirectorResponse() {
     showStatus("Director 返回为空，未改变当前章小纲", true);
     return;
   }
-  $("director-response").value = response;
-  const lines = [];
-  const fieldLabels = new Set();
-  let afterField = false;
-  for (const line of response.split(/\r?\n/)) {
-    const trimmed = line.trim();
-    if (/^#{1,6}\s/.test(trimmed)) {
-      if (afterField) break;
-      continue;
-    }
-    const fieldMatch = /^(触发事件|推动事件的人|主角行动|对手或世界反应|直接结果|状态变化|叙事功能|结尾推动力)\s*[：:]/.exec(trimmed);
-    if (fieldMatch) {
-      fieldLabels.add(fieldMatch[1]);
-      afterField = true;
-      lines.push(trimmed);
-    } else if (afterField && trimmed) {
-      lines.push(trimmed);
-    }
-  }
-  if (fieldLabels.size !== 8) {
+  if (!hydrateDirectorResponseEditors(response)) {
     showStatus("Director 返回没有完整八字段，未改变当前章小纲", true);
     return;
   }
-  $("current-outline").value = lines.join("\n");
   markEditorDirty("current-outline");
   await saveRunResponseForMode("director", response);
   showStatus("Director 八字段已采用到当前章小纲；尚未写盘");
@@ -1951,7 +2348,18 @@ async function adoptAuthorityRevision() {
   $("chapter-body-for-save").value = body;
   $("chapter-fact-summary").value = "";
   markEditorDirty("chapter-body-for-save");
-  await saveRunResponseForMode("authority_reviser", $("authority-reviser-response").value);
+  const manifest = await saveRunResponseForMode("authority_reviser", $("authority-reviser-response").value);
+  const reviser = manifest?.nodes?.authority_reviser || {};
+  if (reviser.status === "failed" && reviser.repair_reason === "missing_explicit_milestone_outcome") {
+    $("chapter-body-for-save").value = "";
+    showStatus("Authority Revision 漏掉已批准的显式里程碑结果；系统已准备一次窄 Outcome Repair。请在 Run Ledger 点击“重试节点”。", true);
+    return false;
+  }
+  if (reviser.status === "failed") {
+    $("chapter-body-for-save").value = "";
+    showStatus("Authority Reviser 仍未满足显式里程碑 Outcome Authority；不会采用，也不会进入 State。", true);
+    return false;
+  }
   await adoptRunSource("authority_reviser");
   showStatus("已采用 Authority Revision 作为正式正文；State Extraction 将只读取修订稿。尚未保存章节");
   return true;
@@ -2095,6 +2503,31 @@ function compactRecentSummaryWindow(text, keep = 3) {
   return clean.split(/\n\s*\n/).filter(Boolean).slice(-keep).join("\n\n");
 }
 
+function exactPowerPositionLine(text, prefix) {
+  return text.split(/\r?\n/)
+    .map((line) => line.trim().replace(/^[-*]\s*/, ""))
+    .find((line) => line.startsWith(prefix) && /精确位置[：:].*\d/.test(line)) || "";
+}
+
+function preserveExactPowerPosition(proposedPersistent, oldStatus) {
+  if (exactPowerPositionLine(proposedPersistent, "Current Power Position｜")) return proposedPersistent;
+
+  const oldPersistent = existingCanonSection(oldStatus, "## PERSISTENT CANON", "长期事实");
+  let position = exactPowerPositionLine(oldPersistent, "Current Power Position｜");
+  if (!position) {
+    const characterCard = $("creative-character-card")?.value || "";
+    const initial = exactPowerPositionLine(characterCard, "开局精确力量位置｜");
+    if (initial) position = initial.replace(/^开局精确力量位置｜/, "Current Power Position｜");
+  }
+  if (!position) return proposedPersistent;
+
+  const heading = "### Power / Capability";
+  if (proposedPersistent.includes(heading)) {
+    return proposedPersistent.replace(heading, `${heading}\n${position}`);
+  }
+  return `${heading}\n${position}\n${proposedPersistent}`.trim();
+}
+
 function buildCanonMemoryStatus(proposed) {
   const chapterNumber = currentChapterNumber();
   const oldStatus = $("section-status").value;
@@ -2104,12 +2537,13 @@ function buildCanonMemoryStatus(proposed) {
     `第${chapterNumber}章：${proposed.chapter_summary}`,
   ].filter(Boolean).join("\n"));
   const authorNotes = existingAuthorNotes(oldStatus);
+  const persistentCanon = preserveExactPowerPosition(proposed.persistent_canon, oldStatus);
   return [
     `当前已完成第${chapterNumber}章。`,
     "## ACTIVE SCENE STATE",
     proposed.active_scene_state,
     "## PERSISTENT CANON",
-    proposed.persistent_canon,
+    persistentCanon,
     "## RECENT SUMMARIES",
     summaries,
     "## OPEN PROMISES",
@@ -2286,6 +2720,19 @@ $("close-settings").addEventListener("click", () => $("settings-dialog").close()
 $("save-settings").addEventListener("click", saveOpenAISettings);
 $("default-gbrain-query").addEventListener("click", setDefaultGbrainQuery);
 $("query-gbrain").addEventListener("click", queryGbrain);
+$("generate-premise-forge-prompt").addEventListener("click", generatePremiseForgePrompt);
+$("apply-premise-forge-response").addEventListener("click", () => applyPremiseResponse("premise-candidates", "Premise Forge 返回"));
+$("save-premise-candidates").addEventListener("click", savePremiseCandidates);
+$("generate-premise-batch-compiler").addEventListener("click", () => generatePremiseCompilerPrompt("candidates"));
+document.querySelectorAll("[data-premise-select]").forEach((button) => {
+  button.addEventListener("click", () => choosePremiseCandidate(button.dataset.premiseSelect));
+});
+$("save-selected-premise").addEventListener("click", saveSelectedPremise);
+$("generate-selected-premise-compiler").addEventListener("click", () => generatePremiseCompilerPrompt("selected"));
+$("apply-premise-compiler-response").addEventListener("click", () => applyPremiseResponse("premise-compiler-report", "Premise Compiler 返回"));
+$("save-premise-compiler").addEventListener("click", savePremiseCompilerReport);
+$("approve-premise").addEventListener("click", approvePremiseContract);
+$("skip-premise").addEventListener("click", skipPremiseAperture);
 $("generate-idea-prompt").addEventListener("click", generateIdeaPrompt);
 $("generate-world-vision-prompt").addEventListener("click", () => generateCreativePrompt("world_vision"));
 $("generate-power-seed-prompt").addEventListener("click", () => generateCreativePrompt("power_seed"));
@@ -2295,16 +2742,25 @@ $("human-prototype-selector").addEventListener("change", async () => {
   if ($("prompt-mode").value === "human_seed") await setDefaultGbrainQuery();
 });
 $("generate-story-program-prompt").addEventListener("click", () => generateCreativePrompt("idea"));
+$("generate-world-expansion-prompt").addEventListener("click", () => generateCreativePrompt("world_expansion"));
+$("generate-human-development-prompt").addEventListener("click", () => generateCreativePrompt("human_development"));
+$("generate-story-refresh-prompt").addEventListener("click", () => generateCreativePrompt("story_refresh"));
 $("apply-world-vision-response").addEventListener("click", () => applyCreativeResponse("world_vision"));
 $("apply-power-seed-response").addEventListener("click", () => applyCreativeResponse("power_seed"));
 $("apply-human-seed-response").addEventListener("click", () => applyCreativeResponse("human_seed"));
 $("apply-story-program-response").addEventListener("click", () => applyCreativeResponse("proposal"));
+$("apply-world-expansion-response").addEventListener("click", () => applyEvolutionResponse("world"));
+$("apply-human-development-response").addEventListener("click", () => applyEvolutionResponse("human"));
+$("apply-story-refresh-response").addEventListener("click", applyStoryRefreshResponse);
 $("save-world-vision").addEventListener("click", () => saveCreativeArtifact("world_vision"));
 $("save-power-seed").addEventListener("click", () => saveCreativeArtifact("power_seed"));
 $("save-human-seed").addEventListener("click", () => saveCreativeArtifact("human_seed"));
 $("approve-world-vision").addEventListener("click", () => approveCreativeArtifact("world_vision"));
 $("approve-character").addEventListener("click", approveCharacter);
 $("approve-proposal").addEventListener("click", () => approveCreativeArtifact("proposal"));
+$("approve-world-expansion").addEventListener("click", approveWorldExpansion);
+$("approve-human-development").addEventListener("click", approveHumanDevelopment);
+$("refresh-current-character").addEventListener("click", refreshCurrentCharacter);
 $("generate-prompt").addEventListener("click", generateCurrentChapterAction);
 $("generate-director-prompt").addEventListener("click", () => generateHybridNodePrompt("director"));
 $("generate-curator-prompt").addEventListener("click", () => generateHybridNodePrompt("context_curator"));

@@ -215,8 +215,46 @@
           </div>
           <span class="status">模型建议 ≠ 作者批准</span>
         </div>
-        <p class="hint">按 World Vision → Character Authority（Power Seed ∥ Human Seed，一次批准）→ Story Program 的顺序推进。Power 与 Human 是两个独立创意上下文，但不是两个审批门禁。</p>
+        <p class="hint">可选 Premise Aperture → World Vision → Character Authority（Power Seed ∥ Human Seed，一次批准）→ Story Program。Premise 从未开始或作者显式跳过时，旧开书路径保持可用；一旦开始，必须 strict PASS + 作者批准后才能继续。</p>
         <p class="hint">默认是阅读态；点击阶段标题进入编辑。GBrain 与 References 保持折叠，只有作者主动展开。</p>
+
+        <details class="creative-stage" id="premise-stage" open>
+          <summary>Premise Aperture / 大胆前提（可选） <span id="premise-status" class="count">not_started</span></summary>
+          <p id="premise-preview" class="reading-preview">尚未开始；可直接跳过，或先生成三张完整大胆候选。</p>
+          <p class="hint">Forge 只生成 Non-Canon 候选；Compiler 只查 trigger、载体、尺度与远期复合，不评分、不选择、不修稿。只有 strict PASS 的已保存候选才能由作者批准并确定性拆成四条 lane contract。</p>
+          <label class="field"><span>Premise Candidates（必须完整包含 S1 / S2 / S3）</span><textarea id="premise-candidates" rows="18" placeholder="Single-Agent Premise Forge 返回"></textarea></label>
+          <div class="action-row wrap">
+            <button id="generate-premise-forge-prompt" class="primary">生成 Premise Forge Prompt</button>
+            <button id="apply-premise-forge-response">应用模型返回</button>
+            <button id="save-premise-candidates">保存三张候选</button>
+            <button id="generate-premise-batch-compiler">独立编译三张候选</button>
+          </div>
+          <div class="action-row wrap">
+            <span class="hint">作者选择：</span>
+            <button type="button" data-premise-select="S1">选择 S1</button>
+            <button type="button" data-premise-select="S2">选择 S2</button>
+            <button type="button" data-premise-select="S3">选择 S3</button>
+          </div>
+          <label class="field"><span>Selected Premise（作者可编辑；编辑后必须重新编译）</span><textarea id="selected-premise" rows="16" placeholder="只保留一张 ## S#｜... 候选"></textarea></label>
+          <div class="action-row wrap">
+            <button id="save-selected-premise">保存所选候选</button>
+            <button id="generate-selected-premise-compiler" class="primary">独立复编所选候选</button>
+          </div>
+          <label class="field"><span>Independent Compiler Report</span><textarea id="premise-compiler-report" rows="13" placeholder="PASS / CONDITIONAL PASS / FAIL；不允许评分或自动修复"></textarea></label>
+          <div class="action-row wrap">
+            <button id="apply-premise-compiler-response">应用 Compiler 返回</button>
+            <button id="save-premise-compiler">保存 Compiler Report</button>
+            <button id="approve-premise" class="primary">批准 Premise Contract</button>
+            <button id="skip-premise">显式跳过 Premise Aperture</button>
+          </div>
+          <details class="source-details">
+            <summary>Frozen Lane Contracts（批准后只读）</summary>
+            <label class="field"><span>World lane</span><textarea id="premise-world-contract" rows="7" readonly></textarea></label>
+            <label class="field"><span>Power lane</span><textarea id="premise-power-contract" rows="7" readonly></textarea></label>
+            <label class="field"><span>Human lane</span><textarea id="premise-human-contract" rows="7" readonly></textarea></label>
+            <label class="field"><span>Story lane</span><textarea id="premise-story-contract" rows="9" readonly></textarea></label>
+          </details>
+        </details>
 
         <details class="creative-stage" open>
           <summary>World Vision / Protagonist-blind 世界 <span id="creative-meta-world-vision" class="count">empty · empty</span></summary>
@@ -290,6 +328,56 @@
             <button id="save-proposal">保存 Story Program</button>
             <button id="approve-proposal" class="primary">批准 Story Program</button>
           </div>
+        </details>
+
+        <details class="creative-stage" id="long-form-evolution-stage">
+          <summary>Long-form Evolution / 长篇向前演化</summary>
+          <p class="hint"><strong>只在真正的世界边界调用，不是每100章税。</strong> World Expansion 与 Human Development 使用隔离上下文；前者看不到主角，后者看不到未来世界。Human Development 是更慢的可选时钟，不要求每个副本/每次 World Expansion 都跑；只有长期历史可能真的改变 Stable Choice Bias 时才需要。随后代码确定性编译 Current Character，最后才用 Story Refresh 让独立 Authority 重新碰撞。</p>
+          <p class="hint">普通玄幻可在进入新大陆/新圈层时使用 macro；多世界副本流每个真正独立新世界可使用 instance，并用结束章节限制其 Local World Authority。已完成正文永不因向前扩展被重写。</p>
+          <label class="field"><span>Story Program 的 World Horizon Handoff（只读；不注入 World Agent）</span><textarea id="evolution-world-handoff" rows="8" readonly placeholder="Story Program 会在当前 World Horizon 接近结束时留下交接任务；World Agent 为保留 Surprise 不读取此区块。"></textarea></label>
+
+          <div class="character-seed-grid">
+            <div>
+              <h3>World Expansion</h3>
+              <label class="field"><span>类型</span>
+                <select id="evolution-world-scope">
+                  <option value="macro">macro · 长篇世界层拓宽</option>
+                  <option value="instance">instance · 独立副本 / Local World</option>
+                </select>
+              </label>
+              <div class="action-row wrap">
+                <label class="field compact-field"><span>从第几章生效</span><input id="evolution-world-from" type="number" min="1" value="1"></label>
+                <label class="field compact-field"><span>到第几章结束（0=持续）</span><input id="evolution-world-until" type="number" min="0" value="0"></label>
+              </div>
+              <label class="field"><span>已批准 World Expansions（只读）</span><textarea id="evolution-world-history" rows="10" readonly></textarea></label>
+              <label class="field"><span>本次候选</span><textarea id="evolution-world-candidate" rows="13" placeholder="生成 Prompt 后运行 Luna high，将返回放到这里；批准前不是 Authority。"></textarea></label>
+              <div class="action-row wrap">
+                <button id="generate-world-expansion-prompt" class="primary">生成 World Expansion Prompt</button>
+                <button id="apply-world-expansion-response">应用模型返回</button>
+                <button id="approve-world-expansion" class="primary">批准向前扩展</button>
+              </div>
+            </div>
+
+            <div>
+              <h3>Human Development</h3>
+              <p class="hint">只判断已经发生的长期历史是否真的改变了稳定选择偏向。允许直接返回 <code>NONE</code>；不因为最近几章救人/负责就重写人格。</p>
+              <label class="field"><span>已批准 Human Development（只读）</span><textarea id="evolution-human-history" rows="10" readonly></textarea></label>
+              <label class="field"><span>本次候选</span><textarea id="evolution-human-candidate" rows="13" placeholder="周期性 Luna high；只看 Frozen Human + 已发生 Canon，不看未来 World。"></textarea></label>
+              <div class="action-row wrap">
+                <button id="generate-human-development-prompt" class="primary">生成 Human Development Prompt</button>
+                <button id="apply-human-development-response">应用模型返回</button>
+                <button id="approve-human-development" class="primary">批准人物发展</button>
+              </div>
+            </div>
+          </div>
+
+          <label class="field"><span>CURRENT_CHARACTER.md（确定性编译，只读）</span><textarea id="evolution-current-character" rows="18" readonly></textarea></label>
+          <div class="action-row wrap">
+            <button id="refresh-current-character" class="primary">刷新 Current Character</button>
+            <button id="generate-story-refresh-prompt" class="primary">生成 Story Refresh / Re-Collision Prompt</button>
+            <button id="apply-story-refresh-response">将模型返回放入 Story Program 编辑器</button>
+          </div>
+          <p class="hint">Story Refresh 使用 GPT-5.6 Sol high；结果仍进入上面的 Story Program 编辑器，由现有“保存 → 批准 Story Program”流程冻结。它只刷新未来，不创建第四个常驻审批链。</p>
         </details>
       </section>
 
@@ -608,10 +696,15 @@
           <label class="field">
             <span>生成节点（高级）</span>
             <select id="prompt-mode" aria-label="Prompt 模式">
-              <option value="world_vision">World Vision / Protagonist-blind 世界</option>
+              <option value="premise_forge">Premise Forge / 大胆前提候选</option>
+              <option value="premise_compiler">Premise Compiler / 可满足性检查</option>
+              <option value="world_vision" selected>World Vision / Protagonist-blind 世界</option>
+              <option value="world_expansion">World Expansion / 向前扩世界</option>
               <option value="power_seed">Power Seed / 力量异常</option>
               <option value="human_seed">Human Seed / 独立人物</option>
+              <option value="human_development">Human Development / 长期人物发展</option>
               <option value="idea">Story Program / Collision 主线</option>
+              <option value="story_refresh">Story Refresh / Periodic Re-Collision</option>
               <option value="outline">新书/总纲规划</option>
               <option value="director">当前章 Director</option>
               <option value="chapter_prep">当前章执行小纲</option>

@@ -13,6 +13,8 @@ from urllib.parse import urlparse
 
 DEFAULT_OPENAI_MODEL = "gpt-5.6"
 DEFAULT_AUTHORITY_REVISER_MODEL = "gpt-5.6-luna"
+DEFAULT_BATCH_PRIMARY_MODEL = "gpt-5.6-terra"
+DEFAULT_BATCH_AUTHORITY_REVISER_MODEL = "gpt-5.6-sol"
 _runtime_settings = {"name": "", "url": "", "api_key": ""}
 
 
@@ -121,6 +123,17 @@ def authority_reviser_model() -> str:
     return os.environ.get("STORY_MVP_AUTHORITY_REVISER_MODEL", "").strip() or DEFAULT_AUTHORITY_REVISER_MODEL
 
 
+def batch_primary_model() -> str:
+    return os.environ.get("STORY_MVP_BATCH_PRIMARY_MODEL", "").strip() or DEFAULT_BATCH_PRIMARY_MODEL
+
+
+def batch_authority_reviser_model() -> str:
+    return (
+        os.environ.get("STORY_MVP_BATCH_AUTHORITY_REVISER_MODEL", "").strip()
+        or DEFAULT_BATCH_AUTHORITY_REVISER_MODEL
+    )
+
+
 def _create_client() -> Any:
     try:
         from openai import OpenAI
@@ -150,6 +163,12 @@ def generate_text(
     executor = client or _create_client()
     if purpose == "authority_reviser":
         resolved_model = authority_reviser_model()
+        resolved_effort = "high"
+    elif purpose == "batch_primary":
+        resolved_model = batch_primary_model()
+        resolved_effort = "high"
+    elif purpose == "batch_authority_reviser":
+        resolved_model = batch_authority_reviser_model()
         resolved_effort = "high"
     else:
         resolved_model = model.strip() or (

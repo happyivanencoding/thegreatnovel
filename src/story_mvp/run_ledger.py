@@ -7,11 +7,21 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, Mapping
 
 from .hybrid_runtime import count_specialist_patches
+from .outcome_fidelity import (
+    build_explicit_milestone_repair_prompt,
+    detect_explicit_milestone_outcome,
+    explicit_milestone_realized,
+)
+from .story_event_obligations import (
+    build_protected_story_event_repair_prompt,
+    missing_story_events,
+)
 
 
 RUN_NODES = (
@@ -43,6 +53,31 @@ _DEPENDENTS = {
 }
 
 
+def _sha256_text(text: str) -> str:
+    """Exact UTF-8 identity used only to skip an otherwise expensive LLM rerun."""
+
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _response_receipt_matches(
+    directory: Path,
+    node_manifest: Mapping[str, Any],
+    prompt_sha256: str,
+) -> bool:
+    if node_manifest.get("response_receipt_status") not in {"completed", "adopted"}:
+        return False
+    if node_manifest.get("response_prompt_sha256") != prompt_sha256:
+        return False
+    filename = node_manifest.get("response_file")
+    expected_response_sha256 = node_manifest.get("response_sha256")
+    if not filename or not expected_response_sha256:
+        return False
+    path = directory / str(filename)
+    if not path.is_file():
+        return False
+    return _sha256_text(path.read_text(encoding="utf-8")) == expected_response_sha256
+
+
 def _chapter_name(chapter_number: int) -> str:
     if chapter_number < 1 or chapter_number > 9999:
         raise ValueError("章节编号必须在 1 到 9999 之间")
@@ -65,6 +100,12 @@ def _node_manifest(node: str, status: str = "pending") -> dict[str, Any]:
         "response_file": None,
         "prompt_chars": 0,
         "response_chars": 0,
+        "prompt_sha256": None,
+        "response_prompt_sha256": None,
+        "response_sha256": None,
+        "response_receipt_status": None,
+        "receipt_reuses": 0,
+        "receipt_reused": False,
     }
 
 
@@ -82,6 +123,14 @@ def _read_manifest(path: Path) -> dict[str, Any]:
         raise ValueError(f"无法读取章节 Run manifest：{path}") from error
     if not isinstance(value, dict) or not isinstance(value.get("nodes"), dict):
         raise ValueError(f"章节 Run manifest 结构无效：{path}")
+    for node_value in value["nodes"].values():
+        if isinstance(node_value, dict):
+            node_value.setdefault("prompt_sha256", None)
+            node_value.setdefault("response_prompt_sha256", None)
+            node_value.setdefault("response_sha256", None)
+            node_value.setdefault("response_receipt_status", None)
+            node_value.setdefault("receipt_reuses", 0)
+            node_value.setdefault("receipt_reused", False)
     if "authority_reviser" not in value["nodes"]:
         historical_completed = (
             value.get("run_status") == "completed"
@@ -188,6 +237,109 @@ def load_node_response(book_directory: Path, chapter_number: int, node: str) -> 
     return path.read_text(encoding="utf-8") if path.is_file() else ""
 
 
+def load_node_prompt(book_directory: Path, chapter_number: int, node: str) -> str:
+    """读取 Ledger 当前生效的节点 Prompt；Outcome Repair retry 会复用这个入口。"""
+
+    manifest = load_run(book_directory, chapter_number)
+    info = _require_node(manifest, node)
+    filename = info.get("prompt_file")
+    if not filename:
+        return ""
+    path = run_directory(book_directory, chapter_number) / str(filename)
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
+
+
+def _prepare_authority_outcome_retry(
+    book_directory: Path,
+    chapter_number: int,
+    manifest: dict[str, Any],
+    node_manifest: dict[str, Any],
+    response: str,
+) -> None:
+    """Prepare one bounded Reviser retry for a dropped hard chapter obligation."""
+
+    prompt_file = node_manifest.get("prompt_file")
+    if not prompt_file:
+        return
+    prompt_path = run_directory(book_directory, chapter_number) / str(prompt_file)
+    if not prompt_path.is_file():
+        return
+    authority_prompt = prompt_path.read_text(encoding="utf-8")
+    attempts = max(1, int(node_manifest.get("attempts", 0)))
+
+    if attempts >= 2 and node_manifest.get("required_outcome") and node_manifest.get("required_target"):
+        from .outcome_fidelity import ExplicitMilestoneOutcome
+
+        milestone = ExplicitMilestoneOutcome(
+            outcome=str(node_manifest["required_outcome"]),
+            target=str(node_manifest["required_target"]),
+        )
+    else:
+        milestone = detect_explicit_milestone_outcome(authority_prompt)
+    milestone_missing = bool(
+        milestone is not None and not explicit_milestone_realized(response, milestone)
+    )
+    story_missing = missing_story_events(authority_prompt, response)
+
+    if not milestone_missing and not story_missing:
+        for key in (
+            "repair_reason",
+            "required_outcome",
+            "required_target",
+            "required_story_event_ids",
+        ):
+            node_manifest.pop(key, None)
+        return
+
+    if milestone_missing and milestone is not None:
+        node_manifest["required_outcome"] = milestone.outcome
+        node_manifest["required_target"] = milestone.target
+    else:
+        node_manifest.pop("required_outcome", None)
+        node_manifest.pop("required_target", None)
+    if story_missing:
+        node_manifest["required_story_event_ids"] = [event.event_id for event in story_missing]
+    else:
+        node_manifest.pop("required_story_event_ids", None)
+
+    if attempts >= 2:
+        node_manifest["status"] = "failed"
+        if milestone_missing and not story_missing:
+            node_manifest["repair_reason"] = "explicit_milestone_repair_failed"
+        elif story_missing and not milestone_missing:
+            node_manifest["repair_reason"] = "protected_story_event_repair_failed"
+        else:
+            node_manifest["repair_reason"] = "chapter_obligation_repair_failed"
+        _mark_dependents_stale(manifest, "authority_reviser")
+        return
+
+    repair_prompt = authority_prompt
+    if milestone_missing and milestone is not None:
+        repair_prompt = build_explicit_milestone_repair_prompt(
+            authority_prompt, response, milestone
+        )
+    if story_missing:
+        repair_prompt = build_protected_story_event_repair_prompt(
+            repair_prompt, response, story_missing
+        )
+
+    archive = prompt_path.with_name("authority_reviser_prompt_attempt-1.md")
+    if not archive.exists():
+        archive.write_text(authority_prompt, encoding="utf-8")
+    canonical_prompt = run_directory(book_directory, chapter_number) / "authority_reviser_prompt.md"
+    canonical_prompt.write_text(repair_prompt, encoding="utf-8")
+    node_manifest["prompt_file"] = canonical_prompt.name
+    node_manifest["prompt_chars"] = len(repair_prompt)
+    node_manifest["prompt_sha256"] = _sha256_text(repair_prompt)
+    node_manifest["status"] = "failed"
+    if milestone_missing and not story_missing:
+        node_manifest["repair_reason"] = "missing_explicit_milestone_outcome"
+    elif story_missing and not milestone_missing:
+        node_manifest["repair_reason"] = "missing_protected_story_event"
+    else:
+        node_manifest["repair_reason"] = "missing_required_chapter_obligations"
+    _mark_dependents_stale(manifest, "authority_reviser")
+
 def _require_node(manifest: dict[str, Any], node: str) -> dict[str, Any]:
     if node not in RUN_NODES:
         raise ValueError(f"未知固定节点：{node}")
@@ -237,14 +389,26 @@ def save_node_prompt(
     node_manifest = _require_node(manifest, node)
     if not prompt.strip():
         raise ValueError("节点 Prompt 不能为空")
-    path = run_directory(book_directory, chapter_number) / f"{node}_prompt.md"
+    directory = run_directory(book_directory, chapter_number)
+    path = directory / f"{node}_prompt.md"
+    prompt_sha256 = _sha256_text(prompt)
+    previous_status = node_manifest["status"]
     path.write_text(prompt, encoding="utf-8")
     if node_manifest["attempts"] == 0:
         node_manifest["attempts"] = 1
-    if node_manifest["status"] == "stale" and not node_manifest.get("response_file"):
-        node_manifest["status"] = "pending"
     node_manifest["prompt_file"] = path.name
     node_manifest["prompt_chars"] = len(prompt)
+    node_manifest["prompt_sha256"] = prompt_sha256
+    node_manifest["receipt_reused"] = False
+    if previous_status == "stale":
+        if _response_receipt_matches(directory, node_manifest, prompt_sha256):
+            node_manifest["status"] = (
+                "adopted" if manifest.get("final_source") == node else "completed"
+            )
+            node_manifest["receipt_reuses"] = int(node_manifest.get("receipt_reuses", 0)) + 1
+            node_manifest["receipt_reused"] = True
+        elif not node_manifest.get("response_file"):
+            node_manifest["status"] = "pending"
     return _save(manifest, book_directory)
 
 
@@ -269,17 +433,32 @@ def save_node_response(
         if old_path.is_file():
             previous_response = old_path.read_text(encoding="utf-8")
     attempts = max(1, int(node_manifest.get("attempts", 0)))
+    directory = run_directory(book_directory, chapter_number)
+    response_prompt_sha256 = node_manifest.get("prompt_sha256")
+    if not response_prompt_sha256 and node_manifest.get("prompt_file"):
+        current_prompt = directory / str(node_manifest["prompt_file"])
+        if current_prompt.is_file():
+            response_prompt_sha256 = _sha256_text(current_prompt.read_text(encoding="utf-8"))
+            node_manifest["prompt_sha256"] = response_prompt_sha256
     filename = f"{node}_response.md" if attempts == 1 else f"{node}_response_attempt-{attempts}.md"
-    path = run_directory(book_directory, chapter_number) / filename
+    path = directory / filename
     path.write_text(response, encoding="utf-8")
     node_manifest.update(
         {
             "status": status,
+            "receipt_reused": False,
             "attempts": attempts,
             "response_file": path.name,
             "response_chars": len(response),
+            "response_prompt_sha256": response_prompt_sha256,
+            "response_sha256": _sha256_text(response),
         }
     )
+    if node == "authority_reviser" and status == "completed":
+        _prepare_authority_outcome_retry(
+            book_directory, chapter_number, manifest, node_manifest, response
+        )
+    node_manifest["response_receipt_status"] = node_manifest["status"]
     if (
         previous_response != response
         and (previous_status in {"completed", "adopted", "failed", "stale"} or attempts > 1)
@@ -290,7 +469,10 @@ def save_node_response(
 
 def mark_node_failed(book_directory: Path, chapter_number: int, node: str) -> dict[str, Any]:
     manifest = load_run(book_directory, chapter_number)
-    _require_node(manifest, node)["status"] = "failed"
+    node_manifest = _require_node(manifest, node)
+    node_manifest["status"] = "failed"
+    node_manifest["response_receipt_status"] = "failed"
+    node_manifest["receipt_reused"] = False
     return _save(manifest, book_directory)
 
 
@@ -332,6 +514,7 @@ def retry_node(book_directory: Path, chapter_number: int, node: str) -> dict[str
         raise ValueError("节点没有已保存 Prompt，不能复用重试")
     node_manifest["attempts"] = max(1, int(node_manifest.get("attempts", 0))) + 1
     node_manifest["status"] = "pending"
+    node_manifest["receipt_reused"] = False
     _mark_dependents_stale(manifest, node)
     return _save(manifest, book_directory)
 
@@ -350,6 +533,8 @@ def adopt_final_source(
     previous = manifest.get("final_source")
     manifest["final_source"] = source
     source_manifest["status"] = "adopted"
+    if source_manifest.get("response_sha256"):
+        source_manifest["response_receipt_status"] = "adopted"
     if previous != source:
         _mark_dependents_stale(manifest, source)
     return _save(manifest, book_directory)

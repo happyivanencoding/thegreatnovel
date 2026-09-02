@@ -31,6 +31,14 @@ WORLD = """# PROTAGONIST-BLIND WORLD VISION
 ## 力量体系与正常值
 普通人不会正式修行；纳息、通脉、立相、照域逐层稀少。一人通常只能维持一种稳定主承载。
 
+### 精确力量主尺｜Frozen Grammar
+主尺类型：大境界+数字子级
+主尺名称：灵潮阶
+精确位置格式：{大境界}{N}重
+数字精度规则：每个大境界1—9重
+当前可见范围：纳息1重—照域9重
+当前大档位：纳息、通脉、立相、照域
+
 ## 社会现实与身份
 宗门、世家、商盟、军府并存，身份影响师承与资源。
 
@@ -73,6 +81,7 @@ POWER = """# POWER SEED｜两处同身
 
 HUMAN = """# HUMAN SEED｜石砚／让所有人同时回头
 ## 世界中的初始位置与成长环境
+开局精确力量位置｜主尺：灵潮阶｜精确位置：纳息2重
 山城石匠家庭，从小做石笛。
 ## Formative Facts → Adaptation → Observable Behavior
 曾偶然吹出一次极好听的回声 → 不能接受“差不多” → 会为找回那个声音浪费钱和时间。
@@ -168,8 +177,25 @@ def test_human_prompt_is_power_blind_and_has_no_life_texture_input() -> None:
     assert "经历是背景，不是人格证明" in prompt
     assert "多重动机并存" in prompt
     assert "持续牵引与互相竞争的动机" in prompt
-    assert "不要求被一个单一核心执念统一" in prompt
+    assert "职业化责任倾向必须大幅降权" in prompt
+    assert "主角永远不是协调员" in prompt
     assert "character hook craft" in prompt
+
+
+
+def test_world_prompt_prefers_small_grammar_large_variation_without_forcing_one_mechanism() -> None:
+    prompt = generate_split_prompt(
+        mode="world_vision",
+        creative_direction="男频玄幻",
+        gbrain_inspiration="world craft",
+    )
+    assert "Small Grammar, Large Variation" in prompt
+    assert "现有一到少数互补操作轴" in prompt
+    assert "不要为了“更统一”上提成泛化元能量、材性或总机制" in prompt
+    assert "Variation 可以很大胆" in prompt
+    assert "Fantasy Surface 要主动丰富" in prompt
+    assert "Optional Secondary Fantasy Road" in prompt
+    assert "不预设未来主角一定会走" in prompt
 
 
 def test_power_prompt_uses_world_normal_but_not_story_opportunities() -> None:
@@ -184,6 +210,8 @@ def test_power_prompt_uses_world_normal_but_not_story_opportunities() -> None:
     assert "倒悬石城" not in prompt
     assert "Legendary Power State" in prompt
     assert "未来身份、组织、统治地位、使命" in prompt
+    assert "Permanent Boundary 优先收束成一到少数根边界" in prompt
+    assert "Boundary Stable, Privilege Expands" in prompt
 
 
 def test_collision_prompt_first_combines_full_world_and_character() -> None:
@@ -204,6 +232,16 @@ def test_collision_prompt_first_combines_full_world_and_character() -> None:
     assert "石砚想让所有人回头" in prompt
     assert "现在想找到一块会回响的石头" in prompt
     assert "Approved Fantasy Seed" not in prompt
+    assert "Aggressive Fantasy / Payoff Bias" in prompt
+    assert "Bonus Surprise is allowed" in prompt
+    assert "一个阶段只能一份大奖励" in prompt
+    assert "Gain First, Counter Earned Later" in prompt
+    assert "Growth Must Be Felt Before Reset" in prompt
+    assert "4—6 次真正改变主角本人能力结构" not in prompt
+    assert "New Asymmetry ≠ New Power System" in prompt
+    assert "Fantasy Surface 可以持续偏丰富" in prompt
+    assert "主动检查 Approved World" in prompt
+    assert "若 Human 不想走，就让它继续属于世界或配角" in prompt
 
 
 def test_character_modes_have_stable_keyword_gbrain_queries(monkeypatch: pytest.MonkeyPatch) -> None:

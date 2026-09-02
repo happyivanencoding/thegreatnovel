@@ -20,6 +20,34 @@ _POWER_FANTASIES: tuple[tuple[str, str, tuple[str, ...]], ...] = (
 )
 
 
+# Distilled from docs/MALE_WEBNOVEL_STRANGE_SETTING_LEXICON.md.  These are
+# deliberately concrete object x mutation pairs: they are a weak optional
+# semantic perturbation layer, not a second power-system generator and not a
+# naming vocabulary.
+_POWER_LEXIQUE_PRIMITIVES: tuple[tuple[str, str], ...] = (
+    ("影子", "替代"),
+    ("分身", "回流"),
+    ("门", "错位"),
+    ("镜面", "映射"),
+    ("伤口", "残留"),
+    ("伤疤", "转移"),
+    ("骨", "增生"),
+    ("血", "交换"),
+    ("皮肤", "转移"),
+    ("器官", "替代"),
+    ("心脏", "延迟"),
+    ("声音", "具象"),
+    ("回声", "复现"),
+    ("面具", "寄生"),
+    ("书页", "复现"),
+    ("剑", "残留"),
+    ("机关兽", "学习"),
+    ("共生武器", "自主化"),
+    ("死亡", "延迟"),
+    ("死者最后一招", "复现"),
+)
+
+
 def build_power_novelty_bundle(seed: int | None = None) -> str:
     """Return three reproducible, plain-language Power novelty sparks.
 
@@ -48,4 +76,32 @@ def build_power_novelty_bundle(seed: int | None = None) -> str:
                 "",
             ]
         )
+    return "\n".join(lines).strip() + "\n"
+
+
+def build_power_lexique_bundle(seed: int | None = None, *, count: int = 6) -> str:
+    """Return a small, disposable Power lexique primitive pool.
+
+    The pool exists to make a familiar Power Novelty Spark occasionally find a
+    more concrete body / object / spatial carrier or a new use.  It must never
+    rewrite the Spark's trigger, boundary, coverage or cost merely to consume a
+    lexique entry.
+    """
+
+    if count < 1 or count > len(_POWER_LEXIQUE_PRIMITIVES):
+        raise ValueError("Power Lexique primitive count 超出可用范围")
+    actual_seed = secrets.randbits(32) if seed is None else int(seed)
+    rng = random.Random(actual_seed)
+    selected = rng.sample(_POWER_LEXIQUE_PRIMITIVES, k=count)
+    lines = [
+        "# OPTIONAL POWER LEXIQUE PRIMITIVE POOL｜非 Canon",
+        f"seed: {actual_seed}",
+        "来源：项目 Strange Setting Lexicon 的 concrete object × mutation 抽象；不是完成设定、不是第二能力、也不是命名词表。",
+        "用途：先让原 Power Novelty Spark 与 World Power Normal 成立，再最多为每个 Candidate 借 0—1 个 primitive 的一部分；全部不适合时必须全部忽略。",
+        "采用门槛：只有它能让同一个主异常获得更具体的身体/器物/空间载体，或新增真实的战斗、移动、探索、保命、获得/组合玩法时才借用；只是换皮、加限制、变玄或降低 Privilege Delta 时不用。",
+        "Authority 边界：不得借 primitive 改写 POWER BASELINE / Novelty Spark 已有的触发、条件、覆盖对象、代价或 Permanent Boundary；不得因此新建第二能源、法则树、概念权限或复杂触发链。",
+        "Reader-facing 边界：对象/变化原语是后台创意词，不要求进入一句话大白话或能力短名。",
+        "",
+    ]
+    lines.extend(f"- {obj} × {mutation}" for obj, mutation in selected)
     return "\n".join(lines).strip() + "\n"

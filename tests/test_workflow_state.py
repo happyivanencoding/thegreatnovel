@@ -21,6 +21,26 @@ from story_mvp.workflow_state import workflow_impact, workflow_status
 from story_mvp.workflow_cli import apply_response
 
 
+PRECISE_WORLD_1 = """# PROTAGONIST-BLIND WORLD VISION
+
+## 力量体系与正常值
+### 精确力量主尺｜Frozen Grammar
+主尺类型：连续数字
+主尺名称：测试等级
+精确位置格式：测试{N}级
+数字精度规则：0—100，每1级可记录
+当前可见范围：0级—60级
+当前大档位：NONE
+"""
+
+PRECISE_HUMAN = """# HUMAN SEED｜人物／欲望
+## 世界中的初始位置与生活事实
+开局精确力量位置｜主尺：测试等级｜精确位置：3级
+## Core Obsession
+想赢。
+"""
+
+
 def _book_content(
     *,
     design: str = "DESIGN",
@@ -49,10 +69,10 @@ def _artifacts(workspace: Path, book_id: str) -> dict[str, dict[str, object]]:
 
 def test_world_vision_stales_split_future_chain_but_protects_completed_body(tmp_path: Path) -> None:
     book_dir = create_book("demo", tmp_path)
-    write_creative_artifact("demo", "world_vision", "WORLD-1", tmp_path)
+    write_creative_artifact("demo", "world_vision", PRECISE_WORLD_1, tmp_path)
     approve_creative_artifact("demo", "world_vision", tmp_path)
     write_creative_artifact("demo", "power_seed", "# POWER SEED｜能力\n\n## Core Fantasy\n能力。", tmp_path)
-    write_creative_artifact("demo", "human_seed", "# HUMAN SEED｜人物／欲望\n\n## Core Obsession\n想赢。", tmp_path)
+    write_creative_artifact("demo", "human_seed", PRECISE_HUMAN, tmp_path)
     approve_character_artifact("demo", tmp_path)
     write_creative_artifact("demo", "proposal", "PROGRAM-1", tmp_path)
     write_book("demo", _book_content(), tmp_path)
@@ -79,10 +99,10 @@ def test_world_vision_stales_split_future_chain_but_protects_completed_body(tmp_
 
 def test_power_seed_change_does_not_stale_world_but_reopens_character(tmp_path: Path) -> None:
     create_book("demo", tmp_path)
-    write_creative_artifact("demo", "world_vision", "WORLD-1", tmp_path)
+    write_creative_artifact("demo", "world_vision", PRECISE_WORLD_1, tmp_path)
     approve_creative_artifact("demo", "world_vision", tmp_path)
     write_creative_artifact("demo", "power_seed", "# POWER SEED｜A\n\n## Core Fantasy\nA", tmp_path)
-    write_creative_artifact("demo", "human_seed", "# HUMAN SEED｜人／X\n\n## Core Obsession\nX", tmp_path)
+    write_creative_artifact("demo", "human_seed", PRECISE_HUMAN, tmp_path)
     approve_character_artifact("demo", tmp_path)
     before = _artifacts(tmp_path, "demo")
 
@@ -324,3 +344,47 @@ def test_codex_external_authority_reviser_auto_adopts_final_source(tmp_path: Pat
     assert manifest["nodes"]["authority_reviser"]["status"] == "adopted"
     assert manifest["final_source"] == "authority_reviser"
     assert manifest["nodes"]["state_delta"]["status"] in {"pending", "stale"}
+
+
+def test_codex_external_authority_reviser_prepares_bounded_outcome_repair(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("STORY_MVP_WORKSPACE", str(tmp_path))
+    book_dir = create_book("external-outcome-repair", tmp_path)
+    _run(book_dir, 19)
+    from story_mvp.run_ledger import save_node_prompt, save_node_response
+
+    for node in ("director", "curator", "primary"):
+        save_node_prompt(book_dir, 19, node, f"{node} prompt")
+        save_node_response(book_dir, 19, node, f"{node} response")
+    authority_prompt = """FROZEN CHAPTER MISSION
+状态变化：顾停舟重伤。
+上游计划已批准结果（本章必须同时成立；若与已发生 Canon 冲突则 Canon 优先）：顾停舟本人进入镇海，镇海潮兽被压回远潮。
+结尾推动力：战后结算。
+"""
+    save_node_prompt(book_dir, 19, "authority_reviser", authority_prompt)
+
+    response = tmp_path / "authority-response.md"
+    response.write_text(
+        "# 正式正文\n\n顾停舟以照域承住镇海潮兽，最终把它压回远潮。",
+        encoding="utf-8",
+    )
+    result = apply_response(
+        book_id="external-outcome-repair",
+        artifact="chapter.19.run",
+        input_path=response,
+        source="codex_external",
+        chapter=19,
+        node="authority_reviser",
+    )
+
+    manifest = json.loads(
+        (book_dir / "runs" / "chapter-0019" / "manifest.json").read_text(encoding="utf-8")
+    )
+    reviser = manifest["nodes"]["authority_reviser"]
+    assert result["status"] == "repair_required"
+    assert result["repair_prompt_file"] == "authority_reviser_prompt.md"
+    assert reviser["status"] == "pending"
+    assert reviser["attempts"] == 2
+    assert manifest["final_source"] is None
+    repair_prompt = (book_dir / "runs" / "chapter-0019" / "authority_reviser_prompt.md").read_text(encoding="utf-8")
+    assert "条件性 Outcome Repair" in repair_prompt
+    assert "顾停舟本人进入镇海" in repair_prompt

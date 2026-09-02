@@ -94,6 +94,38 @@ APPROVED_CREATIVE_STATE = {
 }
 
 
+MINIMAL_PRECISE_WORLD = """# PROTAGONIST-BLIND WORLD VISION
+
+## 普通人的生活与上升
+普通人在城镇生活。
+
+## 力量体系与正常值
+修行者按公开主尺比较。
+
+### 精确力量主尺｜Frozen Grammar
+主尺类型：连续数字
+主尺名称：灵力等级
+精确位置格式：灵力{N}级
+数字精度规则：0—100，每1级都是可记录位置
+当前可见范围：0级—60级
+当前大档位：NONE
+
+## 社会现实与身份
+等级会影响挑战与待遇。
+
+## 世界里真正值钱、值得想要的东西
+功法与兵器。
+
+## 世界正在发生的大事
+城内正在举行公开比试。
+
+## 值得进入的地点、奇观与未知
+城外仍有未知区域。
+
+## 世界知识边界
+普通人知道公开等级，远期上限未知。
+"""
+
 OUTLINE = "\n".join(f"{field}：内容" for field in REQUIRED_OUTLINE_FIELDS)
 
 
@@ -101,7 +133,7 @@ def approved_creative_inputs() -> dict[str, object]:
     return {
         "creative_state": APPROVED_CREATIVE_STATE,
         "fantasy_seed": "APPROVED_FANTASY_SEED",
-        "world_vision": "APPROVED_WORLD_VISION",
+        "world_vision": MINIMAL_PRECISE_WORLD,
         "proposal_context": "APPROVED_STORY_PROGRAM",
     }
 
@@ -123,6 +155,7 @@ def test_new_book_has_creative_artifacts_and_fixed_state(tmp_path: Path) -> None
         "CHARACTER_INITIAL_STATE.md",
         "CHARACTER_AUDITION.md",
         "CREATIVE_STATE.json",
+        "MYSTERY_CONTROL.json",
         "chapters",
     }
     assert (book_dir / "chapters").is_dir()
@@ -236,7 +269,7 @@ def test_creative_state_sources_and_single_character_approval_api(tmp_path: Path
 
     world = local_client.put(
         "/api/books/creative/world-vision",
-        json={"content": "# PROTAGONIST-BLIND WORLD VISION\n\nWORLD", "origin": "model_generated"},
+        json={"content": MINIMAL_PRECISE_WORLD, "origin": "model_generated"},
     )
     assert world.status_code == 200
     assert world.json()["creative_state"]["world_vision"] == {
@@ -252,7 +285,7 @@ def test_creative_state_sources_and_single_character_approval_api(tmp_path: Path
     )
     human = local_client.put(
         "/api/books/creative/human-seed",
-        json={"content": "# HUMAN SEED｜季衡／想赢\n\n## Core Obsession\n一直想赢。\n\n## Initial State Seed\n### 当前私人欲望\n赢下眼前这一场。", "origin": "author_edited"},
+        json={"content": "# HUMAN SEED｜季衡／想赢\n\n## 世界中的初始位置与生活事实\n开局精确力量位置｜主尺：灵力等级｜精确位置：12级\n\n## Core Obsession\n一直想赢。\n\n## Initial State Seed\n### 当前私人欲望\n赢下眼前这一场。", "origin": "author_edited"},
     )
     assert power.status_code == human.status_code == 200
     assert power.json()["creative_state"]["power_seed"]["status"] == "draft"
@@ -310,7 +343,7 @@ def test_creative_prompt_approval_boundaries_and_outline_authority(tmp_path: Pat
 
     local_client.put(
         "/api/books/gates/world-vision",
-        json={"content": "# PROTAGONIST-BLIND WORLD VISION\n\n## 力量体系与正常值\n一人一主承载。", "origin": "model_generated"},
+        json={"content": MINIMAL_PRECISE_WORLD, "origin": "model_generated"},
     )
     assert local_client.post("/api/books/gates/world-vision/approve").status_code == 200
     assert local_client.post("/api/prompt", json={"book_id": "gates", "mode": "power_seed"}).status_code == 200
@@ -326,7 +359,7 @@ def test_creative_prompt_approval_boundaries_and_outline_authority(tmp_path: Pat
     )
     local_client.put(
         "/api/books/gates/human-seed",
-        json={"content": "# HUMAN SEED｜石砚／找声音\n\n## Core Obsession\n找回一个声音。", "origin": "model_selected"},
+        json={"content": "# HUMAN SEED｜石砚／找声音\n\n## 世界中的初始位置与生活事实\n开局精确力量位置｜主尺：灵力等级｜精确位置：8级\n\n## Core Obsession\n找回一个声音。", "origin": "model_selected"},
     )
     assert local_client.post("/api/books/gates/character/approve").status_code == 200
     program = local_client.post("/api/prompt", json={"book_id": "gates", "mode": "idea"})
@@ -2680,7 +2713,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "震撼式长期重释" not in generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
     assert "震撼式长期重释" not in generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
     assert "Persistent Reader Ruler" in story_program
-    assert "主角现在大致在哪一档" in story_program
+    assert "主角**精确在哪一位**" in story_program
+    assert "43级对58级" in story_program
     assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["review"]
     director_ruler = generate_prompt(mode="director", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE)
@@ -2849,8 +2883,8 @@ def test_growth_contract_is_present_in_idea_outline_and_review_prompts() -> None
     ):
         assert marker in idea
     assert "### 成本节奏" not in idea
-    assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in idea
-    assert "长期必须让**新的 Power Asymmetry 加入**" in idea
+    assert "“可以没有”不是 withholding 指令" in idea
+    assert "长期应让**新的 Power Asymmetry 加入**" in idea
     assert "某些大型阶段仍可以完全没有 Power Delta" in idea
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
     for marker in (
@@ -3190,7 +3224,7 @@ def test_old_book_gets_code_default_hybrid_templates_without_prompt_file_write(t
     assert prompts_path.read_bytes() == before
 
 
-def test_context_curator_prompt_uses_tail_and_opening_strategy_only() -> None:
+def test_context_curator_prompt_uses_tail_and_opening_strategy_without_raw_gbrain() -> None:
     book = """# 小说总体设计画像
 
 ## 0. 本书成长基因图
@@ -3221,9 +3255,17 @@ FULL_BOOK_FUTURE_MARKER
         current_outline=outline,
         previous_chapter_text=previous,
         gbrain_inspiration="INSPIRATION_MARKER",
+        selected_references=[
+            {
+                "program_id": "REFERENCE_PROGRAM_MUST_NOT_REACH_HYBRID_RUNTIME",
+                "reusable_program": "REFERENCE_BODY_MUST_NOT_REACH_HYBRID_RUNTIME",
+            }
+        ],
     )
     assert "CURRENT_BLOCK_MARKER" in prompt
-    assert "INSPIRATION_MARKER" in prompt
+    assert "INSPIRATION_MARKER" not in prompt
+    assert "REFERENCE_PROGRAM_MUST_NOT_REACH_HYBRID_RUNTIME" not in prompt
+    assert "REFERENCE_BODY_MUST_NOT_REACH_HYBRID_RUNTIME" not in prompt
     assert "城市远景 → 具体现场 → 主角行动" in prompt
     assert "前文最后动作" in prompt
     assert "前文开头" not in prompt
@@ -3276,7 +3318,8 @@ def test_protagonist_behavior_signature_is_fixed_upstream_and_drives_choices() -
     program = DEFAULT_PROMPT_TEMPLATES["idea"]
     assert "主角行为签名" in seed
     assert "### 主角欲望人格与行为签名" in seed
-    assert "不要从预设的优秀男主标签库拼人格" in seed
+    assert "Signature ≠ Tension" in seed
+    assert "第三条路不能无损全拿" in seed
     assert "不自动修正成“靠谱有底线的优秀男主”" in seed
     assert "主角欲望人格与行为签名属于创意权威" in world
     assert "不能为了让主角更成熟、更合理或更容易协调多方利益" in world
@@ -3361,7 +3404,7 @@ def test_story_program_keeps_backstage_principles_but_outputs_concrete_acquisiti
     assert "不是每个大型阶段都缴一次升级税的表单" in template
     assert "成长是全书纵向不变量，不是每个阶段的必填项" in template
     assert "全书成长与核心幻想兑现脊柱" in template
-    assert "若本阶段没有新的标志性力量成长或获得，就让它没有" in template
+    assert "“可以没有”不是 withholding 指令" in template
     assert "**Stage Delta：**" in template
     assert "力量可以无显著升级" in template
     assert "高价值获得是读者欲望原则，不是阶段字段" in template
@@ -3382,8 +3425,8 @@ def test_story_program_growth_is_longitudinal_not_a_stage_tax() -> None:
     assert "核心优势在本阶段怎样参与：" not in template
 
     # But the whole book must still build a cumulative asymmetry stack.
-    assert "长期必须让**新的 Power Asymmetry 加入**" in template
-    assert "旧优势与新优势产生至少一种可复述的**复合效应**" in template
+    assert "长期应让**新的 Power Asymmetry 加入**" in template
+    assert "旧优势与新优势产生可复述的**复合效应**" in template
     assert "不是每阶段新增能力税" in template
     assert "以前做不到什么 → 现在能做什么 / 能打谁 / 能去哪里" in template
     assert "Power Seed 决定开局 Core Asymmetry 及其成长语法" in template
@@ -3395,7 +3438,7 @@ def test_story_program_growth_is_longitudinal_not_a_stage_tax() -> None:
     assert "旧与新还应出现真正的复合玩法" in template
 
 
-def test_asymmetry_reveal_uses_surprise_as_payoff_and_attitude_change_only_when_useful() -> None:
+def test_asymmetry_reveal_allows_crowd_shock_ruler_and_repricing_together() -> None:
     story = DEFAULT_PROMPT_TEMPLATES["idea"]
     outline = DEFAULT_PROMPT_TEMPLATES["outline"]
     review = DEFAULT_PROMPT_TEMPLATES["review"]
@@ -3403,11 +3446,13 @@ def test_asymmetry_reveal_uses_surprise_as_payoff_and_attitude_change_only_when_
 
     for prompt in (story, outline, review, director):
         assert "Power Asymmetry Reveal / Social Proof" in prompt
-        assert "让惊讶本身成为爽点" in prompt
-        assert "不凭空加围观者" in prompt
-        assert "只有重新估价会改变后续行动" in prompt
-        assert "否则惊讶/确认后即可停止" in prompt
-        assert "已公开优势的普通重复使用不反复演震惊" in prompt
+        assert "全场鸦雀无声" in prompt
+        assert "所有人震惊" in prompt
+        assert "Ruler Calibration" in prompt
+        assert "Behavioral Repricing" in prompt
+        assert "三者没有高低之分" in prompt
+        assert "没有真实围观者时不凭空造群众" in prompt
+        assert "普通重复使用也不反复演同一套震惊" in prompt
 
 
 def test_outline_theme_is_derived_and_may_remain_unset() -> None:
@@ -3480,6 +3525,14 @@ def test_context_curator_compiles_scene_prose_projection_instead_of_forwarding_c
 
 def test_extract_primary_draft_drops_inline_model_preamble_before_body_heading() -> None:
     response = "我会按规范直接写作。# 正式正文\n\n顾长川拿起身份牌。"
+    assert extract_primary_draft(response) == "顾长川拿起身份牌。"
+
+
+def test_extract_primary_draft_ignores_quoted_body_heading_in_model_preamble() -> None:
+    response = (
+        "我会先核对边界，只输出规定的 `# 正式正文`，不附审计。"
+        "检查完成。# 正式正文\n\n顾长川拿起身份牌。"
+    )
     assert extract_primary_draft(response) == "顾长川拿起身份牌。"
 
 
@@ -4698,7 +4751,7 @@ def test_chapter_prep_injects_recent_summaries_only_once() -> None:
 def test_state_delta_template_exclusion_lists_ten_chapter_plan_and_references() -> None:
     # 追加修复 B-1：排除声明补全十章计划与 Reference Programs。
     assert (
-        "BOOK CONTRACT、完整百章计划、十章计划、prose profile、GBrain、"
+        "BOOK CONTRACT、完整 World、完整百章计划、十章计划、prose profile、GBrain、"
         "Reference Programs 与前两章正文都不在本次输入中"
     ) in DEFAULT_STATE_DELTA_TEMPLATE
 

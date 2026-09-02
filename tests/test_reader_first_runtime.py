@@ -124,6 +124,28 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "## Payoff and Promise Window",
     ):
         assert heading in curator
+
+    # The explicit fixed-output list must contain every required section.  A prior
+    # contract listed only the first nine headings while defining four more later,
+    # which made otherwise valid Curators stop early after Relevant Inspiration.
+    fixed_output_contract = curator.split("`## Scene Prose Projection`", 1)[0]
+    for heading in (
+        "## Relevant Book Contract",
+        "## Relevant Characters and Relationships",
+        "## Relevant World Rules",
+        "## Relevant Open Promises",
+        "## Relevant Plan",
+        "## Scene Prose Projection",
+        "## Opening Strategy",
+        "## Scene Skill Selection",
+        "## Relevant Inspiration",
+        "## Reader-Facing Language",
+        "## Already Established — Do Not Re-explain",
+        "## Recent Repetition Risks",
+        "## Payoff and Promise Window",
+    ):
+        assert heading in fixed_output_contract
+
     assert "Reader-First Prose Contract" not in curator
     for marker in (
         "当前最在意的事",
@@ -160,6 +182,11 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "清楚 > 顺畅 > 有画面 > 文学感",
         "普通中文男频网文读者",
         "明确写人物、对象、动作、原因和结果",
+        "绝对禁令｜“漂亮二段论”不得重复成章法",
+        "事实已经成立 → 短句总结 → 再解释这意味着什么",
+        "一章一旦已经自然出现一处明显的这种收束",
+        "后文绝对不要再主动制造第二处同构收束",
+        "已经 show 出来的东西，不再为了“漂亮”补一个 tell 的尾巴",
         "重要能力、物品和规则第一次出现时",
         "少连续使用“不是……”",
         "对话像人在现场传递信息",
@@ -644,6 +671,8 @@ def test_canon_memory_v2_and_state_delta_parser() -> None:
 旧场景
 
 ## PERSISTENT CANON
+### Power / Capability
+Current Power Position｜主尺：测试阶｜精确位置：3级
 旧长期事实
 
 ## RECENT SUMMARIES
@@ -696,6 +725,8 @@ FUTURE
 # Proposed Active Scene State
 新
 # Proposed Persistent Canon
+### Power / Capability
+Current Power Position｜主尺：测试阶｜精确位置：1级
 长期
 # Proposed Chapter Summary
 事实
@@ -712,6 +743,8 @@ FUTURE
 ## ACTIVE SCENE STATE
 旧
 ## PERSISTENT CANON
+### Power / Capability
+Current Power Position｜主尺：测试阶｜精确位置：2级
 旧
 ## RECENT SUMMARIES
 旧
@@ -863,6 +896,11 @@ def test_run_ledger_api_persists_prompt_response_and_retry(tmp_path: Path, monke
         json={"content": "director response"},
     )
     assert response.status_code == 200
+    loaded_response = client.get(
+        "/api/books/ledger-api/runs/1/nodes/director/response"
+    )
+    assert loaded_response.status_code == 200
+    assert loaded_response.json() == {"content": "director response"}
     failed = client.post("/api/books/ledger-api/runs/1/nodes/director/failed")
     assert failed.status_code == 200
     retried = client.post("/api/books/ledger-api/runs/1/nodes/director/retry")

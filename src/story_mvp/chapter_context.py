@@ -23,7 +23,12 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from .character_context import project_world_reality
+from .character_context import project_effective_world_reality
+from .story_event_obligations import (
+    render_chapter_story_event_obligations,
+    resolve_chapter_story_events,
+    strip_book_registry_from_section,
+)
 from .prompts import (
     CURRENT_STATE_HEADING,
     canon_memory_has_labels,
@@ -101,6 +106,7 @@ class ChapterContextPacket:
     growth_benefit_projection: str = ""
     growth_genome_compact: str = ""
     reader_release: str = ""
+    protected_story_events: str = ""
 
 
 def _markdown_block(content: str, heading: str) -> str:
@@ -116,6 +122,143 @@ def _markdown_block(content: str, heading: str) -> str:
             collected.append(next_line)
         return "\n".join(collected).strip()
     return ""
+
+
+_CHAPTER_PLAN_FIELDS = (
+    "具体剧情",
+    "结果 / 状态变化",
+    "叙事功能",
+    "结尾推动",
+    "不可降格 Story Event",
+)
+
+PLAN_OUTCOME_ADJUSTMENT_MARKER = "[PLAN OUTCOME ADJUSTMENT]"
+
+_LONG_BLOCK_RANGE_HEADING = re.compile(
+    r"(?m)^#{1,6}\s*第\s*(\d+)\s*[—–－-]\s*(\d+)\s*章(?:\s*[：:].*)?\s*$"
+)
+_LONG_BLOCK_SCOPE = re.compile(
+    r"规划范围\s*[：:]\s*(?:预计)?\s*第\s*(\d+)\s*[—–－-]\s*(\d+)\s*章"
+)
+
+
+def project_current_long_block_for_chapter(current_long_block: str, chapter_number: int) -> str:
+    """只保留明确覆盖当前章的大型剧情块，拒绝把过期块继续注入章节链。
+
+    调用方有时会把整份长纲或上一个窗口的剧情块误传为 ``current_long_block``。
+    这类文本一旦带有明确章节范围，就可以确定性裁剪：
+
+    - 有覆盖当前章的范围时，保留最窄的匹配块；
+    - 文本明确声明了范围、但没有任何范围覆盖当前章时，返回空；
+    - 没有可解析章节范围时保持原文，避免猜测作者意图。
+
+    该函数只删除已经由文本自身证明为 stale 的计划，不生成新计划，也不改变
+    ``current_chapter_plan`` 这一本章唯一事件预算。
+    """
+
+    text = current_long_block.strip()
+    if not text or chapter_number <= 0:
+        return text
+
+    scope = _LONG_BLOCK_SCOPE.search(text)
+    if scope:
+        scope_start, scope_end = sorted((int(scope.group(1)), int(scope.group(2))))
+        if not scope_start <= chapter_number <= scope_end:
+            return ""
+
+    matches = list(_LONG_BLOCK_RANGE_HEADING.finditer(text))
+    if not matches:
+        return text
+
+    candidates: list[tuple[int, int, str]] = []
+    for index, match in enumerate(matches):
+        start, end = sorted((int(match.group(1)), int(match.group(2))))
+        if not start <= chapter_number <= end:
+            continue
+        section_end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        section = text[match.start():section_end].strip()
+        candidates.append((end - start, index, section))
+    if not candidates:
+        return ""
+
+    _, _, selected = min(candidates, key=lambda item: (item[0], item[1]))
+    preamble = text[:matches[0].start()].strip()
+    return "\n\n".join(part for part in (preamble, selected) if part).strip()
+
+
+def parse_chapter_plan_fields(current_chapter_plan: str) -> dict[str, str]:
+    """Parse one production Future-10 chapter entry into its supported fields."""
+
+    text = current_chapter_plan.strip()
+    if not text:
+        return {}
+    field_labels = "|".join(re.escape(field) for field in _CHAPTER_PLAN_FIELDS)
+    pattern = re.compile(rf"^\s*(?:[-*]\s*)?({field_labels})\s*[：:](.*)$")
+    values: dict[str, str] = {}
+    current_label: str | None = None
+    current_lines: list[str] = []
+
+    def flush() -> None:
+        if current_label is None:
+            return
+        value = "\n".join(current_lines).strip()
+        if value:
+            values[current_label] = value
+
+    for raw_line in text.splitlines():
+        stripped = raw_line.strip()
+        if re.match(r"^#{1,6}(?:\s|$)", stripped):
+            flush()
+            current_label = None
+            current_lines = []
+            continue
+        match = pattern.match(raw_line)
+        if match:
+            flush()
+            current_label = match.group(1)
+            inline = match.group(2).strip()
+            current_lines = [inline] if inline else []
+            continue
+        if current_label is not None and stripped:
+            current_lines.append(stripped)
+    flush()
+    return values
+
+
+def project_chapter_plan_execution_boundary(
+    current_chapter_plan: str, *, protected_story_events: str = ""
+) -> str:
+    """Separate this chapter's executable budget from its next-chapter handoff."""
+
+    text = current_chapter_plan.strip()
+    values = parse_chapter_plan_fields(text)
+    if not values:
+        return text
+    lines = [
+        "本章唯一可执行事件预算（只做这里已经分配给本章的事）：",
+        f"具体剧情：{values.get('具体剧情') or '（未填写）'}",
+        f"必须兑现的计划结果 / 状态变化：{values.get('结果 / 状态变化') or '（未填写）'}",
+    ]
+    if protected_story_events.strip():
+        lines.extend(
+            [
+                "",
+                "不可降格 Reader-Facing Story Event（已批准 Story Program 原子义务；必须作为现场事件发生，不能用 State / 结果摘要代替）：",
+                protected_story_events.strip(),
+            ]
+        )
+    if values.get("叙事功能"):
+        lines.append(f"规划功能：{values['叙事功能']}（只用于理解本章作用，不新增事件。）")
+    handoff = values.get("结尾推动")
+    if handoff:
+        lines.extend(
+            [
+                "",
+                "章末 Handoff Reservation（只能让压力、入口、来人、线索或未完成动作出现；不得在本章完成其下一步事件或结算）：",
+                handoff,
+            ]
+        )
+    return "\n".join(lines).strip()
 
 
 def project_frozen_power_core(character_card: str) -> str:
@@ -180,13 +323,26 @@ def extract_reader_release_for_chapter(book_content: str, chapter_number: int) -
     ).strip()
 
 
-def render_event_contract(current_outline: str) -> str:
+def render_event_contract(
+    current_outline: str,
+    *,
+    approved_plan_outcome: str = "",
+    protected_story_events: str = "",
+) -> str:
     """把八字段小纲渲染为规划/筛选节点共用的完整事件合同。
 
     六项合同字段按原文保留“字段：内容”形式；「推动事件的人」呈现为场景上下文；
-    「叙事功能」明确标为规划备注，不要求正文显式表达。
+    「叙事功能」明确标为规划备注，不要求正文显式表达。若 Future-10 已批准当前章
+    outcome，则确定性并入 Frozen Mission 的状态变化，而不是依赖 Director 复述。
     """
     values = parse_outline_fields(current_outline)
+    if approved_plan_outcome.strip():
+        director_state = values.get("状态变化", "").strip()
+        required = (
+            "上游计划已批准结果（本章必须同时成立；若与已发生 Canon 冲突则 Canon 优先）："
+            + approved_plan_outcome.strip()
+        )
+        values["状态变化"] = "\n".join(part for part in (director_state, required) if part)
     lines = [
         "当前章事件合同：下方八字段决定 WHAT HAPPENS，不决定 HOW TO SAY；下游节点按各自职责使用这些事实约束，不把小纲扩写成更长概述。",
         "",
@@ -197,6 +353,14 @@ def render_event_contract(current_outline: str) -> str:
     lines.extend(
         f"{field}：{values.get(field) or '（未填写）'}" for field in EVENT_CONTRACT_FIELDS
     )
+    if protected_story_events.strip():
+        lines.extend(
+            [
+                "",
+                "不可降格 Reader-Facing Story Event（Story Program → Outline 的原子义务；必须让读者经历，状态残留不能替代事件）：",
+                protected_story_events.strip(),
+            ]
+        )
     lines.extend(
         [
             "",
@@ -209,6 +373,27 @@ def render_event_contract(current_outline: str) -> str:
         ]
     )
     return "\n".join(lines)
+
+
+def render_event_contract_with_plan_outcome(
+    current_outline: str,
+    current_chapter_plan: str,
+    *,
+    protected_story_events: str = "",
+) -> str:
+    """Freeze Future-10 outcome inside Mission unless Canon forced an explicit adjustment."""
+
+    director_state = parse_outline_fields(current_outline).get("状态变化", "")
+    if PLAN_OUTCOME_ADJUSTMENT_MARKER in director_state:
+        return render_event_contract(
+            current_outline, protected_story_events=protected_story_events
+        )
+    outcome = parse_chapter_plan_fields(current_chapter_plan).get("结果 / 状态变化", "").strip()
+    return render_event_contract(
+        current_outline,
+        approved_plan_outcome=outcome,
+        protected_story_events=protected_story_events,
+    )
 
 
 def project_event_contract_for_prose(chapter_mission: str) -> str:
@@ -374,6 +559,7 @@ def build_chapter_context(
     book_content: str = "",
     character_card: str = "",
     world_vision: str = "",
+    world_expansions: str = "",
     current_long_block: str = "",
     previous_chapter_text: str = "",
     current_outline: str = "",
@@ -384,17 +570,23 @@ def build_chapter_context(
     chapter_number: int = 0,
 ) -> ChapterContextPacket:
     """由现有页面输入确定性地构建章节运行期上下文包。"""
+    effective_long_block = project_current_long_block_for_chapter(
+        current_long_block, chapter_number
+    )
     prose_profile = "\n\n".join(
         f"{heading}\n\n{_markdown_block(book_content, heading)}"
         for heading in PROSE_PROFILE_HEADINGS
         if _markdown_block(book_content, heading)
     )
 
-    book_contract = "\n\n".join(
-        f"{heading}\n\n{_markdown_block(book_content, heading)}"
-        for heading in CONTEXT_HEADINGS
-        if _markdown_block(book_content, heading)
-    )
+    book_contract_parts: list[str] = []
+    for heading in CONTEXT_HEADINGS:
+        body = _markdown_block(book_content, heading)
+        if heading == "## 1. 核心类型与读者承诺":
+            body = strip_book_registry_from_section(body)
+        if body:
+            book_contract_parts.append(f"{heading}\n\n{body}")
+    book_contract = "\n\n".join(book_contract_parts)
 
     canon_parts: list[str] = []
     status = _markdown_block(book_content, CANON_INDEX_STATUS_HEADING)
@@ -426,15 +618,15 @@ def build_chapter_context(
     canon_context = "\n\n".join(canon_parts)
 
     plan_parts: list[str] = []
-    if current_long_block.strip():
-        plan_parts.append(f"当前大型剧情块\n\n{current_long_block.strip()}")
+    if effective_long_block:
+        plan_parts.append(f"当前大型剧情块\n\n{effective_long_block}")
     small_plan = _markdown_block(book_content, "# 未来十章逐章小纲")
     if small_plan:
         plan_parts.append(f"当前十章计划\n\n{small_plan}")
     rolling_plan = "\n\n".join(plan_parts)
     chapter_plan_parts: list[str] = []
-    if current_long_block.strip():
-        chapter_plan_parts.append(f"当前大型剧情块\n\n{current_long_block.strip()}")
+    if effective_long_block:
+        chapter_plan_parts.append(f"当前大型剧情块\n\n{effective_long_block}")
     if current_chapter_plan.strip():
         chapter_plan_parts.append(f"当前章十章计划条目\n\n{current_chapter_plan.strip()}")
     chapter_plan_context = "\n\n".join(chapter_plan_parts)
@@ -449,22 +641,35 @@ def build_chapter_context(
         f"选中的 Reference Programs（可选参考，不与事件合同并列为硬要求）\n\n{references}"
     )
     growth_benefit_projection = render_growth_benefit_projection(
-        current_long_block=current_long_block,
+        current_long_block=effective_long_block,
         current_chapter_plan=current_chapter_plan,
         current_outline=current_outline,
     )
     growth_genome_compact = compact_growth_genome_for_chapter(book_content)
+    protected_story_events = render_chapter_story_event_obligations(
+        resolve_chapter_story_events(book_content, current_chapter_plan)
+    )
     return ChapterContextPacket(
         authority=MINIMAL_AUTHORITY_RULE,
-        world_authority=project_world_reality(world_vision) if world_vision.strip() else "",
+        world_authority=(
+            project_effective_world_reality(
+                world_vision, world_expansions, chapter_number
+            )
+            if world_vision.strip()
+            else ""
+        ),
         reader_release=extract_reader_release_for_chapter(book_content, chapter_number),
         book_contract=book_contract,
-        chapter_mission=render_event_contract(current_outline),
+        chapter_mission=render_event_contract_with_plan_outcome(
+            current_outline,
+            current_chapter_plan,
+            protected_story_events=protected_story_events,
+        ),
         canon_context=canon_context,
         recent_prose=previous_chapter_text.strip(),
         rolling_plan=rolling_plan,
         chapter_plan_context=chapter_plan_context,
-        current_long_block=current_long_block.strip(),
+        current_long_block=effective_long_block,
         current_chapter_plan=current_chapter_plan.strip(),
         prose_profile=prose_profile,
         optional_inspiration=optional_inspiration,
@@ -472,6 +677,7 @@ def build_chapter_context(
         power_core=project_frozen_power_core(character_card),
         growth_benefit_projection=growth_benefit_projection,
         growth_genome_compact=growth_genome_compact,
+        protected_story_events=protected_story_events,
     )
 
 
@@ -612,7 +818,13 @@ def build_director_context(
 
     return DirectorContextPacket(
         current_long_block=packet.current_long_block or "（未提供当前大型剧情块。）",
-        current_chapter_plan=packet.current_chapter_plan or "（未提供当前章十章计划条目。）",
+        current_chapter_plan=(
+            project_chapter_plan_execution_boundary(
+                packet.current_chapter_plan,
+                protected_story_events=packet.protected_story_events,
+            )
+            or "（未提供当前章十章计划条目。）"
+        ),
         opportunity_authority=project_current_opportunity_authority(
             packet.current_long_block,
             packet.current_chapter_plan,
