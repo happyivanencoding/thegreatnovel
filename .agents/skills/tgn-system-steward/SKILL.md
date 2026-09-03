@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.46
+version: 0.3.47
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -128,6 +128,8 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Naming semantics before fragrance**：首读语义准确高于世界气味；名字不能反向授权机制；普通短名已经准确时不为“更独特”强改。lexique 可以提供可丢弃 semantic primitive / naming fragrance，但没有真实 gameplay 或语义增益时应忽略
 - High-value Asymmetry Reveal can carry **three coequal reader-facing payoffs** when the scene supports them: crowd shock / field-wide silence or eruption, expert ruler calibration, and behavioral repricing. Do not downgrade collective shock as inherently cruder; first reveal, new tier/compound, new higher circle, or stale social valuation should trigger renewed calibration rather than one-time opening exposition
 - **Precise ruler audit is mandatory for long-form main power growth**：production World Root 应能给主要修炼者一个唯一、长期可复述的精确位置（几级 / 几星 / 几重 / 数字序列），而不是只有少数模糊大档。审计时同时追 Root Grammar、Human T0、State Current Power Position、macro Expansion range continuity 与 Public Proof 三线共尺；精确位置是 Reader Ruler，不是战斗公式，越级胜利不能被误判成自动升级
+- **Reader Ruler ≠ Battle Formula ≠ Decorative Number**：公开主尺不决定每场胜负，但必须真实承载少量可复用的力量基础盘（输出/能量总量、身体承受、速度反应、范围、持续、环境进入能力或题材等价物）。若 World / Power 已说明这些基础盘，Story Program 却让“一项刚出现的相性克制”从废掉高阶者一招直接跳成跨明显大档完整击败，最早坍缩在 Story Program，不要去削弱 Power 或给 Writer 加战力审查。保留特殊能力的局部夸张；因果不足时把结果改成失手、受伤、夺物、逃生、逼退或局部翻盘，让未被克制的主尺差距继续真实存在。
+- **Upset Width is Progression; Power Identity beats Skill Inventory**：越级幅度本身是长期爽点资产。早期优先同阶突出/小幅越级，随着主尺上涨、异常掌握、新 Asymmetry、Advantage Stack 与 compound 真实积累，再允许完整越级差距越来越大；不要跨书硬编码统一 `+N级`。若 Core 天然积累同类变体，审计 Story/State 是否持续把它们压在同一个 reader-facing 个人能力语法下，让“新成员 / 旧成员升级 / 复合”形成一棵可记忆的树；外部兵器、法宝、坐骑保留为资产，不混成角色自身 Power Identity。非累积型能力不强造槽位或第二公开体系。
 - High-value Reader Orientation must be distinguished from low-value repeated explanation / implementation detail
 - **Public / Known World = Clarity; Unknown World = Mystery**：普通人从小知道的主流力量、粗略尺度、生活危险与上升入口可以直接讲；环境纹理、道具、专名或氛围不算已经说明
 - Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose

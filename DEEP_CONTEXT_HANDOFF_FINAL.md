@@ -1,6 +1,6 @@
 # DEEP CONTEXT HANDOFF
 
-日期：2026-08-30
+日期：2026-09-03
 项目：TheGreatNovel / TGN Story MVP
 主要工作目录：`C:\dev\tgn-story-mvp`
 开发分支：`principal_dev_new_sys`
@@ -28,6 +28,25 @@
 ### 可访问范围说明
 
 本文基于当前对话可访问的长对话内容、项目级历史摘要、当前仓库文件、实际实验产物与当前工作树。部分更早消息在界面中以“Skipped”形式出现，无法逐字恢复；对这些历史只采用后来明确复述、已进入代码/文档或被实验重新验证的结论。本文不会伪造被截断消息的原文，也不会把无法确认的中间判断当作最终共识。
+
+---
+
+### 0.0 2026-09-03 最新冻结：Reader Ruler Credibility / Upset Width / Power Identity
+
+亚特兰蒂斯 10 章实验暴露了一个此前隐藏在“精确力量尺已经上线”之后的结构缺口。`01C_WORLD.md` 与 `POWER_SEED.md` 本身已经建立了正确关系：潮阶决定能影响多少水、多远、多稳，并同步提高身体承压、基础战斗与环境进入能力；“藏海”只决定水可以保留哪一种海相性质。但下游 Story Program 随后把“潮阶1的新静默海相局部克制潮阶8祝鸦的鸣潮定位”直接编译成“潮阶1完整击败潮阶8”，甚至把这场越七阶胜利设成不可替代的 Public Proof。**因此最早语义坍缩不在 World、Power、Writer 或 Reviser，而在 Story Program 对 `Reader Ruler ≠ Battle Formula` 的过度解释：系统把“不由等级机械决定胜负”误成了“特殊机制可以让等级的其它现实含义全部失效”。**
+
+当前已冻结以下 decision model：
+
+- **Reader Ruler ≠ Battle Formula ≠ Decorative Number**：精确主尺不建立总战力分，也不保证高一级必胜；但 World 当前常用 benchmark 必须真实承载少量基础盘，例如输出/能量总量、身体承受、速度反应、作用范围、持续、环境进入能力或题材等价物。相性克制只自动拿走它实际克制的部分，不能因为高阶者一招或一种感知失效，就把其余主尺优势一起判作不存在。
+- **Ruler Coupling**：Power Seed 必须能用普通话说明“公共主尺负责哪些基础盘，Power Asymmetry 改变哪一部分”。局部高阶特权仍然可以非常夸张，并且保持 AGGRESSIVE；但能力的可承载/输出尺度仍与当前主尺发生真实关系。修复目标不是削弱金手指，而是让异常相对于一个仍然可信的正常世界成立。
+- **Local Reversal ≠ Full Defeat**：开局一次新鲜 Asymmetry 可以让同阶绝望、击败略高阶，甚至让远高阶失手、受伤、丢物、被迫重整，或让主角完成逃生/夺取局部目标；跨越 World 已明确的明显大档后，若要完整击败对方，必须能从已经成立的多重优势因果推出，例如主尺本身上涨、旧优势掌握、新 Asymmetry、compound、装备、环境、伤势、准备或盟友。因果不足时把结果收回到局部翻盘，不把特殊能力本身削弱。
+- **Upset Width is Progression**：越级幅度本身是一条长篇成长曲线。早期优先同阶突出与小幅越级；中期随着 Advantage Stack 与复合扩大；后期才允许主角成为公共力量尺上的异常值。禁止跨书硬编码统一 `+N级` 上限，也不新增隐藏总战力分。
+- **Power Identity beats Skill Inventory**：如果 Core 天生累积同类变体（例如保存不同海相、契约不同对象、收纳不同形态），Story / State 应持续把它压在同一个 reader-facing 个人能力语法里：`当前公开主尺位置 + 已有同族成员/性质 + 已成立复合`。新的获得优先成为这棵树的新成员、旧成员升级或新复合，而不是每次另起一个互不相关技能。非累积型小说不强造魂环式槽位或第二公开体系。
+- **External Asset ≠ Intrinsic Power Identity**：兵器、法宝、坐骑等外部所有权继续进入 Possession / Tracked Assets；只有已经真实学会的使用方式，或它与自身力量形成的复合能力，才进入 `Power / Capability`。这使读者能够区分“沈临自己现在是什么力量身份”与“沈临现在手里有什么东西”。
+
+本轮没有新增战力数据库、Combat Score、逐级参数表、Writer 审查器或新的 LLM 调用。实现仍走既有 Authority 链：World 负责 ruler baseline，Power 负责 ruler coupling 与 Core grammar，Story Program / Outline / Director 负责正确选择局部翻盘还是完整胜利，State 负责长期压缩 Power Identity。`PROJECT_RULES.md`、`character_prompts.py`、`character_seeds.py`、`prompts.py`、`PIPELINE_METHODOLOGY_AND_VALUES.md`、`SPLIT_CHARACTER_AUTHORITY.md`、`CHAPTER_RUNTIME_AND_STATE.md` 与 `tgn-system-steward` 已同步更新；steward 版本提升到 **0.3.47**。
+
+回归测试重点不是证明某个固定等级差“永远不能赢”，而是防止语义再次退化成“既然不是战斗公式，主尺就没有不可被单一克制抹掉的现实含义”。Atlantis 的正确重解释是：潮阶1的静默可以让潮阶8祝鸦第一次真正失手、暴露、丢掉逐流叉或让沈临活下来；这已经足够惊人。等沈临后来拥有更高潮阶、更多海相与真实 compound，再完整赢祝鸦，才把“越级幅度扩大”本身变成几十章累计后的 payoff。
 
 ---
 

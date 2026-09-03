@@ -63,6 +63,8 @@ def test_new_seed_schemas_restore_ambition_without_story_hooks() -> None:
     assert "World Power Normal → Power Asymmetry" in POWER_SEED_SCHEMA
     assert "来源不必强制是世界内的合法例外" in POWER_SEED_SCHEMA
     assert "默认宁强勿弱" in POWER_SEED_SCHEMA
+    assert "主尺负责哪些基础盘、Asymmetry 改变哪一部分" in POWER_SEED_SCHEMA
+    assert "不能自动把明显更高档对手的其余主尺基础优势全部清零" in POWER_SEED_SCHEMA
     assert "为什么读者会馋" in POWER_SEED_SCHEMA
     assert "High-Tier Mutation" in POWER_SEED_SCHEMA
     assert "Legendary Power State" in POWER_SEED_SCHEMA

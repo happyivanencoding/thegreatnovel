@@ -49,7 +49,7 @@ Reader-facing 世界规则先写具体作用，再命名：基础力量应能用
 
 ### 2.1 World Root 与 Forward World Expansion
 
-`WORLD_VISION.md` 不再被理解为“开书时必须把 500 章所有具体世界写完”。它冻结世界根语法、当前可见世界、公共正常值和足够的上升余量。**其中精确力量主尺 Grammar 必须在开书时冻结**：主尺只能采用连续数字、大境界+数字子级、数字序列三种简单形式，并明确数字范围与精确位置格式；这把尺是长期 Reader Ruler，不是战斗公式。故事真正走到边界时，使用 append-only `world_expansions/expansion-NNNN.md` 向未来增加新世界层；旧 World Root 不被改写。
+`WORLD_VISION.md` 不再被理解为“开书时必须把 500 章所有具体世界写完”。它冻结世界根语法、当前可见世界、公共正常值和足够的上升余量。**其中精确力量主尺 Grammar 必须在开书时冻结**：主尺只能采用连续数字、大境界+数字子级、数字序列三种简单形式，并明确数字范围与精确位置格式；这把尺是长期 Reader Ruler，不是机械胜负公式，但也不能只是装饰数字。World 当前常用 benchmark 应让下游知道哪些基础盘会随主尺真实提高；相性克制只自动改变它实际克制的部分，不能把明显更高档对手的其余基础盘一起抹掉。故事真正走到边界时，使用 append-only `world_expansions/expansion-NNNN.md` 向未来增加新世界层；旧 World Root 不被改写。
 
 - `scope=macro`：普通长篇进入新大陆、新文明、新力量圈层或更高社会/世界层；若力量上限扩大，只能延展 Root 精确主尺的可见范围，`主尺语法改动=NONE`；
 - `scope=instance`：多世界副本流的一次独立 Local World，可设置 `Effective Until Chapter`，离开后不再进入章节 World Authority；每个独立 instance 也必须有自己的本地精确力量尺，但本地尺不回写全局主尺；
@@ -67,7 +67,7 @@ Power Seed 只读取确定性的 `POWER_BASELINE`、固定 1 条 source-blind Na
 
 `世界力量正常值 → Power Novelty Spark → Power Asymmetry → 核心幻想 → 长篇成长兼容`
 
-Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个“熟悉能力幻想 × 单一异常”，只负责拉开候选起点；不进入 Human / Story Program / Outline。Optional Lexique Primitive Pool 同样只在 Power 生成时存在：从项目 lexique 抽少量“对象 × 变化”，每个 Candidate 最多借 0—1 个，也可以全部忽略；只有它能给同一个主异常增加更具体的身体/器物/空间载体或真实新玩法时才采用，不得借它改写 POWER_BASELINE / Spark 已有触发、覆盖、代价或 Permanent Boundary，也不得长成第二系统。**Spark 负责不同，不负责强。** Power Asymmetry 才负责把候选推到明显超标：来源可以是世界内稀有天赋/体质、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加，不强制先证明为世界内合法例外。每个候选最多一个主异常，必须先用一句大白话讲清；固定 Naming Craft Reference 只在语义成立后帮助命名；首读准确高于世界气味，只有不牺牲准确时才复用 World 已有具体词根，lexique 只作次级气味，也可以不用；普通短名已经准确时不为“更独特”强改，名字不能反向授权新机制。默认宁可初稿偏强一档，也不要被 LLM 自动平衡成“更方便”。至少一个维度要让同层普通人/天才明显羡慕，Permanent Boundary 防万能但不做对称成本结算，优先只保留真正根边界；长期默认 **Boundary Stable, Privilege Expands**。复杂玩法从简单规则与后续功法/装备/环境等复合成长中长出来。直接型能力的后续掌握继续扩展控制、对象、战斗复合和危险场景下的稳定使用，不反向变成结构分析、材料诊断或路线计算；Legendary / Future Legend 也不能越过 Permanent Boundary。
+Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个“熟悉能力幻想 × 单一异常”，只负责拉开候选起点；不进入 Human / Story Program / Outline。Optional Lexique Primitive Pool 同样只在 Power 生成时存在：从项目 lexique 抽少量“对象 × 变化”，每个 Candidate 最多借 0—1 个，也可以全部忽略；只有它能给同一个主异常增加更具体的身体/器物/空间载体或真实新玩法时才采用，不得借它改写 POWER_BASELINE / Spark 已有触发、覆盖、代价或 Permanent Boundary，也不得长成第二系统。**Spark 负责不同，不负责强。** Power Asymmetry 才负责把候选推到明显超标：来源可以是世界内稀有天赋/体质、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加，不强制先证明为世界内合法例外。每个候选最多一个主异常，必须先用一句大白话讲清；固定 Naming Craft Reference 只在语义成立后帮助命名；首读准确高于世界气味，只有不牺牲准确时才复用 World 已有具体词根，lexique 只作次级气味，也可以不用；普通短名已经准确时不为“更独特”强改，名字不能反向授权新机制。默认宁可初稿偏强一档，也不要被 LLM 自动平衡成“更方便”。至少一个维度要让同层普通人/天才明显羡慕；但要保留 **Ruler Coupling**：公共主尺继续决定力量/能量总量、身体承受、范围、持续或 World 已批准的其它基础盘，Power Asymmetry 负责说明自己具体改写哪一部分。`局部高阶特权 ≠ 开局完整跨大档胜利`：新鲜相性克制可以制造远高阶失手、受伤、丢物、被迫重整或让主角逃生；跨明显大档的完整击败应由已经成立的多重优势因果共同支撑。**越级幅度本身是成长曲线**：早期同阶突出/小幅越级，后续随着主尺上涨、异常掌握、Advantage Stack 与复合能力再逐步扩大；不统一硬编码 `+N级`。Permanent Boundary 防万能但不做对称成本结算，优先只保留真正根边界；长期默认 **Boundary Stable, Privilege Expands**。复杂玩法从简单规则与后续功法/装备/环境等复合成长中长出来。直接型能力的后续掌握继续扩展控制、对象、战斗复合和危险场景下的稳定使用，不反向变成结构分析、材料诊断或路线计算；Legendary / Future Legend 也不能越过 Permanent Boundary。累积同类变体型 Core 优先保持一个 reader-facing 的个人能力语法，让新变体、旧变体升级和复合都挂在同一棵树上；非累积型能力不强造槽位或第二公开体系。
 
 它负责：相关正常值/稀缺度、Power Asymmetry、核心幻想、正常修炼轴、异常掌握轴、高阶质变、永久边界、传奇力量状态。
 
@@ -76,7 +76,7 @@ Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个
 因此长篇 Power Authority 是两层而不是重抽 Seed：
 
 - `Power Origin Core`：`CHARACTER.md` 中 Frozen Power，保存开局核心异常与根边界；
-- `Current Power Portfolio`：State Extraction 在 `PERSISTENT CANON → Power / Capability` 维护已经真实获得/证明的后续 Power、身体变化、兵器权限与 Advantage Stack；第一行固定承载 `Current Power Position｜主尺：…｜精确位置：…`。Human Seed 冻结 T0 精确位置，后续 State 只在正文明确突破时更新；若某次 State 漏写，代码保留上一位置，不允许精确坐标因抽取遗漏消失。
+- `Current Power Portfolio`：State Extraction 在 `PERSISTENT CANON → Power / Capability` 维护已经真实获得/证明的后续 Power、身体变化、武器使用能力与 Advantage Stack；第一行固定承载 `Current Power Position｜主尺：…｜精确位置：…`。Human Seed 冻结 T0 精确位置，后续 State 只在正文明确突破时更新；累积同类变体型 Core 继续按已成立的统一个人能力语法压缩保存，外部兵器/法宝/坐骑所有权留在 Possession / Tracked Assets；若某次 State 漏写，代码保留上一位置，不允许精确坐标因抽取遗漏消失。
 
 后期拿到神兵、传承或第二种非对称优势，只更新 Current Power；不把它回填成“主角从一开始就是这个能力”。精确位置只说明公开主尺坐标：越级胜利、装备或 Power Asymmetry 可以让低位者打赢高位者，但不能因此自动改写 `Current Power Position`。
 

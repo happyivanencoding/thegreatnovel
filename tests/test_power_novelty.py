@@ -21,6 +21,9 @@ def test_world_prompt_requires_reusable_social_power_rulers() -> None:
     assert "唯一精确当前位置" in prompt
     assert "主尺类型" in prompt
     assert "不要合成单一总战力分" in prompt
+    assert "不是机械胜负公式，但也不能只是装饰数字" in prompt
+    assert "不会被单一特殊机制凭空抹掉的**基础盘**" in prompt
+    assert "不能因为废掉高阶者一招" in prompt
     assert "普通人怎样在聚落之间移动" in prompt
     assert "谁有能力跨越危险区域" in prompt
     assert "公开类别" in prompt
@@ -95,8 +98,13 @@ def test_power_prompt_auto_injects_noncanon_novelty_sparks() -> None:
     assert "同层普通人通常只能做到什么" in prompt
     assert "不能靠删除 Novelty Spark 的“单一异常”换来" in prompt
     assert "允许并鼓励有条件的越级威胁" in prompt
+    assert "局部高阶特权 ≠ 开局完整跨大档胜利" in prompt
+    assert "输出尺度与可承载强度仍要和当前主尺发生真实耦合" in prompt
+    assert "越级幅度本身也是成长结果" in prompt
+    assert "不要为不同世界硬编码统一的 `+N级` 上限" in prompt
     assert "不要新增“超标坐标/比较表/评分”等输出字段" in prompt
     assert "不要让长期成长只剩数量、距离、持续时间越来越大" in prompt
+    assert "不要逐步退化成互不相干的“技能背包”" in prompt
     assert "Future Legend Image 都不得放松、绕过或遗忘前面已经写明的 Permanent Boundary" in prompt
     assert "Power Seed 只定义**开局 Core Asymmetry**" in prompt
     assert "后续 Story Program 可以通过真实故事获得新的 Power Asymmetry" in prompt
@@ -119,6 +127,12 @@ def test_story_program_keeps_later_asymmetries_reader_facing() -> None:
     assert "以前做不到什么、现在具体多能做什么" in prompt
     assert "不得靠两三个新造概念互相解释来制造高级感" in prompt
     assert "New Asymmetry ≠ New Power System" in prompt
+    assert "Ruler 不是机械胜负公式，也不是可以被任一特殊机制绕开的装饰数字" in prompt
+    assert "局部翻盘" in prompt
+    assert "制造一次失误 / 存活 / 夺物 / 逼退 / 改变局面" in prompt
+    assert "越级幅度本身也是纵向成长奖励" in prompt
+    assert "Power Identity 要比技能清单更稳定" in prompt
+    assert "外部兵器、法宝、坐骑等仍是外部资产" in prompt
     assert "Bonus Surprise is allowed" in prompt
 
 
