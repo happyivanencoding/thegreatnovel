@@ -42,6 +42,7 @@
 - **Stage Identity first, Exact Number second**：当 World 有有意义的大档名时，正文优先让读者记住“铸脊，炉级41 / 御风6重”这类力量身份；大阶段负责身份与质变，精确数字负责同阶段内校准。不能让大档长期退化成后台区间名，只剩仪表数字。
 - **Public Milestone ≠ Protagonist Expression**：World 冻结“到这一层所有正常修炼者通常第一次能做什么”；Power Seed 只能决定同一公共新动词到 Core Asymmetry 身上时会形成怎样更独特的表达/复合，不得把公共能力偷包装成主角专属技能。这样既保留统一力量母语，也保留主角长期 Asymmetry。
 - **Expectation Ladder / Demonstration before Destination**：Story Program 不重新发明 Milestone，而是挑当前 Horizon 真正值得追的未来节点，优先借已经有自身故事因果的高阶人物、敌人、导师、远行者、危险或真实入口提前演示，让 Frozen Human 因自己的欲望产生羡慕、贪心、竞争或恐惧。到了突破时，再先兑现公共 Milestone，再兑现主角版本。不要把“见过→羡慕→突破→展示”机械拆成每阶段固定模板，也不为展示另造教学、复测或示范任务。
+- **2026-09-03 作者冻结：Future Promise 要在最早真实因果点命名，不等突破章。** 驭兽 production Batch 证明 World/Power/Story 已能设计 `合载19=共骑`，但旧 Outline 把完整 Reader Release 排到第9章，导致前5章只留下“以后更强就能载人”的模糊剪影。作者决定冻结更早 timing：若高阶 actor 已经现场展示某 Public Milestone 的公共新动词，或主角当前明确做不到一件自己想做、而该 Milestone 正好能打开的事，Outline 就在该最早触发章释放最低充分 `阶段名/精确门槛 + 公共新动词 + 一项当前相关 World Aperture`。这不是整梯曝光，也不提前讲主角特殊版本。
 - **Reader Release 只负责 timing，不新增系统**：Public Milestone 本来就是 World Public Knowledge，现有 World Reality Authority 会把 `## 力量体系与正常值` 投影给下游；Outline 只在里程碑第一次真正成为欲望/威胁、高阶人物演示、准入门槛或当前突破时，排 `阶段/精确门槛 + 公共新动词 + 当前相关世界开口` 的最少事实。整张 Ladder 不在开篇倾倒，Primary/Curator 不自行挑未来设定。
 - **Forward-only**：macro World Expansion 若第一次暴露新力量范围，只为新公开范围追加新的 Public Milestone，不重写 Root；独立 instance 可有自己的 Local Milestone Ladder，离开 Local World 后不回写全局体系。
 
