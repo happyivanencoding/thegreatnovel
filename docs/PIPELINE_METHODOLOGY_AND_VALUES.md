@@ -180,6 +180,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 - 普通人的生活、上升与失败路径；
 - 当安全、地理或旅行会限制人生时，普通人怎样跨越聚落、谁能独行、哪些现实通道把当前生活连接到更大世界；
 - 力量体系的正常值、稀缺度、境界/能力的可观察差距；先用 1—3 句普通话说清力量来源、直接作用、成长与失败，再给会反复使用的对象/层级短名。**精确力量主尺是强制 Root Grammar**：World 必须选择 `连续数字 / 大境界+数字子级 / 数字序列` 之一，并给出主尺名称、含 `{N}` 的精确位置格式、明确数字精度规则、当前可见数字范围和少量大档位；任何主要修炼者都应能被写成一个唯一精确位置。它是 Reader Ruler，不变成总战力分或机械胜负公式；但也不能只是装饰数字。World 的少量 benchmark 必须真实说明当前常用档位至少哪些**基础盘**会随主尺提高——例如输出/能量总量、身体承受、速度反应、作用范围、持续、可进入环境或题材自己的等价事实。后续相性克制只自动抹掉它真实克制的部分，不能因为高阶者一招失效就默认其余主尺基础盘同时消失。**Small Grammar, Large Variation**：已有一到少数互补力量操作轴如果已经简单、有辨识度，就保护它，不为“更统一”泛化成元能量/总机制；Small Grammar 不等于 Small World，主动让旧规则长出新招式/战斗姿态、身体/物种、兵器/奇物、异兽/伴生物、会改变玩法的环境、组合与稀有例外，让读者旧知识持续复利。**World Possibility Ecology 关注的是因果分布，不是能力条目数量**：高价值成长来源要自然挂在不同人物、地点、承诺、季节/时间窗口与长期路线，允许真实选择一条以后错过另一条；不要让一个最显眼机制成为所有人生都会回到的 universal upgrade trunk，也不做能力类别配额。World 同时主动寻找 0—1 条真正成熟的 Optional Secondary Fantasy Road；没有足够好的创意就不造，也不预设未来主角一定会走。创新放在力量因果和玩法，不靠多个新词互相解释；默认直接力量先写身体、攻击、防御、移动、元素、兵器等可感知效果。对当前会频繁使用的少数力量/价值/身份档位给 1—2 个可感知、可复用 benchmark，供下游稳定比较，不建战力数据库；
+- **Public Milestone Ladder = Future Power Promise**：精确主尺告诉读者“现在多强”，少数大阶段则提前告诉读者“以后会第一次多出什么可能”。当前可见 Horizon 中真正的大节点必须是 `Major Stage = Capability Milestone = World Aperture`：至少出现一个过去绝不可能的新动词，并带来可观察的社会识别和新的环境/地图/身份/人物/资源入口；再给出低阶人物会具体羡慕它的理由。大档名有意义时优先成为第一力量身份，精确数字用于第二层校准；连续小级仍可只增长基础盘，不逐级列能力、不固定 Milestone 数量。`Public Milestone ≠ Protagonist Expression`：World 只冻结公共版本，Power 才负责 Core 到同一节点时的个人表达；Story Program 借真实高阶人物/冲突/入口把重要未来节点提前演示成 Expectation Ladder，Outline 用现有 Reader Release 只排最少充分事实，不在开篇倾倒整张梯，也不为示范另造教学剧情；
 - 明确区分 **Public World Knowledge / Mystery**：普通人从小知道的主流力量、粗略强弱尺、当前/下一档现实含义、日常危险、上升入口与价值物，要能被下游直接用普通话说明；环境纹理和专名不能替代基础答案。来源、隐藏原因、幕后关系与未来 reveal 继续进入知识边界；
 - 宗门、王朝、家族、商盟、种族等怎样真实影响人生； named 势力 / 部族若会进入世界大事，同时给一个不剧透的公开类别锚点，让章节期 WORLD AUTHORITY 能回答“它是什么”；
 - 世界里真正值钱、值得人物争夺和羡慕的东西；
@@ -211,7 +212,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 World Expansion 使用 **GPT-5.6 Luna high 的 protagonist-blind fresh context**：只看 World Root、此前已批准 Expansion、明确的 `Canon → World State` 与小型 World craft；不看 Current Character、Power Stack、Human、关系、Story Handoff 的人物化答案或未来计划。它只创造世界现实，不替 Story 设计“最适合主角的下一件宝物”。但 protagonist-blind 不等于失忆：`World State` 是**世界影响残留（World Impact Residue）**，谁造成并不重要；只要某个行动者已经公开改变跨地区力量估值、势力行为、商路/价格、迁徙、警戒、联盟、传闻或公共入口，而且传播在世界内成立，新 Horizon 就应继承这些后果。若少量公开姓名、精确力量位置/越级战绩已经传播并会改变新区域 actor 的行动，可以保留其分量；不得从这些结果反推隐藏 Power 机制、私人欲望、关系或 Build，也不要求所有新人物围着旧主角反应。
 
-力量尺也服从 Forward Expansion：`scope=macro` 只能延展 World Root 已冻结精确主尺的**可见数字范围**，不得把“每境1—9星”改成初/中/后期或另造第二套全局计数；如果本轮只扩地理/社会，精确尺范围可以 `NONE`。多世界副本流使用同一机制但有双层时钟：跨世界稳定规则留在 Global / Meta World；每个真正独立新世界用 `scope=instance` 追加 Local World Authority，并强制建立自己的**本地精确力量尺**。本地尺帮助读者理解该世界内部位置，但不会反向改写主角全局主尺。离开副本后 Local World 与本地尺从章节 `WORLD AUTHORITY` 退场；真正带走的 Power、物品、关系、身份、知识和 Meta consequence 继续留在 Canon。
+力量尺也服从 Forward Expansion：`scope=macro` 只能延展 World Root 已冻结精确主尺的**可见数字范围**，不得把“每境1—9星”改成初/中/后期或另造第二套全局计数；如果本轮只扩地理/社会，精确尺范围可以 `NONE`。新范围第一次出现新的大阶段公共质变时，只追加对应的 `Public Milestone`，不回头改写 Root 已知 Milestone；没有新质变就不填。多世界副本流使用同一机制但有双层时钟：跨世界稳定规则留在 Global / Meta World；每个真正独立新世界用 `scope=instance` 追加 Local World Authority，并强制建立自己的**本地精确力量尺**；本地存在真正大阶段时可以有自己的 Local Milestone Ladder。本地尺与里程碑帮助读者理解该世界内部位置，但不会反向改写主角全局主尺。离开副本后 Local World 与本地尺从章节 `WORLD AUTHORITY` 退场；真正带走的 Power、物品、关系、身份、知识和 Meta consequence 继续留在 Canon。
 
 ---
 

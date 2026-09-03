@@ -19,6 +19,9 @@ WORLD = """# PROTAGONIST-BLIND WORLD VISION
 ## 力量体系与正常值
 普通人不会正式修行。纳息者能用小术。通脉修士属于地方精锐。照域修士极其罕见。通常不能逆转时间或真正复活。
 
+### 公共力量里程碑｜Public Milestone Ladder
+- 通脉｜公共新动词：力量第一次可以离体护住兵器｜社会识别：地方武馆会把通脉者视为正式高手｜世界开口：可独自进入低危荒路｜少年为什么向往：不用再跟在护队身后才能出城
+
 ## 社会现实与身份
 世界有王朝、宗门、世家、商盟、军府。身份会受师承、城籍、军籍、商籍影响。
 
@@ -51,6 +54,8 @@ def test_character_world_slice_keeps_reality_and_normal_baseline() -> None:
     assert "纳息者" in result
     assert "通脉修士" in result
     assert "照域修士极其罕见" in result
+    assert "公共力量里程碑｜Public Milestone Ladder" in result
+    assert "公共新动词：力量第一次可以离体护住兵器" in result
     assert "王朝、宗门、世家、商盟、军府" in result
     assert "稳定灵田" in result
     assert "普通人知道归潮" in result
@@ -97,6 +102,8 @@ def test_power_baseline_is_power_authority_not_life_or_hooks() -> None:
     assert "纳息者" in result
     assert "通脉修士" in result
     assert "照域修士极其罕见" in result
+    assert "公共力量里程碑｜Public Milestone Ladder" in result
+    assert "世界开口：可独自进入低危荒路" in result
     assert "Core Fantasy / 特殊能力首先相对于本区块的力量" in result
     assert "不能因为人物是矿工、匠人、账房、向导等职业" in result
     assert "这是男频成长长篇" in result
@@ -145,6 +152,8 @@ def test_world_reality_authority_is_safe_and_complete() -> None:
     assert "WORLD REALITY AUTHORITY" in result
     assert "普通人的生活与上升" in result
     assert "力量体系与正常值" in result
+    assert "公共力量里程碑｜Public Milestone Ladder" in result
+    assert "少年为什么向往：不用再跟在护队身后才能出城" in result
     assert "社会现实与身份" in result
     assert "世界里真正值钱、值得想要的东西" in result
     assert "普通人知道归潮" in result

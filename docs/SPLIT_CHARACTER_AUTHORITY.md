@@ -49,10 +49,10 @@ Reader-facing 世界规则先写具体作用，再命名：基础力量应能用
 
 ### 2.1 World Root 与 Forward World Expansion
 
-`WORLD_VISION.md` 不再被理解为“开书时必须把 500 章所有具体世界写完”。它冻结世界根语法、当前可见世界、公共正常值和足够的上升余量。**其中精确力量主尺 Grammar 必须在开书时冻结**：主尺只能采用连续数字、大境界+数字子级、数字序列三种简单形式，并明确数字范围与精确位置格式；这把尺是长期 Reader Ruler，不是机械胜负公式，但也不能只是装饰数字。World 当前常用 benchmark 应让下游知道哪些基础盘会随主尺真实提高；相性克制只自动改变它实际克制的部分，不能把明显更高档对手的其余基础盘一起抹掉。故事真正走到边界时，使用 append-only `world_expansions/expansion-NNNN.md` 向未来增加新世界层；旧 World Root 不被改写。
+`WORLD_VISION.md` 不再被理解为“开书时必须把 500 章所有具体世界写完”。它冻结世界根语法、当前可见世界、公共正常值和足够的上升余量。**其中精确力量主尺 Grammar 必须在开书时冻结**：主尺只能采用连续数字、大境界+数字子级、数字序列三种简单形式，并明确数字范围与精确位置格式；这把尺是长期 Reader Ruler，不是机械胜负公式，但也不能只是装饰数字。World 当前常用 benchmark 应让下游知道哪些基础盘会随主尺真实提高；相性克制只自动改变它实际克制的部分，不能把明显更高档对手的其余基础盘一起抹掉。与这把“现在多强”的尺并列，World 还冻结当前可见范围内少数真正的 **Public Milestone Ladder**：大阶段不是数字区间别名，而是 `Capability Milestone = World Aperture`，至少让一种过去绝不可能的新动词变成常规可能，并同时改变社会识别与可进入世界；低阶者应有具体理由提前向往。大档名存在时优先作为第一力量身份，精确数字负责第二层校准。这里不逐级列能力、不固定节点数，也不写未来主角版本。故事真正走到边界时，使用 append-only `world_expansions/expansion-NNNN.md` 向未来增加新世界层；旧 World Root 不被改写。
 
-- `scope=macro`：普通长篇进入新大陆、新文明、新力量圈层或更高社会/世界层；若力量上限扩大，只能延展 Root 精确主尺的可见范围，`主尺语法改动=NONE`；
-- `scope=instance`：多世界副本流的一次独立 Local World，可设置 `Effective Until Chapter`，离开后不再进入章节 World Authority；每个独立 instance 也必须有自己的本地精确力量尺，但本地尺不回写全局主尺；
+- `scope=macro`：普通长篇进入新大陆、新文明、新力量圈层或更高社会/世界层；若力量上限扩大，只能延展 Root 精确主尺的可见范围，`主尺语法改动=NONE`；新范围第一次出现新的公共大质变时只追加新的 Public Milestone，不重写 Root 已知节点；
+- `scope=instance`：多世界副本流的一次独立 Local World，可设置 `Effective Until Chapter`，离开后不再进入章节 World Authority；每个独立 instance 也必须有自己的本地精确力量尺，本地存在大阶段时可有自己的 Local Milestone Ladder，但本地尺与里程碑都不回写全局主尺；
 - Expansion 触发来自 Story Program 的 `World Horizon Handoff` / 实际 World Entry，不是固定百章税；
 - World Expansion 用 Luna high fresh context，只读 World Root、旧 Expansion、明确 `Canon → World State` 与 World-only craft；不读 Current Character、Power Stack、Human、关系、未来 Story。这里的 `World State` 是 **World Impact Residue**：若主角或其他行动者已经公开改变跨地区战力估值、势力行动、商路/价格、迁徙、警戒、联盟、传闻或公共入口，新 Horizon 在传播成立时继承这些后果；可保留会改变 actor 行动的少量公开姓名/力量位置/越级战绩，但不能反推隐藏能力原理、私人关系、欲望或 Build，也不能把新世界改造成旧主角的专属回应；
 - Story Program 的 Handoff 只负责 orchestration，**不注入 World Agent**。这样当前主角的需求不会偷偷变成下一世界的设计要求。
@@ -130,7 +130,7 @@ Story Program 是第一次同时看到完整 World、完整 Character、T0 State
 
 核心合同：**不要把碰撞消解成命中注定的适配。** World 与 Character 都是既定事实；Story Program 负责它们碰撞后的事件、关系、反制、后果、阶段发动机与长期因果，不能为主题整齐重写上游。
 
-权威与调度分开：Power Seed 决定开局 Core Asymmetry 的成长语法；Story Program 决定它怎样实现，并可通过真实获得加入新的 Power Asymmetry、让新旧优势发生复合。后续新 Asymmetry 继承同一 Reader-facing 边界：先写“以前做不到什么、现在具体多能做什么”，再决定是否需要短名；新名只压缩已经理解的能力。**成长是全书纵向不变量，不是每阶段升级税。**
+权威与调度分开：Power Seed 决定开局 Core Asymmetry 的成长语法；Story Program 决定它怎样实现，并可通过真实获得加入新的 Power Asymmetry、让新旧优势发生复合。后续新 Asymmetry 继承同一 Reader-facing 边界：先写“以前做不到什么、现在具体多能做什么”，再决定是否需要短名；新名只压缩已经理解的能力。**成长是全书纵向不变量，不是每阶段升级税。** Approved World 的 Public Milestone Ladder 则是 Frozen World Promise，Story Program 不得重新发明公共质变；它负责挑出当前 Horizon 真正值得期待的节点，借已经有自己故事因果的高阶人物/冲突/地点/入口提前演示，让主角因 Frozen Human 自己的欲望产生期待，再在真实突破时先兑现公共新动词、后兑现 Protagonist Expression。这样 `Power Progression × World Expansion` 共用一条发动机，但不把“展示→羡慕→突破”做成每阶段固定模板。
 
 Story Program 只具体规划**当前已批准 World Horizon**，而不是开书时一次写死剩余 500 章。非终局 Horizon 的最后 1—2 个自然阶段若已经把当前世界层主要压力活透，就输出普通 `World Horizon Handoff`：可观察触发条件、`macro / instance` scope、为什么此时应该扩、以及哪些已发生事实必须 carry forward。它不能预写下一世界的宝物、能力、势力或针对当前主角 Build 的答案；Handoff 也不会注入 World Expansion Agent。若作者明确当前就是小说最终 Horizon，则 Handoff 第一行改为 `FINAL NOVEL END`，不再触发 Expansion：主角进入最终公开力量最高可见圈层，并在最后决定性事件中用长期 Advantage Stack 完成同档的 Asymmetry Dominance；允许 Rival 同级、活着或在某一专业更强，未解释世界余白也不再登记成 future story obligation。
 
@@ -160,7 +160,7 @@ Refresh 对少数真正长期重要的 Supporting Cast 保留两种不同方向�
 
 ## 7. Outline：执行编译，不重新调度
 
-Outline 把已批准 Story Program 编译成当前窗口的具体 Story Anchors，不是第二个 Story Program。
+Outline 把已批准 Story Program 编译成当前窗口的具体 Story Anchors，不是第二个 Story Program。Public Milestone 已经是 World Authority；Outline 只在它第一次成为主角欲望/恐惧、当前高阶人物的真实展示、地点/身份准入门槛或本窗口突破时，把 `阶段/门槛 + 公共新动词 + 当前相关世界开口` 的最少充分事实排进 Reader Release。整张 Ladder 不在开篇倾倒，Protagonist Expression 也不由 Outline 发明。
 
 每块只在 `Block Delta` 中记录**相对本块开始真正变化的维度**；没有变化就省略。关系/世界驱动的块可以完全没有 Power、Possession 或新地图；反过来，Story Program 已安排在当前窗口的真实成长又不能被省略。
 

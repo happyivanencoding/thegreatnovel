@@ -31,7 +31,25 @@
 
 ---
 
-### 0.0 2026-09-03 最新冻结：Reader Ruler Credibility / Upset Width / Power Identity
+### 0.0 2026-09-03 最新冻结：Public Milestone Ladder / Future Power Promise
+
+在 Reader Ruler Credibility 修复之后，held-out 力量体系进一步暴露了一个更高层差距：TGN 已经能较可靠地回答“主角现在多强”，但还没有稳定把大境界变成**全世界都知道、读者提前几十章就会等待的未来质变**。成熟成长玄幻的关键并不是每级多一个技能，而是少数大节点提前承诺：到了那里，一个人会第一次获得过去绝不可能的动作、资格或世界入口；低阶人物早就见过高阶者怎样做到，因此“什么时候到那里、我的版本会是什么”本身持续制造欲望。
+
+当前冻结为：
+
+- **Public Milestone Ladder = Future Power Promise**：World Vision 在精确主尺之外，为当前可见 Horizon 冻结少数真正的公共大质变。每个节点必须至少回答 `公共新动词 / 社会识别 / 世界开口 / 少年为什么向往`；若所谓大阶段只有更强、更快、更硬、更久，它还只是连续成长区间，不冒充 Milestone。连续小级允许只有数值增长，不逐级填能力，也不规定固定节点数量。
+- **Major Stage = Capability Milestone = World Aperture**：大阶段的价值优先表现为“可能性集合扩大”。战斗方式、移动方式、可承受环境、社会身份、能接触的人/资源只要有一项真正跨过旧边界即可；最理想时同一次突破自然打开更大的 World Horizon。力量成长因此可以成为 World Expansion 的合法原因，而不是第五卷到了就强行换地图。
+- **Stage Identity first, Exact Number second**：当 World 有有意义的大档名时，正文优先让读者记住“铸脊，炉级41 / 御风6重”这类力量身份；大阶段负责身份与质变，精确数字负责同阶段内校准。不能让大档长期退化成后台区间名，只剩仪表数字。
+- **Public Milestone ≠ Protagonist Expression**：World 冻结“到这一层所有正常修炼者通常第一次能做什么”；Power Seed 只能决定同一公共新动词到 Core Asymmetry 身上时会形成怎样更独特的表达/复合，不得把公共能力偷包装成主角专属技能。这样既保留统一力量母语，也保留主角长期 Asymmetry。
+- **Expectation Ladder / Demonstration before Destination**：Story Program 不重新发明 Milestone，而是挑当前 Horizon 真正值得追的未来节点，优先借已经有自身故事因果的高阶人物、敌人、导师、远行者、危险或真实入口提前演示，让 Frozen Human 因自己的欲望产生羡慕、贪心、竞争或恐惧。到了突破时，再先兑现公共 Milestone，再兑现主角版本。不要把“见过→羡慕→突破→展示”机械拆成每阶段固定模板，也不为展示另造教学、复测或示范任务。
+- **Reader Release 只负责 timing，不新增系统**：Public Milestone 本来就是 World Public Knowledge，现有 World Reality Authority 会把 `## 力量体系与正常值` 投影给下游；Outline 只在里程碑第一次真正成为欲望/威胁、高阶人物演示、准入门槛或当前突破时，排 `阶段/精确门槛 + 公共新动词 + 当前相关世界开口` 的最少事实。整张 Ladder 不在开篇倾倒，Primary/Curator 不自行挑未来设定。
+- **Forward-only**：macro World Expansion 若第一次暴露新力量范围，只为新公开范围追加新的 Public Milestone，不重写 Root；独立 instance 可有自己的 Local Milestone Ladder，离开 Local World 后不回写全局体系。
+
+本轮刻意没有新增 Agent、Reader State 数据库、每境界能力表、固定六/七节点模板、第二战力系统或新的 Hard Gate。核心实现只扩展既有 `World → Power → Story Program → Outline/Reader Release` Authority 链；是否真正达到“读者合上五章就知道现在什么阶段、下一阶段为什么值得等”仍必须由后续 Batch 正文 held-out 验证，而不能用 prompt contract 自证成功。
+
+---
+
+### 0.0A 2026-09-03 冻结：Reader Ruler Credibility / Upset Width / Power Identity
 
 亚特兰蒂斯 10 章实验暴露了一个此前隐藏在“精确力量尺已经上线”之后的结构缺口。`01C_WORLD.md` 与 `POWER_SEED.md` 本身已经建立了正确关系：潮阶决定能影响多少水、多远、多稳，并同步提高身体承压、基础战斗与环境进入能力；“藏海”只决定水可以保留哪一种海相性质。但下游 Story Program 随后把“潮阶1的新静默海相局部克制潮阶8祝鸦的鸣潮定位”直接编译成“潮阶1完整击败潮阶8”，甚至把这场越七阶胜利设成不可替代的 Public Proof。**因此最早语义坍缩不在 World、Power、Writer 或 Reviser，而在 Story Program 对 `Reader Ruler ≠ Battle Formula` 的过度解释：系统把“不由等级机械决定胜负”误成了“特殊机制可以让等级的其它现实含义全部失效”。**
 
@@ -44,7 +62,7 @@
 - **Power Identity beats Skill Inventory**：如果 Core 天生累积同类变体（例如保存不同海相、契约不同对象、收纳不同形态），Story / State 应持续把它压在同一个 reader-facing 个人能力语法里：`当前公开主尺位置 + 已有同族成员/性质 + 已成立复合`。新的获得优先成为这棵树的新成员、旧成员升级或新复合，而不是每次另起一个互不相关技能。非累积型小说不强造魂环式槽位或第二公开体系。
 - **External Asset ≠ Intrinsic Power Identity**：兵器、法宝、坐骑等外部所有权继续进入 Possession / Tracked Assets；只有已经真实学会的使用方式，或它与自身力量形成的复合能力，才进入 `Power / Capability`。这使读者能够区分“沈临自己现在是什么力量身份”与“沈临现在手里有什么东西”。
 
-本轮没有新增战力数据库、Combat Score、逐级参数表、Writer 审查器或新的 LLM 调用。实现仍走既有 Authority 链：World 负责 ruler baseline，Power 负责 ruler coupling 与 Core grammar，Story Program / Outline / Director 负责正确选择局部翻盘还是完整胜利，State 负责长期压缩 Power Identity。`PROJECT_RULES.md`、`character_prompts.py`、`character_seeds.py`、`prompts.py`、`PIPELINE_METHODOLOGY_AND_VALUES.md`、`SPLIT_CHARACTER_AUTHORITY.md`、`CHAPTER_RUNTIME_AND_STATE.md` 与 `tgn-system-steward` 已同步更新；steward 版本提升到 **0.3.47**。
+本轮没有新增战力数据库、Combat Score、逐级参数表、Writer 审查器或新的 LLM 调用。实现仍走既有 Authority 链：World 负责 ruler baseline，Power 负责 ruler coupling 与 Core grammar，Story Program / Outline / Director 负责正确选择局部翻盘还是完整胜利，State 负责长期压缩 Power Identity。`PROJECT_RULES.md`、`character_prompts.py`、`character_seeds.py`、`prompts.py`、`PIPELINE_METHODOLOGY_AND_VALUES.md`、`SPLIT_CHARACTER_AUTHORITY.md`、`CHAPTER_RUNTIME_AND_STATE.md` 与 `tgn-system-steward` 已同步更新；当时 steward 版本提升到 **0.3.47**，本轮 Public Milestone 审计链继续提升到 **0.3.48**。
 
 回归测试重点不是证明某个固定等级差“永远不能赢”，而是防止语义再次退化成“既然不是战斗公式，主尺就没有不可被单一克制抹掉的现实含义”。Atlantis 的正确重解释是：潮阶1的静默可以让潮阶8祝鸦第一次真正失手、暴露、丢掉逐流叉或让沈临活下来；这已经足够惊人。等沈临后来拥有更高潮阶、更多海相与真实 compound，再完整赢祝鸦，才把“越级幅度扩大”本身变成几十章累计后的 payoff。
 

@@ -24,6 +24,14 @@ def test_world_prompt_requires_reusable_social_power_rulers() -> None:
     assert "不是机械胜负公式，但也不能只是装饰数字" in prompt
     assert "不会被单一特殊机制凭空抹掉的**基础盘**" in prompt
     assert "不能因为废掉高阶者一招" in prompt
+    assert "Public Milestone Ladder = 全社会公开的未来力量承诺" in prompt
+    assert "公共新动词" in prompt
+    assert "社会识别" in prompt
+    assert "世界开口" in prompt
+    assert "少年为什么向往" in prompt
+    assert "大档名存在时，它应优先成为读者的力量身份" in prompt
+    assert "不要逐级列能力，不规定固定里程碑数量" in prompt
+    assert "### 公共力量里程碑｜Public Milestone Ladder" in prompt
     assert "普通人怎样在聚落之间移动" in prompt
     assert "谁有能力跨越危险区域" in prompt
     assert "公开类别" in prompt
@@ -105,6 +113,8 @@ def test_power_prompt_auto_injects_noncanon_novelty_sparks() -> None:
     assert "不要新增“超标坐标/比较表/评分”等输出字段" in prompt
     assert "不要让长期成长只剩数量、距离、持续时间越来越大" in prompt
     assert "不要逐步退化成互不相干的“技能背包”" in prompt
+    assert "Public Milestone 是世界公共质变，High-Tier Mutation 是这个 Core 的个人表达" in prompt
+    assert "不要让 Power Candidate 偷偷改写" in prompt
     assert "Future Legend Image 都不得放松、绕过或遗忘前面已经写明的 Permanent Boundary" in prompt
     assert "Power Seed 只定义**开局 Core Asymmetry**" in prompt
     assert "后续 Story Program 可以通过真实故事获得新的 Power Asymmetry" in prompt
@@ -131,6 +141,11 @@ def test_story_program_keeps_later_asymmetries_reader_facing() -> None:
     assert "局部翻盘" in prompt
     assert "制造一次失误 / 存活 / 夺物 / 逼退 / 改变局面" in prompt
     assert "越级幅度本身也是纵向成长奖励" in prompt
+    assert "Public Milestone ≠ Protagonist Expression" in prompt
+    assert "Frozen World Promise" in prompt
+    assert "Expectation Ladder" in prompt
+    assert "Major Stage = Capability Milestone = World Aperture" in prompt
+    assert "让读者在主角抵达以前亲眼见过一次" in prompt
     assert "Power Identity 要比技能清单更稳定" in prompt
     assert "外部兵器、法宝、坐骑等仍是外部资产" in prompt
     assert "Bonus Surprise is allowed" in prompt

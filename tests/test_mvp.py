@@ -3454,6 +3454,10 @@ def test_outline_releases_world_model_and_varies_early_core_gameplay() -> None:
     assert "哪些事实的首次释放时机值得被显式保存" in template
     assert "### Reader Release Map" in template
     assert "具体已批准 World fact" in template
+    assert "Public Milestone Ladder 同样属于 World Public Knowledge" in template
+    assert "绝不能整张在开篇倾倒" in template
+    assert "先演示后抵达" in template
+    assert "主角的特殊版本不属于 World Release" in template
     assert "移动事实等到人物真正离开聚落时再释放" in template
     assert "绝不能把答案提前写入 Map" in template
     assert "Outline Core Gameplay Variation" in template
