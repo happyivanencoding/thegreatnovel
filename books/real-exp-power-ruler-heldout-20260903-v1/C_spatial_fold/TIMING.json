@@ -1,0 +1,8 @@
+{
+  "world": 225.929,
+  "power_candidates": 200.335,
+  "human_candidates": 156.373,
+  "story_program_retry": 752.729,
+  "outline": 293.212,
+  "note": "The first parallel Story Program attempt exceeded ~30 minutes with no response and was stopped. The exact same frozen prompt/model/effort retry succeeded and is the semantic result used in this experiment."
+}

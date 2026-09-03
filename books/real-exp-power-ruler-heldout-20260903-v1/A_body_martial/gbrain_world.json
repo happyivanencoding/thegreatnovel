@@ -1,0 +1,281 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "world_vision",
+  "effective_query": "检索模式：world_vision\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的血肉近战武道世界：主流力量必须主要来自身体、呼吸、血骨、近战兵器与直接肉身战斗，不以法术、召唤、空间术、规则权限或职业流程为核心。公共精确力量主尺必须真实改变输出/爆发、身体承受、反应速度、持续作战与能否进入更危险环境；不要把主尺写成只有称号的装饰数字。世界、地点、异兽、势力和高价值对象自行原创。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续要有可长期成长和复合的男频爽感。\n明确硬约束：未检测到明确题材硬约束\nWorld Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不替未来 Character 决定主角。",
+  "query_strategy": "semantic_brief",
+  "query_texts": [
+    "检索模式：world_vision\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的血肉近战武道世界：主流力量必须主要来自身体、呼吸、血骨、近战兵器与直接肉身战斗，不以法术、召唤、空间术、规则权限或职业流程为核心。公共精确力量主尺必须真实改变输出/爆发、身体承受、反应速度、持续作战与能否进入更危险环境；不要把主尺写成只有称号的装饰数字。世界、地点、异兽、势力和高价值对象自行原创。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续要有可长期成长和复合的男频爽感。\n明确硬约束：未检测到明确题材硬约束\nWorld Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不替未来 Character 决定主角。"
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：world_vision\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的血肉近战武道世界：主流力量必须主要来自身体、呼吸、血骨、近战兵器与直接肉身战斗，不以法术、召唤、空间术、规则权限或职业流程为核心。公共精确力量主尺必须真实改变输出/爆发、身体承受、反应速度、持续作战与能否进入更危险环境；不要把主尺写成只有称号的装饰数字。世界、地点、异兽、势力和高价值对象自行原创。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续要有可长期成长和复合的男频爽感。\n明确硬约束：未检测到明确题材硬约束\nWorld Vision 用途：优先寻找 reader fantasy、world entry、world expansion 与 narrative compounding；只作为可选灵感，不替未来 Character 决定主角。",
+  "query_scope": "book-dna,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 16,
+  "unique_raw_count": 16,
+  "novel_candidate_count": 16,
+  "accepted_count": 3,
+  "coordinate_reference_count": 1,
+  "coordinate_reference": {
+    "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+    "type": "synthesis",
+    "score": 1.0,
+    "abstract": "Guidance：World Vision 使用两类坐标。第一类是**世界前台尺**：至少建立一把当前主尺，生产注入优先从 `POWER / TECHNIQUE / THREAT / STATUS / VALUE / WORLD` 中选择；题材明显依赖装备/法宝或天赋上限时，可条件性加入 `GEAR_ARTIFACT / POTENTIAL_CEILING` 校准。它们回答“现在谁能做到什么、差距造成什么结果、什么东西真值、下一层世界有什么”。第二类是**读者体验 / 故事校准尺**：`ACTION_SPACE / MYSTERY_DEPTH / EXPECTATION_LADDER / IMPACT`（必要时 `REACH`）仍然必须真实参与生产设计，但只作为作者侧坐标——分别投影成“成长后多能做哪件以前做不到的事”“哪个旧锚点仍有可回收的更深解释”“下一层已经看得见但尚未取得的具体人/物/地点/能力/身份”“一次行动实际改变多少人物、关系、地点、阵营或世界状态”。它们不得变成世界内部正式术语、资源名、势力理念或主题命题。`TEMPORAL_SCALE` 继续 HOLD。不要逐项填满，也不要建立战力数据库。",
+    "transfer_boundary": ""
+  },
+  "coordinate_reference_error": "",
+  "naming_reference_count": 0,
+  "naming_reference": null,
+  "naming_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {},
+  "human_lane_order": [],
+  "human_lane_candidate_limit": 0,
+  "prototype_id": "",
+  "prototype_selected": false,
+  "rejected_count": 13,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 3,
+  "raw_stdout": "[0.8902] book-dna/rcv0-20-gaowu-quanqiu-gaowu-v2 -- # Book DNA v2\n\n## Core Reader Fantasy\n\n普通、缺钱、缺地位的人重来一次，先把现金和信息变成气血、排名和武科入口，再把身体力量扩展到地窟、三界和跨界生活。核心满足是\n[0.8787] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3 -- Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come\n[0.8667] syntheses/genre-priors/修仙 -- # 修仙题材模板\n\n> **核心卖点**: 逆天改命 + 长生久视 + 残酷法则。修仙是与天争命，也是与人争利。\n\n---\n\n## 创意约束推荐（可选）\n- 推荐约束包：Pack M01 / Pack\n[0.8545] book-dna/rcv0-34-xuanhuan-doupo-cangqiong-fulltext-growth-v4 -- Retrieval aliases: 斗破苍穹 fulltext growth progression reader ruler scale social repricing advantage st\n[0.8439] book-dna/rcv0-02-xianxia-bailian-chengxian -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n资质普通甚至受限的修士，通过勤修、资源、准备和危险路径持续获得可验证的\n[0.8330] book-dna/rcv0-02-xianxia-bailian-chengxian-v2 -- # Book DNA v2\n\n## Core Reader Fantasy\n\n低资质也能继续向上，靠修炼、材料、丹药、法宝和准备获得原本没有的力量与进入更大世界的资格。读者期待的是突破、反击、法则尺度\n[0.8232] mechanisms/world-entry-v3 -- Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo\n[0.8132] book-dna/rcv0-20-gaowu-quanqiu-gaowu -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n读者先享受重生带来的资源套利、制度误读和武科竞争，再追逐个人战力、身份\n[0.8040] syntheses/genre-priors/西幻 -- # 西幻题材模板\n\n> **核心卖点**: 神魔体系 + 骑士冒险 + 契约代价。在神与魔的夹缝中，书写凡人的史诗。\n\n---\n\n## 创意约束推荐（可选）\n- 推荐约束包：Pack M22\n- 通用\n[0.7949] book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3 -- Retrieval aliases: jidaotianmo power dominance agency obstacle reframing enemy adaptation\n## Evidenc\n[0.7857] syntheses/genre-priors/v2-neutralized -- # 修仙 Genre Prior｜Inspiration-First Neutralization v2\n\n## 低权威说明\n\n这是六个 bounded Pilot 样本提供的灵感地图，不替作者决定境\n[0.7762] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-v2 -- # Book DNA v2\n\n## Core Reader Fantasy\n\n普通人的聊天软件突然连接仙侠世界；现代物件可以成为炼丹、法器和行动接口，群友的知识、吐槽和资源让日常不断打开新世界。造物、\n[0.7671] book-dna/rcv0-30-xuanhuan-douluo-dalu-story-craft-v3 -- Retrieval aliases: core reader fantasy world fantasy relationship payoff hidden identity sacrifice r\n[0.7582] book-dna/rcv0-16-youxi-hupozhijian -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n读者追逐一个普通人的训练、探索和战斗本能如何打开更大的奇幻世界；能力提\n[0.7496] book-dna/rcv0-49-xianxia-manghuangji-story-craft-v3 -- 先用人物当前欲望选择入口，而不是先展示地图。\n2. 新世界必须立即给出一个可感知的尺度差异。\n3. 通过当地称号、强者反应、地盘大小、战斗结果建立新坐标。\n4. 新世界会提供一个新的可欲望对象。\n[0.7416] syntheses/genre-priors/都市异能 -- # 都市异能题材模板\n\n> **核心卖点**: 熟悉的现代生活 + 超凡力量的入侵。在平凡中寻找非凡。\n\n---\n\n## 创意约束推荐（可选）\n- 推荐约束包：Pack M12 / Pack M05",
+  "novel_candidates": [
+    {
+      "score": 0.8902,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-v2",
+      "snippet": "# Book DNA v2"
+    },
+    {
+      "score": 0.8787,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come"
+    },
+    {
+      "score": 0.8667,
+      "slug": "syntheses/genre-priors/修仙",
+      "snippet": "# 修仙题材模板"
+    },
+    {
+      "score": 0.8545,
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-fulltext-growth-v4",
+      "snippet": "Retrieval aliases: 斗破苍穹 fulltext growth progression reader ruler scale social repricing advantage st"
+    },
+    {
+      "score": 0.8439,
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.833,
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian-v2",
+      "snippet": "# Book DNA v2"
+    },
+    {
+      "score": 0.8232,
+      "slug": "mechanisms/world-entry-v3",
+      "snippet": "Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo"
+    },
+    {
+      "score": 0.8132,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.804,
+      "slug": "syntheses/genre-priors/西幻",
+      "snippet": "# 西幻题材模板"
+    },
+    {
+      "score": 0.7949,
+      "slug": "book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3",
+      "snippet": "Retrieval aliases: jidaotianmo power dominance agency obstacle reframing enemy adaptation"
+    },
+    {
+      "score": 0.7857,
+      "slug": "syntheses/genre-priors/v2-neutralized",
+      "snippet": "# 修仙 Genre Prior｜Inspiration-First Neutralization v2"
+    },
+    {
+      "score": 0.7762,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-v2",
+      "snippet": "# Book DNA v2"
+    },
+    {
+      "score": 0.7671,
+      "slug": "book-dna/rcv0-30-xuanhuan-douluo-dalu-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy relationship payoff hidden identity sacrifice r"
+    },
+    {
+      "score": 0.7582,
+      "slug": "book-dna/rcv0-16-youxi-hupozhijian",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.7496,
+      "slug": "book-dna/rcv0-49-xianxia-manghuangji-story-craft-v3",
+      "snippet": "先用人物当前欲望选择入口，而不是先展示地图。"
+    },
+    {
+      "score": 0.7416,
+      "slug": "syntheses/genre-priors/都市异能",
+      "snippet": "# 都市异能题材模板"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.8902,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-v2",
+      "snippet": "# Book DNA v2"
+    },
+    {
+      "score": 0.8787,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come"
+    },
+    {
+      "score": 0.8667,
+      "slug": "syntheses/genre-priors/修仙",
+      "snippet": "# 修仙题材模板"
+    },
+    {
+      "score": 0.8545,
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-fulltext-growth-v4",
+      "snippet": "Retrieval aliases: 斗破苍穹 fulltext growth progression reader ruler scale social repricing advantage st"
+    },
+    {
+      "score": 0.8439,
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.833,
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian-v2",
+      "snippet": "# Book DNA v2"
+    },
+    {
+      "score": 0.8232,
+      "slug": "mechanisms/world-entry-v3",
+      "snippet": "Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo"
+    },
+    {
+      "score": 0.8132,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.804,
+      "slug": "syntheses/genre-priors/西幻",
+      "snippet": "# 西幻题材模板"
+    },
+    {
+      "score": 0.7949,
+      "slug": "book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3",
+      "snippet": "Retrieval aliases: jidaotianmo power dominance agency obstacle reframing enemy adaptation"
+    },
+    {
+      "score": 0.7857,
+      "slug": "syntheses/genre-priors/v2-neutralized",
+      "snippet": "# 修仙 Genre Prior｜Inspiration-First Neutralization v2"
+    },
+    {
+      "score": 0.7762,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-v2",
+      "snippet": "# Book DNA v2"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.8787,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come",
+      "type": "book-dna",
+      "is_genre_prior": false,
+      "abstract": "Reader Promise：核心不是“主角升级”，而是：\n> 一个原本只想过普通大学生活的人，误入一个看似中二、实际真实的修真聊天群；从此，任何日常活动都可能被前辈、朋友、误会和超凡能力改造成私人定制的奇幻冒险。\n读者持续阅读，主要因为：\n1. 普通世界不断被证明“不普通”：晴天雷劫、聊天群、鬼灯寺、飞剑、太空站都从旁观笑话变成现实。\n2. 每个熟人都带着自己的玩法回来，并能以自己的兴趣和目标参与故事。\n3. 白前辈会把“拍照、蹦极、拍电影、修空间站、寻找宝藏”等普通愿望改造成新场景。\n4. 旧笑话、旧能力、旧关系会在新地图中重新组合，产生新的后果。\n5. 终局不是封闭世界，而是再次出现“有人收到加入聊天群邀请”的入口。\nProtagonist Action：开篇宋书航没有宏大目标。他只是感冒、无聊、想看电影，误加九洲一号群后决定潜水看群友笑话（第1–3章，L96-L124、L205-L206、L309-L322）。\n但他的行动欲望逐渐具体化：\n- 想确认群友是不是疯子：他研究丹方、询问药材安全，并主动准备验证（第3章，L343-L386）。\n- 想帮助羽柔子找鬼灯寺：他陪她出行、查资料、询问老人，并承担由此引出的冲突（第14–19章，L1080-L1145、L1416-L1496）。\n- 想获得真正的修真体验：掌心雷、御刀、飞剑、核心世界都从“看别人玩”变成“自己使用”。\n- 想保护家人和身边人：他接受洞天福地，准备让父母避开邪道威胁（第991章，L89175-L89183）。\n- 想成为“可靠的大前辈”：这不是一开始就有的使命，而是被九洲一号群长期照顾后形成的关系性目标（第1525章，L143230-L143239；第3162章，L271289-L271302）。\n- 终局仍由他主动选择：证道、帮助白前辈超脱、重新经营九洲一号群，并邀请新人加入（第3163章，L27…",
+      "transfer_boundary": "",
+      "formatted_block": "### Inspiration\nsource: book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3\ntype: book-dna\nscore: 0.8787\n\n可用抽象：Reader Promise：核心不是“主角升级”，而是：\n> 一个原本只想过普通大学生活的人，误入一个看似中二、实际真实的修真聊天群；从此，任何日常活动都可能被前辈、朋友、误会和超凡能力改造成私人定制的奇幻冒险。\n读者持续阅读，主要因为：\n1. 普通世界不断被证明“不普通”：晴天雷劫、聊天群、鬼灯寺、飞剑、太空站都从旁观笑话变成现实。\n2. 每个熟人都带着自己的玩法回来，并能以自己的兴趣和目标参与故事。\n3. 白前辈会把“拍照、蹦极、拍电影、修空间站、寻找宝藏”等普通愿望改造成新场景。\n4. 旧笑话、旧能力、旧关系会在新地图中重新组合，产生新的后果。\n5. 终局不是封闭世界，而是再次出现“有人收到加入聊天群邀请”的入口。\nProtagonist Action：开篇宋书航没有宏大目标。他只是感冒、无聊、想看电影，误加九洲一号群后决定潜水看群友笑话（第1–3章，L96-L124、L205-L206、L309-L322）。\n但他的行动欲望逐渐具体化：\n- 想确认群友是不是疯子：他研究丹方、询问药材安全，并主动准备验证（第3章，L343-L386）。\n- 想帮助羽柔子找鬼灯寺：他陪她出行、查资料、询问老人，并承担由此引出的冲突（第14–19章，L1080-L1145、L1416-L1496）。\n- 想获得真正的修真体验：掌心雷、御刀、飞剑、核心世界都从“看别人玩”变成“自己使用”。\n- 想保护家人和身边人：他接受洞天福地，准备让父母避开邪道威胁（第991章，L89175-L89183）。\n- 想成为“可靠的大前辈”：这不是一开始就有的使命，而是被九洲一号群长期照顾后形成的关系性目标（第1525章，L143230-L143239；第3162章，L271289-L271302）。\n- 终局仍由他主动选择：证道、帮助白前辈超脱、重新经营九洲一号群，并邀请新人加入（第3163章，L27…\n\n使用边界：只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。"
+    },
+    {
+      "score": 0.8439,
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+      "snippet": "## Evidence Coverage",
+      "type": "book-dna",
+      "is_genre_prior": false,
+      "abstract": "Reader Promise：资质普通甚至受限的修士，通过勤修、资源、准备和危险路径持续获得可验证的能力、地位与生存空间。\nRepeatable Reader Loop：瓶颈显形→训练、资源或秘法准备→在试炼中验证→突破或取得局部优势→换取准入、保护和更高难题。\nCore Progression Grammar：以可见境界、功法、法宝和资源把长期努力拆成可验证的战斗、试炼和身份节点；突破既是数值变化也是行动选项增加。\nPayoff Grammar：POWER_BREAKTHROUGH；NEW_TECHNIQUE；COMBAT_DOMINANCE；RESOURCE_GAIN；UNDERDOG_VICTORY；STATUS_RISE；WORLD_EXPANSION；KNOWLEDGE_GAIN；TEAM_GROWTH；STRATEGIC_ADVANTAGE\nAdvantage / Special Capability：特殊能力首先提供直接的新选项和能力愉悦，再在战斗、阵法或借力场景中接受验证；证据不足的能力代价保持 UNKNOWN，不把能力自动写成负担。\nWorld Expansion Grammar：个人修炼通过宗门、试炼、区域、敌对势力和更高层级资源逐步接入公共秩序。\nNovelty / Recombination：把普通资质、极端准备、危险捷径和防守资源重组为可持续的逆袭路线。\nSocial / Relationship Dynamics：保护、师承、同伴和宗门准入既是 payoff 也是行动空间，不应被单向解释成责任。\nResource / Economy：灵石、丹药、阵法、法宝、时间和借力额度构成明确的准备经济；资源耗尽会改变防守与突破方式。\nOptional Constraints / Costs：已观察到资源消耗、借力限制、反制和守护压力；未观察到的能力成本标为…",
+      "transfer_boundary": "可迁移的是准备—验证—行动空间变化的结构变量，不迁移具体境界、功法名、设定规则或单书因果。",
+      "formatted_block": "### Inspiration\nsource: book-dna/rcv0-02-xianxia-bailian-chengxian\ntype: book-dna\nscore: 0.8439\n\n可用抽象：Reader Promise：资质普通甚至受限的修士，通过勤修、资源、准备和危险路径持续获得可验证的能力、地位与生存空间。\nRepeatable Reader Loop：瓶颈显形→训练、资源或秘法准备→在试炼中验证→突破或取得局部优势→换取准入、保护和更高难题。\nCore Progression Grammar：以可见境界、功法、法宝和资源把长期努力拆成可验证的战斗、试炼和身份节点；突破既是数值变化也是行动选项增加。\nPayoff Grammar：POWER_BREAKTHROUGH；NEW_TECHNIQUE；COMBAT_DOMINANCE；RESOURCE_GAIN；UNDERDOG_VICTORY；STATUS_RISE；WORLD_EXPANSION；KNOWLEDGE_GAIN；TEAM_GROWTH；STRATEGIC_ADVANTAGE\nAdvantage / Special Capability：特殊能力首先提供直接的新选项和能力愉悦，再在战斗、阵法或借力场景中接受验证；证据不足的能力代价保持 UNKNOWN，不把能力自动写成负担。\nWorld Expansion Grammar：个人修炼通过宗门、试炼、区域、敌对势力和更高层级资源逐步接入公共秩序。\nNovelty / Recombination：把普通资质、极端准备、危险捷径和防守资源重组为可持续的逆袭路线。\nSocial / Relationship Dynamics：保护、师承、同伴和宗门准入既是 payoff 也是行动空间，不应被单向解释成责任。\nResource / Economy：灵石、丹药、阵法、法宝、时间和借力额度构成明确的准备经济；资源耗尽会改变防守与突破方式。\nOptional Constraints / Costs：已观察到资源消耗、借力限制、反制和守护压力；未观察到的能力成本标为…\n\n使用边界：可迁移的是准备—验证—行动空间变化的结构变量，不迁移具体境界、功法名、设定规则或单书因果。"
+    },
+    {
+      "score": 0.8232,
+      "slug": "mechanisms/world-entry-v3",
+      "snippet": "Retrieval aliases: world entry relationship entry identity entry mystery entry consequence driven wo",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：怎样让世界扩张来自人物正在经历的故事，而不是突然把主角送去新地图？\nMechanism：世界入口可以是地点，也可以是关系、身份、物件、信息或上一场事件留下的后果。为了救人进入禁区、因为旧身份被揭露进入家族历史、因为误认进入秘密圈层、因为一件旧物重新打开更高规则、因为牺牲/战斗迫使人物接触更大世界，都属于有效入口。\nVariants：- 地点入口：真正需要去到某处。\n- 关系入口：救人、追人、重逢、保护、寻找失踪者。\n- 身份入口：伪装、血脉、真实归属、旧身份回归。\n- 物件入口：一个已经进入故事的东西在新阶段显示更高意义。\n- 信息入口：传闻、日记、群聊、旧史、异常现象。\n- 后果入口：上一阶段的胜利、失败、牺牲、误会或离队直接迫使下一层打开。\nReader Payoff：新世界看起来是“人物自己撞进去的”，旧剧情没有被 reset；读者既想看新地方，也关心旧关系/谜团在新层会怎样变化。\nGuidance：优先让新入口同时改变：角色能看见什么、别人如何理解他、他下一步想追求什么。\nFailure Modes：- 章节到点自动换地图。\n- 新入口和当前人物欲望无关。\n- 旧人物/旧承诺全部留在上一地图。\n- 进入新层后先停止故事解释规则。",
+      "transfer_boundary": "迁移入口类型和因果连接，不迁移源作品具体入口。",
+      "formatted_block": "### Inspiration\nsource: mechanisms/world-entry-v3\ntype: mechanism\nscore: 0.8232\n\n可用抽象：Creative Problem：怎样让世界扩张来自人物正在经历的故事，而不是突然把主角送去新地图？\nMechanism：世界入口可以是地点，也可以是关系、身份、物件、信息或上一场事件留下的后果。为了救人进入禁区、因为旧身份被揭露进入家族历史、因为误认进入秘密圈层、因为一件旧物重新打开更高规则、因为牺牲/战斗迫使人物接触更大世界，都属于有效入口。\nVariants：- 地点入口：真正需要去到某处。\n- 关系入口：救人、追人、重逢、保护、寻找失踪者。\n- 身份入口：伪装、血脉、真实归属、旧身份回归。\n- 物件入口：一个已经进入故事的东西在新阶段显示更高意义。\n- 信息入口：传闻、日记、群聊、旧史、异常现象。\n- 后果入口：上一阶段的胜利、失败、牺牲、误会或离队直接迫使下一层打开。\nReader Payoff：新世界看起来是“人物自己撞进去的”，旧剧情没有被 reset；读者既想看新地方，也关心旧关系/谜团在新层会怎样变化。\nGuidance：优先让新入口同时改变：角色能看见什么、别人如何理解他、他下一步想追求什么。\nFailure Modes：- 章节到点自动换地图。\n- 新入口和当前人物欲望无关。\n- 旧人物/旧承诺全部留在上一地图。\n- 进入新层后先停止故事解释规则。\n\n使用边界：迁移入口类型和因果连接，不迁移源作品具体入口。"
+    }
+  ],
+  "fixed_references": [
+    {
+      "id": "coordinate_reference",
+      "label": "固定读者坐标参考",
+      "required": true,
+      "slug": "syntheses/reader-facing-world-coordinates-batch-d-v3",
+      "formatted_block": "### Fixed Coordinate Reference\nsource: syntheses/reader-facing-world-coordinates-batch-d-v3\nrole: World Vision 固定读者坐标参考；不占 creative inspiration 名额\n\n可用抽象：Guidance：World Vision 使用两类坐标。第一类是**世界前台尺**：至少建立一把当前主尺，生产注入优先从 `POWER / TECHNIQUE / THREAT / STATUS / VALUE / WORLD` 中选择；题材明显依赖装备/法宝或天赋上限时，可条件性加入 `GEAR_ARTIFACT / POTENTIAL_CEILING` 校准。它们回答“现在谁能做到什么、差距造成什么结果、什么东西真值、下一层世界有什么”。第二类是**读者体验 / 故事校准尺**：`ACTION_SPACE / MYSTERY_DEPTH / EXPECTATION_LADDER / IMPACT`（必要时 `REACH`）仍然必须真实参与生产设计，但只作为作者侧坐标——分别投影成“成长后多能做哪件以前做不到的事”“哪个旧锚点仍有可回收的更深解释”“下一层已经看得见但尚未取得的具体人/物/地点/能力/身份”“一次行动实际改变多少人物、关系、地点、阵营或世界状态”。它们不得变成世界内部正式术语、资源名、势力理念或主题命题。`TEMPORAL_SCALE` 继续 HOLD。不要逐项填满，也不要建立战力数据库。\n\n使用边界：只使用这张跨书 synthesis 的读者坐标原则，不迁移来源作品表层设定、人物、事件或数值。"
+    }
+  ],
+  "rejected": [
+    {
+      "slug": "book-dna/rcv0-30-xuanhuan-douluo-dalu-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-16-youxi-hupozhijian",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-49-xianxia-manghuangji-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "syntheses/genre-priors/都市异能",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-v2",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "syntheses/genre-priors/修仙",
+      "reason": "章节节点不自动使用 Genre Prior"
+    },
+    {
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-fulltext-growth-v4",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian-v2",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "syntheses/genre-priors/西幻",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "syntheses/genre-priors/v2-neutralized",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-v2",
+      "reason": "超过最终数量上限"
+    }
+  ],
+  "result": "### Fixed Coordinate Reference\nsource: syntheses/reader-facing-world-coordinates-batch-d-v3\nrole: World Vision 固定读者坐标参考；不占 creative inspiration 名额\n\n可用抽象：Guidance：World Vision 使用两类坐标。第一类是**世界前台尺**：至少建立一把当前主尺，生产注入优先从 `POWER / TECHNIQUE / THREAT / STATUS / VALUE / WORLD` 中选择；题材明显依赖装备/法宝或天赋上限时，可条件性加入 `GEAR_ARTIFACT / POTENTIAL_CEILING` 校准。它们回答“现在谁能做到什么、差距造成什么结果、什么东西真值、下一层世界有什么”。第二类是**读者体验 / 故事校准尺**：`ACTION_SPACE / MYSTERY_DEPTH / EXPECTATION_LADDER / IMPACT`（必要时 `REACH`）仍然必须真实参与生产设计，但只作为作者侧坐标——分别投影成“成长后多能做哪件以前做不到的事”“哪个旧锚点仍有可回收的更深解释”“下一层已经看得见但尚未取得的具体人/物/地点/能力/身份”“一次行动实际改变多少人物、关系、地点、阵营或世界状态”。它们不得变成世界内部正式术语、资源名、势力理念或主题命题。`TEMPORAL_SCALE` 继续 HOLD。不要逐项填满，也不要建立战力数据库。\n\n使用边界：只使用这张跨书 synthesis 的读者坐标原则，不迁移来源作品表层设定、人物、事件或数值。\n\n### Inspiration 1\nsource: book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3\ntype: book-dna\nscore: 0.8787\n\n可用抽象：Reader Promise：核心不是“主角升级”，而是：\n> 一个原本只想过普通大学生活的人，误入一个看似中二、实际真实的修真聊天群；从此，任何日常活动都可能被前辈、朋友、误会和超凡能力改造成私人定制的奇幻冒险。\n读者持续阅读，主要因为：\n1. 普通世界不断被证明“不普通”：晴天雷劫、聊天群、鬼灯寺、飞剑、太空站都从旁观笑话变成现实。\n2. 每个熟人都带着自己的玩法回来，并能以自己的兴趣和目标参与故事。\n3. 白前辈会把“拍照、蹦极、拍电影、修空间站、寻找宝藏”等普通愿望改造成新场景。\n4. 旧笑话、旧能力、旧关系会在新地图中重新组合，产生新的后果。\n5. 终局不是封闭世界，而是再次出现“有人收到加入聊天群邀请”的入口。\nProtagonist Action：开篇宋书航没有宏大目标。他只是感冒、无聊、想看电影，误加九洲一号群后决定潜水看群友笑话（第1–3章，L96-L124、L205-L206、L309-L322）。\n但他的行动欲望逐渐具体化：\n- 想确认群友是不是疯子：他研究丹方、询问药材安全，并主动准备验证（第3章，L343-L386）。\n- 想帮助羽柔子找鬼灯寺：他陪她出行、查资料、询问老人，并承担由此引出的冲突（第14–19章，L1080-L1145、L1416-L1496）。\n- 想获得真正的修真体验：掌心雷、御刀、飞剑、核心世界都从“看别人玩”变成“自己使用”。\n- 想保护家人和身边人：他接受洞天福地，准备让父母避开邪道威胁（第991章，L89175-L89183）。\n- 想成为“可靠的大前辈”：这不是一开始就有的使命，而是被九洲一号群长期照顾后形成的关系性目标（第1525章，L143230-L143239；第3162章，L271289-L271302）。\n- 终局仍由他主动选择：证道、帮助白前辈超脱、重新经营九洲一号群，并邀请新人加入（第3163章，L27…\n\n使用边界：只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。\n\n### Inspiration 2\nsource: book-dna/rcv0-02-xianxia-bailian-chengxian\ntype: book-dna\nscore: 0.8439\n\n可用抽象：Reader Promise：资质普通甚至受限的修士，通过勤修、资源、准备和危险路径持续获得可验证的能力、地位与生存空间。\nRepeatable Reader Loop：瓶颈显形→训练、资源或秘法准备→在试炼中验证→突破或取得局部优势→换取准入、保护和更高难题。\nCore Progression Grammar：以可见境界、功法、法宝和资源把长期努力拆成可验证的战斗、试炼和身份节点；突破既是数值变化也是行动选项增加。\nPayoff Grammar：POWER_BREAKTHROUGH；NEW_TECHNIQUE；COMBAT_DOMINANCE；RESOURCE_GAIN；UNDERDOG_VICTORY；STATUS_RISE；WORLD_EXPANSION；KNOWLEDGE_GAIN；TEAM_GROWTH；STRATEGIC_ADVANTAGE\nAdvantage / Special Capability：特殊能力首先提供直接的新选项和能力愉悦，再在战斗、阵法或借力场景中接受验证；证据不足的能力代价保持 UNKNOWN，不把能力自动写成负担。\nWorld Expansion Grammar：个人修炼通过宗门、试炼、区域、敌对势力和更高层级资源逐步接入公共秩序。\nNovelty / Recombination：把普通资质、极端准备、危险捷径和防守资源重组为可持续的逆袭路线。\nSocial / Relationship Dynamics：保护、师承、同伴和宗门准入既是 payoff 也是行动空间，不应被单向解释成责任。\nResource / Economy：灵石、丹药、阵法、法宝、时间和借力额度构成明确的准备经济；资源耗尽会改变防守与突破方式。\nOptional Constraints / Costs：已观察到资源消耗、借力限制、反制和守护压力；未观察到的能力成本标为…\n\n使用边界：可迁移的是准备—验证—行动空间变化的结构变量，不迁移具体境界、功法名、设定规则或单书因果。\n\n### Inspiration 3\nsource: mechanisms/world-entry-v3\ntype: mechanism\nscore: 0.8232\n\n可用抽象：Creative Problem：怎样让世界扩张来自人物正在经历的故事，而不是突然把主角送去新地图？\nMechanism：世界入口可以是地点，也可以是关系、身份、物件、信息或上一场事件留下的后果。为了救人进入禁区、因为旧身份被揭露进入家族历史、因为误认进入秘密圈层、因为一件旧物重新打开更高规则、因为牺牲/战斗迫使人物接触更大世界，都属于有效入口。\nVariants：- 地点入口：真正需要去到某处。\n- 关系入口：救人、追人、重逢、保护、寻找失踪者。\n- 身份入口：伪装、血脉、真实归属、旧身份回归。\n- 物件入口：一个已经进入故事的东西在新阶段显示更高意义。\n- 信息入口：传闻、日记、群聊、旧史、异常现象。\n- 后果入口：上一阶段的胜利、失败、牺牲、误会或离队直接迫使下一层打开。\nReader Payoff：新世界看起来是“人物自己撞进去的”，旧剧情没有被 reset；读者既想看新地方，也关心旧关系/谜团在新层会怎样变化。\nGuidance：优先让新入口同时改变：角色能看见什么、别人如何理解他、他下一步想追求什么。\nFailure Modes：- 章节到点自动换地图。\n- 新入口和当前人物欲望无关。\n- 旧人物/旧承诺全部留在上一地图。\n- 进入新层后先停止故事解释规则。\n\n使用边界：迁移入口类型和因果连接，不迁移源作品具体入口。"
+}

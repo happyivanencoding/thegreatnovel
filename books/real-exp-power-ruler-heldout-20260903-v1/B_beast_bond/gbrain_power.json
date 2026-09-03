@@ -1,0 +1,308 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "power_seed",
+  "effective_query": "检索模式：power_seed\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的浮空群岛驭兽/伴生兽世界：主流力量来自人与真实存在的伴生兽、契兽或异兽伙伴之间的共鸣与共同作战；个人可以修炼，但伙伴必须有自己的身体、习性与行动，不能降成技能按钮。公共精确力量主尺必须真实改变共享力量强度、骑乘/承载、双方反应与同步、作用距离/持续，以及能否进入更危险风层；不要把主尺写成只有称号的装饰数字。不要使用亚特兰蒂斯、海相、静默水等旧设定。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续要保持人物自身 Power Identity 与真实伙伴/外部资产的区别。\nPower 可见 World Baseline：\n# CHARACTER POWER BASELINE｜Core Fantasy Authority\n\n## 力量体系与正常值\n\n力量来自两部分：人的灵息和伙伴自身的兽息。双方通过共同进食、训练、休息、战斗与危险中的相互配合形成共鸣。共鸣越稳，人的灵息越能传递给伙伴，伙伴也越能把自己的力量、感知和身体承载反馈给人。\n\n这种力量不是召唤术。伙伴有自己的身体、习性、恐惧、食欲和判断，会自行移动、攻击、保护或拒绝命令。人受伤、伙伴受惊、距离过远、风层不适合或双方节奏失配，都会让共鸣减弱甚至反噬。\n\n变强主要依靠体魄、呼吸法、伙伴成长、长期共同作战、针对环境的技法以及更好的装备。不同伙伴会形成完全不同的战斗方式：有的适合高速俯冲，有的擅长承载，有的能钻入浮岛底部，有的依靠听觉、嗅觉或夜间视力作战。\n\n### 精确力量主尺｜Frozen Grammar\n\n主尺类型：大境界+数字子级\n\n主尺名称：风阶\n\n精确位置格式：`风阶·{大境界}{N}重`\n\n数字精度规则：每个大境界为1—9重，每1重都是可记录、可比较的公开位置；同一大境界内，数字越大越强\n\n当前可见范围：`风阶·引息1重`—`风阶·镇岛9重`，共54个公开位置\n\n当前大档位：\n\n- 引息1—9重：能稳定修炼自身灵息，与小型伙伴完成基础共鸣；通常只能在聚落内行动。\n- 合鸣1—9重：双方能在战斗中持续交换力量和感知；合鸣3重左右，正常驭兽者可以骑乘伙伴跨越近岛；合鸣7重以上，才有资格成为正式驭行队成员。\n- 御风1—9重：能让人和伙伴共同飞行，承受普通风路的持续乱流；御风5重左右，可带一名乘客穿过缓风层之间的长距离空隙。\n- 穿层1—9重：能进入折风层并保持较长时间的共鸣；穿层2重以上，才有机会担任高空商队或军府的核心护航者。\n- 裂空1—9重：能在裂风中保持高速行动，伙伴的身体和人的灵息都具备明显的区域破坏力；地方强者多处于此档。\n- 镇岛1—9重：能在大范围风场中作战，并短时间稳定大型浮岛的风锚或抵抗风暴正面冲击；每座大型岛链都只有少数此档人物。\n\n主尺真实反映灵息总量、双方身体承载、反应速度、同步距离、共鸣持续时间，以及能够进入的风层。技法、装备、伙伴习性和地形可以造成越级、失手、逃脱或局部翻盘，但不能凭一种特殊相性自动抹掉更高大档位在体魄、速度、持续和环境承受上的全部优势。\n\n世界中最常见的是引息和合鸣修炼者；御风者已经属于受人雇佣的专业人士；穿层者在一座普通岛上通常只有几十人；裂空者足以改变地方势力格局；镇岛者往往被王庭、军府、商盟或大宗门长期争夺。\n\n可选的副道路是风匠。风匠不以正面战斗为主，而是与专门的巢背兽、掘岩兽或听风鸟合作，修复浮岛风锚、调整风帆航路、建造跨岛风桥。顶级风匠能让一座岛在风暴季少损失一半以上的居民区。风匠仍使用风阶衡量自身和伙伴的承载能力，但其作品、工期、材料和事故率才是社会真正比较的东西。\n\n## Power Asymmetry 生成边界\nCore Fantasy / 特殊能力首先相对于本区块的力量 Normal / Rarity / Acquisition Conditions 生成，而不是相对于人物职业生成。\n先回答：这个世界绝大多数人怎样获得、承载和使用超凡力量？哪些能力常见、哪些少见、哪些尚未被可靠证实？再创造一个相对正常分布明显超标的 Power Asymmetry。它可以来自世界内稀有异常，也可以来自唯一奇物、外来知识/经验、外挂、极端正常天赋或少量优势叠加；不要为了“合法化”强行给世界补一套机制。\n成长背景可以解释人物为什么发现、理解、珍惜、滥用或隐藏这个异常，却不能因为人物是矿工、匠人、账房、向导等职业，就把异常自动写成超级辨矿、维修诊断、路线优化、账契解释等职业强化。\n专业技能可以与异常发生化学反应，但不能替代男频 Core Fantasy 本…\n明确硬约束：未检测到明确题材硬约束\nPower Seed 用途：优先寻找 core fantasy、asymmetric advantage、power dominance / verification 与可成长的能力玩法；World Normal 只作比较尺，不要求优势必须先成为世界内合法例外，也不要用世界兼容性把能力自动削弱。",
+  "query_strategy": "semantic_brief",
+  "query_texts": [
+    "检索模式：power_seed\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的浮空群岛驭兽/伴生兽世界：主流力量来自人与真实存在的伴生兽、契兽或异兽伙伴之间的共鸣与共同作战；个人可以修炼，但伙伴必须有自己的身体、习性与行动，不能降成技能按钮。公共精确力量主尺必须真实改变共享力量强度、骑乘/承载、双方反应与同步、作用距离/持续，以及能否进入更危险风层；不要把主尺写成只有称号的装饰数字。不要使用亚特兰蒂斯、海相、静默水等旧设定。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续要保持人物自身 Power Identity 与真实伙伴/外部资产的区别。\nPower 可见 World Baseline：\n# CHARACTER POWER BASELINE｜Core Fantasy Authority\n\n## 力量体系与正常值\n\n力量来自两部分：人的灵息和伙伴自身的兽息。双方通过共同进食、训练、休息、战斗与危险中的相互配合形成共鸣。共鸣越稳，人的灵息越能传递给伙伴，伙伴也越能把自己的力量、感知和身体承载反馈给人。\n\n这种力量不是召唤术。伙伴有自己的身体、习性、恐惧、食欲和判断，会自行移动、攻击、保护或拒绝命令。人受伤、伙伴受惊、距离过远、风层不适合或双方节奏失配，都会让共鸣减弱甚至反噬。\n\n变强主要依靠体魄、呼吸法、伙伴成长、长期共同作战、针对环境的技法以及更好的装备。不同伙伴会形成完全不同的战斗方式：有的适合高速俯冲，有的擅长承载，有的能钻入浮岛底部，有的依靠听觉、嗅觉或夜间视力作战。\n\n### 精确力量主尺｜Frozen Grammar\n\n主尺类型：大境界+数字子级\n\n主尺名称：风阶\n\n精确位置格式：`风阶·{大境界}{N}重`\n\n数字精度规则：每个大境界为1—9重，每1重都是可记录、可比较的公开位置；同一大境界内，数字越大越强\n\n当前可见范围：`风阶·引息1重`—`风阶·镇岛9重`，共54个公开位置\n\n当前大档位：\n\n- 引息1—9重：能稳定修炼自身灵息，与小型伙伴完成基础共鸣；通常只能在聚落内行动。\n- 合鸣1—9重：双方能在战斗中持续交换力量和感知；合鸣3重左右，正常驭兽者可以骑乘伙伴跨越近岛；合鸣7重以上，才有资格成为正式驭行队成员。\n- 御风1—9重：能让人和伙伴共同飞行，承受普通风路的持续乱流；御风5重左右，可带一名乘客穿过缓风层之间的长距离空隙。\n- 穿层1—9重：能进入折风层并保持较长时间的共鸣；穿层2重以上，才有机会担任高空商队或军府的核心护航者。\n- 裂空1—9重：能在裂风中保持高速行动，伙伴的身体和人的灵息都具备明显的区域破坏力；地方强者多处于此档。\n- 镇岛1—9重：能在大范围风场中作战，并短时间稳定大型浮岛的风锚或抵抗风暴正面冲击；每座大型岛链都只有少数此档人物。\n\n主尺真实反映灵息总量、双方身体承载、反应速度、同步距离、共鸣持续时间，以及能够进入的风层。技法、装备、伙伴习性和地形可以造成越级、失手、逃脱或局部翻盘，但不能凭一种特殊相性自动抹掉更高大档位在体魄、速度、持续和环境承受上的全部优势。\n\n世界中最常见的是引息和合鸣修炼者；御风者已经属于受人雇佣的专业人士；穿层者在一座普通岛上通常只有几十人；裂空者足以改变地方势力格局；镇岛者往往被王庭、军府、商盟或大宗门长期争夺。\n\n可选的副道路是风匠。风匠不以正面战斗为主，而是与专门的巢背兽、掘岩兽或听风鸟合作，修复浮岛风锚、调整风帆航路、建造跨岛风桥。顶级风匠能让一座岛在风暴季少损失一半以上的居民区。风匠仍使用风阶衡量自身和伙伴的承载能力，但其作品、工期、材料和事故率才是社会真正比较的东西。\n\n## Power Asymmetry 生成边界\nCore Fantasy / 特殊能力首先相对于本区块的力量 Normal / Rarity / Acquisition Conditions 生成，而不是相对于人物职业生成。\n先回答：这个世界绝大多数人怎样获得、承载和使用超凡力量？哪些能力常见、哪些少见、哪些尚未被可靠证实？再创造一个相对正常分布明显超标的 Power Asymmetry。它可以来自世界内稀有异常，也可以来自唯一奇物、外来知识/经验、外挂、极端正常天赋或少量优势叠加；不要为了“合法化”强行给世界补一套机制。\n成长背景可以解释人物为什么发现、理解、珍惜、滥用或隐藏这个异常，却不能因为人物是矿工、匠人、账房、向导等职业，就把异常自动写成超级辨矿、维修诊断、路线优化、账契解释等职业强化。\n专业技能可以与异常发生化学反应，但不能替代男频 Core Fantasy 本…\n明确硬约束：未检测到明确题材硬约束\nPower Seed 用途：优先寻找 core fantasy、asymmetric advantage、power dominance / verification 与可成长的能力玩法；World Normal 只作比较尺，不要求优势必须先成为世界内合法例外，也不要用世界兼容性把能力自动削弱。"
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：power_seed\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的浮空群岛驭兽/伴生兽世界：主流力量来自人与真实存在的伴生兽、契兽或异兽伙伴之间的共鸣与共同作战；个人可以修炼，但伙伴必须有自己的身体、习性与行动，不能降成技能按钮。公共精确力量主尺必须真实改变共享力量强度、骑乘/承载、双方反应与同步、作用距离/持续，以及能否进入更危险风层；不要把主尺写成只有称号的装饰数字。不要使用亚特兰蒂斯、海相、静默水等旧设定。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续要保持人物自身 Power Identity 与真实伙伴/外部资产的区别。\nPower 可见 World Baseline：\n# CHARACTER POWER BASELINE｜Core Fantasy Authority\n\n## 力量体系与正常值\n\n力量来自两部分：人的灵息和伙伴自身的兽息。双方通过共同进食、训练、休息、战斗与危险中的相互配合形成共鸣。共鸣越稳，人的灵息越能传递给伙伴，伙伴也越能把自己的力量、感知和身体承载反馈给人。\n\n这种力量不是召唤术。伙伴有自己的身体、习性、恐惧、食欲和判断，会自行移动、攻击、保护或拒绝命令。人受伤、伙伴受惊、距离过远、风层不适合或双方节奏失配，都会让共鸣减弱甚至反噬。\n\n变强主要依靠体魄、呼吸法、伙伴成长、长期共同作战、针对环境的技法以及更好的装备。不同伙伴会形成完全不同的战斗方式：有的适合高速俯冲，有的擅长承载，有的能钻入浮岛底部，有的依靠听觉、嗅觉或夜间视力作战。\n\n### 精确力量主尺｜Frozen Grammar\n\n主尺类型：大境界+数字子级\n\n主尺名称：风阶\n\n精确位置格式：`风阶·{大境界}{N}重`\n\n数字精度规则：每个大境界为1—9重，每1重都是可记录、可比较的公开位置；同一大境界内，数字越大越强\n\n当前可见范围：`风阶·引息1重`—`风阶·镇岛9重`，共54个公开位置\n\n当前大档位：\n\n- 引息1—9重：能稳定修炼自身灵息，与小型伙伴完成基础共鸣；通常只能在聚落内行动。\n- 合鸣1—9重：双方能在战斗中持续交换力量和感知；合鸣3重左右，正常驭兽者可以骑乘伙伴跨越近岛；合鸣7重以上，才有资格成为正式驭行队成员。\n- 御风1—9重：能让人和伙伴共同飞行，承受普通风路的持续乱流；御风5重左右，可带一名乘客穿过缓风层之间的长距离空隙。\n- 穿层1—9重：能进入折风层并保持较长时间的共鸣；穿层2重以上，才有机会担任高空商队或军府的核心护航者。\n- 裂空1—9重：能在裂风中保持高速行动，伙伴的身体和人的灵息都具备明显的区域破坏力；地方强者多处于此档。\n- 镇岛1—9重：能在大范围风场中作战，并短时间稳定大型浮岛的风锚或抵抗风暴正面冲击；每座大型岛链都只有少数此档人物。\n\n主尺真实反映灵息总量、双方身体承载、反应速度、同步距离、共鸣持续时间，以及能够进入的风层。技法、装备、伙伴习性和地形可以造成越级、失手、逃脱或局部翻盘，但不能凭一种特殊相性自动抹掉更高大档位在体魄、速度、持续和环境承受上的全部优势。\n\n世界中最常见的是引息和合鸣修炼者；御风者已经属于受人雇佣的专业人士；穿层者在一座普通岛上通常只有几十人；裂空者足以改变地方势力格局；镇岛者往往被王庭、军府、商盟或大宗门长期争夺。\n\n可选的副道路是风匠。风匠不以正面战斗为主，而是与专门的巢背兽、掘岩兽或听风鸟合作，修复浮岛风锚、调整风帆航路、建造跨岛风桥。顶级风匠能让一座岛在风暴季少损失一半以上的居民区。风匠仍使用风阶衡量自身和伙伴的承载能力，但其作品、工期、材料和事故率才是社会真正比较的东西。\n\n## Power Asymmetry 生成边界\nCore Fantasy / 特殊能力首先相对于本区块的力量 Normal / Rarity / Acquisition Conditions 生成，而不是相对于人物职业生成。\n先回答：这个世界绝大多数人怎样获得、承载和使用超凡力量？哪些能力常见、哪些少见、哪些尚未被可靠证实？再创造一个相对正常分布明显超标的 Power Asymmetry。它可以来自世界内稀有异常，也可以来自唯一奇物、外来知识/经验、外挂、极端正常天赋或少量优势叠加；不要为了“合法化”强行给世界补一套机制。\n成长背景可以解释人物为什么发现、理解、珍惜、滥用或隐藏这个异常，却不能因为人物是矿工、匠人、账房、向导等职业，就把异常自动写成超级辨矿、维修诊断、路线优化、账契解释等职业强化。\n专业技能可以与异常发生化学反应，但不能替代男频 Core Fantasy 本…\n明确硬约束：未检测到明确题材硬约束\nPower Seed 用途：优先寻找 core fantasy、asymmetric advantage、power dominance / verification 与可成长的能力玩法；World Normal 只作比较尺，不要求优势必须先成为世界内合法例外，也不要用世界兼容性把能力自动削弱。",
+  "query_scope": "book-dna,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 19,
+  "unique_raw_count": 19,
+  "novel_candidate_count": 19,
+  "accepted_count": 3,
+  "coordinate_reference_count": 0,
+  "coordinate_reference": null,
+  "coordinate_reference_error": "",
+  "naming_reference_count": 1,
+  "naming_reference": {
+    "slug": "syntheses/reader-facing-naming-craft-v1",
+    "type": "synthesis",
+    "score": 1.0,
+    "abstract": "Guidance：先把对象写成白话：它是什么、对谁起什么作用、出现什么可见结果、有什么永久边界；若这层未成立，不造正式名。命名先保证读者不会误判当前行动，再补世界气味。类别可由名称、句法、持有动作或人物关系承担，不设固定字数、四字格式或统一后缀；高压战斗优先动作、对象、部位、轨迹或结果，器物优先形制、材质、用途与代价，境界优先可比较位置，势力和地点优先社会职能或空间结构。一个名称先突出一个主差异，只有会改变读者选择的来源、关系、限制或等级信息才并入，并须能拆读。抽象名或陌生名可以留白，但首见附近必须有类别、关系、风险、数量或一次兑现，不能让生词互相解释。只给反复出现、会影响决策、可争夺或社会流通的节点命名；普通动作、临时材料和无后续背景不命名。词族只在真实的来源、制造、持有、继承、制度或升级关系存在时建立，且每个派生项要有独立功能。lexique 只用于创意未成形时的“对象×变化”偏航；机制成立后，只有在**不牺牲语义准确**时才优先用世界已有具体词根，也可不用。已有普通短名如果已经准确、顺口、低学习成本，不为“更独特 / 更世界化”强行改写；世界贴合与气味都低于首读准确。气味不能补救语义错误；名字承诺的机制、代价和尺度必须由正文兑现。",
+    "transfer_boundary": "只迁移 source-blind 的 reader-facing 命名规律，不迁移任何来源作品专名、人物、势力、招式、地点、固定词根或句式。Lexique 不是经典证据、Canon 或待选名字库；它可以在 Power 创意期作为可丢弃的对象×变化 primitive，也可以在机制已经成立后提供少量 Naming Fragrance，但不得反向授权新机制。World 已有词根优先；名字若比已批准能力多承诺来源、对象、代价、等级或第二系统，应改名字而不是扩写能力迁就名字。"
+  },
+  "naming_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {},
+  "human_lane_order": [],
+  "human_lane_candidate_limit": 0,
+  "prototype_id": "",
+  "prototype_selected": false,
+  "rejected_count": 16,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 3,
+  "raw_stdout": "[0.8998] book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3 -- Retrieval aliases: jidaotianmo power dominance agency obstacle reframing enemy adaptation\n## Evidenc\n[0.8802] book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3 -- # Core Reader Fantasy\n本书的核心幻想是：\n> 一个原本缺钱、体弱、只想过轻松生活的人，凭借一个能把“看见过的能力”转化为宠兽成长的优势，把低估、弱小、普通甚至非战斗型宠兽，逐\n[0.8688] syntheses/genre-priors/都市异能 -- # 都市异能题材模板\n\n> **核心卖点**: 熟悉的现代生活 + 超凡力量的入侵。在平凡中寻找非凡。\n\n---\n\n## 创意约束推荐（可选）\n- 推荐约束包：Pack M12 / Pack M05\n\n[0.8578] book-dna/rcv0-34-xuanhuan-doupo-cangqiong-fulltext-growth-v4 -- Retrieval aliases: 斗破苍穹 fulltext growth progression reader ruler scale social repricing advantage st\n[0.8451] book-dna/rcv0-16-youxi-hupozhijian -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n读者追逐一个普通人的训练、探索和战斗本能如何打开更大的奇幻世界；能力提\n[0.8339] book-dna/rcv0-29-xuanhuan-guimi-zhi-zhu-story-craft-v3 -- Retrieval aliases: core reader fantasy world fantasy identity layers mystery reveal world expansion \n[0.8229] book-dna/rcv0-02-xianxia-bailian-chengxian -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n资质普通甚至受限的修士，通过勤修、资源、准备和危险路径持续获得可验证的\n[0.8132] book-dna/rcv0-08-kehuan-kongsuxinghen -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE；END\n\n## Reader Promise\n\n读者先获得阶层差异下的个人能力快感，再看到能力被测量、争夺、组\n[0.8030] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3 -- Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come\n[0.7933] book-dna/rcv0-20-gaowu-quanqiu-gaowu-v2 -- # Book DNA v2\n\n## Core Reader Fantasy\n\n普通、缺钱、缺地位的人重来一次，先把现金和信息变成气血、排名和武科入口，再把身体力量扩展到地窟、三界和跨界生活。核心满足是\n[0.7838] book-dna/rcv0-04-kehuan-taxing -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n从灾难中的资源匮乏和低位生存出发，主角通过能力验证、制度准入、联盟和探\n[0.7752] book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3 -- # Core Reader Fantasy\n核心读者幻想不是单纯“主角变成最强者”，而是：\n> 一个原本贫穷、普通、缺乏资格的小人物，突然获得一把极易读懂的力量尺；他可以用这把尺确认自己正在变强，\n[0.7658] syntheses/genre-priors/v2-neutralized -- # 修仙 Genre Prior｜Inspiration-First Neutralization v2\n\n## 低权威说明\n\n这是六个 bounded Pilot 样本提供的灵感地图，不替作者决定境\n[0.7578] book-dna/rcv0-20-gaowu-quanqiu-gaowu -- ## Evidence Coverage\n\nOPENING；EARLY；MID；LATE\n\n## Reader Promise\n\n读者先享受重生带来的资源套利、制度误读和武科竞争，再追逐个人战力、身份\n[0.7498] book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3 -- # Core Reader Fantasy\n综合判断：读者持续阅读的核心，不是“主角单纯升级”，而是：\n1. 一个现代普通人被投入真实江湖，从噩梦中的重刀、妖女和血战开始，逐步拥有一条可观察、可验\n[0.7414] book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3 -- # Evidence Coverage\n覆盖窗口：\n- 开篇：第001—004章，`L19-L451`\n- 玩家机制建立：第054—063章，`L4100-L4823`\n- 公测与海蓝星主线：\n[0.7338] book-dna/rcv0-21-qita-monao-chuanqi -- ## Evidence Coverage\n\nopening；early；mid；late；ending/current ending\n\n## Reader Promise\n\n读者持续获得从技术失败到能\n[0.7250] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-v2 -- # Book DNA v2\n\n## Core Reader Fantasy\n\n普通人的聊天软件突然连接仙侠世界；现代物件可以成为炼丹、法器和行动接口，群友的知识、吐槽和资源让日常不断打开新世界。造物、\n[0.7176] book-dna/rcv0-49-xianxia-manghuangji-story-craft-v3 -- # Core Reader Fantasy\n核心幻想不是单纯“从低境界升到高境界”，而是：\n> 一个曾经被病痛和短命支配、出身微末的人，凭借自己的选择、修炼和剑，逐步获得改变亲人、爱人、家乡、文明",
+  "novel_candidates": [
+    {
+      "score": 0.8998,
+      "slug": "book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3",
+      "snippet": "Retrieval aliases: jidaotianmo power dominance agency obstacle reframing enemy adaptation"
+    },
+    {
+      "score": 0.8802,
+      "slug": "book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.8688,
+      "slug": "syntheses/genre-priors/都市异能",
+      "snippet": "# 都市异能题材模板"
+    },
+    {
+      "score": 0.8578,
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-fulltext-growth-v4",
+      "snippet": "Retrieval aliases: 斗破苍穹 fulltext growth progression reader ruler scale social repricing advantage st"
+    },
+    {
+      "score": 0.8451,
+      "slug": "book-dna/rcv0-16-youxi-hupozhijian",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.8339,
+      "slug": "book-dna/rcv0-29-xuanhuan-guimi-zhi-zhu-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy identity layers mystery reveal world expansion"
+    },
+    {
+      "score": 0.8229,
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.8132,
+      "slug": "book-dna/rcv0-08-kehuan-kongsuxinghen",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.803,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come"
+    },
+    {
+      "score": 0.7933,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-v2",
+      "snippet": "# Book DNA v2"
+    },
+    {
+      "score": 0.7838,
+      "slug": "book-dna/rcv0-04-kehuan-taxing",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.7752,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.7658,
+      "slug": "syntheses/genre-priors/v2-neutralized",
+      "snippet": "# 修仙 Genre Prior｜Inspiration-First Neutralization v2"
+    },
+    {
+      "score": 0.7578,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.7498,
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.7414,
+      "slug": "book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.7338,
+      "slug": "book-dna/rcv0-21-qita-monao-chuanqi",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.725,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-v2",
+      "snippet": "# Book DNA v2"
+    },
+    {
+      "score": 0.7176,
+      "slug": "book-dna/rcv0-49-xianxia-manghuangji-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.8998,
+      "slug": "book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3",
+      "snippet": "Retrieval aliases: jidaotianmo power dominance agency obstacle reframing enemy adaptation"
+    },
+    {
+      "score": 0.8802,
+      "slug": "book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.8688,
+      "slug": "syntheses/genre-priors/都市异能",
+      "snippet": "# 都市异能题材模板"
+    },
+    {
+      "score": 0.8578,
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-fulltext-growth-v4",
+      "snippet": "Retrieval aliases: 斗破苍穹 fulltext growth progression reader ruler scale social repricing advantage st"
+    },
+    {
+      "score": 0.8451,
+      "slug": "book-dna/rcv0-16-youxi-hupozhijian",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.8339,
+      "slug": "book-dna/rcv0-29-xuanhuan-guimi-zhi-zhu-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy identity layers mystery reveal world expansion"
+    },
+    {
+      "score": 0.8229,
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.8132,
+      "slug": "book-dna/rcv0-08-kehuan-kongsuxinghen",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.803,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come"
+    },
+    {
+      "score": 0.7933,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-v2",
+      "snippet": "# Book DNA v2"
+    },
+    {
+      "score": 0.7838,
+      "slug": "book-dna/rcv0-04-kehuan-taxing",
+      "snippet": "## Evidence Coverage"
+    },
+    {
+      "score": 0.7752,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.8998,
+      "slug": "book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3",
+      "snippet": "Retrieval aliases: jidaotianmo power dominance agency obstacle reframing enemy adaptation",
+      "type": "book-dna",
+      "is_genre_prior": false,
+      "abstract": "Reader Promise：核心幻想不是“我拥有更好的解题器”，而是：\n> 我拥有一种力量，使原本决定我命运的问题前提失效。\n世界原本规定：\n- 普通人不能对付妖鬼；\n- 富家公子只能被家族、官府和强者保护；\n- 黑会规矩、世家身份、学派阵法决定谁能出手；\n- 强敌的境界和场地规则决定胜负；\n- 心相世界属于更高层存在。\n路胜的力量不断把这些“前提”改写为：\n- 我可以直接伤害妖鬼；\n- 我可以在被杀前先杀掉对方；\n- 对方的身份不能阻止我出手；\n- 阵法尚未完成，我已经拔断场地石柱；\n- 我可以把战场变成自己的世界。\n这是“问题框架失效”，不是“问题被更高效地解决”。\nProtagonist Action：路胜的主线欲望可压缩为：\n> 活下来，并获得不再任人安排的主动权；当世界暴露出真实危险后，他不愿继续回到普通人的位置。\n连续因果：\n1. 徐家灭门让“这里只是古代社会”的安全假设失效。\n2. 他问“我需要什么东西来自保”，主动寻找武师和秘籍。\n3. 深蓝把已掌握武学直接转成身体经验。\n4. 他不等待别人证明危险，而是在真实冲突中使用力量。\n5. 每次力量证明都改变下一轮的身份、敌人策略和行动空间。\nsource-specific anchors：\n- 第 2 章，L190-L251：徐家灭门；鹅卵石触血后深蓝出现。\n- 第 3 章，L348-L361：路胜从县志中的诡异记录出发，主动寻找赵大虎求自保。\n- 第 4 章，L441-L493：深蓝的作用是修改武学境界，直接形成经验与本能。\n- 第 16—17 章，L2037-L2070：路胜认为仅依靠父亲和家族保护不够，决定依靠自身力量。\nAdvantage / Special Capability：原作的力量支配语法：\n1. 先让威胁贴近身体、家人或身份。\n2. 主角做出一个主动选择，而不是等待规则解释完毕。\n3. 能…",
+      "transfer_boundary": "",
+      "formatted_block": "### Inspiration\nsource: book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3\ntype: book-dna\nscore: 0.8998\n\n可用抽象：Reader Promise：核心幻想不是“我拥有更好的解题器”，而是：\n> 我拥有一种力量，使原本决定我命运的问题前提失效。\n世界原本规定：\n- 普通人不能对付妖鬼；\n- 富家公子只能被家族、官府和强者保护；\n- 黑会规矩、世家身份、学派阵法决定谁能出手；\n- 强敌的境界和场地规则决定胜负；\n- 心相世界属于更高层存在。\n路胜的力量不断把这些“前提”改写为：\n- 我可以直接伤害妖鬼；\n- 我可以在被杀前先杀掉对方；\n- 对方的身份不能阻止我出手；\n- 阵法尚未完成，我已经拔断场地石柱；\n- 我可以把战场变成自己的世界。\n这是“问题框架失效”，不是“问题被更高效地解决”。\nProtagonist Action：路胜的主线欲望可压缩为：\n> 活下来，并获得不再任人安排的主动权；当世界暴露出真实危险后，他不愿继续回到普通人的位置。\n连续因果：\n1. 徐家灭门让“这里只是古代社会”的安全假设失效。\n2. 他问“我需要什么东西来自保”，主动寻找武师和秘籍。\n3. 深蓝把已掌握武学直接转成身体经验。\n4. 他不等待别人证明危险，而是在真实冲突中使用力量。\n5. 每次力量证明都改变下一轮的身份、敌人策略和行动空间。\nsource-specific anchors：\n- 第 2 章，L190-L251：徐家灭门；鹅卵石触血后深蓝出现。\n- 第 3 章，L348-L361：路胜从县志中的诡异记录出发，主动寻找赵大虎求自保。\n- 第 4 章，L441-L493：深蓝的作用是修改武学境界，直接形成经验与本能。\n- 第 16—17 章，L2037-L2070：路胜认为仅依靠父亲和家族保护不够，决定依靠自身力量。\nAdvantage / Special Capability：原作的力量支配语法：\n1. 先让威胁贴近身体、家人或身份。\n2. 主角做出一个主动选择，而不是等待规则解释完毕。\n3. 能…\n\n使用边界：只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。"
+    },
+    {
+      "score": 0.8451,
+      "slug": "book-dna/rcv0-16-youxi-hupozhijian",
+      "snippet": "## Evidence Coverage",
+      "type": "book-dna",
+      "is_genre_prior": false,
+      "abstract": "Reader Promise：读者追逐一个普通人的训练、探索和战斗本能如何打开更大的奇幻世界；能力提升既带来纯粹的生存与掌控快感，也让角色进入契约、继承和政治后果。\nRepeatable Reader Loop：接受训练或进入危险空间 → 用本能、规则和队友活下来 → 解锁更强能力/更大探索权限 → 能力展示改变他人对主角的定位 → 契约、继承或政治秩序重新定义这项能力 → 新的世界尺度问题出现。\nCore Progression Grammar：普通愿望/有限经验 → 训练与生存本能 → 能力和探索范围扩大 → 契约或导师赋予更高解释权 → 能力成为政治资源 → 继承、阵营和历史尺度的后果。\nPayoff Grammar：训练规则被身体化、能力在危险场景中兑现、战斗优势和更高层级的力量突破。；探索权限扩大、契约和阵营位置变化，以及私人愿望在宏大危机中仍有保留。\nAdvantage / Special Capability：训练、游戏经验式规则理解、身体反射和契约能力共同形成特殊优势；能力展示有纯粹的生存和探索快感，政治后果是后续重定价而不是能力的唯一意义。\nWorld Expansion Grammar：危险地点和战场 → 王国、契约与继承 → 阵营政治 → 终焉和真理层；世界扩大时，规则从可操作战术变成身份与制度问题。\nNovelty / Recombination：把类似游戏的规则感、训练本能、私人冒险愿望和政权继承重组在同一成长轴上；能力既能让人活下来，也会改变制度权力。\nSocial / Relationship Dynamics：导师、队友、契约者和政治继承人把能力嵌入社会关系；关系不是能力代价的同义词，也提供协作、信任和身份收益。\nResource / Economy：训练时间、装备、契约资格、队友和政治位置共同组成能力资源；当前粗分段不能支持完整资源账本。…",
+      "transfer_boundary": "只迁移训练、契约、探索和政治重定价的变量，不迁移来源世界、姓名、阵营、战役或独特法术。；由于 segment 粒度极粗，不能把任一能力顺序、章节编号或 detector 结果写成确定连续性。；不能把能力升级自动解释为责任；必须单独核验能力 delight、power verification 和 exploration。",
+      "formatted_block": "### Inspiration\nsource: book-dna/rcv0-16-youxi-hupozhijian\ntype: book-dna\nscore: 0.8451\n\n可用抽象：Reader Promise：读者追逐一个普通人的训练、探索和战斗本能如何打开更大的奇幻世界；能力提升既带来纯粹的生存与掌控快感，也让角色进入契约、继承和政治后果。\nRepeatable Reader Loop：接受训练或进入危险空间 → 用本能、规则和队友活下来 → 解锁更强能力/更大探索权限 → 能力展示改变他人对主角的定位 → 契约、继承或政治秩序重新定义这项能力 → 新的世界尺度问题出现。\nCore Progression Grammar：普通愿望/有限经验 → 训练与生存本能 → 能力和探索范围扩大 → 契约或导师赋予更高解释权 → 能力成为政治资源 → 继承、阵营和历史尺度的后果。\nPayoff Grammar：训练规则被身体化、能力在危险场景中兑现、战斗优势和更高层级的力量突破。；探索权限扩大、契约和阵营位置变化，以及私人愿望在宏大危机中仍有保留。\nAdvantage / Special Capability：训练、游戏经验式规则理解、身体反射和契约能力共同形成特殊优势；能力展示有纯粹的生存和探索快感，政治后果是后续重定价而不是能力的唯一意义。\nWorld Expansion Grammar：危险地点和战场 → 王国、契约与继承 → 阵营政治 → 终焉和真理层；世界扩大时，规则从可操作战术变成身份与制度问题。\nNovelty / Recombination：把类似游戏的规则感、训练本能、私人冒险愿望和政权继承重组在同一成长轴上；能力既能让人活下来，也会改变制度权力。\nSocial / Relationship Dynamics：导师、队友、契约者和政治继承人把能力嵌入社会关系；关系不是能力代价的同义词，也提供协作、信任和身份收益。\nResource / Economy：训练时间、装备、契约资格、队友和政治位置共同组成能力资源；当前粗分段不能支持完整资源账本。…\n\n使用边界：只迁移训练、契约、探索和政治重定价的变量，不迁移来源世界、姓名、阵营、战役或独特法术。；由于 segment 粒度极粗，不能把任一能力顺序、章节编号或 detector 结果写成确定连续性。；不能把能力升级自动解释为责任；必须单独核验能力 delight、power verification 和 exploration。"
+    },
+    {
+      "score": 0.8339,
+      "slug": "book-dna/rcv0-29-xuanhuan-guimi-zhi-zhu-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy identity layers mystery reveal world expansion",
+      "type": "book-dna",
+      "is_genre_prior": false,
+      "abstract": "Reader Promise：核心不是“成为最强者”，而是：\n> 一个失去原身份、缺少资源、甚至不知道自己为何穿越的人，意外获得一个高于当前理解能力的神秘入口；他通过伪装、知识交换、仪式和判断，把“别人以为他是谁”逐渐变成自己的力量，同时不断发现世界比自己想象得更大。\n主要阅读快感有五层：\n1. 身份错位：周明瑞醒来时已经占据克莱恩的身体，面对死者身份、陌生世界和无法解释的笔记本。L13-L82。\n2. 私密高位视角：第一次进入灰雾后，他本来只是受害者，却迅速选择让别人把自己当成神秘强者，并主动塑造神殿、长桌和“愚者”身份。L459-L558。\n3. 伪装成为能力：夏洛克、格尔曼、道恩等身份不是单纯换脸，而是进入不同社会、资源和冲突入口；“无面人”的核心又反过来要求他不能在变化中失去自我。L22070-L22091；L40121-L40139。\n4. 未知持续升级：序列、古神、天使之王、源堡、序列之上、外神与星空，每一次答案都扩大了下一层未知。L103080-L103176。\n5. 关系具有自主性：塔罗会成员、廷根旧同伴、阿兹克、罗塞尔并不是主角的静态工具，而是在各自的世界中成长、受伤、离开和回归。L43074-L43120；L117744-L117800。\n因此读者继续读，不只是为了知道“下一场战斗谁赢”，而是为了确认：\n- 克莱恩到底是谁；\n- “愚者”身份会不会被揭穿；\n- 灰雾和源堡究竟是什么；\n- 罗塞尔留下的信息还有多少没有兑现；\n- 塔罗会成员会走到哪里；\n- 阿蒙、天尊、星空和末日之间究竟是什么关系；\n- 旧关系会以什么新身份重新出现。\nProtagonist Action：| 阶段 | 主要欲望 | 实际行动 |\n|---|---|---|\n| 开篇 | 回到原世界，弄清穿越与克莱恩死亡原因 | 调查笔记、尸体、枪支和仪式，尝试回归。L64-L82；L4…",
+      "transfer_boundary": "",
+      "formatted_block": "### Inspiration\nsource: book-dna/rcv0-29-xuanhuan-guimi-zhi-zhu-story-craft-v3\ntype: book-dna\nscore: 0.8339\n\n可用抽象：Reader Promise：核心不是“成为最强者”，而是：\n> 一个失去原身份、缺少资源、甚至不知道自己为何穿越的人，意外获得一个高于当前理解能力的神秘入口；他通过伪装、知识交换、仪式和判断，把“别人以为他是谁”逐渐变成自己的力量，同时不断发现世界比自己想象得更大。\n主要阅读快感有五层：\n1. 身份错位：周明瑞醒来时已经占据克莱恩的身体，面对死者身份、陌生世界和无法解释的笔记本。L13-L82。\n2. 私密高位视角：第一次进入灰雾后，他本来只是受害者，却迅速选择让别人把自己当成神秘强者，并主动塑造神殿、长桌和“愚者”身份。L459-L558。\n3. 伪装成为能力：夏洛克、格尔曼、道恩等身份不是单纯换脸，而是进入不同社会、资源和冲突入口；“无面人”的核心又反过来要求他不能在变化中失去自我。L22070-L22091；L40121-L40139。\n4. 未知持续升级：序列、古神、天使之王、源堡、序列之上、外神与星空，每一次答案都扩大了下一层未知。L103080-L103176。\n5. 关系具有自主性：塔罗会成员、廷根旧同伴、阿兹克、罗塞尔并不是主角的静态工具，而是在各自的世界中成长、受伤、离开和回归。L43074-L43120；L117744-L117800。\n因此读者继续读，不只是为了知道“下一场战斗谁赢”，而是为了确认：\n- 克莱恩到底是谁；\n- “愚者”身份会不会被揭穿；\n- 灰雾和源堡究竟是什么；\n- 罗塞尔留下的信息还有多少没有兑现；\n- 塔罗会成员会走到哪里；\n- 阿蒙、天尊、星空和末日之间究竟是什么关系；\n- 旧关系会以什么新身份重新出现。\nProtagonist Action：| 阶段 | 主要欲望 | 实际行动 |\n|---|---|---|\n| 开篇 | 回到原世界，弄清穿越与克莱恩死亡原因 | 调查笔记、尸体、枪支和仪式，尝试回归。L64-L82；L4…\n\n使用边界：只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。"
+    }
+  ],
+  "fixed_references": [
+    {
+      "id": "naming_reference",
+      "label": "固定命名工艺参考",
+      "required": true,
+      "slug": "syntheses/reader-facing-naming-craft-v1",
+      "formatted_block": "### Fixed Naming Craft Reference\nsource: syntheses/reader-facing-naming-craft-v1\nrole: Power Seed 固定 reader-facing 命名参考；不占 creative inspiration 名额\n\n可用抽象：Guidance：先把对象写成白话：它是什么、对谁起什么作用、出现什么可见结果、有什么永久边界；若这层未成立，不造正式名。命名先保证读者不会误判当前行动，再补世界气味。类别可由名称、句法、持有动作或人物关系承担，不设固定字数、四字格式或统一后缀；高压战斗优先动作、对象、部位、轨迹或结果，器物优先形制、材质、用途与代价，境界优先可比较位置，势力和地点优先社会职能或空间结构。一个名称先突出一个主差异，只有会改变读者选择的来源、关系、限制或等级信息才并入，并须能拆读。抽象名或陌生名可以留白，但首见附近必须有类别、关系、风险、数量或一次兑现，不能让生词互相解释。只给反复出现、会影响决策、可争夺或社会流通的节点命名；普通动作、临时材料和无后续背景不命名。词族只在真实的来源、制造、持有、继承、制度或升级关系存在时建立，且每个派生项要有独立功能。lexique 只用于创意未成形时的“对象×变化”偏航；机制成立后，只有在**不牺牲语义准确**时才优先用世界已有具体词根，也可不用。已有普通短名如果已经准确、顺口、低学习成本，不为“更独特 / 更世界化”强行改写；世界贴合与气味都低于首读准确。气味不能补救语义错误；名字承诺的机制、代价和尺度必须由正文兑现。\n\n使用边界：只迁移 source-blind 的 reader-facing 命名规律，不迁移任何来源作品专名、人物、势力、招式、地点、固定词根或句式。Lexique 不是经典证据、Canon 或待选名字库；它可以在 Power 创意期作为可丢弃的对象×变化 primitive，也可以在机制已经成立后提供少量 Naming Fragrance，但不得反向授权新机制。World 已有词根优先；名字若比已批准能力多承诺来源、对象、代价、等级或第二系统，应改名字而不是扩写能力迁就名字。"
+    }
+  ],
+  "rejected": [
+    {
+      "slug": "syntheses/genre-priors/v2-neutralized",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-21-qita-monao-chuanqi",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-v2",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-49-xianxia-manghuangji-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-43-xuanhuan-bukexue-yushou-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "syntheses/genre-priors/都市异能",
+      "reason": "章节节点不自动使用 Genre Prior"
+    },
+    {
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-fulltext-growth-v4",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-02-xianxia-bailian-chengxian",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-08-kehuan-kongsuxinghen",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-v2",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-04-kehuan-taxing",
+      "reason": "超过最终数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3",
+      "reason": "超过最终数量上限"
+    }
+  ],
+  "result": "### Fixed Naming Craft Reference\nsource: syntheses/reader-facing-naming-craft-v1\nrole: Power Seed 固定 reader-facing 命名参考；不占 creative inspiration 名额\n\n可用抽象：Guidance：先把对象写成白话：它是什么、对谁起什么作用、出现什么可见结果、有什么永久边界；若这层未成立，不造正式名。命名先保证读者不会误判当前行动，再补世界气味。类别可由名称、句法、持有动作或人物关系承担，不设固定字数、四字格式或统一后缀；高压战斗优先动作、对象、部位、轨迹或结果，器物优先形制、材质、用途与代价，境界优先可比较位置，势力和地点优先社会职能或空间结构。一个名称先突出一个主差异，只有会改变读者选择的来源、关系、限制或等级信息才并入，并须能拆读。抽象名或陌生名可以留白，但首见附近必须有类别、关系、风险、数量或一次兑现，不能让生词互相解释。只给反复出现、会影响决策、可争夺或社会流通的节点命名；普通动作、临时材料和无后续背景不命名。词族只在真实的来源、制造、持有、继承、制度或升级关系存在时建立，且每个派生项要有独立功能。lexique 只用于创意未成形时的“对象×变化”偏航；机制成立后，只有在**不牺牲语义准确**时才优先用世界已有具体词根，也可不用。已有普通短名如果已经准确、顺口、低学习成本，不为“更独特 / 更世界化”强行改写；世界贴合与气味都低于首读准确。气味不能补救语义错误；名字承诺的机制、代价和尺度必须由正文兑现。\n\n使用边界：只迁移 source-blind 的 reader-facing 命名规律，不迁移任何来源作品专名、人物、势力、招式、地点、固定词根或句式。Lexique 不是经典证据、Canon 或待选名字库；它可以在 Power 创意期作为可丢弃的对象×变化 primitive，也可以在机制已经成立后提供少量 Naming Fragrance，但不得反向授权新机制。World 已有词根优先；名字若比已批准能力多承诺来源、对象、代价、等级或第二系统，应改名字而不是扩写能力迁就名字。\n\n### Inspiration 1\nsource: book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3\ntype: book-dna\nscore: 0.8998\n\n可用抽象：Reader Promise：核心幻想不是“我拥有更好的解题器”，而是：\n> 我拥有一种力量，使原本决定我命运的问题前提失效。\n世界原本规定：\n- 普通人不能对付妖鬼；\n- 富家公子只能被家族、官府和强者保护；\n- 黑会规矩、世家身份、学派阵法决定谁能出手；\n- 强敌的境界和场地规则决定胜负；\n- 心相世界属于更高层存在。\n路胜的力量不断把这些“前提”改写为：\n- 我可以直接伤害妖鬼；\n- 我可以在被杀前先杀掉对方；\n- 对方的身份不能阻止我出手；\n- 阵法尚未完成，我已经拔断场地石柱；\n- 我可以把战场变成自己的世界。\n这是“问题框架失效”，不是“问题被更高效地解决”。\nProtagonist Action：路胜的主线欲望可压缩为：\n> 活下来，并获得不再任人安排的主动权；当世界暴露出真实危险后，他不愿继续回到普通人的位置。\n连续因果：\n1. 徐家灭门让“这里只是古代社会”的安全假设失效。\n2. 他问“我需要什么东西来自保”，主动寻找武师和秘籍。\n3. 深蓝把已掌握武学直接转成身体经验。\n4. 他不等待别人证明危险，而是在真实冲突中使用力量。\n5. 每次力量证明都改变下一轮的身份、敌人策略和行动空间。\nsource-specific anchors：\n- 第 2 章，L190-L251：徐家灭门；鹅卵石触血后深蓝出现。\n- 第 3 章，L348-L361：路胜从县志中的诡异记录出发，主动寻找赵大虎求自保。\n- 第 4 章，L441-L493：深蓝的作用是修改武学境界，直接形成经验与本能。\n- 第 16—17 章，L2037-L2070：路胜认为仅依靠父亲和家族保护不够，决定依靠自身力量。\nAdvantage / Special Capability：原作的力量支配语法：\n1. 先让威胁贴近身体、家人或身份。\n2. 主角做出一个主动选择，而不是等待规则解释完毕。\n3. 能…\n\n使用边界：只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。\n\n### Inspiration 2\nsource: book-dna/rcv0-16-youxi-hupozhijian\ntype: book-dna\nscore: 0.8451\n\n可用抽象：Reader Promise：读者追逐一个普通人的训练、探索和战斗本能如何打开更大的奇幻世界；能力提升既带来纯粹的生存与掌控快感，也让角色进入契约、继承和政治后果。\nRepeatable Reader Loop：接受训练或进入危险空间 → 用本能、规则和队友活下来 → 解锁更强能力/更大探索权限 → 能力展示改变他人对主角的定位 → 契约、继承或政治秩序重新定义这项能力 → 新的世界尺度问题出现。\nCore Progression Grammar：普通愿望/有限经验 → 训练与生存本能 → 能力和探索范围扩大 → 契约或导师赋予更高解释权 → 能力成为政治资源 → 继承、阵营和历史尺度的后果。\nPayoff Grammar：训练规则被身体化、能力在危险场景中兑现、战斗优势和更高层级的力量突破。；探索权限扩大、契约和阵营位置变化，以及私人愿望在宏大危机中仍有保留。\nAdvantage / Special Capability：训练、游戏经验式规则理解、身体反射和契约能力共同形成特殊优势；能力展示有纯粹的生存和探索快感，政治后果是后续重定价而不是能力的唯一意义。\nWorld Expansion Grammar：危险地点和战场 → 王国、契约与继承 → 阵营政治 → 终焉和真理层；世界扩大时，规则从可操作战术变成身份与制度问题。\nNovelty / Recombination：把类似游戏的规则感、训练本能、私人冒险愿望和政权继承重组在同一成长轴上；能力既能让人活下来，也会改变制度权力。\nSocial / Relationship Dynamics：导师、队友、契约者和政治继承人把能力嵌入社会关系；关系不是能力代价的同义词，也提供协作、信任和身份收益。\nResource / Economy：训练时间、装备、契约资格、队友和政治位置共同组成能力资源；当前粗分段不能支持完整资源账本。…\n\n使用边界：只迁移训练、契约、探索和政治重定价的变量，不迁移来源世界、姓名、阵营、战役或独特法术。；由于 segment 粒度极粗，不能把任一能力顺序、章节编号或 detector 结果写成确定连续性。；不能把能力升级自动解释为责任；必须单独核验能力 delight、power verification 和 exploration。\n\n### Inspiration 3\nsource: book-dna/rcv0-29-xuanhuan-guimi-zhi-zhu-story-craft-v3\ntype: book-dna\nscore: 0.8339\n\n可用抽象：Reader Promise：核心不是“成为最强者”，而是：\n> 一个失去原身份、缺少资源、甚至不知道自己为何穿越的人，意外获得一个高于当前理解能力的神秘入口；他通过伪装、知识交换、仪式和判断，把“别人以为他是谁”逐渐变成自己的力量，同时不断发现世界比自己想象得更大。\n主要阅读快感有五层：\n1. 身份错位：周明瑞醒来时已经占据克莱恩的身体，面对死者身份、陌生世界和无法解释的笔记本。L13-L82。\n2. 私密高位视角：第一次进入灰雾后，他本来只是受害者，却迅速选择让别人把自己当成神秘强者，并主动塑造神殿、长桌和“愚者”身份。L459-L558。\n3. 伪装成为能力：夏洛克、格尔曼、道恩等身份不是单纯换脸，而是进入不同社会、资源和冲突入口；“无面人”的核心又反过来要求他不能在变化中失去自我。L22070-L22091；L40121-L40139。\n4. 未知持续升级：序列、古神、天使之王、源堡、序列之上、外神与星空，每一次答案都扩大了下一层未知。L103080-L103176。\n5. 关系具有自主性：塔罗会成员、廷根旧同伴、阿兹克、罗塞尔并不是主角的静态工具，而是在各自的世界中成长、受伤、离开和回归。L43074-L43120；L117744-L117800。\n因此读者继续读，不只是为了知道“下一场战斗谁赢”，而是为了确认：\n- 克莱恩到底是谁；\n- “愚者”身份会不会被揭穿；\n- 灰雾和源堡究竟是什么；\n- 罗塞尔留下的信息还有多少没有兑现；\n- 塔罗会成员会走到哪里；\n- 阿蒙、天尊、星空和末日之间究竟是什么关系；\n- 旧关系会以什么新身份重新出现。\nProtagonist Action：| 阶段 | 主要欲望 | 实际行动 |\n|---|---|---|\n| 开篇 | 回到原世界，弄清穿越与克莱恩死亡原因 | 调查笔记、尸体、枪支和仪式，尝试回归。L64-L82；L4…\n\n使用边界：只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。"
+}

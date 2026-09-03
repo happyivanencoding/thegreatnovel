@@ -1,0 +1,462 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "human_seed",
+  "effective_query": "检索模式：human_seed\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的巨城折叠空间术世界：主流力量是读者一眼能看懂的直接空间动作，例如移动、置换、折叠距离、改变落点、切开空间或穿过空间层；不要把核心写成理解/定义/权限/验证等抽象 ontology，也不要以驭兽、纯肉身体修或工程流程为主。公共精确力量主尺必须真实改变可作用的质量/对象规模、距离、连续使用次数或持续、身体承受，以及能否进入更危险折叠层；不要把主尺写成只有称号的装饰数字。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续允许非常大胆的空间玩法，但必须让公共主尺的基础盘继续有现实意义。\nHuman 可见 Life Context：\n# CHARACTER LIFE CONTEXT｜Upbringing Authority\n\n## 普通人的生活与上升\n\n万折城是一座建在巨大空间折层上的巨城。城内的街道有两种长度：脚下的石路是真实距离，门、桥和巷口之间的折叠距离则可能把三百步缩成三步，也可能把一扇门送到数里之外。\n\n普通人依靠固定的“定门钉”和城门司维护的安全落点生活。居民不会随便穿过未标记的门，也不会在陌生巷口奔跑；折叠失稳时，墙面会突然靠近、地面会把人送回原处，或者让一间屋子的出口落到别的街区。每家店铺和住宅都留有固定方向的门钉，夜间外出必须携带路绳或登记过的落点牌。\n\n大多数人一生都没有精确力量等级。少数年轻人会进入白尺院、城门司、商队、猎队或折景行当，先从识别安全落点、短距移动和承受折伤开始。失败者通常成为搬运工、门钉维护者、普通护卫或固定路线车夫；折伤严重的人会失去继续修炼的资格，只能依赖稳定街区生活。\n\n聚落之间通常靠实地商路和固定折舟队往来。普通人不能独自穿越城外的未定地；商队至少需要一名十级以上的折修领路，进入深层路线则要由二十五级以上者护送。真正能独行穿过危险折层的人很少，因此安全落点、熟悉路线和有资格使用深层城门，本身就是身份。\n\n## 社会现实与身份\n\n万折城门司是负责城门、落点牌和危险折层封锁的军府性质机构。它决定谁能进入深层，也掌握大部分公开路线图。\n\n白尺院是修炼、认证和比赛机构。它不保证人人变强，却决定一个折修的等级是否被商队、军府和家族承认。没有认证的高等级者，常被当作危险的“野折修”。\n\n七巷商盟是由商户、车队和深路猎队组成的商盟，控制外城货运、界砂交易和部分安全落点。商盟能给人路线、装备和工作，却会用债契绑定修炼者。\n\n沉井家是盘踞城心旧区的世袭家族，公开身份是旧城地契与深层门路的持有者。普通人认识他们，不是因为血统传说，而是因为许多不能随便打开的门，都挂着沉井家的旧印。\n\n城内还有大量没有正式城籍的“隙民”。他们住在被折叠出来的临时街区，熟悉别人不敢走的门，却无法合法购买深层落点和修炼资源。\n\n## 世界里真正值钱、值得想要的东西\n\n- 界砂：修炼和修复折脉的主要资源，产地集中在危险夹层，价格随城门稳定程度暴涨。\n- 定界钉：能固定一段空间的稀有器物。对商队而言，它决定货物会不会落进错层；对普通家庭而言，它决定房屋是否还能回到原来的街道。\n- 空窗石：能让一处短暂折叠保持稳定的奇物，适合救治折伤、修复古门或维持大型折景。\n- 深层通行牌：不是单纯身份象征，而是进入更远落点、取得稀有资源和接触旧城遗迹的资格。\n- 旧路图：记录的不只是路线，还记录哪些门在什么季节、光线和城声下会出现。可信的旧路图往往比功法更值钱。\n- 折甲与层衣：由能承受空间摩擦的材料制成，让修士短时间进入更危险的折层，但不能替代自身等级。\n- 空鳞兽：天生能辨认真假落点的异兽。它们不能代替修炼者战斗，却能让商队避开会把人送入深层的错门。\n- 城籍与师承：拥有合法城籍、白尺院认证或门司师承，意味着能买到资源、进入安全路线，也意味着必须承担相应债务和服役。\n\n## 世界知识边界\n\n普通人知道万折城依靠固定落点和定门钉运行，知道折距越高，能移动的距离、质量和折层越深，也知道未经标记的门可能致命。他们不知道折层为何出现，更不知道失踪的人究竟被送去了哪里。\n\n专业人士和修士知道界砂、折脉、折伤和不同深度的危险层，能根据门框磨损、风向、声音和落点牌判断一条路线是否即将失稳。他们知道旧城存在，却无法完整绘出沉下城，也无法解释为什么有些空鳞兽能提前感知尚未发生的错门。\n\n顶层势力掌握城心空井、深层门和部分旧路图，知道万折城并非一次建成，而是在漫长岁月里不断吸收、吞并或折离其他建筑与街区。他们仍无法确定原始巨城的边界，也无法回答第七折门后钟声的来源。\n\n## Upbringing 生成…\n明确硬约束：未检测到明确题材硬约束\n创意用途：允许寻找不同成长玩法，但仍不得违反上述明确硬约束。",
+  "query_strategy": "human_lane_queries",
+  "query_texts": [
+    "\"human appetite\" OR \"private appetite\" OR \"private desire\" OR \"non instrumental desire\"",
+    "\"behavior signature\" OR \"stable choice bias\" OR \"character hook\" OR \"protagonist as IP\"",
+    "\"relationship gravity\" OR \"relationship chemistry\" OR \"character autonomy\" OR \"reunion relationship\""
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：human_seed\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的巨城折叠空间术世界：主流力量是读者一眼能看懂的直接空间动作，例如移动、置换、折叠距离、改变落点、切开空间或穿过空间层；不要把核心写成理解/定义/权限/验证等抽象 ontology，也不要以驭兽、纯肉身体修或工程流程为主。公共精确力量主尺必须真实改变可作用的质量/对象规模、距离、连续使用次数或持续、身体承受，以及能否进入更危险折叠层；不要把主尺写成只有称号的装饰数字。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续允许非常大胆的空间玩法，但必须让公共主尺的基础盘继续有现实意义。\nHuman 可见 Life Context：\n# CHARACTER LIFE CONTEXT｜Upbringing Authority\n\n## 普通人的生活与上升\n\n万折城是一座建在巨大空间折层上的巨城。城内的街道有两种长度：脚下的石路是真实距离，门、桥和巷口之间的折叠距离则可能把三百步缩成三步，也可能把一扇门送到数里之外。\n\n普通人依靠固定的“定门钉”和城门司维护的安全落点生活。居民不会随便穿过未标记的门，也不会在陌生巷口奔跑；折叠失稳时，墙面会突然靠近、地面会把人送回原处，或者让一间屋子的出口落到别的街区。每家店铺和住宅都留有固定方向的门钉，夜间外出必须携带路绳或登记过的落点牌。\n\n大多数人一生都没有精确力量等级。少数年轻人会进入白尺院、城门司、商队、猎队或折景行当，先从识别安全落点、短距移动和承受折伤开始。失败者通常成为搬运工、门钉维护者、普通护卫或固定路线车夫；折伤严重的人会失去继续修炼的资格，只能依赖稳定街区生活。\n\n聚落之间通常靠实地商路和固定折舟队往来。普通人不能独自穿越城外的未定地；商队至少需要一名十级以上的折修领路，进入深层路线则要由二十五级以上者护送。真正能独行穿过危险折层的人很少，因此安全落点、熟悉路线和有资格使用深层城门，本身就是身份。\n\n## 社会现实与身份\n\n万折城门司是负责城门、落点牌和危险折层封锁的军府性质机构。它决定谁能进入深层，也掌握大部分公开路线图。\n\n白尺院是修炼、认证和比赛机构。它不保证人人变强，却决定一个折修的等级是否被商队、军府和家族承认。没有认证的高等级者，常被当作危险的“野折修”。\n\n七巷商盟是由商户、车队和深路猎队组成的商盟，控制外城货运、界砂交易和部分安全落点。商盟能给人路线、装备和工作，却会用债契绑定修炼者。\n\n沉井家是盘踞城心旧区的世袭家族，公开身份是旧城地契与深层门路的持有者。普通人认识他们，不是因为血统传说，而是因为许多不能随便打开的门，都挂着沉井家的旧印。\n\n城内还有大量没有正式城籍的“隙民”。他们住在被折叠出来的临时街区，熟悉别人不敢走的门，却无法合法购买深层落点和修炼资源。\n\n## 世界里真正值钱、值得想要的东西\n\n- 界砂：修炼和修复折脉的主要资源，产地集中在危险夹层，价格随城门稳定程度暴涨。\n- 定界钉：能固定一段空间的稀有器物。对商队而言，它决定货物会不会落进错层；对普通家庭而言，它决定房屋是否还能回到原来的街道。\n- 空窗石：能让一处短暂折叠保持稳定的奇物，适合救治折伤、修复古门或维持大型折景。\n- 深层通行牌：不是单纯身份象征，而是进入更远落点、取得稀有资源和接触旧城遗迹的资格。\n- 旧路图：记录的不只是路线，还记录哪些门在什么季节、光线和城声下会出现。可信的旧路图往往比功法更值钱。\n- 折甲与层衣：由能承受空间摩擦的材料制成，让修士短时间进入更危险的折层，但不能替代自身等级。\n- 空鳞兽：天生能辨认真假落点的异兽。它们不能代替修炼者战斗，却能让商队避开会把人送入深层的错门。\n- 城籍与师承：拥有合法城籍、白尺院认证或门司师承，意味着能买到资源、进入安全路线，也意味着必须承担相应债务和服役。\n\n## 世界知识边界\n\n普通人知道万折城依靠固定落点和定门钉运行，知道折距越高，能移动的距离、质量和折层越深，也知道未经标记的门可能致命。他们不知道折层为何出现，更不知道失踪的人究竟被送去了哪里。\n\n专业人士和修士知道界砂、折脉、折伤和不同深度的危险层，能根据门框磨损、风向、声音和落点牌判断一条路线是否即将失稳。他们知道旧城存在，却无法完整绘出沉下城，也无法解释为什么有些空鳞兽能提前感知尚未发生的错门。\n\n顶层势力掌握城心空井、深层门和部分旧路图，知道万折城并非一次建成，而是在漫长岁月里不断吸收、吞并或折离其他建筑与街区。他们仍无法确定原始巨城的边界，也无法回答第七折门后钟声的来源。\n\n## Upbringing 生成…\n明确硬约束：未检测到明确题材硬约束\n创意用途：允许寻找不同成长玩法，但仍不得违反上述明确硬约束。",
+  "query_scope": "book-dna,contrasts,mechanisms,syntheses",
+  "hard_constraints": [],
+  "raw_count": 71,
+  "unique_raw_count": 28,
+  "novel_candidate_count": 28,
+  "accepted_count": 1,
+  "coordinate_reference_count": 0,
+  "coordinate_reference": null,
+  "coordinate_reference_error": "",
+  "naming_reference_count": 0,
+  "naming_reference": null,
+  "naming_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {
+    "appetite": 1,
+    "behavior": 0,
+    "relationship": 0
+  },
+  "human_lane_order": [
+    "appetite",
+    "behavior",
+    "relationship"
+  ],
+  "human_lane_candidate_limit": 12,
+  "prototype_id": "",
+  "prototype_selected": false,
+  "rejected_count": 29,
+  "query_limit": 24,
+  "requested_limit": 36,
+  "final_limit": 3,
+  "raw_stdout": "[1.0223] book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3 -- 判断某个关系是否真正改变了选择：必须能写出 baseline A、实际 B、代价和不可替代性。\n2. 判断同一现场的 competing motives：不能只写“他为了父亲”或“他为了尊严”，必须\n[0.9908] book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3 -- ENDGAME | 判断 |\n|---|---|---|---|---|---|\n| 保命 | H05、H07 | H12 | H13 被识破后撤退 | H17 受反击后撤退 | 持续，但不是绝对\n[0.9334] book-dna/rcv0-32-xianxia-xianni-human-judgment-v3 -- **Cost：** 失去陪伴与助力，延迟重聚。\n- **Non-substitutability：** H11、H15 都由该具体人物的当前选择触发，不是抽象团队效率。\n- **Counter-e\n[0.8945] book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3 -- Cross-stage Continuity\n| 阶段 | 持续内容 | 换挡/消失 | 结论 |\n|---|---|---|---|\n| EARLY | 小蛮不可被丹药直接置换；被占便宜后追讨\n[0.8703] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3 -- `REFERENCE_ONLY`。\n---\n## R5：楚阁主与碧水阁成员\n- **Baseline A：** 直接替复活者完成完整重建。\n- **Specific person：** 楚阁主\n[0.8412] mechanisms/private-appetite-continuity-v1 -- Retrieval aliases: human appetite private appetite appetite continuity private desire survives advan\n[0.8177] book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3 -- Retrieval aliases: 亵渎 Human Craft Human Seed human appetite competing motive motive plurality 多重动机 竞\n[0.8075] book-dna/rcv0-38-xianxia-dashengzhuan-human-dna-v1 -- Retrieval aliases: 大圣传 human appetite life appetite vitality desire survives advancement stable choi\n[0.8050] book-dna/rcv0-66-youxi-quanzhi-gaoshou-human-judgment-v3 -- **Transferable Human Judgment：**\n判断一个人是否真正想要某项活动，应看在直接收益被移除后是否仍愿意投入时间、身体和未来机会。\n**不能与 M2 合并：**\n竞技胜\n[0.7951] book-dna/rcv0-31-xuanhuan-zhetian-human-judgment-v3 -- Competing Motive Matrix\n| 证据 | Motive A | Motive B | 现场条件 | 实际胜出的 motive | 代价 |\n|---|---|---|---|-\n[0.7917] book-dna/rcv0-58-xuanhuan-wo-bushi-xishen-human-dna-v1 -- Retrieval aliases: 我不是戏神 human appetite non instrumental desire private hobby practice gift craft pu\n[0.7533] book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3 -- Retrieval aliases: 斗破苍穹 Human Craft Human Seed human appetite competing motive motive plurality 多重动机\n[0.7489] book-dna/rcv0-30-xuanhuan-douluo-dalu-human-judgment-v3 -- **Baseline A**：接受宗门培养、婚事确定性与安全路线。\n- **Specific person**：唐三。\n- **Actual B**：H13 拒绝离开唐三。\n- **Cost**\n[0.7474] book-dna/rcv0-48-dushi-dawang-raoming-human-dna-v1 -- Retrieval aliases: 大王饶命 human appetite daily life after advancement home food money ordinary desire \n[0.7424] book-dna/rcv0-32-xianxia-xianni-human-judgment-v3 -- Retrieval aliases: 仙逆 Human Craft Human Seed human appetite competing motive motive plurality 多重动机 竞\n[0.7390] book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3 -- Retrieval aliases: 掠天记 Human Craft Human Seed human appetite competing motive motive plurality 多重动机 \n[0.7386] book-dna/rcv0-51-xuanhuan-wanmei-shijie-human-dna-v2 -- Retrieval aliases: 完美世界 human appetite vitality curiosity food play fight win body desire relationsh\n[0.7319] book-dna/rcv0-39-xianxia-youming-xiantu-human-judgment-v3 -- → HIGH_STATE  \n**Benefit-removal：** H03、H14 为 `YES`；目标是知道自己为何被利用、重新取得行动缝隙，不是获得资源。H02 中功法价值主要被转化为免死筹\n[0.7259] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3 -- Retrieval aliases: 修真聊天群 Human Craft Human Seed human appetite competing motive motive plurality 多重动\n[0.7126] book-dna/rcv0-51-xuanhuan-wanmei-shijie-human-dna-v2 -- **火灵儿**：改变终局后的去向与同行方式，“回哪里”变成和谁一起回家。（H14）\n- **已经失去的人**：持续改变他的停留、回返、游历和情绪表达；哀悼表现为重新走过具体旧地，而不只是抽象悲伤。（\n[0.6925] book-dna/rcv0-68-dushi-xieqi-linran-human-judgment-v3 -- | **M1：认定为“兄弟/自己人”后的即时站队与出头** | H01 `EARLY`；H09 `HIGH_STATE` | `YES`。H01 付出房产、债务；H09 已放弃地盘仍为西罗出头 | H\n[0.6892] book-dna/rcv0-39-xianxia-youming-xiantu-human-judgment-v3 -- Retrieval aliases: 幽冥仙途 Human Craft Human Seed human appetite competing motive motive plurality 多重动机\n[0.6683] book-dna/rcv0-31-xuanhuan-zhetian-human-judgment-v3 -- Retrieval aliases: 遮天 Human Craft Human Seed human appetite competing motive motive plurality 多重动机 竞\n[0.6676] book-dna/rcv0-61-dushi-wozhen-meixiang-chongsheng-human-dna-v2 -- - 关系造成的情绪成本通常在事后显现，而不是事前形成稳定道德原则（H06）。\n变化方式：\n- 陌生人或公共舆论场中，面子和脱身优先。\n- 具体亲友受辱、受伤或处于危险时，风险偏好会明显上移。\n[1.8750] book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3 -- 判断某个关系是否真正改变了选择：必须能写出 baseline A、实际 B、代价和不可替代性。\n2. 判断同一现场的 competing motives：不能只写“他为了父亲”或“他为了尊严”，必须\n[1.7910] book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3 -- ENDGAME | 判断 |\n|---|---|---|---|---|---|\n| 保命 | H05、H07 | H12 | H13 被识破后撤退 | H17 受反击后撤退 | 持续，但不是绝对\n[1.7647] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3 -- `REFERENCE_ONLY`。\n---\n## R5：楚阁主与碧水阁成员\n- **Baseline A：** 直接替复活者完成完整重建。\n- **Specific person：** 楚阁主\n[1.6901] book-dna/rcv0-32-xianxia-xianni-human-judgment-v3 -- **Cost：** 失去陪伴与助力，延迟重聚。\n- **Non-substitutability：** H11、H15 都由该具体人物的当前选择触发，不是抽象团队效率。\n- **Counter-e\n[1.6216] book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3 -- Cross-stage Continuity\n| 阶段 | 持续内容 | 换挡/消失 | 结论 |\n|---|---|---|---|\n| EARLY | 小蛮不可被丹药直接置换；被占便宜后追讨\n[1.5385] book-dna/rcv0-66-youxi-quanzhi-gaoshou-human-judgment-v3 -- **Transferable Human Judgment：**\n判断一个人是否真正想要某项活动，应看在直接收益被移除后是否仍愿意投入时间、身体和未来机会。\n**不能与 M2 合并：**\n竞技胜\n[1.5000] book-dna/rcv0-30-xuanhuan-douluo-dalu-human-judgment-v3 -- **Baseline A**：接受宗门培养、婚事确定性与安全路线。\n- **Specific person**：唐三。\n- **Actual B**：H13 拒绝离开唐三。\n- **Cost**\n[1.4286] book-dna/rcv0-67-xianxia-zhuxian-human-judgment-v3 -- 显示，在张小凡濒临崩溃这一特定条件下，陆雪琪仍可能突破原有门规边界。\n- 因此这不是“关系无效”，而是关系影响与身份边界并存。\n**不能合理合并**\n不能与“陆雪琪会改变他的风险选择”合并。她可\n[1.3793] book-dna/rcv0-40-wuxia-sirenjing-human-judgment-v3 -- M4：对上官如形成具体债务与例外 | H02、H09、H11；EARLY→MIDDLE→HIGH_STATE | H09 明确是对交还同伴的回报；H02/H11 只能部分确认 | H09 仍把她置于根\n[1.3483] book-dna/rcv0-28-xuanhuan-jiangye-human-judgment-v3 -- 同时受绝望与桑桑病情影响；H15 未能真正离开；H18 只是终局日常窗口。\n**Transferable Human Judgment**\n判断一个具体关系是否真的属于人物私人价值：它必须能在没有\n[1.3187] book-dna/rcv0-31-xuanhuan-zhetian-human-judgment-v3 -- Competing Motive Matrix\n| 证据 | Motive A | Motive B | 现场条件 | 实际胜出的 motive | 代价 |\n|---|---|---|---|-\n[1.1765] book-dna/rcv0-39-xianxia-youming-xiantu-human-judgment-v3 -- → HIGH_STATE  \n**Benefit-removal：** H03、H14 为 `YES`；目标是知道自己为何被利用、重新取得行动缝隙，不是获得资源。H02 中功法价值主要被转化为免死筹\n[1.1538] book-dna/rcv0-68-dushi-xieqi-linran-human-judgment-v3 -- | **M1：认定为“兄弟/自己人”后的即时站队与出头** | H01 `EARLY`；H09 `HIGH_STATE` | `YES`。H01 付出房产、债务；H09 已放弃地盘仍为西罗出头 | H\n[0.8417] book-dna/rcv0-56-xuanhuan-zhushen-yuxi-character-hook-v3 -- Reference-only source synthesis. Story Craft only; no Prose DNA. Source-specific names, symbols and \n[0.8303] book-dna/rcv0-56-xuanhuan-zhushen-yuxi-character-hook-v3 -- `[source_book_id=rcv0-56-xuanhuan-zhushen-yuxi；41994–41999]`\n- 跨世界重逢后，他会停止继续表演，转而在有限时间内索取必要信息。  \n \n[0.7992] book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3 -- Retrieval aliases: 斗破苍穹 Human Craft Human Seed human appetite competing motive motive plurality 多重动机\n[0.7667] book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3 -- Retrieval aliases: 亵渎 Human Craft Human Seed human appetite competing motive motive plurality 多重动机 竞\n[0.7305] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3 -- - M3 的父母家庭时间：对象和价值来源不同。\n- M4 的关系对象主体性：保护其存续不等于保护其自行行动。\n- M5 的重逢与持续连接：主动靠近不等于危机介入。\n- M1 的未知入口好奇：入口\n[0.7154] book-dna/rcv0-32-xianxia-xianni-human-judgment-v3 -- Independent Motive Map\n## M1：走出原有生活，进入自己的求仙道路\n**Evidence：** H01、H02、H09  \n**阶段：** EARLY → MIDDLE\n[0.6745] book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3 -- Independent Motive Map\n## M1：具体关系不可被直接置换、切断或抛下\n**Evidence：** `H01 / H03 / H11 / H12 / H14 / H15 / \n[0.6576] book-dna/rcv0-66-youxi-quanzhi-gaoshou-human-judgment-v3 -- Retrieval aliases: 全职高手 Human Craft Human Seed human appetite competing motive motive plurality 多重动机\n[0.6457] book-dna/rcv0-30-xuanhuan-douluo-dalu-human-judgment-v3 -- 具体的人可以改变一个人的风险阈值、路线选择和力量保存。\n2. 同一关系可以产生不同实现：阻挡、改地点、放弃力量、身体救助、失控反击、共同协作。\n3. 同一现场通常存在多个动机，关系动机有时压过生存\n[0.6428] book-dna/rcv0-48-dushi-dawang-raoming-human-dna-v1 -- Retrieval aliases: 大王饶命 human appetite daily life after advancement home food money ordinary desire\n[1.1284] book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3 -- 判断某个关系是否真正改变了选择：必须能写出 baseline A、实际 B、代价和不可替代性。\n2. 判断同一现场的 competing motives：不能只写“他为了父亲”或“他为了尊严”，必须\n[1.0931] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3 -- `REFERENCE_ONLY`。\n---\n## R5：楚阁主与碧水阁成员\n- **Baseline A：** 直接替复活者完成完整重建。\n- **Specific person：** 楚阁主\n[1.0288] book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3 -- ENDGAME | 判断 |\n|---|---|---|---|---|---|\n| 保命 | H05、H07 | H12 | H13 被识破后撤退 | H17 受反击后撤退 | 持续，但不是绝对\n[1.0139] book-dna/rcv0-40-wuxia-sirenjing-human-judgment-v3 -- M4：对上官如形成具体债务与例外 | H02、H09、H11；EARLY→MIDDLE→HIGH_STATE | H09 明确是对交还同伴的回报；H02/H11 只能部分确认 | H09 仍把她置于根\n[0.9853] book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3 -- Cross-stage Continuity\n| 阶段 | 持续内容 | 换挡/消失 | 结论 |\n|---|---|---|---|\n| EARLY | 小蛮不可被丹药直接置换；被占便宜后追讨\n[0.9454] book-dna/rcv0-28-xuanhuan-jiangye-human-judgment-v3 -- 同时受绝望与桑桑病情影响；H15 未能真正离开；H18 只是终局日常窗口。\n**Transferable Human Judgment**\n判断一个具体关系是否真的属于人物私人价值：它必须能在没有\n[0.9085] book-dna/rcv0-32-xianxia-xianni-human-judgment-v3 -- **Cost：** 失去陪伴与助力，延迟重聚。\n- **Non-substitutability：** H11、H15 都由该具体人物的当前选择触发，不是抽象团队效率。\n- **Counter-e\n[0.8464] book-dna/rcv0-63-xianxia-wendao-hongchen-human-dna-v2 -- Retrieval aliases: 问道红尘 human attraction desire intimacy longing relationship gravity affection auto\n[0.8327] book-dna/rcv0-62-xuanhuan-nvxia-qieman-human-dna-v2 -- Retrieval aliases: 女侠且慢 human attraction relationship gravity longing jealousy boundaries nonoptimal\n[0.8230] book-dna/rcv0-68-dushi-xieqi-linran-human-judgment-v3 -- | **M1：认定为“兄弟/自己人”后的即时站队与出头** | H01 `EARLY`；H09 `HIGH_STATE` | `YES`。H01 付出房产、债务；H09 已放弃地盘仍为西罗出头 | H\n[0.7950] book-dna/rcv0-31-xuanhuan-zhetian-human-judgment-v3 -- Competing Motive Matrix\n| 证据 | Motive A | Motive B | 现场条件 | 实际胜出的 motive | 代价 |\n|---|---|---|---|-\n[0.7860] book-dna/rcv0-67-xianxia-zhuxian-human-judgment-v3 -- 显示，在张小凡濒临崩溃这一特定条件下，陆雪琪仍可能突破原有门规边界。\n- 因此这不是“关系无效”，而是关系影响与身份边界并存。\n**不能合理合并**\n不能与“陆雪琪会改变他的风险选择”合并。她可\n[0.7681] book-dna/rcv0-60-xuanhuan-wudao-zongshi-human-dna-v2 -- | 共同呐喊本身具有吸引力 | 观赛和助威不只是比赛的附属宣传（H11、H12） |\n## Counterexamples / What NOT to Learn\n- 不要把恋爱写成“提升训练效率\n[0.7654] book-dna/rcv0-61-dushi-wozhen-meixiang-chongsheng-human-dna-v2 -- Retrieval aliases: 我真没想重生啊 human conflicting desires desire plurality vanity selfish attachment care\n[0.7329] book-dna/rcv0-60-xuanhuan-wudao-zongshi-human-dna-v2 -- Retrieval aliases: 武道宗师 human youth romance training competition daily life relationship gravity bod\n[0.6739] mechanisms/departure-vacancy-v3 -- Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac\n[0.6663] book-dna/rcv0-66-youxi-quanzhi-gaoshou-human-judgment-v3 -- **Transferable Human Judgment：**\n判断一个人是否真正想要某项活动，应看在直接收益被移除后是否仍愿意投入时间、身体和未来机会。\n**不能与 M2 合并：**\n竞技胜\n[0.5547] book-dna/private-prototype-pwaalpha-relationship-v1 -- Retrieval aliases: pwaalpha pwaalpha-relationship\n\n# Prism Wanderer Alpha｜Relationship Prototype\n\n[0.5232] mechanisms/reunion-reentry-v3 -- Retrieval aliases: reunion reentry character return growth return delayed payoff recognition team re\n[0.5039] book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3 -- Retrieval aliases: 斗破苍穹 Human Craft Human Seed human appetite competing motive motive plurality 多重动机\n[0.4946] book-dna/rcv0-30-xuanhuan-douluo-dalu-human-judgment-v3 -- 具体的人可以改变一个人的风险阈值、路线选择和力量保存。\n2. 同一关系可以产生不同实现：阻挡、改地点、放弃力量、身体救助、失控反击、共同协作。\n3. 同一现场通常存在多个动机，关系动机有时压过生存\n[0.4915] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3 -- Retrieval aliases: 修真聊天群 Human Craft Human Seed human appetite competing motive motive plurality 多重动\n[0.4856] syntheses/genre-priors/豪门总裁 -- | 类型 | 原因 | 期限 |\n|------|------|------|\n| 假结婚 | 应付家族 | 1-3年 |\n| 代孕 | 需要继承人 | 怀孕期 |\n| 情人 | 商业需要 | 不定 \n[0.4787] mechanisms/thread-collision-v3 -- Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl",
+  "novel_candidates": [
+    {
+      "score": 1.0223,
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3",
+      "snippet": "判断某个关系是否真正改变了选择：必须能写出 baseline A、实际 B、代价和不可替代性。"
+    },
+    {
+      "score": 1.791,
+      "slug": "book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3",
+      "snippet": "ENDGAME | 判断 |"
+    },
+    {
+      "score": 1.0931,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3",
+      "snippet": "`REFERENCE_ONLY`。"
+    },
+    {
+      "score": 0.9334,
+      "slug": "book-dna/rcv0-32-xianxia-xianni-human-judgment-v3",
+      "snippet": "**Cost：** 失去陪伴与助力，延迟重聚。"
+    },
+    {
+      "score": 1.6216,
+      "slug": "book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3",
+      "snippet": "Cross-stage Continuity"
+    },
+    {
+      "score": 1.0139,
+      "slug": "book-dna/rcv0-40-wuxia-sirenjing-human-judgment-v3",
+      "snippet": "M4：对上官如形成具体债务与例外 | H02、H09、H11；EARLY→MIDDLE→HIGH_STATE | H09 明确是对交还同伴的回报；H02/H11 只能部分确认 | H09 仍把她置于根"
+    },
+    {
+      "score": 0.8412,
+      "slug": "mechanisms/private-appetite-continuity-v1",
+      "snippet": "Retrieval aliases: human appetite private appetite appetite continuity private desire survives advan"
+    },
+    {
+      "score": 1.5385,
+      "slug": "book-dna/rcv0-66-youxi-quanzhi-gaoshou-human-judgment-v3",
+      "snippet": "**Transferable Human Judgment：**"
+    },
+    {
+      "score": 0.9454,
+      "slug": "book-dna/rcv0-28-xuanhuan-jiangye-human-judgment-v3",
+      "snippet": "同时受绝望与桑桑病情影响；H15 未能真正离开；H18 只是终局日常窗口。"
+    },
+    {
+      "score": 0.8075,
+      "slug": "book-dna/rcv0-38-xianxia-dashengzhuan-human-dna-v1",
+      "snippet": "Retrieval aliases: 大圣传 human appetite life appetite vitality desire survives advancement stable choi"
+    },
+    {
+      "score": 1.5,
+      "slug": "book-dna/rcv0-30-xuanhuan-douluo-dalu-human-judgment-v3",
+      "snippet": "**Baseline A**：接受宗门培养、婚事确定性与安全路线。"
+    },
+    {
+      "score": 0.8464,
+      "slug": "book-dna/rcv0-63-xianxia-wendao-hongchen-human-dna-v2",
+      "snippet": "Retrieval aliases: 问道红尘 human attraction desire intimacy longing relationship gravity affection auto"
+    },
+    {
+      "score": 0.7951,
+      "slug": "book-dna/rcv0-31-xuanhuan-zhetian-human-judgment-v3",
+      "snippet": "Competing Motive Matrix"
+    },
+    {
+      "score": 1.4286,
+      "slug": "book-dna/rcv0-67-xianxia-zhuxian-human-judgment-v3",
+      "snippet": "显示，在张小凡濒临崩溃这一特定条件下，陆雪琪仍可能突破原有门规边界。"
+    },
+    {
+      "score": 0.8327,
+      "slug": "book-dna/rcv0-62-xuanhuan-nvxia-qieman-human-dna-v2",
+      "snippet": "Retrieval aliases: 女侠且慢 human attraction relationship gravity longing jealousy boundaries nonoptimal"
+    },
+    {
+      "score": 0.7917,
+      "slug": "book-dna/rcv0-58-xuanhuan-wo-bushi-xishen-human-dna-v1",
+      "snippet": "Retrieval aliases: 我不是戏神 human appetite non instrumental desire private hobby practice gift craft pu"
+    },
+    {
+      "score": 1.1765,
+      "slug": "book-dna/rcv0-39-xianxia-youming-xiantu-human-judgment-v3",
+      "snippet": "→ HIGH_STATE"
+    },
+    {
+      "score": 0.823,
+      "slug": "book-dna/rcv0-68-dushi-xieqi-linran-human-judgment-v3",
+      "snippet": "| **M1：认定为“兄弟/自己人”后的即时站队与出头** | H01 `EARLY`；H09 `HIGH_STATE` | `YES`。H01 付出房产、债务；H09 已放弃地盘仍为西罗出头 | H"
+    },
+    {
+      "score": 0.7474,
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-human-dna-v1",
+      "snippet": "Retrieval aliases: 大王饶命 human appetite daily life after advancement home food money ordinary desire"
+    },
+    {
+      "score": 0.8417,
+      "slug": "book-dna/rcv0-56-xuanhuan-zhushen-yuxi-character-hook-v3",
+      "snippet": "Reference-only source synthesis. Story Craft only; no Prose DNA. Source-specific names, symbols and"
+    },
+    {
+      "score": 0.7681,
+      "slug": "book-dna/rcv0-60-xuanhuan-wudao-zongshi-human-dna-v2",
+      "snippet": "| 共同呐喊本身具有吸引力 | 观赛和助威不只是比赛的附属宣传（H11、H12） |"
+    },
+    {
+      "score": 0.7386,
+      "slug": "book-dna/rcv0-51-xuanhuan-wanmei-shijie-human-dna-v2",
+      "snippet": "Retrieval aliases: 完美世界 human appetite vitality curiosity food play fight win body desire relationsh"
+    },
+    {
+      "score": 0.7654,
+      "slug": "book-dna/rcv0-61-dushi-wozhen-meixiang-chongsheng-human-dna-v2",
+      "snippet": "Retrieval aliases: 我真没想重生啊 human conflicting desires desire plurality vanity selfish attachment care"
+    },
+    {
+      "score": 0.6739,
+      "slug": "mechanisms/departure-vacancy-v3",
+      "snippet": "Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac"
+    },
+    {
+      "score": 0.5547,
+      "slug": "book-dna/private-prototype-pwaalpha-relationship-v1",
+      "snippet": "Retrieval aliases: pwaalpha pwaalpha-relationship"
+    },
+    {
+      "score": 0.5232,
+      "slug": "mechanisms/reunion-reentry-v3",
+      "snippet": "Retrieval aliases: reunion reentry character return growth return delayed payoff recognition team re"
+    },
+    {
+      "score": 0.4856,
+      "slug": "syntheses/genre-priors/豪门总裁",
+      "snippet": "| 类型 | 原因 | 期限 |"
+    },
+    {
+      "score": 0.4787,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 1.0223,
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3",
+      "snippet": "判断某个关系是否真正改变了选择：必须能写出 baseline A、实际 B、代价和不可替代性。"
+    },
+    {
+      "score": 1.791,
+      "slug": "book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3",
+      "snippet": "ENDGAME | 判断 |"
+    },
+    {
+      "score": 1.0931,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3",
+      "snippet": "`REFERENCE_ONLY`。"
+    },
+    {
+      "score": 0.9334,
+      "slug": "book-dna/rcv0-32-xianxia-xianni-human-judgment-v3",
+      "snippet": "**Cost：** 失去陪伴与助力，延迟重聚。"
+    },
+    {
+      "score": 1.6216,
+      "slug": "book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3",
+      "snippet": "Cross-stage Continuity"
+    },
+    {
+      "score": 1.0139,
+      "slug": "book-dna/rcv0-40-wuxia-sirenjing-human-judgment-v3",
+      "snippet": "M4：对上官如形成具体债务与例外 | H02、H09、H11；EARLY→MIDDLE→HIGH_STATE | H09 明确是对交还同伴的回报；H02/H11 只能部分确认 | H09 仍把她置于根"
+    },
+    {
+      "score": 0.8412,
+      "slug": "mechanisms/private-appetite-continuity-v1",
+      "snippet": "Retrieval aliases: human appetite private appetite appetite continuity private desire survives advan"
+    },
+    {
+      "score": 1.5385,
+      "slug": "book-dna/rcv0-66-youxi-quanzhi-gaoshou-human-judgment-v3",
+      "snippet": "**Transferable Human Judgment：**"
+    },
+    {
+      "score": 0.9454,
+      "slug": "book-dna/rcv0-28-xuanhuan-jiangye-human-judgment-v3",
+      "snippet": "同时受绝望与桑桑病情影响；H15 未能真正离开；H18 只是终局日常窗口。"
+    },
+    {
+      "score": 0.8075,
+      "slug": "book-dna/rcv0-38-xianxia-dashengzhuan-human-dna-v1",
+      "snippet": "Retrieval aliases: 大圣传 human appetite life appetite vitality desire survives advancement stable choi"
+    },
+    {
+      "score": 1.5,
+      "slug": "book-dna/rcv0-30-xuanhuan-douluo-dalu-human-judgment-v3",
+      "snippet": "**Baseline A**：接受宗门培养、婚事确定性与安全路线。"
+    },
+    {
+      "score": 0.8464,
+      "slug": "book-dna/rcv0-63-xianxia-wendao-hongchen-human-dna-v2",
+      "snippet": "Retrieval aliases: 问道红尘 human attraction desire intimacy longing relationship gravity affection auto"
+    },
+    {
+      "score": 0.7951,
+      "slug": "book-dna/rcv0-31-xuanhuan-zhetian-human-judgment-v3",
+      "snippet": "Competing Motive Matrix"
+    },
+    {
+      "score": 1.4286,
+      "slug": "book-dna/rcv0-67-xianxia-zhuxian-human-judgment-v3",
+      "snippet": "显示，在张小凡濒临崩溃这一特定条件下，陆雪琪仍可能突破原有门规边界。"
+    },
+    {
+      "score": 0.8327,
+      "slug": "book-dna/rcv0-62-xuanhuan-nvxia-qieman-human-dna-v2",
+      "snippet": "Retrieval aliases: 女侠且慢 human attraction relationship gravity longing jealousy boundaries nonoptimal"
+    },
+    {
+      "score": 0.7917,
+      "slug": "book-dna/rcv0-58-xuanhuan-wo-bushi-xishen-human-dna-v1",
+      "snippet": "Retrieval aliases: 我不是戏神 human appetite non instrumental desire private hobby practice gift craft pu"
+    },
+    {
+      "score": 1.1765,
+      "slug": "book-dna/rcv0-39-xianxia-youming-xiantu-human-judgment-v3",
+      "snippet": "→ HIGH_STATE"
+    },
+    {
+      "score": 0.823,
+      "slug": "book-dna/rcv0-68-dushi-xieqi-linran-human-judgment-v3",
+      "snippet": "| **M1：认定为“兄弟/自己人”后的即时站队与出头** | H01 `EARLY`；H09 `HIGH_STATE` | `YES`。H01 付出房产、债务；H09 已放弃地盘仍为西罗出头 | H"
+    },
+    {
+      "score": 0.7474,
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-human-dna-v1",
+      "snippet": "Retrieval aliases: 大王饶命 human appetite daily life after advancement home food money ordinary desire"
+    },
+    {
+      "score": 0.8417,
+      "slug": "book-dna/rcv0-56-xuanhuan-zhushen-yuxi-character-hook-v3",
+      "snippet": "Reference-only source synthesis. Story Craft only; no Prose DNA. Source-specific names, symbols and"
+    },
+    {
+      "score": 0.7681,
+      "slug": "book-dna/rcv0-60-xuanhuan-wudao-zongshi-human-dna-v2",
+      "snippet": "| 共同呐喊本身具有吸引力 | 观赛和助威不只是比赛的附属宣传（H11、H12） |"
+    },
+    {
+      "score": 0.7386,
+      "slug": "book-dna/rcv0-51-xuanhuan-wanmei-shijie-human-dna-v2",
+      "snippet": "Retrieval aliases: 完美世界 human appetite vitality curiosity food play fight win body desire relationsh"
+    },
+    {
+      "score": 0.7654,
+      "slug": "book-dna/rcv0-61-dushi-wozhen-meixiang-chongsheng-human-dna-v2",
+      "snippet": "Retrieval aliases: 我真没想重生啊 human conflicting desires desire plurality vanity selfish attachment care"
+    },
+    {
+      "score": 0.6739,
+      "slug": "mechanisms/departure-vacancy-v3",
+      "snippet": "Retrieval aliases: departure vacancy character departure long absence dormancy return promise charac"
+    },
+    {
+      "score": 0.5547,
+      "slug": "book-dna/private-prototype-pwaalpha-relationship-v1",
+      "snippet": "Retrieval aliases: pwaalpha pwaalpha-relationship"
+    },
+    {
+      "score": 0.5232,
+      "slug": "mechanisms/reunion-reentry-v3",
+      "snippet": "Retrieval aliases: reunion reentry character return growth return delayed payoff recognition team re"
+    },
+    {
+      "score": 0.4856,
+      "slug": "syntheses/genre-priors/豪门总裁",
+      "snippet": "| 类型 | 原因 | 期限 |"
+    },
+    {
+      "score": 0.4787,
+      "slug": "mechanisms/thread-collision-v3",
+      "snippet": "Retrieval aliases: thread collision braided climax causal convergence second payoff narrative afterl"
+    }
+  ],
+  "accepted": [
+    {
+      "score": 0.8412,
+      "slug": "mechanisms/private-appetite-continuity-v1",
+      "snippet": "Retrieval aliases: human appetite private appetite appetite continuity private desire survives advan",
+      "type": "mechanism",
+      "is_genre_prior": false,
+      "abstract": "Creative Problem：人物变强、变富、获得身份或进入世界级冲突之后，怎样避免他自动变成只剩任务、职责、胜负、资源和长期 KPI 的执行器？\n真正的问题不是“给角色加一个爱好”，而是：\n> 当直接升级收益被拿掉时，什么具体东西仍然值得这个人物去吃、做、看、练、保护、赠予、回返、追逐或享受？成长以后，这种私人价值如何继续影响真实选择？\nMechanism：当人物已经建立过具体私人欲望时，成长后的新阶段可以让其中少量欲望以新的方式重新进入行动：\n`早期私人价值 → 力量/身份/财富扩大 → 欲望优先级与实现方式变化 → 在新处境中通过具体选择再次出现 → 证明人物没有被自动职业化`\n关键不是维持原样，而是允许 **desire reordering**：\n- 频率可以降低；\n- 实现方式可以改变；\n- 旧欲望可以与新欲望竞争；\n- 某些欲望可以真正消失，但需要由经历、选择或关系造成，而不是“升级后自动成熟”。\n私人价值必须落在行为里，而不是作者声明里。可见形式包括但不限于：回家、吃一顿曾经吃不起的东西、继续一个无人奖励的练习、为具体的人改变风险选择、想看远方、追逐强敌、赠予、享受身体与生活、拒绝一个会吞掉行动空间的机会。",
+      "transfer_boundary": "",
+      "human_lane": "appetite",
+      "formatted_block": "### Inspiration\nsource: mechanisms/private-appetite-continuity-v1\ntype: mechanism\nhuman_lane: appetite\nscore: 0.8412\n\n可用抽象：Creative Problem：人物变强、变富、获得身份或进入世界级冲突之后，怎样避免他自动变成只剩任务、职责、胜负、资源和长期 KPI 的执行器？\n真正的问题不是“给角色加一个爱好”，而是：\n> 当直接升级收益被拿掉时，什么具体东西仍然值得这个人物去吃、做、看、练、保护、赠予、回返、追逐或享受？成长以后，这种私人价值如何继续影响真实选择？\nMechanism：当人物已经建立过具体私人欲望时，成长后的新阶段可以让其中少量欲望以新的方式重新进入行动：\n`早期私人价值 → 力量/身份/财富扩大 → 欲望优先级与实现方式变化 → 在新处境中通过具体选择再次出现 → 证明人物没有被自动职业化`\n关键不是维持原样，而是允许 **desire reordering**：\n- 频率可以降低；\n- 实现方式可以改变；\n- 旧欲望可以与新欲望竞争；\n- 某些欲望可以真正消失，但需要由经历、选择或关系造成，而不是“升级后自动成熟”。\n私人价值必须落在行为里，而不是作者声明里。可见形式包括但不限于：回家、吃一顿曾经吃不起的东西、继续一个无人奖励的练习、为具体的人改变风险选择、想看远方、追逐强敌、赠予、享受身体与生活、拒绝一个会吞掉行动空间的机会。\n\n使用边界：只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。"
+    }
+  ],
+  "fixed_references": [],
+  "rejected": [
+    {
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-32-xianxia-xianni-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-32-xianxia-xianni-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-66-youxi-quanzhi-gaoshou-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-30-xuanhuan-douluo-dalu-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-67-xianxia-zhuxian-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-40-wuxia-sirenjing-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-28-xuanhuan-jiangye-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-31-xuanhuan-zhetian-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-39-xianxia-youming-xiantu-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-34-xuanhuan-doupo-cangqiong-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-69-qihuan-xiedu-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-40-wuxia-sirenjing-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-65-xianxia-luetianji-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-28-xuanhuan-jiangye-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-32-xianxia-xianni-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-63-xianxia-wendao-hongchen-human-dna-v2",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-62-xuanhuan-nvxia-qieman-human-dna-v2",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-68-dushi-xieqi-linran-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-31-xuanhuan-zhetian-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    },
+    {
+      "slug": "book-dna/rcv0-67-xianxia-zhuxian-human-judgment-v3",
+      "reason": "卡片当前未启用为 active inspiration"
+    }
+  ],
+  "result": "### Inspiration 1\nsource: mechanisms/private-appetite-continuity-v1\ntype: mechanism\nhuman_lane: appetite\nscore: 0.8412\n\n可用抽象：Creative Problem：人物变强、变富、获得身份或进入世界级冲突之后，怎样避免他自动变成只剩任务、职责、胜负、资源和长期 KPI 的执行器？\n真正的问题不是“给角色加一个爱好”，而是：\n> 当直接升级收益被拿掉时，什么具体东西仍然值得这个人物去吃、做、看、练、保护、赠予、回返、追逐或享受？成长以后，这种私人价值如何继续影响真实选择？\nMechanism：当人物已经建立过具体私人欲望时，成长后的新阶段可以让其中少量欲望以新的方式重新进入行动：\n`早期私人价值 → 力量/身份/财富扩大 → 欲望优先级与实现方式变化 → 在新处境中通过具体选择再次出现 → 证明人物没有被自动职业化`\n关键不是维持原样，而是允许 **desire reordering**：\n- 频率可以降低；\n- 实现方式可以改变；\n- 旧欲望可以与新欲望竞争；\n- 某些欲望可以真正消失，但需要由经历、选择或关系造成，而不是“升级后自动成熟”。\n私人价值必须落在行为里，而不是作者声明里。可见形式包括但不限于：回家、吃一顿曾经吃不起的东西、继续一个无人奖励的练习、为具体的人改变风险选择、想看远方、追逐强敌、赠予、享受身体与生活、拒绝一个会吞掉行动空间的机会。\n\n使用边界：只迁移当前卡片的抽象机制，不迁移来源人物、事件、专名、世界设定或句式。"
+}

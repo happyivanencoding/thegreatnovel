@@ -1,0 +1,41 @@
+{
+  "experiment": "power-ruler-heldout-20260903-v1",
+  "selection_rule": "Power Candidate 1 + Human Candidate 1 fixed before reading outputs",
+  "production_routes": {
+    "world": "gpt-5.6-luna/high + production GBrain",
+    "power": "gpt-5.6-luna/high + production GBrain",
+    "human": "gpt-5.6-luna/high + production GBrain",
+    "story_program": "gpt-5.6-sol/high + production GBrain",
+    "outline": "gpt-5.6-luna/high + production GBrain"
+  },
+  "cases": {
+    "A_body_martial": {
+      "status": "PASS",
+      "world_seconds": 184.159,
+      "power_seconds": 204.648,
+      "human_seconds": 183.77,
+      "story_program_seconds": 929.429,
+      "outline_seconds": 257.23
+    },
+    "B_beast_bond": {
+      "status": "PASS",
+      "world_seconds": 210.605,
+      "power_seconds": 130.668,
+      "human_seconds": 75.116,
+      "story_program_seconds": 858.217,
+      "outline_seconds": 313.228
+    },
+    "C_spatial_fold": {
+      "status": "PASS",
+      "world_seconds": 225.929,
+      "power_seconds": 200.335,
+      "human_seconds": 156.373,
+      "story_program_seconds": 752.729,
+      "outline_seconds": 293.212,
+      "transport_note": "first parallel Sol-high Story attempt exceeded ~30 minutes without response and was stopped; exact same frozen prompt/model/effort retry succeeded, so semantic result is valid and the first attempt remains transport-invalid provenance"
+    }
+  },
+  "valid_story_level_cases": 3,
+  "valid_story_level_passes": 3,
+  "regression_of_atlantis_failure": 0
+}

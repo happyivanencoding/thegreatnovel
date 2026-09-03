@@ -1,0 +1,304 @@
+{
+  "status": "available",
+  "scope": "修仙小说素材库小说蒸馏域 → 小说来源过滤 → BOOK 兼容性筛选",
+  "mode": "outline",
+  "effective_query": "检索模式：outline\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的巨城折叠空间术世界：主流力量是读者一眼能看懂的直接空间动作，例如移动、置换、折叠距离、改变落点、切开空间或穿过空间层；不要把核心写成理解/定义/权限/验证等抽象 ontology，也不要以驭兽、纯肉身体修或工程流程为主。公共精确力量主尺必须真实改变可作用的质量/对象规模、距离、连续使用次数或持续、身体承受，以及能否进入更危险折叠层；不要把主尺写成只有称号的装饰数字。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续允许非常大胆的空间玩法，但必须让公共主尺的基础盘继续有现实意义。\n已批准 World Vision：\n# PROTAGONIST-BLIND WORLD VISION\n\n## 普通人的生活与上升\n\n万折城是一座建在巨大空间折层上的巨城。城内的街道有两种长度：脚下的石路是真实距离，门、桥和巷口之间的折叠距离则可能把三百步缩成三步，也可能把一扇门送到数里之外。\n\n普通人依靠固定的“定门钉”和城门司维护的安全落点生活。居民不会随便穿过未标记的门，也不会在陌生巷口奔跑；折叠失稳时，墙面会突然靠近、地面会把人送回原处，或者让一间屋子的出口落到别的街区。每家店铺和住宅都留有固定方向的门钉，夜间外出必须携带路绳或登记过的落点牌。\n\n大多数人一生都没有精确力量等级。少数年轻人会进入白尺院、城门司、商队、猎队或折景行当，先从识别安全落点、短距移动和承受折伤开始。失败者通常成为搬运工、门钉维护者、普通护卫或固定路线车夫；折伤严重的人会失去继续修炼的资格，只能依赖稳定街区生活。\n\n聚落之间通常靠实地商路和固定折舟队往来。普通人不能独自穿越城外的未定地；商队至少需要一名十级以上的折修领路，进入深层路线则要由二十五级以上者护送。真正能独行穿过危险折层的人很少，因此安全落点、熟悉路线和有资格使用深层城门，本身就是身份。\n\n## 力量体系与正常值\n\n空间中自然存在细小的“界砂”。修炼者通过呼吸稳定裂缝、反复承受短距折叠，让界砂沉入体内的折脉，再用身体、步法和器物把附近空间折短、置换或切开。\n\n普通的空间动作很直观：\n\n- 移动：把自己或物体从一个落点挪到另一个落点。\n- 置换：交换两个相近物体或人的位置。\n- 折距：把两点之间的距离临时缩短。\n- 改落：改变正在移动的人或物最终出现的位置。\n- 切空：在短时间内切开空间表面。\n- 穿层：进入更深的折叠层，再从另一处出来。\n\n力量受五件事限制：距离、质量、连续使用次数、持续时间和身体承受。落点越陌生、空间层越深，失败越容易造成折伤。切空可以割开木石，却不代表能无视高阶修士的速度、身体承受和持续作战能力。\n\n普通人中只有极少数能达到折距1级。能稳定达到1—9级，已经足够担任固定路线护卫、短途信使或城门学徒。十级以上是正式折修，二十五级左右可以成为地方商队首领或街区强者，四十级以上则能影响一座城门的开闭。五十五级以上的人，万折城现存记录中只有少数。\n\n相邻档位之间不是简单的胜负公式。相性、技法、装备和落点都能造成越级，但一次克制只能改变它实际克制的部分，不能凭空抹掉高阶者的速度、体力、作用范围和深层承受。\n\n### 精确力量主尺｜Frozen Grammar\n\n主尺类型：连续数字\n\n主尺名称：折距级\n\n精确位置格式：折距{N}级\n\n数字精度规则：1—100，每1级都是可记录位置；未达到1级者记为“未入尺”\n\n当前可见范围：折距1级—折距72级\n\n当前大档位：\n\n- 折距1—9级：入折段\n- 折距10—24级：定折段\n- 折距25—39级：跨层段\n- 折距40—54级：城关段\n- 折距55—72级：天隙段\n\n可复用的公开基准：\n\n- 折距1—9级：通常只能在同一房间或街巷内移动自身、一个人或约百斤物件，连续使用数次后就会出现眩晕和折脉疼痛。\n- 折距10—24级：可以沿已标记落点折过数十步至百步，带走一辆小车或数名普通人，能够独立护送固定路线。\n- 折距25—39级：可以跨越街区甚至数里，短暂切开一层空间，承受货箱、石柱等较大质量的置换，是地方强者和深路猎队的常见上限。\n- 折距40—54级：可以借稳定落点折过十里以上，改变大型车队或桥段的落点，并进入第一层危险夹层；普通二十级折修不能正面承受其连续动作。\n- 折距55—72级：可以穿过更深折层，移动整段街道尺度的物体或大范围改变落点，足以决定城门、商路和一个街区的生死。\n\n开局前段自然可出现一种强弱冲突：一名刚稳定使用某种个人异常折法的新人，在争夺具体物件或逃离封锁时，撞上折距…\n已批准 Character Authority：\n# CHARACTER CARD 1｜Split Authority\n\n## POWER CORE｜Frozen Authority\n\n# POWER SEED｜错后成路\n\n## 一句话大白话\n\n别人一次空间折法失败，通常只留下折伤和教训；持有者只要亲自失败并真正学会其中一个关键点，就能把这一点永久留在身体里，下一次直接带着它重做同类空间动作。\n\n## World Power Normal → Power Asymmetry\n\n绝大多数修炼者靠呼吸界砂、承受折叠、重复练习来提升折距级。失败通常意味着眩晕、折脉疼痛、落点偏移，最多让人积累普通经验；即使是天才，也必须用新的时间和身体风险重新掌握。\n\n这个异常把“失败后的真正领悟”变成了永久存在的空间本能。\n\n同层普通人面对陌生落点、深层夹缝或复杂置换，第一次失败后往往只能撤退；同层天才也只是学得更快。持有者却能在一次亲身失败后，直接拥有那次失败中真正学会的一个关键折法。折距级仍决定距离、质量、次数、持续和承受，但他可以提前使用普通人必须多次试错、甚至高一大档才敢掌握的局部空间技巧。\n\n## Core Fantasy\n\n把“差点死掉的错误”变成下一次已经会用的空间动作。\n\n## 为什么读者会馋\n\n如果明天醒来得到它，最想立刻做的事，就是拿一块石头尝试折到墙后；第一次失败后，第二次不再从零摸索那个落点。\n\n战斗中，第一次切空偏开、置换错位、穿层受伤，都可能留下真正有用的一步。别人越不敢尝试的空间动作，持有者越可能通过一次失败把它变成自己的杀招、逃路或突破口。\n\n## Growth Compatibility\n\n### 正常修炼轴\n\n提升折距级，扩大距离、质量、连续使用次数、持续时间与身体承受；从自身移动成长到带人、带物、切空、改落和穿层。\n\n### 异常掌握轴\n\n失败中留下的关键点从单一动作，成长为连续动作中的多个稳定环节；从只能修正自身移动，成长到修正带物、置换、切空和穿层。\n\n不同失败留下的关键点，会自然形成一套个人折法语法，并能与功法、兵器、身体状态和当前环境组合。\n\n### High-Tier Mutation\n\n在深层夹层或大范围空间战中，即使第一次尝试失败，也能把其中一个正确的进出姿态永久留住。多次真实失败后，原本只能赌一次的危险折路，会逐渐变成可以连续使用的个人路线。\n\n### 永久边界\n\n只能从自己亲自经历、并且确实学会的一点中获得保留；不能观看他人失败就复制，也不能把一次没有真正领悟的失败强行变成能力。折距级始终决定实际尺度、承载和身体风险。\n\n## Legendary Power State\n\n任何从未有人敢反复尝试的深层折法，都能先用一次真实风险换来一个永久可复用的正确环节。高阶时，持有者可以在混乱战场中连续调用多次失败留下的空间本能，把敌人眼中的死路变成自己已经走过的路。\n\n## Power Audit Metadata（非 Canon）\n\n### Future Legend Image\n\n一个人身上累积的不是招式，而是无数次空间错误留下的正确部分；越是复杂、危险、没人走通的空间，越可能成为他最熟悉的战场。\n\n---\n\n## HUMAN CORE｜Frozen Authority\n\n# HUMAN SEED｜祁砚声／把喜欢的东西变成自己的\n\n## 世界中的初始位置与生活事实\n\n开局精确力量位置｜主尺：折距级｜精确位置：折距1级\n\n祁砚声生在外城一条固定街巷，父亲是固定路线车夫，母亲替人修补门帘、路绳和旧衣，家里还有一个正在白尺院附属学堂读书的妹妹。他读完外城公学后，没有继续进院修炼，如今经营一辆夜间甜食小车。\n\n十岁时，家里的定门钉松脱，整间屋子的出口连续三次落到不同巷口，一家人借住了几个月。十五岁时，他用攒下的钱买过一只裂口的青釉碗，修好后摆在床头，后来又把它卖掉，换成甜…\n已批准 Story Program：\n# STORY PROGRAM\n\n## 核心碰撞\n\n1. 祁砚声想把真正喜欢的东西留下来，万折城却把器物、铺面、门路乃至住处都变成随时可能移位的临时财产。空间异常最先诱惑他的，不是拯救全城，而是把一件旁人认为该上交、变卖或放弃的东西真正攥进自己手里。\n\n2. “错后成路”让失败不再完全浪费，却不能替他支付界砂、身体承受和公开等级的差距。他因此比别人更敢试一次，也容易误判成“只要敢撞就总能得到第二次”。封离第一次吃亏后，会改用不断变化、不给同类动作重来的折法，真正让祁砚声失去一次阻止焚卷的机会。\n\n3. 宁绾要找罗渡，宁秋棠要证明父亲没有逃走，封离要烧掉旧卷，唐守墨要救女儿并抹去旧债。他们的目标早在祁砚声入局前已经互相冲突。祁砚声拿走空窗石、赢下定界钉、保住自己的铺门，只会使原有争夺改道，不会让这些人围绕他的成长自动站队。\n\n4. 妹妹能改变的不是他的善恶立场，而是某件东西到手以后究竟算不算“值得”。她会让他把第一次真正属于自己的铺子变成可以共同享受的生活，也会在他为保住所有物而放弃另一条路时，直接指出那份代价，不替他合理化。\n\n5. 宁秋棠与祁砚声会互相需要，却不会自然适配。她愿意为了父亲的档案放弃比赛、城籍和安全路线；祁砚声则会在同一扇门前选择完成比赛、拿走定界钉。此后他们能够共同进入沉下城，但这次不同选择会持续影响信任、情报分享与谁先迈进危险落点。\n\n## 不可降格的 Reader-Facing Story Events\n\n### RSE-01\n\n事件原子：黑脊折鹿撞断街区定门钉 → 祁砚声以折距1级强折甜食车失败并真正摸到一个正确落点 → 第二次直接复用这一点，将车尾折过错门，从折距47级的封离手下带走一只青釉雨碟及与它同包出现的旧路线铜签。\n\n状态残留：祁砚声第一次稳定拥有失败后永久留下的正确折法；青釉雨碟与旧路线铜签归他持有，封离知道有人从自己的封锁中夺走了东西。该状态不能替代逃车、夺物与高低级碰撞的现场事件。\n\n排程边界：开书前段，由 Outline 安排在核心异常首次稳定成立的同一连续事件内。\n\n读者证明锚点：折距1级；折距47级；黑脊折鹿；青釉雨碟；旧路线铜签；第七折门\n\n### RSE-02\n\n事件原子：宁绾与七巷商盟同时闯入第七折门争夺空窗石 → 祁砚声第一次夺取失败后保留住石头移出夹层的关键落点 → 他在高阶者互相牵制的短暂窗口里第二次折走空窗石，并当面只许唐守墨使用一夜救女儿，换得一间铺面的完整地契、现钱和商盟不再追夺，而空窗石仍归祁砚声。\n\n状态残留：空窗石成为祁砚声实际持有、可以继续使用的奇物；唐守墨的女儿得到救治，唐守墨却必须承认石头不再属于商盟；祁砚声得到第一处自己的铺面。该结果不能替代夺石、定价、交付使用与所有权落定的现场。\n\n排程边界：阶段2内由 Outline 排章。\n\n读者证明锚点：空窗石；第七折门；一夜；铺面地契；七巷商盟；祁砚声\n\n### RSE-03\n\n事件原子：折距9级的祁砚声与折距14级的商盟种子同时进入百门竞折终段 → 宁秋棠在终点前转入禁行旧门寻找父亲档案，祁砚声没有跟随 → 他凭此前失败留下的三个落点修正率先出门，当众赢下定界钉、城籍与奖金，并在当晚把空窗石和定界钉真正装进自己的青釉甜铺。\n\n状态残留：祁砚声的公开位置仍是折距9级，胜的是复杂路线而非等级基础盘；定界钉、奖金、城籍和青釉甜铺真实归他，宁秋棠失去本次城籍机会却取得一页旧路线记录。该状态不能替代比赛中的路线分歧、公开越级结果和铺子第一次开门。\n\n排程边界：阶段3内由 Outline 排章。\n\n读者证明锚点：折距9级；折距14级；百门竞折；定界钉；青釉甜铺；第一名\n\n### RSE-04\n\n事件原子：城心空井与沉下城发生街道尺度重叠 → 祁砚声第一次穿入最深重叠处仍被折回并留下正确进姿 → 他带着空窗石、空鳞兽指认的真门和历次…\n明确硬约束：无修炼体系\nOutline 用途：优先寻找长中短线编织、身份揭露、离队归来、牺牲/二次兑现、多线合流与高价值获得/旧奖励重释；必须服从已批准 Character Authority / World Vision / Story Program。",
+  "query_strategy": "semantic_brief",
+  "query_texts": [
+    "检索模式：outline\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的巨城折叠空间术世界：主流力量是读者一眼能看懂的直接空间动作，例如移动、置换、折叠距离、改变落点、切开空间或穿过空间层；不要把核心写成理解/定义/权限/验证等抽象 ontology，也不要以驭兽、纯肉身体修或工程流程为主。公共精确力量主尺必须真实改变可作用的质量/对象规模、距离、连续使用次数或持续、身体承受，以及能否进入更危险折叠层；不要把主尺写成只有称号的装饰数字。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续允许非常大胆的空间玩法，但必须让公共主尺的基础盘继续有现实意义。\n已批准 World Vision：\n# PROTAGONIST-BLIND WORLD VISION\n\n## 普通人的生活与上升\n\n万折城是一座建在巨大空间折层上的巨城。城内的街道有两种长度：脚下的石路是真实距离，门、桥和巷口之间的折叠距离则可能把三百步缩成三步，也可能把一扇门送到数里之外。\n\n普通人依靠固定的“定门钉”和城门司维护的安全落点生活。居民不会随便穿过未标记的门，也不会在陌生巷口奔跑；折叠失稳时，墙面会突然靠近、地面会把人送回原处，或者让一间屋子的出口落到别的街区。每家店铺和住宅都留有固定方向的门钉，夜间外出必须携带路绳或登记过的落点牌。\n\n大多数人一生都没有精确力量等级。少数年轻人会进入白尺院、城门司、商队、猎队或折景行当，先从识别安全落点、短距移动和承受折伤开始。失败者通常成为搬运工、门钉维护者、普通护卫或固定路线车夫；折伤严重的人会失去继续修炼的资格，只能依赖稳定街区生活。\n\n聚落之间通常靠实地商路和固定折舟队往来。普通人不能独自穿越城外的未定地；商队至少需要一名十级以上的折修领路，进入深层路线则要由二十五级以上者护送。真正能独行穿过危险折层的人很少，因此安全落点、熟悉路线和有资格使用深层城门，本身就是身份。\n\n## 力量体系与正常值\n\n空间中自然存在细小的“界砂”。修炼者通过呼吸稳定裂缝、反复承受短距折叠，让界砂沉入体内的折脉，再用身体、步法和器物把附近空间折短、置换或切开。\n\n普通的空间动作很直观：\n\n- 移动：把自己或物体从一个落点挪到另一个落点。\n- 置换：交换两个相近物体或人的位置。\n- 折距：把两点之间的距离临时缩短。\n- 改落：改变正在移动的人或物最终出现的位置。\n- 切空：在短时间内切开空间表面。\n- 穿层：进入更深的折叠层，再从另一处出来。\n\n力量受五件事限制：距离、质量、连续使用次数、持续时间和身体承受。落点越陌生、空间层越深，失败越容易造成折伤。切空可以割开木石，却不代表能无视高阶修士的速度、身体承受和持续作战能力。\n\n普通人中只有极少数能达到折距1级。能稳定达到1—9级，已经足够担任固定路线护卫、短途信使或城门学徒。十级以上是正式折修，二十五级左右可以成为地方商队首领或街区强者，四十级以上则能影响一座城门的开闭。五十五级以上的人，万折城现存记录中只有少数。\n\n相邻档位之间不是简单的胜负公式。相性、技法、装备和落点都能造成越级，但一次克制只能改变它实际克制的部分，不能凭空抹掉高阶者的速度、体力、作用范围和深层承受。\n\n### 精确力量主尺｜Frozen Grammar\n\n主尺类型：连续数字\n\n主尺名称：折距级\n\n精确位置格式：折距{N}级\n\n数字精度规则：1—100，每1级都是可记录位置；未达到1级者记为“未入尺”\n\n当前可见范围：折距1级—折距72级\n\n当前大档位：\n\n- 折距1—9级：入折段\n- 折距10—24级：定折段\n- 折距25—39级：跨层段\n- 折距40—54级：城关段\n- 折距55—72级：天隙段\n\n可复用的公开基准：\n\n- 折距1—9级：通常只能在同一房间或街巷内移动自身、一个人或约百斤物件，连续使用数次后就会出现眩晕和折脉疼痛。\n- 折距10—24级：可以沿已标记落点折过数十步至百步，带走一辆小车或数名普通人，能够独立护送固定路线。\n- 折距25—39级：可以跨越街区甚至数里，短暂切开一层空间，承受货箱、石柱等较大质量的置换，是地方强者和深路猎队的常见上限。\n- 折距40—54级：可以借稳定落点折过十里以上，改变大型车队或桥段的落点，并进入第一层危险夹层；普通二十级折修不能正面承受其连续动作。\n- 折距55—72级：可以穿过更深折层，移动整段街道尺度的物体或大范围改变落点，足以决定城门、商路和一个街区的生死。\n\n开局前段自然可出现一种强弱冲突：一名刚稳定使用某种个人异常折法的新人，在争夺具体物件或逃离封锁时，撞上折距…\n已批准 Character Authority：\n# CHARACTER CARD 1｜Split Authority\n\n## POWER CORE｜Frozen Authority\n\n# POWER SEED｜错后成路\n\n## 一句话大白话\n\n别人一次空间折法失败，通常只留下折伤和教训；持有者只要亲自失败并真正学会其中一个关键点，就能把这一点永久留在身体里，下一次直接带着它重做同类空间动作。\n\n## World Power Normal → Power Asymmetry\n\n绝大多数修炼者靠呼吸界砂、承受折叠、重复练习来提升折距级。失败通常意味着眩晕、折脉疼痛、落点偏移，最多让人积累普通经验；即使是天才，也必须用新的时间和身体风险重新掌握。\n\n这个异常把“失败后的真正领悟”变成了永久存在的空间本能。\n\n同层普通人面对陌生落点、深层夹缝或复杂置换，第一次失败后往往只能撤退；同层天才也只是学得更快。持有者却能在一次亲身失败后，直接拥有那次失败中真正学会的一个关键折法。折距级仍决定距离、质量、次数、持续和承受，但他可以提前使用普通人必须多次试错、甚至高一大档才敢掌握的局部空间技巧。\n\n## Core Fantasy\n\n把“差点死掉的错误”变成下一次已经会用的空间动作。\n\n## 为什么读者会馋\n\n如果明天醒来得到它，最想立刻做的事，就是拿一块石头尝试折到墙后；第一次失败后，第二次不再从零摸索那个落点。\n\n战斗中，第一次切空偏开、置换错位、穿层受伤，都可能留下真正有用的一步。别人越不敢尝试的空间动作，持有者越可能通过一次失败把它变成自己的杀招、逃路或突破口。\n\n## Growth Compatibility\n\n### 正常修炼轴\n\n提升折距级，扩大距离、质量、连续使用次数、持续时间与身体承受；从自身移动成长到带人、带物、切空、改落和穿层。\n\n### 异常掌握轴\n\n失败中留下的关键点从单一动作，成长为连续动作中的多个稳定环节；从只能修正自身移动，成长到修正带物、置换、切空和穿层。\n\n不同失败留下的关键点，会自然形成一套个人折法语法，并能与功法、兵器、身体状态和当前环境组合。\n\n### High-Tier Mutation\n\n在深层夹层或大范围空间战中，即使第一次尝试失败，也能把其中一个正确的进出姿态永久留住。多次真实失败后，原本只能赌一次的危险折路，会逐渐变成可以连续使用的个人路线。\n\n### 永久边界\n\n只能从自己亲自经历、并且确实学会的一点中获得保留；不能观看他人失败就复制，也不能把一次没有真正领悟的失败强行变成能力。折距级始终决定实际尺度、承载和身体风险。\n\n## Legendary Power State\n\n任何从未有人敢反复尝试的深层折法，都能先用一次真实风险换来一个永久可复用的正确环节。高阶时，持有者可以在混乱战场中连续调用多次失败留下的空间本能，把敌人眼中的死路变成自己已经走过的路。\n\n## Power Audit Metadata（非 Canon）\n\n### Future Legend Image\n\n一个人身上累积的不是招式，而是无数次空间错误留下的正确部分；越是复杂、危险、没人走通的空间，越可能成为他最熟悉的战场。\n\n---\n\n## HUMAN CORE｜Frozen Authority\n\n# HUMAN SEED｜祁砚声／把喜欢的东西变成自己的\n\n## 世界中的初始位置与生活事实\n\n开局精确力量位置｜主尺：折距级｜精确位置：折距1级\n\n祁砚声生在外城一条固定街巷，父亲是固定路线车夫，母亲替人修补门帘、路绳和旧衣，家里还有一个正在白尺院附属学堂读书的妹妹。他读完外城公学后，没有继续进院修炼，如今经营一辆夜间甜食小车。\n\n十岁时，家里的定门钉松脱，整间屋子的出口连续三次落到不同巷口，一家人借住了几个月。十五岁时，他用攒下的钱买过一只裂口的青釉碗，修好后摆在床头，后来又把它卖掉，换成甜…\n已批准 Story Program：\n# STORY PROGRAM\n\n## 核心碰撞\n\n1. 祁砚声想把真正喜欢的东西留下来，万折城却把器物、铺面、门路乃至住处都变成随时可能移位的临时财产。空间异常最先诱惑他的，不是拯救全城，而是把一件旁人认为该上交、变卖或放弃的东西真正攥进自己手里。\n\n2. “错后成路”让失败不再完全浪费，却不能替他支付界砂、身体承受和公开等级的差距。他因此比别人更敢试一次，也容易误判成“只要敢撞就总能得到第二次”。封离第一次吃亏后，会改用不断变化、不给同类动作重来的折法，真正让祁砚声失去一次阻止焚卷的机会。\n\n3. 宁绾要找罗渡，宁秋棠要证明父亲没有逃走，封离要烧掉旧卷，唐守墨要救女儿并抹去旧债。他们的目标早在祁砚声入局前已经互相冲突。祁砚声拿走空窗石、赢下定界钉、保住自己的铺门，只会使原有争夺改道，不会让这些人围绕他的成长自动站队。\n\n4. 妹妹能改变的不是他的善恶立场，而是某件东西到手以后究竟算不算“值得”。她会让他把第一次真正属于自己的铺子变成可以共同享受的生活，也会在他为保住所有物而放弃另一条路时，直接指出那份代价，不替他合理化。\n\n5. 宁秋棠与祁砚声会互相需要，却不会自然适配。她愿意为了父亲的档案放弃比赛、城籍和安全路线；祁砚声则会在同一扇门前选择完成比赛、拿走定界钉。此后他们能够共同进入沉下城，但这次不同选择会持续影响信任、情报分享与谁先迈进危险落点。\n\n## 不可降格的 Reader-Facing Story Events\n\n### RSE-01\n\n事件原子：黑脊折鹿撞断街区定门钉 → 祁砚声以折距1级强折甜食车失败并真正摸到一个正确落点 → 第二次直接复用这一点，将车尾折过错门，从折距47级的封离手下带走一只青釉雨碟及与它同包出现的旧路线铜签。\n\n状态残留：祁砚声第一次稳定拥有失败后永久留下的正确折法；青釉雨碟与旧路线铜签归他持有，封离知道有人从自己的封锁中夺走了东西。该状态不能替代逃车、夺物与高低级碰撞的现场事件。\n\n排程边界：开书前段，由 Outline 安排在核心异常首次稳定成立的同一连续事件内。\n\n读者证明锚点：折距1级；折距47级；黑脊折鹿；青釉雨碟；旧路线铜签；第七折门\n\n### RSE-02\n\n事件原子：宁绾与七巷商盟同时闯入第七折门争夺空窗石 → 祁砚声第一次夺取失败后保留住石头移出夹层的关键落点 → 他在高阶者互相牵制的短暂窗口里第二次折走空窗石，并当面只许唐守墨使用一夜救女儿，换得一间铺面的完整地契、现钱和商盟不再追夺，而空窗石仍归祁砚声。\n\n状态残留：空窗石成为祁砚声实际持有、可以继续使用的奇物；唐守墨的女儿得到救治，唐守墨却必须承认石头不再属于商盟；祁砚声得到第一处自己的铺面。该结果不能替代夺石、定价、交付使用与所有权落定的现场。\n\n排程边界：阶段2内由 Outline 排章。\n\n读者证明锚点：空窗石；第七折门；一夜；铺面地契；七巷商盟；祁砚声\n\n### RSE-03\n\n事件原子：折距9级的祁砚声与折距14级的商盟种子同时进入百门竞折终段 → 宁秋棠在终点前转入禁行旧门寻找父亲档案，祁砚声没有跟随 → 他凭此前失败留下的三个落点修正率先出门，当众赢下定界钉、城籍与奖金，并在当晚把空窗石和定界钉真正装进自己的青釉甜铺。\n\n状态残留：祁砚声的公开位置仍是折距9级，胜的是复杂路线而非等级基础盘；定界钉、奖金、城籍和青釉甜铺真实归他，宁秋棠失去本次城籍机会却取得一页旧路线记录。该状态不能替代比赛中的路线分歧、公开越级结果和铺子第一次开门。\n\n排程边界：阶段3内由 Outline 排章。\n\n读者证明锚点：折距9级；折距14级；百门竞折；定界钉；青釉甜铺；第一名\n\n### RSE-04\n\n事件原子：城心空井与沉下城发生街道尺度重叠 → 祁砚声第一次穿入最深重叠处仍被折回并留下正确进姿 → 他带着空窗石、空鳞兽指认的真门和历次…\n明确硬约束：无修炼体系\nOutline 用途：优先寻找长中短线编织、身份揭露、离队归来、牺牲/二次兑现、多线合流与高价值获得/旧奖励重释；必须服从已批准 Character Authority / World Vision / Story Program。"
+  ],
+  "query_failures": [],
+  "retrieval_brief": "检索模式：outline\n作者当前方向：成熟中文男频玄幻成长长篇。建立一个完全全新的巨城折叠空间术世界：主流力量是读者一眼能看懂的直接空间动作，例如移动、置换、折叠距离、改变落点、切开空间或穿过空间层；不要把核心写成理解/定义/权限/验证等抽象 ontology，也不要以驭兽、纯肉身体修或工程流程为主。公共精确力量主尺必须真实改变可作用的质量/对象规模、距离、连续使用次数或持续、身体承受，以及能否进入更危险折叠层；不要把主尺写成只有称号的装饰数字。\n\nPower Asymmetry 由当前系统自行生成，不预指定能力。开局前段必须自然出现一次：主角刚获得/第一次稳定使用 Core Asymmetry 后，与公开主尺上明显更高一档或大档的人物发生真实冲突。不要规定主角必须赢，也不要为了测试刻意让他输；让 Story Program 根据当前 World + Power 自己决定是完整胜利、局部翻盘、夺物、逼退、逃生或其它结果。后续允许非常大胆的空间玩法，但必须让公共主尺的基础盘继续有现实意义。\n已批准 World Vision：\n# PROTAGONIST-BLIND WORLD VISION\n\n## 普通人的生活与上升\n\n万折城是一座建在巨大空间折层上的巨城。城内的街道有两种长度：脚下的石路是真实距离，门、桥和巷口之间的折叠距离则可能把三百步缩成三步，也可能把一扇门送到数里之外。\n\n普通人依靠固定的“定门钉”和城门司维护的安全落点生活。居民不会随便穿过未标记的门，也不会在陌生巷口奔跑；折叠失稳时，墙面会突然靠近、地面会把人送回原处，或者让一间屋子的出口落到别的街区。每家店铺和住宅都留有固定方向的门钉，夜间外出必须携带路绳或登记过的落点牌。\n\n大多数人一生都没有精确力量等级。少数年轻人会进入白尺院、城门司、商队、猎队或折景行当，先从识别安全落点、短距移动和承受折伤开始。失败者通常成为搬运工、门钉维护者、普通护卫或固定路线车夫；折伤严重的人会失去继续修炼的资格，只能依赖稳定街区生活。\n\n聚落之间通常靠实地商路和固定折舟队往来。普通人不能独自穿越城外的未定地；商队至少需要一名十级以上的折修领路，进入深层路线则要由二十五级以上者护送。真正能独行穿过危险折层的人很少，因此安全落点、熟悉路线和有资格使用深层城门，本身就是身份。\n\n## 力量体系与正常值\n\n空间中自然存在细小的“界砂”。修炼者通过呼吸稳定裂缝、反复承受短距折叠，让界砂沉入体内的折脉，再用身体、步法和器物把附近空间折短、置换或切开。\n\n普通的空间动作很直观：\n\n- 移动：把自己或物体从一个落点挪到另一个落点。\n- 置换：交换两个相近物体或人的位置。\n- 折距：把两点之间的距离临时缩短。\n- 改落：改变正在移动的人或物最终出现的位置。\n- 切空：在短时间内切开空间表面。\n- 穿层：进入更深的折叠层，再从另一处出来。\n\n力量受五件事限制：距离、质量、连续使用次数、持续时间和身体承受。落点越陌生、空间层越深，失败越容易造成折伤。切空可以割开木石，却不代表能无视高阶修士的速度、身体承受和持续作战能力。\n\n普通人中只有极少数能达到折距1级。能稳定达到1—9级，已经足够担任固定路线护卫、短途信使或城门学徒。十级以上是正式折修，二十五级左右可以成为地方商队首领或街区强者，四十级以上则能影响一座城门的开闭。五十五级以上的人，万折城现存记录中只有少数。\n\n相邻档位之间不是简单的胜负公式。相性、技法、装备和落点都能造成越级，但一次克制只能改变它实际克制的部分，不能凭空抹掉高阶者的速度、体力、作用范围和深层承受。\n\n### 精确力量主尺｜Frozen Grammar\n\n主尺类型：连续数字\n\n主尺名称：折距级\n\n精确位置格式：折距{N}级\n\n数字精度规则：1—100，每1级都是可记录位置；未达到1级者记为“未入尺”\n\n当前可见范围：折距1级—折距72级\n\n当前大档位：\n\n- 折距1—9级：入折段\n- 折距10—24级：定折段\n- 折距25—39级：跨层段\n- 折距40—54级：城关段\n- 折距55—72级：天隙段\n\n可复用的公开基准：\n\n- 折距1—9级：通常只能在同一房间或街巷内移动自身、一个人或约百斤物件，连续使用数次后就会出现眩晕和折脉疼痛。\n- 折距10—24级：可以沿已标记落点折过数十步至百步，带走一辆小车或数名普通人，能够独立护送固定路线。\n- 折距25—39级：可以跨越街区甚至数里，短暂切开一层空间，承受货箱、石柱等较大质量的置换，是地方强者和深路猎队的常见上限。\n- 折距40—54级：可以借稳定落点折过十里以上，改变大型车队或桥段的落点，并进入第一层危险夹层；普通二十级折修不能正面承受其连续动作。\n- 折距55—72级：可以穿过更深折层，移动整段街道尺度的物体或大范围改变落点，足以决定城门、商路和一个街区的生死。\n\n开局前段自然可出现一种强弱冲突：一名刚稳定使用某种个人异常折法的新人，在争夺具体物件或逃离封锁时，撞上折距…\n已批准 Character Authority：\n# CHARACTER CARD 1｜Split Authority\n\n## POWER CORE｜Frozen Authority\n\n# POWER SEED｜错后成路\n\n## 一句话大白话\n\n别人一次空间折法失败，通常只留下折伤和教训；持有者只要亲自失败并真正学会其中一个关键点，就能把这一点永久留在身体里，下一次直接带着它重做同类空间动作。\n\n## World Power Normal → Power Asymmetry\n\n绝大多数修炼者靠呼吸界砂、承受折叠、重复练习来提升折距级。失败通常意味着眩晕、折脉疼痛、落点偏移，最多让人积累普通经验；即使是天才，也必须用新的时间和身体风险重新掌握。\n\n这个异常把“失败后的真正领悟”变成了永久存在的空间本能。\n\n同层普通人面对陌生落点、深层夹缝或复杂置换，第一次失败后往往只能撤退；同层天才也只是学得更快。持有者却能在一次亲身失败后，直接拥有那次失败中真正学会的一个关键折法。折距级仍决定距离、质量、次数、持续和承受，但他可以提前使用普通人必须多次试错、甚至高一大档才敢掌握的局部空间技巧。\n\n## Core Fantasy\n\n把“差点死掉的错误”变成下一次已经会用的空间动作。\n\n## 为什么读者会馋\n\n如果明天醒来得到它，最想立刻做的事，就是拿一块石头尝试折到墙后；第一次失败后，第二次不再从零摸索那个落点。\n\n战斗中，第一次切空偏开、置换错位、穿层受伤，都可能留下真正有用的一步。别人越不敢尝试的空间动作，持有者越可能通过一次失败把它变成自己的杀招、逃路或突破口。\n\n## Growth Compatibility\n\n### 正常修炼轴\n\n提升折距级，扩大距离、质量、连续使用次数、持续时间与身体承受；从自身移动成长到带人、带物、切空、改落和穿层。\n\n### 异常掌握轴\n\n失败中留下的关键点从单一动作，成长为连续动作中的多个稳定环节；从只能修正自身移动，成长到修正带物、置换、切空和穿层。\n\n不同失败留下的关键点，会自然形成一套个人折法语法，并能与功法、兵器、身体状态和当前环境组合。\n\n### High-Tier Mutation\n\n在深层夹层或大范围空间战中，即使第一次尝试失败，也能把其中一个正确的进出姿态永久留住。多次真实失败后，原本只能赌一次的危险折路，会逐渐变成可以连续使用的个人路线。\n\n### 永久边界\n\n只能从自己亲自经历、并且确实学会的一点中获得保留；不能观看他人失败就复制，也不能把一次没有真正领悟的失败强行变成能力。折距级始终决定实际尺度、承载和身体风险。\n\n## Legendary Power State\n\n任何从未有人敢反复尝试的深层折法，都能先用一次真实风险换来一个永久可复用的正确环节。高阶时，持有者可以在混乱战场中连续调用多次失败留下的空间本能，把敌人眼中的死路变成自己已经走过的路。\n\n## Power Audit Metadata（非 Canon）\n\n### Future Legend Image\n\n一个人身上累积的不是招式，而是无数次空间错误留下的正确部分；越是复杂、危险、没人走通的空间，越可能成为他最熟悉的战场。\n\n---\n\n## HUMAN CORE｜Frozen Authority\n\n# HUMAN SEED｜祁砚声／把喜欢的东西变成自己的\n\n## 世界中的初始位置与生活事实\n\n开局精确力量位置｜主尺：折距级｜精确位置：折距1级\n\n祁砚声生在外城一条固定街巷，父亲是固定路线车夫，母亲替人修补门帘、路绳和旧衣，家里还有一个正在白尺院附属学堂读书的妹妹。他读完外城公学后，没有继续进院修炼，如今经营一辆夜间甜食小车。\n\n十岁时，家里的定门钉松脱，整间屋子的出口连续三次落到不同巷口，一家人借住了几个月。十五岁时，他用攒下的钱买过一只裂口的青釉碗，修好后摆在床头，后来又把它卖掉，换成甜…\n已批准 Story Program：\n# STORY PROGRAM\n\n## 核心碰撞\n\n1. 祁砚声想把真正喜欢的东西留下来，万折城却把器物、铺面、门路乃至住处都变成随时可能移位的临时财产。空间异常最先诱惑他的，不是拯救全城，而是把一件旁人认为该上交、变卖或放弃的东西真正攥进自己手里。\n\n2. “错后成路”让失败不再完全浪费，却不能替他支付界砂、身体承受和公开等级的差距。他因此比别人更敢试一次，也容易误判成“只要敢撞就总能得到第二次”。封离第一次吃亏后，会改用不断变化、不给同类动作重来的折法，真正让祁砚声失去一次阻止焚卷的机会。\n\n3. 宁绾要找罗渡，宁秋棠要证明父亲没有逃走，封离要烧掉旧卷，唐守墨要救女儿并抹去旧债。他们的目标早在祁砚声入局前已经互相冲突。祁砚声拿走空窗石、赢下定界钉、保住自己的铺门，只会使原有争夺改道，不会让这些人围绕他的成长自动站队。\n\n4. 妹妹能改变的不是他的善恶立场，而是某件东西到手以后究竟算不算“值得”。她会让他把第一次真正属于自己的铺子变成可以共同享受的生活，也会在他为保住所有物而放弃另一条路时，直接指出那份代价，不替他合理化。\n\n5. 宁秋棠与祁砚声会互相需要，却不会自然适配。她愿意为了父亲的档案放弃比赛、城籍和安全路线；祁砚声则会在同一扇门前选择完成比赛、拿走定界钉。此后他们能够共同进入沉下城，但这次不同选择会持续影响信任、情报分享与谁先迈进危险落点。\n\n## 不可降格的 Reader-Facing Story Events\n\n### RSE-01\n\n事件原子：黑脊折鹿撞断街区定门钉 → 祁砚声以折距1级强折甜食车失败并真正摸到一个正确落点 → 第二次直接复用这一点，将车尾折过错门，从折距47级的封离手下带走一只青釉雨碟及与它同包出现的旧路线铜签。\n\n状态残留：祁砚声第一次稳定拥有失败后永久留下的正确折法；青釉雨碟与旧路线铜签归他持有，封离知道有人从自己的封锁中夺走了东西。该状态不能替代逃车、夺物与高低级碰撞的现场事件。\n\n排程边界：开书前段，由 Outline 安排在核心异常首次稳定成立的同一连续事件内。\n\n读者证明锚点：折距1级；折距47级；黑脊折鹿；青釉雨碟；旧路线铜签；第七折门\n\n### RSE-02\n\n事件原子：宁绾与七巷商盟同时闯入第七折门争夺空窗石 → 祁砚声第一次夺取失败后保留住石头移出夹层的关键落点 → 他在高阶者互相牵制的短暂窗口里第二次折走空窗石，并当面只许唐守墨使用一夜救女儿，换得一间铺面的完整地契、现钱和商盟不再追夺，而空窗石仍归祁砚声。\n\n状态残留：空窗石成为祁砚声实际持有、可以继续使用的奇物；唐守墨的女儿得到救治，唐守墨却必须承认石头不再属于商盟；祁砚声得到第一处自己的铺面。该结果不能替代夺石、定价、交付使用与所有权落定的现场。\n\n排程边界：阶段2内由 Outline 排章。\n\n读者证明锚点：空窗石；第七折门；一夜；铺面地契；七巷商盟；祁砚声\n\n### RSE-03\n\n事件原子：折距9级的祁砚声与折距14级的商盟种子同时进入百门竞折终段 → 宁秋棠在终点前转入禁行旧门寻找父亲档案，祁砚声没有跟随 → 他凭此前失败留下的三个落点修正率先出门，当众赢下定界钉、城籍与奖金，并在当晚把空窗石和定界钉真正装进自己的青釉甜铺。\n\n状态残留：祁砚声的公开位置仍是折距9级，胜的是复杂路线而非等级基础盘；定界钉、奖金、城籍和青釉甜铺真实归他，宁秋棠失去本次城籍机会却取得一页旧路线记录。该状态不能替代比赛中的路线分歧、公开越级结果和铺子第一次开门。\n\n排程边界：阶段3内由 Outline 排章。\n\n读者证明锚点：折距9级；折距14级；百门竞折；定界钉；青釉甜铺；第一名\n\n### RSE-04\n\n事件原子：城心空井与沉下城发生街道尺度重叠 → 祁砚声第一次穿入最深重叠处仍被折回并留下正确进姿 → 他带着空窗石、空鳞兽指认的真门和历次…\n明确硬约束：无修炼体系\nOutline 用途：优先寻找长中短线编织、身份揭露、离队归来、牺牲/二次兑现、多线合流与高价值获得/旧奖励重释；必须服从已批准 Character Authority / World Vision / Story Program。",
+  "query_scope": "arcs,book-dna,contrasts,mechanisms,syntheses",
+  "hard_constraints": [
+    "无修炼体系"
+  ],
+  "raw_count": 23,
+  "unique_raw_count": 22,
+  "novel_candidate_count": 22,
+  "accepted_count": 0,
+  "coordinate_reference_count": 0,
+  "coordinate_reference": null,
+  "coordinate_reference_error": "",
+  "naming_reference_count": 0,
+  "naming_reference": null,
+  "naming_reference_error": "",
+  "genre_prior_count": 0,
+  "human_lane_counts": {},
+  "human_lane_order": [],
+  "human_lane_candidate_limit": 0,
+  "prototype_id": "",
+  "prototype_selected": false,
+  "rejected_count": 22,
+  "query_limit": 24,
+  "requested_limit": 12,
+  "final_limit": 5,
+  "raw_stdout": "[0.9207] book-dna/rcv0-30-xuanhuan-douluo-dalu-story-craft-v3 -- Retrieval aliases: core reader fantasy world fantasy relationship payoff hidden identity sacrifice r\n[0.9057] book-dna/rcv0-41-xuanhuan-mushenji-story-craft-v3 -- # Evidence Coverage\n覆盖窗口：\n- 开篇：第 1–4、7–9、17–25 章。\n- 前中期：第 45–94、150–264 章。\n- 中期：第 500–675 章。\n- \n[0.8922] book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3 -- # Evidence Coverage\n- 开篇：第1–5章、第10章、第46–50章、第73–79章。\n- 前中期：第200章、第399–405章、第478章、第500章。\n- 中后期：第60\n[0.8810] book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3 -- # Evidence Coverage\n抽样覆盖：\n- 开篇：第一章至第六十四章，L20-L5455。\n- 前中期：地书、桑泊、案件与身份试探，L6194-L8600、L10075-L10380\n[0.8703] book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3 -- # Core Reader Fantasy\n核心幻想是：\n> 一个贫穷、体弱、被世界冷落的少年，不靠传统英雄资格，而靠自己的嘴、机灵和不体面的“惹人烦”能力，把别人的情绪转化成资源；他因此获得自由\n[0.8599] book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3 -- Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come\n[0.8498] arcs/rcv0-37-xianxia-mieyun-tulu-longitudinal-story-craft-v3 -- 隐藏传承／根脚：从保命秘密到敌人战略模型\n\n- 山河珠与宝录提供起点，但元神后的内容被延迟开放（L31-L38）。\n- 进入高阶后，外界先后把石轩理解为神霄、生死、末运根脚；每种误判都会吸引不同盟友、\n[0.8384] arcs/rcv0-44-xuanhuan-cangyuantu-longitudinal-story-craft-v3 -- 黑岩大妖王围杀夫妇\n`L17550-L18220`\n同时结算：\n- 妖族开始针对高价值人物设伏；\n- 柳七月燃寿保护丈夫；\n- 孟川在“独自逃生／回救妻子”之间作出选择；\n- 刀道、元神、\n[0.8288] book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3 -- # Core Reader Fantasy\n核心读者幻想不是单纯“升级”，而是：\n> 一个六岁时失去母亲、十五岁仍卡在凡俗门槛前的少年，靠一把越来越快的刀、一种别人无法替代的观察方式，逐步变成真正\n[0.8198] book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3 -- # Core Reader Fantasy\n核心读者幻想不是单纯“主角变成最强者”，而是：\n> 一个原本贫穷、普通、缺乏资格的小人物，突然获得一把极易读懂的力量尺；他可以用这把尺确认自己正在变强，\n[0.8104] book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3 -- # Evidence Coverage\n覆盖窗口：\n- 开篇：第001—004章，`L19-L451`\n- 玩家机制建立：第054—063章，`L4100-L4823`\n- 公测与海蓝星主线：\n[0.8013] arcs/rcv0-41-xuanhuan-mushenji-longitudinal-story-craft-v3 -- **Reminder**：司婆婆、瞎子、瘸子、屠夫等人嘴上说各有正事，实际相继离村；每个人也确实拥有独立目标，不只是追随秦牧。\n- **Escalation**：他们进入延康学宫、工坊和战场：哑巴继\n[0.7926] arcs/rcv0-37-xianxia-mieyun-tulu-longitudinal-story-craft-v3 -- Retrieval aliases: mieyun realm escalation story problem dao choice power experience long thread sta\n[0.7840] arcs/rcv0-38-xianxia-dashengzhuan-longitudinal-story-craft-v3 -- Retrieval aliases: dashengzhuan protagonist desire undomesticated power fantasy world desire agency \n[0.7752] book-dna/rcv0-28-xuanhuan-jiangye-story-craft-v3 -- Retrieval aliases: core reader fantasy world fantasy relationship world expansion private desire his\n[0.7676] arcs/rcv0-28-xuanhuan-jiangye-longitudinal-story-craft-v3 -- 匿名笔友到自主行动者（陈皮皮）\n- **Length class：long**\n- **Setup：**陈皮皮先是旧书楼里匿名帮助宁缺的笔友和喜剧型天才，不以父亲、道门继承人身份登场。\n- **\n[0.7599] book-dna/rcv0-49-xianxia-manghuangji-story-craft-v3 -- # Core Reader Fantasy\n核心幻想不是单纯“从低境界升到高境界”，而是：\n> 一个曾经被病痛和短命支配、出身微末的人，凭借自己的选择、修炼和剑，逐步获得改变亲人、爱人、家乡、文明\n[0.7524] book-dna/rcv0-29-xuanhuan-guimi-zhi-zhu-story-craft-v3 -- Retrieval aliases: core reader fantasy world fantasy identity layers mystery reveal world expansion \n[0.7450] book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3 -- Retrieval aliases: jidaotianmo power dominance agency obstacle reframing enemy adaptation\n## Evidenc\n[0.7379] arcs/rcv0-49-xianxia-manghuangji-longitudinal-story-craft-v3 -- Payoff / Afterlife：** 九尘依靠自己的长期积累、洞溟玉符、香宝灵果和纪宁提供的法门成功合道；终局仍以“北冥生死兄弟”的身份出现。\n- **Why Reader Cares：** \n[0.7310] arcs/rcv0-45-xuanhuan-luanshishu-longitudinal-story-craft-v3 -- 韩无病：约战者 → 第一个男性朋友 → 白虎棋子 → 只做韩无病\n- **Thread name**：把既定之剑还给一个人\n- **Length class**：long，低频回流型\n- **S\n[0.7239] arcs/rcv0-48-dushi-dawang-raoming-longitudinal-story-craft-v3 -- |\n| 黄石遗迹后的英雄化 | 负面情绪、公众身份、吕树—小鱼、旧神王形象 | 群体善意反而切断能力收益，迫使核心玩法换发动机 | 第1212—1214章，L60629–L60745 |\n| 御龙\n[0.7167] book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3 -- # Core Reader Fantasy\n综合判断：读者持续阅读的核心，不是“主角单纯升级”，而是：\n1. 一个现代普通人被投入真实江湖，从噩梦中的重刀、妖女和血战开始，逐步拥有一条可观察、可验",
+  "novel_candidates": [
+    {
+      "score": 0.9207,
+      "slug": "book-dna/rcv0-30-xuanhuan-douluo-dalu-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy relationship payoff hidden identity sacrifice r"
+    },
+    {
+      "score": 0.9057,
+      "slug": "book-dna/rcv0-41-xuanhuan-mushenji-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.8922,
+      "slug": "book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.881,
+      "slug": "book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.8703,
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.8599,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come"
+    },
+    {
+      "score": 0.8498,
+      "slug": "arcs/rcv0-37-xianxia-mieyun-tulu-longitudinal-story-craft-v3",
+      "snippet": "隐藏传承／根脚：从保命秘密到敌人战略模型"
+    },
+    {
+      "score": 0.8384,
+      "slug": "arcs/rcv0-44-xuanhuan-cangyuantu-longitudinal-story-craft-v3",
+      "snippet": "黑岩大妖王围杀夫妇"
+    },
+    {
+      "score": 0.8288,
+      "slug": "book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.8198,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.8104,
+      "slug": "book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.8013,
+      "slug": "arcs/rcv0-41-xuanhuan-mushenji-longitudinal-story-craft-v3",
+      "snippet": "**Reminder**：司婆婆、瞎子、瘸子、屠夫等人嘴上说各有正事，实际相继离村；每个人也确实拥有独立目标，不只是追随秦牧。"
+    },
+    {
+      "score": 0.784,
+      "slug": "arcs/rcv0-38-xianxia-dashengzhuan-longitudinal-story-craft-v3",
+      "snippet": "Retrieval aliases: dashengzhuan protagonist desire undomesticated power fantasy world desire agency"
+    },
+    {
+      "score": 0.7752,
+      "slug": "book-dna/rcv0-28-xuanhuan-jiangye-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy relationship world expansion private desire his"
+    },
+    {
+      "score": 0.7676,
+      "slug": "arcs/rcv0-28-xuanhuan-jiangye-longitudinal-story-craft-v3",
+      "snippet": "匿名笔友到自主行动者（陈皮皮）"
+    },
+    {
+      "score": 0.7599,
+      "slug": "book-dna/rcv0-49-xianxia-manghuangji-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.7524,
+      "slug": "book-dna/rcv0-29-xuanhuan-guimi-zhi-zhu-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy identity layers mystery reveal world expansion"
+    },
+    {
+      "score": 0.745,
+      "slug": "book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3",
+      "snippet": "Retrieval aliases: jidaotianmo power dominance agency obstacle reframing enemy adaptation"
+    },
+    {
+      "score": 0.7379,
+      "slug": "arcs/rcv0-49-xianxia-manghuangji-longitudinal-story-craft-v3",
+      "snippet": "Payoff / Afterlife：** 九尘依靠自己的长期积累、洞溟玉符、香宝灵果和纪宁提供的法门成功合道；终局仍以“北冥生死兄弟”的身份出现。"
+    },
+    {
+      "score": 0.731,
+      "slug": "arcs/rcv0-45-xuanhuan-luanshishu-longitudinal-story-craft-v3",
+      "snippet": "韩无病：约战者 → 第一个男性朋友 → 白虎棋子 → 只做韩无病"
+    },
+    {
+      "score": 0.7239,
+      "slug": "arcs/rcv0-48-dushi-dawang-raoming-longitudinal-story-craft-v3",
+      "snippet": "|"
+    },
+    {
+      "score": 0.7167,
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    }
+  ],
+  "raw_results": [
+    {
+      "score": 0.9207,
+      "slug": "book-dna/rcv0-30-xuanhuan-douluo-dalu-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy relationship payoff hidden identity sacrifice r"
+    },
+    {
+      "score": 0.9057,
+      "slug": "book-dna/rcv0-41-xuanhuan-mushenji-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.8922,
+      "slug": "book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.881,
+      "slug": "book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.8703,
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.8599,
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3",
+      "snippet": "Retrieval aliases: core reader fantasy world fantasy supporting cast return old ability new use come"
+    },
+    {
+      "score": 0.8498,
+      "slug": "arcs/rcv0-37-xianxia-mieyun-tulu-longitudinal-story-craft-v3",
+      "snippet": "隐藏传承／根脚：从保命秘密到敌人战略模型"
+    },
+    {
+      "score": 0.8384,
+      "slug": "arcs/rcv0-44-xuanhuan-cangyuantu-longitudinal-story-craft-v3",
+      "snippet": "黑岩大妖王围杀夫妇"
+    },
+    {
+      "score": 0.8288,
+      "slug": "book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.8198,
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3",
+      "snippet": "# Core Reader Fantasy"
+    },
+    {
+      "score": 0.8104,
+      "slug": "book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3",
+      "snippet": "# Evidence Coverage"
+    },
+    {
+      "score": 0.8013,
+      "slug": "arcs/rcv0-41-xuanhuan-mushenji-longitudinal-story-craft-v3",
+      "snippet": "**Reminder**：司婆婆、瞎子、瘸子、屠夫等人嘴上说各有正事，实际相继离村；每个人也确实拥有独立目标，不只是追随秦牧。"
+    }
+  ],
+  "accepted": [],
+  "fixed_references": [],
+  "rejected": [
+    {
+      "slug": "arcs/rcv0-38-xianxia-dashengzhuan-longitudinal-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-28-xuanhuan-jiangye-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-28-xuanhuan-jiangye-longitudinal-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-49-xianxia-manghuangji-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-29-xuanhuan-guimi-zhi-zhu-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-33-xianxia-jidaotianmo-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-49-xianxia-manghuangji-longitudinal-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-45-xuanhuan-luanshishu-longitudinal-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "arcs/rcv0-48-dushi-dawang-raoming-longitudinal-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-45-xuanhuan-luanshishu-story-craft-v3",
+      "reason": "超过小说候选数量上限"
+    },
+    {
+      "slug": "book-dna/rcv0-30-xuanhuan-douluo-dalu-story-craft-v3",
+      "reason": "与 BOOK 的现实模式冲突"
+    },
+    {
+      "slug": "book-dna/rcv0-41-xuanhuan-mushenji-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-47-dushi-mingkejie-13hao-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-42-xianxia-dafeng-dagengren-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-48-dushi-dawang-raoming-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-03-dushi-xiuzhen-chatianqun-story-craft-v3",
+      "reason": "与 BOOK 的现实模式冲突"
+    },
+    {
+      "slug": "arcs/rcv0-37-xianxia-mieyun-tulu-longitudinal-story-craft-v3",
+      "reason": "与 BOOK 的现实模式冲突"
+    },
+    {
+      "slug": "arcs/rcv0-44-xuanhuan-cangyuantu-longitudinal-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-44-xuanhuan-cangyuantu-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-20-gaowu-quanqiu-gaowu-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "book-dna/rcv0-46-youxi-chaoshen-jixieshi-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    },
+    {
+      "slug": "arcs/rcv0-41-xuanhuan-mushenji-longitudinal-story-craft-v3",
+      "reason": "没有可提取的抽象区块"
+    }
+  ],
+  "result": "（本次没有找到与 BOOK 硬约束和当前章节任务兼容的 GBrain 证据；不要用不相关材料补位。）"
+}
