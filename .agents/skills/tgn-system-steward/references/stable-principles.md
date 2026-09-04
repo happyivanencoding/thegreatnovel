@@ -302,6 +302,22 @@ Power / growth grammar 负责“怎样能变强”；Story 负责“什么时候
 - `Mechanism Explanation Decay` 只适用于已经理解的静态能力边界；动态成长因果、当前精确位置、伤势状态和离下一质变的距离属于新 Reader Model，继续更新；
 - `Proof Decay ≠ Ruler Decay`：同一能力无需反复证明，但每当比较对象、位置、状态或距离发生新的相对变化，最短 Ruler refresh 仍有价值。
 
+### 11.2 Reader-Facing Scene Ecology：上游丰富不等于读者拿得到
+
+Story Program 可以已经有完整 Living Actors、共享旧史、精确力量位置与独立目标，最终正文仍可能只剩“名字 + 任务 + 一句功能对白”。这类失败不要只审 Writer，而要追 transport chain：
+
+`Story Program → Outline / Future-10 → Batch Packet → Primary → Sol Delta`
+
+关键边界：
+
+- **Representation Compression Loss**：如果 Story 已经决定 `具名人物 + 精确位置 + 当前阶段/地点 + 公共展示 + 现场意义`，Outline 不能把它摘要成通用 Milestone、丢掉演员绑定或搬到更晚阶段。少量这类已决定事实可以使用 `Reader-Facing Actor Ruler Anchors` 做低带宽 transport；它不创建新 Authority/等级/事件，也不把完整 Story Program 送给 Primary。
+- **Living Power Ecology**：公开主尺如果只在主角和主 Rival 身上出现，仍不是世界母语。重要人物已有公开精确位置，而且它解释为什么能站在这里、别人为什么让路/忌惮、能守哪条线或为什么有能力却选择不介入时，这个坐标应自然进入 scene。没有上游 Authority 不补数字，不建全员等级表。
+- **Stable Scene Geography**：连续跨章的复杂 Action Block 先给 3—5 个稳定空间锚点及关系，Future-10 和 prose 后续沿同一组锚点移动人物。新微地形合法，但要附着到旧锚点，不能每段重新造主地图。
+- **Action Advance ≠ Situation Memory**：动作推进、人物换位、通路开闭或目标改变后，直接重报“谁在哪 / 哪条路开着 / 谁守什么 / 还差什么 / 主角现在去哪”是更新 reader working memory，不是低价值重复。
+- **Active Interior Continuity**：当前场景真正起作用的私人压力、旧关系或不愿承认的判断，应至少改变一次对白、停顿、注意力、误判、拒绝/让步或选择。不要把修法变成 Biography dump、全员内心独白或统一加长对白。
+- **Convergence is payoff, not simultaneous loading**：后台人物各自活着，不代表读者已经认识他们。大碰撞前，大多数重要参与者至少应有 `是谁 / 要什么 / 为什么来 / 若已有且相关则在哪个力量层` 的最低充分锚点；可以在同一剧情块错峰建立，不要求每人单独介绍章。
+- **有限 POV 是现场解释器**：多方局势复杂时允许 `观察 → 判断/猜测 → 必要时修正 → 决定`，帮助读者理解行为因果。不是把主角写成全知军师，而是不让读者只能从动作残片自行重建局势。
+
 ## 12. Narrative Compounding > Asset Compounding
 
 真正的复利是故事不回原点：

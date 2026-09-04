@@ -50,6 +50,33 @@
 
 ---
 
+### 0.0C 2026-09-04 冻结：Reader-Facing Scene Ecology / Living Power Ecology
+
+在 `Power Growth Causality / Living Power Progression` 修复后，驭兽 V2 第5—10章又暴露出更高一层：**Story Program 里的小说明显比最终正文里的小说丰富。** 鸣骨峡上游已经拥有唐鹭、叶朔、韩狩的独立人生、旧史、目标与力量位置，但下游出现两类连续压缩：一是 Story Program → Outline/Future-10 把 `唐鹭44 / 共载`、`韩狩68 / 择风` 这类具名力量演示压成通用阶段或完全丢失；二是 Primary 在没有稳定舞台/当前私人压力/局势重锚的情况下，把复杂多方场景写成不断新增局部空间与一句功能对白。
+
+真实受控实验：Baseline `books/real-exp-living-power-progression-beast-20260903-v2`；Treatment `books/real-exp-reader-facing-scene-ecology-beast-20260904-v1`。Author / World / Power / Human / Character / Story 创作事实、GBrain 与最终第1—4章正文冻结，只 fresh Outline 与第5—10章 production Batch。最终6章 Terra Primary + Sol Batch Delta + 6次 State 全链完成；8次模型调用、模型 wall 1063.826s、7个局部 Delta、0 upstream conflict。完整报告见 Treatment `RESULTS.md`。
+
+本轮先有两个重要失败，不能只记最终成功：
+
+1. 仅增加泛化 `Important Actor Carry-Forward / Living Power Ecology` 提醒时，Stable Geography 已改善，但 Luna Outline 仍把唐鹭44/韩狩68当前绑定压掉；停线，不生成正文。
+2. 再强调 carry-forward 后，Outline 保留了44/68，却把唐鹭44搬到后面白脊阶段、韩狩68搬到后面雷穹阶段；说明自由文本“保留”仍不等于保留 Story 已批准的演员×数字×时机绑定。
+
+因此冻结最小结构修复：
+
+- **Reader-Facing Actor Ruler Anchors**：Story Program 只对 0—6 条已经明确决定的具名人物力量演示，结构化保存 `人物 + 精确位置 + 展示 + 时机/地点 + 现场意义`；通常 `NONE`。它不是第四 Authority、人物等级表、RSE、Reviewer 或新 Agent，也不能为了填表给 NPC 发等级/安排展示。Outline 在对应 Schedule 原样运输，不能换演员/数字/能力/地点或搬到更晚阶段；Future-10 到达边界时必须把四者一起写进具体剧情。
+- **Living Power Ecology**：精确力量尺不是主角/Rival 专用数字。重要人物已有公开精确位置，且它解释为什么能站在这里、别人为什么让路/忌惮、为什么能守某条线或为什么有能力却不介入时，这个坐标应自然进入 Reader model。没有 Authority 不补数字，不做全员等级表。
+- **Stable Scene Geography**：跨多章高负荷 Action Block 在第一处复杂动作前先建立3—5个稳定空间锚点及关系；后续复用同一组名称，新行动点先说明相对旧锚点的位置。鸣骨峡 Treatment 先立 `外围停驻点 / 中段交易台 / 台下三条副链 / 更深旧风门与迁徙风道 / 下方风隙`，后续人物始终围这张图移动。
+- **Action Advance ≠ Situation Memory**：动作推进两三轮、人物换位、路线开闭或目标变化后，允许用1—4句完全直接地重报 `谁在哪里 / 哪条路开着 / 谁守什么 / 还差什么 / 主角现在去哪`。这不是低价值重复，而是更新 reader working memory。
+- **有限 POV 是读者的现场解释器**：复杂多方场景允许 `观察 → 判断/猜测 → 必要时发现判断不全 → 决定`。Treatment 中贺临川直接判断“段阙想把照雪赶回交易台、唐鹭盯契纸和沉瓦、叶朔只管兽群过门”，读者因此知道为什么没人替他解决照雪问题。
+- **Active Interior Continuity / Dialogue Breathing**：Story Program 已经有丰富人物人生时，不把完整 Biography 倒给 Writer，也不能只送“名字 + 任务”。Outline 只运输当前会影响本场选择/对白/是否介入的最小私人压力；Primary 让它至少改变一次停顿、措辞、误判、拒绝/让步或选择。唐鹭因此不再只是“给船换兽”，而会承认苏渠、沉瓦、照雪选择之间的私人难题。对白长短跟人物/压力走；韩狩现场仍可短促，唐鹭的交易可以有多轮呼吸。
+- **Convergence is payoff, not simultaneous loading**：Living Actors 在后台各自有目标，不等于读者已经认识他们。真正多线大碰撞前，大多数重要参与者应已有最低充分 `是谁 / 要什么 / 为什么来 / 若已有且相关则在哪个力量层` 锚点；可以在同一个剧情块错峰建立，不要求每人单独介绍章。Treatment 第5—10章按唐鹭 → 叶朔/旧风门 → 韩狩68 → 唐鹭44与私人交易 → 主角选择 → 奖励结算逐步汇流。
+
+Final 正文证据：韩狩明确 `共鸣级68 / 越风 / 择风`，返程线让普通商盟伙计靠近就被侧风撞回；他又明确自己“查镇脉钉旧案”，所以高阶力量用于返程线/军府查案而不替主角争照雪。唐鹭明确 `共鸣级44 / 载身 / 共载`，人兽货物一起换落点，主角1级直接比较差距；随后她在“能否保证照雪自己选路”上沉默并承认做不到，私人关系真实进入决策。Sol Delta 保留了这些 reader-facing 增益，只修7处 Authority 问题。
+
+残余边界：少量骨台/骨梁/骨脊等局部动作点仍合法，只要附着于稳定舞台；叶朔当前比唐鹭薄也不是自动失败，只要他的迁巢欲望、空间职责和选择因果已足够清楚。不要为人物厚度均匀建立全员内心戏、Scene Graph、Reader State DB 或空间硬 Gate。
+
+---
+
 ### 0.0B 2026-09-04 冻结：Power Growth Causality / Living Power Progression / Reader-Explicit Growth
 
 驭兽 production Batch 在 Public Milestone / 精确主尺已经成立后暴露了下一层问题：**知道“现在几级”和“未来某大阶段能做什么”仍不等于读者知道“力量到底怎样长出来”。** 旧版本可以给出清楚的共鸣级，却仍可能把一大段成长压成“练了几个月 → 直接到某级”；能力说明衰减又容易误伤动态成长说明，使“为什么主角成长更快、为什么别人不能同样快、受伤/恢复怎样影响成长”只留在后台。

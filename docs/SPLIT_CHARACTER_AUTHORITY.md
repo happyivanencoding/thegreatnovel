@@ -132,6 +132,8 @@ Story Program 是第一次同时看到完整 World、完整 Character、T0 State
 
 权威与调度分开：Power Seed 决定开局 Core Asymmetry 的成长语法；Story Program 决定它怎样实现，并可通过真实获得加入新的 Power Asymmetry、让新旧优势发生复合。后续新 Asymmetry 继承同一 Reader-facing 边界：先写“以前做不到什么、现在具体多能做什么”，再决定是否需要短名；新名只压缩已经理解的能力。**成长是全书纵向不变量，不是每阶段升级税；但它必须是 Living Power Progression，而不是起点数字与终点数字之间的一段时间跳跃。** Story Program 沿 World `Power Growth Causality` 与 Power `Growth Coupling` 判断已有战斗、训练、探索、伤势恢复、资源、功法、伙伴变化究竟怎样改变 Power State；允许“没升级但瓶颈更清楚 / 当前发挥受伤势影响 / 某个中间动作稳定成立 / 距离 Milestone 更近”，没有真实因果就保持原位。重大 Milestone 前若跨度较长，应在本来已有的故事里留下少量 `Distance Closing`，例如5→9→12这样的精确位置、仍失败的最后门槛或成长速度比较，不为此另造验级章。Approved World 的 Public Milestone Ladder 则是 Frozen World Promise，Story Program 不得重新发明公共质变；它负责挑出当前 Horizon 真正值得期待的节点，借已经有自己故事因果的高阶人物/冲突/地点/入口提前演示，让主角因 Frozen Human 自己的欲望产生期待，再在真实突破时先兑现公共新动词、后兑现 Protagonist Expression。这样 `Power Progression × World Expansion` 共用一条发动机，但不把“展示→羡慕→突破”做成每阶段固定模板。**Outline 的职责不是等突破章再解释：一旦已有高阶 actor 真实展示这个公共新动词，或主角当前缺口已经让“到该 Milestone 就能做什么”成为眼前因果，就在最早真实触发章的 Reader Release 中提前命名最低充分 Promise；主角版本仍等 Story/Power 因果兑现。**
 
+Story Program 对少量**已经明确决定**的具名人物力量演示保留 `Reader-Facing Actor Ruler Anchors`：通常 `NONE`、最多0—6条，每条只保存 `人物 + 精确位置 + 展示 + 时机/地点 + 现场意义`。只有 Story Program 已经决定“某个重要人物会在当前 Horizon 的具体阶段/地点，以已批准公开位置提前展示某公共能力/里程碑，并由此改变现场让路、忌惮、封路、主角期待或解释为何不介入”时才列。它不是新 Authority、人物等级表或 RSE，不允许为填表给 NPC 发等级、安排展示或新增事件；作用只是避免自由文本在 Outline 编译时丢掉演员绑定或把展示搬到更晚阶段。
+
 Story Program 只具体规划**当前已批准 World Horizon**，而不是开书时一次写死剩余 500 章。非终局 Horizon 的最后 1—2 个自然阶段若已经把当前世界层主要压力活透，就输出普通 `World Horizon Handoff`：可观察触发条件、`macro / instance` scope、为什么此时应该扩、以及哪些已发生事实必须 carry forward。它不能预写下一世界的宝物、能力、势力或针对当前主角 Build 的答案；Handoff 也不会注入 World Expansion Agent。若作者明确当前就是小说最终 Horizon，则 Handoff 第一行改为 `FINAL NOVEL END`，不再触发 Expansion：主角进入最终公开力量最高可见圈层，并在最后决定性事件中用长期 Advantage Stack 完成同档的 Asymmetry Dominance；允许 Rival 同级、活着或在某一专业更强，未解释世界余白也不再登记成 future story obligation。
 
 Story Program 现在拥有明确的 **Relationship-History Backfill** 权限，不再限于“少量非奠基性过去”。如果 World / Human 只冻结了今天的形状，而人物关系史仍有未定义空白，它可以补入重要配角的旧爱、亲缘、师徒、竞争、共同失败、救命、背叛、债、失约、失去的人或上一代选择，也可以把 Human 已成立的父母/兄妹/旧关系与 World Living Actors 接成共享旧史。优先能自然穿过多个既有人物、甚至跨代留下后果的共享历史，而不是给多个配角各写互不相干的“深刻往事”。
@@ -161,6 +163,8 @@ Refresh 对少数真正长期重要的 Supporting Cast 保留两种不同方向�
 ## 7. Outline：执行编译，不重新调度
 
 Outline 把已批准 Story Program 编译成当前窗口的具体 Story Anchors，不是第二个 Story Program。Public Milestone 已经是 World Authority；Outline 只在它第一次成为主角欲望/恐惧、当前高阶人物的真实展示、地点/身份准入门槛或本窗口突破时，把 `阶段/门槛 + 公共新动词 + 当前相关世界开口` 的最少充分事实排进 Reader Release。**主角第一次真实进入主力量尺时，若 World 已冻结 Power Growth Causality，Outline 在第1—3章最早自然机会同时排一次最低充分成长常识：普通人怎样让精确位置前进、为什么不能无限快；若当前受伤恢复/共鸣磨合/训练尝试又正好触发 Power 的 Growth Coupling，就直接让读者知道 Asymmetry 改了哪一环，即使本章没有升级。** 整张 Ladder 不在开篇倾倒，Protagonist Expression 也不由 Outline 发明。
+
+Story Program 的 `Reader-Facing Actor Ruler Anchors` 在 Outline 使用对应 Schedule **原样运输**：不能换演员、数字、公共展示、时机/地点或现场意义；Future 10 落入 Anchor 边界时必须把 `人物 + 精确位置 + 展示 + 现场影响` 落进具体剧情。与此同时，重要人物在当前场景真正起作用的 reader-safe 私人压力要以最小一层进入相关锚点，避免人物被压成“名字 + 任务”；完整隐藏旧史仍保持 backstage。复杂多方 Action Block 先确立 3—5 个 Stable Scene Geography 锚点并跨章复用；多线大碰撞遵守 `Convergence is payoff, not simultaneous loading`，可以在同一剧情块错峰建立人物，不要求额外介绍章。
 
 每块只在 `Block Delta` 中记录**相对本块开始真正变化的维度**；没有变化就省略。关系/世界驱动的块可以完全没有 Power、Possession 或新地图；反过来，Story Program 已安排在当前窗口的真实成长又不能被省略。
 

@@ -1251,6 +1251,16 @@ def test_outline_prompt_has_exact_book_headings_and_concrete_formats() -> None:
     assert "Story Program 的执行编译层，不是第二个 Story Program" in prompt
     assert "通常 3—5 个锚点只是密度参考" in prompt
     assert "每个剧情块是若干会改变局势的故事转折，不是实施步骤" in prompt
+    assert "Important Actor Carry-Forward 不只保护 Rival" in prompt
+    assert "具名人物 + 精确位置N + 在当前 Horizon/前期/某具名地点展示公共新动词X" in prompt
+    assert "Story-Approved Actor Ruler / Demo 不得在 Future 10 再压缩一次" in prompt
+    assert "人物名 + 精确位置N + 展示X + 它怎样改变现场" in prompt
+    assert "### Reader-Facing Actor Ruler Anchor Schedule" in prompt
+    assert "逐条**原样复制**每个 `ACTOR-RULER-xx`" in prompt
+    assert "改时机/地点或把它搬到另一个大型阶段" in prompt
+    assert "Convergence is payoff, not simultaneous loading" in prompt
+    assert "Stable Scene Geography" in prompt
+    assert "不能让每一章为了当前动作再临时发明一套" in prompt
     assert "提高故事确定性，不是提高施工步骤确定性" in prompt
     assert "推进、转折或结算当前剧情块中的某个故事锚点" in prompt
     assert "不要为了填章数，把一个锚点拆成连续几章" in prompt
@@ -2688,6 +2698,11 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "震撼式长期重释" not in generate_prompt(mode="primary_writer", template="", book_content="", current_outline=REAL_COLD_CHAIN_OUTLINE, curated_context="# Curated Chapter Context")
     assert "Persistent Reader Ruler" in story_program
     assert "主角**精确在哪一位**" in story_program
+    assert "Living Power Ecology" in story_program
+    assert "重要人物也必须活在同一把公开力量尺上" in story_program
+    assert "一个明显高阶人物已经在场却没有介入" in story_program
+    assert "### Reader-Facing Actor Ruler Anchors" in story_program
+    assert "ACTOR-RULER-01｜人物：X｜精确位置：Y｜展示：Z" in story_program
     assert "43级对58级" in story_program
     assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "Persistent Reader Ruler" in DEFAULT_PROMPT_TEMPLATES["review"]

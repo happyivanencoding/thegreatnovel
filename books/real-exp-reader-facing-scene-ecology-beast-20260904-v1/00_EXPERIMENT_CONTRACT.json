@@ -1,0 +1,28 @@
+{
+  "baseline": "C:\\dev\\tgn-story-mvp\\books\\real-exp-living-power-progression-beast-20260903-v2",
+  "frozen": [
+    "author_direction",
+    "world",
+    "power",
+    "human",
+    "character",
+    "story_program",
+    "gbrain",
+    "final_chapters_1_4"
+  ],
+  "fresh": [
+    "outline",
+    "batch_primary_5_10",
+    "batch_delta_5_10",
+    "state_5_10"
+  ],
+  "treatment": "Reader-Facing Scene Ecology: Stable Scene Geography + Living Power Ecology + Active Interior Continuity + Situation Re-anchor + Earned Convergence",
+  "models": {
+    "outline": "gpt-5.6-luna/high",
+    "batch_primary": "gpt-5.6-terra/high",
+    "batch_delta": "gpt-5.6-sol/high",
+    "state": "gpt-5.6-luna/low"
+  },
+  "batch_window": "chapters 5-10 (6 chapters)",
+  "manual_prose_treatment": false
+}

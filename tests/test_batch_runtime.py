@@ -224,6 +224,10 @@ def test_batch_prompts_preserve_narrative_window_and_reviser_does_not_invent_acc
     )
     assert "# APPROVED BATCH PLANS" in primary
     assert "一次连续写完" in primary
+    assert "Stable Scene Geography" in primary
+    assert "Action Advance ≠ Situation Memory" in primary
+    assert "Active Interior Continuity" in primary
+    assert "Living Power Ecology 要在正文里真正约束行为" in primary
     reviser = build_batch_delta_reviser_prompt(
         window=window,
         batch_plans=plans,

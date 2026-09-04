@@ -1,0 +1,1 @@
+{"output": "C:\\dev\\tgn-story-mvp\\books\\real-exp-reader-facing-scene-ecology-beast-20260904-v1\\calls\\state-5\\response.md", "chars": 1352, "stopReason": "end_turn", "usage": {"totalTokens": 33421, "inputTokens": 22247, "cachedReadTokens": 9984, "outputTokens": 1190, "thoughtTokens": 165}}

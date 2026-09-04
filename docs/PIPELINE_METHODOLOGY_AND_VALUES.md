@@ -328,6 +328,10 @@ Story Program 是第一次同时看到完整 World 与 Character 的阶段，也
 
 Story Program 只在极少数高价值现场需要时登记 0—4 个 `RSE-xx`：如果被压成 State / 摘要会明显改变本书的 Premise、Meta Grammar、关键 Surprise 或 Long-Horizon Promise，才值得进入。每个 RSE 分开保存 `Event Atom / State Residue / Timing Boundary / Reader Anchors`；Event Atom 是读者必须经历的事实与因果，State Residue 只是事后 Canon，不能互相替代。会直接显示给人物/读者的任务、UI、退出或携带规则优先写成“还剩多久 / 去哪里 / 能带走什么 / 失败会怎样”等具体事实；Reader Anchors 只锁 reader-safe 的专名、数字、地点/物件或确实必须照字出现的世界内短名，不锁后台策划词。普通转折、情绪、Reward、关系 cue 不升级成 RSE 配额。
 
+#### Reader-Facing Actor Ruler Anchors
+
+Story Program 对少量**已经明确决定**的具名人物力量演示另有一个低带宽 transport surface：`Reader-Facing Actor Ruler Anchors`，通常 `NONE`，最多 0—6 条。它只在“具名重要人物 + 已批准精确公开位置/阶段 + 当前 Horizon 的具体阶段/地点 + 已决定要提前展示的公共能力/里程碑 + 该展示会改变现场让路/忌惮/封路/期待或解释为何不介入”同时成立时保存。每条只写 `人物 + 精确位置 + 展示 + 时机/地点 + 现场意义`。它不是第四 Authority、人物等级表或新 RSE，也不能为了填表给 NPC 发等级/安排展示；只是防止 Story Program 自由文本里已经决定的 `唐某44级在某峡展示共载` 在 Outline 编译时被压成通用 Milestone、丢掉演员绑定或搬到更晚阶段。
+
 #### 当前 World Horizon 的长期责任
 
 - 通常 5—7 个自然大型阶段，但只具体规划当前已批准 World Horizon；若当前世界层 3—4 个阶段就自然走到边界，就停在那里，不为凑数提前发明未知下一世界；
@@ -486,13 +490,16 @@ Outline 是 Story Program 与 Director 之间的中层分辨率。
 - 通常 3—5 个连续故事锚点；
 - Future 10 的逐章具体事件；
 - 故事开写前的 **T0 Initial State**：只记录 Chapter 1 第一场事件发生前已经成立的事实；Future 10 / 剧情块中规划出的能力使用、奖励、物品、关系变化、伤亡和其它未来结果只能留在 Plan / Open Promises，不能提前进入 Current State / Canon；
-- **Story Program execution, not rescheduling**：Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势成长、后续新 Asymmetry 获得与复合；Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略；
+- **Story Program execution, not rescheduling**：Power Seed 决定开局 Core Asymmetry grammar；Story Program 决定开局优势成长、后续新 Asymmetry 获得与复合；Outline 只把已批准变化落进当前窗口。某个剧情块可以完全没有 Power / Acquisition / 新地图；已经安排在当前窗口的真实成长又不能被省略。Story Program 的 `Reader-Facing Actor Ruler Anchors` 若不是 `NONE`，Outline 在 `Reader-Facing Actor Ruler Anchor Schedule` 逐条原样运输；演员、精确位置、公共展示、时机/地点与现场意义都不能被摘要成通用 Milestone 或搬到更晚阶段。当前 Future 10 落入 Anchor 边界时，逐章 `具体剧情` 必须兑现 `人物 + 精确位置 + 展示 + 它怎样改变现场`；
+- **Important Actor Carry-Forward / Active Interior**：Story Program 已经给当前窗口的重要人物一条会改变本场选择、说话方式或是否介入的 reader-safe 私人压力（旧关系、失去的人、当前不愿承认的判断、旧案压力等）时，Outline 不把人物压成“名字 + 任务”，只把**当前会起作用的最小一层**送入相关 Story Anchor / Future 10；未排程隐藏旧史仍保持 backstage，不能为了人物厚度把 Biography 一次倾倒；
+- **Convergence is payoff, not simultaneous loading**：多条重要人物线进入同一高负荷场景前，读者应在真正大碰撞前对其中大多数至少已有 `是谁 / 此刻要什么 / 为什么会来 / 若上游已有且与行为有关，他在哪个力量层` 的可复述锚点。可以在同一剧情块前几个锚点错峰建立，不要求每人独占一章，也不把多线碰撞拆成任务列表；
+- **Stable Scene Geography**：连续跨多章使用多个路线、平台、门、锁点或高低位置的 Action Block，在第一处真正复杂动作前先确定 3—5 个后续会反复使用的稳定空间锚点及彼此关系，只保留会改变选择/胜负的关系。后续 Future 10 沿用同一组名称；新地点只有真产生新行动可能时才增加，并说明它相对旧锚点的位置，不能每章为了当前动作重新发明一套局部舞台；
 - **Forward Authority after refresh**：开书 Outline 读取 `CHARACTER.md + T0 + WORLD_VISION.md`；周期性 Story Refresh 后，Outline 改读 deterministic `CURRENT_CHARACTER.md + Effective World（Root + 已批准 Expansion）`，不能拿 Chapter 1 的人物状态继续规划 Chapter 200；
 - **World Horizon Handoff 是前向边界**：如果批准 Story Program 的 Handoff 会在当前中期窗口 / Future 10 内触发，Outline 只排到触发章就停止。剩余章数不补占位，不自行发明下一大陆、下一副本或新规则；先完成 World Expansion / Current Character / Story Refresh，再生成新的 Outline；
 - **Block Delta**：每块只记录相对本块开始真实改变的 Power/Capability、Possession、Relationship、Identity/Access、Knowledge、Enemy State、World State，没变化的维度省略，上一块已经发生的变化不能重复包装成新 Delta；
 - **World Model Release / Reader Release Scheduler**：Approved World Vision 决定世界事实；Outline 在 `## 2. 世界观结构` 内用一个很短的 `Reader Release Map` 保存当前窗口里值得显式调度的首次释放，格式 `第N章｜触发：具体 World fact`，不是每章 KPI。未来仍作为 discovery / reveal 的答案不得提前排入 Map；只能先释放不回答谜底的公共背景。明显陌生/架空世界的第1章若 World 与前3章确实提供多类相关公共事实，默认把力量/当前与下一档 ruler、生活危险/共同常识、其它确属 World 的社会位置/价值物拆成 2—3 条 Public Common-Knowledge Release；下一档若有现实 benchmark，同时写能力效果与社会含义。**主角第一次真实进入主力量尺时，若 World 已冻结 Power Growth Causality，Outline 还应在第1—3章最早自然落点排一条“普通人怎样让位置前进 + 为什么不能无限快”的最低充分公共事实；若 Power Seed 的 Growth Coupling 已明确改变某一瓶颈，且当前伤势/恢复/共鸣磨合/训练尝试自然触发，就同时让读者知道主角具体改了哪一环，即使本章没有升级。**具名机会价值不混进 World Release**：若 Story Program / 当前剧情块已批准机会名与公开价值，但 Future 10 单章条目只剩泛化“试场前训练 / 争取机会”，Director runtime 只在当章已指向同一机会时，从当前剧情块确定性恢复一条“具体机会名 + 当前已知价值”；不新增回报、不提前宣布结果。**World Entry 在人物真正跨过门槛的当章释放**；重要 named 势力、地点、Rival、传承或高价值机会第一次进入时保留最短欲望与尺度锚点。Chapter Runtime 按章读取，再从 WORLD AUTHORITY 取对应事实；开篇同时建立最低生活世界位置与必要 ruler。不新增 Prelude / Setup 章，也不能推迟第一章核心优势真实结果；
 - **RSE Registry / Schedule**：若 Story Program 有不可降格 RSE，Outline 必须把 Event Atom / State Residue / Timing Boundary / Reader Anchors 原样注册，只负责把 ID 排进承载章的 Future 10；明确 `第N章` 的事件在当前窗口包含 N 时必须排到该章。不能改写、缩写、补充 Event Atom，也不能把 State Residue 当成已完成 Event。完整 Registry 不作为章节上下文下传；未来 RSE 不提前泄漏。
-- **Ruler = Compression；Proof Decay ≠ Ruler Decay**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落。力量尺尤其应像群众反应一样成为叙事母语：训练/修炼出现新结果、遇见有公开位置的对手、进入带力量门槛的地点、超标攻击、伤势改变当前发挥、获得会影响力量的资源/装备、成长速度比较、某件事仍做不到或离下一 Milestone 明显更近时，只要存在新的比较价值就顺手刷新“当前精确位置 / 对象位置 / 正常含义 / 当前状态 / 距离下一质变”；没有新比较价值时不机械报同一个数字，也不另造测试章。若本章真实跨过已经介绍过的公开档位，结果处直接命名新档位一次，不让读者从本地术语或现象自己换算；
+- **Ruler = Compression；Proof Decay ≠ Ruler Decay；Living Power Ecology**：当前事件碰到哪把尺（力量、战绩、价值、天赋/适配、技熟、装备、排名、身份或世界层级），就用一次 World 已批准的 benchmark / 懂行比较完成校准；它优先替代多轮重复验证，不是新的百科段落。力量尺尤其应像群众反应一样成为叙事母语：训练/修炼出现新结果、遇见有公开位置的对手、进入带力量门槛的地点、超标攻击、伤势改变当前发挥、获得会影响力量的资源/装备、成长速度比较、某件事仍做不到或离下一 Milestone 明显更近时，只要存在新的比较价值就顺手刷新“当前精确位置 / 对象位置 / 正常含义 / 当前状态 / 距离下一质变”；没有新比较价值时不机械报同一个数字，也不另造测试章。**这把尺不只属于主角/Rival：重要人物已有公开精确位置且它解释他为什么能站在这里、别人为什么让路/忌惮、他为什么能守某条线或为什么有能力却选择不介入时，同样应在自然动作中进入 Reader model。** 不为没有 Authority 的人补数字，也不做全员等级表。若本章真实跨过已经介绍过的公开档位，结果处直接命名新档位一次，不让读者从本地术语或现象自己换算；
 - **State Advance After Proof / Choice → Consequence**：一个问题经动作结果与一次足够校准成立后，不再把换证据证明同一结论规划成独立 beat；社会确认只有改变机会、敌意、关系、身份、资源或行动入口时才继续。重大选择的选项与主要代价清楚后尽快做出，让后续篇幅进入选择造成的新局面。**Stage Settlement = Consequence, not Process Carrier**：事实已清楚时，报告、登记、责任说明、复盘、资格发放等只作一句/背景，前景放在重新估价、实际得失、Rival 换位与下一件值得想要的机会；十章批次不是拉长当前剧情块的配额，块完成就进入相邻块；不做每章状态变化配额；
 - **Core Gameplay Variation**：第一次高光以后，尽快把“它能不能做到”推进成“为什么选这个对象/时机/用法、别人怎样反制、同一优势还能产生什么不同结果”；尤其不要让上一轮已经证明有效的解法自动解决下一轮主要问题，下一轮冲突优先攻击它尚未解决的对象、关系、资源、目标或条件，或迫使主角换一种用法。这样实现换挡，不要求机械让主角失败或每轮加新代价；
 - **Reader Experience Projection**：Action Space / Expectation Ladder / Mystery Depth / Impact 仍作为后台阅读体验坐标，但通过具体故事锚点和实际 Delta 自然显现，不再要求每块或每十章分别填写“一级成长 / 净收益 / 新行动空间 / 世界扩张”；
@@ -581,7 +588,11 @@ Director 的核心问题不是“这一章还能安排什么任务”，而是�
 
 - 把 Director Contract + Curated Context 写成完整、可保存的正式正文；Primary 不直接读取完整 Scene Skill / 原著 evidence，只消费 Curator 已编译的短 `Scene Prose Projection`；
 - Future 10 当前章明确批准的 `结果 / 状态变化` 已确定性并入 Frozen Mission；力量/身份跨档、持有关系和其它不可逆里程碑必须成为正文事实，不能只用“打出该级战绩 / 接近 / 获得资格 / 被重新估价”等暗示替代；若 Canon 真使结果不可能，只接受 Director 的 `[PLAN OUTCOME ADJUSTMENT]` 显式调整；
-- Reader-First：先让读者理解人、问题和 stakes，再给最低限度规则；
+- Reader-First：先让读者理解人、问题和 stakes，再给最低限度规则；默认 Batch Primary 与单章 fallback 都遵守同一正文原则；
+- **Stable Scene Geography / Action Advance ≠ Situation Memory**：复杂多方动作场第一次进入高负荷状态时，用一两句建立 3—5 个后续反复使用的稳定空间锚点及关系；后续沿用同一组名词，新行动点说明相对旧锚点的位置。动作推进两三轮、人物换位、通路开闭或目标明显变化后，允许用非常直接的 1—4 句重报“谁在哪 / 哪条路开着 / 谁守什么 / 还差哪个点 / 主角现在要去哪”；这是更新 reader working memory，不是低价值重复；
+- **有限 POV 帮读者理解局势**：多方场景里如果下一步选择依赖谁在挡谁、谁其实不管这件事、谁在等谁先动，允许主角经历 `观察 → 判断/猜测 → 必要时发现判断不全 → 决定`。不把主角写成全知军师，只让读者知道为什么现在做这个；
+- **Active Interior Continuity / 对话有呼吸**：当前 Plan 已保留重要配角正在起作用的私人压力、旧关系或不愿承认的判断时，让它至少改变一次对白长度/措辞、停顿、注意力、误判、拒绝/让步或选择；有限 POV 不偷写别人内心，通过行为和主角有限判断传达。紧急时对白可以短，非秒级危机不把所有人物都压成同一种“一句话完成剧情功能”的指令体；也不反向把每个人写成长篇独白；
+- **Living Power Ecology**：当前 Authority 已给重要人物公开精确位置/阶段且它解释现场分量时，在第一次自然比较、出手、让路、忌惮、封路或准入变化时直接使用；明显高阶人物在场却不介入时，若 Plan 已给目标/职责/空间/利益边界，用最短一句或行为让读者明白“不出手为什么合理”。没有上游原因不自行补；
 - 当动作自然提出“这是什么 / 为什么重要”的问题，而 Curator 已投影当前 Plan 排程的 World fact 时，用 1—3 个短直接旁白段或等价场景表达回答到足够后立刻回场景；**已排程 Reader Release 是本章需要兑现的 timing decision**，不是可选装饰。若该事实同时说明地点/势力/传承为什么值得争，保留一个最短价值锚点；Writer 不自行从完整 World 选择说明主题；
 - Frozen Mission 若携带不可降格 RSE，Primary 必须让读者经历 Event Atom 的现场因果，不能只写 State Residue 或结果摘要；Event Atom 锁事实与因果，不要求逐字复刻后台系统句。Meta/UI/任务规则优先翻成一眼懂的具体事实。**模型看得到 Frozen Power 不等于场内 NPC 知道私有机制**：NPC 只能说自己有来源知道的公开位置、可观察表现和 World/Canon 事实，不能从一次目击推断永久性、私有触发、内部计数或隐藏因果；
 - 决定已经成立后的普通实施优先一句或短段概括，不靠实施流水账填充低动作章节；

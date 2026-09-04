@@ -1,0 +1,58 @@
+[
+  {
+    "label": "batch-primary-05_10",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "wall_seconds": 166.429,
+    "chars": 8823
+  },
+  {
+    "label": "batch-delta-05_10",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "wall_seconds": 733.47,
+    "chars": 2173
+  },
+  {
+    "label": "state-5",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 26.745,
+    "chars": 1352
+  },
+  {
+    "label": "state-6",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 26.596,
+    "chars": 1384
+  },
+  {
+    "label": "state-7",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 27.322,
+    "chars": 1451
+  },
+  {
+    "label": "state-8",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 28.752,
+    "chars": 1494
+  },
+  {
+    "label": "state-9",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 27.682,
+    "chars": 1307
+  },
+  {
+    "label": "state-10",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "wall_seconds": 26.83,
+    "chars": 1510
+  }
+]

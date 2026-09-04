@@ -32,6 +32,7 @@ TGN 要生成的是成熟中文男频成长长篇：读者明确想拥有主角�
 - 新优势、新层级或意外复合首次被他人看见时，允许 **Collective Shock / 群体震动、懂行者 Ruler Calibration、关键人物 Behavioral Repricing** 三条 Public Proof 并列成立；三者没有高低之分。主力量已有精确主尺时，三条线共用同一坐标：读者要知道主角/对手到底几级、几星、几重、差多少，以及这个超标怎样改变现场与社会价格；**Public Proof ≠ Hidden Mechanism Knowledge**：观察者只能解释自己实际看见的表现、公开主尺、伤势/器物和 World/Canon 已知事实，不能仅因高手在场就知道私有能力的永久性、隐藏触发、内部计数或因果；
 - **世界强制保留一把精确、长期可复用的主力量尺**：只能采用连续数字、大境界+数字子级或数字序列等简单 Grammar，使主要修炼者始终有唯一 `Current Power Position`。突破、新强敌、公开验证或世界换挡后重新校准；精确尺是 Reader Ruler，不是战斗公式，越级胜利不自动升级。新圈层只按各自真实知道的旧名声/战绩/已公开能力先判断，再因最低充分的新事实更新待遇、敌意或合作，不默认全知也不靠降智轻视；
 - **力量成长还必须有可复述的因果链**：World 冻结 Power Growth Causality（普通人怎样变强、为什么不能无限快、主要瓶颈/伤停/恢复是什么）；Power Seed 冻结 Growth Coupling（主角异常是否改变其中一环）；Story/Outline 用已有事件形成 Living Power Progression 与少量 Distance Closing；正文第一次进入力量体系时直接讲清最少充分因果，之后只补新的 delta。静态能力机制可随使用衰减解释，动态成长因果与 Ruler 不一起衰减；
+- **Reader-Facing Scene Ecology**：上游人物/世界很丰富不等于读者拿得到。重要人物已有公开精确力量位置且会改变现场行为时，让力量尺成为整个社会的共同语言，不只服务主角/Rival；Story Program 已明确决定的少量具名高阶演示通过 `Reader-Facing Actor Ruler Anchors` 原样送进 Outline/Future-10，不允许自由摘要丢演员/数字/地点。复杂多方场景先建立少量稳定空间锚点，动作若持续推进则周期性直接重报当前局势；有限 POV 帮读者完成最低充分判断。重要配角只携带当前会起作用的私人压力，不倾倒 Biography；多线大碰撞遵守 `Convergence is payoff, not simultaneous loading`；
 - Core Fantasy 必须反复兑现，但它是长期 **Reader Promise**，不是主角唯一的人生目的；
 - 长篇需要少量**震撼式长期重释**：旧事实在后续出现意外但可回看的新解释，并立刻改变力量、身份、关系或世界格局；不强制隐藏身世或伏笔配额；
 - 财富、装备、身份、关系、势力、领地、入口和资格可以很重要，但不逐渐取代主角自身成长；

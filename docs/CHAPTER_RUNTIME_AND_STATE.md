@@ -102,8 +102,8 @@ Preservation 默认依靠 Edit Locality，而不是 Desire / Surprise / Relation
 
 ### Outline Batch Packet / Primary / Authority Delta（默认）
 
-- **Outline Batch Packet｜deterministic**：直接从已批准 Future-10 抽取当前 4—6 章、默认 5 章的原始逐章条目；不由另一个 LLM 改写 Event / Result / Ending。复用现有 Chapter Context compiler，按章叠加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。跨章节 access provenance 若上游本身没决定，保留为上游冲突，不在这里补机制。
-- **Batch Primary｜Terra high**：一次连续写完整窗口。它的价值是让章节共享小说认知，而不是减少字数；前章摆出的空间、物件、关系与 Promise 可后章自然复用。已成立人物标签不靠固定口癖每章重证，世界独有规则也应在人物关系/命运中产生故事，而不只当解题机制。
+- **Outline Batch Packet｜deterministic**：直接从已批准 Future-10 抽取当前 4—6 章、默认 5 章的原始逐章条目；不由另一个 LLM 改写 Event / Result / Ending。复用现有 Chapter Context compiler，按章叠加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。Story Program 已经结构化进入 BOOK/Future-10 的 `Reader-Facing Actor Ruler Anchor Schedule` 仍按普通 Approved Plan transport 进入对应章，不新增 Runtime 节点或数据库。跨章节 access provenance 若上游本身没决定，保留为上游冲突，不在这里补机制。
+- **Batch Primary｜Terra high**：一次连续写完整窗口。它的价值是让章节共享小说认知，而不是减少字数；前章摆出的空间、物件、关系与 Promise 可后章自然复用。复杂多方 Action Block 应利用这个连续窗口保持 Stable Scene Geography，不让每章重新造舞台；动作推进后允许直接 Situation Re-anchor。重要人物已有公开力量坐标与当前私人压力时，让它们真实影响现场行为和对白，不把力量尺只留给主角/Rival，也不把所有配角压成一句任务。已成立人物标签不靠固定口癖每章重证，世界独有规则也应在人物关系/命运中产生故事，而不只当解题机制。
 - **Batch Authority Delta｜Sol high**：一次读取完整 Batch + Frozen Power/Human + safe World + Reader Release + Story/Outline/Canon；只返回 exact `OLD → NEW` 局部 patch，不输出全文。发现一处事实冲突后要扫描该事实域的跨章依赖；修复需要新世界机制或新重大事件时返回 `upstream_conflicts`。存在 conflict 时整批 `adoptable=false`；无 conflict 才一次保存全部最终章。
 - **State｜Luna low**：等整批 prose finalization 完成后，再按章号顺序从最终正文抽取。Batch 中途不以 Primary 临时稿更新 Canon。
 
