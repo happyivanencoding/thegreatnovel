@@ -40,8 +40,19 @@ def test_world_prompt_requires_reusable_social_power_rulers() -> None:
     assert "公开类别" in prompt
     assert "不把当前行动目的、隐藏关系、未解真相或未来 reveal" in prompt
     assert "创新落在事实与玩法，不落在词汇表" in prompt
+    assert "概念预算优先给真正值得记住的奇观、势力、人物与高价值遗物" in prompt
+    assert "普通墙砖、道路凭证、测量工具、修炼材料、常规药物、交通方式" in prompt
     assert "不能让一个新词必须再靠两三个本书新词才能解释" in prompt
     assert "不要为了证明原创而回避境界、功法、兵器、异兽、血脉、火雷" in prompt
+    assert "主尺名称` 默认写 `NONE`" in prompt
+    assert "身天尺 / 九门尺 / 开身序" in prompt
+    assert "Major Stage = Body Change = Action Space" in prompt
+    assert "基础行动权优先由大境界自身的身体/精神结构变化解释" in prompt
+    assert "公共新动词”只是后台字段名" in prompt
+    assert "禁止先给这个能力另起短名" in prompt
+    assert "身体/精神为什么做到" in prompt
+    assert "复杂度优先纵向加深，不横向铺满新机制" in prompt
+    assert "读者每到一地却不应该像重学一个小系统" in prompt
     assert "前台力量先给直接可感知的作用" in prompt
     assert "而不是先学习一套道路/路径概念" in prompt
 

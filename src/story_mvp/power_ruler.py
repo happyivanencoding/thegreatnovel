@@ -139,8 +139,9 @@ def _parse_position_line(text: str, prefix: str) -> tuple[str, str] | None:
             continue
         ruler_match = re.search(r"主尺[：:]\s*([^｜|]+)", line)
         position_match = re.search(r"精确位置[：:]\s*(.+?)\s*$", line)
-        if ruler_match and position_match:
-            return ruler_match.group(1).strip(), position_match.group(1).strip()
+        if position_match:
+            ruler_name = ruler_match.group(1).strip() if ruler_match else ""
+            return ruler_name, position_match.group(1).strip()
     return None
 
 
@@ -151,10 +152,13 @@ def validate_human_seed_start(human_seed: str, world_text: str) -> None:
     parsed = _parse_position_line(human_seed, INITIAL_POWER_POSITION_PREFIX)
     if parsed is None:
         raise ValueError(
-            "HUMAN_SEED.md 缺少 `开局精确力量位置｜主尺：...｜精确位置：...`，无法冻结开局精确力量位置"
+            "HUMAN_SEED.md 缺少 `开局精确力量位置｜[主尺：...｜]精确位置：...`，无法冻结开局精确力量位置"
         )
     ruler_name, position = parsed
-    if ruler_name != ruler.name:
+    if ruler.name == "NONE":
+        if ruler_name not in {"", "NONE"}:
+            raise ValueError(f"World Root 未使用公开主尺专名，Human Seed 不应另造主尺 `{ruler_name}`")
+    elif ruler_name != ruler.name:
         raise ValueError(f"Human Seed 主尺 `{ruler_name}` 与 World Root 主尺 `{ruler.name}` 不一致")
     if not _DIGIT_RE.search(position):
         raise ValueError("开局精确力量位置必须包含明确数字；未入门角色使用世界定义的 `0级/0段` 等精确零位")
@@ -165,6 +169,8 @@ def extract_initial_power_position(human_seed_or_human_core: str) -> str:
     if parsed is None:
         return ""
     ruler, position = parsed
+    if ruler in {"", "NONE"}:
+        return f"{CURRENT_POWER_POSITION_PREFIX}精确位置：{position}"
     return f"{CURRENT_POWER_POSITION_PREFIX}主尺：{ruler}｜精确位置：{position}"
 
 

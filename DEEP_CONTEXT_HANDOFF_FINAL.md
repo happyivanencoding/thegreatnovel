@@ -2391,6 +2391,12 @@ Author Workspace 新 `agentdock_acp` 曾出现稳定故障：ASCII 最小 Prompt
 
 Production 已改为从可信 `codex-acp.ps1` 安装锚点解析 JS entry，再由 `node.exe` 直接启动。顺带补齐两个原本潜伏的 callback 缺口：`fs/read_text_file` 只允许 project root 内 UTF-8 文件；`session/request_permission` 对 `execute` 选择 `allow_once`，但 session 始终保持 `read-only` sandbox，`edit` / file-write / permission escalation 仍拒绝。真实验证：中文 no-tool smoke 从 30 秒超时恢复为约 5.6 秒完成；读取 `PROJECT_RULES.md` 约 12.7 秒完成且 `tool_counts=1 completed`；写入探针返回 `WRITE_BLOCKED`、工具失败且文件未产生。该修复只改变 transport，不改变 Authority adoption、模型路由或小说 pipeline。
 
+## 2026-09-04｜World Reader Grammar：低词汇语法 + 高历史纵深 + Action-Space Coupling
+
+对同一“人体小宇宙、从古星走向星海”的 World 方向比较 Terra/Luna/Sol 与 high/max 后，确认此前的 reader burden 不是“世界太大”，而是**横向 reader-interface 复杂度过高**：World 会给整套精确力量尺另造 `身天尺 / 九门尺 / 开身序` 一类二次专名，又给每个大境界能力起 `悬行 / 离察 / 镇轨 / 应星` 一类短名，同时让普通材料、凭证、测量工具和每个地点各自拥有新术语/新机制；另外，境界表虽声称可以飞行、耐恶劣环境或进入星空，实际行动空间又常被平行的器物/资格/职业系统重新解释。Production World Vision 因此改为 **`World Depth ≠ Vocabulary Breadth`** 与 **`Major Stage = Body Change = Capability Milestone = World Aperture`**：概念预算优先给真正值得记住的奇观、人物、势力和高价值遗物；普通 supporting object 先用类别名；当前 Horizon 只保留少数 signature 异常地点，其余通过地理、Living Actors、旧史与强者遗痕变深。精确力量 Grammar 继续强制，但 `主尺名称` 默认 `NONE`；“化龙7重 / 43级”本身足够时不再创造整套尺名。`公共新动词` 只是后台槽位，直接写“能稳定飞行 / 能把感知送到体外 / 能在无空气环境长期生存”，并补一句身体/精神为何因此做到，不再给能力二次命名。对身体成长型玄幻，普通飞行、感知、恶劣环境生存、离星/横渡等基础行动权由境界自身解释；器物/阵法/异兽只负责低阶借用、效率、扩距或特殊路线，身份只负责合法准入。`NONE` 仅为 World parser 兼容字段，不继续进入 Human / Character / State；人物直接保存 `精确位置：某境N重`。
+
+同一新版 production Prompt（13142 chars）真实生成三版：Terra-high **161.70s / 4988 chars / 48029 tokens**；Luna-high **208.41s / 5907 chars / 47254 tokens**；研究用 Luna-max（通过 ACP 指向 Desktop Codex 0.153.1，production effort whitelist 未改）**581.41s / 6166 chars / 75367 tokens**。三版全部使用 `主尺名称=NONE`，并把飞行→识海外感→圣者脱离古星→更高层星海/天体行动写回同一身体成长曲线。Terra-high 最克制清楚；Luna-high 用 `源泉→神藏→四肢→贯脊→识海→圣→王→准至尊→至尊` 达到最接近传统玄幻母语的低解码成本；Luna-max 把大档进一步压至 `引源→开藏→锻肢→贯脊→识海→圣者→王者→准至尊`，同时保住鸣烬环、落环台、沉星灯、跨代旧案等奇观与历史厚度，当前单样本综合最好，但耗时约为 Luna-high 的 2.8 倍，**不足以改变 production 默认 Luna-high/high 路由**。专项 ruler/naming tests **22/22 PASS**，最终全仓 **532 passed**。`tgn-system-steward` 同步升级至 **0.3.53**，新增 World Depth vs Vocabulary Breadth、Precision ≠ Ruler Meta-Name 与 Action-Space Coupling 审计；安装后 bounded Luna-high read-only smoke **PASS**，正确把“境界只更强、飞行/星空生存另靠资格/器物/职业、每地一套术语和机制”的坏例最早定位回 World 层，并只要求收回到少数大境界的身体变化与行动空间，没有新增 Reviewer / 数据库 / Writer 补丁。
+
 ## Cognitive Integrity Check
 
 阅读本文后，一个新 Agent 不应只知道“项目采用了哪些 Prompt”，还应能够面对新案例作出以下判断：
