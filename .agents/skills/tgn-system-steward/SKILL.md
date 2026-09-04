@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.53
+version: 0.3.54
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -120,6 +120,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Behavior Signature may have a life root, never reverse-engineered trauma**：先看 Human 已成立的旧物、家庭位置、长期失去/占有经验或关系习惯能否自然给选择偏向加重量；没有就保持未知，禁止为了“人物深度”临时发明悲惨童年证明人格
 - Power novelty must still produce comparative privilege; reader-facing rulers must recur after major scale changes
 - **Small Grammar ≠ Small World; World Depth ≠ Vocabulary Breadth**：审计底层学习成本与 Fantasy Surface 丰富度时必须分开判断；少系统不能成为压掉装备、身体、异兽、环境、奇物、副轴与复合玩法的理由。进一步区分**纵向复杂度**与**横向复杂度**：历史重释、人物旧关系、同一地点跨时代留下的痕迹、世界尺度扩张可以很深；但若“世界很丰富”主要靠每个地点各有新物理规则、普通药/材料/凭证/测量工具都获专名、每个阶段能力再起短名来证明，就是 reader-interface 膨胀。审计概念预算是否优先留给真正值得记住的奇观、人物、势力与高价值遗物；删术语不能顺手删掉真实玩法与历史厚度
+- **World Depth ≠ Early Canon Breadth / Detail-on-Demand**：高质量 World Agent 能想到很多好地点、人物旧史和未来机会，不等于它们都应该在开书或本次 Expansion 变成 Authority。审计 World 时区分“模型想得深”与“Canon 冻得多”：Opening World 与 Forward Expansion 都应优先冻结 Root、当前自然 Horizon、当前 Living Actors、今天仍在产生后果的 Causal History，以及少量 Adaptive Scale Promise；未来局部城市、副本、支线遗迹、市场/分舵、一次性资源、尚未进入当前因果的人物和旧史布景默认 OPEN。**停止判断不是地点配额，而是因果充分性**：继续增加事实若已不会改变当前可行动选择、空间因果、价值判断、Reader orientation 或未来一致性，就应停止具体化。Scale Promise 只负责“世界怎样变大 + 当前必须稳定的最少根事实”，Landmark 由题材自适应，不是主角必去清单；远方 Promise / Deferred World 不应进入章节 Writer 的安全 World Authority。遇到“世界像任务地图 / Story 把所有好点子逐一打卡”时，先审 Early Canon Over-Specification 与 Universal World Tour，而不是先削弱世界想象力
 - **World Possibility Ecology is route-bearing, not a catalog**：当不同 Human 最后仍拿到同一第二/第三优势时，不要先强迫 Story Program“发不同能力”。先审 World 的高价值成长来源是否实际分布在不同 Living Actors、地点、承诺与时间窗口，还是一个最显眼机制构成所有路线都会回去的 universal upgrade trunk；再追 Story 是否因“把 World 都用上”让主角逐一打卡所有大会/矿塔/战争/秘境。**不要过早停在 `Opportunity → Privilege Delta`：如果给奖励加 route-local 约束后，不同 Human 仍实际访问同一批高价值节点，最早剩余根因是 `Choice → Route` 被 Universal World Tour 重新合流。** PASS 不要求人格→外挂一一映射，而要求真实选择可以改变可达/错过的机会，未选路线由 NPC 继续推进并留下不可逆结果
 - **Living World ≠ Symmetric Protagonist Privilege**：NPC / Rival 拿到主角错失的 signature reward、阶段性更强、拥有独门神兵/异兽/体质/绝技或某个专业长期第一，都不等于它应该获得主角同等级的递归 Advantage Stack。审计长期 Rival 时区分“强而自主”与“shadow protagonist”：若规划器只是为了让普通 Rival 永远追平主角，在主角每次新增 Asymmetry 后也自动补一个新异常/奇物/复合，最早坍缩在 Story Program 的长期 privilege allocation；不要反过来削弱 Rival。只有极少数由 Story Design 明确指定的镜像宿敌、共同成长极或最终 Boss 可作为有自己因果路线的例外
 - **World Independence ≠ World Amnesia**：protagonist-blind World Expansion 必须隔离 Current Character / 私有 Power / Human / 关系，但不能因此丢掉 `Canon → World State` 已成立的公共后果。若主角或其他行动者已公开改变跨地区力量估值、势力行动、市场/迁徙、警戒、联盟、传闻或公共入口，审计新 Horizon 是否把这些“世界上的凹痕”转化为当地 actor 的报价、招揽、敌意、路线或资源行动；只传播公共事实，不从结果反推隐藏机制或私人关系

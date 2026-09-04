@@ -261,6 +261,19 @@ Power / growth grammar 负责“怎样能变强”；Story 负责“什么时候
 
 因此审计应分别问：**读者需要重新学习多少底层规则/新词？已学规则还能长出多少真正不同的可玩东西？世界的厚度来自历史与复用，还是来自不断增加术语？** 不要用“少”自动否定丰富度，也不要用“新词多”冒充世界深。
 
+### World Depth ≠ Early Canon Breadth；Think Deeply, Freeze Sparsely
+
+World Agent 能想到很多高质量未来地点、人物旧史和机会，只说明它**设计能力强**，不说明这些东西现在就应该冻结。Opening World 与每次 Forward World Expansion 都把“思考深度”与“Canon 宽度”分开：
+
+- World Root、当前自然 Horizon、当前 Living Actors、今天仍在产生后果的 Causal History 需要具体；
+- 远方只保留少量 Adaptive Scale Promise，回答“世界怎样变大、当前有哪些根事实不能以后随便改”；Landmark 由题材自己长出，不套古墓/宗门/城市/星路模板；
+- 未来局部城市、副本、支线遗迹、市场/分舵、一次性资源、尚未进入当前因果的人物和旧史布景默认 OPEN，不用大量 TBD 替代 OPEN；
+- **停止点是因果充分性，不是数量配额**：继续增加事实已经不会改变当前可行动选择、空间因果、价值判断、Reader orientation 或未来一致性时，就停止具体化；
+- Causal History 冻结“谁做了什么 → 今天留下什么 → 谁因此怎样行动”，旧事的客栈、河谷、日期、沿途小遗迹等当前无因果价值时继续 OPEN；
+- Scale Promise / Deferred World 属于 planning/backstage Authority，不应进入章节 Writer 的安全 World Authority；只有未来 World Expansion 真正把某块 OPEN 区域具体化成当前 Horizon，它才进入 Writer。
+
+遇到“World 很精彩但像任务地图、Story 后来把所有好地点逐一打卡”时，先审 **Early Canon Over-Specification → Universal World Tour**，不要为了修任务感去削弱 World Agent 的想象力。相反，若 treatment 只是把未来都删光，连读者长期尺度承诺也消失，则属于过度稀疏，而不是 Progressive Skeleton。
+
 ### Secondary Fantasy Axis: Search Upstream, Choice Downstream
 
 反工程化不等于反专业幻想。若一条职业/技艺即使完全不增强正面战力，仍有独立强弱、顶层人物、作品/胜负、稀有成果与社会价格，读者可能愿意看某个人一路练到顶，它就有资格成为 Secondary Fantasy Axis。

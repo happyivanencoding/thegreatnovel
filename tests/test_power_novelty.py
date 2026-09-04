@@ -53,6 +53,14 @@ def test_world_prompt_requires_reusable_social_power_rulers() -> None:
     assert "身体/精神为什么做到" in prompt
     assert "复杂度优先纵向加深，不横向铺满新机制" in prompt
     assert "读者每到一地却不应该像重学一个小系统" in prompt
+    assert "Progressive World Skeleton / Think Deeply, Freeze Sparsely" in prompt
+    assert "细节按因果需求加载，不按世界规模加载" in prompt
+    assert "Scale Promise Spine ≠ 必去路线" in prompt
+    assert "不要求古墓、宗门、城市、禁区或星路" in prompt
+    assert "## Scale Promise Spine｜Adaptive Landmarks" in prompt
+    assert "## Deferred World｜Not Yet Canon" in prompt
+    assert "身天尺 / 九门尺 / 开身序 / 潮阶" in prompt
+    assert "不要突然用“到王境便能控制任意法则”" in prompt
     assert "前台力量先给直接可感知的作用" in prompt
     assert "而不是先学习一套道路/路径概念" in prompt
 

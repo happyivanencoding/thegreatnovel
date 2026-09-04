@@ -184,9 +184,10 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 - 明确区分 **Public World Knowledge / Mystery**：普通人从小知道的主流力量、粗略强弱尺、当前/下一档现实含义、日常危险、上升入口与价值物，要能被下游直接用普通话说明；环境纹理和专名不能替代基础答案。来源、隐藏原因、幕后关系与未来 reveal 继续进入知识边界；
 - 宗门、王朝、家族、商盟、种族等怎样真实影响人生； named 势力 / 部族若会进入世界大事，同时给一个不剧透的公开类别锚点，让章节期 WORLD AUTHORITY 能回答“它是什么”；
 - 世界里真正值钱、值得人物争夺和羡慕的东西；
-- 3—6 件即使主角从未出生也会推进的人物行动、战争、迁徙、竞争或灾难；
-- 少量真正改变今天行动的 **Existing Human History** 关系结：旧爱、亲缘、师徒、救命、背叛、共同失败、欠债、失踪者空位或上一代选择均可；自然时保留第三人/下一代传导，以及当前可信表层解释与尚未 reader-facing 的更深因果；
-- 真正值得进入的地点、奇观、危险与未知；
+- 当前自然 Horizon 内通常 2—4 件即使主角从未出生也会推进的人物行动、战争、迁徙、竞争或灾难；远方支线事件不为展示世界丰富度提前铺满；
+- 少量真正改变今天行动的 **Existing Human History** 关系结：旧爱、亲缘、师徒、救命、背叛、共同失败、欠债、失踪者空位或上一代选择均可；自然时保留第三人/下一代传导，以及当前可信表层解释与尚未 reader-facing 的更深因果；**冻结因果，不冻结无关布景**，旧事地点/日期/沿途小事件当前无因果价值时保持 OPEN；
+- 当前 Horizon 真正值得进入的地点、奇观、危险与未知；另保留少量**自适应 Scale Promise Spine**，只说明世界未来怎样扩大、现在必须稳定的最少根事实，以及哪些内部内容继续 OPEN；Landmark 不套古墓/宗门/城市/星路模板，也不是主角必去路线；
+- **Deferred World**：未来局部城镇、副本、支线遗迹、市场/分舵、一次性资源、未进入当前因果的人物默认不提前具体化；一旦继续加细节已经不会改变当前选择、空间因果、价值判断、Reader orientation 或未来一致性，就停止；
 - 普通人 / 专业人士 / 顶层势力各自知道什么。
 
 #### 不负责
@@ -210,7 +211,7 @@ World Vision 是 protagonist-blind：不知道未来主角是谁，也不知道�
 
 触发由故事边界决定，不按“每 100 章必须扩一次”缴税。100 章可以是普通长篇的观察尺度；真正条件是当前世界层已经难以继续制造新的欲望、尺度、入口或不同 Story Engine，且人物通过具体事件真正来到更高边界。
 
-World Expansion 使用 **GPT-5.6 Luna high 的 protagonist-blind fresh context**：只看 World Root、此前已批准 Expansion、明确的 `Canon → World State` 与小型 World craft；不看 Current Character、Power Stack、Human、关系、Story Handoff 的人物化答案或未来计划。它只创造世界现实，不替 Story 设计“最适合主角的下一件宝物”。但 protagonist-blind 不等于失忆：`World State` 是**世界影响残留（World Impact Residue）**，谁造成并不重要；只要某个行动者已经公开改变跨地区力量估值、势力行为、商路/价格、迁徙、警戒、联盟、传闻或公共入口，而且传播在世界内成立，新 Horizon 就应继承这些后果。若少量公开姓名、精确力量位置/越级战绩已经传播并会改变新区域 actor 的行动，可以保留其分量；不得从这些结果反推隐藏 Power 机制、私人欲望、关系或 Build，也不要求所有新人物围着旧主角反应。
+World Expansion 使用 **GPT-5.6 Luna high 的 protagonist-blind fresh context**：只看 World Root、此前已批准 Expansion、明确的 `Canon → World State` 与小型 World craft；不看 Current Character、Power Stack、Human、关系、Story Handoff 的人物化答案或未来计划。它只创造世界现实，不替 Story 设计“最适合主角的下一件宝物”。每次 Expansion 继续执行 **Progressive Detail Loading**：只把本轮真正到达的新 Horizon 变高清，通常收在 3—5 个可复用空间/势力锚点和 2—4 件无主角也会推进的当前事件；至少一条主要欲望直接指向本 Horizon 的奇观、强者、生物、传承、兵器、身体变化或其它 Fantasy Surface，普通修路/护运/维修/配给/路线管理只能作 supporting logic，不能占满新世界发动机。下一层只保留少量 Adaptive Scale Promise，未来局部地点/人物/奖励继续 OPEN；停止条件与 Opening World 相同——继续加事实已不会改变当前选择、空间因果、价值判断、Reader orientation 或一致性时就停。Small Grammar 同样跨 Expansion 复利，不因换城市/大陆/副本就重新造能量、资格、材料、测量名和行动权限。protagonist-blind 不等于失忆：`World State` 是**世界影响残留（World Impact Residue）**，谁造成并不重要；只要某个行动者已经公开改变跨地区力量估值、势力行为、商路/价格、迁徙、警戒、联盟、传闻或公共入口，而且传播在世界内成立，新 Horizon 就应继承这些后果。若少量公开姓名、精确力量位置/越级战绩已经传播并会改变新区域 actor 的行动，可以保留其分量；不得从这些结果反推隐藏 Power 机制、私人欲望、关系或 Build，也不要求所有新人物围着旧主角反应。
 
 力量尺也服从 Forward Expansion：`scope=macro` 只能延展 World Root 已冻结精确主尺的**可见数字范围**，不得把“每境1—9星”改成初/中/后期或另造第二套全局计数；如果本轮只扩地理/社会，精确尺范围可以 `NONE`。新范围第一次出现新的大阶段公共质变时，只追加对应的 `Public Milestone`，不回头改写 Root 已知 Milestone；没有新质变就不填。多世界副本流使用同一机制但有双层时钟：跨世界稳定规则留在 Global / Meta World；每个真正独立新世界用 `scope=instance` 追加 Local World Authority，并强制建立自己的**本地精确力量尺**；本地存在真正大阶段时可以有自己的 Local Milestone Ladder。本地尺与里程碑帮助读者理解该世界内部位置，但不会反向改写主角全局主尺。离开副本后 Local World 与本地尺从章节 `WORLD AUTHORITY` 退场；真正带走的 Power、物品、关系、身份、知识和 Meta consequence 继续留在 Canon。
 

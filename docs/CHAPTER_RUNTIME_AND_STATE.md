@@ -14,7 +14,7 @@ Batch Authority Reviser 不重输五章全文，只返回 exact local Delta；�
 
 章节 Runtime 默认不直接读取 raw GBrain。GBrain 对章节层的影响只通过已批准的 Story Program / Outline，以及离线深蒸馏后的 source-blind Scene Deep Craft 间接进入；原著 evidence 不进入章节模型。当前 Scene Skill v2 冻结为 **24 个 Primary + 3 个不进 Router 的 Shared Reference Lens**；Authority Reviser 目前只有 `social_bargain_decision` 与 `relationship` 两张 Skill 开放短 `Revision Watch`，其余 22 张为 `NONE`。
 
-已批准 `WORLD_VISION.md` 仍是一等 World Root，不由 Outline 的 `BOOK §2` 摘要替代。长期进入新 World Horizon 后，Runtime 组合 `World Root + 当前章已生效的 Forward World Expansions`，再确定性裁成安全 `WORLD AUTHORITY`。Expansion 只投影公共现实、力量/身份/价值尺度、公开地点/势力和具体价值物；世界人物未公开欲望、隐藏行动、未知边界与未来 reveal 不因存在于 Expansion 就直接进入 Writer。`scope=instance` 只在自己的 `Effective From/Until` 章节窗口生效，离开副本后 Local World 自动退场；跨副本留下的能力、物品、关系、知识与 Meta consequence 继续由 Canon 承载。
+已批准 `WORLD_VISION.md` 仍是一等 World Root，不由 Outline 的 `BOOK §2` 摘要替代。长期进入新 World Horizon 后，Runtime 组合 `World Root + 当前章已生效的 Forward World Expansions`，再确定性裁成安全 `WORLD AUTHORITY`。Expansion 只投影**已经具体化并进入本轮 Horizon**的公共现实、力量/身份/价值尺度、公开地点/势力和具体价值物；`Scale Promise Spine / 下一层 Scale Promise / Deferred World` 属于 planning/backstage Authority，**不会进入 Writer 的安全 WORLD AUTHORITY**，避免远方 OPEN 轮廓被正文提前写死。世界人物未公开欲望、隐藏行动、未知边界与未来 reveal 同样不因存在于 Expansion 就直接进入 Writer。`scope=instance` 只在自己的 `Effective From/Until` 章节窗口生效，离开副本后 Local World 自动退场；跨副本留下的能力、物品、关系、知识与 Meta consequence 继续由 Canon 承载。
 
 Outline 在 `BOOK §2 / Reader Release Map` 只保存 timing-sensitive、与该章实际事件相交的首次释放；未来仍作为 reveal 的答案不能提前排入 Map。Runtime 按当前章读取该条目，再从 WORLD AUTHORITY 做 bounded prefetch。Director 不读取完整 World，Curator 不重做 release 选择，Primary 也不自行选择世界资料。
 

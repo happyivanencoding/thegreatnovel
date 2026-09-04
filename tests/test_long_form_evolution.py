@@ -211,6 +211,12 @@ Effective Until Chapter: 0
 ## 世界人物欲望与正在发生的事
 沈家正在秘密追捕一名叛徒。
 
+## 下一层 Scale Promise｜Adaptive Landmarks
+天外祖庭｜尺度变化：进入更高文明层｜现在必须冻结：只知道确实存在｜保持 OPEN：内部人物、路线、奖励。
+
+## Deferred World｜Not Yet Canon
+未来祖庭内部全部保持 OPEN。
+
 ## 新 World Horizon 能产生的不同故事可能性
 可以写追捕、战争或夺宝。
 
@@ -235,6 +241,8 @@ Effective Until Chapter: 140
     assert "FORWARD WORLD EXPANSION 1" in authority
     assert "雾港世界" in authority
     assert "沈家正在秘密追捕" not in authority
+    assert "天外祖庭" not in authority
+    assert "未来祖庭内部全部保持 OPEN" not in authority
     assert "可以写追捕、战争或夺宝" not in authority
 
 
@@ -299,6 +307,15 @@ def test_prompt_boundaries_keep_surprise_until_recollision(tmp_path: Path) -> No
     assert "沈照" not in world_prompt
     assert "World Independence ≠ World Amnesia" in world_prompt
     assert "世界上的凹痕" in world_prompt
+    assert "Progressive Detail Loading 同样适用于每次 Expansion" in world_prompt
+    assert "一旦继续增加细节已经不会改变当前人物可行动选择" in world_prompt
+    assert "Small Grammar 继续累积，不因换地图重置" in world_prompt
+    assert "## 下一层 Scale Promise｜Adaptive Landmarks" in world_prompt
+    assert "## Deferred World｜Not Yet Canon" in world_prompt
+    assert "通常只需要 3—5 个能长期复用的空间/势力锚点" in world_prompt
+    assert "通常 2—4 件即可" in world_prompt
+    assert "不能让整段新世界主要靠修路、护运、维修、配给、路线管理或多方协调来发动" in world_prompt
+    assert "普通通行份额、维修方法、运输工具、配给资格" in world_prompt
     assert "主角私人欲望" not in world_prompt
 
     human_prompt = generate_split_prompt(
