@@ -1,0 +1,8 @@
+{
+  "total_model_wall_seconds": 895.792,
+  "calls": 19,
+  "batch_primary_wall_seconds": 334.419,
+  "batch_delta_wall_seconds": 296.631,
+  "patch_count": 6,
+  "upstream_conflicts": 0
+}

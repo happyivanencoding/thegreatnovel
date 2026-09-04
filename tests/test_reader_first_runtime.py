@@ -192,7 +192,11 @@ def test_reader_first_contract_and_curator_sections_are_scoped() -> None:
         "对话像人在现场传递信息",
         "世界观和空间信息只解释当前故事与开篇定向需要的最小部分",
         "公共常识要直接讲清",
+        "复杂场景先给可行动地图，不写三维坐标说明书",
         "不要只摆出火盆、服装、站位、专名或异常现象让读者自己推",
+        "动态成长因果不随之衰减",
+        "Tell clearly → Show repeatedly → Tell the new delta",
+        "关键后果的前提要在不可逆选择之前建立",
         "简单不等于空泛",
         "当前读者主问题",
         "具名的重要物品一旦明确换了持有人或位置",
@@ -639,6 +643,8 @@ def test_canon_memory_v2_and_state_delta_parser() -> None:
     assert "黑炉钥匙｜沈砚" in rendered
     assert "当前主动目标" in DEFAULT_STATE_DELTA_TEMPLATE
     assert "### Active Relationships" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "当前 Growth State" in DEFAULT_STATE_DELTA_TEMPLATE
+    assert "没有正文直接证据就不要推理" in DEFAULT_STATE_DELTA_TEMPLATE
     assert "### Tracked Assets" in DEFAULT_STATE_DELTA_TEMPLATE
 
     proposal = parse_state_delta_v2(

@@ -1,0 +1,1 @@
+{"output": "C:\\dev\\tgn-story-mvp\\books\\real-exp-living-power-progression-beast-20260903-v2\\calls\\state-2\\response.md", "chars": 1141, "stopReason": "end_turn", "usage": {"totalTokens": 33235, "inputTokens": 32217, "cachedReadTokens": 0, "outputTokens": 1018, "thoughtTokens": 188}}

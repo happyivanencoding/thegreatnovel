@@ -49,7 +49,7 @@ Reader-facing 世界规则先写具体作用，再命名：基础力量应能用
 
 ### 2.1 World Root 与 Forward World Expansion
 
-`WORLD_VISION.md` 不再被理解为“开书时必须把 500 章所有具体世界写完”。它冻结世界根语法、当前可见世界、公共正常值和足够的上升余量。**其中精确力量主尺 Grammar 必须在开书时冻结**：主尺只能采用连续数字、大境界+数字子级、数字序列三种简单形式，并明确数字范围与精确位置格式；这把尺是长期 Reader Ruler，不是机械胜负公式，但也不能只是装饰数字。World 当前常用 benchmark 应让下游知道哪些基础盘会随主尺真实提高；相性克制只自动改变它实际克制的部分，不能把明显更高档对手的其余基础盘一起抹掉。与这把“现在多强”的尺并列，World 还冻结当前可见范围内少数真正的 **Public Milestone Ladder**：大阶段不是数字区间别名，而是 `Capability Milestone = World Aperture`，至少让一种过去绝不可能的新动词变成常规可能，并同时改变社会识别与可进入世界；低阶者应有具体理由提前向往。大档名存在时优先作为第一力量身份，精确数字负责第二层校准。这里不逐级列能力、不固定节点数，也不写未来主角版本。故事真正走到边界时，使用 append-only `world_expansions/expansion-NNNN.md` 向未来增加新世界层；旧 World Root 不被改写。
+`WORLD_VISION.md` 不再被理解为“开书时必须把 500 章所有具体世界写完”。它冻结世界根语法、当前可见世界、公共正常值和足够的上升余量。**Power Growth Causality 与精确力量主尺 Grammar 都属于 World Root Authority。** 前者回答“力量从哪里来、普通人具体怎样让位置前进、为什么不能无限快、最主要瓶颈/伤停/恢复/资源限制是什么、天赋/功法/资源/际遇分别改变哪一环”；后者回答“当前到底多强”。不要求逐级公式，但不能只写“长期训练自然提升”。**其中精确力量主尺 Grammar 必须在开书时冻结**：主尺只能采用连续数字、大境界+数字子级、数字序列三种简单形式，并明确数字范围与精确位置格式；这把尺是长期 Reader Ruler，不是机械胜负公式，但也不能只是装饰数字。World 当前常用 benchmark 应让下游知道哪些基础盘会随主尺真实提高；相性克制只自动改变它实际克制的部分，不能把明显更高档对手的其余基础盘一起抹掉。与这把“现在多强”的尺并列，World 还冻结当前可见范围内少数真正的 **Public Milestone Ladder**：大阶段不是数字区间别名，而是 `Capability Milestone = World Aperture`，至少让一种过去绝不可能的新动词变成常规可能，并同时改变社会识别与可进入世界；低阶者应有具体理由提前向往。大档名存在时优先作为第一力量身份，精确数字负责第二层校准。这里不逐级列能力、不固定节点数，也不写未来主角版本。故事真正走到边界时，使用 append-only `world_expansions/expansion-NNNN.md` 向未来增加新世界层；旧 World Root 不被改写。
 
 - `scope=macro`：普通长篇进入新大陆、新文明、新力量圈层或更高社会/世界层；若力量上限扩大，只能延展 Root 精确主尺的可见范围，`主尺语法改动=NONE`；新范围第一次出现新的公共大质变时只追加新的 Public Milestone，不重写 Root 已知节点；
 - `scope=instance`：多世界副本流的一次独立 Local World，可设置 `Effective Until Chapter`，离开后不再进入章节 World Authority；每个独立 instance 也必须有自己的本地精确力量尺，本地存在大阶段时可有自己的 Local Milestone Ladder，但本地尺与里程碑都不回写全局主尺；
@@ -69,7 +69,7 @@ Power Seed 只读取确定性的 `POWER_BASELINE`、固定 1 条 source-blind Na
 
 Power Novelty Spark 是非 Canon 的轻量随机扰动：3 个候选各取一个“熟悉能力幻想 × 单一异常”，只负责拉开候选起点；不进入 Human / Story Program / Outline。Optional Lexique Primitive Pool 同样只在 Power 生成时存在：从项目 lexique 抽少量“对象 × 变化”，每个 Candidate 最多借 0—1 个，也可以全部忽略；只有它能给同一个主异常增加更具体的身体/器物/空间载体或真实新玩法时才采用，不得借它改写 POWER_BASELINE / Spark 已有触发、覆盖、代价或 Permanent Boundary，也不得长成第二系统。**Spark 负责不同，不负责强。** Power Asymmetry 才负责把候选推到明显超标：来源可以是世界内稀有天赋/体质、唯一奇物/际遇、外来知识/经验、外挂、极端正常天赋或少量优势叠加，不强制先证明为世界内合法例外。每个候选最多一个主异常，必须先用一句大白话讲清；固定 Naming Craft Reference 只在语义成立后帮助命名；首读准确高于世界气味，只有不牺牲准确时才复用 World 已有具体词根，lexique 只作次级气味，也可以不用；普通短名已经准确时不为“更独特”强改，名字不能反向授权新机制。默认宁可初稿偏强一档，也不要被 LLM 自动平衡成“更方便”。至少一个维度要让同层普通人/天才明显羡慕；但要保留 **Ruler Coupling**：公共主尺继续决定力量/能量总量、身体承受、范围、持续或 World 已批准的其它基础盘，Power Asymmetry 负责说明自己具体改写哪一部分。`局部高阶特权 ≠ 开局完整跨大档胜利`：新鲜相性克制可以制造远高阶失手、受伤、丢物、被迫重整或让主角逃生；跨明显大档的完整击败应由已经成立的多重优势因果共同支撑。**越级幅度本身是成长曲线**：早期同阶突出/小幅越级，后续随着主尺上涨、异常掌握、Advantage Stack 与复合能力再逐步扩大；不统一硬编码 `+N级`。Permanent Boundary 防万能但不做对称成本结算，优先只保留真正根边界；长期默认 **Boundary Stable, Privilege Expands**。复杂玩法从简单规则与后续功法/装备/环境等复合成长中长出来。直接型能力的后续掌握继续扩展控制、对象、战斗复合和危险场景下的稳定使用，不反向变成结构分析、材料诊断或路线计算；Legendary / Future Legend 也不能越过 Permanent Boundary。累积同类变体型 Core 优先保持一个 reader-facing 的个人能力语法，让新变体、旧变体升级和复合都挂在同一棵树上；非累积型能力不强造槽位或第二公开体系。
 
-它负责：相关正常值/稀缺度、Power Asymmetry、核心幻想、正常修炼轴、异常掌握轴、高阶质变、永久边界、传奇力量状态。
+它负责：相关正常值/稀缺度、Power Asymmetry、核心幻想、正常修炼轴、**Growth Coupling**、异常掌握轴、高阶质变、永久边界、传奇力量状态。Growth Coupling 必须读取 World 的 Power Growth Causality：明确普通人真正卡在哪里，以及该 Asymmetry 是否改变学习/吸收/身体或伴生承受/伤停恢复/资源效率/实战反馈/突破条件/机会获取中的某一环；若没有真实关系，明确写 `不改变正常修炼速度`，不能为后续剧情偷偷补修炼加速。
 
 `Future Legend Image` 只用于候选审计，不进入 Canon。Power Seed 匿名，不负责姓名与个人身份，也只定义**开局 Core Asymmetry**；全书后续新非对称优势由 Story Program 通过真实获得加入。正常成长必须真实增强主角本人，异常不能只把修炼替换成更聪明的职业技能。
 
@@ -130,7 +130,7 @@ Story Program 是第一次同时看到完整 World、完整 Character、T0 State
 
 核心合同：**不要把碰撞消解成命中注定的适配。** World 与 Character 都是既定事实；Story Program 负责它们碰撞后的事件、关系、反制、后果、阶段发动机与长期因果，不能为主题整齐重写上游。
 
-权威与调度分开：Power Seed 决定开局 Core Asymmetry 的成长语法；Story Program 决定它怎样实现，并可通过真实获得加入新的 Power Asymmetry、让新旧优势发生复合。后续新 Asymmetry 继承同一 Reader-facing 边界：先写“以前做不到什么、现在具体多能做什么”，再决定是否需要短名；新名只压缩已经理解的能力。**成长是全书纵向不变量，不是每阶段升级税。** Approved World 的 Public Milestone Ladder 则是 Frozen World Promise，Story Program 不得重新发明公共质变；它负责挑出当前 Horizon 真正值得期待的节点，借已经有自己故事因果的高阶人物/冲突/地点/入口提前演示，让主角因 Frozen Human 自己的欲望产生期待，再在真实突破时先兑现公共新动词、后兑现 Protagonist Expression。这样 `Power Progression × World Expansion` 共用一条发动机，但不把“展示→羡慕→突破”做成每阶段固定模板。**Outline 的职责不是等突破章再解释：一旦已有高阶 actor 真实展示这个公共新动词，或主角当前缺口已经让“到该 Milestone 就能做什么”成为眼前因果，就在最早真实触发章的 Reader Release 中提前命名最低充分 Promise；主角版本仍等 Story/Power 因果兑现。**
+权威与调度分开：Power Seed 决定开局 Core Asymmetry 的成长语法；Story Program 决定它怎样实现，并可通过真实获得加入新的 Power Asymmetry、让新旧优势发生复合。后续新 Asymmetry 继承同一 Reader-facing 边界：先写“以前做不到什么、现在具体多能做什么”，再决定是否需要短名；新名只压缩已经理解的能力。**成长是全书纵向不变量，不是每阶段升级税；但它必须是 Living Power Progression，而不是起点数字与终点数字之间的一段时间跳跃。** Story Program 沿 World `Power Growth Causality` 与 Power `Growth Coupling` 判断已有战斗、训练、探索、伤势恢复、资源、功法、伙伴变化究竟怎样改变 Power State；允许“没升级但瓶颈更清楚 / 当前发挥受伤势影响 / 某个中间动作稳定成立 / 距离 Milestone 更近”，没有真实因果就保持原位。重大 Milestone 前若跨度较长，应在本来已有的故事里留下少量 `Distance Closing`，例如5→9→12这样的精确位置、仍失败的最后门槛或成长速度比较，不为此另造验级章。Approved World 的 Public Milestone Ladder 则是 Frozen World Promise，Story Program 不得重新发明公共质变；它负责挑出当前 Horizon 真正值得期待的节点，借已经有自己故事因果的高阶人物/冲突/地点/入口提前演示，让主角因 Frozen Human 自己的欲望产生期待，再在真实突破时先兑现公共新动词、后兑现 Protagonist Expression。这样 `Power Progression × World Expansion` 共用一条发动机，但不把“展示→羡慕→突破”做成每阶段固定模板。**Outline 的职责不是等突破章再解释：一旦已有高阶 actor 真实展示这个公共新动词，或主角当前缺口已经让“到该 Milestone 就能做什么”成为眼前因果，就在最早真实触发章的 Reader Release 中提前命名最低充分 Promise；主角版本仍等 Story/Power 因果兑现。**
 
 Story Program 只具体规划**当前已批准 World Horizon**，而不是开书时一次写死剩余 500 章。非终局 Horizon 的最后 1—2 个自然阶段若已经把当前世界层主要压力活透，就输出普通 `World Horizon Handoff`：可观察触发条件、`macro / instance` scope、为什么此时应该扩、以及哪些已发生事实必须 carry forward。它不能预写下一世界的宝物、能力、势力或针对当前主角 Build 的答案；Handoff 也不会注入 World Expansion Agent。若作者明确当前就是小说最终 Horizon，则 Handoff 第一行改为 `FINAL NOVEL END`，不再触发 Expansion：主角进入最终公开力量最高可见圈层，并在最后决定性事件中用长期 Advantage Stack 完成同档的 Asymmetry Dominance；允许 Rival 同级、活着或在某一专业更强，未解释世界余白也不再登记成 future story obligation。
 
@@ -160,7 +160,7 @@ Refresh 对少数真正长期重要的 Supporting Cast 保留两种不同方向�
 
 ## 7. Outline：执行编译，不重新调度
 
-Outline 把已批准 Story Program 编译成当前窗口的具体 Story Anchors，不是第二个 Story Program。Public Milestone 已经是 World Authority；Outline 只在它第一次成为主角欲望/恐惧、当前高阶人物的真实展示、地点/身份准入门槛或本窗口突破时，把 `阶段/门槛 + 公共新动词 + 当前相关世界开口` 的最少充分事实排进 Reader Release。整张 Ladder 不在开篇倾倒，Protagonist Expression 也不由 Outline 发明。
+Outline 把已批准 Story Program 编译成当前窗口的具体 Story Anchors，不是第二个 Story Program。Public Milestone 已经是 World Authority；Outline 只在它第一次成为主角欲望/恐惧、当前高阶人物的真实展示、地点/身份准入门槛或本窗口突破时，把 `阶段/门槛 + 公共新动词 + 当前相关世界开口` 的最少充分事实排进 Reader Release。**主角第一次真实进入主力量尺时，若 World 已冻结 Power Growth Causality，Outline 在第1—3章最早自然机会同时排一次最低充分成长常识：普通人怎样让精确位置前进、为什么不能无限快；若当前受伤恢复/共鸣磨合/训练尝试又正好触发 Power 的 Growth Coupling，就直接让读者知道 Asymmetry 改了哪一环，即使本章没有升级。** 整张 Ladder 不在开篇倾倒，Protagonist Expression 也不由 Outline 发明。
 
 每块只在 `Block Delta` 中记录**相对本块开始真正变化的维度**；没有变化就省略。关系/世界驱动的块可以完全没有 Power、Possession 或新地图；反过来，Story Program 已安排在当前窗口的真实成长又不能被省略。
 

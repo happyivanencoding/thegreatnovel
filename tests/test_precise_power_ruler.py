@@ -371,6 +371,9 @@ def test_precise_ruler_is_wired_into_all_three_public_proof_lanes() -> None:
     ruler = PERSISTENT_READER_RULER_DIRECTION
     assert "唯一 `Current Power Position`" in ruler
     assert "43级对58级" in ruler
+    assert "力量尺要像群众反应一样成为叙事母语" in ruler
+    assert "16级，离合载19还差3级" in ruler
+    assert "Proof Decay ≠ Ruler Decay" in ruler
     assert "精确位置是公开坐标，不是胜负公式" in ruler
 
     reviser = DEFAULT_PROMPT_TEMPLATES["authority_reviser"]

@@ -1,0 +1,154 @@
+[
+  {
+    "label": "world",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": true,
+    "wall_seconds": 0.0,
+    "chars": 5737
+  },
+  {
+    "label": "power",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": true,
+    "wall_seconds": 0.0,
+    "chars": 5743
+  },
+  {
+    "label": "human",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": true,
+    "wall_seconds": 0.0,
+    "chars": 4002
+  },
+  {
+    "label": "story",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "reused": true,
+    "wall_seconds": 0.0,
+    "chars": 11133
+  },
+  {
+    "label": "outline",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "reused": true,
+    "wall_seconds": 0.0,
+    "chars": 13597
+  },
+  {
+    "label": "batch-primary-01_05",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "reused": false,
+    "wall_seconds": 159.079,
+    "chars": 8852
+  },
+  {
+    "label": "batch-delta-01_05",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "reused": false,
+    "wall_seconds": 210.679,
+    "chars": 373
+  },
+  {
+    "label": "state-1",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 25.653,
+    "chars": 1270
+  },
+  {
+    "label": "state-2",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 25.975,
+    "chars": 1289
+  },
+  {
+    "label": "state-3",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 22.956,
+    "chars": 1139
+  },
+  {
+    "label": "state-4",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 24.576,
+    "chars": 1260
+  },
+  {
+    "label": "state-5",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 28.029,
+    "chars": 1449
+  },
+  {
+    "label": "batch-primary-06_10",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "reused": false,
+    "wall_seconds": 175.34,
+    "chars": 7494
+  },
+  {
+    "label": "batch-delta-06_10",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "reused": false,
+    "wall_seconds": 85.952,
+    "chars": 1245
+  },
+  {
+    "label": "state-6",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 28.628,
+    "chars": 1412
+  },
+  {
+    "label": "state-7",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 27.248,
+    "chars": 1340
+  },
+  {
+    "label": "state-8",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 21.559,
+    "chars": 1084
+  },
+  {
+    "label": "state-9",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 30.328,
+    "chars": 1359
+  },
+  {
+    "label": "state-10",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "reused": false,
+    "wall_seconds": 29.79,
+    "chars": 1629
+  }
+]

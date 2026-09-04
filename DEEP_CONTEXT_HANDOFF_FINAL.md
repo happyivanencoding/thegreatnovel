@@ -1,6 +1,6 @@
 # DEEP CONTEXT HANDOFF
 
-日期：2026-09-03
+日期：2026-09-04
 项目：TheGreatNovel / TGN Story MVP
 主要工作目录：`C:\dev\tgn-story-mvp`
 开发分支：`principal_dev_new_sys`
@@ -47,6 +47,29 @@
 - **Forward-only**：macro World Expansion 若第一次暴露新力量范围，只为新公开范围追加新的 Public Milestone，不重写 Root；独立 instance 可有自己的 Local Milestone Ladder，离开 Local World 后不回写全局体系。
 
 本轮刻意没有新增 Agent、Reader State 数据库、每境界能力表、固定六/七节点模板、第二战力系统或新的 Hard Gate。核心实现只扩展既有 `World → Power → Story Program → Outline/Reader Release` Authority 链；是否真正达到“读者合上五章就知道现在什么阶段、下一阶段为什么值得等”仍必须由后续 Batch 正文 held-out 验证，而不能用 prompt contract 自证成功。
+
+---
+
+### 0.0B 2026-09-04 冻结：Power Growth Causality / Living Power Progression / Reader-Explicit Growth
+
+驭兽 production Batch 在 Public Milestone / 精确主尺已经成立后暴露了下一层问题：**知道“现在几级”和“未来某大阶段能做什么”仍不等于读者知道“力量到底怎样长出来”。** 旧版本可以给出清楚的共鸣级，却仍可能把一大段成长压成“练了几个月 → 直接到某级”；能力说明衰减又容易误伤动态成长说明，使“为什么主角成长更快、为什么别人不能同样快、受伤/恢复怎样影响成长”只留在后台。
+
+本轮用同一驭兽 author direction、冻结 GBrain、相同候选选择方式做了 V1→V2 production 实验。V1 路径：`books/real-exp-living-power-progression-beast-20260903-v1`；V2 路径：`books/real-exp-living-power-progression-beast-20260903-v2`。V2 最终两批 Terra Primary + 两批 Sol Authority Delta + 10 次 Luna State 全部完成，`29` 个局部 Delta、`0 upstream conflict`。最终正文 `FULL_10_CHAPTERS.md/.txt` 已落盘。
+
+冻结 decision model：
+
+- **Power Growth Causality = World Root Authority**：World 不只写等级结果，还冻结“力量从哪里进入人/身体/器物；普通人每天具体怎样变强；什么真实负荷/吸收/理解/战斗/资源消化使精确位置前进；为什么不能无限快；主要伤停/恢复、资源、身体/伙伴承受或突破瓶颈是什么；天赋/功法/资源/际遇分别改变哪一环”。不要求逐级公式。
+- **Growth Coupling = Power Authority**：Power Seed 必须明确 Asymmetry 是否改变正常成长链的一环。若改变，写清 `普通人卡在哪里 → 主角改了哪一环 → 为什么可能更快/更稳/上限不同`；若无真实关系，明确 `不改变正常修炼速度`，Story 不得偷偷把它解释成升级加速。
+- **Living Power Progression = Story responsibility**：Story Program 沿 World Growth Causality + Power Growth Coupling 判断既有战斗、训练、探索、伤势恢复、资源、功法、伙伴变化怎样改变 Power State。可以升级，也可以只逼近、恢复、看见瓶颈、稳定中间动作或提高异常掌握。重大 Milestone 前若跨度较长，在本来已有故事里留下少量 `Distance Closing`（如共鸣级5→9→12），不为此新造验级/复测章。
+- **第一次进入主力量尺时就解释最少充分成长因果**：Outline 不等真正升级或训练蒙太奇才讲。第1—3章只要有自然的伤势恢复、共鸣磨合、训练尝试等场景，就安排一次“普通人怎样让位置前进 + 为什么不能无限快”；Growth Coupling 已触发时同时说主角具体改了哪一环，即使本章没有升级。
+- **Tell clearly → Show repeatedly → Tell the new delta**：核心成长链第一次用普通话说清，后续靠不同故事事件证明，每次只补新的那一环、新数字/状态或新世界开口。
+- **Mechanism Explanation Decay 只作用于静态边界；动态 Growth Causality 不衰减。** 已理解的 `能A/不能B` 不重复念，但“为什么这次修炼有效/无效、为什么主角更快/并不更快、伤势为何停住成长、当前精确位置/状态/离下一 Milestone 多远”属于新 Reader Model，必须继续更新。
+- **Proof Decay ≠ Ruler Decay**：能力不需要换一批证据反复证明，但训练结果、对手位置、门槛、伤势状态、成长速度、距离下一质变只要出现新的比较价值，就顺手刷新 Reader Ruler；没有新比较价值不机械报表。
+- **State 只保存已发生 Growth State，不推理**：`Power / Capability` 除固定 Current Power Position 外，可压缩保存正文已明确证明的“减少伤停/提高有效训练、当前没升级但中间能力稳定、伤势暂时压低发挥、最后瓶颈仍在”等事实；没有正文证据不推断。
+
+V2 的关键正文验证不是“多写了说明”，而是解释进入了自然故事位置：第2章处理贺临川与照雪的伤势时，正文直接告诉读者“共鸣不是一张牌；人和兽谁先伤着，两个都得停；真要往上走，只能一人一兽共同承受略高于当前稳定范围的负荷，再共同恢复；先见一瞬只减少真正致伤的一次误判，不增加力量、不抬高基础上限”。第3章继续用 `共鸣级1 vs 共鸣级26` 及合拍能力直接校准差距，而没有因主角局部闪避就抹掉二十五级基础盘。
+
+这轮同样**没有新增 Agent、Power State 数据库、每章验级 KPI、训练专用章、Reviewer、Hash 或新的 LLM 调用层**。最小修复仍在现有 `World → Power → Story → Outline → Batch Primary/Reviser → State` 链上。`tgn-system-steward` 因此升级到 **0.3.49**。
 
 ---
 

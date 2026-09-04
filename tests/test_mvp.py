@@ -2716,6 +2716,8 @@ def test_compounding_growth_contract_is_limited_to_creative_chain() -> None:
     assert "不新增 Prelude / Setup 章" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "明显陌生/架空世界的第1章是公共常识定向的例外" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "默认把其中不同功能的事实拆成 2—3 条 `公共常识` Reader Release" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "普通人怎样让位置前进 + 为什么不能无限快速升级" in DEFAULT_PROMPT_TEMPLATES["outline"]
+    assert "不要等到数章后的训练蒙太奇或真正升档才第一次解释" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "不同功能的公共常识分行" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "World Entry 的 trigger 是人物真正跨过门槛的那一章" in DEFAULT_PROMPT_TEMPLATES["outline"]
     assert "直到 N+1 第一次遇险、封路或见强者时才补" in DEFAULT_PROMPT_TEMPLATES["outline"]

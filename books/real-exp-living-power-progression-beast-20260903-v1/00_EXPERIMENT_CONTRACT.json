@@ -1,0 +1,22 @@
+{
+  "source_heldout": "C:\\dev\\tgn-story-mvp\\books\\real-exp-power-ruler-heldout-20260903-v1\\B_beast_bond",
+  "frozen_author_direction": true,
+  "frozen_gbrain_from_source_heldout": true,
+  "power_candidate": 1,
+  "human_candidate": 1,
+  "premise": "skipped (same split-authority path as source held-out)",
+  "models": {
+    "world": "gpt-5.6-luna/high",
+    "power": "gpt-5.6-luna/high",
+    "human": "gpt-5.6-luna/high",
+    "story": "gpt-5.6-sol/high",
+    "outline": "gpt-5.6-luna/high",
+    "batch_primary": "gpt-5.6-terra/high",
+    "batch_delta": "gpt-5.6-sol/high",
+    "state": "gpt-5.6-luna/low"
+  },
+  "batch_size": 5,
+  "chapters": 10,
+  "manual_prose_treatment": false,
+  "treatment": "Living Power Progression / Reader-Explicit Growth / Frequent Ruler Refresh"
+}

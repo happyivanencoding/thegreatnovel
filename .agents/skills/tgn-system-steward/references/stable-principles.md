@@ -287,6 +287,21 @@ Power / growth grammar 负责“怎样能变强”；Story 负责“什么时候
 - macro World Expansion 只能延展同一主尺范围，不能换计数语法；真正独立 instance 可以有自己的本地精确尺，但不能重写全局尺；
 - Public Proof 与主力量相关时，Collective Shock、Ruler Calibration、Behavioral Repricing 应尽量共享同一精确坐标，而不是后台知道43 vs 58、正文仍只写“好强 / 全场震惊”。
 
+### 11.1 Living Power Progression：尺有信用以后，还要让“怎么变强”有信用
+
+一把稳定精确主尺仍然可能写出死成长：起点数字明确，终点数字明确，中间只剩“苦练数月”。长期成长体系还需要另一条 authority chain：
+
+`World Power Growth Causality → Power Growth Coupling → Story Living Power Progression / Distance Closing → Outline early Reader Release → Prose Reader-Explicit Growth → State Growth State`
+
+关键边界：
+
+- World 先回答普通人怎样真正让位置前进、为什么不能无限快速升级、主要伤停/恢复/资源/身体或伙伴承受瓶颈是什么；
+- Power 明确 Asymmetry 是否改变其中一环；没有真实关系就写“不改变正常修炼速度”，不能为剧情偷偷补加速；
+- Story 利用本来已有的战斗、训练、探索、伤势、资源、功法和伙伴事件留下少量中间位置、瓶颈或状态变化；不为成长感另造复测/验级 filler；
+- 主角第一次进入力量体系时，若前几章已有自然的受伤恢复/磨合/训练机会，Outline 就安排一次最低充分“普通人怎么长 + 为什么主角更快/并不更快”，不能等到真正升级章再解释；
+- `Mechanism Explanation Decay` 只适用于已经理解的静态能力边界；动态成长因果、当前精确位置、伤势状态和离下一质变的距离属于新 Reader Model，继续更新；
+- `Proof Decay ≠ Ruler Decay`：同一能力无需反复证明，但每当比较对象、位置、状态或距离发生新的相对变化，最短 Ruler refresh 仍有价值。
+
 ## 12. Narrative Compounding > Asset Compounding
 
 真正的复利是故事不回原点：

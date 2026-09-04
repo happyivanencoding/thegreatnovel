@@ -17,6 +17,9 @@ STATE = {"world_vision": {"status": "author_approved"}}
 def test_world_prompt_requires_reusable_social_power_rulers() -> None:
     prompt = generate_split_prompt(mode="world_vision", creative_direction="男频修仙")
     assert "力量尺必须能长期反复拿来比较" in prompt
+    assert "Power Growth Causality 是 World Root Authority" in prompt
+    assert "### 正常成长因果｜Power Growth Causality" in prompt
+    assert "为什么不会人人快速升级" in prompt
     assert "精确力量主尺是强制 World Root Authority" in prompt
     assert "唯一精确当前位置" in prompt
     assert "主尺类型" in prompt
@@ -112,6 +115,9 @@ def test_power_prompt_auto_injects_noncanon_novelty_sparks() -> None:
     assert "不要为不同世界硬编码统一的 `+N级` 上限" in prompt
     assert "不要新增“超标坐标/比较表/评分”等输出字段" in prompt
     assert "不要让长期成长只剩数量、距离、持续时间越来越大" in prompt
+    assert "必须读取 World 已冻结的 `Power Growth Causality`" in prompt
+    assert "### 正常成长耦合｜Growth Coupling" in prompt
+    assert "不改变正常修炼速度" in prompt
     assert "不要逐步退化成互不相干的“技能背包”" in prompt
     assert "Public Milestone 是世界公共质变，High-Tier Mutation 是这个 Core 的个人表达" in prompt
     assert "不要让 Power Candidate 偷偷改写" in prompt
@@ -146,6 +152,9 @@ def test_story_program_keeps_later_asymmetries_reader_facing() -> None:
     assert "Expectation Ladder" in prompt
     assert "Major Stage = Capability Milestone = World Aperture" in prompt
     assert "让读者在主角抵达以前亲眼见过一次" in prompt
+    assert "Living Power Progression" in prompt
+    assert "Distance Closing" in prompt
+    assert "Tell clearly → Show repeatedly → Tell the new delta" in prompt
     assert "Power Identity 要比技能清单更稳定" in prompt
     assert "外部兵器、法宝、坐骑等仍是外部资产" in prompt
     assert "Bonus Surprise is allowed" in prompt

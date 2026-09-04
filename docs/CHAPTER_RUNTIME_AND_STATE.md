@@ -157,7 +157,7 @@ State Extraction 还为长篇 Forward Evolution 提供**已经发生的原料**�
 
 这里必须区分 **memory correctness** 与 **story advancement**：State 的职责是把旧 Rival、关系、资产、Mystery、世界后果正确保存，防止未来失忆；它**不负责决定哪条旧线下一轮必须前景化**。因此“某长期线还在 OPEN PROMISES / PERSISTENT CANON”不能被 Story Program 视作已经推进。跨 Horizon 是否真的产生新事实，由后续 Story Refresh / Outline 决定；State 只提供真实原料，不把记忆数据库升级成主线调度器。
 
-- `Power / Capability`：第一行固定保存 `Current Power Position｜主尺：…｜精确位置：…`，随后维护后续已获得/证明的 Power Delta、身体变化、武器使用能力与关键边界；Frozen Power Core 不在这里重写。累积同类变体型 Core 继续按已经成立的统一个人能力语法压缩保存（已掌握哪些同族变体、哪些复合已经真实成立），不要拆成互不相关的技能包；外部兵器/法宝/坐骑的所有权留在 `Tracked Assets`。等级没变时沿用上一精确位置；只有最终正文明确突破才更新。State 模型偶尔漏写该行时，runtime 确定性保留上一 Canon 位置；越级胜利、承受高阶攻击或社会重新估价都不能推断升级；
+- `Power / Capability`：第一行固定保存 `Current Power Position｜主尺：…｜精确位置：…`，随后维护后续已获得/证明的 Power Delta、身体变化、武器使用能力与关键边界；若正式正文已经直接建立新的 **Growth State**（例如某 Asymmetry 被证明减少伤停/提高有效训练、当前位置没变但一个中间动作已稳定、伤势暂时压低当前发挥、最后瓶颈仍未跨过），只把这个以后会影响力量规划的已发生事实压成最短一句保留；没有正文直接证据不推理。Frozen Power Core 不在这里重写。累积同类变体型 Core 继续按已经成立的统一个人能力语法压缩保存（已掌握哪些同族变体、哪些复合已经真实成立），不要拆成互不相关的技能包；外部兵器/法宝/坐骑的所有权留在 `Tracked Assets`。等级没变时沿用上一精确位置；只有最终正文明确突破才更新。State 模型偶尔漏写该行时，runtime 确定性保留上一 Canon 位置；越级胜利、承受高阶攻击或社会重新估价都不能推断升级；
 - `Active Relationships`：只保存仍会改变选择的少量人物关系事实。对重要人物优先保留其**自己的当前目标 / 已启动动作**，与主角关系只是其中一项；若两名重要人物之间已有会改变行动的关系，可最短保留一次。State 不画全员关系网，也不能补造离屏恋爱、联盟、背叛、升级或其它未发生历史；
 - `Identity / Access`：仍会改变待遇/入口的长期身份；
 - `Knowledge / Enemy State`：确认知识、重要误解与持续敌我状态；
