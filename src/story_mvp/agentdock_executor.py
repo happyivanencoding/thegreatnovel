@@ -69,8 +69,8 @@ def resolve_acp_path() -> Path:
     return Path.home() / "AppData" / "Roaming" / "npm" / "codex-acp.ps1"
 
 
-def resolve_powershell_host() -> str:
-    return shutil.which("pwsh.exe") or shutil.which("powershell.exe") or "powershell.exe"
+def resolve_node_host() -> str:
+    return shutil.which("node.exe") or shutil.which("node") or "node.exe"
 
 
 def _safe_public_text(value: object, *, max_chars: int = 180) -> str:
@@ -232,7 +232,7 @@ def _stop_process(process: Any, *, wait_seconds: float = 2.0) -> None:
 
 class AgentDockJobManager:
     """有界内存作业表；每条作业只能启动一个受限 ACP 子进程。"""
-    def __init__(self, project_root: Path, *, acp_path: Path | None = None, powershell_host: str | None = None,
+    def __init__(self, project_root: Path, *, acp_path: Path | None = None, node_host: str | None = None,
         max_concurrency: int = 1, max_completed_jobs: int = MAX_COMPLETED_JOBS,
         max_pending_jobs: int = MAX_PENDING_JOBS,
         job_timeout_seconds: float = DEFAULT_JOB_TIMEOUT_SECONDS, rpc_timeout_seconds: float = DEFAULT_RPC_TIMEOUT_SECONDS,
@@ -240,7 +240,7 @@ class AgentDockJobManager:
         clock: Clock | None = None) -> None:
         self.project_root = Path(project_root).resolve()
         self.acp_path = Path(acp_path) if acp_path is not None else resolve_acp_path()
-        self.powershell_host = powershell_host or resolve_powershell_host()
+        self.node_host = node_host or resolve_node_host()
         self.max_concurrency = max(1, min(int(max_concurrency), 2))
         self.max_completed_jobs = max(1, int(max_completed_jobs))
         self.max_pending_jobs = max(self.max_concurrency, int(max_pending_jobs))
@@ -506,10 +506,13 @@ class AgentDockJobManager:
                     self._prune_completed_locked()
 
     def _command(self) -> list[str]:
-        return [self.powershell_host, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(self.acp_path)]
+        return [self.node_host, str(self._acp_entry_path())]
+
+    def _acp_entry_path(self) -> Path:
+        return self.acp_path.parent / "node_modules" / "@agentclientprotocol" / "codex-acp" / "dist" / "index.js"
 
     def _available(self) -> bool:
-        try: return bool(self._executable_exists(self.acp_path))
+        try: return bool(self._executable_exists(self.acp_path) and self._executable_exists(self._acp_entry_path()))
         except OSError: return False
 
     def _execute(self, process: Any, job: AgentDockJob) -> dict[str, Any]:
@@ -520,6 +523,7 @@ class AgentDockJobManager:
             clock=self._clock,
             rpc_timeout_seconds=self.rpc_timeout_seconds,
             deadline=deadline,
+            read_root=self.project_root,
             on_update=lambda message: self._handle_transport_update(job.job_id, message),
         )
         self._record_activity(job.job_id, phase="connecting", kind="phase", label="正在协商 ACP 协议")
@@ -569,10 +573,12 @@ class _JsonRpcTransport:
         clock: Clock,
         rpc_timeout_seconds: float,
         deadline: float,
+        read_root: Path,
         on_update: Callable[[dict[str, Any]], None] | None = None,
     ) -> None:
         self.process, self.is_cancelled, self._clock = process, is_cancelled, clock
         self.rpc_timeout_seconds, self.deadline, self._request_id = rpc_timeout_seconds, deadline, 0
+        self.read_root = Path(read_root).resolve()
         self.on_update = on_update or (lambda _message: None)
         # Apply bounded backpressure instead of letting long ACP notification
         # bursts grow process memory without limit. The request loop drains this
@@ -610,7 +616,7 @@ class _JsonRpcTransport:
             try: message = json.loads(line)
             except json.JSONDecodeError: continue
             if "id" in message and "method" in message:
-                self._deny_callback(message); continue
+                self._handle_callback(message); continue
             self._record_update(message)
             if message.get("id") == request_id:
                 if "error" in message: raise self._transport_error(str(message["error"].get("message", "ACP 请求失败")), "rpc_error", 502)
@@ -639,6 +645,81 @@ class _JsonRpcTransport:
     def _send(self, message: dict[str, Any]) -> None:
         self.process.stdin.write(json.dumps(message, ensure_ascii=False) + "\n")
         self.process.stdin.flush()
+
+    def _handle_callback(self, message: dict[str, Any]) -> None:
+        method = message.get("method")
+        if method == "fs/read_text_file":
+            self._read_text_file(message)
+            return
+        if method == "session/request_permission":
+            self._handle_permission_request(message)
+            return
+        self._deny_callback(message)
+
+    def _handle_permission_request(self, message: dict[str, Any]) -> None:
+        params = message.get("params") or {}
+        tool_call = params.get("toolCall") or {}
+        options = params.get("options") or []
+        tool_kind = str(tool_call.get("kind") or "")
+        desired_kind = "allow_once" if tool_kind == "execute" else "reject_once"
+        selected = next(
+            (option for option in options if isinstance(option, dict) and option.get("kind") == desired_kind),
+            None,
+        )
+        if selected is None and tool_kind != "execute":
+            selected = next(
+                (option for option in options if isinstance(option, dict) and str(option.get("kind", "")).startswith("reject_")),
+                None,
+            )
+        if selected is None:
+            self._send({
+                "jsonrpc": "2.0",
+                "id": message["id"],
+                "result": {"outcome": {"outcome": "cancelled"}},
+            })
+            return
+        self._send({
+            "jsonrpc": "2.0",
+            "id": message["id"],
+            "result": {"outcome": {"outcome": "selected", "optionId": selected["optionId"]}},
+        })
+
+    def _read_text_file(self, message: dict[str, Any]) -> None:
+        params = message.get("params") or {}
+        path_value = params.get("path")
+        try:
+            if not isinstance(path_value, str) or not path_value:
+                raise ValueError("missing path")
+            requested = Path(path_value)
+            if not requested.is_absolute():
+                raise ValueError("path must be absolute")
+            target = requested.resolve()
+            target.relative_to(self.read_root)
+            if not target.is_file():
+                raise ValueError("not a file")
+
+            line_value = params.get("line")
+            limit_value = params.get("limit")
+            line = 1 if line_value is None else int(line_value)
+            limit = None if limit_value is None else int(limit_value)
+            if line < 1 or (limit is not None and limit < 0):
+                raise ValueError("invalid line range")
+
+            text = target.read_text(encoding="utf-8")
+            if line != 1 or limit is not None:
+                lines = text.splitlines(keepends=True)
+                start = line - 1
+                text = "".join(lines[start:] if limit is None else lines[start:start + limit])
+            self._send({"jsonrpc": "2.0", "id": message["id"], "result": {"content": text}})
+        except (OSError, UnicodeError, ValueError):
+            self._send({
+                "jsonrpc": "2.0",
+                "id": message["id"],
+                "error": {
+                    "code": -32000,
+                    "message": "TGN AgentDock read-only client can only read UTF-8 files under the project root",
+                },
+            })
 
     def _deny_callback(self, message: dict[str, Any]) -> None:
         self._send({"jsonrpc": "2.0", "id": message["id"], "error": {"code": -32601, "message": "TGN AgentDock read-only client denies permission, file, and terminal callbacks"}})

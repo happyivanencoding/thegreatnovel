@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.50
+version: 0.3.51
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -312,9 +312,10 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 1. **Trusted transport boundary**：executable、cwd、mode、MCP、认证方式和模型白名单必须由可信后端决定，不能由浏览器任意提交；状态接口不得泄露用户名、绝对路径、凭据或完整命令。若 production 声称 read-only，必须验证真实模式与 callback policy，而不是只看 UI 文案。
 2. **Response-only completion**：transport 完成最多把文本放入一个明确 Response target；不得自动 Save / Apply / Adopt / Approve，不得通过 CLI 旁路现有 Authority API。Workflow / Run Ledger artifact 状态与 executor job 状态必须分开显示。
 3. **Identity-safe return**：任何异步结果自动回填都至少绑定 book、chapter、workflow node、必要的 Batch window 与 launch identity；共享编辑区还要保护作者在运行期间的手工修改。错书、错章、错节点、旧 launch、刷新恢复、服务重启丢失或作者已编辑时，结果只能只读预览或 fail loud，不能“最后完成者覆盖当前页”。
-4. **Bounded process lifecycle**：短控制 RPC 与长生成任务分别有 deadline；stdout / stderr 持续 drain；cancel / timeout / shutdown 执行 terminate → wait → kill；permission、terminal、file-write 等服务端 callback 默认拒绝。pending job queue、ACP stdout event queue、output、error 与 history 都必须有界；高频 update 应通过反压或安全合并处理，但不得丢 RPC response / callback，活跃 job 不得被错误 prune。
+4. **Bounded process lifecycle**：短控制 RPC 与长生成任务分别有 deadline；stdout / stderr 持续 drain；cancel / timeout / shutdown 执行 terminate → wait → kill。callback policy 必须与声明能力和真实 sandbox 一致：read-only client 可以在 read-only sandbox 内单次允许 `execute`，也可以提供明确范围内的只读 file callback；`edit` / file-write / permission escalation 仍拒绝。不能一边宣告 `fs.readTextFile=true` 一边把对应 callback 统一报错。pending job queue、ACP stdout event queue、output、error 与 history 都必须有界；高频 update 应通过反压或安全合并处理，但不得丢 RPC response / callback，活跃 job 不得被错误 prune。
 5. **Exact downstream snapshot**：Batch / Delta / preflight 一类多阶段 UI 必须把窗口和实际输入文本一起绑定。起始章、窗口大小、Primary 或 Delta 任一变化，都使后续 Prompt、预检或 adopt capability stale；不能只因为旧预检曾 PASS 就继续采用。
 6. **Reload is not consent**：页面刷新可以恢复轮询和只读运行记录，但不能自动重放作者已失去上下文的写入意图，也不能把恢复后的结果自动塞回可编辑 Authority surface。
+7. **Protocol transport fidelity before model blame**：stdio / NDJSON executor 若表现为“ASCII smoke 成功、非 ASCII 或真实长 Prompt 卡在模型前置阶段”，先检查 transport 是否插入 shell wrapper、字符编码转换或其它会重写双向流的中间层，再谈模型质量、reasoning 或 Prompt 长度。对 ACP 这类协议优先直接启动实际 server entry；最小 smoke 至少包含一个非 ASCII Prompt 和一个真实 read-only tool call。ASCII-only `OK` 不能证明 production transport 健康。
 
 长任务与检索式创作 UI 还要追加两条 transport-specific trace：
 

@@ -210,22 +210,36 @@ def test_agentdock_command_and_rpc_are_fixed_to_project_read_only_and_no_mcp() -
         return process
 
     manager = AgentDockJobManager(
-        Path.cwd(), acp_path=Path("trusted-acp.ps1"), powershell_host="pwsh.exe",
+        Path.cwd(), acp_path=Path("trusted-acp.ps1"), node_host="node.exe",
         executable_exists=lambda _path: True, process_factory=factory,
     )
     result = wait_for(manager, manager.create(prompt="Prompt")["job_id"])
 
     assert result["status"] == "completed"
     assert captured["cwd"] == Path.cwd().resolve()
-    assert captured["command"] == ["pwsh.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "trusted-acp.ps1"]
+    assert captured["command"] == [
+        "node.exe",
+        str(Path("node_modules") / "@agentclientprotocol" / "codex-acp" / "dist" / "index.js"),
+    ]
     sent = str(captured["process"].stdin.getvalue())
     assert '"mcpServers": []' in sent
     assert '"modeId": "read-only"' in sent
 
 
-def test_agentdock_denies_callbacks_and_does_not_expose_local_path() -> None:
+def test_agentdock_denies_mutation_callbacks_and_does_not_expose_local_path() -> None:
     lines = successful_lines()
-    lines.insert(5, {"jsonrpc": "2.0", "id": "permission-1", "method": "session/request_permission", "params": {}})
+    lines.insert(5, {
+        "jsonrpc": "2.0",
+        "id": "permission-1",
+        "method": "session/request_permission",
+        "params": {
+            "toolCall": {"kind": "edit"},
+            "options": [
+                {"optionId": "allow", "kind": "allow_once"},
+                {"optionId": "reject", "kind": "reject_once"},
+            ],
+        },
+    })
     process_holder: list[FakeProcess] = []
     manager = AgentDockJobManager(
         Path.cwd(), acp_path=Path(r"C:\Users\private\secret-acp.ps1"), executable_exists=lambda _path: True,
@@ -236,7 +250,75 @@ def test_agentdock_denies_callbacks_and_does_not_expose_local_path() -> None:
     assert result["status"] == "completed"
     assert "permission" not in manager.status()
     assert "acp_path" not in manager.status()
-    assert "denies permission" in process_holder[0].stdin.getvalue()
+    assert '"optionId": "reject"' in process_holder[0].stdin.getvalue()
+
+
+def test_agentdock_allows_execute_permission_once_but_keeps_read_only_mode() -> None:
+    lines = successful_lines()
+    lines.insert(5, {
+        "jsonrpc": "2.0",
+        "id": "permission-1",
+        "method": "session/request_permission",
+        "params": {
+            "toolCall": {"kind": "execute"},
+            "options": [
+                {"optionId": "allow", "kind": "allow_once"},
+                {"optionId": "reject", "kind": "reject_once"},
+            ],
+        },
+    })
+    process_holder: list[FakeProcess] = []
+    manager = AgentDockJobManager(
+        Path.cwd(),
+        acp_path=Path("fake-acp.ps1"),
+        executable_exists=lambda _path: True,
+        process_factory=lambda _command, _cwd: process_holder.append(FakeProcess(lines)) or process_holder[-1],
+    )
+
+    result = wait_for(manager, manager.create(prompt="Prompt")["job_id"])
+    sent = process_holder[0].stdin.getvalue()
+
+    assert result["status"] == "completed"
+    assert '"optionId": "allow"' in sent
+    assert '"modeId": "read-only"' in sent
+
+
+def test_agentdock_serves_read_text_file_callback_only_under_project_root(tmp_path: Path) -> None:
+    project_root = tmp_path / "project"
+    project_root.mkdir()
+    readable = project_root / "rules.md"
+    readable.write_text("第一行\n第二行\n第三行\n", encoding="utf-8")
+    outside = tmp_path / "outside.md"
+    outside.write_text("不能读取", encoding="utf-8")
+
+    lines = successful_lines()
+    lines.insert(5, {
+        "jsonrpc": "2.0",
+        "id": "read-1",
+        "method": "fs/read_text_file",
+        "params": {"sessionId": "session-1", "path": str(readable), "line": 2, "limit": 1},
+    })
+    lines.insert(6, {
+        "jsonrpc": "2.0",
+        "id": "read-2",
+        "method": "fs/read_text_file",
+        "params": {"sessionId": "session-1", "path": str(outside)},
+    })
+    process_holder: list[FakeProcess] = []
+    manager = AgentDockJobManager(
+        project_root,
+        acp_path=Path("fake-acp.ps1"),
+        executable_exists=lambda _path: True,
+        process_factory=lambda _command, _cwd: process_holder.append(FakeProcess(lines)) or process_holder[-1],
+    )
+
+    result = wait_for(manager, manager.create(prompt="Prompt")["job_id"])
+    sent = process_holder[0].stdin.getvalue()
+
+    assert result["status"] == "completed"
+    assert '"id": "read-1", "result": {"content": "第二行\\n"}' in sent
+    assert '"id": "read-2", "error"' in sent
+    assert "only read UTF-8 files under the project root" in sent
 
 
 def test_agentdock_timeout_and_pruning_keep_active_jobs_out_of_history_limit() -> None:
@@ -367,6 +449,7 @@ def test_agentdock_stdout_queue_is_bounded_and_preserves_rpc_after_update_burst(
         clock=time.monotonic,
         rpc_timeout_seconds=1,
         deadline=time.monotonic() + 1,
+        read_root=Path.cwd(),
     )
     assert probe._stdout.maxsize == MAX_STDOUT_QUEUE_EVENTS
 

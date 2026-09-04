@@ -227,7 +227,7 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 网页是阅读优先的本地创作舱：浮动项目栏、hash 工作区、窄导航 rail，以及桌面常驻/小屏覆盖的 AgentDock 面板。Light / Dark 是独立设计层级，正文优先 Serif 阅读，卡片使用 22—28px 圆角、细边框、低饱和玻璃层和极轻阴影。Workflow State 与 Run Ledger 仍是正式 artifact 状态的唯一来源；AgentDock / Batch 执行状态独立显示，不伪装成已保存节点，也不另造内容真源。
 
-`agentdock_acp` 是本机、内存作业型 Response executor：后端可信解析 ACP，固定 TGN 项目 cwd、空 MCP 与 `read-only` mode；短控制 RPC 与长生成 job 使用不同 deadline，stdout/stderr 持续 drain，pending job queue、ACP stdout event queue、activity、output、error 与 completed history 全部有界；高频 update 通过有界 FIFO 反压，不丢 RPC response / callback。它可以读取项目上下文，但不能保存、采用、批准或写 Authority artifact；status 只说明 ACP 入口是否存在，ChatGPT 登录在真实启动时确认。自动回填必须同时匹配 book / chapter / workflow mode / Batch window / latest launch、精确 Prompt / 上游输入快照，并确认作者未改动目标编辑区；刷新恢复、错位、旧 launch 或丢失作业只允许只读查看。
+`agentdock_acp` 是本机、内存作业型 Response executor：后端从可信安装锚点解析 `codex-acp` 的 JS 入口并由 `node.exe` 直接承载 UTF-8 NDJSON，固定 TGN 项目 cwd、空 MCP 与 `read-only` mode；不再通过 PowerShell wrapper 转发协议流。`fs/read_text_file` 只允许项目根内 UTF-8 文件；只读命令的 `execute` permission 可单次通过，但仍受 read-only sandbox 约束，`edit` / file-write / permission escalation 继续拒绝。短控制 RPC 与长生成 job 使用不同 deadline，stdout/stderr 持续 drain，pending job queue、ACP stdout event queue、activity、output、error 与 completed history 全部有界；高频 update 通过有界 FIFO 反压，不丢 RPC response / callback。它可以读取项目上下文，但不能保存、采用、批准或写 Authority artifact；status 只说明 ACP 入口是否存在，ChatGPT 登录在真实启动时确认。自动回填必须同时匹配 book / chapter / workflow mode / Batch window / latest launch、精确 Prompt / 上游输入快照，并确认作者未改动目标编辑区；刷新恢复、错位、旧 launch 或丢失作业只允许只读查看。
 
 长任务 UI 不显示虚假百分比或 ETA，而持续显示真实阶段、累计耗时、距最近信号时长、通用 plan / tool / activity 摘要、取消入口和低打扰定时提醒。ACP commentary、private reasoning、原始命令、路径与凭据都不进入作者可见 activity；最终 Response 只接收明确 final channel。短暂列表 / 状态查询失败保留 pending lock 并退避重试，不能因此允许重复启动。
 

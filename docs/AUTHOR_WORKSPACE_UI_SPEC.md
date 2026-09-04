@@ -58,6 +58,7 @@ AgentDock ACP 可能持续数分钟甚至更久。V3 不显示虚假百分比或
 `agentdock_acp` 仍是本机、有界内存的 Response executor：
 
 - 后端可信解析 ACP，固定 TGN project root、`mcpServers=[]`、`read-only`、模型 / effort 白名单；
+- ACP stdio 由 `node.exe` 直接启动 `@agentclientprotocol/codex-acp/dist/index.js`，不用 PowerShell wrapper 承载 UTF-8 NDJSON；`fs/read_text_file` 只读 project root 内 UTF-8 文件；`execute` permission 只单次放行并继续受 read-only sandbox 约束，`edit` / file-write / permission escalation 拒绝；
 - 短控制 RPC 与最长 60 分钟生成 job 分开计时；stdout / stderr 持续 drain；cancel / timeout / shutdown 使用 terminate → wait → kill；
 - pending job queue、ACP stdout event queue、activity、plan、output、error 与 completed history 都有界；stdout burst 通过有界 FIFO 反压处理，RPC response / callback 不丢弃；status 不返回 ACP 绝对路径；
 - job completed 不等于 Workflow artifact completed，不自动 Save / Apply / Adopt / Approve。

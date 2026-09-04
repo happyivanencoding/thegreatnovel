@@ -1569,7 +1569,7 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 
 普通代码、Prompt、文件、Git 由当前 Agent 直接完成；只有真实 LLM 生成、模型 A/B、正文实验、原著蒸馏、跨书 synthesis 才用 ACP。
 
-ACP：`C:\Users\jingx\AppData\Roaming\npm\codex-acp.ps1`，ChatGPT 登录，不切 API Key。Author Workspace 的 `agentdock_acp` 由后端可信解析入口，固定项目 cwd、空 MCP、`read-only`、模型/effort 白名单与有界单并发队列；只返回文本 Response。短控制 RPC 与长生成 job 分开计时，作业完成后仅在 book / chapter / workflow / Batch window / latest launch 全匹配且作者未改目标编辑区时自动回填；否则只读查看。Apply / Save / Adopt / Approve 仍由作者显式触发，服务重启丢失会 fail loud。
+ACP 安装仍以 `C:\Users\jingx\AppData\Roaming\npm\codex-acp.ps1` 定位，但 Author Workspace production transport 从同一安装目录解析 `@agentclientprotocol/codex-acp/dist/index.js` 并由 `node.exe` 直接启动，避免 PowerShell wrapper 介入 UTF-8 NDJSON。ChatGPT 登录，不切 API Key。`agentdock_acp` 固定项目 cwd、空 MCP、`read-only`、模型/effort 白名单与有界单并发队列；项目内 UTF-8 read callback 可用，只读 `execute` permission 单次放行而 edit/write/escalation 继续拒绝；只返回文本 Response。短控制 RPC 与长生成 job 分开计时，作业完成后仅在 book / chapter / workflow / Batch window / latest launch 全匹配且作者未改目标编辑区时自动回填；否则只读查看。Apply / Save / Adopt / Approve 仍由作者显式触发，服务重启丢失会 fail loud。
 
 ### 12.6 Docs 维护
 
@@ -2384,6 +2384,12 @@ Batch Production 的既有 production 链保持不变：任意起始章先读取
 宁烬 21—30 的 Sol-high real-Horizon retest 不计 retrieval 胜负：修复后的 fixed retrieval `accepted_count=0`，Navigator 四次主动 query 也全部 `accepted_count=0` 并合法选择 0 卡；因此两边 Story 都没有差异化 GBrain inspiration，这一 pair 只能说明 Story Refresh retrieval 仍存在 coverage gap，不能用模型随机差异证明检索架构优劣。
 
 **Production decision：Full Retrieval Navigator 不升默认 production。继续使用修复后的 personalized deterministic semantic retrieval。** Integrated JIT 也继续排除。仍值得未来单独实验的是低频、窄范围的 `Conditional Plot-Engine Gap Querying`：只有 deterministic Story planning 已明确一个具体结构缺口（例如“对手已经学会旧解，成功条件现在缺什么”）时，发一次短 semantic query；这只是 Open Hypothesis，当前没有 production wiring 授权。完整报告：`books/real-exp-agentic-gbrain-navigation-ab-20260901-v1/POST_FIX_NAVIGATOR_RETEST_FINAL.md`。
+
+## 2026-09-04｜AgentDock ACP UTF-8 Transport Repair
+
+Author Workspace 新 `agentdock_acp` 曾出现稳定故障：ASCII 最小 Prompt 可在数秒完成，而中文 World Vision、中文 no-tool smoke 与项目文件读取均长期停在 `planning`。对照证明不是桌面 Codex 更新、模型版本或 Prompt 长度：ACP 自己捆绑的 Codex 0.148.0 与旧 `tgn-text-runner` 相同；同一 `codex-acp 1.6.2 + Terra-medium + 中文 Prompt` 在跳过 PowerShell、由 Python 直接启动 `node.exe .../codex-acp/dist/index.js` 后约 6 秒完成。根因因此定位为 **PowerShell wrapper 不适合作为 ACP UTF-8 NDJSON 双向长连接 transport**。
+
+Production 已改为从可信 `codex-acp.ps1` 安装锚点解析 JS entry，再由 `node.exe` 直接启动。顺带补齐两个原本潜伏的 callback 缺口：`fs/read_text_file` 只允许 project root 内 UTF-8 文件；`session/request_permission` 对 `execute` 选择 `allow_once`，但 session 始终保持 `read-only` sandbox，`edit` / file-write / permission escalation 仍拒绝。真实验证：中文 no-tool smoke 从 30 秒超时恢复为约 5.6 秒完成；读取 `PROJECT_RULES.md` 约 12.7 秒完成且 `tool_counts=1 completed`；写入探针返回 `WRITE_BLOCKED`、工具失败且文件未产生。该修复只改变 transport，不改变 Authority adoption、模型路由或小说 pipeline。
 
 ## Cognitive Integrity Check
 
