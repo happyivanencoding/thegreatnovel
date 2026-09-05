@@ -10,13 +10,15 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 对应实际链路：
 
-`作者方向 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → 作者批准 / 显式跳过 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → deterministic Character → Story Program / Collision → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5；复用 Chapter Context compiler）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘`
+`用户方向 / 冻结输入 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → TGN operator 选择并 Freeze / 跳过 → protagonist-blind World Vision → World Freeze → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → operator 选择并 Freeze Character → deterministic Character → Story Program / Collision → Story Freeze → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5；复用 Chapter Context compiler）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘 → 最终正文`
 
-Premise Aperture 已冻结为可跳过的 production 开书阶段，但不是第四 Authority。Forge 一次形成三张完整货架候选；Compiler 只审 trigger、载体、T0 尺位、Interface 因果与远期复合，不评分、不选择、不修稿。作者批准后，代码确定性拆出 World / Power / Human / Story 四条 lane contract；Story Program 第一次读取完整 Promise，Outline 与章节不再读取 raw card。该阶段从未开始或显式跳过时，原 Split Authority 路径保持可用；一旦开始，必须 strict PASS + 作者批准后才能继续。完整合同见 `docs/PREMISE_APERTURE.md`。
+Premise Aperture 已冻结为可跳过的 production 开书阶段，但不是第四 Authority。Forge 一次形成三张完整货架候选；Compiler 只审 trigger、载体、T0 尺位、Interface 因果与远期复合，不评分、不选择、不修稿。operator 采用后，代码确定性拆出 World / Power / Human / Story 四条 lane contract；Story Program 第一次读取完整 Promise，Outline 与章节不再读取 raw card。该阶段从未开始或 operator 跳过时，原 Split Authority 路径保持可用；一旦开始，必须 strict PASS + 明确 Freeze 后才能继续。这里的显式 Freeze 是 Agent 间信息边界，不要求用户逐项点击。完整合同见 `docs/PREMISE_APERTURE.md`。
 
 长篇不是把这条开书链一次跑完后消费 500 章。当前 World Horizon 被故事真正活透时，进入低频的向前循环：
 
-`Story Program 的 World Horizon Handoff → protagonist-blind World Expansion →（只有长期证据足够时）Human Development → deterministic Current Character → Sol Story Refresh / Re-Collision → 作者批准 Story Program → Outline → 后续章节`
+`Story Program 的 World Horizon Handoff → protagonist-blind World Expansion →（只有长期证据足够时）Human Development → deterministic Current Character → Sol Story Refresh / Re-Collision → operator Freeze Story Program → Outline → 后续章节`
+
+**默认产品交互是 final-output-only / hands-off。** 用户不承担 World / Character / Story / Expansion 的逐阶段审核；Automatic Production Run 中由 TGN operator 完成候选选择、Save / Adopt / Freeze、现有 validator 与正常失败恢复。模型 Response 仍不能直接成为 Authority；只是“谁执行 Freeze”从默认用户点击改成了已获整项任务授权的 operator。手工 Author Workspace 保留为高级检查 / 人工改稿 / 调试面。
 
 这里的核心是 **Stable Origins, Evolving Authorities**：开书 World / Power / Human Origin 不因后期增长被重写；新世界、新能力、人物发展和长期状态只向未来追加。World Expansion 与 Human Development 使用隔离上下文，只有 Story Refresh 第一次同时看到新 World 与 Current Character，避免单一 Agent 把“下一世界—主角现有 Build—未来奖励”预先自洽成一套钥匙孔。
 
@@ -133,7 +135,7 @@ Reader Coordinates 因此分成两类：
 
 这里明确区分两种“过去”：
 
-- **允许 backfill 的过去空白**：World / Human / Canon 从未定义的 supporting-character shared past，可由 Story Program/Refresh 补入，并在作者批准后成为 Authority；优先一条穿过多个人/两代人的共享历史，而不是多人各自一段孤立悲惨往事。
+- **允许 backfill 的过去空白**：World / Human / Canon 从未定义的 supporting-character shared past，可由 Story Program/Refresh 补入，并在 Story Freeze 后成为 Authority；优先一条穿过多个人/两代人的共享历史，而不是多人各自一段孤立悲惨往事。
 - **不能 retcon 的既成过去 / 不能伪造的未来**：已经发生/公开的 Canon、Frozen Human 明确经历、AUTHOR OPEN 不能被改写；人物离开镜头后的未来成长也不能以后随手补成已经拿到神器、联盟或重大转折，仍须 forward from approved facts。
 
 完整历史真相可以留在 backstage Story Authority。Outline 只在当前因果真正到达 reveal 时排最小必要层；`BOOK §5` 保持 reader-safe；Batch Primary 不读 raw Story Program，Sol Delta 只能拿未排程旧史做一致性检查，不能提前揭露。这样系统可以拥有《斗罗》式“揭露后重读过去”的能力，而不会把后台关系史一次性剧透。
@@ -407,7 +409,7 @@ Story Program 可以为了让当前关系、局部性格反应或某次选择更
 
 ### Story Refresh：Periodic Re-Collision，不把旧 Program 无限延长
 
-World Expansion 被作者批准后，先确定性刷新 `CURRENT_CHARACTER.md`；只有这个阶段，Sol high 才第一次同时看到 **Effective World × Current Character**，重新规划当前新的 World Horizon。
+World Expansion 被 TGN operator Freeze 后，先确定性刷新 `CURRENT_CHARACTER.md`；只有这个阶段，Sol high 才第一次同时看到 **Effective World × Current Character**，重新规划当前新的 World Horizon。
 
 Story Refresh 不是把旧 Program 续写几十行，而是 fresh collision：新世界不能为了主角重新改；Current Character 也不能为了适配新世界被重写。旧 Story Program 只保留仍未兑现且仍成立的因果。允许主角错过机会、NPC 拒绝、旧能力在新世界出现意外用途、Human 因私人偏好走非最优路线；新的 Power Asymmetry 只能从新世界已经独立成立、且人物真实走入的机会中获得。**No Universal World Tour 同样延续到 Refresh**：Effective World 里的所有大会、遗迹、战争和高价值对象不是主角待办清单；未选路线继续由当地 actor 推进，直到新的独立因果让它再次与人物相交。
 
@@ -434,11 +436,11 @@ Story Refresh 自己也只规划当前新 World Horizon，并继续输出下一�
 - `AUTHOR OPEN`：问题已经成立，但作者自己当前也没有决定答案；这是合法状态，不是待补设定；
 - `AUTHOR FIXED HIDDEN`：作者已经决定一小层事实，但人物与读者尚未知道。
 
-低频工作流是：`AUTHOR OPEN → Decision Surface → DEFER / DECISION NEEDED → Reframe R1/R2/R3/D0 → 作者选择 → Independent Compiler → AUTHOR FIXED HIDDEN → Planning → reader-facing Reveal Event → State/Canon → 更深 AUTHOR OPEN`。
+低频工作流是：`AUTHOR OPEN → Decision Surface → DEFER / DECISION NEEDED → Reframe R1/R2/R3/D0 → TGN operator 选择 → Independent Compiler → AUTHOR FIXED HIDDEN → Planning → reader-facing Reveal Event → State/Canon → 更深 AUTHOR OPEN`。
 
-**触发由下一段故事真正需要什么决定，不由章节数决定。** 如果作者下一步仍可以写出具体的争夺、关系、探索、获得和后果，Decision Surface 必须允许 `DEFER`；只有作者已经批准的下一事件无法在缺少某一最小事实时成立，才指出 `Smallest Decision`。因此作者可以先有一个好小点子一路写，等某个真正想看的新场面把世界逼到墙角时，再只补足那一层大框架。
+**触发由下一段故事真正需要什么决定，不由章节数决定。** 如果下一步仍可以写出具体的争夺、关系、探索、获得和后果，Decision Surface 必须允许 `DEFER`；只有已经冻结的下一事件无法在缺少某一最小事实时成立，才指出 `Smallest Decision`。自动 Production Run 由 TGN operator 在用户方向与既有 Authority 内只补足这一层，不把技术决策抛回给用户。
 
-Reframe 只给局部方向，不替作者选。Compiler V2 只检查：该 Fixed Point 是否回答且只回答 `Smallest Decision`、是否兼容已发生 Canon、是否把 Future Direction 错当过去事实、候选自己的 `What Remains Unknown` 是否继续开放。旧 `AUTHOR OPEN` 的 Unknown 列表是**决策前未知池**，不是永远不可回答的禁区；采用后新的 `What Remains Unknown` 才是保护边界。
+Reframe 只给局部方向，不自选；由 TGN operator 选择。Compiler V2 只检查：该 Fixed Point 是否回答且只回答 `Smallest Decision`、是否兼容已发生 Canon、是否把 Future Direction 错当过去事实、候选自己的 `What Remains Unknown` 是否继续开放。旧 `AUTHOR OPEN` 的 Unknown 列表是**决策前未知池**，不是永远不可回答的禁区；采用后新的 `What Remains Unknown` 才是保护边界。
 
 Compiler 也遵守和 Premise Compiler 相同的 stale discipline，但不增加 hash：生成 Compiler Prompt 时，代码把当前 Mystery Thread、selected candidate、Decision Surface、author planning need 与当前 BOOK/Canon **原文 snapshot** 保存在 `MYSTERY_CONTROL.json`。采用 Hidden Fixed Point 时直接比较这些文本；候选、Thread 或 BOOK/Canon 任一变化都要求重新编译。作者可以自己改候选，但不能把旧 PASS 误绑到新候选；`FIXED_HIDDEN` 不能通过普通 PUT 绕过 Compiler + adopt。
 

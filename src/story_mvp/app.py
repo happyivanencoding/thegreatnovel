@@ -22,6 +22,7 @@ from .batch_runtime import (
     parse_batch_primary_response,
 )
 from .agentdock_executor import AgentDockExecutorError, AgentDockJobManager
+from .background_job import get_public_job, list_public_jobs, public_job, stop_job
 from .character_prompts import generate_split_prompt
 from .gbrain import GBrainQueryError, resolve_command_prefix, resolve_openai_api_key
 from .gbrain_retrieval import (
@@ -483,6 +484,28 @@ def delete_agentdock_job(job_id: str) -> dict[str, Any]:
         return agentdock_job_manager.cancel(job_id)
     except AgentDockExecutorError as error:
         raise HTTPException(status_code=error.status_code, detail={"code": error.code, "message": str(error)}) from error
+
+
+@app.get("/api/production-runs")
+def get_production_runs() -> dict[str, Any]:
+    """Read ChatGPT-operated durable runs without exposing local commands or paths."""
+    return {"runs": list_public_jobs()}
+
+
+@app.get("/api/production-runs/{job_id}")
+def get_production_run(job_id: str) -> dict[str, Any]:
+    try:
+        return get_public_job(job_id)
+    except FileNotFoundError as error:
+        raise not_found(error) from error
+
+
+@app.delete("/api/production-runs/{job_id}")
+def delete_production_run(job_id: str) -> dict[str, Any]:
+    try:
+        return public_job(stop_job(job_id))
+    except FileNotFoundError as error:
+        raise not_found(error) from error
 
 
 @app.get("/api/settings/openai")

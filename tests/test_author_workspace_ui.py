@@ -18,6 +18,24 @@ def test_author_workspace_has_the_six_hash_views() -> None:
     assert 'id="tools-workspace"' in TEMPLATE
 
 
+def test_default_product_surface_is_automatic_production_not_stage_approval() -> None:
+    assert 'id="production-runs-panel"' in TEMPLATE
+    assert 'id="production-run-list"' in TEMPLATE
+    assert 'id="refresh-production-runs"' in TEMPLATE
+    assert "你不需要逐阶段批准" in TEMPLATE
+    assert "手工冻结 World Vision" in TEMPLATE
+    assert "手工冻结 Character" in TEMPLATE
+    assert "手工冻结 Story Program" in TEMPLATE
+    assert '<details class="creative-stage" id="premise-stage" open>' not in TEMPLATE
+    reading_state = APP_JS.split("function initializeReadingState()", 1)[1].split("const workflowStages", 1)[0]
+    assert "stage.open = false" in reading_state
+    assert "stage.open = true" not in reading_state
+    assert "async function refreshProductionRuns" in APP_JS
+    assert 'requestJson("/api/production-runs"' in APP_JS
+    assert 'value.status === "author_approved" ? "frozen"' in APP_JS
+    assert "window.setInterval(refreshProductionRuns, 15_000)" in APP_JS
+
+
 def test_existing_editors_are_single_sources_and_drawer_reuses_them() -> None:
     ids = re.findall(r'id="([^"]+)"', TEMPLATE)
     assert len(ids) == len(set(ids))

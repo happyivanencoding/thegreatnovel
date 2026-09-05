@@ -10,18 +10,18 @@ TGN 要生成的是成熟中文男频成长长篇：读者明确想拥有主角�
 
 当前真实生产链路是：
 
-`作者方向 →（可选）Premise Forge S1/S2/S3 → Independent Compiler → 作者批准 / 显式跳过 → protagonist-blind World Vision → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → 作者一次批准 Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ 作者批准 → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘`
+`用户方向 / 冻结输入 →（可选）Premise Forge S1/S2/S3 → Independent Compiler → TGN operator 选择并 Freeze / 跳过 → protagonist-blind World Vision → World Freeze → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → operator 一次 Freeze Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ Story Freeze → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘 → 最终正文交付用户阅读`
 
-没有 production Fantasy Seed，也没有 Character Composer LLM。Premise Aperture 只在 Authority 冻结前搜索完整大胆货架前提：候选 Non-Canon，Compiler 不评分/选择/修稿，批准后由代码拆成四条 lane contract，Story Program 后不再下传 raw card。
+没有 production Fantasy Seed，也没有 Character Composer LLM。Premise Aperture 只在 Authority 冻结前搜索完整大胆货架前提：候选 Non-Canon，Compiler 不评分/选择/修稿，operator 采用后由代码拆成四条 lane contract，Story Program 后不再下传 raw card。
 
-当前作者批准点保持紧凑：
+当前内部 Freeze checkpoint 保持紧凑：
 
 1. 可选 Premise Contract；
 2. World Vision；
-3. Character（Power + Human 一次批准）；
+3. Character（Power + Human 一次 Freeze）；
 4. Story Program。
 
-模型生成、模型选择和作者编辑都只是 draft；作者明确批准才形成创意权威。
+模型生成本身仍只是 draft；只有经过既有 validator 并由 TGN operator 明确采用 / Freeze 才形成创意权威。Automatic Production Run 默认替用户完成这些内部 checkpoint；手工 Author Workspace 只在高级干预时要求点击。
 
 ## Fantasy-First 读者承诺
 
@@ -136,7 +136,7 @@ Stage Delta 只写真实变化，不逐项填满。可包含 Power / Capability�
 
 Handoff 真正触发后：
 
-`protagonist-blind World Expansion → optional Human Development → deterministic CURRENT_CHARACTER.md → Sol Story Refresh / Re-Collision → 作者批准刷新后的 Story Program → Outline`
+`protagonist-blind World Expansion → optional Human Development → deterministic CURRENT_CHARACTER.md → Sol Story Refresh / Re-Collision → operator Freeze 刷新后的 Story Program → Outline`
 
 - **World Expansion**：Luna high，向前追加世界层；不看 Current Character / Power Stack / Human / Future Story。`macro` 只能延展 World Root 已冻结精确主尺的可见范围，不能改计数 Grammar；真正独立 `instance` 必须有自己的本地精确尺，可用章节范围承载 Local World，离开后 Local World/本地尺退场，跨世界 consequence 留在 Canon。
 - **两层 Power**：Frozen Power Origin Core + `Canon → Power / Capability` 中已经真实获得/证明的 Current Power Portfolio；其中持续维护 `Current Power Position`。后期神兵、传承、新 Asymmetry 不回写 Seed，越级胜利也不能反推精确位置自动升级。
@@ -225,7 +225,7 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 ## Author Workspace / AgentDock
 
-网页是阅读优先的本地创作舱：浮动项目栏、hash 工作区、窄导航 rail，以及桌面常驻/小屏覆盖的 AgentDock 面板。Light / Dark 是独立设计层级，正文优先 Serif 阅读，卡片使用 22—28px 圆角、细边框、低饱和玻璃层和极轻阴影。Workflow State 与 Run Ledger 仍是正式 artifact 状态的唯一来源；AgentDock / Batch 执行状态独立显示，不伪装成已保存节点，也不另造内容真源。
+网页是阅读优先的本地创作舱，但**默认产品工作方式不是逐阶段 Author Approval**。主路径是 `方向 / 冻结输入 / 目标章数 → ChatGPT-operated Automatic Production Run → 最终正文 → 用户阅读反馈`；World / Character / Story / Expansion 等内部 Freeze checkpoint 继续保护 Agent 间 Authority，却降为高级检查 / 人工干预面。Light / Dark 是独立设计层级，正文优先 Serif 阅读，卡片使用 22—28px 圆角、细边框、低饱和玻璃层和极轻阴影。Workflow State 与 Run Ledger 仍是正式 artifact 状态的唯一来源；AgentDock / Batch / Production Run 执行状态独立显示，不伪装成已保存节点，也不另造内容真源。
 
 `agentdock_acp` 是本机、内存作业型 Response executor：后端从可信安装锚点解析 `codex-acp` 的 JS 入口并由 `node.exe` 直接承载 UTF-8 NDJSON，固定 TGN 项目 cwd、空 MCP 与 `read-only` mode；不再通过 PowerShell wrapper 转发协议流。`fs/read_text_file` 只允许项目根内 UTF-8 文件；只读命令的 `execute` permission 可单次通过，但仍受 read-only sandbox 约束，`edit` / file-write / permission escalation 继续拒绝。短控制 RPC 与长生成 job 使用不同 deadline，stdout/stderr 持续 drain，pending job queue、ACP stdout event queue、activity、output、error 与 completed history 全部有界；高频 update 通过有界 FIFO 反压，不丢 RPC response / callback。它可以读取项目上下文，但不能保存、采用、批准或写 Authority artifact；status 只说明 ACP 入口是否存在，ChatGPT 登录在真实启动时确认。自动回填必须同时匹配 book / chapter / workflow mode / Batch window / latest launch、精确 Prompt / 上游输入快照，并确认作者未改动目标编辑区；刷新恢复、错位、旧 launch 或丢失作业只允许只读查看。
 
@@ -233,11 +233,11 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 ChatGPT 直接发起的长时生成 / A/B / 蒸馏与多阶段小说 runner 使用 `story-mvp-background` 作为**进程宿主**，而不是继续把当前 ChatGPT turn 当宿主。它把已经存在的 runner 原样交给本机后台 worker：Windows 通过 WMI/CIM `Win32_Process.Create` 让 OS 服务启动 worker，从而脱离 AgentDock 的 Job Object；worker 继续使用 runner 内既有的 `codex-acp + ChatGPT login` 模型调用，并把状态与 stdout/stderr 落到 gitignored `.local/background_jobs/`。这不是新的小说阶段，也没有新增 Recovery Agent；Story / Outline / Batch / State 的语义、validator 与原 runner 的恢复逻辑保持原样。ChatGPT turn 中断后任务仍可继续，之后只需读取持久状态与最终 artifact。
 
-当用户明确采用 **final-output-only / hands-off** 工作方式时，中间候选、Save/Adopt/Approval checkpoint 与正常失败恢复由当前 TGN operator 按既有 production 规则完成，不再要求用户阅读技术细节或逐阶段批准；这是 ChatGPT-operated 长任务的执行授权，不改变 Author Workspace 交互模式下的显式批准边界。用户仍只在最终小说 / 实验成果层给阅读反馈。
+**final-output-only / hands-off 现在是默认 production 语义。** 中间候选、Save/Adopt/Freeze checkpoint 与正常失败恢复由当前 TGN operator 按既有 production 规则完成，不要求用户阅读技术细节或逐阶段批准；`author_approved` 等旧内部状态名仅作兼容，UI 显示为 `frozen`。手工审批 API / 编辑器继续存在，只服务检查、人工改稿和调试。
 
-Author Workspace 桌面布局为窄 nav rail → 真实 Story Structure tree → 中央 manuscript surface → 固定 AgentDock。Structure tree 的 World/Character/Story/Long Plan/Future-10/当前章/Canon/Run 均从 Workflow artifacts 和已解析 Future-10 生成，点击定位真实工作区。顶部 Manuscript、Structure、Memory 切换真实 view；Audit 与 Versions 打开右侧真实区域。Batch Production 复用既有 Batch API，并确定性补齐任意起始章的连续性上下文，完成 Packet → Terra high Primary → Sol high Delta → exact-window/exact-response 预检 → 作者显式 Adopt → 作者逐章 State；窗口或 Response 变化会使下游 Prompt / 预检失效，不复制 Authority 算法。
+Author Workspace 桌面布局为窄 nav rail → 真实 Story Structure tree → 中央 manuscript surface → 固定 AgentDock。Overview 首先显示 Automatic Production Runs，只投影安全的 `job_id / label / status / timestamps / exit_code / sanitized error`，不把 cwd、command、PID 或日志路径暴露给浏览器；支持刷新和取消。Structure tree 的 World/Character/Story/Long Plan/Future-10/当前章/Canon/Run 继续从 Workflow artifacts 和已解析 Future-10 生成，主要用于检查。Batch Production 复用既有 Batch API 与 Authority 算法；自动模式由 operator 完成 adopt / State，手工按钮仍可用于高级干预。
 
-GBrain 在 Workspace 中使用 Curator 交互：semantic retrieval / full-page extraction 后分别展示 fixed references 与 BOOK-compatible candidates；每轮默认不选，作者可按 Human 三 lane 浏览、显式勾选、并排比较、组装可编辑 Bundle，或明确本轮不注入。请求返回、Bundle 与 Prompt 都绑定发起时上下文；上下文变化后旧材料只读保留并标 stale，selection stale / 未绑定手工文本 / GBrain-OFF 阶段由前后端共同 fail-closed。GBrain 仍只提供 Optional Inspiration，不写 Canon，也不成为 Hard Gate。
+GBrain 在手工 Workspace 中仍保留 Curator 交互以便研究与干预；Automatic Production Run 则沿各 runner 已冻结的 production semantic retrieval / selection 规则消费 GBrain，不要求用户逐卡勾选。两种入口共用同一 Optional Inspiration 边界：请求与 Bundle 必须匹配当前上下文，stale / 未绑定内容不能进入 Prompt，GBrain 不写 Canon，也不成为 Hard Gate。
 
 ## GBrain 与模型默认路由
 
@@ -272,6 +272,6 @@ ChapterContextPacket、Canon Memory、State Delta、Run Ledger 与章节保存�
 
 ## Experiment Boundary
 
-`books/real-exp-*` 下的世界、人物、能力、审计、模型选择与实验输出只用于验证系统假设；模型选择不等于作者批准，实验角色也不自动进入产品默认。
+`books/real-exp-*` 下的世界、人物、能力、审计、模型选择与实验输出只用于验证系统假设；实验里的模型/候选选择不等于 production operator Freeze，实验角色也不自动进入产品默认。
 
 只有当问题跨新书稳定复现、且能定位到最早语义节点时，才改 production。一次样本的局部怪异不值得长出新的 Prompt 规则、Agent 或 Gate。

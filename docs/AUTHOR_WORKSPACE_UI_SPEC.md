@@ -4,7 +4,7 @@
 
 ## 产品定位
 
-Author Workspace 是阅读优先的本地小说创作舱，不是后台管理系统，也不是普通 Markdown 编辑器。界面继续复用唯一的 BOOK / Workflow / Run Ledger / Response 真源，不为视觉便利复制第二份 Authority。
+Author Workspace 是阅读优先的本地小说创作舱，不是后台管理系统，也不是逐阶段审批表。**默认产品路径是 ChatGPT-operated Automatic Production Run：用户给方向 / 冻结输入 / 目标章数，TGN operator 跑完整生产链，用户主要阅读最终正文。** 界面继续复用唯一的 BOOK / Workflow / Run Ledger / Response 真源，不为视觉便利复制第二份 Authority；World / Character / Story 等 Freeze checkpoint 保留为 Agent 间信息边界，但其手工按钮属于高级检查 / 干预模式。
 
 视觉采用两套独立主题：
 
@@ -26,11 +26,17 @@ Author Workspace 是阅读优先的本地小说创作舱，不是后台管理系
 
 - 导航 Rail：概览、创意、故事设计、章节写作、记忆、工具；每个实际 view 只有一个 active item。
 - Story Structure Tree：World、Power / Human / Character、Story Program、Long Plan、Future-10、当前章、Canon 与 Run，全部来自真实 Workflow artifacts 与已解析内容。
-- 中央区：正文与长时间阅读优先；复杂 Prompt、Response、调试与采用动作进入右侧中枢或显式高级区。
+- 中央区：正文与长时间阅读优先；Overview 首先显示 Automatic Production Runs，复杂 Prompt、Response、Authority freeze、调试与手工采用动作进入右侧中枢或显式高级区。
 - AgentDock：桌面常驻；中屏 / 小屏作为覆盖 Drawer。关闭 Drawer 后，运行中的任务仍通过轻量 mini anchor 保持可见。
 - 顶部 Manuscript / Structure / Memory 切换真实 view；Audit / Versions 定位真实右侧区域，不伪装成概览页。
 
 小屏使用单列内容、横向紧凑导航和覆盖式 AgentDock；390×844 下页面不得出现水平溢出。
+
+## 默认 Automatic Production Run
+
+用户不需要依次审批 World、Character、Story Program、World Expansion 或每一批章节。ChatGPT-operated 长任务在初始方向明确后，由 TGN operator 按既有 validator / Authority / retrieval / model routing 完成内部选择、Freeze、Adopt、正常失败恢复与后续生成；`author_approved` 等旧状态值只作为兼容性的内部 Frozen Authority 状态，UI 显示 `frozen`。手工编辑器和批准 API 不删除，但默认折叠并标为高级干预。
+
+Overview 的 `Automatic Production Runs` 读取 `story-mvp-background` 持久任务，只展示 `job_id / label / status / timestamps / exit_code / sanitized error`，不展示 cwd、command、PID、日志路径或模型私有活动。浏览器只能读取 / 取消已经由可信 TGN operator 发起的任务，**不能提交 executable、cwd 或任意 runner command**。
 
 ## 长任务进度与心理锚点
 
@@ -53,7 +59,7 @@ AgentDock ACP 可能持续数分钟甚至更久。V3 不显示虚假百分比或
 
 浏览器对作业 list / get / cancel / create 使用明确 deadline。短暂状态查询失败时保留 pending lock 与已有活动，自动退避重试，不能因一次网络失败解锁重复启动；只有明确 404 / 服务重启丢失才终止轮询并 fail loud。
 
-## AgentDock Response 边界
+## AgentDock Response 边界（手工高级执行面）
 
 `agentdock_acp` 仍是本机、有界内存的 Response executor：
 
@@ -61,7 +67,7 @@ AgentDock ACP 可能持续数分钟甚至更久。V3 不显示虚假百分比或
 - ACP stdio 由 `node.exe` 直接启动 `@agentclientprotocol/codex-acp/dist/index.js`，不用 PowerShell wrapper 承载 UTF-8 NDJSON；`fs/read_text_file` 只读 project root 内 UTF-8 文件；`execute` permission 只单次放行并继续受 read-only sandbox 约束，`edit` / file-write / permission escalation 拒绝；
 - 短控制 RPC 与最长 60 分钟生成 job 分开计时；stdout / stderr 持续 drain；cancel / timeout / shutdown 使用 terminate → wait → kill；
 - pending job queue、ACP stdout event queue、activity、plan、output、error 与 completed history 都有界；stdout burst 通过有界 FIFO 反压处理，RPC response / callback 不丢弃；status 不返回 ACP 绝对路径；
-- job completed 不等于 Workflow artifact completed，不自动 Save / Apply / Adopt / Approve。
+- 手工 AgentDock job completed 不等于 Workflow artifact completed，不自动 Save / Apply / Adopt / Freeze。Automatic Production Run 是另一条由 TGN operator 明确委托的执行模式，它仍经过同一 Authority checkpoint，而不是把模型 Response 直接写成 Canon。
 
 每次启动冻结：
 

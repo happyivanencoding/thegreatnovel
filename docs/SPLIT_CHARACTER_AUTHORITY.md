@@ -7,16 +7,18 @@
 ## 1. Production 链
 
 ```text
-作者方向
+用户方向 / 冻结输入
   →（可选）Non-Canon Premise Forge S1/S2/S3
   → Independent Premise Authority Compiler
-  → 作者批准 Premise Contract / 显式跳过
+  → TGN operator 选择并 Freeze Premise Contract / 跳过
   → protagonist-blind World Vision
+  → World Freeze
   → POWER_BASELINE / LIFE_CONTEXT
   → 独立 Power Seed + Human Seed
-  → 作者一次批准 Character
+  → operator 一次 Freeze Character
   → deterministic CHARACTER.md
   → Story Program（第一次完整 Collision）
+  → Story Freeze
   → Outline
   → chapters / Canon
 
@@ -27,15 +29,16 @@ Story Program Handoff
   → 可选 Human Development
   → deterministic CURRENT_CHARACTER.md
   → Story Refresh（Periodic Re-Collision）
-  → 作者批准刷新后的 Story Program
+  → operator Freeze 刷新后的 Story Program
   → Outline / chapters
 ```
 
 - **没有 production Fantasy Seed。** Premise Aperture 是可跳过、可丢弃的 Non-Canon 搜索与编译阶段，不是第四 Authority。
-- Forge 一次生成 S1/S2/S3；Compiler fresh context 只审可满足性。作者选择与批准发生在候选与 Authority 之间；`CONDITIONAL PASS / FAIL` 返回作者，没有自动 selector 或 repair loop。
-- 批准后代码确定性投影四条 lane：World 只见 World + public Interface；Power 只见 Ontology/Scale/trigger/coverage/carrier/boundary；Human 只见 Ontology/T0/Scale；Story 在前述 Authority 批准后第一次见完整 Promise。Outline 与章节不见 raw card。
-- Premise 未开始/显式跳过时原链可用；开始未批准时不得绕过。World Vision 批准后 Premise 决定冻结。
-- Power Seed 与 Human Seed 是两份独立创意权威，但**不是两个审批门**；作者只批准一次 Character。
+- Forge 一次生成 S1/S2/S3；Compiler fresh context 只审可满足性。TGN operator 的选择与 Freeze 发生在候选与 Authority 之间；`CONDITIONAL PASS / FAIL` 返回 operator 处理，没有额外常驻 selector 或 repair loop。
+- Freeze 后代码确定性投影四条 lane：World 只见 World + public Interface；Power 只见 Ontology/Scale/trigger/coverage/carrier/boundary；Human 只见 Ontology/T0/Scale；Story 在前述 Authority Freeze 后第一次见完整 Promise。Outline 与章节不见 raw card。
+- Premise 未开始/由 operator 跳过时原链可用；开始未 Freeze 时不得绕过。World Vision Freeze 后 Premise 决定冻结。
+- Power Seed 与 Human Seed 是两份独立创意权威，但**不是两个用户审批门**；Automatic Production Run 由 operator 一次 Freeze Character。
+- **默认是 hands-off 自动生产。** 用户不逐阶段点批准；Freeze checkpoint 继续存在，因为它们保护 Agent 间的信息与 stale 边界。`author_approved` 等内部状态名暂保留兼容，手工 Author Workspace 只用于高级检查 / 人工改稿 / 调试。
 - 核心去相关机制是 **fresh context + authority isolation**，不是必须使用不同模型；完整 premise 一次形成负责创意合成，后续 isolation 负责防止后验合理化。
 - Long-form Evolution 也遵守同一原则：创造新世界的上下文看不到当前主角；判断人物长期发展的上下文看不到未来世界；只有 Re-Collision 同时看到二者。
 
@@ -145,7 +148,7 @@ Story Program 现在拥有明确的 **Relationship-History Backfill** 权限，�
 - 不得偷答 `AUTHOR OPEN` / 受保护 Mystery；
 - 不得为了人格合理化自动制造悲惨童年；
 - **过去空白可以补，未来不能伪造**：从当前时点往后的离屏成长、联盟、神器、重大转折仍必须 forward from approved facts，不能回流时事后补成已发生；
-- 新旧史只有作者批准 Story Program 后才成为 Authority；
+- 新旧史只有 Story Program 被 operator Freeze 后才成为 Authority；
 - **过去存在，不等于现在就告诉读者**。如果完整旧史适合后期重释，当前保留可信表层关系、可见残留与隐藏层，Outline 只在因果到达时揭最小一层，并让揭露真实改变关系、身份、敌我、去留或行动路径。
 
 大型阶段保持轻量：为什么现在发生、谁想要什么、主角关键选择/行动、主要阅读满足、`Stage Delta`、下一阶段为何自然发生。`Stage Delta` 只写实际变化的维度；Power、获得、关系、身份、知识、敌人或世界变化都不是必填项。
@@ -192,15 +195,15 @@ Human 三个 lane 是**检索预算，不是人格必填维度**；只接受对�
 
 当前场景自然需要时，Curator / Writer 可以从已批准 World 事实中偶尔投影 **0–1 个生活性细节**；若 Primary 漏掉而场景因此显得像无背景空间，Authority Reviser 也可以从 safe World Authority 补回一个已批准细节。它不得建立新世界规则、新人物动机、新剧情义务，也不因为出现一次就自动成为长期 Canon，更不要求每章使用。
 
-## 10. 审批与 stale graph
+## 10. Freeze checkpoint 与 stale graph
 
-开书创意批准点仍只有：
+开书内部 Freeze checkpoint 仍只有：
 
 1. World Vision；
-2. Character（Power + Human 一次批准）；
+2. Character（Power + Human 一次 Freeze）；
 3. Story Program。
 
-Long-form Evolution 不把这些拆成新的常驻开书审批链，但 forward Authority 必须显式采用：World Expansion 候选只有作者点击“批准向前扩展”后才生效；Human Development 候选只有作者批准后才进入人物长期权威（`NONE` 不产生 Delta）；Story Refresh 仍复用现有 Story Program 的保存/批准流程。模型生成不自动写 Authority。
+Long-form Evolution 不把这些拆成新的常驻审批链，但 forward Authority 必须被 operator 显式采用：World Expansion 候选只有 Freeze 后才生效；Human Development 候选只有 Freeze 后才进入人物长期权威（`NONE` 不产生 Delta）；Story Refresh 仍复用现有 Story Program 的保存/Freeze 流程。Automatic Production Run 由 operator 完成这些动作，手工 Workspace 才由用户点击；模型生成本身仍不自动写 Authority。
 
 开书 Rewrite 依赖方向：
 

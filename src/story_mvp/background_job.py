@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import uuid
@@ -28,6 +29,16 @@ STDERR_FILE = "stderr.log"
 WORKER_CMD_FILE = "worker.cmd"
 WORKER_BOOTSTRAP_LOG = "worker-bootstrap.log"
 TERMINAL_STATUSES = {"completed", "failed", "cancelled"}
+PUBLIC_JOB_FIELDS = (
+    "job_id",
+    "label",
+    "status",
+    "created_at",
+    "started_at",
+    "finished_at",
+    "exit_code",
+    "error",
+)
 
 
 def _utc_now() -> str:
@@ -270,6 +281,18 @@ def get_job(job_id: str, *, root: Path | None = None, tail_lines: int = 0) -> di
     return manifest
 
 
+def public_job(job: dict[str, Any]) -> dict[str, Any]:
+    """Project durable-job state without local commands, paths, or process ids."""
+    projected = {field: job.get(field) for field in PUBLIC_JOB_FIELDS}
+    error = str(projected.get("error") or "")
+    projected["error"] = re.sub(r"[A-Za-z]:\\[^\s\"']+", "<本机路径>", error)[:1000]
+    return projected
+
+
+def get_public_job(job_id: str, *, root: Path | None = None) -> dict[str, Any]:
+    return public_job(get_job(job_id, root=root))
+
+
 def list_jobs(*, root: Path | None = None) -> list[dict[str, Any]]:
     base = (root or _job_root()).resolve()
     if not base.is_dir():
@@ -284,6 +307,10 @@ def list_jobs(*, root: Path | None = None) -> list[dict[str, Any]]:
         except (OSError, json.JSONDecodeError, ValueError):
             continue
     return sorted(jobs, key=lambda item: str(item.get("created_at", "")), reverse=True)
+
+
+def list_public_jobs(*, root: Path | None = None) -> list[dict[str, Any]]:
+    return [public_job(job) for job in list_jobs(root=root)]
 
 
 def stop_job(job_id: str, *, root: Path | None = None) -> dict[str, Any]:

@@ -13,7 +13,7 @@
       <div class="brand-block">
         <p class="eyebrow">TGN · PRIVATE WRITING CABIN</p>
         <h1>沉浸式小说工作台</h1>
-        <p class="subtle">模型只返回候选；保存、采用与批准永远由作者确认。</p>
+        <p class="subtle">默认由 TGN 自动 Production Run 跑完整链；这里保留阅读、监控与高级干预入口。</p>
       </div>
       <div class="topbar-project" aria-label="当前项目">
         <span id="topbar-book">未加载项目</span>
@@ -95,7 +95,7 @@
         <div class="sidebar-footer">
           <button id="open-workflow-drawer" type="button">执行透明度</button>
           <button id="settings-button" type="button">设置</button>
-          <span class="sidebar-caption">所有保存、批准与重跑仍由作者明确触发</span>
+          <span class="sidebar-caption">默认自动跑到底；手工冻结与调试仅在需要时使用</span>
         </div>
       </aside>
 
@@ -110,7 +110,7 @@
             <div>
               <p class="eyebrow">AUTHOR WORKSPACE</p>
               <h2 id="overview-title">概览</h2>
-              <p class="subtle">只看现在该做什么；完整 Prompt、Response 和依赖细节在执行透明度抽屉中。</p>
+              <p class="subtle">默认只看自动 Production Run 与最终正文；Prompt、Authority checkpoint 和依赖细节留在高级区。</p>
             </div>
             <span id="overview-dirty" class="status"></span>
           </div>
@@ -121,8 +121,14 @@
             <article class="overview-card overview-card-alert"><span>需要关注</span><strong id="overview-stale">—</strong><small id="overview-stale-detail">暂无状态</small></article>
           </div>
           <div class="overview-action-row">
-            <button id="continue-chapter" class="primary" type="button">继续写作</button>
-            <button id="overview-open-workflow" type="button">查看 Workflow 与 Impact</button>
+            <button id="continue-chapter" class="primary" type="button">查看当前章节</button>
+            <button id="overview-open-workflow" type="button">高级：Workflow 与 Impact</button>
+          </div>
+          <div class="story-flow-block" id="production-runs-panel">
+            <div class="section-heading"><strong>Automatic Production Runs</strong><span class="subtle">方向 / 目标章节 → 后台跑完整链 → 最终正文</span></div>
+            <p class="hint">这是默认工作方式：你在 ChatGPT 里给方向、冻结输入或目标章数，TGN operator 处理内部候选选择、Authority freeze、验证与正常重试。你不需要逐阶段批准，只在最终小说层给阅读反馈。</p>
+            <div id="production-run-list" class="overview-flow"><p class="hint">暂无后台 Production Run。</p></div>
+            <div class="overview-action-row"><button id="refresh-production-runs" type="button">刷新后台任务</button></div>
           </div>
           <div class="story-flow-block">
             <div class="section-heading"><strong>Story Flow</strong><span class="subtle">创意 → 设计 → 规划 → 当前章节 → 记忆</span></div>
@@ -321,17 +327,17 @@
         <div class="panel-heading">
           <div>
             <p class="eyebrow">00 · CREATIVE AUTHORITY</p>
-            <h2>创意阶段</h2>
+            <h2>创意 Authority · 高级检查</h2>
           </div>
-          <span class="status">模型建议 ≠ 作者批准</span>
+          <span class="status">自动模式默认由 TGN operator 冻结</span>
         </div>
-        <p class="hint">可选 Premise Aperture → World Vision → Character Authority（Power Seed ∥ Human Seed，一次批准）→ Story Program。Premise 从未开始或作者显式跳过时，旧开书路径保持可用；一旦开始，必须 strict PASS + 作者批准后才能继续。</p>
-        <p class="hint">默认是阅读态；点击阶段标题进入编辑。GBrain 与 References 保持折叠，只有作者主动展开。</p>
+        <p class="hint">默认 Production Run 会自动完成 Premise（若启用）→ World Vision → Character Authority → Story Program → Outline → Batch → State。下方保留的是高级检查 / 手工干预面，不是日常必经步骤；内部 freeze checkpoint 仍然存在，用来保护不同 Agent 之间的信息，不等于要求你逐项点批准。</p>
+        <p class="hint">默认全部折叠；只有需要检查某个中间产物、人工改稿或调试时才展开。GBrain 与 References 同样是高级入口。</p>
 
-        <details class="creative-stage" id="premise-stage" open>
+        <details class="creative-stage" id="premise-stage">
           <summary>Premise Aperture / 大胆前提（可选） <span id="premise-status" class="count">not_started</span></summary>
           <p id="premise-preview" class="reading-preview">尚未开始；可直接跳过，或先生成三张完整大胆候选。</p>
-          <p class="hint">Forge 只生成 Non-Canon 候选；Compiler 只查 trigger、载体、尺度与远期复合，不评分、不选择、不修稿。只有 strict PASS 的已保存候选才能由作者批准并确定性拆成四条 lane contract。</p>
+          <p class="hint">Forge 只生成 Non-Canon 候选；Compiler 只查 trigger、载体、尺度与远期复合。自动 Production Run 由 TGN operator 完成选择与 freeze；这里仅供手工干预。</p>
           <label class="field"><span>Premise Candidates（必须完整包含 S1 / S2 / S3）</span><textarea id="premise-candidates" rows="18" placeholder="Single-Agent Premise Forge 返回"></textarea></label>
           <div class="action-row wrap">
             <button id="generate-premise-forge-prompt" class="primary">生成 Premise Forge Prompt</button>
@@ -340,10 +346,10 @@
             <button id="generate-premise-batch-compiler">独立编译三张候选</button>
           </div>
           <div class="action-row wrap">
-            <span class="hint">作者选择：</span>
-            <button type="button" data-premise-select="S1">选择 S1</button>
-            <button type="button" data-premise-select="S2">选择 S2</button>
-            <button type="button" data-premise-select="S3">选择 S3</button>
+            <span class="hint">高级手工选择：</span>
+            <button type="button" data-premise-select="S1">手工选择 S1</button>
+            <button type="button" data-premise-select="S2">手工选择 S2</button>
+            <button type="button" data-premise-select="S3">手工选择 S3</button>
           </div>
           <label class="field"><span>Selected Premise（作者可编辑；编辑后必须重新编译）</span><textarea id="selected-premise" rows="16" placeholder="只保留一张 ## S#｜... 候选"></textarea></label>
           <div class="action-row wrap">
@@ -354,7 +360,7 @@
           <div class="action-row wrap">
             <button id="apply-premise-compiler-response">应用 Compiler 返回</button>
             <button id="save-premise-compiler">保存 Compiler Report</button>
-            <button id="approve-premise" class="primary">批准 Premise Contract</button>
+            <button id="approve-premise" class="primary">手工冻结 Premise Contract</button>
             <button id="skip-premise">显式跳过 Premise Aperture</button>
           </div>
           <details class="source-details">
@@ -366,7 +372,7 @@
           </details>
         </details>
 
-        <details class="creative-stage" open>
+        <details class="creative-stage">
           <summary>World Vision / Protagonist-blind 世界 <span id="creative-meta-world-vision" class="count">empty · empty</span></summary>
           <p id="creative-preview-world-vision" class="reading-preview">尚未填写 World Vision。</p>
           <div class="creative-read-actions"><button type="button" data-creative-edit="world_vision">编辑</button></div>
@@ -376,13 +382,13 @@
             <button id="generate-world-vision-prompt" class="primary">生成 World Vision Prompt</button>
             <button id="apply-world-vision-response">应用模型返回</button>
             <button id="save-world-vision">保存 World Vision</button>
-            <button id="approve-world-vision" class="primary">批准 World Vision</button>
+            <button id="approve-world-vision" class="primary">手工冻结 World Vision</button>
           </div>
         </details>
 
         <details class="creative-stage">
           <summary>Character Authority / 人物权威 <span id="creative-meta-character-card" class="count">empty · empty</span></summary>
-          <p class="hint">World 批准后，Power Seed 与 Human Seed 使用独立上下文生成。两份 Seed 分别编辑，最后只点击一次“批准 Character”；CHARACTER.md 由代码确定性合成，不调用 Composer。</p>
+          <p class="hint">自动模式会在 World freeze 后独立生成 Power / Human，完成内部选择并确定性合成 CHARACTER.md；这里的按钮只用于高级手工干预。</p>
           <div class="character-seed-grid">
             <div>
               <h3>Power Seed <span id="creative-meta-power-seed" class="count">empty · empty</span></h3>
@@ -416,7 +422,7 @@
             </div>
           </div>
           <div class="action-row wrap">
-            <button id="approve-character" class="primary">批准 Character（一次冻结 Power + Human）</button>
+            <button id="approve-character" class="primary">手工冻结 Character（Power + Human）</button>
           </div>
           <label class="field"><span>CHARACTER.md（确定性合成，只读）</span><textarea id="creative-character-card" rows="14" readonly></textarea></label>
           <details class="source-details">
@@ -430,13 +436,13 @@
           <summary>Story Program / Collision 主线 <span id="creative-meta-proposal" class="count">empty · empty</span></summary>
           <p id="creative-preview-proposal" class="reading-preview">尚未填写 Story Program。</p>
           <div class="creative-read-actions"><button type="button" data-creative-edit="proposal">编辑</button></div>
-          <p class="hint">Character 批准后，Story Program 第一次同时看 Full World + Character + Story Opportunities。Do Not Reconcile Away the Collision；不得重写 World 或 Character Core 制造命中注定的适配。Proposal 编辑区是唯一 Proposal 来源。</p>
+          <p class="hint">Character freeze 后，Story Program 第一次同时看 Full World + Character + Story Opportunities。自动模式会继续跑到 Outline / 正文；此编辑区仅用于检查或人工改稿，并仍是手工干预时的唯一 Proposal 来源。</p>
           <label class="field"><span>Story Program 编辑器</span><textarea id="proposal-editor" rows="18" placeholder="模型返回或作者选择/编辑后的方案"></textarea></label>
           <div class="action-row wrap">
             <button id="generate-story-program-prompt" class="primary">生成 Story Program Prompt</button>
             <button id="apply-story-program-response">应用模型返回</button>
             <button id="save-proposal">保存 Story Program</button>
-            <button id="approve-proposal" class="primary">批准 Story Program</button>
+            <button id="approve-proposal" class="primary">手工冻结 Story Program</button>
           </div>
         </details>
 
@@ -464,7 +470,7 @@
               <div class="action-row wrap">
                 <button id="generate-world-expansion-prompt" class="primary">生成 World Expansion Prompt</button>
                 <button id="apply-world-expansion-response">应用模型返回</button>
-                <button id="approve-world-expansion" class="primary">批准向前扩展</button>
+                <button id="approve-world-expansion" class="primary">手工冻结向前扩展</button>
               </div>
             </div>
 
@@ -476,7 +482,7 @@
               <div class="action-row wrap">
                 <button id="generate-human-development-prompt" class="primary">生成 Human Development Prompt</button>
                 <button id="apply-human-development-response">应用模型返回</button>
-                <button id="approve-human-development" class="primary">批准人物发展</button>
+                <button id="approve-human-development" class="primary">手工冻结人物发展</button>
               </div>
             </div>
           </div>
@@ -487,7 +493,7 @@
             <button id="generate-story-refresh-prompt" class="primary">生成 Story Refresh / Re-Collision Prompt</button>
             <button id="apply-story-refresh-response">将模型返回放入 Story Program 编辑器</button>
           </div>
-          <p class="hint">Story Refresh 使用 GPT-5.6 Sol high；结果仍进入上面的 Story Program 编辑器，由现有“保存 → 批准 Story Program”流程冻结。它只刷新未来，不创建第四个常驻审批链。</p>
+          <p class="hint">Story Refresh 使用 GPT-5.6 Sol high。自动 Production Run 会在既有 Authority 边界内继续 freeze 并向后生成；上面的保存 / 手工冻结只保留给高级干预。</p>
         </details>
       </section>
 

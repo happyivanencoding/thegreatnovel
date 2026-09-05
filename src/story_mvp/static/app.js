@@ -36,6 +36,7 @@ const state = {
   agentdockLaunchSnapshots: new Map(),
   agentdockEditorVersions: new Map(),
   agentdockPreviewJob: null,
+  productionRuns: [],
   batch: {
     preflight: null,
     adopted: null,
@@ -358,17 +359,21 @@ function renderOverview(snapshot) {
   const chapter = snapshot?.current_chapter || currentChapterNumber();
   const artifacts = snapshot?.artifacts || {};
   const stale = Object.values(artifacts).filter((entry) => entry.status === "STALE").length;
-  const next = snapshot?.next_actionable_node || "等待 Workflow";
-  const nextAction = chapterActionForNode(snapshot?.next_actionable_node);
+  const activeProductionRun = state.productionRuns.find((run) => ["queued", "running"].includes(run.status));
+  const latestProductionRun = state.productionRuns[0];
   $("overview-book").textContent = book;
   $("overview-book-path").textContent = book === "未加载" ? "请从上方加载小说" : "本地工作区已连接";
   $("overview-chapter").textContent = snapshot ? `第 ${chapter} 章` : "—";
   $("overview-chapter-state").textContent = snapshot ? (artifacts[`chapter.${chapter}.body`]?.status || "正文未载入") : "—";
-  $("overview-next").textContent = snapshot ? nextAction.title : next;
-  $("overview-next-detail").textContent = snapshot ? `主操作：${nextAction.button}` : "加载小说后显示";
+  $("overview-next").textContent = activeProductionRun
+    ? productionRunStatusLabel(activeProductionRun.status)
+    : (latestProductionRun?.status === "completed" ? "最近自动任务已完成" : "等待 Automatic Production Run");
+  $("overview-next-detail").textContent = activeProductionRun?.label
+    || latestProductionRun?.label
+    || "从 ChatGPT 给出方向与目标章数；中间 checkpoint 自动处理";
   $("overview-stale").textContent = snapshot ? `${stale} 项 stale` : "—";
-  $("overview-stale-detail").textContent = stale ? "打开执行透明度查看依赖影响" : "暂无需要处理的 stale";
-  $("continue-chapter").textContent = snapshot ? `继续写第 ${chapter} 章` : "继续写作";
+  $("overview-stale-detail").textContent = stale ? "高级区可查看依赖影响；自动任务会按原 runner 逻辑处理" : "暂无需要处理的 stale";
+  $("continue-chapter").textContent = snapshot ? `查看第 ${chapter} 章` : "查看当前章节";
   const flow = $("overview-flow");
   if (!flow) return;
   flow.replaceChildren();
@@ -406,14 +411,12 @@ function closeRightDrawer() {
 
 function initializeReadingState() {
   document.querySelectorAll(".creative-stage").forEach((stage) => {
-    stage.open = true;
+    stage.open = false;
     const summary = stage.querySelector("summary");
     if (!summary || summary.dataset.readingBound) return;
     summary.dataset.readingBound = "true";
-    summary.addEventListener("click", (event) => {
-      event.preventDefault();
-      stage.classList.toggle("stage-editing");
-      stage.open = true;
+    summary.addEventListener("click", () => {
+      window.setTimeout(() => stage.classList.toggle("stage-editing", stage.open), 0);
     });
   });
   document.querySelectorAll(".design-card").forEach((card) => { card.open = true; });
@@ -1391,12 +1394,70 @@ function showStatus(message, isError = false) {
   target.classList.toggle("error", isError);
 }
 
+function productionRunStatusLabel(status) {
+  return ({ queued: "等待开始", running: "后台运行中", completed: "已完成", failed: "失败", cancelled: "已取消" })[status] || status || "未知";
+}
+
+function renderProductionRuns() {
+  const target = $("production-run-list");
+  if (!target) return;
+  target.replaceChildren();
+  if (!state.productionRuns.length) {
+    const empty = document.createElement("p");
+    empty.className = "hint";
+    empty.textContent = "暂无后台 Production Run。你从 ChatGPT 发起的持久长任务会显示在这里。";
+    target.appendChild(empty);
+    return;
+  }
+  for (const run of state.productionRuns.slice(0, 8)) {
+    const card = document.createElement("article");
+    card.className = "overview-card";
+    const label = document.createElement("span");
+    label.textContent = run.label || "Production Run";
+    const status = document.createElement("strong");
+    status.textContent = productionRunStatusLabel(run.status);
+    const detail = document.createElement("small");
+    detail.textContent = run.status === "failed" && run.error
+      ? run.error
+      : (run.finished_at || run.started_at || run.created_at || "");
+    card.append(label, status, detail);
+    if (["queued", "running"].includes(run.status)) {
+      const cancel = document.createElement("button");
+      cancel.type = "button";
+      cancel.textContent = "取消";
+      cancel.addEventListener("click", async () => {
+        try {
+          await requestJson(`/api/production-runs/${encodeURIComponent(run.job_id)}`, { method: "DELETE" });
+          await refreshProductionRuns();
+        } catch (error) {
+          showStatus(`取消后台任务失败：${error.message}`, true);
+        }
+      });
+      card.appendChild(cancel);
+    }
+    target.appendChild(card);
+  }
+}
+
+async function refreshProductionRuns() {
+  try {
+    const payload = await requestJson("/api/production-runs", { timeoutMs: 10_000 });
+    state.productionRuns = Array.isArray(payload.runs) ? payload.runs : [];
+    renderProductionRuns();
+    renderOverview(state.workflow);
+  } catch (error) {
+    const target = $("production-run-list");
+    if (target) target.textContent = `后台任务状态暂时不可读：${error.message}`;
+  }
+}
+
 function renderCreativeMeta(artifact) {
   const ui = creativeUi[artifact];
   const value = state.creativeArtifacts[artifact] || state.creativeState[artifact] || {};
   const target = $(ui.meta);
   if (!target) return;
-  target.textContent = `${value.origin || "empty"} · ${value.status || "empty"}`;
+  const displayStatus = value.status === "author_approved" ? "frozen" : (value.status || "empty");
+  target.textContent = `${value.origin || "empty"} · ${displayStatus}`;
 }
 
 function renderCreativePreview(artifact) {
@@ -4329,7 +4390,7 @@ async function initialize() {
     renderLongPlanPanorama();
     renderBatchStatus();
     renderGbrainModeState();
-    await Promise.all([refreshExecutorStatus(), refreshGbrainStatus()]);
+    await Promise.all([refreshExecutorStatus(), refreshGbrainStatus(), refreshProductionRuns()]);
     await loadOpenAISettings();
     const defaultTemplates = await requestJson("/api/prompt-templates");
     populatePromptTemplates(defaultTemplates.templates);
@@ -4636,6 +4697,7 @@ $("continue-chapter").addEventListener("click", () => {
   updateChapterWorkspace();
 });
 $("overview-open-workflow").addEventListener("click", openRightDrawer);
+$("refresh-production-runs").addEventListener("click", refreshProductionRuns);
 $("memory-open-workflow").addEventListener("click", openRightDrawer);
 $("open-workflow-drawer").addEventListener("click", openRightDrawer);
 $("open-workflow-from-tools").addEventListener("click", openRightDrawer);
@@ -4660,6 +4722,7 @@ $("open-references").addEventListener("click", () => {
 });
 
 window.setInterval(refreshAgentDockFocusClock, 1000);
+window.setInterval(refreshProductionRuns, 15_000);
 
 mountRightDrawer();
 initializeReadingState();
