@@ -148,7 +148,7 @@ def project_current_long_block_for_chapter(current_long_block: str, chapter_numb
     调用方有时会把整份长纲或上一个窗口的剧情块误传为 ``current_long_block``。
     这类文本一旦带有明确章节范围，就可以确定性裁剪：
 
-    - 有覆盖当前章的范围时，保留最窄的匹配块；
+    - 有覆盖当前章的范围时，只保留最窄的匹配块，不携带整窗终点等前言；
     - 文本明确声明了范围、但没有任何范围覆盖当前章时，返回空；
     - 没有可解析章节范围时保持原文，避免猜测作者意图。
 
@@ -182,8 +182,7 @@ def project_current_long_block_for_chapter(current_long_block: str, chapter_numb
         return ""
 
     _, _, selected = min(candidates, key=lambda item: (item[0], item[1]))
-    preamble = text[:matches[0].start()].strip()
-    return "\n\n".join(part for part in (preamble, selected) if part).strip()
+    return selected
 
 
 def parse_chapter_plan_fields(current_chapter_plan: str) -> dict[str, str]:

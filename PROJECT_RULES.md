@@ -86,7 +86,7 @@
 | Story Program | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration |
 | Story Refresh | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration；Effective World × Current Character；如有 AUTHOR FIXED HIDDEN 可 planning-only 编译 Reveal Contract |
 | Outline | GPT-5.6 Luna | high | ON：通常 4 条、最多 5 条 |
-| Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block；不调用 LLM 重规划 |
+| Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon；当前 Batch 不直接注入整块 Long Block，已批准阶段背景仍需以当前章有界形式保真运输；不调用 LLM 重规划 |
 | Batch Primary Writer | **GPT-5.6 Terra** | high | raw GBrain OFF；Frozen Power/Human + safe World/Reader Release + Approved Future-10；一次写完整 Batch |
 | Batch Authority Delta | **GPT-5.6 Sol** | **high** | raw GBrain OFF；完整 Batch + safe Authority；只输出 exact local patch / upstream conflicts，不输出全文 |
 | State Extraction | GPT-5.6 Luna | low | OFF；整批 prose final 后逐章落盘 |
@@ -127,6 +127,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 同时：
 
 - 修最早发生语义坍缩的节点；少深层规则 > 多 Hard Gate。
+- **运输缺失 ≠ 设计目标错误**：上游已经批准的阶段背景、私人压力、机会价值、空间因果或成长因果如果在下游消失，先定位最早丢失的 transport。某一种 whole-block / Long Block 注入方案失败，只否定该运输方案；不能据此删除阶段背景这个设计目标，也不能把未来剧情、隐藏旧史或完整 Story Program 直接塞进 Writer 作为补偿。当前章只运输 reader-safe、与本章真实行动有关、足以改变理解或选择的最小背景。
 - Human：**经历是背景，不是人格证明**；允许多重动机、稳定选择偏向与现场变化。候选期现有 `Audition Metadata / 人物钩子` 固定用一次短 **Action Audition** 检验“这个人有没有戏”：只使用候选已成立的动机/关系，在与未来 Power/主线无关的小现场里让至少两项私人价值相撞，人物必须做出可见选择并留下一个真实小代价；不解释人格、不新增过去/未来事实、不把这次做法固化成固定招式。Audition 全部 Non-Canon，作者选定后继续由现有 parser 与 Human Core / Initial State 分离。冻结 Human Core 高于最近几章的“负责/克制/救人”等行为归纳；下游不得把局部正确选择反推成新的道德人格。人物长期允许真实发展，但只能通过低频 `Human Development Delta` 基于已发生长期历史 forward-only 更新，且允许 `NONE`；该阶段看不到未来 World/Story。章节期仍从 `CHARACTER.md` 确定性投影 Frozen Human Core：默认 Batch Packet 直接携带；单章 fallback 才交给 Curator，Curator 不重复 Power Core。当前场景自然触发已批准的虚荣、钱、审美、身体吸引、享受、好奇、偏心等私人牵引时，应让它真实影响注意力、靠近/回避或选择，不统一净化成职责协作与成熟沟通。若 Frozen Human 已明确某个具体人会改变选择，而本章正发生近身照料、重逢、分别、私密靠近、嫉妒或邀请等关系现场，默认属于自然触发，保留一个克制 cue 即可，不要求改写主事件。
 - **Behavior Signature 可以有生活根，但不得反向造创伤**：若 Human Seed 已先独立建立具体旧物、家庭位置、长期失去/占有经验、反复生活现实或关系习惯，而它自然解释为什么某种选择权/所有权/输赢/自由对人物格外刺，可以把它连成低频长期人物线；只能引用已成立生活事实，不为证明人格临时发明父母惨死、家产被夺、背叛等悲情答案。没有自然根就保持未知。
 - **Behavior Signature = Decision Vector；Signature ≠ Tension**：稳定人格只保存跨场景的选择偏向，不保存固定动作、口癖或每卷同一道题。真正人物张力来自当前至少两样 Frozen Human 已经认可、都真有价值却不能同时完整取得的东西；自然出现这种冲突时，Story Program 应让选择真实改变对象、顺序、路线、暴露、谁承担代价或哪项机会被放弃。允许人物找第三条路，但第三条路不能无损全拿；不得为了制造张力反向补创伤，也不得把“安全 vs 自主”“钱 vs 人”等任何单一对立固化成主角模板。
@@ -183,6 +184,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - 测 authority isolation 使用 fresh context；能 deterministic 就不加 LLM Composer。
 - 候选选择规则预先规定，不 cherry-pick。
 - 先直接读真实输出，再用指标/Judge；明显结构性问题不需要 Judge。
+- **经典对照必须先读原文**：做小说读感、场景技法或“是否接近某部经典”的比较前，必须实际读取对应经典小说原文的完整场景或足够连续窗口，并明确记录自己读过的书名、章节/位置与范围；不能用 GBrain 摘要、蒸馏卡、剧情梗概或模型记忆冒充原文阅读，也不能把局部阅读说成通读全书。经典原文只用于评审学习，不进入 Writer。
 - 至少记录：质量、工程/程序化倾向、Plot Engine、人物自主性、合同稳定性、tokens、wall-clock、credits/成本。
 - 结论区分 PASS / DIRECTIONAL PASS / PARTIAL PASS / FAIL / INVALID，并记录 **What This Did Not Solve**；单本书或单个 candidate 不直接升级为 production 结论。
 - 快速大规模 A/B 可用 Terra high，但不替代默认高质量规划路由。

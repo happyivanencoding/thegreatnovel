@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.56
+version: 0.3.58
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -141,6 +141,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Public / Known World = Clarity; Unknown World = Mystery**：普通人从小知道的主流力量、粗略尺度、生活危险与上升入口可以直接讲；环境纹理、道具、专名或氛围不算已经说明
 - Reader knowledge is an authority/timing/delivery/realization chain; audit all four before blaming prose
 - **Reader-Facing Event ≠ State**：当 Story Program 已设计出决定 Premise、Meta Grammar、关键 Surprise 或 Long-Horizon Promise 的高价值现场，而正文只剩某个 State 成立，沿 `Story Program → Outline Registry → Future-10 schedule → Director budget → Frozen Mission → final prose` 追最早运输坍缩；State Residue 不能替代 Event realization。
+- **运输缺失 ≠ 设计目标错误**：上游已经批准的阶段背景、私人压力、机会价值、空间因果或成长因果如果在下游消失，先找最早 transport loss。某一种 whole-block / Long Block 注入方案失败，只否定该运输方案，不证明阶段背景应该删除；也不能为了补缺口把未来剧情、隐藏旧史或完整 Story Program 直接塞进 Writer。审计应追到当前章真正需要、reader-safe、足以改变理解或选择的最小背景是否被保真运输。
 - **Batch Narrative Window ≠ Permission to Finalize Chapters Independently**：若 4—6 章连续 Primary 明显比逐章 Writer 更像一本小说，先保护这项 reader-facing 增益，不要因少量跨章 drift 直接退回单章生成。审计 Batch 时把“写作窗口”和“Authority finalization 窗口”分开：`Batch Primary → 逐章全文 Reviser` 会让前章修订把后章预写稿变 stale；更合理的是让 Reviser 同时看完整 Batch，只返回 exact local Authority Delta，未触碰正文物理保留。**Approved Future-10 已经足够具体时，优先确定性原样抽取，不再增加一个 LLM Batch Director 重解释 Event / Result / Ending；但“直接抽 Future-10”不等于把其它已存在 Authority 丢掉，Primary 前仍应通过现有 deterministic Chapter Context compiler 把 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract 与 starting Canon 编入每章 Batch packet。** held-out 中 LLM 再规划虽提高小说味，却把界阶时序、奖励来源和器物首次使用改偏；反过来只给薄 Future-10 又让 Reviser承担过多事后补救。Delta 必须同时扫同一事实域的跨章依赖；若修复需要新增传送、追踪、奖励、身份、胜负或世界机制，必须上报 upstream conflict，不能由 Reviser 聪明补洞。评估时同时看小说味、Hard Authority、修改字符量、完整 wall 与 cross-book held-out；“模型更强 / effort 更高”本身不是证据，Max / Ultra 只有在真实 closure 提升时才值得采用。
 - **Access Provenance survives chapter distance**：上一章明确关门、断桥、拒绝入境、把某人留在另一侧，后两三章让他在边界另一侧出现仍然必须解释合法到达因果；非相邻章节不能绕过 Chapter Handoff 审计。若上游没授权路径，最早坍缩在 Story / Outline，而不是 Writer。
 - **Premise Identity must pay off before the first natural horizon ends**：当作品真正卖点是“跨世界带走并复合可能性 / 永久保存极限 / 吞并规则”这类独特操作时，普通掉宝、资格和地图不能连续替代它。审计第一世界/第一自然阶段结束前，读者是否至少亲眼看到一次“这本书与普通同类哪里不同”的完整兑现；不要求提前解释终极机制。
@@ -238,6 +239,8 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 
 
 ## Scene Craft Evidence & Runtime Bandwidth Trace
+
+做小说读感、场景技法或“是否接近某部经典”的对照前，先实际读取对应经典小说原文的完整场景或足够连续窗口，并记录书名、章节/位置与阅读范围。GBrain 摘要、蒸馏卡、剧情梗概和模型记忆都不能冒充原文阅读；局部阅读也不能写成通读全书。经典原文只用于评审与 craft 学习，不进入 Writer。
 
 当问题是“战斗/对白/关系/探索等 Scene Skill 不够好”，不要直接给 Writer 增加更长 Skill，也不要因为某种场景很重要就新增 Agent / Primary。按下面顺序审计：
 

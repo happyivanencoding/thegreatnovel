@@ -1,6 +1,6 @@
 # DEEP CONTEXT HANDOFF
 
-日期：2026-09-04
+日期：2026-09-05
 项目：TheGreatNovel / TGN Story MVP
 主要工作目录：`C:\dev\tgn-story-mvp`
 开发分支：`principal_dev_new_sys`
@@ -28,6 +28,23 @@
 ### 可访问范围说明
 
 本文基于当前对话可访问的长对话内容、项目级历史摘要、当前仓库文件、实际实验产物与当前工作树。部分更早消息在界面中以“Skipped”形式出现，无法逐字恢复；对这些历史只采用后来明确复述、已进入代码/文档或被实验重新验证的结论。本文不会伪造被截断消息的原文，也不会把无法确认的中间判断当作最终共识。
+
+---
+
+### 0.0D 2026-09-05 冻结：dev_astra 三项选择性回收 / Transport 与原文对照纪律
+
+当前内部开发权威继续是 `C:\dev\tgn-story-mvp` / `principal_dev_new_sys`；没有合并 `dev_astra` 的分支身份，也没有回退 2026-09-05 已冻结的 hands-off Automatic Production、Delegated Operator Freeze 或持久 Background Job Host。只把 Astra 中与当前主线兼容、可独立验证的三项改进回收到当前分支：
+
+1. **Chapter Long-Block Projection 收窄**：带明确章节范围的 `current_long_block` 只保留覆盖当前章的最窄编号块，不再附带整窗前言/远期终点；默认 Batch 当前不直接注入整块 Long Block，因此移除恒空的 `ACTIVE LONG BLOCK` Primary 标题。
+2. **GBrain Stage Guidance Priority**：`book-dna / arcs` 在既有 800 字预算内优先当前调用阶段对应的 `Guidance`，剩余预算再补 Reader Promise / Mechanism 等背景；没有匹配 Guidance 时沿用原顺序。没有新增 Agent、reranker 或模型调用。
+3. **Reader-First 表达改为完整意思组织**：取消“一章一次漂亮二段论”这类修辞配额，改成已知事实直接陈述、无真实误认不先否后揭、普通信息不机械排比、一人未被真正打断时说完一个完整意思、多人对白及时标清说话归属、同一人的话与接续动作通常保持自然段。
+
+同时冻结两个系统判断：
+
+- **运输缺失 ≠ 设计目标错误**：某一种 whole-block / Long Block 注入方案失败，只否定该运输方案；上游已经批准的阶段背景、私人压力、机会价值、空间因果或成长因果如果在下游消失，应修最早 transport loss。不能因为整块注入失败就删除阶段背景目标，也不能反向把未来剧情、隐藏旧史或完整 Story Program 直接塞给 Writer。
+- **经典对照必须先读原文**：做小说读感、场景技法或“是否接近某部经典”的比较前，必须实际读取对应经典小说原文的完整场景或足够连续窗口，并记录书名、章节/位置与阅读范围。GBrain 摘要、蒸馏卡、剧情梗概和模型记忆不能冒充原文阅读；局部阅读也不能声称通读全书。原文只用于评审/craft 学习，不进入 Writer。
+
+验证：相关 5 组测试 **254/254 PASS**；Git 已跟踪的 30 个测试文件 **532/532 PASS**。`tgn-system-steward` 从 0.3.56 升级为 **0.3.58**，package validate 为 valid / 0 issues，安装并激活成功；Luna-high 只读 smoke 对“Long Block 注入失败后是否删除阶段背景目标”和“只看 GBrain 摘要能否声称读过经典原文”两个 case 均正确 PASS。未复制 `dev_astra` 中无法在当前仓库复核的 2026-09-05 实验报告或其数字。
 
 ---
 

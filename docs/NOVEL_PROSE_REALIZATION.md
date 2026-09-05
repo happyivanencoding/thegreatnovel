@@ -221,7 +221,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 `Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘 → chapter-NNNN.md`
 
-默认路径不让另一个 LLM 再解释已批准 Future-10：代码直接抽取本批逐章事件/结果/结尾，并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。Sol Reviser 一次看到完整 Batch，但只返回 exact local Delta；未触碰句子逐字保留。若修复必须发明新传送/追踪、奖励、胜负、身份或世界机制，返回 `upstream_conflicts`，整批不得采用。旧 `curator_primary` 的 `Director → Curator → Primary → Full Reviser` 继续作为兼容 fallback / 专项实验；Specialist / Integrator 仍只在作者明确 repair 时使用。
+默认路径不让另一个 LLM 再解释已批准 Future-10：代码直接抽取本批逐章事件/结果/结尾，并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon。当前 Batch 不直接注入整块 Long Block；这只是当前运输实现边界，不代表阶段背景目标被取消。Sol Reviser 一次看到完整 Batch，但只返回 exact local Delta；未触碰句子逐字保留。若修复必须发明新传送/追踪、奖励、胜负、身份或世界机制，返回 `upstream_conflicts`，整批不得采用。旧 `curator_primary` 的 `Director → Curator → Primary → Full Reviser` 继续作为兼容 fallback / 专项实验；Specialist / Integrator 仍只在作者明确 repair 时使用。
 
 ---
 
@@ -229,7 +229,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ### Deterministic Batch Packet — Preserve Approved Events
 
-从 Future-10 直接抽取本批 4—6 章、默认 5 章的原始条目，不由 LLM 重写。它保留每章 `具体剧情 / 结果状态 / 结尾推动 / RSE`，再通过现有 Chapter Context compiler 附加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。held-out 已验证额外 Batch Director 虽可提高小说味，却会重新解释界阶时序、奖励来源与器物首次使用，因此不作为默认规划层。
+从 Future-10 直接抽取本批 4—6 章、默认 5 章的原始条目，不由 LLM 重写。它保留每章 `具体剧情 / 结果状态 / 结尾推动 / RSE`，再通过现有 Chapter Context compiler 附加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile 与 starting Canon。当前 Batch 不直接注入整块 Long Block；如果上游阶段背景在下游消失，应修 transport，而不是删除阶段背景目标或把完整远期计划塞给 Writer。held-out 已验证额外 Batch Director 虽可提高小说味，却会重新解释界阶时序、奖励来源与器物首次使用，因此不作为默认规划层。
 
 ### Batch Primary — Continuous Novel Window
 
@@ -257,7 +257,7 @@ Sol high 一次读取完整 Batch 与远端 Authority，只输出 exact `OLD →
 
 **Mechanism Explanation Decay**：Authority 的完整边界不会因为读者已经懂了而删除，但**静态能力边界**的正文说明必须随使用次数衰减。第一次真正影响选择时，用普通话讲清“现在具体能做什么”；第二次只补新的边界、失败方式或组合变化；第三次以后若动作本身已经足够让读者认出规则，优先只写动作、人物反应与结果，不再把 `能A / 不能B / 也不能C` 重新念一遍。**动态 Growth Causality 不随之衰减**：为什么这次修炼有效/无效、为什么主角比普通人快或并不更快、伤势为何让成长停住、Asymmetry 新改变了哪一环、当前精确位置/状态/距离下一 Milestone 怎样变化、升级后旧优势为什么更值钱，都是新的 Reader Model 更新；上游已批准时必须用普通话直接补清新的那一环。采用 `Tell clearly → Show repeatedly → Tell the new delta`，不要把核心成长因果拆散到几章让读者自己拼。第一次出现新的复合玩法时，尤其不要在高潮前先替读者写出静态公式；优先让场面先发生，确有理解风险时才补一句最短确认。章节标题同样优先人物、争夺物、地点变化或有画面的结果，少用已经成立的后台机制公式直接剧透本章答案。
 
-**漂亮二段论不得重复成章法**：Primary 可以在真正关键处自然出现一次短促对照或金句，但不得把“事实 / 动作已经成立 → 另起短句裁断或否定翻转 → 再升华其意义”复现为整章稳定收束语法。`他不怕 A。他怕的是 B。`、`他只会 A。可这一件事已经够了。`、`一个 X 做 A，另一个 X 做 B`、连续 `不是 A / 不是 B / 而是 C` 都只按语义结构判断，不靠换词规避。若本章已经自然出现一处明显的这种收束，后文不再主动制造第二处；让动作、反应、后果、沉默或下一事件自己完成意义。该约束只作用于 Primary 生成，不新增禁词扫描、style score、Reviewer 或自动重写。
+**按完整意思组织叙述与对白**：已经知道的事实直接陈述；没有真实误认、反驳或判断转变时，不先否定一个答案再揭另一个。普通信息不整理成整齐排比、重复句首或人为逐句揭晓；同一人物没有被现场真正打断时，让一个完整意思说完，再由对方回应。简单应答、重复确认和次要交谈可以由叙述带过；多人交谈、第三人插话、话题转交或经过动作段后，及时用姓名、称呼或与人物绑定的动作交代说话归属。同一人的话与接续动作通常保持在同一自然段，不为制造钩子机械拆句，也不为标归属逐句添加无意义动作。真实关键位置仍可自然出现短句、对照或金句，但不把它们配额化、模板化；不新增禁词扫描、style score、Reviewer 或自动重写。
 
 **Story-bearing Texture > Decorative Density**：正文不以“多写”或“多修饰”制造丰富感。每个主要 beat 选择少量真正改变画面的具体动作、物件/空间、身体反馈、力量后果和人物差异化反应；感官细节选择最有辨识度的少数锚点，不机械覆盖五感。细节如果不承载人物、冲突、因果或幻想体验，就继续压缩。
 
