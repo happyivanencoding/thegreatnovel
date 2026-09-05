@@ -185,7 +185,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - 结论区分 PASS / DIRECTIONAL PASS / PARTIAL PASS / FAIL / INVALID，并记录 **What This Did Not Solve**；单本书或单个 candidate 不直接升级为 production 结论。
 - 快速大规模 A/B 可用 Terra high，但不替代默认高质量规划路由。
 - **Character Authority Invariance**：凡结构机制可能改变主角取舍，默认用至少 2—3 个动机排序明显不同的冻结 Human 做同一 A/B；Treatment 除了产生目标结构增益，还必须保留 Human-specific 选择差异。若不同 Human 被推成同一种“成长最优/关系最优/道德最优”路线，即使结构更整齐也判失败或降级。
-- **Reader Experience / Creative Intensity Decision**：人物选择、爽感、节奏、情绪浓度及重要文风取舍，必须把有代表性的前后原文与完整样本入口发给作者，模型评审只作参考。作者回复时纳入其实际读感，必要时修正暂定判断；没有回复时不阻塞已授权工作，按已说明的证据与判断继续，不能把沉默写成作者认可。多版均通过 Canon / authority / 基本因果边界而只在创作强度上不同，Steward/Judge 不得默认选更保守版；当前作者偏好 AGGRESSIVE。事实矛盾、authority 越界、真实牺牲被即时等价抹平可直接指出，奖励较多或主角获益较大本身不算失败。
+- **Reader Experience / Creative Intensity Decision**：自行比较阅读效果前，先亲自读取本地经典小说中相应场景的原文，记录实际书名、章节与定位，再读生成稿判断；GBrain蒸馏卡不能代替读过原文，局部阅读不能声称通读全书。人物选择、爽感、节奏、情绪浓度及重要文风取舍，必须把有代表性的前后原文与完整样本入口发给作者，模型评审只作参考。作者回复时纳入其实际读感，必要时修正暂定判断；没有回复时继续已授权工作，不能把沉默写成认可。当前明确的表达偏好是避免普通信息先否后揭、整齐排比与细碎轮问，多人对白须容易辨认说话人。创作强度偏好 AGGRESSIVE；多版通过事实与因果边界后，不默认选更保守版。事实矛盾、authority 越界、真实牺牲被即时等价抹平可直接指出，奖励较多本身不算失败。
 - **Aggressive Variant Must Be Shown When Over-Restraint Is Suspected**：当问题本身就是 LLM 过度克制、少给、弱化社会反应、把欲望降成资格或把主角写得过于理性时，只要 authority / Canon / 因果允许，实验必须至少包含一个**明显更激进**的真实 Treatment；必要时再加 Extreme Treatment。不得先由系统/Judge替作者把“太爽、奖励太多、反应太大、主角太占便宜”裁掉；保存真实输出并由作者判断是否过头。
 - **Matched Decision Point**：要证明‘Personality → Choice → Route’时，先让不同冻结 Human 面对同一个具体诱惑/冲突/机会；对每个被测 Human 都应至少有两个具真实私人价值且不能同时完整取得的方向；价值强弱不必相等，选择后的主要机会成本必须保留，不能被隐藏奖励立即抵消。先验证选择本身是否随 Human 分叉，再放开长期 Story Program；若触发事件与机会池同时变化，长期差异不能纯归因于人格。
 
