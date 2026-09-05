@@ -1,0 +1,38 @@
+{
+  "id": "RIS-008",
+  "title": "章末 Handoff 指向的下一章结算被当前章提前执行",
+  "boundary": "director.chapter_execution_budget",
+  "failure_class": "chapter_budget/cross_chapter_spill",
+  "detects": "当前章只批准事故、救人和保住一辆矿车；章末 Handoff 只让重新核账/路线记录进入视线，Director 却提前完成下一章付款、重新核账或校路结论。",
+  "on_failure": "回到确定性 Current Chapter Execution Budget 与 Handoff Reservation 分离；当前章只完成已批准直接结果，下一章结算只能作为压力/待办出现。",
+  "source_evidence": [
+    "books/real-exp-fast-world-20ch-20260828-v1/SYSTEM_FIX_VALIDATION.md"
+  ],
+  "files": {
+    "snapshot": "snapshot.md",
+    "known_bad": "known_bad.md",
+    "known_good": "known_good.md"
+  },
+  "assertions": [
+    {
+      "kind": "not_contains_any",
+      "label": "不得提前完成下一章结算",
+      "values": [
+        "完成份额付款",
+        "支付第一笔个人潮钱",
+        "完成重新核账",
+        "校路官确认路线结论"
+      ]
+    },
+    {
+      "kind": "contains_all",
+      "label": "当前章保留事故直接结果并把结算留作 Handoff",
+      "values": [
+        "脚夫",
+        "矿车",
+        "Handoff Reservation",
+        "必须重新核账"
+      ]
+    }
+  ]
+}

@@ -183,6 +183,7 @@ GBrain 根目录由 `TGN_GBRAIN_ROOT` 统一解析；当前生产默认为 `C:\G
 
 - 冻结**被测阶段之前的全部已批准上游 authority**，并尽量冻结模型、reasoning、retrieval bundle 与其它输入；一次只改变一个主要变量。
 - 测 authority isolation 使用 fresh context；能 deterministic 就不加 LLM Composer。
+- **Real Incident Snapshot Eval 先筛已知回归，held-out 再判未知整体质量**：凡真实 production / E2E / Authority 审计已经确认过的事故，优先在 `evals/real_incident_snapshots/` 保存“最早可检测边界前的最小状态 + source evidence + known-bad + known-good + case-specific assertions”。运行前必须写清 `detects`（会抓什么具体失败）与 `on_failure`（抓到后下一步会做什么不同）；known-bad 必须 FAIL、known-good 必须 PASS 才算有效 case。它只属于实验/回归层，不接 production Gate，不新增通用中文 parser / LLM classifier；通过 Snapshot 只证明已知事故没有按该 case 形态回归，任何 production 晋级仍必须走新书/新样本完整 downstream 的 Reader + Authority held-out。
 - 候选选择规则预先规定，不 cherry-pick。
 - 先直接读真实输出，再用指标/Judge；明显结构性问题不需要 Judge。
 - **Reader / Authority 双轴评审必须分证据源**：Reader / classic Judge 只评价读感、段落、对白、节奏、人物与经典结构机制，不得在没有实际 Frozen Authority 的情况下猜 Authority；Authority Auditor 必须读取匿名 A/B + 实际 Frozen World / Character / Story / BOOK / Outline / Canon，只判断事实、事件、时序、持有、知识与隐藏旧史。最终只有 Reader 改善且 Authority 不退化时才能晋级 production。

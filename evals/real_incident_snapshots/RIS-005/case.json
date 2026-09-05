@@ -1,0 +1,36 @@
+{
+  "id": "RIS-005",
+  "title": "已持有高价值资产被擅自押输再作为奖励取回",
+  "boundary": "batch_primary.cross_chapter_assets",
+  "failure_class": "asset_continuity/stale_future",
+  "detects": "第4章已经取得并应继续持有的白昼火屑，在第5章被 Primary 擅自拿去下注并输掉，随后又与本章新增更大火屑混成一次结算。",
+  "on_failure": "拒绝该跨章资产变化；保留已持有旧火屑，赌局若需要普通输局只用 Authority 已允许的低价值随身物，本章奖励只新增更大的第二枚火屑。",
+  "source_evidence": [
+    "books/real-exp-batch5-full-chain-20260831-v1/FULL_CHAIN_BATCH5_REPORT.md",
+    "books/real-exp-batch5-full-chain-20260831-v1/BATCH_PRODUCTION_FINAL_REPORT.md"
+  ],
+  "files": {
+    "snapshot": "snapshot.md",
+    "known_bad": "known_bad.md",
+    "known_good": "known_good.md"
+  },
+  "assertions": [
+    {
+      "kind": "not_contains_any",
+      "label": "旧火屑不得被计划外押出或收走",
+      "values": [
+        "把火屑压上赌案",
+        "白昼火屑被城主收走",
+        "刚收走的火屑"
+      ]
+    },
+    {
+      "kind": "contains_all",
+      "label": "普通输局与新旧火屑身份必须分开",
+      "values": [
+        "随身小物",
+        "先前那枚仍在原处"
+      ]
+    }
+  ]
+}

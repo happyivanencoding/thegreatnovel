@@ -36,6 +36,29 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 如果必须有两个变量，说明为何不可分，并把结论限定为组合效果。
 
+### 3A. Real Incident Snapshot Eval｜已知事故先做便宜回归
+
+真实 production / E2E / Authority 审计一旦已经确认某个具体失败，不要以后每次都从开书重新生成几十章来证明它没有回来。把**事故第一次变得可检测之前的最小状态**冻结成 Snapshot，并把昂贵验证拆成两层：
+
+1. **Real Incident Snapshot Regression**：先回答“我们已经修过的已知事故，有没有在这个 treatment 下回来？”；
+2. **Fresh held-out full chain**：再回答“即使旧事故没回来，完整小说有没有新的 Reader / Authority 退化、随机漂移或跨书副作用？”
+
+当前 corpus 真源是 `evals/real_incident_snapshots/`；执行器是 `src/story_mvp/incident_snapshot_eval.py`。一个有效 case 至少包含：
+
+- `snapshot.md`：最早可检测边界前的最小 Frozen / 已发生状态，只放决定该事故的事实；
+- `known_bad.md`：当年真实失败或由当年真实输出裁出的最小失败片段；
+- `known_good.md`：已验证修复输出，或当年冻结规则允许的最小正确结果；
+- `case.json`：`boundary / failure_class / detects / on_failure / source_evidence / case-specific assertions`；
+- manifest 中唯一的 `RIS-xxx` ID。
+
+**每次运行前先回答两个问题**：`detects` 具体会检测什么失败？如果失败，`on_failure` 会让下一步做什么不同？答不上来就不跑该 case。Snapshot 不是“多一道保险税”，而是为了在支付完整 held-out 成本前淘汰已经知道会错的 treatment。
+
+校准是硬要求：同一 assertions 下 `known_bad` 必须 FAIL、`known_good` 必须 PASS。校准不成立就修 case，不增加 Judge 来替 case 自证。Assertions 只允许服务这个真实事故的稳定锚点、顺序、计数或禁用旧回归字面；**不要把 8 个 case 的 literals 扩成全局中文规则 parser**。如果一个新输出使用了不同但 Authority 合法的表达，人工确认后只扩这个 case 的合法候选锚点；如果需要真正语义判断，直接保留到 Authority Auditor / held-out，不另造通用 LLM classifier。
+
+Snapshot PASS 的含义非常窄：**这个已知事故没有按本 case 可判定的形态回归。** 它不能证明 prose 更好、故事更好、Authority 已全面闭合，也不能跳过当前要求的完整 downstream、Reader / Authority 双盲、新书 held-out、repeat、cross-book 或 fallback-adjusted wall。Snapshot FAIL 则足以阻止一个本来就声称“不应破坏该历史修复”的 treatment 继续花大成本晋级；先修最早失败边界。
+
+新增 case 只收**真实发生并已有 evidence 的事故**。理论上构造得出的风险、纯审美偏好或“也许以后会错”的想象不进入 Real Incident Corpus；它们可留在实验 hypothesis。这样 corpus 随项目真实经验增长，而不是变成防御性 checklist。
+
 ## 4. Fresh Context for Causal Isolation
 
 测试 authority independence / rationalization 时：

@@ -1,0 +1,34 @@
+{
+  "id": "RIS-006",
+  "title": "固定空间拓扑的天海上下轴被写反",
+  "boundary": "batch_authority_finalization.space_topology",
+  "failure_class": "world_authority/topology_inversion",
+  "detects": "World Authority 已冻结镜海界“天海在上、陆地在下”，后章却把白海和海上黑舰写到倒悬城下方。",
+  "on_failure": "在同一事实域跨章扫清上下轴；只改真实受影响的位置，不改剧情。若当前 World Authority 本身不明确，先回 World，而不是 Writer 自己选轴。",
+  "source_evidence": [
+    "books/real-exp-batch5-full-chain-20260831-v1/BATCH_PRODUCTION_FINAL_REPORT.md"
+  ],
+  "files": {
+    "snapshot": "snapshot.md",
+    "known_bad": "known_bad.md",
+    "known_good": "known_good.md"
+  },
+  "assertions": [
+    {
+      "kind": "not_contains_any",
+      "label": "不得把天海放到城下",
+      "values": [
+        "倒悬城下方的白海",
+        "从下方压上来"
+      ]
+    },
+    {
+      "kind": "contains_all",
+      "label": "修复后保持天海在上",
+      "values": [
+        "倒悬城上方的白海",
+        "从上方压下来"
+      ]
+    }
+  ]
+}

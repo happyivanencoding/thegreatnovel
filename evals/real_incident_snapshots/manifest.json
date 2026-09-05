@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "corpus_name": "TGN Real Incident Snapshot Eval Corpus",
+  "purpose": "Cheap regression screen for already-known historical TGN failures. Passing does not replace fresh held-out Reader + Authority evaluation.",
+  "cases": [
+    "RIS-001",
+    "RIS-002",
+    "RIS-003",
+    "RIS-004",
+    "RIS-005",
+    "RIS-006",
+    "RIS-007",
+    "RIS-008"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "RIS-002",
+  "title": "不可降格 RSE 被 Outline 压成单一 State",
+  "boundary": "story_program_to_outline.reader_facing_event",
+  "failure_class": "plan_compression/rse_demotion",
+  "detects": "Story Program 已批准的开篇 Premise / Meta Grammar 现场事件，在 Outline 后只剩“界阶1成立”之类状态，期限、归门和携带规则全部消失。",
+  "on_failure": "停止在 Story Program → Outline 运输层；先恢复现有 RSE Event Atom / State Residue / Timing Boundary / Reader Anchors 的原样排程，不让 Writer 或新 Reviewer 猜回整件事。",
+  "source_evidence": [
+    "books/real-exp-game-instance-rse-5ch-20260829-v2/RESULTS.md",
+    "DEEP_CONTEXT_HANDOFF_FINAL.md"
+  ],
+  "files": {
+    "snapshot": "snapshot.md",
+    "known_bad": "known_bad.md",
+    "known_good": "known_good.md"
+  },
+  "assertions": [
+    {
+      "kind": "contains_all",
+      "label": "开篇 Meta 事件的五个 reader-facing 锚点必须一起存活",
+      "values": [
+        "第一副本：沉昼界·北燧城",
+        "界阶：1",
+        "期限：十二日",
+        "合法归门：落日隧道",
+        "仅限本地真实取得，并被确认归属的成果"
+      ]
+    }
+  ]
+}

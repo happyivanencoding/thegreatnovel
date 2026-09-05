@@ -31,6 +31,31 @@
 
 ---
 
+### 0.0F 2026-09-05 冻结：Real Incident Snapshot Eval Corpus / 已知事故回归层
+
+在完整阅读 Anthropic `commerce-agents` 的 article + reference source 后，TGN 没有因此新增 Router / Memory Agent / Reviewer，也没有改变当前 Batch production topology。真正吸收的是一条实验方法：**真实事故一旦已经被 production / E2E / Authority 审计确认，就把“事故第一次变得可检测之前”的最小状态冻结成 Snapshot；以后先用廉价回归挡住已知错误，再把昂贵 fresh held-out 留给未知整体质量。** 这与当前 TGN 的 Frozen Authority / deterministic harness 方向一致，不是另造 Agent 架构。
+
+当前已建立 `evals/real_incident_snapshots/`，schema v1 首批 **8 个真实历史 case**：
+
+1. `RIS-001`：Future-10 明确“顾停舟本人进入镇海”，最终却只剩镇海级战绩/站住战局；
+2. `RIS-002`：开篇 Premise / Meta Grammar 的 RSE 被 Outline 压成“界阶1成立”单一 State；
+3. `RIS-003`：Ch4 裴照临堵桥/断桥/追兵未解，Ch5 直接从已到倒悬城重新起场；
+4. `RIS-004`：人物“门骨暂时由你保管”的要求被偷换成“门骨不能离开你手”的世界绑定规则；
+5. `RIS-005`：上一章已持有的白昼火屑被 Batch Primary 擅自押输，再与本章新增更大火屑混成一次奖励；
+6. `RIS-006`：镜海界已冻结“天海在上”，正文却把白海/黑舰写到倒悬城下方；
+7. `RIS-007`：门已关闭且无合法跨界 Authority，Reviser 为裴照临发明“剑意追入镜海”而不是返回 `upstream_conflicts`；
+8. `RIS-008`：当前章只批准事故/救人/保住矿车，却把 Handoff 指向的下一章付款、重新核账、校路结论提前完成。
+
+每个 case 固定 `case.json + snapshot.md + known_bad.md + known_good.md`。`case.json` 必须声明 `boundary / failure_class / detects / on_failure / source_evidence / assertions`；`src/story_mvp/incident_snapshot_eval.py` 只提供 case-specific 的 `contains_all / contains_any / not_contains_any / ordered / count`，不做通用语义判定。Corpus 校准要求同一断言下 **known-bad 必须 FAIL、known-good 必须 PASS**，并验证 source evidence 仍存在。执行示例：`$env:PYTHONPATH='src'; .\.venv\Scripts\python.exe -m story_mvp.incident_snapshot_eval validate`；检查某个候选：同模块 `check RIS-007 <response-file>`。
+
+方法论冻结成明确两层：**Snapshot Regression → Fresh Held-out Full Chain**。Snapshot 运行前必须先回答“这次会检测什么具体失败；失败时下一步会做什么不同”；若 treatment 根本不碰该边界（例如只改 Accent Color），就不为覆盖率机械跑。Snapshot FAIL 可以在支付大规模模型成本前淘汰一个破坏既有修复的 treatment；Snapshot PASS 只证明该历史事故没有按该 case 的可判定形态回归，**绝不能替代**新书/新样本完整 downstream 的 Reader + Authority held-out、repeat、cross-book、fallback/丢弃成本与 wall。不要把 case literals 扩成全局中文 parser，不新增 LLM regression classifier，也不把 Corpus 接成章节 production Hard Gate。
+
+同步更新：`PROJECT_RULES.md` 实验规则、`docs/PIPELINE_METHODOLOGY_AND_VALUES.md`（并修正一处仍把旧 Director→Curator→Primary→Full Reviser 写成“当前默认链”的过时描述）、`tgn-system-steward/references/experiment-protocol.md` 与审计 Skill。`tgn-system-steward` 已升级为 **0.3.61**：skill-authoring lint `portable=true / 0 error / 0 warning`；clean Git-tracked-only package validate PASS，digest `sha256:41e211760cc7ffa2c849ca04261866807f754797dcb5df48ffc3f167da47452e`，已 install + activate。Luna-high bounded read-only smoke 正确判：修改 Batch Authority Delta 应先跑 RIS-007；若 FAIL 停止 held-out 回最早 transport；PASS 不能 productionize；纯 Accent Color treatment 不跑 snapshots；Snapshot 不能替代 fresh Reader+Authority held-out。Corpus focused tests **3/3 PASS**，最终全仓回归 **558/558 PASS**，`git diff --check` PASS。
+
+这轮**没有修改小说 production pipeline、模型路由、Authority adoption、State 或生成 Prompt**；新增的是开发/实验回归资产。后续每遇到一个已经确认且以后值得永久防回归的真实事故，优先追加一个最小 `RIS-xxx`，而不是把它写成新的 production guard。
+
+---
+
 ### 0.0E 2026-09-05 冻结：`novel-original-text-review` / 经典原文证据插件
 
 为把“经典对照必须先读原文”从文字纪律变成可执行默认，新增独立开发评审 Skill：`.agents/skills/novel-original-text-review/`。它不进入小说 production pipeline，不是评分器或 Reviewer，而是给当前 ChatGPT / Agent / Steward 做经典对照时提供**原文证据入口**。

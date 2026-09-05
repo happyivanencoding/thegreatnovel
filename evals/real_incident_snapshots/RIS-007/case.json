@@ -1,0 +1,45 @@
+{
+  "id": "RIS-007",
+  "title": "关闭边界后的无因果跨界被 Reviser 用新机制聪明补洞",
+  "boundary": "batch_authority_delta.upstream_conflict",
+  "failure_class": "access_provenance/unauthorized_repair",
+  "detects": "裴照临先被门力甩回，后章却出现在镜海界；Frozen Authority 没有合法到达因果时，Reviser 自行发明“剑意被卷入并可追踪跨界”。",
+  "on_failure": "不要生成 access patch；返回 upstream_conflicts，回 Story / Outline 决定最小合法到达因果或可见 Mystery。",
+  "source_evidence": [
+    "books/real-exp-batch5-full-chain-20260831-v1/BATCH_PRODUCTION_FINAL_REPORT.md"
+  ],
+  "files": {
+    "snapshot": "snapshot.md",
+    "known_bad": "known_bad.md",
+    "known_good": "known_good.md"
+  },
+  "assertions": [
+    {
+      "kind": "not_contains_any",
+      "label": "Reviser 不得新造跨界机制",
+      "values": [
+        "一缕剑意",
+        "剑意追来",
+        "备用门",
+        "秘密接引",
+        "剑意追踪"
+      ]
+    },
+    {
+      "kind": "contains_all",
+      "label": "无法局部合法修复时必须上报上游",
+      "values": [
+        "upstream_conflicts",
+        "Story / Outline"
+      ]
+    },
+    {
+      "kind": "contains_any",
+      "label": "冲突必须指向第4章",
+      "values": [
+        "\"chapter\": 4",
+        "\"chapter\":4"
+      ]
+    }
+  ]
+}

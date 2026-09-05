@@ -1,0 +1,38 @@
+{
+  "id": "RIS-003",
+  "title": "即时冲突在章节边界被删除",
+  "boundary": "chapter_handoff.continuity_debt",
+  "failure_class": "continuity/handoff_drop",
+  "detects": "上一章已经形成堵路、断桥和追兵逼近的即时未解局面，下一章却直接从“已经到达倒悬城入口”重新起场。",
+  "on_failure": "先修当前章 Handoff bridge；必须用已有 Authority 支持的最低充分动作结束、打断或转化即时局面，不能靠摘要跳过，也不能新增禁杀、备用门等方便规则。",
+  "source_evidence": [
+    "DEEP_CONTEXT_HANDOFF_FINAL.md",
+    "books/real-exp-batch5-full-chain-20260831-v1/FULL_CHAIN_BATCH5_REPORT.md"
+  ],
+  "files": {
+    "snapshot": "snapshot.md",
+    "known_bad": "known_bad.md",
+    "known_good": "known_good.md"
+  },
+  "assertions": [
+    {
+      "kind": "contains_all",
+      "label": "桥接必须真正使用已建立的现场对象",
+      "values": [
+        "断桥",
+        "石檐",
+        "镜离",
+        "澜生"
+      ]
+    },
+    {
+      "kind": "ordered",
+      "label": "先处理堵桥再进入城内",
+      "values": [
+        "裴照临",
+        "断桥",
+        "进入倒悬城"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "RIS-004",
+  "title": "人物保管要求被偷换成客观绑定规则",
+  "boundary": "batch_authority_finalization.prose_fact",
+  "failure_class": "authority_invention/convenience_mechanism",
+  "detects": "Frozen Authority 只批准“黑门骨当前由宁烬持有 / 有特殊适配”，正文为了固定合作后的持有状态，新增“门骨不能离开你手”的物理绑定规则。",
+  "on_failure": "在当前局部删除未授权机制，只保留人物会说的保管选择；若真的需要物理绑定，必须回 World / Story 明确冻结，不能由 Writer/Reviser 顺手补。",
+  "source_evidence": [
+    "books/real-exp-batch5-full-chain-20260831-v1/FULL_CHAIN_BATCH5_REPORT.md"
+  ],
+  "files": {
+    "snapshot": "snapshot.md",
+    "known_bad": "known_bad.md",
+    "known_good": "known_good.md"
+  },
+  "assertions": [
+    {
+      "kind": "not_contains_any",
+      "label": "不得把保管要求写成不能离手的世界机制",
+      "values": [
+        "不能离开你手",
+        "不能离手",
+        "离不开你手"
+      ]
+    },
+    {
+      "kind": "contains_any",
+      "label": "只保留当前人物安排",
+      "values": [
+        "门骨暂由你拿着",
+        "门骨先留在你手",
+        "门骨暂时由你保管",
+        "门先留你手里",
+        "暂时由你拿着"
+      ]
+    }
+  ]
+}

@@ -791,11 +791,11 @@ TGN 最怕的不是某一章偶尔写差，而是系统逐层把“令人向往�
 
 系统目标不是“调用最多的模型得到最高质量”，而是让高推理成本集中在高杠杆决策上。
 
-当前章节默认链：
+当前长篇正文默认链：
 
-`Director → Curator → Primary Draft → Authority Reviser → lightweight State Extraction`
+`Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra-high Batch Primary → [Terra-high Prose Delta ∥ Sol-high Authority Delta] → deterministic Authority-first composition → Luna-low State逐章落盘`
 
-即 4 个主要生成调用 + 1 个轻量状态抽取，不默认运行 Specialist / Integrator。Reviser 的存在是为了把“Primary 窄上下文”和“远端高权威准确性”解耦，不是为了再写一次全文。
+Batch 的价值首先是连续小说窗口，不只是加速；两个 Delta 独立读取同一 immutable Primary，Authority patch 先落，Prose patch 只在 Authority-closed 文本仍逐字唯一命中时叠加。旧 `Director → Curator → Primary → Full Authority Reviser → State` 只保留为单章 fallback / 专项实验，不再描述默认 production。
 
 Long-form Evolution 不进入每章成本。World Expansion 只在真实 World Horizon / 新独立副本入口运行；Human Development 更低频且允许 `NONE`；Current Character 纯确定性；Story Refresh 只在扩世界后使用 Sol high 做一次高杠杆 Re-Collision。这里允许增加少量周期 Agent，因为 A/B 显示 fresh-context 分权明显优于单 Agent 全包，但不把它们升级成每章 Reviewer/Coordinator。
 
@@ -807,6 +807,14 @@ Long-form Evolution 不进入每章成本。World Expansion 只在真实 World H
 - 状态结构写回。
 
 不要为了省一点本地代码，把简单筛选重新交给 LLM；也不要为了“保险”给每个阶段都上最慢模型。
+
+### Real Incident Snapshot Eval｜已知事故先回归，未知质量仍靠 held-out
+
+已经由真实 production / E2E / Authority 审计确认过的问题，不再默认每次从开书重跑整条链才能验证。当前在 `evals/real_incident_snapshots/` 维护 **Real Incident Snapshot Eval Corpus**：每个 `RIS-xxx` 只冻结事故第一次变得可检测之前的最小状态、历史 source evidence、known-bad、known-good，以及只服务该事故的窄断言；执行器为 `src/story_mvp/incident_snapshot_eval.py`。首批 8 个 case 来自 TGN 实际发生过的：显式力量里程碑被降格成战绩、RSE 被压成 State、即时冲突跨章消失、保管要求偷变世界绑定、已有白昼火屑被擅自押输再赢回、天海上下轴写反、关闭边界后 Reviser 发明跨界机制、下一章结算被提前执行。
+
+有效 Snapshot 必须先校准：同一断言下 `known_bad = FAIL`、`known_good = PASS`，并在 metadata 里写明 `detects` 与 `on_failure`。这正对应实验前必须回答的两个问题：**会检测什么具体失败？真出现时下一步会做什么不同？** 如果 treatment 根本不触碰该边界，或失败不会改变后续动作，就不为了覆盖率机械运行。Snapshot FAIL 足以阻止一个声称“不破坏既有修复”的 treatment 继续支付大规模 held-out 成本；Snapshot PASS 只说明该已知事故没有按当前 case 的可判定形态回归。
+
+因此它绝不替代完整质量验证。任何会改变 production 的 Prompt、模型、路由、上下文、Delta 或 Authority transport，最终仍必须用冻结 treatment 后的**新书 / 新样本完整 downstream**做 Reader + Authority held-out，并按需要报告 repeat、cross-book、fallback/丢弃成本与完整 wall。不要把 Snapshot literals 扩成通用中文 parser，不新增 LLM regression classifier，也不把 Corpus 接成章节 production Hard Gate；需要语义判断的残余问题继续交给直接阅读 / Authority Auditor。
 
 延迟优化也遵守 root-cause layering：先区分正常采用链与废弃重跑/周期 Review/Repair 的真实摊销，再区分 deterministic context、模型推理与排队波动。不能用“最终稿和 Primary 很像”证明 Reviser 冗余，也不能用“中间包标题完整”证明降 effort 后最终正文等价。冻结上游、单变量运行，并把 treatment 接回正常下游；只有最终正文同时通过商业读感与 Authority/Canon 盲评，才允许改变 production 路由。涉及随机稀疏修订、条件路由、提前编译或跨章投机时，还必须报告**完整下游 critical path**、独立重复运行、跨书泛化、fallback/丢弃成本与 Reader↔Authority 分裂；子节点快不等于整章快，一次胜出不等于稳定 route。替换成另一强模型也服从同一标准：Full Curator 攡为 Terra high 虽在四章完整下游中快26.9%，但 Reader 与 Authority均2:2，不能按平均速度改默认。2026-08-29 的两轮实验已否决 full/patch medium Reviser、Slim/medium Curator、Conditional/Speculative Director、Parallel Pre-Curator、Authority Blueprint、Attention Kernel、Reviser+State 合并、State Terra low、Paragraph Manifest 与常驻 Reader Polish 作为质量等价默认。Paragraph-Delta 是唯一保留的高潜研究：它证明全文重输可被局部操作替代，但两次独立运行只有1/5完全一致，跨书 Reader 与 Authority仍分裂；下一步需要 deterministic Atomic Chapter Obligations，不再增加一个 LLM classifier。确定性删除 stale context 可以冻结；模型、effort、输出协议、并行语义或新 Agent 继续属于实验假设。
 

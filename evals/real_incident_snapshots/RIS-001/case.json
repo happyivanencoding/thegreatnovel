@@ -1,0 +1,29 @@
+{
+  "id": "RIS-001",
+  "title": "显式力量里程碑被降格成同级战绩",
+  "boundary": "authority_reviser.final_prose",
+  "failure_class": "authority_transport/milestone_demotion",
+  "detects": "Future-10 已明确批准“顾停舟本人进入镇海”，最终正文却只写他站住镇海级战局或获得镇海级战绩，没有直接落成主角自身层级变化。",
+  "on_failure": "停止该 treatment 在这一边界继续晋级；先检查 approved outcome → Frozen Mission → Authority finalization 的运输与现有 bounded milestone repair，再进入昂贵 held-out。",
+  "source_evidence": [
+    "books/real-exp-fast-world-20ch-20260828-v1/SYSTEM_FIX_VALIDATION.md",
+    "DEEP_CONTEXT_HANDOFF_FINAL.md"
+  ],
+  "files": {
+    "snapshot": "snapshot.md",
+    "known_bad": "known_bad.md",
+    "known_good": "known_good.md"
+  },
+  "assertions": [
+    {
+      "kind": "contains_any",
+      "label": "主角本人层级必须直接落成",
+      "values": [
+        "顾停舟本人，已经跨进镇海",
+        "顾停舟本人已经进入镇海",
+        "顾停舟已跨入镇海层",
+        "顾停舟已成为镇海层强者"
+      ]
+    }
+  ]
+}
