@@ -2407,6 +2407,16 @@ Production 已改为从可信 `codex-acp.ps1` 安装锚点解析 JS entry，再�
 
 Production 同时进一步收口力量语言：`潮阶 / 身天尺 / 九门尺` 这类只在精确位置外套一层标签的主尺元专名默认不要；高境界能力必须从此前身体/精神 Grammar 连续长出，不用“到王境便获得任意法则权限”式抽象跳步。focused tests **23/23 PASS**；最终全仓 **532/532 PASS**。`tgn-system-steward` 升级至 **0.3.54**，新增 `World Depth ≠ Early Canon Breadth / Detail-on-Demand` 审计；skill-authoring lint `portable=true / 0 errors / 0 warnings`，package validate/install/activate PASS，digest `sha256:45070b9d2a5746b30281a6f5edad7539b69b08967eb33588b8b7524c19789461`；bounded Luna-high read-only smoke **PASS**，正确把“未来地点全提前冻结 + 当前 Horizon 被护运/修桥/配给占满 + 远方轮廓泄漏 Writer”定位回 World Expansion 的 Early Canon Over-Specification + supporting logic 前景化，而不是 Writer 问题，也没有建议新增 Agent / Reviewer / 数据库。默认模型路由**不变**：World Vision / World Expansion 仍为 Luna-high；Sol-max 继续作为高质量研究/挑战者，不因本次结构升级自动成为 production 默认。
 
+## 2026-09-05｜ChatGPT 长任务持久宿主：只搬进程，不改小说 Pipeline
+
+多次真实长篇生成暴露一个与小说架构无关的执行问题：ChatGPT Web / Mobile turn 可能在模型或本地 runner 尚未结束时终止继续轮询；AgentDock command session 本身又运行在 Windows Job Object 中，因此即使普通 `DETACHED_PROCESS` 子进程也会随发起 session 结束而被系统回收。结果表现为“用户第二天回来必须先问一句好了吗，控制流程才重新获得 turn”，甚至本地 runner 已经失败/完成但对话没有继续读取结果。
+
+Production 新增 `story-mvp-background`，仅作为 **Persistent Job Host**。Windows 通过 WMI/CIM `Win32_Process.Create` 让 OS 服务启动真正 worker，随后原 runner 在 ChatGPT / AgentDock 发起命令退出后继续运行；状态、stdout、stderr 落在 gitignored `.local/background_jobs/<job_id>/`，支持 status/list/stop。它**不是**新的 Story/Recovery Agent，不理解小说，不改变现有 World → Power/Human → Story → Outline → Batch → Delta → State 语义，也不替代各 runner 已经拥有的 validator / retry / provenance。真实 smoke 已证明：发起命令结束后后台 worker 仍继续，随后通过现有 `AgentDockJobManager → codex-acp → ChatGPT login` 调用 Terra，并独立取得 `BACKGROUND_ACP_OK` 后完成；因此不改成 API Key 计费路径。
+
+用户同时明确长期工作方式是 **final-output-only / hands-off**：不会逐阶段分析技术错误或中途做候选批准，只阅读最终小说并给阅读感受。今后 ChatGPT-operated 长任务在初始方向明确后，由 TGN operator 按现有 production 规则、冻结输入、validator 与预先选择原则完成内部 candidate selection / Save / Adopt / Approval checkpoint 与正常失败恢复；交互式 Author Workspace 的人工批准 UX 不变。不要因为后台化再造 Recovery Controller / Judge / Reviewer；真正变化只有“现有 runner 由谁托管”。
+
+实现验证：最初尝试普通 detached process，真实证明会被 AgentDock 的 Windows Job Object 回收；Task Scheduler 版本虽能脱离父会话，但会留下 scheduled-task residue，因此未保留。最终 WMI/CIM 版本在发起 AgentDock command 已退出后仍继续运行，真实后台 `AgentDockJobManager → codex-acp → Terra` 返回 `BACKGROUND_ACP_OK` 并独立 `completed`。后台 focused + ACP executor tests **22/22 PASS**，全仓 **535/535 PASS**，`git diff --check` PASS。Steward 审计方法同步升级至 **0.3.55**，新增“Process Host ≠ Novel Pipeline”的 live-discovery 判断；skill-authoring lint `portable=true / 0 errors / 0 warnings`，package validate/install/activate PASS，digest `sha256:f47ee91d5526ab052bd3a6935485a6188bcc0479b4c8f4825f7da20d810876b8`，bounded read-only smoke 正确拒绝新增 Recovery Agent / Reviewer / Judge，定位为持久进程宿主问题。
+
 ## Cognitive Integrity Check
 
 阅读本文后，一个新 Agent 不应只知道“项目采用了哪些 Prompt”，还应能够面对新案例作出以下判断：

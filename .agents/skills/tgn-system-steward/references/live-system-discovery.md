@@ -50,6 +50,8 @@ git log --oneline -8
 
 实验目录里的模块只有在实际 import / route 中被调用才算 production。
 
+如果问题涉及“长任务为什么停住 / 必须回来问好了吗才继续”，把**进程宿主**与**小说 pipeline**分开审计。先确认现有 runner 是否已经包含正常的 validator / retry / error handling，再确认它是不是被当前 ChatGPT turn、AgentDock command session 或其它短生命周期父进程托管。若 runner 语义本身正确而只是父进程结束后被回收，最小修法是换成持久 Job Host；不要因此新增 Recovery Agent、Reviewer、Judge 或第二套 workflow。反过来，持久宿主只能保证 runner 活着，不能拿它掩盖真实的 Story / Outline / Authority transport 缺陷。
+
 ## 4. Experiment Status
 
 用户说“这个实验完成了吗”时，不只看文件存在。

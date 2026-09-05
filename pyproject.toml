@@ -23,6 +23,7 @@ test = ["pytest>=8.0", "httpx>=0.27"]
 [project.scripts]
 story-mvp = "story_mvp.__main__:main"
 story-mvp-workflow = "story_mvp.workflow_cli:main"
+story-mvp-background = "story_mvp.background_job:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

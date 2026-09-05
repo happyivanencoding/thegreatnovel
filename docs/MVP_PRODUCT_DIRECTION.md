@@ -231,6 +231,10 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 长任务 UI 不显示虚假百分比或 ETA，而持续显示真实阶段、累计耗时、距最近信号时长、通用 plan / tool / activity 摘要、取消入口和低打扰定时提醒。ACP commentary、private reasoning、原始命令、路径与凭据都不进入作者可见 activity；最终 Response 只接收明确 final channel。短暂列表 / 状态查询失败保留 pending lock 并退避重试，不能因此允许重复启动。
 
+ChatGPT 直接发起的长时生成 / A/B / 蒸馏与多阶段小说 runner 使用 `story-mvp-background` 作为**进程宿主**，而不是继续把当前 ChatGPT turn 当宿主。它把已经存在的 runner 原样交给本机后台 worker：Windows 通过 WMI/CIM `Win32_Process.Create` 让 OS 服务启动 worker，从而脱离 AgentDock 的 Job Object；worker 继续使用 runner 内既有的 `codex-acp + ChatGPT login` 模型调用，并把状态与 stdout/stderr 落到 gitignored `.local/background_jobs/`。这不是新的小说阶段，也没有新增 Recovery Agent；Story / Outline / Batch / State 的语义、validator 与原 runner 的恢复逻辑保持原样。ChatGPT turn 中断后任务仍可继续，之后只需读取持久状态与最终 artifact。
+
+当用户明确采用 **final-output-only / hands-off** 工作方式时，中间候选、Save/Adopt/Approval checkpoint 与正常失败恢复由当前 TGN operator 按既有 production 规则完成，不再要求用户阅读技术细节或逐阶段批准；这是 ChatGPT-operated 长任务的执行授权，不改变 Author Workspace 交互模式下的显式批准边界。用户仍只在最终小说 / 实验成果层给阅读反馈。
+
 Author Workspace 桌面布局为窄 nav rail → 真实 Story Structure tree → 中央 manuscript surface → 固定 AgentDock。Structure tree 的 World/Character/Story/Long Plan/Future-10/当前章/Canon/Run 均从 Workflow artifacts 和已解析 Future-10 生成，点击定位真实工作区。顶部 Manuscript、Structure、Memory 切换真实 view；Audit 与 Versions 打开右侧真实区域。Batch Production 复用既有 Batch API，并确定性补齐任意起始章的连续性上下文，完成 Packet → Terra high Primary → Sol high Delta → exact-window/exact-response 预检 → 作者显式 Adopt → 作者逐章 State；窗口或 Response 变化会使下游 Prompt / 预检失效，不复制 Authority 算法。
 
 GBrain 在 Workspace 中使用 Curator 交互：semantic retrieval / full-page extraction 后分别展示 fixed references 与 BOOK-compatible candidates；每轮默认不选，作者可按 Human 三 lane 浏览、显式勾选、并排比较、组装可编辑 Bundle，或明确本轮不注入。请求返回、Bundle 与 Prompt 都绑定发起时上下文；上下文变化后旧材料只读保留并标 stale，selection stale / 未绑定手工文本 / GBrain-OFF 阶段由前后端共同 fail-closed。GBrain 仍只提供 Optional Inspiration，不写 Canon，也不成为 Hard Gate。
