@@ -2,8 +2,8 @@
 
 日期：2026-09-04
 项目：TheGreatNovel / TGN Story MVP
-主要工作目录：`C:\dev\tgn-story-mvp`
-开发分支：`principal_dev_new_sys`
+主要工作目录：`C:\dev\tgn-astra`
+开发分支：`dev_astra`
 
 ---
 
@@ -1383,8 +1383,8 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 
 截至本 Handoff 写作前核对：
 
-- Repo：`C:\dev\tgn-story-mvp`
-- Branch：`principal_dev_new_sys`
+- Repo：`C:\dev\tgn-astra`
+- Branch：`dev_astra`
 - 本次最终融合校准时的 source baseline HEAD：`bad80ae docs: finalize deep context handoff`；接手时仍应 live-check HEAD，不把该 commit 当永久事实。
 - 前一关键提交：
   - `1760c9a docs: add deep context handoff`

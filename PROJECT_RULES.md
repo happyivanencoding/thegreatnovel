@@ -11,11 +11,11 @@
 
 ## 2. Repo / Git / ACP
 
-- Repo：`C:\dev\tgn-story-mvp`
-- 唯一开发分支：`principal_dev_new_sys`
+- Repo：`C:\dev\tgn-astra`
+- 唯一开发分支：`dev_astra`
 - 普通代码、Prompt、测试、文件、Git 任务由当前 ChatGPT 直接完成，不为方便调用 ACP。
 - 有效修改后测试、提交并推送；不碰无关 untracked 实验文件。
-- **`principal_dev_new_sys` 是内部开发权威；`main` 是 public production freeze，不承载内部方法论。** 向 `main` 发布时不得 fast-forward / merge 整条 dev 历史；必须以当前 `origin/main` 为父节点构造 clean release commit，只同步已冻结 production code、必要 runtime skill、构建配置与可公开测试。`docs/`、`DEEP_CONTEXT_HANDOFF*`、`PROJECT_RULES.md`、`tgn-system-steward`、`temps/`、`CURRENT_NOVEL_FOR_REVIEW.txt` 和新内部实验 provenance 不得进入 main；必要 runtime Scene Skill 可保留。main release 前做敏感路径树检查、独立测试并打 freeze tag。
+- **`dev_astra` 是内部开发权威；`main` 是 public production freeze，不承载内部方法论。** 向 `main` 发布时不得 fast-forward / merge 整条 dev 历史；必须以当前 `origin/main` 为父节点构造 clean release commit，只同步已冻结 production code、必要 runtime skill、构建配置与可公开测试。`docs/`、`DEEP_CONTEXT_HANDOFF*`、`PROJECT_RULES.md`、`tgn-system-steward`、`temps/`、`CURRENT_NOVEL_FOR_REVIEW.txt` 和新内部实验 provenance 不得进入 main；必要 runtime Scene Skill 可保留。main release 前做敏感路径树检查、独立测试并打 freeze tag。
 - 所有 TGN commit 的 Author / Committer 固定为 `happyivanencoding <jingxuan.ivan@gmail.com>`；不得使用 Codex、Agent 或本地占位身份。提交前若仓库 Git identity 不一致，先修正再提交。
 - 只有真实 LLM / Coding Agent 执行才调用 ACP，例如小说生成、模型 A/B、正文质量实验、GBrain 原著蒸馏或跨书 synthesis。
 - ACP 安装锚点：`C:\Users\jingx\AppData\Roaming\npm\codex-acp.ps1`；production transport 从该安装目录解析 `@agentclientprotocol/codex-acp/dist/index.js`，由 `node.exe` **直接**启动，不再把 UTF-8 NDJSON 长连接穿过 PowerShell wrapper；ChatGPT 登录，不使用 API Key；默认 read-only。
