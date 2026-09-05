@@ -626,7 +626,29 @@ def _parse_markdown_sections(content: str) -> list[tuple[str, str]]:
     return sections
 
 
-def extract_abstract_content(page: str) -> tuple[str, str]:
+def _stage_guidance(body: str, mode: str) -> str:
+    heading = {
+        "world_vision": "World Vision",
+        "world_expansion": "World Expansion",
+        "power_seed": "Power Seed",
+        "human_seed": "Human Seed",
+        "idea": "Story Program",
+        "story_refresh": "Story Program",
+        "outline": "Outline",
+    }.get(mode)
+    if heading:
+        match = re.search(
+            rf"^###[ \t]+{re.escape(heading)}[ \t]*\n.+?(?=^#{{1,3}}[ \t]+|\Z)",
+            body,
+            flags=re.MULTILINE | re.DOTALL | re.IGNORECASE,
+        )
+        if match:
+            return match.group(0).strip()
+    return body
+
+
+def extract_abstract_content(page: str, *, mode: str, category: str) -> tuple[str, str]:
+    guidance: list[tuple[str, str]] = []
     selected: list[tuple[str, str]] = []
     boundary = ""
     for heading, body in _parse_markdown_sections(page):
@@ -635,6 +657,11 @@ def extract_abstract_content(page: str) -> tuple[str, str]:
             continue
         if normalized not in ABSTRACT_HEADINGS or not body:
             continue
+        prioritize_guidance = normalized == "guidance" and category in {"book-dna", "arcs"}
+        if prioritize_guidance:
+            # Source studies put long plot evidence before their reusable craft.
+            # Select the existing stage guidance before applying the shared budget.
+            body = _stage_guidance(body, mode)
         cleaned_lines = []
         for line in body.splitlines():
             stripped = line.strip()
@@ -648,11 +675,13 @@ def extract_abstract_content(page: str) -> tuple[str, str]:
             continue
         if normalized in {"transfer boundary", "使用边界"}:
             boundary = _compact(cleaned, 500)
+        elif prioritize_guidance:
+            guidance.append((heading, _compact(cleaned, 800)))
         else:
             selected.append((heading, _compact(cleaned, 800)))
-    if not selected:
+    if not guidance and not selected:
         return "", boundary
-    abstract = "\n".join(f"{heading}：{body}" for heading, body in selected)
+    abstract = "\n".join(f"{heading}：{body}" for heading, body in guidance + selected)
     return _compact(abstract, 800), boundary
 
 
@@ -878,7 +907,7 @@ def _load_world_coordinate_reference(
         return None, f"固定 Coordinate Reference 读取失败：{error}"
     if not active_inspiration_allowed(page):
         return None, "固定 Coordinate Reference 当前未启用为 active inspiration"
-    abstract, transfer_boundary = extract_abstract_content(page)
+    abstract, transfer_boundary = extract_abstract_content(page, mode="world_vision", category="syntheses")
     if not abstract:
         return None, "固定 Coordinate Reference 没有可提取的抽象区块"
     if _has_surface_conflict(abstract, constraints):
@@ -901,7 +930,7 @@ def _load_power_naming_reference(
         return None, f"固定 Naming Craft Reference 读取失败：{error}"
     if not active_inspiration_allowed(page):
         return None, "固定 Naming Craft Reference 当前未启用为 active inspiration"
-    abstract, transfer_boundary = extract_abstract_content(page)
+    abstract, transfer_boundary = extract_abstract_content(page, mode="power_seed", category="syntheses")
     if not abstract:
         return None, "固定 Naming Craft Reference 没有可提取的抽象区块"
     if _has_surface_conflict(abstract, constraints):
@@ -1159,7 +1188,7 @@ def retrieve_gbrain(
         if genre_prior and genre_prior_count >= GENRE_PRIOR_ACCEPT_LIMIT:
             rejected.append({"slug": hit["slug"], "reason": "超过 Genre Prior 接受上限"})
             return None
-        abstract, transfer_boundary = extract_abstract_content(page)
+        abstract, transfer_boundary = extract_abstract_content(page, mode=mode, category=category)
         if not abstract:
             rejected.append({"slug": hit["slug"], "reason": "没有可提取的抽象区块"})
             return None

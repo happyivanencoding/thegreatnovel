@@ -35,6 +35,7 @@ from story_mvp.gbrain_retrieval import (
     build_retrieval_brief,
     dedupe_query_hits_by_slug,
     default_effective_query,
+    extract_abstract_content,
     extract_hard_constraints,
     parse_query_results,
     retrieve_gbrain,
@@ -2264,6 +2265,94 @@ def test_xuanhuan_arc_is_accepted_when_abstract_is_transferable() -> None:
 
     assert result["accepted_count"] == 1
     assert result["accepted"][0]["slug"] == slug
+
+
+def _long_reference_with_stage_guidance() -> str:
+    return (
+        "## Reader Promise\n\n背景起点：" + "来源人物经历了一场胜负。" * 100
+        + "\n\n## Guidance\n\n只迁移可复用的写作机制。\n\n"
+        "### World Vision\n\n" + "新世界要产生具体欲望。" * 100
+        + "\n\n### Story Program\n\n长期换挡：让旧关系改变新阶段的选择。\n\n"
+        "### Outline\n\n现场兑现：先设置，再提醒，经过沉默期后兑现。\n\n"
+        "## Transfer Boundary\n\n只借鉴机制，不迁移原作事件。\n"
+    )
+
+
+@pytest.mark.parametrize(
+    ("mode", "category", "expected", "other_stage"),
+    [
+        ("outline", "book-dna", "现场兑现", "长期换挡"),
+        ("story_refresh", "arcs", "长期换挡", "现场兑现"),
+    ],
+)
+def test_reference_abstract_prioritizes_stage_guidance_before_long_plot_summary(
+    mode: str, category: str, expected: str, other_stage: str
+) -> None:
+    abstract, boundary = extract_abstract_content(
+        _long_reference_with_stage_guidance(), mode=mode, category=category
+    )
+
+    assert abstract.startswith("Guidance：")
+    assert expected in abstract
+    assert other_stage not in abstract
+    assert "新世界要产生具体欲望" not in abstract
+    assert "背景起点" in abstract
+    assert len(abstract) <= 800
+    assert boundary == "只借鉴机制，不迁移原作事件。"
+
+
+def test_reference_abstract_keeps_general_guidance_without_a_matching_stage() -> None:
+    page = (
+        "## Mechanism\n\n" + "前部来源研究。" * 180
+        + "\n\n## Guidance\n\n### Pattern 1\n\n新力量应使旧限制失效。\n"
+    )
+    abstract, _ = extract_abstract_content(page, mode="outline", category="arcs")
+
+    assert abstract.startswith("Guidance：### Pattern 1")
+    assert "新力量应使旧限制失效" in abstract
+    assert "前部来源研究" in abstract
+    assert len(abstract) <= 800
+
+
+def test_reference_abstract_without_guidance_preserves_existing_mechanism() -> None:
+    page = (
+        "## Mechanism\n\n旧关系改变新选择。\n\n"
+        "## Transfer Boundary\n\n不搬运来源事件。\n"
+    )
+    assert extract_abstract_content(page, mode="outline", category="arcs") == (
+        "Mechanism：旧关系改变新选择。", "不搬运来源事件。"
+    )
+
+
+def test_mechanism_abstract_keeps_its_existing_section_order() -> None:
+    abstract, _ = extract_abstract_content(
+        _long_reference_with_stage_guidance(), mode="outline", category="mechanisms"
+    )
+    assert abstract.startswith("Reader Promise：背景起点")
+    assert "Guidance：" not in abstract
+    assert len(abstract) <= 800
+
+
+@pytest.mark.parametrize(
+    ("mode", "category", "expected"),
+    [("outline", "book-dna", "现场兑现"), ("story_refresh", "arcs", "长期换挡")],
+)
+def test_reference_retrieval_passes_stage_to_guidance_extraction(
+    mode: str, category: str, expected: str
+) -> None:
+    slug = f"{category}/long-reference"
+    result = retrieve_gbrain(
+        mode=mode,
+        query_override="manual reference query",
+        query_func=lambda _query, **_kwargs: f"[0.9] {slug} -- story craft",
+        page_func=lambda _slug: _long_reference_with_stage_guidance(),
+    )
+
+    assert result["accepted_count"] == 1
+    assert expected in result["accepted"][0]["abstract"]
+    assert "背景起点" in result["accepted"][0]["abstract"]
+    assert len(result["accepted"][0]["abstract"]) <= 800
+    assert "只借鉴机制，不迁移原作事件。" in result["result"]
 
 
 def test_chapter_filters_sources_and_builds_bundle_from_full_pages() -> None:

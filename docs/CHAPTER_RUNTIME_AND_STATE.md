@@ -8,7 +8,7 @@
 
 `Approved Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra-high Batch Primary → Sol-high Batch Authority Delta Reviser → 整批采用 → Luna-low State 逐章落盘`
 
-Batch 的目的首先是小说连续感，不只是加速。默认路径**不再增加一个 LLM 重新规划已批准五章**：代码直接抽取 Future-10 对应章条目，并复用现有 Chapter Context compiler，按章叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。Writer 在同一上下文中看到整段短中程故事，前章摆出的地形、人物势能、物件与 Promise 可以自然进入后章。State **不在 Batch 中途更新**：先让 Authority Reviser 看完整批次并一次收口，再按最终章 1→N 顺序抽取 State，因此不存在“Reviser 改完前章，后章预写稿立即 stale”的循环。
+Batch 的目的首先是小说连续感，不只是加速。代码直接抽取 Future-10 对应章条目，并复用 Chapter Context compiler，按章叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon。当前默认不直接注入整段 Long Block；机会价值与关系压力需要通过已批准的逐章计划等输入进入。整段背景运输的双书实验未达到跨书不退化标准，见本地 `books/real-exp-reader-experience-ab-20260905-v1/REPORT.md`。单章链使用的 Long Block 范围投影只保留覆盖当前章的最窄编号块，不带整窗结局前言；明确过期则为空。Writer 在同一上下文中看到整段短中程故事，前章摆出的地形、人物势能、物件与 Promise 可以自然进入后章。State **不在 Batch 中途更新**：先让 Authority Reviser 看完整批次并一次收口，再按最终章 1→N 顺序抽取 State。
 
 Batch Authority Reviser 不重输五章全文，只返回 exact local Delta；未触碰正文逐字保留。同一 Authority 冲突必须跨章扫描所有依赖位置。若修复必须发明新传送、追踪、身份、奖励、胜负或世界机制，Reviser 返回 `upstream_conflicts`，整批不得采用，回 Story / Outline 修最早根因。LLM `Batch Director` 的失败实现只保留在实验目录作证据，**不进入 production API / 模型路由**。旧 `curator_primary` 单章链继续作为兼容/专项 fallback；Specialist / Integrator 仍只在作者显式 repair 时使用。
 
@@ -102,7 +102,7 @@ Preservation 默认依靠 Edit Locality，而不是 Desire / Surprise / Relation
 
 ### Outline Batch Packet / Primary / Authority Delta（默认）
 
-- **Outline Batch Packet｜deterministic**：直接从已批准 Future-10 抽取当前 4—6 章、默认 5 章的原始逐章条目；不由另一个 LLM 改写 Event / Result / Ending。复用现有 Chapter Context compiler，按章叠加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。Story Program 已经结构化进入 BOOK/Future-10 的 `Reader-Facing Actor Ruler Anchor Schedule` 仍按普通 Approved Plan transport 进入对应章，不新增 Runtime 节点或数据库。跨章节 access provenance 若上游本身没决定，保留为上游冲突，不在这里补机制。
+- **Outline Batch Packet｜deterministic**：直接从已批准 Future-10 抽取当前 4—6 章、默认 5 章的原始逐章条目；不由另一个 LLM 改写 Event / Result / Ending。复用现有 Chapter Context compiler，按章叠加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon。Story Program 已经结构化进入 BOOK/Future-10 的 `Reader-Facing Actor Ruler Anchor Schedule` 仍按普通 Approved Plan transport 进入对应章，不新增 Runtime 节点或数据库。跨章节 access provenance 若上游本身没决定，保留为上游冲突，不在这里补机制。
 - **Batch Primary｜Terra high**：一次连续写完整窗口。它的价值是让章节共享小说认知，而不是减少字数；前章摆出的空间、物件、关系与 Promise 可后章自然复用。复杂多方 Action Block 应利用这个连续窗口保持 Stable Scene Geography，不让每章重新造舞台；动作推进后允许直接 Situation Re-anchor。重要人物已有公开力量坐标与当前私人压力时，让它们真实影响现场行为和对白，不把力量尺只留给主角/Rival，也不把所有配角压成一句任务。已成立人物标签不靠固定口癖每章重证，世界独有规则也应在人物关系/命运中产生故事，而不只当解题机制。
 - **Batch Authority Delta｜Sol high**：一次读取完整 Batch + Frozen Power/Human + safe World + Reader Release + Story/Outline/Canon；只返回 exact `OLD → NEW` 局部 patch，不输出全文。发现一处事实冲突后要扫描该事实域的跨章依赖；修复需要新世界机制或新重大事件时返回 `upstream_conflicts`。存在 conflict 时整批 `adoptable=false`；无 conflict 才一次保存全部最终章。
 - **State｜Luna low**：等整批 prose finalization 完成后，再按章号顺序从最终正文抽取。Batch 中途不以 Primary 临时稿更新 Canon。

@@ -84,7 +84,7 @@
 | Story Program | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration |
 | Story Refresh | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration；Effective World × Current Character；如有 AUTHOR FIXED HIDDEN 可 planning-only 编译 Reveal Contract |
 | Outline | GPT-5.6 Luna | high | ON：通常 4 条、最多 5 条 |
-| Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block；不调用 LLM 重规划 |
+| Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon；不直接注入整段 Long Block；不调用 LLM 重规划 |
 | Batch Primary Writer | **GPT-5.6 Terra** | high | raw GBrain OFF；Frozen Power/Human + safe World/Reader Release + Approved Future-10；一次写完整 Batch |
 | Batch Authority Delta | **GPT-5.6 Sol** | **high** | raw GBrain OFF；完整 Batch + safe Authority；只输出 exact local patch / upstream conflicts，不输出全文 |
 | State Extraction | GPT-5.6 Luna | low | OFF；整批 prose final 后逐章落盘 |
@@ -185,7 +185,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - 结论区分 PASS / DIRECTIONAL PASS / PARTIAL PASS / FAIL / INVALID，并记录 **What This Did Not Solve**；单本书或单个 candidate 不直接升级为 production 结论。
 - 快速大规模 A/B 可用 Terra high，但不替代默认高质量规划路由。
 - **Character Authority Invariance**：凡结构机制可能改变主角取舍，默认用至少 2—3 个动机排序明显不同的冻结 Human 做同一 A/B；Treatment 除了产生目标结构增益，还必须保留 Human-specific 选择差异。若不同 Human 被推成同一种“成长最优/关系最优/道德最优”路线，即使结构更整齐也判失败或降级。
-- **Creative Intensity Decision**：当多版都通过 Canon / authority / 基本因果边界，主要差异只是“更 aggressive、更爽、更富 vs 更 conservative、更稳、更少给”时，Steward/Judge **不得自动替作者选择更保守版**。必须保存并向作者并列展示有代表性的真实输出差异，由作者决定冻结强度；当前作者默认审美明显倾向 AGGRESSIVE。只有事实矛盾、authority 越界、真实牺牲被即时等价抹平等硬错误可以直接淘汰，而不能把“奖励较多/主角占便宜较大”本身当成失败。
+- **Reader Experience / Creative Intensity Decision**：人物选择、爽感、节奏、情绪浓度及重要文风取舍，必须把有代表性的前后原文与完整样本入口发给作者，模型评审只作参考。作者回复时纳入其实际读感，必要时修正暂定判断；没有回复时不阻塞已授权工作，按已说明的证据与判断继续，不能把沉默写成作者认可。多版均通过 Canon / authority / 基本因果边界而只在创作强度上不同，Steward/Judge 不得默认选更保守版；当前作者偏好 AGGRESSIVE。事实矛盾、authority 越界、真实牺牲被即时等价抹平可直接指出，奖励较多或主角获益较大本身不算失败。
 - **Aggressive Variant Must Be Shown When Over-Restraint Is Suspected**：当问题本身就是 LLM 过度克制、少给、弱化社会反应、把欲望降成资格或把主角写得过于理性时，只要 authority / Canon / 因果允许，实验必须至少包含一个**明显更激进**的真实 Treatment；必要时再加 Extreme Treatment。不得先由系统/Judge替作者把“太爽、奖励太多、反应太大、主角太占便宜”裁掉；保存真实输出并由作者判断是否过头。
 - **Matched Decision Point**：要证明‘Personality → Choice → Route’时，先让不同冻结 Human 面对同一个具体诱惑/冲突/机会；对每个被测 Human 都应至少有两个具真实私人价值且不能同时完整取得的方向；价值强弱不必相等，选择后的主要机会成本必须保留，不能被隐藏奖励立即抵消。先验证选择本身是否随 Human 分叉，再放开长期 Story Program；若触发事件与机会池同时变化，长期差异不能纯归因于人格。
 

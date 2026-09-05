@@ -154,6 +154,7 @@ def test_director_contract_requires_explicit_adjustment_marker_only_for_real_can
 def test_long_block_projection_keeps_only_the_narrowest_range_covering_current_chapter() -> None:
     long_plan = """# 第一世界长纲
 规划范围：预计第1—20章
+窗口终点：第20章揭开旧王身份并获得王印。
 
 ## 第1—20章：总阶段
 只提供全阶段方向。
@@ -164,7 +165,8 @@ def test_long_block_projection_keeps_only_the_narrowest_range_covering_current_c
 ## 第16—20章：镇海决战
 未来阶段，不得提前进入。"""
     projected = project_current_long_block_for_chapter(long_plan, 14)
-    assert "# 第一世界长纲" in projected
+    assert "# 第一世界长纲" not in projected
+    assert "揭开旧王身份" not in projected
     assert "## 第11—15章：镇海前夜" in projected
     assert "当前章真正需要的阶段背景" in projected
     assert "## 第1—20章：总阶段" not in projected

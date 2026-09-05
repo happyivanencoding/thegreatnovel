@@ -175,7 +175,7 @@ TGN production 的 GBrain 路由现在**强制需要 query embedding**。Windows
 - 中文 BOOK-aware Retrieval Brief 继续完整保留给作者/调试查看；
 - 用户手工 query 仍可覆盖默认 query，但 production 仍要求 embedding Key；
 - 普通 creative 规划最多检查 12 个候选，World creative 最多 3、Program 最多 3、Outline 最多 5；固定 Reader Coordinates / Naming Craft Reference 不占 creative 名额；
-- 返回给 LLM 的 `可用抽象` 仍来自中文 Mechanism / Guidance 等 source-blind 正文，英文 aliases 不进入 Prompt。
+- 返回给规划 LLM 的 `可用抽象` 来自原卡中文写作区块，英文 aliases 不进入 Prompt。`book-dna / arcs` 在原有 800 字预算内优先当前阶段的 `Guidance`，再用余量补 Reader Promise / Mechanism 等背景，避免长原作摘要挤掉可迁移方法；没有 Guidance 的卡沿用已有区块。规划参考可以含必要的来源背景，不能据此变成 Canon；章节层仍只接收已批准故事与 source-blind craft。
 
 原则仍是 **wide recall, narrow context**，但 recall 必须首先对当前 World / Human 有辨识度；宁可停止生成，也不以通用 fallback 悄悄同质化不同小说。
 

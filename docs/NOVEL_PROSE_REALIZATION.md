@@ -221,7 +221,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 `Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘 → chapter-NNNN.md`
 
-默认路径不让另一个 LLM 再解释已批准 Future-10：代码直接抽取本批逐章事件/结果/结尾，并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。Sol Reviser 一次看到完整 Batch，但只返回 exact local Delta；未触碰句子逐字保留。若修复必须发明新传送/追踪、奖励、胜负、身份或世界机制，返回 `upstream_conflicts`，整批不得采用。旧 `curator_primary` 的 `Director → Curator → Primary → Full Reviser` 继续作为兼容 fallback / 专项实验；Specialist / Integrator 仍只在作者明确 repair 时使用。
+默认路径不让另一个 LLM 再解释已批准 Future-10：代码直接抽取本批逐章事件/结果/结尾，并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon。Sol Reviser 一次看到完整 Batch，但只返回 exact local Delta；未触碰句子逐字保留。若修复必须发明新传送/追踪、奖励、胜负、身份或世界机制，返回 `upstream_conflicts`，整批不得采用。旧 `curator_primary` 的 `Director → Curator → Primary → Full Reviser` 继续作为兼容 fallback / 专项实验；Specialist / Integrator 仍只在作者明确 repair 时使用。
 
 ---
 
@@ -229,7 +229,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ### Deterministic Batch Packet — Preserve Approved Events
 
-从 Future-10 直接抽取本批 4—6 章、默认 5 章的原始条目，不由 LLM 重写。它保留每章 `具体剧情 / 结果状态 / 结尾推动 / RSE`，再通过现有 Chapter Context compiler 附加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block。held-out 已验证额外 Batch Director 虽可提高小说味，却会重新解释界阶时序、奖励来源与器物首次使用，因此不作为默认规划层。
+从 Future-10 直接抽取本批 4—6 章、默认 5 章的原始条目，不由 LLM 重写。它保留每章 `具体剧情 / 结果状态 / 结尾推动 / RSE`，再通过现有 Chapter Context compiler 附加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon。held-out 已验证额外 Batch Director 虽可提高小说味，却会重新解释界阶时序、奖励来源与器物首次使用，因此不作为默认规划层。
 
 ### Batch Primary — Continuous Novel Window
 

@@ -240,8 +240,7 @@ def build_batch_primary_prompt(
             f"# CHAPTER {chapter} AUTHORITY\n"
             f"## SAFE WORLD\n{packet.world_authority.strip() or 'NONE'}\n"
             f"## READER RELEASE\n{packet.reader_release.strip() or 'NONE'}\n"
-            f"## PROTECTED STORY EVENT\n{packet.protected_story_events.strip() or 'NONE'}\n"
-            f"## ACTIVE LONG BLOCK\n{packet.current_long_block.strip() or 'NONE'}"
+            f"## PROTECTED STORY EVENT\n{packet.protected_story_events.strip() or 'NONE'}"
         )
 
     plans = "\n\n".join(
