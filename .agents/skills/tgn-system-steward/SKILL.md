@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.58
+version: 0.3.59
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -240,7 +240,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 
 ## Scene Craft Evidence & Runtime Bandwidth Trace
 
-做小说读感、场景技法或“是否接近某部经典”的对照前，先实际读取对应经典小说原文的完整场景或足够连续窗口，并记录书名、章节/位置与阅读范围。GBrain 摘要、蒸馏卡、剧情梗概和模型记忆都不能冒充原文阅读；局部阅读也不能写成通读全书。经典原文只用于评审与 craft 学习，不进入 Writer。
+做小说读感、场景技法或“是否接近某部经典”的对照前，默认调用 `novel-original-text-review` Skill：从本地完整原著库动态定位最相关作品，实际读取完整场景或足够连续窗口，并记录书名、source path、章节/位置、line range 与阅读范围；输出简短 `Original Text Reading Receipt`。用户未点名时可从当前数百本完整原著中选 1—3 本最合适的作品，不限固定三本；用户点名而本地找不到原著时必须明确未完成该书原文对照。GBrain 摘要、蒸馏卡、剧情梗概和模型记忆都不能冒充原文阅读；局部阅读也不能写成通读全书。经典原文只用于评审与 craft 学习，不进入 Writer。
 
 当问题是“战斗/对白/关系/探索等 Scene Skill 不够好”，不要直接给 Writer 增加更长 Skill，也不要因为某种场景很重要就新增 Agent / Primary。按下面顺序审计：
 

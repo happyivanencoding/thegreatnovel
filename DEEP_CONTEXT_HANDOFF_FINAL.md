@@ -31,6 +31,21 @@
 
 ---
 
+### 0.0E 2026-09-05 冻结：`novel-original-text-review` / 经典原文证据插件
+
+为把“经典对照必须先读原文”从文字纪律变成可执行默认，新增独立开发评审 Skill：`.agents/skills/novel-original-text-review/`。它不进入小说 production pipeline，不是评分器或 Reviewer，而是给当前 ChatGPT / Agent / Steward 做经典对照时提供**原文证据入口**。
+
+- **动态原著库，不是三本白名单**：默认扫描 `400+本高质量完本合集`、`起点精选小说合集`、`小说整理合集` 中的完整 `.txt`；当前仅主合集实测已有 **410 个 txt / 约3.58GB**。路由提示只帮助快速选择同位作品，不限制可用书目。《遮天》《斗罗》《斗破》只是候选之一；《诡秘之主》《将夜》《庆余年》《仙逆》《全球高武》《修真聊天群》《第一序列》《大奉打更人》《牧神记》《一世之尊》《凡人修仙传》《惊悚乐园》《间客》《大道朝天》《雪中悍刀行》等本地完整原著均可按问题调用，未来新增完整原著也自动可发现。
+- **确定性 locator 工具**：`scripts/classic_text.py` 支持 `catalog / resolve / search / window`。它识别 UTF-8/GB18030、解析阿拉伯/中文数字章号、返回 chapter/ordinal/source line locator，并把连续原文窗口导出到 `.local/classic-review/`。`search` 只返回 locator，不返回正文，避免“搜到关键词就冒充读过”。
+- **真实 corpus 修正**：实测《将夜》会按卷重复“第一章/第五章”等章号，因此 `window --chapter N` 遇重复章号现在 fail loud，要求使用 `search` 返回的唯一 `--ordinal`；不静默选第一处。这是本地真实输入，不是理论 corner case。
+- **Reading Receipt**：任何声称“已对照经典原文”的报告都必须记录书名、source path、章节/位置、line range、连续窗口范围，并明确 `GBrain used as original evidence: NO`。用户点名而本地找不到完整原著时，只能说未完成该书原文对照，不能用 GBrain/蒸馏卡/剧情梗概替代。
+- **Evidence → Interpretation → Generalization**：先读原文连续窗口，再读冻结 TGN 同位文本；原文只支持短引用/位置描述与结构观察，最终只迁移 source-blind craft，不模仿作者声音、专名、句法或情节。
+- **Runtime boundary**：原著窗口、路径与 locator 只服务开发审计 / Scene Craft 研究，不进入 Batch Primary / Reviser / Story / GBrain active generation，也不提交 Git。
+
+验证：可移植工具单测 **6/6 PASS**；真实《遮天》GB18030 全文成功定位第38章并导出 UTF-8 连续窗口；真实《将夜》解析 **1116 个章节 marker**，`ordinal=496` 可稳定定位“第五章 桑桑的病”，歧义 `--chapter 5` 按设计拒绝；已安装 Skill 版本还能直接定位《诡秘之主》，并通过“斗破苍穹”别名打开本地《斗破》第2章。`novel-original-text-review 0.1.0` package validate 为 valid / 0 issues 并已安装激活；`tgn-system-steward` 同步升级为 **0.3.59**、valid / 0 issues 并激活，Luna-high 只读 smoke 正确要求先调用原文 Skill、读取连续窗口并输出 Receipt，拒绝 GBrain 作为 original evidence。最终全仓回归（原有测试 + 新插件测试）为 **538/538 PASS**。回归期间还发现既有 `test_background_job` 只接受 `queued`，但 production `start_job()` 明确允许 worker 在 WMI 返回前已进入 `running` 并返回最新状态；只把测试断言收窄为接受 `queued/running`，没有修改 Job Host production 行为。该 Skill 随本轮接入 `PROJECT_RULES.md`、`NOVEL_PROSE_REALIZATION.md`、`PIPELINE_METHODOLOGY_AND_VALUES.md` 与 Steward 原文证据流程。
+
+---
+
 ### 0.0D 2026-09-05 冻结：dev_astra 三项选择性回收 / Transport 与原文对照纪律
 
 当前内部开发权威继续是 `C:\dev\tgn-story-mvp` / `principal_dev_new_sys`；没有合并 `dev_astra` 的分支身份，也没有回退 2026-09-05 已冻结的 hands-off Automatic Production、Delegated Operator Freeze 或持久 Background Job Host。只把 Astra 中与当前主线兼容、可独立验证的三项改进回收到当前分支：

@@ -78,7 +78,7 @@ TGN 的实验不是为了“证明我们喜欢的方案正确”，而是为了�
 
 ## 6. Direct Reading Before Metrics
 
-做小说读感、场景技法或经典对照评审前，先实际读取对应经典小说原文的完整场景或足够连续窗口，记录书名、章节/位置与阅读范围，再读 TGN 输出。GBrain 摘要、蒸馏卡、剧情梗概与模型记忆都不能替代原文阅读；经典原文不进入 Writer。
+做小说读感、场景技法或经典对照评审前，默认通过 `novel-original-text-review` 从本地完整原著库定位证据，先实际读取完整场景或足够连续窗口，记录书名、source path、章节/位置、line range 与阅读范围，再读 TGN 输出；报告保留简短 `Original Text Reading Receipt`。GBrain 摘要、蒸馏卡、剧情梗概与模型记忆都不能替代原文阅读；经典原文不进入 Writer。
 
 先读具体输出，问：
 

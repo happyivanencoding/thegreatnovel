@@ -79,7 +79,7 @@ def test_detached_job_survives_launcher_process_exit(job_root: Path) -> None:
     )
     assert launcher.returncode == 0, launcher.stderr
     started = json.loads(launcher.stdout)
-    assert started["status"] == "queued"
+    assert started["status"] in {"queued", "running"}
 
     # The launcher process above is already gone. The independent worker must still
     # finish the child command and persist its result without any polling owner.

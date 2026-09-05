@@ -213,6 +213,12 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 这些 profile 可以组合。选择由当前 BOOK 和场景决定，不作为固定 genre 映射。
 
+### 5.4 Original-Text Comparative Review（开发评审，不进入 Runtime）
+
+当开发/审计要判断“这段为什么不像成熟经典”“与某部经典的战斗/对白/世界介绍差在哪里”时，默认使用 `novel-original-text-review` Skill：从本地完整小说库动态定位原著，先直接阅读完整场景或足够连续窗口，再与冻结的 TGN 同位文本比较。当前主合集已有约 410 个 `.txt` 原著，因此参考范围不锁死在《遮天》《斗罗》《斗破》；用户未点名时按当前问题选择 1—3 本最合适的作品即可。
+
+任何“已对照经典原文”的结论都保留简短 `Original Text Reading Receipt`（书名、source path、章节/位置、line range、连续窗口范围），并明确 `GBrain used as original evidence: NO`。GBrain、蒸馏卡、剧情梗概和模型记忆可以用于导航或提出假设，但不能替代原文阅读。原著窗口只服务开发评审 / Scene Craft 研究，不进入 Batch Primary、Reviser、Story Program 或其它 production Prompt，也不提交 Git。
+
 ---
 
 ## 6. Pipeline Position

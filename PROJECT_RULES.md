@@ -184,7 +184,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - 测 authority isolation 使用 fresh context；能 deterministic 就不加 LLM Composer。
 - 候选选择规则预先规定，不 cherry-pick。
 - 先直接读真实输出，再用指标/Judge；明显结构性问题不需要 Judge。
-- **经典对照必须先读原文**：做小说读感、场景技法或“是否接近某部经典”的比较前，必须实际读取对应经典小说原文的完整场景或足够连续窗口，并明确记录自己读过的书名、章节/位置与范围；不能用 GBrain 摘要、蒸馏卡、剧情梗概或模型记忆冒充原文阅读，也不能把局部阅读说成通读全书。经典原文只用于评审学习，不进入 Writer。
+- **经典对照必须先读原文，并默认使用 `novel-original-text-review` Skill**：做小说读感、场景技法或“是否接近某部经典”的比较前，先从本地完整小说库动态定位原著，实际读取完整场景或足够连续窗口，并记录书名、source path、章节/位置、line range 与阅读范围；结论中保留简短 `Original Text Reading Receipt`。不能用 GBrain 摘要、蒸馏卡、剧情梗概或模型记忆冒充原文阅读，也不能把局部阅读说成通读全书。用户未点名时可从当前可用的数百本经典中选择最适合问题的 1—3 本，不限《遮天》《斗罗》《斗破》；用户点名而本地找不到原著时必须明确“未完成该书原文对照”，不得以 GBrain 顶替。经典原文只用于评审学习，不进入 Writer。
 - 至少记录：质量、工程/程序化倾向、Plot Engine、人物自主性、合同稳定性、tokens、wall-clock、credits/成本。
 - 结论区分 PASS / DIRECTIONAL PASS / PARTIAL PASS / FAIL / INVALID，并记录 **What This Did Not Solve**；单本书或单个 candidate 不直接升级为 production 结论。
 - 快速大规模 A/B 可用 Terra high，但不替代默认高质量规划路由。
