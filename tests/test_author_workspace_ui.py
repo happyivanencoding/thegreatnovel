@@ -186,13 +186,14 @@ def test_navigation_is_unique_and_batch_controls_use_existing_endpoints() -> Non
     assert 'data-drawer-section="workflow-audit-section"' in TEMPLATE
     assert 'data-drawer-section="agentdock-run-log"' in TEMPLATE
     for element_id in (
-        "story-structure-tree", "batch-compile-primary", "batch-run-primary", "batch-compile-delta",
-        "batch-run-delta", "batch-preflight", "batch-adopt", "batch-load-state", "batch-primary-response",
-        "batch-delta-response", "agentdock-result-preview", "agentdock-load-current",
+        "story-structure-tree", "batch-compile-primary", "batch-run-primary", "batch-compile-prose", "batch-run-prose",
+        "batch-compile-delta", "batch-run-delta", "batch-preflight", "batch-adopt", "batch-load-state",
+        "batch-primary-response", "batch-prose-prompt", "batch-prose-response", "batch-delta-response",
+        "agentdock-result-preview", "agentdock-load-current",
     ):
         assert TEMPLATE.count(f'id="{element_id}"') == 1
     for endpoint in (
-        "/api/batch/primary-prompt", "/api/batch/authority-reviser-prompt", "/api/batch/apply-authority-delta",
+        "/api/batch/primary-prompt", "/api/batch/prose-delta-prompt", "/api/batch/authority-reviser-prompt", "/api/batch/apply-authority-delta",
         "/batch/adopt-authority-delta",
     ):
         assert endpoint in APP_JS
@@ -206,8 +207,10 @@ def test_navigation_is_unique_and_batch_controls_use_existing_endpoints() -> Non
     assert "batchPreflightMatchesCurrent" in APP_JS
     assert "handleBatchWindowChange" in APP_JS
     assert '$("batch-primary-response").addEventListener("input", invalidateBatchPrimaryDependents)' in APP_JS
+    assert '$("batch-prose-response").addEventListener("input", invalidateBatchPreflight)' in APP_JS
     assert '$("batch-delta-response").addEventListener("input", invalidateBatchPreflight)' in APP_JS
     assert '"codex-response", "state-delta-response", "agentdock-consult-response"' in APP_JS
+    assert '"batch_primary", "batch_prose_delta", "batch_delta"' in APP_JS
     assert 'markAgentDockEditorEdited(event.currentTarget)' in APP_JS
     assert "await loadCurrentChapterBody()" in APP_JS
 

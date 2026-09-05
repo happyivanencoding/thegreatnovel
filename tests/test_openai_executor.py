@@ -50,6 +50,8 @@ def test_openai_status_does_not_expose_api_key(monkeypatch) -> None:
         "authority_reviser_reasoning": "high",
         "batch_primary_model": "gpt-5.6-terra",
         "batch_primary_reasoning": "high",
+        "batch_prose_delta_model": "gpt-5.6-terra",
+        "batch_prose_delta_reasoning": "high",
         "batch_authority_reviser_model": "gpt-5.6-sol",
         "batch_authority_reviser_reasoning": "high",
         "name": "",
@@ -116,6 +118,31 @@ def test_authority_reviser_uses_fixed_luna_high_profile(monkeypatch) -> None:
     assert client.responses.calls == [{
         "model": "gpt-5.6-luna",
         "input": "REVISER PROMPT",
+        "reasoning": {"effort": "high"},
+    }]
+
+
+def test_batch_prose_delta_uses_fixed_terra_high_profile(monkeypatch) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("STORY_MVP_BATCH_PROSE_DELTA_MODEL", raising=False)
+    client = FakeClient()
+
+    result = generate_text(
+        "BATCH PROSE PROMPT",
+        model="SHOULD_BE_IGNORED",
+        purpose="batch_prose_delta",
+        reasoning_effort="low",
+        client=client,
+    )
+
+    assert result == {
+        "output_text": "FAKE OUTPUT",
+        "model": "gpt-5.6-terra",
+        "reasoning_effort": "high",
+    }
+    assert client.responses.calls == [{
+        "model": "gpt-5.6-terra",
+        "input": "BATCH PROSE PROMPT",
         "reasoning": {"effort": "high"},
     }]
 

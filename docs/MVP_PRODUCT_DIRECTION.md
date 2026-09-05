@@ -212,11 +212,12 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 章节默认链：
 
-`Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra high Batch Primary → Sol high Batch Authority Delta → 整批采用 → Luna low State逐章落盘`
+`Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra high Batch Primary → [Terra high Batch Prose Delta ∥ Sol high Batch Authority Delta，同一 immutable Primary] → deterministic Authority-first composition → 整批采用 → Luna low State逐章落盘`
 
 - Batch Packet：代码原样抽取当前 Future-10 逐章条目，不让第二个规划 LLM 改写已批准 Event / Result / Ending；同时复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon；当前 Batch 不直接注入整块 Long Block，但阶段背景仍需以当前章有界、reader-safe 的最小形式保真运输；
 - Batch Primary：一次连续写完整窗口，保留章间 Handoff、人物声音、物件/地形复用和短中程铺垫回收；
-- Batch Authority Delta：一次看完整 Batch 与 safe Effective World / Frozen Power+Human / Reader Release / Story/Outline/Canon，只做 exact local patch；同一事实域跨章扫清，无法不新增机制地修复时返回 `upstream_conflicts`，整批不采用；
+- Batch Prose Delta：Terra high 独立读取同一 immutable Primary，只做窄 exact local prose patch；只修动作后二次判词、同一 beat 碎段、功能型短问短答，不新增事实/旧史/Story beat；
+- Batch Authority Delta：Sol high 独立读取同一 immutable Primary 与 safe Effective World / Frozen Power+Human / Reader Release / Story/Outline/Canon，只做 exact local hard-fix；同一事实域跨章扫清，无法不新增机制地修复时返回 `upstream_conflicts`，整批不采用。采用前代码先应用 Authority，再只叠加仍逐字唯一命中的 Prose patch；重叠 Prose patch 自动跳过，不重跑第二次 Sol；
 - State：等整批正文 final 后按章顺序记录已经发生的事实，并持续维护 `Current Power Position`；没有明确突破时沿用原位置，不能由越级表现推断升级。
 
 旧 `Luna Director → Luna Curator → Terra Primary → Luna Full Reviser → State` 保留为单章 fallback / 专项实验，不再是默认正文拓扑。Scene Skill v2 的 Curator `Scene Prose Projection` 与短 Revision Watch 也暂时只在这条 fallback / 专项修订中使用；默认 Batch 未经单独 A/B 不增加 Batch Curator。
@@ -256,6 +257,7 @@ GBrain 在手工 Workspace 中仍保留 Curator 交互以便研究与干预；Au
 - Outline：GPT-5.6 Luna high，GBrain ON，通常 4 条、最多 5 条；
 - Batch Packet：deterministic，直接抽取 Approved Future-10，默认5章、支持4—6章，并复用现有 Chapter Context compiler 前置完整安全 Authority；
 - Batch Primary Writer：Terra high；
+- Batch Prose Delta：Terra high；
 - Batch Authority Delta：Sol high；
 - State Extraction：Luna low；
 - 单章 Director / Curator / Full Reviser：Luna high，仅 fallback / 专项实验。

@@ -29,6 +29,7 @@ DEFAULT_BATCH_SIZE = 5
 MIN_BATCH_SIZE = 4
 MAX_BATCH_SIZE = 6
 MAX_PATCHES_PER_CHAPTER = 4
+MAX_PROSE_PATCHES_PER_BATCH = 15
 
 
 @dataclass(frozen=True)
@@ -204,6 +205,104 @@ def apply_batch_delta(
     return revised
 
 
+def parse_batch_prose_delta_response(text: str, window: BatchWindow) -> BatchDelta:
+    """Parse the narrow prose-only delta; it may never escalate into upstream facts."""
+
+    delta = parse_batch_delta_response(text, window)
+    if delta.upstream_conflicts:
+        raise ValueError("Batch Prose Delta 不得报告或修复上游冲突")
+    if len(delta.patches) > MAX_PROSE_PATCHES_PER_BATCH:
+        raise ValueError("Batch Prose Delta patch 过多；应停止而不是进行全章润色")
+    return delta
+
+
+def compose_batch_deltas(
+    chapters: Mapping[int, str],
+    authority_delta: BatchDelta,
+    prose_delta: BatchDelta,
+    window: BatchWindow,
+) -> tuple[dict[int, str], tuple[dict[str, Any], ...], tuple[dict[str, Any], ...]]:
+    """Authority-first deterministic composition over one immutable Primary.
+
+    Both deltas must have been generated from the same Primary. Authority patches are
+    applied first. A prose patch survives only when its exact OLD still occurs once in
+    the Authority-closed chapter; otherwise it is skipped, so prose can never override
+    an Authority repair.
+    """
+
+    if authority_delta.upstream_conflicts:
+        raise ValueError("Batch Authority Delta 仍有上游冲突，不能组合正文")
+    if prose_delta.upstream_conflicts:
+        raise ValueError("Batch Prose Delta 不得包含上游冲突")
+    revised = apply_batch_delta(chapters, authority_delta, window)
+    applied: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    for patch in prose_delta.patches:
+        chapter = int(patch["chapter"])
+        old = str(patch["old"])
+        new = str(patch["new"])
+        count = revised[chapter].count(old)
+        if count != 1:
+            skipped.append({**patch, "match_count_after_authority": count})
+            continue
+        revised[chapter] = revised[chapter].replace(old, new, 1)
+        applied.append(patch)
+    for body in revised.values():
+        validate_chapter_body_for_save(body)
+    return revised, tuple(applied), tuple(skipped)
+
+
+def build_batch_prose_delta_prompt(
+    *,
+    window: BatchWindow,
+    primary_chapters: Mapping[int, str],
+    book_content: str,
+) -> str:
+    """Build the independent Terra prose patch pass over the immutable Primary."""
+
+    if tuple(sorted(primary_chapters)) != window.chapter_numbers:
+        raise ValueError("Batch Primary chapters 与窗口不一致")
+    prose_profile = build_chapter_context(
+        book_content=book_content,
+        chapter_number=window.start_chapter,
+    ).prose_profile.strip()
+    drafts = "\n\n".join(
+        f"# CHAPTER {chapter} PRIMARY\n{primary_chapters[chapter].strip()}"
+        for chapter in window.chapter_numbers
+    )
+    return f"""你是 TGN 的 Batch Prose Delta。你不是第二个 Writer，也不是 Authority Reviser；你只能对同一份 immutable Primary 做 preservation-first exact local patch。
+
+唯一目标：只修当前已验证的三种 reader-facing 问题：
+1. **Show-Then-Trust**：动作、对白、物件变化或现实后果已经让同一意义成立后，紧邻着又出现“这是他的选择 / 这意味着 / 他真正想要的是 / 从此关系变成 / 这才算……”等抽象二次判词；只删或改这个后置复述。若句子包含会改变下一动作的新判断，则不动。
+2. **Paragraph Continuity**：同一个连续 beat 被机械切成很多一句一段。允许把相邻碎句重组为一个自然段，保留原来的每个动作、感知、对象、顺序和后果；合段是重组，不是压缩场景。
+3. **Dialogue Continuity**：没有真实打断时，人物稳定“问一句—答四五个字—再问一句”，每句只报一个剧情字段。允许在同一局部交换内，把**已经存在的语义**重写成更完整的说话回合，让措辞、停顿和对应动作承载当下情绪；但不能减少真实试探、讨价、嘴硬、拒绝或关系摩擦的回合。
+
+## Preservation Boundary
+- **不能新增或删除任何 story beat。** 不改变事件身份、参与者、受伤者、被救对象、顺序、胜负、选择、结果、地点、时间、钱、奖励、身份、力量、物件取得/持有/去向、知识边界或关系状态。
+- **不能新增任何过去事实。** 不准为了让人物更有感情补父母旧伤、童年旧情、上一趟死人、旧赠物、旧债、过去共同经历或未出现过的生活习惯。
+- 不新增专名、数字、世界规则、能力边界、动机或“真正原因”；不把人物暂时判断升级成客观事实。
+- 不因“更自然”改写已经自然的段落；不要做全章润色、辞藻升级、删减说明或重排剧情。
+- 不以更短为目标；故事密度、对白摩擦、生活细节和社会反应不得少于底稿。
+- 如果某处需要新增事实才能变自然，**不要 patch**。
+- 典型每章 0—3 个 patch；整批最多 {MAX_PROSE_PATCHES_PER_BATCH} 个。没有真实问题就少改，不凑数量。
+
+# PROSE PROFILE
+{prose_profile or "（未提供；只按上述窄合同处理。）"}
+
+# IMMUTABLE BATCH PRIMARY
+{drafts}
+
+只输出一个 JSON object；JSON 前后不要解释：
+{{
+  "patches": [
+    {{"chapter": {window.start_chapter}, "old": "逐字且唯一的原文", "new": "局部替换文本", "reason": "只说明上述三类 prose 问题之一"}}
+  ],
+  "upstream_conflicts": []
+}}
+`old` 必须是同章逐字唯一片段；允许多段文本。不要输出全文，不要输出 chain-of-thought。
+"""
+
+
 def build_batch_primary_prompt(
     *,
     window: BatchWindow,
@@ -260,6 +359,7 @@ def build_batch_primary_prompt(
 - 不提前实现后章计划；但可以让上一章 Ending Handoff 的压力真实出现。
 - 不为桥接新造禁杀规则、备用传送、强敌心软、免费救援或其它方便机制。
 - 已经建立的人格不靠同一句口癖重复证明；让不同真实牵引随现场进入。
+- `APPROVED BATCH PLAN` 里的“叙事功能”、策划层动机解释和主题判断只指导你把动作、选择与后果写对，不是正文台词或旁白；当前场面已经用动作与现实后果成立时，直接继续，不把这些策划语义再翻译一遍。**这只删除二次意义说明，不授权你缩掉 Plan 已自然产生的人物互动、关系摩擦、社会反应、生活纹理或动作 beat；段落重组也不能变成场景摘要。**
 - 世界独有规则不仅服务解题：若 Batch Plan 已给具体人物命运/关系后果，让它通过人物选择真正进入故事。
 
 # FROZEN POWER CORE
@@ -342,7 +442,11 @@ def build_batch_delta_reviser_prompt(
 ## 只修真实硬问题
 - Frozen Authority / 已发生 Canon 冲突；
 - 明确 Reader Release / RSE / Plan Result 完全漏失；
+- `PROTECTED STORY EVENT` / RSE 的事件身份、单次性或内部顺序被改写，例如同一场“第一次失败 → 第二次同类动作修正”被拆成多局、另起回合或新增一次胜负；
+- 已明确为同一件/唯一凭证的物件，在没有正文转移、归还或复制因果时同时出现在两处，或被第二次发放；
 - 跨章物品首次取得、持有人、钱、伤势、位置、时间、力量位置 stale；
+- 同一批已经写实发生的具体事件，其参与者身份、受伤者、被救对象、见证者或责任主体在后章被偷偷换人，例如前章明确甲被车辕压伤，后章却回忆成主角从车辕下救出乙；这种 Event Participant stale 也属于同一事实域硬冲突；
+- Primary 为了让人物更有感情/更有生活感而新增 Authority 未批准的过去事实，例如父母旧伤、童年旧情、上一趟死人、旧赠物、旧债或早先共同经历；当前关系可以靠当下动作和已批准旧史写活，不能靠 retrospective backfill 偷造 Canon；
 - Primary 凭空新增 Approved Plan / Canon 未授权的付款、奖金、报酬、赠予、资源到账或精确时间承诺；这些会进入 State，不是可自由补写的生活细节；
 - 第N章关闭/拒绝一个关键边界后，第N+2章人物无因果出现在另一侧；
 - 固定空间拓扑、能力边界或知识边界被写反；

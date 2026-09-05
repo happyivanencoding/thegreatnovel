@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.59
+version: 0.3.60
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -99,6 +99,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Backstage Principles Must Not Become Generated Ontology
 - **Institutional Activity ≠ Living World**：World Independence 不能仅靠“军府在开发、商盟在竞争、学院在调查、部族在迁徙”证明。优先追到一个具体人物、生物或小群体：他现在私人地想要什么、下一步马上做什么、没有主角也会改变什么。机构/制度/生态可以放大后果，但不能默认替代 Living Actor 成为故事发动机；反过来也不要把所有世界冲突过度纠正成私人恩怨
 - Authority separation beats negative-prompt restraint when causal leakage is the problem
+- **Reader Judge ≠ Authority Auditor; evidence source must match the verdict**：小说读感/经典对照 Judge 可以只读匿名 A/B + 真实经典原文，但在没有实际 Frozen World / Character / Story / BOOK / Outline / Canon 时**不得猜 Authority**，也不能因为 A/B 某事实不同就自动把其中一版判成越权。Authority Auditor 必须直接读取匿名 A/B + 当前真实 Frozen Authority，只判断事实、事件、时序、持有、知识与隐藏旧史；Reader 改善与 Authority closure 是两个独立轴，只有前者提升且后者不退化时才可晋级 production。若一个 Judge 同时承担两种结论却只拿到一种证据，先修评审设计，不拿其 Authority 票否决或通过系统。
 - **Execution transport ≠ Authority adoption**：ACP、OpenAI API、外部 CLI 或浏览器 job 只负责产生候选 Response；job `completed` 不能冒充 Workflow artifact `completed / adopted`。审计任何新 executor 时，必须追到既有显式 Save / Apply / Adopt / Approve 边界，确认模型完成、页面回填、Run Ledger 与 Canon mutation 四件事没有被合并。
 - **Delegated Operator Freeze ≠ Approval Bypass**：final-output-only / hands-off 可以是默认产品工作方式。用户不逐项审批 World / Character / Story 时，已获整项任务授权的 TGN operator 可以完成候选选择、Save / Adopt / Freeze 与正常重试；审计对象应是“下游是否只消费已经验证并冻结的正确上游”，而不是“用户是否点了按钮”。但 operator delegation 也不能把任意模型 Response 自动升级成 Canon、跳过 validator 或模糊 Frozen Authority 边界。手工 Approval UI 可以降为高级干预，不应反向定义 production 架构。
 - Character is a person, not a psychological proof

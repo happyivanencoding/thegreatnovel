@@ -1,13 +1,6 @@
 {
   "version": 1,
   "artifacts": {
-    "creative.fantasy_seed": {
-      "revision": 0,
-      "status": "EMPTY",
-      "freshness": "fresh",
-      "last_source": "empty",
-      "stale_from": []
-    },
     "creative.world_vision": {
       "revision": 0,
       "status": "EMPTY",
@@ -50,7 +43,49 @@
       "last_source": "legacy",
       "stale_from": []
     },
-    "book.prologue": {
+    "premise.contract": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    },
+    "creative.power_seed": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    },
+    "creative.human_seed": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    },
+    "creative.character_card": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    },
+    "evolution.world": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    },
+    "evolution.human_development": {
+      "revision": 0,
+      "status": "EMPTY",
+      "freshness": "fresh",
+      "last_source": "empty",
+      "stale_from": []
+    },
+    "evolution.current_character": {
       "revision": 0,
       "status": "EMPTY",
       "freshness": "fresh",

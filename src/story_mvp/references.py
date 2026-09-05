@@ -1,14 +1,15 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 
-REFERENCE_ROOT = Path(
-    r"C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库\reference-corpus-program-deep-v1\reference-programs"
-)
+DEFAULT_TGN_GBRAIN_ROOT = Path(r"C:\GoogleDrive\笔记\50_Corpora\TGN")
+TGN_GBRAIN_ROOT = Path(os.environ.get("TGN_GBRAIN_ROOT", DEFAULT_TGN_GBRAIN_ROOT))
+REFERENCE_ROOT = TGN_GBRAIN_ROOT / "reference-corpus-program-deep-v1" / "reference-programs"
 
 REFERENCE_FIELDS = (
     "program_id",

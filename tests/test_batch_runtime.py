@@ -12,9 +12,12 @@ from story_mvp.batch_runtime import (
     apply_batch_delta,
     build_batch_delta_reviser_prompt,
     build_batch_primary_prompt,
+    build_batch_prose_delta_prompt,
+    compose_batch_deltas,
     extract_batch_outline_plans,
     parse_batch_delta_response,
     parse_batch_primary_response,
+    parse_batch_prose_delta_response,
 )
 
 
@@ -184,6 +187,80 @@ def test_batch_delta_changes_only_exact_unique_text_and_preserves_other_chapters
         apply_batch_delta(duplicate, duplicate_delta, window)
 
 
+def test_batch_prose_delta_is_narrow_and_composes_authority_first() -> None:
+    window = BatchWindow(1, 4)
+    primary = parse_batch_primary_response(_primary_response(window), window)
+    prose_prompt = build_batch_prose_delta_prompt(
+        window=window,
+        primary_chapters=primary,
+        book_content="""# 小说总体设计画像
+
+## 8. 文风与可操作参数
+动作成立后不要重复下判词。
+
+## 9. 对话特点
+人物把一个完整意思说完。
+""",
+    )
+    assert "Batch Prose Delta" in prose_prompt
+    assert "immutable Primary" in prose_prompt
+    assert "Show-Then-Trust" in prose_prompt
+    assert "Paragraph Continuity" in prose_prompt
+    assert "Dialogue Continuity" in prose_prompt
+    assert "不能新增或删除任何 story beat" in prose_prompt
+    assert "动作成立后不要重复下判词" in prose_prompt
+
+    authority = parse_batch_delta_response(
+        json.dumps(
+            {
+                "patches": [
+                    {"chapter": 2, "old": "关键物2仍在", "new": "关键物2已经交出", "reason": "Authority"}
+                ],
+                "upstream_conflicts": [],
+            },
+            ensure_ascii=False,
+        ),
+        window,
+    )
+    prose = parse_batch_prose_delta_response(
+        json.dumps(
+            {
+                "patches": [
+                    {"chapter": 1, "old": "第1章正文。", "new": "第1章正文——", "reason": "合并同一 beat"},
+                    {"chapter": 2, "old": "关键物2仍在", "new": "关键物2还在", "reason": "与 Authority 重叠"},
+                ],
+                "upstream_conflicts": [],
+            },
+            ensure_ascii=False,
+        ),
+        window,
+    )
+    final, applied, skipped = compose_batch_deltas(primary, authority, prose, window)
+    assert "第1章正文——关键物1仍在" in final[1]
+    assert "关键物2已经交出" in final[2]
+    assert len(applied) == 1
+    assert len(skipped) == 1
+    assert skipped[0]["chapter"] == 2
+    assert skipped[0]["match_count_after_authority"] == 0
+
+
+def test_batch_prose_delta_rejects_upstream_conflicts() -> None:
+    window = BatchWindow(1, 4)
+    with pytest.raises(ValueError, match="Prose Delta 不得报告"):
+        parse_batch_prose_delta_response(
+            json.dumps(
+                {
+                    "patches": [],
+                    "upstream_conflicts": [
+                        {"chapter": 2, "issue": "计划缺因果", "required_upstream": "先修 Outline"}
+                    ],
+                },
+                ensure_ascii=False,
+            ),
+            window,
+        )
+
+
 def test_batch_delta_keeps_upstream_plan_conflict_out_of_prose_patch() -> None:
     window = BatchWindow(1, 5)
     delta = parse_batch_delta_response(
@@ -228,6 +305,9 @@ def test_batch_prompts_preserve_narrative_window_and_reviser_does_not_invent_acc
     assert "Action Advance ≠ Situation Memory" in primary
     assert "Active Interior Continuity" in primary
     assert "Living Power Ecology 要在正文里真正约束行为" in primary
+    assert "短独段只留给真正的冲击" in primary
+    assert "功能型乒乓" in primary
+    assert "叙事功能" in primary and "不把这些策划语义再翻译一遍" in primary
     reviser = build_batch_delta_reviser_prompt(
         window=window,
         batch_plans=plans,
@@ -242,6 +322,10 @@ def test_batch_prompts_preserve_narrative_window_and_reviser_does_not_invent_acc
     assert "upstream_conflicts" in reviser
     assert "不得 patch" in reviser
     assert "扫描该事实域的所有出现位置" in reviser
+    assert "同一场“第一次失败 → 第二次同类动作修正”" in reviser
+    assert "唯一凭证" in reviser
+    assert "Event Participant stale" in reviser
+    assert "retrospective backfill 偷造 Canon" in reviser
 
 
 def test_batch_api_builds_prompts_and_marks_upstream_conflict_non_adoptable() -> None:
@@ -264,6 +348,10 @@ def test_batch_api_builds_prompts_and_marks_upstream_conflict_non_adoptable() ->
     response = client.post("/api/batch/primary-prompt", json=common)
     assert response.status_code == 200
     assert "## 第4章：第4章" in response.json()["content"]
+
+    prose_prompt = client.post("/api/batch/prose-delta-prompt", json=common)
+    assert prose_prompt.status_code == 200
+    assert "Batch Prose Delta" in prose_prompt.json()["content"]
 
     delta = json.dumps(
         {
@@ -290,6 +378,50 @@ def test_batch_api_builds_prompts_and_marks_upstream_conflict_non_adoptable() ->
     assert applied.status_code == 200
     assert applied.json()["adoptable"] is False
     assert applied.json()["patch_count"] == 0
+
+
+def test_batch_api_composes_authority_then_surviving_prose_patch() -> None:
+    client = TestClient(app)
+    window = BatchWindow(1, 4)
+    primary = _primary_response(window)
+    authority = json.dumps(
+        {
+            "patches": [
+                {"chapter": 2, "old": "关键物2仍在", "new": "关键物2已经交出", "reason": "Authority"}
+            ],
+            "upstream_conflicts": [],
+        },
+        ensure_ascii=False,
+    )
+    prose = json.dumps(
+        {
+            "patches": [
+                {"chapter": 1, "old": "第1章正文。", "new": "第1章正文——", "reason": "prose"},
+                {"chapter": 2, "old": "关键物2仍在", "new": "关键物2还在", "reason": "overlap"},
+            ],
+            "upstream_conflicts": [],
+        },
+        ensure_ascii=False,
+    )
+    applied = client.post(
+        "/api/batch/apply-authority-delta",
+        json={
+            "start_chapter": 1,
+            "batch_size": 4,
+            "batch_primary_response": primary,
+            "batch_delta_response": authority,
+            "batch_prose_delta_response": prose,
+        },
+    )
+    assert applied.status_code == 200
+    body = applied.json()
+    assert body["adoptable"] is True
+    assert body["patch_count"] == 1
+    assert body["prose_patch_count"] == 2
+    assert body["prose_applied_count"] == 1
+    assert len(body["prose_skipped"]) == 1
+    assert "第1章正文——关键物1仍在" in body["chapters"]["1"]
+    assert "关键物2已经交出" in body["chapters"]["2"]
 
 
 def test_batch_api_defaults_to_approved_future10_without_replanning_llm() -> None:

@@ -246,6 +246,7 @@
         <p class="hint">AgentDock 可读取固定项目上下文以回答 Prompt，但不会写入小说或工作流；保存、采用和批准始终由作者显式触发。</p>
         <div class="pipeline-cards" aria-label="生产链状态">
           <article><span>Batch Draft</span><strong id="batch-primary-status">等待 Batch Primary</strong></article>
+          <article><span>Prose Delta</span><strong id="batch-prose-status">等待 Prose Delta</strong></article>
           <article><span>Authority Delta</span><strong id="batch-delta-status">等待 Authority Delta</strong></article>
           <article><span>State</span><strong id="batch-state-status">未采用；不会自动更新 State</strong></article>
         </div>
@@ -292,7 +293,7 @@
         <div id="agentdock-job-list" class="agentdock-job-list" aria-live="polite"></div>
         <details class="batch-production" open>
           <summary>Batch Production <span id="batch-window">第1—5章 · 生产默认</span></summary>
-          <p class="hint">固定生产配置：Primary 使用 Terra high；Authority Delta 使用 Sol high。此处只复用现有 Batch API，不会自动采用或写 Canon。</p>
+          <p class="hint">固定生产配置：Primary 使用 Terra high；Prose Delta 使用 Terra high；Authority Delta 使用 Sol high。两个 Delta 独立读取同一 Primary，采用时 Authority 优先，只有仍逐字唯一命中的 Prose patch 才叠加。</p>
           <div class="batch-window-controls">
             <label>起始章 <input id="batch-start-chapter" type="number" min="1" max="9999" value="1"></label>
             <label>批量 <select id="batch-size"><option value="4">4章</option><option value="5" selected>5章</option><option value="6">6章</option></select></label>
@@ -300,6 +301,9 @@
           <div class="action-row wrap"><button id="batch-compile-primary" type="button">编译 Batch Packet / Primary Prompt</button><button id="batch-run-primary" class="primary" type="button">运行 Batch Primary</button></div>
           <label class="field"><span>Batch Primary Prompt（只读）</span><textarea id="batch-primary-prompt" rows="7" readonly></textarea></label>
           <label class="field"><span>Batch Primary Response（专属编辑区）</span><textarea id="batch-primary-response" rows="10" placeholder="Terra high 的整批正文返回只进入这里"></textarea></label>
+          <div class="action-row wrap"><button id="batch-compile-prose" type="button">编译 Prose Delta Prompt</button><button id="batch-run-prose" class="primary" type="button">运行 Prose Delta</button></div>
+          <label class="field"><span>Prose Delta Prompt（只读）</span><textarea id="batch-prose-prompt" rows="7" readonly></textarea></label>
+          <label class="field"><span>Prose Delta Response（专属编辑区）</span><textarea id="batch-prose-response" rows="8" placeholder="Terra high 的窄 prose patch 返回只进入这里"></textarea></label>
           <div class="action-row wrap"><button id="batch-compile-delta" type="button">编译 Authority Delta Prompt</button><button id="batch-run-delta" class="primary" type="button">运行 Authority Delta</button></div>
           <label class="field"><span>Authority Delta Prompt（只读）</span><textarea id="batch-delta-prompt" rows="7" readonly></textarea></label>
           <label class="field"><span>Authority Delta Response（专属编辑区）</span><textarea id="batch-delta-response" rows="10" placeholder="Sol high 的 exact local patch / upstream conflicts 返回只进入这里"></textarea></label>

@@ -127,13 +127,15 @@ Production 默认章节链仍是：
 Approved Future-10
 → deterministic Batch Packet
 → Terra-high Batch Primary
-→ Sol-high Authority Delta
+→ Terra-high Prose Delta ┐
+                         ├→ deterministic Authority-first composition
+→ Sol-high Authority Delta ┘
 → exact-window / exact-response preflight
 → 作者显式整批采用
 → State 逐章处理
 ```
 
-Primary、Delta 与 State 使用独立 Response；窗口或 Response 变化使后续 Prompt / preflight stale。旧单章 Director → Curator → Primary → Full Reviser 仅保留为 fallback / 专项实验。
+Primary、Prose Delta、Authority Delta 与 State 使用独立 Response；两个 Delta 都绑定同一 Primary。窗口、Primary 或任一 Delta Response 变化都会使 preflight stale；预检显示 Authority patch 数、成功叠加的 Prose patch 数与因 Authority 重叠而跳过的 Prose patch。旧单章 Director → Curator → Primary → Full Reviser 仅保留为 fallback / 专项实验。
 
 所有正式保存继续走 `saveCreativeArtifact`、`saveBook`、`approveChapter`、`saveRunPromptForMode`、`saveRunResponseForMode`、`applyCanonIndexProposal` 与现有后端 API。V3 不自动保存、不自动批准、不自动重跑 stale。
 

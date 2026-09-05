@@ -273,7 +273,8 @@ Canon / State Continuity
 → Outline / Future-10
 → Full Deterministic 4—6章 Authority Packet（默认5）
 → Terra-high Batch Primary
-→ Sol-high Batch Authority Delta
+→ [Terra-high Batch Prose Delta ∥ Sol-high Batch Authority Delta，二者读取同一 immutable Primary]
+→ deterministic Authority-first composition
 → 整批采用
 → Luna-low State Extraction 逐章落盘
 ```
@@ -1457,7 +1458,8 @@ A/B 不稳定，容易变成 World 先写宝物、Power 为宝物配钥匙，破
 → Outline / Future-10
 → Full Deterministic 4—6章 Authority Packet（默认5）
 → Terra-high Batch Primary
-→ Sol-high Batch Authority Delta
+→ [Terra-high Batch Prose Delta ∥ Sol-high Batch Authority Delta，二者读取同一 immutable Primary]
+→ deterministic Authority-first composition
 → 整批采用
 → Luna-low State Extraction 逐章落盘
 ```
@@ -1569,13 +1571,14 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 | Outline | GPT-5.6 Luna | high | 通常 4，最多 5 |
 | Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用现有 Chapter Context compiler 前置 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block |
 | Batch Primary Writer | GPT-5.6 Terra | high | raw GBrain OFF；Frozen Power/Human + safe World/Reader Release + Approved Future-10 |
-| Batch Authority Delta | GPT-5.6 Sol | high | raw GBrain OFF；完整Batch + safe Authority；exact local patch / upstream conflicts |
+| Batch Prose Delta | GPT-5.6 Terra | high | raw GBrain OFF；同一 immutable Primary + BOOK Prose Profile；窄 exact prose patch，不得新增事实/旧史/Story beat |
+| Batch Authority Delta | GPT-5.6 Sol | high | raw GBrain OFF；同一 immutable Primary + safe Authority；exact local hard-fix / upstream conflicts |
 | State | GPT-5.6 Luna | low | OFF；整批 prose final 后逐章落盘 |
 | 单章 Director / Curator / Full Reviser | GPT-5.6 Luna | high | fallback / 专项实验；Scene Skill v2 的 Curator Projection / Revision Watch 当前也只在这里使用，不是默认 Batch 链 |
 
 默认章节链：
 
-> `Approved Future-10 → Full Deterministic Authority Packet → Terra-high Batch Primary → Sol-high Batch Authority Delta → 整批采用 → Luna-low State`
+> `Approved Future-10 → Full Deterministic Authority Packet → Terra-high Batch Primary → [Terra-high Batch Prose Delta ∥ Sol-high Batch Authority Delta] → deterministic Authority-first composition → 整批采用 → Luna-low State`
 
 模型判断必须分开：生成质量、wall-clock、实际成本。Terra 负责连续小说正文；Sol-high 当前同时承担 Story Program/Refresh 与跨章 Authority Delta。Max/Ultra 不按名字自动采用，只有真实 Authority closure 相对 high 有补偿性收益时才升级。
 
@@ -1592,7 +1595,7 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 
 ### 12.4 GBrain 工具
 
-- 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库`
+- 根目录由 `TGN_GBRAIN_ROOT` 统一解析；当前生产默认为 `C:\GoogleDrive\笔记\50_Corpora\TGN`。principal / Astra 共用同一 corpus root；生产引用的 `reference-programs` 与原著库从该 root 派生。旧 `卡片盒子\20_Knowledge\修仙小说素材库` 已于 2026-09-05 完成迁移。
 - Windows/Git Bash 使用：`C:\Users\jingx\.bun\bin\gbrain.exe`
 - 更新后：`embed --stale`
 - 交付：`Embedded == Chunks`
@@ -2450,6 +2453,16 @@ Production 新增 `story-mvp-background`，仅作为 **Persistent Job Host**。W
 对应 UI/API 已调整：Creative Authority 默认折叠，World / Character / Story / Forward Evolution 按钮改标“手工冻结”；raw `author_approved` 在 UI 显示为 `frozen`。新增只读 `/api/production-runs` 视图给工作台监控 `story-mvp-background` 任务，浏览器只看到 job id、label、状态、时间、exit code 与脱敏错误，不能看到或提交 cwd / command / PID / runner path；可取消已有任务，但不能从浏览器任意创建本机命令。这样“内部 Authority checkpoint 必须存在”和“用户不应被迫逐项审批”被彻底分开。
 
 实现验证：最初尝试普通 detached process，真实证明会被 AgentDock 的 Windows Job Object 回收；Task Scheduler 版本虽能脱离父会话，但会留下 scheduled-task residue，因此未保留。最终 WMI/CIM 版本在发起 AgentDock command 已退出后仍继续运行，真实后台 `AgentDockJobManager → codex-acp → Terra` 返回 `BACKGROUND_ACP_OK` 并独立 `completed`。本轮把 Automatic Production 升为默认后，focused background/UI/ACP tests **39/39 PASS**，最终全仓 **538/538 PASS**，`node --check src/story_mvp/static/app.js` 与 `git diff --check` PASS。Steward 审计方法同步升级至 **0.3.56**：保留“Process Host ≠ Novel Pipeline”，新增 `Delegated Operator Freeze ≠ Approval Bypass`；skill-authoring lint `portable=true / 0 errors / 0 warnings`，package validate/install/activate PASS，digest `sha256:b79bae106e741f03e99dcae107235240a14741d5f9591d8175fc8f013cbab946`。bounded read-only smoke PASS：正确判断默认 production 不应要求用户逐项点击，TGN operator 可完成 Save / Adopt / Freeze 与正常重试，但 raw model Response 仍不能绕过 validator / Freeze 直接进入 Canon，也不需要新增 Recovery Agent / Judge / Reviewer。
+
+## 2026-09-05｜Prose-only 问题的实验方法收口：不要用整批 fresh 重生成测试局部表达
+
+本轮从“人物老被旁白解释、段落碎成 storyboard、对白像功能型 NPC”出发，最初把 Show-Then-Trust / Paragraph Continuity / Dialogue Continuity 继续加压到 Batch Primary Prompt，再用 fresh 5章 A/B 验证。这个方法暴露出一个重要实验设计错误：**只想测试 prose，却重新采样了整批故事。** Terra 每次 fresh Primary 都可能同时改变人物旧史、金额、地点、事件参与者、物件、奖励或实现细节；随后 Sol Authority Delta 也会重新采样修复集合。结果是 prose 增益与剧情/Authority 随机漂移纠缠，导致 v1→v4 多轮 A/B、Invalid 样本、重复 Judge 与额外 Authority Audit，墙钟与模型调用大幅增加。
+
+冻结工程教训：**如果问题已经明确属于局部 reader-facing prose realization，而且上游 Story / Character / Authority 本身不需要改变，优先冻结同一份 Primary / Final 底稿做 preservation-first local patch A/B，不重新生成整批正文。** 只有目标变量本来就会改变 Story beat、事件安排、人物选择或 Authority 时，才允许 fresh Primary 作为必要实验变量。对局部 prose，先问“这次运行会检测什么具体失败；若失败我会改什么”：若答案只是二次判词、碎段或功能型短问短答，就不应支付一次整批剧情重采样的噪声与成本。
+
+最终 production 方案因此不是“再强化 Primary Prompt”，而是：`immutable Terra Batch Primary → [Terra-high Batch Prose Delta ∥ Sol-high Batch Authority Delta] → deterministic Authority-first composition`。两个 Delta 独立读取同一 Primary；Authority patch 先应用，Prose patch 只有在 Authority-closed 文本中其 `OLD` 仍逐字唯一命中时才应用，重叠则直接跳过，不重新采样第二次 Sol。最终三本 clean held-out 的 Reader/classic blind 为 **Treatment 3/3 胜**；独立 Authority blind 为 **3/3 TIE，0 个 Treatment-only hard finding**。实际只用了 3/3/2 个局部 patch，分别改动约 61/119/28 个字符，没有靠整体压缩小说取胜。完整报告见 `books/real-exp-prose-composed-delta-final-ab-20260905-v1/REPORT.md`。
+
+评审方法也同步收口：**Reader / Classic Judge 与 Authority Auditor 必须分证据源。** Reader Judge 可以匿名读 A/B + 真实经典原文，只判断读感、对白、段落、人物、Show-Then-Trust 与经典结构机制；若它没有读取 Frozen World / Character / Story / BOOK / Outline / Canon，就不得因为 A/B 差异猜哪版“越权”。Authority 结论必须由独立 Auditor 直接读取真实 Frozen Authority 后给出。该规则已进入 `PROJECT_RULES.md` 与 `tgn-system-steward 0.3.60`。
 
 ## Cognitive Integrity Check
 

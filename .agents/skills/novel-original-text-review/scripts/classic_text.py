@@ -9,11 +9,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
-DEFAULT_ROOTS = (
-    Path(r"C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库\400+本高质量完本合集"),
-    Path(r"C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库\起点精选小说合集"),
-    Path(r"C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库\小说整理合集"),
-)
+DEFAULT_TGN_GBRAIN_ROOT = Path(r"C:\GoogleDrive\笔记\50_Corpora\TGN")
+CLASSIC_LIBRARY_SUBDIRS = ("400+本高质量完本合集", "起点精选小说合集", "小说整理合集")
+DEFAULT_ROOTS = tuple(DEFAULT_TGN_GBRAIN_ROOT / name for name in CLASSIC_LIBRARY_SUBDIRS)
 
 ALIASES = {
     "斗破苍穹": "斗破",
@@ -51,6 +49,10 @@ def roots_from_env() -> tuple[Path, ...]:
     raw = os.environ.get("TGN_CLASSIC_LIBRARY_ROOTS", "").strip()
     if raw:
         return tuple(Path(part) for part in raw.split(";") if part.strip())
+    gbrain_root = os.environ.get("TGN_GBRAIN_ROOT", "").strip()
+    if gbrain_root:
+        root = Path(gbrain_root)
+        return tuple(root / name for name in CLASSIC_LIBRARY_SUBDIRS)
     return DEFAULT_ROOTS
 
 

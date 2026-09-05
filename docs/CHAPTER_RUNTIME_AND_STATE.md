@@ -6,7 +6,7 @@
 
 章节 Runtime 只负责执行已经批准的故事，不重新设计长期主线。当前默认正文窗口改为 **4—6 章 Batch，默认 5 章**：
 
-`Approved Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra-high Batch Primary → Sol-high Batch Authority Delta Reviser → 整批采用 → Luna-low State 逐章落盘`
+`Approved Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra-high Batch Primary → [Terra-high Batch Prose Delta ∥ Sol-high Batch Authority Delta，二者读取同一 immutable Primary] → deterministic Authority-first composition → 整批采用 → Luna-low State 逐章落盘`
 
 Batch 的目的首先是小说连续感，不只是加速。默认路径**不再增加一个 LLM 重新规划已批准五章**：代码直接抽取 Future-10 对应章条目，并复用现有 Chapter Context compiler，按章叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon。当前 Batch **不直接注入整块 Long Block**，因此也不再向 Primary 显示一个恒空的 `ACTIVE LONG BLOCK` 标题；但阶段背景仍是设计目标。某种 whole-block 注入方案失败只否定该运输方式，不能据此删除已批准的私人压力、机会价值、空间因果或成长因果。它们需要在当前章确实相关时，以 reader-safe、current-chapter bounded 的最小形式进入下游。Writer 在同一上下文中看到整段短中程故事，前章摆出的地形、人物势能、物件与 Promise 可以自然进入后章。State **不在 Batch 中途更新**：先让 Authority Reviser 看完整批次并一次收口，再按最终章 1→N 顺序抽取 State，因此不存在“Reviser 改完前章，后章预写稿立即 stale”的循环。
 
@@ -100,11 +100,12 @@ Preservation 默认依靠 Edit Locality，而不是 Desire / Surprise / Relation
 
 ## 节点职责
 
-### Outline Batch Packet / Primary / Authority Delta（默认）
+### Outline Batch Packet / Primary / Prose Delta / Authority Delta（默认）
 
 - **Outline Batch Packet｜deterministic**：直接从已批准 Future-10 抽取当前 4—6 章、默认 5 章的原始逐章条目；不由另一个 LLM 改写 Event / Result / Ending。复用现有 Chapter Context compiler，按章叠加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile 与 starting Canon。当前 Batch 不直接注入整块 Long Block；阶段背景的最小保真运输仍是待持续守住的设计目标。Story Program 已经结构化进入 BOOK/Future-10 的 `Reader-Facing Actor Ruler Anchor Schedule` 仍按普通 Approved Plan transport 进入对应章，不新增 Runtime 节点或数据库。跨章节 access provenance 若上游本身没决定，保留为上游冲突，不在这里补机制。
 - **Batch Primary｜Terra high**：一次连续写完整窗口。它的价值是让章节共享小说认知，而不是减少字数；前章摆出的空间、物件、关系与 Promise 可后章自然复用。复杂多方 Action Block 应利用这个连续窗口保持 Stable Scene Geography，不让每章重新造舞台；动作推进后允许直接 Situation Re-anchor。重要人物已有公开力量坐标与当前私人压力时，让它们真实影响现场行为和对白，不把力量尺只留给主角/Rival，也不把所有配角压成一句任务。已成立人物标签不靠固定口癖每章重证，世界独有规则也应在人物关系/命运中产生故事，而不只当解题机制。
-- **Batch Authority Delta｜Sol high**：一次读取完整 Batch + Frozen Power/Human + safe World + Reader Release + Story/Outline/Canon；只返回 exact `OLD → NEW` 局部 patch，不输出全文。发现一处事实冲突后要扫描该事实域的跨章依赖；修复需要新世界机制或新重大事件时返回 `upstream_conflicts`。存在 conflict 时整批 `adoptable=false`；无 conflict 才一次保存全部最终章。
+- **Batch Prose Delta｜Terra high**：与 Authority Delta **独立读取同一 immutable Primary**，只返回 exact local prose patch。目标只有三类：动作/现实后果已经成立后的二次抽象判词、同一 beat 被机械切碎的一句一段、无真实打断的功能型短问短答。不得新增/删除 Story beat、旧史、数字、奖励、力量、物件、知识或关系事实；不是全章润色，也不以变短为目标。
+- **Batch Authority Delta｜Sol high**：同样读取 immutable Primary + Frozen Power/Human + safe World + Reader Release + Story/Outline/Canon；只返回 exact `OLD → NEW` 局部 patch，不输出全文。发现一处事实冲突后要扫描该事实域的跨章依赖；修复需要新世界机制或新重大事件时返回 `upstream_conflicts`。最终代码先应用 Authority patch，再只应用那些 `OLD` 在 Authority-closed 文本里仍逐字唯一命中的 Prose patch；重叠 Prose patch 直接跳过，不重新跑第二次 Sol。存在 conflict 时整批 `adoptable=false`；无 conflict 才一次保存全部最终章。
 - **State｜Luna low**：等整批 prose finalization 完成后，再按章号顺序从最终正文抽取。Batch 中途不以 Primary 临时稿更新 Canon。
 
 失败的 Batch Director 仅保留在 `books/real-exp-*` 实验产物中用于复核，不进入 production runtime。当前 Batch 默认链也**不调用 Curator / Scene Skill Router**：`Scene Prose Projection`、selected Scene Skill 与 Revision Watch 继续属于单章 fallback / 专项修订能力，直到有独立 Batch-compatible A/B 证明可加入而不损失本轮小说感与 Authority；本轮不为保持表面功能齐全临时新增 Batch Curator。下面的单章 Director / Curator / Primary / Full Authority Reviser 职责继续定义兼容 fallback 与专项实验；它们也不代表默认长篇正文拓扑。

@@ -42,6 +42,8 @@ const state = {
     adopted: null,
     continuityText: "",
     primaryPromptWindow: "",
+    prosePromptWindow: "",
+    prosePromptPrimary: "",
     deltaPromptWindow: "",
     deltaPromptPrimary: "",
     window: { startChapter: 1, batchSize: 5 },
@@ -1047,6 +1049,7 @@ function agentDockButtonsForTarget(target) {
     state_delta: ["agentdock-run-current", "generate-state-delta-prompt"],
     consultation: ["agentdock-run-consult"],
     batch_primary: ["batch-run-primary"],
+    batch_prose_delta: ["batch-run-prose"],
     batch_delta: ["batch-run-delta"],
   }[target] || [];
 }
@@ -1057,7 +1060,7 @@ function syncAgentDockPendingButtons() {
       .filter((entry) => entry.bookId === state.bookId)
       .map((entry) => entry.target),
   );
-  for (const target of ["workflow_response", "state_delta", "consultation", "batch_primary", "batch_delta"]) {
+  for (const target of ["workflow_response", "state_delta", "consultation", "batch_primary", "batch_prose_delta", "batch_delta"]) {
     const pending = activeTargets.has(target);
     for (const id of agentDockButtonsForTarget(target)) {
       if ($(id)) $(id).disabled = !state.agentdockAvailable || pending;
@@ -1113,6 +1116,7 @@ async function refreshAgentDockJobs() {
 function responseTargetForJob(job) {
   if (job.purpose === "consultation") return "consultation";
   if (job.purpose === "batch_primary") return "batch_primary";
+  if (job.purpose === "batch_prose_delta") return "batch_prose_delta";
   if (job.purpose === "batch_authority_reviser") return "batch_delta";
   if (job.workflow_mode === "state_delta") return "state_delta";
   return "workflow_response";
@@ -1130,6 +1134,7 @@ function currentAgentDockPromptForJob(job) {
   const target = responseTargetForJob(job);
   if (target === "consultation") return $("agentdock-consult-prompt")?.value || "";
   if (target === "batch_primary") return $("batch-primary-prompt")?.value || "";
+  if (target === "batch_prose_delta") return $("batch-prose-prompt")?.value || "";
   if (target === "batch_delta") return $("batch-delta-prompt")?.value || "";
   return $("prompt-text")?.value || "";
 }
@@ -1137,7 +1142,7 @@ function currentAgentDockPromptForJob(job) {
 function agentDockSourceSnapshot(job, prompt = currentAgentDockPromptForJob(job)) {
   const target = responseTargetForJob(job);
   if (target === "consultation") return JSON.stringify({ prompt });
-  if (["batch_primary", "batch_delta"].includes(target)) {
+  if (["batch_primary", "batch_prose_delta", "batch_delta"].includes(target)) {
     return JSON.stringify({ prompt, window: batchWindowKey(), inputs: batchPayload() });
   }
   return JSON.stringify({ prompt, inputs: promptPayload() });
@@ -1145,7 +1150,7 @@ function agentDockSourceSnapshot(job, prompt = currentAgentDockPromptForJob(job)
 
 function jobMatchesCurrentIdentity(job) {
   if (job.purpose === "consultation") return job.book_id === state.bookId;
-  if (job.purpose === "batch_primary" || job.purpose === "batch_authority_reviser") {
+  if (["batch_primary", "batch_prose_delta", "batch_authority_reviser"].includes(job.purpose)) {
     return job.book_id === state.bookId
       && job.chapter_number === Number($("batch-start-chapter")?.value || 0)
       && job.workflow_mode === currentBatchWorkflowMode(job.purpose);
@@ -1161,6 +1166,7 @@ function responseEditorForJob(job) {
   const target = responseTargetForJob(job);
   if (target === "consultation") return $("agentdock-consult-response");
   if (target === "batch_primary") return $("batch-primary-response");
+  if (target === "batch_prose_delta") return $("batch-prose-response");
   if (target === "batch_delta") return $("batch-delta-response");
   if (target === "state_delta") return $("state-delta-response");
   return $("codex-response");
@@ -1197,7 +1203,7 @@ function canAutoFillAgentDockJob(job) {
 
 async function startAgentDockJob(prompt, { mode = "", purpose = "consultation", contextLabel = "", model = "", reasoningEffort = "" } = {}) {
   const identity = { book_id: state.bookId, chapter_number: purpose === "consultation" ? 0 : currentChapterNumber(), workflow_mode: mode };
-  if (purpose === "batch_primary" || purpose === "batch_authority_reviser") {
+  if (["batch_primary", "batch_prose_delta", "batch_authority_reviser"].includes(purpose)) {
     identity.chapter_number = Number($("batch-start-chapter").value);
     identity.workflow_mode = currentBatchWorkflowMode(purpose);
   }
@@ -1287,7 +1293,7 @@ async function pollAgentDockJob(jobId) {
         if (canAutoFillAgentDockJob(job)) {
           responseEditorForJob(job).value = job.output_text || "";
           if (target === "batch_primary") invalidateBatchPrimaryDependents();
-          if (target === "batch_delta") invalidateBatchPreflight();
+          if (["batch_prose_delta", "batch_delta"].includes(target)) invalidateBatchPreflight();
           showStatus(job.purpose === "consultation" ? "AgentDock 临时咨询已完成；结果没有写入小说或工作流。" : "AgentDock 已返回匹配的 Response；仍需作者明确 Apply / Save / Approve。 ");
         } else {
           showStatus("AgentDock 结果待查看：页面已刷新、作者已编辑目标区域，或当前小说/章节/节点不匹配，因此未覆盖编辑区。 ");
@@ -1348,7 +1354,7 @@ function loadAgentDockPreview() {
   markAgentDockEditorEdited(editor);
   editor.value = job.output_text || "";
   if (target === "batch_primary") invalidateBatchPrimaryDependents();
-  if (target === "batch_delta") invalidateBatchPreflight();
+  if (["batch_prose_delta", "batch_delta"].includes(target)) invalidateBatchPreflight();
   showStatus("结果已载入当前 Response；尚未保存、采用或批准。 ");
 }
 
@@ -3041,6 +3047,7 @@ function gbrainOffScopeText(mode) {
     authority_reviser: "GBrain：Authority Reviser 固定 OFF；只读取 safe Authority Refresh Pack。",
     state_delta: "GBrain：State Extraction 固定 OFF；只提取最终正文已经发生的事实。",
     batch_primary: "GBrain：Batch Primary 固定 OFF；只消费已批准的上游 Authority。",
+    batch_prose_delta: "GBrain：Batch Prose Delta 固定 OFF；只做同一 Primary 上的窄 prose patch。",
     batch_authority_reviser: "GBrain：Batch Authority Delta 固定 OFF；只修复 Frozen Authority 闭合。",
   }[mode] || "GBrain：当前 production 阶段固定 OFF；raw inspiration 不进入正文与 Authority recovery。";
 }
@@ -3470,7 +3477,7 @@ function batchWindowKey() {
 }
 
 function batchProductionHasContent() {
-  const ids = ["batch-primary-prompt", "batch-primary-response", "batch-delta-prompt", "batch-delta-response"];
+  const ids = ["batch-primary-prompt", "batch-primary-response", "batch-prose-prompt", "batch-prose-response", "batch-delta-prompt", "batch-delta-response"];
   return Boolean(
     state.batch.preflight
     || state.batch.adopted
@@ -3485,19 +3492,23 @@ function invalidateBatchPreflight() {
 }
 
 function invalidateBatchPrimaryDependents() {
+  state.batch.prosePromptWindow = "";
+  state.batch.prosePromptPrimary = "";
   state.batch.deltaPromptWindow = "";
   state.batch.deltaPromptPrimary = "";
   invalidateBatchPreflight();
 }
 
 function clearBatchProductionBuffers() {
-  for (const id of ["batch-primary-prompt", "batch-primary-response", "batch-delta-prompt", "batch-delta-response"]) {
+  for (const id of ["batch-primary-prompt", "batch-primary-response", "batch-prose-prompt", "batch-prose-response", "batch-delta-prompt", "batch-delta-response"]) {
     if ($(id)) $(id).value = "";
   }
   state.batch.preflight = null;
   state.batch.adopted = null;
   state.batch.continuityText = "";
   state.batch.primaryPromptWindow = "";
+  state.batch.prosePromptWindow = "";
+  state.batch.prosePromptPrimary = "";
   state.batch.deltaPromptWindow = "";
   state.batch.deltaPromptPrimary = "";
   renderBatchStatus();
@@ -3539,6 +3550,7 @@ function batchPayload() {
     story_program: $("proposal-editor").value,
     previous_chapter_text: state.batch.continuityText,
     batch_primary_response: $("batch-primary-response").value,
+    batch_prose_delta_response: $("batch-prose-response")?.value || "",
   };
 }
 
@@ -3548,6 +3560,7 @@ function batchPreflightMatchesCurrent() {
     preflight
     && preflight.windowKey === batchWindowKey()
     && preflight.primaryResponse === $("batch-primary-response").value
+    && preflight.proseResponse === ($("batch-prose-response")?.value || "")
     && preflight.deltaResponse === $("batch-delta-response").value,
   );
 }
@@ -3556,16 +3569,23 @@ function renderBatchStatus() {
   const preflight = state.batch.preflight;
   const currentPreflight = batchPreflightMatchesCurrent();
   const primaryResponse = $("batch-primary-response").value;
+  const proseResponse = $("batch-prose-response")?.value || "";
   const deltaResponse = $("batch-delta-response").value;
+  const proseCurrent = state.batch.prosePromptWindow === batchWindowKey()
+    && state.batch.prosePromptPrimary === primaryResponse;
   const deltaCurrent = state.batch.deltaPromptWindow === batchWindowKey()
     && state.batch.deltaPromptPrimary === primaryResponse;
   $("batch-primary-status").textContent = primaryResponse.trim() ? "Primary Response 已就绪" : "等待 Batch Primary";
+  if ($("batch-prose-status")) $("batch-prose-status").textContent = proseResponse.trim()
+    ? (proseCurrent ? "Prose Delta 已就绪" : "Prose Delta 已失效；请重新编译")
+    : "等待 Prose Delta";
   $("batch-delta-status").textContent = deltaResponse.trim()
     ? (deltaCurrent ? "Authority Delta 已就绪" : "Authority Delta 已失效；请重新编译")
     : "等待 Authority Delta";
   $("batch-state-status").textContent = state.batch.adopted ? `已采用；下一步 State：第${state.batch.adopted.state_next}章` : "未采用；不会自动更新 State";
   $("batch-preflight-result").textContent = !preflight ? "尚未预检。" : [
-    `Patch：${preflight.patch_count}`,
+    `Authority Patch：${preflight.patch_count}`,
+    `Prose Patch：${preflight.prose_applied_count}/${preflight.prose_patch_count} 应用${(preflight.prose_skipped || []).length ? `，跳过 ${(preflight.prose_skipped || []).length}` : ""}`,
     `章节：${(preflight.revised_chapters || []).join("、") || "—"}`,
     `上游冲突：${(preflight.upstream_conflicts || []).join("；") || "无"}`,
     currentPreflight ? (preflight.adoptable ? "可由作者显式采用" : "不可采用") : "预检已失效：Batch 窗口或 Response 已变化",
@@ -3575,8 +3595,8 @@ function renderBatchStatus() {
 
 async function compileBatchPrimaryPrompt() {
   if (!state.bookId) return showStatus("请先加载小说", true);
-  if (("batch-primary-response batch-delta-prompt batch-delta-response").split(" ").some((id) => $(id).value.trim())
-      && !window.confirm("重新编译 Batch Primary 会清空当前 Primary/Delta Response 与预检结果。继续吗？")) return;
+  if (("batch-primary-response batch-prose-prompt batch-prose-response batch-delta-prompt batch-delta-response").split(" ").some((id) => $(id).value.trim())
+      && !window.confirm("重新编译 Batch Primary 会清空当前 Primary/Prose/Authority Delta Response 与预检结果。继续吗？")) return;
   try {
     const window = currentBatchWindow();
     const continuityText = await loadContinuityContextBefore(window.startChapter);
@@ -3602,6 +3622,36 @@ async function runBatchPrimary() {
     await startAgentDockJob(prompt, { purpose: "batch_primary", mode: "batch_primary", contextLabel: "Batch Primary", model: "gpt-5.6-terra", reasoningEffort: "high" });
     showStatus("Batch Primary 已启动（Terra high）；结果只进入 Batch Primary Response。 ");
   } catch (error) { showStatus(`启动 Batch Primary 失败：${error.message}`, true); }
+}
+
+async function compileBatchProseDeltaPrompt() {
+  const primaryResponse = $("batch-primary-response").value;
+  if (!primaryResponse.trim()) return showStatus("请先获得完整 Batch Primary Response", true);
+  try {
+    const result = await requestJson("/api/batch/prose-delta-prompt", { method: "POST", body: JSON.stringify(batchPayload()) });
+    $("batch-prose-response").value = "";
+    state.batch.preflight = null;
+    state.batch.adopted = null;
+    state.batch.prosePromptWindow = batchWindowKey();
+    state.batch.prosePromptPrimary = primaryResponse;
+    $("batch-prose-prompt").value = result.content || "";
+    $("prompt-text").value = result.content || "";
+    $("batch-window").textContent = `第${result.start_chapter}—${result.end_chapter}章 · Terra Prose Delta high`;
+    renderBatchStatus();
+    showStatus("Prose Delta Prompt 已编译；它与 Authority Delta 都读取同一 immutable Primary。 ");
+  } catch (error) { showStatus(`编译 Prose Delta 失败：${error.message}`, true); }
+}
+
+async function runBatchProseDelta() {
+  const prompt = $("batch-prose-prompt").value.trim();
+  if (!prompt) return showStatus("请先编译 Prose Delta Prompt", true);
+  if (state.batch.prosePromptWindow !== batchWindowKey() || state.batch.prosePromptPrimary !== $("batch-primary-response").value) {
+    return showStatus("Batch 窗口或 Primary Response 已变化，请重新编译 Prose Delta Prompt。", true);
+  }
+  try {
+    await startAgentDockJob(prompt, { purpose: "batch_prose_delta", mode: "batch_prose_delta", contextLabel: "Batch Prose Delta", model: "gpt-5.6-terra", reasoningEffort: "high" });
+    showStatus("Batch Prose Delta 已启动（Terra high）；只返回 exact local prose patch。 ");
+  } catch (error) { showStatus(`启动 Prose Delta 失败：${error.message}`, true); }
 }
 
 async function compileBatchDeltaPrompt() {
@@ -3636,21 +3686,27 @@ async function runBatchDelta() {
 
 async function preflightBatchDelta() {
   const primaryResponse = $("batch-primary-response").value;
+  const proseResponse = $("batch-prose-response")?.value || "";
   const deltaResponse = $("batch-delta-response").value;
-  if (!primaryResponse.trim() || !deltaResponse.trim()) return showStatus("需要完整 Primary Response 与 Authority Delta Response", true);
-  if (state.batch.deltaPromptWindow !== batchWindowKey() || state.batch.deltaPromptPrimary !== primaryResponse) {
-    return showStatus("Primary Response 或 Batch 窗口已变化，请重新编译并运行 Authority Delta。", true);
+  if (!primaryResponse.trim() || !proseResponse.trim() || !deltaResponse.trim()) return showStatus("需要完整 Primary、Prose Delta 与 Authority Delta Response", true);
+  if (state.batch.prosePromptWindow !== batchWindowKey() || state.batch.prosePromptPrimary !== primaryResponse
+      || state.batch.deltaPromptWindow !== batchWindowKey() || state.batch.deltaPromptPrimary !== primaryResponse) {
+    return showStatus("Primary Response 或 Batch 窗口已变化，请重新编译并运行两个 Delta。", true);
   }
   try {
-    const payload = { ...batchPayload(), batch_delta_response: deltaResponse };
+    const payload = { ...batchPayload(), batch_delta_response: deltaResponse, batch_prose_delta_response: proseResponse };
     const result = await requestJson("/api/batch/apply-authority-delta", { method: "POST", body: JSON.stringify(payload) });
     state.batch.preflight = {
       patch_count: result.patch_count,
+      prose_patch_count: result.prose_patch_count || 0,
+      prose_applied_count: result.prose_applied_count || 0,
+      prose_skipped: result.prose_skipped || [],
       upstream_conflicts: result.upstream_conflicts || [],
       adoptable: Boolean(result.adoptable),
       revised_chapters: Object.keys(result.chapters || {}),
       windowKey: batchWindowKey(),
       primaryResponse,
+      proseResponse,
       deltaResponse,
     };
     state.batch.adopted = null;
@@ -4550,6 +4606,8 @@ $("agentdock-run-consult").addEventListener("click", runAgentDockConsult);
 $("agentdock-load-current").addEventListener("click", loadAgentDockPreview);
 $("batch-compile-primary").addEventListener("click", compileBatchPrimaryPrompt);
 $("batch-run-primary").addEventListener("click", runBatchPrimary);
+$("batch-compile-prose").addEventListener("click", compileBatchProseDeltaPrompt);
+$("batch-run-prose").addEventListener("click", runBatchProseDelta);
 $("batch-compile-delta").addEventListener("click", compileBatchDeltaPrompt);
 $("batch-run-delta").addEventListener("click", runBatchDelta);
 $("batch-preflight").addEventListener("click", preflightBatchDelta);
@@ -4557,10 +4615,11 @@ $("batch-adopt").addEventListener("click", adoptBatchDelta);
 $("batch-load-state").addEventListener("click", loadBatchStateChapter);
 $("batch-start-chapter").addEventListener("change", handleBatchWindowChange);
 $("batch-size").addEventListener("change", handleBatchWindowChange);
-for (const id of ["codex-response", "state-delta-response", "agentdock-consult-response", "batch-primary-response", "batch-delta-response"]) {
+for (const id of ["codex-response", "state-delta-response", "agentdock-consult-response", "batch-primary-response", "batch-prose-response", "batch-delta-response"]) {
   if ($(id)) $(id).addEventListener("input", (event) => markAgentDockEditorEdited(event.currentTarget));
 }
 $("batch-primary-response").addEventListener("input", invalidateBatchPrimaryDependents);
+$("batch-prose-response").addEventListener("input", invalidateBatchPreflight);
 $("batch-delta-response").addEventListener("input", invalidateBatchPreflight);
 $("locate-workflow-artifact").addEventListener("click", locateWorkflowArtifact);
 $("copy-codex-task").addEventListener("click", async () => {

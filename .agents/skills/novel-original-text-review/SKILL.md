@@ -1,6 +1,6 @@
 ---
 name: novel-original-text-review
-version: 0.1.0
+version: 0.1.1
 description: TGN 小说读感与经典对照的原文证据 Skill；从本地完整小说库直接读取经典原著连续窗口，再与 TGN 正文做 source-first 对照，禁止用 GBrain/蒸馏卡/梗概冒充原文阅读。
 ---
 
@@ -21,13 +21,13 @@ GBrain、蒸馏库、剧情梗概、模型记忆可以帮助提出“去哪里�
 
 # Original Library
 
-默认从本机完整小说库动态发现可用 `.txt` 原著，而不是维护三本书白名单。默认 roots：
+默认从本机完整小说库动态发现可用 `.txt` 原著，而不是维护三本书白名单。三组默认 roots 都从 `TGN_GBRAIN_ROOT` 派生：
 
-- `C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库\400+本高质量完本合集`
-- `C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库\起点精选小说合集`
-- `C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库\小说整理合集`
+- `<TGN_GBRAIN_ROOT>\400+本高质量完本合集`
+- `<TGN_GBRAIN_ROOT>\起点精选小说合集`
+- `<TGN_GBRAIN_ROOT>\小说整理合集`
 
-可用 `TGN_CLASSIC_LIBRARY_ROOTS`（Windows `;` 分隔）覆盖/扩展 roots。当前主合集本身已有约 410 个 `.txt` 原著；**所有能被工具定位和直接读取的完整原著都可成为参考，不限于预设书单。**
+`TGN_GBRAIN_ROOT` 未设置时，当前 fallback 为 `C:\GoogleDrive\笔记\50_Corpora\TGN`。如确实需要不同原著 roots，可继续用 `TGN_CLASSIC_LIBRARY_ROOTS`（Windows `;` 分隔）显式覆盖，它优先于 corpus root。当前主合集本身已有约 410 个 `.txt` 原著；**所有能被工具定位和直接读取的完整原著都可成为参考，不限于预设书单。**
 
 少量经典路由建议见 `references/classic-routing.md`。它只是 search prior，不是排名，不是配额；当前任务若有更合适的其它原著，直接使用其它书。
 

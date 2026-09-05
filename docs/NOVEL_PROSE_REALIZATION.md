@@ -225,9 +225,9 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 当前默认章节链：
 
-`Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘 → chapter-NNNN.md`
+`Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → [Terra Batch Prose Delta ∥ Sol Batch Authority Delta，二者读取同一 immutable Primary] → deterministic Authority-first composition → 整批采用 → State Extraction逐章落盘 → chapter-NNNN.md`
 
-默认路径不让另一个 LLM 再解释已批准 Future-10：代码直接抽取本批逐章事件/结果/结尾，并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon。当前 Batch 不直接注入整块 Long Block；这只是当前运输实现边界，不代表阶段背景目标被取消。Sol Reviser 一次看到完整 Batch，但只返回 exact local Delta；未触碰句子逐字保留。若修复必须发明新传送/追踪、奖励、胜负、身份或世界机制，返回 `upstream_conflicts`，整批不得采用。旧 `curator_primary` 的 `Director → Curator → Primary → Full Reviser` 继续作为兼容 fallback / 专项实验；Specialist / Integrator 仍只在作者明确 repair 时使用。
+默认路径不让另一个规划 LLM 再解释已批准 Future-10：代码直接抽取本批逐章事件/结果/结尾，并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon。当前 Batch 不直接注入整块 Long Block；这只是当前运输实现边界，不代表阶段背景目标被取消。Primary 完成后，Terra Prose Delta 与 Sol Authority Delta **独立读取同一份 immutable Primary**：前者只做极窄 reader-facing prose patch，后者只做 Authority closure。最终代码先应用 Authority，再只应用仍逐字唯一命中的 Prose patch；重叠就跳过 Prose，不重新采样 Sol。若 Authority 修复必须发明新传送/追踪、奖励、胜负、身份或世界机制，返回 `upstream_conflicts`，整批不得采用。旧 `curator_primary` 的 `Director → Curator → Primary → Full Reviser` 继续作为兼容 fallback / 专项实验；Specialist / Integrator 仍只在作者明确 repair 时使用。
 
 ---
 
@@ -241,9 +241,13 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 Terra high 一次写完整 Batch。它不把五章当五个独立任务：上一章摆出的空间、物件、关系势能与未完动作自然成为下一章可用的小说素材。人物标签成立后不靠同一种口癖重复证明；强世界规则既可以制造战斗玩法，也应在已批准的人物关系/命运里产生后果。默认 Batch 直接使用 BOOK Prose Profile，不调用 Curator / Scene Skill Router；现有 `Scene Prose Projection` 继续属于单章 fallback / 专项修订，未经过 Batch-compatible A/B 前不回接。Batch 中途不写 State，不让临时 Primary 成为 Canon。
 
+### Batch Prose Delta — Local Reader-Facing Repair
+
+Terra high 读取与 Authority Delta 相同的 immutable Primary，但**不读取 Authority Delta 输出，也不重写全文**。它只允许 0—15 个 exact local patch，目标限定为：删除动作/现实后果已经证明后的紧邻抽象二次判词；把同一连续 beat 的机械碎段重新合成自然段；把没有真实打断的功能型短问短答改成更完整的同义说话回合。它不能新增/删除 Story beat、旧史、数字、奖励、力量、物件、动机、知识或关系状态，也不能为了“自然”重排剧情。没有真实问题时可以 0 patch。
+
 ### Batch Authority Delta — Cross-Chapter Recovery
 
-Sol high 一次读取完整 Batch 与远端 Authority，只输出 exact `OLD → NEW` patch，不输出五章全文。一个事实域出现冲突时必须扫描所有跨章依赖；例如旧物返还与新奖励要同时闭合，空间上下轴不能只修第一处。需要发明新跨界机制、追踪、奖励、身份或胜负才能圆上时，返回 `upstream_conflicts`，不由 Reviser 聪明补洞。无 conflict 才整批采用；随后 Luna low State 按章顺序从最终正文提取。
+Sol high 一次读取同一 immutable Primary 与远端 Authority，只输出 exact `OLD → NEW` patch，不输出五章全文。一个事实域出现冲突时必须扫描所有跨章依赖；例如旧物返还与新奖励要同时闭合，空间上下轴不能只修第一处。需要发明新跨界机制、追踪、奖励、身份或胜负才能圆上时，返回 `upstream_conflicts`，不由 Reviser 聪明补洞。最终 deterministic merge 固定 Authority first：先应用全部合法 Authority patch；随后 Prose patch 只有在其 `OLD` 仍在 Authority-closed 章节中**恰好出现一次**时才应用，0 次或多次都跳过。这样 prose 永远不能覆盖 Authority，也不需要为了润色重新跑第二次 Sol。无 conflict 才整批采用；随后 Luna low State 按章顺序从最终正文提取。
 
 ### Director — Event Contract（单章 fallback）
 

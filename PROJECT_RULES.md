@@ -24,7 +24,7 @@
 - ACP 长任务反馈只投影真实、非敏感信号：排队 / 会话 / 配置 / 理解计划 / 读取执行 / 组织输出 / 收尾、累计耗时、距最近信号时长、通用 plan/tool/activity 摘要和取消入口。禁止伪造百分比、ETA 或“仍在工作”的不存在事件；禁止显示 private reasoning、原始命令、文件路径、凭据或模型 commentary 原文。ACP 路径存在只表示入口可用，ChatGPT 登录状态只能在真实任务启动时确认。短暂状态查询失败必须保留 pending lock 并自动重试，不能因此允许重复启动；pending job、ACP stdout event、activity、output 与 history 都必须有界，高频 update 通过反压处理但不得丢 RPC response / callback。
 - **ChatGPT 发起的跨多模型 / 长时 TGN runner 不得把当前 conversation turn 当作进程宿主。** 预计可能跨 turn 的生成、A/B、蒸馏或长篇 runner 统一通过 `story-mvp-background` 交给本机持久 Job Host；Host 只负责进程所有权、stdout/stderr 与 `queued/running/completed/failed/cancelled` 状态，不理解小说、不新增 Recovery Agent / Reviewer / Judge，也不改变原 runner 已有的错误处理、Authority、模型路由或 GBrain。Windows 下通过 WMI/CIM `Win32_Process.Create` 让 OS 服务启动 worker，从而脱离 AgentDock/ChatGPT 的 Job Object；状态保存在 gitignored `.local/background_jobs/`。因此 ChatGPT 网页/手机 turn 结束只能影响“我是否即时汇报”，不能再成为本机任务继续执行的前提。
 - **Production 默认工作方式是 final-output-only / hands-off 自动生成，而不是逐阶段作者审批。** 用户给出方向、冻结输入（若有）与目标章数后，即授权当前 TGN operator 在既有 production 规则、validator、Authority 边界与预先选择原则内完成候选选择、内部 Save/Adopt/Freeze checkpoint、正常重试与继续生成；用户主要在最终小说 / 实验成果层给阅读反馈。`author_approved` 等既有内部状态名暂保留为兼容性的 **Frozen Authority checkpoint**，不再解释为用户必须逐项点击。Author Workspace 的 World / Character / Story / Expansion 等手工批准入口降为高级检查 / 人工干预模式，不是默认生产路径。阶段失败时优先沿原 runner 既有恢复方式继续，或在同一用户方向与 Frozen Authority 内重生成最早失败节点；不要因为自动化另造万能 recovery layer。只有凭据/额度/宿主不可用、或继续必然违反用户明确冻结输入而又没有合法候选时，任务才落成明确 `failed/blocked` provenance；不得把技术细节转嫁给只要求最终阅读结果的用户。
-- **手工网页** Batch Production 只能复用既有 deterministic API 链：Primary Prompt → Terra-high Primary → Delta Prompt → Sol-high Authority Delta → exact-window/exact-response 预检 → 手工整批采用 → State 逐章处理。自动 Production Run 复用同一 Batch / Delta / State 语义，由 TGN operator 完成采用，不要求用户点击。窗口、Primary 或 Delta 任一变化都使后续 Prompt / 预检失效，不得沿用旧结果。
+- **手工网页** Batch Production 只能复用既有 deterministic API 链：Primary Prompt → Terra-high Primary → [Terra-high Prose Delta Prompt/Response ∥ Sol-high Authority Delta Prompt/Response，二者绑定同一 immutable Primary] → Authority-first deterministic composition → exact-window/exact-response 预检 → 手工整批采用 → State 逐章处理。自动 Production Run 复用同一 Batch / 双 Delta / State 语义，由 TGN operator 完成采用，不要求用户点击。窗口、Primary、Prose Delta 或 Authority Delta 任一变化都使后续 Prompt / 预检失效，不得沿用旧结果。
 - ACP 访问 GBrain：TGN 为主工作目录 + `additionalDirectories(GBrain root)`；不复制原著，不默认 full access。
 - **手工 Author Workspace** 的 GBrain Curator 默认 `NONE`：检索成功只展示 fixed references 与经过 BOOK 兼容筛选的候选；人工干预时必须显式选择 / 比较 / 组装后，才形成可编辑 Inspiration Bundle。Automatic Production Run 继续使用各阶段已冻结的 production semantic retrieval / selection 规则，不要求用户逐卡操作。请求返回必须仍匹配发起时的 BOOK / mode / query / 规划上下文；任一相关输入变化后旧候选与 Bundle 可只读保留但必须标 stale，且前后端都不得把 stale、未绑定手工文本或 GBrain-OFF 阶段内容送入 Prompt。GBrain 仍是 Optional Inspiration，不自动成为 Canon、Hard Gate 或 Authority source。
 - ACP 失败不切换认证方式；无法继续时给出可直接交给 Codex 的完整 Prompt。
@@ -50,7 +50,7 @@
 
 ## 4. 当前 Production 创意链
 
-`用户方向 / 冻结输入 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → TGN operator 选择并 Freeze / 跳过 → protagonist-blind World Vision → World Freeze → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → operator 选择并一次 Freeze Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ Story Freeze → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘 → 最终正文交付用户阅读`
+`用户方向 / 冻结输入 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → TGN operator 选择并 Freeze / 跳过 → protagonist-blind World Vision → World Freeze → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → operator 选择并一次 Freeze Character → deterministic CHARACTER.md → Story Program（第一次完整 Collision）→ Story Freeze → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra Batch Primary → [Terra Batch Prose Delta ∥ Sol Batch Authority Delta，二者读取同一 immutable Primary] → deterministic Authority-first Delta composition → 整批采用 → State Extraction逐章落盘 → 最终正文交付用户阅读`
 
 长篇到达真实 `World Horizon` 后使用低频 forward loop：`Story Program Handoff → protagonist-blind World Expansion →（仅长期证据足够时）Human Development → deterministic CURRENT_CHARACTER.md → Sol Story Refresh / Re-Collision → operator Freeze 刷新后的 Story Program → Outline → 后续章节`。开书 World / Power / Human 是稳定 Origin，不要求一次写完 500 章所有具体世界与能力。自动 Production Run 在这些 checkpoint 自己继续，不把每个 Horizon 变成用户审批中断。
 
@@ -88,11 +88,12 @@
 | Outline | GPT-5.6 Luna | high | ON：通常 4 条、最多 5 条 |
 | Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon；当前 Batch 不直接注入整块 Long Block，已批准阶段背景仍需以当前章有界形式保真运输；不调用 LLM 重规划 |
 | Batch Primary Writer | **GPT-5.6 Terra** | high | raw GBrain OFF；Frozen Power/Human + safe World/Reader Release + Approved Future-10；一次写完整 Batch |
-| Batch Authority Delta | **GPT-5.6 Sol** | **high** | raw GBrain OFF；完整 Batch + safe Authority；只输出 exact local patch / upstream conflicts，不输出全文 |
+| Batch Prose Delta | **GPT-5.6 Terra** | **high** | raw GBrain OFF；只看同一 immutable Primary + BOOK Prose Profile；只修动作后二次判词、同一 beat 碎段、功能型短问短答；exact local patch，不得新增事实/旧史/Story beat |
+| Batch Authority Delta | **GPT-5.6 Sol** | **high** | raw GBrain OFF；完整 immutable Primary + safe Authority；只输出 exact local patch / upstream conflicts，不输出全文 |
 | State Extraction | GPT-5.6 Luna | low | OFF；整批 prose final 后逐章落盘 |
 | 单章 Director / Curator / Full Reviser | GPT-5.6 Luna | high | raw GBrain OFF；仅兼容 fallback / 专项实验，不是默认 Batch 链 |
 
-默认章节链：`Approved Future-10 → Full Deterministic Authority Packet → Terra high Batch Primary → Sol high Batch Authority Delta → 整批采用 → Luna low State 逐章落盘`，默认 5 章、支持 4—6 章。**Batch 中途不更新 State / Canon**：Primary 先连续完成整批，Reviser 再一次看到整批与远端 Authority，避免“第1章修订后第2—5章预写稿全部 stale”。Reviser 只返回 exact `OLD→NEW` Delta；同一事实域冲突必须跨章扫清。若修复需要新增传送/追踪、世界机制、重大胜负、奖励或身份，返回 `upstream_conflicts`，整批不得采用，回 Story / Outline 修最早根因。单章 `curator_primary` 的 Luna Director → Luna Curator → Terra Primary → Luna Full Reviser → State 保留为 fallback；其一次 Outcome/RSE repair 规则继续只作用于这条 fallback。
+默认章节链：`Approved Future-10 → Full Deterministic Authority Packet → Terra high Batch Primary → [Terra high Batch Prose Delta ∥ Sol high Batch Authority Delta] → deterministic Authority-first composition → 整批采用 → Luna low State 逐章落盘`，默认 5 章、支持 4—6 章。**Batch 中途不更新 State / Canon**：Primary 先连续完成整批；两个 Delta 随后独立读取同一份 immutable Primary，不互相读取对方修改。Authority Delta 只返回 exact `OLD→NEW` hard-fix 与 `upstream_conflicts`，同一事实域冲突必须跨章扫清；Prose Delta 只允许窄改动作后二次判词、同一 beat 碎段与功能型短问短答，不得新增/删除 Story beat、旧史、数字、奖励、力量、物件或其它 Canon 事实。最终由代码**先应用 Authority patch，再只重放那些 `OLD` 在 Authority-closed 文本中仍逐字唯一命中的 Prose patch**；发生重叠时直接跳过 Prose patch，Authority 永远优先，不重新采样第二次 Sol。若 Authority 修复需要新增传送/追踪、世界机制、重大胜负、奖励或身份，返回 `upstream_conflicts`，整批不得采用，回 Story / Outline 修最早根因。单章 `curator_primary` 的 Luna Director → Luna Curator → Terra Primary → Luna Full Reviser → State 保留为 fallback；其一次 Outcome/RSE repair 规则继续只作用于这条 fallback。
 
 - **Run Ledger Exact-Input Receipt**：依赖变化仍先按现有规则把未来节点标 `stale`；节点重新构建 Prompt 后，只有当 exact UTF-8 `prompt_sha256` 与已保存 Response 绑定的 Prompt digest 完全一致，且 Response 文件自身 SHA-256 仍与 receipt 一致时，才确定性恢复 `completed / adopted` 并跳过模型调用。Prompt 有任一字符变化、Response 被改、旧 manifest 没有 receipt、或作者显式 `retry` 时都不得复用。该机制只减少上游编辑后的无效增量重跑，不宣称降低首次章节生成 wall；不用 semantic hash，不建立通用 cache 框架。
 
@@ -102,7 +103,7 @@
 
 ## 6. GBrain
 
-GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说素材库`
+GBrain 根目录由 `TGN_GBRAIN_ROOT` 统一解析；当前生产默认为 `C:\GoogleDrive\笔记\50_Corpora\TGN`。principal / Astra 必须共享同一个 corpus root；`reference-programs` 与原著库均从该 root 派生，不再在生产代码里各自写死完整路径。旧 `卡片盒子\20_Knowledge\修仙小说素材库` 已于 2026-09-05 迁移完成，不再是有效生产路径。
 
 - **OpenAI embedding credential 不写入 repo / `.env`。** Windows 上以持久 `OPENAI_API_KEY` 环境变量为唯一凭据来源；TGN 先读当前进程，宿主进程较旧未继承时再读 Windows User Environment，最后 fallback 到 Machine Environment，并显式传给 GBrain 子进程。**凡当前阶段配置为 GBrain ON，embedding Key 是生成硬前置条件：resolver 找不到 Key 时立即停止该阶段并明确报错，不允许降级为 keyword-only，也不允许用固定通用卡补位。** GBrain OFF 的 Primary / Batch Authority Delta / State 等阶段不受此限制。排查时先检查 resolver 与 Key 本身是否有效，不要只看当前 AgentDock/终端的 `Env:`。
 
@@ -184,6 +185,7 @@ GBrain 根目录：`C:\GoogleDrive\笔记\卡片盒子\20_Knowledge\修仙小说
 - 测 authority isolation 使用 fresh context；能 deterministic 就不加 LLM Composer。
 - 候选选择规则预先规定，不 cherry-pick。
 - 先直接读真实输出，再用指标/Judge；明显结构性问题不需要 Judge。
+- **Reader / Authority 双轴评审必须分证据源**：Reader / classic Judge 只评价读感、段落、对白、节奏、人物与经典结构机制，不得在没有实际 Frozen Authority 的情况下猜 Authority；Authority Auditor 必须读取匿名 A/B + 实际 Frozen World / Character / Story / BOOK / Outline / Canon，只判断事实、事件、时序、持有、知识与隐藏旧史。最终只有 Reader 改善且 Authority 不退化时才能晋级 production。
 - **经典对照必须先读原文，并默认使用 `novel-original-text-review` Skill**：做小说读感、场景技法或“是否接近某部经典”的比较前，先从本地完整小说库动态定位原著，实际读取完整场景或足够连续窗口，并记录书名、source path、章节/位置、line range 与阅读范围；结论中保留简短 `Original Text Reading Receipt`。不能用 GBrain 摘要、蒸馏卡、剧情梗概或模型记忆冒充原文阅读，也不能把局部阅读说成通读全书。用户未点名时可从当前可用的数百本经典中选择最适合问题的 1—3 本，不限《遮天》《斗罗》《斗破》；用户点名而本地找不到原著时必须明确“未完成该书原文对照”，不得以 GBrain 顶替。经典原文只用于评审学习，不进入 Writer。
 - 至少记录：质量、工程/程序化倾向、Plot Engine、人物自主性、合同稳定性、tokens、wall-clock、credits/成本。
 - 结论区分 PASS / DIRECTIONAL PASS / PARTIAL PASS / FAIL / INVALID，并记录 **What This Did Not Solve**；单本书或单个 candidate 不直接升级为 production 结论。

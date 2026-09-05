@@ -14,6 +14,7 @@ from urllib.parse import urlparse
 DEFAULT_OPENAI_MODEL = "gpt-5.6"
 DEFAULT_AUTHORITY_REVISER_MODEL = "gpt-5.6-luna"
 DEFAULT_BATCH_PRIMARY_MODEL = "gpt-5.6-terra"
+DEFAULT_BATCH_PROSE_DELTA_MODEL = "gpt-5.6-terra"
 DEFAULT_BATCH_AUTHORITY_REVISER_MODEL = "gpt-5.6-sol"
 _runtime_settings = {"name": "", "url": "", "api_key": ""}
 
@@ -127,6 +128,10 @@ def batch_primary_model() -> str:
     return os.environ.get("STORY_MVP_BATCH_PRIMARY_MODEL", "").strip() or DEFAULT_BATCH_PRIMARY_MODEL
 
 
+def batch_prose_delta_model() -> str:
+    return os.environ.get("STORY_MVP_BATCH_PROSE_DELTA_MODEL", "").strip() or DEFAULT_BATCH_PROSE_DELTA_MODEL
+
+
 def batch_authority_reviser_model() -> str:
     return (
         os.environ.get("STORY_MVP_BATCH_AUTHORITY_REVISER_MODEL", "").strip()
@@ -166,6 +171,9 @@ def generate_text(
         resolved_effort = "high"
     elif purpose == "batch_primary":
         resolved_model = batch_primary_model()
+        resolved_effort = "high"
+    elif purpose == "batch_prose_delta":
+        resolved_model = batch_prose_delta_model()
         resolved_effort = "high"
     elif purpose == "batch_authority_reviser":
         resolved_model = batch_authority_reviser_model()

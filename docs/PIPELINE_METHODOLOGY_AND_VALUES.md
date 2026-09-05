@@ -10,7 +10,7 @@ Story MVP 不是“让一个大模型从设定一路写到正文”的流水线�
 
 对应实际链路：
 
-`用户方向 / 冻结输入 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → TGN operator 选择并 Freeze / 跳过 → protagonist-blind World Vision → World Freeze → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → operator 选择并 Freeze Character → deterministic Character → Story Program / Collision → Story Freeze → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5；复用 Chapter Context compiler）→ Terra Batch Primary → Sol Batch Authority Delta → 整批采用 → State Extraction逐章落盘 → 最终正文`
+`用户方向 / 冻结输入 →（可选）Non-Canon Premise Forge S1/S2/S3 → Independent Premise Authority Compiler → TGN operator 选择并 Freeze / 跳过 → protagonist-blind World Vision → World Freeze → POWER_BASELINE / LIFE_CONTEXT → 独立 Power Seed + Human Seed → operator 选择并 Freeze Character → deterministic Character → Story Program / Collision → Story Freeze → Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5；复用 Chapter Context compiler）→ Terra Batch Primary → [Terra Batch Prose Delta ∥ Sol Batch Authority Delta，同一 immutable Primary] → deterministic Authority-first composition → 整批采用 → State Extraction逐章落盘 → 最终正文`
 
 Premise Aperture 已冻结为可跳过的 production 开书阶段，但不是第四 Authority。Forge 一次形成三张完整货架候选；Compiler 只审 trigger、载体、T0 尺位、Interface 因果与远期复合，不评分、不选择、不修稿。operator 采用后，代码确定性拆出 World / Power / Human / Story 四条 lane contract；Story Program 第一次读取完整 Promise，Outline 与章节不再读取 raw card。该阶段从未开始或 operator 跳过时，原 Split Authority 路径保持可用；一旦开始，必须 strict PASS + 明确 Freeze 后才能继续。这里的显式 Freeze 是 Agent 间信息边界，不要求用户逐项点击。完整合同见 `docs/PREMISE_APERTURE.md`。
 
@@ -834,7 +834,8 @@ Atomic 的稳定方法论进一步收敛为“**Authority Contract 与 Primary P
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |
 | Batch Packet | deterministic | OFF | 直接抽取 Approved Future-10 当前4—6章（默认5），并复用 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon；当前 Batch 不直接注入整块 Long Block，阶段背景仍需有界保真运输；不由 LLM 重规划 |
 | Batch Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；Frozen Power/Human + safe World/Reader Release + Approved Future-10 | 一次连续写完整 Batch；保留短中程小说认知；不是 final source |
-| Batch Authority Delta | **GPT-5.6 Sol high** | **OFF**；完整 Batch + safe Authority | 跨章 Authority sweep，只输出 exact local patch；修复需要新机制时返回 `upstream_conflicts`，不改正文 |
+| Batch Prose Delta | **GPT-5.6 Terra high** | **OFF**；同一 immutable Primary + BOOK Prose Profile | 只输出窄 exact local prose patch；修动作后二次判词、同一 beat 碎段、功能型短问短答；不得新增事实/旧史/Story beat |
+| Batch Authority Delta | **GPT-5.6 Sol high** | **OFF**；同一 immutable Primary + safe Authority | 跨章 Authority sweep，只输出 exact local patch；修复需要新机制时返回 `upstream_conflicts`；最终 Authority-first 合并 |
 | State Extraction | GPT-5.6 Luna low | OFF | 整批 prose final 后按章顺序抽取已发生事实 |
 | Director / Curator / Full Reviser | Luna high / Luna high / Luna high | raw GBrain OFF | 旧单章 `curator_primary` fallback / 专项实验；Scene Skill v2 的 Curator Projection / Revision Watch 当前也只在这里使用，不是默认 Batch 路径 |
 
@@ -846,7 +847,7 @@ Atomic 的稳定方法论进一步收敛为“**Authority Contract 与 Primary P
 - **Max / Ultra**：不按档位名字自动进入 production。Terra-max/ultra 能抓更多问题，但 Ultra wall 约为 Max 的 2.8 倍且没有全面增益；Luna-max 有 overrepair 倾向。它们只保留诊断/最高质量对照。
 - **GPT-5.4 high**：当前没有补偿性优势，只用于回归或模型对照。
 
-章节模型选择继续分开看 **生成质量 / wall-clock / 实际成本**。当前默认路由是 `Approved Future-10 → Full Deterministic Authority Packet → Terra-high Batch Primary → Sol-high Authority Delta → Luna-low State`，窗口默认 5 章、支持 4—6 章。旧 `Luna Director → Luna Curator → Terra Primary → Luna Full Reviser → State` 保留为兼容 fallback；2026-08-29 的 medium/Slim/Patch-only 等失败结论仍有效，但不再定义当前默认拓扑。
+章节模型选择继续分开看 **生成质量 / wall-clock / 实际成本**。当前默认路由是 `Approved Future-10 → Full Deterministic Authority Packet → Terra-high Batch Primary → [Terra-high Prose Delta ∥ Sol-high Authority Delta] → Authority-first deterministic composition → Luna-low State`，窗口默认 5 章、支持 4—6 章。两个 Delta 读取同一 immutable Primary，因此可以并行；最终不重新采样正文或 Sol，只把仍与 Authority-closed 文本不冲突的 Prose patch 确定性叠加。旧 `Luna Director → Luna Curator → Terra Primary → Luna Full Reviser → State` 保留为兼容 fallback；2026-08-29 的 medium/Slim/Patch-only 等失败结论仍有效，但不再定义当前默认拓扑。
 
 ### 已验证的 Theme Emergent A/B 结论（2026-08-25）
 

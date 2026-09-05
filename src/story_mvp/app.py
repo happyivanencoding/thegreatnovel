@@ -13,13 +13,17 @@ from pydantic import BaseModel, Field
 
 from .batch_runtime import (
     DEFAULT_BATCH_SIZE,
+    BatchDelta,
     BatchWindow,
     apply_batch_delta,
     build_batch_delta_reviser_prompt,
     build_batch_primary_prompt,
+    build_batch_prose_delta_prompt,
+    compose_batch_deltas,
     extract_batch_outline_plans,
     parse_batch_delta_response,
     parse_batch_primary_response,
+    parse_batch_prose_delta_response,
 )
 from .agentdock_executor import AgentDockExecutorError, AgentDockJobManager
 from .background_job import get_public_job, list_public_jobs, public_job, stop_job
@@ -35,6 +39,7 @@ from .openai_executor import (
     OpenAIExecutorError,
     batch_authority_reviser_model,
     batch_primary_model,
+    batch_prose_delta_model,
     configure_settings,
     configured as openai_configured,
     authority_reviser_model,
@@ -191,6 +196,7 @@ class OpenAIExecutorRequest(BaseModel):
         "state_extraction",
         "authority_reviser",
         "batch_primary",
+        "batch_prose_delta",
         "batch_authority_reviser",
     ] = "default"
     reasoning_effort: str = ""
@@ -204,6 +210,7 @@ class AgentDockJobRequest(BaseModel):
         "consultation",
         "workflow_response",
         "batch_primary",
+        "batch_prose_delta",
         "batch_authority_reviser",
     ] = "consultation"
     context_label: str = Field(default="", max_length=160)
@@ -230,6 +237,7 @@ class BatchDeltaApplyRequest(BaseModel):
     batch_size: int = Field(default=DEFAULT_BATCH_SIZE, ge=4, le=6)
     batch_primary_response: str
     batch_delta_response: str
+    batch_prose_delta_response: str = ""
 
 
 class OpenAISettingsRequest(BaseModel):
@@ -435,6 +443,8 @@ def get_executors() -> dict[str, Any]:
             "authority_reviser_reasoning": "high",
             "batch_primary_model": batch_primary_model(),
             "batch_primary_reasoning": "high",
+            "batch_prose_delta_model": batch_prose_delta_model(),
+            "batch_prose_delta_reasoning": "high",
             "batch_authority_reviser_model": batch_authority_reviser_model(),
             "batch_authority_reviser_reasoning": "high",
             "name": openai_settings["name"],
@@ -555,6 +565,25 @@ def post_batch_primary_prompt(payload: BatchPromptRequest) -> dict[str, str | in
         raise HTTPException(status_code=400, detail=str(error)) from error
 
 
+@app.post("/api/batch/prose-delta-prompt")
+def post_batch_prose_delta_prompt(payload: BatchPromptRequest) -> dict[str, str | int]:
+    try:
+        window = BatchWindow(payload.start_chapter, payload.batch_size)
+        chapters = parse_batch_primary_response(payload.batch_primary_response, window)
+        prompt = build_batch_prose_delta_prompt(
+            window=window,
+            primary_chapters=chapters,
+            book_content=payload.book_content,
+        )
+        return {
+            "content": prompt,
+            "start_chapter": window.start_chapter,
+            "end_chapter": window.end_chapter,
+        }
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+
 @app.post("/api/batch/authority-reviser-prompt")
 def post_batch_authority_reviser_prompt(payload: BatchPromptRequest) -> dict[str, str | int]:
     try:
@@ -585,15 +614,30 @@ def post_batch_apply_authority_delta(payload: BatchDeltaApplyRequest) -> dict[st
     try:
         window = BatchWindow(payload.start_chapter, payload.batch_size)
         chapters = parse_batch_primary_response(payload.batch_primary_response, window)
-        delta = parse_batch_delta_response(payload.batch_delta_response, window)
-        revised = apply_batch_delta(chapters, delta, window)
+        authority_delta = parse_batch_delta_response(payload.batch_delta_response, window)
+        prose_delta = (
+            parse_batch_prose_delta_response(payload.batch_prose_delta_response, window)
+            if payload.batch_prose_delta_response.strip()
+            else BatchDelta((), ())
+        )
+        if authority_delta.upstream_conflicts:
+            revised = apply_batch_delta(chapters, authority_delta, window)
+            prose_applied: tuple[dict[str, Any], ...] = ()
+            prose_skipped: tuple[dict[str, Any], ...] = ()
+        else:
+            revised, prose_applied, prose_skipped = compose_batch_deltas(
+                chapters, authority_delta, prose_delta, window
+            )
         return {
             "start_chapter": window.start_chapter,
             "end_chapter": window.end_chapter,
             "chapters": {str(number): revised[number] for number in window.chapter_numbers},
-            "patch_count": len(delta.patches),
-            "upstream_conflicts": list(delta.upstream_conflicts),
-            "adoptable": not delta.upstream_conflicts,
+            "patch_count": len(authority_delta.patches),
+            "prose_patch_count": len(prose_delta.patches),
+            "prose_applied_count": len(prose_applied),
+            "prose_skipped": list(prose_skipped),
+            "upstream_conflicts": list(authority_delta.upstream_conflicts),
+            "adoptable": not authority_delta.upstream_conflicts,
         }
     except ValueError as error:
         raise HTTPException(status_code=400, detail=str(error)) from error
@@ -609,12 +653,19 @@ def post_batch_adopt_authority_delta(
         window = BatchWindow(payload.start_chapter, payload.batch_size)
         directory = _book_directory(book_id)
         chapters = parse_batch_primary_response(payload.batch_primary_response, window)
-        delta = parse_batch_delta_response(payload.batch_delta_response, window)
-        if delta.upstream_conflicts:
+        authority_delta = parse_batch_delta_response(payload.batch_delta_response, window)
+        prose_delta = (
+            parse_batch_prose_delta_response(payload.batch_prose_delta_response, window)
+            if payload.batch_prose_delta_response.strip()
+            else BatchDelta((), ())
+        )
+        if authority_delta.upstream_conflicts:
             raise ValueError(
                 "Batch Authority Delta 仍有上游冲突，必须先修 Story / Outline，不能采用正文"
             )
-        revised = apply_batch_delta(chapters, delta, window)
+        revised, prose_applied, prose_skipped = compose_batch_deltas(
+            chapters, authority_delta, prose_delta, window
+        )
         existing = [
             number
             for number in window.chapter_numbers
@@ -638,7 +689,10 @@ def post_batch_adopt_authority_delta(
             "status": "saved",
             "start_chapter": window.start_chapter,
             "end_chapter": window.end_chapter,
-            "patch_count": len(delta.patches),
+            "patch_count": len(authority_delta.patches),
+            "prose_patch_count": len(prose_delta.patches),
+            "prose_applied_count": len(prose_applied),
+            "prose_skipped": list(prose_skipped),
             "saved": saved,
             "state_next": window.start_chapter,
         }
