@@ -214,7 +214,7 @@ Outline 的职责是把 Story Program 编译成当前窗口的具体 Story Ancho
 
 `Approved Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra high Batch Primary → Sol high Batch Authority Delta → 整批采用 → Luna low State逐章落盘`
 
-- Batch Packet：代码原样抽取当前 Future-10 逐章条目，不让第二个规划 LLM 改写已批准 Event / Result / Ending；同时复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon；
+- Batch Packet：代码原样抽取当前 Future-10 逐章条目，不让第二个规划 LLM 改写已批准 Event / Result / Ending；同时复用现有 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon；当前阶段背景仍需保真运输，现有缺口见 `CHAPTER_RUNTIME_AND_STATE.md`；
 - Batch Primary：一次连续写完整窗口，保留章间 Handoff、人物声音、物件/地形复用和短中程铺垫回收；
 - Batch Authority Delta：一次看完整 Batch 与 safe Effective World / Frozen Power+Human / Reader Release / Story/Outline/Canon，只做 exact local patch；同一事实域跨章扫清，无法不新增机制地修复时返回 `upstream_conflicts`，整批不采用；
 - State：等整批正文 final 后按章顺序记录已经发生的事实，并持续维护 `Current Power Position`；没有明确突破时沿用原位置，不能由越级表现推断升级。

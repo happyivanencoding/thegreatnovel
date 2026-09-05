@@ -8,7 +8,7 @@
 
 `Approved Outline / Future-10 → Full Deterministic 4—6章 Authority Packet（默认5）→ Terra-high Batch Primary → Sol-high Batch Authority Delta Reviser → 整批采用 → Luna-low State 逐章落盘`
 
-Batch 的目的首先是小说连续感，不只是加速。代码直接抽取 Future-10 对应章条目，并复用 Chapter Context compiler，按章叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon。当前默认不直接注入整段 Long Block；机会价值与关系压力需要通过已批准的逐章计划等输入进入。整段背景运输的双书实验未达到跨书不退化标准，见本地 `books/real-exp-reader-experience-ab-20260905-v1/REPORT.md`。单章链使用的 Long Block 范围投影只保留覆盖当前章的最窄编号块，不带整窗结局前言；明确过期则为空。Writer 在同一上下文中看到整段短中程故事，前章摆出的地形、人物势能、物件与 Promise 可以自然进入后章。State **不在 Batch 中途更新**：先让 Authority Reviser 看完整批次并一次收口，再按最终章 1→N 顺序抽取 State。
+Batch 的目的首先是小说连续感，不只是加速。代码直接抽取 Future-10 对应章条目，并复用 Chapter Context compiler，按章叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile 与 starting Canon。**已批准的当前阶段背景仍是设计要求，运输缺口尚未闭合**：当前Batch没有传入Long Block；直接逐章注入整块的双书实验未达到跨书不退化标准，但这不否定最小私人压力、机会价值与场景因果需要运输。实验与边界见本地 `books/real-exp-reader-experience-ab-20260905-v1/REPORT.md`；不能以改文档或删除空标题代替修复。单章链使用的范围投影只保留覆盖当前章的最窄编号块，不带整窗结局前言；明确过期则为空。Writer 在同一上下文中看到整段短中程故事，前章摆出的地形、人物势能、物件与 Promise 可以自然进入后章。State **不在 Batch 中途更新**：先让 Authority Reviser 看完整批次并一次收口，再按最终章 1→N 顺序抽取 State。
 
 Batch Authority Reviser 不重输五章全文，只返回 exact local Delta；未触碰正文逐字保留。同一 Authority 冲突必须跨章扫描所有依赖位置。若修复必须发明新传送、追踪、身份、奖励、胜负或世界机制，Reviser 返回 `upstream_conflicts`，整批不得采用，回 Story / Outline 修最早根因。LLM `Batch Director` 的失败实现只保留在实验目录作证据，**不进入 production API / 模型路由**。旧 `curator_primary` 单章链继续作为兼容/专项 fallback；Specialist / Integrator 仍只在作者显式 repair 时使用。
 

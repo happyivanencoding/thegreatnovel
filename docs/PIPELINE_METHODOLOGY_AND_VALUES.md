@@ -828,7 +828,7 @@ Atomic 的稳定方法论进一步收敛为“**Authority Contract 与 Primary P
 | Story Program | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Collision + long-form causality；最高杠杆长期结构节点 |
 | Story Refresh | GPT-5.6 Sol high | **ON，最多 3 条 focused inspiration** | Effective World × Current Character 的周期性 fresh Re-Collision；如有 Fixed Hidden Mystery，可 planning-only 编译 reader-facing Reveal Contract |
 | Outline | GPT-5.6 Luna high | **ON，通常 4 条，最多 5 条** | 把批准 Program 编译成中期故事锚点与 Future 10 |
-| Batch Packet | deterministic | OFF | 直接抽取 Approved Future-10 当前4—6章（默认5），并复用 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon；不由 LLM 重规划 |
+| Batch Packet | deterministic | OFF | 直接抽取 Approved Future-10 当前4—6章（默认5），并复用 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon；active阶段背景运输缺口仍待解决；不由 LLM 重规划 |
 | Batch Primary Writer | GPT-5.6 Terra high | raw GBrain OFF；Frozen Power/Human + safe World/Reader Release + Approved Future-10 | 一次连续写完整 Batch；保留短中程小说认知；不是 final source |
 | Batch Authority Delta | **GPT-5.6 Sol high** | **OFF**；完整 Batch + safe Authority | 跨章 Authority sweep，只输出 exact local patch；修复需要新机制时返回 `upstream_conflicts`，不改正文 |
 | State Extraction | GPT-5.6 Luna low | OFF | 整批 prose final 后按章顺序抽取已发生事实 |

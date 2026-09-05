@@ -229,7 +229,7 @@ BOOK 中以下四个区块共同组成当前书的 prose profile：
 
 ### Deterministic Batch Packet — Preserve Approved Events
 
-从 Future-10 直接抽取本批 4—6 章、默认 5 章的原始条目，不由 LLM 重写。它保留每章 `具体剧情 / 结果状态 / 结尾推动 / RSE`，再通过现有 Chapter Context compiler 附加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon。held-out 已验证额外 Batch Director 虽可提高小说味，却会重新解释界阶时序、奖励来源与器物首次使用，因此不作为默认规划层。
+从 Future-10 直接抽取本批 4—6 章、默认 5 章的原始条目，不由 LLM 重写。它保留每章 `具体剧情 / 结果状态 / 结尾推动 / RSE`，再通过现有 Chapter Context compiler 附加 safe World、Reader Release、Protected RSE、Frozen Power/Human、Book Contract、BOOK Prose Profile、starting Canon。阶段背景仍是设计要求，当前运输缺口及未采用的整块注入方案见 `CHAPTER_RUNTIME_AND_STATE.md`。held-out 已验证额外 Batch Director 虽可提高小说味，却会重新解释界阶时序、奖励来源与器物首次使用，因此不作为默认规划层。
 
 ### Batch Primary — Continuous Novel Window
 

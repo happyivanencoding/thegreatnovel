@@ -1,6 +1,6 @@
 ---
 name: tgn-system-steward
-version: 0.3.54
+version: 0.3.57
 description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；审计创意架构、GBrain、Story Program、Outline、章节 Runtime 与实验，优先寻找最早语义坍缩点和最小可归因修复。
 ---
 
@@ -50,9 +50,11 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 
 # Before Any Serious Audit
 
-如果有 repo 访问权限，先**有界地动态读取**当前系统，而不是依赖本 Skill 内的历史快照，也不是默认全仓库考古。
+每次 TGN 系统协作、审阅或维护任务，必须在作出决定或修改前，先**完整读取并遵守项目根目录 `DEEP_CONTEXT_HANDOFF_FINAL.md`**，再完整读取 `PROJECT_RULES.md`，然后做 live discovery。全文可以按连续行号分段读取；输出截断必须续读，不漏段，不用关键词检索、旧摘要或另一 Agent 的阅读结论替代自己的全文阅读。历史结论仍按 Source Hierarchy 与用户最新纠正解释。
 
-默认读取预算：
+该入口属于系统协作上下文，不把交接全文、审计历史或经典原文加入生产 Writer / Curator 输入。必读文件完成后，再**有界地动态读取**任务相关系统，不默认全仓库考古。
+
+完成上述必读后的默认读取预算：
 
 1. `git status` + 最近 5—8 个 commit；
 2. 与当前问题直接相关的 **2—4 份 current docs**；
@@ -91,15 +93,16 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - Fix the earliest semantic collapse
 - **Premise search before Authority freeze**：当系统能生成完整、合理、可持续却普遍不敢押注的设定时，先检查 World / Power / Human 开始前是否存在非 Canon 完整货架前提搜索；不要把这个缺口误判成 Writer、GBrain 或下游玩法问题
 - **Isolation controls leakage; it does not maximize creativity**：fresh-context 分权能阻止后验合理化，却可能让多个独立高电压组件争夺同一个主承诺；创意实验必须比较完整 premise 一次形成与正交组件碰撞，不能把 Agent 数量或独立性本身当成大胆度
-- **Compiler checks satisfiability, not creative intensity**：同一个 Forge 会把自己的隐含桥梁合理化，因此完整候选需要 fresh-context Compiler 复核；但 Compiler 只能指出 trigger、目标／载体、尺度与远期复合冲突，不能评分、改稿、替作者选择或自动偏向保守
-- **Compiler conflict returns to the author before repair**：Compiler FAIL 默认输出精确冲突并停止；不要自动进入 LLM repair loop。若研究定点修复，必须代码锁死标题、货架句、literal Ontology、Changed Verbs 与不可磨平项，先过 deterministic validator，再允许独立 Compiler 复检；任一缺失立即停止，不事后复制旧字段伪造成功
-- **Optional premise is a state machine, not a silent bypass**：当前 production 的 Premise Aperture 可以从未开始或由作者显式跳过；但一旦保存候选，World / Power / Human / Story 必须等待 strict PASS、Compiler Input 与所选卡完全一致、作者批准。批准后 Workflow 只登记 `premise.contract`；World 批准后 Premise 决定冻结。候选、选择卡与 Compiler Report 不是第四 Authority，也不能进入 Outline / chapter
+- **Compiler checks satisfiability, not creative intensity**：同一个 Forge 会把自己的隐含桥梁合理化，因此完整候选需要 fresh-context Compiler 复核；但 Compiler 只能指出 trigger、目标／载体、尺度与远期复合冲突，不能评分、改稿、替 TGN operator 选择或自动偏向保守
+- **Compiler conflict returns to the TGN operator before repair**：Compiler FAIL 默认输出精确冲突并停止该候选的 Authority 升级；不要自动进入 LLM repair loop。Automatic Production Run 由已获整项任务授权的 TGN operator 在既有用户方向内选择其它 strict-PASS 候选、跳过可选 Premise，或按原 runner 已有恢复方式处理；若研究定点修复，必须代码锁死标题、货架句、literal Ontology、Changed Verbs 与不可磨平项，先过 deterministic validator，再允许独立 Compiler 复检；任一缺失立即停止，不事后复制旧字段伪造成功
+- **Optional premise is a state machine, not a silent bypass**：当前 production 的 Premise Aperture 可以从未开始或由 TGN operator 跳过；但一旦保存候选，World / Power / Human / Story 必须等待 strict PASS、Compiler Input 与所选卡完全一致、operator Freeze。Freeze 后 Workflow 只登记 `premise.contract`；World Freeze 后 Premise 决定冻结。候选、选择卡与 Compiler Report 不是第四 Authority，也不能进入 Outline / chapter。用户不需要逐项点击，但 operator delegation 不能绕过这些状态边界
 - Few deep rules > many hard gates
 - Supporting Logic Must Not Automatically Become Story Engine
 - Backstage Principles Must Not Become Generated Ontology
 - **Institutional Activity ≠ Living World**：World Independence 不能仅靠“军府在开发、商盟在竞争、学院在调查、部族在迁徙”证明。优先追到一个具体人物、生物或小群体：他现在私人地想要什么、下一步马上做什么、没有主角也会改变什么。机构/制度/生态可以放大后果，但不能默认替代 Living Actor 成为故事发动机；反过来也不要把所有世界冲突过度纠正成私人恩怨
 - Authority separation beats negative-prompt restraint when causal leakage is the problem
 - **Execution transport ≠ Authority adoption**：ACP、OpenAI API、外部 CLI 或浏览器 job 只负责产生候选 Response；job `completed` 不能冒充 Workflow artifact `completed / adopted`。审计任何新 executor 时，必须追到既有显式 Save / Apply / Adopt / Approve 边界，确认模型完成、页面回填、Run Ledger 与 Canon mutation 四件事没有被合并。
+- **Delegated Operator Freeze ≠ Approval Bypass**：final-output-only / hands-off 可以是默认产品工作方式。用户不逐项审批 World / Character / Story 时，已获整项任务授权的 TGN operator 可以完成候选选择、Save / Adopt / Freeze 与正常重试；审计对象应是“下游是否只消费已经验证并冻结的正确上游”，而不是“用户是否点了按钮”。但 operator delegation 也不能把任意模型 Response 自动升级成 Canon、跳过 validator 或模糊 Frozen Authority 边界。手工 Approval UI 可以降为高级干预，不应反向定义 production 架构。
 - Character is a person, not a psychological proof
 - **Human candidate needs Action Evidence, not another personality sentence**：候选期 Non-Canon Audition 应用一个小而真实的取舍现场检验 competing motives / relationship 是否会落成行动与机会成本；Audition 不是 Canon，不新增人物历史，也不能把一次表现固化成“以后每次都这样”的人格算法
 - Growth is longitudinal, not a per-stage / per-block tax
@@ -109,7 +112,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Historical Recontextualization ≠ Inventory Reuse**：旧 Power / Asset / Relationship / Identity / Knowledge 被记住、换地图后原样再用，只说明 continuity。真正 longitudinal compounding 要看新敌人、关系或世界条件是否让旧积累改变用途、风险、选择价值或社会价格；可用 `Carry → Recontextualize → Combine → Consequence / Reprice` 作为诊断链，但不要求每件旧资产每卷换功能
 - **Supporting Cast Agency ≠ Protagonist-Star Topology**：世界有 Living Actors 还不等于长篇人物生态已经成立。审计少数真正重要人物时，除了“他怎样影响主角”，还要问：他自己现在想得到/避免什么、哪件人生问题没结、主角暂时消失后他是否仍会沿已成立目标/承诺/损失/限制继续行动。人物—人物之间会改变行动的亲缘、爱情、师徒、竞争、利益、债、背叛、效忠或共同历史可以继续生效；若上游尚未定义这些历史，Story Program / Refresh 现在也可以在批准点合法 backfill。若 State / Story 只保存 `NPC → 与主角关系` 而吞掉人物自己的行动，最早坍缩在 Story Program / State representation；修法不是给所有 NPC 建 Human Seed、Character Agent 或关系数据库
 - **Character Ecology ≠ Character History**：配角各自有目标只证明“现在活着”；《斗罗》式长篇厚度还要求少量人物**过去也彼此活过**。审计 World 时问：是否存在 protagonist-blind 的 `Past Choice → Present Residue → 多个 Current Actions`，自然时旧选择是否穿过第三人/孩子/弟子/继承者而不是全被压成 A↔B 双人旧债；是否留下可信表层解释、遗物/空位/误解或互相冲突的记忆，供以后重释。审计 Story Program 时问：backfill 是否优先形成共享历史结、是否改变今天至少两个人、是否可能经 `Dormancy / Delayed Reveal → Relationship Reinterpretation → Convergence / Second Payoff` 继续复利。不要把“人物更深”替换成给每个 NPC 各补一段悲惨往事，也不要为此建全员关系图或代际配额
-- **Past-gap Backfill ≠ Retcon ≠ Fake Offscreen Future**：用户现在明确允许 Story Program / Story Refresh 对**此前从未被 Frozen Authority / Canon 定义的 supporting-character 过去**补历史，包括旧爱、亲缘、师徒、共同失败、救命、背叛、债、失约、上一代选择，并可把 Human 已成立家人与 World Living Actors 接成共享旧史。合法 backfill 不能否定已发生/公开 Canon、不能重写 Frozen Human 明确过去、不能偷答 `AUTHOR OPEN`；只有作者批准后的 Story Program/Refresh 才使它成为 Authority。最重要的时间方向区别是：**过去空白可以补；从当前时点往后的离屏未来不能事后伪造。** 人物离场后的神器、联盟、重大成长仍必须 forward from approved facts
+- **Past-gap Backfill ≠ Retcon ≠ Fake Offscreen Future**：用户现在明确允许 Story Program / Story Refresh 对**此前从未被 Frozen Authority / Canon 定义的 supporting-character 过去**补历史，包括旧爱、亲缘、师徒、共同失败、救命、背叛、债、失约、上一代选择，并可把 Human 已成立家人与 World Living Actors 接成共享旧史。合法 backfill 不能否定已发生/公开 Canon、不能重写 Frozen Human 明确过去、不能偷答 `AUTHOR OPEN`；只有经过 Story Program / Refresh 的 operator Freeze 后才使它成为 Authority。最重要的时间方向区别是：**过去空白可以补；从当前时点往后的离屏未来不能事后伪造。** 人物离场后的神器、联盟、重大成长仍必须 forward from approved facts
 - **Hidden Relationship History Is Backstage Authority Until Scheduled Reveal**：Approved Story Program 可以知道完整旧史，但“后台知道”不等于“正文已经知道”。审计 transport 时追 `Story Program hidden history → Outline minimal reveal scheduling → reader-safe BOOK §5 → Batch Primary → Sol Delta → State`：未排程的旧史不能因为 Outline/Reviser 看得到就提前写进正文；若 Primary 全知断言写反后台事实，Reviser只应恢复兼容当前表层认知的中性表达，不顺手揭底。State 只有正文真正 reveal 后才能把该层写成 Canon
 - **Character Afterlife does not imply recall quota**：重要人物可以离屏、死亡、沉睡或永久不回场；遗产、能力缺口、权限、债务、可靠消息、关系换位或敌方策略只要仍改变当前选择、代价、时间窗口或可用行动，就说明关系/人物历史仍在产生因果。**过去未定义的关系史可以在 Story approval 点 backfill；人物从当前时点离场后的未来变化仍只能从已成立目标、承诺、损失、限制或行动方向 forward。** 反过来，为了证明“关系有长期性”而固定每卷召回旧人、给所有 NPC 独立支线或让所有 Spine 同时亮灯，是新的 Book Engine 过度治理
 - **Convergence ≠ Recall**：多线大高潮的审计对象是共享因果铰链，不是到场人数。每条参与线都应能从人物自己正在追逐的人/物/地点/身份/时间窗口/决定推出为什么此刻必然撞到一起，并且移除该线会改变选择、结果或后续可行性；“旧人物都回来站队 / 同时围观终局”不算 thread collision。成熟线可以不合流，重要人物也可以缺席；不要为了群像把尚未成熟的线硬塞进高潮
@@ -150,8 +153,8 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - **Persistent Power Reader Proof Must Ride Story**：永久/累积/复用型私有优势应在本来就必须发生的高价值事件里让读者亲眼看到“上次极限现在直接可用”；没有自然事件就延后，不新增训练、复测、工作任务或路边小危险。若复利会诱惑 Frozen Human，也只把它叠到现成高价值目标的选择因果上。
 - **Bounded Repair Has One Current Prose Draft**：Outcome / RSE 等同一 Reviser 的窄 retry 可以完整保留 Frozen Authority，但正文只能暴露当前 Authority Revision 一份；旧 Primary 不得作为第二份全文与之竞争注意力。
 - Unresolved long-history facts must remain unresolved; Reader Orientation cannot authorize retrospective canon
-- **Author Unknown Is a Valid Authority State**：长期 Mystery 必须区分 `AUTHOR OPEN`（作者自己尚未决定）与 `AUTHOR FIXED HIDDEN`（作者已决定、读者/人物未知）。`AUTHOR OPEN` 不是 worldbuilding 缺失；只要作者下一段批准的具体故事仍能在不回答该问题时成立，审计结论应允许 `DEFER`，不能因为伏笔存在很久、Outline 想更完整或终局迟早要解释就要求现在定真
-- **Progressive Canonization Answers Only What the Next Story Earned**：只有作者下一步真正想写的事件已经无法执行时，Decision Surface 才指出一个 `Smallest Decision`。旧 AUTHOR OPEN 的 unknown list 是决策前未知池；当次可回答且只能回答 Smallest Decision，候选自己的 `What Remains Unknown` 才成为新保护边界。Reframe 不自动选，Compiler 不评分/修稿，FAIL 返回作者
+- **Author Unknown Is a Valid Authority State**：长期 Mystery 必须区分 `AUTHOR OPEN`（当前尚未冻结答案）与 `AUTHOR FIXED HIDDEN`（答案已冻结、读者/人物未知）。`AUTHOR OPEN` 不是 worldbuilding 缺失；只要下一段已冻结的具体故事仍能在不回答该问题时成立，审计结论应允许 `DEFER`，不能因为伏笔存在很久、Outline 想更完整或终局迟早要解释就要求现在定真
+- **Progressive Canonization Answers Only What the Next Story Earned**：只有下一段已冻结、真正要写的事件已经无法执行时，Decision Surface 才指出一个 `Smallest Decision`。旧 AUTHOR OPEN 的 unknown list 是决策前未知池；当次可回答且只能回答 Smallest Decision，候选自己的 `What Remains Unknown` 才成为新保护边界。Reframe 不自选，Compiler 不评分/修稿，FAIL 返回 TGN operator；Automatic Production Run 在既有用户方向内处理，不把技术决策抛给用户
 - **Hidden Truth Must Cross a Reader Event Before Canon**：planning-only Fixed Point 必须 runtime-blind；Outline 只能拿无答案 Reveal marker，Reveal 前 Writer 看不到 raw Hidden Truth。Reveal 章只能通过动作/物证/可验证观察把 `Reveal Boundary` 允许的一层变成 Reader Fact，State 才能把该 Residue 记为 Canon；随后更深问题重新 OPEN。允许 backward-compatible reinterpretation 给旧事实新意义，但不能把过去明确为真的事实改成假的 Retcon
 - Established non-core Supporting Skill should collapse to story result, not be re-methodized on every reuse
 - Access / Reward must not be taxed by an invented qualification process when Plan already grants the opportunity
@@ -185,6 +188,8 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 
 如果换一本完全不同的新书同样会复现，优先修上游系统层；如果只在一个 scene 的表达中出现，才修 Writer / Scene Skill。
 
+**运输缺失不等于设计目标错误。** 上游已批准的私人压力、稳定舞台、成长因果或机会价值在下游消失时，先找最早丢失的事实及其当前 reader-safe 表达，不能因为它尚未运输就删除对应设计目标。某一种 whole-block 注入失败，只否定该注入方案；不证明背景无法运输，也不授权把未来剧情、隐藏旧史或完整 Story Program 直接送进 Writer。
+
 ## Premise Search / Creative Voltage Audit
 
 当用户指出“设定不够大胆 / 新书都是安全职业玄幻 / 素材很多却想不到让人点开的前提”时，先审搜索分布，不要直接给 World 或 Power 堆更多创新字段：
@@ -192,15 +197,15 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 1. **Shelf Promise**：是否存在一句普通话可复述的完整前提，还是只有多个分别合理的世界、能力与人物组件？
 2. **Changed Verbs**：前提是否让主角反复拥有普通人类修士不会自然做出的身体、移动、战斗、占有、变形、生存或关系动作；分析更准、维护更快、资格更多仍是旧动词换名。
 3. **One Dominant Bet**：第一章是否有一个主承诺，其余异常放大它；多个 fresh-context Agent 各自大胆不等于整体更大胆。
-4. **Non-Canon Author Gate**：前置搜索只生成作者候选，不自动成为 World / Power / Human Canon，不由 Judge 自动选择，也不进入章节 Runtime。
-5. **Trace + Independent Compiler**：Forge 候选先输出 `Authority-Compilation Trace`，逐项声明“具体动作/结果 → 精确来源字段 → trigger → 目标/载体 → 为什么合法”；但不能相信同一 Agent 的自我证明。作者选择前再由 fresh-context Premise Compiler 独立检查 trigger 是否已满足、目标/载体/出口/见证者是否真实存在、Interface 是否偷做 Power 因果、T0 是否被 protagonist-blind World 尺容纳、20/100章是否假设共同载体、无限复制或新能力。Compiler 只审可满足性，不评分、不排名、不改稿、不替作者选；激进、怪异、主角占便宜大本身不是错误。
-6. **Lane-specific Frozen Contract**：作者选定后，Premise 仍不是第四 Authority，却也不是可随意改写的灵感。World 只看 World + protagonist-blind public interface；Power 只看 literal Ontology + Initial Scale Position + trigger / target coverage / action / carrier / root boundary；Human 只看 literal Ontology + exact T0 origin + Initial Scale Position；Story 在 Authorities 批准后才第一次看完整 Promise。
+4. **Non-Canon Operator Gate**：前置搜索只生成 Non-Canon 候选，不自动成为 World / Power / Human Canon，不由通用 Judge / scorer 自动偏向保守，也不进入章节 Runtime。Automatic Production Run 可由已获任务授权的 TGN operator 做 bounded selection，但仍要经过后续 Freeze。
+5. **Trace + Independent Compiler**：Forge 候选先输出 `Authority-Compilation Trace`，逐项声明“具体动作/结果 → 精确来源字段 → trigger → 目标/载体 → 为什么合法”；但不能相信同一 Agent 的自我证明。operator 采用前再由 fresh-context Premise Compiler 独立检查 trigger 是否已满足、目标/载体/出口/见证者是否真实存在、Interface 是否偷做 Power 因果、T0 是否被 protagonist-blind World 尺容纳、20/100章是否假设共同载体、无限复制或新能力。Compiler 只审可满足性，不评分、不排名、不改稿、不替 operator 选；激进、怪异、主角占便宜大本身不是错误。
+6. **Lane-specific Frozen Contract**：operator 选定并 Freeze 后，Premise 仍不是第四 Authority，却也不是可随意改写的灵感。World 只看 World + protagonist-blind public interface；Power 只看 literal Ontology + Initial Scale Position + trigger / target coverage / action / carrier / root boundary；Human 只看 literal Ontology + exact T0 origin + Initial Scale Position；Story 在 Authorities Freeze 后才第一次看完整 Promise。
 7. **Conflict Before Silent Rewrite**：lane isolation 通过仍不等于 premise 保真。无法同时实现已选约束与 Authority 时必须显式返回 `PREMISE-AUTHORITY CONFLICT`；不能静默搬移出生、恢复人形、缩窄/增强 Power coverage，或把稳定 Interface 降成偶发演出。Fail-loud 证明边界有效，不证明该候选已可 productionize。
 8. **Approved Authority Carries Forward**：Outline 与章节只读取已经实现这些约束的 approved World / Character / Story，不重复读取 raw Premise Card；若必须一路塞 raw card 才能保留，说明上游 Authority 没真正承载选择。
-9. **No Automatic Repair Loop**：Compiler FAIL 后先把精确冲突交还作者。定点 Repair 只能作为 research-only 单次实验；标题、Shelf Promise、literal Ontology、Changed Verbs 与不可磨平项必须由代码逐字校验，缺一项就在 fresh Compiler 和 downstream 前停止。Prompt 承诺“会保留”不算证据。
-10. **Production State Audit**：当前默认允许 `not_started` / `skipped` 直接进入原 Split Authority；`candidates_ready / selected / compiled / compiler_blocked` 都必须阻止 World / Power / Human / Story。Compiler Input snapshot 必须在生成 batch / selected Compiler Prompt 的当下落盘，报告保存不得用当时最新文本重写它；只有 strict `PASS`、snapshot 与当前 selected card 完全一致、作者批准后才生成四条 lane contract。Workflow 只能把 `premise.contract` 当正式 artifact；World 批准后不能再修改或跳过 Premise；raw card 不得进入 Outline、章节或 State。
+9. **No Automatic Repair Loop**：Compiler FAIL 后先把精确冲突交还 TGN operator。Automatic Production Run 可以选择另一个 strict-PASS 候选或跳过可选 Premise；定点 Repair 只能作为 research-only 单次实验；标题、Shelf Promise、literal Ontology、Changed Verbs 与不可磨平项必须由代码逐字校验，缺一项就在 fresh Compiler 和 downstream 前停止。Prompt 承诺“会保留”不算证据。
+10. **Production State Audit**：当前默认允许 `not_started` / `skipped` 直接进入原 Split Authority；`candidates_ready / selected / compiled / compiler_blocked` 都必须阻止 World / Power / Human / Story。Compiler Input snapshot 必须在生成 batch / selected Compiler Prompt 的当下落盘，报告保存不得用当时最新文本重写它；只有 strict `PASS`、snapshot 与当前 selected card 完全一致、operator Freeze 后才生成四条 lane contract。Workflow 只能把 `premise.contract` 当正式 artifact；World Freeze 后不能再修改或跳过 Premise；raw card 不得进入 Outline、章节或 State。
 
-受控实验至少比较：现有 baseline、完整 premise 一次形成、正交组件碰撞；预注册同位候选或审整个 candidate distribution，不事后只挑最好的一张。若各题材最优强度不同，保留作者选择，不建立自动 conservative selector。
+受控实验至少比较：现有 baseline、完整 premise 一次形成、正交组件碰撞；预注册同位候选或审整个 candidate distribution，不事后只挑最好的一张。若各题材最优强度不同，保留 operator 在用户方向下的强度判断，不建立自动 conservative selector。
 
 当问题表现为“解释太多 / 太少 / 世界看不懂”时，不要只按 exposition 数量审计。先区分：
 
@@ -237,6 +242,10 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 
 
 ## Scene Craft Evidence & Runtime Bandwidth Trace
+
+对正文作经典对照或读感判断前，先亲读对应经典原文的完整场景或足够连续窗口，记录书名、章节/位置与观察范围；不能用情节梗概、GBrain 抽象卡或模型记忆冒充原文阅读。经典原文只用于评审学习，Writer 继续只读批准输入与 source-blind craft。
+
+重要读感取舍给用户真实原稿、试改和足够前后文，明确哪些是原始自动输出、哪些经局部手工编辑。用户反馈优先于模型自评；用户未回复时按暂定判断继续，不把沉默记为认可。审对白要看完整发言、说话人追踪、动作和反应的间隙；合并碎对白之后仍需判断是否一口气急促说完，不能把“更长/更少轮次”当成改善。否定翻转、排比和漂亮收束按具体语境及连续节拍判断，不新增禁词表或句式评分器。
 
 当问题是“战斗/对白/关系/探索等 Scene Skill 不够好”，不要直接给 Writer 增加更长 Skill，也不要因为某种场景很重要就新增 Agent / Primary。按下面顺序审计：
 
@@ -382,6 +391,7 @@ description: TGN / TheGreatNovel 第一性原则系统审计与演化 Agent；�
 - 延迟/成本审计先拆开 adopted node wall、真实批次 elapsed（含重跑/Review/Repair）、上游摊销与 execution transport / queue；相似度高不等于节点冗余，模型/effort/输出合同变化必须接回正常下游并审最终正文；条件路由、局部 Delta、提前编译或跨章投机还必须计算完整 critical path、独立 repeat、cross-book、fallback/丢弃成本与 Reader↔Authority 分裂，不能用一次胜出或子节点加速 productionize；
 - Atomic 审计按 `references/atomic-authority-ir-protocol.md`：严格拆开 `Atomic Authority Contract` 与 `Primary Preservation Map`。Hard Contract只接收可信Frozen Authority artifacts与Entity Registry；Curator/Primary不得创建Fact、Conflict或Identity。Evidence binding必须由Runtime签发并绑定Primary hash，默认用Edit Locality锁住窗口外正文；unsupported章节绕过Atomic走当前Full；free-text Sidecar、中文关键词parser与LLM safety classifier均不得productionize。特别分开审 `typed known-fact coverage / semantic Contract repeat / human Mission Story+Authority / Final Story+Authority / full fallback-adjusted wall`：fixture recall不能替代human projection或最终Authority；**Contract closure也不能替代Reviser-necessity判断**。若想让Primary直接跳过、降档或实质削弱一个已证明value-bearing的Full Reviser，必须先在derivation pair上证明Primary→Reviser的Story/Authority gap、Hard problems、edit blocks/exact no-op确实收敛，再**冻结Treatment后用全新小说held-out**复验；单个Gate/Oracle PASS、Primary单独更好、Final单独更好或similarity更高都不够，不能用另一个LLM classifier补这个缺口。尤其分开审attention placement与Authority closure：短Final-Facts投影可能提高Story却增加Hard错误；速度screen若medium/high Authority仍有稳定差距，不得为追速度进入Production；
 - 先人工/结构化直接读输出，再考虑 Judge；
+- 代码测试通过只证明被测实现；局部手工编辑有效、用户接受一个短段、planning 结构接近经典，都不等于自动 Batch 正文质量通过。宣称生成改善必须回到实际生成链的连续正文，并把跨书、长篇等未验证范围保留为 OPEN；
 - 不用一组自动词频代替文学判断；
 - 不 cherry-pick 最好 candidate 证明系统成功；
 - 对可能改变人物取舍的结构机制，做 **Character Authority Invariance**：同一 A/B 至少冻结 2—3 个动机排序明显不同的 Human；Treatment 必须产生目标结构增益，同时不能把不同人物推成同一种成长最优、关系最优或道德最优路线；
@@ -485,31 +495,18 @@ GBrain 是 craft inspiration，不是 Canon、人格菜单或剧情素材库。
 
 # Skill Update Policy
 
-本 Skill 保存的是**审计方法**，不是 production snapshot。不要因为普通代码、Prompt、模型路由或单次实验变化就同步改 Skill。
+按用户要求，**每次系统改动后在同一任务同步相关 docs、审计技能和 `DEEP_CONTEXT_HANDOFF_FINAL.md`**。docs 维护当前行为；本 Skill 更新相关审计入口、方法与判断边界；交接文件保存决策原因、真实验证、用户反馈与未解决项。不以“只是 Prompt / 局部实现”跳过同步，也不为同步复制整个 production snapshot 或把单样本判断升级成 Stable Principle。
 
-**必须更新 Skill** 的情况：
+默认模型、价格、GBrain 数量和实现位置继续由 live discovery 获取。若修改没有改变审计方法，只同步相关发现入口或验收边界；已准确的原则保持不动。
 
-- 跨样本证据改变了 Stable Principle；
-- root-cause layering、source hierarchy、authority 判断或审计 operating mode 发生实质变化；
-- 实验方法、因果 A/B 标准、GBrain governance / retrieval 审计方法或 repo safety 发生实质变化；
-- 反复出现并经受控实验确认了新的系统性模型偏置，需要成为长期审计能力；
-- 当前 Skill 会系统性误判 production，且问题不能靠 live discovery 自动解决。
+每次更新 Skill：
 
-**通常不更新 Skill** 的情况：
-
-- production 新增/删除一个阶段，但审计方法没变；
-- 默认模型、价格、GBrain 条数或文档路径变化，可由 live discovery 获取；
-- 单本书、单次实验、单个 candidate 的结论；
-- 仅修 Prompt 文案、字段名、UI 或局部实现 bug；
-- Current Default 更新但 Stable Principle 不变。
-
-每次真正更新 Skill：
-
-1. 递增版本号；
-2. `skill_package validate`；
-3. install + activate 新版本；
-4. 用一个最近已经有已知结论的系统问题做 bounded read-only smoke audit；
-5. smoke PASS 后再提交/推送；失败则修 Skill，不把失败掩盖成 production 问题。
+1. 比较 repo 与当前激活版本，保留他人的较新有效方法，使用未占用的新版本号；
+2. 只从受控文件构造干净包，隔离无关 untracked 内容；
+3. 运行 Skill 可移植性 lint 与 package validate；
+4. install + activate，新版本正文与引用回读确认；
+5. 用一个最近已有已知结论的系统问题做 bounded read-only smoke audit；
+6. smoke PASS 后再提交/推送；失败则修 Skill，不把失败掩盖成 production 问题。
 
 # Repo Safety
 

@@ -1,12 +1,14 @@
 # TheGreatNovel 项目总执行规则
 
-> 本文件是 TGN 项目执行规则的**唯一长期权威**。ChatGPT Project Prompt 只保留本文件路径与“每次 TGN 任务先读取并遵守”的入口指令，不再复制整份规则。
+> 每次 TGN 系统协作任务，先完整读取并遵守 `DEEP_CONTEXT_HANDOFF_FINAL.md`，再读取本文件。`AGENTS.md` 保留这一入口；交接文件迁移决策模型，本文件维护当前执行规则，两者都不能用摘要替代。
 
 ## 1. 权威与维护
 
 - 本轮用户明确要求 > 当前 production code / tests / runtime > 本文件 > current docs > 历史实验。
+- 在作出系统决定或修改前完整读完 `DEEP_CONTEXT_HANDOFF_FINAL.md`；可分段，不漏段，不以关键词检索或旧摘要冒充全文阅读。生产生成节点继续只消费本阶段批准输入，不把交接历史送进Writer。
 - 本文件只保存**当前规则**，过时内容直接替换，不累积历史说明。
-- 当架构、阶段职责、默认模型/GBrain 路由、审批流、Git/ACP/GBrain 工具边界、审计协议或 docs 权威发生稳定变化时，必须在同一任务更新本文件。
+- 系统改动后同一任务同步相关 docs、审计技能和交接文件：docs 记录当前行为，技能更新相关审计入口/方法/判断边界，交接文件保存原因、验证与未解决项。保持各自职责，不复制整套系统快照到技能。
+- 当架构、阶段职责、默认模型/GBrain 路由、审批流、Git/ACP/GBrain 工具边界、审计协议或 docs 权威发生稳定变化时，同步更新本文件。
 - 单次实验、单个 candidate、临时模型比较或不改变行为的内部重构，不更新本文件。
 
 ## 2. Repo / Git / ACP
@@ -40,9 +42,7 @@
 
 ### 什么时候更新 Steward
 
-只在**审计方法本身**发生稳定变化时更新，例如：Stable Principle、root-cause layering、source hierarchy、authority 判断、因果 A/B 方法、GBrain governance/retrieval 审计方法、repo safety，或跨样本确认的新系统性模型偏置。
-
-不要因为 production 新增/删除阶段、模型/价格/GBrain 条数变化、单次实验、字段名/UI/局部 Prompt 修改而更新 Steward；这些由 live discovery 获取。
+按作者要求，每次系统改动都同步审计技能的相关入口、方法与判断边界。技能保存审计方法，模型/价格/GBrain条数等事实继续由 live discovery 获取；不为同步把单样本结论或完整production快照写成稳定原则。
 
 更新流程：递增版本 → `skill-authoring` lint → package validate → install/activate → bounded read-only smoke audit → PASS 后提交推送。
 
@@ -84,7 +84,7 @@
 | Story Program | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration |
 | Story Refresh | **GPT-5.6 Sol** | high | ON：最多 3 条 focused inspiration；Effective World × Current Character；如有 AUTHOR FIXED HIDDEN 可 planning-only 编译 Reveal Contract |
 | Outline | GPT-5.6 Luna | high | ON：通常 4 条、最多 5 条 |
-| Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon；不直接注入整段 Long Block；不调用 LLM 重规划 |
+| Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用 Chapter Context compiler 叠加 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon；已批准的当前阶段背景仍是设计要求，现有运输缺口尚未闭合，直接逐章注入整块的实验未采用；不调用 LLM 重规划 |
 | Batch Primary Writer | **GPT-5.6 Terra** | high | raw GBrain OFF；Frozen Power/Human + safe World/Reader Release + Approved Future-10；一次写完整 Batch |
 | Batch Authority Delta | **GPT-5.6 Sol** | **high** | raw GBrain OFF；完整 Batch + safe Authority；只输出 exact local patch / upstream conflicts，不输出全文 |
 | State Extraction | GPT-5.6 Luna | low | OFF；整批 prose final 后逐章落盘 |

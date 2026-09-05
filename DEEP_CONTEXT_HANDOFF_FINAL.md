@@ -1,6 +1,6 @@
 # DEEP CONTEXT HANDOFF
 
-日期：2026-09-04
+日期：2026-09-05
 项目：TheGreatNovel / TGN Story MVP
 主要工作目录：`C:\dev\tgn-astra`
 开发分支：`dev_astra`
@@ -17,11 +17,12 @@
 
 1. 这个项目真正想达到的读者体验与产品目标；
 2. 经过长期纠偏形成的判断模型：为什么某种方案对，为什么一个表面相似的方案仍然错；
-3. 截至 2026-08-30 的已验证结论、当前实现、并行工作状态与下一步实验。
+3. 按各节日期记录的已验证结论、当前实现、并行工作状态与下一步实验；后续明确修正优先于较早阶段结论。
 
 使用方式：
 
-- 开始任何 TGN 工作前，仍应先读根目录 `PROJECT_RULES.md`，再检查 live code、tests、`git status` 与用户本轮最新指令；它们的事实优先级高于本文。
+- 每次 TGN 系统协作任务，在作出决定或修改前先完整读取并遵守本文，再读取 `PROJECT_RULES.md`，检查用户最新指令、live code、tests 与 `git status`。可分段，不漏段，不以关键词、摘要或他人的结论代替全文。事实优先级仍按用户最新要求与当前runtime核对，不机械恢复旧实现。
+- 系统改动后，同一任务同步相关 docs、审计技能与本文，分别记录当前行为、审计方法、决策依据和验证范围。生产链各生成节点继续遵守分权输入，本文的完整历史不能注入Writer。
 - 本文优先传递**决策模型**。当技术实现变化时，不要机械维护本文所列的旧函数名、模型名或目录；应保留更高层目标和边界。
 - 本文将 Stable Principle、Validated Conclusion、Current Implementation、Open Question 分开。不要把当前实现伪装成永恒原则，也不要把一次实验假说写成 production 事实。
 
@@ -30,6 +31,20 @@
 本文基于当前对话可访问的长对话内容、项目级历史摘要、当前仓库文件、实际实验产物与当前工作树。部分更早消息在界面中以“Skipped”形式出现，无法逐字恢复；对这些历史只采用后来明确复述、已进入代码/文档或被实验重新验证的结论。本文不会伪造被截断消息的原文，也不会把无法确认的中间判断当作最终共识。
 
 ---
+
+### 0.0E 2026-09-05 接手纠偏与当前验证范围
+
+本轮协作最初只检索和抽读本文便作出改动，作者明确指出这不符合接手要求。随后根代理完整读取修改前第1—2430行，复核 `b19f7ea6` 与 `444f1fbd`，并把全文必读写入 `AGENTS.md`、`PROJECT_RULES.md` 与审计技能。该疏漏不能用后来补读掩盖。
+
+- **当前阶段背景运输仍是未闭合需求。** 原Batch调用没有把 `current_long_block` 传入，实际 `ACTIVE LONG BLOCK` 恒为NONE；这不能反推原设计不需要阶段背景。两书各五章A/B中，直接按章塞完整阶段块在修仙有局部人物竞争增益，海洋却没有稳定读感增益，故该具体注入方案未采用。它不否定14.15的Full Deterministic Packet及0.0C的最小私人压力、机会价值和场景因果。已删除恒空标题，但有用背景如何保真进入当前章仍为OPEN；不能靠删除文档中的设计要求宣布修好。
+- **已验证的确定性修复限于其证明范围。** `chapter_context` 选择有效编号块后不再附带整窗远期结局前言；GBrain的book-dna/arcs在原800字预算内优先已有阶段Guidance，避免长摘要挤掉指导。没有更改GBrain源页、增加生成节点或证明文学质量因此全面提高。
+- **读者反馈是判断依据。** 作者指出普通信息先否后揭、整齐排比与碎问答影响读感，多人对白难辨说话人；要求自行比较前先读经典原文，重要取舍同时提供前后实文。回复时纳入其读感，无回复时继续已授权工作但不视为认可。本轮亲读范围为《遮天》3/18/38章和《斗罗大陆》本地分章7，不能宣称通读经典。
+- **表达方向与表达效果分开。** 新Primary条目替换旧一章一次修辞配额，要求完整意思、归属与自然段；两书各五章C仍有原问题，539项代码测试通过不等于表达验收通过。换Sol的同输入短段也未充分解决。定向编辑E让海洋片段获得作者“其实还可以”的反馈，试枪E被指出急促，随后F及助手两处局部编辑仅为展示稿；不能将其当成一键Batch或常驻润色阶段的效果证据。
+- **保留此前已验证的阅读能力。** 对特定样本训练/说明节奏的批评，必须区分静态重复、真实成长因果、下一Milestone期待与高价值Orientation。不要从“说明多”推出删成长、删力量尺、削弱副轴或压薄世界。默认Batch、Terra Primary、Sol Delta、分权Authority与渐进世界冻结均未因本轮片段实验改变。
+
+完整本地证据分别在 `books/real-exp-reader-experience-ab-20260905-v1/REPORT.md` 与 `books/real-exp-dialogue-prose-reader-feedback-20260905-v1/REPORT.md`。前者20章中有一臂原始输出分隔格式失败，仅修标记后继续；后者10章及短段展示均未写正式Canon。前两次提交只发布代码/规则/docs，实验原文与私有参考保留本地。本轮同时补齐审计技能与本文同步；审计技能更新必须基于实际已激活版本，保留较新Delegated Operator Freeze等有效方法，不能从repo旧版本覆盖回去。
+
+同步结果：`tgn-system-steward 0.3.57` 已从实际激活的0.3.56升级并安装启用，保留Delegated Operator Freeze、hands-off与持久Job Host审计方法。干净包仅含6个受控文件，lint为portable/0 errors/0 warnings，package validate无issues。安装后Luna-high只读方法判例回归四项均正确识别：未全文阅读、错误取消运输目标、误删动态成长说明、手工片段冒充自动Batch证明。该回归验证判断方法，不宣称技术上强制了每次阅读动作；本轮未生成新小说或改生产算法。工具回执在 `temps/steward-0357-sync-20260905/VALIDATION.json`，判例记录在 `books/real-exp-handoff-entry-sync-20260905-v1/`。
 
 ### 0.0 2026-09-03 最新冻结：Public Milestone Ladder / Future Power Promise
 
@@ -1535,7 +1550,7 @@ Authority Reviser 不是第二 Writer。它只读取冻结 Chapter Mission、Cur
 | Human Seed | GPT-5.6 Luna | high | Appetite/Behavior/Relationship 各最多 1，总计最多 3 |
 | Story Program | GPT-5.6 Sol | high | 最多 3 focused inspiration |
 | Outline | GPT-5.6 Luna | high | 通常 4，最多 5 |
-| Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用现有 Chapter Context compiler 前置 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon 与 active Long Block |
+| Batch Packet | deterministic | — | OFF；直接抽取 Approved Future-10 当前4—6章（默认5），并复用 Chapter Context compiler 前置 Frozen Power/Human、safe World、Reader Release、Protected RSE、Book Contract、BOOK Prose Profile、starting Canon；active阶段背景仍为设计要求，当前运输缺口尚未闭合，不能把一种整块注入方案失败写成取消该需求 |
 | Batch Primary Writer | GPT-5.6 Terra | high | raw GBrain OFF；Frozen Power/Human + safe World/Reader Release + Approved Future-10 |
 | Batch Authority Delta | GPT-5.6 Sol | high | raw GBrain OFF；完整Batch + safe Authority；exact local patch / upstream conflicts |
 | State | GPT-5.6 Luna | low | OFF；整批 prose final 后逐章落盘 |
@@ -2106,9 +2121,9 @@ Steward 同步升级到干净版 **`tgn-system-steward 0.3.42`**，新增两个�
 
 每次都应问：下一本全新书是否仍会复现？若会，修最早层；若只在当前 scene，才修正文。
 
-### 15.4 证据要来自实际输出和代码
+### 15.4 证据要来自实际输出、原文参照和用户读感
 
-不要只说 Prompt 看起来合理。用户重视：
+自行比较读感前，先亲读经典中相应场景的原文并记录书章定位，再读生成稿；不能用GBrain卡冒充原文阅读。重要判断给作者有代表性的前后原文与完整样本入口，反馈优先于模型排名；无回复时继续已授权工作，不将沉默记成认可。不要只说 Prompt 看起来合理。用户重视：
 
 - 实际 novel output；
 - A/B；
@@ -2137,7 +2152,7 @@ Steward 同步升级到干净版 **`tgn-system-steward 0.3.42`**，新增两个�
 
 ### 15.8 Docs 要言简意赅
 
-稳定变化同任务更新 current docs；优先删旧、替换、合并，不不断新建文档。历史证据放实验目录。
+系统改动后同任务同步相关docs、审计技能和本文。docs写当前有效行为，技能写相关审计入口/方法/判断边界，交接写原因与验证范围；优先替换/合并，不机械复制快照。历史长证据放实验目录。
 
 ### 15.9 Git 与并行工作
 
@@ -2212,7 +2227,7 @@ Steward 同步升级到干净版 **`tgn-system-steward 0.3.42`**，新增两个�
 50. 看到多个 fresh-context Agent 各自产出新奇组件，就把“独立性”当作整体创意质量；四个高电压好点子可能只会争夺第一章注意力。
 51. 把非 Canon Premise Card 直接升级成第四 Authority、自动 selector 或所有 lane 的共同输入；候选应先经独立 Premise Compiler 只审可满足性，再由作者选择，并按现有 Authority 确定性拆为 `World + protagonist-blind Interface`、`Ontology + Initial Scale Position + exact Power trigger/target/action/carrier/boundary`、`Ontology + T0 Origin + Initial Scale Position` 与后置 Story Promise。这些字段是 binding contract，不是柔性 direction。
 52. 用换名词、换能源、换职业证明创新，却没有改变主角反复会做的基本动词；大胆度优先看身体、战斗、移动、生存、占有、变形和社会关系动作是否真实不同。
-53. Primary 把“事实 / 动作已经成立 → 另起漂亮短句裁断或否定翻转 → 再升华意义”反复写成整章稳定节拍。单独一次可以是好句；问题是 LLM 把它复现成章法。当前 Primary Prompt 已加窄硬禁令：本章自然出现一处明显的这种收束后，后文不再主动制造第二处同构；按语义结构判断，不做禁词扫描，也不新增 Reviewer / style score。
+53. Primary 把普通观察写成先否后揭、整齐排比或机械单句段，或把多人交谈切碎而丢失说话归属。2026-09-05作者反馈已取代旧“一章一次”配额；当前表达方向是直接交代已知事实、围绕完整意思组织轮次与叙述，真实误认/反驳仍按场景处理。方向已明确，自动生成效果仍未稳定通过；不加禁词扫描、Reviewer或style score，也不能把所有条件赶在一轮说完。
 54. 把 Forge 自己写的 `Authority-Compilation Trace` 当作客观证明；单个 Agent 会把“棚屋开始缩小”误写成“棚屋已完整穿门”，也会为不存在的出口、共同载体或等级跃迁补出合理感。必须由独立 Compiler 重查具体 trigger、目标、载体与尺度。
 55. 把 Premise Compiler 做成评分器、自动修稿器或保守 selector；它只判断约束能否同时成立，不能因为设定激进、主角占便宜大或风险高就否决，也不能替作者选择 S1 / S2 / S3。
 56. Compiler FAIL 后自动进入 LLM repair loop；一次预注册 V5 定点修复即使 Prompt 明令保护，仍漏掉整个 `主角反复会做的新动作` 字段并扩大成机制重构。正式边界应先把精确冲突交给作者；任何 repair 研究都必须代码锁定标题、货架句、Ontology、Changed Verbs 与不可磨平项，并在独立 Compiler 前 fail closed。
