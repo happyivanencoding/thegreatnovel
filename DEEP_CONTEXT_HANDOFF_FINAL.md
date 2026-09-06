@@ -6,6 +6,15 @@
 开发分支：`principal_dev_new_sys`
 
 ---
+### 0.0G 2026-09-06：GPT-6 Astra Authority follow-up（medium / Finder→Terra）
+
+在上一轮 `gpt-6-astra[high]` 直接替代 Sol 的 screen 中，Story Program / Story Refresh 已 4/4 输给 Sol，而 Batch Authority Delta 呈现“Authority 3/3 更强、Reader 1/3”这一高 recall / prose preservation 分裂。本轮只围绕 Authority 做两个 matched follow-up，复用完全相同的 `fast / shadow / pace` immutable Primary + Frozen Authority，不重跑 Story / Outline / Primary。
+
+1. **Astra-medium direct：FAIL。** 三本 wall 89.7 / 112.0 / 104.0s，aggregate 305.8s，比 Astra-high 599.9s 快约49%，比 Sol-high 524.9s 快约41.7%；patch 10 / 19 / 11，接近 high 的12 / 20 / 12。但 Authority 从未超过 high，Reader 三本全部 `Sol > Astra-high > Astra-medium`；fast 还出现 `NEW` 把 Prompt 尾部 `只输出一个 JSON object...` 整段写进最终小说的真实 contract spill。结论：不能为速度把 Astra Authority 从 high 降到 medium。
+
+2. **Astra-high Finder → Terra-high Patch Realizer：FAIL。** Finder 只列硬 finding、禁止写 patch；Terra 只把既有 finding 实现成 exact-local patch、禁止再找错。三本 sequential wall 309.3 / 233.0 / 214.4s，aggregate 756.6s，比单次 Astra-high / Sol-high 都慢，并重复整份 Authority/Primary token。Finder 在 fast 报1个 upstream、pace 报2个；独立 conflict audit 仅确认 pace 的 `中期9–18章 vs Future-10第4–5章白角部排期` 为真实 upstream，fast 的远程合并问题可通过既有真实可移动第二身体局部会合解决，pace 的包裹事件链已有 Canon 足够，因此 **3个 conflict 仅1个 legitimate**。唯一合法两阶段 FINAL 的 shadow：Authority `Astra-high > medium > Finder→Terra > Sol`，Reader `Sol > Astra-high > medium > Finder→Terra`。拆成“强审计脑 + prose 手”没有自动改善自然度，反而增加 patch seam / 删除断口与 false upstream stop。
+
+因此 production 路由**不变**：Story Program / Refresh 继续 Sol-high；Batch Authority Delta 继续 Sol-high；Astra-high 只保留为实验性的 high-recall candidate，不新增 Finder→Realizer production stage。完整产物：`books/real-exp-gpt6-authority-variants-20260906-v1/REPORT.md`。该结论只否定这两个具体变体，不宣称所有 detector/realizer 架构永远无效。
 
 ## 0. Handoff Purpose
 
@@ -2523,4 +2532,5 @@ Production 新增 `story-mvp-background`，仅作为 **Persistent Job Host**。W
 - Approved Story Program 知道完整隐藏旧史，不等于 Reader / Writer 现在应该知道；未排程 reveal 必须继续留在 backstage Authority。
 
 只要下一位 Agent能稳定作出这些区分，本文迁移的就不只是 conclusions，而是当前对话长期形成的 decision model。
+
 

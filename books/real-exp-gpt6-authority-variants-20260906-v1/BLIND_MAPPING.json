@@ -1,0 +1,18 @@
+{
+  "fast": {
+    "sol_high": "B",
+    "astra_high": "A",
+    "astra_medium": "C"
+  },
+  "shadow": {
+    "sol_high": "B",
+    "astra_high": "C",
+    "astra_medium": "A",
+    "finder_terra": "D"
+  },
+  "pace": {
+    "sol_high": "C",
+    "astra_high": "A",
+    "astra_medium": "B"
+  }
+}

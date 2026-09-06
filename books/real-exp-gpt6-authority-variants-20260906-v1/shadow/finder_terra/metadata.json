@@ -1,0 +1,15 @@
+{
+  "label": "shadow-finder-terra",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a0788f-09f2-7652-a671-a74551a2f0da",
+  "wall_seconds": 68.784,
+  "usage": {
+    "totalTokens": 73292,
+    "inputTokens": 42418,
+    "cachedReadTokens": 27392,
+    "outputTokens": 3482,
+    "thoughtTokens": 2703
+  },
+  "output_chars": 1281
+}

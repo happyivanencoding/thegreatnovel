@@ -1,0 +1,22 @@
+{
+  "question": [
+    "Astra medium direct Authority Delta",
+    "Astra high Finder -> Terra high Patch Realizer"
+  ],
+  "baseline": [
+    "Sol high direct",
+    "Astra high direct from prior matched screen"
+  ],
+  "same_immutable_primary": true,
+  "same_frozen_authority": true,
+  "raw_gbrain": false,
+  "detects": {
+    "medium": "whether one-lower reasoning preserves Astra hard-issue recall while reducing patch/explanation texture and wall/tokens",
+    "finder_terra": "whether separating semantic detection from prose realization preserves Astra recall while Terra makes smaller/more natural exact-local patches"
+  },
+  "on_failure": {
+    "medium": "do not downgrade effort",
+    "finder_terra": "do not add two-stage production topology; keep current Sol-high Authority Delta"
+  },
+  "production_defaults_changed": false
+}

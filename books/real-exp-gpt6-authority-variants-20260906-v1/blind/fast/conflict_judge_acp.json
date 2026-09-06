@@ -1,0 +1,43 @@
+{
+  "ok": true,
+  "label": "fast-conflict-judge",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a07895-5e1e-7851-b6c9-15f9344d4e0d",
+  "wall_seconds": 13.927,
+  "text": "VERDICT: FALSE_POSITIVE  \nEVIDENCE: 现有 Authority 明确分身是“真实、能移动”的第二身体；第2章仅要求合一后的经验回收，并未要求远程回收。第1章中脚夫已撤至高地后，本体可走到矿车旁与分身会合。  \nWHY: 可用 exact-local patch 把“远程抹掉、撞回体内”改为本体赶到矿车旁、分身松开木辕后两具身体实际合一。该改动不新增能力、空间机制或因果，只落实已批准的真实可移动身体，因此不构成 upstream conflict。",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 71622,
+      "inputTokens": 42773,
+      "cachedReadTokens": 28416,
+      "outputTokens": 433,
+      "thoughtTokens": 278
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 71622,
+          "inputTokens": 42773,
+          "cachedInputTokens": 28416,
+          "outputTokens": 433,
+          "reasoningOutputTokens": 278
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 71622,
+              "inputTokens": 42773,
+              "cachedInputTokens": 28416,
+              "outputTokens": 433,
+              "reasoningOutputTokens": 278
+            }
+          }
+        ]
+      }
+    }
+  },
+  "agent_version": "1.10.0"
+}

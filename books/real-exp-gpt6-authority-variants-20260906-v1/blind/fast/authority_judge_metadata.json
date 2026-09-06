@@ -1,0 +1,14 @@
+{
+  "label": "fast-authority-judge",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a07891-facd-7851-8d8e-9f311c5c07f8",
+  "wall_seconds": 415.226,
+  "usage": {
+    "totalTokens": 145736,
+    "inputTokens": 2316,
+    "cachedReadTokens": 137984,
+    "outputTokens": 5436,
+    "thoughtTokens": 4142
+  }
+}

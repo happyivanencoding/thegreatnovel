@@ -1,0 +1,15 @@
+{
+  "label": "pace-finder",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "session_id": "01a0788c-7f20-71c3-abd9-294f575ecebc",
+  "wall_seconds": 166.618,
+  "usage": {
+    "totalTokens": 73760,
+    "inputTokens": 43150,
+    "cachedReadTokens": 25344,
+    "outputTokens": 5266,
+    "thoughtTokens": 3624
+  },
+  "output_chars": 2985
+}

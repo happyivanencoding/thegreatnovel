@@ -1,0 +1,15 @@
+{
+  "label": "fast-finder",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "session_id": "01a07887-00b4-70a2-bf62-74bcbe8f3a6f",
+  "wall_seconds": 255.642,
+  "usage": {
+    "totalTokens": 73056,
+    "inputTokens": 66779,
+    "cachedReadTokens": 0,
+    "outputTokens": 6277,
+    "thoughtTokens": 4603
+  },
+  "output_chars": 3076
+}

@@ -1,0 +1,43 @@
+{
+  "ok": true,
+  "label": "fast-authority-judge",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a07891-facd-7851-8d8e-9f311c5c07f8",
+  "wall_seconds": 415.226,
+  "text": "结论：按严格 Frozen Authority，A、B、C 均为 **FAIL**，均不应进入 State 或采用。最干净排序为：**A ＞ C ＞ B**。\n\n| 版本 | 第1章 | 第2章 | 第3章 | 第4章 | 第5章 | 判定 |\n|---|---|---|---|---|---|---|\n| B | FAIL | FAIL | 部分通过 | FAIL | FAIL | FAIL |\n| A | 部分通过 | FAIL | FAIL | FAIL | FAIL | FAIL |\n| C | FAIL | FAIL | FAIL | FAIL | FAIL | FAIL |\n\n**COMMON｜三版共有的硬越权**\n\n- 新增具名参与者“许衡”“阿成”。Frozen Authority 只授权成炉护卫、脚夫等角色位置，未冻结这两人的身份；“许衡”还承担了事故判断责任，不能视作普通背景纹理。\n- 第3章把侧路写成“原本只在商号私用图上留过”的旧路，新增了侧路的过去来源、商号既有知识与潜在权属。Authority 只授权顾停舟根据当下证据形成侧路判断并保留坐标。\n- 物资与金钱被擅自定量：前车“十二篓加三篓”、首笔报酬“三枚银铢”、阮青蜃“五十银铢”报价、实测预付款“十银铢”。Frozen Authority 只冻结了首笔个人钱、预付款和兼容潮髓的取得及归属，没有授权这些数额或载重数值。\n\n这三项分别触及参与者身份、过去事实／知识边界、金额奖励与物资事实，因此不是文句实现差异。\n\n**B｜FAIL**\n\n硬发现：\n\n- 第1章的货签仍是“空白货签”，只留下口头份额；Authority 要求顾停舟先把保货份额**写清**，这是第1章事件结果的一部分。\n- 分身腰间出现“都一模一样”的账簿，构成未授权的物件复制。借身只授权第二真实身体及其单一超凡本事，不授权复制可用账簿或其他持有物。\n- 第2章改成“许护卫和我都说过要停队”，直接改写了事故责任；Frozen Plan 明确是成炉护卫为赶时间坚持原计划。\n- 第5章说“低潮只剩三日、明早出发”，与第1章“低潮期只剩半日”、其后紧接的次日校路与次日签约冲突；世界的地潮周期为十二日，Authority 未授权中间跳过一个周期。\n\nB 的侧路处理反而正确：它明确将坐标留在顾停舟手中，符合“公开事实、保留侧路坐标”的边界。\n\nFalse positives：行潮籍、兼容潮髓和正式承揽人的取得顺序本身符合第4—5章 Plan；问题是未冻结数额和上述事件／能力越界。\n\n**A｜FAIL**\n\n硬发现：\n\n- 第3章顾停舟说“坐标的副本也可以留档”，已经把本应保留的侧路坐标交入官方系统。随后“坐标暂不公开”不能恢复该越界：Authority 要的是不无偿交出坐标、由他保留其判断与资本位置。[OUTLINE.md](C:/dev/tgn-story-mvp/books/real-exp-fast-world-20ch-20260828-v1/OUTLINE.md:194)\n\n其余核心顺序是对的：第1章的书面份额、救人／定住矿车；第2章的个人钱与原始记录；第4章的双重条件；第5章的签约、行潮籍、预付款和潮髓归属，都与批准 Plan 对齐。\n\nFalse positives：分身合并后的经验回收、第1章潮兽从矿脉方向逃离、潮髓不会立刻使他突破，都没有泄露隐藏旧史或越过能力边界。\n\n**C｜FAIL**\n\n硬发现：\n\n- 第1章同 B，货签保持空白，未实现“事前写清份额”的 Plan Result。\n- 第3章同 A，向校路台留存侧路坐标副本，破坏坐标保留边界。\n- 第5章正文后混入“只输出一个 JSON object”的外部指令。这不新增世界事实，但该文件已不是干净的五章 FINAL，不能作为可采用正文。\n\nFalse positives：C 未复制账簿；“下一次低潮前出发”的表述本身没有像 B 那样制造时间矛盾。\n\n力量位置、地点推进、隐藏谜底边界总体没有额外问题：顾停舟至第5章仍在入潮阶段；回潮楔、成炉、乌合、倒悬峡和实测尾款都未被提前写成既成事实。公共 Reader Release 也基本按第1、4章的批准时点出现。[CHARACTER.md](C:/dev/tgn-story-mvp/books/real-exp-fast-world-20ch-20260828-v1/CHARACTER.md:15) [OUTLINE.md](C:/dev/tgn-story-mvp/books/real-exp-fast-world-20ch-20260828-v1/OUTLINE.md:170)\n\n",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 145736,
+      "inputTokens": 2316,
+      "cachedReadTokens": 137984,
+      "outputTokens": 5436,
+      "thoughtTokens": 4142
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 145736,
+          "inputTokens": 2316,
+          "cachedInputTokens": 137984,
+          "outputTokens": 5436,
+          "reasoningOutputTokens": 4142
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 145736,
+              "inputTokens": 2316,
+              "cachedInputTokens": 137984,
+              "outputTokens": 5436,
+              "reasoningOutputTokens": 4142
+            }
+          }
+        ]
+      }
+    }
+  },
+  "agent_version": "1.10.0"
+}

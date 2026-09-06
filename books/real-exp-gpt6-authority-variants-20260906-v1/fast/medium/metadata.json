@@ -1,0 +1,15 @@
+{
+  "label": "fast-medium",
+  "model": "gpt-6-astra",
+  "effort": "medium",
+  "session_id": "01a07887-00b4-7641-9233-7c7131540351",
+  "wall_seconds": 89.715,
+  "usage": {
+    "totalTokens": 68981,
+    "inputTokens": 66777,
+    "cachedReadTokens": 0,
+    "outputTokens": 2204,
+    "thoughtTokens": 929
+  },
+  "output_chars": 2036
+}

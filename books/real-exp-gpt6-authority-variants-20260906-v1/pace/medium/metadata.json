@@ -1,0 +1,15 @@
+{
+  "label": "pace-medium",
+  "model": "gpt-6-astra",
+  "effort": "medium",
+  "session_id": "01a0788a-e71e-7d91-9f5c-29656378c90c",
+  "wall_seconds": 104.02,
+  "usage": {
+    "totalTokens": 72627,
+    "inputTokens": 69388,
+    "cachedReadTokens": 0,
+    "outputTokens": 3239,
+    "thoughtTokens": 1552
+  },
+  "output_chars": 2556
+}

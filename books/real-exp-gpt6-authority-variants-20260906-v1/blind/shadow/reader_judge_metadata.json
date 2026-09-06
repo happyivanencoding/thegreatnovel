@@ -1,0 +1,14 @@
+{
+  "label": "shadow-reader-judge",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a07898-4fbf-73d0-8c3c-4bef757a3564",
+  "wall_seconds": 220.521,
+  "usage": {
+    "totalTokens": 130109,
+    "inputTokens": 1723,
+    "cachedReadTokens": 127744,
+    "outputTokens": 642,
+    "thoughtTokens": 0
+  }
+}

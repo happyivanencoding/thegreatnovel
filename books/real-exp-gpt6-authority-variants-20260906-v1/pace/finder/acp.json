@@ -1,0 +1,43 @@
+{
+  "ok": true,
+  "label": "pace-finder",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "session_id": "01a0788c-7f20-71c3-abd9-294f575ecebc",
+  "wall_seconds": 166.618,
+  "text": "{\n  \"findings\": [\n    {\n      \"chapter\": 2,\n      \"domain\": \"Plan Result / 敌方行动\",\n      \"primary_anchor\": \"临走前，他回头看了闻野舟一眼。\",\n      \"issue\": \"正文完成了猎队首领记住异常，却没有落实他开始查找闻野舟来历的行动；第3—5章也没有补足。记住、注视不能替代已经启动的追查。\",\n      \"authority_basis\": \"第2章 BATCH PLAN 的结果明确要求：猎队首领记住他的异常，开始寻找他的来历。Story Program 阶段1也要求首领开始寻找这个让异兽异常失手的人。\",\n      \"repair_goal\": \"恢复猎队首领已经开始追查闻野舟来历的事实；不提前增加调查成果或新的身份信息。\"\n    },\n    {\n      \"chapter\": 3,\n      \"domain\": \"Frozen Human Core / 未批准关系过去\",\n      \"primary_anchor\": \"回来没了位置，喝了两天闷酒。第三天见着我，还说是我带你乱跑。\",\n      \"issue\": \"新增了失岗后连续两日饮酒、第三日向顾晚禾归责的具体关系历史。这改变了既往选择的责任承担与双方冲突依据，批准材料没有这些事件。\",\n      \"authority_basis\": \"Frozen Human Core 批准的是十九岁放弃稳定管事职位、随顾晚禾同行一个月、回来后失去原位置；没有批准饮酒及责怪顾晚禾的后续事件。\",\n      \"repair_goal\": \"删除未经批准的饮酒和归责旧事，保持已批准的弃职、同行时长与失岗事实。\"\n    },\n    {\n      \"chapter\": 4,\n      \"domain\": \"World Authority / 未批准群体历史\",\n      \"primary_anchor\": \"白角部这几年抢过水点、杀过护商的猎手，还袭过两处小镇。\",\n      \"issue\": \"通过陶遂的陈述新增了白角部抢夺水点、杀害护商猎手及袭击两处小镇的具体历史指控。上游只批准边军把本次迁徙误判为进攻，以及部族与人类存在一般性长期冲突，没有批准这些具体旧案。\",\n      \"authority_basis\": \"Story Program 阶段2与第4章 BATCH PLAN 批准陶遂将白角部迁徙视为进攻；SAFE WORLD 没有提供上述事件、时间范围或袭镇数量。\",\n      \"repair_goal\": \"删除未经批准的具体历史指控，保持陶遂对本次迁徙的威胁判断与封路行为。\"\n    },\n    {\n      \"chapter\": 4,\n      \"domain\": \"Canon / 搜查行动跨章连续性\",\n      \"primary_anchor\": \"所有人守车。今晚谁都别离开自己的位置。\",\n      \"issue\": \"第4章没有发生 Canon 记录的彻查所有车辆命令；第5章只有翻车暴露人影后的局部控制，也没有落实章末正在逐车搜查的状态。\",\n      \"authority_basis\": \"RECENT SUMMARIES 第4章明确记录陶遂下令彻查商队所有车辆；第5章 ACTIVE SCENE STATE 明确规定边军正在逐车搜查。\",\n      \"repair_goal\": \"恢复第4章全面搜车命令及第5章仍在逐车搜查的行动连续性，不以偶然翻车后的局部处置替代。\"\n    },\n    {\n      \"chapter\": 5,\n      \"domain\": \"Canon / 救援结果与借力兑现\",\n      \"primary_anchor\": \"顾晚禾扑过去拽缰，没能把它拉住。\",\n      \"issue\": \"伤驮兽失控后，正文没有闻野舟将其拉回车阵内侧的行动或结果。后续写的是顾晚禾把闻野舟拖入车阵，救援对象与责任主体不能替代 Canon 指定的闻野舟救回伤驮兽；Canon 记录的借力救援也因此漏失。\",\n      \"authority_basis\": \"PERSISTENT CANON 明确规定伤驮兽已被闻野舟拉回车阵内侧；ACTIVE SCENE STATE、Active Relationships 和第5章 RECENT SUMMARIES 均确认这一结果，摘要还明确记录借力救回伤驮兽。\",\n      \"repair_goal\": \"恢复闻野舟借力救回伤驮兽、伤驮兽最终位于车阵内侧的事实；保持右肩伤势加重及右臂无法抬起的结局，并遵守借来效果只供一次动作的边界。\"\n    },\n    {\n      \"chapter\": 5,\n      \"domain\": \"Plan / 发现顺序与知识状态\",\n      \"primary_anchor\": \"他们追的是被人从族群里偷走的幼兽。\",\n      \"issue\": \"正文已经展示包裹内幼兽，并确定其被盗来源及白角部的追索目标，提前完成了下一章承担的发现与冲突重释。当前章批准的终点是听见包裹中的异常幼叫，包裹内容及其引来白角部的原因仍待查明。\",\n      \"authority_basis\": \"第5章 BATCH PLAN 以包裹内传出不属于普通异兽的幼叫收尾；第6章负责确认幼年王种并首次重释争夺核心。当前 ACTIVE SCENE STATE 与 OPEN PROMISES 仍要求查清包裹内容、来源及其与白角部的关系。\",\n      \"repair_goal\": \"保持第5章末包裹内容、被盗来源和追索原因尚未确认，仅保留已批准的幼叫及围绕货队追索的迹象；恢复第6章的确认与重释位置。\"\n    }\n  ],\n  \"upstream_conflicts\": [\n    {\n      \"chapter\": 3,\n      \"issue\": \"上游章节排期互相冲突：中期窗口规定第1—8章完成猎市与南行选择、第9—18章进入白角部争夺；逐章计划却要求第3章出发并遇封路、第4—5章进入白角部冲突。Primary 遵循逐章计划，无法同时满足两套编号安排。\",\n      \"required_upstream\": \"统一南行出发、封路和白角部冲突开始的章节位置，并明确中期分块与逐章计划中哪套排期有效。\"\n    },\n    {\n      \"chapter\": 5,\n      \"issue\": \"包裹出场的行动主体与事件链存在上游冲突：BATCH PLAN 要求被击倒的盗猎者从车底拖出包裹；PERSISTENT CANON 则记录边军从车底搜出抱着包裹的陌生男人。Primary 又采用翻车压腿、包裹先滚落、边军随后拖人及陶遂挑起包裹的第三条事件链。不能在不裁定上游事件的情况下同时恢复这些版本。\",\n      \"required_upstream\": \"明确谁使包裹离开车底、男人当时是否仍持有包裹、他如何受伤，以及本章是否确认其盗猎者身份。\"\n    }\n  ]\n}",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 73760,
+      "inputTokens": 43150,
+      "cachedReadTokens": 25344,
+      "outputTokens": 5266,
+      "thoughtTokens": 3624
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 73760,
+          "inputTokens": 43150,
+          "cachedInputTokens": 25344,
+          "outputTokens": 5266,
+          "reasoningOutputTokens": 3624
+        },
+        "model_usage": [
+          {
+            "model": "gpt-6-astra",
+            "token_count": {
+              "totalTokens": 73760,
+              "inputTokens": 43150,
+              "cachedInputTokens": 25344,
+              "outputTokens": 5266,
+              "reasoningOutputTokens": 3624
+            }
+          }
+        ]
+      }
+    }
+  },
+  "agent_version": "1.10.0"
+}

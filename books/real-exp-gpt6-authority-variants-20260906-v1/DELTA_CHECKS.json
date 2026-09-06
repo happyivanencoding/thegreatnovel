@@ -1,0 +1,61 @@
+[
+  {
+    "case": "fast",
+    "variant": "medium",
+    "patch_count": 10,
+    "upstream_conflicts": [],
+    "apply_status": "PASS"
+  },
+  {
+    "case": "fast",
+    "variant": "finder_terra",
+    "patch_count": 9,
+    "upstream_conflicts": [
+      {
+        "chapter": 1,
+        "issue": "本体已退到高地，分身仍在矿车旁；随后“那具身体像被潮水抹掉一样，重新撞回顾停舟体内”，直接跨过两处位置完成回收。批准能力允许真实第二身体，批准第2章允许合一后的经验回收，但没有确定分隔状态下是否可以远程消失、回收以及由此跨越空间。",
+        "required_upstream": "确定首次合一是否要求两个身体实际会合，以及此次合一的合法空间条件；若允许远程回收，须明确批准该能力及其边界。"
+      }
+    ],
+    "apply_status": "UPSTREAM_CONFLICT"
+  },
+  {
+    "case": "shadow",
+    "variant": "medium",
+    "patch_count": 19,
+    "upstream_conflicts": [],
+    "apply_status": "PASS"
+  },
+  {
+    "case": "shadow",
+    "variant": "finder_terra",
+    "patch_count": 13,
+    "upstream_conflicts": [],
+    "apply_status": "PASS"
+  },
+  {
+    "case": "pace",
+    "variant": "medium",
+    "patch_count": 11,
+    "upstream_conflicts": [],
+    "apply_status": "PASS"
+  },
+  {
+    "case": "pace",
+    "variant": "finder_terra",
+    "patch_count": 8,
+    "upstream_conflicts": [
+      {
+        "chapter": 3,
+        "issue": "中期窗口与逐章计划对南行出发、封路和白角部冲突开始的章节排期互相冲突。",
+        "required_upstream": "统一南行出发、封路和白角部冲突开始的章节位置，并明确中期分块与逐章计划中哪套排期有效。"
+      },
+      {
+        "chapter": 5,
+        "issue": "包裹出场的行动主体与事件链在 BATCH PLAN、PERSISTENT CANON 和 Primary 间互相冲突。",
+        "required_upstream": "明确谁使包裹离开车底、男人当时是否仍持有包裹、他如何受伤，以及本章是否确认其盗猎者身份。"
+      }
+    ],
+    "apply_status": "UPSTREAM_CONFLICT"
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "label": "shadow-finder",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "session_id": "01a0788a-1523-7bf0-a52c-5b18c0ea06c5",
+  "wall_seconds": 164.178,
+  "usage": {
+    "totalTokens": 70013,
+    "inputTokens": 40324,
+    "cachedReadTokens": 24448,
+    "outputTokens": 5241,
+    "thoughtTokens": 3390
+  },
+  "output_chars": 3424
+}

@@ -1,0 +1,14 @@
+{
+  "label": "pace-reader-judge",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a0789b-ad5e-71c1-a31a-be895f4989e7",
+  "wall_seconds": 121.377,
+  "usage": {
+    "totalTokens": 87556,
+    "inputTokens": 6823,
+    "cachedReadTokens": 78592,
+    "outputTokens": 2141,
+    "thoughtTokens": 1339
+  }
+}

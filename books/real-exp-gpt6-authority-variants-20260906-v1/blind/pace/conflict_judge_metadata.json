@@ -1,0 +1,14 @@
+{
+  "label": "pace-conflict-judge",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a0789d-88f1-7463-8b4e-6ece82a3926d",
+  "wall_seconds": 19.268,
+  "usage": {
+    "totalTokens": 73695,
+    "inputTokens": 44525,
+    "cachedReadTokens": 28416,
+    "outputTokens": 754,
+    "thoughtTokens": 516
+  }
+}

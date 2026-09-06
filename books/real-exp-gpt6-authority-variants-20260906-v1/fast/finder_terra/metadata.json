@@ -1,0 +1,15 @@
+{
+  "label": "fast-finder-terra",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a0788f-09f6-7361-9b40-5bfaa952317d",
+  "wall_seconds": 53.608,
+  "usage": {
+    "totalTokens": 73414,
+    "inputTokens": 43363,
+    "cachedReadTokens": 27392,
+    "outputTokens": 2659,
+    "thoughtTokens": 1552
+  },
+  "output_chars": 1586
+}

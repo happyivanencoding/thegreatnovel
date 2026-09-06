@@ -1,0 +1,15 @@
+{
+  "label": "pace-finder-terra",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a0788f-db78-7ba1-a9b6-4a573c9ce75f",
+  "wall_seconds": 47.764,
+  "usage": {
+    "totalTokens": 75698,
+    "inputTokens": 44916,
+    "cachedReadTokens": 28416,
+    "outputTokens": 2366,
+    "thoughtTokens": 1537
+  },
+  "output_chars": 1269
+}

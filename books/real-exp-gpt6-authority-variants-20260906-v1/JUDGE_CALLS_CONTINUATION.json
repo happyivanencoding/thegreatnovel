@@ -1,0 +1,130 @@
+[
+  {
+    "case": "fast",
+    "kind": "reader",
+    "label": "fast-reader-judge",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "session_id": "01a07891-fa60-7b33-90c2-4da828972a2a",
+    "wall_seconds": 221.915,
+    "usage": {
+      "totalTokens": 80821,
+      "inputTokens": 1553,
+      "cachedReadTokens": 78592,
+      "outputTokens": 676,
+      "thoughtTokens": 0
+    }
+  },
+  {
+    "case": "fast",
+    "kind": "conflict",
+    "label": "fast-conflict-judge",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "session_id": "01a07895-5e1e-7851-b6c9-15f9344d4e0d",
+    "wall_seconds": 13.927,
+    "usage": {
+      "totalTokens": 71622,
+      "inputTokens": 42773,
+      "cachedReadTokens": 28416,
+      "outputTokens": 433,
+      "thoughtTokens": 278
+    }
+  },
+  {
+    "case": "fast",
+    "kind": "authority",
+    "label": "fast-authority-judge",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "session_id": "01a07891-facd-7851-8d8e-9f311c5c07f8",
+    "wall_seconds": 415.226,
+    "usage": {
+      "totalTokens": 145736,
+      "inputTokens": 2316,
+      "cachedReadTokens": 137984,
+      "outputTokens": 5436,
+      "thoughtTokens": 4142
+    }
+  },
+  {
+    "case": "shadow",
+    "kind": "authority",
+    "label": "shadow-authority-judge",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "session_id": "01a07895-933c-7b70-a5b8-f510bd0d86a6",
+    "wall_seconds": 387.822,
+    "usage": {
+      "totalTokens": 152873,
+      "inputTokens": 9896,
+      "cachedReadTokens": 140032,
+      "outputTokens": 2945,
+      "thoughtTokens": 1140
+    }
+  },
+  {
+    "case": "shadow",
+    "kind": "reader",
+    "label": "shadow-reader-judge",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "session_id": "01a07898-4fbf-73d0-8c3c-4bef757a3564",
+    "wall_seconds": 220.521,
+    "usage": {
+      "totalTokens": 130109,
+      "inputTokens": 1723,
+      "cachedReadTokens": 127744,
+      "outputTokens": 642,
+      "thoughtTokens": 0
+    }
+  },
+  {
+    "case": "pace",
+    "kind": "reader",
+    "label": "pace-reader-judge",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "session_id": "01a0789b-ad5e-71c1-a31a-be895f4989e7",
+    "wall_seconds": 121.377,
+    "usage": {
+      "totalTokens": 87556,
+      "inputTokens": 6823,
+      "cachedReadTokens": 78592,
+      "outputTokens": 2141,
+      "thoughtTokens": 1339
+    }
+  },
+  {
+    "case": "pace",
+    "kind": "conflict",
+    "label": "pace-conflict-judge",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "session_id": "01a0789d-88f1-7463-8b4e-6ece82a3926d",
+    "wall_seconds": 19.268,
+    "usage": {
+      "totalTokens": 73695,
+      "inputTokens": 44525,
+      "cachedReadTokens": 28416,
+      "outputTokens": 754,
+      "thoughtTokens": 516
+    }
+  },
+  {
+    "case": "pace",
+    "kind": "authority",
+    "label": "pace-authority-judge",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "session_id": "01a0789b-7ec3-74a2-8b02-e329cd5227ce",
+    "wall_seconds": 300.896,
+    "usage": {
+      "totalTokens": 145087,
+      "inputTokens": 15463,
+      "cachedReadTokens": 122624,
+      "outputTokens": 7000,
+      "thoughtTokens": 5627
+    }
+  }
+]
