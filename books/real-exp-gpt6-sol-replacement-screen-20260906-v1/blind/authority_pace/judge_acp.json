@@ -1,0 +1,43 @@
+{
+  "ok": true,
+  "label": "authority_pace-blind-judge",
+  "model": "gpt-5.6-terra",
+  "effort": "high",
+  "session_id": "01a07842-f1d4-7f30-a107-26b5f891acc2",
+  "wall_seconds": 211.211,
+  "text": "A AUTHORITY: PARTIAL\n\nA FALSE POSITIVES: NONE\n\nA MISSES:\n- 第3章仍将“十九岁同行一月、归来失去职位”提前公开；这是未排程的 Relationship-History Backfill。\n- 第3章仍把限期入场牌升级为“固定席位”。\n- 陶遂在出城时已验货、顾晚禾预先留位，分别违背其应在半日后关口首次出现、以及“不替他留位置”的既定状态。\n\nB AUTHORITY: PARTIAL\n\nB FALSE POSITIVES: NONE\n\nB MISSES:\n- 第1章未恢复“旧伤导致挣笼”及借所剥冲势侧撞异兽入窄隙的批准结果。\n- 第4章未恢复陶遂逐车搜查的已发生 Canon。\n- 第5章未恢复借力拉回伤驮兽、顾晚禾承认保住车阵并保留损失清算。\n- 第5章仍提前揭露白角幼兽身份、外观与“被盗”因果，且未清扫同一揭露域的后续指称。\n\nWHICH IS CLEANER: A\n\nDECISIVE EVIDENCE: A 对第5章包裹的身份、可见内容与白角部追踪原因做了同域清扫，恢复为“内容未明”；B 保留了第6章才应完成的确认。A 的剩余问题均可由删除或缩回既有句子解决；两版都没有需要新增重大因果的 upstream conflict。  \n\n",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 104573,
+      "inputTokens": 5058,
+      "cachedReadTokens": 93952,
+      "outputTokens": 5563,
+      "thoughtTokens": 5139
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 104573,
+          "inputTokens": 5058,
+          "cachedInputTokens": 93952,
+          "outputTokens": 5563,
+          "reasoningOutputTokens": 5139
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-terra",
+            "token_count": {
+              "totalTokens": 104573,
+              "inputTokens": 5058,
+              "cachedInputTokens": 93952,
+              "outputTokens": 5563,
+              "reasoningOutputTokens": 5139
+            }
+          }
+        ]
+      }
+    }
+  },
+  "agent_version": "1.10.0"
+}

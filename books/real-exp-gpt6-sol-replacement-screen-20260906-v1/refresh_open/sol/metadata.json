@@ -1,0 +1,16 @@
+{
+  "case": "refresh_open",
+  "stage": "story_refresh",
+  "lane": "sol",
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "session_id": "01a07823-fda4-7aa3-a550-2d1a55b36fd5",
+  "wall_seconds": 343.371,
+  "total_tokens": 86732,
+  "input_tokens": 10771,
+  "cached_read_tokens": 68992,
+  "output_tokens": 6969,
+  "thought_tokens": 3456,
+  "output_chars": 4639,
+  "runner_elapsed_seconds": 343.518
+}

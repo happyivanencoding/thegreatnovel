@@ -1,0 +1,16 @@
+{
+  "case": "story_ocean",
+  "stage": "story_program",
+  "lane": "astra",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "session_id": "01a07821-143e-7a82-8c82-31a5a9ee481f",
+  "wall_seconds": 341.622,
+  "total_tokens": 65222,
+  "input_tokens": 54123,
+  "cached_read_tokens": 0,
+  "output_tokens": 11099,
+  "thought_tokens": 2070,
+  "output_chars": 11850,
+  "runner_elapsed_seconds": 341.769
+}

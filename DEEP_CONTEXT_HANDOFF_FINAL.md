@@ -1,6 +1,6 @@
 # DEEP CONTEXT HANDOFF
 
-日期：2026-09-05
+日期：2026-09-06
 项目：TheGreatNovel / TGN Story MVP
 主要工作目录：`C:\dev\tgn-story-mvp`
 开发分支：`principal_dev_new_sys`
@@ -31,6 +31,19 @@
 
 ---
 
+### 0.0G 2026-09-06 实验：GPT-6 Astra 直接替换 GPT-5.6 Sol
+
+因 GPT-6 发布，做了严格 matched-high 替换实验，只测试当前 production 中由 `GPT-5.6 Sol high` 承担的三个职责：Story Program、Story Refresh、Batch Authority Delta。其它模型、Prompt、Frozen Authority 与输入保持不变；实验产物：`books/real-exp-gpt6-sol-replacement-screen-20260906-v1/`，最终报告见 `REPORT.md`。
+
+**结论不是全面升级。** Story Program + Story Refresh 的 4 个匿名规划 Judge **Sol 4/4 胜**。Astra 虽在规划层明显更省 reasoning token，尤其 Story Refresh wall 约减半，但更容易把复杂 Collision 转译成“训练/经营/履约/逐阶升级”程序，让 Tier Pace 吞掉 Plot Engine，或把人物收束成更负责、更稳妥的路线。因此当前 `Story Program / Story Refresh = GPT-5.6 Sol high` 保持不变。
+
+Batch Authority Delta 则出现相反结果：三组真实五章 Primary 上，Astra **Authority Auditor 3/3 胜**；patch 数 44 vs Sol 19，且没有被独立 Auditor 判出的 false positive。shadow 样本 Astra 达到 `PASS`、Sol 为 `FAIL`，说明 Astra 对跨章 stale、隐藏旧史、实体持有、能力边界、Reader Release 与未授权时间/付款等硬域的 recall 明显更高。但把两版 Delta 真正应用回正文后再做经典原文校准 Reader 盲审，结果是 **Astra 1/3、Sol 2/3**；Astra 的额外修复在部分样本会留下“补规则/补说明”的 patch texture。因此当前只记为 **Authority closure 的 directional candidate**，尚未满足“Reader 不退化 + Authority 提升”的 production freeze 条件，`Batch Authority Delta = GPT-5.6 Sol high` 暂不改。
+
+技术可达性：本机最初的 `@agentclientprotocol/codex-acp 1.6.2` 不接受 `gpt-6-astra`；升级到 **1.10.0** 后真实 `gpt-6-astra[high]` ACP 调用成功。当前安装已经暴露 `gpt-6-astra` 的 low/medium/high/xhigh/max/ultra，但 TGN production executor 的 allowed model 列表没有因此自动放开 GPT-6，因为本轮没有冻结新的 production route。实验使用 direct read-only ACP runner，不改变 Authority adoption。
+
+下一步若继续，只测试 **Astra Authority Delta 的 realization 边界**：目标不是让它少抓硬问题，而是保住 3/3 更高 Authority recall 的同时，避免删除未授权旧史/补回漏失事实时写出解释性补丁。不要再重测 Story Program / Story Refresh 的直接替换，除非模型或 Prompt 职责发生实质变化。
+
+---
 ### 0.0F 2026-09-05 冻结：Real Incident Snapshot Eval Corpus / 已知事故回归层
 
 在完整阅读 Anthropic `commerce-agents` 的 article + reference source 后，TGN 没有因此新增 Router / Memory Agent / Reviewer，也没有改变当前 Batch production topology。真正吸收的是一条实验方法：**真实事故一旦已经被 production / E2E / Authority 审计确认，就把“事故第一次变得可检测之前”的最小状态冻结成 Snapshot；以后先用廉价回归挡住已知错误，再把昂贵 fresh held-out 留给未知整体质量。** 这与当前 TGN 的 Frozen Authority / deterministic harness 方向一致，不是另造 Agent 架构。
@@ -2510,3 +2523,4 @@ Production 新增 `story-mvp-background`，仅作为 **Persistent Job Host**。W
 - Approved Story Program 知道完整隐藏旧史，不等于 Reader / Writer 现在应该知道；未排程 reveal 必须继续留在 backstage Authority。
 
 只要下一位 Agent能稳定作出这些区分，本文迁移的就不只是 conclusions，而是当前对话长期形成的 decision model。
+

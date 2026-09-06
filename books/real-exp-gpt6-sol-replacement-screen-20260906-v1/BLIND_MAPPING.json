@@ -1,0 +1,30 @@
+{
+  "story_cultivation": {
+    "sol": "A",
+    "astra": "B"
+  },
+  "story_ocean": {
+    "sol": "A",
+    "astra": "B"
+  },
+  "refresh_open": {
+    "sol": "A",
+    "astra": "B"
+  },
+  "refresh_cycle2": {
+    "sol": "B",
+    "astra": "A"
+  },
+  "authority_fast": {
+    "sol": "B",
+    "astra": "A"
+  },
+  "authority_shadow": {
+    "sol": "A",
+    "astra": "B"
+  },
+  "authority_pace": {
+    "sol": "B",
+    "astra": "A"
+  }
+}

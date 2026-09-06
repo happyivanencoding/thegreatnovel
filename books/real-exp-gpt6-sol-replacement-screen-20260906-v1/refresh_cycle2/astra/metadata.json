@@ -1,0 +1,16 @@
+{
+  "case": "refresh_cycle2",
+  "stage": "story_refresh",
+  "lane": "astra",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "session_id": "01a07829-3b2e-7b12-8e9a-d4d21910ae68",
+  "wall_seconds": 273.807,
+  "total_tokens": 63685,
+  "input_tokens": 10360,
+  "cached_read_tokens": 45312,
+  "output_tokens": 8013,
+  "thought_tokens": 2124,
+  "output_chars": 8124,
+  "runner_elapsed_seconds": 273.946
+}

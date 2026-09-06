@@ -1,0 +1,21 @@
+{
+  "date": "2026-09-06",
+  "question": "Can GPT-6 Astra high replace GPT-5.6 Sol high in current TGN Sol-routed production stages?",
+  "independent_variable": "model only: gpt-5.6-sol/high vs gpt-6-astra/high",
+  "stages": [
+    "Story Program",
+    "Story Refresh",
+    "Batch Authority Delta"
+  ],
+  "prompt_identity": "exact same saved UTF-8 prompt within each pair",
+  "fresh_context": true,
+  "auth": "ChatGPT via codex-acp",
+  "production_defaults_changed": false,
+  "detects": {
+    "story_program": "Astra improves surface richness but weakens long-form causality, Human-specific choice, World independence, or downstream compilability",
+    "story_refresh": "Astra overfits the new horizon to the protagonist, rewrites settled Canon, or plans beyond the approved horizon",
+    "batch_authority_delta": "Astra misses a real hard conflict, adds non-authorized story changes, or produces non-local/non-applicable patches"
+  },
+  "on_failure": "Keep GPT-5.6 Sol for the failing stage; do not add a repair layer to rescue Astra.",
+  "screen_only": "This phase chooses which stages merit downstream held-out confirmation; it does not itself change production routing."
+}

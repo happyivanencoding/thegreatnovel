@@ -1,0 +1,50 @@
+[
+  {
+    "case": "authority_fast",
+    "lane": "sol",
+    "parse": "PASS",
+    "patches": 6,
+    "upstream_conflicts": [],
+    "apply": "PASS"
+  },
+  {
+    "case": "authority_fast",
+    "lane": "astra",
+    "parse": "PASS",
+    "patches": 12,
+    "upstream_conflicts": [],
+    "apply": "PASS"
+  },
+  {
+    "case": "authority_shadow",
+    "lane": "sol",
+    "parse": "PASS",
+    "patches": 5,
+    "upstream_conflicts": [],
+    "apply": "PASS"
+  },
+  {
+    "case": "authority_shadow",
+    "lane": "astra",
+    "parse": "PASS",
+    "patches": 20,
+    "upstream_conflicts": [],
+    "apply": "PASS"
+  },
+  {
+    "case": "authority_pace",
+    "lane": "sol",
+    "parse": "PASS",
+    "patches": 8,
+    "upstream_conflicts": [],
+    "apply": "PASS"
+  },
+  {
+    "case": "authority_pace",
+    "lane": "astra",
+    "parse": "PASS",
+    "patches": 12,
+    "upstream_conflicts": [],
+    "apply": "PASS"
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "ok": true,
+  "label": "authority_fast-sol",
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "session_id": "01a0782d-6983-7cd3-8e08-129353047f22",
+  "wall_seconds": 122.264,
+  "text": "{\n  \"patches\": [\n    {\n      \"chapter\": 1,\n      \"old\": \"低潮期只剩半日，沉灯商盟的车队却还卡在石桩路上。\",\n      \"new\": \"低潮期只剩半日，沉灯商盟的车队却还卡在石桩路上。\\n\\n九垂原的地潮每十二日经过一次聚落。每到这时，井水上涨，潮兽迁徙，房屋和道路都可能被冲垮；寻常人家只能预先固定屋梁、点起潮灯，把粮食藏进避潮粮窖。\",\n      \"reason\": \"第1章明确排程的地潮周期、生活影响与普通家庭避潮方式完全漏失。\"\n    },\n    {\n      \"chapter\": 1,\n      \"old\": \"成炉者能连续使用潮息，挡住普通弓弩，也能独自护住一辆商车。\",\n      \"new\": \"普通人走潮路得依赖潮器和商队，入潮者则能用潮息强化身体。到了成炉，才能连续使用潮息，挡住普通弓弩，通常也能独自护住一辆商车，并获得独自穿越短距离荒地的资格。\",\n      \"reason\": \"第1章明确排程的普通人潮器依赖、入潮能力粗尺及成炉者短程独行资格未完整释放。\"\n    },\n    {\n      \"chapter\": 2,\n      \"old\": \"少东家小时候偷跑去潮井边玩，鞋掉进泥里，是顾停舟替他瞒着管事，又把鞋洗干净带回去。\",\n      \"new\": \"\",\n      \"reason\": \"正文凭空新增作者未批准的童年共同经历，构成 Relationship-History retrospective backfill。\"\n    },\n    {\n      \"chapter\": 3,\n      \"old\": \"脚夫阿成的腿断了\",\n      \"new\": \"脚夫阿成的小腿被木板划开一道深口\",\n      \"reason\": \"第2章已写实发生的是小腿被木板划伤，第3章将同一伤势回忆成断腿，构成跨章伤势 stale。\"\n    },\n    {\n      \"chapter\": 3,\n      \"old\": \"“事实我可以给。”顾停舟说，“坐标的副本也可以留档。”\",\n      \"new\": \"“事实我可以给。”顾停舟说，“侧路坐标不在这份货损里。”\",\n      \"reason\": \"批准计划要求顾停舟交出事故事实但保留侧路坐标，不得把自己的路线判断无偿交给任何一方；原文反而主动允许坐标留档。\"\n    },\n    {\n      \"chapter\": 3,\n      \"old\": \"“这份原件你收着。事实副本留给我，侧路坐标暂不公开。”\",\n      \"new\": \"“这份原件你收着。事实副本留给我，侧路坐标也先留在你手里。”\",\n      \"reason\": \"与上一处属于同一侧路坐标事实域；必须明确校路官只取得事故事实副本，侧路坐标仍由顾停舟持有。\"\n    }\n  ],\n  \"upstream_conflicts\": []\n}",
+  "result": {
+    "stopReason": "end_turn",
+    "usage": {
+      "totalTokens": 77368,
+      "inputTokens": 70917,
+      "cachedReadTokens": 0,
+      "outputTokens": 6451,
+      "thoughtTokens": 5696
+    },
+    "_meta": {
+      "quota": {
+        "token_count": {
+          "totalTokens": 77368,
+          "inputTokens": 70917,
+          "cachedInputTokens": 0,
+          "outputTokens": 6451,
+          "reasoningOutputTokens": 5696
+        },
+        "model_usage": [
+          {
+            "model": "gpt-5.6-sol",
+            "token_count": {
+              "totalTokens": 77368,
+              "inputTokens": 70917,
+              "cachedInputTokens": 0,
+              "outputTokens": 6451,
+              "reasoningOutputTokens": 5696
+            }
+          }
+        ]
+      }
+    }
+  },
+  "agent_version": "1.10.0"
+}

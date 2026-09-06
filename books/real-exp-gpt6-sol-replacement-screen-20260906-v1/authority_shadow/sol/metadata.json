@@ -1,0 +1,16 @@
+{
+  "case": "authority_shadow",
+  "stage": "batch_authority_delta",
+  "lane": "sol",
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "session_id": "01a0782f-998e-7140-88af-fafa00c3c9d4",
+  "wall_seconds": 154.02,
+  "total_tokens": 77961,
+  "input_tokens": 41250,
+  "cached_read_tokens": 28544,
+  "output_tokens": 8167,
+  "thought_tokens": 7230,
+  "output_chars": 1353,
+  "runner_elapsed_seconds": 154.159
+}

@@ -1,0 +1,12 @@
+{
+  "case": "pace",
+  "session_id": null,
+  "wall_seconds": 124.133,
+  "usage": {
+    "totalTokens": 86579,
+    "inputTokens": 3107,
+    "cachedReadTokens": 82688,
+    "outputTokens": 784,
+    "thoughtTokens": 253
+  }
+}

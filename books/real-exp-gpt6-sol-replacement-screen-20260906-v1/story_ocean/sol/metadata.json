@@ -1,0 +1,16 @@
+{
+  "case": "story_ocean",
+  "stage": "story_program",
+  "lane": "sol",
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "session_id": "01a0781f-0edb-7273-9f64-b6ca2705e481",
+  "wall_seconds": 323.227,
+  "total_tokens": 74952,
+  "input_tokens": 57365,
+  "cached_read_tokens": 0,
+  "output_tokens": 17587,
+  "thought_tokens": 9424,
+  "output_chars": 10233,
+  "runner_elapsed_seconds": 323.369
+}

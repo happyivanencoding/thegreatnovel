@@ -1,0 +1,12 @@
+{
+  "case": "shadow",
+  "session_id": null,
+  "wall_seconds": 159.781,
+  "usage": {
+    "totalTokens": 119851,
+    "inputTokens": 4446,
+    "cachedReadTokens": 113408,
+    "outputTokens": 1997,
+    "thoughtTokens": 1387
+  }
+}

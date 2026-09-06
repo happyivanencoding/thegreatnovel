@@ -1,0 +1,16 @@
+{
+  "case": "authority_shadow",
+  "stage": "batch_authority_delta",
+  "lane": "astra",
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "session_id": "01a07831-936e-7a12-a339-cd5d53755de9",
+  "wall_seconds": 289.183,
+  "total_tokens": 75825,
+  "input_tokens": 41210,
+  "cached_read_tokens": 25344,
+  "output_tokens": 9271,
+  "thought_tokens": 6908,
+  "output_chars": 3800,
+  "runner_elapsed_seconds": 289.32
+}

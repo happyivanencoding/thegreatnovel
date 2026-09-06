@@ -1,0 +1,51 @@
+[
+  {
+    "case": "authority_fast",
+    "session_id": "01a0783f-2002-7e20-8fa9-c9bc94cc6591",
+    "wall_seconds": 249.961,
+    "total_tokens": 112730,
+    "output_tokens": 252
+  },
+  {
+    "case": "authority_pace",
+    "session_id": "01a07842-f1d4-7f30-a107-26b5f891acc2",
+    "wall_seconds": 211.211,
+    "total_tokens": 104573,
+    "output_tokens": 5563
+  },
+  {
+    "case": "authority_shadow",
+    "session_id": "01a07840-8400-7ac2-9256-ab7efc8990ba",
+    "wall_seconds": 419.96,
+    "total_tokens": 127630,
+    "output_tokens": 1332
+  },
+  {
+    "case": "refresh_cycle2",
+    "session_id": "01a0783e-9ea2-7660-a8a2-8d78d4c3043b",
+    "wall_seconds": 124.357,
+    "total_tokens": 64537,
+    "output_tokens": 2124
+  },
+  {
+    "case": "refresh_open",
+    "session_id": "01a0783c-f442-7480-86e4-a6876248f4f9",
+    "wall_seconds": 142.131,
+    "total_tokens": 86478,
+    "output_tokens": 2315
+  },
+  {
+    "case": "story_cultivation",
+    "session_id": "01a0783a-7e3e-7de2-8c1a-7feb7cf3aaf7",
+    "wall_seconds": 270.317,
+    "total_tokens": 149655,
+    "output_tokens": 5930
+  },
+  {
+    "case": "story_ocean",
+    "session_id": "01a0783a-7e38-7380-a402-c2c8ce871fab",
+    "wall_seconds": 161.391,
+    "total_tokens": 92391,
+    "output_tokens": 2244
+  }
+]

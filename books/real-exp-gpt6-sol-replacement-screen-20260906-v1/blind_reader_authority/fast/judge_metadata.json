@@ -1,0 +1,12 @@
+{
+  "case": "fast",
+  "session_id": null,
+  "wall_seconds": 145.962,
+  "usage": {
+    "totalTokens": 122989,
+    "inputTokens": 3277,
+    "cachedReadTokens": 117504,
+    "outputTokens": 2208,
+    "thoughtTokens": 1552
+  }
+}
